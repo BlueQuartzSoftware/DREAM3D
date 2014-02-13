@@ -41,6 +41,7 @@
 
 #include <QtCore/QString>
 #include <QtGui/QImage>
+#include <QtCore/QFile>
 
 
 // -----------------------------------------------------------------------------
@@ -48,10 +49,10 @@
 // -----------------------------------------------------------------------------
 ImportR3DStack::ImportR3DStack() :
   AbstractFilter(),
-  m_ImageDataArrayName(DREAM3D::CellData::ImageData),
+  m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
   m_ZStartIndex(0),
   m_ZEndIndex(0),
-  m_ImageData(NULL)
+  m_GrainIds(NULL)
 {
 
   m_Origin.x = 0.0;
@@ -91,7 +92,6 @@ void ImportR3DStack::setupFilterParameters()
 void ImportR3DStack::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-  setImageDataArrayName( reader->readValue("ImageDataArrayName", getImageDataArrayName()) );
   setZStartIndex( reader->readValue("ZStartIndex", getZStartIndex()) );
   setZEndIndex( reader->readValue("ZEndIndex", getZEndIndex()) );
   setOrigin( reader->readValue("Origin", getOrigin()) );
@@ -106,7 +106,6 @@ int ImportR3DStack::writeFilterParameters(AbstractFilterParametersWriter* writer
 {
   writer->openFilterGroup(this, index);
 /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
-  writer->writeValue("ImageDataArrayName", getImageDataArrayName() );
   writer->writeValue("ZStartIndex", getZStartIndex() );
   writer->writeValue("ZEndIndex", getZEndIndex() );
   writer->writeValue("Origin", getOrigin() );
@@ -125,7 +124,7 @@ void ImportR3DStack::dataCheck(bool preflight, size_t voxels, size_t fields, siz
   std::stringstream ss;
   VoxelDataContainer* m = getVoxelDataContainer();
 
-  if (m_ImageFileList.size() == 0)
+  if (m_R3DFileList.size() == 0)
   {
     ss.str("");
     ss << "No files have been selected for import. Have you set the input directory?";
@@ -134,11 +133,7 @@ void ImportR3DStack::dataCheck(bool preflight, size_t voxels, size_t fields, siz
   }
   else
   {
-    // This would be for a gray scale image
-    CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, ImageData, ss, uint8_t, UInt8ArrayType, 0, voxels, 1)
-    // If we have RGB or RGBA Images then we are going to have to change things a bit.
-    // We should read the file and see what we have? Of course Qt is going to read it up into
-    // an RGB array by default
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, int32_t, Int32ArrayType, 0, voxels, 1)
   }
 
 }
@@ -171,14 +166,13 @@ void ImportR3DStack::execute()
   setErrorCondition(0);
   std::stringstream ss;
 
-
   m->setResolution(m_Resolution.x, m_Resolution.y, m_Resolution.z);
   m->setOrigin(m_Origin.x, m_Origin.y, m_Origin.z);
 
 
   UInt8ArrayType::Pointer data = UInt8ArrayType::NullPointer();
 
-  uint8_t* imagePtr = NULL;
+  uint8_t* currentPositionPtr = NULL;
 
   float total = static_cast<float>( m_ZEndIndex - m_ZStartIndex );
   int progress = 0;
@@ -189,49 +183,87 @@ void ImportR3DStack::execute()
 //  int bytesPerLine = 0;
 
   int64_t z = m_ZStartIndex;
-  for (std::vector<std::string>::iterator filepath = m_ImageFileList.begin(); filepath != m_ImageFileList.end(); ++filepath)
+  for (std::vector<std::string>::iterator filepath = m_R3DFileList.begin(); filepath != m_R3DFileList.end(); ++filepath)
   {
-    std::string imageFName = *filepath;
-    progress = static_cast<int>( z - m_ZStartIndex );
-    progress = (int)(100.0f * (float)(progress) / total);
+    QString R3DFName = QString::fromStdString(*filepath);
+//    progress = static_cast<int>( z - m_ZStartIndex );
+//    progress = (int)(100.0f * (float)(progress) / total);
 
     ss.str("");
-    ss << "Importing file " << imageFName;
+	ss << "Importing file " << R3DFName.toStdString();
     notifyStatusMessage(ss.str());
 
-    QImage image(QString::fromStdString(imageFName));
-    if (image.isNull() == true)
-    {
+    QByteArray buf;
+	QFile in(R3DFName);
+
+	if (!in.open(QIODevice::ReadOnly | QIODevice::Text))
+	{
+	  QString msg = QString("R3D file could not be opened: ") + R3DFName;
       setErrorCondition(-14000);
-      notifyErrorMessage("Failed to load Image file", getErrorCondition());
-    }
-    height = image.height();
-    width = image.width();
-    totalPixels = width * height;
+      notifyErrorMessage(msg.toStdString(), getErrorCondition());
+	}
+
+	buf = in.readLine();
+
+	QList<QByteArray> tokens = buf.split(',');
+//    QString word(tokens.at(0));
+
+//    QImage image(QString::fromStdString(R3DFName));
+//    if (image.isNull() == true)
+//    {
+//      setErrorCondition(-14000);
+//      notifyErrorMessage("Failed to load Image file", getErrorCondition());
+//    }
+//    height = image.height();
+//    width = image.width();
+
   //  bytesPerLine = image.bytesPerLine();
-    // This is the first image so we need to create our block of data to store the data
+    // This is the first slice so we need to create our block of data to store the data
+
     if (z == m_ZStartIndex)
     {
-      m->setDimensions(width, height, m_ImageFileList.size());
-      if (image.format() == QImage::Format_Indexed8)
-      {
-        pixelBytes = 1;
-      }
-      else if (image.format() == QImage::Format_RGB32 || image.format() == QImage::Format_ARGB32)
-      {
+	  width = tokens.at(0).toInt();
+	  height = tokens.at(1).toInt();
+      totalPixels = width * height;
+      m->setDimensions(width, height, m_R3DFileList.size());
+//      if (image.format() == QImage::Format_Indexed8)
+//      {
+//        pixelBytes = 1;
+//      }
+//      else if (image.format() == QImage::Format_RGB32 || image.format() == QImage::Format_ARGB32)
+//      {
         pixelBytes = 4;
-      }
-      data = UInt8ArrayType::CreateArray(totalPixels * m_ImageFileList.size(), pixelBytes, m_ImageDataArrayName);
+//      }
+      data = UInt8ArrayType::CreateArray(totalPixels * m_R3DFileList.size(), pixelBytes, m_GrainIdsArrayName);
 
     }
 
     // Get the current position in the array to copy the image into
-    imagePtr = data->GetPointer( (z-m_ZStartIndex) * totalPixels * pixelBytes);
+    currentPositionPtr = data->GetPointer( (z-m_ZStartIndex) * totalPixels * pixelBytes);
+
+	Int32ArrayType::Pointer m_GrainIdData = Int32ArrayType::CreateArray(totalPixels, m_GrainIdsArrayName);
+    m_GrainIdData->initializeWithValues(-1);
+    int32_t* grainIds = m_GrainIdData->GetPointer(0);
+	int index = 0;
+	int32_t value = 0;
+
     for(qint32 i = 0; i < height; ++i)
     {
-      imagePtr = data->GetPointer( (z-m_ZStartIndex) * totalPixels * pixelBytes + i * (width * pixelBytes));
-      uint8_t* source = image.scanLine(i);
-      ::memcpy(imagePtr, source, width * pixelBytes);
+	  buf = in.readLine();
+	  tokens = buf.split(',');
+//	  for(qint32 j = 0; j < width-1; ++j)
+//	  {
+//		index = totalPixels*z + i*width + j;
+//		value = tokens.at(j+1).toInt();
+//		grainIds[index] = value;
+//	  }
+      currentPositionPtr = data->GetPointer( (z-m_ZStartIndex) * totalPixels * pixelBytes + i * (width * pixelBytes));
+//      uint8_t* source = image.scanLine(i);
+      ::memcpy(currentPositionPtr, &tokens, width * pixelBytes);
+	  if (in.atEnd() == true)
+	  {
+		break;
+	  }
     }
 
     ++z;
@@ -245,8 +277,7 @@ void ImportR3DStack::execute()
 
 
 
-  m->addCellData(data->GetName(), data);
-
+  getVoxelDataContainer()->addCellData(DREAM3D::CellData::GrainIds, data);
 
   /* Let the GUI know we are done with this filter */
   notifyStatusMessage("Complete");

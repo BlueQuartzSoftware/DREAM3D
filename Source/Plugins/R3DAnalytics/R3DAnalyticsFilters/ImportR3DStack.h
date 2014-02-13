@@ -39,6 +39,8 @@
 
 #include <string>
 
+#include <QtCore/QString>
+
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/DataArrays/IDataArray.h"
@@ -46,7 +48,7 @@
 
 
 /**
- * @class ImportR3DStack ImportR3DStack.h ImageImport/Code/ImageImportFilters/ImportR3DStack.h
+ * @class ImportR3DStack ImportR3DStack.h R3DAnalytics/R3DAnalyticsFilters/ImportR3DStack.h
  * @brief
  * @author Joseph C. Tucker for UES, Inc.
  * @date Feb 210, 2014
@@ -61,10 +63,10 @@ class ImportR3DStack : public AbstractFilter
 
     virtual ~ImportR3DStack();
 
-    DREAM3D_INSTANCE_STRING_PROPERTY(ImageDataArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
     DREAM3D_INSTANCE_PROPERTY(int64_t, ZStartIndex)
     DREAM3D_INSTANCE_PROPERTY(int64_t, ZEndIndex)
-    DREAM3D_INSTANCE_PROPERTY(std::vector<std::string>, ImageFileList)
+    DREAM3D_INSTANCE_PROPERTY(std::vector<std::string>, R3DFileList)
     DREAM3D_INSTANCE_PROPERTY(FloatVec3Widget_t, Origin)
     DREAM3D_INSTANCE_PROPERTY(FloatVec3Widget_t, Resolution)
 
@@ -133,7 +135,7 @@ class ImportR3DStack : public AbstractFilter
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
   private:
-    uint8_t* m_ImageData;
+    int32_t* m_GrainIds;
 
     ImportR3DStack(const ImportR3DStack&); // Copy Constructor Not Implemented
     void operator=(const ImportR3DStack&); // Operator '=' Not Implemented
