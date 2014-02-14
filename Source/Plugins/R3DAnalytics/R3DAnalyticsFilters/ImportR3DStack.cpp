@@ -251,11 +251,9 @@ void ImportR3DStack::execute()
     {
 	  buf = in.readLine();
 	  tokens = buf.split(',');
-//	  for(qint32 j = 0; j < width-1; ++j)
+//	  for(qint32 j = 1; j < width+2; ++j)
 //	  {
-//		index = totalPixels*z + i*width + j;
-//		value = tokens.at(j+1).toInt();
-//		grainIds[index] = value;
+//		value = tokens.at(j).toInt();
 //	  }
       currentPositionPtr = data->GetPointer( (z-m_ZStartIndex) * totalPixels * pixelBytes + i * (width * pixelBytes));
 //      uint8_t* source = image.scanLine(i);
