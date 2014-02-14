@@ -133,6 +133,7 @@ class ImportR3DStack : public AbstractFilter
     * @param ensembles The number of ensembles
     */
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
+    void readXYSize(int &x, int &y);
 
   private:
     int32_t* m_GrainIds;
