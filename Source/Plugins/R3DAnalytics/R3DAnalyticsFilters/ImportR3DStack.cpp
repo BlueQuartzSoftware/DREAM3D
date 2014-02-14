@@ -162,11 +162,11 @@ void ImportR3DStack::readXYSize(int &x, int &y)
   QString r3dFName  = QString::fromStdString(m_R3DFileList[0]);
 
   QByteArray buf;
-  QFile in(R3DFName);
+  QFile in(r3dFName);
 
   if (!in.open(QIODevice::ReadOnly | QIODevice::Text))
   {
-    QString msg = QString("R3D file could not be opened: ") + R3DFName;
+    QString msg = QString("R3D file could not be opened: ") + r3dFName;
     setErrorCondition(-14000);
     notifyErrorMessage(msg.toStdString(), getErrorCondition());
   }
@@ -174,26 +174,29 @@ void ImportR3DStack::readXYSize(int &x, int &y)
   buf = in.readLine(); // Read first line which is the x and y sizes
 
   QList<QByteArray> tokens = buf.split(',');
-  if(tokens.size() != 2)
+  if(tokens.size() < 2)
   {
-    // Notify error messge
-
+	setErrorCondition(-2002);
+	notifyErrorMessage("Header line is an incorrect length", getErrorCondition());
+	x = -1;
+	y = -1;
     return;
   }
 
   bool ok = false;
   x = tokens.at(0).toInt(&ok, 10);
-  if (!ok) {
-    <<<<<<<<<<<<<<<<<<<<
-    handle the error
-        return;
+  if (!ok) 
+  {
+	setErrorCondition(-2000);
+	notifyErrorMessage("Width dimension entry was not an integer", getErrorCondition());
+    return;
   }
   y = tokens.at(1).toInt(&ok, 10);
-  if(!ok) {
-
-    <<<<<<<<<<<<<<<<<
-    Handle the error
-        return;
+  if(!ok) 
+  {
+	setErrorCondition(-2001);
+	notifyErrorMessage("Height dimension entry was not an integer", getErrorCondition());
+    return;
   }
 
 }
@@ -204,6 +207,8 @@ void ImportR3DStack::execute()
 {
   int err = 0;
   setErrorCondition(err);
+  dataCheck(false,1,1,1);
+  if (getErrorCondition() < 0) { notifyErrorMessage("There is a problem with the data check", getErrorCondition()); }
   VoxelDataContainer* m = getVoxelDataContainer();
   if(NULL == m)
   {
@@ -220,31 +225,35 @@ void ImportR3DStack::execute()
   int y = 0;
   readXYSize(x, y);
 
-  UInt8ArrayType::Pointer data = UInt8ArrayType::NullPointer();
+  if (x < 1 || y < 1)
+  {  
+	setErrorCondition(-1000);
+	notifyErrorMessage("At least one dimension is less than 1", getErrorCondition());
+  }
 
-
-
-  float totalSlices = static_cast<float>( m_ZEndIndex - m_ZStartIndex );
-  size_t totalVoxels = (m_ZEndIndex - m_ZStartIndex) * x * y;
+  size_t totalVoxels = (m_ZEndIndex - m_ZStartIndex + 1) * x * y;
   // Create a new array, eventually substituting this into the DataContainer later on.
   Int32ArrayType::Pointer grainIdsPtr = Int32ArrayType::CreateArray(totalVoxels, 1, DREAM3D::CellData::GrainIds);
   grainIdsPtr->initializeWithZeros();
   m_GrainIds = grainIdsPtr->GetPointer(0); // Get the pointer to the front of the array
-  uint32_t* currentPositionPtr = m_GrainIds;
+  int32_t* currentPositionPtr = m_GrainIds;
 
-  int progress = 0;
+  bool ok = false;
+
   int pixelBytes = 0;
   int totalPixels = 0;
   int height = 0;
   int width = 0;
-  //  int bytesPerLine = 0;
+
+  size_t index = 0;
 
   int64_t z = m_ZStartIndex;
+
+  m->setDimensions(x,y,m_ZEndIndex-m_ZStartIndex+1);
+
   for (std::vector<std::string>::iterator filepath = m_R3DFileList.begin(); filepath != m_R3DFileList.end(); ++filepath)
   {
     QString R3DFName = QString::fromStdString(*filepath);
-    //    progress = static_cast<int>( z - m_ZStartIndex );
-    //    progress = (int)(100.0f * (float)(progress) / total);
 
     ss.str("");
     ss << "Importing file " << R3DFName.toStdString();
@@ -267,26 +276,32 @@ void ImportR3DStack::execute()
     width = tokens.at(0).toInt();
     height = tokens.at(1).toInt();
 
-    int index = 0;
     int32_t value = 0;
 
     for(qint32 i = 0; i < height; ++i)
     {
       buf = in.readLine();
       tokens = buf.split(',');
-      if (tokens.size() != width)
+      if (tokens.size() != width+2)
       {
-        <<<<<<<<<<<<<<<<<<<<<
-        Deal with not reading enough
+		notifyStatusMessage("A file did not have the correct width partilcuar line");
+		break;
       }
-      for(int j = 0; j < width; j++)
+      for(int j = 1; j < width+1; j++)
       {
-        *currentPositionPtr = tokens[j].toInt(&ok, 10);
-        currentPositionPt++;
+        currentPositionPtr[index] = tokens[j].toInt(&ok, 10);
+        ++index;
+		if (!ok) 
+		{
+		  setErrorCondition(-2004);
+		  notifyErrorMessage("Width dimension entry was not an integer", getErrorCondition());
+		  break;
+		}
       }
 
-      if (in.atEnd() == true)
+      if (in.atEnd() == true && i < height - 2)
       {
+		notifyStatusMessage("A file did not have the correct height");
         break;
       }
     }
