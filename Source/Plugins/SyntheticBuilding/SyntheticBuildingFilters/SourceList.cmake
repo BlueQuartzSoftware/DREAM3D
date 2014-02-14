@@ -15,6 +15,7 @@ set(_PublicFilters
   MatchCrystallography
   JumbleOrientations
   InsertPrecipitatePhases
+  InsertAtoms
   EstablishMatrixPhase
   AddBadData
   AddOrientationNoise

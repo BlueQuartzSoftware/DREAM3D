@@ -262,6 +262,7 @@ namespace DREAM3D
   {
     const DREAM3D_STRING AtomVelocities("AtomVelocities");
     const DREAM3D_STRING AtomTypes("AtomTypes");
+    const DREAM3D_STRING AtomFeatureLabels("AtomFeatureLabels");
     const DREAM3D_STRING NumberOfArms("NumberOfArms");
     const DREAM3D_STRING NodeConstraints("NodeConstraints");
     const DREAM3D_STRING SurfaceMeshNodes("SurfaceMeshNodes");

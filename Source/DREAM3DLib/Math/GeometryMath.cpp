@@ -175,6 +175,43 @@ void GeometryMath::FindBoundingBoxOfFaces(FaceArray::Pointer faces, Int32Dynamic
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void GeometryMath::FindBoundingBoxOfRotatedFaces(FaceArray::Pointer faces, Int32DynamicListArray::ElementList faceIds, float g[3][3], VertexArray::Vert_t& ll, VertexArray::Vert_t& ur)
+{
+  ll.pos[0] = 100000000.0;
+  ll.pos[1] = 100000000.0;
+  ll.pos[2] = 100000000.0;
+  ur.pos[0] = 0.0;
+  ur.pos[1] = 0.0;
+  ur.pos[2] = 0.0;
+
+  VertexArray::Vert_t a, b, c;
+  VertexArray::Vert_t facell, faceur;
+
+  for(int i = 0; i < faceIds.ncells; i++)
+  {
+    FindBoundingBoxOfRotatedFace(faces, faceIds.cells[i], g, facell, faceur);
+    if(facell.pos[0] < ll.pos[0]) { ll.pos[0] = facell.pos[0]; }
+    if(facell.pos[1] < ll.pos[1]) { ll.pos[1] = facell.pos[1]; }
+    if(facell.pos[2] < ll.pos[2]) { ll.pos[2] = facell.pos[2]; }
+    if(faceur.pos[0] > ur.pos[0]) { ur.pos[0] = faceur.pos[0]; }
+    if(faceur.pos[1] > ur.pos[1]) { ur.pos[1] = faceur.pos[1]; }
+    if(faceur.pos[2] > ur.pos[2]) { ur.pos[2] = faceur.pos[2]; }
+  }
+
+  if(faceIds.ncells == 0)
+  {
+    ll.pos[0] = 0.0;
+    ll.pos[1] = 0.0;
+    ll.pos[2] = 0.0;
+    ur.pos[0] = 0.0;
+    ur.pos[1] = 0.0;
+    ur.pos[2] = 0.0;
+  }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void GeometryMath::FindBoundingBoxOfFace(FaceArray::Pointer faces, int faceId, VertexArray::Vert_t& ll, VertexArray::Vert_t& ur)
 {
   VertexArray::Vert_t a, b, c;
@@ -198,6 +235,42 @@ void GeometryMath::FindBoundingBoxOfFace(FaceArray::Pointer faces, int faceId, V
   if(c.pos[1] > ur.pos[1]) { ur.pos[1] = c.pos[1]; }
   if(c.pos[2] < ll.pos[2]) { ll.pos[2] = c.pos[2]; }
   if(c.pos[2] > ur.pos[2]) { ur.pos[2] = c.pos[2]; }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void GeometryMath::FindBoundingBoxOfRotatedFace(FaceArray::Pointer faces, int faceId, float g[3][3], VertexArray::Vert_t& ll, VertexArray::Vert_t& ur)
+{
+  VertexArray::Vert_t a, b, c;
+  float p1[3], p2[3], p3[3];
+  float p1r[3], p2r[3], p3r[3];
+
+  faces->getVertObjects(faceId, a, b, c);
+  p1[0] = a.pos[0];
+  p1[1] = a.pos[1];
+  p1[2] = a.pos[2];
+  MatrixMath::Multiply3x3with3x1(g, p1, p1r);
+  MatrixMath::Multiply3x3with3x1(g, p2, p2r);
+  MatrixMath::Multiply3x3with3x1(g, p3, p3r);
+  ll.pos[0] = p1r[0];
+  ur.pos[0] = p1r[0];
+  ll.pos[1] = p1r[1];
+  ur.pos[1] = p1r[1];
+  ll.pos[2] = p1r[2];
+  ur.pos[2] = p1r[2];
+  if(p2r[0] < ll.pos[0]) { ll.pos[0] = p2r[0]; }
+  if(p2r[0] > ur.pos[0]) { ur.pos[0] = p2r[0]; }
+  if(p2r[1] < ll.pos[1]) { ll.pos[1] = p2r[1]; }
+  if(p2r[1] > ur.pos[1]) { ur.pos[1] = p2r[1]; }
+  if(p2r[2] < ll.pos[2]) { ll.pos[2] = p2r[2]; }
+  if(p2r[2] > ur.pos[2]) { ur.pos[2] = p2r[2]; }
+  if(p3r[0] < ll.pos[0]) { ll.pos[0] = p3r[0]; }
+  if(p3r[0] > ur.pos[0]) { ur.pos[0] = p3r[0]; }
+  if(p3r[1] < ll.pos[1]) { ll.pos[1] = p3r[1]; }
+  if(p3r[1] > ur.pos[1]) { ur.pos[1] = p3r[1]; }
+  if(p3r[2] < ll.pos[2]) { ll.pos[2] = p3r[2]; }
+  if(p3r[2] > ur.pos[2]) { ur.pos[2] = p3r[2]; }
 }
 
 // -----------------------------------------------------------------------------

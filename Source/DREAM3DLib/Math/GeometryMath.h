@@ -200,7 +200,6 @@ class DREAM3DLib_EXPORT GeometryMath
      */
     static void FindBoundingBoxOfFace(FaceArray::Pointer faces, int faceId, VertexArray::Vert_t& lowerLeft, VertexArray::Vert_t& upperRight);
 
-
     /**
      * @brief Determines the bounding box defined by the lower left and upper right corners of a set of vertices
      * @param verts pointer to vertex array
@@ -208,7 +207,26 @@ class DREAM3DLib_EXPORT GeometryMath
      * @param upperRight
      * @return
      */
+    static void FindBoundingBoxOfRotatedFace(FaceArray::Pointer faces, int faceId, float g[3][3], VertexArray::Vert_t& lowerLeft, VertexArray::Vert_t& upperRight);
+
+    /**
+     * @brief Determines the bounding box defined by the lower left and upper right corners of a set of faces
+     * @param faces pointer to face array
+     * @param lowerLeft
+     * @param upperRight
+     * @return
+     */
     static void FindBoundingBoxOfFaces(FaceArray::Pointer faces, Int32DynamicListArray::ElementList faceIds, VertexArray::Vert_t& lowerLeft, VertexArray::Vert_t& upperRight);
+
+    /**
+     * @brief Determines the bounding box defined by the lower left and upper right corners of a set of rotated faces
+     * @param faces pointer to face array
+     * param g 
+     * @param lowerLeft
+     * @param upperRight
+     * @return
+     */
+    static void FindBoundingBoxOfRotatedFaces(FaceArray::Pointer faces, Int32DynamicListArray::ElementList faceIds, float g[3][3], VertexArray::Vert_t& lowerLeft, VertexArray::Vert_t& upperRight);
 
     /**
      * @brief Determines if a segment between two points intersects a triangle defined by 3 points
