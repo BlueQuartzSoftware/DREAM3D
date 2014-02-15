@@ -287,10 +287,10 @@ class StructArray : public IDataArray
 
       // Create a new Array to copy into
       T* newArray = (T*)malloc(newSize * sizeof(T));
-	  if (NULL == newArray)
-	  {
-		  return -1000;
-	  }
+    if (NULL == newArray)
+    {
+      return -1000;
+    }
       // Splat AB across the array so we know if we are copying the values or not
       ::memset(newArray, 0xAB, newSize * sizeof(T));
 
@@ -482,6 +482,17 @@ class StructArray : public IDataArray
       {
         // Array[i] = c;
       }
+    }
+
+
+    virtual IDataArray::Pointer deepCopy()
+    {
+      IDataArray::Pointer daCopy = createNewArray(GetNumberOfTuples(), GetNumberOfComponents(), GetName());
+      T* src = GetPointer(0);
+      void* dest = daCopy->GetVoidPointer(0);
+      size_t totalBytes = (GetNumberOfTuples()*GetNumberOfComponents()*sizeof(T));
+      ::memcpy(dest, src, totalBytes);
+      return daCopy;
     }
 
 

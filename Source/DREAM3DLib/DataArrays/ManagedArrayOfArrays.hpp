@@ -89,6 +89,21 @@ class ManagedArrayOfArrays : public IDataArray
       return p;
     }
 
+    /**
+     * @brief deepCopy
+     * @return
+     */
+    virtual IDataArray::Pointer deepCopy()
+    {
+      // This is NOT the way to do this. You are not COPYING the actual data.
+      assert(false);
+      IDataArray::Pointer daCopy = createNewArray(GetNumberOfTuples(), GetNumberOfComponents(), GetName());
+      Data_t* src = GetPointer(0);
+      void* dest = daCopy->GetVoidPointer(0);
+      size_t totalBytes = (GetNumberOfTuples()*GetNumberOfComponents()*sizeof(T));
+      ::memcpy(dest, src, totalBytes);
+      return daCopy;
+    }
 
     /**
      * @brief Destructor
