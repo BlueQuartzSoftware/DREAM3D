@@ -144,7 +144,7 @@ AbstractFilter::Pointer QImportR3DStackWidget::getFilter(bool defaultValues)
     }
   }
 
-  filter->setImageFileList(realFileList);
+  filter->setR3DFileList(realFileList);
 
   bool ok = false;
 

@@ -41,6 +41,7 @@
 
 #include <QtCore/QString>
 #include <QtGui/QImage>
+#include <QtCore/QFile>
 
 
 // -----------------------------------------------------------------------------
@@ -48,10 +49,10 @@
 // -----------------------------------------------------------------------------
 ImportR3DStack::ImportR3DStack() :
   AbstractFilter(),
-  m_ImageDataArrayName(DREAM3D::CellData::ImageData),
+  m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
   m_ZStartIndex(0),
   m_ZEndIndex(0),
-  m_ImageData(NULL)
+  m_GrainIds(NULL)
 {
 
   m_Origin.x = 0.0;
@@ -91,7 +92,6 @@ void ImportR3DStack::setupFilterParameters()
 void ImportR3DStack::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-  setImageDataArrayName( reader->readValue("ImageDataArrayName", getImageDataArrayName()) );
   setZStartIndex( reader->readValue("ZStartIndex", getZStartIndex()) );
   setZEndIndex( reader->readValue("ZEndIndex", getZEndIndex()) );
   setOrigin( reader->readValue("Origin", getOrigin()) );
@@ -105,8 +105,7 @@ void ImportR3DStack::readFilterParameters(AbstractFilterParametersReader* reader
 int ImportR3DStack::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
-  writer->writeValue("ImageDataArrayName", getImageDataArrayName() );
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
   writer->writeValue("ZStartIndex", getZStartIndex() );
   writer->writeValue("ZEndIndex", getZEndIndex() );
   writer->writeValue("Origin", getOrigin() );
@@ -125,7 +124,7 @@ void ImportR3DStack::dataCheck(bool preflight, size_t voxels, size_t fields, siz
   std::stringstream ss;
   VoxelDataContainer* m = getVoxelDataContainer();
 
-  if (m_ImageFileList.size() == 0)
+  if (m_R3DFileList.size() == 0)
   {
     ss.str("");
     ss << "No files have been selected for import. Have you set the input directory?";
@@ -134,11 +133,7 @@ void ImportR3DStack::dataCheck(bool preflight, size_t voxels, size_t fields, siz
   }
   else
   {
-    // This would be for a gray scale image
-    CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, ImageData, ss, uint8_t, UInt8ArrayType, 0, voxels, 1)
-    // If we have RGB or RGBA Images then we are going to have to change things a bit.
-    // We should read the file and see what we have? Of course Qt is going to read it up into
-    // an RGB array by default
+    CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, int32_t, Int32ArrayType, 0, voxels, 1)
   }
 
 }
@@ -157,10 +152,63 @@ void ImportR3DStack::preflight()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void ImportR3DStack::readXYSize(int &x, int &y)
+{
+  if (m_R3DFileList.size() == 0)
+  {
+    x = -1; y = -1;
+    return;
+  }
+  QString r3dFName  = QString::fromStdString(m_R3DFileList[0]);
+
+  QByteArray buf;
+  QFile in(r3dFName);
+
+  if (!in.open(QIODevice::ReadOnly | QIODevice::Text))
+  {
+    QString msg = QString("R3D file could not be opened: ") + r3dFName;
+    setErrorCondition(-14000);
+    notifyErrorMessage(msg.toStdString(), getErrorCondition());
+  }
+
+  buf = in.readLine(); // Read first line which is the x and y sizes
+
+  QList<QByteArray> tokens = buf.split(',');
+  if(tokens.size() < 2)
+  {
+	setErrorCondition(-2002);
+	notifyErrorMessage("Header line is an incorrect length", getErrorCondition());
+	x = -1;
+	y = -1;
+    return;
+  }
+
+  bool ok = false;
+  x = tokens.at(0).toInt(&ok, 10);
+  if (!ok) 
+  {
+	setErrorCondition(-2000);
+	notifyErrorMessage("Width dimension entry was not an integer", getErrorCondition());
+    return;
+  }
+  y = tokens.at(1).toInt(&ok, 10);
+  if(!ok) 
+  {
+	setErrorCondition(-2001);
+	notifyErrorMessage("Height dimension entry was not an integer", getErrorCondition());
+    return;
+  }
+
+}
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void ImportR3DStack::execute()
 {
   int err = 0;
   setErrorCondition(err);
+  dataCheck(false,1,1,1);
+  if (getErrorCondition() < 0) { notifyErrorMessage("There is a problem with the data check", getErrorCondition()); }
   VoxelDataContainer* m = getVoxelDataContainer();
   if(NULL == m)
   {
@@ -171,67 +219,91 @@ void ImportR3DStack::execute()
   setErrorCondition(0);
   std::stringstream ss;
 
-
   m->setResolution(m_Resolution.x, m_Resolution.y, m_Resolution.z);
   m->setOrigin(m_Origin.x, m_Origin.y, m_Origin.z);
+  int x = 0;
+  int y = 0;
+  readXYSize(x, y);
 
+  if (x < 1 || y < 1)
+  {  
+	setErrorCondition(-1000);
+	notifyErrorMessage("At least one dimension is less than 1", getErrorCondition());
+  }
 
-  UInt8ArrayType::Pointer data = UInt8ArrayType::NullPointer();
+  size_t totalVoxels = (m_ZEndIndex - m_ZStartIndex + 1) * x * y;
+  // Create a new array, eventually substituting this into the DataContainer later on.
+  Int32ArrayType::Pointer grainIdsPtr = Int32ArrayType::CreateArray(totalVoxels, 1, DREAM3D::CellData::GrainIds);
+  grainIdsPtr->initializeWithZeros();
+  m_GrainIds = grainIdsPtr->GetPointer(0); // Get the pointer to the front of the array
+  int32_t* currentPositionPtr = m_GrainIds;
 
-  uint8_t* imagePtr = NULL;
+  bool ok = false;
 
-  float total = static_cast<float>( m_ZEndIndex - m_ZStartIndex );
-  int progress = 0;
   int pixelBytes = 0;
   int totalPixels = 0;
   int height = 0;
   int width = 0;
-//  int bytesPerLine = 0;
+
+  size_t index = 0;
 
   int64_t z = m_ZStartIndex;
-  for (std::vector<std::string>::iterator filepath = m_ImageFileList.begin(); filepath != m_ImageFileList.end(); ++filepath)
+
+  m->setDimensions(x,y,m_ZEndIndex-m_ZStartIndex+1);
+
+  for (std::vector<std::string>::iterator filepath = m_R3DFileList.begin(); filepath != m_R3DFileList.end(); ++filepath)
   {
-    std::string imageFName = *filepath;
-    progress = static_cast<int>( z - m_ZStartIndex );
-    progress = (int)(100.0f * (float)(progress) / total);
+    QString R3DFName = QString::fromStdString(*filepath);
 
     ss.str("");
-    ss << "Importing file " << imageFName;
+    ss << "Importing file " << R3DFName.toStdString();
     notifyStatusMessage(ss.str());
 
-    QImage image(QString::fromStdString(imageFName));
-    if (image.isNull() == true)
+    QByteArray buf;
+    QFile in(R3DFName);
+
+    if (!in.open(QIODevice::ReadOnly | QIODevice::Text))
     {
+      QString msg = QString("R3D file could not be opened: ") + R3DFName;
       setErrorCondition(-14000);
-      notifyErrorMessage("Failed to load Image file", getErrorCondition());
-    }
-    height = image.height();
-    width = image.width();
-    totalPixels = width * height;
-  //  bytesPerLine = image.bytesPerLine();
-    // This is the first image so we need to create our block of data to store the data
-    if (z == m_ZStartIndex)
-    {
-      m->setDimensions(width, height, m_ImageFileList.size());
-      if (image.format() == QImage::Format_Indexed8)
-      {
-        pixelBytes = 1;
-      }
-      else if (image.format() == QImage::Format_RGB32 || image.format() == QImage::Format_ARGB32)
-      {
-        pixelBytes = 4;
-      }
-      data = UInt8ArrayType::CreateArray(totalPixels * m_ImageFileList.size(), pixelBytes, m_ImageDataArrayName);
-
+      notifyErrorMessage(msg.toStdString(), getErrorCondition());
     }
 
-    // Get the current position in the array to copy the image into
-    imagePtr = data->GetPointer( (z-m_ZStartIndex) * totalPixels * pixelBytes);
+    buf = in.readLine(); // Read first line which is the x and y sizes
+
+    QList<QByteArray> tokens = buf.split(',');
+
+    width = tokens.at(0).toInt();
+    height = tokens.at(1).toInt();
+
+    int32_t value = 0;
+
     for(qint32 i = 0; i < height; ++i)
     {
-      imagePtr = data->GetPointer( (z-m_ZStartIndex) * totalPixels * pixelBytes + i * (width * pixelBytes));
-      uint8_t* source = image.scanLine(i);
-      ::memcpy(imagePtr, source, width * pixelBytes);
+      buf = in.readLine();
+      tokens = buf.split(',');
+      if (tokens.size() != width+2)
+      {
+		notifyStatusMessage("A file did not have the correct width partilcuar line");
+		break;
+      }
+      for(int j = 1; j < width+1; j++)
+      {
+        currentPositionPtr[index] = tokens[j].toInt(&ok, 10);
+        ++index;
+		if (!ok) 
+		{
+		  setErrorCondition(-2004);
+		  notifyErrorMessage("Width dimension entry was not an integer", getErrorCondition());
+		  break;
+		}
+      }
+
+      if (in.atEnd() == true && i < height - 2)
+      {
+		notifyStatusMessage("A file did not have the correct height");
+        break;
+      }
     }
 
     ++z;
@@ -242,11 +314,8 @@ void ImportR3DStack::execute()
     }
   }
 
-
-
-
-  m->addCellData(data->GetName(), data);
-
+  // OVer write any GrainIds array that is already in the DataContainer
+  getVoxelDataContainer()->addCellData(DREAM3D::CellData::GrainIds, grainIdsPtr);
 
   /* Let the GUI know we are done with this filter */
   notifyStatusMessage("Complete");
