@@ -1,4 +1,4 @@
-Visualize GBCD {#visualizegbcd}
+Visualize GBCD {#visualizegbcdgmt}
 ======
 
 ## EXPERIMENTAL FILTER WARNING ##
@@ -45,12 +45,12 @@ To generate this view in ParaView the user should load the .vtk file and then ap
 ## Parameters ##
 
 | Name | Type |
-|------|------|  
-| Misorientation Angle | Floating Point value in DEGREES |  
-| Misorientation Axis | Floating point 1x3 vector that is the rotation axis |  
-| Regular Grid File Path | Vtk Rectilinear Grid |  
-|  Irregular grid  File Path | Vtk Point Data |  
-| Irregular Grid Sphere Coords | Vtk Point Data |  
+|------|------|
+| Misorientation Angle | Floating Point value in DEGREES |
+| Misorientation Axis | Floating point 1x3 vector that is the rotation axis |
+| Regular Grid File Path | Vtk Rectilinear Grid |
+|  Irregular grid  File Path | Vtk Point Data |
+| Irregular Grid Sphere Coords | Vtk Point Data |
 | GMT Plot file | .dat file |
 
 
@@ -62,7 +62,7 @@ SurfaceMesh
 
 | Type | Default Name | Description | Comment | Filters Known to Create Data |
 |--------|--------------------|----------------|----------------|----------------------------------------|
-| 5 Dimension GBCD Array | GBCDArray | The 5 parameter GBCD data | Currently stored as Ensemble data in the Surface Mesh Data Container | FindGBCD |  
+| 5 Dimension GBCD Array | GBCDArray | The 5 parameter GBCD data | Currently stored as Ensemble data in the Surface Mesh Data Container | FindGBCD |
 
 
 

@@ -196,8 +196,7 @@ void GBCDTriangleDumper::dataCheckVoxel(bool preflight, size_t voxels, size_t fi
   else
   {
     GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldEulerAngles, ss, -301, float, FloatArrayType, fields, 3)
-        // GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, -302, int32_t, Int32ArrayType,  fields, 1)
-        typedef DataArray<unsigned int> XTalStructArrayType;
+    typedef DataArray<unsigned int> XTalStructArrayType;
     GET_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, ss, -304, unsigned int, XTalStructArrayType, ensembles, 1)
   }
 }
@@ -296,6 +295,7 @@ void GBCDTriangleDumper::execute()
   {
     fprintf(f, "# Phase: %ld\n# Crystal Symmetry: %s\n# Material Name: %s \n", i, ops[m_CrystalStructures[i]]->getSymmetryName().c_str(), matNames[i].c_str() );
   }
+  fprintf(f, "# Number Triangles: %ld\n", totalFaces);
 
   int gid0 = 0; // Grain id 0
   int gid1 = 0; // Grain id 1
