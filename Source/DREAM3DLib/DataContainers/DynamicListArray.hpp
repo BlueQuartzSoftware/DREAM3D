@@ -60,7 +60,7 @@ class DynamicListArray
 
     class ElementList {
       public:
-      uint16_t ncells;
+      int32_t ncells;
       T* cells;
     };
 
@@ -87,7 +87,7 @@ class DynamicListArray
      }
 
     //----------------------------------------------------------------------------
-    inline void insertCellReference(size_t ptId, unsigned short pos, size_t cellId)
+    inline void insertCellReference(size_t ptId, int32_t pos, size_t cellId)
     {
       this->m_Array[ptId].cells[pos] = cellId;
     }
@@ -103,7 +103,7 @@ class DynamicListArray
      * @param data
      * @return
      */
-    bool setElementList(size_t ptId, uint16_t nCells, T* data)
+    bool setElementList(size_t ptId, int32_t nCells, T* data)
     {
       if(ptId >= m_Size) return false;
       if(NULL != m_Array[ptId].cells && m_Array[ptId].ncells > 0)
@@ -120,7 +120,7 @@ class DynamicListArray
 
     // Description:
     // Get the number of cells using the point specified by ptId.
-    unsigned short getNumberOfElements(size_t ptId) {return this->m_Array[ptId].ncells;}
+    int32_t getNumberOfElements(size_t ptId) {return this->m_Array[ptId].ncells;}
 
     // Description:
     // Return a list of cell ids using the point.
@@ -136,11 +136,11 @@ class DynamicListArray
       uint8_t* bufPtr = buffer.data();
 
       // Walk the array and allocate all the array links to Zero and NULL
-      uint16_t* ncells = NULL;
+      int32_t* ncells = NULL;
       //int32_t* cells = NULL;
       for(size_t i = 0; i < nElements; ++i)
       {
-        ncells = reinterpret_cast<uint16_t*>(bufPtr + offset);
+        ncells = reinterpret_cast<int32_t*>(bufPtr + offset);
         this->m_Array[i].ncells = *ncells; // Set the number of cells in this link
         offset += 2;
         this->m_Array[i].cells = new T[(*ncells)]; // Allocate a new chunk of memory to store the list
@@ -159,11 +159,11 @@ class DynamicListArray
       uint8_t* bufPtr = &(buffer.front());
 
       // Walk the array and allocate all the array links to Zero and NULL
-      uint16_t* ncells = NULL;
+      int32_t* ncells = NULL;
       //int32_t* cells = NULL;
       for(size_t i = 0; i < nElements; ++i)
       {
-        ncells = reinterpret_cast<uint16_t*>(bufPtr + offset);
+        ncells = reinterpret_cast<int32_t*>(bufPtr + offset);
         this->m_Array[i].ncells = *ncells; // Set the number of cells in this link
         offset += 2;
         this->m_Array[i].cells = new T[(*ncells)]; // Allocate a new chunk of memory to store the list
@@ -172,7 +172,7 @@ class DynamicListArray
       }
     }
 
-    void allocateLists(QVector<uint16_t> &linkCounts)
+    void allocateLists(QVector<int32_t> &linkCounts)
     {
       allocate(linkCounts.size());
       for (int i=0; i < linkCounts.size(); i++)

@@ -77,7 +77,6 @@ class InsertAtomsImpl
     void checkPoints(size_t start, size_t end) const
     {
       float radius;
-      int numPoints = m_Points[start]->count();
       VertexArray::Vert_t ll, ur;
       VertexArray::Vert_t point;
       char code;
@@ -93,10 +92,11 @@ class InsertAtomsImpl
         generatePoints(iter, m_Points, m_InFeature, m_AvgQuats, m_LatticeConstants, ll, ur);
 
         //check points in vertex array to see if they are in the bounding box of the feature
+        int numPoints = m_Points[iter]->getNumberOfTuples();
         for(int i = 0; i < numPoints; i++)
         {
-          point = m_Points[start]->getVert(i);
-          if(m_InFeature[start]->getValue(i) == false)
+          point = m_Points[iter]->getVert(i);
+          if(m_InFeature[iter]->getValue(i) == false)
           {
             code = GeometryMath::PointInPolyhedron(m_Faces, m_FaceIds->getElementList(iter), m_FaceBBs, point, ll, ur, radius);
             if(code == 'i' || code == 'V' || code == 'E' || code == 'F') { m_InFeature[start]->setValue(i, true); }
@@ -128,17 +128,17 @@ class InsertAtomsImpl
       size_t zPoints = int(deltaZ/latticeConstants.z)+1;
       size_t nPoints = xPoints*yPoints*zPoints;
 
-      points[iter]->resizeArray(nPoints);
-      inFeature[iter]->resize(nPoints);
+      points[iter] = VertexArray::CreateArray(nPoints, "points");
+      inFeature[iter] = BoolArrayType::CreateArray(nPoints, "inside");
 
       int count = 0;
       float coords[3];
       float coordsT[3];
-      for(int k = 0; k <= zPoints; k++)
+      for(int k = 0; k < zPoints; k++)
       {
-        for(int j = 0; j <= yPoints; j++)
+        for(int j = 0; j < yPoints; j++)
         {
-          for(int i = 0; i <= xPoints; i++)
+          for(int i = 0; i < xPoints; i++)
           {
             coords[0] = float(i) * latticeConstants.x;
             coords[1] = float(j) * latticeConstants.y;
@@ -309,6 +309,10 @@ void InsertAtoms::execute()
   dataCheck();
   if(getErrorCondition() < 0) { return; }
 
+  m_LatticeConstants.x = m_LatticeConstants.x/10000.0;
+  m_LatticeConstants.y = m_LatticeConstants.y/10000.0;
+  m_LatticeConstants.z = m_LatticeConstants.z/10000.0;
+
   SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
   DREAM3D_RANDOMNG_NEW()
 
@@ -343,15 +347,15 @@ void InsertAtoms::execute()
 
   //create a dynamic list array to hold face lists
   Int32DynamicListArray::Pointer faceLists = Int32DynamicListArray::New();
-  QVector<uint16_t> linkCount(numFeatures, 0);
-  unsigned short* linkLoc;
+  QVector<int32_t> linkCount(numFeatures, 0);
+  int32_t* linkLoc;
 
   // fill out lists with number of references to cells
-  typedef boost::shared_array<unsigned short> SharedShortArray_t;
-  SharedShortArray_t linkLocPtr(new unsigned short[numFaces]);
+  typedef boost::shared_array<int32_t> SharedInt32Array_t;
+  SharedInt32Array_t linkLocPtr(new int32_t[numFaces]);
   linkLoc = linkLocPtr.get();
 
-  ::memset(linkLoc, 0, numFaces * sizeof(unsigned short));
+  ::memset(linkLoc, 0, numFaces * sizeof(int32_t));
 
   // traverse data to determine number of faces belonging to each feature
   for (int i = 0; i < numFaces; i++)
@@ -381,6 +385,11 @@ void InsertAtoms::execute()
   //generate the list of sampling points fom subclass
   QVector<VertexArray::Pointer> points(numFeatures);
   QVector<BoolArrayType::Pointer> inFeature(numFeatures);
+  for(int i=0;i<numFeatures;i++)
+  {
+    points[i] = VertexArray::NullPointer();
+    inFeature[i] = BoolArrayType::NullPointer();
+  }
 
   QuatF* avgQuats = reinterpret_cast<QuatF*>(m_AvgQuats);
 

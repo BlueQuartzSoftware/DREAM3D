@@ -244,15 +244,15 @@ void SampleSurfaceMesh::execute()
 
   //create a dynamic list array to hold face lists
   Int32DynamicListArray::Pointer faceLists = Int32DynamicListArray::New();
-  QVector<uint16_t> linkCount(numFeatures, 0);
-  unsigned short* linkLoc;
+  QVector<int32_t> linkCount(numFeatures, 0);
+  int32_t* linkLoc;
 
   // fill out lists with number of references to cells
-  typedef boost::shared_array<unsigned short> SharedShortArray_t;
-  SharedShortArray_t linkLocPtr(new unsigned short[numFaces]);
+  typedef boost::shared_array<int32_t> SharedInt32Array_t;
+  SharedInt32Array_t linkLocPtr(new int32_t[numFaces]);
   linkLoc = linkLocPtr.get();
 
-  ::memset(linkLoc, 0, numFaces * sizeof(unsigned short));
+  ::memset(linkLoc, 0, numFaces * sizeof(int32_t));
 
   // traverse data to determine number of faces belonging to each feature
   for (int i = 0; i < numFaces; i++)

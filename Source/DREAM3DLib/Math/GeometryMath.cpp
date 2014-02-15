@@ -250,6 +250,12 @@ void GeometryMath::FindBoundingBoxOfRotatedFace(FaceArray::Pointer faces, int fa
   p1[0] = a.pos[0];
   p1[1] = a.pos[1];
   p1[2] = a.pos[2];
+  p2[0] = b.pos[0];
+  p2[1] = b.pos[1];
+  p2[2] = b.pos[2];
+  p3[0] = c.pos[0];
+  p3[1] = c.pos[1];
+  p3[2] = c.pos[2];
   MatrixMath::Multiply3x3with3x1(g, p1, p1r);
   MatrixMath::Multiply3x3with3x1(g, p2, p2r);
   MatrixMath::Multiply3x3with3x1(g, p3, p3r);
