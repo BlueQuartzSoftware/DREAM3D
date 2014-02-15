@@ -67,7 +67,20 @@ class DREAM3DLib_EXPORT IDataArray
     virtual void SetName(const std::string &name) = 0;
     virtual std::string GetName() = 0;
 
+    /**
+     * @brief createNewArray
+     * @param numElements
+     * @param numComponents
+     * @param name
+     * @return
+     */
     virtual Pointer createNewArray(size_t numElements, int numComponents, const std::string &name) = 0;
+
+    /**
+     * @brief createDeepCopy
+     * @return
+     */
+    virtual Pointer deepCopy() = 0;
 
     /**
      * @brief Has all the memory needed for this class been allocated?

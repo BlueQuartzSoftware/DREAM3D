@@ -225,6 +225,25 @@ void StatsDataArray::initializeWithZeros()
 
 }
 
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+IDataArray::Pointer StatsDataArray::deepCopy()
+{
+  StatsDataArray::Pointer daCopyPtr = StatsDataArray::New();
+  daCopyPtr->Resize(GetNumberOfTuples());
+  StatsDataArray& daCopy = *daCopyPtr;
+  for(size_t i = 0; i < GetNumberOfTuples(); i++)
+  {
+    daCopy[i] = m_StatsDataArray[i];
+  }
+
+  return daCopyPtr;
+}
+
+
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
