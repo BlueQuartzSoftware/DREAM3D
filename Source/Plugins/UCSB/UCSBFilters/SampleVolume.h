@@ -11,7 +11,8 @@
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
 
-#include "DREAM3DLib/Common/FilterPipeline.h"
+
+#include "SubFilterPipeline.h"
 
 /**
  * @class SampleVolume SampleVolume.h UCSB/Code/UCSBFilters/SampleVolume.h
@@ -105,7 +106,7 @@ class SampleVolume : public AbstractFilter
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
   private:
-    FilterPipeline::Pointer SampleVolume::buildPipeline(int append, int x1, int x2, int y1, int y2, int z1, int z2);
+    SubFilterPipeline::Pointer buildPipeline(int append, int x1, int x2, int y1, int y2, int z1, int z2);
 
     SampleVolume(const SampleVolume&); // Copy Constructor Not Implemented
     void operator=(const SampleVolume&); // Operator '=' Not Implemented

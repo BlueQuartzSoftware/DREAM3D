@@ -42,6 +42,11 @@ foreach(f ${_PrivateFilters} )
 endforeach()
 
 
+#-------------
+# These are files that need to be compiled into DREAM3DLib but are NOT filters
+ADD_DREAM3D_SUPPORT_HEADER(${UCSB_SOURCE_DIR} ${_filterGroupName} SubFilterPipeline.h)
+ADD_DREAM3D_SUPPORT_HEADER(${UCSB_SOURCE_DIR} ${_filterGroupName} SubFilterPipeline.cpp)
+
 #---------------------
 # This macro must come last after we are done adding all the filters and support files.
 END_FILTER_GROUP(${UCSB_BINARY_DIR} "${_filterGroupName}" "UCSB")

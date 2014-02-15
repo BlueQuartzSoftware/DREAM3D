@@ -3,28 +3,32 @@
  */
 
 #include "SampleVolume.h"
-#include "DREAM3DLib/Common/Observer.h"
-
-#include "DREAM3DLib/IOFilters/DataContainerReader.h"
-#include "DREAM3DLib/SamplingFilters/CropVolume.h"
-#include "DREAM3DLib/IOFilters/DataContainerWriter.h"
 
 //reader
 #include "H5Support/H5Utilities.h"
 #include "H5Support/H5Lite.h"
+#include "H5Support/HDF5ScopedFileSentinel.h"
+
 #include "MXA/Utilities/MXAFileInfo.h"
+
+#include "DREAM3DLib/Common/Observer.h"
+#include "DREAM3DLib/Common/FilterManager.h"
+#include "DREAM3DLib/SamplingFilters/CropVolume.h"
+#include "DREAM3DLib/IOFilters/DataContainerWriter.h"
+#include "DREAM3DLib/IOFilters/DataContainerReader.h"
 #include "DREAM3DLib/IOFilters/VoxelDataContainerReader.h"
 #include "DREAM3DLib/IOFilters/SurfaceMeshDataContainerReader.h"
 #include "DREAM3DLib/IOFilters/SolidMeshDataContainerReader.h"
 #include "DREAM3DLib/FilterParameters/H5FilterParametersReader.h"
-#include "DREAM3DLib/Common/FilterManager.h"
-#include "H5Support/HDF5ScopedFileSentinel.h"
+#include "DREAM3DLib/Utilities/DREAM3DRandom.h"
+
 
 //random numbers
 #include <boost/random/mersenne_twister.hpp>
 #include <boost/random/uniform_int.hpp>
 #include <boost/random/variate_generator.hpp>
-#include "DREAM3DLib/Utilities/DREAM3DRandom.h"
+
+
 
 // -----------------------------------------------------------------------------
 //
@@ -33,14 +37,12 @@ SampleVolume::SampleVolume() :
 AbstractFilter(),
 //file reader
 m_InputFile(""),
-
+//cropping
+m_NumberVolumes(0),
 //file writting
 m_OutputDirectory(""),
 m_FileName(""),
-m_WriteXdmf(false),
-
-//cropping
-m_NumberVolumes(NULL)
+m_WriteXdmf(false)
 {
   m_BoxSize.x = 10;
   m_BoxSize.y = 10;
@@ -236,9 +238,8 @@ void SampleVolume::dataCheck(bool preflight, size_t voxels, size_t fields, size_
   }
 
 
-  FilterPipeline::Pointer pipeline = buildPipeline(0, 0, m_BoxSize.x-1, 0, m_BoxSize.y-1, 0, m_BoxSize.z-1);
-  pipeline->preflightPipeline();
-  err = pipeline->getErrorCondition();
+  SubFilterPipeline::Pointer pipeline = buildPipeline(0, 0, m_BoxSize.x-1, 0, m_BoxSize.y-1, 0, m_BoxSize.z-1);
+  err = pipeline->preflightPipeline();
   if(err<0)
   {
     setErrorCondition(-1);
@@ -332,14 +333,10 @@ void SampleVolume::execute()
     y2=y1+m_BoxSize.y-1;
     z2=z1+m_BoxSize.z-1;
 
-    FilterPipeline::Pointer pipeline = buildPipeline(i+1, x1, x2, y1, y2, z1, z2);
-    pipeline->preflightPipeline();
-    err = pipeline->getErrorCondition();
-    if(err<0)
-    {
-      setErrorCondition(err);
-      notifyErrorMessage("Error in subpipeline", err);
-    }
+    // In theory, the subpipeline was already constucted and preflight run on it so
+    // there is no need to rerun it here. Just let it fly and see what happens.
+    SubFilterPipeline::Pointer pipeline = buildPipeline(i+1, x1, x2, y1, y2, z1, z2);
+
     pipeline->run();
     err = pipeline->getErrorCondition();
     if(err<0)
@@ -354,18 +351,74 @@ void SampleVolume::execute()
    notifyStatusMessage("Complete");
 }
 
-FilterPipeline::Pointer SampleVolume::buildPipeline(int append, int x1, int x2, int y1, int y2, int z1, int z2)
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+SubFilterPipeline::Pointer SampleVolume::buildPipeline(int append, int x1, int x2, int y1, int y2, int z1, int z2)
 {
-  //make pipeline
-  FilterPipeline::Pointer pipeline = FilterPipeline::New();
+  //make a subpipeline and populate with empty SurfaceMesh and Solid DataContainers
+  SubFilterPipeline::Pointer pipeline = SubFilterPipeline::New();
+  SurfaceMeshDataContainer::Pointer sm = SurfaceMeshDataContainer::New();
+  pipeline->setSurfaceMeshDataContainer(sm);
+  SolidMeshDataContainer::Pointer solid = SolidMeshDataContainer::New();
+  pipeline->setSolidMeshDataContainer(solid);
 
-  //set up reader
-  DataContainerReader::Pointer reader = DataContainerReader::New();
-  reader->setInputFile(m_InputFile);
-  reader->setReadVoxelData(true);
-  reader->setReadAllArrays(true);
-  reader->setObservers(getObservers());
-  pipeline->pushBack(reader);
+  // Get the Current VoxelDataContainer;
+  VoxelDataContainer* m = getVoxelDataContainer();
+
+  // Create a new one for the sub pipeline to use
+  VoxelDataContainer::Pointer copy = VoxelDataContainer::New();
+  // Get a copy of the observers from the current VoxelDataContainer
+  copy->setObservers(m->getObservers() );
+  // Most likely our error messages are going to go to a console somewhere. It is probably best
+  // to sanity check the values in the actual preflight of this filter where you can figure out
+  // if the user entries are going to work.
+
+
+  // Copy out the Dims, Origin, Resolution from our current Voxel Data Container to the
+  // new one
+  size_t dims[3] = { 0,0,0};
+  m->getDimensions(dims);
+  copy->setDimensions(dims);
+
+  float origin[3] = {0.0f, 0.0f, 0.0f};
+  m->getOrigin(origin);
+  copy->setOrigin(origin);
+
+  float res[3] = { 0.0f, 0.0f, 0.0f};
+  m->getResolution(res);
+  copy->setResolution(res);
+
+  // Now get a list of all the CellArrayNames to make deep copies of
+  std::list<std::string> arrayNames = m->getCellArrayNameList();
+  for (std::list<std::string>::iterator iter = arrayNames.begin(); iter != arrayNames.end(); ++iter)
+  {
+    std::string name = *iter;
+    IDataArray::Pointer p = m->getCellData(name);
+    IDataArray::Pointer dataCopy = p->deepCopy();
+    copy->addCellData(name, dataCopy);
+  }
+  // Now get a list of all the Field Array Names to make deep copies of
+  arrayNames = m->getFieldArrayNameList();
+  for (std::list<std::string>::iterator iter = arrayNames.begin(); iter != arrayNames.end(); ++iter)
+  {
+    std::string name = *iter;
+    IDataArray::Pointer p = m->getCellData(name);
+    IDataArray::Pointer dataCopy = p->deepCopy();
+    copy->addFieldData(name, dataCopy);
+  }
+
+// Now get a list of all the Ensemble Array Names to make deep copies of
+  arrayNames = m->getEnsembleArrayNameList();
+  for (std::list<std::string>::iterator iter = arrayNames.begin(); iter != arrayNames.end(); ++iter)
+  {
+    std::string name = *iter;
+    IDataArray::Pointer p = m->getCellData(name);
+    IDataArray::Pointer dataCopy = p->deepCopy();
+    copy->addEnsembleData(name, dataCopy);
+  }
+
+  pipeline->setVoxelDataContainer(copy);
 
   //set up crop
   CropVolume::Pointer crop = CropVolume::New();

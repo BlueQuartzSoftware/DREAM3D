@@ -1,4 +1,4 @@
-SampleStatistics {#samplestatistics}
+SampleVolume {#samplevolume}
 =====
 
 ## Group (Subgroup) ##
