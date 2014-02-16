@@ -495,10 +495,10 @@ void WritePoleFigure::writeVtkFile(const std::string filename, DoubleArrayType* 
 
   notifyStatusMessage("Writing VTK File");
 
-  size_t dims[3] = {dimension, dimension, 1};
-  float res[3] = {  2.0 / (float)(dimension),
-                    2.0 / (float)(dimension),
-                    ( 2.0 / (float)(dimension) + 2.0 / (float)(dimension) ) / 2.0
+  size_t dims[3] = {size_t(dimension), size_t(dimension), 1};
+  float res[3] = {  2.0f / (float)(dimension),
+                    2.0f / (float)(dimension),
+                    ( 2.0f / (float)(dimension) + 2.0f / (float)(dimension) ) / 2.0f
                  };
 
   int err = VtkRectilinearGridWriter::WriteDataArrayToFile(filename, poleFigurePtr, dims, res, "double", true);

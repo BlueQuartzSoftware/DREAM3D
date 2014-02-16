@@ -39,6 +39,8 @@
 
 #include <string>
 
+#include "DREAM3DLib/DREAM3DLib.h"
+
 #define SET_GET_POINTER(name, var, type)\
 type* get##name##Pointer() { return m_##name; }\
 void set##name##Pointer(type* f)\
@@ -153,7 +155,7 @@ protected:
 
 private:
     std::string m_FileName;
-    long long int m_NumberOfElements;
+    int64_t m_NumberOfElements;
     int    m_NumFields;
 
     int*   m_GrainId;

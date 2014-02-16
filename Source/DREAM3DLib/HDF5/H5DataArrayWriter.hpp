@@ -70,8 +70,7 @@ class H5DataArrayWriter
         rank = 2;
       }
 
-      hsize_t dims[2] =
-      { numTuples, numComp };
+      hsize_t dims[2] = { hsize_t(numTuples), hsize_t(numComp) };
       int err = 0;
       if (H5Lite::datasetExists(gid, name) == false) {
         err = H5Lite::writePointerDataset(gid, name, rank, dims, data);

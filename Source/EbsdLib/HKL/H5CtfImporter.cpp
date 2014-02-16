@@ -342,7 +342,7 @@ int H5CtfImporter::writeSliceData(hid_t fileId, CtfReader &reader, int z, int ac
 
   int32_t rank = 1;
   hsize_t dims[1] =
-  { reader.getXCells() * reader.getYCells() };
+  { hsize_t(reader.getXCells() * reader.getYCells()) };
 
   Ebsd::NumType numType = Ebsd::UnknownNumType;
   std::vector<std::string> columnNames = reader.getColumnNames();

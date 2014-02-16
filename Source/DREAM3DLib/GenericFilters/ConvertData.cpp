@@ -164,14 +164,16 @@ namespace Detail
 
 } // End Namespace Detail
 
-//#define CHECK_AND_CONVERT(Type, DataContainer, ScalarType, Array, OutputName)\
-//  if(false == completed) {\
-//    Type* Type##Ptr = Type::SafePointerDownCast(Array.get());\
-//    if (NULL != Type##Ptr) {\
-//      Detail::ConvertData<Type>(Type##Ptr, DataContainer, ScalarType, OutputName);\
-//      completed = true;\
-//    }\
-//  }
+#if 0
+#define CHECK_AND_CONVERT(Type, DataContainer, ScalarType, Array, OutputName)\
+  if(false == completed) {\
+    Type* Type##Ptr = Type::SafePointerDownCast(Array.get());\
+    if (NULL != Type##Ptr) {\
+      Detail::ConvertData<Type>(Type##Ptr, DataContainer, ScalarType, OutputName);\
+      completed = true;\
+    }\
+  }
+#endif
 
 #define CHECK_AND_CONVERT(Type, DataContainer, ScalarType, Array, OutputName)\
   if(false == completed) {\
