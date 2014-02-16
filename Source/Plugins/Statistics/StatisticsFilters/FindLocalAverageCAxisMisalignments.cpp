@@ -177,6 +177,8 @@ void FindLocalAverageCAxisMisalignments::dataCheck()
   { m_CellParentIds = m_CellParentIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   // Feature Data
+#error THIS CODE IS GOING TO FAIL BECAUSE the variables are Floats and you are comparing them to a boolean
+
   if ( m_CalcUnbiasedAvg == true)
   {
 	m_UnbiasedLocalCAxisMisalignmentsPtr = newCellFeatureAttrMat->createNonPrereqArray<DataArray<float>, AbstractFilter, float>(this, m_UnbiasedLocalCAxisMisalignmentsArrayName, 0.0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
@@ -209,6 +211,8 @@ void FindLocalAverageCAxisMisalignments::dataCheck()
       m_CAxisMisalignmentList->resize(cellFeatureAttrMat->getNumTuples());
     }
   }
+#error THIS CODE IS GOING TO FAIL BECAUSE the variables are Floats and you are comparing them to a boolean
+
   if (m_CalcBiasedAvg == true)
   {
 	m_AvgCAxisMisalignmentsPtr = cellFeatureAttrMat->getPrereqArray<DataArray<float>, AbstractFilter>(this, m_AvgCAxisMisalignmentsArrayName, -302, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
@@ -261,6 +265,7 @@ void FindLocalAverageCAxisMisalignments::execute()
   size_t newNumFeatures = m->getAttributeMatrix(getNewCellFeatureAttributeMatrixName())->getNumTuples();
 
   QVector<int32_t> NumUnbiasedFeaturesPerParent(numFeatures,0);
+#error THIS CODE IS GOING TO FAIL BECAUSE the variables are Floats and you are comparing them to a boolean
 
   if(m_CalcUnbiasedAvg == true)
   {
@@ -280,6 +285,8 @@ void FindLocalAverageCAxisMisalignments::execute()
       }
     }
   }
+#error THIS CODE IS GOING TO FAIL BECAUSE the variables are Floats and you are comparing them to a boolean
+
   if (m_CalcBiasedAvg == true)
   {
     for(int i=1;i<numFeatures;i++)
@@ -292,6 +299,7 @@ void FindLocalAverageCAxisMisalignments::execute()
 
   for(int i=1;i<newNumFeatures;i++)
   {
+#error THIS CODE IS GOING TO FAIL BECAUSE the variables are Floats and you are comparing them to a boolean
     if (m_CalcBiasedAvg == true) m_LocalCAxisMisalignments[i] /= m_NumFeaturesPerParent[i];
     if (m_CalcUnbiasedAvg == true)
     {
