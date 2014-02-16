@@ -128,8 +128,8 @@ class InsertAtomsImpl
       size_t zPoints = int(deltaZ/latticeConstants.z)+1;
       size_t nPoints = xPoints*yPoints*zPoints;
 
-      points[iter] = VertexArray::CreateArray(nPoints, "points");
-      inFeature[iter] = BoolArrayType::CreateArray(nPoints, "inside");
+      points[iter]->resizeArray(nPoints);
+      inFeature[iter]->resize(nPoints);
 
       int count = 0;
       float coords[3];
@@ -387,8 +387,8 @@ void InsertAtoms::execute()
   QVector<BoolArrayType::Pointer> inFeature(numFeatures);
   for(int i=0;i<numFeatures;i++)
   {
-    points[i] = VertexArray::NullPointer();
-    inFeature[i] = BoolArrayType::NullPointer();
+    points[i] = VertexArray::CreateArray(0, "points");
+    inFeature[i] = BoolArrayType::CreateArray(0, "inside");
   }
 
   QuatF* avgQuats = reinterpret_cast<QuatF*>(m_AvgQuats);
