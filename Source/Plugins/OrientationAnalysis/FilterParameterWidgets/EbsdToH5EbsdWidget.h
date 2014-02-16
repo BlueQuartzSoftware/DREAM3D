@@ -70,7 +70,7 @@
  * @date Jan 30, 2011
  * @version 1.0
  */
-class DREAM3DWidgetsLib_EXPORT EbsdToH5EbsdWidget : public QWidget, private Ui::EbsdToH5EbsdWidget
+class EbsdToH5EbsdWidget : public QWidget, private Ui::EbsdToH5EbsdWidget
 {
     Q_OBJECT
 
