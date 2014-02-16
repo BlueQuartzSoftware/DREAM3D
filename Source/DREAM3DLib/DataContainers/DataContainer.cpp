@@ -77,19 +77,18 @@ void DataContainer::ReadDataContainerStructure(hid_t dcArrayGroupId, DataContain
     hid_t containerGid = H5Gopen(dcArrayGroupId, dataContainerName.toAscii().constData(), H5P_DEFAULT);
     if (containerGid < 0) { continue; }
     HDF5ScopedGroupSentinel sentinel(&containerGid, false);
-    DataContainerProxy dataContainer(dataContainerName);
-    dataContainer.name = dataContainerName;
-    dataContainer.read = true;
-    herr_t err = QH5Lite::readScalarAttribute(dcArrayGroupId, dataContainerName, DREAM3D::StringConstants::DataContainerType, dataContainer.dcType);
+    DataContainerProxy dcProxy(dataContainerName);
+    dcProxy.name = dataContainerName;
+    dcProxy.flag = Qt::Checked;
+    herr_t err = QH5Lite::readScalarAttribute(dcArrayGroupId, dataContainerName, DREAM3D::StringConstants::DataContainerType, dcProxy.dcType);
     if(err < 0) { std::cout << "Error Reading the DataContainer Type for DataContainer " << dataContainerName.toStdString() << std::endl; }
 
     QString h5Path = h5InternalPath + "/" + dataContainerName;
     // Read the Attribute Matricies for this Data Container
-    AttributeMatrix::ReadAttributeMatrixStructure(containerGid, dataContainer, h5Path);
+    AttributeMatrix::ReadAttributeMatrixStructure(containerGid, dcProxy, h5Path);
 
-    // Insert the DataContainerProxy proxy into the Proxy Map
-    proxy.list.push_back(dataContainer);
-
+    // Insert the DataContainerProxy proxy into the DataContainerArrayProxy
+    proxy.list.push_back(dcProxy);
   }
 }
 
@@ -273,7 +272,7 @@ int DataContainer::readAttributeMatricesFromHDF5(bool preflight, hid_t dcGid, co
   QString amName;
   for(QMap<QString, AttributeMatrixProxy>::iterator iter = attrMatsToRead.begin(); iter != attrMatsToRead.end(); ++iter)
   {
-    if(iter.value().read == false) continue;
+    if(iter.value().flag == Qt::Unchecked) continue;
     amName = iter.key();
     amType = DREAM3D::AttributeMatrixType::Unknown;
     err = QH5Lite::readScalarAttribute(dcGid, amName, DREAM3D::StringConstants::AttributeMatrixType, amType);

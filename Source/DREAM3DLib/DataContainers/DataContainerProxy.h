@@ -56,7 +56,7 @@ class DataContainerProxy
      * @brief DataContainerProxy
      */
     DataContainerProxy() :
-      read(false),
+      flag(Qt::Unchecked),
       name(""),
       dcType(DREAM3D::DataContainerType::UnknownDataContainer)
     {}
@@ -67,8 +67,8 @@ class DataContainerProxy
      * @param read_dc
      * @param dc_type
      */
-    DataContainerProxy(QString dc_name, bool read_dc = true, unsigned int dc_type = DREAM3D::DataContainerType::UnknownDataContainer) :
-      read(read_dc),
+    DataContainerProxy(QString dc_name, uint8_t read_dc = Qt::Checked, unsigned int dc_type = DREAM3D::DataContainerType::UnknownDataContainer) :
+      flag(read_dc),
       name(dc_name),
       dcType(dc_type) {}
 
@@ -77,7 +77,7 @@ class DataContainerProxy
     */
     DataContainerProxy(const DataContainerProxy& amp)
     {
-      read = amp.read;
+      flag = amp.flag;
       name = amp.name;
       dcType = amp.dcType;
       attributeMatricies = amp.attributeMatricies;
@@ -88,14 +88,14 @@ class DataContainerProxy
     */
     void operator=(const DataContainerProxy& amp)
     {
-      read = amp.read;
+      flag = amp.flag;
       name = amp.name;
       dcType = amp.dcType;
       attributeMatricies = amp.attributeMatricies;
     }
 
     //----- Our variables, publicly available
-    bool read;
+    uint8_t flag;
     QString name;
     unsigned int dcType;
     QMap<QString, AttributeMatrixProxy> attributeMatricies;

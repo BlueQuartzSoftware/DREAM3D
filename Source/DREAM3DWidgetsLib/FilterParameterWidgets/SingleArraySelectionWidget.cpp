@@ -71,16 +71,15 @@ SingleArraySelectionWidget::~SingleArraySelectionWidget()
 void SingleArraySelectionWidget::setupGui()
 {
 
-  // The filter should emit this signal when a filter changes.
-  //  connect(m_Filter, SIGNAL(parametersChanged()),
-  //          this, SLOT(initializeHeirarchy() ) );
-
+  // Catch when the filter is about to execute the preflight
   connect(m_Filter, SIGNAL(preflightAboutToExecute()),
           this, SLOT(beforePreflight()));
 
+  // Catch when the filter is finished running the preflight
   connect(m_Filter, SIGNAL(preflightExecuted()),
           this, SLOT(afterPreflight()));
 
+  // Catch when the filter wants its values updated
   connect(m_Filter, SIGNAL(updateFilterParameters(AbstractFilter*)),
           this, SLOT(filterNeedsInputParameters(AbstractFilter*)));
 
@@ -134,7 +133,9 @@ void SingleArraySelectionWidget::populateComboBoxes()
   while(iter.hasNext() )
   {
     DataContainerProxy dc = iter.next();
-    dataContainerList->addItem(dc.name);
+    if(dataContainerList->findText(dc.name) == -1 ) {
+      dataContainerList->addItem(dc.name);
+    }
   }
 
   // Grab what is currently selected
@@ -167,38 +168,44 @@ void SingleArraySelectionWidget::populateComboBoxes()
   QString amName = checkStringValues(curAmName, filtAmName);
   QString daName = checkStringValues(curDaName, filtDaName);
 
+  bool didBlock = false;
 
+  if (!dataContainerList->signalsBlocked()) { didBlock = true; }
+  dataContainerList->blockSignals(true);
   int dcIndex = dataContainerList->findText(dcName);
   if(dcIndex < 0 && dcName.isEmpty() == false) {
     dataContainerList->addItem(dcName);
   } // the string was not found so just set it to the first index
   else {
-    // dcIndex = -1, which means the 'dcName' was not found and it is empty which means no default selection.
     if(dcIndex < 0) { dcIndex = 0; } // Just set it to the first DataContainer in the list
-    dataContainerList->blockSignals(true);
     dataContainerList->setCurrentIndex(dcIndex);
     populateAttributeMatrixList();
-    dataContainerList->blockSignals(false);
   }
+  if(didBlock) { dataContainerList->blockSignals(false); didBlock = false; }
 
+
+  if(!attributeMatrixList->signalsBlocked()) { didBlock = true; }
+  attributeMatrixList->blockSignals(true);
   int amIndex = attributeMatrixList->findText(amName);
   if(amIndex < 0 && amName.isEmpty() == false) { attributeMatrixList->addItem(amName); } // The name of the attributeMatrix was not found so just set the first one
   else {
     if(amIndex < 0) { amIndex = 0; }
-    attributeMatrixList->blockSignals(true);
     attributeMatrixList->setCurrentIndex(amIndex);
     populateAttributeArrayList();
-    attributeMatrixList->blockSignals(false);
   }
+  if(didBlock) { attributeMatrixList->blockSignals(false); didBlock = false; }
 
+
+  if(!attributeArrayList->signalsBlocked()) { didBlock = true; }
+  attributeArrayList->blockSignals(true);
   int daIndex = attributeArrayList->findText(daName);
   if(daIndex < 0 && daName.isEmpty() == false) { attributeArrayList->addItem(daName); } // The name of the attribute array was not found in the list
   {
     if (daIndex < 0) { daIndex = 0; }
-    attributeArrayList->blockSignals(true);
     attributeArrayList->setCurrentIndex(daIndex); // we set the selection but we are NOT triggering anything so we shoudl
-    attributeArrayList->blockSignals(false);// not be triggering an infinte recursion of preflights
   }
+  if(didBlock) { attributeArrayList->blockSignals(false); didBlock = false; }// not be triggering an infinte recursion of preflights
+
 }
 
 // -----------------------------------------------------------------------------

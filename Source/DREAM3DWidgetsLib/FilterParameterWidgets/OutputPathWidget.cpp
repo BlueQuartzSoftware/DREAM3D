@@ -69,8 +69,20 @@ OutputPathWidget::~OutputPathWidget()
 // -----------------------------------------------------------------------------
 void OutputPathWidget::setupGui()
 {
-  connect(value, SIGNAL(textChanged(const QString&)),
-          this, SLOT(widgetChanged(const QString&)));
+  // Catch when the filter is about to execute the preflight
+  connect(m_Filter, SIGNAL(preflightAboutToExecute()),
+          this, SLOT(beforePreflight()));
+
+  // Catch when the filter is finished running the preflight
+  connect(m_Filter, SIGNAL(preflightExecuted()),
+          this, SLOT(afterPreflight()));
+
+  // Catch when the filter wants its values updated
+  connect(m_Filter, SIGNAL(updateFilterParameters(AbstractFilter*)),
+          this, SLOT(filterNeedsInputParameters(AbstractFilter*)));
+
+//  connect(value, SIGNAL(textChanged(const QString&)),
+//          this, SLOT(widgetChanged(const QString&)));
 
   QFileCompleter* com = new QFileCompleter(this, false);
   value->setCompleter(com);
@@ -121,10 +133,24 @@ void OutputPathWidget::on_selectBtn_clicked()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void OutputPathWidget::widgetChanged(const QString &text)
+//void OutputPathWidget::widgetChanged(const QString &text)
+//{
+//  emit parametersChanged();
+//}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void OutputPathWidget::on_value_textChanged(const QString& text)
 {
-  emit parametersChanged();
+  // We dont want to run a preflight for every character that is typed instead we want (I think) to
+  // check that the file exists first before emitting the signal
+ // if(verifyPathExists(text, value) == true) {
+    emit parametersChanged();
+ // }
 }
+
 
 // -----------------------------------------------------------------------------
 //
@@ -141,3 +167,19 @@ void OutputPathWidget::filterNeedsInputParameters(AbstractFilter* filter)
 }
 
 
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void OutputPathWidget::beforePreflight()
+{
+
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void OutputPathWidget::afterPreflight()
+{
+
+}

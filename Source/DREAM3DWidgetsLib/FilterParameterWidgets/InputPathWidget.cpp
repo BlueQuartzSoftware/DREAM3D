@@ -71,6 +71,18 @@ InputPathWidget::~InputPathWidget()
 // -----------------------------------------------------------------------------
 void InputPathWidget::setupGui()
 {
+  // Catch when the filter is about to execute the preflight
+  connect(m_Filter, SIGNAL(preflightAboutToExecute()),
+          this, SLOT(beforePreflight()));
+
+  // Catch when the filter is finished running the preflight
+  connect(m_Filter, SIGNAL(preflightExecuted()),
+          this, SLOT(afterPreflight()));
+
+  // Catch when the filter wants its values updated
+  connect(m_Filter, SIGNAL(updateFilterParameters(AbstractFilter*)),
+          this, SLOT(filterNeedsInputParameters(AbstractFilter*)));
+
   connect(value, SIGNAL(textChanged(const QString&)),
           this, SLOT(widgetChanged(const QString&)));
 
@@ -102,6 +114,27 @@ bool InputPathWidget::verifyPathExists(QString filePath, QLineEdit* lineEdit)
     lineEdit->setStyleSheet("");
   }
   return fileinfo.exists();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void InputPathWidget::on_value_returnPressed()
+{
+  emit parametersChanged(); // This should force the preflight to run because we are emitting a signal
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void InputPathWidget::on_value_textChanged(const QString& text)
+{
+  // We dont want to run a preflight for every character that is typed instead we want (I think) to
+  // check that the file exists first before emitting the signal
+  if(verifyPathExists(text, value) == true) {
+    emit parametersChanged();
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -157,4 +190,20 @@ void InputPathWidget::filterNeedsInputParameters(AbstractFilter* filter)
     QString ss = QObject::tr("Error occurred setting Filter Parameter %1").arg(m_FilterParameter->getPropertyName());
     emit errorSettingFilterParameter(ss);
   }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void InputPathWidget::beforePreflight()
+{
+
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void InputPathWidget::afterPreflight()
+{
+
 }

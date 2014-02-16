@@ -416,7 +416,7 @@ void TestDataContainerReader()
   for(int i=(dcsToRead.size()-1); i>=0; i--)
   {
     DataContainerProxy& dcProxy = dcsToRead[i];
-    if (dcProxy.name.compare(DREAM3D::Defaults::VolumeDataContainerName) != 0) dcProxy.read = false;
+    if (dcProxy.name.compare(DREAM3D::Defaults::VolumeDataContainerName) != 0) { dcProxy.flag = Qt::Unchecked; }
     else
     {
       QMap<QString, AttributeMatrixProxy>& attrMatsToRead = dcProxy.attributeMatricies;
@@ -424,7 +424,7 @@ void TestDataContainerReader()
       for(QMap<QString, AttributeMatrixProxy>::iterator iter = attrMatsToRead.begin(); iter != attrMatsToRead.end(); ++iter)
       {
         amName = iter.key();
-        if (amName.compare(getCellFeatureAttributeMatrixName()) != 0) iter.value().read = false;
+        if (amName.compare(getCellFeatureAttributeMatrixName()) != 0) iter.value().flag = Qt::Unchecked;
         else
         {
           QMap<QString, DataArrayProxy>& dasToRead = iter.value().dataArrays;

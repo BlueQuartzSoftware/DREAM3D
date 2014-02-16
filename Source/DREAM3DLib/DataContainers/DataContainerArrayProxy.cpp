@@ -35,6 +35,8 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #include "DataContainerArrayProxy.h"
 
+#include <iostream>
+
 #include "DREAM3DLib/DataContainers/DataContainerProxy.h"
 
 #include "DREAM3DLib/DataContainers/DataContainerArray.h"
@@ -74,7 +76,7 @@ DataContainerArrayProxy::DataContainerArrayProxy(DataContainerArray* dca) :
   for(int i = 0; i < containers.size(); i++) // Loop on each Data Container
   {
     DataContainer::Pointer container = containers.at(i);
-    DataContainerProxy dcProxy(container->getName(), false, container->getDCType()); // Create a new DataContainerProxy
+    DataContainerProxy dcProxy(container->getName(), Qt::Checked, container->getDCType()); // Create a new DataContainerProxy
 
     // Now loop over each AttributeMatrix in the data container that was selected
     DataContainer::AttributeMatrixMap_t attrMats = container->getAttributeMatrices();
@@ -84,7 +86,7 @@ DataContainerArrayProxy::DataContainerArrayProxy(DataContainerArray* dca) :
       iter.next();
       QString amName = iter.key();
       AttributeMatrix::Pointer attrMat = iter.value();
-      AttributeMatrixProxy amProxy(amName, false, attrMat->getType());
+      AttributeMatrixProxy amProxy(amName, Qt::Checked, attrMat->getType());
 
       QList<QString> attrArrayNames = attrMat->getAttributeArrayNameList();
       QListIterator<QString> attrArrayNamesIter(attrArrayNames);
@@ -93,7 +95,7 @@ DataContainerArrayProxy::DataContainerArrayProxy(DataContainerArray* dca) :
         QString aaName = attrArrayNamesIter.next();
         QString daPath = container->getName() + "/" + amName + "/";
         IDataArray::Pointer attrArray = attrMat->getAttributeArray(aaName);
-        DataArrayProxy daProxy(daPath, aaName, false, attrArray->getTypeAsString(), attrArray->getClassVersion() );
+        DataArrayProxy daProxy(daPath, aaName, Qt::Checked, attrArray->getTypeAsString(), attrArray->getClassVersion() );
         amProxy.dataArrays.insert(aaName, daProxy);
       }
       dcProxy.attributeMatricies.insert(amName, amProxy); // Add the new AttributeMatrix to the DataContainerProxy
@@ -125,14 +127,14 @@ QStringList DataContainerArrayProxy::flattenHeirarchy()
   while (dcIter.hasNext()) // DataContainerLevel
   {
     const DataContainerProxy& dcProxy =  dcIter.next();
-    if(dcProxy.read == false) { continue; } // Skip to the next DataContainer if we are not reading this one.
+    if(dcProxy.flag == Qt::Unchecked) { continue; } // Skip to the next DataContainer if we are not reading this one.
     QMapIterator<QString, AttributeMatrixProxy> amIter(dcProxy.attributeMatricies);
     while(amIter.hasNext()) // AttributeMatrixLevel
     {
       amIter.next();
 
       const AttributeMatrixProxy& amProxy = amIter.value();
-      if(amProxy.read == false) { continue; } // Skip to the next AttributeMatrix if not reading this one
+      if(amProxy.flag == Qt::Unchecked) { continue; } // Skip to the next AttributeMatrix if not reading this one
 
       QMapIterator<QString, DataArrayProxy> dIter(amProxy.dataArrays);
       while(dIter.hasNext()) // DataArray Level
@@ -148,4 +150,105 @@ QStringList DataContainerArrayProxy::flattenHeirarchy()
     }
   }
   return strList;
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DataContainerArrayProxy::print(const QString header)
+{
+  QString str;
+  QTextStream out(&str);
+  QListIterator<DataContainerProxy> dcIter(list);
+
+  while (dcIter.hasNext()) // DataContainerLevel
+  {
+    const DataContainerProxy& dcProxy =  dcIter.next();
+
+    out << dcProxy.name << "|" << "  [flag:" << (int)(dcProxy.flag) << "]\n";
+    QMapIterator<QString, AttributeMatrixProxy> amIter(dcProxy.attributeMatricies);
+    while(amIter.hasNext()) // AttributeMatrixLevel
+    {
+      amIter.next();
+
+      const AttributeMatrixProxy& amProxy = amIter.value();
+      out << dcProxy.name << "|" << amProxy.name << "|" << "  [flag:" << (int)(amProxy.flag) << "]\n";
+      QMapIterator<QString, DataArrayProxy> dIter(amProxy.dataArrays);
+      while(dIter.hasNext()) // DataArray Level
+      {
+        dIter.next();
+
+        const DataArrayProxy& daProxy = dIter.value();
+
+        out << dcProxy.name << "|" << amProxy.name << "|" << daProxy.name << "  [flag:" << (int)(daProxy.flag) << "]"
+            << " [Object Type: " << daProxy.objectType << "] [CompDims: ";
+        for(int i = 0; i < daProxy.compDims.size(); i++)
+        {
+          out << daProxy.compDims[i] << " ";
+        }
+        out << "]\n";
+      }
+    }
+  }
+  std::cout << "---------------- " << header.toStdString() << " ----------------------" << std::endl;
+  std::cout << str.toStdString() << std::endl;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DataContainerArrayProxy::removeSelectionsFromDataContainerArray(DataContainerArray* dca)
+{
+ // Loop over the data containers until we find the proper data container
+  QList<DataContainerProxy> containers = list;
+  QListIterator<DataContainerProxy> containerIter(containers);
+  QStringList dcList;
+  while(containerIter.hasNext())
+  {
+    DataContainerProxy dcProxy = containerIter.next();
+    dcList.push_back(dcProxy.name);
+    DataContainer::Pointer dcItem = dca->getDataContainer(dcProxy.name);
+    assert(dcItem.get()   != NULL);
+    // Check to see if the DataContainer is checked, if it is NOT checked then we remove the entire DataContainer from
+    // the DataContainerArray
+    if (dcProxy.flag == Qt::Unchecked)
+    {
+      dca->removeDataContainer(dcProxy.name); // Remove it out
+      continue; // Continue to the next DataContainer
+    }
+    QMap<QString, AttributeMatrixProxy>& attrMats = dcProxy.attributeMatricies;
+    QMapIterator<QString, AttributeMatrixProxy> attrMatsIter(attrMats);
+    while(attrMatsIter.hasNext() )
+    {
+      attrMatsIter.next();
+      QString amName = attrMatsIter.key();
+      AttributeMatrix::Pointer amItem = dcItem->getAttributeMatrix(amName);
+      assert(amItem.get() != NULL);
+      AttributeMatrixProxy attrProxy = attrMatsIter.value();
+      // Check to see if this AttributeMatrix is checked, if not then remove it from the DataContainer and go to the next loop
+      if(attrProxy.flag == Qt::Unchecked)
+      {
+        dcItem->removeAttributeMatrix(amName);
+        continue;
+      }
+      // We found the selected AttributeMatrix, so loop over this attribute matrix arrays and populate the list widget
+      QMap<QString, DataArrayProxy>& dataArrays = attrProxy.dataArrays;
+      QMapIterator<QString, DataArrayProxy> dataArraysIter(dataArrays);
+      while(dataArraysIter.hasNext() )
+      {
+        dataArraysIter.next();
+        QString daName = dataArraysIter.key();
+        IDataArray::Pointer daItem = amItem->getAttributeArray(daName);
+        assert(daItem.get() != NULL);
+        DataArrayProxy daProxy = dataArraysIter.value();
+        // Check to see if the user selected this item
+        if(daProxy.flag == Qt::Unchecked)
+        {
+          amItem->removeAttributeArray(daName);
+          continue;
+        }
+      }
+    }
+  }
 }

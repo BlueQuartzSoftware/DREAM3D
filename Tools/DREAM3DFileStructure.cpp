@@ -64,7 +64,7 @@ DataContainerArray::Pointer _createDataContainerArray(DataContainerArrayProxy &d
 
     const DataContainerProxy& dcProxy =  dcIter.next();
     std::cout << "Found " << dcProxy.name.toStdString() << ": " << std::endl;
-    if(dcProxy.read == false) { continue; } // Skip to the next DataContainer if we are not reading this one.
+    if(dcProxy.flag == Qt::Unchecked) { continue; } // Skip to the next DataContainer if we are not reading this one.
 
     std::cout << "  reading " << dcProxy.name.toStdString() << ": " << std::endl;
     // Create the real DataContainer Object and push it into the DataContainerArray object
@@ -79,7 +79,7 @@ DataContainerArray::Pointer _createDataContainerArray(DataContainerArrayProxy &d
       std::cout << "  Found " << amIter.key().toStdString() << ": " << std::endl;
 
       const AttributeMatrixProxy& amProxy = amIter.value();
-      if(amProxy.read == false) { continue; } // Skip to the next AttributeMatrix if not reading this one
+      if(amProxy.flag == Qt::Unchecked) { continue; } // Skip to the next AttributeMatrix if not reading this one
 
       std::cout << "    reading " << amIter.key().toStdString() << std::endl;
       QVector<size_t> tupleDims(1,0);

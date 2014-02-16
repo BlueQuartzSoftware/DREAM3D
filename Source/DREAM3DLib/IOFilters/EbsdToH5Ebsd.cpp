@@ -79,6 +79,8 @@ EbsdToH5Ebsd::EbsdToH5Ebsd() :
   m_EulerTransformationAxis[0] = 0.0;
   m_EulerTransformationAxis[1] = 0.0;
   m_EulerTransformationAxis[2] = 1.0;
+
+    setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------
@@ -86,6 +88,7 @@ EbsdToH5Ebsd::EbsdToH5Ebsd() :
 // -----------------------------------------------------------------------------
 EbsdToH5Ebsd::~EbsdToH5Ebsd()
 {
+
 }
 
 // -----------------------------------------------------------------------------
@@ -94,6 +97,15 @@ EbsdToH5Ebsd::~EbsdToH5Ebsd()
 void EbsdToH5Ebsd::setupFilterParameters()
 {
   FilterParameterVector parameters;
+  {
+    FilterParameter::Pointer parameter = FilterParameter::New();
+    parameter->setHumanLabel("Import Orientation Data");
+    parameter->setPropertyName("OrientationData");
+    parameter->setWidgetType(FilterParameterWidgetType::EbsdToH5EbsdWidget);
+    //parameter->setFileExtension("*.dream3d");
+    parameter->setValueType("OrientationImporter");
+    parameters.push_back(parameter);
+  }
 
   setFilterParameters(parameters);
 }

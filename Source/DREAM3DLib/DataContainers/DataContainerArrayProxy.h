@@ -36,10 +36,13 @@
 #ifndef _DataContainerArrayProxy_H_
 #define _DataContainerArrayProxy_H_
 
+
+
 #include <QtCore/QMetaType>
 #include <QtCore/QString>
 #include <QtCore/QList>
 #include <QtCore/QStringList>
+#include <QtCore/QTextStream>
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/DataContainers/DataContainerProxy.h"
@@ -86,6 +89,19 @@ class DREAM3DLib_EXPORT DataContainerArrayProxy
      * @return
      */
     QStringList flattenHeirarchy();
+
+    /**
+     * @brief Print the Heirarchy and attributes of the Proxy
+     * @param out
+     */
+    void print(const QString header = QString(""));
+
+    /**
+     * @brief updateDataContainer This function will attempt to remove those DataContainers, AttributeMatrix and
+     * DataArray items that are flagged as selected by the user/programmer.
+     * @param dca
+     */
+    void removeSelectionsFromDataContainerArray(DataContainerArray* dca);
 
 
     //----- Our variables, publicly available

@@ -77,7 +77,10 @@ class DREAM3DWidgetsLib_EXPORT IntVec3Widget : public QWidget, private Ui::IntVe
 
   public slots:
     void widgetChanged(const QString& msg);
+    void beforePreflight();
+    void afterPreflight();
     void filterNeedsInputParameters(AbstractFilter* filter);
+
 
   signals:
     void errorSettingFilterParameter(const QString& msg);

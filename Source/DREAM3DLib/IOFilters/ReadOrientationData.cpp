@@ -150,19 +150,21 @@ void ReadOrientationData::dataCheck()
   if(getErrorCondition() < 0) { return; }
 
   QFileInfo fi(m_InputFile);
+  if (fi.exists() == false)
+  {
+    QString ss = QObject::tr("The input file does not exist: '%1'").arg(getInputFile());
+    setErrorCondition(-388);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+  }
+
   if (m_InputFile.isEmpty() == true && m_Manufacturer == Ebsd::UnknownManufacturer)
   {
     QString ss = QObject::tr("%1: The InputFile must be set. It is empty.").arg(getHumanLabel());
     setErrorCondition(-1);
     notifyErrorMessage(getHumanLabel(), ss, -1);
   }
-  else if (fi.exists() == false)
-  {
-    QString ss = QObject::tr("The input file does not exist: %1").arg(getInputFile());
-    setErrorCondition(-388);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-  }
-  else if (m_InputFile.isEmpty() == false)
+
+  if (m_InputFile.isEmpty() == false) // User set a filename, so lets check it
   {
     QVector<size_t> dims(3, 0);
 

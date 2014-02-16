@@ -253,6 +253,10 @@ class DREAM3DLib_EXPORT ModifiedLambertProjectionArray : public IDataArray
      */
     virtual void initializeWithZeros();
 
+    /**
+     * @brief deepCopy
+     * @return
+     */
     virtual IDataArray::Pointer deepCopy();
 
     /**

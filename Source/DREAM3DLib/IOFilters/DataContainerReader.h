@@ -140,7 +140,7 @@ class DREAM3DLib_EXPORT DataContainerReader : public AbstractFilter
     */
     void dataCheck();
 
-    void readData(bool preflight);
+    void readData(bool preflight, DataContainerArrayProxy &proxy);
 
   private:
     FilterPipeline::Pointer m_PipelineFromFile;

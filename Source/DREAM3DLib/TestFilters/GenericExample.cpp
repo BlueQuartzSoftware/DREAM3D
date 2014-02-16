@@ -604,8 +604,11 @@ void GenericExample::dataCheck2()
 // -----------------------------------------------------------------------------
 void GenericExample::preflight()
 {
+  emit preflightAboutToExecute();
+  emit updateFilterParameters(this);
   dataCheck();
   dataCheck2();
+  emit preflightExecuted();
 }
 
 // -----------------------------------------------------------------------------

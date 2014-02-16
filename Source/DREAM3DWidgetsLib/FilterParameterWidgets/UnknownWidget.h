@@ -77,6 +77,8 @@ public:
 
   public slots:
     void widgetChanged(const QString& msg);
+    void beforePreflight();
+    void afterPreflight();
     void filterNeedsInputParameters(AbstractFilter* filter);
 
   signals:

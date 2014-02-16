@@ -77,11 +77,25 @@ InputFileWidget::~InputFileWidget()
 void InputFileWidget::setupGui()
 {
 
+  // Catch when the filter is about to execute the preflight
+  connect(m_Filter, SIGNAL(preflightAboutToExecute()),
+          this, SLOT(beforePreflight()));
+
+  // Catch when the filter is finished running the preflight
+  connect(m_Filter, SIGNAL(preflightExecuted()),
+          this, SLOT(afterPreflight()));
+
+  // Catch when the filter wants its values updated
+  connect(m_Filter, SIGNAL(updateFilterParameters(AbstractFilter*)),
+          this, SLOT(filterNeedsInputParameters(AbstractFilter*)));
+
+  // Put a file path completer to help out the user to select a valid file
   QFileCompleter* com = new QFileCompleter(this, false);
   value->setCompleter(com);
-  QObject::connect( com, SIGNAL(activated(const QString &)),
-                    this, SLOT(on_value_textChanged(const QString &)));
+  QObject::connect( com, SIGNAL(activated(const QString&)),
+                    this, SLOT(on_value_textChanged(const QString&)));
 
+  // See if we can get the default value from the filter instance
   if (m_FilterParameter != NULL)
   {
     inputFileWidgetLabel->setText(m_FilterParameter->getHumanLabel() );
@@ -112,7 +126,7 @@ bool InputFileWidget::verifyPathExists(QString filePath, QLineEdit* lineEdit)
 // -----------------------------------------------------------------------------
 void InputFileWidget::on_value_returnPressed()
 {
-  emit parametersChanged();
+  emit parametersChanged(); // This should force the preflight to run because we are emitting a signal
 }
 
 // -----------------------------------------------------------------------------
@@ -120,7 +134,12 @@ void InputFileWidget::on_value_returnPressed()
 // -----------------------------------------------------------------------------
 void InputFileWidget::on_value_textChanged(const QString& text)
 {
-  emit parametersChanged();
+  // We dont want to run a preflight for every character that is typed instead we want (I think) to
+  // check that the file exists first before emitting the signal
+  if(verifyPathExists(text, value) == true)
+  {
+    emit parametersChanged();
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -146,28 +165,38 @@ void InputFileWidget::on_selectBtn_clicked()
   value->setText(file);
 }
 
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void InputFileWidget::widgetChanged(const QString &text)
-{
-  emit parametersChanged();
-}
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 void InputFileWidget::filterNeedsInputParameters(AbstractFilter* filter)
 {
+//  qDebug() << "InputFileWidget::filterNeedsInputParameters(AbstractFilter* filter)";
   QString text = value->text();
-  if (verifyPathExists(text, value) == true )
+  if (verifyPathExists(text, value) == true ) {}
+
+  bool ok = filter->setProperty(PROPERTY_NAME_AS_CHAR, text);
+  if (false == ok)
   {
-    bool ok = filter->setProperty(PROPERTY_NAME_AS_CHAR, text);
-    if (false == ok)
-    {
-      QString ss = QObject::tr("Error occurred setting Filter Parameter %1").arg(m_FilterParameter->getPropertyName());
-      emit errorSettingFilterParameter(ss);
-    }
+    QString ss = QObject::tr("Error occurred setting Filter Parameter %1").arg(m_FilterParameter->getPropertyName());
+    emit errorSettingFilterParameter(ss);
   }
+
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void InputFileWidget::afterPreflight()
+{
+  // std::cout << "After Preflight" << std::endl;
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void InputFileWidget::beforePreflight()
+{
+  // std::cout << "After Preflight" << std::endl;
 }
