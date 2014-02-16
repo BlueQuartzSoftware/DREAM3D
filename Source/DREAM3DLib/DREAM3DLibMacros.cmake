@@ -5,8 +5,8 @@
 macro(START_FILTER_GROUP WidgetsBinaryDir filterGroup humanGroup)
    file(APPEND ${AllFiltersHeaderFile} "\n/* ------ ${filterGroup} --------- */\n")
    file(APPEND ${CodeGeneratorFile} "//----- ${filterGroup} --------------- \n")
-   file(APPEND ${AllFilterWidgetsHeaderFile} "\n/* ------ ${filterGroup} --------- */\n")
-   file(APPEND ${RegisterKnownFilterWidgetsFile} "\n    /* ------ ${filterGroup} --------- */\n")
+ #  file(APPEND ${AllFilterWidgetsHeaderFile} "\n/* ------ ${filterGroup} --------- */\n")
+ #  file(APPEND ${RegisterKnownFilterWidgetsFile} "\n    /* ------ ${filterGroup} --------- */\n")
    file(APPEND ${RegisterKnownFiltersFile} "\n    /* ------ ${filterGroup} --------- */\n")
 
 

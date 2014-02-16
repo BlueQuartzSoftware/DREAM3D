@@ -21,7 +21,7 @@ set(DREAM3D_PARAMETER_WIDGETS
       SingleArraySelectionWidget
       DataContainerArrayProxyWidget
 #      ReadH5EbsdWidget
-      EbsdToH5EbsdWidget
+#      EbsdToH5EbsdWidget
 #      VolumeVertexArrayNameSelectionWidget
 #      VolumeEdgeArrayNameSelectionWidget
 #      VolumeFaceArrayNameSelectionWidget

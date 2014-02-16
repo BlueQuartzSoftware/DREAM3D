@@ -16,7 +16,6 @@ set(DREAM3D_WIDGETS
     IssuesDockWidget
     PipelineFilterWidget
     PrebuiltPipelinesDockWidget
-    QEbsdReferenceFrameDialog
 )
 
 foreach(FPW ${DREAM3D_WIDGETS})

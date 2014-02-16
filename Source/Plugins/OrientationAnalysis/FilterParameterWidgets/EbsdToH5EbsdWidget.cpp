@@ -58,9 +58,9 @@
 #include "QtSupport/DREAM3DQtMacros.h"
 #include "QtSupport/DREAM3DHelpUrlGenerator.h"
 
-#include "QEbsdReferenceFrameDialog.h"
+#include "OrientationAnalysis/Widgets/QEbsdReferenceFrameDialog.h"
 
-#include "DREAM3DWidgetsLib/FilterParameterWidgets/moc_EbsdToH5EbsdWidget.cxx"
+#include "OrientationAnalysis/FilterParameterWidgets/moc_EbsdToH5EbsdWidget.cxx"
 
 // Initialize private static member variable
 QString EbsdToH5EbsdWidget::m_OpenDialogLastDirectory = "";
