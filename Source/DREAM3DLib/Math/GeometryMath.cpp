@@ -81,7 +81,10 @@ bool GeometryMath::PointInBox(VertexArray::Vert_t p, VertexArray::Vert_t ll, Ver
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-bool GeometryMath::RayIntersectsBox(VertexArray::Vert_t p, VertexArray::Vert_t q, VertexArray::Vert_t ll, VertexArray::Vert_t ur)
+bool GeometryMath::RayIntersectsBox(const VertexArray::Vert_t &p,
+                                  const VertexArray::Vert_t &q,
+                                  const VertexArray::Vert_t &ll,
+                                  const VertexArray::Vert_t &ur)
 {
   for(int i = 0; i < 3; i++)
   {
@@ -464,7 +467,13 @@ char GeometryMath::RayCrossesTriangle(VertexArray::Vert_t a, VertexArray::Vert_t
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-char GeometryMath::PointInPolyhedron(FaceArray::Pointer faces, Int32DynamicListArray::ElementList faceIds, VertexArray::Pointer faceBBs, VertexArray::Vert_t q, VertexArray::Vert_t ll, VertexArray::Vert_t ur, float radius)
+char GeometryMath::PointInPolyhedron(const FaceArray::Pointer faces,
+                                     const Int32DynamicListArray::ElementList &faceIds,
+                                     const VertexArray::Pointer faceBBs,
+                                     const VertexArray::Vert_t &q,
+                                     const VertexArray::Vert_t &ll,
+                                     const VertexArray::Vert_t &ur,
+                                     float radius)
 {
   float ray[3];  /* Ray */
   VertexArray::Vert_t r;  /* Ray endpoint. */
@@ -486,6 +495,7 @@ char GeometryMath::PointInPolyhedron(FaceArray::Pointer faces, Int32DynamicListA
   p.pos[1] = 0;
   p.pos[2] = 0;
 
+  VertexArray::Vert_t* faceBBsPtr = faceBBs->getPointer(0);
 LOOP:
   while( k++ < numFaces )
   {
@@ -500,7 +510,10 @@ LOOP:
     for ( f = 0; f < numFaces; f++ )
     {
       /* Begin check each face */
-      if( RayIntersectsBox(q, r, faceBBs->getVert(2 * faceIds.cells[f]), faceBBs->getVert(2 * faceIds.cells[f] + 1)) == false )
+      int32_t idx = 2 * faceIds.cells[f];
+      VertexArray::Vert_t v0 = faceBBsPtr[idx];
+      VertexArray::Vert_t v1 = faceBBsPtr[idx + 1];
+      if( RayIntersectsBox(q, r, v0, v1) == false )
       {
         code = '0';
       }
@@ -536,3 +549,4 @@ LOOP:
   if( ( crossings % 2 ) == 1 ) { return 'i'; }
   else { return 'o'; }
 }
+

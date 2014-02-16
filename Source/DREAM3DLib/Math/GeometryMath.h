@@ -141,8 +141,13 @@ class DREAM3DLib_EXPORT GeometryMath
      * @param upperRight
      * @return
      */
-    static char PointInPolyhedron(FaceArray::Pointer faces, Int32DynamicListArray::ElementList faceIds, VertexArray::Pointer faceBBs, VertexArray::Vert_t point, VertexArray::Vert_t ll, VertexArray::Vert_t ur, float radius);
-
+    static char PointInPolyhedron(const FaceArray::Pointer faces,
+                                     const Int32DynamicListArray::ElementList &faceIds,
+                                     const VertexArray::Pointer faceBBs,
+                                     const VertexArray::Vert_t &q,
+                                     const VertexArray::Vert_t &ll,
+                                     const VertexArray::Vert_t &ur,
+                                     float radius);
     /**
      * @brief Determines if a point is inside of a triangle defined by 3 points
      * @param a
@@ -172,7 +177,7 @@ class DREAM3DLib_EXPORT GeometryMath
      * @param upperRight
      * @return
      */
-    static bool RayIntersectsBox(VertexArray::Vert_t p, VertexArray::Vert_t q, VertexArray::Vert_t lowerLeft, VertexArray::Vert_t upperRight);
+    static bool RayIntersectsBox(const VertexArray::Vert_t &p, const VertexArray::Vert_t &q, const VertexArray::Vert_t &lowerLeft, const VertexArray::Vert_t &upperRight);
 
     /**
      * @brief Creates a randomly oriented ray of given length
@@ -221,7 +226,7 @@ class DREAM3DLib_EXPORT GeometryMath
     /**
      * @brief Determines the bounding box defined by the lower left and upper right corners of a set of rotated faces
      * @param faces pointer to face array
-     * param g 
+     * param g
      * @param lowerLeft
      * @param upperRight
      * @return
