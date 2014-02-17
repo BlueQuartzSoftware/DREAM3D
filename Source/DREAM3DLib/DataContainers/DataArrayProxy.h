@@ -103,7 +103,7 @@ class DataArrayProxy
     {
 
       QList<QString> dataArrayNames;
-      QH5Utilities::getGroupObjects(attrMatGid, H5Utilities::H5Support_DATASET, dataArrayNames);
+      QH5Utilities::getGroupObjects(attrMatGid, H5Utilities::H5Support_DATASET | H5Utilities::H5Support_GROUP, dataArrayNames);
       foreach(QString dataArrayName, dataArrayNames)
       {
         if(__SHOW_DEBUG_MSG__) { std::cout << "        DataArray: " << dataArrayName.toStdString()  << std::endl; }

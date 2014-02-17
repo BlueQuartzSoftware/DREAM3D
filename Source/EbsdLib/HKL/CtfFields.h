@@ -74,7 +74,8 @@ class EbsdLib_EXPORT CtfFields : public AbstractEbsdFields
       features.push_back(Ebsd::Ctf::MAD);
       features.push_back(Ebsd::Ctf::BC);
       features.push_back(Ebsd::Ctf::BS);
-
+      features.push_back(Ebsd::Ctf::X);
+      features.push_back(Ebsd::Ctf::Y);
       return features;
     }
 

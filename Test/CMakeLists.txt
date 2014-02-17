@@ -85,7 +85,7 @@ ADD_DREAM3D_TEST(FilterPipelineTest  "DREAM3DLib")
 
 ADD_DREAM3D_TEST(DataArrayTest  "DREAM3DLib")
 ADD_DREAM3D_TEST(ErrorMessageTest  "DREAM3DLib")
-ADD_DREAM3D_TEST(GenericFilterTest  "DREAM3DLib")
+#ADD_DREAM3D_TEST(GenericFilterTest  "DREAM3DLib")
 ADD_DREAM3D_TEST(PreFlightTest  "DREAM3DLib")
 ADD_DREAM3D_TEST(DataContainerTest  "DREAM3DLib")
 

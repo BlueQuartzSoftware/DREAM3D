@@ -48,7 +48,7 @@
 #include "DREAM3DLib/Common/FilterPipeline.h"
 #include "DREAM3DLib/TestFilters/GenericExample.h"
 #include "DREAM3DLib/TestFilters/MakeVolumeDataContainer.h"
-#include "DREAM3DLib/IOFilters/ReadH5Ebsd.h"
+
 #include "DREAM3DLib/IOFilters/DataContainerWriter.h"
 #include "DREAM3DLib/FilterParameters/QFilterParametersWriter.h"
 #include "DREAM3DLib/FilterParameters/H5FilterParametersWriter.h"

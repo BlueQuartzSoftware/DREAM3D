@@ -68,7 +68,7 @@ class H5EbsdVolumeReader;
  * @date Nov 19, 2011
  * @version 1.0
  */
-class DREAM3DLib_EXPORT ReadH5Ebsd : public AbstractFilter
+class ReadH5Ebsd : public AbstractFilter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
@@ -87,27 +87,27 @@ class DREAM3DLib_EXPORT ReadH5Ebsd : public AbstractFilter
 
     DREAM3D_FILTER_PARAMETER(QString, InputFile)
     Q_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile NOTIFY parametersChanged)
-    DREAM3D_INSTANCE_PROPERTY(uint32_t, RefFrameZDir)
-    Q_PROPERTY(quint32 RefFrameZDir READ getRefFrameZDir WRITE setRefFrameZDir NOTIFY parametersChanged)
     DREAM3D_FILTER_PARAMETER(int, ZStartIndex)
     Q_PROPERTY(int ZStartIndex READ getZStartIndex WRITE setZStartIndex NOTIFY parametersChanged)
     DREAM3D_FILTER_PARAMETER(int, ZEndIndex)
     Q_PROPERTY(int ZEndIndex READ getZEndIndex WRITE setZEndIndex NOTIFY parametersChanged)
     DREAM3D_FILTER_PARAMETER(bool, UseTransformations)
     Q_PROPERTY(bool UseTransformations READ getUseTransformations WRITE setUseTransformations NOTIFY parametersChanged)
+
     DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedArrayNames)
     Q_PROPERTY(QSet<QString> SelectedArrayNames READ getSelectedArrayNames WRITE setSelectedArrayNames NOTIFY parametersChanged)
-    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, PossibleArrayNames) // These are for reading the names of the arrays during a preflight
-    Q_PROPERTY(QSet<QString> PossibleArrayNames READ getPossibleArrayNames WRITE setPossibleArrayNames NOTIFY parametersChanged)
+
+
+    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, DataArrayNames) // These are for reading the names of the arrays during a preflight
+    Q_PROPERTY(QSet<QString> DataArrayNames READ getDataArrayNames WRITE setDataArrayNames NOTIFY parametersChanged)
 
     //-------------------------------------------------------
     // Not sure why these are here. We would be reading all of these from the file
     //
+    DREAM3D_INSTANCE_PROPERTY(uint32_t, RefFrameZDir)
     DREAM3D_INSTANCE_PROPERTY(int, Manufacturer)
-    DREAM3D_INSTANCE_PROPERTY(float, SampleTransformationAngle)
-    DREAM3D_INSTANCE_PROPERTY(QVector<float>, SampleTransformationAxis)
-    DREAM3D_INSTANCE_PROPERTY(float, EulerTransformationAngle)
-    DREAM3D_INSTANCE_PROPERTY(QVector<float>, EulerTransformationAxis)
+    DREAM3D_INSTANCE_PROPERTY(AxisAngleInput_t, SampleTransformation)
+    DREAM3D_INSTANCE_PROPERTY(AxisAngleInput_t, EulerTransformation)
     //-------------------------------------------------------
 
 
@@ -146,6 +146,7 @@ class DREAM3DLib_EXPORT ReadH5Ebsd : public AbstractFilter
     void dataCheck();
 
     int initDataContainerDimsRes(int64_t dims[3], VolumeDataContainer* m);
+    void readVolumeInfo();
 
     H5EbsdVolumeReader::Pointer initTSLEbsdVolumeReader();
     H5EbsdVolumeReader::Pointer initHKLEbsdVolumeReader();
@@ -232,6 +233,7 @@ class DREAM3DLib_EXPORT ReadH5Ebsd : public AbstractFilter
     DEFINE_PTR_WEAKPTR_DATAARRAY(float, CellEulerAngles)
     DEFINE_PTR_WEAKPTR_DATAARRAY(uint32_t, CrystalStructures)
     DEFINE_PTR_WEAKPTR_DATAARRAY(float, LatticeConstants)
+    StringDataArray::WeakPointer  m_MaterialNamesPtr;
 
     int tempxpoints;
     int tempypoints;

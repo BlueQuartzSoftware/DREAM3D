@@ -154,6 +154,7 @@ set(${PLUGIN_NAME}_MODULE_SRCS
   ${${PLUGIN_NAME}_HDRS}
   ${${PLUGIN_NAME}_SRCS}
   ${${PLUGIN_NAME}_MODULE_MOC_SRCS}
+  ${${PLUGIN_NAME}_MISC_HDRS}
   # -- Add in the Filter Parameter Widgets
   ${${PLUGIN_NAME}_ParameterWidgets_HDRS}
   ${${PLUGIN_NAME}_ParameterWidgets_SRCS}

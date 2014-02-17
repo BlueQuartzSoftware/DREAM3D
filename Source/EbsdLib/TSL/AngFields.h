@@ -72,7 +72,8 @@ class EbsdLib_EXPORT AngFields : public AbstractEbsdFields
 
       features.push_back(Ebsd::Ang::SEMSignal);
       features.push_back(Ebsd::Ang::Fit);
-
+      features.push_back(Ebsd::Ang::XPosition);
+      features.push_back(Ebsd::Ang::YPosition);
       return features;
     }
 

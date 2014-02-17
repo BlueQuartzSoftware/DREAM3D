@@ -128,6 +128,14 @@ class EbsdToH5EbsdWidget : public QWidget, private Ui::EbsdToH5EbsdWidget
     virtual void checkIOFiles();
 
     /**
+     * @brief verifyPathExists
+     * @param outFilePath
+     * @param lineEdit
+     * @return
+     */
+    bool verifyPathExists(QString outFilePath, QLineEdit* lineEdit);
+
+    /**
      * @brief setWidgetListEnabled
      */
     void setWidgetListEnabled(bool v);
@@ -143,8 +151,6 @@ class EbsdToH5EbsdWidget : public QWidget, private Ui::EbsdToH5EbsdWidget
     void m_generateExampleEbsdInputFile();
     uint32_t getRefFrameZDir();
     void setRefFrameZDir(uint32_t ref);
-
-    virtual void openHtmlHelpFile();
 
     /**
      * @brief getGuiParametersFromFilter
@@ -170,7 +176,6 @@ class EbsdToH5EbsdWidget : public QWidget, private Ui::EbsdToH5EbsdWidget
     static QString								m_OpenDialogLastDirectory;
     bool m_DidCausePreflight;
 
-    bool verifyPathExists(QString outFilePath, QLineEdit* lineEdit);
 
     EbsdToH5EbsdWidget(const EbsdToH5EbsdWidget&); // Copy Constructor Not Implemented
     void operator=(const EbsdToH5EbsdWidget&); // Operator '=' Not Implemented

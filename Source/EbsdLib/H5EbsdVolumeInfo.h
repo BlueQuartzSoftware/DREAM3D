@@ -39,6 +39,7 @@
 
 #include <QtCore/QString>
 #include <QtCore/QVector>
+#include <QtCore/QSet>
 
 #include "EbsdLib/EbsdLib.h"
 #include "EbsdLib/EbsdSetGetMacros.h"
@@ -170,6 +171,14 @@ class  EbsdLib_EXPORT H5EbsdVolumeInfo
      */
     virtual int updateToLatestVersion();
 
+    /**
+     * @brief getDataArrayNames
+     * @return
+     */
+    virtual QSet<QString> getDataArrayNames();
+
+    //virtual QSet<QString> readMetaDataArrayNames();
+
 
   protected:
     H5EbsdVolumeInfo();
@@ -191,6 +200,9 @@ class  EbsdLib_EXPORT H5EbsdVolumeInfo
     QVector<float> m_SampleTransformationAxis;
     float m_EulerTransformationAngle;
     QVector<float> m_EulerTransformationAxis;
+
+    QSet<QString> m_DataArrayNames;
+//    QSet<QString> m_MetaDataArrayNames;
 
     QString m_Manufacturer;
 
