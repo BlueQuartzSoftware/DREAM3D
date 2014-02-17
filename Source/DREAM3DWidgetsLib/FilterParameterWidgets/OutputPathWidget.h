@@ -82,6 +82,7 @@ class DREAM3DWidgetsLib_EXPORT OutputPathWidget : public QWidget, private Ui::Ou
     void filterNeedsInputParameters(AbstractFilter* filter);
 
     void on_value_textChanged(const QString& text);
+    void on_value_editingFinished();
     void on_selectBtn_clicked();
 
   signals:

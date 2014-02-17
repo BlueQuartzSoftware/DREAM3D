@@ -120,6 +120,10 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
 
     //View Menu
     void on_actionShow_Filter_Library_triggered();
+    void on_actionShow_Filter_List_triggered();
+    void on_actionShow_Prebuilt_Pipelines_triggered();
+    void on_actionShow_Favorites_triggered();
+    void on_actionShow_Issues_triggered();
 
     // Help Menu
     void on_actionCheck_For_Updates_triggered();

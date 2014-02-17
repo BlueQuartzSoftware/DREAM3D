@@ -87,7 +87,7 @@ class DREAM3DWidgetsLib_EXPORT InputPathWidget : public QWidget, private Ui::Inp
     void afterPreflight(); // Called just after the dataCheck() is called.
 
     void on_value_textChanged(const QString& text);
-    void on_value_returnPressed();
+    void on_value_editingFinished();
     void on_selectBtn_clicked();
 
   signals:

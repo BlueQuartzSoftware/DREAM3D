@@ -360,12 +360,10 @@ void VisualizeGBCDGMT::execute()
   float rotNormal2[3];
   float sqCoord[2];
   float dg[3][3];
-  float dgOrig[3][3];
   float dgt[3][3];
   float dg1[3][3];
   float dg2[3][3];
   float sym1[3][3];
-  float sym1t[3][3];
   float sym2[3][3];
   float sym2t[3][3];
   float mis_euler1[3];

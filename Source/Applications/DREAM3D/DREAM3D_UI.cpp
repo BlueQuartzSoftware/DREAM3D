@@ -258,7 +258,7 @@ void DREAM3D_UI::readWindowSettings()
     }
     readDockWidgetSettings(prefs, filterListDockWidget);
     readDockWidgetSettings(prefs, filterLibraryDockWidget);
-    readDockWidgetSettings(prefs, documentsDockWidget);
+    readDockWidgetSettings(prefs, favoritesDockWidget);
     readDockWidgetSettings(prefs, prebuiltPipelinesDockWidget);
     readDockWidgetSettings(prefs, issuesDockWidget);
 
@@ -368,7 +368,7 @@ void DREAM3D_UI::writeWindowSettings(QSettings &prefs)
 
   writeDockWidgetSettings(prefs, filterListDockWidget);
   writeDockWidgetSettings(prefs, filterLibraryDockWidget);
-  writeDockWidgetSettings(prefs, documentsDockWidget);
+  writeDockWidgetSettings(prefs, favoritesDockWidget);
   writeDockWidgetSettings(prefs, prebuiltPipelinesDockWidget);
   writeDockWidgetSettings(prefs, issuesDockWidget);
 
@@ -449,14 +449,14 @@ void DREAM3D_UI::setupGui()
 
   makeStatusBarButton("Filters", filterListDockWidget, 0);
   makeStatusBarButton("Filter Library", filterLibraryDockWidget, 1);
-  makeStatusBarButton("Favorites", documentsDockWidget , 2);
+  makeStatusBarButton("Favorites", favoritesDockWidget , 2);
   makeStatusBarButton("PreBuilt", prebuiltPipelinesDockWidget, 3);
   makeStatusBarButton("Issues", issuesDockWidget, 4);
 
 
   // Make the connections between the gui elements
   filterLibraryDockWidget->connectFilterList(filterListDockWidget);
-  documentsDockWidget->connectFilterList(filterListDockWidget);
+  favoritesDockWidget->connectFilterList(filterListDockWidget);
   prebuiltPipelinesDockWidget->connectFilterList(filterListDockWidget);
 
   // Hook up the signals from the various docks to the PipelineViewWidget that will either add a filter
@@ -465,7 +465,7 @@ void DREAM3D_UI::setupGui()
           pipelineViewWidget, SLOT(addFilter(const QString&)) );
   connect(prebuiltPipelinesDockWidget, SIGNAL(pipelineFileActivated(QString)),
           pipelineViewWidget, SLOT(loadPipelineFile(QString)) );
-  connect(documentsDockWidget, SIGNAL(pipelineFileActivated(QString)),
+  connect(favoritesDockWidget, SIGNAL(pipelineFileActivated(QString)),
           pipelineViewWidget, SLOT(loadPipelineFile(QString)) );
 
 
@@ -942,4 +942,36 @@ void DREAM3D_UI::versionCheckReply(UpdateCheckData* dataObj)
 void DREAM3D_UI::on_actionShow_Filter_Library_triggered()
 {
     filterLibraryDockWidget->setVisible(true);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DREAM3D_UI::on_actionShow_Filter_List_triggered()
+{
+    filterListDockWidget->setVisible(true);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DREAM3D_UI::on_actionShow_Prebuilt_Pipelines_triggered()
+{
+    prebuiltPipelinesDockWidget->setVisible(true);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DREAM3D_UI::on_actionShow_Favorites_triggered()
+{
+    favoritesDockWidget->setVisible(true);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DREAM3D_UI::on_actionShow_Issues_triggered()
+{
+    issuesDockWidget->setVisible(true);
 }
