@@ -6,36 +6,36 @@ UCSB (UCSB)
 
 
 ## Description ##
-This filter does the following...
+This filter makes a copy of the dataset, picks a region of the specified dimensions at random, writes it to the specified location, and loops. Only the voxel data is copied and written.
 
 ## Parameters ##
 | Name             | Type |
 |------------------|------|
-| Field Array Name | String |
+| Number of Volumes | Int |
+| Sampling Size | 3x Int |
+| Output File Prefix | String |
+| Write Xdmf | Bool |
+| Output Directory | Path |
 
 ## Required Arrays ##
 
-| Type | Default Array Name | Description | Comment |
-|------|--------------------|-------------|---------|
-| Int  | SomeName           | ....        | other   |
+None (a valid voxel data container is required)
 
 
 ## Created Arrays ##
 
-| Type | Default Array Name | Description | Comment |
-|------|--------------------|-------------|---------|
-| Int  | SomeName           | ....        | other   |
+None
 
 
 
 ## Authors: ##
 
-**Copyright:** Who holds the copyright for the code
+**Copyright:** 2014 Michael A. Jackson (BlueQuartz Software), 2014 William Lenthe (UCSB)
 
-**Contact Info:** email address
+**Contact Info:** willlenthe@gmail.com
 
-**Version:** x.y.z
+**Version:** 1.0.0
 
-**License:**  What is the license for this code
+**License:**  See the License.txt file that came with DREAM3D.
 
 

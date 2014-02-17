@@ -139,12 +139,12 @@ void SampleVolume::dataCheck(bool preflight, size_t voxels, size_t fields, size_
     addErrorMessage(getHumanLabel(), "Output Directory is Not set correctly", -382);
   }
 
-  SubFilterPipeline::Pointer pipeline = buildPipeline(0, 0, m_BoxSize.x-1, 0, m_BoxSize.y-1, 0, m_BoxSize.z-1);
+  SubFilterPipeline::Pointer pipeline = buildPipeline(0, 0, 0, 0);
   err = pipeline->preflightPipeline();
   if(err<0)
   {
     setErrorCondition(-1);
-    addErrorMessage(getHumanLabel(), "Errors in sub-pipeline", -382);
+    addErrorMessage(getHumanLabel(), "Errors in sub-pipeline", err);
   }
 }
 
@@ -223,17 +223,14 @@ void SampleVolume::execute()
   //generate volumes
   for(int i=0; i<m_NumberVolumes; i++)
   {
-    int x1, x2, y1, y2, z1, z2;//bounding box
+    int x1, y1, z1;
     x1=xCord[i];
     y1=zCord[i];
     z1=yCord[i];
-    x2=x1+m_BoxSize.x-1;
-    y2=y1+m_BoxSize.y-1;
-    z2=z1+m_BoxSize.z-1;
 
     // In theory, the subpipeline was already constucted and preflight run on it so
     // there is no need to rerun it here. Just let it fly and see what happens.
-    SubFilterPipeline::Pointer pipeline = buildPipeline(i+1, x1, x2, y1, y2, z1, z2);
+    SubFilterPipeline::Pointer pipeline = buildPipeline(i+1, x1, y1, z1);
 
     pipeline->run();
     err = pipeline->getErrorCondition();
@@ -252,7 +249,7 @@ void SampleVolume::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-SubFilterPipeline::Pointer SampleVolume::buildPipeline(int append, int x1, int x2, int y1, int y2, int z1, int z2)
+SubFilterPipeline::Pointer SampleVolume::buildPipeline(int append, int x, int y, int z)
 {
   //make a subpipeline and populate with empty SurfaceMesh and Solid DataContainers
   SubFilterPipeline::Pointer pipeline = SubFilterPipeline::New();
@@ -273,8 +270,7 @@ SubFilterPipeline::Pointer SampleVolume::buildPipeline(int append, int x1, int x
   // if the user entries are going to work.
 
 
-  // Copy out the Dims, Origin, Resolution from our current Voxel Data Container to the
-  // new one
+  // Copy out the Dims, Origin, Resolution from our current Voxel Data Container to the new one
   size_t dims[3] = { 0,0,0};
   m->getDimensions(dims);
   copy->setDimensions(dims);
@@ -320,12 +316,12 @@ SubFilterPipeline::Pointer SampleVolume::buildPipeline(int append, int x1, int x
 
   //set up crop
   CropVolume::Pointer crop = CropVolume::New();
-  crop->setXMin(x1);
-  crop->setYMin(y1);
-  crop->setZMin(z1);
-  crop->setXMax(x2);
-  crop->setYMax(y2);
-  crop->setZMax(z2);
+  crop->setXMin(x);
+  crop->setYMin(y);
+  crop->setZMin(z);
+  crop->setXMax(x+m_BoxSize.x-1);
+  crop->setYMax(y+m_BoxSize.y-1);
+  crop->setZMax(z+m_BoxSize.z-1);
   crop->setRenumberGrains(false);
   crop->setUpdateOrigin(true);
   crop->setObservers(getObservers());
