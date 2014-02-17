@@ -67,17 +67,17 @@ VertexDataContainer::~VertexDataContainer()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int VertexDataContainer::writeMeshToHDF5(hid_t dcGid)
+int VertexDataContainer::writeMeshToHDF5(hid_t dcGid, bool writeXdmf)
 {
   herr_t err = 0;
-  writeVerticesToHDF5(dcGid);
+  writeVerticesToHDF5(dcGid, writeXdmf);
   return err;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int VertexDataContainer::writeVerticesToHDF5(hid_t dcGid)
+int VertexDataContainer::writeVerticesToHDF5(hid_t dcGid, bool writeXdmf)
 {
   herr_t err = 0;
   //first write the faces if they exist
@@ -94,6 +94,22 @@ int VertexDataContainer::writeVerticesToHDF5(hid_t dcGid)
     {
 //      setErrorCondition(err);
 //      notifyErrorMessage(getHumanLabel(), "Error Writing Face List to DREAM3D file", getErrorCondition());
+    }
+
+    if(writeXdmf == true)
+    {
+      QVector<size_t> cDims(1, 3);
+      DataArray<int32_t>::Pointer vertsPtr = DataArray<int32_t>::CreateArray(verticesPtr->getNumberOfTuples(), cDims, DREAM3D::StringConstants::VertsName);
+      int32_t* verts = vertsPtr->getPointer(0);
+      for(int i=0;i<vertsPtr->getNumberOfTuples();i++)
+      {
+        verts[3*i] = 1;
+        verts[3*i+1] = 1;
+        verts[3*i+2] = i;
+      }
+      int32_t rank = 2;
+      hsize_t dims[2] = {vertsPtr->getNumberOfTuples(), 3};
+      err = QH5Lite::writePointerDataset(dcGid, DREAM3D::StringConstants::VertsName, rank, dims, verts);
     }
   }
   return err;

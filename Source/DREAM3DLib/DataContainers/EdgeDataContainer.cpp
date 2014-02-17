@@ -67,10 +67,10 @@ EdgeDataContainer::~EdgeDataContainer()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int EdgeDataContainer::writeMeshToHDF5(hid_t dcGid)
+int EdgeDataContainer::writeMeshToHDF5(hid_t dcGid, bool writeXdmf)
 {
   herr_t err = 0;
-  writeVerticesToHDF5(dcGid);
+  writeVerticesToHDF5(dcGid, writeXdmf);
   writeEdgesToHDF5(dcGid);
   return err;
 }

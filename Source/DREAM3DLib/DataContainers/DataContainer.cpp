@@ -321,7 +321,7 @@ DataContainer::Pointer DataContainer::deepCopy()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int DataContainer::writeMeshToHDF5(hid_t dcGid)
+int DataContainer::writeMeshToHDF5(hid_t dcGid, bool writeXdmf)
 {
   BOOST_ASSERT(false);
   return -1;

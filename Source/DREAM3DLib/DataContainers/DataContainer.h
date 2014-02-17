@@ -300,7 +300,7 @@ class DREAM3DLib_EXPORT DataContainer : public Observable
      * @param dcGid
      * @return
      */
-    virtual int writeMeshToHDF5(hid_t dcGid);
+    virtual int writeMeshToHDF5(hid_t dcGid, bool writeXdmf);
 
     /**
      * @brief writeXdmf

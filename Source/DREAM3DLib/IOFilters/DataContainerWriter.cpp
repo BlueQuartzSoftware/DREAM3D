@@ -299,7 +299,7 @@ void DataContainerWriter::execute()
       notifyErrorMessage(getHumanLabel(), "Error Writing DataContainer Attribute Matrices", -803);
       return;
     }
-    err = dc->writeMeshToHDF5(dcGid);
+    err = dc->writeMeshToHDF5(dcGid, m_WriteXdmfFile);
     if (err < 0)
     {
       notifyErrorMessage(getHumanLabel(), "Error Writing DataContainer Mesh", -804);

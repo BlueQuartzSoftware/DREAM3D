@@ -78,27 +78,33 @@ class InsertAtomsImpl
     {
       float radius;
       VertexArray::Vert_t ll, ur;
+      VertexArray::Vert_t ll_rot, ur_rot;
       VertexArray::Vert_t point;
       char code;
       float g[3][3];
 
       for(int iter = start; iter < end; iter++)
       {
+        Int32DynamicListArray::ElementList &faceIds = m_FaceIds->getElementList(iter);
+
         OrientationMath::QuattoMat(m_AvgQuats[iter], g);
         //find bounding box for current feature
-        GeometryMath::FindBoundingBoxOfRotatedFaces(m_Faces, m_FaceIds->getElementList(iter), g, ll, ur);
+        GeometryMath::FindBoundingBoxOfFaces(m_Faces, faceIds, ll, ur);
+        GeometryMath::FindBoundingBoxOfRotatedFaces(m_Faces, faceIds, g, ll_rot, ur_rot);
         GeometryMath::FindDistanceBetweenPoints(ll, ur, radius);
 
-        generatePoints(iter, m_Points, m_InFeature, m_AvgQuats, m_LatticeConstants, ll, ur);
+        generatePoints(iter, m_Points, m_InFeature, m_AvgQuats, m_LatticeConstants, ll_rot, ur_rot);
 
         //check points in vertex array to see if they are in the bounding box of the feature
         int numPoints = m_Points[iter]->getNumberOfTuples();
+        VertexArray::Pointer vertArray = m_Points[iter];
+        BoolArrayType::Pointer boolArray = m_InFeature[iter];
         for(int i = 0; i < numPoints; i++)
         {
-          point = m_Points[iter]->getVert(i);
-          if(m_InFeature[iter]->getValue(i) == false)
+          point = vertArray->getVert(i);
+          if(boolArray->getValue(i) == false)
           {
-            code = GeometryMath::PointInPolyhedron(m_Faces, m_FaceIds->getElementList(iter), m_FaceBBs, point, ll, ur, radius);
+            code = GeometryMath::PointInPolyhedron(m_Faces, faceIds, m_FaceBBs, point, ll, ur, radius);
             if(code == 'i' || code == 'V' || code == 'E' || code == 'F') { m_InFeature[start]->setValue(i, true); }
           }
         }
@@ -120,9 +126,15 @@ class InsertAtomsImpl
       OrientationMath::QuattoMat(m_AvgQuats[iter], g);
       MatrixMath::Transpose3x3(g, gT);
 
-      float deltaX = ur.pos[0]-ll.pos[0];
-      float deltaY = ur.pos[1]-ll.pos[1];
-      float deltaZ = ur.pos[2]-ll.pos[2];
+      float minx = ll.pos[0];
+      float miny = ll.pos[1];
+      float minz = ll.pos[2];
+      float maxx = ur.pos[0];
+      float maxy = ur.pos[1];
+      float maxz = ur.pos[2];
+      float deltaX = maxx-minx;
+      float deltaY = maxy-miny;
+      float deltaZ = maxz-minz;
       size_t xPoints = int(deltaX/latticeConstants.x)+1;
       size_t yPoints = int(deltaY/latticeConstants.y)+1;
       size_t zPoints = int(deltaZ/latticeConstants.z)+1;
@@ -140,11 +152,11 @@ class InsertAtomsImpl
         {
           for(int i = 0; i < xPoints; i++)
           {
-            coords[0] = float(i) * latticeConstants.x;
-            coords[1] = float(j) * latticeConstants.y;
-            coords[2] = float(k) * latticeConstants.z;
+            coords[0] = float(i) * latticeConstants.x + minx;
+            coords[1] = float(j) * latticeConstants.y + miny;
+            coords[2] = float(k) * latticeConstants.z + minz;
             MatrixMath::Multiply3x3with3x1(gT, coords, coordsT);
-            points[iter]->setCoords(count, coords);
+            points[iter]->setCoords(count, coordsT);
             count++;
           }
         }
@@ -253,7 +265,7 @@ void InsertAtoms::dataCheck()
   AttributeMatrix::Pointer faceAttrMat = sm->getPrereqAttributeMatrix<AbstractFilter>(this, getFaceAttributeMatrixName(), -301);
   if(getErrorCondition() < 0) { return; }
   QVector<size_t> tDims(1, 0);
-  AttributeMatrix::Pointer vertexAttrMat = v->createNonPrereqAttributeMatrix<AbstractFilter>(this, getFaceAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::Vertex);
+  AttributeMatrix::Pointer vertexAttrMat = v->createNonPrereqAttributeMatrix<AbstractFilter>(this, getVertexAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::Vertex);
   if(getErrorCondition() < 0) { return; }
 
   // We MUST have Nodes
@@ -407,6 +419,8 @@ void InsertAtoms::execute()
     serial.checkPoints(0, numFeatures);
   }
 
+
+  notifyStatusMessage(getHumanLabel(), "Assigning Points");
   assign_points(points, inFeature);
 
   notifyStatusMessage(getHumanLabel(), "Complete");
@@ -429,15 +443,22 @@ void InsertAtoms::assign_points(QVector<VertexArray::Pointer> points, QVector<Bo
     }
   }
 
+  notifyStatusMessage(getHumanLabel(), "Getting VDC");
   VertexDataContainer* v = getDataContainerArray()->getDataContainerAs<VertexDataContainer>(getVertexDataContainerName());
 
+  notifyStatusMessage(getHumanLabel(), "Creating Verts");
   VertexArray::Pointer vertices = VertexArray::CreateArray(count, DREAM3D::VertexData::SurfaceMeshNodes);
 
+  notifyStatusMessage(getHumanLabel(), "Getting VAM");
   AttributeMatrix::Pointer vertexAttrMat = v->getAttributeMatrix(getVertexAttributeMatrixName());
   QVector<size_t> tDims(1, count);
+  notifyStatusMessage(getHumanLabel(), "Resizing VAM");
   vertexAttrMat->resizeAttributeArrays(tDims);
+  notifyStatusMessage(getHumanLabel(), "updating Pointers");
   updateVertexInstancePointers();
 
+  notifyStatusMessage(getHumanLabel(), "Making Verts");
+  count = 0;
   float coords[3];
   for(int i=0;i<numFeatures;i++)
   {

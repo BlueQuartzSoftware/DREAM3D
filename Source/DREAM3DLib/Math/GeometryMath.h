@@ -81,7 +81,7 @@ class DREAM3DLib_EXPORT GeometryMath
      * @param distance
      * @return
      */
-    static void FindDistanceBetweenPoints(VertexArray::Vert_t a, VertexArray::Vert_t b, float& distance);
+    static void FindDistanceBetweenPoints(const VertexArray::Vert_t& a, const VertexArray::Vert_t& b, float& distance);
 
     /**
      * @brief Computes the area of a triangle defined by 3 points.
@@ -91,7 +91,7 @@ class DREAM3DLib_EXPORT GeometryMath
      * @param area
      * @return
      */
-    static void FindTriangleArea(VertexArray::Vert_t a, VertexArray::Vert_t b, VertexArray::Vert_t c, float& area);
+    static void FindTriangleArea(const VertexArray::Vert_t& a, const VertexArray::Vert_t& b, const VertexArray::Vert_t& c, float& area);
 
     /**
      * @brief Computes the volume of a tetrahedron defined by 4 points.
@@ -102,7 +102,7 @@ class DREAM3DLib_EXPORT GeometryMath
      * @param volume
      * @return
      */
-    static void FindTetrahedronVolume(VertexArray::Vert_t a, VertexArray::Vert_t b, VertexArray::Vert_t c, VertexArray::Vert_t d, float& volume);
+    static void FindTetrahedronVolume(const VertexArray::Vert_t& a, const VertexArray::Vert_t& b, const VertexArray::Vert_t& c, const VertexArray::Vert_t& d, float& volume);
 
     /**
      * @brief Computes the normal vector to a plane containing 3 points (AB X AC).
@@ -112,7 +112,7 @@ class DREAM3DLib_EXPORT GeometryMath
      * @param n
      * @return
      */
-    static void FindPlaneNormalVector(VertexArray::Vert_t a, VertexArray::Vert_t b, VertexArray::Vert_t c, float n[3]);
+    static void FindPlaneNormalVector(const VertexArray::Vert_t& a, const VertexArray::Vert_t& b, const VertexArray::Vert_t& c, float n[3]);
 
     /**
      * @brief Computes the coefficients of a plane containing 3 points (AB X AC).
@@ -123,7 +123,7 @@ class DREAM3DLib_EXPORT GeometryMath
      * @param d float
      * @return
      */
-    static void FindPlaneCoefficients(VertexArray::Vert_t a, VertexArray::Vert_t b, VertexArray::Vert_t c, float n[3], float& d);
+    static void FindPlaneCoefficients(const VertexArray::Vert_t& a, const VertexArray::Vert_t& b, const VertexArray::Vert_t& c, float n[3], float& d);
 
     /**
      * @brief Determines if a point is inside of a box defined by the lower left and upper right corners
@@ -132,7 +132,7 @@ class DREAM3DLib_EXPORT GeometryMath
      * @param upperRight
      * @return
      */
-    static bool PointInBox(VertexArray::Vert_t p, VertexArray::Vert_t lowerLeft, VertexArray::Vert_t upperRight);
+    static bool PointInBox(const VertexArray::Vert_t& p, const VertexArray::Vert_t& lowerLeft, const VertexArray::Vert_t& upperRight);
 
     /**
      * @brief Determines if a point is inside of a polyhedron defined by a set of faces
@@ -157,7 +157,7 @@ class DREAM3DLib_EXPORT GeometryMath
      * @param p
      * @return
      */
-    static char PointInTriangle3D(VertexArray::Vert_t a, VertexArray::Vert_t b, VertexArray::Vert_t c, int m, VertexArray::Vert_t p);
+    static char PointInTriangle3D(const VertexArray::Vert_t& a, const VertexArray::Vert_t& b, const VertexArray::Vert_t& c, int m, const VertexArray::Vert_t& p);
 
     /**
      * @brief Determines if a point is inside of a triangle defined by 3 points
@@ -167,7 +167,7 @@ class DREAM3DLib_EXPORT GeometryMath
      * @param p
      * @return
      */
-    static char PointInTriangle2D(VertexArray::Vert_t a, VertexArray::Vert_t b, VertexArray::Vert_t c, VertexArray::Vert_t p);
+    static char PointInTriangle2D(const VertexArray::Vert_t& a, const VertexArray::Vert_t& b, const VertexArray::Vert_t& c, const VertexArray::Vert_t& p);
 
     /**
      * @brief Determines if a segment between two points intersects a box defined by the lower left and upper right corners
@@ -243,7 +243,7 @@ class DREAM3DLib_EXPORT GeometryMath
      * @param p
      * @return
      */
-    static char RayIntersectsTriangle(VertexArray::Vert_t a, VertexArray::Vert_t b, VertexArray::Vert_t c, VertexArray::Vert_t q, VertexArray::Vert_t r, VertexArray::Vert_t p);
+    static char RayIntersectsTriangle(const VertexArray::Vert_t& a, const VertexArray::Vert_t& b, const VertexArray::Vert_t& c, const VertexArray::Vert_t& q, const VertexArray::Vert_t& r, VertexArray::Vert_t& p);
 
     /**
      * @brief Determines if a segment between two points crosses a triangle defined by 3 points
@@ -254,7 +254,7 @@ class DREAM3DLib_EXPORT GeometryMath
      * @param c
      * @return
      */
-    static char RayCrossesTriangle(VertexArray::Vert_t a, VertexArray::Vert_t b, VertexArray::Vert_t c, VertexArray::Vert_t q, VertexArray::Vert_t r);
+    static char RayCrossesTriangle(const VertexArray::Vert_t& a, const VertexArray::Vert_t& b, const VertexArray::Vert_t& c, const VertexArray::Vert_t& q, const VertexArray::Vert_t& r);
 
     /**
      * @brief Determines if a segment between two points intersects a plane defined by 3 points
@@ -266,7 +266,7 @@ class DREAM3DLib_EXPORT GeometryMath
      * @param p
      * @return
      */
-    static char RayIntersectsPlane(VertexArray::Vert_t a, VertexArray::Vert_t b, VertexArray::Vert_t c, VertexArray::Vert_t q, VertexArray::Vert_t r, VertexArray::Vert_t p, int& m);
+    static char RayIntersectsPlane(const VertexArray::Vert_t& a, const VertexArray::Vert_t& b, const VertexArray::Vert_t& c, const VertexArray::Vert_t& q, const VertexArray::Vert_t& r, VertexArray::Vert_t& p, int& m);
 
   protected:
     GeometryMath();

@@ -67,10 +67,10 @@ SurfaceDataContainer::~SurfaceDataContainer()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int SurfaceDataContainer::writeMeshToHDF5(hid_t dcGid)
+int SurfaceDataContainer::writeMeshToHDF5(hid_t dcGid, bool writeXdmf)
 {
   herr_t err = 0;
-  writeVerticesToHDF5(dcGid);
+  writeVerticesToHDF5(dcGid, writeXdmf);
   writeEdgesToHDF5(dcGid);
   writeFacesToHDF5(dcGid);
   return err;
