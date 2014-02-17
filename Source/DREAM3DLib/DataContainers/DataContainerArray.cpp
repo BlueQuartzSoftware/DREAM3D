@@ -211,7 +211,13 @@ void DataContainerArray::printDataContainerNames(QTextStream& out)
   out << "---------------------------------------------------------------------" ;
 }
 
-int DataContainerArray::readDataContainersFromHDF5(bool preflight, hid_t dcaGid, DataContainerArrayProxy& dcaProxy)
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int DataContainerArray::readDataContainersFromHDF5(bool preflight,
+                                                   hid_t dcaGid,
+                                                   DataContainerArrayProxy& dcaProxy,
+                                                   Observable* obs)
 {
   int err = 0;
   QList<DataContainerProxy> dcsToRead = dcaProxy.list;
@@ -220,21 +226,23 @@ int DataContainerArray::readDataContainersFromHDF5(bool preflight, hid_t dcaGid,
   while (dcIter.hasNext()) // DataContainerLevel
   {
     const DataContainerProxy& dcProxy =  dcIter.next();
-    if(dcProxy.read == false) continue;
+    if(dcProxy.flag == Qt::Unchecked) continue;
     if (this->contains(dcProxy.name) == true )
     {
-      //setErrorCondition(-10987);
-      //QString ss = QObject::tr("A Data Container with name %1 already exists in Memory. Reading a Data Container with the same name would over write the one in memory. Currently this is not allowed.").arg(dcNames[iter]);
-      //notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-      return -1;
+      if(NULL != obs) {
+        QString ss = QObject::tr("A Data Container with name %1 already exists in Memory. Reading a Data Container with the same name would over write the one in memory. Currently this is not allowed.").arg(dcProxy.name);
+        obs->notifyErrorMessage(getNameOfClass(), ss, -198745600);
+      }
+      return -198745600;
     }
     err = QH5Lite::readScalarAttribute(dcaGid, dcProxy.name, DREAM3D::StringConstants::DataContainerType, dcType);
     if (err < 0)
     {
-      //setErrorCondition(-109283);
-      //QString ss = QObject::tr("The DataContainer is missing the 'DataContainerType' attribute on the '%1' Data Container").arg(dcNames[iter]);
-      //notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-      return -1;
+      if(NULL != obs) {
+        QString ss = QObject::tr("The DataContainer is missing the 'DataContainerType' attribute on the '%1' Data Container").arg(dcProxy.name);
+        obs->notifyErrorMessage(getNameOfClass(), ss, -198745601);
+      }
+      return -198745601;
     }
     if(dcType == DREAM3D::DataContainerType::VolumeDataContainer)
     {
@@ -260,17 +268,36 @@ int DataContainerArray::readDataContainersFromHDF5(bool preflight, hid_t dcaGid,
       dc->setName(dcProxy.name);
       this->pushBack(dc);
     }
+
+    // Now open the DataContainer Group in the HDF5 file
     hid_t dcGid = H5Gopen(dcaGid, dcProxy.name.toLatin1().data(), H5P_DEFAULT );
     if (dcGid < 0)
     {
-      //QString ss = QObject::tr("Error opening Group %1").arg(dcNames[iter]);
-      //setErrorCondition(-61);
-      //notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-      return -1;
+      if(NULL != obs) {
+        QString ss = QObject::tr("Error opening Group '%1'").arg(dcProxy.name);
+        obs->notifyErrorMessage(getNameOfClass(), ss, -198745602);
+      }
+      return -198745602;
     }
 
-    this->getDataContainer(dcProxy.name)->readMeshDataFromHDF5(dcGid, preflight);
+    err = this->getDataContainer(dcProxy.name)->readMeshDataFromHDF5(dcGid, preflight);
+    if(err < 0)
+    {
+      if(NULL != obs) {
+        QString ss = QObject::tr("Error reading Mesh Data from '%1'").arg(dcProxy.name);
+        obs->notifyErrorMessage(getNameOfClass(), ss, -198745603);
+      }
+      return -198745603;
+    }
     err = this->getDataContainer(dcProxy.name)->readAttributeMatricesFromHDF5(preflight, dcGid, dcProxy);
+    if (err < 0)
+    {
+      if(NULL != obs) {
+        QString ss = QObject::tr("Error reading AttributeMatrix Data from '%1'").arg(dcProxy.name);
+        obs->notifyErrorMessage(getNameOfClass(), ss, -198745604);
+      }
+      return -198745604;
+    }
   }
   return err;
 }

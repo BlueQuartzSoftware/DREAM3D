@@ -49,6 +49,8 @@
 
 #include "DREAM3DWidgetsLib/ui_DataContainerArrayProxyWidget.h"
 
+class QStandardItemModel;
+
 
 /**
 * @brief
@@ -78,20 +80,25 @@ class DREAM3DWidgetsLib_EXPORT DataContainerArrayProxyWidget : public QWidget, p
   public slots:
     void beforePreflight();
     void afterPreflight();
-
-    void on_dataContainerList_currentItemChanged(QListWidgetItem* current, QListWidgetItem* previous);
-
-    void on_attributeMatrixList_currentItemChanged(QListWidgetItem* current, QListWidgetItem* previous);
-
-    void on_attributeArrayList_currentItemChanged(QListWidgetItem* current, QListWidgetItem* previous);
+    void filterNeedsInputParameters(AbstractFilter* filter);
+    void itemActivated(const QModelIndex& index);
 
   signals:
     void errorSettingFilterParameter(const QString& msg);
     void parametersChanged();
 
+  protected:
+     void updateProxyFromModel();
+
+     void updateModelFromProxy(DataContainerArrayProxy &proxy);
+     void updateProxyFromProxy(DataContainerArrayProxy &current, DataContainerArrayProxy &incoming);
+
   private:
     AbstractFilter*   m_Filter;
     FilterParameter*  m_FilterParameter;
+    DataContainerArrayProxy m_DcaProxy;
+    bool m_DidCausePreflight;
+
 
     DataContainerArrayProxyWidget(const DataContainerArrayProxyWidget&); // Copy Constructor Not Implemented
     void operator=(const DataContainerArrayProxyWidget&); // Operator '=' Not Implemented

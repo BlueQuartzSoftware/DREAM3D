@@ -93,15 +93,13 @@ void IssuesDockWidget::on_errorTableWidget_itemClicked( QTableWidgetItem* item )
 // -----------------------------------------------------------------------------
 void IssuesDockWidget::clearIssues()
 {
-  // std::cout << "IssuesDockWidget::clearIssues()" << std::endl;
+  // qDebug() << "IssuesDockWidget::clearIssues()";
   for (int i = 0; i < errorTableWidget->rowCount(); ++i)
   {
-    //  std::cout << "    Removing Issue" << std::endl;
+    qDebug() << "    Removing Issue";
     errorTableWidget->removeRow(i);
   }
   errorTableWidget->setRowCount(0);
-
-
 }
 
 // -----------------------------------------------------------------------------

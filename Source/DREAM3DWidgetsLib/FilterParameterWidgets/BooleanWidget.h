@@ -78,7 +78,9 @@ class DREAM3DWidgetsLib_EXPORT BooleanWidget : public QWidget, private Ui::Boole
 
   public slots:
     void widgetChanged(int state);
-    void filterNeedsInputParameters(AbstractFilter* filter);
+    void filterNeedsInputParameters(AbstractFilter* filter); // When the filter is ready for us to update its input parameter(s) that we are responsible for
+    void beforePreflight(); // Called just before the "dataCheck()" is called
+    void afterPreflight(); // Called just after the dataCheck() is called.
 
   signals:
     void errorSettingFilterParameter(const QString& msg);

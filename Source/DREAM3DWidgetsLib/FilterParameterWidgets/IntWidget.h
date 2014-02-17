@@ -78,6 +78,8 @@ class DREAM3DWidgetsLib_EXPORT IntWidget : public QWidget, private Ui::IntWidget
 
   public slots:
     void widgetChanged(const QString& msg);
+    void beforePreflight();
+    void afterPreflight();
     void filterNeedsInputParameters(AbstractFilter* filter);
 
   signals:

@@ -385,6 +385,12 @@ int DataContainerWriter::writePipeline()
   }
 
   int err = QH5Lite::writeScalarAttribute(m_FileId, DREAM3D::StringConstants::PipelineGroupName, DREAM3D::Settings::NumFilters, index);
+  if(err < 0)
+  {
+    QString ss = QObject::tr("Error Writing HDF5 Scalar Attribute '%1' on HDF5 Group '%2'").arg(DREAM3D::Settings::NumFilters).arg(DREAM3D::StringConstants::PipelineGroupName);
+    setErrorCondition(-12324323);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition() );
+  }
   H5Gclose(pipelineGroupId);
   return 1;
 }

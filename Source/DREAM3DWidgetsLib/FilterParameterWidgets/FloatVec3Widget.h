@@ -77,7 +77,9 @@ class DREAM3DWidgetsLib_EXPORT FloatVec3Widget : public QWidget, private Ui::Flo
 
   public slots:
     void widgetChanged(const QString& msg);
-    void filterNeedsInputParameters(AbstractFilter* filter);
+    void filterNeedsInputParameters(AbstractFilter* filter); // When the filter is ready for us to update its input parameter(s) that we are responsible for
+    void beforePreflight(); // Called just before the "dataCheck()" is called
+    void afterPreflight(); // Called just after the dataCheck() is called.
 
   signals:
     void errorSettingFilterParameter(const QString& msg);

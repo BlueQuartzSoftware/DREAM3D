@@ -52,7 +52,7 @@ class AttributeMatrixProxy
      * @brief AttributeMatrixProxy
      */
     AttributeMatrixProxy() :
-      read(false),
+      flag(0),
       name(""),
       amType(DREAM3D::AttributeMatrixType::Unknown)
       {}
@@ -63,8 +63,8 @@ class AttributeMatrixProxy
      * @param read_am
      * @param am_type
      */
-    AttributeMatrixProxy(QString am_name, bool read_am = true, unsigned int am_type = DREAM3D::AttributeMatrixType::Unknown) :
-      read(read_am),
+    AttributeMatrixProxy(QString am_name, uint8_t read_am = Qt::Checked, unsigned int am_type = DREAM3D::AttributeMatrixType::Unknown) :
+      flag(read_am),
       name(am_name),
       amType(am_type)
       {}
@@ -74,7 +74,7 @@ class AttributeMatrixProxy
     */
     AttributeMatrixProxy(const AttributeMatrixProxy& amp)
     {
-      read = amp.read;
+      flag = amp.flag;
       name = amp.name;
       amType = amp.amType;
       dataArrays = amp.dataArrays;
@@ -85,14 +85,14 @@ class AttributeMatrixProxy
     */
     void operator=(const AttributeMatrixProxy& amp)
     {
-      read = amp.read;
+      flag = amp.flag;
       name = amp.name;
       amType = amp.amType;
       dataArrays = amp.dataArrays;
     }
 
     //----- Our variables, publicly available
-    bool read;
+    uint8_t flag;
     QString name;
     unsigned int amType;
     QMap<QString, DataArrayProxy> dataArrays;

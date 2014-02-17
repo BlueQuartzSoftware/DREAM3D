@@ -90,7 +90,7 @@ int main(int argc, char* argv[])
 #endif
 
 
-  QCoreApplication::setApplicationName("DREAM3D");
+  QCoreApplication::setApplicationName("DREAM3D_V5");
   QCoreApplication::setOrganizationDomain("bluequartz.net");
   QCoreApplication::setOrganizationName("BlueQuartz Software");
 

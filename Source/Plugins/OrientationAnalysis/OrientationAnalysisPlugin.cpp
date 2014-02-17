@@ -8,8 +8,6 @@
 #include "DREAM3DLib/Common/IFilterFactory.hpp"
 #include "DREAM3DLib/Common/FilterFactory.hpp"
 
-//#include "PipelineBuilder/FilterWidgetManager.h"
-//#include "FilterWidgets/PipelineFilterWidgetFactory.hpp"
 
 #include "moc_OrientationAnalysisPlugin.cxx"
 
@@ -61,6 +59,6 @@ void OrientationAnalysisPlugin::readSettings(QSettings& prefs)
 
 }
 
-//#include "OrientationAnalysisFilters/RegisterKnownFilterWidgets.cpp"
 #include "OrientationAnalysisFilters/RegisterKnownFilters.cpp"
 
+#include "FilterParameterWidgets/RegisterKnownFilterParameterWidgets.cpp"

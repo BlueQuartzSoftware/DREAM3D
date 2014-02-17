@@ -64,6 +64,18 @@ UnknownWidget::~UnknownWidget()
 // -----------------------------------------------------------------------------
 void UnknownWidget::setupGui()
 {
+  // Catch when the filter is about to execute the preflight
+  connect(m_Filter, SIGNAL(preflightAboutToExecute()),
+          this, SLOT(beforePreflight()));
+
+  // Catch when the filter is finished running the preflight
+  connect(m_Filter, SIGNAL(preflightExecuted()),
+          this, SLOT(afterPreflight()));
+
+  // Catch when the filter wants its values updated
+  connect(m_Filter, SIGNAL(updateFilterParameters(AbstractFilter*)),
+          this, SLOT(filterNeedsInputParameters(AbstractFilter*)));
+
   if (m_FilterParameter != NULL)
   {
     UnknownWidgetLabel->setText("Unknown Widget Type " + m_FilterParameter->getWidgetType() + " for " + m_FilterParameter->getHumanLabel());
@@ -86,3 +98,20 @@ void UnknownWidget::filterNeedsInputParameters(AbstractFilter* filter)
 
 }
 
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void UnknownWidget::afterPreflight()
+{
+  // std::cout << "After Preflight" << std::endl;
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void UnknownWidget::beforePreflight()
+{
+  // std::cout << "After Preflight" << std::endl;
+}

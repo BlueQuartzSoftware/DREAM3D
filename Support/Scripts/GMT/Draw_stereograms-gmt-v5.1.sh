@@ -61,6 +61,21 @@ then
 fi
 
 
+#----------------------------------------------------------------------------------
+# This next section deals with getting the necessary commands to generate a continuous plot versus a discrete plot.
+# We are going to default to attempting a continuous plot. If you explicitly want a Discrete plot then set the variable
+# DO_DISCRETE=1
+DO_DISCRETE=0
+
+# Check for the 'bc' command. if it is not found then we can not do a discrete plot
+BC=`type -P bc`
+if [[ $BC == "" ]];
+	then
+	echo "Missing 'bc' program which allows you to do a continuous plot. Turning off the continuous plot and doing a discrete instead"
+	DO_DISCRETE=1
+fi
+
+
  
 STRING="
  0  90
@@ -246,7 +261,7 @@ fi
 #  If you want the traditional discrete plot style, comment out "z=$(echo "scale=9; $y/10.0" | bc)" and uncomment z=$7, below.
 #  If you want to add the lines between contours, find "Adds the contour line" and remove all 
 #  comments in that section that are marked by "#g"
-DO_DISCRETE=0
+
 if [ ${DO_DISCRETE} = "0" ] ; then
 y=$7
 z=$(echo "scale=9; $y/10.0" | bc)

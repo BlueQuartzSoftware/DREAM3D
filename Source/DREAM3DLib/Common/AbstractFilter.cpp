@@ -40,6 +40,8 @@ AbstractFilter::AbstractFilter() :
 {
   m_DataContainerArray = DataContainerArray::New();
   setupFilterParameters();
+  m_PreviousFilter = NullPointer();
+  m_NextFilter = NullPointer();
 }
 
 // -----------------------------------------------------------------------------

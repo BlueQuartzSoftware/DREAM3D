@@ -76,8 +76,10 @@ class DREAM3DWidgetsLib_EXPORT DoubleWidget : public QWidget, private Ui::Double
     void setupGui();
 
   public slots:
-    void widgetChanged(const QString& msg);
-    void filterNeedsInputParameters(AbstractFilter* filter);
+    void widgetChanged(const QString& msg);// when something in the widget changes
+    void filterNeedsInputParameters(AbstractFilter* filter); // When the filter is ready for us to update its input parameter(s) that we are responsible for
+    void beforePreflight(); // Called just before the "dataCheck()" is called
+    void afterPreflight(); // Called just after the dataCheck() is called.
 
   signals:
     void errorSettingFilterParameter(const QString& msg);

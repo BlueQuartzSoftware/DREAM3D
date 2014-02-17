@@ -77,13 +77,13 @@ class DREAM3DWidgetsLib_EXPORT ArraySelectionWidget : public QWidget, private Ui
     void setupGui();
 
   public slots:
-    void widgetChanged(const QString& msg);
-    void filterNeedsInputParameters(AbstractFilter* filter);
-
-    void beforePreflight();
-    void afterPreflight();
+    void widgetChanged(const QString& msg);// when something in the widget changes
+    void filterNeedsInputParameters(AbstractFilter* filter); // When the filter is ready for us to update its input parameter(s) that we are responsible for
+    void beforePreflight(); // Called just before the "dataCheck()" is called
+    void afterPreflight(); // Called just after the dataCheck() is called.
 
     void on_dataContainerList_currentItemChanged(QListWidgetItem* current, QListWidgetItem* previous);
+
     void on_dataContainerList_itemClicked(QListWidgetItem* dcWidgetItem);
 
     void on_attributeMatrixList_currentItemChanged(QListWidgetItem* current, QListWidgetItem* previous);

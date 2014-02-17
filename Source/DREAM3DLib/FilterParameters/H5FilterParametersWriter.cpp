@@ -522,7 +522,7 @@ int H5FilterParametersWriter::writeValue(const QString name, DataContainerArrayP
   while (dcIter.hasNext()) // DataContainerLevel
   {
     const DataContainerProxy& dcProxy =  dcIter.next();
-    if(dcProxy.read == false) { continue; } // Skip to the next DataContainer if we are not reading this one.
+    if(dcProxy.flag == Qt::Unchecked) { continue; } // Skip to the next DataContainer if we are not reading this one.
     hid_t dcGid = QH5Utilities::createGroup(dcaGid, dcProxy.name);
 
     QStringList flat;
@@ -532,7 +532,7 @@ int H5FilterParametersWriter::writeValue(const QString name, DataContainerArrayP
       amIter.next();
 
       const AttributeMatrixProxy& amProxy = amIter.value();
-      if(amProxy.read == false) { continue; } // Skip to the next AttributeMatrix if not reading this one
+      if(amProxy.flag == Qt::Unchecked) { continue; } // Skip to the next AttributeMatrix if not reading this one
       hid_t amGid = QH5Utilities::createGroup(dcGid, amProxy.name);
 
       QMapIterator<QString, DataArrayProxy> dIter(amProxy.dataArrays);

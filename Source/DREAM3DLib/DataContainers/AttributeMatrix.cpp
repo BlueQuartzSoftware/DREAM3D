@@ -80,7 +80,7 @@ AttributeMatrix::~AttributeMatrix()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AttributeMatrix::ReadAttributeMatrixStructure(hid_t containerId, DataContainerProxy& dataContainer, QString h5InternalPath)
+void AttributeMatrix::ReadAttributeMatrixStructure(hid_t containerId, DataContainerProxy& dcProxy, QString h5InternalPath)
 {
   QList<QString> attributeMatrixNames;
   QH5Utilities::getGroupObjects(containerId, H5Utilities::H5Support_GROUP, attributeMatrixNames);
@@ -89,21 +89,22 @@ void AttributeMatrix::ReadAttributeMatrixStructure(hid_t containerId, DataContai
     if(__SHOW_DEBUG_MSG__) { std::cout << "    AttributeMatrix: " << attributeMatrixName.toStdString()  << std::endl; }
     hid_t attrMatGid = H5Gopen(containerId, attributeMatrixName.toAscii().constData(), H5P_DEFAULT);
     if (attrMatGid < 0) { continue; }
-    HDF5ScopedGroupSentinel sentinel(&attrMatGid, false);
+    HDF5ScopedGroupSentinel sentinel(&attrMatGid, true);
 
-    AttributeMatrixProxy attrMatrix(attributeMatrixName);
-    attrMatrix.name = attributeMatrixName;
-    attrMatrix.read = true;
-    herr_t err = QH5Lite::readScalarAttribute(containerId, attributeMatrixName, DREAM3D::StringConstants::AttributeMatrixType, attrMatrix.amType);
+    AttributeMatrixProxy amProxy(attributeMatrixName);
+    amProxy.name = attributeMatrixName;
+    amProxy.flag = Qt::Checked;
+    herr_t err = QH5Lite::readScalarAttribute(containerId, attributeMatrixName, DREAM3D::StringConstants::AttributeMatrixType, amProxy.amType);
     if(err < 0) { std::cout << "Error Reading the AttributeMatrix Type for AttributeMatrix " << attributeMatrixName.toStdString() << std::endl; }
 
     QString h5Path = h5InternalPath + "/" + attributeMatrixName;
 
     // Read in the names of the Data Arrays that make up the AttributeMatrix
-    DataArrayProxy::ReadDataArrayStructure(attrMatGid, attrMatrix.dataArrays, h5Path);
+    QMap<QString, DataArrayProxy>& daProxies = amProxy.dataArrays;
+    DataArrayProxy::ReadDataArrayStructure(attrMatGid, daProxies, h5Path);
 
     // Insert the AttributeMatrixProxy proxy into the dataContainer proxy
-    dataContainer.attributeMatricies.insert(attributeMatrixName, attrMatrix);
+    dcProxy.attributeMatricies.insert(attributeMatrixName, amProxy);
   }
 }
 
@@ -455,7 +456,7 @@ int AttributeMatrix::readAttributeArraysFromHDF5(hid_t amGid, bool preflight, At
   QString classType;
   for (QMap<QString, DataArrayProxy>::iterator iter = dasToRead.begin(); iter != dasToRead.end(); ++iter)
   {
-    qDebug() << "Reading the " << iter->name << " Array from the " << m_Name << " Attribute Matrix \n";
+    //qDebug() << "Reading the " << iter->name << " Array from the " << m_Name << " Attribute Matrix \n";
     if(iter->flag == DREAM3D::Unchecked) continue;
     QH5Lite::readStringAttribute(amGid, iter->name, DREAM3D::HDF5::ObjectType, classType);
     //   qDebug() << groupName << " Array: " << *iter << " with C++ ClassType of " << classType << "\n";

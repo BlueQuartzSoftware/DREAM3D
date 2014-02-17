@@ -393,11 +393,23 @@ class NeighborList : public IDataArray
         {
           return -606;
         }
-
+        err = QH5Lite::writeScalarAttribute(parentId, getName(), DREAM3D::HDF5::DataArrayVersion, getClassVersion());
+        if(err < 0)
+        {
+          return err;
+        }
         err = QH5Lite::writeStringAttribute(parentId, getName(), DREAM3D::HDF5::ObjectType, getNameOfClass());
         if(err < 0)
         {
           return -607;
+        }
+
+        // Write the tuple dimensions as an attribute
+        hsize_t size = tDims.size();
+        err = QH5Lite::writePointerAttribute(parentId, getName(), DREAM3D::HDF5::TupleDimensions, 1, &size, tDims.data());
+        if (err < 0)
+        {
+          return err;
         }
 
         err = QH5Lite::writeStringAttribute(parentId, getName(), "Linked NumNeighbors Dataset", m_NumNeighborsArrayName);

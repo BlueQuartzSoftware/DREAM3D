@@ -320,8 +320,8 @@ Int32ArrayType::Pointer binData(IDataArray::Pointer correlatedData, int64_t numB
 
   for (size_t i = 1; i < numfeatures; i++)
   {
-    if(fPtr[i] < min) { min = fPtr[i]; }
-    if(fPtr[i] > max) { max = fPtr[i]; }
+    if(static_cast<T>(fPtr[i]) < min) { min = static_cast<T>(fPtr[i]); }
+    if(static_cast<T>(fPtr[i]) > max) { max = static_cast<T>(fPtr[i]); }
   }
   //to make sure the max value feature doesn't walk off the end of the array, add a small value to the max
   max += 0.000001;

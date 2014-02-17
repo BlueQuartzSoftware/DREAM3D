@@ -42,10 +42,10 @@
 //
 // -----------------------------------------------------------------------------
 ArraySelectionExample::ArraySelectionExample() :
-  AbstractFilter(),
-  m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
-  m_AttributeMatrixName(DREAM3D::Defaults::AttributeMatrixName),
-  m_SelectedArrayName("")
+  AbstractFilter()
+  //  m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
+  //  m_AttributeMatrixName(DREAM3D::Defaults::AttributeMatrixName),
+  //  m_SelectedArrayName("")
 {
   setupFilterParameters();
 }
@@ -67,8 +67,8 @@ void ArraySelectionExample::setupFilterParameters()
   {
     FilterParameter::Pointer parameter = FilterParameter::New();
     parameter->setHumanLabel("Array to Select");
-    parameter->setPropertyName("SelectedArrayName");
-    parameter->setWidgetType(FilterParameterWidgetType::ArraySelectionWidget);
+    parameter->setPropertyName("DataContainerArrayProxy");
+    parameter->setWidgetType(FilterParameterWidgetType::DataContainerArrayProxyWidget);
     parameters.push_back(parameter);
   }
 
@@ -84,9 +84,9 @@ void ArraySelectionExample::readFilterParameters(AbstractFilterParametersReader*
   /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
 
   reader->openFilterGroup(this, index);
-  setDataContainerName( reader->readString("DataContainerName", getDataContainerName()) );
-  setAttributeMatrixName( reader->readString("AttributeMatrixName", getAttributeMatrixName()) );
-  setSelectedArrayName( reader->readString("SelectedArrayName", getSelectedArrayName()) );
+  //  setDataContainerName( reader->readString("DataContainerName", getDataContainerName()) );
+  //  setAttributeMatrixName( reader->readString("AttributeMatrixName", getAttributeMatrixName()) );
+  //  setSelectedArrayName( reader->readString("SelectedArrayName", getSelectedArrayName()) );
   reader->closeFilterGroup();
 }
 
@@ -96,9 +96,9 @@ void ArraySelectionExample::readFilterParameters(AbstractFilterParametersReader*
 int ArraySelectionExample::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  writer->writeValue("DataContainerName", getDataContainerName());
-  writer->writeValue("AttributeMatrixName", getAttributeMatrixName());
-  writer->writeValue("SelectedArrayName", getSelectedArrayName());
+  //  writer->writeValue("DataContainerName", getDataContainerName());
+  //  writer->writeValue("AttributeMatrixName", getAttributeMatrixName());
+  //  writer->writeValue("SelectedArrayName", getSelectedArrayName());
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
@@ -109,11 +109,9 @@ int ArraySelectionExample::writeFilterParameters(AbstractFilterParametersWriter*
 // -----------------------------------------------------------------------------
 void ArraySelectionExample::dataCheck()
 {
-  std::cout << " ArraySelectionExample   Preflighting " << std::endl;
+  //std::cout << " ArraySelectionExample   Preflighting " << std::endl;
   setErrorCondition(0);
 
-  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName(), false);
-  if(getErrorCondition() < 0 || NULL == m) { return; }
 }
 
 
@@ -122,7 +120,11 @@ void ArraySelectionExample::dataCheck()
 // -----------------------------------------------------------------------------
 void ArraySelectionExample::preflight()
 {
+  // Read up the structure from the file
+  m_DataContainerArrayProxy = DataContainerArrayProxy(getDataContainerArray().get());
+  // Annouce we are about to preflight
   emit preflightAboutToExecute();
+  emit updateFilterParameters(this);
   dataCheck();
   emit preflightExecuted();
 }
@@ -134,9 +136,8 @@ void ArraySelectionExample::execute()
 {
   int err = 0;
   setErrorCondition(err);
-
-  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName(), false);
-  if(getErrorCondition() < 0 || NULL == m) { return; }
+  dataCheck();
+  if(getErrorCondition() < 0) { return; }
 
   /* Place all your code to execute your filter here. */
 

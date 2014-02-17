@@ -57,7 +57,7 @@
 */
 class DREAM3DWidgetsLib_EXPORT OutputFileWidget : public QWidget, private Ui::OutputFileWidget
 {
-  Q_OBJECT
+    Q_OBJECT
 
   public:
     /**
@@ -83,8 +83,11 @@ class DREAM3DWidgetsLib_EXPORT OutputFileWidget : public QWidget, private Ui::Ou
 
   public slots:
     void widgetChanged(const QString& msg);
+    void beforePreflight();
+    void afterPreflight();
     void filterNeedsInputParameters(AbstractFilter* filter);
 
+    void on_value_textChanged(const QString& text);
     void on_value_returnPressed();
 
     void on_selectBtn_clicked();

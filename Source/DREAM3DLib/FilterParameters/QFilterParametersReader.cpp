@@ -813,7 +813,7 @@ DataContainerArrayProxy QFilterParametersReader::readDataContainerArrayProxy(con
   {
     m_Prefs->setArrayIndex(i);
     QString data = m_Prefs->value("Name", defValue).toString();
-    DataContainerProxy dcProxy(data, true);
+    DataContainerProxy dcProxy(data, Qt::Checked);
     dcaProxy.list.push_back(dcProxy);
     // qDebug() << "Found DataContainer: " << data;
   }
@@ -833,13 +833,13 @@ DataContainerArrayProxy QFilterParametersReader::readDataContainerArrayProxy(con
       QStringList tokens = data.split("/");
       if(dcProxy.attributeMatricies.find(tokens[0]) == dcProxy.attributeMatricies.end() ) // AttributeMatrix does not exist.
       {
-        AttributeMatrixProxy amProxy(tokens[0], true);
+        AttributeMatrixProxy amProxy(tokens[0], Qt::Checked);
         dcProxy.attributeMatricies[tokens[0]] = amProxy; // Add it to the DataContainerProxy
       }
 
       AttributeMatrixProxy& amProxy = dcProxy.attributeMatricies[tokens[0]];
       QString path = DREAM3D::StringConstants::DataContainerGroupName + "/" + dcProxy.name + "/" + amProxy.name;
-      DataArrayProxy daProxy(path, tokens[1], true);
+      DataArrayProxy daProxy(path, tokens[1], Qt::Checked);
       amProxy.dataArrays.insert(daProxy.name, daProxy);
       // qDebug() << "Found AttributeMatrix/DataArray: " << data;
     }

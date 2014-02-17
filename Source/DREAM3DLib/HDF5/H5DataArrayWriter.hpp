@@ -95,16 +95,16 @@ class H5DataArrayWriter
       }
 
 #endif
-      std::cout << dataArray->getName().toStdString() << " Tuple Dims " << std::endl;
+    //  std::cout << dataArray->getName().toStdString() << " Tuple Dims " << std::endl;
       for (int i = 0; i < tDims.size(); i++)
       {
-        std::cout << i <<  "  " << tDims[i] << std::endl;
+    //    std::cout << i <<  "  " << tDims[i] << std::endl;
         h5Dims[i] = tDims[i];
       }
-      std::cout << "  Comp Dims: " << std::endl;
+    //  std::cout << "  Comp Dims: " << std::endl;
       for(int i = 0;i < cDims.size(); i++)
       {
-        std::cout << (i+tDims.size()) << "  " << cDims[i] << std::endl;
+     //   std::cout << (i+tDims.size()) << "  " << cDims[i] << std::endl;
         h5Dims[i + tDims.size()] = cDims[i];
       }
 

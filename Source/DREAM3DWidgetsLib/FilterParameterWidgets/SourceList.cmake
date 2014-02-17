@@ -17,9 +17,11 @@ set(DREAM3D_PARAMETER_WIDGETS
       IntVec3Widget
       FloatVec3Widget
       AxisAngleWidget
-      ArraySelectionWidget
+ #     ArraySelectionWidget
       SingleArraySelectionWidget
       DataContainerArrayProxyWidget
+#      ReadH5EbsdWidget
+#      EbsdToH5EbsdWidget
 #      VolumeVertexArrayNameSelectionWidget
 #      VolumeEdgeArrayNameSelectionWidget
 #      VolumeFaceArrayNameSelectionWidget

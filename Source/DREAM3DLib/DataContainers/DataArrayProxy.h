@@ -101,6 +101,7 @@ class DataArrayProxy
      */
     static void ReadDataArrayStructure(hid_t attrMatGid, QMap<QString, DataArrayProxy>& dataArrays, QString h5InternalPath)
     {
+
       QList<QString> dataArrayNames;
       QH5Utilities::getGroupObjects(attrMatGid, H5Utilities::H5Support_DATASET, dataArrayNames);
       foreach(QString dataArrayName, dataArrayNames)

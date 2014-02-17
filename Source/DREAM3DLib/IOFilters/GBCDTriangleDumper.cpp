@@ -218,13 +218,11 @@ void GBCDTriangleDumper::execute()
     return;
   }
 
-  fprintf(f, "# Triangles Produced from DREAM3D version %s\n", DREAM3DLib::Version::Package() );
+  fprintf(f, "# Triangles Produced from DREAM3D version %s\n", DREAM3DLib::Version::Package().toLatin1().data() );
   fprintf(f, "# Column 1-3:    right hand average orientation (phi1, PHI, phi2 in RADIANS)\n");
   fprintf(f, "# Column 4-6:    left hand average orientation (phi1, PHI, phi2 in RADIANS)\n");
   fprintf(f, "# Column 7-9:    triangle normal\n");
   fprintf(f, "# Column 8:      surface area\n");
-
-  float radToDeg = 180.0 / M_PI;
 
   int gid0 = 0; // Feature id 0
   int gid1 = 0; // Feature id 1

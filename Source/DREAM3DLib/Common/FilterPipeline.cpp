@@ -210,7 +210,8 @@ void FilterPipeline::updatePrevNextFilters()
 
   for (FilterContainerType::iterator iter = m_Pipeline.begin(); iter != m_Pipeline.end(); ++iter)
   {
-    // currFilt = *iter;
+    (*iter)->setPreviousFilter(AbstractFilter::NullPointer());
+    (*iter)->setNextFilter(AbstractFilter::NullPointer());
     if(iter != m_Pipeline.begin())
     {
       prev = iter;

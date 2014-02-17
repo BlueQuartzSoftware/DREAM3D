@@ -72,15 +72,18 @@ ArraySelectionWidget::~ArraySelectionWidget()
 void ArraySelectionWidget::setupGui()
 {
   qRegisterMetaType<DataContainerArrayProxy>("DataContainerArrayProxy");
-  // The filter should emit this signal when a filter changes.
-  //  connect(m_Filter, SIGNAL(parametersChanged()),
-  //          this, SLOT(initializeHeirarchy() ) );
 
+  // Catch when the filter is about to execute the preflight
   connect(m_Filter, SIGNAL(preflightAboutToExecute()),
-          this, SLOT(beforePreflight() ) );
+          this, SLOT(beforePreflight()));
 
+  // Catch when the filter is finished running the preflight
   connect(m_Filter, SIGNAL(preflightExecuted()),
-          this, SLOT(afterPreflight()) );
+          this, SLOT(afterPreflight()));
+
+  // Catch when the filter wants its values updated
+  connect(m_Filter, SIGNAL(updateFilterParameters(AbstractFilter*)),
+          this, SLOT(filterNeedsInputParameters(AbstractFilter*)));
 
   if (m_FilterParameter != NULL)
   {
@@ -264,6 +267,60 @@ void ArraySelectionWidget::initializeHeirarchy()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+DataContainerArrayProxy ArraySelectionWidget::generateDCAProxy()
+{
+  // This will only work for a single selection
+  DataContainerArrayProxy dcaProxy(true);
+  QString dcaName = dataContainerList->currentItem()->text();
+  DataContainerProxy dcProxy(dcaName, true);
+
+  QString amName = attributeMatrixList->currentItem()->text();
+  AttributeMatrixProxy amProxy(amName, true);
+
+  QString daName = attributeArrayList->currentItem()->text();
+  DataArrayProxy daProxy(dcaName + "|" + amName, daName, true);
+  amProxy.dataArrays.insert(daName, daProxy);
+  dcProxy.attributeMatricies.insert(amName, amProxy);
+  dcaProxy.list.push_back(dcProxy);
+
+  return dcaProxy;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ArraySelectionWidget::filterNeedsInputParameters(AbstractFilter* filter)
+{
+  // Set this value into the m_FilterInstance as the specified Filter Property, Which will cause a preflight to occur
+  // because the parameters have changed. which will reset the lists, which causes a preflight..
+  this->blockSignals(true);
+  filter->blockSignals(true); // Make sure the filter does not fire off the parametersChanged() signal too soon
+
+  // Generate the DataContainerArrayProxy object to pass over to the filter, letting the filter know what the
+  // user has selected
+  DataContainerArrayProxy dcaProxy = generateDCAProxy();
+
+
+  QVariant var;
+  var.setValue(m_DcaProxy);
+  bool ok = false;
+
+  ok = filter->setProperty(PROPERTY_NAME_AS_CHAR, var);
+  if(false == ok)
+  {
+    QString ss = QObject::tr("Error occurred setting Filter Parameter '%1'").arg(m_FilterParameter->getPropertyName() );
+    emit errorSettingFilterParameter(ss);
+    qDebug() << ss;
+  }
+
+  this->blockSignals(false);
+  filter->blockSignals(false); // Make sure the filter does not fire off the parametersChanged() signal too soon
+
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void ArraySelectionWidget::beforePreflight()
 {
 
@@ -340,59 +397,5 @@ void ArraySelectionWidget::afterPreflight()
     }
   }
   attributeArrayList->blockSignals(false);
-
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-DataContainerArrayProxy ArraySelectionWidget::generateDCAProxy()
-{
-  // This will only work for a single selection
-  DataContainerArrayProxy dcaProxy(true);
-  QString dcaName = dataContainerList->currentItem()->text();
-  DataContainerProxy dcProxy(dcaName, true);
-
-  QString amName = attributeMatrixList->currentItem()->text();
-  AttributeMatrixProxy amProxy(amName, true);
-
-  QString daName = attributeArrayList->currentItem()->text();
-  DataArrayProxy daProxy(dcaName + "|" + amName, daName, true);
-  amProxy.dataArrays.insert(daName, daProxy);
-  dcProxy.attributeMatricies.insert(amName, amProxy);
-  dcaProxy.list.push_back(dcProxy);
-
-  return dcaProxy;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void ArraySelectionWidget::filterNeedsInputParameters(AbstractFilter* filter)
-{
-  // Set this value into the m_FilterInstance as the specified Filter Property, Which will cause a preflight to occur
-  // because the parameters have changed. which will reset the lists, which causes a preflight..
-  this->blockSignals(true);
-  filter->blockSignals(true); // Make sure the filter does not fire off the parametersChanged() signal too soon
-
-  // Generate the DataContainerArrayProxy object to pass over to the filter, letting the filter know what the
-  // user has selected
-  DataContainerArrayProxy dcaProxy = generateDCAProxy();
-
-
-  QVariant var;
-  var.setValue(m_DcaProxy);
-  bool ok = false;
-
-  ok = filter->setProperty(PROPERTY_NAME_AS_CHAR, var);
-  if(false == ok)
-  {
-    QString ss = QObject::tr("Error occurred setting Filter Parameter '%1'").arg(m_FilterParameter->getPropertyName() );
-    emit errorSettingFilterParameter(ss);
-    qDebug() << ss;
-  }
-
-  this->blockSignals(false);
-  filter->blockSignals(false); // Make sure the filter does not fire off the parametersChanged() signal too soon
 
 }

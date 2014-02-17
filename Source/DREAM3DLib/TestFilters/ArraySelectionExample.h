@@ -42,13 +42,7 @@
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/DataArrays/IDataArray.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-/*
- * Look at Generic/RemoveArrays class for code on how to write the values to the .dream3d file.
- */
+#include "DREAM3DLib/DataContainers/DataContainerArrayProxy.h"
 
 
 /**
@@ -73,12 +67,16 @@ class DREAM3DLib_EXPORT ArraySelectionExample : public AbstractFilter
      * as input parameters
      */
 
-    DREAM3D_FILTER_PARAMETER(QString, DataContainerName)
-    Q_PROPERTY(QString DataContainerName READ getDataContainerName WRITE setDataContainerName NOTIFY parametersChanged)
-    DREAM3D_FILTER_PARAMETER(QString, AttributeMatrixName)
-    Q_PROPERTY(QString AttributeMatrixName READ getAttributeMatrixName WRITE setAttributeMatrixName NOTIFY parametersChanged)
-    DREAM3D_FILTER_PARAMETER(QString, SelectedArrayName)
-    Q_PROPERTY(QString SelectedArrayName READ getSelectedArrayName WRITE setSelectedArrayName NOTIFY parametersChanged)
+    //    DREAM3D_FILTER_PARAMETER(QString, DataContainerName)
+    //    Q_PROPERTY(QString DataContainerName READ getDataContainerName WRITE setDataContainerName NOTIFY parametersChanged)
+    //    DREAM3D_FILTER_PARAMETER(QString, AttributeMatrixName)
+    //    Q_PROPERTY(QString AttributeMatrixName READ getAttributeMatrixName WRITE setAttributeMatrixName NOTIFY parametersChanged)
+    //    DREAM3D_FILTER_PARAMETER(QString, SelectedArrayName)
+    //    Q_PROPERTY(QString SelectedArrayName READ getSelectedArrayName WRITE setSelectedArrayName NOTIFY parametersChanged)
+
+    DREAM3D_FILTER_PARAMETER(DataContainerArrayProxy, DataContainerArrayProxy)
+    Q_PROPERTY(DataContainerArrayProxy DataContainerArrayProxy READ getDataContainerArrayProxy WRITE setDataContainerArrayProxy NOTIFY parametersChanged)
+
 
     /**
     * @brief This returns the group that the filter belonds to. You can select
@@ -91,7 +89,7 @@ class DREAM3DLib_EXPORT ArraySelectionExample : public AbstractFilter
     * @brief This returns a string that is displayed in the GUI. It should be readable
     * and understandable by humans.
     */
-    virtual const QString getHumanLabel() { return "Array Selection Example"; }
+    virtual const QString getHumanLabel() { return "DataContainerArrayProxy Example"; }
 
     /**
     * @brief This returns a string that is displayed in the GUI and helps to sort the filters into

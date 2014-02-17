@@ -68,6 +68,18 @@ AxisAngleWidget::~AxisAngleWidget()
 void AxisAngleWidget::setupGui()
 {
 
+  // Catch when the filter is about to execute the preflight
+  connect(m_Filter, SIGNAL(preflightAboutToExecute()),
+          this, SLOT(beforePreflight()));
+
+  // Catch when the filter is finished running the preflight
+  connect(m_Filter, SIGNAL(preflightExecuted()),
+          this, SLOT(afterPreflight()));
+
+  // Catch when the filter wants its values updated
+  connect(m_Filter, SIGNAL(updateFilterParameters(AbstractFilter*)),
+          this, SLOT(filterNeedsInputParameters(AbstractFilter*)));
+
   connect(angle, SIGNAL(textChanged(const QString&)),
           this, SLOT(widgetChanged(const QString&) ) );
   connect(axis_i, SIGNAL(textChanged(const QString&)),
@@ -128,3 +140,19 @@ void AxisAngleWidget::filterNeedsInputParameters(AbstractFilter* filter)
   }
 }
 
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void AxisAngleWidget::beforePreflight()
+{
+
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void AxisAngleWidget::afterPreflight()
+{
+
+}

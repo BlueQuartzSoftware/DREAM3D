@@ -40,6 +40,7 @@
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/Observer.h"
+#include "DREAM3DLib/Common/Observable.h"
 #include "DREAM3DLib/DataContainers/DataContainer.h"
 #include "DREAM3DLib/DataContainers/VolumeDataContainer.h"
 #include "DREAM3DLib/DataContainers/SurfaceDataContainer.h"
@@ -100,7 +101,10 @@ class DREAM3DLib_EXPORT DataContainerArray : public QObject
     * @brief Reads desired the DataContainers from HDF5 file
     * @return
     */
-    virtual int readDataContainersFromHDF5(bool preflight, hid_t dcaGid, DataContainerArrayProxy& dcaProxy);
+    virtual int readDataContainersFromHDF5(bool preflight,
+                                                   hid_t dcaGid,
+                                                   DataContainerArrayProxy& dcaProxy,
+                                                   Observable* obs = NULL);
 
     /**
      * @brief getDataContainerAs

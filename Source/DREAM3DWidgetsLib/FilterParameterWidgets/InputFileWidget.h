@@ -81,7 +81,8 @@ class DREAM3DWidgetsLib_EXPORT InputFileWidget : public QWidget, private Ui::Inp
     bool verifyPathExists(QString filePath, QLineEdit* lineEdit);
 
   public slots:
-    void widgetChanged(const QString &text);
+    void beforePreflight();
+    void afterPreflight();
     void filterNeedsInputParameters(AbstractFilter* filter);
 
     void on_value_textChanged(const QString& text);

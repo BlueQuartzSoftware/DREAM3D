@@ -100,7 +100,7 @@ class DREAM3DLib_EXPORT AttributeMatrix : public Observable
      * @param dataContainer
      * @param h5InternalPath
      */
-    static void ReadAttributeMatrixStructure(hid_t containerId, DataContainerProxy& dataContainer, QString h5InternalPath);
+    static void ReadAttributeMatrixStructure(hid_t containerId, DataContainerProxy& dcProxy, QString h5InternalPath);
 
     /**
      * @brief getPrereqArray
@@ -354,7 +354,7 @@ class DREAM3DLib_EXPORT AttributeMatrix : public Observable
     void resizeAttributeArrays(QVector<size_t> tDims);
 
     /**
-    * @brief Removes inactive objects from the Attribute Matrix and renumbers the active objects to preserve a compact matrix 
+    * @brief Removes inactive objects from the Attribute Matrix and renumbers the active objects to preserve a compact matrix
       (only valid for feature or ensemble type matrices)
     * @param size The new size of the array
     */

@@ -81,8 +81,13 @@ class DREAM3DWidgetsLib_EXPORT InputPathWidget : public QWidget, private Ui::Inp
     bool verifyPathExists(QString filePath, QLineEdit* lineEdit);
 
   public slots:
-    void widgetChanged(const QString& msg);
-    void filterNeedsInputParameters(AbstractFilter* filter);
+    void widgetChanged(const QString& msg);// when something in the widget changes
+    void filterNeedsInputParameters(AbstractFilter* filter); // When the filter is ready for us to update its input parameter(s) that we are responsible for
+    void beforePreflight(); // Called just before the "dataCheck()" is called
+    void afterPreflight(); // Called just after the dataCheck() is called.
+
+    void on_value_textChanged(const QString& text);
+    void on_value_returnPressed();
     void on_selectBtn_clicked();
 
   signals:
