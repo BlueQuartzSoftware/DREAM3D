@@ -52,10 +52,11 @@
 #include <QtGui/QMenu>
 
 #include "DREAM3DLib/DataContainers/VolumeDataContainer.h"
+#include "DREAM3DLib/Common/FilterManager.h"
+#include "DREAM3DLib/Common/IFilterFactory.hpp"
 #include "DREAM3DLib/DataArrays/DataArray.hpp"
 #include "DREAM3DLib/IOFilters/ReadOrientationData.h"
 #include "DREAM3DLib/GenericFilters/GenerateIPFColors.h"
-//#include "DREAM3DLib/ProcessingFilters/ConvertEulerAngles.h"
 
 #include "QtSupport/DREAM3DHelpUrlGenerator.h"
 
@@ -92,20 +93,20 @@ QEbsdReferenceFrameDialog::~QEbsdReferenceFrameDialog()
 //
 // -----------------------------------------------------------------------------
 #define ZOOM_MENU(var, menu, slot)\
-  {\
+{\
   QAction* action = new QAction(menu);\
   action->setText( #var );\
   QString actionName("action_z" #var "Action");\
   action->setObjectName(actionName);\
   zoomMenu->addAction(action);\
   connect(action, SIGNAL(triggered()), this, SLOT(slot())); \
-}
+  }
 
 #define ZOOM_MENU_SLOT_DEF(var, index)\
-void QEbsdReferenceFrameDialog::z##var##_triggered() {\
+  void QEbsdReferenceFrameDialog::z##var##_triggered() {\
   zoomButton->setText(#var " % ");\
   m_EbsdView->setZoomIndex(index);\
-}
+  }
 
 ZOOM_MENU_SLOT_DEF(10, 0)
 ZOOM_MENU_SLOT_DEF(25, 1)
@@ -153,7 +154,7 @@ void QEbsdReferenceFrameDialog::setupGui()
   connect(refDir, SIGNAL(currentIndexChanged(int)),
           this, SLOT(referenceDirectionChanged()));
 
-    QMenu* zoomMenu = new QMenu(this);
+  QMenu* zoomMenu = new QMenu(this);
   ZOOM_MENU(10, zoomMenu, z10_triggered);
   ZOOM_MENU(25, zoomMenu, z25_triggered);
   ZOOM_MENU(50, zoomMenu, z50_triggered);
@@ -166,8 +167,8 @@ void QEbsdReferenceFrameDialog::setupGui()
 
   zoomButton->setMenu(zoomMenu);
 
-//  connect(fitToWindow, SIGNAL(clicked()),
-//          m_EbsdView->fitInView() );
+  //  connect(fitToWindow, SIGNAL(clicked()),
+  //          m_EbsdView->fitInView() );
 }
 
 // -----------------------------------------------------------------------------
@@ -273,23 +274,38 @@ void QEbsdReferenceFrameDialog::loadEbsdData()
     m_DisplayedImage = QImage();
   }
 
-#if 0
+
   //If they want to convert the Eulers to Radians
   if(degToRads->isChecked() == true)
   {
-    ConvertEulerAngles::Pointer convert = ConvertEulerAngles::New();
-    convert->setConversionType(DREAM3D::EulerAngleConversionType::DegreesToRadians);
-    convert->setVolumeDataContainer(m.get());
-    convert->execute();
-    err = convert->getErrorCondition();
-    if (err < 0)
+    QString filtName = "ConvertEulerAngles";
+    FilterManager::Pointer fm = FilterManager::Instance();
+    IFilterFactory::Pointer convertEulerFactory = fm->getFactoryForFilter(filtName);
+    if (NULL != convertEulerFactory.get() )
     {
-      m_BaseImage = QImage();
-      m_DisplayedImage = QImage();
-    }
-  }
-#endif
+      // If we get this far, the Factory is good so creating the filter should not fail unless something has
+      // horribly gone wrong in which case the system is going to come down quickly after this.
+      AbstractFilter::Pointer convert = convertEulerFactory->create();
 
+      // Connect up the Error/Warning/Progress object so the filter can report those things
+//      connect(convert.get(), SIGNAL(filterGeneratedMessage(const PipelineMessage&)),
+//              this, SLOT(broadcastPipelineMessage(const PipelineMessage&)));
+
+      convert->setProperty("ConversionType", DREAM3D::EulerAngleConversionType::DegreesToRadians);
+
+      convert->setDataContainerArray(dca);
+      convert->execute();
+      err = convert->getErrorCondition();
+      if (err < 0)
+      {
+        m_BaseImage = QImage();
+        m_DisplayedImage = QImage();
+      }
+    }
+
+  }
+
+  // We can use this filter directly because it is in the Core of DREAM3D
   GenerateIPFColors::Pointer ipfColorFilter = GenerateIPFColors::New();
   FloatVec3_t ref;
   ref.x = 0;
@@ -379,86 +395,93 @@ void QEbsdReferenceFrameDialog::originChanged(bool checked)
   }
 
   // Initialize to "No Transform"
-  float sampleTransAngle = 0.0f;
-  float sampleTransAxis[3] = { 0.0f, 0.0f, 1.0f};
-  float eulerTranAngle = 0.0f;
-  float eulerTransAxis[3] = { 0.0f, 0.0f, 1.0f};
+  AxisAngleInput_t sampleTrans;
+  sampleTrans.angle = 0.0f;
+  sampleTrans.h = 0.0f;
+  sampleTrans.k = 0.0f;
+  sampleTrans.l = 1.0f;
+  AxisAngleInput_t eulerTrans;
+  eulerTrans.angle = 0.0f;
+  eulerTrans.h = 0.0f;
+  eulerTrans.k = 0.0f;
+  eulerTrans.l = 1.0f;
 
-  getSampleTranformation(sampleTransAngle, sampleTransAxis[0], sampleTransAxis[1], sampleTransAxis[2]);
-  getEulerTranformation(eulerTranAngle, eulerTransAxis[0], eulerTransAxis[1], eulerTransAxis[2]);
 
-  QString sampleTrans = QString::number(sampleTransAngle) + " @ <" + QString::number(sampleTransAxis[0]) + QString::number(sampleTransAxis[1]) + QString::number(sampleTransAxis[2]) + ">";
-  QString eulerTrans = QString::number(eulerTranAngle) + " @ <" + QString::number(eulerTransAxis[0]) + QString::number(eulerTransAxis[1]) + QString::number(eulerTransAxis[2]) + ">";
-  m_SampleTransformationLabel->setText(sampleTrans);
-  m_EulerTransformationLabel->setText(eulerTrans);
+  getSampleTranformation(sampleTrans);
+  getEulerTranformation(eulerTrans);
+
+  QString sampleTransLabel = QString::number(sampleTrans.angle) + " @ <" + QString::number(sampleTrans.h) + QString::number(sampleTrans.k) + QString::number(sampleTrans.l) + ">";
+  QString eulerTransLabel = QString::number(eulerTrans.angle) + " @ <" + QString::number(eulerTrans.h) + QString::number(eulerTrans.k) + QString::number(eulerTrans.l) + ">";
+  m_SampleTransformationLabel->setText(sampleTransLabel);
+  m_EulerTransformationLabel->setText(eulerTransLabel);
 
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QEbsdReferenceFrameDialog::getSampleTranformation(float &sampleTransAngle, float &dir0, float &dir1, float &dir2)
+void QEbsdReferenceFrameDialog::getSampleTranformation(AxisAngleInput_t &input)
 {
   // Initialize to "No Transform"
-  sampleTransAngle = 0.0f;
-  dir0 = 0.0f;
-  dir1 = 0.0f;
-  dir2 = 1.0f;
+  input.angle = 0.0f;
+  input.h = 0.0f;
+  input.k = 0.0f;
+  input.l = 1.0f;
 
 
   if (getTSLchecked() == true)
   {
-    sampleTransAngle = 180.0;
-    dir0 = 0.0;
-    dir1 = 1.0;
-    dir2 = 0.0;
+    input.angle = 180.0;
+    input.h = 0.0;
+    input.k = 1.0;
+    input.l = 0.0;
   }
   else if (getHKLchecked() == true)
   {
-    sampleTransAngle = 180.0;
-    dir0 = 0.0;
-    dir1 = 1.0;
-    dir2 = 0.0;
+    input.angle = 180.0;
+    input.h = 0.0;
+    input.k = 1.0;
+    input.l = 0.0;
   }
   else if (getHEDMchecked() == true)
   {
-    sampleTransAngle = 0.0;
-    dir0 = 0.0;
-    dir1 = 0.0;
-    dir2 = 1.0;
+    input.angle = 0.0;
+    input.h = 0.0;
+    input.k = 0.0;
+    input.l = 1.0;
   }
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QEbsdReferenceFrameDialog::getEulerTranformation(float &eulerTransAngle, float &dir0, float &dir1, float &dir2)
+void QEbsdReferenceFrameDialog::getEulerTranformation(AxisAngleInput_t &input)
 {
-  eulerTransAngle = 0.0f;
-  dir0 = 0.0f;
-  dir1 = 0.0f;
-  dir2 = 1.0f;
+  input.angle = 0.0f;
+  input.h = 0.0f;
+  input.k = 0.0f;
+  input.l = 1.0f;
 
   if (getTSLchecked() == true)
   {
-    eulerTransAngle = 90.0;
-    dir0 = 0.0;
-    dir1 = 0.0;
-    dir2 = 1.0;
+    input.angle = 90.0;
+    input.h = 0.0;
+    input.k = 0.0;
+    input.l = 1.0;
   }
   else if (getHKLchecked() == true)
   {
-    eulerTransAngle = 0.0;
-    dir0 = 0.0;
-    dir1 = 0.0;
-    dir2 = 1.0;
+    input.angle = 0.0;
+    input.h = 0.0;
+    input.k = 0.0;
+    input.l = 1.0;
   }
   else if (getHEDMchecked() == true)
   {
-    eulerTransAngle = 0.0;
-    dir0 = 0.0;
-    dir1 = 0.0;
-    dir2 = 1.0;
+    input.angle = 0.0;
+    input.h = 0.0;
+    input.k = 0.0;
+    input.l = 1.0;
   }
 
 }
@@ -551,10 +574,10 @@ QImage QEbsdReferenceFrameDialog::paintImage(QImage image)
   qint32 penWidth = 2;
   painter.setPen(QPen(QColor(0, 0, 0, 255), penWidth, Qt::SolidLine, Qt::SquareCap, Qt::MiterJoin));
 
-//  QPainterPath circle;
-//  QPointF center(pImageWidth / 2, pImageHeight / 2);
-//  circle.addEllipse(center, imageWidth / 2, imageHeight / 2);
-//  painter.drawPath(circle);
+  //  QPainterPath circle;
+  //  QPointF center(pImageWidth / 2, pImageHeight / 2);
+  //  circle.addEllipse(center, imageWidth / 2, imageHeight / 2);
+  //  painter.drawPath(circle);
 
   painter.drawText(pxOffset/2, pImageHeight / 2 + pxHigh / 3, "Y");
 
@@ -563,8 +586,8 @@ QImage QEbsdReferenceFrameDialog::paintImage(QImage image)
 
   painter.drawText(pxOffset/2, pImageHeight - pyOffset + pxHigh + 2, "(0,0)");
 
-//  pxWide = metrics.width(config.label);
-//  painter.drawText(2, pxHigh, config.label);
+  //  pxWide = metrics.width(config.label);
+  //  painter.drawText(2, pxHigh, config.label);
 
   // Draw slightly transparent lines
   penWidth = 3;
@@ -574,8 +597,8 @@ QImage QEbsdReferenceFrameDialog::paintImage(QImage image)
   // Draw the Y-Axis
   painter.drawLine(pxOffset-3, pImageHeight-pyOffset + 3, pxOffset-3, pImageHeight / 2);
 
-//    painter.drawLine(pxOffset, pImageHeight / 2, pImageWidth - pxOffset, pImageHeight / 2);
-//  painter.drawLine(pImageWidth / 2, pyOffset, pImageWidth / 2, pImageHeight - pyOffset);
+  //    painter.drawLine(pxOffset, pImageHeight / 2, pImageWidth - pxOffset, pImageHeight / 2);
+  //  painter.drawLine(pImageWidth / 2, pyOffset, pImageWidth / 2, pImageHeight - pyOffset);
 
 
   painter.end();

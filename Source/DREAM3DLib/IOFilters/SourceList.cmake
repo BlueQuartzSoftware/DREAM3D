@@ -26,7 +26,6 @@ set(_PublicFilters
   DataContainerWriter
   DxReader
   DxWriter
-  EbsdToH5Ebsd
   EnsembleInfoReader
   FeatureDataCSVWriter
   FeatureInfoReader

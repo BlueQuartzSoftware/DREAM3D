@@ -310,6 +310,14 @@ int TextFilterParametersWriter::writeValue(const QString name, QVector<AxisAngle
   int err = -1;
   return err;
 }
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int TextFilterParametersWriter::writeValue(const QString name, AxisAngleInput_t v)
+{
+  int err = -1;
+  return err;
+}
 
 // -----------------------------------------------------------------------------
 //

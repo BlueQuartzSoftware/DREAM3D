@@ -732,7 +732,13 @@ QVector<ComparisonInput_t> QFilterParametersReader::readComparisonInputs(const Q
 AxisAngleInput_t QFilterParametersReader::readAxisAngle(const QString name, AxisAngleInput_t v, int vectorPos)
 {
   BOOST_ASSERT(m_Prefs != NULL);
-
+  bool closeArray = false;
+  if (vectorPos == -1)
+  {
+    int count = m_Prefs->beginReadArray(name);
+    vectorPos = 0;
+    closeArray = true;
+  }
   bool ok = false;
 
   m_Prefs->setArrayIndex(vectorPos);
@@ -741,6 +747,10 @@ AxisAngleInput_t QFilterParametersReader::readAxisAngle(const QString name, Axis
   v.k = m_Prefs->value("K").toFloat(&ok);
   v.l = m_Prefs->value("L").toFloat(&ok);
 
+  if (closeArray == true)
+  {
+    m_Prefs->endArray();
+  }
   return v;
 }
 

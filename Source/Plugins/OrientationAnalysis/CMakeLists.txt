@@ -118,7 +118,7 @@ if(UNIX AND NOT APPLE)
 endif()
 
 # --------------------------------------------------------------------
-#
+# These headers will be MOC'ed by the build system. They should all inherit from QObject
 # --------------------------------------------------------------------
 set(${PLUGIN_NAME}_HDRS
   ${PROJECT_SOURCE_DIR}/${PLUGIN_NAME}Plugin.h
@@ -127,7 +127,11 @@ set(${PLUGIN_NAME}_HDRS
 set(${PLUGIN_NAME}_SRCS
  ${PROJECT_SOURCE_DIR}/${PLUGIN_NAME}Plugin.cpp
 )
-cmp_IDE_SOURCE_PROPERTIES( "${PLUGIN_NAME}/" "${${PLUGIN_NAME}_HDRS}" "${${PLUGIN_NAME}_SRCS}" "0")
+
+set(${PLUGIN_NAME}_MISC_HDRS
+    ${PROJECT_SOURCE_DIR}/${PLUGIN_NAME}Constants.h
+)
+cmp_IDE_SOURCE_PROPERTIES( "${PLUGIN_NAME}/" "${${PLUGIN_NAME}_HDRS};${${PLUGIN_NAME}_MISC_HDRS}" "${${PLUGIN_NAME}_SRCS}" "0")
 
 # --------------------------------------------------------------------
 #
@@ -162,7 +166,7 @@ set(${PLUGIN_NAME}_MODULE_SRCS
   ${${PLUGIN_NAME}_Widgets_UIS}
   ${${PLUGIN_NAME}_Widgets_Generated_MOC_SRCS}
   ${${PLUGIN_NAME}_Widgets_Generated_UI_HDRS}
-  
+
 )
 
 # --------------------------------------------------------------------

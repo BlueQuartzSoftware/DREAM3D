@@ -47,7 +47,7 @@ class QGraphicsPixmapItem;
 #include "ui_QEbsdReferenceFrameDialog.h"
 
 #include "EbsdLib/EbsdConstants.h"
-
+#include "DREAM3DLib/FilterParameters/FilterParameter.h"
 
 /**
  * @class QEbsdReferenceFrameDialog QEbsdReferenceFrameDialog.h EbsdImport/UI/QEbsdReferenceFrameDialog.h
@@ -81,8 +81,8 @@ class QEbsdReferenceFrameDialog : public QDialog, private Ui::QEbsdReferenceFram
     bool getHKLchecked();
     bool getHEDMchecked();
     bool getNoTranschecked();
-    void getSampleTranformation(float &angle, float &dir0, float &dir1, float &dir2);
-    void getEulerTranformation(float &eulerTransAngle, float &dir0, float &dir1, float &dir2);
+    void getSampleTranformation(AxisAngleInput_t &input);
+    void getEulerTranformation(AxisAngleInput_t &input);
 
   protected slots:
     void originChanged(bool checked);

@@ -106,12 +106,14 @@ class DREAM3DLib_EXPORT AbstractFilterParametersWriter
 
     virtual int writeValue(const QString name, DataContainerArrayProxy& v) = 0;
 
+    virtual int writeValue(const QString name, AxisAngleInput_t v) = 0;
 
   protected:
     AbstractFilterParametersWriter();
+
+
     virtual int writeValue(const QString name, AxisAngleInput_t v, int vectorPos) = 0;
     virtual int writeValue(const QString name, ComparisonInput_t v, int vectorPos) = 0;
-
   private:
     AbstractFilterParametersWriter(const AbstractFilterParametersWriter&); // Copy Constructor Not Implemented
     void operator=(const AbstractFilterParametersWriter&); // Operator '=' Not Implemented

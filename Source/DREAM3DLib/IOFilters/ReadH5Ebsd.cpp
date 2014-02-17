@@ -56,10 +56,6 @@
 #include "DREAM3DLib/Common/FilterManager.h"
 #include "DREAM3DLib/Common/IFilterFactory.hpp"
 
-//#include "Processing/ProcessingFilters/RotateEulerRefFrame.h"
-
-//#include "Sampling/SamplingFilters/RotateSampleRefFrame.h"
-
 
 #define ERROR_TXT_OUT 1
 #define ERROR_TXT_OUT1 1

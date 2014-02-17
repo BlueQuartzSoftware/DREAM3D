@@ -13,7 +13,6 @@
   <property name="windowTitle">
    <string>Form</string>
   </property>
-
   <layout class="QGridLayout" name="gridLayout_3">
    <property name="leftMargin">
     <number>6</number>
@@ -499,7 +498,7 @@ font-size: 11px;
       </widget>
      </item>
      <item row="1" column="1">
-      <widget class="QLineEdit" name="m_InputDir"/>
+      <widget class="QFSDropLineEdit" name="m_InputDir"/>
      </item>
      <item row="1" column="2">
       <widget class="QPushButton" name="m_InputDirBtn">
@@ -563,7 +562,7 @@ font-size: 11px;
       </widget>
      </item>
      <item row="2" column="1">
-      <widget class="QLineEdit" name="m_OutputFile">
+      <widget class="QFSDropLineEdit" name="m_OutputFile">
        <property name="toolTip">
         <string>The absolute path to the output file</string>
        </property>
@@ -590,6 +589,13 @@ font-size: 11px;
    </item>
   </layout>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>QFSDropLineEdit</class>
+   <extends>QLineEdit</extends>
+   <header location="global">QFSDropLineEdit.h</header>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>

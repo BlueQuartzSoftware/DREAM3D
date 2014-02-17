@@ -43,7 +43,8 @@
 #include <QtCore/QDir>
 #include <QtCore/QFile>
 
-
+#include "EbsdLib/EbsdLib.h"
+#include "EbsdLib/EbsdConstants.h"
 #include "EbsdLib/EbsdImporter.h"
 #include "EbsdLib/TSL/AngConstants.h"
 #include "EbsdLib/TSL/AngFields.h"
@@ -55,8 +56,12 @@
 #include "EbsdLib/HEDM/MicFields.h"
 #include "EbsdLib/HEDM/H5MicImporter.h"
 
+#include "DREAM3DLib/Common/Constants.h"
+#include "DREAM3DLib/Common/Observer.h"
+#include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
 
 
+#include "OrientationAnalysis/OrientationAnalysisConstants.h"
 
 // -----------------------------------------------------------------------------
 //
@@ -66,21 +71,24 @@ EbsdToH5Ebsd::EbsdToH5Ebsd() :
   m_ZStartIndex(0),
   m_ZEndIndex(0),
   m_ZResolution(1.0),
-  m_SampleTransformationAngle(0.0),
-  m_EulerTransformationAngle(0.0),
-  m_RefFrameZDir(Ebsd::RefFrameZDir::LowtoHigh)
+  m_RefFrameZDir(Ebsd::RefFrameZDir::LowtoHigh),
+  m_InputPath(""),
+  m_FilePrefix(""),
+  m_FileSuffix(""),
+  m_FileExtension("ang"),
+  m_PaddingDigits(4)
 {
-  m_SampleTransformationAxis.resize(3);
-  m_SampleTransformationAxis[0] = 0.0;
-  m_SampleTransformationAxis[1] = 0.0;
-  m_SampleTransformationAxis[2] = 1.0;
+  m_SampleTransformation.angle = 0.0f;
+  m_SampleTransformation.h = 0.0f;
+  m_SampleTransformation.k = 0.0f;
+  m_SampleTransformation.l = 1.0f;
 
-  m_EulerTransformationAxis.resize(3);
-  m_EulerTransformationAxis[0] = 0.0;
-  m_EulerTransformationAxis[1] = 0.0;
-  m_EulerTransformationAxis[2] = 1.0;
+  m_EulerTransformation.angle = 0.0f;
+  m_EulerTransformation.h = 0.0f;
+  m_EulerTransformation.k = 0.0f;
+  m_EulerTransformation.l = 1.0f;
 
-    setupFilterParameters();
+  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------
@@ -102,7 +110,7 @@ void EbsdToH5Ebsd::setupFilterParameters()
     parameter->setHumanLabel("Import Orientation Data");
     parameter->setPropertyName("OrientationData");
     parameter->setWidgetType(FilterParameterWidgetType::EbsdToH5EbsdWidget);
-    //parameter->setFileExtension("*.dream3d");
+    parameter->setFileExtension("*.h5ebsd");
     parameter->setValueType("OrientationImporter");
     parameters.push_back(parameter);
   }
@@ -120,12 +128,15 @@ void EbsdToH5Ebsd::readFilterParameters(AbstractFilterParametersReader* reader, 
   setZStartIndex( reader->readValue("ZStartIndex", getZStartIndex()) );
   setZEndIndex( reader->readValue("ZEndIndex", getZEndIndex()) );
   setZResolution( reader->readValue("ZResolution", getZResolution()) );
-  setSampleTransformationAngle( reader->readValue("SampleTransformationAngle", getSampleTransformationAngle()) );
-  setSampleTransformationAxis( reader->readArray("SampleTransformationAxis", getSampleTransformationAxis()) );
-  setEulerTransformationAngle( reader->readValue("EulerTransformationAngle", getEulerTransformationAngle()) );
-  setEulerTransformationAxis( reader->readArray("EulerTransformationAxis", getEulerTransformationAxis()) );
   setRefFrameZDir( reader->readValue("RefFrameZDir", getRefFrameZDir()) );
-  setEbsdFileList( reader->readStrings("EbsdFileList", getEbsdFileList()) );
+  setInputPath( reader->readString("InputPath", getInputPath()) );
+  setFilePrefix( reader->readString("FilePrefix", getFilePrefix()) );
+  setFileSuffix( reader->readString("FileSuffix", getFileSuffix()) );
+  setFileExtension( reader->readString("FileExtension", getFileExtension()) );
+  setPaddingDigits( reader->readValue("PaddingDigits", getPaddingDigits()) );
+  setSampleTransformation( reader->readAxisAngle("SampleTransformation", getSampleTransformation(), -1) );
+  setEulerTransformation( reader->readAxisAngle("EulerTransformation", getEulerTransformation(), -1) );
+
   reader->closeFilterGroup();
 }
 
@@ -139,12 +150,14 @@ int EbsdToH5Ebsd::writeFilterParameters(AbstractFilterParametersWriter* writer, 
   writer->writeValue("ZStartIndex", getZStartIndex());
   writer->writeValue("ZEndIndex", getZEndIndex());
   writer->writeValue("ZResolution", getZResolution());
-  writer->writeValue("SampleTransformationAngle", getSampleTransformationAngle());
-  writer->writeValue("SampleTransformationAxis", getSampleTransformationAxis());
-  writer->writeValue("EulerTransformationAngle", getEulerTransformationAngle());
-  writer->writeValue("EulerTransformationAxis", getEulerTransformationAxis());
   writer->writeValue("RefFrameZDir", getRefFrameZDir());
-  writer->writeValue("EbsdFileList", getEbsdFileList());
+  writer->writeValue("InputPath", getInputPath());
+  writer->writeValue("FilePrefix", getFilePrefix());
+  writer->writeValue("FileSuffix", getFileSuffix());
+  writer->writeValue("FileExtension", getFileExtension());
+  writer->writeValue("PaddingDigits", getPaddingDigits());
+  writer->writeValue("SampleTransformation", getSampleTransformation());
+  writer->writeValue("EulerTransformation", getEulerTransformation());
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
@@ -157,18 +170,31 @@ void EbsdToH5Ebsd::dataCheck()
   setErrorCondition(0);
   QString ss;
 
-  if (m_EbsdFileList.size() == 0)
+//  QString filename = QString("%1%2%3.%4").arg(m_FilePrefix)
+//      .arg(QString::number(m_ZStartIndex), m_PaddingDigits, '0')
+//      .arg(m_FileSuffix).arg(m_FileExtension);
+
+  bool hasMissingFiles = false;
+  bool stackLowToHigh = false;
+
+  if( Ebsd::RefFrameZDir::LowtoHigh == m_RefFrameZDir) { stackLowToHigh = true; }
+  else if (Ebsd::RefFrameZDir::HightoLow == m_RefFrameZDir) { stackLowToHigh = false; }
+
+  // Now generate all the file names the user is asking for and populate the table
+  QVector<QString> fileList = generateFileList(m_ZStartIndex, m_ZEndIndex, hasMissingFiles, stackLowToHigh);
+
+  if (fileList.size() == 0)
   {
-    ss = QObject::tr("No files have been selected for import. Have you set the input directory?");
+    ss = QObject::tr("No files have been selected for import. Have you set the input directory and other values so that input files will be generated?");
     notifyErrorMessage(getHumanLabel(), ss, -11);
-    setErrorCondition(-1);
+    setErrorCondition(-11);
   }
   else
   {
     // Based on the type of file (.ang or .ctf) get the list of arrays that would be created
-    QFileInfo fi(m_EbsdFileList.front());
+    QFileInfo fi(fileList.front());
     QString ext = fi.suffix();
-    QVector<QString> columnNames;
+    //QVector<QString> columnNames;
     //    AbstractEbsdFields* ebsdFeatures = NULL;
     if(ext.compare(Ebsd::Ang::FileExt) == 0)
     {
@@ -184,25 +210,18 @@ void EbsdToH5Ebsd::dataCheck()
     }
     else
     {
-
       ss = QObject::tr("The File extension '%1' was not recognized. Currently .ang or .ctf are the only recognized file extensions").arg(ext);
       notifyErrorMessage(getHumanLabel(), ss, -997);
-      setErrorCondition(-1);
+      setErrorCondition(-997);
       return;
     }
-    //    columnNames = ebsdFeatures->getFeatureNames();
-    //    for(QVector<QString>::size_type i = 0; i < columnNames.size(); ++i)
-    //    {
-    //      addCreatedCellData(columnNames[i]);
-    //    }
   }
 
   if(m_OutputFile.isEmpty() == true)
   {
-
     ss = QObject::tr("The output file must be set before executing this filter.");
     notifyErrorMessage(getHumanLabel(), ss, -12);
-    setErrorCondition(-1);
+    setErrorCondition(-12);
   }
 
 
@@ -294,7 +313,7 @@ void EbsdToH5Ebsd::execute()
 
   }
 
-  err = QH5Lite::writeScalarDataset(fileId, Ebsd::H5::SampleTransformationAngle, m_SampleTransformationAngle);
+  err = QH5Lite::writeScalarDataset(fileId, Ebsd::H5::SampleTransformationAngle, m_SampleTransformation.angle);
   if(err < 0)
   {
 
@@ -304,8 +323,9 @@ void EbsdToH5Ebsd::execute()
 
   }
 
-  QVector<hsize_t> dims(1, 3);
-  err = QH5Lite::writeVectorDataset(fileId, Ebsd::H5::SampleTransformationAxis, dims, m_SampleTransformationAxis);
+  int32_t rank = 1;
+  hsize_t dims[3] = {3, 0, 0};
+  err = QH5Lite::writePointerDataset<float>(fileId, Ebsd::H5::SampleTransformationAxis, rank, dims, &(m_SampleTransformation.h));
   if(err < 0)
   {
 
@@ -315,7 +335,7 @@ void EbsdToH5Ebsd::execute()
 
   }
 
-  err = QH5Lite::writeScalarDataset(fileId, Ebsd::H5::EulerTransformationAngle, m_EulerTransformationAngle);
+  err = QH5Lite::writeScalarDataset(fileId, Ebsd::H5::EulerTransformationAngle, m_EulerTransformation.angle);
   if(err < 0)
   {
 
@@ -325,7 +345,7 @@ void EbsdToH5Ebsd::execute()
 
   }
 
-  err = QH5Lite::writeVectorDataset(fileId, Ebsd::H5::EulerTransformationAxis, dims, m_EulerTransformationAxis);
+  err = QH5Lite::writePointerDataset<float>(fileId, Ebsd::H5::EulerTransformationAxis, rank, dims, &(m_EulerTransformation.h));
   if(err < 0)
   {
 
@@ -335,11 +355,24 @@ void EbsdToH5Ebsd::execute()
 
   }
 
+//  QString filename = QString("%1%2%3.%4").arg(m_FilePrefix)
+//      .arg(QString::number(m_ZStartIndex), m_PaddingDigits, '0')
+//      .arg(m_FileSuffix).arg(m_FileExtension);
+
+  bool hasMissingFiles = false;
+  bool stackLowToHigh = false;
+
+  if( Ebsd::RefFrameZDir::LowtoHigh == m_RefFrameZDir) { stackLowToHigh = true; }
+  else if (Ebsd::RefFrameZDir::HightoLow == m_RefFrameZDir) { stackLowToHigh = false; }
+
+  // Now generate all the file names the user is asking for and populate the table
+  QVector<QString> fileList = generateFileList(m_ZStartIndex, m_ZEndIndex, hasMissingFiles, stackLowToHigh);
+
   EbsdImporter::Pointer fileImporter;
 
   // Write the Manufacturer of the OIM file here
   // This list will grow to be the number of EBSD file formats we support
-  QFileInfo fiExt(m_EbsdFileList.front());
+  QFileInfo fiExt(fileList.front());
   QString ext = fiExt.suffix();
   if(ext.compare(Ebsd::Ang::FileExt) == 0)
   {
@@ -424,7 +457,7 @@ void EbsdToH5Ebsd::execute()
   int64_t biggestxDim = 0;
   int64_t biggestyDim = 0;
   int totalSlicesImported = 0;
-  for (QVector<QString>::iterator filepath = m_EbsdFileList.begin(); filepath != m_EbsdFileList.end(); ++filepath)
+  for (QVector<QString>::iterator filepath = fileList.begin(); filepath != fileList.end(); ++filepath)
   {
     QString ebsdFName = *filepath;
     progress = static_cast<int>( z - m_ZStartIndex );
@@ -538,4 +571,33 @@ void EbsdToH5Ebsd::execute()
   notifyStatusMessage(getHumanLabel(), "Import Complete");
 }
 
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QVector<QString> EbsdToH5Ebsd::generateFileList(int start, int end, bool &hasMissingFiles,
+                                                bool stackLowToHigh)
+{
+  int index = 0;
+  QVector<QString> fileList;
+  QString filename;
+  for (int i = 0; i < (end-start)+1; ++i)
+  {
+    if (stackLowToHigh)
+    {
+      index = start + i;
+    }
+    else
+    {
+      index = end - i;
+    }
+    filename = QString("%1%2%3.%4").arg(m_FilePrefix)
+        .arg(QString::number(index), m_PaddingDigits, '0')
+        .arg(m_FileSuffix).arg(m_FileExtension);
+    QString filePath = m_InputPath + QDir::separator() + filename;
+    filePath = QDir::toNativeSeparators(filePath);
+    fileList.push_back(filePath);
+  }
+  return fileList;
+}
 

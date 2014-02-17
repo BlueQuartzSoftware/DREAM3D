@@ -442,6 +442,22 @@ int H5FilterParametersWriter::writeValue(const QString name, QVector<ComparisonI
 }
 
 // -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int H5FilterParametersWriter::writeValue(const QString name, AxisAngleInput_t v)
+{
+  int numQFilters = static_cast<int>( 1 );
+  int err = writeValue(name,  numQFilters);
+  if (err < 0) { return err; }
+  QString parseOrder = "Angle, H, K, L";
+  err = QH5Lite::writeStringAttribute(m_CurrentGroupId, name, "Data Order", parseOrder);
+  if (err < 0) { return err; }
+  err = writeValue(name, v, 0);
+  if (err < 0) { return err; }
+  return err;
+}
+
+// -----------------------------------------------------------------------------
 // These are actually written as a binary 4x1 float array as an attribute
 // -----------------------------------------------------------------------------
 int H5FilterParametersWriter::writeValue(const QString name, AxisAngleInput_t v, int vectorPos)

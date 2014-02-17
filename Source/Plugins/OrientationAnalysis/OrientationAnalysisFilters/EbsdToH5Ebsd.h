@@ -1,6 +1,6 @@
 /* ============================================================================
- * Copyright (c) 2010, Michael A. Jackson (BlueQuartz Software)
- * Copyright (c) 2010, Dr. Michael A. Groeber (US Air Force Research Laboratories)
+ * Copyright (c) 2014, Michael A. Jackson (BlueQuartz Software)
+ * Copyright (c) 2014, Dr. Michael A. Groeber (US Air Force Research Laboratories)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -36,26 +36,14 @@
 #ifndef EbsdToH5Ebsd_H_
 #define EbsdToH5Ebsd_H_
 
-
-
-#if defined (_MSC_VER)
-#define WIN32_LEAN_AND_MEAN   // Exclude rarely-used stuff from Windows headers
-#endif
-
-
-#include <vector>
+#include <QtCore/QVector>
 #include <QtCore/QString>
 
 
-
-
-#include "EbsdLib/EbsdConstants.h"
-
 #include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/Common/Observer.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
+
+class AbstractFilterParametersWriter;
 
 /**
  * @class EbsdToH5Ebsd EbsdToH5Ebsd.h EbsdToH5Ebsd/EbsdToH5Ebsd.h
@@ -80,12 +68,16 @@ class DREAM3DLib_EXPORT EbsdToH5Ebsd : public AbstractFilter
     DREAM3D_INSTANCE_PROPERTY(int64_t, ZStartIndex)
     DREAM3D_INSTANCE_PROPERTY(int64_t, ZEndIndex)
     DREAM3D_INSTANCE_PROPERTY(float, ZResolution)
-    DREAM3D_INSTANCE_PROPERTY(QVector<QString>, EbsdFileList)
-    DREAM3D_INSTANCE_PROPERTY(float, SampleTransformationAngle)
-    DREAM3D_INSTANCE_PROPERTY(QVector<float>, SampleTransformationAxis)
-    DREAM3D_INSTANCE_PROPERTY(float, EulerTransformationAngle)
-    DREAM3D_INSTANCE_PROPERTY(QVector<float>, EulerTransformationAxis)
     DREAM3D_INSTANCE_PROPERTY(uint32_t, RefFrameZDir)
+
+    DREAM3D_FILTER_PARAMETER(QString, InputPath)
+    DREAM3D_FILTER_PARAMETER(QString, FilePrefix)
+    DREAM3D_FILTER_PARAMETER(QString, FileSuffix)
+    DREAM3D_FILTER_PARAMETER(QString, FileExtension)
+    DREAM3D_FILTER_PARAMETER(int, PaddingDigits)
+
+    DREAM3D_FILTER_PARAMETER(AxisAngleInput_t, SampleTransformation)
+    DREAM3D_FILTER_PARAMETER(AxisAngleInput_t, EulerTransformation)
 
     virtual void preflight();
 
@@ -110,6 +102,25 @@ class DREAM3DLib_EXPORT EbsdToH5Ebsd : public AbstractFilter
     * @brief Reimplemented from @see AbstractFilter class
     */
     virtual void execute();
+
+    /**
+     * @brief generateFileList This method will generate a file list in the correct order of the files that should
+     * be imported into an h5ebsd file
+     * @param start Z Slice Start
+     * @param end S Slice End
+     * @param hasMissingFiles Are any files missing
+     * @param stackLowToHigh Is the Slice order low to high
+     * @param filename Example File Name
+     * @return
+     */
+    QVector<QString> generateFileList(int start, int end, bool &hasMissingFiles,
+                                                      bool stackLowToHigh);
+
+  signals:
+    void updateFilterParameters(AbstractFilter* filter);
+    void parametersChanged();
+    void preflightAboutToExecute();
+    void preflightExecuted();
 
   protected:
     EbsdToH5Ebsd();

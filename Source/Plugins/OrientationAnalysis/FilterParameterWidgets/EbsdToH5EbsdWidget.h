@@ -47,7 +47,6 @@
 #include "EbsdLib/EbsdConstants.h"
 
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/IOFilters/EbsdToH5Ebsd.h"
 
 #include "QtSupport/DREAM3DPluginFrame.h"
 
@@ -57,7 +56,7 @@
 #include "ui_EbsdToH5EbsdWidget.h"
 
 
-
+class EbsdToH5Ebsd;
 
 /**
  * @class EbsdToH5EbsdWidget EbsdToH5EbsdWidget.h Plugins/EbsdImport/UI/EbsdToH5EbsdWidget.h
@@ -75,62 +74,30 @@ class EbsdToH5EbsdWidget : public QWidget, private Ui::EbsdToH5EbsdWidget
     Q_OBJECT
 
   public:
-      /**
+    /**
     * @brief Constructor
     * @param parameter The FilterParameter object that this widget represents
     * @param filter The instance of the filter that this parameter is a part of
     * @param parent The parent QWidget for this Widget
     */
     EbsdToH5EbsdWidget(FilterParameter* parameter, AbstractFilter* filter = NULL, QWidget* parent = NULL);
+
     virtual ~EbsdToH5EbsdWidget();
-
-    static void setOpenDialogLastDirectory(QString val) { m_OpenDialogLastDirectory = val; }
-    static QString getOpenDialogLastDirectory() { return m_OpenDialogLastDirectory; }
-
-
-
-    virtual AbstractFilter::Pointer getFilter(bool defaultValues);
-
-    virtual void writeOptions(QSettings &prefs);
-    virtual void readOptions(QSettings &prefs);
-
-
-    DREAM3D_INSTANCE_PROPERTY(float, SampleTransformationAngle)
-    DREAM3D_INSTANCE_PROPERTY(float, EulerTransformationAngle)
-
-    DREAM3D_INSTANCE_PROPERTY(QVector<QString>, EbsdFileList)
-    /**
-     * @brief Enables or Disables all the widgets in a list
-     * @param b
-     */
-    virtual void setWidgetListEnabled(bool b);
 
     /**
      * @brief Initializes some of the GUI elements with selections or other GUI related items
      */
     virtual void setupGui();
 
-    PipelineFilterWidget* createDeepCopy();
+  public slots:
+    void widgetChanged(const QString& msg);
+    void beforePreflight();
+    void afterPreflight();
+    void filterNeedsInputParameters(AbstractFilter* filter);
 
-    virtual void checkIOFiles();
-
-    virtual QString getFilterGroup();
-    /**
-     * @brief Method to attempt the extraction of the .ang max slice value and prefix
-     */
-    void m_findEbsdMaxSliceAndPrefix();
-    void m_generateExampleEbsdInputFile();
-    uint32_t getRefFrameZDir();
-    void setRefFrameZDir(uint32_t ref);
-
-    QVector<QString> generateFileList(int start, int end, bool &hasMissingFiles,
-                                      bool stackLowToHigh, QString filename);
-
-    virtual void openHtmlHelpFile();
-    virtual void getGuiParametersFromFilter(AbstractFilter* filt);
-
-  protected:
-
+  signals:
+    void errorSettingFilterParameter(const QString& msg);
+    void parametersChanged();
 
   protected slots:
     /* OIM Data Import Slots */
@@ -149,17 +116,45 @@ class EbsdToH5EbsdWidget : public QWidget, private Ui::EbsdToH5EbsdWidget
     void on_m_InputDir_textChanged(const QString & text);
     void on_m_OutputFile_textChanged(const QString & text);
 
-  private slots:
     void stackingOrderChanged(bool checked);
 
+  protected:
+    static void setOpenDialogLastDirectory(QString val) { m_OpenDialogLastDirectory = val; }
+    static QString getOpenDialogLastDirectory() { return m_OpenDialogLastDirectory; }
 
-  signals:
-    void errorSettingFilterParameter(const QString& msg);
-    void parametersChanged();
+    /**
+     * @brief checkIOFiles
+     */
+    virtual void checkIOFiles();
+
+    /**
+     * @brief setWidgetListEnabled
+     */
+    void setWidgetListEnabled(bool v);
+
+    /**
+     * @brief Method to attempt the extraction of the .ang max slice value and prefix
+     */
+    void m_findEbsdMaxSliceAndPrefix();
+
+    /**
+     * @brief m_generateExampleEbsdInputFile
+     */
+    void m_generateExampleEbsdInputFile();
+    uint32_t getRefFrameZDir();
+    void setRefFrameZDir(uint32_t ref);
+
+    virtual void openHtmlHelpFile();
+
+    /**
+     * @brief getGuiParametersFromFilter
+     */
+    void getGuiParametersFromFilter();
+
 
   private:
-    AbstractFilter*   m_Filter;
-    FilterParameter*  m_FilterParameter;
+    EbsdToH5Ebsd*               m_Filter;
+    FilterParameter*            m_FilterParameter;
     QList<QWidget*>             m_WidgetList;
     QButtonGroup*               m_StackingGroup;
     QButtonGroup*               m_OriginGroup;
@@ -169,10 +164,11 @@ class EbsdToH5EbsdWidget : public QWidget, private Ui::EbsdToH5EbsdWidget
     bool m_HKLchecked;
     bool m_HEDMchecked;
     bool m_NoTranschecked;
-    QVector<float> m_SampleTransformationAxis;
-    QVector<float> m_EulerTransformationAxis;
+    AxisAngleInput_t m_SampleTransformation;
+    AxisAngleInput_t m_EulerTransformation;
 
     static QString								m_OpenDialogLastDirectory;
+    bool m_DidCausePreflight;
 
     bool verifyPathExists(QString outFilePath, QLineEdit* lineEdit);
 

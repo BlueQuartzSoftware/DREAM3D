@@ -1,6 +1,6 @@
 /* ============================================================================
- * Copyright (c) 2010, Michael A. Jackson (BlueQuartz Software)
- * Copyright (c) 2010, Dr. Michael A. Groeber (US Air Force Research Laboratories)
+ * Copyright (c) 2014, Michael A. Jackson (BlueQuartz Software)
+ * Copyright (c) 2014, Dr. Michael A. Groeber (US Air Force Research Laboratories)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -58,6 +58,9 @@
 #include "QtSupport/DREAM3DQtMacros.h"
 #include "QtSupport/DREAM3DHelpUrlGenerator.h"
 
+
+#include "OrientationAnalysis/OrientationAnalysisFilters/EbsdToH5Ebsd.h"
+
 #include "OrientationAnalysis/Widgets/QEbsdReferenceFrameDialog.h"
 
 #include "OrientationAnalysis/FilterParameterWidgets/moc_EbsdToH5EbsdWidget.cxx"
@@ -70,25 +73,26 @@ QString EbsdToH5EbsdWidget::m_OpenDialogLastDirectory = "";
 // -----------------------------------------------------------------------------
 EbsdToH5EbsdWidget::EbsdToH5EbsdWidget(FilterParameter* parameter, AbstractFilter* filter, QWidget* parent) :
   QWidget(parent),
-  m_SampleTransformationAngle(0.0),
-  m_EulerTransformationAngle(0.0),
-  m_Filter(filter),
   m_FilterParameter(parameter),
   m_StackingGroup(NULL),
   m_TSLchecked(false),
   m_HKLchecked(false),
   m_HEDMchecked(false),
-  m_NoTranschecked(true)
+  m_NoTranschecked(true),
+  m_DidCausePreflight(false)
 {
-  m_SampleTransformationAxis.resize(3);
-  m_SampleTransformationAxis[0] = 0.0;
-  m_SampleTransformationAxis[1] = 0.0;
-  m_SampleTransformationAxis[2] = 1.0;
+  m_SampleTransformation.angle = 0.0f;
+  m_SampleTransformation.h = 0.0f;
+  m_SampleTransformation.k = 0.0f;
+  m_SampleTransformation.l = 1.0f;
 
-  m_EulerTransformationAxis.resize(3);
-  m_EulerTransformationAxis[0] = 0.0;
-  m_EulerTransformationAxis[1] = 0.0;
-  m_EulerTransformationAxis[2] = 1.0;
+  m_EulerTransformation.angle = 0.0f;
+  m_EulerTransformation.h = 0.0f;
+  m_EulerTransformation.k = 0.0f;
+  m_EulerTransformation.l = 1.0f;
+
+  m_Filter = qobject_cast<EbsdToH5Ebsd*>(filter);
+  Q_ASSERT_X(NULL != m_Filter, "EbsdToH5EbsdWidget can ONLY be used with EbsdToH5Ebsd filter", __FILE__);
 
   if ( getOpenDialogLastDirectory().isEmpty() )
   {
@@ -110,117 +114,6 @@ EbsdToH5EbsdWidget::~EbsdToH5EbsdWidget()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QString EbsdToH5EbsdWidget::getFilterGroup()
-{
-  return (DREAM3D::FilterGroups::GenericFilters);
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void EbsdToH5EbsdWidget::getGuiParametersFromFilter(AbstractFilter* filt)
-{
-  EbsdToH5Ebsd* filter = EbsdToH5Ebsd::SafeObjectDownCast<AbstractFilter*, EbsdToH5Ebsd*>(filt);
-  m_OutputFile->setText(  ( filter->getOutputFile() ) );
-  m_ZStartIndex->setValue( filter->getZStartIndex() );
-  m_ZEndIndex->setValue( filter->getZEndIndex() );
-  QString str;
-  QTextStream ss(&str) ;
-  ss << filter->getZResolution();
-  m_zSpacing->setText(str);
-  m_SampleTransformationAngle = filter->getSampleTransformationAngle();
-  m_SampleTransformationAxis = filter->getSampleTransformationAxis();
-  m_EulerTransformationAngle = filter->getEulerTransformationAngle();
-  m_EulerTransformationAxis = filter->getEulerTransformationAxis();
-  setRefFrameZDir( filter->getRefFrameZDir() );
-  setEbsdFileList( filter->getEbsdFileList() );
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-AbstractFilter::Pointer EbsdToH5EbsdWidget::getFilter(bool defaultValues)
-{
-  bool ok = false;
-
-  // Now create the filter and start pushing values into the filter
-  EbsdToH5Ebsd::Pointer filter =  EbsdToH5Ebsd::New();
-  if (defaultValues == true) { return filter; }
-
-  filter->setOutputFile(QDir::toNativeSeparators(m_OutputFile->text()));
-  filter->setZStartIndex(m_ZStartIndex->value());
-  filter->setZEndIndex(m_ZEndIndex->value());
-  filter->setZResolution(m_zSpacing->text().toFloat(&ok));
-  filter->setSampleTransformationAngle(m_SampleTransformationAngle);
-  filter->setSampleTransformationAxis(m_SampleTransformationAxis);
-  filter->setEulerTransformationAngle(m_EulerTransformationAngle);
-  filter->setEulerTransformationAxis(m_EulerTransformationAxis);
-
-
-  filter->setRefFrameZDir( getRefFrameZDir() );
-
-
-  QString filename = QString("%1%2%3.%4").arg(m_FilePrefix->text())
-      .arg(m_ZStartIndex->text(), m_TotalDigits->value(), '0')
-      .arg(m_FileSuffix->text()).arg(m_FileExt->text());
-  m_GeneratedFileNameExample->setText(filename);
-
-  int start = m_ZStartIndex->value();
-  int end = m_ZEndIndex->value();
-  bool hasMissingFiles = false;
-
-  // Now generate all the file names in the "Low to High" order because that is what the importer is expecting
-  QVector<QString> fileList = generateFileList(start, end, hasMissingFiles, true, filename);
-  QVector<QString> realFileList;
-  for(QVector<QString>::size_type i = 0; i < fileList.size(); ++i)
-  {
-    QString filePath = (fileList[i]);
-    QFileInfo fi(filePath);
-    if (fi.exists())
-    {
-      realFileList.push_back(fileList[i]);
-    }
-  }
-
-  filter->setEbsdFileList(realFileList);
-
-  return filter;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-PipelineFilterWidget *EbsdToH5EbsdWidget::createDeepCopy()
-{
-#if 0
-  QFilterWidget* w = new QFilterWidget();
-
-  bool ok = false;
-  w->setOutputFile(QDir::toNativeSeparators(m_OutputFile->text()));
-
-
-  QString filename = QString("%1%2%3.%4").arg(m_FilePrefix->text())
-      .arg(m_ZStartIndex->text(), m_TotalDigits->value(), '0')
-      .arg(m_FileSuffix->text()).arg(m_FileExt->text());
-  m_GeneratedFileNameExample->setText(filename);
-
-  int start = m_ZStartIndex->value();
-  int end = m_ZEndIndex->value();
-  bool hasMissingFiles = false;
-
-  // Now generate all the file names in the "Low to High" order because that is what the importer is expecting
-  QVector<QString> fileList = generateFileList(start, end, hasMissingFiles, true, filename);
-
-  w->setEbsdFileList(fileList);
-
-  return w;
-#endif
-  return NULL;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void EbsdToH5EbsdWidget::setWidgetListEnabled(bool b)
 {
   foreach (QWidget* w, m_WidgetList) {
@@ -228,12 +121,24 @@ void EbsdToH5EbsdWidget::setWidgetListEnabled(bool b)
   }
 }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 void EbsdToH5EbsdWidget::setupGui()
 {
+
+
+  // Catch when the filter is about to execute the preflight
+  connect(m_Filter, SIGNAL(preflightAboutToExecute()),
+          this, SLOT(beforePreflight()));
+
+  // Catch when the filter is finished running the preflight
+  connect(m_Filter, SIGNAL(preflightExecuted()),
+          this, SLOT(afterPreflight()));
+
+  // Catch when the filter wants its values updated
+  connect(m_Filter, SIGNAL(updateFilterParameters(AbstractFilter*)),
+          this, SLOT(filterNeedsInputParameters(AbstractFilter*)));
 
   QFileCompleter* com = new QFileCompleter(this, true);
   m_InputDir->setCompleter(com);
@@ -260,81 +165,54 @@ void EbsdToH5EbsdWidget::setupGui()
   connect(m_StackLowToHigh, SIGNAL(toggled(bool)),
           this, SLOT(stackingOrderChanged(bool)));
 
-}
+  m_RefFrameOptionsBtn->setEnabled(false);
 
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void EbsdToH5EbsdWidget::readOptions(QSettings &prefs)
-{
-  QString val;
-  bool ok;
-  qint32 i;
-
-  // Run the input dir FIRST as the side effect of running this will be resetting much of the user
-  // interface widgets to their default values. We then get the values from the prefs object
-  // and populate the user interface widgets
-  READ_FILEPATH_SETTING(prefs, m_, InputDir, "");
-
-  READ_SETTING(prefs, m_, ZStartIndex, ok, i, 1 , Int);
-  READ_SETTING(prefs, m_, ZEndIndex, ok, i, 10 , Int);
-  READ_SETTING(prefs, m_, TotalDigits, ok, i, 4 , Int);
-  READ_STRING_SETTING(prefs, m_, zSpacing, "0.25");
-  READ_STRING_SETTING(prefs, m_, FilePrefix, "");
-  READ_STRING_SETTING(prefs, m_, FileSuffix, "");
-  READ_STRING_SETTING(prefs, m_, FileExt, "ang");
-  READ_FILEPATH_SETTING(prefs, m_, OutputFile, "Untitled.h5ebsd");
-  READ_CHECKBOX_SETTING(prefs, m_, StackLowToHigh, true)
-      READ_CHECKBOX_SETTING(prefs, m_, StackHighToLow, false)
-
-      READ_BOOL_SETTING(prefs, m_, TSLchecked, false)
-      READ_BOOL_SETTING(prefs, m_, HKLchecked, false)
-      READ_BOOL_SETTING(prefs, m_, HEDMchecked, false)
-      READ_BOOL_SETTING(prefs, m_, NoTranschecked, true)
-
-
-      QEbsdReferenceFrameDialog d("", this);
-  d.setEbsdFileName("");
-  d.setTSLDefault(m_TSLchecked);
-  d.setHKLDefault(m_HKLchecked);
-  d.setHEDMDefault(m_HEDMchecked);
-  d.setNoTrans(m_NoTranschecked);
-  d.getSampleTranformation(m_SampleTransformationAngle, m_SampleTransformationAxis[0], m_SampleTransformationAxis[1], m_SampleTransformationAxis[2]);
-  d.getEulerTranformation(m_EulerTransformationAngle, m_EulerTransformationAxis[0], m_EulerTransformationAxis[1], m_EulerTransformationAxis[2]);
-
+  getGuiParametersFromFilter();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void EbsdToH5EbsdWidget::writeOptions(QSettings &prefs)
+void EbsdToH5EbsdWidget::getGuiParametersFromFilter()
 {
-  prefs.setValue("Filter_Name", "EbsdToH5Ebsd");
-  WRITE_STRING_SETTING(prefs, m_, InputDir)
-      WRITE_STRING_SETTING(prefs, m_, FilePrefix)
-      WRITE_STRING_SETTING(prefs, m_, FileSuffix)
-      WRITE_STRING_SETTING(prefs, m_, FileExt)
-      WRITE_STRING_SETTING(prefs, m_, ZStartIndex)
-      WRITE_STRING_SETTING(prefs, m_, ZEndIndex)
-      WRITE_STRING_SETTING(prefs, m_, zSpacing)
-      WRITE_STRING_SETTING(prefs, m_, TotalDigits)
-      WRITE_STRING_SETTING(prefs, m_, OutputFile)
-      WRITE_CHECKBOX_SETTING(prefs, m_, StackHighToLow)
-      WRITE_CHECKBOX_SETTING(prefs, m_, StackLowToHigh)
+  m_OutputFile->setText( m_Filter->getOutputFile() );
+  m_ZStartIndex->setValue( m_Filter->getZStartIndex() );
+  m_ZEndIndex->setValue( m_Filter->getZEndIndex() );
+  m_zSpacing->setText( QString::number(m_Filter->getZResolution()) );
+  setRefFrameZDir( m_Filter->getRefFrameZDir() );
 
-      WRITE_BOOL_SETTING(prefs, m_, TSLchecked, m_TSLchecked)
-      WRITE_BOOL_SETTING(prefs, m_, HKLchecked, m_HKLchecked)
-      WRITE_BOOL_SETTING(prefs, m_, HEDMchecked, m_HEDMchecked)
-      WRITE_BOOL_SETTING(prefs, m_, NoTranschecked, m_NoTranschecked)
+  m_InputDir->setText(m_Filter->getInputPath());
+  m_FilePrefix->setText(m_Filter->getFilePrefix());
+  m_FileSuffix->setText(m_Filter->getFileSuffix());
+  m_FileExt->setText(m_Filter->getFileExtension());
+  m_TotalDigits->setValue(m_Filter->getPaddingDigits());
+
+  m_SampleTransformation = m_Filter->getSampleTransformation();
+  m_EulerTransformation = m_Filter->getEulerTransformation();
+
+
 }
+
+
+#if 0
+
+QEbsdReferenceFrameDialog d("", this);
+d.setEbsdFileName("");
+d.setTSLDefault(m_TSLchecked);
+d.setHKLDefault(m_HKLchecked);
+d.setHEDMDefault(m_HEDMchecked);
+d.setNoTrans(m_NoTranschecked);
+d.getSampleTranformation(m_SampleTransformation.angle, m_SampleTransformationAxis[0], m_SampleTransformationAxis[1], m_SampleTransformationAxis[2]);
+d.getEulerTranformation(m_EulerTransformationAngle, m_EulerTransformationAxis[0], m_EulerTransformationAxis[1], m_EulerTransformationAxis[2]);
+
+#endif
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 void EbsdToH5EbsdWidget::on_m_OutputFile_textChanged(const QString & text)
 {
-  if (verifyPathExists(text, m_OutputFile) == true )
+  //if (verifyPathExists(text, m_OutputFile) == true )
   {
     QFileInfo fi(text);
     setOpenDialogLastDirectory( fi.path() );
@@ -412,6 +290,7 @@ void EbsdToH5EbsdWidget::on_m_InputDir_textChanged(const QString & text)
 {
   if (verifyPathExists(m_InputDir->text(), m_InputDir) )
   {
+    m_RefFrameOptionsBtn->setEnabled(true);
     m_findEbsdMaxSliceAndPrefix();
     QDir dir(m_InputDir->text());
     QString dirname = dir.dirName();
@@ -523,35 +402,6 @@ void EbsdToH5EbsdWidget::on_m_FilePrefix_textChanged(const QString &string)
   emit parametersChanged();
 }
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-QVector<QString> EbsdToH5EbsdWidget::generateFileList(int start, int end, bool &hasMissingFiles,
-                                                      bool stackLowToHigh, QString filename)
-{
-  int index = 0;
-  QVector<QString> fileList;
-
-  for (int i = 0; i < (end-start)+1; ++i)
-  {
-    if (stackLowToHigh)
-    {
-      index = start + i;
-    }
-    else
-    {
-      index = end - i;
-    }
-    filename = QString("%1%2%3.%4").arg(m_FilePrefix->text())
-        .arg(QString::number(index), m_TotalDigits->value(), '0')
-        .arg(m_FileSuffix->text()).arg(m_FileExt->text());
-    QString filePath = m_InputDir->text() + QDir::separator() + filename;
-    filePath = QDir::toNativeSeparators(filePath);
-    fileList.push_back(filePath);
-  }
-  return fileList;
-}
-
 
 
 // -----------------------------------------------------------------------------
@@ -570,7 +420,7 @@ void EbsdToH5EbsdWidget::m_generateExampleEbsdInputFile()
   bool hasMissingFiles = false;
 
   // Now generate all the file names the user is asking for and populate the table
-  QVector<QString> fileList = generateFileList(start, end, hasMissingFiles, m_StackLowToHigh->isChecked(), filename);
+  QVector<QString> fileList = m_Filter->generateFileList(start, end, hasMissingFiles, m_StackLowToHigh->isChecked());
 
   m_FileListView->clear();
   QIcon greenDot = QIcon(QString(":/green-dot.png"));
@@ -609,9 +459,9 @@ void EbsdToH5EbsdWidget::m_generateExampleEbsdInputFile()
 // -----------------------------------------------------------------------------
 void EbsdToH5EbsdWidget::on_m_RefFrameOptionsBtn_clicked()
 {
-  QString filename = QString("%1%2%3.%4").arg(m_FilePrefix->text())
-      .arg(m_ZStartIndex->text(), m_TotalDigits->value(), '0')
-      .arg(m_FileSuffix->text()).arg(m_FileExt->text());
+//  QString filename = QString("%1%2%3.%4").arg(m_FilePrefix->text())
+//      .arg(m_ZStartIndex->text(), m_TotalDigits->value(), '0')
+//      .arg(m_FileSuffix->text()).arg(m_FileExt->text());
   //m_GeneratedFileNameExample->setText(filename);
 
 
@@ -623,7 +473,7 @@ void EbsdToH5EbsdWidget::on_m_RefFrameOptionsBtn_clicked()
   bool hasMissingFiles = false;
 
   // Now generate all the file names in the "Low to High" order because that is what the importer is expecting
-  QVector<QString> fileList = generateFileList(start, end, hasMissingFiles, true, filename);
+  QVector<QString> fileList = m_Filter->generateFileList(start, end, hasMissingFiles, true);
   if (fileList.size() == 0)
   {
     return;
@@ -643,8 +493,8 @@ void EbsdToH5EbsdWidget::on_m_RefFrameOptionsBtn_clicked()
     m_HKLchecked = d.getHKLchecked();
     m_HEDMchecked = d.getHEDMchecked();
     m_NoTranschecked = d.getNoTranschecked();
-    d.getSampleTranformation(m_SampleTransformationAngle, m_SampleTransformationAxis[0], m_SampleTransformationAxis[1], m_SampleTransformationAxis[2]);
-    d.getEulerTranformation(m_EulerTransformationAngle, m_EulerTransformationAxis[0], m_EulerTransformationAxis[1], m_EulerTransformationAxis[2]);
+    d.getSampleTranformation(m_SampleTransformation);
+    d.getEulerTranformation(m_EulerTransformation);
   }
 }
 
@@ -762,4 +612,60 @@ void EbsdToH5EbsdWidget::openHtmlHelpFile()
   DREAM3DHelpUrlGenerator::generateAndOpenHTMLUrl(lowerFilter, this);
 }
 
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void EbsdToH5EbsdWidget::widgetChanged(const QString &text)
+{
+  emit parametersChanged();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void EbsdToH5EbsdWidget::filterNeedsInputParameters(AbstractFilter* filter)
+{
+  if (NULL == m_Filter)
+  {
+    QString ss = QObject::tr("Error Setting EbsdToH5Ebsd Gui values to Filter instance. Filter instance was NULL.").arg(m_FilterParameter->getPropertyName());
+    emit errorSettingFilterParameter(ss);
+  }
+  bool ok = false;
+  m_Filter->setOutputFile(m_OutputFile->text() );
+  m_Filter->setZStartIndex(m_ZStartIndex->text().toLongLong(&ok));
+  m_Filter->setZEndIndex(m_ZEndIndex->text().toLongLong(&ok));
+  m_Filter->setZResolution(m_zSpacing->text().toDouble(&ok));
+  m_Filter->setRefFrameZDir( getRefFrameZDir() );
+
+  m_Filter->setInputPath(m_InputDir->text());
+  m_Filter->setFilePrefix(m_FilePrefix->text());
+  m_Filter->setFileSuffix(m_FileSuffix->text());
+  m_Filter->setFileExtension(m_FileExt->text());
+  m_Filter->setPaddingDigits(m_TotalDigits->value());
+
+  m_Filter->setSampleTransformation(m_SampleTransformation);
+  m_Filter->setEulerTransformation(m_EulerTransformation);
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void EbsdToH5EbsdWidget::beforePreflight()
+{
+  if (m_DidCausePreflight == false)
+  {
+
+  }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void EbsdToH5EbsdWidget::afterPreflight()
+{
+
+}
 

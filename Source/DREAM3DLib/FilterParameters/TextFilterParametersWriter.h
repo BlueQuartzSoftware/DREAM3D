@@ -98,6 +98,8 @@ class DREAM3DLib_EXPORT TextFilterParametersWriter : public AbstractFilterParame
     virtual int writeValue(const QString name, AxisAngleInput_t v, int vectorPos);
     virtual int writeArraySelections(const QString name, QSet<QString> v);
     virtual int writeValue(const QString name, DataContainerArrayProxy& v);
+    virtual int writeValue(const QString name, AxisAngleInput_t v);
+
   protected:
     TextFilterParametersWriter();
 

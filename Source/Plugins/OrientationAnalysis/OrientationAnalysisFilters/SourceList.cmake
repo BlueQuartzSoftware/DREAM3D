@@ -13,6 +13,7 @@ START_FILTER_GROUP(${OrientationAnalysis_BINARY_DIR} "${_filterGroupName}" "Orie
 #---------
 # List your public filters here
 set(_PublicFilters
+  EbsdToH5Ebsd
   WritePoleFigure
   WriteIPFStandardTriangle
 )

@@ -24,7 +24,7 @@ Due to different experimental setups the definition of the _bottom_ slice or the
 
 Many serial sectioning systems are inherently a series of 2D scans stacked together to form a 3D volume of material. Due to this the experimental systems have no knowledge of the amount of material that was removed between each slice and so the user is responsible for setting this value correctly for their data set.
 
-![Import Orientation Files User Interface](ImportOrientationDataFilter.png)
+![Import Orientation Files User Interface](images/ImportOrientationDataFilter.png)
 
 @image latex ImportOrientationDataFilter.png " " width=6in
 
@@ -32,7 +32,7 @@ Many serial sectioning systems are inherently a series of 2D scans stacked toget
 ## Orientations, Reference Frames and Coordinate Systems
 DREAM.3D's origin follows the specimen's coordinate system so that the physical location of the 0 row and 0 column voxel should visually appear in the lower left corner of a computer graphics display as shown in the figure where the Specimen Coordinate System (White) overlaid with EBSD Coordinate System (Yellow).
 
-![TSL Coordinate System (Spatial)](CoordinateSystem1.png)
+![TSL Coordinate System (Spatial)](images/CoordinateSystem1.png)
 
 @image latex CoordinateSystem1.png "TSL Coordinate System (Spatial)" width=3in
 
@@ -40,7 +40,7 @@ Commercial EBSD acquisition systems do not typically follow this convention, and
 
 -----
 
-![The Advance Reference Frame Dialog](EbsdToH5Ebsd_ReferenceFrameDialog.png)
+![The Advance Reference Frame Dialog](images/EbsdToH5Ebsd_ReferenceFrameDialog.png)
 @image latex EbsdToH5Ebsd_ReferenceFrameDialog.png "The Advance Reference Frame Dialog" width=3in
 
 -----
@@ -51,13 +51,13 @@ The next item that the user needs to do is to click the **Set Reference Frame** 
 
 ---
 
-![No Transform or Unknown Manufacturer or HEDM Data](NoUnknown_HEDM_RefFrame.png)
+![No Transform or Unknown Manufacturer or HEDM Data](images/NoUnknown_HEDM_RefFrame.png)
 
 @image latex NoUnknown_HEDM_RefFrame.png "No Transform or Unknown Manufacturer or HEDM Data" width=4in
 
 ---
 
-![TSL or HKL Transform](EDAX_HKL_RefFrame.png)
+![TSL or HKL Transform](images/EDAX_HKL_RefFrame.png)
 
 @image latex EDAX_HKL_RefFrame.png "TSL or HKL Transform" width=4in
 

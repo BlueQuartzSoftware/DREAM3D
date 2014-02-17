@@ -508,6 +508,23 @@ int QFilterParametersWriter::writeValue(const QString name, QVector<ComparisonIn
 }
 
 // -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int QFilterParametersWriter::writeValue(const QString name, AxisAngleInput_t data)
+{
+  int err = 0;
+  m_Prefs->beginWriteArray(name, 0);
+  m_Prefs->setArrayIndex(0);
+  m_Prefs->setValue("Angle", static_cast<double>(data.angle));
+  m_Prefs->setValue("H", static_cast<double>(data.h));
+  m_Prefs->setValue("K", static_cast<double>(data.k));
+  m_Prefs->setValue("L", static_cast<double>(data.l));
+  m_Prefs->endArray();
+  return err;
+}
+
+
+// -----------------------------------------------------------------------------
 // These are actually written as a binary 4x1 float array as an attribute
 // -----------------------------------------------------------------------------
 int QFilterParametersWriter::writeValue(const QString name, AxisAngleInput_t data, int vectorPos)
