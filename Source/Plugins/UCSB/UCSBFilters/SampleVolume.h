@@ -10,8 +10,6 @@
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
-
-
 #include "SubFilterPipeline.h"
 
 /**
@@ -30,14 +28,10 @@ class SampleVolume : public AbstractFilter
 
     virtual ~SampleVolume();
 
-    //values for input file
-    DREAM3D_INSTANCE_STRING_PROPERTY(InputFile)
-
     //values for cropping
     typedef struct { int x; int y; int z; } BoxSize_t;
     DREAM3D_INSTANCE_PROPERTY(int, NumberVolumes)
     DREAM3D_INSTANCE_PROPERTY(IntVec3Widget_t, BoxSize)
-    DREAM3D_INSTANCE_PROPERTY(IntVec3Widget_t, Dims)
 
     //values for output file
     DREAM3D_INSTANCE_STRING_PROPERTY(OutputDirectory)

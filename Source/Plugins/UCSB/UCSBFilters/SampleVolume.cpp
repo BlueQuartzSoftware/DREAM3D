@@ -4,13 +4,7 @@
 
 #include "SampleVolume.h"
 
-//reader
-#include "H5Support/H5Utilities.h"
-#include "H5Support/H5Lite.h"
-#include "H5Support/HDF5ScopedFileSentinel.h"
-
 #include "MXA/Utilities/MXAFileInfo.h"
-
 #include "DREAM3DLib/Common/Observer.h"
 #include "DREAM3DLib/Common/FilterManager.h"
 #include "DREAM3DLib/SamplingFilters/CropVolume.h"
@@ -21,13 +15,9 @@
 #include "DREAM3DLib/IOFilters/SolidMeshDataContainerReader.h"
 #include "DREAM3DLib/FilterParameters/H5FilterParametersReader.h"
 #include "DREAM3DLib/Utilities/DREAM3DRandom.h"
-
-
-//random numbers
 #include <boost/random/mersenne_twister.hpp>
 #include <boost/random/uniform_int.hpp>
 #include <boost/random/variate_generator.hpp>
-
 
 
 // -----------------------------------------------------------------------------
@@ -35,11 +25,7 @@
 // -----------------------------------------------------------------------------
 SampleVolume::SampleVolume() :
 AbstractFilter(),
-//file reader
-m_InputFile(""),
-//cropping
 m_NumberVolumes(0),
-//file writting
 m_OutputDirectory(""),
 m_FileName(""),
 m_WriteXdmf(false)
@@ -47,9 +33,6 @@ m_WriteXdmf(false)
   m_BoxSize.x = 10;
   m_BoxSize.y = 10;
   m_BoxSize.z = 10;
-  m_Dims.x = 0;
-  m_Dims.y = 0;
-  m_Dims.z = 0;
   setupFilterParameters();
 }
 
@@ -68,14 +51,6 @@ void SampleVolume::setupFilterParameters()
   std::vector<FilterParameter::Pointer> parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
-    option->setHumanLabel("Input File");
-    option->setPropertyName("InputFile");
-    option->setWidgetType(FilterParameter::InputFileWidget);
-    option->setValueType("string");
-    parameters.push_back(option);
-  }
-  {
-    FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Number of Volumes");
     option->setPropertyName("NumberVolumes");
     option->setWidgetType(FilterParameter::IntWidget);
@@ -86,15 +61,6 @@ void SampleVolume::setupFilterParameters()
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Sampling Size");
     option->setPropertyName("BoxSize");
-    option->setWidgetType(FilterParameter::IntVec3Widget);
-    option->setValueType("IntVec3Widget_t");
-    option->setUnits("voxels");
-    parameters.push_back(option);
-  }
-  {
-    FilterParameter::Pointer option = FilterParameter::New();
-    option->setHumanLabel("Sample Dimensions");
-    option->setPropertyName("Dims");
     option->setWidgetType(FilterParameter::IntVec3Widget);
     option->setValueType("IntVec3Widget_t");
     option->setUnits("voxels");
@@ -133,20 +99,11 @@ void SampleVolume::setupFilterParameters()
 void SampleVolume::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-
-  //reader
-  setInputFile( reader->readValue("InputFile", getInputFile() ) );
-
-  //cropping
   setNumberVolumes( reader->readValue( "NumberVolumes", getNumberVolumes() ) );
   setBoxSize( reader->readValue( "BoxSize", getBoxSize() ) );
-  setDims( reader->readValue( "Dims", getDims() ) );
-
-  //writer
   setOutputDirectory( reader->readValue( "OutputDirectory", getOutputDirectory() ) );
   setFileName( reader->readValue( "FileName", getFileName() ) );
   setWriteXdmf( reader->readValue( "WriteXdmf", getWriteXdmf() ) );
-
   reader->closeFilterGroup();
 }
 
@@ -156,21 +113,13 @@ void SampleVolume::readFilterParameters(AbstractFilterParametersReader* reader, 
 int SampleVolume::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 
 {
-  //reader
   writer->openFilterGroup(this, index);
-  writer->writeValue("InputFile", getInputFile() );
-
-  //cropping
   writer->writeValue("NumberVolumes", getNumberVolumes() );
   writer->writeValue("BoxSize", getBoxSize() );
-  writer->writeValue("Dims", getDims() );
-
-  //writer
   writer->writeValue("OutputDirectory", getOutputDirectory() );
   writer->writeValue("FileName", getFileName() );
   writer->writeValue("WriteXdmf", getWriteXdmf() );
   writer->closeFilterGroup();
-
   return ++index; // we want to return the next index that was just written to
 }
 
@@ -189,54 +138,6 @@ void SampleVolume::dataCheck(bool preflight, size_t voxels, size_t fields, size_
     setErrorCondition(-1003);
     addErrorMessage(getHumanLabel(), "Output Directory is Not set correctly", -382);
   }
-
-  if (getInputFile().empty() == true)
-  {
-    ss << ClassName() << " needs the Input File Set and it was not.";
-    setErrorCondition(-387);
-    addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
-  }
-  else if (MXAFileInfo::exists(getInputFile()) == false)
-  {
-    ss << "The input file does not exist.";
-    setErrorCondition(-388);
-    addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
-  }
-  else
-  {
-    // Read the Meta Data and Array names from the file
-    hid_t fileId = H5Utilities::openFile(m_InputFile, true); // Open the file Read Only
-    if(fileId < 0)
-    {
-      ss.str("");
-      ss << ": Error opening input file '" << m_InputFile << "'";
-      setErrorCondition(-150);
-      addErrorMessage(getHumanLabel(), ss.str(), err);
-      return;
-    }
-
-    // This will make sure if we return early from this method that the HDF5 File is properly closed.
-    HDF5ScopedFileSentinel scopedFileSentinel(&fileId, true);
-
-      /* READ THE VOXEL DATA TO THE HDF5 FILE */
-      if (getVoxelDataContainer() != NULL)
-      {
-        VoxelDataContainerReader::Pointer voxelReader = VoxelDataContainerReader::New();
-        voxelReader->setHdfFileId(fileId);
-        voxelReader->setVoxelDataContainer(getVoxelDataContainer());
-        voxelReader->setObservers(getObservers());
-        ss.str("");
-        ss << getMessagePrefix() << " |--> Reading Voxel Data ";
-        voxelReader->setMessagePrefix(ss.str());
-        voxelReader->preflight();
-        if (voxelReader->getErrorCondition() < 0)
-        {
-          setErrorCondition(voxelReader->getErrorCondition());
-          addErrorMessage(getHumanLabel(), "The voxel data was not available in the data file.", getErrorCondition());
-        }
-      }
-  }
-
 
   SubFilterPipeline::Pointer pipeline = buildPipeline(0, 0, m_BoxSize.x-1, 0, m_BoxSize.y-1, 0, m_BoxSize.z-1);
   err = pipeline->preflightPipeline();
@@ -275,7 +176,7 @@ void SampleVolume::execute()
   setErrorCondition(0);
 
   /* Place all your code to execute your filter here. */
-/*
+
   //get size of sample
   size_t udims[3] =
   { 0, 0, 0 };
@@ -287,20 +188,17 @@ void SampleVolume::execute()
 #endif
   DimType dims[3] =
   { static_cast<DimType>(udims[0]), static_cast<DimType>(udims[1]), static_cast<DimType>(udims[2]), };
+
+  //set bounds for valid sampling locations
   const int xMax = dims[0]-m_BoxSize.x;
   const int yMax = dims[1]-m_BoxSize.y;
   const int zMax = dims[2]-m_BoxSize.z;
-*/
-  const int xMax = m_Dims.x-m_BoxSize.x;
-  const int yMax = m_Dims.y-m_BoxSize.y;
-  const int zMax = m_Dims.z-m_BoxSize.z;
 
   //set up generation
   const int rangeMin = 0;
   typedef boost::uniform_int<int> NumberDistribution;
   typedef boost::mt19937 RandomNumberGenerator;
   typedef boost::variate_generator<RandomNumberGenerator&, NumberDistribution> Generator;
-
   NumberDistribution xDist(0, xMax);
   NumberDistribution yDist(0, yMax);
   NumberDistribution zDist(0, zMax);
@@ -403,7 +301,7 @@ SubFilterPipeline::Pointer SampleVolume::buildPipeline(int append, int x1, int x
   for (std::list<std::string>::iterator iter = arrayNames.begin(); iter != arrayNames.end(); ++iter)
   {
     std::string name = *iter;
-    IDataArray::Pointer p = m->getCellData(name);
+    IDataArray::Pointer p = m->getFieldData(name);
     IDataArray::Pointer dataCopy = p->deepCopy();
     copy->addFieldData(name, dataCopy);
   }
@@ -413,7 +311,7 @@ SubFilterPipeline::Pointer SampleVolume::buildPipeline(int append, int x1, int x
   for (std::list<std::string>::iterator iter = arrayNames.begin(); iter != arrayNames.end(); ++iter)
   {
     std::string name = *iter;
-    IDataArray::Pointer p = m->getCellData(name);
+    IDataArray::Pointer p = m->getEnsembleData(name);
     IDataArray::Pointer dataCopy = p->deepCopy();
     copy->addEnsembleData(name, dataCopy);
   }
@@ -437,8 +335,8 @@ SubFilterPipeline::Pointer SampleVolume::buildPipeline(int append, int x1, int x
   std::stringstream ss;
   ss<<"_"<<append;
   DataContainerWriter::Pointer writer = DataContainerWriter::New();
-  std::string dream_3d_file = m_OutputDirectory + m_FileName + ss.str();
-  writer->setOutputFile(dream_3d_file);
+  std::string dream_3d_file = m_OutputDirectory + "/" + m_FileName + ss.str();
+  writer->setOutputFile(MXAFileInfo::toNativeSeparators(dream_3d_file));
   writer->setWriteVoxelData(true);
   writer->setWriteSurfaceMeshData(false);
   writer->setWriteXdmfFile(m_WriteXdmf);
