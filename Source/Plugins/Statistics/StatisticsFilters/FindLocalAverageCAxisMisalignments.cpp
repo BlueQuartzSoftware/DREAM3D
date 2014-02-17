@@ -103,7 +103,7 @@ void FindLocalAverageCAxisMisalignments::setupFilterParameters()
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Calculate Unbiased Local C-Axis Misalignments");
     option->setPropertyName("CalcUnbiasedAvg");
-    option->setWidgetType(FilterParameterWidgetType::DoubleWidget);
+    option->setWidgetType(FilterParameterWidgetType::BooleanWidget);
     option->setValueType("bool");
     option->setUnits("");
     parameters.push_back(option);
@@ -112,7 +112,7 @@ void FindLocalAverageCAxisMisalignments::setupFilterParameters()
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Calculate Local C-Axis Misalignments");
     option->setPropertyName("CalcBiasedAvg");
-    option->setWidgetType(FilterParameterWidgetType::DoubleWidget);
+    option->setWidgetType(FilterParameterWidgetType::BooleanWidget);
     option->setValueType("bool");
     option->setUnits("");
     parameters.push_back(option);
@@ -177,7 +177,6 @@ void FindLocalAverageCAxisMisalignments::dataCheck()
   { m_CellParentIds = m_CellParentIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   // Feature Data
-#error THIS CODE IS GOING TO FAIL BECAUSE the variables are Floats and you are comparing them to a boolean
 
   if ( m_CalcUnbiasedAvg == true)
   {
@@ -211,7 +210,7 @@ void FindLocalAverageCAxisMisalignments::dataCheck()
       m_CAxisMisalignmentList->resize(cellFeatureAttrMat->getNumTuples());
     }
   }
-#error THIS CODE IS GOING TO FAIL BECAUSE the variables are Floats and you are comparing them to a boolean
+
 
   if (m_CalcBiasedAvg == true)
   {
@@ -265,7 +264,7 @@ void FindLocalAverageCAxisMisalignments::execute()
   size_t newNumFeatures = m->getAttributeMatrix(getNewCellFeatureAttributeMatrixName())->getNumTuples();
 
   QVector<int32_t> NumUnbiasedFeaturesPerParent(numFeatures,0);
-#error THIS CODE IS GOING TO FAIL BECAUSE the variables are Floats and you are comparing them to a boolean
+
 
   if(m_CalcUnbiasedAvg == true)
   {
@@ -285,7 +284,7 @@ void FindLocalAverageCAxisMisalignments::execute()
       }
     }
   }
-#error THIS CODE IS GOING TO FAIL BECAUSE the variables are Floats and you are comparing them to a boolean
+
 
   if (m_CalcBiasedAvg == true)
   {
@@ -299,7 +298,7 @@ void FindLocalAverageCAxisMisalignments::execute()
 
   for(int i=1;i<newNumFeatures;i++)
   {
-#error THIS CODE IS GOING TO FAIL BECAUSE the variables are Floats and you are comparing them to a boolean
+
     if (m_CalcBiasedAvg == true) m_LocalCAxisMisalignments[i] /= m_NumFeaturesPerParent[i];
     if (m_CalcUnbiasedAvg == true)
     {
