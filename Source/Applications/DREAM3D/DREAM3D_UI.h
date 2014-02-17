@@ -118,6 +118,9 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
     //Pipeline Menu
     void on_actionClearPipeline_triggered();
 
+    //View Menu
+    void on_actionShow_Filter_Library_triggered();
+
     // Help Menu
     void on_actionCheck_For_Updates_triggered();
     void on_actionLicense_Information_triggered();

@@ -935,3 +935,11 @@ void DREAM3D_UI::versionCheckReply(UpdateCheckData* dataObj)
     d->exec();
   }
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DREAM3D_UI::on_actionShow_Filter_Library_triggered()
+{
+    filterLibraryDockWidget->setVisible(true);
+}

@@ -120,7 +120,7 @@ color: white;
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>453</width>
+             <width>532</width>
              <height>566</height>
             </rect>
            </property>
@@ -298,10 +298,16 @@ border: 2px solid;
    <property name="text">
     <string>Show Filter Library</string>
    </property>
+   <property name="iconVisibleInMenu">
+    <bool>false</bool>
+   </property>
   </action>
   <action name="actionShow_Prebuilt_Pipelines">
    <property name="text">
     <string>Show Prebuilt Pipelines</string>
+   </property>
+   <property name="iconVisibleInMenu">
+    <bool>false</bool>
    </property>
   </action>
   <action name="actionOpenPipeline">
@@ -332,6 +338,9 @@ border: 2px solid;
    <property name="text">
     <string>Show Favorites</string>
    </property>
+   <property name="iconVisibleInMenu">
+    <bool>false</bool>
+   </property>
   </action>
   <action name="actionClearPipeline">
    <property name="text">
@@ -350,10 +359,16 @@ border: 2px solid;
    <property name="text">
     <string>Show Issues</string>
    </property>
+   <property name="iconVisibleInMenu">
+    <bool>false</bool>
+   </property>
   </action>
   <action name="actionShow_Filter_List">
    <property name="text">
     <string>Show Filter List</string>
+   </property>
+   <property name="iconVisibleInMenu">
+    <bool>false</bool>
    </property>
   </action>
   <action name="actionShow_User_Manual">
