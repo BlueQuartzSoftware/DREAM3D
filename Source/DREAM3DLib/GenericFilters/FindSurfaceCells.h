@@ -79,6 +79,12 @@ class DREAM3DLib_EXPORT FindSurfaceCells : public AbstractFilter
     virtual void execute();
     virtual void preflight();
 
+signals:
+    void updateFilterParameters(AbstractFilter* filter);
+    void parametersChanged();
+    void preflightAboutToExecute();
+    void preflightExecuted();
+
   protected:
     FindSurfaceCells();
 

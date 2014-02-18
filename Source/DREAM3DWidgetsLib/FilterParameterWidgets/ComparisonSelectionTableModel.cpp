@@ -55,7 +55,7 @@ ComparisonSelectionTableModel::ComparisonSelectionTableModel(bool showOperators,
 {
   if (showOperators)
   {
-    m_ColumnCount = ColumnCount;
+    m_ColumnCount = ColumnCount; // this comes from the enumerator in the header file
   }
   else
   {

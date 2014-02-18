@@ -109,6 +109,11 @@ class ComparisonSelectionWidget : public QWidget, private Ui::ComparisonSelectio
      */
     QVector<ComparisonInput_t> getComparisonInputs();
 
+  protected:
+    void populateComboBoxes();
+    void populateAttributeMatrixList();
+    QStringList generateAttributeArrayList();
+    QString checkStringValues(QString curDcName, QString filtDcName);
 
   protected slots:
 

@@ -121,11 +121,18 @@ font-weight: bold;
      <property name="font">
       <font>
        <family>Arial</family>
-       <pointsize>12</pointsize>
+       <pointsize>10</pointsize>
        <weight>75</weight>
-       <italic>true</italic>
+       <italic>false</italic>
        <bold>true</bold>
       </font>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QLabel {
+font: 75 10pt &quot;Arial&quot;;
+font-weight: bold;
+}
+</string>
      </property>
      <property name="lineWidth">
       <number>0</number>

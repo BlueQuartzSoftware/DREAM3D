@@ -148,6 +148,7 @@ class ComparisonSelectionTableModel : public QAbstractTableModel
 
 
     void setPossibleFeatures(QStringList features);
+
     void setPossibleFeatures(QList<QString>& features);
 
     QStringList getPossibleFeatures();

@@ -109,6 +109,12 @@ class TriangleAreaFilter : public SurfaceMeshFilter
     */
     virtual void preflight();
 
+signals:
+    void updateFilterParameters(AbstractFilter* filter);
+    void parametersChanged();
+    void preflightAboutToExecute();
+    void preflightExecuted();
+
   protected:
     TriangleAreaFilter();
 

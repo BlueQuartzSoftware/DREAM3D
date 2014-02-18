@@ -114,7 +114,7 @@ class ReadH5EbsdWidget : public QWidget, private Ui::ReadH5EbsdWidget
 
 
   public slots:
-    void setInputFile(const QString &v);
+   // void setInputFile(const QString &v);
     void arraySelectionWidgetChanged();
 
 #endif

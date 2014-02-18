@@ -44,7 +44,7 @@
 // -----------------------------------------------------------------------------
 ComparisonSelectionWidget::ComparisonSelectionWidget(FilterParameter* parameter, AbstractFilter* filter, QWidget* parent) :
   QWidget(parent),
-  m_ShowOperators(false),
+  m_ShowOperators(true),
   m_Filter(filter),
   m_FilterParameter(parameter),
   m_DidCausePreflight(false),
@@ -93,21 +93,253 @@ QVector<ComparisonInput_t> ComparisonSelectionWidget::getComparisonInputs()
 // -----------------------------------------------------------------------------
 void ComparisonSelectionWidget::setupGui()
 {
+    qRegisterMetaType<ComparisonInput_t>();
+     qRegisterMetaType<QVector<ComparisonInput_t> >();
+
+  // Catch when the filter is about to execute the preflight
+  connect(m_Filter, SIGNAL(preflightAboutToExecute()),
+    this, SLOT(beforePreflight()));
+
+  // Catch when the filter is finished running the preflight
+  connect(m_Filter, SIGNAL(preflightExecuted()),
+    this, SLOT(afterPreflight()));
+
+  // Catch when the filter wants its values updated
+  connect(m_Filter, SIGNAL(updateFilterParameters(AbstractFilter*)),
+    this, SLOT(filterNeedsInputParameters(AbstractFilter*)));
+
+  if (m_FilterParameter == NULL)
+  {
+    return;
+  }
 
   m_ComparisonSelectionTableModel = new ComparisonSelectionTableModel(m_ShowOperators);
   QAbstractItemModel* model = m_ComparisonSelectionTableView->model();
-  m_ComparisonSelectionTableView->setModel(m_ComparisonSelectionTableModel);
-
-  m_ComparisonSelectionTableModel->setNumberOfPhases(1);
-  if(model != m_ComparisonSelectionTableModel && model == NULL)
+  if(NULL != model)
   {
-    delete model; // Clean up this memory
+    delete model;
   }
+  m_ComparisonSelectionTableView->setModel(m_ComparisonSelectionTableModel);
+  m_ComparisonSelectionTableModel->setNumberOfPhases(1);
+
   // Set the ItemDelegate for the table.
   QAbstractItemDelegate* aid = m_ComparisonSelectionTableModel->getItemDelegate();
   m_ComparisonSelectionTableView->setItemDelegate(aid);
+
+
+
+  dataContainerList->blockSignals(true);
+  attributeMatrixList->blockSignals(true);
+
+  dataContainerList->clear();
+  attributeMatrixList->clear();
+
+  // Now let the gui send signals like normal
+  dataContainerList->blockSignals(false);
+  attributeMatrixList->blockSignals(false);
+
+
+  populateComboBoxes();
+
+
 }
 
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ComparisonSelectionWidget::populateComboBoxes()
+{
+  //  std::cout << "void SingleArraySelectionWidget::populateComboBoxesWithSelection()" << std::endl;
+
+
+  // Now get the DataContainerArray from the Filter instance
+  // We are going to use this to get all the current DataContainers
+  DataContainerArray::Pointer dca = m_Filter->getDataContainerArray();
+  if(NULL == dca.get()) { return; }
+
+  // Check to see if we have any DataContainers to actually populate drop downs with.
+  if(dca->getDataContainerArray().size() == 0)
+  {
+    return;
+  }
+  // Cache the DataContainerArray Structure for our use during all the selections
+  m_DcaProxy = DataContainerArrayProxy(dca.get());
+
+  // Populate the DataContainerArray Combo Box with all the DataContainers
+  QList<DataContainerProxy> dcList = m_DcaProxy.list;
+  QListIterator<DataContainerProxy> iter(dcList);
+
+  while(iter.hasNext() )
+  {
+    DataContainerProxy dc = iter.next();
+    if(dataContainerList->findText(dc.name) == -1 ) {
+      dataContainerList->addItem(dc.name);
+    }
+  }
+
+  // Grab what is currently selected
+  QString curDcName = dataContainerList->currentText();
+  QString curAmName = attributeMatrixList->currentText();
+//  QString curDaName = attributeArrayList->currentText();
+
+  // Get what is in the filter
+  QString selectedPath = m_Filter->property(PROPERTY_NAME_AS_CHAR).toString();
+  // Split the path up to make sure we have a valid path separated by the "|" character
+
+  QString filtDcName;
+  QString filtAmName;
+//  QString filtDaName;
+  QStringList tokens = selectedPath.split(DREAM3D::PathSep);
+  if(tokens.size() == 3) {
+    filtDcName = tokens.at(0);
+    filtAmName = tokens.at(1);
+//    filtDaName = tokens.at(2);
+  }
+
+  // Now to figure out which one of these to use. If this is the first time through then what we picked up from the
+  // gui will be empty strings because nothing is there. If there is something in the filter then we should use that.
+  // If there is something in both of them and they are NOT equal then we have a problem. Use the flag m_DidCausePreflight
+  // to determine if the change from the GUI should over ride the filter or vice versa. there is a potential that in future
+  // versions that something else is driving DREAM3D and pushing the changes to the filter and we need to reflect those
+  // changes in the GUI, like a testing script?
+
+  QString dcName = checkStringValues(curDcName, filtDcName);
+  QString amName = checkStringValues(curAmName, filtAmName);
+ // QString daName = checkStringValues(curDaName, filtDaName);
+
+  bool didBlock = false;
+
+  if (!dataContainerList->signalsBlocked()) { didBlock = true; }
+  dataContainerList->blockSignals(true);
+  int dcIndex = dataContainerList->findText(dcName);
+  if(dcIndex < 0 && dcName.isEmpty() == false) {
+    dataContainerList->addItem(dcName);
+  } // the string was not found so just set it to the first index
+  else {
+    if(dcIndex < 0) { dcIndex = 0; } // Just set it to the first DataContainer in the list
+    dataContainerList->setCurrentIndex(dcIndex);
+    populateAttributeMatrixList();
+  }
+  if(didBlock) { dataContainerList->blockSignals(false); didBlock = false; }
+
+
+  if(!attributeMatrixList->signalsBlocked()) { didBlock = true; }
+  attributeMatrixList->blockSignals(true);
+  int amIndex = attributeMatrixList->findText(amName);
+  if(amIndex < 0 && amName.isEmpty() == false) { attributeMatrixList->addItem(amName); } // The name of the attributeMatrix was not found so just set the first one
+  else {
+    if(amIndex < 0) { amIndex = 0; }
+    attributeMatrixList->setCurrentIndex(amIndex);
+    QStringList possibleArrays = generateAttributeArrayList();
+    m_ComparisonSelectionTableModel->setPossibleFeatures(possibleArrays);
+  }
+  if(didBlock) { attributeMatrixList->blockSignals(false); didBlock = false; }
+
+
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ComparisonSelectionWidget::populateAttributeMatrixList()
+{
+  QString dcName = dataContainerList->currentText();
+
+  // Clear the AttributeMatrix List
+  attributeMatrixList->blockSignals(true);
+  attributeMatrixList->clear();
+
+  // Loop over the data containers until we find the proper data container
+  QList<DataContainerProxy> containers = m_DcaProxy.list;
+  QListIterator<DataContainerProxy> containerIter(containers);
+  while(containerIter.hasNext())
+  {
+    DataContainerProxy dc = containerIter.next();
+
+    if(dc.name.compare(dcName) == 0 )
+    {
+      // We found the proper Data Container, now populate the AttributeMatrix List
+      QMap<QString, AttributeMatrixProxy> attrMats = dc.attributeMatricies;
+      QMapIterator<QString, AttributeMatrixProxy> attrMatsIter(attrMats);
+      while(attrMatsIter.hasNext() )
+      {
+        attrMatsIter.next();
+        QString amName = attrMatsIter.key();
+        attributeMatrixList->addItem(amName);
+      }
+    }
+  }
+
+  attributeMatrixList->blockSignals(false);
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QStringList ComparisonSelectionWidget::generateAttributeArrayList()
+{
+
+  QStringList attributeArrayList;
+  // Get the selected Data Container Name from the DataContainerList Widget
+  QString currentDCName = dataContainerList->currentText();
+  QString currentAttrMatName = attributeMatrixList->currentText();
+
+  // Loop over the data containers until we find the proper data container
+  QList<DataContainerProxy> containers = m_DcaProxy.list;
+  QListIterator<DataContainerProxy> containerIter(containers);
+  while(containerIter.hasNext())
+  {
+    DataContainerProxy dc = containerIter.next();
+    if(dc.name.compare(currentDCName) == 0 )
+    {
+      // We found the proper Data Container, now populate the AttributeMatrix List
+      QMap<QString, AttributeMatrixProxy> attrMats = dc.attributeMatricies;
+      QMapIterator<QString, AttributeMatrixProxy> attrMatsIter(attrMats);
+      while(attrMatsIter.hasNext() )
+      {
+        attrMatsIter.next();
+        QString amName = attrMatsIter.key();
+        if(amName.compare(currentAttrMatName) == 0 )
+        {
+
+          // We found the selected AttributeMatrix, so loop over this attribute matrix arrays and populate the list widget
+          AttributeMatrixProxy amProxy = attrMatsIter.value();
+          QMap<QString, DataArrayProxy> dataArrays = amProxy.dataArrays;
+          QMapIterator<QString, DataArrayProxy> dataArraysIter(dataArrays);
+          while(dataArraysIter.hasNext() )
+          {
+            dataArraysIter.next();
+            //DataArrayProxy daProxy = dataArraysIter.value();
+            QString daName = dataArraysIter.key();
+            attributeArrayList << daName;
+          }
+        }
+      }
+    }
+  }
+
+  return attributeArrayList;
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString ComparisonSelectionWidget::checkStringValues(QString curDcName, QString filtDcName)
+{
+  if(curDcName.isEmpty() == true && filtDcName.isEmpty() == false)
+  {return filtDcName;}
+  else if(curDcName.isEmpty() == false && filtDcName.isEmpty() == true)
+  {return curDcName;}
+  else if(curDcName.isEmpty() == false && filtDcName.isEmpty() == false && m_DidCausePreflight == true)
+  { return curDcName;}
+
+  return filtDcName;
+
+}
 
 // -----------------------------------------------------------------------------
 //
@@ -194,11 +426,21 @@ void ComparisonSelectionWidget::filterNeedsInputParameters(AbstractFilter* filte
 // -----------------------------------------------------------------------------
 void ComparisonSelectionWidget::beforePreflight()
 {
-  if (m_DidCausePreflight == false)
+  if (NULL == m_Filter) { return; }
+  if(m_DidCausePreflight == true)
   {
-
+    std::cout << "***  ComparisonSelectionWidget already caused a preflight, just returning" << std::endl;
+    return;
   }
 
+  dataContainerList->blockSignals(true);
+  attributeMatrixList->blockSignals(true);
+
+  // Reset all the combo box widgets to have the default selection of the first index in the list
+  populateComboBoxes();
+
+  dataContainerList->blockSignals(false);
+  attributeMatrixList->blockSignals(false);
 }
 
 // -----------------------------------------------------------------------------

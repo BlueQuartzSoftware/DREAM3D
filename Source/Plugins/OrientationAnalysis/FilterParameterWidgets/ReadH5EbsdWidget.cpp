@@ -162,8 +162,7 @@ void ReadH5EbsdWidget::on_m_InputFileBtn_clicked()
   inputFile = QDir::toNativeSeparators(inputFile);
   if (!inputFile.isNull())
   {
-    m_InputFile->setText(inputFile);
-    setOpenDialogLastDirectory(inputFile);
+    m_InputFile->setText(inputFile); // Should cause a signal to be emitted
   }
 }
 
@@ -173,12 +172,14 @@ void ReadH5EbsdWidget::on_m_InputFileBtn_clicked()
 // -----------------------------------------------------------------------------
 void ReadH5EbsdWidget::on_m_InputFile_textChanged(const QString &text)
 {
-
+  setOpenDialogLastDirectory(m_InputFile->text());
   if (verifyPathExists(m_InputFile->text(), m_InputFile) )
   {
-    setInputFile(m_InputFile->text());
-    setOpenDialogLastDirectory(m_InputFile->text());
+    // This is a new file coming in so check the check box to select all the arrays
+   // m_DataArraysCheckBox->setCheckState(Qt::Checked);
   }
+
+  m_DataArraysCheckBox->setCheckState(Qt::Unchecked);
 }
 
 // -----------------------------------------------------------------------------
@@ -497,16 +498,6 @@ void ReadH5EbsdWidget::resetGuiFileInfoWidgets()
   m_RefFrameZDir->setText("xxx");
 }
 
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void ReadH5EbsdWidget::setInputFile(const QString &v)
-{
-  QString natPath = QDir::toNativeSeparators(v);
-  m_InputFile->setText(natPath);
-  emit parametersChanged();
-}
 
 
 #if 0

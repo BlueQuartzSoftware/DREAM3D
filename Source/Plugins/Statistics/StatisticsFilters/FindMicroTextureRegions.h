@@ -88,6 +88,12 @@ class FindMicroTextureRegions : public AbstractFilter
     virtual void execute();
     virtual void preflight();
 
+signals:
+    void updateFilterParameters(AbstractFilter* filter);
+    void parametersChanged();
+    void preflightAboutToExecute();
+    void preflightExecuted();
+
   protected:
     FindMicroTextureRegions();
     void find_microtextureregions();

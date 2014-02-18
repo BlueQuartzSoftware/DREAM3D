@@ -110,6 +110,12 @@ class DREAM3DLib_EXPORT GenerateRodriguesColors : public AbstractFilter
     */
     virtual void preflight();
 
+signals:
+    void updateFilterParameters(AbstractFilter* filter);
+    void parametersChanged();
+    void preflightAboutToExecute();
+    void preflightExecuted();
+
   protected:
     GenerateRodriguesColors();
 
