@@ -86,6 +86,20 @@ class StringDataArray : public IDataArray
       return p;
     }
 
+    /**
+     * @brief deepCopy
+     * @return
+     */
+    virtual IDataArray::Pointer deepCopy()
+    {
+      StringDataArray::Pointer daCopy = StringDataArray::CreateArray(GetNumberOfTuples(), GetName());
+      for(int32_t i = 0; i < m_Array.size(); ++i)
+      {
+        daCopy->SetValue(i, m_Array[i]);
+      }
+      return daCopy;
+    }
+
     virtual ~StringDataArray(){}
 
     /**

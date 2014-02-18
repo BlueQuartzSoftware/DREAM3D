@@ -139,7 +139,7 @@ class NeighborList : public IDataArray
     virtual int EraseTuples(std::vector<size_t> &idxs)
     {
       int err = 0;
-            // If nothing is to be erased just return
+      // If nothing is to be erased just return
       if(idxs.size() == 0)
       {
         return 0;
@@ -213,19 +213,54 @@ class NeighborList : public IDataArray
       return total;
     }
 
-
+    /**
+     * @brief SetNumberOfComponents
+     * @param nc
+     */
     void SetNumberOfComponents(int nc) { }
 
-
+    /**
+     * @brief GetNumberOfComponents
+     * @return
+     */
     int GetNumberOfComponents() { return 1; }
 
-
+    /**
+     * @brief GetTypeSize
+     * @return
+     */
     size_t GetTypeSize()  { return sizeof(SharedVectorType); }
 
-
+    /**
+     * @brief initializeWithZeros
+     */
     void initializeWithZeros() { _data.clear(); }
 
+    /**
+     * @brief deepCopy
+     * @return
+     */
+    IDataArray::Pointer deepCopy()
+    {
+      NeighborList<T>::Pointer daCopyPtr = NeighborList<T>::New();
+      daCopyPtr->Resize(GetNumberOfTuples());
 
+      //NeighborList<T>* daCopy = NeighborList<T>::SafeObjectDownCast<IDataArray*, NeighborList<T>*>(daCopyPtr.get());
+      for(size_t i=0;i<GetNumberOfTuples();i++)
+      {
+        NeighborList<T>::SharedVectorType sharedNeiLst(new std::vector<T>);
+        sharedNeiLst = _data[i];
+        daCopyPtr->setList(static_cast<int>(i), sharedNeiLst);
+      }
+
+      return daCopyPtr;
+    }
+
+    /**
+     * @brief RawResize
+     * @param size
+     * @return
+     */
     int32_t RawResize(size_t size)
     {
       size_t old = _data.size();
@@ -259,6 +294,12 @@ class NeighborList : public IDataArray
       }
     }
 
+    /**
+     * @brief printComponent
+     * @param out
+     * @param i
+     * @param j
+     */
     virtual void printComponent(std::ostream &out, size_t i, int j)
     {
       BOOST_ASSERT(false);
@@ -392,7 +433,7 @@ class NeighborList : public IDataArray
      * @return
      */
     virtual int writeXdmfAttribute(std::ostream &out, int64_t* volDims, const std::string &hdfFileName,
-            const std::string &groupPath, const std::string &label)
+                                   const std::string &groupPath, const std::string &label)
     {
 
       std::stringstream dimStr;
@@ -479,8 +520,10 @@ class NeighborList : public IDataArray
     }
 
     /**
- *
- */
+     * @brief addEntry
+     * @param grainId
+     * @param value
+     */
     void addEntry(int grainId, int value)
     {
       if(grainId >= static_cast<int>(_data.size()) )
