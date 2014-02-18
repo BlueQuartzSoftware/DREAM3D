@@ -287,7 +287,7 @@ int TextFilterParametersWriter::writeValue(const QString name, FloatVec3_t v)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int TextFilterParametersWriter::writeValue(const QString name, ComparisonInput_t v, int vectorPos)
+int TextFilterParametersWriter::writeValue(const QString name, ComparisonInput_t v)
 {
   int err = -1;
   return err;
@@ -296,7 +296,7 @@ int TextFilterParametersWriter::writeValue(const QString name, ComparisonInput_t
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int TextFilterParametersWriter::writeValue(const QString name, QVector<ComparisonInput_t> v)
+int TextFilterParametersWriter::writeValue(const QString name, ComparisonInputs v)
 {
   int err = -1;
   return err;

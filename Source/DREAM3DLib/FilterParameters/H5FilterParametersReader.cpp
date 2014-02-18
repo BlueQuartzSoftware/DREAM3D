@@ -542,11 +542,12 @@ FloatVec3_t H5FilterParametersReader::readFloatVec3(const QString name, FloatVec
 // -----------------------------------------------------------------------------
 ComparisonInput_t H5FilterParametersReader::readComparisonInput(const QString name, ComparisonInput_t defaultValue, int vectorPos)
 {
-  QVector<ComparisonInput_t> comps(1, defaultValue);
-  QVector<ComparisonInput_t> values = readComparisonInputs(name, comps);
+ // QVector<ComparisonInput_t> comps(1, defaultValue);
+  ComparisonInputs comps;
+  ComparisonInputs values = readComparisonInputs(name, comps);
   if(values.size() >= 1)
   {
-    return values[0];
+    return values.getInput(0);
   }
   return defaultValue;
 }
@@ -554,7 +555,7 @@ ComparisonInput_t H5FilterParametersReader::readComparisonInput(const QString na
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QVector<ComparisonInput_t> H5FilterParametersReader::readComparisonInputs(const QString name, QVector<ComparisonInput_t> defValue)
+ComparisonInputs H5FilterParametersReader::readComparisonInputs(const QString name, ComparisonInputs defValue)
 {
   int size = 0;
   QString strData = "";
@@ -577,10 +578,10 @@ QVector<ComparisonInput_t> H5FilterParametersReader::readComparisonInputs(const 
     return defValue;
   }
 
-  QVector<ComparisonInput_t> values(size);
+  ComparisonInputs values;
   for(qint32 i = 0; i < size; ++i)
   {
-    ComparisonInput_t& v = values[i];
+    ComparisonInput_t v;
     QStringList tokens = strVector[i].split(',', QString::SkipEmptyParts);
     if(tokens.size() >= 1)
     {
@@ -594,6 +595,7 @@ QVector<ComparisonInput_t> H5FilterParametersReader::readComparisonInputs(const 
     {
       v.compValue = QString(tokens[2]).toDouble(&ok);
     }
+    values.addInput(v);
   }
   return values;
 

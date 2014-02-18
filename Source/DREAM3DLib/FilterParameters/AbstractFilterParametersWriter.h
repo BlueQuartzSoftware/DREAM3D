@@ -42,6 +42,7 @@
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+#include "DREAM3DLib/Common/ComparisonInputs.h"
 #include "DREAM3DLib/FilterParameters/FilterParameter.h"
 #include "DREAM3DLib/DataContainers/DataContainerArrayProxy.h"
 
@@ -100,8 +101,12 @@ class DREAM3DLib_EXPORT AbstractFilterParametersWriter
 
     virtual int writeValue(const QString name, IntVec3_t v) = 0;
     virtual int writeValue(const QString name, FloatVec3_t v) = 0;
-    virtual int writeValue(const QString name, QVector<ComparisonInput_t> v) = 0;
+
+    virtual int writeValue(const QString name, ComparisonInput_t v) = 0;
+    virtual int writeValue(const QString name, ComparisonInputs v) = 0;
+
     virtual int writeValue(const QString name, QVector<AxisAngleInput_t> v) = 0;
+
     virtual int writeArraySelections(const QString name, QSet<QString> v) = 0;
 
     virtual int writeValue(const QString name, DataContainerArrayProxy& v) = 0;
@@ -113,7 +118,9 @@ class DREAM3DLib_EXPORT AbstractFilterParametersWriter
 
 
     virtual int writeValue(const QString name, AxisAngleInput_t v, int vectorPos) = 0;
-    virtual int writeValue(const QString name, ComparisonInput_t v, int vectorPos) = 0;
+
+
+
   private:
     AbstractFilterParametersWriter(const AbstractFilterParametersWriter&); // Copy Constructor Not Implemented
     void operator=(const AbstractFilterParametersWriter&); // Operator '=' Not Implemented

@@ -46,12 +46,11 @@
 
 typedef struct { int x; int y; int z; } IntVec3_t;
 typedef struct { float x; float y; float z; } FloatVec3_t;
-typedef struct { QString arrayName; int compOperator; double compValue; } ComparisonInput_t;
+//typedef struct { QString arrayName; int compOperator; double compValue; } ComparisonInput_t;
 typedef struct { float angle; float h; float k; float l; } AxisAngleInput_t;
 
 Q_DECLARE_METATYPE(IntVec3_t)
 Q_DECLARE_METATYPE(FloatVec3_t)
-Q_DECLARE_METATYPE(ComparisonInput_t)
 Q_DECLARE_METATYPE(AxisAngleInput_t)
 
 

@@ -93,8 +93,8 @@ QVector<ComparisonInput_t> ComparisonSelectionWidget::getComparisonInputs()
 // -----------------------------------------------------------------------------
 void ComparisonSelectionWidget::setupGui()
 {
-    qRegisterMetaType<ComparisonInput_t>();
-     qRegisterMetaType<QVector<ComparisonInput_t> >();
+  qRegisterMetaType<ComparisonInput_t>();
+
 
   // Catch when the filter is about to execute the preflight
   connect(m_Filter, SIGNAL(preflightAboutToExecute()),

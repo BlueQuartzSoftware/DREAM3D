@@ -37,7 +37,7 @@
 #define CRYSTALSTRUCTURE_H_
 
 
-
+#error
 #include "EbsdLib/EbsdConstants.h"
 
 

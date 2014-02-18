@@ -82,9 +82,9 @@ void MultiThresholdObjects::setupFilterParameters()
   {
     ComparisonFilterParameter::Pointer parameter = ComparisonFilterParameter::New();
     parameter->setHumanLabel("Select Arrays to Threshold");
-    parameter->setPropertyName("ComparisonInputs");
+    parameter->setPropertyName("SelectedThresholds");
     parameter->setWidgetType(FilterParameterWidgetType::ComparisonSelectionWidget);
-    parameter->setValueType("QVector<ComparisonInput_t>");
+    parameter->setValueType("ComparisonInputs");
     parameter->setShowOperators(true);
     parameters.push_back(parameter);
   }
@@ -101,7 +101,7 @@ void MultiThresholdObjects::readFilterParameters(AbstractFilterParametersReader*
   /* Code to read the values goes between these statements */
   /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
   setOutputArrayName(reader->readString( "OutputArrayName", getOutputArrayName()));
-  setComparisonInputs(reader->readComparisonInputs("ComparisonInputs", getComparisonInputs()));
+  setSelectedThresholds(reader->readComparisonInputs("SelectedThresholds", getSelectedThresholds()));
   /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }
@@ -113,7 +113,7 @@ int MultiThresholdObjects::writeFilterParameters(AbstractFilterParametersWriter*
 {
   writer->openFilterGroup(this, index);
   writer->writeValue("OutputArrayName", getOutputArrayName());
-  writer->writeValue("ComparisonInputs", getComparisonInputs());
+  writer->writeValue("SelectedThresholds", getSelectedThresholds());
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
@@ -130,10 +130,10 @@ void MultiThresholdObjects::dataCheck()
   AttributeMatrix::Pointer attrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getAttributeMatrixName(), -301);
   if(getErrorCondition() < 0 || NULL == attrMat.get() ) { return; }
 
-  if (m_ComparisonInputs.size() == 0)
+  if (m_SelectedThresholds.size() == 0)
   {
     setErrorCondition(-12000);
-    notifyErrorMessage(getHumanLabel(), "You must add at least 1 comparison array.", getErrorCondition());
+    notifyErrorMessage(getHumanLabel(), "You must add at least 1 threshold value.", getErrorCondition());
   }
 
   QVector<size_t> dims(1, 1);
@@ -170,7 +170,7 @@ void MultiThresholdObjects::execute()
 
   // Prime our output array with the result of the first comparison
   {
-    ComparisonInput_t& comp_0 = m_ComparisonInputs[0];
+    ComparisonInput_t& comp_0 = m_SelectedThresholds[0];
 
     ThresholdFilterHelper filter(static_cast<DREAM3D::Comparison::Enumeration>(comp_0.compOperator), comp_0.compValue, m_DestinationPtr.lock().get());
 
@@ -182,13 +182,13 @@ void MultiThresholdObjects::execute()
       return;
     }
   }
-  for(size_t i = 1; i < m_ComparisonInputs.size(); ++i)
+  for(size_t i = 1; i < m_SelectedThresholds.size(); ++i)
   {
     BoolArrayType::Pointer currentArrayPtr = BoolArrayType::CreateArray(totalTuples, "TEMP");
     currentArrayPtr->initializeWithZeros();
     bool* currentArray = currentArrayPtr->getPointer(0);
 
-    ComparisonInput_t& compRef = m_ComparisonInputs[i];
+    ComparisonInput_t& compRef = m_SelectedThresholds[i];
 
     ThresholdFilterHelper filter(static_cast<DREAM3D::Comparison::Enumeration>(compRef.compOperator), compRef.compValue, currentArrayPtr.get());
 

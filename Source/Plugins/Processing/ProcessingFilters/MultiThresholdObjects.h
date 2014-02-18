@@ -66,8 +66,8 @@ class MultiThresholdObjects : public AbstractFilter
     DREAM3D_FILTER_PARAMETER(QString, OutputArrayName)
     Q_PROPERTY(QString OutputArrayName READ getOutputArrayName WRITE setOutputArrayName NOTIFY parametersChanged)
 
-    DREAM3D_FILTER_PARAMETER(QVector<ComparisonInput_t>, ComparisonInputs)
-    Q_PROPERTY(QVector<ComparisonInput_t> ComparisonInputs READ getComparisonInputs WRITE setComparisonInputs NOTIFY parametersChanged)
+    DREAM3D_FILTER_PARAMETER(ComparisonInputs, SelectedThresholds)
+    Q_PROPERTY(ComparisonInputs SelectedThresholds READ getSelectedThresholds WRITE setSelectedThresholds NOTIFY parametersChanged)
 
 
     /**
