@@ -320,7 +320,7 @@ int64_t EBSDSegmentFeatures::getSeed(size_t gnum)
   while (seed == -1 && counter < totalPoints)
   {
     if (randpoint > totalPMinus1) { randpoint = static_cast<int64_t>( randpoint - totalPoints ); }
-    if ((m_GoodVoxels[randpoint] == true || missingGoodVoxels == true) && m_FeatureIds[randpoint] == 0 && m_CellPhases[randpoint] > 0) { seed = randpoint; }
+    if (( missingGoodVoxels == true || m_GoodVoxels[randpoint] == true) && m_FeatureIds[randpoint] == 0 && m_CellPhases[randpoint] > 0) { seed = randpoint; }
     randpoint++;
     counter++;
   }
@@ -347,7 +347,7 @@ bool EBSDSegmentFeatures::determineGrouping(int64_t referencepoint, int64_t neig
   float n1, n2, n3;
   unsigned int phase1, phase2;
 
-  if(m_FeatureIds[neighborpoint] == 0 && (m_GoodVoxels[neighborpoint] == true || missingGoodVoxels == true))
+  if(m_FeatureIds[neighborpoint] == 0 && (missingGoodVoxels == true || m_GoodVoxels[neighborpoint] == true))
   {
     phase1 = m_CrystalStructures[m_CellPhases[referencepoint]];
     QuaternionMathF::Copy(quats[referencepoint], q1);
