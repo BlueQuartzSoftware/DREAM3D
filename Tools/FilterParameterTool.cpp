@@ -278,7 +278,7 @@ void LoopOnFilters()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int main(int argc, char *argv[])
+int main2(int argc, char *argv[])
 {
   Q_ASSERT(false); // We don't want anyone to run this program.
   // Instantiate the QCoreApplication that we need to get the current path and load plugins.
@@ -302,3 +302,13 @@ int main(int argc, char *argv[])
 
   return 0;
 }
+
+
+int main(int argc, char *argv[])
+{
+ QVector<size_t> dims(1, 3);
+ qDebug() << dims[0];
+ return 0;
+}
+
+

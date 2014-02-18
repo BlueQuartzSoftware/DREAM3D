@@ -17,36 +17,17 @@ set(DREAM3D_PARAMETER_WIDGETS
       IntVec3Widget
       FloatVec3Widget
       AxisAngleWidget
- #     ArraySelectionWidget
       SingleArraySelectionWidget
       DataContainerArrayProxyWidget
-#      VolumeVertexArrayNameSelectionWidget
-#      VolumeEdgeArrayNameSelectionWidget
-#      VolumeFaceArrayNameSelectionWidget
-#      VolumeCellArrayNameSelectionWidget
-#      VolumeFeatureArrayNameSelectionWidget
-#      VolumeEnsembleArrayNameSelectionWidget
-#      SurfaceVertexArrayNameSelectionWidget
-#      SurfaceFaceArrayNameSelectionWidget
-#      SurfaceEdgeArrayNameSelectionWidget
-#      SurfaceFeatureArrayNameSelectionWidget
-#      SurfaceEnsembleArrayNameSelectionWidget
-#      EdgeVertexArrayNameSelectionWidget
-#      EdgeEdgeArrayNameSelectionWidget
-#      EdgeFeatureArrayNameSelectionWidget
-#      EdgeEnsembleArrayNameSelectionWidget
-#      VertexVertexArrayNameSelectionWidget
-#      VertexFeatureArrayNameSelectionWidget
-#      VertexEnsembleArrayNameSelectionWidget
+      ComparisonSelectionWidget
+
 #      CellArrayComparisonSelectionWidget
 #      FeatureArrayComparisonSelectionWidget
 #      EnsembleArrayComparisonSelectionWidget
 #      VertexArrayComparisonSelectionWidget
 #      FaceArrayComparisonSelectionWidget
 #      EdgeArrayComparisonSelectionWidget
-#      CustomWidget
       UnknownWidget
-
 )
 
 set(REGISTER_KNOWN_WIDGETS ${DREAM3DWidgetsLib_BINARY_DIR}/FilterWidgetManager_RegisterWidgets.cpp)
@@ -71,6 +52,23 @@ foreach(FPW ${DREAM3D_PARAMETER_WIDGETS})
   file(APPEND  ${REGISTER_KNOWN_WIDGETS} "}\n")
   file(APPEND  ${FILTER_WIDGET_HEADERS} "#include \"DREAM3DWidgetsLib/FilterParameterWidgets/${FPW}.h\"\n")
 endforeach()
+
+# --------------------------------------------------------------------
+# Add some support files that still need MOC and UIC to be run on them
+set(DREAM3DWidgetsLib_ParameterWidgets_HDRS
+  ${DREAM3DWidgetsLib_ParameterWidgets_HDRS}
+  ${DREAM3DWidgetsLib_SOURCE_DIR}/FilterParameterWidgets/ComparisonSelectionTableModel.h
+  ${DREAM3DWidgetsLib_SOURCE_DIR}/FilterParameterWidgets/ComparisonSelectionItemDelegate.h
+)
+set(DREAM3DWidgetsLib_ParameterWidgets_SRCS
+  ${DREAM3DWidgetsLib_ParameterWidgets_SRCS}
+  ${DREAM3DWidgetsLib_SOURCE_DIR}/FilterParameterWidgets/ComparisonSelectionTableModel.cpp
+  ${DREAM3DWidgetsLib_SOURCE_DIR}/FilterParameterWidgets/ComparisonSelectionItemDelegate.cpp
+)
+set(DREAM3DWidgetsLib_ParameterWidgets_UIS
+  ${DREAM3DWidgetsLib_ParameterWidgets_UIS}
+  )
+
 
 
 

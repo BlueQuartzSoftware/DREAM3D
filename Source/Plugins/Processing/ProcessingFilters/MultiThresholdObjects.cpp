@@ -83,7 +83,7 @@ void MultiThresholdObjects::setupFilterParameters()
     ComparisonFilterParameter::Pointer parameter = ComparisonFilterParameter::New();
     parameter->setHumanLabel("Select Arrays to Threshold");
     parameter->setPropertyName("ComparisonInputs");
-    parameter->setWidgetType(FilterParameterWidgetType::CellArrayComparisonSelectionWidget);
+    parameter->setWidgetType(FilterParameterWidgetType::ComparisonSelectionWidget);
     parameter->setValueType("QVector<ComparisonInput_t>");
     parameter->setShowOperators(true);
     parameters.push_back(parameter);
