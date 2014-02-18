@@ -252,9 +252,6 @@ int ReadH5Ebsd::initDataContainerDimsRes(int64_t dims[3], VolumeDataContainer* m
 void ReadH5Ebsd::readVolumeInfo()
 {
 
-  VolumeDataContainer* m = getDataContainerArray()->createNonPrereqDataContainer<VolumeDataContainer, AbstractFilter>(NULL, getDataContainerName());
-  if(getErrorCondition() < 0) { return; }
-
   QFileInfo fi(m_InputFile);
   if (m_InputFile.isEmpty() == true && m_Manufacturer == Ebsd::UnknownManufacturer)
   {
@@ -336,15 +333,7 @@ void ReadH5Ebsd::readVolumeInfo()
       return;
     }
     /* ************ End Sanity Check *************************** */
-    size_t dcDims[3] =
-    { dims[0], dims[1], dims[2] };
-    m->setDimensions(dcDims);
-    m->setResolution(res);
-    m->setOrigin(0.0f, 0.0f, 0.0f);
   }
-
-
-
 }
 
 
