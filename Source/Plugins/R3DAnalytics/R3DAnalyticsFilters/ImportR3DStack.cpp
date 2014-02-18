@@ -230,8 +230,8 @@ void ImportR3DStack::execute()
 	setErrorCondition(-1000);
 	notifyErrorMessage("At least one dimension is less than 1", getErrorCondition());
   }
-
-  size_t totalVoxels = (m_ZEndIndex - m_ZStartIndex + 1) * x * y;
+  size_t numSlices = m_ZEndIndex - m_ZStartIndex + 1;
+  size_t totalVoxels = numSlices * x * y;
   // Create a new array, eventually substituting this into the DataContainer later on.
   Int32ArrayType::Pointer grainIdsPtr = Int32ArrayType::CreateArray(totalVoxels, 1, DREAM3D::CellData::GrainIds);
   grainIdsPtr->initializeWithZeros();
@@ -249,7 +249,7 @@ void ImportR3DStack::execute()
 
   int64_t z = m_ZStartIndex;
 
-  m->setDimensions(x,y,m_ZEndIndex-m_ZStartIndex+1);
+  m->setDimensions(x,y,numSlices);
 
   for (std::vector<std::string>::iterator filepath = m_R3DFileList.begin(); filepath != m_R3DFileList.end(); ++filepath)
   {
