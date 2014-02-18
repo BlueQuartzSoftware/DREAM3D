@@ -128,23 +128,15 @@ void ReadH5EbsdWidget::setupGui()
                     this, SLOT(on_m_InputFile_textChanged(const QString &)));
 
 
-  getGuiParametersFromFilter();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void ReadH5EbsdWidget::getGuiParametersFromFilter()
-{
-
+  // Setup the GUI widgets from what ever is in the Filter instance
   m_InputFile->setText( m_Filter->getInputFile() );
   m_ZStartIndex->setValue( m_Filter->getZStartIndex() );
   m_ZEndIndex->setValue( m_Filter->getZEndIndex() );
   m_UseTransformations->setChecked( m_Filter->getUseTransformations() );
   m_RefFrameZDir->setText( Ebsd::StackingOrder::Utils::getStringForEnum( m_Filter->getRefFrameZDir() )  );
-
   updateFileInfoWidgets();
-
+  QSet<QString> selectedArrays = m_Filter->getSelectedArrayNames();
+  updateModelFromFilter(selectedArrays, true);
 }
 
 // -----------------------------------------------------------------------------
@@ -340,7 +332,7 @@ void ReadH5EbsdWidget::afterPreflight()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ReadH5EbsdWidget::updateModelFromFilter(QSet<QString> &arrayNames)
+void ReadH5EbsdWidget::updateModelFromFilter(QSet<QString> &arrayNames, bool setChecked)
 {
   m_CellList->blockSignals(true);
   // Get the items that are checked, which is different that being selected.
@@ -352,7 +344,7 @@ void ReadH5EbsdWidget::updateModelFromFilter(QSet<QString> &arrayNames)
   foreach(QString item, arrayNames)
   {
     QListWidgetItem* listItem = new QListWidgetItem(item, m_CellList);
-    if(selections.find(item) != selections.end() )
+    if( (selections.find(item) != selections.end() ) || (setChecked == true))
     {
       listItem->setCheckState(Qt::Checked);
     }

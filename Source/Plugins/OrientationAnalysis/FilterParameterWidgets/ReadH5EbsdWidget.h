@@ -153,10 +153,6 @@ class ReadH5EbsdWidget : public QWidget, private Ui::ReadH5EbsdWidget
      */
     void updateFileInfoWidgets();
 
-    /**
-     * @brief getGuiParametersFromFilter
-     */
-    virtual void getGuiParametersFromFilter();
 
     /**
      * @brief getSelectedArrayNames
@@ -170,7 +166,7 @@ class ReadH5EbsdWidget : public QWidget, private Ui::ReadH5EbsdWidget
     */
     QSet<QString> getSelectedEnsembleNames();
 
-    void updateModelFromFilter(QSet<QString> &arrayNames);
+    void updateModelFromFilter(QSet<QString> &arrayNames, bool setChecked = false);
 
 
   private:
