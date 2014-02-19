@@ -957,12 +957,7 @@ void DREAM3D_UI::on_actionShow_Filter_Library_triggered()
 void DREAM3D_UI::on_filterLibraryDockWidget_visibilityChanged(bool b)
 {
   qDebug() << "on_filterLibraryDockWidget_visibilityChanged";
-  //actionShow_Filter_Library
-  //filterLibraryDockWidget
-  //m_FilterLibraryBtn
-  filterLibraryDockWidget->blockSignals(true);
   updateAndSyncDockWidget(actionShow_Filter_Library, filterLibraryDockWidget, m_FilterLibraryBtn);
-  filterLibraryDockWidget->blockSignals(false);
 }
 
 // -----------------------------------------------------------------------------
@@ -1041,7 +1036,7 @@ void DREAM3D_UI::updateAndSyncDockWidget(QAction* action, QDockWidget* dock, QTo
   action->blockSignals(true);
   dock->blockSignals(true);
   btn->blockSignals(true);
-  QString text = actionShow_Filter_Library->text();
+  QString text = action->text();
   if(text.startsWith("Show"))
   {
     text = text.replace("Show", "Hide");
