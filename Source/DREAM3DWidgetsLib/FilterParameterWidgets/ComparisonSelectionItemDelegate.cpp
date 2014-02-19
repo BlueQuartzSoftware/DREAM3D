@@ -55,7 +55,6 @@ ComparisonSelectionItemDelegate::ComparisonSelectionItemDelegate(QStringList pos
   m_FeatureList(possibleFeatures),
   m_NumberOfPhases(numPhases)
 {
-  qDebug() << this << "ComparisonSelectionItemDelegate::ComparisonSelectionItemDelegate: " << m_FeatureList;
 }
 
 // -----------------------------------------------------------------------------
@@ -85,7 +84,6 @@ void ComparisonSelectionItemDelegate::paint(QPainter* painter, const QStyleOptio
 void ComparisonSelectionItemDelegate::setFeatureList(QStringList features)
 {
   m_FeatureList = features;
-  qDebug() <<  this << "ComparisonSelectionItemDelegate::setFeatureList: " << features;
 }
 
 // -----------------------------------------------------------------------------
@@ -115,7 +113,6 @@ QWidget* ComparisonSelectionItemDelegate::createEditor(QWidget* parent, const QS
     case ComparisonSelectionTableModel::FeatureName:
       operatorCombo = new QComboBox(parent);
       operatorCombo->addItems(m_FeatureList);
-      qDebug() <<  this << "operatorCombo->addItems(m_FeatureList): " << m_FeatureList;
       operatorCombo->setAutoFillBackground(true);
       return operatorCombo;
       break;

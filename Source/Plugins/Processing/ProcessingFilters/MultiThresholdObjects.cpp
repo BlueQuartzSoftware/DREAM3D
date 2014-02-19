@@ -48,8 +48,6 @@
 // -----------------------------------------------------------------------------
 MultiThresholdObjects::MultiThresholdObjects() :
   AbstractFilter(),
-  m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
-  m_AttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
   m_OutputArrayName(DREAM3D::CellData::GoodVoxels),
   m_DestinationArrayName(""),
   m_Destination(NULL)
@@ -125,21 +123,65 @@ void MultiThresholdObjects::dataCheck()
 {
   setErrorCondition(0);
 
-  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName(), false);
-  if(getErrorCondition() < 0 || NULL == m) { return; }
-  AttributeMatrix::Pointer attrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getAttributeMatrixName(), -301);
-  if(getErrorCondition() < 0 || NULL == attrMat.get() ) { return; }
 
   if (m_SelectedThresholds.size() == 0)
   {
     setErrorCondition(-12000);
     notifyErrorMessage(getHumanLabel(), "You must add at least 1 threshold value.", getErrorCondition());
   }
+  else
+  {
+    DataContainerArray::Pointer dca = getDataContainerArray();
+    int count = m_SelectedThresholds.size();
+     QSet<QString> dcSet;
+     QSet<QString> amSet;
+    // Loop through each selected threshold item which will have the complete path and check that path
+    for(int i = 0; i < count; i++)
+    {
+      ComparisonInput_t comp = m_SelectedThresholds[i];
+      dcSet.insert(comp.dataContainerName);
+      amSet.insert(comp.attributeMatrixName);
 
-  QVector<size_t> dims(1, 1);
-  m_DestinationPtr = attrMat->createNonPrereqArray<DataArray<bool>, AbstractFilter, bool>(this, m_OutputArrayName, true, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_DestinationPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
-  { m_Destination = m_DestinationPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+      VolumeDataContainer* m = dca->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, comp.dataContainerName, false);
+      if(getErrorCondition() < 0 || NULL == m) { return; }
+      AttributeMatrix::Pointer attrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, comp.attributeMatrixName, -301);
+      if(getErrorCondition() < 0 || NULL == attrMat.get() ) { return; }
+    }
+    
+    // Enforce that right now all the arrays MUST come from the same data container and attribute matrix
+    if(dcSet.size() != 1)
+    {
+      setErrorCondition(-13090);
+      QString ss = QObject::tr("Threshold selections must come from the same DataContainer. %1 were selected").arg(dcSet.size());
+      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+      return;
+    }
+    if(amSet.size() != 1)
+    {
+      setErrorCondition(-13091);
+      QString ss = QObject::tr("Threshold selections must come from the same AttributeMatrix. %1 were selected").arg(amSet.size());
+      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+      return;
+    }
+
+    // Now that we passed all those tests, create our output array
+    {
+      ComparisonInput_t comp = m_SelectedThresholds[0];
+      // At this point we are going to just grab the DataContainer Name and AttributeMatrix Name
+      // from the first entry and use that to create a new AttributeArray
+      VolumeDataContainer* m = dca->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, comp.dataContainerName, false);
+      if(getErrorCondition() < 0 || NULL == m) { return; }
+      AttributeMatrix::Pointer attrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, comp.attributeMatrixName, -302);
+      if(getErrorCondition() < 0 || NULL == attrMat.get() ) { return; }
+      QVector<size_t> dims(1, 1);
+      m_DestinationPtr = attrMat->createNonPrereqArray<DataArray<bool>, AbstractFilter, bool>(this, m_OutputArrayName, true, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+      if( NULL != m_DestinationPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+      { m_Destination = m_DestinationPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+    
+    }
+  }
+
+
 }
 
 
@@ -165,16 +207,20 @@ void MultiThresholdObjects::execute()
   dataCheck();
   if(getErrorCondition() < 0) { return; }
 
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-  int64_t totalTuples = m->getAttributeMatrix(getAttributeMatrixName())->getNumTuples();
+  // Get the first comparison object
+  ComparisonInput_t& comp_0 = m_SelectedThresholds[0];
+  // Get the names of the Data Container and AttributeMatrix for later
+  QString dcName = comp_0.dataContainerName;
+  QString amName = comp_0.attributeMatrixName;
+
+  DataContainerArray::Pointer dca = getDataContainerArray();
+  VolumeDataContainer* m =dca->getDataContainerAs<VolumeDataContainer>(dcName);
 
   // Prime our output array with the result of the first comparison
   {
-    ComparisonInput_t& comp_0 = m_SelectedThresholds[0];
-
     ThresholdFilterHelper filter(static_cast<DREAM3D::Comparison::Enumeration>(comp_0.compOperator), comp_0.compValue, m_DestinationPtr.lock().get());
-
-    err = filter.execute(m->getAttributeMatrix(getAttributeMatrixName())->getAttributeArray(comp_0.attributeArrayName).get(), m_DestinationPtr.lock().get());
+    // Run the first threshold and store the results in our output array
+    err = filter.execute(m->getAttributeMatrix(amName)->getAttributeArray(comp_0.attributeArrayName).get(), m_DestinationPtr.lock().get());
     if (err < 0)
     {
       setErrorCondition(-13001);
@@ -182,28 +228,38 @@ void MultiThresholdObjects::execute()
       return;
     }
   }
-  for(size_t i = 1; i < m_SelectedThresholds.size(); ++i)
+
+  if (m_SelectedThresholds.size() > 1)
   {
+    // Get the total number of tuples, create and initialize an array to use for these results
+    int64_t totalTuples = m->getAttributeMatrix(amName)->getNumTuples();
     BoolArrayType::Pointer currentArrayPtr = BoolArrayType::CreateArray(totalTuples, "TEMP");
-    currentArrayPtr->initializeWithZeros();
-    bool* currentArray = currentArrayPtr->getPointer(0);
 
-    ComparisonInput_t& compRef = m_SelectedThresholds[i];
-
-    ThresholdFilterHelper filter(static_cast<DREAM3D::Comparison::Enumeration>(compRef.compOperator), compRef.compValue, currentArrayPtr.get());
-
-    err = filter.execute(m->getAttributeMatrix(getAttributeMatrixName())->getAttributeArray(compRef.attributeArrayName).get(), currentArrayPtr.get());
-    if (err < 0)
+    // Loop on the remaining Comparison objects updating our final result array as we go
+    for(size_t i = 1; i < m_SelectedThresholds.size(); ++i)
     {
-      setErrorCondition(-13002);
-      notifyErrorMessage(getHumanLabel(), "Error Executing threshold filter on array", getErrorCondition());
-      return;
-    }
-    for (int64_t p = 0; p < totalTuples; ++p)
-    {
-      if(m_Destination[p] == false || currentArray[p] == false)
+      // Initialize the array to false
+      currentArrayPtr->initializeWithZeros();
+      // Get the pointer to the front of the array. Raw Pointers = fast access = NO Bounds Checking!!!
+      bool* currentArray = currentArrayPtr->getPointer(0);
+
+      ComparisonInput_t& compRef = m_SelectedThresholds[i];
+
+      ThresholdFilterHelper filter(static_cast<DREAM3D::Comparison::Enumeration>(compRef.compOperator), compRef.compValue, currentArrayPtr.get());
+
+      err = filter.execute(m->getAttributeMatrix(amName)->getAttributeArray(compRef.attributeArrayName).get(), currentArrayPtr.get());
+      if (err < 0)
       {
-        m_Destination[p] = false;
+        setErrorCondition(-13002);
+        notifyErrorMessage(getHumanLabel(), "Error Executing threshold filter on array", getErrorCondition());
+        return;
+      }
+      for (int64_t p = 0; p < totalTuples; ++p)
+      {
+        if(m_Destination[p] == false || currentArray[p] == false)
+        {
+          m_Destination[p] = false;
+        }
       }
     }
   }

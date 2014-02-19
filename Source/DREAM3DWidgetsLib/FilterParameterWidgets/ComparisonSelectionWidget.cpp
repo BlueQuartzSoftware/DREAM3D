@@ -377,6 +377,35 @@ void ComparisonSelectionWidget::on_removeComparison_clicked()
 }
 
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ComparisonSelectionWidget::on_dataContainerList_currentIndexChanged(int index)
+{
+
+  //  std::cout << "void SingleArraySelectionWidget::on_dataContainerList_currentIndexChanged(int index)" << std::endl;
+  populateAttributeMatrixList();
+
+  // Select the first AttributeMatrix in the list
+  if(attributeMatrixList->count() > 0)
+  {
+    on_attributeMatrixList_currentIndexChanged(0);
+  }
+
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ComparisonSelectionWidget::on_attributeMatrixList_currentIndexChanged(int index)
+{
+  QStringList possibleArrays = generateAttributeArrayList();
+  m_ComparisonSelectionTableModel->setPossibleFeatures(possibleArrays);
+  // Set the ItemDelegate for the table.
+  QAbstractItemDelegate* aid = m_ComparisonSelectionTableModel->getItemDelegate();
+  m_ComparisonSelectionTableView->setItemDelegate(aid);
+}
 
 // -----------------------------------------------------------------------------
 //
@@ -453,148 +482,3 @@ void ComparisonSelectionWidget::afterPreflight()
   // qDebug() << m_Filter->getNameOfClass() << " DataContainerArrayProxyWidget::afterPreflight()";
 }
 
-
-#if 0
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void ComparisonSelectionWidget::populateArrayNames(DataContainerArray::Pointer dca)
-{
-#if __APPLE__
-#warning This needs to be fixed
-#endif
-  if (m_ArrayListType >= CellListType && m_ArrayListType <= FaceListType )
-  {
-    //    populateVolumeArrayNames(vldc);
-  }
-  else if (m_ArrayListType >= FeatureListType && m_ArrayListType <= FaceListType)
-  {
-    //populateSurfaceArrayNames(sdc);
-  }
-  else if (m_ArrayListType >= FeatureListType && m_ArrayListType <= EdgeListType)
-  {
-    //  populateEdgeArrayNames(edc);
-  }
-  else if (m_ArrayListType >= FeatureListType && m_ArrayListType <= VertexListType)
-  {
-    //  populateVertexArrayNames(vdc);
-  }
-
-
-  // We need to do this each time the possible arrays names are changed upstream in the
-  // pipeline so that we get a new/updated array list.
-  // Set the ItemDelegate for the table.
-  QAbstractItemDelegate* aid = m_ComparisonSelectionTableModel->getItemDelegate();
-  m_ComparisonSelectionTableView->setItemDelegate(aid);
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void ComparisonSelectionWidget::populateVolumeArrayNames(VolumeDataContainer::Pointer vldc)
-{
-
-  QList<QString> cellNames;
-  if (m_ArrayListType == VertexListType)
-  {
-    cellNames = vldc->getVertexArrayNameList();
-  }
-  else if (m_ArrayListType == EdgeListType)
-  {
-    cellNames = vldc->getEdgeArrayNameList();
-  }
-  else if (m_ArrayListType == FaceListType)
-  {
-    cellNames = vldc->getFaceArrayNameList();
-  }
-  if (m_ArrayListType == CellListType)
-  {
-    cellNames = vldc->getCellArrayNameList();
-  }
-  else if (m_ArrayListType == FeatureListType)
-  {
-    cellNames = vldc->getCellFeatureArrayNameList();
-  }
-  else if (m_ArrayListType == EnsembleListType)
-  {
-    cellNames = vldc->getCellEnsembleArrayNameList();
-  }
-  m_ComparisonSelectionTableModel->setPossibleFeatures(cellNames);
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void ComparisonSelectionWidget::populateSurfaceArrayNames(SurfaceDataContainer::Pointer sdc)
-{
-  QList<QString> cellNames;
-  if (m_ArrayListType == VertexListType)
-  {
-    cellNames = sdc->getVertexArrayNameList();
-  }
-  else if (m_ArrayListType == EdgeListType)
-  {
-    cellNames = sdc->getEdgeArrayNameList();
-  }
-  else if (m_ArrayListType == FaceListType)
-  {
-    cellNames = sdc->getFaceArrayNameList();
-  }
-  else if (m_ArrayListType == FeatureListType)
-  {
-    cellNames = sdc->getFaceFeatureArrayNameList();
-  }
-  else if (m_ArrayListType == EnsembleListType)
-  {
-    cellNames = sdc->getFaceEnsembleArrayNameList();
-  }
-  m_ComparisonSelectionTableModel->setPossibleFeatures(cellNames);
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void ComparisonSelectionWidget::populateEdgeArrayNames(EdgeDataContainer::Pointer edc)
-{
-  QList<QString> cellNames;
-  if (m_ArrayListType == VertexListType)
-  {
-    cellNames = edc->getVertexArrayNameList();
-  }
-  else if (m_ArrayListType == EdgeListType)
-  {
-    cellNames = edc->getEdgeArrayNameList();
-  }
-  else if (m_ArrayListType == FeatureListType)
-  {
-    cellNames = edc->getEdgeFeatureArrayNameList();
-  }
-  else if (m_ArrayListType == EnsembleListType)
-  {
-    cellNames = edc->getEdgeEnsembleArrayNameList();
-  }
-  m_ComparisonSelectionTableModel->setPossibleFeatures(cellNames);
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void ComparisonSelectionWidget::populateVertexArrayNames(VertexDataContainer::Pointer vdc)
-{
-  QList<QString> cellNames;
-  if (m_ArrayListType == VertexListType)
-  {
-    cellNames = vdc->getVertexArrayNameList();
-  }
-  else if (m_ArrayListType == FeatureListType)
-  {
-    cellNames = vdc->getVertexFeatureArrayNameList();
-  }
-  else if (m_ArrayListType == EnsembleListType)
-  {
-    cellNames = vdc->getVertexEnsembleArrayNameList();
-  }
-  m_ComparisonSelectionTableModel->setPossibleFeatures(cellNames);
-}
-#endif

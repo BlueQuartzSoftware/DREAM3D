@@ -59,8 +59,10 @@ class MultiThresholdObjects : public AbstractFilter
     DREAM3D_TYPE_MACRO_SUPER(MultiThresholdObjects, AbstractFilter)
 
     virtual ~MultiThresholdObjects();
+#if 0
     DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
     DREAM3D_INSTANCE_STRING_PROPERTY(AttributeMatrixName)
+#endif
 
     /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
     DREAM3D_FILTER_PARAMETER(QString, OutputArrayName)
@@ -71,7 +73,7 @@ class MultiThresholdObjects : public AbstractFilter
 
 
     /**
-    * @brief This returns the group that the filter belonds to. You can select
+    * @brief This returns the group that the filter belongs to. You can select
     * a different group if you want. The string returned here will be displayed
     * in the GUI for the filter
     */

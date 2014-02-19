@@ -103,13 +103,13 @@ class ComparisonSelectionWidget : public QWidget, private Ui::ComparisonSelectio
      * @param comparisons
      */
     virtual void setComparisons(QVector<ComparisonInput_t> comparisons);
+
     /**
      * @brief getComparisonInputs
      * @return
      */
     ComparisonInputs getComparisonInputs();
 
-  protected:
     void populateComboBoxes();
     void populateAttributeMatrixList();
     QStringList generateAttributeArrayList();
@@ -119,6 +119,10 @@ class ComparisonSelectionWidget : public QWidget, private Ui::ComparisonSelectio
 
     void on_addComparison_clicked();
     void on_removeComparison_clicked();
+
+    void on_dataContainerList_currentIndexChanged(int index);
+
+    void on_attributeMatrixList_currentIndexChanged(int index);
 
 
   private:
