@@ -55,6 +55,11 @@ namespace Ebsd
     UnknownManufacturer
   };
 
+  namespace CellData
+  {
+    const QString EulerAngles("EulerAngles");
+    const QString Phases("Phases");
+  }
 
   namespace H5
   {
@@ -93,11 +98,11 @@ namespace Ebsd
 
   /** @brief Constants defined for the 5 orientation options */
   namespace RefFrameZDir {
-      static const unsigned int LowtoHigh = 0;
-      static const unsigned int HightoLow = 1;
-      static const unsigned int UnknownRefFrameZDirection = 2;
+    static const unsigned int LowtoHigh = 0;
+    static const unsigned int HightoLow = 1;
+    static const unsigned int UnknownRefFrameZDirection = 2;
   }
-    #if 0
+#if 0
   enum RefFrameZDir
   {
     LowtoHigh = 0,

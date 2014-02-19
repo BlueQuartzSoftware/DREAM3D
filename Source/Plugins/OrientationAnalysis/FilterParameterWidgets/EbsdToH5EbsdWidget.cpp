@@ -63,7 +63,7 @@
 
 #include "OrientationAnalysis/Widgets/QEbsdReferenceFrameDialog.h"
 
-#include "OrientationAnalysis/FilterParameterWidgets/moc_EbsdToH5EbsdWidget.cxx"
+#include "OrientationAnalysis/moc_EbsdToH5EbsdWidget.cpp"
 
 // Initialize private static member variable
 QString EbsdToH5EbsdWidget::m_OpenDialogLastDirectory = "";
@@ -189,8 +189,6 @@ void EbsdToH5EbsdWidget::getGuiParametersFromFilter()
 
   m_SampleTransformation = m_Filter->getSampleTransformation();
   m_EulerTransformation = m_Filter->getEulerTransformation();
-
-
 }
 
 
@@ -604,14 +602,6 @@ void EbsdToH5EbsdWidget::m_findEbsdMaxSliceAndPrefix()
   //  this->m_ZStartIndex->setRange(minSlice, maxSlice);
   //  this->m_ZEndIndex->setRange(minSlice, maxSlice);
 }
-
-// -----------------------------------------------------------------------------
-void EbsdToH5EbsdWidget::openHtmlHelpFile()
-{
-  QString lowerFilter = QString("EbsdToH5Ebsd").toLower();
-  DREAM3DHelpUrlGenerator::generateAndOpenHTMLUrl(lowerFilter, this);
-}
-
 
 
 // -----------------------------------------------------------------------------

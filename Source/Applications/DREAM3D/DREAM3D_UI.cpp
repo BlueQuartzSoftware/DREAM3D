@@ -446,12 +446,16 @@ void DREAM3D_UI::setupGui()
   // Tell the Filter Library that we have more Filters (potentially)
   filterLibraryDockWidget->refreshFilterGroups();
 
-
-  makeStatusBarButton("Filters", filterListDockWidget, 0);
-  makeStatusBarButton("Filter Library", filterLibraryDockWidget, 1);
-  makeStatusBarButton("Favorites", favoritesDockWidget , 2);
-  makeStatusBarButton("PreBuilt", prebuiltPipelinesDockWidget, 3);
-  makeStatusBarButton("Issues", issuesDockWidget, 4);
+  m_FilterListBtn = new QToolButton(this);
+  makeStatusBarButton("Filters", filterListDockWidget, m_FilterListBtn, 0);
+  m_FilterLibraryBtn = new QToolButton(this);
+  makeStatusBarButton("Filter Library", filterLibraryDockWidget, m_FilterLibraryBtn, 1);
+  m_FavoritesBtn = new QToolButton(this);
+  makeStatusBarButton("Favorites", favoritesDockWidget, m_FavoritesBtn, 2);
+  m_PrebuiltBtn = new QToolButton(this);
+  makeStatusBarButton("Prebuilt", prebuiltPipelinesDockWidget, m_PrebuiltBtn, 3);
+  m_IssuesBtn = new QToolButton(this);
+  makeStatusBarButton("Issues", issuesDockWidget, m_IssuesBtn, 4);
 
 
   // Make the connections between the gui elements
@@ -484,20 +488,20 @@ void DREAM3D_UI::setupGui()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DREAM3D_UI::makeStatusBarButton(QString text, QDockWidget* dockWidget, int index)
+void DREAM3D_UI::makeStatusBarButton(QString text, QDockWidget* dockWidget, QToolButton* btn, int index)
 {
-  QToolButton* btn = new QToolButton(this);
+
   btn->setText(text);
   btn->setCheckable(true);
 
-#if 0
-  btn->setStyleSheet(QString::fromUtf8("QToolButton { color: black; border-radius: 2px; font-size: 12px; font-style: bold;\n"
-                                       "	background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 rgba(150, 150, 150, 255), stop:0.497537 rgba(225, 225, 225, 255), stop:0.517241 rgba(190, 190, 190, 255), stop:0.990148 rgba(160, 160, 160, 255));\n"
-                                       "selection-background-color: rgb(100, 100, 100);\n"
-                                       "}"));
-#endif
+  // This sets up when the dock widget changees visibility the button changes
+  connect(dockWidget, SIGNAL(visibilityChanged(bool)),
+          btn, SLOT(setChecked(bool)));
+
+  // This sets up when the button is changed, the dock widget will change visibility
   connect(btn, SIGNAL(toggled(bool)),
           dockWidget, SLOT(setVisible(bool)));
+
   btn->setChecked(!dockWidget->isHidden());
   statusBar()->insertPermanentWidget(index, btn, 0);
 }
@@ -941,12 +945,28 @@ void DREAM3D_UI::versionCheckReply(UpdateCheckData* dataObj)
 // -----------------------------------------------------------------------------
 void DREAM3D_UI::on_actionShow_Filter_Library_triggered()
 {
-    filterLibraryDockWidget->setVisible(true);
+  updateAndSyncDockWidget(actionShow_Filter_Library, filterLibraryDockWidget, m_FilterLibraryBtn);
+
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void DREAM3D_UI::on_filterLibraryDockWidget_visibilityChanged(bool b)
+{
+  qDebug() << "on_filterLibraryDockWidget_visibilityChanged";
+  //actionShow_Filter_Library
+  //filterLibraryDockWidget
+  //m_FilterLibraryBtn
+  filterLibraryDockWidget->blockSignals(true);
+  updateAndSyncDockWidget(actionShow_Filter_Library, filterLibraryDockWidget, m_FilterLibraryBtn);
+  filterLibraryDockWidget->blockSignals(false);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+<<<<<<< HEAD
 void DREAM3D_UI::on_actionShow_Filter_List_triggered()
 {
     filterListDockWidget->setVisible(true);
@@ -975,3 +995,26 @@ void DREAM3D_UI::on_actionShow_Issues_triggered()
 {
     issuesDockWidget->setVisible(true);
 }
+=======
+void DREAM3D_UI::updateAndSyncDockWidget(QAction* action, QDockWidget* dock, QToolButton* btn)
+{
+  QString text = actionShow_Filter_Library->text();
+  if(text.startsWith("Show"))
+  {
+    text = text.replace("Show", "Hide");
+    action->setText(text);
+    dock->setVisible(true);
+    btn->setChecked(true);
+  }
+  else
+  {
+    text = text.replace("Hide", "Show");
+    action->setText(text);
+    dock->setVisible(false);
+    btn->setChecked(false);
+  }
+
+}
+
+
+>>>>>>> bb82e68c0c18e1e632185001bf1fd3b51134480c

@@ -116,6 +116,12 @@ class SharedFeatureFaceFilter : public SurfaceMeshFilter
 
     SharedFeatureFaces_t& getSharedFeatureFaces();
 
+signals:
+    void updateFilterParameters(AbstractFilter* filter);
+    void parametersChanged();
+    void preflightAboutToExecute();
+    void preflightExecuted();
+
   protected:
     SharedFeatureFaceFilter();
 

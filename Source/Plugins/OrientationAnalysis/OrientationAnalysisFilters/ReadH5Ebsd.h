@@ -1,6 +1,7 @@
+
 /* ============================================================================
- * Copyright (c) 2012 Michael A. Jackson (BlueQuartz Software)
- * Copyright (c) 2012 Dr. Michael A. Groeber (US Air Force Research Laboratories)
+ * Copyright (c) 2011 Michael A. Jackson (BlueQuartz Software)
+ * Copyright (c) 2011 Dr. Michael A. Groeber (US Air Force Research Laboratories)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -33,38 +34,49 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef _ReadOrientationData_H_
-#define _ReadOrientationData_H_
 
+#ifndef ReadH5Ebsd_H_
+#define ReadH5Ebsd_H_
+
+#include <vector>
 #include <QtCore/QString>
 
-#include "EbsdLib/EbsdReader.h"
+#include "EbsdLib/EbsdConstants.h"
+#include "EbsdLib/TSL/AngConstants.h"
+#include "EbsdLib/HKL/CtfConstants.h"
+#include "EbsdLib/HEDM/MicConstants.h"
+#include "EbsdLib/H5EbsdVolumeReader.h"
+
+
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/DataArrays/IDataArray.h"
-#include "DREAM3DLib/DataArrays/StringDataArray.hpp"
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/DataContainers/VolumeDataContainer.h"
 #include "DREAM3DLib/OrientationOps/OrientationOps.h"
+#include "DREAM3DLib/DataArrays/StringDataArray.hpp"
+
+class H5EbsdVolumeReader;
+
+
 
 
 /**
- * @class ReadOrientationData ReadOrientationData.h /FilterCategoryFilters/ReadOrientationData.h
+ * @class ReadH5Ebsd ReadH5Ebsd.h DREAM3DLib/ReconstructionFilters/ReadH5Ebsd.h
  * @brief
  * @author
- * @date
+ * @date Nov 19, 2011
  * @version 1.0
  */
-class DREAM3DLib_EXPORT ReadOrientationData : public AbstractFilter
+class ReadH5Ebsd : public AbstractFilter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
-    DREAM3D_SHARED_POINTERS(ReadOrientationData)
-    DREAM3D_STATIC_NEW_MACRO(ReadOrientationData)
-    DREAM3D_TYPE_MACRO_SUPER(ReadOrientationData, AbstractFilter)
+    DREAM3D_SHARED_POINTERS(ReadH5Ebsd)
+    DREAM3D_STATIC_NEW_MACRO(ReadH5Ebsd)
+    DREAM3D_TYPE_MACRO_SUPER(ReadH5Ebsd, AbstractFilter)
 
-    virtual ~ReadOrientationData();
+    virtual ~ReadH5Ebsd();
     DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellEnsembleAttributeMatrixName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
@@ -72,34 +84,37 @@ class DREAM3DLib_EXPORT ReadOrientationData : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(PhaseNameArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(MaterialNameArrayName)
 
+
     DREAM3D_FILTER_PARAMETER(QString, InputFile)
     Q_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile NOTIFY parametersChanged)
+    DREAM3D_FILTER_PARAMETER(int, ZStartIndex)
+    Q_PROPERTY(int ZStartIndex READ getZStartIndex WRITE setZStartIndex NOTIFY parametersChanged)
+    DREAM3D_FILTER_PARAMETER(int, ZEndIndex)
+    Q_PROPERTY(int ZEndIndex READ getZEndIndex WRITE setZEndIndex NOTIFY parametersChanged)
+    DREAM3D_FILTER_PARAMETER(bool, UseTransformations)
+    Q_PROPERTY(bool UseTransformations READ getUseTransformations WRITE setUseTransformations NOTIFY parametersChanged)
+
+    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedArrayNames)
+    Q_PROPERTY(QSet<QString> SelectedArrayNames READ getSelectedArrayNames WRITE setSelectedArrayNames NOTIFY parametersChanged)
 
 
-    /**
-    * @brief This returns the group that the filter belonds to. You can select
-    * a different group if you want. The string returned here will be displayed
-    * in the GUI for the filter
-    */
+    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, DataArrayNames) // These are for reading the names of the arrays during a preflight
+    Q_PROPERTY(QSet<QString> DataArrayNames READ getDataArrayNames WRITE setDataArrayNames NOTIFY parametersChanged)
+
+    //-------------------------------------------------------
+    // Not sure why these are here. We would be reading all of these from the file
+    //
+    DREAM3D_INSTANCE_PROPERTY(uint32_t, RefFrameZDir)
+    DREAM3D_INSTANCE_PROPERTY(int, Manufacturer)
+    DREAM3D_INSTANCE_PROPERTY(AxisAngleInput_t, SampleTransformation)
+    DREAM3D_INSTANCE_PROPERTY(AxisAngleInput_t, EulerTransformation)
+    //-------------------------------------------------------
+
+
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
-
-    /**
-    * @brief This returns the group that the filter belonds to. You can select
-    * a different group if you want. The string returned here will be displayed
-    * in the GUI for the filter
-    */
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::InputFilters; }
+    virtual const QString getHumanLabel() { return "Read H5Ebsd File"; }
 
-    /**
-    * @brief This returns a string that is displayed in the GUI. It should be readable
-    * and understandable by humans.
-    */
-    virtual const QString getHumanLabel() { return "Read Orientation Data"; }
-
-    /**
-    * @brief This method will instantiate all the end user settable options/parameters
-    * for this filter
-    */
     virtual void setupFilterParameters();
 
     /**
@@ -115,69 +130,54 @@ class DREAM3DLib_EXPORT ReadOrientationData : public AbstractFilter
     virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
 
     /**
-    * @brief Reimplemented from @see AbstractFilter class
-    */
+     * @brief Reimplemented from @see AbstractFilter class
+     */
     virtual void execute();
-
-    /**
-    * @brief This function runs some sanity checks on the DataContainer and inputs
-    * in an attempt to ensure the filter can process the inputs.
-    */
     virtual void preflight();
 
-    /* These are non-exposed to the user through the GUI. Manual Pipelines are OK to set them */
-    DREAM3D_INSTANCE_PROPERTY(uint32_t, RefFrameZDir)
-    DREAM3D_INSTANCE_PROPERTY(int, Manufacturer)
-
-    signals:
-      void parametersChanged();
+  signals:
+    void updateFilterParameters(AbstractFilter* filter);
+    void parametersChanged();
     void preflightAboutToExecute();
     void preflightExecuted();
 
   protected:
-    ReadOrientationData();
-
-    /**
-    * @brief Checks for the appropriate parameter values and availability of
-    * arrays in the data container
-    * @param preflight
-    * @param voxels The number of voxels
-    * @param features The number of features
-    * @param ensembles The number of ensembles
-    */
+    ReadH5Ebsd();
     void dataCheck();
 
-    /**
-     * @brief readAngFile This reads the Ang file and puts the data into the Voxel Data container
-     */
-    void readAngFile();
+    int initDataContainerDimsRes(int64_t dims[3], VolumeDataContainer* m);
+    void readVolumeInfo();
 
-    /**
-     * @brief readCtfFile This reads the Ctf file and puts the data into the Voxel Data container
-     */
-    void readCtfFile();
+    H5EbsdVolumeReader::Pointer initTSLEbsdVolumeReader();
+    H5EbsdVolumeReader::Pointer initHKLEbsdVolumeReader();
+    H5EbsdVolumeReader::Pointer initHEDMEbsdVolumeReader();
 
-    /**
-     * @brief readMicFile This reads the HEDM .mic file and puts the data into the Voxel Data container
-     */
-    void readMicFile();
-
+    void copyTSLArrays(H5EbsdVolumeReader* ebsdReader);
+    void copyHKLArrays(H5EbsdVolumeReader* ebsdReader);
+    void copyHEDMArrays(H5EbsdVolumeReader* ebsdReader);
 
 
     /**
-     * @brief This method reads the values for the phase type, crystal structure
-     * and precipitate fractions from the EBSD file.
-     * @param reader The EbsdReader instance
-     * @param precipFractions Container to hold the precipitate fractions (out)
-     * @param crystalStructures Container to hold the crystal structures (out)
-     * @return Zero/Positive on Success - Negative on error.
-     */
+    * @brief This method reads the values for the phase type, crystal structure
+    * and precipitate fractions from the EBSD file.
+    * @param reader The EbsdReader instance
+    * @param precipFractions Container to hold the precipitate fractions (out)
+    * @param crystalStructures Container to hold the crystal structures (out)
+    * @return Zero/Positive on Success - Negative on error.
+    */
     template<typename EbsdReader, typename EbsdPhase>
     int loadInfo(EbsdReader* reader)
     {
+      VolumeDataContainer* vdc = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+      if(NULL == vdc) { return -1;}
+      AttributeMatrix::Pointer attrMatrix = vdc->getAttributeMatrix(getCellEnsembleAttributeMatrixName() );
+      if(NULL == attrMatrix.get() ) { return -2; }
 
+      reader->setFileName(m_InputFile);
+      reader->setSliceStart(m_ZStartIndex);
+      reader->setSliceEnd(m_ZEndIndex);
 
-      QVector<typename EbsdPhase::Pointer> phases = reader->getPhaseVector();
+      QVector<typename EbsdPhase::Pointer> phases = reader->getPhases();
       if (phases.size() == 0)
       {
         setErrorCondition(reader->getErrorCode());
@@ -185,10 +185,14 @@ class DREAM3DLib_EXPORT ReadOrientationData : public AbstractFilter
         return getErrorCondition();
       }
 
-      DataArray<unsigned int>::Pointer crystalStructures = DataArray<unsigned int>::CreateArray(phases.size() + 1, m_CrystalStructuresArrayName);
-      StringDataArray::Pointer materialNames = StringDataArray::CreateArray(phases.size() + 1, m_MaterialNameArrayName);
-      QVector<size_t> dims(1, 6);
-      FloatArrayType::Pointer latticeConstants = FloatArrayType::CreateArray(phases.size() + 1, dims, m_LatticeConstantsArrayName);
+      // Resize the Ensemble Attribute Matrix to be the correct number of phases.
+      QVector<size_t> tDims(1, phases.size() + 1);
+      attrMatrix->resizeAttributeArrays(tDims);
+
+      DataArray<unsigned int>::Pointer crystalStructures = DataArray<unsigned int>::CreateArray(phases.size() + 1, getCrystalStructuresArrayName());
+      StringDataArray::Pointer materialNames = StringDataArray::CreateArray(phases.size() + 1, getMaterialNameArrayName());
+      QVector<size_t> cDims(1, 6);
+      FloatArrayType::Pointer latticeConstants = FloatArrayType::CreateArray(phases.size() + 1, cDims, getLatticeConstantsArrayName());
 
       // Initialize the zero'th element to unknowns. The other elements will
       // be filled in based on values from the data file
@@ -216,28 +220,11 @@ class DREAM3DLib_EXPORT ReadOrientationData : public AbstractFilter
         latticeConstants->setComponent(phaseID, 5, lc[5]);
 
       }
-      VolumeDataContainer* vdc = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-      if(NULL == vdc) { return -1;}
-      AttributeMatrix::Pointer attrMatrix = vdc->getAttributeMatrix(getCellEnsembleAttributeMatrixName() );
-      if(NULL == attrMatrix.get() ) { return -2; }
 
-      // Resize the AttributeMatrix based on the size of the crystal structures array
-      QVector<size_t> tDims(1, crystalStructures->getNumberOfTuples());
-      attrMatrix->resizeAttributeArrays(tDims);
-      // Now add the attributeArray to the AttributeMatrix
+
       attrMatrix->addAttributeArray(DREAM3D::EnsembleData::CrystalStructures, crystalStructures);
-      attrMatrix->addAttributeArray(DREAM3D::EnsembleData::MaterialName, materialNames);
       attrMatrix->addAttributeArray(DREAM3D::EnsembleData::LatticeConstants, latticeConstants);
-
-      // Now reset the internal ensemble array references to these new arrays
-      m_CrystalStructuresPtr = crystalStructures;
-      if( NULL != m_CrystalStructuresPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
-      { m_CrystalStructures = m_CrystalStructuresPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-
-
-      m_LatticeConstantsPtr = latticeConstants;
-      if( NULL != m_LatticeConstantsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
-      { m_LatticeConstants = m_LatticeConstantsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+      attrMatrix->addAttributeArray(DREAM3D::EnsembleData::MaterialName, materialNames);
       return 0;
     }
 
@@ -246,12 +233,15 @@ class DREAM3DLib_EXPORT ReadOrientationData : public AbstractFilter
     DEFINE_PTR_WEAKPTR_DATAARRAY(float, CellEulerAngles)
     DEFINE_PTR_WEAKPTR_DATAARRAY(uint32_t, CrystalStructures)
     DEFINE_PTR_WEAKPTR_DATAARRAY(float, LatticeConstants)
+    StringDataArray::WeakPointer  m_MaterialNamesPtr;
 
-    ReadOrientationData(const ReadOrientationData&); // Copy Constructor Not Implemented
-    void operator=(const ReadOrientationData&); // Operator '=' Not Implemented
+    int tempxpoints;
+    int tempypoints;
+    int totaltemppoints;
+
+    ReadH5Ebsd(const ReadH5Ebsd&); // Copy Constructor Not Implemented
+    void operator=(const ReadH5Ebsd&); // Operator '=' Not Implemented
 };
 
-#endif /* _ReadOrientationData_H_ */
-
-
+#endif /* ReadH5Ebsd_H_ */
 

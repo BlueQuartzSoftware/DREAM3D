@@ -11,7 +11,7 @@ This Filter reads from the **.h5ebsd** file that was generated with the [Import 
 
 If the processing pipeline is going to process phase based data for crystallographic information the user should enable the reading of the _CrystalStructure_ _**Ensemble Data**_ array.
 
-![Read H5Ebsd File User Interface](ReadH5Ebsd_UI.png)
+![Read H5Ebsd File User Interface](images/ReadH5Ebsd_UI.png)
 @image latex ReadH5Ebsd_UI.png "User Interface" width=6in
 
 

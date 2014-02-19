@@ -46,12 +46,11 @@
 
 typedef struct { int x; int y; int z; } IntVec3_t;
 typedef struct { float x; float y; float z; } FloatVec3_t;
-typedef struct { QString arrayName; int compOperator; double compValue; } ComparisonInput_t;
+//typedef struct { QString arrayName; int compOperator; double compValue; } ComparisonInput_t;
 typedef struct { float angle; float h; float k; float l; } AxisAngleInput_t;
 
 Q_DECLARE_METATYPE(IntVec3_t)
 Q_DECLARE_METATYPE(FloatVec3_t)
-Q_DECLARE_METATYPE(ComparisonInput_t)
 Q_DECLARE_METATYPE(AxisAngleInput_t)
 
 
@@ -74,7 +73,7 @@ namespace FilterParameterWidgetType
       const QString DataContainerArrayProxyWidget("DataContainerArrayProxyWidget");
       const QString ArraySelectionWidget("ArraySelectionWidget"); // This is the generic array name selection tool where the user can select multiple arrays with checkboxes from all data containers
       const QString SingleArraySelectionWidget("SingleArraySelectionWidget");
-      const QString ReadH5EbsdWidget("ReadH5EbsdWidget");
+      const QString ComparisonSelectionWidget("ComparisonSelectionWidget");
 
 #if 0
       /* **** DO NOT PUT ANY OTHER WIDGETS BETWEEN THIS ***** */

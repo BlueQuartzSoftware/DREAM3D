@@ -43,40 +43,42 @@
 #include "H5Support/H5Utilities.h"
 #include "H5Support/HDF5ScopedFileSentinel.h"
 
-
+#include "EbsdLib/TSL/AngConstants.h"
+#include "EbsdLib/HKL/CtfConstants.h"
+#include "EbsdLib/HEDM/MicConstants.h"
 
 #define EBSD_VOLREADER_READ_HEADER(fileId, path, var)\
   err = H5Lite::readScalarDataset(fileId, path.toStdString(), var);\
   if (err < 0) {\
-    qDebug() << "H5EbsdVolumeInfo Error: Could not load header value for " << path ;\
-    err = H5Utilities::closeFile(fileId);\
-    return err;\
+  qDebug() << "H5EbsdVolumeInfo Error: Could not load header value for " << path ;\
+  err = H5Utilities::closeFile(fileId);\
+  return err;\
   }
 
 #define EBSD_VOLREADER_READ_VECTOR_HEADER(fileId, path, var, type)\
-  {\
-    std::vector<type> data;\
-    err = H5Lite::readVectorDataset(fileId, path.toStdString(), data);\
-    if (err < 0) {\
-      qDebug() << "H5EbsdVolumeInfo Error: Could not load header value for " << path ;\
-      err = H5Utilities::closeFile(fileId);\
-      return err;\
-    } else {\
-      var.resize(static_cast<qint32>(data.size()));\
-      ::memcpy(var.data(), &(data.front()), sizeof(type) * var.size());\
-    }\
+{\
+  std::vector<type> data;\
+  err = H5Lite::readVectorDataset(fileId, path.toStdString(), data);\
+  if (err < 0) {\
+  qDebug() << "H5EbsdVolumeInfo Error: Could not load header value for " << path ;\
+  err = H5Utilities::closeFile(fileId);\
+  return err;\
+  } else {\
+  var.resize(static_cast<qint32>(data.size()));\
+  ::memcpy(var.data(), &(data.front()), sizeof(type) * var.size());\
+  }\
   }
 
 
 #define EBSD_VOLREADER_READ_HEADER_CAST(fileId, path, var, m_msgType, cast)\
-  { cast t;\
-    err = H5Lite::readScalarDataset(fileId, path.toStdString(), t);\
-    if (err < 0) {\
-      qDebug() << "H5EbsdVolumeInfo Error: Could not load header value for " << path ;\
-      err = H5Utilities::closeFile(fileId);\
-      return err;\
-    }\
-    var = static_cast<m_msgType>(t); }
+{ cast t;\
+  err = H5Lite::readScalarDataset(fileId, path.toStdString(), t);\
+  if (err < 0) {\
+  qDebug() << "H5EbsdVolumeInfo Error: Could not load header value for " << path ;\
+  err = H5Utilities::closeFile(fileId);\
+  return err;\
+  }\
+  var = static_cast<m_msgType>(t); }
 
 #if defined (H5Support_NAMESPACE)
 using namespace H5Support_NAMESPACE;
@@ -202,7 +204,7 @@ int H5EbsdVolumeInfo::readVolumeInfo()
   EBSD_VOLREADER_READ_HEADER(fileId, Ebsd::H5::EulerTransformationAngle, m_EulerTransformationAngle);
   EBSD_VOLREADER_READ_VECTOR_HEADER(fileId, Ebsd::H5::EulerTransformationAxis, m_EulerTransformationAxis, float);
 
-
+  // Read the manufacturer from the file
   m_Manufacturer = "";
   std::string data;
   err = H5Lite::readStringDataset(fileId, Ebsd::H5::Manufacturer.toStdString(), data);
@@ -237,8 +239,79 @@ int H5EbsdVolumeInfo::readVolumeInfo()
       }
       H5Gclose(headerId);
     }
+
+    // Now read out the names of the data arrays in the file
+
+    hid_t dataGid = H5Gopen(gid, Ebsd::H5::Data.toStdString().c_str(), H5P_DEFAULT);
+    if(dataGid > 0)
+    {
+      std::list<std::string> names;
+      err = H5Utilities::getGroupObjects(dataGid, H5Utilities::H5Support_DATASET, names);
+      if (err >= 0)
+      {
+        for(std::list<std::string>::iterator iter = names.begin(); iter != names.end(); iter++)
+        {
+          m_DataArrayNames.insert(QString::fromStdString(*iter));
+        }
+      }
+      H5Gclose(dataGid);
+    }
     H5Gclose(gid);
   }
+
+// we are going to selectively replace some of the data array names with some common names instead
+  if(m_Manufacturer.compare(Ebsd::Ang::Manufacturer) == 0)
+  {
+    if(m_DataArrayNames.contains(Ebsd::Ang::Phi1)
+       && m_DataArrayNames.contains(Ebsd::Ang::Phi)
+       && m_DataArrayNames.contains(Ebsd::Ang::Phi2) )
+    {
+      m_DataArrayNames.remove(Ebsd::Ang::Phi1);
+      m_DataArrayNames.remove(Ebsd::Ang::Phi);
+      m_DataArrayNames.remove(Ebsd::Ang::Phi2);
+      m_DataArrayNames.insert(Ebsd::CellData::EulerAngles);
+    }
+    if(m_DataArrayNames.contains(Ebsd::Ang::PhaseData) )
+    {
+      m_DataArrayNames.remove(Ebsd::Ang::PhaseData);
+      m_DataArrayNames.insert(Ebsd::CellData::Phases);
+    }
+  }
+  else if(m_Manufacturer.compare(Ebsd::Ctf::Manufacturer) == 0)
+  {
+    if(m_DataArrayNames.contains(Ebsd::Ctf::Euler1)
+       && m_DataArrayNames.contains(Ebsd::Ctf::Euler2)
+       && m_DataArrayNames.contains(Ebsd::Ctf::Euler3) )
+    {
+      m_DataArrayNames.remove(Ebsd::Ctf::Euler1);
+      m_DataArrayNames.remove(Ebsd::Ctf::Euler2);
+      m_DataArrayNames.remove(Ebsd::Ctf::Euler3);
+      m_DataArrayNames.insert(Ebsd::CellData::EulerAngles);
+    }
+    if(m_DataArrayNames.contains(Ebsd::Ctf::Phase) )
+    {
+      m_DataArrayNames.remove(Ebsd::Ctf::Phase);
+      m_DataArrayNames.insert(Ebsd::CellData::Phases);
+    }
+  }
+  else if(m_Manufacturer.compare(Ebsd::Mic::Manufacturer) == 0)
+  {
+    if(m_DataArrayNames.contains(Ebsd::Mic::Euler1)
+       && m_DataArrayNames.contains(Ebsd::Mic::Euler2)
+       && m_DataArrayNames.contains(Ebsd::Mic::Euler3) )
+    {
+      m_DataArrayNames.remove(Ebsd::Mic::Euler1);
+      m_DataArrayNames.remove(Ebsd::Mic::Euler2);
+      m_DataArrayNames.remove(Ebsd::Mic::Euler3);
+      m_DataArrayNames.insert(Ebsd::CellData::EulerAngles);
+    }
+    if(m_DataArrayNames.contains(Ebsd::Mic::Phase) )
+    {
+      m_DataArrayNames.remove(Ebsd::Mic::Phase);
+      m_DataArrayNames.insert(Ebsd::CellData::Phases);
+    }
+  }
+
 
   m_ValuesAreCached = true;
   err = H5Utilities::closeFile(fileId);
@@ -478,4 +551,19 @@ QVector<float> H5EbsdVolumeInfo::getEulerTransformationAxis()
     }
   }
   return m_EulerTransformationAxis;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QSet<QString> H5EbsdVolumeInfo::getDataArrayNames()
+{
+  QSet<QString> empty;
+  int err = -1;
+  if (m_ValuesAreCached == false)
+  {
+    err = readVolumeInfo();
+    if (err < 0) { return empty; }
+  }
+  return m_DataArrayNames;
 }

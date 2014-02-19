@@ -62,7 +62,7 @@
 // -----------------------------------------------------------------------------
 // Include the "moc" file that was generated for this file
 // -----------------------------------------------------------------------------
-#include "DREAM3DWidgetsLib/Widgets/moc_PipelineFilterWidget.cxx"
+#include "DREAM3DWidgetsLib/moc_PipelineFilterWidget.cpp"
 
 #define PADDING 5
 #define BORDER 2
@@ -196,7 +196,7 @@ void PipelineFilterWidget::initialize(AbstractFilter::Pointer filter)
 // -----------------------------------------------------------------------------
 PipelineFilterWidget::~PipelineFilterWidget()
 {
- // std::cout << "~PipelineFilterWidget() " << m_Filter->getNameOfClass().toStdString() << std::endl;
+  // std::cout << "~PipelineFilterWidget() " << m_Filter->getNameOfClass().toStdString() << std::endl;
 }
 
 // -----------------------------------------------------------------------------
@@ -381,7 +381,7 @@ void PipelineFilterWidget::updateWidgetStyle()
 {
   QString style;
 
-  style.append("QFrame#PipelineFilterWidget\n {\n");
+  style.append("PipelineFilterWidget {\n");
 
   style.append("background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 rgba(185, 185, 185, 255), stop:0.5 rgba(226, 226, 226, 255), stop:1 rgba(150, 150, 150, 255));\n");
 
@@ -401,26 +401,18 @@ void PipelineFilterWidget::updateWidgetStyle()
 #endif
 
 
-    //    QString headerImage("background-image: url(:/filterWidgetBorder.png);");
-    //  if(m_HasPreflightWarnings == true)
-    //  {
-    //    headerImage = "background-image: url(:/filterWidgetBorder_Warning.png);";
-    //  }
-
-    //  if(m_HasPreflightErrors == true)
-    //  {
-    //    headerImage = "background-image: url(:/filterWidgetBorder_Error.png);";
-    //  }
-    //  style.append(headerImage);
-
     style.append("background-position: top ;\n background-repeat: repeat-x;");
 
   style.append(getBorderColorStyle());
 
   style.append("border-radius: 10px;");
   style.append("padding: 0 0 0 0px;");
+  style.append("}\n");
+
+  style.append("QLabel\n {\n");
+
 #if defined(Q_WS_WIN)
-  style.append("font: 85 italic 10pt \"Arial\";");
+  style.append("font: 75 italic 10pt \"Arial\";");
 #elif defined(Q_WS_MAC)
   style.append("font: 100 italic 12pt \"Arial\";");
 #else
@@ -428,20 +420,6 @@ void PipelineFilterWidget::updateWidgetStyle()
 #endif
   style.append("font-weight: bold;");
   style.append("}\n");
-  //  style.append(" QGroupBox::title {");
-  //  style.append("    subcontrol-origin: padding;");
-  //  style.append("    subcontrol-position: top left;");
-  //  style.append("    padding: 5 5px;");
-  //  style.append("    background-color: rgba(255, 255, 255, 0);");
-  //  style.append(" }\n");
-  //  style.append("QGroupBox::indicator {");
-  //  style.append("    width: 17px;");
-  //  style.append("    height: 17px;");
-  //  style.append("}\n");
-  //  style.append("\nQGroupBox::indicator:unchecked { image: url(:/delete-corner.png);}");
-  //  style.append("\nQGroupBox::indicator:unchecked:pressed { image: url(:/delete-corner-pressed.png);}");
-  //  style.append("\nQGroupBox::indicator:checked { image: url(:/delete-corner.png);}");
-  //  style.append("\nQGroupBox::indicator:checked:pressed { image: url(:/delete-corner-pressed.png);}");
 
   setStyleSheet(style);
 }

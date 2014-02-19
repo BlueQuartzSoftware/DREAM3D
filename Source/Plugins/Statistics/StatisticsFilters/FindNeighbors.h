@@ -91,6 +91,12 @@ class FindNeighbors : public AbstractFilter
     virtual const QString getHumanLabel() { return "Find Feature Neighbors"; }
 
 
+signals:
+    void updateFilterParameters(AbstractFilter* filter);
+    void parametersChanged();
+    void preflightAboutToExecute();
+    void preflightExecuted();
+
   protected:
     FindNeighbors();
 

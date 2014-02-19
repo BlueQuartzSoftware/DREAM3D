@@ -68,6 +68,8 @@ class EbsdLib_EXPORT MicFields : public AbstractEbsdFields
       T features;
 
       features.push_back(Ebsd::Mic::Confidence);
+      features.push_back(Ebsd::Mic::X);
+      features.push_back(Ebsd::Mic::Y);
 
       return features;
     }

@@ -35,7 +35,7 @@ set(PluginMaker_SRCS
   ${PluginMaker_SOURCE_DIR}/PMFilterGenerator.cpp
   ${PluginMaker_SOURCE_DIR}/AddFilterWidget.cpp
   ${PluginMaker_SOURCE_DIR}/FilterBundler.cpp
-    ${DREAM3DProj_SOURCE_DIR}/Source/QtSupport/ApplicationAboutBoxDialog.cpp
+#    ${DREAM3DProj_SOURCE_DIR}/Source/QtSupport/ApplicationAboutBoxDialog.cpp
   )
 
 SET(PluginMaker_HDRS
@@ -49,9 +49,8 @@ SET(PluginMaker_MOC_HDRS
     ${PluginMaker_SOURCE_DIR}/PMDirGenerator.h
     ${PluginMaker_SOURCE_DIR}/PMFileGenerator.h
     ${PluginMaker_SOURCE_DIR}/PMFilterGenerator.h
-    ${DREAM3DProj_SOURCE_DIR}/Source/QtSupport/ApplicationAboutBoxDialog.h
+#    ${DREAM3DProj_SOURCE_DIR}/Source/QtSupport/ApplicationAboutBoxDialog.h
   ${PluginMaker_SOURCE_DIR}/AddFilterWidget.h
-  ${DREAM3DProj_SOURCE_DIR}/Source/QtSupport/ApplicationAboutBoxDialog.h
   )
 cmp_IDE_SOURCE_PROPERTIES( "PluginMaker" "${PluginMaker_HDRS};${PluginMaker_MOC_HDRS}" "${PluginMaker_SRCS}" "${PROJECT_INSTALL_HEADERS}")
 
@@ -60,7 +59,7 @@ SET(PluginMaker_UIS
   ${PluginMaker_SOURCE_DIR}/UI_Files/PluginMaker.ui
   ${PluginMaker_SOURCE_DIR}/UI_Files/HelpWidget.ui
   ${PluginMaker_SOURCE_DIR}/UI_Files/AddFilterWidget.ui
-    ${DREAM3DProj_SOURCE_DIR}/Source/QtSupport/UI_Files/ApplicationAboutBoxDialog.ui
+#    ${DREAM3DProj_SOURCE_DIR}/Source/QtSupport/UI_Files/ApplicationAboutBoxDialog.ui
   )
 
 cmp_IDE_GENERATED_PROPERTIES("PluginMaker/UI_Files" "${PluginMaker_UIS}" "")
@@ -76,7 +75,7 @@ QT4_ADD_RESOURCES( PluginMaker_Generated_RC_SRCS ${PluginMaker_RCS} ${QRC_LICENS
 QT4_WRAP_UI( PluginMaker_Generated_UI_HDRS ${PluginMaker_UIS} )
 
 # and finally this will run moc:
-QT4_WRAP_CPP( PluginMaker_Generated_MOC_SRCS ${PluginMaker_MOC_HDRS} )
+#QT4_WRAP_CPP( PluginMaker_Generated_MOC_SRCS ${PluginMaker_MOC_HDRS} )
 
 #-- Put the generated files into their own group for IDEs
 cmp_IDE_GENERATED_PROPERTIES("Generated/ui" "${PluginMaker_Generated_UI_HDRS}" "")
@@ -90,7 +89,7 @@ set(${PROJECT_NAME}_PROJECT_SRCS
   ${PluginMaker_MOC_HDRS}
     ${PluginMaker_Generated_RC_SRCS}
     ${PluginMaker_Generated_UI_HDRS}
-    ${PluginMaker_Generated_MOC_SRCS}
+#    ${PluginMaker_Generated_MOC_SRCS}
   )
 #message(STATUS "${PROJECT_NAME}_PROJECT_SRCS: ${${PROJECT_NAME}_PROJECT_SRCS}")
 include_directories(${PluginMaker_SOURCE_DIR} )

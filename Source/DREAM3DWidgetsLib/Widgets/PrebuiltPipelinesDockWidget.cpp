@@ -55,7 +55,7 @@
 #include "FilterListDockWidget.h"
 
 
-#include "DREAM3DWidgetsLib/Widgets/moc_PrebuiltPipelinesDockWidget.cxx"
+#include "DREAM3DWidgetsLib/moc_PrebuiltPipelinesDockWidget.cpp"
 
 
 // -----------------------------------------------------------------------------

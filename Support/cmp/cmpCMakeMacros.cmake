@@ -142,7 +142,7 @@ function(BuildQtAppBundle)
 #        list(APPEND QAB_SOURCES ${qt_menu_nib_sources} ${qt_conf_file})
          list(APPEND QAB_SOURCES ${qt_menu_nib_sources})
     elseif(WIN32)
-        SET(GUI_TYPE WIN32)
+        #SET(GUI_TYPE WIN32)
         FILE (WRITE "${CMAKE_CURRENT_BINARY_DIR}/Icon.rc"
           "// Icon with lowest ID value placed first to ensure application icon\n"
           "// remains consistent on all systems.\n"

@@ -14,16 +14,7 @@
    <string>Filter Input Parameters</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout_2">
-   <property name="leftMargin">
-    <number>0</number>
-   </property>
-   <property name="topMargin">
-    <number>0</number>
-   </property>
-   <property name="rightMargin">
-    <number>0</number>
-   </property>
-   <property name="bottomMargin">
+   <property name="margin">
     <number>0</number>
    </property>
    <item>
@@ -83,20 +74,10 @@ font-weight: bold;s
           <property name="text">
            <string>Filter Name</string>
           </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
          </widget>
-        </item>
-        <item>
-         <spacer name="horizontalSpacer">
-          <property name="orientation">
-           <enum>Qt::Horizontal</enum>
-          </property>
-          <property name="sizeHint" stdset="0">
-           <size>
-            <width>40</width>
-            <height>20</height>
-           </size>
-          </property>
-         </spacer>
         </item>
        </layout>
       </item>
@@ -110,16 +91,7 @@ font-weight: bold;s
           <string>Inputs</string>
          </attribute>
          <layout class="QGridLayout" name="gridLayout_2">
-          <property name="leftMargin">
-           <number>0</number>
-          </property>
-          <property name="topMargin">
-           <number>0</number>
-          </property>
-          <property name="rightMargin">
-           <number>0</number>
-          </property>
-          <property name="bottomMargin">
+          <property name="margin">
            <number>0</number>
           </property>
           <item row="0" column="0">
@@ -136,7 +108,7 @@ font-weight: bold;s
                <x>0</x>
                <y>0</y>
                <width>564</width>
-               <height>339</height>
+               <height>346</height>
               </rect>
              </property>
              <layout class="QVBoxLayout" name="verticalLayout"/>
@@ -156,10 +128,18 @@ font-weight: bold;s
        <widget class="QLabel" name="brandingLabel">
         <property name="font">
          <font>
-          <pointsize>11</pointsize>
+          <family>Arial</family>
+          <pointsize>10</pointsize>
           <weight>75</weight>
+          <italic>true</italic>
           <bold>true</bold>
          </font>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QLabel{
+	font: 75 italic 10pt &quot;Arial&quot;;
+font-weight: bold;
+}</string>
         </property>
         <property name="text">
          <string>Branding Information</string>

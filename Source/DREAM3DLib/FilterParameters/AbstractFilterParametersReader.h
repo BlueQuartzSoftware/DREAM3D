@@ -42,6 +42,7 @@
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+#include "DREAM3DLib/Common/ComparisonInputs.h"
 #include "DREAM3DLib/FilterParameters/FilterParameter.h"
 #include "DREAM3DLib/DataContainers/DataContainerArrayProxy.h"
 
@@ -102,7 +103,7 @@ class DREAM3DLib_EXPORT AbstractFilterParametersReader
     virtual IntVec3_t readIntVec3(const QString name, IntVec3_t v) = 0;
     virtual FloatVec3_t readFloatVec3(const QString name, FloatVec3_t v) = 0;
     virtual ComparisonInput_t readComparisonInput(const QString name, ComparisonInput_t v, int vectorPos) = 0;
-    virtual QVector<ComparisonInput_t> readComparisonInputs(const QString name, QVector<ComparisonInput_t> v) = 0;
+    virtual ComparisonInputs readComparisonInputs(const QString name, ComparisonInputs v) = 0;
     virtual AxisAngleInput_t readAxisAngle(const QString name, AxisAngleInput_t v, int vectorPos) = 0;
     virtual QVector<AxisAngleInput_t> readAxisAngles(const QString name, QVector<AxisAngleInput_t> v) = 0;
     virtual QSet<QString> readArraySelections(const QString name, QSet<QString> v) = 0;

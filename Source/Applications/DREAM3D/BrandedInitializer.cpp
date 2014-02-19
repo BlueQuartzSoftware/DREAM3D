@@ -39,7 +39,7 @@
 #include <QtCore/QPluginLoader>
 #include <QtCore/QCoreApplication>
 #include <QtGui/QSplashScreen>
-#include <QtGui/QBitMap>
+#include <QtGui/QBitmap>
 #include <QtGui/QMessageBox>
 
 

@@ -58,7 +58,7 @@
 
 #include "FilterListDockWidget.h"
 
-#include "DREAM3DWidgetsLib/Widgets/moc_FavoritesDockWidget.cxx"
+#include "DREAM3DWidgetsLib/moc_FavoritesDockWidget.cpp"
 
 // -----------------------------------------------------------------------------
 //
@@ -123,8 +123,8 @@ void FavoritesDockWidget::setupContextMenus()
 {
 
 //// This all should come from the GUI. Or the gui should gather these items and set them into this class?  QAction* separator = new QAction(this);
-    QMenu*                      m_MenuPipeline = NULL;
-    QMenu* menuPipeline = NULL;
+    QMenu* m_MenuPipeline = NULL;
+//    QMenu* menuPipeline = NULL;
 
 
   QAction* separator = new QAction(this);

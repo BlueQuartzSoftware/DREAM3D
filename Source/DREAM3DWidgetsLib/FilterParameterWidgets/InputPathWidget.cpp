@@ -43,7 +43,7 @@
 #include "QtSupport/QFileCompleter.h"
 
 
-#include "DREAM3DWidgetsLib/FilterParameterWidgets/moc_InputPathWidget.cxx"
+#include "DREAM3DWidgetsLib/moc_InputPathWidget.cpp"
 
 
 // Initialize private static member variable

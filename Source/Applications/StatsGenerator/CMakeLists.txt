@@ -183,11 +183,11 @@ QT4_ADD_RESOURCES( Generated_RC_SRCS ${StatsGenerator_RCS} ${QRC_LICENSE_FILES})
 QT4_WRAP_UI( Generated_UI_HDRS ${StatsGenerator_UIS} )
 
 # and finally this will run moc:
-QT4_WRAP_CPP( Generated_MOC_SRCS
-            ${StatsGenerator_MOC_HDRS}
-            ${StatsGenerator_DELEGATE_HDRS}
-            ${StatsGenerator_TABLEMODEL_HDRS}
-            ${StatsGenerator_DIALOGS_HDRS} )
+#QT4_WRAP_CPP( Generated_MOC_SRCS
+#            ${StatsGenerator_MOC_HDRS}
+#            ${StatsGenerator_DELEGATE_HDRS}
+#            ${StatsGenerator_TABLEMODEL_HDRS}
+#            ${StatsGenerator_DIALOGS_HDRS} )
 
 #-- Put the generated files into their own group for IDEs
 cmp_IDE_GENERATED_PROPERTIES("Generated/ui" "${Generated_UI_HDRS}" "")

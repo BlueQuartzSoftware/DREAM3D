@@ -87,6 +87,13 @@ class FindSurfaceVoxelFractions : public AbstractFilter
     virtual void execute();
     virtual void preflight();
 
+
+signals:
+    void updateFilterParameters(AbstractFilter* filter);
+    void parametersChanged();
+    void preflightAboutToExecute();
+    void preflightExecuted();
+
   protected:
     FindSurfaceVoxelFractions();
     void find_surface_voxel_fractions();

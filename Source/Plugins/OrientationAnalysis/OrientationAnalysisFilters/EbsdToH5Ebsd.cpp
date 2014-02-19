@@ -174,6 +174,21 @@ void EbsdToH5Ebsd::dataCheck()
 //      .arg(QString::number(m_ZStartIndex), m_PaddingDigits, '0')
 //      .arg(m_FileSuffix).arg(m_FileExtension);
 
+
+  if(m_OutputFile.isEmpty() == true)
+  {
+    ss = QObject::tr("The output file must be set before executing this filter.");
+    notifyErrorMessage(getHumanLabel(), ss, -12);
+    setErrorCondition(-12);
+  }
+
+  if(m_InputPath.isEmpty() == true)
+  {
+    ss = QObject::tr("The Input Directory must be set before executing this filter.");
+    notifyErrorMessage(getHumanLabel(), ss, -13);
+    setErrorCondition(-13);
+  }
+
   bool hasMissingFiles = false;
   bool stackLowToHigh = false;
 
@@ -217,12 +232,6 @@ void EbsdToH5Ebsd::dataCheck()
     }
   }
 
-  if(m_OutputFile.isEmpty() == true)
-  {
-    ss = QObject::tr("The output file must be set before executing this filter.");
-    notifyErrorMessage(getHumanLabel(), ss, -12);
-    setErrorCondition(-12);
-  }
 
 
 }

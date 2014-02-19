@@ -399,17 +399,17 @@ int H5FilterParametersWriter::writeValue(const QString name, FloatVec3_t v)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int H5FilterParametersWriter::writeValue(const QString name, ComparisonInput_t v, int notUsed)
+int H5FilterParametersWriter::writeValue(const QString name, ComparisonInput_t comp)
 {
-  QVector<ComparisonInput_t> comps(1);
-  comps[0] = v;
-  return writeValue(name, comps);
+  ComparisonInputs v;
+  v.addInput(comp);
+  return writeValue(name, v);
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int H5FilterParametersWriter::writeValue(const QString name, QVector<ComparisonInput_t> v)
+int H5FilterParametersWriter::writeValue(const QString name, ComparisonInputs v)
 {
   int numQFilters = static_cast<int>( v.size() );
   int err = 0;

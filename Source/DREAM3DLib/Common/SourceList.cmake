@@ -13,13 +13,14 @@
 # Any Class that inherits from QObject, either directly or through the heirarchy needs to have its header listed here
 set(DREAM3DLib_Common_Moc_HDRS
   ${DREAM3DLib_SOURCE_DIR}/Common/AbstractFilter.h
+  ${DREAM3DLib_SOURCE_DIR}/Common/ComparisonInputs.h
   ${DREAM3DLib_SOURCE_DIR}/Common/FilterPipeline.h
   ${DREAM3DLib_SOURCE_DIR}/Common/Observer.h
   ${DREAM3DLib_SOURCE_DIR}/Common/Observable.h
 )
 # --------------------------------------------------------------------
 # Run Qts automoc program to generate some source files that get compiled
-QT4_WRAP_CPP( DREAM3DLib_Common_Generated_MOC_SRCS ${DREAM3DLib_Common_Moc_HDRS})
+#QT4_WRAP_CPP( DREAM3DLib_Common_Generated_MOC_SRCS ${DREAM3DLib_Common_Moc_HDRS})
 
 
 set(DREAM3DLib_Common_HDRS
@@ -51,6 +52,7 @@ set(DREAM3DLib_Common_HDRS
 set(DREAM3DLib_Common_SRCS
   ${DREAM3DLib_SOURCE_DIR}/Common/AbstractFilter.cpp
   ${DREAM3DLib_SOURCE_DIR}/Common/AppVersion.cpp
+  ${DREAM3DLib_SOURCE_DIR}/Common/ComparisonInputs.cpp
   ${DREAM3DLib_SOURCE_DIR}/Common/CreatedArrayHelpIndexEntry.cpp
   ${DREAM3DLib_SOURCE_DIR}/Common/FilterManager.cpp
   ${DREAM3DLib_SOURCE_DIR}/Common/FilterPipeline.cpp
@@ -72,8 +74,8 @@ cmp_IDE_SOURCE_PROPERTIES( "DREAM3DLib/Common" "${DREAM3DLib_Common_HDRS};${DREA
 cmp_IDE_SOURCE_PROPERTIES( "Generated/DREAM3DLib/Common" "" "${DREAM3DLib_Common_Generated_MOC_SRCS}" "0")
 
 set(DREAM3DLib_Common_SRCS
-	${DREAM3DLib_Common_SRCS}
-	${DREAM3DLib_Common_Generated_MOC_SRCS}  # Add the generated source files here so they get compiled.
+  ${DREAM3DLib_Common_SRCS}
+  ${DREAM3DLib_Common_Generated_MOC_SRCS}  # Add the generated source files here so they get compiled.
 )
 
 if( ${PROJECT_INSTALL_HEADERS} EQUAL 1 )

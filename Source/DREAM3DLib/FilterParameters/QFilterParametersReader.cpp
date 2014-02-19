@@ -703,10 +703,10 @@ ComparisonInput_t QFilterParametersReader::readComparisonInput(const QString nam
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QVector<ComparisonInput_t> QFilterParametersReader::readComparisonInputs(const QString name, QVector<ComparisonInput_t> defValues)
+ComparisonInputs QFilterParametersReader::readComparisonInputs(const QString name, ComparisonInputs defValues)
 {
   BOOST_ASSERT(m_Prefs != NULL);
-  QVector<ComparisonInput_t> comparisons;
+  ComparisonInputs comparisons;
   int count = m_Prefs->beginReadArray(name);
   bool ok = false;
   ComparisonInput_t v;
@@ -720,7 +720,7 @@ QVector<ComparisonInput_t> QFilterParametersReader::readComparisonInputs(const Q
     if(!ok) { continue; }
     v.compValue = m_Prefs->value("CompValue").toDouble(&ok);
     if(!ok) { continue; }
-    comparisons.push_back(v);
+    comparisons.addInput(v);
   }
   m_Prefs->endArray();
   return comparisons;

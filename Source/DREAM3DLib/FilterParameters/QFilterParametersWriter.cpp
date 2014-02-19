@@ -480,24 +480,24 @@ int QFilterParametersWriter::writeValue(const QString name, FloatVec3_t v)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int QFilterParametersWriter::writeValue(const QString name, ComparisonInput_t v, int notUsed)
+int QFilterParametersWriter::writeValue(const QString name, ComparisonInput_t comp)
 {
-  QVector<ComparisonInput_t> comps(1);
-  comps[0] = v;
-  return writeValue(name, comps);
+  ComparisonInputs v;
+  v.addInput(comp);
+  return writeValue(name, v);
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int QFilterParametersWriter::writeValue(const QString name, QVector<ComparisonInput_t> v)
+int QFilterParametersWriter::writeValue(const QString name, ComparisonInputs v)
 {
   int count = static_cast<int>( v.size() );
   int err = 0;
   m_Prefs->beginWriteArray(name, count);
   for(int i = 0; i < count; ++i)
   {
-    ComparisonInput_t d = v.at(i);
+    ComparisonInput_t d = v[i];
     m_Prefs->setArrayIndex(i);
     m_Prefs->setValue("ArrayName", d.arrayName);
     m_Prefs->setValue("CompOperator", d.compOperator);

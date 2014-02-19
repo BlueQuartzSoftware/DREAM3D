@@ -39,7 +39,7 @@
 #include <QtGui/QStandardItemModel>
 #include <QtGui/QItemSelectionModel>
 
-#include "DREAM3DWidgetsLib/FilterParameterWidgets/moc_DataContainerArrayProxyWidget.cxx"
+#include "DREAM3DWidgetsLib/moc_DataContainerArrayProxyWidget.cpp"
 
 
 // -----------------------------------------------------------------------------
@@ -170,7 +170,7 @@ void removeNonExistantChildren(QStandardItem* parent, QStringList possibleNames)
     QStringList list = possibleNames.filter(item->text() );
     if(list.size() == 0) // the name is in the model but NOT in the proxy so we need to remove it
     {
-      qDebug() << "!! Removing " << item->text();
+     // qDebug() << "!! Removing " << item->text();
       parent->removeRow(i);
     }
   }
@@ -219,7 +219,7 @@ QStandardItem* updateProxyItem(QStandardItem* parent, QString name, T &proxy)
   if (items.count() == 1)
   {
     item = items.at(0);
-    qDebug() << parent->text() << " | " << item->text() << " ::"  << proxy.flag << " (Going to Change to) " << item->checkState();
+ //   qDebug() << parent->text() << " | " << item->text() << " ::"  << proxy.flag << " (Going to Change to) " << item->checkState();
     proxy.flag = item->checkState();
   }
 

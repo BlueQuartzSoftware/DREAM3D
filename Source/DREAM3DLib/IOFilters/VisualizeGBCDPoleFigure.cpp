@@ -367,6 +367,9 @@ void VisualizeGBCDPoleFigure::execute()
   float sym2[3][3];
   float sym2t[3][3];
   float mis_euler1[3];
+  float sym2[3][3];
+  float sym2t[3][3];
+  float mis_euler1[3];
 
   m_MisAngle = m_MisAngle * m_pi/180.0f;
   //convert axis angle to matrix representation of misorientation

@@ -69,6 +69,8 @@ class DREAM3DUpdateCheckDialog;
 class UpdateCheckData;
 class UpdateCheck;
 class HelpDialog;
+class QToolButton;
+
 
 /**
 * @class DREAM3D_UI DREAM3D_UI Applications/DREAM3D/DREAM3D_UI.h
@@ -134,6 +136,7 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
     // Buttons and other widgets that send signals that we want to catch
     void on_startPipelineBtn_clicked();
 
+    void on_filterLibraryDockWidget_visibilityChanged(bool b);
 
     /**
      * @brief Updates the QMenu 'Recent Files' with the latest list of files. This
@@ -221,8 +224,9 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
     void writeDockWidgetSettings(QSettings& prefs, QDockWidget* dw);
 
 
-    void makeStatusBarButton(QString text, QDockWidget *dockWidget, int index);
+    void makeStatusBarButton(QString text, QDockWidget *dockWidget, QToolButton *btn, int index);
 
+    void updateAndSyncDockWidget(QAction* action, QDockWidget* dock, QToolButton* btn);
 
     /**
      * @brief Checks the currently open file for changes that need to be saved
@@ -250,6 +254,13 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
     FilterWidgetManager::Pointer m_FilterWidgetManager;
 
     FilterPipeline::Pointer      m_PipelineInFlight;
+
+    QToolButton*         m_FilterListBtn;
+    QToolButton*        m_FilterLibraryBtn;
+    QToolButton*        m_FavoritesBtn;
+    QToolButton*        m_PrebuiltBtn;
+    QToolButton*        m_IssuesBtn;
+
 
     static QString    m_OpenDialogLastDirectory;
 

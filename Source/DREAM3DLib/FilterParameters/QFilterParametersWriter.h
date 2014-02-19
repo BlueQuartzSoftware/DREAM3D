@@ -130,7 +130,9 @@ class DREAM3DLib_EXPORT QFilterParametersWriter : public AbstractFilterParameter
 
     virtual int writeValue(const QString name, IntVec3_t v);
     virtual int writeValue(const QString name, FloatVec3_t v);
-    virtual int writeValue(const QString name, QVector<ComparisonInput_t> v);
+
+    virtual int writeValue(const QString name, ComparisonInput_t comp);
+    virtual int writeValue(const QString name, ComparisonInputs v);
 
     virtual int writeValue(const QString name, QVector<AxisAngleInput_t> v);
 
@@ -142,7 +144,7 @@ class DREAM3DLib_EXPORT QFilterParametersWriter : public AbstractFilterParameter
   protected:
     QFilterParametersWriter();
     virtual int writeValue(const QString name, AxisAngleInput_t v, int notUsed);
-    virtual int writeValue(const QString name, ComparisonInput_t v, int notUsed);
+
 
 
   private:

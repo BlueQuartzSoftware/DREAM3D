@@ -38,21 +38,52 @@
 
 
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/IOFilters/ReadH5Ebsd.h"
+
 #include "DREAM3DWidgetsLib/Widgets/PipelineFilterWidget.h"
 
-#include "DREAM3DWidgetsLib/ui_ReadH5EbsdWidget.h"
+
+
+#include "OrientationAnalysis/ui_ReadH5EbsdWidget.h"
 
 class QualityMetricTableModel;
-
+class ReadH5Ebsd;
 
 class ReadH5EbsdWidget : public QWidget, private Ui::ReadH5EbsdWidget
 {
     Q_OBJECT
   public:
+    /**
+    * @brief Constructor
+    * @param parameter The FilterParameter object that this widget represents
+    * @param filter The instance of the filter that this parameter is a part of
+    * @param parent The parent QWidget for this Widget
+    */
     ReadH5EbsdWidget(FilterParameter* parameter, AbstractFilter* filter = NULL, QWidget* parent = NULL);
+
     virtual ~ReadH5EbsdWidget();
 
+    /**
+     * @brief Initializes some of the GUI elements with selections or other GUI related items
+     */
+    virtual void setupGui();
+
+  public slots:
+    //void widgetChanged(const QString& msg);
+    void beforePreflight();
+    void afterPreflight();
+    void filterNeedsInputParameters(AbstractFilter* filter);
+
+  signals:
+    void errorSettingFilterParameter(const QString& msg);
+    void parametersChanged();
+
+  protected slots:
+    void on_m_InputFileBtn_clicked();
+    void on_m_InputFile_textChanged(const QString & text);
+    void on_m_CellList_itemClicked(QListWidgetItem * item);
+    void on_m_DataArraysCheckBox_stateChanged(int state);
+
+#if 0
     virtual AbstractFilter::Pointer getFilter(bool defaultValues);
 
     virtual void writeOptions(QSettings &prefs);
@@ -65,8 +96,7 @@ class ReadH5EbsdWidget : public QWidget, private Ui::ReadH5EbsdWidget
     void setupGui();
     QString  getInputFile();
 
-    void resetGuiFileInfoWidgets();
-    void updateFileInfoWidgets();
+
 
     Q_PROPERTY(int ZStartIndex READ getZStartIndex WRITE setZStartIndex)
     void setZStartIndex(int value) { this->m_ZStartIndex->setValue(value); emit parametersChanged();}
@@ -81,33 +111,73 @@ class ReadH5EbsdWidget : public QWidget, private Ui::ReadH5EbsdWidget
     QString getRefFrameZDir() { return this->m_RefFrameZDir->text(); }
 
     virtual void openHtmlHelpFile();
-    virtual void getGuiParametersFromFilter(AbstractFilter* filt);
+
 
   public slots:
-    void setInputFile(const QString &v);
+   // void setInputFile(const QString &v);
     void arraySelectionWidgetChanged();
 
-  protected slots:
-    void on_m_InputFileBtn_clicked();
-    void on_m_InputFile_textChanged(const QString & text);
+#endif
 
   protected:
+    static void setOpenDialogLastDirectory(QString val) { m_OpenDialogLastDirectory = val; }
+    static QString getOpenDialogLastDirectory() { return m_OpenDialogLastDirectory; }
+
+
+    /**
+     * @brief setInputFile
+     * @param v
+     */
+    void setInputFile(const QString &v);
+
+    /**
+     * @brief setWidgetListEnabled
+     */
+    void setWidgetListEnabled(bool v);
+
+    /**
+     * @brief verifyPathExists
+     * @param outFilePath
+     * @param lineEdit
+     * @return
+     */
     bool verifyPathExists(QString outFilePath, QLineEdit* lineEdit);
 
-  signals:
-    void errorSettingFilterParameter(const QString& msg);
-    void parametersChanged();
+    /**
+     * @brief resetGuiFileInfoWidgets
+     */
+    void resetGuiFileInfoWidgets();
+
+    /**
+     * @brief updateFileInfoWidgets
+     */
+    void updateFileInfoWidgets();
+
+
+    /**
+     * @brief getSelectedArrayNames
+     * @return
+     */
+    QSet<QString> getSelectedArrayNames();
+
+    /**
+    * @brief getSelectedEnsembleNames
+    * @return
+    */
+    QSet<QString> getSelectedEnsembleNames();
+
+    void updateModelFromFilter(QSet<QString> &arrayNames, bool setChecked = false);
+
 
   private:
-    AbstractFilter*   m_Filter;
-    FilterParameter*  m_FilterParameter;
-    float                        sampleTransAngle;
-    std::vector<float>           sampleTransAxis;
-    float                        eulerTransAngle;
-    std::vector<float>           eulerTransAxis;
-
-    QString m_FilterGroup;
+    ReadH5Ebsd*         m_Filter;
+    FilterParameter*          m_FilterParameter;
+    QList<QWidget*>             m_WidgetList;
+    AxisAngleInput_t m_SampleTransformation;
+    AxisAngleInput_t m_EulerTransformation;
     bool m_Version4Warning;
+    static QString								m_OpenDialogLastDirectory;
+    bool m_DidCausePreflight;
 
     ReadH5EbsdWidget(const ReadH5EbsdWidget&); // Copy Constructor Not Implemented
     void operator=(const ReadH5EbsdWidget&); // Operator '=' Not Implemented

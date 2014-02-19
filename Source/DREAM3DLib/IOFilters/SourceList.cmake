@@ -38,8 +38,6 @@ set(_PublicFilters
   PhReader
   PhWriter
   RawBinaryReader
-  ReadH5Ebsd
-  ReadOrientationData
   SPParksWriter
   SurfaceMeshToNodesTrianglesEdges
   SurfaceMeshToNonconformalVtk

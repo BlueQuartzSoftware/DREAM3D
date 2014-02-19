@@ -187,11 +187,13 @@ class DREAM3DLib_EXPORT AbstractFilter : public Observable
     void setCancel(bool value);
 
 
+#if 0
   signals:
     void updateFilterParameters(AbstractFilter* filter);
     void parametersChanged();
     void preflightAboutToExecute();
     void preflightExecuted();
+#endif
 
   protected:
     AbstractFilter();

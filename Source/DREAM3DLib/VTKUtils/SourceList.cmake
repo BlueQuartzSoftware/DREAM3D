@@ -15,7 +15,7 @@ set(DREAM3DLib_VTKUtils_Moc_HDRS
 )
 # --------------------------------------------------------------------
 # Run Qts automoc program to generate some source files that get compiled
-QT4_WRAP_CPP( DREAM3DLib_VTKUtils_Generated_MOC_SRCS ${DREAM3DLib_VTKUtils_Moc_HDRS})
+#QT4_WRAP_CPP( DREAM3DLib_VTKUtils_Generated_MOC_SRCS ${DREAM3DLib_VTKUtils_Moc_HDRS})
 
 
 
