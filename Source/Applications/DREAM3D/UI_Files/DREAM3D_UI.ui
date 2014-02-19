@@ -21,11 +21,25 @@
   </property>
   <property name="styleSheet">
    <string notr="true"> QStatusBar {
-     background: rgb(123, 123, 123);
+     background: rgb(80, 80, 80);
      color: white;
-     font-style: bold;
  }
-</string>
+
+ QStatusBar QToolButton {
+	font: bold 12pt &quot;Arial&quot;;
+     border: 1px solid #8f8f91;
+     border-radius: 3px;
+	color: rgb(255, 255, 255);
+	background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 rgba(103, 103, 103, 255), stop:1 rgba(158, 158, 158, 255));
+     min-width: 80px;
+	min-height: 20px;
+ }
+
+ QStatusBar QToolButton:checked {
+	color: rgb(0, 0, 0);
+	background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 rgba(210, 210, 210, 255), stop:1 rgba(225, 225, 225, 255));
+ }
+sss</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <property name="maximumSize">

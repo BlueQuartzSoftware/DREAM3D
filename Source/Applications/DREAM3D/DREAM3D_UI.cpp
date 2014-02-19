@@ -450,7 +450,7 @@ void DREAM3D_UI::setupGui()
   makeStatusBarButton("Filters", filterListDockWidget, 0);
   makeStatusBarButton("Filter Library", filterLibraryDockWidget, 1);
   makeStatusBarButton("Favorites", documentsDockWidget , 2);
-  makeStatusBarButton("PreBuilt", prebuiltPipelinesDockWidget, 3);
+  makeStatusBarButton("Prebuilt", prebuiltPipelinesDockWidget, 3);
   makeStatusBarButton("Issues", issuesDockWidget, 4);
 
 
@@ -490,14 +490,13 @@ void DREAM3D_UI::makeStatusBarButton(QString text, QDockWidget* dockWidget, int 
   btn->setText(text);
   btn->setCheckable(true);
 
-#if 0
-  btn->setStyleSheet(QString::fromUtf8("QToolButton { color: black; border-radius: 2px; font-size: 12px; font-style: bold;\n"
-                                       "	background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 rgba(150, 150, 150, 255), stop:0.497537 rgba(225, 225, 225, 255), stop:0.517241 rgba(190, 190, 190, 255), stop:0.990148 rgba(160, 160, 160, 255));\n"
-                                       "selection-background-color: rgb(100, 100, 100);\n"
-                                       "}"));
-#endif
+  // This sets up when the button is changed, the dock widget will change visibility
   connect(btn, SIGNAL(toggled(bool)),
           dockWidget, SLOT(setVisible(bool)));
+  // This sets up when the dock widget changees visibility the button changes
+  connect(dockWidget, SIGNAL(visibilityChanged(bool)),
+          btn, SLOT(setChecked(bool)));
+
   btn->setChecked(!dockWidget->isHidden());
   statusBar()->insertPermanentWidget(index, btn, 0);
 }
@@ -941,5 +940,5 @@ void DREAM3D_UI::versionCheckReply(UpdateCheckData* dataObj)
 // -----------------------------------------------------------------------------
 void DREAM3D_UI::on_actionShow_Filter_Library_triggered()
 {
-    filterLibraryDockWidget->setVisible(true);
+  filterLibraryDockWidget->setVisible(true);
 }

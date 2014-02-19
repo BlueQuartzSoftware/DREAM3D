@@ -196,7 +196,7 @@ void PipelineFilterWidget::initialize(AbstractFilter::Pointer filter)
 // -----------------------------------------------------------------------------
 PipelineFilterWidget::~PipelineFilterWidget()
 {
- // std::cout << "~PipelineFilterWidget() " << m_Filter->getNameOfClass().toStdString() << std::endl;
+  // std::cout << "~PipelineFilterWidget() " << m_Filter->getNameOfClass().toStdString() << std::endl;
 }
 
 // -----------------------------------------------------------------------------
@@ -381,7 +381,7 @@ void PipelineFilterWidget::updateWidgetStyle()
 {
   QString style;
 
-  style.append("QFrame#PipelineFilterWidget\n {\n");
+  style.append("PipelineFilterWidget {\n");
 
   style.append("background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 rgba(185, 185, 185, 255), stop:0.5 rgba(226, 226, 226, 255), stop:1 rgba(150, 150, 150, 255));\n");
 
@@ -407,8 +407,12 @@ void PipelineFilterWidget::updateWidgetStyle()
 
   style.append("border-radius: 10px;");
   style.append("padding: 0 0 0 0px;");
+  style.append("}\n");
+
+  style.append("QLabel\n {\n");
+
 #if defined(Q_WS_WIN)
-  style.append("font: 50 italic 8pt \"Arial\";");
+  style.append("font: 75 italic 10pt \"Arial\";");
 #elif defined(Q_WS_MAC)
   style.append("font: 100 italic 12pt \"Arial\";");
 #else

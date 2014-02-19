@@ -66,6 +66,7 @@ class DREAM3DWidgetsLib_EXPORT FilterListDockWidget : public QDockWidget, privat
   signals:
 
     void filterItemDoubleClicked(const QString& filterName);
+  //  void visibilityChanged(bool visible); // Reimplemented from superclass
 
 
   protected:

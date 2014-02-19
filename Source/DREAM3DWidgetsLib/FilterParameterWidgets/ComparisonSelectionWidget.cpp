@@ -64,9 +64,9 @@ ComparisonSelectionWidget::~ComparisonSelectionWidget()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QVector<ComparisonInput_t> ComparisonSelectionWidget::getComparisonInputs()
+ComparisonInputs ComparisonSelectionWidget::getComparisonInputs()
 {
-  QVector<ComparisonInput_t> comps;
+  ComparisonInputs comps;
   if (m_ComparisonSelectionTableModel == NULL) { return comps; }
 
   int filterCount = m_ComparisonSelectionTableModel->rowCount();
@@ -81,12 +81,10 @@ QVector<ComparisonInput_t> ComparisonSelectionWidget::getComparisonInputs()
     comp.arrayName = featureNames[i];
     comp.compOperator = featureOperators[i];
     comp.compValue = featureValues[i];
-    comps.push_back(comp);
+    comps.addInput(comp);
   }
   return comps;
 }
-
-
 
 // -----------------------------------------------------------------------------
 //
@@ -94,7 +92,7 @@ QVector<ComparisonInput_t> ComparisonSelectionWidget::getComparisonInputs()
 void ComparisonSelectionWidget::setupGui()
 {
   qRegisterMetaType<ComparisonInput_t>();
-
+  qRegisterMetaType<ComparisonInputs>();
 
   // Catch when the filter is about to execute the preflight
   connect(m_Filter, SIGNAL(preflightAboutToExecute()),

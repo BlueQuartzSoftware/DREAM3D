@@ -107,7 +107,7 @@ class ComparisonSelectionWidget : public QWidget, private Ui::ComparisonSelectio
      * @brief getComparisonInputs
      * @return
      */
-    QVector<ComparisonInput_t> getComparisonInputs();
+    ComparisonInputs getComparisonInputs();
 
   protected:
     void populateComboBoxes();
