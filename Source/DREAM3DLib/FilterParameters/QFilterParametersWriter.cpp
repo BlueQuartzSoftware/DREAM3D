@@ -499,7 +499,9 @@ int QFilterParametersWriter::writeValue(const QString name, ComparisonInputs v)
   {
     ComparisonInput_t d = v[i];
     m_Prefs->setArrayIndex(i);
-    m_Prefs->setValue("ArrayName", d.arrayName);
+    m_Prefs->setValue("DataContainerName", d.dataContainerName);
+    m_Prefs->setValue("AttributeMatrixName", d.attributeMatrixName);
+    m_Prefs->setValue("AttributeArrayName", d.attributeArrayName);
     m_Prefs->setValue("CompOperator", d.compOperator);
     m_Prefs->setValue("CompValue", d.compValue);
   }

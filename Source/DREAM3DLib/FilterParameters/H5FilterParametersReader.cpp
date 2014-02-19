@@ -542,7 +542,7 @@ FloatVec3_t H5FilterParametersReader::readFloatVec3(const QString name, FloatVec
 // -----------------------------------------------------------------------------
 ComparisonInput_t H5FilterParametersReader::readComparisonInput(const QString name, ComparisonInput_t defaultValue, int vectorPos)
 {
- // QVector<ComparisonInput_t> comps(1, defaultValue);
+  // QVector<ComparisonInput_t> comps(1, defaultValue);
   ComparisonInputs comps;
   ComparisonInputs values = readComparisonInputs(name, comps);
   if(values.size() >= 1)
@@ -585,15 +585,23 @@ ComparisonInputs H5FilterParametersReader::readComparisonInputs(const QString na
     QStringList tokens = strVector[i].split(',', QString::SkipEmptyParts);
     if(tokens.size() >= 1)
     {
-      v.arrayName = tokens[0];
+      v.dataContainerName = tokens[0];
     }
     if(tokens.size() >= 2)
     {
-      v.compOperator = QString(tokens[1]).toInt(&ok, 10);
+      v.attributeMatrixName = tokens[1];
     }
     if(tokens.size() >= 3)
     {
-      v.compValue = QString(tokens[2]).toDouble(&ok);
+      v.attributeArrayName = tokens[2];
+    }
+    if(tokens.size() >= 4)
+    {
+      v.compOperator = QString(tokens[3]).toInt(&ok, 10);
+    }
+    if(tokens.size() >= 5)
+    {
+      v.compValue = QString(tokens[4]).toDouble(&ok);
     }
     values.addInput(v);
   }

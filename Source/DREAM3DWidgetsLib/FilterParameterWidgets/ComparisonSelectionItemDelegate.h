@@ -79,6 +79,9 @@ class ComparisonSelectionItemDelegate : public QStyledItemDelegate
     QStringList m_FeatureList;
     int m_NumberOfPhases;
 
+    ComparisonSelectionItemDelegate(const ComparisonSelectionItemDelegate&); // Copy Constructor Not Implemented
+    void operator=(const ComparisonSelectionItemDelegate&); // Operator '=' Not Implemented
+
 };
 
 #endif /*  */

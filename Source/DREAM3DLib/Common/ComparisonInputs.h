@@ -42,7 +42,11 @@
 
 #include "DREAM3DLib/DREAM3DLib.h"
 
-typedef struct { QString arrayName; int compOperator; double compValue; } ComparisonInput_t;
+typedef struct { QString dataContainerName;
+                 QString attributeMatrixName;
+                 QString attributeArrayName;
+                 int compOperator;
+                 double compValue; } ComparisonInput_t;
 
 /**
  * @class ComparisonInputs ComparisonInputs.h DREAM3DLib/Common/ComparisonInputs.h
@@ -58,13 +62,17 @@ class DREAM3DLib_EXPORT ComparisonInputs : public QObject
   public:
     ComparisonInputs();
     ComparisonInputs(const ComparisonInputs& rhs);
-    explicit ComparisonInputs(ComparisonInputs& rhs);
+    //explicit ComparisonInputs(ComparisonInputs& rhs);
 
     virtual ~ComparisonInputs();
 
     int size();
 
-    void addInput(const QString arrayName, int compOperator, double compValue);
+    void addInput(const QString dataContainerName,
+                 const QString attributeMatrixName,
+                 const QString arrayName,
+                 int compOperator,
+                 double compValue);
     void addInput(const ComparisonInput_t& input);
 
     ComparisonInput_t& getInput(int index);

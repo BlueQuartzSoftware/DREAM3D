@@ -420,7 +420,7 @@ int H5FilterParametersWriter::writeValue(const QString name, ComparisonInputs v)
   // to mark the end of each ComparisonOpertor struct
   for(int i = 0; i < numQFilters; i++)
   {
-    ss << v[i].arrayName << "," <<  v[i].compOperator << "," << v[i].compValue << "\n";
+    ss << v[i].dataContainerName << "," << v[i].attributeMatrixName << "," << v[i].attributeArrayName << "," <<  v[i].compOperator << "," << v[i].compValue << "\n";
   }
 
   // Write the data set to the file and attach an attribute that says how many there were.

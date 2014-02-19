@@ -58,10 +58,10 @@ ComparisonInputs::ComparisonInputs(const ComparisonInputs& rhs)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ComparisonInputs::ComparisonInputs(ComparisonInputs& rhs)
-{
-  m_Inputs = rhs.m_Inputs;
-}
+//ComparisonInputs::ComparisonInputs(ComparisonInputs& rhs)
+//{
+//  m_Inputs = rhs.m_Inputs;
+//}
 
 
 // -----------------------------------------------------------------------------
@@ -83,9 +83,15 @@ int ComparisonInputs::size()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ComparisonInputs::addInput(const QString arrayName, int compOperator, double compValue)
+void ComparisonInputs::addInput(const QString dataContainerName, const QString attributeMatrixName, const QString arrayName, int compOperator, double compValue)
 {
-
+  ComparisonInput_t v;
+  v.dataContainerName = dataContainerName;
+  v.attributeMatrixName = attributeMatrixName;
+  v.attributeArrayName = arrayName;
+  v.compOperator = compOperator;
+  v.compValue = compValue;
+  m_Inputs.push_back(v);
 }
 
 // -----------------------------------------------------------------------------
@@ -93,7 +99,7 @@ void ComparisonInputs::addInput(const QString arrayName, int compOperator, doubl
 // -----------------------------------------------------------------------------
 void ComparisonInputs::addInput(const ComparisonInput_t& input)
 {
-
+  m_Inputs.push_back(input);
 }
 
 // -----------------------------------------------------------------------------

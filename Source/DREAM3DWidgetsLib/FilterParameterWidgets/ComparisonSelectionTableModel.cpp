@@ -36,7 +36,7 @@
 
 #include "ComparisonSelectionTableModel.h"
 
-
+#include <QtCore/QDebug>
 #include <QApplication>
 #include <QtGui/QStyleOptionComboBox>
 #include <QtGui/QAbstractItemDelegate>
@@ -403,6 +403,7 @@ void ComparisonSelectionTableModel::setNumberOfPhases(int n)
 // -----------------------------------------------------------------------------
 QAbstractItemDelegate* ComparisonSelectionTableModel::getItemDelegate()
 {
+  qDebug() << this << "::getItemDelegate()";
   return new ComparisonSelectionItemDelegate(m_PossibleFeatures, m_NumberOfPhases);
 }
 

@@ -690,7 +690,9 @@ ComparisonInput_t QFilterParametersReader::readComparisonInput(const QString nam
   ComparisonInput_t v;
   m_Prefs->beginReadArray(name);
   m_Prefs->setArrayIndex(arrayIndex);
-  v.arrayName = m_Prefs->value("ArrayName").toString();
+  v.dataContainerName = m_Prefs->value("DataContainerName").toString();
+  v.attributeMatrixName = m_Prefs->value("AttributeMatrixName").toString();
+  v.attributeArrayName = m_Prefs->value("AttributeArrayName").toString();
   v.compOperator = m_Prefs->value("CompOperator").toInt(&ok);
   if(!ok) { m_Prefs->endArray(); m_Prefs->endArray(); return defaultValue; }
   v.compValue = m_Prefs->value("CompValue").toDouble(&ok);
@@ -715,7 +717,9 @@ ComparisonInputs QFilterParametersReader::readComparisonInputs(const QString nam
   for(int i = 0; i < count; i++)
   {
     m_Prefs->setArrayIndex(i);
-    v.arrayName = m_Prefs->value("ArrayName").toString();
+    v.dataContainerName = m_Prefs->value("DataContainerName").toString();
+    v.attributeMatrixName = m_Prefs->value("AttributeMatrixName").toString();
+    v.attributeArrayName = m_Prefs->value("AttributeArrayName").toString();
     v.compOperator = m_Prefs->value("CompOperator").toInt(&ok);
     if(!ok) { continue; }
     v.compValue = m_Prefs->value("CompValue").toDouble(&ok);
