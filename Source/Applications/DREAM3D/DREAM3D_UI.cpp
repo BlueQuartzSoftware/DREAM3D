@@ -329,13 +329,16 @@ void DREAM3D_UI::readLastPipeline()
 // -----------------------------------------------------------------------------
 void DREAM3D_UI::writeSettings()
 {
+  #if defined (Q_OS_MAC)
+    QSettings::Format format = QSettings::NativeFormat;
+  #else
+    QSettings::Format format = QSettings::IniFormat;
+  #endif
   QString filePath;
   {
-#if defined (Q_OS_MAC)
-    QSettings prefs(QSettings::NativeFormat, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName());
-#else
-    QSettings prefs(QSettings::IniFormat, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName());
-#endif
+
+    QSettings prefs(format, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName());
+
     filePath = prefs.fileName();
     // Have the pipeline builder write its settings to the prefs file
     writeWindowSettings(prefs);
@@ -344,7 +347,7 @@ void DREAM3D_UI::writeSettings()
   }
 
   QFileInfo fi(filePath);
-  pipelineViewWidget->savePipeline(filePath, fi.baseName(), QSettings::NativeFormat);
+  pipelineViewWidget->savePipeline(filePath, fi.baseName(), format);
 }
 
 // -----------------------------------------------------------------------------
