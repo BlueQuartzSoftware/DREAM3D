@@ -259,7 +259,7 @@ void DREAM3D_UI::readWindowSettings()
     }
     readDockWidgetSettings(prefs, filterListDockWidget);
     readDockWidgetSettings(prefs, filterLibraryDockWidget);
-    readDockWidgetSettings(prefs, documentsDockWidget);
+    readDockWidgetSettings(prefs, favoritesDockWidget);
     readDockWidgetSettings(prefs, prebuiltPipelinesDockWidget);
     readDockWidgetSettings(prefs, issuesDockWidget);
 
@@ -376,7 +376,7 @@ void DREAM3D_UI::writeWindowSettings(QSettings &prefs)
 
   writeDockWidgetSettings(prefs, filterListDockWidget);
   writeDockWidgetSettings(prefs, filterLibraryDockWidget);
-  writeDockWidgetSettings(prefs, documentsDockWidget);
+  writeDockWidgetSettings(prefs, favoritesDockWidget);
   writeDockWidgetSettings(prefs, prebuiltPipelinesDockWidget);
   writeDockWidgetSettings(prefs, issuesDockWidget);
 
@@ -459,7 +459,7 @@ void DREAM3D_UI::setupGui()
   m_FilterLibraryBtn = new QToolButton(this);
   makeStatusBarButton("Filter Library", filterLibraryDockWidget, m_FilterLibraryBtn, 1);
   m_FavoritesBtn = new QToolButton(this);
-  makeStatusBarButton("Favorites", documentsDockWidget, m_FavoritesBtn, 2);
+  makeStatusBarButton("Favorites", favoritesDockWidget, m_FavoritesBtn, 2);
   m_PrebuiltBtn = new QToolButton(this);
   makeStatusBarButton("Prebuilt", prebuiltPipelinesDockWidget, m_PrebuiltBtn, 3);
   m_IssuesBtn = new QToolButton(this);
@@ -468,7 +468,7 @@ void DREAM3D_UI::setupGui()
 
   // Make the connections between the gui elements
   filterLibraryDockWidget->connectFilterList(filterListDockWidget);
-  documentsDockWidget->connectFilterList(filterListDockWidget);
+  favoritesDockWidget->connectFilterList(filterListDockWidget);
   prebuiltPipelinesDockWidget->connectFilterList(filterListDockWidget);
 
   // Hook up the signals from the various docks to the PipelineViewWidget that will either add a filter
@@ -477,7 +477,7 @@ void DREAM3D_UI::setupGui()
           pipelineViewWidget, SLOT(addFilter(const QString&)) );
   connect(prebuiltPipelinesDockWidget, SIGNAL(pipelineFileActivated(QString)),
           pipelineViewWidget, SLOT(loadPipelineFile(QString)) );
-  connect(documentsDockWidget, SIGNAL(pipelineFileActivated(QString)),
+  connect(favoritesDockWidget, SIGNAL(pipelineFileActivated(QString)),
           pipelineViewWidget, SLOT(loadPipelineFile(QString)) );
 
 
@@ -523,49 +523,6 @@ void DREAM3D_UI::setLoadedPlugins(QVector<DREAM3DPluginInterface::Pointer> plugi
   m_LoadedPlugins = plugins;
 }
 
-
-#if 0
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void DREAM3D_UI::on_action_OpenStatsGenerator_triggered()
-{
-  QString appPath = qApp->applicationDirPath();
-
-  QDir appDir = QDir(appPath);
-  QString s("file://");
-
-#if defined(Q_OS_WIN)
-  s = s + "/"; // Need the third slash on windows because file paths start with a drive letter
-#elif defined(Q_OS_MAC)
-  if (appDir.dirName() == "MacOS")
-  {
-    appDir.cdUp();
-    appDir.cdUp();
-    appDir.cdUp();
-  }
-#else
-  // We are on Linux - I think
-  appDir.cdUp();
-#endif
-
-  QString appName = "StatsGenerator";
-#ifdef QT_DEBUG
-  appName.append("_debug");
-#endif
-
-
-#if defined(Q_OS_WIN)
-  s = s + appDir.absolutePath() + QDir::separator() + appName + ".exe";
-#elif defined(Q_OS_MAC)
-  s = s + appDir.absolutePath() + QDir::separator() + appName  + ".app";
-#else
-  s = s + appDir.absolutePath() + QDir::separator() + appName  + ".sh";
-#endif
-  QDesktopServices::openUrl(QUrl(s));
-
-}
-#endif
 
 // -----------------------------------------------------------------------------
 //
@@ -954,7 +911,6 @@ void DREAM3D_UI::versionCheckReply(UpdateCheckData* dataObj)
 void DREAM3D_UI::on_actionShow_Filter_Library_triggered()
 {
   updateAndSyncDockWidget(actionShow_Filter_Library, filterLibraryDockWidget, m_FilterLibraryBtn);
-
 }
 
 // -----------------------------------------------------------------------------
@@ -963,12 +919,75 @@ void DREAM3D_UI::on_actionShow_Filter_Library_triggered()
 void DREAM3D_UI::on_filterLibraryDockWidget_visibilityChanged(bool b)
 {
   qDebug() << "on_filterLibraryDockWidget_visibilityChanged";
-  //actionShow_Filter_Library
-  //filterLibraryDockWidget
-  //m_FilterLibraryBtn
-  filterLibraryDockWidget->blockSignals(true);
   updateAndSyncDockWidget(actionShow_Filter_Library, filterLibraryDockWidget, m_FilterLibraryBtn);
-  filterLibraryDockWidget->blockSignals(false);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DREAM3D_UI::on_actionShow_Filter_List_triggered()
+{
+  updateAndSyncDockWidget(actionShow_Filter_List, filterListDockWidget, m_FilterListBtn);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DREAM3D_UI::on_filterListDockWidget_visibilityChanged(bool b)
+{
+  qDebug() << "on_filterListDockWidget_visibilityChanged";
+  updateAndSyncDockWidget(actionShow_Filter_List, filterListDockWidget, m_FilterListBtn);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DREAM3D_UI::on_actionShow_Prebuilt_Pipelines_triggered()
+{
+  updateAndSyncDockWidget(actionShow_Prebuilt_Pipelines, prebuiltPipelinesDockWidget, m_PrebuiltBtn);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DREAM3D_UI::on_prebuiltPipelinesDockWidget_visibilityChanged(bool b)
+{
+  qDebug() << "on_prebuiltPipelinesDockWidget_visibilityChanged";
+  updateAndSyncDockWidget(actionShow_Prebuilt_Pipelines, prebuiltPipelinesDockWidget, m_PrebuiltBtn);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DREAM3D_UI::on_actionShow_Favorites_triggered()
+{
+  updateAndSyncDockWidget(actionShow_Favorites, favoritesDockWidget, m_FavoritesBtn);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DREAM3D_UI::on_favoritesDockWidget_visibilityChanged(bool b)
+{
+  qDebug() << "on_favoritesDockWidget_visibilityChanged";
+  updateAndSyncDockWidget(actionShow_Favorites, favoritesDockWidget, m_FavoritesBtn);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DREAM3D_UI::on_actionShow_Issues_triggered()
+{
+  updateAndSyncDockWidget(actionShow_Issues, issuesDockWidget, m_IssuesBtn);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DREAM3D_UI::on_issuesDockWidget_visibilityChanged(bool b)
+{
+  qDebug() << "on_issuesDockWidget_visibilityChanged";
+  updateAndSyncDockWidget(actionShow_Issues, issuesDockWidget, m_IssuesBtn);
 }
 
 // -----------------------------------------------------------------------------
@@ -976,7 +995,10 @@ void DREAM3D_UI::on_filterLibraryDockWidget_visibilityChanged(bool b)
 // -----------------------------------------------------------------------------
 void DREAM3D_UI::updateAndSyncDockWidget(QAction* action, QDockWidget* dock, QToolButton* btn)
 {
-  QString text = actionShow_Filter_Library->text();
+  action->blockSignals(true);
+  dock->blockSignals(true);
+  btn->blockSignals(true);
+  QString text = action->text();
   if(text.startsWith("Show"))
   {
     text = text.replace("Show", "Hide");
@@ -991,7 +1013,7 @@ void DREAM3D_UI::updateAndSyncDockWidget(QAction* action, QDockWidget* dock, QTo
     dock->setVisible(false);
     btn->setChecked(false);
   }
-
+  action->blockSignals(false);
+  dock->blockSignals(false);
+  btn->blockSignals(false);
 }
-
-

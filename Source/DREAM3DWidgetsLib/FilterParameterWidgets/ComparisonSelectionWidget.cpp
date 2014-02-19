@@ -228,12 +228,33 @@ void ComparisonSelectionWidget::populateComboBoxes()
   if(amIndex < 0 && amName.isEmpty() == false) { attributeMatrixList->addItem(amName); } // The name of the attributeMatrix was not found so just set the first one
   else {
     if(amIndex < 0) { amIndex = 0; }
+    // Set the selected index in the Attribute Matrix
     attributeMatrixList->setCurrentIndex(amIndex);
+    // Now based on that AttributeMatrix get a list the AttributeArrays 
     QStringList possibleArrays = generateAttributeArrayList();
+    // Push that list into the Table Model
     m_ComparisonSelectionTableModel->setPossibleFeatures(possibleArrays);
-    // Set the ItemDelegate for the table.
+    // Now that we have an updated list of names we need to Set the ItemDelegate for the table.
     QAbstractItemDelegate* aid = m_ComparisonSelectionTableModel->getItemDelegate();
     m_ComparisonSelectionTableView->setItemDelegate(aid);
+
+    // Now we need to actually get the selections from the filter instance
+    // which we have from above
+    
+    int count = comps.size();
+    // Create our inputs to directly set the table model
+    QVector<QString> featureNames(count);
+    QVector<float> featureValues(count);
+    QVector<int> featureOperators(count);
+    for (int i = 0; i < count; i++)
+    {
+      comp = comps[i];
+      featureNames[i] = comp.attributeArrayName;
+      featureValues[i] = comp.compValue;
+      featureOperators[i] = comp.compOperator;
+    }
+    // Now set the table data directly.
+    m_ComparisonSelectionTableModel->setTableData(featureNames, featureValues, featureOperators);
   }
   if(didBlock) { attributeMatrixList->blockSignals(false); didBlock = false; }
 

@@ -128,7 +128,7 @@ void OutputFileWidget::on_value_textChanged(const QString& text)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void OutputFileWidget::on_value_returnPressed()
+void OutputFileWidget::on_value_editingFinished()
 {
   emit parametersChanged();
 }

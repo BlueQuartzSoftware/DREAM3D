@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>939</width>
-    <height>673</height>
+    <width>953</width>
+    <height>805</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -49,16 +49,7 @@ sss</string>
     </size>
    </property>
    <layout class="QGridLayout" name="gridLayout">
-    <property name="leftMargin">
-     <number>0</number>
-    </property>
-    <property name="topMargin">
-     <number>0</number>
-    </property>
-    <property name="rightMargin">
-     <number>0</number>
-    </property>
-    <property name="bottomMargin">
+    <property name="margin">
      <number>0</number>
     </property>
     <item row="0" column="0">
@@ -134,8 +125,8 @@ color: white;
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>532</width>
-             <height>566</height>
+             <width>506</width>
+             <height>692</height>
             </rect>
            </property>
            <property name="sizePolicy">
@@ -215,8 +206,8 @@ border: 2px solid;
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>939</width>
-     <height>22</height>
+     <width>953</width>
+     <height>26</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -244,7 +235,7 @@ border: 2px solid;
     <addaction name="actionShow_Filter_Library"/>
     <addaction name="actionShow_Filter_List"/>
     <addaction name="actionShow_Prebuilt_Pipelines"/>
-    <addaction name="actionShowFavorites"/>
+    <addaction name="actionShow_Favorites"/>
     <addaction name="actionShow_Issues"/>
    </widget>
    <widget class="QMenu" name="menuPipeline">
@@ -268,7 +259,7 @@ border: 2px solid;
    <addaction name="menuHelp"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
-  <widget class="FavoritesDockWidget" name="documentsDockWidget">
+  <widget class="FavoritesDockWidget" name="favoritesDockWidget">
    <property name="windowTitle">
     <string>Favorite Pipelines</string>
    </property>
@@ -348,7 +339,7 @@ border: 2px solid;
     <string>Ctrl+Shift+S</string>
    </property>
   </action>
-  <action name="actionShowFavorites">
+  <action name="actionShow_Favorites">
    <property name="text">
     <string>Show Favorites</string>
    </property>

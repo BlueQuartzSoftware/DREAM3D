@@ -86,7 +86,7 @@ class DREAM3DWidgetsLib_EXPORT InputFileWidget : public QWidget, private Ui::Inp
     void filterNeedsInputParameters(AbstractFilter* filter);
 
     void on_value_textChanged(const QString& text);
-    void on_value_returnPressed();
+    void on_value_editingFinished();
 
     void on_selectBtn_clicked();
 

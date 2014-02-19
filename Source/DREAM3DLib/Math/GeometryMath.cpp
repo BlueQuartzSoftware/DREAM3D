@@ -152,7 +152,6 @@ void GeometryMath::FindBoundingBoxOfFaces(FaceArray::Pointer faces, Int32Dynamic
   ur.pos[1] = 0.0;
   ur.pos[2] = 0.0;
 
-  VertexArray::Vert_t a, b, c;
   VertexArray::Vert_t facell, faceur;
 
   int numFaces = faceIds.ncells;
@@ -191,7 +190,6 @@ void GeometryMath::FindBoundingBoxOfRotatedFaces(FaceArray::Pointer faces, Int32
   ur.pos[1] = 0.0;
   ur.pos[2] = 0.0;
 
-  VertexArray::Vert_t a, b, c;
   VertexArray::Vert_t facell, faceur;
   
   int numFaces = faceIds.ncells;
@@ -484,7 +482,6 @@ char GeometryMath::PointInPolyhedron(const FaceArray::Pointer faces,
   float ray[3];  /* Ray */
   VertexArray::Vert_t r;  /* Ray endpoint. */
   VertexArray::Vert_t p;  /* Intersection point; not used. */
-  VertexArray::Vert_t facell, faceur;
   int f, k = 0, crossings = 0;
   char code = '?';
   VertexArray::Vert_t a, b, c;

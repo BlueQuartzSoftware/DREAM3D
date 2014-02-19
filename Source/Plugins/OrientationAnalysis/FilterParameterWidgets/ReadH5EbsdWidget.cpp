@@ -175,11 +175,19 @@ void ReadH5EbsdWidget::on_m_InputFile_textChanged(const QString &text)
   setOpenDialogLastDirectory(m_InputFile->text());
   if (verifyPathExists(m_InputFile->text(), m_InputFile) )
   {
-    // This is a new file coming in so check the check box to select all the arrays
-   // m_DataArraysCheckBox->setCheckState(Qt::Checked);
-  }
 
-  m_DataArraysCheckBox->setCheckState(Qt::Unchecked);
+  }
+  else
+  {
+    m_CellList->blockSignals(true);
+    m_CellList->clear();
+    m_CellList->blockSignals(false);
+  }
+      updateFileInfoWidgets();
+  m_InputFile->blockSignals(true);
+  emit parametersChanged();
+   m_InputFile->blockSignals(false);
+  m_DataArraysCheckBox->setCheckState(Qt::Checked);
 }
 
 // -----------------------------------------------------------------------------

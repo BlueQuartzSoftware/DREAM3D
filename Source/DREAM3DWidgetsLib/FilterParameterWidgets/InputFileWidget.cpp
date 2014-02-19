@@ -124,7 +124,7 @@ bool InputFileWidget::verifyPathExists(QString filePath, QLineEdit* lineEdit)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void InputFileWidget::on_value_returnPressed()
+void InputFileWidget::on_value_editingFinished()
 {
   emit parametersChanged(); // This should force the preflight to run because we are emitting a signal
 }

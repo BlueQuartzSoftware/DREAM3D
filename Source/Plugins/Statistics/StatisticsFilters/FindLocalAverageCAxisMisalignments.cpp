@@ -177,7 +177,6 @@ void FindLocalAverageCAxisMisalignments::dataCheck()
   { m_CellParentIds = m_CellParentIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   // Feature Data
-
   if ( m_CalcUnbiasedAvg == true)
   {
 	m_UnbiasedLocalCAxisMisalignmentsPtr = newCellFeatureAttrMat->createNonPrereqArray<DataArray<float>, AbstractFilter, float>(this, m_UnbiasedLocalCAxisMisalignmentsArrayName, 0.0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
@@ -210,7 +209,6 @@ void FindLocalAverageCAxisMisalignments::dataCheck()
       m_CAxisMisalignmentList->resize(cellFeatureAttrMat->getNumTuples());
     }
   }
-
 
   if (m_CalcBiasedAvg == true)
   {
@@ -265,7 +263,6 @@ void FindLocalAverageCAxisMisalignments::execute()
 
   QVector<int32_t> NumUnbiasedFeaturesPerParent(numFeatures,0);
 
-
   if(m_CalcUnbiasedAvg == true)
   {
     NeighborList<int>& neighborlist = *m_NeighborList;
@@ -285,7 +282,6 @@ void FindLocalAverageCAxisMisalignments::execute()
     }
   }
 
-
   if (m_CalcBiasedAvg == true)
   {
     for(int i=1;i<numFeatures;i++)
@@ -298,7 +294,6 @@ void FindLocalAverageCAxisMisalignments::execute()
 
   for(int i=1;i<newNumFeatures;i++)
   {
-
     if (m_CalcBiasedAvg == true) m_LocalCAxisMisalignments[i] /= m_NumFeaturesPerParent[i];
     if (m_CalcUnbiasedAvg == true)
     {
