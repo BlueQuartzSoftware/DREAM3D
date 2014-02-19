@@ -78,7 +78,9 @@ ComparisonInputs ComparisonSelectionWidget::getComparisonInputs()
   for(int i = 0; i < filterCount; ++i)
   {
     ComparisonInput_t comp;
-    comp.arrayName = featureNames[i];
+    comp.dataContainerName = dataContainerList->currentText();
+    comp.attributeMatrixName = attributeMatrixList->currentText();
+    comp.attributeArrayName = featureNames[i];
     comp.compOperator = featureOperators[i];
     comp.compValue = featureValues[i];
     comps.addInput(comp);
@@ -96,15 +98,15 @@ void ComparisonSelectionWidget::setupGui()
 
   // Catch when the filter is about to execute the preflight
   connect(m_Filter, SIGNAL(preflightAboutToExecute()),
-    this, SLOT(beforePreflight()));
+          this, SLOT(beforePreflight()));
 
   // Catch when the filter is finished running the preflight
   connect(m_Filter, SIGNAL(preflightExecuted()),
-    this, SLOT(afterPreflight()));
+          this, SLOT(afterPreflight()));
 
   // Catch when the filter wants its values updated
   connect(m_Filter, SIGNAL(updateFilterParameters(AbstractFilter*)),
-    this, SLOT(filterNeedsInputParameters(AbstractFilter*)));
+          this, SLOT(filterNeedsInputParameters(AbstractFilter*)));
 
   if (m_FilterParameter == NULL)
   {
@@ -179,21 +181,19 @@ void ComparisonSelectionWidget::populateComboBoxes()
   // Grab what is currently selected
   QString curDcName = dataContainerList->currentText();
   QString curAmName = attributeMatrixList->currentText();
-//  QString curDaName = attributeArrayList->currentText();
+  //  QString curDaName = attributeArrayList->currentText();
 
   // Get what is in the filter
-  QString selectedPath = m_Filter->property(PROPERTY_NAME_AS_CHAR).toString();
+  ComparisonInputs comps = m_Filter->property(PROPERTY_NAME_AS_CHAR).value<ComparisonInputs>();
   // Split the path up to make sure we have a valid path separated by the "|" character
-
-  QString filtDcName;
-  QString filtAmName;
-//  QString filtDaName;
-  QStringList tokens = selectedPath.split(DREAM3D::PathSep);
-  if(tokens.size() == 3) {
-    filtDcName = tokens.at(0);
-    filtAmName = tokens.at(1);
-//    filtDaName = tokens.at(2);
+  ComparisonInput_t comp;
+  if(comps.size() > 0) {
+    comp = comps[0]; // Get the first threshold value;
   }
+  QString filtDcName = comp.dataContainerName;
+  QString filtAmName = comp.attributeMatrixName;
+  QString filtDaName = comp.attributeArrayName;
+  //QStringList tokens = selectedPath.split(DREAM3D::PathSep);
 
   // Now to figure out which one of these to use. If this is the first time through then what we picked up from the
   // gui will be empty strings because nothing is there. If there is something in the filter then we should use that.
@@ -204,7 +204,7 @@ void ComparisonSelectionWidget::populateComboBoxes()
 
   QString dcName = checkStringValues(curDcName, filtDcName);
   QString amName = checkStringValues(curAmName, filtAmName);
- // QString daName = checkStringValues(curDaName, filtDaName);
+  // QString daName = checkStringValues(curDaName, filtDaName);
 
   bool didBlock = false;
 
@@ -231,6 +231,9 @@ void ComparisonSelectionWidget::populateComboBoxes()
     attributeMatrixList->setCurrentIndex(amIndex);
     QStringList possibleArrays = generateAttributeArrayList();
     m_ComparisonSelectionTableModel->setPossibleFeatures(possibleArrays);
+    // Set the ItemDelegate for the table.
+    QAbstractItemDelegate* aid = m_ComparisonSelectionTableModel->getItemDelegate();
+    m_ComparisonSelectionTableView->setItemDelegate(aid);
   }
   if(didBlock) { attributeMatrixList->blockSignals(false); didBlock = false; }
 
@@ -388,7 +391,7 @@ void ComparisonSelectionWidget::setComparisons(QVector<ComparisonInput_t> compar
   //bool ok = false;
   for(int i = 0; i < count; ++i)
   {
-    arrayNames[i] = (comparisons[i].arrayName);
+    arrayNames[i] = (comparisons[i].attributeArrayName);
     compOperators[i] = comparisons[i].compOperator;
     compValues[i] = comparisons[i].compValue;
   }
@@ -401,10 +404,11 @@ void ComparisonSelectionWidget::setComparisons(QVector<ComparisonInput_t> compar
 // -----------------------------------------------------------------------------
 void ComparisonSelectionWidget::filterNeedsInputParameters(AbstractFilter* filter)
 {
- // qDebug() << "DataContainerArrayProxyWidget::filterNeedsInputParameters(AbstractFilter* filter)";
+  // qDebug() << "DataContainerArrayProxyWidget::filterNeedsInputParameters(AbstractFilter* filter)";
 
   QVariant var;
-  //var.setValue(m_DcaProxy);
+  ComparisonInputs comps = getComparisonInputs();
+  var.setValue(comps);
   bool ok = false;
   // Set the value into the Filter
   ok = filter->setProperty(PROPERTY_NAME_AS_CHAR, var);
@@ -446,7 +450,7 @@ void ComparisonSelectionWidget::beforePreflight()
 // -----------------------------------------------------------------------------
 void ComparisonSelectionWidget::afterPreflight()
 {
- // qDebug() << m_Filter->getNameOfClass() << " DataContainerArrayProxyWidget::afterPreflight()";
+  // qDebug() << m_Filter->getNameOfClass() << " DataContainerArrayProxyWidget::afterPreflight()";
 }
 
 
@@ -462,7 +466,7 @@ void ComparisonSelectionWidget::populateArrayNames(DataContainerArray::Pointer d
 #endif
   if (m_ArrayListType >= CellListType && m_ArrayListType <= FaceListType )
   {
-//    populateVolumeArrayNames(vldc);
+    //    populateVolumeArrayNames(vldc);
   }
   else if (m_ArrayListType >= FeatureListType && m_ArrayListType <= FaceListType)
   {

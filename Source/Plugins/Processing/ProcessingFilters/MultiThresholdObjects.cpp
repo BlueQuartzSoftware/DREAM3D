@@ -174,7 +174,7 @@ void MultiThresholdObjects::execute()
 
     ThresholdFilterHelper filter(static_cast<DREAM3D::Comparison::Enumeration>(comp_0.compOperator), comp_0.compValue, m_DestinationPtr.lock().get());
 
-    err = filter.execute(m->getAttributeMatrix(getAttributeMatrixName())->getAttributeArray(comp_0.arrayName).get(), m_DestinationPtr.lock().get());
+    err = filter.execute(m->getAttributeMatrix(getAttributeMatrixName())->getAttributeArray(comp_0.attributeArrayName).get(), m_DestinationPtr.lock().get());
     if (err < 0)
     {
       setErrorCondition(-13001);
@@ -192,7 +192,7 @@ void MultiThresholdObjects::execute()
 
     ThresholdFilterHelper filter(static_cast<DREAM3D::Comparison::Enumeration>(compRef.compOperator), compRef.compValue, currentArrayPtr.get());
 
-    err = filter.execute(m->getAttributeMatrix(getAttributeMatrixName())->getAttributeArray(compRef.arrayName).get(), currentArrayPtr.get());
+    err = filter.execute(m->getAttributeMatrix(getAttributeMatrixName())->getAttributeArray(compRef.attributeArrayName).get(), currentArrayPtr.get());
     if (err < 0)
     {
       setErrorCondition(-13002);
