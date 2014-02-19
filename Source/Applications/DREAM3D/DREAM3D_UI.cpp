@@ -969,6 +969,38 @@ void DREAM3D_UI::on_filterLibraryDockWidget_visibilityChanged(bool b)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void DREAM3D_UI::on_actionShow_Filter_List_triggered()
+{
+    filterListDockWidget->setVisible(true);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DREAM3D_UI::on_actionShow_Prebuilt_Pipelines_triggered()
+{
+    prebuiltPipelinesDockWidget->setVisible(true);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DREAM3D_UI::on_actionShow_Favorites_triggered()
+{
+    favoritesDockWidget->setVisible(true);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DREAM3D_UI::on_actionShow_Issues_triggered()
+{
+    issuesDockWidget->setVisible(true);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void DREAM3D_UI::updateAndSyncDockWidget(QAction* action, QDockWidget* dock, QToolButton* btn)
 {
   QString text = actionShow_Filter_Library->text();
