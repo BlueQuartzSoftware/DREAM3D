@@ -949,7 +949,6 @@ void DREAM3D_UI::versionCheckReply(UpdateCheckData* dataObj)
 void DREAM3D_UI::on_actionShow_Filter_Library_triggered()
 {
   updateAndSyncDockWidget(actionShow_Filter_Library, filterLibraryDockWidget, m_FilterLibraryBtn);
-
 }
 
 // -----------------------------------------------------------------------------
@@ -971,7 +970,16 @@ void DREAM3D_UI::on_filterLibraryDockWidget_visibilityChanged(bool b)
 // -----------------------------------------------------------------------------
 void DREAM3D_UI::on_actionShow_Filter_List_triggered()
 {
-    filterListDockWidget->setVisible(true);
+  updateAndSyncDockWidget(actionShow_Filter_List, filterListDockWidget, m_FilterListBtn);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DREAM3D_UI::on_filterListDockWidget_visibilityChanged(bool b)
+{
+  qDebug() << "on_filterListDockWidget_visibilityChanged";
+  updateAndSyncDockWidget(actionShow_Filter_List, filterListDockWidget, m_FilterListBtn);
 }
 
 // -----------------------------------------------------------------------------
@@ -979,7 +987,16 @@ void DREAM3D_UI::on_actionShow_Filter_List_triggered()
 // -----------------------------------------------------------------------------
 void DREAM3D_UI::on_actionShow_Prebuilt_Pipelines_triggered()
 {
-    prebuiltPipelinesDockWidget->setVisible(true);
+  updateAndSyncDockWidget(actionShow_Prebuilt_Pipelines, prebuiltPipelinesDockWidget, m_PrebuiltBtn);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DREAM3D_UI::on_prebuiltPipelinesDockWidget_visibilityChanged(bool b)
+{
+  qDebug() << "on_prebuiltPipelinesDockWidget_visibilityChanged";
+  updateAndSyncDockWidget(actionShow_Prebuilt_Pipelines, prebuiltPipelinesDockWidget, m_PrebuiltBtn);
 }
 
 // -----------------------------------------------------------------------------
@@ -987,7 +1004,16 @@ void DREAM3D_UI::on_actionShow_Prebuilt_Pipelines_triggered()
 // -----------------------------------------------------------------------------
 void DREAM3D_UI::on_actionShow_Favorites_triggered()
 {
-    favoritesDockWidget->setVisible(true);
+  updateAndSyncDockWidget(actionShow_Favorites, favoritesDockWidget, m_FavoritesBtn);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DREAM3D_UI::on_favoritesDockWidget_visibilityChanged(bool b)
+{
+  qDebug() << "on_favoritesDockWidget_visibilityChanged";
+  updateAndSyncDockWidget(actionShow_Favorites, favoritesDockWidget, m_FavoritesBtn);
 }
 
 // -----------------------------------------------------------------------------
@@ -995,7 +1021,16 @@ void DREAM3D_UI::on_actionShow_Favorites_triggered()
 // -----------------------------------------------------------------------------
 void DREAM3D_UI::on_actionShow_Issues_triggered()
 {
-    issuesDockWidget->setVisible(true);
+  updateAndSyncDockWidget(actionShow_Issues, issuesDockWidget, m_IssuesBtn);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DREAM3D_UI::on_issuesDockWidget_visibilityChanged(bool b)
+{
+  qDebug() << "on_issuesDockWidget_visibilityChanged";
+  updateAndSyncDockWidget(actionShow_Issues, issuesDockWidget, m_IssuesBtn);
 }
 
 // -----------------------------------------------------------------------------
@@ -1003,6 +1038,9 @@ void DREAM3D_UI::on_actionShow_Issues_triggered()
 // -----------------------------------------------------------------------------
 void DREAM3D_UI::updateAndSyncDockWidget(QAction* action, QDockWidget* dock, QToolButton* btn)
 {
+  action->blockSignals(true);
+  dock->blockSignals(true);
+  btn->blockSignals(true);
   QString text = actionShow_Filter_Library->text();
   if(text.startsWith("Show"))
   {
@@ -1018,5 +1056,7 @@ void DREAM3D_UI::updateAndSyncDockWidget(QAction* action, QDockWidget* dock, QTo
     dock->setVisible(false);
     btn->setChecked(false);
   }
-
+  action->blockSignals(false);
+  dock->blockSignals(false);
+  btn->blockSignals(false);
 }

@@ -137,6 +137,10 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
     void on_startPipelineBtn_clicked();
 
     void on_filterLibraryDockWidget_visibilityChanged(bool b);
+    void on_filterListDockWidget_visibilityChanged(bool b);
+    void on_prebuiltPipelinesDockWidget_visibilityChanged(bool b);
+    void on_favoritesDockWidget_visibilityChanged(bool b);
+    void on_issuesDockWidget_visibilityChanged(bool b);
 
     /**
      * @brief Updates the QMenu 'Recent Files' with the latest list of files. This
