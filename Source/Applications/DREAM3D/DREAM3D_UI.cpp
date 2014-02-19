@@ -230,13 +230,14 @@ void DREAM3D_UI::closeEvent(QCloseEvent *event)
 // -----------------------------------------------------------------------------
 void DREAM3D_UI::readWindowSettings()
 {
+#if defined (Q_OS_MAC)
+  QSettings::Format format = QSettings::NativeFormat;
+#else
+  QSettings::Format format = QSettings::IniFormat;
+#endif
   QString filePath;
   {
-#if defined (Q_OS_MAC)
-    QSettings prefs(QSettings::NativeFormat, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName());
-#else
-    QSettings prefs(QSettings::IniFormat, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName());
-#endif
+    QSettings prefs(format, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName());
     filePath = prefs.fileName();
     bool ok = false;
     prefs.beginGroup("WindowSettings");
@@ -292,13 +293,15 @@ void DREAM3D_UI::readDockWidgetSettings(QSettings& prefs, QDockWidget* dw)
 // -----------------------------------------------------------------------------
 void DREAM3D_UI::readVersionSettings()
 {
+#if defined (Q_OS_MAC)
+  QSettings::Format format = QSettings::NativeFormat;
+#else
+  QSettings::Format format = QSettings::IniFormat;
+#endif
   QString filePath;
   {
-#if defined (Q_OS_MAC)
-    QSettings prefs(QSettings::NativeFormat, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName());
-#else
-    QSettings prefs(QSettings::IniFormat, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName());
-#endif
+    QSettings prefs(format, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName());
+
     filePath = prefs.fileName();
 
   }
@@ -311,16 +314,18 @@ void DREAM3D_UI::readVersionSettings()
 // -----------------------------------------------------------------------------
 void DREAM3D_UI::readLastPipeline()
 {
+#if defined (Q_OS_MAC)
+  QSettings::Format format = QSettings::NativeFormat;
+#else
+  QSettings::Format format = QSettings::IniFormat;
+#endif
   QString filePath;
   {
-#if defined (Q_OS_MAC)
-    QSettings prefs(QSettings::NativeFormat, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName());
-#else
-    QSettings prefs(QSettings::IniFormat, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName());
-#endif
+    QSettings prefs(format, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName());
+
     filePath = prefs.fileName();
   }
-  pipelineViewWidget->loadPipelineFile(filePath, QSettings::NativeFormat);
+  pipelineViewWidget->loadPipelineFile(filePath, format);
 }
 
 
