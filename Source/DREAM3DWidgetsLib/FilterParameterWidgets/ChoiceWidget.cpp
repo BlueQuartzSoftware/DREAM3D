@@ -38,7 +38,7 @@
 #include <QtCore/QMetaProperty>
 
 
-#include "DREAM3DWidgetsLib/FilterParameterWidgets/moc_ChoiceWidget.cxx"
+#include "DREAM3DWidgetsLib/moc_ChoiceWidget.cpp"
 
 
 // -----------------------------------------------------------------------------

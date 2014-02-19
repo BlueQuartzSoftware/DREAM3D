@@ -188,7 +188,7 @@ COMPILE_TOOL(
 
 # --------------------------------------------------------------------
 # Run Qts automoc program to generate some source files that get compiled
-QT4_WRAP_CPP( DREAM3DFileStructure_Generated_MOC_SRCS ${DREAM3DTools_SOURCE_DIR}/DREAM3DFileStructure.h)
+#QT4_WRAP_CPP( DREAM3DFileStructure_Generated_MOC_SRCS ${DREAM3DTools_SOURCE_DIR}/DREAM3DFileStructure.h)
 COMPILE_TOOL(
     TARGET DREAM3DFileStructure
     SOURCES ${DREAM3DTools_SOURCE_DIR}/DREAM3DFileStructure.cpp

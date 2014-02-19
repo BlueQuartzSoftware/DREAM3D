@@ -46,7 +46,7 @@
 
 #include "DREAM3DWidgetsLib/Widgets/PipelineFilterWidget.h"
 
-#include "DREAM3DWidgetsLib/Widgets/moc_FilterInputDockWidget.cxx"
+#include "DREAM3DWidgetsLib/moc_FilterInputDockWidget.cpp"
 
 // -----------------------------------------------------------------------------
 //

@@ -42,7 +42,7 @@
 
 #include "QtSupport/QFileCompleter.h"
 
-#include "DREAM3DWidgetsLib/FilterParameterWidgets/moc_InputFileWidget.cxx"
+#include "DREAM3DWidgetsLib/moc_InputFileWidget.cpp"
 
 // Initialize private static member variable
 QString InputFileWidget::m_OpenDialogLastDirectory = "";

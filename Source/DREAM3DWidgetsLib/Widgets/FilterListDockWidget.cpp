@@ -42,7 +42,7 @@
 #include "DREAM3DLib/Common/IFilterFactory.hpp"
 #include "DREAM3DLib/Common/FilterFactory.hpp"
 
-#include "DREAM3DWidgetsLib/Widgets/moc_FilterListDockWidget.cxx"
+#include "DREAM3DWidgetsLib/moc_FilterListDockWidget.cpp"
 
 
 // -----------------------------------------------------------------------------

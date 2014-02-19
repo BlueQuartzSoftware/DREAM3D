@@ -79,7 +79,7 @@ QT4_WRAP_UI( QtSupport_Generated_UI_HDRS ${DREAM3D_QT_UI_FILES} )
 
 # --------------------------------------------------------------------
 # and finally this will run moc:
-QT4_WRAP_CPP( QtSupport_Generated_MOC_SRCS ${QtSupport_HDRS} )
+#QT4_WRAP_CPP( QtSupport_Generated_MOC_SRCS ${QtSupport_HDRS} )
 
 # --------------------------------------------------------------------
 #-- Put the generated files into their own group for IDEs

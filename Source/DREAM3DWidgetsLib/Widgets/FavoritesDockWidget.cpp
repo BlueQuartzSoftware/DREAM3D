@@ -58,7 +58,7 @@
 
 #include "FilterListDockWidget.h"
 
-#include "DREAM3DWidgetsLib/Widgets/moc_FavoritesDockWidget.cxx"
+#include "DREAM3DWidgetsLib/moc_FavoritesDockWidget.cpp"
 
 // -----------------------------------------------------------------------------
 //

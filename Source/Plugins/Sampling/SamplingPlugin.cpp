@@ -11,7 +11,7 @@
 //#include "PipelineBuilder/FilterWidgetManager.h"
 //#include "FilterWidgets/PipelineFilterWidgetFactory.hpp"
 
-#include "moc_SamplingPlugin.cxx"
+#include "moc_SamplingPlugin.cpp"
 
 Q_EXPORT_PLUGIN2(SamplingPlugin, SamplingPlugin)
 

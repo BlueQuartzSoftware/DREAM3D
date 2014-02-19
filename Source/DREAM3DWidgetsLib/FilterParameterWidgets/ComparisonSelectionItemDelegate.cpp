@@ -43,7 +43,7 @@
 #include <QtGui/QComboBox>
 #include <QtGui/QPainter>
 
-#include "DREAM3DWidgetsLib/FilterParameterWidgets/moc_ComparisonSelectionItemDelegate.cxx"
+#include "DREAM3DWidgetsLib/moc_ComparisonSelectionItemDelegate.cpp"
 
 
 // -----------------------------------------------------------------------------

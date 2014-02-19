@@ -70,7 +70,7 @@ cmp_IDE_GENERATED_PROPERTIES("${PLUGIN_NAME}/FilterParameterWidgets/UI_Files" "$
 
 # --------------------------------------------------------------------
 # and finally this will run moc:
-QT4_WRAP_CPP( ${PLUGIN_NAME}_ParameterWidgets_Generated_MOC_SRCS ${${PLUGIN_NAME}_ParameterWidgets_HDRS} )
+#QT4_WRAP_CPP( ${PLUGIN_NAME}_ParameterWidgets_Generated_MOC_SRCS ${${PLUGIN_NAME}_ParameterWidgets_HDRS} )
 
 # These generated moc files will be #include in the FilterWidget source file that
 # are generated so we need to tell the build system to NOT compile these files

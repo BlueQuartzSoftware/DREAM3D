@@ -54,7 +54,7 @@
 
 #include "UpdateCheckData.h"
 
-#include "moc_UpdateCheck.cxx"
+#include "moc_UpdateCheck.cpp"
 
 // -----------------------------------------------------------------------------
 //

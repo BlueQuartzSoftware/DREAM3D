@@ -44,7 +44,7 @@
 #include "QtSupport/DREAM3DHelpUrlGenerator.h"
 
 
-#include "DREAM3DWidgetsLib/Widgets/moc_IssuesDockWidget.cxx"
+#include "DREAM3DWidgetsLib/moc_IssuesDockWidget.cpp"
 
 
 // -----------------------------------------------------------------------------

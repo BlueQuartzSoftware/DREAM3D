@@ -43,7 +43,7 @@
 
 #include "ComparisonSelectionItemDelegate.h"
 
-#include "DREAM3DWidgetsLib/FilterParameterWidgets/moc_ComparisonSelectionTableModel.cxx"
+#include "DREAM3DWidgetsLib/moc_ComparisonSelectionTableModel.cpp"
 
 // -----------------------------------------------------------------------------
 //

@@ -74,15 +74,13 @@ set(AllFiltersHeaderFile ${${PLUGIN_NAME}_BINARY_DIR}/${PLUGIN_NAME}Filters/${PL
 set(RegisterKnownFiltersFile ${${PLUGIN_NAME}_BINARY_DIR}/${PLUGIN_NAME}Filters/RegisterKnownFilters.cpp)
 
 
-
+message(STATUS "QtSupport_SOURCE_DIR: ${QtSupport_SOURCE_DIR}")
 #--------------------------
 include_directories( ${HDF5_INCLUDE_DIR} )
 include_directories( ${PROJECT_CODE_DIR} )
 include_directories( ${QtSupport_BINARY_DIR} )
 include_directories( ${QtSupport_SOURCE_DIR} )
-include_directories( ${PipelineBuilderLib_SOURCE_DIR} )
-include_directories( ${PipelineBuilderLib_BINARY_DIR} )
-include_directories( ${FilterWidgetsLib_SOURCE_DIR} )
+
 
 get_filename_component(PLUGINS_SOURCE_DIR  ${${PLUGIN_NAME}_SOURCE_DIR} DIRECTORY)
 get_filename_component(PLUGINS_BINARY_DIR  ${${PLUGIN_NAME}_BINARY_DIR} DIRECTORY)
@@ -136,7 +134,7 @@ cmp_IDE_SOURCE_PROPERTIES( "${PLUGIN_NAME}/" "${${PLUGIN_NAME}_HDRS};${${PLUGIN_
 # --------------------------------------------------------------------
 #
 # --------------------------------------------------------------------
-QT4_WRAP_CPP( ${PLUGIN_NAME}_MODULE_MOC_SRCS ${${PLUGIN_NAME}_HDRS} )
+#QT4_WRAP_CPP( ${PLUGIN_NAME}_MODULE_MOC_SRCS ${${PLUGIN_NAME}_HDRS} )
 set_source_files_properties( ${${PLUGIN_NAME}_MODULE_MOC_SRCS} PROPERTIES HEADER_FILE_ONLY TRUE)
 # --------------------------------------------------------------------
 # Group all the generated source files in IDE's that support it. Makes it clear

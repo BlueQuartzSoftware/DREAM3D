@@ -20,7 +20,7 @@ set(DREAM3DLib_Common_Moc_HDRS
 )
 # --------------------------------------------------------------------
 # Run Qts automoc program to generate some source files that get compiled
-QT4_WRAP_CPP( DREAM3DLib_Common_Generated_MOC_SRCS ${DREAM3DLib_Common_Moc_HDRS})
+#QT4_WRAP_CPP( DREAM3DLib_Common_Generated_MOC_SRCS ${DREAM3DLib_Common_Moc_HDRS})
 
 
 set(DREAM3DLib_Common_HDRS

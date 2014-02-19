@@ -40,10 +40,7 @@
 #include "DREAM3DLib/Common/IFilterFactory.hpp"
 #include "DREAM3DLib/Common/FilterFactory.hpp"
 
-//#include "PipelineBuilder/FilterWidgetManager.h"
-//#include "FilterWidgets/PipelineFilterWidgetFactory.hpp"
-
-#include "moc_StatisticsPlugin.cxx"
+#include "moc_StatisticsPlugin.cpp"
 
 Q_EXPORT_PLUGIN2(StatisticsPlugin, StatisticsPlugin)
 

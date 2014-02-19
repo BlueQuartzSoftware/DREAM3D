@@ -38,7 +38,7 @@
 #include <QtCore/QMetaProperty>
 
 
-#include "DREAM3DWidgetsLib/FilterParameterWidgets/moc_FloatVec3Widget.cxx"
+#include "DREAM3DWidgetsLib/moc_FloatVec3Widget.cpp"
 
 
 // -----------------------------------------------------------------------------

@@ -109,12 +109,44 @@ if(BUILD_SHARED_LIBS)
     endif()
 endif(BUILD_SHARED_LIBS)
 
+# ------------------------------------------------------------------------------
+#  Qt 4 Section
+# ------------------------------------------------------------------------------
+# by default only QtCore and QtGui modules are enabled
+# other modules must be enabled like this:
+if(WIN32)
+   set(QT_USE_QTMAIN TRUE)
+ENDif(WIN32)
+
+# this command finds Qt4 libraries and sets all required variables
+# note that it's Qt4, not QT4 or qt4
+FIND_PACKAGE( Qt4 REQUIRED )
+if(QT4_FOUND)
+   CMP_COPY_QT4_RUNTIME_LIBRARIES( "QtCore;QtGui;QtNetwork")
+   CMP_QT_LIBRARIES_INSTALL_RULES("QtCore;QtGui;QtNetwork" ".")
+else()
+  message(FATAL_ERROR "Qt version 4.8 is REQUIRED to build DREAM3D")
+endif()
+
+set(QT_USE_QTCORE "TRUE")
+set(QT_USE_QTGUI "TRUE")
+set(QT_USE_QTNETWORK "TRUE")
+set(CMAKE_AUTOMOC TRUE)
+
+# add some useful macros and variables
+# (QT_USE_FILE is a variable defined by FIND_PACKAGE( Qt4 ) that
+# contains a path to CMake script)
+INCLUDE( ${QT_USE_FILE} )
+
+# Append the locations of the Qt libraries to our Library Search Paths
+list(APPEND CMP_LIB_SEARCH_DIRS ${QT_BINARY_DIR} ${QT_LIBRARY_DIR} )
+
 # ---------- Find Boost Headers/Libraries -----------------------
 #set(Boost_FIND_REQUIRED FALSE)
 set(Boost_DEBUG FALSE)
 set(Boost_USE_MULTITHREADED TRUE)
 set(Boost_USE_STATIC_LIBS TRUE)
-set(Boost_ADDITIONAL_VERSIONS "1.47.0" "1.46.0" "1.44.0" "1.44" "1.41" "1.41.0" "1.39" "1.39.0")
+set(Boost_ADDITIONAL_VERSIONS "1.47.0" "1.46.0" "1.44.0" "1.44" "1.41" "1.41.0" "1.55.0")
 set(Boost_FIND_COMPONENTS "")
 set(Boost_NO_BOOST_CMAKE 1)
 FIND_PACKAGE(Boost)
@@ -160,11 +192,11 @@ endif()
 # DREAM3D needs the Eigen library for Least Squares fit and Eigen
 # value/vector calculations.
 Find_Package(Eigen REQUIRED)
-if(NOT EIGEN_FOUND)
-  message(WARNING "The Eigen Library is required for parallel algorithms. The Eigen Library could not be located so these algorithms will be compiled in serial mode.")
-else()
+if(EIGEN_FOUND)
   message(STATUS "Found Eigen Library")
   include_directories( ${EIGEN_INCLUDE_DIRS} )
+else()
+  message(WARNING "The Eigen Library is required for parallel algorithms. The Eigen Library could not be located so these algorithms will be compiled in serial mode.")
 endif()
 
 # We do NOT want to install any of the headers
@@ -222,37 +254,7 @@ include_directories(${PROJECT_BINARY_DIR})
 # Setup some Global Lists that are used to gather Documentation Information
 file(WRITE ${DREAM3DProj_BINARY_DIR}/DREAM3DDocGroupList "")
 
-# ------------------------------------------------------------------------------
-#  Qt 4 Section
-# ------------------------------------------------------------------------------
-# by default only QtCore and QtGui modules are enabled
-# other modules must be enabled like this:
-if(WIN32)
-   set(QT_USE_QTMAIN TRUE)
-ENDif(WIN32)
 
-# this command finds Qt4 libraries and sets all required variables
-# note that it's Qt4, not QT4 or qt4
-FIND_PACKAGE( Qt4 REQUIRED )
-if(QT4_FOUND)
-   CMP_COPY_QT4_RUNTIME_LIBRARIES( "QtCore;QtGui;QtNetwork")
-   CMP_QT_LIBRARIES_INSTALL_RULES("QtCore;QtGui;QtNetwork" ".")
-else()
-  message(FATAL_ERROR "Qt version 4.7 is REQUIRED to build DREAM3D")
-endif()
-
-set(QT_USE_QTCORE "TRUE")
-set(QT_USE_QTGUI "TRUE")
-set(QT_USE_QTNETWORK "TRUE")
-
-
-# add some useful macros and variables
-# (QT_USE_FILE is a variable defined by FIND_PACKAGE( Qt4 ) that
-# contains a path to CMake script)
-INCLUDE( ${QT_USE_FILE} )
-
-# Append the locations of the Qt libraries to our Library Search Paths
-list(APPEND CMP_LIB_SEARCH_DIRS ${QT_BINARY_DIR} ${QT_LIBRARY_DIR} )
 
 # ------- Enable the CTest testing. Use make test to run all tests ---------------
 OPTION(DREAM3D_BUILD_TESTING "Compile the test programs" ON)
@@ -275,7 +277,7 @@ add_subdirectory( ${DREAM3DProj_SOURCE_DIR}/Source/EbsdLib ${PROJECT_BINARY_DIR}
 # -----------------------------------------------------------------------
 # This needs to be set here as we are going to look for files in this directory
 # -----------------------------------------------------------------------
-set(FilterWidgetsLib_SOURCE_DIR ${DREAM3DProj_SOURCE_DIR}/Source/FilterWidgetsLib)
+#set(FilterWidgetsLib_SOURCE_DIR ${DREAM3DProj_SOURCE_DIR}/Source/FilterWidgetsLib)
 set(FilterWidgetsLib_BINARY_DIR ${DREAM3DProj_BINARY_DIR}/FilterWidgetsLib)
 
 # -----------------------------------------------------------------------
@@ -284,6 +286,10 @@ add_subdirectory( ${DREAM3DProj_SOURCE_DIR}/Source/DREAM3DLib/ ${PROJECT_BINARY_
 
 file(WRITE ${DREAM3DProj_BINARY_DIR}/Qt_Plugins.txt)
 
+
+# Build the static QtSupport library - which MUST be a static library or the linking
+# will not work due to signals/slots mechanism.
+add_subdirectory(${DREAM3DProj_SOURCE_DIR}/Source/QtSupport ${PROJECT_BINARY_DIR}/QtSupport)
 
 
 # --------------------------------------------------------------------
@@ -333,16 +339,7 @@ foreach(p ${DREAM3D_PLUGIN_LIST})
 endforeach()
 
 
-# Build the static QtSupport library - which MUST be a static library or the linking
-# will not work due to signals/slots mechanism.
-add_subdirectory(${DREAM3DProj_SOURCE_DIR}/Source/QtSupport ${PROJECT_BINARY_DIR}/QtSupport)
-
-
 if(DREAM3D_BUILD_DREAM3D)
-
-  # --------------------------------------------------------------------
-  # Build the PipelineBuilderLib
-  # add_subdirectory(${DREAM3DProj_SOURCE_DIR}/Source/PipelineBuilder ${PROJECT_BINARY_DIR}/PipelineBuilder)
 
   # --------------------------------------------------------------------
   # Build the FilterWidgets Static Library
@@ -354,12 +351,12 @@ if(DREAM3D_BUILD_DREAM3D)
   #- Now set up the dependency between the main application and each of the plugins so that
   #- things like Visual Studio are forced to rebuild the plugins when launching
   #- the DREAM3D application
-  message(STATUS "This next section needst to be revalidated for each plugin dependency")
-  #foreach(p ${DREAM3D_PLUGIN_LIST})
-  #    if(DREAM3D_BUILD_PLUGIN_${p})
-  #        add_dependencies(${p} DREAM3D)
-  #    endif()
-  #endforeach()
+  message(STATUS "This next section needs to be revalidated for each plugin dependency")
+  foreach(p ${DREAM3D_PLUGIN_LIST})
+      if(DREAM3D_BUILD_PLUGIN_${p})
+          add_dependencies(${p} DREAM3D)
+      endif()
+  endforeach()
 
   set(DREAM3D_DOCS_ROOT_DIR "${DREAM3DProj_BINARY_DIR}/Bin/Help/DREAM3D")
 endif()
@@ -448,39 +445,38 @@ FIND_PACKAGE(Doxygen)
 if(NOT DOXYGEN_FOUND)
   message(FATAL_ERROR "Doxygen is needed to build the documentation. Please install it correctly")
 else()
-set(DOCUMENTATION_RESOURCES_DIR ${PROJECT_RESOURCES_DIR}/DocConfigFiles)
+  set(DOCUMENTATION_RESOURCES_DIR ${PROJECT_RESOURCES_DIR}/DocConfigFiles)
 
-
-set(DOX_GENERATE_RTF "NO")
-option(DREAM3D_GENERATE_RTF "Generate RTF Documentation" OFF)
-if(DREAM3D_GENERATE_RTF STREQUAL "ON")
-  set(DOX_GENERATE_RTF "YES")
-endif()
-
-
-set(DOX_GENERATE_HTML "NO")
-option(DREAM3D_GENERATE_HTML "Generate HTML Documentation" ON)
-if(DREAM3D_GENERATE_HTML STREQUAL "ON")
-  set(DOX_GENERATE_HTML "YES")
-endif()
-
-
-set(DOX_GENERATE_LATEX "NO")
-option(DREAM3D_GENERATE_LATEX "Generate PDF Documentation" OFF)
-if(DREAM3D_GENERATE_LATEX STREQUAL "ON")
-  set(DOX_GENERATE_LATEX "YES")
-  # Check for existence of LaTex executable files
-  INCLUDE( ${DOCUMENTATION_RESOURCES_DIR}/CMake/UseLATEX.cmake)
-  if(APPLE)
-    option(AUTO_OPEN_PDF "Automatically open generated PDF files with default PDF reading application" ON)
+  set(DOX_GENERATE_RTF "NO")
+  option(DREAM3D_GENERATE_RTF "Generate RTF Documentation" OFF)
+  if(DREAM3D_GENERATE_RTF STREQUAL "ON")
+    set(DOX_GENERATE_RTF "YES")
   endif()
-endif()
+
+
+  set(DOX_GENERATE_HTML "NO")
+  option(DREAM3D_GENERATE_HTML "Generate HTML Documentation" ON)
+  if(DREAM3D_GENERATE_HTML STREQUAL "ON")
+    set(DOX_GENERATE_HTML "YES")
+  endif()
+
+
+  set(DOX_GENERATE_LATEX "NO")
+  option(DREAM3D_GENERATE_LATEX "Generate PDF Documentation" OFF)
+  if(DREAM3D_GENERATE_LATEX STREQUAL "ON")
+    set(DOX_GENERATE_LATEX "YES")
+    # Check for existence of LaTex executable files
+    INCLUDE( ${DOCUMENTATION_RESOURCES_DIR}/CMake/UseLATEX.cmake)
+    if(APPLE)
+      option(AUTO_OPEN_PDF "Automatically open generated PDF files with default PDF reading application" ON)
+    endif()
+  endif()
 
 
 
-add_subdirectory(${PROJECT_SOURCE_DIR}/Documentation/Developer ${PROJECT_BINARY_DIR}/Documentation/Developer)
-add_subdirectory(${PROJECT_SOURCE_DIR}/Documentation/ReferenceManual ${PROJECT_BINARY_DIR}/Documentation/ReferenceManual)
-add_subdirectory(${PROJECT_SOURCE_DIR}/Documentation/APIDocs ${PROJECT_BINARY_DIR}/Documentation/APIDocs)
+  add_subdirectory(${PROJECT_SOURCE_DIR}/Documentation/Developer ${PROJECT_BINARY_DIR}/Documentation/Developer)
+  add_subdirectory(${PROJECT_SOURCE_DIR}/Documentation/ReferenceManual ${PROJECT_BINARY_DIR}/Documentation/ReferenceManual)
+  add_subdirectory(${PROJECT_SOURCE_DIR}/Documentation/APIDocs ${PROJECT_BINARY_DIR}/Documentation/APIDocs)
 endif()
 
 

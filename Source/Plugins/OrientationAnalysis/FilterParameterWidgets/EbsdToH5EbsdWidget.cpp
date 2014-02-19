@@ -63,7 +63,7 @@
 
 #include "OrientationAnalysis/Widgets/QEbsdReferenceFrameDialog.h"
 
-#include "OrientationAnalysis/FilterParameterWidgets/moc_EbsdToH5EbsdWidget.cxx"
+#include "OrientationAnalysis/moc_EbsdToH5EbsdWidget.cpp"
 
 // Initialize private static member variable
 QString EbsdToH5EbsdWidget::m_OpenDialogLastDirectory = "";

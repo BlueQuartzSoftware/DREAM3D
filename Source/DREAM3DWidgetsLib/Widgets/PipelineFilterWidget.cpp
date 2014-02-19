@@ -62,7 +62,7 @@
 // -----------------------------------------------------------------------------
 // Include the "moc" file that was generated for this file
 // -----------------------------------------------------------------------------
-#include "DREAM3DWidgetsLib/Widgets/moc_PipelineFilterWidget.cxx"
+#include "DREAM3DWidgetsLib/moc_PipelineFilterWidget.cpp"
 
 #define PADDING 5
 #define BORDER 2

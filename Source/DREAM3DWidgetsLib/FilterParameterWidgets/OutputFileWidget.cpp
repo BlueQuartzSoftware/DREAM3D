@@ -43,7 +43,7 @@
 #include "QtSupport/QFileCompleter.h"
 
 
-#include "DREAM3DWidgetsLib/FilterParameterWidgets/moc_OutputFileWidget.cxx"
+#include "DREAM3DWidgetsLib/moc_OutputFileWidget.cpp"
 
 // Initialize private static member variable
 QString OutputFileWidget::m_OpenDialogLastDirectory = "";

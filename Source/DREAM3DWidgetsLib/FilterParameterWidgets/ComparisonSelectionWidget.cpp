@@ -37,7 +37,7 @@
 #include "ComparisonSelectionWidget.h"
 
 
-#include "DREAM3DWidgetsLib/FilterParameterWidgets/moc_ComparisonSelectionWidget.cxx"
+#include "DREAM3DWidgetsLib/moc_ComparisonSelectionWidget.cpp"
 
 // -----------------------------------------------------------------------------
 //

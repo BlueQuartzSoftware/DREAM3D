@@ -39,7 +39,7 @@
 #include <QtGui/QMouseEvent>
 #include <QtGui/QApplication>
 
-#include "DREAM3DWidgetsLib/Widgets/moc_FilterListWidget.cxx"
+#include "DREAM3DWidgetsLib/moc_FilterListWidget.cpp"
 
 
 // -----------------------------------------------------------------------------

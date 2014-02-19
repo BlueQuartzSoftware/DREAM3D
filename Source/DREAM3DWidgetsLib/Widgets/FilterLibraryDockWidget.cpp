@@ -44,7 +44,7 @@
 
 #include "FilterListDockWidget.h"
 
-#include "DREAM3DWidgetsLib/Widgets/moc_FilterLibraryDockWidget.cxx"
+#include "DREAM3DWidgetsLib/moc_FilterLibraryDockWidget.cpp"
 
 // -----------------------------------------------------------------------------
 //

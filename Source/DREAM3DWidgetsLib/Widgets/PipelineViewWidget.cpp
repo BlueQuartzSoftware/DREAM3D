@@ -66,7 +66,7 @@
 
 #include "QtSupport/QDroppableScrollArea.h"
 
-#include "DREAM3DWidgetsLib/Widgets/moc_PipelineViewWidget.cxx"
+#include "DREAM3DWidgetsLib/moc_PipelineViewWidget.cpp"
 
 
 // -----------------------------------------------------------------------------

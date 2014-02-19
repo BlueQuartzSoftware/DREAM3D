@@ -78,7 +78,7 @@ cmp_IDE_GENERATED_PROPERTIES("DREAM3DWidgetsLib/FilterParameterWidgets/UI_Files"
 
 # --------------------------------------------------------------------
 # and finally this will run moc:
-QT4_WRAP_CPP( DREAM3DWidgetsLib_ParameterWidgets_Generated_MOC_SRCS ${DREAM3DWidgetsLib_ParameterWidgets_HDRS} )
+#QT4_WRAP_CPP( DREAM3DWidgetsLib_ParameterWidgets_Generated_MOC_SRCS ${DREAM3DWidgetsLib_ParameterWidgets_HDRS} )
 
 # These generated moc files will be #include in the FilterWidget source file that
 # are generated so we need to tell the build system to NOT compile these files

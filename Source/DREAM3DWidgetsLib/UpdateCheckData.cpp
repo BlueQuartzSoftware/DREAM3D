@@ -37,7 +37,7 @@
 #include "UpdateCheckData.h"
 
 
-#include "moc_UpdateCheckData.cxx"
+#include "moc_UpdateCheckData.cpp"
 
 // -----------------------------------------------------------------------------
 //

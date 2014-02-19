@@ -39,7 +39,7 @@
 #include <QtGui/QStandardItemModel>
 #include <QtGui/QItemSelectionModel>
 
-#include "DREAM3DWidgetsLib/FilterParameterWidgets/moc_DataContainerArrayProxyWidget.cxx"
+#include "DREAM3DWidgetsLib/moc_DataContainerArrayProxyWidget.cpp"
 
 
 // -----------------------------------------------------------------------------
