@@ -74,6 +74,7 @@ class GroupFeatures : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(NonContiguousNeighborListArrayName)
 
     DREAM3D_FILTER_PARAMETER(bool, UseNonContiguousNeighbors)
+    Q_PROPERTY(float UseNonContiguousNeighbors READ getUseNonContiguousNeighbors WRITE setUseNonContiguousNeighbors NOTIFY parametersChanged)
 
     virtual const QString getGroupName() {return DREAM3D::FilterGroups::ReconstructionFilters;}
     virtual const QString getSubGroupName() {return DREAM3D::FilterSubGroups::SegmentationFilters;}
