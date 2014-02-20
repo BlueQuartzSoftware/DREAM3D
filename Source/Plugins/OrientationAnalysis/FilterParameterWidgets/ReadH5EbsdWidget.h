@@ -178,6 +178,7 @@ class ReadH5EbsdWidget : public QWidget, private Ui::ReadH5EbsdWidget
     bool m_Version4Warning;
     static QString								m_OpenDialogLastDirectory;
     bool m_DidCausePreflight;
+    bool m_NewFileLoaded;
 
     ReadH5EbsdWidget(const ReadH5EbsdWidget&); // Copy Constructor Not Implemented
     void operator=(const ReadH5EbsdWidget&); // Operator '=' Not Implemented

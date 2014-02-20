@@ -64,7 +64,8 @@ ReadH5EbsdWidget::ReadH5EbsdWidget(FilterParameter* parameter, AbstractFilter* f
   QWidget(parent),
   m_FilterParameter(parameter),
   m_Version4Warning(false),
-  m_DidCausePreflight(false)
+  m_DidCausePreflight(false),
+  m_NewFileLoaded(false)
 {
   m_SampleTransformation.angle = 0.0f;
   m_SampleTransformation.h = 0.0f;
@@ -173,21 +174,19 @@ void ReadH5EbsdWidget::on_m_InputFileBtn_clicked()
 void ReadH5EbsdWidget::on_m_InputFile_textChanged(const QString &text)
 {
   setOpenDialogLastDirectory(m_InputFile->text());
-  if (verifyPathExists(m_InputFile->text(), m_InputFile) )
-  {
-
-  }
-  else
-  {
-    m_CellList->blockSignals(true);
-    m_CellList->clear();
-    m_CellList->blockSignals(false);
-  }
-      updateFileInfoWidgets();
-  m_InputFile->blockSignals(true);
+  bool b = verifyPathExists(m_InputFile->text(), m_InputFile);
+  
+  m_NewFileLoaded = true;
+  // Clear the QListWidget
+  m_CellList->blockSignals(true);
+  m_CellList->clear();
+  m_CellList->blockSignals(false);
+  
+  m_DidCausePreflight = true;
   emit parametersChanged();
-   m_InputFile->blockSignals(false);
-  m_DataArraysCheckBox->setCheckState(Qt::Checked);
+  m_DidCausePreflight = false;
+  m_NewFileLoaded = false;
+
 }
 
 // -----------------------------------------------------------------------------
@@ -236,7 +235,9 @@ void ReadH5EbsdWidget::on_m_DataArraysCheckBox_stateChanged(int state)
   if(Qt::PartiallyChecked == state)
   {
     state = (int)(Qt::Checked);
+    m_DataArraysCheckBox->blockSignals(true);
     m_DataArraysCheckBox->setCheckState(Qt::CheckState(state) );
+    m_DataArraysCheckBox->blockSignals(false);
   }
 
 
@@ -323,7 +324,21 @@ QSet<QString> ReadH5EbsdWidget::getSelectedEnsembleNames()
 // -----------------------------------------------------------------------------
 void ReadH5EbsdWidget::beforePreflight()
 {
-  if (m_DidCausePreflight == false)
+
+  if (m_NewFileLoaded == true)
+  {
+    // Get all the arrays from the file
+    QSet<QString> arrayNames = m_Filter->getDataArrayNames();
+    // Push those arrays into the QListWidget and set them all to true
+    updateModelFromFilter(arrayNames, true);
+    // Set our check box to be synced up with all the arrays being selected
+    m_DataArraysCheckBox->blockSignals(true);
+    m_DataArraysCheckBox->setCheckState(Qt::Checked);
+    m_DataArraysCheckBox->blockSignals(false);
+    m_NewFileLoaded = false; // We are all done with our update based a new file being loaded
+  }
+
+  if (m_DidCausePreflight == false )
   {
     QSet<QString> arrayNames = m_Filter->getDataArrayNames();
     updateModelFromFilter(arrayNames);
