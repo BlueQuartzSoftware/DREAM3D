@@ -96,18 +96,6 @@ void ComparisonSelectionWidget::setupGui()
   qRegisterMetaType<ComparisonInput_t>();
   qRegisterMetaType<ComparisonInputs>();
 
-  // Catch when the filter is about to execute the preflight
-  connect(m_Filter, SIGNAL(preflightAboutToExecute()),
-          this, SLOT(beforePreflight()));
-
-  // Catch when the filter is finished running the preflight
-  connect(m_Filter, SIGNAL(preflightExecuted()),
-          this, SLOT(afterPreflight()));
-
-  // Catch when the filter wants its values updated
-  connect(m_Filter, SIGNAL(updateFilterParameters(AbstractFilter*)),
-          this, SLOT(filterNeedsInputParameters(AbstractFilter*)));
-
   if (m_FilterParameter == NULL)
   {
     return;
@@ -127,20 +115,34 @@ void ComparisonSelectionWidget::setupGui()
   m_ComparisonSelectionTableView->setItemDelegate(aid);
 
 
-
-  dataContainerList->blockSignals(true);
-  attributeMatrixList->blockSignals(true);
+//  dataContainerList->blockSignals(true);
+//  attributeMatrixList->blockSignals(true);
 
   dataContainerList->clear();
   attributeMatrixList->clear();
 
   // Now let the gui send signals like normal
-  dataContainerList->blockSignals(false);
-  attributeMatrixList->blockSignals(false);
+//  dataContainerList->blockSignals(false);
+//  attributeMatrixList->blockSignals(false);
 
-
+  //Block the signals as we do not 
   populateComboBoxes();
 
+  // Now connect all the signals and slots
+  connect(m_ComparisonSelectionTableModel, SIGNAL(dataChanged(const QModelIndex&, const QModelIndex)),
+    this, SLOT(tableDataWasChanged(const QModelIndex&, const QModelIndex&)));
+
+  // Catch when the filter is about to execute the preflight
+  connect(m_Filter, SIGNAL(preflightAboutToExecute()),
+    this, SLOT(beforePreflight()));
+
+  // Catch when the filter is finished running the preflight
+  connect(m_Filter, SIGNAL(preflightExecuted()),
+    this, SLOT(afterPreflight()));
+
+  // Catch when the filter wants its values updated
+  connect(m_Filter, SIGNAL(updateFilterParameters(AbstractFilter*)),
+    this, SLOT(filterNeedsInputParameters(AbstractFilter*)));
 
 }
 
@@ -366,6 +368,15 @@ QString ComparisonSelectionWidget::checkStringValues(QString curDcName, QString 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void ComparisonSelectionWidget::tableDataWasChanged(const QModelIndex& topLeft, const QModelIndex& bottomRight)
+{
+  m_DidCausePreflight = true;
+  emit parametersChanged();
+  m_DidCausePreflight = false;
+}
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void ComparisonSelectionWidget::on_addComparison_clicked()
 {
   if (!m_ComparisonSelectionTableModel->insertRow(m_ComparisonSelectionTableModel->rowCount())) { return; }
@@ -375,7 +386,9 @@ void ComparisonSelectionWidget::on_addComparison_clicked()
   m_ComparisonSelectionTableView->resizeColumnsToContents();
   m_ComparisonSelectionTableView->scrollToBottom();
   m_ComparisonSelectionTableView->setFocus();
+  m_DidCausePreflight = true;
   emit parametersChanged();
+  m_DidCausePreflight = false;
 }
 
 
@@ -394,7 +407,9 @@ void ComparisonSelectionWidget::on_removeComparison_clicked()
   {
     m_ComparisonSelectionTableView->resizeColumnsToContents();
   }
+  m_DidCausePreflight = true;
   emit parametersChanged();
+  m_DidCausePreflight = false;
 }
 
 
@@ -487,10 +502,10 @@ void ComparisonSelectionWidget::beforePreflight()
 
   dataContainerList->blockSignals(true);
   attributeMatrixList->blockSignals(true);
-
+  m_ComparisonSelectionTableModel->blockSignals(true);
   // Reset all the combo box widgets to have the default selection of the first index in the list
   populateComboBoxes();
-
+  m_ComparisonSelectionTableModel->blockSignals(false);
   dataContainerList->blockSignals(false);
   attributeMatrixList->blockSignals(false);
 }

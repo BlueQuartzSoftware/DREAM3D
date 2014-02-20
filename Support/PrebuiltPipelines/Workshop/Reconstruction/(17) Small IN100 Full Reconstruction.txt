@@ -1,6 +1,7 @@
 [PipelineBuilder]
 Name=(17) Small IN100 Full Reconstruction
 Number_Filters=24
+Version=5.0.6238
 
 [0]
 Filter_Name=ReadH5Ebsd
@@ -19,14 +20,19 @@ ArraySelections_SelectedArrayNames\6\SelectedArrayNames=Image Quality
 
 [1]
 Filter_Name=MultiThresholdObjects
+Filter_Human_Label=Threshold Objects
 OutputArrayName=GoodVoxels
-ComparisonInputs\size=2
-ComparisonInputs\1\ArrayName=Image Quality
-ComparisonInputs\1\CompOperator=1
-ComparisonInputs\1\CompValue=120
-ComparisonInputs\2\ArrayName=Confidence Index
-ComparisonInputs\2\CompOperator=1
-ComparisonInputs\2\CompValue=0.100000001490116
+SelectedThresholds\size=2
+SelectedThresholds\1\DataContainerName=VolumeDataContainer
+SelectedThresholds\1\AttributeMatrixName=CellData
+SelectedThresholds\1\AttributeArrayName=Confidence Index
+SelectedThresholds\1\CompOperator=1
+SelectedThresholds\1\CompValue=0.100000001490116
+SelectedThresholds\2\DataContainerName=VolumeDataContainer
+SelectedThresholds\2\AttributeMatrixName=CellData
+SelectedThresholds\2\AttributeArrayName=Image Quality
+SelectedThresholds\2\CompOperator=1
+SelectedThresholds\2\CompValue=120
 
 [2]
 Filter_Name=FindCellQuats
@@ -78,7 +84,7 @@ AngleTolerance=2
 
 [13]
 Filter_Name=MinSize
-MinAllowedGrainSize=16
+MinAllowedFeatureSize=16
 
 [14]
 Filter_Name=FindNeighbors

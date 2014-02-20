@@ -52,6 +52,7 @@
 #include <QtGui/QHeaderView>
 #include <QtGui/QScrollArea>
 #include <QtGui/QScrollBar>
+#include <QtGui/QProgressDialog>
 
 
 #include "DREAM3DLib/DREAM3DLib.h"
@@ -313,6 +314,7 @@ void PipelineViewWidget::loadPipelineFile(const QString& filePath, QSettings::Fo
   FilterPipeline::FilterContainerType& filters = pipeline->getFilterContainer();
   int fCount = filters.size();
   int index = -1;
+
   // Start looping on each filter
   for (int i = 0; i < fCount; i++)
   {
@@ -441,8 +443,13 @@ void PipelineViewWidget::preflightPipeline()
   // Create a Pipeline Object and fill it with the filters from this View
   FilterPipeline::Pointer pipeline = getFilterPipeline();
 
+  QProgressDialog progress("Preflight Pipeline", "", 0, 1, this);
+  progress.setWindowModality(Qt::WindowModal);
+
   // Preflight the pipeline
   int err = pipeline->preflightPipeline();
+
+  progress.setValue(1);
 
   int count = pipeline->getFilterContainer().size();
   //Now that the preflight has been executed loop through the filters and check their error condition and set the
