@@ -124,6 +124,7 @@ class ComparisonSelectionWidget : public QWidget, private Ui::ComparisonSelectio
 
     void on_attributeMatrixList_currentIndexChanged(int index);
 
+    void tableDataWasChanged(const QModelIndex& topLeft, const QModelIndex& bottomRight);
 
   private:
     AbstractFilter*   m_Filter;
