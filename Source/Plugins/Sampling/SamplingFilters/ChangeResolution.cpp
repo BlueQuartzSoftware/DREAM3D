@@ -172,12 +172,16 @@ void ChangeResolution::dataCheck()
   }
 
 }
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 void ChangeResolution::preflight()
 {
+  emit preflightAboutToExecute();
+  emit updateFilterParameters(this);
   dataCheck();
+  emit preflightExecuted();
   if(getErrorCondition() < 0) { return; }
 
   VolumeDataContainer* m;

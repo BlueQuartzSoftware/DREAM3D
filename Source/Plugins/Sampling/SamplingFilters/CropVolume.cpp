@@ -245,7 +245,10 @@ void CropVolume::dataCheck()
 // -----------------------------------------------------------------------------
 void CropVolume::preflight()
 {
+  emit preflightAboutToExecute();
+  emit updateFilterParameters(this);
   dataCheck();
+  emit preflightExecuted();
   if(getErrorCondition() < 0) { return; }
 
   VolumeDataContainer* m;
