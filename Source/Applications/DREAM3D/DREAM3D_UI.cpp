@@ -96,7 +96,12 @@ DREAM3D_UI::DREAM3D_UI(QWidget *parent) :
   m_ActivePlugin(NULL),
   //  m_PluginToolBar(NULL),
   m_HelpDialog(NULL),
-  m_UpdateCheckThread(NULL)
+  m_UpdateCheckThread(NULL),
+  m_FilterListBtn(NULL),
+  m_FilterLibraryBtn(NULL),
+  m_FavoritesBtn(NULL),
+  m_PrebuiltBtn(NULL),
+  m_IssuesBtn(NULL)
 {
   m_OpenDialogLastDirectory = QDir::homePath();
 
@@ -161,7 +166,7 @@ void DREAM3D_UI::on_actionExit_triggered()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DREAM3D_UI::on_actionOpenPipeline_triggered()
+void DREAM3D_UI::on_actionImportPipeline_triggered()
 {
   QString file = QFileDialog::getOpenFileName(this, tr("Select Pipeline File"),
                                               m_OpenDialogLastDirectory,
@@ -173,7 +178,7 @@ void DREAM3D_UI::on_actionOpenPipeline_triggered()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DREAM3D_UI::on_actionSavePipeline_triggered()
+void DREAM3D_UI::on_actionExportPipeline_triggered()
 {
   QString proposedFile = m_OpenDialogLastDirectory + QDir::separator() + "Untitled.txt";
   QString filePath = QFileDialog::getSaveFileName(this, tr("Save Pipeline To File"),
@@ -197,16 +202,6 @@ void DREAM3D_UI::on_actionSavePipeline_triggered()
   pipelineViewWidget->savePipeline(filePath, fi.baseName());
   m_OpenDialogLastDirectory = fi.path();
 }
-
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void DREAM3D_UI::on_actionSavePipelineAs_triggered()
-{
-
-}
-
 
 // -----------------------------------------------------------------------------
 //  Called when the main window is closed.
@@ -487,10 +482,10 @@ void DREAM3D_UI::setupGui()
 
   // Add some key shortcuts
   QKeySequence actionOpenKeySeq(Qt::CTRL + Qt::Key_O);
-  actionOpenPipeline->setShortcut(actionOpenKeySeq);
+  actionImportPipeline->setShortcut(actionOpenKeySeq);
 
   QKeySequence actionSaveKeySeq(Qt::CTRL + Qt::Key_S);
-  actionSavePipeline->setShortcut(actionSaveKeySeq);
+  actionExportPipeline->setShortcut(actionSaveKeySeq);
 }
 
 // -----------------------------------------------------------------------------
@@ -548,15 +543,6 @@ void DREAM3D_UI::on_actionCheck_For_Updates_triggered()
 
   // Now display the dialog box
   d->exec();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void DREAM3D_UI::on_actionClearPipeline_triggered()
-{
-  filterInputWidget->clearInputWidgets();
-  pipelineViewWidget->clearWidgets();
 }
 
 // -----------------------------------------------------------------------------
@@ -908,6 +894,63 @@ void DREAM3D_UI::versionCheckReply(UpdateCheckData* dataObj)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void DREAM3D_UI::on_actionUpdatePipeline_triggered()
+{
+
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DREAM3D_UI::on_actionSaveAsNewPipeline_triggered()
+{
+
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DREAM3D_UI::on_actionAppendToExistingPipeline_triggered()
+{
+
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DREAM3D_UI::on_actionClearPipeline_triggered()
+{
+  filterInputWidget->clearInputWidgets();
+  pipelineViewWidget->clearWidgets();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DREAM3D_UI::on_actionCopyCurrentFilter_triggered()
+{
+
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DREAM3D_UI::on_actionPasteCopiedFilter_triggered()
+{
+
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DREAM3D_UI::on_actionRemoveCurrentFilter_triggered()
+{
+
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void DREAM3D_UI::on_actionShow_Filter_Library_triggered()
 {
   updateAndSyncDockWidget(actionShow_Filter_Library, filterLibraryDockWidget, m_FilterLibraryBtn);
@@ -995,6 +1038,8 @@ void DREAM3D_UI::on_issuesDockWidget_visibilityChanged(bool b)
 // -----------------------------------------------------------------------------
 void DREAM3D_UI::updateAndSyncDockWidget(QAction* action, QDockWidget* dock, QToolButton* btn)
 {
+  if(m_FilterListBtn == NULL || m_FilterLibraryBtn == NULL || m_FavoritesBtn == NULL || m_PrebuiltBtn == NULL || m_IssuesBtn == NULL) return;
+
   action->blockSignals(true);
   dock->blockSignals(true);
   btn->blockSignals(true);

@@ -125,7 +125,7 @@ color: white;
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>506</width>
+             <width>563</width>
              <height>692</height>
             </rect>
            </property>
@@ -220,9 +220,8 @@ border: 2px solid;
      </property>
      <addaction name="actionREMOVE_ME"/>
     </widget>
-    <addaction name="actionOpenPipeline"/>
-    <addaction name="actionSavePipeline"/>
-    <addaction name="actionSavePipelineAs"/>
+    <addaction name="actionImportPipeline"/>
+    <addaction name="actionExportPipeline"/>
     <addaction name="separator"/>
     <addaction name="menu_RecentFiles"/>
     <addaction name="separator"/>
@@ -242,7 +241,14 @@ border: 2px solid;
     <property name="title">
      <string>Pipeline</string>
     </property>
+    <addaction name="actionUpdateFavorite"/>
+    <addaction name="actionSaveAsNewFavorite"/>
+    <addaction name="actionAppendToExistingFavorite"/>
     <addaction name="actionClearPipeline"/>
+    <addaction name="separator"/>
+    <addaction name="actionCopyCurrentFilter"/>
+    <addaction name="actionPasteCopiedFilter"/>
+    <addaction name="actionRemoveCurrentFilter"/>
    </widget>
    <widget class="QMenu" name="menuHelp">
     <property name="title">
@@ -315,20 +321,20 @@ border: 2px solid;
     <bool>false</bool>
    </property>
   </action>
-  <action name="actionOpenPipeline">
+  <action name="actionImportPipeline">
    <property name="text">
-    <string>Open Pipeline</string>
+    <string>Import Pipeline</string>
    </property>
    <property name="shortcut">
-    <string>Ctrl+O</string>
+    <string>Ctrl+I</string>
    </property>
   </action>
-  <action name="actionSavePipeline">
+  <action name="actionExportPipeline">
    <property name="text">
-    <string>Save Pipeline</string>
+    <string>Export Pipeline</string>
    </property>
    <property name="shortcut">
-    <string>Ctrl+S</string>
+    <string>Ctrl+E</string>
    </property>
   </action>
   <action name="actionSavePipelineAs">
@@ -380,6 +386,9 @@ border: 2px solid;
    <property name="text">
     <string>Show User Manual</string>
    </property>
+   <property name="shortcut">
+    <string>Ctrl+M</string>
+   </property>
   </action>
   <action name="actionLicense_Information">
    <property name="text">
@@ -399,6 +408,54 @@ border: 2px solid;
   <action name="actionExit">
    <property name="text">
     <string>Exit</string>
+   </property>
+  </action>
+  <action name="actionSaveAsNewFavorite">
+   <property name="text">
+    <string>Save As New Favorite</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Shift+S</string>
+   </property>
+  </action>
+  <action name="actionCopyCurrentFilter">
+   <property name="text">
+    <string>Copy Current Filter</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+C</string>
+   </property>
+  </action>
+  <action name="actionAppendToExistingFavorite">
+   <property name="text">
+    <string>Append To Existing Favorite</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+A</string>
+   </property>
+  </action>
+  <action name="actionUpdateFavorite">
+   <property name="text">
+    <string>Update Favorite</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+S</string>
+   </property>
+  </action>
+  <action name="actionPasteCopiedFilter">
+   <property name="text">
+    <string>Paste Copied Filter</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+V</string>
+   </property>
+  </action>
+  <action name="actionRemoveCurrentFilter">
+   <property name="text">
+    <string>Remove Current Filter</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Backspace</string>
    </property>
   </action>
  </widget>

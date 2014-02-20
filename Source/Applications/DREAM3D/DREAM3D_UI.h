@@ -109,16 +109,20 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
   protected slots:
 
     /* Menu Slots */
-    // File MENU
 
-    void on_actionOpenPipeline_triggered();
-    void on_actionSavePipeline_triggered();
-    void on_actionSavePipelineAs_triggered();
-
+    // File Menu
+    void on_actionImportPipeline_triggered();
+    void on_actionExportPipeline_triggered();
     void on_actionExit_triggered();
 
     //Pipeline Menu
+    void on_actionUpdatePipeline_triggered();
+    void on_actionSaveAsNewPipeline_triggered();
+    void on_actionAppendToExistingPipeline_triggered();
     void on_actionClearPipeline_triggered();
+    void on_actionCopyCurrentFilter_triggered();
+    void on_actionPasteCopiedFilter_triggered();
+    void on_actionRemoveCurrentFilter_triggered();
 
     //View Menu
     void on_actionShow_Filter_Library_triggered();
