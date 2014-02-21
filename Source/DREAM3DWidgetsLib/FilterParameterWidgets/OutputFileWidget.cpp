@@ -161,6 +161,7 @@ void OutputFileWidget::on_selectBtn_clicked()
   m_OpenDialogLastDirectory = fi.path();
 
   value->setText(file);
+  on_value_editingFinished();
 }
 
 

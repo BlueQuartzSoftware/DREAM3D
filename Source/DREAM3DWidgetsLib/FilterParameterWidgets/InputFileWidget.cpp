@@ -134,12 +134,7 @@ void InputFileWidget::on_value_editingFinished()
 // -----------------------------------------------------------------------------
 void InputFileWidget::on_value_textChanged(const QString& text)
 {
-  // We dont want to run a preflight for every character that is typed instead we want (I think) to
-  // check that the file exists first before emitting the signal
-  if(verifyPathExists(text, value) == true)
-  {
-    emit parametersChanged();
-  }
+  // We dont want to run a preflight for every character that is typed
 }
 
 // -----------------------------------------------------------------------------
@@ -163,6 +158,7 @@ void InputFileWidget::on_selectBtn_clicked()
   QFileInfo fi(file);
   m_OpenDialogLastDirectory = fi.path();
   value->setText(file);
+  on_value_editingFinished();
 }
 
 // -----------------------------------------------------------------------------
