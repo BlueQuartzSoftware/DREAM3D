@@ -136,6 +136,7 @@ class DREAM3DWidgetsLib_EXPORT PipelineViewWidget : public QFrame
 
     void setPipelineMessageObserver(QObject* pipelineMessageObserver);
 
+
   public slots:
     void addFilter(const QString& filterClassName, int index = -1);
     void addFilterWidget(PipelineFilterWidget *w, AbstractFilter::Pointer filter, int index = -1);
@@ -153,7 +154,8 @@ class DREAM3DWidgetsLib_EXPORT PipelineViewWidget : public QFrame
     void loadPipelineFile(const QString& filePath, QSettings::Format format = QSettings::IniFormat, bool append = false);
 
     /**
-     * @brief savePipeline Saves the pipeline to the file
+     * @brief savePipeline Saves the pipeline to the file. If the file exists this function will <b>DELETE</b> the pipeline
+     * before saving this pipeline. MAKE SURE YOU UNDERSTAND THIS before using this function
      * @param filePath The absolute path to the pipeline file
      * @param name The name that will be used for display purposes
      */

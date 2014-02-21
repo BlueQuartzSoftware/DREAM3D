@@ -56,6 +56,7 @@
 #include "DREAM3DLib/DREAM3DVersion.h"
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Common/FilterManager.h"
+#include "DREAM3DLib/FilterParameters/QFilterParametersWriter.h"
 
 #include "QtSupport/ApplicationAboutBoxDialog.h"
 #include "QtSupport/QRecentFileList.h"
@@ -335,8 +336,17 @@ void DREAM3D_UI::writeSettings()
     writeVersionCheckSettings(prefs);
   }
 
+  // Typically we would use the function in the PipelineViewWidget but it will remove the prefs file and that is NOT
+  // what we want to do here. We want to append in our prefs to the current file, not delete it first.
   QFileInfo fi(filePath);
-  pipelineViewWidget->savePipeline(filePath, fi.baseName(), format);
+ // pipelineViewWidget->savePipeline(filePath, fi.baseName(), format);
+    // Create a Pipeline Object and fill it with the filters from this View
+  FilterPipeline::Pointer pipeline = pipelineViewWidget->getFilterPipeline();
+  int err = QFilterParametersWriter::WritePipelineToFile(pipeline, fi.absoluteFilePath(), fi.baseName(), format, NULL);
+  if (err < 0)
+  {
+
+  }
 }
 
 // -----------------------------------------------------------------------------
