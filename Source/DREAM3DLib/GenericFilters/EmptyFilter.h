@@ -64,6 +64,8 @@ class DREAM3DLib_EXPORT EmptyFilter : public AbstractFilter
 
     virtual ~EmptyFilter();
 
+    DREAM3D_INSTANCE_STRING_PROPERTY(OriginalFilterName)
+
     /**
     * @brief This returns the group that the filter belonds to. You can select
     * a different group if you want. The string returned here will be displayed
