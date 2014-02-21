@@ -111,9 +111,6 @@ bool BrandedInitializer::initialize(int argc, char* argv[])
   // Load application plugins.
   loadPlugins();
 
-  // just put in a delay
-   delay(2);
-
   // Create main window.
   this->MainWindow = new DREAM3D_UI();
   this->MainWindow->setWindowTitle("DREAM.3D Version " + DREAM3DLib::Version::Package());
