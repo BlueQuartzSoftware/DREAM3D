@@ -126,11 +126,11 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
 
     //View Menu
     // These all need to take a bool b  argument
-    void on_actionShow_Filter_Library_triggered();
+    void on_actionShow_Filter_Library_triggered(bool b);
     void on_actionShow_Filter_List_triggered(bool b);
-    void on_actionShow_Prebuilt_Pipelines_triggered();
-    void on_actionShow_Favorites_triggered();
-    void on_actionShow_Issues_triggered();
+    void on_actionShow_Prebuilt_Pipelines_triggered(bool b);
+    void on_actionShow_Favorites_triggered(bool b);
+    void on_actionShow_Issues_triggered(bool b);
 
     // Help Menu
     void on_actionCheck_For_Updates_triggered();
@@ -140,15 +140,6 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
 
     // Buttons and other widgets that send signals that we want to catch
     void on_startPipelineBtn_clicked();
-
-
-//// THESE ALL NEED TO BE REMOVED
-    void on_filterLibraryDockWidget_visibilityChanged(bool b);
-
-    void on_prebuiltPipelinesDockWidget_visibilityChanged(bool b);
-    void on_favoritesDockWidget_visibilityChanged(bool b);
-    void on_issuesDockWidget_visibilityChanged(bool b);
-////========================
 
     /**
      * @brief Updates the QMenu 'Recent Files' with the latest list of files. This
@@ -238,7 +229,7 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
 
     void makeStatusBarButton(QString text, QDockWidget *dockWidget, QToolButton *btn, int index);
 
-    void updateAndSyncDockWidget(QAction* action, QDockWidget* dock, QToolButton* btn);
+    void updateAndSyncDockWidget(QAction* action, QDockWidget* dock, QToolButton* btn, bool b);
 
     /**
      * @brief Checks the currently open file for changes that need to be saved

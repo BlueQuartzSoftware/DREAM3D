@@ -416,7 +416,7 @@ void ComparisonSelectionTableModel::setPossibleFeatures(QStringList features)
   qint32 count = m_FeatureNames.count();
   for(qint32 i = 0; i < count; ++i)
   {
-    if (m_PossibleFeatures.contains(m_FeatureNames.at(i)) == false)
+    if (m_PossibleFeatures.contains(m_FeatureNames.at(i)) == false && m_PossibleFeatures.count() > 0)
     {
       m_FeatureNames[i] = m_PossibleFeatures[0]; // Just set it to the first index
     }

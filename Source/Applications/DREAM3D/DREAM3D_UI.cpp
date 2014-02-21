@@ -505,8 +505,10 @@ void DREAM3D_UI::setupViewMenu()
   actionShow_Filter_Library = filterLibraryDockWidget->toggleViewAction();
   actionShow_Filter_Library->setText("Show Filter Library");
   menuView->addAction(actionShow_Filter_Library);
-  connect(actionShow_Filter_Library, SIGNAL(triggered()),
-          this, SLOT(on_actionShow_Filter_Library_triggered()) );
+  connect(actionShow_Filter_Library, SIGNAL(triggered(bool)),
+          this, SLOT(on_actionShow_Filter_Library_triggered(bool)) );
+  connect(m_FilterLibraryBtn, SIGNAL(toggled(bool)),
+          this, SLOT(on_actionShow_Filter_Library_triggered(bool)) );
 
   m_FavoritesBtn = new QToolButton(this);
   makeStatusBarButton("Favorites", favoritesDockWidget, m_FavoritesBtn, 2);
@@ -515,8 +517,10 @@ void DREAM3D_UI::setupViewMenu()
   actionShow_Favorites = favoritesDockWidget->toggleViewAction();
   actionShow_Favorites->setText("Show Favorites");
   menuView->addAction(actionShow_Favorites);
-  connect(actionShow_Favorites, SIGNAL(triggered()),
-          this, SLOT(on_actionShow_Favorites_triggered()) );
+  connect(actionShow_Favorites, SIGNAL(triggered(bool)),
+          this, SLOT(on_actionShow_Favorites_triggered(bool)) );
+  connect(m_FavoritesBtn, SIGNAL(toggled(bool)),
+          this, SLOT(on_actionShow_Favorites_triggered(bool)) );
 
   m_PrebuiltBtn = new QToolButton(this);
   makeStatusBarButton("Prebuilt", prebuiltPipelinesDockWidget, m_PrebuiltBtn, 3);
@@ -525,8 +529,11 @@ void DREAM3D_UI::setupViewMenu()
   actionShow_Prebuilt_Pipelines = prebuiltPipelinesDockWidget->toggleViewAction();
   actionShow_Prebuilt_Pipelines->setText("Show Prebuilts");
   menuView->addAction(actionShow_Prebuilt_Pipelines);
-  connect(actionShow_Prebuilt_Pipelines, SIGNAL(triggered()),
-          this, SLOT(on_actionShow_Prebuilt_Pipelines_triggered()) );
+  connect(actionShow_Prebuilt_Pipelines, SIGNAL(triggered(bool)),
+          this, SLOT(on_actionShow_Prebuilt_Pipelines_triggered(bool)) );
+  connect(m_PrebuiltBtn, SIGNAL(toggled(bool)),
+          this, SLOT(on_actionShow_Prebuilt_Pipelines_triggered(bool)) );
+
 
   m_IssuesBtn = new QToolButton(this);
   makeStatusBarButton("Issues", issuesDockWidget, m_IssuesBtn, 4);
@@ -535,8 +542,11 @@ void DREAM3D_UI::setupViewMenu()
   actionShow_Issues = issuesDockWidget->toggleViewAction();
   actionShow_Issues->setText("Show Issues");
   menuView->addAction(actionShow_Issues);
-  connect(actionShow_Issues, SIGNAL(triggered()),
-          this, SLOT(on_actionShow_Issues_triggered()) );
+  connect(actionShow_Issues, SIGNAL(triggered(bool)),
+          this, SLOT(on_actionShow_Issues_triggered(bool)) );
+  connect(m_IssuesBtn, SIGNAL(toggled(bool)),
+          this, SLOT(on_actionShow_Issues_triggered(bool)) );
+
 }
 
 // -----------------------------------------------------------------------------
@@ -544,17 +554,8 @@ void DREAM3D_UI::setupViewMenu()
 // -----------------------------------------------------------------------------
 void DREAM3D_UI::makeStatusBarButton(QString text, QDockWidget* dockWidget, QToolButton* btn, int index)
 {
-
   btn->setText(text);
   btn->setCheckable(true);
-
-  // This sets up when the dock widget changees visibility the button changes
-  //  connect(dockWidget, SIGNAL(visibilityChanged(bool)),
-  //          btn, SLOT(setChecked(bool)));
-
-  // This sets up when the button is changed, the dock widget will change visibility
-  //  connect(btn, SIGNAL(toggled(bool)),
-  //          dockWidget, SLOT(setVisible(bool)));
 
   btn->setChecked(!dockWidget->isHidden());
   statusBar()->insertPermanentWidget(index, btn, 0);
@@ -978,18 +979,9 @@ void DREAM3D_UI::on_actionRemoveCurrentFilter_triggered()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DREAM3D_UI::on_actionShow_Filter_Library_triggered()
+void DREAM3D_UI::on_actionShow_Filter_Library_triggered(bool b)
 {
-  updateAndSyncDockWidget(actionShow_Filter_Library, filterLibraryDockWidget, m_FilterLibraryBtn);
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void DREAM3D_UI::on_filterLibraryDockWidget_visibilityChanged(bool b)
-{
-  qDebug() << "on_filterLibraryDockWidget_visibilityChanged";
-  //  updateAndSyncDockWidget(actionShow_Filter_Library, filterLibraryDockWidget, m_FilterLibraryBtn);
+  updateAndSyncDockWidget(actionShow_Filter_Library, filterLibraryDockWidget, m_FilterLibraryBtn, b);
 }
 
 // -----------------------------------------------------------------------------
@@ -997,104 +989,60 @@ void DREAM3D_UI::on_filterLibraryDockWidget_visibilityChanged(bool b)
 // -----------------------------------------------------------------------------
 void DREAM3D_UI::on_actionShow_Filter_List_triggered(bool b)
 {
-//// updateAndSyncDockWidget() CONTENTS NEEDS TO BE REPLACED WITH THIS CONTENT. AN ADDITIONAL
-/// ARGUMENT OF A BOOLEAN NEEDS TO BE ALSO PASSED IN "b".
-  actionShow_Filter_List->setChecked(b);
-  m_FilterListBtn->setChecked(b);
-  filterListDockWidget->setVisible(b);
-
-  if(b == false)
-  {
-    QString text = actionShow_Filter_List->text().replace("Show", "Hide");
-    actionShow_Filter_List->setText(text);
-  }
-  else
-  {
-    QString text = actionShow_Filter_List->text().replace("Hide", "Show");
-    actionShow_Filter_List->setText(text);
-  }
+  updateAndSyncDockWidget(actionShow_Filter_List, filterListDockWidget, m_FilterListBtn, b);
 }
 
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DREAM3D_UI::on_actionShow_Prebuilt_Pipelines_triggered()
+void DREAM3D_UI::on_actionShow_Prebuilt_Pipelines_triggered(bool b)
 {
-  qDebug() << "on_actionShow_Prebuilt_Pipelines_triggered";
-  updateAndSyncDockWidget(actionShow_Prebuilt_Pipelines, prebuiltPipelinesDockWidget, m_PrebuiltBtn);
+  updateAndSyncDockWidget(actionShow_Prebuilt_Pipelines, prebuiltPipelinesDockWidget, m_PrebuiltBtn, b);
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DREAM3D_UI::on_prebuiltPipelinesDockWidget_visibilityChanged(bool b)
+void DREAM3D_UI::on_actionShow_Favorites_triggered(bool b)
 {
-  qDebug() << "on_prebuiltPipelinesDockWidget_visibilityChanged";
-  //  updateAndSyncDockWidget(actionShow_Prebuilt_Pipelines, prebuiltPipelinesDockWidget, m_PrebuiltBtn);
+  updateAndSyncDockWidget(actionShow_Favorites, favoritesDockWidget, m_FavoritesBtn, b);
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DREAM3D_UI::on_actionShow_Favorites_triggered()
+void DREAM3D_UI::on_actionShow_Issues_triggered(bool b)
 {
-  updateAndSyncDockWidget(actionShow_Favorites, favoritesDockWidget, m_FavoritesBtn);
+  updateAndSyncDockWidget(actionShow_Issues, issuesDockWidget, m_IssuesBtn, b);
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DREAM3D_UI::on_favoritesDockWidget_visibilityChanged(bool b)
-{
-  qDebug() << "on_favoritesDockWidget_visibilityChanged";
-  //  updateAndSyncDockWidget(actionShow_Favorites, favoritesDockWidget, m_FavoritesBtn);
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void DREAM3D_UI::on_actionShow_Issues_triggered()
-{
-  updateAndSyncDockWidget(actionShow_Issues, issuesDockWidget, m_IssuesBtn);
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void DREAM3D_UI::on_issuesDockWidget_visibilityChanged(bool b)
-{
-  qDebug() << "on_issuesDockWidget_visibilityChanged";
-  //  updateAndSyncDockWidget(actionShow_Issues, issuesDockWidget, m_IssuesBtn);
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void DREAM3D_UI::updateAndSyncDockWidget(QAction* action, QDockWidget* dock, QToolButton* btn)
+void DREAM3D_UI::updateAndSyncDockWidget(QAction* action, QDockWidget* dock, QToolButton* btn, bool b)
 {
   if(m_FilterListBtn == NULL || m_FilterLibraryBtn == NULL || m_FavoritesBtn == NULL || m_PrebuiltBtn == NULL || m_IssuesBtn == NULL) return;
 
   action->blockSignals(true);
   dock->blockSignals(true);
   btn->blockSignals(true);
-  QString text = action->text();
-  bool isChecked = action->isChecked();
+  
+  action->setChecked(b);
+  btn->setChecked(b);
+  dock->setVisible(b);
 
-  if(isChecked == false)
+  if(b == false)
   {
-    text = text.replace("Show", "Hide");
+    QString text = action->text().replace("Show", "Hide");
     action->setText(text);
-    dock->setVisible(isChecked);
-    btn->setChecked(isChecked);
   }
   else
   {
-    text = text.replace("Hide", "Show");
+    QString text = action->text().replace("Hide", "Show");
     action->setText(text);
-    dock->setVisible(isChecked);
-    btn->setChecked(isChecked);
   }
+
   action->blockSignals(false);
   dock->blockSignals(false);
   btn->blockSignals(false);
