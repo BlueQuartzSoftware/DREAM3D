@@ -1,7 +1,7 @@
 /* ============================================================================
  * Copyright (c) 2012 Michael A. Jackson (BlueQuartz Software)
  * Copyright (c) 2012 Dr. Michael A. Groeber (US Air Force Research Laboratories)
- * Copyright (c) 2012 Joseph B. Kleingers (Student Research Assistant)
+ * Copyright (c) 2012 Joseph B. Kleingers (Intern, University of Dayton)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -14,10 +14,10 @@
  * list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
  *
- * Neither the name of Michael A. Groeber, Michael A. Jackson, Joseph B. Kleingers,
- * the US Air Force, BlueQuartz Software nor the names of its contributors may be
- * used to endorse or promote products derived from this software without specific
- * prior written permission.
+ * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
+ * BlueQuartz Software nor the names of its contributors may be used to endorse
+ * or promote products derived from this software without specific prior written
+ * permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -35,53 +35,93 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include "AddFavoriteWidget.h"
+#include "FilterLibraryTreeWidget.h"
 
-AddFavoriteWidget::AddFavoriteWidget(QString text, QWidget *parent) {
-  setupUi(this);
-  addfavoriteOKButton->setEnabled(false);
-  BtnClicked = false;
-  label->setText(text);
-}
 
-// -----------------------------------------------------------------------------
-//  Called when the OK button is clicked.
-// -----------------------------------------------------------------------------
-void AddFavoriteWidget::on_addfavoriteOKButton_clicked() {
-  BtnClicked = true;
-  this->close();
-}
 
-// -----------------------------------------------------------------------------
-//  Called when the Cancel button is clicked.
-// -----------------------------------------------------------------------------
-void AddFavoriteWidget::on_addfavoriteCancelButton_clicked() {
-  BtnClicked = false;
-  this->close();
+FilterLibraryTreeWidget::FilterLibraryTreeWidget(QWidget *parent) :
+QTreeWidget(parent)
+{
+  setContextMenuPolicy(Qt::CustomContextMenu);
+
+  connect(this,
+    SIGNAL(customContextMenuRequested(const QPoint&)),
+    SLOT(onCustomContextMenuRequested(const QPoint&)));
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-bool AddFavoriteWidget::getBtnClicked() {
-  return BtnClicked;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-QString AddFavoriteWidget::getFavoriteName() {
-  return ( favoriteName->text() );
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void AddFavoriteWidget::on_favoriteName_textChanged(const QString & text) {
-  if (favoriteName->text() == "") {
-    addfavoriteOKButton->setEnabled(false);
+void FilterLibraryTreeWidget::addActionList(QList<QAction*> actionList)
+{
+  for (int i=0; i<actionList.size(); i++)
+  {
+    m_Menu.addAction(actionList[i]);
   }
-  else {
-    addfavoriteOKButton->setEnabled(true);
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void FilterLibraryTreeWidget::setNodeActionList(QList<QAction *> list)
+{
+  m_NodeActions = list;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void FilterLibraryTreeWidget::setLeafActionList(QList<QAction *> list)
+{
+  m_LeafActions = list;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void FilterLibraryTreeWidget::onCustomContextMenuRequested(const QPoint& pos)
+{
+  QTreeWidgetItem* item = itemAt(pos);
+
+  if (item)
+  {
+    // Note: We must map the point to global from the viewport to
+    // account for the header.
+    showContextMenu( item, viewport()->mapToGlobal(pos) );
   }
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void FilterLibraryTreeWidget::showContextMenu(QTreeWidgetItem* item, const QPoint& globalPos)
+{
+  // Clear menu's previous actions
+  m_Menu.clear();
+
+  int itemType = item->type();
+  switch (itemType)
+  {
+
+//    case Default_Item_Type:
+//    if ( !m_DefaultActions.isEmpty() )
+//      addActionList(m_DefaultActions);
+//    break;
+
+  case Leaf_Item_Type:
+    if ( !m_LeafActions.isEmpty() )
+      addActionList(m_LeafActions);
+    break;
+
+
+  case Node_Item_Type:
+    if ( !m_NodeActions.isEmpty() )
+      addActionList(m_NodeActions);
+    break;
+
+  }
+
+  m_Menu.exec(globalPos);
 }

@@ -188,17 +188,6 @@ void DREAM3D_UI::on_actionExportPipeline_triggered()
 
   //If the filePath already exists - delete it so that we get a clean write to the file
   QFileInfo fi(filePath);
-  if (fi.exists() == true)
-  {
-    QFile f(filePath);
-    if (f.remove() == false)
-    {
-      QMessageBox::warning ( this, QString::fromAscii("File Save Error"),
-                             QString::fromAscii("There was an error removing the existing Pipeline file. The pipeline was NOT saved.") );
-      return;
-    }
-  }
-
   pipelineViewWidget->savePipeline(filePath, fi.baseName());
   m_OpenDialogLastDirectory = fi.path();
 }
@@ -458,10 +447,15 @@ void DREAM3D_UI::setupGui()
   // or load an entire pipeline into the view
   connect(filterListDockWidget, SIGNAL(filterItemDoubleClicked(const QString&)),
           pipelineViewWidget, SLOT(addFilter(const QString&)) );
+
   connect(prebuiltPipelinesDockWidget, SIGNAL(pipelineFileActivated(QString)),
           pipelineViewWidget, SLOT(loadPipelineFile(QString)) );
-  connect(favoritesDockWidget, SIGNAL(pipelineFileActivated(QString)),
-          pipelineViewWidget, SLOT(loadPipelineFile(QString)) );
+
+  connect(favoritesDockWidget, SIGNAL(pipelineFileActivated(QString, QSettings::Format, bool)),
+          pipelineViewWidget, SLOT(loadPipelineFile(QString, QSettings::Format, bool)) );
+
+  connect(favoritesDockWidget, SIGNAL(pipelineNeedsToBeSaved(const QString&, const QString&)),
+          pipelineViewWidget, SLOT(savePipeline(const QString&, const QString&)) );
 
 
   // Set the IssuesDockWidget as a PipelineMessageObserver Object.
@@ -476,7 +470,134 @@ void DREAM3D_UI::setupGui()
   actionExportPipeline->setShortcut(actionSaveKeySeq);
 
   setupViewMenu();
+  setupPipelineContextMenu();
+}
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DREAM3D_UI::setupPipelineContextMenu()
+{
+
+
+  QList<QAction*> m_FavoriteItemActions;
+  QList<QAction*> m_FavoriteCategoryActions;
+
+  QAction* actionAddFavorite = new QAction(menuPipeline);
+  actionAddFavorite->setObjectName(QString::fromUtf8("actionAddFavorite"));
+  actionAddFavorite->setText(QApplication::translate("DREAM3D_UI", "Add Favorite", 0, QApplication::UnicodeUTF8));
+  menuPipeline->addAction(actionAddFavorite);
+  QKeySequence actionAddFavKeySeq(Qt::CTRL + Qt::Key_Plus);
+  actionAddFavorite->setShortcut(actionAddFavKeySeq);
+  connect(actionAddFavorite, SIGNAL(triggered()),
+          favoritesDockWidget, SLOT( actionAddFavorite_triggered() ) );
+  m_FavoriteItemActions << actionAddFavorite;
+  m_FavoriteCategoryActions << actionAddFavorite;
+
+  QAction* actionAddFavoriteFolder = new QAction(menuPipeline);
+  actionAddFavoriteFolder->setObjectName(QString::fromUtf8("actionAddFavoriteFolder"));
+  actionAddFavoriteFolder->setText(QApplication::translate("DREAM3D_UI", "Add Folder", 0, QApplication::UnicodeUTF8));
+  menuPipeline->addAction(actionAddFavoriteFolder);
+  //QKeySequence actionAddFavKeySeq(Qt::CTRL + Qt::Key_Plus);
+  //actionAddFavoriteFolder->setShortcut(actionAddFavKeySeq);
+  connect(actionAddFavoriteFolder, SIGNAL(triggered()),
+          favoritesDockWidget, SLOT( actionAddFavoriteFolder_triggered() ) );
+  m_FavoriteItemActions << actionAddFavoriteFolder;
+  m_FavoriteCategoryActions << actionAddFavoriteFolder;
+
+
+  QAction* actionUpdateFavorite = new QAction(menuPipeline);
+  actionUpdateFavorite->setObjectName(QString::fromUtf8("actionUpdateFavorite"));
+  actionUpdateFavorite->setText(QApplication::translate("DREAM3D_UI", "Update Favorite", 0, QApplication::UnicodeUTF8));
+  menuPipeline->addAction(actionUpdateFavorite);
+  //QKeySequence actionAddFavKeySeq(Qt::CTRL + Qt::Key_Plus);
+  //actionUpdateFavorite->setShortcut(actionAddFavKeySeq);
+  connect(actionUpdateFavorite, SIGNAL(triggered()),
+          favoritesDockWidget, SLOT( actionUpdateFavorite_triggered() ) );
+  m_FavoriteItemActions << actionUpdateFavorite;
+
+  QAction* actionRenameFavorite = new QAction(menuPipeline);
+  actionRenameFavorite->setObjectName(QString::fromUtf8("actionRenameFavorite"));
+  actionRenameFavorite->setText(QApplication::translate("DREAM3D_UI", "Rename ...", 0, QApplication::UnicodeUTF8));
+  menuPipeline->addAction(actionRenameFavorite);
+  QKeySequence actionRenameFavKeySeq(Qt::CTRL + Qt::Key_R);
+  actionRenameFavorite->setShortcut(actionRenameFavKeySeq);
+  connect(actionRenameFavorite, SIGNAL(triggered()),
+          favoritesDockWidget, SLOT( actionRenameFavorite_triggered() ) );
+  m_FavoriteItemActions << actionRenameFavorite;
+
+
+  QAction* actionAppendFavorite = new QAction(menuPipeline);
+  actionAppendFavorite->setObjectName(QString::fromUtf8("actionAppendFavorite"));
+  actionAppendFavorite->setText(QApplication::translate("DREAM3D_UI", "Append to Pipeline", 0, QApplication::UnicodeUTF8));
+  menuPipeline->addAction(actionAppendFavorite);
+  QKeySequence actionAppendFavKeySeq(Qt::CTRL + Qt::Key_A);
+
+  actionAppendFavorite->setShortcut(actionAppendFavKeySeq);
+  connect(actionAppendFavorite, SIGNAL(triggered()),
+          favoritesDockWidget, SLOT( actionAppendFavorite_triggered() ) );
+  m_FavoriteItemActions << actionAppendFavorite;
+
+  //m_PrebuiltItemActions << actionAppendFavorite;
+  {
+    QAction* separator = new QAction(this);
+    separator->setSeparator(true);
+    m_FavoriteItemActions << separator;
+    menuPipeline->addSeparator();
+  }
+
+  QAction* actionRemoveFavorite = new QAction(menuPipeline);
+  actionRemoveFavorite->setObjectName(QString::fromUtf8("actionRemoveFavorite"));
+  actionRemoveFavorite->setText(QApplication::translate("DREAM3D_UI", "Remove Favorite", 0, QApplication::UnicodeUTF8));
+  menuPipeline->addAction(actionRemoveFavorite);
+  QKeySequence actionRemoveFavKeySeq(Qt::CTRL + Qt::Key_Minus);
+  actionRemoveFavorite->setShortcut(actionRemoveFavKeySeq);
+  connect(actionRemoveFavorite, SIGNAL(triggered()),
+          favoritesDockWidget, SLOT( actionRemoveFavorite_triggered() ) );
+  m_FavoriteItemActions << actionRemoveFavorite;
+  {
+    QAction* separator = new QAction(this);
+    separator->setSeparator(true);
+    m_FavoriteItemActions << separator;
+    menuPipeline->addSeparator();
+  }
+
+
+  QAction* actionClearPipeline = new QAction(menuPipeline);
+  actionClearPipeline->setObjectName(QString::fromUtf8("actionClearPipeline"));
+  actionClearPipeline->setText(QApplication::translate("DREAM3D_UI", "Clear Pipeline", 0, QApplication::UnicodeUTF8));
+  menuPipeline->addAction(actionClearPipeline);
+  QKeySequence actionClearKeySeq(Qt::CTRL + Qt::Key_Delete);
+  actionClearPipeline->setShortcut(actionClearKeySeq);
+  connect(actionClearPipeline, SIGNAL(triggered()),
+          this, SLOT( on_actionClearPipeline_triggered() ) );
+
+
+  QAction* actionShowInFileSystem = new QAction(this);
+  actionShowInFileSystem->setObjectName(QString::fromUtf8("actionShowInFileSystem"));
+  // Handle the naming based on what OS we are currently running...
+#if defined(Q_OS_WIN)
+  actionShowInFileSystem->setText(QApplication::translate("DREAM3D_UI", "Show in Windows Explorer", 0, QApplication::UnicodeUTF8));
+#elif defined(Q_OS_MAC)
+  actionShowInFileSystem->setText(QApplication::translate("DREAM3D_UI", "Show in Finder", 0, QApplication::UnicodeUTF8));
+#else
+  actionShowInFileSystem->setText(QApplication::translate("DREAM3D_UI", "Show in File System", 0, QApplication::UnicodeUTF8));
+#endif
+
+  connect(actionShowInFileSystem, SIGNAL(triggered()),
+          favoritesDockWidget, SLOT( actionShowInFileSystem_triggered() ) );
+  {
+    QAction* separator = new QAction(this);
+    separator->setSeparator(true);
+    m_FavoriteItemActions << separator;
+  }
+  m_FavoriteItemActions << actionShowInFileSystem;
+  m_FavoriteCategoryActions << actionShowInFileSystem;
+  //  m_PrebuiltItemActions << separator;
+  //  m_PrebuiltItemActions << actionShowInFileSystem;
+
+  favoritesDockWidget->getFilterLibraryTreeWidget()->setNodeActionList(m_FavoriteCategoryActions);
+  favoritesDockWidget->getFilterLibraryTreeWidget()->setLeafActionList(m_FavoriteItemActions);
 }
 
 // -----------------------------------------------------------------------------
@@ -997,8 +1118,8 @@ void DREAM3D_UI::on_filterLibraryDockWidget_visibilityChanged(bool b)
 // -----------------------------------------------------------------------------
 void DREAM3D_UI::on_actionShow_Filter_List_triggered(bool b)
 {
-//// updateAndSyncDockWidget() CONTENTS NEEDS TO BE REPLACED WITH THIS CONTENT. AN ADDITIONAL
-/// ARGUMENT OF A BOOLEAN NEEDS TO BE ALSO PASSED IN "b".
+  //// updateAndSyncDockWidget() CONTENTS NEEDS TO BE REPLACED WITH THIS CONTENT. AN ADDITIONAL
+  /// ARGUMENT OF A BOOLEAN NEEDS TO BE ALSO PASSED IN "b".
   actionShow_Filter_List->setChecked(b);
   m_FilterListBtn->setChecked(b);
   filterListDockWidget->setVisible(b);

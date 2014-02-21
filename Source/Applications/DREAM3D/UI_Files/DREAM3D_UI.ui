@@ -49,7 +49,16 @@ sss</string>
     </size>
    </property>
    <layout class="QGridLayout" name="gridLayout">
-    <property name="margin">
+    <property name="leftMargin">
+     <number>0</number>
+    </property>
+    <property name="topMargin">
+     <number>0</number>
+    </property>
+    <property name="rightMargin">
+     <number>0</number>
+    </property>
+    <property name="bottomMargin">
      <number>0</number>
     </property>
     <item row="0" column="0">
@@ -125,8 +134,8 @@ color: white;
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>563</width>
-             <height>692</height>
+             <width>541</width>
+             <height>698</height>
             </rect>
            </property>
            <property name="sizePolicy">
@@ -207,7 +216,7 @@ border: 2px solid;
      <x>0</x>
      <y>0</y>
      <width>953</width>
-     <height>26</height>
+     <height>22</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -241,10 +250,6 @@ border: 2px solid;
     <property name="title">
      <string>Pipeline</string>
     </property>
-    <addaction name="actionUpdateFavorite"/>
-    <addaction name="actionSaveAsNewFavorite"/>
-    <addaction name="actionAppendToExistingFavorite"/>
-    <addaction name="actionClearPipeline"/>
     <addaction name="separator"/>
     <addaction name="actionCopyCurrentFilter"/>
     <addaction name="actionPasteCopiedFilter"/>

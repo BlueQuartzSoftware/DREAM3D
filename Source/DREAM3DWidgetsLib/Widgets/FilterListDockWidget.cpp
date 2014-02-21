@@ -69,10 +69,6 @@ FilterListDockWidget::~FilterListDockWidget()
 void FilterListDockWidget::setupGui()
 {
 
-  //
-  filterList->setContextMenuPolicy(Qt::CustomContextMenu);
-  connect(filterList, SIGNAL(customContextMenuRequested(const QPoint&)),
-          this, SLOT(onFilterListCustomContextMenuRequested(const QPoint&)));
 }
 
 // -----------------------------------------------------------------------------
@@ -190,14 +186,6 @@ void FilterListDockWidget::on_filterSearch_textChanged (const QString& text)
 #endif
 }
 
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void FilterListDockWidget::on_filterList_currentItemChanged ( QListWidgetItem* item, QListWidgetItem* previous )
-{
-
-}
 
 // -----------------------------------------------------------------------------
 //

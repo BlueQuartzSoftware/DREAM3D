@@ -36,11 +36,13 @@ set(DREAM3DWidgetsLib_Widgets_HDRS
   ${DREAM3DWidgetsLib_Widgets_HDRS}
   ${DREAM3DWidgetsLib_SOURCE_DIR}/Widgets/PipelineViewWidget.h
   ${DREAM3DWidgetsLib_SOURCE_DIR}/Widgets/FilterListWidget.h
+  ${DREAM3DWidgetsLib_SOURCE_DIR}/Widgets/FilterLibraryTreeWidget.h
   )
 set(DREAM3DWidgetsLib_Widgets_SRCS
   ${DREAM3DWidgetsLib_Widgets_SRCS}
   ${DREAM3DWidgetsLib_SOURCE_DIR}/Widgets/PipelineViewWidget.cpp
   ${DREAM3DWidgetsLib_SOURCE_DIR}/Widgets/FilterListWidget.cpp
+  ${DREAM3DWidgetsLib_SOURCE_DIR}/Widgets/FilterLibraryTreeWidget.cpp
   )
 
 

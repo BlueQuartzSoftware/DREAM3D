@@ -37,6 +37,7 @@
 #define _QDREAM3D_DOCUMENTS_DOCKWIDGET_H_
 
 #include <QtCore/QFileInfo>
+#include <QtCore/QSettings>
 #include <QtGui/QDockWidget>
 #include <QtGui/QTreeWidgetItem>
 
@@ -50,17 +51,14 @@
 class QListWidget;
 class QTreeWidgetItem;
 class FilterListDockWidget;
+class FilterLibraryTreeWidget;
+class QSettings;
 
-
+/**
+ * @brief The FavoritesDockWidget class
+ */
 class DREAM3DWidgetsLib_EXPORT FavoritesDockWidget : public QDockWidget, private Ui::FavoritesDockWidget
 {
-
-    enum ItemType
-    {
-      Default_Item_Type = 0,
-      Favorite_Item_Type = 1,
-      Favorite_Category_Item_Type = 3
-    };
 
     Q_OBJECT
   public:
@@ -71,9 +69,24 @@ class DREAM3DWidgetsLib_EXPORT FavoritesDockWidget : public QDockWidget, private
 
     void connectFilterList(FilterListDockWidget *filterListWidget);
 
+    FilterLibraryTreeWidget* getFilterLibraryTreeWidget();
+
+    void setupContextMenus(QMenu* menu);
+
+public slots:
+    //// Slots to catch signals from main menu or context menu
+    void actionAddFavoriteFolder_triggered();
+    void actionAddFavorite_triggered();
+    void actionUpdateFavorite_triggered();
+    void removeFavorite(QTreeWidgetItem* item);
+    void actionRemoveFavorite_triggered();
+    void actionRenameFavorite_triggered();
+    void actionAppendFavorite_triggered();
+    void actionShowInFileSystem_triggered();
+
   protected:
 
-    void addFavorite(QString favoriteTitle);
+ //   void addFavorite(QString path, QString favoriteTitle);
     virtual QDir findPipelinesDirectory();
     virtual void readPipelines();
     QStringList generateFilterListFromPipelineFile(QString path);
@@ -83,19 +96,10 @@ class DREAM3DWidgetsLib_EXPORT FavoritesDockWidget : public QDockWidget, private
     bool hasIllegalFavoriteName(QString favoritePath, QString newFavoriteTitle, QTreeWidgetItem* item);
     bool hasDuplicateFavorites(QList<QTreeWidgetItem*> favoritesList, QString favoritePath, QString newFavoriteTitle, QTreeWidgetItem* item);
 
-    void addFiltersRecursively(QDir currentDir, QTreeWidgetItem* currentDirItem);
-    void setupContextMenus();
+    void addFiltersRecursively(QDir currentDir, QTreeWidgetItem* currentDirItem, QString iconFileName,
+                               bool allowEditing, QString fileExtension, FilterLibraryTreeWidget::ItemType itemType);
 
 
-public slots:
-    //// Slots to catch signals from main menu or context menu
-    void actionAddFavorite_triggered();
-    void actionUpdateFavorite_triggered();
-    void removeFavorite(QTreeWidgetItem* item);
-    void actionRemoveFavorite_triggered();
-    void actionRenameFavorite_triggered();
-    void actionAppendFavorite_triggered();
-    void actionShowInFileSystem_triggered();
 
   protected slots:
     //// Slots to catch signals from the QTreeWidget
@@ -109,7 +113,20 @@ public slots:
   signals:
 
     void fireWriteSettings();
-    void pipelineFileActivated(const QString &filePath);
+
+    /**
+     * @brief pipelineNeedsToBeSaved
+     * @param path The absolute path to the pipeline file
+     * @param name The name that the favorite will show up as in the GUI
+     */
+    void pipelineNeedsToBeSaved(const QString& path, const QString& name);
+
+    /**
+     * @brief The signal is emitted when the user double clicks on a pipeline file
+     * @param filePath The absolute path to the pipeline file
+     * @param append Should the pipeline be appended to the current pipeline
+     */
+    void pipelineFileActivated(const QString &filePath, QSettings::Format, bool append);
 
     void filterListGenerated(const QStringList& filterList);
 
