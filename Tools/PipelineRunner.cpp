@@ -104,6 +104,34 @@ void readPipeline(QFilterParametersReader::Pointer paramsReader, FilterPipeline:
   }
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void verifySignals(FilterManager::Pointer fm)
+{
+
+  QByteArray normType = ("updateFilterParameters(AbstractFilter*)");
+  FilterManager::Collection factories = fm->getFactories();
+  QMapIterator<QString, IFilterFactory::Pointer> iter(factories);
+  while(iter.hasNext())
+  {
+    iter.next();
+    IFilterFactory::Pointer factory = iter.value();
+    AbstractFilter::Pointer filter = factory->create();
+    const QMetaObject* meta = filter->metaObject();
+    int count = meta->methodCount();
+
+
+
+    int index = meta->indexOfSignal(normType);
+    if (index < 0)
+    {
+        qDebug() << "Filter: " << iter.key() << "  Method Count: " << count;
+      qDebug() << "==>  Signal void updateFilterParameters(AbstractFilter* filter) does not exist";
+    }
+  }
+}
+
 
 // -----------------------------------------------------------------------------
 //
@@ -144,6 +172,16 @@ int main (int argc, char  *argv[])
 
   std::cout << "PipelineRunner Starting. Version " << DREAM3DLib::Version::PackageComplete().toStdString() << std::endl;
 
+
+  // Register all the filters including trying to load those from Plugins
+  FilterManager::Pointer fm = FilterManager::Instance();
+  DREAM3DPluginLoader::LoadPluginFilters(fm.get());
+
+  // Send progress messages from PipelineBuilder to this object for display
+  qRegisterMetaType<PipelineMessage>();
+
+  int err = 0;
+
   // Sanity Check the filepath to make sure it exists, Report an error and bail if it does not
   QFileInfo fi(pipelineFile);
   if(fi.exists() == false)
@@ -151,16 +189,6 @@ int main (int argc, char  *argv[])
     std::cout << "The input file '" << pipelineFile.toStdString() << "' does not exist" << std::endl;
     return EXIT_FAILURE;
   }
-
-  // Register all the filters including trying to load those from Plugins
-  FilterManager::Pointer fm = FilterManager::Instance();
-  DREAM3DPluginLoader::LoadPluginFilters(fm.get());
-
-
-  // Send progress messages from PipelineBuilder to this object for display
-  qRegisterMetaType<PipelineMessage>();
-
-  int err = 0;
 
   // Use the static method to read the Pipeline file and return a Filter Pipeline
   FilterPipeline::Pointer pipeline = QFilterParametersReader::ReadPipelineFromFile(pipelineFile, QSettings::IniFormat);
