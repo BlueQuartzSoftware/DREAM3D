@@ -152,7 +152,10 @@ void RegularizeZSpacing::dataCheck(bool preflight)
 // -----------------------------------------------------------------------------
 void RegularizeZSpacing::preflight()
 {
+  emit preflightAboutToExecute();
+  emit updateFilterParameters(this);
   dataCheck(true);
+  emit preflightExecuted();
 }
 
 // -----------------------------------------------------------------------------

@@ -246,7 +246,10 @@ void RotateSampleRefFrame::dataCheck()
 void RotateSampleRefFrame::preflight()
 {
   setErrorCondition(0);
+  emit preflightAboutToExecute();
+  emit updateFilterParameters(this);
   dataCheck();
+  emit preflightExecuted();
   if(getErrorCondition() < 0) { return; }
 
 

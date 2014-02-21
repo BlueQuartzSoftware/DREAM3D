@@ -87,13 +87,7 @@ class DREAM3DWidgetsLib_EXPORT FavoritesDockWidget : public QDockWidget, private
     void setupContextMenus();
 
 
-  protected slots:
-    //// Slots to catch signals from the QTreeWidget
-    void on_filterLibraryTree_itemClicked( QTreeWidgetItem* item, int column );
-    void on_filterLibraryTree_itemChanged( QTreeWidgetItem* item, int column );
-    void on_filterLibraryTree_currentItemChanged(QTreeWidgetItem* current, QTreeWidgetItem* previous );
-    void on_filterLibraryTree_itemDoubleClicked( QTreeWidgetItem* item, int column );
-
+public slots:
     //// Slots to catch signals from main menu or context menu
     void actionAddFavorite_triggered();
     void actionUpdateFavorite_triggered();
@@ -102,6 +96,14 @@ class DREAM3DWidgetsLib_EXPORT FavoritesDockWidget : public QDockWidget, private
     void actionRenameFavorite_triggered();
     void actionAppendFavorite_triggered();
     void actionShowInFileSystem_triggered();
+
+  protected slots:
+    //// Slots to catch signals from the QTreeWidget
+    void on_filterLibraryTree_itemClicked( QTreeWidgetItem* item, int column );
+    void on_filterLibraryTree_itemChanged( QTreeWidgetItem* item, int column );
+    void on_filterLibraryTree_currentItemChanged(QTreeWidgetItem* current, QTreeWidgetItem* previous );
+    void on_filterLibraryTree_itemDoubleClicked( QTreeWidgetItem* item, int column );
+
 
 
   signals:
