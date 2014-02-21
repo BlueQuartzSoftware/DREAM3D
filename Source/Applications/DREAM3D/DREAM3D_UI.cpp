@@ -329,11 +329,11 @@ void DREAM3D_UI::readLastPipeline()
 // -----------------------------------------------------------------------------
 void DREAM3D_UI::writeSettings()
 {
-  #if defined (Q_OS_MAC)
-    QSettings::Format format = QSettings::NativeFormat;
-  #else
-    QSettings::Format format = QSettings::IniFormat;
-  #endif
+#if defined (Q_OS_MAC)
+  QSettings::Format format = QSettings::NativeFormat;
+#else
+  QSettings::Format format = QSettings::IniFormat;
+#endif
   QString filePath;
   {
 
@@ -449,18 +449,6 @@ void DREAM3D_UI::setupGui()
   // Tell the Filter Library that we have more Filters (potentially)
   filterLibraryDockWidget->refreshFilterGroups();
 
-  m_FilterListBtn = new QToolButton(this);
-  makeStatusBarButton("Filters", filterListDockWidget, m_FilterListBtn, 0);
-  m_FilterLibraryBtn = new QToolButton(this);
-  makeStatusBarButton("Filter Library", filterLibraryDockWidget, m_FilterLibraryBtn, 1);
-  m_FavoritesBtn = new QToolButton(this);
-  makeStatusBarButton("Favorites", favoritesDockWidget, m_FavoritesBtn, 2);
-  m_PrebuiltBtn = new QToolButton(this);
-  makeStatusBarButton("Prebuilt", prebuiltPipelinesDockWidget, m_PrebuiltBtn, 3);
-  m_IssuesBtn = new QToolButton(this);
-  makeStatusBarButton("Issues", issuesDockWidget, m_IssuesBtn, 4);
-
-
   // Make the connections between the gui elements
   filterLibraryDockWidget->connectFilterList(filterListDockWidget);
   favoritesDockWidget->connectFilterList(filterListDockWidget);
@@ -486,6 +474,69 @@ void DREAM3D_UI::setupGui()
 
   QKeySequence actionSaveKeySeq(Qt::CTRL + Qt::Key_S);
   actionExportPipeline->setShortcut(actionSaveKeySeq);
+
+  setupViewMenu();
+
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DREAM3D_UI::setupViewMenu()
+{
+  m_FilterListBtn = new QToolButton(this);
+  makeStatusBarButton("Filters", filterListDockWidget, m_FilterListBtn, 0);
+  menuView->removeAction(actionShow_Filter_List);
+  delete actionShow_Filter_List;
+  actionShow_Filter_List = filterListDockWidget->toggleViewAction();
+  actionShow_Filter_List->setText("Show Filter List");
+
+  menuView->addAction(actionShow_Filter_List);
+  connect(actionShow_Filter_List, SIGNAL(triggered(bool)),
+          this, SLOT(on_actionShow_Filter_List_triggered(bool)) );
+  connect(m_FilterListBtn, SIGNAL(toggled(bool)),
+          this, SLOT(on_actionShow_Filter_List_triggered(bool)) );
+
+
+  m_FilterLibraryBtn = new QToolButton(this);
+  makeStatusBarButton("Filter Library", filterLibraryDockWidget, m_FilterLibraryBtn, 1);
+  menuView->removeAction(actionShow_Filter_Library);
+  delete actionShow_Filter_Library;
+  actionShow_Filter_Library = filterLibraryDockWidget->toggleViewAction();
+  actionShow_Filter_Library->setText("Show Filter Library");
+  menuView->addAction(actionShow_Filter_Library);
+  connect(actionShow_Filter_Library, SIGNAL(triggered()),
+          this, SLOT(on_actionShow_Filter_Library_triggered()) );
+
+  m_FavoritesBtn = new QToolButton(this);
+  makeStatusBarButton("Favorites", favoritesDockWidget, m_FavoritesBtn, 2);
+  menuView->removeAction(actionShow_Favorites);
+  delete actionShow_Favorites;
+  actionShow_Favorites = favoritesDockWidget->toggleViewAction();
+  actionShow_Favorites->setText("Show Favorites");
+  menuView->addAction(actionShow_Favorites);
+  connect(actionShow_Favorites, SIGNAL(triggered()),
+          this, SLOT(on_actionShow_Favorites_triggered()) );
+
+  m_PrebuiltBtn = new QToolButton(this);
+  makeStatusBarButton("Prebuilt", prebuiltPipelinesDockWidget, m_PrebuiltBtn, 3);
+  menuView->removeAction(actionShow_Prebuilt_Pipelines);
+  delete actionShow_Prebuilt_Pipelines;
+  actionShow_Prebuilt_Pipelines = prebuiltPipelinesDockWidget->toggleViewAction();
+  actionShow_Prebuilt_Pipelines->setText("Show Prebuilts");
+  menuView->addAction(actionShow_Prebuilt_Pipelines);
+  connect(actionShow_Prebuilt_Pipelines, SIGNAL(triggered()),
+          this, SLOT(on_actionShow_Prebuilt_Pipelines_triggered()) );
+
+  m_IssuesBtn = new QToolButton(this);
+  makeStatusBarButton("Issues", issuesDockWidget, m_IssuesBtn, 4);
+  menuView->removeAction(actionShow_Issues);
+  delete actionShow_Issues;
+  actionShow_Issues = issuesDockWidget->toggleViewAction();
+  actionShow_Issues->setText("Show Issues");
+  menuView->addAction(actionShow_Issues);
+  connect(actionShow_Issues, SIGNAL(triggered()),
+          this, SLOT(on_actionShow_Issues_triggered()) );
 }
 
 // -----------------------------------------------------------------------------
@@ -498,12 +549,12 @@ void DREAM3D_UI::makeStatusBarButton(QString text, QDockWidget* dockWidget, QToo
   btn->setCheckable(true);
 
   // This sets up when the dock widget changees visibility the button changes
-  connect(dockWidget, SIGNAL(visibilityChanged(bool)),
-          btn, SLOT(setChecked(bool)));
+  //  connect(dockWidget, SIGNAL(visibilityChanged(bool)),
+  //          btn, SLOT(setChecked(bool)));
 
   // This sets up when the button is changed, the dock widget will change visibility
-  connect(btn, SIGNAL(toggled(bool)),
-          dockWidget, SLOT(setVisible(bool)));
+  //  connect(btn, SIGNAL(toggled(bool)),
+  //          dockWidget, SLOT(setVisible(bool)));
 
   btn->setChecked(!dockWidget->isHidden());
   statusBar()->insertPermanentWidget(index, btn, 0);
@@ -748,31 +799,7 @@ void DREAM3D_UI::on_startPipelineBtn_clicked()
 // -----------------------------------------------------------------------------
 void DREAM3D_UI::populateMenus(QObject *plugin)
 {
-#if 0
-#ifdef QT_DEBUG
-  qDebug() << "Found Plugin..." << "\n";
-#endif
-  DREAM3DPluginInterface* ipPlugin = qobject_cast<DREAM3DPluginInterface * > (plugin);
-  if (ipPlugin)
-  {
-    m_LoadedPlugins.push_back(ipPlugin);
-#ifdef QT_DEBUG
-    qWarning(ipPlugin->getPluginName().toAscii(), "%s");
-#endif
-    QIcon newIcon = ipPlugin->icon();
 
-    addToPluginMenu(plugin, ipPlugin->getPluginName(),
-                    menuPlugins, SLOT(setInputUI()), m_PluginActionGroup, newIcon);
-
-    QAction* action = new QAction(newIcon, ipPlugin->getPluginName(), this);
-    connect(action, SIGNAL(triggered()),
-            plugin, SLOT(displayHelp()));
-    connect(plugin, SIGNAL(showHelp(QUrl)),
-            m_HelpDialog, SLOT(setContentFile(QUrl)));
-    menuHelp->addAction(action);
-
-  }
-#endif
 }
 
 
@@ -962,31 +989,39 @@ void DREAM3D_UI::on_actionShow_Filter_Library_triggered()
 void DREAM3D_UI::on_filterLibraryDockWidget_visibilityChanged(bool b)
 {
   qDebug() << "on_filterLibraryDockWidget_visibilityChanged";
-  updateAndSyncDockWidget(actionShow_Filter_Library, filterLibraryDockWidget, m_FilterLibraryBtn);
+  //  updateAndSyncDockWidget(actionShow_Filter_Library, filterLibraryDockWidget, m_FilterLibraryBtn);
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DREAM3D_UI::on_actionShow_Filter_List_triggered()
+void DREAM3D_UI::on_actionShow_Filter_List_triggered(bool b)
 {
-  updateAndSyncDockWidget(actionShow_Filter_List, filterListDockWidget, m_FilterListBtn);
+//// updateAndSyncDockWidget() CONTENTS NEEDS TO BE REPLACED WITH THIS CONTENT. AN ADDITIONAL
+/// ARGUMENT OF A BOOLEAN NEEDS TO BE ALSO PASSED IN "b".
+  actionShow_Filter_List->setChecked(b);
+  m_FilterListBtn->setChecked(b);
+  filterListDockWidget->setVisible(b);
+
+  if(b == false)
+  {
+    QString text = actionShow_Filter_List->text().replace("Show", "Hide");
+    actionShow_Filter_List->setText(text);
+  }
+  else
+  {
+    QString text = actionShow_Filter_List->text().replace("Hide", "Show");
+    actionShow_Filter_List->setText(text);
+  }
 }
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void DREAM3D_UI::on_filterListDockWidget_visibilityChanged(bool b)
-{
-  qDebug() << "on_filterListDockWidget_visibilityChanged";
-  updateAndSyncDockWidget(actionShow_Filter_List, filterListDockWidget, m_FilterListBtn);
-}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 void DREAM3D_UI::on_actionShow_Prebuilt_Pipelines_triggered()
 {
+  qDebug() << "on_actionShow_Prebuilt_Pipelines_triggered";
   updateAndSyncDockWidget(actionShow_Prebuilt_Pipelines, prebuiltPipelinesDockWidget, m_PrebuiltBtn);
 }
 
@@ -996,7 +1031,7 @@ void DREAM3D_UI::on_actionShow_Prebuilt_Pipelines_triggered()
 void DREAM3D_UI::on_prebuiltPipelinesDockWidget_visibilityChanged(bool b)
 {
   qDebug() << "on_prebuiltPipelinesDockWidget_visibilityChanged";
-  updateAndSyncDockWidget(actionShow_Prebuilt_Pipelines, prebuiltPipelinesDockWidget, m_PrebuiltBtn);
+  //  updateAndSyncDockWidget(actionShow_Prebuilt_Pipelines, prebuiltPipelinesDockWidget, m_PrebuiltBtn);
 }
 
 // -----------------------------------------------------------------------------
@@ -1013,7 +1048,7 @@ void DREAM3D_UI::on_actionShow_Favorites_triggered()
 void DREAM3D_UI::on_favoritesDockWidget_visibilityChanged(bool b)
 {
   qDebug() << "on_favoritesDockWidget_visibilityChanged";
-  updateAndSyncDockWidget(actionShow_Favorites, favoritesDockWidget, m_FavoritesBtn);
+  //  updateAndSyncDockWidget(actionShow_Favorites, favoritesDockWidget, m_FavoritesBtn);
 }
 
 // -----------------------------------------------------------------------------
@@ -1030,7 +1065,7 @@ void DREAM3D_UI::on_actionShow_Issues_triggered()
 void DREAM3D_UI::on_issuesDockWidget_visibilityChanged(bool b)
 {
   qDebug() << "on_issuesDockWidget_visibilityChanged";
-  updateAndSyncDockWidget(actionShow_Issues, issuesDockWidget, m_IssuesBtn);
+  //  updateAndSyncDockWidget(actionShow_Issues, issuesDockWidget, m_IssuesBtn);
 }
 
 // -----------------------------------------------------------------------------
@@ -1044,19 +1079,21 @@ void DREAM3D_UI::updateAndSyncDockWidget(QAction* action, QDockWidget* dock, QTo
   dock->blockSignals(true);
   btn->blockSignals(true);
   QString text = action->text();
-  if(text.startsWith("Show"))
+  bool isChecked = action->isChecked();
+
+  if(isChecked == false)
   {
     text = text.replace("Show", "Hide");
     action->setText(text);
-    dock->setVisible(true);
-    btn->setChecked(true);
+    dock->setVisible(isChecked);
+    btn->setChecked(isChecked);
   }
   else
   {
     text = text.replace("Hide", "Show");
     action->setText(text);
-    dock->setVisible(false);
-    btn->setChecked(false);
+    dock->setVisible(isChecked);
+    btn->setChecked(isChecked);
   }
   action->blockSignals(false);
   dock->blockSignals(false);

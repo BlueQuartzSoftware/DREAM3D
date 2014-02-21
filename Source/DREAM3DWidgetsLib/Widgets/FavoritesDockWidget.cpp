@@ -94,21 +94,8 @@ void FavoritesDockWidget::connectFilterList(FilterListDockWidget* filterListWidg
 // -----------------------------------------------------------------------------
 void FavoritesDockWidget::setupGui()
 {
-  // This is just here to have the code compile. This is a QListWidget where the filters that make up
-  // a prebuilt pipeline are displayed.
-  //filterList = new QListWidget(this);
-
   // Clear out the default stuff
   filterLibraryTree->clear();
-
-
-#if 0
-  QTreeWidgetItem* m_favorites = new QTreeWidgetItem(filterLibraryTree, Favorite_Category_Item_Type);
-  m_favorites->setText(0, DREAM3D::Settings::FavoritePipelines);
-  m_favorites->setIcon(0, QIcon(":/flash.png"));
-
-  m_favorites->setExpanded(true);
-#endif
 
   setupContextMenus();
 
@@ -124,7 +111,7 @@ void FavoritesDockWidget::setupContextMenus()
 
 //// This all should come from the GUI. Or the gui should gather these items and set them into this class?  QAction* separator = new QAction(this);
     QMenu* m_MenuPipeline = NULL;
-//    QMenu* menuPipeline = NULL;
+
 
 
   QAction* separator = new QAction(this);

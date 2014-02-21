@@ -125,8 +125,9 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
     void on_actionRemoveCurrentFilter_triggered();
 
     //View Menu
+    // These all need to take a bool b  argument
     void on_actionShow_Filter_Library_triggered();
-    void on_actionShow_Filter_List_triggered();
+    void on_actionShow_Filter_List_triggered(bool b);
     void on_actionShow_Prebuilt_Pipelines_triggered();
     void on_actionShow_Favorites_triggered();
     void on_actionShow_Issues_triggered();
@@ -140,11 +141,14 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
     // Buttons and other widgets that send signals that we want to catch
     void on_startPipelineBtn_clicked();
 
+
+//// THESE ALL NEED TO BE REMOVED
     void on_filterLibraryDockWidget_visibilityChanged(bool b);
-    void on_filterListDockWidget_visibilityChanged(bool b);
+
     void on_prebuiltPipelinesDockWidget_visibilityChanged(bool b);
     void on_favoritesDockWidget_visibilityChanged(bool b);
     void on_issuesDockWidget_visibilityChanged(bool b);
+////========================
 
     /**
      * @brief Updates the QMenu 'Recent Files' with the latest list of files. This
@@ -180,7 +184,7 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
   protected:
 
     void populateMenus(QObject *plugin);
-
+    void setupViewMenu();
 
     /**
      * @brief Implements the CloseEvent to Quit the application and write settings
