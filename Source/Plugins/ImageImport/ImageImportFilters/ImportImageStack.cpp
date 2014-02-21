@@ -195,7 +195,7 @@ void ImportImageStack::dataCheck()
     m->setDimensions(static_cast<size_t>(dims[0]), static_cast<size_t>(dims[1]), static_cast<size_t>(dims[2]));
     m->setResolution(m_Resolution.x, m_Resolution.y, m_Resolution.z);
     m->setOrigin(m_Origin.x, m_Origin.y, m_Origin.z);
-    
+
     QVector<size_t> tDims(3, 0);
     for(int i=0;i<3; i++)
     {
@@ -218,9 +218,10 @@ void ImportImageStack::dataCheck()
 // -----------------------------------------------------------------------------
 void ImportImageStack::preflight()
 {
-  /* Place code here that sanity checks input arrays and input values. Look at some
-  * of the other DREAM3DLib/Filters/.cpp files for sample codes */
+  emit preflightAboutToExecute();
+  emit updateFilterParameters(this);
   dataCheck();
+  emit preflightExecuted();
 }
 
 // -----------------------------------------------------------------------------

@@ -187,12 +187,15 @@ void InitializeSyntheticVolume::dataCheck()
 // -----------------------------------------------------------------------------
 void InitializeSyntheticVolume::preflight()
 {
+  emit preflightAboutToExecute();
+  emit updateFilterParameters(this);
   dataCheck();
+
 
   hid_t fileId = QH5Utilities::openFile(m_InputFile, true); // Open the file Read Only
   if(fileId < 0)
   {
-
+    emit preflightExecuted(); // Be sure to emit this if we return early
     QString ss = QObject::tr(": Error opening input file '%1'").arg(m_InputFile);
     setErrorCondition(-150);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
@@ -217,6 +220,8 @@ void InitializeSyntheticVolume::preflight()
   cellEnsembleAttrMat->createAndAddAttributeArray<DataArray<uint32_t>, uint32_t>(DREAM3D::EnsembleData::ShapeTypes, 0, dims);
 
   QList<QString> check = cellEnsembleAttrMat->getAttributeArrayNameList();
+
+  emit preflightExecuted();
 }
 
 // -----------------------------------------------------------------------------
