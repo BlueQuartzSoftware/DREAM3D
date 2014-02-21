@@ -57,7 +57,6 @@ class DREAM3DWidgetsLib_EXPORT FilterListDockWidget : public QDockWidget, privat
   public slots:
 
     void on_filterList_itemDoubleClicked( QListWidgetItem* item );
-    void on_filterList_currentItemChanged( QListWidgetItem* item, QListWidgetItem* previous );
 
     void on_filterSearch_textChanged (const QString& text);
 
@@ -66,7 +65,6 @@ class DREAM3DWidgetsLib_EXPORT FilterListDockWidget : public QDockWidget, privat
   signals:
 
     void filterItemDoubleClicked(const QString& filterName);
-  //  void visibilityChanged(bool visible); // Reimplemented from superclass
 
 
   protected:

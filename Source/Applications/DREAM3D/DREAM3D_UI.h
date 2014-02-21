@@ -120,6 +120,8 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
     void on_actionSaveAsNewPipeline_triggered();
     void on_actionAppendToExistingPipeline_triggered();
     void on_actionClearPipeline_triggered();
+
+    // Filter Menu
     void on_actionCopyCurrentFilter_triggered();
     void on_actionPasteCopiedFilter_triggered();
     void on_actionRemoveCurrentFilter_triggered();
@@ -174,7 +176,18 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
 
   protected:
 
+    /**
+     * @brief populateMenus This is a planned API that plugins would use to add Menus to the main application
+     * @param plugin
+     */
     void populateMenus(QObject *plugin);
+
+    /**
+     * @brief setupPipelineMenu This will collect specific menu items and allow them to be used from a contextual menu
+     * assigned to the various Pipeline/Filter/Favorites type items
+     */
+    void setupPipelineContextMenu();
+
     void setupViewMenu();
 
     /**

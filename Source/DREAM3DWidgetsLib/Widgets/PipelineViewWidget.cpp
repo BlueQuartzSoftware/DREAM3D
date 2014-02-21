@@ -53,7 +53,7 @@
 #include <QtGui/QScrollArea>
 #include <QtGui/QScrollBar>
 #include <QtGui/QProgressDialog>
-
+#include <QtGui/QMessageBox>
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
@@ -285,12 +285,25 @@ FilterPipeline::Pointer PipelineViewWidget::getFilterPipeline()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PipelineViewWidget::savePipeline(const QString& filePath, const QString name, QSettings::Format format)
+void PipelineViewWidget::savePipeline(const QString& filePath, const QString &name, QSettings::Format format)
 {
 
-    // Create a Pipeline Object and fill it with the filters from this View
+  //If the filePath already exists - delete it so that we get a clean write to the file
+  QFileInfo fi(filePath);
+  if (fi.exists() == true)
+  {
+    QFile f(filePath);
+    if (f.remove() == false)
+    {
+      QMessageBox::warning ( this, QString::fromAscii("Pipeline Save Error"),
+                             QString::fromAscii("There was an error removing the existing Pipeline file. The pipeline was NOT saved.") );
+      return;
+    }
+  }
+
+  // Create a Pipeline Object and fill it with the filters from this View
   FilterPipeline::Pointer pipeline = getFilterPipeline();
-  int err = QFilterParametersWriter::WritePipelineToFile(pipeline, filePath, name, format, reinterpret_cast<IObserver*>(m_PipelineMessageObserver));
+  int err = QFilterParametersWriter::WritePipelineToFile(pipeline, fi.absoluteFilePath(), name, format, reinterpret_cast<IObserver*>(m_PipelineMessageObserver));
   if (err < 0)
   {
 
@@ -300,14 +313,13 @@ void PipelineViewWidget::savePipeline(const QString& filePath, const QString nam
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PipelineViewWidget::loadPipelineFile(const QString& filePath, QSettings::Format format)
+void PipelineViewWidget::loadPipelineFile(const QString& filePath, QSettings::Format format, bool append)
 {
   // Clear the pipeline Issues table first so we can collect all the error messages
   emit pipelineIssuesCleared();
   // Load the pipeline from the file resulting in a FilterPipeline Object
   FilterPipeline::Pointer pipeline = QFilterParametersReader::ReadPipelineFromFile(filePath, format, dynamic_cast<IObserver*>(m_PipelineMessageObserver) );
 
-  bool append = false;
   // Clear the Pipeline First
   if (false == append) { clearWidgets(); }
   // get a reference to the filters which are in some type of container object.
@@ -448,7 +460,10 @@ void PipelineViewWidget::preflightPipeline()
 
   // Preflight the pipeline
   int err = pipeline->preflightPipeline();
-
+  if (err < 0)
+  {
+  //FIXME: Implement this
+  }
   progress.setValue(1);
 
   int count = pipeline->getFilterContainer().size();

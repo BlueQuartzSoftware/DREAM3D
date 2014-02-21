@@ -333,8 +333,11 @@ void GenerateFaceIPFColoring::dataCheckVoxel()
 // -----------------------------------------------------------------------------
 void GenerateFaceIPFColoring::preflight()
 {
+  emit preflightAboutToExecute();
+  emit updateFilterParameters(this);
   dataCheckSurfaceMesh();
   dataCheckVoxel();
+  emit preflightExecuted();
 }
 
 // -----------------------------------------------------------------------------

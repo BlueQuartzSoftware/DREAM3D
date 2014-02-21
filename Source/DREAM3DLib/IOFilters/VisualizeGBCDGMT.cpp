@@ -256,7 +256,10 @@ void VisualizeGBCDGMT::dataCheckSurfaceMesh()
 // -----------------------------------------------------------------------------
 void VisualizeGBCDGMT::preflight()
 {
+  emit preflightAboutToExecute();
+  emit updateFilterParameters(this);
   dataCheckSurfaceMesh();
+    emit preflightExecuted();
 }
 
 // -----------------------------------------------------------------------------
@@ -300,7 +303,7 @@ void VisualizeGBCDGMT::execute()
   VertexArray::Pointer nodesPtr = sm->getVertices();
 
   FaceArray::Pointer trianglesPtr = sm->getFaces();
-  size_t totalFaces = trianglesPtr->getNumberOfTuples();
+ // size_t totalFaces = trianglesPtr->getNumberOfTuples();
 
   FloatArrayType::Pointer gbcdDeltasArray = FloatArrayType::CreateArray(5, "GBCDDeltas");
   gbcdDeltasArray->initializeWithZeros();
@@ -382,7 +385,7 @@ void VisualizeGBCDGMT::execute()
 
   int thetaPoints = 120;
   int phiPoints = 30;
-  int zpoints = 1;
+  //int zpoints = 1;
   float thetaRes = 360.0/float(thetaPoints);
   float phiRes = 90.0/float(phiPoints);
   float theta, phi;

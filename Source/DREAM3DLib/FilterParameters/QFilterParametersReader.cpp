@@ -126,12 +126,13 @@ FilterPipeline::Pointer QFilterParametersReader::ReadPipelineFromFile(QString fi
         // be due to a name change for the filter.
       {
         EmptyFilter::Pointer filter = EmptyFilter::New();
-        QString humanLabel = QString("MISSING FILTER: ") + filterName;
+        QString humanLabel = QString("UNKONWN OR MISSING FILTER: ") + filterName;
         filter->setHumanLabel(humanLabel);
+        filter->setOriginalFilterName(filterName);
         pipeline->pushBack(filter);
 
         if (NULL != obs) {
-          QString ss = QObject::tr("An implementation for filter '%1' could not be located. Is it spelled correctly or has the name changed? A blank filter has been inserted in its place.").arg(filterName);
+          QString ss = QObject::tr("An implementation for filter '%1' could not be located. Possible reasons include a name change of the filter, plugin not loading or a simple spelling mistake? A blank filter has been inserted in its place.").arg(filterName);
           PipelineMessage pm(filterName, ss, -66066, PipelineMessage::Error);
           pm.setPrefix("QFilterParametersReader::ReadPipelineFromFile()");
           obs->processPipelineMessage(pm);
@@ -739,7 +740,7 @@ AxisAngleInput_t QFilterParametersReader::readAxisAngle(const QString name, Axis
   bool closeArray = false;
   if (vectorPos == -1)
   {
-    int count = m_Prefs->beginReadArray(name);
+    m_Prefs->beginReadArray(name);
     vectorPos = 0;
     closeArray = true;
   }

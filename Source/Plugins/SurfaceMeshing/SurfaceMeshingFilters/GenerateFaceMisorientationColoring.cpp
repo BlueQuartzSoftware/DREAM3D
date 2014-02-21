@@ -287,8 +287,11 @@ void GenerateFaceMisorientationColoring::dataCheckVoxel()
 // -----------------------------------------------------------------------------
 void GenerateFaceMisorientationColoring::preflight()
 {
+  emit preflightAboutToExecute();
+  emit updateFilterParameters(this);
   dataCheckSurfaceMesh();
   dataCheckVoxel();
+  emit preflightExecuted();
 }
 
 // -----------------------------------------------------------------------------
@@ -305,7 +308,7 @@ void GenerateFaceMisorientationColoring::execute()
   if(getErrorCondition() < 0) { return; }
 
   SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  //VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
   notifyStatusMessage(getHumanLabel(), "Starting");
 
   // Run the data check to allocate the memory for the centroid array

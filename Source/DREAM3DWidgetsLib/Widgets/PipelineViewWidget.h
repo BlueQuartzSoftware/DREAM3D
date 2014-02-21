@@ -71,12 +71,7 @@ class DREAM3DWidgetsLib_EXPORT PipelineViewWidget : public QFrame
     PipelineFilterWidget* filterWidgetAt(int index);
     void clearWidgets();
 
-    /**
-     * @brief savePipeline
-     * @param filePath
-     * @param name
-     */
-    void savePipeline(const QString& filePath, const QString name, QSettings::Format = QSettings::IniFormat);
+
 
     /**
      * @brief getFilterPipeline
@@ -155,8 +150,14 @@ class DREAM3DWidgetsLib_EXPORT PipelineViewWidget : public QFrame
      */
     void doAutoScroll();
 
-    void loadPipelineFile(const QString& filePath, QSettings::Format format = QSettings::IniFormat);
+    void loadPipelineFile(const QString& filePath, QSettings::Format format = QSettings::IniFormat, bool append = false);
 
+    /**
+     * @brief savePipeline Saves the pipeline to the file
+     * @param filePath The absolute path to the pipeline file
+     * @param name The name that will be used for display purposes
+     */
+    void savePipeline(const QString& filePath, const QString& name, QSettings::Format = QSettings::IniFormat);
 
   signals:
     void addPlaceHolderFilter(QPoint p);

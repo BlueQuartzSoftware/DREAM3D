@@ -1,6 +1,7 @@
 /* ============================================================================
  * Copyright (c) 2012 Michael A. Jackson (BlueQuartz Software)
  * Copyright (c) 2012 Dr. Michael A. Groeber (US Air Force Research Laboratories)
+ * Copyright (c) 2012 Joseph B. Kleingers (Intern, University of Dayton)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -30,89 +31,97 @@
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  *  This code was written under United States Air Force Contract number
- *                           FA8650-10-D-5210
+ *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#include "EmptyFilter.h"
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-EmptyFilter::EmptyFilter() :
-  AbstractFilter(),
-  m_HumanLabel("NON FUNCTIONAL FILTER")
+#include "FilterLibraryTreeWidget.h"
+
+
+
+FilterLibraryTreeWidget::FilterLibraryTreeWidget(QWidget *parent) :
+QTreeWidget(parent)
 {
+  setContextMenuPolicy(Qt::CustomContextMenu);
+
+  connect(this,
+    SIGNAL(customContextMenuRequested(const QPoint&)),
+    SLOT(onCustomContextMenuRequested(const QPoint&)));
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-EmptyFilter::~EmptyFilter()
+void FilterLibraryTreeWidget::addActionList(QList<QAction*> actionList)
 {
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void EmptyFilter::setupFilterParameters()
-{
-
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void EmptyFilter::readFilterParameters(AbstractFilterParametersReader* reader, int index)
-{
-  reader->openFilterGroup(this, index);
-  /* Code to read the values goes between these statements */
-  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
-
-  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
-  reader->closeFilterGroup();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int EmptyFilter::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  writer->openFilterGroup(this, index);
-  /* Place code that will write the inputs values into a file. reference the
-   AbstractFilterParametersWriter class for the proper API to use. */
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void EmptyFilter::dataCheck(bool preflight)
-{
-
-  QString ss = QObject::tr("This filter does nothing and was was inserted as a place holder for filter '%1' that does not exist anymore.").arg(getOriginalFilterName());
-  setErrorCondition(-9999);
-  notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-
+  for (int i=0; i<actionList.size(); i++)
+  {
+    m_Menu.addAction(actionList[i]);
+  }
 }
 
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void EmptyFilter::preflight()
+void FilterLibraryTreeWidget::setNodeActionList(QList<QAction *> list)
 {
-  dataCheck(true);
+  m_NodeActions = list;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void FilterLibraryTreeWidget::setLeafActionList(QList<QAction *> list)
+{
+  m_LeafActions = list;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void FilterLibraryTreeWidget::onCustomContextMenuRequested(const QPoint& pos)
+{
+  QTreeWidgetItem* item = itemAt(pos);
+
+  if (item)
+  {
+    // Note: We must map the point to global from the viewport to
+    // account for the header.
+    showContextMenu( item, viewport()->mapToGlobal(pos) );
+  }
 }
 
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void EmptyFilter::execute()
+void FilterLibraryTreeWidget::showContextMenu(QTreeWidgetItem* item, const QPoint& globalPos)
 {
-  dataCheck(false);
+  // Clear menu's previous actions
+  m_Menu.clear();
 
-  /* Let the GUI know we are done with this filter */
-  notifyStatusMessage(getHumanLabel(), "Complete");
+  int itemType = item->type();
+  switch (itemType)
+  {
+
+//    case Default_Item_Type:
+//    if ( !m_DefaultActions.isEmpty() )
+//      addActionList(m_DefaultActions);
+//    break;
+
+  case Leaf_Item_Type:
+    if ( !m_LeafActions.isEmpty() )
+      addActionList(m_LeafActions);
+    break;
+
+
+  case Node_Item_Type:
+    if ( !m_NodeActions.isEmpty() )
+      addActionList(m_NodeActions);
+    break;
+
+  }
+
+  m_Menu.exec(globalPos);
 }

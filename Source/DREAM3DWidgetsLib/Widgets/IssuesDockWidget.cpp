@@ -96,7 +96,7 @@ void IssuesDockWidget::clearIssues()
   // qDebug() << "IssuesDockWidget::clearIssues()";
   for (int i = 0; i < errorTableWidget->rowCount(); ++i)
   {
-    qDebug() << "    Removing Issue";
+    //qDebug() << "    Removing Issue";
     errorTableWidget->removeRow(i);
   }
   errorTableWidget->setRowCount(0);

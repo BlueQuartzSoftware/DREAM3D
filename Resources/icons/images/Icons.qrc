@@ -71,6 +71,7 @@
   <file>warning.png</file>
   <file>zoomIn.png</file>
   <file>zoomOut.png</file>
-
+  <file>folder_blue.png</file>
+  <file>text.png</file>
  </qresource>
  </RCC>

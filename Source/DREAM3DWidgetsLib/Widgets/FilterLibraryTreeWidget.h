@@ -1,7 +1,7 @@
 /* ============================================================================
  * Copyright (c) 2012 Michael A. Jackson (BlueQuartz Software)
  * Copyright (c) 2012 Dr. Michael A. Groeber (US Air Force Research Laboratories)
- * Copyright (c) 2012 Joseph B. Kleingers (Student Research Assistant)
+ * Copyright (c) 2012 Joseph B. Kleingers (Intern, University of Dayton)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -14,10 +14,10 @@
  * list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
  *
- * Neither the name of Michael A. Groeber, Michael A. Jackson, Joseph B. Kleingers,
- * the US Air Force, BlueQuartz Software nor the names of its contributors may be
- * used to endorse or promote products derived from this software without specific
- * prior written permission.
+ * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
+ * BlueQuartz Software nor the names of its contributors may be used to endorse
+ * or promote products derived from this software without specific prior written
+ * permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -35,30 +35,63 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _ADDFAVORITEWIDGET_H_
-#define _ADDFAVORITEWIDGET_H_
+#ifndef _TREEWIDGETBUILDER_H_
+#define _TREEWIDGETBUILDER_H_
 
-#include "DREAM3DWidgetsLib/DREAM3DWidgetsLib.h"
+#include <QApplication>
 
-#include "ui_AddFavoriteWidget.h"
 
-class DREAM3DWidgetsLib_EXPORT AddFavoriteWidget : public QDialog, public Ui::Dialog
+#include <QtGui/QMenu>
+#include <QtGui/QMouseEvent>
+#include <QtGui/QTreeWidget>
+#include <QtGui/QTreeWidgetItem>
+
+class PipelineBuilderWidget;
+class QAction;
+class QTreeWidgetItem;
+
+class FilterLibraryTreeWidget : public QTreeWidget
 {
-  Q_OBJECT
+    Q_OBJECT;
 
   public:
-    AddFavoriteWidget(QString text, QWidget* parent = 0);
-    bool getBtnClicked();
-    QString getFavoriteName();
+    enum ItemType
+    {
+      Node_Item_Type = 1,
+      Leaf_Item_Type = 2
+    };
 
-  protected slots:
-    void on_addfavoriteOKButton_clicked();
-    void on_addfavoriteCancelButton_clicked();
-    void on_favoriteName_textChanged(const QString & text);
+    FilterLibraryTreeWidget(QWidget* parent = 0);
+
+
+    /**
+     * @brief setNodeActionList
+     * @param list
+     */
+    void setNodeActionList(QList<QAction*> list);
+
+    /**
+     * @brief setLeafActionList
+     * @param list
+     */
+    void setLeafActionList(QList<QAction*> list);
+
+  protected:
+
+
+    /**
+     * @brief Adds the actions in the actionList parameter to the right-click menu
+     */
+    void addActionList(QList<QAction*> actionList);
+
+  private slots:
+    void onCustomContextMenuRequested(const QPoint& pos);
+    void showContextMenu(QTreeWidgetItem* item, const QPoint& globalPos);
 
   private:
-    bool BtnClicked;
+    QMenu                     m_Menu;
+    QList<QAction*>						m_NodeActions;
+    QList<QAction*>						m_LeafActions;
 };
 
-#endif /* _AddFavoriteWidget_H */
-
+#endif /* _TREEWIDGETBUILDER_H_ */
