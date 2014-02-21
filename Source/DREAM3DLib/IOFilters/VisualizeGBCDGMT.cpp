@@ -256,7 +256,10 @@ void VisualizeGBCDGMT::dataCheckSurfaceMesh()
 // -----------------------------------------------------------------------------
 void VisualizeGBCDGMT::preflight()
 {
+  emit preflightAboutToExecute();
+  emit updateFilterParameters(this);
   dataCheckSurfaceMesh();
+    emit preflightExecuted();
 }
 
 // -----------------------------------------------------------------------------
