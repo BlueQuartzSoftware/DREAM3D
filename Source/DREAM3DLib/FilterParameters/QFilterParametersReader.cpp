@@ -126,7 +126,7 @@ FilterPipeline::Pointer QFilterParametersReader::ReadPipelineFromFile(QString fi
         // be due to a name change for the filter.
       {
         EmptyFilter::Pointer filter = EmptyFilter::New();
-        QString humanLabel = QString("UNKONWN OR MISSING FILTER: ") + filterName;
+        QString humanLabel = QString("UNKNOWN OR MISSING FILTER: ") + filterName;
         filter->setHumanLabel(humanLabel);
         filter->setOriginalFilterName(filterName);
         pipeline->pushBack(filter);
