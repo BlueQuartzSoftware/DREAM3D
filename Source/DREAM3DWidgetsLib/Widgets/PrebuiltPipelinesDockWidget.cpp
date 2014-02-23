@@ -120,7 +120,13 @@ QDir PrebuiltPipelinesDockWidget::findPipelinesDirectory()
   QString appPath = qApp->applicationDirPath();
   QDir pipelinesDir = QDir(appPath);
 #if defined(Q_OS_WIN)
-
+  QFileInfo fi(pipelinesDir.absolutePath() + QDir::separator() + dirName);
+  if (fi.exists() == false)
+  {
+    // The help file does not exist at the default location because we are probably running from visual studio.
+    // Try up one more directory
+    pipelinesDir.cdUp();
+  }
 #elif defined(Q_OS_MAC)
   if (pipelinesDir.dirName() == "MacOS")
   {
@@ -130,18 +136,17 @@ QDir PrebuiltPipelinesDockWidget::findPipelinesDirectory()
   }
 #else
   // We are on Linux - I think
-  pipelinesDir.cdUp();
-#endif
-
-#if defined(Q_OS_WIN)
   QFileInfo fi(pipelinesDir.absolutePath() + QDir::separator() + dirName);
+ // qDebug() << fi.absolutePath();
+  // Look for the "PrebuiltPipelines" directory in the current app directory
   if (fi.exists() == false)
   {
-    // The help file does not exist at the default location because we are probably running from visual studio.
     // Try up one more directory
     pipelinesDir.cdUp();
   }
+
 #endif
+
   pipelinesDir = pipelinesDir.absolutePath() + QDir::separator() + dirName;
   return pipelinesDir;
 }

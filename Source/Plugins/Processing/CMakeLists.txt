@@ -166,7 +166,7 @@ set(${PLUGIN_NAME}_MODULE_SRCS
 # --------------------------------------------------------------------
 # Setup output Directory for the plugin
 if(NOT MSVC)
-  set(CMAKE_LIBRARY_OUTPUT_DIRECTORY  ${DREAM3DProj_BINARY_DIR}/Bin/plugins  )
+  set(CMAKE_LIBRARY_OUTPUT_DIRECTORY  ${DREAM3DProj_BINARY_DIR}/Bin/Plugins  )
 endif()
 
 
