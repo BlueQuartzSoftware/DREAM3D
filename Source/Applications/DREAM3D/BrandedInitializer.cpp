@@ -103,8 +103,16 @@ bool BrandedInitializer::initialize(int argc, char* argv[])
   // Not sure why this is needed. Andy added this ages ago with comment saying
   // needed for Mac apps. Need to check that it's indeed still required.
   QDir dir(QApplication::applicationDirPath());
+#if defined (Q_OS_MAC)
   dir.cdUp();
   dir.cd("Plugins");
+
+#elif defined (Q_OS_LINUX)
+
+#elif defined (Q_OS_WIN)
+  dir.cdUp();
+  dir.cd("Plugins");
+#endif
   QApplication::addLibraryPath(dir.absolutePath());
 
 
@@ -145,7 +153,7 @@ void BrandedInitializer::loadPlugins()
   m_PluginDirs << qApp->applicationDirPath();
 
   QDir aPluginDir = QDir(qApp->applicationDirPath());
-  // qDebug() << "aPluginDir: " << aPluginDir.absolutePath() << "\n";
+  qDebug() << "aPluginDir: " << aPluginDir.absolutePath();
   QString thePath;
 
 #if defined(Q_OS_WIN)
@@ -175,6 +183,14 @@ void BrandedInitializer::loadPlugins()
 #endif
 #else
   // We are on Linux - I think
+  // Try the current location of where the application was launched from
+  if (aPluginDir.cd("Plugins"))
+  {
+    thePath = aPluginDir.absolutePath();
+    m_PluginDirs << thePath;
+  }
+  // Now try moving up a directory which is what should happen when running from a
+  // proper distribution of DREAM3D
   aPluginDir.cdUp();
   if (aPluginDir.cd("plugins"))
   {
@@ -187,7 +203,7 @@ void BrandedInitializer::loadPlugins()
 
   foreach (QString pluginDirString, m_PluginDirs)
   {
-    //qDebug() << "Plugin Directory being Searched: " << pluginDirString() << "\n";
+    qDebug() << "Plugin Directory being Searched: " << pluginDirString << "\n";
     aPluginDir = QDir(pluginDirString);
     foreach (QString fileName, aPluginDir.entryList(QDir::Files))
     {

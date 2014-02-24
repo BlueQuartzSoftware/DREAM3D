@@ -173,13 +173,13 @@ function(BuildQtAppBundle)
     )
 
 #-- Create install rules for any Qt Plugins that are needed
-    set(pi_dest ${QAB_INSTALL_DEST}/plugins)
+    set(pi_dest ${QAB_INSTALL_DEST}/Plugins)
     # if we are on OS X then we set the plugin installation location to inside the App bundle
     if(APPLE)
-        set(pi_dest ${QAB_TARGET}.app/Contents/plugins)
+        set(pi_dest ${QAB_TARGET}.app/Contents/Plugins)
         set(osx_app_name ${QAB_TARGET})
         if(CMAKE_BUILD_TYPE MATCHES "Debug")
-            set(pi_dest ${QAB_TARGET}${QAB_DEBUG_EXTENSION}.app/Contents/plugins)
+            set(pi_dest ${QAB_TARGET}${QAB_DEBUG_EXTENSION}.app/Contents/Plugins)
             set(osx_app_name ${QAB_TARGET}${QAB_DEBUG_EXTENSION})
         endif()
     endif()
@@ -510,7 +510,7 @@ macro(PluginProperties targetName DEBUG_EXTENSION projectVersion binaryDir plugi
         set(BUILD_TYPES "Debug;Release")
         foreach(btype ${BUILD_TYPES})
             INSTALL(TARGETS ${targetName}
-                    DESTINATION ./plugins
+                    DESTINATION ./Plugins
                     CONFIGURATIONS ${btype}
                     COMPONENT Applications)
         endforeach()
@@ -568,13 +568,13 @@ macro (FindQt4Plugins pluginlist pluginfile libdirsearchfile plugintype)
                 #  message(STATUS "${upperlib}_LIBRARY_DLL_${TYPE}: ${${upperlib}_LIBRARY_DLL_${TYPE}}")
                 #  message(STATUS "Generating Install Rule for DLL File for QT_IMAGEFORMAT_PLUGIN_${PLUGIN}_${BTYPE}\n  ${QT_IMAGEFORMAT_PLUGIN_${PLUGIN}_${BTYPE}}")
                 INSTALL(FILES ${QT_IMAGEFORMAT_PLUGIN_${PLUGIN}_${BTYPE}}
-                    DESTINATION ./plugins/${plugintype}
+                    DESTINATION ./Plugins/${plugintype}
                     CONFIGURATIONS ${BTYPE}
                     COMPONENT Applications)
             endif()
         elseif(UNIX AND NOT APPLE)
             INSTALL(FILES ${QT_IMAGEFORMAT_PLUGIN_${PLUGIN}_${BTYPE}}
-                DESTINATION ./plugins/${plugintype}
+                DESTINATION ./Plugins/${plugintype}
                 CONFIGURATIONS ${BTYPE}
                 COMPONENT Applications)
         endif()
@@ -598,7 +598,7 @@ macro (FindQt4Plugins pluginlist pluginfile libdirsearchfile plugintype)
       endif()
     else()
         # Create the qt.conf file so that the image plugins will be loaded correctly
-        FILE(WRITE ${PROJECT_BINARY_DIR}/qt.conf "[Paths]\nPlugins = plugins")
+        FILE(WRITE ${PROJECT_BINARY_DIR}/qt.conf "[Paths]\nPlugins = Plugins")
         INSTALL(FILES ${PROJECT_BINARY_DIR}/qt.conf
                 DESTINATION .
                 COMPONENT Applications)
