@@ -355,8 +355,26 @@ void ReadH5Ebsd::dataCheck()
   if(getErrorCondition() < 0) { return; }
 
 
+  H5EbsdVolumeInfo::Pointer volumeInfoReader = H5EbsdVolumeInfo::New();
+  volumeInfoReader->setFileName(m_InputFile);
   H5EbsdVolumeReader::Pointer reader;
   QVector<QString> names;
+
+  int64_t dims[3];
+  float res[3];
+  volumeInfoReader->getDimsAndResolution(dims[0], dims[1], dims[2], res[0], res[1], res[2]);
+  size_t dcDims[3] = {dims[0], dims[1], dims[2]};
+  //Now Calculate our "subvolume" of slices, ie, those start and end values that the user selected from the GUI
+  dcDims[2] = m_ZEndIndex - m_ZStartIndex + 1;
+  m->setDimensions(dcDims);
+  m->setResolution(res);
+
+  //Update the size fo the Cell Attribute Matrix now that the dimensions of the volume are known
+  tDims.resize(3);
+  tDims[0] = dcDims[0];
+  tDims[1] = dcDims[1];
+  tDims[2] = dcDims[2];
+  cellAttrMat->resizeAttributeArrays(tDims);
 
   if (m_Manufacturer == Ebsd::TSL)
   {
@@ -385,26 +403,26 @@ void ReadH5Ebsd::dataCheck()
   }
 
 
-  QVector<size_t> dims(1, 1);
+  QVector<size_t> cDims(1, 1);
   for (size_t i = 0; i < names.size(); ++i)
   {
     // First check to see if the name is in our list of names to read.
     if(m_SelectedArrayNames.find(names[i]) == m_SelectedArrayNames.end() ) { continue; }
     if (reader->getPointerType(names[i]) == Ebsd::Int32)
     {
-      cellAttrMat->createAndAddAttributeArray<DataArray<int32_t>, int32_t>(names[i], 0, dims);
+      cellAttrMat->createAndAddAttributeArray<DataArray<int32_t>, int32_t>(names[i], 0, cDims);
     }
     else if (reader->getPointerType(names[i]) == Ebsd::Float)
     {
-      cellAttrMat->createAndAddAttributeArray<DataArray<float>, float>(names[i], 0, dims);
+      cellAttrMat->createAndAddAttributeArray<DataArray<float>, float>(names[i], 0, cDims);
     }
   }
 
-  QVector<size_t> dim(1, 3);
   // Only read these arrays if the user wants them
   if(m_SelectedArrayNames.contains(DREAM3D::CellData::EulerAngles) )
   {
-    m_CellEulerAnglesPtr = cellAttrMat->createNonPrereqArray<DataArray<float>, AbstractFilter, float>(this,  m_CellEulerAnglesArrayName, 0, dim); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+    cDims[0] = 3;
+    m_CellEulerAnglesPtr = cellAttrMat->createNonPrereqArray<DataArray<float>, AbstractFilter, float>(this,  m_CellEulerAnglesArrayName, 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
     if( NULL != m_CellEulerAnglesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
     { m_CellEulerAngles = m_CellEulerAnglesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   }
@@ -412,15 +430,16 @@ void ReadH5Ebsd::dataCheck()
   // ONly read the phases if the user wants it.
   if(m_SelectedArrayNames.contains(DREAM3D::CellData::Phases) )
   {
-    dim[0] = 1;
-    m_CellPhasesPtr = cellAttrMat->createNonPrereqArray<DataArray<int32_t>, AbstractFilter, int32_t>(this,  m_CellPhasesArrayName, 0, dim); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+    cDims[0] = 1;
+    m_CellPhasesPtr = cellAttrMat->createNonPrereqArray<DataArray<int32_t>, AbstractFilter, int32_t>(this,  m_CellPhasesArrayName, 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
     if( NULL != m_CellPhasesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
     { m_CellPhases = m_CellPhasesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   }
 
   // Now create the Ensemble arrays for the XTal Structures, Material Names and LatticeConstants
+  cDims[0] = 1;
   typedef DataArray<unsigned int> XTalStructArrayType;
-  m_CrystalStructuresPtr = cellEnsembleAttrMat->createNonPrereqArray<DataArray<uint32_t>, AbstractFilter, uint32_t>(this,  m_CrystalStructuresArrayName, Ebsd::CrystalStructure::UnknownCrystalStructure, dim); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_CrystalStructuresPtr = cellEnsembleAttrMat->createNonPrereqArray<DataArray<uint32_t>, AbstractFilter, uint32_t>(this,  m_CrystalStructuresArrayName, Ebsd::CrystalStructure::UnknownCrystalStructure, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_CrystalStructuresPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_CrystalStructures = m_CrystalStructuresPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
@@ -428,8 +447,8 @@ void ReadH5Ebsd::dataCheck()
   cellEnsembleAttrMat->addAttributeArray(materialNamesPtr->getName(), materialNamesPtr);
   m_MaterialNamesPtr = materialNamesPtr;
 
-  dim[0] = 6;
-  m_LatticeConstantsPtr = cellEnsembleAttrMat->createNonPrereqArray<DataArray<float>, AbstractFilter, float>(this,  m_LatticeConstantsArrayName, 0.0, dim); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  cDims[0] = 6;
+  m_LatticeConstantsPtr = cellEnsembleAttrMat->createNonPrereqArray<DataArray<float>, AbstractFilter, float>(this,  m_LatticeConstantsArrayName, 0.0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_LatticeConstantsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_LatticeConstants = m_LatticeConstantsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
@@ -473,34 +492,7 @@ void ReadH5Ebsd::execute()
     int64_t dims[3];
     float res[3];
     volumeInfoReader->getDimsAndResolution(dims[0], dims[1], dims[2], res[0], res[1], res[2]);
-    /* Sanity check what we are trying to load to make sure it can fit in our address space.
-     * Note that this does not guarantee the user has enough left, just that the
-     * size of the volume can fit in the address space of the program
-     */
-#if   (CMP_SIZEOF_SSIZE_T==4)
-    int64_t max = std::numeric_limits<size_t>::max();
-#else
-    int64_t max = std::numeric_limits<int64_t>::max();
-#endif
-    if(dims[0] * dims[1] * dims[2] > max)
-    {
-      err = -1;
-      QString ss = QObject::tr("The total number of elements '%1' is greater than this program can hold. Try the 64 bit version.").arg(dims[0] * dims[1] * dims[2]);
-      setErrorCondition(err);
-      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-      return;
-    }
 
-    if(dims[0] > max || dims[1] > max || dims[2] > max)
-    {
-      err = -1;
-      QString ss = QObject::tr("One of the dimensions is greater than the max index for this sysem. Try the 64 bit version."\
-                               " dim[0]=%1  dim[1]=%2  dim[2]=%3").arg(dims[0]).arg(dims[1]).arg(dims[0]);
-      setErrorCondition(err);
-      notifyErrorMessage(getHumanLabel(), ss, -1);
-      return;
-    }
-    /* ************ End Sanity Check *************************** */
     size_t dcDims[3] =
     { dims[0], dims[1], dims[2] };
     m->setDimensions(dcDims);
