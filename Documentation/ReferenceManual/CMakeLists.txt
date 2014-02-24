@@ -167,9 +167,8 @@ endif()
 #-------------------------------------------------------------------------------
 # Make Sure this target is built so that the DREAM3D Application has access to
 # the HTML help files
-if(DREAM3D_BUILD_DREAM3D AND DREAM3DReferenceManual_HTML)
-add_dependencies(DREAM3D DREAM3DReferenceManual_HTML)
-#add_dependencies(DREAM3DReferenceManual_HTML FilterWidgetsLib)
+if (TARGET DREAM3DReferenceManual_HTML AND TARGET DREAM3D)
+	add_dependencies(DREAM3D DREAM3DReferenceManual_HTML)
 endif()
 
 
