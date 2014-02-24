@@ -46,11 +46,14 @@
 #include <QtGui/QTreeWidget>
 #include <QtGui/QTreeWidgetItem>
 
+#include "DREAM3DWidgetsLib/DREAM3DWidgetsLib.h"
+
+
 class PipelineBuilderWidget;
 class QAction;
 class QTreeWidgetItem;
 
-class FilterLibraryTreeWidget : public QTreeWidget
+class DREAM3DWidgetsLib_EXPORT FilterLibraryTreeWidget : public QTreeWidget
 {
     Q_OBJECT;
 
