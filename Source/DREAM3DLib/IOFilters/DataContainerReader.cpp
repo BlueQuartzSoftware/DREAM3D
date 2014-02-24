@@ -297,7 +297,7 @@ DataContainerArrayProxy DataContainerReader::readDataContainerArrayStructure()
   herr_t err = 0;
   hid_t fileId = QH5Utilities::openFile(getInputFile(), true);
   if(fileId < 0) {
-    QString ss = QObject::tr("Error opening DREAM3D filea location at %1").arg(getInputFile());
+    QString ss = QObject::tr("Error opening DREAM3D file location at %1").arg(getInputFile());
     setErrorCondition(-71);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return proxy;
