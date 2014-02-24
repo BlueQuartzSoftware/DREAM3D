@@ -19,7 +19,7 @@ macro(START_FILTER_GROUP WidgetsBinaryDir filterGroup humanGroup)
    #file(APPEND ${DOX_FILTER_INDEX_FILE} "  \${PROJECT_SOURCE_DIR}/Filters/${filterGroup}/${filterGroup}.dox\n")
    #file(APPEND ${DOX_FILTER_INDEX_FILE} "${filterGroup_Lower} ${filterGroup}\n\n")
 
-   message(STATUS "Adding Filters for Group ${filterGroup}")
+   # message(STATUS "Adding Filters for Group ${filterGroup}")
 endmacro()
 
 #-------------------------------------------------------------------------------
