@@ -164,9 +164,6 @@ RawBinaryReader::RawBinaryReader() :
   m_Endian(0),
   m_Dimensionality(0),
   m_NumberOfComponents(0),
-
-
-
   m_OverRideOriginResolution(true),
   m_SkipHeaderBytes(0),
   m_OutputArrayName(""),
@@ -365,12 +362,6 @@ void RawBinaryReader::dataCheck(bool preflight)
 {
   setErrorCondition(0);
 
-  VolumeDataContainer* m = getDataContainerArray()->createNonPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName());
-  if(getErrorCondition() < 0) { return; }
-  QVector<size_t> tDims(3, 0);
-  AttributeMatrix::Pointer attrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::Cell);
-  if(getErrorCondition() < 0) { return; }
-
   QFileInfo fi(getInputFile());
   if (getInputFile().isEmpty() == true)
   {
@@ -412,6 +403,12 @@ void RawBinaryReader::dataCheck(bool preflight)
     setErrorCondition(-390);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
+
+  VolumeDataContainer* m = getDataContainerArray()->createNonPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName());
+  if(getErrorCondition() < 0) { return; }
+  QVector<size_t> tDims(3, 0);
+  AttributeMatrix::Pointer attrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::Cell);
+  if(getErrorCondition() < 0) { return; }
 
   if (true == preflight)
   {
@@ -483,7 +480,7 @@ void RawBinaryReader::dataCheck(bool preflight)
     else if (check == 1)
     {
 
-      QString ss = QObject::tr("The file size is %1 but the number of bytes needed to fill the array is %1 which is less than the size of the file."
+      QString ss = QObject::tr("The file size is %1 but the number of bytes needed to fill the array is %2 which is less than the size of the file."
                                " DREAM3D will read only the first part of the file into the array.").arg(fileSize).arg(allocatedBytes);
       notifyWarningMessage(getHumanLabel(), ss, RBR_FILE_TOO_BIG);
     }
@@ -500,7 +497,10 @@ void RawBinaryReader::dataCheck(bool preflight)
 // -----------------------------------------------------------------------------
 void RawBinaryReader::preflight()
 {
+  emit preflightAboutToExecute();
+  emit updateFilterParameters(this);
   dataCheck(true);
+  emit preflightExecuted();
 }
 
 // -----------------------------------------------------------------------------

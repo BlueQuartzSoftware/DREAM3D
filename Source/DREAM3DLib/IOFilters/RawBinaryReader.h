@@ -68,21 +68,32 @@ class DREAM3DLib_EXPORT RawBinaryReader : public AbstractFilter
     typedef struct { int x; int y; int z; } Dimensions_t;
 
     /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
-    DREAM3D_INSTANCE_PROPERTY(int, ScalarType)
-    DREAM3D_INSTANCE_PROPERTY(int, Endian)
+    DREAM3D_FILTER_PARAMETER(int, ScalarType)
+    Q_PROPERTY(int ScalarType READ getScalarType WRITE setScalarType NOTIFY parametersChanged)
+
+    DREAM3D_FILTER_PARAMETER(int, Endian)
+    Q_PROPERTY(int Endian READ getEndian WRITE setEndian NOTIFY parametersChanged)
+
     DREAM3D_FILTER_PARAMETER(int, Dimensionality)
     Q_PROPERTY(int Dimensionality READ getDimensionality WRITE setDimensionality NOTIFY parametersChanged)
+
     DREAM3D_FILTER_PARAMETER(int, NumberOfComponents)
     Q_PROPERTY(int NumberOfComponents READ getNumberOfComponents WRITE setNumberOfComponents NOTIFY parametersChanged)
+
     DREAM3D_FILTER_PARAMETER(IntVec3_t, Dimensions)
     Q_PROPERTY(IntVec3_t Dimensions READ getDimensions WRITE setDimensions NOTIFY parametersChanged)
+
     DREAM3D_FILTER_PARAMETER(FloatVec3_t, Origin)
     Q_PROPERTY(FloatVec3_t Origin READ getOrigin WRITE setOrigin NOTIFY parametersChanged)
+
     DREAM3D_FILTER_PARAMETER(FloatVec3_t, Resolution)
     Q_PROPERTY(FloatVec3_t Resolution READ getResolution WRITE setResolution NOTIFY parametersChanged)
+
     DREAM3D_FILTER_PARAMETER(bool, OverRideOriginResolution)
     Q_PROPERTY(bool OverRideOriginResolution READ getOverRideOriginResolution WRITE setOverRideOriginResolution NOTIFY parametersChanged)
-    DREAM3D_INSTANCE_PROPERTY(uint32_t, SkipHeaderBytes)
+
+    DREAM3D_FILTER_PARAMETER(int, SkipHeaderBytes)
+    Q_PROPERTY(int SkipHeaderBytes READ getSkipHeaderBytes WRITE setSkipHeaderBytes NOTIFY parametersChanged)
 
     DREAM3D_FILTER_PARAMETER(QString, OutputArrayName)
     Q_PROPERTY(QString OutputArrayName READ getOutputArrayName WRITE setOutputArrayName NOTIFY parametersChanged)
