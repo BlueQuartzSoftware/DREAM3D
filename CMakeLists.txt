@@ -199,6 +199,20 @@ else()
   message(WARNING "The Eigen Library is required for parallel algorithms. The Eigen Library could not be located so these algorithms will be compiled in serial mode.")
 endif()
 
+# --------------------------------------------------------------------
+# Find the Doxygen package
+FIND_PACKAGE(Doxygen)
+if(DOXYGEN_FOUND)
+	message(STATUS "Doxygen Found at ${DOXYGEN_EXECUTABLE}")
+else()
+  message(FATAL_ERROR "Doxygen is needed to build the documentation. Please install it correctly")
+endif()
+
+
+# --------------------------------------------------------------------
+# Now that we have found all of our required libraries and packages we can start the all
+# the tests
+
 # We do NOT want to install any of the headers
 set(DREAM3DProj_INSTALL_FILES "${PROJECT_INSTALL_HEADERS}")
 
@@ -291,6 +305,25 @@ file(WRITE ${DREAM3DProj_BINARY_DIR}/Qt_Plugins.txt)
 # will not work due to signals/slots mechanism.
 add_subdirectory(${DREAM3DProj_SOURCE_DIR}/Source/QtSupport ${PROJECT_BINARY_DIR}/QtSupport)
 
+# --------------------------------------------------------------------
+# Build the DREAM3DWidgetsLib Library which holds all the DREAM3D Specific Widgets such
+# as the Filter Parameter Widgets and various building block widgets for the DREAM3D app
+# The plugins are also going to depend on these being built
+add_subdirectory( ${DREAM3DProj_SOURCE_DIR}/Source/DREAM3DWidgetsLib ${PROJECT_BINARY_DIR}/DREAM3DWidgetsLib)
+
+#-------------------------------------------------------------------------------
+# Build the DREAM3D Application here so we can add dependencies between the plugin and
+# the main DREAM3D application target. This should ensure that everything is built and
+# up-to-date properly.
+option(DREAM3D_BUILD_DREAM3D "Compile the DREAM3D GUI Application" ON)
+if(DREAM3D_BUILD_DREAM3D)
+
+  #- Add in the Main DREAM.3D Application
+  add_subdirectory( ${DREAM3DProj_SOURCE_DIR}/Source/Applications/DREAM3D ${PROJECT_BINARY_DIR}/Applications/DREAM3D)
+
+  set(DREAM3D_DOCS_ROOT_DIR "${DREAM3DProj_BINARY_DIR}/Bin/Help/DREAM3D")
+endif()
+
 
 # --------------------------------------------------------------------
 # This function optionally compiles a named plugin when compiling DREAM3D
@@ -306,15 +339,21 @@ function(DREAM3D_COMPILE_PLUGIN)
 
     option(DREAM3D_BUILD_PLUGIN_${PLUG_PLUGIN_NAME} "Build the ${PLUG_PLUGIN_NAME}" ON)
     if(DREAM3D_BUILD_PLUGIN_${PLUG_PLUGIN_NAME})
-        message(STATUS "Plugin: ${PLUG_PLUGIN_NAME} Adding Plugin")
+        message(STATUS "${PLUG_PLUGIN_NAME}: Configuring Plugin ....")
         add_subdirectory(${PLUG_PLUGIN_SOURCE_DIR} ${PROJECT_BINARY_DIR}/Plugins/${PLUG_PLUGIN_NAME})
+        #- Now set up the dependency between the main application and each of the plugins so that
+  		#- things like Visual Studio are forced to rebuild the plugins when launching
+  		#- the DREAM3D application
+		if(DREAM3D_BUILD_PLUGIN_${p})
+          add_dependencies(DREAM3D ${p})
+      endif()
     else()
         message(STATUS "Plugin: ${PLUG_PLUGIN_NAME} Disabled")
     endif()
 endfunction()
 
 #-----------------
-# These are the core plugins
+# These are the core plugins that need to be built
 set(DREAM3D_PLUGIN_LIST
      ImageImport
      OrientationAnalysis
@@ -328,49 +367,20 @@ set(DREAM3D_PLUGIN_LIST
 
 # Clear this file out before we go any further
 file(WRITE ${DREAM3DProj_BINARY_DIR}/Qt_Plugins.txt "")
- # Build the DREAM3D Application
-option(DREAM3D_BUILD_DREAM3D "Compile the DREAM3D GUI Application" ON)
 
 #-------------------------------------------------------------------------------
 # Build the "Built in" Plugins
+message(STATUS "*** Configuring Standard Plugins ***")
 foreach(p ${DREAM3D_PLUGIN_LIST})
     DREAM3D_COMPILE_PLUGIN(PLUGIN_NAME ${p}
                            PLUGIN_SOURCE_DIR ${DREAM3DProj_SOURCE_DIR}/Source/Plugins/${p})
 endforeach()
 
 
-if(DREAM3D_BUILD_DREAM3D)
-
-  # --------------------------------------------------------------------
-  # Build the FilterWidgets Static Library
-  add_subdirectory( ${DREAM3DProj_SOURCE_DIR}/Source/DREAM3DWidgetsLib ${PROJECT_BINARY_DIR}/DREAM3DWidgetsLib)
-
-  #- Add in the Main DREAM.3D Application
-  add_subdirectory( ${DREAM3DProj_SOURCE_DIR}/Source/Applications/DREAM3D ${PROJECT_BINARY_DIR}/Applications/DREAM3D)
-
-  #- Now set up the dependency between the main application and each of the plugins so that
-  #- things like Visual Studio are forced to rebuild the plugins when launching
-  #- the DREAM3D application
-  message(STATUS "This next section needs to be revalidated for each plugin dependency")
-  foreach(p ${DREAM3D_PLUGIN_LIST})
-      if(DREAM3D_BUILD_PLUGIN_${p})
-          add_dependencies(${p} DREAM3D)
-      endif()
-  endforeach()
-
-  set(DREAM3D_DOCS_ROOT_DIR "${DREAM3DProj_BINARY_DIR}/Bin/Help/DREAM3D")
-endif()
-
-#- Add in the Main DREAM.3D Application
-option(DREAM3D_BUILD_PLUGINMAKER "Compile the PluginMaker Application" ON)
-if(DREAM3D_BUILD_PLUGINMAKER)
-    add_subdirectory( ${DREAM3DProj_SOURCE_DIR}/Source/Applications/PluginMaker  ${PROJECT_BINARY_DIR}/Applications/PluginMaker)
-endif()
-
 # --- Look for user defined external Plugins that the user has entered
 # into CMake-GUI or through CCMake by the user.
 set(DREAM3D_EXTRA_PLUGINS "" CACHE LIST "Semicolon delimited list of Extra External Plugins that you want to build into DREAM.3D")
-
+message(STATUS "*** Configuring User Defined Plugins ***")
 #-- Attempt to look in our local source directory for the plugin. Anywhere else
 # and the user will have to put the entire path into CMake manually.
 foreach(userPlugin ${DREAM3D_EXTRA_PLUGINS})
@@ -378,7 +388,6 @@ foreach(userPlugin ${DREAM3D_EXTRA_PLUGINS})
   message(STATUS "Plugin: ${userPlugin}...")
 
   if(DEFINED ${userPlugin}_SOURCE_DIR AND "${${userPlugin}_SOURCE_DIR}" STREQUAL "")
-  #  message(STATUS "${userPlugin}_SOURCE_DIR Empty")
     set(pluginSearchDir ${PROJECT_CODE_DIR}/Plugins/${userPlugin})
     set(${userPlugin}_SOURCE_DIR ${pluginSearchDir} CACHE PATH "")
   endif()
@@ -399,23 +408,17 @@ foreach(userPlugin ${DREAM3D_EXTRA_PLUGINS})
   endif()
 
 
- # message(STATUS "${userPlugin}_SOURCE_DIR: ${${userPlugin}_SOURCE_DIR}")
-  #Now that we have defined where the user's plugin directory is at we
-  # need to make sure it have a CMakeLists.txt file in it
+# Now that we have defined where the user's plugin directory is at we
+# need to make sure it have a CMakeLists.txt file in it
   if(EXISTS ${${userPlugin}_SOURCE_DIR}/CMakeLists.txt)
-      #message(STATUS "EXISTS: ${${userPlugin}_SOURCE_DIR}/CMakeLists.txt")
       set(${userPlugin}_IMPORT_FILE ${userPlugin}_SOURCE_DIR/CMakeLists.txt)
   endif()
 
 # By this point we should have everything defined and ready to go...
-#  message(STATUS "${userPlugin}_SOURCE_DIR: ${${userPlugin}_SOURCE_DIR}")
-#  message(STATUS "${userPlugin}_IMPORT_FILE: ${${userPlugin}_IMPORT_FILE}")
-
-
   if(DEFINED ${userPlugin}_SOURCE_DIR AND DEFINED ${userPlugin}_IMPORT_FILE)
       message(STATUS "Plugin: Adding Plugin ${${userPlugin}_SOURCE_DIR}")
       DREAM3D_COMPILE_PLUGIN(PLUGIN_NAME ${userPlugin}
-        PLUGIN_SOURCE_DIR ${${userPlugin}_SOURCE_DIR})
+                             PLUGIN_SOURCE_DIR ${${userPlugin}_SOURCE_DIR})
   else()
       set(${userPlugin}_SOURCE_DIR ${pluginSearchDir} CACHE PATH "" FORCE)
       message(FATAL_ERROR "Plugin: The directory for plugin ${userPlugin} was not found. Please set this directory manually")
@@ -431,6 +434,13 @@ if(DREAM3D_BUILD_STATS_GENERATOR)
 endif()
 
 
+#- Add in the PluginMaker application
+option(DREAM3D_BUILD_PLUGINMAKER "Compile the PluginMaker Application" ON)
+if(DREAM3D_BUILD_PLUGINMAKER)
+    add_subdirectory( ${DREAM3DProj_SOURCE_DIR}/Source/Applications/PluginMaker  ${PROJECT_BINARY_DIR}/Applications/PluginMaker)
+endif()
+
+
 # add the Command line utilities
 # Figure out here if we are going to build the command line tools
 option(DREAM3D_BUILD_CLI_TOOLS "Build the command line versions of the applications" ON)
@@ -441,10 +451,8 @@ endif()
 
 #-------------------------------------------------------------------------------
 # Should we build the documentation using DOxygen
-FIND_PACKAGE(Doxygen)
-if(NOT DOXYGEN_FOUND)
-  message(FATAL_ERROR "Doxygen is needed to build the documentation. Please install it correctly")
-else()
+option(DREAM3D_BUILD_DOCUMENTATION "Build the DREAM3D documentation" ON)
+if(DREAM3D_BUILD_DOCUMENTATION)
   set(DOCUMENTATION_RESOURCES_DIR ${PROJECT_RESOURCES_DIR}/DocConfigFiles)
 
   set(DOX_GENERATE_RTF "NO")
@@ -453,14 +461,14 @@ else()
     set(DOX_GENERATE_RTF "YES")
   endif()
 
-
+  # By default we generate the Documentation in HTML format
   set(DOX_GENERATE_HTML "NO")
   option(DREAM3D_GENERATE_HTML "Generate HTML Documentation" ON)
   if(DREAM3D_GENERATE_HTML STREQUAL "ON")
     set(DOX_GENERATE_HTML "YES")
   endif()
 
-
+  #most windows machines do NOT have LATEX built in so default this to OFF
   set(DOX_GENERATE_LATEX "NO")
   option(DREAM3D_GENERATE_LATEX "Generate PDF Documentation" OFF)
   if(DREAM3D_GENERATE_LATEX STREQUAL "ON")
@@ -473,7 +481,7 @@ else()
   endif()
 
 
-
+  # Now add each subdirectory that holds our documentation files
   add_subdirectory(${PROJECT_SOURCE_DIR}/Documentation/Developer ${PROJECT_BINARY_DIR}/Documentation/Developer)
   add_subdirectory(${PROJECT_SOURCE_DIR}/Documentation/ReferenceManual ${PROJECT_BINARY_DIR}/Documentation/ReferenceManual)
   add_subdirectory(${PROJECT_SOURCE_DIR}/Documentation/APIDocs ${PROJECT_BINARY_DIR}/Documentation/APIDocs)

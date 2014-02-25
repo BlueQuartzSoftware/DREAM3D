@@ -204,7 +204,7 @@ PipelineFilterWidget::~PipelineFilterWidget()
 // -----------------------------------------------------------------------------
 void PipelineFilterWidget::on_helpBtn_clicked()
 {
-
+  DREAM3DHelpUrlGenerator::generateAndOpenHTMLUrl( m_Filter->getNameOfClass().toLower(), this );
 }
 
 // -----------------------------------------------------------------------------
