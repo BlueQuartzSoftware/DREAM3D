@@ -67,6 +67,8 @@ class FindProjectedImageStatistics : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(CellFeatureAttributeMatrixName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
 
+    DREAM3D_FILTER_PARAMETER(QString, SelectedCellArrayName)
+    Q_PROPERTY(QString SelectedCellArrayName READ getSelectedCellArrayName WRITE setSelectedCellArrayName NOTIFY parametersChanged)
     DREAM3D_FILTER_PARAMETER(unsigned int, Plane)
     Q_PROPERTY(unsigned int Plane READ getPlane WRITE setPlane NOTIFY parametersChanged)
 
@@ -114,8 +116,11 @@ class FindProjectedImageStatistics : public AbstractFilter
     void find_crosssections();
 
   private:
-    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeatureIds)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(float, LargestCrossSections)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(float, ProjectedImageMin)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(float, ProjectedImageMax)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(float, ProjectedImageAvg)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(float, ProjectedImageStd)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(float, ProjectedImageVar)
 
     void dataCheck();
 

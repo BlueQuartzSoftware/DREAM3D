@@ -476,7 +476,10 @@ void PackPrimaryPhases::preflight()
     setErrorCondition(-387);
   }
 
+  emit preflightAboutToExecute();
+  emit updateFilterParameters(this);
   dataCheck();
+  emit preflightExecuted();
 }
 
 // -----------------------------------------------------------------------------

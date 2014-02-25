@@ -315,8 +315,11 @@ void FindTwinBoundaries::dataCheckSurfaceMesh()
 // -----------------------------------------------------------------------------
 void FindTwinBoundaries::preflight()
 {
+  emit preflightAboutToExecute();
+  emit updateFilterParameters(this);
   dataCheckVoxel();
   dataCheckSurfaceMesh();
+  emit preflightExecuted();
 }
 // -----------------------------------------------------------------------------
 //

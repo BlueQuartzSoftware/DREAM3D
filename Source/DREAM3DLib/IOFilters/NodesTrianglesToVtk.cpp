@@ -203,7 +203,10 @@ void NodesTrianglesToVtk::dataCheck(bool preflight)
 // -----------------------------------------------------------------------------
 void NodesTrianglesToVtk::preflight()
 {
+  emit preflightAboutToExecute();
+  emit updateFilterParameters(this);
   dataCheck(true);
+  emit preflightExecuted();
 }
 
 // -----------------------------------------------------------------------------

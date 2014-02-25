@@ -174,7 +174,10 @@ void UncertainRegularGridSampleSurfaceMesh::dataCheck()
 // -----------------------------------------------------------------------------
 void UncertainRegularGridSampleSurfaceMesh::preflight()
 {
+  emit preflightAboutToExecute();
+  emit updateFilterParameters(this);
   dataCheck();
+  emit preflightExecuted();
 
   SampleSurfaceMesh::preflight();
 }

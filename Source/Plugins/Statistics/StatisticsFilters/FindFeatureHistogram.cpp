@@ -295,7 +295,6 @@ void FindFeatureHistogram::execute()
     findHistogram<bool>(inputData, m_NewEnsembleArray, m_FeaturePhases, m_NumBins, m_RemoveBiasedFeatures, m_BiasedFeatures);
   }
 
-  m->getAttributeMatrix(getCellEnsembleAttributeMatrixName())->addAttributeArray(p->getName(), p);
   notifyStatusMessage(getHumanLabel(), "Complete");
 }
 

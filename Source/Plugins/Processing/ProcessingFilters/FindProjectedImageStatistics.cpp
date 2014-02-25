@@ -45,13 +45,18 @@
 FindProjectedImageStatistics::FindProjectedImageStatistics() :
   AbstractFilter(),
   m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
-  m_CellFeatureAttributeMatrixName(DREAM3D::Defaults::CellFeatureAttributeMatrixName),
   m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
   m_Plane(0),
-  m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
-  m_FeatureIds(NULL),
-  m_LargestCrossSectionsArrayName(DREAM3D::FeatureData::LargestCrossSections),
-  m_LargestCrossSections(NULL)
+  m_ProjectedImageMinArrayName(DREAM3D::CellData::ProjectedImageMin),
+  m_ProjectedImageMin(NULL),
+  m_ProjectedImageMaxArrayName(DREAM3D::CellData::ProjectedImageMax),
+  m_ProjectedImageMax(NULL),
+  m_ProjectedImageAvgArrayName(DREAM3D::CellData::ProjectedImageAvg),
+  m_ProjectedImageAvg(NULL),
+  m_ProjectedImageStdArrayName(DREAM3D::CellData::ProjectedImageStd),
+  m_ProjectedImageStd(NULL),
+  m_ProjectedImageVarArrayName(DREAM3D::CellData::ProjectedImageVar),
+  m_ProjectedImageVar(NULL)
 {
   setupFilterParameters();
 }
@@ -69,6 +74,15 @@ FindProjectedImageStatistics::~FindProjectedImageStatistics()
 void FindProjectedImageStatistics::setupFilterParameters()
 {
   FilterParameterVector parameters;
+  {
+    FilterParameter::Pointer parameter = FilterParameter::New();
+    parameter->setHumanLabel("Cell Array To Bin");
+    parameter->setPropertyName("SelectedCellArrayName");
+    parameter->setWidgetType(FilterParameterWidgetType::SingleArraySelectionWidget);
+    parameter->setValueType("QString");
+    parameter->setUnits("");
+    parameters.push_back(parameter);
+  }
   {
     ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New();
     parameter->setHumanLabel("Plane of Interest");
@@ -90,6 +104,7 @@ void FindProjectedImageStatistics::readFilterParameters(AbstractFilterParameters
 {
   reader->openFilterGroup(this, index);
   /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+  setSelectedCellArrayName( reader->readString( "SelectedcellArrayName", getSelectedCellArrayName() ) );
   setPlane( reader->readValue("Plane", getPlane()));
   /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
@@ -101,6 +116,7 @@ void FindProjectedImageStatistics::readFilterParameters(AbstractFilterParameters
 int FindProjectedImageStatistics::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
+  writer->writeValue("SelectedCellArrayName", getSelectedCellArrayName() );
   writer->writeValue("Plane", getPlane());
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
@@ -120,13 +136,28 @@ void FindProjectedImageStatistics::dataCheck()
   AttributeMatrix::Pointer cellAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), -301);
   if(getErrorCondition() < 0 || NULL == cellAttrMat.get() ) { return; }
 
+  if(m_SelectedCellArrayName.isEmpty() == true)
+  {
+    setErrorCondition(-11000);
+    notifyErrorMessage(getHumanLabel(), "An array from the Volume DataContainer must be selected.", getErrorCondition());
+  }
+
   QVector<size_t> dims(1, 1);
-  m_FeatureIdsPtr = cellAttrMat->getPrereqArray<DataArray<int32_t>, AbstractFilter>(this, m_FeatureIdsArrayName, -300, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
-  { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-  m_LargestCrossSectionsPtr = cellFeatureAttrMat->createNonPrereqArray<DataArray<float>, AbstractFilter, float>(this, m_LargestCrossSectionsArrayName, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_LargestCrossSectionsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
-  { m_LargestCrossSections = m_LargestCrossSectionsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  m_ProjectedImageMinPtr = cellFeatureAttrMat->createNonPrereqArray<DataArray<float>, AbstractFilter, float>(this, m_ProjectedImageMinArrayName, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if( NULL != m_ProjectedImageMinPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  { m_ProjectedImageMin = m_ProjectedImageMinPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  m_ProjectedImageMaxPtr = cellFeatureAttrMat->createNonPrereqArray<DataArray<float>, AbstractFilter, float>(this, m_ProjectedImageMaxArrayName, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if( NULL != m_ProjectedImageMaxPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  { m_ProjectedImageMax = m_ProjectedImageMaxPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  m_ProjectedImageAvgPtr = cellFeatureAttrMat->createNonPrereqArray<DataArray<float>, AbstractFilter, float>(this, m_ProjectedImageAvgArrayName, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if( NULL != m_ProjectedImageAvgPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  { m_ProjectedImageAvg = m_ProjectedImageAvgPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  m_ProjectedImageStdPtr = cellFeatureAttrMat->createNonPrereqArray<DataArray<float>, AbstractFilter, float>(this, m_ProjectedImageStdArrayName, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if( NULL != m_ProjectedImageStdPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  { m_ProjectedImageStd = m_ProjectedImageStdPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  m_ProjectedImageVarPtr = cellFeatureAttrMat->createNonPrereqArray<DataArray<float>, AbstractFilter, float>(this, m_ProjectedImageVarArrayName, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if( NULL != m_ProjectedImageVarPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  { m_ProjectedImageVar = m_ProjectedImageVarPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
 
 
@@ -140,6 +171,25 @@ void FindProjectedImageStatistics::preflight()
   dataCheck();
   emit preflightExecuted();
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+template<typename T>
+void findProjectedStats(IDataArray::Pointer inputData, float* m_ProjectedImageMin, float* m_ProjectedImageMax, float* m_ProjectedImageAvg, float* m_ProjectedImageStd, float* m_ProjectedImageVar)
+{
+  DataArray<T>* cellArray = DataArray<T>::SafePointerDownCast(inputData.get());
+  if (NULL == cellArray)
+  {
+    return;
+  }
+
+  T* fPtr = cellArray->getPointer(0);
+  size_t numfeatures = cellArray->getNumberOfTuples();
+
+
+}
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -151,89 +201,74 @@ void FindProjectedImageStatistics::execute()
 
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
-  if(m->getXPoints() > 1 && m->getYPoints() > 1 && m->getZPoints() > 1) { find_crosssections(); }
-  else
+  if(m->getXPoints() <= 1 && m->getYPoints() <= 1 && m->getZPoints() <= 1)
   {
     setErrorCondition(-999);
     notifyErrorMessage(getHumanLabel(), "The volume is not 3D and cannot be run through this filter", -999);
     return;
   }
+
+  QString ss;
+
+  IDataArray::Pointer inputData = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getAttributeArray(m_SelectedCellArrayName);
+  if (NULL == inputData.get())
+  {
+    ss = QObject::tr("Selected array '%1' does not exist in the Voxel Data Container. Was it spelled correctly?").arg(m_SelectedCellArrayName);
+    setErrorCondition(-11001);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    return;
+  }
+
+  QString dType = inputData->getTypeAsString();
+  IDataArray::Pointer p = IDataArray::NullPointer();
+  if (dType.compare("int8_t") == 0)
+  {
+    findProjectedStats<int8_t>(inputData, m_ProjectedImageMin, m_ProjectedImageMax, m_ProjectedImageAvg, m_ProjectedImageStd, m_ProjectedImageVar);
+  }
+  else if (dType.compare("uint8_t") == 0)
+  {
+    findProjectedStats<uint8_t>(inputData, m_ProjectedImageMin, m_ProjectedImageMax, m_ProjectedImageAvg, m_ProjectedImageStd, m_ProjectedImageVar);
+  }
+  else if (dType.compare("int16_t") == 0)
+  {
+    findProjectedStats<int16_t>(inputData, m_ProjectedImageMin, m_ProjectedImageMax, m_ProjectedImageAvg, m_ProjectedImageStd, m_ProjectedImageVar);
+  }
+  else if (dType.compare("uint16_t") == 0)
+  {
+    findProjectedStats<uint16_t>(inputData, m_ProjectedImageMin, m_ProjectedImageMax, m_ProjectedImageAvg, m_ProjectedImageStd, m_ProjectedImageVar);
+  }
+  else if (dType.compare("int32_t") == 0)
+  {
+    findProjectedStats<int32_t>(inputData, m_ProjectedImageMin, m_ProjectedImageMax, m_ProjectedImageAvg, m_ProjectedImageStd, m_ProjectedImageVar);
+  }
+  else if (dType.compare("uint32_t") == 0)
+  {
+    findProjectedStats<uint32_t>(inputData, m_ProjectedImageMin, m_ProjectedImageMax, m_ProjectedImageAvg, m_ProjectedImageStd, m_ProjectedImageVar);
+  }
+  else if (dType.compare("int64_t") == 0)
+  {
+    findProjectedStats<int64_t>(inputData, m_ProjectedImageMin, m_ProjectedImageMax, m_ProjectedImageAvg, m_ProjectedImageStd, m_ProjectedImageVar);
+  }
+  else if (dType.compare("uint64_t") == 0)
+  {
+    findProjectedStats<uint64_t>(inputData, m_ProjectedImageMin, m_ProjectedImageMax, m_ProjectedImageAvg, m_ProjectedImageStd, m_ProjectedImageVar);
+  }
+  else if (dType.compare("float") == 0)
+  {
+    findProjectedStats<float>(inputData, m_ProjectedImageMin, m_ProjectedImageMax, m_ProjectedImageAvg, m_ProjectedImageStd, m_ProjectedImageVar);
+  }
+  else if (dType.compare("double") == 0)
+  {
+    findProjectedStats<double>(inputData, m_ProjectedImageMin, m_ProjectedImageMax, m_ProjectedImageAvg, m_ProjectedImageStd, m_ProjectedImageVar);
+  }
+  else if (dType.compare("bool") == 0)
+  {
+    ss = QObject::tr("Selected array '%1' cannot be of type bool").arg(m_SelectedCellArrayName);
+    setErrorCondition(-11001);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    return;
+  }
+
   notifyStatusMessage(getHumanLabel(), "FindProjectedImageStatistics Completed");
 }
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void FindProjectedImageStatistics::find_crosssections()
-{
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-
-  size_t numfeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
-
-  DataArray<double>::Pointer m_FeatureCounts = DataArray<double>::CreateArray(numfeatures, "FeatureCounts");
-  double* featurecounts = m_FeatureCounts->getPointer(0);
-
-  int outPlane, inPlane1, inPlane2;
-  float res_scalar, area;
-  int stride1, stride2, stride3;
-  int istride, jstride, kstride;
-  int point, gnum;
-
-  if(m_Plane == 0)
-  {
-    outPlane = m->getZPoints();
-    inPlane1 = m->getXPoints();
-    inPlane2 = m->getYPoints();
-    res_scalar = m->getXRes() * m->getYRes();
-    stride1 = inPlane1 * inPlane2;
-    stride2 = 1;
-    stride3 = inPlane1;
-  }
-  if(m_Plane == 1)
-  {
-    outPlane = m->getYPoints();
-    inPlane1 = m->getXPoints();
-    inPlane2 = m->getZPoints();
-    res_scalar = m->getXRes() * m->getZRes();
-    stride1 = inPlane1;
-    stride2 = 1;
-    stride3 = inPlane1 * inPlane2;
-  }
-  if(m_Plane == 2)
-  {
-    outPlane = m->getXPoints();
-    inPlane1 = m->getYPoints();
-    inPlane2 = m->getZPoints();
-    res_scalar = m->getYRes() * m->getZRes();
-    stride1 = 1;
-    stride2 = inPlane1;
-    stride3 = inPlane1 * inPlane2;
-  }
-  for(int i = 0; i < outPlane; i++)
-  {
-    for (size_t g = 0; g < numfeatures * 1; g++)
-    {
-      featurecounts[g] = 0.0f;
-    }
-    istride = i * stride1;
-    for (int j = 0; j < inPlane1; j++)
-    {
-      jstride = j * stride2;
-      for(int k = 0; k < inPlane2; k++)
-      {
-        kstride = k * stride3;
-        point = istride + jstride + kstride;
-        gnum = m_FeatureIds[point];
-        featurecounts[gnum]++;
-      }
-    }
-    for (size_t g = 1; g < numfeatures; g++)
-    {
-      area = featurecounts[g] * res_scalar;
-      if(area > m_LargestCrossSections[g]) { m_LargestCrossSections[g] = area; }
-    }
-  }
-}
-
-
 

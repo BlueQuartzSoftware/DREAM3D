@@ -256,7 +256,10 @@ void VisualizeGBCDPoleFigure::dataCheckSurfaceMesh()
 // -----------------------------------------------------------------------------
 void VisualizeGBCDPoleFigure::preflight()
 {
+  emit preflightAboutToExecute();
+  emit updateFilterParameters(this);
   dataCheckSurfaceMesh();
+  emit preflightExecuted();
 }
 
 // -----------------------------------------------------------------------------

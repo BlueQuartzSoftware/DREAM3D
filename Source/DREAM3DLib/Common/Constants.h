@@ -169,6 +169,11 @@ namespace DREAM3D
     const DREAM3D_STRING NearestNeighbors("NearestNeighbors");
     const DREAM3D_STRING ParentIds("ParentIds");
     const DREAM3D_STRING Phases("Phases");
+    const DREAM3D_STRING ProjectedImageMin("ProjectedImageMin");
+    const DREAM3D_STRING ProjectedImageMax("ProjectedImageMax");
+    const DREAM3D_STRING ProjectedImageAvg("ProjectedImageAvg");
+    const DREAM3D_STRING ProjectedImageStd("ProjectedImageStd");
+    const DREAM3D_STRING ProjectedImageVar("ProjectedImageVar");
     const DREAM3D_STRING QPEuclideanDistances("QPEuclideanDistances");
     const DREAM3D_STRING Quats("Quats");
     const DREAM3D_STRING RodriguesColor("RodriguesColor");
