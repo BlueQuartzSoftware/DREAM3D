@@ -33,6 +33,7 @@ set(_PublicFilters
   GenerateRodriguesColors
   LinkFeatureMapToCellArray
   RemoveArrays
+  RenameAttributeMatrix
   RenameAttributeArray
   ScaleVolume
   UpdateCellQuats

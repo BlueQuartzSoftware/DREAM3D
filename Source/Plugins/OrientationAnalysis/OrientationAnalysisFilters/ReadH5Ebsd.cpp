@@ -375,7 +375,15 @@ void ReadH5Ebsd::dataCheck()
 
   int64_t dims[3];
   float res[3];
-  volumeInfoReader->getDimsAndResolution(dims[0], dims[1], dims[2], res[0], res[1], res[2]);
+  int err = volumeInfoReader->getDimsAndResolution(dims[0], dims[1], dims[2], res[0], res[1], res[2]);
+  // Need to 
+  if(err < 0)
+  {
+    QString ss = QObject::tr("%1:  File counld not be read properly").arg(getHumanLabel());
+    setErrorCondition(-1);
+    notifyErrorMessage(getHumanLabel(), ss, -1);
+    return;
+  }
   size_t dcDims[3] = {dims[0], dims[1], dims[2]};
   //Now Calculate our "subvolume" of slices, ie, those start and end values that the user selected from the GUI
   dcDims[2] = m_ZEndIndex - m_ZStartIndex + 1;

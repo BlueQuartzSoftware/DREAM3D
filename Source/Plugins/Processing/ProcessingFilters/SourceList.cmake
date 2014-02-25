@@ -16,6 +16,7 @@ set(_PublicFilters
   MinSize
   ClearData
   FillBadData
+  FindProjectedImageStatistics
   NeighborCICorrelation
   NeighborOrientationCorrelation
   BadDataNeighborOrientationCheck

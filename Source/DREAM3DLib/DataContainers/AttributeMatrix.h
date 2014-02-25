@@ -201,6 +201,12 @@ class DREAM3DLib_EXPORT AttributeMatrix : public Observable
       }
       createAndAddAttributeArray<ArrayType, T>(attributeArrayName, initValue, dims);
       IDataArray::Pointer iDataArray = getAttributeArray(attributeArrayName);
+      if(NULL == iDataArray && filter)
+      {
+        filter->setErrorCondition(-10003);
+        ss = QObject::tr("AttributeMatrix:'%1' An array with name '%2' could not be created.").arg(getName()).arg(attributeArrayName);
+        filter->notifyErrorMessage(filter->getHumanLabel(), ss, filter->getErrorCondition());
+      }
       attributeArray = boost::dynamic_pointer_cast< ArrayType >(iDataArray);
       if(NULL == attributeArray.get() && filter)
       {
@@ -220,9 +226,12 @@ class DREAM3DLib_EXPORT AttributeMatrix : public Observable
     void createAndAddAttributeArray(const QString& name, T initValue, QVector<size_t> compDims)
     {
       typename ArrayType::Pointer attributeArray = ArrayType::CreateArray(getNumTuples(), compDims, name);
-      attributeArray->initializeWithValue(initValue);
-      attributeArray->setInitValue(initValue);
-      addAttributeArray(name, attributeArray);
+      if(attributeArray != NULL)
+      {
+        attributeArray->initializeWithValue(initValue);
+        attributeArray->setInitValue(initValue);
+        addAttributeArray(name, attributeArray);
+      }
     }
 
     /**
