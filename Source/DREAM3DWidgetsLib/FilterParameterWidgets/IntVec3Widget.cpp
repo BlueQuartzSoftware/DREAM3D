@@ -126,6 +126,7 @@ void IntVec3Widget::filterNeedsInputParameters(AbstractFilter* filter)
   {
     QString ss = QObject::tr("Error occurred setting Filter Parameter %1").arg(m_FilterParameter->getPropertyName());
     emit errorSettingFilterParameter(ss);
+    qDebug() << ss;
   }
 }
 

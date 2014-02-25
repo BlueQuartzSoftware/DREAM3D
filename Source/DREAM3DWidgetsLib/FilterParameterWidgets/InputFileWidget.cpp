@@ -126,6 +126,7 @@ bool InputFileWidget::verifyPathExists(QString filePath, QLineEdit* lineEdit)
 // -----------------------------------------------------------------------------
 void InputFileWidget::on_value_editingFinished()
 {
+
   emit parametersChanged(); // This should force the preflight to run because we are emitting a signal
 }
 
@@ -134,7 +135,24 @@ void InputFileWidget::on_value_editingFinished()
 // -----------------------------------------------------------------------------
 void InputFileWidget::on_value_textChanged(const QString& text)
 {
-  // We dont want to run a preflight for every character that is typed
+  setOpenDialogLastDirectory(text);
+  // Set/Remove the red outline if the file does exist
+  verifyPathExists(text, value);
+
+//  emit parametersChanged(); // This should force the preflight to run because we are emitting a signal
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void InputFileWidget::on_value_fileDropped(const QString& text)
+{
+  setOpenDialogLastDirectory(text);
+  // Set/Remove the red outline if the file does exist
+  verifyPathExists(text, value);
+
+  emit parametersChanged(); // This should force the preflight to run because we are emitting a signal
 }
 
 // -----------------------------------------------------------------------------
@@ -166,7 +184,6 @@ void InputFileWidget::on_selectBtn_clicked()
 // -----------------------------------------------------------------------------
 void InputFileWidget::filterNeedsInputParameters(AbstractFilter* filter)
 {
-//  qDebug() << "InputFileWidget::filterNeedsInputParameters(AbstractFilter* filter)";
   QString text = value->text();
   if (verifyPathExists(text, value) == true ) {}
 
@@ -175,6 +192,7 @@ void InputFileWidget::filterNeedsInputParameters(AbstractFilter* filter)
   {
     QString ss = QObject::tr("Error occurred setting Filter Parameter %1").arg(m_FilterParameter->getPropertyName());
     emit errorSettingFilterParameter(ss);
+    qDebug() << ss;
   }
 
 }
@@ -185,7 +203,7 @@ void InputFileWidget::filterNeedsInputParameters(AbstractFilter* filter)
 // -----------------------------------------------------------------------------
 void InputFileWidget::afterPreflight()
 {
-  // std::cout << "After Preflight" << std::endl;
+
 }
 
 
@@ -194,5 +212,5 @@ void InputFileWidget::afterPreflight()
 // -----------------------------------------------------------------------------
 void InputFileWidget::beforePreflight()
 {
-  // std::cout << "After Preflight" << std::endl;
+
 }
