@@ -73,10 +73,10 @@ namespace Detail
   }
 }
 
-static const QuatF OrthoQuatSym[4] = { QuaternionMathF::New(0.000000000f, 0.000000000f, 0.000000000f, 1.000000000f),
-                                       QuaternionMathF::New(1.000000000f, 0.000000000f, 0.000000000f, 0.000000000f),
-                                       QuaternionMathF::New(0.000000000f, 1.000000000f, 0.000000000f, 0.000000000f),
-                                       QuaternionMathF::New(0.000000000f, 0.000000000f, 1.000000000f, 0.000000000)
+static const QuatF OrthoQuatSym[4] = { QuaternionMathF::NewXYZW(0.000000000f, 0.000000000f, 0.000000000f, 1.000000000f),
+                                       QuaternionMathF::NewXYZW(1.000000000f, 0.000000000f, 0.000000000f, 0.000000000f),
+                                       QuaternionMathF::NewXYZW(0.000000000f, 1.000000000f, 0.000000000f, 0.000000000f),
+                                       QuaternionMathF::NewXYZW(0.000000000f, 0.000000000f, 1.000000000f, 0.000000000)
                                      };
 
 static const float OrthoRodSym[4][3] = {{0.0f, 0.0f, 0.0f},

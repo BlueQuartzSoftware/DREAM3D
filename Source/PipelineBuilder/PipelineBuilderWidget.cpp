@@ -1592,21 +1592,6 @@ void PipelineBuilderWidget::addFavorite(QString path, QString favoriteTitle)
     newPrefs.endGroup();
     writeSettings(newPrefs, m_PipelineViewWidget);
   }
-
-#if 0
-  QList<QTreeWidgetItem*> items = m_favorites->takeChildren();
-  int count = items.count();
-  for(int i = 0; i < count; ++i)
-  {
-    delete items.at(i);
-  }
-  filterLibraryTree->blockSignals(true);
-  readFavoritePipelines();
-  filterLibraryTree->blockSignals(false);
-  // Tell everyone to save their preferences NOW instead of waiting until the app quits
-  emit fireWriteSettings();
-#endif
-
 }
 
 // -----------------------------------------------------------------------------
@@ -1614,31 +1599,68 @@ void PipelineBuilderWidget::addFavorite(QString path, QString favoriteTitle)
 // -----------------------------------------------------------------------------
 void PipelineBuilderWidget::actionAddFavoriteFolder_triggered()
 {
-
+  QString favoriteTitle;
   AddFavoriteWidget* addfavoriteDialog = new AddFavoriteWidget("Name of Folder", this);
-  addfavoriteDialog->exec();
-  if(addfavoriteDialog->getBtnClicked())
+  bool done = false;
+  bool cancel = false;
+  while (done == false)
   {
-    QString favoriteTitle = addfavoriteDialog->getFavoriteName();
-    QTreeWidgetItem* currentDirItem = filterLibraryTree->currentItem();
-    QString path = currentDirItem->data(0, Qt::UserRole).toString();
-
-    QString folderPath = path + QDir::separator() + favoriteTitle + QDir::separator();
-
-    QDir dir(path);
-
-    bool created = dir.mkpath(favoriteTitle);
-    if(created == false)
+    addfavoriteDialog->exec(); // Show the dialog
+    if(addfavoriteDialog->getBtnClicked()) // the user clicked the OK button, now check what they typed
     {
-      qDebug() << "Could not create path " << folderPath;
+      favoriteTitle = addfavoriteDialog->getFavoriteName();
+      if ( favoriteTitle.contains(QRegExp("[^a-zA-Z_-\\d ]")) )
+      {
+        QString displayText = "The name of the Favorite that was chosen has illegal characters.\n\nNames can only have:\n\tLetters\n\tNumbers\n\tUnderscores\n\tDashes";
+        displayText = displayText + "\n\nNo special charaters allowed due to file system restrictions";
+        // Display error message
+        int reply = QMessageBox::critical(this, tr("Rename Favorite"), tr(displayText.toLatin1().data()),
+                                          QMessageBox::Ok | QMessageBox::Cancel, QMessageBox::Ok);
+        if(reply == QMessageBox::Cancel) {
+          done = true;
+          cancel = true;
+        }
+      }
+      else { done = true; }
     }
-
-    QTreeWidgetItem* nextDirItem = new QTreeWidgetItem(currentDirItem, PipelineTreeWidget::Favorite_Category_Item_Type);
-    nextDirItem->setText(0, favoriteTitle);
-    nextDirItem->setData(0, Qt::UserRole, QVariant(folderPath ) );
-    //Nothing to add as this was a brand new folder
+    else
+    {
+      done = true; // The user clicked the cancel button
+    }
   }
+  if (true == cancel) { return; } // The user cancelled the whole thing, just return
+
+  QTreeWidgetItem* currentDirItem = filterLibraryTree->currentItem();
+  QString path = currentDirItem->data(0, Qt::UserRole).toString();
+  QFileInfo fi(path);
+  // If the user selected a file instead of a folder then get the path of the file, not including the filename
+  if(fi.isFile() == true)
+  {
+    currentDirItem = currentDirItem->parent(); // We need to step up one level to get the parent item which should be a folder
+    path = currentDirItem->data(0, Qt::UserRole).toString(); // Update the path string
+  }
+
+  QString folderPath = path + QDir::separator() + favoriteTitle + QDir::separator();
+
+  QDir dir(path);
+
+  bool created = dir.mkpath(favoriteTitle);
+  if(created == false)
+  {
+    qDebug() << "Could not create path " << folderPath;
+  }
+
+  filterLibraryTree->blockSignals(true);
+  QTreeWidgetItem* nextDirItem = new QTreeWidgetItem(currentDirItem, PipelineTreeWidget::Favorite_Item_Type);
+  nextDirItem->setText(0, favoriteTitle);
+  nextDirItem->setData(0, Qt::UserRole, QVariant(folderPath) );
+  nextDirItem->setIcon(0, QIcon(":/folder_blue.png"));
+  filterLibraryTree->blockSignals(false);
+  //Nothing to add as this was a brand new folder
+  //FIXME: We should figure out how to plae the folder alphabetically, or reload the favorites maybe?
+
 }
+
 
 // -----------------------------------------------------------------------------
 //

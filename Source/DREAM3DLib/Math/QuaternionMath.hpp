@@ -63,24 +63,8 @@ class QuaternionMath
         T w;
     } Quaternion;
 
-    /**
-    * @brief
-    */
-//    typedef struct {
-//        T d[4];
-//    } Vec4_t;
-
-    /**
-    * @brief The Union of the 2 structures
-    */
-//    typedef union {
-//        Quaternion quat;
-//        Vec4_t vec4;
-//    } Quaternion_t;
-
     // -----------------------------------------------------------------------------
-
-    static Quaternion New(T x, T y, T z, T w)
+    static Quaternion NewXYZW(T x, T y, T z, T w)
     {
       Quaternion q;
       q.x = x;
@@ -89,6 +73,7 @@ class QuaternionMath
       q.w = w;
       return q;
     }
+
 
     // -----------------------------------------------------------------------------
     static void Identity(Quaternion &q)
@@ -149,9 +134,9 @@ class QuaternionMath
     }
 
     /**
-     * @brief ElementWiseAdd Adds each element in v to q and stores the results in q
+     * @brief ElementWiseAssign Assigns each element in v to q and stores the results in q
      * @param q Quat that has values stored in it
-     * @param v Input Quat to add elements
+     * @param v Input Quat to assign elements
      */
 
     static void ElementWiseAssign(Quaternion &q, T v)

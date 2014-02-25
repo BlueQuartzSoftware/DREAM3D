@@ -59,8 +59,8 @@ void TestCubicOps()
    float e0[3] = {0.0f, 0.0f, 0.0f};
    float e1[3] = {0.0f, 0.0f, 30.0f * M_PI/180.f};
 
-   QuaternionMathF::Quaternion q0 = QuaternionMathF::New(0.0f, 0.0f, 0.0f, 0.0f);
-   QuaternionMathF::Quaternion q1 = QuaternionMathF::New(0.0f, 0.0f, 0.0f, 0.0f);
+   QuaternionMathF::Quaternion q0 = QuaternionMathF::NewXYZW(0.0f, 0.0f, 0.0f, 0.0f);
+   QuaternionMathF::Quaternion q1 = QuaternionMathF::NewXYZW(0.0f, 0.0f, 0.0f, 0.0f);
 
    OrientationMath::EulertoQuat(q0, e0[0], e0[1], e0[2]);
    OrientationMath::EulertoQuat(q1, e1[0], e1[1], e1[2]);
@@ -81,10 +81,10 @@ void TestQuat_t()
 
 
 
-  QuatF p = QuaternionMathF::New(1.0f, 0.0f, 0.0f, 1.0f);
-  QuatF q = QuaternionMathF::New(0.0f, 1.0f, 0.0f, 2.0f);
-  QuatF out = QuaternionMathF::New(0.0f, 0.0f, 0.0f, 0.0f);
-  QuatF out2 = QuaternionMathF::New(10.0f, 20.0f, 30.0f, 40.0f);
+  QuatF p = QuaternionMathF::NewXYZW(1.0f, 0.0f, 0.0f, 1.0f);
+  QuatF q = QuaternionMathF::NewXYZW(0.0f, 1.0f, 0.0f, 2.0f);
+  QuatF out = QuaternionMathF::NewXYZW(0.0f, 0.0f, 0.0f, 0.0f);
+  QuatF out2 = QuaternionMathF::NewXYZW(10.0f, 20.0f, 30.0f, 40.0f);
 
   QuaternionMathF::Negate(out2);
   DREAM3D_REQUIRE_EQUAL(out2.x, -10.0)
@@ -104,14 +104,14 @@ void TestQuat_t()
   DREAM3D_REQUIRE_EQUAL(out.z, 0.0)
   DREAM3D_REQUIRE_EQUAL(out.w, 1.0)
 
-  out = QuaternionMathF::New(-10.5f, -1.5f, -30.66f, -40.987f);
+  out = QuaternionMathF::NewXYZW(-10.5f, -1.5f, -30.66f, -40.987f);
   QuaternionMathF::ElementWiseAbs(out);
   DREAM3D_REQUIRE_EQUAL(out.x, 10.5f)
   DREAM3D_REQUIRE_EQUAL(out.y, 1.5f)
   DREAM3D_REQUIRE_EQUAL(out.z, 30.66f)
   DREAM3D_REQUIRE_EQUAL(out.w, 40.987f)
 
-  out = QuaternionMathF::New(10.0f, 20.0f, 30.0f, 40.0f);
+  out = QuaternionMathF::NewXYZW(10.0f, 20.0f, 30.0f, 40.0f);
   QuaternionMathF::ScalarMultiply(out, -1.0f);
   DREAM3D_REQUIRE_EQUAL(out.x, -10.0)
   DREAM3D_REQUIRE_EQUAL(out.y, -20.0)

@@ -73,7 +73,7 @@ namespace Detail
 
 static const QuatF TriclinicQuatSym[1] =
 {
-  QuaternionMathF::New(0.000000000f, 0.000000000f, 0.000000000f, 1.000000000f)
+  QuaternionMathF::NewXYZW(0.000000000f, 0.000000000f, 0.000000000f, 1.000000000f)
 };
 
 

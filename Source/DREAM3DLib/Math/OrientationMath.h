@@ -45,10 +45,10 @@
 
 // Here the order of multiplication is q1*q2 not q2*q1
 #define MULT_QUAT(q1, q2, out)\
-    out[1] = q2[1] * q1[4] + q2[4] * q1[1] + q2[3] * q1[2] - q2[2] * q1[3];\
-    out[2] = q2[2] * q1[4] + q2[4] * q1[2] + q2[1] * q1[3] - q2[3] * q1[1];\
-    out[3] = q2[3] * q1[4] + q2[4] * q1[3] + q2[2] * q1[1] - q2[1] * q1[2];\
-    out[4] = q2[4] * q1[4] - q2[1] * q1[1] - q2[2] * q1[2] - q2[3] * q1[3];\
+  out[1] = q2[1] * q1[4] + q2[4] * q1[1] + q2[3] * q1[2] - q2[2] * q1[3];\
+  out[2] = q2[2] * q1[4] + q2[4] * q1[2] + q2[1] * q1[3] - q2[3] * q1[1];\
+  out[3] = q2[3] * q1[4] + q2[4] * q1[3] + q2[2] * q1[1] - q2[1] * q1[2];\
+  out[4] = q2[4] * q1[4] - q2[1] * q1[1] - q2[2] * q1[2] - q2[3] * q1[3];\
 
 
 /*
@@ -135,6 +135,35 @@ class DREAM3DLib_EXPORT OrientationMath
     static float MatrixMisorientation(float g1[3][3], float g2[3][3]);
 
     static void MultiplyQuaternionVector(QuatF &inQuat, float inVec[3], float outVec[3]);
+
+    /**
+    * @brief Does a passive Rotation of the coordinate system defined by  w,n1,n2,n3 of the point xyz using Quaternion
+    * math to perform the rotation
+    * @param angle
+    * @param xAxis
+    * @param yAxis
+    * @param zAxis
+    * @param x
+    * @param y
+    * @param z
+    * @return The returned Quaternion is a "pure" Vector quaterion with a Zero value for the scalar (w) portion
+    */
+    static QuatF PassiveRotation(float angle, float xAxis, float yAxis, float zAxis, float x, float y, float z);
+
+    /**
+    * @brief Does an active Rotation of (xyz) in using the Axis-Angle w,n1,n2,n3 using Quaternion math to perform
+    * the rotation
+    * @param angle
+    * @param xAxis
+    * @param yAxis
+    * @param zAxis
+    * @param x
+    * @param y
+    * @param z
+    * @return The returned Quaternion is a "pure" Vector quaterion with a Zero value for the scalar (w) portion
+    */
+    static QuatF ActiveRotation(float angle, float xAxis, float yAxis, float zAxis, float x, float y, float z);
+
 
   protected:
     OrientationMath();
