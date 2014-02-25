@@ -168,8 +168,10 @@ void MakeVolumeDataContainer::dataCheck()
 // -----------------------------------------------------------------------------
 void MakeVolumeDataContainer::preflight()
 {
+  emit preflightAboutToExecute();
+  emit updateFilterParameters(this);
   dataCheck();
-
+  emit preflightExecuted();
 }
 
 
