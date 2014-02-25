@@ -35,17 +35,28 @@
 #include <string>
 #include <vector>
 
+#include <QtCore/QObject>
 #include <QtCore/QDir>
 #include <QtCore/QFile>
+#include <QtCore/QSettings>
+#include <QtCore/QString>
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/Observer.h"
 #include "DREAM3DLib/Common/FilterManager.h"
 #include "DREAM3DLib/Common/FilterFactory.hpp"
+#include "DREAM3DLib/Common/AbstractFilter.h"
+#include "DREAM3DLib/Plugin/DREAM3DPluginInterface.h"
+#include "DREAM3DLib/Plugin/DREAM3DPluginLoader.h"
 #include "DREAM3DLib/DREAM3DFilters.h"
 
 #include "UnitTestSupport.hpp"
 #include "TestFileLocations.h"
+
+#include "PreflightVerify.h"
+
+
+
 
 // -----------------------------------------------------------------------------
 //
@@ -117,24 +128,88 @@ void RemoveTestFiles()
 
 
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void verifySignals(FilterManager::Pointer fm)
+{
+
+  QByteArray normType = ("updateFilterParameters(AbstractFilter*)");
+  FilterManager::Collection factories = fm->getFactories();
+  QMapIterator<QString, IFilterFactory::Pointer> iter(factories);
+  while(iter.hasNext())
+  {
+    iter.next();
+    IFilterFactory::Pointer factory = iter.value();
+    AbstractFilter::Pointer filter = factory->create();
+    const QMetaObject* meta = filter->metaObject();
+    int count = meta->methodCount();
+
+
+
+    int index = meta->indexOfSignal(normType);
+    if (index < 0)
+    {
+      qDebug() << "Filter: " << iter.key() << "  Method Count: " << count;
+      qDebug() << "==>  Signal void updateFilterParameters(AbstractFilter* filter) does not exist";
+    }
+  }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void verifyPreflightEmitsProperly()
+{
+  FilterManager::Pointer fm = FilterManager::Instance();
+  FilterManager::Collection factories = fm->getFactories();
+  QMapIterator<QString, IFilterFactory::Pointer> iter(factories);
+
+  while(iter.hasNext())
+  {
+    PreflightVerify p(NULL);
+    qDebug() << "--------------------------";
+    iter.next();
+    IFilterFactory::Pointer factory = iter.value();
+    AbstractFilter::Pointer filter = factory->create();
+    filter->connect(filter.get(), SIGNAL(preflightAboutToExecute()),
+                    &p, SLOT(beforePreflight()) );
+    filter->connect(filter.get(), SIGNAL(preflightExecuted()),
+                    &p, SLOT(afterPreflight()) );
+    filter->connect(filter.get(), SIGNAL(updateFilterParameters(AbstractFilter*) ),
+                    &p, SLOT(filterNeedsInputParameters(AbstractFilter*)) );
+
+    filter->preflight();
+
+    if(p.m_beforePreflight == false)
+    {
+      qDebug() << filter->getNameOfClass() << " Missing emit preflightAboutToExecute()";
+    }
+    if(p.m_afterPreflight == false)
+    {
+      qDebug() << filter->getNameOfClass() << " Missing emit preflightExecuted()";
+    }
+    if(p.m_filterNeedsInputParameters == false)
+    {
+      qDebug() << filter->getNameOfClass() << " Missing emit updateFilterParameters()";
+    }
+  }
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 void TestPreflight()
 {
-  FilterManager::Pointer filtManager = FilterManager::Instance();
-  // THIS IS A VERY IMPORTANT LINE: It will register all the known filters in the dream3d library. This
-  // will NOT however get filters from plugins. We are going to have to figure out how to compile filters
-  // into their own plugin and load the plugins from a command line.
-  filtManager->RegisterKnownFilters(filtManager.get());
 
-  FilterManager::Collection factories = filtManager->getFactories();
+  FilterManager::Pointer fm = FilterManager::Instance();
+
+  FilterManager::Collection factories = fm->getFactories();
   FilterManager::Collection::const_iterator factoryMapIter = factories.constBegin();
   int err = 0;
   while (factoryMapIter != factories.constEnd())
   {
-    IFilterFactory::Pointer factory = filtManager->getFactoryForFilter(factoryMapIter.key());
+    IFilterFactory::Pointer factory = fm->getFactoryForFilter(factoryMapIter.key());
     if(factory.get() != NULL)
     {
       AbstractFilter::Pointer filter = factory->create();
@@ -152,8 +227,19 @@ void TestPreflight()
 // -----------------------------------------------------------------------------
 int main(int argc, char** argv)
 {
+  // Load all the plugins and
+  // Register all the filters including trying to load those from Plugins
+  FilterManager::Pointer fm = FilterManager::Instance();
+  DREAM3DPluginLoader::LoadPluginFilters(fm.get());
+  // THIS IS A VERY IMPORTANT LINE: It will register all the known filters in the dream3d library. This
+  // will NOT however get filters from plugins. We are going to have to figure out how to compile filters
+  // into their own plugin and load the plugins from a command line.
+  fm->RegisterKnownFilters(fm.get());
+
   int err = EXIT_SUCCESS;
   DREAM3D_REGISTER_TEST( TestPreflight() )
+
+  verifyPreflightEmitsProperly();
 
   PRINT_TEST_SUMMARY();
   return err;
