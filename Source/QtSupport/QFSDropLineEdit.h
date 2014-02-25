@@ -51,6 +51,10 @@ class QFSDropLineEdit : public QLineEdit
     void dragEnterEvent(QDragEnterEvent* event);
     void dropEvent(QDropEvent* event);
 
+
+  signals:
+    void fileDropped(const QString& file);
+
   private:
 
 };
