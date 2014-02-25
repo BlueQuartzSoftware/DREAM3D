@@ -6,6 +6,7 @@
 + all menus need to be reimplemented
 + Get list of menus from Version 4
 + Implement "Dock" Menu to toggle the dock widgets
+	+ DONE
 
 ## PipelineView ##
 + Loading a pipeline can take a while. Put up a progress dialog box
@@ -14,7 +15,9 @@
 ## General Layout ##
 
 + properly figure out the state of each Dock Widget and save the state to the prefs file
+	+ DONE
 + properly init the dock widget buttons at the bottom of the GUI based on if they are showing or not
+	+ DONE
 
 ## Filter List Dock Widget ##
 
@@ -23,6 +26,7 @@
 ## Favorites/Documents ##
 
 + Add folder hierarchy capabilities
+	+ DONE
 
 ## Filter Parameter Widgets ##
 + Changing a parameter does not trigger a preflight.

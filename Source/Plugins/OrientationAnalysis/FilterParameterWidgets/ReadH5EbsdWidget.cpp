@@ -175,14 +175,18 @@ void ReadH5EbsdWidget::on_m_InputFile_textChanged(const QString &text)
 {
   setOpenDialogLastDirectory(m_InputFile->text());
   bool b = verifyPathExists(m_InputFile->text(), m_InputFile);
-  
+
   m_NewFileLoaded = true;
   // Clear the QListWidget
   m_CellList->blockSignals(true);
   m_CellList->clear();
   m_CellList->blockSignals(false);
-  
+
   m_DidCausePreflight = true;
+
+  // We need to send the file down to the filter BEFORE any of the preflight starts because it needs this updated file
+  m_Filter->setInputFile(m_InputFile->text());
+  // Once the input file is changed then kick off the prefligth by emitting the parametersChanged() signal
   emit parametersChanged();
   m_DidCausePreflight = false;
   m_NewFileLoaded = false;
