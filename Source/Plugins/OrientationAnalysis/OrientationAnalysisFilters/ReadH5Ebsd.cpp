@@ -252,18 +252,22 @@ int ReadH5Ebsd::initDataContainerDimsRes(int64_t dims[3], VolumeDataContainer* m
 void ReadH5Ebsd::readVolumeInfo()
 {
 
+  m_DataArrayNames.clear(); // Remove all the data arrays
+
   QFileInfo fi(m_InputFile);
-  if (m_InputFile.isEmpty() == true && m_Manufacturer == Ebsd::UnknownManufacturer)
+  if (m_InputFile.isEmpty() == true )
   {
     QString ss = QObject::tr("%1: The H5Ebsd file must exist and the Manufacturer must be set correctly in the file").arg(getHumanLabel());
     setErrorCondition(-1);
     notifyErrorMessage(getHumanLabel(), ss, -1);
+    return;
   }
   else if (fi.exists() == false)
   {
     QString ss = QObject::tr("The input file does not exist. '%1'").arg(getInputFile());
     setErrorCondition(-388);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    return;
   }
   else if (m_InputFile.isEmpty() == false)
   {
@@ -344,6 +348,15 @@ void ReadH5Ebsd::dataCheck()
 {
   setErrorCondition(0);
 
+  m_DataArrayNames.clear(); // Remove all the data arrays
+
+  H5EbsdVolumeInfo::Pointer volumeInfoReader = H5EbsdVolumeInfo::New();
+  QFileInfo fi(getInputFile());
+  if(fi.exists() == false)
+  {
+    return;
+  }
+
   VolumeDataContainer* m = getDataContainerArray()->createNonPrereqDataContainer<VolumeDataContainer, AbstractFilter>(NULL, getDataContainerName());
   if(getErrorCondition() < 0) { return; }
   QVector<size_t> tDims(3, 0);
@@ -355,7 +368,7 @@ void ReadH5Ebsd::dataCheck()
   if(getErrorCondition() < 0) { return; }
 
 
-  H5EbsdVolumeInfo::Pointer volumeInfoReader = H5EbsdVolumeInfo::New();
+
   volumeInfoReader->setFileName(m_InputFile);
   H5EbsdVolumeReader::Pointer reader;
   QVector<QString> names;
@@ -402,6 +415,9 @@ void ReadH5Ebsd::dataCheck()
     return;
   }
 
+
+  // Get the list of data arrays in the EBSD file
+  m_DataArrayNames = reader->getDataArrayNames();
 
   QVector<size_t> cDims(1, 1);
   for (size_t i = 0; i < names.size(); ++i)

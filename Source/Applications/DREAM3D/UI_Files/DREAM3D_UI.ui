@@ -254,6 +254,7 @@ border: 2px solid;
     <addaction name="actionCopyCurrentFilter"/>
     <addaction name="actionPasteCopiedFilter"/>
     <addaction name="actionRemoveCurrentFilter"/>
+    <addaction name="separator"/>
    </widget>
    <widget class="QMenu" name="menuHelp">
     <property name="title">
