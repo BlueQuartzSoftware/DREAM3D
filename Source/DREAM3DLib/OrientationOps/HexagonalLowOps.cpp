@@ -73,12 +73,12 @@ namespace Detail
 }
 
 
-static const QuatF HexQuatSym[6] = {QuaternionMathF::New(0.000000000f, 0.000000000f, 0.000000000f, 1.000000000f),
-                                    QuaternionMathF::New(0.000000000f, 0.000000000f, 0.500000000f, 0.866025400f),
-                                    QuaternionMathF::New(0.000000000f, 0.000000000f, 0.866025400f, 0.500000000f),
-                                    QuaternionMathF::New(0.000000000f, 0.000000000f, 1.000000000f, 0.000000000f),
-                                    QuaternionMathF::New(0.000000000f, 0.000000000f, 0.866025400f, -0.50000000f),
-                                    QuaternionMathF::New(0.000000000f, 0.000000000f, 0.500000000f, -0.86602540f)
+static const QuatF HexQuatSym[6] = {QuaternionMathF::NewXYZW(0.000000000f, 0.000000000f, 0.000000000f, 1.000000000f),
+                                    QuaternionMathF::NewXYZW(0.000000000f, 0.000000000f, 0.500000000f, 0.866025400f),
+                                    QuaternionMathF::NewXYZW(0.000000000f, 0.000000000f, 0.866025400f, 0.500000000f),
+                                    QuaternionMathF::NewXYZW(0.000000000f, 0.000000000f, 1.000000000f, 0.000000000f),
+                                    QuaternionMathF::NewXYZW(0.000000000f, 0.000000000f, 0.866025400f, -0.50000000f),
+                                    QuaternionMathF::NewXYZW(0.000000000f, 0.000000000f, 0.500000000f, -0.86602540f)
                                    };
 
 

@@ -73,18 +73,18 @@ namespace Detail
   }
 }
 
-static const QuatF HexQuatSym[12] = {QuaternionMathF::New(0.000000000f, 0.000000000f, 0.000000000f, 1.000000000f),
-                                     QuaternionMathF::New(0.000000000f, 0.000000000f, 0.500000000f, 0.866025400f),
-                                     QuaternionMathF::New(0.000000000f, 0.000000000f, 0.866025400f, 0.500000000f),
-                                     QuaternionMathF::New(0.000000000f, 0.000000000f, 1.000000000f, 0.000000000f),
-                                     QuaternionMathF::New(0.000000000f, 0.000000000f, 0.866025400f, -0.50000000f),
-                                     QuaternionMathF::New(0.000000000f, 0.000000000f, 0.500000000f, -0.86602540f),
-                                     QuaternionMathF::New(1.000000000f, 0.000000000f, 0.000000000f, 0.000000000f),
-                                     QuaternionMathF::New(0.866025400f, 0.500000000f, 0.000000000f, 0.000000000f),
-                                     QuaternionMathF::New(0.500000000f, 0.866025400f, 0.000000000f, 0.000000000f),
-                                     QuaternionMathF::New(0.000000000f, 1.000000000f, 0.000000000f, 0.000000000f),
-                                     QuaternionMathF::New(-0.50000000f, 0.866025400f, 0.000000000f, 0.000000000f),
-                                     QuaternionMathF::New(-0.86602540f, 0.500000000f, 0.000000000f, 0.000000000)
+static const QuatF HexQuatSym[12] = {QuaternionMathF::NewXYZW(0.000000000f, 0.000000000f, 0.000000000f, 1.000000000f),
+                                     QuaternionMathF::NewXYZW(0.000000000f, 0.000000000f, 0.500000000f, 0.866025400f),
+                                     QuaternionMathF::NewXYZW(0.000000000f, 0.000000000f, 0.866025400f, 0.500000000f),
+                                     QuaternionMathF::NewXYZW(0.000000000f, 0.000000000f, 1.000000000f, 0.000000000f),
+                                     QuaternionMathF::NewXYZW(0.000000000f, 0.000000000f, 0.866025400f, -0.50000000f),
+                                     QuaternionMathF::NewXYZW(0.000000000f, 0.000000000f, 0.500000000f, -0.86602540f),
+                                     QuaternionMathF::NewXYZW(1.000000000f, 0.000000000f, 0.000000000f, 0.000000000f),
+                                     QuaternionMathF::NewXYZW(0.866025400f, 0.500000000f, 0.000000000f, 0.000000000f),
+                                     QuaternionMathF::NewXYZW(0.500000000f, 0.866025400f, 0.000000000f, 0.000000000f),
+                                     QuaternionMathF::NewXYZW(0.000000000f, 1.000000000f, 0.000000000f, 0.000000000f),
+                                     QuaternionMathF::NewXYZW(-0.50000000f, 0.866025400f, 0.000000000f, 0.000000000f),
+                                     QuaternionMathF::NewXYZW(-0.86602540f, 0.500000000f, 0.000000000f, 0.000000000)
                                     };
 
 

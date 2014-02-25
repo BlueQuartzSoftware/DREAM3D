@@ -70,10 +70,10 @@ namespace Detail
     static const int symSize2 = 2;
   }
 }
-static const QuatF TetraQuatSym[4] = {QuaternionMathF::New(0.000000000f, 0.000000000f, 0.000000000f, 1.000000000f),
-                                      QuaternionMathF::New(0.000000000f, 0.000000000f, 1.000000000f, 0.000000000f),
-                                      QuaternionMathF::New(0.000000000f, 0.000000000f, DREAM3D::Constants::k_1OverRoot2, -DREAM3D::Constants::k_1OverRoot2),
-                                      QuaternionMathF::New(0.000000000f, 0.000000000f, DREAM3D::Constants::k_1OverRoot2, DREAM3D::Constants::k_1OverRoot2)
+static const QuatF TetraQuatSym[4] = {QuaternionMathF::NewXYZW(0.000000000f, 0.000000000f, 0.000000000f, 1.000000000f),
+                                      QuaternionMathF::NewXYZW(0.000000000f, 0.000000000f, 1.000000000f, 0.000000000f),
+                                      QuaternionMathF::NewXYZW(0.000000000f, 0.000000000f, DREAM3D::Constants::k_1OverRoot2, -DREAM3D::Constants::k_1OverRoot2),
+                                      QuaternionMathF::NewXYZW(0.000000000f, 0.000000000f, DREAM3D::Constants::k_1OverRoot2, DREAM3D::Constants::k_1OverRoot2)
                                      };
 
 

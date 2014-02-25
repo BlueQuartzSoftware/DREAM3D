@@ -35,9 +35,9 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
+#include <iostream>
 
-
-
+#include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/OrientationOps/OrientationOps.h"
 
 #include "DREAM3DLib/OrientationOps/CubicOps.h"
@@ -148,7 +148,43 @@ void testEulerRotMatrix()
 #endif
 }
 
+    /**
+     * @brief Print
+     * @param o
+     * @param q
+     */
+    void Print(std::ostream& o, QuatF &q)
+    {
+      o << "{" << "<" << q.w << "> (" << q.x << ", " << q.y << ", " << q.z << ") }";
+    }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void Rotations()
+{
+  QuatF passive = OrientationMath::PassiveRotation(M_PI/2, 0.0, 0.0, 1.0, 0.0, 1.0, 0.0);
+  Print(std::cout, passive);
+  std::cout << std::endl;
+
+
+  QuatF active = OrientationMath::ActiveRotation(M_PI/2, 0.0, 0.0, 1.0, 0.0, 1.0, 0.0);
+  Print(std::cout, active);
+  std::cout << std::endl;
+
+
+  QuatF q = QuaternionMathF::NewXYZW(0.0, 0.0, 1.0, M_PI/2.0);
+  float n1 = 0.0f;
+  float n2 = 1.0f;
+  float n3 = 0.0f;
+  OrientationMath::ChangeAxisReferenceFrame(q, n1, n2, n3);
+  std::cout << "ChangeAxisReferenceFrame: " << n1 << ", " << n2 << ", " << n3 << std::endl;
+
+  float inVec[3] = {0.0f, 1.0f, 0.0f};
+  float outVec[3] = {0.0, 0.0, 0.0};
+  OrientationMath::MultiplyQuaternionVector(q, inVec, outVec);
+  std::cout << "MultiplyQuaternionVector: " << outVec[0] << ", " << outVec[1] << ", " << outVec[2] << std::endl;
+}
 
 // -----------------------------------------------------------------------------
 //  Use test framework
@@ -158,9 +194,10 @@ int main(int argc, char **argv) {
 
   DREAM3D_REGISTER_TEST( testEulerRotMatrix() )
 
-      DREAM3D_REGISTER_TEST( TestQuatMath() )
+  DREAM3D_REGISTER_TEST( TestQuatMath() )
+  DREAM3D_REGISTER_TEST( Rotations() )
 
-      PRINT_TEST_SUMMARY();
+  PRINT_TEST_SUMMARY();
   return err;
 }
 

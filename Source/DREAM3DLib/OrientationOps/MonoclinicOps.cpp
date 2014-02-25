@@ -72,8 +72,8 @@ namespace Detail
 
 static const QuatF MonoclinicQuatSym[2] =
 {
-  QuaternionMathF::New(0.000000000f, 0.000000000f, 0.000000000f, 1.000000000f),
-  QuaternionMathF::New(0.000000000f, 1.000000000f, 0.000000000f, 0.000000000f)
+  QuaternionMathF::NewXYZW(0.000000000f, 0.000000000f, 0.000000000f, 1.000000000f),
+  QuaternionMathF::NewXYZW(0.000000000f, 1.000000000f, 0.000000000f, 0.000000000f)
 };
 
 

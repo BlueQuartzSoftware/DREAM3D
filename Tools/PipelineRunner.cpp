@@ -75,7 +75,7 @@
 int main (int argc, char  *argv[])
 {
 
-  QuatF q = QuaternionMathF::New(0.565907, -0.24196, 0.106982, -0.7808710);
+  QuatF q = QuaternionMathF::NewXYZW(0.565907, -0.24196, 0.106982, -0.7808710);
   float euler[3] = {0.0, 0.0, 0.0};
 
 
