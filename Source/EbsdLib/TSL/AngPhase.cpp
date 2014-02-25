@@ -181,6 +181,11 @@ void AngPhase::parseCategories(QList<QByteArray> tokens)
 {
   m_Categories.clear();
   bool ok = false;
+  if(tokens[0].size() != Ebsd::Ang::Categories.size())
+  {
+    tokens[0].replace(Ebsd::Ang::Categories, "");
+    m_Categories.push_back(tokens.at(0).toInt(&ok, 10));
+  }
   for(int i = 1; i < tokens.size(); ++i)
   {
     m_Categories.push_back(tokens.at(i).toInt(&ok, 10));

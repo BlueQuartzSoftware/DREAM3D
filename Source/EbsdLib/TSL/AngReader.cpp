@@ -482,7 +482,7 @@ void AngReader::parseHeaderLine(QByteArray& buf)
   {
     if (tokens.size() > 1) { m_CurrentPhase->parseHKLFamilies(tokens); }
   }
-  else if (word.compare(Ebsd::Ang::Categories) == 0 && m_CurrentPhase.get() != NULL)
+  else if (word.startsWith(Ebsd::Ang::Categories) == true && m_CurrentPhase.get() != NULL)
   {
     if (tokens.size() > 1) { m_CurrentPhase->parseCategories(tokens); }
   }
