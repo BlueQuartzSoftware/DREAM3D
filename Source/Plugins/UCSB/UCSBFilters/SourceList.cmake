@@ -14,6 +14,7 @@ START_FILTER_GROUP(${UCSB_BINARY_DIR} "${_filterGroupName}" "UCSB")
 # List your public filters here
 set(_PublicFilters
   SampleVolume
+  RemoveJitter
 )
 
 
