@@ -127,6 +127,8 @@ class DREAM3DWidgetsLib_EXPORT PipelineFilterWidget : public QFrame, private Ui:
 
     void setHasPreflightWarnings(bool hasWarnings);
 
+    void displayFilterParameterWidgetError(const QString& msg);
+
   protected slots:
     void on_deleteBtn_clicked();
     void on_helpBtn_clicked();

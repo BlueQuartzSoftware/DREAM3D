@@ -424,9 +424,9 @@ void PipelineViewWidget::addFilterWidget(PipelineFilterWidget* w, AbstractFilter
   // Conditionally when the filter widget is selected, show the inputs on another widget
   if (NULL != m_InputParametersWidget) {
     connect(w, SIGNAL(widgetSelected(PipelineFilterWidget*)),
-      m_InputParametersWidget, SLOT(displayFilterParameters(PipelineFilterWidget*)));
+          m_InputParametersWidget, SLOT(displayFilterParameters(PipelineFilterWidget*)));
     connect(w, SIGNAL(filterWidgetRemoved(PipelineFilterWidget*)),
-      m_InputParametersWidget, SLOT(removeWidgetInputs(PipelineFilterWidget*)));
+          m_InputParametersWidget, SLOT(removeWidgetInputs(PipelineFilterWidget*)));
   }
 
   connect(w, SIGNAL(parametersChanged()),
@@ -449,7 +449,7 @@ void PipelineViewWidget::addFilterWidget(PipelineFilterWidget* w, AbstractFilter
 void PipelineViewWidget::preflightPipeline()
 {
 
-  std::cout << "PipelineViewWidget::preflightPipeline()" << std::endl;
+ // std::cout << "PipelineViewWidget::preflightPipeline()" << std::endl;
 
   emit pipelineIssuesCleared();
   // Create a Pipeline Object and fill it with the filters from this View

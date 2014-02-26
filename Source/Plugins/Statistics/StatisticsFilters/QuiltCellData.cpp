@@ -52,13 +52,13 @@ QuiltCellData::QuiltCellData() :
   m_OutputArrayName("Quilt_Data"),
   m_OutputArray(NULL)
 {
-  m_QuiltStep.x = 0;
-  m_QuiltStep.y = 0;
-  m_QuiltStep.z = 0;
+  m_QuiltStep.x = 2;
+  m_QuiltStep.y = 2;
+  m_QuiltStep.z = 2;
 
-  m_PatchSize.x = 0;
-  m_PatchSize.y = 0;
-  m_PatchSize.z = 0;
+  m_PatchSize.x = 3;
+  m_PatchSize.y = 3;
+  m_PatchSize.z = 3;
 
   setupFilterParameters();
 }
@@ -97,7 +97,7 @@ void QuiltCellData::setupFilterParameters()
   {
     FilterParameter::Pointer parameter = FilterParameter::New();
     parameter->setHumanLabel("Patch Size");
-    parameter->setPropertyName("Dimensions");
+    parameter->setPropertyName("PatchSize");
     parameter->setWidgetType(FilterParameterWidgetType::IntVec3Widget);
     parameter->setValueType("IntVec3_t");
     parameter->setUnits("Voxels");
@@ -184,7 +184,7 @@ void QuiltCellData::dataCheck()
   if(getOutputDataContainerName().isEmpty() == true)
   {
     QString ss = QObject::tr("The output DataContainer name is empty. Please assign a name for the created DataContainer");
-    setErrorCondition(-11000);
+    setErrorCondition(-11001);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 
@@ -192,22 +192,39 @@ void QuiltCellData::dataCheck()
   if(getOutputAttributeMatrixName().isEmpty() == true)
   {
     QString ss = QObject::tr("The output AttributeMatrix name is empty. Please assign a name for the created AttributeMatrix");
-    setErrorCondition(-11000);
+    setErrorCondition(-11002);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 
   if(getOutputArrayName().isEmpty() == true)
   {
     QString ss = QObject::tr("The output array name is empty. Please assign a name for the created array");
-    setErrorCondition(-11000);
+    setErrorCondition(-11003);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
+
+  // Check to make sure the QuiltStep and Patch Size are non-zero
+  if(m_QuiltStep.x < 1 || m_QuiltStep.y < 1 || m_QuiltStep.z < 1)
+  {
+    QString ss = QObject::tr("The QuiltStep parameter is invalid because one of the values is Negative or Zero. Value=(%1, %2, %3)").arg(m_QuiltStep.x).arg(m_QuiltStep.y).arg(m_QuiltStep.z);
+    setErrorCondition(-11004);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+  }
+  // Check to make sure the QuiltStep and Patch Size are non-zero
+  if(m_PatchSize.x < 1 || m_PatchSize.y < 1 || m_PatchSize.z < 1)
+  {
+    QString ss = QObject::tr("The Patch Size parameter is invalid because one of the values is Negative or Zero. Value=(%1, %2, %3)").arg(m_PatchSize.x).arg(m_PatchSize.y).arg(m_PatchSize.z);
+    setErrorCondition(-11005);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+  }
+
 
   // we can not go any further until all of the names are set.
   if(getErrorCondition() < 0)
   {
     return;
   }
+
 
   // Next check the existing DataContainer/AttributeMatrix
   VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName());

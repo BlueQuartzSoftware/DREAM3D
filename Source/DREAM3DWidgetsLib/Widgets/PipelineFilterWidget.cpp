@@ -180,15 +180,29 @@ void PipelineFilterWidget::initialize(AbstractFilter::Pointer filter)
       // Add the FilterWidget to the layout
       verticalLayout->addWidget(w);
 
-      // Connect any errors/warnings that the widget may create to the Issues Tab
       connect(w, SIGNAL(parametersChanged() ),
               parent(), SLOT(preflightPipeline() ) );
+      connect(w, SIGNAL(errorSettingFilterParameter(const QString&)),
+              this, SLOT(displayFilterParameterWidgetError(const QString&)));
+
     }
 
     QSpacerItem* verticalSpacer = new QSpacerItem(20, 40, QSizePolicy::Minimum, QSizePolicy::Expanding);
     verticalLayout->addItem(verticalSpacer);
   }
 
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void PipelineFilterWidget::displayFilterParameterWidgetError(const QString& msg)
+{
+ if(m_Observer)
+ {
+   PipelineMessage pm("Filter Paramter Widget", msg, -1, PipelineMessage::Error);
+    m_Observer->processPipelineMessage(pm);
+ }
 }
 
 // -----------------------------------------------------------------------------
