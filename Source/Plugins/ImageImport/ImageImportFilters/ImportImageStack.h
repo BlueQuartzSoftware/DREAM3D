@@ -75,10 +75,11 @@ class ImportImageStack : public AbstractFilter
     DREAM3D_FILTER_PARAMETER(QString, FileSuffix)
     DREAM3D_FILTER_PARAMETER(QString, FileExtension)
     DREAM3D_FILTER_PARAMETER(int, PaddingDigits)
+    DREAM3D_FILTER_PARAMETER(uint32_t, RefFrameZDir)
 
-    DREAM3D_INSTANCE_PROPERTY(uint32_t, RefFrameZDir)
+    DREAM3D_FILTER_PARAMETER(int, ImageStack)
+    Q_PROPERTY(int ImageStack READ getImageStack WRITE setImageStack NOTIFY parametersChanged)
 
-   // DREAM3D_INSTANCE_PROPERTY(QVector<QString>, ImageFileList)
 
     /**
     * @brief This returns the group that the filter belonds to. You can select

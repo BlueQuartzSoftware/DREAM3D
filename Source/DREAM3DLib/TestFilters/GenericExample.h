@@ -70,7 +70,8 @@ class DREAM3DLib_EXPORT GenericExample : public AbstractFilter
     Q_PROPERTY(QString StlFilePrefix READ getStlFilePrefix WRITE setStlFilePrefix NOTIFY parametersChanged)
     DREAM3D_FILTER_PARAMETER(int, MaxIterations)
     Q_PROPERTY(int MaxIterations READ getMaxIterations WRITE setMaxIterations NOTIFY parametersChanged)
-    DREAM3D_INSTANCE_PROPERTY(double, MisorientationTolerance)
+    DREAM3D_FILTER_PARAMETER(double, MisorientationTolerance)
+    Q_PROPERTY(double MisorientationTolerance READ getMisorientationTolerance WRITE setMisorientationTolerance NOTIFY parametersChanged)
     DREAM3D_FILTER_PARAMETER(QString, InputFile)
     Q_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile NOTIFY parametersChanged)
     DREAM3D_FILTER_PARAMETER(QString, InputPath)
@@ -81,12 +82,16 @@ class DREAM3DLib_EXPORT GenericExample : public AbstractFilter
     Q_PROPERTY(QString OutputPath READ getOutputPath WRITE setOutputPath NOTIFY parametersChanged)
     DREAM3D_FILTER_PARAMETER(bool, WriteAlignmentShifts)
     Q_PROPERTY(bool WriteAlignmentShifts READ getWriteAlignmentShifts WRITE setWriteAlignmentShifts NOTIFY parametersChanged)
-    DREAM3D_INSTANCE_PROPERTY(int, ConversionType)
+    DREAM3D_FILTER_PARAMETER(int, ConversionType)
+    Q_PROPERTY(int ConversionType READ getConversionType WRITE setConversionType NOTIFY parametersChanged)
 
     DREAM3D_FILTER_PARAMETER(IntVec3_t, Dimensions)
     Q_PROPERTY(IntVec3_t Dimensions READ getDimensions WRITE setDimensions NOTIFY parametersChanged)
     DREAM3D_FILTER_PARAMETER(FloatVec3_t, Origin)
     Q_PROPERTY(FloatVec3_t Origin READ getOrigin WRITE setOrigin NOTIFY parametersChanged)
+    DREAM3D_FILTER_PARAMETER(AxisAngleInput_t, CrystalSymmetryRotations)
+    Q_PROPERTY(AxisAngleInput_t CrystalSymmetryRotations READ getCrystalSymmetryRotations WRITE setCrystalSymmetryRotations NOTIFY parametersChanged)
+
 
     DREAM3D_INSTANCE_PROPERTY(QVector<AxisAngleInput_t>, AxisAngleInputs)
 
