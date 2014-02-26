@@ -85,10 +85,14 @@ class DREAM3DWidgetsLib_EXPORT InputFileWidget : public QWidget, private Ui::Inp
     void afterPreflight();
     void filterNeedsInputParameters(AbstractFilter* filter);
 
-    void on_value_textChanged(const QString& text);
+    void on_value_fileDropped(const QString& text);
     void on_value_editingFinished();
-
+    void on_value_textChanged(const QString& text);
     void on_selectBtn_clicked();
+
+  protected:
+    static void setOpenDialogLastDirectory(QString val) { m_OpenDialogLastDirectory = val; }
+    static QString getOpenDialogLastDirectory() { return m_OpenDialogLastDirectory; }
 
   signals:
     void errorSettingFilterParameter(const QString& msg);

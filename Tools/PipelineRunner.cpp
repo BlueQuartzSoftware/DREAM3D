@@ -107,35 +107,6 @@ void readPipeline(QFilterParametersReader::Pointer paramsReader, FilterPipeline:
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void verifySignals(FilterManager::Pointer fm)
-{
-
-  QByteArray normType = ("updateFilterParameters(AbstractFilter*)");
-  FilterManager::Collection factories = fm->getFactories();
-  QMapIterator<QString, IFilterFactory::Pointer> iter(factories);
-  while(iter.hasNext())
-  {
-    iter.next();
-    IFilterFactory::Pointer factory = iter.value();
-    AbstractFilter::Pointer filter = factory->create();
-    const QMetaObject* meta = filter->metaObject();
-    int count = meta->methodCount();
-
-
-
-    int index = meta->indexOfSignal(normType);
-    if (index < 0)
-    {
-        qDebug() << "Filter: " << iter.key() << "  Method Count: " << count;
-      qDebug() << "==>  Signal void updateFilterParameters(AbstractFilter* filter) does not exist";
-    }
-  }
-}
-
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 int main (int argc, char  *argv[])
 {
 
