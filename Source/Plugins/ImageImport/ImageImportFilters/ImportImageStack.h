@@ -64,19 +64,21 @@ class ImportImageStack : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
 
-    DREAM3D_INSTANCE_PROPERTY(int64_t, ZStartIndex)
-    DREAM3D_INSTANCE_PROPERTY(int64_t, ZEndIndex)
-    DREAM3D_INSTANCE_PROPERTY(int64_t, TotalDigits)
-    DREAM3D_INSTANCE_STRING_PROPERTY(InputDir)
-    DREAM3D_INSTANCE_STRING_PROPERTY(FilePrefix)
-    DREAM3D_INSTANCE_STRING_PROPERTY(FileSuffix)
-    DREAM3D_INSTANCE_STRING_PROPERTY(FileExt)
-    DREAM3D_INSTANCE_PROPERTY(QVector<QString>, ImageFileList)
-    DREAM3D_INSTANCE_PROPERTY(FloatVec3_t, Origin)
-    DREAM3D_INSTANCE_PROPERTY(FloatVec3_t, Resolution)
-    DREAM3D_INSTANCE_PROPERTY(bool, StackLowToHigh)
-    DREAM3D_INSTANCE_PROPERTY(bool, StackHighToLow)
 
+    DREAM3D_FILTER_PARAMETER(int64_t, ZStartIndex)
+    DREAM3D_FILTER_PARAMETER(int64_t, ZEndIndex)
+    DREAM3D_FILTER_PARAMETER(FloatVec3_t, Resolution)
+    DREAM3D_FILTER_PARAMETER(FloatVec3_t, Origin)
+
+    DREAM3D_FILTER_PARAMETER(QString, InputPath)
+    DREAM3D_FILTER_PARAMETER(QString, FilePrefix)
+    DREAM3D_FILTER_PARAMETER(QString, FileSuffix)
+    DREAM3D_FILTER_PARAMETER(QString, FileExtension)
+    DREAM3D_FILTER_PARAMETER(int, PaddingDigits)
+
+    DREAM3D_INSTANCE_PROPERTY(uint32_t, RefFrameZDir)
+
+   // DREAM3D_INSTANCE_PROPERTY(QVector<QString>, ImageFileList)
 
     /**
     * @brief This returns the group that the filter belonds to. You can select

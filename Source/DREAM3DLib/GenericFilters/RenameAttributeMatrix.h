@@ -88,7 +88,7 @@ class DREAM3DLib_EXPORT RenameAttributeMatrix : public AbstractFilter
     * @brief This returns a string that is displayed in the GUI. It should be readable
     * and understandable by humans.
     */
-    virtual const QString getHumanLabel() { return "Rename Attribute Array"; }
+    virtual const QString getHumanLabel() { return "Rename Attribute Matrix"; }
 
     /**
     * @brief This method will instantiate all the end user settable options/parameters

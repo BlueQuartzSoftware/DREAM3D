@@ -70,7 +70,8 @@ class QuiltCellData : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
     DREAM3D_INSTANCE_STRING_PROPERTY(NewCellAttributeMatrixName)
 
-    DREAM3D_INSTANCE_STRING_PROPERTY(SelectedCellArrayName)
+    DREAM3D_FILTER_PARAMETER(QString, SelectedCellArrayName)
+    Q_PROPERTY(QString SelectedCellArrayName READ getSelectedCellArrayName WRITE setSelectedCellArrayName NOTIFY parametersChanged)
 
     DREAM3D_FILTER_PARAMETER(int, QStepX)
     Q_PROPERTY(int QStepX READ getQStepX WRITE setQStepX NOTIFY parametersChanged)

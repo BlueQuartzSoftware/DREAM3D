@@ -22,14 +22,6 @@ include(${DREAM3DProj_SOURCE_DIR}/Source/DREAM3DLib/DREAM3DLibMacros.cmake)
 # Start writing this header file
 set(AllFiltersHeaderFile ${${PLUGIN_NAME}_BINARY_DIR}/${PLUGIN_NAME}Filters/${PLUGIN_NAME}Filters.h_tmp)
 file(WRITE ${AllFiltersHeaderFile} "#ifndef _${PLUGIN_NAME}_Filters_H_\n#define _${PLUGIN_NAME}_Filters_H_\n\n")
-# --------------------------------------------------------------------
-# Create a File that will be used to generate a program that itself generates a
-# QFilterWidget derived header for each of the filters based on thier exposed
-# filter options
-set(CodeGeneratorFile  ${${PLUGIN_NAME}_BINARY_DIR}/${PLUGIN_NAME}CodeGenerator.h)
-file(WRITE ${CodeGeneratorFile} "")
-
-
 
 # --------------------------------------------------------------------
 # Create a File that will register all of the DREAM3D Filters
@@ -118,6 +110,7 @@ endif()
 # --------------------------------------------------------------------
 set(${PLUGIN_NAME}_HDRS
   ${PROJECT_SOURCE_DIR}/${PLUGIN_NAME}Plugin.h
+  ${PROJECT_SOURCE_DIR}/${PLUGIN_NAME}Constants.h
 )
 
 set(${PLUGIN_NAME}_SRCS

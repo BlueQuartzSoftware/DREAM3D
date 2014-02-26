@@ -60,7 +60,8 @@ class ConvertEulerAngles : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
 
-    DREAM3D_INSTANCE_PROPERTY(uint32_t, ConversionType)
+    DREAM3D_FILTER_PARAMETER(uint32_t, ConversionType)
+    Q_PROPERTY(uint32_t ConversionType READ getConversionType WRITE setConversionType NOTIFY parametersChanged)
 
     virtual void preflight();
 

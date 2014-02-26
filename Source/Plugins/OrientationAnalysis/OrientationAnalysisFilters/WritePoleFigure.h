@@ -73,7 +73,8 @@ class WritePoleFigure : public AbstractFilter
     Q_PROPERTY(QString ImagePrefix READ getImagePrefix WRITE setImagePrefix NOTIFY parametersChanged)
     DREAM3D_FILTER_PARAMETER(QString, OutputPath)
     Q_PROPERTY(QString OutputPath READ getOutputPath WRITE setOutputPath NOTIFY parametersChanged)
-    DREAM3D_INSTANCE_PROPERTY(int, ImageFormat)
+    DREAM3D_FILTER_PARAMETER(int, ImageFormat)
+    Q_PROPERTY(int ImageFormat READ getImageFormat WRITE setImageFormat NOTIFY parametersChanged)
     DREAM3D_FILTER_PARAMETER(int, ImageSize)
     Q_PROPERTY(int ImageSize READ getImageSize WRITE setImageSize NOTIFY parametersChanged)
     DREAM3D_FILTER_PARAMETER(int, LambertSize)
@@ -81,6 +82,8 @@ class WritePoleFigure : public AbstractFilter
     DREAM3D_FILTER_PARAMETER(int, NumColors)
     Q_PROPERTY(int NumColors READ getNumColors WRITE setNumColors NOTIFY parametersChanged)
 
+    // Need this here because the Array Name is declared in another macro in the private section
+    Q_PROPERTY(QString CellEulerAnglesArrayName READ getCellEulerAnglesArrayName WRITE setCellEulerAnglesArrayName NOTIFY parametersChanged)
 
     enum ImageFormatType
     {

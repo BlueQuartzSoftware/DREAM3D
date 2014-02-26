@@ -22,12 +22,7 @@ include(${DREAM3DProj_SOURCE_DIR}/Source/DREAM3DLib/DREAM3DLibMacros.cmake)
 # Start writing this header file
 set(AllFiltersHeaderFile ${${PLUGIN_NAME}_BINARY_DIR}/${PLUGIN_NAME}Filters/${PLUGIN_NAME}Filters.h_tmp)
 file(WRITE ${AllFiltersHeaderFile} "#ifndef _${PLUGIN_NAME}_Filters_H_\n#define _${PLUGIN_NAME}_Filters_H_\n\n")
-# --------------------------------------------------------------------
-# Create a File that will be used to generate a program that itself generates a
-# QFilterWidget derived header for each of the filters based on thier exposed
-# filter options
-set(CodeGeneratorFile  ${${PLUGIN_NAME}_BINARY_DIR}/${PLUGIN_NAME}CodeGenerator.h)
-file(WRITE ${CodeGeneratorFile} "")
+
 
 # --------------------------------------------------------------------
 # Create a File that has all the headers for the various Filter Widgets
@@ -101,12 +96,10 @@ include_directories( ${${PLUGIN_NAME}_SOURCE_DIR})
 # classes from information stored in the Filters themselves.
 # Read the file back into a string so we can configure our file
 file(READ ${RegisterKnownFilterWidgetsFile} QFILTERWIDGET_FACTORY_SOURCE)
-file(READ ${CodeGeneratorFile} CODE_GEN_FILTER_FUNCTION)
 file(READ ${FilterWidget_GEN_HDRS_File} ${PLUGIN_NAME}Widget_GEN_HDRS)
 file(READ ${FilterWidget_GEN_SRCS_File} ${PLUGIN_NAME}Widget_GEN_SRCS)
 
 # Remove the temp files that we no longer need
-file(REMOVE ${CodeGeneratorFile})
 file(REMOVE ${FilterWidget_GEN_HDRS_File})
 file(REMOVE ${FilterWidget_GEN_SRCS_File})
 

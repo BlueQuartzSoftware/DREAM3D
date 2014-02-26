@@ -59,7 +59,7 @@
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Common/Observer.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
-
+#include "DREAM3DLib/Utilities/FilePathGenerator.h"
 
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
 
@@ -170,11 +170,6 @@ void EbsdToH5Ebsd::dataCheck()
   setErrorCondition(0);
   QString ss;
 
-//  QString filename = QString("%1%2%3.%4").arg(m_FilePrefix)
-//      .arg(QString::number(m_ZStartIndex), m_PaddingDigits, '0')
-//      .arg(m_FileSuffix).arg(m_FileExtension);
-
-
   if(m_OutputFile.isEmpty() == true)
   {
     ss = QObject::tr("The output file must be set before executing this filter.");
@@ -196,7 +191,10 @@ void EbsdToH5Ebsd::dataCheck()
   else if (Ebsd::RefFrameZDir::HightoLow == m_RefFrameZDir) { stackLowToHigh = false; }
 
   // Now generate all the file names the user is asking for and populate the table
-  QVector<QString> fileList = generateFileList(m_ZStartIndex, m_ZEndIndex, hasMissingFiles, stackLowToHigh);
+  QVector<QString> fileList = FilePathGenerator::GenerateFileList(m_ZStartIndex, m_ZEndIndex,
+                                              hasMissingFiles, stackLowToHigh, m_InputPath,
+                                              m_FilePrefix, m_FileSuffix, m_FileExtension,
+                                              m_PaddingDigits);
 
   if (fileList.size() == 0)
   {
@@ -374,8 +372,12 @@ void EbsdToH5Ebsd::execute()
   if( Ebsd::RefFrameZDir::LowtoHigh == m_RefFrameZDir) { stackLowToHigh = true; }
   else if (Ebsd::RefFrameZDir::HightoLow == m_RefFrameZDir) { stackLowToHigh = false; }
 
+
   // Now generate all the file names the user is asking for and populate the table
-  QVector<QString> fileList = generateFileList(m_ZStartIndex, m_ZEndIndex, hasMissingFiles, stackLowToHigh);
+  QVector<QString> fileList = FilePathGenerator::GenerateFileList(m_ZStartIndex, m_ZEndIndex,
+                                              hasMissingFiles, stackLowToHigh, m_InputPath,
+                                              m_FilePrefix, m_FileSuffix, m_FileExtension,
+                                              m_PaddingDigits);
 
   EbsdImporter::Pointer fileImporter;
 
@@ -579,34 +581,3 @@ void EbsdToH5Ebsd::execute()
   fileId = -1;
   notifyStatusMessage(getHumanLabel(), "Import Complete");
 }
-
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-QVector<QString> EbsdToH5Ebsd::generateFileList(int start, int end, bool &hasMissingFiles,
-                                                bool stackLowToHigh)
-{
-  int index = 0;
-  QVector<QString> fileList;
-  QString filename;
-  for (int i = 0; i < (end-start)+1; ++i)
-  {
-    if (stackLowToHigh)
-    {
-      index = start + i;
-    }
-    else
-    {
-      index = end - i;
-    }
-    filename = QString("%1%2%3.%4").arg(m_FilePrefix)
-        .arg(QString::number(index), m_PaddingDigits, '0')
-        .arg(m_FileSuffix).arg(m_FileExtension);
-    QString filePath = m_InputPath + QDir::separator() + filename;
-    filePath = QDir::toNativeSeparators(filePath);
-    fileList.push_back(filePath);
-  }
-  return fileList;
-}
-

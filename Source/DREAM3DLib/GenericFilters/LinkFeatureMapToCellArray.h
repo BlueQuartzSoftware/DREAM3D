@@ -66,6 +66,8 @@ class DREAM3DLib_EXPORT LinkFeatureMapToCellArray : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellFeatureAttributeMatrixName)
 
+    Q_PROPERTY(QString SelectedCellDataArrayName READ getSelectedCellDataArrayName WRITE setSelectedCellDataArrayName NOTIFY parametersChanged)
+
     /**
     * @brief This returns the group that the filter belonds to. You can select
     * a different group if you want. The string returned here will be displayed

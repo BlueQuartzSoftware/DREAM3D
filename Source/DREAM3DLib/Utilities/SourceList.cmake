@@ -17,6 +17,7 @@ set(DREAM3DLib_Utilities_HDRS
   ${DREAM3DLib_SOURCE_DIR}/Utilities/TimeUtilities.h
   ${DREAM3DLib_SOURCE_DIR}/Utilities/DREAM3DEndian.h
   ${DREAM3DLib_SOURCE_DIR}/Utilities/DREAM3DRandom.h
+  ${DREAM3DLib_SOURCE_DIR}/Utilities/FilePathGenerator.h
 )
 
 set(DREAM3DLib_Utilities_SRCS
@@ -25,6 +26,7 @@ set(DREAM3DLib_Utilities_SRCS
   ${DREAM3DLib_SOURCE_DIR}/Utilities/ImageUtilities.cpp
   ${DREAM3DLib_SOURCE_DIR}/Utilities/ColorUtilities.cpp
   ${DREAM3DLib_SOURCE_DIR}/Utilities/DREAM3DRandom.cpp
+  ${DREAM3DLib_SOURCE_DIR}/Utilities/FilePathGenerator.cpp
 )
 
 cmp_IDE_SOURCE_PROPERTIES( "DREAM3DLib/Utilities" "${DREAM3DLib_Utilities_HDRS}" "${DREAM3DLib_Utilities_SRCS}" "0")

@@ -81,6 +81,7 @@ class FindMisorientations : public AbstractFilter
     virtual const QString getHumanLabel() { return "Find Feature Neighbor Misorientations"; }
 
     DREAM3D_FILTER_PARAMETER(bool, FindAvgMisors)
+    Q_PROPERTY(bool FindAvgMisors READ getFindAvgMisors WRITE setFindAvgMisors NOTIFY parametersChanged)
 
     virtual void setupFilterParameters();
 
