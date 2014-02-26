@@ -43,10 +43,7 @@
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/DataArrays/IDataArray.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
-
-#include "DREAM3DLib/DataContainers/VolumeDataContainer.h"
 
 
 /**
@@ -66,25 +63,29 @@ class QuiltCellData : public AbstractFilter
 
     virtual ~QuiltCellData();
     DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(NewDataContainerName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(NewCellAttributeMatrixName)
 
+    DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
+
+    // What Cell Array do they want to work on
     DREAM3D_FILTER_PARAMETER(QString, SelectedCellArrayName)
     Q_PROPERTY(QString SelectedCellArrayName READ getSelectedCellArrayName WRITE setSelectedCellArrayName NOTIFY parametersChanged)
 
-    DREAM3D_FILTER_PARAMETER(int, QStepX)
-    Q_PROPERTY(int QStepX READ getQStepX WRITE setQStepX NOTIFY parametersChanged)
-    DREAM3D_FILTER_PARAMETER(int, QStepY)
-    Q_PROPERTY(int QStepY READ getQStepY WRITE setQStepY NOTIFY parametersChanged)
-    DREAM3D_FILTER_PARAMETER(int, QStepZ)
-    Q_PROPERTY(int QStepZ READ getQStepZ WRITE setQStepZ NOTIFY parametersChanged)
-    DREAM3D_FILTER_PARAMETER(int, PSizeX)
-    Q_PROPERTY(int PSizeX READ getPSizeX WRITE setPSizeX NOTIFY parametersChanged)
-    DREAM3D_FILTER_PARAMETER(int, PSizeY)
-    Q_PROPERTY(int PSizeY READ getPSizeY WRITE setPSizeY NOTIFY parametersChanged)
-    DREAM3D_FILTER_PARAMETER(int, PSizeZ)
-    Q_PROPERTY(int PSizeZ READ getPSizeZ WRITE setPSizeZ NOTIFY parametersChanged)
+    DREAM3D_FILTER_PARAMETER(IntVec3_t, QuiltStep)
+    Q_PROPERTY(IntVec3_t QuiltStep READ getQuiltStep WRITE setQuiltStep NOTIFY parametersChanged)
+    DREAM3D_FILTER_PARAMETER(IntVec3_t, PatchSize)
+    Q_PROPERTY(IntVec3_t PatchSize READ getPatchSize WRITE setPatchSize NOTIFY parametersChanged)
+
+    // The user selects a new DataContainerName
+    DREAM3D_FILTER_PARAMETER(QString, OutputDataContainerName)
+    Q_PROPERTY(QString OutputDataContainerName READ getOutputDataContainerName WRITE setOutputDataContainerName NOTIFY parametersChanged)
+    // Name the new AttributeMatrix that will get created
+    DREAM3D_FILTER_PARAMETER(QString, OutputAttributeMatrixName)
+    Q_PROPERTY(QString OutputAttributeMatrixName READ getOutputAttributeMatrixName WRITE setOutputAttributeMatrixName NOTIFY parametersChanged)
+    // Give the created data array a name
+    DREAM3D_FILTER_PARAMETER(QString, OutputArrayName)
+    Q_PROPERTY(QString OutputArrayName READ getOutputArrayName WRITE setOutputArrayName NOTIFY parametersChanged)
+
+
 
     /**
     * @brief This returns the group that the filter belonds to. You can select
@@ -149,7 +150,7 @@ class QuiltCellData : public AbstractFilter
     void dataCheck();
 
   private:
-    DEFINE_PTR_WEAKPTR_DATAARRAY(float, NewCellArray)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(float, OutputArray)
 
     QuiltCellData(const QuiltCellData&); // Copy Constructor Not Implemented
     void operator=(const QuiltCellData&); // Operator '=' Not Implemented
