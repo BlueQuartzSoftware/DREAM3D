@@ -40,7 +40,9 @@
 #include <QtCore/QString>
 #include <QtCore/QVector>
 
-class FilePathGenerator
+#include "DREAM3DLib/DREAM3DLib.h"
+
+class DREAM3DLib_EXPORT FilePathGenerator
 {
   public:
 
