@@ -63,18 +63,17 @@ class FindProjectedImageStatistics : public AbstractFilter
     DREAM3D_TYPE_MACRO_SUPER(FindProjectedImageStatistics, AbstractFilter)
 
     virtual ~FindProjectedImageStatistics();
-    DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(CellFeatureAttributeMatrixName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
+    DREAM3D_INSTANCE_PROPERTY(QString, DataContainerName)
+    DREAM3D_INSTANCE_PROPERTY(QString, CellAttributeMatrixName)
 
-    DREAM3D_FILTER_PARAMETER(QString, SelectedCellArrayName)
-    Q_PROPERTY(QString SelectedCellArrayName READ getSelectedCellArrayName WRITE setSelectedCellArrayName NOTIFY parametersChanged)
+    DREAM3D_FILTER_PARAMETER(QString, SelectedArrayPath)
+    Q_PROPERTY(QString SelectedArrayPath READ getSelectedArrayPath WRITE setSelectedArrayPath NOTIFY parametersChanged)
     DREAM3D_FILTER_PARAMETER(unsigned int, Plane)
     Q_PROPERTY(unsigned int Plane READ getPlane WRITE setPlane NOTIFY parametersChanged)
 
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::MorphologicalFilters; }
-    virtual const QString getHumanLabel() { return "Find Feature Largest Cross-Section Areas"; }
+    virtual const QString getHumanLabel() { return "Find Projected Image Statistics"; }
 
     /**
     * @brief This method will instantiate all the end user settable options/parameters

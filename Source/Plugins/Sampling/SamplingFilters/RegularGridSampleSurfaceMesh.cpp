@@ -146,9 +146,12 @@ void RegularGridSampleSurfaceMesh::dataCheck()
 {
   setErrorCondition(0);
 
-  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName());
+  VolumeDataContainer* m = getDataContainerArray()->createNonPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName());
   if(getErrorCondition() < 0) { return; }
-  QVector<size_t> tDims(3, 0);  
+  QVector<size_t> tDims(3, 0);
+  tDims[0] = m_XPoints;
+  tDims[1] = m_YPoints;
+  tDims[2] = m_ZPoints;
   AttributeMatrix::Pointer cellAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::Cell);
   if(getErrorCondition() < 0) { return; }
 
