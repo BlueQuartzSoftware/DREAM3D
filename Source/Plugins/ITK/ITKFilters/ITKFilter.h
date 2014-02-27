@@ -28,11 +28,16 @@ class ITKFilter : public AbstractFilter
 
     virtual ~ITKFilter();
 
-    /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to
-    * DREAM3D_INSTANCE_PROPERTY(float, XRes)
-    * DREAM3D_INSTANCE_STRING_PROPERTY(OutputFile)
-    */
+    //Required Cell Data
+    DREAM3D_INSTANCE_STRING_PROPERTY(RawImageDataArrayName)
 
+    //Created Cell Data
+    DREAM3D_INSTANCE_STRING_PROPERTY(ProcessedImageDataArrayName)
+
+    //filter parameters
+    DREAM3D_INSTANCE_STRING_PROPERTY(SelectedCellArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(NewCellArrayName)
+    DREAM3D_INSTANCE_PROPERTY(bool, OverwriteArray)
 
     /**
     * @brief This returns the group that the filter belonds to. You can select
@@ -96,6 +101,8 @@ class ITKFilter : public AbstractFilter
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
   private:
+    uint8_t* m_RawImageData;
+    float* m_ProcessedImageData;
 
     ITKFilter(const ITKFilter&); // Copy Constructor Not Implemented
     void operator=(const ITKFilter&); // Operator '=' Not Implemented

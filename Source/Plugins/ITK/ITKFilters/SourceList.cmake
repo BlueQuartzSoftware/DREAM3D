@@ -41,8 +41,6 @@ foreach(f ${_PrivateFilters} )
                         ${DREAM3DLib_FILTER_DOC_DIR}/${_filterGroupName}/${f}.md FALSE)
 endforeach()
 
-
-
 #---------------------
 # This macro must come last after we are done adding all the filters and support files.
 END_FILTER_GROUP(${ITK_BINARY_DIR} "${_filterGroupName}" "ITK")

@@ -15,8 +15,35 @@ include( ${QT_USE_FILE} )
 
 # --------------------------------------------------------------------
 # find ITK libararies
-# find_package(ITK COMPONENTS ITKIOImageBase REQUIRED)
-find_package(ITK REQUIRED)
+# list of modules can be found here: http://www.itk.org/Doxygen/html/modules.html
+find_package(ITK COMPONENTS 
+	#Group Core
+		ITKCommon
+
+	#Group IO  ---No HDF5 Modules---
+		#ITKIOImageBase
+
+	#Group Filtering
+		#ITKDistanceMap
+		#ITKThresholding
+		#ITKImageGradient
+		#ITKImageFilterBase
+		#ITKSmoothing
+		#ITKDenoising
+		#ITKConvolution
+		#ITKStatistics
+		#ITKImageFeature
+
+	#Group Registration
+		#ITKRegistrationCommon
+
+	#Group Segmentation
+		#ITKVoronoi
+		#ITKLevelSets
+		#ITKWaterSheds
+		#ITKConnectedComponents
+	
+	REQUIRED)
 include(${ITK_USE_FILE})
 
 
@@ -143,7 +170,8 @@ add_executable(${PLUGIN_NAME}WidgetCodeGen  ${FilterWidgetsLib_SOURCE_DIR}/Filte
                                             ${${PLUGIN_NAME}_BINARY_DIR}/FilterWidgetCodeGen.h
                                             ${${PLUGIN_NAME}_Project_SRCS}
                                             )
-target_link_libraries(${PLUGIN_NAME}WidgetCodeGen MXA EbsdLib DREAM3DLib ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY})
+#target_link_libraries(${PLUGIN_NAME}WidgetCodeGen MXA EbsdLib DREAM3DLib ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY})
+target_link_libraries(${PLUGIN_NAME}WidgetCodeGen MXA EbsdLib DREAM3DLib ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY} ${ITK_LIBRARIES})
 
 
 # Now run the code to generate the header files which will over write the place
