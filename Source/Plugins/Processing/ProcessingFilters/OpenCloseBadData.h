@@ -50,6 +50,7 @@
 #include "DREAM3DLib/OrientationOps/OrientationOps.h"
 #include "DREAM3DLib/DataArrays/NeighborList.hpp"
 
+#include "Processing/ProcessingConstants.h"
 
 /**
  * @class OpenCloseBadData OpenCloseBadData.h DREAM3DLib/ReconstructionFilters/OpenCloseBadData.h
@@ -81,6 +82,7 @@ class OpenCloseBadData : public AbstractFilter
     DREAM3D_FILTER_PARAMETER(bool, ZDirOn)
     Q_PROPERTY(bool ZDirOn READ getZDirOn WRITE setZDirOn)
 
+    virtual const QString getCompiledLibraryName() { return Processing::ProcessingBaseName; }
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::ProcessingFilters; }
     virtual const QString getSubGroupName()  { return DREAM3D::FilterSubGroups::CleanupFilters; }
     virtual const QString getHumanLabel() { return "Erode/Dilate Bad Data"; }
@@ -124,6 +126,7 @@ class OpenCloseBadData : public AbstractFilter
 };
 
 #endif /* OpenCloseBadData_H_ */
+
 
 
 

@@ -50,6 +50,7 @@
 #include "DREAM3DLib/OrientationOps/OrientationOps.h"
 #include "DREAM3DLib/DataArrays/NeighborList.hpp"
 
+#include "Processing/ProcessingConstants.h"
 
 /**
  * @class FillBadData FillBadData.h DREAM3DLib/ReconstructionFilters/FillBadData.h
@@ -73,6 +74,7 @@ class FillBadData : public AbstractFilter
     DREAM3D_FILTER_PARAMETER(int, MinAllowedDefectSize)
     Q_PROPERTY(int MinAllowedDefectSize READ getMinAllowedDefectSize WRITE setMinAllowedDefectSize)
 
+    virtual const QString getCompiledLibraryName() { return Processing::ProcessingBaseName; }
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::ProcessingFilters; }
     virtual const QString getSubGroupName()  { return DREAM3D::FilterSubGroups::CleanupFilters; }
     virtual const QString getHumanLabel() { return "Fill Bad Data"; }
@@ -114,6 +116,7 @@ class FillBadData : public AbstractFilter
 };
 
 #endif /* FillBadData_H_ */
+
 
 
 

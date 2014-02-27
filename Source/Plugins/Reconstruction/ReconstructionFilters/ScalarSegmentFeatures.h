@@ -48,6 +48,7 @@
 #include "DREAM3DLib/DataContainers/VolumeDataContainer.h"
 
 #include "Reconstruction/ReconstructionFilters/SegmentFeatures.h"
+#include "Reconstruction/ReconstructionConstants.h"
 
 
 class CompareFunctor;
@@ -79,6 +80,7 @@ class ScalarSegmentFeatures : public SegmentFeatures
     Q_PROPERTY(float ScalarTolerance READ getScalarTolerance WRITE setScalarTolerance)
     DREAM3D_INSTANCE_PROPERTY(bool, RandomizeFeatureIds)
 
+    virtual const QString getCompiledLibraryName() { return Reconstruction::ReconstructionBaseName; }
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::ReconstructionFilters; }
     virtual const QString getSubGroupName() {return DREAM3D::FilterSubGroups::SegmentationFilters;}
     virtual const QString getHumanLabel() { return "Segment Features (Scalar)"; }
@@ -133,4 +135,5 @@ class ScalarSegmentFeatures : public SegmentFeatures
 };
 
 #endif /* ScalarSegmentFeatures_H_ */
+
 

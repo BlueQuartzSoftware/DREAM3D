@@ -237,8 +237,8 @@ void FindOrientationFieldCurl::execute()
   size_t yP = m->getYPoints();
   size_t zP = m->getZPoints();
 
-  QuatF q1;
-  QuatF q2;
+//  QuatF q1;
+//  QuatF q2;
   QuatF* quats = reinterpret_cast<QuatF*>(m_Quats);
   size_t totalFaces = ((xP+1)*yP*zP)+((yP+1)*xP*zP)+((zP+1)*xP*yP);
   QVector<size_t> tDims(1, totalFaces);
@@ -295,10 +295,10 @@ void FindOrientationFieldCurl::execute()
 
   int good = 0;
 
-  float w, totalmisorientation;
-  float n1, n2, n3;
-  unsigned int phase1 = Ebsd::CrystalStructure::UnknownCrystalStructure;
-  unsigned int phase2 = Ebsd::CrystalStructure::UnknownCrystalStructure;
+//  float w, totalmisorientation;
+//  float n1, n2, n3;
+//  unsigned int phase1 = Ebsd::CrystalStructure::UnknownCrystalStructure;
+//  unsigned int phase2 = Ebsd::CrystalStructure::UnknownCrystalStructure;
   size_t udims[3] = {0, 0, 0};
   m->getDimensions(udims);
 #if (CMP_SIZEOF_SIZE_T == 4)

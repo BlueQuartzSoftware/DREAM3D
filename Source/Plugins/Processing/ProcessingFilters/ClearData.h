@@ -45,6 +45,7 @@
 
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/DataContainers/VolumeDataContainer.h"
+#include "Processing/ProcessingConstants.h"
 
 /**
  * @class ClearData ClearData.h DREAM3DLib/SyntheticBuilderFilters/ClearData.h
@@ -79,6 +80,7 @@ class ClearData : public AbstractFilter
     DREAM3D_FILTER_PARAMETER(int, ZMax)
     Q_PROPERTY(int ZMax READ getZMax WRITE setZMax)
 
+    virtual const QString getCompiledLibraryName() { return Processing::ProcessingBaseName; }
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::ProcessingFilters; }
     virtual const QString getSubGroupName()  { return DREAM3D::FilterSubGroups::CleanupFilters; }
     virtual const QString getHumanLabel() { return "Clear Data"; }
@@ -121,6 +123,7 @@ class ClearData : public AbstractFilter
 };
 
 #endif /* ClearData_H_ */
+
 
 
 

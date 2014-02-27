@@ -51,7 +51,7 @@
 #include "DREAM3DLib/DataContainers/VolumeDataContainer.h"
 #include "DREAM3DLib/ShapeOps/ShapeOps.h"
 #include "DREAM3DLib/OrientationOps/OrthoRhombicOps.h"
-
+#include "SyntheticBuilding/SyntheticBuildingConstants.h"
 typedef struct
 {
   float m_Volumes;
@@ -87,6 +87,7 @@ class PackPrimaryPhases : public AbstractFilter
     typedef boost::shared_array<float> SharedFloatArray;
     typedef boost::shared_array<int> SharedIntArray;
 
+    virtual const QString getCompiledLibraryName() { return SyntheticBuilding::SyntheticBuildingBaseName; }
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::SyntheticBuildingFilters; }
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::PackingFilters; }
     virtual const QString getHumanLabel() { return "Pack Primary Phases"; }
@@ -241,4 +242,5 @@ class PackPrimaryPhases : public AbstractFilter
 };
 
 #endif /* PackPrimaryPhases_H_ */
+
 

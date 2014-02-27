@@ -43,6 +43,7 @@
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/DataArrays/DataArray.hpp"
 #include "DREAM3DLib/IOFilters/FileWriter.h"
+#include "DREAM3DLib/Common/Constants.h"
 
 /**
  * @class DxWriter DxWriter.h DREAM3DLib/IOFilters/DxWriter.h
@@ -67,6 +68,7 @@ class DREAM3DLib_EXPORT DxWriter : public FileWriter
     DREAM3D_FILTER_PARAMETER(bool, AddSurfaceLayer)
     Q_PROPERTY(bool AddSurfaceLayer READ getAddSurfaceLayer WRITE setAddSurfaceLayer)
 
+    virtual const QString getCompiledLibraryName() { return IO::IOBaseName; }
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::OutputFilters; }
     virtual const QString getHumanLabel() { return "Write Dx File (Feature Ids)"; }
@@ -108,3 +110,4 @@ class DREAM3DLib_EXPORT DxWriter : public FileWriter
 };
 
 #endif /* DXGRAINIDWRITER_H_ */
+

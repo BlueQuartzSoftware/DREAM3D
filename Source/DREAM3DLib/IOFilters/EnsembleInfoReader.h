@@ -45,6 +45,7 @@
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/DataArrays/DataArray.hpp"
 #include "DREAM3DLib/IOFilters/FileReader.h"
+#include "DREAM3DLib/Common/Constants.h"
 
 /**
  * @class EnsembleInfoReader EnsembleInfoReader.h DREAM3DLib/IO/EnsembleInfoReader.h
@@ -69,6 +70,7 @@ class DREAM3DLib_EXPORT EnsembleInfoReader : public FileReader
     DREAM3D_FILTER_PARAMETER(QString, InputFile)
     Q_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile)
 
+    virtual const QString getCompiledLibraryName() { return IO::IOBaseName; }
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::InputFilters; }
     virtual const QString getHumanLabel() { return "Read Ensemble Info File"; }
@@ -112,6 +114,7 @@ class DREAM3DLib_EXPORT EnsembleInfoReader : public FileReader
 };
 
 #endif //_EnsembleInfoReader_h_
+
 
 
 

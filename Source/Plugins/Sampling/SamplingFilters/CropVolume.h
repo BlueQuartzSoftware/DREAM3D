@@ -46,6 +46,7 @@
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/DataContainers/VolumeDataContainer.h"
 
+#include "Sampling/SamplingConstants.h"
 /**
  * @class CropVolume CropVolume.h DREAM3DLib/SyntheticBuilderFilters/CropVolume.h
  * @brief
@@ -88,6 +89,7 @@ class CropVolume : public AbstractFilter
     Q_PROPERTY(bool UpdateOrigin READ getUpdateOrigin WRITE setUpdateOrigin)
 
 
+    virtual const QString getCompiledLibraryName() { return Sampling::SamplingBaseName; }
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::SamplingFilters; }
     virtual const QString getSubGroupName()  { return DREAM3D::FilterSubGroups::CropCutFilters; }
     virtual const QString getHumanLabel() { return "Crop Volume"; }
@@ -132,6 +134,7 @@ class CropVolume : public AbstractFilter
 };
 
 #endif /* CROPVOLUME_H_ */
+
 
 
 

@@ -43,6 +43,7 @@
 #include "DREAM3DLib/DataArrays/IDataArray.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/FilterParameters/FilterParameter.h"
+#include "DREAM3DLib/Common/Constants.h"
 
 
 
@@ -108,6 +109,7 @@ class DREAM3DLib_EXPORT RawBinaryReader : public AbstractFilter
     * a different group if you want. The string returned here will be displayed
     * in the GUI for the filter
     */
+    virtual const QString getCompiledLibraryName() { return IO::IOBaseName; }
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::InputFilters; }
 
@@ -173,6 +175,7 @@ class DREAM3DLib_EXPORT RawBinaryReader : public AbstractFilter
 };
 
 #endif /* _RawBinaryReader_H_ */
+
 
 
 

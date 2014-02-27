@@ -45,7 +45,7 @@
 #include "DREAM3DLib/DataArrays/IDataArray.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
 
-
+#include "OrientationAnalysis/OrientationAnalysisConstants.h"
 
 /**
  * @class WritePoleFigure WritePoleFigure.h /IOFilters/WritePoleFigure.h
@@ -98,6 +98,7 @@ class WritePoleFigure : public AbstractFilter
     * a different group if you want. The string returned here will be displayed
     * in the GUI for the filter
     */
+    virtual const QString getCompiledLibraryName() { return OrientationAnalysis::OrientationAnalysisBaseName; }
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
 
     /**
@@ -198,6 +199,7 @@ class WritePoleFigure : public AbstractFilter
 };
 
 #endif /* _WritePoleFigure_H_ */
+
 
 
 

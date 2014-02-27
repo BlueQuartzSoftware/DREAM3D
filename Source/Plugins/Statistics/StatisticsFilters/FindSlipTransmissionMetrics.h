@@ -64,6 +64,7 @@
 #include "DREAM3DLib/DataContainers/VolumeDataContainer.h"
 #include "DREAM3DLib/DataArrays/NeighborList.hpp"
 
+#include "Statistics/StatisticsConstants.h"
 /**
  * @class FindSlipTransmissionMetrics FindSlipTransmissionMetrics.h DREAM3DLib/GenericFilters/FindSlipTransmissionMetrics.h
  * @brief
@@ -89,6 +90,7 @@ class FindSlipTransmissionMetrics : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(F7ArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(mPrimeArrayName)
 
+    virtual const QString getCompiledLibraryName() { return Statistics::StatisticsBaseName; }
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::CrystallographicFilters; }
     virtual const QString getHumanLabel() { return "Find Neighbor Slip Transmission Metrics"; }
@@ -144,4 +146,5 @@ signals:
 };
 
 #endif /* FindSlipTransmissionMetrics_H_ */
+
 

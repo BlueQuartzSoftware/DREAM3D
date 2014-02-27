@@ -54,6 +54,7 @@
 #include "DREAM3DLib/OrientationOps/OrthoRhombicOps.h"
 #include "DREAM3DLib/DataContainers/VolumeDataContainer.h"
 
+#include "Statistics/StatisticsConstants.h"
 /**
  * @class FindSlicetoSliceRotations FindSlicetoSliceRotations.h DREAM3DLib/GenericFilters/FindSlicetoSliceRotations.h
  * @brief

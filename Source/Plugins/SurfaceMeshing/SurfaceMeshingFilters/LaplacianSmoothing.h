@@ -45,6 +45,8 @@
 #include "SurfaceMeshing/SurfaceMeshingFilters/SurfaceMeshFilter.h"
 
 
+#include "SurfaceMeshing/SurfaceMeshingConstants.h"
+
 #define OUTPUT_DEBUG_VTK_FILES 1
 
 
@@ -105,6 +107,7 @@ class LaplacianSmoothing : public SurfaceMeshFilter
     * a different group if you want. The string returned here will be displayed
     * in the GUI for the filter
     */
+    virtual const QString getCompiledLibraryName() { return SurfaceMeshing::SurfaceMeshingBaseName; }
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::SurfaceMeshingFilters; }
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::SmoothingFilters; }
 
@@ -193,6 +196,7 @@ class LaplacianSmoothing : public SurfaceMeshFilter
 };
 
 #endif /* _LaplacianSmoothing_H_ */
+
 
 
 

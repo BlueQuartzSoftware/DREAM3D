@@ -43,6 +43,8 @@
 #include "DREAM3DLib/DataArrays/IDataArray.h"
 #include "SurfaceMeshing/SurfaceMeshingFilters/SurfaceMeshFilter.h"
 
+#include "SurfaceMeshing/SurfaceMeshingConstants.h"
+
 /**
  * @class FeatureFaceCurvatureFilter FeatureFaceCurvatureFilter.h FeatureCurvature/Code/FeatureFaceCurvatureFilters/FeatureFaceCurvatureFilter.h
  * @brief
@@ -86,6 +88,7 @@ class FeatureFaceCurvatureFilter : public SurfaceMeshFilter
     * a different group if you want. The string returned here will be displayed
     * in the GUI for the filter
     */
+    virtual const QString getCompiledLibraryName() { return SurfaceMeshing::SurfaceMeshingBaseName; }
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::SurfaceMeshingFilters; }
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::CurvatureFilters; }
 
@@ -163,6 +166,7 @@ class FeatureFaceCurvatureFilter : public SurfaceMeshFilter
 };
 
 #endif /* FeatureFaceCurvatureFilter_H_ */
+
 
 
 

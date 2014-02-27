@@ -51,6 +51,7 @@
 #include "DREAM3DLib/DataContainers/VolumeDataContainer.h"
 #include "DREAM3DLib/DistributionAnalysisOps/DistributionAnalysisOps.h"
 
+#include "Statistics/StatisticsConstants.h"
 /**
  * @class FitFeatureData FitFeatureData.h /FilterCategoryFilters/FitFeatureData.h
  * @brief
@@ -84,6 +85,7 @@ class FitFeatureData : public AbstractFilter
     * a different group if you want. The string returned here will be displayed
     * in the GUI for the filter
     */
+    virtual const QString getCompiledLibraryName() { return Statistics::StatisticsBaseName; }
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::EnsembleStatsFilters; }
 
@@ -151,4 +153,5 @@ class FitFeatureData : public AbstractFilter
 };
 
 #endif /* FITFIELDDATA_H_ */
+
 

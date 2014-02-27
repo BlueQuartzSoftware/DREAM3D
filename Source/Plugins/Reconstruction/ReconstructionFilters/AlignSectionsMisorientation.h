@@ -47,6 +47,7 @@
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/DataContainers/VolumeDataContainer.h"
 #include "DREAM3DLib/OrientationOps/OrientationOps.h"
+#include "Reconstruction/ReconstructionConstants.h"
 
 #include "Reconstruction/ReconstructionFilters/AlignSections.h"
 
@@ -74,6 +75,7 @@ class AlignSectionsMisorientation : public AlignSections
     DREAM3D_FILTER_PARAMETER(float, MisorientationTolerance)
     Q_PROPERTY(float MisorientationTolerance READ getMisorientationTolerance WRITE setMisorientationTolerance)
 
+    virtual const QString getCompiledLibraryName() { return Reconstruction::ReconstructionBaseName; }
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::ReconstructionFilters; }
     virtual const QString getSubGroupName() {return DREAM3D::FilterSubGroups::AlignmentFilters;}
     virtual const QString getHumanLabel() { return "Align Sections (Misorientation)"; }
@@ -123,4 +125,5 @@ class AlignSectionsMisorientation : public AlignSections
 };
 
 #endif /* AlignSectionsMisorientation_H_ */
+
 

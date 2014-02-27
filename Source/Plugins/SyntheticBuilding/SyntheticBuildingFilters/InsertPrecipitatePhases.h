@@ -55,7 +55,7 @@
 #include "DREAM3DLib/OrientationOps/HexagonalOps.h"
 #include "DREAM3DLib/OrientationOps/OrthoRhombicOps.h"
 #include "DREAM3DLib/DataArrays/NeighborList.hpp"
-
+#include "SyntheticBuilding/SyntheticBuildingConstants.h"
 typedef struct
 {
   float m_Volumes;
@@ -98,6 +98,7 @@ class InsertPrecipitatePhases : public AbstractFilter
     DREAM3D_FILTER_PARAMETER(bool, WriteGoalAttributes)
     Q_PROPERTY(bool WriteGoalAttributes READ getWriteGoalAttributes WRITE setWriteGoalAttributes)
 
+    virtual const QString getCompiledLibraryName() { return SyntheticBuilding::SyntheticBuildingBaseName; }
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::SyntheticBuildingFilters; }
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::PackingFilters; }
     virtual const QString getHumanLabel() { return "Insert Precipitate Phases"; }
@@ -236,4 +237,5 @@ class InsertPrecipitatePhases : public AbstractFilter
 };
 
 #endif /* InsertPrecipitatePhases_H_ */
+
 

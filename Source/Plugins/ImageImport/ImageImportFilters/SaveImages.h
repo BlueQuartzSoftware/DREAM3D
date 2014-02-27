@@ -43,6 +43,7 @@
 #include "DREAM3DLib/DataArrays/IDataArray.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
 
+#include "ImageImport/ImageImportConstants.h"
 
 /**
  * @class SaveImages SaveImages.h /IOFilters/SaveImages.h
@@ -87,6 +88,7 @@ class SaveImages : public AbstractFilter
     * a different group if you want. The string returned here will be displayed
     * in the GUI for the filter
     */
+    virtual const QString getCompiledLibraryName() { return ImageImport::ImageImportBaseName; }
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
 
     /**
@@ -165,5 +167,6 @@ class SaveImages : public AbstractFilter
 };
 
 #endif /* _SaveImages_H_ */
+
 
 

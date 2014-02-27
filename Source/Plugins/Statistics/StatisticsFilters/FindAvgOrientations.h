@@ -51,6 +51,7 @@
 #include "DREAM3DLib/OrientationOps/OrthoRhombicOps.h"
 #include "DREAM3DLib/DataContainers/VolumeDataContainer.h"
 
+#include "Statistics/StatisticsConstants.h"
 /**
  * @class FindAvgOrientations FindAvgOrientations.h DREAM3DLib/GenericFilters/FindAvgOrientations.h
  * @brief
@@ -72,6 +73,7 @@ class FindAvgOrientations : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(CellEnsembleAttributeMatrixName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
 
+    virtual const QString getCompiledLibraryName() { return Statistics::StatisticsBaseName; }
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::CrystallographicFilters; }
     virtual const QString getHumanLabel() { return "Find Feature Average Orientations"; }
@@ -120,4 +122,5 @@ signals:
 };
 
 #endif /* FINDAVGORIENTATIONS_H_ */
+
 

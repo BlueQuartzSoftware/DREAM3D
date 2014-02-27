@@ -43,6 +43,7 @@
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/DataArrays/IDataArray.h"
+#include "DREAM3DLib/Common/Constants.h"
 
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/DataContainers/VolumeDataContainer.h"
@@ -69,6 +70,7 @@ class DREAM3DLib_EXPORT FindBoundingBoxFeatures : public AbstractFilter
 
     DECLARE_WRAPPED_ARRAY(totalsurfacearea, m_TotalSurfaceArea, float)
 
+    virtual const QString getCompiledLibraryName() { return Generic::GenericBaseName; }
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::GenericFilters; }
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::SpatialFilters; }
     virtual const QString getHumanLabel() { return "Find Biased Features (Bounding Box)"; }
@@ -112,4 +114,5 @@ signals:
 };
 
 #endif /* FINDBOUNDINGBOXGRAINS_H_ */
+
 

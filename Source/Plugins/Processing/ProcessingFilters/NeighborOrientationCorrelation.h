@@ -50,6 +50,7 @@
 #include "DREAM3DLib/OrientationOps/OrientationOps.h"
 #include "DREAM3DLib/DataArrays/NeighborList.hpp"
 
+#include "Processing/ProcessingConstants.h"
 
 /**
  * @class NeighborOrientationCorrelation NeighborOrientationCorrelation.h DREAM3DLib/ReconstructionFilters/NeighborOrientationCorrelation.h
@@ -78,6 +79,7 @@ class NeighborOrientationCorrelation : public AbstractFilter
     DREAM3D_FILTER_PARAMETER(int, Level)
     Q_PROPERTY(int Level READ getLevel WRITE setLevel)
 
+    virtual const QString getCompiledLibraryName() { return Processing::ProcessingBaseName; }
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::ProcessingFilters; }
     virtual const QString getSubGroupName()  { return DREAM3D::FilterSubGroups::CleanupFilters; }
     virtual const QString getHumanLabel() { return "Neighbor Orientation Correlation"; }
@@ -118,4 +120,5 @@ class NeighborOrientationCorrelation : public AbstractFilter
 };
 
 #endif /* NeighborOrientationCorrelation_H_ */
+
 

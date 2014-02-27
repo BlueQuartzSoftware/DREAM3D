@@ -41,6 +41,7 @@
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/DataArrays/IDataArray.h"
+#include "DREAM3DLib/Common/Constants.h"
 
 #include "DREAM3DLib/Common/AbstractFilter.h"
 
@@ -77,6 +78,7 @@ class DREAM3DLib_EXPORT SurfaceMeshToNonconformalVtk : public AbstractFilter
     * a different group if you want. The string returned here will be displayed
     * in the GUI for the filter
     */
+    virtual const QString getCompiledLibraryName() { return IO::IOBaseName; }
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::OutputFilters; }
 
@@ -148,3 +150,4 @@ class DREAM3DLib_EXPORT SurfaceMeshToNonconformalVtk : public AbstractFilter
 };
 
 #endif /* _SurfaceMeshToNonconformalVtk_H_ */
+

@@ -50,6 +50,7 @@
 #include "DREAM3DLib/DataContainers/VolumeDataContainer.h"
 #include "DREAM3DLib/OrientationOps/OrientationOps.h"
 #include "DREAM3DLib/DataArrays/NeighborList.hpp"
+#include "Reconstruction/ReconstructionConstants.h"
 
 /**
  * @class GroupFeatures GroupFeatures.h DREAM3DLib/ReconstructionFilters/GroupFeatures.h

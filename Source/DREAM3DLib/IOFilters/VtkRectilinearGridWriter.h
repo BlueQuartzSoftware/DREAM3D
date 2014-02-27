@@ -49,6 +49,7 @@
 #include "DREAM3DLib/DataContainers/VolumeDataContainer.h"
 
 #include "DREAM3DLib/VTKUtils/VTKWriterMacros.h"
+#include "DREAM3DLib/Common/Constants.h"
 
 /**
  * @class VTKRectilinearGridFileWriter VTKRectilinearGridFileWriter.h DREAM3D/Common/VTKUtils/VTKRectilinearGridFileWriter.h
@@ -82,6 +83,7 @@ class DREAM3DLib_EXPORT VtkRectilinearGridWriter : public AbstractFilter
 
     virtual void preflight();
 
+    virtual const QString getCompiledLibraryName() { return IO::IOBaseName; }
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::OutputFilters; }
     virtual const QString getHumanLabel() { return "Write Vtk File (Rectilinear Grid)"; }
@@ -241,3 +243,4 @@ class DREAM3DLib_EXPORT VtkRectilinearGridWriter : public AbstractFilter
 };
 
 #endif /* VTKRECTILINEARGRIDWRITER_H_ */
+

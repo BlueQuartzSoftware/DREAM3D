@@ -240,7 +240,59 @@ QString findPath(const QString& groupName, const QString& filtName)
   return "NOT FOUND";
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void generateLibraryLocation(AbstractFilter::Pointer filter, const QString path)
+{
+  QFileInfo fi(path);
+  if(fi.isFile() == false) { return; } // only want source files
 
+  QDir pluginDir = fi.absoluteDir();
+  QString pluginName = pluginDir.dirName();
+  qint32 index = pluginName.lastIndexOf("Filters");
+  pluginName.truncate(index);
+
+//  qDebug() << pluginName;
+
+
+  // Read the header File
+
+  QFile source(path);
+  source.open(QFile::ReadOnly);
+  QString cpp = source.readAll();
+  source.close();
+
+  QString headerStr;
+  QTextStream header(&headerStr);
+  QString searchString = "virtual const QString getGroupName()";
+  QStringList list = cpp.split(QRegExp("\\n"));
+  QStringListIterator sourceLines(list);
+  while (sourceLines.hasNext())
+  {
+    QString line = sourceLines.next();
+    if(line.contains(searchString) )
+    {
+      header << "    virtual const QString getCompiledLibraryName() { return " << pluginName << "::" << pluginName << "BaseName; }" << "\n";
+    }
+    header << line << "\n";
+  }
+
+  QFileInfo fi2(path);
+#if 1
+  QFile hOut(path);
+#else
+  QString tmpPath = "/tmp/" + fi2.fileName();
+  QFile hOut(tmpPath);
+#endif
+  hOut.open(QFile::WriteOnly);
+  QTextStream stream( &hOut );
+  stream << headerStr;
+  hOut.close();
+
+  qDebug() << "Saved File " << fi2.absoluteFilePath();
+
+}
 
 // -----------------------------------------------------------------------------
 //
@@ -260,13 +312,11 @@ void LoopOnFilters()
     //std::cout << "  public:" << std::endl;
     IFilterFactory::Pointer factory = i.value();
     AbstractFilter::Pointer filter = factory->create();
-    //if (filter->getGroupName().compare(DREAM3D::FilterGroups::StatisticsFilters) == 0)
-   // if(filter->getNameOfClass().compare("FindSchmids") == 0)
     {
-      std::cout << "" << filter->getGroupName().toStdString() << "Filters/" << filter->getNameOfClass().toStdString() << ".h" << std::endl;
+      //    std::cout << "" << filter->getGroupName().toStdString() << "Filters/" << filter->getNameOfClass().toStdString() << ".h" << std::endl;
       QString path = findPath(filter->getGroupName(), filter->getNameOfClass());
-      std::cout << " " << path.toStdString() << std::endl;
-      generateQProperties(filter, path);
+      //    std::cout << " " << path.toStdString() << std::endl;
+      generateLibraryLocation(filter, path);
     }
 
   }
@@ -278,7 +328,7 @@ void LoopOnFilters()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int main2(int argc, char *argv[])
+int main(int argc, char *argv[])
 {
   Q_ASSERT(false); // We don't want anyone to run this program.
   // Instantiate the QCoreApplication that we need to get the current path and load plugins.
@@ -301,14 +351,6 @@ int main2(int argc, char *argv[])
   LoopOnFilters();
 
   return 0;
-}
-
-
-int main(int argc, char *argv[])
-{
- QVector<size_t> dims(1, 3);
- qDebug() << dims[0];
- return 0;
 }
 
 

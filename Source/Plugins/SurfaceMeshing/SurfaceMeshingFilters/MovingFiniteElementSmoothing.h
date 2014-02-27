@@ -42,6 +42,8 @@
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "SurfaceMeshing/SurfaceMeshingFilters/SurfaceMeshFilter.h"
 
+#include "SurfaceMeshing/SurfaceMeshingConstants.h"
+
 /**
  * @class MovingFiniteElementSmoothing MovingFiniteElementSmoothing.h /Code/Filters/MovingFiniteElementSmoothing.h
  * @brief The Moving Finite Element (MFE) algorithm is based on Kuprat's work on Gradient Weighted Moving
@@ -87,6 +89,7 @@ class MovingFiniteElementSmoothing : public SurfaceMeshFilter
     * a different group if you want. The string returned here will be displayed
     * in the GUI for the filter
     */
+    virtual const QString getCompiledLibraryName() { return SurfaceMeshing::SurfaceMeshingBaseName; }
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::SurfaceMeshingFilters; }
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::SmoothingFilters; }
 
@@ -153,6 +156,7 @@ class MovingFiniteElementSmoothing : public SurfaceMeshFilter
 };
 
 #endif /* _MovingFiniteElementSmoothing_H_ */
+
 
 
 

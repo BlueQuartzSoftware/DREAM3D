@@ -47,6 +47,7 @@
 #include "DREAM3DLib/DataContainers/VolumeDataContainer.h"
 #include "DREAM3DLib/DataContainers/SurfaceDataContainer.h"
 
+#include "Sampling/SamplingConstants.h"
 /**
  * @class SampleSurfaceMesh SampleSurfaceMesh.h DREAM3DLib/SyntheticBuilderFilters/SampleSurfaceMesh.h
  * @brief

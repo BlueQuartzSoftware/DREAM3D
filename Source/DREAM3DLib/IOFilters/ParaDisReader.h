@@ -45,6 +45,7 @@
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/DataArrays/DataArray.hpp"
 #include "DREAM3DLib/IOFilters/FileReader.h"
+#include "DREAM3DLib/Common/Constants.h"
 
 /**
  * @class ParaDisReader ParaDisReader.h DREAM3DLib/IO/ParaDisReader.h
@@ -72,6 +73,7 @@ class DREAM3DLib_EXPORT ParaDisReader : public FileReader
     //------ Created Vertex Data
     //------ Created Edge Data
 
+    virtual const QString getCompiledLibraryName() { return IO::IOBaseName; }
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::InputFilters; }
     virtual const QString getHumanLabel() { return "Read ParaDis File"; }
@@ -123,6 +125,7 @@ class DREAM3DLib_EXPORT ParaDisReader : public FileReader
 };
 
 #endif /* ParaDisREADER_H_ */
+
 
 
 

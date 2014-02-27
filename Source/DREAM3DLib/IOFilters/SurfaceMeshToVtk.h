@@ -43,6 +43,7 @@
 #include "DREAM3DLib/DataArrays/IDataArray.h"
 
 #include "DREAM3DLib/Common/AbstractFilter.h"
+#include "DREAM3DLib/Common/Constants.h"
 
 /**
  * @class SurfaceMeshToVtk SurfaceMeshToVtk.h IOFilters/Code/IOFiltersFilters/SurfaceMeshToVtk.h
@@ -78,6 +79,7 @@ class DREAM3DLib_EXPORT SurfaceMeshToVtk : public AbstractFilter
     * a different group if you want. The string returned here will be displayed
     * in the GUI for the filter
     */
+    virtual const QString getCompiledLibraryName() { return IO::IOBaseName; }
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::OutputFilters; }
 
@@ -149,3 +151,4 @@ class DREAM3DLib_EXPORT SurfaceMeshToVtk : public AbstractFilter
 };
 
 #endif /* _SurfaceMeshToVtk_H_ */
+

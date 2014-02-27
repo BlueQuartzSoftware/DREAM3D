@@ -45,6 +45,7 @@
 #include "DREAM3DLib/DataArrays/IDataArray.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/DataContainers/VolumeDataContainer.h"
+#include "DREAM3DLib/Common/Constants.h"
 
 
 /**
@@ -73,6 +74,7 @@ class DREAM3DLib_EXPORT FeatureDataCSVWriter : public AbstractFilter
     Q_PROPERTY(bool WriteNeighborListData READ getWriteNeighborListData WRITE setWriteNeighborListData)
     DREAM3D_INSTANCE_PROPERTY(char, Delimiter)
 
+    virtual const QString getCompiledLibraryName() { return IO::IOBaseName; }
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::OutputFilters; }
     virtual const QString getHumanLabel() { return "Write Feature Data as CSV File"; }
@@ -114,3 +116,4 @@ class DREAM3DLib_EXPORT FeatureDataCSVWriter : public AbstractFilter
 };
 
 #endif /* FeatureDataCSVWriter_H_ */
+

@@ -17,7 +17,6 @@ include( ${QT_USE_FILE} )
 set(${PLUGIN_NAME}_Project_SRCS "")
 
 include(${DREAM3DProj_SOURCE_DIR}/Source/DREAM3DLib/DREAM3DLibMacros.cmake)
-
 #-------
 # Start writing this header file
 set(AllFiltersHeaderFile ${${PLUGIN_NAME}_BINARY_DIR}/${PLUGIN_NAME}Filters/${PLUGIN_NAME}Filters.h_tmp)

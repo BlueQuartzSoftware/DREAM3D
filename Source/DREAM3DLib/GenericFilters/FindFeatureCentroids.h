@@ -42,6 +42,7 @@
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/DataArrays/IDataArray.h"
+#include "DREAM3DLib/Common/Constants.h"
 
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/DataContainers/VolumeDataContainer.h"
@@ -62,6 +63,7 @@ class DREAM3DLib_EXPORT FindFeatureCentroids : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellFeatureAttributeMatrixName)
 
+    virtual const QString getCompiledLibraryName() { return Generic::GenericBaseName; }
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::GenericFilters; }
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::MiscFilters; }
     virtual const QString getHumanLabel() { return "Find Feature Centroids"; }
@@ -108,4 +110,5 @@ signals:
 };
 
 #endif /* FindFeatureCentroids_H_ */
+
 

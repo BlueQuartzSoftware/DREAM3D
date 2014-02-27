@@ -49,7 +49,7 @@
 #include "DREAM3DLib/DataContainers/VolumeDataContainer.h"
 #include "DREAM3DLib/OrientationOps/OrientationOps.h"
 #include "DREAM3DLib/DataArrays/NeighborList.hpp"
-
+#include "Processing/ProcessingConstants.h"
 
 /**
  * @class MinSize MinSize.h Processing/ProcessingFilters/MinSize.h
@@ -78,6 +78,7 @@ class MinSize : public AbstractFilter
     DREAM3D_FILTER_PARAMETER(int, PhaseNumber)
     Q_PROPERTY(int PhaseNumber READ getPhaseNumber WRITE setPhaseNumber)
 
+    virtual const QString getCompiledLibraryName() { return Processing::ProcessingBaseName; }
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::ProcessingFilters; }
     virtual const QString getSubGroupName()  { return DREAM3D::FilterSubGroups::CleanupFilters; }
     virtual const QString getHumanLabel() { return "Minimum Size Filter (All Phases)"; }
@@ -126,4 +127,5 @@ class MinSize : public AbstractFilter
 };
 
 #endif /* MinSize_H_ */
+
 

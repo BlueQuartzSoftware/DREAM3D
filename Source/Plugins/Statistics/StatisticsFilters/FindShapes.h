@@ -48,6 +48,7 @@
 #include "DREAM3DLib/DataContainers/VolumeDataContainer.h"
 
 
+#include "Statistics/StatisticsConstants.h"
 /**
  * @class FindShapes FindShapes.h DREAM3DLib/GenericFilters/FindShapes.h
  * @brief
@@ -71,6 +72,7 @@ class FindShapes : public AbstractFilter
     DREAM3D_DECLARE_ARRAY(double, featuremoments, FeatureMoments) // N x 6 Array
     DREAM3D_DECLARE_ARRAY(double, featureeigenvals, FeatureEigenVals) // N x 3 Array
 
+    virtual const QString getCompiledLibraryName() { return Statistics::StatisticsBaseName; }
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::MorphologicalFilters; }
     virtual const QString getHumanLabel() { return "Find Feature Shapes"; }
@@ -132,4 +134,5 @@ signals:
 };
 
 #endif /* FINDSHAPES_H_ */
+
 

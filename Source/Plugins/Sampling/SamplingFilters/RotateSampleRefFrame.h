@@ -40,6 +40,7 @@
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
 
+#include "Sampling/SamplingConstants.h"
 /**
  * @class RotateSampleRefFrame RotateSampleRefFrame.h DREAM3DLib/GenericFilters/RotateSampleRefFrame.h
  * @brief This filter will
@@ -65,6 +66,7 @@ class RotateSampleRefFrame : public AbstractFilter
     DREAM3D_INSTANCE_PROPERTY(bool, SliceBySlice)
     Q_PROPERTY(bool SliceBySlice READ getSliceBySlice WRITE setSliceBySlice)
 
+    virtual const QString getCompiledLibraryName() { return Sampling::SamplingBaseName; }
     virtual const QString getGroupName()  { return DREAM3D::FilterGroups::SamplingFilters; }
     virtual const QString getSubGroupName()  { return DREAM3D::FilterSubGroups::RotationTransformationFilters; }
     virtual const QString getHumanLabel() { return "Rotate Sample Reference Frame"; }
@@ -107,3 +109,4 @@ class RotateSampleRefFrame : public AbstractFilter
 };
 
 #endif /* RotateSampleRefFrame_H_ */
+

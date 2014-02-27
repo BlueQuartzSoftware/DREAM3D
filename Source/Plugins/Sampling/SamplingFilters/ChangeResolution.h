@@ -46,6 +46,7 @@
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/DataContainers/VolumeDataContainer.h"
 
+#include "Sampling/SamplingConstants.h"
 /**
  * @class ChangeResolution ChangeResolution.h DREAM3DLib/SyntheticBuilderFilters/ChangeResolution.h
  * @brief
@@ -74,6 +75,7 @@ class ChangeResolution : public AbstractFilter
     DREAM3D_FILTER_PARAMETER(bool, SaveAsNewDataContainer)
     Q_PROPERTY(bool SaveAsNewDataContainer READ getSaveAsNewDataContainer WRITE setSaveAsNewDataContainer)
 
+    virtual const QString getCompiledLibraryName() { return Sampling::SamplingBaseName; }
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::SamplingFilters; }
     virtual const QString getSubGroupName()  { return DREAM3D::FilterSubGroups::ResolutionFilters; }
     virtual const QString getHumanLabel() { return "Change Resolution"; }
@@ -118,6 +120,7 @@ class ChangeResolution : public AbstractFilter
 };
 
 #endif /* CHANGERESOLUTION_H_ */
+
 
 
 

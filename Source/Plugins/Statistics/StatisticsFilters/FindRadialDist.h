@@ -47,6 +47,7 @@
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/DataContainers/VolumeDataContainer.h"
 
+#include "Statistics/StatisticsConstants.h"
 /**
  * @class FindRadialDist FindRadialDist.h DREAM3DLib/GenericFilters/FindRadialDist.h
  * @brief

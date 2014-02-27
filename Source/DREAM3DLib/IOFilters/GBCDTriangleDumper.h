@@ -46,6 +46,7 @@
 #include "DREAM3DLib/OrientationOps/HexagonalOps.h"
 #include "DREAM3DLib/OrientationOps/OrthoRhombicOps.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
+#include "DREAM3DLib/Common/Constants.h"
 
 /**
  * @class GBCDTriangleDumper GBCDTriangleDumper.h DREAM3DLib/SurfaceMeshFilters/GBCDTriangleDumper.h
@@ -81,6 +82,7 @@ class GBCDTriangleDumper : public AbstractFilter
     * a different group if you want. The string returned here will be displayed
     * in the GUI for the filter
     */
+    virtual const QString getCompiledLibraryName() { return IO::IOBaseName; }
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::MiscFilters; }
 
@@ -153,6 +155,7 @@ class GBCDTriangleDumper : public AbstractFilter
 };
 
 #endif /* _GBCDTriangleDumper_H_ */
+
 
 
 

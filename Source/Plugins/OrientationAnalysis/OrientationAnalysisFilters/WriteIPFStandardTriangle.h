@@ -45,7 +45,7 @@
 #include "DREAM3DLib/DataArrays/IDataArray.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
 
-
+#include "OrientationAnalysis/OrientationAnalysisConstants.h"
 
 /**
  * @class WriteIPFStandardTriangle WriteIPFStandardTriangle.h /IOFilters/WriteIPFStandardTriangle.h
@@ -89,6 +89,7 @@ class WriteIPFStandardTriangle : public AbstractFilter
     * a different group if you want. The string returned here will be displayed
     * in the GUI for the filter
     */
+    virtual const QString getCompiledLibraryName() { return OrientationAnalysis::OrientationAnalysisBaseName; }
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
 
     /**
@@ -176,4 +177,5 @@ class WriteIPFStandardTriangle : public AbstractFilter
 };
 
 #endif /* _WriteIPFStandardTriangle_H_ */
+
 

@@ -48,6 +48,7 @@
 #include "DREAM3DLib/DataContainers/VolumeDataContainer.h"
 #include "DREAM3DLib/OrientationOps/OrientationOps.h"
 
+#include "Reconstruction/ReconstructionConstants.h"
 
 /**
  * @class AlignSections AlignSections.h DREAM3DLib/ReconstructionFilters/AlignSections.h

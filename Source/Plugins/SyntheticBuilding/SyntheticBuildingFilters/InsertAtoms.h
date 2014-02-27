@@ -46,7 +46,7 @@
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/DataContainers/VolumeDataContainer.h"
 #include "DREAM3DLib/DataContainers/SurfaceDataContainer.h"
-
+#include "SyntheticBuilding/SyntheticBuildingConstants.h"
 /**
  * @class InsertAtoms InsertAtoms.h DREAM3DLib/SyntheticBuilderFilters/InsertAtoms.h
  * @brief
@@ -73,6 +73,7 @@ class InsertAtoms : public AbstractFilter
     DREAM3D_FILTER_PARAMETER(FloatVec3_t, LatticeConstants)
     Q_PROPERTY(FloatVec3_t LatticeConstants READ getLatticeConstants WRITE setLatticeConstants)
 
+    virtual const QString getCompiledLibraryName() { return SyntheticBuilding::SyntheticBuildingBaseName; }
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::SamplingFilters; }
     virtual const QString getSubGroupName()  { return DREAM3D::FilterSubGroups::ResolutionFilters; }
     virtual const QString getHumanLabel() { return "Insert Atoms"; }
@@ -128,4 +129,5 @@ class InsertAtoms : public AbstractFilter
 };
 
 #endif /* InsertAtoms_H_ */
+
 

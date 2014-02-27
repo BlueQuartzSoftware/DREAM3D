@@ -131,7 +131,11 @@ set(${PLUGIN_NAME}_HDRS
 set(${PLUGIN_NAME}_SRCS
  ${PROJECT_SOURCE_DIR}/${PLUGIN_NAME}Plugin.cpp
 )
-cmp_IDE_SOURCE_PROPERTIES( "${PLUGIN_NAME}/" "${${PLUGIN_NAME}_HDRS}" "${${PLUGIN_NAME}_SRCS}" "0")
+
+set(${PLUGIN_NAME}_MISC_HDRS
+    ${PROJECT_SOURCE_DIR}/${PLUGIN_NAME}Constants.h
+)
+cmp_IDE_SOURCE_PROPERTIES( "${PLUGIN_NAME}/" "${${PLUGIN_NAME}_HDRS};${${PLUGIN_NAME}_MISC_HDRS}" "${${PLUGIN_NAME}_SRCS}" "0")
 
 # --------------------------------------------------------------------
 #

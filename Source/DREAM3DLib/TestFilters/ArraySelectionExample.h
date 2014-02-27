@@ -76,6 +76,7 @@ class DREAM3DLib_EXPORT ArraySelectionExample : public AbstractFilter
     * a different group if you want. The string returned here will be displayed
     * in the GUI for the filter
     */
+    virtual const QString getCompiledLibraryName() { return Test::TestBaseName; }
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::TestFilters; }
 
     /**
@@ -145,4 +146,5 @@ class DREAM3DLib_EXPORT ArraySelectionExample : public AbstractFilter
 };
 
 #endif /* _ArraySelectionExample_H_ */
+
 

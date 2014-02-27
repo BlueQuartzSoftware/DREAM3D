@@ -49,6 +49,7 @@
 #include "DREAM3DLib/DataContainers/VolumeDataContainer.h"
 #include "DREAM3DLib/OrientationOps/OrientationOps.h"
 #include "DREAM3DLib/DataArrays/NeighborList.hpp"
+#include "Processing/ProcessingConstants.h"
 
 
 /**
@@ -75,6 +76,7 @@ class OpenCloseCoordinationNumber : public AbstractFilter
     DREAM3D_FILTER_PARAMETER(int, CoordinationNumber)
     Q_PROPERTY(int CoordinationNumber READ getCoordinationNumber WRITE setCoordinationNumber)
 
+    virtual const QString getCompiledLibraryName() { return Processing::ProcessingBaseName; }
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::ProcessingFilters; }
     virtual const QString getSubGroupName()  { return DREAM3D::FilterSubGroups::CleanupFilters; }
     virtual const QString getHumanLabel() { return "Smooth Bad Data (Coordination Number)"; }
@@ -121,3 +123,4 @@ class OpenCloseCoordinationNumber : public AbstractFilter
 };
 
 #endif /* OpenCloseCoordinationNumber_H_ */
+

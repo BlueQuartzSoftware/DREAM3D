@@ -40,6 +40,7 @@
 #include "DREAM3DLib/OrientationOps/OrientationOps.h"
 #include "DREAM3DLib/IOFilters/FileReader.h"
 #include "DREAM3DLib/DataArrays/DataArray.hpp"
+#include "DREAM3DLib/Common/Constants.h"
 
 
 class DREAM3DLib_EXPORT YSChoiAbaqusReader : public FileReader
@@ -62,6 +63,7 @@ class DREAM3DLib_EXPORT YSChoiAbaqusReader : public FileReader
     DREAM3D_FILTER_PARAMETER(QString, InputFeatureInfoFile)
     Q_PROPERTY(QString InputFeatureInfoFile READ getInputFeatureInfoFile WRITE setInputFeatureInfoFile)
 
+    virtual const QString getCompiledLibraryName() { return IO::IOBaseName; }
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::InputFilters; }
     virtual const QString getHumanLabel() { return "Read YS Choi Abaqus Vtk Output File"; }
@@ -105,3 +107,4 @@ class DREAM3DLib_EXPORT YSChoiAbaqusReader : public FileReader
 };
 
 #endif /* YSCHOIABAQUSREADER_H_ */
+

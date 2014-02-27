@@ -48,6 +48,7 @@
 #include "DREAM3DLib/OrientationOps/OrientationOps.h"
 #include "DREAM3DLib/DataContainers/VolumeDataContainer.h"
 
+#include "Statistics/StatisticsConstants.h"
 /**
  * @class FindOrientationFieldCurl FindOrientationFieldCurl.h DREAM3DLib/GenericFilters/FindOrientationFieldCurl.h
  * @brief
@@ -68,6 +69,7 @@ class FindOrientationFieldCurl : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(CellEnsembleAttributeMatrixName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
 
+    virtual const QString getCompiledLibraryName() { return Statistics::StatisticsBaseName; }
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::CrystallographicFilters; }
     virtual const QString getHumanLabel() { return "Find Curl of Orientation Field"; }
@@ -120,6 +122,7 @@ class FindOrientationFieldCurl : public AbstractFilter
 };
 
 #endif /* FindOrientationFieldCurl_H_ */
+
 
 
 

@@ -50,6 +50,7 @@
 
 #include "DREAM3DLib/DataContainers/VolumeDataContainer.h"
 
+#include "Statistics/StatisticsConstants.h"
 /**
  * @class FindFeatureHistogram FindFeatureHistogram.h /FilterCategoryFilters/FindFeatureHistogram.h
  * @brief
@@ -83,6 +84,7 @@ class FindFeatureHistogram : public AbstractFilter
     * a different group if you want. The string returned here will be displayed
     * in the GUI for the filter
     */
+    virtual const QString getCompiledLibraryName() { return Statistics::StatisticsBaseName; }
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::EnsembleStatsFilters; }
 
@@ -150,3 +152,4 @@ class FindFeatureHistogram : public AbstractFilter
 };
 
 #endif /* FindFeatureHistogram_H_ */
+

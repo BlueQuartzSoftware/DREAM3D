@@ -42,6 +42,7 @@
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/DataArrays/IDataArray.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
+#include "Processing/ProcessingConstants.h"
 
 /**
  * @class MultiThresholdObjects MultiThresholdObjects.h /GenericFilters/MultiThresholdObjects.h
@@ -77,6 +78,7 @@ class MultiThresholdObjects : public AbstractFilter
     * a different group if you want. The string returned here will be displayed
     * in the GUI for the filter
     */
+    virtual const QString getCompiledLibraryName() { return Processing::ProcessingBaseName; }
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::ProcessingFilters; }
     virtual const QString getSubGroupName()  { return DREAM3D::FilterSubGroups::ThresholdFilters; }
 
@@ -142,3 +144,4 @@ class MultiThresholdObjects : public AbstractFilter
 };
 
 #endif /* _MultiThresholdObjects_H_ */
+

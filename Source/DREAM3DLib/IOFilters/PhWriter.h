@@ -42,6 +42,7 @@
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/DataArrays/DataArray.hpp"
 #include "DREAM3DLib/IOFilters/FileWriter.h"
+#include "DREAM3DLib/Common/Constants.h"
 
 /**
  * @class PhWriter PhWriter.h DREAM3DLib/IOFilters/PhWriter.h
@@ -70,6 +71,7 @@ class DREAM3DLib_EXPORT PhWriter : public FileWriter
     * a different group if you want. The string returned here will be displayed
     * in the GUI for the filter
     */
+    virtual const QString getCompiledLibraryName() { return IO::IOBaseName; }
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
 
     /**
@@ -140,5 +142,6 @@ signals:
 };
 
 #endif /* PHWRITER_HPP_ */
+
 
 

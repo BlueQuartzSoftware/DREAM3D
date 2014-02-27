@@ -46,6 +46,8 @@
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/DataContainers/VolumeDataContainer.h"
 #include "DREAM3DLib/DataContainers/SurfaceDataContainer.h"
+
+#include "Sampling/SamplingConstants.h"
 #include "Sampling/SamplingFilters/SampleSurfaceMesh.h"
 
 /**
@@ -77,6 +79,7 @@ class RegularGridSampleSurfaceMesh : public SampleSurfaceMesh
     DREAM3D_FILTER_PARAMETER(FloatVec3_t, Resolution)
     Q_PROPERTY(FloatVec3_t Resolution READ getResolution WRITE setResolution)
 
+    virtual const QString getCompiledLibraryName() { return Sampling::SamplingBaseName; }
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::SamplingFilters; }
     virtual const QString getSubGroupName()  { return DREAM3D::FilterSubGroups::ResolutionFilters; }
     virtual const QString getHumanLabel() { return "Sample Surface Mesh on Regular Grid"; }
@@ -130,5 +133,6 @@ class RegularGridSampleSurfaceMesh : public SampleSurfaceMesh
 };
 
 #endif /* RegularGridSampleSurfaceMesh_H_ */
+
 
 

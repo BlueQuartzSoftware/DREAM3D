@@ -47,6 +47,7 @@
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/DataContainers/VolumeDataContainer.h"
 #include "DREAM3DLib/OrientationOps/OrientationOps.h"
+#include "Reconstruction/ReconstructionConstants.h"
 
 #include "Reconstruction/ReconstructionFilters/AlignSections.h"
 
@@ -73,6 +74,7 @@ class AlignSectionsList : public AlignSections
     DREAM3D_FILTER_PARAMETER(QString, InputFile)
     Q_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile)
 
+    virtual const QString getCompiledLibraryName() { return Reconstruction::ReconstructionBaseName; }
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::ReconstructionFilters; }
     virtual const QString getSubGroupName() {return DREAM3D::FilterSubGroups::AlignmentFilters;}
     virtual const QString getHumanLabel() { return "Align Sections (List)"; }
@@ -113,4 +115,5 @@ class AlignSectionsList : public AlignSections
 };
 
 #endif /* AlignSectionsList_H_ */
+
 

@@ -50,6 +50,7 @@
 #include "DREAM3DLib/OrientationOps/OrientationOps.h"
 #include "DREAM3DLib/DataArrays/NeighborList.hpp"
 
+#include "Processing/ProcessingConstants.h"
 
 /**
  * @class MinNeighbors MinNeighbors.h DREAM3DLib/ReconstructionFilters/MinNeighbors.h
@@ -74,6 +75,7 @@ class MinNeighbors : public AbstractFilter
     DREAM3D_FILTER_PARAMETER(int, MinNumNeighbors)
     Q_PROPERTY(int MinNumNeighbors READ getMinNumNeighbors WRITE setMinNumNeighbors)
 
+    virtual const QString getCompiledLibraryName() { return Processing::ProcessingBaseName; }
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::ProcessingFilters; }
     virtual const QString getSubGroupName()  { return DREAM3D::FilterSubGroups::CleanupFilters; }
     virtual const QString getHumanLabel() { return "Minimum Number of Neighbors Filter"; }
@@ -116,6 +118,7 @@ class MinNeighbors : public AbstractFilter
 };
 
 #endif /* MinNeighbors_H_ */
+
 
 
 

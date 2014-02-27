@@ -46,6 +46,7 @@
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/DataContainers/VolumeDataContainer.h"
+#include "DREAM3DLib/Common/Constants.h"
 
 
 
@@ -75,6 +76,7 @@ class DREAM3DLib_EXPORT DataContainerWriter : public AbstractFilter
 
     virtual void preflight();
 
+    virtual const QString getCompiledLibraryName() { return IO::IOBaseName; }
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::OutputFilters; }
     virtual const QString getHumanLabel() { return "Write DREAM3D Data File"; }
@@ -137,3 +139,4 @@ class DREAM3DLib_EXPORT DataContainerWriter : public AbstractFilter
 };
 
 #endif /* _DATACONTAINERWRITER_H_ */
+

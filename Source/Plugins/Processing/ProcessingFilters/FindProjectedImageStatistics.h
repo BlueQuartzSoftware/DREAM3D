@@ -46,6 +46,7 @@
 
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/DataContainers/VolumeDataContainer.h"
+#include "Processing/ProcessingConstants.h"
 
 /**
  * @class FindProjectedImageStatistics FindProjectedImageStatistics.h DREAM3DLib/GenericFilters/FindProjectedImageStatistics.h
@@ -71,6 +72,7 @@ class FindProjectedImageStatistics : public AbstractFilter
     DREAM3D_FILTER_PARAMETER(unsigned int, Plane)
     Q_PROPERTY(unsigned int Plane READ getPlane WRITE setPlane)
 
+    virtual const QString getCompiledLibraryName() { return Processing::ProcessingBaseName; }
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::MorphologicalFilters; }
     virtual const QString getHumanLabel() { return "Find Projected Image Statistics"; }
@@ -128,6 +130,7 @@ class FindProjectedImageStatistics : public AbstractFilter
 };
 
 #endif /* FindProjectedImageStatistics_H_ */
+
 
 
 

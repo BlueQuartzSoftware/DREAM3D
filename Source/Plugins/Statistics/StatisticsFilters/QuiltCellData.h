@@ -45,7 +45,7 @@
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
 
-
+#include "Statistics/StatisticsConstants.h"
 /**
  * @class QuiltCellData QuiltCellData.h /FilterCategoryFilters/QuiltCellData.h
  * @brief
@@ -92,6 +92,7 @@ class QuiltCellData : public AbstractFilter
     * a different group if you want. The string returned here will be displayed
     * in the GUI for the filter
     */
+    virtual const QString getCompiledLibraryName() { return Statistics::StatisticsBaseName; }
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::EnsembleStatsFilters; }
 
@@ -157,6 +158,7 @@ class QuiltCellData : public AbstractFilter
 };
 
 #endif /* QuiltCellData_H_ */
+
 
 
 

@@ -39,6 +39,7 @@
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
+#include "Processing/ProcessingConstants.h"
 
 /**
  * @class ConvertEulerAngles ConvertEulerAngles.h DREAM3DLib/GenericFilters/ConvertEulerAngles.h
@@ -65,6 +66,7 @@ class ConvertEulerAngles : public AbstractFilter
 
     virtual void preflight();
 
+    virtual const QString getCompiledLibraryName() { return Processing::ProcessingBaseName; }
     virtual const QString getGroupName()  { return DREAM3D::FilterGroups::ProcessingFilters; }
     virtual const QString getSubGroupName()  { return DREAM3D::FilterSubGroups::ConversionFilters; }
     virtual const QString getHumanLabel() { return "Convert Euler Angles"; }
@@ -106,5 +108,6 @@ signals:
 };
 
 #endif /* CONVERTEULERANGLES_H_ */
+
 
 

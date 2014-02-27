@@ -56,6 +56,8 @@
 #include "DREAM3DLib/OrientationOps/OrientationOps.h"
 #include "DREAM3DLib/DataArrays/StringDataArray.hpp"
 
+#include "OrientationAnalysis/OrientationAnalysisConstants.h"
+
 class H5EbsdVolumeReader;
 
 
@@ -111,6 +113,7 @@ class ReadH5Ebsd : public AbstractFilter
     //-------------------------------------------------------
 
 
+    virtual const QString getCompiledLibraryName() { return OrientationAnalysis::OrientationAnalysisBaseName; }
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::InputFilters; }
     virtual const QString getHumanLabel() { return "Read H5Ebsd File"; }
@@ -244,4 +247,5 @@ class ReadH5Ebsd : public AbstractFilter
 };
 
 #endif /* ReadH5Ebsd_H_ */
+
 

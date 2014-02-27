@@ -39,6 +39,7 @@
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
+#include "Processing/ProcessingConstants.h"
 
 /**
  * @class RotateEulerRefFrame RotateEulerRefFrame.h DREAM3DLib/GenericFilters/RotateEulerRefFrame.h
@@ -67,6 +68,7 @@ class RotateEulerRefFrame : public AbstractFilter
     DREAM3D_FILTER_PARAMETER(float, RotationAngle)
     Q_PROPERTY(float RotationAngle READ getRotationAngle WRITE setRotationAngle)
 
+    virtual const QString getCompiledLibraryName() { return Processing::ProcessingBaseName; }
     virtual const QString getGroupName()  { return DREAM3D::FilterGroups::ProcessingFilters; }
     virtual const QString getSubGroupName()  { return DREAM3D::FilterSubGroups::ConversionFilters; }
     virtual const QString getHumanLabel() { return "Rotate Euler Reference Frame"; }
@@ -109,3 +111,4 @@ class RotateEulerRefFrame : public AbstractFilter
 };
 
 #endif /* RotateEulerRefFrame_H_ */
+
