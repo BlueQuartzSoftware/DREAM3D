@@ -75,19 +75,19 @@ class LaplacianSmoothing : public SurfaceMeshFilter
 
     /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
     DREAM3D_FILTER_PARAMETER(int, IterationSteps)
-    Q_PROPERTY(int IterationSteps READ getIterationSteps WRITE setIterationSteps NOTIFY parametersChanged)
+    Q_PROPERTY(int IterationSteps READ getIterationSteps WRITE setIterationSteps)
     DREAM3D_FILTER_PARAMETER(float, Lambda)
-    Q_PROPERTY(float Lambda READ getLambda WRITE setLambda NOTIFY parametersChanged)
+    Q_PROPERTY(float Lambda READ getLambda WRITE setLambda)
     DREAM3D_FILTER_PARAMETER(float, SurfacePointLambda)
-    Q_PROPERTY(float SurfacePointLambda READ getSurfacePointLambda WRITE setSurfacePointLambda NOTIFY parametersChanged)
+    Q_PROPERTY(float SurfacePointLambda READ getSurfacePointLambda WRITE setSurfacePointLambda)
     DREAM3D_FILTER_PARAMETER(float, TripleLineLambda)
-    Q_PROPERTY(float TripleLineLambda READ getTripleLineLambda WRITE setTripleLineLambda NOTIFY parametersChanged)
+    Q_PROPERTY(float TripleLineLambda READ getTripleLineLambda WRITE setTripleLineLambda)
     DREAM3D_FILTER_PARAMETER(float, QuadPointLambda)
-    Q_PROPERTY(float QuadPointLambda READ getQuadPointLambda WRITE setQuadPointLambda NOTIFY parametersChanged)
+    Q_PROPERTY(float QuadPointLambda READ getQuadPointLambda WRITE setQuadPointLambda)
     DREAM3D_FILTER_PARAMETER(float, SurfaceTripleLineLambda)
-    Q_PROPERTY(float SurfaceTripleLineLambda READ getSurfaceTripleLineLambda WRITE setSurfaceTripleLineLambda NOTIFY parametersChanged)
+    Q_PROPERTY(float SurfaceTripleLineLambda READ getSurfaceTripleLineLambda WRITE setSurfaceTripleLineLambda)
     DREAM3D_FILTER_PARAMETER(float, SurfaceQuadPointLambda)
-    Q_PROPERTY(float SurfaceQuadPointLambda READ getSurfaceQuadPointLambda WRITE setSurfaceQuadPointLambda NOTIFY parametersChanged)
+    Q_PROPERTY(float SurfaceQuadPointLambda READ getSurfaceQuadPointLambda WRITE setSurfaceQuadPointLambda)
     DREAM3D_INSTANCE_PROPERTY(bool, GenerateIterationOutputFiles)
 
 

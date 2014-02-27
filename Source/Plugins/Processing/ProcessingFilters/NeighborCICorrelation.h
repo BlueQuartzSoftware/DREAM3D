@@ -73,9 +73,9 @@ class NeighborCICorrelation : public AbstractFilter
     //------ Required Cell Data
 
     DREAM3D_FILTER_PARAMETER(float, MinConfidence)
-    Q_PROPERTY(float MinConfidence READ getMinConfidence WRITE setMinConfidence NOTIFY parametersChanged)
+    Q_PROPERTY(float MinConfidence READ getMinConfidence WRITE setMinConfidence)
     DREAM3D_FILTER_PARAMETER(bool, Loop)
-    Q_PROPERTY(bool Loop READ getLoop WRITE setLoop NOTIFY parametersChanged)
+    Q_PROPERTY(bool Loop READ getLoop WRITE setLoop)
 
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::ProcessingFilters; }
     virtual const QString getSubGroupName()  { return DREAM3D::FilterSubGroups::CleanupFilters; }

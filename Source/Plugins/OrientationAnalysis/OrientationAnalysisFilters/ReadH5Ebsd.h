@@ -86,20 +86,20 @@ class ReadH5Ebsd : public AbstractFilter
 
 
     DREAM3D_FILTER_PARAMETER(QString, InputFile)
-    Q_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile NOTIFY parametersChanged)
+    Q_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile)
     DREAM3D_FILTER_PARAMETER(int, ZStartIndex)
-    Q_PROPERTY(int ZStartIndex READ getZStartIndex WRITE setZStartIndex NOTIFY parametersChanged)
+    Q_PROPERTY(int ZStartIndex READ getZStartIndex WRITE setZStartIndex)
     DREAM3D_FILTER_PARAMETER(int, ZEndIndex)
-    Q_PROPERTY(int ZEndIndex READ getZEndIndex WRITE setZEndIndex NOTIFY parametersChanged)
+    Q_PROPERTY(int ZEndIndex READ getZEndIndex WRITE setZEndIndex)
     DREAM3D_FILTER_PARAMETER(bool, UseTransformations)
-    Q_PROPERTY(bool UseTransformations READ getUseTransformations WRITE setUseTransformations NOTIFY parametersChanged)
+    Q_PROPERTY(bool UseTransformations READ getUseTransformations WRITE setUseTransformations)
 
     DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedArrayNames)
-    Q_PROPERTY(QSet<QString> SelectedArrayNames READ getSelectedArrayNames WRITE setSelectedArrayNames NOTIFY parametersChanged)
+    Q_PROPERTY(QSet<QString> SelectedArrayNames READ getSelectedArrayNames WRITE setSelectedArrayNames)
 
 
     DREAM3D_INSTANCE_PROPERTY(QSet<QString>, DataArrayNames) // These are for reading the names of the arrays during a preflight
-    Q_PROPERTY(QSet<QString> DataArrayNames READ getDataArrayNames WRITE setDataArrayNames NOTIFY parametersChanged)
+    Q_PROPERTY(QSet<QString> DataArrayNames READ getDataArrayNames WRITE setDataArrayNames)
 
     //-------------------------------------------------------
     // Not sure why these are here. We would be reading all of these from the file

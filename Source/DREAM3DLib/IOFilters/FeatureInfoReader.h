@@ -68,11 +68,11 @@ class DREAM3DLib_EXPORT FeatureInfoReader : public FileReader
 
     /* Input Parameters */
     DREAM3D_FILTER_PARAMETER(QString, InputFile)
-    Q_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile NOTIFY parametersChanged)
+    Q_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile)
     DREAM3D_FILTER_PARAMETER(bool, CreateCellLevelArrays)
-    Q_PROPERTY(bool CreateCellLevelArrays READ getCreateCellLevelArrays WRITE setCreateCellLevelArrays NOTIFY parametersChanged)
+    Q_PROPERTY(bool CreateCellLevelArrays READ getCreateCellLevelArrays WRITE setCreateCellLevelArrays)
     DREAM3D_FILTER_PARAMETER(bool, RenumberFeatures)
-    Q_PROPERTY(bool RenumberFeatures READ getRenumberFeatures WRITE setRenumberFeatures NOTIFY parametersChanged)
+    Q_PROPERTY(bool RenumberFeatures READ getRenumberFeatures WRITE setRenumberFeatures)
 
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::InputFilters; }

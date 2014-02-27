@@ -66,7 +66,7 @@ class DREAM3DLib_EXPORT VASPReader : public FileReader
     DREAM3D_INSTANCE_STRING_PROPERTY(VertexAttributeMatrixName)
 
     DREAM3D_FILTER_PARAMETER(QString, InputFile)
-    Q_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile NOTIFY parametersChanged)
+    Q_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile)
 
     //------ Created Cell Data
 

@@ -78,7 +78,7 @@ class ImportImageStack : public AbstractFilter
     DREAM3D_FILTER_PARAMETER(uint32_t, RefFrameZDir)
 
     DREAM3D_FILTER_PARAMETER(int, ImageStack)
-    Q_PROPERTY(int ImageStack READ getImageStack WRITE setImageStack NOTIFY parametersChanged)
+    Q_PROPERTY(int ImageStack READ getImageStack WRITE setImageStack)
 
 
     /**

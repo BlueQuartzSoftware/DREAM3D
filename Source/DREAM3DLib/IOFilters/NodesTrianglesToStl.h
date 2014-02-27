@@ -64,13 +64,13 @@ class DREAM3DLib_EXPORT NodesTrianglesToStl : public AbstractFilter
     virtual ~NodesTrianglesToStl();
 
     DREAM3D_FILTER_PARAMETER(QString, NodesFile);
-    Q_PROPERTY(QString NodesFile READ getNodesFile WRITE setNodesFile NOTIFY parametersChanged)
+    Q_PROPERTY(QString NodesFile READ getNodesFile WRITE setNodesFile)
     DREAM3D_FILTER_PARAMETER(QString, TrianglesFile);
-    Q_PROPERTY(QString TrianglesFile READ getTrianglesFile WRITE setTrianglesFile NOTIFY parametersChanged)
+    Q_PROPERTY(QString TrianglesFile READ getTrianglesFile WRITE setTrianglesFile)
     DREAM3D_FILTER_PARAMETER(QString, OutputStlDirectory);
-    Q_PROPERTY(QString OutputStlDirectory READ getOutputStlDirectory WRITE setOutputStlDirectory NOTIFY parametersChanged)
+    Q_PROPERTY(QString OutputStlDirectory READ getOutputStlDirectory WRITE setOutputStlDirectory)
     DREAM3D_FILTER_PARAMETER(QString, OutputStlPrefix);
-    Q_PROPERTY(QString OutputStlPrefix READ getOutputStlPrefix WRITE setOutputStlPrefix NOTIFY parametersChanged)
+    Q_PROPERTY(QString OutputStlPrefix READ getOutputStlPrefix WRITE setOutputStlPrefix)
 
     /**
     * @brief This returns the group that the filter belonds to. You can select

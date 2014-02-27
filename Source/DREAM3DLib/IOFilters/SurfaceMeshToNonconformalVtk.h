@@ -68,9 +68,9 @@ class DREAM3DLib_EXPORT SurfaceMeshToNonconformalVtk : public AbstractFilter
 
     /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
     DREAM3D_FILTER_PARAMETER(QString, OutputVtkFile)
-    Q_PROPERTY(QString OutputVtkFile READ getOutputVtkFile WRITE setOutputVtkFile NOTIFY parametersChanged)
+    Q_PROPERTY(QString OutputVtkFile READ getOutputVtkFile WRITE setOutputVtkFile)
     DREAM3D_FILTER_PARAMETER(bool, WriteBinaryFile)
-    Q_PROPERTY(bool WriteBinaryFile READ getWriteBinaryFile WRITE setWriteBinaryFile NOTIFY parametersChanged)
+    Q_PROPERTY(bool WriteBinaryFile READ getWriteBinaryFile WRITE setWriteBinaryFile)
 
     /**
     * @brief This returns the group that the filter belonds to. You can select

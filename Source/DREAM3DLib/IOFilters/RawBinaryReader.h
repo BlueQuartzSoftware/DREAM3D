@@ -69,37 +69,37 @@ class DREAM3DLib_EXPORT RawBinaryReader : public AbstractFilter
 
     /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
     DREAM3D_FILTER_PARAMETER(int, ScalarType)
-    Q_PROPERTY(int ScalarType READ getScalarType WRITE setScalarType NOTIFY parametersChanged)
+    Q_PROPERTY(int ScalarType READ getScalarType WRITE setScalarType)
 
     DREAM3D_FILTER_PARAMETER(int, Endian)
-    Q_PROPERTY(int Endian READ getEndian WRITE setEndian NOTIFY parametersChanged)
+    Q_PROPERTY(int Endian READ getEndian WRITE setEndian)
 
     DREAM3D_FILTER_PARAMETER(int, Dimensionality)
-    Q_PROPERTY(int Dimensionality READ getDimensionality WRITE setDimensionality NOTIFY parametersChanged)
+    Q_PROPERTY(int Dimensionality READ getDimensionality WRITE setDimensionality)
 
     DREAM3D_FILTER_PARAMETER(int, NumberOfComponents)
-    Q_PROPERTY(int NumberOfComponents READ getNumberOfComponents WRITE setNumberOfComponents NOTIFY parametersChanged)
+    Q_PROPERTY(int NumberOfComponents READ getNumberOfComponents WRITE setNumberOfComponents)
 
     DREAM3D_FILTER_PARAMETER(IntVec3_t, Dimensions)
-    Q_PROPERTY(IntVec3_t Dimensions READ getDimensions WRITE setDimensions NOTIFY parametersChanged)
+    Q_PROPERTY(IntVec3_t Dimensions READ getDimensions WRITE setDimensions)
 
     DREAM3D_FILTER_PARAMETER(FloatVec3_t, Origin)
-    Q_PROPERTY(FloatVec3_t Origin READ getOrigin WRITE setOrigin NOTIFY parametersChanged)
+    Q_PROPERTY(FloatVec3_t Origin READ getOrigin WRITE setOrigin)
 
     DREAM3D_FILTER_PARAMETER(FloatVec3_t, Resolution)
-    Q_PROPERTY(FloatVec3_t Resolution READ getResolution WRITE setResolution NOTIFY parametersChanged)
+    Q_PROPERTY(FloatVec3_t Resolution READ getResolution WRITE setResolution)
 
     DREAM3D_FILTER_PARAMETER(bool, OverRideOriginResolution)
-    Q_PROPERTY(bool OverRideOriginResolution READ getOverRideOriginResolution WRITE setOverRideOriginResolution NOTIFY parametersChanged)
+    Q_PROPERTY(bool OverRideOriginResolution READ getOverRideOriginResolution WRITE setOverRideOriginResolution)
 
     DREAM3D_FILTER_PARAMETER(int, SkipHeaderBytes)
-    Q_PROPERTY(int SkipHeaderBytes READ getSkipHeaderBytes WRITE setSkipHeaderBytes NOTIFY parametersChanged)
+    Q_PROPERTY(int SkipHeaderBytes READ getSkipHeaderBytes WRITE setSkipHeaderBytes)
 
     DREAM3D_FILTER_PARAMETER(QString, OutputArrayName)
-    Q_PROPERTY(QString OutputArrayName READ getOutputArrayName WRITE setOutputArrayName NOTIFY parametersChanged)
+    Q_PROPERTY(QString OutputArrayName READ getOutputArrayName WRITE setOutputArrayName)
 
     DREAM3D_FILTER_PARAMETER(QString, InputFile)
-    Q_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile NOTIFY parametersChanged)
+    Q_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile)
 
 
 

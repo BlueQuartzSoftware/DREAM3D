@@ -73,9 +73,9 @@ class MergeTwins : public GroupFeatures
     DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
 
     DREAM3D_FILTER_PARAMETER(float, AxisTolerance)
-    Q_PROPERTY(float AxisTolerance READ getAxisTolerance WRITE setAxisTolerance NOTIFY parametersChanged)
+    Q_PROPERTY(float AxisTolerance READ getAxisTolerance WRITE setAxisTolerance)
     DREAM3D_FILTER_PARAMETER(float, AngleTolerance)
-    Q_PROPERTY(float AngleTolerance READ getAngleTolerance WRITE setAngleTolerance NOTIFY parametersChanged)
+    Q_PROPERTY(float AngleTolerance READ getAngleTolerance WRITE setAngleTolerance)
     DREAM3D_INSTANCE_PROPERTY(bool, RandomizeParentIds)
 
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::ReconstructionFilters; }

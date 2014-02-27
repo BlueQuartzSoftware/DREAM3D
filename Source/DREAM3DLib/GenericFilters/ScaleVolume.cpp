@@ -235,7 +235,7 @@ void ScaleVolume::execute()
 
   if (m_ApplyToSurfaceMesh == true)
   {
-    SurfaceDataContainer* m = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
+ //   SurfaceDataContainer* m = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
 
     updateSurfaceMesh();
   }
@@ -251,7 +251,7 @@ void ScaleVolume::updateSurfaceMesh()
   int err = 0;
   QString ss;
   setErrorCondition(err);
-  SurfaceDataContainer* m = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
+ // SurfaceDataContainer* m = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
 
   notifyStatusMessage(getHumanLabel(), "Starting");
 

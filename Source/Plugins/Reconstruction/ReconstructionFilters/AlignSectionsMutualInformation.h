@@ -71,7 +71,7 @@ class AlignSectionsMutualInformation : public AlignSections
     DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
 
     DREAM3D_FILTER_PARAMETER(float, MisorientationTolerance)
-    Q_PROPERTY(float MisorientationTolerance READ getMisorientationTolerance WRITE setMisorientationTolerance NOTIFY parametersChanged)
+    Q_PROPERTY(float MisorientationTolerance READ getMisorientationTolerance WRITE setMisorientationTolerance)
     DREAM3D_DECLARE_ARRAY(int, featurecounts, FeatureCounts)
 
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::ReconstructionFilters; }

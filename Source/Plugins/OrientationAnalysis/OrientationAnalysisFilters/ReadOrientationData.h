@@ -73,7 +73,7 @@ class ReadOrientationData : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(MaterialNameArrayName)
 
     DREAM3D_FILTER_PARAMETER(QString, InputFile)
-    Q_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile NOTIFY parametersChanged)
+    Q_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile)
 
 
     /**

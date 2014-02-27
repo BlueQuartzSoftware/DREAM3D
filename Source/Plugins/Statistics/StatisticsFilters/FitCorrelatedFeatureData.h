@@ -72,16 +72,16 @@ class FitCorrelatedFeatureData : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(CellEnsembleAttributeMatrixName)
 
     DREAM3D_FILTER_PARAMETER(QString, SelectedFeatureArrayName)
-    Q_PROPERTY(QString SelectedFeatureArrayName READ getSelectedFeatureArrayName WRITE setSelectedFeatureArrayName NOTIFY parametersChanged)
+    Q_PROPERTY(QString SelectedFeatureArrayName READ getSelectedFeatureArrayName WRITE setSelectedFeatureArrayName)
     DREAM3D_FILTER_PARAMETER(QString, CorrelatedFeatureArrayName)
-    Q_PROPERTY(QString CorrelatedFeatureArrayName READ getCorrelatedFeatureArrayName WRITE setCorrelatedFeatureArrayName NOTIFY parametersChanged)
+    Q_PROPERTY(QString CorrelatedFeatureArrayName READ getCorrelatedFeatureArrayName WRITE setCorrelatedFeatureArrayName)
 
     DREAM3D_FILTER_PARAMETER(unsigned int, DistributionType)
-    Q_PROPERTY(unsigned int DistributionType READ getDistributionType WRITE setDistributionType NOTIFY parametersChanged)
+    Q_PROPERTY(unsigned int DistributionType READ getDistributionType WRITE setDistributionType)
     DREAM3D_FILTER_PARAMETER(int, NumberOfCorrelatedBins)
-    Q_PROPERTY(int NumberOfCorrelatedBins READ getNumberOfCorrelatedBins WRITE setNumberOfCorrelatedBins NOTIFY parametersChanged)
+    Q_PROPERTY(int NumberOfCorrelatedBins READ getNumberOfCorrelatedBins WRITE setNumberOfCorrelatedBins)
     DREAM3D_FILTER_PARAMETER(bool, RemoveBiasedFeatures)
-    Q_PROPERTY(bool RemoveBiasedFeatures READ getRemoveBiasedFeatures WRITE setRemoveBiasedFeatures NOTIFY parametersChanged)
+    Q_PROPERTY(bool RemoveBiasedFeatures READ getRemoveBiasedFeatures WRITE setRemoveBiasedFeatures)
 
     /**
     * @brief This returns the group that the filter belonds to. You can select

@@ -66,7 +66,7 @@ class DREAM3DLib_EXPORT GenerateIPFColors : public AbstractFilter
 
     /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
     DREAM3D_FILTER_PARAMETER(FloatVec3_t, ReferenceDir)
-    Q_PROPERTY(FloatVec3_t ReferenceDir READ getReferenceDir WRITE setReferenceDir NOTIFY parametersChanged)
+    Q_PROPERTY(FloatVec3_t ReferenceDir READ getReferenceDir WRITE setReferenceDir)
 
 
     /**

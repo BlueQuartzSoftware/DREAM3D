@@ -68,9 +68,9 @@ class DREAM3DLib_EXPORT FeatureDataCSVWriter : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
 
     DREAM3D_FILTER_PARAMETER(QString, FeatureDataFile)
-    Q_PROPERTY(QString FeatureDataFile READ getFeatureDataFile WRITE setFeatureDataFile NOTIFY parametersChanged)
+    Q_PROPERTY(QString FeatureDataFile READ getFeatureDataFile WRITE setFeatureDataFile)
     DREAM3D_FILTER_PARAMETER(bool, WriteNeighborListData)
-    Q_PROPERTY(bool WriteNeighborListData READ getWriteNeighborListData WRITE setWriteNeighborListData NOTIFY parametersChanged)
+    Q_PROPERTY(bool WriteNeighborListData READ getWriteNeighborListData WRITE setWriteNeighborListData)
     DREAM3D_INSTANCE_PROPERTY(char, Delimiter)
 
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::IOFilters; }

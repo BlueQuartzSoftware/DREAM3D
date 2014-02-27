@@ -69,15 +69,15 @@ class UncertainRegularGridSampleSurfaceMesh : public SampleSurfaceMesh
 
 
     DREAM3D_FILTER_PARAMETER(int, XPoints)
-    Q_PROPERTY(int XPoints READ getXPoints WRITE setXPoints NOTIFY parametersChanged)
+    Q_PROPERTY(int XPoints READ getXPoints WRITE setXPoints)
     DREAM3D_FILTER_PARAMETER(int, YPoints)
-    Q_PROPERTY(int YPoints READ getYPoints WRITE setYPoints NOTIFY parametersChanged)
+    Q_PROPERTY(int YPoints READ getYPoints WRITE setYPoints)
     DREAM3D_FILTER_PARAMETER(int, ZPoints)
-    Q_PROPERTY(int ZPoints READ getZPoints WRITE setZPoints NOTIFY parametersChanged)
+    Q_PROPERTY(int ZPoints READ getZPoints WRITE setZPoints)
     DREAM3D_FILTER_PARAMETER(FloatVec3_t, Resolution)
-    Q_PROPERTY(FloatVec3_t Resolution READ getResolution WRITE setResolution NOTIFY parametersChanged)
+    Q_PROPERTY(FloatVec3_t Resolution READ getResolution WRITE setResolution)
     DREAM3D_FILTER_PARAMETER(FloatVec3_t, Uncertainty)
-    Q_PROPERTY(FloatVec3_t Uncertainty READ getUncertainty WRITE setUncertainty NOTIFY parametersChanged)
+    Q_PROPERTY(FloatVec3_t Uncertainty READ getUncertainty WRITE setUncertainty)
 
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::SamplingFilters; }
     virtual const QString getSubGroupName()  { return DREAM3D::FilterSubGroups::ResolutionFilters; }

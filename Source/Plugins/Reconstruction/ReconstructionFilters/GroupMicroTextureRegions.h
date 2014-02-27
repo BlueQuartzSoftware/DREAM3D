@@ -74,9 +74,9 @@ class GroupMicroTextureRegions : public GroupFeatures
     DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
 
     DREAM3D_FILTER_PARAMETER(float, CAxisTolerance)
-    Q_PROPERTY(float CAxisTolerance READ getCAxisTolerance WRITE setCAxisTolerance NOTIFY parametersChanged)
+    Q_PROPERTY(float CAxisTolerance READ getCAxisTolerance WRITE setCAxisTolerance)
     DREAM3D_FILTER_PARAMETER(bool, UseRunningAverage)
-    Q_PROPERTY(float UseRunningAverage READ getUseRunningAverage WRITE setUseRunningAverage NOTIFY parametersChanged)
+    Q_PROPERTY(float UseRunningAverage READ getUseRunningAverage WRITE setUseRunningAverage)
     DREAM3D_INSTANCE_PROPERTY(bool, RandomizeParentIds)
 
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::ReconstructionFilters; }

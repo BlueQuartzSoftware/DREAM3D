@@ -68,22 +68,22 @@ class QuiltCellData : public AbstractFilter
 
     // What Cell Array do they want to work on
     DREAM3D_FILTER_PARAMETER(QString, SelectedCellArrayName)
-    Q_PROPERTY(QString SelectedCellArrayName READ getSelectedCellArrayName WRITE setSelectedCellArrayName NOTIFY parametersChanged)
+    Q_PROPERTY(QString SelectedCellArrayName READ getSelectedCellArrayName WRITE setSelectedCellArrayName)
 
     DREAM3D_FILTER_PARAMETER(IntVec3_t, QuiltStep)
-    Q_PROPERTY(IntVec3_t QuiltStep READ getQuiltStep WRITE setQuiltStep NOTIFY parametersChanged)
+    Q_PROPERTY(IntVec3_t QuiltStep READ getQuiltStep WRITE setQuiltStep)
     DREAM3D_FILTER_PARAMETER(IntVec3_t, PatchSize)
-    Q_PROPERTY(IntVec3_t PatchSize READ getPatchSize WRITE setPatchSize NOTIFY parametersChanged)
+    Q_PROPERTY(IntVec3_t PatchSize READ getPatchSize WRITE setPatchSize)
 
     // The user selects a new DataContainerName
     DREAM3D_FILTER_PARAMETER(QString, OutputDataContainerName)
-    Q_PROPERTY(QString OutputDataContainerName READ getOutputDataContainerName WRITE setOutputDataContainerName NOTIFY parametersChanged)
+    Q_PROPERTY(QString OutputDataContainerName READ getOutputDataContainerName WRITE setOutputDataContainerName)
     // Name the new AttributeMatrix that will get created
     DREAM3D_FILTER_PARAMETER(QString, OutputAttributeMatrixName)
-    Q_PROPERTY(QString OutputAttributeMatrixName READ getOutputAttributeMatrixName WRITE setOutputAttributeMatrixName NOTIFY parametersChanged)
+    Q_PROPERTY(QString OutputAttributeMatrixName READ getOutputAttributeMatrixName WRITE setOutputAttributeMatrixName)
     // Give the created data array a name
     DREAM3D_FILTER_PARAMETER(QString, OutputArrayName)
-    Q_PROPERTY(QString OutputArrayName READ getOutputArrayName WRITE setOutputArrayName NOTIFY parametersChanged)
+    Q_PROPERTY(QString OutputArrayName READ getOutputArrayName WRITE setOutputArrayName)
 
 
 

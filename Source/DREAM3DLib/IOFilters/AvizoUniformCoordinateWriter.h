@@ -68,10 +68,10 @@ class DREAM3DLib_EXPORT AvizoUniformCoordinateWriter : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
 
     DREAM3D_FILTER_PARAMETER(QString, OutputFile)
-    Q_PROPERTY(QString OutputFile READ getOutputFile WRITE setOutputFile NOTIFY parametersChanged)
+    Q_PROPERTY(QString OutputFile READ getOutputFile WRITE setOutputFile)
     DREAM3D_INSTANCE_PROPERTY(bool, WriteFeatureIds)
     DREAM3D_FILTER_PARAMETER(bool, WriteBinaryFile)
-    Q_PROPERTY(bool WriteBinaryFile READ getWriteBinaryFile WRITE setWriteBinaryFile NOTIFY parametersChanged)
+    Q_PROPERTY(bool WriteBinaryFile READ getWriteBinaryFile WRITE setWriteBinaryFile)
 
     /**
     * @brief This returns the group that the filter belonds to. You can select

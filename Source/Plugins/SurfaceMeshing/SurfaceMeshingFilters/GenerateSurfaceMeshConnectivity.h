@@ -67,11 +67,11 @@ class GenerateSurfaceMeshConnectivity : public SurfaceMeshFilter
 
     /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
     DREAM3D_FILTER_PARAMETER(bool, GenerateVertexTriangleLists)
-    Q_PROPERTY(bool GenerateVertexTriangleLists READ getGenerateVertexTriangleLists WRITE setGenerateVertexTriangleLists NOTIFY parametersChanged)
+    Q_PROPERTY(bool GenerateVertexTriangleLists READ getGenerateVertexTriangleLists WRITE setGenerateVertexTriangleLists)
     DREAM3D_FILTER_PARAMETER(bool, GenerateTriangleNeighbors)
-    Q_PROPERTY(bool GenerateTriangleNeighbors READ getGenerateTriangleNeighbors WRITE setGenerateTriangleNeighbors NOTIFY parametersChanged)
+    Q_PROPERTY(bool GenerateTriangleNeighbors READ getGenerateTriangleNeighbors WRITE setGenerateTriangleNeighbors)
     DREAM3D_FILTER_PARAMETER(bool, GenerateEdgeIdList)
-    Q_PROPERTY(bool GenerateEdgeIdList READ getGenerateEdgeIdList WRITE setGenerateEdgeIdList NOTIFY parametersChanged)
+    Q_PROPERTY(bool GenerateEdgeIdList READ getGenerateEdgeIdList WRITE setGenerateEdgeIdList)
 
     /**
     * @brief This returns the group that the filter belonds to. You can select

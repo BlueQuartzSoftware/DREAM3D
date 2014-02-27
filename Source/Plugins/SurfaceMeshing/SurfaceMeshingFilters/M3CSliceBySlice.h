@@ -112,7 +112,7 @@ class M3CSliceBySlice : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshTriangleLabelsArrayName)
 
     DREAM3D_FILTER_PARAMETER(bool, DeleteTempFiles)
-    Q_PROPERTY(bool DeleteTempFiles READ getDeleteTempFiles WRITE setDeleteTempFiles NOTIFY parametersChanged)
+    Q_PROPERTY(bool DeleteTempFiles READ getDeleteTempFiles WRITE setDeleteTempFiles)
 
 
     virtual void preflight();

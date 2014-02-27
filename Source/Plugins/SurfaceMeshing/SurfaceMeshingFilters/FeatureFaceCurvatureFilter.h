@@ -71,15 +71,15 @@ class FeatureFaceCurvatureFilter : public SurfaceMeshFilter
 
     /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
     DREAM3D_FILTER_PARAMETER(int, NRing)
-    Q_PROPERTY(int NRing READ getNRing WRITE setNRing NOTIFY parametersChanged)
+    Q_PROPERTY(int NRing READ getNRing WRITE setNRing)
     DREAM3D_FILTER_PARAMETER(bool, ComputePrincipalDirectionVectors)
-    Q_PROPERTY(bool ComputePrincipalDirectionVectors READ getComputePrincipalDirectionVectors WRITE setComputePrincipalDirectionVectors NOTIFY parametersChanged)
+    Q_PROPERTY(bool ComputePrincipalDirectionVectors READ getComputePrincipalDirectionVectors WRITE setComputePrincipalDirectionVectors)
     DREAM3D_FILTER_PARAMETER(bool, ComputeMeanCurvature)
-    Q_PROPERTY(bool ComputeMeanCurvature READ getComputeMeanCurvature WRITE setComputeMeanCurvature NOTIFY parametersChanged)
+    Q_PROPERTY(bool ComputeMeanCurvature READ getComputeMeanCurvature WRITE setComputeMeanCurvature)
     DREAM3D_FILTER_PARAMETER(bool, ComputeGaussianCurvature)
-    Q_PROPERTY(bool ComputeGaussianCurvature READ getComputeGaussianCurvature WRITE setComputeGaussianCurvature NOTIFY parametersChanged)
+    Q_PROPERTY(bool ComputeGaussianCurvature READ getComputeGaussianCurvature WRITE setComputeGaussianCurvature)
     DREAM3D_FILTER_PARAMETER(bool, UseNormalsForCurveFitting)
-    Q_PROPERTY(bool UseNormalsForCurveFitting READ getUseNormalsForCurveFitting WRITE setUseNormalsForCurveFitting NOTIFY parametersChanged)
+    Q_PROPERTY(bool UseNormalsForCurveFitting READ getUseNormalsForCurveFitting WRITE setUseNormalsForCurveFitting)
 
     /**
     * @brief This returns the group that the filter belonds to. You can select

@@ -67,11 +67,11 @@ class WriteIPFStandardTriangle : public AbstractFilter
 
     /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
     DREAM3D_FILTER_PARAMETER(QString, OutputFile)
-    Q_PROPERTY(QString OutputFile READ getOutputFile WRITE setOutputFile NOTIFY parametersChanged)
+    Q_PROPERTY(QString OutputFile READ getOutputFile WRITE setOutputFile)
     DREAM3D_FILTER_PARAMETER(int, ImageFormat)
-    Q_PROPERTY(int ImageFormat READ getImageFormat WRITE setImageFormat NOTIFY parametersChanged)
+    Q_PROPERTY(int ImageFormat READ getImageFormat WRITE setImageFormat)
     DREAM3D_FILTER_PARAMETER(int, ImageSize)
-    Q_PROPERTY(int ImageSize READ getImageSize WRITE setImageSize NOTIFY parametersChanged)
+    Q_PROPERTY(int ImageSize READ getImageSize WRITE setImageSize)
     DREAM3D_INSTANCE_PROPERTY(float, ColorCorrectionFactor)
 
 

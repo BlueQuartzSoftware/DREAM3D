@@ -69,9 +69,9 @@ class AlignSectionsFeatureCentroid : public AlignSections
     DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
 
     DREAM3D_FILTER_PARAMETER(int, ReferenceSlice)
-    Q_PROPERTY(int ReferenceSlice READ getReferenceSlice WRITE setReferenceSlice NOTIFY parametersChanged)
+    Q_PROPERTY(int ReferenceSlice READ getReferenceSlice WRITE setReferenceSlice)
     DREAM3D_FILTER_PARAMETER(bool, UseReferenceSlice)
-    Q_PROPERTY(bool UseReferenceSlice READ getUseReferenceSlice WRITE setUseReferenceSlice NOTIFY parametersChanged)
+    Q_PROPERTY(bool UseReferenceSlice READ getUseReferenceSlice WRITE setUseReferenceSlice)
 
 
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::ReconstructionFilters; }

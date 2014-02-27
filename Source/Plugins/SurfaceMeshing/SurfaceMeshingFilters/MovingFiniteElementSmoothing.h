@@ -70,15 +70,15 @@ class MovingFiniteElementSmoothing : public SurfaceMeshFilter
 
     /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
     DREAM3D_FILTER_PARAMETER(int, IterationSteps)
-    Q_PROPERTY(int IterationSteps READ getIterationSteps WRITE setIterationSteps NOTIFY parametersChanged)
+    Q_PROPERTY(int IterationSteps READ getIterationSteps WRITE setIterationSteps)
     DREAM3D_FILTER_PARAMETER(bool, NodeConstraints)
-    Q_PROPERTY(bool NodeConstraints READ getNodeConstraints WRITE setNodeConstraints NOTIFY parametersChanged)
+    Q_PROPERTY(bool NodeConstraints READ getNodeConstraints WRITE setNodeConstraints)
     DREAM3D_FILTER_PARAMETER(bool, ConstrainSurfaceNodes)
-    Q_PROPERTY(bool ConstrainSurfaceNodes READ getConstrainSurfaceNodes WRITE setConstrainSurfaceNodes NOTIFY parametersChanged)
+    Q_PROPERTY(bool ConstrainSurfaceNodes READ getConstrainSurfaceNodes WRITE setConstrainSurfaceNodes)
     DREAM3D_FILTER_PARAMETER(bool, ConstrainQuadPoints)
-    Q_PROPERTY(bool ConstrainQuadPoints READ getConstrainQuadPoints WRITE setConstrainQuadPoints NOTIFY parametersChanged)
+    Q_PROPERTY(bool ConstrainQuadPoints READ getConstrainQuadPoints WRITE setConstrainQuadPoints)
     DREAM3D_FILTER_PARAMETER(bool, SmoothTripleLines)
-    Q_PROPERTY(bool SmoothTripleLines READ getSmoothTripleLines WRITE setSmoothTripleLines NOTIFY parametersChanged)
+    Q_PROPERTY(bool SmoothTripleLines READ getSmoothTripleLines WRITE setSmoothTripleLines)
 
 
 

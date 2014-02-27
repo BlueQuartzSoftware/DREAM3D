@@ -66,7 +66,7 @@ class DREAM3DLib_EXPORT AbaqusSurfaceMeshWriter : public AbstractFilter
 
     /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
     DREAM3D_FILTER_PARAMETER(QString, OutputFile)
-    Q_PROPERTY(QString OutputFile READ getOutputFile WRITE setOutputFile NOTIFY parametersChanged)
+    Q_PROPERTY(QString OutputFile READ getOutputFile WRITE setOutputFile)
 
     /**
     * @brief This returns the group that the filter belonds to. You can select

@@ -59,11 +59,11 @@ class RotateSampleRefFrame : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
 
     DREAM3D_FILTER_PARAMETER(FloatVec3_t, RotationAxis)
-    Q_PROPERTY(FloatVec3_t RotationAxis READ getRotationAxis WRITE setRotationAxis NOTIFY parametersChanged)
+    Q_PROPERTY(FloatVec3_t RotationAxis READ getRotationAxis WRITE setRotationAxis)
     DREAM3D_FILTER_PARAMETER(float, RotationAngle)
-    Q_PROPERTY(float RotationAngle READ getRotationAngle WRITE setRotationAngle NOTIFY parametersChanged)
+    Q_PROPERTY(float RotationAngle READ getRotationAngle WRITE setRotationAngle)
     DREAM3D_INSTANCE_PROPERTY(bool, SliceBySlice)
-    Q_PROPERTY(bool SliceBySlice READ getSliceBySlice WRITE setSliceBySlice NOTIFY parametersChanged)
+    Q_PROPERTY(bool SliceBySlice READ getSliceBySlice WRITE setSliceBySlice)
 
     virtual const QString getGroupName()  { return DREAM3D::FilterGroups::SamplingFilters; }
     virtual const QString getSubGroupName()  { return DREAM3D::FilterSubGroups::RotationTransformationFilters; }

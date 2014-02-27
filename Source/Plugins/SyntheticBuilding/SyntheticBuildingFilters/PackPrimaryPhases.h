@@ -94,11 +94,11 @@ class PackPrimaryPhases : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(ErrorOutputFile)
     DREAM3D_INSTANCE_STRING_PROPERTY(VtkOutputFile)
     DREAM3D_FILTER_PARAMETER(QString, CsvOutputFile)
-    Q_PROPERTY(QString CsvOutputFile READ getCsvOutputFile WRITE setCsvOutputFile NOTIFY parametersChanged)
+    Q_PROPERTY(QString CsvOutputFile READ getCsvOutputFile WRITE setCsvOutputFile)
     DREAM3D_FILTER_PARAMETER(bool, PeriodicBoundaries)
-    Q_PROPERTY(bool PeriodicBoundaries READ getPeriodicBoundaries WRITE setPeriodicBoundaries NOTIFY parametersChanged)
+    Q_PROPERTY(bool PeriodicBoundaries READ getPeriodicBoundaries WRITE setPeriodicBoundaries)
     DREAM3D_FILTER_PARAMETER(bool, WriteGoalAttributes)
-    Q_PROPERTY(bool WriteGoalAttributes READ getWriteGoalAttributes WRITE setWriteGoalAttributes NOTIFY parametersChanged)
+    Q_PROPERTY(bool WriteGoalAttributes READ getWriteGoalAttributes WRITE setWriteGoalAttributes)
 
 
     virtual void setupFilterParameters();

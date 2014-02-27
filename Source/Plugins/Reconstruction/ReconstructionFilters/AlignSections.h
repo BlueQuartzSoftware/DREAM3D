@@ -70,9 +70,9 @@ class AlignSections : public AbstractFilter
 
 
     DREAM3D_INSTANCE_PROPERTY(bool, WriteAlignmentShifts)
-    Q_PROPERTY(bool WriteAlignmentShifts READ getWriteAlignmentShifts WRITE setWriteAlignmentShifts NOTIFY parametersChanged)
+    Q_PROPERTY(bool WriteAlignmentShifts READ getWriteAlignmentShifts WRITE setWriteAlignmentShifts)
     DREAM3D_INSTANCE_STRING_PROPERTY(AlignmentShiftFileName)
-    Q_PROPERTY(QString AlignmentShiftFileName READ getAlignmentShiftFileName WRITE setAlignmentShiftFileName NOTIFY parametersChanged)
+    Q_PROPERTY(QString AlignmentShiftFileName READ getAlignmentShiftFileName WRITE setAlignmentShiftFileName)
 
 
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::ReconstructionFilters; }

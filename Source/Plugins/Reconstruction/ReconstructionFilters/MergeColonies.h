@@ -76,12 +76,12 @@ class MergeColonies : public GroupFeatures
     virtual const QString getHumanLabel() { return "Reconstruct Prior Beta Features"; }
 
     DREAM3D_FILTER_PARAMETER(float, AxisTolerance)
-    Q_PROPERTY(float AxisTolerance READ getAxisTolerance WRITE setAxisTolerance NOTIFY parametersChanged)
+    Q_PROPERTY(float AxisTolerance READ getAxisTolerance WRITE setAxisTolerance)
     DREAM3D_FILTER_PARAMETER(float, AngleTolerance)
-    Q_PROPERTY(float AngleTolerance READ getAngleTolerance WRITE setAngleTolerance NOTIFY parametersChanged)
+    Q_PROPERTY(float AngleTolerance READ getAngleTolerance WRITE setAngleTolerance)
     DREAM3D_INSTANCE_PROPERTY(bool, RandomizeParentIds)
     DREAM3D_FILTER_PARAMETER(bool, IdentifyGlobAlpha)
-    Q_PROPERTY(bool IdentifyGlobAlpha READ getIdentifyGlobAlpha WRITE setIdentifyGlobAlpha NOTIFY parametersChanged)
+    Q_PROPERTY(bool IdentifyGlobAlpha READ getIdentifyGlobAlpha WRITE setIdentifyGlobAlpha)
 
     virtual void setupFilterParameters();
     virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);

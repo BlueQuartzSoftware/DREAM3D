@@ -61,7 +61,7 @@ class FlattenImage : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
 
     DREAM3D_FILTER_PARAMETER(quint32, FlattenMethod)
-    Q_PROPERTY(quint32 FlattenMethod READ getFlattenMethod WRITE setFlattenMethod NOTIFY parametersChanged)
+    Q_PROPERTY(quint32 FlattenMethod READ getFlattenMethod WRITE setFlattenMethod)
 
     virtual void preflight();
 

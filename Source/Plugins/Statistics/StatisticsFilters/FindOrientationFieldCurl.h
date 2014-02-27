@@ -73,7 +73,7 @@ class FindOrientationFieldCurl : public AbstractFilter
     virtual const QString getHumanLabel() { return "Find Curl of Orientation Field"; }
 
     DREAM3D_FILTER_PARAMETER(IntVec3_t, CurlSize)
-    Q_PROPERTY(IntVec3_t CurlSize READ getCurlSize WRITE setCurlSize NOTIFY parametersChanged)
+    Q_PROPERTY(IntVec3_t CurlSize READ getCurlSize WRITE setCurlSize)
 
     virtual void setupFilterParameters();
     /**

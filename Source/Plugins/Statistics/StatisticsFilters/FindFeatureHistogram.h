@@ -71,12 +71,12 @@ class FindFeatureHistogram : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(CellEnsembleAttributeMatrixName)
 
     DREAM3D_FILTER_PARAMETER(QString, SelectedFeatureArrayName)
-    Q_PROPERTY(QString SelectedFeatureArrayName READ getSelectedFeatureArrayName WRITE setSelectedFeatureArrayName NOTIFY parametersChanged)
+    Q_PROPERTY(QString SelectedFeatureArrayName READ getSelectedFeatureArrayName WRITE setSelectedFeatureArrayName)
 
     DREAM3D_FILTER_PARAMETER(int, NumBins)
-    Q_PROPERTY(int NumBins READ getNumBins WRITE setNumBins NOTIFY parametersChanged)
+    Q_PROPERTY(int NumBins READ getNumBins WRITE setNumBins)
     DREAM3D_FILTER_PARAMETER(bool, RemoveBiasedFeatures)
-    Q_PROPERTY(bool RemoveBiasedFeatures READ getRemoveBiasedFeatures WRITE setRemoveBiasedFeatures NOTIFY parametersChanged)
+    Q_PROPERTY(bool RemoveBiasedFeatures READ getRemoveBiasedFeatures WRITE setRemoveBiasedFeatures)
 
     /**
     * @brief This returns the group that the filter belonds to. You can select

@@ -73,16 +73,16 @@ class VisualizeGBCDGMT : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(CrystalStructuresArrayName)
 
     DREAM3D_FILTER_PARAMETER(QString, GMTOutputFile)
-    Q_PROPERTY(QString GMTOutputFile READ getGMTOutputFile WRITE setGMTOutputFile NOTIFY parametersChanged)
+    Q_PROPERTY(QString GMTOutputFile READ getGMTOutputFile WRITE setGMTOutputFile)
 
     DREAM3D_FILTER_PARAMETER(float, MisAngle)
-    Q_PROPERTY(float MisAngle READ getMisAngle WRITE setMisAngle NOTIFY parametersChanged)
+    Q_PROPERTY(float MisAngle READ getMisAngle WRITE setMisAngle)
 
     DREAM3D_FILTER_PARAMETER(FloatVec3_t, MisAxis)
-    Q_PROPERTY(FloatVec3_t MisAxis READ getMisAxis WRITE setMisAxis NOTIFY parametersChanged)
+    Q_PROPERTY(FloatVec3_t MisAxis READ getMisAxis WRITE setMisAxis)
 
     DREAM3D_FILTER_PARAMETER(unsigned int, CrystalStructure)
-    Q_PROPERTY(unsigned int CrystalStructure READ getCrystalStructure WRITE setCrystalStructure NOTIFY parametersChanged)
+    Q_PROPERTY(unsigned int CrystalStructure READ getCrystalStructure WRITE setCrystalStructure)
 
     // Local Instance variables
     DREAM3D_INSTANCE_PROPERTY(QVector<AxisAngleInput_t>, MisorientationRotations)

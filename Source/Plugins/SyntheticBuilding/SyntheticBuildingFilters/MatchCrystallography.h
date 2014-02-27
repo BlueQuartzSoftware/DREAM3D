@@ -86,7 +86,7 @@ class MatchCrystallography : public AbstractFilter
     typedef boost::shared_array<int> SharedIntArray;
 
     DREAM3D_FILTER_PARAMETER(int, MaxIterations)
-    Q_PROPERTY(int MaxIterations READ getMaxIterations WRITE setMaxIterations NOTIFY parametersChanged)
+    Q_PROPERTY(int MaxIterations READ getMaxIterations WRITE setMaxIterations)
 
     virtual const QString getGroupName() {return DREAM3D::FilterGroups::SyntheticBuildingFilters;}
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::CrystallographyFilters; }

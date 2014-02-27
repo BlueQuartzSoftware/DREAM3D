@@ -67,7 +67,7 @@ class DREAM3DLib_EXPORT CopyFeatureArrayToCellArray : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(CellFeatureAttributeMatrixName)
 
     DREAM3D_FILTER_PARAMETER(QString, SelectedFeatureArrayName)
-    Q_PROPERTY(QString SelectedFeatureArrayName READ getSelectedFeatureArrayName WRITE setSelectedFeatureArrayName NOTIFY parametersChanged)
+    Q_PROPERTY(QString SelectedFeatureArrayName READ getSelectedFeatureArrayName WRITE setSelectedFeatureArrayName)
 
     /**
     * @brief This returns the group that the filter belonds to. You can select

@@ -64,11 +64,11 @@ class DREAM3DLib_EXPORT DataContainerReader : public AbstractFilter
     virtual ~DataContainerReader();
 
     DREAM3D_FILTER_PARAMETER(QString, InputFile)
-    Q_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile NOTIFY parametersChanged)
+    Q_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile)
     DREAM3D_FILTER_PARAMETER(bool, OverwriteExistingDataContainers)
-    Q_PROPERTY(bool OverwriteExistingDataContainers READ getOverwriteExistingDataContainers WRITE setOverwriteExistingDataContainers NOTIFY parametersChanged)
+    Q_PROPERTY(bool OverwriteExistingDataContainers READ getOverwriteExistingDataContainers WRITE setOverwriteExistingDataContainers)
     DREAM3D_FILTER_PARAMETER(DataContainerArrayProxy, DataContainerArrayProxy)
-    Q_PROPERTY(DataContainerArrayProxy DataContainerArrayProxy READ getDataContainerArrayProxy WRITE setDataContainerArrayProxy NOTIFY parametersChanged)
+    Q_PROPERTY(DataContainerArrayProxy DataContainerArrayProxy READ getDataContainerArrayProxy WRITE setDataContainerArrayProxy)
 
 
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::IOFilters; }

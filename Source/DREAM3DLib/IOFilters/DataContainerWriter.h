@@ -67,10 +67,10 @@ class DREAM3DLib_EXPORT DataContainerWriter : public AbstractFilter
     virtual ~DataContainerWriter();
 
     DREAM3D_FILTER_PARAMETER(QString, OutputFile)
-    Q_PROPERTY(QString OutputFile READ getOutputFile WRITE setOutputFile NOTIFY parametersChanged)
+    Q_PROPERTY(QString OutputFile READ getOutputFile WRITE setOutputFile)
     DREAM3D_INSTANCE_PROPERTY(bool, WritePipeline)
     DREAM3D_FILTER_PARAMETER(bool, WriteXdmfFile)
-    Q_PROPERTY(bool WriteXdmfFile READ getWriteXdmfFile WRITE setWriteXdmfFile NOTIFY parametersChanged)
+    Q_PROPERTY(bool WriteXdmfFile READ getWriteXdmfFile WRITE setWriteXdmfFile)
 
 
     virtual void preflight();
