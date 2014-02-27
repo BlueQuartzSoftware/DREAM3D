@@ -38,7 +38,7 @@
 #include <QtCore/QMetaProperty>
 
 
-#include "DREAM3DWidgetsLib/moc_StringWidget.cpp"
+#include "FilterParameterWidgetsDialogs.h"
 
 
 // -----------------------------------------------------------------------------

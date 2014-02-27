@@ -42,7 +42,7 @@
 
 #include "QtSupport/QFileCompleter.h"
 
-#include "DREAM3DWidgetsLib/moc_OutputPathWidget.cpp"
+#include "FilterParameterWidgetsDialogs.h"
 
 // Initialize private static member variable
 QString OutputPathWidget::m_OpenDialogLastDirectory = "";

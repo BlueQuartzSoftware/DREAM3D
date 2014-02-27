@@ -30,92 +30,22 @@
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  *  This code was written under United States Air Force Contract number
- *                           FA8650-10-D-5210
+ *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#include "DoubleWidget.h"
-
-#include <QtCore/QMetaProperty>
-
-
 #include "FilterParameterWidgetsDialogs.h"
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-DoubleWidget::DoubleWidget(FilterParameter* parameter, AbstractFilter* filter, QWidget* parent) :
-  QWidget(parent),
-  m_Filter(filter),
-  m_FilterParameter(parameter)
-{
-  setupUi(this);
-  setupGui();
-}
+#include <QtCore/QObject>
+#include <QtCore/QString>
+#include <QtGui/QMessageBox>
+
+#include "DREAM3DLib/Common/AbstractFilter.h"
+#include "DREAM3DLib/FilterParameters/FilterParameter.h"
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-DoubleWidget::~DoubleWidget()
-{}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void DoubleWidget::setupGui()
-{
-  // Catch when the filter is about to execute the preflight
-  connect(m_Filter, SIGNAL(preflightAboutToExecute()),
-          this, SLOT(beforePreflight()));
-
-  // Catch when the filter is finished running the preflight
-  connect(m_Filter, SIGNAL(preflightExecuted()),
-          this, SLOT(afterPreflight()));
-
-  // Catch when the filter wants its values updated
-  connect(m_Filter, SIGNAL(updateFilterParameters(AbstractFilter*)),
-          this, SLOT(filterNeedsInputParameters(AbstractFilter*)));
-
-  connect(value, SIGNAL(textChanged(const QString&)),
-          this, SLOT(widgetChanged(const QString&)));
-
-  QDoubleValidator* xVal = new QDoubleValidator(value);
-  value->setValidator(xVal);
-
-  if (m_FilterParameter != NULL)
-  {
-    DoubleWidgetLabel->setText(m_FilterParameter->getHumanLabel() );
-    QString str = m_Filter->property(PROPERTY_NAME_AS_CHAR).toString();
-    value->setText(str);
-  }
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void DoubleWidget::widgetChanged(const QString &text)
-{
-  emit parametersChanged();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void DoubleWidget::filterNeedsInputParameters(AbstractFilter* filter)
-{
-  bool ok = false;
-  double i = value->text().toDouble(&ok);
-  QVariant v(i);
-  ok = filter->setProperty(PROPERTY_NAME_AS_CHAR, v);
-  if(false == ok)
-  {
-    FilterParameterWidgetsDialogs::ShowCouldNotSetFilterParameter(m_Filter, m_FilterParameter);
-  }
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void DoubleWidget::beforePreflight()
+FilterParameterWidgetsDialogs::FilterParameterWidgetsDialogs()
 {
 
 }
@@ -123,7 +53,18 @@ void DoubleWidget::beforePreflight()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DoubleWidget::afterPreflight()
+FilterParameterWidgetsDialogs::~FilterParameterWidgetsDialogs()
 {
 
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void FilterParameterWidgetsDialogs::ShowCouldNotSetFilterParameter(AbstractFilter* filter, FilterParameter* filterParameter)
+{
+  QString ss = QString("Error occurred transferring the Input Parameter '%1' in Filter '%2' to the filter instance. The pipeline may run but the underlying filter will NOT be using the values from the GUI."
+    " Please report this issue to the developers of this filter.").arg(filterParameter->getPropertyName()).arg(filter->getHumanLabel());
+  QMessageBox::StandardButton reply;
+  reply = QMessageBox::critical(NULL, QString("Filter Parameter Error"), ss, QMessageBox::Ok);
 }

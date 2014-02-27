@@ -37,9 +37,7 @@
 
 #include <QtCore/QMetaProperty>
 
-
-#include "DREAM3DWidgetsLib/moc_IntVec3Widget.cpp"
-
+#include "FilterParameterWidgetsDialogs.h"
 
 // -----------------------------------------------------------------------------
 //
@@ -124,9 +122,7 @@ void IntVec3Widget::filterNeedsInputParameters(AbstractFilter* filter)
   ok = filter->setProperty(PROPERTY_NAME_AS_CHAR, v);
   if(false == ok)
   {
-    QString ss = QObject::tr("Error occurred setting Filter Parameter %1").arg(m_FilterParameter->getPropertyName());
-    emit errorSettingFilterParameter(ss);
-    qDebug() << ss;
+    FilterParameterWidgetsDialogs::ShowCouldNotSetFilterParameter(m_Filter, m_FilterParameter);
   }
 }
 
