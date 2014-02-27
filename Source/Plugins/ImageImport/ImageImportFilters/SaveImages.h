@@ -68,7 +68,11 @@ class SaveImages : public AbstractFilter
     Q_PROPERTY(QString ImagePrefix READ getImagePrefix WRITE setImagePrefix NOTIFY parametersChanged)
     DREAM3D_FILTER_PARAMETER(QString, OutputPath)
     Q_PROPERTY(QString OutputPath READ getOutputPath WRITE setOutputPath NOTIFY parametersChanged)
-    DREAM3D_INSTANCE_PROPERTY(int, ImageFormat)
+    DREAM3D_FILTER_PARAMETER(int, ImageFormat)
+    Q_PROPERTY(int ImageFormat READ getImageFormat WRITE setImageFormat NOTIFY parametersChanged)
+
+    DREAM3D_FILTER_PARAMETER(QString, CellEulerAnglesArrayName)
+    Q_PROPERTY(QString ColorsArrayName READ getColorsArrayName WRITE setColorsArrayName NOTIFY parametersChanged)
 
     enum ImageFormatType
     {

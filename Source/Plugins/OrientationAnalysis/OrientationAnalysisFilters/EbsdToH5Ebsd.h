@@ -65,6 +65,7 @@ class EbsdToH5Ebsd : public AbstractFilter
     virtual ~EbsdToH5Ebsd();
 
     DREAM3D_INSTANCE_STRING_PROPERTY(OutputFile)
+
     DREAM3D_INSTANCE_PROPERTY(int64_t, ZStartIndex)
     DREAM3D_INSTANCE_PROPERTY(int64_t, ZEndIndex)
     DREAM3D_INSTANCE_PROPERTY(float, ZResolution)
@@ -103,18 +104,6 @@ class EbsdToH5Ebsd : public AbstractFilter
     */
     virtual void execute();
 
-    /**
-     * @brief generateFileList This method will generate a file list in the correct order of the files that should
-     * be imported into an h5ebsd file
-     * @param start Z Slice Start
-     * @param end S Slice End
-     * @param hasMissingFiles Are any files missing
-     * @param stackLowToHigh Is the Slice order low to high
-     * @param filename Example File Name
-     * @return
-     */
-    QVector<QString> generateFileList(int start, int end, bool &hasMissingFiles,
-                                                      bool stackLowToHigh);
 
   signals:
     void updateFilterParameters(AbstractFilter* filter);

@@ -531,7 +531,7 @@ QString AttributeMatrix::writeXdmfAttributeDataHelper(int numComp, const QString
   QTextStream out(&buf);
 
   QString tupleStr;
-  for(int i = 0; i < m_TupleDims.size(); i++)
+  for(int i = m_TupleDims.size() - 1; i >= 0 ; i--)
   {
     tupleStr = tupleStr + QString::number(m_TupleDims[i]) + QString(" ");
   }

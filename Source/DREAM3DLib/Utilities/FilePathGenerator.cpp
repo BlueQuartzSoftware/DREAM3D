@@ -33,61 +33,54 @@
  *                           FA8650-10-D-5210
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef _ImageImportPlugin_H_
-#define _ImageImportPlugin_H_
+ #include "FilePathGenerator.h"
 
-#include <QtCore/QObject>
-#include <QtCore/QSettings>
-#include "DREAM3DLib/Plugin/DREAM3DPluginInterface.h"
+#include <QtCore/QDir>
 
 
-/**
- * @class ImageImportPlugin ImageImportPlugin.h SurfaceMeshing/ImageImportPlugin.h
- * @brief
- * @author Michael A. Jackson for BlueQuartz Software
- * @date May 10, 2012
- * @version 1.0
- */
-class ImageImportPlugin : public QObject, public DREAM3DPluginInterface
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+FilePathGenerator::FilePathGenerator(){
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+FilePathGenerator::~FilePathGenerator()
 {
-    Q_OBJECT
-    Q_INTERFACES(DREAM3DPluginInterface)
 
-  public:
-    ImageImportPlugin();
-    virtual ~ImageImportPlugin();
-    /**
-     * @brief Returns the name of the plugin
-     */
-    virtual QString getPluginName();
+}
 
-    /**
-     * @brief Register all the filters with the FilterWidgetFactory
-     */
-    virtual void registerFilterWidgets();
-
-    /**
-     * @brief registerFilters
-     */
-    virtual void registerFilters(FilterManager* fm);
-
-    /**
-     * @brief Writes the settings in the input gui to the Application's preference file
-     * @param prefs A valid QSettings pointer.
-     */
-    virtual void writeSettings(QSettings& prefs);
-
-    /**
-     * @brief Reads the settings from the Application's preference file and sets
-     * the input GUI widgets accordingly.
-     * @param prefs
-     */
-    virtual void readSettings(QSettings& prefs);
-
-  private:
-    ImageImportPlugin(const ImageImportPlugin&); // Copy Constructor Not Implemented
-    void operator=(const ImageImportPlugin&); // Operator '=' Not Implemented
-};
-
-#endif /* _ImageImportPlugin_H_ */
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QVector<QString> FilePathGenerator::GenerateFileList(int start, int end, bool &hasMissingFiles,
+                                                      bool stackLowToHigh,const QString& inputPath,
+                                                      const QString& filePrefix,
+                                                      const QString& fileSuffix, const QString& fileExtension,
+                                                      int paddingDigits)
+{
+  int index = 0;
+  QVector<QString> fileList;
+  QString filename;
+  for (int i = 0; i < (end-start)+1; ++i)
+  {
+    if (stackLowToHigh)
+    {
+      index = start + i;
+    }
+    else
+    {
+      index = end - i;
+    }
+    filename = QString("%1%2%3.%4").arg(filePrefix)
+        .arg(QString::number(index), paddingDigits, '0')
+        .arg(fileSuffix).arg(fileExtension);
+    QString filePath = inputPath + QDir::separator() + filename;
+    filePath = QDir::toNativeSeparators(filePath);
+    fileList.push_back(filePath);
+  }
+  return fileList;
+}
 

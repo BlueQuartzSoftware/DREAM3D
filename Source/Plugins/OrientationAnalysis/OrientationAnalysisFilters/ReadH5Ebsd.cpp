@@ -124,7 +124,7 @@ void ReadH5Ebsd::setupFilterParameters()
   {
     FilterParameter::Pointer parameter = FilterParameter::New();
     parameter->setHumanLabel("Read H5Ebsd File");
-    parameter->setPropertyName("ReadH5Ebsd");
+    parameter->setPropertyName("SelectedArrayNames");
     parameter->setWidgetType(FilterParameterWidgetType::ReadH5EbsdWidget);
     parameter->setFileExtension("*.h5ebsd");
     parameter->setValueType("ReadH5Ebsd");
@@ -376,7 +376,7 @@ void ReadH5Ebsd::dataCheck()
   int64_t dims[3];
   float res[3];
   int err = volumeInfoReader->getDimsAndResolution(dims[0], dims[1], dims[2], res[0], res[1], res[2]);
-  // Need to 
+  // Need to
   if(err < 0)
   {
     QString ss = QObject::tr("%1:  File counld not be read properly").arg(getHumanLabel());

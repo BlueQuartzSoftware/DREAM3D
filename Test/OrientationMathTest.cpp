@@ -37,24 +37,57 @@
 
 
 
+#include "DREAM3DLib/Math/QuaternionMath.hpp"
+#include "DREAM3DLib/Math/OrientationMath.h"
 
-#include "DREAM3DLib/OrientationOps/OrientationOps.h"
-
-#include "DREAM3DLib/OrientationOps/CubicOps.h"
-#include "DREAM3DLib/OrientationOps/HexagonalOps.h"
-#include "DREAM3DLib/OrientationOps/OrthoRhombicOps.h"
-#include "DREAM3DLib/OrientationOps/TrigonalOps.h"
 
 #include "UnitTestSupport.hpp"
 #include "TestFileLocations.h"
 
+/*
+ * IDL> print, eulers[*,0]
+     2.72167     0.148401     0.148886
 
+IDL> print, eulerang2quat(eulers[*,0])
+    0.134731   -0.0208004   -0.0711543    -0.988105
+
+IDL> print, makeeulerrot(eulers[*,0])
+   -0.962830     0.269217    0.0219326
+   -0.263297    -0.953569     0.146221
+   0.0602794     0.135011     0.989009
+
+IDL> print, makeeulerrot(eulers[*,0]) ## [[1.,2.,3.]]
+   -0.358598
+    -1.73177
+     3.29733
+
+IDL> print, quat_vector(eulerang2quat(eulers[*,0]), [1,2,3.])
+   -0.358598     -1.73177      3.29733
+   */
+
+void Print(std::ostream& o, QuatF &q)
+{
+  o << "{" << "<" << q.w << "> (" << q.x << ", " << q.y << ", " << q.z << ") }";
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 void TestQuatMath()
 {
+
+  float euler[3] = {  2.72167, 0.148401, 0.148886 };
+  QuatF q;
+  OrientationMath::EulertoQuat(q, euler);
+  Print(std::cout, q);
+  std::cout << "" << std::endl;
+
+  float g[3][3];
+  OrientationMath::EulertoMat(euler[0], euler[1], euler[2], g);
+  std::cout << g[0][0] <<  " " << g[0][1] << " " << g[0][2] << std::endl;
+  std::cout << g[1][0] <<  " " << g[1][1] << " " << g[1][2] << std::endl;
+  std::cout << g[2][0] <<  " " << g[2][1] << " " << g[2][2] << std::endl;
+
 
 }
 
@@ -70,7 +103,7 @@ int main(int argc, char** argv)
 
   DREAM3D_REGISTER_TEST( TestQuatMath() )
 
-  PRINT_TEST_SUMMARY();
+      PRINT_TEST_SUMMARY();
   return err;
 }
 

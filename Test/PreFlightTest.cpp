@@ -35,6 +35,8 @@
 #include <string>
 #include <vector>
 
+#include <QtCore/QtDebug>
+#include <QtCore/QCoreApplication>
 #include <QtCore/QObject>
 #include <QtCore/QDir>
 #include <QtCore/QFile>
@@ -131,9 +133,43 @@ void RemoveTestFiles()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void verifySignals(FilterManager::Pointer fm)
+void verifyFilterParameters()
 {
+  FilterManager::Pointer fm = FilterManager::Instance();
+  //QByteArray normType = ("updateFilterParameters(AbstractFilter*)");
+  FilterManager::Collection factories = fm->getFactories();
+  QMapIterator<QString, IFilterFactory::Pointer> iter(factories);
+  while(iter.hasNext())
+  {
+    iter.next();
+    IFilterFactory::Pointer factory = iter.value();
+    AbstractFilter::Pointer filter = factory->create();
+    const QMetaObject* meta = filter->metaObject();
+   // int count = meta->methodCount();
+   // qDebug() << filter->getNameOfClass();
+    QVector<FilterParameter::Pointer> options = filter->getFilterParameters();
+    for (QVector<FilterParameter::Pointer>::iterator iter = options.begin(); iter != options.end(); ++iter )
+    {
 
+      FilterParameter* option = (*iter).get();
+      QByteArray normType = QString("%1").arg( option->getPropertyName()).toLatin1();
+     // qDebug() << "   " <<  option->getPropertyName();
+      int index = meta->indexOfProperty(normType);
+      if (index < 0)
+      {
+        qDebug() << "Filter: " << filter->getNameOfClass() << "  Missing Property: " << option->getPropertyName();
+      }
+    }
+  }
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void verifySignals()
+{
+  FilterManager::Pointer fm = FilterManager::Instance();
   QByteArray normType = ("updateFilterParameters(AbstractFilter*)");
   FilterManager::Collection factories = fm->getFactories();
   QMapIterator<QString, IFilterFactory::Pointer> iter(factories);
@@ -156,6 +192,8 @@ void verifySignals(FilterManager::Pointer fm)
   }
 }
 
+
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -168,7 +206,6 @@ void verifyPreflightEmitsProperly()
   while(iter.hasNext())
   {
     PreflightVerify p(NULL);
-    qDebug() << "--------------------------";
     iter.next();
     IFilterFactory::Pointer factory = iter.value();
     AbstractFilter::Pointer filter = factory->create();
@@ -227,6 +264,14 @@ void TestPreflight()
 // -----------------------------------------------------------------------------
 int main(int argc, char** argv)
 {
+
+  // Instantiate the QCoreApplication that we need to get the current path and load plugins.
+  QCoreApplication app(argc, argv);
+  QCoreApplication::setOrganizationName("BlueQuartz Software");
+  QCoreApplication::setOrganizationDomain("bluequartz.net");
+  QCoreApplication::setApplicationName("PreflightTest");
+
+
   // Load all the plugins and
   // Register all the filters including trying to load those from Plugins
   FilterManager::Pointer fm = FilterManager::Instance();
@@ -236,10 +281,14 @@ int main(int argc, char** argv)
   // into their own plugin and load the plugins from a command line.
   fm->RegisterKnownFilters(fm.get());
 
-  int err = EXIT_SUCCESS;
-  DREAM3D_REGISTER_TEST( TestPreflight() )
 
-  verifyPreflightEmitsProperly();
+  //// These functions are just to verify that the filters have certain signals and properties available.
+  //  verifyPreflightEmitsProperly();
+  //  verifySignals();
+  verifyFilterParameters();
+
+  int err = EXIT_SUCCESS;
+  //  DREAM3D_REGISTER_TEST( TestPreflight() )
 
   PRINT_TEST_SUMMARY();
   return err;

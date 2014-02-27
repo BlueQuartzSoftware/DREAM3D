@@ -68,7 +68,9 @@ class DREAM3DLib_EXPORT ConvertData : public AbstractFilter
     typedef struct { int x; int y; int z; } Dimensions_t;
 
     /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
-    DREAM3D_INSTANCE_PROPERTY(int, ScalarType)
+    DREAM3D_FILTER_PARAMETER(int, ScalarType)
+    Q_PROPERTY(int ScalarType READ getScalarType WRITE setScalarType NOTIFY parametersChanged)
+
     DREAM3D_FILTER_PARAMETER(QString, OutputArrayName)
     Q_PROPERTY(QString OutputArrayName READ getOutputArrayName WRITE setOutputArrayName NOTIFY parametersChanged)
     DREAM3D_FILTER_PARAMETER(QString, SelectedCellArrayName)

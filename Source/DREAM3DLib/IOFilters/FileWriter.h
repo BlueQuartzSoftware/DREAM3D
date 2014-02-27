@@ -55,9 +55,16 @@ class DREAM3DLib_EXPORT FileWriter : public AbstractFilter
 
     DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
 
-    DREAM3D_INSTANCE_STRING_PROPERTY(OutputFile)
+    DREAM3D_FILTER_PARAMETER(QString, OutputFile)
+    Q_PROPERTY(QString OutputFile READ getOutputFile WRITE setOutputFile NOTIFY parametersChanged)
 
     virtual void execute();
+
+  signals:
+    void updateFilterParameters(AbstractFilter* filter);
+    void parametersChanged();
+    void preflightAboutToExecute();
+    void preflightExecuted();
 
   protected:
     FileWriter();
