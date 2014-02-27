@@ -53,13 +53,27 @@ class DREAM3DWidgetsLib_EXPORT FilterLibraryDockWidget : public QDockWidget, pri
 
     Q_OBJECT
   public:
+    /**
+     * @brief FilterLibraryDockWidget
+     * @param parent
+     */
     FilterLibraryDockWidget(QWidget* parent = NULL);
     virtual ~FilterLibraryDockWidget();
 
+    /**
+     * @brief setupGui
+     */
     virtual void setupGui();
 
+    /**
+     * @brief connectFilterList
+     * @param filterListWidget
+     */
     void connectFilterList(FilterListDockWidget *filterListWidget);
 
+    /**
+     * @brief refreshFilterGroups
+     */
     void refreshFilterGroups();
 
   protected:

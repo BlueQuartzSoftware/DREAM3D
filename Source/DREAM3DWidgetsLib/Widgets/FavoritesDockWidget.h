@@ -42,7 +42,7 @@
 #include <QtGui/QTreeWidgetItem>
 
 
-#include "DREAM3DLib/Common/FilterManager.h"
+#include "DREAM3DLib/Common/Constants.h"
 
 #include "DREAM3DWidgetsLib/DREAM3DWidgetsLib.h"
 
@@ -62,16 +62,29 @@ class DREAM3DWidgetsLib_EXPORT FavoritesDockWidget : public QDockWidget, private
 
     Q_OBJECT
   public:
+    /**
+     * @brief FavoritesDockWidget
+     * @param parent
+     */
     FavoritesDockWidget(QWidget* parent = NULL);
     virtual ~FavoritesDockWidget();
 
+    /**
+     * @brief setupGui
+     */
     virtual void setupGui();
 
+    /**
+     * @brief connectFilterList
+     * @param filterListWidget
+     */
     void connectFilterList(FilterListDockWidget *filterListWidget);
 
+    /**
+     * @brief getFilterLibraryTreeWidget
+     * @return
+     */
     FilterLibraryTreeWidget* getFilterLibraryTreeWidget();
-
-    void setupContextMenus(QMenu* menu);
 
 public slots:
     //// Slots to catch signals from main menu or context menu
@@ -96,7 +109,7 @@ public slots:
     bool hasIllegalFavoriteName(QString favoritePath, QString newFavoriteTitle, QTreeWidgetItem* item);
     bool hasDuplicateFavorites(QList<QTreeWidgetItem*> favoritesList, QString favoritePath, QString newFavoriteTitle, QTreeWidgetItem* item);
 
-    void addFiltersRecursively(QDir currentDir, QTreeWidgetItem* currentDirItem, QString iconFileName,
+    void addPipelinesRecursively(QDir currentDir, QTreeWidgetItem* currentDirItem, QString iconFileName,
                                bool allowEditing, QString fileExtension, FilterLibraryTreeWidget::ItemType itemType);
 
 
@@ -128,6 +141,10 @@ public slots:
      */
     void pipelineFileActivated(const QString &filePath, QSettings::Format, bool append);
 
+    /**
+     * @brief filterListGenerated
+     * @param filterList
+     */
     void filterListGenerated(const QStringList& filterList);
 
   private:

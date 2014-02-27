@@ -37,62 +37,91 @@
 #define _PrebuiltPipelinesDockWidget_H_
 
 #include <QtCore/QDir>
+#include <QtCore/QSettings>
+
 #include <QtGui/QDockWidget>
 
-
-
-#include "DREAM3DLib/Common/FilterManager.h"
+#include "DREAM3DLib/Common/Constants.h"
 
 #include "DREAM3DWidgetsLib/DREAM3DWidgetsLib.h"
 
 #include "ui_PrebuiltPipelinesDockWidget.h"
 
 
-class QTreeWidget;
+class QListWidget;
 class QTreeWidgetItem;
 class FilterListDockWidget;
+class FilterLibraryTreeWidget;
+class QSettings;
 
+
+/**
+ * @brief The PrebuiltPipelinesDockWidget class
+ */
 class DREAM3DWidgetsLib_EXPORT  PrebuiltPipelinesDockWidget : public QDockWidget, private Ui::PrebuiltPipelinesDockWidget
 {
 
-    enum ItemType
-    {
-      Default_Item_Type = 0,
-      Prebuilt_Item_Type = 2,
-      Prebuilt_Category_Item_Type = 4
-    };
-
     Q_OBJECT
-public:
+
+  public:
+    /**
+     * @brief PrebuiltPipelinesDockWidget
+     * @param parent
+     */
     PrebuiltPipelinesDockWidget(QWidget* parent = NULL);
     virtual ~PrebuiltPipelinesDockWidget();
 
+    /**
+     * @brief setupGui
+     */
     virtual void setupGui();
 
+    /**
+     * @brief connectFilterList
+     * @param filterListWidget
+     */
     void connectFilterList(FilterListDockWidget *filterListWidget);
 
-protected:
+    /**
+     * @brief getFilterLibraryTreeWidget
+     * @return
+     */
+    FilterLibraryTreeWidget* getFilterLibraryTreeWidget();
+
+
+  public slots:
+    void actionAppendPipeline_triggered();
+    void actionShowInFileSystem_triggered();
+
+
+  protected:
     virtual QDir findPipelinesDirectory();
     virtual void readPipelines();
-    virtual void addFiltersRecursively(QDir currentDir, QTreeWidgetItem* currentDirItem);
+    void addPipelinesRecursively(QDir currentDir, QTreeWidgetItem* currentDirItem, QString iconFileName,
+                                 bool allowEditing, QString fileExtension, FilterLibraryTreeWidget::ItemType itemType);
     virtual QStringList generateFilterListFromPipelineFile(QString path);
 
 
-protected slots:
+  protected slots:
     void on_filterLibraryTree_itemClicked( QTreeWidgetItem* item, int column );
-    void on_filterLibraryTree_itemChanged( QTreeWidgetItem* item, int column );
-    void on_filterLibraryTree_currentItemChanged(QTreeWidgetItem* current, QTreeWidgetItem* previous );
     void on_filterLibraryTree_itemDoubleClicked( QTreeWidgetItem* item, int column );
 
-signals:
+  signals:
 
-    void filterItemDoubleClicked(const QString& filterName);
-    void pipelineFileActivated(const QString& filePath);
+    /**
+     * @brief The signal is emitted when the user double clicks on a pipeline file
+     * @param filePath The absolute path to the pipeline file
+     * @param append Should the pipeline be appended to the current pipeline
+     */
+    void pipelineFileActivated(const QString &filePath, QSettings::Format, bool append);
 
+    /**
+     * @brief filterListGenerated
+     * @param filterList
+     */
     void filterListGenerated(const QStringList& filterList);
 
-private:
-   // QListWidget* filterList;
+  private:
 
     PrebuiltPipelinesDockWidget(const PrebuiltPipelinesDockWidget&); // Copy Constructor Not Implemented
     void operator=(const PrebuiltPipelinesDockWidget&); // Operator '=' Not Implemented

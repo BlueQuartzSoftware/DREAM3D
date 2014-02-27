@@ -283,12 +283,12 @@ int main(int argc, char** argv)
 
 
   //// These functions are just to verify that the filters have certain signals and properties available.
-  //  verifyPreflightEmitsProperly();
-  //  verifySignals();
+  verifyPreflightEmitsProperly();
+  verifySignals();
   verifyFilterParameters();
 
   int err = EXIT_SUCCESS;
-  //  DREAM3D_REGISTER_TEST( TestPreflight() )
+  DREAM3D_REGISTER_TEST( TestPreflight() )
 
   PRINT_TEST_SUMMARY();
   return err;
