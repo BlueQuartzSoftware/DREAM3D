@@ -162,6 +162,7 @@ namespace DREAM3D
     const DREAM3D_STRING ImageQuality("Image Quality");
     const DREAM3D_STRING ImageQualityNoSpace("ImageQuality");
     const DREAM3D_STRING KernelAverageMisorientations("KernelAverageMisorientations");
+    const DREAM3D_STRING MotionDirection("MotionDirection");
     const DREAM3D_STRING MicroTexVolFrac("MicroTexVolFrac");
     const DREAM3D_STRING MisorientationColor("MisorientationColor");
     const DREAM3D_STRING ParentDensity("ParentDensity");

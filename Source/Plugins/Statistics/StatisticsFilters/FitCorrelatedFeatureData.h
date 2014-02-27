@@ -95,7 +95,7 @@ class FitCorrelatedFeatureData : public AbstractFilter
     * @brief This returns a string that is displayed in the GUI. It should be readable
     * and understandable by humans.
     */
-    virtual const QString getHumanLabel() { return "Fit Distribution To Feature Data"; }
+    virtual const QString getHumanLabel() { return "Fit Correlated Distributions To Feature Data"; }
 
     /**
     * @brief This method will instantiate all the end user settable options/parameters

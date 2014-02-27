@@ -34,7 +34,7 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include "FindProjectedImageStatistics.h"
+#include "FindRelativeMotionBetweenSlices.h"
 
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
 #include <tbb/parallel_for.h>
@@ -47,59 +47,47 @@
 #include "DREAM3DLib/Common/Constants.h"
 
 template<typename T>
-class CalcProjectedStatsImpl
+class CalcRelativeMotion
 {
 
   public:
-    CalcProjectedStatsImpl(T* data, float* min, float* max, float* avg, float* std, float* var, int32_t* startPoints, size_t stride, size_t depth) :
+    CalcRelativeMotion(T* data, float* motionDir, int32_t* patchPoints, int32_t* searchPoints, bool* validPoints, size_t numPP, size_t numSP) :
       m_Data(data),
-      m_Min(min),
-      m_Max(max),
-      m_Avg(avg),
-      m_Std(std),
-      m_Var(var),
-      m_StartPoints(startPoints),
-      m_Stride(stride),
-      m_Depth(depth)
+      m_MotionDirection(motionDir),
+      m_PatchPoints(patchPoints),
+      m_SearchPoints(searchPoints),
+      m_ValidPoints(validPoints),
+      m_NumPatchPoints(numPP),
+      m_NumSearchPoints(numSP)
     {}
-    virtual ~CalcProjectedStatsImpl() {}
+    virtual ~CalcRelativeMotion() {}
 
     void convert(size_t start, size_t end) const
     {
-      int32_t point, newPoint;
-      T val;
+      int32_t patchPoint, comparePoint;
+      float val, minVal;
       for (size_t i = start; i < end; i++)
       {
-        point = m_StartPoints[i];
-        m_Min[point] = m_Data[point];
-        m_Max[point] = m_Data[point];
-        m_Avg[point] = m_Data[point];
-        for(size_t j = 0; j < m_Depth; j++)
+        if(m_ValidPoints[i] == true)
         {
-          newPoint = point + (j*m_Stride);
-          val = m_Data[newPoint];
-          if(val < m_Min[point]) m_Min[point] = val;
-          if(val > m_Max[point]) m_Max[point] = val;
-          m_Avg[point] += val;
-        }
-        m_Avg[point] /= m_Depth;
-        for(size_t j = 0; j < m_Depth; j++)
-        {
-          newPoint = point + (j*m_Stride);
-          val = m_Data[newPoint];
-          m_Min[newPoint] = m_Min[point];
-          m_Max[newPoint] = m_Max[point];
-          m_Avg[newPoint] = m_Avg[point];
-          m_Std[point] += ((val-m_Avg[point])*(val-m_Avg[point]));
-        }
-        m_Std[point] /= m_Depth;
-        m_Var[point] = m_Std[point];
-        m_Std[point] = sqrt(m_Std[point]);
-        for(size_t j = 0; j < m_Depth; j++)
-        {
-          newPoint = point + (j*m_Stride);
-          m_Std[newPoint] = m_Std[point];
-          m_Var[newPoint] = m_Var[point];
+          minVal = 10000000000.0;
+          for(size_t j = 0; j < m_NumSearchPoints; j++)
+          {
+            val = 0;
+            for(size_t k = 0; k < m_NumPatchPoints; k++)
+            {
+              patchPoint = i + m_PatchPoints[k];
+              comparePoint = patchPoint + m_SearchPoints[4*j];
+              val += float((m_Data[patchPoint]-m_Data[comparePoint]))*float((m_Data[patchPoint]-m_Data[comparePoint]));
+            }
+            if(val < minVal)
+            {
+              minVal = val;
+              m_MotionDirection[3*i+0] = m_SearchPoints[4*j+1];
+              m_MotionDirection[3*i+1] = m_SearchPoints[4*j+2];
+              m_MotionDirection[3*i+2] = m_SearchPoints[4*j+3];
+            }
+          }
         }
       }
     }
@@ -112,35 +100,25 @@ class CalcProjectedStatsImpl
 #endif
   private:
     T* m_Data;
-    float* m_Min;
-    float* m_Max;
-    float* m_Avg;
-    float* m_Std;
-    float* m_Var;
-    int32_t* m_StartPoints;
-    size_t m_Stride;
-    size_t m_Depth;
+    float* m_MotionDirection;
+    int32_t* m_PatchPoints;
+    int32_t* m_SearchPoints;
+    bool* m_ValidPoints;
+    size_t m_NumPatchPoints;
+    size_t m_NumSearchPoints;
 };
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FindProjectedImageStatistics::FindProjectedImageStatistics() :
+FindRelativeMotionBetweenSlices::FindRelativeMotionBetweenSlices() :
   AbstractFilter(),
   m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
   m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
   m_SelectedArrayPath(""),
   m_Plane(0),
-  m_ProjectedImageMinArrayName(DREAM3D::CellData::ProjectedImageMin),
-  m_ProjectedImageMin(NULL),
-  m_ProjectedImageMaxArrayName(DREAM3D::CellData::ProjectedImageMax),
-  m_ProjectedImageMax(NULL),
-  m_ProjectedImageAvgArrayName(DREAM3D::CellData::ProjectedImageAvg),
-  m_ProjectedImageAvg(NULL),
-  m_ProjectedImageStdArrayName(DREAM3D::CellData::ProjectedImageStd),
-  m_ProjectedImageStd(NULL),
-  m_ProjectedImageVarArrayName(DREAM3D::CellData::ProjectedImageVar),
-  m_ProjectedImageVar(NULL)
+  m_MotionDirectionArrayName(DREAM3D::CellData::MotionDirection),
+  m_MotionDirection(NULL)
 {
   setupFilterParameters();
 }
@@ -148,19 +126,19 @@ FindProjectedImageStatistics::FindProjectedImageStatistics() :
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FindProjectedImageStatistics::~FindProjectedImageStatistics()
+FindRelativeMotionBetweenSlices::~FindRelativeMotionBetweenSlices()
 {
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FindProjectedImageStatistics::setupFilterParameters()
+void FindRelativeMotionBetweenSlices::setupFilterParameters()
 {
   FilterParameterVector parameters;
   {
     FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Cell Array To Quantify");
+    parameter->setHumanLabel("Cell Array To Track Motion");
     parameter->setPropertyName("SelectedArrayPath");
     parameter->setWidgetType(FilterParameterWidgetType::SingleArraySelectionWidget);
     parameter->setValueType("QString");
@@ -180,16 +158,34 @@ void FindProjectedImageStatistics::setupFilterParameters()
     parameter->setChoices(choices);
     parameters.push_back(parameter);
   }
+  {
+    FilterParameter::Pointer parameter = FilterParameter::New();
+    parameter->setHumanLabel("Patch Size 1 (Voxels)");
+    parameter->setPropertyName("PSize1");
+    parameter->setWidgetType(FilterParameterWidgetType::IntWidget);
+    parameter->setValueType("int");
+    parameters.push_back(parameter);
+  }
+  {
+    FilterParameter::Pointer parameter = FilterParameter::New();
+    parameter->setHumanLabel("Patch Size 2 (Voxels)");
+    parameter->setPropertyName("PSize2");
+    parameter->setWidgetType(FilterParameterWidgetType::IntWidget);
+    parameter->setValueType("int");
+    parameters.push_back(parameter);
+  }
   setFilterParameters(parameters);
 }
 
 // -----------------------------------------------------------------------------
-void FindProjectedImageStatistics::readFilterParameters(AbstractFilterParametersReader* reader, int index)
+void FindRelativeMotionBetweenSlices::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
   /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
   setSelectedArrayPath( reader->readString( "SelectedArrayPath", getSelectedArrayPath() ) );
   setPlane( reader->readValue("Plane", getPlane()));
+  setPSize1( reader->readValue("PSize1", getPSize1()));
+  setPSize2( reader->readValue("PSize2", getPSize2()));
   /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }
@@ -197,11 +193,13 @@ void FindProjectedImageStatistics::readFilterParameters(AbstractFilterParameters
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int FindProjectedImageStatistics::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
+int FindRelativeMotionBetweenSlices::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
   writer->writeValue("SelectedArrayPath", getSelectedArrayPath() );
   writer->writeValue("Plane", getPlane());
+  writer->writeValue("PSize1", getPSize1());
+  writer->writeValue("PSize2", getPSize2());
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
@@ -209,7 +207,7 @@ int FindProjectedImageStatistics::writeFilterParameters(AbstractFilterParameters
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FindProjectedImageStatistics::dataCheck()
+void FindRelativeMotionBetweenSlices::dataCheck()
 {
   setErrorCondition(0);
 
@@ -265,22 +263,10 @@ void FindProjectedImageStatistics::dataCheck()
         return;
       }
 
-      QVector<size_t> dims(1, 1);
-      m_ProjectedImageMinPtr = attrMat->createNonPrereqArray<DataArray<float>, AbstractFilter, float>(this, m_ProjectedImageMinArrayName, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-      if( NULL != m_ProjectedImageMinPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
-      { m_ProjectedImageMin = m_ProjectedImageMinPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-      m_ProjectedImageMaxPtr = attrMat->createNonPrereqArray<DataArray<float>, AbstractFilter, float>(this, m_ProjectedImageMaxArrayName, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-      if( NULL != m_ProjectedImageMaxPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
-      { m_ProjectedImageMax = m_ProjectedImageMaxPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-      m_ProjectedImageAvgPtr = attrMat->createNonPrereqArray<DataArray<float>, AbstractFilter, float>(this, m_ProjectedImageAvgArrayName, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-      if( NULL != m_ProjectedImageAvgPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
-      { m_ProjectedImageAvg = m_ProjectedImageAvgPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-      m_ProjectedImageStdPtr = attrMat->createNonPrereqArray<DataArray<float>, AbstractFilter, float>(this, m_ProjectedImageStdArrayName, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-      if( NULL != m_ProjectedImageStdPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
-      { m_ProjectedImageStd = m_ProjectedImageStdPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-      m_ProjectedImageVarPtr = attrMat->createNonPrereqArray<DataArray<float>, AbstractFilter, float>(this, m_ProjectedImageVarArrayName, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-      if( NULL != m_ProjectedImageVarPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
-      { m_ProjectedImageVar = m_ProjectedImageVarPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+      QVector<size_t> dims(1, 3);
+      m_MotionDirectionPtr = attrMat->createNonPrereqArray<DataArray<float>, AbstractFilter, float>(this, m_MotionDirectionArrayName, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+      if( NULL != m_MotionDirectionPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+      { m_MotionDirection = m_MotionDirectionPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
     }
   }
 }
@@ -289,7 +275,7 @@ void FindProjectedImageStatistics::dataCheck()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FindProjectedImageStatistics::preflight()
+void FindRelativeMotionBetweenSlices::preflight()
 {
   emit preflightAboutToExecute();
   emit updateFilterParameters(this);
@@ -300,7 +286,7 @@ void FindProjectedImageStatistics::preflight()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FindProjectedImageStatistics::execute()
+void FindRelativeMotionBetweenSlices::execute()
 {
   setErrorCondition(0);
   dataCheck();
@@ -350,58 +336,133 @@ void FindProjectedImageStatistics::execute()
 
   size_t xP, yP, zP;
   m->getDimensions(xP, yP, zP);
+  size_t totalPoints = xP*yP*zP;
 
-  Int32ArrayType::Pointer startingPoints = Int32ArrayType::CreateArray(0, "startingPoints");
-  int32_t* startPoints;
-  size_t stride, yStride;
+  QVector<size_t> cDims(1, 4);
+  Int32ArrayType::Pointer patchPointsPtr = Int32ArrayType::CreateArray((m_PSize1*m_PSize2), "patchPoints");
+  Int32ArrayType::Pointer searchPointsPtr = Int32ArrayType::CreateArray((21*21), cDims, "searchPoints");
+  BoolArrayType::Pointer validPointsPtr = BoolArrayType::CreateArray(totalPoints, "validPoints");
+  validPointsPtr->initializeWithValue(false);
+  int32_t* patchPoints = patchPointsPtr->getPointer(0);
+  int32_t* searchPoints = searchPointsPtr->getPointer(0);
+  bool* validPoints = validPointsPtr->getPointer(0);
+  size_t yStride, zStride;
   size_t count = 0;
-  size_t depth;
-  QVector<size_t> cDims(1, 1);
+  size_t numPatchPoints, numSearchPoints;
   if(m_Plane == 0)
   {
-    startingPoints->resize(xP*yP);
-    startPoints = startingPoints->getPointer(0);
-    stride = xP*yP;
-    depth = zP;
-    for(int i=0;i<yP;i++)
+    for(int j = -(m_PSize2/2); j < (m_PSize2/2); j++)
     {
-      yStride = i*xP;
-      for(int j=0;j<xP;j++)
+      yStride = (j*xP);
+      for(int i = -(m_PSize1/2); i < (m_PSize1/2); i++)
       {
-        startPoints[count] = yStride + j;
+        patchPoints[count] = yStride+i;
         count++;
+      }
+    }
+    numPatchPoints = count;
+    count = 0;
+    for(int j = -10; j <= 10; j++)
+    {
+      yStride = (j*xP);
+      for(int i = -10; i <= 10; i++)
+      {
+        searchPoints[4*count] = (xP*yP)+yStride+i;
+        searchPoints[4*count+1] = i;
+        searchPoints[4*count+2] = j;
+        searchPoints[4*count+3] = 3;
+        count++;
+      }
+    }
+    numSearchPoints = count;
+    for(int k=0;k<zP-3;k++)
+    {
+      zStride = k*xP*yP;
+      for(int j=m_PSize2;j<(yP-m_PSize2);j++)
+      {
+        yStride = j*xP;
+        for(int i=m_PSize1;i<(xP-m_PSize1);i++)
+        {
+          validPoints[zStride+yStride+i] = true;
+        }
       }
     }
   }
   if(m_Plane == 1)
   {
-    startingPoints->resize(xP*zP);
-    startPoints = startingPoints->getPointer(0);
-    stride = xP;
-    depth = yP;
-    for(int i=0;i<zP;i++)
+    for(int j = -(m_PSize2/2); j < (m_PSize2/2); j++)
     {
-      yStride = i*xP*yP;
-      for(int j=0;j<xP;j++)
+      yStride = (j*xP*yP);
+      for(int i = -(m_PSize1/2); i < (m_PSize1/2); i++)
       {
-        startPoints[count] = yStride + j;
+        patchPoints[count] = yStride+i;
         count++;
+      }
+    }
+    numPatchPoints = count;
+    count = 0;
+    for(int j = -10; j <= 10; j++)
+    {
+      yStride = (j*xP*yP);
+      for(int i = -10; i <= 10; i++)
+      {
+        searchPoints[count] = (xP)+yStride+i;
+        searchPoints[4*count+1] = i;
+        searchPoints[4*count+2] = 3;
+        searchPoints[4*count+3] = j;
+        count++;
+      }
+    }
+    numSearchPoints = count;
+    for(int k=m_PSize2;k<(zP-m_PSize2);k++)
+    {
+      zStride = k*xP*yP;
+      for(int j=0;j<yP-3;j++)
+      {
+        yStride = j*xP;
+        for(int i=m_PSize1;i<(xP-m_PSize1);i++)
+        {
+          validPoints[zStride+yStride+i] = true;
+        }
       }
     }
   }
   if(m_Plane == 2)
   {
-    startingPoints->resize(yP*zP);
-    startPoints = startingPoints->getPointer(0);
-    stride = 1;
-    depth = xP;
-    for(int i=0;i<zP;i++)
+    for(int j = -(m_PSize2/2); j < (m_PSize2/2); j++)
     {
-      yStride = i*xP*yP;
-      for(int j=0;j<yP;j++)
+      yStride = (j*xP*yP);
+      for(int i = -(m_PSize1/2); i < (m_PSize1/2); i++)
       {
-        startPoints[count] = yStride + (j*xP);
+        patchPoints[count] = yStride+(i*xP);
         count++;
+      }
+    }
+    numPatchPoints = count;
+    count = 0;
+    for(int j = -10; j <= 10; j++)
+    {
+      yStride = (j*xP*yP);
+      for(int i = -10; i <= 10; i++)
+      {
+        searchPoints[count] = (1)+yStride+(i*xP);
+        searchPoints[4*count+1] = 3;
+        searchPoints[4*count+2] = i;
+        searchPoints[4*count+3] = j;
+        count++;
+      }
+    }
+    numSearchPoints = count;
+    for(int k=m_PSize2;k<(zP-m_PSize2);k++)
+    {
+      zStride = k*xP*yP;
+      for(int j=m_PSize1;j<(yP-m_PSize1);j++)
+      {
+        yStride = j*xP;
+        for(int i=0;i<xP-3;i++)
+        {
+          validPoints[zStride+yStride+i] = true;
+        }
       }
     }
   }
@@ -415,13 +476,13 @@ void FindProjectedImageStatistics::execute()
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
     if (doParallel == true)
     {
-      tbb::parallel_for(tbb::blocked_range<size_t>(0, count), CalcProjectedStatsImpl<int8_t>(cPtr, m_ProjectedImageMin, m_ProjectedImageMax, m_ProjectedImageAvg, m_ProjectedImageStd, m_ProjectedImageVar, startPoints, stride, depth), tbb::auto_partitioner());
+      tbb::parallel_for(tbb::blocked_range<size_t>(0, totalPoints), CalcRelativeMotion<int8_t>(cPtr, m_MotionDirection, patchPoints, searchPoints, validPoints, numPatchPoints, numSearchPoints), tbb::auto_partitioner());
     }
     else
 #endif
     {
-      CalcProjectedStatsImpl<int8_t> serial(cPtr, m_ProjectedImageMin, m_ProjectedImageMax, m_ProjectedImageAvg, m_ProjectedImageStd, m_ProjectedImageVar, startPoints, stride, depth);
-      serial.convert(0, count);
+      CalcRelativeMotion<int8_t> serial(cPtr, m_MotionDirection, patchPoints, searchPoints, validPoints, numPatchPoints, numSearchPoints);
+      serial.convert(0, totalPoints);
     }
   }
   else if (dType.compare("uint8_t") == 0)
@@ -432,13 +493,13 @@ void FindProjectedImageStatistics::execute()
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
     if (doParallel == true)
     {
-      tbb::parallel_for(tbb::blocked_range<size_t>(0, count), CalcProjectedStatsImpl<uint8_t>(cPtr, m_ProjectedImageMin, m_ProjectedImageMax, m_ProjectedImageAvg, m_ProjectedImageStd, m_ProjectedImageVar, startPoints, stride, depth), tbb::auto_partitioner());
+      tbb::parallel_for(tbb::blocked_range<size_t>(0, totalPoints), CalcRelativeMotion<uint8_t>(cPtr, m_MotionDirection, patchPoints, searchPoints, validPoints, numPatchPoints, numSearchPoints), tbb::auto_partitioner());
     }
     else
 #endif
     {
-      CalcProjectedStatsImpl<uint8_t> serial(cPtr, m_ProjectedImageMin, m_ProjectedImageMax, m_ProjectedImageAvg, m_ProjectedImageStd, m_ProjectedImageVar, startPoints, stride, depth);
-      serial.convert(0, count);
+      CalcRelativeMotion<uint8_t> serial(cPtr, m_MotionDirection, patchPoints, searchPoints, validPoints, numPatchPoints, numSearchPoints);
+      serial.convert(0, totalPoints);
     }
   }
   else if (dType.compare("int16_t") == 0)
@@ -449,13 +510,13 @@ void FindProjectedImageStatistics::execute()
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
     if (doParallel == true)
     {
-      tbb::parallel_for(tbb::blocked_range<size_t>(0, count), CalcProjectedStatsImpl<int16_t>(cPtr, m_ProjectedImageMin, m_ProjectedImageMax, m_ProjectedImageAvg, m_ProjectedImageStd, m_ProjectedImageVar, startPoints, stride, depth), tbb::auto_partitioner());
+      tbb::parallel_for(tbb::blocked_range<size_t>(0, totalPoints), CalcRelativeMotion<int16_t>(cPtr, m_MotionDirection, patchPoints, searchPoints, validPoints, numPatchPoints, numSearchPoints), tbb::auto_partitioner());
     }
     else
 #endif
     {
-      CalcProjectedStatsImpl<int16_t> serial(cPtr, m_ProjectedImageMin, m_ProjectedImageMax, m_ProjectedImageAvg, m_ProjectedImageStd, m_ProjectedImageVar, startPoints, stride, depth);
-      serial.convert(0, count);
+      CalcRelativeMotion<int16_t> serial(cPtr, m_MotionDirection, patchPoints, searchPoints, validPoints, numPatchPoints, numSearchPoints);
+      serial.convert(0, totalPoints);
     }
   }
   else if (dType.compare("uint16_t") == 0)
@@ -466,13 +527,13 @@ void FindProjectedImageStatistics::execute()
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
     if (doParallel == true)
     {
-      tbb::parallel_for(tbb::blocked_range<size_t>(0, count), CalcProjectedStatsImpl<uint16_t>(cPtr, m_ProjectedImageMin, m_ProjectedImageMax, m_ProjectedImageAvg, m_ProjectedImageStd, m_ProjectedImageVar, startPoints, stride, depth), tbb::auto_partitioner());
+      tbb::parallel_for(tbb::blocked_range<size_t>(0, totalPoints), CalcRelativeMotion<uint16_t>(cPtr, m_MotionDirection, patchPoints, searchPoints, validPoints, numPatchPoints, numSearchPoints), tbb::auto_partitioner());
     }
     else
 #endif
     {
-      CalcProjectedStatsImpl<uint16_t> serial(cPtr, m_ProjectedImageMin, m_ProjectedImageMax, m_ProjectedImageAvg, m_ProjectedImageStd, m_ProjectedImageVar, startPoints, stride, depth);
-      serial.convert(0, count);
+      CalcRelativeMotion<uint16_t> serial(cPtr, m_MotionDirection, patchPoints, searchPoints, validPoints, numPatchPoints, numSearchPoints);
+      serial.convert(0, totalPoints);
     }
   }
   else if (dType.compare("int32_t") == 0)
@@ -483,13 +544,13 @@ void FindProjectedImageStatistics::execute()
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
     if (doParallel == true)
     {
-      tbb::parallel_for(tbb::blocked_range<size_t>(0, count), CalcProjectedStatsImpl<int32_t>(cPtr, m_ProjectedImageMin, m_ProjectedImageMax, m_ProjectedImageAvg, m_ProjectedImageStd, m_ProjectedImageVar, startPoints, stride, depth), tbb::auto_partitioner());
+      tbb::parallel_for(tbb::blocked_range<size_t>(0, totalPoints), CalcRelativeMotion<int32_t>(cPtr, m_MotionDirection, patchPoints, searchPoints, validPoints, numPatchPoints, numSearchPoints), tbb::auto_partitioner());
     }
     else
 #endif
     {
-      CalcProjectedStatsImpl<int32_t> serial(cPtr, m_ProjectedImageMin, m_ProjectedImageMax, m_ProjectedImageAvg, m_ProjectedImageStd, m_ProjectedImageVar, startPoints, stride, depth);
-      serial.convert(0, count);
+      CalcRelativeMotion<int32_t> serial(cPtr, m_MotionDirection, patchPoints, searchPoints, validPoints, numPatchPoints, numSearchPoints);
+      serial.convert(0, totalPoints);
     }
   }
   else if (dType.compare("uint32_t") == 0)
@@ -500,13 +561,13 @@ void FindProjectedImageStatistics::execute()
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
     if (doParallel == true)
     {
-      tbb::parallel_for(tbb::blocked_range<size_t>(0, count), CalcProjectedStatsImpl<uint32_t>(cPtr, m_ProjectedImageMin, m_ProjectedImageMax, m_ProjectedImageAvg, m_ProjectedImageStd, m_ProjectedImageVar, startPoints, stride, depth), tbb::auto_partitioner());
+      tbb::parallel_for(tbb::blocked_range<size_t>(0, totalPoints), CalcRelativeMotion<uint32_t>(cPtr, m_MotionDirection, patchPoints, searchPoints, validPoints, numPatchPoints, numSearchPoints), tbb::auto_partitioner());
     }
     else
 #endif
     {
-      CalcProjectedStatsImpl<uint32_t> serial(cPtr, m_ProjectedImageMin, m_ProjectedImageMax, m_ProjectedImageAvg, m_ProjectedImageStd, m_ProjectedImageVar, startPoints, stride, depth);
-      serial.convert(0, count);
+      CalcRelativeMotion<uint32_t> serial(cPtr, m_MotionDirection, patchPoints, searchPoints, validPoints, numPatchPoints, numSearchPoints);
+      serial.convert(0, totalPoints);
     }
   }
   else if (dType.compare("int64_t") == 0)
@@ -517,13 +578,13 @@ void FindProjectedImageStatistics::execute()
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
     if (doParallel == true)
     {
-      tbb::parallel_for(tbb::blocked_range<size_t>(0, count), CalcProjectedStatsImpl<int64_t>(cPtr, m_ProjectedImageMin, m_ProjectedImageMax, m_ProjectedImageAvg, m_ProjectedImageStd, m_ProjectedImageVar, startPoints, stride, depth), tbb::auto_partitioner());
+      tbb::parallel_for(tbb::blocked_range<size_t>(0, totalPoints), CalcRelativeMotion<int64_t>(cPtr, m_MotionDirection, patchPoints, searchPoints, validPoints, numPatchPoints, numSearchPoints), tbb::auto_partitioner());
     }
     else
 #endif
     {
-      CalcProjectedStatsImpl<int64_t> serial(cPtr, m_ProjectedImageMin, m_ProjectedImageMax, m_ProjectedImageAvg, m_ProjectedImageStd, m_ProjectedImageVar, startPoints, stride, depth);
-      serial.convert(0, count);
+      CalcRelativeMotion<int64_t> serial(cPtr, m_MotionDirection, patchPoints, searchPoints, validPoints, numPatchPoints, numSearchPoints);
+      serial.convert(0, totalPoints);
     }
   }
   else if (dType.compare("uint64_t") == 0)
@@ -534,13 +595,13 @@ void FindProjectedImageStatistics::execute()
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
     if (doParallel == true)
     {
-      tbb::parallel_for(tbb::blocked_range<size_t>(0, count), CalcProjectedStatsImpl<uint64_t>(cPtr, m_ProjectedImageMin, m_ProjectedImageMax, m_ProjectedImageAvg, m_ProjectedImageStd, m_ProjectedImageVar, startPoints, stride, depth), tbb::auto_partitioner());
+      tbb::parallel_for(tbb::blocked_range<size_t>(0, totalPoints), CalcRelativeMotion<uint64_t>(cPtr, m_MotionDirection, patchPoints, searchPoints, validPoints, numPatchPoints, numSearchPoints), tbb::auto_partitioner());
     }
     else
 #endif
     {
-      CalcProjectedStatsImpl<uint64_t> serial(cPtr, m_ProjectedImageMin, m_ProjectedImageMax, m_ProjectedImageAvg, m_ProjectedImageStd, m_ProjectedImageVar, startPoints, stride, depth);
-      serial.convert(0, count);
+      CalcRelativeMotion<uint64_t> serial(cPtr, m_MotionDirection, patchPoints, searchPoints, validPoints, numPatchPoints, numSearchPoints);
+      serial.convert(0, totalPoints);
     }
   }
   else if (dType.compare("float") == 0)
@@ -551,13 +612,13 @@ void FindProjectedImageStatistics::execute()
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
     if (doParallel == true)
     {
-      tbb::parallel_for(tbb::blocked_range<size_t>(0, count), CalcProjectedStatsImpl<float>(cPtr, m_ProjectedImageMin, m_ProjectedImageMax, m_ProjectedImageAvg, m_ProjectedImageStd, m_ProjectedImageVar, startPoints, stride, depth), tbb::auto_partitioner());
+      tbb::parallel_for(tbb::blocked_range<size_t>(0, totalPoints), CalcRelativeMotion<float>(cPtr, m_MotionDirection, patchPoints, searchPoints, validPoints, numPatchPoints, numSearchPoints), tbb::auto_partitioner());
     }
     else
 #endif
     {
-      CalcProjectedStatsImpl<float> serial(cPtr, m_ProjectedImageMin, m_ProjectedImageMax, m_ProjectedImageAvg, m_ProjectedImageStd, m_ProjectedImageVar, startPoints, stride, depth);
-      serial.convert(0, count);
+      CalcRelativeMotion<float> serial(cPtr, m_MotionDirection, patchPoints, searchPoints, validPoints, numPatchPoints, numSearchPoints);
+      serial.convert(0, totalPoints);
     }
   }
   else if (dType.compare("double") == 0)
@@ -568,13 +629,13 @@ void FindProjectedImageStatistics::execute()
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
     if (doParallel == true)
     {
-      tbb::parallel_for(tbb::blocked_range<size_t>(0, count), CalcProjectedStatsImpl<double>(cPtr, m_ProjectedImageMin, m_ProjectedImageMax, m_ProjectedImageAvg, m_ProjectedImageStd, m_ProjectedImageVar, startPoints, stride, depth), tbb::auto_partitioner());
+      tbb::parallel_for(tbb::blocked_range<size_t>(0, totalPoints), CalcRelativeMotion<double>(cPtr, m_MotionDirection, patchPoints, searchPoints, validPoints, numPatchPoints, numSearchPoints), tbb::auto_partitioner());
     }
     else
 #endif
     {
-      CalcProjectedStatsImpl<double> serial(cPtr, m_ProjectedImageMin, m_ProjectedImageMax, m_ProjectedImageAvg, m_ProjectedImageStd, m_ProjectedImageVar, startPoints, stride, depth);
-      serial.convert(0, count);
+      CalcRelativeMotion<double> serial(cPtr, m_MotionDirection, patchPoints, searchPoints, validPoints, numPatchPoints, numSearchPoints);
+      serial.convert(0, totalPoints);
     }
   }
   else if (dType.compare("bool") == 0)
@@ -585,6 +646,6 @@ void FindProjectedImageStatistics::execute()
     return;
   }
 
-  notifyStatusMessage(getHumanLabel(), "FindProjectedImageStatistics Completed");
+  notifyStatusMessage(getHumanLabel(), "FindRelativeMotionBetweenSlices Completed");
 }
 

@@ -17,6 +17,7 @@ set(_PublicFilters
   ClearData
   FillBadData
   FindProjectedImageStatistics
+  FindRelativeMotionBetweenSlices
   NeighborCICorrelation
   NeighborOrientationCorrelation
   BadDataNeighborOrientationCheck

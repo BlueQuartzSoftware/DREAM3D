@@ -34,8 +34,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef FindProjectedImageStatistics_H_
-#define FindProjectedImageStatistics_H_
+#ifndef FindRelativeMotionBetweenSlices_H_
+#define FindRelativeMotionBetweenSlices_H_
 
 #include <vector>
 #include <QtCore/QString>
@@ -48,21 +48,21 @@
 #include "DREAM3DLib/DataContainers/VolumeDataContainer.h"
 
 /**
- * @class FindProjectedImageStatistics FindProjectedImageStatistics.h DREAM3DLib/GenericFilters/FindProjectedImageStatistics.h
+ * @class FindRelativeMotionBetweenSlices FindRelativeMotionBetweenSlices.h DREAM3DLib/GenericFilters/FindRelativeMotionBetweenSlices.h
  * @brief
  * @author
  * @date Nov 19, 2011
  * @version 1.0
  */
-class FindProjectedImageStatistics : public AbstractFilter
+class FindRelativeMotionBetweenSlices : public AbstractFilter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
-    DREAM3D_SHARED_POINTERS(FindProjectedImageStatistics)
-    DREAM3D_STATIC_NEW_MACRO(FindProjectedImageStatistics)
-    DREAM3D_TYPE_MACRO_SUPER(FindProjectedImageStatistics, AbstractFilter)
+    DREAM3D_SHARED_POINTERS(FindRelativeMotionBetweenSlices)
+    DREAM3D_STATIC_NEW_MACRO(FindRelativeMotionBetweenSlices)
+    DREAM3D_TYPE_MACRO_SUPER(FindRelativeMotionBetweenSlices, AbstractFilter)
 
-    virtual ~FindProjectedImageStatistics();
+    virtual ~FindRelativeMotionBetweenSlices();
     DREAM3D_INSTANCE_PROPERTY(QString, DataContainerName)
     DREAM3D_INSTANCE_PROPERTY(QString, CellAttributeMatrixName)
 
@@ -70,10 +70,15 @@ class FindProjectedImageStatistics : public AbstractFilter
     Q_PROPERTY(QString SelectedArrayPath READ getSelectedArrayPath WRITE setSelectedArrayPath NOTIFY parametersChanged)
     DREAM3D_FILTER_PARAMETER(unsigned int, Plane)
     Q_PROPERTY(unsigned int Plane READ getPlane WRITE setPlane NOTIFY parametersChanged)
+    DREAM3D_FILTER_PARAMETER(int, PSize1)
+    Q_PROPERTY(int PSize1 READ getPSize1 WRITE setPSize1 NOTIFY parametersChanged)
+    DREAM3D_FILTER_PARAMETER(int, PSize2)
+    Q_PROPERTY(int PSize2 READ getPSize2 WRITE setPSize2 NOTIFY parametersChanged)
+
 
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::ProcessingFilters; }
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::ImageFilters; }
-    virtual const QString getHumanLabel() { return "Find Projected Image Statistics"; }
+    virtual const QString getHumanLabel() { return "Find Relative Motion Between Slices"; }
 
     /**
     * @brief This method will instantiate all the end user settable options/parameters
@@ -111,23 +116,19 @@ class FindProjectedImageStatistics : public AbstractFilter
     void preflightExecuted();
 
   protected:
-    FindProjectedImageStatistics();
+    FindRelativeMotionBetweenSlices();
     void find_crosssections();
 
   private:
-    DEFINE_PTR_WEAKPTR_DATAARRAY(float, ProjectedImageMin)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(float, ProjectedImageMax)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(float, ProjectedImageAvg)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(float, ProjectedImageStd)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(float, ProjectedImageVar)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(float, MotionDirection)
 
     void dataCheck();
 
-    FindProjectedImageStatistics(const FindProjectedImageStatistics&); // Copy Constructor Not Implemented
-    void operator=(const FindProjectedImageStatistics&); // Operator '=' Not Implemented
+    FindRelativeMotionBetweenSlices(const FindRelativeMotionBetweenSlices&); // Copy Constructor Not Implemented
+    void operator=(const FindRelativeMotionBetweenSlices&); // Operator '=' Not Implemented
 };
 
-#endif /* FindProjectedImageStatistics_H_ */
+#endif /* FindRelativeMotionBetweenSlices_H_ */
 
 
 
