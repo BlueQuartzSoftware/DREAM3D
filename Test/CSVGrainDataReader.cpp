@@ -205,8 +205,8 @@ int CSVGrainDataReader::readFile()
     return -1;
   }
 
-  size_t counter = 0;
-  for(size_t row = 0; row < m_NumberOfElements && in.eof() == false; ++row)
+  int64_t counter = 0;
+  for(int64_t row = 0; row < m_NumberOfElements && in.eof() == false; ++row)
   {
     in.getline(buf, kBufferSize);
     this->readData(buf, static_cast<int>(row), counter);

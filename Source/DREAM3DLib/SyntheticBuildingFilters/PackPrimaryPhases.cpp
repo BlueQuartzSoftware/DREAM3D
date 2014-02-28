@@ -331,8 +331,11 @@ void PackPrimaryPhases::readFilterParameters(AbstractFilterParametersReader* rea
 {
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+  setPeriodicBoundaries(reader->readValue("PeriodicBoundaries", getPeriodicBoundaries()));
+  setWriteGoalAttributes(reader->readValue("WriteGoalAttributes", getWriteGoalAttributes()));
+  setCsvOutputFile(reader->readValue("CsvOutputFile", getCsvOutputFile()));
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }
 
@@ -345,8 +348,8 @@ int PackPrimaryPhases::writeFilterParameters(AbstractFilterParametersWriter* wri
   writer->writeValue("PeriodicBoundaries", getPeriodicBoundaries() );
   writer->writeValue("WriteGoalAttributes", getWriteGoalAttributes() );
   writer->writeValue("CsvOutputFile", getCsvOutputFile() );
-    writer->closeFilterGroup();
-    return ++index; // we want to return the next index that was just written to
+  writer->closeFilterGroup();
+  return ++index; // we want to return the next index that was just written to
 }
 // -----------------------------------------------------------------------------
 //
@@ -356,6 +359,16 @@ void PackPrimaryPhases::dataCheck(bool preflight, size_t voxels, size_t fields, 
   setErrorCondition(0);
   std::stringstream ss;
   VoxelDataContainer* m = getVoxelDataContainer();
+
+
+  if (m_WriteGoalAttributes == true && getCsvOutputFile().empty() == true)
+  {
+    setErrorCondition(-387);
+    std::stringstream ss;
+    ss << ClassName() << " needs the Csv Output File Set and it was not.";
+    addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
+
+  }
 
   //Cell Data
   GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -301, int32_t, Int32ArrayType, voxels, 1)
@@ -395,13 +408,6 @@ void PackPrimaryPhases::preflight()
 {
   dataCheck(true, 1, 1, 1);
 
-  if (m_WriteGoalAttributes == true && getCsvOutputFile().empty() == true)
-  {
-    std::stringstream ss;
-    ss << ClassName() << " needs the Csv Output File Set and it was not.";
-    addErrorMessage(getHumanLabel(), ss.str(), -1);
-    setErrorCondition(-387);
-  }
 
 }
 

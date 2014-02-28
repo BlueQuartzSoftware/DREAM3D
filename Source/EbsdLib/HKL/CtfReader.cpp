@@ -616,7 +616,6 @@ int CtfReader::getHeaderLines(std::ifstream &reader, std::vector<std::vector<std
   int err = 0;
   char buf[kBufferSize];
   int index = 0;
-  int phaseLineIndex = 0;
   int numPhases = 0;
   while (!reader.eof() && false == getHeaderIsComplete())
   {
@@ -635,7 +634,6 @@ int CtfReader::getHeaderLines(std::ifstream &reader, std::vector<std::vector<std
     // Once we hit the "Phases" header line we know exactly how many lines we have left to read
     if (tokens[0].compare("Phases") == 0)
     {
-      phaseLineIndex = index;
       numPhases = atoi(tokens[1].c_str());
       headerLines.push_back(tokens);
       for(int n = 0; n < numPhases; ++n)

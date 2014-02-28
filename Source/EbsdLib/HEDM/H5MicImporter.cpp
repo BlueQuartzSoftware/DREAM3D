@@ -319,7 +319,7 @@ int H5MicImporter::importFile(hid_t fileId, int64_t z, const std::string &MicFil
   }
 
   int32_t rank = 1;
-  hsize_t dims[1] = { reader.getXDimension() * reader.getYDimension() };
+  hsize_t dims[1] = { hsize_t(reader.getXDimension() * reader.getYDimension()) };
 
   WRITE_Mic_DATA_ARRAY(reader, float, gid, Euler1, Ebsd::Mic::Euler1);
   WRITE_Mic_DATA_ARRAY(reader, float, gid, Euler2, Ebsd::Mic::Euler2);

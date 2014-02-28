@@ -306,7 +306,7 @@ int H5AngImporter::importFile(hid_t fileId, int64_t z, const std::string &angFil
   }
 
   int32_t rank = 1;
-  hsize_t dims[1] = { reader.getNumEvenCols() * reader.getNumRows() };
+  hsize_t dims[1] = { hsize_t(reader.getNumEvenCols() * reader.getNumRows()) };
 
   WRITE_ANG_DATA_ARRAY(reader, float, gid, Phi1, Ebsd::Ang::Phi1);
   WRITE_ANG_DATA_ARRAY(reader, float, gid, Phi, Ebsd::Ang::Phi);

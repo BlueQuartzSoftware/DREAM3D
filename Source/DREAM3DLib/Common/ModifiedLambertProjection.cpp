@@ -101,7 +101,7 @@ ModifiedLambertProjection::Pointer ModifiedLambertProjection::CreateProjectionFr
   fprintf(f, "DATASET UNSTRUCTURED_GRID\nPOINTS %lu float\n", coords->GetNumberOfTuples() );
 #endif
 
-  for(int i = 0; i < npoints; ++i)
+  for(size_t i = 0; i < npoints; ++i)
   {
     sqCoord[0] = 0.0;
     sqCoord[1] = 0.0;
@@ -484,7 +484,7 @@ void ModifiedLambertProjection::createStereographicProjection(int dim, DoubleArr
 
   stereoIntensity->initializeWithZeros();
   double* intensity = stereoIntensity->GetPointer(0);
-  int sqIndex = 0;
+
 
   for (int64_t y = 0; y < ypoints; y++)
   {
@@ -506,7 +506,7 @@ void ModifiedLambertProjection::createStereographicProjection(int dim, DoubleArr
         {
           if(m == 1) { MatrixMath::Multiply3x1withConstant(xyz, -1.0); }
           nhCheck = getSquareCoord(xyz, sqCoord);
-          sqIndex = getSquareIndex(sqCoord);
+          //sqIndex = getSquareIndex(sqCoord);
           if (nhCheck == true)
           {
             //get Value from North square

@@ -417,7 +417,7 @@ int MicReader::readData(std::ifstream &in, char* buf, size_t bufSize)
   ::memset(buf, 0, bufSize); // Clear the buffer
   in.getline(buf, kBufferSize);// Read the next line of data
   fieldsRead = sscanf(buf, "%f", &origEdgeLength);
- // origEdgeLength = origEdgeLength;
+  if(fieldsRead != 1) {}
   ::memset(buf, 0, bufSize); // Clear the buffer
   in.getline(buf, kBufferSize);// Read the next line of data
   this->parseDataLine(buf, 0);
@@ -639,7 +639,7 @@ void MicReader::parseDataLine(const std::string &line, size_t i)
   size_t offset = 0;
   size_t fieldsRead = 0;
   fieldsRead = sscanf(line.c_str(), "%f %f %f %d %d %d %f %f %f %f", &x, &y,&z, &up, &level, &good, &p1, &p, &p2, &conf);
-
+    if(fieldsRead != 10) {}
   offset = i;
 
   m_Euler1[offset] = p1;

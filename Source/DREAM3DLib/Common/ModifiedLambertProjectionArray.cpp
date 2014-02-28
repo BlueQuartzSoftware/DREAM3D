@@ -358,10 +358,10 @@ void Create2DExpandableDataset(hid_t gid, const std::string& dsetName, int lambe
   herr_t status = -1;
   hsize_t maxdims[2] = { H5S_UNLIMITED, H5S_UNLIMITED }; // Allow for 2D Arrays
   hsize_t chunk_dims[2] =  { 1, chunk_dim };
-  hsize_t dims[2] = { 1, lambertSize };
+  hsize_t dims[2] = { 1, hsize_t(lambertSize) };
   hsize_t size[2];
   hsize_t offset[2];
-  hsize_t hyperDims[2] =  { 1, lambertSize };
+  hsize_t hyperDims[2] =  { 1, hsize_t(lambertSize) };
   double fillvalue = -1.0;
   int rank = 2;
 //  int i = 0;
