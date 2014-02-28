@@ -2,9 +2,9 @@
 #-- Your License or copyright can go here
 #--////////////////////////////////////////////////////////////////////////////
 
-project(ITK)
+project(ImageProcessing)
 
-set(PLUGIN_NAME ITK)
+set(PLUGIN_NAME ImageProcessing)
 
 # --------------------------------------------------------------------
 # Look for Qt 4 as we need it for the plugin GUI to be generated
@@ -45,7 +45,6 @@ find_package(ITK COMPONENTS
 	
 	REQUIRED)
 include(${ITK_USE_FILE})
-
 
 
 set(${PLUGIN_NAME}_Project_SRCS "")
@@ -170,7 +169,6 @@ add_executable(${PLUGIN_NAME}WidgetCodeGen  ${FilterWidgetsLib_SOURCE_DIR}/Filte
                                             ${${PLUGIN_NAME}_BINARY_DIR}/FilterWidgetCodeGen.h
                                             ${${PLUGIN_NAME}_Project_SRCS}
                                             )
-#target_link_libraries(${PLUGIN_NAME}WidgetCodeGen MXA EbsdLib DREAM3DLib ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY})
 target_link_libraries(${PLUGIN_NAME}WidgetCodeGen MXA EbsdLib DREAM3DLib ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY} ${ITK_LIBRARIES})
 
 
@@ -273,7 +271,6 @@ endif()
 add_library(${PLUGIN_NAME} MODULE ${${PLUGIN_NAME}_Project_SRCS})
 # --------------------------------------------------------------------
 # Link the plugin with other DREAM3D Libraries.
-
 target_link_libraries(${PLUGIN_NAME}
                     MXA
                     DREAM3DLib
@@ -281,8 +278,9 @@ target_link_libraries(${PLUGIN_NAME}
                     ${QT_QTGUI_LIBRARY}
                     QtSupport
                     PipelineBuilderLib
-		    ${ITK_LIBRARIES}
+                    ${ITK_LIBRARIES}
                     )
+
 # --------------------------------------------------------------------
 # Add a dependency on the code generation step to make sure the code is
 # generated before we try to compile the plugin

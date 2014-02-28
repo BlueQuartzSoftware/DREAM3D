@@ -2,7 +2,7 @@
  * Your License or Copyright Information can go here
  */
 
-#include "ITKPlugin.h"
+#include "ImageProcessingPlugin.h"
 
 #include "DREAM3DLib/Common/FilterManager.h"
 #include "DREAM3DLib/Common/IFilterFactory.hpp"
@@ -11,21 +11,21 @@
 #include "PipelineBuilder/FilterWidgetManager.h"
 #include "FilterWidgets/QFilterWidgetFactory.hpp"
 
-#include "moc_ITKPlugin.cxx"
+#include "moc_ImageProcessingPlugin.cxx"
 
-Q_EXPORT_PLUGIN2(ITKPlugin, ITKPlugin)
+Q_EXPORT_PLUGIN2(ImageProcessingPlugin, ImageProcessingPlugin)
 
 namespace Detail
 {
-   const std::string ITKPluginFile("ITKPlugin");
-   const std::string ITKPluginDisplayName("ITKPlugin");
-   const std::string ITKPluginBaseName("ITKPlugin");
+   const std::string ImageProcessingPluginFile("ImageProcessingPlugin");
+   const std::string ImageProcessingPluginDisplayName("ImageProcessingPlugin");
+   const std::string ImageProcessingPluginBaseName("ImageProcessingPlugin");
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ITKPlugin::ITKPlugin()
+ImageProcessingPlugin::ImageProcessingPlugin()
 {
 
 }
@@ -33,22 +33,22 @@ ITKPlugin::ITKPlugin()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ITKPlugin::~ITKPlugin()
+ImageProcessingPlugin::~ImageProcessingPlugin()
 {
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QString ITKPlugin::getPluginName()
+QString ImageProcessingPlugin::getPluginName()
 {
-  return QString::fromStdString(Detail::ITKPluginDisplayName);
+  return QString::fromStdString(Detail::ImageProcessingPluginDisplayName);
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ITKPlugin::writeSettings(QSettings &prefs)
+void ImageProcessingPlugin::writeSettings(QSettings &prefs)
 {
 
 }
@@ -56,11 +56,11 @@ void ITKPlugin::writeSettings(QSettings &prefs)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ITKPlugin::readSettings(QSettings &prefs)
+void ImageProcessingPlugin::readSettings(QSettings &prefs)
 {
 
 }
 
-#include "ITKFilters/RegisterKnownFilterWidgets.cpp"
-#include "ITKFilters/RegisterKnownFilters.cpp"
+#include "ImageProcessingFilters/RegisterKnownFilterWidgets.cpp"
+#include "ImageProcessingFilters/RegisterKnownFilters.cpp"
 

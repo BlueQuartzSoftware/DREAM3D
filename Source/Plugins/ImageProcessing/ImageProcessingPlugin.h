@@ -2,8 +2,8 @@
  * Your License or Copyright Information can go here
  */
 
-#ifndef _ITK_H_
-#define _ITK_H_
+#ifndef _ImageProcessing_H_
+#define _ImageProcessing_H_
 
 #include <QtCore/QObject>
 #include <QtCore/QSettings>
@@ -11,20 +11,20 @@
 
 
 /**
- * @class ITKPlugin ITKPlugin.h SurfaceMeshing/ITKPlugin.h
+ * @class ImageProcessingPlugin ImageProcessingPlugin.h SurfaceMeshing/ImageProcessingPlugin.h
  * @brief
  * @author Michael A. Jackson for BlueQuartz Software
  * @date May 10, 2012
  * @version 1.0
  */
-class ITKPlugin : public QObject, public DREAM3DPluginInterface
+class ImageProcessingPlugin : public QObject, public DREAM3DPluginInterface
 {
     Q_OBJECT;
     Q_INTERFACES(DREAM3DPluginInterface)
 
   public:
-    ITKPlugin();
-    virtual ~ITKPlugin();
+    ImageProcessingPlugin();
+    virtual ~ImageProcessingPlugin();
     /**
      * @brief Returns the name of the plugin
      */
@@ -55,8 +55,8 @@ class ITKPlugin : public QObject, public DREAM3DPluginInterface
     virtual void readSettings(QSettings &prefs);
 
   private:
-    ITKPlugin(const ITKPlugin&); // Copy Constructor Not Implemented
-    void operator=(const ITKPlugin&); // Operator '=' Not Implemented
+    ImageProcessingPlugin(const ImageProcessingPlugin&); // Copy Constructor Not Implemented
+    void operator=(const ImageProcessingPlugin&); // Operator '=' Not Implemented
 };
 
-#endif /* _ITK_H_ */
+#endif /* _ImageProcessing_H_ */

@@ -4,7 +4,7 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include "ITKFilter.h"
+#include "GuassianBlur.h"
 
 #include "ITKUtilities.h"
 #include "itkGaussianBlurImageFunction.h"
@@ -13,7 +13,7 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ITKFilter::ITKFilter() :
+GuassianBlur::GuassianBlur() :
 AbstractFilter(),
 m_RawImageDataArrayName("RawImageData"),
 m_ProcessedImageDataArrayName("ProcessedData"),
@@ -29,14 +29,14 @@ m_ProcessedImageData(NULL)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ITKFilter::~ITKFilter()
+GuassianBlur::~GuassianBlur()
 {
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ITKFilter::setupFilterParameters()
+void GuassianBlur::setupFilterParameters()
 {
   std::vector<FilterParameter::Pointer> options;
   {
@@ -70,7 +70,7 @@ void ITKFilter::setupFilterParameters()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ITKFilter::readFilterParameters(AbstractFilterParametersReader* reader, int index)
+void GuassianBlur::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
   setSelectedCellArrayName( reader->readValue( "SelectedCellArrayName", getSelectedCellArrayName() ) );
@@ -82,7 +82,7 @@ void ITKFilter::readFilterParameters(AbstractFilterParametersReader* reader, int
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int ITKFilter::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
+int GuassianBlur::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 
 {
   writer->openFilterGroup(this, index);
@@ -96,7 +96,7 @@ int ITKFilter::writeFilterParameters(AbstractFilterParametersWriter* writer, int
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ITKFilter::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
+void GuassianBlur::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
   std::stringstream ss;
@@ -125,10 +125,11 @@ void ITKFilter::dataCheck(bool preflight, size_t voxels, size_t fields, size_t e
   }
 }
 
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ITKFilter::preflight()
+void GuassianBlur::preflight()
 {
   /* Place code here that sanity checks input arrays and input values. Look at some
   * of the other DREAM3DLib/Filters/.cpp files for sample codes */
@@ -138,7 +139,7 @@ void ITKFilter::preflight()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ITKFilter::execute()
+void GuassianBlur::execute()
 {
   std::stringstream ss;
   int err = 0;
@@ -166,16 +167,16 @@ void ITKFilter::execute()
 
   /* Place all your code to execute your filter here. */
   //get filter to convert m_RawImageData to itk::image
-  ImportCharFilterType::Pointer importFilter=Dream3DChartoITK(m, m_RawImageData);
+  ImageProcessing::ImportCharFilterType::Pointer importFilter=ITKUtilities::Dream3DChartoITK(m, m_RawImageData);
 
   //get image from filter
-  const ITK_CharImageType * inputImage;
+  const ImageProcessing::CharImageType * inputImage;
   inputImage=importFilter->GetOutput();
-  ITK_CharImageType::RegionType filterRegion = inputImage->GetBufferedRegion();
-  CharConstIteratorType it(inputImage, filterRegion);
+  ImageProcessing::CharImageType::RegionType filterRegion = inputImage->GetBufferedRegion();
+  ImageProcessing::CharConstIteratorType it(inputImage, filterRegion);
 
   //create guassian blur filter
-  typedef itk::GaussianBlurImageFunction< ITK_CharImageType > GFunctionType;
+  typedef itk::GaussianBlurImageFunction< ImageProcessing::CharImageType > GFunctionType;
   GFunctionType::Pointer gaussianFunction = GFunctionType::New();
   gaussianFunction->SetInputImage( inputImage );
 

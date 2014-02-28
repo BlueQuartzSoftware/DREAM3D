@@ -1,8 +1,8 @@
-ITKFilter {#itkfilter}
+GuassianBlur {#guassianblur}
 =====
 
 ## Group (Subgroup) ##
-ITK (ITK)
+ImageProcessing (ImageProcessing)
 
 
 ## Description ##

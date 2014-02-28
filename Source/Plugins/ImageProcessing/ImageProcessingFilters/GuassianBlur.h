@@ -4,8 +4,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _ITKFilter_H_
-#define _ITKFilter_H_
+#ifndef _ImageProcessingFilter_H_
+#define _ImageProcessingFilter_H_
 
 #include <string>
 
@@ -15,20 +15,20 @@
 #include "DREAM3DLib/DataArrays/IDataArray.h"
 
 /**
- * @class ITKFilter ITKFilter.h ITK/Code/ITKFilters/ITKFilter.h
- * @brief Example filter to guassian blur data with itk
- * @author Will Lenthe
- * @date 2/26/2014
+ * @class GuassianBlur GuassianBlur.h ImageProcessing/Code/ImageProcessingFilters/GuassianBlur.h
+ * @brief
+ * @author
+ * @date
  * @version 1.0
  */
-class ITKFilter : public AbstractFilter
+class GuassianBlur : public AbstractFilter
 {
   public:
-    DREAM3D_SHARED_POINTERS(ITKFilter);
-    DREAM3D_STATIC_NEW_MACRO(ITKFilter);
-    DREAM3D_TYPE_MACRO_SUPER(ITKFilter, AbstractFilter);
+    DREAM3D_SHARED_POINTERS(GuassianBlur);
+    DREAM3D_STATIC_NEW_MACRO(GuassianBlur);
+    DREAM3D_TYPE_MACRO_SUPER(GuassianBlur, AbstractFilter);
 
-    virtual ~ITKFilter();
+    virtual ~GuassianBlur();
 
     //Required Cell Data
     DREAM3D_INSTANCE_STRING_PROPERTY(RawImageDataArrayName)
@@ -46,13 +46,13 @@ class ITKFilter : public AbstractFilter
     * a different group if you want. The string returned here will be displayed
     * in the GUI for the filter
     */
-    virtual const std::string getGroupName() { return "ITK"; }
+    virtual const std::string getGroupName() { return "ImageProcessing"; }
 
     /**
     * @brief This returns a string that is displayed in the GUI. It should be readable
     * and understandable by humans.
     */
-    virtual const std::string getHumanLabel() { return "ITKFilter"; }
+    virtual const std::string getHumanLabel() { return "Guassian Blur"; }
 
     /**
     * @brief This returns a string that is displayed in the GUI and helps to sort the filters into
@@ -90,7 +90,7 @@ class ITKFilter : public AbstractFilter
     virtual void preflight();
 
   protected:
-    ITKFilter();
+    GuassianBlur();
 
     /**
     * @brief Checks for the appropriate parameter values and availability of
@@ -106,8 +106,8 @@ class ITKFilter : public AbstractFilter
     uint8_t* m_RawImageData;
     float* m_ProcessedImageData;
 
-    ITKFilter(const ITKFilter&); // Copy Constructor Not Implemented
-    void operator=(const ITKFilter&); // Operator '=' Not Implemented
+    GuassianBlur(const GuassianBlur&); // Copy Constructor Not Implemented
+    void operator=(const GuassianBlur&); // Operator '=' Not Implemented
 };
 
-#endif /* _ITKFilter_H_ */
+#endif /* _ImageProcessingFilter_H_ */
