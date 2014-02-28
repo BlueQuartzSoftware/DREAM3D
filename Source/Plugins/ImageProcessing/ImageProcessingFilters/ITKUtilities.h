@@ -29,8 +29,20 @@ class DREAM3DLib_EXPORT ITKUtilities
 
     virtual ~ITKUtilities();
 
+    //conversion from dream3d arrays to itk images
+    static ImageProcessing::ImportInt8FilterType::Pointer Dream3DInt8toITK(VoxelDataContainer* m, int8_t* data);
+    static ImageProcessing::ImportUInt8FilterType::Pointer Dream3DUInt8toITK(VoxelDataContainer* m, uint8_t* data);
+    static ImageProcessing::ImportInt16FilterType::Pointer Dream3DInt16toITK(VoxelDataContainer* m, int16_t* data);
+    static ImageProcessing::ImportUInt16FilterType::Pointer Dream3DUInt16toITK(VoxelDataContainer* m, uint16_t* data);
+    static ImageProcessing::ImportInt32FilterType::Pointer Dream3DInt32toITK(VoxelDataContainer* m, int32_t* data);
+    static ImageProcessing::ImportUInt32FilterType::Pointer Dream3DUInt32toITK(VoxelDataContainer* m, uint32_t* data);
+    static ImageProcessing::ImportInt64FilterType::Pointer Dream3DInt64toITK(VoxelDataContainer* m, int64_t* data);
+    static ImageProcessing::ImportUInt64FilterType::Pointer Dream3DUInt64toITK(VoxelDataContainer* m, uint64_t* data);
     static ImageProcessing::ImportFloatFilterType::Pointer Dream3DFloattoITK(VoxelDataContainer* m, float* data);
-    static ImageProcessing::ImportCharFilterType::Pointer Dream3DChartoITK(VoxelDataContainer* m, uint8_t* data);
+    static ImageProcessing::ImportDoubleFilterType::Pointer Dream3DDoubletoITK(VoxelDataContainer* m, double* data);
+
+    //static ImageProcessing::ImportRGBUint8FilterType::Pointer Dream3DRGBUInt8toITK(VoxelDataContainer* m, uint8_t* data);
+    //static ImageProcessing::ImportRGBAFloatFilterType::Pointer Dream3DRGBAFloattoITK(VoxelDataContainer* m, float* data);
 
     ITKUtilities();
 

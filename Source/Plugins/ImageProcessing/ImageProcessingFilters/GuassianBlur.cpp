@@ -167,16 +167,16 @@ void GuassianBlur::execute()
 
   /* Place all your code to execute your filter here. */
   //get filter to convert m_RawImageData to itk::image
-  ImageProcessing::ImportCharFilterType::Pointer importFilter=ITKUtilities::Dream3DChartoITK(m, m_RawImageData);
+  ImageProcessing::ImportUInt8FilterType::Pointer importFilter=ITKUtilities::Dream3DUInt8toITK(m, m_RawImageData);
 
   //get image from filter
-  const ImageProcessing::CharImageType * inputImage;
+  const ImageProcessing::UInt8ImageType * inputImage;
   inputImage=importFilter->GetOutput();
-  ImageProcessing::CharImageType::RegionType filterRegion = inputImage->GetBufferedRegion();
-  ImageProcessing::CharConstIteratorType it(inputImage, filterRegion);
+  ImageProcessing::UInt8ImageType::RegionType filterRegion = inputImage->GetBufferedRegion();
+  ImageProcessing::UInt8ConstIteratorType it(inputImage, filterRegion);
 
   //create guassian blur filter
-  typedef itk::GaussianBlurImageFunction< ImageProcessing::CharImageType > GFunctionType;
+  typedef itk::GaussianBlurImageFunction< ImageProcessing::UInt8ImageType > GFunctionType;
   GFunctionType::Pointer gaussianFunction = GFunctionType::New();
   gaussianFunction->SetInputImage( inputImage );
 
