@@ -19,6 +19,17 @@ For historical compatibility in versions prior to 4.2 the internal representatio
  The official DREAM3D issue tracker is located at https://github.com/DREAM3D/DREAM3D/issues
 
 ## Version 4.2 Bugs Fixed & Features Added ##
+### Version 4.2.4815 ###
++ Added ability to nest Favorite Pipelines in folders
++ Fixed bugs when reading/write filter parameters for some Filters
++ Completely rewrote the GBCD codes to more closely mimic a reference implementation from CMU
++ Added the ability to generate several types of GBCd output files for visualization or use in an external GBCD code
++ Added version number to each Pipeline File
++ Fixed issue no. *143*: Fixing issue where reading in a stats file would not properly parse the ODF data
++ Fixed bug where doing certain types of rotation calculations would cause a crash or malformed output data
++ Adding a parameter to the Visualize GBCD filter to allow the user to set the Crystal symmetry
++ Fixed issue no. *138*: Convert data now works correctly on boolean Arrays
++ Many more low level developer centric bugs and APIs
 
 
 ### Version 4.2.4695 ###
