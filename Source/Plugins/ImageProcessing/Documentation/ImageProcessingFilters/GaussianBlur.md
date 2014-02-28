@@ -1,4 +1,4 @@
-GuassianBlur {#guassianblur}
+GaussianBlur {#gaussianblur}
 =====
 
 ## Group (Subgroup) ##

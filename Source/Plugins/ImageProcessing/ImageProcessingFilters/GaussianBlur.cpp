@@ -4,7 +4,7 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include "GuassianBlur.h"
+#include "GaussianBlur.h"
 
 #include "ITKUtilities.h"
 #include "itkGaussianBlurImageFunction.h"
@@ -13,7 +13,7 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-GuassianBlur::GuassianBlur() :
+GaussianBlur::GaussianBlur() :
 AbstractFilter(),
 m_RawImageDataArrayName("RawImageData"),
 m_ProcessedImageDataArrayName("ProcessedData"),
@@ -29,14 +29,14 @@ m_ProcessedImageData(NULL)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-GuassianBlur::~GuassianBlur()
+GaussianBlur::~GaussianBlur()
 {
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void GuassianBlur::setupFilterParameters()
+void GaussianBlur::setupFilterParameters()
 {
   std::vector<FilterParameter::Pointer> options;
   {
@@ -70,7 +70,7 @@ void GuassianBlur::setupFilterParameters()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void GuassianBlur::readFilterParameters(AbstractFilterParametersReader* reader, int index)
+void GaussianBlur::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
   setSelectedCellArrayName( reader->readValue( "SelectedCellArrayName", getSelectedCellArrayName() ) );
@@ -82,7 +82,7 @@ void GuassianBlur::readFilterParameters(AbstractFilterParametersReader* reader, 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int GuassianBlur::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
+int GaussianBlur::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 
 {
   writer->openFilterGroup(this, index);
@@ -96,7 +96,7 @@ int GuassianBlur::writeFilterParameters(AbstractFilterParametersWriter* writer, 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void GuassianBlur::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
+void GaussianBlur::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
   std::stringstream ss;
@@ -129,7 +129,7 @@ void GuassianBlur::dataCheck(bool preflight, size_t voxels, size_t fields, size_
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void GuassianBlur::preflight()
+void GaussianBlur::preflight()
 {
   /* Place code here that sanity checks input arrays and input values. Look at some
   * of the other DREAM3DLib/Filters/.cpp files for sample codes */
@@ -139,7 +139,7 @@ void GuassianBlur::preflight()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void GuassianBlur::execute()
+void GaussianBlur::execute()
 {
   std::stringstream ss;
   int err = 0;

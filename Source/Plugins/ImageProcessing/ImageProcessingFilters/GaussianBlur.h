@@ -15,20 +15,20 @@
 #include "DREAM3DLib/DataArrays/IDataArray.h"
 
 /**
- * @class GuassianBlur GuassianBlur.h ImageProcessing/Code/ImageProcessingFilters/GuassianBlur.h
+ * @class GaussianBlur GaussianBlur.h ImageProcessing/Code/ImageProcessingFilters/GaussianBlur.h
  * @brief
  * @author
  * @date
  * @version 1.0
  */
-class GuassianBlur : public AbstractFilter
+class GaussianBlur : public AbstractFilter
 {
   public:
-    DREAM3D_SHARED_POINTERS(GuassianBlur);
-    DREAM3D_STATIC_NEW_MACRO(GuassianBlur);
-    DREAM3D_TYPE_MACRO_SUPER(GuassianBlur, AbstractFilter);
+    DREAM3D_SHARED_POINTERS(GaussianBlur);
+    DREAM3D_STATIC_NEW_MACRO(GaussianBlur);
+    DREAM3D_TYPE_MACRO_SUPER(GaussianBlur, AbstractFilter);
 
-    virtual ~GuassianBlur();
+    virtual ~GaussianBlur();
 
     //Required Cell Data
     DREAM3D_INSTANCE_STRING_PROPERTY(RawImageDataArrayName)
@@ -90,7 +90,7 @@ class GuassianBlur : public AbstractFilter
     virtual void preflight();
 
   protected:
-    GuassianBlur();
+    GaussianBlur();
 
     /**
     * @brief Checks for the appropriate parameter values and availability of
@@ -106,8 +106,8 @@ class GuassianBlur : public AbstractFilter
     uint8_t* m_RawImageData;
     float* m_ProcessedImageData;
 
-    GuassianBlur(const GuassianBlur&); // Copy Constructor Not Implemented
-    void operator=(const GuassianBlur&); // Operator '=' Not Implemented
+    GaussianBlur(const GaussianBlur&); // Copy Constructor Not Implemented
+    void operator=(const GaussianBlur&); // Operator '=' Not Implemented
 };
 
 #endif /* _ImageProcessingFilter_H_ */
