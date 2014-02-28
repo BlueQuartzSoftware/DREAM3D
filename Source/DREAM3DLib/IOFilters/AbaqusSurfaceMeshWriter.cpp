@@ -90,8 +90,9 @@ void AbaqusSurfaceMeshWriter::readFilterParameters(AbstractFilterParametersReade
 {
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+  setOutputFile(reader->readValue("OutputFile", getOutputFile()));
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }
 
@@ -102,8 +103,8 @@ int AbaqusSurfaceMeshWriter::writeFilterParameters(AbstractFilterParametersWrite
 {
   writer->openFilterGroup(this, index);
   writer->writeValue("OutputFile", getOutputFile() );
-      writer->closeFilterGroup();
-    return ++index; // we want to return the next index that was just written to
+  writer->closeFilterGroup();
+  return ++index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------
@@ -115,25 +116,26 @@ void AbaqusSurfaceMeshWriter::dataCheck(bool preflight, size_t voxels, size_t fi
   if (m_OutputFile.empty() == true)
   {
     setErrorCondition(-1003);
-    addErrorMessage(getHumanLabel(), "Stl Output Directory is Not set correctly", -1003);
+    addErrorMessage(getHumanLabel(), "Abaqus Output file is not set.", getErrorCondition());
   }
 
   SurfaceMeshDataContainer* sm = getSurfaceMeshDataContainer();
   if (NULL == sm)
   {
-    addErrorMessage(getHumanLabel(), "SurfaceMeshDataContainer is missing", -383);
     setErrorCondition(-384);
+    addErrorMessage(getHumanLabel(), "SurfaceMeshDataContainer is missing", getErrorCondition());
   }
-  else {
+  else
+  {
     if (sm->getFaces().get() == NULL)
     {
-      addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Triangles", -383);
-      setErrorCondition(-384);
+      setErrorCondition(-385);
+      addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Triangles",getErrorCondition());
     }
     if (sm->getVertices().get() == NULL)
     {
-      addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Nodes", -384);
-      setErrorCondition(-384);
+      setErrorCondition(-386);
+      addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Nodes",getErrorCondition());
     }
     std::stringstream ss;
     GET_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshFaceLabels, ss, -30, int32_t, Int32ArrayType, sm->getNumFaceTuples(), 2)
@@ -166,16 +168,16 @@ void AbaqusSurfaceMeshWriter::execute()
     return;
   }
 
-   // Make sure any directory path is also available as the user may have just typed
+  // Make sure any directory path is also available as the user may have just typed
   // in a path without actually creating the full path
   std::string parentPath = MXAFileInfo::parentPath(getOutputFile());
   if(!MXADir::mkdir(parentPath, true))
   {
-      std::stringstream ss;
-      ss << "Error creating parent path '" << parentPath << "'";
-      notifyErrorMessage(ss.str(), -1);
-      setErrorCondition(-1);
-      return;
+    std::stringstream ss;
+    ss << "Error creating parent path '" << parentPath << "'";
+    notifyErrorMessage(ss.str(), -1);
+    setErrorCondition(-1);
+    return;
   }
 
   DREAM3D::SurfaceMesh::VertListPointer_t nodesPtr = sm->getVertices();
@@ -237,7 +239,7 @@ int AbaqusSurfaceMeshWriter::writeNodes(FILE* f)
   size_t numNodes = nodesPtr->GetNumberOfTuples();
   int err = 0;
   fprintf(f, "*Node,NSET=NALL\n");
-//1, 72.520433763730, 70.306420652241, 100.000000000000
+  //1, 72.520433763730, 70.306420652241, 100.000000000000
 
 
   for(size_t i = 1; i <= numNodes; ++i)
@@ -278,8 +280,8 @@ int AbaqusSurfaceMeshWriter::writeTriangles(FILE* f)
 int AbaqusSurfaceMeshWriter::writeGrains(FILE* f)
 {
 
-//*Elset, elset=Grain1
-//1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16
+  //*Elset, elset=Grain1
+  //1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16
 
   int err = 0;
 
@@ -347,7 +349,7 @@ int AbaqusSurfaceMeshWriter::writeGrains(FILE* f)
     // Make sure we have a new line at the end of the section
     if (lineCount != 0)
     {
-    fprintf(f, "\n");
+      fprintf(f, "\n");
     }
   }
   return err;
