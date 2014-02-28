@@ -1,31 +1,14 @@
-/*
- * Your License or Copyright Information can go here
- */
+/* ============================================================================
+ *
+ *
+ *
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 #include "ITKFilter.h"
 
-#include "itkImage.h"
-#include "itkImportImageFilter.h"
+#include "ITKUtilities.h"
 #include "itkGaussianBlurImageFunction.h"
-#include "itkImageRegionIterator.h"
 
- //define commonly used pixel types
-typedef uint8_t ITK_CharPixelType;//8 bit images (dream3d ImageData)
-typedef float ITK_FloatPixelType;//32 bit images (normal itk output)
-
-//define dimensionality
-const unsigned int ITK_ImageDimension = 3;
-
-//define commonly used image types
-typedef itk::Image< ITK_CharPixelType, ITK_ImageDimension > ITK_CharImageType;
-typedef itk::Image< ITK_FloatPixelType, ITK_ImageDimension > ITK_FloatImageType;
-
-//define iterator
-typedef itk::ImageRegionConstIterator< ITK_CharImageType > ConstIteratorType;
-
-//define import filter
-typedef itk::ImportImageFilter<ITK_FloatPixelType, ITK_ImageDimension> ImportFilterType;
-typedef itk::ImportImageFilter<ITK_CharPixelType, ITK_ImageDimension> ImportCharFilterType;
 
 // -----------------------------------------------------------------------------
 //
@@ -36,7 +19,7 @@ m_RawImageDataArrayName("RawImageData"),
 m_ProcessedImageDataArrayName("ProcessedData"),
 m_SelectedCellArrayName(""),
 m_NewCellArrayName("ProcessedArray"),
-m_OverwriteArray(false),
+m_OverwriteArray(true),
 m_RawImageData(NULL),
 m_ProcessedImageData(NULL)
 {
@@ -119,8 +102,6 @@ void ITKFilter::dataCheck(bool preflight, size_t voxels, size_t fields, size_t e
   std::stringstream ss;
   VoxelDataContainer* m = getVoxelDataContainer();
 
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, ProcessedImageData, ss, float, FloatArrayType, 0, voxels, 1)
-
   if(m_SelectedCellArrayName.empty() == true)
   {
     setErrorCondition(-11000);
@@ -134,20 +115,15 @@ void ITKFilter::dataCheck(bool preflight, size_t voxels, size_t fields, size_t e
 
     if(m_OverwriteArray)
     {
-      //bool check = m->renameCellData(m_ProcessedImageDataArrayName, m_RawImageDataArrayName);
+
     }
     else
     {
-      bool check = m->renameCellData(m_ProcessedImageDataArrayName, m_NewCellArrayName);
-      if(check == false)
-      {
-        ss << "Array to be processed could not be found in DataContainer";
-        addErrorMessage(getHumanLabel(),ss.str(),getErrorCondition());
-      }
+      CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, ProcessedImageData, ss, float, FloatArrayType, 0, voxels, 1)
+      m->renameCellData(m_ProcessedImageDataArrayName, m_NewCellArrayName);
     }
   }
 }
-
 
 // -----------------------------------------------------------------------------
 //
@@ -164,6 +140,7 @@ void ITKFilter::preflight()
 // -----------------------------------------------------------------------------
 void ITKFilter::execute()
 {
+  std::stringstream ss;
   int err = 0;
   setErrorCondition(err);
   VoxelDataContainer* m = getVoxelDataContainer();
@@ -178,65 +155,24 @@ void ITKFilter::execute()
   size_t totalFields = m->getNumFieldTuples();
   size_t totalEnsembles = m->getNumEnsembleTuples();
   dataCheck(false, totalPoints, totalFields, totalEnsembles);
+  if(m_OverwriteArray)
+  {
+    CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, ProcessedImageData, ss, float, FloatArrayType, 0, totalPoints, 1)
+  }
   if (getErrorCondition() < 0)
   {
     return;
   }
 
   /* Place all your code to execute your filter here. */
+  //get filter to convert m_RawImageData to itk::image
+  ImportCharFilterType::Pointer importFilter=Dream3DChartoITK(m, m_RawImageData);
 
-  //get size of dataset
-  size_t udims[3] =
-  { 0, 0, 0 };
-  m->getDimensions(udims);
-#if (CMP_SIZEOF_SIZE_T == 4)
-  typedef int32_t DimType;
-#else
-  typedef int64_t DimType;
-#endif
-   DimType dims[3] = { static_cast<DimType>(udims[0]), static_cast<DimType>(udims[1]), static_cast<DimType>(udims[2]), };
-
-  ImportCharFilterType::Pointer importFilter = ImportCharFilterType::New();
-
-  //set size of itkImage
-  ImportCharFilterType::SizeType  size;
-  size[0]  = dims[0];  // size along X
-  size[1]  = dims[1];  // size along Y
-  size[2]  = dims[2];  // size along Z
-
-  //fill with 'black'
-  ImportCharFilterType::IndexType start;
-  start.Fill( 0 );
-
-  //setup import filter
-  ImportCharFilterType::RegionType region;
-  region.SetIndex( start );
-  region.SetSize(  size  );
-  importFilter->SetRegion( region );
-
-  //define origin
-  double origin[ ITK_ImageDimension ];///this may not be zero if cropped w/o updating origin
-  origin[0] = 0.0;    // X coordinate
-  origin[1] = 0.0;    // Y coordinate
-  origin[2] = 0.0;    // Z coordinate
-  importFilter->SetOrigin( origin );
-
-  //define spacing
-  double spacing[ ITK_ImageDimension ];///this should probably also grab the actual spacing
-  spacing[0] = 1.0;    // along X direction
-  spacing[1] = 1.0;    // along Y direction
-  spacing[2] = 1.0;    // along Z direction
-  importFilter->SetSpacing( spacing );
-
-  //import data
-  const bool importImageFilterWillOwnTheBuffer = false;
-  importFilter->SetImportPointer( m_RawImageData, totalPoints, importImageFilterWillOwnTheBuffer );
-  importFilter->Update();
-
-  //get image iterator
-  const ITK_CharImageType * inputImage = importFilter->GetOutput();
+  //get image from filter
+  const ITK_CharImageType * inputImage;
+  inputImage=importFilter->GetOutput();
   ITK_CharImageType::RegionType filterRegion = inputImage->GetBufferedRegion();
-  ConstIteratorType it(inputImage, filterRegion);
+  CharConstIteratorType it(inputImage, filterRegion);
 
   //create guassian blur filter
   typedef itk::GaussianBlurImageFunction< ITK_CharImageType > GFunctionType;
@@ -266,10 +202,6 @@ void ITKFilter::execute()
   {
     m->removeCellData(m_SelectedCellArrayName);
     bool check = m->renameCellData(m_ProcessedImageDataArrayName, m_SelectedCellArrayName);
-  }
-  else
-  {
-    bool check = m->renameCellData(m_ProcessedImageDataArrayName, m_NewCellArrayName);
   }
 
   /* Let the GUI know we are done with this filter */

@@ -41,6 +41,10 @@ foreach(f ${_PrivateFilters} )
                         ${DREAM3DLib_FILTER_DOC_DIR}/${_filterGroupName}/${f}.md FALSE)
 endforeach()
 
+#-------------
+# These are files that need to be compiled into DREAM3DLib but are NOT filters
+ADD_DREAM3D_SUPPORT_HEADER(${ITK_SOURCE_DIR} ${_filterGroupName} ITKUtilities.h)
+ADD_DREAM3D_SUPPORT_SOURCE(${ITK_SOURCE_DIR} ${_filterGroupName} ITKUtilities.cpp)
 #---------------------
 # This macro must come last after we are done adding all the filters and support files.
 END_FILTER_GROUP(${ITK_BINARY_DIR} "${_filterGroupName}" "ITK")

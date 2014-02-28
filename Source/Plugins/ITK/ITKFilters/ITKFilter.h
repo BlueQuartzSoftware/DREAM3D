@@ -1,6 +1,8 @@
-/*
- * Your License or Copyright Information can go here
- */
+/* ============================================================================
+ *
+ *
+ *
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 #ifndef _ITKFilter_H_
 #define _ITKFilter_H_
@@ -14,9 +16,9 @@
 
 /**
  * @class ITKFilter ITKFilter.h ITK/Code/ITKFilters/ITKFilter.h
- * @brief
- * @author
- * @date
+ * @brief Example filter to guassian blur data with itk
+ * @author Will Lenthe
+ * @date 2/26/2014
  * @version 1.0
  */
 class ITKFilter : public AbstractFilter
