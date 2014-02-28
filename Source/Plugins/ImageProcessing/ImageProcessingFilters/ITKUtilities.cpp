@@ -53,16 +53,20 @@ ImageProcessing::ImportInt8FilterType::Pointer ITKUtilities::Dream3DInt8toITK(Vo
   region.SetSize(  size  );
   importFilter->SetRegion( region );
 
-  double origin[ ImageProcessing::ImageDimension ];///this may not be zero if cropped w/o updating origin
-  origin[0] = 0.0;    // X coordinate
-  origin[1] = 0.0;    // Y coordinate
-  origin[2] = 0.0;    // Z coordinate
+  float sampleOrigin[3] = {0.0f, 0.0f, 0.0f};
+  m->getOrigin(sampleOrigin);
+  double origin[ ImageProcessing::ImageDimension ];
+  origin[0] = sampleOrigin[0];    // X coordinate
+  origin[1] = sampleOrigin[1];    // Y coordinate
+  origin[2] = sampleOrigin[2];    // Z coordinate
   importFilter->SetOrigin( origin );
 
-  double spacing[ ImageProcessing::ImageDimension ];///should get actual spacing here too
-  spacing[0] = 1.0;    // along X direction
-  spacing[1] = 1.0;    // along Y direction
-  spacing[2] = 1.0;    // along Z direction
+  float voxelResolution[3] = {0.0f, 0.0f, 0.0f};
+  m->getResolution(voxelResolution);
+  double spacing[ ImageProcessing::ImageDimension ];
+  spacing[0] = voxelResolution[0];    // along X direction
+  spacing[1] = voxelResolution[1];    // along Y direction
+  spacing[2] = voxelResolution[2];    // along Z direction
   importFilter->SetSpacing( spacing );
 
   const bool importImageFilterWillOwnTheBuffer = false;
@@ -105,16 +109,20 @@ ImageProcessing::ImportUInt8FilterType::Pointer ITKUtilities::Dream3DUInt8toITK(
   region.SetSize(  size  );
   importFilter->SetRegion( region );
 
-  double origin[ ImageProcessing::ImageDimension ];///this may not be zero if cropped w/o updating origin
-  origin[0] = 0.0;    // X coordinate
-  origin[1] = 0.0;    // Y coordinate
-  origin[2] = 0.0;    // Z coordinate
+  float sampleOrigin[3] = {0.0f, 0.0f, 0.0f};
+  m->getOrigin(sampleOrigin);
+  double origin[ ImageProcessing::ImageDimension ];
+  origin[0] = sampleOrigin[0];    // X coordinate
+  origin[1] = sampleOrigin[1];    // Y coordinate
+  origin[2] = sampleOrigin[2];    // Z coordinate
   importFilter->SetOrigin( origin );
 
-  double spacing[ ImageProcessing::ImageDimension ];///should get actual spacing here too
-  spacing[0] = 1.0;    // along X direction
-  spacing[1] = 1.0;    // along Y direction
-  spacing[2] = 1.0;    // along Z direction
+  float voxelResolution[3] = {0.0f, 0.0f, 0.0f};
+  m->getResolution(voxelResolution);
+  double spacing[ ImageProcessing::ImageDimension ];
+  spacing[0] = voxelResolution[0];    // along X direction
+  spacing[1] = voxelResolution[1];    // along Y direction
+  spacing[2] = voxelResolution[2];    // along Z direction
   importFilter->SetSpacing( spacing );
 
   const bool importImageFilterWillOwnTheBuffer = false;
@@ -157,16 +165,20 @@ ImageProcessing::ImportInt16FilterType::Pointer ITKUtilities::Dream3DInt16toITK(
   region.SetSize(  size  );
   importFilter->SetRegion( region );
 
-  double origin[ ImageProcessing::ImageDimension ];///this may not be zero if cropped w/o updating origin
-  origin[0] = 0.0;    // X coordinate
-  origin[1] = 0.0;    // Y coordinate
-  origin[2] = 0.0;    // Z coordinate
+  float sampleOrigin[3] = {0.0f, 0.0f, 0.0f};
+  m->getOrigin(sampleOrigin);
+  double origin[ ImageProcessing::ImageDimension ];
+  origin[0] = sampleOrigin[0];    // X coordinate
+  origin[1] = sampleOrigin[1];    // Y coordinate
+  origin[2] = sampleOrigin[2];    // Z coordinate
   importFilter->SetOrigin( origin );
 
-  double spacing[ ImageProcessing::ImageDimension ];///should get actual spacing here too
-  spacing[0] = 1.0;    // along X direction
-  spacing[1] = 1.0;    // along Y direction
-  spacing[2] = 1.0;    // along Z direction
+  float voxelResolution[3] = {0.0f, 0.0f, 0.0f};
+  m->getResolution(voxelResolution);
+  double spacing[ ImageProcessing::ImageDimension ];
+  spacing[0] = voxelResolution[0];    // along X direction
+  spacing[1] = voxelResolution[1];    // along Y direction
+  spacing[2] = voxelResolution[2];    // along Z direction
   importFilter->SetSpacing( spacing );
 
   const bool importImageFilterWillOwnTheBuffer = false;
@@ -209,16 +221,20 @@ ImageProcessing::ImportUInt16FilterType::Pointer ITKUtilities::Dream3DUInt16toIT
   region.SetSize(  size  );
   importFilter->SetRegion( region );
 
-  double origin[ ImageProcessing::ImageDimension ];///this may not be zero if cropped w/o updating origin
-  origin[0] = 0.0;    // X coordinate
-  origin[1] = 0.0;    // Y coordinate
-  origin[2] = 0.0;    // Z coordinate
+  float sampleOrigin[3] = {0.0f, 0.0f, 0.0f};
+  m->getOrigin(sampleOrigin);
+  double origin[ ImageProcessing::ImageDimension ];
+  origin[0] = sampleOrigin[0];    // X coordinate
+  origin[1] = sampleOrigin[1];    // Y coordinate
+  origin[2] = sampleOrigin[2];    // Z coordinate
   importFilter->SetOrigin( origin );
 
-  double spacing[ ImageProcessing::ImageDimension ];///should get actual spacing here too
-  spacing[0] = 1.0;    // along X direction
-  spacing[1] = 1.0;    // along Y direction
-  spacing[2] = 1.0;    // along Z direction
+  float voxelResolution[3] = {0.0f, 0.0f, 0.0f};
+  m->getResolution(voxelResolution);
+  double spacing[ ImageProcessing::ImageDimension ];
+  spacing[0] = voxelResolution[0];    // along X direction
+  spacing[1] = voxelResolution[1];    // along Y direction
+  spacing[2] = voxelResolution[2];    // along Z direction
   importFilter->SetSpacing( spacing );
 
   const bool importImageFilterWillOwnTheBuffer = false;
@@ -261,16 +277,20 @@ ImageProcessing::ImportInt32FilterType::Pointer ITKUtilities::Dream3DInt32toITK(
   region.SetSize(  size  );
   importFilter->SetRegion( region );
 
-  double origin[ ImageProcessing::ImageDimension ];///this may not be zero if cropped w/o updating origin
-  origin[0] = 0.0;    // X coordinate
-  origin[1] = 0.0;    // Y coordinate
-  origin[2] = 0.0;    // Z coordinate
+  float sampleOrigin[3] = {0.0f, 0.0f, 0.0f};
+  m->getOrigin(sampleOrigin);
+  double origin[ ImageProcessing::ImageDimension ];
+  origin[0] = sampleOrigin[0];    // X coordinate
+  origin[1] = sampleOrigin[1];    // Y coordinate
+  origin[2] = sampleOrigin[2];    // Z coordinate
   importFilter->SetOrigin( origin );
 
-  double spacing[ ImageProcessing::ImageDimension ];///should get actual spacing here too
-  spacing[0] = 1.0;    // along X direction
-  spacing[1] = 1.0;    // along Y direction
-  spacing[2] = 1.0;    // along Z direction
+  float voxelResolution[3] = {0.0f, 0.0f, 0.0f};
+  m->getResolution(voxelResolution);
+  double spacing[ ImageProcessing::ImageDimension ];
+  spacing[0] = voxelResolution[0];    // along X direction
+  spacing[1] = voxelResolution[1];    // along Y direction
+  spacing[2] = voxelResolution[2];    // along Z direction
   importFilter->SetSpacing( spacing );
 
   const bool importImageFilterWillOwnTheBuffer = false;
@@ -313,16 +333,20 @@ ImageProcessing::ImportUInt32FilterType::Pointer ITKUtilities::Dream3DUInt32toIT
   region.SetSize(  size  );
   importFilter->SetRegion( region );
 
-  double origin[ ImageProcessing::ImageDimension ];///this may not be zero if cropped w/o updating origin
-  origin[0] = 0.0;    // X coordinate
-  origin[1] = 0.0;    // Y coordinate
-  origin[2] = 0.0;    // Z coordinate
+  float sampleOrigin[3] = {0.0f, 0.0f, 0.0f};
+  m->getOrigin(sampleOrigin);
+  double origin[ ImageProcessing::ImageDimension ];
+  origin[0] = sampleOrigin[0];    // X coordinate
+  origin[1] = sampleOrigin[1];    // Y coordinate
+  origin[2] = sampleOrigin[2];    // Z coordinate
   importFilter->SetOrigin( origin );
 
-  double spacing[ ImageProcessing::ImageDimension ];///should get actual spacing here too
-  spacing[0] = 1.0;    // along X direction
-  spacing[1] = 1.0;    // along Y direction
-  spacing[2] = 1.0;    // along Z direction
+  float voxelResolution[3] = {0.0f, 0.0f, 0.0f};
+  m->getResolution(voxelResolution);
+  double spacing[ ImageProcessing::ImageDimension ];
+  spacing[0] = voxelResolution[0];    // along X direction
+  spacing[1] = voxelResolution[1];    // along Y direction
+  spacing[2] = voxelResolution[2];    // along Z direction
   importFilter->SetSpacing( spacing );
 
   const bool importImageFilterWillOwnTheBuffer = false;
@@ -365,16 +389,20 @@ ImageProcessing::ImportInt64FilterType::Pointer ITKUtilities::Dream3DInt64toITK(
   region.SetSize(  size  );
   importFilter->SetRegion( region );
 
-  double origin[ ImageProcessing::ImageDimension ];///this may not be zero if cropped w/o updating origin
-  origin[0] = 0.0;    // X coordinate
-  origin[1] = 0.0;    // Y coordinate
-  origin[2] = 0.0;    // Z coordinate
+  float sampleOrigin[3] = {0.0f, 0.0f, 0.0f};
+  m->getOrigin(sampleOrigin);
+  double origin[ ImageProcessing::ImageDimension ];
+  origin[0] = sampleOrigin[0];    // X coordinate
+  origin[1] = sampleOrigin[1];    // Y coordinate
+  origin[2] = sampleOrigin[2];    // Z coordinate
   importFilter->SetOrigin( origin );
 
-  double spacing[ ImageProcessing::ImageDimension ];///should get actual spacing here too
-  spacing[0] = 1.0;    // along X direction
-  spacing[1] = 1.0;    // along Y direction
-  spacing[2] = 1.0;    // along Z direction
+  float voxelResolution[3] = {0.0f, 0.0f, 0.0f};
+  m->getResolution(voxelResolution);
+  double spacing[ ImageProcessing::ImageDimension ];
+  spacing[0] = voxelResolution[0];    // along X direction
+  spacing[1] = voxelResolution[1];    // along Y direction
+  spacing[2] = voxelResolution[2];    // along Z direction
   importFilter->SetSpacing( spacing );
 
   const bool importImageFilterWillOwnTheBuffer = false;
@@ -417,16 +445,20 @@ ImageProcessing::ImportUInt64FilterType::Pointer ITKUtilities::Dream3DUInt64toIT
   region.SetSize(  size  );
   importFilter->SetRegion( region );
 
-  double origin[ ImageProcessing::ImageDimension ];///this may not be zero if cropped w/o updating origin
-  origin[0] = 0.0;    // X coordinate
-  origin[1] = 0.0;    // Y coordinate
-  origin[2] = 0.0;    // Z coordinate
+  float sampleOrigin[3] = {0.0f, 0.0f, 0.0f};
+  m->getOrigin(sampleOrigin);
+  double origin[ ImageProcessing::ImageDimension ];
+  origin[0] = sampleOrigin[0];    // X coordinate
+  origin[1] = sampleOrigin[1];    // Y coordinate
+  origin[2] = sampleOrigin[2];    // Z coordinate
   importFilter->SetOrigin( origin );
 
-  double spacing[ ImageProcessing::ImageDimension ];///should get actual spacing here too
-  spacing[0] = 1.0;    // along X direction
-  spacing[1] = 1.0;    // along Y direction
-  spacing[2] = 1.0;    // along Z direction
+  float voxelResolution[3] = {0.0f, 0.0f, 0.0f};
+  m->getResolution(voxelResolution);
+  double spacing[ ImageProcessing::ImageDimension ];
+  spacing[0] = voxelResolution[0];    // along X direction
+  spacing[1] = voxelResolution[1];    // along Y direction
+  spacing[2] = voxelResolution[2];    // along Z direction
   importFilter->SetSpacing( spacing );
 
   const bool importImageFilterWillOwnTheBuffer = false;
@@ -469,16 +501,20 @@ ImageProcessing::ImportFloatFilterType::Pointer ITKUtilities::Dream3DFloattoITK(
   region.SetSize(  size  );
   importFilter->SetRegion( region );
 
-  double origin[ ImageProcessing::ImageDimension ];///this may not be zero if cropped w/o updating origin
-  origin[0] = 0.0;    // X coordinate
-  origin[1] = 0.0;    // Y coordinate
-  origin[2] = 0.0;    // Z coordinate
+  float sampleOrigin[3] = {0.0f, 0.0f, 0.0f};
+  m->getOrigin(sampleOrigin);
+  double origin[ ImageProcessing::ImageDimension ];
+  origin[0] = sampleOrigin[0];    // X coordinate
+  origin[1] = sampleOrigin[1];    // Y coordinate
+  origin[2] = sampleOrigin[2];    // Z coordinate
   importFilter->SetOrigin( origin );
 
-  double spacing[ ImageProcessing::ImageDimension ];///should get actual spacing here too
-  spacing[0] = 1.0;    // along X direction
-  spacing[1] = 1.0;    // along Y direction
-  spacing[2] = 1.0;    // along Z direction
+  float voxelResolution[3] = {0.0f, 0.0f, 0.0f};
+  m->getResolution(voxelResolution);
+  double spacing[ ImageProcessing::ImageDimension ];
+  spacing[0] = voxelResolution[0];    // along X direction
+  spacing[1] = voxelResolution[1];    // along Y direction
+  spacing[2] = voxelResolution[2];    // along Z direction
   importFilter->SetSpacing( spacing );
 
   const bool importImageFilterWillOwnTheBuffer = false;
@@ -521,16 +557,20 @@ ImageProcessing::ImportDoubleFilterType::Pointer ITKUtilities::Dream3DDoubletoIT
   region.SetSize(  size  );
   importFilter->SetRegion( region );
 
-  double origin[ ImageProcessing::ImageDimension ];///this may not be zero if cropped w/o updating origin
-  origin[0] = 0.0;    // X coordinate
-  origin[1] = 0.0;    // Y coordinate
-  origin[2] = 0.0;    // Z coordinate
+  float sampleOrigin[3] = {0.0f, 0.0f, 0.0f};
+  m->getOrigin(sampleOrigin);
+  double origin[ ImageProcessing::ImageDimension ];
+  origin[0] = sampleOrigin[0];    // X coordinate
+  origin[1] = sampleOrigin[1];    // Y coordinate
+  origin[2] = sampleOrigin[2];    // Z coordinate
   importFilter->SetOrigin( origin );
 
-  double spacing[ ImageProcessing::ImageDimension ];///should get actual spacing here too
-  spacing[0] = 1.0;    // along X direction
-  spacing[1] = 1.0;    // along Y direction
-  spacing[2] = 1.0;    // along Z direction
+  float voxelResolution[3] = {0.0f, 0.0f, 0.0f};
+  m->getResolution(voxelResolution);
+  double spacing[ ImageProcessing::ImageDimension ];
+  spacing[0] = voxelResolution[0];    // along X direction
+  spacing[1] = voxelResolution[1];    // along Y direction
+  spacing[2] = voxelResolution[2];    // along Z direction
   importFilter->SetSpacing( spacing );
 
   const bool importImageFilterWillOwnTheBuffer = false;
