@@ -38,7 +38,7 @@
 #include <QtCore/QMetaProperty>
 
 
-#include "DREAM3DWidgetsLib/moc_BooleanWidget.cpp"
+#include "FilterParameterWidgetsDialogs.h"
 
 
 // -----------------------------------------------------------------------------
@@ -114,12 +114,9 @@ void BooleanWidget::filterNeedsInputParameters(AbstractFilter* filter)
 
   QVariant v(value->isChecked() );
   bool ok = filter->setProperty(PROPERTY_NAME_AS_CHAR, v);
-
   if(false == ok)
   {
-    QString ss = QObject::tr("Error occurred setting Filter Parameter %1").arg(m_FilterParameter->getPropertyName());
-    emit errorSettingFilterParameter(ss);
-    qDebug() << ss;
+    FilterParameterWidgetsDialogs::ShowCouldNotSetFilterParameter(m_Filter, m_FilterParameter);
   }
 }
 

@@ -44,6 +44,8 @@
 #include "DREAM3DLib/DataArrays/IDataArray.h"
 #include "SurfaceMeshing/SurfaceMeshingFilters/SurfaceMeshFilter.h"
 
+#include "SurfaceMeshing/SurfaceMeshingConstants.h"
+
 /**
  * @class GenerateUniqueEdges GenerateUniqueEdges.h /SurfaceMeshFilters/GenerateUniqueEdges.h
  * @brief This filter creates a pair of arrays that help to describe the connectivity in a triangle

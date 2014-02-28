@@ -43,6 +43,8 @@
 #include "DREAM3DLib/DataArrays/IDataArray.h"
 #include "SurfaceMeshing/SurfaceMeshingFilters/SurfaceMeshFilter.h"
 
+#include "SurfaceMeshing/SurfaceMeshingConstants.h"
+
 /**
  * @class SharedFeatureFaceFilter SharedFeatureFaceFilter.h SurfaceMeshing/SurfaceMeshingFilters/SharedFeatureFaceFilter.h
  * @brief This filter groups triangles together in a way where each group would define a feature face where the group
@@ -75,6 +77,7 @@ class SharedFeatureFaceFilter : public SurfaceMeshFilter
     * a different group if you want. The string returned here will be displayed
     * in the GUI for the filter
     */
+    virtual const QString getCompiledLibraryName() { return SurfaceMeshing::SurfaceMeshingBaseName; }
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::SurfaceMeshingFilters; }
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::ConnectivityArrangementFilters; }
 
@@ -145,4 +148,5 @@ signals:
 };
 
 #endif /* _FeatureFaceFilter_H_ */
+
 

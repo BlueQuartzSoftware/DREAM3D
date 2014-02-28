@@ -46,6 +46,7 @@
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/DataContainers/VolumeDataContainer.h"
 
+#include "Sampling/SamplingConstants.h"
 /**
  * @class ChangeResolution ChangeResolution.h DREAM3DLib/SyntheticBuilderFilters/ChangeResolution.h
  * @brief
@@ -68,12 +69,13 @@ class ChangeResolution : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
 
     DREAM3D_FILTER_PARAMETER(FloatVec3_t, Resolution)
-    Q_PROPERTY(FloatVec3_t Resolution READ getResolution WRITE setResolution NOTIFY parametersChanged)
+    Q_PROPERTY(FloatVec3_t Resolution READ getResolution WRITE setResolution)
     DREAM3D_FILTER_PARAMETER(bool, RenumberFeatures)
-    Q_PROPERTY(bool RenumberFeatures READ getRenumberFeatures WRITE setRenumberFeatures NOTIFY parametersChanged)
+    Q_PROPERTY(bool RenumberFeatures READ getRenumberFeatures WRITE setRenumberFeatures)
     DREAM3D_FILTER_PARAMETER(bool, SaveAsNewDataContainer)
-    Q_PROPERTY(bool SaveAsNewDataContainer READ getSaveAsNewDataContainer WRITE setSaveAsNewDataContainer NOTIFY parametersChanged)
+    Q_PROPERTY(bool SaveAsNewDataContainer READ getSaveAsNewDataContainer WRITE setSaveAsNewDataContainer)
 
+    virtual const QString getCompiledLibraryName() { return Sampling::SamplingBaseName; }
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::SamplingFilters; }
     virtual const QString getSubGroupName()  { return DREAM3D::FilterSubGroups::ResolutionFilters; }
     virtual const QString getHumanLabel() { return "Change Resolution"; }
@@ -118,6 +120,7 @@ class ChangeResolution : public AbstractFilter
 };
 
 #endif /* CHANGERESOLUTION_H_ */
+
 
 
 

@@ -45,6 +45,7 @@
 #include "DREAM3DLib/DataArrays/IDataArray.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/DataContainers/VolumeDataContainer.h"
+#include "DREAM3DLib/Common/Constants.h"
 
 
 /**
@@ -68,11 +69,12 @@ class DREAM3DLib_EXPORT FeatureDataCSVWriter : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
 
     DREAM3D_FILTER_PARAMETER(QString, FeatureDataFile)
-    Q_PROPERTY(QString FeatureDataFile READ getFeatureDataFile WRITE setFeatureDataFile NOTIFY parametersChanged)
+    Q_PROPERTY(QString FeatureDataFile READ getFeatureDataFile WRITE setFeatureDataFile)
     DREAM3D_FILTER_PARAMETER(bool, WriteNeighborListData)
-    Q_PROPERTY(bool WriteNeighborListData READ getWriteNeighborListData WRITE setWriteNeighborListData NOTIFY parametersChanged)
+    Q_PROPERTY(bool WriteNeighborListData READ getWriteNeighborListData WRITE setWriteNeighborListData)
     DREAM3D_INSTANCE_PROPERTY(char, Delimiter)
 
+    virtual const QString getCompiledLibraryName() { return IO::IOBaseName; }
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::OutputFilters; }
     virtual const QString getHumanLabel() { return "Write Feature Data as CSV File"; }
@@ -114,3 +116,4 @@ class DREAM3DLib_EXPORT FeatureDataCSVWriter : public AbstractFilter
 };
 
 #endif /* FeatureDataCSVWriter_H_ */
+

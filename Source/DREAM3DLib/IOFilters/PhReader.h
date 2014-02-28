@@ -47,6 +47,7 @@
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/DataArrays/DataArray.hpp"
 #include "DREAM3DLib/IOFilters/FileReader.h"
+#include "DREAM3DLib/Common/Constants.h"
 
 /**
  * @class PHReader PHReader.h DREAM3DLib/IO/PHReader.h
@@ -68,14 +69,15 @@ class DREAM3DLib_EXPORT PhReader : public FileReader
     DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
 
     DREAM3D_FILTER_PARAMETER(QString, InputFile)
-    Q_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile NOTIFY parametersChanged)
+    Q_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile)
     DREAM3D_FILTER_PARAMETER(FloatVec3_t, Origin)
-    Q_PROPERTY(FloatVec3_t Origin READ getOrigin WRITE setOrigin NOTIFY parametersChanged)
+    Q_PROPERTY(FloatVec3_t Origin READ getOrigin WRITE setOrigin)
     DREAM3D_FILTER_PARAMETER(FloatVec3_t, Resolution)
-    Q_PROPERTY(FloatVec3_t Resolution READ getResolution WRITE setResolution NOTIFY parametersChanged)
+    Q_PROPERTY(FloatVec3_t Resolution READ getResolution WRITE setResolution)
 
     //------ Created Cell Data
 
+    virtual const QString getCompiledLibraryName() { return IO::IOBaseName; }
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::InputFilters; }
     virtual const QString getHumanLabel() { return "Read Ph File (Feature Ids)"; }
@@ -121,6 +123,7 @@ class DREAM3DLib_EXPORT PhReader : public FileReader
 };
 
 #endif //_PHReader_h_
+
 
 
 

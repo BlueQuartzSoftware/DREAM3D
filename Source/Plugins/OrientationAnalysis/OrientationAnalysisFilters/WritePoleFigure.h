@@ -45,7 +45,7 @@
 #include "DREAM3DLib/DataArrays/IDataArray.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
 
-
+#include "OrientationAnalysis/OrientationAnalysisConstants.h"
 
 /**
  * @class WritePoleFigure WritePoleFigure.h /IOFilters/WritePoleFigure.h
@@ -70,20 +70,20 @@ class WritePoleFigure : public AbstractFilter
 
     /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
     DREAM3D_FILTER_PARAMETER(QString, ImagePrefix)
-    Q_PROPERTY(QString ImagePrefix READ getImagePrefix WRITE setImagePrefix NOTIFY parametersChanged)
+    Q_PROPERTY(QString ImagePrefix READ getImagePrefix WRITE setImagePrefix)
     DREAM3D_FILTER_PARAMETER(QString, OutputPath)
-    Q_PROPERTY(QString OutputPath READ getOutputPath WRITE setOutputPath NOTIFY parametersChanged)
+    Q_PROPERTY(QString OutputPath READ getOutputPath WRITE setOutputPath)
     DREAM3D_FILTER_PARAMETER(int, ImageFormat)
-    Q_PROPERTY(int ImageFormat READ getImageFormat WRITE setImageFormat NOTIFY parametersChanged)
+    Q_PROPERTY(int ImageFormat READ getImageFormat WRITE setImageFormat)
     DREAM3D_FILTER_PARAMETER(int, ImageSize)
-    Q_PROPERTY(int ImageSize READ getImageSize WRITE setImageSize NOTIFY parametersChanged)
+    Q_PROPERTY(int ImageSize READ getImageSize WRITE setImageSize)
     DREAM3D_FILTER_PARAMETER(int, LambertSize)
-    Q_PROPERTY(int LambertSize READ getLambertSize WRITE setLambertSize NOTIFY parametersChanged)
+    Q_PROPERTY(int LambertSize READ getLambertSize WRITE setLambertSize)
     DREAM3D_FILTER_PARAMETER(int, NumColors)
-    Q_PROPERTY(int NumColors READ getNumColors WRITE setNumColors NOTIFY parametersChanged)
+    Q_PROPERTY(int NumColors READ getNumColors WRITE setNumColors)
 
     // Need this here because the Array Name is declared in another macro in the private section
-    Q_PROPERTY(QString CellEulerAnglesArrayName READ getCellEulerAnglesArrayName WRITE setCellEulerAnglesArrayName NOTIFY parametersChanged)
+    Q_PROPERTY(QString CellEulerAnglesArrayName READ getCellEulerAnglesArrayName WRITE setCellEulerAnglesArrayName)
 
     enum ImageFormatType
     {
@@ -98,6 +98,7 @@ class WritePoleFigure : public AbstractFilter
     * a different group if you want. The string returned here will be displayed
     * in the GUI for the filter
     */
+    virtual const QString getCompiledLibraryName() { return OrientationAnalysis::OrientationAnalysisBaseName; }
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
 
     /**
@@ -198,6 +199,7 @@ class WritePoleFigure : public AbstractFilter
 };
 
 #endif /* _WritePoleFigure_H_ */
+
 
 
 

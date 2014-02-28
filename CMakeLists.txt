@@ -138,6 +138,15 @@ set(CMAKE_AUTOMOC TRUE)
 # contains a path to CMake script)
 INCLUDE( ${QT_USE_FILE} )
 
+
+# --------------------------------------------------------------------
+# We need the Qt Image Plugins (Most likley) for either the DREAM3D application
+# or the pipeline runner which might load images through one of the plugins
+# so we are just going to look for the plugins here and include them.
+FindQt4Plugins("qgif;qjpeg;qtiff" "${DREAM3DProj_BINARY_DIR}/Qt_Plugins.txt"
+                "${DREAM3DProj_BINARY_DIR}/LibSearchDirs.txt"
+                "imageformats" )
+
 # Append the locations of the Qt libraries to our Library Search Paths
 list(APPEND CMP_LIB_SEARCH_DIRS ${QT_BINARY_DIR} ${QT_LIBRARY_DIR} )
 
@@ -298,9 +307,6 @@ set(FilterWidgetsLib_BINARY_DIR ${DREAM3DProj_BINARY_DIR}/FilterWidgetsLib)
 # -- Add in the DREAM3D Sources into a static library
 add_subdirectory( ${DREAM3DProj_SOURCE_DIR}/Source/DREAM3DLib/ ${PROJECT_BINARY_DIR}/DREAM3DLib)
 
-file(WRITE ${DREAM3DProj_BINARY_DIR}/Qt_Plugins.txt)
-
-
 # Build the static QtSupport library - which MUST be a static library or the linking
 # will not work due to signals/slots mechanism.
 add_subdirectory(${DREAM3DProj_SOURCE_DIR}/Source/QtSupport ${PROJECT_BINARY_DIR}/QtSupport)
@@ -364,9 +370,6 @@ set(DREAM3D_PLUGIN_LIST
      SurfaceMeshing
      SyntheticBuilding
 )
-
-# Clear this file out before we go any further
-file(WRITE ${DREAM3DProj_BINARY_DIR}/Qt_Plugins.txt "")
 
 #-------------------------------------------------------------------------------
 # Build the "Built in" Plugins

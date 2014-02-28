@@ -45,6 +45,7 @@
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/DataArrays/DataArray.hpp"
 #include "DREAM3DLib/IOFilters/FileReader.h"
+#include "DREAM3DLib/Common/Constants.h"
 
 /**
  * @class VASPReader VASPReader.h DREAM3DLib/IO/VASPReader.h
@@ -66,10 +67,11 @@ class DREAM3DLib_EXPORT VASPReader : public FileReader
     DREAM3D_INSTANCE_STRING_PROPERTY(VertexAttributeMatrixName)
 
     DREAM3D_FILTER_PARAMETER(QString, InputFile)
-    Q_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile NOTIFY parametersChanged)
+    Q_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile)
 
     //------ Created Cell Data
 
+    virtual const QString getCompiledLibraryName() { return IO::IOBaseName; }
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::InputFilters; }
     virtual const QString getHumanLabel() { return "Read VASP File"; }
@@ -119,6 +121,7 @@ class DREAM3DLib_EXPORT VASPReader : public FileReader
 };
 
 #endif /* VASPREADER_H_ */
+
 
 
 

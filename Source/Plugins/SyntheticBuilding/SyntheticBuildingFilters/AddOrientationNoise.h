@@ -48,7 +48,7 @@
 
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/DataContainers/VolumeDataContainer.h"
-
+#include "SyntheticBuilding/SyntheticBuildingConstants.h"
 
 /**
  * @class AddOrientationNoises AddOrientationNoises.h DREAM3DLib/SyntheticBuilderFilters/AddOrientationNoises.h
@@ -73,8 +73,9 @@ class AddOrientationNoise : public AbstractFilter
 
 
     DREAM3D_FILTER_PARAMETER(float, Magnitude)
-    Q_PROPERTY(float Magnitude READ getMagnitude WRITE setMagnitude NOTIFY parametersChanged)
+    Q_PROPERTY(float Magnitude READ getMagnitude WRITE setMagnitude)
 
+    virtual const QString getCompiledLibraryName() { return SyntheticBuilding::SyntheticBuildingBaseName; }
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::SyntheticBuildingFilters; }
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::CrystallographyFilters; }
     virtual const QString getHumanLabel() { return "Add Orientation Noise"; }
@@ -120,6 +121,7 @@ class AddOrientationNoise : public AbstractFilter
 };
 
 #endif /* AddOrientationNoise_H_ */
+
 
 
 

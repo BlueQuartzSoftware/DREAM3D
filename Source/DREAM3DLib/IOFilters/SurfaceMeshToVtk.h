@@ -43,6 +43,7 @@
 #include "DREAM3DLib/DataArrays/IDataArray.h"
 
 #include "DREAM3DLib/Common/AbstractFilter.h"
+#include "DREAM3DLib/Common/Constants.h"
 
 /**
  * @class SurfaceMeshToVtk SurfaceMeshToVtk.h IOFilters/Code/IOFiltersFilters/SurfaceMeshToVtk.h
@@ -68,9 +69,9 @@ class DREAM3DLib_EXPORT SurfaceMeshToVtk : public AbstractFilter
 
     /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
     DREAM3D_FILTER_PARAMETER(QString, OutputVtkFile)
-    Q_PROPERTY(QString OutputVtkFile READ getOutputVtkFile WRITE setOutputVtkFile NOTIFY parametersChanged)
+    Q_PROPERTY(QString OutputVtkFile READ getOutputVtkFile WRITE setOutputVtkFile)
     DREAM3D_FILTER_PARAMETER(bool, WriteBinaryFile)
-    Q_PROPERTY(bool WriteBinaryFile READ getWriteBinaryFile WRITE setWriteBinaryFile NOTIFY parametersChanged)
+    Q_PROPERTY(bool WriteBinaryFile READ getWriteBinaryFile WRITE setWriteBinaryFile)
     DREAM3D_INSTANCE_PROPERTY(bool, WriteConformalMesh)
 
     /**
@@ -78,6 +79,7 @@ class DREAM3DLib_EXPORT SurfaceMeshToVtk : public AbstractFilter
     * a different group if you want. The string returned here will be displayed
     * in the GUI for the filter
     */
+    virtual const QString getCompiledLibraryName() { return IO::IOBaseName; }
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::OutputFilters; }
 
@@ -149,3 +151,4 @@ class DREAM3DLib_EXPORT SurfaceMeshToVtk : public AbstractFilter
 };
 
 #endif /* _SurfaceMeshToVtk_H_ */
+

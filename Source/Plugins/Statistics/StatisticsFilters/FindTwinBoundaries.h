@@ -52,6 +52,7 @@
 #include "DREAM3DLib/DataContainers/VolumeDataContainer.h"
 #include "DREAM3DLib/DataArrays/NeighborList.hpp"
 
+#include "Statistics/StatisticsConstants.h"
 /**
  * @class FindTwinBoundaries FindTwinBoundaries.h DREAM3DLib/GenericFilters/FindTwinBoundaries.h
  * @brief
@@ -75,10 +76,11 @@ class FindTwinBoundaries : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(CellFeatureAttributeMatrixName)
 
     DREAM3D_FILTER_PARAMETER(float, AxisTolerance)
-    Q_PROPERTY(float AxisTolerance READ getAxisTolerance WRITE setAxisTolerance NOTIFY parametersChanged)
+    Q_PROPERTY(float AxisTolerance READ getAxisTolerance WRITE setAxisTolerance)
     DREAM3D_FILTER_PARAMETER(float, AngleTolerance)
-    Q_PROPERTY(float AngleTolerance READ getAngleTolerance WRITE setAngleTolerance NOTIFY parametersChanged)
+    Q_PROPERTY(float AngleTolerance READ getAngleTolerance WRITE setAngleTolerance)
 
+    virtual const QString getCompiledLibraryName() { return Statistics::StatisticsBaseName; }
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::CrystallographicFilters; }
     virtual const QString getHumanLabel() { return "Find Twin Boundaries"; }
@@ -133,3 +135,4 @@ class FindTwinBoundaries : public AbstractFilter
 };
 
 #endif /* FindTwinBoundaries_H_ */
+

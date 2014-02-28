@@ -44,6 +44,7 @@
 #include "DREAM3DLib/DataArrays/IDataArray.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/DataContainers/VolumeDataContainer.h"
+#include "DREAM3DLib/Common/Constants.h"
 
 /**
  * @class CMUSmoothingToVtk CMUSmoothingToVtk.h NeverMind/Code/NeverMindFilters/CMUSmoothingToVtk.h
@@ -68,21 +69,22 @@ class DREAM3DLib_EXPORT NodesTrianglesToVtk : public AbstractFilter
 
 
     DREAM3D_FILTER_PARAMETER(QString, NodesFile)
-    Q_PROPERTY(QString NodesFile READ getNodesFile WRITE setNodesFile NOTIFY parametersChanged)
+    Q_PROPERTY(QString NodesFile READ getNodesFile WRITE setNodesFile)
     DREAM3D_FILTER_PARAMETER(QString, TrianglesFile)
-    Q_PROPERTY(QString TrianglesFile READ getTrianglesFile WRITE setTrianglesFile NOTIFY parametersChanged)
+    Q_PROPERTY(QString TrianglesFile READ getTrianglesFile WRITE setTrianglesFile)
     DREAM3D_FILTER_PARAMETER(QString, OutputVtkFile)
-    Q_PROPERTY(QString OutputVtkFile READ getOutputVtkFile WRITE setOutputVtkFile NOTIFY parametersChanged)
+    Q_PROPERTY(QString OutputVtkFile READ getOutputVtkFile WRITE setOutputVtkFile)
     DREAM3D_FILTER_PARAMETER(bool, WriteBinaryFile)
-    Q_PROPERTY(bool WriteBinaryFile READ getWriteBinaryFile WRITE setWriteBinaryFile NOTIFY parametersChanged)
+    Q_PROPERTY(bool WriteBinaryFile READ getWriteBinaryFile WRITE setWriteBinaryFile)
     DREAM3D_FILTER_PARAMETER(bool, WriteConformalMesh)
-    Q_PROPERTY(bool WriteConformalMesh READ getWriteConformalMesh WRITE setWriteConformalMesh NOTIFY parametersChanged)
+    Q_PROPERTY(bool WriteConformalMesh READ getWriteConformalMesh WRITE setWriteConformalMesh)
 
     /**
     * @brief This returns the group that the filter belonds to. You can select
     * a different group if you want. The string returned here will be displayed
     * in the GUI for the filter
     */
+    virtual const QString getCompiledLibraryName() { return IO::IOBaseName; }
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::OutputFilters; }
 
@@ -157,6 +159,7 @@ class DREAM3DLib_EXPORT NodesTrianglesToVtk : public AbstractFilter
 };
 
 #endif /* CMUSmoothingToVtk_H_ */
+
 
 
 

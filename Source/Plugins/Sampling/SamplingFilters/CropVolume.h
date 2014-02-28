@@ -46,6 +46,7 @@
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/DataContainers/VolumeDataContainer.h"
 
+#include "Sampling/SamplingConstants.h"
 /**
  * @class CropVolume CropVolume.h DREAM3DLib/SyntheticBuilderFilters/CropVolume.h
  * @brief
@@ -68,26 +69,27 @@ class CropVolume : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
 
     DREAM3D_FILTER_PARAMETER(int, XMin)
-    Q_PROPERTY(int XMin READ getXMin WRITE setXMin NOTIFY parametersChanged)
+    Q_PROPERTY(int XMin READ getXMin WRITE setXMin)
     DREAM3D_FILTER_PARAMETER(int, YMin)
-    Q_PROPERTY(int YMin READ getYMin WRITE setYMin NOTIFY parametersChanged)
+    Q_PROPERTY(int YMin READ getYMin WRITE setYMin)
     DREAM3D_FILTER_PARAMETER(int, ZMin)
-    Q_PROPERTY(int ZMin READ getZMin WRITE setZMin NOTIFY parametersChanged)
+    Q_PROPERTY(int ZMin READ getZMin WRITE setZMin)
 
     DREAM3D_FILTER_PARAMETER(int, XMax)
-    Q_PROPERTY(int XMax READ getXMax WRITE setXMax NOTIFY parametersChanged)
+    Q_PROPERTY(int XMax READ getXMax WRITE setXMax)
     DREAM3D_FILTER_PARAMETER(int, YMax)
-    Q_PROPERTY(int YMax READ getYMax WRITE setYMax NOTIFY parametersChanged)
+    Q_PROPERTY(int YMax READ getYMax WRITE setYMax)
     DREAM3D_FILTER_PARAMETER(int, ZMax)
-    Q_PROPERTY(int ZMax READ getZMax WRITE setZMax NOTIFY parametersChanged)
+    Q_PROPERTY(int ZMax READ getZMax WRITE setZMax)
     DREAM3D_FILTER_PARAMETER(bool, RenumberFeatures)
-    Q_PROPERTY(bool RenumberFeatures READ getRenumberFeatures WRITE setRenumberFeatures NOTIFY parametersChanged)
+    Q_PROPERTY(bool RenumberFeatures READ getRenumberFeatures WRITE setRenumberFeatures)
     DREAM3D_FILTER_PARAMETER(bool, SaveAsNewDataContainer)
-    Q_PROPERTY(bool SaveAsNewDataContainer READ getSaveAsNewDataContainer WRITE setSaveAsNewDataContainer NOTIFY parametersChanged)
+    Q_PROPERTY(bool SaveAsNewDataContainer READ getSaveAsNewDataContainer WRITE setSaveAsNewDataContainer)
     DREAM3D_FILTER_PARAMETER(bool, UpdateOrigin)
-    Q_PROPERTY(bool UpdateOrigin READ getUpdateOrigin WRITE setUpdateOrigin NOTIFY parametersChanged)
+    Q_PROPERTY(bool UpdateOrigin READ getUpdateOrigin WRITE setUpdateOrigin)
 
 
+    virtual const QString getCompiledLibraryName() { return Sampling::SamplingBaseName; }
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::SamplingFilters; }
     virtual const QString getSubGroupName()  { return DREAM3D::FilterSubGroups::CropCutFilters; }
     virtual const QString getHumanLabel() { return "Crop Volume"; }
@@ -132,6 +134,7 @@ class CropVolume : public AbstractFilter
 };
 
 #endif /* CROPVOLUME_H_ */
+
 
 
 

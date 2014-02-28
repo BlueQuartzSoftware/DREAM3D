@@ -48,6 +48,8 @@
 #include "SurfaceMeshing/SurfaceMeshingFilters/SurfaceMeshFilter.h"
 #include "DREAM3DLib/Common/ModifiedLambertProjection.h"
 
+#include "SurfaceMeshing/SurfaceMeshingConstants.h"
+
 /**
  * @class FindGBCD FindGBCD.h DREAM3DLib/SurfaceMeshFilters/FindGBCD.h
  * @brief This filter calculates the centroid of each triangle in the surface mesh.
@@ -72,7 +74,7 @@ class FindGBCD : public SurfaceMeshFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(CellEnsembleAttributeMatrixName)
 
     DREAM3D_FILTER_PARAMETER(float, GBCDRes)
-    Q_PROPERTY(float GBCDRes READ getGBCDRes WRITE setGBCDRes NOTIFY parametersChanged)
+    Q_PROPERTY(float GBCDRes READ getGBCDRes WRITE setGBCDRes)
 
     DREAM3D_INSTANCE_PROPERTY(QVector<ComparisonInput_t>, GBCDArrayNames)
 
@@ -84,6 +86,7 @@ class FindGBCD : public SurfaceMeshFilter
     * a different group if you want. The string returned here will be displayed
     * in the GUI for the filter
     */
+    virtual const QString getCompiledLibraryName() { return SurfaceMeshing::SurfaceMeshingBaseName; }
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::CrystallographicFilters; }
 
@@ -171,3 +174,4 @@ class FindGBCD : public SurfaceMeshFilter
 };
 
 #endif /* _FindGBCD_H_ */
+

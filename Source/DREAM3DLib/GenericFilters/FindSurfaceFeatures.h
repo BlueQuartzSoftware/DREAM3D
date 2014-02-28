@@ -46,6 +46,7 @@
 
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/DataContainers/VolumeDataContainer.h"
+#include "DREAM3DLib/Common/Constants.h"
 
 /**
  * @class FindSurfaceFeatures FindSurfaceFeatures.h DREAM3DLib/StatisticsFilters/FindSurfaceFeatures.h
@@ -70,6 +71,7 @@ class DREAM3DLib_EXPORT FindSurfaceFeatures : public AbstractFilter
     //------ Required Cell Data
     //------ Created Feature Data
 
+    virtual const QString getCompiledLibraryName() { return Generic::GenericBaseName; }
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::GenericFilters; }
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::SpatialFilters; }
     virtual const QString getHumanLabel() { return "Find Surface Features"; }
@@ -111,4 +113,5 @@ signals:
 };
 
 #endif /* FINDSURFACEGRAINS_H_ */
+
 

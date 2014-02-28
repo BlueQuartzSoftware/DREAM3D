@@ -45,6 +45,7 @@
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/DataArrays/DataArray.hpp"
 #include "DREAM3DLib/IOFilters/FileReader.h"
+#include "DREAM3DLib/Common/Constants.h"
 
 /**
  * @class FeatureInfoReader FeatureInfoReader.h DREAM3DLib/IO/FeatureInfoReader.h
@@ -68,12 +69,13 @@ class DREAM3DLib_EXPORT FeatureInfoReader : public FileReader
 
     /* Input Parameters */
     DREAM3D_FILTER_PARAMETER(QString, InputFile)
-    Q_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile NOTIFY parametersChanged)
+    Q_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile)
     DREAM3D_FILTER_PARAMETER(bool, CreateCellLevelArrays)
-    Q_PROPERTY(bool CreateCellLevelArrays READ getCreateCellLevelArrays WRITE setCreateCellLevelArrays NOTIFY parametersChanged)
+    Q_PROPERTY(bool CreateCellLevelArrays READ getCreateCellLevelArrays WRITE setCreateCellLevelArrays)
     DREAM3D_FILTER_PARAMETER(bool, RenumberFeatures)
-    Q_PROPERTY(bool RenumberFeatures READ getRenumberFeatures WRITE setRenumberFeatures NOTIFY parametersChanged)
+    Q_PROPERTY(bool RenumberFeatures READ getRenumberFeatures WRITE setRenumberFeatures)
 
+    virtual const QString getCompiledLibraryName() { return IO::IOBaseName; }
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::InputFilters; }
     virtual const QString getHumanLabel() { return "Read Feature Info File"; }
@@ -121,6 +123,7 @@ class DREAM3DLib_EXPORT FeatureInfoReader : public FileReader
 };
 
 #endif //_FeatureInfoReader_h_
+
 
 
 

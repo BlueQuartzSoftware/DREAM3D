@@ -80,17 +80,7 @@ font-weight: bold;
       </size>
      </property>
      <property name="styleSheet">
-      <string notr="true"> QPushButton:pressed {
-
- }
-
- QPushButton:flat {
-     border: none; /* no border for a flat push button */
- }
-
- QPushButton:default {
-     border-color: navy; /* make the default button prominent */
- }</string>
+      <string notr="true"/>
      </property>
      <property name="text">
       <string/>
@@ -153,16 +143,8 @@ font-weight: bold;
       </size>
      </property>
      <property name="styleSheet">
-      <string notr="true"> QPushButton:pressed {
-	background-image: url(:/help2.png);
- }
-
- QPushButton:flat {
+      <string notr="true"> QPushButton:flat {
      border: none; /* no border for a flat push button */
- }
-
- QPushButton:default {
-     border-color: navy; /* make the default button prominent */
  }</string>
      </property>
      <property name="text">

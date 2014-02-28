@@ -63,6 +63,7 @@
 #include "DREAM3DLib/OrientationOps/OrthoRhombicOps.h"
 #include "DREAM3DLib/DataContainers/VolumeDataContainer.h"
 
+#include "Statistics/StatisticsConstants.h"
 /**
  * @class FindBoundaryStrengths FindBoundaryStrengths.h DREAM3DLib/GenericFilters/FindBoundaryStrengths.h
  * @brief
@@ -86,8 +87,9 @@ class FindBoundaryStrengths : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(CellEnsembleAttributeMatrixName)
 
     DREAM3D_FILTER_PARAMETER(FloatVec3_t, Loading)
-    Q_PROPERTY(FloatVec3_t Loading READ getLoading WRITE setLoading NOTIFY parametersChanged)
+    Q_PROPERTY(FloatVec3_t Loading READ getLoading WRITE setLoading)
 
+    virtual const QString getCompiledLibraryName() { return Statistics::StatisticsBaseName; }
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::CrystallographicFilters; }
     virtual const QString getHumanLabel() { return "Find Feature Boundary Strength Metrics"; }
@@ -145,6 +147,7 @@ class FindBoundaryStrengths : public AbstractFilter
 };
 
 #endif /* FindBoundaryStrengths_H_ */
+
 
 
 

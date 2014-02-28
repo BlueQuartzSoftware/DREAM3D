@@ -46,6 +46,7 @@
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/DataContainers/VolumeDataContainer.h"
 #include "DREAM3DLib/OrientationOps/OrientationOps.h"
+#include "Reconstruction/ReconstructionConstants.h"
 
 #include "Reconstruction/ReconstructionFilters/AlignSections.h"
 
@@ -71,9 +72,10 @@ class AlignSectionsMutualInformation : public AlignSections
     DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
 
     DREAM3D_FILTER_PARAMETER(float, MisorientationTolerance)
-    Q_PROPERTY(float MisorientationTolerance READ getMisorientationTolerance WRITE setMisorientationTolerance NOTIFY parametersChanged)
+    Q_PROPERTY(float MisorientationTolerance READ getMisorientationTolerance WRITE setMisorientationTolerance)
     DREAM3D_DECLARE_ARRAY(int, featurecounts, FeatureCounts)
 
+    virtual const QString getCompiledLibraryName() { return Reconstruction::ReconstructionBaseName; }
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::ReconstructionFilters; }
     virtual const QString getSubGroupName() {return DREAM3D::FilterSubGroups::AlignmentFilters;}
     virtual const QString getHumanLabel() { return "Align Sections (Mutual Information)"; }
@@ -128,4 +130,5 @@ class AlignSectionsMutualInformation : public AlignSections
 };
 
 #endif /* AlignSectionsMutualInformation_H_ */
+
 

@@ -39,8 +39,7 @@
 #include <QtGui/QStandardItemModel>
 #include <QtGui/QItemSelectionModel>
 
-#include "DREAM3DWidgetsLib/moc_DataContainerArrayProxyWidget.cpp"
-
+#include "FilterParameterWidgetsDialogs.h"
 
 // -----------------------------------------------------------------------------
 //
@@ -128,9 +127,7 @@ void DataContainerArrayProxyWidget::filterNeedsInputParameters(AbstractFilter* f
   ok = filter->setProperty(PROPERTY_NAME_AS_CHAR, var);
   if(false == ok)
   {
-    QString ss = QObject::tr("Filter '%1': Error occurred setting Filter Parameter '%2'").arg(m_Filter->getNameOfClass()).arg(m_FilterParameter->getPropertyName() );
-    emit errorSettingFilterParameter(ss);
-    qDebug() << ss;
+    FilterParameterWidgetsDialogs::ShowCouldNotSetFilterParameter(m_Filter, m_FilterParameter);
   }
 
 }

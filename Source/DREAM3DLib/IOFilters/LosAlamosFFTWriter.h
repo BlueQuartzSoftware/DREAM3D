@@ -44,6 +44,7 @@
 #include "DREAM3DLib/DataArrays/DataArray.hpp"
 #include "DREAM3DLib/IOFilters/FileWriter.h"
 #include "DREAM3DLib/DataArrays/StringDataArray.hpp"
+#include "DREAM3DLib/Common/Constants.h"
 
 /**
  * @class LosAlamosFFTWriter LosAlamosFFTWriter.h DREAM3DLib/IOFilters/LosAlamosFFTWriter.h
@@ -68,6 +69,7 @@ class DREAM3DLib_EXPORT LosAlamosFFTWriter : public FileWriter
     //------ Required Cell Data
 
 
+    virtual const QString getCompiledLibraryName() { return IO::IOBaseName; }
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::OutputFilters; }
     virtual const QString getHumanLabel() { return "Write Los Alamos FFT File"; }
@@ -113,5 +115,6 @@ signals:
 };
 
 #endif /* _LosAlamosFFTWriter_H_ */
+
 
 

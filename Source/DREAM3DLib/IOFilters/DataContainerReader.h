@@ -45,6 +45,7 @@
 #include "DREAM3DLib/DataContainers/VolumeDataContainer.h"
 #include "DREAM3DLib/Common/FilterPipeline.h"
 #include "DREAM3DLib/DataContainers/DataContainerArrayProxy.h"
+#include "DREAM3DLib/Common/Constants.h"
 
 /**
  * @class DataContainerReader DataContainerReader.h DREAM3DLib/IOFilters/DataContainerReader.h
@@ -64,13 +65,14 @@ class DREAM3DLib_EXPORT DataContainerReader : public AbstractFilter
     virtual ~DataContainerReader();
 
     DREAM3D_FILTER_PARAMETER(QString, InputFile)
-    Q_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile NOTIFY parametersChanged)
+    Q_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile)
     DREAM3D_FILTER_PARAMETER(bool, OverwriteExistingDataContainers)
-    Q_PROPERTY(bool OverwriteExistingDataContainers READ getOverwriteExistingDataContainers WRITE setOverwriteExistingDataContainers NOTIFY parametersChanged)
+    Q_PROPERTY(bool OverwriteExistingDataContainers READ getOverwriteExistingDataContainers WRITE setOverwriteExistingDataContainers)
     DREAM3D_FILTER_PARAMETER(DataContainerArrayProxy, DataContainerArrayProxy)
-    Q_PROPERTY(DataContainerArrayProxy DataContainerArrayProxy READ getDataContainerArrayProxy WRITE setDataContainerArrayProxy NOTIFY parametersChanged)
+    Q_PROPERTY(DataContainerArrayProxy DataContainerArrayProxy READ getDataContainerArrayProxy WRITE setDataContainerArrayProxy)
 
 
+    virtual const QString getCompiledLibraryName() { return IO::IOBaseName; }
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::InputFilters; }
     virtual const QString getHumanLabel() { return "Read DREAM3D Data File"; }
@@ -178,4 +180,5 @@ class DREAM3DLib_EXPORT DataContainerReader : public AbstractFilter
 };
 
 #endif /* _DATACONTAINER_READER_H_ */
+
 

@@ -43,6 +43,7 @@
 #include "DREAM3DLib/DataArrays/IDataArray.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
 
+#include "ImageImport/ImageImportConstants.h"
 
 /**
  * @class SaveImages SaveImages.h /IOFilters/SaveImages.h
@@ -65,14 +66,14 @@ class SaveImages : public AbstractFilter
 
     /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
     DREAM3D_FILTER_PARAMETER(QString, ImagePrefix)
-    Q_PROPERTY(QString ImagePrefix READ getImagePrefix WRITE setImagePrefix NOTIFY parametersChanged)
+    Q_PROPERTY(QString ImagePrefix READ getImagePrefix WRITE setImagePrefix)
     DREAM3D_FILTER_PARAMETER(QString, OutputPath)
-    Q_PROPERTY(QString OutputPath READ getOutputPath WRITE setOutputPath NOTIFY parametersChanged)
+    Q_PROPERTY(QString OutputPath READ getOutputPath WRITE setOutputPath)
     DREAM3D_FILTER_PARAMETER(int, ImageFormat)
-    Q_PROPERTY(int ImageFormat READ getImageFormat WRITE setImageFormat NOTIFY parametersChanged)
+    Q_PROPERTY(int ImageFormat READ getImageFormat WRITE setImageFormat)
 
     DREAM3D_FILTER_PARAMETER(QString, CellEulerAnglesArrayName)
-    Q_PROPERTY(QString ColorsArrayName READ getColorsArrayName WRITE setColorsArrayName NOTIFY parametersChanged)
+    Q_PROPERTY(QString ColorsArrayName READ getColorsArrayName WRITE setColorsArrayName)
 
     enum ImageFormatType
     {
@@ -87,6 +88,7 @@ class SaveImages : public AbstractFilter
     * a different group if you want. The string returned here will be displayed
     * in the GUI for the filter
     */
+    virtual const QString getCompiledLibraryName() { return ImageImport::ImageImportBaseName; }
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
 
     /**
@@ -165,5 +167,6 @@ class SaveImages : public AbstractFilter
 };
 
 #endif /* _SaveImages_H_ */
+
 
 

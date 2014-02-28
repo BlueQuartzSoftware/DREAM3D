@@ -48,7 +48,7 @@
 
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/DataContainers/VolumeDataContainer.h"
-
+#include "SyntheticBuilding/SyntheticBuildingConstants.h"
 
 /**
  * @class AddBadDatas AddBadDatas.h DREAM3DLib/SyntheticBuilderFilters/AddBadDatas.h
@@ -69,18 +69,19 @@ class AddBadData : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
 
+    virtual const QString getCompiledLibraryName() { return SyntheticBuilding::SyntheticBuildingBaseName; }
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::SyntheticBuildingFilters; }
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::MiscFilters; }
     virtual const QString getHumanLabel() { return "Add Bad Data"; }
 
     DREAM3D_FILTER_PARAMETER(bool, PoissonNoise)
-    Q_PROPERTY(bool PoissonNoise READ getPoissonNoise WRITE setPoissonNoise NOTIFY parametersChanged)
+    Q_PROPERTY(bool PoissonNoise READ getPoissonNoise WRITE setPoissonNoise)
     DREAM3D_FILTER_PARAMETER(float, PoissonVolFraction)
-    Q_PROPERTY(float PoissonVolFraction READ getPoissonVolFraction WRITE setPoissonVolFraction NOTIFY parametersChanged)
+    Q_PROPERTY(float PoissonVolFraction READ getPoissonVolFraction WRITE setPoissonVolFraction)
     DREAM3D_FILTER_PARAMETER(bool, BoundaryNoise)
-    Q_PROPERTY(bool BoundaryNoise READ getBoundaryNoise WRITE setBoundaryNoise NOTIFY parametersChanged)
+    Q_PROPERTY(bool BoundaryNoise READ getBoundaryNoise WRITE setBoundaryNoise)
     DREAM3D_FILTER_PARAMETER(float, BoundaryVolFraction)
-    Q_PROPERTY(float BoundaryVolFraction READ getBoundaryVolFraction WRITE setBoundaryVolFraction NOTIFY parametersChanged)
+    Q_PROPERTY(float BoundaryVolFraction READ getBoundaryVolFraction WRITE setBoundaryVolFraction)
 
     virtual void setupFilterParameters();
     virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
@@ -119,6 +120,7 @@ class AddBadData : public AbstractFilter
 };
 
 #endif /* AddBadData_H_ */
+
 
 
 

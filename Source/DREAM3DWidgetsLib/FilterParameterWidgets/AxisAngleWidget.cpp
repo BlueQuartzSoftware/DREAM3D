@@ -40,7 +40,7 @@
 #include "DREAM3DLib/FilterParameters/FilterParameter.h"
 
 
-#include "DREAM3DWidgetsLib/moc_AxisAngleWidget.cpp"
+#include "FilterParameterWidgetsDialogs.h"
 
 
 // -----------------------------------------------------------------------------

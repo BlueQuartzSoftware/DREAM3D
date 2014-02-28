@@ -48,6 +48,7 @@
 #include "DREAM3DLib/DataContainers/VolumeDataContainer.h"
 #include "DREAM3DLib/DataArrays/NeighborList.hpp"
 
+#include "Statistics/StatisticsConstants.h"
 /**
  * @class FindNeighbors FindNeighbors.h DREAM3DLib/GenericFilters/FindNeighbors.h
  * @brief
@@ -86,6 +87,7 @@ class FindNeighbors : public AbstractFilter
     virtual void execute();
     virtual void preflight();
 
+    virtual const QString getCompiledLibraryName() { return Statistics::StatisticsBaseName; }
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::MorphologicalFilters; }
     virtual const QString getHumanLabel() { return "Find Feature Neighbors"; }
@@ -115,4 +117,5 @@ signals:
 };
 
 #endif /* FINDNEIGHBORS_H_ */
+
 

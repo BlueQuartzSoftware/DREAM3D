@@ -74,6 +74,12 @@ class FindRelativeMotionBetweenSlices : public AbstractFilter
     Q_PROPERTY(int PSize1 READ getPSize1 WRITE setPSize1 NOTIFY parametersChanged)
     DREAM3D_FILTER_PARAMETER(int, PSize2)
     Q_PROPERTY(int PSize2 READ getPSize2 WRITE setPSize2 NOTIFY parametersChanged)
+    DREAM3D_FILTER_PARAMETER(int, SSize1)
+    Q_PROPERTY(int SSize1 READ getSSize1 WRITE setSSize1 NOTIFY parametersChanged)
+    DREAM3D_FILTER_PARAMETER(int, SSize2)
+    Q_PROPERTY(int SSize2 READ getSSize2 WRITE setSSize2 NOTIFY parametersChanged)
+    DREAM3D_FILTER_PARAMETER(int, SliceStep)
+    Q_PROPERTY(int SliceStep READ getSliceStep WRITE setSliceStep NOTIFY parametersChanged)
 
 
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::ProcessingFilters; }

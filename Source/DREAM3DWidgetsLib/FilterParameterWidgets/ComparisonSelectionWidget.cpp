@@ -37,7 +37,7 @@
 #include "ComparisonSelectionWidget.h"
 
 
-#include "DREAM3DWidgetsLib/moc_ComparisonSelectionWidget.cpp"
+#include "FilterParameterWidgetsDialogs.h"
 
 // -----------------------------------------------------------------------------
 //
@@ -479,9 +479,7 @@ void ComparisonSelectionWidget::filterNeedsInputParameters(AbstractFilter* filte
   ok = filter->setProperty(PROPERTY_NAME_AS_CHAR, var);
   if(false == ok)
   {
-    QString ss = QObject::tr("Filter '%1': Error occurred setting Filter Parameter '%2'").arg(m_Filter->getNameOfClass()).arg(m_FilterParameter->getPropertyName() );
-    emit errorSettingFilterParameter(ss);
-    qDebug() << ss;
+    FilterParameterWidgetsDialogs::ShowCouldNotSetFilterParameter(m_Filter, m_FilterParameter);
   }
 
 }

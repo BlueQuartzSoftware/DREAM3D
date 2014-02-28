@@ -46,6 +46,7 @@
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/DataContainers/VolumeDataContainer.h"
+#include "DREAM3DLib/Common/Constants.h"
 
 
 
@@ -67,14 +68,15 @@ class DREAM3DLib_EXPORT DataContainerWriter : public AbstractFilter
     virtual ~DataContainerWriter();
 
     DREAM3D_FILTER_PARAMETER(QString, OutputFile)
-    Q_PROPERTY(QString OutputFile READ getOutputFile WRITE setOutputFile NOTIFY parametersChanged)
+    Q_PROPERTY(QString OutputFile READ getOutputFile WRITE setOutputFile)
     DREAM3D_INSTANCE_PROPERTY(bool, WritePipeline)
     DREAM3D_FILTER_PARAMETER(bool, WriteXdmfFile)
-    Q_PROPERTY(bool WriteXdmfFile READ getWriteXdmfFile WRITE setWriteXdmfFile NOTIFY parametersChanged)
+    Q_PROPERTY(bool WriteXdmfFile READ getWriteXdmfFile WRITE setWriteXdmfFile)
 
 
     virtual void preflight();
 
+    virtual const QString getCompiledLibraryName() { return IO::IOBaseName; }
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::OutputFilters; }
     virtual const QString getHumanLabel() { return "Write DREAM3D Data File"; }
@@ -137,3 +139,4 @@ class DREAM3DLib_EXPORT DataContainerWriter : public AbstractFilter
 };
 
 #endif /* _DATACONTAINERWRITER_H_ */
+

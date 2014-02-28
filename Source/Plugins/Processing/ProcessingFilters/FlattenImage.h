@@ -39,6 +39,7 @@
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
+#include "Processing/ProcessingConstants.h"
 
 /**
  * @class FlattenImage FlattenImage.h DREAM3DLib/GenericFilters/FlattenImage.h
@@ -61,10 +62,11 @@ class FlattenImage : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
 
     DREAM3D_FILTER_PARAMETER(quint32, FlattenMethod)
-    Q_PROPERTY(quint32 FlattenMethod READ getFlattenMethod WRITE setFlattenMethod NOTIFY parametersChanged)
+    Q_PROPERTY(quint32 FlattenMethod READ getFlattenMethod WRITE setFlattenMethod)
 
     virtual void preflight();
 
+    virtual const QString getCompiledLibraryName() { return Processing::ProcessingBaseName; }
     virtual const QString getGroupName()  { return DREAM3D::FilterGroups::ProcessingFilters; }
     virtual const QString getSubGroupName()  { return DREAM3D::FilterSubGroups::ImageFilters; }
     virtual const QString getHumanLabel() { return "Flatten Image"; }
@@ -107,5 +109,6 @@ signals:
 };
 
 #endif /* FlattenImage_H_ */
+
 
 

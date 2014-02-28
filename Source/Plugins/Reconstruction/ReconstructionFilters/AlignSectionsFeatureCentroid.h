@@ -45,6 +45,7 @@
 #include "DREAM3DLib/DataArrays/IDataArray.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/OrientationOps/OrientationOps.h"
+#include "Reconstruction/ReconstructionConstants.h"
 
 #include "Reconstruction/ReconstructionFilters/AlignSections.h"
 
@@ -69,11 +70,12 @@ class AlignSectionsFeatureCentroid : public AlignSections
     DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
 
     DREAM3D_FILTER_PARAMETER(int, ReferenceSlice)
-    Q_PROPERTY(int ReferenceSlice READ getReferenceSlice WRITE setReferenceSlice NOTIFY parametersChanged)
+    Q_PROPERTY(int ReferenceSlice READ getReferenceSlice WRITE setReferenceSlice)
     DREAM3D_FILTER_PARAMETER(bool, UseReferenceSlice)
-    Q_PROPERTY(bool UseReferenceSlice READ getUseReferenceSlice WRITE setUseReferenceSlice NOTIFY parametersChanged)
+    Q_PROPERTY(bool UseReferenceSlice READ getUseReferenceSlice WRITE setUseReferenceSlice)
 
 
+    virtual const QString getCompiledLibraryName() { return Reconstruction::ReconstructionBaseName; }
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::ReconstructionFilters; }
     virtual const QString getSubGroupName() {return DREAM3D::FilterSubGroups::AlignmentFilters;}
     virtual const QString getHumanLabel() { return "Align Sections (Feature Centroid)"; }
@@ -118,4 +120,5 @@ class AlignSectionsFeatureCentroid : public AlignSections
 };
 
 #endif /* AlignSectionsFeatureCentroid_H_ */
+
 

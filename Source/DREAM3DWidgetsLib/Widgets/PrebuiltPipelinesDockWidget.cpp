@@ -40,22 +40,16 @@
 #include <QtCore/QDir>
 #include <QtCore/QFile>
 #include <QtCore/QString>
-#include <QtCore/QSettings>
+#include <QtCore/QUrl>
+#include <QtCore/QDebug>
 
-#include <QtGui/QTreeWidget>
-#include <QtGui/QListWidgetItem>
+#include <QtGui/QMessageBox>
+#include <QtGui/QDesktopServices>
 #include <QtGui/QTreeWidgetItem>
-
-
-#include "DREAM3DLib/Common/IFilterFactory.hpp"
-#include "DREAM3DLib/Common/FilterFactory.hpp"
-#include "DREAM3DLib/FilterParameters/QFilterParametersReader.h"
+#include <QtGui/QMenu>
 
 
 #include "FilterListDockWidget.h"
-
-
-#include "DREAM3DWidgetsLib/moc_PrebuiltPipelinesDockWidget.cpp"
 
 
 // -----------------------------------------------------------------------------
@@ -91,25 +85,21 @@ void PrebuiltPipelinesDockWidget::connectFilterList(FilterListDockWidget* filter
 // -----------------------------------------------------------------------------
 void PrebuiltPipelinesDockWidget::setupGui()
 {
-  // This is just here to have the code compile. This is a QListWidget where the filters that make up
-  // a prebuilt pipeline are displayed.
-  //filterList = new QListWidget(this);
-
   // Clear out the default stuff
   filterLibraryTree->clear();
 
-
-#if 0
-  QTreeWidgetItem* prebuiltTreeWidgetItem = new QTreeWidgetItem(filterLibraryTree, ItemType::Prebuilt_Category_Item_Type);
-  prebuiltTreeWidgetItem->setText(0, DREAM3D::Settings::PrebuiltPipelines);
-  prebuiltTreeWidgetItem->setIcon(0, QIcon(":/flag_blue_scroll.png"));
-  prebuiltTreeWidgetItem->setExpanded(true);
-#endif
-
-
   readPipelines();
-
 }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+FilterLibraryTreeWidget* PrebuiltPipelinesDockWidget::getFilterLibraryTreeWidget()
+{
+  return filterLibraryTree;
+}
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -157,21 +147,25 @@ QDir PrebuiltPipelinesDockWidget::findPipelinesDirectory()
 void PrebuiltPipelinesDockWidget::readPipelines()
 {
   QDir pipelinesDir = findPipelinesDirectory();
+
+  FilterLibraryTreeWidget::ItemType itemType = FilterLibraryTreeWidget::Leaf_Item_Type;
+  QString iconFileName(":/text.png");
+  bool allowEditing = false;
+  QString fileExtension("*.txt");
+
     // Now block signals and load up all the pipelines in the folder
   filterLibraryTree->blockSignals(true);
-  addFiltersRecursively(pipelinesDir, filterLibraryTree->invisibleRootItem());
+  addPipelinesRecursively(pipelinesDir, filterLibraryTree->invisibleRootItem(), iconFileName, allowEditing, fileExtension, itemType);
   filterLibraryTree->blockSignals(false);
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PrebuiltPipelinesDockWidget::addFiltersRecursively(QDir currentDir, QTreeWidgetItem* currentDirItem)
+void PrebuiltPipelinesDockWidget::addPipelinesRecursively(QDir currentDir, QTreeWidgetItem* currentDirItem, QString iconFileName,
+                                                bool allowEditing, QString fileExtension, FilterLibraryTreeWidget::ItemType itemType)
 {
-  ItemType itemType = Prebuilt_Item_Type;
-  QString iconFileName(":/bullet_ball_blue.png");
-  bool allowEditing = false;
-  QString fileExtension("*.txt");
+
 
   QTreeWidgetItem* nextDirItem;
 
@@ -185,10 +179,13 @@ void PrebuiltPipelinesDockWidget::addFiltersRecursively(QDir currentDir, QTreeWi
       // 1.Create an entry in the tree widget with this name
       // 2.drop into the directory and look for all the .txt files and add entries for those items.
       //qDebug() << fi.absoluteFilePath() << "\n";
-      // Add a tree widget item for this Prebuilt Group
-      nextDirItem = new QTreeWidgetItem(currentDirItem);
+      // Add a tree widget item for this  Group
+      //qDebug() << fi.absoluteFilePath();
+      nextDirItem = new QTreeWidgetItem(currentDirItem, FilterLibraryTreeWidget::Node_Item_Type);
       nextDirItem->setText(0, fi.baseName());
-      addFiltersRecursively( QDir( fi.absoluteFilePath() ), nextDirItem );   // Recursive call
+      nextDirItem->setIcon(0, QIcon(":/folder_blue.png"));
+      nextDirItem->setData(0, Qt::UserRole, QVariant(fi.absoluteFilePath() ) );
+      addPipelinesRecursively( QDir( fi.absoluteFilePath() ), nextDirItem, iconFileName, allowEditing, fileExtension, itemType );   // Recursive call
     }
   }
 
@@ -201,8 +198,9 @@ void PrebuiltPipelinesDockWidget::addFiltersRecursively(QDir currentDir, QTreeWi
     QSettings itemPref(itemFilePath, QSettings::IniFormat);
     itemPref.beginGroup(DREAM3D::Settings::PipelineBuilderGroup);
     QString itemName = itemPref.value("Name").toString();
+    //itemPref.setValue("DREAM3D_Version", QString::fromStdString(DREAM3DLib::Version::Package()));
     itemPref.endGroup();
-    //qDebug() << pbinfo.absoluteFilePath() << "\n";
+    //qDebug() << itemInfo.absoluteFilePath() << "\n";
     // Add tree widget for this Prebuilt Pipeline
     QTreeWidgetItem* itemWidget = new QTreeWidgetItem(currentDirItem, itemType);
     itemWidget->setText(0, itemName);
@@ -215,14 +213,14 @@ void PrebuiltPipelinesDockWidget::addFiltersRecursively(QDir currentDir, QTreeWi
   }
 }
 
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 void PrebuiltPipelinesDockWidget::on_filterLibraryTree_itemClicked( QTreeWidgetItem* item, int column )
 {
-  //QString prebuiltName = item->text(0);
-  QString prebuiltPath = item->data(0, Qt::UserRole).toString();
-  QStringList filterList = generateFilterListFromPipelineFile(prebuiltPath);
+  QString favoritePath = item->data(0, Qt::UserRole).toString();
+  QStringList filterList = generateFilterListFromPipelineFile(favoritePath);
   emit filterListGenerated(filterList);
 }
 
@@ -231,36 +229,24 @@ void PrebuiltPipelinesDockWidget::on_filterLibraryTree_itemClicked( QTreeWidgetI
 // -----------------------------------------------------------------------------
 QStringList PrebuiltPipelinesDockWidget::generateFilterListFromPipelineFile(QString path)
 {
-  QStringList filterNames;
-  FilterPipeline::Pointer pipeline = QFilterParametersReader::ReadPipelineFromFile(path, QSettings::IniFormat);
-  if(NULL == pipeline.get()) { return filterNames; }
 
-  FilterPipeline::FilterContainerType& filters = pipeline->getFilterContainer();
-  int filterCount = filters.count();
+  QStringList filterNames;
+  QSettings prefs(path, QSettings::IniFormat);
+
+  prefs.beginGroup(DREAM3D::Settings::PipelineBuilderGroup);
+  bool ok = false;
+  int filterCount = prefs.value("Number_Filters").toInt(&ok);
+  prefs.endGroup();
+  if (false == ok) {filterCount = 0;}
   for (int i = 0; i < filterCount; ++i)
   {
-    QString filterName = filters.at(i)->getNameOfClass();
+    QString gName = QString::number(i);
+    prefs.beginGroup(gName);
+    QString filterName = prefs.value("Filter_Name", "").toString();
     filterNames.push_back(filterName);
+    prefs.endGroup();
   }
   return filterNames;
-}
-
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void PrebuiltPipelinesDockWidget::on_filterLibraryTree_itemChanged( QTreeWidgetItem* item, int column )
-{
-
-}
-
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void PrebuiltPipelinesDockWidget::on_filterLibraryTree_currentItemChanged(QTreeWidgetItem* item, QTreeWidgetItem* previous )
-{
-  on_filterLibraryTree_itemClicked(item, 0);
 }
 
 // -----------------------------------------------------------------------------
@@ -269,9 +255,56 @@ void PrebuiltPipelinesDockWidget::on_filterLibraryTree_currentItemChanged(QTreeW
 void PrebuiltPipelinesDockWidget::on_filterLibraryTree_itemDoubleClicked( QTreeWidgetItem* item, int column )
 {
   QString pipelinePath = item->data(0, Qt::UserRole).toString();
+  if (item->type() == FilterLibraryTreeWidget::Node_Item_Type)
+  {
+    return; // The user double clicked a folder, so don't do anything
+  }
   if (pipelinePath.isEmpty() == false)
   {
-    emit pipelineFileActivated(pipelinePath);
+    emit pipelineFileActivated(pipelinePath, QSettings::IniFormat, false);
+  }
+
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void PrebuiltPipelinesDockWidget::actionAppendPipeline_triggered()
+{
+  QTreeWidgetItem* item = filterLibraryTree->currentItem();
+
+  QString pipelinePath = item->data(0, Qt::UserRole).toString();
+  if (pipelinePath.isEmpty() == false)
+  {
+    QFileInfo fi(pipelinePath);
+    if (fi.exists() == false) { return; }
+    emit pipelineFileActivated(fi.absoluteFilePath(), QSettings::IniFormat, true);
   }
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void PrebuiltPipelinesDockWidget::actionShowInFileSystem_triggered()
+{
+  QTreeWidgetItem* item = filterLibraryTree->currentItem();
+  QString pipelinePath = item->data(0, Qt::UserRole).toString();
+
+  QFileInfo pipelinePathInfo(pipelinePath);
+  QString pipelinePathDir = pipelinePathInfo.path();
+
+  QString s("file://");
+#if defined(Q_OS_WIN)
+  s = s + "/"; // Need the third slash on windows because file paths start with a drive letter
+#elif defined(Q_OS_MAC)
+
+#else
+  // We are on Linux - I think
+
+#endif
+  s = s + pipelinePathDir;
+  QDesktopServices::openUrl(s);
+}
+
 

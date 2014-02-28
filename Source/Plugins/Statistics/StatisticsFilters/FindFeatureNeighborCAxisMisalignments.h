@@ -53,6 +53,7 @@
 #include "DREAM3DLib/DataContainers/VolumeDataContainer.h"
 #include "DREAM3DLib/DataArrays/NeighborList.hpp"
 
+#include "Statistics/StatisticsConstants.h"
 /**
  * @class FindFeatureNeighborCAxisMisalignments FindFeatureNeighborCAxisMisalignments.h Plugins/Statistics/StatisticsFilters/FindFeatureNeighborCAxisMisalignments.h
  * @brief
@@ -77,12 +78,13 @@ class FindFeatureNeighborCAxisMisalignments : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(NeighborListArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CAxisMisalignmentListArrayName)
 
+    virtual const QString getCompiledLibraryName() { return Statistics::StatisticsBaseName; }
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::CrystallographicFilters; }
     virtual const QString getHumanLabel() { return "Find Feature Neighbor C-Axis Misalignments"; }
 
     DREAM3D_FILTER_PARAMETER(bool, FindAvgMisals)
-    Q_PROPERTY(bool FindAvgMisals READ getFindAvgMisals WRITE setFindAvgMisals NOTIFY parametersChanged)
+    Q_PROPERTY(bool FindAvgMisals READ getFindAvgMisals WRITE setFindAvgMisals)
 
     virtual void setupFilterParameters();
 
@@ -133,4 +135,5 @@ class FindFeatureNeighborCAxisMisalignments : public AbstractFilter
 };
 
 #endif /* FINDFIELDNEIGHBORCAXISMISALIGNMENTS_H_ */
+
 

@@ -42,6 +42,7 @@
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/DataArrays/IDataArray.h"
+#include "DREAM3DLib/Common/Constants.h"
 
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/DataContainers/VolumeDataContainer.h"
@@ -66,6 +67,7 @@ class DREAM3DLib_EXPORT FindFeaturePhases : public AbstractFilter
     //------ Created Feature Data
 
 
+    virtual const QString getCompiledLibraryName() { return Generic::GenericBaseName; }
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::GenericFilters; }
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::MiscFilters; }
     virtual const QString getHumanLabel() { return "Find Feature Phases"; }
@@ -107,4 +109,5 @@ signals:
 };
 
 #endif /* FindFeaturePhases_H_ */
+
 

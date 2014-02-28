@@ -174,6 +174,30 @@ void FindRelativeMotionBetweenSlices::setupFilterParameters()
     parameter->setValueType("int");
     parameters.push_back(parameter);
   }
+  {
+    FilterParameter::Pointer parameter = FilterParameter::New();
+    parameter->setHumanLabel("Search Distance 1 (Voxels)");
+    parameter->setPropertyName("SSize1");
+    parameter->setWidgetType(FilterParameterWidgetType::IntWidget);
+    parameter->setValueType("int");
+    parameters.push_back(parameter);
+  }
+  {
+    FilterParameter::Pointer parameter = FilterParameter::New();
+    parameter->setHumanLabel("Search Distance 2 (Voxels)");
+    parameter->setPropertyName("SSize2");
+    parameter->setWidgetType(FilterParameterWidgetType::IntWidget);
+    parameter->setValueType("int");
+    parameters.push_back(parameter);
+  }
+  {
+    FilterParameter::Pointer parameter = FilterParameter::New();
+    parameter->setHumanLabel("Slice Step (Voxels)");
+    parameter->setPropertyName("SliceStep");
+    parameter->setWidgetType(FilterParameterWidgetType::IntWidget);
+    parameter->setValueType("int");
+    parameters.push_back(parameter);
+  }
   setFilterParameters(parameters);
 }
 
@@ -186,6 +210,9 @@ void FindRelativeMotionBetweenSlices::readFilterParameters(AbstractFilterParamet
   setPlane( reader->readValue("Plane", getPlane()));
   setPSize1( reader->readValue("PSize1", getPSize1()));
   setPSize2( reader->readValue("PSize2", getPSize2()));
+  setSSize1( reader->readValue("SSize1", getSSize1()));
+  setSSize2( reader->readValue("SSize2", getSSize2()));
+  setSliceStep( reader->readValue("SliceStep", getSliceStep()));
   /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }
@@ -200,6 +227,9 @@ int FindRelativeMotionBetweenSlices::writeFilterParameters(AbstractFilterParamet
   writer->writeValue("Plane", getPlane());
   writer->writeValue("PSize1", getPSize1());
   writer->writeValue("PSize2", getPSize2());
+  writer->writeValue("SSize1", getSSize1());
+  writer->writeValue("SSize2", getSSize2());
+  writer->writeValue("SliceStep", getSliceStep());
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
@@ -338,9 +368,14 @@ void FindRelativeMotionBetweenSlices::execute()
   m->getDimensions(xP, yP, zP);
   size_t totalPoints = xP*yP*zP;
 
+  int32_t buffer1 = m_PSize1/2;
+  int32_t buffer2 = m_PSize2/2;
+  if(m_SSize1 > m_PSize1) buffer1 = m_SSize1/2;
+  if(m_SSize2 > m_PSize2) buffer2 = m_SSize2/2;
+
   QVector<size_t> cDims(1, 4);
   Int32ArrayType::Pointer patchPointsPtr = Int32ArrayType::CreateArray((m_PSize1*m_PSize2), "patchPoints");
-  Int32ArrayType::Pointer searchPointsPtr = Int32ArrayType::CreateArray((21*21), cDims, "searchPoints");
+  Int32ArrayType::Pointer searchPointsPtr = Int32ArrayType::CreateArray((m_SSize1*m_SSize2), cDims, "searchPoints");
   BoolArrayType::Pointer validPointsPtr = BoolArrayType::CreateArray(totalPoints, "validPoints");
   validPointsPtr->initializeWithValue(false);
   int32_t* patchPoints = patchPointsPtr->getPointer(0);
@@ -362,26 +397,26 @@ void FindRelativeMotionBetweenSlices::execute()
     }
     numPatchPoints = count;
     count = 0;
-    for(int j = -10; j <= 10; j++)
+    for(int j = -(m_SSize2/2); j <= (m_SSize2/2); j++)
     {
       yStride = (j*xP);
-      for(int i = -10; i <= 10; i++)
+      for(int i = -(m_SSize1/2); i <= (m_SSize1/2); i++)
       {
-        searchPoints[4*count] = (xP*yP)+yStride+i;
+        searchPoints[4*count] = (m_SliceStep*xP*yP)+yStride+i;
         searchPoints[4*count+1] = i;
         searchPoints[4*count+2] = j;
-        searchPoints[4*count+3] = 3;
+        searchPoints[4*count+3] = m_SliceStep;
         count++;
       }
     }
     numSearchPoints = count;
-    for(int k=0;k<zP-3;k++)
+    for(int k=0;k<zP-m_SliceStep;k++)
     {
       zStride = k*xP*yP;
-      for(int j=m_PSize2;j<(yP-m_PSize2);j++)
+      for(int j=buffer2;j<(yP-buffer2);j++)
       {
         yStride = j*xP;
-        for(int i=m_PSize1;i<(xP-m_PSize1);i++)
+        for(int i=buffer1;i<(xP-buffer1);i++)
         {
           validPoints[zStride+yStride+i] = true;
         }
@@ -401,26 +436,26 @@ void FindRelativeMotionBetweenSlices::execute()
     }
     numPatchPoints = count;
     count = 0;
-    for(int j = -10; j <= 10; j++)
+    for(int j = -(m_SSize2/2); j <= (m_SSize2/2); j++)
     {
       yStride = (j*xP*yP);
-      for(int i = -10; i <= 10; i++)
+      for(int i = -(m_SSize1/2); i <= (m_SSize1/2); i++)
       {
-        searchPoints[count] = (xP)+yStride+i;
+        searchPoints[count] = (m_SliceStep*xP)+yStride+i;
         searchPoints[4*count+1] = i;
-        searchPoints[4*count+2] = 3;
+        searchPoints[4*count+2] = m_SliceStep;
         searchPoints[4*count+3] = j;
         count++;
       }
     }
     numSearchPoints = count;
-    for(int k=m_PSize2;k<(zP-m_PSize2);k++)
+    for(int k=buffer2;k<(yP-buffer2);k++)
     {
       zStride = k*xP*yP;
-      for(int j=0;j<yP-3;j++)
+      for(int j=0;j<yP-m_SliceStep;j++)
       {
         yStride = j*xP;
-        for(int i=m_PSize1;i<(xP-m_PSize1);i++)
+        for(int i=buffer1;i<(xP-buffer1);i++)
         {
           validPoints[zStride+yStride+i] = true;
         }
@@ -440,26 +475,26 @@ void FindRelativeMotionBetweenSlices::execute()
     }
     numPatchPoints = count;
     count = 0;
-    for(int j = -10; j <= 10; j++)
+    for(int j = -(m_SSize2/2); j <= (m_SSize2/2); j++)
     {
       yStride = (j*xP*yP);
-      for(int i = -10; i <= 10; i++)
+      for(int i = -(m_SSize1/2); i <= (m_SSize1/2); i++)
       {
-        searchPoints[count] = (1)+yStride+(i*xP);
-        searchPoints[4*count+1] = 3;
+        searchPoints[count] = (m_SliceStep)+yStride+(i*xP);
+        searchPoints[4*count+1] = m_SliceStep;
         searchPoints[4*count+2] = i;
         searchPoints[4*count+3] = j;
         count++;
       }
     }
     numSearchPoints = count;
-    for(int k=m_PSize2;k<(zP-m_PSize2);k++)
+    for(int k=buffer2;k<(yP-buffer2);k++)
     {
       zStride = k*xP*yP;
-      for(int j=m_PSize1;j<(yP-m_PSize1);j++)
+      for(int j=buffer1;j<(xP-buffer1);j++)
       {
         yStride = j*xP;
-        for(int i=0;i<xP-3;i++)
+        for(int i=0;i<xP-m_SliceStep;i++)
         {
           validPoints[zStride+yStride+i] = true;
         }

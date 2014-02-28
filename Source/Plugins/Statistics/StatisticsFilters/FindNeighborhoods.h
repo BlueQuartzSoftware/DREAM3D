@@ -47,6 +47,7 @@
 #include "DREAM3DLib/DataContainers/VolumeDataContainer.h"
 #include "DREAM3DLib/DataArrays/NeighborList.hpp"
 
+#include "Statistics/StatisticsConstants.h"
 /**
  * @class FindNeighborhoods FindNeighborhoods.h DREAM3DLib/GenericFilters/FindNeighborhoods.h
  * @brief
@@ -71,8 +72,9 @@ class FindNeighborhoods : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(NumNeighborsArrayName)
 
     DREAM3D_FILTER_PARAMETER(float, MultiplesOfAverage)
-    Q_PROPERTY(int MultiplesOfAverage READ getMultiplesOfAverage WRITE setMultiplesOfAverage NOTIFY parametersChanged)
+    Q_PROPERTY(int MultiplesOfAverage READ getMultiplesOfAverage WRITE setMultiplesOfAverage)
 
+    virtual const QString getCompiledLibraryName() { return Statistics::StatisticsBaseName; }
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::MorphologicalFilters; }
     virtual const QString getHumanLabel() { return "Find Feature Neighborhoods"; }
@@ -122,6 +124,7 @@ class FindNeighborhoods : public AbstractFilter
 };
 
 #endif /* FINDNEIGHBORHOODS_H_ */
+
 
 
 

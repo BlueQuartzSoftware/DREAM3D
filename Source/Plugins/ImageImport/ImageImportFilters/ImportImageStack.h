@@ -43,7 +43,7 @@
 #include "DREAM3DLib/DataArrays/IDataArray.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
 
-
+#include "ImageImport/ImageImportConstants.h"
 /**
  * @class ImportImageStack ImportImageStack.h ImageImport/Code/ImageImportFilters/ImportImageStack.h
  * @brief
@@ -78,7 +78,7 @@ class ImportImageStack : public AbstractFilter
     DREAM3D_FILTER_PARAMETER(uint32_t, RefFrameZDir)
 
     DREAM3D_FILTER_PARAMETER(int, ImageStack)
-    Q_PROPERTY(int ImageStack READ getImageStack WRITE setImageStack NOTIFY parametersChanged)
+    Q_PROPERTY(int ImageStack READ getImageStack WRITE setImageStack)
 
 
     /**
@@ -86,6 +86,7 @@ class ImportImageStack : public AbstractFilter
     * a different group if you want. The string returned here will be displayed
     * in the GUI for the filter
     */
+    virtual const QString getCompiledLibraryName() { return ImageImport::ImageImportBaseName; }
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
 
     /**
@@ -159,4 +160,5 @@ signals:
 };
 
 #endif /* ImportImageStack_H_ */
+
 

@@ -82,7 +82,7 @@ void FindNeighborhoods::setupFilterParameters()
     parameter->setHumanLabel("Multiples Of Average Diameter");
     parameter->setWidgetType(FilterParameterWidgetType::DoubleWidget);
     parameter->setValueType("float");
-	parameter->setCastableValueType("double");
+    parameter->setCastableValueType("double");
     parameter->setUnits("");
     parameters.push_back(parameter);
   }
@@ -128,7 +128,7 @@ void FindNeighborhoods::dataCheck()
   // because we are just creating an empty NeighborList object.
   // Now we are going to get a "Pointer" to the NeighborList object out of the DataContainer
   m_NeighborhoodList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>* >
-                       (m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getAttributeArray(m_NeighborhoodListArrayName).get());
+      (m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getAttributeArray(m_NeighborhoodListArrayName).get());
   if(m_NeighborhoodList == NULL)
   {
     NeighborList<int>::Pointer neighborhoodlistPtr = NeighborList<int>::New();
@@ -143,7 +143,7 @@ void FindNeighborhoods::dataCheck()
       setErrorCondition(-308);
     }
     m_NeighborhoodList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>* >
-                         (m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getAttributeArray(m_NeighborhoodListArrayName).get());
+        (m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getAttributeArray(m_NeighborhoodListArrayName).get());
 
     CreatedArrayHelpIndexEntry::Pointer e = CreatedArrayHelpIndexEntry::New();
     e->setFilterName(this->getNameOfClass());
@@ -205,15 +205,15 @@ void FindNeighborhoods::find_neighborhoods()
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
   float x, y, z;
-  float xn, yn, zn;
-  float dx, dy, dz;
+  //  float xn, yn, zn;
+  //  float dx, dy, dz;
 
   QVector<QVector<int> > neighborhoodlist;
   QVector<float> criticalDistance;
 
   //int64_t totalPoints = m->getTotalPoints();
   size_t totalFeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
- // size_t totalEnsembles = 0;
+  // size_t totalEnsembles = 0;
   dataCheck();
 
   neighborhoodlist.resize(totalFeatures);
@@ -224,7 +224,7 @@ void FindNeighborhoods::find_neighborhoods()
   {
     m_Neighborhoods[i] = 0;
     aveDiam += m_EquivalentDiameters[i];
-	criticalDistance[i] = m_EquivalentDiameters[i] * m_MultiplesOfAverage;
+    criticalDistance[i] = m_EquivalentDiameters[i] * m_MultiplesOfAverage;
   }
   aveDiam /= totalFeatures;
   for (size_t i = 1; i < totalFeatures; i++)
@@ -250,20 +250,21 @@ void FindNeighborhoods::find_neighborhoods()
     static_cast<DimType>(udims[2]),
   };
 
-  size_t xP = dims[0];
-  size_t yP = dims[1];
-  size_t zP = dims[2];
-  float xRes = m->getXRes();
-  float yRes = m->getYRes();
-  float zRes = m->getZRes();
-  float sizeX = float(xP) * xRes;
-  float sizeY = float(yP) * yRes;
-  float sizeZ = float(zP) * zRes;
-  int numXBins = int(sizeX / aveCriticalDistance);
-  int numYBins = int(sizeY / aveCriticalDistance);
-  int numZBins = int(sizeZ / aveCriticalDistance);
+  //  size_t xP = dims[0];
+  //  size_t yP = dims[1];
+  //  size_t zP = dims[2];
+  //  float xRes = m->getXRes();
+  //  float yRes = m->getYRes();
+  //  float zRes = m->getZRes();
+  //  float sizeX = float(xP) * xRes;
+  //  float sizeY = float(yP) * yRes;
+  //  float sizeZ = float(zP) * zRes;
+  //  int numXBins = int(sizeX / aveCriticalDistance);
+  //  int numYBins = int(sizeY / aveCriticalDistance);
+  //  int numZBins = int(sizeZ / aveCriticalDistance);
 
-  int xbin, ybin, zbin, bin, bin1, bin2;
+  int xbin, ybin, zbin;
+  //int bin, bin1, bin2;
   QVector<size_t> bins(3*totalFeatures, 0);
   for (size_t i = 1; i < totalFeatures; i++)
   {
@@ -273,9 +274,9 @@ void FindNeighborhoods::find_neighborhoods()
     xbin = int((x - m_OriginX) / aveCriticalDistance);
     ybin = int((y - m_OriginY) / aveCriticalDistance);
     zbin = int((z - m_OriginZ) / aveCriticalDistance);
-	bins[3*i] = xbin;
-	bins[3*i+1] = ybin;
-	bins[3*i+2] = zbin;
+    bins[3*i] = xbin;
+    bins[3*i+1] = ybin;
+    bins[3*i+2] = zbin;
   }
 
   int bin1x, bin2x, bin1y, bin2y, bin1z, bin2z;
@@ -294,32 +295,32 @@ void FindNeighborhoods::find_neighborhoods()
     y = m_Centroids[3 * i + 1];
     z = m_Centroids[3 * i + 2];
     bin1x = bins[3*i];
-	bin1y = bins[3*i+1];
-	bin1z = bins[3*i+2];
-	criticalDistance1 = criticalDistance[i];
-    
-	for (size_t j = i + 1; j < totalFeatures; j++)
+    bin1y = bins[3*i+1];
+    bin1z = bins[3*i+2];
+    criticalDistance1 = criticalDistance[i];
+
+    for (size_t j = i + 1; j < totalFeatures; j++)
     {
       bin2x = bins[3*j];
-	  bin2y = bins[3*j+1];
-	  bin2z = bins[3*j+2];
-	  criticalDistance2 = criticalDistance[j];
+      bin2y = bins[3*j+1];
+      bin2z = bins[3*j+2];
+      criticalDistance2 = criticalDistance[j];
 
-	  dBinX = abs(bin2x - bin1x);
-	  dBinY = abs(bin2y - bin1y);
-	  dBinZ = abs(bin2z - bin1z);
+      dBinX = abs(bin2x - bin1x);
+      dBinY = abs(bin2y - bin1y);
+      dBinZ = abs(bin2z - bin1z);
 
-	  if (dBinX < criticalDistance1 && dBinY < criticalDistance1 && dBinZ < criticalDistance1)
-	  {
-		m_Neighborhoods[i]++;
-		neighborhoodlist[i].push_back(j);
-	  }
+      if (dBinX < criticalDistance1 && dBinY < criticalDistance1 && dBinZ < criticalDistance1)
+      {
+        m_Neighborhoods[i]++;
+        neighborhoodlist[i].push_back(j);
+      }
 
-	  if (dBinX < criticalDistance2 && dBinY < criticalDistance2 && dBinZ < criticalDistance2)
-	  {
-		m_Neighborhoods[j]++;
-		neighborhoodlist[j].push_back(i);
-	  }
+      if (dBinX < criticalDistance2 && dBinY < criticalDistance2 && dBinZ < criticalDistance2)
+      {
+        m_Neighborhoods[j]++;
+        neighborhoodlist[j].push_back(i);
+      }
     }
   }
   for (size_t i = 1; i < totalFeatures; i++)

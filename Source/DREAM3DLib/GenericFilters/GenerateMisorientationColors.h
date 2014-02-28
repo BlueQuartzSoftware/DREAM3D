@@ -38,6 +38,7 @@
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/DataArrays/IDataArray.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
+#include "DREAM3DLib/Common/Constants.h"
 
 
 /**
@@ -65,9 +66,9 @@ class DREAM3DLib_EXPORT GenerateMisorientationColors : public AbstractFilter
 
     /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
     DREAM3D_FILTER_PARAMETER(FloatVec3_t, ReferenceAxis)
-    Q_PROPERTY(FloatVec3_t ReferenceAxis READ getReferenceAxis WRITE setReferenceAxis NOTIFY parametersChanged)
+    Q_PROPERTY(FloatVec3_t ReferenceAxis READ getReferenceAxis WRITE setReferenceAxis)
     DREAM3D_FILTER_PARAMETER(float, ReferenceAngle)
-    Q_PROPERTY(float ReferenceAngle READ getReferenceAngle WRITE setReferenceAngle NOTIFY parametersChanged)
+    Q_PROPERTY(float ReferenceAngle READ getReferenceAngle WRITE setReferenceAngle)
 
 
     /**
@@ -75,6 +76,7 @@ class DREAM3DLib_EXPORT GenerateMisorientationColors : public AbstractFilter
     * a different group if you want. The string returned here will be displayed
     * in the GUI for the filter
     */
+    virtual const QString getCompiledLibraryName() { return Generic::GenericBaseName; }
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::GenericFilters; }
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::CrystallographyFilters; }
 
@@ -144,3 +146,4 @@ class DREAM3DLib_EXPORT GenerateMisorientationColors : public AbstractFilter
 };
 
 #endif /* _GenerateMisorientationColors_H_ */
+

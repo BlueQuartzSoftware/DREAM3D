@@ -72,6 +72,7 @@ class DREAM3DLib_EXPORT AbstractFilter : public Observable
     Q_PROPERTY(QString SubGroupName READ getSubGroupName CONSTANT)
     Q_PROPERTY(QString HumanLabel READ getHumanLabel CONSTANT)
     Q_PROPERTY(QString FilterVersion READ getFilterVersion CONSTANT)
+    Q_PROPERTY(QString CompiledLibraryName READ getCompiledLibraryName CONSTANT)
     Q_PROPERTY(int Cancel READ getCancel WRITE setCancel)
 
   public:
@@ -89,6 +90,7 @@ class DREAM3DLib_EXPORT AbstractFilter : public Observable
     virtual const QString getSubGroupName() { return "YOUR CLASS SHOULD IMPLEMENT THIS";}
     virtual const QString getHumanLabel() { return "YOUR CLASS SHOULD IMPLEMENT THIS";}
     virtual const QString getBrandingString() { return "DREAM3D Core Filter"; }
+    virtual const QString getCompiledLibraryName() { return "DREAM3DLib"; }
 
     /**
      * @brief setupFilterParameters

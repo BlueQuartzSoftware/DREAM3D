@@ -62,11 +62,11 @@ class SingleThresholdFeatures : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
 
     DREAM3D_INSTANCE_STRING_PROPERTY(SelectedFeatureArrayName)
-    Q_PROPERTY(QString SelectedFeatureArrayName READ getSelectedFeatureArrayName WRITE setSelectedFeatureArrayName NOTIFY parametersChanged)
+    Q_PROPERTY(QString SelectedFeatureArrayName READ getSelectedFeatureArrayName WRITE setSelectedFeatureArrayName)
 
     DREAM3D_INSTANCE_PROPERTY(int, ComparisonOperator)
     DREAM3D_INSTANCE_PROPERTY(double, ComparisonValue)
-    Q_PROPERTY(double ComparisonValue READ getComparisonValue WRITE setComparisonValue NOTIFY parametersChanged)
+    Q_PROPERTY(double ComparisonValue READ getComparisonValue WRITE setComparisonValue)
 
     virtual void preflight();
 

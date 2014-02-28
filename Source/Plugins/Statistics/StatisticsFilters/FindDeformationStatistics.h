@@ -63,6 +63,7 @@
 #include "DREAM3DLib/OrientationOps/OrthoRhombicOps.h"
 #include "DREAM3DLib/DataContainers/VolumeDataContainer.h"
 
+#include "Statistics/StatisticsConstants.h"
 /**
  * @class FindDeformationStatistics FindDeformationStatistics.h DREAM3DLib/GenericFilters/FindDeformationStatistics.h
  * @brief

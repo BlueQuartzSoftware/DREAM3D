@@ -46,6 +46,7 @@
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/DataContainers/VolumeDataContainer.h"
 
+#include "Sampling/SamplingConstants.h"
 /**
  * @class RegularizeZSpacing RegularizeZSpacing.h DREAM3DLib/SyntheticBuilderFilters/RegularizeZSpacing.h
  * @brief
@@ -66,12 +67,13 @@ class RegularizeZSpacing : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
 
     DREAM3D_FILTER_PARAMETER(QString, InputFile)
-    Q_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile NOTIFY parametersChanged)
+    Q_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile)
 
 
     DREAM3D_FILTER_PARAMETER(float, NewZRes)
-    Q_PROPERTY(float NewZRes READ getNewZRes WRITE setNewZRes NOTIFY parametersChanged)
+    Q_PROPERTY(float NewZRes READ getNewZRes WRITE setNewZRes)
 
+    virtual const QString getCompiledLibraryName() { return Sampling::SamplingBaseName; }
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::SamplingFilters; }
     virtual const QString getSubGroupName()  { return DREAM3D::FilterSubGroups::ResolutionFilters; }
     virtual const QString getHumanLabel() { return "Regularize Z Spacing"; }
@@ -113,3 +115,4 @@ class RegularizeZSpacing : public AbstractFilter
 };
 
 #endif /* RegularizeZSpacing_H_ */
+

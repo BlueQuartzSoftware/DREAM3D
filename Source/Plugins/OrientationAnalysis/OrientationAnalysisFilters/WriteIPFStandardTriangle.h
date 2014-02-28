@@ -45,7 +45,7 @@
 #include "DREAM3DLib/DataArrays/IDataArray.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
 
-
+#include "OrientationAnalysis/OrientationAnalysisConstants.h"
 
 /**
  * @class WriteIPFStandardTriangle WriteIPFStandardTriangle.h /IOFilters/WriteIPFStandardTriangle.h
@@ -67,11 +67,11 @@ class WriteIPFStandardTriangle : public AbstractFilter
 
     /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
     DREAM3D_FILTER_PARAMETER(QString, OutputFile)
-    Q_PROPERTY(QString OutputFile READ getOutputFile WRITE setOutputFile NOTIFY parametersChanged)
+    Q_PROPERTY(QString OutputFile READ getOutputFile WRITE setOutputFile)
     DREAM3D_FILTER_PARAMETER(int, ImageFormat)
-    Q_PROPERTY(int ImageFormat READ getImageFormat WRITE setImageFormat NOTIFY parametersChanged)
+    Q_PROPERTY(int ImageFormat READ getImageFormat WRITE setImageFormat)
     DREAM3D_FILTER_PARAMETER(int, ImageSize)
-    Q_PROPERTY(int ImageSize READ getImageSize WRITE setImageSize NOTIFY parametersChanged)
+    Q_PROPERTY(int ImageSize READ getImageSize WRITE setImageSize)
     DREAM3D_INSTANCE_PROPERTY(float, ColorCorrectionFactor)
 
 
@@ -89,6 +89,7 @@ class WriteIPFStandardTriangle : public AbstractFilter
     * a different group if you want. The string returned here will be displayed
     * in the GUI for the filter
     */
+    virtual const QString getCompiledLibraryName() { return OrientationAnalysis::OrientationAnalysisBaseName; }
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
 
     /**
@@ -176,4 +177,5 @@ class WriteIPFStandardTriangle : public AbstractFilter
 };
 
 #endif /* _WriteIPFStandardTriangle_H_ */
+
 

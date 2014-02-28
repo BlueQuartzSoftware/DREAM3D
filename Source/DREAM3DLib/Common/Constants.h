@@ -659,5 +659,27 @@ namespace DREAM3D
 
 }
 
+
+namespace Generic
+{
+  const QString GenericPluginFile("GenericPlugin");
+  const QString GenericPluginDisplayName("GenericPlugin");
+  const QString GenericBaseName("GenericPlugin");
+}
+
+namespace IO
+{
+  const QString IOPluginFile("IOPlugin");
+  const QString IOPluginDisplayName("IOPlugin");
+  const QString IOBaseName("IOPlugin");
+}
+
+namespace Test
+{
+  const QString TestPluginFile("TestPlugin");
+  const QString TestPluginDisplayName("TestPlugin");
+  const QString TestBaseName("TestPlugin");
+}
+
 #endif /* _DREAM3D_CONSTANTS_H_ */
 

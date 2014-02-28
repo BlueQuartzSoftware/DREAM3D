@@ -44,6 +44,8 @@
 #include "SurfaceMeshing/SurfaceMeshingFilters/SurfaceMeshFilter.h"
 
 
+#include "SurfaceMeshing/SurfaceMeshingConstants.h"
+
 /**
  * @class BinaryNodesTrianglesReader BinaryNodesTrianglesReader.h /SurfaceMeshingFilters/BinaryNodesTrianglesReader.h
  * @brief

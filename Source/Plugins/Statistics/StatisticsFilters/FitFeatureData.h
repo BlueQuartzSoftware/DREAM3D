@@ -51,6 +51,7 @@
 #include "DREAM3DLib/DataContainers/VolumeDataContainer.h"
 #include "DREAM3DLib/DistributionAnalysisOps/DistributionAnalysisOps.h"
 
+#include "Statistics/StatisticsConstants.h"
 /**
  * @class FitFeatureData FitFeatureData.h /FilterCategoryFilters/FitFeatureData.h
  * @brief
@@ -72,18 +73,19 @@ class FitFeatureData : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(CellEnsembleAttributeMatrixName)
 
     DREAM3D_FILTER_PARAMETER(QString, SelectedFeatureArrayName)
-    Q_PROPERTY(QString SelectedFeatureArrayName READ getSelectedFeatureArrayName WRITE setSelectedFeatureArrayName NOTIFY parametersChanged)
+    Q_PROPERTY(QString SelectedFeatureArrayName READ getSelectedFeatureArrayName WRITE setSelectedFeatureArrayName)
 
     DREAM3D_FILTER_PARAMETER(unsigned int, DistributionType)
-    Q_PROPERTY(unsigned int DistributionType READ getDistributionType WRITE setDistributionType NOTIFY parametersChanged)
+    Q_PROPERTY(unsigned int DistributionType READ getDistributionType WRITE setDistributionType)
     DREAM3D_FILTER_PARAMETER(bool, RemoveBiasedFeatures)
-    Q_PROPERTY(bool RemoveBiasedFeatures READ getRemoveBiasedFeatures WRITE setRemoveBiasedFeatures NOTIFY parametersChanged)
+    Q_PROPERTY(bool RemoveBiasedFeatures READ getRemoveBiasedFeatures WRITE setRemoveBiasedFeatures)
 
     /**
     * @brief This returns the group that the filter belonds to. You can select
     * a different group if you want. The string returned here will be displayed
     * in the GUI for the filter
     */
+    virtual const QString getCompiledLibraryName() { return Statistics::StatisticsBaseName; }
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::EnsembleStatsFilters; }
 
@@ -151,4 +153,5 @@ class FitFeatureData : public AbstractFilter
 };
 
 #endif /* FITFIELDDATA_H_ */
+
 

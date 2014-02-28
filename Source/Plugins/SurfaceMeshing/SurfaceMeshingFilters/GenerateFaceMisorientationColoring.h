@@ -43,6 +43,8 @@
 #include "DREAM3DLib/DataArrays/IDataArray.h"
 #include "SurfaceMeshing/SurfaceMeshingFilters/SurfaceMeshFilter.h"
 
+#include "SurfaceMeshing/SurfaceMeshingConstants.h"
+
 /**
  * @class GenerateFaceMisorientationColoring GenerateFaceMisorientationColoring.h /SurfaceMeshFilters/GenerateFaceMisorientationColoring.h
  * @brief This filter calculates the normal of each triangle in the surface mesh. The calculated normals have been
@@ -75,6 +77,7 @@ class GenerateFaceMisorientationColoring : public SurfaceMeshFilter
     * a different group if you want. The string returned here will be displayed
     * in the GUI for the filter
     */
+    virtual const QString getCompiledLibraryName() { return SurfaceMeshing::SurfaceMeshingBaseName; }
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::SurfaceMeshingFilters; }
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::MiscFilters; }
 
@@ -145,4 +148,5 @@ signals:
 };
 
 #endif /* _GenerateFaceMisorientationColoring_H_ */
+
 

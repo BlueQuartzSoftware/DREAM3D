@@ -44,6 +44,7 @@
 #include "DREAM3DLib/DataArrays/DataArray.hpp"
 #include "DREAM3DLib/IOFilters/FileWriter.h"
 #include "DREAM3DLib/DataArrays/StringDataArray.hpp"
+#include "DREAM3DLib/Common/Constants.h"
 
 /**
  * @class INLWriter INLWriter.h DREAM3DLib/IOFilters/INLWriter.h
@@ -71,6 +72,7 @@ class DREAM3DLib_EXPORT INLWriter : public FileWriter
     DREAM3D_INSTANCE_STRING_PROPERTY(MaterialNamesArrayName)
 
 
+    virtual const QString getCompiledLibraryName() { return IO::IOBaseName; }
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::OutputFilters; }
     virtual const QString getHumanLabel() { return "Write INL File"; }
@@ -116,5 +118,6 @@ signals:
 };
 
 #endif /* _INLWRITER_H_ */
+
 
 

@@ -128,26 +128,43 @@ int TestDxWriter()
 // -----------------------------------------------------------------------------
 int TestDxReader()
 {
-
+  Observer obs;
   // Create the pipeline
-  FilterPipeline::Pointer pipeline = FilterPipeline::New();
-
+  //FilterPipeline::Pointer pipeline = FilterPipeline::New();
+  DataContainerArray::Pointer dca = DataContainerArray::New();
   // Create the Dx Reader
   DxReader::Pointer reader = DxReader::New();
+  reader->setDataContainerArray(dca);
   reader->setInputFile(getTestFile());
+
+  QObject::connect(reader.get(), SIGNAL(filterGeneratedMessage(const PipelineMessage&)),
+            &obs, SLOT(processPipelineMessage(const PipelineMessage&)) );
+
   // Put the Filter into the pipeline
-  pipeline->pushBack(reader);
+  //pipeline->pushBack(reader);
   // Preflight the pipeline
-  int err = pipeline->preflightPipeline();
+  //int err = pipeline->preflightPipeline();
+
+
+
+  reader->preflight();
+  int err = reader->getErrorCondition();
   DREAM3D_REQUIRE(err >= 0)
 
-  // Now execute the filter
-  pipeline->execute();
+  // Now we need to clear the DataContainerArray from everything that was put into it during the preflight
+  dca->clear();
 
+  // Now execute the filter
+  reader->execute();
+  err = reader->getErrorCondition();
   // The Pipeline should have executed without any issues
-  DREAM3D_REQUIRE(pipeline->getErrorCondition() >= 0)
+  DREAM3D_REQUIRE(err >= 0)
+
+
 
   // Get the Volume Data Container from the Pipeline
+  dca = reader->getDataContainerArray();
+  DREAM3D_REQUIRE(NULL != dca.get());
   VolumeDataContainer* mFromFile = reader->getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(DREAM3D::Defaults::VolumeDataContainerName);
   DREAM3D_REQUIRE(NULL != mFromFile );
 

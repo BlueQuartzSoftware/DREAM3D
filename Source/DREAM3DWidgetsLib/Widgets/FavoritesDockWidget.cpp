@@ -47,17 +47,9 @@
 #include <QtGui/QTreeWidgetItem>
 #include <QtGui/QMenu>
 
-#include "DREAM3DLib/Common/IFilterFactory.hpp"
-#include "DREAM3DLib/Common/FilterFactory.hpp"
-#include "DREAM3DLib/Common/FilterPipeline.h"
-#include "DREAM3DLib/FilterParameters/QFilterParametersReader.h"
-#include "DREAM3DLib/FilterParameters/QFilterParametersWriter.h"
-
-
 #include "DREAM3DWidgetsLib/Widgets/AddFavoriteWidget.h"
 #include "DREAM3DWidgetsLib/Widgets/FilterListDockWidget.h"
 
-#include "DREAM3DWidgetsLib/moc_FavoritesDockWidget.cpp"
 
 // -----------------------------------------------------------------------------
 //
@@ -97,7 +89,6 @@ void FavoritesDockWidget::setupGui()
   filterLibraryTree->clear();
 
   readPipelines();
-
 }
 
 // -----------------------------------------------------------------------------
@@ -106,15 +97,6 @@ void FavoritesDockWidget::setupGui()
 FilterLibraryTreeWidget* FavoritesDockWidget::getFilterLibraryTreeWidget()
 {
   return filterLibraryTree;
-}
-
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void FavoritesDockWidget::setupContextMenus(QMenu* menuPipeline)
-{
-
 }
 
 // -----------------------------------------------------------------------------
@@ -159,8 +141,7 @@ void FavoritesDockWidget::readPipelines()
 
   // Now block signals and load up all the pipelines in the folder
   filterLibraryTree->blockSignals(true);
-  //  addFiltersRecursively(pipelinesDir, filterLibraryTree->invisibleRootItem());
-  addFiltersRecursively(pipelinesDir, filterLibraryTree->invisibleRootItem(), iconFileName, allowEditing, fileExtension, itemType);
+  addPipelinesRecursively(pipelinesDir, filterLibraryTree->invisibleRootItem(), iconFileName, allowEditing, fileExtension, itemType);
   filterLibraryTree->blockSignals(false);
 }
 
@@ -168,8 +149,8 @@ void FavoritesDockWidget::readPipelines()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FavoritesDockWidget::addFiltersRecursively(QDir currentDir, QTreeWidgetItem* currentDirItem, QString iconFileName,
-                                                bool allowEditing, QString fileExtension, FilterLibraryTreeWidget::ItemType itemType)
+void FavoritesDockWidget::addPipelinesRecursively(QDir currentDir, QTreeWidgetItem* currentDirItem, QString iconFileName,
+                                                  bool allowEditing, QString fileExtension, FilterLibraryTreeWidget::ItemType itemType)
 {
 
 
@@ -191,7 +172,7 @@ void FavoritesDockWidget::addFiltersRecursively(QDir currentDir, QTreeWidgetItem
       nextDirItem->setText(0, fi.baseName());
       nextDirItem->setIcon(0, QIcon(":/folder_blue.png"));
       nextDirItem->setData(0, Qt::UserRole, QVariant(fi.absoluteFilePath() ) );
-      addFiltersRecursively( QDir( fi.absoluteFilePath() ), nextDirItem, iconFileName, allowEditing, fileExtension, itemType );   // Recursive call
+      addPipelinesRecursively( QDir( fi.absoluteFilePath() ), nextDirItem, iconFileName, allowEditing, fileExtension, itemType );   // Recursive call
     }
   }
 
@@ -392,7 +373,10 @@ QString FavoritesDockWidget::writeNewFavoriteFilePath(QString newFavoriteTitle, 
   bool success = f.rename(newPath);
   if (false == success)
   {
-    qDebug() << "Failed";
+    QMessageBox::StandardButton reply;
+    reply = QMessageBox::critical(this, QObject::tr("Error renaming a file"),
+                                  QObject::tr("Error renaming file '%1' to '%2'.").arg(favoritePath).arg(newPath),
+                                  QMessageBox::Ok);
   }
 
   filterLibraryTree->blockSignals(true);
@@ -479,9 +463,12 @@ void FavoritesDockWidget::actionAddFavoriteFolder_triggered()
   QDir dir(path);
 
   bool created = dir.mkpath(favoriteTitle);
-  if(created == false)
+  if (false == created)
   {
-    qDebug() << "Could not create path " << folderPath;
+    QMessageBox::StandardButton reply;
+    reply = QMessageBox::critical(this, QObject::tr("Folder Creation Error"),
+                                  QObject::tr("Error creating folder '%1'.").arg(path + "/" + favoriteTitle),
+                                  QMessageBox::Ok);
   }
 
   filterLibraryTree->blockSignals(true);
@@ -561,12 +548,12 @@ void FavoritesDockWidget::actionUpdateFavorite_triggered()
 {
   // Lets get the name of the favorite
   QTreeWidgetItem* item = filterLibraryTree->currentItem();
- // QTreeWidgetItem* parent = filterLibraryTree->currentItem()->parent();
+  // QTreeWidgetItem* parent = filterLibraryTree->currentItem()->parent();
 
   QString name = item->text(0);
   QString filePath = item->data(0, Qt::UserRole).toString();
-//  QFileInfo filePathInfo = QFileInfo(filePath);
-//  QString name = filePathInfo.baseName();
+  //  QFileInfo filePathInfo = QFileInfo(filePath);
+  //  QString name = filePathInfo.baseName();
 
   emit pipelineNeedsToBeSaved(filePath, name);
 
@@ -587,7 +574,7 @@ void FavoritesDockWidget::removeFavorite(QTreeWidgetItem* item)
     bool didRemove = file.remove();
     if(didRemove == false)
     {
-          QMessageBox::warning ( this, QString::fromAscii("Pipeline Save Error"),
+      QMessageBox::warning ( this, QString::fromAscii("Pipeline Save Error"),
                              QString::fromAscii("There was an error removing the existing Pipeline file. The pipeline was NOT removed") );
       return;
     }
@@ -654,20 +641,23 @@ void FavoritesDockWidget::actionAppendFavorite_triggered()
 void FavoritesDockWidget::actionShowInFileSystem_triggered()
 {
   QTreeWidgetItem* item = filterLibraryTree->currentItem();
-  QString pipelinePath = item->data(0, Qt::UserRole).toString();
+  if(item)
+  {
+    QString pipelinePath = item->data(0, Qt::UserRole).toString();
 
-  QFileInfo pipelinePathInfo(pipelinePath);
-  QString pipelinePathDir = pipelinePathInfo.path();
+    QFileInfo pipelinePathInfo(pipelinePath);
+    QString pipelinePathDir = pipelinePathInfo.path();
 
-  QString s("file://");
+    QString s("file://");
 #if defined(Q_OS_WIN)
-  s = s + "/"; // Need the third slash on windows because file paths start with a drive letter
+    s = s + "/"; // Need the third slash on windows because file paths start with a drive letter
 #elif defined(Q_OS_MAC)
 
 #else
-  // We are on Linux - I think
+    // We are on Linux - I think
 
 #endif
-  s = s + pipelinePathDir;
-  QDesktopServices::openUrl(s);
+    s = s + pipelinePathDir;
+    QDesktopServices::openUrl(s);
+  }
 }

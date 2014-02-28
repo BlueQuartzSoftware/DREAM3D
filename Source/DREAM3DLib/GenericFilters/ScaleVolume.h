@@ -44,6 +44,7 @@
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/DataArrays/IDataArray.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
+#include "DREAM3DLib/Common/Constants.h"
 
 
 /**
@@ -66,17 +67,18 @@ class DREAM3DLib_EXPORT ScaleVolume : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceDataContainerName)
 
     DREAM3D_FILTER_PARAMETER(bool, ApplyToVoxelVolume)
-    Q_PROPERTY(bool ApplyToVoxelVolume READ getApplyToVoxelVolume WRITE setApplyToVoxelVolume NOTIFY parametersChanged)
+    Q_PROPERTY(bool ApplyToVoxelVolume READ getApplyToVoxelVolume WRITE setApplyToVoxelVolume)
     DREAM3D_FILTER_PARAMETER(bool, ApplyToSurfaceMesh)
-    Q_PROPERTY(bool ApplyToSurfaceMesh READ getApplyToSurfaceMesh WRITE setApplyToSurfaceMesh NOTIFY parametersChanged)
+    Q_PROPERTY(bool ApplyToSurfaceMesh READ getApplyToSurfaceMesh WRITE setApplyToSurfaceMesh)
     DREAM3D_FILTER_PARAMETER(FloatVec3_t, ScaleFactor)
-    Q_PROPERTY(FloatVec3_t ScaleFactor READ getScaleFactor WRITE setScaleFactor NOTIFY parametersChanged)
+    Q_PROPERTY(FloatVec3_t ScaleFactor READ getScaleFactor WRITE setScaleFactor)
 
     /**
     * @brief This returns the group that the filter belonds to. You can select
     * a different group if you want. The string returned here will be displayed
     * in the GUI for the filter
     */
+    virtual const QString getCompiledLibraryName() { return Generic::GenericBaseName; }
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::GenericFilters; }
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::SpatialFilters; }
 
@@ -147,4 +149,5 @@ class DREAM3DLib_EXPORT ScaleVolume : public AbstractFilter
 };
 
 #endif /* _ScaleVolume_H_ */
+
 

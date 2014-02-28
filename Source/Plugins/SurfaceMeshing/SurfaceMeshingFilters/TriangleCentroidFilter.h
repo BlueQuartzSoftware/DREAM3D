@@ -43,6 +43,8 @@
 #include "DREAM3DLib/DataArrays/IDataArray.h"
 #include "SurfaceMeshing/SurfaceMeshingFilters/SurfaceMeshFilter.h"
 
+#include "SurfaceMeshing/SurfaceMeshingConstants.h"
+
 /**
  * @class TriangleCentroidFilter TriangleCentroidFilter.h DREAM3DLib/SurfaceMeshFilters/TriangleCentroidFilter.h
  * @brief This filter calculates the centroid of each triangle in the surface mesh.
@@ -71,6 +73,7 @@ class TriangleCentroidFilter : public SurfaceMeshFilter
     * a different group if you want. The string returned here will be displayed
     * in the GUI for the filter
     */
+    virtual const QString getCompiledLibraryName() { return SurfaceMeshing::SurfaceMeshingBaseName; }
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::SurfaceMeshingFilters; }
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::MiscFilters; }
 
@@ -136,4 +139,5 @@ signals:
 };
 
 #endif /* _TriangleCentroidFilter_H_ */
+
 

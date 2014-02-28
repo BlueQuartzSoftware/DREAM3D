@@ -66,7 +66,7 @@ class MultiThresholdFeatures : public AbstractFilter
     /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
 
     DREAM3D_INSTANCE_PROPERTY(QVector<ComparisonInput_t>, ComparisonInputs)
-    Q_PROPERTY(QVector<ComparisonInput_t> ComparisonInputs READ getComparisonInputs WRITE setComparisonInputs NOTIFY parametersChanged)
+    Q_PROPERTY(QVector<ComparisonInput_t> ComparisonInputs READ getComparisonInputs WRITE setComparisonInputs)
 
 
     /**

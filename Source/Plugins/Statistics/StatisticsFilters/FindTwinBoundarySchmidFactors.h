@@ -52,6 +52,7 @@
 #include "DREAM3DLib/DataContainers/VolumeDataContainer.h"
 #include "DREAM3DLib/DataArrays/NeighborList.hpp"
 
+#include "Statistics/StatisticsConstants.h"
 /**
  * @class FindTwinBoundarySchmidFactors FindTwinBoundarySchmidFactors.h DREAM3DLib/GenericFilters/FindTwinBoundarySchmidFactors.h
  * @brief
@@ -75,10 +76,11 @@ class FindTwinBoundarySchmidFactors : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(CellFeatureAttributeMatrixName)
 
     DREAM3D_FILTER_PARAMETER(QString, TwinBoundarySchmidFactorsFile)
-    Q_PROPERTY(QString TwinBoundarySchmidFactorsFile READ getTwinBoundarySchmidFactorsFile WRITE setTwinBoundarySchmidFactorsFile NOTIFY parametersChanged)
+    Q_PROPERTY(QString TwinBoundarySchmidFactorsFile READ getTwinBoundarySchmidFactorsFile WRITE setTwinBoundarySchmidFactorsFile)
     DREAM3D_FILTER_PARAMETER(FloatVec3_t, LoadingDir)
-    Q_PROPERTY(FloatVec3_t LoadingDir READ getLoadingDir WRITE setLoadingDir NOTIFY parametersChanged)
+    Q_PROPERTY(FloatVec3_t LoadingDir READ getLoadingDir WRITE setLoadingDir)
 
+    virtual const QString getCompiledLibraryName() { return Statistics::StatisticsBaseName; }
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::CrystallographicFilters; }
     virtual const QString getHumanLabel() { return "Find Twin Boundary Schmid Factors"; }
@@ -133,3 +135,4 @@ class FindTwinBoundarySchmidFactors : public AbstractFilter
 };
 
 #endif /* FindTwinBoundarySchmidFactors_H_ */
+

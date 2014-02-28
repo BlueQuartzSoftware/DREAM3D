@@ -48,6 +48,7 @@
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/DataContainers/VolumeDataContainer.h"
 #include "DREAM3DLib/OrientationOps/OrientationOps.h"
+#include "Reconstruction/ReconstructionConstants.h"
 
 #include "Reconstruction/ReconstructionFilters/GroupFeatures.h"
 /**
@@ -74,11 +75,12 @@ class GroupMicroTextureRegions : public GroupFeatures
     DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
 
     DREAM3D_FILTER_PARAMETER(float, CAxisTolerance)
-    Q_PROPERTY(float CAxisTolerance READ getCAxisTolerance WRITE setCAxisTolerance NOTIFY parametersChanged)
+    Q_PROPERTY(float CAxisTolerance READ getCAxisTolerance WRITE setCAxisTolerance)
     DREAM3D_FILTER_PARAMETER(bool, UseRunningAverage)
-    Q_PROPERTY(float UseRunningAverage READ getUseRunningAverage WRITE setUseRunningAverage NOTIFY parametersChanged)
+    Q_PROPERTY(float UseRunningAverage READ getUseRunningAverage WRITE setUseRunningAverage)
     DREAM3D_INSTANCE_PROPERTY(bool, RandomizeParentIds)
 
+    virtual const QString getCompiledLibraryName() { return Reconstruction::ReconstructionBaseName; }
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::ReconstructionFilters; }
     virtual const QString getSubGroupName() {return DREAM3D::FilterSubGroups::GroupingFilters;}
     virtual const QString getHumanLabel() { return "Identify MicroTexture (C-Axis Misorientation)"; }
@@ -145,4 +147,5 @@ class GroupMicroTextureRegions : public GroupFeatures
 };
 
 #endif /* GroupMicroTextureRegions_H_ */
+
 

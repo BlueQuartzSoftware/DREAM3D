@@ -43,6 +43,8 @@
 #include "DREAM3DLib/DataArrays/IDataArray.h"
 #include "SurfaceMeshing/SurfaceMeshingFilters/SurfaceMeshFilter.h"
 
+#include "SurfaceMeshing/SurfaceMeshingConstants.h"
+
 /**
  * @class ReverseTriangleWinding ReverseTriangleWinding.h DREAM3DLib/SurfaceMeshFilters/ReverseTriangleWinding.h
  * @brief This filter reverses the triangle winding for a surface mesh
@@ -68,6 +70,7 @@ class ReverseTriangleWinding : public SurfaceMeshFilter
     * a different group if you want. The string returned here will be displayed
     * in the GUI for the filter
     */
+    virtual const QString getCompiledLibraryName() { return SurfaceMeshing::SurfaceMeshingBaseName; }
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::SurfaceMeshingFilters; }
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::ConnectivityArrangementFilters; }
 
@@ -132,4 +135,5 @@ signals:
 };
 
 #endif /* _ReverseTriangleWinding_H_ */
+
 

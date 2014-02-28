@@ -55,7 +55,7 @@
 #include "DREAM3DLib/DataContainers/VolumeDataContainer.h"
 #include "DREAM3DLib/OrientationOps/OrientationOps.h"
 #include "DREAM3DLib/DataArrays/NeighborList.hpp"
-
+#include "SyntheticBuilding/SyntheticBuildingConstants.h"
 /**
  * @class MatchCrystallography MatchCrystallography.h DREAM3DLib/SyntheticBuilderFilters/MatchCrystallography.h
  * @brief
@@ -86,8 +86,9 @@ class MatchCrystallography : public AbstractFilter
     typedef boost::shared_array<int> SharedIntArray;
 
     DREAM3D_FILTER_PARAMETER(int, MaxIterations)
-    Q_PROPERTY(int MaxIterations READ getMaxIterations WRITE setMaxIterations NOTIFY parametersChanged)
+    Q_PROPERTY(int MaxIterations READ getMaxIterations WRITE setMaxIterations)
 
+    virtual const QString getCompiledLibraryName() { return SyntheticBuilding::SyntheticBuildingBaseName; }
     virtual const QString getGroupName() {return DREAM3D::FilterGroups::SyntheticBuildingFilters;}
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::CrystallographyFilters; }
     virtual const QString getHumanLabel() {return "Match Crystallography";}
@@ -178,6 +179,7 @@ class MatchCrystallography : public AbstractFilter
 };
 
 #endif /* MATCHCRYSTALLOGRAPHY_H_ */
+
 
 
 

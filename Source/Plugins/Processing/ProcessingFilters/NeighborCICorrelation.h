@@ -50,6 +50,7 @@
 #include "DREAM3DLib/OrientationOps/OrientationOps.h"
 #include "DREAM3DLib/DataArrays/NeighborList.hpp"
 
+#include "Processing/ProcessingConstants.h"
 
 /**
  * @class NeighborCICorrelation NeighborCICorrelation.h DREAM3DLib/ReconstructionFilters/NeighborCICorrelation.h
@@ -73,10 +74,11 @@ class NeighborCICorrelation : public AbstractFilter
     //------ Required Cell Data
 
     DREAM3D_FILTER_PARAMETER(float, MinConfidence)
-    Q_PROPERTY(float MinConfidence READ getMinConfidence WRITE setMinConfidence NOTIFY parametersChanged)
+    Q_PROPERTY(float MinConfidence READ getMinConfidence WRITE setMinConfidence)
     DREAM3D_FILTER_PARAMETER(bool, Loop)
-    Q_PROPERTY(bool Loop READ getLoop WRITE setLoop NOTIFY parametersChanged)
+    Q_PROPERTY(bool Loop READ getLoop WRITE setLoop)
 
+    virtual const QString getCompiledLibraryName() { return Processing::ProcessingBaseName; }
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::ProcessingFilters; }
     virtual const QString getSubGroupName()  { return DREAM3D::FilterSubGroups::CleanupFilters; }
     virtual const QString getHumanLabel() { return "Neighbor CI Correlation"; }
@@ -117,3 +119,4 @@ class NeighborCICorrelation : public AbstractFilter
 };
 
 #endif /* NeighborCICorrelation_H_ */
+

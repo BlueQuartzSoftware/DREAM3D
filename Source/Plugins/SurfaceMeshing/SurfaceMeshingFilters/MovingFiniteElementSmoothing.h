@@ -42,6 +42,8 @@
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "SurfaceMeshing/SurfaceMeshingFilters/SurfaceMeshFilter.h"
 
+#include "SurfaceMeshing/SurfaceMeshingConstants.h"
+
 /**
  * @class MovingFiniteElementSmoothing MovingFiniteElementSmoothing.h /Code/Filters/MovingFiniteElementSmoothing.h
  * @brief The Moving Finite Element (MFE) algorithm is based on Kuprat's work on Gradient Weighted Moving
@@ -70,15 +72,15 @@ class MovingFiniteElementSmoothing : public SurfaceMeshFilter
 
     /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
     DREAM3D_FILTER_PARAMETER(int, IterationSteps)
-    Q_PROPERTY(int IterationSteps READ getIterationSteps WRITE setIterationSteps NOTIFY parametersChanged)
+    Q_PROPERTY(int IterationSteps READ getIterationSteps WRITE setIterationSteps)
     DREAM3D_FILTER_PARAMETER(bool, NodeConstraints)
-    Q_PROPERTY(bool NodeConstraints READ getNodeConstraints WRITE setNodeConstraints NOTIFY parametersChanged)
+    Q_PROPERTY(bool NodeConstraints READ getNodeConstraints WRITE setNodeConstraints)
     DREAM3D_FILTER_PARAMETER(bool, ConstrainSurfaceNodes)
-    Q_PROPERTY(bool ConstrainSurfaceNodes READ getConstrainSurfaceNodes WRITE setConstrainSurfaceNodes NOTIFY parametersChanged)
+    Q_PROPERTY(bool ConstrainSurfaceNodes READ getConstrainSurfaceNodes WRITE setConstrainSurfaceNodes)
     DREAM3D_FILTER_PARAMETER(bool, ConstrainQuadPoints)
-    Q_PROPERTY(bool ConstrainQuadPoints READ getConstrainQuadPoints WRITE setConstrainQuadPoints NOTIFY parametersChanged)
+    Q_PROPERTY(bool ConstrainQuadPoints READ getConstrainQuadPoints WRITE setConstrainQuadPoints)
     DREAM3D_FILTER_PARAMETER(bool, SmoothTripleLines)
-    Q_PROPERTY(bool SmoothTripleLines READ getSmoothTripleLines WRITE setSmoothTripleLines NOTIFY parametersChanged)
+    Q_PROPERTY(bool SmoothTripleLines READ getSmoothTripleLines WRITE setSmoothTripleLines)
 
 
 
@@ -87,6 +89,7 @@ class MovingFiniteElementSmoothing : public SurfaceMeshFilter
     * a different group if you want. The string returned here will be displayed
     * in the GUI for the filter
     */
+    virtual const QString getCompiledLibraryName() { return SurfaceMeshing::SurfaceMeshingBaseName; }
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::SurfaceMeshingFilters; }
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::SmoothingFilters; }
 
@@ -153,6 +156,7 @@ class MovingFiniteElementSmoothing : public SurfaceMeshFilter
 };
 
 #endif /* _MovingFiniteElementSmoothing_H_ */
+
 
 
 

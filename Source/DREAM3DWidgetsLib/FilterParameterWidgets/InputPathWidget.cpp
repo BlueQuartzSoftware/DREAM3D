@@ -43,7 +43,7 @@
 #include "QtSupport/QFileCompleter.h"
 
 
-#include "DREAM3DWidgetsLib/moc_InputPathWidget.cpp"
+#include "FilterParameterWidgetsDialogs.h"
 
 
 // Initialize private static member variable
@@ -182,12 +182,10 @@ void InputPathWidget::filterNeedsInputParameters(AbstractFilter* filter)
 {
   QString text = value->text();
   bool ok = filter->setProperty(PROPERTY_NAME_AS_CHAR, text);
-  if (false == ok)
+  if(false == ok)
   {
-    QString ss = QObject::tr("Error occurred setting Filter Parameter %1").arg(m_FilterParameter->getPropertyName());
-    emit errorSettingFilterParameter(ss);
-     qDebug() << ss;
- }
+    FilterParameterWidgetsDialogs::ShowCouldNotSetFilterParameter(m_Filter, m_FilterParameter);
+  }
 }
 
 // -----------------------------------------------------------------------------

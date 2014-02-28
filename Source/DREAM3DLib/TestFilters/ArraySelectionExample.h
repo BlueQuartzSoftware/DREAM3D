@@ -67,15 +67,8 @@ class DREAM3DLib_EXPORT ArraySelectionExample : public AbstractFilter
      * as input parameters
      */
 
-    //    DREAM3D_FILTER_PARAMETER(QString, DataContainerName)
-    //    Q_PROPERTY(QString DataContainerName READ getDataContainerName WRITE setDataContainerName NOTIFY parametersChanged)
-    //    DREAM3D_FILTER_PARAMETER(QString, AttributeMatrixName)
-    //    Q_PROPERTY(QString AttributeMatrixName READ getAttributeMatrixName WRITE setAttributeMatrixName NOTIFY parametersChanged)
-    //    DREAM3D_FILTER_PARAMETER(QString, SelectedArrayName)
-    //    Q_PROPERTY(QString SelectedArrayName READ getSelectedArrayName WRITE setSelectedArrayName NOTIFY parametersChanged)
-
     DREAM3D_FILTER_PARAMETER(DataContainerArrayProxy, DataContainerArrayProxy)
-    Q_PROPERTY(DataContainerArrayProxy DataContainerArrayProxy READ getDataContainerArrayProxy WRITE setDataContainerArrayProxy NOTIFY parametersChanged)
+    Q_PROPERTY(DataContainerArrayProxy DataContainerArrayProxy READ getDataContainerArrayProxy WRITE setDataContainerArrayProxy)
 
 
     /**
@@ -83,6 +76,7 @@ class DREAM3DLib_EXPORT ArraySelectionExample : public AbstractFilter
     * a different group if you want. The string returned here will be displayed
     * in the GUI for the filter
     */
+    virtual const QString getCompiledLibraryName() { return Test::TestBaseName; }
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::TestFilters; }
 
     /**
@@ -152,4 +146,5 @@ class DREAM3DLib_EXPORT ArraySelectionExample : public AbstractFilter
 };
 
 #endif /* _ArraySelectionExample_H_ */
+
 

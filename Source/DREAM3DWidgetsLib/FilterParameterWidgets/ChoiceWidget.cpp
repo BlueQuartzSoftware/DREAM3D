@@ -38,7 +38,7 @@
 #include <QtCore/QMetaProperty>
 
 
-#include "DREAM3DWidgetsLib/moc_ChoiceWidget.cpp"
+#include "FilterParameterWidgetsDialogs.h"
 
 
 // -----------------------------------------------------------------------------
@@ -114,9 +114,7 @@ void ChoiceWidget::filterNeedsInputParameters(AbstractFilter* filter)
 
   if(false == ok)
   {
-    QString ss = QObject::tr("Error occurred setting Filter Parameter %1").arg(m_FilterParameter->getPropertyName());
-    emit errorSettingFilterParameter(ss);
-    qDebug() << ss;
+    FilterParameterWidgetsDialogs::ShowCouldNotSetFilterParameter(m_Filter, m_FilterParameter);
   }
 }
 

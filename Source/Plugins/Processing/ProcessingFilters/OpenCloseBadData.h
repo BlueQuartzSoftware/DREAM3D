@@ -50,6 +50,7 @@
 #include "DREAM3DLib/OrientationOps/OrientationOps.h"
 #include "DREAM3DLib/DataArrays/NeighborList.hpp"
 
+#include "Processing/ProcessingConstants.h"
 
 /**
  * @class OpenCloseBadData OpenCloseBadData.h DREAM3DLib/ReconstructionFilters/OpenCloseBadData.h
@@ -71,16 +72,17 @@ class OpenCloseBadData : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
 
     DREAM3D_FILTER_PARAMETER(unsigned int, Direction)
-    Q_PROPERTY(unsigned int Direction READ getDirection WRITE setDirection NOTIFY parametersChanged)
+    Q_PROPERTY(unsigned int Direction READ getDirection WRITE setDirection)
     DREAM3D_FILTER_PARAMETER(int, NumIterations)
-    Q_PROPERTY(int NumIterations READ getNumIterations WRITE setNumIterations NOTIFY parametersChanged)
+    Q_PROPERTY(int NumIterations READ getNumIterations WRITE setNumIterations)
     DREAM3D_FILTER_PARAMETER(bool, XDirOn)
-    Q_PROPERTY(bool XDirOn READ getXDirOn WRITE setXDirOn NOTIFY parametersChanged)
+    Q_PROPERTY(bool XDirOn READ getXDirOn WRITE setXDirOn)
     DREAM3D_FILTER_PARAMETER(bool, YDirOn)
-    Q_PROPERTY(bool YDirOn READ getYDirOn WRITE setYDirOn NOTIFY parametersChanged)
+    Q_PROPERTY(bool YDirOn READ getYDirOn WRITE setYDirOn)
     DREAM3D_FILTER_PARAMETER(bool, ZDirOn)
-    Q_PROPERTY(bool ZDirOn READ getZDirOn WRITE setZDirOn NOTIFY parametersChanged)
+    Q_PROPERTY(bool ZDirOn READ getZDirOn WRITE setZDirOn)
 
+    virtual const QString getCompiledLibraryName() { return Processing::ProcessingBaseName; }
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::ProcessingFilters; }
     virtual const QString getSubGroupName()  { return DREAM3D::FilterSubGroups::CleanupFilters; }
     virtual const QString getHumanLabel() { return "Erode/Dilate Bad Data"; }
@@ -124,6 +126,7 @@ class OpenCloseBadData : public AbstractFilter
 };
 
 #endif /* OpenCloseBadData_H_ */
+
 
 
 

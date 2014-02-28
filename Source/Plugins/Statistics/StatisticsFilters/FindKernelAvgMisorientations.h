@@ -48,6 +48,7 @@
 #include "DREAM3DLib/OrientationOps/OrientationOps.h"
 #include "DREAM3DLib/DataContainers/VolumeDataContainer.h"
 
+#include "Statistics/StatisticsConstants.h"
 /**
  * @class FindKernelAvgMisorientations FindKernelAvgMisorientations.h DREAM3DLib/GenericFilters/FindKernelAvgMisorientations.h
  * @brief
@@ -68,12 +69,13 @@ class FindKernelAvgMisorientations : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(CellEnsembleAttributeMatrixName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
 
+    virtual const QString getCompiledLibraryName() { return Statistics::StatisticsBaseName; }
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::CrystallographicFilters; }
     virtual const QString getHumanLabel() { return "Find Kernel Average Misorientations"; }
 
     DREAM3D_FILTER_PARAMETER(IntVec3_t, KernelSize)
-    Q_PROPERTY(IntVec3_t KernelSize READ getKernelSize WRITE setKernelSize NOTIFY parametersChanged)
+    Q_PROPERTY(IntVec3_t KernelSize READ getKernelSize WRITE setKernelSize)
 
     virtual void setupFilterParameters();
     /**
@@ -121,6 +123,7 @@ class FindKernelAvgMisorientations : public AbstractFilter
 };
 
 #endif /* FindKernelAvgMisorientations_H_ */
+
 
 
 

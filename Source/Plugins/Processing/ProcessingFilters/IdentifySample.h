@@ -49,6 +49,7 @@
 #include "DREAM3DLib/DataContainers/VolumeDataContainer.h"
 #include "DREAM3DLib/OrientationOps/OrientationOps.h"
 #include "DREAM3DLib/DataArrays/NeighborList.hpp"
+#include "Processing/ProcessingConstants.h"
 
 
 /**
@@ -74,6 +75,7 @@ class IdentifySample : public AbstractFilter
     //------ Required Cell Data
 
 
+    virtual const QString getCompiledLibraryName() { return Processing::ProcessingBaseName; }
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::ProcessingFilters; }
     virtual const QString getSubGroupName()  { return DREAM3D::FilterSubGroups::CleanupFilters; }
     virtual const QString getHumanLabel() { return "Identify Sample"; }
@@ -115,4 +117,5 @@ signals:
 };
 
 #endif /* IdentifySample_H_ */
+
 

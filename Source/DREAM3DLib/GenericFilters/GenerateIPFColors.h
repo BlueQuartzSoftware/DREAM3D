@@ -42,6 +42,7 @@
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/DataArrays/IDataArray.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
+#include "DREAM3DLib/Common/Constants.h"
 
 
 /**
@@ -66,7 +67,7 @@ class DREAM3DLib_EXPORT GenerateIPFColors : public AbstractFilter
 
     /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
     DREAM3D_FILTER_PARAMETER(FloatVec3_t, ReferenceDir)
-    Q_PROPERTY(FloatVec3_t ReferenceDir READ getReferenceDir WRITE setReferenceDir NOTIFY parametersChanged)
+    Q_PROPERTY(FloatVec3_t ReferenceDir READ getReferenceDir WRITE setReferenceDir)
 
 
     /**
@@ -74,6 +75,7 @@ class DREAM3DLib_EXPORT GenerateIPFColors : public AbstractFilter
     * a different group if you want. The string returned here will be displayed
     * in the GUI for the filter
     */
+    virtual const QString getCompiledLibraryName() { return Generic::GenericBaseName; }
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::GenericFilters; }
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::CrystallographyFilters; }
 
@@ -143,6 +145,7 @@ class DREAM3DLib_EXPORT GenerateIPFColors : public AbstractFilter
 };
 
 #endif /* _GenerateIPFColors_H_ */
+
 
 
 

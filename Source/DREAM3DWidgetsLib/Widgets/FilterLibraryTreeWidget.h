@@ -55,7 +55,7 @@ class QTreeWidgetItem;
 
 class DREAM3DWidgetsLib_EXPORT FilterLibraryTreeWidget : public QTreeWidget
 {
-    Q_OBJECT;
+    Q_OBJECT
 
   public:
     enum ItemType
@@ -64,6 +64,10 @@ class DREAM3DWidgetsLib_EXPORT FilterLibraryTreeWidget : public QTreeWidget
       Leaf_Item_Type = 2
     };
 
+    /**
+     * @brief FilterLibraryTreeWidget
+     * @param parent
+     */
     FilterLibraryTreeWidget(QWidget* parent = 0);
 
 
@@ -88,7 +92,18 @@ class DREAM3DWidgetsLib_EXPORT FilterLibraryTreeWidget : public QTreeWidget
     void addActionList(QList<QAction*> actionList);
 
   private slots:
+
+    /**
+     * @brief onCustomContextMenuRequested
+     * @param pos
+     */
     void onCustomContextMenuRequested(const QPoint& pos);
+
+    /**
+     * @brief showContextMenu
+     * @param item
+     * @param globalPos
+     */
     void showContextMenu(QTreeWidgetItem* item, const QPoint& globalPos);
 
   private:

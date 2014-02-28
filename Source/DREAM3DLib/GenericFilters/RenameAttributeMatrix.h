@@ -44,6 +44,7 @@
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/DataArrays/IDataArray.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
+#include "DREAM3DLib/Common/Constants.h"
 
 
 /**
@@ -64,16 +65,16 @@ class DREAM3DLib_EXPORT RenameAttributeMatrix : public AbstractFilter
     virtual ~RenameAttributeMatrix();
 
     DREAM3D_INSTANCE_PROPERTY(QString, DataContainerName)
- //   Q_PROPERTY(QString DataContainerName READ getDataContainerName WRITE setDataContainerName NOTIFY parametersChanged)
+ //   Q_PROPERTY(QString DataContainerName READ getDataContainerName WRITE setDataContainerName)
     DREAM3D_INSTANCE_PROPERTY(QString, AttributeMatrixName)
- //   Q_PROPERTY(QString AttributeMatrixName READ getAttributeMatrixName WRITE setAttributeMatrixName NOTIFY parametersChanged)
+ //   Q_PROPERTY(QString AttributeMatrixName READ getAttributeMatrixName WRITE setAttributeMatrixName)
 
 
     DREAM3D_FILTER_PARAMETER(QString, SelectedArrayPath)
-    Q_PROPERTY(QString SelectedArrayPath READ getSelectedArrayPath WRITE setSelectedArrayPath NOTIFY parametersChanged)
+    Q_PROPERTY(QString SelectedArrayPath READ getSelectedArrayPath WRITE setSelectedArrayPath)
 
     DREAM3D_FILTER_PARAMETER(QString, NewMatrixName)
-    Q_PROPERTY(QString NewMatrixName READ getNewMatrixName WRITE setNewMatrixName NOTIFY parametersChanged)
+    Q_PROPERTY(QString NewMatrixName READ getNewMatrixName WRITE setNewMatrixName)
 
 
     /**
@@ -81,6 +82,7 @@ class DREAM3DLib_EXPORT RenameAttributeMatrix : public AbstractFilter
     * a different group if you want. The string returned here will be displayed
     * in the GUI for the filter
     */
+    virtual const QString getCompiledLibraryName() { return Generic::GenericBaseName; }
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::GenericFilters; }
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::MemoryManagementFilters; }
 
@@ -145,3 +147,4 @@ class DREAM3DLib_EXPORT RenameAttributeMatrix : public AbstractFilter
 };
 
 #endif /* _RenameAttributeMatrix_H_ */
+

@@ -55,6 +55,7 @@
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
 
+#include "Sampling/SamplingConstants.h"
 /**
  * @class Hex2SqrConverter Hex2SqrConverter.h Hex2SqrConverter/Hex2SqrConverter.h
  * @brief This class is used to convert Hex grid TSL .ang files into Square grid
@@ -87,6 +88,7 @@ class Hex2SqrConverter : public AbstractFilter
 
     virtual void preflight();
 
+    virtual const QString getCompiledLibraryName() { return Sampling::SamplingBaseName; }
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::SamplingFilters; }
     virtual const QString getSubGroupName()  { return DREAM3D::FilterSubGroups::ResolutionFilters; }
     virtual const QString getHumanLabel() { return "Convert Hexagonal Grid Data to Square Grid Data (TSL - .ang)"; }
@@ -134,4 +136,5 @@ signals:
 };
 
 #endif /* Hex2SqrConverter_H_ */
+
 

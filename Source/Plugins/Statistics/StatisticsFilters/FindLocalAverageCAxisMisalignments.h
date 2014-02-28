@@ -49,6 +49,7 @@
 #include "DREAM3DLib/OrientationOps/OrientationOps.h"
 #include "DREAM3DLib/DataArrays/NeighborList.hpp"
 
+#include "Statistics/StatisticsConstants.h"
 /**
  * @class FindLocalAverageCAxisMisalignments FindLocalAverageCAxisMisalignments.h Plugins/Statistics/StatisticsFilters/FindLocalAverageCAxisMisalignments.h
  * @brief
@@ -77,10 +78,11 @@ class FindLocalAverageCAxisMisalignments : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(CAxisMisalignmentListArrayName)
 
     DREAM3D_FILTER_PARAMETER(bool, CalcUnbiasedAvg)
-    Q_PROPERTY(bool CalcUnbiasedAvg READ getCalcUnbiasedAvg WRITE setCalcUnbiasedAvg NOTIFY parametersChanged)
+    Q_PROPERTY(bool CalcUnbiasedAvg READ getCalcUnbiasedAvg WRITE setCalcUnbiasedAvg)
     DREAM3D_FILTER_PARAMETER(bool, CalcBiasedAvg)
-    Q_PROPERTY(bool CalcBiasedAvg READ getCalcBiasedAvg WRITE setCalcBiasedAvg NOTIFY parametersChanged)
+    Q_PROPERTY(bool CalcBiasedAvg READ getCalcBiasedAvg WRITE setCalcBiasedAvg)
 
+    virtual const QString getCompiledLibraryName() { return Statistics::StatisticsBaseName; }
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
     virtual const QString getSubGroupName() {return DREAM3D::FilterSubGroups::CrystallographicFilters;}
     virtual const QString getHumanLabel() { return "Find Local Average C-Axis Misalignments"; }
@@ -145,4 +147,5 @@ class FindLocalAverageCAxisMisalignments : public AbstractFilter
 };
 
 #endif /* FindLocalAverageCAxisMisalignments_H_ */
+
 

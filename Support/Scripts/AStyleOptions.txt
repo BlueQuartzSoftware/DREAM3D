@@ -1,3 +1,4 @@
+#astyle --options=/Users/mjackson/Workspace/DREAM3D_Rewrite/Support/Scripts/AStyleOptions.txt  "DREAM3DLib/*.cpp" "DREAM3DLib/*.h" "DREAM3DLib/*.hpp" "Plugins/*.cpp" "Plugins/*.hpp" "Plugins/*.h"
 --style=allman
 --indent=spaces=2
 --indent-classes
@@ -13,10 +14,10 @@
 --suffix=none
 --recursive
 --lineend=linux
---exclude=Applications
+#--exclude=Applications
 #--exclude=FilterWidgets
 #--exclude=EbsdLib
 #--exclude=MXA
 #--exclude=PipelineBuilder
 #--exclude=QtSupport
---exclude=tclap
+#--exclude=tclap

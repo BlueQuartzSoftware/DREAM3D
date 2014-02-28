@@ -339,8 +339,8 @@ void DREAM3D_UI::writeSettings()
   // Typically we would use the function in the PipelineViewWidget but it will remove the prefs file and that is NOT
   // what we want to do here. We want to append in our prefs to the current file, not delete it first.
   QFileInfo fi(filePath);
- // pipelineViewWidget->savePipeline(filePath, fi.baseName(), format);
-    // Create a Pipeline Object and fill it with the filters from this View
+  // pipelineViewWidget->savePipeline(filePath, fi.baseName(), format);
+  // Create a Pipeline Object and fill it with the filters from this View
   FilterPipeline::Pointer pipeline = pipelineViewWidget->getFilterPipeline();
   int err = QFilterParametersWriter::WritePipelineToFile(pipeline, fi.absoluteFilePath(), fi.baseName(), format, NULL);
   if (err < 0)
@@ -458,8 +458,8 @@ void DREAM3D_UI::setupGui()
   connect(filterListDockWidget, SIGNAL(filterItemDoubleClicked(const QString&)),
           pipelineViewWidget, SLOT(addFilter(const QString&)) );
 
-  connect(prebuiltPipelinesDockWidget, SIGNAL(pipelineFileActivated(QString)),
-          pipelineViewWidget, SLOT(loadPipelineFile(QString)) );
+  connect(prebuiltPipelinesDockWidget, SIGNAL(pipelineFileActivated(QString, QSettings::Format, bool)),
+          pipelineViewWidget, SLOT(loadPipelineFile(QString, QSettings::Format, bool)) );
 
   connect(favoritesDockWidget, SIGNAL(pipelineFileActivated(QString, QSettings::Format, bool)),
           pipelineViewWidget, SLOT(loadPipelineFile(QString, QSettings::Format, bool)) );
@@ -490,8 +490,10 @@ void DREAM3D_UI::setupPipelineContextMenu()
 {
 
 
-  QList<QAction*> m_FavoriteItemActions;
-  QList<QAction*> m_FavoriteCategoryActions;
+  QList<QAction*> favoriteItemActions;
+  QList<QAction*> favoriteCategoryActions;
+  QList<QAction*> prebuiltItemActions;
+  QList<QAction*> prebuildCategoryActions;
 
   QAction* actionAddFavorite = new QAction(menuPipeline);
   actionAddFavorite->setObjectName(QString::fromUtf8("actionAddFavorite"));
@@ -501,19 +503,19 @@ void DREAM3D_UI::setupPipelineContextMenu()
   actionAddFavorite->setShortcut(actionAddFavKeySeq);
   connect(actionAddFavorite, SIGNAL(triggered()),
           favoritesDockWidget, SLOT( actionAddFavorite_triggered() ) );
-  m_FavoriteItemActions << actionAddFavorite;
-  m_FavoriteCategoryActions << actionAddFavorite;
+  favoriteItemActions << actionAddFavorite;
+  favoriteCategoryActions << actionAddFavorite;
 
   QAction* actionAddFavoriteFolder = new QAction(menuPipeline);
   actionAddFavoriteFolder->setObjectName(QString::fromUtf8("actionAddFavoriteFolder"));
-  actionAddFavoriteFolder->setText(QApplication::translate("DREAM3D_UI", "Add Folder", 0, QApplication::UnicodeUTF8));
+  actionAddFavoriteFolder->setText(QApplication::translate("DREAM3D_UI", "Add Favorite Folder", 0, QApplication::UnicodeUTF8));
   menuPipeline->addAction(actionAddFavoriteFolder);
   //QKeySequence actionAddFavKeySeq(Qt::CTRL + Qt::Key_Plus);
   //actionAddFavoriteFolder->setShortcut(actionAddFavKeySeq);
   connect(actionAddFavoriteFolder, SIGNAL(triggered()),
           favoritesDockWidget, SLOT( actionAddFavoriteFolder_triggered() ) );
-  m_FavoriteItemActions << actionAddFavoriteFolder;
-  m_FavoriteCategoryActions << actionAddFavoriteFolder;
+  favoriteItemActions << actionAddFavoriteFolder;
+  favoriteCategoryActions << actionAddFavoriteFolder;
 
 
   QAction* actionUpdateFavorite = new QAction(menuPipeline);
@@ -524,55 +526,133 @@ void DREAM3D_UI::setupPipelineContextMenu()
   //actionUpdateFavorite->setShortcut(actionAddFavKeySeq);
   connect(actionUpdateFavorite, SIGNAL(triggered()),
           favoritesDockWidget, SLOT( actionUpdateFavorite_triggered() ) );
-  m_FavoriteItemActions << actionUpdateFavorite;
+  favoriteItemActions << actionUpdateFavorite;
 
   QAction* actionRenameFavorite = new QAction(menuPipeline);
   actionRenameFavorite->setObjectName(QString::fromUtf8("actionRenameFavorite"));
-  actionRenameFavorite->setText(QApplication::translate("DREAM3D_UI", "Rename ...", 0, QApplication::UnicodeUTF8));
+  actionRenameFavorite->setText(QApplication::translate("DREAM3D_UI", "Rename Favorite ...", 0, QApplication::UnicodeUTF8));
   menuPipeline->addAction(actionRenameFavorite);
   QKeySequence actionRenameFavKeySeq(Qt::CTRL + Qt::Key_R);
   actionRenameFavorite->setShortcut(actionRenameFavKeySeq);
   connect(actionRenameFavorite, SIGNAL(triggered()),
           favoritesDockWidget, SLOT( actionRenameFavorite_triggered() ) );
-  m_FavoriteItemActions << actionRenameFavorite;
+  favoriteItemActions << actionRenameFavorite;
 
 
   QAction* actionAppendFavorite = new QAction(menuPipeline);
   actionAppendFavorite->setObjectName(QString::fromUtf8("actionAppendFavorite"));
-  actionAppendFavorite->setText(QApplication::translate("DREAM3D_UI", "Append to Pipeline", 0, QApplication::UnicodeUTF8));
+  actionAppendFavorite->setText(QApplication::translate("DREAM3D_UI", "Append Favorite to Pipeline", 0, QApplication::UnicodeUTF8));
   menuPipeline->addAction(actionAppendFavorite);
   QKeySequence actionAppendFavKeySeq(Qt::CTRL + Qt::Key_A);
 
   actionAppendFavorite->setShortcut(actionAppendFavKeySeq);
   connect(actionAppendFavorite, SIGNAL(triggered()),
           favoritesDockWidget, SLOT( actionAppendFavorite_triggered() ) );
-  m_FavoriteItemActions << actionAppendFavorite;
-
-  //m_PrebuiltItemActions << actionAppendFavorite;
+  favoriteItemActions << actionAppendFavorite;
   {
     QAction* separator = new QAction(this);
     separator->setSeparator(true);
-    m_FavoriteItemActions << separator;
+    favoriteItemActions << separator;
     menuPipeline->addSeparator();
   }
 
   QAction* actionRemoveFavorite = new QAction(menuPipeline);
   actionRemoveFavorite->setObjectName(QString::fromUtf8("actionRemoveFavorite"));
-  actionRemoveFavorite->setText(QApplication::translate("DREAM3D_UI", "Remove Favorite", 0, QApplication::UnicodeUTF8));
+  actionRemoveFavorite->setText(QApplication::translate("DREAM3D_UI", "Delete Favorite", 0, QApplication::UnicodeUTF8));
   menuPipeline->addAction(actionRemoveFavorite);
   QKeySequence actionRemoveFavKeySeq(Qt::CTRL + Qt::Key_Minus);
   actionRemoveFavorite->setShortcut(actionRemoveFavKeySeq);
   connect(actionRemoveFavorite, SIGNAL(triggered()),
           favoritesDockWidget, SLOT( actionRemoveFavorite_triggered() ) );
-  m_FavoriteItemActions << actionRemoveFavorite;
+  favoriteItemActions << actionRemoveFavorite;
   {
     QAction* separator = new QAction(this);
     separator->setSeparator(true);
-    m_FavoriteItemActions << separator;
+    favoriteItemActions << separator;
     menuPipeline->addSeparator();
   }
 
 
+  {
+    QAction* actionShowInFileSystem = new QAction(this);
+    actionShowInFileSystem->setObjectName(QString::fromUtf8("actionShowInFileSystem"));
+    // Handle the naming based on what OS we are currently running...
+#if defined(Q_OS_WIN)
+    actionShowInFileSystem->setText(QApplication::translate("DREAM3D_UI", "Show in Windows Explorer", 0, QApplication::UnicodeUTF8));
+#elif defined(Q_OS_MAC)
+    actionShowInFileSystem->setText(QApplication::translate("DREAM3D_UI", "Show in Finder", 0, QApplication::UnicodeUTF8));
+#else
+    actionShowInFileSystem->setText(QApplication::translate("DREAM3D_UI", "Show in File System", 0, QApplication::UnicodeUTF8));
+#endif
+
+    connect(actionShowInFileSystem, SIGNAL(triggered()),
+            favoritesDockWidget, SLOT( actionShowInFileSystem_triggered() ) );
+    {
+      QAction* separator = new QAction(this);
+      separator->setSeparator(true);
+      favoriteItemActions << separator;
+      prebuiltItemActions << separator;
+    }
+    favoriteItemActions << actionShowInFileSystem;
+    favoriteCategoryActions << actionShowInFileSystem;
+  }
+  favoritesDockWidget->getFilterLibraryTreeWidget()->setNodeActionList(favoriteCategoryActions);
+  favoritesDockWidget->getFilterLibraryTreeWidget()->setLeafActionList(favoriteItemActions);
+
+
+
+
+  /// Now setup the Prebuilt Pipelines Context Menus
+  QAction* actionAppendPrebuilt = new QAction(menuPipeline);
+  actionAppendPrebuilt->setObjectName(QString::fromUtf8("actionAppendPrebuilt"));
+  actionAppendPrebuilt->setText(QApplication::translate("DREAM3D_UI", "Append Prebuilt to Pipeline", 0, QApplication::UnicodeUTF8));
+  menuPipeline->addAction(actionAppendPrebuilt);
+  connect(actionAppendPrebuilt, SIGNAL(triggered()),
+          prebuiltPipelinesDockWidget, SLOT( actionAppendPipeline_triggered() ) );
+  prebuiltItemActions << actionAppendPrebuilt;
+  {
+    QAction* separator = new QAction(this);
+    separator->setSeparator(true);
+    prebuiltItemActions << separator;
+    menuPipeline->addSeparator();
+  }
+
+  {
+    QAction* actionShowInFileSystem = new QAction(this);
+    actionShowInFileSystem->setObjectName(QString::fromUtf8("actionShowInFileSystem"));
+    // Handle the naming based on what OS we are currently running...
+#if defined(Q_OS_WIN)
+    actionShowInFileSystem->setText(QApplication::translate("DREAM3D_UI", "Show in Windows Explorer", 0, QApplication::UnicodeUTF8));
+#elif defined(Q_OS_MAC)
+    actionShowInFileSystem->setText(QApplication::translate("DREAM3D_UI", "Show in Finder", 0, QApplication::UnicodeUTF8));
+#else
+    actionShowInFileSystem->setText(QApplication::translate("DREAM3D_UI", "Show in File System", 0, QApplication::UnicodeUTF8));
+#endif
+
+    connect(actionShowInFileSystem, SIGNAL(triggered()),
+            prebuiltPipelinesDockWidget, SLOT( actionShowInFileSystem_triggered() ) );
+    {
+      QAction* separator = new QAction(this);
+      separator->setSeparator(true);
+      favoriteItemActions << separator;
+      prebuiltItemActions << separator;
+    }
+
+    prebuiltItemActions << actionShowInFileSystem;
+    prebuildCategoryActions << actionShowInFileSystem;
+  }
+
+  prebuiltPipelinesDockWidget->getFilterLibraryTreeWidget()->setNodeActionList(prebuildCategoryActions);
+  prebuiltPipelinesDockWidget->getFilterLibraryTreeWidget()->setLeafActionList(prebuiltItemActions);
+
+
+
+
+  {
+    QAction* separator = new QAction(this);
+    separator->setSeparator(true);
+    menuPipeline->addSeparator();
+  }
   QAction* actionClearPipeline = new QAction(menuPipeline);
   actionClearPipeline->setObjectName(QString::fromUtf8("actionClearPipeline"));
   actionClearPipeline->setText(QApplication::translate("DREAM3D_UI", "Clear Pipeline", 0, QApplication::UnicodeUTF8));
@@ -583,31 +663,7 @@ void DREAM3D_UI::setupPipelineContextMenu()
           this, SLOT( on_actionClearPipeline_triggered() ) );
 
 
-  QAction* actionShowInFileSystem = new QAction(this);
-  actionShowInFileSystem->setObjectName(QString::fromUtf8("actionShowInFileSystem"));
-  // Handle the naming based on what OS we are currently running...
-#if defined(Q_OS_WIN)
-  actionShowInFileSystem->setText(QApplication::translate("DREAM3D_UI", "Show in Windows Explorer", 0, QApplication::UnicodeUTF8));
-#elif defined(Q_OS_MAC)
-  actionShowInFileSystem->setText(QApplication::translate("DREAM3D_UI", "Show in Finder", 0, QApplication::UnicodeUTF8));
-#else
-  actionShowInFileSystem->setText(QApplication::translate("DREAM3D_UI", "Show in File System", 0, QApplication::UnicodeUTF8));
-#endif
 
-  connect(actionShowInFileSystem, SIGNAL(triggered()),
-          favoritesDockWidget, SLOT( actionShowInFileSystem_triggered() ) );
-  {
-    QAction* separator = new QAction(this);
-    separator->setSeparator(true);
-    m_FavoriteItemActions << separator;
-  }
-  m_FavoriteItemActions << actionShowInFileSystem;
-  m_FavoriteCategoryActions << actionShowInFileSystem;
-  //  m_PrebuiltItemActions << separator;
-  //  m_PrebuiltItemActions << actionShowInFileSystem;
-
-  favoritesDockWidget->getFilterLibraryTreeWidget()->setNodeActionList(m_FavoriteCategoryActions);
-  favoritesDockWidget->getFilterLibraryTreeWidget()->setLeafActionList(m_FavoriteItemActions);
 }
 
 // -----------------------------------------------------------------------------

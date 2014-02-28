@@ -38,7 +38,7 @@
 #include "DREAM3DLib/Common/FilterManager.h"
 #include "DREAM3DLib/Common/IFilterFactory.hpp"
 #include "DREAM3DLib/Common/FilterFactory.hpp"
-
+#include "Reconstruction/ReconstructionConstants.h"
 
 #include "moc_ReconstructionPlugin.cpp"
 

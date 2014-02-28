@@ -9,9 +9,6 @@ macro(START_FILTER_GROUP WidgetsBinaryDir filterGroup humanGroup)
  #  file(APPEND ${RegisterKnownFilterWidgetsFile} "\n    /* ------ ${filterGroup} --------- */\n")
    file(APPEND ${RegisterKnownFiltersFile} "\n    /* ------ ${filterGroup} --------- */\n")
 
-
-
-
    file(APPEND "${DREAM3DProj_BINARY_DIR}/DREAM3DDocGroupList" "${filterGroup}\n")
    file(WRITE "${DREAM3DProj_BINARY_DIR}/DREAM3DDoc_${filterGroup}" "")
    #string(TOLOWER ${filterGroup} filterGroup_Lower)
@@ -27,6 +24,20 @@ endmacro()
 macro(END_FILTER_GROUP WidgetsBinaryDir filterGroup humanGroup)
 #    file(APPEND ${DREAM3DProj_SOURCE_DIR}/Source/Applications/DREAM3D/Help/Filters/${filterGroup}/${filterGroup}.dox "\n*/\n")
 endmacro(END_FILTER_GROUP  WidgetsBinaryDir filterGroup)
+
+
+macro(MAKE_CONSTANTS_HEADER PLUGIN_NAME)
+set(PLUGIN_NAME ${PLUGIN_NAME})
+set(ConstantsFile ${${PLUGIN_NAME}_SOURCE_DIR}/${PLUGIN_NAME}Constants.h)
+file(WRITE ${ConstantsFile} "#ifndef _${PLUGIN_NAME}_H_\n#define _${PLUGIN_NAME}_H_\n\n#include <QtCore/QString>\n\n")
+file(APPEND ${ConstantsFile} "namespace ${PLUGIN_NAME} {\n")
+file(APPEND ${ConstantsFile} "  const QString ${PLUGIN_NAME}PluginFile(\"${PLUGIN_NAME}Plugin\");\n")
+file(APPEND ${ConstantsFile} "  const QString ${PLUGIN_NAME}PluginDisplayName(\"${PLUGIN_NAME}Plugin\");\n")
+file(APPEND ${ConstantsFile} "  const QString ${PLUGIN_NAME}PluginBaseName(\"${PLUGIN_NAME}Plugin\");\n")
+file(APPEND ${ConstantsFile} "}\n")
+file(APPEND ${ConstantsFile} "#endif\n")
+endmacro()
+
 
 #-------------------------------------------------------------------------------
 # Macro ADD_DREAM3D_SUPPORT_HEADER

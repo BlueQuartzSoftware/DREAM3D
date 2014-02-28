@@ -42,6 +42,8 @@
 #include "DREAM3DLib/DataContainers/SurfaceDataContainer.h"
 
 
+#include "SurfaceMeshing/SurfaceMeshingConstants.h"
+
 /**
  * @class FindNRingNeighbors FindNRingNeighbors.h SurfaceMeshFilters/FindNRingNeighbors.h
  * @brief Calculates the set of triangles that are "N" rings (based on vertex) from a seed triangle

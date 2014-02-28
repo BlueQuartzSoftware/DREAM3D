@@ -47,6 +47,7 @@
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/DataContainers/VolumeDataContainer.h"
 
+#include "Statistics/StatisticsConstants.h"
 /**
  * @class FindLargestCrossSections FindLargestCrossSections.h DREAM3DLib/GenericFilters/FindLargestCrossSections.h
  * @brief
@@ -68,8 +69,9 @@ class FindLargestCrossSections : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
 
     DREAM3D_FILTER_PARAMETER(unsigned int, Plane)
-    Q_PROPERTY(unsigned int Plane READ getPlane WRITE setPlane NOTIFY parametersChanged)
+    Q_PROPERTY(unsigned int Plane READ getPlane WRITE setPlane)
 
+    virtual const QString getCompiledLibraryName() { return Statistics::StatisticsBaseName; }
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::MorphologicalFilters; }
     virtual const QString getHumanLabel() { return "Find Feature Largest Cross-Section Areas"; }
@@ -124,6 +126,7 @@ class FindLargestCrossSections : public AbstractFilter
 };
 
 #endif /* FindLargestCrossSections_H_ */
+
 
 
 

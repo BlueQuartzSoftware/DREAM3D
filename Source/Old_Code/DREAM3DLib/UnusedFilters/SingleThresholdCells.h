@@ -62,12 +62,12 @@ class SingleThresholdCells : public AbstractFilter
 
     //------ Required Cell Data
     DREAM3D_INSTANCE_STRING_PROPERTY(SelectedCellArrayName)
-    Q_PROPERTY(QString SelectedCellArrayName READ getSelectedCellArrayName WRITE setSelectedCellArrayName NOTIFY parametersChanged)
+    Q_PROPERTY(QString SelectedCellArrayName READ getSelectedCellArrayName WRITE setSelectedCellArrayName)
     //------ Created Cell Data
 
     DREAM3D_INSTANCE_PROPERTY(int, ComparisonOperator)
     DREAM3D_INSTANCE_PROPERTY(double, ComparisonValue)
-    Q_PROPERTY(double ComparisonValue READ getComparisonValue WRITE setComparisonValue NOTIFY parametersChanged)
+    Q_PROPERTY(double ComparisonValue READ getComparisonValue WRITE setComparisonValue)
 
 
     virtual void preflight();

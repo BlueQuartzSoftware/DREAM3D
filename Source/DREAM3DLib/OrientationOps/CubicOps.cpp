@@ -2003,7 +2003,7 @@ UInt8ArrayType::Pointer CubicOps::generateMisorientationTriangleLegend(float ang
     quat.y = d2[i] * cosAng * tanAng;
     quat.z = d3[i] * cosAng * tanAng;
     quat.w = cosAng;
-    DREAM3D::Rgb pix = generateMisorientationColor(quat, refQuat);
+    //DREAM3D::Rgb pix = generateMisorientationColor(quat, refQuat);
     //image.setPixel(qpointba[i].x(), qpointba[i].y(), pix);
   }
 
@@ -2101,7 +2101,7 @@ UInt8ArrayType::Pointer CubicOps::generateMisorientationTriangleLegend(float ang
               uint8_t green = g1 * gamma1 + g2 * gamma2 + g3 * gamma3;
               uint8_t blue = b1 * gamma1 + b2 * gamma2 + b3 * gamma3;
               uint8_t alpha = 255;
-              unsigned int pix = (alpha << 24) | (red << 16) | (green << 8) | blue;
+              //unsigned int pix = (alpha << 24) | (red << 16) | (green << 8) | blue;
               //image.setPixel(i, j, pix);
             }
           }

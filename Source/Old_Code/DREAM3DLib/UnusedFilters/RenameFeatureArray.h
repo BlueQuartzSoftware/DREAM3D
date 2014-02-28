@@ -66,9 +66,9 @@ class DREAM3DLib_EXPORT RenameFeatureArray : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(CellFeatureAttributeMatrixName)
 
     DREAM3D_INSTANCE_STRING_PROPERTY(SelectedFeatureArrayName)
-    Q_PROPERTY(QString SelectedFeatureArrayName READ getSelectedFeatureArrayName WRITE setSelectedFeatureArrayName NOTIFY parametersChanged)
+    Q_PROPERTY(QString SelectedFeatureArrayName READ getSelectedFeatureArrayName WRITE setSelectedFeatureArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(NewFeatureArrayName)
-    Q_PROPERTY(QString NewFeatureArrayName READ getNewFeatureArrayName WRITE setNewFeatureArrayName NOTIFY parametersChanged)
+    Q_PROPERTY(QString NewFeatureArrayName READ getNewFeatureArrayName WRITE setNewFeatureArrayName)
 
 
     /**

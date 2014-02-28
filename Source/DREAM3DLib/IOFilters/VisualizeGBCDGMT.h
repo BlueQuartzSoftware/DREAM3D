@@ -47,6 +47,7 @@
 #include "DREAM3DLib/OrientationOps/HexagonalOps.h"
 #include "DREAM3DLib/OrientationOps/OrthoRhombicOps.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
+#include "DREAM3DLib/Common/Constants.h"
 
 
 typedef float real;
@@ -73,16 +74,16 @@ class VisualizeGBCDGMT : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(CrystalStructuresArrayName)
 
     DREAM3D_FILTER_PARAMETER(QString, GMTOutputFile)
-    Q_PROPERTY(QString GMTOutputFile READ getGMTOutputFile WRITE setGMTOutputFile NOTIFY parametersChanged)
+    Q_PROPERTY(QString GMTOutputFile READ getGMTOutputFile WRITE setGMTOutputFile)
 
     DREAM3D_FILTER_PARAMETER(float, MisAngle)
-    Q_PROPERTY(float MisAngle READ getMisAngle WRITE setMisAngle NOTIFY parametersChanged)
+    Q_PROPERTY(float MisAngle READ getMisAngle WRITE setMisAngle)
 
     DREAM3D_FILTER_PARAMETER(FloatVec3_t, MisAxis)
-    Q_PROPERTY(FloatVec3_t MisAxis READ getMisAxis WRITE setMisAxis NOTIFY parametersChanged)
+    Q_PROPERTY(FloatVec3_t MisAxis READ getMisAxis WRITE setMisAxis)
 
     DREAM3D_FILTER_PARAMETER(unsigned int, CrystalStructure)
-    Q_PROPERTY(unsigned int CrystalStructure READ getCrystalStructure WRITE setCrystalStructure NOTIFY parametersChanged)
+    Q_PROPERTY(unsigned int CrystalStructure READ getCrystalStructure WRITE setCrystalStructure)
 
     // Local Instance variables
     DREAM3D_INSTANCE_PROPERTY(QVector<AxisAngleInput_t>, MisorientationRotations)
@@ -92,6 +93,7 @@ class VisualizeGBCDGMT : public AbstractFilter
     * a different group if you want. The string returned here will be displayed
     * in the GUI for the filter
     */
+    virtual const QString getCompiledLibraryName() { return IO::IOBaseName; }
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::OutputFilters; }
 
@@ -164,5 +166,6 @@ class VisualizeGBCDGMT : public AbstractFilter
 };
 
 #endif /* _VisualizeGBCDGMT_H_ */
+
 
 

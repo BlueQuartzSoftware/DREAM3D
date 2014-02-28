@@ -55,6 +55,7 @@
 #include "DREAM3DLib/DataArrays/NeighborList.hpp"
 #include "DREAM3DLib/DistributionAnalysisOps/DistributionAnalysisOps.h"
 
+#include "Statistics/StatisticsConstants.h"
 /**
  * @class GenerateEnsembleStatistics GenerateEnsembleStatistics.h DREAM3DLib/GenericFilters/GenerateEnsembleStatistics.h
  * @brief
@@ -77,6 +78,7 @@ class GenerateEnsembleStatistics : public AbstractFilter
 
     DREAM3D_INSTANCE_STRING_PROPERTY(TotalSurfaceAreasArrayName)
 
+    virtual const QString getCompiledLibraryName() { return Statistics::StatisticsBaseName; }
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::EnsembleStatsFilters; }
     virtual const QString getHumanLabel() { return "Generate Ensemble Statistics"; }
@@ -164,4 +166,5 @@ signals:
 };
 
 #endif /* GenerateEnsembleStatistics_H_ */
+
 
