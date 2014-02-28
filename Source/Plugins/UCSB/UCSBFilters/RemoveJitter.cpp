@@ -129,9 +129,9 @@ void RemoveJitter::setupFilterParameters()
 void RemoveJitter::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-  /* Code to read the values goes between these statements */
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
+  setMisorientationTolerance( reader->readValue( "MisorientationTolerance", getMisorientationTolerance() ) );
+  setAlignmentShiftFileName( reader->readValue( "AlignmentShiftFileName", getAlignmentShiftFileName() ) );
+  setWriteAlignmentShifts( reader->readValue( "WriteAlignmentShifts", getWriteAlignmentShifts() ) );
   reader->closeFilterGroup();
 }
 
@@ -453,7 +453,9 @@ void RemoveJitter::find_shifts(std::vector<int> &xshifts, std::vector<int> &yshi
         }
       }
     }
-    double shift=((newxshift+newxshiftabove)/2.0f);
+    double shift=0;
+    if( (abs(newxshift)==newxshift && abs(newxshiftabove)==newxshiftabove) || (abs(newxshift)==-newxshift && abs(newxshiftabove)==-newxshiftabove) )
+      shift=((newxshift+newxshiftabove)/2.0f);
     if(shift>0)
     {
       xshifts[iter] = xshifts[iter-1]+floor(shift);
@@ -463,7 +465,9 @@ void RemoveJitter::find_shifts(std::vector<int> &xshifts, std::vector<int> &yshi
       xshifts[iter] = xshifts[iter-1]+ceil(shift);
     }
 
-    shift=((newyshift+newyshiftabove)/2.0f);
+    shift=0;
+    if( (abs(newxshift)==newxshift && abs(newxshiftabove)==newxshiftabove) || (abs(newxshift)==-newxshift && abs(newxshiftabove)==-newxshiftabove) )
+      shift=((newyshift+newyshiftabove)/2.0f);
     if(shift>0)
     {
       yshifts[iter] = yshifts[iter-1]+floor(shift);

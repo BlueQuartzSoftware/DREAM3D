@@ -1,4 +1,4 @@
-RemoveJitter {#RemoveJitter}
+RemoveJitter {#removejitter}
 =====
 
 ## Group (Subgroup) ##
@@ -6,7 +6,7 @@ UCSB (UCSB)
 
 
 ## Description ##
-This filter does the following...
+For each slice computes alignment for the slice above and below. If both shifts for x or y are in the same direction they are averaged and applied
 
 ## Parameters ##
 | Name             | Type |
@@ -22,17 +22,15 @@ This filter does the following...
 
 ## Created Arrays ##
 
-| Type | Default Array Name | Description | Comment |
-|------|--------------------|-------------|---------|
-| Int  | SomeName           | ....        | other   |
+None
 
 
 
 ## Authors ##
 
-**Copyright** 2012 Michael A. Groeber (AFRL), 2012 Michael A. Jackson (BlueQuartz Software)
+**Copyright** 2014 Will Lenthe (UCSB)
 
-**Contact Info** dream3d@bluequartz.net
+**Contact Info** willlenthe@gmail.com
 
 **Version** 1.0.0
 
