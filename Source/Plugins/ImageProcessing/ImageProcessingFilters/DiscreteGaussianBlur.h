@@ -4,8 +4,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _GuassianBlur_H_
-#define _GuassianBlur_H_
+#ifndef _DiscreteGaussianBlur_H_
+#define _DiscreteGaussianBlur_H_
 
 #include <string>
 
@@ -15,20 +15,20 @@
 #include "DREAM3DLib/DataArrays/IDataArray.h"
 
 /**
- * @class GaussianBlur GaussianBlur.h ImageProcessing/Code/ImageProcessingFilters/GaussianBlur.h
+ * @class DiscreteGaussianBlur DiscreteGaussianBlur.h ImageProcessing/Code/ImageProcessingFilters/DiscreteGaussianBlur.h
  * @brief
  * @author
  * @date
  * @version 1.0
  */
-class GaussianBlur : public AbstractFilter
+class DiscreteGaussianBlur : public AbstractFilter
 {
   public:
-    DREAM3D_SHARED_POINTERS(GaussianBlur);
-    DREAM3D_STATIC_NEW_MACRO(GaussianBlur);
-    DREAM3D_TYPE_MACRO_SUPER(GaussianBlur, AbstractFilter);
+    DREAM3D_SHARED_POINTERS(DiscreteGaussianBlur);
+    DREAM3D_STATIC_NEW_MACRO(DiscreteGaussianBlur);
+    DREAM3D_TYPE_MACRO_SUPER(DiscreteGaussianBlur, AbstractFilter);
 
-    virtual ~GaussianBlur();
+    virtual ~DiscreteGaussianBlur();
 
     //Required Cell Data
     DREAM3D_INSTANCE_STRING_PROPERTY(RawImageDataArrayName)
@@ -52,7 +52,7 @@ class GaussianBlur : public AbstractFilter
     * @brief This returns a string that is displayed in the GUI. It should be readable
     * and understandable by humans.
     */
-    virtual const std::string getHumanLabel() { return "Guassian Blur"; }
+    virtual const std::string getHumanLabel() { return "Discrete Guassian Blur"; }
 
     /**
     * @brief This returns a string that is displayed in the GUI and helps to sort the filters into
@@ -90,7 +90,7 @@ class GaussianBlur : public AbstractFilter
     virtual void preflight();
 
   protected:
-    GaussianBlur();
+    DiscreteGaussianBlur();
 
     /**
     * @brief Checks for the appropriate parameter values and availability of
@@ -106,8 +106,8 @@ class GaussianBlur : public AbstractFilter
     uint8_t* m_RawImageData;
     float* m_ProcessedImageData;
 
-    GaussianBlur(const GaussianBlur&); // Copy Constructor Not Implemented
-    void operator=(const GaussianBlur&); // Operator '=' Not Implemented
+    DiscreteGaussianBlur(const DiscreteGaussianBlur&); // Copy Constructor Not Implemented
+    void operator=(const DiscreteGaussianBlur&); // Operator '=' Not Implemented
 };
 
-#endif /* _GuassianBlur_H_ */
+#endif /* _DiscreteGaussianBlur_H_ */
