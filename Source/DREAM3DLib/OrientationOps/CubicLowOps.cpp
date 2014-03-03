@@ -213,7 +213,6 @@ CubicLowOps::~CubicLowOps()
 // -----------------------------------------------------------------------------
 float CubicLowOps::getMisoQuat(QuatF& q1, QuatF& q2, float& n1, float& n2, float& n3)
 {
-
   int numsym = 12;
 
   return _calcMisoQuat(CubicLowQuatSym, numsym, q1, q2, n1, n2, n3);
