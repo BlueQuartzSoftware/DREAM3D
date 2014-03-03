@@ -173,26 +173,11 @@ void DiscreteGaussianBlur::execute()
   GuassianFilterType::Pointer guassianFilter = GuassianFilterType::New();
   guassianFilter->SetInput(importFilter->GetOutput());
   guassianFilter->SetVariance(4);
+  ImageProcessing::FloatPixelType * pixelData = static_cast<ImageProcessing::FloatPixelType*>(m_ProcessedImageData);
+  const bool filterWillDeleteTheInputBuffer = false;
+  const unsigned int totalNumberOfPixels = totalPoints;
+  guassianFilter->GetOutput()->GetPixelContainer()->SetImportPointer(pixelData,totalNumberOfPixels,filterWillDeleteTheInputBuffer);
   guassianFilter->Update();
-
-  //get blurred image and create an iterator over it
-  ImageProcessing::FloatImageType::Pointer blurredImage = guassianFilter->GetOutput();
-  ImageProcessing::FloatImageType::RegionType filterRegion = blurredImage->GetBufferedRegion();
-  ImageProcessing::FloatConstIteratorType it(blurredImage, filterRegion);
-
-  //loop over image running filter
-  it.GoToBegin();
-  int index=0;
-   while( !it.IsAtEnd() )
-  {
-    m_ProcessedImageData[index]=it.Get();
-    ++it;
-    ++index;
-  }
-
-  ///I think there should be a way to just replace our pointer with a pointer
-  ///to the array underneath of the itk image but it doesn't seem to be working
-  //m_ProcessedImageData=guassianFilter->GetOutput()->GetBufferPointer();
 
   //array name changing/cleanup
   if(m_OverwriteArray)
