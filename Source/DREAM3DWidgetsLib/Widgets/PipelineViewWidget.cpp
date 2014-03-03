@@ -605,12 +605,12 @@ void PipelineViewWidget::dragMoveEvent( QDragMoveEvent* event)
     // Check to see if we are trying to move it to the end
     if (false == didInsert && count > 0)
     {
-      PipelineFilterWidget* w = qobject_cast<PipelineFilterWidget*>(m_FilterWidgetLayout->itemAt(count - 1)->widget());
+      PipelineFilterWidget* w = qobject_cast<PipelineFilterWidget*>(m_FilterWidgetLayout->itemAt(count - 2)->widget());
       if(w != NULL && m_FilterBeingDragged != NULL && w != m_FilterBeingDragged)
       {
         if(event->pos().y() > w->geometry().y() + w->geometry().height())
         {
-          m_FilterWidgetLayout->insertWidget(count - 1, m_FilterBeingDragged);
+          m_FilterWidgetLayout->insertWidget(count - 2, m_FilterBeingDragged);
           setSelectedFilterWidget(m_FilterBeingDragged);
         }
       }

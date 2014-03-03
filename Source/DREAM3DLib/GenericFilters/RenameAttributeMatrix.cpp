@@ -121,9 +121,6 @@ void RenameAttributeMatrix::dataCheck()
 {
   setErrorCondition(0);
 
-
-  qDebug() << "RenameAttributeMatrix::dataCheck() ==> " << getSelectedAttributeMatrixPath();
-  qDebug() << "RenameAttributeMatrix::dataCheck() ==> " << getNewAttributeMatrix();
   if(m_NewAttributeMatrix.isEmpty() == true)
   {
     setErrorCondition(-11000);

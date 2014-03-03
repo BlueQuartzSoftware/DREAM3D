@@ -504,7 +504,8 @@ void PipelineFilterWidget::mouseMoveEvent(QMouseEvent* event)
   {
     return;
   }
-
+  // The user is dragging the filter widget so we should set it as selected.
+  setIsSelected(true);
   QPixmap pixmap = QPixmap::grabWidget(this);
 
   // Create new picture for transparent
