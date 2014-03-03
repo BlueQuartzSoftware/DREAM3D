@@ -243,12 +243,12 @@ void FindNeighborhoods::find_neighborhoods()
 #else
   typedef int64_t DimType;
 #endif
-  DimType dims[3] =
-  {
-    static_cast<DimType>(udims[0]),
-    static_cast<DimType>(udims[1]),
-    static_cast<DimType>(udims[2]),
-  };
+//  DimType dims[3] =
+//  {
+//    static_cast<DimType>(udims[0]),
+//    static_cast<DimType>(udims[1]),
+//    static_cast<DimType>(udims[2]),
+//  };
 
   //  size_t xP = dims[0];
   //  size_t yP = dims[1];
