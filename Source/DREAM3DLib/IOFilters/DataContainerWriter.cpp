@@ -162,9 +162,9 @@ void DataContainerWriter::dataCheck()
 
   if (m_OutputFile.isEmpty() == true)
   {
+    setErrorCondition(-10000);
     ss = QObject::tr("The output file must be set before executing this filter.");
-    notifyErrorMessage(getHumanLabel(), ss, -1);
-    setErrorCondition(-1);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 
   QFileInfo fi(m_OutputFile);
@@ -177,6 +177,12 @@ void DataContainerWriter::dataCheck()
   if (fi.suffix().compare("") == 0)
   {
     m_OutputFile.append(".dream3d");
+  }
+  if(fi.baseName().compare("") == 0)
+  {
+    setErrorCondition(-10001);
+    ss = QObject::tr("The output file must have its actual filename set.");
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 
 }
@@ -224,7 +230,7 @@ void DataContainerWriter::execute()
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;
   }
-  qDebug() << "DREAM3D File: " << m_OutputFile;
+  //qDebug() << "DREAM3D File: " << m_OutputFile;
 
   // This will make sure if we return early from this method that the HDF5 File is properly closed.
   HDF5ScopedFileSentinel scopedFileSentinel(&m_FileId, true);
@@ -290,7 +296,7 @@ void DataContainerWriter::execute()
 
     hid_t dcGid = H5Gopen(dcaGid, dcNames[iter].toLatin1().data(), H5P_DEFAULT );
     HDF5ScopedGroupSentinel groupSentinel(&dcGid, false);
-   //QString ss = QObject::tr("%1 |--> Writing %2 DataContainer ").arg(getMessagePrefix()).arg(dcNames[iter]);
+    //QString ss = QObject::tr("%1 |--> Writing %2 DataContainer ").arg(getMessagePrefix()).arg(dcNames[iter]);
 
     // Have the DataContainer write all of its Attribute Matrices and its Mesh
     err = dc->writeAttributeMatricesToHDF5(dcGid);

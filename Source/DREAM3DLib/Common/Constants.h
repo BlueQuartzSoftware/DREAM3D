@@ -342,7 +342,7 @@ namespace DREAM3D
     const DREAM3D_STRING NumComponents("NumComponents");
     const DREAM3D_STRING TupleDimensions("TupleDimensions");
     const DREAM3D_STRING ComponentDimensions("ComponentDimensions");
-
+    const DREAM3D_STRING AxisDimensions("Axis Dimensions");
     const DREAM3D_STRING DataArrayVersion("DataArrayVersion");
   }
 
