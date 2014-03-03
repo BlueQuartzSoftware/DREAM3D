@@ -174,7 +174,7 @@ void ReadH5EbsdWidget::on_m_InputFileBtn_clicked()
 void ReadH5EbsdWidget::on_m_InputFile_textChanged(const QString &text)
 {
   setOpenDialogLastDirectory(m_InputFile->text());
-  bool b = verifyPathExists(m_InputFile->text(), m_InputFile);
+  verifyPathExists(m_InputFile->text(), m_InputFile);
 
   m_NewFileLoaded = true;
   // Clear the QListWidget
@@ -525,98 +525,4 @@ void ReadH5EbsdWidget::resetGuiFileInfoWidgets()
   m_RefFrameZDir->setText("xxx");
 }
 
-
-
-#if 0
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-AbstractFilter::Pointer ReadH5EbsdWidget::getFilter(bool defaultValues)
-{
-  ReadH5Ebsd::Pointer filter =  ReadH5Ebsd::New();
-  if (defaultValues == true) { return filter; }
-
-  filter->setInputFile(m_InputFile->text().toStdString());
-  filter->setZStartIndex(m_ZStartIndex->value());
-  filter->setZEndIndex(m_ZEndIndex->value());
-  filter->setUseTransformations(m_UseTransformations->isChecked());
-
-  filter->setRefFrameZDir(Ebsd::StackingOrder::Utils::getEnumForString(m_RefFrameZDir->text().toStdString()));
-
-  arraySelectionWidget->getArraySelections(filter.get());
-
-  return filter;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-PipelineFilterWidget *ReadH5EbsdWidget::createDeepCopy()
-{
-  ReadH5EbsdWidget* w = new ReadH5EbsdWidget();
-  // Update the Filter with all of these values;
-  w->setInputFile(m_InputFile->text());
-  w->setZStartIndex(m_ZStartIndex->value());
-  w->setZEndIndex(m_ZEndIndex->value());
-  w->setRefFrameZDir(m_RefFrameZDir->text());
-  return w;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void ReadH5EbsdWidget::arraySelectionWidgetChanged()
-{
-  emit parametersChanged();
-}
-
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-QString  ReadH5EbsdWidget::getInputFile()
-{
-  return m_InputFile->text();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void ReadH5EbsdWidget::writeOptions(QSettings &prefs)
-{
-  prefs.setValue("Filter_Name", "ReadH5Ebsd" );
-  prefs.setValue("InputFile", QDir::toNativeSeparators(getInputFile()) );
-  prefs.setValue("ZStartIndex", m_ZStartIndex->value());
-  prefs.setValue("ZEndIndex", m_ZEndIndex->value() );
-  prefs.setValue("UseTransformations",m_UseTransformations->isChecked());
-  arraySelectionWidget->writeOptions(prefs, "ArraySelections");
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void ReadH5EbsdWidget::readOptions(QSettings &prefs)
-{
-  QString val;
-  bool ok;
-  qint32 i;
-
-  {
-    QVariant p_InputFile = prefs.value("InputFile");
-    QString path = QDir::toNativeSeparators(p_InputFile.toString());
-    QLineEdit* lb = qFindChild<QLineEdit*>(this, "InputFile");
-    if (lb) { lb->setText(path); }
-    setInputFile(path);
-  }
-
-  READ_SETTING(prefs, m_, ZStartIndex, ok, i, 0, Int)
-      READ_SETTING(prefs, m_, ZEndIndex, ok, i, 0, Int)
-
-      QVariant UseTrans = prefs.value("UseTransformations");
-  m_UseTransformations->setChecked(UseTrans.toBool());
-
-  arraySelectionWidget->readOptions(prefs, "ArraySelections");
-
-}
-#endif
 

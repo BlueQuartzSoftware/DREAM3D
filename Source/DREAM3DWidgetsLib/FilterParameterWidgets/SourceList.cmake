@@ -20,7 +20,7 @@ set(DREAM3D_PARAMETER_WIDGETS
       SingleArraySelectionWidget
       DataContainerArrayProxyWidget
       ComparisonSelectionWidget
-
+      AttributeMatrixSelectionWidget
 #      CellArrayComparisonSelectionWidget
 #      FeatureArrayComparisonSelectionWidget
 #      EnsembleArrayComparisonSelectionWidget

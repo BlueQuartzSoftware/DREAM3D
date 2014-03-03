@@ -121,9 +121,6 @@ void RenameAttributeArray::dataCheck()
 {
   setErrorCondition(0);
 
-
-  qDebug() << "RenameAttributeArray::dataCheck() ==> " << getSelectedArrayPath();
-  qDebug() << "RenameAttributeArray::dataCheck() ==> " << getNewArrayName();
   if(m_NewArrayName.isEmpty() == true)
   {
     setErrorCondition(-11000);
