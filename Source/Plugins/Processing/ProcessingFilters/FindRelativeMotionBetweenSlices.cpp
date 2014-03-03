@@ -368,10 +368,8 @@ void FindRelativeMotionBetweenSlices::execute()
   m->getDimensions(xP, yP, zP);
   size_t totalPoints = xP*yP*zP;
 
-  int32_t buffer1 = m_PSize1/2;
-  int32_t buffer2 = m_PSize2/2;
-  if(m_SSize1 > m_PSize1) buffer1 = m_SSize1/2;
-  if(m_SSize2 > m_PSize2) buffer2 = m_SSize2/2;
+  int32_t buffer1 = (m_PSize1/2)+(m_SSize1/2);
+  int32_t buffer2 = (m_PSize2/2)+(m_SSize1/2);
 
   QVector<size_t> cDims(1, 4);
   Int32ArrayType::Pointer patchPointsPtr = Int32ArrayType::CreateArray((m_PSize1*m_PSize2), "patchPoints");
@@ -449,7 +447,7 @@ void FindRelativeMotionBetweenSlices::execute()
       }
     }
     numSearchPoints = count;
-    for(int k=buffer2;k<(yP-buffer2);k++)
+    for(int k=buffer2;k<(zP-buffer2);k++)
     {
       zStride = k*xP*yP;
       for(int j=0;j<yP-m_SliceStep;j++)
@@ -488,10 +486,10 @@ void FindRelativeMotionBetweenSlices::execute()
       }
     }
     numSearchPoints = count;
-    for(int k=buffer2;k<(yP-buffer2);k++)
+    for(int k=buffer2;k<(zP-buffer2);k++)
     {
       zStride = k*xP*yP;
-      for(int j=buffer1;j<(xP-buffer1);j++)
+      for(int j=buffer1;j<(yP-buffer1);j++)
       {
         yStride = j*xP;
         for(int i=0;i<xP-m_SliceStep;i++)

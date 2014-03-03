@@ -373,8 +373,8 @@ void ReadH5Ebsd::dataCheck()
   H5EbsdVolumeReader::Pointer reader;
   QVector<QString> names;
 
-  int64_t dims[3];
-  float res[3];
+  int64_t dims[3] = {0, 0, 0};
+  float res[3] = {0, 0, 0};
   int err = volumeInfoReader->getDimsAndResolution(dims[0], dims[1], dims[2], res[0], res[1], res[2]);
   // Need to
   if(err < 0)
