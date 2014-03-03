@@ -1674,7 +1674,11 @@ void PipelineBuilderWidget::actionAddFavorite_triggered()
   if(addfavoriteDialog->getBtnClicked())
   {
     QTreeWidgetItem* selection = filterLibraryTree->currentItem();
-    // qDebug() << selection->data(0, Qt::UserRole).toString();
+    if(selection->type() == PipelineTreeWidget::Favorite_Item_Type)
+    {
+      // The current selection is a leaf. We need to get its parent.
+      selection = selection->parent();
+    }
     QString favoriteTitle = addfavoriteDialog->getFavoriteName();
 
     favoriteTitle = favoriteTitle.trimmed();

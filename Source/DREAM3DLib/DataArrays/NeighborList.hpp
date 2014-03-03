@@ -242,13 +242,13 @@ class NeighborList : public IDataArray
      */
     IDataArray::Pointer deepCopy()
     {
-      NeighborList<T>::Pointer daCopyPtr = NeighborList<T>::New();
+      typename NeighborList<T>::Pointer daCopyPtr = NeighborList<T>::New();
       daCopyPtr->Resize(GetNumberOfTuples());
 
       //NeighborList<T>* daCopy = NeighborList<T>::SafeObjectDownCast<IDataArray*, NeighborList<T>*>(daCopyPtr.get());
       for(size_t i=0;i<GetNumberOfTuples();i++)
       {
-        NeighborList<T>::SharedVectorType sharedNeiLst(new std::vector<T>);
+        typename NeighborList<T>::SharedVectorType sharedNeiLst(new std::vector<T>);
         sharedNeiLst = _data[i];
         daCopyPtr->setList(static_cast<int>(i), sharedNeiLst);
       }
