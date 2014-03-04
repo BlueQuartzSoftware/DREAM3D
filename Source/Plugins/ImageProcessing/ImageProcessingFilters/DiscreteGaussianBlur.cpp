@@ -173,10 +173,11 @@ void DiscreteGaussianBlur::execute()
   GuassianFilterType::Pointer guassianFilter = GuassianFilterType::New();
   guassianFilter->SetInput(importFilter->GetOutput());
   guassianFilter->SetVariance(4);
-  ImageProcessing::FloatPixelType * pixelData = static_cast<ImageProcessing::FloatPixelType*>(m_ProcessedImageData);
-  const bool filterWillDeleteTheInputBuffer = false;
-  const unsigned int totalNumberOfPixels = totalPoints;
-  guassianFilter->GetOutput()->GetPixelContainer()->SetImportPointer(pixelData,totalNumberOfPixels,filterWillDeleteTheInputBuffer);
+
+  //have filter write to dream3d array instead of creating its own buffer
+  ITKUtilities::SetITKFloatOutput(guassianFilter->GetOutput(), m_ProcessedImageData, totalPoints);
+
+  //execute filter
   guassianFilter->Update();
 
   //array name changing/cleanup

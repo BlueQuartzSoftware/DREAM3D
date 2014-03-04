@@ -44,6 +44,30 @@ class DREAM3DLib_EXPORT ITKUtilities
     //static ImageProcessing::ImportRGBUint8FilterType::Pointer Dream3DRGBUInt8toITK(VoxelDataContainer* m, uint8_t* data);
     //static ImageProcessing::ImportRGBAFloatFilterType::Pointer Dream3DRGBAFloattoITK(VoxelDataContainer* m, float* data);
 
+    //set itk ImageToImageFilter output buffer to dream3d buffer
+    static void SetITKInt8Output(ImageProcessing::Int8ImageType::Pointer image, int8_t* output, const unsigned int totalPoints);
+    static void SetITKUInt8Output(ImageProcessing::UInt8ImageType::Pointer image, uint8_t* output, const unsigned int totalPoints);
+    static void SetITKInt16Output(ImageProcessing::Int16ImageType::Pointer image, int16_t* output, const unsigned int totalPoints);
+    static void SetITKUInt16Output(ImageProcessing::UInt16ImageType::Pointer image, uint16_t* output, const unsigned int totalPoints);
+    static void SetITKInt32Output(ImageProcessing::Int32ImageType::Pointer image, int32_t* output, const unsigned int totalPoints);
+    static void SetITKUInt32Output(ImageProcessing::UInt32ImageType::Pointer image, uint32_t* output, const unsigned int totalPoints);
+    static void SetITKInt64Output(ImageProcessing::Int64ImageType::Pointer image, int64_t* output, const unsigned int totalPoints);
+    static void SetITKUInt64Output(ImageProcessing::UInt64ImageType::Pointer image, uint64_t* output, const unsigned int totalPoints);
+    static void SetITKFloatOutput(ImageProcessing::FloatImageType::Pointer image, float* output, const unsigned int totalPoints);
+    static void SetITKDoubleOutput(ImageProcessing::DoubleImageType::Pointer image, double* output, const unsigned int totalPoints);
+
+    //copy itk image to dream3d buffer
+    static void ITKInt8toDream3D(ImageProcessing::Int8ImageType::Pointer image, int8_t* buffer);
+    static void ITKUInt8toDream3D(ImageProcessing::UInt8ImageType::Pointer image, uint8_t* buffer);
+    static void ITKInt16toDream3D(ImageProcessing::Int16ImageType::Pointer image, int16_t* buffer);
+    static void ITKUInt16toDream3D(ImageProcessing::UInt16ImageType::Pointer image, uint16_t* buffer);
+    static void ITKInt32toDream3D(ImageProcessing::Int32ImageType::Pointer image, int32_t* buffer);
+    static void ITKUInt32toDream3D(ImageProcessing::UInt32ImageType::Pointer image, uint32_t* buffer);
+    static void ITKInt64toDream3D(ImageProcessing::Int64ImageType::Pointer image, int64_t* buffer);
+    static void ITKUInt64toDream3D(ImageProcessing::UInt64ImageType::Pointer image, uint64_t* buffer);
+    static void ITKFloattoDream3D(ImageProcessing::FloatImageType::Pointer image, float* buffer);
+    static void ITKDoubletoDream3D(ImageProcessing::DoubleImageType::Pointer image, double* buffer);
+
     ITKUtilities();
 
   private:

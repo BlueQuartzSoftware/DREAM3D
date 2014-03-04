@@ -73,7 +73,6 @@ ImageProcessing::ImportInt8FilterType::Pointer ITKUtilities::Dream3DInt8toITK(Vo
   importFilter->SetImportPointer( data, totalPoints, importImageFilterWillOwnTheBuffer );
   importFilter->Update();
   return importFilter;
-  //return importFilter->GetOutput();
 }
 
 // -----------------------------------------------------------------------------
@@ -129,7 +128,6 @@ ImageProcessing::ImportUInt8FilterType::Pointer ITKUtilities::Dream3DUInt8toITK(
   importFilter->SetImportPointer( data, totalPoints, importImageFilterWillOwnTheBuffer );
   importFilter->Update();
   return importFilter;
-  //return importFilter->GetOutput();
 }
 
 // -----------------------------------------------------------------------------
@@ -185,7 +183,6 @@ ImageProcessing::ImportInt16FilterType::Pointer ITKUtilities::Dream3DInt16toITK(
   importFilter->SetImportPointer( data, totalPoints, importImageFilterWillOwnTheBuffer );
   importFilter->Update();
   return importFilter;
-  //return importFilter->GetOutput();
 }
 
 // -----------------------------------------------------------------------------
@@ -241,7 +238,6 @@ ImageProcessing::ImportUInt16FilterType::Pointer ITKUtilities::Dream3DUInt16toIT
   importFilter->SetImportPointer( data, totalPoints, importImageFilterWillOwnTheBuffer );
   importFilter->Update();
   return importFilter;
-  //return importFilter->GetOutput();
 }
 
 // -----------------------------------------------------------------------------
@@ -297,7 +293,6 @@ ImageProcessing::ImportInt32FilterType::Pointer ITKUtilities::Dream3DInt32toITK(
   importFilter->SetImportPointer( data, totalPoints, importImageFilterWillOwnTheBuffer );
   importFilter->Update();
   return importFilter;
-  //return importFilter->GetOutput();
 }
 
 // -----------------------------------------------------------------------------
@@ -353,7 +348,6 @@ ImageProcessing::ImportUInt32FilterType::Pointer ITKUtilities::Dream3DUInt32toIT
   importFilter->SetImportPointer( data, totalPoints, importImageFilterWillOwnTheBuffer );
   importFilter->Update();
   return importFilter;
-  //return importFilter->GetOutput();
 }
 
 // -----------------------------------------------------------------------------
@@ -409,7 +403,6 @@ ImageProcessing::ImportInt64FilterType::Pointer ITKUtilities::Dream3DInt64toITK(
   importFilter->SetImportPointer( data, totalPoints, importImageFilterWillOwnTheBuffer );
   importFilter->Update();
   return importFilter;
-  //return importFilter->GetOutput();
 }
 
 // -----------------------------------------------------------------------------
@@ -465,7 +458,6 @@ ImageProcessing::ImportUInt64FilterType::Pointer ITKUtilities::Dream3DUInt64toIT
   importFilter->SetImportPointer( data, totalPoints, importImageFilterWillOwnTheBuffer );
   importFilter->Update();
   return importFilter;
-  //return importFilter->GetOutput();
 }
 
 // -----------------------------------------------------------------------------
@@ -521,7 +513,6 @@ ImageProcessing::ImportFloatFilterType::Pointer ITKUtilities::Dream3DFloattoITK(
   importFilter->SetImportPointer( data, totalPoints, importImageFilterWillOwnTheBuffer );
   importFilter->Update();
   return importFilter;
-  //return importFilter->GetOutput();
 }
 
 // -----------------------------------------------------------------------------
@@ -577,5 +568,274 @@ ImageProcessing::ImportDoubleFilterType::Pointer ITKUtilities::Dream3DDoubletoIT
   importFilter->SetImportPointer( data, totalPoints, importImageFilterWillOwnTheBuffer );
   importFilter->Update();
   return importFilter;
-  //return importFilter->GetOutput();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ITKUtilities::SetITKInt8Output(ImageProcessing::Int8ImageType::Pointer image, int8_t* output, const unsigned int totalPoints)
+{
+  const bool filterWillDeleteTheInputBuffer = false;
+  ImageProcessing::Int8PixelType * pixelData = static_cast<ImageProcessing::Int8PixelType*>(output);
+  image->GetPixelContainer()->SetImportPointer(pixelData, totalPoints, filterWillDeleteTheInputBuffer);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ITKUtilities::SetITKUInt8Output(ImageProcessing::UInt8ImageType::Pointer image, uint8_t* output, const unsigned int totalPoints)
+{
+  const bool filterWillDeleteTheInputBuffer = false;
+  ImageProcessing::UInt8PixelType * pixelData = static_cast<ImageProcessing::UInt8PixelType*>(output);
+  image->GetPixelContainer()->SetImportPointer(pixelData, totalPoints, filterWillDeleteTheInputBuffer);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ITKUtilities::SetITKInt16Output(ImageProcessing::Int16ImageType::Pointer image, int16_t* output, const unsigned int totalPoints)
+{
+  const bool filterWillDeleteTheInputBuffer = false;
+  ImageProcessing::Int16PixelType * pixelData = static_cast<ImageProcessing::Int16PixelType*>(output);
+  image->GetPixelContainer()->SetImportPointer(pixelData, totalPoints, filterWillDeleteTheInputBuffer);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ITKUtilities::SetITKUInt16Output(ImageProcessing::UInt16ImageType::Pointer image, uint16_t* output, const unsigned int totalPoints)
+{
+  const bool filterWillDeleteTheInputBuffer = false;
+  ImageProcessing::UInt16PixelType * pixelData = static_cast<ImageProcessing::UInt16PixelType*>(output);
+  image->GetPixelContainer()->SetImportPointer(pixelData, totalPoints, filterWillDeleteTheInputBuffer);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ITKUtilities::SetITKInt32Output(ImageProcessing::Int32ImageType::Pointer image, int32_t* output, const unsigned int totalPoints)
+{
+  const bool filterWillDeleteTheInputBuffer = false;
+  ImageProcessing::Int32PixelType * pixelData = static_cast<ImageProcessing::Int32PixelType*>(output);
+  image->GetPixelContainer()->SetImportPointer(pixelData, totalPoints, filterWillDeleteTheInputBuffer);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ITKUtilities::SetITKUInt32Output(ImageProcessing::UInt32ImageType::Pointer image, uint32_t* output, const unsigned int totalPoints)
+{
+  const bool filterWillDeleteTheInputBuffer = false;
+  ImageProcessing::UInt32PixelType * pixelData = static_cast<ImageProcessing::UInt32PixelType*>(output);
+  image->GetPixelContainer()->SetImportPointer(pixelData, totalPoints, filterWillDeleteTheInputBuffer);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ITKUtilities::SetITKInt64Output(ImageProcessing::Int64ImageType::Pointer image, int64_t* output, const unsigned int totalPoints)
+{
+  const bool filterWillDeleteTheInputBuffer = false;
+  ImageProcessing::Int64PixelType * pixelData = static_cast<ImageProcessing::Int64PixelType*>(output);
+  image->GetPixelContainer()->SetImportPointer(pixelData, totalPoints, filterWillDeleteTheInputBuffer);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ITKUtilities::SetITKUInt64Output(ImageProcessing::UInt64ImageType::Pointer image, uint64_t* output, const unsigned int totalPoints)
+{
+  const bool filterWillDeleteTheInputBuffer = false;
+  ImageProcessing::UInt64PixelType * pixelData = static_cast<ImageProcessing::UInt64PixelType*>(output);
+  image->GetPixelContainer()->SetImportPointer(pixelData, totalPoints, filterWillDeleteTheInputBuffer);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ITKUtilities::SetITKFloatOutput(ImageProcessing::FloatImageType::Pointer image, float* output, const unsigned int totalPoints)
+{
+  const bool filterWillDeleteTheInputBuffer = false;
+  ImageProcessing::FloatPixelType * pixelData = static_cast<ImageProcessing::FloatPixelType*>(output);
+  image->GetPixelContainer()->SetImportPointer(pixelData, totalPoints, filterWillDeleteTheInputBuffer);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ITKUtilities::SetITKDoubleOutput(ImageProcessing::DoubleImageType::Pointer image, double* output, const unsigned int totalPoints)
+{
+  const bool filterWillDeleteTheInputBuffer = false;
+  ImageProcessing::DoublePixelType * pixelData = static_cast<ImageProcessing::DoublePixelType*>(output);
+  image->GetPixelContainer()->SetImportPointer(pixelData, totalPoints, filterWillDeleteTheInputBuffer);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ITKUtilities::ITKInt8toDream3D(ImageProcessing::Int8ImageType::Pointer image, int8_t* buffer)
+{
+  ImageProcessing::Int8ImageType::RegionType filterRegion = image->GetBufferedRegion();
+  ImageProcessing::Int8ConstIteratorType it(image, filterRegion);
+  it.GoToBegin();
+  int index=0;
+  while(!it.IsAtEnd())
+  {
+    buffer[index]=it.Get();
+    ++it;
+    ++index;
+  }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ITKUtilities::ITKUInt8toDream3D(ImageProcessing::UInt8ImageType::Pointer image, uint8_t* buffer)
+{
+  ImageProcessing::UInt8ImageType::RegionType filterRegion = image->GetBufferedRegion();
+  ImageProcessing::UInt8ConstIteratorType it(image, filterRegion);
+  it.GoToBegin();
+  int index=0;
+  while(!it.IsAtEnd())
+  {
+    buffer[index]=it.Get();
+    ++it;
+    ++index;
+  }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ITKUtilities::ITKInt16toDream3D(ImageProcessing::Int16ImageType::Pointer image, int16_t* buffer)
+{
+  ImageProcessing::Int16ImageType::RegionType filterRegion = image->GetBufferedRegion();
+  ImageProcessing::Int16ConstIteratorType it(image, filterRegion);
+  it.GoToBegin();
+  int index=0;
+  while(!it.IsAtEnd())
+  {
+    buffer[index]=it.Get();
+    ++it;
+    ++index;
+  }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ITKUtilities::ITKUInt16toDream3D(ImageProcessing::UInt16ImageType::Pointer image, uint16_t* buffer)
+{
+  ImageProcessing::UInt16ImageType::RegionType filterRegion = image->GetBufferedRegion();
+  ImageProcessing::UInt16ConstIteratorType it(image, filterRegion);
+  it.GoToBegin();
+  int index=0;
+  while(!it.IsAtEnd())
+  {
+    buffer[index]=it.Get();
+    ++it;
+    ++index;
+  }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ITKUtilities::ITKInt32toDream3D(ImageProcessing::Int32ImageType::Pointer image, int32_t* buffer)
+{
+  ImageProcessing::Int32ImageType::RegionType filterRegion = image->GetBufferedRegion();
+  ImageProcessing::Int32ConstIteratorType it(image, filterRegion);
+  it.GoToBegin();
+  int index=0;
+  while(!it.IsAtEnd())
+  {
+    buffer[index]=it.Get();
+    ++it;
+    ++index;
+  }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ITKUtilities::ITKUInt32toDream3D(ImageProcessing::UInt32ImageType::Pointer image, uint32_t* buffer)
+{
+  ImageProcessing::UInt32ImageType::RegionType filterRegion = image->GetBufferedRegion();
+  ImageProcessing::UInt32ConstIteratorType it(image, filterRegion);
+  it.GoToBegin();
+  int index=0;
+  while(!it.IsAtEnd())
+  {
+    buffer[index]=it.Get();
+    ++it;
+    ++index;
+  }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ITKUtilities::ITKInt64toDream3D(ImageProcessing::Int64ImageType::Pointer image, int64_t* buffer)
+{
+  ImageProcessing::Int64ImageType::RegionType filterRegion = image->GetBufferedRegion();
+  ImageProcessing::Int64ConstIteratorType it(image, filterRegion);
+  it.GoToBegin();
+  int index=0;
+  while(!it.IsAtEnd())
+  {
+    buffer[index]=it.Get();
+    ++it;
+    ++index;
+  }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ITKUtilities::ITKUInt64toDream3D(ImageProcessing::UInt64ImageType::Pointer image, uint64_t* buffer)
+{
+  ImageProcessing::UInt64ImageType::RegionType filterRegion = image->GetBufferedRegion();
+  ImageProcessing::UInt64ConstIteratorType it(image, filterRegion);
+  it.GoToBegin();
+  int index=0;
+  while(!it.IsAtEnd())
+  {
+    buffer[index]=it.Get();
+    ++it;
+    ++index;
+  }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ITKUtilities::ITKFloattoDream3D(ImageProcessing::FloatImageType::Pointer image, float* buffer)
+{
+  ImageProcessing::FloatImageType::RegionType filterRegion = image->GetBufferedRegion();
+  ImageProcessing::FloatConstIteratorType it(image, filterRegion);
+  it.GoToBegin();
+  int index=0;
+  while(!it.IsAtEnd())
+  {
+    buffer[index]=it.Get();
+    ++it;
+    ++index;
+  }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ITKUtilities::ITKDoubletoDream3D(ImageProcessing::DoubleImageType::Pointer image, double* buffer)
+{
+  ImageProcessing::DoubleImageType::RegionType filterRegion = image->GetBufferedRegion();
+  ImageProcessing::DoubleConstIteratorType it(image, filterRegion);
+  it.GoToBegin();
+  int index=0;
+  while(!it.IsAtEnd())
+  {
+    buffer[index]=it.Get();
+    ++it;
+    ++index;
+  }
 }
