@@ -74,6 +74,18 @@ class QuaternionMath
       return q;
     }
 
+    // -----------------------------------------------------------------------------
+    static Quaternion New(const Quaternion& in)
+    {
+      Quaternion q;
+      q.x = in.x;
+      q.y = in.y;
+      q.z = in.z;
+      q.w = in.w;
+      return q;
+    }
+
+
 
     // -----------------------------------------------------------------------------
     static void Identity(Quaternion &q)
@@ -259,6 +271,25 @@ class QuaternionMath
       qr.w = static_cast<T>( qr.w/length );
     }
 
+    /**
+     * @brief PassiveRotation Passive Rotation of 3D vector 'vec' by the quaternion 'q' which has been converted
+     * from an Angle-Axis representation into a Quaternion
+     * @param q Quaterion to do the rotation
+     * @param vec Vector to rotation (3D Point in space)
+     * @return New Pure Quaternion (w=0 in the quaternion)
+     */
+    static Quaternion PassiveRotation(const Quaternion q, T* vec)
+    {
+      Quaternion pureQ = QuaternionMath<T>::NewXYZW(vec[0], vec[1], vec[2], 0);
+      Quaternion qStar = QuaternionMath<T>::New(q);
+      Quaternion temp;    // Temp Quaternion
+      Quaternion passive; // Final Output Quaternion
+
+      QuaternionMath<T>::Conjugate(qStar); // conjugate of q
+      QuaternionMath<T>::Multiply(qStar, pureQ, temp);
+      QuaternionMath<T>::Multiply(temp, q, passive);
+      return passive;
+    }
 
   protected:
 
