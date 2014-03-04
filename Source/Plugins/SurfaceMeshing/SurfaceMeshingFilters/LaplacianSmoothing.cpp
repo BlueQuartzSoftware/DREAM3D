@@ -41,19 +41,19 @@
 #include <sstream>
 
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Math/DREAM3DMath.h"
-#include "DREAM3DLib/Utilities/DREAM3DEndian.h"
-#include "DREAM3DLib/DataContainers/MeshStructs.h"
-#include "SurfaceMeshing/SurfaceMeshingFilters/GenerateUniqueEdges.h"
-#include "SurfaceMeshing/SurfaceMeshingFilters/util/Vector3.h"
-
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
 #include <tbb/parallel_for.h>
 #include <tbb/blocked_range.h>
 #include <tbb/partitioner.h>
 #endif
 
+
+#include "DREAM3DLib/DREAM3DLib.h"
+#include "DREAM3DLib/Math/DREAM3DMath.h"
+#include "DREAM3DLib/Utilities/DREAM3DEndian.h"
+#include "DREAM3DLib/DataContainers/MeshStructs.h"
+#include "SurfaceMeshing/SurfaceMeshingFilters/GenerateUniqueEdges.h"
+#include "SurfaceMeshing/SurfaceMeshingFilters/util/Vector3.h"
 
 /**
  * @brief The LaplacianSmoothingImpl class is the actual code that does the computation and can be called either

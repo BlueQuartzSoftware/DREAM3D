@@ -97,9 +97,13 @@ class DREAM3DWidgetsLib_EXPORT PipelineFilterWidget : public QFrame, private Ui:
 
     QWidget* getScrollWidgetContents();
 
-  signals:
-    void dragStarted(PipelineFilterWidget* widget);
-    void parametersChanged();
+    /**
+     * @brief Sets the actions that will be displayed as a context menu
+     * @param list
+     */
+    void setContextMenuActions(QList<QAction*> list);
+
+
 
   public slots:
 
@@ -129,6 +133,7 @@ class DREAM3DWidgetsLib_EXPORT PipelineFilterWidget : public QFrame, private Ui:
 
     void displayFilterParameterWidgetError(const QString& msg);
 
+
   protected slots:
     void on_deleteBtn_clicked();
     void on_helpBtn_clicked();
@@ -136,13 +141,15 @@ class DREAM3DWidgetsLib_EXPORT PipelineFilterWidget : public QFrame, private Ui:
   signals:
     void widgetSelected(PipelineFilterWidget* w);
     void filterWidgetRemoved(PipelineFilterWidget* widget);
-
+    void dragStarted(PipelineFilterWidget* widget);
+    void parametersChanged();
 
   protected:
     virtual void mousePressEvent( QMouseEvent* event );
     virtual void mouseReleaseEvent( QMouseEvent* event );
     virtual void mouseMoveEvent( QMouseEvent* event );
 
+    void showContextMenu(const QPoint& globalPos);
 
 
   private:
@@ -160,6 +167,8 @@ class DREAM3DWidgetsLib_EXPORT PipelineFilterWidget : public QFrame, private Ui:
     QVector<QWidget*>         m_FilterParameterWidgets;
     QWidget*                  m_BasicInputsScrollWidget;
     IObserver*                m_Observer;
+    QMenu                     m_Menu;
+    QList<QAction*>           m_MenuActions;
 
     /**
      * @brief initialize Calls all the necessary initialization code for the widget

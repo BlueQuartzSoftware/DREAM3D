@@ -39,6 +39,7 @@
 #include "DREAM3DLib/Math/DREAM3DMath.h"
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Math/QuaternionMath.hpp"
+#include "DREAM3DLib/Math/OrientationMath.h"
 
 // -----------------------------------------------------------------------------
 //

@@ -42,6 +42,8 @@
 #include "DREAM3DLib/DistributionAnalysisOps/BetaOps.h"
 #include "DREAM3DLib/DistributionAnalysisOps/PowerLawOps.h"
 #include "DREAM3DLib/DistributionAnalysisOps/LogNormalOps.h"
+#include "DREAM3DLib/Math/OrientationMath.h"
+
 
 // -----------------------------------------------------------------------------
 //

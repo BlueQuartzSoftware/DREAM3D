@@ -42,6 +42,8 @@
 #include "DREAM3DLib/Math/MatrixMath.h"
 #include "DREAM3DLib/OrientationOps/OrientationOps.h"
 #include "DREAM3DLib/Utilities/DREAM3DRandom.h"
+#include "DREAM3DLib/Math/GeometryMath.h"
+#include "DREAM3DLib/Math/OrientationMath.h"
 
 // -----------------------------------------------------------------------------
 //

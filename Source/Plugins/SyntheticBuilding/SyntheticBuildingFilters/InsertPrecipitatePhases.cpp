@@ -44,16 +44,13 @@
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Math/MatrixMath.h"
 #include "DREAM3DLib/Math/DREAM3DMath.h"
+#include "DREAM3DLib/Math/OrientationMath.h"
 #include "DREAM3DLib/Utilities/DREAM3DRandom.h"
-
 #include "DREAM3DLib/ShapeOps/CubeOctohedronOps.h"
 #include "DREAM3DLib/ShapeOps/CylinderOps.h"
 #include "DREAM3DLib/ShapeOps/EllipsoidOps.h"
 #include "DREAM3DLib/ShapeOps/SuperEllipsoidOps.h"
 #include "DREAM3DLib/StatsData/PrecipitateStatsData.h"
-
-//#include "Statistics/StatisticsFilters/FindNeighbors.h"
-
 
 
 

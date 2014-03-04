@@ -51,9 +51,47 @@
 void RemoveTestFiles()
 {
 #if REMOVE_TEST_FILES
-// QFile::remove();
+  // QFile::remove();
 #endif
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void TestVectorRotation()
+{
+  QuatF equat;
+  OrientationMath::EulertoQuat(equat, DREAM3D::Constants::k_PiOver2, DREAM3D::Constants::k_PiOver2, DREAM3D::Constants::k_PiOver2);
+  std::cout << "equat: " << equat.w << ", <" << equat.x << ", " << equat.y << ", " << equat.z << ">"  << std::endl;
+
+
+  CubicOps cubic;
+  int nsym = cubic.getNumSymOps();
+  QuatF sym_q;
+  float xstl_norm[3] = {1.0, 0.0, 0.0};
+  std::cout << "xstl_norm: " << xstl_norm[0] << ", " << xstl_norm[1] << ", " << xstl_norm[2]  << std::endl;
+  float s_xstl_norm[3];
+  for (int j = 0; j < nsym; j++)
+  {
+    cubic.getQuatSymOp(j, sym_q);
+    std::cout << "sym_q: " << sym_q.w << ", <" << sym_q.x << ", " << sym_q.y << ", " << sym_q.z << ">"  << std::endl;
+    OrientationMath::MultiplyQuaternionVector(sym_q, xstl_norm, s_xstl_norm);
+    std::cout << "Rotation Matrix: " << s_xstl_norm[0] << ", " << s_xstl_norm[1] << ", " << s_xstl_norm[2]  << std::endl;
+    QuaternionMathF::MultiplyQuatVec(sym_q, xstl_norm, s_xstl_norm);
+    std::cout << "Quaternion:      " << s_xstl_norm[0] << ", " << s_xstl_norm[1] << ", " << s_xstl_norm[2]  << std::endl;
+
+    QuatF passive = OrientationMath::PassiveRotation(0.5, 0.5, 0.5, -0.5, 1, 0, 0);
+    std::cout << "passive: " << passive.w << ", <" << passive.x << ", " << passive.y << ", " << passive.z << ">"  << std::endl;
+
+    QuatF active = OrientationMath::ActiveRotation(0.5, 0.5, 0.5, -0.5, 1, 0, 0);
+    std::cout << "active: " << active.w << ", <" << active.x << ", " << active.y << ", " << active.z << ">"  << std::endl;
+
+
+  }
+}
+
+
+
 
 // -----------------------------------------------------------------------------
 //
@@ -122,12 +160,7 @@ void TestQuat_t()
   DREAM3D_REQUIRE_EQUAL(out.z, -30.0)
   DREAM3D_REQUIRE_EQUAL(out.w, -40.0)
 
-  QuaternionMathF::ElementWiseAssign(out, 5.0f);
-  DREAM3D_REQUIRE_EQUAL(out.x, 5.0)
-  DREAM3D_REQUIRE_EQUAL(out.y, 5.0)
-  DREAM3D_REQUIRE_EQUAL(out.z, 5.0)
-  DREAM3D_REQUIRE_EQUAL(out.w, 5.0)
-
+  QuaternionMathF::ScalarDivide(out, -1.0f);
 
   QuaternionMathF::ScalarAdd(out, 50.0f);
   DREAM3D_REQUIRE_EQUAL(out.x, 55.0)
@@ -135,8 +168,22 @@ void TestQuat_t()
   DREAM3D_REQUIRE_EQUAL(out.z, 55.0)
   DREAM3D_REQUIRE_EQUAL(out.w, 55.0)
 
-// Conjugate Tests where conjugate of a Quaternion is q*
-// (q*)* = q
+  QuaternionMathF::ElementWiseAssign(out, 5.0f);
+  DREAM3D_REQUIRE_EQUAL(out.x, 5.0)
+  DREAM3D_REQUIRE_EQUAL(out.y, 5.0)
+  DREAM3D_REQUIRE_EQUAL(out.z, 5.0)
+  DREAM3D_REQUIRE_EQUAL(out.w, 5.0)
+
+  QuaternionMathF::Negate(out);
+
+
+  QuaternionMathF::Add(p, q, out);
+  QuaternionMathF::Subtract(p, q, out);
+
+
+
+  // Conjugate Tests where conjugate of a Quaternion is q*
+  // (q*)* = q
 
   p.x = 1.0f;
   p.y = 2.0f;
@@ -153,7 +200,7 @@ void TestQuat_t()
   DREAM3D_REQUIRE_EQUAL(p.z, 3.0)
   DREAM3D_REQUIRE_EQUAL(p.w, 1.0)
 
-// (pq)* = q*p*
+  // (pq)* = q*p*
   q.x = 1.0f;
   q.y = 0.0f;
   q.z = 1.0f;
@@ -168,7 +215,7 @@ void TestQuat_t()
   DREAM3D_REQUIRE_EQUAL(out.z, out2.z)
   DREAM3D_REQUIRE_EQUAL(out.w, out2.w)
 
-//(p+q)* = p*+q*
+  //(p+q)* = p*+q*
   p.x = 1.0f;
   p.y = 2.0f;
   p.z = 3.0f;
@@ -187,8 +234,8 @@ void TestQuat_t()
   DREAM3D_REQUIRE_EQUAL(out.z, out2.z)
   DREAM3D_REQUIRE_EQUAL(out.w, out2.w)
 
-// Multiplication Test
-// pq != qp
+  // Multiplication Test
+  // pq != qp
   p.x = 1.0f;
   p.y = 0.0f;
   p.z = 0.0f;
@@ -210,8 +257,8 @@ void TestQuat_t()
   DREAM3D_REQUIRE_EQUAL(out.z, -1.0)
   DREAM3D_REQUIRE_EQUAL(out.w, 2.0)
 
-// Norm Test
-// N(q*) = N(q)
+  // Norm Test
+  // N(q*) = N(q)
   p.x = 1.0f;
   p.y = 0.0f;
   p.z = 0.0f;
@@ -225,7 +272,7 @@ void TestQuat_t()
   float cnorm =  QuaternionMathF::Norm(p);
   DREAM3D_REQUIRE_EQUAL(norm, cnorm)
 
-// Length and Unit Quaternion Tests
+  // Length and Unit Quaternion Tests
   p.x = 2.0f;
   p.y = 2.0f;
   p.z = 2.0f;
@@ -238,6 +285,12 @@ void TestQuat_t()
   DREAM3D_REQUIRE_EQUAL(p.z, 0.5)
   DREAM3D_REQUIRE_EQUAL(p.w, 0.5)
 
+
+  float vec[3] = { 0.0f, 0.0f, 0.0f};
+  float ovec[3] = { 0.0f, 0.0f, 0.0f};
+
+  QuaternionMathF::GetMisorientationVector(p, vec);
+  QuaternionMathF::MultiplyQuatVec(q, vec, ovec);
 }
 
 // -----------------------------------------------------------------------------
@@ -248,9 +301,11 @@ int main(int argc, char* argv[])
   int err = EXIT_SUCCESS;
   DREAM3D_REGISTER_TEST( TestQuat_t() )
 
-  DREAM3D_REGISTER_TEST( TestCubicOps() )
+      DREAM3D_REGISTER_TEST( TestCubicOps() )
 
-  DREAM3D_REGISTER_TEST( RemoveTestFiles() )
-  PRINT_TEST_SUMMARY();
+      DREAM3D_REGISTER_TEST( RemoveTestFiles() )
+      PRINT_TEST_SUMMARY();
+
+  TestVectorRotation();
   return err;
 }

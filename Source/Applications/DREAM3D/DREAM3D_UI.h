@@ -155,6 +155,14 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
      */
     void openRecentFile();
 
+    /**
+     * @brief pipelineFileLoaded
+     * @param file
+     * @param format
+     * @param append
+     */
+    void pipelineFileLoaded(QString file, QSettings::Format format, bool append);
+
 
     void pipelineDidFinish();
 

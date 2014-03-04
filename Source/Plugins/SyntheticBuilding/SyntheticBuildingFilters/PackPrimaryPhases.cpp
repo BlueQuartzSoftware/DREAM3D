@@ -36,6 +36,15 @@
 
 #include "PackPrimaryPhases.h"
 
+
+#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
+#include <tbb/parallel_for.h>
+#include <tbb/blocked_range3d.h>
+#include <tbb/partitioner.h>
+#include <tbb/task_scheduler_init.h>
+#endif
+
+
 #include <QtCore/QFile>
 #include <QtCore/QFileInfo>
 #include <QtCore/QDir>
@@ -44,6 +53,7 @@
 #include "DREAM3DLib/DataArrays/NeighborList.hpp"
 #include "DREAM3DLib/Math/MatrixMath.h"
 #include "DREAM3DLib/Math/DREAM3DMath.h"
+#include "DREAM3DLib/Math/OrientationMath.h"
 #include "DREAM3DLib/StatsData/PrimaryStatsData.h"
 #include "DREAM3DLib/ShapeOps/CubeOctohedronOps.h"
 #include "DREAM3DLib/ShapeOps/CylinderOps.h"
@@ -55,13 +65,6 @@
 #include "DREAM3DLib/Utilities/TimeUtilities.h"
 #include "DREAM3DLib/Utilities/DREAM3DRandom.h"
 
-
-#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
-#include <tbb/parallel_for.h>
-#include <tbb/blocked_range3d.h>
-#include <tbb/partitioner.h>
-#include <tbb/task_scheduler_init.h>
-#endif
 
 
 #define NEW_SHARED_ARRAY(var, m_msgType, size)\

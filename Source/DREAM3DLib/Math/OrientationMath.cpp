@@ -35,6 +35,7 @@
 
 
 #include "DREAM3DLib/Math/MatrixMath.h"
+#include "DREAM3DLib/Math/GeometryMath.h"
 #include "DREAM3DLib/OrientationOps/CubicOps.h"
 #include "DREAM3DLib/OrientationOps/HexagonalOps.h"
 #include "DREAM3DLib/OrientationOps/OrthoRhombicOps.h"
@@ -524,4 +525,44 @@ void OrientationMath::ChangeAxisReferenceFrame(QuatF& q, float& n1, float& n2, f
   n1 = nNew[0];
   n2 = nNew[1];
   n3 = nNew[2];
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QuatF OrientationMath::PassiveRotation(float angle, float xAxis, float yAxis, float zAxis, float x, float y, float z)
+{
+  QuatF q;
+
+  AxisAngletoQuat(angle, xAxis, yAxis, zAxis, q);
+  QuatF qStar;   // conjugate of q
+  QuatF passive; // Final Output Quaternion
+  QuatF temp;    // Temp Quaternion
+  QuaternionMathF::Copy(q, qStar);
+  QuaternionMathF::Conjugate(qStar);
+  QuatF v = QuaternionMathF::New(x, y, z, 0);
+
+  QuaternionMathF::Multiply(qStar, v, temp);
+  QuaternionMathF::Multiply(temp, q, passive);
+  return passive;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QuatF OrientationMath::ActiveRotation(float angle, float xAxis, float yAxis, float zAxis, float x, float y, float z)
+{
+  QuatF q;
+
+  AxisAngletoQuat(angle, xAxis, yAxis, zAxis, q);
+  QuatF qStar;   // conjugate of q
+  QuatF active; // Final Output Quaternion
+  QuatF temp;    // Temp Quaternion
+  QuaternionMathF::Copy(q, qStar);
+  QuaternionMathF::Conjugate(qStar);
+  QuatF v = QuaternionMathF::New(x, y, z, 0);
+
+  QuaternionMathF::Multiply(q, v, temp);
+  QuaternionMathF::Multiply(temp, qStar, active);
+  return active;
 }

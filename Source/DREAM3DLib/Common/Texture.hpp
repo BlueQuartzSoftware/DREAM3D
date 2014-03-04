@@ -52,7 +52,7 @@
 #include "DREAM3DLib/OrientationOps/CubicOps.h"
 #include "DREAM3DLib/OrientationOps/HexagonalOps.h"
 #include "DREAM3DLib/OrientationOps/OrthoRhombicOps.h"
-
+#include "DREAM3DLib/Utilities/DREAM3DRandom.h"
 
 /**
  * @class Texture Texture.h AIM/Common/Texture.h

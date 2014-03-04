@@ -38,6 +38,7 @@
 
 #include <stdlib.h>
 #include "DREAM3DLib/Math/DREAM3DMath.h"
+#include "DREAM3DLib/Math/MatrixMath.h"
 
 /**
  * @brief This class performs calculations on a Quaternion or pair of Quaternions. The class is templated on the type
@@ -59,25 +60,60 @@ template<typename T>
 class QuaternionMath
 {
   public:
-    QuaternionMath();
-    virtual ~QuaternionMath();
-
-
-    // -----------------------------------------------------------------------------
+      // -----------------------------------------------------------------------------
     /**
     * @brief
     */
     typedef struct
     {
-      T x;
-      T y;
-      T z;
-      T w;
+        T x;
+        T y;
+        T z;
+        T w;
     } Quaternion;
 
 
-    // -----------------------------------------------------------------------------
 
+    QuaternionMath()
+    {
+      m_Quat.w = 0.0;
+      m_Quat.x = 0.0;
+      m_Quat.y = 0.0;
+      m_Quat.z = 0.0f;
+    }
+    virtual ~QuaternionMath(){}
+
+    /**
+     * @brief QuaternionMath Copy Constructor
+     * @param rhs
+     */
+    QuaternionMath(const QuaternionMath& rhs)
+    {
+      m_Quat.w = rhs.w;
+      m_Quat.x = rhs.x;
+      m_Quat.y = rhs.y;
+      m_Quat.z = rhs.z;
+    }
+
+    /**
+     * @brief operator =
+     */
+    void operator=(const QuaternionMath& rhs)
+    {
+      m_Quat.w = rhs.w;
+      m_Quat.x = rhs.x;
+      m_Quat.y = rhs.y;
+      m_Quat.z = rhs.z;
+    }
+
+    /**
+     * @brief New
+     * @param x
+     * @param y
+     * @param z
+     * @param w
+     * @return
+     */
     static Quaternion New(T x, T y, T z, T w)
     {
       Quaternion q;
@@ -88,7 +124,6 @@ class QuaternionMath
       return q;
     }
 
-    // -----------------------------------------------------------------------------
     /**
      * @brief Identity Sets the quaternion q to the identity quaternion (<0,0,0>,1)
      * @param q
@@ -101,7 +136,6 @@ class QuaternionMath
       q.w = 1.0;
     }
 
-    // -----------------------------------------------------------------------------
     /**
      * @brief Copy Copies the values from src into dest
      * @param src
@@ -115,7 +149,20 @@ class QuaternionMath
       dest.w = src.w;
     }
 
-    // -----------------------------------------------------------------------------
+    /**
+     * @brief Copy
+     * @param src
+     * @return
+     */
+    static Quaternion Copy(const Quaternion& src)
+    {
+      Quaternion dest;
+      dest.x = src.x;
+      dest.y = src.y;
+      dest.z = src.z;
+      dest.w = src.w;
+      return dest;
+    }
 
     /**
      * @brief ElementWiseAbs inline assigns the absolute value of each element to itself
@@ -170,7 +217,7 @@ class QuaternionMath
     }
 
     /**
-     * @brief ElementWiseAdd Adds each element in v to q and stores the results in q
+     * @brief ElementWiseAssign Assigns each element in q a value of v and stores the results in q
      * @param q Quat that has values stored in it
      * @param v Input Quat to add elements
      */
@@ -250,7 +297,7 @@ class QuaternionMath
     // -----------------------------------------------------------------------------
 
     /**
-     * @brief Conjugate Converts quaternion q into its conjugate.
+     * @brief Conjugate Converts quaternion q into its conjugate in place.
      * @param q
      */
     static void Conjugate(Quaternion& q)
@@ -261,29 +308,43 @@ class QuaternionMath
       q.w = q.w;
     }
 
+    /**
+     * @brief Conjugate Converts quaternion q into its conjugate.
+     * @param in Input Quaternion
+     * @param out Output Quaternion (By Reference)
+     */
+    static void Conjugate(const Quaternion in, Quaternion& out)
+    {
+      out.x = -in.x;
+      out.y = -in.y;
+      out.z = -in.z;
+      out.w = in.w;
+    }
+
     // -----------------------------------------------------------------------------
 
     /**
-     * @brief Norm Computes and returns the "norm" of the quaternion
+     * @brief Norm Computes and returns the "norm" of the quaternion (x^2 + y^2 + z^2 + w^2)
      * @param q
      */
-    static T Norm(Quaternion& q)
+    static T Norm(const Quaternion& q)
     {
       return q.x * q.x + q.y * q.y + q.z * q.z + q.w * q.w;
     }
 
 
     /**
-     * @brief Length Computes are returns the "length" of the quaternion which is the square root of the norm.
+     * @brief Length Computes are returns the "length" of the quaternion which is the square root of the norm. SQRT (x^2 + y^2 + z^2 + w^2)
      * @param q
      */
-    static T Length(Quaternion& q)
+    static T Length(const Quaternion& q)
     {
       return sqrt(q.x * q.x + q.y * q.y + q.z * q.z + q.w * q.w);
     }
 
     /**
-    * @brief UnitQuaternion (Normalize) Converts the quaternion into its normalized values
+    * @brief UnitQuaternion (Normalize) Converts the quaternion into its normalized values (x/L, y/L, z/L, w/L) where "L"
+    * is the "length" of the quaternion
     * @param qr
     */
     static void UnitQuaternion(Quaternion& qr)
@@ -311,12 +372,41 @@ class QuaternionMath
       misoVec[2] = float( qr.z * constVal );
     }
 
+    /**
+     * @brief MultiplyQuatVec Rotates a 3d vector 'v' by the quaternion 'q'
+     * @param q Input Quaternion
+     * @param v Input Vector
+     * @param out Output Vector
+     */
+    static void MultiplyQuatVec(const Quaternion q, T* v, T* out)
+    {
+//    t = 2 * cross(q.xyz, v)
+//    v' = v +  (q.w * t) + cross(q.xyz, t)
+      T w    = q.w;
+      T r[3] = { q.x, q.y, q.z};
+      T temp2[3] = { 0.0, 0.0, 0.0 };
+      T temp[3] = { 0.0, 0.0, 0.0};
+      // Cross r into vtemp resulting in temp
+      MatrixMath::CrossProduct( r, v, temp );
+
+      for (int j=0; j<3; j++) {
+        temp[j] += w * v[j];
+      }
+
+      MatrixMath::CrossProduct( r, temp, temp2 );
+
+      for (int j=0; j<3; j++) {
+        out[j] = v[j] + (2.0 * temp2[j]);
+      }
+    }
+
   protected:
 
 
   private:
-    QuaternionMath(const QuaternionMath&); // Copy Constructor Not Implemented
-    void operator=(const QuaternionMath&); // Operator '=' Not Implemented
+    Quaternion m_Quat;
+
+
 };
 
 /**
@@ -333,6 +423,7 @@ typedef QuaternionMath<double> QuaternionMathD;
  * @brief QuatF 32 Bit Floating point Quaternion for convenience.
  */
 typedef QuaternionMath<float>::Quaternion  QuatF;
+
 /**
  * @brief QuatD 64 Bit Floating point Quaternion for convenience.
  */

@@ -458,11 +458,19 @@ void DREAM3D_UI::setupGui()
   connect(filterListDockWidget, SIGNAL(filterItemDoubleClicked(const QString&)),
           pipelineViewWidget, SLOT(addFilter(const QString&)) );
 
+
+
   connect(prebuiltPipelinesDockWidget, SIGNAL(pipelineFileActivated(QString, QSettings::Format, bool)),
           pipelineViewWidget, SLOT(loadPipelineFile(QString, QSettings::Format, bool)) );
 
+  connect(prebuiltPipelinesDockWidget, SIGNAL(pipelineFileActivated(QString, QSettings::Format, bool)),
+          this, SLOT(pipelineFileLoaded(QString, QSettings::Format, bool)) );
+
   connect(favoritesDockWidget, SIGNAL(pipelineFileActivated(QString, QSettings::Format, bool)),
           pipelineViewWidget, SLOT(loadPipelineFile(QString, QSettings::Format, bool)) );
+
+  connect(favoritesDockWidget, SIGNAL(pipelineFileActivated(QString, QSettings::Format, bool)),
+          this, SLOT(pipelineFileLoaded(QString, QSettings::Format, bool)) );
 
   connect(favoritesDockWidget, SIGNAL(pipelineNeedsToBeSaved(const QString&, const QString&)),
           pipelineViewWidget, SLOT(savePipeline(const QString&, const QString&)) );
@@ -488,12 +496,13 @@ void DREAM3D_UI::setupGui()
 // -----------------------------------------------------------------------------
 void DREAM3D_UI::setupPipelineContextMenu()
 {
-
-
   QList<QAction*> favoriteItemActions;
   QList<QAction*> favoriteCategoryActions;
   QList<QAction*> prebuiltItemActions;
   QList<QAction*> prebuildCategoryActions;
+
+
+/* ******************************* Favorites Pipelines Context Menus ***********************************************/
 
   QAction* actionAddFavorite = new QAction(menuPipeline);
   actionAddFavorite->setObjectName(QString::fromUtf8("actionAddFavorite"));
@@ -601,8 +610,7 @@ void DREAM3D_UI::setupPipelineContextMenu()
 
 
 
-
-  /// Now setup the Prebuilt Pipelines Context Menus
+/* ******************************* Prebuilt Pipelines Context Menus ***********************************************/
   QAction* actionAppendPrebuilt = new QAction(menuPipeline);
   actionAppendPrebuilt->setObjectName(QString::fromUtf8("actionAppendPrebuilt"));
   actionAppendPrebuilt->setText(QApplication::translate("DREAM3D_UI", "Append Prebuilt to Pipeline", 0, QApplication::UnicodeUTF8));
@@ -645,9 +653,6 @@ void DREAM3D_UI::setupPipelineContextMenu()
   prebuiltPipelinesDockWidget->getFilterLibraryTreeWidget()->setNodeActionList(prebuildCategoryActions);
   prebuiltPipelinesDockWidget->getFilterLibraryTreeWidget()->setLeafActionList(prebuiltItemActions);
 
-
-
-
   {
     QAction* separator = new QAction(this);
     separator->setSeparator(true);
@@ -662,6 +667,13 @@ void DREAM3D_UI::setupPipelineContextMenu()
   connect(actionClearPipeline, SIGNAL(triggered()),
           this, SLOT( on_actionClearPipeline_triggered() ) );
 
+
+/* ******************************* PipelineView Actions Setup ***********************************************/
+  QList<QAction*> pipelineViewActions;
+  pipelineViewActions << actionClearPipeline;
+  pipelineViewWidget->setContextMenuActions(pipelineViewActions);
+
+/* ******************************* PipelineView Actions Setup ***********************************************/
 
 
 }
@@ -757,6 +769,14 @@ void DREAM3D_UI::setLoadedPlugins(QVector<DREAM3DPluginInterface::Pointer> plugi
   m_LoadedPlugins = plugins;
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DREAM3D_UI::pipelineFileLoaded(QString file, QSettings::Format format, bool append)
+{
+  QFileInfo fi(file);
+  pipelineTitle->setText(fi.fileName());
+}
 
 // -----------------------------------------------------------------------------
 //
@@ -1137,6 +1157,7 @@ void DREAM3D_UI::on_actionClearPipeline_triggered()
 {
   filterInputWidget->clearInputWidgets();
   pipelineViewWidget->clearWidgets();
+  pipelineTitle->setText("Untitled Pipeline");
 }
 
 // -----------------------------------------------------------------------------

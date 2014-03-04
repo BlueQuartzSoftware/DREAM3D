@@ -46,8 +46,12 @@
 #include "DREAM3DLib/Math/DREAM3DMath.h"
 #include "DREAM3DLib/OrientationOps/OrientationOps.h"
 #include "DREAM3DLib/Math/QuaternionMath.hpp"
+#include "DREAM3DLib/Math/OrientationMath.h"
 
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 class StandardizeEulerAnglesImpl
 {
     float* m_CellEulerAngles;

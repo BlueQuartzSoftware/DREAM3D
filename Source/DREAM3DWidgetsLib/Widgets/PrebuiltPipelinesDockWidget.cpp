@@ -152,6 +152,8 @@ void PrebuiltPipelinesDockWidget::readPipelines()
   QString iconFileName(":/text.png");
   bool allowEditing = false;
   QString fileExtension("*.txt");
+  // Need to add the path to the prebuilts directory to the root item since we may use this later on.
+  filterLibraryTree->invisibleRootItem()->setData(0, Qt::UserRole, QVariant(pipelinesDir.absolutePath()));
 
     // Now block signals and load up all the pipelines in the folder
   filterLibraryTree->blockSignals(true);
