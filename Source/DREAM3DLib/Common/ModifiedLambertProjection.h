@@ -215,10 +215,6 @@ class GenerateIntensityMapImpl
     void operator()() const
     {
       ModifiedLambertProjection::Pointer lambert = ModifiedLambertProjection::CreateProjectionFromXYZCoords(m_XYZCoords, m_Config->lambertDim, m_Config->sphereRadius);
-//        size_t dims[3] = {m_Config->lambertDim, m_Config->lambertDim, 1 };
-//        float res[3] = {1.0, 1.0, 1.0};
-//        DoubleArrayType::Pointer north = lambert->getNorthSquare();
-//        VtkRectilinearGridWriter::WriteDataArrayToFile("/tmp/NorthSquare_" + m_Intensity->getName() + ".vtk", north.get(), dims, res, "double", true);
       lambert->normalizeSquaresToMRD();
       m_Intensity->resize(m_Config->imageDim * m_Config->imageDim);
       lambert->createStereographicProjection(m_Config->imageDim, m_Intensity);

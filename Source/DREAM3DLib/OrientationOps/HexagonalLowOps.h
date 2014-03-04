@@ -41,7 +41,7 @@
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/DataArrays/DataArray.hpp"
 #include "DREAM3DLib/OrientationOps/OrientationOps.h"
-
+#include "DREAM3DLib/Math/QuaternionMath.hpp"
 
 /**
  * @class HexagonalLowOps HexagonalLowOps.h DREAM3DLib/Common/OrientationOps/HexagonalLowOps.h

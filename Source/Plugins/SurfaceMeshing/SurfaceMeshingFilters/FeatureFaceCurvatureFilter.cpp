@@ -36,20 +36,18 @@
 
 #include "FeatureFaceCurvatureFilter.h"
 
+#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
+#include <tbb/task_scheduler_init.h>
+#include <tbb/task_group.h>
+#include <tbb/task.h>
+#endif
 
-
-//#include "SurfaceMeshing/SurfaceMeshingFilters/GenerateNodeFaceConnectivity.h"
 #include "SurfaceMeshing/SurfaceMeshingFilters/TriangleCentroidFilter.h"
 #include "SurfaceMeshing/SurfaceMeshingFilters/TriangleNormalFilter.h"
 
 #include "CalculateTriangleGroupCurvatures.h"
 #include "SharedFeatureFaceFilter.h"
 
-#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
-#include <tbb/task_scheduler_init.h>
-#include <tbb/task_group.h>
-#include <tbb/task.h>
-#endif
 
 // -----------------------------------------------------------------------------
 //

@@ -47,6 +47,9 @@
 #include "DREAM3DLib/Math/DREAM3DMath.h"
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Math/QuaternionMath.hpp"
+#include "DREAM3DLib/Math/GeometryMath.h"
+#include "DREAM3DLib/Math/OrientationMath.h"
+
 
 class CalculateTwinBoundaryImpl
 {
@@ -129,6 +132,7 @@ class CalculateTwinBoundaryImpl
               //calculate crystal direction parallel to normal
               QuaternionMathF::Multiply(sym_q, misq, s1_misq);
               OrientationMath::MultiplyQuaternionVector(sym_q, xstl_norm, s_xstl_norm);
+              //QuaternionMathF::MultiplyQuatVec(sym_q, xstl_norm, s_xstl_norm);
               for (int k = 0; k < nsym; k++)
               {
                 //calculate the symmetric misorienation

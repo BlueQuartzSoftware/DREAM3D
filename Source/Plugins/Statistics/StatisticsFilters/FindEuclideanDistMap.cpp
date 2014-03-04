@@ -36,9 +36,6 @@
 
 #include "FindEuclideanDistMap.h"
 
-#include "DREAM3DLib/Math/DREAM3DMath.h"
-#include "DREAM3DLib/Common/Constants.h"
-
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
 #include <tbb/parallel_for.h>
 #include <tbb/blocked_range.h>
@@ -47,6 +44,9 @@
 #include <tbb/task_scheduler_init.h>
 #include <tbb/task_group.h>
 #endif
+
+#include "DREAM3DLib/Math/DREAM3DMath.h"
+#include "DREAM3DLib/Common/Constants.h"
 
 
 

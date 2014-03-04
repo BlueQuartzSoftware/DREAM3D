@@ -458,11 +458,19 @@ void DREAM3D_UI::setupGui()
   connect(filterListDockWidget, SIGNAL(filterItemDoubleClicked(const QString&)),
           pipelineViewWidget, SLOT(addFilter(const QString&)) );
 
+
+
   connect(prebuiltPipelinesDockWidget, SIGNAL(pipelineFileActivated(QString, QSettings::Format, bool)),
           pipelineViewWidget, SLOT(loadPipelineFile(QString, QSettings::Format, bool)) );
 
+  connect(prebuiltPipelinesDockWidget, SIGNAL(pipelineFileActivated(QString, QSettings::Format, bool)),
+          this, SLOT(pipelineFileLoaded(QString, QSettings::Format, bool)) );
+
   connect(favoritesDockWidget, SIGNAL(pipelineFileActivated(QString, QSettings::Format, bool)),
           pipelineViewWidget, SLOT(loadPipelineFile(QString, QSettings::Format, bool)) );
+
+  connect(favoritesDockWidget, SIGNAL(pipelineFileActivated(QString, QSettings::Format, bool)),
+          this, SLOT(pipelineFileLoaded(QString, QSettings::Format, bool)) );
 
   connect(favoritesDockWidget, SIGNAL(pipelineNeedsToBeSaved(const QString&, const QString&)),
           pipelineViewWidget, SLOT(savePipeline(const QString&, const QString&)) );
@@ -488,8 +496,6 @@ void DREAM3D_UI::setupGui()
 // -----------------------------------------------------------------------------
 void DREAM3D_UI::setupPipelineContextMenu()
 {
-
-
   QList<QAction*> favoriteItemActions;
   QList<QAction*> favoriteCategoryActions;
   QList<QAction*> prebuiltItemActions;
@@ -757,6 +763,14 @@ void DREAM3D_UI::setLoadedPlugins(QVector<DREAM3DPluginInterface::Pointer> plugi
   m_LoadedPlugins = plugins;
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DREAM3D_UI::pipelineFileLoaded(QString file, QSettings::Format format, bool append)
+{
+  QFileInfo fi(file);
+  pipelineTitle->setText(fi.fileName());
+}
 
 // -----------------------------------------------------------------------------
 //
@@ -1137,6 +1151,7 @@ void DREAM3D_UI::on_actionClearPipeline_triggered()
 {
   filterInputWidget->clearInputWidgets();
   pipelineViewWidget->clearWidgets();
+  pipelineTitle->setText("Untitled Pipeline");
 }
 
 // -----------------------------------------------------------------------------

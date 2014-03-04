@@ -43,10 +43,16 @@
 #include <tbb/task_scheduler_init.h>
 #endif
 
+
 #include "DREAM3DLib/Math/MatrixMath.h"
 #include "DREAM3DLib/Math/DREAM3DMath.h"
 #include "DREAM3DLib/Common/Constants.h"
+#include "DREAM3DLib/Math/GeometryMath.h"
+#include "DREAM3DLib/Math/OrientationMath.h"
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 class CalculateTwinBoundarySchmidFactorsImpl
 {
     int32_t* m_Labels;

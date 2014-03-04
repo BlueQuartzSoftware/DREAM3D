@@ -38,6 +38,7 @@
 
 #include <stdlib.h>
 #include "DREAM3DLib/Math/DREAM3DMath.h"
+#include "DREAM3DLib/Math/MatrixMath.h"
 
 /**
  * @brief This class performs calculations on a Quaternion or pair of Quaternions. The class is templated on the type
@@ -69,10 +70,10 @@ class QuaternionMath
     */
     typedef struct
     {
-      T x;
-      T y;
-      T z;
-      T w;
+        T x;
+        T y;
+        T z;
+        T w;
     } Quaternion;
 
 
@@ -170,7 +171,7 @@ class QuaternionMath
     }
 
     /**
-     * @brief ElementWiseAdd Adds each element in v to q and stores the results in q
+     * @brief ElementWiseAssign Assigns each element in q a value of v and stores the results in q
      * @param q Quat that has values stored in it
      * @param v Input Quat to add elements
      */
@@ -250,7 +251,7 @@ class QuaternionMath
     // -----------------------------------------------------------------------------
 
     /**
-     * @brief Conjugate Converts quaternion q into its conjugate.
+     * @brief Conjugate Converts quaternion q into its conjugate in place.
      * @param q
      */
     static void Conjugate(Quaternion& q)
@@ -261,29 +262,43 @@ class QuaternionMath
       q.w = q.w;
     }
 
+    /**
+     * @brief Conjugate Converts quaternion q into its conjugate.
+     * @param in Input Quaternion
+     * @param out Output Quaternion (By Reference)
+     */
+    static void Conjugate(const Quaternion in, Quaternion& out)
+    {
+      out.x = -in.x;
+      out.y = -in.y;
+      out.z = -in.z;
+      out.w = in.w;
+    }
+
     // -----------------------------------------------------------------------------
 
     /**
-     * @brief Norm Computes and returns the "norm" of the quaternion
+     * @brief Norm Computes and returns the "norm" of the quaternion (x^2 + y^2 + z^2 + w^2)
      * @param q
      */
-    static T Norm(Quaternion& q)
+    static T Norm(const Quaternion& q)
     {
       return q.x * q.x + q.y * q.y + q.z * q.z + q.w * q.w;
     }
 
 
     /**
-     * @brief Length Computes are returns the "length" of the quaternion which is the square root of the norm.
+     * @brief Length Computes are returns the "length" of the quaternion which is the square root of the norm. SQRT (x^2 + y^2 + z^2 + w^2)
      * @param q
      */
-    static T Length(Quaternion& q)
+    static T Length(const Quaternion& q)
     {
       return sqrt(q.x * q.x + q.y * q.y + q.z * q.z + q.w * q.w);
     }
 
     /**
-    * @brief UnitQuaternion (Normalize) Converts the quaternion into its normalized values
+    * @brief UnitQuaternion (Normalize) Converts the quaternion into its normalized values (x/L, y/L, z/L, w/L) where "L"
+    * is the "length" of the quaternion
     * @param qr
     */
     static void UnitQuaternion(Quaternion& qr)
@@ -309,6 +324,34 @@ class QuaternionMath
       misoVec[0] = float( qr.x * constVal );
       misoVec[1] = float( qr.y * constVal );
       misoVec[2] = float( qr.z * constVal );
+    }
+
+    /**
+     * @brief MultiplyQuatVec Rotates a 3d vector 'v' by the quaternion 'q'
+     * @param q Input Quaternion
+     * @param v Input Vector
+     * @param out Output Vector
+     */
+    static void MultiplyQuatVec(const Quaternion q, T* v, T* out)
+    {
+//    t = 2 * cross(q.xyz, v)
+//    v' = v +  (q.w * t) + cross(q.xyz, t)
+      T w    = q.w;
+      T r[3] = { q.x, q.y, q.z};
+      T temp2[3] = { 0.0, 0.0, 0.0 };
+      T temp[3] = { 0.0, 0.0, 0.0};
+      // Cross r into vtemp resulting in temp
+      MatrixMath::CrossProduct( r, v, temp );
+
+      for (int j=0; j<3; j++) {
+        temp[j] += w * v[j];
+      }
+
+      MatrixMath::CrossProduct( r, temp, temp2 );
+
+      for (int j=0; j<3; j++) {
+        out[j] = v[j] + (2.0 * temp2[j]);
+      }
     }
 
   protected:
