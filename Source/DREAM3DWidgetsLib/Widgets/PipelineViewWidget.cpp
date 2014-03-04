@@ -67,7 +67,7 @@
 
 #include "QtSupport/QDroppableScrollArea.h"
 
-#include "DREAM3DWidgetsLib/moc_PipelineViewWidget.cpp"
+//#include "DREAM3DWidgetsLib/moc_PipelineViewWidget.cpp"
 
 
 // -----------------------------------------------------------------------------
@@ -90,6 +90,13 @@ PipelineViewWidget::PipelineViewWidget(QWidget* parent) :
   setupGui();
   m_LastDragPoint = QPoint(-1, -1);
   m_autoScrollTimer.setParent(this);
+
+  setContextMenuPolicy(Qt::CustomContextMenu);
+
+  connect(this,
+    SIGNAL(customContextMenuRequested(const QPoint&)),
+    SLOT(on_customContextMenuRequested(const QPoint&)));
+
 }
 
 // -----------------------------------------------------------------------------
@@ -261,7 +268,7 @@ void PipelineViewWidget::clearWidgets()
 // -----------------------------------------------------------------------------
 FilterPipeline::Pointer PipelineViewWidget::getFilterPipeline()
 {
-    // Create a Pipeline Object and fill it with the filters from this View
+  // Create a Pipeline Object and fill it with the filters from this View
   FilterPipeline::Pointer pipeline = FilterPipeline::New();
 
   qint32 count = filterCount();
@@ -424,13 +431,13 @@ void PipelineViewWidget::addFilterWidget(PipelineFilterWidget* w, AbstractFilter
   // Conditionally when the filter widget is selected, show the inputs on another widget
   if (NULL != m_InputParametersWidget) {
     connect(w, SIGNAL(widgetSelected(PipelineFilterWidget*)),
-          m_InputParametersWidget, SLOT(displayFilterParameters(PipelineFilterWidget*)));
+            m_InputParametersWidget, SLOT(displayFilterParameters(PipelineFilterWidget*)));
     connect(w, SIGNAL(filterWidgetRemoved(PipelineFilterWidget*)),
-          m_InputParametersWidget, SLOT(removeWidgetInputs(PipelineFilterWidget*)));
+            m_InputParametersWidget, SLOT(removeWidgetInputs(PipelineFilterWidget*)));
   }
 
   connect(w, SIGNAL(parametersChanged()),
-    this, SLOT(preflightPipeline()));
+          this, SLOT(preflightPipeline()));
 
   // Check to make sure at least the vertical spacer is in the Layout
   if (addSpacer)
@@ -449,7 +456,7 @@ void PipelineViewWidget::addFilterWidget(PipelineFilterWidget* w, AbstractFilter
 void PipelineViewWidget::preflightPipeline()
 {
 
- // std::cout << "PipelineViewWidget::preflightPipeline()" << std::endl;
+  // std::cout << "PipelineViewWidget::preflightPipeline()" << std::endl;
 
   emit pipelineIssuesCleared();
   // Create a Pipeline Object and fill it with the filters from this View
@@ -462,7 +469,7 @@ void PipelineViewWidget::preflightPipeline()
   int err = pipeline->preflightPipeline();
   if (err < 0)
   {
-  //FIXME: Implement this
+    //FIXME: Implement this
   }
   progress.setValue(1);
 
@@ -752,4 +759,35 @@ bool PipelineViewWidget::shouldAutoScroll(const QPoint& pos)
     return true;
   }
   return false;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void PipelineViewWidget::setContextMenuActions(QList<QAction*> list)
+{
+  m_MenuActions = list;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void PipelineViewWidget::on_customContextMenuRequested(const QPoint& pos)
+{
+  // Note: We must map the point to global from the viewport to
+  // account for the header.
+  showContextMenu(mapToGlobal(pos) );
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void PipelineViewWidget::showContextMenu(const QPoint& globalPos)
+{
+  m_Menu.clear();
+  for (int i=0; i<m_MenuActions.size(); i++)
+  {
+    m_Menu.addAction(m_MenuActions[i]);
+  }
+  m_Menu.exec(globalPos);
 }

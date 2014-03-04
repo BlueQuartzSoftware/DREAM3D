@@ -501,6 +501,9 @@ void DREAM3D_UI::setupPipelineContextMenu()
   QList<QAction*> prebuiltItemActions;
   QList<QAction*> prebuildCategoryActions;
 
+
+/* ******************************* Favorites Pipelines Context Menus ***********************************************/
+
   QAction* actionAddFavorite = new QAction(menuPipeline);
   actionAddFavorite->setObjectName(QString::fromUtf8("actionAddFavorite"));
   actionAddFavorite->setText(QApplication::translate("DREAM3D_UI", "Add Favorite", 0, QApplication::UnicodeUTF8));
@@ -607,8 +610,7 @@ void DREAM3D_UI::setupPipelineContextMenu()
 
 
 
-
-  /// Now setup the Prebuilt Pipelines Context Menus
+/* ******************************* Prebuilt Pipelines Context Menus ***********************************************/
   QAction* actionAppendPrebuilt = new QAction(menuPipeline);
   actionAppendPrebuilt->setObjectName(QString::fromUtf8("actionAppendPrebuilt"));
   actionAppendPrebuilt->setText(QApplication::translate("DREAM3D_UI", "Append Prebuilt to Pipeline", 0, QApplication::UnicodeUTF8));
@@ -651,9 +653,6 @@ void DREAM3D_UI::setupPipelineContextMenu()
   prebuiltPipelinesDockWidget->getFilterLibraryTreeWidget()->setNodeActionList(prebuildCategoryActions);
   prebuiltPipelinesDockWidget->getFilterLibraryTreeWidget()->setLeafActionList(prebuiltItemActions);
 
-
-
-
   {
     QAction* separator = new QAction(this);
     separator->setSeparator(true);
@@ -668,6 +667,13 @@ void DREAM3D_UI::setupPipelineContextMenu()
   connect(actionClearPipeline, SIGNAL(triggered()),
           this, SLOT( on_actionClearPipeline_triggered() ) );
 
+
+/* ******************************* PipelineView Actions Setup ***********************************************/
+  QList<QAction*> pipelineViewActions;
+  pipelineViewActions << actionClearPipeline;
+  pipelineViewWidget->setContextMenuActions(pipelineViewActions);
+
+/* ******************************* PipelineView Actions Setup ***********************************************/
 
 
 }

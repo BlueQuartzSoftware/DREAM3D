@@ -124,6 +124,12 @@ void PipelineFilterWidget::initialize(AbstractFilter::Pointer filter)
 {
   setupUi(this);
 
+//  setContextMenuPolicy(Qt::CustomContextMenu);
+
+//  connect(this,
+//    SIGNAL(customContextMenuRequested(const QPoint&)),
+//    SLOT(on_customContextMenuRequested(const QPoint&)));
+
   qRegisterMetaType<IntVec3_t>("IntVec3_t");
   qRegisterMetaTypeStreamOperators<IntVec3_t>("IntVec3_t");
 
@@ -570,3 +576,5 @@ void PipelineFilterWidget::on_deleteBtn_clicked()
 {
   emit filterWidgetRemoved(this);
 }
+
+

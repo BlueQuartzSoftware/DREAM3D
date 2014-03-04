@@ -138,10 +138,15 @@ void FavoritesDockWidget::readPipelines()
   bool allowEditing = true;
   QString fileExtension("*.ini");
 
+  // Need to add the path to the favorites directory to the root item since we may use this later on.
+  filterLibraryTree->invisibleRootItem()->setData(0, Qt::UserRole, QVariant(pipelinesDir.absolutePath()));
+
 
   // Now block signals and load up all the pipelines in the folder
   filterLibraryTree->blockSignals(true);
   addPipelinesRecursively(pipelinesDir, filterLibraryTree->invisibleRootItem(), iconFileName, allowEditing, fileExtension, itemType);
+  // Sort the Favorite Tree by name(?)
+  filterLibraryTree->sortItems(0, Qt::AscendingOrder);
   filterLibraryTree->blockSignals(false);
 }
 
@@ -490,7 +495,8 @@ void FavoritesDockWidget::actionAddFavoriteFolder_triggered()
 void FavoritesDockWidget::actionAddFavorite_triggered()
 {
   QString favoriteTitle;
-  AddFavoriteWidget* addfavoriteDialog = new AddFavoriteWidget("Name of Folder", this);
+  AddFavoriteWidget* addfavoriteDialog = new AddFavoriteWidget("Name of Favorite", this);
+  addfavoriteDialog->setModal(true);
   bool done = false;
   bool cancel = false;
   while (done == false)
@@ -522,7 +528,23 @@ void FavoritesDockWidget::actionAddFavorite_triggered()
 
   filterLibraryTree->blockSignals(true);
   QTreeWidgetItem* selection = filterLibraryTree->currentItem();
+
+    // Sanity check to make sure we actually have selected a folder to add a favorite into the tree. If the user has
+  // selected an actual favorite item, get it's parent which MUST be a folder
+  if(NULL != selection && selection->type() == FilterLibraryTreeWidget::Leaf_Item_Type)
+  {
+    selection = selection->parent();
+    // We can _still_ get a null item (for some odd reason) so check that next
+  }
+
+  // Make sure we have a valid selection otherwise select the root item
+  if (NULL == selection)
+  {
+    selection = filterLibraryTree->invisibleRootItem();
+  }
+
   bool allowEditing = true;
+
   QString path = selection->data(0, Qt::UserRole).toString();
   QString newPrefPath = path + QDir::separator() + favoriteTitle + ".ini";
 
@@ -535,7 +557,7 @@ void FavoritesDockWidget::actionAddFavorite_triggered()
   {
     itemWidget->setFlags(itemWidget->flags() | Qt::ItemIsEditable);
   }
-
+  filterLibraryTree->sortItems(0, Qt::AscendingOrder);
   filterLibraryTree->blockSignals(false);
   // Signal out to the PipelineViewWidget to save the current pipeline to the path & filename
   emit pipelineNeedsToBeSaved(newPrefPath, favoriteTitle);
