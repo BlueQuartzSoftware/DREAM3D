@@ -177,8 +177,9 @@ void PipelineViewWidget::newEmptyPipelineViewLayout()
     QSpacerItem* verticalSpacer_2 = new QSpacerItem(20, 341, QSizePolicy::Minimum, QSizePolicy::Expanding);
 
     gridLayout->addItem(verticalSpacer_2, 2, 1, 1, 1);
-
   }
+  emit pipelineTitleUpdated(QString("Untitled Pipeline"));
+  emit pipelineChanged();
 }
 
 
@@ -247,6 +248,7 @@ void PipelineViewWidget::resetLayout()
 void PipelineViewWidget::clearWidgets()
 {
   emit pipelineIssuesCleared();
+  emit pipelineChanged();
 
   qint32 count = filterCount();
   for(qint32 i = count - 1; i >= 0; --i)
@@ -345,6 +347,7 @@ void PipelineViewWidget::loadPipelineFile(const QString& filePath, QSettings::Fo
 
   // Now preflight the pipeline for this filter.
   preflightPipeline();
+  if (append == true ) { emit pipelineChanged(); }
 }
 
 // -----------------------------------------------------------------------------
@@ -448,6 +451,8 @@ void PipelineViewWidget::addFilterWidget(PipelineFilterWidget* w, AbstractFilter
 
   // Finally, set this new filter widget as selected in order to show the input parameters right away
   w->setIsSelected(true);
+  // Emit that the pipeline changed
+  emit pipelineChanged();
 }
 
 // -----------------------------------------------------------------------------
@@ -510,6 +515,7 @@ void PipelineViewWidget::removeFilterWidget(PipelineFilterWidget* whoSent)
   preflightPipeline();
 
   resetLayout();
+  emit pipelineChanged();
 }
 
 // -----------------------------------------------------------------------------
@@ -679,6 +685,8 @@ void PipelineViewWidget::dropEvent(QDropEvent* event)
 
   // Stop auto scrolling if widget is dropped
   stopAutoScroll();
+
+  emit pipelineChanged();
 }
 
 // -----------------------------------------------------------------------------

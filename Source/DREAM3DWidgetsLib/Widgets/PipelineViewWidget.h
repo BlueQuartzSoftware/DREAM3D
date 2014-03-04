@@ -56,6 +56,7 @@
 
 class QScrollArea;
 class QContextMenuEvent;
+class QLabel;
 
 /*
  *
@@ -91,7 +92,6 @@ class DREAM3DWidgetsLib_EXPORT PipelineViewWidget : public QFrame
      * @return
      */
     FilterPipeline::Pointer getFilterPipeline();
-
 
     /**
      * @brief setScrollArea
@@ -239,11 +239,14 @@ class DREAM3DWidgetsLib_EXPORT PipelineViewWidget : public QFrame
   signals:
     void addPlaceHolderFilter(QPoint p);
     void removePlaceHolderFilter();
-    void pipelineFileDropped(const QString& file);
+    void preflightHasMessage(PipelineMessage msg);
+
+    void pipelineFileDropped(QString& file);
     void pipelineHasErrorsSignal();
     void pipelineHasNoErrors();
-    void preflightHasMessage(PipelineMessage msg);
     void pipelineIssuesCleared();
+    void pipelineTitleUpdated(QString name);
+    void pipelineChanged();
 
   protected:
     void setupGui();

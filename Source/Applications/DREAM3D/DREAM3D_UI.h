@@ -168,6 +168,16 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
 
     void processPipelineMessage(const PipelineMessage& msg);
 
+    /**
+     * @brief on_pipelineViewWidget_pipelineChanged AUTO HOOKUP by name
+     */
+    void on_pipelineViewWidget_pipelineChanged();
+    void on_pipelineViewWidget_pipelineTitleUpdated(QString title);
+    void on_pipelineViewWidget_pipelineIssuesCleared();
+    void on_pipelineViewWidget_pipelineHasNoErrors();
+    void on_pipelineViewWidget_pipelineFileDropped(QString& file);
+
+
     // Our Signals that we can emit custom for this class
   signals:
     void parentResized();

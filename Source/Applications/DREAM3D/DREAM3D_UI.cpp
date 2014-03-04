@@ -104,6 +104,9 @@ DREAM3D_UI::DREAM3D_UI(QWidget *parent) :
   m_PrebuiltBtn(NULL),
   m_IssuesBtn(NULL)
 {
+  // First thing, set the title of the window
+  setWindowTitle("DREAM.3D Version " + DREAM3DLib::Version::Package());
+
   m_OpenDialogLastDirectory = QDir::homePath();
 
   // Register all of the Filters we know about - the rest will be loaded through plugins
@@ -458,8 +461,6 @@ void DREAM3D_UI::setupGui()
   connect(filterListDockWidget, SIGNAL(filterItemDoubleClicked(const QString&)),
           pipelineViewWidget, SLOT(addFilter(const QString&)) );
 
-
-
   connect(prebuiltPipelinesDockWidget, SIGNAL(pipelineFileActivated(QString, QSettings::Format, bool)),
           pipelineViewWidget, SLOT(loadPipelineFile(QString, QSettings::Format, bool)) );
 
@@ -471,9 +472,13 @@ void DREAM3D_UI::setupGui()
 
   connect(favoritesDockWidget, SIGNAL(pipelineFileActivated(QString, QSettings::Format, bool)),
           this, SLOT(pipelineFileLoaded(QString, QSettings::Format, bool)) );
+
 
   connect(favoritesDockWidget, SIGNAL(pipelineNeedsToBeSaved(const QString&, const QString&)),
           pipelineViewWidget, SLOT(savePipeline(const QString&, const QString&)) );
+
+  //  connect(pipelineViewWidget, SIGNAL(pipelineTitleUpdated(QString)),
+  //          pipelineTitle, SLOT(setText(QString)));
 
 
   // Set the IssuesDockWidget as a PipelineMessageObserver Object.
@@ -502,7 +507,7 @@ void DREAM3D_UI::setupPipelineContextMenu()
   QList<QAction*> prebuildCategoryActions;
 
 
-/* ******************************* Favorites Pipelines Context Menus ***********************************************/
+  /* ******************************* Favorites Pipelines Context Menus ***********************************************/
 
   QAction* actionAddFavorite = new QAction(menuPipeline);
   actionAddFavorite->setObjectName(QString::fromUtf8("actionAddFavorite"));
@@ -610,7 +615,7 @@ void DREAM3D_UI::setupPipelineContextMenu()
 
 
 
-/* ******************************* Prebuilt Pipelines Context Menus ***********************************************/
+  /* ******************************* Prebuilt Pipelines Context Menus ***********************************************/
   QAction* actionAppendPrebuilt = new QAction(menuPipeline);
   actionAppendPrebuilt->setObjectName(QString::fromUtf8("actionAppendPrebuilt"));
   actionAppendPrebuilt->setText(QApplication::translate("DREAM3D_UI", "Append Prebuilt to Pipeline", 0, QApplication::UnicodeUTF8));
@@ -668,12 +673,12 @@ void DREAM3D_UI::setupPipelineContextMenu()
           this, SLOT( on_actionClearPipeline_triggered() ) );
 
 
-/* ******************************* PipelineView Actions Setup ***********************************************/
+  /* ******************************* PipelineView Actions Setup ***********************************************/
   QList<QAction*> pipelineViewActions;
   pipelineViewActions << actionClearPipeline;
   pipelineViewWidget->setContextMenuActions(pipelineViewActions);
 
-/* ******************************* PipelineView Actions Setup ***********************************************/
+  /* ******************************* PipelineView Actions Setup ***********************************************/
 
 
 }
@@ -776,7 +781,47 @@ void DREAM3D_UI::pipelineFileLoaded(QString file, QSettings::Format format, bool
 {
   QFileInfo fi(file);
   pipelineTitle->setText(fi.fileName());
+  setWindowFilePath(file);
+ // setWindowTitle(QString("[*] ") + fi.fileName());
+  setWindowModified(false);
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DREAM3D_UI::on_pipelineViewWidget_pipelineChanged()
+{
+  setWindowModified(true);
+  QString title = pipelineTitle->text();
+  if(title.endsWith(" [modified]") == false)
+  {
+    title = title +  QString(" [modified]");
+    pipelineTitle->setText(title);
+  }
+}
+
+void DREAM3D_UI::on_pipelineViewWidget_pipelineTitleUpdated(QString title)
+{
+  pipelineTitle->setText(title);
+}
+void DREAM3D_UI::on_pipelineViewWidget_pipelineIssuesCleared()
+{
+
+}
+void DREAM3D_UI::on_pipelineViewWidget_pipelineHasNoErrors()
+{
+
+}
+void DREAM3D_UI::on_pipelineViewWidget_pipelineFileDropped(QString& file)
+{
+  QFileInfo fi(file);
+  pipelineTitle->setText(fi.fileName());
+  setWindowFilePath(file);
+//  setWindowTitle(QString("[*] ") + fi.fileName());
+  setWindowModified(false);
+}
+
+
 
 // -----------------------------------------------------------------------------
 //
@@ -855,7 +900,7 @@ qint32 DREAM3D_UI::checkDirtyDocument()
   if (this->isWindowModified() == true)
   {
     int r = QMessageBox::warning(this, tr("DREAM.3D"),
-                                 tr("The Data has been modified.\nDo you want to save your changes?"),
+                                 tr("The Pipeline has been modified.\nDo you want to save your changes?"),
                                  QMessageBox::Save | QMessageBox::Default,
                                  QMessageBox::Discard,
                                  QMessageBox::Cancel | QMessageBox::Escape);
