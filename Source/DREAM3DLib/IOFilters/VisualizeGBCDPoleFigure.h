@@ -72,17 +72,20 @@ class VisualizeGBCDPoleFigure : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(FaceEnsembleAttributeMatrixName)
 
     DREAM3D_INSTANCE_STRING_PROPERTY(CrystalStructuresArrayName)
-    DREAM3D_FILTER_PARAMETER(float, MisAngle)
-    Q_PROPERTY(float MisAngle READ getMisAngle WRITE setMisAngle)
-    DREAM3D_FILTER_PARAMETER(FloatVec3_t, MisAxis)
-    Q_PROPERTY(FloatVec3_t MisAxis READ getMisAxis WRITE setMisAxis)
+//    DREAM3D_FILTER_PARAMETER(float, MisAngle)
+//    Q_PROPERTY(float MisAngle READ getMisAngle WRITE setMisAngle)
+//    DREAM3D_FILTER_PARAMETER(FloatVec3_t, MisAxis)
+//    Q_PROPERTY(FloatVec3_t MisAxis READ getMisAxis WRITE setMisAxis)
     DREAM3D_FILTER_PARAMETER(QString, OutputFile)
     Q_PROPERTY(QString OutputFile READ getOutputFile WRITE setOutputFile)
     DREAM3D_FILTER_PARAMETER(unsigned int, CrystalStructure)
     Q_PROPERTY(unsigned int CrystalStructure READ getCrystalStructure WRITE setCrystalStructure)
 
+    DREAM3D_FILTER_PARAMETER(AxisAngleInput_t, MisorientationRotation)
+    Q_PROPERTY(AxisAngleInput_t MisorientationRotation READ getMisorientationRotation WRITE setMisorientationRotation)
+
     // Local Instance variables
-    DREAM3D_INSTANCE_PROPERTY(QVector<AxisAngleInput_t>, MisorientationRotations)
+    // DREAM3D_INSTANCE_PROPERTY(QVector<AxisAngleInput_t>, MisorientationRotations)
 
     /**
     * @brief This returns the group that the filter belonds to. You can select
@@ -97,7 +100,7 @@ class VisualizeGBCDPoleFigure : public AbstractFilter
     * @brief This returns a string that is displayed in the GUI. It should be readable
     * and understandable by humans.
     */
-    virtual const QString getHumanLabel() { return "Visualize GBCD"; }
+    virtual const QString getHumanLabel() { return "Write VTK Pole Figure (GBCD Data)"; }
 
     /**
     * @brief This method will instantiate all the end user settable options/parameters

@@ -59,15 +59,15 @@ VisualizeGBCDGMT::VisualizeGBCDGMT() :
   m_SurfaceDataContainerName(DREAM3D::Defaults::SurfaceDataContainerName),
   m_FaceEnsembleAttributeMatrixName(DREAM3D::Defaults::FaceEnsembleAttributeMatrixName),
   m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
-  m_GMTOutputFile(""),
-  m_MisAngle(60.0f),
+  m_OutputFile(""),
   m_CrystalStructure(Ebsd::CrystalStructure::UnknownCrystalStructure),
   m_GBCDArrayName(DREAM3D::EnsembleData::GBCD),
   m_GBCD(NULL)
 {
-  m_MisAxis.x = 1;
-  m_MisAxis.y = 1;
-  m_MisAxis.z = 1;
+  m_MisorientationRotation.angle = 0.0f;
+  m_MisorientationRotation.h = 0.0f;
+  m_MisorientationRotation.k = 0.0f;
+  m_MisorientationRotation.l = 0.0f;
 
   m_OrientationOps = OrientationOps::getOrientationOpsVector();
   setupFilterParameters();
@@ -110,34 +110,35 @@ void VisualizeGBCDGMT::setupFilterParameters()
   {
     FilterParameter::Pointer parameter = FilterParameter::New();
     parameter->setHumanLabel("Misorientation Axis Angles");
-    parameter->setPropertyName("MisorientationRotations");
+    parameter->setPropertyName("MisorientationRotation");
     parameter->setWidgetType(FilterParameterWidgetType::AxisAngleWidget);
+    parameter->setCastableValueType("AxisAngleInput_t");
     parameters.push_back(parameter);
   }
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setPropertyName("MisAngle");
-    parameter->setHumanLabel("Misorientation Angle");
-    parameter->setWidgetType(FilterParameterWidgetType::DoubleWidget);
-    parameter->setValueType("float");
-    parameter->setCastableValueType("double");
-    parameter->setUnits("Degrees");
-    parameters.push_back(parameter);
-  }
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
+//  {
+//    FilterParameter::Pointer parameter = FilterParameter::New();
+//    parameter->setPropertyName("MisAngle");
+//    parameter->setHumanLabel("Misorientation Angle");
+//    parameter->setWidgetType(FilterParameterWidgetType::DoubleWidget);
+//    parameter->setValueType("float");
+//    parameter->setCastableValueType("double");
+//    parameter->setUnits("Degrees");
+//    parameters.push_back(parameter);
+//  }
+//  {
+//    FilterParameter::Pointer parameter = FilterParameter::New();
 
-    parameter->setHumanLabel("Misorientation Axis");
-    parameter->setPropertyName("MisAxis");
-    parameter->setWidgetType(FilterParameterWidgetType::FloatVec3Widget);
-    parameter->setValueType("FloatVec3_t");
-    parameter->setUnits("");
-    parameters.push_back(parameter);
-  }
+//    parameter->setHumanLabel("Misorientation Axis");
+//    parameter->setPropertyName("MisAxis");
+//    parameter->setWidgetType(FilterParameterWidgetType::FloatVec3Widget);
+//    parameter->setValueType("FloatVec3_t");
+//    parameter->setUnits("");
+//    parameters.push_back(parameter);
+//  }
   {
     FilterParameter::Pointer parameter = FilterParameter::New();
     parameter->setHumanLabel("GMT Output File");
-    parameter->setPropertyName("GMTOutputFile");
+    parameter->setPropertyName("OutputFile");
     parameter->setWidgetType(FilterParameterWidgetType::OutputFileWidget);
     parameter->setFileExtension("*.dat");
     parameter->setFileType("DAT File");
@@ -155,10 +156,10 @@ void VisualizeGBCDGMT::readFilterParameters(AbstractFilterParametersReader* read
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
   /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
-  setMisAngle( reader->readValue("MisAngle", getMisAngle()) );
-  setMisAxis( reader->readFloatVec3("MisAxis", getMisAxis() ) );
-  setGMTOutputFile( reader->readString( "GMTOutputFile", getGMTOutputFile() ) );
-  setMisorientationRotations(reader->readAxisAngles("MisorientationRotations", getMisorientationRotations() ) );
+//  setMisAngle( reader->readValue("MisAngle", getMisAngle()) );
+//  setMisAxis( reader->readFloatVec3("MisAxis", getMisAxis() ) );
+  setOutputFile( reader->readString( "OutputFile", getOutputFile() ) );
+  setMisorientationRotation(reader->readAxisAngle("MisorientationRotation", getMisorientationRotation(), -1) );
   setCrystalStructure(reader->readValue("CrystalStructure", getCrystalStructure() ) );
   /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
@@ -170,10 +171,10 @@ void VisualizeGBCDGMT::readFilterParameters(AbstractFilterParametersReader* read
 int VisualizeGBCDGMT::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  writer->writeValue("MisorientationAngle", getMisAngle() );
-  writer->writeValue("MisorientationAxis", getMisAxis() );
-  writer->writeValue("GMTOutputFile", getGMTOutputFile() );
-  writer->writeValue("MisorientationRotations", getMisorientationRotations() );
+ // writer->writeValue("MisorientationAngle", getMisAngle() );
+ // writer->writeValue("MisorientationAxis", getMisAxis() );
+  writer->writeValue("OutputFile", getOutputFile() );
+  writer->writeValue("MisorientationRotation", getMisorientationRotation() );
   writer->writeValue("CrystalStructure", getCrystalStructure() );
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
@@ -198,13 +199,13 @@ void VisualizeGBCDGMT::dataCheckSurfaceMesh()
     setErrorCondition(-381);
   }
 
-  if (getGMTOutputFile().isEmpty() == true)
+  if (getOutputFile().isEmpty() == true)
   {
     QString ss = QObject::tr( ": The output file must be set before executing this filter.");
     notifyErrorMessage(getHumanLabel(), ss, -1000);
     setErrorCondition(-1);
   }
-  QFileInfo fi(getGMTOutputFile());
+  QFileInfo fi(getOutputFile());
   QDir parentPath = fi.path();
   if (parentPath.exists() == false)
   {
@@ -214,7 +215,7 @@ void VisualizeGBCDGMT::dataCheckSurfaceMesh()
 
   if (fi.suffix().compare("") == 0)
   {
-    setGMTOutputFile(getGMTOutputFile().append(".dat"));
+    setOutputFile(getOutputFile().append(".dat"));
   }
 
   // We MUST have Nodes
@@ -279,7 +280,7 @@ void VisualizeGBCDGMT::execute()
 
   // Make sure any directory path is also available as the user may have just typed
   // in a path without actually creating the full path
-  QFileInfo fi(getGMTOutputFile());
+  QFileInfo fi(getOutputFile());
 
   QDir dir(fi.path());
   if(!dir.mkpath("."))
@@ -291,10 +292,10 @@ void VisualizeGBCDGMT::execute()
     return;
   }
 
-  QFile file(getGMTOutputFile());
+  QFile file(getOutputFile());
   if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
   {
-    QString ss = QObject::tr("DxWriter Input file could not be opened: %1").arg(getGMTOutputFile());
+    QString ss = QObject::tr("DxWriter Input file could not be opened: %1").arg(getOutputFile());
     setErrorCondition(-100);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;
@@ -371,9 +372,9 @@ void VisualizeGBCDGMT::execute()
   float sym2t[3][3];
   float mis_euler1[3];
 
-  m_MisAngle = m_MisAngle * m_pi/180.0f;
+  float misAngle = m_MisorientationRotation.angle * DREAM3D::Constants::k_PiOver180;
   //convert axis angle to matrix representation of misorientation
-  OrientationMath::AxisAngletoMat(m_MisAngle, m_MisAxis.x, m_MisAxis.y, m_MisAxis.z, dg);
+  OrientationMath::AxisAngletoMat(misAngle, m_MisorientationRotation.h, m_MisorientationRotation.k, m_MisorientationRotation.l, dg);
   //take inverse of misorientation variable to use for switching symmetry
   MatrixMath::Transpose3x3(dg, dgt);
 
@@ -390,7 +391,7 @@ void VisualizeGBCDGMT::execute()
   float phiRes = 90.0/float(phiPoints);
   float theta, phi;
   float thetaRad, phiRad;
-  float degToRad = m_pi/180.0;
+  float degToRad = DREAM3D::Constants::k_PiOver180;
   float sum = 0;
   int count = 0;
   bool nhCheck;
@@ -434,7 +435,7 @@ void VisualizeGBCDGMT::execute()
           MatrixMath::Multiply3x3with3x3(sym1,dg1,dg2);
           //convert to euler angle
           OrientationMath::MattoEuler(dg2, mis_euler1[0], mis_euler1[1], mis_euler1[2]);
-          if(mis_euler1[0] < m_piOver2 && mis_euler1[1] < m_piOver2 && mis_euler1[2] < m_piOver2)
+          if(mis_euler1[0] < DREAM3D::Constants::k_PiOver2 && mis_euler1[1] < DREAM3D::Constants::k_PiOver2 && mis_euler1[2] < DREAM3D::Constants::k_PiOver2)
           {
             mis_euler1[1] = cosf(mis_euler1[1]);
             //find bins in GBCD
@@ -465,7 +466,7 @@ void VisualizeGBCDGMT::execute()
           MatrixMath::Multiply3x3with3x3(sym1,dg1,dg2);
           //convert to euler angle
           OrientationMath::MattoEuler(dg2, mis_euler1[0], mis_euler1[1], mis_euler1[2]);
-          if(mis_euler1[0] < m_piOver2 && mis_euler1[1] < m_piOver2 && mis_euler1[2] < m_piOver2)
+          if(mis_euler1[0] < DREAM3D::Constants::k_PiOver2 && mis_euler1[1] < DREAM3D::Constants::k_PiOver2 && mis_euler1[2] < DREAM3D::Constants::k_PiOver2)
           {
             mis_euler1[1] = cosf(mis_euler1[1]);
             //find bins in GBCD
@@ -498,15 +499,16 @@ void VisualizeGBCDGMT::execute()
   }
 
   FILE* f = NULL;
-  f = fopen(m_GMTOutputFile.toLatin1().data(), "wb");
+  f = fopen(m_OutputFile.toLatin1().data(), "wb");
   if(NULL == f)
   {
-    QString ss = QObject::tr("Could not open GBCD viz file %1 for writing. Please check access permissions and the path to the output location exists").arg(m_GMTOutputFile);
+    QString ss = QObject::tr("Could not open GBCD viz file %1 for writing. Please check access permissions and the path to the output location exists").arg(m_OutputFile);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;
   }
 
-  fprintf(f, "%.1f %.1f %.1f %.1f\n", m_MisAxis.x, m_MisAxis.y, m_MisAxis.z, m_MisAngle * 180/M_PI);
+  // Remember to use the original Angle in Degrees!!!!
+  fprintf(f, "%.1f %.1f %.1f %.1f\n", m_MisorientationRotation.h, m_MisorientationRotation.k, m_MisorientationRotation.l, m_MisorientationRotation.angle);
   size_t size = gmtValues.size()/3;
 
   for(size_t i = 0; i < size; i++)
@@ -519,6 +521,9 @@ void VisualizeGBCDGMT::execute()
   notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 bool VisualizeGBCDGMT::getSquareCoord(float* xstl1_norm1, float* sqCoord)
 {
   bool nhCheck = false;
