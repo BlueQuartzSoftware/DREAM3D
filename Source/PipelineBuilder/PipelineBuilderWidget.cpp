@@ -1600,7 +1600,7 @@ void PipelineBuilderWidget::addFavorite(QString path, QString favoriteTitle)
 void PipelineBuilderWidget::actionAddFavoriteFolder_triggered()
 {
   QString favoriteTitle;
-  AddFavoriteWidget* addfavoriteDialog = new AddFavoriteWidget("Name of Folder", this);
+  AddFavoriteWidget* addfavoriteDialog = new AddFavoriteWidget("Name of Favorite", this);
   bool done = false;
   bool cancel = false;
   while (done == false)
