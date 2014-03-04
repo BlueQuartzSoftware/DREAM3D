@@ -15,6 +15,7 @@ START_FILTER_GROUP(${UCSB_BINARY_DIR} "${_filterGroupName}" "UCSB")
 set(_PublicFilters
   SampleVolume
   RemoveJitter
+  RotateSliceEulerRefFrame
 )
 
 
