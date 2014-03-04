@@ -180,6 +180,9 @@ void DiscreteGaussianBlur::execute()
   //execute filter
   guassianFilter->Update();
 
+  ///if we wanted to let itk allocate its own memory instead and then copy to a buffer
+  //ITKUtilities::ITKFloattoDream3D(guassianFilter->GetOutput(), m_ProcessedImageData);
+
   //array name changing/cleanup
   if(m_OverwriteArray)
   {
