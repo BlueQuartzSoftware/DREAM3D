@@ -61,10 +61,48 @@ class DREAM3DLib_EXPORT OrientationMath
 
     virtual ~OrientationMath();
 
-
+    /**
+     * @brief AxisAngletoHomochoric
+     * @param w Angle (Radians)
+     * @param n1 Axis
+     * @param n2 Axis
+     * @param n3 Axis
+     * @param r1
+     * @param r2
+     * @param r3
+     */
     static void AxisAngletoHomochoric(float w, float n1, float n2, float n3, float& r1, float& r2, float& r3);
+
+    /**
+     * @brief AxisAngletoRod
+     * @param w Angle (Radians)
+     * @param n1 Axis
+     * @param n2 Axis
+     * @param n3 Axis
+     * @param r1
+     * @param r2
+     * @param r3
+     */
     static void AxisAngletoRod(float w, float n1, float n2, float n3, float& r1, float& r2, float& r3);
+
+    /**
+     * @brief AxisAngletoQuat
+     * @param w Angle (Radians)
+     * @param n1 Axis
+     * @param n2 Axis
+     * @param n3 Axis
+     * @param q
+     */
     static void AxisAngletoQuat(float w, float n1, float n2, float n3, QuatF& q);
+
+    /**
+     * @brief AxisAngletoMat
+     * @param w Angle (Radians)
+     * @param n1 Axis
+     * @param n2 Axis
+     * @param n3 Axis
+     * @param g
+     */
     static void AxisAngletoMat(float w, float n1, float n2, float n3, float g[3][3]);
 
     static void ChangeAxisReferenceFrame(QuatF& q, float& n1, float& n2, float& n3);

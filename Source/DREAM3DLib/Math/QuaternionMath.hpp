@@ -60,11 +60,7 @@ template<typename T>
 class QuaternionMath
 {
   public:
-    QuaternionMath();
-    virtual ~QuaternionMath();
-
-
-    // -----------------------------------------------------------------------------
+      // -----------------------------------------------------------------------------
     /**
     * @brief
     */
@@ -77,8 +73,47 @@ class QuaternionMath
     } Quaternion;
 
 
-    // -----------------------------------------------------------------------------
 
+    QuaternionMath()
+    {
+      m_Quat.w = 0.0;
+      m_Quat.x = 0.0;
+      m_Quat.y = 0.0;
+      m_Quat.z = 0.0f;
+    }
+    virtual ~QuaternionMath(){}
+
+    /**
+     * @brief QuaternionMath Copy Constructor
+     * @param rhs
+     */
+    QuaternionMath(const QuaternionMath& rhs)
+    {
+      m_Quat.w = rhs.w;
+      m_Quat.x = rhs.x;
+      m_Quat.y = rhs.y;
+      m_Quat.z = rhs.z;
+    }
+
+    /**
+     * @brief operator =
+     */
+    void operator=(const QuaternionMath& rhs)
+    {
+      m_Quat.w = rhs.w;
+      m_Quat.x = rhs.x;
+      m_Quat.y = rhs.y;
+      m_Quat.z = rhs.z;
+    }
+
+    /**
+     * @brief New
+     * @param x
+     * @param y
+     * @param z
+     * @param w
+     * @return
+     */
     static Quaternion New(T x, T y, T z, T w)
     {
       Quaternion q;
@@ -89,7 +124,6 @@ class QuaternionMath
       return q;
     }
 
-    // -----------------------------------------------------------------------------
     /**
      * @brief Identity Sets the quaternion q to the identity quaternion (<0,0,0>,1)
      * @param q
@@ -102,7 +136,6 @@ class QuaternionMath
       q.w = 1.0;
     }
 
-    // -----------------------------------------------------------------------------
     /**
      * @brief Copy Copies the values from src into dest
      * @param src
@@ -116,7 +149,20 @@ class QuaternionMath
       dest.w = src.w;
     }
 
-    // -----------------------------------------------------------------------------
+    /**
+     * @brief Copy
+     * @param src
+     * @return
+     */
+    static Quaternion Copy(const Quaternion& src)
+    {
+      Quaternion dest;
+      dest.x = src.x;
+      dest.y = src.y;
+      dest.z = src.z;
+      dest.w = src.w;
+      return dest;
+    }
 
     /**
      * @brief ElementWiseAbs inline assigns the absolute value of each element to itself
@@ -358,8 +404,9 @@ class QuaternionMath
 
 
   private:
-    QuaternionMath(const QuaternionMath&); // Copy Constructor Not Implemented
-    void operator=(const QuaternionMath&); // Operator '=' Not Implemented
+    Quaternion m_Quat;
+
+
 };
 
 /**
@@ -376,6 +423,7 @@ typedef QuaternionMath<double> QuaternionMathD;
  * @brief QuatF 32 Bit Floating point Quaternion for convenience.
  */
 typedef QuaternionMath<float>::Quaternion  QuatF;
+
 /**
  * @brief QuatD 64 Bit Floating point Quaternion for convenience.
  */
