@@ -493,14 +493,15 @@ void OrientationMath::ChangeAxisReferenceFrame(QuatF &q, float &n1, float &n2, f
 QuatF OrientationMath::PassiveRotation(float angle, float xAxis, float yAxis, float zAxis, float x, float y, float z)
 {
   QuatF q;
+  QuatF v = QuaternionMathF::NewXYZW(x, y, z, 0);
 
   AxisAngletoQuat(angle, xAxis, yAxis, zAxis, q);
-  QuatF qStar;   // conjugate of q
+
   QuatF passive; // Final Output Quaternion
   QuatF temp;    // Temp Quaternion
-  QuaternionMathF::Copy(q, qStar);
-  QuaternionMathF::Conjugate(qStar);
-  QuatF v = QuaternionMathF::NewXYZW(x, y, z, 0);
+
+  QuatF qStar = QuaternionMathF::New(q);
+  QuaternionMathF::Conjugate(qStar); // conjugate of q
 
   QuaternionMathF::Multiply(qStar, v, temp);
   QuaternionMathF::Multiply(temp, q, passive);
