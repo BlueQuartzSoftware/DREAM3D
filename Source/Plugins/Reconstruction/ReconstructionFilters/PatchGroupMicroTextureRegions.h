@@ -55,7 +55,7 @@
  * @class PatchGroupMicroTextureRegions PatchGroupMicroTextureRegions.h Plugins/Reconstruction/ReconstructionFilters/PatchGroupMicroTextureRegions.h
  * @brief
  * @author Michael A Groeber (AFRL) & Joseph C Tucker (UES)
- * @date Mar 4, 2014
+ * @date Mar 5, 2014
  * @version 5.0
  */
 class PatchGroupMicroTextureRegions : public GroupFeatures
@@ -78,6 +78,8 @@ class PatchGroupMicroTextureRegions : public GroupFeatures
     Q_PROPERTY(float CAxisTolerance READ getCAxisTolerance WRITE setCAxisTolerance)
     DREAM3D_FILTER_PARAMETER(bool, UseRunningAverage)
     Q_PROPERTY(float UseRunningAverage READ getUseRunningAverage WRITE setUseRunningAverage)
+    DREAM3D_FILTER_PARAMETER(int, PatchEdgeLength)
+    Q_PROPERTY(int PatchEdgeLength READ getPatchEdgeLength WRITE setPatchEdgeLength)
     DREAM3D_INSTANCE_PROPERTY(bool, RandomizeParentIds)
 
     virtual const QString getCompiledLibraryName() { return Reconstruction::ReconstructionBaseName; }
@@ -121,6 +123,8 @@ class PatchGroupMicroTextureRegions : public GroupFeatures
 
     virtual int getSeed(int newFid);
     virtual bool determineGrouping(int referenceFeature, int neighborFeature, int newFid);
+	virtual void determinePatchFeatureCentroids();
+	virtual void quiltLandscape();
 
     void characterize_micro_texture_regions();
 

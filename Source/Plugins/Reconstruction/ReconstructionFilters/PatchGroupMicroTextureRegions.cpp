@@ -71,6 +71,7 @@ PatchGroupMicroTextureRegions::PatchGroupMicroTextureRegions() :
   m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
   m_CAxisTolerance(1.0f),
   m_UseRunningAverage(false),
+  m_PatchEdgeLength(1),
   m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
   m_FeatureIds(NULL),
   m_CellParentIdsArrayName(DREAM3D::CellData::ParentIds),
@@ -134,6 +135,16 @@ void PatchGroupMicroTextureRegions::setupFilterParameters()
     parameter->setUnits("");
     parameters.push_back(parameter);
   }
+  {
+	// FIX - change to minimum MTR size (diameter)
+    FilterParameter::Pointer parameter = FilterParameter::New();
+    parameter->setHumanLabel("Patch Edge Length");
+    parameter->setPropertyName("PatchEdgeLength");
+	parameter->setWidgetType(FilterParameterWidgetType::IntWidget);
+    parameter->setValueType("int");
+    parameter->setUnits("");
+    parameters.push_back(parameter);
+  }
 
   setFilterParameters(parameters);
 }
@@ -149,6 +160,7 @@ void PatchGroupMicroTextureRegions::readFilterParameters(AbstractFilterParameter
   setCAxisTolerance( reader->readValue("CAxisTolerance", getCAxisTolerance()) );
   setUseNonContiguousNeighbors( reader->readValue("UseNonContiguousNeighbors", getUseNonContiguousNeighbors()) );
   setUseRunningAverage( reader->readValue("UseRunningAverage", getUseRunningAverage()) );
+  setPatchEdgeLength( reader->readValue("PatchEdgeLength", getPatchEdgeLength()) );
   /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }
@@ -162,6 +174,7 @@ int PatchGroupMicroTextureRegions::writeFilterParameters(AbstractFilterParameter
   writer->writeValue("CAxisTolerance", getCAxisTolerance() );
   writer->writeValue("UseNonContiguousNeighbors", getUseNonContiguousNeighbors() );
   writer->writeValue("UseRunningAverage", getUseRunningAverage() );
+  writer->writeValue("PatchEdgeLength", getPatchEdgeLength() );
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
@@ -275,6 +288,8 @@ void PatchGroupMicroTextureRegions::execute()
 
   // Tell the user we are starting the filter
   notifyStatusMessage(getHumanLabel(), "Starting");
+  quiltLandscape();
+  determinePatchFeatureCentroids();
   GroupFeatures::execute();
 
   size_t totalFeatures = m->getAttributeMatrix(getNewCellFeatureAttributeMatrixName())->getNumTuples();
@@ -483,3 +498,55 @@ bool PatchGroupMicroTextureRegions::determineGrouping(int referenceFeature, int 
   return false;
 }
 
+void PatchGroupMicroTextureRegions::determinePatchFeatureCentroids()
+{
+  // figure out how to make patches fit
+
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+
+  size_t udims[3] = {0, 0, 0};
+  m->getDimensions(udims);
+
+//  int numPatches = ceil(udims[0] / m_PatchEdgeLength) * ceil(udims[1] / m_PatchEdgeLength) * ceil(udims[2] / m_PatchEdgeLength);
+  int totalPatches = (udims[0] / m_PatchEdgeLength) * (udims[1] / m_PatchEdgeLength) * (udims[2] / m_PatchEdgeLength);
+
+// FIX - figure out what to do when patches don't fit perfectly
+//  if (udims[0] % m_PatchEdgeLength != 0)
+//  {
+//
+//  }
+
+  // figure out what what centroids are in each patch
+  QVector<QVector<int> > patchfeaturelist;
+
+  size_t totalFeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
+
+  patchfeaturelist.resize(totalPatches);
+
+  for (size_t i = 1; i < totalPatches; i++)
+  {
+
+  }
+
+  int xMin, xMax, yMin, yMax, zMin, zMax;
+
+  for (size_t i = 1; i < totalPatches; i++)
+  {
+	xMin = m_PatchEdgeLength * (i % udims[0] - 1);
+	xMax = m_PatchEdgeLength * i;
+	yMin = m_PatchEdgeLength * (i - 1);
+	yMax = m_PatchEdgeLength * i;
+	zMin = m_PatchEdgeLength * (i - 1);
+	zMax = m_PatchEdgeLength * i;
+
+	for (size_t j = 1; j < totalFeatures; j++)
+	{
+
+	}
+  }
+}
+
+void PatchGroupMicroTextureRegions::quiltLandscape()
+{
+
+}
