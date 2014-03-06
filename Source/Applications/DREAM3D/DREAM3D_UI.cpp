@@ -152,11 +152,7 @@ DREAM3D_UI::~DREAM3D_UI()
 // -----------------------------------------------------------------------------
 void DREAM3D_UI::resizeEvent ( QResizeEvent * event )
 {
-  // qDebug() << "DREAM3D_UI::resizeEvent" << "\n";
-  // qDebug() << "   oldSize: " << event->oldSize().width() << " x " << event->oldSize().height() << "\n";
-  // qDebug() << "   newSize: " << event->size().width() << " x " << event->size().height() << "\n";
   emit parentResized();
-  // qDebug() << "DREAM3D_UI::resizeEvent --- Done" << "\n";
 }
 
 // -----------------------------------------------------------------------------
@@ -477,13 +473,8 @@ void DREAM3D_UI::setupGui()
   connect(favoritesDockWidget, SIGNAL(pipelineNeedsToBeSaved(const QString&, const QString&)),
           pipelineViewWidget, SLOT(savePipeline(const QString&, const QString&)) );
 
-  //  connect(pipelineViewWidget, SIGNAL(pipelineTitleUpdated(QString)),
-  //          pipelineTitle, SLOT(setText(QString)));
-
-
   // Set the IssuesDockWidget as a PipelineMessageObserver Object.
   pipelineViewWidget->setPipelineMessageObserver(issuesDockWidget);
-
 
   // Add some key shortcuts
   QKeySequence actionOpenKeySeq(Qt::CTRL + Qt::Key_O);
@@ -994,8 +985,6 @@ void DREAM3D_UI::on_startPipelineBtn_clicked()
   // Clear out the Issues Table
   issuesDockWidget->clearIssues();
 
-  //  m_hasErrors = false;
-  //  m_hasWarnings = false;
   if (m_WorkerThread != NULL)
   {
     m_WorkerThread->wait(); // Wait until the thread is complete
@@ -1008,7 +997,7 @@ void DREAM3D_UI::on_startPipelineBtn_clicked()
   m_WorkerThread = new QThread(); // Create a new Thread Resource
 
   // Ask the PipelineViewWidget to create a FilterPipeline Object
-  m_PipelineInFlight = pipelineViewWidget->getFilterPipeline();
+  m_PipelineInFlight = pipelineViewWidget->copyFilterPipeline();
 
   // Move the FilterPipeline object into the thread that we just created.
   m_PipelineInFlight->moveToThread(m_WorkerThread);

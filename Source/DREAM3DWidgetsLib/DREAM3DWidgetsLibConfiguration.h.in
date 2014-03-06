@@ -25,7 +25,7 @@
 #cmakedefine DREAM3D_DISABLE_MSVC_WARNINGS
 
 /* This is a Macro that comes in handy in all the filter parameter widgets */
-#define PROPERTY_NAME_AS_CHAR m_FilterParameter->getPropertyName().toStdString().c_str()
+#define PROPERTY_NAME_AS_CHAR m_FilterParameter->getPropertyName().toLatin1().constData()
 
 
 #if (_MSC_VER >= 1)

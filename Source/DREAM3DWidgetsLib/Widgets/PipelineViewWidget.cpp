@@ -41,6 +41,8 @@
 #include <QtCore/QFileInfo>
 #include <QtCore/QUrl>
 #include <QtCore/QDir>
+#include <QtCore/QTemporaryFile>
+
 #include <QtGui/QMouseEvent>
 #include <QtGui/QDropEvent>
 #include <QtGui/QDragEnterEvent>
@@ -64,11 +66,11 @@
 #include "DREAM3DLib/FilterParameters/QFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/QFilterParametersWriter.h"
 
-
+#include "DREAM3DWidgetsLib/FilterWidgetManager.h"
 #include "QtSupport/QDroppableScrollArea.h"
 
-//#include "DREAM3DWidgetsLib/moc_PipelineViewWidget.cpp"
 
+#include "DREAM3DWidgetsLib/FilterParameterWidgets/FilterParameterWidgetsDialogs.h"
 
 // -----------------------------------------------------------------------------
 //
@@ -94,8 +96,8 @@ PipelineViewWidget::PipelineViewWidget(QWidget* parent) :
   setContextMenuPolicy(Qt::CustomContextMenu);
 
   connect(this,
-    SIGNAL(customContextMenuRequested(const QPoint&)),
-    SLOT(on_customContextMenuRequested(const QPoint&)));
+          SIGNAL(customContextMenuRequested(const QPoint&)),
+          SLOT(on_customContextMenuRequested(const QPoint&)));
 
 }
 
@@ -290,6 +292,43 @@ FilterPipeline::Pointer PipelineViewWidget::getFilterPipeline()
   return pipeline;
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+FilterPipeline::Pointer PipelineViewWidget::copyFilterPipeline()
+{
+  //// Worlds worst kludge for getting a copy of the Filter Pipeline. We write the pipeline to a temp file and thne read
+  /// the pipeline back into a new FilterPipeline Object. There were a few reasons for this choice of algorithm. I tried
+  /// to dynamically read the Q_PROPERTY for each Filter Parameter but with custom widgets there is NOT a 1-to-1 relationship
+  /// between the filter parameters and the Q_PROPERTY so that does not work. I thought about implementing a
+  /// "newFilterInstanceWithFilterParameters()" function in every filter but thought that if the developer does NOT keep
+  /// this updated there could be issues. Using the Writer/Reader the programmer can _still_ mess this up if they do not
+  /// update their Parameter read and write functions which is probably just as bad as the second option from above.
+  ///
+
+
+  // Create a Pipeline Object and fill it with the filters from this View
+  FilterPipeline::Pointer pipeline = getFilterPipeline();
+
+  // now write it out to a normal Pipeline File
+  QString tempPath;
+  QTemporaryFile file;
+  if (file.open()) {
+    tempPath = file.fileName();// returns the unique file name
+  }
+  file.close(); // Close up the file
+  int err = QFilterParametersWriter::WritePipelineToFile(pipeline, tempPath, "Current Pipeline", QSettings::IniFormat, dynamic_cast<IObserver*>(m_PipelineMessageObserver));
+  if (err < 0)
+  {
+    return FilterPipeline::NullPointer();
+  }
+
+  // Now Read it back into a new Pipeline Object
+  pipeline = QFilterParametersReader::ReadPipelineFromFile(tempPath,  QSettings::IniFormat, dynamic_cast<IObserver*>(m_PipelineMessageObserver) );
+
+  pipeline->addMessageReceiver(m_PipelineMessageObserver);
+  return pipeline;
+}
 
 // -----------------------------------------------------------------------------
 //
@@ -460,9 +499,6 @@ void PipelineViewWidget::addFilterWidget(PipelineFilterWidget* w, AbstractFilter
 // -----------------------------------------------------------------------------
 void PipelineViewWidget::preflightPipeline()
 {
-
-  // std::cout << "PipelineViewWidget::preflightPipeline()" << std::endl;
-
   emit pipelineIssuesCleared();
   // Create a Pipeline Object and fill it with the filters from this View
   FilterPipeline::Pointer pipeline = getFilterPipeline();
