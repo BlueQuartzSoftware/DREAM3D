@@ -384,6 +384,20 @@ void ReadH5Ebsd::dataCheck()
     notifyErrorMessage(getHumanLabel(), ss, -1);
     return;
   }
+  QString manufacturer = volumeInfoReader->getManufacturer();
+  if(manufacturer.compare(Ebsd::Ang::Manufacturer) == 0)
+  {
+    m_Manufacturer = Ebsd::TSL;
+  }
+  else if(manufacturer.compare(Ebsd::Ctf::Manufacturer) == 0)
+  {
+    m_Manufacturer = Ebsd::HKL;
+  }
+  else if(manufacturer.compare(Ebsd::Mic::Manufacturer) == 0)
+  {
+    m_Manufacturer = Ebsd::HEDM;
+  }
+
   size_t dcDims[3] = {dims[0], dims[1], dims[2]};
   //Now Calculate our "subvolume" of slices, ie, those start and end values that the user selected from the GUI
   dcDims[2] = m_ZEndIndex - m_ZStartIndex + 1;
