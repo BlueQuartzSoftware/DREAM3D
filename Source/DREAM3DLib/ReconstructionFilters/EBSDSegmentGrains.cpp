@@ -306,7 +306,7 @@ int EBSDSegmentGrains::getSeed(size_t gnum)
     }
     counter++;
   }
-  std::cout << "gnum: " << gnum << "   counter: " << counter << std::endl;
+//  std::cout << "gnum: " << gnum << "   counter: " << counter << std::endl;
   if (seed >= 0)
   {
     m_GrainIds[seed] = gnum;
