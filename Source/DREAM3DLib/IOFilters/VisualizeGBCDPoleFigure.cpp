@@ -331,19 +331,19 @@ void VisualizeGBCDPoleFigure::execute()
   float rotNormal_sc[2];
   float rotNormal2_sc[2];
   float dg[3][3];
-  float dgOrig[3][3];
+//  float dgOrig[3][3];
   float dgt[3][3];
   float dg1[3][3];
   float dg2[3][3];
   float sym1[3][3];
-  float sym1t[3][3];
+//  float sym1t[3][3];
   float sym2[3][3];
   float sym2t[3][3];
   float mis_euler1[3];
-  QuatF qtest;
-  float w, n1, n2, n3;
+//  QuatF qtest;
+//  float w, n1, n2, n3;
   //  float dist;
-  float theta, cosPhi, phi;
+//  float theta, cosPhi, phi;
 
   m_MisAngle = m_MisAngle * m_pi/180.0f;
   //convert axis angle to matrix representation of misorientation
@@ -365,8 +365,8 @@ void VisualizeGBCDPoleFigure::execute()
   float xres = 2.0/float(xpoints);
   float yres = 2.0/float(ypoints);
   float zres = (xres+yres)/2.0;
-  float x, y, z;
-  int xbin, ybin;
+  float x, y; //, z;
+//  int xbin, ybin;
   float sum = 0;
   int count = 0;
 
