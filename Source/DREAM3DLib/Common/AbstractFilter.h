@@ -91,6 +91,7 @@ class DREAM3DLib_EXPORT AbstractFilter : public Observable
     virtual const QString getHumanLabel() { return "YOUR CLASS SHOULD IMPLEMENT THIS";}
     virtual const QString getBrandingString() { return "DREAM3D Core Filter"; }
     virtual const QString getCompiledLibraryName() { return "DREAM3DLib"; }
+    virtual Pointer newFilterInstance(bool copyFilterParameters);
 
     /**
      * @brief setupFilterParameters
