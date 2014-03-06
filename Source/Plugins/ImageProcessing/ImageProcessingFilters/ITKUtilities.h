@@ -60,18 +60,18 @@ class DREAM3DLib_EXPORT ITKUtilities
       int64_t totalPoints = m->getTotalPoints();
 
       //create and setup import filter
-      typedef itk::ImportImageFilter<TImage::PixelType, ImageProcessing::ImageDimension> ImportFilterType;
-      ImportFilterType::Pointer importFilter = ImportFilterType::New();
+      typedef typename itk::ImportImageFilter<typename TImage::PixelType, ImageProcessing::ImageDimension> ImportFilterType;
+      typename ImportFilterType::Pointer importFilter = ImportFilterType::New();
 
-      ImportFilterType::SizeType  size;
+      typename ImportFilterType::SizeType  size;
       size[0]  = dims[0];  // size along X
       size[1]  = dims[1];  // size along Y
       size[2]  = dims[2];  // size along Z
 
-      ImportFilterType::IndexType start;
+      typename ImportFilterType::IndexType start;
       start.Fill( 0 );
 
-      ImportFilterType::RegionType region;
+      typename ImportFilterType::RegionType region;
       region.SetIndex( start );
       region.SetSize(  size  );
       importFilter->SetRegion( region );
@@ -132,7 +132,7 @@ class DREAM3DLib_EXPORT ITKUtilities
     template<typename TImage>
     static void CopyITKtoDream3D(typename TImage::Pointer image, typename TImage::InternalPixelType* buffer)
     {
-      TImage::RegionType filterRegion = image->GetBufferedRegion();
+      typename TImage::RegionType filterRegion = image->GetBufferedRegion();
       typedef itk::ImageRegionConstIterator<TImage> ConstIteratorType;
       ConstIteratorType it(image, filterRegion);
       it.GoToBegin();
