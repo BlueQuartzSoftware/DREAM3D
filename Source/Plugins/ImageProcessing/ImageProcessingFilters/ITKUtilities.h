@@ -12,6 +12,7 @@
 
 #include "Plugins/ImageProcessing/ImageProcessingConstants.h"
 #include "DREAM3DLib/DataContainers/VoxelDataContainer.h"
+#include "itkExtractImageFilter.h"
 
 /*
  * @class ITKUtilities ITKUtilities.h DREAM3DLib/Plugins/ImageProcessing/ImageProcessingFilters/ITKUtilities.h
@@ -93,7 +94,7 @@ class DREAM3DLib_EXPORT ITKUtilities
 
     //set itk image buffer to dream3d array
     template<typename T>
-     static void SetITKOutput(typename itk::Image<T, ImageProcessing::ImageDimension>::Pointer image, typename T* output, const unsigned int totalPoints)
+    static void SetITKOutput(typename itk::Image<T, ImageProcessing::ImageDimension>::Pointer image, typename T* output, const unsigned int totalPoints)
     {
       const bool filterWillDeleteTheInputBuffer = false;
       image->GetPixelContainer()->SetImportPointer(output, totalPoints, filterWillDeleteTheInputBuffer);
@@ -114,6 +115,28 @@ class DREAM3DLib_EXPORT ITKUtilities
         ++it;
         ++index;
       }
+    }
+
+    //extract a slice
+    template<typename T>
+    static typename itk::Image<typename T,ImageProcessing::SliceDimension>::Pointer ExtractSlice(typename itk::Image<typename T,ImageProcessing::ImageDimension>::Pointer image, int sliceType, int sliceNum)
+    {
+      typedef typename itk::ExtractImageFilter< itk::Image<typename T,ImageProcessing::ImageDimension>, itk::Image<typename T,ImageProcessing::SliceDimension> > SliceExtractFilter;
+      typename SliceExtractFilter::Pointer extractSlice = SliceExtractFilter::New();
+      typename itk::Image<typename T,ImageProcessing::ImageDimension>::RegionType inputRegion = image->GetLargestPossibleRegion();
+      typename itk::Image<typename T,ImageProcessing::ImageDimension>::SizeType size = inputRegion.GetSize();
+      //if(ImageProcessing::XSlice==sliceType) size[0]=0;
+      size[sliceType]=0;
+      typename itk::Image<typename T,ImageProcessing::ImageDimension>::IndexType start = inputRegion.GetIndex();
+      start[sliceType]=sliceNum;
+      typename itk::Image<typename T,ImageProcessing::ImageDimension>::RegionType extractedRegion;
+      extractedRegion.SetSize(size);
+      extractedRegion.SetIndex(start);
+      extractSlice->SetInput(image);
+      extractSlice->SetExtractionRegion(extractedRegion);
+      extractSlice->SetDirectionCollapseToIdentity();
+      extractSlice->Update();
+      return extractSlice->GetOutput();
     }
 
     ITKUtilities();

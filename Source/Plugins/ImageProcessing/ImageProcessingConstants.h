@@ -12,6 +12,7 @@
 //#include "itkRGBAPixel.h"
 #include "itkImportImageFilter.h"
 #include "itkImageRegionIterator.h"
+#include "itkImageToImageFilter.h"
 
 namespace ImageProcessing
 {
@@ -32,7 +33,13 @@ namespace ImageProcessing
   //typedef itk::RGBAPixel <float> RGBAFloatPixelType; //may be able to handle quats with this?
 
   //define dimensionality
+  const unsigned int SliceDimension = 2;
   const unsigned int ImageDimension = 3;
+
+  //slice directions
+  const unsigned int XSlice = 0;
+  const unsigned int YSlice = 1;
+  const unsigned int ZSlice = 2;
 
   //define image types
   typedef itk::Image< Int8PixelType, ImageDimension > Int8ImageType;
@@ -48,6 +55,18 @@ namespace ImageProcessing
 
   typedef itk::Image< RGBUInt8PixelType, ImageDimension > RGBUint8ImageType;
   //typedef itk::Image< RGBAFloatPixelType, ImageDimension > RGBAFloatImageType;
+
+  typedef itk::Image< Int8PixelType, SliceDimension > Int8SliceType;
+  typedef itk::Image< UInt8PixelType, SliceDimension > UInt8SliceType;
+  typedef itk::Image< Int16PixelType, SliceDimension > Int16SliceType;
+  typedef itk::Image< UInt16PixelType, SliceDimension > UInt16SliceType;
+  typedef itk::Image< Int32PixelType, SliceDimension > Int32SliceType;
+  typedef itk::Image< UInt32PixelType, SliceDimension > UInt32SliceType;
+  typedef itk::Image< Int64PixelType, SliceDimension > Int64SliceType;
+  typedef itk::Image< UInt64PixelType, SliceDimension > UInt64SliceType;
+  typedef itk::Image< FloatPixelType, SliceDimension > FloatSliceType;
+  typedef itk::Image< DoublePixelType, SliceDimension > DoubleSliceType;
+
 
   //define import filters
   typedef itk::ImportImageFilter<Int8PixelType, ImageDimension> ImportInt8FilterType;
