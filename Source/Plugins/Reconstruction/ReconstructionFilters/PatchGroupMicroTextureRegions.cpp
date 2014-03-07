@@ -86,6 +86,8 @@ PatchGroupMicroTextureRegions::PatchGroupMicroTextureRegions() :
   m_FeaturePhases(NULL),
   m_VolumesArrayName(DREAM3D::FeatureData::Volumes),
   m_Volumes(NULL),
+  m_NumCellsArrayName(DREAM3D::FeatureData::NumCells),
+  m_NumCells(NULL),
   m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
   m_CrystalStructures(NULL)
 {
@@ -237,6 +239,9 @@ void PatchGroupMicroTextureRegions::dataCheck()
   m_VolumesPtr = cellFeatureAttrMat->getPrereqArray<DataArray<float>, AbstractFilter>(this, m_VolumesArrayName, -304, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_VolumesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_Volumes = m_VolumesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  m_NumCellsPtr = cellFeatureAttrMat->createNonPrereqArray<DataArray<int32_t>, AbstractFilter, int32_t>(this, m_NumCellsArrayName, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if( NULL != m_NumCellsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  { m_NumCells = m_NumCellsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   }
   dims[0] = 4;
   m_AvgQuatsPtr = cellFeatureAttrMat->getPrereqArray<DataArray<float>, AbstractFilter>(this, m_AvgQuatsArrayName, -302, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
@@ -516,7 +521,14 @@ void PatchGroupMicroTextureRegions::determinePatchFeatureCentroids()
 //
 //  }
 
-  // figure out what what centroids are in each patch
+  // figure out what centroids are in each patch
+
+  // As a first go, will implement this like find neighborhoods.
+  // All feature centroids within the patch centroid will be
+  // patch-grouped.  The volume fraction will, somewhat
+  // incorrectly, be the feature cell summation over the total
+  // patch cells.
+
   QVector<QVector<int> > patchfeaturelist;
 
   size_t totalFeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();

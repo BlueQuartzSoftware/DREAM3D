@@ -55,7 +55,7 @@
  * @class PatchGroupMicroTextureRegions PatchGroupMicroTextureRegions.h Plugins/Reconstruction/ReconstructionFilters/PatchGroupMicroTextureRegions.h
  * @brief
  * @author Michael A Groeber (AFRL) & Joseph C Tucker (UES)
- * @date Mar 5, 2014
+ * @date Mar 7, 2014
  * @version 5.0
  */
 class PatchGroupMicroTextureRegions : public GroupFeatures
@@ -137,6 +137,7 @@ class PatchGroupMicroTextureRegions : public GroupFeatures
     DEFINE_PTR_WEAKPTR_DATAARRAY(bool, Active)
     DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeaturePhases)
     DEFINE_PTR_WEAKPTR_DATAARRAY(float, Volumes)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, NumCells)
 
     DEFINE_PTR_WEAKPTR_DATAARRAY(unsigned int, CrystalStructures)
 
