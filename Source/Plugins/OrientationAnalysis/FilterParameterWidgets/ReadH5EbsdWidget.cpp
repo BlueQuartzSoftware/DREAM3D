@@ -284,13 +284,17 @@ void ReadH5EbsdWidget::filterNeedsInputParameters(AbstractFilter* filter)
     QString ss = QObject::tr("Error Setting ReadH5Ebsd Gui values to Filter instance. Filter instance was NULL.").arg(m_FilterParameter->getPropertyName());
     emit errorSettingFilterParameter(ss);
   }
-  bool ok = false;
-  m_Filter->setInputFile(m_InputFile->text() );
-  m_Filter->setZStartIndex(m_ZStartIndex->text().toLongLong(&ok));
-  m_Filter->setZEndIndex(m_ZEndIndex->text().toLongLong(&ok));
-  m_Filter->setUseTransformations(m_UseTransformations->isChecked() );
 
-  m_Filter->setSelectedArrayNames(getSelectedArrayNames());
+  ReadH5Ebsd* readEbsd = qobject_cast<ReadH5Ebsd*>(filter);
+  Q_ASSERT_X(NULL != readEbsd, "ReadH5EbsdWidget can ONLY be used with ReadH5Ebsd filter", __FILE__);
+
+  bool ok = false;
+  readEbsd->setInputFile(m_InputFile->text() );
+  readEbsd->setZStartIndex(m_ZStartIndex->text().toLongLong(&ok));
+  readEbsd->setZEndIndex(m_ZEndIndex->text().toLongLong(&ok));
+  readEbsd->setUseTransformations(m_UseTransformations->isChecked() );
+
+  readEbsd->setSelectedArrayNames(getSelectedArrayNames());
   //  m_Filter->setSelectedEnsembleNames(getSelectedEnsembleNames());
 
 }
