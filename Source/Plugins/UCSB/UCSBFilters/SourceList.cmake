@@ -16,6 +16,7 @@ set(_PublicFilters
   SampleVolume
   RemoveJitter
   RotateSliceEulerRefFrame
+  MergeArrays
 )
 
 
