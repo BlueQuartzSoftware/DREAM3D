@@ -88,6 +88,8 @@ PatchGroupMicroTextureRegions::PatchGroupMicroTextureRegions() :
   m_Volumes(NULL),
   m_NumCellsArrayName(DREAM3D::FeatureData::NumCells),
   m_NumCells(NULL),
+  m_CentroidsArrayName(DREAM3D::FeatureData::Centroids),
+  m_Centroids(NULL),
   m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
   m_CrystalStructures(NULL)
 {
@@ -242,6 +244,10 @@ void PatchGroupMicroTextureRegions::dataCheck()
   m_NumCellsPtr = cellFeatureAttrMat->createNonPrereqArray<DataArray<int32_t>, AbstractFilter, int32_t>(this, m_NumCellsArrayName, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_NumCellsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_NumCells = m_NumCellsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  dims[0] = 3;
+  m_CentroidsPtr = cellFeatureAttrMat->getPrereqArray<DataArray<float>, AbstractFilter>(this, m_CentroidsArrayName, -305, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if( NULL != m_CentroidsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  { m_Centroids = m_CentroidsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   }
   dims[0] = 4;
   m_AvgQuatsPtr = cellFeatureAttrMat->getPrereqArray<DataArray<float>, AbstractFilter>(this, m_AvgQuatsArrayName, -302, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
@@ -512,8 +518,19 @@ void PatchGroupMicroTextureRegions::determinePatchFeatureCentroids()
   size_t udims[3] = {0, 0, 0};
   m->getDimensions(udims);
 
-//  int numPatches = ceil(udims[0] / m_PatchEdgeLength) * ceil(udims[1] / m_PatchEdgeLength) * ceil(udims[2] / m_PatchEdgeLength);
-  int totalPatches = (udims[0] / m_PatchEdgeLength) * (udims[1] / m_PatchEdgeLength) * (udims[2] / m_PatchEdgeLength);
+  int zPatch;
+  if (udims[2] == 1) zPatch = 1;
+  else zPatch = floor(udims[2] / m_PatchEdgeLength);
+
+  int totalPatches = floor(udims[0] / m_PatchEdgeLength) * floor(udims[1] / m_PatchEdgeLength) * zPatch;
+//  int totalPatches = (udims[0] / m_PatchEdgeLength) * (udims[1] / m_PatchEdgeLength) * (udims[2] / m_PatchEdgeLength);
+
+  QVector<int> patchIds;
+  patchIds.resize(totalPatches);
+  for (int i = 0; i < totalPatches; i++)
+  {
+	patchIds[i] = i + 1;
+  }
 
 // FIX - figure out what to do when patches don't fit perfectly
 //  if (udims[0] % m_PatchEdgeLength != 0)
@@ -529,33 +546,130 @@ void PatchGroupMicroTextureRegions::determinePatchFeatureCentroids()
   // incorrectly, be the feature cell summation over the total
   // patch cells.
 
-  QVector<QVector<int> > patchfeaturelist;
+  float x, y, z;
+
+  QVector<QVector<int> > patchFeatureList;
+  QVector<int32_t> berryPatch;
 
   size_t totalFeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
 
-  patchfeaturelist.resize(totalPatches);
+  dataCheck();
+
+  patchFeatureList.resize(totalPatches);
+  berryPatch.resize(totalPatches);
+
+  float m_OriginX, m_OriginY, m_OriginZ;
+  m->getOrigin(m_OriginX, m_OriginY, m_OriginZ);
+#if (CMP_SIZEOF_SIZE_T == 4)
+  typedef int32_t DimType;
+#else
+  typedef int64_t DimType;
+#endif
+
+  // determine patch centroids
+
+  QVector<float> patchCenters;
+  patchCenters.resize(totalPatches * 3);
+
+  int xPoints = static_cast<int>(m->getXPoints());
+  int yPoints = static_cast<int>(m->getYPoints());
+  int zPoints = static_cast<int>(m->getZPoints());
+
+  float xRes = m->getXRes();
+  float yRes = m->getYRes();
+  float zRes = m->getZRes();
+
+  // Initialize every element to 0.0
+  for (size_t i = 0; i < totalPatches * 3; i++)
+  {
+    patchCenters[i] = 0.0f;
+  }
+  size_t zStride, yStride;
+  for(size_t i = 0; i < zPoints; i+=m_PatchEdgeLength)
+  {
+    zStride = i * xPoints * yPoints / m_PatchEdgeLength;
+    for (size_t j = 0; j < yPoints; j+=m_PatchEdgeLength)
+    {
+      yStride = j * xPoints / m_PatchEdgeLength;
+      for(size_t k = 0; k < xPoints; k+=m_PatchEdgeLength)
+      {
+		int patchnum = patchIds[int(zStride/m_PatchEdgeLength) + int(yStride/m_PatchEdgeLength) + int(k/m_PatchEdgeLength)] - 1;
+        patchCenters[patchnum * 3]++;
+        x = float(k) * xRes;
+        y = float(j) * yRes;
+        z = float(i) * zRes;
+        patchCenters[patchnum * 3 + 0] = patchCenters[patchnum * 3 + 0] + x;
+        patchCenters[patchnum * 3 + 1] = patchCenters[patchnum * 3 + 1] + y;
+        patchCenters[patchnum * 3 + 2] = patchCenters[patchnum * 3 + 2] + z;
+      }
+    }
+  }
+
+  float patchCriticalDistance = powf(float(m_PatchEdgeLength * xRes + m_PatchEdgeLength * yRes + m_PatchEdgeLength * zRes), 1.0f / 3.0f) / 2.0f;
+
+  int xbin, ybin, zbin;
+  QVector<size_t> featureBins(3*totalFeatures, 0);
+  for (size_t i = 1; i < totalFeatures; i++)
+  {
+    x = m_Centroids[3 * i];
+    y = m_Centroids[3 * i + 1];
+    z = m_Centroids[3 * i + 2];
+    xbin = int((x - m_OriginX) / patchCriticalDistance);
+    ybin = int((y - m_OriginY) / patchCriticalDistance);
+    zbin = int((z - m_OriginZ) / patchCriticalDistance);
+    featureBins[3*i] = xbin;
+    featureBins[3*i+1] = ybin;
+    featureBins[3*i+2] = zbin;
+  }
+
+  QVector<size_t> patchBins(3*totalPatches, 0);
+  for (size_t i = 1; i < totalPatches; i++)
+  {
+    x = patchCenters[3 * i];
+    y = patchCenters[3 * i + 1];
+    z = patchCenters[3 * i + 2];
+    xbin = int((x - m_OriginX) / patchCriticalDistance);
+    ybin = int((y - m_OriginY) / patchCriticalDistance);
+    zbin = int((z - m_OriginZ) / patchCriticalDistance);
+    patchBins[3*i] = xbin;
+    patchBins[3*i+1] = ybin;
+    patchBins[3*i+2] = zbin;
+  }
+
+  int bin1x, bin2x, bin1y, bin2y, bin1z, bin2z;
+  int dBinX, dBinY, dBinZ;
 
   for (size_t i = 1; i < totalPatches; i++)
   {
+    if (i % 1000 == 0)
+    {
 
+	  QString ss = QObject::tr("Working On Patch %1 of %2").arg(i).arg(totalPatches);
+      notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
+    }
+    bin1x = patchBins[3*i];
+    bin1y = patchBins[3*i+1];
+    bin1z = patchBins[3*i+2];
+
+    for (size_t j = i + 1; j < totalFeatures; j++)
+    {
+      bin2x = featureBins[3*j];
+      bin2y = featureBins[3*j+1];
+      bin2z = featureBins[3*j+2];
+
+      dBinX = abs(bin2x - bin1x);
+      dBinY = abs(bin2y - bin1y);
+      dBinZ = abs(bin2z - bin1z);
+
+      if (dBinX < patchCriticalDistance && dBinY < patchCriticalDistance && dBinZ < patchCriticalDistance)
+      {
+        berryPatch[i]++;
+        patchFeatureList[i].push_back(j);
+      }
+    }
   }
 
-  int xMin, xMax, yMin, yMax, zMin, zMax;
 
-  for (size_t i = 1; i < totalPatches; i++)
-  {
-  xMin = m_PatchEdgeLength * (i % udims[0] - 1);
-  xMax = m_PatchEdgeLength * i;
-  yMin = m_PatchEdgeLength * (i - 1);
-  yMax = m_PatchEdgeLength * i;
-  zMin = m_PatchEdgeLength * (i - 1);
-  zMax = m_PatchEdgeLength * i;
-
-  for (size_t j = 1; j < totalFeatures; j++)
-  {
-
-  }
-  }
 }
 
 void PatchGroupMicroTextureRegions::quiltLandscape()

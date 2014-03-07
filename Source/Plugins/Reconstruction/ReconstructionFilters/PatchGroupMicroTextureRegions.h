@@ -138,6 +138,7 @@ class PatchGroupMicroTextureRegions : public GroupFeatures
     DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeaturePhases)
     DEFINE_PTR_WEAKPTR_DATAARRAY(float, Volumes)
     DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, NumCells)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(float, Centroids)
 
     DEFINE_PTR_WEAKPTR_DATAARRAY(unsigned int, CrystalStructures)
 
