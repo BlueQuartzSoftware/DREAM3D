@@ -634,26 +634,31 @@ void EbsdToH5EbsdWidget::widgetChanged(const QString &text)
 // -----------------------------------------------------------------------------
 void EbsdToH5EbsdWidget::filterNeedsInputParameters(AbstractFilter* filter)
 {
-  if (NULL == m_Filter)
+  if (NULL == filter)
   {
     QString ss = QObject::tr("Error Setting EbsdToH5Ebsd Gui values to Filter instance. Filter instance was NULL.").arg(m_FilterParameter->getPropertyName());
     emit errorSettingFilterParameter(ss);
   }
+
+  EbsdToH5Ebsd* ebsdConverter = qobject_cast<EbsdToH5Ebsd*>(filter);
+  Q_ASSERT_X(NULL != filter, "EbsdToH5EbsdWidget can ONLY be used with EbsdToH5Ebsd filter", __FILE__);
+
+
   bool ok = false;
-  m_Filter->setOutputFile(m_OutputFile->text() );
-  m_Filter->setZStartIndex(m_ZStartIndex->text().toLongLong(&ok));
-  m_Filter->setZEndIndex(m_ZEndIndex->text().toLongLong(&ok));
-  m_Filter->setZResolution(m_zSpacing->text().toDouble(&ok));
-  m_Filter->setRefFrameZDir( getRefFrameZDir() );
+  ebsdConverter->setOutputFile(m_OutputFile->text() );
+  ebsdConverter->setZStartIndex(m_ZStartIndex->text().toLongLong(&ok));
+  ebsdConverter->setZEndIndex(m_ZEndIndex->text().toLongLong(&ok));
+  ebsdConverter->setZResolution(m_zSpacing->text().toDouble(&ok));
+  ebsdConverter->setRefFrameZDir( getRefFrameZDir() );
 
-  m_Filter->setInputPath(m_InputDir->text());
-  m_Filter->setFilePrefix(m_FilePrefix->text());
-  m_Filter->setFileSuffix(m_FileSuffix->text());
-  m_Filter->setFileExtension(m_FileExt->text());
-  m_Filter->setPaddingDigits(m_TotalDigits->value());
+  ebsdConverter->setInputPath(m_InputDir->text());
+  ebsdConverter->setFilePrefix(m_FilePrefix->text());
+  ebsdConverter->setFileSuffix(m_FileSuffix->text());
+  ebsdConverter->setFileExtension(m_FileExt->text());
+  ebsdConverter->setPaddingDigits(m_TotalDigits->value());
 
-  m_Filter->setSampleTransformation(m_SampleTransformation);
-  m_Filter->setEulerTransformation(m_EulerTransformation);
+  ebsdConverter->setSampleTransformation(m_SampleTransformation);
+  ebsdConverter->setEulerTransformation(m_EulerTransformation);
 }
 
 
