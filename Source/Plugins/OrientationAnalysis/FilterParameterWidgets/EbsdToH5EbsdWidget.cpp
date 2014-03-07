@@ -64,7 +64,7 @@
 
 #include "OrientationAnalysis/Widgets/QEbsdReferenceFrameDialog.h"
 
-#include "OrientationAnalysis/moc_EbsdToH5EbsdWidget.cpp"
+//#include "OrientationAnalysis/moc_EbsdToH5EbsdWidget.cpp"
 
 // Initialize private static member variable
 QString EbsdToH5EbsdWidget::m_OpenDialogLastDirectory = "";
@@ -341,9 +341,17 @@ void EbsdToH5EbsdWidget::setRefFrameZDir(uint32_t ref)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void EbsdToH5EbsdWidget::on_m_zSpacing_textChanged(const QString& string)
+{
+   emit parametersChanged();
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void EbsdToH5EbsdWidget::stackingOrderChanged(bool checked)
 {
-  m_generateExampleEbsdInputFile();
   emit parametersChanged();
 }
 
@@ -400,8 +408,6 @@ void EbsdToH5EbsdWidget::on_m_FilePrefix_textChanged(const QString &string)
   m_generateExampleEbsdInputFile();
   emit parametersChanged();
 }
-
-
 
 // -----------------------------------------------------------------------------
 //
@@ -503,6 +509,7 @@ void EbsdToH5EbsdWidget::on_m_RefFrameOptionsBtn_clicked()
     m_NoTranschecked = d.getNoTranschecked();
     d.getSampleTranformation(m_SampleTransformation);
     d.getEulerTranformation(m_EulerTransformation);
+    emit parametersChanged(); // emit to let the system know to preflight
   }
 }
 

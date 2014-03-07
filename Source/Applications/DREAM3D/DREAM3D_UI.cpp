@@ -976,15 +976,6 @@ void DREAM3D_UI::on_startPipelineBtn_clicked()
     return;
   }
 
-  // Save the preferences file NOW in case something happens
-  writeSettings();
-
-
-  pipelineViewWidget->setEnabled(false);
-
-  // Clear out the Issues Table
-  issuesDockWidget->clearIssues();
-
   if (m_WorkerThread != NULL)
   {
     m_WorkerThread->wait(); // Wait until the thread is complete
@@ -996,8 +987,26 @@ void DREAM3D_UI::on_startPipelineBtn_clicked()
   }
   m_WorkerThread = new QThread(); // Create a new Thread Resource
 
+
+  // Clear out the Issues Table
+  issuesDockWidget->clearIssues();
+
   // Ask the PipelineViewWidget to create a FilterPipeline Object
   m_PipelineInFlight = pipelineViewWidget->copyFilterPipeline();
+
+  // Give the pipeline one last chance to preflight and get all the latest values from the GUI
+  int err = m_PipelineInFlight->preflightPipeline();
+  if(err < 0)
+  {
+    m_PipelineInFlight = FilterPipeline::NullPointer();
+    return;
+  }
+
+  // Save the preferences file NOW in case something happens
+  writeSettings();
+
+
+  pipelineViewWidget->setEnabled(false);
 
   // Move the FilterPipeline object into the thread that we just created.
   m_PipelineInFlight->moveToThread(m_WorkerThread);
