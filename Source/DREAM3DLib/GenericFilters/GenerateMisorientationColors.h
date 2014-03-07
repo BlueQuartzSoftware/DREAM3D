@@ -36,7 +36,6 @@
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/DataArrays/IDataArray.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
 
 
@@ -50,9 +49,9 @@
 class DREAM3DLib_EXPORT GenerateMisorientationColors : public AbstractFilter
 {
   public:
-    DREAM3D_SHARED_POINTERS(GenerateMisorientationColors);
-    DREAM3D_STATIC_NEW_MACRO(GenerateMisorientationColors);
-    DREAM3D_TYPE_MACRO_SUPER(GenerateMisorientationColors, AbstractFilter);
+    DREAM3D_SHARED_POINTERS(GenerateMisorientationColors)
+    DREAM3D_STATIC_NEW_MACRO(GenerateMisorientationColors)
+    DREAM3D_TYPE_MACRO_SUPER(GenerateMisorientationColors, AbstractFilter)
 
     virtual ~GenerateMisorientationColors();
     //------ Required Cell Data
