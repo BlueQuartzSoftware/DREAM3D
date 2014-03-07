@@ -29,23 +29,9 @@ class DREAM3DLib_EXPORT ITKUtilities
 
     virtual ~ITKUtilities();
 
-    //conversion from dream3d arrays to itk images
-    static ImageProcessing::ImportInt8FilterType::Pointer Dream3DInt8toITK(VoxelDataContainer* m, int8_t* data);
-    static ImageProcessing::ImportUInt8FilterType::Pointer Dream3DUInt8toITK(VoxelDataContainer* m, uint8_t* data);
-    static ImageProcessing::ImportInt16FilterType::Pointer Dream3DInt16toITK(VoxelDataContainer* m, int16_t* data);
-    static ImageProcessing::ImportUInt16FilterType::Pointer Dream3DUInt16toITK(VoxelDataContainer* m, uint16_t* data);
-    static ImageProcessing::ImportInt32FilterType::Pointer Dream3DInt32toITK(VoxelDataContainer* m, int32_t* data);
-    static ImageProcessing::ImportUInt32FilterType::Pointer Dream3DUInt32toITK(VoxelDataContainer* m, uint32_t* data);
-    static ImageProcessing::ImportInt64FilterType::Pointer Dream3DInt64toITK(VoxelDataContainer* m, int64_t* data);
-    static ImageProcessing::ImportUInt64FilterType::Pointer Dream3DUInt64toITK(VoxelDataContainer* m, uint64_t* data);
-    static ImageProcessing::ImportFloatFilterType::Pointer Dream3DFloattoITK(VoxelDataContainer* m, float* data);
-    static ImageProcessing::ImportDoubleFilterType::Pointer Dream3DDoubletoITK(VoxelDataContainer* m, double* data);
-
-    //static ImageProcessing::ImportRGBUint8FilterType::Pointer Dream3DRGBUInt8toITK(VoxelDataContainer* m, uint8_t* data);
-    //static ImageProcessing::ImportRGBAFloatFilterType::Pointer Dream3DRGBAFloattoITK(VoxelDataContainer* m, float* data);
-
-    template<typename TImage>
-    static typename TImage::Pointer Dream3DtoITK(VoxelDataContainer* m, typename TImage::InternalPixelType* data)
+    //conversion from dream3d arrays to importfilter
+    template<typename T>
+    static typename itk::ImportImageFilter<typename T,ImageProcessing::ImageDimension>::Pointer Dream3DtoITKImportFilter(VoxelDataContainer* m, typename T* data)
     {
       //get size+dimensions of dataset
       size_t udims[3] =
@@ -60,7 +46,7 @@ class DREAM3DLib_EXPORT ITKUtilities
       int64_t totalPoints = m->getTotalPoints();
 
       //create and setup import filter
-      typedef typename itk::ImportImageFilter<typename TImage::PixelType, ImageProcessing::ImageDimension> ImportFilterType;
+      typedef typename itk::ImportImageFilter<typename T, ImageProcessing::ImageDimension> ImportFilterType;
       typename ImportFilterType::Pointer importFilter = ImportFilterType::New();
 
       typename ImportFilterType::SizeType  size;
@@ -95,45 +81,30 @@ class DREAM3DLib_EXPORT ITKUtilities
       const bool importImageFilterWillOwnTheBuffer = false;
       importFilter->SetImportPointer( data, totalPoints, importImageFilterWillOwnTheBuffer );
       importFilter->Update();
-      return importFilter->GetOutput();
+      return importFilter;
     }
 
-    //set itk ImageToImageFilter output buffer to dream3d buffer
-    static void SetITKInt8Output(ImageProcessing::Int8ImageType::Pointer image, int8_t* output, const unsigned int totalPoints);
-    static void SetITKUInt8Output(ImageProcessing::UInt8ImageType::Pointer image, uint8_t* output, const unsigned int totalPoints);
-    static void SetITKInt16Output(ImageProcessing::Int16ImageType::Pointer image, int16_t* output, const unsigned int totalPoints);
-    static void SetITKUInt16Output(ImageProcessing::UInt16ImageType::Pointer image, uint16_t* output, const unsigned int totalPoints);
-    static void SetITKInt32Output(ImageProcessing::Int32ImageType::Pointer image, int32_t* output, const unsigned int totalPoints);
-    static void SetITKUInt32Output(ImageProcessing::UInt32ImageType::Pointer image, uint32_t* output, const unsigned int totalPoints);
-    static void SetITKInt64Output(ImageProcessing::Int64ImageType::Pointer image, int64_t* output, const unsigned int totalPoints);
-    static void SetITKUInt64Output(ImageProcessing::UInt64ImageType::Pointer image, uint64_t* output, const unsigned int totalPoints);
-    static void SetITKFloatOutput(ImageProcessing::FloatImageType::Pointer image, float* output, const unsigned int totalPoints);
-    static void SetITKDoubleOutput(ImageProcessing::DoubleImageType::Pointer image, double* output, const unsigned int totalPoints);
+    //conversion from dream3d arrays to itk images
+    template<typename T>
+    static typename itk::Image<typename T,ImageProcessing::ImageDimension>::Pointer Dream3DtoITK(VoxelDataContainer* m, typename T* data)
+    {
+      return Dream3DtoITKImportFilter(m, data)->GetOutput();
+    }
 
-    template<typename TImageFilter>
-    static void SetITKOutput(typename TImageFilter::Pointer filter, typename TImageFilter::OutputImageType::InternalPixelType* output, const unsigned int totalPoints)
+    //set itk image buffer to dream3d array
+    template<typename T>
+     static void SetITKOutput(typename itk::Image<T, ImageProcessing::ImageDimension>::Pointer image, typename T* output, const unsigned int totalPoints)
     {
       const bool filterWillDeleteTheInputBuffer = false;
-      filter->GetOutput()->GetPixelContainer()->SetImportPointer(output, totalPoints, filterWillDeleteTheInputBuffer);
+      image->GetPixelContainer()->SetImportPointer(output, totalPoints, filterWillDeleteTheInputBuffer);
     }
 
-    //copy itk image to dream3d buffer
-    static void ITKInt8toDream3D(ImageProcessing::Int8ImageType::Pointer image, int8_t* buffer);
-    static void ITKUInt8toDream3D(ImageProcessing::UInt8ImageType::Pointer image, uint8_t* buffer);
-    static void ITKInt16toDream3D(ImageProcessing::Int16ImageType::Pointer image, int16_t* buffer);
-    static void ITKUInt16toDream3D(ImageProcessing::UInt16ImageType::Pointer image, uint16_t* buffer);
-    static void ITKInt32toDream3D(ImageProcessing::Int32ImageType::Pointer image, int32_t* buffer);
-    static void ITKUInt32toDream3D(ImageProcessing::UInt32ImageType::Pointer image, uint32_t* buffer);
-    static void ITKInt64toDream3D(ImageProcessing::Int64ImageType::Pointer image, int64_t* buffer);
-    static void ITKUInt64toDream3D(ImageProcessing::UInt64ImageType::Pointer image, uint64_t* buffer);
-    static void ITKFloattoDream3D(ImageProcessing::FloatImageType::Pointer image, float* buffer);
-    static void ITKDoubletoDream3D(ImageProcessing::DoubleImageType::Pointer image, double* buffer);
-
-    template<typename TImage>
-    static void CopyITKtoDream3D(typename TImage::Pointer image, typename TImage::InternalPixelType* buffer)
+    //copy itk image to dream3d array
+    template<typename T>
+    static void CopyITKtoDream3D(typename itk::Image<T, ImageProcessing::ImageDimension>::Pointer image, typename T* buffer)
     {
-      typename TImage::RegionType filterRegion = image->GetBufferedRegion();
-      typedef itk::ImageRegionConstIterator<TImage> ConstIteratorType;
+      typename itk::Image<T, ImageProcessing::ImageDimension>::RegionType filterRegion = image->GetBufferedRegion();
+      typedef typename itk::ImageRegionConstIterator<itk::Image<T, ImageProcessing::ImageDimension>> ConstIteratorType;
       ConstIteratorType it(image, filterRegion);
       it.GoToBegin();
       int index=0;

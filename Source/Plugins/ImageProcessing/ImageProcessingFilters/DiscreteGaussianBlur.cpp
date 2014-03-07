@@ -165,27 +165,23 @@ void DiscreteGaussianBlur::execute()
     return;
   }
 
-  //get filter to convert m_RawImageData to itk::image
-  //ImageProcessing::ImportUInt8FilterType::Pointer importFilter=ITKUtilities::Dream3DUInt8toITK(m, m_RawImageData);
-  ImageProcessing::UInt8ImageType::Pointer importFilter=ITKUtilities::Dream3DtoITK<ImageProcessing::UInt8ImageType>(m, m_RawImageData);
+  //wrap m_RawImageData as itk::image
+  ImageProcessing::UInt8ImageType::Pointer inputImage=ITKUtilities::Dream3DtoITK(m, m_RawImageData);
 
   //create guassian blur filter
   typedef itk::DiscreteGaussianImageFilter< ImageProcessing::UInt8ImageType,  ImageProcessing::FloatImageType > GuassianFilterType;
   GuassianFilterType::Pointer guassianFilter = GuassianFilterType::New();
-  //guassianFilter->SetInput(importFilter->GetOutput());
-  guassianFilter->SetInput(importFilter);
+  guassianFilter->SetInput(inputImage);
   guassianFilter->SetVariance(4);
 
   //have filter write to dream3d array instead of creating its own buffer
-  //ITKUtilities::SetITKFloatOutput(guassianFilter->GetOutput(), m_ProcessedImageData, totalPoints);
-  ITKUtilities::SetITKOutput<GuassianFilterType>(guassianFilter, m_ProcessedImageData, totalPoints);
+  ITKUtilities::SetITKOutput(guassianFilter->GetOutput(), m_ProcessedImageData, totalPoints);
 
   //execute filter
   guassianFilter->Update();
 
   ///if we wanted to let itk allocate its own memory instead and then copy to a buffer
-  //ITKUtilities::ITKFloattoDream3D(guassianFilter->GetOutput(), m_ProcessedImageData);
-  //ITKUtilities::CopyITKtoDream3D<ImageProcessing::FloatImageType>(guassianFilter->GetOutput(), m_ProcessedImageData);
+  //ITKUtilities::CopyITKtoDream3D(guassianFilter->GetOutput(), m_ProcessedImageData);
 
   //array name changing/cleanup
   if(m_OverwriteArray)

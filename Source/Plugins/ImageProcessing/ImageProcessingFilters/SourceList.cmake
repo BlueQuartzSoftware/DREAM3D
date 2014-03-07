@@ -45,9 +45,7 @@ endforeach()
 
 #-------------
 # These are files that need to be compiled into DREAM3DLib but are NOT filters
-#ADD_DREAM3D_SUPPORT_HEADER(${ImageProcessing_SOURCE_DIR} ImageProcessingConstants.h)
 ADD_DREAM3D_SUPPORT_HEADER(${ImageProcessing_SOURCE_DIR} ${_filterGroupName} ITKUtilities.h)
-ADD_DREAM3D_SUPPORT_SOURCE(${ImageProcessing_SOURCE_DIR} ${_filterGroupName} ITKUtilities.cpp)
 
 
 #---------------------
