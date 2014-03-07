@@ -201,7 +201,7 @@ void FindFeatureClustering::find_clustering()
     {
 
       QString ss = QObject::tr("Working On Feature %1 of %2").arg(i).arg(totalFeatures);
-      notifyStatusMessage(getHumanLabel(), ss);
+      notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
     }
     x = m_Centroids[3 * i];
     y = m_Centroids[3 * i + 1];

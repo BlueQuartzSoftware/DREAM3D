@@ -245,7 +245,7 @@ int VtkRectilinearGridWriter::write(const QString& file)
 
   int index = 0;
   QString ss = QObject::tr("Writing Feature Ids");
-  notifyStatusMessage(getHumanLabel(), ss);
+  notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
   if (m_WriteBinaryFile == true)
   {
     WRITE_VTK_FEATURE_IDS_BINARY(r, DREAM3D::CellData::FeatureIds);

@@ -510,7 +510,7 @@ int LaplacianSmoothing::edgeBasedSmoothing()
   {
     if (getCancel() == true) { return -1; }
     QString ss = QObject::tr("Iteration %1").arg(q);
-    notifyStatusMessage(getHumanLabel(), ss);
+    notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
     for (int i = 0; i < nedges; i++)
     {
       int in_edge = 2 * i;
@@ -636,7 +636,7 @@ int LaplacianSmoothing::vertexBasedSmoothing()
   {
     if (getCancel() == true) { return -1; }
     QString ss = QObject::tr("Iteration %1").arg(q);
-    notifyStatusMessage(getHumanLabel(), ss);
+    notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
     if (doParallel == true)
     {

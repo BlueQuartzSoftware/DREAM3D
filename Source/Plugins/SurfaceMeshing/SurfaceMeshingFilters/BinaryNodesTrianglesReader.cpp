@@ -209,7 +209,7 @@ int BinaryNodesTrianglesReader::read()
   }
   {
     QString ss = QObject::tr("Calc Node Count from Nodes.bin File: ").arg(nNodes);
-    notifyStatusMessage(getHumanLabel(), ss);
+    notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
   }
   // Open the triangles file for reading
   FILE* triFile = fopen(m_BinaryTrianglesFile.toLatin1().data(), "rb+");
@@ -238,7 +238,7 @@ int BinaryNodesTrianglesReader::read()
 
   {
     QString ss = QObject::tr("Calc Triangle Count from Triangles.bin File: %1").arg(nTriangles);
-    notifyStatusMessage(getHumanLabel(), ss);
+    notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
   }
 
   // Allocate all the nodes
@@ -252,7 +252,7 @@ int BinaryNodesTrianglesReader::read()
 
   {
     QString ss  = QObject::tr("Reading Nodes file into Memory");
-    notifyStatusMessage(getHumanLabel(), ss);
+    notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
   }
   size_t nread = 0;
   SurfaceMesh::NodesFile::NodesFileRecord_t nRecord;
@@ -273,7 +273,7 @@ int BinaryNodesTrianglesReader::read()
 
   {
     QString ss = QObject::tr("Reading Triangles file into Memory");
-    notifyStatusMessage(getHumanLabel(), ss);
+    notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
   }
 
   // Allocate all the Triangle Objects

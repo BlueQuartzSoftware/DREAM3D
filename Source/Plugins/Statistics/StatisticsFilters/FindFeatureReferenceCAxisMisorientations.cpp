@@ -261,7 +261,7 @@ void FindFeatureReferenceCAxisMisorientations::execute()
     if (i % 1000 == 0)
     {
       QString ss = QObject::tr("Working On Feature %1 of %2").arg(i).arg(totalFeatures);
-      notifyStatusMessage(getHumanLabel(), ss);
+      notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
     }
     index = i * avgMisoComps;
     m_FeatureAvgCAxisMisorientations[i] = avgmiso[index + 1] / avgmiso[index];

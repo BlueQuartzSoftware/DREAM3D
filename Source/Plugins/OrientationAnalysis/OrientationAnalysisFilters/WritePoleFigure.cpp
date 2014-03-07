@@ -533,7 +533,7 @@ void WritePoleFigure::writeVtkFile(const QString filename, DoubleArrayType* pole
 void WritePoleFigure::writeImage(const QString outputPath, QImage image, int dimension, QString label)
 {
   QString ss = QObject::tr("Writing Image %1").arg(outputPath);
-  notifyStatusMessage(getHumanLabel(), ss);
+  notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
 
   QString filename = generateImagePath(label);
   bool saved = image.save(filename);

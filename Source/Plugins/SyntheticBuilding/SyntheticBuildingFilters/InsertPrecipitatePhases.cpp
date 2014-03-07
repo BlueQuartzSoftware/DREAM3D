@@ -496,7 +496,7 @@ void  InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer featur
       if(change > 0 || currentsizedisterror > (1.0 - (float(iter) * 0.001)) || curphasevol[j] < (0.75 * factor * curphasetotalvol))
       {
         QString ss = QObject::tr("Packing Precipitates - Generating Feature #%1").arg(currentnumfeatures);
-        notifyStatusMessage(getHumanLabel(), ss);
+        notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
 
         tDims[0] = currentnumfeatures+1;
         m->getAttributeMatrix(m_CellFeatureAttributeMatrixName)->resizeAttributeArrays(tDims);
@@ -574,7 +574,7 @@ void  InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer featur
   {
 
     QString ss = QObject::tr("Packing Precipitates - Placing Precipitate #%1").arg(i);
-    notifyStatusMessage(getHumanLabel(), ss);
+    notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
 
     PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsDataArray[m_FeaturePhases[i]].get());
     precipboundaryfraction = pp->getPrecipBoundaryFraction();
@@ -667,7 +667,7 @@ void  InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer featur
 
     QString ss;
     ss = QObject::tr("Packing Features - Swapping/Moving/Adding/Removing Features Iteration %1/%2").arg(iteration).arg(totalAdjustments);
-    if(iteration % 100 == 0) { notifyStatusMessage(getHumanLabel(), ss); }
+    if(iteration % 100 == 0) { notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss); }
 
     //    change1 = 0;
     //    change2 = 0;
@@ -1969,7 +1969,7 @@ void InsertPrecipitatePhases::write_goal_attributes()
     if (((float)i / numTuples) * 100.0f > threshold)
     {
       QString ss = QObject::tr("Writing Feature Data - %1% Complete").arg(((float)i / numTuples) * 100);
-      notifyStatusMessage(getHumanLabel(), ss);
+      notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
       threshold = threshold + 5.0f;
       if (threshold < ((float)i / numTuples) * 100.0f)
       {

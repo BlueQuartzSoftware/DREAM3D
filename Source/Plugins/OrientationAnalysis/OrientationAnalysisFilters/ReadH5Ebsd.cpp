@@ -586,11 +586,11 @@ void ReadH5Ebsd::execute()
   int64_t totalPoints = m->getTotalPoints();
   {
     QString ss = QObject::tr("Initializing %1 voxels").arg(totalPoints);
-    notifyStatusMessage(getHumanLabel(), ss);
+    notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
   }
   {
     QString ss = QObject::tr("Reading Ebsd Data from file %1").arg(getInputFile());
-    notifyStatusMessage(getHumanLabel(), ss);
+    notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
   }
   ebsdReader->setSliceStart(m_ZStartIndex);
   ebsdReader->setSliceEnd(m_ZEndIndex);

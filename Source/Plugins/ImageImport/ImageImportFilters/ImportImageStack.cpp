@@ -301,7 +301,7 @@ void ImportImageStack::execute()
   {
     QString imageFName = *filepath;
     QString ss = QObject::tr("Importing file %1").arg(imageFName);
-    notifyStatusMessage(getHumanLabel(), ss);
+    notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
 
     QImage image(imageFName);
     if (image.isNull() == true)

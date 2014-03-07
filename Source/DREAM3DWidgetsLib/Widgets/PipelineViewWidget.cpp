@@ -297,7 +297,7 @@ FilterPipeline::Pointer PipelineViewWidget::getFilterPipeline()
 // -----------------------------------------------------------------------------
 FilterPipeline::Pointer PipelineViewWidget::copyFilterPipeline()
 {
-  //// Worlds worst kludge for getting a copy of the Filter Pipeline. We write the pipeline to a temp file and thne read
+  /// Worlds worst kludge for getting a copy of the Filter Pipeline. We write the pipeline to a temp file and thne read
   /// the pipeline back into a new FilterPipeline Object. There were a few reasons for this choice of algorithm. I tried
   /// to dynamically read the Q_PROPERTY for each Filter Parameter but with custom widgets there is NOT a 1-to-1 relationship
   /// between the filter parameters and the Q_PROPERTY so that does not work. I thought about implementing a
@@ -308,8 +308,24 @@ FilterPipeline::Pointer PipelineViewWidget::copyFilterPipeline()
 
 
   // Create a Pipeline Object and fill it with the filters from this View
-  FilterPipeline::Pointer pipeline = getFilterPipeline();
+ // Create a Pipeline Object and fill it with the filters from this View
+  FilterPipeline::Pointer pipeline = FilterPipeline::New();
 
+  qint32 count = filterCount();
+  for(qint32 i = 0; i < count; ++i)
+  {
+    PipelineFilterWidget* fw = filterWidgetAt(i);
+    if (fw)
+    {
+      fw->setHasPreflightErrors(false);
+      AbstractFilter::Pointer filter = fw->getFilter()->newFilterInstance(true);
+      filter->setErrorCondition(0); // Reset the error condition as we are going to preflight
+      pipeline->pushBack(filter);
+    }
+
+  }
+
+#if 0
   // now write it out to a normal Pipeline File
   QString tempPath;
   QTemporaryFile file;
@@ -325,6 +341,7 @@ FilterPipeline::Pointer PipelineViewWidget::copyFilterPipeline()
 
   // Now Read it back into a new Pipeline Object
   pipeline = QFilterParametersReader::ReadPipelineFromFile(tempPath,  QSettings::IniFormat, dynamic_cast<IObserver*>(m_PipelineMessageObserver) );
+#endif
 
   pipeline->addMessageReceiver(m_PipelineMessageObserver);
   return pipeline;

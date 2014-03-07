@@ -547,7 +547,7 @@ void FindGBCD::execute()
       numIterationsPerTime = i - lastIteration;
       lastIteration = i;
     }
-    notifyStatusMessage(getHumanLabel(), ss);
+    notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
 
     for(int j = 0; j < faceChunkSize; j++)
     {
@@ -565,7 +565,7 @@ void FindGBCD::execute()
   }
 
   ss = QObject::tr("Starting GBCD Normalization");
-  notifyStatusMessage(getHumanLabel(), ss);
+  notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
 
   int totalBins = m_GBCDsizes[0] * m_GBCDsizes[1] * m_GBCDsizes[2] * m_GBCDsizes[3] * m_GBCDsizes[4] * 2;
   double MRDfactor = double(totalBins) / totalFaceArea;

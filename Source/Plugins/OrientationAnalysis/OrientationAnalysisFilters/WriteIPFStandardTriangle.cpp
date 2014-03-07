@@ -341,7 +341,7 @@ void WriteIPFStandardTriangle::writeImage( QImage& image)
 {
 
   QString ss = QObject::tr("Writing Image %1").arg(getOutputFile());
-  notifyStatusMessage(getHumanLabel(), ss);
+  notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
 
   QFileInfo fi((m_OutputFile));
   QDir parent(fi.absolutePath());

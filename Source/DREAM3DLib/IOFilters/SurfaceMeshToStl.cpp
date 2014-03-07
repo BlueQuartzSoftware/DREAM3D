@@ -258,7 +258,7 @@ void SurfaceMeshToStl::execute()
 
     {
       QString ss = QObject::tr("Writing STL for Feature Id ").arg(spin);
-      notifyStatusMessage(getHumanLabel(), ss);
+      notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
     }
 
     QString header = "DREAM3D Generated For Feature ID " + QString::number(spin);

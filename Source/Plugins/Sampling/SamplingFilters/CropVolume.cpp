@@ -392,7 +392,7 @@ void CropVolume::execute()
   for (int64_t i = 0; i < m_ZP; i++)
   {
     QString ss = QObject::tr("Cropping Volume - Slice %1 of %2 Complete").arg(i).arg(m_ZP);
-    notifyStatusMessage(getHumanLabel(), ss);
+    notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
     planeold = (i + m_ZMin) * (m->getXPoints() * m->getYPoints());
     plane = (i * m_XP * m_YP);
     for (int64_t j = 0; j < m_YP; j++)

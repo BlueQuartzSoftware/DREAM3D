@@ -73,6 +73,16 @@ void Observable::notifyStatusMessage(const QString& humanLabel, const QString& s
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void Observable::notifyStatusMessage(const QString& prefix, const QString& humanLabel, const QString& str)
+{
+  PipelineMessage pm = PipelineMessage::CreateStatusMessage(getNameOfClass(), humanLabel, str);
+  pm.setPrefix(prefix);
+  emit filterGeneratedMessage(pm);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void Observable::notifyWarningMessage(const QString& humanLabel, const QString& str, int code)
 {
   PipelineMessage pm = PipelineMessage::CreateWarningMessage(getNameOfClass(), humanLabel, str, code);

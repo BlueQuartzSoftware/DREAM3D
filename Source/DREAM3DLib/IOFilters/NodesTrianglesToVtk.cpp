@@ -234,7 +234,7 @@ void NodesTrianglesToVtk::execute()
   fscanf(nodesFile, "%d", &nNodes);
   {
     QString ss = QObject::tr("Node Count from %1 File: %2").arg(getNodesFile()).arg(nNodes);
-    notifyStatusMessage(getHumanLabel(), ss);
+    notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
   }
 
   // Open the triangles file for reading
@@ -253,7 +253,7 @@ void NodesTrianglesToVtk::execute()
 
   {
     QString ss = QObject::tr("Triangle Count from %1 File: %2").arg(getTrianglesFile()).arg(nTriangles);
-    notifyStatusMessage(getHumanLabel(), ss);
+    notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
   }
   // Open the output VTK File for writing
   FILE* vtkFile = NULL;

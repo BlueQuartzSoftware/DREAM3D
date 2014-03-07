@@ -708,7 +708,7 @@ void MovingFiniteElementSmoothing::execute()
       qDebug() << "Update loop: " << updates << "\n";
     }
     QString ss = QObject::tr("Iteration: %1").arg(updates);
-    notifyStatusMessage(getHumanLabel(), ss);
+    notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
 
     Dihedral_min = 180.;
     Dihedral_max = 0.;

@@ -269,11 +269,11 @@ void MatchCrystallography::execute()
 
   QString ss;
   ss = QObject::tr("Determining Volumes");
-  notifyStatusMessage(getHumanLabel(), ss);
+  notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
   determine_volumes();
 
   ss = QObject::tr("Determining Boundary Areas");
-  notifyStatusMessage(getHumanLabel(), ss);
+  notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
   determine_boundary_areas();
 
   for (int64_t i = 1; i < totalEnsembles; ++i)
@@ -285,15 +285,15 @@ void MatchCrystallography::execute()
       initializeArrays(i);
 
       ss = QObject::tr("Assigning Eulers to Phase %1").arg(i);
-      notifyStatusMessage(getHumanLabel(), ss);
+      notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
       assign_eulers(i);
 
       ss = QObject::tr("Measuring Misorientations of Phase %1").arg(i);
-      notifyStatusMessage(getHumanLabel(), ss);
+      notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
       measure_misorientations(i);
 
       ss = QObject::tr("Matching Crystallography of Phase %1").arg(i);
-      notifyStatusMessage(getHumanLabel(), ss);
+      notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
       matchCrystallography(i);
     }
   }
@@ -570,7 +570,7 @@ void MatchCrystallography::matchCrystallography(int ensem)
   while (badtrycount < (m_MaxIterations / 10) && iterations < m_MaxIterations)
   {
     QString ss = QObject::tr("Matching Crystallography - Swapping/Switching Orientations - %1% Complete").arg(((float)iterations / float(1000 * totalFeatures)) * 100);
-    //      notifyStatusMessage(getHumanLabel(), ss);
+    //      notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
     currentodferror = 0;
     currentmdferror = 0;
     for (int i = 0; i < numbins; i++)

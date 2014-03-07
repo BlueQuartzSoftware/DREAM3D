@@ -427,7 +427,7 @@ void FeatureFaceCurvatureFilter::tbbTaskProgress()
   m_CompletedFeatureFaces++;
 
   QString ss = QObject::tr("%1/%2 Complete").arg(m_CompletedFeatureFaces).arg(m_TotalFeatureFaces);
-  notifyStatusMessage(getHumanLabel(), ss);
+  notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
 }
 
 #endif

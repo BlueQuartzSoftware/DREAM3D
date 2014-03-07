@@ -165,7 +165,7 @@ void RenumberFeatures::execute()
   QVector<size_t> NewNames(totalFeatures, 0);
 
   ss = QObject::tr(" - Generating Active Feature List");
-  notifyStatusMessage(getHumanLabel(), ss);
+  notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
   QVector<size_t> RemoveList;
   for(size_t i = 1; i < totalFeatures; i++)
   {
@@ -189,7 +189,7 @@ void RenumberFeatures::execute()
       IDataArray::Pointer p = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getAttributeArray(*iter);
 
       ss = QObject::tr("Updating Feature Array '%1'").arg(*iter);
-      notifyStatusMessage(getHumanLabel(), ss);
+      notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
       QString type = p->getTypeAsString();
       if(type.compare("NeighborList<T>") == 0)
       {
@@ -206,7 +206,7 @@ void RenumberFeatures::execute()
 
     // Loop over all the points and correct all the feature names
     ss = QObject::tr("Renumbering Cell Region Ids");
-    notifyStatusMessage(getHumanLabel(), ss);
+    notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
     for (int i = 0; i < totalPoints; i++)
     {
       if(m_FeatureIds[i] > 0)

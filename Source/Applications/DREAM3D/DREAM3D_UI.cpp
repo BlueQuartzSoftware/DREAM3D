@@ -967,12 +967,12 @@ void DREAM3D_UI::on_startPipelineBtn_clicked()
   {
     qDebug() << "canceling from GUI...." << "\n";
     emit pipelineCanceled();
-    m_WorkerThread->wait(); // Wait until the thread is complete
-    if (m_WorkerThread->isFinished() == true)
-    {
-      delete m_WorkerThread;
-      m_WorkerThread = NULL;
-    }
+//    m_WorkerThread->wait(); // Wait until the thread is complete
+//    if (m_WorkerThread->isFinished() == true)
+//    {
+//      delete m_WorkerThread;
+//      m_WorkerThread = NULL;
+//    }
     return;
   }
 
@@ -1025,7 +1025,7 @@ void DREAM3D_UI::on_startPipelineBtn_clicked()
   // If the use clicks on the "Cancel" button send a message to the PipelineBuilder object
   // We need a Direct Connection so the
   connect(this, SIGNAL(pipelineCanceled() ),
-          m_PipelineInFlight.get(), SLOT (cancelPipeline() ) , Qt::DirectConnection);
+          m_PipelineInFlight.get(), SLOT (cancelPipeline() ), Qt::DirectConnection);
 
   qRegisterMetaType<PipelineMessage>();
 
