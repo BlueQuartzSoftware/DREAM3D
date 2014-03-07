@@ -257,3 +257,16 @@ SharedFeatureFaceFilter::SharedFeatureFaces_t& SharedFeatureFaceFilter::getShare
   return m_SharedFeatureFaces;
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AbstractFilter::Pointer SharedFeatureFaceFilter::newFilterInstance(bool copyFilterParameters)
+{
+  /*
+  */
+  SharedFeatureFaceFilter::Pointer filter = SharedFeatureFaceFilter::New();
+  if(true == copyFilterParameters)
+  {
+  }
+  return filter;
+}

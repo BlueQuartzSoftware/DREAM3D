@@ -198,3 +198,18 @@ void  AddOrientationNoise::add_orientation_noise()
 }
 
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AbstractFilter::Pointer AddOrientationNoise::newFilterInstance(bool copyFilterParameters)
+{
+  /*
+  * Magnitude
+  */
+  AddOrientationNoise::Pointer filter = AddOrientationNoise::New();
+  if(true == copyFilterParameters)
+  {
+    filter->setMagnitude( getMagnitude() );
+  }
+  return filter;
+}

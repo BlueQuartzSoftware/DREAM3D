@@ -310,3 +310,22 @@ int  PhReader::readFile()
   return 0;
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AbstractFilter::Pointer PhReader::newFilterInstance(bool copyFilterParameters)
+{
+  /*
+  * InputFile
+  * Origin
+  * Resolution
+  */
+  PhReader::Pointer filter = PhReader::New();
+  if(true == copyFilterParameters)
+  {
+    filter->setInputFile( getInputFile() );
+    filter->setOrigin( getOrigin() );
+    filter->setResolution( getResolution() );
+  }
+  return filter;
+}

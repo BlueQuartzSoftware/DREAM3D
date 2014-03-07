@@ -582,3 +582,22 @@ bool VisualizeGBCDPoleFigure::getSquareCoord(float* xstl1_norm1, float* sqCoord)
   }
   return nhCheck;
 }
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AbstractFilter::Pointer VisualizeGBCDPoleFigure::newFilterInstance(bool copyFilterParameters)
+{
+  /*
+  * OutputFile
+  * CrystalStructure
+  * MisorientationRotation
+  */
+  VisualizeGBCDPoleFigure::Pointer filter = VisualizeGBCDPoleFigure::New();
+  if(true == copyFilterParameters)
+  {
+    filter->setCrystalStructure( getCrystalStructure() );
+    filter->setMisorientationRotation( getMisorientationRotation() );
+    filter->setOutputFile( getOutputFile() );
+  }
+  return filter;
+}

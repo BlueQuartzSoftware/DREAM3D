@@ -76,6 +76,7 @@ class AlignSectionsFeatureCentroid : public AlignSections
 
 
     virtual const QString getCompiledLibraryName() { return Reconstruction::ReconstructionBaseName; }
+    virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::ReconstructionFilters; }
     virtual const QString getSubGroupName() {return DREAM3D::FilterSubGroups::AlignmentFilters;}
     virtual const QString getHumanLabel() { return "Align Sections (Feature Centroid)"; }
@@ -120,5 +121,6 @@ class AlignSectionsFeatureCentroid : public AlignSections
 };
 
 #endif /* AlignSectionsFeatureCentroid_H_ */
+
 
 

@@ -89,6 +89,7 @@ class Hex2SqrConverter : public AbstractFilter
     virtual void preflight();
 
     virtual const QString getCompiledLibraryName() { return Sampling::SamplingBaseName; }
+    virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::SamplingFilters; }
     virtual const QString getSubGroupName()  { return DREAM3D::FilterSubGroups::ResolutionFilters; }
     virtual const QString getHumanLabel() { return "Convert Hexagonal Grid Data to Square Grid Data (TSL - .ang)"; }
@@ -136,5 +137,6 @@ signals:
 };
 
 #endif /* Hex2SqrConverter_H_ */
+
 
 

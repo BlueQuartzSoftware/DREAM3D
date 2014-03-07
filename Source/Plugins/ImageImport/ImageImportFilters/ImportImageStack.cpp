@@ -354,3 +354,18 @@ void ImportImageStack::execute()
   notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AbstractFilter::Pointer ImportImageStack::newFilterInstance(bool copyFilterParameters)
+{
+  /*
+  * ImageStack
+  */
+  ImportImageStack::Pointer filter = ImportImageStack::New();
+  if(true == copyFilterParameters)
+  {
+    filter->setImageStack( getImageStack() );
+  }
+  return filter;
+}

@@ -83,6 +83,7 @@ class OpenCloseBadData : public AbstractFilter
     Q_PROPERTY(bool ZDirOn READ getZDirOn WRITE setZDirOn)
 
     virtual const QString getCompiledLibraryName() { return Processing::ProcessingBaseName; }
+    virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::ProcessingFilters; }
     virtual const QString getSubGroupName()  { return DREAM3D::FilterSubGroups::CleanupFilters; }
     virtual const QString getHumanLabel() { return "Erode/Dilate Bad Data"; }
@@ -126,6 +127,7 @@ class OpenCloseBadData : public AbstractFilter
 };
 
 #endif /* OpenCloseBadData_H_ */
+
 
 
 

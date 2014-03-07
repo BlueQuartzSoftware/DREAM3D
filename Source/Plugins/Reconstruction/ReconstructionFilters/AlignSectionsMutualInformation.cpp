@@ -552,3 +552,18 @@ void AlignSectionsMutualInformation::form_features_sections()
   }
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AbstractFilter::Pointer AlignSectionsMutualInformation::newFilterInstance(bool copyFilterParameters)
+{
+  /*
+  * MisorientationTolerance
+  */
+  AlignSectionsMutualInformation::Pointer filter = AlignSectionsMutualInformation::New();
+  if(true == copyFilterParameters)
+  {
+    filter->setMisorientationTolerance( getMisorientationTolerance() );
+  }
+  return filter;
+}

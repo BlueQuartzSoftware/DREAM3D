@@ -433,3 +433,18 @@ void FindOrientationFieldCurl::execute()
   notifyStatusMessage(getHumanLabel(), "FindOrientationFieldCurl Completed");
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AbstractFilter::Pointer FindOrientationFieldCurl::newFilterInstance(bool copyFilterParameters)
+{
+  /*
+  * CurlSize
+  */
+  FindOrientationFieldCurl::Pointer filter = FindOrientationFieldCurl::New();
+  if(true == copyFilterParameters)
+  {
+    filter->setCurlSize( getCurlSize() );
+  }
+  return filter;
+}

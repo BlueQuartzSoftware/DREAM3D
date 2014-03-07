@@ -256,3 +256,20 @@ void RegularizeZSpacing::execute()
   notifyStatusMessage(getHumanLabel(), "Changing Resolution Complete");
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AbstractFilter::Pointer RegularizeZSpacing::newFilterInstance(bool copyFilterParameters)
+{
+  /*
+  * InputFile
+  * NewZRes
+  */
+  RegularizeZSpacing::Pointer filter = RegularizeZSpacing::New();
+  if(true == copyFilterParameters)
+  {
+    filter->setInputFile( getInputFile() );
+    filter->setNewZRes( getNewZRes() );
+  }
+  return filter;
+}

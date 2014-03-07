@@ -682,3 +682,30 @@ void FindRelativeMotionBetweenSlices::execute()
   notifyStatusMessage(getHumanLabel(), "FindRelativeMotionBetweenSlices Completed");
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AbstractFilter::Pointer FindRelativeMotionBetweenSlices::newFilterInstance(bool copyFilterParameters)
+{
+  /*
+  * SelectedArrayPath
+  * Plane
+  * PSize1
+  * PSize2
+  * SSize1
+  * SSize2
+  * SliceStep
+  */
+  FindRelativeMotionBetweenSlices::Pointer filter = FindRelativeMotionBetweenSlices::New();
+  if(true == copyFilterParameters)
+  {
+    filter->setSelectedArrayPath( getSelectedArrayPath() );
+    filter->setPlane( getPlane() );
+    filter->setPSize1( getPSize1() );
+    filter->setPSize2( getPSize2() );
+    filter->setSSize1( getSSize1() );
+    filter->setSSize2( getSSize2() );
+    filter->setSliceStep( getSliceStep() );
+  }
+  return filter;
+}

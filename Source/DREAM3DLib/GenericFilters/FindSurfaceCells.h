@@ -66,6 +66,7 @@ class DREAM3DLib_EXPORT FindSurfaceCells : public AbstractFilter
     //------ Created Cell Data
 
     virtual const QString getCompiledLibraryName() { return Generic::GenericBaseName; }
+    virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::GenericFilters; }
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::SpatialFilters; }
     virtual const QString getHumanLabel() { return "Find Boundary Cells"; }
@@ -102,5 +103,6 @@ signals:
 };
 
 #endif /* FindSurfaceCells_H_ */
+
 
 

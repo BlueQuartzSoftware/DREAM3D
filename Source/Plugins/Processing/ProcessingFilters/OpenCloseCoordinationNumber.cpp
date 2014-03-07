@@ -313,3 +313,20 @@ void OpenCloseCoordinationNumber::execute()
   notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AbstractFilter::Pointer OpenCloseCoordinationNumber::newFilterInstance(bool copyFilterParameters)
+{
+  /*
+  * Loop
+  * CoordinationNumber
+  */
+  OpenCloseCoordinationNumber::Pointer filter = OpenCloseCoordinationNumber::New();
+  if(true == copyFilterParameters)
+  {
+    filter->setCoordinationNumber( getCoordinationNumber() );
+    filter->setLoop( getLoop() );
+  }
+  return filter;
+}

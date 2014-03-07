@@ -471,3 +471,24 @@ int NodesTrianglesToStl::writeNumTrianglesToFile(const QString& filename, int tr
 
 
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AbstractFilter::Pointer NodesTrianglesToStl::newFilterInstance(bool copyFilterParameters)
+{
+  /*
+  * NodesFile
+  * TrianglesFile
+  * OutputStlDirectory
+  * OutputStlPrefix
+  */
+  NodesTrianglesToStl::Pointer filter = NodesTrianglesToStl::New();
+  if(true == copyFilterParameters)
+  {
+    filter->setNodesFile( getNodesFile() );
+    filter->setTrianglesFile( getTrianglesFile() );
+    filter->setOutputStlDirectory( getOutputStlDirectory() );
+    filter->setOutputStlPrefix( getOutputStlPrefix() );
+  }
+  return filter;
+}

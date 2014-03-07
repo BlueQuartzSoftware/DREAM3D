@@ -227,3 +227,16 @@ void JumbleOrientations::execute()
   notifyStatusMessage(getHumanLabel(), "Jumbling Orientations Complete");
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AbstractFilter::Pointer JumbleOrientations::newFilterInstance(bool copyFilterParameters)
+{
+  /*
+  */
+  JumbleOrientations::Pointer filter = JumbleOrientations::New();
+  if(true == copyFilterParameters)
+  {
+  }
+  return filter;
+}

@@ -293,3 +293,22 @@ void AlignSectionsFeatureCentroid::find_shifts(QVector<int>& xshifts, QVector<in
   }
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AbstractFilter::Pointer AlignSectionsFeatureCentroid::newFilterInstance(bool copyFilterParameters)
+{
+  /*
+  * ReferenceSlice
+  * UseReferenceSlice
+  */
+  AlignSectionsFeatureCentroid::Pointer filter = AlignSectionsFeatureCentroid::New();
+  if(true == copyFilterParameters)
+  {
+    filter->setUseReferenceSlice( getUseReferenceSlice() );
+    filter->setReferenceSlice( getReferenceSlice() );
+    filter->setWriteAlignmentShifts( getWriteAlignmentShifts() );
+    filter->setAlignmentShiftFileName( getAlignmentShiftFileName() );
+  }
+  return filter;
+}

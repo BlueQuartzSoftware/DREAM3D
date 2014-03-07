@@ -84,6 +84,7 @@ class DREAM3DLib_EXPORT VtkRectilinearGridWriter : public AbstractFilter
     virtual void preflight();
 
     virtual const QString getCompiledLibraryName() { return IO::IOBaseName; }
+    virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::OutputFilters; }
     virtual const QString getHumanLabel() { return "Write Vtk File (Rectilinear Grid)"; }
@@ -243,4 +244,5 @@ class DREAM3DLib_EXPORT VtkRectilinearGridWriter : public AbstractFilter
 };
 
 #endif /* VTKRECTILINEARGRIDWRITER_H_ */
+
 

@@ -64,9 +64,10 @@ class RotateSampleRefFrame : public AbstractFilter
     DREAM3D_FILTER_PARAMETER(float, RotationAngle)
     Q_PROPERTY(float RotationAngle READ getRotationAngle WRITE setRotationAngle)
     DREAM3D_INSTANCE_PROPERTY(bool, SliceBySlice)
-    Q_PROPERTY(bool SliceBySlice READ getSliceBySlice WRITE setSliceBySlice)
+   // Q_PROPERTY(bool SliceBySlice READ getSliceBySlice WRITE setSliceBySlice)
 
     virtual const QString getCompiledLibraryName() { return Sampling::SamplingBaseName; }
+    virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName()  { return DREAM3D::FilterGroups::SamplingFilters; }
     virtual const QString getSubGroupName()  { return DREAM3D::FilterSubGroups::RotationTransformationFilters; }
     virtual const QString getHumanLabel() { return "Rotate Sample Reference Frame"; }
@@ -109,4 +110,5 @@ class RotateSampleRefFrame : public AbstractFilter
 };
 
 #endif /* RotateSampleRefFrame_H_ */
+
 

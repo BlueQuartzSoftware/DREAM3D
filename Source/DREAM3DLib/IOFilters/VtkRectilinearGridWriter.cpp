@@ -265,3 +265,20 @@ int VtkRectilinearGridWriter::write(const QString& file)
   fclose(f);
   return err;
 }
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AbstractFilter::Pointer VtkRectilinearGridWriter::newFilterInstance(bool copyFilterParameters)
+{
+  /*
+  * OutputFile
+  * WriteBinaryFile
+  */
+  VtkRectilinearGridWriter::Pointer filter = VtkRectilinearGridWriter::New();
+  if(true == copyFilterParameters)
+  {
+    filter->setOutputFile( getOutputFile() );
+    filter->setWriteBinaryFile( getWriteBinaryFile() );
+  }
+  return filter;
+}

@@ -215,3 +215,18 @@ void FindSchmids::execute()
   notifyStatusMessage(getHumanLabel(), "FindSchmids Completed");
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AbstractFilter::Pointer FindSchmids::newFilterInstance(bool copyFilterParameters)
+{
+  /*
+  * LoadingDir
+  */
+  FindSchmids::Pointer filter = FindSchmids::New();
+  if(true == copyFilterParameters)
+  {
+    filter->setLoadingDir( getLoadingDir() );
+  }
+  return filter;
+}

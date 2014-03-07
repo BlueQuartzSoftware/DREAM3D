@@ -588,3 +588,20 @@ void FindProjectedImageStatistics::execute()
   notifyStatusMessage(getHumanLabel(), "FindProjectedImageStatistics Completed");
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AbstractFilter::Pointer FindProjectedImageStatistics::newFilterInstance(bool copyFilterParameters)
+{
+  /*
+  * SelectedArrayPath
+  * Plane
+  */
+  FindProjectedImageStatistics::Pointer filter = FindProjectedImageStatistics::New();
+  if(true == copyFilterParameters)
+  {
+    filter->setSelectedArrayPath( getSelectedArrayPath() );
+    filter->setPlane( getPlane() );
+  }
+  return filter;
+}

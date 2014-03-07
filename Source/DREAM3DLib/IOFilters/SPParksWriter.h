@@ -70,6 +70,7 @@ class DREAM3DLib_EXPORT SPParksWriter : public FileWriter
     * in the GUI for the filter
     */
     virtual const QString getCompiledLibraryName() { return IO::IOBaseName; }
+    virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
 
     /**
@@ -147,6 +148,7 @@ signals:
 };
 
 #endif /* _SPParksWriter_H_ */
+
 
 
 

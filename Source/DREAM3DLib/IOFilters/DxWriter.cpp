@@ -364,3 +364,19 @@ int DxWriter::writeFile()
   notifyStatusMessage(getHumanLabel(), "Complete");
   return err;
 }
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AbstractFilter::Pointer DxWriter::newFilterInstance(bool copyFilterParameters)
+{
+  /*
+  * AddSurfaceLayer
+  */
+  DxWriter::Pointer filter = DxWriter::New();
+  if(true == copyFilterParameters)
+  {
+    filter->setOutputFile( getOutputFile() );
+    filter->setAddSurfaceLayer( getAddSurfaceLayer() );
+  }
+  return filter;
+}

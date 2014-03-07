@@ -76,6 +76,7 @@ class DREAM3DLib_EXPORT FeatureInfoReader : public FileReader
     Q_PROPERTY(bool RenumberFeatures READ getRenumberFeatures WRITE setRenumberFeatures)
 
     virtual const QString getCompiledLibraryName() { return IO::IOBaseName; }
+    virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::InputFilters; }
     virtual const QString getHumanLabel() { return "Read Feature Info File"; }
@@ -123,6 +124,7 @@ class DREAM3DLib_EXPORT FeatureInfoReader : public FileReader
 };
 
 #endif //_FeatureInfoReader_h_
+
 
 
 

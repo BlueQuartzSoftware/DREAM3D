@@ -200,3 +200,18 @@ void AlignSectionsList::find_shifts(QVector<int>& xshifts, QVector<int>& yshifts
   inFile.close();
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AbstractFilter::Pointer AlignSectionsList::newFilterInstance(bool copyFilterParameters)
+{
+  /*
+  * InputFile
+  */
+  AlignSectionsList::Pointer filter = AlignSectionsList::New();
+  if(true == copyFilterParameters)
+  {
+    filter->setInputFile( getInputFile() );
+  }
+  return filter;
+}

@@ -74,6 +74,7 @@ class DREAM3DLib_EXPORT AbaqusSurfaceMeshWriter : public AbstractFilter
     * in the GUI for the filter
     */
     virtual const QString getCompiledLibraryName() { return IO::IOBaseName; }
+    virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::OutputFilters; }
 
@@ -144,6 +145,7 @@ class DREAM3DLib_EXPORT AbaqusSurfaceMeshWriter : public AbstractFilter
 };
 
 #endif /* _AbaqusSurfaceMeshWriter_H_ */
+
 
 
 

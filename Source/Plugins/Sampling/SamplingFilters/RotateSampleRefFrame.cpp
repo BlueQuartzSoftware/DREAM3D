@@ -513,3 +513,21 @@ void RotateSampleRefFrame::execute()
   notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AbstractFilter::Pointer RotateSampleRefFrame::newFilterInstance(bool copyFilterParameters)
+{
+  /*
+  * RotationAxis
+  * RotationAngle
+  * SliceBySlice
+  */
+  RotateSampleRefFrame::Pointer filter = RotateSampleRefFrame::New();
+  if(true == copyFilterParameters)
+  {
+    filter->setRotationAxis( getRotationAxis() );
+    filter->setRotationAngle( getRotationAngle() );
+  }
+  return filter;
+}

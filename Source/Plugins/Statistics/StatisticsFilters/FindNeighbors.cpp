@@ -330,3 +330,16 @@ void FindNeighbors::execute()
 }
 
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AbstractFilter::Pointer FindNeighbors::newFilterInstance(bool copyFilterParameters)
+{
+  /*
+  */
+  FindNeighbors::Pointer filter = FindNeighbors::New();
+  if(true == copyFilterParameters)
+  {
+  }
+  return filter;
+}

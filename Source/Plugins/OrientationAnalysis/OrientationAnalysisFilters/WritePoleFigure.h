@@ -99,6 +99,7 @@ class WritePoleFigure : public AbstractFilter
     * in the GUI for the filter
     */
     virtual const QString getCompiledLibraryName() { return OrientationAnalysis::OrientationAnalysisBaseName; }
+    virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
 
     /**
@@ -199,6 +200,7 @@ class WritePoleFigure : public AbstractFilter
 };
 
 #endif /* _WritePoleFigure_H_ */
+
 
 
 

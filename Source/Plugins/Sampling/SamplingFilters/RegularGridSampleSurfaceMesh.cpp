@@ -237,3 +237,24 @@ void RegularGridSampleSurfaceMesh::assign_points(Int32ArrayType::Pointer iArray)
   }
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AbstractFilter::Pointer RegularGridSampleSurfaceMesh::newFilterInstance(bool copyFilterParameters)
+{
+  /*
+  * XPoints
+  * YPoints
+  * ZPoints
+  * Resolution
+  */
+  RegularGridSampleSurfaceMesh::Pointer filter = RegularGridSampleSurfaceMesh::New();
+  if(true == copyFilterParameters)
+  {
+    filter->setXPoints( getXPoints() );
+    filter->setYPoints( getYPoints() );
+    filter->setZPoints( getZPoints() );
+    filter->setResolution( getResolution() );
+  }
+  return filter;
+}

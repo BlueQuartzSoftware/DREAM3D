@@ -72,6 +72,7 @@ class FindLargestCrossSections : public AbstractFilter
     Q_PROPERTY(unsigned int Plane READ getPlane WRITE setPlane)
 
     virtual const QString getCompiledLibraryName() { return Statistics::StatisticsBaseName; }
+    virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::MorphologicalFilters; }
     virtual const QString getHumanLabel() { return "Find Feature Largest Cross-Section Areas"; }
@@ -126,6 +127,7 @@ class FindLargestCrossSections : public AbstractFilter
 };
 
 #endif /* FindLargestCrossSections_H_ */
+
 
 
 

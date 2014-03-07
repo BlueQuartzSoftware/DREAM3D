@@ -400,3 +400,18 @@ bool CAxisSegmentFeatures::determineGrouping(int64_t referencepoint, int64_t nei
   return group;
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AbstractFilter::Pointer CAxisSegmentFeatures::newFilterInstance(bool copyFilterParameters)
+{
+  /*
+  * MisorientationTolerance
+  */
+  CAxisSegmentFeatures::Pointer filter = CAxisSegmentFeatures::New();
+  if(true == copyFilterParameters)
+  {
+    filter->setMisorientationTolerance( getMisorientationTolerance() );
+  }
+  return filter;
+}

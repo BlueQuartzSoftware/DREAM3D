@@ -432,3 +432,20 @@ int DataContainerWriter::closeFile()
   return true;
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AbstractFilter::Pointer DataContainerWriter::newFilterInstance(bool copyFilterParameters)
+{
+  /*
+  * OutputFile
+  * WriteXdmfFile
+  */
+  DataContainerWriter::Pointer filter = DataContainerWriter::New();
+  if(true == copyFilterParameters)
+  {
+    filter->setOutputFile( getOutputFile() );
+    filter->setWriteXdmfFile( getWriteXdmfFile() );
+  }
+  return filter;
+}

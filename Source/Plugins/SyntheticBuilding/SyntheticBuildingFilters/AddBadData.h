@@ -70,6 +70,7 @@ class AddBadData : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
 
     virtual const QString getCompiledLibraryName() { return SyntheticBuilding::SyntheticBuildingBaseName; }
+    virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::SyntheticBuildingFilters; }
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::MiscFilters; }
     virtual const QString getHumanLabel() { return "Add Bad Data"; }
@@ -120,6 +121,7 @@ class AddBadData : public AbstractFilter
 };
 
 #endif /* AddBadData_H_ */
+
 
 
 

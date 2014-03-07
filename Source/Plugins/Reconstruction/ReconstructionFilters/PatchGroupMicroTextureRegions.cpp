@@ -136,11 +136,11 @@ void PatchGroupMicroTextureRegions::setupFilterParameters()
     parameters.push_back(parameter);
   }
   {
-	// FIX - change to minimum MTR size (diameter)
+  // FIX - change to minimum MTR size (diameter)
     FilterParameter::Pointer parameter = FilterParameter::New();
     parameter->setHumanLabel("Patch Edge Length");
     parameter->setPropertyName("PatchEdgeLength");
-	parameter->setWidgetType(FilterParameterWidgetType::IntWidget);
+  parameter->setWidgetType(FilterParameterWidgetType::IntWidget);
     parameter->setValueType("int");
     parameter->setUnits("");
     parameters.push_back(parameter);
@@ -532,21 +532,41 @@ void PatchGroupMicroTextureRegions::determinePatchFeatureCentroids()
 
   for (size_t i = 1; i < totalPatches; i++)
   {
-	xMin = m_PatchEdgeLength * (i % udims[0] - 1);
-	xMax = m_PatchEdgeLength * i;
-	yMin = m_PatchEdgeLength * (i - 1);
-	yMax = m_PatchEdgeLength * i;
-	zMin = m_PatchEdgeLength * (i - 1);
-	zMax = m_PatchEdgeLength * i;
+  xMin = m_PatchEdgeLength * (i % udims[0] - 1);
+  xMax = m_PatchEdgeLength * i;
+  yMin = m_PatchEdgeLength * (i - 1);
+  yMax = m_PatchEdgeLength * i;
+  zMin = m_PatchEdgeLength * (i - 1);
+  zMax = m_PatchEdgeLength * i;
 
-	for (size_t j = 1; j < totalFeatures; j++)
-	{
+  for (size_t j = 1; j < totalFeatures; j++)
+  {
 
-	}
+  }
   }
 }
 
 void PatchGroupMicroTextureRegions::quiltLandscape()
 {
 
+}// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AbstractFilter::Pointer PatchGroupMicroTextureRegions::newFilterInstance(bool copyFilterParameters)
+{
+  /*
+  * CAxisTolerance
+  * UseRunningAverage
+  * PatchEdgeLength
+  */
+  PatchGroupMicroTextureRegions::Pointer filter = PatchGroupMicroTextureRegions::New();
+  if(true == copyFilterParameters)
+  {
+    filter->setCAxisTolerance( getCAxisTolerance() );
+    filter->setUseNonContiguousNeighbors( getUseNonContiguousNeighbors() );
+    filter->setUseRunningAverage( getUseRunningAverage() );
+    filter->setPatchEdgeLength( getPatchEdgeLength() );
+    filter->setRandomizeParentIds( getRandomizeParentIds() );
+  }
+  return filter;
 }

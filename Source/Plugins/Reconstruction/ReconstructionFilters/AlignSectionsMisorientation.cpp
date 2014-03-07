@@ -369,3 +369,20 @@ void AlignSectionsMisorientation::find_shifts(QVector<int>& xshifts, QVector<int
   }
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AbstractFilter::Pointer AlignSectionsMisorientation::newFilterInstance(bool copyFilterParameters)
+{
+  /*
+  * MisorientationTolerance
+  */
+  AlignSectionsMisorientation::Pointer filter = AlignSectionsMisorientation::New();
+  if(true == copyFilterParameters)
+  {
+    filter->setMisorientationTolerance( getMisorientationTolerance() );
+    filter->setWriteAlignmentShifts( getWriteAlignmentShifts() );
+    filter->setAlignmentShiftFileName( getAlignmentShiftFileName() );
+  }
+  return filter;
+}

@@ -318,3 +318,18 @@ void FindFeatureReferenceMisorientations::execute()
   notifyStatusMessage(getHumanLabel(), "FindFeatureReferenceMisorientations Completed");
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AbstractFilter::Pointer FindFeatureReferenceMisorientations::newFilterInstance(bool copyFilterParameters)
+{
+  /*
+  * ReferenceOrientation
+  */
+  FindFeatureReferenceMisorientations::Pointer filter = FindFeatureReferenceMisorientations::New();
+  if(true == copyFilterParameters)
+  {
+    filter->setReferenceOrientation( getReferenceOrientation() );
+  }
+  return filter;
+}

@@ -265,3 +265,18 @@ void CreateFeatureArrayFromCellArray::execute()
   notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AbstractFilter::Pointer CreateFeatureArrayFromCellArray::newFilterInstance(bool copyFilterParameters)
+{
+  /*
+  * SelectedCellArrayName
+  */
+  CreateFeatureArrayFromCellArray::Pointer filter = CreateFeatureArrayFromCellArray::New();
+  if(true == copyFilterParameters)
+  {
+    filter->setSelectedCellArrayName( getSelectedCellArrayName() );
+  }
+  return filter;
+}

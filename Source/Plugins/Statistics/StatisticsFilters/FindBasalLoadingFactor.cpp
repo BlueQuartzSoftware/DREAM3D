@@ -211,3 +211,18 @@ void FindBasalLoadingFactor::execute()
   notifyStatusMessage(getHumanLabel(), "FindBasalLoadingFactor Completed");
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AbstractFilter::Pointer FindBasalLoadingFactor::newFilterInstance(bool copyFilterParameters)
+{
+  /*
+  * LoadingDir
+  */
+  FindBasalLoadingFactor::Pointer filter = FindBasalLoadingFactor::New();
+  if(true == copyFilterParameters)
+  {
+    filter->setLoadingDir( getLoadingDir() );
+  }
+  return filter;
+}

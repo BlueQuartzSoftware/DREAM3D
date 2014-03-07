@@ -99,6 +99,7 @@ class InsertPrecipitatePhases : public AbstractFilter
     Q_PROPERTY(bool WriteGoalAttributes READ getWriteGoalAttributes WRITE setWriteGoalAttributes)
 
     virtual const QString getCompiledLibraryName() { return SyntheticBuilding::SyntheticBuildingBaseName; }
+    virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::SyntheticBuildingFilters; }
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::PackingFilters; }
     virtual const QString getHumanLabel() { return "Insert Precipitate Phases"; }
@@ -237,5 +238,6 @@ class InsertPrecipitatePhases : public AbstractFilter
 };
 
 #endif /* InsertPrecipitatePhases_H_ */
+
 
 

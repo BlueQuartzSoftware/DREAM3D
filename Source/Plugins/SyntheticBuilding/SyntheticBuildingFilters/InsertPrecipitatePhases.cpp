@@ -1989,3 +1989,22 @@ void InsertPrecipitatePhases::write_goal_attributes()
   }
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AbstractFilter::Pointer InsertPrecipitatePhases::newFilterInstance(bool copyFilterParameters)
+{
+  /*
+  * CsvOutputFile
+  * PeriodicBoundaries
+  * WriteGoalAttributes
+  */
+  InsertPrecipitatePhases::Pointer filter = InsertPrecipitatePhases::New();
+  if(true == copyFilterParameters)
+  {
+    filter->setPeriodicBoundaries( getPeriodicBoundaries() );
+    filter->setWriteGoalAttributes( getWriteGoalAttributes() );
+    filter->setCsvOutputFile( getCsvOutputFile() );
+  }
+  return filter;
+}

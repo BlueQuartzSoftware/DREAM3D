@@ -265,3 +265,18 @@ void GBCDTriangleDumper::execute()
 }
 
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AbstractFilter::Pointer GBCDTriangleDumper::newFilterInstance(bool copyFilterParameters)
+{
+  /*
+  * OutputFile
+  */
+  GBCDTriangleDumper::Pointer filter = GBCDTriangleDumper::New();
+  if(true == copyFilterParameters)
+  {
+    filter->setOutputFile( getOutputFile() );
+  }
+  return filter;
+}

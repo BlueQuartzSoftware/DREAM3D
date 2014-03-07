@@ -332,3 +332,18 @@ void FindNeighborhoods::find_neighborhoods()
   }
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AbstractFilter::Pointer FindNeighborhoods::newFilterInstance(bool copyFilterParameters)
+{
+  /*
+  * MultiplesOfAverage
+  */
+  FindNeighborhoods::Pointer filter = FindNeighborhoods::New();
+  if(true == copyFilterParameters)
+  {
+    filter->setMultiplesOfAverage( getMultiplesOfAverage() );
+  }
+  return filter;
+}

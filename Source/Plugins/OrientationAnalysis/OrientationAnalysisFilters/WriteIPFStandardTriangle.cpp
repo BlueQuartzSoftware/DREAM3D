@@ -360,3 +360,22 @@ void WriteIPFStandardTriangle::writeImage( QImage& image)
 }
 
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AbstractFilter::Pointer WriteIPFStandardTriangle::newFilterInstance(bool copyFilterParameters)
+{
+  /*
+  * OutputFile
+  * ImageFormat
+  * ImageSize
+  */
+  WriteIPFStandardTriangle::Pointer filter = WriteIPFStandardTriangle::New();
+  if(true == copyFilterParameters)
+  {
+    filter->setOutputFile( getOutputFile() );
+    filter->setImageFormat( getImageFormat() );
+    filter->setImageSize( getImageSize() );
+  }
+  return filter;
+}

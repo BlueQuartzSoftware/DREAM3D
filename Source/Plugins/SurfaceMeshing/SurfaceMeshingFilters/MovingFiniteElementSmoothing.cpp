@@ -1046,3 +1046,26 @@ void MovingFiniteElementSmoothing::execute()
 }
 
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AbstractFilter::Pointer MovingFiniteElementSmoothing::newFilterInstance(bool copyFilterParameters)
+{
+  /*
+  * IterationSteps
+  * NodeConstraints
+  * ConstrainSurfaceNodes
+  * ConstrainQuadPoints
+  * SmoothTripleLines
+  */
+  MovingFiniteElementSmoothing::Pointer filter = MovingFiniteElementSmoothing::New();
+  if(true == copyFilterParameters)
+  {
+    filter->setIterationSteps( getIterationSteps() );
+    filter->setNodeConstraints( getNodeConstraints() );
+    filter->setConstrainSurfaceNodes( getConstrainSurfaceNodes() );
+    filter->setConstrainQuadPoints( getConstrainQuadPoints() );
+    filter->setSmoothTripleLines( getSmoothTripleLines() );
+  }
+  return filter;
+}

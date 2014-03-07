@@ -287,3 +287,22 @@ void AdjustVolumeOrigin::updateSurfaceMesh()
 }
 
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AbstractFilter::Pointer AdjustVolumeOrigin::newFilterInstance(bool copyFilterParameters)
+{
+  /*
+  * ApplyToVoxelVolume
+  * ApplyToSurfaceMesh
+  * Origin
+  */
+  AdjustVolumeOrigin::Pointer filter = AdjustVolumeOrigin::New();
+  if(true == copyFilterParameters)
+  {
+    filter->setApplyToVoxelVolume( getApplyToVoxelVolume() );
+    filter->setApplyToSurfaceMesh( getApplyToSurfaceMesh() );
+    filter->setOrigin( getOrigin() );
+  }
+  return filter;
+}

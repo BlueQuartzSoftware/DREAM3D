@@ -233,4 +233,17 @@ int PhWriter::writeFile()
   // If there is an error set this to something negative and also set a message
   notifyStatusMessage(getHumanLabel(), "Writing Ph File Complete");
   return 0;
+}// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AbstractFilter::Pointer PhWriter::newFilterInstance(bool copyFilterParameters)
+{
+  /*
+  */
+  PhWriter::Pointer filter = PhWriter::New();
+  if(true == copyFilterParameters)
+  {
+    filter->setOutputFile( getOutputFile() );
+  }
+  return filter;
 }

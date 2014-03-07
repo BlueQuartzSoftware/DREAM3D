@@ -633,3 +633,22 @@ void MergeColonies::identify_globAlpha()
   //}
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AbstractFilter::Pointer MergeColonies::newFilterInstance(bool copyFilterParameters)
+{
+  /*
+  * AxisTolerance
+  * AngleTolerance
+  * IdentifyGlobAlpha
+  */
+  MergeColonies::Pointer filter = MergeColonies::New();
+  if(true == copyFilterParameters)
+  {
+    filter->setAxisTolerance( getAxisTolerance() );
+    filter->setAngleTolerance( getAngleTolerance() );
+    filter->setIdentifyGlobAlpha( getIdentifyGlobAlpha() );
+  }
+  return filter;
+}

@@ -255,3 +255,16 @@ void TriangleDihedralAngleFilter::execute()
   /* Let the GUI know we are done with this filter */
   notifyStatusMessage(getHumanLabel(), "Complete");
 }
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AbstractFilter::Pointer TriangleDihedralAngleFilter::newFilterInstance(bool copyFilterParameters)
+{
+  /*
+  */
+  TriangleDihedralAngleFilter::Pointer filter = TriangleDihedralAngleFilter::New();
+  if(true == copyFilterParameters)
+  {
+  }
+  return filter;
+}

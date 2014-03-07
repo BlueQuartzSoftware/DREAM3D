@@ -77,6 +77,7 @@ class DREAM3DLib_EXPORT ArraySelectionExample : public AbstractFilter
     * in the GUI for the filter
     */
     virtual const QString getCompiledLibraryName() { return Test::TestBaseName; }
+    virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::TestFilters; }
 
     /**
@@ -146,5 +147,6 @@ class DREAM3DLib_EXPORT ArraySelectionExample : public AbstractFilter
 };
 
 #endif /* _ArraySelectionExample_H_ */
+
 
 

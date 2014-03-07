@@ -378,3 +378,17 @@ int INLWriter::writeFile()
   return err;
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AbstractFilter::Pointer INLWriter::newFilterInstance(bool copyFilterParameters)
+{
+  /*
+  */
+  INLWriter::Pointer filter = INLWriter::New();
+  if(true == copyFilterParameters)
+  {
+    filter->setOutputFile( getOutputFile() );
+  }
+  return filter;
+}

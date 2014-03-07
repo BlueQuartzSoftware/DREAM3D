@@ -334,3 +334,16 @@ void GenerateFaceMisorientationColoring::execute()
   /* Let the GUI know we are done with this filter */
   notifyStatusMessage(getHumanLabel(), "Complete");
 }
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AbstractFilter::Pointer GenerateFaceMisorientationColoring::newFilterInstance(bool copyFilterParameters)
+{
+  /*
+  */
+  GenerateFaceMisorientationColoring::Pointer filter = GenerateFaceMisorientationColoring::New();
+  if(true == copyFilterParameters)
+  {
+  }
+  return filter;
+}

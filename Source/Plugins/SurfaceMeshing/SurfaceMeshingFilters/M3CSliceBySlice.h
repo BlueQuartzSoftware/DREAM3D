@@ -120,6 +120,7 @@ class M3CSliceBySlice : public AbstractFilter
     virtual void preflight();
 
     virtual const QString getCompiledLibraryName() { return SurfaceMeshing::SurfaceMeshingBaseName; }
+    virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::SurfaceMeshingFilters; }
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::GenerationFilters; }
     virtual const QString getHumanLabel() { return "M3C Surface Meshing (Slice at a time)"; }
@@ -422,6 +423,7 @@ class M3CSliceBySlice : public AbstractFilter
 };
 
 #endif
+
 
 
 

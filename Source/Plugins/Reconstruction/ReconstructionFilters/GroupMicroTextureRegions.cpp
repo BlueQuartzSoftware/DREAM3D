@@ -483,3 +483,22 @@ bool GroupMicroTextureRegions::determineGrouping(int referenceFeature, int neigh
   return false;
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AbstractFilter::Pointer GroupMicroTextureRegions::newFilterInstance(bool copyFilterParameters)
+{
+  /*
+  * CAxisTolerance
+  * UseRunningAverage
+  */
+  GroupMicroTextureRegions::Pointer filter = GroupMicroTextureRegions::New();
+  if(true == copyFilterParameters)
+  {
+    filter->setCAxisTolerance( getCAxisTolerance() );
+    filter->setUseNonContiguousNeighbors( getUseNonContiguousNeighbors() );
+    filter->setUseRunningAverage( getUseRunningAverage() );
+    filter->setRandomizeParentIds( getRandomizeParentIds() );
+  }
+  return filter;
+}

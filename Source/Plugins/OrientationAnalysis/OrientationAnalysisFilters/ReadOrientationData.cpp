@@ -679,3 +679,18 @@ void ReadOrientationData::readMicFile()
 
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AbstractFilter::Pointer ReadOrientationData::newFilterInstance(bool copyFilterParameters)
+{
+  /*
+  * InputFile
+  */
+  ReadOrientationData::Pointer filter = ReadOrientationData::New();
+  if(true == copyFilterParameters)
+  {
+    filter->setInputFile( getInputFile() );
+  }
+  return filter;
+}

@@ -432,3 +432,26 @@ void FeatureFaceCurvatureFilter::tbbTaskProgress()
 
 #endif
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AbstractFilter::Pointer FeatureFaceCurvatureFilter::newFilterInstance(bool copyFilterParameters)
+{
+  /*
+  * NRing
+  * ComputePrincipalDirectionVectors
+  * ComputeMeanCurvature
+  * ComputeGaussianCurvature
+  * UseNormalsForCurveFitting
+  */
+  FeatureFaceCurvatureFilter::Pointer filter = FeatureFaceCurvatureFilter::New();
+  if(true == copyFilterParameters)
+  {
+    filter->setNRing( getNRing() );
+    filter->setComputePrincipalDirectionVectors( getComputePrincipalDirectionVectors() );
+    filter->setComputeGaussianCurvature( getComputeGaussianCurvature() );
+    filter->setComputeMeanCurvature( getComputeMeanCurvature() );
+    filter->setUseNormalsForCurveFitting( getUseNormalsForCurveFitting() );
+  }
+  return filter;
+}

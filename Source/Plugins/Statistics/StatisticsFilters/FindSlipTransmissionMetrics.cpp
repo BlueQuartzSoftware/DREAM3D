@@ -290,3 +290,16 @@ void FindSlipTransmissionMetrics::execute()
   notifyStatusMessage(getHumanLabel(), "Completed");
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AbstractFilter::Pointer FindSlipTransmissionMetrics::newFilterInstance(bool copyFilterParameters)
+{
+  /*
+  */
+  FindSlipTransmissionMetrics::Pointer filter = FindSlipTransmissionMetrics::New();
+  if(true == copyFilterParameters)
+  {
+  }
+  return filter;
+}

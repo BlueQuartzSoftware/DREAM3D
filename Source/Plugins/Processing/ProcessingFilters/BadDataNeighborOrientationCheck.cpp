@@ -311,3 +311,20 @@ void BadDataNeighborOrientationCheck::execute()
   notifyStatusMessage(getHumanLabel(), "Filling Bad Data Complete");
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AbstractFilter::Pointer BadDataNeighborOrientationCheck::newFilterInstance(bool copyFilterParameters)
+{
+  /*
+  * MisorientationTolerance
+  * NumberOfNeighbors
+  */
+  BadDataNeighborOrientationCheck::Pointer filter = BadDataNeighborOrientationCheck::New();
+  if(true == copyFilterParameters)
+  {
+    filter->setMisorientationTolerance( getMisorientationTolerance() );
+    filter->setNumberOfNeighbors( getNumberOfNeighbors() );
+  }
+  return filter;
+}

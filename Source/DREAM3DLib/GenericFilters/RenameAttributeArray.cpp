@@ -226,3 +226,20 @@ void RenameAttributeArray::execute()
 
   notifyStatusMessage(getHumanLabel(), "Complete");
 }
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AbstractFilter::Pointer RenameAttributeArray::newFilterInstance(bool copyFilterParameters)
+{
+  /*
+  * SelectedArrayPath
+  * NewArrayName
+  */
+  RenameAttributeArray::Pointer filter = RenameAttributeArray::New();
+  if(true == copyFilterParameters)
+  {
+    filter->setSelectedArrayPath( getSelectedArrayPath() );
+    filter->setNewArrayName( getNewArrayName() );
+  }
+  return filter;
+}

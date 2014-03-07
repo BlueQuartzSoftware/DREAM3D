@@ -333,3 +333,22 @@ void FitFeatureData::execute()
 }
 
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AbstractFilter::Pointer FitFeatureData::newFilterInstance(bool copyFilterParameters)
+{
+  /*
+  * SelectedFeatureArrayName
+  * DistributionType
+  * RemoveBiasedFeatures
+  */
+  FitFeatureData::Pointer filter = FitFeatureData::New();
+  if(true == copyFilterParameters)
+  {
+    filter->setSelectedFeatureArrayName( getSelectedFeatureArrayName() );
+    filter->setDistributionType( getDistributionType() );
+    filter->setRemoveBiasedFeatures( getRemoveBiasedFeatures() );
+  }
+  return filter;
+}

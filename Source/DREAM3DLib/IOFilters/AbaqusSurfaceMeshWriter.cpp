@@ -349,3 +349,18 @@ int AbaqusSurfaceMeshWriter::writeFeatures(FILE* f)
 
 
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AbstractFilter::Pointer AbaqusSurfaceMeshWriter::newFilterInstance(bool copyFilterParameters)
+{
+  /*
+  * OutputFile
+  */
+  AbaqusSurfaceMeshWriter::Pointer filter = AbaqusSurfaceMeshWriter::New();
+  if(true == copyFilterParameters)
+  {
+    filter->setOutputFile( getOutputFile() );
+  }
+  return filter;
+}

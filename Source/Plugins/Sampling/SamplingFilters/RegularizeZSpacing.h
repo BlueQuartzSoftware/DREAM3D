@@ -74,6 +74,7 @@ class RegularizeZSpacing : public AbstractFilter
     Q_PROPERTY(float NewZRes READ getNewZRes WRITE setNewZRes)
 
     virtual const QString getCompiledLibraryName() { return Sampling::SamplingBaseName; }
+    virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::SamplingFilters; }
     virtual const QString getSubGroupName()  { return DREAM3D::FilterSubGroups::ResolutionFilters; }
     virtual const QString getHumanLabel() { return "Regularize Z Spacing"; }
@@ -115,4 +116,5 @@ class RegularizeZSpacing : public AbstractFilter
 };
 
 #endif /* RegularizeZSpacing_H_ */
+
 

@@ -436,3 +436,22 @@ int DxReader::readFile()
 }
 
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AbstractFilter::Pointer DxReader::newFilterInstance(bool copyFilterParameters)
+{
+  /*
+  * InputFile
+  * Origin
+  * Resolution
+  */
+  DxReader::Pointer filter = DxReader::New();
+  if(true == copyFilterParameters)
+  {
+    filter->setInputFile( getInputFile() );
+    filter->setOrigin( getOrigin() );
+    filter->setResolution( getResolution() );
+  }
+  return filter;
+}

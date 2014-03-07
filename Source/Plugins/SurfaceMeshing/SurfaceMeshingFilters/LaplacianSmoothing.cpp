@@ -811,3 +811,30 @@ void LaplacianSmoothing::writeVTKFile(const QString& outputVtkFile)
 
 #endif
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AbstractFilter::Pointer LaplacianSmoothing::newFilterInstance(bool copyFilterParameters)
+{
+  /*
+  * IterationSteps
+  * Lambda
+  * SurfacePointLambda
+  * TripleLineLambda
+  * QuadPointLambda
+  * SurfaceTripleLineLambda
+  * SurfaceQuadPointLambda
+  */
+  LaplacianSmoothing::Pointer filter = LaplacianSmoothing::New();
+  if(true == copyFilterParameters)
+  {
+    filter->setIterationSteps( getIterationSteps() );
+    filter->setLambda( getLambda() );
+    filter->setTripleLineLambda( getTripleLineLambda() );
+    filter->setQuadPointLambda( getQuadPointLambda() );
+    filter->setSurfacePointLambda( getSurfacePointLambda() );
+    filter->setSurfaceTripleLineLambda( getSurfaceTripleLineLambda() );
+    filter->setSurfaceQuadPointLambda( getSurfaceQuadPointLambda() );
+  }
+  return filter;
+}

@@ -81,6 +81,7 @@ class FindFeatureNeighborCAxisMisalignments : public AbstractFilter
     Q_PROPERTY(bool FindAvgMisals READ getFindAvgMisals WRITE setFindAvgMisals)
 
     virtual const QString getCompiledLibraryName() { return Statistics::StatisticsBaseName; }
+    virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::CrystallographicFilters; }
     virtual const QString getHumanLabel() { return "Find Feature Neighbor C-Axis Misalignments"; }
@@ -137,5 +138,6 @@ class FindFeatureNeighborCAxisMisalignments : public AbstractFilter
 };
 
 #endif /* FINDFIELDNEIGHBORCAXISMISALIGNMENTS_H_ */
+
 
 

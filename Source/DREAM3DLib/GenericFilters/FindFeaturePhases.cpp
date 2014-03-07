@@ -150,3 +150,16 @@ void FindFeaturePhases::execute()
 
 
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AbstractFilter::Pointer FindFeaturePhases::newFilterInstance(bool copyFilterParameters)
+{
+  /*
+  */
+  FindFeaturePhases::Pointer filter = FindFeaturePhases::New();
+  if(true == copyFilterParameters)
+  {
+  }
+  return filter;
+}

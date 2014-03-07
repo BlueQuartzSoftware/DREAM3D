@@ -192,3 +192,16 @@ void MakeVolumeDataContainer::execute()
   notifyStatusMessage(getHumanLabel(), "Complete");
 
 }
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AbstractFilter::Pointer MakeVolumeDataContainer::newFilterInstance(bool copyFilterParameters)
+{
+  /*
+  */
+  MakeVolumeDataContainer::Pointer filter = MakeVolumeDataContainer::New();
+  if(true == copyFilterParameters)
+  {
+  }
+  return filter;
+}

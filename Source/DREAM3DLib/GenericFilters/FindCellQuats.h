@@ -65,6 +65,7 @@ class DREAM3DLib_EXPORT FindCellQuats : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
 
     virtual const QString getCompiledLibraryName() { return Generic::GenericBaseName; }
+    virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::GenericFilters; }
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::CrystallographyFilters; }
     virtual const QString getHumanLabel() { return "Find Cell Quaternions"; }
@@ -109,5 +110,6 @@ signals:
 };
 
 #endif /* FindCellQuats_H_ */
+
 
 

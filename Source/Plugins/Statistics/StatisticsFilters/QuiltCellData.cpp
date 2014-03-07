@@ -409,3 +409,28 @@ void QuiltCellData::execute()
 }
 
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AbstractFilter::Pointer QuiltCellData::newFilterInstance(bool copyFilterParameters)
+{
+  /*
+  * SelectedCellArrayName
+  * QuiltStep
+  * PatchSize
+  * OutputDataContainerName
+  * OutputAttributeMatrixName
+  * OutputArrayName
+  */
+  QuiltCellData::Pointer filter = QuiltCellData::New();
+  if(true == copyFilterParameters)
+  {
+    filter->setSelectedCellArrayName( getSelectedCellArrayName() );
+    filter->setQuiltStep( getQuiltStep() );
+    filter->setPatchSize( getPatchSize() );
+    filter->setOutputDataContainerName( getOutputDataContainerName() );
+    filter->setOutputAttributeMatrixName( getOutputAttributeMatrixName() );
+    filter->setOutputArrayName( getOutputArrayName() );
+  }
+  return filter;
+}

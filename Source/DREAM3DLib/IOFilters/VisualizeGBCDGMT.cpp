@@ -545,3 +545,22 @@ bool VisualizeGBCDGMT::getSquareCoord(float* xstl1_norm1, float* sqCoord)
   }
   return nhCheck;
 }
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AbstractFilter::Pointer VisualizeGBCDGMT::newFilterInstance(bool copyFilterParameters)
+{
+  /*
+  * OutputFile
+  * CrystalStructure
+  * MisorientationRotation
+  */
+  VisualizeGBCDGMT::Pointer filter = VisualizeGBCDGMT::New();
+  if(true == copyFilterParameters)
+  {
+    filter->setCrystalStructure( getCrystalStructure() );
+    filter->setMisorientationRotation( getMisorientationRotation() );
+    filter->setOutputFile( getOutputFile() );
+  }
+  return filter;
+}

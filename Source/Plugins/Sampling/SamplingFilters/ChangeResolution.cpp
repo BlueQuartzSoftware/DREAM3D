@@ -340,3 +340,22 @@ void ChangeResolution::execute()
   notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AbstractFilter::Pointer ChangeResolution::newFilterInstance(bool copyFilterParameters)
+{
+  /*
+  * Resolution
+  * RenumberFeatures
+  * SaveAsNewDataContainer
+  */
+  ChangeResolution::Pointer filter = ChangeResolution::New();
+  if(true == copyFilterParameters)
+  {
+    filter->setResolution( getResolution() );
+    filter->setRenumberFeatures( getRenumberFeatures() );
+    filter->setSaveAsNewDataContainer( getSaveAsNewDataContainer() );
+  }
+  return filter;
+}

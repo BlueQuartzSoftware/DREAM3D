@@ -67,6 +67,7 @@ class FlattenImage : public AbstractFilter
     virtual void preflight();
 
     virtual const QString getCompiledLibraryName() { return Processing::ProcessingBaseName; }
+    virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName()  { return DREAM3D::FilterGroups::ProcessingFilters; }
     virtual const QString getSubGroupName()  { return DREAM3D::FilterSubGroups::ImageFilters; }
     virtual const QString getHumanLabel() { return "Flatten Image"; }
@@ -109,6 +110,7 @@ signals:
 };
 
 #endif /* FlattenImage_H_ */
+
 
 
 

@@ -250,3 +250,20 @@ void NeighborCICorrelation::execute()
   notifyStatusMessage(getHumanLabel(), "Filling Bad Data Complete");
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AbstractFilter::Pointer NeighborCICorrelation::newFilterInstance(bool copyFilterParameters)
+{
+  /*
+  * MinConfidence
+  * Loop
+  */
+  NeighborCICorrelation::Pointer filter = NeighborCICorrelation::New();
+  if(true == copyFilterParameters)
+  {
+    filter->setMinConfidence( getMinConfidence() );
+    filter->setLoop( getLoop() );
+  }
+  return filter;
+}

@@ -290,3 +290,16 @@ void IdentifySample::execute()
   notifyStatusMessage(getHumanLabel(), "Identifying Sample Complete");
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AbstractFilter::Pointer IdentifySample::newFilterInstance(bool copyFilterParameters)
+{
+  /*
+  */
+  IdentifySample::Pointer filter = IdentifySample::New();
+  if(true == copyFilterParameters)
+  {
+  }
+  return filter;
+}

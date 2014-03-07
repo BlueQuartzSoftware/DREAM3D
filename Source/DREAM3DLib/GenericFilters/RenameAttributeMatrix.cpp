@@ -209,3 +209,20 @@ void RenameAttributeMatrix::execute()
 
   notifyStatusMessage(getHumanLabel(), "Complete");
 }
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AbstractFilter::Pointer RenameAttributeMatrix::newFilterInstance(bool copyFilterParameters)
+{
+  /*
+  * SelectedAttributeMatrixPath
+  * NewAttributeMatrix
+  */
+  RenameAttributeMatrix::Pointer filter = RenameAttributeMatrix::New();
+  if(true == copyFilterParameters)
+  {
+    filter->setSelectedAttributeMatrixPath( getSelectedAttributeMatrixPath() );
+    filter->setNewAttributeMatrix( getNewAttributeMatrix() );
+  }
+  return filter;
+}

@@ -143,4 +143,16 @@ void RemoveArrays::execute()
   dataCheck();
   if(getErrorCondition() < 0) { return; }
   notifyStatusMessage(getHumanLabel(), "Complete");
+}// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AbstractFilter::Pointer RemoveArrays::newFilterInstance(bool copyFilterParameters)
+{
+  /*
+  */
+  RemoveArrays::Pointer filter = RemoveArrays::New();
+  if(true == copyFilterParameters)
+  {
+  }
+  return filter;
 }

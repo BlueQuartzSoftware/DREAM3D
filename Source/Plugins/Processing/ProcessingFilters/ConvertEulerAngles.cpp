@@ -220,3 +220,18 @@ void ConvertEulerAngles::execute()
   notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AbstractFilter::Pointer ConvertEulerAngles::newFilterInstance(bool copyFilterParameters)
+{
+  /*
+  * ConversionType
+  */
+  ConvertEulerAngles::Pointer filter = ConvertEulerAngles::New();
+  if(true == copyFilterParameters)
+  {
+    filter->setConversionType( getConversionType() );
+  }
+  return filter;
+}

@@ -81,6 +81,7 @@ class GenerateSurfaceMeshConnectivity : public SurfaceMeshFilter
     * in the GUI for the filter
     */
     virtual const QString getCompiledLibraryName() { return SurfaceMeshing::SurfaceMeshingBaseName; }
+    virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::SurfaceMeshingFilters; }
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::ConnectivityArrangementFilters; }
 
@@ -145,5 +146,6 @@ class GenerateSurfaceMeshConnectivity : public SurfaceMeshFilter
 };
 
 #endif /* _GenerateSurfaceMeshConnectivity_H_ */
+
 
 

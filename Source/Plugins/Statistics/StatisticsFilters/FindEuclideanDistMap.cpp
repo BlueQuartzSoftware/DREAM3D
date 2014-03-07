@@ -530,3 +530,16 @@ void FindEuclideanDistMap::find_euclideandistmap()
   }
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AbstractFilter::Pointer FindEuclideanDistMap::newFilterInstance(bool copyFilterParameters)
+{
+  /*
+  */
+  FindEuclideanDistMap::Pointer filter = FindEuclideanDistMap::New();
+  if(true == copyFilterParameters)
+  {
+  }
+  return filter;
+}

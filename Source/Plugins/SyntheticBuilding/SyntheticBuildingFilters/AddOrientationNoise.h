@@ -76,6 +76,7 @@ class AddOrientationNoise : public AbstractFilter
     Q_PROPERTY(float Magnitude READ getMagnitude WRITE setMagnitude)
 
     virtual const QString getCompiledLibraryName() { return SyntheticBuilding::SyntheticBuildingBaseName; }
+    virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::SyntheticBuildingFilters; }
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::CrystallographyFilters; }
     virtual const QString getHumanLabel() { return "Add Orientation Noise"; }
@@ -121,6 +122,7 @@ class AddOrientationNoise : public AbstractFilter
 };
 
 #endif /* AddOrientationNoise_H_ */
+
 
 
 

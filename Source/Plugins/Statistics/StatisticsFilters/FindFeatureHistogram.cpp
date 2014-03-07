@@ -298,3 +298,22 @@ void FindFeatureHistogram::execute()
   notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AbstractFilter::Pointer FindFeatureHistogram::newFilterInstance(bool copyFilterParameters)
+{
+  /*
+  * SelectedFeatureArrayName
+  * NumBins
+  * RemoveBiasedFeatures
+  */
+  FindFeatureHistogram::Pointer filter = FindFeatureHistogram::New();
+  if(true == copyFilterParameters)
+  {
+    filter->setSelectedFeatureArrayName( getSelectedFeatureArrayName() );
+    filter->setNumBins( getNumBins() );
+    filter->setRemoveBiasedFeatures( getRemoveBiasedFeatures() );
+  }
+  return filter;
+}

@@ -164,6 +164,7 @@ class DREAM3DLib_EXPORT GenericExample : public AbstractFilter
     * in the GUI for the filter
     */
     virtual const QString getCompiledLibraryName() { return Test::TestBaseName; }
+    virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::TestFilters; }
 
     /**
@@ -240,5 +241,6 @@ class DREAM3DLib_EXPORT GenericExample : public AbstractFilter
 };
 
 #endif /* _GenericExample_H_ */
+
 
 

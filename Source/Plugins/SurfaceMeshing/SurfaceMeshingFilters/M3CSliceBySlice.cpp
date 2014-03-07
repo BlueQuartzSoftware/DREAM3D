@@ -3053,3 +3053,18 @@ QVector<int> M3CSliceBySlice::findAdjacentTriangles(SurfaceMesh::M3C::Triangle* 
 
 #endif
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AbstractFilter::Pointer M3CSliceBySlice::newFilterInstance(bool copyFilterParameters)
+{
+  /*
+  * DeleteTempFiles
+  */
+  M3CSliceBySlice::Pointer filter = M3CSliceBySlice::New();
+  if(true == copyFilterParameters)
+  {
+    filter->setDeleteTempFiles( getDeleteTempFiles() );
+  }
+  return filter;
+}

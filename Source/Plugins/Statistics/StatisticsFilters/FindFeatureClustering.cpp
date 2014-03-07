@@ -234,3 +234,16 @@ void FindFeatureClustering::find_clustering()
 }
 
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AbstractFilter::Pointer FindFeatureClustering::newFilterInstance(bool copyFilterParameters)
+{
+  /*
+  */
+  FindFeatureClustering::Pointer filter = FindFeatureClustering::New();
+  if(true == copyFilterParameters)
+  {
+  }
+  return filter;
+}

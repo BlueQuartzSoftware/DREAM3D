@@ -399,3 +399,16 @@ QString Hex2SqrConverter::modifyAngHeaderLine(QString& buf)
 }
 
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AbstractFilter::Pointer Hex2SqrConverter::newFilterInstance(bool copyFilterParameters)
+{
+  /*
+  */
+  Hex2SqrConverter::Pointer filter = Hex2SqrConverter::New();
+  if(true == copyFilterParameters)
+  {
+  }
+  return filter;
+}

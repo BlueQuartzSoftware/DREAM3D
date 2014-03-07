@@ -253,3 +253,20 @@ void RotateEulerRefFrame::execute()
   notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AbstractFilter::Pointer RotateEulerRefFrame::newFilterInstance(bool copyFilterParameters)
+{
+  /*
+  * RotationAxis
+  * RotationAngle
+  */
+  RotateEulerRefFrame::Pointer filter = RotateEulerRefFrame::New();
+  if(true == copyFilterParameters)
+  {
+    filter->setRotationAxis( getRotationAxis() );
+    filter->setRotationAngle( getRotationAngle() );
+  }
+  return filter;
+}

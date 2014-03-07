@@ -423,3 +423,20 @@ void YSChoiAbaqusReader::execute()
   delete[] mat;
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AbstractFilter::Pointer YSChoiAbaqusReader::newFilterInstance(bool copyFilterParameters)
+{
+  /*
+  * InputFile
+  * InputFeatureInfoFile
+  */
+  YSChoiAbaqusReader::Pointer filter = YSChoiAbaqusReader::New();
+  if(true == copyFilterParameters)
+  {
+    filter->setInputFile( getInputFile() );
+    filter->setInputFeatureInfoFile( getInputFeatureInfoFile() );
+  }
+  return filter;
+}

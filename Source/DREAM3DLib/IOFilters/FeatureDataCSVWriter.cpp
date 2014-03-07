@@ -307,3 +307,20 @@ void FeatureDataCSVWriter::execute()
 
 
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AbstractFilter::Pointer FeatureDataCSVWriter::newFilterInstance(bool copyFilterParameters)
+{
+  /*
+  * FeatureDataFile
+  * WriteNeighborListData
+  */
+  FeatureDataCSVWriter::Pointer filter = FeatureDataCSVWriter::New();
+  if(true == copyFilterParameters)
+  {
+    filter->setFeatureDataFile( getFeatureDataFile() );
+    filter->setWriteNeighborListData( getWriteNeighborListData() );
+  }
+  return filter;
+}

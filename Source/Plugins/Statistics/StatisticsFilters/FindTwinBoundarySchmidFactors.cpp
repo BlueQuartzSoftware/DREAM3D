@@ -422,3 +422,20 @@ void FindTwinBoundarySchmidFactors::execute()
   notifyStatusMessage(getHumanLabel(), "FindTwinBoundarySchmidFactors Completed");
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AbstractFilter::Pointer FindTwinBoundarySchmidFactors::newFilterInstance(bool copyFilterParameters)
+{
+  /*
+  * TwinBoundarySchmidFactorsFile
+  * LoadingDir
+  */
+  FindTwinBoundarySchmidFactors::Pointer filter = FindTwinBoundarySchmidFactors::New();
+  if(true == copyFilterParameters)
+  {
+    filter->setTwinBoundarySchmidFactorsFile( getTwinBoundarySchmidFactorsFile() );
+    filter->setLoadingDir( getLoadingDir() );
+  }
+  return filter;
+}

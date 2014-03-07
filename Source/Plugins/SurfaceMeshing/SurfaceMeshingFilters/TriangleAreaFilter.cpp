@@ -230,3 +230,16 @@ void TriangleAreaFilter::execute()
   /* Let the GUI know we are done with this filter */
   notifyStatusMessage(getHumanLabel(), "Complete");
 }
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AbstractFilter::Pointer TriangleAreaFilter::newFilterInstance(bool copyFilterParameters)
+{
+  /*
+  */
+  TriangleAreaFilter::Pointer filter = TriangleAreaFilter::New();
+  if(true == copyFilterParameters)
+  {
+  }
+  return filter;
+}

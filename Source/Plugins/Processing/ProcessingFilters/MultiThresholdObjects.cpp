@@ -268,3 +268,20 @@ void MultiThresholdObjects::execute()
   notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AbstractFilter::Pointer MultiThresholdObjects::newFilterInstance(bool copyFilterParameters)
+{
+  /*
+  * OutputArrayName
+  * SelectedThresholds
+  */
+  MultiThresholdObjects::Pointer filter = MultiThresholdObjects::New();
+  if(true == copyFilterParameters)
+  {
+    filter->setOutputArrayName( getOutputArrayName() );
+    filter->setSelectedThresholds( getSelectedThresholds() );
+  }
+  return filter;
+}

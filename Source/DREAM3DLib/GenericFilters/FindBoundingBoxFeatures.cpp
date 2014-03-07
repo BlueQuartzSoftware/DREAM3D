@@ -279,3 +279,16 @@ void FindBoundingBoxFeatures::find_boundingboxfeatures2D()
   }
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AbstractFilter::Pointer FindBoundingBoxFeatures::newFilterInstance(bool copyFilterParameters)
+{
+  /*
+  */
+  FindBoundingBoxFeatures::Pointer filter = FindBoundingBoxFeatures::New();
+  if(true == copyFilterParameters)
+  {
+  }
+  return filter;
+}

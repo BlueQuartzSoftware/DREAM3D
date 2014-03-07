@@ -411,3 +411,22 @@ int DataContainerReader::writeExistingPipelineToFile(AbstractFilterParametersWri
   }
   return index;
 }
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AbstractFilter::Pointer DataContainerReader::newFilterInstance(bool copyFilterParameters)
+{
+  /*
+  * InputFile
+  * OverwriteExistingDataContainers
+  * DataContainerArrayProxy
+  */
+  DataContainerReader::Pointer filter = DataContainerReader::New();
+  if(true == copyFilterParameters)
+  {
+    filter->setInputFile( getInputFile() );
+    filter->setOverwriteExistingDataContainers( getOverwriteExistingDataContainers() );
+    filter->setDataContainerArrayProxy( getDataContainerArrayProxy() );
+  }
+  return filter;
+}

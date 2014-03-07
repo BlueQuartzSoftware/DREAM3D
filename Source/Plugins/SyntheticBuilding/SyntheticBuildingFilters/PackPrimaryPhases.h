@@ -88,6 +88,7 @@ class PackPrimaryPhases : public AbstractFilter
     typedef boost::shared_array<int> SharedIntArray;
 
     virtual const QString getCompiledLibraryName() { return SyntheticBuilding::SyntheticBuildingBaseName; }
+    virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::SyntheticBuildingFilters; }
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::PackingFilters; }
     virtual const QString getHumanLabel() { return "Pack Primary Phases"; }
@@ -242,5 +243,6 @@ class PackPrimaryPhases : public AbstractFilter
 };
 
 #endif /* PackPrimaryPhases_H_ */
+
 
 

@@ -2503,3 +2503,22 @@ void PackPrimaryPhases::write_goal_attributes()
   }
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AbstractFilter::Pointer PackPrimaryPhases::newFilterInstance(bool copyFilterParameters)
+{
+  /*
+  * CsvOutputFile
+  * PeriodicBoundaries
+  * WriteGoalAttributes
+  */
+  PackPrimaryPhases::Pointer filter = PackPrimaryPhases::New();
+  if(true == copyFilterParameters)
+  {
+    filter->setPeriodicBoundaries( getPeriodicBoundaries() );
+    filter->setWriteGoalAttributes( getWriteGoalAttributes() );
+    filter->setCsvOutputFile( getCsvOutputFile() );
+  }
+  return filter;
+}

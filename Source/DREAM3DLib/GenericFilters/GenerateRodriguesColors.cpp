@@ -235,3 +235,16 @@ void GenerateRodriguesColors::execute()
   notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AbstractFilter::Pointer GenerateRodriguesColors::newFilterInstance(bool copyFilterParameters)
+{
+  /*
+  */
+  GenerateRodriguesColors::Pointer filter = GenerateRodriguesColors::New();
+  if(true == copyFilterParameters)
+  {
+  }
+  return filter;
+}

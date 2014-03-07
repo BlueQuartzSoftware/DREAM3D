@@ -67,6 +67,7 @@ class InitializeSyntheticVolume : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(ShapeTypesArrayName)
 
     virtual const QString getCompiledLibraryName() { return SyntheticBuilding::SyntheticBuildingBaseName; }
+    virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName() {return DREAM3D::FilterGroups::SyntheticBuildingFilters;}
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::PackingFilters; }
     virtual const QString getHumanLabel() {return "Initialize Synthetic Volume";}
@@ -129,5 +130,6 @@ signals:
 };
 
 #endif /* _INITIALIZESYNTHETICVOLUME_H_ */
+
 
 

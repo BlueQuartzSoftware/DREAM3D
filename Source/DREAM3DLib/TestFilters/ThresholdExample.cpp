@@ -217,3 +217,28 @@ void ThresholdExample::execute()
   notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AbstractFilter::Pointer ThresholdExample::newFilterInstance(bool copyFilterParameters)
+{
+  /*
+  * CellComparisonInputs
+  * FeatureComparisonInputs
+  * EnsembleComparisonInputs
+  * PointComparisonInputs
+  * FaceComparisonInputs
+  * EdgeComparisonInputs
+  */
+  ThresholdExample::Pointer filter = ThresholdExample::New();
+  if(true == copyFilterParameters)
+  {
+    filter->setCellComparisonInputs( getCellComparisonInputs() );
+    filter->setFeatureComparisonInputs( getFeatureComparisonInputs() );
+    filter->setEnsembleComparisonInputs( getEnsembleComparisonInputs() );
+    filter->setPointComparisonInputs( getPointComparisonInputs() );
+    filter->setFaceComparisonInputs( getFaceComparisonInputs() );
+    filter->setEdgeComparisonInputs( getEdgeComparisonInputs() );
+  }
+  return filter;
+}

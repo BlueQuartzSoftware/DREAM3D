@@ -452,3 +452,20 @@ int VtkFeatureIdReader::readFile()
   instream.close();
   return err;
 }
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AbstractFilter::Pointer VtkFeatureIdReader::newFilterInstance(bool copyFilterParameters)
+{
+  /*
+  * InputFile
+  * FeatureIdScalarName
+  */
+  VtkFeatureIdReader::Pointer filter = VtkFeatureIdReader::New();
+  if(true == copyFilterParameters)
+  {
+    filter->setInputFile( getInputFile() );
+    filter->setFeatureIdScalarName( getFeatureIdScalarName() );
+  }
+  return filter;
+}

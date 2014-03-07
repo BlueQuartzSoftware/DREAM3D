@@ -1127,3 +1127,27 @@ void ReadH5Ebsd::copyHEDMArrays(H5EbsdVolumeReader* ebsdReader)
   }
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AbstractFilter::Pointer ReadH5Ebsd::newFilterInstance(bool copyFilterParameters)
+{
+  /*
+  * InputFile
+  * ZStartIndex
+  * ZEndIndex
+  * UseTransformations
+  * SelectedArrayNames
+  * DataArrayNames
+  */
+  ReadH5Ebsd::Pointer filter = ReadH5Ebsd::New();
+  if(true == copyFilterParameters)
+  {
+    filter->setInputFile( getInputFile() );
+    filter->setZStartIndex( getZStartIndex() );
+    filter->setZEndIndex( getZEndIndex() );
+    filter->setUseTransformations( getUseTransformations() );
+    filter->setSelectedArrayNames( getSelectedArrayNames() );
+  }
+  return filter;
+}

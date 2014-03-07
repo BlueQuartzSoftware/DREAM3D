@@ -87,6 +87,7 @@ class FindGBCD : public SurfaceMeshFilter
     * in the GUI for the filter
     */
     virtual const QString getCompiledLibraryName() { return SurfaceMeshing::SurfaceMeshingBaseName; }
+    virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::CrystallographicFilters; }
 
@@ -174,4 +175,5 @@ class FindGBCD : public SurfaceMeshFilter
 };
 
 #endif /* _FindGBCD_H_ */
+
 

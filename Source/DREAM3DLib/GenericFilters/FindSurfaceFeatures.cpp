@@ -233,3 +233,16 @@ void FindSurfaceFeatures::find_surfacefeatures2D()
   }
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AbstractFilter::Pointer FindSurfaceFeatures::newFilterInstance(bool copyFilterParameters)
+{
+  /*
+  */
+  FindSurfaceFeatures::Pointer filter = FindSurfaceFeatures::New();
+  if(true == copyFilterParameters)
+  {
+  }
+  return filter;
+}

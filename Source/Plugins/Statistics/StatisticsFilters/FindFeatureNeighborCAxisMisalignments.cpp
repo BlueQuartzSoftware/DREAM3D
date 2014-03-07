@@ -312,3 +312,18 @@ void FindFeatureNeighborCAxisMisalignments::execute()
 
   notifyStatusMessage(getHumanLabel(), "FindFeatureNeighborCAxisMisalignments Completed");
 }
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AbstractFilter::Pointer FindFeatureNeighborCAxisMisalignments::newFilterInstance(bool copyFilterParameters)
+{
+  /*
+  * FindAvgMisals
+  */
+  FindFeatureNeighborCAxisMisalignments::Pointer filter = FindFeatureNeighborCAxisMisalignments::New();
+  if(true == copyFilterParameters)
+  {
+    filter->setFindAvgMisals( getFindAvgMisals() );
+  }
+  return filter;
+}

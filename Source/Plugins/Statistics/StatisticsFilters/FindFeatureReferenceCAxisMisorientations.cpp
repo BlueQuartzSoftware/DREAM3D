@@ -285,3 +285,16 @@ void FindFeatureReferenceCAxisMisorientations::execute()
   notifyStatusMessage(getHumanLabel(), "Completed");
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AbstractFilter::Pointer FindFeatureReferenceCAxisMisorientations::newFilterInstance(bool copyFilterParameters)
+{
+  /*
+  */
+  FindFeatureReferenceCAxisMisorientations::Pointer filter = FindFeatureReferenceCAxisMisorientations::New();
+  if(true == copyFilterParameters)
+  {
+  }
+  return filter;
+}

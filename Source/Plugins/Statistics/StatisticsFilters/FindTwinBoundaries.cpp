@@ -367,3 +367,20 @@ void FindTwinBoundaries::execute()
   notifyStatusMessage(getHumanLabel(), "FindTwinBoundaries Completed");
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AbstractFilter::Pointer FindTwinBoundaries::newFilterInstance(bool copyFilterParameters)
+{
+  /*
+  * AxisTolerance
+  * AngleTolerance
+  */
+  FindTwinBoundaries::Pointer filter = FindTwinBoundaries::New();
+  if(true == copyFilterParameters)
+  {
+    filter->setAxisTolerance( getAxisTolerance() );
+    filter->setAngleTolerance( getAngleTolerance() );
+  }
+  return filter;
+}

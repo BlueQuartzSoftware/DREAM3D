@@ -231,3 +231,24 @@ void  AddBadData::add_noise()
 }
 
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AbstractFilter::Pointer AddBadData::newFilterInstance(bool copyFilterParameters)
+{
+  /*
+  * PoissonNoise
+  * PoissonVolFraction
+  * BoundaryNoise
+  * BoundaryVolFraction
+  */
+  AddBadData::Pointer filter = AddBadData::New();
+  if(true == copyFilterParameters)
+  {
+    filter->setPoissonNoise( getPoissonNoise() );
+    filter->setPoissonVolFraction( getPoissonVolFraction() );
+    filter->setBoundaryNoise( getBoundaryNoise() );
+    filter->setBoundaryVolFraction( getBoundaryVolFraction() );
+  }
+  return filter;
+}

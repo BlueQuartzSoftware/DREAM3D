@@ -382,3 +382,16 @@ void GenerateFaceIPFColoring::execute()
   notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AbstractFilter::Pointer GenerateFaceIPFColoring::newFilterInstance(bool copyFilterParameters)
+{
+  /*
+  */
+  GenerateFaceIPFColoring::Pointer filter = GenerateFaceIPFColoring::New();
+  if(true == copyFilterParameters)
+  {
+  }
+  return filter;
+}

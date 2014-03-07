@@ -81,6 +81,7 @@ class GroupMicroTextureRegions : public GroupFeatures
     DREAM3D_INSTANCE_PROPERTY(bool, RandomizeParentIds)
 
     virtual const QString getCompiledLibraryName() { return Reconstruction::ReconstructionBaseName; }
+    virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::ReconstructionFilters; }
     virtual const QString getSubGroupName() {return DREAM3D::FilterSubGroups::GroupingFilters;}
     virtual const QString getHumanLabel() { return "Identify MicroTexture (C-Axis Misalignment)"; }
@@ -147,5 +148,6 @@ class GroupMicroTextureRegions : public GroupFeatures
 };
 
 #endif /* GroupMicroTextureRegions_H_ */
+
 
 

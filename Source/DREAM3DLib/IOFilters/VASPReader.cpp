@@ -366,3 +366,18 @@ int VASPReader::readFile()
 }
 
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AbstractFilter::Pointer VASPReader::newFilterInstance(bool copyFilterParameters)
+{
+  /*
+  * InputFile
+  */
+  VASPReader::Pointer filter = VASPReader::New();
+  if(true == copyFilterParameters)
+  {
+    filter->setInputFile( getInputFile() );
+  }
+  return filter;
+}

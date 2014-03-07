@@ -406,7 +406,7 @@ int NodesTrianglesToVtk::writeBinaryPointData(const QString& NodesFile, FILE* vt
   //#                       For the nodes on surfaces of microstructure, negative wrapper spins are treated as neighboring features.
   //#                       12 = on the feature boundary trace area at the surface of microstructure
   //#                       13 = on the feature boundary trace line
-  //#                 14 = on the triple point, and so onâÃ Ã¶âÂ¢
+  //#                 14 = on the triple point, and so onÃ¢ÂÂÃ ÃÂ¶Ã¢ÂÂÃÂ¢
   //# column 3 to 5 = coordinates of nodes, x, y, and z
 
   int err = 0;
@@ -591,3 +591,26 @@ int NodesTrianglesToVtk::writeASCIICellData(const QString& TrianglesFile, FILE* 
 }
 
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AbstractFilter::Pointer NodesTrianglesToVtk::newFilterInstance(bool copyFilterParameters)
+{
+  /*
+  * NodesFile
+  * TrianglesFile
+  * OutputVtkFile
+  * WriteBinaryFile
+  * WriteConformalMesh
+  */
+  NodesTrianglesToVtk::Pointer filter = NodesTrianglesToVtk::New();
+  if(true == copyFilterParameters)
+  {
+    filter->setNodesFile( getNodesFile() );
+    filter->setTrianglesFile( getTrianglesFile() );
+    filter->setOutputVtkFile( getOutputVtkFile() );
+    filter->setWriteBinaryFile( getWriteBinaryFile() );
+    filter->setWriteConformalMesh( getWriteConformalMesh() );
+  }
+  return filter;
+}

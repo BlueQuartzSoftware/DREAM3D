@@ -305,3 +305,24 @@ int SaveImages::saveImage(uint8_t* ipfColors, size_t slice, size_t* dims)
   return err;
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AbstractFilter::Pointer SaveImages::newFilterInstance(bool copyFilterParameters)
+{
+  /*
+  * ImagePrefix
+  * OutputPath
+  * ImageFormat
+  * ColorsArrayName
+  */
+  SaveImages::Pointer filter = SaveImages::New();
+  if(true == copyFilterParameters)
+  {
+    filter->setColorsArrayName( getColorsArrayName() );
+    filter->setImageFormat( getImageFormat() );
+    filter->setImagePrefix( getImagePrefix() );
+    filter->setOutputPath( getOutputPath() );
+  }
+  return filter;
+}

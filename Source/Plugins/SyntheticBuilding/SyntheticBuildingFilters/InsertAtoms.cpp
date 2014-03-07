@@ -481,3 +481,18 @@ void InsertAtoms::assign_points(QVector<VertexArray::Pointer> points, QVector<Bo
 
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AbstractFilter::Pointer InsertAtoms::newFilterInstance(bool copyFilterParameters)
+{
+  /*
+  * LatticeConstants
+  */
+  InsertAtoms::Pointer filter = InsertAtoms::New();
+  if(true == copyFilterParameters)
+  {
+    filter->setLatticeConstants( getLatticeConstants() );
+  }
+  return filter;
+}

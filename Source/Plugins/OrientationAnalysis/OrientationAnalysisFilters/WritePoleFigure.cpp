@@ -580,3 +580,30 @@ QString WritePoleFigure::generateImagePath( QString label)
 }
 
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AbstractFilter::Pointer WritePoleFigure::newFilterInstance(bool copyFilterParameters)
+{
+  /*
+  * ImagePrefix
+  * OutputPath
+  * ImageFormat
+  * ImageSize
+  * LambertSize
+  * NumColors
+  * CellEulerAnglesArrayName
+  */
+  WritePoleFigure::Pointer filter = WritePoleFigure::New();
+  if(true == copyFilterParameters)
+  {
+    filter->setCellEulerAnglesArrayName( getCellEulerAnglesArrayName() );
+    filter->setImageFormat( getImageFormat() );
+    filter->setImagePrefix( getImagePrefix() );
+    filter->setOutputPath( getOutputPath() );
+    filter->setImageSize( getImageSize() );
+    filter->setLambertSize( getLambertSize() );
+    filter->setNumColors( getNumColors() );
+  }
+  return filter;
+}

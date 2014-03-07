@@ -142,3 +142,16 @@ void FindVolFractions::execute()
   notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AbstractFilter::Pointer FindVolFractions::newFilterInstance(bool copyFilterParameters)
+{
+  /*
+  */
+  FindVolFractions::Pointer filter = FindVolFractions::New();
+  if(true == copyFilterParameters)
+  {
+  }
+  return filter;
+}

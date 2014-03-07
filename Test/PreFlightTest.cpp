@@ -42,6 +42,7 @@
 #include <QtCore/QFile>
 #include <QtCore/QSettings>
 #include <QtCore/QString>
+#include <QtCore/QMetaProperty>
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/Observer.h"
@@ -146,25 +147,43 @@ void GenerateCopyCode()
     IFilterFactory::Pointer factory = iter.value();
     AbstractFilter::Pointer filter = factory->create();
     const QMetaObject* meta = filter->metaObject();
+
+
+
     std::string cn = filter->getNameOfClass().toStdString();
     std::cout << cn << "::Pointer " << cn << "::newFilterInstance(bool copyFilterParameters)" << std::endl;
     std::cout << "{" << std::endl;
+
+    QStringList properties;
+    std::cout << "/*" << std::endl;
+    for(int i = meta->propertyOffset(); i < meta->propertyCount(); ++i)
+    {
+      properties << QString::fromLatin1(meta->property(i).name());
+      std::cout << QString::fromLatin1(meta->property(i).name()).toStdString() << std::endl;
+    }
+    std::cout << "*/" << std::endl;
+
+
     std::cout << "  " << cn << "::Pointer filter = " << cn << "::New();" << std::endl;
     std::cout << "  if(true == copyFilterParameters)\n  {" << std::endl;
 
     QVector<FilterParameter::Pointer> options = filter->getFilterParameters();
     for (QVector<FilterParameter::Pointer>::iterator iter = options.begin(); iter != options.end(); ++iter )
     {
-
       FilterParameter* option = (*iter).get();
       QByteArray normType = QString("%1").arg( option->getPropertyName()).toLatin1();
       int index = meta->indexOfProperty(normType);
       if (index < 0)
       {
-        qDebug() << "Filter: " << filter->getNameOfClass() << "  Missing Property: " << option->getPropertyName();
+        std::cout << "#error Filter: " << filter->getNameOfClass().toStdString() << "  Missing Property: " << option->getPropertyName().toStdString() << std::endl;
       }
 
       std::cout << "    filter->set" << option->getPropertyName().toStdString() << "( get" << option->getPropertyName().toStdString() << "() );" << std::endl;
+    }
+    if(options.size() != properties.count())
+    {
+      std::cout << "#error The number of Q_PROPERITES " << properties.count() <<
+      " does not match the number of FilterParameters " << options.size() << " created in the setupFilterParameters() function." << std::endl;
     }
     std::cout << "  }" << std::endl;
     std::cout << "  return filter;" << std::endl;
@@ -193,8 +212,7 @@ void verifyFilterParameters()
     IFilterFactory::Pointer factory = iter.value();
     AbstractFilter::Pointer filter = factory->create();
     const QMetaObject* meta = filter->metaObject();
-    // int count = meta->methodCount();
-    // qDebug() << filter->getNameOfClass();
+
     QVector<FilterParameter::Pointer> options = filter->getFilterParameters();
     for (QVector<FilterParameter::Pointer>::iterator iter = options.begin(); iter != options.end(); ++iter )
     {
@@ -340,7 +358,7 @@ int main(int argc, char** argv)
   int err = EXIT_SUCCESS;
   DREAM3D_REGISTER_TEST( TestPreflight() )
 
-  PRINT_TEST_SUMMARY();
+      PRINT_TEST_SUMMARY();
 
   GenerateCopyCode();
   return err;

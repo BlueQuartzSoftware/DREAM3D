@@ -76,6 +76,7 @@ class DREAM3DLib_EXPORT GenerateIPFColors : public AbstractFilter
     * in the GUI for the filter
     */
     virtual const QString getCompiledLibraryName() { return Generic::GenericBaseName; }
+    virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::GenericFilters; }
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::CrystallographyFilters; }
 
@@ -145,6 +146,7 @@ class DREAM3DLib_EXPORT GenerateIPFColors : public AbstractFilter
 };
 
 #endif /* _GenerateIPFColors_H_ */
+
 
 
 

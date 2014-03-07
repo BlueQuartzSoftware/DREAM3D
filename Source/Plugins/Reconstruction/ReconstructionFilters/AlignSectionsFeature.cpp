@@ -276,3 +276,16 @@ void AlignSectionsFeature::find_shifts(QVector<int>& xshifts, QVector<int>& yshi
     outFile.close();
   }
 }
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AbstractFilter::Pointer AlignSectionsFeature::newFilterInstance(bool copyFilterParameters)
+{
+  /*
+  */
+  AlignSectionsFeature::Pointer filter = AlignSectionsFeature::New();
+  if(true == copyFilterParameters)
+  {
+  }
+  return filter;
+}

@@ -81,6 +81,7 @@ class FindTwinBoundaries : public AbstractFilter
     Q_PROPERTY(float AngleTolerance READ getAngleTolerance WRITE setAngleTolerance)
 
     virtual const QString getCompiledLibraryName() { return Statistics::StatisticsBaseName; }
+    virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::CrystallographicFilters; }
     virtual const QString getHumanLabel() { return "Find Twin Boundaries"; }
@@ -135,4 +136,5 @@ class FindTwinBoundaries : public AbstractFilter
 };
 
 #endif /* FindTwinBoundaries_H_ */
+
 

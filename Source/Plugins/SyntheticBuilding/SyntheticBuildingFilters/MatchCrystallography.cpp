@@ -898,3 +898,18 @@ void MatchCrystallography::measure_misorientations(int ensem)
   }
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AbstractFilter::Pointer MatchCrystallography::newFilterInstance(bool copyFilterParameters)
+{
+  /*
+  * MaxIterations
+  */
+  MatchCrystallography::Pointer filter = MatchCrystallography::New();
+  if(true == copyFilterParameters)
+  {
+    filter->setMaxIterations( getMaxIterations() );
+  }
+  return filter;
+}

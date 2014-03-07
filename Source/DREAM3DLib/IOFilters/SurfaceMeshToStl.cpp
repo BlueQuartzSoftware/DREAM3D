@@ -385,3 +385,22 @@ int SurfaceMeshToStl::writeNumTrianglesToFile(const QString& filename, int triCo
 
 
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AbstractFilter::Pointer SurfaceMeshToStl::newFilterInstance(bool copyFilterParameters)
+{
+  /*
+  * OutputStlDirectory
+  * OutputStlPrefix
+  * GroupByPhase
+  */
+  SurfaceMeshToStl::Pointer filter = SurfaceMeshToStl::New();
+  if(true == copyFilterParameters)
+  {
+    filter->setOutputStlDirectory( getOutputStlDirectory() );
+    filter->setOutputStlPrefix( getOutputStlPrefix() );
+    filter->setGroupByPhase( getGroupByPhase() );
+  }
+  return filter;
+}

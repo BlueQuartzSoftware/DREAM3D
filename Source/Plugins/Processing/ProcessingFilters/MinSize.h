@@ -79,6 +79,7 @@ class MinSize : public AbstractFilter
     Q_PROPERTY(int PhaseNumber READ getPhaseNumber WRITE setPhaseNumber)
 
     virtual const QString getCompiledLibraryName() { return Processing::ProcessingBaseName; }
+    virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::ProcessingFilters; }
     virtual const QString getSubGroupName()  { return DREAM3D::FilterSubGroups::CleanupFilters; }
     virtual const QString getHumanLabel() { return "Minimum Size Filter (All Phases)"; }
@@ -127,5 +128,6 @@ class MinSize : public AbstractFilter
 };
 
 #endif /* MinSize_H_ */
+
 
 

@@ -366,3 +366,18 @@ bool EBSDSegmentFeatures::determineGrouping(int64_t referencepoint, int64_t neig
   return group;
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AbstractFilter::Pointer EBSDSegmentFeatures::newFilterInstance(bool copyFilterParameters)
+{
+  /*
+  * MisorientationTolerance
+  */
+  EBSDSegmentFeatures::Pointer filter = EBSDSegmentFeatures::New();
+  if(true == copyFilterParameters)
+  {
+    filter->setMisorientationTolerance( getMisorientationTolerance() );
+  }
+  return filter;
+}

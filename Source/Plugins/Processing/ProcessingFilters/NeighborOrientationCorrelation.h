@@ -80,6 +80,7 @@ class NeighborOrientationCorrelation : public AbstractFilter
     Q_PROPERTY(int Level READ getLevel WRITE setLevel)
 
     virtual const QString getCompiledLibraryName() { return Processing::ProcessingBaseName; }
+    virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::ProcessingFilters; }
     virtual const QString getSubGroupName()  { return DREAM3D::FilterSubGroups::CleanupFilters; }
     virtual const QString getHumanLabel() { return "Neighbor Orientation Correlation"; }
@@ -120,5 +121,6 @@ class NeighborOrientationCorrelation : public AbstractFilter
 };
 
 #endif /* NeighborOrientationCorrelation_H_ */
+
 
 

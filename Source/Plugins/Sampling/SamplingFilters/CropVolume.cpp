@@ -463,3 +463,34 @@ void CropVolume::execute()
 }
 
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AbstractFilter::Pointer CropVolume::newFilterInstance(bool copyFilterParameters)
+{
+  /*
+  * XMin
+  * YMin
+  * ZMin
+  * XMax
+  * YMax
+  * ZMax
+  * RenumberFeatures
+  * SaveAsNewDataContainer
+  * UpdateOrigin
+  */
+  CropVolume::Pointer filter = CropVolume::New();
+  if(true == copyFilterParameters)
+  {
+    filter->setXMin( getXMin() );
+    filter->setYMin( getYMin() );
+    filter->setZMin( getZMin() );
+    filter->setXMax( getXMax() );
+    filter->setYMax( getYMax() );
+    filter->setZMax( getZMax() );
+    filter->setRenumberFeatures( getRenumberFeatures() );
+    filter->setSaveAsNewDataContainer( getSaveAsNewDataContainer() );
+    filter->setUpdateOrigin( getUpdateOrigin() );
+  }
+  return filter;
+}

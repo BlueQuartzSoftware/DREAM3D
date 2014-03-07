@@ -650,3 +650,18 @@ void FindGBCD::sizeGBCD(int faceChunkSize, int numMisoReps)
   m_GBCDdeltas[3] = (m_GBCDlimits[8] - m_GBCDlimits[3]) / float(m_GBCDsizes[3]);
   m_GBCDdeltas[4] = (m_GBCDlimits[9] - m_GBCDlimits[4]) / float(m_GBCDsizes[4]);
 }
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AbstractFilter::Pointer FindGBCD::newFilterInstance(bool copyFilterParameters)
+{
+  /*
+  * GBCDRes
+  */
+  FindGBCD::Pointer filter = FindGBCD::New();
+  if(true == copyFilterParameters)
+  {
+    filter->setGBCDRes( getGBCDRes() );
+  }
+  return filter;
+}

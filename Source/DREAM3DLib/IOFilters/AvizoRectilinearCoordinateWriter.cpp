@@ -327,3 +327,20 @@ int AvizoRectilinearCoordinateWriter::writeData(QDataStream& out)
 
 
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AbstractFilter::Pointer AvizoRectilinearCoordinateWriter::newFilterInstance(bool copyFilterParameters)
+{
+  /*
+  * OutputFile
+  * WriteBinaryFile
+  */
+  AvizoRectilinearCoordinateWriter::Pointer filter = AvizoRectilinearCoordinateWriter::New();
+  if(true == copyFilterParameters)
+  {
+    filter->setOutputFile( getOutputFile() );
+    filter->setWriteBinaryFile( getWriteBinaryFile() );
+  }
+  return filter;
+}
