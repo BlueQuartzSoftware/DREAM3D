@@ -35,7 +35,7 @@ find_package(ITK COMPONENTS
 		#ITKImageFeature
 
 	#Group Registration
-		#ITKRegistrationCommon
+		ITKRegistrationCommon
 
 	#Group Segmentation
 		#ITKVoronoi
