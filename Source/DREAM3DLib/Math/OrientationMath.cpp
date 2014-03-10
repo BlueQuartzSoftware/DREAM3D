@@ -357,7 +357,7 @@ void OrientationMath::QuattoEuler(QuatF& q, float& ea1, float& ea2, float& ea3)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void OrientationMath::EulertoQuat(QuatF& q, float e1, float e2, float e3)
+void OrientationMath::EulertoQuat(float e1, float e2, float e3, QuatF& q)
 {
   float s, c, s1, c1, s2, c2;
   s = sinf(0.5f * e2);
@@ -375,7 +375,7 @@ void OrientationMath::EulertoQuat(QuatF& q, float e1, float e2, float e3)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void OrientationMath::EulertoQuat(QuatF& q, float* e)
+void OrientationMath::EulertoQuat(const float* e, QuatF& q)
 {
   float s, c, s1, c1, s2, c2;
   s = sinf(0.5f * e[1]);
@@ -452,7 +452,7 @@ void OrientationMath::MattoEuler(float g[3][3], float& phi1, float& Phi, float& 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void OrientationMath::EulertoRod(float& r1, float& r2, float& r3, float ea1, float ea2, float ea3)
+void OrientationMath::EulertoRod(float ea1, float ea2, float ea3, float& r1, float& r2, float& r3)
 {
   float sum, diff, csum, cdiff, sdiff, t2;
   sum = (ea1 + ea3) * 0.5;

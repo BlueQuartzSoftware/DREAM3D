@@ -604,7 +604,7 @@ void MatchCrystallography::matchCrystallography(int ensem)
         ea1 = m_FeatureEulerAngles[3 * selectedfeature1];
         ea2 = m_FeatureEulerAngles[3 * selectedfeature1 + 1];
         ea3 = m_FeatureEulerAngles[3 * selectedfeature1 + 2];
-        OrientationMath::EulertoRod(r1, r2, r3, ea1, ea2, ea3);
+        OrientationMath::EulertoRod( ea1, ea2, ea3, r1, r2, r3);
         g1odfbin = m_OrientationOps[m_CrystalStructures[ensem]]->getOdfBin(r1, r2, r3);
         random = static_cast<float>( rg.genrand_res53() );
         int choose = 0;
@@ -698,10 +698,10 @@ void MatchCrystallography::matchCrystallography(int ensem)
           g2ea2 = m_FeatureEulerAngles[3 * selectedfeature2 + 1];
           g2ea3 = m_FeatureEulerAngles[3 * selectedfeature2 + 2];
           QuaternionMathF::Copy(q1, avgQuats[selectedfeature1]);
-          OrientationMath::EulertoRod(r1, r2, r3, g1ea1, g1ea2, g1ea3);
+          OrientationMath::EulertoRod(g1ea1, g1ea2, g1ea3, r1, r2, r3);
           g1odfbin = m_OrientationOps[m_CrystalStructures[ensem]]->getOdfBin(r1, r2, r3);
           QuaternionMathF::Copy(q1, avgQuats[selectedfeature2]);
-          OrientationMath::EulertoRod(r1, r2, r3, g2ea1, g2ea2, g2ea3);
+          OrientationMath::EulertoRod(g2ea1, g2ea2, g2ea3, r1, r2, r3);
           g2odfbin = m_OrientationOps[m_CrystalStructures[ensem]]->getOdfBin(r1, r2, r3);
 
           odfchange = ((actualodf->getValue(g1odfbin) - simodf->getValue(g1odfbin)) * (actualodf->getValue(g1odfbin) - simodf->getValue(g1odfbin)))

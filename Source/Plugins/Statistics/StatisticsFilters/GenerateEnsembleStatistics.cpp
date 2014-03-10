@@ -779,7 +779,7 @@ void GenerateEnsembleStatistics::gatherODFStats()
       ea2 = m_FeatureEulerAngles[3 * i + 1];
       ea3 = m_FeatureEulerAngles[3 * i + 2];
       phase = m_CrystalStructures[m_FeaturePhases[i]];
-      OrientationMath::EulertoRod(r1, r2, r3, ea1, ea2, ea3);
+      OrientationMath::EulertoRod( ea1, ea2, ea3, r1, r2, r3);
       bin = m_OrientationOps[phase]->getOdfBin(r1, r2, r3);
       eulerodf[m_FeaturePhases[i]]->setValue(bin, (eulerodf[m_FeaturePhases[i]]->getValue(bin) + (m_Volumes[i] / totalvol[m_FeaturePhases[i]])));
     }
@@ -954,7 +954,7 @@ void GenerateEnsembleStatistics::gatherAxisODFStats()
     float ea3 = m_AxisEulerAngles[3 * i + 2];
     if(m_SurfaceFeatures[i] == 0)
     {
-      OrientationMath::EulertoRod(r1, r2, r3, ea1, ea2, ea3);
+      OrientationMath::EulertoRod( ea1, ea2, ea3, r1, r2, r3);
       m_OrientationOps[Ebsd::CrystalStructure::OrthoRhombic]->getODFFZRod(r1, r2, r3);
       bin = m_OrientationOps[Ebsd::CrystalStructure::OrthoRhombic]->getOdfBin(r1, r2, r3);
       axisodf[m_FeaturePhases[i]]->setValue(bin, (axisodf[m_FeaturePhases[i]]->getValue(bin) + static_cast<float>((1.0 / totalaxes[m_FeaturePhases[i]]))));

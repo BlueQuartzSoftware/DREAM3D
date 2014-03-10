@@ -100,16 +100,23 @@ void TestQuatMath()
 {
 
   float euler[3] = {  2.72167, 0.148401, 0.148886 };
+  printf("Euler Angle: %0.6f, %0.6f, %0.6f\n", euler[0], euler[1], euler[2]);
+
+
   QuatF q;
   OrientationMath::EulertoQuat(q, euler);
-  Print(std::cout, q);
-  std::cout << "" << std::endl;
+
+  printf("Euler to Quaternion: (%0.6f <%0.6f, %0.6f, %0.6f>)\n", q.w, q.x, q.y, q.z);
+
+
 
   OrientationMath::EulertoMat(euler[0], euler[1], euler[2], g);
-  std::cout << g[0][0] <<  " " << g[0][1] << " " << g[0][2] << std::endl;
-  std::cout << g[1][0] <<  " " << g[1][1] << " " << g[1][2] << std::endl;
-  std::cout << g[2][0] <<  " " << g[2][1] << " " << g[2][2] << std::endl;
+  printf("Euler to Rotation Matrix: %0.6f  %0.6f  %0.6f\n", g[0][0] , g[0][1] , g[0][2]);
+  printf("                          %0.6f  %0.6f  %0.6f\n", g[1][0] , g[1][1] , g[1][2]);
+  printf("                          %0.6f  %0.6f  %0.6f\n", g[2][0] , g[2][1] , g[2][2]);
 
+  OrientationMath::EulertoRod(euler[0], euler[1], euler[2], r1, r2, r3);
+  printf("Euler to Rodrigues: %0.6f, %0.6f, %0.6f\n", r1, r2, r3);
 
 }
 
