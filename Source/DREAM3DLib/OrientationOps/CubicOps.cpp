@@ -322,6 +322,10 @@ float CubicOps::_calcMisoQuat(const QuatF quatsym[24], int numsym,
   float sin_wmin_over_2 = 0.0;
 
   QuaternionMathF::Conjugate(q2, q2inv); // Computes the Conjugate of q2 and places the result in q2inv
+/*
+ * Dave's Code will have this looking "opposite". he will do (q1, q2Inv, qc) because Dave's Quaternions are active
+ * where as DREAM3D seems to define a passive Quat
+ */
 
   QuaternionMathF::Multiply(q2inv, q1, qc);
   QuaternionMathF::ElementWiseAbs(qc);
@@ -1306,7 +1310,7 @@ DREAM3D::Rgb CubicOps::generateIPFColor(double phi1, double phi, double phi2, do
   float chi, eta;
   float _rgb[3] = { 0.0, 0.0, 0.0 };
 
-  OrientationMath::EulertoQuat(q1, phi1, phi, phi2);
+  OrientationMath::EulertoQuat(phi1, phi, phi2, q1);
 
   for (int j = 0; j < 24; j++)
   {

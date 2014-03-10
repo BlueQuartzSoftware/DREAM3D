@@ -282,16 +282,39 @@ class QuaternionMath
     /**
      * @brief Multiply Multiplies 2 quaternions according to quaternion multiplication. Note that the order of the quaternions
      * is critical as Quaternioin multiplication is NOT cummunitive i.e., A * B != B * A
-     * @param q1
-     * @param q2
-     * @param out
+     * @param q1 Input Quaternion
+     * @param q2 Input Quaternion
+     * @param out Result
      */
     static void Multiply(const Quaternion& q1, const Quaternion& q2, Quaternion& out)
     {
       out.x = q2.x * q1.w + q2.w * q1.x + q2.z * q1.y - q2.y * q1.z;
       out.y = q2.y * q1.w + q2.w * q1.y + q2.x * q1.z - q2.z * q1.x;
       out.z = q2.z * q1.w + q2.w * q1.z + q2.y * q1.x - q2.x * q1.y;
+
+     /* Dave R.
+      out.vec = w1(q2.vec) + w2(q1.vec) + cross(q1.vec, q2.vec)
+      */
+
+      /* Verified */
       out.w = q2.w * q1.w - q2.x * q1.x - q2.y * q1.y - q2.z * q1.z;
+    }
+
+    /**
+     * @brief Multiply Multiplies 2 quaternions according to quaternion multiplication. Note that the order of the quaternions
+     * is critical as Quaternioin multiplication is NOT cummunitive i.e., A * B != B * A
+     * @param q1 Input Quaternion
+     * @param q2 Input Quaternion
+     * @return Result Quaternion
+     */
+    static Quaternion Multiply(const Quaternion& q1, const Quaternion& q2)
+    {
+      Quaternion out;
+      out.x = q2.x * q1.w + q2.w * q1.x + q2.z * q1.y - q2.y * q1.z;
+      out.y = q2.y * q1.w + q2.w * q1.y + q2.x * q1.z - q2.z * q1.x;
+      out.z = q2.z * q1.w + q2.w * q1.z + q2.y * q1.x - q2.x * q1.y;
+      out.w = q2.w * q1.w - q2.x * q1.x - q2.y * q1.y - q2.z * q1.z;
+      return out;
     }
 
     // -----------------------------------------------------------------------------

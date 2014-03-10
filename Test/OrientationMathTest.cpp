@@ -100,16 +100,47 @@ void TestQuatMath()
 {
 
   float euler[3] = {  2.72167, 0.148401, 0.148886 };
+  printf("Euler Angle & %0.6f, %0.6f, %0.6f\n", euler[0], euler[1], euler[2]);
+
+
   QuatF q;
-  OrientationMath::EulertoQuat(q, euler);
-  Print(std::cout, q);
-  std::cout << "" << std::endl;
+  OrientationMath::EulertoQuat(euler, q);
+
+  printf("Euler to Quaternion & (%0.6f <%0.6f, %0.6f, %0.6f>)\n", q.w, q.x, q.y, q.z);
+
+  OrientationMath::EulertoRod(euler[0], euler[1], euler[2], r1, r2, r3);
+  printf("Euler to Rodrigues & %0.6f, %0.6f, %0.6f\n", r1, r2, r3);
+  printf("Euler To Homochoric & MISSING\n");
+
 
   OrientationMath::EulertoMat(euler[0], euler[1], euler[2], g);
-  std::cout << g[0][0] <<  " " << g[0][1] << " " << g[0][2] << std::endl;
-  std::cout << g[1][0] <<  " " << g[1][1] << " " << g[1][2] << std::endl;
-  std::cout << g[2][0] <<  " " << g[2][1] << " " << g[2][2] << std::endl;
+//  printf("Euler to Passive Rotation Matrix & %0.6f  %0.6f  %0.6f\n", g[0][0] , g[0][1] , g[0][2]);
+//  printf("                                 & %0.6f  %0.6f  %0.6f\n", g[1][0] , g[1][1] , g[1][2]);
+//  printf("                                 & %0.6f  %0.6f  %0.6f\n", g[2][0] , g[2][1] , g[2][2]);
 
+
+printf("\\begin{equation}\n\\textbf{R}_{Passive} = \\begin{bmatrix}\n");
+printf("%0.6f & %0.6f & %0.6f\\\\\n", g[0][0] , g[0][1] , g[0][2]);
+printf("%0.6f & %0.6f & %0.6f\\\\\n", g[1][0] , g[1][1] , g[1][2]);
+printf("%0.6f & %0.6f & %0.6f\n", g[2][0] , g[2][1] , g[2][2]);
+printf("\\end{bmatrix}\n\\end{equation}\n");
+
+
+  OrientationMath::EulertoMatActive(euler[0], euler[1], euler[2], g);
+//  printf("Euler to Active Rotation Matrix & %0.6f  %0.6f  %0.6f\n", g[0][0] , g[0][1] , g[0][2]);
+//  printf("                                &  %0.6f  %0.6f  %0.6f\n", g[1][0] , g[1][1] , g[1][2]);
+//  printf("                                &  %0.6f  %0.6f  %0.6f\n", g[2][0] , g[2][1] , g[2][2]);
+
+  printf("\\begin{equation}\n\\textbf{R}_{Active} = \\begin{bmatrix}\n");
+  printf("%0.6f & %0.6f & %0.6f\\\\\n", g[0][0] , g[0][1] , g[0][2]);
+  printf("%0.6f & %0.6f & %0.6f\\\\\n", g[1][0] , g[1][1] , g[1][2]);
+  printf("%0.6f & %0.6f & %0.6f\n", g[2][0] , g[2][1] , g[2][2]);
+  printf("\\end{bmatrix}\n\\end{equation}\n");
+
+
+
+  QuatF quat = OrientationMath::EulertoQuat(euler);
+  quat = OrientationMath::EulertoQuat(euler[0], euler[1], euler[2]);
 
 }
 
@@ -158,8 +189,8 @@ void TestQuaternion()
 // -----------------------------------------------------------------------------
 void TestEuler()
 {
-  OrientationMath::EulertoQuat(q, ea1, ea2, ea3);
-  OrientationMath::EulertoQuat(q, euler);
+  OrientationMath::EulertoQuat(ea1, ea2, ea3, q);
+  OrientationMath::EulertoQuat(euler, q);
   OrientationMath::EulertoMat(ea1, ea2, ea3, g);
   OrientationMath::EulertoRod(r1, r2, r3, ea1, ea2, ea3);
 

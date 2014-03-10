@@ -512,7 +512,7 @@ DREAM3D::Rgb TetragonalLowOps::generateIPFColor(double phi1, double phi, double 
   float eta, chi;
   float _rgb[3] = { 0.0, 0.0, 0.0 };
 
-  OrientationMath::EulertoQuat(q1, phi1, phi, phi2);
+  OrientationMath::EulertoQuat(phi1, phi, phi2, q1);
 
   for (int j = 0; j < 4; j++)
   {

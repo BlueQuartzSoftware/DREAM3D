@@ -681,7 +681,7 @@ DREAM3D::Rgb CubicLowOps::generateIPFColor(double phi1, double phi, double phi2,
   float _rgb[3] = { 0.0, 0.0, 0.0 };
 
   // 1) find rotation matrix from Euler angles
-  OrientationMath::EulertoQuat(q1, phi1, phi, phi2);
+  OrientationMath::EulertoQuat(phi1, phi, phi2, q1);
   QuatF q2;
   CubicLowOps co;
   for (int j = 0; j < 12; j++)

@@ -219,7 +219,7 @@ void JumbleOrientations::execute()
   QuatF* avgQuats = reinterpret_cast<QuatF*>(m_AvgQuats);
   for (int i = 1; i < totalFeatures; i++)
   {
-    OrientationMath::EulertoQuat(q, m_FeatureEulerAngles[3 * i], m_FeatureEulerAngles[3 * i + 1], m_FeatureEulerAngles[3 * i + 2]);
+    OrientationMath::EulertoQuat(m_FeatureEulerAngles[3 * i], m_FeatureEulerAngles[3 * i + 1], m_FeatureEulerAngles[3 * i + 2], q);
     QuaternionMathF::Copy(q, avgQuats[i]);
   }
 

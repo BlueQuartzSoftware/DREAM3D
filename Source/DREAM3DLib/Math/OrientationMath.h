@@ -67,9 +67,9 @@ class DREAM3DLib_EXPORT OrientationMath
      * @param n1 Axis
      * @param n2 Axis
      * @param n3 Axis
-     * @param r1
-     * @param r2
-     * @param r3
+     * @param r1 Output
+     * @param r2 Output
+     * @param r3 Output
      */
     static void AxisAngletoHomochoric(float w, float n1, float n2, float n3, float& r1, float& r2, float& r3);
 
@@ -79,9 +79,9 @@ class DREAM3DLib_EXPORT OrientationMath
      * @param n1 Axis
      * @param n2 Axis
      * @param n3 Axis
-     * @param r1
-     * @param r2
-     * @param r3
+     * @param r1 Output
+     * @param r2 Output
+     * @param r3 Output
      */
     static void AxisAngletoRod(float w, float n1, float n2, float n3, float& r1, float& r2, float& r3);
 
@@ -91,9 +91,10 @@ class DREAM3DLib_EXPORT OrientationMath
      * @param n1 Axis
      * @param n2 Axis
      * @param n3 Axis
-     * @param q
+     * @param q Output
      */
     static void AxisAngletoQuat(float w, float n1, float n2, float n3, QuatF& q);
+
 
     /**
      * @brief AxisAngletoMat
@@ -120,20 +121,54 @@ class DREAM3DLib_EXPORT OrientationMath
     static void QuattoRod(QuatF& q, float& r1, float& r2, float& r3);
     static void QuattoEuler(QuatF& q, float& ea1, float& ea2, float& ea3);
 
+    /**
+     * @brief EulertoQuat Passive Quaternion
+     * @param ea1
+     * @param ea2
+     * @param ea3
+     * @param q
+     */
+    static void EulertoQuat(float ea1, float ea2, float ea3, QuatF& q);
+    static QuatF EulertoQuat(float ea1, float ea2, float ea3);
+    static void EulertoQuat(const float *euler, QuatF& q);
+    static QuatF EulertoQuat(const float* ea);
 
-    static void EulertoQuat(QuatF& q, float ea1, float ea2, float ea3);
-    static void EulertoQuat(QuatF& q, float* euler);
+    /**
+     * @brief EulertoMat This function converts an Euler Angle triplet (Bunge) into a <b>PASSIVE</b> Orientation Matrix. This
+     * is taking a Sample Coordinate system and transforming it to the Crystal Coordinate System (S->C)
+     * @param ea1
+     * @param ea2
+     * @param ea3
+     * @param g Output 3x3 Matrix where the values are ordered Row X Column
+     */
     static void EulertoMat(float ea1, float ea2, float ea3, float g[3][3]);
-    static void EulertoRod(float& r1, float& r2, float& r3, float ea1, float ea2, float ea3);
+    static void EulertoRod(float ea1, float ea2, float ea3, float& r1, float& r2, float& r3);
+
+    /**
+     * @brief EulertoMatActive This function converts an Euler Angle triplet (Bunge) into a <b>ACTIVE</b> Orientation Matrix. This
+     * is taking a Crystal Coordinate system and transforming it to the Sample Coordinate System (C->S). Note that to convert
+     * from an ACTIVE to PASSIVE or PASSIVE to ACTIVE is just the transpose of the Orienation Maxtrix
+     * @param ea1
+     * @param ea2
+     * @param ea3
+     * @param g
+     */
+    static void EulertoMatActive(float ea1, float ea2, float ea3, float g[3][3]);
 
 
     static void MattoEuler(float g[3][3], float& ea1, float& ea2, float& ea3);
 
     static float MatrixMisorientation(float g1[3][3], float g2[3][3]);
 
+    /**
+     * @brief MultiplyQuaternionVector Multiplies a Vector by a quaternion putting the result into 'outVec'
+     * @param inQuat Input Quaternion
+     * @param inVec Input Vector (XYZ)
+     * @param outVec Resulting vector
+     */
     static void MultiplyQuaternionVector(QuatF& inQuat, float inVec[3], float outVec[3]);
     /**
-    * @brief Does a passive Rotation of the coordinate system defined by  w,n1,n2,n3 of the point xyz using Quaternion
+    * @brief Does a passive Rotation of the coordinate system defined by w,n1,n2,n3 of the point xyz using Quaternion
     * math to perform the rotation
     * @param angle
     * @param xAxis
