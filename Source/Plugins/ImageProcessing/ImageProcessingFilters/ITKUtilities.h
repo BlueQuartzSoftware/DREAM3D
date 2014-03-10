@@ -32,7 +32,7 @@ class DREAM3DLib_EXPORT ITKUtilities
 
     //conversion from dream3d arrays to importfilter
     template<typename T>
-    static typename itk::ImportImageFilter<typename T,ImageProcessing::ImageDimension>::Pointer Dream3DtoITKImportFilter(VoxelDataContainer* m, typename T* data)
+    static typename itk::ImportImageFilter<T, ImageProcessing::ImageDimension>::Pointer Dream3DtoITKImportFilter(VoxelDataContainer* m, T* data)
     {
       //get size+dimensions of dataset
       size_t udims[3] =
@@ -47,7 +47,7 @@ class DREAM3DLib_EXPORT ITKUtilities
       int64_t totalPoints = m->getTotalPoints();
 
       //create and setup import filter
-      typedef typename itk::ImportImageFilter<typename T, ImageProcessing::ImageDimension> ImportFilterType;
+      typedef typename itk::ImportImageFilter<T, ImageProcessing::ImageDimension> ImportFilterType;
       typename ImportFilterType::Pointer importFilter = ImportFilterType::New();
 
       typename ImportFilterType::SizeType  size;
@@ -87,7 +87,7 @@ class DREAM3DLib_EXPORT ITKUtilities
 
     //conversion from dream3d arrays to itk images
     template<typename T>
-    static typename itk::Image<typename T,ImageProcessing::ImageDimension>::Pointer Dream3DtoITK(VoxelDataContainer* m, typename T* data)
+    static typename itk::Image<T,ImageProcessing::ImageDimension>::Pointer Dream3DtoITK(VoxelDataContainer* m, T* data)
     {
       return Dream3DtoITKImportFilter(m, data)->GetOutput();
     }
@@ -102,10 +102,10 @@ class DREAM3DLib_EXPORT ITKUtilities
 
     //copy itk image to dream3d array
     template<typename T>
-    static void CopyITKtoDream3D(typename itk::Image<T, ImageProcessing::ImageDimension>::Pointer image, typename T* buffer)
+    static void CopyITKtoDream3D(typename itk::Image<T, ImageProcessing::ImageDimension>::Pointer image, T* buffer)
     {
       typename itk::Image<T, ImageProcessing::ImageDimension>::RegionType filterRegion = image->GetBufferedRegion();
-      typedef typename itk::ImageRegionConstIterator<itk::Image<T, ImageProcessing::ImageDimension>> ConstIteratorType;
+      typedef typename itk::ImageRegionConstIterator<itk::Image<T, ImageProcessing::ImageDimension> > ConstIteratorType;
       ConstIteratorType it(image, filterRegion);
       it.GoToBegin();
       int index=0;
@@ -119,17 +119,17 @@ class DREAM3DLib_EXPORT ITKUtilities
 
     //extract a slice
     template<typename T>
-    static typename itk::Image<typename T,ImageProcessing::SliceDimension>::Pointer ExtractSlice(typename itk::Image<typename T,ImageProcessing::ImageDimension>::Pointer image, int sliceType, int sliceNum)
+    static typename itk::Image<T,ImageProcessing::SliceDimension>::Pointer ExtractSlice(typename itk::Image<T,ImageProcessing::ImageDimension>::Pointer image, int sliceType, int sliceNum)
     {
-      typedef typename itk::ExtractImageFilter< itk::Image<typename T,ImageProcessing::ImageDimension>, itk::Image<typename T,ImageProcessing::SliceDimension> > SliceExtractFilter;
+      typedef typename itk::ExtractImageFilter< itk::Image<T,ImageProcessing::ImageDimension>, itk::Image<T,ImageProcessing::SliceDimension> > SliceExtractFilter;
       typename SliceExtractFilter::Pointer extractSlice = SliceExtractFilter::New();
-      typename itk::Image<typename T,ImageProcessing::ImageDimension>::RegionType inputRegion = image->GetLargestPossibleRegion();
-      typename itk::Image<typename T,ImageProcessing::ImageDimension>::SizeType size = inputRegion.GetSize();
+      typename itk::Image<T,ImageProcessing::ImageDimension>::RegionType inputRegion = image->GetLargestPossibleRegion();
+      typename itk::Image<T,ImageProcessing::ImageDimension>::SizeType size = inputRegion.GetSize();
       //if(ImageProcessing::XSlice==sliceType) size[0]=0;
       size[sliceType]=0;
-      typename itk::Image<typename T,ImageProcessing::ImageDimension>::IndexType start = inputRegion.GetIndex();
+      typename itk::Image<T,ImageProcessing::ImageDimension>::IndexType start = inputRegion.GetIndex();
       start[sliceType]=sliceNum;
-      typename itk::Image<typename T,ImageProcessing::ImageDimension>::RegionType extractedRegion;
+      typename itk::Image<T,ImageProcessing::ImageDimension>::RegionType extractedRegion;
       extractedRegion.SetSize(size);
       extractedRegion.SetIndex(start);
       extractSlice->SetInput(image);
