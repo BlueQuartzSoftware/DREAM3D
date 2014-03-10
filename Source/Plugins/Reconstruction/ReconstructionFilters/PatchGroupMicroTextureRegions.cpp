@@ -526,10 +526,12 @@ void PatchGroupMicroTextureRegions::determinePatchFeatureCentroids()
 //  int totalPatches = (udims[0] / m_PatchEdgeLength) * (udims[1] / m_PatchEdgeLength) * (udims[2] / m_PatchEdgeLength);
 
   QVector<int> patchIds;
-  patchIds.resize(totalPatches);
-  for (int i = 0; i < totalPatches; i++)
+  int64_t totalPoints = m->getTotalPoints();
+  patchIds.resize(totalPoints);
+
+  for (int i = 0; i < totalPoints; i++)
   {
-	patchIds[i] = i + 1;
+	patchIds[i] = 0;
   }
 
 // FIX - figure out what to do when patches don't fit perfectly
@@ -569,7 +571,8 @@ void PatchGroupMicroTextureRegions::determinePatchFeatureCentroids()
   // determine patch centroids
 
   QVector<float> patchCenters;
-  patchCenters.resize(totalPatches * 3);
+  patchCenters.resize(totalPatches * 5);
+  patchCentroids.resize(totalPatches * 3);
 
   int xPoints = static_cast<int>(m->getXPoints());
   int yPoints = static_cast<int>(m->getYPoints());
@@ -580,29 +583,48 @@ void PatchGroupMicroTextureRegions::determinePatchFeatureCentroids()
   float zRes = m->getZRes();
 
   // Initialize every element to 0.0
-  for (size_t i = 0; i < totalPatches * 3; i++)
+  for (size_t i = 0; i < totalPatches * 5; i++)
   {
     patchCenters[i] = 0.0f;
   }
-  size_t zStride, yStride;
-  for(size_t i = 0; i < zPoints; i+=m_PatchEdgeLength)
+
+  // right now, only works if dimensions are divisible by patch length
+  int count = 0;
+  size_t zStride, yStride, patchnum, patchIntervalX, patchIntervalY, patchIntervalZ;
+  for(size_t i = 0; i < zPoints; i++)
   {
-    zStride = i * xPoints * yPoints / m_PatchEdgeLength;
-    for (size_t j = 0; j < yPoints; j+=m_PatchEdgeLength)
-    {
-      yStride = j * xPoints / m_PatchEdgeLength;
-      for(size_t k = 0; k < xPoints; k+=m_PatchEdgeLength)
-      {
-		int patchnum = patchIds[int(zStride/m_PatchEdgeLength) + int(yStride/m_PatchEdgeLength) + int(k/m_PatchEdgeLength)] - 1;
-        patchCenters[patchnum * 3]++;
+    for (size_t j = 0; j < yPoints; j++)
+	{
+      for(size_t k = 0; k < xPoints; k++)
+	  {
+		patchIntervalZ = int(floor(i/m_PatchEdgeLength)) * int(zPoints/m_PatchEdgeLength);
+		patchIntervalY = int(floor(j/m_PatchEdgeLength)) * int(yPoints/m_PatchEdgeLength);
+	    patchIntervalX = int(floor(k/m_PatchEdgeLength));
+		patchnum = patchIntervalZ + patchIntervalY + patchIntervalX;
+		patchIds[count] = patchnum + 1;
         x = float(k) * xRes;
         y = float(j) * yRes;
         z = float(i) * zRes;
-        patchCenters[patchnum * 3 + 0] = patchCenters[patchnum * 3 + 0] + x;
-        patchCenters[patchnum * 3 + 1] = patchCenters[patchnum * 3 + 1] + y;
-        patchCenters[patchnum * 3 + 2] = patchCenters[patchnum * 3 + 2] + z;
-      }
-    }
+		patchCenters[patchnum * 5 + 0]++;
+        patchCenters[patchnum * 5 + 1] = patchCenters[patchnum * 5 + 1] + x;
+        patchCenters[patchnum * 5 + 2] = patchCenters[patchnum * 5 + 2] + y;
+        patchCenters[patchnum * 5 + 3] = patchCenters[patchnum * 5 + 3] + z;
+	    ++count;
+	  }
+	}
+  }
+
+  for (size_t i = 1; i < totalPatches; i++)
+  {
+    patchCenters[i * 5 + 1] = patchCenters[i * 5 + 1] / patchCenters[i * 5 + 0];
+    patchCenters[i * 5 + 2] = patchCenters[i * 5 + 2] / patchCenters[i * 5 + 0];
+    patchCenters[i * 5 + 3] = patchCenters[i * 5 + 3] / patchCenters[i * 5 + 0];
+    patchCentroids[3 * i] = patchCenters[i * 5 + 1];
+    patchCentroids[3 * i + 1] = patchCenters[i * 5 + 2];
+    patchCentroids[3 * i + 2] = patchCenters[i * 5 + 3];
+	float checkPatchCentersx = patchCentroids[3 * i];
+	float checkPatchCentersy = patchCentroids[3 * i + 1];
+	float checkPatchCentersz = patchCentroids[3 * i + 2];
   }
 
   float patchCriticalDistance = powf(float(m_PatchEdgeLength * xRes + m_PatchEdgeLength * yRes + m_PatchEdgeLength * zRes), 1.0f / 3.0f) / 2.0f;
@@ -667,9 +689,8 @@ void PatchGroupMicroTextureRegions::determinePatchFeatureCentroids()
         patchFeatureList[i].push_back(j);
       }
     }
+int checkBerryPatch = berryPatch[i];
   }
-
-
 }
 
 void PatchGroupMicroTextureRegions::quiltLandscape()

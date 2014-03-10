@@ -55,7 +55,7 @@
  * @class PatchGroupMicroTextureRegions PatchGroupMicroTextureRegions.h Plugins/Reconstruction/ReconstructionFilters/PatchGroupMicroTextureRegions.h
  * @brief
  * @author Michael A Groeber (AFRL) & Joseph C Tucker (UES)
- * @date Mar 7, 2014
+ * @date Mar 10, 2014
  * @version 5.0
  */
 class PatchGroupMicroTextureRegions : public GroupFeatures
@@ -143,6 +143,7 @@ class PatchGroupMicroTextureRegions : public GroupFeatures
     DEFINE_PTR_WEAKPTR_DATAARRAY(unsigned int, CrystalStructures)
 
   	float avgCaxes[3];
+    QVector<float> patchCentroids;
 
     QVector<OrientationOps::Pointer> m_OrientationOps;
 
