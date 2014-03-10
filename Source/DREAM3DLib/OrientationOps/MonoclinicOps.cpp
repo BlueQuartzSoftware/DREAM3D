@@ -497,7 +497,7 @@ DREAM3D::Rgb MonoclinicOps::generateIPFColor(double phi1, double phi, double phi
   float eta = 0.0f, chi = 0.0f;
   float _rgb[3] = { 0.0, 0.0, 0.0 };
 
-  OrientationMath::EulertoQuat(q1, phi1, phi, phi2);
+  OrientationMath::EulertoQuat(phi1, phi, phi2, q1);
   MonoclinicOps ops;
   for (int j = 0; j < 2; j++)
   {

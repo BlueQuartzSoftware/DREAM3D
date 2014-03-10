@@ -464,11 +464,11 @@ bool SegmentBetaGrains::determineGrouping(int referencepoint, int neighborpoint,
     //float ea1 = 309.0*degToRad;
     //float ea2 = 42.0*degToRad;
     //float ea3 = 74.0*degToRad;
-    //OrientationMath::EulertoQuat(q1, ea1, ea2, ea3);
+    //OrientationMath::EulertoQuat(ea1, ea2, ea3, q1);
     //ea1 = 28.0*degToRad;
     //ea2 = 35.0*degToRad;
     //ea3 = 334.0*degToRad;
-    //OrientationMath::EulertoQuat(q2, ea1, ea2, ea3);
+    //OrientationMath::EulertoQuat(ea1, ea2, ea3, q2);
     //phase1 = 0;
     //phase2 = 1;
 

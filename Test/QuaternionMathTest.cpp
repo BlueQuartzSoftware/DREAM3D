@@ -61,7 +61,7 @@ void RemoveTestFiles()
 void TestVectorRotation()
 {
   QuatF equat;
-  OrientationMath::EulertoQuat(equat, DREAM3D::Constants::k_PiOver2, DREAM3D::Constants::k_PiOver2, DREAM3D::Constants::k_PiOver2);
+  OrientationMath::EulertoQuat(DREAM3D::Constants::k_PiOver2, DREAM3D::Constants::k_PiOver2, DREAM3D::Constants::k_PiOver2, equat);
   std::cout << "equat: " << equat.w << ", <" << equat.x << ", " << equat.y << ", " << equat.z << ">"  << std::endl;
 
 
@@ -104,8 +104,8 @@ void TestCubicOps()
   QuaternionMathF::Quaternion q0 = QuaternionMathF::New(0.0f, 0.0f, 0.0f, 0.0f);
   QuaternionMathF::Quaternion q1 = QuaternionMathF::New(0.0f, 0.0f, 0.0f, 0.0f);
 
-  OrientationMath::EulertoQuat(q0, e0[0], e0[1], e0[2]);
-  OrientationMath::EulertoQuat(q1, e1[0], e1[1], e1[2]);
+  OrientationMath::EulertoQuat(e0[0], e0[1], e0[2], q0);
+  OrientationMath::EulertoQuat(e1[0], e1[1], e1[2], q0);
 
   CubicOps co;
 

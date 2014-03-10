@@ -551,7 +551,7 @@ DREAM3D::Rgb TrigonalOps::generateIPFColor(double phi1, double phi, double phi2,
   float eta, chi;
   float _rgb[3] = { 0.0, 0.0, 0.0 };
 
-  OrientationMath::EulertoQuat(q1, phi1, phi, phi2);
+  OrientationMath::EulertoQuat(phi1, phi, phi2, q1);
 
   for (int j = 0; j < 6; j++)
   {

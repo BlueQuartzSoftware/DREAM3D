@@ -375,6 +375,26 @@ void OrientationMath::EulertoQuat(float e1, float e2, float e3, QuatF& q)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+QuatF OrientationMath::EulertoQuat(float e1, float e2, float e3)
+{
+  QuatF q;
+  float s, c, s1, c1, s2, c2;
+  s = sinf(0.5f * e2);
+  c = cosf(0.5f * e2);
+  s1 = sinf(0.5f * (e1 - e3));
+  c1 = cosf(0.5f * (e1 - e3));
+  s2 = sinf(0.5f * (e1 + e3));
+  c2 = cosf(0.5f * (e1 + e3));
+  q.x = s * c1;
+  q.y = s * s1;
+  q.z = c * s2;
+  q.w = c * c2;
+  return q;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void OrientationMath::EulertoQuat(const float* e, QuatF& q)
 {
   float s, c, s1, c1, s2, c2;
@@ -390,30 +410,73 @@ void OrientationMath::EulertoQuat(const float* e, QuatF& q)
   q.w = c * c2;
 }
 
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QuatF OrientationMath::EulertoQuat(const float* e)
+{
+  QuatF q;
+  float s, c, s1, c1, s2, c2;
+  s = sinf(0.5f * e[1]);
+  c = cosf(0.5f * e[1]);
+  s1 = sinf(0.5f * (e[0] - e[2]));
+  c1 = cosf(0.5f * (e[0] - e[2]));
+  s2 = sinf(0.5f * (e[0] + e[2]));
+  c2 = cosf(0.5f * (e[0] + e[2]));
+  q.x = s * c1;
+  q.y = s * s1;
+  q.z = c * s2;
+  q.w = c * c2;
+  return q;
+}
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 void OrientationMath::EulertoMat(float ea1, float ea2, float ea3, float g[3][3])
 {
   // Calcuate all the values once
-  float cos_phi1 = cosf(ea1);
-  float sin_phi1 = sinf(ea1);
-  float cos_phi = cosf(ea2);
-  float sin_phi = sinf(ea2);
-  float cos_phi2 = cosf(ea3);
-  float sin_phi2 = sinf(ea3);
+  float cp1 = cosf(ea1);
+  float sp1 = sinf(ea1);
+  float cp = cosf(ea2);
+  float sp = sinf(ea2);
+  float cp2 = cosf(ea3);
+  float sp2 = sinf(ea3);
 
   // 1) find rotation matrix from Euler angles
-  g[0][0] = cos_phi1 * cos_phi2 - sin_phi1 * sin_phi2 * cos_phi;
-  g[0][1] = sin_phi1 * cos_phi2 + cos_phi1 * sin_phi2 * cos_phi;
-  g[0][2] = sin_phi2 * sin_phi;
-  g[1][0] = -cos_phi1 * sin_phi2 - sin_phi1 * cos_phi2 * cos_phi;
-  g[1][1] = -sin_phi1 * sin_phi2 + cos_phi1 * cos_phi2 * cos_phi;
-  g[1][2] = cos_phi2 * sin_phi;
-  g[2][0] = sin_phi1 * sin_phi;
-  g[2][1] = -cos_phi1 * sin_phi;
-  g[2][2] = cos_phi;
+  // g[row][col]
+  g[0][0] = cp1*cp2 - sp1*sp2*cp;
+  g[0][1] = sp1 * cp2 + cp1 * sp2 * cp;
+  g[0][2] = sp2 * sp;
+  g[1][0] = -cp1 * sp2 - sp1 * cp2 * cp;
+  g[1][1] = -sp1 * sp2 + cp1 * cp2 * cp;
+  g[1][2] = cp2 * sp;
+  g[2][0] = sp1 * sp;
+  g[2][1] = -cp1 * sp;
+  g[2][2] = cp;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void OrientationMath::EulertoMatActive(float ea1, float ea2, float ea3, float g[3][3])
+{
+  // Calcuate all the values once
+  float cp1 = cosf(ea1);
+  float sp1 = sinf(ea1);
+  float cp = cosf(ea2);
+  float sp = sinf(ea2);
+  float cp2 = cosf(ea3);
+  float sp2 = sinf(ea3);
+
+  // 1) find rotation matrix from Euler angles
+  // g[row][col] This is an ACTIVE rotation
+  g[0][0] =  cp1*cp2 - sp1*sp2*cp;       g[0][1] = -cp1 * sp2 - sp1 * cp2 * cp;  g[0][2] =  sp1 * sp;
+  g[1][0] = sp1 * cp2 + cp1 * sp2 * cp;  g[1][1] = -sp1 * sp2 + cp1 * cp2 * cp;  g[1][2] = -cp1 * sp;
+  g[2][0] = sp2 * sp;                    g[2][1] = cp2 * sp;                     g[2][2] = cp;
+}
+
 
 // -----------------------------------------------------------------------------
 //
@@ -533,17 +596,15 @@ void OrientationMath::ChangeAxisReferenceFrame(QuatF& q, float& n1, float& n2, f
 QuatF OrientationMath::PassiveRotation(float angle, float xAxis, float yAxis, float zAxis, float x, float y, float z)
 {
   QuatF q;
+  QuatF qStar;
 
   AxisAngletoQuat(angle, xAxis, yAxis, zAxis, q);
-  QuatF qStar;   // conjugate of q
-  QuatF passive; // Final Output Quaternion
-  QuatF temp;    // Temp Quaternion
-  QuaternionMathF::Copy(q, qStar);
-  QuaternionMathF::Conjugate(qStar);
-  QuatF v = QuaternionMathF::New(x, y, z, 0);
 
-  QuaternionMathF::Multiply(qStar, v, temp);
-  QuaternionMathF::Multiply(temp, q, passive);
+  QuaternionMathF::Conjugate(q, qStar);
+  QuatF v = QuaternionMathF::New(x, y, z, 0); // Make the Pure quaternion
+
+  QuatF temp = QuaternionMathF::Multiply(qStar, v);
+  QuatF passive = QuaternionMathF::Multiply(temp, q);
   return passive;
 }
 
@@ -553,16 +614,13 @@ QuatF OrientationMath::PassiveRotation(float angle, float xAxis, float yAxis, fl
 QuatF OrientationMath::ActiveRotation(float angle, float xAxis, float yAxis, float zAxis, float x, float y, float z)
 {
   QuatF q;
-
+  QuatF qStar;
   AxisAngletoQuat(angle, xAxis, yAxis, zAxis, q);
-  QuatF qStar;   // conjugate of q
-  QuatF active; // Final Output Quaternion
-  QuatF temp;    // Temp Quaternion
-  QuaternionMathF::Copy(q, qStar);
-  QuaternionMathF::Conjugate(qStar);
-  QuatF v = QuaternionMathF::New(x, y, z, 0);
 
-  QuaternionMathF::Multiply(q, v, temp);
-  QuaternionMathF::Multiply(temp, qStar, active);
+  QuaternionMathF::Conjugate(q, qStar);
+  QuatF v = QuaternionMathF::New(x, y, z, 0); // Make the Pure quaternion
+
+  QuatF temp = QuaternionMathF::Multiply(q, v);
+  QuatF active = QuaternionMathF::Multiply(temp, qStar);
   return active;
 }

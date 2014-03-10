@@ -518,9 +518,9 @@ class Texture
           if(random2 >= d && random2 < totaldensity) { choose2 = static_cast<int>(j); }
         }
         orientationOps.determineEulerAngles(choose1, ea11, ea12, ea13);
-        OrientationMath::EulertoQuat(q1, ea11, ea12, ea13);
+        OrientationMath::EulertoQuat(ea11, ea12, ea13, q1);
         orientationOps.determineEulerAngles(choose2, ea21, ea22, ea23);
-        OrientationMath::EulertoQuat(q2, ea21, ea22, ea23);
+        OrientationMath::EulertoQuat(ea21, ea22, ea23, q2);
         w = orientationOps.getMisoQuat(q1, q2, n1, n2, n3);
         OrientationMath::AxisAngletoRod(w, n1, n2, n3, r1, r2, r3);
         orientationOps.getMDFFZRod(r1, r2, r3);
