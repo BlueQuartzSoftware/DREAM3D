@@ -1,8 +1,8 @@
 /* ============================================================================
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef _UpdateGrainIDs_H_
-#define _UpdateGrainIDs_H_
+#ifndef _ChangeGrainIds_H_
+#define _ChangeGrainIds_H_
 
 #include <string>
 
@@ -11,26 +11,27 @@
 #include "DREAM3DLib/Common/AbstractFilter.h"
 
 /**
-* @class UpdateGrainIDs UpdateGrainIDs.h DREAM3DLib/Plugins/UCSB/UCSBFilters/UpdateGrainIDs.h
+* @class ChangeGrainIds ChangeGrainIds.h DREAM3DLib/Plugins/UCSB/UCSBFilters/ChangeGrainIds.h
 * @brief This filter change grainid's for bad voxels to 0.
 * @author William Lenthe UCSB
 * @date March 11, 2014
 * @version 1.0
 */
-class DREAM3DLib_EXPORT UpdateGrainIDs : public AbstractFilter
+class DREAM3DLib_EXPORT ChangeGrainIds : public AbstractFilter
 {
   public:
-    DREAM3D_SHARED_POINTERS(UpdateGrainIDs)
-    DREAM3D_STATIC_NEW_MACRO(UpdateGrainIDs)
-    DREAM3D_TYPE_MACRO_SUPER(UpdateGrainIDs, AbstractFilter)
-    virtual ~UpdateGrainIDs();
+    DREAM3D_SHARED_POINTERS(ChangeGrainIds)
+    DREAM3D_STATIC_NEW_MACRO(ChangeGrainIds)
+    DREAM3D_TYPE_MACRO_SUPER(ChangeGrainIds, AbstractFilter)
+    virtual ~ChangeGrainIds();
 
     DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(GoodVoxelsArrayName)
+    DREAM3D_INSTANCE_PROPERTY(int, NewID)
 
     virtual const std::string getGroupName() { return "UCSB"; }
     virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::MiscFilters; }
-    virtual const std::string getHumanLabel() { return "Update Bad Grain IDs"; }
+    virtual const std::string getHumanLabel() { return "Change Bad Grain IDs"; }
 
     virtual void setupFilterParameters();
     /**
@@ -52,7 +53,7 @@ class DREAM3DLib_EXPORT UpdateGrainIDs : public AbstractFilter
     virtual void execute();
 
   protected:
-    UpdateGrainIDs();
+    ChangeGrainIds();
 
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
@@ -60,8 +61,8 @@ class DREAM3DLib_EXPORT UpdateGrainIDs : public AbstractFilter
     int32_t* m_GrainIds;
     bool* m_GoodVoxels;
 
-    UpdateGrainIDs(const UpdateGrainIDs&); // Copy Constructor Not Implemented
-    void operator=(const UpdateGrainIDs&); // Operator '=' Not Implemented
+    ChangeGrainIds(const ChangeGrainIds&); // Copy Constructor Not Implemented
+    void operator=(const ChangeGrainIds&); // Operator '=' Not Implemented
 };
 
 #endif /* RotateEulerRefFrame_H_ */

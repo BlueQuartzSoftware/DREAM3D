@@ -1,4 +1,4 @@
-UpdateGrainIDs {#updategrainids}
+ChangeGrainIds {#changegrainids}
 =====
 
 ## Group (Subgroup) ##
@@ -6,7 +6,14 @@ UCSB (UCSB)
 
 
 ## Description ##
-For each bad voxel replaces grain id with 0.
+For each bad voxel replaces the grain id with the specified value.
+
+
+## Parameters ##
+| Name             | Type |
+|------------------|------|
+| New Grain ID | Int |
+| GoodVoxels Array | String |
   
 
 ## Required Arrays ##
@@ -18,12 +25,7 @@ For each bad voxel replaces grain id with 0.
 
 
 ## Created Arrays ##
-      
-
-| Name| Type |
-|------|------|
-| Original_Quats | Float | 
-
+None
 
 ## Authors ##
 
