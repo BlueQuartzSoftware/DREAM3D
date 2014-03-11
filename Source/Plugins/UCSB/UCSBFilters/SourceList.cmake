@@ -17,6 +17,7 @@ set(_PublicFilters
   RemoveJitter
   RotateSliceEulerRefFrame
   MergeArrays
+  UpdateGrainIDs
 )
 
 
