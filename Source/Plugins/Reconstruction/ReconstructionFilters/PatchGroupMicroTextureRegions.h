@@ -55,7 +55,7 @@
  * @class PatchGroupMicroTextureRegions PatchGroupMicroTextureRegions.h Plugins/Reconstruction/ReconstructionFilters/PatchGroupMicroTextureRegions.h
  * @brief
  * @author Michael A Groeber (AFRL) & Joseph C Tucker (UES)
- * @date Mar 10, 2014
+ * @date Mar 11, 2014
  * @version 5.0
  */
 class PatchGroupMicroTextureRegions : public GroupFeatures
@@ -124,8 +124,8 @@ class PatchGroupMicroTextureRegions : public GroupFeatures
 
     virtual int getSeed(int newFid);
     virtual bool determineGrouping(int referenceFeature, int neighborFeature, int newFid);
-	virtual void determinePatchFeatureCentroids();
-	virtual void quiltLandscape();
+	virtual size_t determinePatchFeatureCentroids();
+	virtual void determinePatchFeatureVolumeFraction(size_t totalPatches);
 
     void characterize_micro_texture_regions();
 

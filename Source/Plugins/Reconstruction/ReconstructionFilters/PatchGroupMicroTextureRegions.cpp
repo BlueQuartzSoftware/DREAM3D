@@ -299,8 +299,8 @@ void PatchGroupMicroTextureRegions::execute()
 
   // Tell the user we are starting the filter
   notifyStatusMessage(getHumanLabel(), "Starting");
-  quiltLandscape();
-  determinePatchFeatureCentroids();
+  size_t numPatches = determinePatchFeatureCentroids();
+  determinePatchFeatureVolumeFraction(numPatches);
   GroupFeatures::execute();
 
   size_t totalFeatures = m->getAttributeMatrix(getNewCellFeatureAttributeMatrixName())->getNumTuples();
@@ -509,25 +509,25 @@ bool PatchGroupMicroTextureRegions::determineGrouping(int referenceFeature, int 
   return false;
 }
 
-void PatchGroupMicroTextureRegions::determinePatchFeatureCentroids()
+size_t PatchGroupMicroTextureRegions::determinePatchFeatureCentroids()
 {
-  // figure out how to make patches fit
-
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
   size_t udims[3] = {0, 0, 0};
   m->getDimensions(udims);
-
-  int zPatch;
-  if (udims[2] == 1) zPatch = 1;
-  else zPatch = floor(udims[2] / m_PatchEdgeLength);
-
-  int totalPatches = floor(udims[0] / m_PatchEdgeLength) * floor(udims[1] / m_PatchEdgeLength) * zPatch;
-//  int totalPatches = (udims[0] / m_PatchEdgeLength) * (udims[1] / m_PatchEdgeLength) * (udims[2] / m_PatchEdgeLength);
-
+#if (CMP_SIZEOF_SIZE_T == 4)
+  typedef int32_t DimType;
+#else
+  typedef int64_t DimType;
+#endif
   QVector<int> patchIds;
   int64_t totalPoints = m->getTotalPoints();
   patchIds.resize(totalPoints);
+  size_t zPatch;
+  if (udims[2] == 1) zPatch = 1;
+  else zPatch = floor(udims[2] / m_PatchEdgeLength);
+
+  size_t totalPatches = floor(udims[0] / m_PatchEdgeLength) * floor(udims[1] / m_PatchEdgeLength) * zPatch;
 
   for (int i = 0; i < totalPoints; i++)
   {
@@ -550,23 +550,7 @@ void PatchGroupMicroTextureRegions::determinePatchFeatureCentroids()
 
   float x, y, z;
 
-  QVector<QVector<int> > patchFeatureList;
-  QVector<int32_t> berryPatch;
-
   size_t totalFeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
-
-  dataCheck();
-
-  patchFeatureList.resize(totalPatches);
-  berryPatch.resize(totalPatches);
-
-  float m_OriginX, m_OriginY, m_OriginZ;
-  m->getOrigin(m_OriginX, m_OriginY, m_OriginZ);
-#if (CMP_SIZEOF_SIZE_T == 4)
-  typedef int32_t DimType;
-#else
-  typedef int64_t DimType;
-#endif
 
   // determine patch centroids
 
@@ -614,6 +598,7 @@ void PatchGroupMicroTextureRegions::determinePatchFeatureCentroids()
 	}
   }
 
+  // FIX - check for some roundoff error
   for (size_t i = 1; i < totalPatches; i++)
   {
     patchCenters[i * 5 + 1] = patchCenters[i * 5 + 1] / patchCenters[i * 5 + 0];
@@ -627,9 +612,49 @@ void PatchGroupMicroTextureRegions::determinePatchFeatureCentroids()
 	float checkPatchCentersz = patchCentroids[3 * i + 2];
   }
 
-  float patchCriticalDistance = powf(float(m_PatchEdgeLength * xRes + m_PatchEdgeLength * yRes + m_PatchEdgeLength * zRes), 1.0f / 3.0f) / 2.0f;
+  return totalPatches;
+}
 
-  int xbin, ybin, zbin;
+void PatchGroupMicroTextureRegions::determinePatchFeatureVolumeFraction(size_t totalPatches)
+{
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  float xRes = m->getXRes();
+  float yRes = m->getYRes();
+  float zRes = m->getZRes();
+  size_t totalFeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
+  QVector<QVector<int> > patchFeatureList;
+  QVector<int32_t> berryPatch;
+  patchFeatureList.resize(totalPatches);
+  berryPatch.resize(totalPatches);
+  float m_OriginX, m_OriginY, m_OriginZ;
+  m->getOrigin(m_OriginX, m_OriginY, m_OriginZ);
+#if (CMP_SIZEOF_SIZE_T == 4)
+  typedef int32_t DimType;
+#else
+  typedef int64_t DimType;
+#endif
+
+  // taking sphere (circle) eq dia as the critical distance
+  float patchCriticalDistance, patchVolume, radsquared, radcubed, res_scalar = 0.0f;
+  if (m->getXPoints() == 1 || m->getYPoints() == 1 || m->getZPoints() == 1)
+  {
+//	if(m->getXPoints() == 1) { res_scalar = m->getYRes() * m->getZRes(); }
+//	else if(m->getYPoints() == 1) { res_scalar = m->getXRes() * m->getZRes(); }
+//	else if(m->getZPoints() == 1) { res_scalar = m->getXRes() * m->getYRes(); }
+	patchVolume = 2 * m_PatchEdgeLength;
+	radsquared = patchVolume / DREAM3D::Constants::k_Pi;
+	patchCriticalDistance = 2.0f * sqrtf(radsquared);
+  }
+  else
+  {
+//	res_scalar = m->getXRes() * m->getYRes() * m->getZRes();
+	float vol_term = static_cast<double>( (4.0f / 3.0f) * DREAM3D::Constants::k_Pi );
+	patchVolume = (3 * m_PatchEdgeLength);
+	radcubed = patchVolume / vol_term;
+	patchCriticalDistance = 2.0f * powf(radcubed, 0.3333333333f);
+  }
+
+  int xbin, ybin, zbin, x, y, z;
   QVector<size_t> featureBins(3*totalFeatures, 0);
   for (size_t i = 1; i < totalFeatures; i++)
   {
@@ -647,9 +672,9 @@ void PatchGroupMicroTextureRegions::determinePatchFeatureCentroids()
   QVector<size_t> patchBins(3*totalPatches, 0);
   for (size_t i = 1; i < totalPatches; i++)
   {
-    x = patchCenters[3 * i];
-    y = patchCenters[3 * i + 1];
-    z = patchCenters[3 * i + 2];
+    x = patchCentroids[3 * i];
+    y = patchCentroids[3 * i + 1];
+    z = patchCentroids[3 * i + 2];
     xbin = int((x - m_OriginX) / patchCriticalDistance);
     ybin = int((y - m_OriginY) / patchCriticalDistance);
     zbin = int((z - m_OriginZ) / patchCriticalDistance);
@@ -690,12 +715,8 @@ void PatchGroupMicroTextureRegions::determinePatchFeatureCentroids()
       }
     }
 int checkBerryPatch = berryPatch[i];
+int stop = 0;
   }
-}
-
-void PatchGroupMicroTextureRegions::quiltLandscape()
-{
-
 }// -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
