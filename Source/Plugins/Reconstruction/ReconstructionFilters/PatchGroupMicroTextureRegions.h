@@ -74,6 +74,8 @@ class PatchGroupMicroTextureRegions : public GroupFeatures
     DREAM3D_INSTANCE_STRING_PROPERTY(CellEnsembleAttributeMatrixName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
 
+    DREAM3D_INSTANCE_STRING_PROPERTY(NeighborhoodListArrayName)
+
     DREAM3D_FILTER_PARAMETER(float, CAxisTolerance)
     Q_PROPERTY(float CAxisTolerance READ getCAxisTolerance WRITE setCAxisTolerance)
     DREAM3D_FILTER_PARAMETER(bool, UseRunningAverage)
@@ -125,7 +127,7 @@ class PatchGroupMicroTextureRegions : public GroupFeatures
     virtual int getSeed(int newFid);
     virtual bool determineGrouping(int referenceFeature, int neighborFeature, int newFid);
 	virtual size_t determinePatchFeatureCentroids();
-	virtual void determinePatchFeatureVolumeFraction(size_t totalPatches);
+	virtual void determinePatchFeatureVolumes(size_t totalPatches);
 
     void characterize_micro_texture_regions();
 
@@ -139,8 +141,11 @@ class PatchGroupMicroTextureRegions : public GroupFeatures
     DEFINE_PTR_WEAKPTR_DATAARRAY(float, Volumes)
     DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, NumCells)
     DEFINE_PTR_WEAKPTR_DATAARRAY(float, Centroids)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, Neighborhoods)
 
     DEFINE_PTR_WEAKPTR_DATAARRAY(unsigned int, CrystalStructures)
+
+    NeighborList<int>* m_NeighborhoodList;
 
   	float avgCaxes[3];
     QVector<float> patchCentroids;
