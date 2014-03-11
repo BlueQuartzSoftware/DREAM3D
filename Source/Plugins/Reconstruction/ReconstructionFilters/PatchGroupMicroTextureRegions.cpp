@@ -72,6 +72,7 @@ PatchGroupMicroTextureRegions::PatchGroupMicroTextureRegions() :
   m_CAxisTolerance(1.0f),
   m_UseRunningAverage(false),
   m_PatchEdgeLength(1),
+  m_PatchVolumeFractionForMTRGrowth(1.0f),
   m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
   m_CellParentIdsArrayName(DREAM3D::CellData::ParentIds),
   m_FeatureParentIdsArrayName(DREAM3D::FeatureData::ParentIds),
@@ -115,15 +116,6 @@ void PatchGroupMicroTextureRegions::setupFilterParameters()
   }
   {
     FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Use Non-Contiguous Neighbors");
-    parameter->setPropertyName("UseNonContiguousNeighbors");
-    parameter->setWidgetType(FilterParameterWidgetType::BooleanWidget);
-    parameter->setValueType("bool");
-    parameter->setUnits("");
-    parameters.push_back(parameter);
-  }
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
     parameter->setHumanLabel("Group C-Axes With Running Average");
     parameter->setPropertyName("UseRunningAverage");
     parameter->setWidgetType(FilterParameterWidgetType::BooleanWidget);
@@ -136,9 +128,18 @@ void PatchGroupMicroTextureRegions::setupFilterParameters()
     FilterParameter::Pointer parameter = FilterParameter::New();
     parameter->setHumanLabel("Patch Edge Length");
     parameter->setPropertyName("PatchEdgeLength");
-  parameter->setWidgetType(FilterParameterWidgetType::IntWidget);
+    parameter->setWidgetType(FilterParameterWidgetType::IntWidget);
     parameter->setValueType("int");
     parameter->setUnits("");
+    parameters.push_back(parameter);
+  }
+  {
+    FilterParameter::Pointer parameter = FilterParameter::New();
+    parameter->setHumanLabel("Minimum C-Axis Aligned Patch Volume Fraction For MTR Growth");
+    parameter->setPropertyName("PatchVolumeFractionForMTRGrowth");
+    parameter->setWidgetType(FilterParameterWidgetType::DoubleWidget);
+    parameter->setValueType("float");
+    parameter->setCastableValueType("double");
     parameters.push_back(parameter);
   }
 
@@ -154,9 +155,9 @@ void PatchGroupMicroTextureRegions::readFilterParameters(AbstractFilterParameter
   /* Code to read the values goes between these statements */
   /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
   setCAxisTolerance( reader->readValue("CAxisTolerance", getCAxisTolerance()) );
-  setUseNonContiguousNeighbors( reader->readValue("UseNonContiguousNeighbors", getUseNonContiguousNeighbors()) );
   setUseRunningAverage( reader->readValue("UseRunningAverage", getUseRunningAverage()) );
   setPatchEdgeLength( reader->readValue("PatchEdgeLength", getPatchEdgeLength()) );
+  setPatchVolumeFractionForMTRGrowth( reader->readValue("PatchVolumeFractionForMTRGrowth", getPatchVolumeFractionForMTRGrowth()) );
   /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }
@@ -168,9 +169,9 @@ int PatchGroupMicroTextureRegions::writeFilterParameters(AbstractFilterParameter
 {
   writer->openFilterGroup(this, index);
   writer->writeValue("CAxisTolerance", getCAxisTolerance() );
-  writer->writeValue("UseNonContiguousNeighbors", getUseNonContiguousNeighbors() );
   writer->writeValue("UseRunningAverage", getUseRunningAverage() );
   writer->writeValue("PatchEdgeLength", getPatchEdgeLength() );
+  writer->writeValue("PatchVolumeFractionForMTRGrowth", getPatchVolumeFractionForMTRGrowth() );
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
@@ -251,6 +252,44 @@ void PatchGroupMicroTextureRegions::dataCheck()
   m_ActivePtr = newCellFeatureAttrMat->createNonPrereqArray<DataArray<bool>, AbstractFilter, bool>(this, m_ActiveArrayName, true, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_ActivePtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_Active = m_ActivePtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+
+  // Do this whole block FIRST otherwise the side effect is that a call to m->getNumCellFeatureTuples will = 0
+  // because we are just creating an empty NeighborList object.
+  // Now we are going to get a "Pointer" to the NeighborList object out of the DataContainer
+  if(getErrorCondition() < 0) { return; }
+  m_NeighborhoodList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>* >
+      (m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getAttributeArray(m_NeighborhoodListArrayName).get());
+  if(m_NeighborhoodList == NULL)
+  {
+    NeighborList<int>::Pointer neighborhoodlistPtr = NeighborList<int>::New();
+    neighborhoodlistPtr->setName(m_NeighborhoodListArrayName);
+	neighborhoodlistPtr->resize(cellFeatureAttrMat->getNumTuples());
+    neighborhoodlistPtr->setNumNeighborsArrayName(m_NeighborhoodsArrayName);
+    m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->addAttributeArray(m_NeighborhoodListArrayName, neighborhoodlistPtr);
+
+    if (neighborhoodlistPtr.get() == NULL)
+    {
+      QString ss = QObject::tr("NeighborhoodLists Array Not Initialized at Beginning of FindNeighbors Filter");
+      setErrorCondition(-308);
+    }
+    m_NeighborhoodList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>* >
+        (m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getAttributeArray(m_NeighborhoodListArrayName).get());
+
+    CreatedArrayHelpIndexEntry::Pointer e = CreatedArrayHelpIndexEntry::New();
+    e->setFilterName(this->getNameOfClass());
+    e->setFilterHumanLabel(this->getHumanLabel());
+    e->setFilterGroup(this->getGroupName());
+    e->setFilterSubGroup(this->getSubGroupName());
+    e->setArrayDefaultName(m_NeighborhoodListArrayName);
+    e->setArrayGroup("Feature");
+    e->setArrayNumComponents(0);
+    e->setArrayType("NeighborList");
+    addCreatedArrayHelpIndexEntry(e);
+  }
+
+  m_NeighborhoodsPtr = cellFeatureAttrMat->createNonPrereqArray<DataArray<int32_t>, AbstractFilter, int32_t>(this, m_NeighborhoodsArrayName, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if( NULL != m_NeighborhoodsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  { m_Neighborhoods = m_NeighborhoodsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   
   // Ensemble Data
   typedef DataArray<unsigned int> XTalStructArrayType;
@@ -293,6 +332,9 @@ void PatchGroupMicroTextureRegions::execute()
   notifyStatusMessage(getHumanLabel(), "Starting");
   size_t numPatches = determinePatchFeatureCentroids();
   determinePatchFeatureVolumes(numPatches);
+  // Making some calls to 
+  setUseNonContiguousNeighbors(true);
+  setPatchGrouping(true);
   GroupFeatures::execute();
 
   size_t totalFeatures = m->getAttributeMatrix(getNewCellFeatureAttributeMatrixName())->getNumTuples();
@@ -382,6 +424,9 @@ int PatchGroupMicroTextureRegions::getSeed(int newFid)
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
   size_t numfeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
+  if (newFid <= numfeatures) return newFid;
+  else return -1;
+  /*
 
   float c1[3];
   unsigned int phase1;
@@ -392,7 +437,7 @@ int PatchGroupMicroTextureRegions::getSeed(int newFid)
   float g1t[3][3];
 
   DREAM3D_RANDOMNG_NEW()
-      int seed = -1;
+  int seed = -1;
   int randfeature = 0;
 
   // Precalculate some constants
@@ -431,7 +476,7 @@ int PatchGroupMicroTextureRegions::getSeed(int newFid)
       MatrixMath::Multiply3x1withConstant(avgCaxes,m_Volumes[seed]);
     }
   }
-  return seed;
+  */
 }
 
 // -----------------------------------------------------------------------------
@@ -439,7 +484,6 @@ int PatchGroupMicroTextureRegions::getSeed(int newFid)
 // -----------------------------------------------------------------------------
 bool PatchGroupMicroTextureRegions::determineGrouping(int referenceFeature, int neighborFeature, int newFid)
 {
-  //float angcur = 180.0f;
   unsigned int phase1 = 0, phase2 = 0;
   float w = 0.0f;
   float g1[3][3];
@@ -454,7 +498,7 @@ bool PatchGroupMicroTextureRegions::determineGrouping(int referenceFeature, int 
 
   QuatF* avgQuats = reinterpret_cast<QuatF*>(m_AvgQuats);
 
-  if (m_FeatureParentIds[neighborFeature] == -1 && m_FeaturePhases[referenceFeature] > 0 && m_FeaturePhases[neighborFeature] > 0)
+  if (m_FeaturePhases[referenceFeature] > 0 && m_FeaturePhases[neighborFeature] > 0)
   {
     if (m_UseRunningAverage == false)
     {
@@ -468,6 +512,22 @@ bool PatchGroupMicroTextureRegions::determineGrouping(int referenceFeature, int 
       //normalize so that the dot product can be taken below without
       //dividing by the magnitudes (they would be 1)
       MatrixMath::Normalize3x1(c1);
+    }
+	if (m_UseRunningAverage == true && avgCaxes[0] == 0.0f && avgCaxes[1] == 0.0f && avgCaxes[2] == 0.0f)
+    {
+      QuaternionMathF::Copy(avgQuats[referenceFeature], q1);
+      phase1 = m_CrystalStructures[m_FeaturePhases[referenceFeature]];
+      OrientationMath::QuattoMat(q1, g1);
+      //transpose the g matrix so when caxis is multiplied by it
+      //it will give the sample direction that the caxis is along
+      MatrixMath::Transpose3x3(g1, g1t);
+      MatrixMath::Multiply3x3with3x1(g1t, caxis, c1);
+      //normalize so that the dot product can be taken below without
+      //dividing by the magnitudes (they would be 1)
+      MatrixMath::Normalize3x1(c1);
+
+      MatrixMath::Copy3x1(c1,avgCaxes);
+      MatrixMath::Multiply3x1withConstant(avgCaxes,m_Volumes[referenceFeature]);
     }
     phase2 = m_CrystalStructures[m_FeaturePhases[neighborFeature]];
     if (phase1 == phase2 && (phase1 == Ebsd::CrystalStructure::Hexagonal_High) )
@@ -488,11 +548,12 @@ bool PatchGroupMicroTextureRegions::determineGrouping(int referenceFeature, int 
       w = acosf(w);
       if (w <= m_CAxisTolerance || (DREAM3D::Constants::k_Pi - w) <= m_CAxisTolerance)
       {
-        m_FeatureParentIds[neighborFeature] = newFid;
+//        m_FeatureParentIds[neighborFeature] = newFid;
         if (m_UseRunningAverage == true)
         {
           MatrixMath::Multiply3x1withConstant(c2, m_Volumes[neighborFeature]);
           MatrixMath::Add3x1s(avgCaxes, c2, avgCaxes);
+		  patchFeatureVolumeFractions[newFid] += m_Volumes[neighborFeature];
         }
         return true;
       }
@@ -516,16 +577,17 @@ size_t PatchGroupMicroTextureRegions::determinePatchFeatureCentroids()
   typedef int64_t DimType;
 #endif
   int64_t totalPoints = m->getTotalPoints();
-  QVector<int> patchIds(totalPoints, 0);
+//  QVector<int> patchIds(totalPoints, 0);
   size_t zPatch;
   if (udims[2] == 1) zPatch = 1;
   else zPatch = floor(udims[2] / m_PatchEdgeLength);
 
   size_t totalPatches = floor(udims[0] / m_PatchEdgeLength) * floor(udims[1] / m_PatchEdgeLength) * zPatch;
-
-  for (int i = 0; i < totalPoints; i++)
+  patchFeatureVolumeFractions.resize(totalPatches+1);
+  for (int i = 0; i < totalPatches; i++)
   {
-	patchIds[i] = 0;
+	m_FeatureParentIds[i+1] = i+1;
+	patchFeatureVolumeFractions[i+1] = 0.0f;
   }
 
 // FIX - figure out what to do when patches don't fit perfectly
@@ -578,7 +640,7 @@ size_t PatchGroupMicroTextureRegions::determinePatchFeatureCentroids()
 		patchIntervalY = int(floor(j/m_PatchEdgeLength)) * int(yPoints/m_PatchEdgeLength);
 	    patchIntervalX = int(floor(k/m_PatchEdgeLength));
 		patchnum = patchIntervalZ + patchIntervalY + patchIntervalX;
-		patchIds[count] = patchnum + 1;
+		m_CellParentIds[count] = patchnum + 1;
         x = float(k) * xRes;
         y = float(j) * yRes;
         z = float(i) * zRes;
@@ -600,9 +662,11 @@ size_t PatchGroupMicroTextureRegions::determinePatchFeatureCentroids()
     patchCentroids[3 * i] = patchCenters[i * 5 + 1];
     patchCentroids[3 * i + 1] = patchCenters[i * 5 + 2];
     patchCentroids[3 * i + 2] = patchCenters[i * 5 + 3];
+// debugging lines
 	float checkPatchCentersx = patchCentroids[3 * i];
 	float checkPatchCentersy = patchCentroids[3 * i + 1];
 	float checkPatchCentersz = patchCentroids[3 * i + 2];
+	int stop = 0;
   }
 
   return totalPatches;
@@ -619,7 +683,6 @@ void PatchGroupMicroTextureRegions::determinePatchFeatureVolumes(size_t totalPat
   float zRes = m->getZRes();
   size_t totalFeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
   QVector<QVector<int> > patchFeatureList;
-  QVector<int32_t> berryPatch(totalPatches, 0);
   patchFeatureList.resize(totalPatches);
   float m_OriginX, m_OriginY, m_OriginZ;
   m->getOrigin(m_OriginX, m_OriginY, m_OriginZ);
@@ -633,18 +696,18 @@ void PatchGroupMicroTextureRegions::determinePatchFeatureVolumes(size_t totalPat
   float patchCriticalDistance, patchVolume, radsquared, radcubed, res_scalar = 0.0f;
   if (m->getXPoints() == 1 || m->getYPoints() == 1 || m->getZPoints() == 1)
   {
-//	if(m->getXPoints() == 1) { res_scalar = m->getYRes() * m->getZRes(); }
-//	else if(m->getYPoints() == 1) { res_scalar = m->getXRes() * m->getZRes(); }
-//	else if(m->getZPoints() == 1) { res_scalar = m->getXRes() * m->getYRes(); }
-	patchVolume = 2 * m_PatchEdgeLength;
+	if(m->getXPoints() == 1) { res_scalar = m->getYRes() * m->getZRes(); }
+	else if(m->getYPoints() == 1) { res_scalar = m->getXRes() * m->getZRes(); }
+	else if(m->getZPoints() == 1) { res_scalar = m->getXRes() * m->getYRes(); }
+	patchVolume = m_PatchEdgeLength * m_PatchEdgeLength / res_scalar;
 	radsquared = patchVolume / DREAM3D::Constants::k_Pi;
 	patchCriticalDistance = 2.0f * sqrtf(radsquared);
   }
   else
   {
-//	res_scalar = m->getXRes() * m->getYRes() * m->getZRes();
+	res_scalar = m->getXRes() * m->getYRes() * m->getZRes();
 	float vol_term = static_cast<double>( (4.0f / 3.0f) * DREAM3D::Constants::k_Pi );
-	patchVolume = (3 * m_PatchEdgeLength);
+	patchVolume = m_PatchEdgeLength * m_PatchEdgeLength * m_PatchEdgeLength / res_scalar;
 	radcubed = patchVolume / vol_term;
 	patchCriticalDistance = 2.0f * powf(radcubed, 0.3333333333f);
   }
@@ -678,10 +741,16 @@ void PatchGroupMicroTextureRegions::determinePatchFeatureVolumes(size_t totalPat
     patchBins[3*i+2] = zbin;
   }
 
+  QVector<size_t> tDims(1, totalPatches+1);
+  m->getAttributeMatrix(getNewCellFeatureAttributeMatrixName())->resizeAttributeArrays(tDims);
+  updateFeatureInstancePointers();
+
+  AttributeMatrix::Pointer cellFeatureAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellFeatureAttributeMatrixName(), -301);
+  if(getErrorCondition() < 0) { return; }
+
   // Do this whole block FIRST otherwise the side effect is that a call to m->getNumCellFeatureTuples will = 0
   // because we are just creating an empty NeighborList object.
   // Now we are going to get a "Pointer" to the NeighborList object out of the DataContainer
-  AttributeMatrix::Pointer cellFeatureAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellFeatureAttributeMatrixName(), -301);
   if(getErrorCondition() < 0) { return; }
   m_NeighborhoodList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>* >
       (m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getAttributeArray(m_NeighborhoodListArrayName).get());
@@ -689,7 +758,7 @@ void PatchGroupMicroTextureRegions::determinePatchFeatureVolumes(size_t totalPat
   {
     NeighborList<int>::Pointer neighborhoodlistPtr = NeighborList<int>::New();
     neighborhoodlistPtr->setName(m_NeighborhoodListArrayName);
-	neighborhoodlistPtr->resize(totalPatches);
+	neighborhoodlistPtr->resize(cellFeatureAttrMat->getNumTuples());
     neighborhoodlistPtr->setNumNeighborsArrayName(m_NeighborhoodsArrayName);
     m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->addAttributeArray(m_NeighborhoodListArrayName, neighborhoodlistPtr);
 
@@ -712,6 +781,11 @@ void PatchGroupMicroTextureRegions::determinePatchFeatureVolumes(size_t totalPat
     e->setArrayType("NeighborList");
     addCreatedArrayHelpIndexEntry(e);
   }
+  QVector<size_t> dims(1, 1);
+  dims[0] = 1;
+  m_NeighborhoodsPtr = cellFeatureAttrMat->createNonPrereqArray<DataArray<int32_t>, AbstractFilter, int32_t>(this, m_NeighborhoodsArrayName, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if( NULL != m_NeighborhoodsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  { m_Neighborhoods = m_NeighborhoodsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   int bin1x, bin2x, bin1y, bin2y, bin1z, bin2z;
   int dBinX, dBinY, dBinZ;
@@ -745,6 +819,9 @@ void PatchGroupMicroTextureRegions::determinePatchFeatureVolumes(size_t totalPat
 		patchFeatureVolume[i] += m_Volumes[j];
       }
     }
+	// debugging lines
+	int test = m_Neighborhoods[i];
+	int stop = 0;
   }
   for (size_t i = 1; i < totalPatches; i++)
   {
@@ -752,6 +829,34 @@ void PatchGroupMicroTextureRegions::determinePatchFeatureVolumes(size_t totalPat
     NeighborList<int>::SharedVectorType sharedNeiLst(new std::vector<int>);
     sharedNeiLst->assign(patchFeatureList[i].begin(), patchFeatureList[i].end());
     m_NeighborhoodList->setList(static_cast<int>(i), sharedNeiLst);
+  }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void PatchGroupMicroTextureRegions::growPatch(int currentPatch)
+{
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  float res_scalar;
+  float patchVolume = 0.0f;
+  if (m->getXPoints() == 1 || m->getYPoints() == 1 || m->getZPoints() == 1)
+  {
+	if(m->getXPoints() == 1) { res_scalar = m->getYRes() * m->getZRes(); }
+	else if(m->getYPoints() == 1) { res_scalar = m->getXRes() * m->getZRes(); }
+	else if(m->getZPoints() == 1) { res_scalar = m->getXRes() * m->getYRes(); }
+	patchVolume = m_PatchEdgeLength * m_PatchEdgeLength * res_scalar;
+  }
+  else
+  {
+	res_scalar = m->getXRes() * m->getYRes() * m->getZRes();
+	patchVolume = (m_PatchEdgeLength * m_PatchEdgeLength * m_PatchEdgeLength);
+  }
+
+  // only flag as an MTR if above the threshold volume fraction of c-ax0s aligns alpha globs within the patch
+  if ((patchFeatureVolumeFractions[currentPatch] / patchVolume) > m_PatchVolumeFractionForMTRGrowth);
+  {
+
   }
 }
 
@@ -769,10 +874,10 @@ AbstractFilter::Pointer PatchGroupMicroTextureRegions::newFilterInstance(bool co
   if(true == copyFilterParameters)
   {
     filter->setCAxisTolerance( getCAxisTolerance() );
-    filter->setUseNonContiguousNeighbors( getUseNonContiguousNeighbors() );
     filter->setUseRunningAverage( getUseRunningAverage() );
     filter->setPatchEdgeLength( getPatchEdgeLength() );
     filter->setRandomizeParentIds( getRandomizeParentIds() );
+    filter->setPatchGrouping( getPatchGrouping() );
   }
   return filter;
 }

@@ -56,7 +56,7 @@
  * @class GroupFeatures GroupFeatures.h DREAM3DLib/ReconstructionFilters/GroupFeatures.h
  * @brief
  * @author Joseph C Tucker (UES) & Michael A Groeber (AFRL)
- * @date Jan 30, 2014
+ * @date Mar 11, 2014
  * @version 5.0
  */
 class GroupFeatures : public AbstractFilter
@@ -76,6 +76,8 @@ class GroupFeatures : public AbstractFilter
 
     DREAM3D_FILTER_PARAMETER(bool, UseNonContiguousNeighbors)
     Q_PROPERTY(float UseNonContiguousNeighbors READ getUseNonContiguousNeighbors WRITE setUseNonContiguousNeighbors)
+    DREAM3D_FILTER_PARAMETER(bool, PatchGrouping)
+    Q_PROPERTY(float PatchGrouping READ getPatchGrouping WRITE setPatchGrouping)
 
     virtual const QString getGroupName() {return DREAM3D::FilterGroups::ReconstructionFilters;}
     virtual const QString getSubGroupName() {return DREAM3D::FilterSubGroups::SegmentationFilters;}
@@ -110,6 +112,7 @@ class GroupFeatures : public AbstractFilter
 
     virtual int getSeed(int newFid);
     virtual bool determineGrouping(int referenceFeature, int neighborFeature, int newFid);
+	virtual void growPatch(int currentPatch);
 
   private:
     NeighborList<int>* m_ContiguousNeighborList;

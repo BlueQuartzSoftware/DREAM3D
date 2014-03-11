@@ -60,7 +60,8 @@ GroupFeatures::GroupFeatures() :
   m_CellFeatureAttributeMatrixName(DREAM3D::Defaults::CellFeatureAttributeMatrixName),
   m_ContiguousNeighborListArrayName(DREAM3D::FeatureData::NeighborList),
   m_NonContiguousNeighborListArrayName(DREAM3D::FeatureData::NeighborhoodList),
-  m_UseNonContiguousNeighbors(false)
+  m_UseNonContiguousNeighbors(false),
+  m_PatchGrouping(false)
 {
 
 }
@@ -177,6 +178,7 @@ void GroupFeatures::execute()
         if (m_UseNonContiguousNeighbors == true) { list2size = int(neighborlist2[firstfeature].size()); }
         for (int k = 0; k < 2; k++)
         {
+		  if (m_PatchGrouping == true) { k = 1; }
           if (k == 0) { listsize = list1size; }
           else if (k == 1) { listsize = list2size; }
           for (int l = 0; l < listsize; l++)
@@ -188,13 +190,14 @@ void GroupFeatures::execute()
             {
               if(determineGrouping(firstfeature, neigh, parentcount) == true)
               {
-                grouplist.push_back(neigh);
+				if (m_PatchGrouping == false) { grouplist.push_back(neigh); }
               }
             }
           }
         }
       }
     }
+	if (m_PatchGrouping == true) growPatch(parentcount);
     grouplist.clear();
   }
 
@@ -217,4 +220,13 @@ bool GroupFeatures::determineGrouping(int referenceFeature, int neighborFeature,
 {
   return false;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void GroupFeatures::growPatch(int currentPatch)
+{
+  return;
+}
+
 

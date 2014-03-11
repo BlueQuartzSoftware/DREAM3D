@@ -82,7 +82,9 @@ class PatchGroupMicroTextureRegions : public GroupFeatures
     Q_PROPERTY(float UseRunningAverage READ getUseRunningAverage WRITE setUseRunningAverage)
     DREAM3D_FILTER_PARAMETER(int, PatchEdgeLength)
     Q_PROPERTY(int PatchEdgeLength READ getPatchEdgeLength WRITE setPatchEdgeLength)
-    DREAM3D_INSTANCE_PROPERTY(bool, RandomizeParentIds)
+    DREAM3D_FILTER_PARAMETER(float, PatchVolumeFractionForMTRGrowth)
+    Q_PROPERTY(int PatchVolumeFractionForMTRGrowth READ getPatchVolumeFractionForMTRGrowth WRITE setPatchVolumeFractionForMTRGrowth)
+    DREAM3D_INSTANCE_PROPERTY(bool, RandomizeParentIds) 
 
     virtual const QString getCompiledLibraryName() { return Reconstruction::ReconstructionBaseName; }
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
@@ -128,6 +130,7 @@ class PatchGroupMicroTextureRegions : public GroupFeatures
     virtual bool determineGrouping(int referenceFeature, int neighborFeature, int newFid);
 	virtual size_t determinePatchFeatureCentroids();
 	virtual void determinePatchFeatureVolumes(size_t totalPatches);
+	virtual void growPatch(int currentPatch);
 
     void characterize_micro_texture_regions();
 
@@ -149,6 +152,7 @@ class PatchGroupMicroTextureRegions : public GroupFeatures
 
   	float avgCaxes[3];
     QVector<float> patchCentroids;
+	QVector<float> patchFeatureVolumeFractions;
 
     QVector<OrientationOps::Pointer> m_OrientationOps;
 
