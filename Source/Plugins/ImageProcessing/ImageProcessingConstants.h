@@ -53,7 +53,7 @@ namespace ImageProcessing
   typedef itk::Image< FloatPixelType, ImageDimension > FloatImageType;
   typedef itk::Image< DoublePixelType, ImageDimension > DoubleImageType;
 
-  typedef itk::Image< RGBUInt8PixelType, ImageDimension > RGBUint8ImageType;
+  typedef itk::Image< ImageProcessing::RGBUInt8PixelType, ImageProcessing::ImageDimension > RGBUInt8ImageType;
   //typedef itk::Image< RGBAFloatPixelType, ImageDimension > RGBAFloatImageType;
 
   typedef itk::Image< Int8PixelType, SliceDimension > Int8SliceType;
@@ -95,7 +95,7 @@ namespace ImageProcessing
   typedef itk::ImageRegionConstIterator< FloatImageType > FloatConstIteratorType;
   typedef itk::ImageRegionConstIterator< DoubleImageType > DoubleConstIteratorType;
 
-  typedef itk::ImageRegionConstIterator< RGBUInt8PixelType > RGBUInt8ConstIteratorType;
+  typedef itk::ImageRegionConstIterator< ImageProcessing::RGBUInt8PixelType > RGBUInt8ConstIteratorType;
   //typedef itk::ImageRegionConstIterator< RGBAFloatPixelType > RGBAFloatConstIteratorType;
 }
 

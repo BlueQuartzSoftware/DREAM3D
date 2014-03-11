@@ -219,6 +219,11 @@ void ImageRegistration::execute()
 
   for(int i=dims[2]-1; i>0; i--)
   {
+    //update gui
+    ss.str("");
+    ss << "Aligning Slice "<< dims[2]-i << "/" << dims[2];
+    notifyStatusMessage(ss.str());
+
     //get and register 2 images
     ImageProcessing::UInt8SliceType::Pointer fixedImage = ITKUtilities::ExtractSlice<ImageProcessing::UInt8PixelType>(inputImage, ImageProcessing::ZSlice, i-1);
     ImageProcessing::UInt8SliceType::Pointer movingImage = ITKUtilities::ExtractSlice<ImageProcessing::UInt8PixelType>(inputImage, ImageProcessing::ZSlice, i);
@@ -240,7 +245,7 @@ void ImageRegistration::execute()
     registration->SetInitialTransformParameters( initialParameters );
 
     optimizer->SetMaximumStepLength( 4.00 );
-    optimizer->SetMinimumStepLength( 0.01 );
+    optimizer->SetMinimumStepLength( 1.00 );
 
     // Set a stopping criterion
     optimizer->SetNumberOfIterations( 200 );
@@ -251,7 +256,6 @@ void ImageRegistration::execute()
     }
     catch( itk::ExceptionObject & err )
     {
-      std::stringstream ss;
       ss.str("");
       ss << "ExceptionObject caught!: "<< err;
       setErrorCondition(-800);
