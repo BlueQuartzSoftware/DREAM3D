@@ -1,15 +1,15 @@
 /* ============================================================================
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#include "ChangeGrainIdsField.h"
+#include "ChangeGrainIds.h"
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ChangeGrainIdsField::ChangeGrainIdsField() :
+ChangeGrainIds::ChangeGrainIds() :
   AbstractFilter(),
-  m_GoodFieldsArrayName(""),
-  m_GrainIdsArrayName(DREAM3D::FieldData::GoodFields),
+  m_GoodVoxelsArrayName(""),
+  m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
   m_GrainIds(NULL),
   m_NewID(0)
 {
@@ -19,21 +19,21 @@ ChangeGrainIdsField::ChangeGrainIdsField() :
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ChangeGrainIdsField::~ChangeGrainIdsField()
+ChangeGrainIds::~ChangeGrainIds()
 {
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ChangeGrainIdsField::setupFilterParameters()
+void ChangeGrainIds::setupFilterParameters()
 {
   std::vector<FilterParameter::Pointer> parameters;
   {
     FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Good Fields Array");
-    parameter->setPropertyName("GoodFieldsArrayName");
-    parameter->setWidgetType(FilterParameter::VoxelFieldArrayNameSelectionWidget);
+    parameter->setHumanLabel("Good Voxels Array");
+    parameter->setPropertyName("GoodVoxelsArrayName");
+    parameter->setWidgetType(FilterParameter::VoxelCellArrayNameSelectionWidget);
     parameter->setValueType("string");
     parameter->setUnits("");
     parameters.push_back(parameter);
@@ -52,10 +52,10 @@ void ChangeGrainIdsField::setupFilterParameters()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ChangeGrainIdsField::readFilterParameters(AbstractFilterParametersReader* reader, int index)
+void ChangeGrainIds::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-  setGoodFieldsArrayName( reader->readValue( "GoodFieldsArrayName", getGoodFieldsArrayName() ) );
+  setGoodVoxelsArrayName( reader->readValue( "GoodVoxelsArrayName", getGoodVoxelsArrayName() ) );
   setNewID( reader->readValue( "NewID", getNewID() ) );
   reader->closeFilterGroup();
 }
@@ -63,10 +63,10 @@ void ChangeGrainIdsField::readFilterParameters(AbstractFilterParametersReader* r
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int ChangeGrainIdsField::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
+int ChangeGrainIds::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  writer->writeValue("GoodFieldsArrayName", getGoodFieldsArrayName() );
+  writer->writeValue("GoodVoxelsArrayName", getGoodVoxelsArrayName() );
   writer->writeValue("NewID", getNewID() );
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
@@ -75,22 +75,22 @@ int ChangeGrainIdsField::writeFilterParameters(AbstractFilterParametersWriter* w
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ChangeGrainIdsField::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
+void ChangeGrainIds::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
   std::stringstream ss;
   VoxelDataContainer* m = getVoxelDataContainer();
 
-  if(m_GoodFieldsArrayName.empty() == true)
+  if(m_GoodVoxelsArrayName.empty() == true)
   {
     ss.str("");
-    ss << "The GoodFields Array Name is blank (empty).";
+    ss << "The GoodVoxels Array Name is blank (empty).";
     setErrorCondition(-397);
     addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
   }
   else
   {
-    //GET_PREREQ_DATA(m, DREAM3D, FieldData, GoodFields, ss, -300, bool, BoolArrayType, fields, 1)
+    GET_PREREQ_DATA(m, DREAM3D, CellData, GoodVoxels, ss, -300, bool, BoolArrayType, voxels, 1)
   }
 
   GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -301, int32_t, Int32ArrayType, voxels, 1);
@@ -99,7 +99,7 @@ void ChangeGrainIdsField::dataCheck(bool preflight, size_t voxels, size_t fields
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ChangeGrainIdsField::preflight()
+void ChangeGrainIds::preflight()
 {
   dataCheck(true, 1, 1, 1);
 }
@@ -107,7 +107,7 @@ void ChangeGrainIdsField::preflight()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ChangeGrainIdsField::execute()
+void ChangeGrainIds::execute()
 {
   int32_t err =0;
   VoxelDataContainer* m = getVoxelDataContainer();
@@ -129,7 +129,7 @@ void ChangeGrainIdsField::execute()
 
   for(int i=0; i<totalPoints; i++)
   {
-    if(0==m_GoodFields[m_GrainIds[i]])
+    if(0==m_GoodVoxels[i])
     {
       m_GrainIds[i]=m_NewID;
     }
