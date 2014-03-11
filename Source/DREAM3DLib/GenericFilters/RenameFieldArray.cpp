@@ -113,6 +113,14 @@ int RenameFieldArray::writeFilterParameters(AbstractFilterParametersWriter* writ
 // -----------------------------------------------------------------------------
 void RenameFieldArray::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
+  VoxelDataContainer* m = getVoxelDataContainer();
+  if(NULL == m)
+  {
+    setErrorCondition(-999);
+    addErrorMessage(getHumanLabel(), "The DataContainer Object was NULL", -999);
+    return;
+  }
+
   setErrorCondition(0);
   std::stringstream ss;
 
@@ -120,6 +128,15 @@ void RenameFieldArray::dataCheck(bool preflight, size_t voxels, size_t fields, s
   {
     setErrorCondition(-11000);
      addErrorMessage(getHumanLabel(), "An array from the Voxel Data Container must be selected.", getErrorCondition());
+  }
+  else
+  {
+    bool check = m->renameFieldData(m_SelectedFieldArrayName, m_NewFieldArrayName);
+    if(check == false)
+    {
+      ss << "Array to be renamed could not be found in DataContainer";
+      addErrorMessage(getHumanLabel(),ss.str(),getErrorCondition());
+    }
   }
 }
 
