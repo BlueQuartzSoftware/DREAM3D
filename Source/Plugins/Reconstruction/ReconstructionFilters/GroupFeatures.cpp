@@ -196,8 +196,29 @@ void GroupFeatures::execute()
           }
         }
       }
-    }
-	if (m_PatchGrouping == true) growPatch(parentcount);
+	  if (m_PatchGrouping == true) 
+	  {
+		if (growPatch(parentcount) == true)
+		{
+		  for (size_t j = 0; j < grouplist.size(); j++)
+		  {
+			int firstfeature = grouplist[j];
+			listsize = int(neighborlist[firstfeature].size());
+			for (int l = 0; l < listsize; l++)
+			{
+			  neigh = neighborlist[firstfeature][l];
+			  if (neigh != firstfeature)
+			  {
+				if(determineGrouping(firstfeature, neigh, parentcount) == true)
+				{
+				  grouplist.push_back(neigh);
+				}
+			  }
+			}
+		  }
+		}
+	  }
+	}
     grouplist.clear();
   }
 
@@ -224,9 +245,9 @@ bool GroupFeatures::determineGrouping(int referenceFeature, int neighborFeature,
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void GroupFeatures::growPatch(int currentPatch)
+bool GroupFeatures::growPatch(int currentPatch)
 {
-  return;
+  return false;
 }
 
 

@@ -422,9 +422,12 @@ int PatchGroupMicroTextureRegions::getSeed(int newFid)
 {
   setErrorCondition(0);
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-
-  size_t numfeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
-  if (newFid <= numfeatures) return newFid;
+  size_t numfeatures = m->getAttributeMatrix(getNewCellFeatureAttributeMatrixName())->getNumTuples();
+  int stop = 0;
+  avgCaxes[0] = 0.0f;
+  avgCaxes[1] = 0.0f;
+  avgCaxes[2] = 0.0f;
+  if (newFid < numfeatures) return newFid;
   else return -1;
   /*
 
@@ -498,7 +501,7 @@ bool PatchGroupMicroTextureRegions::determineGrouping(int referenceFeature, int 
 
   QuatF* avgQuats = reinterpret_cast<QuatF*>(m_AvgQuats);
 
-  if (m_FeaturePhases[referenceFeature] > 0 && m_FeaturePhases[neighborFeature] > 0)
+  if (m_FeatureParentIds[neighborFeature] == -1 && m_FeaturePhases[referenceFeature] > 0 && m_FeaturePhases[neighborFeature] > 0)
   {
     if (m_UseRunningAverage == false)
     {
@@ -835,7 +838,7 @@ void PatchGroupMicroTextureRegions::determinePatchFeatureVolumes(size_t totalPat
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PatchGroupMicroTextureRegions::growPatch(int currentPatch)
+bool PatchGroupMicroTextureRegions::growPatch(int currentPatch)
 {
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
   float res_scalar;
@@ -852,12 +855,13 @@ void PatchGroupMicroTextureRegions::growPatch(int currentPatch)
 	res_scalar = m->getXRes() * m->getYRes() * m->getZRes();
 	patchVolume = (m_PatchEdgeLength * m_PatchEdgeLength * m_PatchEdgeLength);
   }
-
+  // debugging lines
+  float check1 = patchFeatureVolumeFractions[currentPatch];
+  float check = patchFeatureVolumeFractions[currentPatch] / patchVolume;
+  int stop = 0;
   // only flag as an MTR if above the threshold volume fraction of c-ax0s aligns alpha globs within the patch
-  if ((patchFeatureVolumeFractions[currentPatch] / patchVolume) > m_PatchVolumeFractionForMTRGrowth);
-  {
-
-  }
+  if ((patchFeatureVolumeFractions[currentPatch] / patchVolume) > m_PatchVolumeFractionForMTRGrowth) { return true; }
+  else { return false; }
 }
 
 // -----------------------------------------------------------------------------

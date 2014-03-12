@@ -130,7 +130,7 @@ class PatchGroupMicroTextureRegions : public GroupFeatures
     virtual bool determineGrouping(int referenceFeature, int neighborFeature, int newFid);
 	virtual size_t determinePatchFeatureCentroids();
 	virtual void determinePatchFeatureVolumes(size_t totalPatches);
-	virtual void growPatch(int currentPatch);
+	virtual bool growPatch(int currentPatch);
 
     void characterize_micro_texture_regions();
 

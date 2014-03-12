@@ -112,7 +112,7 @@ class GroupFeatures : public AbstractFilter
 
     virtual int getSeed(int newFid);
     virtual bool determineGrouping(int referenceFeature, int neighborFeature, int newFid);
-	virtual void growPatch(int currentPatch);
+	virtual bool growPatch(int currentPatch);
 
   private:
     NeighborList<int>* m_ContiguousNeighborList;
