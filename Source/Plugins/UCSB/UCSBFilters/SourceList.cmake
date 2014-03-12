@@ -18,6 +18,7 @@ set(_PublicFilters
   RotateSliceEulerRefFrame
   MergeArrays
   ChangeGrainIds
+  MoveGrain
 )
 
 
