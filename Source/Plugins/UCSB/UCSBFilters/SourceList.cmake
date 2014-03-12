@@ -19,6 +19,7 @@ set(_PublicFilters
   MergeArrays
   ChangeGrainIds
   MoveGrain
+  GenerateFaceMisorientationColors
 )
 
 

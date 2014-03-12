@@ -33,8 +33,8 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef _GenerateFaceMisorientationColoring_H_
-#define _GenerateFaceMisorientationColoring_H_
+#ifndef _GenerateFaceMisorientationColors_H_
+#define _GenerateFaceMisorientationColors_H_
 
 #include <string>
 
@@ -44,22 +44,22 @@
 #include "DREAM3DLib/SurfaceMeshingFilters/SurfaceMeshFilter.h"
 
 /**
- * @class GenerateFaceMisorientationColoring GenerateFaceMisorientationColoring.h /SurfaceMeshFilters/GenerateFaceMisorientationColoring.h
+ * @class GenerateFaceMisorientationColors GenerateFaceMisorientationColors.h DREAM3DLib/ProcessingFilters/GenerateFaceMisorientationColors.h
  * @brief This filter calculates the normal of each triangle in the surface mesh. The calculated normals have been
  * normalized themselves. This filter is parallelized using the Threading Building Blocks library and will attempt to
  * use the optimal number of processors to do the computation.
- * @author Michael A. Jackson (BlueQuartz Software)
- * @date Dec 12, 2012
+ * @author Will Lenthe
+ * @date March 12, 2014
  * @version 1.0
  */
-class DREAM3DLib_EXPORT GenerateFaceMisorientationColoring : public SurfaceMeshFilter
+class DREAM3DLib_EXPORT GenerateFaceMisorientationColors : public SurfaceMeshFilter
 {
   public:
-    DREAM3D_SHARED_POINTERS(GenerateFaceMisorientationColoring)
-    DREAM3D_STATIC_NEW_MACRO(GenerateFaceMisorientationColoring)
-    DREAM3D_TYPE_MACRO_SUPER(GenerateFaceMisorientationColoring, SurfaceMeshFilter)
+    DREAM3D_SHARED_POINTERS(GenerateFaceMisorientationColors)
+    DREAM3D_STATIC_NEW_MACRO(GenerateFaceMisorientationColors)
+    DREAM3D_TYPE_MACRO_SUPER(GenerateFaceMisorientationColors, SurfaceMeshFilter)
 
-    virtual ~GenerateFaceMisorientationColoring();
+    virtual ~GenerateFaceMisorientationColors();
 
     DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshFaceLabelsArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshFaceMisorientationColorsArrayName)
@@ -74,14 +74,14 @@ class DREAM3DLib_EXPORT GenerateFaceMisorientationColoring : public SurfaceMeshF
     * a different group if you want. The string returned here will be displayed
     * in the GUI for the filter
     */
-    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::SurfaceMeshingFilters; }
+    virtual const std::string getGroupName() { return "UCSB"; }
     virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::MiscFilters; }
 
     /**
     * @brief This returns a string that is displayed in the GUI. It should be readable
     * and understandable by humans.
     */
-    virtual const std::string getHumanLabel() { return "Generate Face Misorientation Colors (Scalar)"; }
+    virtual const std::string getHumanLabel() { return "Generate Face Misorientation Colors"; }
 
     /**
     * @brief This method will instantiate all the end user settable options/parameters
@@ -94,7 +94,7 @@ class DREAM3DLib_EXPORT GenerateFaceMisorientationColoring : public SurfaceMeshF
     * @param writer The writer that is used to write the options to a file
     */
     virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
-    
+
     /**
     * @brief This method will read the options from a file
     * @param reader The reader that is used to read the options from a file
@@ -113,7 +113,7 @@ class DREAM3DLib_EXPORT GenerateFaceMisorientationColoring : public SurfaceMeshF
     virtual void preflight();
 
   protected:
-    GenerateFaceMisorientationColoring();
+    GenerateFaceMisorientationColors();
 
     /**
     * @brief Checks for the appropriate parameter values and availability of
@@ -128,13 +128,13 @@ class DREAM3DLib_EXPORT GenerateFaceMisorientationColoring : public SurfaceMeshF
 
   private:
     int32_t* m_SurfaceMeshFaceLabels;
-    float* m_SurfaceMeshFaceMisorientationColors;
+    uint8_t* m_SurfaceMeshFaceMisorientationColors;
     float* m_AvgQuats;
     int32_t* m_FieldPhases;
     unsigned int* m_CrystalStructures;
 
-    GenerateFaceMisorientationColoring(const GenerateFaceMisorientationColoring&); // Copy Constructor Not Implemented
-    void operator=(const GenerateFaceMisorientationColoring&); // Operator '=' Not Implemented
+    GenerateFaceMisorientationColors(const GenerateFaceMisorientationColors&); // Copy Constructor Not Implemented
+    void operator=(const GenerateFaceMisorientationColors&); // Operator '=' Not Implemented
 };
 
-#endif /* _GenerateFaceMisorientationColoring_H_ */
+#endif /* _GenerateFaceMisorientationColors_H_ */
