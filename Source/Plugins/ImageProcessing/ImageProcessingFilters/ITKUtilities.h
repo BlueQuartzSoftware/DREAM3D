@@ -124,15 +124,23 @@ class DREAM3DLib_EXPORT ITKUtilities
       }
     }
 
-  ///RGB conversion and copying
-    template<typename T>
-    static typename itk::Image<typename itk::RGBPixel <T>,ImageProcessing::ImageDimension>::Pointer Dream3DRGBtoITK(VoxelDataContainer* m, typename T* data)
-    {
-      //define image and iterator types
-      typedef typename itk::RGBPixel<T> RGBPixelType;
-      typedef typename itk::Image<RGBPixelType, ImageProcessing::ImageDimension> RGBImageType;
-      typedef typename itk::ImageRegionIterator<RGBImageType> IteratorType;
 
+      //define image and iterator types
+      typedef itk::RGBPixel<unsigned char> RGBPixelType;
+      typedef itk::Image<RGBPixelType, ImageProcessing::ImageDimension> RGBImageType;
+      typedef itk::ImageRegionIterator<RGBImageType> IteratorType;
+
+    /**
+     * @brief Dream3DRGBtoITK Converts DREAM3D DataArray into an RGB Pixel for use in ITK. While the method will work
+     * for any "DataArray" based class the individual values will be converted to 8 bit unsigned chars so if the values
+     * of each component are outside the range of 0 255 then unpredictable results will occur.
+     * @param m
+     * @param data
+     * @return
+     */
+    template<typename T>
+    static typename RGBImageType::Pointer Dream3DRGBtoITK(VoxelDataContainer* m, T* data)
+    {
       //get size+dimensions of dataset
       size_t udims[3] =
       { 0, 0, 0 };
@@ -143,21 +151,21 @@ class DREAM3DLib_EXPORT ITKUtilities
       typedef int64_t DimType;
     #endif
       DimType dims[3] = { static_cast<DimType>(udims[0]), static_cast<DimType>(udims[1]), static_cast<DimType>(udims[2]), };
-      int64_t totalPoints = m->getTotalPoints();
+      //int64_t totalPoints = m->getTotalPoints();
 
       //copy dataset dimensions
-      RGBImageType::SizeType size;
+      typename RGBImageType::SizeType size;
       size[0]=dims[0];
       size[1]=dims[1];
       size[2]=dims[2];
 
       //create image region
-      RGBImageType::IndexType start;
+      typename RGBImageType::IndexType start;
       start.Fill(0);
-      RGBImageType::RegionType region(start,size);
+      typename RGBImageType::RegionType region(start,size);
 
       //create and allocate image
-      RGBImageType::Pointer image = RGBImageType::New();
+      typename RGBImageType::Pointer image = RGBImageType::New();
       image->SetRegions(region);
       image->Allocate();
 
@@ -168,9 +176,9 @@ class DREAM3DLib_EXPORT ITKUtilities
       while(!it.IsAtEnd())
       {
         RGBPixelType pixel;
-        pixel[0]=data[++index];
-        pixel[1]=data[++index];
-        pixel[2]=data[++index];
+        pixel[0]=static_cast<unsigned char>(data[++index]);
+        pixel[1]=static_cast<unsigned char>(data[++index]);
+        pixel[2]=static_cast<unsigned char>(data[++index]);
         it.Set(pixel);
         ++it;
       }
@@ -252,6 +260,7 @@ class DREAM3DLib_EXPORT ITKUtilities
     }
     */
 
+protected:
     ITKUtilities();
 
   private:
