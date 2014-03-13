@@ -54,6 +54,7 @@ FindSlipTransmissionMetrics::FindSlipTransmissionMetrics() :
   m_mPrimeArrayName(DREAM3D::FieldData::mPrime),
   m_FieldPhasesArrayName(DREAM3D::FieldData::Phases),
   m_AvgQuatsArrayName(DREAM3D::FieldData::AvgQuats),
+  m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
   m_FieldPhases(NULL),
   m_AvgQuats(NULL),
   m_F1(NULL),
