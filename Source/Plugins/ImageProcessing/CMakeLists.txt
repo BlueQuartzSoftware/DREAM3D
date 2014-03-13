@@ -40,7 +40,7 @@ find_package(ITK COMPONENTS
 	#Group Segmentation
 		#ITKVoronoi
 		#ITKLevelSets
-		#ITKWaterSheds
+		ITKWatersheds
 		#ITKConnectedComponents
 	
 	REQUIRED)
