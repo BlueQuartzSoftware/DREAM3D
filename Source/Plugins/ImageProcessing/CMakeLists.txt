@@ -16,35 +16,105 @@ include( ${QT_USE_FILE} )
 # --------------------------------------------------------------------
 # find ITK libararies
 # list of modules can be found here: http://www.itk.org/Doxygen/html/modules.html
-find_package(ITK COMPONENTS 
-	#Group Core
-		ITKCommon
+IF(ITK_DIR)
 
-	#Group IO  ---No HDF5 Modules---
-		#ITKIOImageBase
+  # ITK has been built already
+  FIND_PACKAGE(ITK REQUIRED PATHS ${ITK_DIR} NO_DEFAULT_PATH)
 
-	#Group Filtering
-		#ITKDistanceMap
-		#ITKThresholding
-		#ITKImageGradient
-		#ITKImageFilterBase
-		#ITKSmoothing
-		#ITKDenoising
-		#ITKConvolution
-		#ITKStatistics
-		#ITKImageFeature
+  MESSAGE(STATUS "Using ITK available at: ${ITK_DIR}")
 
-	#Group Registration
-		ITKRegistrationCommon
+  IF("${ITK_LIBRARY_DIRS}" STREQUAL "")
+    # ITKv4 does not seem to specify ITK_LIBRARY_DIRS any more, so we generate the binary directory from the main ITK directory
+    SET(ITK_LIBRARY_DIRS "${ITK_DIR}/bin")
+  ENDIF()
 
-	#Group Segmentation
-		#ITKVoronoi
-		#ITKLevelSets
-		ITKWatersheds
-		#ITKConnectedComponents
-	
-	REQUIRED)
+  # Copy libraries to PLUS_EXECUTABLE_OUTPUT_PATH
+  IF( ${CMAKE_GENERATOR} MATCHES "Visual Studio" )
+    FILE(COPY
+      ${ITK_LIBRARY_DIRS}/Release/
+      DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/Release
+      FILES_MATCHING REGEX .*${CMAKE_SHARED_LIBRARY_SUFFIX}
+      )
+    FILE(COPY
+      ${ITK_LIBRARY_DIRS}/Debug/
+      DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/Debug
+      FILES_MATCHING REGEX .*${CMAKE_SHARED_LIBRARY_SUFFIX}
+      )
+  ELSE()
+    FILE(COPY
+      ${ITK_LIBRARY_DIRS}/
+      DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}
+      FILES_MATCHING REGEX .*${CMAKE_SHARED_LIBRARY_SUFFIX}
+      )
+  ENDIF()
+  SET(DREAM3D_ITK_DIR "${ITK_DIR}" CACHE INTERNAL "Path to store itk binaries")
+
+ELSE(ITK_DIR)
+  set(itk_PREFIX "${CMAKE_BINARY_DIR}/itk")
+  include(ExternalProject)
+  # ITK has not been built yet, so download and build it as an external project
+  ExternalProject_Add( itk
+    PREFIX ${itk_PREFIX}
+    SOURCE_DIR "${CMAKE_BINARY_DIR}/itk"
+    BINARY_DIR "${CMAKE_BINARY_DIR}/itk-build"
+    #--Download step--------------
+#    GIT_REPOSITORY "git://itk.org/ITK.git"
+#    GIT_TAG "421d314ff85ad542ad5c0f3d3c115fa7427b1c64"
+    #--Configure step-------------
+    CMAKE_ARGS
+      -DCMAKE_RUNTIME_OUTPUT_DIRECTORY:STRING=${CMAKE_RUNTIME_OUTPUT_DIRECTORY}
+      -DBUILD_SHARED_LIBS:BOOL=${BUILD_SHARED_LIBS}
+      -DBUILD_TESTING:BOOL=OFF
+      -DBUILD_EXAMPLES:BOOL=OFF
+      -DITK_LEGACY_REMOVE:BOOL=ON
+      -DKWSYS_USE_MD5:BOOL=ON
+      -DITK_USE_REVIEW:BOOL=OFF
+      -DITK_BUILD_DEFAULT_MODULES=OFF
+      -DITKGroup_Core=ON
+      -DITKGroup_Filtering=ON
+      -DITKGroup_Registratio=ON
+      -DITKGroup_Segmentation=ON
+
+    #--Build step-----------------
+    #--Install step-----------------
+    INSTALL_COMMAND ""
+    DEPENDS ${ITK_DEPENDENCIES}
+    )
+
+ENDIF(ITK_DIR)
+
+if(0)
+find_package(ITK COMPONENTS
+  #Group Core
+    ITKCommon
+
+  #Group IO  ---No HDF5 Modules---
+    #ITKIOImageBase
+
+  #Group Filtering
+    #ITKDistanceMap
+    #ITKThresholding
+    #ITKImageGradient
+    #ITKImageFilterBase
+    #ITKSmoothing
+    #ITKDenoising
+    #ITKConvolution
+    #ITKStatistics
+    #ITKImageFeature
+
+  #Group Registration
+    ITKRegistrationCommon
+
+  #Group Segmentation
+    #ITKVoronoi
+    #ITKLevelSets
+    ITKWatersheds
+    #ITKConnectedComponents
+
+  REQUIRED)
+
 include(${ITK_USE_FILE})
+  endif()
 
 
 set(${PLUGIN_NAME}_Project_SRCS "")

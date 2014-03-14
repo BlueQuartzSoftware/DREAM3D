@@ -35,7 +35,7 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 #ifndef H5VOXELFILEREADER_H_
-#define H5VOXELFileREADER_H_
+#define H5VOXELFILEREADER_H_
 
 #include <string>
 #include <vector>
@@ -115,4 +115,4 @@ class DREAM3DLib_EXPORT H5VoxelFileReader : public FileReader
 };
 
 
-#endif /* H5VoxelFileReader_H_ */
+#endif /* H5VOXELFILEREADER_H_ */
