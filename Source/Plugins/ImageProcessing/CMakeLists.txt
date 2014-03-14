@@ -17,7 +17,7 @@ include( ${QT_USE_FILE} )
 # find ITK libararies
 # list of modules can be found here: http://www.itk.org/Doxygen/html/modules.html
 IF(ITK_DIR)
-
+  
   # ITK has been built already
   FIND_PACKAGE(ITK REQUIRED PATHS ${ITK_DIR} NO_DEFAULT_PATH)
 
@@ -50,16 +50,35 @@ IF(ITK_DIR)
   SET(DREAM3D_ITK_DIR "${ITK_DIR}" CACHE INTERNAL "Path to store itk binaries")
 
 ELSE(ITK_DIR)
-  set(itk_PREFIX "${CMAKE_BINARY_DIR}/itk")
+	
+	# By default set everything up to download ITK from the DREAM3D web site and we will
+	# build inside of our DREAM3D build directory.
+	set(ITK_URL "http://dream3d.bluequartz.net/binaries/InsightToolkit-4.5.1.zip")
+	set(ITK_PREFIX "${CMAKE_BINARY_DIR}/itk")
+	set(ITK_BINARY_DIR "${ITK_PREFIX}/build")
+	set(ITK_SOURCE_DIR "${ITK_PREFIX}/src")
+	
+	# Now look for the DREAM3D_SDK variable that is set on newer versions of DREAM3D. If we
+	# find that variable is set to something then we are going to use that directory to 
+	# look for the .Zip file containing the source for ITK and then build it.
+	if( NOT ${DREAM3D_SDK} STREQUAL "" )
+		set(ITK_URL "${DREAM3D_SDK}/InsightToolkit-4.5.1.zip")
+		set(ITK_PREFIX ${DREAM3D_SDK}/ITK)
+		set(ITK_BINARY_DIR "${DREAM3D_SDK}/ITKBuild")
+		set(ITK_SOURCE_DIR "${DREAM3D_SDK}/InsightToolkit-4.5.1")
+	endif()
+
+  # We need this for the next command
   include(ExternalProject)
-  # ITK has not been built yet, so download and build it as an external project
+  # ITK has not been built yet, so (possibly) download and build it as an external project
   ExternalProject_Add( itk
-    PREFIX ${itk_PREFIX}
-    SOURCE_DIR "${CMAKE_BINARY_DIR}/itk"
-    BINARY_DIR "${CMAKE_BINARY_DIR}/itk-build"
+    PREFIX ${ITK_PREFIX}
+    SOURCE_DIR "${ITK_SOURCE_DIR}"
+    BINARY_DIR "${ITK_BINARY_DIR}"
     #--Download step--------------
-#    GIT_REPOSITORY "git://itk.org/ITK.git"
-#    GIT_TAG "421d314ff85ad542ad5c0f3d3c115fa7427b1c64"
+ #   GIT_REPOSITORY "git://itk.org/ITK.git"
+ #   GIT_TAG "421d314ff85ad542ad5c0f3d3c115fa7427b1c64"
+    URL ${ITK_URL}
     #--Configure step-------------
     CMAKE_ARGS
       -DCMAKE_RUNTIME_OUTPUT_DIRECTORY:STRING=${CMAKE_RUNTIME_OUTPUT_DIRECTORY}
@@ -72,49 +91,48 @@ ELSE(ITK_DIR)
       -DITK_BUILD_DEFAULT_MODULES=OFF
       -DITKGroup_Core=ON
       -DITKGroup_Filtering=ON
-      -DITKGroup_Registratio=ON
+      -DITKGroup_Registration=ON
       -DITKGroup_Segmentation=ON
-
     #--Build step-----------------
     #--Install step-----------------
-    INSTALL_COMMAND ""
-    DEPENDS ${ITK_DEPENDENCIES}
+    	INSTALL_COMMAND ""
+    	DEPENDS ${ITK_DEPENDENCIES}
     )
-
+	
 ENDIF(ITK_DIR)
 
-if(0)
 find_package(ITK COMPONENTS
-  #Group Core
-    ITKCommon
+	#Group Core
+	ITKCommon
 
-  #Group IO  ---No HDF5 Modules---
-    #ITKIOImageBase
+	#Group IO  ---No HDF5 Modules---
+	#ITKIOImageBase
 
-  #Group Filtering
-    #ITKDistanceMap
-    #ITKThresholding
-    #ITKImageGradient
-    #ITKImageFilterBase
-    #ITKSmoothing
-    #ITKDenoising
-    #ITKConvolution
-    #ITKStatistics
-    #ITKImageFeature
+	#Group Filtering
+	#ITKDistanceMap
+	#ITKThresholding
+	#ITKImageGradient
+	#ITKImageFilterBase
+	#ITKSmoothing
+	#ITKDenoising
+	#ITKConvolution
+	#ITKStatistics
+	#ITKImageFeature
 
-  #Group Registration
-    ITKRegistrationCommon
+	#Group Registration
+	ITKRegistrationCommon
 
-  #Group Segmentation
-    #ITKVoronoi
-    #ITKLevelSets
-    ITKWatersheds
-    #ITKConnectedComponents
+	#Group Segmentation
+	#ITKVoronoi
+	#ITKLevelSets
+	ITKWatersheds
+	#ITKConnectedComponents
 
-  REQUIRED)
+	REQUIRED
+)
 
 include(${ITK_USE_FILE})
-  endif()
+
 
 
 set(${PLUGIN_NAME}_Project_SRCS "")
