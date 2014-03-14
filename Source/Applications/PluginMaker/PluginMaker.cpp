@@ -142,9 +142,83 @@ void PluginMaker::setupGui()
             gen, SLOT(pluginNameChanged(const QString &)));
   }
 
+  //// This is for the @PluginName@Constants File Generation
+  PMGeneratorTreeItem* pluginConstants = new PMGeneratorTreeItem(F_main);
+  pluginConstants->setText(0, "Unknown Plugin Name");
+  pathTemplate = "@PluginName@/";
+  QString resourceTemplate( generateFileSystemPath("/Template/Constants.h.in") );
+  PMFileGenerator* constantsPluginGen = new PMFileGenerator(m_OutputDir->text(),
+                                                            pathTemplate,
+                                                            QString(""),
+                                                            resourceTemplate,
+                                                            pluginConstants,
+                                                            this);
+  pluginConstants->setFileGenPtr(constantsPluginGen);
+  constantsPluginGen->setDisplaySuffix("Constants.h");
+  constantsPluginGen->setDoesGenerateOutput(true);
+  constantsPluginGen->setNameChangeable(true);
+  connect(m_PluginName, SIGNAL(textChanged(const QString &)),
+          constantsPluginGen, SLOT(pluginNameChanged(const QString &)));
+  connect(m_OutputDir, SIGNAL(textChanged(const QString &)),
+          constantsPluginGen, SLOT(outputDirChanged(const QString &)));
+  // For "Directories" this probably isn't needed
+  connect(generateButton, SIGNAL(clicked()),
+          constantsPluginGen, SLOT(generateOutput()));
+  connect(constantsPluginGen, SIGNAL(outputError(const QString &)),
+          this, SLOT(generationError(const QString &)));
 
-  //  PMGeneratorTreeItem* F_code = new PMGeneratorTreeItem(F_main);
-  //  F_code->setText(0, tr(""));
+
+  //// This is for the @PluginName@Plugin.cpp File Generation
+  PMGeneratorTreeItem* pluginCPP = new PMGeneratorTreeItem(F_main);
+  pluginCPP->setText(0, "Unknown Plugin Name");
+  pathTemplate = "@PluginName@/";
+  resourceTemplate = generateFileSystemPath("/Template/Plugin.cpp.in");
+  PMFileGenerator* cppPluginGen = new PMFileGenerator(m_OutputDir->text(),
+                                                      pathTemplate,
+                                                      QString(""),
+                                                      resourceTemplate,
+                                                      pluginCPP,
+                                                      this);
+  pluginCPP->setFileGenPtr(cppPluginGen);
+  cppPluginGen->setDisplaySuffix("Plugin.cpp");
+  cppPluginGen->setDoesGenerateOutput(true);
+  cppPluginGen->setNameChangeable(true);
+  connect(m_PluginName, SIGNAL(textChanged(const QString &)),
+          cppPluginGen, SLOT(pluginNameChanged(const QString &)));
+  connect(m_OutputDir, SIGNAL(textChanged(const QString &)),
+          cppPluginGen, SLOT(outputDirChanged(const QString &)));
+  // For "Directories" this probably isn't needed
+  connect(generateButton, SIGNAL(clicked()),
+          cppPluginGen, SLOT(generateOutput()));
+  connect(cppPluginGen, SIGNAL(outputError(const QString &)),
+          this, SLOT(generationError(const QString &)));
+
+
+  //// This is for the @PluginName@Plugin.h File Generation
+  PMGeneratorTreeItem* pluginH = new PMGeneratorTreeItem(F_main);
+  pluginH->setText(0, "Unknown Plugin Name");
+  pathTemplate = "@PluginName@/";
+  resourceTemplate = generateFileSystemPath("/Template/Plugin.h.in");
+  PMFileGenerator* hPluginGen = new PMFileGenerator(m_OutputDir->text(),
+                                                    pathTemplate,
+                                                    QString(""),
+                                                    resourceTemplate,
+                                                    pluginH,
+                                                    this);
+  pluginH->setFileGenPtr(hPluginGen);
+  hPluginGen->setDisplaySuffix("Plugin.h");
+  hPluginGen->setDoesGenerateOutput(true);
+  hPluginGen->setNameChangeable(true);
+  connect(m_PluginName, SIGNAL(textChanged(const QString &)),
+          hPluginGen, SLOT(pluginNameChanged(const QString &)));
+  connect(m_OutputDir, SIGNAL(textChanged(const QString &)),
+          hPluginGen, SLOT(outputDirChanged(const QString &)));
+  // For "Directories" this probably isn't needed
+  connect(generateButton, SIGNAL(clicked()),
+          hPluginGen, SLOT(generateOutput()));
+  connect(hPluginGen, SIGNAL(outputError(const QString &)),
+          this, SLOT(generationError(const QString &)));
+
 
 
   F_doc = new PMGeneratorTreeItem(F_main);
@@ -176,9 +250,14 @@ void PluginMaker::setupGui()
     gen->setDoesGenerateOutput(true);
   }
 
+  // Dummy HTML file (to bundle the plugin CPP and H files in a FilterBundler)
+  PMFileGenerator* htmlPluginDoc = new PMFileGenerator("", "", "", "", NULL, this);
+
+  FilterBundler fb(cppPluginGen, hPluginGen, htmlPluginDoc, true);
 
 
 
+//// TreeItem for the PluginNameFilters directory
   F_name = new PMGeneratorTreeItem(F_main);
   F_name->setText(0, "Unknown Plugin Name");
   {
@@ -198,66 +277,7 @@ void PluginMaker::setupGui()
 
   }
 
-
-
-  PMGeneratorTreeItem* pluginCPP = new PMGeneratorTreeItem(F_main);
-  pluginCPP->setText(0, "Unknown Plugin Name");
-  pathTemplate = "@PluginName@/";
-  QString resourceTemplate( generateFileSystemPath("/Template/Plugin.cpp.in") );
-  PMFileGenerator* cppPluginGen = new PMFileGenerator(m_OutputDir->text(),
-                                                      pathTemplate,
-                                                      QString(""),
-                                                      resourceTemplate,
-                                                      pluginCPP,
-                                                      this);
-  pluginCPP->setFileGenPtr(cppPluginGen);
-  cppPluginGen->setDisplaySuffix("Plugin.cpp");
-  cppPluginGen->setDoesGenerateOutput(true);
-  cppPluginGen->setNameChangeable(true);
-  connect(m_PluginName, SIGNAL(textChanged(const QString &)),
-          cppPluginGen, SLOT(pluginNameChanged(const QString &)));
-  connect(m_OutputDir, SIGNAL(textChanged(const QString &)),
-          cppPluginGen, SLOT(outputDirChanged(const QString &)));
-  // For "Directories" this probably isn't needed
-  connect(generateButton, SIGNAL(clicked()),
-          cppPluginGen, SLOT(generateOutput()));
-  connect(cppPluginGen, SIGNAL(outputError(const QString &)),
-          this, SLOT(generationError(const QString &)));
-
-
-  PMGeneratorTreeItem* pluginH = new PMGeneratorTreeItem(F_main);
-  pluginH->setText(0, "Unknown Plugin Name");
-  pathTemplate = "@PluginName@/";
-  resourceTemplate = generateFileSystemPath("/Template/Plugin.h.in");
-  PMFileGenerator* hPluginGen = new PMFileGenerator(m_OutputDir->text(),
-                                                    pathTemplate,
-                                                    QString(""),
-                                                    resourceTemplate,
-                                                    pluginH,
-                                                    this);
-  pluginH->setFileGenPtr(hPluginGen);
-  hPluginGen->setDisplaySuffix("Plugin.h");
-  hPluginGen->setDoesGenerateOutput(true);
-  hPluginGen->setNameChangeable(true);
-  connect(m_PluginName, SIGNAL(textChanged(const QString &)),
-          hPluginGen, SLOT(pluginNameChanged(const QString &)));
-  connect(m_OutputDir, SIGNAL(textChanged(const QString &)),
-          hPluginGen, SLOT(outputDirChanged(const QString &)));
-  // For "Directories" this probably isn't needed
-  connect(generateButton, SIGNAL(clicked()),
-          hPluginGen, SLOT(generateOutput()));
-  connect(hPluginGen, SIGNAL(outputError(const QString &)),
-          this, SLOT(generationError(const QString &)));
-
-  PMFileGenerator* htmlPluginDoc = new PMFileGenerator("", "", "", "", NULL, this);   // Dummy HTML file (to bundle the plugin
-  // CPP and H files in a FilterBundler)
-
-  FilterBundler fb(cppPluginGen, hPluginGen, htmlPluginDoc, true);
-  // m_FilterBundles.push_back(fb);
-
-
-
-
+  //// TreeItem for a Filter Class source filfe
   PMGeneratorTreeItem* filterCPP = new PMGeneratorTreeItem(F_name);
   filterCPP->setText(0, "Unknown Plugin Name");
   pathTemplate = "@PluginName@/@PluginName@Filters/";
@@ -282,7 +302,7 @@ void PluginMaker::setupGui()
   connect(cppFilterGen, SIGNAL(outputError(const QString &)),
           this, SLOT(generationError(const QString &)));
 
-
+  //// TreeItem for a Filter Class Header
   PMGeneratorTreeItem* filterH = new PMGeneratorTreeItem(F_name);
   filterH->setText(0, "Unknown Plugin Name");
   pathTemplate = "@PluginName@/@PluginName@Filters/";
@@ -307,12 +327,102 @@ void PluginMaker::setupGui()
   connect(hFilterGen, SIGNAL(outputError(const QString &)),
           this, SLOT(generationError(const QString &)));
 
-
+  //// TreeItem for the SourceList.cmake file that will compile all the filters
   PMGeneratorTreeItem* sourceList = new PMGeneratorTreeItem(F_name);
   sourceList->setText(0, tr("SourceList.cmake"));
 
 
 
+
+  //// This adds a "Directory" TreeItem for the FilterParameterWidgets folder
+  {
+    QTreeWidgetItem* fpw_Name = new PMGeneratorTreeItem(F_main);
+    fpw_Name->setText(0, "FilterParameterWidgets");
+
+    pathTemplate = "@PluginName@/FilterParameterWidgets/";
+    QString resourceTemplate("");
+    PMDirGenerator* gen = new PMDirGenerator(m_OutputDir->text(),
+                                             pathTemplate,
+                                             QString(""),
+                                             resourceTemplate,
+                                             fpw_Name,
+                                             this);
+    gen->setDisplaySuffix("FilterParameterWidgets");
+    gen->setDoesGenerateOutput(false);
+    gen->setNameChangeable(true);
+
+    /// Add TreeItem for the FilterParameterWidgets/SourceList.cmake file
+    PMGeneratorTreeItem* fpw_SourceList = new PMGeneratorTreeItem(fpw_Name);
+    fpw_SourceList->setText(0, "SourceList.cmake");
+    pathTemplate = "@PluginName@/FilterParameterWidgets/";
+    resourceTemplate = generateFileSystemPath("/Template/FilterParameterWidgets/SourceList.cmake.in");
+    PMFileGenerator* fpwFilterGen = new PMFileGenerator(m_OutputDir->text(),
+                                                        pathTemplate,
+                                                        QString("SourceList.cmake"),
+                                                        resourceTemplate,
+                                                        fpw_SourceList,
+                                                        this);
+    fpw_SourceList->setFileGenPtr(fpwFilterGen);
+    fpwFilterGen->setDisplaySuffix("");
+    fpwFilterGen->setDoesGenerateOutput(true);
+    fpwFilterGen->setNameChangeable(false);
+    connect(m_PluginName, SIGNAL(textChanged(const QString &)),
+            fpwFilterGen, SLOT(pluginNameChanged(const QString &)));
+    connect(m_OutputDir, SIGNAL(textChanged(const QString &)),
+            fpwFilterGen, SLOT(outputDirChanged(const QString &)));
+    connect(generateButton, SIGNAL(clicked()),
+            fpwFilterGen, SLOT(generateOutput()));
+    connect(fpwFilterGen, SIGNAL(outputError(const QString &)),
+            this, SLOT(generationError(const QString &)));
+
+  }
+
+
+  //// This adds a "Directory" TreeItem for the Widgets folder
+  {
+    QTreeWidgetItem* fpw_Name = new PMGeneratorTreeItem(F_main);
+    fpw_Name->setText(0, "Widgets");
+
+    pathTemplate = "@PluginName@/Widgets/";
+    QString resourceTemplate("");
+    PMDirGenerator* gen = new PMDirGenerator(m_OutputDir->text(),
+                                             pathTemplate,
+                                             QString(""),
+                                             resourceTemplate,
+                                             fpw_Name,
+                                             this);
+    gen->setDisplaySuffix("Widgets");
+    gen->setDoesGenerateOutput(false);
+    gen->setNameChangeable(true);
+
+    /// Add TreeItem for the FilterParameterWidgets/SourceList.cmake file
+    PMGeneratorTreeItem* fpw_SourceList = new PMGeneratorTreeItem(fpw_Name);
+    fpw_SourceList->setText(0, "SourceList.cmake");
+    pathTemplate = "@PluginName@/Widgets/";
+    resourceTemplate = generateFileSystemPath("/Template/Widgets/SourceList.cmake.in");
+    PMFileGenerator* fpwFilterGen = new PMFileGenerator(m_OutputDir->text(),
+                                                        pathTemplate,
+                                                        QString("SourceList.cmake"),
+                                                        resourceTemplate,
+                                                        fpw_SourceList,
+                                                        this);
+    fpw_SourceList->setFileGenPtr(fpwFilterGen);
+    fpwFilterGen->setDisplaySuffix("");
+    fpwFilterGen->setDoesGenerateOutput(true);
+    fpwFilterGen->setNameChangeable(false);
+    connect(m_PluginName, SIGNAL(textChanged(const QString &)),
+            fpwFilterGen, SLOT(pluginNameChanged(const QString &)));
+    connect(m_OutputDir, SIGNAL(textChanged(const QString &)),
+            fpwFilterGen, SLOT(outputDirChanged(const QString &)));
+    connect(generateButton, SIGNAL(clicked()),
+            fpwFilterGen, SLOT(generateOutput()));
+    connect(fpwFilterGen, SIGNAL(outputError(const QString &)),
+            this, SLOT(generationError(const QString &)));
+
+  }
+
+
+  //// TreeItems for the Plugin Documentation
   F_namefilters = new PMGeneratorTreeItem(F_doc);
   F_namefilters->setText(0, "Unknown Plugin Name");
   {
@@ -332,10 +442,7 @@ void PluginMaker::setupGui()
   }
 
 
-//  PMGeneratorTreeItem* pluginDocs = new PMGeneratorTreeItem(F_doc);
-//  pluginDocs->setText(0, "PluginDocumentation.qrc");
-
-
+  //// TreeItem for the actual filter Documentation
   PMGeneratorTreeItem* filterHTML = new PMGeneratorTreeItem(F_namefilters);
   filterHTML->setText(0, "Unknown Plugin Name");
   pathTemplate = "@PluginName@/Documentation/@PluginName@Filters/";
@@ -380,35 +487,35 @@ QString PluginMaker::generateFileSystemPath(QString pathEnding)
 
   QDir pluginMakerDir = QDir(appPath);
 
-  #if defined(Q_OS_WIN)
+#if defined(Q_OS_WIN)
 
-  #elif defined(Q_OS_MAC)
-    if (pluginMakerDir.dirName() == "MacOS")
-    {
-      pluginMakerDir.cdUp();
-      pluginMakerDir.cdUp();
-      pluginMakerDir.cdUp();
-    }
-  #else
-    // We are on Linux - I think
-    QFileInfo fi( pluginMakerDir.absolutePath() + pathEnding);
-    if (fi.exists() == false)
-    {
-      // The help file does not exist at the default location because we are probably running from the build tree.
-      // Try up one more directory
-      pluginMakerDir.cdUp();
-    }
-  #endif
+#elif defined(Q_OS_MAC)
+  if (pluginMakerDir.dirName() == "MacOS")
+  {
+    pluginMakerDir.cdUp();
+    pluginMakerDir.cdUp();
+    pluginMakerDir.cdUp();
+  }
+#else
+  // We are on Linux - I think
+  QFileInfo fi( pluginMakerDir.absolutePath() + pathEnding);
+  if (fi.exists() == false)
+  {
+    // The help file does not exist at the default location because we are probably running from the build tree.
+    // Try up one more directory
+    pluginMakerDir.cdUp();
+  }
+#endif
 
-  #if defined(Q_OS_WIN)
-    QFileInfo fi( pluginMakerDir.absolutePath() + pathEnding);
-    if (fi.exists() == false)
-    {
-      // The help file does not exist at the default location because we are probably running from visual studio.
-      // Try up one more directory
-      pluginMakerDir.cdUp();
-    }
-  #endif
+#if defined(Q_OS_WIN)
+  QFileInfo fi( pluginMakerDir.absolutePath() + pathEnding);
+  if (fi.exists() == false)
+  {
+    // The help file does not exist at the default location because we are probably running from visual studio.
+    // Try up one more directory
+    pluginMakerDir.cdUp();
+  }
+#endif
 
   QString filePath = pluginMakerDir.absolutePath() + pathEnding;
   filePath = QDir::toNativeSeparators(filePath);
@@ -456,8 +563,7 @@ void PluginMaker::on_generateButton_clicked()
   QString text = generateCmakeContents();
 
   QString pathTemplate = "@PluginName@/@PluginName@Filters/";
-  QString parentPath = m_OutputDir->text() + QDir::separator()
-      + pathTemplate.replace("@PluginName@", pluginName);
+  QString parentPath = m_OutputDir->text() + QDir::separator() + pathTemplate.replace("@PluginName@", pluginName);
   parentPath = QDir::toNativeSeparators(parentPath);
 
   QDir dir(parentPath);
@@ -473,8 +579,7 @@ void PluginMaker::on_generateButton_clicked()
 
 
   pathTemplate = "@PluginName@/Documentation/";
-  parentPath = m_OutputDir->text() + QDir::separator()
-      + pathTemplate.replace("@PluginName@", pluginName);
+  parentPath = m_OutputDir->text() + QDir::separator() + pathTemplate.replace("@PluginName@", pluginName);
   parentPath = QDir::toNativeSeparators(parentPath);
 
   QDir dir2(parentPath);
@@ -512,7 +617,7 @@ QString PluginMaker::cleanName_filters(QString name) {
 //
 // -----------------------------------------------------------------------------
 void PluginMaker::on_m_PluginName_textChanged(const QString & text) {
-//  QString pluginName = cleanName(m_PluginName->text());
+  //  QString pluginName = cleanName(m_PluginName->text());
 
   statusbar->showMessage("Ready");
 
@@ -661,10 +766,10 @@ void PluginMaker::on_addFilterBtn_clicked()
     FilterBundler filterpack(cppgen, hgen, htmlgen, addFilterDialog->isPublic());
     m_FilterBundles.push_back(filterpack);
   }
-//  for(int i = 0;i < m_FilterBundles.count(); ++i)
-//  {
-//    std::cout  << "CPP: " << m_FilterBundles[i].getCPPGenerator()->getTreeWidgetItem()->text(0)() << "\n";
-//  }
+  //  for(int i = 0;i < m_FilterBundles.count(); ++i)
+  //  {
+  //    std::cout  << "CPP: " << m_FilterBundles[i].getCPPGenerator()->getTreeWidgetItem()->text(0)() << "\n";
+  //  }
 }
 
 // -----------------------------------------------------------------------------
@@ -715,8 +820,10 @@ void PluginMaker::on_treeWidget_itemSelectionChanged() {
   }
 
   QString text = "";
-
-  if ( currentFile->text(0).contains(".cmake") )
+  QTreeWidgetItem* parent = treeWidget->currentItem()->parent();
+  if(NULL != parent
+      && parent->text(0).endsWith("Filters")
+      && currentFile->text(0).compare("SourceList.cmake") == 0 )
   {
     text = generateCmakeContents();
   }
@@ -878,7 +985,7 @@ QString PluginMaker::generateCmakeContents() {
   QString hdrContents;
   for (int i = 0; i < m_FilterBundles.count(); ++i)
   {
-   // PMFileGenerator* cppGen = m_FilterBundles[i].getCPPGenerator();
+    // PMFileGenerator* cppGen = m_FilterBundles[i].getCPPGenerator();
     PMFileGenerator* hGen = m_FilterBundles[i].getHGenerator();
     bool isPublic = m_FilterBundles[i].isPublic();
 

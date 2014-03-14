@@ -13,7 +13,8 @@ START_FILTER_GROUP(${@PluginName@_BINARY_DIR} "${_filterGroupName}" "@PluginName
 #---------
 # List your public filters here
 set(_PublicFilters
-@PUBLIC_FILTERS@)
+@PUBLIC_FILTERS@
+)
 
 
 #--------------
@@ -30,7 +31,8 @@ endforeach()
 # This is the list of Private Filters. These filters are available from other filters but the user will not
 # be able to use them from the DREAM3D user interface.
 set(_PrivateFilters
-@PRIVATE_FILTERS@)
+@PRIVATE_FILTERS@
+)
 
 #-----------------
 # Loop on the Private Filters adding each one to the DREAM3DLib project so that it gets compiled.

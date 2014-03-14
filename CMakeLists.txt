@@ -212,7 +212,7 @@ endif()
 # Find the Doxygen package
 FIND_PACKAGE(Doxygen)
 if(DOXYGEN_FOUND)
-	message(STATUS "Doxygen Found at ${DOXYGEN_EXECUTABLE}")
+  message(STATUS "Doxygen Found at ${DOXYGEN_EXECUTABLE}")
 else()
   message(FATAL_ERROR "Doxygen is needed to build the documentation. Please install it correctly")
 endif()
@@ -345,12 +345,12 @@ function(DREAM3D_COMPILE_PLUGIN)
 
     option(DREAM3D_BUILD_PLUGIN_${PLUG_PLUGIN_NAME} "Build the ${PLUG_PLUGIN_NAME}" ON)
     if(DREAM3D_BUILD_PLUGIN_${PLUG_PLUGIN_NAME})
-        message(STATUS "${PLUG_PLUGIN_NAME}: Configuring Plugin ....")
+        # message(STATUS "${PLUG_PLUGIN_NAME}: Configuring Plugin ....")
         add_subdirectory(${PLUG_PLUGIN_SOURCE_DIR} ${PROJECT_BINARY_DIR}/Plugins/${PLUG_PLUGIN_NAME})
         #- Now set up the dependency between the main application and each of the plugins so that
-  		#- things like Visual Studio are forced to rebuild the plugins when launching
-  		#- the DREAM3D application
-		if(DREAM3D_BUILD_PLUGIN_${p})
+        #- things like Visual Studio are forced to rebuild the plugins when launching
+        #- the DREAM3D application
+    if(DREAM3D_BUILD_PLUGIN_${p})
           add_dependencies(DREAM3D ${p})
       endif()
     else()
@@ -373,22 +373,25 @@ set(DREAM3D_PLUGIN_LIST
 
 #-------------------------------------------------------------------------------
 # Build the "Built in" Plugins
-message(STATUS "*** Configuring Standard Plugins ***")
-foreach(p ${DREAM3D_PLUGIN_LIST})
-    DREAM3D_COMPILE_PLUGIN(PLUGIN_NAME ${p}
-                           PLUGIN_SOURCE_DIR ${DREAM3DProj_SOURCE_DIR}/Source/Plugins/${p})
-endforeach()
+#message(STATUS "*** Configuring Standard Plugins ***")
+#foreach(p ${DREAM3D_PLUGIN_LIST})
+#    DREAM3D_COMPILE_PLUGIN(PLUGIN_NAME ${p}
+#                           PLUGIN_SOURCE_DIR ${DREAM3DProj_SOURCE_DIR}/Source/Plugins/${p})
+#endforeach()
 
 
 # --- Look for user defined external Plugins that the user has entered
 # into CMake-GUI or through CCMake by the user.
 set(DREAM3D_EXTRA_PLUGINS "" CACHE LIST "Semicolon delimited list of Extra External Plugins that you want to build into DREAM.3D")
-message(STATUS "*** Configuring User Defined Plugins ***")
+#message(STATUS "*** Configuring User Defined Plugins ***")
+
+set(DREAM3D_PLUGIN_LIST ${DREAM3D_PLUGIN_LIST} ${DREAM3D_EXTRA_PLUGINS} )
+
 #-- Attempt to look in our local source directory for the plugin. Anywhere else
 # and the user will have to put the entire path into CMake manually.
-foreach(userPlugin ${DREAM3D_EXTRA_PLUGINS})
+foreach(userPlugin ${DREAM3D_PLUGIN_LIST})
 
-  message(STATUS "Plugin: ${userPlugin}...")
+  message(STATUS "Adding Plugin: ${userPlugin}...")
 
   if(DEFINED ${userPlugin}_SOURCE_DIR AND "${${userPlugin}_SOURCE_DIR}" STREQUAL "")
     set(pluginSearchDir ${PROJECT_CODE_DIR}/Plugins/${userPlugin})
@@ -419,7 +422,7 @@ foreach(userPlugin ${DREAM3D_EXTRA_PLUGINS})
 
 # By this point we should have everything defined and ready to go...
   if(DEFINED ${userPlugin}_SOURCE_DIR AND DEFINED ${userPlugin}_IMPORT_FILE)
-      message(STATUS "Plugin: Adding Plugin ${${userPlugin}_SOURCE_DIR}")
+      #message(STATUS "Plugin: Adding Plugin ${${userPlugin}_SOURCE_DIR}")
       DREAM3D_COMPILE_PLUGIN(PLUGIN_NAME ${userPlugin}
                              PLUGIN_SOURCE_DIR ${${userPlugin}_SOURCE_DIR})
   else()

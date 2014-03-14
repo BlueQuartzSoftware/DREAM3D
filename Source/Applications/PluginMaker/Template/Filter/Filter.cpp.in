@@ -4,14 +4,15 @@
 
 #include "@ClassName@.h"
 
+#include <QtCore/QString>
 
-
+#include "@PluginName@/@PluginName@Constants.h"
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 @ClassName@::@ClassName@() :
-AbstractFilter()
+  AbstractFilter()
 {
   setupFilterParameters();
 }
@@ -28,79 +29,20 @@ AbstractFilter()
 // -----------------------------------------------------------------------------
 void @ClassName@::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> options;
+  FilterParameterVector parameters;
   /* Place all your option initialization code here */
-   /* For String input use this code */
+  /* For String input use this code */
   /* {
-    FilterParameter::Pointer option = FilterParameter::New();
-    option->setHumanLabel("STL Output Prefix");
-    option->setPropertyName("StlFilePrefix");
-    option->setWidgetType(FilterParameter::StringWidget);
-    option->setValueType("string");
-    options.push_back(option);
-  }*/
-   /*  For an Integer use this code*/
-  /* {
-    FilterParameter::Pointer option = FilterParameter::New();
-    option->setHumanLabel("Max Iterations");
-    option->setPropertyName("MaxIterations");
-    option->setWidgetType(FilterParameter::IntWidget);
-    option->setValueType("int");
-    options.push_back(option);
-  }*/
-   /*  For a Floating point value use this code*/
-  /* {
-    FilterParameter::Pointer option = FilterParameter::New();
-    option->setHumanLabel("Misorientation Tolerance");
-    option->setPropertyName("MisorientationTolerance");
-    option->setWidgetType(FilterParameter::DoubleWidget);
-    option->setValueType("float");
-    option->setCastableValueType("double");
-    options.push_back(option);
-  }*/
-  /*   For an input file use this code*/
- /*  {
-    FilterParameter::Pointer option = FilterParameter::New();
-    option->setHumanLabel("Input File");
-    option->setPropertyName("InputFile");
-    option->setWidgetType(FilterParameter::InputFileWidget);
-    option->setValueType("string");
-    options.push_back(option);
-  }*/
-  /*   For an output file use this code*/
-  /* {
-    FilterParameter::Pointer option = FilterParameter::New();
-    option->setHumanLabel("Alignment File");
-    option->setPropertyName("AlignmentShiftFileName");
-    option->setWidgetType(FilterParameter::OutputFileWidget);
-    option->setValueType("string");
-    options.push_back(option);
-  }*/
-  /*   For a simple true/false boolean use this code*/
-  /* {
-    FilterParameter::Pointer option = FilterParameter::New();
-    option->setHumanLabel("Write Alignment Shift File");
-    option->setPropertyName("WriteAlignmentShifts");
-    option->setWidgetType(FilterParameter::BooleanWidget);
-    option->setValueType("bool");
-    options.push_back(option);
-  }*/
-  /*   For presenting a set of choices to the user use this code*/
-  /* {
-    ChoiceFilterParameter::Pointer option = ChoiceFilterParameter::New();
-    option->setHumanLabel("Conversion Type");
-    option->setPropertyName("ConversionType");
-    option->setWidgetType(FilterParameter::ChoiceWidget);
-    option->setValueType("unsigned int");
-    std::vector<std::string> choices;
-    choices.push_back("Degrees To Radians");
-    choices.push_back("Radians To Degrees");
-    option->setChoices(choices);
-    options.push_back(option);
-  }*/
-
-
-  setFilterParameters(options);
+    FilterParameter::Pointer parameter = FilterParameter::New();
+    parameter->setHumanLabel("Eulers Array");
+    parameter->setPropertyName("CellEulerAnglesArrayName");
+    parameter->setWidgetType(FilterParameterWidgetType::SingleArraySelectionWidget);
+    parameter->setValueType("QString");
+    parameter->setUnits("");
+    parameters.push_back(parameter);
+  }
+  */
+  setFilterParameters(parameters);
 }
 
 // -----------------------------------------------------------------------------
@@ -141,14 +83,13 @@ void @ClassName@::dataCheck()
   /*
   if (m_OutputFile.empty() == true)
   {
-    ss << "The output file must be set before executing this filter.";
-    PipelineMessage em(getNameOfClass(), "There was an error", -666);
-    addErrorMessage(em);
+    QString ss = QObject::tr("Output file name was not set").arg(getHumanLabel());
     setErrorCondition(-1);
+    notifyErrorMessage(getHumanLabel(), ss, -1);
+    return;
   }
   */
 }
-
 
 // -----------------------------------------------------------------------------
 //
@@ -157,7 +98,42 @@ void @ClassName@::preflight()
 {
   /* Place code here that sanity checks input arrays and input values. Look at some
   * of the other DREAM3DLib/Filters/.cpp files for sample codes */
+  emit preflightAboutToExecute();
+  emit updateFilterParameters(this);
   dataCheck();
+  emit preflightExecuted();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString @ClassName@::getCompiledLibraryName()
+{
+  return @PluginName@::@PluginName@BaseName;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString @ClassName@::getGroupName()
+{
+  return "@PluginName@";
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString @ClassName@::getHumanLabel()
+{
+  return "@ClassName@";
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString @ClassName@::getSubGroupName()
+{
+  return "Misc";
 }
 
 // -----------------------------------------------------------------------------
@@ -166,18 +142,41 @@ void @ClassName@::preflight()
 void @ClassName@::execute()
 {
   int err = 0;
-  setErrorCondition(err);
-  VolumeDataContainer* m = getVolumeDataContainer();
-  if(NULL == m)
-  {
-    setErrorCondition(-999);
-    notifyErrorMessage("The DataContainer Object was NULL", getErrorCondition());
-    return;
-  }
+  // typically run your dataCheck function to make sure you can get that far and all your variables are initialized
+  dataCheck();
+  // Check to make sure you made it through the data check. Errors would have been reported already so if something
+  // happens to fail in the dataCheck() then we simply return
+  if(getErrorCondition() < 0) { return; }
   setErrorCondition(0);
 
   /* Place all your code to execute your filter here. */
 
+  /* If some error occurs this code snippet can report the error up the call chain*/
+  if (err < 0)
+  {
+    QString ss = QObject::tr("Some error message");
+    setErrorCondition(-99999999);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    return;
+  }
+
   /* Let the GUI know we are done with this filter */
-   notifyStatusMessage("Complete");
+  notifyStatusMessage(getHumanLabel(), "Import Complete");
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AbstractFilter::Pointer @ClassName@::newFilterInstance(bool copyFilterParameters)
+{
+  /*
+  * write code to optionally copy the filter parameters from the current filter into the new instance
+  */
+  @ClassName@::Pointer filter = @ClassName@::New();
+  if(true == copyFilterParameters)
+  {
+    /* filter->setOutputFile( getOutputFile() ); */
+  }
+  return filter;
+}
+
