@@ -86,8 +86,8 @@ class ImportImagesAsVector : public AbstractFilter
     * in the GUI for the filter
     */
     virtual const QString getCompiledLibraryName() { return ImageImport::ImageImportBaseName; }
+    virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
-
     /**
      * @brief getSubGroupName This returns the subgroup within the main group for this filter.
      * @return

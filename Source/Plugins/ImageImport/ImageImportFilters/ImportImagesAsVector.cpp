@@ -354,3 +354,16 @@ void ImportImagesAsVector::execute()
   notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AbstractFilter::Pointer ImportImagesAsVector::newFilterInstance(bool copyFilterParameters)
+{
+  ImportImagesAsVector::Pointer filter = ImportImagesAsVector::New();
+  if(true == copyFilterParameters)
+  {
+    filter->setImageVector( getImageVector() );
+  }
+  return filter;
+}
