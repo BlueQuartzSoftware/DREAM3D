@@ -92,7 +92,7 @@ set(Project_SRCS
 
 
 add_library(${PROJECT_NAME} ${LIB_TYPE}  ${Project_SRCS})
-target_link_libraries(${PROJECT_NAME} ${HDF5_LIBRARIES} MXA)
+target_link_libraries(${PROJECT_NAME} ${HDF5_LIBRARIES})
 LibraryProperties( ${PROJECT_NAME} ${EXE_DEBUG_EXTENSION})
 
 set(install_dir "tools")
