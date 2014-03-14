@@ -1,6 +1,7 @@
 /* ============================================================================
  * Copyright (c) 2011 Michael A. Jackson (BlueQuartz Software)
  * Copyright (c) 2011 Dr. Michael A. Groeber (US Air Force Research Laboratories)
+ * Copyright (c) 2013 Dr. Joseph C. Tucker (UES, Inc.)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -13,10 +14,10 @@
  * list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
  *
- * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
- * BlueQuartz Software nor the names of its contributors may be used to endorse
- * or promote products derived from this software without specific prior written
- * permission.
+ * Neither the name of Joseph C. Tucker, Michael A. Groeber, Michael A. Jackson,
+ * UES, Inc., the US Air Force, BlueQuartz Software nor the names of its contributors
+ * may be used to endorse or promote products derived from this software without
+ * specific prior written permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -30,57 +31,62 @@
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  *  This code was written under United States Air Force Contract number
- *                           FA8650-07-D-5800
+ *                   FA8650-07-D-5800 and FA8650-10-D-5226
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef InsertAtoms_H_
-#define InsertAtoms_H_
+#ifndef IdentifyDislocationSegments_H_
+#define IdentifyDislocationSegments_H_
 
 #include <QtCore/QString>
+#include <set>
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/DataArrays/IDataArray.h"
-
 #include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/DataContainers/VolumeDataContainer.h"
-#include "DREAM3DLib/DataContainers/SurfaceDataContainer.h"
-#include "SyntheticBuilding/SyntheticBuildingConstants.h"
+
+#include "Reconstruction/ReconstructionConstants.h"
 /**
- * @class InsertAtoms InsertAtoms.h DREAM3DLib/SyntheticBuilderFilters/InsertAtoms.h
+ * @class IdentifyDislocationSegments IdentifyDislocationSegments.h /FilterCategoryFilters/IdentifyDislocationSegments.h
  * @brief
  * @author
- * @date Nov 19, 2011
+ * @date
  * @version 1.0
  */
-class InsertAtoms : public AbstractFilter
+class IdentifyDislocationSegments : public AbstractFilter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
-    DREAM3D_SHARED_POINTERS(InsertAtoms)
-    DREAM3D_STATIC_NEW_MACRO(InsertAtoms)
-    DREAM3D_TYPE_MACRO_SUPER(InsertAtoms, AbstractFilter)
+    DREAM3D_SHARED_POINTERS(IdentifyDislocationSegments)
+    DREAM3D_STATIC_NEW_MACRO(IdentifyDislocationSegments)
+    DREAM3D_TYPE_MACRO_SUPER(IdentifyDislocationSegments, AbstractFilter)
 
-    virtual ~InsertAtoms();
-    DREAM3D_INSTANCE_STRING_PROPERTY(VolumeDataContainerName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceDataContainerName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(VertexDataContainerName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(VertexAttributeMatrixName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(FaceAttributeMatrixName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(CellFeatureAttributeMatrixName)
+    virtual ~IdentifyDislocationSegments();
+    DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(EdgeAttributeMatrixName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(EdgeFeatureAttributeMatrixName)
 
-    DREAM3D_FILTER_PARAMETER(FloatVec3_t, LatticeConstants)
-    Q_PROPERTY(FloatVec3_t LatticeConstants READ getLatticeConstants WRITE setLatticeConstants)
-    DREAM3D_FILTER_PARAMETER(uint32_t, Basis)
-    Q_PROPERTY(uint32_t Basis READ getBasis WRITE setBasis)
+    /**
+    * @brief This returns the group that the filter belonds to. You can select
+    * a different group if you want. The string returned here will be displayed
+    * in the GUI for the filter
+    */
+    virtual const QString getCompiledLibraryName() { return Reconstruction::ReconstructionBaseName; }
+    virtual const QString getGroupName() { return DREAM3D::FilterGroups::ReconstructionFilters; }
+    virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::SegmentationFilters; }
 
-    virtual const QString getCompiledLibraryName() { return SyntheticBuilding::SyntheticBuildingBaseName; }
-    virtual const QString getGroupName() { return DREAM3D::FilterGroups::SamplingFilters; }
-    virtual const QString getSubGroupName()  { return DREAM3D::FilterSubGroups::ResolutionFilters; }
-    virtual const QString getHumanLabel() { return "Insert Atoms"; }
+    /**
+    * @brief This returns a string that is displayed in the GUI. It should be readable
+    * and understandable by humans.
+    */
+    virtual const QString getHumanLabel() { return "Identify Dislocation Segments"; }
 
+    /**
+    * @brief This method will instantiate all the end user settable options/parameters
+    * for this filter
+    */
     virtual void setupFilterParameters();
+
     /**
     * @brief This method will write the options to a file
     * @param writer The writer that is used to write the options to a file
@@ -94,11 +100,15 @@ class InsertAtoms : public AbstractFilter
     virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
 
     /**
-     * @brief Reimplemented from @see AbstractFilter class
-     */
+    * @brief Reimplemented from @see AbstractFilter class
+    */
     virtual void execute();
+
+    /**
+    * @brief This function runs some sanity checks on the DataContainer and inputs
+    * in an attempt to ensure the filter can process the inputs.
+    */
     virtual void preflight();
-    virtual void updateVertexInstancePointers();
 
   signals:
     void updateFilterParameters(AbstractFilter* filter);
@@ -107,7 +117,7 @@ class InsertAtoms : public AbstractFilter
     void preflightExecuted();
 
   protected:
-    InsertAtoms();
+    IdentifyDislocationSegments();
 
     /**
     * @brief Checks for the appropriate parameter values and availability of
@@ -118,18 +128,22 @@ class InsertAtoms : public AbstractFilter
     * @param ensembles The number of ensembles
     */
     void dataCheck();
-
-    virtual void assign_points(QVector<VertexArray::Pointer> points, QVector<BoolArrayType::Pointer> inFeature);
+    void updateEdgeFeatureInstancePointers();
 
   private:
-    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, SurfaceMeshFaceLabels)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(float, AvgQuats)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, AtomFeatureLabels)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(float, BurgersVectors)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(float, SlipPlaneNormals)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, DislocationIds)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(bool, Active)
 
-    InsertAtoms(const InsertAtoms&); // Copy Constructor Not Implemented
-    void operator=(const InsertAtoms&); // Operator '=' Not Implemented
+    IdentifyDislocationSegments(const IdentifyDislocationSegments&); // Copy Constructor Not Implemented
+    void operator=(const IdentifyDislocationSegments&); // Operator '=' Not Implemented
 };
 
-#endif /* InsertAtoms_H_ */
+#endif /* IdentifyDislocationSegments_H_ */
+
+
+
+
 
 

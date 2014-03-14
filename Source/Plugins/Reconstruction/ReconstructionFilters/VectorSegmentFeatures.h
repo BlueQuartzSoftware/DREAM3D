@@ -34,47 +34,56 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _VASPREADER_H_
-#define _VASPREADER_H_
+#ifndef VectorSegmentFeatures_H_
+#define VectorSegmentFeatures_H_
 
 #include <QtCore/QString>
-#include <vector>
-#include <QtCore/QFile>
+
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/DataArrays/DataArray.hpp"
-#include "DREAM3DLib/IOFilters/FileReader.h"
-#include "DREAM3DLib/Common/Constants.h"
+#include "DREAM3DLib/DataArrays/IDataArray.h"
+
+#include "DREAM3DLib/Common/AbstractFilter.h"
+#include "DREAM3DLib/DataContainers/VolumeDataContainer.h"
+
+#include "Reconstruction/ReconstructionFilters/SegmentFeatures.h"
+#include "Reconstruction/ReconstructionConstants.h"
+
+
+class CompareFunctor;
 
 /**
- * @class VASPReader VASPReader.h DREAM3DLib/IO/VASPReader.h
+ * @class VectorSegmentFeatures VectorSegmentFeatures.h DREAM3DLib/ReconstructionFilters/VectorSegmentFeatures.h
  * @brief
- * @author mjackson
- * @date Sep 28, 2011
- * @version $Revision$
+ * @author
+ * @date Nov 19, 2011
+ * @version 1.0
  */
-class DREAM3DLib_EXPORT VASPReader : public FileReader
+class VectorSegmentFeatures : public SegmentFeatures
 {
-    Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
+	Q_OBJECT
   public:
-    DREAM3D_SHARED_POINTERS(VASPReader)
-    DREAM3D_STATIC_NEW_MACRO(VASPReader)
-    DREAM3D_TYPE_MACRO_SUPER(VASPReader, FileReader)
+    DREAM3D_SHARED_POINTERS(VectorSegmentFeatures)
+    DREAM3D_STATIC_NEW_MACRO(VectorSegmentFeatures)
+    DREAM3D_TYPE_MACRO_SUPER(VectorSegmentFeatures, AbstractFilter)
 
-    virtual ~VASPReader();
-    DREAM3D_INSTANCE_STRING_PROPERTY(VertexDataContainerName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(VertexAttributeMatrixName)
+    virtual ~VectorSegmentFeatures();
+    DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(CellFeatureAttributeMatrixName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
 
-    DREAM3D_FILTER_PARAMETER(QString, InputFile)
-    Q_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile)
+    DREAM3D_FILTER_PARAMETER(QString, SelectedVectorArrayName)
+    Q_PROPERTY(QString SelectedVectorArrayName READ getSelectedVectorArrayName WRITE setSelectedVectorArrayName)
 
-    //------ Created Cell Data
+    DREAM3D_FILTER_PARAMETER(float, AngleTolerance)
+    Q_PROPERTY(float AngleTolerance READ getAngleTolerance WRITE setAngleTolerance)
+    DREAM3D_INSTANCE_PROPERTY(bool, RandomizeFeatureIds)
 
-    virtual const QString getCompiledLibraryName() { return IO::IOBaseName; }
-    virtual const QString getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
-    virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::InputFilters; }
-    virtual const QString getHumanLabel() { return "Read VASP File"; }
+    virtual const QString getCompiledLibraryName() { return Reconstruction::ReconstructionBaseName; }
+    virtual const QString getGroupName() { return DREAM3D::FilterGroups::ReconstructionFilters; }
+    virtual const QString getSubGroupName() {return DREAM3D::FilterSubGroups::SegmentationFilters;}
+    virtual const QString getHumanLabel() { return "Segment Features (Scalar)"; }
 
     virtual void setupFilterParameters();
     /**
@@ -89,8 +98,11 @@ class DREAM3DLib_EXPORT VASPReader : public FileReader
     */
     virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
 
-    virtual void preflight();
+    /**
+     * @brief Reimplemented from @see AbstractFilter class
+     */
     virtual void execute();
+    virtual void preflight();
 
   signals:
     void updateFilterParameters(AbstractFilter* filter);
@@ -99,30 +111,28 @@ class DREAM3DLib_EXPORT VASPReader : public FileReader
     void preflightExecuted();
 
   protected:
-    VASPReader();
+    VectorSegmentFeatures();
 
-    virtual int readHeader();
-    virtual int readFile();
-
-    void dataCheck();
-    void updateVertexInstancePointers();
+    virtual int64_t getSeed(size_t gnum);
+    virtual bool determineGrouping(int64_t referencepoint, int64_t neighborpoint, size_t gnum);
 
   private:
-    DEFINE_PTR_WEAKPTR_DATAARRAY(float, AtomVelocities)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, AtomTypes)
-    QFile  m_InStream;
+    IDataArray::Pointer m_InputData;
 
-    float latticeConstant;
-    float latticeVectors[3][3];
-    QVector<int> atomNumbers;
-    int totalAtoms;
+    DEFINE_PTR_WEAKPTR_DATAARRAY(float, Vectors)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeatureIds)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(bool, GoodVoxels)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(bool, Active)
 
-    VASPReader(const VASPReader&); // Copy Constructor Not Implemented
-    void operator=(const VASPReader&); // Operator '=' Not Implemented
+    void dataCheck();
+    void updateFeatureInstancePointers();
+
+    bool missingGoodVoxels;
+
+    VectorSegmentFeatures(const VectorSegmentFeatures&); // Copy Constructor Not Implemented
+    void operator=(const VectorSegmentFeatures&); // Operator '=' Not Implemented
 };
 
-#endif /* VASPREADER_H_ */
-
-
+#endif /* VectorSegmentFeatures_H_ */
 
 

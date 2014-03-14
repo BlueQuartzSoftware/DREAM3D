@@ -69,9 +69,8 @@ class DREAM3DLib_EXPORT ParaDisReader : public FileReader
 
     DREAM3D_FILTER_PARAMETER(QString, InputFile)
     Q_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile)
-
-    //------ Created Vertex Data
-    //------ Created Edge Data
+    DREAM3D_FILTER_PARAMETER(float, BurgersVector)
+    Q_PROPERTY(float BurgersVector READ getBurgersVector WRITE setBurgersVector)
 
     virtual const QString getCompiledLibraryName() { return IO::IOBaseName; }
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
@@ -107,6 +106,8 @@ class DREAM3DLib_EXPORT ParaDisReader : public FileReader
     virtual int readFile();
 
     void dataCheck();
+    void updateVertexInstancePointers();
+    void updateEdgeInstancePointers();
 
   private:
     DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, NumberOfArms)

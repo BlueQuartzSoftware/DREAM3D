@@ -44,6 +44,7 @@
 #endif
 
 #include "DREAM3DLib/Math/DREAM3DMath.h"
+#include "DREAM3DLib/Math/MatrixMath.h"
 #include "DREAM3DLib/Common/Constants.h"
 
 template<typename T>
@@ -677,6 +678,21 @@ void FindRelativeMotionBetweenSlices::execute()
     setErrorCondition(-11001);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;
+  }
+
+  float v[3];
+  float xRes = m->getXRes();
+  float yRes = m->getYRes();
+  float zRes = m->getZRes();
+  for(size_t i=0; i<totalPoints; i++)
+  {
+    v[0] = m_MotionDirection[3*i+0]*xRes;
+    v[1] = m_MotionDirection[3*i+1]*yRes;
+    v[2] = m_MotionDirection[3*i+2]*zRes;
+    MatrixMath::Normalize3x1(v);
+    m_MotionDirection[3*i+0] = v[0];
+    m_MotionDirection[3*i+1] = v[1];
+    m_MotionDirection[3*i+2] = v[2];
   }
 
   notifyStatusMessage(getHumanLabel(), "FindRelativeMotionBetweenSlices Completed");

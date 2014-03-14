@@ -1,4 +1,4 @@
-Smooth Bad Data (coordination Number) {#openclosecoordinationnumber}
+Smooth Bad Data (coordination Number) {#erodedilatecoordinationnumber}
 ======
 
 ## Group (Subgroup) ##

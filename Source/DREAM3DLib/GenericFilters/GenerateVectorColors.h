@@ -1,6 +1,6 @@
 /* ============================================================================
- * Copyright (c) 2011 Michael A. Jackson (BlueQuartz Software)
- * Copyright (c) 2011 Dr. Michael A. Groeber (US Air Force Research Laboratories)
+ * Copyright (c) 2012 Michael A. Jackson (BlueQuartz Software)
+ * Copyright (c) 2012 Dr. Michael A. Groeber (US Air Force Research Laboratories)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -33,55 +33,63 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+#ifndef _GenerateVectorColors_H_
+#define _GenerateVectorColors_H_
 
-#ifndef OpenCloseCoordinationNumber_H_
-#define OpenCloseCoordinationNumber_H_
-
-#include <vector>
 #include <QtCore/QString>
-
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/DataArrays/IDataArray.h"
-
 #include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/DataContainers/VolumeDataContainer.h"
-#include "DREAM3DLib/OrientationOps/OrientationOps.h"
-#include "DREAM3DLib/DataArrays/NeighborList.hpp"
-#include "Processing/ProcessingConstants.h"
+#include "DREAM3DLib/Common/Constants.h"
 
 
 /**
- * @class OpenCloseCoordinationNumber OpenCloseCoordinationNumber.h DREAM3DLib/ReconstructionFilters/OpenCloseCoordinationNumber.h
- * @brief
- * @author
- * @date Nov 19, 2011
+ * @class GenerateVectorColors GenerateVectorColors.h DREAM3DLib/GenericFilters/GenerateVectorColors.h
+ * @brief This filter generates colors for each voxel based on the "Standard" IPF Triangle.
+ * @author Michael A. Jackson for BlueQuartz Software
+ * @date Feb 6, 2013
  * @version 1.0
  */
-class OpenCloseCoordinationNumber : public AbstractFilter
+class DREAM3DLib_EXPORT GenerateVectorColors : public AbstractFilter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
-    DREAM3D_SHARED_POINTERS(OpenCloseCoordinationNumber)
-    DREAM3D_STATIC_NEW_MACRO(OpenCloseCoordinationNumber)
-    DREAM3D_TYPE_MACRO_SUPER(OpenCloseCoordinationNumber, AbstractFilter)
+    DREAM3D_SHARED_POINTERS(GenerateVectorColors)
+    DREAM3D_STATIC_NEW_MACRO(GenerateVectorColors)
+    DREAM3D_TYPE_MACRO_SUPER(GenerateVectorColors, AbstractFilter)
 
-    virtual ~OpenCloseCoordinationNumber();
+    virtual ~GenerateVectorColors();
     DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
 
-    DREAM3D_FILTER_PARAMETER(bool, Loop)
-    Q_PROPERTY(bool Loop READ getLoop WRITE setLoop)
-    DREAM3D_FILTER_PARAMETER(int, CoordinationNumber)
-    Q_PROPERTY(int CoordinationNumber READ getCoordinationNumber WRITE setCoordinationNumber)
+    /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
+    DREAM3D_FILTER_PARAMETER(QString, SelectedVectorArrayName)
+    Q_PROPERTY(QString SelectedVectorArrayName READ getSelectedVectorArrayName WRITE setSelectedVectorArrayName)
 
-    virtual const QString getCompiledLibraryName() { return Processing::ProcessingBaseName; }
-    virtual const QString getGroupName() { return DREAM3D::FilterGroups::ProcessingFilters; }
-    virtual const QString getSubGroupName()  { return DREAM3D::FilterSubGroups::CleanupFilters; }
-    virtual const QString getHumanLabel() { return "Smooth Bad Data (Coordination Number)"; }
 
+    /**
+    * @brief This returns the group that the filter belonds to. You can select
+    * a different group if you want. The string returned here will be displayed
+    * in the GUI for the filter
+    */
+    virtual const QString getCompiledLibraryName() { return Generic::GenericBaseName; }
+    virtual const QString getGroupName() { return DREAM3D::FilterGroups::GenericFilters; }
+    virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::CrystallographyFilters; }
+
+    /**
+    * @brief This returns a string that is displayed in the GUI. It should be readable
+    * and understandable by humans.
+    */
+    virtual const QString getHumanLabel() { return "Generate Vector Colors"; }
+
+    /**
+    * @brief This method will instantiate all the end user settable options/parameters
+    * for this filter
+    */
     virtual void setupFilterParameters();
+
     /**
     * @brief This method will write the options to a file
     * @param writer The writer that is used to write the options to a file
@@ -94,8 +102,15 @@ class OpenCloseCoordinationNumber : public AbstractFilter
     */
     virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
 
-
+    /**
+    * @brief Reimplemented from @see AbstractFilter class
+    */
     virtual void execute();
+
+    /**
+    * @brief This function runs some sanity checks on the DataContainer and inputs
+    * in an attempt to ensure the filter can process the inputs.
+    */
     virtual void preflight();
 
   signals:
@@ -105,22 +120,29 @@ class OpenCloseCoordinationNumber : public AbstractFilter
     void preflightExecuted();
 
   protected:
-    OpenCloseCoordinationNumber();
+    GenerateVectorColors();
 
-
-  private:
-    int32_t* m_Neighbors;
-
-    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeatureIds)
-
-    QVector<QVector<int> > voxellists;
-    QVector<int> nuclei;
-
+    /**
+    * @brief Checks for the appropriate parameter values and availability of
+    * arrays in the data container
+    * @param preflight
+    * @param voxels The number of voxels
+    * @param features The number of features
+    * @param ensembles The number of ensembles
+    */
     void dataCheck();
 
-    OpenCloseCoordinationNumber(const OpenCloseCoordinationNumber&); // Copy Constructor Not Implemented
-    void operator=(const OpenCloseCoordinationNumber&); // Operator '=' Not Implemented
+  private:
+    DEFINE_PTR_WEAKPTR_DATAARRAY(float, Vectors)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(bool, GoodVoxels)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(uint8_t, CellVectorColors)
+
+    GenerateVectorColors(const GenerateVectorColors&); // Copy Constructor Not Implemented
+    void operator=(const GenerateVectorColors&); // Operator '=' Not Implemented
 };
 
-#endif /* OpenCloseCoordinationNumber_H_ */
+#endif /* _GenerateVectorColors_H_ */
+
+
+
 

@@ -138,6 +138,7 @@ namespace DREAM3D
     static const double k_PiOver180 = M_PI / 180.0;
     static const double k_360OverPi = 360.0 / M_PI;
     static const double k_180OverPi = 180.0 / M_PI;
+    static const double k_PiOver2 = M_PI / 2.0;
     static const double k_PiOver4 = M_PI / 4.0;
     static const double k_PiOver8 = M_PI / 8.0;
     static const double k_PiOver12 = M_PI / 12.0;

@@ -183,6 +183,8 @@ namespace DREAM3D
     const DREAM3D_STRING SurfaceMeshCells("SurfaceMeshCells");
     const DREAM3D_STRING SurfaceVoxels("SurfaceVoxels");
     const DREAM3D_STRING TJEuclideanDistances("TJEuclideanDistances");
+    const DREAM3D_STRING VectorColor("VectorColor");
+    const DREAM3D_STRING VectorData("VectorData");
   }
 
   namespace FeatureData

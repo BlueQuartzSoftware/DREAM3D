@@ -215,6 +215,7 @@ void MatrixMath::Normalize3x3(float g[3][3])
 {
   float denom;
   denom = g[0][0] * g[0][0] + g[1][0] * g[1][0] + g[2][0] * g[2][0];
+  if(denom == 0.0) return;
   denom = sqrt(denom);
   g[0][0] = g[0][0] / denom;
   if(g[0][0] > 1) { g[0][0] = 1; }
@@ -223,6 +224,7 @@ void MatrixMath::Normalize3x3(float g[3][3])
   g[2][0] = g[2][0] / denom;
   if(g[2][0] > 1) { g[2][0] = 1; }
   denom = g[0][1] * g[0][1] + g[1][1] * g[1][1] + g[2][1] * g[2][1];
+  if(denom == 0.0) return;
   denom = sqrt(denom);
   g[0][1] = g[0][1] / denom;
   if(g[0][1] > 1) { g[0][1] = 1; }
@@ -231,6 +233,7 @@ void MatrixMath::Normalize3x3(float g[3][3])
   g[2][1] = g[2][1] / denom;
   if(g[2][1] > 1) { g[2][1] = 1; }
   denom = g[0][2] * g[0][2] + g[1][2] * g[1][2] + g[2][2] * g[2][2];
+  if(denom == 0.0) return;
   denom = sqrt(denom);
   g[0][2] = g[0][2] / denom;
   if(g[0][2] > 1) { g[0][2] = 1; }
@@ -247,6 +250,7 @@ void MatrixMath::Normalize3x1(float g[3])
 {
   float denom;
   denom = g[0] * g[0] + g[1] * g[1] + g[2] * g[2];
+  if(denom == 0.0) return;
   denom = sqrt(denom);
   g[0] = g[0] / denom;
   if(g[0] > 1.0f) { g[0] = 1.0f; }

@@ -1,6 +1,6 @@
 /* ============================================================================
- * Copyright (c) 2011 Michael A. Jackson (BlueQuartz Software)
- * Copyright (c) 2011 Dr. Michael A. Groeber (US Air Force Research Laboratories)
+ * Copyright (c) 2012 Michael A. Jackson (BlueQuartz Software)
+ * Copyright (c) 2012 Dr. Michael A. Groeber (US Air Force Research Laboratories)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -33,61 +33,80 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+#ifndef ImportImagesAsVector_H_
+#define ImportImagesAsVector_H_
 
-#ifndef OpenCloseBadData_H_
-#define OpenCloseBadData_H_
-
-#include <vector>
 #include <QtCore/QString>
-
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/DataArrays/IDataArray.h"
-
 #include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/DataContainers/VolumeDataContainer.h"
-#include "DREAM3DLib/OrientationOps/OrientationOps.h"
-#include "DREAM3DLib/DataArrays/NeighborList.hpp"
 
-#include "Processing/ProcessingConstants.h"
-
+#include "ImageImport/ImageImportConstants.h"
 /**
- * @class OpenCloseBadData OpenCloseBadData.h DREAM3DLib/ReconstructionFilters/OpenCloseBadData.h
+ * @class ImportImagesAsVector ImportImagesAsVector.h ImageImport/Code/ImageImportFilters/ImportImagesAsVector.h
  * @brief
  * @author
- * @date Nov 19, 2011
+ * @date
  * @version 1.0
  */
-class OpenCloseBadData : public AbstractFilter
+class ImportImagesAsVector : public AbstractFilter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
-    DREAM3D_SHARED_POINTERS(OpenCloseBadData)
-    DREAM3D_STATIC_NEW_MACRO(OpenCloseBadData)
-    DREAM3D_TYPE_MACRO_SUPER(OpenCloseBadData, AbstractFilter)
+    DREAM3D_SHARED_POINTERS(ImportImagesAsVector)
+    DREAM3D_STATIC_NEW_MACRO(ImportImagesAsVector)
+    DREAM3D_TYPE_MACRO_SUPER(ImportImagesAsVector, AbstractFilter)
 
-    virtual ~OpenCloseBadData();
+    virtual ~ImportImagesAsVector();
+
     DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
 
-    DREAM3D_FILTER_PARAMETER(unsigned int, Direction)
-    Q_PROPERTY(unsigned int Direction READ getDirection WRITE setDirection)
-    DREAM3D_FILTER_PARAMETER(int, NumIterations)
-    Q_PROPERTY(int NumIterations READ getNumIterations WRITE setNumIterations)
-    DREAM3D_FILTER_PARAMETER(bool, XDirOn)
-    Q_PROPERTY(bool XDirOn READ getXDirOn WRITE setXDirOn)
-    DREAM3D_FILTER_PARAMETER(bool, YDirOn)
-    Q_PROPERTY(bool YDirOn READ getYDirOn WRITE setYDirOn)
-    DREAM3D_FILTER_PARAMETER(bool, ZDirOn)
-    Q_PROPERTY(bool ZDirOn READ getZDirOn WRITE setZDirOn)
 
-    virtual const QString getCompiledLibraryName() { return Processing::ProcessingBaseName; }
-    virtual const QString getGroupName() { return DREAM3D::FilterGroups::ProcessingFilters; }
-    virtual const QString getSubGroupName()  { return DREAM3D::FilterSubGroups::CleanupFilters; }
-    virtual const QString getHumanLabel() { return "Erode/Dilate Bad Data"; }
+    DREAM3D_FILTER_PARAMETER(int64_t, StartIndex)
+    DREAM3D_FILTER_PARAMETER(int64_t, EndIndex)
+    DREAM3D_FILTER_PARAMETER(FloatVec3_t, Resolution)
+    DREAM3D_FILTER_PARAMETER(FloatVec3_t, Origin)
 
+    DREAM3D_FILTER_PARAMETER(QString, InputPath)
+    DREAM3D_FILTER_PARAMETER(QString, FilePrefix)
+    DREAM3D_FILTER_PARAMETER(QString, FileSuffix)
+    DREAM3D_FILTER_PARAMETER(QString, FileExtension)
+    DREAM3D_FILTER_PARAMETER(int, PaddingDigits)
+
+    DREAM3D_FILTER_PARAMETER(int, ImageVector)
+    Q_PROPERTY(int ImageVector READ getImageVector WRITE setImageVector)
+
+
+    /**
+    * @brief This returns the group that the filter belonds to. You can select
+    * a different group if you want. The string returned here will be displayed
+    * in the GUI for the filter
+    */
+    virtual const QString getCompiledLibraryName() { return ImageImport::ImageImportBaseName; }
+    virtual const QString getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
+
+    /**
+     * @brief getSubGroupName This returns the subgroup within the main group for this filter.
+     * @return
+     */
+    virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::InputFilters; }
+
+    /**
+    * @brief This returns a string that is displayed in the GUI. It should be readable
+    * and understandable by humans.
+    */
+    virtual const QString getHumanLabel() { return "Import Images (As Vector)"; }
+
+
+    /**
+    * @brief This method will instantiate all the end user settable options/parameters
+    * for this filter
+    */
     virtual void setupFilterParameters();
+
     /**
     * @brief This method will write the options to a file
     * @param writer The writer that is used to write the options to a file
@@ -100,33 +119,45 @@ class OpenCloseBadData : public AbstractFilter
     */
     virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
 
+    /**
+     * @brief Reimplemented from @see AbstractFilter class
+     */
     virtual void execute();
+
+    /**
+    * @brief This function runs some sanity checks on the DataContainer and inputs
+    * in an attempt to ensure the filter can process the inputs.
+    */
     virtual void preflight();
 
-  signals:
+signals:
     void updateFilterParameters(AbstractFilter* filter);
     void parametersChanged();
     void preflightAboutToExecute();
     void preflightExecuted();
 
   protected:
-    OpenCloseBadData();
+    ImportImagesAsVector();
 
-  private:
-    int32_t* m_Neighbors;
-    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeatureIds)
-
-    QVector<QVector<int> > voxellists;
-    QVector<int> nuclei;
-
+    /**
+    * @brief Checks for the appropriate parameter values and availability of
+    * arrays in the data container
+    * @param preflight
+    * @param voxels The number of voxels
+    * @param features The number of features
+    * @param ensembles The number of ensembles
+    */
     void dataCheck();
 
-    OpenCloseBadData(const OpenCloseBadData&); // Copy Constructor Not Implemented
-    void operator=(const OpenCloseBadData&); // Operator '=' Not Implemented
+    void generateFileList();
+
+  private:
+    DEFINE_PTR_WEAKPTR_DATAARRAY(uint8_t, VectorData)
+
+    ImportImagesAsVector(const ImportImagesAsVector&); // Copy Constructor Not Implemented
+    void operator=(const ImportImagesAsVector&); // Operator '=' Not Implemented
 };
 
-#endif /* OpenCloseBadData_H_ */
-
-
+#endif /* ImportImagesAsVector_H_ */
 
 

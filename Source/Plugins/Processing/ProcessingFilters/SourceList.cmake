@@ -15,14 +15,15 @@ set(_PublicFilters
   FlattenImage
   MinSize
   ClearData
+  ErodeDilateBadData
+  ErodeDilateCoordinationNumber
+  ErodeDilateMask
   FillBadData
   FindProjectedImageStatistics
   FindRelativeMotionBetweenSlices
   NeighborCICorrelation
   NeighborOrientationCorrelation
   BadDataNeighborOrientationCheck
-  OpenCloseBadData
-  OpenCloseCoordinationNumber
   ConvertEulerAngles
   RotateEulerRefFrame
   IdentifySample

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>QImportImageStackWidget</class>
- <widget class="QFilterWidget" name="QImportImageStackWidget">
+ <class>ImportImagesAsVectorWidget</class>
+ <widget class="QWidget" name="ImportImagesAsVectorWidget">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -13,7 +13,7 @@
   <property name="windowTitle">
    <string>Form</string>
   </property>
-  <property name="title">
+  <property name="title" stdset="0">
    <string>Image Stack Import</string>
   </property>
   <layout class="QGridLayout" name="gridLayout_3">
@@ -21,13 +21,13 @@
     <number>6</number>
    </property>
    <property name="topMargin">
-    <number>12</number>
+    <number>0</number>
    </property>
    <property name="rightMargin">
     <number>6</number>
    </property>
    <property name="bottomMargin">
-    <number>12</number>
+    <number>6</number>
    </property>
    <property name="spacing">
     <number>4</number>
@@ -51,7 +51,7 @@ font-size: 11px;
       </widget>
      </item>
      <item row="1" column="1">
-      <widget class="QSpinBox" name="m_ZStartIndex">
+      <widget class="QSpinBox" name="m_StartIndex">
        <property name="minimumSize">
         <size>
          <width>75</width>
@@ -86,7 +86,7 @@ font-size: 11px;
       </widget>
      </item>
      <item row="1" column="3">
-      <widget class="QSpinBox" name="m_ZEndIndex">
+      <widget class="QSpinBox" name="m_EndIndex">
        <property name="minimumSize">
         <size>
          <width>75</width>
@@ -331,36 +331,6 @@ font-size: 11px;
        </property>
       </spacer>
      </item>
-     <item row="3" column="0">
-      <widget class="QLabel" name="label_7">
-       <property name="styleSheet">
-        <string notr="true">QLabel {
-font-weight: bold;
-font-size: 11px;
-}</string>
-       </property>
-       <property name="text">
-        <string>Stacking Order:</string>
-       </property>
-      </widget>
-     </item>
-     <item row="3" column="1">
-      <widget class="QRadioButton" name="m_StackLowToHigh">
-       <property name="text">
-        <string>Low To High</string>
-       </property>
-       <property name="checked">
-        <bool>true</bool>
-       </property>
-      </widget>
-     </item>
-     <item row="3" column="2">
-      <widget class="QRadioButton" name="m_StackHighToLow">
-       <property name="text">
-        <string>High To Low</string>
-       </property>
-      </widget>
-     </item>
     </layout>
    </item>
    <item row="3" column="0">
@@ -545,12 +515,6 @@ font-size: 11px;
    <class>QFSDropLineEdit</class>
    <extends>QLineEdit</extends>
    <header location="global">QFSDropLineEdit.h</header>
-  </customwidget>
-  <customwidget>
-   <class>QFilterWidget</class>
-   <extends>QGroupBox</extends>
-   <header location="global">QFilterWidget.h</header>
-   <container>1</container>
   </customwidget>
  </customwidgets>
  <resources/>

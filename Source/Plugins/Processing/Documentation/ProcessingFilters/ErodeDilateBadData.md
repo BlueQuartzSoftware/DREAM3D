@@ -1,4 +1,4 @@
-Erode/Dilate Bad Data {#openclosebaddata}
+Erode/Dilate Bad Data {#erodedilatebaddata}
 ======
 
 ## Group (Subgroup) ##

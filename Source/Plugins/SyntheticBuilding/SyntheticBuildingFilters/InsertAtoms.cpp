@@ -59,16 +59,18 @@ class InsertAtomsImpl
     VertexArray::Pointer m_FaceBBs;
     QuatF* m_AvgQuats;
     FloatVec3_t m_LatticeConstants;
+    uint32_t m_Basis;
     QVector<VertexArray::Pointer> m_Points;
     QVector<BoolArrayType::Pointer> m_InFeature;
 
   public:
-    InsertAtomsImpl(FaceArray::Pointer faces, Int32DynamicListArray::Pointer faceIds, VertexArray::Pointer faceBBs, QuatF* avgQuats, FloatVec3_t latticeConstants, QVector<VertexArray::Pointer> points, QVector<BoolArrayType::Pointer> inFeature) :
+    InsertAtomsImpl(FaceArray::Pointer faces, Int32DynamicListArray::Pointer faceIds, VertexArray::Pointer faceBBs, QuatF* avgQuats, FloatVec3_t latticeConstants, uint32_t basis, QVector<VertexArray::Pointer> points, QVector<BoolArrayType::Pointer> inFeature) :
       m_Faces(faces),
       m_FaceIds(faceIds),
       m_FaceBBs(faceBBs),
       m_AvgQuats(avgQuats),
       m_LatticeConstants(latticeConstants),
+      m_Basis(basis),
       m_Points(points),
       m_InFeature(inFeature)
     {}
@@ -93,7 +95,7 @@ class InsertAtomsImpl
         GeometryMath::FindBoundingBoxOfRotatedFaces(m_Faces, faceIds, g, ll_rot, ur_rot);
         GeometryMath::FindDistanceBetweenPoints(ll, ur, radius);
 
-        generatePoints(iter, m_Points, m_InFeature, m_AvgQuats, m_LatticeConstants, ll_rot, ur_rot);
+        generatePoints(iter, m_Points, m_InFeature, m_AvgQuats, m_LatticeConstants, m_Basis, ll_rot, ur_rot);
 
         //check points in vertex array to see if they are in the bounding box of the feature
         int numPoints = m_Points[iter]->getNumberOfTuples();
@@ -118,7 +120,7 @@ class InsertAtomsImpl
     }
 #endif
 
-    void generatePoints(int iter, QVector<VertexArray::Pointer> points, QVector<BoolArrayType::Pointer> inFeature, QuatF* m_AvgQuats, FloatVec3_t latticeConstants, VertexArray::Vert_t ll, VertexArray::Vert_t ur) const
+    void generatePoints(int iter, QVector<VertexArray::Pointer> points, QVector<BoolArrayType::Pointer> inFeature, QuatF* m_AvgQuats, FloatVec3_t latticeConstants, uint32_t basis, VertexArray::Vert_t ll, VertexArray::Vert_t ur) const
     {
       float g[3][3];
       float gT[3][3];
@@ -135,9 +137,13 @@ class InsertAtomsImpl
       float deltaX = maxx-minx;
       float deltaY = maxy-miny;
       float deltaZ = maxz-minz;
-      size_t xPoints = int(deltaX/latticeConstants.x)+1;
-      size_t yPoints = int(deltaY/latticeConstants.y)+1;
-      size_t zPoints = int(deltaZ/latticeConstants.z)+1;
+      size_t atomMult = 1;
+      if(basis == 0) atomMult = 1;
+      if(basis == 1) atomMult = 2;
+      if(basis == 2) atomMult = 4;
+      size_t xPoints = atomMult*(size_t(deltaX/latticeConstants.x)+1);
+      size_t yPoints = atomMult*(size_t(deltaY/latticeConstants.y)+1);
+      size_t zPoints = atomMult*(size_t(deltaZ/latticeConstants.z)+1);
       size_t nPoints = xPoints*yPoints*zPoints;
 
       points[iter]->resizeArray(nPoints);
@@ -158,6 +164,39 @@ class InsertAtomsImpl
             MatrixMath::Multiply3x3with3x1(gT, coords, coordsT);
             points[iter]->setCoords(count, coordsT);
             count++;
+            if(basis == 1)
+            {
+              coords[0] = coords[0] + (0.5*latticeConstants.x);
+              coords[1] = coords[1] + (0.5*latticeConstants.y);
+              coords[2] = coords[2] + (0.5*latticeConstants.z);
+              MatrixMath::Multiply3x3with3x1(gT, coords, coordsT);
+              points[iter]->setCoords(count, coordsT);
+              count++;
+            }
+            if(basis == 2)
+            {
+              //makes the (0.5,0.5,0) atom
+              coords[0] = coords[0] + (0.5*latticeConstants.x);
+              coords[1] = coords[1] + (0.5*latticeConstants.y);
+              coords[2] = coords[2];
+              MatrixMath::Multiply3x3with3x1(gT, coords, coordsT);
+              points[iter]->setCoords(count, coordsT);
+              count++;
+              //makes the (0.5,0,0.5) atom
+              coords[0] = coords[0];
+              coords[1] = coords[1] - (0.5*latticeConstants.y);
+              coords[2] = coords[2] + (0.5*latticeConstants.z);
+              MatrixMath::Multiply3x3with3x1(gT, coords, coordsT);
+              points[iter]->setCoords(count, coordsT);
+              count++;
+              //makes the (0,0.5,0.5) atom
+              coords[0] = coords[0] - (0.5*latticeConstants.x);
+              coords[1] = coords[1] + (0.5*latticeConstants.y);
+              coords[2] = coords[2];
+              MatrixMath::Multiply3x3with3x1(gT, coords, coordsT);
+              points[iter]->setCoords(count, coordsT);
+              count++;
+            }
           }
         }
       }
@@ -175,6 +214,7 @@ InsertAtoms::InsertAtoms() :
   m_VertexAttributeMatrixName(DREAM3D::Defaults::VertexAttributeMatrixName),
   m_FaceAttributeMatrixName(DREAM3D::Defaults::FaceAttributeMatrixName),
   m_CellFeatureAttributeMatrixName(DREAM3D::Defaults::CellFeatureAttributeMatrixName),
+  m_Basis(0),
   m_SurfaceMeshFaceLabelsArrayName(DREAM3D::FaceData::SurfaceMeshFaceLabels),
   m_SurfaceMeshFaceLabels(NULL),
   m_AvgQuatsArrayName(DREAM3D::FeatureData::AvgQuats),
@@ -211,7 +251,19 @@ void InsertAtoms::setupFilterParameters()
     parameter->setUnits("Angstoms");
     parameters.push_back(parameter);
   }
-
+  {
+    ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New();
+    parameter->setHumanLabel("Crystal Basis");
+    parameter->setPropertyName("Basis");
+    parameter->setWidgetType(FilterParameterWidgetType::ChoiceWidget);
+    parameter->setValueType("quint32");
+    QVector<QString> choices;
+    choices.push_back("Simple Cubic");
+    choices.push_back("Body Centered Cubic");
+    choices.push_back("Face Centered Cubic");
+    parameter->setChoices(choices);
+    parameters.push_back(parameter);
+  }
   setFilterParameters(parameters);
 }
 
@@ -223,6 +275,7 @@ void InsertAtoms::readFilterParameters(AbstractFilterParametersReader* reader, i
   /* Code to read the values goes between these statements */
   /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
   setLatticeConstants( reader->readFloatVec3("LatticeConstants", getLatticeConstants() ) );
+  setBasis( reader->readValue("Basis", getBasis() ) );
   /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }
@@ -234,6 +287,7 @@ int InsertAtoms::writeFilterParameters(AbstractFilterParametersWriter* writer, i
 {
   writer->openFilterGroup(this, index);
   writer->writeValue("LatticeConstants", getLatticeConstants() );
+  writer->writeValue("Basis", getBasis() );
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
@@ -409,13 +463,13 @@ void InsertAtoms::execute()
   if (doParallel == true)
   {
     tbb::parallel_for(tbb::blocked_range<size_t>(0, numFeatures),
-                      InsertAtomsImpl(faces, faceLists, faceBBs, avgQuats, m_LatticeConstants, points, inFeature), tbb::auto_partitioner());
+                      InsertAtomsImpl(faces, faceLists, faceBBs, avgQuats, m_LatticeConstants, m_Basis, points, inFeature), tbb::auto_partitioner());
 
   }
   else
 #endif
   {
-    InsertAtomsImpl serial(faces, faceLists, faceBBs, avgQuats, m_LatticeConstants, points, inFeature);
+    InsertAtomsImpl serial(faces, faceLists, faceBBs, avgQuats, m_LatticeConstants, m_Basis, points, inFeature);
     serial.checkPoints(0, numFeatures);
   }
 

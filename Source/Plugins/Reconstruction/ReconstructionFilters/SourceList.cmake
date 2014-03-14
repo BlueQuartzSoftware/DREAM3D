@@ -17,11 +17,13 @@ set(_PublicFilters
   AlignSectionsFeatureCentroid
   AlignSectionsList
   EBSDSegmentFeatures
-  ScalarSegmentFeatures
   CAxisSegmentFeatures
+  IdentifyDislocationSegments
   MergeTwins
   MergeColonies
   GroupMicroTextureRegions
+  ScalarSegmentFeatures
+  VectorSegmentFeatures
 )
 
 #--------------

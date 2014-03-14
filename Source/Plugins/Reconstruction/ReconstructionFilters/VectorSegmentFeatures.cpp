@@ -34,112 +34,40 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include "ScalarSegmentFeatures.h"
+#include "VectorSegmentFeatures.h"
 
 #include <boost/random/mersenne_twister.hpp>
 #include <boost/random/uniform_int.hpp>
 #include <boost/random/variate_generator.hpp>
 
 #include "DREAM3DLib/Common/Constants.h"
+#include "DREAM3DLib/Math/GeometryMath.h"
 
-#include "DREAM3DLib/OrientationOps/OrientationOps.h"
 #include "DREAM3DLib/Utilities/DREAM3DRandom.h"
 
-#include "DREAM3DLib/OrientationOps/CubicOps.h"
-#include "DREAM3DLib/OrientationOps/HexagonalOps.h"
-#include "DREAM3DLib/OrientationOps/OrthoRhombicOps.h"
 
 #define ERROR_TXT_OUT 1
 #define ERROR_TXT_OUT1 1
 
-
-
-
-#define NEW_SHARED_ARRAY(var, m_msgType, size)\
-  boost::shared_array<m_msgType> var##Array(new m_msgType[size]);\
-  m_msgType* var = var##Array.get();
-
-
-
-/* from http://www.newty.de/fpt/functor.html */
-// base class
-class CompareFunctor
-{
-  public:
-    virtual ~CompareFunctor() {}
-
-    virtual bool operator()(size_t index, size_t neighIndex, size_t gnum)  // call using operator
-    {
-      return false;
-    }
-};
-
-
-template<class T>
-class TSpecificCompareFunctor : public CompareFunctor
-{
-  public:
-    TSpecificCompareFunctor(void* data, size_t length, T tolerance, int32_t* featureIds) :
-      m_Length(length),
-      m_Tolerance(tolerance),
-      m_FeatureIds(featureIds)
-    {
-      m_Data = reinterpret_cast<T*>(data);
-    }
-    virtual ~TSpecificCompareFunctor() {};
-
-    virtual bool operator()(size_t referencepoint, size_t neighborpoint, size_t gnum)
-    {
-      // Sanity check the indices that are being passed in.
-      if (referencepoint >= m_Length || neighborpoint >= m_Length) { return false; }
-
-      if(m_Data[referencepoint] >= m_Data[neighborpoint])
-      {
-        if ((m_Data[referencepoint] - m_Data[neighborpoint]) <= m_Tolerance)
-        {
-          m_FeatureIds[neighborpoint] = gnum;
-          return true;
-        }
-      }
-      else
-      {
-        if ((m_Data[neighborpoint] - m_Data[referencepoint]) <= m_Tolerance)
-        {
-          m_FeatureIds[neighborpoint] = gnum;
-          return true;
-        }
-      }
-      return false;
-    }
-
-  protected:
-    TSpecificCompareFunctor() {}
-
-  private:
-    T* m_Data;       // The data that is being compared
-    size_t m_Length; // Length of the Data Array
-    T      m_Tolerance; // The tolerance of the comparison
-    int32_t* m_FeatureIds; // The feature Ids
-};
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ScalarSegmentFeatures::ScalarSegmentFeatures() :
+VectorSegmentFeatures::VectorSegmentFeatures() :
   SegmentFeatures(),
   m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
   m_CellFeatureAttributeMatrixName(DREAM3D::Defaults::CellFeatureAttributeMatrixName),
   m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
-  m_ScalarArrayName(""),
-  m_ScalarTolerance(5.0f),
+  m_SelectedVectorArrayName(""),
+  m_AngleTolerance(5.0f),
   m_RandomizeFeatureIds(true),
+  m_VectorsArrayName(""),
+  m_Vectors(NULL),
   m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
   m_FeatureIds(NULL),
   m_GoodVoxelsArrayName(DREAM3D::CellData::GoodVoxels),
   m_GoodVoxels(NULL),
   m_ActiveArrayName(DREAM3D::FeatureData::Active),
-  m_Active(NULL),
-  m_Compare(NULL)
+  m_Active(NULL)
 {
   setupFilterParameters();
 }
@@ -147,24 +75,20 @@ ScalarSegmentFeatures::ScalarSegmentFeatures() :
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ScalarSegmentFeatures::~ScalarSegmentFeatures()
+VectorSegmentFeatures::~VectorSegmentFeatures()
 {
-  if (m_Compare != NULL)
-  {
-    delete m_Compare;
-  }
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ScalarSegmentFeatures::setupFilterParameters()
+void VectorSegmentFeatures::setupFilterParameters()
 {
   FilterParameterVector parameters;
   {
     FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Input Cell Array Name");
-    parameter->setPropertyName("ScalarArrayName");
+    parameter->setHumanLabel("Vector Array Name");
+    parameter->setPropertyName("SelectedVectorArrayName");
     parameter->setWidgetType(FilterParameterWidgetType::SingleArraySelectionWidget);
     parameter->setValueType("QString");
     parameter->setUnits("");
@@ -172,8 +96,8 @@ void ScalarSegmentFeatures::setupFilterParameters()
   }
   {
     FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setPropertyName("ScalarTolerance");
-    parameter->setHumanLabel("Scalar Tolerance");
+    parameter->setPropertyName("AngleTolerance");
+    parameter->setHumanLabel("Angle Tolerance");
     parameter->setWidgetType(FilterParameterWidgetType::DoubleWidget);
     parameter->setValueType("float");
     parameter->setCastableValueType("double");
@@ -196,13 +120,13 @@ void ScalarSegmentFeatures::setupFilterParameters()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ScalarSegmentFeatures::readFilterParameters(AbstractFilterParametersReader* reader, int index)
+void VectorSegmentFeatures::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
   /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
-  setScalarArrayName( reader->readString( "ScalarArrayName", getScalarArrayName() ) );
-  setScalarTolerance( reader->readValue("ScalarTolerance", getScalarTolerance()) );
+  setSelectedVectorArrayName( reader->readString( "SelectedVectorArrayName", getSelectedVectorArrayName() ) );
+  setAngleTolerance( reader->readValue("AngleTolerance", getAngleTolerance()) );
   /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }
@@ -210,11 +134,11 @@ void ScalarSegmentFeatures::readFilterParameters(AbstractFilterParametersReader*
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int ScalarSegmentFeatures::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
+int VectorSegmentFeatures::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  writer->writeValue("ScalarArrayName", getScalarArrayName() );
-  writer->writeValue("ScalarTolerance", getScalarTolerance() );
+  writer->writeValue("SelectedVectorArrayName", getSelectedVectorArrayName() );
+  writer->writeValue("AngleTolerance", getAngleTolerance() );
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
@@ -222,7 +146,7 @@ int ScalarSegmentFeatures::writeFilterParameters(AbstractFilterParametersWriter*
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ScalarSegmentFeatures::updateFeatureInstancePointers()
+void VectorSegmentFeatures::updateFeatureInstancePointers()
 {
   setErrorCondition(0);
 
@@ -233,7 +157,7 @@ void ScalarSegmentFeatures::updateFeatureInstancePointers()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ScalarSegmentFeatures::dataCheck()
+void VectorSegmentFeatures::dataCheck()
 {
   setErrorCondition(0);
 
@@ -245,10 +169,57 @@ void ScalarSegmentFeatures::dataCheck()
   AttributeMatrix::Pointer cellAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), -301);
   if(getErrorCondition() < 0 || NULL == cellAttrMat.get() ) { return; }
 
-  if(m_ScalarArrayName.isEmpty() == true)
+  if(m_SelectedVectorArrayName.isEmpty() == true)
   {
     setErrorCondition(-11000);
     notifyErrorMessage(getHumanLabel(), "An array from the Volume DataContainer must be selected.", getErrorCondition());
+  }
+  else
+  {
+
+    QString dcName;
+    QString amName;
+    QString daName;
+
+    QStringList tokens = m_SelectedVectorArrayName.split(DREAM3D::PathSep);
+    // We should end up with 3 Tokens
+    if(tokens.size() != 3)
+    {
+      setErrorCondition(-11002);
+      QString ss = QObject::tr("The path to the Attribute Array is malformed. Each part should be separated by a '|' character.");
+      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    }
+    else
+    {
+      dcName = tokens.at(0);
+      amName = tokens.at(1);
+      daName = tokens.at(2);
+
+      DataContainer::Pointer dc = getDataContainerArray()->getDataContainer(dcName);
+      if(NULL == dc.get())
+      {
+        setErrorCondition(-11003);
+        QString ss = QObject::tr("The DataContainer '%1' was not found in the DataContainerArray").arg(dcName);
+        notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+        return;
+      }
+
+      AttributeMatrix::Pointer attrMat = dc->getAttributeMatrix(amName);
+       if(NULL == attrMat.get())
+      {
+        setErrorCondition(-11004);
+        QString ss = QObject::tr("The AttributeMatrix '%1' was not found in the DataContainer '%2'").arg(amName).arg(dcName);
+        notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+        return;
+      }
+
+      m_VectorsArrayName = daName;
+
+      QVector<size_t> dims(1, 3);
+      m_VectorsPtr = cellAttrMat->getPrereqArray<DataArray<float>, AbstractFilter>(this, m_VectorsArrayName, -303, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+      if( NULL != m_VectorsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+      { m_Vectors = m_VectorsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+    }
   }
 
   QVector<size_t> dims(1, 1);
@@ -267,7 +238,7 @@ void ScalarSegmentFeatures::dataCheck()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ScalarSegmentFeatures::preflight()
+void VectorSegmentFeatures::preflight()
 {
   emit preflightAboutToExecute();
   emit updateFilterParameters(this);
@@ -278,7 +249,7 @@ void ScalarSegmentFeatures::preflight()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ScalarSegmentFeatures::execute()
+void VectorSegmentFeatures::execute()
 {
   setErrorCondition(0);
 
@@ -292,109 +263,14 @@ void ScalarSegmentFeatures::execute()
   // This runs a subfilter
   int64_t totalPoints = m->getAttributeMatrix(getCellAttributeMatrixName())->getNumTuples();
 
-  QString dcName;
-  QString amName;
-  QString daName;
-
-  QStringList tokens = m_ScalarArrayName.split(DREAM3D::PathSep);
-  // We should end up with 3 Tokens
-  if(tokens.size() != 3)
-  {
-    setErrorCondition(-11002);
-    QString ss = QObject::tr("The path to the Attribute Array is malformed. Each part should be separated by a '|' character.");
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-  }
-  else
-  {
-    dcName = tokens.at(0);
-    amName = tokens.at(1);
-    daName = tokens.at(2);
-
-    DataContainer::Pointer dc = getDataContainerArray()->getDataContainer(dcName);
-    if(NULL == dc.get())
-    {
-      setErrorCondition(-11003);
-      QString ss = QObject::tr("The DataContainer '%1' was not found in the DataContainerArray").arg(dcName);
-      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-      return;
-    }
-
-    AttributeMatrix::Pointer attrMat = dc->getAttributeMatrix(amName);
-      if(NULL == attrMat.get())
-    {
-      setErrorCondition(-11004);
-      QString ss = QObject::tr("The AttributeMatrix '%1' was not found in the DataContainer '%2'").arg(amName).arg(dcName);
-      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-      return;
-    }
-  }
-
-  m_InputData = m->getAttributeMatrix(getCellAttributeMatrixName())->getAttributeArray(daName);
-  if (NULL == m_InputData.get())
-  {
-
-    QString ss = QObject::tr("Selected array '%1' does not exist in the Voxel Data Container. Was it spelled correctly?").arg(m_ScalarArrayName);
-    setErrorCondition(-11001);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-    return;
-  }
-
   // Tell the user we are starting the filter
   notifyStatusMessage(getHumanLabel(), "Starting");
 
+  //Convert user defined tolerance to radians.
+  m_AngleTolerance = m_AngleTolerance * DREAM3D::Constants::k_Pi / 180.0f;
   for(int64_t i = 0; i < totalPoints; i++)
   {
     m_FeatureIds[i] = 0;
-  }
-
-  QString dType = m_InputData->getTypeAsString();
-  if(m_InputData->getNumberOfComponents() != 1)
-  {
-    m_Compare = new CompareFunctor(); // The default CompareFunctor which ALWAYS returns false for the comparison
-  }
-  else if (dType.compare("int8_t") == 0)
-  {
-    m_Compare = new TSpecificCompareFunctor<int8_t>(m_InputData->getVoidPointer(0), m_InputData->getNumberOfTuples(), m_ScalarTolerance, m_FeatureIds);
-  }
-  else if (dType.compare("uint8_t") == 0)
-  {
-    m_Compare =  new TSpecificCompareFunctor<uint8_t>(m_InputData->getVoidPointer(0), m_InputData->getNumberOfTuples(), m_ScalarTolerance, m_FeatureIds);
-  }
-  else if (dType.compare("bool") == 0)
-  {
-    m_Compare =  new TSpecificCompareFunctor<bool>(m_InputData->getVoidPointer(0), m_InputData->getNumberOfTuples(), m_ScalarTolerance, m_FeatureIds);
-  }
-  else if (dType.compare("int16_t") == 0)
-  {
-    m_Compare =  new TSpecificCompareFunctor<int16_t>(m_InputData->getVoidPointer(0), m_InputData->getNumberOfTuples(), m_ScalarTolerance, m_FeatureIds);
-  }
-  else if (dType.compare("uint16_t") == 0)
-  {
-    m_Compare =  new TSpecificCompareFunctor<uint16_t>(m_InputData->getVoidPointer(0), m_InputData->getNumberOfTuples(), m_ScalarTolerance, m_FeatureIds);
-  }
-  else if (dType.compare("int32_t") == 0)
-  {
-    m_Compare =  new TSpecificCompareFunctor<int32_t>(m_InputData->getVoidPointer(0), m_InputData->getNumberOfTuples(), m_ScalarTolerance, m_FeatureIds);
-  }
-  else if (dType.compare("uint32_t") == 0)
-  {
-    m_Compare =  new TSpecificCompareFunctor<uint32_t>(m_InputData->getVoidPointer(0), m_InputData->getNumberOfTuples(), m_ScalarTolerance, m_FeatureIds);
-  }
-  else if (dType.compare("int64_t") == 0)
-  {
-    m_Compare =  new TSpecificCompareFunctor<int64_t>(m_InputData->getVoidPointer(0), m_InputData->getNumberOfTuples(), m_ScalarTolerance, m_FeatureIds);
-  }
-  else if (dType.compare("uint64_t") == 0)
-  {
-    m_Compare =  new TSpecificCompareFunctor<uint64_t>(m_InputData->getVoidPointer(0), m_InputData->getNumberOfTuples(), m_ScalarTolerance, m_FeatureIds);
-  }
-  else if (dType.compare("float") == 0)
-  {
-    m_Compare =  new TSpecificCompareFunctor<float>(m_InputData->getVoidPointer(0), m_InputData->getNumberOfTuples(), m_ScalarTolerance, m_FeatureIds);
-  }
-  else if (dType.compare("double") == 0)
-  {
-    m_Compare =  new TSpecificCompareFunctor<double>(m_InputData->getVoidPointer(0), m_InputData->getNumberOfTuples(), m_ScalarTolerance, m_FeatureIds);
   }
 
   missingGoodVoxels = true;
@@ -464,7 +340,7 @@ void ScalarSegmentFeatures::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int64_t ScalarSegmentFeatures::getSeed(size_t gnum)
+int64_t VectorSegmentFeatures::getSeed(size_t gnum)
 {
   setErrorCondition(0);
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
@@ -483,7 +359,7 @@ int64_t ScalarSegmentFeatures::getSeed(size_t gnum)
   while (seed == -1 && counter < totalPoints)
   {
     if (randpoint > totalPMinus1) { randpoint = static_cast<int64_t>( randpoint - totalPoints ); }
-    if ((m_GoodVoxels[randpoint] == true || missingGoodVoxels == true) && m_FeatureIds[randpoint] == 0) { seed = randpoint; }
+    if ((missingGoodVoxels == true || m_GoodVoxels[randpoint] == true) && m_FeatureIds[randpoint] == 0) { seed = randpoint; }
     randpoint++;
     counter++;
   }
@@ -500,17 +376,28 @@ int64_t ScalarSegmentFeatures::getSeed(size_t gnum)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-bool ScalarSegmentFeatures::determineGrouping(int64_t referencepoint, int64_t neighborpoint, size_t gnum)
+bool VectorSegmentFeatures::determineGrouping(int64_t referencepoint, int64_t neighborpoint, size_t gnum)
 {
+  bool group = false;
+  float v1[3];
+  float v2[3];
+  if(m_FeatureIds[neighborpoint] == 0 && (missingGoodVoxels == true || m_GoodVoxels[neighborpoint] == true))
+  {
+    v1[0] = m_Vectors[3*referencepoint+0];
+    v1[1] = m_Vectors[3*referencepoint+1];
+    v1[2] = m_Vectors[3*referencepoint+2];
+    v2[0] = m_Vectors[3*neighborpoint+0];
+    v2[1] = m_Vectors[3*neighborpoint+1];
+    v2[2] = m_Vectors[3*neighborpoint+2];
+    float w = GeometryMath::CosThetaBetweenVectors(v1, v2);
+    w = acos(w);
+    if(w < m_AngleTolerance || (DREAM3D::Constants::k_Pi-w) < m_AngleTolerance)
+    {
+      group = true;
+      m_FeatureIds[neighborpoint] = gnum;
+    }
+  }
 
-  if(m_FeatureIds[neighborpoint] == 0 && (m_GoodVoxels[neighborpoint] == true || missingGoodVoxels == true))
-  {
-    return (*m_Compare)( (size_t)(referencepoint), (size_t)(neighborpoint), gnum );
-  //     | Functor  ||calling the operator() method of the CompareFunctor Class |
-  }
-  else
-  {
-    return false;
-  }
+  return group;
 }
 

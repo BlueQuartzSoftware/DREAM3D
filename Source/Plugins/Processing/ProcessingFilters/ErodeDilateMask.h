@@ -34,47 +34,60 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _VASPREADER_H_
-#define _VASPREADER_H_
+#ifndef ErodeDilateMask_H_
+#define ErodeDilateMask_H_
 
-#include <QtCore/QString>
 #include <vector>
-#include <QtCore/QFile>
+#include <QtCore/QString>
+
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/DataArrays/DataArray.hpp"
-#include "DREAM3DLib/IOFilters/FileReader.h"
-#include "DREAM3DLib/Common/Constants.h"
+#include "DREAM3DLib/DataArrays/IDataArray.h"
+
+#include "DREAM3DLib/Common/AbstractFilter.h"
+#include "DREAM3DLib/DataContainers/VolumeDataContainer.h"
+#include "DREAM3DLib/OrientationOps/OrientationOps.h"
+#include "DREAM3DLib/DataArrays/NeighborList.hpp"
+
+#include "Processing/ProcessingConstants.h"
 
 /**
- * @class VASPReader VASPReader.h DREAM3DLib/IO/VASPReader.h
+ * @class ErodeDilateMask ErodeDilateMask.h DREAM3DLib/ReconstructionFilters/ErodeDilateMask.h
  * @brief
- * @author mjackson
- * @date Sep 28, 2011
- * @version $Revision$
+ * @author
+ * @date Nov 19, 2011
+ * @version 1.0
  */
-class DREAM3DLib_EXPORT VASPReader : public FileReader
+class ErodeDilateMask : public AbstractFilter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
-    DREAM3D_SHARED_POINTERS(VASPReader)
-    DREAM3D_STATIC_NEW_MACRO(VASPReader)
-    DREAM3D_TYPE_MACRO_SUPER(VASPReader, FileReader)
+    DREAM3D_SHARED_POINTERS(ErodeDilateMask)
+    DREAM3D_STATIC_NEW_MACRO(ErodeDilateMask)
+    DREAM3D_TYPE_MACRO_SUPER(ErodeDilateMask, AbstractFilter)
 
-    virtual ~VASPReader();
-    DREAM3D_INSTANCE_STRING_PROPERTY(VertexDataContainerName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(VertexAttributeMatrixName)
+    virtual ~ErodeDilateMask();
+    DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
 
-    DREAM3D_FILTER_PARAMETER(QString, InputFile)
-    Q_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile)
+    DREAM3D_FILTER_PARAMETER(QString, SelectedArrayPath)
+    Q_PROPERTY(QString SelectedArrayPath READ getSelectedArrayPath WRITE setSelectedArrayPath)
+    DREAM3D_FILTER_PARAMETER(unsigned int, Direction)
+    Q_PROPERTY(unsigned int Direction READ getDirection WRITE setDirection)
+    DREAM3D_FILTER_PARAMETER(int, NumIterations)
+    Q_PROPERTY(int NumIterations READ getNumIterations WRITE setNumIterations)
+    DREAM3D_FILTER_PARAMETER(bool, XDirOn)
+    Q_PROPERTY(bool XDirOn READ getXDirOn WRITE setXDirOn)
+    DREAM3D_FILTER_PARAMETER(bool, YDirOn)
+    Q_PROPERTY(bool YDirOn READ getYDirOn WRITE setYDirOn)
+    DREAM3D_FILTER_PARAMETER(bool, ZDirOn)
+    Q_PROPERTY(bool ZDirOn READ getZDirOn WRITE setZDirOn)
 
-    //------ Created Cell Data
-
-    virtual const QString getCompiledLibraryName() { return IO::IOBaseName; }
-    virtual const QString getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
-    virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::InputFilters; }
-    virtual const QString getHumanLabel() { return "Read VASP File"; }
+    virtual const QString getCompiledLibraryName() { return Processing::ProcessingBaseName; }
+    virtual const QString getGroupName() { return DREAM3D::FilterGroups::ProcessingFilters; }
+    virtual const QString getSubGroupName()  { return DREAM3D::FilterSubGroups::CleanupFilters; }
+    virtual const QString getHumanLabel() { return "Erode/Dilate Mask"; }
 
     virtual void setupFilterParameters();
     /**
@@ -89,8 +102,8 @@ class DREAM3DLib_EXPORT VASPReader : public FileReader
     */
     virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
 
-    virtual void preflight();
     virtual void execute();
+    virtual void preflight();
 
   signals:
     void updateFilterParameters(AbstractFilter* filter);
@@ -99,29 +112,22 @@ class DREAM3DLib_EXPORT VASPReader : public FileReader
     void preflightExecuted();
 
   protected:
-    VASPReader();
-
-    virtual int readHeader();
-    virtual int readFile();
-
-    void dataCheck();
-    void updateVertexInstancePointers();
+    ErodeDilateMask();
 
   private:
-    DEFINE_PTR_WEAKPTR_DATAARRAY(float, AtomVelocities)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, AtomTypes)
-    QFile  m_InStream;
+    bool* m_MaskCopy;
+    DEFINE_PTR_WEAKPTR_DATAARRAY(bool, Mask)
 
-    float latticeConstant;
-    float latticeVectors[3][3];
-    QVector<int> atomNumbers;
-    int totalAtoms;
+    QVector<QVector<int> > voxellists;
+    QVector<int> nuclei;
 
-    VASPReader(const VASPReader&); // Copy Constructor Not Implemented
-    void operator=(const VASPReader&); // Operator '=' Not Implemented
+    void dataCheck();
+
+    ErodeDilateMask(const ErodeDilateMask&); // Copy Constructor Not Implemented
+    void operator=(const ErodeDilateMask&); // Operator '=' Not Implemented
 };
 
-#endif /* VASPREADER_H_ */
+#endif /* ErodeDilateMask_H_ */
 
 
 

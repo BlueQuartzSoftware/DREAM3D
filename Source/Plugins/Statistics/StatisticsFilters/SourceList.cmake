@@ -41,6 +41,7 @@ set(_PublicFilters
   FitFeatureData
   FitCorrelatedFeatureData
   GenerateEnsembleStatistics
+  LocalDislocationDensityCalculator
   QuiltCellData
 )
 

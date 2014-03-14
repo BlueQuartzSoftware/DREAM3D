@@ -108,12 +108,26 @@ int VASPReader::writeFilterParameters(AbstractFilterParametersWriter* writer, in
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void VASPReader::updateVertexInstancePointers()
+{
+  setErrorCondition(0);
+
+  if( NULL != m_AtomVelocitiesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  { m_AtomVelocities = m_AtomVelocitiesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  if( NULL != m_AtomTypesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  { m_AtomTypes = m_AtomTypesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void VASPReader::dataCheck()
 {
   setErrorCondition(0);
   VertexDataContainer* m = getDataContainerArray()->createNonPrereqDataContainer<VertexDataContainer, AbstractFilter>(this, getVertexDataContainerName());
   if(getErrorCondition() < 0) { return; }
-  AttributeMatrix::Pointer vertexAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getVertexAttributeMatrixName(), -301);
+  QVector<size_t> tDims (1, 0);
+  AttributeMatrix::Pointer vertexAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getVertexAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::Vertex);
   if(getErrorCondition() < 0) { return; }
 
   QFileInfo fi(getInputFile());
@@ -130,6 +144,7 @@ void VASPReader::dataCheck()
     setErrorCondition(-388);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
+
   QVector<size_t> dims(1, 3);
   m_AtomVelocitiesPtr = vertexAttrMat->createNonPrereqArray<DataArray<float>, AbstractFilter, float>(this,  m_AtomVelocitiesArrayName, 0.0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_AtomVelocitiesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
@@ -161,7 +176,7 @@ void VASPReader::dataCheck()
     if (error < 0)
     {
       setErrorCondition(error);
-      QString ss = QObject::tr("Error occurred trying to parse the dimensions from the input file. Is the input file a Dx file?");
+      QString ss = QObject::tr("Error occurred trying to parse the dimensions from the input file. Is the input file a VASP file?");
       notifyErrorMessage(getHumanLabel(), ss, -11000);
     }
   }
@@ -184,6 +199,9 @@ void VASPReader::preflight()
 void VASPReader::execute()
 {
   int err = 0;
+
+  dataCheck();
+  if(getErrorCondition() < 0) { return; }
 
   m_InStream.setFileName(getInputFile());
   if (!m_InStream.open(QIODevice::ReadOnly | QIODevice::Text))
@@ -217,9 +235,8 @@ int VASPReader::readHeader()
 {
   QString ss;
 
-  dataCheck();
-
   VertexDataContainer* m = getDataContainerArray()->getDataContainerAs<VertexDataContainer>(getVertexDataContainerName());
+  AttributeMatrix::Pointer vertexAttrMat = m->getAttributeMatrix(getVertexAttributeMatrixName());
 
   int error = 0;
 
@@ -275,6 +292,10 @@ int VASPReader::readHeader()
   VertexArray::Pointer vertices = VertexArray::CreateArray(totalAtoms, DREAM3D::VertexData::SurfaceMeshNodes);
   m->setVertices(vertices);
 
+  QVector<size_t> tDims(1, totalAtoms);
+  vertexAttrMat->resizeAttributeArrays(tDims);
+  updateVertexInstancePointers(); 
+
   return error;
 }
 
@@ -283,8 +304,6 @@ int VASPReader::readHeader()
 // -----------------------------------------------------------------------------
 int VASPReader::readFile()
 {
-  dataCheck();
-
   VertexDataContainer* m = getDataContainerArray()->getDataContainerAs<VertexDataContainer>(getVertexDataContainerName());
 
   QByteArray buf;
@@ -292,18 +311,7 @@ int VASPReader::readFile()
 
   VertexArray::Pointer verticesPtr = m->getVertices();
   VertexArray::Vert_t* vertex = verticesPtr.get()->getPointer(0);
-  totalAtoms = verticesPtr->getNumberOfTuples();
 
-  // Resize the vertex attribute matrix
-  QVector<size_t> tDims(1, totalAtoms);
-  m->getAttributeMatrix(getVertexAttributeMatrixName())->resizeAttributeArrays(tDims);
-  dataCheck();
-
-  if (getErrorCondition() < 0)
-  {
-    m_InStream.close();
-    return -1;
-  }
   //read the blank line
   buf = m_InStream.readLine();
   bool ok = false;

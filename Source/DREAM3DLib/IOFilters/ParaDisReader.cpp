@@ -40,6 +40,9 @@
 
 #include <QtCore/QFileInfo>
 
+#include "DREAM3DLib/Math/MatrixMath.h"
+
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -83,6 +86,16 @@ void ParaDisReader::setupFilterParameters()
     parameter->setValueType("QString");
     parameters.push_back(parameter);
   }
+  {
+    FilterParameter::Pointer parameter = FilterParameter::New();
+    parameter->setHumanLabel("Burgers Vector Length");
+    parameter->setPropertyName("BurgersVector");
+    parameter->setWidgetType(FilterParameterWidgetType::DoubleWidget);
+    parameter->setValueType("float");
+    parameter->setCastableValueType("double");
+    parameter->setUnits("Angstroms");
+    parameters.push_back(parameter);
+  }
   setFilterParameters(parameters);
 }
 
@@ -93,6 +106,7 @@ void ParaDisReader::readFilterParameters(AbstractFilterParametersReader* reader,
   /* Code to read the values goes between these statements */
   /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
   setInputFile( reader->readString( "InputFile", getInputFile() ) );
+  setBurgersVector( reader->readValue( "BurgersVector", getBurgersVector() ) );
   /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }
@@ -104,8 +118,35 @@ int ParaDisReader::writeFilterParameters(AbstractFilterParametersWriter* writer,
 {
   writer->openFilterGroup(this, index);
   writer->writeValue("InputFile", getInputFile() );
+  writer->writeValue("BurgersVector", getBurgersVector() );
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ParaDisReader::updateVertexInstancePointers()
+{
+  setErrorCondition(0);
+
+  if( NULL != m_NumberOfArmsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  { m_NumberOfArms = m_NumberOfArmsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  if( NULL != m_NodeConstraintsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  { m_NodeConstraints = m_NodeConstraintsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ParaDisReader::updateEdgeInstancePointers()
+{
+  setErrorCondition(0);
+
+  if( NULL != m_BurgersVectorsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  { m_BurgersVectors = m_BurgersVectorsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  if( NULL != m_SlipPlaneNormalsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  { m_SlipPlaneNormals = m_SlipPlaneNormalsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
 
 // -----------------------------------------------------------------------------
@@ -232,6 +273,7 @@ int ParaDisReader::readHeader()
 {
   QString ss;
   EdgeDataContainer* m = getDataContainerArray()->getDataContainerAs<EdgeDataContainer>(getEdgeDataContainerName());
+  AttributeMatrix::Pointer vertexAttrMat = m->getAttributeMatrix(getVertexAttributeMatrixName());
 
   int error = 0;
 
@@ -247,95 +289,46 @@ int ParaDisReader::readHeader()
   buf = buf.simplified();
   tokens = buf.split(' ');
   fileVersion = tokens[2].toInt(&ok, 10);
-  if(fileVersion == 2)
+
+  int keepgoing = 1;
+  //read until get to nodeCount line 
+  while(keepgoing == 1)
   {
-    //read num file segments line
     buf = m_InStream.readLine();
+    buf = buf.trimmed();
+    buf = buf.simplified();
+    tokens = buf.split(' ');
+    QString word(tokens.at(0));
+    if(word.compare("nodeCount") == 0)
+    {
+      numVerts = tokens[2].toInt(&ok, 10);
+      keepgoing = 0;
+    }
   }
-  //read minCoordinates lines
-  buf = m_InStream.readLine();
-  buf = m_InStream.readLine();
-  buf = m_InStream.readLine();
-  buf = m_InStream.readLine();
-  buf = m_InStream.readLine();
-  //read maxCoordinates lines
-  buf = m_InStream.readLine();
-  buf = m_InStream.readLine();
-  buf = m_InStream.readLine();
-  buf = m_InStream.readLine();
-  buf = m_InStream.readLine();
-  //read the number of nodes
-  buf = m_InStream.readLine();
-  buf = buf.trimmed();
-  buf = buf.simplified();
-  tokens = buf.split(' ');
-  numVerts = tokens[2].toInt(&ok, 10);
-  if(fileVersion == 2)
+  keepgoing = 1;
+  //read until get to nodalData line 
+  while(keepgoing == 1)
   {
-    //read data decomp line
     buf = m_InStream.readLine();
-    //read data decomp geometry lines
-    buf = m_InStream.readLine();
-    buf = m_InStream.readLine();
-    buf = m_InStream.readLine();
-    buf = m_InStream.readLine();
-    buf = m_InStream.readLine();
-    //read end of file parameters lines
-    buf = m_InStream.readLine();
-    buf = m_InStream.readLine();
-    buf = m_InStream.readLine();
-    buf = m_InStream.readLine();
-    buf = m_InStream.readLine();
-    //read domain decomposition lines
-    buf = m_InStream.readLine();
-    buf = m_InStream.readLine();
-    buf = m_InStream.readLine();
-    buf = m_InStream.readLine();
-    buf = m_InStream.readLine();
-    buf = m_InStream.readLine();
-    buf = m_InStream.readLine();
-    buf = m_InStream.readLine();
+    buf = buf.trimmed();
+    buf = buf.simplified();
+    tokens = buf.split(' ');
+    QString word(tokens.at(0));
+    if(word.compare("nodalData") == 0)
+    {
+      //read nodal Data lines
+      buf = m_InStream.readLine();
+      buf = m_InStream.readLine();
+      keepgoing = 0;
+    }
   }
-  if(fileVersion == 5)
-  {
-    //read end of file parameters lines
-    buf = m_InStream.readLine();
-    buf = m_InStream.readLine();
-    buf = m_InStream.readLine();
-    buf = m_InStream.readLine();
-    buf = m_InStream.readLine();
-    //read domain decomposition lines
-    buf = m_InStream.readLine();
-    buf = m_InStream.readLine();
-    buf = m_InStream.readLine();
-    buf = m_InStream.readLine();
-    buf = m_InStream.readLine();
-    buf = m_InStream.readLine();
-    buf = m_InStream.readLine();
-    buf = m_InStream.readLine();
-    buf = m_InStream.readLine();
-    buf = m_InStream.readLine();
-    buf = m_InStream.readLine();
-    buf = m_InStream.readLine();
-    buf = m_InStream.readLine();
-    buf = m_InStream.readLine();
-    buf = m_InStream.readLine();
-    buf = m_InStream.readLine();
-    buf = m_InStream.readLine();
-    buf = m_InStream.readLine();
-    buf = m_InStream.readLine();
-    buf = m_InStream.readLine();
-    buf = m_InStream.readLine();
-    buf = m_InStream.readLine();
-    buf = m_InStream.readLine();
-  }
-  //read nodal Data lines
-  buf = m_InStream.readLine();
-  buf = m_InStream.readLine();
-  buf = m_InStream.readLine();
 
   VertexArray::Pointer vertices = VertexArray::CreateArray(numVerts, DREAM3D::VertexData::SurfaceMeshNodes);
   m->setVertices(vertices);
+
+  QVector<size_t> tDims(1, numVerts);
+  vertexAttrMat->resizeAttributeArrays(tDims);
+  updateVertexInstancePointers(); 
 
   return error;
 }
@@ -346,6 +339,7 @@ int ParaDisReader::readHeader()
 int ParaDisReader::readFile()
 {
   EdgeDataContainer* m = getDataContainerArray()->getDataContainerAs<EdgeDataContainer>(getEdgeDataContainerName());
+  AttributeMatrix::Pointer edgeAttrMat = m->getAttributeMatrix(getEdgeAttributeMatrixName());
 
   QByteArray buf;
   QList<QByteArray> tokens; /* vector to store the split data */
@@ -354,18 +348,6 @@ int ParaDisReader::readFile()
   VertexArray::Pointer verticesPtr = m->getVertices();
   VertexArray::Vert_t* vertex = verticesPtr.get()->getPointer(0);
   numVerts = verticesPtr->getNumberOfTuples();
-
-  // Resize the vertex attribute matrix to the number of vertices
-  QVector<size_t> tDims(1, numVerts);
-  m->getAttributeMatrix(getVertexAttributeMatrixName())->resizeAttributeArrays(tDims);
-  // Rerun the data check in order to allocate the array to store the data.
-  dataCheck();
-
-  if (getErrorCondition() < 0)
-  {
-    m_InStream.close();
-    return -1;
-  }
 
   bool ok = false;
 
@@ -387,9 +369,14 @@ int ParaDisReader::readFile()
   QVector<float> burgerXs;
   QVector<float> burgerYs;
   QVector<float> burgerZs;
+  float burgVec[3];
   QVector<float> spnXs;
   QVector<float> spnYs;
   QVector<float> spnZs;
+  float spNorm[3];
+
+  //turn burgers vector into microns from angstroms
+  m_BurgersVector = m_BurgersVector/10000;
 
   for(int j = 0; j < numVerts; j++)
   {
@@ -405,9 +392,9 @@ int ParaDisReader::readFile()
     if(nodeNum == -1)
     {
       nodeNum = nodeCounter;
-      vertex[nodeNum].pos[0] = tokens[1].toFloat(&ok);
-      vertex[nodeNum].pos[1] = tokens[2].toFloat(&ok);
-      vertex[nodeNum].pos[2] = tokens[3].toFloat(&ok);
+      vertex[nodeNum].pos[0] = tokens[1].toFloat(&ok)*m_BurgersVector;
+      vertex[nodeNum].pos[1] = tokens[2].toFloat(&ok)*m_BurgersVector;
+      vertex[nodeNum].pos[2] = tokens[3].toFloat(&ok)*m_BurgersVector;
       m_NumberOfArms[nodeNum] = tokens[4].toInt(&ok, 10);
       m_NodeConstraints[nodeNum] = tokens[5].toInt(&ok, 10);
       vertNumbers.insert(*ptr64, nodeNum);
@@ -415,9 +402,9 @@ int ParaDisReader::readFile()
     }
     else
     {
-      vertex[nodeNum].pos[0] = tokens[1].toFloat(&ok);
-      vertex[nodeNum].pos[1] = tokens[2].toFloat(&ok);
-      vertex[nodeNum].pos[2] = tokens[3].toFloat(&ok);
+      vertex[nodeNum].pos[0] = tokens[1].toFloat(&ok)*m_BurgersVector;
+      vertex[nodeNum].pos[1] = tokens[2].toFloat(&ok)*m_BurgersVector;
+      vertex[nodeNum].pos[2] = tokens[3].toFloat(&ok)*m_BurgersVector;
       m_NumberOfArms[nodeNum] = tokens[4].toInt(&ok, 10);
       m_NodeConstraints[nodeNum] = tokens[5].toInt(&ok, 10);
     }
@@ -447,9 +434,12 @@ int ParaDisReader::readFile()
         numEdges++;
         firstNodes.push_back(nodeNum);
         secondNodes.push_back(neighborNode);
-        burgerXs.push_back(tokens[1].toFloat(&ok));
-        burgerYs.push_back(tokens[2].toFloat(&ok));
-        burgerZs.push_back(tokens[3].toFloat(&ok));
+        burgVec[0] = tokens[1].toFloat(&ok)*m_BurgersVector;
+        burgVec[1] = tokens[2].toFloat(&ok)*m_BurgersVector;
+        burgVec[2] = tokens[3].toFloat(&ok)*m_BurgersVector;
+        burgerXs.push_back(burgVec[0]);
+        burgerYs.push_back(burgVec[1]);
+        burgerZs.push_back(burgVec[2]);
       }
       buf = m_InStream.readLine();
       buf = buf.trimmed();
@@ -457,9 +447,13 @@ int ParaDisReader::readFile()
       tokens = buf.split(' ');
       if(neighborNode > nodeNum)
       {
-        spnXs.push_back(tokens[0].toFloat(&ok));
-        spnYs.push_back(tokens[1].toFloat(&ok));
-        spnZs.push_back(tokens[2].toFloat(&ok));
+        spNorm[0] = tokens[0].toFloat(&ok);
+        spNorm[1] = tokens[1].toFloat(&ok);
+        spNorm[2] = tokens[2].toFloat(&ok);
+        MatrixMath::Normalize3x1(spNorm);
+        spnXs.push_back(spNorm[0]);
+        spnYs.push_back(spNorm[1]);
+        spnZs.push_back(spNorm[2]);
       }
     }
   }
@@ -469,10 +463,9 @@ int ParaDisReader::readFile()
   EdgeArray::Edge_t* edge = edges.get()->getPointer(0);
 
   // Resize the edge attribute matrix to the number of vertices
-  tDims[0] = numEdges;
-  m->getAttributeMatrix(getEdgeAttributeMatrixName())->resizeAttributeArrays(tDims);
-  // Rerun the data check in order to allocate the array to store the data.
-  dataCheck();
+  QVector<size_t> tDims (1, numEdges);
+  edgeAttrMat->resizeAttributeArrays(tDims);
+  updateEdgeInstancePointers(); 
 
   for(int i = 0; i < numEdges; i++)
   {

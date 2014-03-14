@@ -34,7 +34,7 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include "OpenCloseCoordinationNumber.h"
+#include "ErodeDilateCoordinationNumber.h"
 
 
 #include "DREAM3DLib/Common/Constants.h"
@@ -49,7 +49,7 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-OpenCloseCoordinationNumber::OpenCloseCoordinationNumber() :
+ErodeDilateCoordinationNumber::ErodeDilateCoordinationNumber() :
   AbstractFilter(),
   m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
   m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
@@ -64,14 +64,14 @@ OpenCloseCoordinationNumber::OpenCloseCoordinationNumber() :
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-OpenCloseCoordinationNumber::~OpenCloseCoordinationNumber()
+ErodeDilateCoordinationNumber::~ErodeDilateCoordinationNumber()
 {
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void OpenCloseCoordinationNumber::setupFilterParameters()
+void ErodeDilateCoordinationNumber::setupFilterParameters()
 {
   FilterParameterVector parameters;
   {
@@ -96,7 +96,7 @@ void OpenCloseCoordinationNumber::setupFilterParameters()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void OpenCloseCoordinationNumber::readFilterParameters(AbstractFilterParametersReader* reader, int index)
+void ErodeDilateCoordinationNumber::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
@@ -110,7 +110,7 @@ void OpenCloseCoordinationNumber::readFilterParameters(AbstractFilterParametersR
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int OpenCloseCoordinationNumber::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
+int ErodeDilateCoordinationNumber::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
   writer->writeValue("CoordinationNumber", getCoordinationNumber() );
@@ -122,7 +122,7 @@ int OpenCloseCoordinationNumber::writeFilterParameters(AbstractFilterParametersW
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void OpenCloseCoordinationNumber::dataCheck()
+void ErodeDilateCoordinationNumber::dataCheck()
 {
   setErrorCondition(0);
 
@@ -141,7 +141,7 @@ void OpenCloseCoordinationNumber::dataCheck()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void OpenCloseCoordinationNumber::preflight()
+void ErodeDilateCoordinationNumber::preflight()
 {
   emit preflightAboutToExecute();
   emit updateFilterParameters(this);
@@ -152,7 +152,7 @@ void OpenCloseCoordinationNumber::preflight()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void OpenCloseCoordinationNumber::execute()
+void ErodeDilateCoordinationNumber::execute()
 {
   setErrorCondition(0);
 

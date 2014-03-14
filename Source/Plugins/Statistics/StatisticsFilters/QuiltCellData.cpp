@@ -143,7 +143,7 @@ void QuiltCellData::readFilterParameters(AbstractFilterParametersReader* reader,
   setOutputDataContainerName( reader->readString( "OutputDataContainerName", getOutputDataContainerName() ) );
   setOutputAttributeMatrixName( reader->readString( "OutputAttributeMatrixName", getOutputAttributeMatrixName() ) );
   setOutputArrayName( reader->readString( "OutputArrayName", getOutputArrayName() ) );
-  setQuiltStep( reader->readIntVec3("QuiltSte", getQuiltStep() ) );
+  setQuiltStep( reader->readIntVec3("QuiltStep", getQuiltStep() ) );
   setPatchSize( reader->readIntVec3("PatchSize", getPatchSize() ) );
   /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
@@ -159,7 +159,7 @@ int QuiltCellData::writeFilterParameters(AbstractFilterParametersWriter* writer,
   writer->writeValue("OutputDataContainerName", getOutputDataContainerName() );
   writer->writeValue("OutputAttributeMatrixName", getOutputAttributeMatrixName() );
   writer->writeValue("OutputArrayName", getOutputArrayName() );
-  writer->writeValue("QuiltSte", getQuiltStep() );
+  writer->writeValue("QuiltStep", getQuiltStep() );
   writer->writeValue("PatchSize", getPatchSize() );
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to

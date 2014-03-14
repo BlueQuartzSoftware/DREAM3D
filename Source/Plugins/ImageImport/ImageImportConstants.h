@@ -13,6 +13,7 @@ namespace ImageImport {
 namespace FilterParameterWidgetType
 {
   const QString ImportImagesWidget("ImportImagesWidget");
+  const QString ImportImagesAsVectorWidget("ImportImagesAsVectorWidget");
 }
 
 

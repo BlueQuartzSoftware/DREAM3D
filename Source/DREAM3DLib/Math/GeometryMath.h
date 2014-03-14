@@ -180,6 +180,16 @@ class DREAM3DLib_EXPORT GeometryMath
     static bool RayIntersectsBox(const VertexArray::Vert_t &p, const VertexArray::Vert_t &q, const VertexArray::Vert_t &lowerLeft, const VertexArray::Vert_t &upperRight);
 
     /**
+     * @brief Determines length of a segment between two points that lies within a box defined by the lower left and upper right corners
+     * @param p
+     * @param q
+     * @param lowerLeft
+     * @param upperRight
+     * @return
+     */
+    static float LengthOfRayInBox(const VertexArray::Vert_t &p, const VertexArray::Vert_t &q, const VertexArray::Vert_t &lowerLeft, const VertexArray::Vert_t &upperRight);
+
+    /**
      * @brief Creates a randomly oriented ray of given length
      * @param length float
      * @param ray 1x3 Vector

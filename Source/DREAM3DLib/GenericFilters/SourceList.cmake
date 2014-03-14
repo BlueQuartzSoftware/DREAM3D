@@ -31,6 +31,7 @@ set(_PublicFilters
   GenerateIPFColors
   GenerateMisorientationColors
   GenerateRodriguesColors
+  GenerateVectorColors
   LinkFeatureMapToCellArray
   RemoveArrays
   RenameAttributeMatrix

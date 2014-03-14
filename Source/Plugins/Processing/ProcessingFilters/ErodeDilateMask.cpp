@@ -34,7 +34,7 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include "OpenCloseBadData.h"
+#include "ErodeDilateMask.h"
 
 
 #include "DREAM3DLib/Common/Constants.h"
@@ -49,17 +49,18 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-OpenCloseBadData::OpenCloseBadData() :
+ErodeDilateMask::ErodeDilateMask() :
   AbstractFilter(),
   m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
   m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
+  m_SelectedArrayPath(""),
   m_Direction(0),
   m_NumIterations(1),
   m_XDirOn(true),
   m_YDirOn(true),
   m_ZDirOn(true),
-  m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
-  m_FeatureIds(NULL)
+  m_MaskArrayName(""),
+  m_Mask(NULL)
 {
   setupFilterParameters();
 }
@@ -67,16 +68,25 @@ OpenCloseBadData::OpenCloseBadData() :
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-OpenCloseBadData::~OpenCloseBadData()
+ErodeDilateMask::~ErodeDilateMask()
 {
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void OpenCloseBadData::setupFilterParameters()
+void ErodeDilateMask::setupFilterParameters()
 {
   FilterParameterVector parameters;
+  {
+    FilterParameter::Pointer parameter = FilterParameter::New();
+    parameter->setHumanLabel("Cell Mask Array");
+    parameter->setPropertyName("SelectedArrayPath");
+    parameter->setWidgetType(FilterParameterWidgetType::SingleArraySelectionWidget);
+    parameter->setValueType("QString");
+    parameter->setUnits("");
+    parameters.push_back(parameter);
+  }
   {
     ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New();
     parameter->setHumanLabel("Operation");
@@ -127,11 +137,12 @@ void OpenCloseBadData::setupFilterParameters()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void OpenCloseBadData::readFilterParameters(AbstractFilterParametersReader* reader, int index)
+void ErodeDilateMask::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
   /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+  setSelectedArrayPath( reader->readString( "SelectedArrayPath", getSelectedArrayPath() ) );
   setDirection( reader->readValue("Direction", getDirection()) );
   setNumIterations( reader->readValue("NumIterations", getNumIterations()) );
   setXDirOn(reader->readValue("X Direction", getXDirOn()) );
@@ -144,9 +155,10 @@ void OpenCloseBadData::readFilterParameters(AbstractFilterParametersReader* read
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int OpenCloseBadData::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
+int ErodeDilateMask::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
+  writer->writeValue("SelectedArrayPath", getSelectedArrayPath() );
   writer->writeValue("Direction", getDirection() );
   writer->writeValue("NumIterations", getNumIterations() );
   writer->writeValue("X Direction", getXDirOn() );
@@ -159,26 +171,68 @@ int OpenCloseBadData::writeFilterParameters(AbstractFilterParametersWriter* writ
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void OpenCloseBadData::dataCheck()
+void ErodeDilateMask::dataCheck()
 {
   setErrorCondition(0);
 
-  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName(), false);
-  if(getErrorCondition() < 0 || NULL == m) { return; }
-  AttributeMatrix::Pointer cellAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), -301);
-  if(getErrorCondition() < 0 || NULL == cellAttrMat.get() ) { return; }
+  if (m_SelectedArrayPath.isEmpty() == true)
+  {
+    setErrorCondition(-11001);
+    QString ss = QObject::tr("The complete path to the Attribute Array can not be empty. Please set an appropriate path.");
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+  }
+  else
+  {
 
-  QVector<size_t> dims(1, 1);
-  m_FeatureIdsPtr = cellAttrMat->getPrereqArray<DataArray<int32_t>, AbstractFilter>(this, m_FeatureIdsArrayName, -301, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
-  { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+    QString dcName;
+    QString amName;
+    QString daName;
+
+    QStringList tokens = m_SelectedArrayPath.split(DREAM3D::PathSep);
+    // We should end up with 3 Tokens
+    if(tokens.size() != 3)
+    {
+      setErrorCondition(-11002);
+      QString ss = QObject::tr("The path to the Attribute Array is malformed. Each part should be separated by a '|' character.");
+      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    }
+    else
+    {
+      m_DataContainerName = tokens.at(0);
+      m_CellAttributeMatrixName = tokens.at(1);
+      m_MaskArrayName = tokens.at(2);
+
+      DataContainer::Pointer dc = getDataContainerArray()->getDataContainer(m_DataContainerName);
+      if(NULL == dc.get())
+      {
+        setErrorCondition(-11003);
+        QString ss = QObject::tr("The DataContainer '%1' was not found in the DataContainerArray").arg(dcName);
+        notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+        return;
+      }
+
+      AttributeMatrix::Pointer cellAttrMat = dc->getAttributeMatrix(m_CellAttributeMatrixName);
+       if(NULL == cellAttrMat.get())
+      {
+        setErrorCondition(-11004);
+        QString ss = QObject::tr("The AttributeMatrix '%1' was not found in the DataContainer '%2'").arg(amName).arg(dcName);
+        notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+        return;
+      }
+
+       QVector<size_t> dims(1, 1);
+       m_MaskPtr = cellAttrMat->getPrereqArray<DataArray<bool>, AbstractFilter>(this, m_MaskArrayName, -301, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+       if( NULL != m_MaskPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+       { m_Mask = m_MaskPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+    }
+  }
 }
 
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void OpenCloseBadData::preflight()
+void ErodeDilateMask::preflight()
 {
   emit preflightAboutToExecute();
   emit updateFilterParameters(this);
@@ -189,7 +243,7 @@ void OpenCloseBadData::preflight()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void OpenCloseBadData::execute()
+void ErodeDilateMask::execute()
 {
   setErrorCondition(0);
 
@@ -199,9 +253,8 @@ void OpenCloseBadData::execute()
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
   int64_t totalPoints = m->getAttributeMatrix(getCellAttributeMatrixName())->getNumTuples();
 
-  Int32ArrayType::Pointer neighborsPtr = Int32ArrayType::CreateArray(totalPoints, "Neighbors");
-  m_Neighbors = neighborsPtr->getPointer(0);
-  neighborsPtr->initializeWithValue(-1);
+  BoolArrayType::Pointer maskCopyPtr = BoolArrayType::CreateArray(totalPoints, "MaskCopy");
+  m_MaskCopy = maskCopyPtr->getPointer(0);
 
   size_t udims[3] = {0, 0, 0};
   m->getDimensions(udims);
@@ -219,19 +272,8 @@ void OpenCloseBadData::execute()
 
   int good = 1;
   size_t count = 0;
-  //size_t point = 0;
   int kstride, jstride;
-  int featurename, feature;
-  //int coordination = 0;
-  int current = 0;
-  int most = 0;
   int neighpoint;
-  size_t numfeatures = 0;
-  for(int64_t i = 0; i < totalPoints; i++)
-  {
-    featurename = m_FeatureIds[i];
-    if(featurename > numfeatures) { numfeatures = featurename; }
-  }
 
   int neighpoints[6];
   neighpoints[0] = static_cast<int>(-dims[0] * dims[1]);
@@ -240,9 +282,7 @@ void OpenCloseBadData::execute()
   neighpoints[3] = static_cast<int>(1);
   neighpoints[4] = static_cast<int>(dims[0]);
   neighpoints[5] = static_cast<int>(dims[0] * dims[1]);
-  QVector<int> currentvlist;
 
-  QVector<int > n(numfeatures + 1, 0);
   for (int iteration = 0; iteration < m_NumIterations; iteration++)
   {
     for (int k = 0; k < dims[2]; k++)
@@ -255,11 +295,9 @@ void OpenCloseBadData::execute()
         {
           count = kstride + jstride + i;
 
-          featurename = m_FeatureIds[count];
-          if (featurename == 0)
+          m_MaskCopy[count] = m_Mask[count];
+          if (m_Mask[count] == false)
           {
-            current = 0;
-            most = 0;
             for (int l = 0; l < 6; l++)
             {
               good = 1;
@@ -272,39 +310,13 @@ void OpenCloseBadData::execute()
               else if (l == 3 && (i == (dims[0] - 1) || m_XDirOn == false)) { good = 0; }
               if (good == 1)
               {
-                feature = m_FeatureIds[neighpoint];
-                if (m_Direction == 0 && feature > 0)
+                if (m_Direction == 0 && m_Mask[neighpoint] == true)
                 {
-                  m_Neighbors[neighpoint] = count;
+                  m_MaskCopy[count] = true;
                 }
-                if ((feature > 0 && m_Direction == 1))
+                if (m_Direction == 1 && m_Mask[neighpoint] == true)
                 {
-                  n[feature]++;
-                  current = n[feature];
-                  if (current > most)
-                  {
-                    most = current;
-                    m_Neighbors[count] = neighpoint;
-                  }
-                }
-              }
-            }
-            if (m_Direction == 1)
-            {
-              for (int l = 0; l < 6; l++)
-              {
-                good = 1;
-                neighpoint = static_cast<int>( count + neighpoints[l] );
-                if (l == 0 && k == 0) { good = 0; }
-                if (l == 5 && k == (dims[2] - 1)) { good = 0; }
-                if (l == 1 && j == 0) { good = 0; }
-                if (l == 4 && j == (dims[1] - 1)) { good = 0; }
-                if (l == 2 && i == 0) { good = 0; }
-                if (l == 3 && i == (dims[0] - 1)) { good = 0; }
-                if (good == 1)
-                {
-                  feature = m_FeatureIds[neighpoint];
-                  n[feature] = 0;
+                  m_MaskCopy[neighpoint] = false;
                 }
               }
             }
@@ -312,24 +324,9 @@ void OpenCloseBadData::execute()
         }
       }
     }
-    QList<QString> voxelArrayNames = m->getAttributeMatrix(getCellAttributeMatrixName())->getAttributeArrayNameList();
     for (size_t j = 0; j < totalPoints; j++)
     {
-      featurename = m_FeatureIds[j];
-      int neighbor = m_Neighbors[j];
-      if (neighbor >= 0)
-      {
-        if ( (featurename == 0 && m_FeatureIds[neighbor] > 0 && m_Direction == 1)
-             || (featurename > 0 && m_FeatureIds[neighbor] == 0 && m_Direction == 0))
-        {
-          for(QList<QString>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
-          {
-            QString name = *iter;
-            IDataArray::Pointer p = m->getAttributeMatrix(getCellAttributeMatrixName())->getAttributeArray(*iter);
-            p->copyTuple(neighbor, j);
-          }
-        }
-      }
+      m_Mask[j] = m_MaskCopy[j];
     }
   }
 
