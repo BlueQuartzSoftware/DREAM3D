@@ -583,9 +583,9 @@ size_t PatchGroupMicroTextureRegions::determinePatchFeatureCentroids()
 //  QVector<int> patchIds(totalPoints, 0);
   size_t zPatch;
   if (udims[2] == 1) zPatch = 1;
-  else zPatch = floor(udims[2] / m_PatchEdgeLength);
+  else zPatch = int(udims[2] / m_PatchEdgeLength);
 
-  size_t totalPatches = floor(udims[0] / m_PatchEdgeLength) * floor(udims[1] / m_PatchEdgeLength) * zPatch;
+  size_t totalPatches = int(udims[0] / m_PatchEdgeLength) * int(udims[1] / m_PatchEdgeLength) * zPatch;
   patchFeatureVolumeFractions.resize(totalPatches+1);
   for (int i = 0; i < totalPatches; i++)
   {
@@ -639,9 +639,9 @@ size_t PatchGroupMicroTextureRegions::determinePatchFeatureCentroids()
 	{
       for(size_t k = 0; k < xPoints; k++)
 	  {
-		patchIntervalZ = int(floor(i/m_PatchEdgeLength)) * int(zPoints/m_PatchEdgeLength);
-		patchIntervalY = int(floor(j/m_PatchEdgeLength)) * int(yPoints/m_PatchEdgeLength);
-	    patchIntervalX = int(floor(k/m_PatchEdgeLength));
+		patchIntervalZ = int(int(i/m_PatchEdgeLength)) * int(zPoints/m_PatchEdgeLength);
+		patchIntervalY = int(int(j/m_PatchEdgeLength)) * int(yPoints/m_PatchEdgeLength);
+	    patchIntervalX = int(int(k/m_PatchEdgeLength));
 		patchnum = patchIntervalZ + patchIntervalY + patchIntervalX;
 		m_CellParentIds[count] = patchnum + 1;
         x = float(k) * xRes;

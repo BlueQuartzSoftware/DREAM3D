@@ -316,13 +316,13 @@ void ErodeDilateCoordinationNumber::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer OpenCloseCoordinationNumber::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer ErodeDilateCoordinationNumber::newFilterInstance(bool copyFilterParameters)
 {
   /*
   * Loop
   * CoordinationNumber
   */
-  OpenCloseCoordinationNumber::Pointer filter = OpenCloseCoordinationNumber::New();
+  ErodeDilateCoordinationNumber::Pointer filter = ErodeDilateCoordinationNumber::New();
   if(true == copyFilterParameters)
   {
     filter->setCoordinationNumber( getCoordinationNumber() );

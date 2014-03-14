@@ -340,7 +340,7 @@ void ErodeDilateBadData::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer OpenCloseBadData::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer ErodeDilateBadData::newFilterInstance(bool copyFilterParameters)
 {
   /*
   * Direction
@@ -349,7 +349,7 @@ AbstractFilter::Pointer OpenCloseBadData::newFilterInstance(bool copyFilterParam
   * YDirOn
   * ZDirOn
   */
-  OpenCloseBadData::Pointer filter = OpenCloseBadData::New();
+  ErodeDilateBadData::Pointer filter = ErodeDilateBadData::New();
   if(true == copyFilterParameters)
   {
     filter->setDirection( getDirection() );
