@@ -39,6 +39,8 @@
 #include "DREAM3DLib/Math/MatrixMath.h"
 #include "DREAM3DLib/Math/DREAM3DMath.h"
 #include "DREAM3DLib/Common/Constants.h"
+#include "DREAM3DLib/Math/OrientationMath.h"
+
 
 // -----------------------------------------------------------------------------
 //
@@ -213,3 +215,18 @@ void FindSchmids::execute()
   notifyStatusMessage(getHumanLabel(), "FindSchmids Completed");
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AbstractFilter::Pointer FindSchmids::newFilterInstance(bool copyFilterParameters)
+{
+  /*
+  * LoadingDir
+  */
+  FindSchmids::Pointer filter = FindSchmids::New();
+  if(true == copyFilterParameters)
+  {
+    filter->setLoadingDir( getLoadingDir() );
+  }
+  return filter;
+}

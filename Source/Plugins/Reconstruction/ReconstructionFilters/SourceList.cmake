@@ -24,6 +24,7 @@ set(_PublicFilters
   GroupMicroTextureRegions
   ScalarSegmentFeatures
   VectorSegmentFeatures
+  PatchGroupMicroTextureRegions
 )
 
 #--------------

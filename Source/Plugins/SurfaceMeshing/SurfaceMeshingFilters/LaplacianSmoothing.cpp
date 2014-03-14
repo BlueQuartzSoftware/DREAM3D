@@ -41,19 +41,19 @@
 #include <sstream>
 
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Math/DREAM3DMath.h"
-#include "DREAM3DLib/Utilities/DREAM3DEndian.h"
-#include "DREAM3DLib/DataContainers/MeshStructs.h"
-#include "SurfaceMeshing/SurfaceMeshingFilters/GenerateUniqueEdges.h"
-#include "SurfaceMeshing/SurfaceMeshingFilters/util/Vector3.h"
-
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
 #include <tbb/parallel_for.h>
 #include <tbb/blocked_range.h>
 #include <tbb/partitioner.h>
 #endif
 
+
+#include "DREAM3DLib/DREAM3DLib.h"
+#include "DREAM3DLib/Math/DREAM3DMath.h"
+#include "DREAM3DLib/Utilities/DREAM3DEndian.h"
+#include "DREAM3DLib/DataContainers/MeshStructs.h"
+#include "SurfaceMeshing/SurfaceMeshingFilters/GenerateUniqueEdges.h"
+#include "SurfaceMeshing/SurfaceMeshingFilters/util/Vector3.h"
 
 /**
  * @brief The LaplacianSmoothingImpl class is the actual code that does the computation and can be called either
@@ -510,7 +510,7 @@ int LaplacianSmoothing::edgeBasedSmoothing()
   {
     if (getCancel() == true) { return -1; }
     QString ss = QObject::tr("Iteration %1").arg(q);
-    notifyStatusMessage(getHumanLabel(), ss);
+    notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
     for (int i = 0; i < nedges; i++)
     {
       int in_edge = 2 * i;
@@ -636,7 +636,7 @@ int LaplacianSmoothing::vertexBasedSmoothing()
   {
     if (getCancel() == true) { return -1; }
     QString ss = QObject::tr("Iteration %1").arg(q);
-    notifyStatusMessage(getHumanLabel(), ss);
+    notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
     if (doParallel == true)
     {
@@ -811,3 +811,30 @@ void LaplacianSmoothing::writeVTKFile(const QString& outputVtkFile)
 
 #endif
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AbstractFilter::Pointer LaplacianSmoothing::newFilterInstance(bool copyFilterParameters)
+{
+  /*
+  * IterationSteps
+  * Lambda
+  * SurfacePointLambda
+  * TripleLineLambda
+  * QuadPointLambda
+  * SurfaceTripleLineLambda
+  * SurfaceQuadPointLambda
+  */
+  LaplacianSmoothing::Pointer filter = LaplacianSmoothing::New();
+  if(true == copyFilterParameters)
+  {
+    filter->setIterationSteps( getIterationSteps() );
+    filter->setLambda( getLambda() );
+    filter->setTripleLineLambda( getTripleLineLambda() );
+    filter->setQuadPointLambda( getQuadPointLambda() );
+    filter->setSurfacePointLambda( getSurfacePointLambda() );
+    filter->setSurfaceTripleLineLambda( getSurfaceTripleLineLambda() );
+    filter->setSurfaceQuadPointLambda( getSurfaceQuadPointLambda() );
+  }
+  return filter;
+}

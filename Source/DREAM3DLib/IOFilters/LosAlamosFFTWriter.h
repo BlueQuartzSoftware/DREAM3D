@@ -66,10 +66,8 @@ class DREAM3DLib_EXPORT LosAlamosFFTWriter : public FileWriter
     DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
 
-    //------ Required Cell Data
-
-
     virtual const QString getCompiledLibraryName() { return IO::IOBaseName; }
+    virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::OutputFilters; }
     virtual const QString getHumanLabel() { return "Write Los Alamos FFT File"; }
@@ -115,6 +113,7 @@ signals:
 };
 
 #endif /* _LosAlamosFFTWriter_H_ */
+
 
 
 

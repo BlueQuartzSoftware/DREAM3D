@@ -59,15 +59,15 @@ VisualizeGBCDPoleFigure::VisualizeGBCDPoleFigure() :
   m_SurfaceDataContainerName(DREAM3D::Defaults::SurfaceDataContainerName),
   m_FaceEnsembleAttributeMatrixName(DREAM3D::Defaults::FaceEnsembleAttributeMatrixName),
   m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
-  m_MisAngle(60.0f),
   m_OutputFile(""),
   m_CrystalStructure(Ebsd::CrystalStructure::UnknownCrystalStructure),
   m_GBCDArrayName(DREAM3D::EnsembleData::GBCD),
   m_GBCD(NULL)
 {
-  m_MisAxis.x = 1;
-  m_MisAxis.y = 1;
-  m_MisAxis.z = 1;
+  m_MisorientationRotation.angle = 0.0f;
+  m_MisorientationRotation.h = 0.0f;
+  m_MisorientationRotation.k = 0.0f;
+  m_MisorientationRotation.l = 0.0f;
 
   m_OrientationOps = OrientationOps::getOrientationOpsVector();
   setupFilterParameters();
@@ -110,30 +110,31 @@ void VisualizeGBCDPoleFigure::setupFilterParameters()
   {
     FilterParameter::Pointer parameter = FilterParameter::New();
     parameter->setHumanLabel("Misorientation Axis Angles");
-    parameter->setPropertyName("MisorientationRotations");
+    parameter->setPropertyName("MisorientationRotation");
     parameter->setWidgetType(FilterParameterWidgetType::AxisAngleWidget);
+    parameter->setCastableValueType("AxisAngleInput_t");
     parameters.push_back(parameter);
   }
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setPropertyName("MisAngle");
-    parameter->setHumanLabel("Misorientation Angle");
-    parameter->setWidgetType(FilterParameterWidgetType::DoubleWidget);
-    parameter->setValueType("float");
-    parameter->setCastableValueType("double");
-    parameter->setUnits("Degrees");
-    parameters.push_back(parameter);
-  }
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
+//  {
+//    FilterParameter::Pointer parameter = FilterParameter::New();
+//    parameter->setPropertyName("MisAngle");
+//    parameter->setHumanLabel("Misorientation Angle");
+//    parameter->setWidgetType(FilterParameterWidgetType::DoubleWidget);
+//    parameter->setValueType("float");
+//    parameter->setCastableValueType("double");
+//    parameter->setUnits("Degrees");
+//    parameters.push_back(parameter);
+//  }
+//  {
+//    FilterParameter::Pointer parameter = FilterParameter::New();
 
-    parameter->setHumanLabel("Misorientation Axis");
-    parameter->setPropertyName("MisAxis");
-    parameter->setWidgetType(FilterParameterWidgetType::FloatVec3Widget);
-    parameter->setValueType("FloatVec3_t");
-    parameter->setUnits("");
-    parameters.push_back(parameter);
-  }
+//    parameter->setHumanLabel("Misorientation Axis");
+//    parameter->setPropertyName("MisAxis");
+//    parameter->setWidgetType(FilterParameterWidgetType::FloatVec3Widget);
+//    parameter->setValueType("FloatVec3_t");
+//    parameter->setUnits("");
+//    parameters.push_back(parameter);
+//  }
   {
     FilterParameter::Pointer parameter = FilterParameter::New();
     parameter->setHumanLabel("Regular Grid Pole Figure");
@@ -155,10 +156,10 @@ void VisualizeGBCDPoleFigure::readFilterParameters(AbstractFilterParametersReade
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
   /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
-  setMisAngle( reader->readValue("MisAngle", getMisAngle()) );
-  setMisAxis( reader->readFloatVec3("MisAxis", getMisAxis() ) );
+//  setMisAngle( reader->readValue("MisAngle", getMisAngle()) );
+//  setMisAxis( reader->readFloatVec3("MisAxis", getMisAxis() ) );
   setOutputFile( reader->readString( "OutputFile", getOutputFile() ) );
-  setMisorientationRotations(reader->readAxisAngles("MisorientationRotations", getMisorientationRotations() ) );
+  setMisorientationRotation(reader->readAxisAngle("MisorientationRotation", getMisorientationRotation(), -1) );
   setCrystalStructure(reader->readValue("CrystalStructure", getCrystalStructure() ) );
   /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
@@ -170,10 +171,10 @@ void VisualizeGBCDPoleFigure::readFilterParameters(AbstractFilterParametersReade
 int VisualizeGBCDPoleFigure::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  writer->writeValue("MisorientationAngle", getMisAngle() );
-  writer->writeValue("MisorientationAxis", getMisAxis() );
+ // writer->writeValue("MisorientationAngle", getMisAngle() );
+ // writer->writeValue("MisorientationAxis", getMisAxis() );
   writer->writeValue("OutputFile", getOutputFile() );
-  writer->writeValue("MisorientationRotations", getMisorientationRotations() );
+  writer->writeValue("MisorientationRotation", getMisorientationRotation() );
   writer->writeValue("CrystalStructure", getCrystalStructure() );
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
@@ -371,9 +372,9 @@ void VisualizeGBCDPoleFigure::execute()
   float sym2t[3][3];
   float mis_euler1[3];
 
-  m_MisAngle = m_MisAngle * m_pi/180.0f;
+  float misAngle = m_MisorientationRotation.angle * DREAM3D::Constants::k_PiOver180;
   //convert axis angle to matrix representation of misorientation
-  OrientationMath::AxisAngletoMat(m_MisAngle, m_MisAxis.x, m_MisAxis.y, m_MisAxis.z, dg);
+  OrientationMath::AxisAngletoMat(misAngle, m_MisorientationRotation.h, m_MisorientationRotation.k, m_MisorientationRotation.l, dg);
   //take inverse of misorientation variable to use for switching symmetry
   MatrixMath::Transpose3x3(dg, dgt);
 
@@ -439,7 +440,7 @@ void VisualizeGBCDPoleFigure::execute()
             MatrixMath::Multiply3x3with3x3(sym1,dg1,dg2);
             //convert to euler angle
             OrientationMath::MattoEuler(dg2, mis_euler1[0], mis_euler1[1], mis_euler1[2]);
-            if(mis_euler1[0] < m_piOver2 && mis_euler1[1] < m_piOver2 && mis_euler1[2] < m_piOver2)
+            if(mis_euler1[0] < DREAM3D::Constants::k_PiOver2 && mis_euler1[1] < DREAM3D::Constants::k_PiOver2 && mis_euler1[2] < DREAM3D::Constants::k_PiOver2)
             {
               mis_euler1[1] = cosf(mis_euler1[1]);
               //find bins in GBCD
@@ -470,7 +471,7 @@ void VisualizeGBCDPoleFigure::execute()
             MatrixMath::Multiply3x3with3x3(sym1,dg1,dg2);
             //convert to euler angle
             OrientationMath::MattoEuler(dg2, mis_euler1[0], mis_euler1[1], mis_euler1[2]);
-            if(mis_euler1[0] < m_piOver2 && mis_euler1[1] < m_piOver2 && mis_euler1[2] < m_piOver2)
+            if(mis_euler1[0] < DREAM3D::Constants::k_PiOver2 && mis_euler1[1] < DREAM3D::Constants::k_PiOver2 && mis_euler1[2] < DREAM3D::Constants::k_PiOver2)
             {
               mis_euler1[1] = cosf(mis_euler1[1]);
               //find bins in GBCD
@@ -557,6 +558,9 @@ void VisualizeGBCDPoleFigure::execute()
   notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 bool VisualizeGBCDPoleFigure::getSquareCoord(float* xstl1_norm1, float* sqCoord)
 {
   bool nhCheck = false;
@@ -577,4 +581,23 @@ bool VisualizeGBCDPoleFigure::getSquareCoord(float* xstl1_norm1, float* sqCoord)
     sqCoord[1] = (xstl1_norm1[1] / fabs(xstl1_norm1[1])) * sqrt(2.0 * 1.0 * (1.0 + (xstl1_norm1[2] * adjust))) * (DREAM3D::Constants::k_SqrtPi / 2.0);
   }
   return nhCheck;
+}
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AbstractFilter::Pointer VisualizeGBCDPoleFigure::newFilterInstance(bool copyFilterParameters)
+{
+  /*
+  * OutputFile
+  * CrystalStructure
+  * MisorientationRotation
+  */
+  VisualizeGBCDPoleFigure::Pointer filter = VisualizeGBCDPoleFigure::New();
+  if(true == copyFilterParameters)
+  {
+    filter->setCrystalStructure( getCrystalStructure() );
+    filter->setMisorientationRotation( getMisorientationRotation() );
+    filter->setOutputFile( getOutputFile() );
+  }
+  return filter;
 }

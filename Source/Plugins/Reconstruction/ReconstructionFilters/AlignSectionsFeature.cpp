@@ -208,7 +208,7 @@ void AlignSectionsFeature::find_shifts(QVector<int>& xshifts, QVector<int>& yshi
   {
 
     QString ss = QObject::tr("Aligning Sections - Determining Shifts - %1 Percent Complete").arg(((float)iter / dims[2]) * 100);
-    //  notifyStatusMessage(getHumanLabel(), ss);
+    //  notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
     mindisorientation = 100000000;
     slice = static_cast<int>( (dims[2] - 1) - iter );
     oldxshift = -1;
@@ -275,4 +275,17 @@ void AlignSectionsFeature::find_shifts(QVector<int>& xshifts, QVector<int>& yshi
   {
     outFile.close();
   }
+}
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AbstractFilter::Pointer AlignSectionsFeature::newFilterInstance(bool copyFilterParameters)
+{
+  /*
+  */
+  AlignSectionsFeature::Pointer filter = AlignSectionsFeature::New();
+  if(true == copyFilterParameters)
+  {
+  }
+  return filter;
 }

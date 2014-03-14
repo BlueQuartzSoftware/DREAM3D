@@ -253,3 +253,18 @@ void FlattenImage::execute()
   notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AbstractFilter::Pointer FlattenImage::newFilterInstance(bool copyFilterParameters)
+{
+  /*
+  * FlattenMethod
+  */
+  FlattenImage::Pointer filter = FlattenImage::New();
+  if(true == copyFilterParameters)
+  {
+    filter->setFlattenMethod( getFlattenMethod() );
+  }
+  return filter;
+}

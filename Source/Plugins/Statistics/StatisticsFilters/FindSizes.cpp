@@ -225,3 +225,16 @@ void FindSizes::find_sizes2D()
 }
 
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AbstractFilter::Pointer FindSizes::newFilterInstance(bool copyFilterParameters)
+{
+  /*
+  */
+  FindSizes::Pointer filter = FindSizes::New();
+  if(true == copyFilterParameters)
+  {
+  }
+  return filter;
+}

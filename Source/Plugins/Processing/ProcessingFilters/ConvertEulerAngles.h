@@ -61,12 +61,13 @@ class ConvertEulerAngles : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
 
-    DREAM3D_FILTER_PARAMETER(uint32_t, ConversionType)
-    Q_PROPERTY(uint32_t ConversionType READ getConversionType WRITE setConversionType)
+    DREAM3D_FILTER_PARAMETER(int, ConversionType)
+    Q_PROPERTY(int ConversionType READ getConversionType WRITE setConversionType)
 
     virtual void preflight();
 
     virtual const QString getCompiledLibraryName() { return Processing::ProcessingBaseName; }
+    virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName()  { return DREAM3D::FilterGroups::ProcessingFilters; }
     virtual const QString getSubGroupName()  { return DREAM3D::FilterSubGroups::ConversionFilters; }
     virtual const QString getHumanLabel() { return "Convert Euler Angles"; }
@@ -108,6 +109,7 @@ signals:
 };
 
 #endif /* CONVERTEULERANGLES_H_ */
+
 
 
 

@@ -301,7 +301,7 @@ void ImportImageStack::execute()
   {
     QString imageFName = *filepath;
     QString ss = QObject::tr("Importing file %1").arg(imageFName);
-    notifyStatusMessage(getHumanLabel(), ss);
+    notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
 
     QImage image(imageFName);
     if (image.isNull() == true)
@@ -354,3 +354,18 @@ void ImportImageStack::execute()
   notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AbstractFilter::Pointer ImportImageStack::newFilterInstance(bool copyFilterParameters)
+{
+  /*
+  * ImageStack
+  */
+  ImportImageStack::Pointer filter = ImportImageStack::New();
+  if(true == copyFilterParameters)
+  {
+    filter->setImageStack( getImageStack() );
+  }
+  return filter;
+}

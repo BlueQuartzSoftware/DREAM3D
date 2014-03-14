@@ -349,3 +349,22 @@ void NeighborOrientationCorrelation::execute()
   notifyStatusMessage(getHumanLabel(), "Filling Bad Data Complete");
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AbstractFilter::Pointer NeighborOrientationCorrelation::newFilterInstance(bool copyFilterParameters)
+{
+  /*
+  * MisorientationTolerance
+  * MinConfidence
+  * Level
+  */
+  NeighborOrientationCorrelation::Pointer filter = NeighborOrientationCorrelation::New();
+  if(true == copyFilterParameters)
+  {
+    filter->setMinConfidence( getMinConfidence() );
+    filter->setMisorientationTolerance( getMisorientationTolerance() );
+    filter->setLevel( getLevel() );
+  }
+  return filter;
+}

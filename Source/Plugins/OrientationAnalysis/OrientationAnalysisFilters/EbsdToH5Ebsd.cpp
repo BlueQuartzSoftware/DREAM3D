@@ -581,3 +581,28 @@ void EbsdToH5Ebsd::execute()
   fileId = -1;
   notifyStatusMessage(getHumanLabel(), "Import Complete");
 }
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AbstractFilter::Pointer EbsdToH5Ebsd::newFilterInstance(bool copyFilterParameters)
+{
+  /*
+  */
+  EbsdToH5Ebsd::Pointer filter = EbsdToH5Ebsd::New();
+  if(true == copyFilterParameters)
+  {
+    filter->setOutputFile( getOutputFile() );
+    filter->setZStartIndex( getZStartIndex() );
+    filter->setZEndIndex( getZEndIndex() );
+    filter->setZResolution( getZResolution() );
+    filter->setRefFrameZDir(getRefFrameZDir() );
+    filter->setInputPath(getInputPath() );
+    filter->setFilePrefix(getFilePrefix() );
+    filter->setFileSuffix(getFileSuffix() );
+    filter->setFileExtension(getFileExtension() );
+    filter->setPaddingDigits(getPaddingDigits() );
+    filter->setSampleTransformation(getSampleTransformation() );
+    filter->setEulerTransformation(getEulerTransformation() );
+  }
+  return filter;
+}

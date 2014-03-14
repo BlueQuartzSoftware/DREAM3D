@@ -41,6 +41,8 @@
 #include <QtCore/QFileInfo>
 #include <QtCore/QUrl>
 #include <QtCore/QDir>
+#include <QtCore/QTemporaryFile>
+
 #include <QtGui/QMouseEvent>
 #include <QtGui/QDropEvent>
 #include <QtGui/QDragEnterEvent>
@@ -64,11 +66,11 @@
 #include "DREAM3DLib/FilterParameters/QFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/QFilterParametersWriter.h"
 
-
+#include "DREAM3DWidgetsLib/FilterWidgetManager.h"
 #include "QtSupport/QDroppableScrollArea.h"
 
-#include "DREAM3DWidgetsLib/moc_PipelineViewWidget.cpp"
 
+#include "DREAM3DWidgetsLib/FilterParameterWidgets/FilterParameterWidgetsDialogs.h"
 
 // -----------------------------------------------------------------------------
 //
@@ -90,6 +92,13 @@ PipelineViewWidget::PipelineViewWidget(QWidget* parent) :
   setupGui();
   m_LastDragPoint = QPoint(-1, -1);
   m_autoScrollTimer.setParent(this);
+
+  setContextMenuPolicy(Qt::CustomContextMenu);
+
+  connect(this,
+          SIGNAL(customContextMenuRequested(const QPoint&)),
+          SLOT(on_customContextMenuRequested(const QPoint&)));
+
 }
 
 // -----------------------------------------------------------------------------
@@ -170,8 +179,9 @@ void PipelineViewWidget::newEmptyPipelineViewLayout()
     QSpacerItem* verticalSpacer_2 = new QSpacerItem(20, 341, QSizePolicy::Minimum, QSizePolicy::Expanding);
 
     gridLayout->addItem(verticalSpacer_2, 2, 1, 1, 1);
-
   }
+  emit pipelineTitleUpdated(QString("Untitled Pipeline"));
+  emit pipelineChanged();
 }
 
 
@@ -240,6 +250,7 @@ void PipelineViewWidget::resetLayout()
 void PipelineViewWidget::clearWidgets()
 {
   emit pipelineIssuesCleared();
+  emit pipelineChanged();
 
   qint32 count = filterCount();
   for(qint32 i = count - 1; i >= 0; --i)
@@ -261,7 +272,7 @@ void PipelineViewWidget::clearWidgets()
 // -----------------------------------------------------------------------------
 FilterPipeline::Pointer PipelineViewWidget::getFilterPipeline()
 {
-    // Create a Pipeline Object and fill it with the filters from this View
+  // Create a Pipeline Object and fill it with the filters from this View
   FilterPipeline::Pointer pipeline = FilterPipeline::New();
 
   qint32 count = filterCount();
@@ -281,6 +292,60 @@ FilterPipeline::Pointer PipelineViewWidget::getFilterPipeline()
   return pipeline;
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+FilterPipeline::Pointer PipelineViewWidget::copyFilterPipeline()
+{
+  /// Worlds worst kludge for getting a copy of the Filter Pipeline. We write the pipeline to a temp file and thne read
+  /// the pipeline back into a new FilterPipeline Object. There were a few reasons for this choice of algorithm. I tried
+  /// to dynamically read the Q_PROPERTY for each Filter Parameter but with custom widgets there is NOT a 1-to-1 relationship
+  /// between the filter parameters and the Q_PROPERTY so that does not work. I thought about implementing a
+  /// "newFilterInstanceWithFilterParameters()" function in every filter but thought that if the developer does NOT keep
+  /// this updated there could be issues. Using the Writer/Reader the programmer can _still_ mess this up if they do not
+  /// update their Parameter read and write functions which is probably just as bad as the second option from above.
+  ///
+
+
+  // Create a Pipeline Object and fill it with the filters from this View
+ // Create a Pipeline Object and fill it with the filters from this View
+  FilterPipeline::Pointer pipeline = FilterPipeline::New();
+
+  qint32 count = filterCount();
+  for(qint32 i = 0; i < count; ++i)
+  {
+    PipelineFilterWidget* fw = filterWidgetAt(i);
+    if (fw)
+    {
+      fw->setHasPreflightErrors(false);
+      AbstractFilter::Pointer filter = fw->getFilter()->newFilterInstance(true);
+      filter->setErrorCondition(0); // Reset the error condition as we are going to preflight
+      pipeline->pushBack(filter);
+    }
+
+  }
+
+#if 0
+  // now write it out to a normal Pipeline File
+  QString tempPath;
+  QTemporaryFile file;
+  if (file.open()) {
+    tempPath = file.fileName();// returns the unique file name
+  }
+  file.close(); // Close up the file
+  int err = QFilterParametersWriter::WritePipelineToFile(pipeline, tempPath, "Current Pipeline", QSettings::IniFormat, dynamic_cast<IObserver*>(m_PipelineMessageObserver));
+  if (err < 0)
+  {
+    return FilterPipeline::NullPointer();
+  }
+
+  // Now Read it back into a new Pipeline Object
+  pipeline = QFilterParametersReader::ReadPipelineFromFile(tempPath,  QSettings::IniFormat, dynamic_cast<IObserver*>(m_PipelineMessageObserver) );
+#endif
+
+  pipeline->addMessageReceiver(m_PipelineMessageObserver);
+  return pipeline;
+}
 
 // -----------------------------------------------------------------------------
 //
@@ -338,6 +403,7 @@ void PipelineViewWidget::loadPipelineFile(const QString& filePath, QSettings::Fo
 
   // Now preflight the pipeline for this filter.
   preflightPipeline();
+  if (append == true ) { emit pipelineChanged(); }
 }
 
 // -----------------------------------------------------------------------------
@@ -424,13 +490,13 @@ void PipelineViewWidget::addFilterWidget(PipelineFilterWidget* w, AbstractFilter
   // Conditionally when the filter widget is selected, show the inputs on another widget
   if (NULL != m_InputParametersWidget) {
     connect(w, SIGNAL(widgetSelected(PipelineFilterWidget*)),
-          m_InputParametersWidget, SLOT(displayFilterParameters(PipelineFilterWidget*)));
+            m_InputParametersWidget, SLOT(displayFilterParameters(PipelineFilterWidget*)));
     connect(w, SIGNAL(filterWidgetRemoved(PipelineFilterWidget*)),
-          m_InputParametersWidget, SLOT(removeWidgetInputs(PipelineFilterWidget*)));
+            m_InputParametersWidget, SLOT(removeWidgetInputs(PipelineFilterWidget*)));
   }
 
   connect(w, SIGNAL(parametersChanged()),
-    this, SLOT(preflightPipeline()));
+          this, SLOT(preflightPipeline()));
 
   // Check to make sure at least the vertical spacer is in the Layout
   if (addSpacer)
@@ -441,6 +507,8 @@ void PipelineViewWidget::addFilterWidget(PipelineFilterWidget* w, AbstractFilter
 
   // Finally, set this new filter widget as selected in order to show the input parameters right away
   w->setIsSelected(true);
+  // Emit that the pipeline changed
+  emit pipelineChanged();
 }
 
 // -----------------------------------------------------------------------------
@@ -448,9 +516,6 @@ void PipelineViewWidget::addFilterWidget(PipelineFilterWidget* w, AbstractFilter
 // -----------------------------------------------------------------------------
 void PipelineViewWidget::preflightPipeline()
 {
-
- // std::cout << "PipelineViewWidget::preflightPipeline()" << std::endl;
-
   emit pipelineIssuesCleared();
   // Create a Pipeline Object and fill it with the filters from this View
   FilterPipeline::Pointer pipeline = getFilterPipeline();
@@ -462,7 +527,7 @@ void PipelineViewWidget::preflightPipeline()
   int err = pipeline->preflightPipeline();
   if (err < 0)
   {
-  //FIXME: Implement this
+    //FIXME: Implement this
   }
   progress.setValue(1);
 
@@ -503,6 +568,7 @@ void PipelineViewWidget::removeFilterWidget(PipelineFilterWidget* whoSent)
   preflightPipeline();
 
   resetLayout();
+  emit pipelineChanged();
 }
 
 // -----------------------------------------------------------------------------
@@ -605,12 +671,12 @@ void PipelineViewWidget::dragMoveEvent( QDragMoveEvent* event)
     // Check to see if we are trying to move it to the end
     if (false == didInsert && count > 0)
     {
-      PipelineFilterWidget* w = qobject_cast<PipelineFilterWidget*>(m_FilterWidgetLayout->itemAt(count - 1)->widget());
+      PipelineFilterWidget* w = qobject_cast<PipelineFilterWidget*>(m_FilterWidgetLayout->itemAt(count - 2)->widget());
       if(w != NULL && m_FilterBeingDragged != NULL && w != m_FilterBeingDragged)
       {
         if(event->pos().y() > w->geometry().y() + w->geometry().height())
         {
-          m_FilterWidgetLayout->insertWidget(count - 1, m_FilterBeingDragged);
+          m_FilterWidgetLayout->insertWidget(count - 2, m_FilterBeingDragged);
           setSelectedFilterWidget(m_FilterBeingDragged);
         }
       }
@@ -672,6 +738,8 @@ void PipelineViewWidget::dropEvent(QDropEvent* event)
 
   // Stop auto scrolling if widget is dropped
   stopAutoScroll();
+
+  emit pipelineChanged();
 }
 
 // -----------------------------------------------------------------------------
@@ -752,4 +820,35 @@ bool PipelineViewWidget::shouldAutoScroll(const QPoint& pos)
     return true;
   }
   return false;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void PipelineViewWidget::setContextMenuActions(QList<QAction*> list)
+{
+  m_MenuActions = list;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void PipelineViewWidget::on_customContextMenuRequested(const QPoint& pos)
+{
+  // Note: We must map the point to global from the viewport to
+  // account for the header.
+  showContextMenu(mapToGlobal(pos) );
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void PipelineViewWidget::showContextMenu(const QPoint& globalPos)
+{
+  m_Menu.clear();
+  for (int i=0; i<m_MenuActions.size(); i++)
+  {
+    m_Menu.addAction(m_MenuActions[i]);
+  }
+  m_Menu.exec(globalPos);
 }

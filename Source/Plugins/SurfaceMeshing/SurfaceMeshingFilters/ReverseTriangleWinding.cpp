@@ -223,3 +223,16 @@ void ReverseTriangleWinding::execute()
   notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AbstractFilter::Pointer ReverseTriangleWinding::newFilterInstance(bool copyFilterParameters)
+{
+  /*
+  */
+  ReverseTriangleWinding::Pointer filter = ReverseTriangleWinding::New();
+  if(true == copyFilterParameters)
+  {
+  }
+  return filter;
+}

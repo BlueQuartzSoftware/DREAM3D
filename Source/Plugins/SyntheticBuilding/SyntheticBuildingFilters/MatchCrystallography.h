@@ -89,6 +89,7 @@ class MatchCrystallography : public AbstractFilter
     Q_PROPERTY(int MaxIterations READ getMaxIterations WRITE setMaxIterations)
 
     virtual const QString getCompiledLibraryName() { return SyntheticBuilding::SyntheticBuildingBaseName; }
+    virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName() {return DREAM3D::FilterGroups::SyntheticBuildingFilters;}
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::CrystallographyFilters; }
     virtual const QString getHumanLabel() {return "Match Crystallography";}
@@ -179,6 +180,7 @@ class MatchCrystallography : public AbstractFilter
 };
 
 #endif /* MATCHCRYSTALLOGRAPHY_H_ */
+
 
 
 

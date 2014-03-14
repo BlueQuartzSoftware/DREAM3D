@@ -76,6 +76,7 @@ class AlignSectionsMutualInformation : public AlignSections
     DREAM3D_DECLARE_ARRAY(int, featurecounts, FeatureCounts)
 
     virtual const QString getCompiledLibraryName() { return Reconstruction::ReconstructionBaseName; }
+    virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::ReconstructionFilters; }
     virtual const QString getSubGroupName() {return DREAM3D::FilterSubGroups::AlignmentFilters;}
     virtual const QString getHumanLabel() { return "Align Sections (Mutual Information)"; }
@@ -130,5 +131,6 @@ class AlignSectionsMutualInformation : public AlignSections
 };
 
 #endif /* AlignSectionsMutualInformation_H_ */
+
 
 

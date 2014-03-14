@@ -655,3 +655,76 @@ void GenericExample::execute()
   notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AbstractFilter::Pointer GenericExample::newFilterInstance(bool copyFilterParameters)
+{
+  /*
+  * StlFilePrefix
+  * MaxIterations
+  * MisorientationTolerance
+  * InputFile
+  * InputPath
+  * OutputFile
+  * OutputPath
+  * WriteAlignmentShifts
+  * ConversionType
+  * Dimensions
+  * Origin
+  * CrystalSymmetryRotations
+  * SelectedVolumeVertexArrayName
+  * SelectedVolumeEdgeArrayName
+  * SelectedVolumeFaceArrayName
+  * SelectedVolumeCellArrayName
+  * SelectedVolumeFeatureArrayName
+  * SelectedVolumeEnsembleArrayName
+  * SelectedSurfaceVertexArrayName
+  * SelectedSurfaceEdgeArrayName
+  * SelectedSurfaceFaceArrayName
+  * SelectedSurfaceFeatureArrayName
+  * SelectedSurfaceEnsembleArrayName
+  * SelectedEdgeVertexArrayName
+  * SelectedEdgeEdgeArrayName
+  * SelectedEdgeFeatureArrayName
+  * SelectedEdgeEnsembleArrayName
+  * SelectedVertexVertexArrayName
+  * SelectedVertexFeatureArrayName
+  * SelectedVertexEnsembleArrayName
+  */
+  GenericExample::Pointer filter = GenericExample::New();
+  if(true == copyFilterParameters)
+  {
+    filter->setStlFilePrefix( getStlFilePrefix() );
+    filter->setMaxIterations( getMaxIterations() );
+    filter->setMisorientationTolerance( getMisorientationTolerance() );
+    filter->setInputFile( getInputFile() );
+    filter->setInputPath( getInputPath() );
+    filter->setOutputFile( getOutputFile() );
+    filter->setOutputPath( getOutputPath() );
+    filter->setWriteAlignmentShifts( getWriteAlignmentShifts() );
+    filter->setConversionType( getConversionType() );
+    filter->setDimensions( getDimensions() );
+    filter->setOrigin( getOrigin() );
+    filter->setSelectedVolumeVertexArrayName( getSelectedVolumeVertexArrayName() );
+    filter->setSelectedVolumeEdgeArrayName( getSelectedVolumeEdgeArrayName() );
+    filter->setSelectedVolumeFaceArrayName( getSelectedVolumeFaceArrayName() );
+    filter->setSelectedVolumeCellArrayName( getSelectedVolumeCellArrayName() );
+    filter->setSelectedVolumeFeatureArrayName( getSelectedVolumeFeatureArrayName() );
+    filter->setSelectedVolumeEnsembleArrayName( getSelectedVolumeEnsembleArrayName() );
+    filter->setSelectedSurfaceVertexArrayName( getSelectedSurfaceVertexArrayName() );
+    filter->setSelectedSurfaceEdgeArrayName( getSelectedSurfaceEdgeArrayName() );
+    filter->setSelectedSurfaceFaceArrayName( getSelectedSurfaceFaceArrayName() );
+    filter->setSelectedSurfaceFeatureArrayName( getSelectedSurfaceFeatureArrayName() );
+    filter->setSelectedSurfaceEnsembleArrayName( getSelectedSurfaceEnsembleArrayName() );
+    filter->setSelectedEdgeVertexArrayName( getSelectedEdgeVertexArrayName() );
+    filter->setSelectedEdgeEdgeArrayName( getSelectedEdgeEdgeArrayName() );
+    filter->setSelectedEdgeFeatureArrayName( getSelectedEdgeFeatureArrayName() );
+    filter->setSelectedEdgeEnsembleArrayName( getSelectedEdgeEnsembleArrayName() );
+    filter->setSelectedVertexVertexArrayName( getSelectedVertexVertexArrayName() );
+    filter->setSelectedVertexFeatureArrayName( getSelectedVertexFeatureArrayName() );
+    filter->setSelectedVertexEnsembleArrayName( getSelectedVertexEnsembleArrayName() );
+    filter->setCrystalSymmetryRotations( getCrystalSymmetryRotations() );
+  }
+  return filter;
+}

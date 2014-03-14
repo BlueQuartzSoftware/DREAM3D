@@ -881,3 +881,20 @@ int SurfaceMeshToNonconformalVtk::writeCellData(FILE* vtkFile, QMap<int32_t, int
   return err;
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AbstractFilter::Pointer SurfaceMeshToNonconformalVtk::newFilterInstance(bool copyFilterParameters)
+{
+  /*
+  * OutputVtkFile
+  * WriteBinaryFile
+  */
+  SurfaceMeshToNonconformalVtk::Pointer filter = SurfaceMeshToNonconformalVtk::New();
+  if(true == copyFilterParameters)
+  {
+    filter->setOutputVtkFile( getOutputVtkFile() );
+    filter->setWriteBinaryFile( getWriteBinaryFile() );
+  }
+  return filter;
+}

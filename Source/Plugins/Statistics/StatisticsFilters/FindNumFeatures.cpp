@@ -144,3 +144,16 @@ void FindNumFeatures::execute()
   notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AbstractFilter::Pointer FindNumFeatures::newFilterInstance(bool copyFilterParameters)
+{
+  /*
+  */
+  FindNumFeatures::Pointer filter = FindNumFeatures::New();
+  if(true == copyFilterParameters)
+  {
+  }
+  return filter;
+}

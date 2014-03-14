@@ -245,7 +245,7 @@ int VtkRectilinearGridWriter::write(const QString& file)
 
   int index = 0;
   QString ss = QObject::tr("Writing Feature Ids");
-  notifyStatusMessage(getHumanLabel(), ss);
+  notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
   if (m_WriteBinaryFile == true)
   {
     WRITE_VTK_FEATURE_IDS_BINARY(r, DREAM3D::CellData::FeatureIds);
@@ -264,4 +264,21 @@ int VtkRectilinearGridWriter::write(const QString& file)
   // Close the file
   fclose(f);
   return err;
+}
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AbstractFilter::Pointer VtkRectilinearGridWriter::newFilterInstance(bool copyFilterParameters)
+{
+  /*
+  * OutputFile
+  * WriteBinaryFile
+  */
+  VtkRectilinearGridWriter::Pointer filter = VtkRectilinearGridWriter::New();
+  if(true == copyFilterParameters)
+  {
+    filter->setOutputFile( getOutputFile() );
+    filter->setWriteBinaryFile( getWriteBinaryFile() );
+  }
+  return filter;
 }

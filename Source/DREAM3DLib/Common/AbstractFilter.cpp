@@ -161,3 +161,11 @@ bool AbstractFilter::getCancel()
 {
   return m_Cancel;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AbstractFilter::Pointer AbstractFilter::newFilterInstance(bool copyFilterParameters)
+{
+  return NullPointer();
+}

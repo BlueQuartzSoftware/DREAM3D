@@ -89,6 +89,7 @@ class SaveImages : public AbstractFilter
     * in the GUI for the filter
     */
     virtual const QString getCompiledLibraryName() { return ImageImport::ImageImportBaseName; }
+    virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
 
     /**
@@ -167,6 +168,7 @@ class SaveImages : public AbstractFilter
 };
 
 #endif /* _SaveImages_H_ */
+
 
 
 

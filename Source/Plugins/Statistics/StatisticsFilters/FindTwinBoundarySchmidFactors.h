@@ -81,6 +81,7 @@ class FindTwinBoundarySchmidFactors : public AbstractFilter
     Q_PROPERTY(FloatVec3_t LoadingDir READ getLoadingDir WRITE setLoadingDir)
 
     virtual const QString getCompiledLibraryName() { return Statistics::StatisticsBaseName; }
+    virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::CrystallographicFilters; }
     virtual const QString getHumanLabel() { return "Find Twin Boundary Schmid Factors"; }
@@ -135,4 +136,5 @@ class FindTwinBoundarySchmidFactors : public AbstractFilter
 };
 
 #endif /* FindTwinBoundarySchmidFactors_H_ */
+
 

@@ -110,7 +110,7 @@ void ConvertEulerAngles::setupFilterParameters()
     parameter->setHumanLabel("Conversion Type");
     parameter->setPropertyName("ConversionType");
     parameter->setWidgetType(FilterParameterWidgetType::ChoiceWidget);
-    parameter->setValueType("unsigned int");
+    parameter->setValueType("int");
     QVector<QString> choices;
     choices.push_back("Degrees To Radians");
     choices.push_back("Radians To Degrees");
@@ -220,3 +220,18 @@ void ConvertEulerAngles::execute()
   notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AbstractFilter::Pointer ConvertEulerAngles::newFilterInstance(bool copyFilterParameters)
+{
+  /*
+  * ConversionType
+  */
+  ConvertEulerAngles::Pointer filter = ConvertEulerAngles::New();
+  if(true == copyFilterParameters)
+  {
+    filter->setConversionType( getConversionType() );
+  }
+  return filter;
+}

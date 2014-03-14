@@ -337,3 +337,26 @@ void ErodeDilateBadData::execute()
   notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AbstractFilter::Pointer OpenCloseBadData::newFilterInstance(bool copyFilterParameters)
+{
+  /*
+  * Direction
+  * NumIterations
+  * XDirOn
+  * YDirOn
+  * ZDirOn
+  */
+  OpenCloseBadData::Pointer filter = OpenCloseBadData::New();
+  if(true == copyFilterParameters)
+  {
+    filter->setDirection( getDirection() );
+    filter->setNumIterations( getNumIterations() );
+    filter->setXDirOn( getXDirOn() );
+    filter->setYDirOn( getYDirOn() );
+    filter->setZDirOn( getZDirOn() );
+  }
+  return filter;
+}

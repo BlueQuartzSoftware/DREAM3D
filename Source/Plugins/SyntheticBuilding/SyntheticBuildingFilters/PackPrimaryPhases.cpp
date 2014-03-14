@@ -36,6 +36,15 @@
 
 #include "PackPrimaryPhases.h"
 
+
+#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
+#include <tbb/parallel_for.h>
+#include <tbb/blocked_range3d.h>
+#include <tbb/partitioner.h>
+#include <tbb/task_scheduler_init.h>
+#endif
+
+
 #include <QtCore/QFile>
 #include <QtCore/QFileInfo>
 #include <QtCore/QDir>
@@ -44,6 +53,7 @@
 #include "DREAM3DLib/DataArrays/NeighborList.hpp"
 #include "DREAM3DLib/Math/MatrixMath.h"
 #include "DREAM3DLib/Math/DREAM3DMath.h"
+#include "DREAM3DLib/Math/OrientationMath.h"
 #include "DREAM3DLib/StatsData/PrimaryStatsData.h"
 #include "DREAM3DLib/ShapeOps/CubeOctohedronOps.h"
 #include "DREAM3DLib/ShapeOps/CylinderOps.h"
@@ -55,13 +65,6 @@
 #include "DREAM3DLib/Utilities/TimeUtilities.h"
 #include "DREAM3DLib/Utilities/DREAM3DRandom.h"
 
-
-#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
-#include <tbb/parallel_for.h>
-#include <tbb/blocked_range3d.h>
-#include <tbb/partitioner.h>
-#include <tbb/task_scheduler_init.h>
-#endif
 
 
 #define NEW_SHARED_ARRAY(var, m_msgType, size)\
@@ -673,7 +676,7 @@ void PackPrimaryPhases::execute()
       if(change > 0 || currentsizedisterror > (1.0 - (float(iter) * 0.001)) || curphasevol[j] < (0.75 * factor * curphasetotalvol))
       {
         QString ss = QObject::tr("Packing Features (1/2) - Generating Feature #%1").arg(gid);
-        notifyStatusMessage(getHumanLabel(), ss);
+        notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
         if (gid + 1 >= static_cast<int>(m->getAttributeMatrix(m_CellFeatureAttributeMatrixName)->getNumTuples()))
         {
           tDims[0] = gid+1;
@@ -720,7 +723,7 @@ void PackPrimaryPhases::execute()
         if(change > 0 || currentsizedisterror > (1.0 - (iter * 0.001)) || curphasevol[j] < (0.75 * factor * curphasetotalvol))
         {
           QString ss = QObject::tr("Packing Features (2/2) - Generating Feature #%1").arg(gid);
-          notifyStatusMessage(getHumanLabel(), ss);
+          notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
           if (gid + 1 >= static_cast<int>(m->getAttributeMatrix(m_CellFeatureAttributeMatrixName)->getNumTuples()) )
           {
             tDims[0] = gid+1;
@@ -837,7 +840,7 @@ void PackPrimaryPhases::execute()
     {
 
       QString ss = QObject::tr("Placing Feature #%1/%2").arg(i).arg(totalFeatures);
-      notifyStatusMessage(getHumanLabel(), ss);
+      notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
       progFeature = i;
     }
 
@@ -897,7 +900,7 @@ void PackPrimaryPhases::execute()
       timeDiff = ((float)i / (float)(currentMillis - startMillis));
       estimatedTime = (float)(totalFeatures - i) / timeDiff;
       ss = QObject::tr(" Est. Time Remain: %1").arg(DREAM3D::convertMillisToHrsMinSecs(estimatedTime));
-      notifyStatusMessage(getHumanLabel(), ss);
+      notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
 
       millis = QDateTime::currentMSecsSinceEpoch();
     }
@@ -923,7 +926,7 @@ void PackPrimaryPhases::execute()
       estimatedTime = (float)(totalAdjustments - iteration) / timeDiff;
 
       ss = QObject::tr(" || Est. Time Remain: %1 || Iterations/Sec: %2").arg(DREAM3D::convertMillisToHrsMinSecs(estimatedTime)).arg(timeDiff * 1000);
-      notifyStatusMessage(getHumanLabel(), ss);
+      notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
 
       millis = QDateTime::currentMSecsSinceEpoch();
 
@@ -1899,7 +1902,7 @@ void PackPrimaryPhases::assign_voxels()
       float rate = featuresPerTime / ( (float)(currentMillis - millis) ) * 1000.0f;
 
       QString ss = QObject::tr("Assign Voxels & Gaps|| Features Checked: %1 || Features/Second: %2").arg(i).arg((int)rate);
-      notifyStatusMessage(getHumanLabel(), ss);
+      notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
       featuresPerTime = 0;
       millis = QDateTime::currentMSecsSinceEpoch();
     }
@@ -2138,7 +2141,7 @@ void PackPrimaryPhases::assign_gaps_only()
     if(counter >= 1)
     {
       QString ss = QObject::tr("Assign Gaps|| Cycle#: %1 || Remaining Unassigned Voxel Count: %2").arg(counter).arg(count);
-      notifyStatusMessage(getHumanLabel(), ss);
+      notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
     }
   }
 }
@@ -2480,7 +2483,7 @@ void PackPrimaryPhases::write_goal_attributes()
     {
 
       QString ss = QObject::tr("Writing Feature Data - %1% Complete").arg(((float)i / numTuples) * 100);
-      notifyStatusMessage(getHumanLabel(), ss);
+      notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
       threshold = threshold + 5.0f;
       if (threshold < ((float)i / numTuples) * 100.0f)
       {
@@ -2500,3 +2503,22 @@ void PackPrimaryPhases::write_goal_attributes()
   }
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AbstractFilter::Pointer PackPrimaryPhases::newFilterInstance(bool copyFilterParameters)
+{
+  /*
+  * CsvOutputFile
+  * PeriodicBoundaries
+  * WriteGoalAttributes
+  */
+  PackPrimaryPhases::Pointer filter = PackPrimaryPhases::New();
+  if(true == copyFilterParameters)
+  {
+    filter->setPeriodicBoundaries( getPeriodicBoundaries() );
+    filter->setWriteGoalAttributes( getWriteGoalAttributes() );
+    filter->setCsvOutputFile( getCsvOutputFile() );
+  }
+  return filter;
+}

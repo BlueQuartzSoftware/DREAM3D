@@ -47,6 +47,7 @@
 #include "DREAM3DLib/Math/DREAM3DMath.h"
 #include "DREAM3DLib/OrientationOps/OrientationOps.h"
 #include "DREAM3DLib/Math/MatrixMath.h"
+#include "DREAM3DLib/Math/OrientationMath.h"
 
 
 
@@ -252,3 +253,20 @@ void RotateEulerRefFrame::execute()
   notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AbstractFilter::Pointer RotateEulerRefFrame::newFilterInstance(bool copyFilterParameters)
+{
+  /*
+  * RotationAxis
+  * RotationAngle
+  */
+  RotateEulerRefFrame::Pointer filter = RotateEulerRefFrame::New();
+  if(true == copyFilterParameters)
+  {
+    filter->setRotationAxis( getRotationAxis() );
+    filter->setRotationAngle( getRotationAngle() );
+  }
+  return filter;
+}

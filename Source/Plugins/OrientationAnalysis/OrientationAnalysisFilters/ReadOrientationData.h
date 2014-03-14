@@ -83,6 +83,7 @@ class ReadOrientationData : public AbstractFilter
     * in the GUI for the filter
     */
     virtual const QString getCompiledLibraryName() { return OrientationAnalysis::OrientationAnalysisBaseName; }
+    virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
 
     /**
@@ -256,6 +257,7 @@ signals:
 };
 
 #endif /* _ReadOrientationData_H_ */
+
 
 
 

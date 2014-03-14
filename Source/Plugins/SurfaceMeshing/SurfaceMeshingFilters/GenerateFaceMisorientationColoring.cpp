@@ -35,6 +35,13 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #include "GenerateFaceMisorientationColoring.h"
 
+#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
+#include <tbb/parallel_for.h>
+#include <tbb/blocked_range.h>
+#include <tbb/partitioner.h>
+#endif
+
+
 #include "DREAM3DLib/Math/DREAM3DMath.h"
 #include "DREAM3DLib/Math/MatrixMath.h"
 #include "SurfaceMeshing/SurfaceMeshingFilters/util/Vector3.h"
@@ -48,13 +55,6 @@
 #include "DREAM3DLib/OrientationOps/TetragonalOps.h"
 #include "DREAM3DLib/OrientationOps/OrthoRhombicOps.h"
 #include "DREAM3DLib/OrientationOps/MonoclinicOps.h"
-
-#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
-#include <tbb/parallel_for.h>
-#include <tbb/blocked_range.h>
-#include <tbb/partitioner.h>
-#endif
-
 
 
 /**
@@ -333,4 +333,17 @@ void GenerateFaceMisorientationColoring::execute()
 
   /* Let the GUI know we are done with this filter */
   notifyStatusMessage(getHumanLabel(), "Complete");
+}
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AbstractFilter::Pointer GenerateFaceMisorientationColoring::newFilterInstance(bool copyFilterParameters)
+{
+  /*
+  */
+  GenerateFaceMisorientationColoring::Pointer filter = GenerateFaceMisorientationColoring::New();
+  if(true == copyFilterParameters)
+  {
+  }
+  return filter;
 }

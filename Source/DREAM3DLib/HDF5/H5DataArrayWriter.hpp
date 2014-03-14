@@ -70,13 +70,13 @@ class H5DataArrayWriter
 
       QVector<hsize_t> h5Dims(tDims.size() + cDims.size());
 
-#if 0
+#if 1
       /*** !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
       *  VERY IMPORTANT. MAKE SURE YOU UNDERSTAND THIS NEXT SECTION FULLY BEFORE CHANGING ANYTHING.
       * HDF5 wants the dimensions written from slowest to fastest, so "C" style or ZYX style. DREAM3D stores
       * the dimensions in the opposite order (XYZ) (even though the data is laid out in memory correctly). So using the
       * Small IN100 data set as an example the NCOLS(189) NROWS(201) and NSLICES(117) are stored in the tDims vector as
-      * [189,201,117] BUT we need to reverse the order so that HDF5 can properly store the arrays and also properly
+      * [189,201,117] BUT we need to reverse the order so that HDF5 can properly interpret the arrays and also properly
       * load data into the HDFView program. These next few loops will reverse the order in addition to calculating the
       * total number of elements in the array
       */
@@ -147,6 +147,15 @@ class H5DataArrayWriter
       // write the component dimensions as  an attribute
       size = cDims.size();
       err = QH5Lite::writePointerAttribute(gid, dataArray->getName(), DREAM3D::HDF5::ComponentDimensions, 1, &size, cDims.data());
+      if (err < 0)
+      {
+        return err;
+      }
+
+      QString str = QString("x=%1").arg(tDims[0]);
+      if(tDims.size() > 1) { str = str + QString(",y=%1").arg(tDims[1]); }
+      if(tDims.size() > 2) { str = str + QString(",z=%1").arg(tDims[2]); }
+      err = QH5Lite::writeStringAttribute(gid, dataArray->getName(), DREAM3D::HDF5::AxisDimensions, str);
       if (err < 0)
       {
         return err;

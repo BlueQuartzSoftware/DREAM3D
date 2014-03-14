@@ -212,3 +212,22 @@ void GenerateSurfaceMeshConnectivity::execute()
   notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AbstractFilter::Pointer GenerateSurfaceMeshConnectivity::newFilterInstance(bool copyFilterParameters)
+{
+  /*
+  * GenerateVertexTriangleLists
+  * GenerateTriangleNeighbors
+  * GenerateEdgeIdList
+  */
+  GenerateSurfaceMeshConnectivity::Pointer filter = GenerateSurfaceMeshConnectivity::New();
+  if(true == copyFilterParameters)
+  {
+    filter->setGenerateVertexTriangleLists( getGenerateVertexTriangleLists() );
+    filter->setGenerateTriangleNeighbors( getGenerateTriangleNeighbors() );
+    filter->setGenerateEdgeIdList( getGenerateEdgeIdList() );
+  }
+  return filter;
+}

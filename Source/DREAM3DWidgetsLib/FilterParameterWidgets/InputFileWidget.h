@@ -49,6 +49,8 @@
 
 #include "DREAM3DWidgetsLib/ui_InputFileWidget.h"
 
+class QLineEdit;
+
 
 /**
 * @brief

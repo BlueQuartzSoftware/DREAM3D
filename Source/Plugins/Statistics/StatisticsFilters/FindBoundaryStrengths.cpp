@@ -302,3 +302,18 @@ void FindBoundaryStrengths::execute()
   notifyStatusMessage(getHumanLabel(), "Completed");
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AbstractFilter::Pointer FindBoundaryStrengths::newFilterInstance(bool copyFilterParameters)
+{
+  /*
+  * Loading
+  */
+  FindBoundaryStrengths::Pointer filter = FindBoundaryStrengths::New();
+  if(true == copyFilterParameters)
+  {
+    filter->setLoading( getLoading() );
+  }
+  return filter;
+}

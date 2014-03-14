@@ -75,6 +75,7 @@ class FillBadData : public AbstractFilter
     Q_PROPERTY(int MinAllowedDefectSize READ getMinAllowedDefectSize WRITE setMinAllowedDefectSize)
 
     virtual const QString getCompiledLibraryName() { return Processing::ProcessingBaseName; }
+    virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::ProcessingFilters; }
     virtual const QString getSubGroupName()  { return DREAM3D::FilterSubGroups::CleanupFilters; }
     virtual const QString getHumanLabel() { return "Fill Bad Data"; }
@@ -116,6 +117,7 @@ class FillBadData : public AbstractFilter
 };
 
 #endif /* FillBadData_H_ */
+
 
 
 

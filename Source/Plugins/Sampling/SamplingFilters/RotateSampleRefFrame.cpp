@@ -35,16 +35,17 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #include "RotateSampleRefFrame.h"
 
-#include "DREAM3DLib/OrientationOps/OrientationOps.h"
-#include "DREAM3DLib/Math/MatrixMath.h"
-#include "DREAM3DLib/Math/OrientationMath.h"
-
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
 #include <tbb/parallel_for.h>
 #include <tbb/blocked_range3d.h>
 #include <tbb/partitioner.h>
 #include <tbb/task_scheduler_init.h>
 #endif
+
+#include "DREAM3DLib/OrientationOps/OrientationOps.h"
+#include "DREAM3DLib/Math/MatrixMath.h"
+#include "DREAM3DLib/Math/OrientationMath.h"
+#include "DREAM3DLib/Math/GeometryMath.h"
 
 
 typedef struct
@@ -512,3 +513,21 @@ void RotateSampleRefFrame::execute()
   notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AbstractFilter::Pointer RotateSampleRefFrame::newFilterInstance(bool copyFilterParameters)
+{
+  /*
+  * RotationAxis
+  * RotationAngle
+  * SliceBySlice
+  */
+  RotateSampleRefFrame::Pointer filter = RotateSampleRefFrame::New();
+  if(true == copyFilterParameters)
+  {
+    filter->setRotationAxis( getRotationAxis() );
+    filter->setRotationAngle( getRotationAngle() );
+  }
+  return filter;
+}

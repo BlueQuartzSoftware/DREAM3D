@@ -73,6 +73,7 @@ class DREAM3DLib_EXPORT ParaDisReader : public FileReader
     Q_PROPERTY(float BurgersVector READ getBurgersVector WRITE setBurgersVector)
 
     virtual const QString getCompiledLibraryName() { return IO::IOBaseName; }
+    virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::InputFilters; }
     virtual const QString getHumanLabel() { return "Read ParaDis File"; }
@@ -126,6 +127,7 @@ class DREAM3DLib_EXPORT ParaDisReader : public FileReader
 };
 
 #endif /* ParaDisREADER_H_ */
+
 
 
 

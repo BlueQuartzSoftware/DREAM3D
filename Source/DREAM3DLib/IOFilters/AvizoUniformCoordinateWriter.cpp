@@ -284,3 +284,20 @@ int AvizoUniformCoordinateWriter::writeData(QDataStream& out)
 }
 
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AbstractFilter::Pointer AvizoUniformCoordinateWriter::newFilterInstance(bool copyFilterParameters)
+{
+  /*
+  * OutputFile
+  * WriteBinaryFile
+  */
+  AvizoUniformCoordinateWriter::Pointer filter = AvizoUniformCoordinateWriter::New();
+  if(true == copyFilterParameters)
+  {
+    filter->setOutputFile( getOutputFile() );
+    filter->setWriteBinaryFile( getWriteBinaryFile() );
+  }
+  return filter;
+}

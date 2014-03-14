@@ -34,15 +34,7 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #include "CubicOps.h"
-// Include this FIRST because there is a needed define for some compiles
-// to expose some of the constants needed below
-#include "DREAM3DLib/Math/DREAM3DMath.h"
-#include "DREAM3DLib/Math/OrientationMath.h"
-#include "DREAM3DLib/Common/ModifiedLambertProjection.h"
-#include "DREAM3DLib/IOFilters/VtkRectilinearGridWriter.h"
-#include "DREAM3DLib/Utilities/ImageUtilities.h"
-#include "DREAM3DLib/Utilities/ColorTable.h"
-#include "DREAM3DLib/Utilities/ColorUtilities.h"
+
 
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
 #include <tbb/parallel_for.h>
@@ -52,6 +44,17 @@
 #include <tbb/task_group.h>
 #include <tbb/task.h>
 #endif
+
+
+
+// Include this FIRST because there is a needed define for some compiles
+// to expose some of the constants needed below
+#include "DREAM3DLib/Math/DREAM3DMath.h"
+#include "DREAM3DLib/Math/OrientationMath.h"
+#include "DREAM3DLib/Math/GeometryMath.h"
+#include "DREAM3DLib/Common/ModifiedLambertProjection.h"
+#include "DREAM3DLib/Utilities/ColorUtilities.h"
+#include "DREAM3DLib/Utilities/ImageUtilities.h"
 
 
 namespace Detail
@@ -317,10 +320,12 @@ float CubicOps::_calcMisoQuat(const QuatF quatsym[24], int numsym,
   QuatF q2inv;
   int type = 1;
   float sin_wmin_over_2 = 0.0;
-  //  float _1, _2,  _6;
 
-  QuaternionMathF::Copy(q2, q2inv);
-  QuaternionMathF::Conjugate(q2inv);
+  QuaternionMathF::Conjugate(q2, q2inv); // Computes the Conjugate of q2 and places the result in q2inv
+/*
+ * Dave's Code will have this looking "opposite". he will do (q1, q2Inv, qc) because Dave's Quaternions are active
+ * where as DREAM3D seems to define a passive Quat
+ */
 
   QuaternionMathF::Multiply(q2inv, q1, qc);
   QuaternionMathF::ElementWiseAbs(qc);
@@ -1305,7 +1310,7 @@ DREAM3D::Rgb CubicOps::generateIPFColor(double phi1, double phi, double phi2, do
   float chi, eta;
   float _rgb[3] = { 0.0, 0.0, 0.0 };
 
-  OrientationMath::EulertoQuat(q1, phi1, phi, phi2);
+  OrientationMath::EulertoQuat(phi1, phi, phi2, q1);
 
   for (int j = 0; j < 24; j++)
   {

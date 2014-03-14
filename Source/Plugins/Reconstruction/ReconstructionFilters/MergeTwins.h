@@ -81,6 +81,7 @@ class MergeTwins : public GroupFeatures
     DREAM3D_INSTANCE_PROPERTY(bool, RandomizeParentIds)
 
     virtual const QString getCompiledLibraryName() { return Reconstruction::ReconstructionBaseName; }
+    virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::ReconstructionFilters; }
     virtual const QString getSubGroupName() {return DREAM3D::FilterSubGroups::GroupingFilters;}
     virtual const QString getHumanLabel() { return "Merge Twins"; }
@@ -133,5 +134,6 @@ class MergeTwins : public GroupFeatures
 };
 
 #endif /* MERGETWINS_H_ */
+
 
 

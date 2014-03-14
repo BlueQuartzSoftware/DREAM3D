@@ -126,7 +126,6 @@ bool InputFileWidget::verifyPathExists(QString filePath, QLineEdit* lineEdit)
 // -----------------------------------------------------------------------------
 void InputFileWidget::on_value_editingFinished()
 {
-
   emit parametersChanged(); // This should force the preflight to run because we are emitting a signal
 }
 
@@ -137,11 +136,11 @@ void InputFileWidget::on_value_textChanged(const QString& text)
 {
   setOpenDialogLastDirectory(text);
   // Set/Remove the red outline if the file does exist
-  verifyPathExists(text, value);
-
-//  emit parametersChanged(); // This should force the preflight to run because we are emitting a signal
+  if (verifyPathExists(text, value)==true)
+  {
+    emit parametersChanged(); // This should force the preflight to run because we are emitting a signal
+  }
 }
-
 
 // -----------------------------------------------------------------------------
 //
@@ -150,9 +149,10 @@ void InputFileWidget::on_value_fileDropped(const QString& text)
 {
   setOpenDialogLastDirectory(text);
   // Set/Remove the red outline if the file does exist
-  verifyPathExists(text, value);
-
-  emit parametersChanged(); // This should force the preflight to run because we are emitting a signal
+  if (verifyPathExists(text, value)==true)
+  {
+    emit parametersChanged(); // This should force the preflight to run because we are emitting a signal
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -195,20 +195,18 @@ void InputFileWidget::filterNeedsInputParameters(AbstractFilter* filter)
 
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void InputFileWidget::beforePreflight()
+{
+
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 void InputFileWidget::afterPreflight()
-{
-
-}
-
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void InputFileWidget::beforePreflight()
 {
 
 }

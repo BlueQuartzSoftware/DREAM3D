@@ -225,3 +225,16 @@ void TriangleCentroidFilter::execute()
   /* Let the GUI know we are done with this filter */
   notifyStatusMessage(getHumanLabel(), "Complete");
 }
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AbstractFilter::Pointer TriangleCentroidFilter::newFilterInstance(bool copyFilterParameters)
+{
+  /*
+  */
+  TriangleCentroidFilter::Pointer filter = TriangleCentroidFilter::New();
+  if(true == copyFilterParameters)
+  {
+  }
+  return filter;
+}

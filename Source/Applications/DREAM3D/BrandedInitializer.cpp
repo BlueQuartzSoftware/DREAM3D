@@ -121,7 +121,7 @@ bool BrandedInitializer::initialize(int argc, char* argv[])
 
   // Create main window.
   this->MainWindow = new DREAM3D_UI();
-  this->MainWindow->setWindowTitle("DREAM.3D Version " + DREAM3DLib::Version::Package());
+  this->MainWindow->setWindowTitle("[*] DREAM.3D Version " + DREAM3DLib::Version::Package());
   this->MainWindow->setLoadedPlugins(m_LoadedPlugins);
 
   // give GUI components time to update before the mainwindow is shown

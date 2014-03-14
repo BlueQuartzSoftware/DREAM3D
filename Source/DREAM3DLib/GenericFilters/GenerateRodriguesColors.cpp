@@ -223,7 +223,7 @@ void GenerateRodriguesColors::execute()
     if( (missingGoodVoxels == true || m_GoodVoxels[i] == true)
         && m_CrystalStructures[phase] < Ebsd::CrystalStructure::LaueGroupEnd )
     {
-      OrientationMath::EulertoRod(r1, r2, r3, m_CellEulerAngles[index], m_CellEulerAngles[index + 1], m_CellEulerAngles[index + 2]);
+      OrientationMath::EulertoRod(m_CellEulerAngles[index], m_CellEulerAngles[index + 1], m_CellEulerAngles[index + 2], r1, r2, r3);
       argb = ops[m_CrystalStructures[phase]]->generateRodriguesColor(r1, r2, r3);
       m_CellRodriguesColors[index] = RgbColor::dRed(argb);
       m_CellRodriguesColors[index + 1] = RgbColor::dGreen(argb);
@@ -235,3 +235,16 @@ void GenerateRodriguesColors::execute()
   notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AbstractFilter::Pointer GenerateRodriguesColors::newFilterInstance(bool copyFilterParameters)
+{
+  /*
+  */
+  GenerateRodriguesColors::Pointer filter = GenerateRodriguesColors::New();
+  if(true == copyFilterParameters)
+  {
+  }
+  return filter;
+}

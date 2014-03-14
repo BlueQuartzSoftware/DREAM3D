@@ -384,6 +384,20 @@ void ReadH5Ebsd::dataCheck()
     notifyErrorMessage(getHumanLabel(), ss, -1);
     return;
   }
+  QString manufacturer = volumeInfoReader->getManufacturer();
+  if(manufacturer.compare(Ebsd::Ang::Manufacturer) == 0)
+  {
+    m_Manufacturer = Ebsd::TSL;
+  }
+  else if(manufacturer.compare(Ebsd::Ctf::Manufacturer) == 0)
+  {
+    m_Manufacturer = Ebsd::HKL;
+  }
+  else if(manufacturer.compare(Ebsd::Mic::Manufacturer) == 0)
+  {
+    m_Manufacturer = Ebsd::HEDM;
+  }
+
   size_t dcDims[3] = {dims[0], dims[1], dims[2]};
   //Now Calculate our "subvolume" of slices, ie, those start and end values that the user selected from the GUI
   dcDims[2] = m_ZEndIndex - m_ZStartIndex + 1;
@@ -572,11 +586,11 @@ void ReadH5Ebsd::execute()
   int64_t totalPoints = m->getTotalPoints();
   {
     QString ss = QObject::tr("Initializing %1 voxels").arg(totalPoints);
-    notifyStatusMessage(getHumanLabel(), ss);
+    notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
   }
   {
     QString ss = QObject::tr("Reading Ebsd Data from file %1").arg(getInputFile());
-    notifyStatusMessage(getHumanLabel(), ss);
+    notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
   }
   ebsdReader->setSliceStart(m_ZStartIndex);
   ebsdReader->setSliceEnd(m_ZEndIndex);
@@ -641,7 +655,7 @@ void ReadH5Ebsd::execute()
         bool propWasSet = rot_Sample->setProperty("RotationAngle", m_SampleTransformation.angle);
         if(false == propWasSet)
         {
-          QString ss = QObject::tr("Error Setting Property '%1' into filter '%2'. The filter should have been loaded through the plugin mechanism. This filter is aborting now.").arg("RotationAngle").arg(filtName);
+          QString ss = QObject::tr("ReadH5Ebsd Error Setting Property '%1' into filter '%2' which is a subfilter called by ReadH5Ebsd. The property was not set which could mean the property was not exposed with a Q_PROPERTY macro. Please notify the developers.").arg("RotationAngle").arg(filtName);
           setErrorCondition(-109874);
           notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
         }
@@ -650,7 +664,7 @@ void ReadH5Ebsd::execute()
         propWasSet = rot_Sample->setProperty("RotationAxis", v);
         if(false == propWasSet)
         {
-          QString ss = QObject::tr("Error Setting Property '%1' into filter '%2'. The filter should have been loaded through the plugin mechanism. This filter is aborting now.").arg("RotationAxis").arg(filtName);
+          QString ss = QObject::tr("ReadH5Ebsd Error Setting Property '%1' into filter '%2' which is a subfilter called by ReadH5Ebsd. The property was not set which could mean the property was not exposed with a Q_PROPERTY macro. Please notify the developers.").arg("RotationAxis").arg(filtName);
           setErrorCondition(-109873);
           notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
         }
@@ -658,7 +672,7 @@ void ReadH5Ebsd::execute()
         propWasSet = rot_Sample->setProperty("SliceBySlice", v);
         if(false == propWasSet)
         {
-          QString ss = QObject::tr("Error Setting Property '%1' into filter '%2'. The filter should have been loaded through the plugin mechanism. This filter is aborting now.").arg("SliceBySlice").arg(filtName);
+          QString ss = QObject::tr("ReadH5Ebsd Error Setting Property '%1' into filter '%2' which is a subfilter called by ReadH5Ebsd. The property was not set which could mean the property was not exposed with a Q_PROPERTY macro. Please notify the developers.").arg("SliceBySlice").arg(filtName);
           setErrorCondition(-109872);
           notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
         }
@@ -692,7 +706,7 @@ void ReadH5Ebsd::execute()
         bool propWasSet = rot_Sample->setProperty("RotationAngle", m_EulerTransformation.angle);
         if(false == propWasSet)
         {
-          QString ss = QObject::tr("Error Setting Property '%1' into filter '%2'. The filter should have been loaded through the plugin mechanism. This filter is aborting now.").arg("RotationAngle").arg(filtName);
+          QString ss = QObject::tr("ReadH5Ebsd Error Setting Property '%1' into filter '%2' which is a subfilter called by ReadH5Ebsd. The property was not set which could mean the property was not exposed with a Q_PROPERTY macro. Please notify the developers.").arg("RotationAngle").arg(filtName);
           setErrorCondition(-109874);
           notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
         }
@@ -701,7 +715,7 @@ void ReadH5Ebsd::execute()
         propWasSet = rot_Sample->setProperty("RotationAxis", v);
         if(false == propWasSet)
         {
-          QString ss = QObject::tr("Error Setting Property '%1' into filter '%2'. The filter should have been loaded through the plugin mechanism. This filter is aborting now.").arg("RotationAxis").arg(filtName);
+          QString ss = QObject::tr("ReadH5Ebsd Error Setting Property '%1' into filter '%2' which is a subfilter called by ReadH5Ebsd. The property was not set which could mean the property was not exposed with a Q_PROPERTY macro. Please notify the developers.").arg("RotationAxis").arg(filtName);
           setErrorCondition(-109873);
           notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
         }
@@ -1113,3 +1127,27 @@ void ReadH5Ebsd::copyHEDMArrays(H5EbsdVolumeReader* ebsdReader)
   }
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AbstractFilter::Pointer ReadH5Ebsd::newFilterInstance(bool copyFilterParameters)
+{
+  /*
+  * InputFile
+  * ZStartIndex
+  * ZEndIndex
+  * UseTransformations
+  * SelectedArrayNames
+  * DataArrayNames
+  */
+  ReadH5Ebsd::Pointer filter = ReadH5Ebsd::New();
+  if(true == copyFilterParameters)
+  {
+    filter->setInputFile( getInputFile() );
+    filter->setZStartIndex( getZStartIndex() );
+    filter->setZEndIndex( getZEndIndex() );
+    filter->setUseTransformations( getUseTransformations() );
+    filter->setSelectedArrayNames( getSelectedArrayNames() );
+  }
+  return filter;
+}

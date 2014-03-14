@@ -73,6 +73,7 @@ class FindProjectedImageStatistics : public AbstractFilter
     Q_PROPERTY(unsigned int Plane READ getPlane WRITE setPlane)
 
     virtual const QString getCompiledLibraryName() { return Processing::ProcessingBaseName; }
+    virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::ProcessingFilters; }
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::ImageFilters; }
     virtual const QString getHumanLabel() { return "Find Projected Image Statistics"; }
@@ -130,6 +131,7 @@ class FindProjectedImageStatistics : public AbstractFilter
 };
 
 #endif /* FindProjectedImageStatistics_H_ */
+
 
 
 

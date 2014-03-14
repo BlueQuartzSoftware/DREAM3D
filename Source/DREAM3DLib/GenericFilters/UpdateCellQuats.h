@@ -67,6 +67,7 @@ class DREAM3DLib_EXPORT UpdateCellQuats : public AbstractFilter
     //------ Created Cell Data
 
     virtual const QString getCompiledLibraryName() { return Generic::GenericBaseName; }
+    virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::GenericFilters; }
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::CrystallographyFilters; }
     virtual const QString getHumanLabel() { return "Update Cell Quaternions"; }
@@ -109,5 +110,6 @@ signals:
 };
 
 #endif /* UpdateCellQuats_H_ */
+
 
 

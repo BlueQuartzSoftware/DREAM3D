@@ -69,6 +69,7 @@ class RotateEulerRefFrame : public AbstractFilter
     Q_PROPERTY(float RotationAngle READ getRotationAngle WRITE setRotationAngle)
 
     virtual const QString getCompiledLibraryName() { return Processing::ProcessingBaseName; }
+    virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName()  { return DREAM3D::FilterGroups::ProcessingFilters; }
     virtual const QString getSubGroupName()  { return DREAM3D::FilterSubGroups::ConversionFilters; }
     virtual const QString getHumanLabel() { return "Rotate Euler Reference Frame"; }
@@ -111,4 +112,5 @@ class RotateEulerRefFrame : public AbstractFilter
 };
 
 #endif /* RotateEulerRefFrame_H_ */
+
 

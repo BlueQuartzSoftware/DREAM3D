@@ -55,7 +55,7 @@
  * @class GroupMicroTextureRegions GroupMicroTextureRegions.h Plugins/Reconstruction/ReconstructionFilters/GroupMicroTextureRegions.h
  * @brief
  * @author Michael A Groeber (AFRL) & Joseph C Tucker (UES)
- * @date Jan 30, 2014
+ * @date Mar 4, 2014
  * @version 5.0
  */
 class GroupMicroTextureRegions : public GroupFeatures
@@ -81,9 +81,10 @@ class GroupMicroTextureRegions : public GroupFeatures
     DREAM3D_INSTANCE_PROPERTY(bool, RandomizeParentIds)
 
     virtual const QString getCompiledLibraryName() { return Reconstruction::ReconstructionBaseName; }
+    virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::ReconstructionFilters; }
     virtual const QString getSubGroupName() {return DREAM3D::FilterSubGroups::GroupingFilters;}
-    virtual const QString getHumanLabel() { return "Identify MicroTexture (C-Axis Misorientation)"; }
+    virtual const QString getHumanLabel() { return "Identify MicroTexture (C-Axis Misalignment)"; }
 
     /**
      * @brief setupFilterParameters
@@ -147,5 +148,6 @@ class GroupMicroTextureRegions : public GroupFeatures
 };
 
 #endif /* GroupMicroTextureRegions_H_ */
+
 
 

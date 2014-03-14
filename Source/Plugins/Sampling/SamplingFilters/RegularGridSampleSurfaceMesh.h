@@ -80,6 +80,7 @@ class RegularGridSampleSurfaceMesh : public SampleSurfaceMesh
     Q_PROPERTY(FloatVec3_t Resolution READ getResolution WRITE setResolution)
 
     virtual const QString getCompiledLibraryName() { return Sampling::SamplingBaseName; }
+    virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::SamplingFilters; }
     virtual const QString getSubGroupName()  { return DREAM3D::FilterSubGroups::ResolutionFilters; }
     virtual const QString getHumanLabel() { return "Sample Surface Mesh on Regular Grid"; }
@@ -133,6 +134,7 @@ class RegularGridSampleSurfaceMesh : public SampleSurfaceMesh
 };
 
 #endif /* RegularGridSampleSurfaceMesh_H_ */
+
 
 
 

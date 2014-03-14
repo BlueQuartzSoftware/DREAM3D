@@ -269,7 +269,7 @@ void AlignSectionsMutualInformation::find_shifts(QVector<int>& xshifts, QVector<
   for (DimType iter = 1; iter < dims[2]; iter++)
   {
     QString ss = QObject::tr("Aligning Sections - Determining Shifts - %1 Percent Complete").arg(((float)iter / dims[2]) * 100);
-    //  notifyStatusMessage(getHumanLabel(), ss);
+    //  notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
     mindisorientation = 100000000;
     slice = static_cast<int>( (dims[2] - 1) - iter );
     featurecount1 = featurecounts[slice];
@@ -552,3 +552,18 @@ void AlignSectionsMutualInformation::form_features_sections()
   }
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AbstractFilter::Pointer AlignSectionsMutualInformation::newFilterInstance(bool copyFilterParameters)
+{
+  /*
+  * MisorientationTolerance
+  */
+  AlignSectionsMutualInformation::Pointer filter = AlignSectionsMutualInformation::New();
+  if(true == copyFilterParameters)
+  {
+    filter->setMisorientationTolerance( getMisorientationTolerance() );
+  }
+  return filter;
+}

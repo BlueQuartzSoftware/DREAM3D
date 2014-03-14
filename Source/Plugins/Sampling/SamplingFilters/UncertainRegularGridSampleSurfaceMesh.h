@@ -82,6 +82,7 @@ class UncertainRegularGridSampleSurfaceMesh : public SampleSurfaceMesh
     Q_PROPERTY(FloatVec3_t Uncertainty READ getUncertainty WRITE setUncertainty)
 
     virtual const QString getCompiledLibraryName() { return Sampling::SamplingBaseName; }
+    virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::SamplingFilters; }
     virtual const QString getSubGroupName()  { return DREAM3D::FilterSubGroups::ResolutionFilters; }
     virtual const QString getHumanLabel() { return "Sample Surface Mesh on Regular Grid"; }
@@ -135,6 +136,7 @@ class UncertainRegularGridSampleSurfaceMesh : public SampleSurfaceMesh
 };
 
 #endif /* UncertainRegularGridSampleSurfaceMesh_H_ */
+
 
 
 

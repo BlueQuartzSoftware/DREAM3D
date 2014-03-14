@@ -90,6 +90,7 @@ class CropVolume : public AbstractFilter
 
 
     virtual const QString getCompiledLibraryName() { return Sampling::SamplingBaseName; }
+    virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::SamplingFilters; }
     virtual const QString getSubGroupName()  { return DREAM3D::FilterSubGroups::CropCutFilters; }
     virtual const QString getHumanLabel() { return "Crop Volume"; }
@@ -134,6 +135,7 @@ class CropVolume : public AbstractFilter
 };
 
 #endif /* CROPVOLUME_H_ */
+
 
 
 

@@ -40,7 +40,7 @@
 
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/DataArrays/IDataArray.h"
-
+#include "DREAM3DLib/Math/OrientationMath.h"
 
 
 // -----------------------------------------------------------------------------
@@ -158,7 +158,7 @@ void FindCellQuats::execute()
   for (int i = 0; i < totalPoints; i++)
   {
     phase = m_CellPhases[i];
-    OrientationMath::EulertoQuat(qr, m_CellEulerAngles[3 * i], m_CellEulerAngles[3 * i + 1], m_CellEulerAngles[3 * i + 2]);
+    OrientationMath::EulertoQuat( m_CellEulerAngles[3 * i], m_CellEulerAngles[3 * i + 1], m_CellEulerAngles[3 * i + 2], qr);
     QuaternionMathF::UnitQuaternion(qr);
     if (m_CrystalStructures[phase] == Ebsd::CrystalStructure::UnknownCrystalStructure)
     {
@@ -172,3 +172,16 @@ void FindCellQuats::execute()
 
 
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AbstractFilter::Pointer FindCellQuats::newFilterInstance(bool copyFilterParameters)
+{
+  /*
+  */
+  FindCellQuats::Pointer filter = FindCellQuats::New();
+  if(true == copyFilterParameters)
+  {
+  }
+  return filter;
+}

@@ -715,3 +715,16 @@ void FindShapes::find_axiseulers2D()
 }
 
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AbstractFilter::Pointer FindShapes::newFilterInstance(bool copyFilterParameters)
+{
+  /*
+  */
+  FindShapes::Pointer filter = FindShapes::New();
+  if(true == copyFilterParameters)
+  {
+  }
+  return filter;
+}

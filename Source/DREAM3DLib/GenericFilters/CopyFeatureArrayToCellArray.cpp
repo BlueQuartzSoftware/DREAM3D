@@ -269,3 +269,18 @@ void CopyFeatureArrayToCellArray::execute()
   notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AbstractFilter::Pointer CopyFeatureArrayToCellArray::newFilterInstance(bool copyFilterParameters)
+{
+  /*
+  * SelectedFeatureArrayName
+  */
+  CopyFeatureArrayToCellArray::Pointer filter = CopyFeatureArrayToCellArray::New();
+  if(true == copyFilterParameters)
+  {
+    filter->setSelectedFeatureArrayName( getSelectedFeatureArrayName() );
+  }
+  return filter;
+}

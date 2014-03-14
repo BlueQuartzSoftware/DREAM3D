@@ -279,3 +279,18 @@ void FindMisorientations::execute()
   notifyStatusMessage(getHumanLabel(), "FindMisorientations Completed");
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AbstractFilter::Pointer FindMisorientations::newFilterInstance(bool copyFilterParameters)
+{
+  /*
+  * FindAvgMisors
+  */
+  FindMisorientations::Pointer filter = FindMisorientations::New();
+  if(true == copyFilterParameters)
+  {
+    filter->setFindAvgMisors( getFindAvgMisors() );
+  }
+  return filter;
+}

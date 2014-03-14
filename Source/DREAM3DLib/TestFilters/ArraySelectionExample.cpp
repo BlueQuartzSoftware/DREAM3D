@@ -145,3 +145,18 @@ void ArraySelectionExample::execute()
   notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AbstractFilter::Pointer ArraySelectionExample::newFilterInstance(bool copyFilterParameters)
+{
+  /*
+  * DataContainerArrayProxy
+  */
+  ArraySelectionExample::Pointer filter = ArraySelectionExample::New();
+  if(true == copyFilterParameters)
+  {
+    filter->setDataContainerArrayProxy( getDataContainerArrayProxy() );
+  }
+  return filter;
+}

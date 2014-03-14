@@ -237,3 +237,18 @@ void FindLargestCrossSections::find_crosssections()
 
 
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AbstractFilter::Pointer FindLargestCrossSections::newFilterInstance(bool copyFilterParameters)
+{
+  /*
+  * Plane
+  */
+  FindLargestCrossSections::Pointer filter = FindLargestCrossSections::New();
+  if(true == copyFilterParameters)
+  {
+    filter->setPlane( getPlane() );
+  }
+  return filter;
+}

@@ -86,8 +86,8 @@ void OutputFileWidget::setupGui()
 
   QFileCompleter* com = new QFileCompleter(this, false);
   value->setCompleter(com);
-  QObject::connect( com, SIGNAL(activated(const QString &)),
-                    this, SLOT(widgetChanged(const QString &)));
+  QObject::connect( com, SIGNAL(activated(const QString&)),
+                    this, SLOT(on_value_textChanged(const QString&)));
 
   if (m_FilterParameter != NULL)
   {
@@ -115,22 +115,34 @@ bool OutputFileWidget::verifyPathExists(QString filePath, QLineEdit* lineEdit)
   return fileinfo.exists();
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void OutputFileWidget::on_value_editingFinished()
+{
+  emit parametersChanged(); // This should force the preflight to run because we are emitting a signal
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 void OutputFileWidget::on_value_textChanged(const QString& text)
 {
-
+  setOpenDialogLastDirectory(text);
+  // Set/Remove the red outline if the file does exist
+  emit parametersChanged(); // This should force the preflight to run because we are emitting a signal
 }
-
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void OutputFileWidget::on_value_editingFinished()
+void OutputFileWidget::on_value_fileDropped(const QString& text)
 {
-  emit parametersChanged();
+  setOpenDialogLastDirectory(text);
+  // Set/Remove the red outline if the file does exist
+  verifyPathExists(text, value);
+
+  emit parametersChanged(); // This should force the preflight to run because we are emitting a signal
 }
 
 // -----------------------------------------------------------------------------
@@ -162,16 +174,6 @@ void OutputFileWidget::on_selectBtn_clicked()
 
   value->setText(file);
   on_value_editingFinished();
-}
-
-
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void OutputFileWidget::widgetChanged(const QString &text)
-{
-  emit parametersChanged();
 }
 
 // -----------------------------------------------------------------------------

@@ -42,7 +42,7 @@
 
 #include "ui_AddFavoriteWidget.h"
 
-class DREAM3DWidgetsLib_EXPORT AddFavoriteWidget : public QDialog, public Ui::Dialog
+class DREAM3DWidgetsLib_EXPORT AddFavoriteWidget : public QDialog, public Ui::AddFavoriteDialog
 {
   Q_OBJECT
 

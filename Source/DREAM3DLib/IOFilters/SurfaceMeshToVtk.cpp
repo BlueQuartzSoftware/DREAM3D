@@ -787,3 +787,20 @@ int SurfaceMeshToVtk::writeCellData(FILE* vtkFile)
   return err;
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AbstractFilter::Pointer SurfaceMeshToVtk::newFilterInstance(bool copyFilterParameters)
+{
+  /*
+  * OutputVtkFile
+  * WriteBinaryFile
+  */
+  SurfaceMeshToVtk::Pointer filter = SurfaceMeshToVtk::New();
+  if(true == copyFilterParameters)
+  {
+    filter->setOutputVtkFile( getOutputVtkFile() );
+    filter->setWriteBinaryFile( getWriteBinaryFile() );
+  }
+  return filter;
+}

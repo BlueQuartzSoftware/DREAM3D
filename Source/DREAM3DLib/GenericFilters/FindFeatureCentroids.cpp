@@ -201,3 +201,16 @@ void FindFeatureCentroids::find_centroids()
   }
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AbstractFilter::Pointer FindFeatureCentroids::newFilterInstance(bool copyFilterParameters)
+{
+  /*
+  */
+  FindFeatureCentroids::Pointer filter = FindFeatureCentroids::New();
+  if(true == copyFilterParameters)
+  {
+  }
+  return filter;
+}

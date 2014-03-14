@@ -78,6 +78,7 @@ class FindMisorientations : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(MisorientationListArrayName)
 
     virtual const QString getCompiledLibraryName() { return Statistics::StatisticsBaseName; }
+    virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::CrystallographicFilters; }
     virtual const QString getHumanLabel() { return "Find Feature Neighbor Misorientations"; }
@@ -135,5 +136,6 @@ class FindMisorientations : public AbstractFilter
 };
 
 #endif /* FindMisorientations_H_ */
+
 
 

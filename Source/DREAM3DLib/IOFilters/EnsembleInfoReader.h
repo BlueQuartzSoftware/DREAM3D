@@ -71,6 +71,7 @@ class DREAM3DLib_EXPORT EnsembleInfoReader : public FileReader
     Q_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile)
 
     virtual const QString getCompiledLibraryName() { return IO::IOBaseName; }
+    virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::InputFilters; }
     virtual const QString getHumanLabel() { return "Read Ensemble Info File"; }
@@ -114,6 +115,7 @@ class DREAM3DLib_EXPORT EnsembleInfoReader : public FileReader
 };
 
 #endif //_EnsembleInfoReader_h_
+
 
 
 

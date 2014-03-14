@@ -487,3 +487,18 @@ int ParaDisReader::readFile()
 }
 
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AbstractFilter::Pointer ParaDisReader::newFilterInstance(bool copyFilterParameters)
+{
+  /*
+  * InputFile
+  */
+  ParaDisReader::Pointer filter = ParaDisReader::New();
+  if(true == copyFilterParameters)
+  {
+    filter->setInputFile( getInputFile() );
+  }
+  return filter;
+}

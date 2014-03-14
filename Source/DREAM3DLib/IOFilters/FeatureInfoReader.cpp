@@ -308,3 +308,22 @@ int FeatureInfoReader::readFile()
 }
 
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AbstractFilter::Pointer FeatureInfoReader::newFilterInstance(bool copyFilterParameters)
+{
+  /*
+  * InputFile
+  * CreateCellLevelArrays
+  * RenumberFeatures
+  */
+  FeatureInfoReader::Pointer filter = FeatureInfoReader::New();
+  if(true == copyFilterParameters)
+  {
+    filter->setInputFile( getInputFile() );
+    filter->setCreateCellLevelArrays( getCreateCellLevelArrays() );
+    filter->setRenumberFeatures( getRenumberFeatures() );
+  }
+  return filter;
+}

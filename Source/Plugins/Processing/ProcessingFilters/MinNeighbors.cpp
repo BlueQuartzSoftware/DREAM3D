@@ -335,3 +335,18 @@ QVector<bool> MinNeighbors::merge_containedfeatures()
   return activeObjects;
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AbstractFilter::Pointer MinNeighbors::newFilterInstance(bool copyFilterParameters)
+{
+  /*
+  * MinNumNeighbors
+  */
+  MinNeighbors::Pointer filter = MinNeighbors::New();
+  if(true == copyFilterParameters)
+  {
+    filter->setMinNumNeighbors( getMinNumNeighbors() );
+  }
+  return filter;
+}

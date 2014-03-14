@@ -83,6 +83,7 @@ class GBCDTriangleDumper : public AbstractFilter
     * in the GUI for the filter
     */
     virtual const QString getCompiledLibraryName() { return IO::IOBaseName; }
+    virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::MiscFilters; }
 
@@ -155,6 +156,7 @@ class GBCDTriangleDumper : public AbstractFilter
 };
 
 #endif /* _GBCDTriangleDumper_H_ */
+
 
 
 

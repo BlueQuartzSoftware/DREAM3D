@@ -39,6 +39,8 @@
 
 #include "DREAM3DLib/Math/MatrixMath.h"
 #include "DREAM3DLib/Math/DREAM3DMath.h"
+#include "DREAM3DLib/Math/GeometryMath.h"
+#include "DREAM3DLib/Math/OrientationMath.h"
 #include "DREAM3DLib/Common/Constants.h"
 
 // -----------------------------------------------------------------------------
@@ -209,3 +211,18 @@ void FindBasalLoadingFactor::execute()
   notifyStatusMessage(getHumanLabel(), "FindBasalLoadingFactor Completed");
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AbstractFilter::Pointer FindBasalLoadingFactor::newFilterInstance(bool copyFilterParameters)
+{
+  /*
+  * LoadingDir
+  */
+  FindBasalLoadingFactor::Pointer filter = FindBasalLoadingFactor::New();
+  if(true == copyFilterParameters)
+  {
+    filter->setLoadingDir( getLoadingDir() );
+  }
+  return filter;
+}

@@ -55,6 +55,8 @@
 
 
 class QScrollArea;
+class QContextMenuEvent;
+class QLabel;
 
 /*
  *
@@ -67,11 +69,23 @@ class DREAM3DWidgetsLib_EXPORT PipelineViewWidget : public QFrame
     PipelineViewWidget(QWidget* parent = 0);
     virtual ~PipelineViewWidget();
 
+    /**
+     * @brief filterCount
+     * @return
+     */
     int filterCount();
+
+    /**
+     * @brief filterWidgetAt
+     * @param index
+     * @return
+     */
     PipelineFilterWidget* filterWidgetAt(int index);
+
+    /**
+     * @brief clearWidgets
+     */
     void clearWidgets();
-
-
 
     /**
      * @brief getFilterPipeline
@@ -79,6 +93,13 @@ class DREAM3DWidgetsLib_EXPORT PipelineViewWidget : public QFrame
      */
     FilterPipeline::Pointer getFilterPipeline();
 
+    /**
+     * @brief Returns a FilterPipeline Object with a new filter instance that has the input parameters copied
+     * from the filter instance that is embedded in the PipelineFilterWidget instance. This function does NOT perform
+     * a DEEP copy of the filter.
+     * @return
+     */
+    FilterPipeline::Pointer copyFilterPipeline();
 
     /**
      * @brief setScrollArea
@@ -126,31 +147,93 @@ class DREAM3DWidgetsLib_EXPORT PipelineViewWidget : public QFrame
      */
     bool shouldAutoScroll(const QPoint& pos);
 
-
+    /**
+     * @brief setInputParametersWidget
+     * @param w
+     */
     void setInputParametersWidget(QWidget* w);
 
-
-
+    /**
+     * @brief newEmptyPipelineViewLayout
+     */
     void newEmptyPipelineViewLayout();
+
+    /**
+     * @brief resetLayout
+     */
     void resetLayout();
 
+    /**
+     * @brief setPipelineMessageObserver
+     * @param pipelineMessageObserver
+     */
     void setPipelineMessageObserver(QObject* pipelineMessageObserver);
+
+    /**
+     * @brief Sets the actions that will be displayed as a context menu
+     * @param list
+     */
+    void setContextMenuActions(QList<QAction*> list);
 
 
   public slots:
+
+    /**
+     * @brief addFilter
+     * @param filterClassName
+     * @param index
+     */
     void addFilter(const QString& filterClassName, int index = -1);
+
+    /**
+     * @brief addFilterWidget
+     * @param w
+     * @param filter
+     * @param index
+     */
     void addFilterWidget(PipelineFilterWidget *w, AbstractFilter::Pointer filter, int index = -1);
 
+    /**
+     * @brief removeFilterWidget
+     * @param whoSent
+     */
     void removeFilterWidget(PipelineFilterWidget *whoSent);
+
+    /**
+     * @brief setSelectedFilterWidget
+     * @param w
+     */
     void setSelectedFilterWidget(PipelineFilterWidget* w);
+
+    /**
+     * @brief setFilterBeingDragged
+     * @param w
+     */
     void setFilterBeingDragged(PipelineFilterWidget* w);
+
+    /**
+     * @brief preflightPipeline
+     */
     void preflightPipeline();
+
+    /**
+     * @brief onCustomContextMenuRequested
+     * @param pos
+     */
+    void on_customContextMenuRequested(const QPoint& pos);
+
 
     /**
      * @brief doAutoScroll This does the actual scrolling of the Widget
      */
     void doAutoScroll();
 
+    /**
+     * @brief loadPipelineFile
+     * @param filePath
+     * @param format
+     * @param append
+     */
     void loadPipelineFile(const QString& filePath, QSettings::Format format = QSettings::IniFormat, bool append = false);
 
     /**
@@ -164,11 +247,14 @@ class DREAM3DWidgetsLib_EXPORT PipelineViewWidget : public QFrame
   signals:
     void addPlaceHolderFilter(QPoint p);
     void removePlaceHolderFilter();
-    void pipelineFileDropped(const QString& file);
+    void preflightHasMessage(PipelineMessage msg);
+
+    void pipelineFileDropped(QString& file);
     void pipelineHasErrorsSignal();
     void pipelineHasNoErrors();
-    void preflightHasMessage(PipelineMessage msg);
     void pipelineIssuesCleared();
+    void pipelineTitleUpdated(QString name);
+    void pipelineChanged();
 
   protected:
     void setupGui();
@@ -177,10 +263,12 @@ class DREAM3DWidgetsLib_EXPORT PipelineViewWidget : public QFrame
     void dragMoveEvent(QDragMoveEvent* event);
     void dropEvent(QDropEvent* event);
 
+    void showContextMenu(const QPoint& globalPos);
+
   private:
-    PipelineFilterWidget*            m_SelectedFilterWidget;
+    PipelineFilterWidget*     m_SelectedFilterWidget;
     QVBoxLayout*              m_FilterWidgetLayout;
-    PipelineFilterWidget*            m_FilterBeingDragged;
+    PipelineFilterWidget*     m_FilterBeingDragged;
     int                       m_DropIndex;
     QLabel*                   m_EmptyPipelineLabel;
     QPoint                    m_LastDragPoint;
@@ -191,6 +279,8 @@ class DREAM3DWidgetsLib_EXPORT PipelineViewWidget : public QFrame
     int                       m_autoScrollCount;
     QWidget*                  m_InputParametersWidget;
     QObject*                  m_PipelineMessageObserver;
+    QMenu                     m_Menu;
+    QList<QAction*>           m_MenuActions;
 
     PipelineViewWidget(const PipelineViewWidget&); // Copy Constructor Not Implemented
     void operator=(const PipelineViewWidget&); // Operator '=' Not Implemented

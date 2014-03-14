@@ -252,3 +252,26 @@ void UncertainRegularGridSampleSurfaceMesh::assign_points(Int32ArrayType::Pointe
     m_FeatureIds[i] = ids[i];
   }
 }
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AbstractFilter::Pointer UncertainRegularGridSampleSurfaceMesh::newFilterInstance(bool copyFilterParameters)
+{
+  /*
+  * XPoints
+  * YPoints
+  * ZPoints
+  * Resolution
+  * Uncertainty
+  */
+  UncertainRegularGridSampleSurfaceMesh::Pointer filter = UncertainRegularGridSampleSurfaceMesh::New();
+  if(true == copyFilterParameters)
+  {
+    filter->setXPoints( getXPoints() );
+    filter->setYPoints( getYPoints() );
+    filter->setZPoints( getZPoints() );
+    filter->setResolution( getResolution() );
+    filter->setUncertainty( getUncertainty() );
+  }
+  return filter;
+}

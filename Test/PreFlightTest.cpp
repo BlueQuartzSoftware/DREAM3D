@@ -42,6 +42,7 @@
 #include <QtCore/QFile>
 #include <QtCore/QSettings>
 #include <QtCore/QString>
+#include <QtCore/QMetaProperty>
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/Observer.h"
@@ -129,12 +130,13 @@ void RemoveTestFiles()
   }
 
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void verifyFilterParameters()
+void GenerateCopyCode()
 {
+  qDebug() << "-------------- GenerateCopyCode ------------------------------";
+
   FilterManager::Pointer fm = FilterManager::Instance();
   //QByteArray normType = ("updateFilterParameters(AbstractFilter*)");
   FilterManager::Collection factories = fm->getFactories();
@@ -145,15 +147,78 @@ void verifyFilterParameters()
     IFilterFactory::Pointer factory = iter.value();
     AbstractFilter::Pointer filter = factory->create();
     const QMetaObject* meta = filter->metaObject();
-   // int count = meta->methodCount();
-   // qDebug() << filter->getNameOfClass();
+
+
+
+    std::string cn = filter->getNameOfClass().toStdString();
+    std::cout << cn << "::Pointer " << cn << "::newFilterInstance(bool copyFilterParameters)" << std::endl;
+    std::cout << "{" << std::endl;
+
+    QStringList properties;
+    std::cout << "/*" << std::endl;
+    for(int i = meta->propertyOffset(); i < meta->propertyCount(); ++i)
+    {
+      properties << QString::fromLatin1(meta->property(i).name());
+      std::cout << QString::fromLatin1(meta->property(i).name()).toStdString() << std::endl;
+    }
+    std::cout << "*/" << std::endl;
+
+
+    std::cout << "  " << cn << "::Pointer filter = " << cn << "::New();" << std::endl;
+    std::cout << "  if(true == copyFilterParameters)\n  {" << std::endl;
+
+    QVector<FilterParameter::Pointer> options = filter->getFilterParameters();
+    for (QVector<FilterParameter::Pointer>::iterator iter = options.begin(); iter != options.end(); ++iter )
+    {
+      FilterParameter* option = (*iter).get();
+      QByteArray normType = QString("%1").arg( option->getPropertyName()).toLatin1();
+      int index = meta->indexOfProperty(normType);
+      if (index < 0)
+      {
+        std::cout << "#error Filter: " << filter->getNameOfClass().toStdString() << "  Missing Property: " << option->getPropertyName().toStdString() << std::endl;
+      }
+
+      std::cout << "    filter->set" << option->getPropertyName().toStdString() << "( get" << option->getPropertyName().toStdString() << "() );" << std::endl;
+    }
+    if(options.size() != properties.count())
+    {
+      std::cout << "#error The number of Q_PROPERITES " << properties.count() <<
+      " does not match the number of FilterParameters " << options.size() << " created in the setupFilterParameters() function." << std::endl;
+    }
+    std::cout << "  }" << std::endl;
+    std::cout << "  return filter;" << std::endl;
+    std::cout << "}" << std::endl;
+  }
+}
+
+
+
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void verifyFilterParameters()
+{
+  qDebug() << "-------------- verifyFilterParameters ------------------------------";
+
+  FilterManager::Pointer fm = FilterManager::Instance();
+  //QByteArray normType = ("updateFilterParameters(AbstractFilter*)");
+  FilterManager::Collection factories = fm->getFactories();
+  QMapIterator<QString, IFilterFactory::Pointer> iter(factories);
+  while(iter.hasNext())
+  {
+    iter.next();
+    IFilterFactory::Pointer factory = iter.value();
+    AbstractFilter::Pointer filter = factory->create();
+    const QMetaObject* meta = filter->metaObject();
+
     QVector<FilterParameter::Pointer> options = filter->getFilterParameters();
     for (QVector<FilterParameter::Pointer>::iterator iter = options.begin(); iter != options.end(); ++iter )
     {
 
       FilterParameter* option = (*iter).get();
       QByteArray normType = QString("%1").arg( option->getPropertyName()).toLatin1();
-     // qDebug() << "   " <<  option->getPropertyName();
       int index = meta->indexOfProperty(normType);
       if (index < 0)
       {
@@ -163,12 +228,13 @@ void verifyFilterParameters()
   }
 }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 void verifySignals()
 {
+  qDebug() << "-------------- verifySignals ------------------------------";
+
   FilterManager::Pointer fm = FilterManager::Instance();
   QByteArray normType = ("updateFilterParameters(AbstractFilter*)");
   FilterManager::Collection factories = fm->getFactories();
@@ -199,6 +265,7 @@ void verifySignals()
 // -----------------------------------------------------------------------------
 void verifyPreflightEmitsProperly()
 {
+  qDebug() << "-------------- verifyPreflightEmitsProperly ------------------------------";
   FilterManager::Pointer fm = FilterManager::Instance();
   FilterManager::Collection factories = fm->getFactories();
   QMapIterator<QString, IFilterFactory::Pointer> iter(factories);
@@ -238,7 +305,7 @@ void verifyPreflightEmitsProperly()
 // -----------------------------------------------------------------------------
 void TestPreflight()
 {
-
+  qDebug() << "-------------- TestPreflight ------------------------------";
   FilterManager::Pointer fm = FilterManager::Instance();
 
   FilterManager::Collection factories = fm->getFactories();
@@ -250,10 +317,11 @@ void TestPreflight()
     if(factory.get() != NULL)
     {
       AbstractFilter::Pointer filter = factory->create();
-      qDebug() << "Testing Preflight for " << filter->getGroupName() << "/" << filter->getNameOfClass();
+
       filter->preflight();
       err = filter->getErrorCondition();
-      DREAM3D_REQUIRE(err < 0)
+      // An error condition GREATER than ZERO is an anomoly and should be looked at.
+      if (err >= 0) { qDebug() << "Testing Preflight for " << filter->getGroupName() << "/" << filter->getNameOfClass(); }
     }
     factoryMapIter++;
   }
@@ -290,7 +358,9 @@ int main(int argc, char** argv)
   int err = EXIT_SUCCESS;
   DREAM3D_REGISTER_TEST( TestPreflight() )
 
-  PRINT_TEST_SUMMARY();
+      PRINT_TEST_SUMMARY();
+
+  GenerateCopyCode();
   return err;
 }
 

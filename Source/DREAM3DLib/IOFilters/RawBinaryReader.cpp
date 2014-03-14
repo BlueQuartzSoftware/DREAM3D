@@ -667,3 +667,38 @@ void RawBinaryReader::execute()
   notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AbstractFilter::Pointer RawBinaryReader::newFilterInstance(bool copyFilterParameters)
+{
+  /*
+  * ScalarType
+  * Endian
+  * Dimensionality
+  * NumberOfComponents
+  * Dimensions
+  * Origin
+  * Resolution
+  * OverRideOriginResolution
+  * SkipHeaderBytes
+  * OutputArrayName
+  * InputFile
+  */
+  RawBinaryReader::Pointer filter = RawBinaryReader::New();
+  if(true == copyFilterParameters)
+  {
+    filter->setInputFile( getInputFile() );
+    filter->setScalarType( getScalarType() );
+    filter->setDimensionality( getDimensionality() );
+    filter->setNumberOfComponents( getNumberOfComponents() );
+    filter->setEndian( getEndian() );
+    filter->setDimensions( getDimensions() );
+    filter->setOrigin( getOrigin() );
+    filter->setResolution( getResolution() );
+    filter->setOverRideOriginResolution( getOverRideOriginResolution() );
+    filter->setSkipHeaderBytes( getSkipHeaderBytes() );
+    filter->setOutputArrayName( getOutputArrayName() );
+  }
+  return filter;
+}

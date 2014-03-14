@@ -44,6 +44,7 @@
 #include "DREAM3DLib/OrientationOps/OrientationOps.h"
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Utilities/DREAM3DRandom.h"
+#include "DREAM3DLib/Math/OrientationMath.h"
 
 // -----------------------------------------------------------------------------
 //
@@ -218,7 +219,7 @@ void JumbleOrientations::execute()
   QuatF* avgQuats = reinterpret_cast<QuatF*>(m_AvgQuats);
   for (int i = 1; i < totalFeatures; i++)
   {
-    OrientationMath::EulertoQuat(q, m_FeatureEulerAngles[3 * i], m_FeatureEulerAngles[3 * i + 1], m_FeatureEulerAngles[3 * i + 2]);
+    OrientationMath::EulertoQuat(m_FeatureEulerAngles[3 * i], m_FeatureEulerAngles[3 * i + 1], m_FeatureEulerAngles[3 * i + 2], q);
     QuaternionMathF::Copy(q, avgQuats[i]);
   }
 
@@ -226,3 +227,16 @@ void JumbleOrientations::execute()
   notifyStatusMessage(getHumanLabel(), "Jumbling Orientations Complete");
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AbstractFilter::Pointer JumbleOrientations::newFilterInstance(bool copyFilterParameters)
+{
+  /*
+  */
+  JumbleOrientations::Pointer filter = JumbleOrientations::New();
+  if(true == copyFilterParameters)
+  {
+  }
+  return filter;
+}

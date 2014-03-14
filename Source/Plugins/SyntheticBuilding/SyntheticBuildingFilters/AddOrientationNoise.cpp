@@ -41,6 +41,7 @@
 
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Math/DREAM3DMath.h"
+#include "DREAM3DLib/Math/OrientationMath.h"
 #include "DREAM3DLib/Utilities/DREAM3DRandom.h"
 #include "DREAM3DLib/OrientationOps/OrientationOps.h"
 #include "DREAM3DLib/Math/MatrixMath.h"
@@ -197,3 +198,18 @@ void  AddOrientationNoise::add_orientation_noise()
 }
 
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AbstractFilter::Pointer AddOrientationNoise::newFilterInstance(bool copyFilterParameters)
+{
+  /*
+  * Magnitude
+  */
+  AddOrientationNoise::Pointer filter = AddOrientationNoise::New();
+  if(true == copyFilterParameters)
+  {
+    filter->setMagnitude( getMagnitude() );
+  }
+  return filter;
+}

@@ -79,6 +79,7 @@ class NeighborCICorrelation : public AbstractFilter
     Q_PROPERTY(bool Loop READ getLoop WRITE setLoop)
 
     virtual const QString getCompiledLibraryName() { return Processing::ProcessingBaseName; }
+    virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::ProcessingFilters; }
     virtual const QString getSubGroupName()  { return DREAM3D::FilterSubGroups::CleanupFilters; }
     virtual const QString getHumanLabel() { return "Neighbor CI Correlation"; }
@@ -119,4 +120,5 @@ class NeighborCICorrelation : public AbstractFilter
 };
 
 #endif /* NeighborCICorrelation_H_ */
+
 

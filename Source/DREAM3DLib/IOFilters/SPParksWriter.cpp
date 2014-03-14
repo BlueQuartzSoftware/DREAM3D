@@ -257,3 +257,17 @@ int SPParksWriter::writeFile()
   return 0;
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AbstractFilter::Pointer SPParksWriter::newFilterInstance(bool copyFilterParameters)
+{
+  /*
+  */
+  SPParksWriter::Pointer filter = SPParksWriter::New();
+  if(true == copyFilterParameters)
+  {
+    filter->setOutputFile( getOutputFile() );
+  }
+  return filter;
+}

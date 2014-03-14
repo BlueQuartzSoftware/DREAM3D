@@ -253,3 +253,18 @@ void GenerateIPFColors::execute()
   notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AbstractFilter::Pointer GenerateIPFColors::newFilterInstance(bool copyFilterParameters)
+{
+  /*
+  * ReferenceDir
+  */
+  GenerateIPFColors::Pointer filter = GenerateIPFColors::New();
+  if(true == copyFilterParameters)
+  {
+    filter->setReferenceDir( getReferenceDir() );
+  }
+  return filter;
+}

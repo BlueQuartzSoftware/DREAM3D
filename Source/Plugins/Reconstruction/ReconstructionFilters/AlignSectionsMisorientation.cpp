@@ -279,7 +279,7 @@ void AlignSectionsMisorientation::find_shifts(QVector<int>& xshifts, QVector<int
   {
     progInt = ((float)iter / dims[2]) * 100.0f;
     QString ss = QObject::tr("Determining Shifts - %1% Complete").arg(progInt);
-    notifyStatusMessage(getHumanLabel(), ss);
+    notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
     if (getCancel() == true)
     {
       return;
@@ -369,3 +369,20 @@ void AlignSectionsMisorientation::find_shifts(QVector<int>& xshifts, QVector<int
   }
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AbstractFilter::Pointer AlignSectionsMisorientation::newFilterInstance(bool copyFilterParameters)
+{
+  /*
+  * MisorientationTolerance
+  */
+  AlignSectionsMisorientation::Pointer filter = AlignSectionsMisorientation::New();
+  if(true == copyFilterParameters)
+  {
+    filter->setMisorientationTolerance( getMisorientationTolerance() );
+    filter->setWriteAlignmentShifts( getWriteAlignmentShifts() );
+    filter->setAlignmentShiftFileName( getAlignmentShiftFileName() );
+  }
+  return filter;
+}

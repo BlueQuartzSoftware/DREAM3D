@@ -64,6 +64,7 @@ class DREAM3DLib_EXPORT YSChoiAbaqusReader : public FileReader
     Q_PROPERTY(QString InputFeatureInfoFile READ getInputFeatureInfoFile WRITE setInputFeatureInfoFile)
 
     virtual const QString getCompiledLibraryName() { return IO::IOBaseName; }
+    virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::InputFilters; }
     virtual const QString getHumanLabel() { return "Read YS Choi Abaqus Vtk Output File"; }
@@ -107,4 +108,5 @@ class DREAM3DLib_EXPORT YSChoiAbaqusReader : public FileReader
 };
 
 #endif /* YSCHOIABAQUSREADER_H_ */
+
 

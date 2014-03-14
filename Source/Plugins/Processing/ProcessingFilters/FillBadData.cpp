@@ -341,3 +341,18 @@ void FillBadData::execute()
   notifyStatusMessage(getHumanLabel(), "Filling Bad Data Complete");
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AbstractFilter::Pointer FillBadData::newFilterInstance(bool copyFilterParameters)
+{
+  /*
+  * MinAllowedDefectSize
+  */
+  FillBadData::Pointer filter = FillBadData::New();
+  if(true == copyFilterParameters)
+  {
+    filter->setMinAllowedDefectSize( getMinAllowedDefectSize() );
+  }
+  return filter;
+}

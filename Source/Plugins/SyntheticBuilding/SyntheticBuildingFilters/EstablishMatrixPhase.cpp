@@ -269,3 +269,16 @@ void  EstablishMatrixPhase::establish_matrix()
 }
 
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AbstractFilter::Pointer EstablishMatrixPhase::newFilterInstance(bool copyFilterParameters)
+{
+  /*
+  */
+  EstablishMatrixPhase::Pointer filter = EstablishMatrixPhase::New();
+  if(true == copyFilterParameters)
+  {
+  }
+  return filter;
+}

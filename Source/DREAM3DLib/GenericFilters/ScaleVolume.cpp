@@ -294,3 +294,22 @@ void ScaleVolume::updateSurfaceMesh()
   }
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AbstractFilter::Pointer ScaleVolume::newFilterInstance(bool copyFilterParameters)
+{
+  /*
+  * ApplyToVoxelVolume
+  * ApplyToSurfaceMesh
+  * ScaleFactor
+  */
+  ScaleVolume::Pointer filter = ScaleVolume::New();
+  if(true == copyFilterParameters)
+  {
+    filter->setApplyToVoxelVolume( getApplyToVoxelVolume() );
+    filter->setApplyToSurfaceMesh( getApplyToSurfaceMesh() );
+    filter->setScaleFactor( getScaleFactor() );
+  }
+  return filter;
+}

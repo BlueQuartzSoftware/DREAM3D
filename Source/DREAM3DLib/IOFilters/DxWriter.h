@@ -69,6 +69,7 @@ class DREAM3DLib_EXPORT DxWriter : public FileWriter
     Q_PROPERTY(bool AddSurfaceLayer READ getAddSurfaceLayer WRITE setAddSurfaceLayer)
 
     virtual const QString getCompiledLibraryName() { return IO::IOBaseName; }
+    virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::OutputFilters; }
     virtual const QString getHumanLabel() { return "Write Dx File (Feature Ids)"; }
@@ -110,4 +111,5 @@ class DREAM3DLib_EXPORT DxWriter : public FileWriter
 };
 
 #endif /* DXGRAINIDWRITER_H_ */
+
 

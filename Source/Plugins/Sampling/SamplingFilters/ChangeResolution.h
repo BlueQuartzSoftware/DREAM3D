@@ -76,6 +76,7 @@ class ChangeResolution : public AbstractFilter
     Q_PROPERTY(bool SaveAsNewDataContainer READ getSaveAsNewDataContainer WRITE setSaveAsNewDataContainer)
 
     virtual const QString getCompiledLibraryName() { return Sampling::SamplingBaseName; }
+    virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::SamplingFilters; }
     virtual const QString getSubGroupName()  { return DREAM3D::FilterSubGroups::ResolutionFilters; }
     virtual const QString getHumanLabel() { return "Change Resolution"; }
@@ -120,6 +121,7 @@ class ChangeResolution : public AbstractFilter
 };
 
 #endif /* CHANGERESOLUTION_H_ */
+
 
 
 

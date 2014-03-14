@@ -82,6 +82,7 @@ class FindRelativeMotionBetweenSlices : public AbstractFilter
     Q_PROPERTY(int SliceStep READ getSliceStep WRITE setSliceStep NOTIFY parametersChanged)
 
 
+    virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::ProcessingFilters; }
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::ImageFilters; }
     virtual const QString getHumanLabel() { return "Find Relative Motion Between Slices"; }
@@ -135,6 +136,7 @@ class FindRelativeMotionBetweenSlices : public AbstractFilter
 };
 
 #endif /* FindRelativeMotionBetweenSlices_H_ */
+
 
 
 

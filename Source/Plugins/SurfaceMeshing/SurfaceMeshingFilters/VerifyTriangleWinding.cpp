@@ -614,7 +614,7 @@ int VerifyTriangleWinding::verifyTriangleWinding()
     if ( (progressIndex / total * 100.0f) > (curPercent) )
     {
       QString ss = QObject::tr("%1% Complete").arg(static_cast<int>(progressIndex / total * 100.0f));
-      notifyStatusMessage(getHumanLabel(), ss);
+      notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
       curPercent += 5.0f;
     }
     ++progressIndex;
@@ -801,3 +801,16 @@ int VerifyTriangleWinding::verifyTriangleWinding()
 
 
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AbstractFilter::Pointer VerifyTriangleWinding::newFilterInstance(bool copyFilterParameters)
+{
+  /*
+  */
+  VerifyTriangleWinding::Pointer filter = VerifyTriangleWinding::New();
+  if(true == copyFilterParameters)
+  {
+  }
+  return filter;
+}

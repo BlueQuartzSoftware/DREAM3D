@@ -75,6 +75,7 @@ class FindNeighborhoods : public AbstractFilter
     Q_PROPERTY(int MultiplesOfAverage READ getMultiplesOfAverage WRITE setMultiplesOfAverage)
 
     virtual const QString getCompiledLibraryName() { return Statistics::StatisticsBaseName; }
+    virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::MorphologicalFilters; }
     virtual const QString getHumanLabel() { return "Find Feature Neighborhoods"; }
@@ -124,6 +125,7 @@ class FindNeighborhoods : public AbstractFilter
 };
 
 #endif /* FINDNEIGHBORHOODS_H_ */
+
 
 
 

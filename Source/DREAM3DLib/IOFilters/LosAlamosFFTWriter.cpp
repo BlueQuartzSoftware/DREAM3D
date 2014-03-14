@@ -242,3 +242,17 @@ int LosAlamosFFTWriter::writeFile()
   return err;
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AbstractFilter::Pointer LosAlamosFFTWriter::newFilterInstance(bool copyFilterParameters)
+{
+  /*
+  */
+  LosAlamosFFTWriter::Pointer filter = LosAlamosFFTWriter::New();
+  if(true == copyFilterParameters)
+  {
+    filter->setOutputFile( getOutputFile() );
+  }
+  return filter;
+}

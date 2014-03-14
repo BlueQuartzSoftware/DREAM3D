@@ -44,8 +44,8 @@ RenameAttributeMatrix::RenameAttributeMatrix() :
   AbstractFilter(),
   m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
   m_AttributeMatrixName(DREAM3D::Defaults::AttributeMatrixName),
-  m_SelectedArrayPath(""),
-  m_NewMatrixName("")
+  m_SelectedAttributeMatrixPath(""),
+  m_NewAttributeMatrix("")
 {
   setupFilterParameters();
 }
@@ -65,17 +65,17 @@ void RenameAttributeMatrix::setupFilterParameters()
   FilterParameterVector parameters;
   {
     FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Array to Rename");
-    parameter->setPropertyName("SelectedArrayPath");
-    parameter->setWidgetType(FilterParameterWidgetType::SingleArraySelectionWidget);
+    parameter->setHumanLabel("AttributeMatrix to Rename");
+    parameter->setPropertyName("SelectedAttributeMatrixPath");
+    parameter->setWidgetType(FilterParameterWidgetType::AttributeMatrixSelectionWidget);
     parameter->setValueType("QString");
     parameter->setUnits("");
     parameters.push_back(parameter);
   }
   {
     FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("New Matrix Name");
-    parameter->setPropertyName("NewMatrixName");
+    parameter->setHumanLabel("New AttributeMatrix Name");
+    parameter->setPropertyName("NewAttributeMatrix");
     parameter->setWidgetType(FilterParameterWidgetType::StringWidget);
     parameter->setValueType("QString");
     parameters.push_back(parameter);
@@ -94,8 +94,8 @@ void RenameAttributeMatrix::readFilterParameters(AbstractFilterParametersReader*
   /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
   //  setDataContainerName( reader->readString("DataContainerName", getDataContainerName()) );
   //  setAttributeMatrixName( reader->readString("AttributeMatrixName", getAttributeMatrixName()) );
-  setSelectedArrayPath( reader->readString("SelectedArrayPath", getSelectedArrayPath()) );
-  setNewMatrixName( reader->readString( "NewMatrixName", getNewMatrixName() ) );
+  setSelectedAttributeMatrixPath( reader->readString("SelectedAttributeMatrixPath", getSelectedAttributeMatrixPath()) );
+  setNewAttributeMatrix( reader->readString( "NewAttributeMatrix", getNewAttributeMatrix() ) );
   /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }
@@ -108,8 +108,8 @@ int RenameAttributeMatrix::writeFilterParameters(AbstractFilterParametersWriter*
   writer->openFilterGroup(this, index);
   //  writer->writeValue("DataContainerName", getDataContainerName());
   //  writer->writeValue("AttributeMatrixName", getAttributeMatrixName());
-  writer->writeValue("SelectedArrayPath", getSelectedArrayPath() );
-  writer->writeValue("NewMatrixName", getNewMatrixName() );
+  writer->writeValue("SelectedAttributeMatrixPath", getSelectedAttributeMatrixPath() );
+  writer->writeValue("NewAttributeMatrix", getNewAttributeMatrix() );
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
@@ -121,17 +121,14 @@ void RenameAttributeMatrix::dataCheck()
 {
   setErrorCondition(0);
 
-
-  qDebug() << "RenameAttributeMatrix::dataCheck() ==> " << getSelectedArrayPath();
-  qDebug() << "RenameAttributeMatrix::dataCheck() ==> " << getNewMatrixName();
-  if(m_NewMatrixName.isEmpty() == true)
+  if(m_NewAttributeMatrix.isEmpty() == true)
   {
     setErrorCondition(-11000);
     QString ss = QObject::tr("The New Attribute Array name can not be empty. Please set a value.");
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 
-  if (m_SelectedArrayPath.isEmpty() == true)
+  if (m_SelectedAttributeMatrixPath.isEmpty() == true)
   {
     setErrorCondition(-11001);
     QString ss = QObject::tr("The complete path to the Attribute Array can not be empty. Please set an appropriate path.");
@@ -142,11 +139,10 @@ void RenameAttributeMatrix::dataCheck()
 
     QString dcName;
     QString amName;
-    QString daName;
 
-    QStringList tokens = m_SelectedArrayPath.split(DREAM3D::PathSep);
+    QStringList tokens = m_SelectedAttributeMatrixPath.split(DREAM3D::PathSep);
     // We should end up with 3 Tokens
-    if(tokens.size() != 3)
+    if(tokens.size() != 2)
     {
       setErrorCondition(-11002);
       QString ss = QObject::tr("The path to the Attribute Array is malformed. Each part should be separated by a '|' character.");
@@ -156,13 +152,7 @@ void RenameAttributeMatrix::dataCheck()
     {
       dcName = tokens.at(0);
       amName = tokens.at(1);
-      daName = tokens.at(2);
 
-
-      //  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName(), false);
-      //  if(getErrorCondition() < 0 || NULL == m) { return; }
-      //  AttributeMatrix::Pointer cellAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getAttributeMatrixName(), -301);
-      //  if(getErrorCondition() < 0 || NULL == cellAttrMat.get() ) { return; }
       DataContainerArray::Pointer dca = getDataContainerArray();
       if (NULL == dca.get() ) { return; }
       DataContainer::Pointer dc = getDataContainerArray()->getDataContainer(dcName);
@@ -175,7 +165,7 @@ void RenameAttributeMatrix::dataCheck()
       }
 
       AttributeMatrix::Pointer attrMat = dc->getAttributeMatrix(amName);
-       if(NULL == attrMat.get())
+      if(NULL == attrMat.get())
       {
         setErrorCondition(-11004);
         QString ss = QObject::tr("The AttributeMatrix '%1' was not found in the DataContainer '%2'").arg(amName).arg(dcName);
@@ -183,24 +173,14 @@ void RenameAttributeMatrix::dataCheck()
         return;
       }
 
-
-      // We the AttributeMatrix, now lets try to get the AttributeArray object and rename it if it exists
-      IDataArray::Pointer dataArray = attrMat->getAttributeArray(daName);
-
-      if(NULL == dataArray.get() )
-      {
-        setErrorCondition(-11005);
-        QString ss = QObject::tr("A DataArray with the name '%1' was not found in the AttributeMatrix").arg(daName);
-        notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-        return;
-      }
-      bool check = attrMat->renameAttributeArray(daName, m_NewMatrixName);
+      bool check = dc->renameAttributeMatrix(amName, getNewAttributeMatrix() );
       if(check == false)
       {
         setErrorCondition(-11006);
-        QString ss = QObject::tr("Attempt to rename AttributeArray '%1' to '%2' Failed.").arg(daName).arg(m_NewMatrixName);
+        QString ss = QObject::tr("Attempt to rename AttributeMatrix '%1' to '%2' Failed.").arg(amName).arg(getNewAttributeMatrix());
         notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
       }
+
     }
   }
 }
@@ -228,4 +208,21 @@ void RenameAttributeMatrix::execute()
   if(getErrorCondition() < 0) { return; }
 
   notifyStatusMessage(getHumanLabel(), "Complete");
+}
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AbstractFilter::Pointer RenameAttributeMatrix::newFilterInstance(bool copyFilterParameters)
+{
+  /*
+  * SelectedAttributeMatrixPath
+  * NewAttributeMatrix
+  */
+  RenameAttributeMatrix::Pointer filter = RenameAttributeMatrix::New();
+  if(true == copyFilterParameters)
+  {
+    filter->setSelectedAttributeMatrixPath( getSelectedAttributeMatrixPath() );
+    filter->setNewAttributeMatrix( getNewAttributeMatrix() );
+  }
+  return filter;
 }

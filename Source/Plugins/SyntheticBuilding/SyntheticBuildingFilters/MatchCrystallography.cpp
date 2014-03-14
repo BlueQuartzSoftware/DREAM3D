@@ -269,11 +269,11 @@ void MatchCrystallography::execute()
 
   QString ss;
   ss = QObject::tr("Determining Volumes");
-  notifyStatusMessage(getHumanLabel(), ss);
+  notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
   determine_volumes();
 
   ss = QObject::tr("Determining Boundary Areas");
-  notifyStatusMessage(getHumanLabel(), ss);
+  notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
   determine_boundary_areas();
 
   for (int64_t i = 1; i < totalEnsembles; ++i)
@@ -285,15 +285,15 @@ void MatchCrystallography::execute()
       initializeArrays(i);
 
       ss = QObject::tr("Assigning Eulers to Phase %1").arg(i);
-      notifyStatusMessage(getHumanLabel(), ss);
+      notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
       assign_eulers(i);
 
       ss = QObject::tr("Measuring Misorientations of Phase %1").arg(i);
-      notifyStatusMessage(getHumanLabel(), ss);
+      notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
       measure_misorientations(i);
 
       ss = QObject::tr("Matching Crystallography of Phase %1").arg(i);
-      notifyStatusMessage(getHumanLabel(), ss);
+      notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
       matchCrystallography(i);
     }
   }
@@ -448,7 +448,7 @@ void MatchCrystallography::assign_eulers(int ensem)
       m_FeatureEulerAngles[3 * i] = synea1;
       m_FeatureEulerAngles[3 * i + 1] = synea2;
       m_FeatureEulerAngles[3 * i + 2] = synea3;
-      OrientationMath::EulertoQuat(q, synea1, synea2, synea3);
+      OrientationMath::EulertoQuat(synea1, synea2, synea3, q);
       QuaternionMathF::Copy(q, avgQuats[i]);
       if(m_SurfaceFeatures[i] == false)
       {
@@ -570,7 +570,7 @@ void MatchCrystallography::matchCrystallography(int ensem)
   while (badtrycount < (m_MaxIterations / 10) && iterations < m_MaxIterations)
   {
     QString ss = QObject::tr("Matching Crystallography - Swapping/Switching Orientations - %1% Complete").arg(((float)iterations / float(1000 * totalFeatures)) * 100);
-    //      notifyStatusMessage(getHumanLabel(), ss);
+    //      notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
     currentodferror = 0;
     currentmdferror = 0;
     for (int i = 0; i < numbins; i++)
@@ -604,7 +604,7 @@ void MatchCrystallography::matchCrystallography(int ensem)
         ea1 = m_FeatureEulerAngles[3 * selectedfeature1];
         ea2 = m_FeatureEulerAngles[3 * selectedfeature1 + 1];
         ea3 = m_FeatureEulerAngles[3 * selectedfeature1 + 2];
-        OrientationMath::EulertoRod(r1, r2, r3, ea1, ea2, ea3);
+        OrientationMath::EulertoRod( ea1, ea2, ea3, r1, r2, r3);
         g1odfbin = m_OrientationOps[m_CrystalStructures[ensem]]->getOdfBin(r1, r2, r3);
         random = static_cast<float>( rg.genrand_res53() );
         int choose = 0;
@@ -612,7 +612,7 @@ void MatchCrystallography::matchCrystallography(int ensem)
         choose = pick_euler(random, numbins);
 
         m_OrientationOps[m_CrystalStructures[ensem]]->determineEulerAngles(choose, g1ea1, g1ea2, g1ea3);
-        OrientationMath::EulertoQuat(q1, g1ea1, g1ea2, g1ea3);
+        OrientationMath::EulertoQuat(g1ea1, g1ea2, g1ea3, q1);
 
         odfchange = ((actualodf->getValue(choose) - simodf->getValue(choose)) * (actualodf->getValue(choose) - simodf->getValue(choose)))
                     - ((actualodf->getValue(choose) - (simodf->getValue(choose) + (m_Volumes[selectedfeature1] / unbiasedvol[ensem])))
@@ -631,7 +631,7 @@ void MatchCrystallography::matchCrystallography(int ensem)
           ea1 = m_FeatureEulerAngles[3 * neighbor];
           ea2 = m_FeatureEulerAngles[3 * neighbor + 1];
           ea3 = m_FeatureEulerAngles[3 * neighbor + 2];
-          OrientationMath::EulertoQuat(q2, ea1, ea2, ea3);
+          OrientationMath::EulertoQuat(ea1, ea2, ea3, q2);
           float neighsurfarea = neighborsurfacearealist[selectedfeature1][j];
           MC_LoopBody1(selectedfeature1, ensem, j, neighsurfarea, m_CrystalStructures[ensem], q1, q2);
         }
@@ -654,7 +654,7 @@ void MatchCrystallography::matchCrystallography(int ensem)
             ea1 = m_FeatureEulerAngles[3 * neighbor];
             ea2 = m_FeatureEulerAngles[3 * neighbor + 1];
             ea3 = m_FeatureEulerAngles[3 * neighbor + 2];
-            OrientationMath::EulertoQuat(q2, ea1, ea2, ea3);
+            OrientationMath::EulertoQuat(ea1, ea2, ea3, q2);
             float neighsurfarea = neighborsurfacearealist[selectedfeature1][j];
             MC_LoopBody2(selectedfeature1, ensem, j, neighsurfarea, m_CrystalStructures[ensem], q1, q2);
           }
@@ -698,10 +698,10 @@ void MatchCrystallography::matchCrystallography(int ensem)
           g2ea2 = m_FeatureEulerAngles[3 * selectedfeature2 + 1];
           g2ea3 = m_FeatureEulerAngles[3 * selectedfeature2 + 2];
           QuaternionMathF::Copy(q1, avgQuats[selectedfeature1]);
-          OrientationMath::EulertoRod(r1, r2, r3, g1ea1, g1ea2, g1ea3);
+          OrientationMath::EulertoRod(g1ea1, g1ea2, g1ea3, r1, r2, r3);
           g1odfbin = m_OrientationOps[m_CrystalStructures[ensem]]->getOdfBin(r1, r2, r3);
           QuaternionMathF::Copy(q1, avgQuats[selectedfeature2]);
-          OrientationMath::EulertoRod(r1, r2, r3, g2ea1, g2ea2, g2ea3);
+          OrientationMath::EulertoRod(g2ea1, g2ea2, g2ea3, r1, r2, r3);
           g2odfbin = m_OrientationOps[m_CrystalStructures[ensem]]->getOdfBin(r1, r2, r3);
 
           odfchange = ((actualodf->getValue(g1odfbin) - simodf->getValue(g1odfbin)) * (actualodf->getValue(g1odfbin) - simodf->getValue(g1odfbin)))
@@ -721,7 +721,7 @@ void MatchCrystallography::matchCrystallography(int ensem)
                                   + (m_Volumes[selectedfeature1] / unbiasedvol[ensem])))));
 
           mdfchange = 0;
-          OrientationMath::EulertoQuat(q1, g2ea1, g2ea2, g2ea3);
+          OrientationMath::EulertoQuat(g2ea1, g2ea2, g2ea3, q1);
           size_t size = 0;
           if(neighborlist[selectedfeature1].size() != 0) { size = neighborlist[selectedfeature1].size(); }
           for (size_t j = 0; j < size; j++)
@@ -730,7 +730,7 @@ void MatchCrystallography::matchCrystallography(int ensem)
             ea1 = m_FeatureEulerAngles[3 * neighbor];
             ea2 = m_FeatureEulerAngles[3 * neighbor + 1];
             ea3 = m_FeatureEulerAngles[3 * neighbor + 2];
-            OrientationMath::EulertoQuat(q2, ea1, ea2, ea3);
+            OrientationMath::EulertoQuat(ea1, ea2, ea3, q2);
             float neighsurfarea = neighborsurfacearealist[selectedfeature1][j];
             if(neighbor != static_cast<int>(selectedfeature2) )
             {
@@ -738,7 +738,7 @@ void MatchCrystallography::matchCrystallography(int ensem)
             }
           }
 
-          OrientationMath::EulertoQuat(q1, g1ea1, g1ea2, g1ea3);
+          OrientationMath::EulertoQuat(g1ea1, g1ea2, g1ea3, q1);
           size = 0;
           if(neighborlist[selectedfeature2].size() != 0) { size = neighborlist[selectedfeature2].size(); }
           for (size_t j = 0; j < size; j++)
@@ -747,7 +747,7 @@ void MatchCrystallography::matchCrystallography(int ensem)
             ea1 = m_FeatureEulerAngles[3 * neighbor];
             ea2 = m_FeatureEulerAngles[3 * neighbor + 1];
             ea3 = m_FeatureEulerAngles[3 * neighbor + 2];
-            OrientationMath::EulertoQuat(q2, ea1, ea2, ea3);
+            OrientationMath::EulertoQuat(ea1, ea2, ea3, q2);
             float neighsurfarea = neighborsurfacearealist[selectedfeature2][j];
             if(neighbor != selectedfeature1)
             {
@@ -771,7 +771,7 @@ void MatchCrystallography::matchCrystallography(int ensem)
             simodf->setValue(g2odfbin, (simodf->getValue(g2odfbin) + (m_Volumes[selectedfeature1] / unbiasedvol[ensem])
                                         - (m_Volumes[selectedfeature2] / unbiasedvol[ensem])));
 
-            OrientationMath::EulertoQuat(q1, g2ea1, g2ea2, g2ea3);
+            OrientationMath::EulertoQuat(g2ea1, g2ea2, g2ea3, q1);
             QuaternionMathF::Copy(avgQuats[selectedfeature1], q1);
             size = 0;
             if(neighborlist[selectedfeature1].size() != 0) { size = neighborlist[selectedfeature1].size(); }
@@ -781,7 +781,7 @@ void MatchCrystallography::matchCrystallography(int ensem)
               ea1 = m_FeatureEulerAngles[3 * neighbor];
               ea2 = m_FeatureEulerAngles[3 * neighbor + 1];
               ea3 = m_FeatureEulerAngles[3 * neighbor + 2];
-              OrientationMath::EulertoQuat(q2, ea1, ea2, ea3);
+              OrientationMath::EulertoQuat(ea1, ea2, ea3, q2);
               float neighsurfarea = neighborsurfacearealist[selectedfeature1][j];
               if(neighbor != selectedfeature2)
               {
@@ -789,7 +789,7 @@ void MatchCrystallography::matchCrystallography(int ensem)
               }
             }
 
-            OrientationMath::EulertoQuat(q1, g1ea1, g1ea2, g1ea3);
+            OrientationMath::EulertoQuat(g1ea1, g1ea2, g1ea3, q1);
             QuaternionMathF::Copy(q1, avgQuats[selectedfeature2]);
             size = 0;
             if(neighborlist[selectedfeature2].size() != 0) { size = neighborlist[selectedfeature2].size(); }
@@ -799,7 +799,7 @@ void MatchCrystallography::matchCrystallography(int ensem)
               ea1 = m_FeatureEulerAngles[3 * neighbor];
               ea2 = m_FeatureEulerAngles[3 * neighbor + 1];
               ea3 = m_FeatureEulerAngles[3 * neighbor + 2];
-              OrientationMath::EulertoQuat(q2, ea1, ea2, ea3);
+              OrientationMath::EulertoQuat(ea1, ea2, ea3, q2);
               float neighsurfarea = neighborsurfacearealist[selectedfeature2][j];
               if(neighbor != selectedfeature1)
               {
@@ -898,3 +898,18 @@ void MatchCrystallography::measure_misorientations(int ensem)
   }
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AbstractFilter::Pointer MatchCrystallography::newFilterInstance(bool copyFilterParameters)
+{
+  /*
+  * MaxIterations
+  */
+  MatchCrystallography::Pointer filter = MatchCrystallography::New();
+  if(true == copyFilterParameters)
+  {
+    filter->setMaxIterations( getMaxIterations() );
+  }
+  return filter;
+}

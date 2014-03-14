@@ -74,6 +74,7 @@ class DREAM3DLib_EXPORT DxReader : public FileReader
     Q_PROPERTY(FloatVec3_t Resolution READ getResolution WRITE setResolution)
 
     virtual const QString getCompiledLibraryName() { return IO::IOBaseName; }
+    virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::InputFilters; }
     virtual const QString getHumanLabel() { return "Read Dx File (Feature Ids)"; }
@@ -119,5 +120,6 @@ class DREAM3DLib_EXPORT DxReader : public FileReader
 };
 
 #endif /* DXREADER_H_ */
+
 
 

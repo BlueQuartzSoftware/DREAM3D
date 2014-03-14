@@ -227,7 +227,7 @@ void FindNeighbors::execute()
   for (int i = 1; i < totalFeatures; i++)
   {
     QString ss = QObject::tr("Finding Neighbors - Initializing Neighbor Lists - %1 Percent Complete").arg((static_cast<float>(i) / totalFeatures) * 100);
-    //   notifyStatusMessage(getHumanLabel(), ss);
+    //   notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
     m_NumNeighbors[i] = 0;
     neighborlist[i].resize(nListSize);
     neighborsurfacearealist[i].fill(-1.0, nListSize);
@@ -237,7 +237,7 @@ void FindNeighbors::execute()
   for (int64_t j = 0; j < totalPoints; j++)
   {
     QString ss = QObject::tr("Finding Neighbors - Determining Neighbor Lists - %1 Percent Complete").arg((static_cast<float>(j) / totalPoints) * 100);
-    //   notifyStatusMessage(getHumanLabel(), ss);
+    //   notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
     onsurf = 0;
     feature = m_FeatureIds[j];
     if(feature > 0)
@@ -277,14 +277,14 @@ void FindNeighbors::execute()
   }
 
   // We do this to create new set of NeighborList objects
-  size_t totalEnsembles = 0;
+  //size_t totalEnsembles = 0;
   dataCheck();
 
   for (size_t i = 1; i < m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples(); i++)
   {
 
     QString ss = QObject::tr("Finding Neighbors - Calculating Surface Areas - %1 Percent Complete").arg(((float)i / totalFeatures) * 100);
-    //  notifyStatusMessage(getHumanLabel(), ss);
+    //  notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
 
     QMap<int, int> neighToCount;
     int numneighs = static_cast<int>( neighborlist[i].size() );
@@ -330,3 +330,16 @@ void FindNeighbors::execute()
 }
 
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AbstractFilter::Pointer FindNeighbors::newFilterInstance(bool copyFilterParameters)
+{
+  /*
+  */
+  FindNeighbors::Pointer filter = FindNeighbors::New();
+  if(true == copyFilterParameters)
+  {
+  }
+  return filter;
+}

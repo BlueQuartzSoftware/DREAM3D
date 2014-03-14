@@ -392,7 +392,7 @@ void CropVolume::execute()
   for (int64_t i = 0; i < m_ZP; i++)
   {
     QString ss = QObject::tr("Cropping Volume - Slice %1 of %2 Complete").arg(i).arg(m_ZP);
-    notifyStatusMessage(getHumanLabel(), ss);
+    notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
     planeold = (i + m_ZMin) * (m->getXPoints() * m->getYPoints());
     plane = (i * m_XP * m_YP);
     for (int64_t j = 0; j < m_YP; j++)
@@ -463,3 +463,34 @@ void CropVolume::execute()
 }
 
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AbstractFilter::Pointer CropVolume::newFilterInstance(bool copyFilterParameters)
+{
+  /*
+  * XMin
+  * YMin
+  * ZMin
+  * XMax
+  * YMax
+  * ZMax
+  * RenumberFeatures
+  * SaveAsNewDataContainer
+  * UpdateOrigin
+  */
+  CropVolume::Pointer filter = CropVolume::New();
+  if(true == copyFilterParameters)
+  {
+    filter->setXMin( getXMin() );
+    filter->setYMin( getYMin() );
+    filter->setZMin( getZMin() );
+    filter->setXMax( getXMax() );
+    filter->setYMax( getYMax() );
+    filter->setZMax( getZMax() );
+    filter->setRenumberFeatures( getRenumberFeatures() );
+    filter->setSaveAsNewDataContainer( getSaveAsNewDataContainer() );
+    filter->setUpdateOrigin( getUpdateOrigin() );
+  }
+  return filter;
+}

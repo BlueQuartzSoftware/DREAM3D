@@ -243,12 +243,12 @@ void FindNeighborhoods::find_neighborhoods()
 #else
   typedef int64_t DimType;
 #endif
-  DimType dims[3] =
-  {
-    static_cast<DimType>(udims[0]),
-    static_cast<DimType>(udims[1]),
-    static_cast<DimType>(udims[2]),
-  };
+//  DimType dims[3] =
+//  {
+//    static_cast<DimType>(udims[0]),
+//    static_cast<DimType>(udims[1]),
+//    static_cast<DimType>(udims[2]),
+//  };
 
   //  size_t xP = dims[0];
   //  size_t yP = dims[1];
@@ -289,7 +289,7 @@ void FindNeighborhoods::find_neighborhoods()
     {
 
       QString ss = QObject::tr("Working On Feature %1 of %2").arg(i).arg(totalFeatures);
-      notifyStatusMessage(getHumanLabel(), ss);
+      notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
     }
     x = m_Centroids[3 * i];
     y = m_Centroids[3 * i + 1];
@@ -332,3 +332,18 @@ void FindNeighborhoods::find_neighborhoods()
   }
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AbstractFilter::Pointer FindNeighborhoods::newFilterInstance(bool copyFilterParameters)
+{
+  /*
+  * MultiplesOfAverage
+  */
+  FindNeighborhoods::Pointer filter = FindNeighborhoods::New();
+  if(true == copyFilterParameters)
+  {
+    filter->setMultiplesOfAverage( getMultiplesOfAverage() );
+  }
+  return filter;
+}

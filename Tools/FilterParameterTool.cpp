@@ -41,6 +41,7 @@
 #include <QtCore/QString>
 #include <QtCore/QDir>
 #include <QtCore/QFile>
+#include <QtCore/QMetaProperty>
 
 // DREAM3DLib includes
 #include "DREAM3DLib/DREAM3DLib.h"
@@ -253,11 +254,7 @@ void generateLibraryLocation(AbstractFilter::Pointer filter, const QString path)
   qint32 index = pluginName.lastIndexOf("Filters");
   pluginName.truncate(index);
 
-//  qDebug() << pluginName;
-
-
   // Read the header File
-
   QFile source(path);
   source.open(QFile::ReadOnly);
   QString cpp = source.readAll();
@@ -273,24 +270,104 @@ void generateLibraryLocation(AbstractFilter::Pointer filter, const QString path)
     QString line = sourceLines.next();
     if(line.contains(searchString) )
     {
-      header << "    virtual const QString getCompiledLibraryName() { return " << pluginName << "::" << pluginName << "BaseName; }" << "\n";
+      header << "    virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);\n";
     }
     header << line << "\n";
   }
 
-  QFileInfo fi2(path);
+  {
+    // Update the header file
+    QFileInfo fi2(path);
 #if 1
-  QFile hOut(path);
+    QFile hOut(path);
 #else
-  QString tmpPath = "/tmp/" + fi2.fileName();
-  QFile hOut(tmpPath);
+    QString tmpPath = "/tmp/" + fi2.fileName();
+    QFile hOut(tmpPath);
 #endif
-  hOut.open(QFile::WriteOnly);
-  QTextStream stream( &hOut );
-  stream << headerStr;
-  hOut.close();
+    hOut.open(QFile::WriteOnly);
+    QTextStream stream( &hOut );
+    stream << headerStr;
+    hOut.close();
 
-  qDebug() << "Saved File " << fi2.absoluteFilePath();
+    qDebug() << "Saved File " << fi2.absoluteFilePath();
+  }
+
+
+  cpp = fi.absolutePath() + "/" + fi.baseName() + ".cpp";
+  source.setFileName(cpp);
+  source.open(QFile::ReadOnly);
+  cpp = source.readAll();
+  source.close();
+  headerStr.clear(); // Clear the string
+
+  header << cpp; // Push out the file contents to our TextStream object
+
+
+  const QMetaObject* meta = filter->metaObject();
+
+
+
+  QString cn = filter->getNameOfClass();
+  header << "// -----------------------------------------------------------------------------\n";
+  header << "//\n";
+  header << "// -----------------------------------------------------------------------------\n";
+  header << "AbstractFilter::Pointer " << cn << "::newFilterInstance(bool copyFilterParameters)"<< "\n";
+  header << "{"<< "\n";
+
+  QStringList properties;
+  header << "  /*"<< "\n";
+  for(int i = meta->propertyOffset(); i < meta->propertyCount(); ++i)
+  {
+    properties << QString::fromLatin1(meta->property(i).name());
+    header << "  * " << QString::fromLatin1(meta->property(i).name())<< "\n";
+  }
+  header << "  */"<< "\n";
+
+
+  header << "  " << cn << "::Pointer filter = " << cn << "::New();"<< "\n";
+  header << "  if(true == copyFilterParameters)\n  {"<< "\n";
+
+  QVector<FilterParameter::Pointer> options = filter->getFilterParameters();
+  for (QVector<FilterParameter::Pointer>::iterator iter = options.begin(); iter != options.end(); ++iter )
+  {
+    FilterParameter* option = (*iter).get();
+    QByteArray normType = QString("%1").arg( option->getPropertyName()).toLatin1();
+    int index = meta->indexOfProperty(normType);
+    if (index < 0)
+    {
+      header << "#error Filter: " << filter->getNameOfClass() << "  Missing Property: " << option->getPropertyName()<< "\n";
+    }
+
+    header << "    filter->set" << option->getPropertyName() << "( get" << option->getPropertyName() << "() );"<< "\n";
+  }
+  if(options.size() != properties.count())
+  {
+    header << "#error The number of Q_PROPERITES " << properties.count() <<
+                 " does not match the number of FilterParameters " << options.size() << " created in the setupFilterParameters() function."<< "\n";
+  }
+  header << "  }"<< "\n";
+  header << "  return filter;"<< "\n";
+  header << "}"<< "\n";
+
+  {
+    cpp = fi.absolutePath() + "/" + fi.baseName() + ".cpp";
+    // Update the Source file
+    QFileInfo fi2(cpp);
+#if 1
+    QFile hOut(cpp);
+#else
+    QString tmpPath = "/tmp/" + fi2.fileName();
+    QFile hOut(tmpPath);
+#endif
+    hOut.open(QFile::WriteOnly);
+    QTextStream stream( &hOut );
+    stream << headerStr;
+    hOut.close();
+
+    qDebug() << "Saved File " << fi2.absoluteFilePath();
+  }
+
+
 
 }
 

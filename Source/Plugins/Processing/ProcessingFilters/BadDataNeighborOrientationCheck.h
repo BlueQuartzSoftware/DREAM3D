@@ -78,6 +78,7 @@ class BadDataNeighborOrientationCheck : public AbstractFilter
     Q_PROPERTY(int NumberOfNeighbors READ getNumberOfNeighbors WRITE setNumberOfNeighbors)
 
     virtual const QString getCompiledLibraryName() { return Processing::ProcessingBaseName; }
+    virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::ProcessingFilters; }
     virtual const QString getSubGroupName()  { return DREAM3D::FilterSubGroups::CleanupFilters; }
     virtual const QString getHumanLabel() { return "Neighbor Orientation Comparison (Bad Data)"; }
@@ -122,4 +123,5 @@ class BadDataNeighborOrientationCheck : public AbstractFilter
 };
 
 #endif /* BadDataNeighborOrientationCheck_H_ */
+
 

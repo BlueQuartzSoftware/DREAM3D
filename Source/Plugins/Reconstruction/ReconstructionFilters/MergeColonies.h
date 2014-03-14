@@ -73,6 +73,7 @@ class MergeColonies : public GroupFeatures
     DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
 
     virtual const QString getCompiledLibraryName() { return Reconstruction::ReconstructionBaseName; }
+    virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::ReconstructionFilters; }
     virtual const QString getSubGroupName() {return DREAM3D::FilterSubGroups::GroupingFilters;}
     virtual const QString getHumanLabel() { return "Reconstruct Prior Beta Features"; }
@@ -138,5 +139,6 @@ class MergeColonies : public GroupFeatures
 };
 
 #endif /* MERGECOLONIES_H_ */
+
 
 

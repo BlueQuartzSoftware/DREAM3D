@@ -198,3 +198,18 @@ void LinkFeatureMapToCellArray::execute()
 }
 
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AbstractFilter::Pointer LinkFeatureMapToCellArray::newFilterInstance(bool copyFilterParameters)
+{
+  /*
+  * SelectedCellDataArrayName
+  */
+  LinkFeatureMapToCellArray::Pointer filter = LinkFeatureMapToCellArray::New();
+  if(true == copyFilterParameters)
+  {
+    filter->setSelectedCellDataArrayName( getSelectedCellDataArrayName() );
+  }
+  return filter;
+}

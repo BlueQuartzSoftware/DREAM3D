@@ -76,6 +76,7 @@ class InsertAtoms : public AbstractFilter
     Q_PROPERTY(uint32_t Basis READ getBasis WRITE setBasis)
 
     virtual const QString getCompiledLibraryName() { return SyntheticBuilding::SyntheticBuildingBaseName; }
+    virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::SamplingFilters; }
     virtual const QString getSubGroupName()  { return DREAM3D::FilterSubGroups::ResolutionFilters; }
     virtual const QString getHumanLabel() { return "Insert Atoms"; }
@@ -131,5 +132,6 @@ class InsertAtoms : public AbstractFilter
 };
 
 #endif /* InsertAtoms_H_ */
+
 
 

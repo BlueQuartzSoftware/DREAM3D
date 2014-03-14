@@ -514,3 +514,20 @@ bool ScalarSegmentFeatures::determineGrouping(int64_t referencepoint, int64_t ne
   }
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AbstractFilter::Pointer ScalarSegmentFeatures::newFilterInstance(bool copyFilterParameters)
+{
+  /*
+  * ScalarArrayName
+  * ScalarTolerance
+  */
+  ScalarSegmentFeatures::Pointer filter = ScalarSegmentFeatures::New();
+  if(true == copyFilterParameters)
+  {
+    filter->setScalarArrayName( getScalarArrayName() );
+    filter->setScalarTolerance( getScalarTolerance() );
+  }
+  return filter;
+}

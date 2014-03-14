@@ -76,6 +76,7 @@ class AlignSectionsMisorientation : public AlignSections
     Q_PROPERTY(float MisorientationTolerance READ getMisorientationTolerance WRITE setMisorientationTolerance)
 
     virtual const QString getCompiledLibraryName() { return Reconstruction::ReconstructionBaseName; }
+    virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::ReconstructionFilters; }
     virtual const QString getSubGroupName() {return DREAM3D::FilterSubGroups::AlignmentFilters;}
     virtual const QString getHumanLabel() { return "Align Sections (Misorientation)"; }
@@ -125,5 +126,6 @@ class AlignSectionsMisorientation : public AlignSections
 };
 
 #endif /* AlignSectionsMisorientation_H_ */
+
 
 

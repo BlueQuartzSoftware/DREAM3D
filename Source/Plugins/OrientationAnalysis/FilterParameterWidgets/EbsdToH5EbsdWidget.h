@@ -111,8 +111,9 @@ class EbsdToH5EbsdWidget : public QWidget, private Ui::EbsdToH5EbsdWidget
     void on_m_TotalDigits_valueChanged(int value);
     void on_m_ZStartIndex_valueChanged(int value);
     void on_m_ZEndIndex_valueChanged(int value);
+    void on_m_zSpacing_textChanged(const QString& string);
 
-    // slots to catch signals emittd by the various QLineEdit widgets
+    // slots to catch signals emitted by the various QLineEdit widgets
     void on_m_InputDir_textChanged(const QString & text);
     void on_m_OutputFile_textChanged(const QString & text);
 

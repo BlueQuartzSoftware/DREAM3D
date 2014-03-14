@@ -359,3 +359,20 @@ void SurfaceMeshToNodesTrianglesEdges::execute()
   notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AbstractFilter::Pointer SurfaceMeshToNodesTrianglesEdges::newFilterInstance(bool copyFilterParameters)
+{
+  /*
+  * OutputNodesFile
+  * OutputTrianglesFile
+  */
+  SurfaceMeshToNodesTrianglesEdges::Pointer filter = SurfaceMeshToNodesTrianglesEdges::New();
+  if(true == copyFilterParameters)
+  {
+    filter->setOutputNodesFile( getOutputNodesFile() );
+    filter->setOutputTrianglesFile( getOutputTrianglesFile() );
+  }
+  return filter;
+}

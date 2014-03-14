@@ -68,6 +68,7 @@ class DREAM3DLib_EXPORT FindFeaturePhases : public AbstractFilter
 
 
     virtual const QString getCompiledLibraryName() { return Generic::GenericBaseName; }
+    virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::GenericFilters; }
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::MiscFilters; }
     virtual const QString getHumanLabel() { return "Find Feature Phases"; }
@@ -109,5 +110,6 @@ signals:
 };
 
 #endif /* FindFeaturePhases_H_ */
+
 
 

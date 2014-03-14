@@ -65,6 +65,29 @@ IDL> print, quat_vector(eulerang2quat(eulers[*,0]), [1,2,3.])
    -0.358598     -1.73177      3.29733
    */
 
+
+float outVec[3] = { 0.5f, 0.5f, 0.5f};
+float inVec[3] = {1.0f, 1.0f, 1.0f };
+float w = 1.0f;
+float n1 = 1.0f;
+float n2 = 1.0f;
+float n3 = 1.0f;
+float r1 = 1.0f;
+float r2 = 1.0f;
+float r3 = 1.0f;
+float ea1 = 1.0f; float ea2 = 1.0f; float ea3 = 1.0f;
+QuatF q = QuaternionMathF::New(0.0f, 0.0f, 1.0, 0.5);
+float g[3][3] =   { {1.0, 0.0, 0.0},
+                    {0.0, 1.0, 0.0},
+                    {0.0, 0.0, 1.0}
+                  };
+float euler[3] = {0.7, -0.7f, -0.7f};
+float x = 1.0; float y = 1.0; float z = 1.0;
+float angle = 3.14;
+float xAxis = 0.5; float yAxis = 0.5; float zAxis = 0.5;
+
+
+
 void Print(std::ostream& o, QuatF &q)
 {
   o << "{" << "<" << q.w << "> (" << q.x << ", " << q.y << ", " << q.z << ") }";
@@ -77,22 +100,114 @@ void TestQuatMath()
 {
 
   float euler[3] = {  2.72167, 0.148401, 0.148886 };
+  printf("Euler Angle & %0.6f, %0.6f, %0.6f\n", euler[0], euler[1], euler[2]);
+
+
   QuatF q;
-  OrientationMath::EulertoQuat(q, euler);
-  Print(std::cout, q);
-  std::cout << "" << std::endl;
+  OrientationMath::EulertoQuat(euler, q);
 
-  float g[3][3];
+  printf("Euler to Quaternion & (%0.6f <%0.6f, %0.6f, %0.6f>)\n", q.w, q.x, q.y, q.z);
+
+  OrientationMath::EulertoRod(euler[0], euler[1], euler[2], r1, r2, r3);
+  printf("Euler to Rodrigues & %0.6f, %0.6f, %0.6f\n", r1, r2, r3);
+  printf("Euler To Homochoric & MISSING\n");
+
+
   OrientationMath::EulertoMat(euler[0], euler[1], euler[2], g);
-  std::cout << g[0][0] <<  " " << g[0][1] << " " << g[0][2] << std::endl;
-  std::cout << g[1][0] <<  " " << g[1][1] << " " << g[1][2] << std::endl;
-  std::cout << g[2][0] <<  " " << g[2][1] << " " << g[2][2] << std::endl;
+//  printf("Euler to Passive Rotation Matrix & %0.6f  %0.6f  %0.6f\n", g[0][0] , g[0][1] , g[0][2]);
+//  printf("                                 & %0.6f  %0.6f  %0.6f\n", g[1][0] , g[1][1] , g[1][2]);
+//  printf("                                 & %0.6f  %0.6f  %0.6f\n", g[2][0] , g[2][1] , g[2][2]);
 
+
+printf("\\begin{equation}\n\\textbf{R}_{Passive} = \\begin{bmatrix}\n");
+printf("%0.6f & %0.6f & %0.6f\\\\\n", g[0][0] , g[0][1] , g[0][2]);
+printf("%0.6f & %0.6f & %0.6f\\\\\n", g[1][0] , g[1][1] , g[1][2]);
+printf("%0.6f & %0.6f & %0.6f\n", g[2][0] , g[2][1] , g[2][2]);
+printf("\\end{bmatrix}\n\\end{equation}\n");
+
+
+  OrientationMath::EulertoMatActive(euler[0], euler[1], euler[2], g);
+//  printf("Euler to Active Rotation Matrix & %0.6f  %0.6f  %0.6f\n", g[0][0] , g[0][1] , g[0][2]);
+//  printf("                                &  %0.6f  %0.6f  %0.6f\n", g[1][0] , g[1][1] , g[1][2]);
+//  printf("                                &  %0.6f  %0.6f  %0.6f\n", g[2][0] , g[2][1] , g[2][2]);
+
+  printf("\\begin{equation}\n\\textbf{R}_{Active} = \\begin{bmatrix}\n");
+  printf("%0.6f & %0.6f & %0.6f\\\\\n", g[0][0] , g[0][1] , g[0][2]);
+  printf("%0.6f & %0.6f & %0.6f\\\\\n", g[1][0] , g[1][1] , g[1][2]);
+  printf("%0.6f & %0.6f & %0.6f\n", g[2][0] , g[2][1] , g[2][2]);
+  printf("\\end{bmatrix}\n\\end{equation}\n");
+
+
+
+  QuatF quat = OrientationMath::EulertoQuat(euler);
+  quat = OrientationMath::EulertoQuat(euler[0], euler[1], euler[2]);
 
 }
 
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void TestAxisAngle()
+{
+  OrientationMath::AxisAngletoHomochoric(w, n1, n2, n3, r1, r2, r3);
+  OrientationMath::AxisAngletoRod(w, n1, n2, n3, r1, r2, r3);
+  OrientationMath::AxisAngletoQuat(w, n1, n2, n3, q);
+  OrientationMath::AxisAngletoMat(w, n1, n2, n3, g);
+  OrientationMath::ChangeAxisReferenceFrame(q, n1, n2, n3);
 
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void TestRodregues()
+{
+
+  OrientationMath::HomochorictoRod(r1, r2, r3);
+
+  OrientationMath::RodtoAxisAngle(r1, r2, r3,  w, n1, n2, n3);
+  OrientationMath::RodtoQuat(q, r1, r2, r3);
+  OrientationMath::RodtoHomochoric(r1, r2, r3);
+  OrientationMath::RodtoEuler(r1, r2, r3,  ea1,  ea2,  ea3);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void TestQuaternion()
+{
+  OrientationMath::QuattoAxisAngle(q,  w, n1, n2, n3);
+  OrientationMath::QuattoMat(q, g);
+  OrientationMath::QuattoRod(q, r1, r2, r3);
+  OrientationMath::QuattoEuler(q,  ea1,  ea2,  ea3);
+  OrientationMath::MultiplyQuaternionVector(q, inVec, outVec);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void TestEuler()
+{
+  OrientationMath::EulertoQuat(ea1, ea2, ea3, q);
+  OrientationMath::EulertoQuat(euler, q);
+  OrientationMath::EulertoMat(ea1, ea2, ea3, g);
+  OrientationMath::EulertoRod(r1, r2, r3, ea1, ea2, ea3);
+
+
+  OrientationMath::MattoEuler(g, ea1, ea2, ea3);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void TestMisc()
+{
+  QuatF passive = OrientationMath::PassiveRotation(angle, xAxis, yAxis, zAxis, x, y, z);
+  Print(std::cout, passive);
+  QuatF active = OrientationMath::ActiveRotation( angle, xAxis, yAxis, zAxis, x, y, z);
+  Print(std::cout, active);
+}
 
 // -----------------------------------------------------------------------------
 //  Use test framework

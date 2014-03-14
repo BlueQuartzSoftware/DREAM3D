@@ -72,6 +72,7 @@ class DREAM3DLib_EXPORT FindSurfaceFeatures : public AbstractFilter
     //------ Created Feature Data
 
     virtual const QString getCompiledLibraryName() { return Generic::GenericBaseName; }
+    virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::GenericFilters; }
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::SpatialFilters; }
     virtual const QString getHumanLabel() { return "Find Surface Features"; }
@@ -113,5 +114,6 @@ signals:
 };
 
 #endif /* FINDSURFACEGRAINS_H_ */
+
 
 

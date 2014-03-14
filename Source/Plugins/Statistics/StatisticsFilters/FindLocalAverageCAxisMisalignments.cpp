@@ -305,3 +305,20 @@ void FindLocalAverageCAxisMisalignments::execute()
   // If there is an error set this to something negative and also set a message
   notifyStatusMessage(getHumanLabel(), "Complete");
 }
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AbstractFilter::Pointer FindLocalAverageCAxisMisalignments::newFilterInstance(bool copyFilterParameters)
+{
+  /*
+  * CalcUnbiasedAvg
+  * CalcBiasedAvg
+  */
+  FindLocalAverageCAxisMisalignments::Pointer filter = FindLocalAverageCAxisMisalignments::New();
+  if(true == copyFilterParameters)
+  {
+    filter->setCalcUnbiasedAvg( getCalcUnbiasedAvg() );
+    filter->setCalcBiasedAvg( getCalcBiasedAvg() );
+  }
+  return filter;
+}

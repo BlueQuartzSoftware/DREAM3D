@@ -53,7 +53,6 @@
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/DataArrays/IDataArray.h"
-#include "DREAM3DLib/HDF5/VTKH5Constants.h"
 
 
 /**
@@ -74,20 +73,44 @@ class NeighborList : public IDataArray
 
     DREAM3D_INSTANCE_STRING_PROPERTY(NumNeighborsArrayName)
 
+    /**
+     * @brief createNewArray
+     * @param numElements
+     * @param rank
+     * @param dims
+     * @param name
+     * @return
+     */
     virtual IDataArray::Pointer createNewArray(size_t numElements, int rank, size_t* dims, const QString& name)
     {
       return NeighborList<T>::New();
     }
 
+    /**
+     * @brief createNewArray
+     * @param numElements
+     * @param dims
+     * @param name
+     * @return
+     */
     virtual IDataArray::Pointer createNewArray(size_t numElements, std::vector<size_t> dims, const QString& name)
     {
       return NeighborList<T>::New();
     }
 
+    /**
+     * @brief createNewArray
+     * @param numElements
+     * @param dims
+     * @param name
+     * @return
+     */
     virtual IDataArray::Pointer createNewArray(size_t numElements, QVector<size_t> dims, const QString& name)
     {
       return NeighborList<T>::New();
     }
+
+
     typedef std::vector<T> VectorType;
     typedef boost::shared_ptr<VectorType> SharedVectorType;
 
@@ -135,14 +158,33 @@ class NeighborList : public IDataArray
      */
     virtual QString getTypeAsString() { return NeighborList<T>::ClassName();}
 
+    /**
+     * @brief setName
+     * @param name
+     */
     void setName(const QString& name) { m_Name = name; }
+
+    /**
+     * @brief getName
+     * @return
+     */
     QString getName() { return m_Name; }
 
-
+    /**
+     * @brief takeOwnership
+     */
     void takeOwnership() {    }
+
+    /**
+     * @brief releaseOwnership
+     */
     void releaseOwnership()  { }
 
-
+    /**
+     * @brief getVoidPointer
+     * @param i
+     * @return
+     */
     void* getVoidPointer(size_t i) { return NULL; }
 
     /**
@@ -196,6 +238,12 @@ class NeighborList : public IDataArray
       return err;
     }
 
+    /**
+     * @brief copyTuple
+     * @param currentPos
+     * @param newPos
+     * @return
+     */
     virtual int copyTuple(size_t currentPos, size_t newPos)
     {
       _data[newPos] = _data[currentPos];
@@ -229,39 +277,76 @@ class NeighborList : public IDataArray
       return total;
     }
 
+    /**
+     * @brief setNumberOfComponents
+     * @param nc
+     */
     void setNumberOfComponents(int nc) { }
 
+    /**
+     * @brief getNumberOfComponents
+     * @return
+     */
     int getNumberOfComponents() { return 1; }
 
+    /**
+     * @brief getComponentDimensions
+     * @return
+     */
     QVector<size_t> getComponentDimensions()
     {
       QVector<size_t> dims(1, 1);
       return dims;
     }
 
+    /**
+     * @brief SetRank
+     * @param rnk
+     */
     void SetRank(int rnk) { }
 
+    /**
+     * @brief getRank
+     * @return
+     */
     int getRank() { return 1; }
 
+    /**
+     * @brief getTypeSize
+     * @return
+     */
     size_t getTypeSize()  { return sizeof(SharedVectorType); }
 
+    /**
+     * @brief initializeWithZeros
+     */
     void initializeWithZeros() { _data.clear(); }
 
+    /**
+     * @brief deepCopy
+     * @return
+     */
     IDataArray::Pointer deepCopy()
     {
-      NeighborList<T>::Pointer daCopyPtr = NeighborList<T>::New();
+      typename NeighborList<T>::Pointer daCopyPtr = NeighborList<T>::New();
       daCopyPtr->resize(getNumberOfTuples());
-      NeighborList<T>*daCopy = NeighborList<T>::SafeObjectDownCast<IDataArray*, NeighborList<T>*>(daCopyPtr.get());
+
+      //NeighborList<T>* daCopy = NeighborList<T>::SafeObjectDownCast<IDataArray*, NeighborList<T>*>(daCopyPtr.get());
       for(size_t i=0;i<getNumberOfTuples();i++)
       {
-        NeighborList<T>::SharedVectorType sharedNeiLst(new std::vector<T>);
+        typename NeighborList<T>::SharedVectorType sharedNeiLst(new std::vector<T>);
         sharedNeiLst = _data[i];
-        daCopy->setList(static_cast<int>(i), sharedNeiLst);
+        daCopyPtr->setList(static_cast<int>(i), sharedNeiLst);
       }
 
       return daCopyPtr;
     }
 
+    /**
+     * @brief resizeTotalElements
+     * @param size
+     * @return
+     */
     int32_t resizeTotalElements(size_t size)
     {
       size_t old = _data.size();
@@ -294,6 +379,12 @@ class NeighborList : public IDataArray
       }
     }
 
+    /**
+     * @brief printComponent
+     * @param out
+     * @param i
+     * @param j
+     */
     virtual void printComponent(QTextStream& out, size_t i, int j)
     {
       BOOST_ASSERT(false);
@@ -507,8 +598,10 @@ class NeighborList : public IDataArray
     }
 
     /**
-    *
-    */
+     * @brief addEntry
+     * @param grainId
+     * @param value
+     */
     void addEntry(int grainId, int value)
     {
       if(grainId >= static_cast<int>(_data.size()) )
@@ -525,7 +618,7 @@ class NeighborList : public IDataArray
     }
 
     /**
-     *
+     * @brief clearAllLists
      */
     void clearAllLists()
     {
@@ -534,7 +627,9 @@ class NeighborList : public IDataArray
 
 
     /**
-     *
+     * @brief setList
+     * @param grainId
+     * @param neighborList
      */
     void setList(int grainId, SharedVectorType neighborList)
     {
@@ -552,7 +647,11 @@ class NeighborList : public IDataArray
     }
 
     /**
-     *
+     * @brief getValue
+     * @param grainId
+     * @param index
+     * @param ok
+     * @return
      */
     T getValue(int grainId, int index, bool& ok)
     {

@@ -48,6 +48,7 @@
 #include <QtGui/QPainter>
 
 
+
 #include "QtSupport/DREAM3DHelpUrlGenerator.h"
 
 #include "DREAM3DLib/Common/FilterManager.h"
@@ -123,6 +124,12 @@ PipelineFilterWidget::PipelineFilterWidget(AbstractFilter::Pointer filter, IObse
 void PipelineFilterWidget::initialize(AbstractFilter::Pointer filter)
 {
   setupUi(this);
+
+//  setContextMenuPolicy(Qt::CustomContextMenu);
+
+//  connect(this,
+//    SIGNAL(customContextMenuRequested(const QPoint&)),
+//    SLOT(on_customContextMenuRequested(const QPoint&)));
 
   qRegisterMetaType<IntVec3_t>("IntVec3_t");
   qRegisterMetaTypeStreamOperators<IntVec3_t>("IntVec3_t");
@@ -504,7 +511,8 @@ void PipelineFilterWidget::mouseMoveEvent(QMouseEvent* event)
   {
     return;
   }
-
+  // The user is dragging the filter widget so we should set it as selected.
+  setIsSelected(true);
   QPixmap pixmap = QPixmap::grabWidget(this);
 
   // Create new picture for transparent
@@ -513,21 +521,11 @@ void PipelineFilterWidget::mouseMoveEvent(QMouseEvent* event)
   transparent.fill(Qt::transparent);
 #if 1
   QPainter p;
-
   p.begin(&transparent);
   p.setOpacity(0.70);
-  // p.setCompositionMode(QPainter::CompositionMode_Plus);
   p.drawPixmap(0, 0, pixmap);
-  // p.setCompositionMode(QPainter::CompositionMode_Plus);
-
-  // Set transparency level to 150 (possible values are 0-255)
-  // The alpha channel of a color specifies the transparency effect,
-  // 0 represents a fully transparent color, while 255 represents
-  // a fully opaque color.
-  //  p.fillRect(transparent.rect(), QColor(0, 0, 0, 150));
   p.end();
 #endif
-
 
   QByteArray itemData;
   QDataStream dataStream(&itemData, QIODevice::WriteOnly);
@@ -569,3 +567,5 @@ void PipelineFilterWidget::on_deleteBtn_clicked()
 {
   emit filterWidgetRemoved(this);
 }
+
+

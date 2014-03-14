@@ -402,3 +402,20 @@ void MergeTwins::characterize_twins()
 }
 
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AbstractFilter::Pointer MergeTwins::newFilterInstance(bool copyFilterParameters)
+{
+  /*
+  * AxisTolerance
+  * AngleTolerance
+  */
+  MergeTwins::Pointer filter = MergeTwins::New();
+  if(true == copyFilterParameters)
+  {
+    filter->setAxisTolerance( getAxisTolerance() );
+    filter->setAngleTolerance( getAngleTolerance() );
+  }
+  return filter;
+}

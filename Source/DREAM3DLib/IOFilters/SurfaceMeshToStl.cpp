@@ -140,8 +140,8 @@ void SurfaceMeshToStl::dataCheck()
     notifyErrorMessage(getHumanLabel(), "Stl Output Directory is Not set correctly", -1003);
   }
 
-  SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
-  if(getErrorCondition() < 0) { return; }
+  SurfaceDataContainer* sm  = getDataContainerArray()->getPrereqDataContainer<SurfaceDataContainer, AbstractFilter>(this, getSurfaceDataContainerName(), false);
+  if(getErrorCondition() < 0 || NULL == sm) { return; }
   AttributeMatrix::Pointer attrMat = sm->getPrereqAttributeMatrix<AbstractFilter>(this, getFaceAttributeMatrixName(), -301);
   if(getErrorCondition() < 0) { return; }
 
@@ -258,7 +258,7 @@ void SurfaceMeshToStl::execute()
 
     {
       QString ss = QObject::tr("Writing STL for Feature Id ").arg(spin);
-      notifyStatusMessage(getHumanLabel(), ss);
+      notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
     }
 
     QString header = "DREAM3D Generated For Feature ID " + QString::number(spin);
@@ -385,3 +385,22 @@ int SurfaceMeshToStl::writeNumTrianglesToFile(const QString& filename, int triCo
 
 
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AbstractFilter::Pointer SurfaceMeshToStl::newFilterInstance(bool copyFilterParameters)
+{
+  /*
+  * OutputStlDirectory
+  * OutputStlPrefix
+  * GroupByPhase
+  */
+  SurfaceMeshToStl::Pointer filter = SurfaceMeshToStl::New();
+  if(true == copyFilterParameters)
+  {
+    filter->setOutputStlDirectory( getOutputStlDirectory() );
+    filter->setOutputStlPrefix( getOutputStlPrefix() );
+    filter->setGroupByPhase( getGroupByPhase() );
+  }
+  return filter;
+}

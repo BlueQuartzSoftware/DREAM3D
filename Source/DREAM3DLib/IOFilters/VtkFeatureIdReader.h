@@ -73,6 +73,7 @@ class DREAM3DLib_EXPORT VtkFeatureIdReader : public FileReader
     //------ Created Cell Data
 
     virtual const QString getCompiledLibraryName() { return IO::IOBaseName; }
+    virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::InputFilters; }
     virtual const QString getHumanLabel() { return "Read Vtk File (STRUCTURED_POINTS) Feature Ids Only"; }
@@ -237,4 +238,5 @@ class DREAM3DLib_EXPORT VtkFeatureIdReader : public FileReader
 };
 
 #endif /* VTKRECTILINEARGRIDREADER_H_ */
+
 

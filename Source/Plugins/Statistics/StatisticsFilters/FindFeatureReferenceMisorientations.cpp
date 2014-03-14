@@ -41,6 +41,8 @@
 
 #include "DREAM3DLib/Math/DREAM3DMath.h"
 #include "DREAM3DLib/Common/Constants.h"
+#include "DREAM3DLib/Math/OrientationMath.h"
+
 
 // -----------------------------------------------------------------------------
 //
@@ -316,3 +318,18 @@ void FindFeatureReferenceMisorientations::execute()
   notifyStatusMessage(getHumanLabel(), "FindFeatureReferenceMisorientations Completed");
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AbstractFilter::Pointer FindFeatureReferenceMisorientations::newFilterInstance(bool copyFilterParameters)
+{
+  /*
+  * ReferenceOrientation
+  */
+  FindFeatureReferenceMisorientations::Pointer filter = FindFeatureReferenceMisorientations::New();
+  if(true == copyFilterParameters)
+  {
+    filter->setReferenceOrientation( getReferenceOrientation() );
+  }
+  return filter;
+}

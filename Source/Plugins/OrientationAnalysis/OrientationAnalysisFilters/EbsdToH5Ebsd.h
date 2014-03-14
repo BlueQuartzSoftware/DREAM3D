@@ -84,6 +84,7 @@ class EbsdToH5Ebsd : public AbstractFilter
     virtual void preflight();
 
     virtual const QString getCompiledLibraryName() { return OrientationAnalysis::OrientationAnalysisBaseName; }
+    virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::InputFilters; }
     virtual const QString getHumanLabel() { return "Import Orientation File(s) to H5Ebsd"; }
@@ -126,5 +127,6 @@ class EbsdToH5Ebsd : public AbstractFilter
 
 
 #endif /* EbsdToH5Ebsd_H_ */
+
 
 

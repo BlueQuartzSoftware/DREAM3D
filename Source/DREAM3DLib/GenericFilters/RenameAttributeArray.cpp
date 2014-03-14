@@ -121,9 +121,6 @@ void RenameAttributeArray::dataCheck()
 {
   setErrorCondition(0);
 
-
-  qDebug() << "RenameAttributeArray::dataCheck() ==> " << getSelectedArrayPath();
-  qDebug() << "RenameAttributeArray::dataCheck() ==> " << getNewArrayName();
   if(m_NewArrayName.isEmpty() == true)
   {
     setErrorCondition(-11000);
@@ -228,4 +225,21 @@ void RenameAttributeArray::execute()
   if(getErrorCondition() < 0) { return; }
 
   notifyStatusMessage(getHumanLabel(), "Complete");
+}
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AbstractFilter::Pointer RenameAttributeArray::newFilterInstance(bool copyFilterParameters)
+{
+  /*
+  * SelectedArrayPath
+  * NewArrayName
+  */
+  RenameAttributeArray::Pointer filter = RenameAttributeArray::New();
+  if(true == copyFilterParameters)
+  {
+    filter->setSelectedArrayPath( getSelectedArrayPath() );
+    filter->setNewArrayName( getNewArrayName() );
+  }
+  return filter;
 }

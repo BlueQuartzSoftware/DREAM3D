@@ -114,6 +114,7 @@ class ReadH5Ebsd : public AbstractFilter
 
 
     virtual const QString getCompiledLibraryName() { return OrientationAnalysis::OrientationAnalysisBaseName; }
+    virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::InputFilters; }
     virtual const QString getHumanLabel() { return "Read H5Ebsd File"; }
@@ -247,5 +248,6 @@ class ReadH5Ebsd : public AbstractFilter
 };
 
 #endif /* ReadH5Ebsd_H_ */
+
 
 

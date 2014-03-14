@@ -466,3 +466,26 @@ void FitCorrelatedFeatureData::execute()
 }
 
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AbstractFilter::Pointer FitCorrelatedFeatureData::newFilterInstance(bool copyFilterParameters)
+{
+  /*
+  * SelectedFeatureArrayName
+  * CorrelatedFeatureArrayName
+  * DistributionType
+  * NumberOfCorrelatedBins
+  * RemoveBiasedFeatures
+  */
+  FitCorrelatedFeatureData::Pointer filter = FitCorrelatedFeatureData::New();
+  if(true == copyFilterParameters)
+  {
+    filter->setSelectedFeatureArrayName( getSelectedFeatureArrayName() );
+    filter->setDistributionType( getDistributionType() );
+    filter->setCorrelatedFeatureArrayName( getCorrelatedFeatureArrayName() );
+    filter->setNumberOfCorrelatedBins( getNumberOfCorrelatedBins() );
+    filter->setRemoveBiasedFeatures( getRemoveBiasedFeatures() );
+  }
+  return filter;
+}

@@ -79,6 +79,7 @@ class MultiThresholdObjects : public AbstractFilter
     * in the GUI for the filter
     */
     virtual const QString getCompiledLibraryName() { return Processing::ProcessingBaseName; }
+    virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::ProcessingFilters; }
     virtual const QString getSubGroupName()  { return DREAM3D::FilterSubGroups::ThresholdFilters; }
 
@@ -144,4 +145,5 @@ class MultiThresholdObjects : public AbstractFilter
 };
 
 #endif /* _MultiThresholdObjects_H_ */
+
 

@@ -260,3 +260,18 @@ void FindKernelAvgMisorientations::execute()
   notifyStatusMessage(getHumanLabel(), "FindKernelAvgMisorientations Completed");
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AbstractFilter::Pointer FindKernelAvgMisorientations::newFilterInstance(bool copyFilterParameters)
+{
+  /*
+  * KernelSize
+  */
+  FindKernelAvgMisorientations::Pointer filter = FindKernelAvgMisorientations::New();
+  if(true == copyFilterParameters)
+  {
+    filter->setKernelSize( getKernelSize() );
+  }
+  return filter;
+}

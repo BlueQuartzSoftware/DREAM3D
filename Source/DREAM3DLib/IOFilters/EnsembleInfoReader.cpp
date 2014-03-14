@@ -211,3 +211,18 @@ int EnsembleInfoReader::readFile()
   notifyStatusMessage(getHumanLabel(), "Complete");
   return 0;
 }
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AbstractFilter::Pointer EnsembleInfoReader::newFilterInstance(bool copyFilterParameters)
+{
+  /*
+  * InputFile
+  */
+  EnsembleInfoReader::Pointer filter = EnsembleInfoReader::New();
+  if(true == copyFilterParameters)
+  {
+    filter->setInputFile( getInputFile() );
+  }
+  return filter;
+}

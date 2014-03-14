@@ -79,6 +79,7 @@ class DREAM3DLib_EXPORT ScaleVolume : public AbstractFilter
     * in the GUI for the filter
     */
     virtual const QString getCompiledLibraryName() { return Generic::GenericBaseName; }
+    virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::GenericFilters; }
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::SpatialFilters; }
 
@@ -149,5 +150,6 @@ class DREAM3DLib_EXPORT ScaleVolume : public AbstractFilter
 };
 
 #endif /* _ScaleVolume_H_ */
+
 
 

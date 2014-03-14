@@ -36,20 +36,18 @@
 
 #include "FeatureFaceCurvatureFilter.h"
 
+#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
+#include <tbb/task_scheduler_init.h>
+#include <tbb/task_group.h>
+#include <tbb/task.h>
+#endif
 
-
-//#include "SurfaceMeshing/SurfaceMeshingFilters/GenerateNodeFaceConnectivity.h"
 #include "SurfaceMeshing/SurfaceMeshingFilters/TriangleCentroidFilter.h"
 #include "SurfaceMeshing/SurfaceMeshingFilters/TriangleNormalFilter.h"
 
 #include "CalculateTriangleGroupCurvatures.h"
 #include "SharedFeatureFaceFilter.h"
 
-#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
-#include <tbb/task_scheduler_init.h>
-#include <tbb/task_group.h>
-#include <tbb/task.h>
-#endif
 
 // -----------------------------------------------------------------------------
 //
@@ -429,8 +427,31 @@ void FeatureFaceCurvatureFilter::tbbTaskProgress()
   m_CompletedFeatureFaces++;
 
   QString ss = QObject::tr("%1/%2 Complete").arg(m_CompletedFeatureFaces).arg(m_TotalFeatureFaces);
-  notifyStatusMessage(getHumanLabel(), ss);
+  notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
 }
 
 #endif
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AbstractFilter::Pointer FeatureFaceCurvatureFilter::newFilterInstance(bool copyFilterParameters)
+{
+  /*
+  * NRing
+  * ComputePrincipalDirectionVectors
+  * ComputeMeanCurvature
+  * ComputeGaussianCurvature
+  * UseNormalsForCurveFitting
+  */
+  FeatureFaceCurvatureFilter::Pointer filter = FeatureFaceCurvatureFilter::New();
+  if(true == copyFilterParameters)
+  {
+    filter->setNRing( getNRing() );
+    filter->setComputePrincipalDirectionVectors( getComputePrincipalDirectionVectors() );
+    filter->setComputeGaussianCurvature( getComputeGaussianCurvature() );
+    filter->setComputeMeanCurvature( getComputeMeanCurvature() );
+    filter->setUseNormalsForCurveFitting( getUseNormalsForCurveFitting() );
+  }
+  return filter;
+}

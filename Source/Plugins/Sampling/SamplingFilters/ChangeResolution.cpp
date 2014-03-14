@@ -258,7 +258,7 @@ void ChangeResolution::execute()
   for (int i = 0; i < m_ZP; i++)
   {
     QString ss = QObject::tr("Changing Resolution - %1 Percent Complete").arg(((float)i / m->getZPoints()) * 100);
-    notifyStatusMessage(getHumanLabel(), ss);
+    notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
     for (int j = 0; j < m_YP; j++)
     {
       for (int k = 0; k < m_XP; k++)
@@ -340,3 +340,22 @@ void ChangeResolution::execute()
   notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AbstractFilter::Pointer ChangeResolution::newFilterInstance(bool copyFilterParameters)
+{
+  /*
+  * Resolution
+  * RenumberFeatures
+  * SaveAsNewDataContainer
+  */
+  ChangeResolution::Pointer filter = ChangeResolution::New();
+  if(true == copyFilterParameters)
+  {
+    filter->setResolution( getResolution() );
+    filter->setRenumberFeatures( getRenumberFeatures() );
+    filter->setSaveAsNewDataContainer( getSaveAsNewDataContainer() );
+  }
+  return filter;
+}

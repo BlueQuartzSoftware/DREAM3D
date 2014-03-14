@@ -247,7 +247,7 @@ void FeatureDataCSVWriter::execute()
     {
 
       QString ss = QObject::tr("Writing Feature Data - %1% Complete").arg(((float)i / numTuples) * 100);
-      notifyStatusMessage(getHumanLabel(), ss);
+      notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
       threshold = threshold + 5.0f;
       if (threshold < ((float)i / numTuples) * 100.0f)
       {
@@ -307,3 +307,20 @@ void FeatureDataCSVWriter::execute()
 
 
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AbstractFilter::Pointer FeatureDataCSVWriter::newFilterInstance(bool copyFilterParameters)
+{
+  /*
+  * FeatureDataFile
+  * WriteNeighborListData
+  */
+  FeatureDataCSVWriter::Pointer filter = FeatureDataCSVWriter::New();
+  if(true == copyFilterParameters)
+  {
+    filter->setFeatureDataFile( getFeatureDataFile() );
+    filter->setWriteNeighborListData( getWriteNeighborListData() );
+  }
+  return filter;
+}

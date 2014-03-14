@@ -287,3 +287,28 @@ void ClearData::execute()
   notifyStatusMessage(getHumanLabel(), "Completed");
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AbstractFilter::Pointer ClearData::newFilterInstance(bool copyFilterParameters)
+{
+  /*
+  * XMin
+  * YMin
+  * ZMin
+  * XMax
+  * YMax
+  * ZMax
+  */
+  ClearData::Pointer filter = ClearData::New();
+  if(true == copyFilterParameters)
+  {
+    filter->setXMin( getXMin() );
+    filter->setYMin( getYMin() );
+    filter->setZMin( getZMin() );
+    filter->setXMax( getXMax() );
+    filter->setYMax( getYMax() );
+    filter->setZMax( getZMax() );
+  }
+  return filter;
+}

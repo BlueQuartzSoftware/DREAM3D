@@ -35,13 +35,6 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 #include "TetragonalOps.h"
-// Include this FIRST because there is a needed define for some compiles
-// to expose some of the constants needed below
-#include "DREAM3DLib/Math/DREAM3DMath.h"
-#include "DREAM3DLib/Math/OrientationMath.h"
-#include "DREAM3DLib/Common/ModifiedLambertProjection.h"
-#include "DREAM3DLib/Utilities/ImageUtilities.h"
-#include "DREAM3DLib/Utilities/ColorTable.h"
 
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
 #include <tbb/parallel_for.h>
@@ -51,6 +44,13 @@
 #include <tbb/task_group.h>
 #include <tbb/task.h>
 #endif
+// Include this FIRST because there is a needed define for some compiles
+// to expose some of the constants needed below
+#include "DREAM3DLib/Math/DREAM3DMath.h"
+#include "DREAM3DLib/Math/OrientationMath.h"
+#include "DREAM3DLib/Common/ModifiedLambertProjection.h"
+#include "DREAM3DLib/Utilities/ImageUtilities.h"
+#include "DREAM3DLib/Utilities/ColorTable.h"
 
 namespace Detail
 {
@@ -549,7 +549,7 @@ DREAM3D::Rgb TetragonalOps::generateIPFColor(double phi1, double phi, double phi
   float eta, chi;
   float _rgb[3] = { 0.0, 0.0, 0.0 };
 
-  OrientationMath::EulertoQuat(q1, phi1, phi, phi2);
+  OrientationMath::EulertoQuat(phi1, phi, phi2, q1);
 
   for (int j = 0; j < 8; j++)
   {

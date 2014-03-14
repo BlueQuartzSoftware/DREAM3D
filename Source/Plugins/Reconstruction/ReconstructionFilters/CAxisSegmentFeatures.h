@@ -77,6 +77,7 @@ class CAxisSegmentFeatures : public SegmentFeatures
     DREAM3D_INSTANCE_PROPERTY(bool, RandomizeFeatureIds)
 
     virtual const QString getCompiledLibraryName() { return Reconstruction::ReconstructionBaseName; }
+    virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::ReconstructionFilters; }
     virtual const QString getSubGroupName() {return DREAM3D::FilterSubGroups::SegmentationFilters;}
     virtual const QString getHumanLabel() { return "Segment Features (C-Axis Misorientation)"; }
@@ -135,5 +136,6 @@ class CAxisSegmentFeatures : public SegmentFeatures
 };
 
 #endif /* CAxisSegmentFeatures_H_ */
+
 
 

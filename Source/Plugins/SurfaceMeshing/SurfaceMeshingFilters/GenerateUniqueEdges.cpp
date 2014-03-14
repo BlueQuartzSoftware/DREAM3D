@@ -281,7 +281,7 @@ void GenerateUniqueEdges::generateEdgeTriangleConnectivity()
     if ( static_cast<float>(i) / static_cast<float>(ntri) * 100.0f > (curPercent) )
     {
       QString ss = QObject::tr("Stage 1/2: %1% Complete").arg(static_cast<float>(i) / static_cast<float>(ntri) * 100.0f);
-      notifyStatusMessage(getHumanLabel(), ss);
+      notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
       curPercent += 5.0f;
     }
     if (getCancel() == true) { return; }
@@ -361,7 +361,7 @@ void GenerateUniqueEdges::generateEdgeTriangleConnectivity()
     if ( progIndex / total * 100.0f > (curPercent) )
     {
       QString ss = QObject::tr("Stage 2/2: %1% Complete").arg(progIndex / total * 100.0f);
-      notifyStatusMessage(getHumanLabel(), ss);
+      notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
       curPercent += 5.0f;
     }
     progIndex++;

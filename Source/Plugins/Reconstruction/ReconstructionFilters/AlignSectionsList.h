@@ -75,6 +75,7 @@ class AlignSectionsList : public AlignSections
     Q_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile)
 
     virtual const QString getCompiledLibraryName() { return Reconstruction::ReconstructionBaseName; }
+    virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::ReconstructionFilters; }
     virtual const QString getSubGroupName() {return DREAM3D::FilterSubGroups::AlignmentFilters;}
     virtual const QString getHumanLabel() { return "Align Sections (List)"; }
@@ -115,5 +116,6 @@ class AlignSectionsList : public AlignSections
 };
 
 #endif /* AlignSectionsList_H_ */
+
 
 

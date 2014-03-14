@@ -203,7 +203,7 @@ void SegmentFeatures::execute()
       gnum++;
 
       QString ss = QObject::tr("Total Features: %1").arg(gnum);
-      if(gnum % 100 == 0) { notifyStatusMessage(getHumanLabel(), ss); }
+      if(gnum % 100 == 0) { notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss); }
     }
   }
 

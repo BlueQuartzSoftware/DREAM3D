@@ -36,9 +36,6 @@
 
 #include "FindOrientationFieldCurl.h"
 
-#include "DREAM3DLib/Math/DREAM3DMath.h"
-#include "DREAM3DLib/Common/Constants.h"
-
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
 #include <tbb/parallel_for.h>
 #include <tbb/blocked_range.h>
@@ -47,6 +44,11 @@
 #include <tbb/task_scheduler_init.h>
 #include <tbb/task_group.h>
 #endif
+
+#include "DREAM3DLib/Math/DREAM3DMath.h"
+#include "DREAM3DLib/Common/Constants.h"
+
+
 
 class FindMisorientationVectorsImpl
 {
@@ -431,3 +433,18 @@ void FindOrientationFieldCurl::execute()
   notifyStatusMessage(getHumanLabel(), "FindOrientationFieldCurl Completed");
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AbstractFilter::Pointer FindOrientationFieldCurl::newFilterInstance(bool copyFilterParameters)
+{
+  /*
+  * CurlSize
+  */
+  FindOrientationFieldCurl::Pointer filter = FindOrientationFieldCurl::New();
+  if(true == copyFilterParameters)
+  {
+    filter->setCurlSize( getCurlSize() );
+  }
+  return filter;
+}

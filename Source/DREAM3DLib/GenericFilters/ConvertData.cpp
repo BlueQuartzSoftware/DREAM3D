@@ -396,3 +396,22 @@ void ConvertData::execute()
       /* Let the GUI know we are done with this filter */
       notifyStatusMessage(getHumanLabel(), "Complete");
 }
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AbstractFilter::Pointer ConvertData::newFilterInstance(bool copyFilterParameters)
+{
+  /*
+  * ScalarType
+  * OutputArrayName
+  * SelectedCellArrayName
+  */
+  ConvertData::Pointer filter = ConvertData::New();
+  if(true == copyFilterParameters)
+  {
+    filter->setSelectedCellArrayName( getSelectedCellArrayName() );
+    filter->setScalarType( getScalarType() );
+    filter->setOutputArrayName( getOutputArrayName() );
+  }
+  return filter;
+}

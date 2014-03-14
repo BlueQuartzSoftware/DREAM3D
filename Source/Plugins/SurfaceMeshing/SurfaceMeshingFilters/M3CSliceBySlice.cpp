@@ -564,7 +564,7 @@ void M3CSliceBySlice::execute()
   {
     QString ss = QObject::tr(" Layers %1 and %2 of %3").arg(i).arg(i + 1).arg(sliceCount);
     // notifyProgressValue((i * 90 / sliceCount));
-    notifyStatusMessage(getHumanLabel(), ss);
+    notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
 
     if (getCancel() == true)
     {
@@ -3053,3 +3053,18 @@ QVector<int> M3CSliceBySlice::findAdjacentTriangles(SurfaceMesh::M3C::Triangle* 
 
 #endif
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AbstractFilter::Pointer M3CSliceBySlice::newFilterInstance(bool copyFilterParameters)
+{
+  /*
+  * DeleteTempFiles
+  */
+  M3CSliceBySlice::Pointer filter = M3CSliceBySlice::New();
+  if(true == copyFilterParameters)
+  {
+    filter->setDeleteTempFiles( getDeleteTempFiles() );
+  }
+  return filter;
+}

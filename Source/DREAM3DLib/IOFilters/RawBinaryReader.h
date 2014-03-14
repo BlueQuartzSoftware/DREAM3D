@@ -110,6 +110,7 @@ class DREAM3DLib_EXPORT RawBinaryReader : public AbstractFilter
     * in the GUI for the filter
     */
     virtual const QString getCompiledLibraryName() { return IO::IOBaseName; }
+    virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::InputFilters; }
 
@@ -175,6 +176,7 @@ class DREAM3DLib_EXPORT RawBinaryReader : public AbstractFilter
 };
 
 #endif /* _RawBinaryReader_H_ */
+
 
 
 

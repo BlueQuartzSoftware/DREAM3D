@@ -79,6 +79,7 @@ class DREAM3DLib_EXPORT NodesTrianglesToStl : public AbstractFilter
     * in the GUI for the filter
     */
     virtual const QString getCompiledLibraryName() { return IO::IOBaseName; }
+    virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::OutputFilters; }
 
@@ -154,6 +155,7 @@ class DREAM3DLib_EXPORT NodesTrianglesToStl : public AbstractFilter
 };
 
 #endif /* CMUNodesTrianglesToStl_H_ */
+
 
 
 

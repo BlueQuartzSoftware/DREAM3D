@@ -249,7 +249,7 @@ IDataArray::Pointer H5DataArrayReader::readIDataArray(hid_t gid, const QString& 
     err = QH5Lite::readVectorAttribute(gid, name, DREAM3D::HDF5::TupleDimensions, tDims);
     if (err < 0)
     {
-      std::cout << "Missing TupleDimensions for Array with Name: " << name.toStdString() << std::endl;
+      qDebug() << "Missing TupleDimensions for Array with Name: " << name;
       return ptr;
     }
 
@@ -258,9 +258,40 @@ IDataArray::Pointer H5DataArrayReader::readIDataArray(hid_t gid, const QString& 
     err = QH5Lite::readVectorAttribute(gid, name, DREAM3D::HDF5::ComponentDimensions,cDims);
     if (err < 0)
     {
-      std::cout << "Missing ComponentDimensions for Array with Name: " << name.toStdString() << std::endl;
+      qDebug() << "Missing ComponentDimensions for Array with Name: " << name;
       return ptr;
     }
+
+
+#if 1
+    /*** !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    * sizes of the dimensions were written into the file in reverse order that DREAM3D uses so we need to reverse the
+    * order of the tuple and component dimenions. DREAM3D stores the dimensions in Fastest To Slowest order (XYZ) and
+    * actually stores the data in that order. HDF5 would interpret the data incorrectly because HDF5 uses the convention
+    * of Slowest to Fastest dimension ordering. This mainly effects HDFView being able to interpret the data and displaying
+    * it correctly. BUT there could be other users that have existing C/C++/Fortran HDF5 codes that would be tripped up
+    * by this issue. There are attributes in the .dream3d file on the actual data set that help to fully describe
+    * the ordering of the data and what dimension goes with which axis.
+    */
+     qint32 count = tDims.size() - 1;
+     QVector<size_t> temp(tDims.size());
+      for (int i = count; i >= 0; i--)
+      {
+   //     std::cout << "  " << tDims[i] << std::endl;
+        temp[count - i] = tDims[i];
+      }
+      tDims = temp;
+    //  std::cout << "  Comp Dims: " << std::endl;
+      count = cDims.size() - 1;
+      temp.resize(cDims.size());
+      for (int i = count; i >= 0; i--)
+      {
+    //    std::cout << "  " << cDims[i] << std::endl;
+        temp[count - i] = cDims[i];
+      }
+      cDims = temp;
+#endif
+
 
     //Sanity Check the combination of the Tuple and Component Dims. They should match in aggregate what we got from the getDatasetInfo above.
     qint32 offset = 0;
@@ -282,7 +313,6 @@ IDataArray::Pointer H5DataArrayReader::readIDataArray(hid_t gid, const QString& 
       }
       offset++;
     }
-
 
     // Check to see if we are reading a bool array and if so read it and return
     if (classType.compare("DataArray<bool>") == 0)

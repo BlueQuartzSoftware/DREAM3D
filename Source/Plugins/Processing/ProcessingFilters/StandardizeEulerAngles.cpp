@@ -46,8 +46,12 @@
 #include "DREAM3DLib/Math/DREAM3DMath.h"
 #include "DREAM3DLib/OrientationOps/OrientationOps.h"
 #include "DREAM3DLib/Math/QuaternionMath.hpp"
+#include "DREAM3DLib/Math/OrientationMath.h"
 
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 class StandardizeEulerAnglesImpl
 {
     float* m_CellEulerAngles;
@@ -80,7 +84,7 @@ class StandardizeEulerAnglesImpl
         ea1 = m_CellEulerAngles[3 * i];
         ea2 = m_CellEulerAngles[3 * i + 1];
         ea3 = m_CellEulerAngles[3 * i + 2];
-        OrientationMath::EulertoQuat(q, ea1, ea2, ea3);
+        OrientationMath::EulertoQuat(ea1, ea2, ea3, q);
         cellPhase = m_CellPhases[i];
         crystalStruct = m_CrystalStructures[cellPhase];
         if (crystalStruct == Ebsd::CrystalStructure::UnknownCrystalStructure) { continue; }

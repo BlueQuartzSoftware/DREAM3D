@@ -533,7 +533,7 @@ void WritePoleFigure::writeVtkFile(const QString filename, DoubleArrayType* pole
 void WritePoleFigure::writeImage(const QString outputPath, QImage image, int dimension, QString label)
 {
   QString ss = QObject::tr("Writing Image %1").arg(outputPath);
-  notifyStatusMessage(getHumanLabel(), ss);
+  notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
 
   QString filename = generateImagePath(label);
   bool saved = image.save(filename);
@@ -580,3 +580,30 @@ QString WritePoleFigure::generateImagePath( QString label)
 }
 
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AbstractFilter::Pointer WritePoleFigure::newFilterInstance(bool copyFilterParameters)
+{
+  /*
+  * ImagePrefix
+  * OutputPath
+  * ImageFormat
+  * ImageSize
+  * LambertSize
+  * NumColors
+  * CellEulerAnglesArrayName
+  */
+  WritePoleFigure::Pointer filter = WritePoleFigure::New();
+  if(true == copyFilterParameters)
+  {
+    filter->setCellEulerAnglesArrayName( getCellEulerAnglesArrayName() );
+    filter->setImageFormat( getImageFormat() );
+    filter->setImagePrefix( getImagePrefix() );
+    filter->setOutputPath( getOutputPath() );
+    filter->setImageSize( getImageSize() );
+    filter->setLambertSize( getLambertSize() );
+    filter->setNumColors( getNumColors() );
+  }
+  return filter;
+}

@@ -708,7 +708,7 @@ void MovingFiniteElementSmoothing::execute()
       qDebug() << "Update loop: " << updates << "\n";
     }
     QString ss = QObject::tr("Iteration: %1").arg(updates);
-    notifyStatusMessage(getHumanLabel(), ss);
+    notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
 
     Dihedral_min = 180.;
     Dihedral_max = 0.;
@@ -1046,3 +1046,26 @@ void MovingFiniteElementSmoothing::execute()
 }
 
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AbstractFilter::Pointer MovingFiniteElementSmoothing::newFilterInstance(bool copyFilterParameters)
+{
+  /*
+  * IterationSteps
+  * NodeConstraints
+  * ConstrainSurfaceNodes
+  * ConstrainQuadPoints
+  * SmoothTripleLines
+  */
+  MovingFiniteElementSmoothing::Pointer filter = MovingFiniteElementSmoothing::New();
+  if(true == copyFilterParameters)
+  {
+    filter->setIterationSteps( getIterationSteps() );
+    filter->setNodeConstraints( getNodeConstraints() );
+    filter->setConstrainSurfaceNodes( getConstrainSurfaceNodes() );
+    filter->setConstrainQuadPoints( getConstrainQuadPoints() );
+    filter->setSmoothTripleLines( getSmoothTripleLines() );
+  }
+  return filter;
+}

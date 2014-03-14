@@ -384,3 +384,22 @@ QVector<bool> MinSize::remove_smallfeatures()
   return activeObjects;
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AbstractFilter::Pointer MinSize::newFilterInstance(bool copyFilterParameters)
+{
+  /*
+  * MinAllowedFeatureSize
+  * ApplyToAll
+  * PhaseNumber
+  */
+  MinSize::Pointer filter = MinSize::New();
+  if(true == copyFilterParameters)
+  {
+    filter->setMinAllowedFeatureSize( getMinAllowedFeatureSize() );
+    filter->setApplyToAll( getApplyToAll() );
+    filter->setPhaseNumber( getPhaseNumber() );
+  }
+  return filter;
+}

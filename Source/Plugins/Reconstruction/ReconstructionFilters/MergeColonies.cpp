@@ -46,6 +46,7 @@
 #include "DREAM3DLib/Utilities/DREAM3DRandom.h"
 #include "DREAM3DLib/Math/MatrixMath.h"
 #include "DREAM3DLib/Math/OrientationMath.h"
+#include "DREAM3DLib/Math/GeometryMath.h"
 #include "DREAM3DLib/OrientationOps/OrientationOps.h"
 
 #define ERROR_TXT_OUT 1
@@ -632,3 +633,22 @@ void MergeColonies::identify_globAlpha()
   //}
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AbstractFilter::Pointer MergeColonies::newFilterInstance(bool copyFilterParameters)
+{
+  /*
+  * AxisTolerance
+  * AngleTolerance
+  * IdentifyGlobAlpha
+  */
+  MergeColonies::Pointer filter = MergeColonies::New();
+  if(true == copyFilterParameters)
+  {
+    filter->setAxisTolerance( getAxisTolerance() );
+    filter->setAngleTolerance( getAngleTolerance() );
+    filter->setIdentifyGlobAlpha( getIdentifyGlobAlpha() );
+  }
+  return filter;
+}

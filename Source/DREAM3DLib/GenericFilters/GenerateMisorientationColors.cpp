@@ -303,3 +303,20 @@ void GenerateMisorientationColors::execute()
   notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AbstractFilter::Pointer GenerateMisorientationColors::newFilterInstance(bool copyFilterParameters)
+{
+  /*
+  * ReferenceAxis
+  * ReferenceAngle
+  */
+  GenerateMisorientationColors::Pointer filter = GenerateMisorientationColors::New();
+  if(true == copyFilterParameters)
+  {
+    filter->setReferenceAxis( getReferenceAxis() );
+    filter->setReferenceAngle( getReferenceAngle() );
+  }
+  return filter;
+}

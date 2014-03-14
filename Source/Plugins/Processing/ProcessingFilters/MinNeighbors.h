@@ -76,6 +76,7 @@ class MinNeighbors : public AbstractFilter
     Q_PROPERTY(int MinNumNeighbors READ getMinNumNeighbors WRITE setMinNumNeighbors)
 
     virtual const QString getCompiledLibraryName() { return Processing::ProcessingBaseName; }
+    virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::ProcessingFilters; }
     virtual const QString getSubGroupName()  { return DREAM3D::FilterSubGroups::CleanupFilters; }
     virtual const QString getHumanLabel() { return "Minimum Number of Neighbors Filter"; }
@@ -118,6 +119,7 @@ class MinNeighbors : public AbstractFilter
 };
 
 #endif /* MinNeighbors_H_ */
+
 
 
 

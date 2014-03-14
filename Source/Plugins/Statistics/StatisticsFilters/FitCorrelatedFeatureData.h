@@ -90,6 +90,7 @@ class FitCorrelatedFeatureData : public AbstractFilter
     * in the GUI for the filter
     */
     virtual const QString getCompiledLibraryName() { return Statistics::StatisticsBaseName; }
+    virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::EnsembleStatsFilters; }
 
@@ -157,6 +158,7 @@ class FitCorrelatedFeatureData : public AbstractFilter
 };
 
 #endif /* FitCorrelatedFeatureData_H_ */
+
 
 
 
