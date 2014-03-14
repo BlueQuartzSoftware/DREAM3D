@@ -2,24 +2,23 @@
  * Your License or Copyright Information can go here
  */
 
+
 #include "@PluginName@Plugin.h"
 
 #include "DREAM3DLib/Common/FilterManager.h"
 #include "DREAM3DLib/Common/IFilterFactory.hpp"
 #include "DREAM3DLib/Common/FilterFactory.hpp"
 
-#include "PipelineBuilder/FilterWidgetManager.h"
-#include "FilterWidgets/QFilterWidgetFactory.hpp"
 
-#include "moc_@PluginName@Plugin.cxx"
+#include "@PluginName@/moc_@PluginName@Plugin.cpp"
 
 Q_EXPORT_PLUGIN2(@PluginName@Plugin, @PluginName@Plugin)
 
 namespace Detail
 {
-   const std::string @PluginName@PluginFile("@PluginName@Plugin");
-   const std::string @PluginName@PluginDisplayName("@PluginName@Plugin");
-   const std::string @PluginName@PluginBaseName("@PluginName@Plugin");
+  const QString @PluginName@PluginFile("@PluginName@Plugin");
+  const QString @PluginName@PluginDisplayName("@PluginName@Plugin");
+  const QString @PluginName@PluginBaseName("@PluginName@Plugin");
 }
 
 // -----------------------------------------------------------------------------
@@ -42,13 +41,13 @@ namespace Detail
 // -----------------------------------------------------------------------------
 QString @PluginName@Plugin::getPluginName()
 {
-  return QString::fromStdString(Detail::@PluginName@PluginDisplayName);
+  return (Detail::@PluginName@PluginDisplayName);
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void @PluginName@Plugin::writeSettings(QSettings &prefs)
+void @PluginName@Plugin::writeSettings(QSettings& prefs)
 {
 
 }
@@ -56,11 +55,12 @@ void @PluginName@Plugin::writeSettings(QSettings &prefs)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void @PluginName@Plugin::readSettings(QSettings &prefs)
+void @PluginName@Plugin::readSettings(QSettings& prefs)
 {
 
 }
 
-#include "@PluginName@Filters/RegisterKnownFilterWidgets.cpp"
 #include "@PluginName@Filters/RegisterKnownFilters.cpp"
+
+#include "FilterParameterWidgets/RegisterKnownFilterParameterWidgets.cpp"
 

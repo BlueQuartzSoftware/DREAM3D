@@ -47,7 +47,8 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-PMFileGenerator::PMFileGenerator(QString outputDir, QString pathTemplate,
+PMFileGenerator::PMFileGenerator(QString outputDir,
+                                 QString pathTemplate,
                                  QString fileName,
                                  QString codeTemplateResourcePath,
                                  QTreeWidgetItem* wi,

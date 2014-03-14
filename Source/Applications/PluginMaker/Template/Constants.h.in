@@ -1,0 +1,24 @@
+#ifndef _@PluginName@Constants_H_
+#define _@PluginName@Constants_H_
+
+#include <QtCore/QString>
+/**
+* @brief This namespace is used to define some Constants for the plugin itself.
+*/
+namespace @PluginName@ {
+  const QString @PluginName@PluginFile("@PluginName@Plugin");
+  const QString @PluginName@PluginDisplayName("@PluginName@Plugin");
+  const QString @PluginName@BaseName("@PluginName@Plugin");
+}
+
+/**
+* @brief Use this namespace to define any custom GUI widgets that collect FilterParameters
+* for a filter. Do NOT define general reusable widgets here.
+*/
+namespace FilterParameterWidgetType
+{
+
+/*  const QString SomeCustomWidget("SomeCustomWidget"); */
+
+}
+#endif

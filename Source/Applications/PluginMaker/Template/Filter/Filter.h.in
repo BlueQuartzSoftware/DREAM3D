@@ -5,16 +5,14 @@
 #ifndef _@ClassName@_H_
 #define _@ClassName@_H_
 
-#include <string>
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/Common/IDataArray.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
 
 
 /**
- * @class @ClassName@ @ClassName@.h @PluginName@/Code/@PluginName@Filters/@ClassName@.h
+ * @class @ClassName@ @ClassName@.h @PluginName@/@PluginName@Filters/@ClassName@.h
  * @brief
  * @author
  * @date
@@ -22,6 +20,7 @@
  */
 class @ClassName@ : public AbstractFilter
 {
+      Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
     DREAM3D_SHARED_POINTERS(@ClassName@);
     DREAM3D_STATIC_NEW_MACRO(@ClassName@);
@@ -30,29 +29,45 @@ class @ClassName@ : public AbstractFilter
     virtual ~@ClassName@();
 
     /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to
-    * DREAM3D_INSTANCE_PROPERTY(float, XRes)
-    * DREAM3D_INSTANCE_STRING_PROPERTY(OutputFile)
+    DREAM3D_FILTER_PARAMETER(QString, ImagePrefix)
+    Q_PROPERTY(QString ImagePrefix READ getImagePrefix WRITE setImagePrefix)
+    DREAM3D_FILTER_PARAMETER(int, ImageSize)
+    Q_PROPERTY(int ImageSize READ getImageSize WRITE setImageSize)
     */
 
+
+    /**
+     * @brief getCompiledLibraryName Returns the name of the Library that this filter is a part of
+     * @return
+     */
+    virtual const QString getCompiledLibraryName();
+
+    /**
+     * @brief newFilterInstance Returns a new instance of the filter optionally copying the filter parameters from the
+     * current filter to the new instance.
+     * @param copyFilterParameters
+     * @return
+     */
+    virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
 
     /**
     * @brief This returns the group that the filter belonds to. You can select
     * a different group if you want. The string returned here will be displayed
     * in the GUI for the filter
     */
-    virtual const std::string getGroupName() { return "@PluginName@"; }
+    virtual const QString getGroupName();
 
     /**
     * @brief This returns a string that is displayed in the GUI. It should be readable
     * and understandable by humans.
     */
-    virtual const std::string getHumanLabel() { return "@ClassName@"; }
+    virtual const QString getHumanLabel();
 
     /**
     * @brief This returns a string that is displayed in the GUI and helps to sort the filters into
     * a subgroup. It should be readable and understandable by humans.
     */
-    virtual const std::string getSubGroupName() { return "Misc"; }
+    virtual const QString getSubGroupName();
 
     /**
     * @brief This method will instantiate all the end user settable options/parameters
@@ -85,6 +100,29 @@ class @ClassName@ : public AbstractFilter
     * in an attempt to ensure the filter can process the inputs.
     */
     virtual void preflight();
+
+  signals:
+    /**
+     * @brief updateFilterParameters This is emitted when the filter requests all the latest Filter Parameters need to be
+     * pushed from a user facing control such as the FilterParameter Widget
+     * @param filter
+     */
+    void updateFilterParameters(AbstractFilter* filter);
+
+    /**
+     * @brief parametersChanged This signal can be emitted when any of the filter parameters are changed internally.
+     */
+    void parametersChanged();
+
+    /**
+     * @brief preflightAboutToExecute Emitted just before the dataCheck() is called. This can change if needed.
+     */
+    void preflightAboutToExecute();
+
+    /**
+     * @brief preflightExecuted Emitted just after the dataCheck() is called. Typically. This can change if needed.
+     */
+    void preflightExecuted();
 
   protected:
     @ClassName@();
