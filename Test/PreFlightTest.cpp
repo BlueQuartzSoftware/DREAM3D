@@ -246,9 +246,6 @@ void verifySignals()
     AbstractFilter::Pointer filter = factory->create();
     const QMetaObject* meta = filter->metaObject();
     int count = meta->methodCount();
-
-
-
     int index = meta->indexOfSignal(normType);
     if (index < 0)
     {
@@ -327,6 +324,31 @@ void TestPreflight()
   }
 }
 
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void TestNewInstanceAvailable()
+{
+  FilterManager::Pointer fm = FilterManager::Instance();
+  QByteArray normType = ("updateFilterParameters(AbstractFilter*)");
+  FilterManager::Collection factories = fm->getFactories();
+  QMapIterator<QString, IFilterFactory::Pointer> iter(factories);
+  while(iter.hasNext())
+  {
+    iter.next();
+    IFilterFactory::Pointer factory = iter.value();
+    AbstractFilter::Pointer filter = factory->create();
+
+    AbstractFilter::Pointer copy = filter->newFilterInstance(true);
+    if(NULL == copy.get())
+    {
+      std::cout << "Filter: '" << filter->getNameOfClass().toStdString() << "' from Library/Plugin '" << filter->getCompiledLibraryName().toStdString() << " has not implemented the newInstance() function" << std::endl;
+    }
+    DREAM3D_REQUIRE_NE(NULL, copy.get());
+  }
+}
+
 // -----------------------------------------------------------------------------
 //  Use unit test framework
 // -----------------------------------------------------------------------------
@@ -357,10 +379,10 @@ int main(int argc, char** argv)
 
   int err = EXIT_SUCCESS;
   DREAM3D_REGISTER_TEST( TestPreflight() )
+  DREAM3D_REGISTER_TEST( TestNewInstanceAvailable() )
+  PRINT_TEST_SUMMARY();
 
-      PRINT_TEST_SUMMARY();
-
-  GenerateCopyCode();
+//  GenerateCopyCode();
   return err;
 }
 
