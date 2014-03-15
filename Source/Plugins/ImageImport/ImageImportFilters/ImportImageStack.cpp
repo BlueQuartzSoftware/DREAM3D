@@ -365,7 +365,15 @@ AbstractFilter::Pointer ImportImageStack::newFilterInstance(bool copyFilterParam
   ImportImageStack::Pointer filter = ImportImageStack::New();
   if(true == copyFilterParameters)
   {
-    filter->setImageStack( getImageStack() );
+    filter->setZStartIndex( getZStartIndex() );
+    filter->setZEndIndex( getZEndIndex() );
+    filter->setResolution( getResolution() );
+    filter->setOrigin( getOrigin() );
+    filter->setInputPath(getInputPath() );
+    filter->setFilePrefix(getFilePrefix() );
+    filter->setFileSuffix(getFileSuffix() );
+    filter->setFileExtension(getFileExtension() );
+    filter->setPaddingDigits(getPaddingDigits() );
   }
   return filter;
 }

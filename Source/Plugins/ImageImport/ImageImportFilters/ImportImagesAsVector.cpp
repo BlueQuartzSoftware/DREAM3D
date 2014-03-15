@@ -63,7 +63,8 @@ ImportImagesAsVector::ImportImagesAsVector() :
   m_FileSuffix(""),
   m_FileExtension(""),
   m_PaddingDigits(0),
-  m_VectorDataArrayName(DREAM3D::CellData::VectorData)
+  m_VectorDataArrayName(DREAM3D::CellData::VectorData),
+  m_VectorData(NULL)
 {
 
   m_Origin.x = 0.0;
@@ -154,6 +155,7 @@ void ImportImagesAsVector::dataCheck()
   setErrorCondition(0);
   QString ss;
 
+  bool m_AddToExistingDataContainer = true;
 
   if(m_InputPath.isEmpty() == true)
   {
@@ -162,12 +164,9 @@ void ImportImagesAsVector::dataCheck()
     setErrorCondition(-13);
   }
 
-  VolumeDataContainer* m = getDataContainerArray()->createNonPrereqDataContainer<VolumeDataContainer, ImportImagesAsVector>(this, getDataContainerName());
-  if(getErrorCondition() < 0) { return; }
-
+  int64_t dims[3];
   bool hasMissingFiles = false;
   bool stackLowToHigh = false;
-
   // Now generate all the file names the user is asking for and populate the table
   QVector<QString> fileList = FilePathGenerator::GenerateFileList(m_StartIndex, m_EndIndex,
                                                                   hasMissingFiles, stackLowToHigh, m_InputPath,
@@ -178,6 +177,7 @@ void ImportImagesAsVector::dataCheck()
     QString ss = QObject::tr("No files have been selected for import. Have you set the input directory?");
     setErrorCondition(-11);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    return;
   }
   else
   {
@@ -187,11 +187,13 @@ void ImportImagesAsVector::dataCheck()
     int err = 0;
     QImageReader reader((fileList[0]));
     QSize imageDims = reader.size();
-    int64_t dims[3] = {imageDims.width(), imageDims.height(), 1};
+    dims[0] = imageDims.width();
+    dims[1] = imageDims.height();
+    dims[2] = 1;
     /* Sanity check what we are trying to load to make sure it can fit in our address space.
-     * Note that this does not guarantee the user has enough left, just that the
-     * size of the volume can fit in the address space of the program
-     */
+      * Note that this does not guarantee the user has enough left, just that the
+      * size of the volume can fit in the address space of the program
+      */
 #if   (CMP_SIZEOF_SSIZE_T==4)
     int64_t max = std::numeric_limits<size_t>::max();
 #else
@@ -209,11 +211,17 @@ void ImportImagesAsVector::dataCheck()
     {
       err = -1;
       QString ss = QObject::tr("One of the dimensions is greater than the max index for this sysem. Try the 64 bit version."
-                               " dim[0]=%1  dim[1]=%2  dim[2]=%3").arg(dims[0]).arg(dims[1]).arg(dims[2]);
+                                " dim[0]=%1  dim[1]=%2  dim[2]=%3").arg(dims[0]).arg(dims[1]).arg(dims[2]);
       setErrorCondition(err);
       notifyErrorMessage(getHumanLabel(), ss, err);
     }
     /* ************ End Sanity Check *************************** */
+  }
+
+  if(m_AddToExistingDataContainer == false)
+  {
+    VolumeDataContainer* m = getDataContainerArray()->createNonPrereqDataContainer<VolumeDataContainer, ImportImagesAsVector>(this, getDataContainerName());
+    if(getErrorCondition() < 0) { return; }
 
     m->setDimensions(static_cast<size_t>(dims[0]), static_cast<size_t>(dims[1]), static_cast<size_t>(dims[2]));
     m->setResolution(m_Resolution.x, m_Resolution.y, m_Resolution.z);
@@ -232,7 +240,39 @@ void ImportImagesAsVector::dataCheck()
     if( NULL != m_VectorDataPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
     { m_VectorData = m_VectorDataPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   }
+  else
+  {
+    VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, ImportImagesAsVector>(this, getDataContainerName());
+    if(getErrorCondition() < 0) { return; }
 
+    AttributeMatrix::Pointer cellAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), DREAM3D::AttributeMatrixType::Cell);
+    if(getErrorCondition() < 0) { return; }
+
+    QVector<size_t> tDims = cellAttrMat->getTupleDimensions();
+    if(tDims.size() != 3)
+    {
+      QString ss = QObject::tr("Existing DataContainer has different number of tuple dimensions than images being read");
+      setErrorCondition(-12);
+      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+      return;
+    }
+    for(int i=0;i<tDims.size();i++)
+    {
+      if(tDims[i] != dims[i])
+      {
+        QString ss = QObject::tr("Existing DataContainer has a tuple dimension different than images being read");
+        setErrorCondition(-12);
+        notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+        return;
+      }
+    }
+
+    QVector<size_t> arraydims(1, fileList.size());
+    // This would be for a gray scale image
+    m_VectorDataPtr = cellAttrMat->createNonPrereqArray<DataArray<uint8_t>, AbstractFilter, uint8_t>(this, m_VectorDataArrayName, 0, arraydims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+    if( NULL != m_VectorDataPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+    { m_VectorData = m_VectorDataPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  }
 }
 
 
@@ -333,6 +373,7 @@ void ImportImagesAsVector::execute()
       for(size_t j = 0; j < width; ++j)
       {
         dst = totalComps*(hStride+j)+compStride;
+        src = j*pixelBytes;
         for(size_t k = 0; k < pixelBytes; ++k)
         {
           imagePtr[dst+k] = source[src+k];
@@ -363,7 +404,15 @@ AbstractFilter::Pointer ImportImagesAsVector::newFilterInstance(bool copyFilterP
   ImportImagesAsVector::Pointer filter = ImportImagesAsVector::New();
   if(true == copyFilterParameters)
   {
-    filter->setImageVector( getImageVector() );
+    filter->setStartIndex( getStartIndex() );
+    filter->setEndIndex( getEndIndex() );
+    filter->setResolution( getResolution() );
+    filter->setOrigin( getOrigin() );
+    filter->setInputPath(getInputPath() );
+    filter->setFilePrefix(getFilePrefix() );
+    filter->setFileSuffix(getFileSuffix() );
+    filter->setFileExtension(getFileExtension() );
+    filter->setPaddingDigits(getPaddingDigits() );
   }
   return filter;
 }
