@@ -335,21 +335,16 @@ void GenerateEnsembleStatistics::execute()
       QString ss = QObject::tr("The number of PhaseTypes entered is more than the number of Ensembles, only the first %1 will be used").arg(totalEnsembles - 1);
       notifyErrorMessage(getHumanLabel(), ss, -999);
     }
-    PhaseTypeArrayType::Pointer phaseTypes = PhaseTypeArrayType::CreateArray(totalEnsembles, m_PhaseTypesArrayName);
     for(int r = 0; r < totalEnsembles; ++r)
     {
-      phaseTypes->setValue(r, m_PhaseTypeArray[r]);
+      m_PhaseTypes[r] = m_PhaseTypeArray[r];
     }
-    m->getAttributeMatrix(getCellEnsembleAttributeMatrixName())->addAttributeArray(phaseTypes->getName(), phaseTypes);
-    m_PhaseTypes = phaseTypes->getPointer(0);
   }
 
   StatsDataArray::Pointer p = StatsDataArray::New();
   m_StatsDataArray = p.get();
   m_StatsDataArray->fillArrayWithNewStatsData(totalEnsembles, m_PhaseTypes);
   m->getAttributeMatrix(getCellEnsembleAttributeMatrixName())->addAttributeArray(DREAM3D::EnsembleData::Statistics, p);
-
-  dataCheck();
 
   if(m_SizeDistribution == true)
   {
@@ -400,7 +395,7 @@ void GenerateEnsembleStatistics::gatherSizeStats()
 
   FloatArrayType::Pointer binnumbers;
   size_t numfeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
-  size_t numensembles = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
+  size_t numensembles = m->getAttributeMatrix(getCellEnsembleAttributeMatrixName())->getNumTuples();
 
   QVector<float> fractions(numensembles, 0.0);
   sizedist.resize(numensembles);
@@ -485,7 +480,7 @@ void GenerateEnsembleStatistics::gatherAspectRatioStats()
   QVector<float> mindiams;
   QVector<float> binsteps;
   size_t numfeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
-  size_t numensembles = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
+  size_t numensembles = m->getAttributeMatrix(getCellEnsembleAttributeMatrixName())->getNumTuples();
 
   boveras.resize(numensembles);
   coveras.resize(numensembles);
@@ -581,7 +576,7 @@ void GenerateEnsembleStatistics::gatherOmega3Stats()
   QVector<float> mindiams;
   QVector<float> binsteps;
   size_t numfeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
-  size_t numensembles = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
+  size_t numensembles = m->getAttributeMatrix(getCellEnsembleAttributeMatrixName())->getNumTuples();
 
   omega3s.resize(numensembles);
   values.resize(numensembles);
@@ -656,7 +651,7 @@ void GenerateEnsembleStatistics::gatherNeighborhoodStats()
   QVector<float> mindiams;
   QVector<float> binsteps;
   size_t numfeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
-  size_t numensembles = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
+  size_t numensembles = m->getAttributeMatrix(getCellEnsembleAttributeMatrixName())->getNumTuples();
 
   neighborhoods.resize(numensembles);
   values.resize(numensembles);
@@ -735,7 +730,7 @@ void GenerateEnsembleStatistics::gatherODFStats()
   QVector<float> totalvol;
   QVector<FloatArrayType::Pointer> eulerodf;
 
-  size_t numensembles = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
+  size_t numensembles = m->getAttributeMatrix(getCellEnsembleAttributeMatrixName())->getNumTuples();
 
   totalvol.resize(numensembles);
   eulerodf.resize(numensembles);
@@ -834,7 +829,7 @@ void GenerateEnsembleStatistics::gatherMDFStats()
   QVector<FloatArrayType::Pointer> misobin;
   int numbins = 0;
 
-  size_t numensembles = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
+  size_t numensembles = m->getAttributeMatrix(getCellEnsembleAttributeMatrixName())->getNumTuples();
 
   misobin.resize(numensembles);
   totalSurfaceArea.resize(numensembles);
@@ -927,7 +922,7 @@ void GenerateEnsembleStatistics::gatherAxisODFStats()
   int bin;
   QVector<FloatArrayType::Pointer> axisodf;
   QVector<float> totalaxes;
-  size_t numXTals = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
+  size_t numXTals = m->getAttributeMatrix(getCellEnsembleAttributeMatrixName())->getNumTuples();
   axisodf.resize(numXTals);
   totalaxes.resize(numXTals);
   for (size_t i = 1; i < numXTals; i++)
