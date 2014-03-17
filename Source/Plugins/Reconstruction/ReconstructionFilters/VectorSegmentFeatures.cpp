@@ -400,4 +400,3 @@ bool VectorSegmentFeatures::determineGrouping(int64_t referencepoint, int64_t ne
 
   return group;
 }
-

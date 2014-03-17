@@ -96,6 +96,7 @@ namespace DREAM3D
 
   namespace FilterGroups
   {
+    const DREAM3D_STRING DDDAnalysisFilters("DDDAnalysis");
     const DREAM3D_STRING GenericFilters("Generic");
     const DREAM3D_STRING IOFilters("IO");
     const DREAM3D_STRING ProcessingFilters("Processing");
@@ -114,6 +115,8 @@ namespace DREAM3D
     const DREAM3D_STRING EnsembleStatsFilters("Ensemble");
     const DREAM3D_STRING MemoryManagementFilters("Memory/Management");
     const DREAM3D_STRING SpatialFilters("Spatial");
+    const DREAM3D_STRING StatisticsFilters("Statistics");
+    const DREAM3D_STRING FeatureIdentificationFilters("FeatureIdentification");
     const DREAM3D_STRING OutputFilters("Output");
     const DREAM3D_STRING InputFilters("Input");
     const DREAM3D_STRING ImageFilters("Image");
@@ -144,6 +147,7 @@ namespace DREAM3D
     const DREAM3D_STRING BandContrast("BandContrast");
     const DREAM3D_STRING CellPhases("Phases");
     const DREAM3D_STRING ConfidenceIndex("Confidence Index");
+    const DREAM3D_STRING CAxisLocation("CAxisLocation");
     const DREAM3D_STRING ConfidenceIndexNoSpace("ConfidenceIndex");
     const DREAM3D_STRING DislocationTensors("DislocationTensors");
     const DREAM3D_STRING EulerAngles("EulerAngles");

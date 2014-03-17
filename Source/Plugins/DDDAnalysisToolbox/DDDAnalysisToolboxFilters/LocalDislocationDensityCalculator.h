@@ -45,7 +45,8 @@
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
 
-#include "Statistics/StatisticsConstants.h"
+#include "DDDAnalysisToolbox/DDDAnalysisToolboxConstants.h"
+
 /**
  * @class LocalDislocationDensityCalculator LocalDislocationDensityCalculator.h /FilterCategoryFilters/LocalDislocationDensityCalculator.h
  * @brief
@@ -84,9 +85,9 @@ class LocalDislocationDensityCalculator : public AbstractFilter
     * a different group if you want. The string returned here will be displayed
     * in the GUI for the filter
     */
-    virtual const QString getCompiledLibraryName() { return Statistics::StatisticsBaseName; }
-    virtual const QString getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
-    virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::EnsembleStatsFilters; }
+    virtual const QString getCompiledLibraryName() { return DDDAnalysisToolbox::DDDAnalysisToolboxBaseName; }
+    virtual const QString getGroupName() { return DREAM3D::FilterGroups::DDDAnalysisFilters; }
+    virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::StatisticsFilters; }
 
     /**
     * @brief This returns a string that is displayed in the GUI. It should be readable

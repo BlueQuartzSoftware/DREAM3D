@@ -244,12 +244,40 @@ void GenerateVectorColors::execute()
       dir[1] = m_Vectors[index+1];
       dir[2] = m_Vectors[index+2];
       MatrixMath::Normalize3x1(dir);
-      r = (DREAM3D::Constants::k_PiOver2-acosf(dir[2]))/DREAM3D::Constants::k_PiOver2;
-      g = (DREAM3D::Constants::k_2Pi-atan2f(dir[1], dir[0])/DREAM3D::Constants::k_2Pi);
-      b = 1.0-g;
-      g = g*r;
-      b = b*r;
-      argb = RgbColor::dRgb(r * 255, g * 255, b * 255, 255);
+      if(dir[2] < 0) MatrixMath::Multiply3x1withConstant(dir, -1);
+      float trend = atan2f(dir[1], dir[0])*(180.0/DREAM3D::Constants::k_Pi);
+      float plunge = acosf(dir[2])*(180.0/DREAM3D::Constants::k_Pi);
+      if(trend < 0.0) trend += 360.0;
+      if(trend <= 120.0)
+      {
+        r = 255.0*((120.0-trend)/120.0);
+        g = 255.0*(trend/120.0);
+        b = 0.0;
+      }
+      if(trend > 120.0 && trend <= 240.0)
+      {
+        trend -= 120.0;
+        r = 0.0;
+        g = 255.0*((120.0-trend)/120.0);
+        b = 255.0*(trend/120.0);
+      }
+      if(trend > 240.0 && trend < 360.0)
+      {
+        trend -= 240.0;
+        r = 255.0*(trend/120.0);
+        g = 0.0;
+        b = 255.0*((120.0-trend)/120.0);
+      }
+      float deltaR = 255.0-r;
+      float deltaG = 255.0-g;
+      float deltaB = 255.0-b;
+      r += (deltaR*((90.0-plunge)/90.0));
+      g += (deltaG*((90.0-plunge)/90.0));
+      b += (deltaB*((90.0-plunge)/90.0));
+      if(r > 255.0) r = 255.0;
+      if(g > 255.0) g = 255.0;
+      if(b > 255.0) b = 255.0;
+      argb = RgbColor::dRgb(r, g, b, 255);
       m_CellVectorColors[index] = RgbColor::dRed(argb);
       m_CellVectorColors[index + 1] = RgbColor::dGreen(argb);
       m_CellVectorColors[index + 2] = RgbColor::dBlue(argb);
@@ -260,3 +288,18 @@ void GenerateVectorColors::execute()
   notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AbstractFilter::Pointer GenerateVectorColors::newFilterInstance(bool copyFilterParameters)
+{
+  /*
+  * FlattenMethod
+  */
+  GenerateVectorColors::Pointer filter = GenerateVectorColors::New();
+  if(true == copyFilterParameters)
+  {
+    filter->setSelectedVectorArrayName( getSelectedVectorArrayName() );
+  }
+  return filter;
+}

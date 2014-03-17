@@ -361,6 +361,7 @@ endfunction()
 #-----------------
 # These are the core plugins that need to be built
 set(DREAM3D_PLUGIN_LIST
+     DDDAnalysisToolbox
      ImageImport
      OrientationAnalysis
      Processing

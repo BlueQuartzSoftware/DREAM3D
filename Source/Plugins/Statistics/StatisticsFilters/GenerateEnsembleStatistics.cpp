@@ -316,7 +316,7 @@ void GenerateEnsembleStatistics::execute()
   if(getErrorCondition() < 0) { return; }
 
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-  int totalEnsembles = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
+  int totalEnsembles = m->getAttributeMatrix(getCellEnsembleAttributeMatrixName())->getNumTuples();
 
   // Check to see if the user has over ridden the phase types for this filter
   if (m_PhaseTypeArray.size() > 0)
