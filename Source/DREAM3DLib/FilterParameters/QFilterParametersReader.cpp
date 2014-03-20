@@ -126,7 +126,7 @@ FilterPipeline::Pointer QFilterParametersReader::ReadPipelineFromFile(QString fi
         // be due to a name change for the filter.
       {
         EmptyFilter::Pointer filter = EmptyFilter::New();
-        QString humanLabel = QString("UNKNOWN OR MISSING FILTER: ") + filterName;
+        QString humanLabel = QString("UNKNOWN FILTER: ") + filterName;
         filter->setHumanLabel(humanLabel);
         filter->setOriginalFilterName(filterName);
         pipeline->pushBack(filter);
@@ -137,6 +137,21 @@ FilterPipeline::Pointer QFilterParametersReader::ReadPipelineFromFile(QString fi
           pm.setPrefix("QFilterParametersReader::ReadPipelineFromFile()");
           obs->processPipelineMessage(pm);
         }
+      }
+    }
+    else
+    {
+      EmptyFilter::Pointer filter = EmptyFilter::New();
+      QString humanLabel = QString("MISSING FILTER: ") + filterName;
+      filter->setHumanLabel(humanLabel);
+      filter->setOriginalFilterName(filterName);
+      pipeline->pushBack(filter);
+
+      if (NULL != obs) {
+        QString ss = QObject::tr("A filter for index '%1' is missing in the file. Is the numbering of the filters correct in the pipeline file?").arg(gName);
+        PipelineMessage pm(filterName, ss, -66067, PipelineMessage::Error);
+        pm.setPrefix("QFilterParametersReader::ReadPipelineFromFile()");
+        obs->processPipelineMessage(pm);
       }
     }
 
@@ -862,4 +877,16 @@ DataContainerArrayProxy QFilterParametersReader::readDataContainerArrayProxy(con
   }
   dcaProxy.isValid = true;
   return dcaProxy;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+DataArrayPath QFilterParametersReader::readDataArrayPath(const QString &name, DataArrayPath def)
+{
+  BOOST_ASSERT(m_Prefs != NULL);
+  QString defPath("");
+  QString str = m_Prefs->value(name, defPath).toString();
+  DataArrayPath path(str);
+  return path;
 }

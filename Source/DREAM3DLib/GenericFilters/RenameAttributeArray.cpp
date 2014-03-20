@@ -67,7 +67,7 @@ void RenameAttributeArray::setupFilterParameters()
     FilterParameter::Pointer parameter = FilterParameter::New();
     parameter->setHumanLabel("Array to Rename");
     parameter->setPropertyName("SelectedArrayPath");
-    parameter->setWidgetType(FilterParameterWidgetType::SingleArraySelectionWidget);
+    parameter->setWidgetType(FilterParameterWidgetType::DataArraySelectionWidget);
     parameter->setValueType("QString");
     parameter->setUnits("");
     parameters.push_back(parameter);
@@ -92,9 +92,7 @@ void RenameAttributeArray::readFilterParameters(AbstractFilterParametersReader* 
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
   /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
-  //  setDataContainerName( reader->readString("DataContainerName", getDataContainerName()) );
-  //  setAttributeMatrixName( reader->readString("AttributeMatrixName", getAttributeMatrixName()) );
-  setSelectedArrayPath( reader->readString("SelectedArrayPath", getSelectedArrayPath()) );
+  setSelectedArrayPath( reader->readDataArrayPath("SelectedArrayPath", getSelectedArrayPath()) );
   setNewArrayName( reader->readString( "NewArrayName", getNewArrayName() ) );
   /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();

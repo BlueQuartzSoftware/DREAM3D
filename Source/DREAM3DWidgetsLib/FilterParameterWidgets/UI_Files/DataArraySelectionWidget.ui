@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>SingleArraySelectionWidget</class>
- <widget class="QWidget" name="SingleArraySelectionWidget">
+ <class>DataArraySelectionWidget</class>
+ <widget class="QWidget" name="DataArraySelectionWidget">
   <property name="geometry">
    <rect>
     <x>0</x>

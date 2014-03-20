@@ -45,7 +45,7 @@
 #include "DREAM3DLib/Common/ComparisonInputs.h"
 #include "DREAM3DLib/FilterParameters/FilterParameter.h"
 #include "DREAM3DLib/DataContainers/DataContainerArrayProxy.h"
-
+#include "DREAM3DLib/DataContainers/DataArrayPath.h"
 
 class AbstractFilter;
 
@@ -109,6 +109,8 @@ class DREAM3DLib_EXPORT AbstractFilterParametersReader
     virtual QSet<QString> readArraySelections(const QString name, QSet<QString> v) = 0;
 
     virtual DataContainerArrayProxy readDataContainerArrayProxy(const QString &name, DataContainerArrayProxy v) = 0;
+
+    virtual DataArrayPath readDataArrayPath(const QString &name, DataArrayPath v) = 0;
 
   protected:
     AbstractFilterParametersReader();

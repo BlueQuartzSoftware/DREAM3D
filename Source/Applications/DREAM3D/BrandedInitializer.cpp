@@ -47,6 +47,7 @@
 
 #include "DREAM3DLib/Common/FilterManager.h"
 #include "DREAM3DLib/DREAM3DVersion.h"
+#include "DREAM3DLib/Utilities/QMetaObjectUtilities.h"
 
 #include "QtSupport/QRecentFileList.h"
 
@@ -115,6 +116,7 @@ bool BrandedInitializer::initialize(int argc, char* argv[])
 #endif
   QApplication::addLibraryPath(dir.absolutePath());
 
+  QMetaObjectUtilities::RegisterMetaTypes();
 
   // Load application plugins.
   loadPlugins();

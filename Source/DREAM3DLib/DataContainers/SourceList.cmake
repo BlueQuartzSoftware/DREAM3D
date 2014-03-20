@@ -36,6 +36,7 @@ set(DREAM3DLib_DataContainers_HDRS
   ${DREAM3DLib_SOURCE_DIR}/DataContainers/DataContainerProxy.h
   ${DREAM3DLib_SOURCE_DIR}/DataContainers/AttributeMatrixProxy.h
   ${DREAM3DLib_SOURCE_DIR}/DataContainers/DataArrayProxy.h
+  ${DREAM3DLib_SOURCE_DIR}/DataContainers/DataArrayPath.h
 )
 
 set(DREAM3DLib_DataContainers_SRCS
@@ -49,6 +50,7 @@ set(DREAM3DLib_DataContainers_SRCS
   ${DREAM3DLib_SOURCE_DIR}/DataContainers/AttributeMatrix.cpp
   ${DREAM3DLib_SOURCE_DIR}/DataContainers/VertexArray.cpp
   ${DREAM3DLib_SOURCE_DIR}/DataContainers/DataContainerArrayProxy.cpp
+  ${DREAM3DLib_SOURCE_DIR}/DataContainers/DataArrayPath.cpp
 )
 
 cmp_IDE_SOURCE_PROPERTIES( "DREAM3DLib/DataContainers" "${DREAM3DLib_DataContainers_HDRS}" "${DREAM3DLib_DataContainers_SRCS}" "0")

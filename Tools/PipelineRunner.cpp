@@ -67,7 +67,7 @@
 #include "DREAM3DLib/Plugin/DREAM3DPluginLoader.h"
 #include "DREAM3DLib/FilterParameters/QFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/QFilterParametersWriter.h"
-
+#include "DREAM3DLib/Utilities/QMetaObjectUtilities.h"
 
 
 // -----------------------------------------------------------------------------
@@ -149,7 +149,8 @@ int main (int argc, char  *argv[])
   DREAM3DPluginLoader::LoadPluginFilters(fm.get());
 
   // Send progress messages from PipelineBuilder to this object for display
-  qRegisterMetaType<PipelineMessage>();
+  QMetaObjectUtilities::RegisterMetaTypes();
+
 
   int err = 0;
 

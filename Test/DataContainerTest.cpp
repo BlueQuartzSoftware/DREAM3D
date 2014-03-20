@@ -59,6 +59,8 @@
 #include "DREAM3DLib/FilterParameters/H5FilterParametersWriter.h"
 #include "DREAM3DLib/FilterParameters/QFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/H5FilterParametersReader.h"
+#include "DREAM3DLib/Utilities/QMetaObjectUtilities.h"
+
 
 #include "UnitTestSupport.hpp"
 
@@ -351,7 +353,7 @@ void TestDataContainerWriter()
 
   Observer obs;
   // Send progress messages from PipelineBuilder to this object for display
-  qRegisterMetaType<PipelineMessage>();
+
 
   DataContainerWriter::Pointer writer = DataContainerWriter::New();
   writer->setDataContainerArray(dca);
@@ -393,7 +395,7 @@ void TestDataContainerReader()
 
       Observer obs;
   // Send progress messages from PipelineBuilder to this object for display
-  qRegisterMetaType<PipelineMessage>();
+
 
   DataContainerWriter::Pointer writer = DataContainerWriter::New();
   writer->setDataContainerArray(dca);
@@ -868,7 +870,7 @@ int main(int argc, char** argv)
   DREAM3D_REGISTER_TEST( RemoveTestFiles() )
     #endif
 
-
+  QMetaObjectUtilities::RegisterMetaTypes();
 
       DREAM3D_REGISTER_TEST( TestInsertDelete() )
 

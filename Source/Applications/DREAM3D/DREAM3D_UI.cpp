@@ -1036,7 +1036,6 @@ void DREAM3D_UI::on_startPipelineBtn_clicked()
   connect(this, SIGNAL(pipelineCanceled() ),
           m_PipelineInFlight.get(), SLOT (cancelPipeline() ), Qt::DirectConnection);
 
-  qRegisterMetaType<PipelineMessage>();
 
 
   emit pipelineStarted();

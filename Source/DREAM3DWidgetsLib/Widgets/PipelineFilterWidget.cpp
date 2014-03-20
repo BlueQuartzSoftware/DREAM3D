@@ -70,16 +70,7 @@
 #define IMAGE_WIDTH 17
 #define IMAGE_HEIGHT 17
 
-// These Streams need to be implemented so that our 3 Element Vectors can be read/write to disk/prefs files
-QDataStream& operator<<( QDataStream& out, const IntVec3_t& v)
-{
-  out << v.x << v.y << v.z;
-  return out;
-}
-QDataStream& operator>>( QDataStream& in, IntVec3_t& v) { in >> v.x >> v.y >> v.z; return in; }
 
-QDataStream& operator<<( QDataStream& out, const FloatVec3_t& v) { out << v.x << v.y << v.z; return out; }
-QDataStream& operator>>( QDataStream& in, FloatVec3_t& v) { in >> v.x >> v.y >> v.z; return in; }
 
 // Initialize private static member variable
 QString PipelineFilterWidget::m_OpenDialogLastDirectory = "";
@@ -124,18 +115,6 @@ PipelineFilterWidget::PipelineFilterWidget(AbstractFilter::Pointer filter, IObse
 void PipelineFilterWidget::initialize(AbstractFilter::Pointer filter)
 {
   setupUi(this);
-
-//  setContextMenuPolicy(Qt::CustomContextMenu);
-
-//  connect(this,
-//    SIGNAL(customContextMenuRequested(const QPoint&)),
-//    SLOT(on_customContextMenuRequested(const QPoint&)));
-
-  qRegisterMetaType<IntVec3_t>("IntVec3_t");
-  qRegisterMetaTypeStreamOperators<IntVec3_t>("IntVec3_t");
-
-  qRegisterMetaType<FloatVec3_t>("FloatVec3_t");
-  qRegisterMetaTypeStreamOperators<FloatVec3_t>("FloatVec3_t");
 
   if ( m_OpenDialogLastDirectory.isEmpty() )
   {

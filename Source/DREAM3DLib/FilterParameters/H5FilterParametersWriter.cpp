@@ -574,3 +574,16 @@ int H5FilterParametersWriter::writeValue(const QString name, DataContainerArrayP
   return err;
 }
 
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int H5FilterParametersWriter::writeValue(const QString name, const DataArrayPath& v)
+{
+  int err = 0;
+  QString value = v.serialize();
+  err = QH5Lite::writeStringDataset(m_CurrentGroupId, name, value);
+  return err;
+}
+

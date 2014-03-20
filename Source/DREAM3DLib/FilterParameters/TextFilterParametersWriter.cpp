@@ -347,3 +347,14 @@ int TextFilterParametersWriter::writeValue(const QString name, DataContainerArra
   return err;
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int TextFilterParametersWriter::writeValue(const QString name, const DataArrayPath& v)
+{
+  int err = -1;
+
+  return err;
+}
+
+

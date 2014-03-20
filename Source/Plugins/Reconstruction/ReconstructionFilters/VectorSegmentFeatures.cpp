@@ -57,7 +57,7 @@ VectorSegmentFeatures::VectorSegmentFeatures() :
   m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
   m_CellFeatureAttributeMatrixName(DREAM3D::Defaults::CellFeatureAttributeMatrixName),
   m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
-  m_SelectedVectorArrayName(""),
+  m_SelectedVectorArrayPath(""),
   m_AngleTolerance(5.0f),
   m_RandomizeFeatureIds(true),
   m_VectorsArrayName(""),
@@ -88,8 +88,8 @@ void VectorSegmentFeatures::setupFilterParameters()
   {
     FilterParameter::Pointer parameter = FilterParameter::New();
     parameter->setHumanLabel("Vector Array Name");
-    parameter->setPropertyName("SelectedVectorArrayName");
-    parameter->setWidgetType(FilterParameterWidgetType::SingleArraySelectionWidget);
+    parameter->setPropertyName("SelectedVectorArrayPath");
+    parameter->setWidgetType(FilterParameterWidgetType::DataArraySelectionWidget);
     parameter->setValueType("QString");
     parameter->setUnits("");
     parameters.push_back(parameter);
@@ -125,7 +125,7 @@ void VectorSegmentFeatures::readFilterParameters(AbstractFilterParametersReader*
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
   /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
-  setSelectedVectorArrayName( reader->readString( "SelectedVectorArrayName", getSelectedVectorArrayName() ) );
+  setSelectedVectorArrayPath( reader->readDataArrayPath( "SelectedVectorArrayPath", getSelectedVectorArrayPath() ) );
   setAngleTolerance( reader->readValue("AngleTolerance", getAngleTolerance()) );
   /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
@@ -137,7 +137,7 @@ void VectorSegmentFeatures::readFilterParameters(AbstractFilterParametersReader*
 int VectorSegmentFeatures::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  writer->writeValue("SelectedVectorArrayName", getSelectedVectorArrayName() );
+  writer->writeValue("SelectedVectorArrayPath", getSelectedVectorArrayPath() );
   writer->writeValue("AngleTolerance", getAngleTolerance() );
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
@@ -169,7 +169,16 @@ void VectorSegmentFeatures::dataCheck()
   AttributeMatrix::Pointer cellAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), -301);
   if(getErrorCondition() < 0 || NULL == cellAttrMat.get() ) { return; }
 
-  if(m_SelectedVectorArrayName.isEmpty() == true)
+
+#if 1
+  QVector<size_t> dims(1, 3);
+  DataContainerArray::Pointer dca = getDataContainerArray();
+
+  m_VectorsPtr = dca->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getSelectedVectorArrayPath(), dims);
+  if( NULL != m_VectorsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  { m_Vectors = m_VectorsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+#else
+  if(m_SelectedVectorArrayPath.isEmpty() == true)
   {
     setErrorCondition(-11000);
     notifyErrorMessage(getHumanLabel(), "An array from the Volume DataContainer must be selected.", getErrorCondition());
@@ -181,7 +190,7 @@ void VectorSegmentFeatures::dataCheck()
     QString amName;
     QString daName;
 
-    QStringList tokens = m_SelectedVectorArrayName.split(DREAM3D::PathSep);
+    QStringList tokens = m_SelectedVectorArrayPath.split(DREAM3D::PathSep);
     // We should end up with 3 Tokens
     if(tokens.size() != 3)
     {
@@ -205,7 +214,7 @@ void VectorSegmentFeatures::dataCheck()
       }
 
       AttributeMatrix::Pointer attrMat = dc->getAttributeMatrix(amName);
-       if(NULL == attrMat.get())
+      if(NULL == attrMat.get())
       {
         setErrorCondition(-11004);
         QString ss = QObject::tr("The AttributeMatrix '%1' was not found in the DataContainer '%2'").arg(amName).arg(dcName);
@@ -221,8 +230,10 @@ void VectorSegmentFeatures::dataCheck()
       { m_Vectors = m_VectorsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
     }
   }
+#endif
 
-  QVector<size_t> dims(1, 1);
+  dims.resize(1);
+  dims[0] = 1;
   m_FeatureIdsPtr = cellAttrMat->createNonPrereqArray<DataArray<int32_t>, AbstractFilter, int32_t>(this, m_FeatureIdsArrayName, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
@@ -292,7 +303,7 @@ void VectorSegmentFeatures::execute()
     typedef boost::uniform_int<int> NumberDistribution;
     typedef boost::mt19937 RandomNumberGenerator;
     typedef boost::variate_generator < RandomNumberGenerator&,
-            NumberDistribution > Generator;
+        NumberDistribution > Generator;
 
     NumberDistribution distribution(rangeMin, rangeMax);
     RandomNumberGenerator generator;
@@ -348,7 +359,7 @@ int64_t VectorSegmentFeatures::getSeed(size_t gnum)
   int64_t totalPoints = m->getTotalPoints();
 
   DREAM3D_RANDOMNG_NEW()
-  int64_t seed = -1;
+      int64_t seed = -1;
   int64_t randpoint = 0;
 
   // Pre-calculate some constants

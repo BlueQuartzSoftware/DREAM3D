@@ -46,7 +46,7 @@
 
 typedef struct { int x; int y; int z; } IntVec3_t;
 typedef struct { float x; float y; float z; } FloatVec3_t;
-//typedef struct { QString arrayName; int compOperator; double compValue; } ComparisonInput_t;
+
 typedef struct { float angle; float h; float k; float l; } AxisAngleInput_t;
 
 Q_DECLARE_METATYPE(IntVec3_t)
@@ -72,9 +72,11 @@ namespace FilterParameterWidgetType
       const QString UnknownWidget("UnknownWidget");
       const QString DataContainerArrayProxyWidget("DataContainerArrayProxyWidget");
       const QString ArraySelectionWidget("ArraySelectionWidget"); // This is the generic array name selection tool where the user can select multiple arrays with checkboxes from all data containers
-      const QString SingleArraySelectionWidget("SingleArraySelectionWidget");
+      const QString DataArraySelectionWidget("DataArraySelectionWidget");
       const QString ComparisonSelectionWidget("ComparisonSelectionWidget");
       const QString AttributeMatrixSelectionWidget("AttributeMatrixSelectionWidget");
+      //// This just here to get stuff to compile. The Widget DOES NOT EXIST and WILL NOT EXIST.
+      const QString SingleArraySelectionWidget("SingleArraySelectionWidget"); // ComboBox where the Cell Array names are used to populate
 
 #if 0
       /* **** DO NOT PUT ANY OTHER WIDGETS BETWEEN THIS ***** */

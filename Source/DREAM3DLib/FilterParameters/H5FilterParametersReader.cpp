@@ -723,3 +723,24 @@ DataContainerArrayProxy H5FilterParametersReader::readDataContainerArrayProxy(co
   return dcaProxy;
 }
 
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+DataArrayPath H5FilterParametersReader::readDataArrayPath(const QString &name, DataArrayPath def)
+{
+  QString value;
+  int err = 0;
+  err = QH5Lite::readStringDataset(m_CurrentGroupId, name, value);
+  if (err == 0)
+  {
+    DataArrayPath path(value);
+    return path;
+  }
+  else
+  {
+    return def;
+  }
+
+}
