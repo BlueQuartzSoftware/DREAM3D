@@ -6,7 +6,7 @@
 # create Resource files for the various license files that are used and
 # also create a header file that lists all the License Files
 set(LICENSE_FILES
-                   ${DREAM3DProj_SOURCE_DIR}/License.txt.in
+                   ${DREAM3DProj_SOURCE_DIR}/License.html
                 #   ${DREAM3DProj_SOURCE_DIR}/ReadMe.txt.in
                    ${DREAM3DProj_SOURCE_DIR}/License/Boost.license
                    ${DREAM3DProj_SOURCE_DIR}/License/MXA.license
