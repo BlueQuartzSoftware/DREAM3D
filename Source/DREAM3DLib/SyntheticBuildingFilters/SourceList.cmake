@@ -27,7 +27,6 @@ set(_PublicFilters
   AddBadData
   AddOrientationNoise
   InitializeSyntheticVolume
-  InsertLamellarPhases
 )
 
 
