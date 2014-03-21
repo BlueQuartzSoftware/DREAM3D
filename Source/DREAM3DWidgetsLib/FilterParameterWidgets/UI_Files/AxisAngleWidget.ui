@@ -36,7 +36,7 @@
     <widget class="QLineEdit" name="axis_j"/>
    </item>
    <item row="1" column="0">
-    <widget class="QLabel" name="AxisAngleWidgetLabel">
+    <widget class="QLabel" name="label">
      <property name="text">
       <string>Property</string>
      </property>
@@ -46,7 +46,7 @@
     <widget class="QLineEdit" name="axis_k"/>
    </item>
    <item row="0" column="1">
-    <widget class="QLabel" name="label">
+    <widget class="QLabel" name="angleLable">
      <property name="text">
       <string>Angle</string>
      </property>
@@ -56,7 +56,7 @@
     </widget>
    </item>
    <item row="0" column="2" colspan="3">
-    <widget class="QLabel" name="label_2">
+    <widget class="QLabel" name="axisLabel">
      <property name="text">
       <string>|----------------- Axis -----------------|</string>
      </property>

@@ -91,7 +91,16 @@ void DataContainerArrayProxyWidget::setupGui()
 
   if (m_FilterParameter != NULL)
   {
-    label->setText(m_FilterParameter->getHumanLabel() );
+    QString units = m_FilterParameter->getUnits();
+    if(units.isEmpty() == false)
+    {
+      label->setText(m_FilterParameter->getHumanLabel() + " (" + units + ")");
+    }
+    else
+    {
+      label->setText(m_FilterParameter->getHumanLabel() );
+    }
+
 
     //If the filter is just being dragged into the pipeline then the filter is going to have an empty
     // Proxy object at which point nothing is going to be put into the lists. But if the Filter was
@@ -118,7 +127,7 @@ void DataContainerArrayProxyWidget::itemActivated(const QModelIndex& index)
 // -----------------------------------------------------------------------------
 void DataContainerArrayProxyWidget::filterNeedsInputParameters(AbstractFilter* filter)
 {
- // qDebug() << "DataContainerArrayProxyWidget::filterNeedsInputParameters(AbstractFilter* filter)";
+  // qDebug() << "DataContainerArrayProxyWidget::filterNeedsInputParameters(AbstractFilter* filter)";
 
   QVariant var;
   var.setValue(m_DcaProxy);
@@ -167,7 +176,7 @@ void removeNonExistantChildren(QStandardItem* parent, QStringList possibleNames)
     QStringList list = possibleNames.filter(item->text() );
     if(list.size() == 0) // the name is in the model but NOT in the proxy so we need to remove it
     {
-     // qDebug() << "!! Removing " << item->text();
+      // qDebug() << "!! Removing " << item->text();
       parent->removeRow(i);
     }
   }
@@ -216,7 +225,7 @@ QStandardItem* updateProxyItem(QStandardItem* parent, QString name, T &proxy)
   if (items.count() == 1)
   {
     item = items.at(0);
- //   qDebug() << parent->text() << " | " << item->text() << " ::"  << proxy.flag << " (Going to Change to) " << item->checkState();
+    //   qDebug() << parent->text() << " | " << item->text() << " ::"  << proxy.flag << " (Going to Change to) " << item->checkState();
     proxy.flag = item->checkState();
   }
 
@@ -228,7 +237,7 @@ QStandardItem* updateProxyItem(QStandardItem* parent, QString name, T &proxy)
 // -----------------------------------------------------------------------------
 void DataContainerArrayProxyWidget::updateModelFromProxy(DataContainerArrayProxy &proxy)
 {
-   QStandardItemModel* model = qobject_cast<QStandardItemModel*>(dcaProxyView->model());
+  QStandardItemModel* model = qobject_cast<QStandardItemModel*>(dcaProxyView->model());
   if(!model)
   {
     Q_ASSERT_X(model, "Model was not a QStandardItemModel in QColumnView", "");
@@ -340,7 +349,7 @@ void DataContainerArrayProxyWidget::updateProxyFromModel()
     }
   }
 
-//  m_DcaProxy.print("updateProxy AFTER Updating");
+  //  m_DcaProxy.print("updateProxy AFTER Updating");
 }
 
 // -----------------------------------------------------------------------------
@@ -415,7 +424,7 @@ void transferAttributeMatrixFlags(const QString dcName, const AttributeMatrixPro
     if(dcProxy.name.compare(dcName) == 0)
     {
       // we have the correct DataContainer, so transfer the flags
-//      dcProxy.flag = source.flag;
+      //      dcProxy.flag = source.flag;
       QMutableMapIterator<QString, AttributeMatrixProxy> attrMatsIter(dcProxy.attributeMatricies);
       while(attrMatsIter.hasNext())
       {
@@ -479,7 +488,7 @@ void transferDataArrayFlags(const QString dc_name, const QString am_name, const 
 // -----------------------------------------------------------------------------
 void DataContainerArrayProxyWidget::updateProxyFromProxy(DataContainerArrayProxy &current, DataContainerArrayProxy &incoming)
 {
-//  qDebug() << m_Filter->getNameOfClass() << " DataContainerArrayProxyWidget::mergeProxies";
+  //  qDebug() << m_Filter->getNameOfClass() << " DataContainerArrayProxyWidget::mergeProxies";
 
   // Loop over the current model and only worry about getting the flag for each proxy from the current and transfering
   // that flag to the incoming. This allows us to save the selections but also update the model later on with this new
@@ -530,7 +539,7 @@ void DataContainerArrayProxyWidget::beforePreflight()
 {
   if (m_DidCausePreflight == false)
   {
-  //  qDebug() << m_Filter->getNameOfClass() << " DataContainerArrayProxyWidget::beforePreflight()";
+    //  qDebug() << m_Filter->getNameOfClass() << " DataContainerArrayProxyWidget::beforePreflight()";
     // Get the DataContainerArray from the Filter instance. This will have what will become the choices for the user
     // to select from.
     DataContainerArray::Pointer dca = m_Filter->getDataContainerArray();
@@ -554,5 +563,5 @@ void DataContainerArrayProxyWidget::beforePreflight()
 // -----------------------------------------------------------------------------
 void DataContainerArrayProxyWidget::afterPreflight()
 {
- // qDebug() << m_Filter->getNameOfClass() << " DataContainerArrayProxyWidget::afterPreflight()";
+  // qDebug() << m_Filter->getNameOfClass() << " DataContainerArrayProxyWidget::afterPreflight()";
 }

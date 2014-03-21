@@ -68,6 +68,8 @@ class DREAM3DWidgetsLib_EXPORT DataArraySelectionWidget : public QWidget, privat
     */
     DataArraySelectionWidget(FilterParameter* parameter, AbstractFilter* filter = NULL, QWidget* parent = NULL);
 
+    DataArraySelectionWidget(QWidget* parent = NULL);
+
     virtual ~DataArraySelectionWidget();
 
     /**
@@ -82,6 +84,13 @@ class DREAM3DWidgetsLib_EXPORT DataArraySelectionWidget : public QWidget, privat
      * @return
      */
     QString checkStringValues(QString current, QString filtDcName);
+
+    /**
+     * @brief initializeWidget
+     * @param parameter
+     * @param filter
+     */
+    void initializeWidget(FilterParameter* parameter, AbstractFilter* filter);
 
 
   public slots:

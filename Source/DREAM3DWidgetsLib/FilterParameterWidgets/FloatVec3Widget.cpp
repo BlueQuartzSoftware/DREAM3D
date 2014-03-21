@@ -92,7 +92,16 @@ void FloatVec3Widget::setupGui()
   zData->setValidator(zVal);
   if (m_FilterParameter != NULL)
   {
-    FloatVec3WidgetLabel->setText(m_FilterParameter->getHumanLabel() );
+    QString units = m_FilterParameter->getUnits();
+    if(units.isEmpty() == false)
+    {
+      label->setText(m_FilterParameter->getHumanLabel() + " (" + units + ")");
+    }
+    else
+    {
+      label->setText(m_FilterParameter->getHumanLabel() );
+    }
+
     FloatVec3_t data = m_Filter->property(PROPERTY_NAME_AS_CHAR).value<FloatVec3_t>();
     xData->setText(QString::number(data.x) );
     yData->setText(QString::number(data.y) );

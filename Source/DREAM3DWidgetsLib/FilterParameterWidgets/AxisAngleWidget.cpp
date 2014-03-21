@@ -102,7 +102,16 @@ void AxisAngleWidget::setupGui()
 
   if (m_FilterParameter != NULL)
   {
-    AxisAngleWidgetLabel->setText(m_FilterParameter->getHumanLabel() );
+    QString units = m_FilterParameter->getUnits();
+    if(units.isEmpty() == false)
+    {
+      label->setText(m_FilterParameter->getHumanLabel() + " (" + units + ")");
+    }
+    else
+    {
+      label->setText(m_FilterParameter->getHumanLabel() );
+    }
+
 
     AxisAngleInput_t data = m_Filter->property(PROPERTY_NAME_AS_CHAR).value<AxisAngleInput_t>();
     axis_i->setText(QString::number(data.h) );

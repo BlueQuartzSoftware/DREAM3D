@@ -83,7 +83,17 @@ void DoubleWidget::setupGui()
 
   if (m_FilterParameter != NULL)
   {
-    DoubleWidgetLabel->setText(m_FilterParameter->getHumanLabel() );
+    QString units = m_FilterParameter->getUnits();
+    if(units.isEmpty() == false)
+    {
+      label->setText(m_FilterParameter->getHumanLabel() + " (" + units + ")");
+    }
+    else
+    {
+      label->setText(m_FilterParameter->getHumanLabel() );
+    }
+
+
     QString str = m_Filter->property(PROPERTY_NAME_AS_CHAR).toString();
     value->setText(str);
   }
