@@ -1,7 +1,11 @@
+/*
+ * Your License should go here
+ */
 #ifndef _@PluginName@Constants_H_
 #define _@PluginName@Constants_H_
 
 #include <QtCore/QString>
+
 /**
 * @brief This namespace is used to define some Constants for the plugin itself.
 */
