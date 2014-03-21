@@ -271,7 +271,7 @@ void CAxisSegmentFeatures::execute()
     gid[0] = 0;
     QSet<int32_t> featureIdSet;
     featureIdSet.insert(0);
-    for(size_t i = 1; i < totalFeatures; ++i)
+    for(int64_t i = 1; i < totalFeatures; ++i)
     {
       gid[i] = i; //numberGenerator();
       featureIdSet.insert(gid[i]);
@@ -280,7 +280,7 @@ void CAxisSegmentFeatures::execute()
     size_t r;
     size_t temp;
     //--- Shuffle elements by randomly exchanging each with one other.
-    for (size_t i = 1; i < totalFeatures; i++)
+    for (int64_t i = 1; i < totalFeatures; i++)
     {
       r = numberGenerator(); // Random remaining position.
 
@@ -294,7 +294,7 @@ void CAxisSegmentFeatures::execute()
     {
       m_FeatureIds[i] = gid[ m_FeatureIds[i] ];
     }
-    for(size_t i = 0; i < totalFeatures; i++)
+    for(int64_t i = 0; i < totalFeatures; i++)
     {
       m_Active[i] = true;
     }

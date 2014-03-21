@@ -206,21 +206,10 @@ void FindFeatureReferenceMisorientations::execute()
   int64_t totalPoints = m->getAttributeMatrix(getCellAttributeMatrixName())->getNumTuples();
   int64_t totalFeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
 
-  float** avgmiso = new float *[totalFeatures];
-  for (size_t i = 1; i < totalFeatures; i++)
-  {
-    avgmiso[i] = new float[2];
-    for (int j = 0; j < 2; j++)
-    {
-      avgmiso[i][j] = 0.0;
-    }
-  }
-
   QuatF q1;
   QuatF q2;
   QuatF* quats = reinterpret_cast<QuatF*>(m_Quats);
   QuatF* avgQuats = reinterpret_cast<QuatF*>(m_AvgQuats);
-
 
   float w;
   float n1, n2, n3;
@@ -261,10 +250,16 @@ void FindFeatureReferenceMisorientations::execute()
     }
   }
 
+
+  FloatArrayType::Pointer avgMisoPtr = FloatArrayType::CreateArray(totalFeatures * 2, "AVERAGE MISORIENTATION INTERNAL_ARRAY");
+  avgMisoPtr->initializeWithZeros();
+  float* avgMiso = avgMisoPtr->getPointer(0);
+
   DimType xPoints = static_cast<DimType>(udims[0]);
   DimType yPoints = static_cast<DimType>(udims[1]);
   DimType zPoints = static_cast<DimType>(udims[2]);
-  DimType point;
+  DimType point = 0;
+  size_t idx = 0;
   for (DimType col = 0; col < xPoints; col++)
   {
     for (DimType row = 0; row < yPoints; row++)
@@ -291,8 +286,9 @@ void FindFeatureReferenceMisorientations::execute()
           m_OrientationOps[phase1]->getMDFFZRod(r1, r2, r3);
           w = w * (180.0f / DREAM3D::Constants::k_Pi);
           m_FeatureReferenceMisorientations[point] = w;
-          avgmiso[m_FeatureIds[point]][0]++;
-          avgmiso[m_FeatureIds[point]][1] = avgmiso[m_FeatureIds[point]][1] + w;
+          idx = m_FeatureIds[point] * 2;
+          avgMiso[idx + 0]++;
+          avgMiso[idx + 1] = avgMiso[idx + 1] + w;
         }
         if (m_FeatureIds[point] == 0 || m_CellPhases[point] == 0)
         {
@@ -302,18 +298,12 @@ void FindFeatureReferenceMisorientations::execute()
     }
   }
 
-  for (size_t i = 1; i < totalFeatures; i++)
+  for (int64_t i = 1; i < totalFeatures; i++)
   {
-    m_FeatureAvgMisorientations[i] = avgmiso[i][1] / avgmiso[i][0];
-    if(avgmiso[i][0] == 0) { m_FeatureAvgMisorientations[i] = 0.0; }
+    idx = i * 2;
+    m_FeatureAvgMisorientations[i] = avgMiso[idx + 1] / avgMiso[idx];
+    if(avgMiso[idx] == 0.0f) { m_FeatureAvgMisorientations[i] = 0.0; }
   }
-
-  // Clean up all the heap allocated memory
-  for (size_t i = 1; i < totalFeatures; i++)
-  {
-    delete[] avgmiso[i];
-  }
-  delete avgmiso;
 
   notifyStatusMessage(getHumanLabel(), "FindFeatureReferenceMisorientations Completed");
 }

@@ -267,7 +267,7 @@ void BadDataNeighborOrientationCheck::execute()
     while(counter > 0)
     {
       counter = 0;
-      for (size_t i = 0; i < totalPoints; i++)
+      for (int64_t i = 0; i < totalPoints; i++)
       {
         if(neighborCount[i] >= currentLevel && m_GoodVoxels[i] == false)
         {

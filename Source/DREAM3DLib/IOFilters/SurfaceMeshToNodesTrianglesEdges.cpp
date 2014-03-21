@@ -337,7 +337,7 @@ void SurfaceMeshToNodesTrianglesEdges::execute()
   FaceArray::Face_t* t = triangles->getPointer(0);
 
   int n1, n2, n3, e1 = -1, e2 = -1, e3 = -1;
-  for (size_t j = 0; j < numTriangles; ++j)
+  for (int64_t j = 0; j < numTriangles; ++j)
   {
     n1 = t[j].verts[0];
     n2 = t[j].verts[1];
