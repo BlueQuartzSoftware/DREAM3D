@@ -103,15 +103,14 @@
   fprintf(f, "SCALARS %s int 1\n", ScalarName.toLatin1().data());\
   fprintf(f, "LOOKUP_TABLE default\n"); \
   { \
-    int* gn = new int[totalPoints];\
+    std::vector<int> gn(totalPoints, 0);\
     int t;\
     for (int64_t i = 0; i < totalPoints; i++) {\
       t = m_FeatureIds[i];\
       DREAM3D::Endian::FromSystemToBig::convert(t);\
       gn[i] = t; \
     }\
-    int64_t totalWritten = fwrite(gn, sizeof(int), totalPoints, f);\
-    delete[] gn;\
+    int64_t totalWritten = fwrite( &(gn.front()), sizeof(int), totalPoints, f);\
     if (totalWritten != totalPoints)  {\
       qDebug() << "Error Writing Binary VTK Data into file " << file ;\
       fclose(f);\

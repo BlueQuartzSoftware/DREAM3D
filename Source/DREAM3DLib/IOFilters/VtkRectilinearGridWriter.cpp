@@ -239,7 +239,7 @@ int VtkRectilinearGridWriter::write(const QString& file)
   VtkRectilinearGridWriter::WriteCoords(f, "Y_COORDINATES", "float", r->getYPoints() + 1, 0.0f - r->getYRes() * 0.5f, (float)(r->getYPoints() + 1 * r->getYRes()), r->getYRes(), m_WriteBinaryFile);
   VtkRectilinearGridWriter::WriteCoords(f, "Z_COORDINATES", "float", r->getZPoints() + 1, 0.0f - r->getZRes() * 0.5f, (float)(r->getZPoints() + 1 * r->getZRes()), r->getZRes(), m_WriteBinaryFile);
 
-  size_t totalPoints = r->getXPoints() * r->getYPoints() * r->getZPoints();
+  int64_t totalPoints = r->getXPoints() * r->getYPoints() * r->getZPoints();
   fprintf(f, "CELL_DATA %d\n", (int)totalPoints);
 
 
