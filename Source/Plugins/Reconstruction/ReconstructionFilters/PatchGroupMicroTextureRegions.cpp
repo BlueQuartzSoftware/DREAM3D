@@ -140,6 +140,7 @@ void PatchGroupMicroTextureRegions::setupFilterParameters()
     parameter->setWidgetType(FilterParameterWidgetType::DoubleWidget);
     parameter->setValueType("float");
     parameter->setCastableValueType("double");
+    parameter->setUnits("");
     parameters.push_back(parameter);
   }
 
@@ -355,7 +356,7 @@ void PatchGroupMicroTextureRegions::execute()
   }
   numParents += 1;
 
-  //m_RandomizeParentIds = false;
+  m_RandomizeParentIds = false;
   if (true == m_RandomizeParentIds)
   {
     int64_t totalPoints = m->getAttributeMatrix(getCellAttributeMatrixName())->getNumTuples();
@@ -533,6 +534,7 @@ bool PatchGroupMicroTextureRegions::determineGrouping(int referenceFeature, int 
       MatrixMath::Multiply3x1withConstant(avgCaxes,m_Volumes[referenceFeature]);
     }
     phase2 = m_CrystalStructures[m_FeaturePhases[neighborFeature]];
+//    if (growPatch(newFid) == true) { m_FeatureParentIds[neighborFeature] = newFid; }
     if (phase1 == phase2 && (phase1 == Ebsd::CrystalStructure::Hexagonal_High) )
     {
       QuaternionMathF::Copy(avgQuats[neighborFeature], q2);
@@ -551,12 +553,11 @@ bool PatchGroupMicroTextureRegions::determineGrouping(int referenceFeature, int 
       w = acosf(w);
       if (w <= m_CAxisTolerance || (DREAM3D::Constants::k_Pi - w) <= m_CAxisTolerance)
       {
-//        m_FeatureParentIds[neighborFeature] = newFid;
         if (m_UseRunningAverage == true)
         {
           MatrixMath::Multiply3x1withConstant(c2, m_Volumes[neighborFeature]);
           MatrixMath::Add3x1s(avgCaxes, c2, avgCaxes);
-      patchFeatureVolumeFractions[newFid] += m_Volumes[neighborFeature];
+          patchFeatureVolumeFractions[newFid] += m_Volumes[neighborFeature];
         }
         return true;
       }
@@ -859,9 +860,92 @@ bool PatchGroupMicroTextureRegions::growPatch(int currentPatch)
   float check1 = patchFeatureVolumeFractions[currentPatch];
   float check = patchFeatureVolumeFractions[currentPatch] / patchVolume;
   int stop = 0;
-  // only flag as an MTR if above the threshold volume fraction of c-ax0s aligns alpha globs within the patch
+  // only flag as an MTR if above the threshold volume fraction of c-axis aligns alpha globs within the patch
   if ((patchFeatureVolumeFractions[currentPatch] / patchVolume) > m_PatchVolumeFractionForMTRGrowth) { return true; }
   else { return false; }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+bool PatchGroupMicroTextureRegions::growGrouping(int referenceFeature, int neighborFeature, int newFid)
+{
+  unsigned int phase1 = 0, phase2 = 0;
+  float w = 0.0f;
+  float g1[3][3];
+  float g2[3][3];
+  float g1t[3][3];
+  float g2t[3][3];
+  float c1[3];
+  float c2[3];
+  float caxis[3] = {0, 0, 1};
+  QuatF q1 = QuaternionMathF::New(0.0f, 0.0f, 0.0f, 0.0f);
+  QuatF q2 = QuaternionMathF::New(0.0f, 0.0f, 0.0f, 0.0f);
+
+  QuatF* avgQuats = reinterpret_cast<QuatF*>(m_AvgQuats);
+
+  if (m_FeatureParentIds[neighborFeature] == -1 && m_FeaturePhases[referenceFeature] > 0 && m_FeaturePhases[neighborFeature] > 0)
+  {
+    if (m_UseRunningAverage == false)
+    {
+      QuaternionMathF::Copy(avgQuats[referenceFeature], q1);
+      phase1 = m_CrystalStructures[m_FeaturePhases[referenceFeature]];
+      OrientationMath::QuattoMat(q1, g1);
+      //transpose the g matrix so when caxis is multiplied by it
+      //it will give the sample direction that the caxis is along
+      MatrixMath::Transpose3x3(g1, g1t);
+      MatrixMath::Multiply3x3with3x1(g1t, caxis, c1);
+      //normalize so that the dot product can be taken below without
+      //dividing by the magnitudes (they would be 1)
+      MatrixMath::Normalize3x1(c1);
+    }
+  if (m_UseRunningAverage == true && avgCaxes[0] == 0.0f && avgCaxes[1] == 0.0f && avgCaxes[2] == 0.0f)
+    {
+      QuaternionMathF::Copy(avgQuats[referenceFeature], q1);
+      phase1 = m_CrystalStructures[m_FeaturePhases[referenceFeature]];
+      OrientationMath::QuattoMat(q1, g1);
+      //transpose the g matrix so when caxis is multiplied by it
+      //it will give the sample direction that the caxis is along
+      MatrixMath::Transpose3x3(g1, g1t);
+      MatrixMath::Multiply3x3with3x1(g1t, caxis, c1);
+      //normalize so that the dot product can be taken below without
+      //dividing by the magnitudes (they would be 1)
+      MatrixMath::Normalize3x1(c1);
+
+      MatrixMath::Copy3x1(c1,avgCaxes);
+      MatrixMath::Multiply3x1withConstant(avgCaxes,m_Volumes[referenceFeature]);
+    }
+    phase2 = m_CrystalStructures[m_FeaturePhases[neighborFeature]];
+    if (growPatch(newFid) == true) { m_FeatureParentIds[neighborFeature] = newFid; }
+    if (phase1 == phase2 && (phase1 == Ebsd::CrystalStructure::Hexagonal_High) )
+    {
+      QuaternionMathF::Copy(avgQuats[neighborFeature], q2);
+      OrientationMath::QuattoMat(q2, g2);
+      //transpose the g matrix so when caxis is multiplied by it
+      //it will give the sample direction that the caxis is along
+      MatrixMath::Transpose3x3(g2, g2t);
+      MatrixMath::Multiply3x3with3x1(g2t, caxis, c2);
+      //normalize so that the dot product can be taken below without
+      //dividing by the magnitudes (they would be 1)
+      MatrixMath::Normalize3x1(c2);
+
+      if (m_UseRunningAverage == true) w = GeometryMath::CosThetaBetweenVectors(avgCaxes, c2);
+      else w = GeometryMath::CosThetaBetweenVectors(c1, c2);
+      DREAM3DMath::boundF(w, -1, 1);
+      w = acosf(w);
+      if (w <= m_CAxisTolerance || (DREAM3D::Constants::k_Pi - w) <= m_CAxisTolerance)
+      {
+        if (m_UseRunningAverage == true)
+        {
+          MatrixMath::Multiply3x1withConstant(c2, m_Volumes[neighborFeature]);
+          MatrixMath::Add3x1s(avgCaxes, c2, avgCaxes);
+          patchFeatureVolumeFractions[newFid] += m_Volumes[neighborFeature];
+        }
+        return true;
+      }
+    }
+  }
+  return false;
 }
 
 // -----------------------------------------------------------------------------
@@ -882,6 +966,7 @@ AbstractFilter::Pointer PatchGroupMicroTextureRegions::newFilterInstance(bool co
     filter->setPatchEdgeLength( getPatchEdgeLength() );
     filter->setRandomizeParentIds( getRandomizeParentIds() );
     filter->setPatchGrouping( getPatchGrouping() );
+	filter->setPatchVolumeFractionForMTRGrowth( getPatchVolumeFractionForMTRGrowth() );
   }
   return filter;
 }

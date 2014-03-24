@@ -200,6 +200,7 @@ void GroupFeatures::execute()
 	  {
 		if (growPatch(parentcount) == true)
 		{
+		  int stop = 0;
 		  for (size_t j = 0; j < grouplist.size(); j++)
 		  {
 			int firstfeature = grouplist[j];
@@ -209,9 +210,11 @@ void GroupFeatures::execute()
 			  neigh = neighborlist[firstfeature][l];
 			  if (neigh != firstfeature)
 			  {
-				if(determineGrouping(firstfeature, neigh, parentcount) == true)
+				if(growGrouping(firstfeature, neigh, parentcount) == true)
 				{
 				  grouplist.push_back(neigh);
+				  int grouplistsize = grouplist.size();
+				  int stop2 = 0;
 				}
 			  }
 			}
@@ -246,6 +249,14 @@ bool GroupFeatures::determineGrouping(int referenceFeature, int neighborFeature,
 //
 // -----------------------------------------------------------------------------
 bool GroupFeatures::growPatch(int currentPatch)
+{
+  return false;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+bool GroupFeatures::growGrouping(int referenceFeature, int neighborFeature, int newFid)
 {
   return false;
 }

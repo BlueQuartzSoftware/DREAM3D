@@ -83,7 +83,7 @@ class PatchGroupMicroTextureRegions : public GroupFeatures
     DREAM3D_FILTER_PARAMETER(int, PatchEdgeLength)
     Q_PROPERTY(int PatchEdgeLength READ getPatchEdgeLength WRITE setPatchEdgeLength)
     DREAM3D_FILTER_PARAMETER(float, PatchVolumeFractionForMTRGrowth)
-    Q_PROPERTY(int PatchVolumeFractionForMTRGrowth READ getPatchVolumeFractionForMTRGrowth WRITE setPatchVolumeFractionForMTRGrowth)
+    Q_PROPERTY(float PatchVolumeFractionForMTRGrowth READ getPatchVolumeFractionForMTRGrowth WRITE setPatchVolumeFractionForMTRGrowth)
     DREAM3D_INSTANCE_PROPERTY(bool, RandomizeParentIds) 
 
     virtual const QString getCompiledLibraryName() { return Reconstruction::ReconstructionBaseName; }
@@ -131,6 +131,7 @@ class PatchGroupMicroTextureRegions : public GroupFeatures
 	virtual size_t determinePatchFeatureCentroids();
 	virtual void determinePatchFeatureVolumes(size_t totalPatches);
 	virtual bool growPatch(int currentPatch);
+    virtual bool growGrouping(int referenceFeature, int neighborFeature, int newFid);
 
     void characterize_micro_texture_regions();
 
