@@ -430,57 +430,6 @@ int PatchGroupMicroTextureRegions::getSeed(int newFid)
   avgCaxes[2] = 0.0f;
   if (newFid < numfeatures) return newFid;
   else return -1;
-  /*
-
-  float c1[3];
-  unsigned int phase1;
-  QuatF* avgQuats = reinterpret_cast<QuatF*>(m_AvgQuats);
-  float caxis[3] = {0, 0, 1};
-  QuatF q1;
-  float g1[3][3];
-  float g1t[3][3];
-
-  DREAM3D_RANDOMNG_NEW()
-  int seed = -1;
-  int randfeature = 0;
-
-  // Precalculate some constants
-  size_t totalFMinus1 = numfeatures - 1;
-
-  size_t counter = 0;
-  randfeature = int(float(rg.genrand_res53()) * float(totalFMinus1));
-  while (seed == -1 && counter < numfeatures)
-  {
-    if (randfeature > totalFMinus1) { randfeature = static_cast<int>( randfeature - numfeatures ); }
-    if (m_FeatureParentIds[randfeature] == -1) { seed = randfeature; }
-    randfeature++;
-    counter++;
-  }
-  if (seed >= 0)
-  {
-    m_FeatureParentIds[seed] = newFid;
-    QVector<size_t> tDims(1, newFid+1);
-    m->getAttributeMatrix(getNewCellFeatureAttributeMatrixName())->resizeAttributeArrays(tDims);
-    updateFeatureInstancePointers();
-
-    if (m_UseRunningAverage == true)
-    {
-      QuaternionMathF::Copy(avgQuats[seed], q1);
-      phase1 = m_CrystalStructures[m_FeaturePhases[seed]];
-      OrientationMath::QuattoMat(q1, g1);
-      //transpose the g matrix so when caxis is multiplied by it
-      //it will give the sample direction that the caxis is along
-      MatrixMath::Transpose3x3(g1, g1t);
-      MatrixMath::Multiply3x3with3x1(g1t, caxis, c1);
-      //normalize so that the dot product can be taken below without
-      //dividing by the magnitudes (they would be 1)
-      MatrixMath::Normalize3x1(c1);
-
-      MatrixMath::Copy3x1(c1,avgCaxes);
-      MatrixMath::Multiply3x1withConstant(avgCaxes,m_Volumes[seed]);
-    }
-  }
-  */
 }
 
 // -----------------------------------------------------------------------------
@@ -587,10 +536,12 @@ size_t PatchGroupMicroTextureRegions::determinePatchFeatureCentroids()
 #endif
   int64_t totalPoints = m->getTotalPoints();
   size_t zPatch;
-  if (udims[2] == 1) zPatch = 1;
-  else zPatch = int(udims[2] / patchEdgeLengthZ);
 
-  size_t totalPatches = int(udims[0] / patchEdgeLengthX) * int(udims[1] / patchEdgeLengthY) * zPatch;
+  // round down to ensure you don't go out of bounds when quilting the landscape
+  // consider alternatives in the future...
+  if (udims[2] == 1) zPatch = 1;
+  else zPatch = int(floor(udims[2] / patchEdgeLengthZ));
+  size_t totalPatches = int(floor(udims[0] / patchEdgeLengthX)) * int(floor(udims[1] / patchEdgeLengthY)) * zPatch;
   patchFeatureVolumeFractions.resize(totalPatches+1);
   for (int i = 0; i < totalPatches; i++)
   {
@@ -598,18 +549,11 @@ size_t PatchGroupMicroTextureRegions::determinePatchFeatureCentroids()
   patchFeatureVolumeFractions[i+1] = 0.0f;
   }
 
-  // FIX - figure out what to do when patches don't fit perfectly
-  //  if (udims[0] % m_MinMTRSize != 0)
-  //  {
-  //
-  //  }
-
   // As a first go, will implement this like find neighborhoods.
   // All feature centroids within the patch centroid will be
   // patch-grouped.  The volume fraction will, somewhat
   // incorrectly, be the feature cell summation over the total
   // patch cells.
-
   size_t totalFeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
 
   // determine patch centroids
@@ -620,10 +564,9 @@ size_t PatchGroupMicroTextureRegions::determinePatchFeatureCentroids()
   int yPoints = static_cast<int>(m->getYPoints());
   int zPoints = static_cast<int>(m->getZPoints());
 
-  // Initialize every element to 0.0f
+  // initialize every element to 0.0f
   for (size_t i = 0; i < totalPatches * 5; i++) { patchCenters[i] = 0.0f; }
 
-  // FIX - right now, only works if dimensions are divisible by patch length
   int count = 0;
   float x, y, z;
   size_t patchnum, patchIntervalX, patchIntervalY, patchIntervalZ;
