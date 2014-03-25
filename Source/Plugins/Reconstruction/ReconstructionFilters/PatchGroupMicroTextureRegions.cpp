@@ -483,7 +483,6 @@ bool PatchGroupMicroTextureRegions::determineGrouping(int referenceFeature, int 
       MatrixMath::Multiply3x1withConstant(avgCaxes,m_Volumes[referenceFeature]);
     }
     phase2 = m_CrystalStructures[m_FeaturePhases[neighborFeature]];
-//    if (growPatch(newFid) == true) { m_FeatureParentIds[neighborFeature] = newFid; }
     if (phase1 == phase2 && (phase1 == Ebsd::CrystalStructure::Hexagonal_High) )
     {
       QuaternionMathF::Copy(avgQuats[neighborFeature], q2);
@@ -535,18 +534,26 @@ size_t PatchGroupMicroTextureRegions::determinePatchFeatureCentroids()
   typedef int64_t DimType;
 #endif
   int64_t totalPoints = m->getTotalPoints();
-  size_t zPatch;
+  size_t zPatch, yPatch, xPatch;
 
   // round down to ensure you don't go out of bounds when quilting the landscape
   // consider alternatives in the future...
+
+  // if z dimension = 0
   if (udims[2] == 1) zPatch = 1;
   else zPatch = int(floor(udims[2] / patchEdgeLengthZ));
-  size_t totalPatches = int(floor(udims[0] / patchEdgeLengthX)) * int(floor(udims[1] / patchEdgeLengthY)) * zPatch;
+  // if y dimension = 0
+  if (udims[1] == 1) yPatch = 1;
+  else yPatch = int(floor(udims[1] / patchEdgeLengthY));
+  // if x dimension = 0
+  if (udims[0] == 1) xPatch = 1;
+  else xPatch = int(floor(udims[0] / patchEdgeLengthX));
+  size_t totalPatches = xPatch * yPatch * zPatch;
   patchFeatureVolumeFractions.resize(totalPatches+1);
-  for (int i = 0; i < totalPatches; i++)
+  for (int i = 1; i < totalPatches; i++)
   {
-  m_FeatureParentIds[i+1] = i+1;
-  patchFeatureVolumeFractions[i+1] = 0.0f;
+  m_FeatureParentIds[i] = i;
+  patchFeatureVolumeFractions[i] = 0.0f;
   }
 
   // As a first go, will implement this like find neighborhoods.
@@ -618,9 +625,6 @@ size_t PatchGroupMicroTextureRegions::determinePatchFeatureCentroids()
 void PatchGroupMicroTextureRegions::determinePatchFeatureVolumes(size_t totalPatches)
 {
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-  float xRes = m->getXRes();
-  float yRes = m->getYRes();
-  float zRes = m->getZRes();
   size_t totalFeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
   QVector<QVector<int> > patchFeatureList;
   patchFeatureList.resize(totalPatches);
@@ -634,24 +638,23 @@ void PatchGroupMicroTextureRegions::determinePatchFeatureVolumes(size_t totalPat
 
   // taking sphere (circle) eq dia as the critical distance
   float patchCriticalDistance, patchVolume, radsquared, radcubed, res_scalar = 0.0f;
+  // if 2D...
   if (m->getXPoints() == 1 || m->getYPoints() == 1 || m->getZPoints() == 1)
   {
-	if(m->getXPoints() == 1) { res_scalar = m->getYRes() * m->getZRes(); }
-	else if(m->getYPoints() == 1) { res_scalar = m->getXRes() * m->getZRes(); }
-	else if(m->getZPoints() == 1) { res_scalar = m->getXRes() * m->getYRes(); }
-	patchVolume = m_MinMTRSize * m_MinMTRSize;// / res_scalar;
+	patchVolume = m_MinMTRSize * m_MinMTRSize;
 	radsquared = patchVolume / DREAM3D::Constants::k_Pi;
 	patchCriticalDistance = 2.0f * sqrtf(radsquared);
   }
+  // if 3D...
   else
   {
-	res_scalar = m->getXRes() * m->getYRes() * m->getZRes();
 	float vol_term = static_cast<double>( (4.0f / 3.0f) * DREAM3D::Constants::k_Pi );
-	patchVolume = m_MinMTRSize * m_MinMTRSize * m_MinMTRSize;// / res_scalar;
+	patchVolume = m_MinMTRSize * m_MinMTRSize * m_MinMTRSize;
 	radcubed = patchVolume / vol_term;
 	patchCriticalDistance = 2.0f * powf(radcubed, 0.3333333333f);
   }
 
+  // bin features according to critical distance
   int xbin, ybin, zbin, x, y, z;
   QVector<size_t> featureBins(3*totalFeatures, 0);
   for (size_t i = 1; i < totalFeatures; i++)
@@ -667,6 +670,7 @@ void PatchGroupMicroTextureRegions::determinePatchFeatureVolumes(size_t totalPat
     featureBins[3*i+2] = zbin;
   }
 
+  // bin patches according to critical distance
   QVector<size_t> patchBins(3*totalPatches, 0);
   for (size_t i = 1; i < totalPatches; i++)
   {
@@ -681,14 +685,17 @@ void PatchGroupMicroTextureRegions::determinePatchFeatureVolumes(size_t totalPat
     patchBins[3*i+2] = zbin;
   }
 
+
+  // FIX - Find a way that the data check doesn't have to be called here
+  // now that we know how many patches, we create another attribute matrix sized for patches
   QVector<size_t> tDims(1, totalPatches+1);
   m->getAttributeMatrix(getNewCellFeatureAttributeMatrixName())->resizeAttributeArrays(tDims);
   updateFeatureInstancePointers();
 
-
-  // FIX - Find a way that the data check doesn't have to be called here
   AttributeMatrix::Pointer cellFeatureAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellFeatureAttributeMatrixName(), -301);
   if(getErrorCondition() < 0) { return; }
+
+  // create neighborlists for each patch to store their critical distance accepted centroid features
 
   // Do this whole block FIRST otherwise the side effect is that a call to m->getNumCellFeatureTuples will = 0
   // because we are just creating an empty NeighborList object.
@@ -700,7 +707,7 @@ void PatchGroupMicroTextureRegions::determinePatchFeatureVolumes(size_t totalPat
   {
     NeighborList<int>::Pointer neighborhoodlistPtr = NeighborList<int>::New();
     neighborhoodlistPtr->setName(m_NeighborhoodListArrayName);
-  neighborhoodlistPtr->resize(cellFeatureAttrMat->getNumTuples());
+    neighborhoodlistPtr->resize(cellFeatureAttrMat->getNumTuples());
     neighborhoodlistPtr->setNumNeighborsArrayName(m_NeighborhoodsArrayName);
     m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->addAttributeArray(m_NeighborhoodListArrayName, neighborhoodlistPtr);
 
@@ -729,8 +736,8 @@ void PatchGroupMicroTextureRegions::determinePatchFeatureVolumes(size_t totalPat
   if( NULL != m_NeighborhoodsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_Neighborhoods = m_NeighborhoodsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
-  int bin1x, bin2x, bin1y, bin2y, bin1z, bin2z;
-  int dBinX, dBinY, dBinZ;
+  // find patch neighboorhoods comparing the critical distance binned features and patches
+  int bin1x, bin2x, bin1y, bin2y, bin1z, bin2z, dBinX, dBinY, dBinZ;;
   QVector<float> patchFeatureVolume(totalPatches, 0.0f);
   for (size_t i = 1; i < totalPatches; i++)
   {
@@ -753,6 +760,7 @@ void PatchGroupMicroTextureRegions::determinePatchFeatureVolumes(size_t totalPat
       dBinY = abs(bin2y - bin1y);
       dBinZ = abs(bin2z - bin1z);
 
+	  // if the bin separation is less than the critical distance in x,y,z then add it to the patch's feature list
       if (dBinX < patchCriticalDistance && dBinY < patchCriticalDistance && dBinZ < patchCriticalDistance)
       {
 		m_Neighborhoods[i]++;
@@ -779,20 +787,9 @@ void PatchGroupMicroTextureRegions::determinePatchFeatureVolumes(size_t totalPat
 bool PatchGroupMicroTextureRegions::growPatch(int currentPatch)
 {
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-  float res_scalar = 0.0f;
   float patchVolume = 0.0f;
-  if (m->getXPoints() == 1 || m->getYPoints() == 1 || m->getZPoints() == 1)
-  {
-	if(m->getXPoints() == 1) { res_scalar = m->getYRes() * m->getZRes(); }
-	else if(m->getYPoints() == 1) { res_scalar = m->getXRes() * m->getZRes(); }
-	else if(m->getZPoints() == 1) { res_scalar = m->getXRes() * m->getYRes(); }
-	patchVolume = m_MinMTRSize * m_MinMTRSize;// * res_scalar;
-  }
-  else
-  {
-	res_scalar = m->getXRes() * m->getYRes() * m->getZRes();
-	patchVolume = (m_MinMTRSize * m_MinMTRSize * m_MinMTRSize * res_scalar);
-  }
+  if (m->getXPoints() == 1 || m->getYPoints() == 1 || m->getZPoints() == 1) { patchVolume = m_MinMTRSize * m_MinMTRSize; }
+  else { patchVolume = m_MinMTRSize * m_MinMTRSize * m_MinMTRSize; }
   // debugging lines
   float check1 = patchFeatureVolumeFractions[currentPatch];
   float check = patchFeatureVolumeFractions[currentPatch] / patchVolume;
@@ -805,6 +802,7 @@ bool PatchGroupMicroTextureRegions::growPatch(int currentPatch)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+
 // FIX - find a way that determineGrouping function can do this
 bool PatchGroupMicroTextureRegions::growGrouping(int referenceFeature, int neighborFeature, int newFid)
 {
@@ -854,6 +852,8 @@ bool PatchGroupMicroTextureRegions::growGrouping(int referenceFeature, int neigh
       MatrixMath::Multiply3x1withConstant(avgCaxes,m_Volumes[referenceFeature]);
     }
     phase2 = m_CrystalStructures[m_FeaturePhases[neighborFeature]];
+
+	// only line that is different from determine grouping
     if (growPatch(newFid) == true) { m_FeatureParentIds[neighborFeature] = newFid; }
     if (phase1 == phase2 && (phase1 == Ebsd::CrystalStructure::Hexagonal_High) )
     {
