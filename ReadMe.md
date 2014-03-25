@@ -20,13 +20,15 @@ For historical compatibility in versions prior to 4.2 the internal representatio
 
 ## Version 4.2 Bugs Fixed & Features Added ##
 
-### Version 4.2.48xx ###
+### Version 4.2.4xxx ###
 + Fixed Issue no. 147: Adding a favorite may result in the favorite being written to the wrong directory
-+ Added several filters from the 'develop' branch to determin microtexture regions in Titanium alloys
++ Added several filters from the 'develop' branch to determine microtexture regions in Titanium alloys
 + Fixing preflight error in the _RenameFieldArray_ filter
-+ Optimizing the EBSD Segment Grains filter
++ Optimizing the EBSD Segment Grains filter for speed based on the random number generator
 + Adding additional methods to the OrientationMath and QuaternionMath c++ classes
 + Fixing issue with writing the parameters of some filters into a pipeline file
++ Fixed Issue no. 148: Fixing issue where an .ang file was too short with respect to the headers. We now return a warning to the user stating there was not enough data in the file
+
 
 
 
