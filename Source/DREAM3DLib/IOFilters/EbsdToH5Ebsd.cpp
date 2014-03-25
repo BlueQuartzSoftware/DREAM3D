@@ -61,11 +61,11 @@
 //
 // -----------------------------------------------------------------------------
 EbsdToH5Ebsd::EbsdToH5Ebsd() :
-m_ZStartIndex(0),
-m_ZEndIndex(0),
-m_ZResolution(1.0),
-m_SampleTransformationAngle(0.0),
-m_EulerTransformationAngle(0.0)
+  m_ZStartIndex(0),
+  m_ZEndIndex(0),
+  m_ZResolution(1.0),
+  m_SampleTransformationAngle(0.0),
+  m_EulerTransformationAngle(0.0)
 {
   m_SampleTransformationAxis.resize(3);
   m_SampleTransformationAxis[0] = 0.0;
@@ -154,18 +154,18 @@ void EbsdToH5Ebsd::dataCheck(bool preflight, size_t voxels, size_t fields, size_
     // Based on the type of file (.ang or .ctf) get the list of arrays that would be created
     std::string ext = MXAFileInfo::extension(m_EbsdFileList.front());
     std::vector<std::string> columnNames;
-//    AbstractEbsdFields* ebsdFields = NULL;
+    //    AbstractEbsdFields* ebsdFields = NULL;
     if(ext.compare(Ebsd::Ang::FileExt) == 0)
     {
-//      ebsdFields = new AngFields;
+      //      ebsdFields = new AngFields;
     }
     else if(ext.compare(Ebsd::Ctf::FileExt) == 0)
     {
-//       ebsdFields = new CtfFields;
+      //       ebsdFields = new CtfFields;
     }
     else if(ext.compare(Ebsd::Mic::FileExt) == 0)
     {
-//       ebsdFields = new MicFields;
+      //       ebsdFields = new MicFields;
     }
     else
     {
@@ -175,11 +175,11 @@ void EbsdToH5Ebsd::dataCheck(bool preflight, size_t voxels, size_t fields, size_
       setErrorCondition(-1);
       return;
     }
-//    columnNames = ebsdFields->getFieldNames();
-//    for(std::vector<std::string>::size_type i = 0; i < columnNames.size(); ++i)
-//    {
-//      addCreatedCellData(columnNames[i]);
-//    }
+    //    columnNames = ebsdFields->getFieldNames();
+    //    for(std::vector<std::string>::size_type i = 0; i < columnNames.size(); ++i)
+    //    {
+    //      addCreatedCellData(columnNames[i]);
+    //    }
   }
 
   if(m_OutputFile.empty() == true)
@@ -225,11 +225,11 @@ void EbsdToH5Ebsd::execute()
   std::string parentPath = MXAFileInfo::parentPath(m_OutputFile);
   if(!MXADir::mkdir(parentPath, true))
   {
-      std::stringstream ss;
-      PipelineMessage em (getHumanLabel(), ss.str(), -1);
-      addErrorMessage(em);
-      setErrorCondition(-1);
-      return;
+    std::stringstream ss;
+    PipelineMessage em (getHumanLabel(), ss.str(), -1);
+    addErrorMessage(em);
+    setErrorCondition(-1);
+    return;
   }
 
   // Create File
@@ -407,9 +407,18 @@ void EbsdToH5Ebsd::execute()
     err = fileImporter->importFile(fileId, z, ebsdFName);
     if (err < 0)
     {
-      addErrorMessage(getHumanLabel(), fileImporter->getPipelineMessage(), fileImporter->getErrorCondition());
-      setErrorCondition(err);
-      return;
+      if (err != -600)
+      {
+        setErrorCondition(fileImporter->getErrorCondition());
+        notifyErrorMessage(fileImporter->getPipelineMessage(), getErrorCondition());
+        return;
+      }
+      else
+      {
+        notifyWarningMessage(fileImporter->getPipelineMessage(), fileImporter->getErrorCondition() );
+        //setErrorCondition(fileImporter->getErrorCondition() );
+        err = 0;
+      }
     }
     totalSlicesImported = totalSlicesImported + fileImporter->numberOfSlicesImported();
 
@@ -418,18 +427,11 @@ void EbsdToH5Ebsd::execute()
     if(xDim > biggestxDim) biggestxDim = xDim;
     if(yDim > biggestyDim) biggestyDim = yDim;
 
-    if(err < 0)
-    {
-      ss.str("");
-      ss << "Could not write dataset for slice to HDF5 file";
-      addErrorMessage(getHumanLabel(), ss.str(), err);
-      setErrorCondition(-1);
-    }
     indices.push_back( static_cast<int>(z) );
     ++z;
     if(getCancel() == true)
     {
-     notifyStatusMessage("Conversion was Canceled");
+      notifyStatusMessage("Conversion was Canceled");
       return;
     }
   }

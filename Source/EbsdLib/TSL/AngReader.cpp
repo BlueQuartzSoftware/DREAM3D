@@ -132,8 +132,8 @@ void AngReader::initPointers(size_t numElements)
   ::memset(m_Iq, 0, numBytes);
   ::memset(m_Ci, 0, numBytes);
   ::memset(m_PhaseData, 0, numBytes);
-  ::memset(m_X, 0, numBytes);
-  ::memset(m_Y, 0, numBytes);
+  ::memset(m_X, -1, numBytes);
+  ::memset(m_Y, -1, numBytes);
   ::memset(m_SEMSignal, 0, numBytes);
   ::memset(m_Fit, 0, numBytes);
 
@@ -271,10 +271,21 @@ int AngReader::readFile()
     return getErrorCode();
   }
 
-  if (getXStep() == 0.0 || getYStep() == 0.0f )
+  if (getXStep() == 0.0f)
   {
+    ss << "X Step value equals 0.0. This is bad. Please check the validity of the ANG file.";
+    setErrorCode(-110);
+    setErrorMessage(ss.str());
     return -110;
   }
+  else if(getYStep() == 0.0f)
+  {
+    ss << "Y Step value equals 0.0. This is bad. Please check the validity of the ANG file.";
+    setErrorCode(-111);
+    setErrorMessage(ss.str());
+    return -111;
+  }
+
 
   if (m_PhaseVector.size() == 0)
   {
@@ -285,11 +296,6 @@ int AngReader::readFile()
 
   // We need to pass in the buffer because it has the first line of data
   readData(in, buf, kBufferSize);
-  if (getErrorCode() < 0)
-  {
-    return getErrorCode();
-  }
-
   return getErrorCode();
 }
 
@@ -421,6 +427,7 @@ void AngReader::readData(std::ifstream &in, char* buf, size_t bufSize)
        << "\n*** Header information ***\nRows=" << numRows << " EvenCols=" << nEvenCols << " OddCols=" << nOddCols
        << "  Calculated Data Points: " << totalDataPoints
        << "\n***Parsing Position ***\nCurrent Row: " << yChange << "  Current Column Index: " << col << "  Current Data Point Count: " << counter
+       << "\nDefault values have been used to fill the data arrays that were not able to read from the file"
        << std::endl;
     setErrorMessage(ss.str());
     setErrorCode(-600);

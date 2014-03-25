@@ -404,8 +404,7 @@ void WritePoleFigure::execute()
     QString label("Phase_");
     label.append(QString::number(phase));
 
-    std::cout << "Phase: " << phase << " CrystalStructure: " << m_CrystalStructures[phase] <<
-    "  Count: " << count << std::endl;
+    //std::cout << "Phase: " << phase << " CrystalStructure: " << m_CrystalStructures[phase] << "  Count: " << count << std::endl;
 
     switch(m_CrystalStructures[phase])
     {
@@ -453,7 +452,7 @@ void WritePoleFigure::execute()
 
     if (figures.size() == 3)
     {
-      std::cout << "Writing Pole FIgures for Phase " << phase << std::endl;
+      //std::cout << "Writing Pole FIgures for Phase " << phase << std::endl;
       QImage combinedImage = PoleFigureImageUtilities::Create3ImagePoleFigure(figures[0].get(), figures[1].get(), figures[2].get(), config);
       writeImage(m_OutputPath, combinedImage, combinedImage.width(), label);
     }
