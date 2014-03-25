@@ -38,8 +38,8 @@ set(_PublicFilters
   FindGBCD
   FindTwinBoundaries
   FindTwinBoundarySchmidFactors
-
   GenerateEnsembleStatistics
+  FindFieldNeighborCAxisMisalignments
 )
 
 

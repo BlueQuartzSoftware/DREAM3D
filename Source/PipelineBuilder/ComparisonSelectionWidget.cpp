@@ -44,8 +44,9 @@
 ComparisonSelectionWidget::ComparisonSelectionWidget(bool showOperators, QWidget *parent) :
   QWidget(parent),
   m_ArrayListType(CellListType),
-  m_ComparisonSelectionTableModel(NULL),
-  m_ShowOperators(showOperators)
+  m_ShowOperators(showOperators),
+  m_ComparisonSelectionTableModel(NULL)
+
 {
   setupUi(this);
   setupGui();

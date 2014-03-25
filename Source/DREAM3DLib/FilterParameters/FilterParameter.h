@@ -128,6 +128,9 @@ class FilterParameter
     void operator=(const FilterParameter&); // Operator '=' Not Implemented
 };
 
+typedef std::vector<FilterParameter::Pointer> FilterParameterVector;
+
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

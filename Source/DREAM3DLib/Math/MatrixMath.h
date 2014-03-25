@@ -171,6 +171,16 @@ class DREAM3DLib_EXPORT MatrixMath
     static void CrossProduct(double a[3], double b[3], double c[3]);
 
 
+    /**
+     * @brief Performs the Matrix Addition of g1 and g2 and puts the result into outMat. (Single Precision version)
+     * @param g1
+     * @param g2
+     * @param outMat
+     */
+    static void Add3x1s(const float g1[3], float g2[3], float outMat[3]);
+
+
+
 
   protected:
     MatrixMath();

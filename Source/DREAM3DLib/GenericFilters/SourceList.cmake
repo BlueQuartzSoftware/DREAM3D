@@ -27,6 +27,8 @@ set(_PublicFilters
   FindGrainPhases
   FindSurfaceCells
   FindSurfaceGrains
+  BridgeParentIdsStatisticsToGrainIds
+  CreateFieldArrayFromCellArray
   GenerateIPFColors
   GenerateMisorientationColors
   LinkFieldMapToCellArray
