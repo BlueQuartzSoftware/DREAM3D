@@ -225,8 +225,8 @@ void SampleVolume::execute()
   {
     int x1, y1, z1;
     x1=xCord[i];
-    y1=zCord[i];
-    z1=yCord[i];
+    y1=yCord[i];
+    z1=zCord[i];
 
     // In theory, the subpipeline was already constucted and preflight run on it so
     // there is no need to rerun it here. Just let it fly and see what happens.
