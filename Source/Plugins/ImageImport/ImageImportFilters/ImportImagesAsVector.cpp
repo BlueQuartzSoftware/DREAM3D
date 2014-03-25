@@ -155,7 +155,7 @@ void ImportImagesAsVector::dataCheck()
   setErrorCondition(0);
   QString ss;
 
-  bool m_AddToExistingDataContainer = true;
+  bool m_AddToExistingDataContainer = false;
 
   if(m_InputPath.isEmpty() == true)
   {
