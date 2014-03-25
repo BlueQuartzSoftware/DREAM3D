@@ -55,7 +55,7 @@
  * @class PatchGroupMicroTextureRegions PatchGroupMicroTextureRegions.h Plugins/Reconstruction/ReconstructionFilters/PatchGroupMicroTextureRegions.h
  * @brief
  * @author Michael A Groeber (AFRL) & Joseph C Tucker (UES)
- * @date Mar 11, 2014
+ * @date Mar 25, 2014
  * @version 5.0
  */
 class PatchGroupMicroTextureRegions : public GroupFeatures

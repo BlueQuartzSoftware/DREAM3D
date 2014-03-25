@@ -1,4 +1,4 @@
-Patch Identify MicroTexture (C-Axis Misorientation) {#patchgroupmicrotextureregions}
+Patch Identify MicroTexture (C-Axis Misalignment) {#patchgroupmicrotextureregions}
 ======
 
 ## Group (Subgroup) ##
@@ -16,8 +16,9 @@ NOTE: This filter is intended for use with *Hexagonal* materials.  While the c-a
 | Name | Type |
 |------|------|
 | C-Axis Misalignment Tolerance | Double |
+| Use Running Average | Boolean |
 | Patch Diameter | Float |
-
+| Minimum C-Axis Aligned Patch Volume Fraction For MTR Growth | Float |
 
 ## Required DataContainers ##
 Volume

@@ -333,7 +333,7 @@ void PatchGroupMicroTextureRegions::execute()
   notifyStatusMessage(getHumanLabel(), "Starting");
   size_t numPatches = determinePatchFeatureCentroids();
   determinePatchFeatureVolumes(numPatches);
-  // Making some calls to
+  // Making some calls to GroupFeatures
   setUseNonContiguousNeighbors(true);
   setPatchGrouping(true);
   GroupFeatures::execute();
@@ -581,7 +581,6 @@ size_t PatchGroupMicroTextureRegions::determinePatchFeatureCentroids()
   typedef int64_t DimType;
 #endif
   int64_t totalPoints = m->getTotalPoints();
-//  QVector<int> patchIds(totalPoints, 0);
   size_t zPatch;
   if (udims[2] == 1) zPatch = 1;
   else zPatch = int(udims[2] / m_PatchEdgeLength);
@@ -594,13 +593,11 @@ size_t PatchGroupMicroTextureRegions::determinePatchFeatureCentroids()
   patchFeatureVolumeFractions[i+1] = 0.0f;
   }
 
-// FIX - figure out what to do when patches don't fit perfectly
-//  if (udims[0] % m_PatchEdgeLength != 0)
-//  {
-//
-//  }
-
-  // figure out what centroids are in each patch
+  // FIX - figure out what to do when patches don't fit perfectly
+  //  if (udims[0] % m_PatchEdgeLength != 0)
+  //  {
+  //
+  //  }
 
   // As a first go, will implement this like find neighborhoods.
   // All feature centroids within the patch centroid will be
@@ -608,12 +605,9 @@ size_t PatchGroupMicroTextureRegions::determinePatchFeatureCentroids()
   // incorrectly, be the feature cell summation over the total
   // patch cells.
 
-  float x, y, z;
-
   size_t totalFeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
 
   // determine patch centroids
-
   QVector<float> patchCenters(totalPatches*5, 0.0f);
   patchCentroids.resize(totalPatches * 3);
 
@@ -625,36 +619,34 @@ size_t PatchGroupMicroTextureRegions::determinePatchFeatureCentroids()
   float yRes = m->getYRes();
   float zRes = m->getZRes();
 
-  // Initialize every element to 0.0
-  for (size_t i = 0; i < totalPatches * 5; i++)
-  {
-    patchCenters[i] = 0.0f;
-  }
+  // Initialize every element to 0.0f
+  for (size_t i = 0; i < totalPatches * 5; i++) { patchCenters[i] = 0.0f; }
 
-  // right now, only works if dimensions are divisible by patch length
+  // FIX - right now, only works if dimensions are divisible by patch length
   int count = 0;
+  float x, y, z;
   size_t zStride, yStride, patchnum, patchIntervalX, patchIntervalY, patchIntervalZ;
   for(size_t i = 0; i < zPoints; i++)
   {
     for (size_t j = 0; j < yPoints; j++)
-  {
-      for(size_t k = 0; k < xPoints; k++)
-    {
-    patchIntervalZ = int(int(i/m_PatchEdgeLength)) * int(zPoints/m_PatchEdgeLength);
-    patchIntervalY = int(int(j/m_PatchEdgeLength)) * int(yPoints/m_PatchEdgeLength);
-      patchIntervalX = int(int(k/m_PatchEdgeLength));
-    patchnum = patchIntervalZ + patchIntervalY + patchIntervalX;
-    m_CellParentIds[count] = patchnum + 1;
-        x = float(k) * xRes;
-        y = float(j) * yRes;
-        z = float(i) * zRes;
-    patchCenters[patchnum * 5 + 0]++;
-        patchCenters[patchnum * 5 + 1] = patchCenters[patchnum * 5 + 1] + x;
-        patchCenters[patchnum * 5 + 2] = patchCenters[patchnum * 5 + 2] + y;
-        patchCenters[patchnum * 5 + 3] = patchCenters[patchnum * 5 + 3] + z;
-      ++count;
-    }
-  }
+	{
+	  for(size_t k = 0; k < xPoints; k++)
+	  {
+		patchIntervalZ = int(i/m_PatchEdgeLength) * int(zPoints/m_PatchEdgeLength);
+		patchIntervalY = int(j/m_PatchEdgeLength) * int(yPoints/m_PatchEdgeLength);
+		patchIntervalX = int(k/m_PatchEdgeLength);
+		patchnum = patchIntervalZ + patchIntervalY + patchIntervalX;
+		m_CellParentIds[count] = patchnum + 1;
+		x = float(k) * xRes;
+		y = float(j) * yRes;
+		z = float(i) * zRes;
+		patchCenters[patchnum * 5 + 0]++;
+		patchCenters[patchnum * 5 + 1] = patchCenters[patchnum * 5 + 1] + x;
+		patchCenters[patchnum * 5 + 2] = patchCenters[patchnum * 5 + 2] + y;
+		patchCenters[patchnum * 5 + 3] = patchCenters[patchnum * 5 + 3] + z;
+		++count;
+	  }
+	}
   }
 
   // FIX - check for some roundoff error
@@ -666,11 +658,11 @@ size_t PatchGroupMicroTextureRegions::determinePatchFeatureCentroids()
     patchCentroids[3 * i] = patchCenters[i * 5 + 1];
     patchCentroids[3 * i + 1] = patchCenters[i * 5 + 2];
     patchCentroids[3 * i + 2] = patchCenters[i * 5 + 3];
-// debugging lines
-  float checkPatchCentersx = patchCentroids[3 * i];
-  float checkPatchCentersy = patchCentroids[3 * i + 1];
-  float checkPatchCentersz = patchCentroids[3 * i + 2];
-  int stop = 0;
+	// debugging lines
+	float checkPatchCentersx = patchCentroids[3 * i];
+	float checkPatchCentersy = patchCentroids[3 * i + 1];
+	float checkPatchCentersz = patchCentroids[3 * i + 2];
+	int stop = 0;
   }
 
   return totalPatches;
@@ -700,20 +692,20 @@ void PatchGroupMicroTextureRegions::determinePatchFeatureVolumes(size_t totalPat
   float patchCriticalDistance, patchVolume, radsquared, radcubed, res_scalar = 0.0f;
   if (m->getXPoints() == 1 || m->getYPoints() == 1 || m->getZPoints() == 1)
   {
-  if(m->getXPoints() == 1) { res_scalar = m->getYRes() * m->getZRes(); }
-  else if(m->getYPoints() == 1) { res_scalar = m->getXRes() * m->getZRes(); }
-  else if(m->getZPoints() == 1) { res_scalar = m->getXRes() * m->getYRes(); }
-  patchVolume = m_PatchEdgeLength * m_PatchEdgeLength / res_scalar;
-  radsquared = patchVolume / DREAM3D::Constants::k_Pi;
-  patchCriticalDistance = 2.0f * sqrtf(radsquared);
+	if(m->getXPoints() == 1) { res_scalar = m->getYRes() * m->getZRes(); }
+	else if(m->getYPoints() == 1) { res_scalar = m->getXRes() * m->getZRes(); }
+	else if(m->getZPoints() == 1) { res_scalar = m->getXRes() * m->getYRes(); }
+	patchVolume = m_PatchEdgeLength * m_PatchEdgeLength / res_scalar;
+	radsquared = patchVolume / DREAM3D::Constants::k_Pi;
+	patchCriticalDistance = 2.0f * sqrtf(radsquared);
   }
   else
   {
-  res_scalar = m->getXRes() * m->getYRes() * m->getZRes();
-  float vol_term = static_cast<double>( (4.0f / 3.0f) * DREAM3D::Constants::k_Pi );
-  patchVolume = m_PatchEdgeLength * m_PatchEdgeLength * m_PatchEdgeLength / res_scalar;
-  radcubed = patchVolume / vol_term;
-  patchCriticalDistance = 2.0f * powf(radcubed, 0.3333333333f);
+	res_scalar = m->getXRes() * m->getYRes() * m->getZRes();
+	float vol_term = static_cast<double>( (4.0f / 3.0f) * DREAM3D::Constants::k_Pi );
+	patchVolume = m_PatchEdgeLength * m_PatchEdgeLength * m_PatchEdgeLength / res_scalar;
+	radcubed = patchVolume / vol_term;
+	patchCriticalDistance = 2.0f * powf(radcubed, 0.3333333333f);
   }
 
   int xbin, ybin, zbin, x, y, z;
@@ -749,6 +741,8 @@ void PatchGroupMicroTextureRegions::determinePatchFeatureVolumes(size_t totalPat
   m->getAttributeMatrix(getNewCellFeatureAttributeMatrixName())->resizeAttributeArrays(tDims);
   updateFeatureInstancePointers();
 
+
+  // FIX - Find a way that the data check doesn't have to be called here
   AttributeMatrix::Pointer cellFeatureAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellFeatureAttributeMatrixName(), -301);
   if(getErrorCondition() < 0) { return; }
 
@@ -798,8 +792,7 @@ void PatchGroupMicroTextureRegions::determinePatchFeatureVolumes(size_t totalPat
   {
     if (i % 1000 == 0)
     {
-
-    QString ss = QObject::tr("Working On Patch %1 of %2").arg(i).arg(totalPatches);
+	  QString ss = QObject::tr("Working On Patch %1 of %2").arg(i).arg(totalPatches);
       notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
     }
     bin1x = patchBins[3*i];
@@ -818,9 +811,9 @@ void PatchGroupMicroTextureRegions::determinePatchFeatureVolumes(size_t totalPat
 
       if (dBinX < patchCriticalDistance && dBinY < patchCriticalDistance && dBinZ < patchCriticalDistance)
       {
-    m_Neighborhoods[i]++;
+		m_Neighborhoods[i]++;
         patchFeatureList[i].push_back(j);
-    patchFeatureVolume[i] += m_Volumes[j];
+		patchFeatureVolume[i] += m_Volumes[j];
       }
     }
   // debugging lines
@@ -846,15 +839,15 @@ bool PatchGroupMicroTextureRegions::growPatch(int currentPatch)
   float patchVolume = 0.0f;
   if (m->getXPoints() == 1 || m->getYPoints() == 1 || m->getZPoints() == 1)
   {
-  if(m->getXPoints() == 1) { res_scalar = m->getYRes() * m->getZRes(); }
-  else if(m->getYPoints() == 1) { res_scalar = m->getXRes() * m->getZRes(); }
-  else if(m->getZPoints() == 1) { res_scalar = m->getXRes() * m->getYRes(); }
-  patchVolume = m_PatchEdgeLength * m_PatchEdgeLength * res_scalar;
+	if(m->getXPoints() == 1) { res_scalar = m->getYRes() * m->getZRes(); }
+	else if(m->getYPoints() == 1) { res_scalar = m->getXRes() * m->getZRes(); }
+	else if(m->getZPoints() == 1) { res_scalar = m->getXRes() * m->getYRes(); }
+	patchVolume = m_PatchEdgeLength * m_PatchEdgeLength * res_scalar;
   }
   else
   {
-  res_scalar = m->getXRes() * m->getYRes() * m->getZRes();
-  patchVolume = (m_PatchEdgeLength * m_PatchEdgeLength * m_PatchEdgeLength);
+	res_scalar = m->getXRes() * m->getYRes() * m->getZRes();
+	patchVolume = (m_PatchEdgeLength * m_PatchEdgeLength * m_PatchEdgeLength);
   }
   // debugging lines
   float check1 = patchFeatureVolumeFractions[currentPatch];
@@ -868,6 +861,7 @@ bool PatchGroupMicroTextureRegions::growPatch(int currentPatch)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+// FIX - find a way that determineGrouping function can do this
 bool PatchGroupMicroTextureRegions::growGrouping(int referenceFeature, int neighborFeature, int newFid)
 {
   unsigned int phase1 = 0, phase2 = 0;
