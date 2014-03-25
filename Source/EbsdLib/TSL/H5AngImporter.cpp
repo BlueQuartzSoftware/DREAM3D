@@ -56,20 +56,20 @@ using namespace H5Support_NAMESPACE;
 #define AIM_STRING std::string
 
 #define CHECK_FOR_CANCELED(AClass)\
-    if (m_Cancel == true){\
-      break; }
+  if (m_Cancel == true){\
+  break; }
 
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 H5AngImporter::H5AngImporter() :
-EbsdImporter(),
-xDim(0),
-yDim(0),
-xRes(0),
-yRes(0),
-m_FileVersion(Ebsd::H5::FileVersion)
+  EbsdImporter(),
+  xDim(0),
+  yDim(0),
+  xRes(0),
+  yRes(0),
+  m_FileVersion(Ebsd::H5::FileVersion)
 {
 }
 
@@ -86,41 +86,41 @@ H5AngImporter::~H5AngImporter()
   m_msgType t = reader.get##prpty();\
   err = H5Lite::writeScalarDataset(gid, key, t);\
   if (err < 0) {\
-    std::ostringstream ss;\
-    ss << "H5AngImporter Error: Could not write Ang Header value '" << t\
-    <<  "' to the HDF5 file with data set name '" << key << "'" << std::endl;\
-    progressMessage(ss.str(), 100);\
-    err = H5Gclose(gid); err = H5Gclose(angGroup);\
-    return -1; }\
-}
+  std::ostringstream ss;\
+  ss << "H5AngImporter Error: Could not write Ang Header value '" << t\
+  <<  "' to the HDF5 file with data set name '" << key << "'" << std::endl;\
+  progressMessage(ss.str(), 100);\
+  err = H5Gclose(gid); err = H5Gclose(angGroup);\
+  return -1; }\
+  }
 
 #define WRITE_ANG_HEADER_STRING_DATA(reader, m_msgType, prpty, key)\
 {\
   m_msgType t = reader.get##prpty();\
   err = H5Lite::writeStringDataset(gid, key, t);\
   if (err < 0) {\
-    std::ostringstream ss;\
-    ss << "H5AngImporter Error: Could not write Ang Header value '" << t\
-    <<  "' to the HDF5 file with data set name '" << key << "'" << std::endl;\
-    progressMessage(ss.str(), 100);\
-    err = H5Gclose(gid); err = H5Gclose(angGroup);\
-    return -1; }\
-}
+  std::ostringstream ss;\
+  ss << "H5AngImporter Error: Could not write Ang Header value '" << t\
+  <<  "' to the HDF5 file with data set name '" << key << "'" << std::endl;\
+  progressMessage(ss.str(), 100);\
+  err = H5Gclose(gid); err = H5Gclose(angGroup);\
+  return -1; }\
+  }
 
 #define WRITE_ANG_DATA_ARRAY(reader, m_msgType, gid, prpty, key)\
 {\
   m_msgType* dataPtr = reader.get##prpty##Pointer();\
   if (NULL != dataPtr) {\
-    err = H5Lite::writePointerDataset(gid, key, rank, dims, dataPtr);\
-    if (err < 0) {\
-      std::ostringstream ss;\
-      ss << "H5AngImporter Error: Could not write Ang Data array for '" << key\
-      <<  "' to the HDF5 file with data set name '" << key << "'" << std::endl;\
-      progressMessage(ss.str(), 100);\
-      err = H5Gclose(gid); err = H5Gclose(angGroup);\
-      return -1; }\
-}\
-}
+  err = H5Lite::writePointerDataset(gid, key, rank, dims, dataPtr);\
+  if (err < 0) {\
+  std::ostringstream ss;\
+  ss << "H5AngImporter Error: Could not write Ang Data array for '" << key\
+  <<  "' to the HDF5 file with data set name '" << key << "'" << std::endl;\
+  progressMessage(ss.str(), 100);\
+  err = H5Gclose(gid); err = H5Gclose(angGroup);\
+  return -1; }\
+  }\
+  }
 
 // -----------------------------------------------------------------------------
 //
@@ -159,7 +159,7 @@ int H5AngImporter::importFile(hid_t fileId, int64_t z, const std::string &angFil
   setErrorCondition(false);
   setPipelineMessage("");
 
-//  std::cout << "H5AngImporter: Importing " << angFile << std::endl;
+  //  std::cout << "H5AngImporter: Importing " << angFile << std::endl;
   AngReader reader;
   reader.setFileName(angFile);
 
@@ -169,39 +169,9 @@ int H5AngImporter::importFile(hid_t fileId, int64_t z, const std::string &angFil
   // Check for errors
   if (err < 0)
   {
-    std::ostringstream ss;
-    if (err == -400) {
-      ss << "H5AngImporter Error: HexGrid Files are not currently supported.";
-    }
-    else if (err == -300)
-    {
-      ss << "H5AngImporter Error: Grid was NOT set in the header.";
-    }
-    else if (err == -200)
-    {
-      ss << "H5AngImporter Error: There was no data in the file.";
-    }
-    else if (err == -100)
-    {
-      ss << "H5AngImporter Error: The Ang file could not be opened.";
-    }
-    else if (reader.getXStep() == 0.0f)
-    {
-      ss << "H5AngImporter Error: X Step value equals 0.0. This is bad. Please check the validity of the ANG file.";
-    }
-    else if(reader.getYStep() == 0.0f)
-    {
-      ss << "H5AngImporter Error: Y Step value equals 0.0. This is bad. Please check the validity of the ANG file.";
-    }
-    else
-    {
-      ss << "H5AngImporter Error: Unknown error.";
-    }
-    setPipelineMessage(ss.str());
-
-    setErrorCondition(err);
-    progressMessage(ss.str(), 100);
-    return -1;
+    setPipelineMessage(reader.getErrorMessage());
+    setErrorCondition(reader.getErrorCode());
+    return getErrorCondition();
   }
 
   // Write the file Version number to the file
@@ -241,7 +211,7 @@ int H5AngImporter::importFile(hid_t fileId, int64_t z, const std::string &angFil
   {
     std::ostringstream ss;
     ss << "H5AngImporter Error: A Group for Z index " << z << " could not be created."
-         << " Please check other error messages from the HDF5 library for possible reasons.";
+       << " Please check other error messages from the HDF5 library for possible reasons.";
     setPipelineMessage(ss.str());
     setErrorCondition(-500);
     return -1;
@@ -252,7 +222,7 @@ int H5AngImporter::importFile(hid_t fileId, int64_t z, const std::string &angFil
   {
     std::ostringstream ss;
     ss << "H5AngImporter Error: The 'Header' Group for Z index " << z << " could not be created."
-         << " Please check other error messages from the HDF5 library for possible reasons.";
+       << " Please check other error messages from the HDF5 library for possible reasons.";
     progressMessage(ss.str(), 100);
     err = H5Gclose(angGroup);
     setPipelineMessage(ss.str());
@@ -260,31 +230,31 @@ int H5AngImporter::importFile(hid_t fileId, int64_t z, const std::string &angFil
     return -1;
   }
   WRITE_ANG_HEADER_DATA(reader, float, TEMpixPerum, Ebsd::Ang::TEMPIXPerUM)
-  WRITE_ANG_HEADER_DATA(reader, float, XStar, Ebsd::Ang::XStar)
-  WRITE_ANG_HEADER_DATA(reader, float, YStar, Ebsd::Ang::YStar)
-  WRITE_ANG_HEADER_DATA(reader, float, ZStar, Ebsd::Ang::ZStar)
-  WRITE_ANG_HEADER_DATA(reader, float, WorkingDistance, Ebsd::Ang::WorkingDistance)
+      WRITE_ANG_HEADER_DATA(reader, float, XStar, Ebsd::Ang::XStar)
+      WRITE_ANG_HEADER_DATA(reader, float, YStar, Ebsd::Ang::YStar)
+      WRITE_ANG_HEADER_DATA(reader, float, ZStar, Ebsd::Ang::ZStar)
+      WRITE_ANG_HEADER_DATA(reader, float, WorkingDistance, Ebsd::Ang::WorkingDistance)
 
-  hid_t phasesGid = H5Utilities::createGroup(gid, Ebsd::H5::Phases);
+      hid_t phasesGid = H5Utilities::createGroup(gid, Ebsd::H5::Phases);
   err = writePhaseData(reader, phasesGid);
   // Close this group
   err = H5Gclose(phasesGid);
 
   WRITE_ANG_HEADER_STRING_DATA(reader, std::string, Grid, Ebsd::Ang::Grid)
-  WRITE_ANG_HEADER_DATA(reader, float, XStep, Ebsd::Ang::XStep)
-  xRes = reader.getXStep();
+      WRITE_ANG_HEADER_DATA(reader, float, XStep, Ebsd::Ang::XStep)
+      xRes = reader.getXStep();
   WRITE_ANG_HEADER_DATA(reader, float, YStep, Ebsd::Ang::YStep)
-  yRes = reader.getYStep();
+      yRes = reader.getYStep();
   WRITE_ANG_HEADER_DATA(reader, int, NumOddCols, Ebsd::Ang::NColsOdd)
-  WRITE_ANG_HEADER_DATA(reader, int, NumEvenCols, Ebsd::Ang::NColsEven)
-  xDim = reader.getNumEvenCols();
+      WRITE_ANG_HEADER_DATA(reader, int, NumEvenCols, Ebsd::Ang::NColsEven)
+      xDim = reader.getNumEvenCols();
   WRITE_ANG_HEADER_DATA(reader, int, NumRows, Ebsd::Ang::NRows)
-  yDim = reader.getNumRows();
+      yDim = reader.getNumRows();
   WRITE_ANG_HEADER_STRING_DATA(reader, std::string, OIMOperator, Ebsd::Ang::Operator)
-  WRITE_ANG_HEADER_STRING_DATA(reader, std::string, SampleID, Ebsd::Ang::SampleId)
-  WRITE_ANG_HEADER_STRING_DATA(reader, std::string, ScanID, Ebsd::Ang::ScanId)
+      WRITE_ANG_HEADER_STRING_DATA(reader, std::string, SampleID, Ebsd::Ang::SampleId)
+      WRITE_ANG_HEADER_STRING_DATA(reader, std::string, ScanID, Ebsd::Ang::ScanId)
 
-  std::string angCompleteHeader = reader.getOriginalHeader();
+      std::string angCompleteHeader = reader.getOriginalHeader();
   err = H5Lite::writeStringDataset(gid, Ebsd::H5::OriginalHeader, angCompleteHeader);
   err = H5Lite::writeStringDataset(gid, Ebsd::H5::OriginalFile, angFile);
 
@@ -297,7 +267,7 @@ int H5AngImporter::importFile(hid_t fileId, int64_t z, const std::string &angFil
   {
     std::ostringstream ss;
     ss << "H5AngImporter Error: The 'Data' Group for Z index " << z << " could not be created."
-         << " Please check other error messages from the HDF5 library for possible reasons."<< std::endl;
+       << " Please check other error messages from the HDF5 library for possible reasons."<< std::endl;
     progressMessage(ss.str(), 100);
     err = H5Gclose(angGroup);
     setPipelineMessage(ss.str());
@@ -333,26 +303,26 @@ int H5AngImporter::importFile(hid_t fileId, int64_t z, const std::string &angFil
   m_msgType t = reader->get##prpty();\
   err = H5Lite::writeScalarDataset(pid, key, t);\
   if (err < 0) {\
-    std::ostringstream ss;\
-    ss << "H5AngImporter Error: Could not write Ang Header value '" << t\
-    <<  "' to the HDF5 file with data set name '" << key << "'" << std::endl;\
-    progressMessage(ss.str(), 100);\
-    err = H5Gclose(pid);\
-    return -1; }\
-}
+  std::ostringstream ss;\
+  ss << "H5AngImporter Error: Could not write Ang Header value '" << t\
+  <<  "' to the HDF5 file with data set name '" << key << "'" << std::endl;\
+  progressMessage(ss.str(), 100);\
+  err = H5Gclose(pid);\
+  return -1; }\
+  }
 
 #define WRITE_PHASE_HEADER_STRING_DATA(reader, m_msgType, prpty, key)\
 {\
   m_msgType t = reader->get##prpty();\
   err = H5Lite::writeStringDataset(pid, key, t);\
   if (err < 0) {\
-    std::ostringstream ss;\
-    ss << "H5AngImporter Error: Could not write Ang Header value '" << t\
-    <<  "' to the HDF5 file with data set name '" << key << "'" << std::endl;\
-    progressMessage(ss.str(), 100);\
-    err = H5Gclose(pid);\
-    return -1; }\
-}
+  std::ostringstream ss;\
+  ss << "H5AngImporter Error: Could not write Ang Header value '" << t\
+  <<  "' to the HDF5 file with data set name '" << key << "'" << std::endl;\
+  progressMessage(ss.str(), 100);\
+  err = H5Gclose(pid);\
+  return -1; }\
+  }
 
 #define WRITE_PHASE_DATA_ARRAY(reader, m_msgType, gid, prpty, key)\
 {\
@@ -360,16 +330,16 @@ int H5AngImporter::importFile(hid_t fileId, int64_t z, const std::string &angFil
   dims[0] = tempVar.size();\
   m_msgType* dataPtr = &(tempVar.front());\
   if (NULL != dataPtr) {\
-    err = H5Lite::writePointerDataset(pid, key, rank, dims, dataPtr);\
-    if (err < 0) {\
-      std::ostringstream ss;\
-      ss << "H5AngImporter Error: Could not write Ang Data array for '" << key\
-      <<  "' to the HDF5 file with data set name '" << key << "'" << std::endl;\
-      progressMessage(ss.str(), 100);\
-      err = H5Gclose(pid); \
-      return -1; }\
-}\
-}
+  err = H5Lite::writePointerDataset(pid, key, rank, dims, dataPtr);\
+  if (err < 0) {\
+  std::ostringstream ss;\
+  ss << "H5AngImporter Error: Could not write Ang Data array for '" << key\
+  <<  "' to the HDF5 file with data set name '" << key << "'" << std::endl;\
+  progressMessage(ss.str(), 100);\
+  err = H5Gclose(pid); \
+  return -1; }\
+  }\
+  }
 
 
 
@@ -379,7 +349,7 @@ int H5AngImporter::importFile(hid_t fileId, int64_t z, const std::string &angFil
 int H5AngImporter::writePhaseData(AngReader &reader, hid_t phasesGid)
 {
   int err = 0;
- // int retErr = 0;
+  // int retErr = 0;
   int32_t rank = 1;
   hsize_t dims[1] = { 0 };
   std::vector<AngPhase::Pointer> phases = reader.getPhaseVector();
@@ -388,21 +358,21 @@ int H5AngImporter::writePhaseData(AngReader &reader, hid_t phasesGid)
     AngPhase* p = (*phase).get();
     hid_t pid = H5Utilities::createGroup(phasesGid, StringUtils::numToString(p->getPhaseIndex()));
     WRITE_PHASE_HEADER_DATA((*phase), int, PhaseIndex, Ebsd::Ang::Phase)
-    WRITE_PHASE_HEADER_STRING_DATA((*phase), std::string, MaterialName, Ebsd::Ang::MaterialName)
-    WRITE_PHASE_HEADER_STRING_DATA((*phase), std::string, Formula, Ebsd::Ang::Formula)
-    WRITE_PHASE_HEADER_STRING_DATA((*phase), std::string, Info, Ebsd::Ang::Info)
-    WRITE_PHASE_HEADER_DATA((*phase), int, Symmetry, Ebsd::Ang::Symmetry)
-    WRITE_PHASE_DATA_ARRAY( (*phase), float, pid, LatticeConstants, Ebsd::Ang::LatticeConstants)
-    WRITE_PHASE_HEADER_DATA((*phase), int, NumberFamilies, Ebsd::Ang::NumberFamilies)
+        WRITE_PHASE_HEADER_STRING_DATA((*phase), std::string, MaterialName, Ebsd::Ang::MaterialName)
+        WRITE_PHASE_HEADER_STRING_DATA((*phase), std::string, Formula, Ebsd::Ang::Formula)
+        WRITE_PHASE_HEADER_STRING_DATA((*phase), std::string, Info, Ebsd::Ang::Info)
+        WRITE_PHASE_HEADER_DATA((*phase), int, Symmetry, Ebsd::Ang::Symmetry)
+        WRITE_PHASE_DATA_ARRAY( (*phase), float, pid, LatticeConstants, Ebsd::Ang::LatticeConstants)
+        WRITE_PHASE_HEADER_DATA((*phase), int, NumberFamilies, Ebsd::Ang::NumberFamilies)
 
-    // Create a Group for the HKLFamilies
-    if (p->getNumberFamilies() > 0) {
+        // Create a Group for the HKLFamilies
+        if (p->getNumberFamilies() > 0) {
       hid_t hklGid = H5Utilities::createGroup(pid, Ebsd::Ang::HKLFamilies);
       err = writeHKLFamilies(p, hklGid);
       if (err < 0) {
         std::ostringstream ss;
         ss << "H5AngImporter Error: Could not write Ang HKL Families to the HDF5 file with data set name '"
-          << Ebsd::Ang::HKLFamilies << "'" << std::endl;
+           << Ebsd::Ang::HKLFamilies << "'" << std::endl;
         progressMessage(ss.str(), 100);
         err = H5Gclose(hklGid);
         return -1;
@@ -410,7 +380,7 @@ int H5AngImporter::writePhaseData(AngReader &reader, hid_t phasesGid)
       err = H5Gclose(hklGid);
     }
     WRITE_PHASE_DATA_ARRAY( (*phase), int, pid, Categories, Ebsd::Ang::Categories)
-    err = H5Gclose(pid);
+        err = H5Gclose(pid);
   }
   return err;
 }
@@ -420,7 +390,7 @@ int H5AngImporter::writePhaseData(AngReader &reader, hid_t phasesGid)
 // -----------------------------------------------------------------------------
 int H5AngImporter::writeHKLFamilies(AngPhase* p, hid_t hklGid)
 {
- // int err = 0;
+  // int err = 0;
   hid_t       memtype, space, dset;
   hsize_t     dims[1] = {1};
   herr_t      status = -1;
