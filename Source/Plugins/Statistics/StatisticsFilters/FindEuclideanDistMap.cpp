@@ -93,10 +93,10 @@ class FindEuclideanMap
       //      double x, y, z;
       size_t neighpoint;
       int nearestneighbor;
-      size_t neighbors[6];
-      size_t xpoints = static_cast<size_t>(m->getXPoints());
-      size_t ypoints = static_cast<size_t>(m->getYPoints());
-      size_t zpoints = static_cast<size_t>(m->getZPoints());
+      int64_t neighbors[6];
+      int64_t xpoints = static_cast<int64_t>(m->getXPoints());
+      int64_t ypoints = static_cast<int64_t>(m->getYPoints());
+      int64_t zpoints = static_cast<int64_t>(m->getZPoints());
       double resx = m->getXRes();
       double resy = m->getYRes();
       double resz = m->getZRes();
@@ -110,7 +110,7 @@ class FindEuclideanMap
       int* voxel_NearestNeighbor = new int[totalPoints];
       double* voxel_EuclideanDistance = new double[totalPoints];
       euclideanDistance = 0;
-      for (size_t a = 0; a < (totalPoints); ++a)
+      for (int64_t a = 0; a < totalPoints; ++a)
       {
         if(m_NearestNeighbors[a * 3 + mapType] >= 0) voxel_NearestNeighbor[a] = a; //if voxel is boundary voxel, then want to use itself as nearest boundary voxel
         else voxel_NearestNeighbor[a] = -1;

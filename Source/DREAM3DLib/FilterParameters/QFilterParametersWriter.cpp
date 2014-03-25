@@ -654,3 +654,14 @@ int QFilterParametersWriter::writeValue(const QString name, DataContainerArrayPr
   return err;
 }
 
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int QFilterParametersWriter::writeValue(const QString name, const DataArrayPath& v)
+{
+  int err = 0;
+  QString value = v.serialize();
+  m_Prefs->setValue(name, value );
+  return err;
+}

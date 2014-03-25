@@ -62,7 +62,7 @@ class CompareFunctor;
  */
 class VectorSegmentFeatures : public SegmentFeatures
 {
-	Q_OBJECT
+  Q_OBJECT
   public:
     DREAM3D_SHARED_POINTERS(VectorSegmentFeatures)
     DREAM3D_STATIC_NEW_MACRO(VectorSegmentFeatures)
@@ -73,8 +73,8 @@ class VectorSegmentFeatures : public SegmentFeatures
     DREAM3D_INSTANCE_STRING_PROPERTY(CellFeatureAttributeMatrixName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
 
-    DREAM3D_FILTER_PARAMETER(QString, SelectedVectorArrayName)
-    Q_PROPERTY(QString SelectedVectorArrayName READ getSelectedVectorArrayName WRITE setSelectedVectorArrayName)
+    DREAM3D_FILTER_PARAMETER(DataArrayPath, SelectedVectorArrayPath)
+    Q_PROPERTY(DataArrayPath SelectedVectorArrayPath READ getSelectedVectorArrayPath WRITE setSelectedVectorArrayPath)
 
     DREAM3D_FILTER_PARAMETER(float, AngleTolerance)
     Q_PROPERTY(float AngleTolerance READ getAngleTolerance WRITE setAngleTolerance)

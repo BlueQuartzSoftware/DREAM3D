@@ -33,8 +33,8 @@
  *                           FA8650-10-D-5210
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef _SingleArraySelectionWidget_H_
-#define _SingleArraySelectionWidget_H_
+#ifndef _DataArraySelectionWidget_H_
+#define _DataArraySelectionWidget_H_
 
 
 
@@ -47,7 +47,7 @@
 
 #include "DREAM3DWidgetsLib/DREAM3DWidgetsLib.h"
 
-#include "DREAM3DWidgetsLib/ui_SingleArraySelectionWidget.h"
+#include "DREAM3DWidgetsLib/ui_DataArraySelectionWidget.h"
 
 
 /**
@@ -55,7 +55,7 @@
 * @author
 * @version
 */
-class DREAM3DWidgetsLib_EXPORT SingleArraySelectionWidget : public QWidget, private Ui::SingleArraySelectionWidget
+class DREAM3DWidgetsLib_EXPORT DataArraySelectionWidget : public QWidget, private Ui::DataArraySelectionWidget
 {
     Q_OBJECT
 
@@ -66,9 +66,9 @@ class DREAM3DWidgetsLib_EXPORT SingleArraySelectionWidget : public QWidget, priv
     * @param filter The instance of the filter that this parameter is a part of
     * @param parent The parent QWidget for this Widget
     */
-    SingleArraySelectionWidget(FilterParameter* parameter, AbstractFilter* filter = NULL, QWidget* parent = NULL);
+    DataArraySelectionWidget(FilterParameter* parameter, AbstractFilter* filter = NULL, QWidget* parent = NULL);
 
-    virtual ~SingleArraySelectionWidget();
+    virtual ~DataArraySelectionWidget();
 
     /**
     * @brief This method does additional GUI widget connections
@@ -115,11 +115,11 @@ class DREAM3DWidgetsLib_EXPORT SingleArraySelectionWidget : public QWidget, priv
 
     DataContainerArrayProxy m_DcaProxy;
 
-    SingleArraySelectionWidget(const SingleArraySelectionWidget&); // Copy Constructor Not Implemented
-    void operator=(const SingleArraySelectionWidget&); // Operator '=' Not Implemented
+    DataArraySelectionWidget(const DataArraySelectionWidget&); // Copy Constructor Not Implemented
+    void operator=(const DataArraySelectionWidget&); // Operator '=' Not Implemented
 
 };
 
-#endif /* _SingleArraySelectionWidget_H_ */
+#endif /* _DataArraySelectionWidget_H_ */
 
 

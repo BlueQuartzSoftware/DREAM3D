@@ -66,7 +66,7 @@ DataContainerArrayProxyWidget::~DataContainerArrayProxyWidget()
 void DataContainerArrayProxyWidget::setupGui()
 {
 
-  qRegisterMetaType<DataContainerArrayProxy>();
+
 
 
   connect(m_Filter, SIGNAL(preflightAboutToExecute()),

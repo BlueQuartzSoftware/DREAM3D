@@ -324,7 +324,7 @@ void ErodeDilateMask::execute()
         }
       }
     }
-    for (size_t j = 0; j < totalPoints; j++)
+    for (int64_t j = 0; j < totalPoints; j++)
     {
       m_Mask[j] = m_MaskCopy[j];
     }

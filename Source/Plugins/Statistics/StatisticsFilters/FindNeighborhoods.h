@@ -72,7 +72,7 @@ class FindNeighborhoods : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(NumNeighborsArrayName)
 
     DREAM3D_FILTER_PARAMETER(float, MultiplesOfAverage)
-    Q_PROPERTY(int MultiplesOfAverage READ getMultiplesOfAverage WRITE setMultiplesOfAverage)
+    Q_PROPERTY(float MultiplesOfAverage READ getMultiplesOfAverage WRITE setMultiplesOfAverage)
 
     virtual const QString getCompiledLibraryName() { return Statistics::StatisticsBaseName; }
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);

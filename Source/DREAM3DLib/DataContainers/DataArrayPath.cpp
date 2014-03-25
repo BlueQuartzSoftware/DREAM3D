@@ -1,6 +1,6 @@
 /* ============================================================================
- * Copyright (c) 2012 Michael A. Jackson (BlueQuartz Software)
- * Copyright (c) 2012 Dr. Michael A. Groeber (US Air Force Research Laboratories)
+ * Copyright (c) 2014 Michael A. Jackson (BlueQuartz Software)
+ * Copyright (c) 2014 Dr. Michael A. Groeber (US Air Force Research Laboratories)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -33,119 +33,12 @@
  *                           FA8650-10-D-5210
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#include "AxisAngleWidget.h"
-
-#include <QtCore/QMetaProperty>
-
-#include "DREAM3DLib/FilterParameters/FilterParameter.h"
-
-
-#include "FilterParameterWidgetsDialogs.h"
-
+#include "DataArrayPath.h"
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AxisAngleWidget::AxisAngleWidget(FilterParameter* parameter, AbstractFilter* filter, QWidget* parent) :
-  QWidget(parent),
-  m_Filter(filter),
-  m_FilterParameter(parameter)
-{
-  setupUi(this);
-  setupGui();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-AxisAngleWidget::~AxisAngleWidget()
-{
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void AxisAngleWidget::setupGui()
-{
-
-
-
-  // Catch when the filter is about to execute the preflight
-  connect(m_Filter, SIGNAL(preflightAboutToExecute()),
-          this, SLOT(beforePreflight()));
-
-  // Catch when the filter is finished running the preflight
-  connect(m_Filter, SIGNAL(preflightExecuted()),
-          this, SLOT(afterPreflight()));
-
-  // Catch when the filter wants its values updated
-  connect(m_Filter, SIGNAL(updateFilterParameters(AbstractFilter*)),
-          this, SLOT(filterNeedsInputParameters(AbstractFilter*)));
-
-  connect(angle, SIGNAL(textChanged(const QString&)),
-          this, SLOT(widgetChanged(const QString&) ) );
-  connect(axis_i, SIGNAL(textChanged(const QString&)),
-          this, SLOT(widgetChanged(const QString&) ) );
-  connect(axis_j, SIGNAL(textChanged(const QString&)),
-          this, SLOT(widgetChanged(const QString&) ) );
-  connect(axis_k, SIGNAL(textChanged(const QString&)),
-          this, SLOT(widgetChanged(const QString&) ) );
-
-  QDoubleValidator* xVal = new QDoubleValidator(axis_i);
-  axis_i->setValidator(xVal);
-  QDoubleValidator* yVal = new QDoubleValidator(axis_j);
-  axis_j->setValidator(yVal);
-  QDoubleValidator* zVal = new QDoubleValidator(axis_k);
-  axis_k->setValidator(zVal);
-  QDoubleValidator* aVal = new QDoubleValidator(angle);
-  angle->setValidator(aVal);
-
-  if (m_FilterParameter != NULL)
-  {
-    AxisAngleWidgetLabel->setText(m_FilterParameter->getHumanLabel() );
-
-    AxisAngleInput_t data = m_Filter->property(PROPERTY_NAME_AS_CHAR).value<AxisAngleInput_t>();
-    axis_i->setText(QString::number(data.h) );
-    axis_j->setText(QString::number(data.k) );
-    axis_k->setText(QString::number(data.l) );
-    angle->setText(QString::number(data.angle) );
-  }
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void AxisAngleWidget::widgetChanged(const QString &text)
-{
-  emit parametersChanged();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void AxisAngleWidget::filterNeedsInputParameters(AbstractFilter* filter)
-{
-  bool ok = false;
-  AxisAngleInput_t data;
-  data.angle = angle->text().toDouble(&ok);
-  data.h = axis_i->text().toDouble(&ok);
-  data.k = axis_j->text().toDouble(&ok);
-  data.l = axis_k->text().toDouble(&ok);
-
-  QVariant v;
-  v.setValue(data);
-  ok = filter->setProperty(PROPERTY_NAME_AS_CHAR, v);
-  if(false == ok)
-  {
-    FilterParameterWidgetsDialogs::ShowCouldNotSetFilterParameter(m_Filter, m_FilterParameter);
-  }
-}
-
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void AxisAngleWidget::beforePreflight()
+DataArrayPath::DataArrayPath()
 {
 
 }
@@ -153,7 +46,107 @@ void AxisAngleWidget::beforePreflight()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AxisAngleWidget::afterPreflight()
+DataArrayPath::DataArrayPath(const QString& dcName, const QString& amName, const QString& daName) :
+  m_DataContainerName(dcName),
+  m_AttributeMatrixName(amName),
+  m_DataArrayName(daName)
 {
 
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+DataArrayPath::DataArrayPath(const QString& path)
+{
+
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+DataArrayPath::DataArrayPath(const DataArrayPath& rhs)
+{
+  m_DataContainerName = rhs.m_DataContainerName;
+  m_AttributeMatrixName = rhs.m_AttributeMatrixName;
+  m_DataArrayName = rhs.m_DataArrayName;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+DataArrayPath::~DataArrayPath()
+{
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DataArrayPath::operator=(const DataArrayPath& rhs)
+{
+  m_DataContainerName = rhs.m_DataContainerName;
+  m_AttributeMatrixName = rhs.m_AttributeMatrixName;
+  m_DataArrayName = rhs.m_DataArrayName;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString DataArrayPath::serialize(QString delimiter) const
+{
+  QString s = m_DataContainerName + delimiter + m_AttributeMatrixName + delimiter + m_DataArrayName;
+  return s;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QStringList DataArrayPath::getAsStringList()
+{
+  QStringList l;
+  l << m_DataContainerName << m_AttributeMatrixName << m_DataArrayName;
+  return l;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QVector<QString> DataArrayPath::getAsVector()
+{
+  QVector<QString> v(3);
+  v[0] = m_DataContainerName;
+  v[1] = m_AttributeMatrixName;
+  v[2] = m_DataArrayName;
+  return v;
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+bool DataArrayPath::isEmpty() const
+{
+  if (m_DataContainerName.isEmpty() && m_AttributeMatrixName.isEmpty() && m_DataArrayName.isEmpty() )
+  { return true; }
+  return false;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+bool DataArrayPath::isValid() const
+{
+    if (m_DataContainerName.isEmpty() == false && m_AttributeMatrixName.isEmpty() == false && m_DataArrayName.isEmpty() == false )
+  { return true; }
+  return false;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QStringList DataArrayPath::split(QString NOT_USED) const
+{
+  QStringList l;
+  l << m_DataContainerName << m_AttributeMatrixName << m_DataArrayName;
+  return l;
 }

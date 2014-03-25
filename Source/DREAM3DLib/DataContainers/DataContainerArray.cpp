@@ -160,6 +160,16 @@ DataContainer::Pointer DataContainerArray::getDataContainer(const QString& name)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+DataContainer::Pointer DataContainerArray::getDataContainer(const DataArrayPath& path)
+{
+  QString dcName = path.getDataContainerName();
+  return getDataContainer(dcName);
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void DataContainerArray::duplicateDataContainer(const QString& name, const QString& newName)
 {
   DataContainer::Pointer f = DataContainer::NullPointer();

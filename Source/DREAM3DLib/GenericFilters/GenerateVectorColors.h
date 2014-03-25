@@ -43,7 +43,7 @@
 #include "DREAM3DLib/DataArrays/IDataArray.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/Constants.h"
-
+#include "DREAM3DLib/DataContainers/DataArrayPath.h"
 
 /**
  * @class GenerateVectorColors GenerateVectorColors.h DREAM3DLib/GenericFilters/GenerateVectorColors.h
@@ -65,8 +65,8 @@ class DREAM3DLib_EXPORT GenerateVectorColors : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
 
     /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
-    DREAM3D_FILTER_PARAMETER(QString, SelectedVectorArrayName)
-    Q_PROPERTY(QString SelectedVectorArrayName READ getSelectedVectorArrayName WRITE setSelectedVectorArrayName)
+    DREAM3D_FILTER_PARAMETER(DataArrayPath, SelectedVectorArrayName)
+    Q_PROPERTY(DataArrayPath SelectedVectorArrayName READ getSelectedVectorArrayName WRITE setSelectedVectorArrayName)
 
 
     /**

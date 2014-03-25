@@ -70,8 +70,8 @@ class DREAM3DLib_EXPORT RenameAttributeArray : public AbstractFilter
  //   Q_PROPERTY(QString AttributeMatrixName READ getAttributeMatrixName WRITE setAttributeMatrixName)
 
 
-    DREAM3D_FILTER_PARAMETER(QString, SelectedArrayPath)
-    Q_PROPERTY(QString SelectedArrayPath READ getSelectedArrayPath WRITE setSelectedArrayPath)
+    DREAM3D_FILTER_PARAMETER(DataArrayPath, SelectedArrayPath)
+    Q_PROPERTY(DataArrayPath SelectedArrayPath READ getSelectedArrayPath WRITE setSelectedArrayPath)
 
     DREAM3D_FILTER_PARAMETER(QString, NewArrayName)
     Q_PROPERTY(QString NewArrayName READ getNewArrayName WRITE setNewArrayName)

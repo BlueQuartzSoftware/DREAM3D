@@ -253,7 +253,7 @@ void MergeTwins::execute()
 
   size_t numParents = 0;
   int64_t totalPoints = static_cast<size_t>(m->getTotalPoints());
-  for (size_t k = 0; k < totalPoints; k++)
+  for (int64_t k = 0; k < totalPoints; k++)
   {
     int featurename = m_FeatureIds[k];
     m_CellParentIds[k] = m_FeatureParentIds[featurename];

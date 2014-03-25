@@ -93,8 +93,7 @@ ComparisonInputs ComparisonSelectionWidget::getComparisonInputs()
 // -----------------------------------------------------------------------------
 void ComparisonSelectionWidget::setupGui()
 {
-  qRegisterMetaType<ComparisonInput_t>();
-  qRegisterMetaType<ComparisonInputs>();
+
 
   if (m_FilterParameter == NULL)
   {
@@ -125,7 +124,7 @@ void ComparisonSelectionWidget::setupGui()
 //  dataContainerList->blockSignals(false);
 //  attributeMatrixList->blockSignals(false);
 
-  //Block the signals as we do not 
+  //Block the signals as we do not
   populateComboBoxes();
 
   // Now connect all the signals and slots
@@ -232,7 +231,7 @@ void ComparisonSelectionWidget::populateComboBoxes()
     if(amIndex < 0) { amIndex = 0; }
     // Set the selected index in the Attribute Matrix
     attributeMatrixList->setCurrentIndex(amIndex);
-    // Now based on that AttributeMatrix get a list the AttributeArrays 
+    // Now based on that AttributeMatrix get a list the AttributeArrays
     QStringList possibleArrays = generateAttributeArrayList();
     // Push that list into the Table Model
     m_ComparisonSelectionTableModel->setPossibleFeatures(possibleArrays);
@@ -242,7 +241,7 @@ void ComparisonSelectionWidget::populateComboBoxes()
 
     // Now we need to actually get the selections from the filter instance
     // which we have from above
-    
+
     int count = comps.size();
     // Create our inputs to directly set the table model
     QVector<QString> featureNames(count);

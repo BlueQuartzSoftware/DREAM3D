@@ -1,4 +1,4 @@
-Patch Identify MicroTexture (C-Axis Misorientation) {#patchgroupmicrotextureregions}
+Patch Identify MicroTexture (C-Axis Misalignment) {#patchgroupmicrotextureregions}
 ======
 
 ## Group (Subgroup) ##
@@ -16,8 +16,9 @@ NOTE: This filter is intended for use with *Hexagonal* materials.  While the c-a
 | Name | Type |
 |------|------|
 | C-Axis Misalignment Tolerance | Double |
-| Patch Diameter | Float |
-
+| Use Running Average | Boolean |
+| Minimum MicroTextured Region Size (Diameter) | Float |
+| Minimum C-Axis Aligned Patch Volume Fraction For MTR Growth | Float |
 
 ## Required DataContainers ##
 Volume
@@ -41,7 +42,7 @@ Volume
 
 ## Authors ##
 
-**Copyright:** 2014 Joseph C. Tucker (UES), 2012 Michael A. Groeber (AFRL),2012 Michael A. Jackson (BlueQuartz Software)
+**Copyright:** 2014 Joseph C. Tucker (UES), 2012 Michael A. Groeber (AFRL), 2012 Michael A. Jackson (BlueQuartz Software)
 
 **Contact Info:** dream3d@bluequartz.net
 

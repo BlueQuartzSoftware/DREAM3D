@@ -321,7 +321,7 @@ void FillBadData::execute()
       }
     }
     QList<QString> voxelArrayNames = m->getAttributeMatrix(getCellAttributeMatrixName())->getAttributeArrayNameList();
-    for (size_t j = 0; j < totalPoints; j++)
+    for (int64_t j = 0; j < totalPoints; j++)
     {
       featurename = m_FeatureIds[j];
       neighbor = m_Neighbors[j];

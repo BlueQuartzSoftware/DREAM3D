@@ -329,7 +329,7 @@ void NeighborOrientationCorrelation::execute()
       }
     }
     QList<QString> voxelArrayNames = m->getAttributeMatrix(getCellAttributeMatrixName())->getAttributeArrayNameList();
-    for (size_t j = 0; j < totalPoints; j++)
+    for (int64_t j = 0; j < totalPoints; j++)
     {
       neighbor = bestNeighbor[j];
       if (neighbor != -1)

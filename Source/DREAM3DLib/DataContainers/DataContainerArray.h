@@ -46,6 +46,7 @@
 #include "DREAM3DLib/DataContainers/SurfaceDataContainer.h"
 #include "DREAM3DLib/DataContainers/VertexDataContainer.h"
 #include "DREAM3DLib/DataContainers/EdgeDataContainer.h"
+#include "DREAM3DLib/DataContainers/DataArrayPath.h"
 
 /**
  * @class DataContainerArray DataContainerArray.h DREAM3DLib/Common/DataContainerArray.h
@@ -91,6 +92,18 @@ class DREAM3DLib_EXPORT DataContainerArray : public QObject
      */
     virtual DataContainer::Pointer removeDataContainer(const QString& name);
     virtual DataContainer::Pointer getDataContainer(const QString& name);
+
+    /**
+     * @brief getDataContainer
+     * @param path Uses the DataContainerName from the DataArrayPath to return a data container
+     * @return
+     */
+    virtual DataContainer::Pointer getDataContainer(const DataArrayPath& path);
+    /**
+     * @brief duplicateDataContainer
+     * @param name
+     * @param newName
+     */
     virtual void duplicateDataContainer(const QString& name, const QString& newName);
     QList<QString> getDataContainerNames();
     QList<DataContainer::Pointer>& getDataContainerArray();
@@ -102,9 +115,9 @@ class DREAM3DLib_EXPORT DataContainerArray : public QObject
     * @return
     */
     virtual int readDataContainersFromHDF5(bool preflight,
-                                                   hid_t dcaGid,
-                                                   DataContainerArrayProxy& dcaProxy,
-                                                   Observable* obs = NULL);
+                                           hid_t dcaGid,
+                                           DataContainerArrayProxy& dcaProxy,
+                                           Observable* obs = NULL);
 
     /**
      * @brief getDataContainerAs
@@ -174,6 +187,77 @@ class DREAM3DLib_EXPORT DataContainerArray : public QObject
       pushBack(dataContainer);
       return dataContainer.get();
     }
+
+
+    /**
+     * @brief getPrereqArrayFromPath
+     * @param filter
+     * @param path
+     * @param dims
+     * @return
+     */
+    template<class ArrayType, class Filter>
+    typename ArrayType::Pointer getPrereqArrayFromPath(Filter* filter, const DataArrayPath& path, QVector<size_t> dims)
+    {
+
+      QString ss;
+      typename ArrayType::Pointer dataArray = ArrayType::NullPointer();
+
+      if(path.isEmpty() == true)
+      {
+        if(filter)
+        {
+          filter->setErrorCondition(-80000);
+          ss = QObject::tr("DataContainerArray::getPrereqArrayFromPath Error at line %1. The DataArrayPath object was empty").arg(__LINE__);
+          filter->notifyErrorMessage(filter->getHumanLabel(), ss, filter->getErrorCondition());
+        }
+        return dataArray;
+      }
+
+      if(path.isValid() == false)
+      {
+        if(filter)
+        {
+          filter->setErrorCondition(-80001);
+          ss = QObject::tr("DataContainerArray::getPrereqArrayFromPath Error at line %1. The DataArrayPath object was not valid meaning one of the strings in the object is empty. The path is %2").arg(__LINE__).arg(path.serialize());
+          filter->notifyErrorMessage(filter->getHumanLabel(), ss, filter->getErrorCondition());
+        }
+        return dataArray;
+      }
+
+      QString dcName = path.getDataContainerName();
+      QString amName = path.getAttributeMatrixName();
+      QString daName = path.getDataArrayName();
+
+
+      DataContainer::Pointer dc = getDataContainer(dcName);
+      if(NULL == dc.get())
+      {
+        if(filter)
+        {
+          filter->setErrorCondition(-80002);
+          ss = QObject::tr("The DataContainer '%1' was not found in the DataContainerArray").arg(dcName);
+          filter->notifyErrorMessage(filter->getHumanLabel(), ss, filter->getErrorCondition());
+        }
+        return dataArray;
+      }
+
+      AttributeMatrix::Pointer attrMat = dc->getAttributeMatrix(amName);
+      if(NULL == attrMat.get())
+      {
+        if(filter)
+        {
+          filter->setErrorCondition(-80003);
+          ss = QObject::tr("The AttributeMatrix '%1' was not found in the DataContainer '%2'").arg(amName).arg(dcName);
+          filter->notifyErrorMessage(filter->getHumanLabel(), ss, filter->getErrorCondition());
+        }
+        return dataArray;
+      }
+
+      dataArray = attrMat->getPrereqArray<ArrayType, Filter>(filter, daName, -80002, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+      return dataArray;
+    }
+
 
 
   protected:

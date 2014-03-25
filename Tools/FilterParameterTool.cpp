@@ -50,6 +50,7 @@
 
 #include "DREAM3DLib/Common/FilterManager.h"
 #include "DREAM3DLib/Common/FilterFactory.hpp"
+#include "DREAM3DLib/Utilities/QMetaObjectUtilities.h"
 
 #include "DREAM3DLib/Plugin/DREAM3DPluginInterface.h"
 #include "DREAM3DLib/Plugin/DREAM3DPluginLoader.h"
@@ -423,7 +424,7 @@ int main(int argc, char *argv[])
 
 
   // Send progress messages from PipelineBuilder to this object for display
-  qRegisterMetaType<PipelineMessage>();
+  QMetaObjectUtilities::RegisterMetaTypes();
 
   LoopOnFilters();
 
