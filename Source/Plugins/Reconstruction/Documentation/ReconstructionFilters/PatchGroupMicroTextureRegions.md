@@ -17,7 +17,7 @@ NOTE: This filter is intended for use with *Hexagonal* materials.  While the c-a
 |------|------|
 | C-Axis Misalignment Tolerance | Double |
 | Use Running Average | Boolean |
-| Patch Diameter | Float |
+| Minimum MicroTextured Region Size (Diameter) | Float |
 | Minimum C-Axis Aligned Patch Volume Fraction For MTR Growth | Float |
 
 ## Required DataContainers ##

@@ -71,7 +71,7 @@ PatchGroupMicroTextureRegions::PatchGroupMicroTextureRegions() :
   m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
   m_CAxisTolerance(1.0f),
   m_UseRunningAverage(false),
-  m_PatchEdgeLength(1),
+  m_MinMTRSize(1.0f),
   m_PatchVolumeFractionForMTRGrowth(1.0f),
   m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
   m_CellParentIdsArrayName(DREAM3D::CellData::ParentIds),
@@ -124,12 +124,12 @@ void PatchGroupMicroTextureRegions::setupFilterParameters()
     parameters.push_back(parameter);
   }
   {
-  // FIX - change to minimum MTR size (diameter)
     FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Patch Edge Length");
-    parameter->setPropertyName("PatchEdgeLength");
-    parameter->setWidgetType(FilterParameterWidgetType::IntWidget);
-    parameter->setValueType("int");
+    parameter->setHumanLabel("Minimum MicroTextured Region Size (Diameter)");
+    parameter->setPropertyName("MinMTRSize");
+    parameter->setWidgetType(FilterParameterWidgetType::DoubleWidget);
+    parameter->setValueType("float");
+    parameter->setCastableValueType("double");
     parameter->setUnits("");
     parameters.push_back(parameter);
   }
@@ -157,7 +157,7 @@ void PatchGroupMicroTextureRegions::readFilterParameters(AbstractFilterParameter
   /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
   setCAxisTolerance( reader->readValue("CAxisTolerance", getCAxisTolerance()) );
   setUseRunningAverage( reader->readValue("UseRunningAverage", getUseRunningAverage()) );
-  setPatchEdgeLength( reader->readValue("PatchEdgeLength", getPatchEdgeLength()) );
+  setMinMTRSize( reader->readValue("MinMTRSize", getMinMTRSize()) );
   setPatchVolumeFractionForMTRGrowth( reader->readValue("PatchVolumeFractionForMTRGrowth", getPatchVolumeFractionForMTRGrowth()) );
   /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
@@ -171,7 +171,7 @@ int PatchGroupMicroTextureRegions::writeFilterParameters(AbstractFilterParameter
   writer->openFilterGroup(this, index);
   writer->writeValue("CAxisTolerance", getCAxisTolerance() );
   writer->writeValue("UseRunningAverage", getUseRunningAverage() );
-  writer->writeValue("PatchEdgeLength", getPatchEdgeLength() );
+  writer->writeValue("MinMTRSize", getMinMTRSize() );
   writer->writeValue("PatchVolumeFractionForMTRGrowth", getPatchVolumeFractionForMTRGrowth() );
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
@@ -572,7 +572,12 @@ bool PatchGroupMicroTextureRegions::determineGrouping(int referenceFeature, int 
 size_t PatchGroupMicroTextureRegions::determinePatchFeatureCentroids()
 {
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-
+  float xRes = m->getXRes();
+  float yRes = m->getYRes();
+  float zRes = m->getZRes();
+  int patchEdgeLengthX = int(xRes * m_MinMTRSize);
+  int patchEdgeLengthY = int(yRes * m_MinMTRSize);
+  int patchEdgeLengthZ = int(zRes * m_MinMTRSize);
   size_t udims[3] = {0, 0, 0};
   m->getDimensions(udims);
 #if (CMP_SIZEOF_SIZE_T == 4)
@@ -583,9 +588,9 @@ size_t PatchGroupMicroTextureRegions::determinePatchFeatureCentroids()
   int64_t totalPoints = m->getTotalPoints();
   size_t zPatch;
   if (udims[2] == 1) zPatch = 1;
-  else zPatch = int(udims[2] / m_PatchEdgeLength);
+  else zPatch = int(udims[2] / patchEdgeLengthZ);
 
-  size_t totalPatches = int(udims[0] / m_PatchEdgeLength) * int(udims[1] / m_PatchEdgeLength) * zPatch;
+  size_t totalPatches = int(udims[0] / patchEdgeLengthX) * int(udims[1] / patchEdgeLengthY) * zPatch;
   patchFeatureVolumeFractions.resize(totalPatches+1);
   for (int i = 0; i < totalPatches; i++)
   {
@@ -594,7 +599,7 @@ size_t PatchGroupMicroTextureRegions::determinePatchFeatureCentroids()
   }
 
   // FIX - figure out what to do when patches don't fit perfectly
-  //  if (udims[0] % m_PatchEdgeLength != 0)
+  //  if (udims[0] % m_MinMTRSize != 0)
   //  {
   //
   //  }
@@ -615,26 +620,22 @@ size_t PatchGroupMicroTextureRegions::determinePatchFeatureCentroids()
   int yPoints = static_cast<int>(m->getYPoints());
   int zPoints = static_cast<int>(m->getZPoints());
 
-  float xRes = m->getXRes();
-  float yRes = m->getYRes();
-  float zRes = m->getZRes();
-
   // Initialize every element to 0.0f
   for (size_t i = 0; i < totalPatches * 5; i++) { patchCenters[i] = 0.0f; }
 
   // FIX - right now, only works if dimensions are divisible by patch length
   int count = 0;
   float x, y, z;
-  size_t zStride, yStride, patchnum, patchIntervalX, patchIntervalY, patchIntervalZ;
+  size_t patchnum, patchIntervalX, patchIntervalY, patchIntervalZ;
   for(size_t i = 0; i < zPoints; i++)
   {
     for (size_t j = 0; j < yPoints; j++)
 	{
 	  for(size_t k = 0; k < xPoints; k++)
 	  {
-		patchIntervalZ = int(i/m_PatchEdgeLength) * int(zPoints/m_PatchEdgeLength);
-		patchIntervalY = int(j/m_PatchEdgeLength) * int(yPoints/m_PatchEdgeLength);
-		patchIntervalX = int(k/m_PatchEdgeLength);
+		patchIntervalZ = int(i/patchEdgeLengthZ) * int(zPoints/patchEdgeLengthZ);
+		patchIntervalY = int(j/patchEdgeLengthY) * int(yPoints/patchEdgeLengthY);
+		patchIntervalX = int(k/patchEdgeLengthX);
 		patchnum = patchIntervalZ + patchIntervalY + patchIntervalX;
 		m_CellParentIds[count] = patchnum + 1;
 		x = float(k) * xRes;
@@ -695,7 +696,7 @@ void PatchGroupMicroTextureRegions::determinePatchFeatureVolumes(size_t totalPat
 	if(m->getXPoints() == 1) { res_scalar = m->getYRes() * m->getZRes(); }
 	else if(m->getYPoints() == 1) { res_scalar = m->getXRes() * m->getZRes(); }
 	else if(m->getZPoints() == 1) { res_scalar = m->getXRes() * m->getYRes(); }
-	patchVolume = m_PatchEdgeLength * m_PatchEdgeLength / res_scalar;
+	patchVolume = m_MinMTRSize * m_MinMTRSize;// / res_scalar;
 	radsquared = patchVolume / DREAM3D::Constants::k_Pi;
 	patchCriticalDistance = 2.0f * sqrtf(radsquared);
   }
@@ -703,7 +704,7 @@ void PatchGroupMicroTextureRegions::determinePatchFeatureVolumes(size_t totalPat
   {
 	res_scalar = m->getXRes() * m->getYRes() * m->getZRes();
 	float vol_term = static_cast<double>( (4.0f / 3.0f) * DREAM3D::Constants::k_Pi );
-	patchVolume = m_PatchEdgeLength * m_PatchEdgeLength * m_PatchEdgeLength / res_scalar;
+	patchVolume = m_MinMTRSize * m_MinMTRSize * m_MinMTRSize;// / res_scalar;
 	radcubed = patchVolume / vol_term;
 	patchCriticalDistance = 2.0f * powf(radcubed, 0.3333333333f);
   }
@@ -842,12 +843,12 @@ bool PatchGroupMicroTextureRegions::growPatch(int currentPatch)
 	if(m->getXPoints() == 1) { res_scalar = m->getYRes() * m->getZRes(); }
 	else if(m->getYPoints() == 1) { res_scalar = m->getXRes() * m->getZRes(); }
 	else if(m->getZPoints() == 1) { res_scalar = m->getXRes() * m->getYRes(); }
-	patchVolume = m_PatchEdgeLength * m_PatchEdgeLength * res_scalar;
+	patchVolume = m_MinMTRSize * m_MinMTRSize;// * res_scalar;
   }
   else
   {
 	res_scalar = m->getXRes() * m->getYRes() * m->getZRes();
-	patchVolume = (m_PatchEdgeLength * m_PatchEdgeLength * m_PatchEdgeLength);
+	patchVolume = (m_MinMTRSize * m_MinMTRSize * m_MinMTRSize * res_scalar);
   }
   // debugging lines
   float check1 = patchFeatureVolumeFractions[currentPatch];
@@ -950,14 +951,14 @@ AbstractFilter::Pointer PatchGroupMicroTextureRegions::newFilterInstance(bool co
   /*
   * CAxisTolerance
   * UseRunningAverage
-  * PatchEdgeLength
+  * MinMTRSize
   */
   PatchGroupMicroTextureRegions::Pointer filter = PatchGroupMicroTextureRegions::New();
   if(true == copyFilterParameters)
   {
     filter->setCAxisTolerance( getCAxisTolerance() );
     filter->setUseRunningAverage( getUseRunningAverage() );
-    filter->setPatchEdgeLength( getPatchEdgeLength() );
+    filter->setMinMTRSize( getMinMTRSize() );
     filter->setRandomizeParentIds( getRandomizeParentIds() );
     filter->setPatchGrouping( getPatchGrouping() );
 	filter->setPatchVolumeFractionForMTRGrowth( getPatchVolumeFractionForMTRGrowth() );
