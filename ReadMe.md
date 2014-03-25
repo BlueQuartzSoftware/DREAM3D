@@ -19,6 +19,17 @@ For historical compatibility in versions prior to 4.2 the internal representatio
  The official DREAM3D issue tracker is located at https://github.com/DREAM3D/DREAM3D/issues
 
 ## Version 4.2 Bugs Fixed & Features Added ##
+
+### Version 4.2.48xx ###
++ Fixed Issue no. 147: Adding a favorite may result in the favorite being written to the wrong directory
++ Added several filters from the 'develop' branch to determin microtexture regions in Titanium alloys
++ Fixing preflight error in the _RenameFieldArray_ filter
++ Optimizing the EBSD Segment Grains filter
++ Adding additional methods to the OrientationMath and QuaternionMath c++ classes
++ Fixing issue with writing the parameters of some filters into a pipeline file
+
+
+
 ### Version 4.2.4815 ###
 + Added ability to nest Favorite Pipelines in folders
 + Fixed bugs when reading/write filter parameters for some Filters
@@ -37,7 +48,7 @@ For historical compatibility in versions prior to 4.2 the internal representatio
 + Fixed issue no. *134* Adding missing checks for FaceLabels array (GrainIds or Feature Ids) and presenting errors if that array is not found.
 + Fixed issue no. *133*: Adding option to group STL files by Phase by encoding the Phase index into the file name and the header of the STL file.
 + Fixed issue no. *135*: Ph reader only would read .dx file extensions.
-+ Misc Fixes/Enhancements: 
++ Misc Fixes/Enhancements:
   + Fixing issue where the git commit hash always had a ‘g’ as the first character
   + Updating the Compile documents with the latest 3rd party library requirements
   + Adding an additional piece of meta data to write the exact version of DREAM3D as an attribute to the .dream3d file

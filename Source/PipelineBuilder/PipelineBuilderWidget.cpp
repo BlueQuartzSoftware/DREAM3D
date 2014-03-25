@@ -308,20 +308,20 @@ void PipelineBuilderWidget::extractPipelineFromFile(const QString &filePath)
   {
 
     std::string filterName = (*iter)->getNameOfClass();
-  //  qDebug() << QTime::currentTime() << " Creating Filter: " << QString::fromStdString(filterName);
+    //  qDebug() << QTime::currentTime() << " Creating Filter: " << QString::fromStdString(filterName);
     QFilterWidget* w = m_PipelineViewWidget->addFilter( QString::fromStdString(filterName) );
-   // qDebug() << QTime::currentTime() << " Loading GUI Values: " << QString::fromStdString(filterName);
+    // qDebug() << QTime::currentTime() << " Loading GUI Values: " << QString::fromStdString(filterName);
     if(w) {
       QTime qtime = QTime::currentTime();
       m_PipelineViewWidget->preflightPipeline();
-    //  qDebug() << "ms: " << qtime.msecsTo(QTime::currentTime());
+      //  qDebug() << "ms: " << qtime.msecsTo(QTime::currentTime());
       qtime = QTime::currentTime();
       w->getGuiParametersFromFilter( (*iter).get() );
-     // qDebug() << "ms: " << qtime.msecsTo(QTime::currentTime());
+      // qDebug() << "ms: " << qtime.msecsTo(QTime::currentTime());
     }
   }
   // One last preflight to get the changes introduced by the last filter
- // m_PipelineViewWidget->preflightPipeline();
+  // m_PipelineViewWidget->preflightPipeline();
 }
 
 
@@ -480,6 +480,7 @@ void PipelineBuilderWidget::readFavoritePipelines()
   QString fileExtension("*.ini");
 
   addFiltersRecursively(favDir, m_favorites, iconFileName, allowEditing, fileExtension, itemType);
+  m_favorites->sortChildren(0, Qt::AscendingOrder);
 }
 
 // -----------------------------------------------------------------------------
@@ -1575,7 +1576,7 @@ void PipelineBuilderWidget::addProgressMessage(QString message)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PipelineBuilderWidget::addFavorite(QString path, QString favoriteTitle)
+bool PipelineBuilderWidget::addFavorite(QString path, QString favoriteTitle)
 {
   //Remove all spaces and illegal characters from favorite name
   favoriteTitle = favoriteTitle.trimmed();
@@ -1587,11 +1588,13 @@ void PipelineBuilderWidget::addFavorite(QString path, QString favoriteTitle)
   // Scope this section so the prefs file is written immediately
   {
     QSettings newPrefs(newPrefPath, QSettings::IniFormat);
+    if (newPrefs.isWritable() == false) { return false; }
     newPrefs.beginGroup(QString::fromStdString(DREAM3D::Settings::PipelineBuilderGroup));
     newPrefs.setValue("Name", favoriteTitle);
     newPrefs.endGroup();
     writeSettings(newPrefs, m_PipelineViewWidget);
   }
+  return true;
 }
 
 // -----------------------------------------------------------------------------
@@ -1667,18 +1670,30 @@ void PipelineBuilderWidget::actionAddFavoriteFolder_triggered()
 // -----------------------------------------------------------------------------
 void PipelineBuilderWidget::actionAddFavorite_triggered()
 {
-  AddFavoriteWidget* addfavoriteDialog = new AddFavoriteWidget("Name of Favorite", this);
-  addfavoriteDialog->exec();
+
 
   filterLibraryTree->blockSignals(true);
+
+  QTreeWidgetItem* selection = filterLibraryTree->currentItem();
+
+  // Make sure we are either on a Favorite Category (folder) or Favorite Item (leaf). If not put the selection
+  // on the Favorites Root Category Item
+  if(selection->type() != PipelineTreeWidget::Favorite_Category_Item_Type
+     && selection->type() != PipelineTreeWidget::Favorite_Item_Type)
+  {
+    selection = m_favorites;
+  }
+
+  if(selection->type() == PipelineTreeWidget::Favorite_Item_Type)
+  {
+    // The current selection is a leaf. We need to get its parent.
+    selection = selection->parent();
+  }
+
+  AddFavoriteWidget* addfavoriteDialog = new AddFavoriteWidget("Name of Favorite (Special Characters will be removed)", this);
+  addfavoriteDialog->exec();
   if(addfavoriteDialog->getBtnClicked())
   {
-    QTreeWidgetItem* selection = filterLibraryTree->currentItem();
-    if(selection->type() == PipelineTreeWidget::Favorite_Item_Type)
-    {
-      // The current selection is a leaf. We need to get its parent.
-      selection = selection->parent();
-    }
     QString favoriteTitle = addfavoriteDialog->getFavoriteName();
 
     favoriteTitle = favoriteTitle.trimmed();
@@ -1688,7 +1703,15 @@ void PipelineBuilderWidget::actionAddFavorite_triggered()
     QString path = selection->data(0, Qt::UserRole).toString();
     QString newPrefPath = path + QDir::separator() + favoriteTitle + ".ini";
 
-    addFavorite(path, favoriteTitle);
+    bool success = addFavorite(path, favoriteTitle);
+    if(false == success)
+    {
+      QMessageBox::critical(this,
+        "Error Creating Favorite",
+        QObject::tr("There was an error trying to create the Favorite Pipeline File at location '%1'. The file path may not be writable. Your favorite was NOT added.").arg(path),
+        QMessageBox::Ok);
+        return;
+    }
 
     QTreeWidgetItem* itemWidget = new QTreeWidgetItem(selection, PipelineTreeWidget::Favorite_Item_Type);
     itemWidget->setText(0, favoriteTitle);
@@ -1698,6 +1721,9 @@ void PipelineBuilderWidget::actionAddFavorite_triggered()
     {
       itemWidget->setFlags(itemWidget->flags() | Qt::ItemIsEditable);
     }
+
+    selection->sortChildren(0, Qt::AscendingOrder);
+    itemWidget->setSelected(true);
     // Tell everyone to save their preferences NOW instead of waiting until the app quits
     emit fireWriteSettings();
   }

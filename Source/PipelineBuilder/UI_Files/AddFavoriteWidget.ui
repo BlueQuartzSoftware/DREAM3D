@@ -17,7 +17,7 @@
    </sizepolicy>
   </property>
   <property name="windowTitle">
-   <string>Add New Filter</string>
+   <string>Add New Favorite</string>
   </property>
   <property name="modal">
    <bool>true</bool>
@@ -26,7 +26,16 @@
    <property name="spacing">
     <number>4</number>
    </property>
-   <property name="margin">
+   <property name="leftMargin">
+    <number>4</number>
+   </property>
+   <property name="topMargin">
+    <number>4</number>
+   </property>
+   <property name="rightMargin">
+    <number>4</number>
+   </property>
+   <property name="bottomMargin">
     <number>4</number>
    </property>
    <item>
@@ -35,11 +44,13 @@
       <widget class="QLabel" name="label">
        <property name="font">
         <font>
-         <pointsize>16</pointsize>
+         <pointsize>12</pointsize>
+         <weight>75</weight>
+         <bold>true</bold>
         </font>
        </property>
        <property name="text">
-        <string>Name of Favorite</string>
+        <string>Name of Favorite (Special Characters and Spaces will be removed)</string>
        </property>
       </widget>
      </item>
