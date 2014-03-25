@@ -48,15 +48,19 @@
 //
 // -----------------------------------------------------------------------------
 FindNeighborhoods::FindNeighborhoods() :
-AbstractFilter(),
-m_CentroidsArrayName(DREAM3D::FieldData::Centroids),
-m_EquivalentDiametersArrayName(DREAM3D::FieldData::EquivalentDiameters),
-m_FieldPhasesArrayName(DREAM3D::FieldData::Phases),
-m_NeighborhoodsArrayName(DREAM3D::FieldData::Neighborhoods),
-m_FieldPhases(NULL),
-m_Centroids(NULL),
-m_EquivalentDiameters(NULL),
-m_Neighborhoods(NULL)
+  AbstractFilter(),
+  m_CentroidsArrayName(DREAM3D::FieldData::Centroids),
+  m_EquivalentDiametersArrayName(DREAM3D::FieldData::EquivalentDiameters),
+  m_FieldPhasesArrayName(DREAM3D::FieldData::Phases),
+  m_NeighborhoodsArrayName(DREAM3D::FieldData::Neighborhoods),
+  m_NeighborhoodListArrayName(DREAM3D::FieldData::NeighborhoodList),
+  m_NumNeighborsArrayName(DREAM3D::FieldData::NumNeighbors),
+  m_MultiplesOfAverage(1.0f),
+  m_FieldPhases(NULL),
+  m_Centroids(NULL),
+  m_EquivalentDiameters(NULL),
+  m_Neighborhoods(NULL),
+  m_NeighborhoodList(NULL)
 {
   setupFilterParameters();
 }
@@ -72,15 +76,28 @@ FindNeighborhoods::~FindNeighborhoods()
 // -----------------------------------------------------------------------------
 void FindNeighborhoods::setupFilterParameters()
 {
+  std::vector<FilterParameter::Pointer> parameters;
+  {
+    FilterParameter::Pointer option = FilterParameter::New();
+    option->setPropertyName("MultiplesOfAverage");
+    option->setHumanLabel("Multiples Of Average Diameter");
+    option->setWidgetType(FilterParameter::DoubleWidget);
+    option->setValueType("float");
+    option->setCastableValueType("double");
+    option->setUnits("");
+    parameters.push_back(option);
+  }
 
+  setFilterParameters(parameters);
 }
 // -----------------------------------------------------------------------------
 void FindNeighborhoods::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+  setMultiplesOfAverage( reader->readValue("MultiplesOfAverage", getMultiplesOfAverage()) );
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }
 
@@ -90,6 +107,7 @@ void FindNeighborhoods::readFilterParameters(AbstractFilterParametersReader* rea
 int FindNeighborhoods::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
+  writer->writeValue("MultiplesOfAverage", getMultiplesOfAverage() );
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
@@ -102,6 +120,39 @@ void FindNeighborhoods::dataCheck(bool preflight, size_t voxels, size_t fields, 
   setErrorCondition(0);
   std::stringstream ss;
   VoxelDataContainer* m = getVoxelDataContainer();
+
+  // Field Data
+  // Do this whole block FIRST otherwise the side effect is that a call to m->getNumFieldTuples will = 0
+  // because we are just creating an empty NeighborList object.
+  // Now we are going to get a "Pointer" to the NeighborList object out of the DataContainer
+  m_NeighborhoodList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>* >
+                       (m->getFieldData(m_NeighborhoodListArrayName).get());
+  if(m_NeighborhoodList == NULL)
+  {
+    NeighborList<int>::Pointer neighborhoodlistPtr = NeighborList<int>::New();
+    neighborhoodlistPtr->SetName(m_NeighborhoodListArrayName);
+    neighborhoodlistPtr->Resize(fields);
+    neighborhoodlistPtr->setNumNeighborsArrayName(m_NeighborhoodsArrayName);
+    m->addFieldData(m_NeighborhoodListArrayName, neighborhoodlistPtr);
+    if (neighborhoodlistPtr.get() == NULL)
+    {
+      ss << "NeighborhoodLists Array Not Initialized at Beginning of FindNeighbors Filter" << std::endl;
+      setErrorCondition(-308);
+    }
+    m_NeighborhoodList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>* >
+                         (m->getFieldData(m_NeighborhoodListArrayName).get());
+
+    CreatedArrayHelpIndexEntry::Pointer e = CreatedArrayHelpIndexEntry::New();
+    e->setFilterName(this->getNameOfClass());
+    e->setFilterHumanLabel(this->getHumanLabel());
+    e->setFilterGroup(this->getGroupName());
+    e->setFilterSubGroup(this->getSubGroupName());
+    e->setArrayDefaultName(m_NeighborhoodListArrayName);
+    e->setArrayGroup("Field");
+    e->setArrayNumComponents(0);
+    e->setArrayType("NeighborList");
+    addCreatedArrayHelpIndexEntry(e);
+  }
 
   GET_PREREQ_DATA(m, DREAM3D, FieldData, EquivalentDiameters, ss, -302, float, FloatArrayType, fields, 1)
 
@@ -141,7 +192,7 @@ void FindNeighborhoods::execute()
   }
 
   find_neighborhoods();
- notifyStatusMessage("FindNeighborhoods Completed");
+  notifyStatusMessage("FindNeighborhoods Completed");
 }
 
 // -----------------------------------------------------------------------------
@@ -149,44 +200,102 @@ void FindNeighborhoods::execute()
 // -----------------------------------------------------------------------------
 void FindNeighborhoods::find_neighborhoods()
 {
+  std::stringstream ss;
   VoxelDataContainer* m = getVoxelDataContainer();
 
   float x, y, z;
-  float xn, yn, zn;
-  float dx, dy, dz;
-  size_t numgrains = m->getNumFieldTuples();
 
-  for (size_t i = 1; i < numgrains; i++)
+  std::vector<std::vector<int> > neighborhoodlist;
+  std::vector<float> criticalDistance;
+
+  int totalFields = int(m->getNumFieldTuples());
+
+  neighborhoodlist.resize(totalFields);
+  criticalDistance.resize(totalFields);
+
+  float aveDiam = 0.0f;
+  for (size_t i = 1; i < totalFields; i++)
   {
     m_Neighborhoods[i] = 0;
+    aveDiam += m_EquivalentDiameters[i];
+  criticalDistance[i] = m_EquivalentDiameters[i] * m_MultiplesOfAverage;
   }
-  for (size_t i = 1; i < numgrains; i++)
+  aveDiam /= totalFields;
+  for (size_t i = 1; i < totalFields; i++)
   {
-      x = m_Centroids[3*i];
-      y = m_Centroids[3*i+1];
-      z = m_Centroids[3*i+2];
-    if(m->getXPoints() == 1) x = 0;
-    if(m->getYPoints() == 1) y = 0;
-    if(m->getZPoints() == 1) z = 0;
-      for (size_t j = i; j < numgrains; j++)
-      {
-      xn = m_Centroids[3*j];
-      yn = m_Centroids[3*j+1];
-      zn = m_Centroids[3*j+2];
-      if(m->getXPoints() == 1) xn = 0;
-      if(m->getYPoints() == 1) yn = 0;
-      if(m->getZPoints() == 1) zn = 0;
-        dx = fabs(x - xn);
-        dy = fabs(y - yn);
-        dz = fabs(z - zn);
-        if (dx < m_EquivalentDiameters[i] && dy < m_EquivalentDiameters[i] && dz < m_EquivalentDiameters[i])
-        {
-            m_Neighborhoods[i]++;
-        }
-        if (dx < m_EquivalentDiameters[j] && dy < m_EquivalentDiameters[j] && dz < m_EquivalentDiameters[j])
-        {
-            m_Neighborhoods[j]++;
-        }
-      }
+    criticalDistance[i] /= aveDiam;
+  }
+
+  float aveCriticalDistance = aveDiam * m_MultiplesOfAverage;
+
+  float m_OriginX, m_OriginY, m_OriginZ;
+  m->getOrigin(m_OriginX, m_OriginY, m_OriginZ);
+
+
+  int xbin, ybin, zbin; //, bin, bin1, bin2;
+  std::vector<size_t> bins(3*totalFields, 0);
+  for (size_t i = 1; i < totalFields; i++)
+  {
+    x = m_Centroids[3 * i];
+    y = m_Centroids[3 * i + 1];
+    z = m_Centroids[3 * i + 2];
+    xbin = int((x - m_OriginX) / aveCriticalDistance);
+    ybin = int((y - m_OriginY) / aveCriticalDistance);
+    zbin = int((z - m_OriginZ) / aveCriticalDistance);
+
+  bins[3*i] = xbin;
+  bins[3*i+1] = ybin;
+  bins[3*i+2] = zbin;
+
+  }
+  int bin1x, bin2x, bin1y, bin2y, bin1z, bin2z;
+  int dBinX, dBinY, dBinZ;
+  int criticalDistance1, criticalDistance2;
+  for (size_t i = 1; i < totalFields; i++)
+  {
+    if (i % 1000 == 0)
+    {
+      ss.str("");
+      ss << "Working On Grain " << i << " of " << totalFields;
+      notifyStatusMessage(ss.str());
+    }
+    x = m_Centroids[3 * i];
+    y = m_Centroids[3 * i + 1];
+    z = m_Centroids[3 * i + 2];
+    bin1x = bins[3*i];
+  bin1y = bins[3*i+1];
+  bin1z = bins[3*i+2];
+  criticalDistance1 = criticalDistance[i];
+
+  for (size_t j = i + 1; j < totalFields; j++)
+    {
+      bin2x = bins[3*j];
+    bin2y = bins[3*j+1];
+    bin2z = bins[3*j+2];
+    criticalDistance2 = criticalDistance[j];
+
+    dBinX = abs(bin2x - bin1x);
+    dBinY = abs(bin2y - bin1y);
+    dBinZ = abs(bin2z - bin1z);
+
+    if (dBinX < criticalDistance1 && dBinY < criticalDistance1 && dBinZ < criticalDistance1)
+    {
+    m_Neighborhoods[i]++;
+    neighborhoodlist[i].push_back(j);
+    }
+
+    if (dBinX < criticalDistance2 && dBinY < criticalDistance2 && dBinZ < criticalDistance2)
+    {
+    m_Neighborhoods[j]++;
+    neighborhoodlist[j].push_back(i);
+    }
+    }
+  }
+  for (size_t i = 1; i < totalFields; i++)
+  {
+    // Set the vector for each list into the NeighborhoodList Object
+    NeighborList<int>::SharedVectorType sharedNeiLst(new std::vector<int>);
+    sharedNeiLst->assign(neighborhoodlist[i].begin(), neighborhoodlist[i].end());
+    m_NeighborhoodList->setList(static_cast<int>(i), sharedNeiLst);
   }
 }

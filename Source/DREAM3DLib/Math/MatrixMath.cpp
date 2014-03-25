@@ -258,3 +258,13 @@ float MatrixMath::AngleBetweenVectors(float a[3], float b[3])
   float norm2 = sqrt(b[0] * b[0] + b[1] * b[1] + b[2] * b[2]);
   return acos((a[0] * b[0] + a[1] * b[1] + a[2] * b[2]) / (norm1 * norm2));
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void MatrixMath::Add3x1s(const float g1[3], float g2[3], float outMat[3])
+{
+  outMat[0] = g1[0] + g2[0];
+  outMat[1] = g1[1] + g2[1];
+  outMat[2] = g1[2] + g2[2];
+}

@@ -139,6 +139,7 @@ namespace DREAM3D
 
     const DREAM3D_STRING SolidMeshNodes("SolidMeshNodes");
     const DREAM3D_STRING SolidMeshTetrahedrons("SolidMeshTetrahedrons");
+    const DREAM3D_STRING OldGrainIds("OldGrainIds");
   }
 
   namespace FieldData

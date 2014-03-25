@@ -1,6 +1,7 @@
 /* ============================================================================
  * Copyright (c) 2011 Michael A. Jackson (BlueQuartz Software)
  * Copyright (c) 2011 Dr. Michael A. Groeber (US Air Force Research Laboratories)
+ * Copyright (c) 2013 Dr. Joseph C. Tucker (UES, Inc.)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -13,10 +14,10 @@
  * list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
  *
- * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
- * BlueQuartz Software nor the names of its contributors may be used to endorse
- * or promote products derived from this software without specific prior written
- * permission.
+ * Neither the name of Joseph C. Tucker, Michael A. Groeber, Michael A. Jackson,
+ * UES, Inc., the US Air Force, BlueQuartz Software nor the names of its contributors
+ * may be used to endorse or promote products derived from this software without
+ * specific prior written permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -30,12 +31,12 @@
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  *  This code was written under United States Air Force Contract number
- *                           FA8650-07-D-5800
+ *                   FA8650-07-D-5800 and FA8650-10-D-5226
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef GroupMicroTextureRegions_H_
-#define GroupMicroTextureRegions_H_
+#ifndef FINDFIELDNEIGHBORCAXISMISALIGNMENTS_H_
+#define FINDFIELDNEIGHBORCAXISMISALIGNMENTS_H_
 
 #include <vector>
 #include <string>
@@ -45,52 +46,48 @@
 #include "DREAM3DLib/DataArrays/IDataArray.h"
 
 #include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/DataContainers/VoxelDataContainer.h"
 #include "DREAM3DLib/OrientationOps/OrientationOps.h"
+#include "DREAM3DLib/OrientationOps/CubicOps.h"
+#include "DREAM3DLib/OrientationOps/HexagonalOps.h"
+#include "DREAM3DLib/OrientationOps/OrthoRhombicOps.h"
+#include "DREAM3DLib/DataContainers/VoxelDataContainer.h"
 #include "DREAM3DLib/DataArrays/NeighborList.hpp"
 
 /**
- * @class GroupMicroTextureRegions GroupMicroTextureRegions.h DREAM3DLib/ReconstructionFilters/GroupMicroTextureRegions.h
+ * @class FindFieldNeighborCAxisMisalignments FindFieldNeighborCAxisMisalignments.h DREAM3DLib/GenericFilters/FindFieldNeighborCAxisMisalignments.h
  * @brief
- * @author
+ * @author Michael A Groeber (AFRL)
  * @date Nov 19, 2011
  * @version 1.0
  */
-class DREAM3DLib_EXPORT GroupMicroTextureRegions : public AbstractFilter
+class DREAM3DLib_EXPORT FindFieldNeighborCAxisMisalignments : public AbstractFilter
 {
   public:
-    DREAM3D_SHARED_POINTERS(GroupMicroTextureRegions)
-    DREAM3D_STATIC_NEW_MACRO(GroupMicroTextureRegions)
-    DREAM3D_TYPE_MACRO_SUPER(GroupMicroTextureRegions, AbstractFilter)
+    DREAM3D_SHARED_POINTERS(FindFieldNeighborCAxisMisalignments)
+    DREAM3D_STATIC_NEW_MACRO(FindFieldNeighborCAxisMisalignments)
+    DREAM3D_TYPE_MACRO_SUPER(FindFieldNeighborCAxisMisalignments, AbstractFilter)
 
+    virtual ~FindFieldNeighborCAxisMisalignments();
 
-    virtual ~GroupMicroTextureRegions();
-
-    //------ Required Cell Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
-    //------ Created Cell Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(CellParentIdsArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(ParentDensityArrayName)
-    //------ Required Field Data
     DREAM3D_INSTANCE_STRING_PROPERTY(AvgQuatsArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(FieldPhasesArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(VolumesArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(ContiguousNeighborListArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(NonContiguousNeighborListArrayName)
-    //------ Created Field Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(ActiveArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(FieldParentIdsArrayName)
-
     //------ Required Ensemble Data
     DREAM3D_INSTANCE_STRING_PROPERTY(CrystalStructuresArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(NeighborListArrayName)
+    //------ Created Field Data
+    DREAM3D_INSTANCE_STRING_PROPERTY(CAxisMisalignmentListArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(AvgCAxisMisalignmentsArrayName)
 
-    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::ReconstructionFilters; }
-    virtual const std::string getSubGroupName() {return DREAM3D::FilterSubGroups::GroupingFilters;}
-    virtual const std::string getHumanLabel() { return "Identify MicroTexture (C-Axis Misorientation)"; }
+    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
+    virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::CrystallographicFilters; }
+    virtual const std::string getHumanLabel() { return "Find Field Neighbor C-Axis Misalignments"; }
 
-    DREAM3D_INSTANCE_PROPERTY(float, CAxisTolerance)
-    DREAM3D_INSTANCE_PROPERTY(bool, UseNonContiguousNeighbors)
+    DREAM3D_INSTANCE_PROPERTY(bool, FindAvgMisals)
 
+    /**
+    * @brief This method will write the options to a file
+    * @param writer The writer that is used to write the options to a file
+    */
     virtual void setupFilterParameters();
     virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
 
@@ -107,36 +104,26 @@ class DREAM3DLib_EXPORT GroupMicroTextureRegions : public AbstractFilter
     virtual void preflight();
 
   protected:
-    GroupMicroTextureRegions();
-
-    void merge_micro_texture_regions();
-    void characterize_micro_texture_regions();
+    FindFieldNeighborCAxisMisalignments();
 
   private:
-    int32_t* m_GrainIds;
-    int32_t* m_CellParentIds;
-    int32_t* m_FieldParentIds;
-    float* m_ParentDensity;
+    std::vector<OrientationOps::Pointer> m_OrientationOps;
+    CubicOps::Pointer m_CubicOps;
+    HexagonalOps::Pointer m_HexOps;
+    OrthoRhombicOps::Pointer m_OrthoOps;
+
     float* m_AvgQuats;
-    bool* m_Active;
     int32_t* m_FieldPhases;
-    float* m_Volumes;
-    NeighborList<int>* m_ContiguousNeighborList;
-    NeighborList<int>* m_NonContiguousNeighborList;
+    NeighborList<int>* m_NeighborList;
+    NeighborList<float>* m_CAxisMisalignmentList;
+    float* m_AvgCAxisMisalignments;
 
     unsigned int* m_CrystalStructures;
 
-    std::vector<int> parentnumbers;
-    std::vector<bool> beenChecked;
-    std::vector<float> densities;
-
-    std::vector<OrientationOps::Pointer> m_OrientationOps;
-
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
-
-    GroupMicroTextureRegions(const GroupMicroTextureRegions&); // Copy Constructor Not Implemented
-    void operator=(const GroupMicroTextureRegions&); // Operator '=' Not Implemented
+    FindFieldNeighborCAxisMisalignments(const FindFieldNeighborCAxisMisalignments&); // Copy Constructor Not Implemented
+    void operator=(const FindFieldNeighborCAxisMisalignments&); // Operator '=' Not Implemented
 };
 
-#endif /* GroupMicroTextureRegions_H_ */
+#endif /* FINDFIELDNEIGHBORCAXISMISALIGNMENTS_H_ */

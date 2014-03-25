@@ -89,8 +89,8 @@ void FindGrainReferenceCAxisMisorientations::readFilterParameters(AbstractFilter
 {
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }
 
@@ -100,8 +100,8 @@ void FindGrainReferenceCAxisMisorientations::readFilterParameters(AbstractFilter
 int FindGrainReferenceCAxisMisorientations::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-    writer->closeFilterGroup();
-    return ++index; // we want to return the next index that was just written to
+  writer->closeFilterGroup();
+  return ++index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------

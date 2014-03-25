@@ -67,7 +67,9 @@ class NeighborList : public IDataArray
     DREAM3D_STATIC_NEW_MACRO(NeighborList<T> )
     DREAM3D_TYPE_MACRO_SUPER(NeighborList<T>, IDataArray)
 
-    IDataArray::Pointer createNewArray(size_t numElements, int numComponents, const std::string &name)
+    DREAM3D_INSTANCE_STRING_PROPERTY(NumNeighborsArrayName)
+
+    IDataArray::Pointer createNewArray(size_t numElements, int numComponents, const std::string& name)
     {
       return NeighborList<T>::New();
     }
@@ -88,7 +90,7 @@ class NeighborList : public IDataArray
      * can be a primitive like char, float, int or the name of a class.
      * @return
      */
-    void GetXdmfTypeAndSize(std::string &xdmfTypeName, int &precision)
+    void GetXdmfTypeAndSize(std::string& xdmfTypeName, int& precision)
     {
       T value = 0x00;
       xdmfTypeName = "UNKNOWN";
@@ -118,7 +120,7 @@ class NeighborList : public IDataArray
      */
     virtual std::string getTypeAsString() { return NeighborList<T>::ClassName();}
 
-    void SetName(const std::string &name) { m_Name = name; }
+    void SetName(const std::string& name) { m_Name = name; }
     std::string GetName() { return m_Name; }
 
 
@@ -136,7 +138,7 @@ class NeighborList : public IDataArray
      * @param idxs The indices to remove
      * @return error code.
      */
-    virtual int EraseTuples(std::vector<size_t> &idxs)
+    virtual int EraseTuples(std::vector<size_t>& idxs)
     {
       int err = 0;
       // If nothing is to be erased just return
@@ -204,7 +206,8 @@ class NeighborList : public IDataArray
      * of the internal storage arrays for this class.
      * @return
      */
-    size_t GetSize() {
+    size_t GetSize()
+    {
       size_t total = 0;
       for(size_t dIdx = 0; dIdx < _data.size(); ++dIdx)
       {
@@ -213,27 +216,16 @@ class NeighborList : public IDataArray
       return total;
     }
 
-    /**
-     * @brief SetNumberOfComponents
-     * @param nc
-     */
+
     void SetNumberOfComponents(int nc) { }
 
-    /**
-     * @brief GetNumberOfComponents
-     * @return
-     */
+
     int GetNumberOfComponents() { return 1; }
 
-    /**
-     * @brief GetTypeSize
-     * @return
-     */
+
     size_t GetTypeSize()  { return sizeof(SharedVectorType); }
 
-    /**
-     * @brief initializeWithZeros
-     */
+
     void initializeWithZeros() { _data.clear(); }
 
     /**
@@ -256,11 +248,6 @@ class NeighborList : public IDataArray
       return daCopyPtr;
     }
 
-    /**
-     * @brief RawResize
-     * @param size
-     * @return
-     */
     int32_t RawResize(size_t size)
     {
       size_t old = _data.size();
@@ -280,27 +267,20 @@ class NeighborList : public IDataArray
      */
     virtual int32_t Resize(size_t numTuples) { return RawResize(numTuples); }
 
-
     //FIXME: These need to be implemented
-    virtual void printTuple(std::ostream &out, size_t i, char delimiter = ',')
+    virtual void printTuple(std::ostream& out, size_t i, char delimiter = ',')
     {
       SharedVectorType sharedVec = _data[i];
       VectorType* vec = sharedVec.get();
       size_t size = vec->size();
       out << size;
-      for(size_t i=0;i<size;i++)
+      for(size_t i = 0; i < size; i++)
       {
         out << delimiter << vec->at(i);
       }
     }
 
-    /**
-     * @brief printComponent
-     * @param out
-     * @param i
-     * @param j
-     */
-    virtual void printComponent(std::ostream &out, size_t i, int j)
+    virtual void printComponent(std::ostream& out, size_t i, int j)
     {
       BOOST_ASSERT(false);
     }
@@ -312,13 +292,14 @@ class NeighborList : public IDataArray
      */
     virtual int writeH5Data(hid_t parentId)
     {
-
       int err = 0;
 
-      // Generate the number of neighbors array and also compute the total number
-      // of elements that would be needed to flatten the array
+      // Generate the NumNeighbors array and also compute the total number
+      // of elements that would be needed to flatten the array so we
+      // can compare this with what is written in the file. If they are
+      // different we are going to overwrite what is in the file with what
+      // we compute here.
       std::vector<int32_t> numNeighbors(_data.size());
-
       size_t total = 0;
       for(size_t dIdx = 0; dIdx < _data.size(); ++dIdx)
       {
@@ -328,14 +309,32 @@ class NeighborList : public IDataArray
 
       // Check to see if the NumNeighbors is already written to the file
       bool rewrite = false;
-      if (H5Lite::datasetExists(parentId, DREAM3D::FieldData::NumNeighbors) == false)
+      if (H5Lite::datasetExists(parentId, m_NumNeighborsArrayName) == false)
       {
-        rewrite = true;
+        // The NumNeighbors Array is NOT already in the file so write it to the file
+        std::vector<hsize_t> dims(1, numNeighbors.size());
+        err = H5Lite::writeVectorDataset(parentId, m_NumNeighborsArrayName, dims, numNeighbors);
+        if(err < 0)
+        {
+          return -603;
+        }
+        err = H5Lite::writeScalarAttribute(parentId, m_NumNeighborsArrayName, std::string(H5_NUMCOMPONENTS), 1);
+        if(err < 0)
+        {
+          return -605;
+        }
+        err = H5Lite::writeStringAttribute(parentId, m_NumNeighborsArrayName, DREAM3D::HDF5::ObjectType, "DataArray<T>");
+        if(err < 0)
+        {
+          return -604;
+        }
       }
       else
       {
+        // The NumNeighbors array is in the dream3d file so read it up into memory and compare with what
+        // we have in memory.
         std::vector<int32_t> fileNumNeigh(_data.size());
-        err = H5Lite::readVectorDataset(parentId, DREAM3D::FieldData::NumNeighbors, fileNumNeigh);
+        err = H5Lite::readVectorDataset(parentId, m_NumNeighborsArrayName, fileNumNeigh);
         if (err < 0)
         {
           return -602;
@@ -356,21 +355,23 @@ class NeighborList : public IDataArray
         }
       }
 
-      // Write out the NumNeighbors Array
+      // Write out the NumNeighbors Array because something was different between what we computed at
+      // the top of the function versus what is in memory
       if(rewrite == true)
       {
-        std::vector<hsize_t> dims(1, numNeighbors.size());
-        err = H5Lite::writeVectorDataset(parentId, DREAM3D::FieldData::NumNeighbors, dims, numNeighbors);
+        hsize_t dims[1] = {numNeighbors.size()};
+        hsize_t rank = 1;
+        err = H5Lite::replacePointerDataset(parentId, m_NumNeighborsArrayName, rank, dims, &(numNeighbors.front()) );
         if(err < 0)
         {
           return -603;
         }
-        err = H5Lite::writeScalarAttribute(parentId, DREAM3D::FieldData::NumNeighbors, std::string(H5_NUMCOMPONENTS), 1);
+        err = H5Lite::writeScalarAttribute(parentId, m_NumNeighborsArrayName, std::string(H5_NUMCOMPONENTS), 1);
         if(err < 0)
         {
           return -605;
         }
-        err = H5Lite::writeStringAttribute(parentId, DREAM3D::FieldData::NumNeighbors, DREAM3D::HDF5::ObjectType, "DataArray<T>");
+        err = H5Lite::writeStringAttribute(parentId, m_NumNeighborsArrayName, DREAM3D::HDF5::ObjectType, "DataArray<T>");
         if(err < 0)
         {
           return -604;
@@ -389,11 +390,12 @@ class NeighborList : public IDataArray
         T* start = &(_data[dIdx]->front()); // Get the pointer to the front of the array
         //    T* end = start + nEle; // Get the pointer to the end of the array
         T* dst = &(flat.front()) + currentStart;
-        ::memcpy(dst, start, nEle*sizeof(T));
+        ::memcpy(dst, start, nEle * sizeof(T));
 
         currentStart += _data[dIdx]->size();
       }
 
+      // Now we can actually write the actual array data.
       int32_t rank = 1;
       hsize_t dims[1] = { total };
       if (total > 0)
@@ -415,7 +417,7 @@ class NeighborList : public IDataArray
           return -607;
         }
 
-        err = H5Lite::writeStringAttribute(parentId, GetName(), "Linked NumNeighbors Dataset", DREAM3D::FieldData::NumNeighbors);
+        err = H5Lite::writeStringAttribute(parentId, GetName(), "Linked NumNeighbors Dataset", m_NumNeighborsArrayName);
         if(err < 0)
         {
           return -608;
@@ -432,8 +434,8 @@ class NeighborList : public IDataArray
      * @param groupPath
      * @return
      */
-    virtual int writeXdmfAttribute(std::ostream &out, int64_t* volDims, const std::string &hdfFileName,
-                                   const std::string &groupPath, const std::string &label)
+    virtual int writeXdmfAttribute(std::ostream& out, int64_t* volDims, const std::string& hdfFileName,
+                                   const std::string& groupPath, const std::string& label)
     {
 
       std::stringstream dimStr;
@@ -443,12 +445,12 @@ class NeighborList : public IDataArray
       GetXdmfTypeAndSize(xdmfTypeName, precision);
 
       /*
-     <Attribute Name="MisorientationList" AttributeType="Scalar" Center="Cell">
+      <Attribute Name="MisorientationList" AttributeType="Scalar" Center="Cell">
       <DataItem Format="HDF" Dimensions="52140" NumberType="Float" Precision="4" >
-        test40638_01.dream3d:/VoxelDataContainer/FIELD_DATA/MisorientationList
+        test40638_01.dream3d:/VolumeDataContainer/FIELD_DATA/MisorientationList
       </DataItem>
-    </Attribute>
-    */
+      </Attribute>
+      */
       out << "    <Attribute Name=\"" << GetName() << label << "\" AttributeType=\"Scalar\" Center=\"Node\">" << std::endl;
       out << "      <DataItem Format=\"HDF\" Dimensions=\"" << dimStr.str() <<  "\" ";
       out << "NumberType=\"" << xdmfTypeName << "\" " << "Precision=\"" << precision << "\" >" << std::endl;
@@ -472,9 +474,9 @@ class NeighborList : public IDataArray
       std::vector<int32_t> numNeighbors;
 
       // Check to see if the NumNeighbors exists in the file, which it must.
-      if(H5Lite::datasetExists(parentId, DREAM3D::FieldData::NumNeighbors) == true)
+      if(H5Lite::datasetExists(parentId, m_NumNeighborsArrayName) == true)
       {
-        err = H5Lite::readVectorDataset(parentId, DREAM3D::FieldData::NumNeighbors, numNeighbors);
+        err = H5Lite::readVectorDataset(parentId, m_NumNeighborsArrayName, numNeighbors);
         if(err < 0)
         {
           return -702;
@@ -520,10 +522,8 @@ class NeighborList : public IDataArray
     }
 
     /**
-     * @brief addEntry
-     * @param grainId
-     * @param value
-     */
+    *
+    */
     void addEntry(int grainId, int value)
     {
       if(grainId >= static_cast<int>(_data.size()) )
@@ -569,7 +569,7 @@ class NeighborList : public IDataArray
     /**
      *
      */
-    T getValue(int grainId, int index, bool &ok)
+    T getValue(int grainId, int index, bool& ok)
     {
 #ifndef NDEBUG
       if (_data.size() > 0u) { BOOST_ASSERT(grainId < static_cast<int>(_data.size()));}
