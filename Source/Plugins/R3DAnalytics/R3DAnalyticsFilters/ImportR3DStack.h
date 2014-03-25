@@ -1,6 +1,7 @@
 /* ============================================================================
- * Copyright (c) 2012 Michael A. Jackson (BlueQuartz Software)
- * Copyright (c) 2012 Dr. Michael A. Groeber (US Air Force Research Laboratories)
+ * Copyright (c) 2011 Michael A. Jackson (BlueQuartz Software)
+ * Copyright (c) 2011 Dr. Michael A. Groeber (US Air Force Research Laboratories)
+ * Copyright (c) 2014 Dr. Joseph C. Tucker (UES, Inc.)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -13,10 +14,10 @@
  * list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
  *
- * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
- * BlueQuartz Software nor the names of its contributors may be used to endorse
- * or promote products derived from this software without specific prior written
- * permission.
+ * Neither the name of Joseph C. Tucker, Michael A. Groeber, Michael A. Jackson,
+ * UES, Inc., the US Air Force, BlueQuartz Software nor the names of its contributors
+ * may be used to endorse or promote products derived from this software without
+ * specific prior written permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -30,13 +31,15 @@
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  *  This code was written under United States Air Force Contract number
- *                           FA8650-07-D-5800
+ *                   FA8650-07-D-5800 and FA8650-13-M-5048
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #ifndef ImportR3DStack_H_
 #define ImportR3DStack_H_
 
 #include <string>
+
+#include <QtCore/QString>
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
@@ -45,10 +48,10 @@
 
 
 /**
- * @class ImportR3DStack ImportR3DStack.h ImageImport/Code/ImageImportFilters/ImportR3DStack.h
+ * @class ImportR3DStack ImportR3DStack.h R3DAnalytics/R3DAnalyticsFilters/ImportR3DStack.h
  * @brief
- * @author
- * @date
+ * @author Joseph C. Tucker for UES, Inc.
+ * @date Feb 210, 2014
  * @version 1.0
  */
 class ImportR3DStack : public AbstractFilter
@@ -60,10 +63,10 @@ class ImportR3DStack : public AbstractFilter
 
     virtual ~ImportR3DStack();
 
-    DREAM3D_INSTANCE_STRING_PROPERTY(ImageDataArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
     DREAM3D_INSTANCE_PROPERTY(int64_t, ZStartIndex)
     DREAM3D_INSTANCE_PROPERTY(int64_t, ZEndIndex)
-    DREAM3D_INSTANCE_PROPERTY(std::vector<std::string>, ImageFileList)
+    DREAM3D_INSTANCE_PROPERTY(std::vector<std::string>, R3DFileList)
     DREAM3D_INSTANCE_PROPERTY(FloatVec3Widget_t, Origin)
     DREAM3D_INSTANCE_PROPERTY(FloatVec3Widget_t, Resolution)
 
@@ -130,9 +133,10 @@ class ImportR3DStack : public AbstractFilter
     * @param ensembles The number of ensembles
     */
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
+    void readXYSize(int &x, int &y);
 
   private:
-    uint8_t* m_ImageData;
+    int32_t* m_GrainIds;
 
     ImportR3DStack(const ImportR3DStack&); // Copy Constructor Not Implemented
     void operator=(const ImportR3DStack&); // Operator '=' Not Implemented

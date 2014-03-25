@@ -36,15 +36,8 @@
 
 #include "EBSDSegmentGrains.h"
 
-#include <boost/random/mersenne_twister.hpp>
-#include <boost/random/uniform_int.hpp>
-#include <boost/random/variate_generator.hpp>
-
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Math/DREAM3DMath.h"
-#include "DREAM3DLib/Utilities/DREAM3DRandom.h"
-
-#include "DREAM3DLib/GenericFilters/FindCellQuats.h"
 
 #define ERROR_TXT_OUT 1
 #define ERROR_TXT_OUT1 1
@@ -200,13 +193,22 @@ void EBSDSegmentGrains::execute()
   // Tell the user we are starting the filter
   notifyStatusMessage("Starting");
 
-  for(int64_t i=0;i<totalPoints;i++)
-  {
-    m_GrainIds[i] = 0;
-  }
+  //std::cout << "Start Time: " << MXA::convertMillisToHrsMinSecs(MXA::getMilliSeconds()) << std::endl;
 
+  // Initialize all the GrainIds to Zero
+  Int32ArrayType::Pointer grainIds = boost::dynamic_pointer_cast<Int32ArrayType>(m->getCellData(getGrainIdsArrayName()));
+  grainIds->initializeWithZeros();
+
+  // Generate the random voxel indices that will be used for the seed points to start a new grain growth/agglomeration
+  const size_t rangeMin = 0;
+  const size_t rangeMax = totalPoints - 1;
+  initializeVoxelSeedGenerator(rangeMin, rangeMax);
+
+  // This will run the actual segmentation Algorithm
   SegmentGrains::execute();
 
+  // Segmentation is complete, now update the grainIds to a more random order. Under default conditions larger grains will
+  // get lower grain ids leading to interesting visualization artifacts. This will mitigate that effect.
   size_t totalFields = m->getNumFieldTuples();
   if (totalFields < 2)
   {
@@ -214,59 +216,61 @@ void EBSDSegmentGrains::execute()
     notifyErrorMessage("The number of Fields was 0 or 1 which means no fields were detected. Is a threshold value set to high?", getErrorCondition());
     return;
   }
+
+  // By default we randomize grains
   if (true == m_RandomizeGrainIds)
   {
     totalPoints = m->getTotalPoints();
-
-
-    // Generate all the numbers up front
-    const int rangeMin = 1;
-    const int rangeMax = totalFields - 1;
-    typedef boost::uniform_int<int> NumberDistribution;
-    typedef boost::mt19937 RandomNumberGenerator;
-    typedef boost::variate_generator<RandomNumberGenerator&,
-        NumberDistribution> Generator;
-
-    NumberDistribution distribution(rangeMin, rangeMax);
-    RandomNumberGenerator generator;
-    Generator numberGenerator(generator, distribution);
-    generator.seed(static_cast<boost::uint32_t>( MXA::getMilliSeconds() )); // seed with the current time
-
-    DataArray<int32_t>::Pointer rndNumbers = DataArray<int32_t>::CreateArray(totalFields, "New GrainIds");
-    int32_t* gid = rndNumbers->GetPointer(0);
-    gid[0] = 0;
-    std::set<int32_t> grainIdSet;
-    grainIdSet.insert(0);
-    for(size_t i = 1; i < totalFields; ++i)
-    {
-      gid[i] = i; //numberGenerator();
-      grainIdSet.insert(gid[i]);
-    }
-
-    size_t r;
-    size_t temp;
-    //--- Shuffle elements by randomly exchanging each with one other.
-    for (size_t i=1; i< totalFields; i++) {
-      r = numberGenerator(); // Random remaining position.
-      if (r >= totalFields) {
-        continue;
-      }
-      temp = gid[i];
-      gid[i] = gid[r];
-      gid[r] = temp;
-    }
-
-    // Now adjust all the Grain Id values for each Voxel
-    for(int64_t i = 0; i < totalPoints; ++i)
-    {
-      m_GrainIds[i] = gid[ m_GrainIds[i] ];
-    }
+    randomizeGrainIds(totalPoints, totalFields);
   }
 
   // If there is an error set this to something negative and also set a message
   notifyStatusMessage("Completed");
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void EBSDSegmentGrains::randomizeGrainIds(int64_t totalPoints, size_t totalFields)
+{
+  notifyStatusMessage("Randomizing Grain Ids");
+  // Generate an even distribution of numbers between the min and max range
+  const size_t rangeMin = 0;
+  const size_t rangeMax = totalFields - 1;
+  initializeVoxelSeedGenerator(rangeMin, rangeMax);
+
+// Get a reference variable to the Generator object
+  Generator& numberGenerator = *m_NumberGenerator;
+
+  DataArray<int32_t>::Pointer rndNumbers = DataArray<int32_t>::CreateArray(totalFields, "New GrainIds");
+
+  int32_t* gid = rndNumbers->GetPointer(0);
+  gid[0] = 0;
+  for(size_t i = 1; i < totalFields; ++i)
+  {
+    gid[i] = i;
+  }
+
+  size_t r;
+  size_t temp;
+  //--- Shuffle elements by randomly exchanging each with one other.
+  for (size_t i = 1; i < totalFields; i++)
+  {
+    r = numberGenerator(); // Random remaining position.
+    if (r >= totalFields) {
+      continue;
+    }
+    temp = gid[i];
+    gid[i] = gid[r];
+    gid[r] = temp;
+  }
+
+  // Now adjust all the Grain Id values for each Voxel
+  for(int64_t i = 0; i < totalPoints; ++i)
+  {
+    m_GrainIds[i] = gid[ m_GrainIds[i] ];
+  }
+}
 
 // -----------------------------------------------------------------------------
 //
@@ -285,23 +289,24 @@ int EBSDSegmentGrains::getSeed(size_t gnum)
   }
 
   int64_t totalPoints = m->getTotalPoints();
-
-  DREAM3D_RANDOMNG_NEW()
   int seed = -1;
-  int randpoint = 0;
-
-  // Precalculate some constants
-  int64_t totalPMinus1 = totalPoints - 1;
-
+  Generator& numberGenerator = *m_NumberGenerator;
   int counter = 0;
-  randpoint = int(float(rg.genrand_res53()) * float(totalPMinus1));
-  while (seed == -1 && counter < totalPoints)
+  while(seed == -1 && m_TotalRandomNumbersGenerated < totalPoints)
   {
-    if (randpoint > totalPMinus1) randpoint = static_cast<int>( randpoint - totalPoints );
-    if (m_GoodVoxels[randpoint] == true && m_GrainIds[randpoint] == 0 && m_CellPhases[randpoint] > 0) seed = randpoint;
-    randpoint++;
+    // Get the next voxel index in the precomputed list of voxel seeds
+    size_t randpoint = numberGenerator();
+    m_TotalRandomNumbersGenerated++; // Increment this counter
+    if(m_GrainIds[randpoint] == 0) // If the GrainId of the voxel is ZERO then we can use this as a seed point
+    {
+      if (m_GoodVoxels[randpoint] == true && m_CellPhases[randpoint] > 0)
+      {
+        seed = randpoint;
+      }
+    }
     counter++;
   }
+//  std::cout << "gnum: " << gnum << "   counter: " << counter << std::endl;
   if (seed >= 0)
   {
     m_GrainIds[seed] = gnum;
@@ -344,4 +349,23 @@ bool EBSDSegmentGrains::determineGrouping(int referencepoint, int neighborpoint,
   }
 
   return group;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void EBSDSegmentGrains::initializeVoxelSeedGenerator(const size_t rangeMin, const size_t rangeMax)
+{
+
+// The way we are using the boost random number generators is that we are asking for a NumberDistribution (see the typedef)
+// to guarantee the numbers are betwee a specific range and will only be generated once. We also keep a tally of the
+// total number of numbers generated as a way to make sure the while loops eventually terminate. This setup should
+// make sure that every voxel can be a seed point.
+//  const size_t rangeMin = 0;
+//  const size_t rangeMax = totalPoints - 1;
+  m_Distribution = boost::shared_ptr<NumberDistribution>(new NumberDistribution(rangeMin, rangeMax));
+  m_RandomNumberGenerator = boost::shared_ptr<RandomNumberGenerator>(new RandomNumberGenerator);
+  m_NumberGenerator = boost::shared_ptr<Generator>(new Generator(*m_RandomNumberGenerator, *m_Distribution));
+  m_RandomNumberGenerator->seed(static_cast<size_t>( MXA::getMilliSeconds() )); // seed with the current time
+  m_TotalRandomNumbersGenerated = 0;
 }

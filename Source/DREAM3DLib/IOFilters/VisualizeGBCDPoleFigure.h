@@ -156,7 +156,7 @@ class DREAM3DLib_EXPORT VisualizeGBCDPoleFigure : public SurfaceMeshFilter
     int writeCoords(FILE* f, const char* axis, const char* type, int64_t npoints, float min, float step)
     {
       int err = 0;
-      fprintf(f, "%s %ld %s\n", axis, npoints, type);
+      fprintf(f, "%s %lld %s\n", axis, npoints, type);
       float* data = new float[npoints];
       float d;
       for (int idx = 0; idx < npoints; ++idx)

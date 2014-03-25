@@ -40,13 +40,18 @@
 #include <vector>
 #include <string>
 
+///Boost Random Number generator stuff
+#include <boost/random/mersenne_twister.hpp>
+#include <boost/random/uniform_int.hpp>
+#include <boost/random/variate_generator.hpp>
+
+typedef boost::uniform_int<int> NumberDistribution;
+typedef boost::mt19937 RandomNumberGenerator;
+typedef boost::variate_generator<RandomNumberGenerator&, NumberDistribution> Generator;
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/DataArrays/IDataArray.h"
-
 #include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/DataContainers/VoxelDataContainer.h"
 #include "DREAM3DLib/OrientationOps/OrientationOps.h"
 
 #include "DREAM3DLib/ReconstructionFilters/SegmentGrains.h"
@@ -82,7 +87,7 @@ class DREAM3DLib_EXPORT EBSDSegmentGrains : public SegmentGrains
     DREAM3D_INSTANCE_PROPERTY(bool, RandomizeGrainIds)
 
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::ReconstructionFilters; }
-	virtual const std::string getSubGroupName() {return DREAM3D::FilterSubGroups::SegmentationFilters;}
+    virtual const std::string getSubGroupName() {return DREAM3D::FilterSubGroups::SegmentationFilters;}
     virtual const std::string getHumanLabel() { return "Segment Fields (Misorientation)"; }
 
     virtual void setupFilterParameters();
@@ -91,7 +96,7 @@ class DREAM3DLib_EXPORT EBSDSegmentGrains : public SegmentGrains
     * @param writer The writer that is used to write the options to a file
     */
     virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
-    
+
     /**
     * @brief This method will read the options from a file
     * @param reader The reader that is used to read the options from a file
@@ -118,10 +123,29 @@ class DREAM3DLib_EXPORT EBSDSegmentGrains : public SegmentGrains
     int32_t* m_CellPhases;
     bool* m_GoodVoxels;
     bool* m_Active;
-
     unsigned int* m_CrystalStructures;
 
+    ///Boost Random Number generator stuff. We use the boost::shared_ptr to ensure the pointers are cleaned up when the
+    ///filter is deleted
+    boost::shared_ptr<NumberDistribution> m_Distribution;
+    boost::shared_ptr<RandomNumberGenerator> m_RandomNumberGenerator;
+    boost::shared_ptr<Generator> m_NumberGenerator;
+    size_t                       m_TotalRandomNumbersGenerated;
+
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
+
+    /**
+     * @brief randomizeGrainIds
+     * @param totalPoints
+     * @param totalFields
+     */
+    void randomizeGrainIds(int64_t totalPoints, size_t totalFields);
+
+    /**
+     * @brief initializeVoxelSeedGenerator
+     * @param totalPoints
+     */
+    void initializeVoxelSeedGenerator(const size_t rangeMin, const size_t rangeMax);
 
 
     EBSDSegmentGrains(const EBSDSegmentGrains&); // Copy Constructor Not Implemented

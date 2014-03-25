@@ -81,7 +81,7 @@ class DREAM3DLib_EXPORT GenerateFaceMisorientationColoring : public SurfaceMeshF
     * @brief This returns a string that is displayed in the GUI. It should be readable
     * and understandable by humans.
     */
-    virtual const std::string getHumanLabel() { return "Generate Face Misorientation Colors"; }
+    virtual const std::string getHumanLabel() { return "Generate Face Misorientation Colors (Scalar)"; }
 
     /**
     * @brief This method will instantiate all the end user settable options/parameters

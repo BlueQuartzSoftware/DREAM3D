@@ -66,28 +66,34 @@ class DREAM3DLib_EXPORT GroupMicroTextureRegions : public AbstractFilter
 
     virtual ~GroupMicroTextureRegions();
 
-	//------ Required Cell Data
-	DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
-	//------ Created Cell Data
-	DREAM3D_INSTANCE_STRING_PROPERTY(CellParentIdsArrayName)
-	//------ Required Field Data
-	DREAM3D_INSTANCE_STRING_PROPERTY(AvgQuatsArrayName)
-	DREAM3D_INSTANCE_STRING_PROPERTY(FieldPhasesArrayName)
-	//------ Created Field Data
-	DREAM3D_INSTANCE_STRING_PROPERTY(ActiveArrayName)
-	DREAM3D_INSTANCE_STRING_PROPERTY(FieldParentIdsArrayName)
-	//------ Required Ensemble Data
-	DREAM3D_INSTANCE_STRING_PROPERTY(CrystalStructuresArrayName)
+    //------ Required Cell Data
+    DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
+    //------ Created Cell Data
+    DREAM3D_INSTANCE_STRING_PROPERTY(CellParentIdsArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(ParentDensityArrayName)
+    //------ Required Field Data
+    DREAM3D_INSTANCE_STRING_PROPERTY(AvgQuatsArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(FieldPhasesArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(VolumesArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(ContiguousNeighborListArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(NonContiguousNeighborListArrayName)
+    //------ Created Field Data
+    DREAM3D_INSTANCE_STRING_PROPERTY(ActiveArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(FieldParentIdsArrayName)
+
+    //------ Required Ensemble Data
+    DREAM3D_INSTANCE_STRING_PROPERTY(CrystalStructuresArrayName)
 
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::ReconstructionFilters; }
-	virtual const std::string getSubGroupName() {return DREAM3D::FilterSubGroups::GroupingFilters;}
+    virtual const std::string getSubGroupName() {return DREAM3D::FilterSubGroups::GroupingFilters;}
     virtual const std::string getHumanLabel() { return "Identify MicroTexture (C-Axis Misorientation)"; }
 
     DREAM3D_INSTANCE_PROPERTY(float, CAxisTolerance)
+    DREAM3D_INSTANCE_PROPERTY(bool, UseNonContiguousNeighbors)
 
     virtual void setupFilterParameters();
-	virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
-    
+    virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
+
     /**
     * @brief This method will read the options from a file
     * @param reader The reader that is used to read the options from a file
@@ -110,14 +116,19 @@ class DREAM3DLib_EXPORT GroupMicroTextureRegions : public AbstractFilter
     int32_t* m_GrainIds;
     int32_t* m_CellParentIds;
     int32_t* m_FieldParentIds;
+    float* m_ParentDensity;
     float* m_AvgQuats;
     bool* m_Active;
     int32_t* m_FieldPhases;
-    NeighborList<int>* m_NeighborList;
+    float* m_Volumes;
+    NeighborList<int>* m_ContiguousNeighborList;
+    NeighborList<int>* m_NonContiguousNeighborList;
 
     unsigned int* m_CrystalStructures;
 
     std::vector<int> parentnumbers;
+    std::vector<bool> beenChecked;
+    std::vector<float> densities;
 
     std::vector<OrientationOps::Pointer> m_OrientationOps;
 

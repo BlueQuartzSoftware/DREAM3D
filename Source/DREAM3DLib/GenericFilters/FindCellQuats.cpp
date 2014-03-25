@@ -38,10 +38,66 @@
 
 #include <sstream>
 
+#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
+#include <tbb/parallel_for.h>
+#include <tbb/blocked_range.h>
+#include <tbb/partitioner.h>
+#include <tbb/task_scheduler_init.h>
+#endif
+
+
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/DataArrays/IDataArray.h"
 
 const static float m_pi = static_cast<float>(M_PI);
+
+
+class FindCellQuatsImpl
+{
+
+  public:
+    FindCellQuatsImpl(float* eulers, int32_t* phases, unsigned int* crystalStructures, float* outQuats) :
+      m_CellEulerAngles(eulers),
+      m_CellPhases(phases),
+      m_CrystalStructures(crystalStructures),
+      m_Quats(outQuats)
+    {}
+    virtual ~FindCellQuatsImpl(){}
+
+    void convert(size_t start, size_t end) const
+    {
+      QuatF* quats = reinterpret_cast<QuatF*>(m_Quats);
+      QuatF qr;
+      int phase = -1;
+      for (size_t i = start; i < end; i++)
+      {
+        phase = m_CellPhases[i];
+        OrientationMath::EulertoQuat(qr, m_CellEulerAngles[3 * i], m_CellEulerAngles[3 * i + 1], m_CellEulerAngles[3 * i + 2]);
+        QuaternionMathF::UnitQuaternion(qr);
+        if (m_CrystalStructures[phase] == Ebsd::CrystalStructure::UnknownCrystalStructure)
+        {
+          QuaternionMathF::Identity(qr);
+        }
+        QuaternionMathF::Copy(qr, quats[i]);
+      }
+    }
+
+#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
+    void operator()(const tbb::blocked_range<size_t> &r) const
+    {
+      convert(r.begin(), r.end());
+    }
+#endif
+  private:
+    float* m_CellEulerAngles;
+    int32_t* m_CellPhases;
+    unsigned int* m_CrystalStructures;
+    float* m_Quats;
+};
+
+
+
+
 
 // -----------------------------------------------------------------------------
 //
@@ -73,8 +129,8 @@ void FindCellQuats::readFilterParameters(AbstractFilterParametersReader* reader,
 {
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }
 
@@ -143,19 +199,23 @@ void FindCellQuats::execute()
     return;
   }
 
-  QuatF* quats = reinterpret_cast<QuatF*>(m_Quats);
-  QuatF qr;
-  int phase = -1;
-  for (int i = 0; i < totalPoints; i++)
+#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
+  tbb::task_scheduler_init init;
+  bool doParallel = true;
+#endif
+
+#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
+  if (doParallel == true)
   {
-    phase = m_CellPhases[i];
-    OrientationMath::EulertoQuat(qr, m_CellEulerAngles[3 * i], m_CellEulerAngles[3 * i + 1], m_CellEulerAngles[3 * i + 2]);
-    QuaternionMathF::UnitQuaternion(qr);
-    if (m_CrystalStructures[phase] == Ebsd::CrystalStructure::UnknownCrystalStructure)
-    {
-      QuaternionMathF::Identity(qr);
-    }
-    QuaternionMathF::Copy(qr, quats[i]);
+    tbb::parallel_for(tbb::blocked_range<size_t>(0, totalPoints),
+                      FindCellQuatsImpl(m_CellEulerAngles, m_CellPhases, m_CrystalStructures, m_Quats), tbb::auto_partitioner());
+
+  }
+  else
+#endif
+  {
+    FindCellQuatsImpl serial(m_CellEulerAngles, m_CellPhases, m_CrystalStructures, m_Quats);
+    serial.convert(0, totalPoints);
   }
 
   notifyStatusMessage("Complete");

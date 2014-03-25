@@ -128,7 +128,6 @@ void SegmentGrains::execute()
     addErrorMessage(getHumanLabel(), ss.str(), -1);
     return;
   }
-  // int64_t totalPoints = m->getTotalPoints();
 
   size_t udims[3] =
   { 0, 0, 0 };
@@ -168,28 +167,40 @@ void SegmentGrains::execute()
       size++;
       for (size_t j = 0; j < size; ++j)
       {
+        // Get the current Voxel
         size_t currentpoint = voxelslist[j];
+        // Figure out the Row, Col & Plane the voxel is located in
         col = currentpoint % dims[0];
         row = (currentpoint / dims[0]) % dims[1];
         plane = currentpoint / (dims[0] * dims[1]);
+
+        // Now loop over its 6 neighbors
         for (int i = 0; i < 6; i++)
         {
           good = true;
           neighbor = currentpoint + neighpoints[i];
-
+          // Make sure we have a valid neighbor taking into account the edges of the volume
           if(i == 0 && plane == 0) good = false;
           if(i == 5 && plane == (dims[2] - 1)) good = false;
           if(i == 1 && row == 0) good = false;
           if(i == 4 && row == (dims[1] - 1)) good = false;
           if(i == 2 && col == 0) good = false;
           if(i == 3 && col == (dims[0] - 1)) good = false;
+
           if(good == true)
           {
+            // We got a good voxel to check so check to see if it can be grouped with this point
             if(determineGrouping(currentpoint, neighbor, gnum) == true)
             {
+              // The voxel can be grouped with this voxel so add it to the list of voxels for this grain
               voxelslist[size] = neighbor;
+              // Increment the size of the list which affects the "j" loop
               size++;
-              if(size >= voxelslist.size()) voxelslist.resize(size + size, -1);
+              // Sanity check the size of the voxelslist vector. If it is not large enough, double the size of the vector
+              if(size >= voxelslist.size())
+              {
+                voxelslist.resize(size + size, -1); // The resize is a hit but the doubling mitigates the penalty somewhat
+              }
             }
           }
         }
@@ -200,8 +211,14 @@ void SegmentGrains::execute()
       ss.str("");
       ss << "Total Grains: " << gnum;
       if(gnum%100 == 0) notifyStatusMessage(ss.str());
+      if (getCancel() == true)
+      {
+        setErrorCondition(-1);
+        break;
+      }
     }
   }
+
 
   // If there is an error set this to something negative and also set a message
  notifyStatusMessage("Completed");
