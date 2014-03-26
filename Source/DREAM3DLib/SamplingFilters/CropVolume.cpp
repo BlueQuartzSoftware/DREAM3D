@@ -434,7 +434,10 @@ void CropVolume::execute()
     addErrorMessages(renum->getPipelineMessages());
   }
 
-  if(m_UpdateOrigin == true)
+
+  float origin[3] = {0.0f, 0.0f, 0.0f};
+
+  if(m_UpdateOrigin == false)
   {
     float resolution[3] = {0.0f, 0.0f, 0.0f};
     m->getResolution(resolution);
@@ -444,9 +447,9 @@ void CropVolume::execute()
     origin[0] = m_XMin * resolution[0]+oldOrigin[0];
     origin[1] = m_YMin * resolution[1]+oldOrigin[1];
     origin[2] = m_ZMin * resolution[2]+oldOrigin[2];
-
-    m->setOrigin(origin);
   }
+
+  m->setOrigin(origin);
 
 
   notifyStatusMessage("Completed");
