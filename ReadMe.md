@@ -21,7 +21,7 @@ For historical compatibility in versions prior to 4.2 the internal representatio
 ## Version 4.2 Bugs Fixed & Features Added ##
 
 
-### Version 4.2.4905 ###
+### Version 4.2.4912 ###
 + Fixed Issue no. 147: Adding a favorite may result in the favorite being written to the wrong directory
 + Added several filters from the 'develop' branch to determine microtexture regions in Titanium alloys
 + Fixing preflight error in the _RenameFieldArray_ filter
