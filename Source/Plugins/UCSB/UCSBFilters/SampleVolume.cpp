@@ -33,8 +33,8 @@ m_CopySurfaceMesh(true),
 m_WriteXdmf(false)
 {
   m_BoxSize.x = 10;
-  m_BoxSize.y = 10;
-  m_BoxSize.z = 10;
+  m_BoxSize.y = 50;
+  m_BoxSize.z = 50;
   setupFilterParameters();
 }
 
@@ -148,15 +148,17 @@ void SampleVolume::dataCheck(bool preflight, size_t voxels, size_t fields, size_
     setErrorCondition(-1003);
     addErrorMessage(getHumanLabel(), "Output Directory is Not set correctly", -382);
   }
+  if(getErrorCondition()>0)
+  {
 
   SubFilterPipeline::Pointer pipeline = buildPipeline(0, 0, 0, 0);
   err = pipeline->preflightPipeline();
   if(err<0)
   {
-    //setErrorCondition(-1);
-    //addErrorMessage(getHumanLabel(), "Errors in sub-pipeline", err);
-    addWarningMessage(getHumanLabel(), "Errors in sub-pipeline", err);
+    setErrorCondition(-1);
+    addErrorMessage(getHumanLabel(), "Errors in sub-pipeline", err);
   }
+}
 }
 
 void SampleVolume::dataCheckSurfaceMesh(bool preflight, size_t voxels, size_t fields, size_t ensembles)
@@ -368,19 +370,7 @@ SubFilterPipeline::Pointer SampleVolume::buildPipeline(int append, int x, int y,
     // Most likely our error messages are going to go to a console somewhere. It is probably best
     // to sanity check the values in the actual preflight of this filter where you can figure out
     // if the user entries are going to work.
-/*
-    size_t smDims[3] = { 0,0,0};
-    sm->getDimensions(smDims);
-    smCopy->setDimensions(smDims);
 
-    float smOrigin[3] = {0.0f, 0.0f, 0.0f};
-    sm->getOrigin(smOrigin);
-    smCopy->setOrigin(smOrigin);
-
-    float smRes[3] = { 0.0f, 0.0f, 0.0f};
-    sm->getResolution(smRes);
-    smCopy->setResolution(smRes);
-*/
     // Now get a list of all the Vertex Array Names to make deep copies of
     std::list<std::string> arrayNames = sm->getPointArrayNameList();
     for (std::list<std::string>::iterator iter = arrayNames.begin(); iter != arrayNames.end(); ++iter)
@@ -412,18 +402,19 @@ SubFilterPipeline::Pointer SampleVolume::buildPipeline(int append, int x, int y,
 
     //copy faces
     DREAM3D::SurfaceMesh::FaceListPointer_t pTriagnles = sm->getFaces();
-    DREAM3D::SurfaceMesh::FaceListPointer_t copyTriangles;// = boost::dynamic_pointer_cast<DREAM3D::SurfaceMesh::FaceList_t>(pTriagnles->deepCopy());
-    smCopy->setFaces(copyTriangles);
+    if(0!=pTriagnles)
+    {
+      DREAM3D::SurfaceMesh::FaceListPointer_t copyTriangles = boost::dynamic_pointer_cast<DREAM3D::SurfaceMesh::FaceList_t>(pTriagnles->deepCopy());
+      smCopy->setFaces(copyTriangles);
+    }
 
     //copy vertices
     DREAM3D::SurfaceMesh::VertListPointer_t pNodes = sm->getVertices();
-    //DREAM3D::SurfaceMesh::VertListPointer_t copyNodes = boost::dynamic_pointer_cast<DREAM3D::SurfaceMesh::VertList_t>(pNodes->deepCopy());
-    IDataArray::Pointer pNodesCopy = pNodes->deepCopy();
-    //DREAM3D::SurfaceMesh::VertList_t::Pointer copyNodes = boost::dynamic_pointer_cast<DREAM3D::SurfaceMesh::VertList_t>(pNodes->deepCopy());
-    ///DREAM3D::SurfaceMesh::VertList_t::Pointer copyNodes = boost::dynamic_pointer_cast<DREAM3D::SurfaceMesh::VertList_t>(pNodesCopy);
-    //smCopy->setVertices(copyNodes);
-
-
+    if(0!=pNodes)
+    {
+      DREAM3D::SurfaceMesh::VertListPointer_t copyNodes = boost::dynamic_pointer_cast<DREAM3D::SurfaceMesh::VertList_t>(pNodes->deepCopy());
+      smCopy->setVertices(copyNodes);
+    }
 
     //dont need to copy edge or field data since it will be deleted by surface mesh crop anyway
     pipeline->setSurfaceMeshDataContainer(smCopy);
@@ -467,7 +458,7 @@ SubFilterPipeline::Pointer SampleVolume::buildPipeline(int append, int x, int y,
   std::string dream_3d_file = m_OutputDirectory + "/" + m_FileName + ss.str();
   writer->setOutputFile(MXAFileInfo::toNativeSeparators(dream_3d_file));
   writer->setWriteVoxelData(true);
-  writer->setWriteSurfaceMeshData(false);
+  writer->setWriteSurfaceMeshData(m_CopySurfaceMesh);
   writer->setWriteXdmfFile(m_WriteXdmf);
   writer->setObservers(getObservers());
   pipeline->pushBack(writer);
