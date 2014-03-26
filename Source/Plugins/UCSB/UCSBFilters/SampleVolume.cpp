@@ -8,6 +8,7 @@
 #include "DREAM3DLib/Common/Observer.h"
 #include "DREAM3DLib/Common/FilterManager.h"
 #include "DREAM3DLib/SamplingFilters/CropVolume.h"
+#include "CropSurfaceMesh.h"
 #include "DREAM3DLib/IOFilters/DataContainerWriter.h"
 #include "DREAM3DLib/IOFilters/DataContainerReader.h"
 #include "DREAM3DLib/IOFilters/VoxelDataContainerReader.h"
@@ -28,6 +29,7 @@ AbstractFilter(),
 m_NumberVolumes(0),
 m_OutputDirectory(""),
 m_FileName(""),
+m_CopySurfaceMesh(true),
 m_WriteXdmf(false)
 {
   m_BoxSize.x = 10;
@@ -80,6 +82,14 @@ void SampleVolume::setupFilterParameters()
     option->setPropertyName("FileName");
     option->setWidgetType(FilterParameter::StringWidget);
     option->setValueType("string");
+    parameters.push_back(option);
+  }
+  {
+    FilterParameter::Pointer option = FilterParameter::New();
+    option->setHumanLabel("Copy Surface Mesh");
+    option->setPropertyName("CopySurfaceMesh");
+    option->setWidgetType(FilterParameter::BooleanWidget);
+    option->setValueType("bool");
     parameters.push_back(option);
   }
   {
@@ -143,8 +153,40 @@ void SampleVolume::dataCheck(bool preflight, size_t voxels, size_t fields, size_
   err = pipeline->preflightPipeline();
   if(err<0)
   {
-    setErrorCondition(-1);
-    addErrorMessage(getHumanLabel(), "Errors in sub-pipeline", err);
+    //setErrorCondition(-1);
+    //addErrorMessage(getHumanLabel(), "Errors in sub-pipeline", err);
+    addWarningMessage(getHumanLabel(), "Errors in sub-pipeline", err);
+  }
+}
+
+void SampleVolume::dataCheckSurfaceMesh(bool preflight, size_t voxels, size_t fields, size_t ensembles)
+{
+  setErrorCondition(0);
+  std::stringstream ss;
+  SurfaceMeshDataContainer* sm = getSurfaceMeshDataContainer();
+  if(NULL == sm)
+  {
+    addErrorMessage(getHumanLabel(), "SurfaceMeshDataContainer is missing", -383);
+    setErrorCondition(-383);
+  }
+  else
+  {
+    // We MUST have Nodes
+    if(sm->getVertices().get() == NULL)
+    {
+      addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Nodes", -384);
+      setErrorCondition(-384);
+    }
+
+    // We MUST have Triangles defined also.
+    if(sm->getFaces().get() == NULL)
+    {
+      addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Triangles", -385);
+      setErrorCondition(-385);
+    }
+    else
+    {
+    }
   }
 }
 
@@ -156,6 +198,7 @@ void SampleVolume::preflight()
 {
   /* Place code here that sanity checks input arrays and input values. Look at some
   * of the other DREAM3DLib/Filters/.cpp files for sample codes */
+  if(m_CopySurfaceMesh)dataCheckSurfaceMesh(true, 1, 1, 1);
   dataCheck(true, 1, 1, 1);
 }
 
@@ -253,8 +296,6 @@ SubFilterPipeline::Pointer SampleVolume::buildPipeline(int append, int x, int y,
 {
   //make a subpipeline and populate with empty SurfaceMesh and Solid DataContainers
   SubFilterPipeline::Pointer pipeline = SubFilterPipeline::New();
-  SurfaceMeshDataContainer::Pointer sm = SurfaceMeshDataContainer::New();
-  pipeline->setSurfaceMeshDataContainer(sm);
   SolidMeshDataContainer::Pointer solid = SolidMeshDataContainer::New();
   pipeline->setSolidMeshDataContainer(solid);
 
@@ -314,7 +355,99 @@ SubFilterPipeline::Pointer SampleVolume::buildPipeline(int append, int x, int y,
 
   pipeline->setVoxelDataContainer(copy);
 
-  //set up crop
+  ///copy surface mesh
+  if(m_CopySurfaceMesh)
+  {
+    // Get the Current VoxelDataContainer;
+    SurfaceMeshDataContainer* sm = getSurfaceMeshDataContainer();
+
+    // Create a new one for the sub pipeline to use
+    SurfaceMeshDataContainer::Pointer smCopy = SurfaceMeshDataContainer::New();
+    // Get a copy of the observers from the current VoxelDataContainer
+    smCopy->setObservers(sm->getObservers() );
+    // Most likely our error messages are going to go to a console somewhere. It is probably best
+    // to sanity check the values in the actual preflight of this filter where you can figure out
+    // if the user entries are going to work.
+/*
+    size_t smDims[3] = { 0,0,0};
+    sm->getDimensions(smDims);
+    smCopy->setDimensions(smDims);
+
+    float smOrigin[3] = {0.0f, 0.0f, 0.0f};
+    sm->getOrigin(smOrigin);
+    smCopy->setOrigin(smOrigin);
+
+    float smRes[3] = { 0.0f, 0.0f, 0.0f};
+    sm->getResolution(smRes);
+    smCopy->setResolution(smRes);
+*/
+    // Now get a list of all the Vertex Array Names to make deep copies of
+    std::list<std::string> arrayNames = sm->getPointArrayNameList();
+    for (std::list<std::string>::iterator iter = arrayNames.begin(); iter != arrayNames.end(); ++iter)
+    {
+      std::string name = *iter;
+      IDataArray::Pointer p = sm->getVertexData(name);
+      IDataArray::Pointer dataCopy = p->deepCopy();
+      smCopy->addVertexData(name, dataCopy);
+    }
+    // Now get a list of all the Face Array Names to make deep copies of
+    arrayNames = sm->getFaceArrayNameList();
+    for (std::list<std::string>::iterator iter = arrayNames.begin(); iter != arrayNames.end(); ++iter)
+    {
+      std::string name = *iter;
+      IDataArray::Pointer p = sm->getFaceData(name);
+      IDataArray::Pointer dataCopy = p->deepCopy();
+      smCopy->addFaceData(name, dataCopy);
+    }
+
+  // Now get a list of all the Ensemble Array Names to make deep copies of
+    arrayNames = sm->getEnsembleArrayNameList();
+    for (std::list<std::string>::iterator iter = arrayNames.begin(); iter != arrayNames.end(); ++iter)
+    {
+      std::string name = *iter;
+      IDataArray::Pointer p = sm->getEnsembleData(name);
+      IDataArray::Pointer dataCopy = p->deepCopy();
+      smCopy->addEnsembleData(name, dataCopy);
+    }
+
+    //copy faces
+    DREAM3D::SurfaceMesh::FaceListPointer_t pTriagnles = sm->getFaces();
+    DREAM3D::SurfaceMesh::FaceListPointer_t copyTriangles;// = boost::dynamic_pointer_cast<DREAM3D::SurfaceMesh::FaceList_t>(pTriagnles->deepCopy());
+    smCopy->setFaces(copyTriangles);
+
+    //copy vertices
+    DREAM3D::SurfaceMesh::VertListPointer_t pNodes = sm->getVertices();
+    //DREAM3D::SurfaceMesh::VertListPointer_t copyNodes = boost::dynamic_pointer_cast<DREAM3D::SurfaceMesh::VertList_t>(pNodes->deepCopy());
+    IDataArray::Pointer pNodesCopy = pNodes->deepCopy();
+    //DREAM3D::SurfaceMesh::VertList_t::Pointer copyNodes = boost::dynamic_pointer_cast<DREAM3D::SurfaceMesh::VertList_t>(pNodes->deepCopy());
+    ///DREAM3D::SurfaceMesh::VertList_t::Pointer copyNodes = boost::dynamic_pointer_cast<DREAM3D::SurfaceMesh::VertList_t>(pNodesCopy);
+    //smCopy->setVertices(copyNodes);
+
+
+
+    //dont need to copy edge or field data since it will be deleted by surface mesh crop anyway
+    pipeline->setSurfaceMeshDataContainer(smCopy);
+
+    //set up surface mesh crop
+    CropSurfaceMesh::Pointer smCrop = CropSurfaceMesh::New();
+
+    smCrop->setXMin(x);
+    smCrop->setYMin(y);
+    smCrop->setZMin(z);
+    smCrop->setXMax(x+m_BoxSize.x-1);
+    smCrop->setYMax(y+m_BoxSize.y-1);
+    smCrop->setZMax(z+m_BoxSize.z-1);
+    smCrop->setUpdateOrigin(false);
+    smCrop->setObservers(getObservers());
+    pipeline->pushBack(smCrop);
+  }
+  else
+  {
+    SurfaceMeshDataContainer::Pointer smNew = SurfaceMeshDataContainer::New();
+    pipeline->setSurfaceMeshDataContainer(smNew);
+  }
+
+  //set up volume crop
   CropVolume::Pointer crop = CropVolume::New();
   crop->setXMin(x);
   crop->setYMin(y);
