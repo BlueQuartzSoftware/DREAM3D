@@ -48,11 +48,11 @@
 // -----------------------------------------------------------------------------
 FindNeighbors::FindNeighbors() :
   AbstractFilter(),
-  m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
-  m_CellFeatureAttributeMatrixName(DREAM3D::Defaults::CellFeatureAttributeMatrixName),
-  m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
-  m_SharedSurfaceAreaListArrayName(DREAM3D::FeatureData::SharedSurfaceAreaList),
-  m_NeighborListArrayName(DREAM3D::FeatureData::NeighborList),
+  //m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
+  m_CellFeatureAttributeMatrixPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, ""),
+  m_CellAttributeMatrixPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, ""),
+  m_SharedSurfaceAreaListArrayName(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, DREAM3D::FeatureData::SharedSurfaceAreaList),
+  m_NeighborListArrayName(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, DREAM3D::FeatureData::NeighborList),
   m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
   m_FeatureIds(NULL),
   m_SurfaceVoxelsArrayName(DREAM3D::CellData::SurfaceVoxels),
@@ -62,6 +62,7 @@ FindNeighbors::FindNeighbors() :
   m_NumNeighborsArrayName(DREAM3D::FeatureData::NumNeighbors),
   m_NumNeighbors(NULL)
 {
+  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------
@@ -70,12 +71,64 @@ FindNeighbors::FindNeighbors() :
 FindNeighbors::~FindNeighbors()
 {
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void FindNeighbors::setupFilterParameters()
+{
+  FilterParameterVector parameters;
+  {
+    FilterParameter::Pointer parameter = FilterParameter::New();
+    parameter->setHumanLabel("Create Cell Data in AttributeMatrix");
+    parameter->setPropertyName("CellAttributeMatrixPath");
+    parameter->setWidgetType(FilterParameterWidgetType::AttributeMatrixSelectionWidget);
+    parameter->setValueType("DataArrayPath");
+    parameter->setUnits("");
+    parameters.push_back(parameter);
+  }
+  {
+    FilterParameter::Pointer parameter = FilterParameter::New();
+    parameter->setHumanLabel("Create Feature Data in AttributeMatrix");
+    parameter->setPropertyName("CellFeatureAttributeMatrixPath");
+    parameter->setWidgetType(FilterParameterWidgetType::AttributeMatrixSelectionWidget);
+    parameter->setValueType("DataArrayPath");
+    parameter->setUnits("");
+    parameters.push_back(parameter);
+  }
+
+  //    {
+  //    FilterParameter::Pointer parameter = FilterParameter::New();
+  //    parameter->setHumanLabel("Input Shared Surface Area NeighborList");
+  //    parameter->setPropertyName("SharedSurfaceAreaListArrayName");
+  //    parameter->setWidgetType(FilterParameterWidgetType::DataArraySelectionWidget);
+  //    parameter->setValueType("DataArrayPath");
+  //    parameter->setUnits("");
+  //    parameters.push_back(parameter);
+  //  }
+  //    {
+  //    FilterParameter::Pointer parameter = FilterParameter::New();
+  //    parameter->setHumanLabel("Input Feature NeighborList");
+  //    parameter->setPropertyName("NeighborListArrayName");
+  //    parameter->setWidgetType(FilterParameterWidgetType::DataArraySelectionWidget);
+  //    parameter->setValueType("DataArrayPath");
+  //    parameter->setUnits("");
+  //    parameters.push_back(parameter);
+  //  }
+  setFilterParameters(parameters);
+}
+
+
+// -----------------------------------------------------------------------------
+//
 // -----------------------------------------------------------------------------
 void FindNeighbors::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
   /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+  setCellFeatureAttributeMatrixPath(reader->readDataArrayPath("CellFeatureAttributeMatrixPath", getCellFeatureAttributeMatrixPath() ) );
+  setCellAttributeMatrixPath(reader->readDataArrayPath("CellAttributeMatrixPath", getCellAttributeMatrixPath() ) );
   /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }
@@ -86,6 +139,8 @@ void FindNeighbors::readFilterParameters(AbstractFilterParametersReader* reader,
 int FindNeighbors::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
+  writer->writeValue("CellFeatureAttributeMatrixPath", getCellFeatureAttributeMatrixPath() );
+  writer->writeValue("CellAttributeMatrixPath", getCellAttributeMatrixPath() );
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
@@ -97,12 +152,15 @@ void FindNeighbors::dataCheck()
 {
   setErrorCondition(0);
 
-  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName(), false);
-  if(getErrorCondition() < 0 || NULL == m) { return; }
-  AttributeMatrix::Pointer cellFeatureAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellFeatureAttributeMatrixName(), -304);
-  if(getErrorCondition() < 0) { return; }
-  AttributeMatrix::Pointer cellAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), -301);
+  // This is for convenience
+  DataContainerArray::Pointer dca = getDataContainerArray();
+
+  //  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName(), false);
+  //  if(getErrorCondition() < 0 || NULL == m) { return; }
+
+  AttributeMatrix::Pointer cellAttrMat = getDataContainerArray()->getPrereqAttributeMatrixFromPath<VolumeDataContainer, AbstractFilter>(this, getCellAttributeMatrixPath(), -303);
   if(getErrorCondition() < 0 || NULL == cellAttrMat.get() ) { return; }
+
 
   QVector<size_t> dims(1, 1);
   // Cell Data
@@ -112,6 +170,11 @@ void FindNeighbors::dataCheck()
   m_SurfaceVoxelsPtr = cellAttrMat->createNonPrereqArray<DataArray<int8_t>, AbstractFilter, int8_t>(this, m_SurfaceVoxelsArrayName, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_SurfaceVoxelsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_SurfaceVoxels = m_SurfaceVoxelsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+
+
+
+  AttributeMatrix::Pointer cellFeatureAttrMat = getDataContainerArray()->getPrereqAttributeMatrixFromPath<VolumeDataContainer, AbstractFilter>(this, getCellFeatureAttributeMatrixPath(), -304);
+  if(getErrorCondition() < 0) { return; }
 
   m_NumNeighborsPtr = cellFeatureAttrMat->createNonPrereqArray<DataArray<int32_t>, AbstractFilter, int32_t>(this, m_NumNeighborsArrayName, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_NumNeighborsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
@@ -124,43 +187,47 @@ void FindNeighbors::dataCheck()
   // Do this whole block FIRST otherwise the side effect is that a call to m->getNumCellFeatureTuples will = 0
   // because we are just creating an empty NeighborList object.
   // Now we are going to get a "Pointer" to the NeighborList object out of the DataContainer
-  m_NeighborList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>* >
-                   (m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getAttributeArray(m_NeighborListArrayName).get());
-  if(m_NeighborList == NULL)
+  typedef NeighborList<int> IntNeighborList_t;
+  typedef NeighborList<float> FloatNeighborList_t;
+
+  //  m_NeighborList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>*>(cellFeatureAttrMat->getAttributeArray(m_NeighborListArrayName.getDataArrayName()).get());
+  m_NeighborList = cellFeatureAttrMat->getArray<IntNeighborList_t>(m_NeighborListArrayName.getDataArrayName());
+  if(NULL == m_NeighborList.get())
   {
-    NeighborList<int>::Pointer neighborlistPtr = NeighborList<int>::New();
-    neighborlistPtr->setName(m_NeighborListArrayName);
+    IntNeighborList_t::Pointer neighborlistPtr = IntNeighborList_t::New();
+    neighborlistPtr->setName(m_NeighborListArrayName.getDataArrayName());
     neighborlistPtr->resize(cellFeatureAttrMat->getNumTuples());
     neighborlistPtr->setNumNeighborsArrayName(m_NumNeighborsArrayName);
-    m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->addAttributeArray(m_NeighborListArrayName, neighborlistPtr);
+    cellFeatureAttrMat->addAttributeArray(m_NeighborListArrayName.getDataArrayName(), neighborlistPtr);
     if (neighborlistPtr.get() == NULL)
     {
       QString ss = QObject::tr("NeighborLists Array Not Initialized at Beginning of FindNeighbors Filter");
       setErrorCondition(-308);
+      notifyErrorMessage(getHumanLabel(), ss, -308);
     }
-    m_NeighborList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>* >
-                     (m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getAttributeArray(m_NeighborListArrayName).get());
+    //   m_NeighborList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>* >(cellFeatureAttrMat->getAttributeArray(m_NeighborListArrayName.getDataArrayName()).get());
+    m_NeighborList = cellFeatureAttrMat->getArray<IntNeighborList_t>(m_NeighborListArrayName.getDataArrayName());
+
   }
 
   // And we do the same for the SharedSurfaceArea list
-  m_SharedSurfaceAreaList = NeighborList<float>::SafeObjectDownCast<IDataArray*, NeighborList<float>*>
-                            (m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getAttributeArray(m_SharedSurfaceAreaListArrayName).get());
+  //m_SharedSurfaceAreaList = NeighborList<float>::SafeObjectDownCast<IDataArray*, NeighborList<float>*>(cellFeatureAttrMat->getAttributeArray(m_SharedSurfaceAreaListArrayName.getDataArrayName()).get());
+  m_SharedSurfaceAreaList = cellFeatureAttrMat->getArray<FloatNeighborList_t>(m_SharedSurfaceAreaListArrayName.getDataArrayName());
   if(m_SharedSurfaceAreaList == NULL)
   {
     NeighborList<float>::Pointer sharedSurfaceAreaListPtr = NeighborList<float>::New();
-    sharedSurfaceAreaListPtr->setName(m_SharedSurfaceAreaListArrayName);
+    sharedSurfaceAreaListPtr->setName(m_SharedSurfaceAreaListArrayName.getDataArrayName());
     sharedSurfaceAreaListPtr->resize(cellFeatureAttrMat->getNumTuples());
     sharedSurfaceAreaListPtr->setNumNeighborsArrayName(m_NumNeighborsArrayName);
-    m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->addAttributeArray(m_SharedSurfaceAreaListArrayName, sharedSurfaceAreaListPtr);
+    cellFeatureAttrMat->addAttributeArray(m_SharedSurfaceAreaListArrayName.getDataArrayName(), sharedSurfaceAreaListPtr);
     if (sharedSurfaceAreaListPtr.get() == NULL)
     {
-
       QString ss = QObject::tr("SurfaceAreaLists Array Not Initialized correctly at Beginning of FindNeighbors Filter");
       setErrorCondition(-308);
       notifyErrorMessage(getHumanLabel(), ss, -308);
     }
-    m_SharedSurfaceAreaList = NeighborList<float>::SafeObjectDownCast<IDataArray*, NeighborList<float>*>
-                              (m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getAttributeArray(m_SharedSurfaceAreaListArrayName).get());
+    //  m_SharedSurfaceAreaList = NeighborList<float>::SafeObjectDownCast<IDataArray*, NeighborList<float>*>(cellFeatureAttrMat->getAttributeArray(m_SharedSurfaceAreaListArrayName.getDataArrayName()).get());
+    m_SharedSurfaceAreaList = cellFeatureAttrMat->getArray<FloatNeighborList_t>(m_SharedSurfaceAreaListArrayName.getDataArrayName());
   }
 }
 
@@ -185,9 +252,13 @@ void FindNeighbors::execute()
   dataCheck();
   if(getErrorCondition() < 0) { return; }
 
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-  int64_t totalPoints = m->getAttributeMatrix(getCellAttributeMatrixName())->getNumTuples();
-  size_t totalFeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
+  QString volDcName = getCellAttributeMatrixPath().getDataContainerName();
+  QString cellAmName = getCellAttributeMatrixPath().getAttributeMatrixName();
+  QString featAmName = getCellFeatureAttributeMatrixPath().getAttributeMatrixName();
+
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(volDcName);
+  int64_t totalPoints = m->getAttributeMatrix(cellAmName)->getNumTuples();
+  size_t totalFeatures = m->getAttributeMatrix(featAmName)->getNumTuples();
 
   size_t udims[3] = {0, 0, 0};
   m->getDimensions(udims);
@@ -279,8 +350,8 @@ void FindNeighbors::execute()
   // We do this to create new set of NeighborList objects
   //size_t totalEnsembles = 0;
   dataCheck();
-
-  for (size_t i = 1; i < m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples(); i++)
+  size_t tCount = m->getAttributeMatrix(featAmName)->getNumTuples();
+  for (size_t i = 1; i < tCount; i++)
   {
 
     QString ss = QObject::tr("Finding Neighbors - Calculating Surface Areas - %1 Percent Complete").arg(((float)i / totalFeatures) * 100);
@@ -340,6 +411,8 @@ AbstractFilter::Pointer FindNeighbors::newFilterInstance(bool copyFilterParamete
   FindNeighbors::Pointer filter = FindNeighbors::New();
   if(true == copyFilterParameters)
   {
+    filter->setCellFeatureAttributeMatrixPath(getCellFeatureAttributeMatrixPath() );
+    filter->setCellAttributeMatrixPath(getCellAttributeMatrixPath() );
   }
   return filter;
 }

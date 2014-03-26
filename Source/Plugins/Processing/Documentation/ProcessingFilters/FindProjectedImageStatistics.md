@@ -1,12 +1,11 @@
-Fill Bad Data {#fillbaddata}
+Fill Bad Data {#findprojectedimagestatistics}
 ======
 
 ## Group (Subgroup) ##
 Processing Filters (Cleanup)
 
 ## Description ##
-This Filter removes small "*noise*" in the data, but keeps larger regions that are possibly features, e.g., pores or defects.
-This Filter collects the *bad* **Cells** (*GrainId = 0*) and runs the _erode_ operation from the [Erode/Dilate Bad Data Filter](OpenCloseBadData.html "") until none remain. However, contiguous groups of *bad* **Cells** that have at least as many **Cells** as the minimum defect size enter by the user will not be *eroded*.
+
 
 ## Parameters ##
 

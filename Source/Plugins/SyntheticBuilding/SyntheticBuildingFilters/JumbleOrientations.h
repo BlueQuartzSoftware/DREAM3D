@@ -70,6 +70,8 @@ class JumbleOrientations : public AbstractFilter
 
     virtual ~JumbleOrientations();
     DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
+    Q_PROPERTY(QString DataContainerName READ getDataContainerName WRITE setDataContainerName)
+
     DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellFeatureAttributeMatrixName)
 
@@ -78,6 +80,7 @@ class JumbleOrientations : public AbstractFilter
     virtual const QString getGroupName() {return DREAM3D::FilterGroups::SyntheticBuildingFilters;}
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::CrystallographyFilters; }
     virtual const QString getHumanLabel() {return "Jumble Orientations";}
+    virtual const QString getBrandingString() { return SyntheticBuilding::SyntheticBuildingPluginDisplayName + " Filter"; }
 
     virtual void setupFilterParameters();
     virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);

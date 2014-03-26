@@ -62,6 +62,25 @@ class DREAM3DLib_EXPORT StatsDataArray : public IDataArray
 
     virtual ~StatsDataArray();
 
+
+    /**
+     * @brief Static constructor
+     * @param numElements The number of elements in the internal array.
+     * @param name The name of the array
+     * @return Boost::Shared_Ptr wrapping an instance of DataArrayTemplate<T>
+     */
+    static Pointer CreateArray(size_t numElements, const QString& name)
+    {
+      if (name.isEmpty() == true)
+      {
+        return NullPointer();
+      }
+      StatsDataArray::Pointer ptr = StatsDataArray::New();
+      std::vector<unsigned int> phase_types(numElements, DREAM3D::PhaseType::UnknownPhaseType);
+      ptr->fillArrayWithNewStatsData(numElements, &(phase_types.front()) );
+      return ptr;
+    }
+
     /**
      * @brief GetTypeName Returns a string representation of the type of data that is stored by this class. This
      * can be a primitive like char, float, int or the name of a class.
@@ -82,7 +101,7 @@ class DREAM3DLib_EXPORT StatsDataArray : public IDataArray
 
     DREAM3D_INSTANCE_PROPERTY(QVector<StatsData::Pointer>, StatsDataArray)
 
-      virtual IDataArray::Pointer createNewArray(size_t numElements, int rank, size_t* dims, const QString& name)
+    virtual IDataArray::Pointer createNewArray(size_t numElements, int rank, size_t* dims, const QString& name)
     {
       return StatsDataArray::New();
     }

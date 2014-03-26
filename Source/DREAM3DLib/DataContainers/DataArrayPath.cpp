@@ -35,6 +35,8 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #include "DataArrayPath.h"
 
+#include "DREAM3DLib/Common/Constants.h"
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -59,7 +61,11 @@ DataArrayPath::DataArrayPath(const QString& dcName, const QString& amName, const
 // -----------------------------------------------------------------------------
 DataArrayPath::DataArrayPath(const QString& path)
 {
+    QStringList tokens = path.split(DREAM3D::PathSep);
 
+    if(tokens.size() > 0) { m_DataContainerName = tokens.at(0); }
+    if(tokens.size() > 1) { m_AttributeMatrixName = tokens.at(1); }
+    if(tokens.size() > 2) { m_DataArrayName = tokens.at(2); }
 }
 
 // -----------------------------------------------------------------------------

@@ -35,7 +35,7 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #ifndef _FilterParameterWidgetsDialogs_H_
 #define _FilterParameterWidgetsDialogs_H_
-
+#include <QtCore/QString>
 
 class AbstractFilter;
 class FilterParameter;
@@ -47,6 +47,7 @@ public:
   ~FilterParameterWidgetsDialogs();
 
   static void ShowCouldNotSetFilterParameter(AbstractFilter* filter, FilterParameter* filterParameter);
+  static void ShowFilterPropertyCastError(AbstractFilter* filter, FilterParameter* filterParameter, const QString& filtType, const QString& widgetType);
 
 protected:
   FilterParameterWidgetsDialogs();

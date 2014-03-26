@@ -34,8 +34,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _INITIALIZESYNTHETICVOLUME_H_
-#define _INITIALIZESYNTHETICVOLUME_H_
+#ifndef _InitializeSyntheticVolume_H_
+#define _InitializeSyntheticVolume_H_
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
@@ -60,35 +60,49 @@ class InitializeSyntheticVolume : public AbstractFilter
 
     virtual ~InitializeSyntheticVolume();
 
-    DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(CellEnsembleAttributeMatrixName)
+    DREAM3D_FILTER_PARAMETER(QString, DataContainerName)
+    Q_PROPERTY(QString DataContainerName READ getDataContainerName WRITE setDataContainerName)
 
-    DREAM3D_INSTANCE_STRING_PROPERTY(ShapeTypesArrayName)
+    DREAM3D_FILTER_PARAMETER(QString, CellAttributeMatrixName)
+    Q_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
+
+    DREAM3D_FILTER_PARAMETER(QString, CellEnsembleAttributeMatrixName)
+    Q_PROPERTY(QString CellEnsembleAttributeMatrixName READ getCellEnsembleAttributeMatrixName WRITE setCellEnsembleAttributeMatrixName)
+
+    DREAM3D_FILTER_PARAMETER(IntVec3_t, Dimensions)
+    Q_PROPERTY(IntVec3_t Dimensions READ getDimensions WRITE setDimensions)
+
+    DREAM3D_FILTER_PARAMETER(FloatVec3_t, Resolution)
+    Q_PROPERTY(FloatVec3_t Resolution READ getResolution WRITE setResolution)
+
+    DREAM3D_FILTER_PARAMETER(FloatVec3_t, Origin)
+    Q_PROPERTY(FloatVec3_t Origin READ getOrigin WRITE setOrigin)
+
+
+
+//// These are for estimating the number of features that will be generated farther down the line.
+    DREAM3D_FILTER_PARAMETER(DataArrayPath, InputStatsArrayPath)
+    Q_PROPERTY(DataArrayPath InputStatsArrayPath READ getInputStatsArrayPath WRITE setInputStatsArrayPath)
+
+    DREAM3D_FILTER_PARAMETER(DataArrayPath, InputPhaseTypesArrayPath)
+    Q_PROPERTY(DataArrayPath InputPhaseTypesArrayPath READ getInputPhaseTypesArrayPath WRITE setInputPhaseTypesArrayPath)
+
+    int getEstimatedPrimaryFeatures();
+    Q_PROPERTY(QVariant EstimatedPrimaryFeatures READ getEstimatedPrimaryFeatures)
 
     virtual const QString getCompiledLibraryName() { return SyntheticBuilding::SyntheticBuildingBaseName; }
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName() {return DREAM3D::FilterGroups::SyntheticBuildingFilters;}
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::PackingFilters; }
     virtual const QString getHumanLabel() {return "Initialize Synthetic Volume";}
+    virtual const QString getBrandingString() { return SyntheticBuilding::SyntheticBuildingPluginDisplayName + " Filter"; }
 
 
-    DREAM3D_INSTANCE_STRING_PROPERTY(InputFile)
-    DREAM3D_INSTANCE_STRING_PROPERTY(InputDataContainerName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(InputEnsembleAttributeMatrixName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(InputStatsAttributeArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(InputPhaseTypeAttributeArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(InputCrystalStructuresAttributeArrayName)
-    DREAM3D_INSTANCE_PROPERTY(int, XVoxels)
-    DREAM3D_INSTANCE_PROPERTY(int, YVoxels)
-    DREAM3D_INSTANCE_PROPERTY(int, ZVoxels)
-    DREAM3D_INSTANCE_PROPERTY(float, XRes)
-    DREAM3D_INSTANCE_PROPERTY(float, YRes)
-    DREAM3D_INSTANCE_PROPERTY(float, ZRes)
-    DREAM3D_INSTANCE_PROPERTY(QVector<uint32_t>, ShapeTypes)
-
-
+    /**
+     * @brief setupFilterParameters
+     */
     virtual void setupFilterParameters();
+
     /**
     * @brief This method will write the options to a file
     * @param writer The writer that is used to write the options to a file
@@ -108,7 +122,7 @@ class InitializeSyntheticVolume : public AbstractFilter
      */
     virtual void execute();
 
-signals:
+  signals:
     void updateFilterParameters(AbstractFilter* filter);
     void parametersChanged();
     void preflightAboutToExecute();
@@ -117,11 +131,17 @@ signals:
   protected:
     InitializeSyntheticVolume();
 
+    /**
+     * @brief estimateNumFeatures
+     * @param dimensions
+     * @param res
+     * @return
+     */
+    int estimateNumFeatures(IntVec3_t dimensions, FloatVec3_t res);
+
   private:
     // Cell Data - make sure these are all initialized to NULL in the constructor
-    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeatureIds)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, CellPhases)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(bool, GoodVoxels)
+    int m_EstimatedPrimaryFeatures;
 
     void dataCheck();
 
@@ -129,7 +149,7 @@ signals:
     void operator=(const InitializeSyntheticVolume&); // Operator '=' Not Implemented
 };
 
-#endif /* _INITIALIZESYNTHETICVOLUME_H_ */
+#endif /* _InitializeSyntheticVolume_H_ */
 
 
 

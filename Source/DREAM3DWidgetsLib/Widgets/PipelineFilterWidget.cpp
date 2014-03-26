@@ -82,8 +82,8 @@ QString PipelineFilterWidget::m_OpenDialogLastDirectory = "";
 // -----------------------------------------------------------------------------
 PipelineFilterWidget::PipelineFilterWidget(QWidget* parent) :
   QFrame(parent),
-  m_CurrentBorderColorFactor(0),
-  m_BorderIncrement(16),
+//  m_CurrentBorderColorFactor(0),
+//  m_BorderIncrement(16),
   m_IsSelected(false),
   m_HasPreflightErrors(false),
   m_HasPreflightWarnings(false),
@@ -98,8 +98,8 @@ PipelineFilterWidget::PipelineFilterWidget(QWidget* parent) :
 // -----------------------------------------------------------------------------
 PipelineFilterWidget::PipelineFilterWidget(AbstractFilter::Pointer filter, IObserver* observer, QWidget* parent) :
   QFrame(parent),
-  m_CurrentBorderColorFactor(0),
-  m_BorderIncrement(16),
+//  m_CurrentBorderColorFactor(0),
+//  m_BorderIncrement(16),
   m_IsSelected(false),
   m_HasPreflightErrors(false),
   m_HasPreflightWarnings(false),
@@ -125,8 +125,8 @@ void PipelineFilterWidget::initialize(AbstractFilter::Pointer filter)
   m_DeleteRect.setY(PADDING + BORDER);
   m_DeleteRect.setWidth(IMAGE_WIDTH);
   m_DeleteRect.setHeight(IMAGE_HEIGHT);
-  m_timer = new QTimer(this);
-  connect(m_timer, SIGNAL(timeout()), this, SLOT(changeStyle()));
+//  m_timer = new QTimer(this);
+//  connect(m_timer, SIGNAL(timeout()), this, SLOT(changeStyle()));
 
   // Set the AbstractFilter for this class
   m_Filter = filter;
@@ -260,35 +260,9 @@ QWidget* PipelineFilterWidget::getScrollWidgetContents()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PipelineFilterWidget::setBorderColorStyle(QString s)
-{
-  m_BorderColorStyle = s;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-QString PipelineFilterWidget::getBorderColorStyle()
-{
-  return m_BorderColorStyle;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void PipelineFilterWidget::setHasPreflightErrors(bool hasErrors)
 {
   m_HasPreflightErrors = hasErrors;
-  if (m_HasPreflightErrors == true)
-  {
-    //    m_timer->start(100);
-    //    m_CurrentBorderColorFactor = 64;
-    //    m_BorderIncrement = 16;
-  }
-  else
-  {
-    m_timer->stop();
-  }
   changeStyle();
 }
 
@@ -298,16 +272,6 @@ void PipelineFilterWidget::setHasPreflightErrors(bool hasErrors)
 void PipelineFilterWidget::setHasPreflightWarnings(bool hasWarnings)
 {
   m_HasPreflightWarnings = hasWarnings;
-  if (m_HasPreflightWarnings == true)
-  {
-    //    m_timer->start(100);
-    //    m_CurrentBorderColorFactor = 64;
-    //    m_BorderIncrement = 16;
-  }
-  else
-  {
-    m_timer->stop();
-  }
   changeStyle();
 }
 
@@ -335,25 +299,28 @@ bool PipelineFilterWidget::isSelected()
 void PipelineFilterWidget::changeStyle()
 {
   QString style;
+//  int m_CurrentBorderColorFactor = 0;
+//  int m_BorderIncrement = 16;
+
   if (m_HasPreflightErrors == true)
   {
-    m_CurrentBorderColorFactor += m_BorderIncrement;
-    if (m_CurrentBorderColorFactor > 127)
-    {
-      m_BorderIncrement = -16;
-    }
-    if (m_CurrentBorderColorFactor < 1)
-    {
-      m_BorderIncrement = 16;
-    }
+//    m_CurrentBorderColorFactor += m_BorderIncrement;
+//    if (m_CurrentBorderColorFactor > 127)
+//    {
+//      m_BorderIncrement = -16;
+//    }
+//    if (m_CurrentBorderColorFactor < 1)
+//    {
+//      m_BorderIncrement = 16;
+//    }
 
-    style.append("border: 2px solid rgb(");
-    style.append(QString::number(255 - m_CurrentBorderColorFactor, 10));
-    style.append(", ");
-    style.append(QString::number(m_CurrentBorderColorFactor, 10));
-    style.append(", ");
-    style.append(QString::number(m_CurrentBorderColorFactor, 10));
-    style.append(");");
+    style.append("border: 2px solid rgb(255, 0, 0);");
+//    style.append(QString::number(255 - m_CurrentBorderColorFactor, 10));
+//    style.append(", ");
+//    style.append(QString::number(m_CurrentBorderColorFactor, 10));
+//    style.append(", ");
+//    style.append(QString::number(m_CurrentBorderColorFactor, 10));
+//    style.append(");");
   }
   else if(m_HasPreflightWarnings)
   {
@@ -362,13 +329,13 @@ void PipelineFilterWidget::changeStyle()
   else if(m_IsSelected == true )
   {
     style.append("border: 2px solid purple;");
-    m_CurrentBorderColorFactor = 0;
+ //   m_CurrentBorderColorFactor = 0;
   }
   else
   {
     style.append("border: 1px solid #515151;");
     style.append("margin: 1px;");
-    m_CurrentBorderColorFactor = 0;
+ //   m_CurrentBorderColorFactor = 0;
   }
   setBorderColorStyle(style);
   updateWidgetStyle();
@@ -385,23 +352,7 @@ void PipelineFilterWidget::updateWidgetStyle()
 
   style.append("background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 rgba(185, 185, 185, 255), stop:0.5 rgba(226, 226, 226, 255), stop:1 rgba(150, 150, 150, 255));\n");
 
-#if 0
-  QString headerFile(":/PipelineFilterWidgetHeaders/");
-
-  headerFile.append(getFilterGroup());
-  headerFile.append("_Header.png");
-  QResource headerResource(headerFile);
-  if (true == headerResource.isValid())
-  {
-    style.append("background-image: url(");
-    style.append( headerFile );
-    style.append(");\n");
-  }
-  else
-#endif
-
-
-    style.append("background-position: top ;\n background-repeat: repeat-x;");
+  style.append("background-position: top ;\n background-repeat: repeat-x;");
 
   style.append(getBorderColorStyle());
 

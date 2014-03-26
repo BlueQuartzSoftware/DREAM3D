@@ -43,6 +43,7 @@
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/DataContainers/DataContainerArrayProxy.h"
+#include "DREAM3DLib/DataContainers/DataArrayPath.h"
 
 typedef struct { int x; int y; int z; } IntVec3_t;
 typedef struct { float x; float y; float z; } FloatVec3_t;
@@ -75,9 +76,13 @@ namespace FilterParameterWidgetType
       const QString DataArraySelectionWidget("DataArraySelectionWidget");
       const QString ComparisonSelectionWidget("ComparisonSelectionWidget");
       const QString AttributeMatrixSelectionWidget("AttributeMatrixSelectionWidget");
+      const QString DataContainerSelectionWidget("DataContainerSelectionWidget");
+      const QString ShapeTypeSelectionWidget("ShapeTypeSelectionWidget");
+
       //// This just here to get stuff to compile. The Widget DOES NOT EXIST and WILL NOT EXIST.
       const QString SingleArraySelectionWidget("SingleArraySelectionWidget"); // ComboBox where the Cell Array names are used to populate
 
+      const QString PreflightUpdatedValueWidget("PreflightUpdatedValueWidget");
 #if 0
       /* **** DO NOT PUT ANY OTHER WIDGETS BETWEEN THIS ***** */
       const QString SingleArraySelectionWidget("SingleArraySelectionWidget"); // ComboBox where the Cell Array names are used to populate
@@ -154,7 +159,6 @@ class FilterParameter
 
 typedef QVector<FilterParameter::Pointer> FilterParameterVector;
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -226,6 +230,54 @@ class ComparisonFilterParameter : public FilterParameter
   private:
     ComparisonFilterParameter(const ComparisonFilterParameter&); // Copy Constructor Not Implemented
     void operator=(const ComparisonFilterParameter&); // Operator '=' Not Implemented
+};
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+class ShapeTypesFilterParameter : public FilterParameter
+{
+  public:
+    DREAM3D_SHARED_POINTERS(ShapeTypesFilterParameter)
+    DREAM3D_STATIC_NEW_MACRO(ShapeTypesFilterParameter)
+    DREAM3D_TYPE_MACRO_SUPER(ShapeTypesFilterParameter, FilterParameter)
+
+    virtual ~ShapeTypesFilterParameter() {}
+
+    DREAM3D_INSTANCE_PROPERTY(QString, PhaseTypeCountProperty)
+    DREAM3D_INSTANCE_PROPERTY(QString, PhaseTypeArrayPathProperty)
+
+  protected:
+    ShapeTypesFilterParameter()
+       {}
+
+  private:
+    ShapeTypesFilterParameter(const ShapeTypesFilterParameter&); // Copy Constructor Not Implemented
+    void operator=(const ShapeTypesFilterParameter&); // Operator '=' Not Implemented
+};
+
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+class PreflightUpdatedValue : public FilterParameter
+{
+  public:
+    DREAM3D_SHARED_POINTERS(PreflightUpdatedValue)
+    DREAM3D_STATIC_NEW_MACRO(PreflightUpdatedValue)
+    DREAM3D_TYPE_MACRO_SUPER(PreflightUpdatedValue, FilterParameter)
+
+    virtual ~PreflightUpdatedValue() {}
+
+    DREAM3D_INSTANCE_PROPERTY(QString, PropertyName)
+
+  protected:
+    PreflightUpdatedValue() {}
+
+  private:
+    PreflightUpdatedValue(const PreflightUpdatedValue&); // Copy Constructor Not Implemented
+    void operator=(const PreflightUpdatedValue&); // Operator '=' Not Implemented
 };
 
 

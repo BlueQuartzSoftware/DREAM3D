@@ -1,11 +1,11 @@
-Rename Attribute Array {#renameattributearray}
+Rename Attribute Array {#renameattributematrix}
 ==============================
 
 ## Group (Subgroup) ##
 Generic Filters (Memory/Management)
 
 ## Description ##
-This filter renames a user chosen array to a user defined new name.
+This filter renames a user chosen AttributeMatrx to a user defined new name.
 
 ## Parameters ##
 
@@ -20,14 +20,14 @@ Voxel
 
 | Type | Default Name | Description | Comment | Filters Known to Create Data |
 |------|--------------|-------------|---------|-----|
-| *User Chosen* | *User Chosen* |  | Array will always be present, since the user may only chose from existing arrays | N/A |
+| *User Chosen* | *User Chosen* |  | AttributeMatrx will always be present, since the user may only chose from existing arrays | N/A |
 
 
 ## Created Arrays ##
 
 | Type | Default Name | Description | Comment |
 |------|--------------|-------------|---------|
-| *User Chosen* | *User Defined* | | Array will have same values as its old counterpart |
+| *User Chosen* | *User Defined* | | AttributeMatrx will have same values as its old counterpart |
 
 
 
@@ -35,7 +35,7 @@ Voxel
 
 ## Authors ##
 
-**Copyright:** 2012 Michael A. Groeber (AFRL), 2012 Michael A. Jackson (BlueQuartz Software)
+**Copyright:** 2014 Michael A. Groeber (AFRL), 2014 Michael A. Jackson (BlueQuartz Software)
 
 **Contact Info:** dream3d@bluequartz.net
 

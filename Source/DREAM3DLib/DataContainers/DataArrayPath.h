@@ -67,7 +67,7 @@ class DREAM3DLib_EXPORT DataArrayPath : public QObject
      * @brief DataArrayPath
      * @param path A path with the '|' delimeters
      */
-    DataArrayPath(const QString& path);
+    explicit DataArrayPath(const QString& path);
 
     /**
      * @brief DataArrayPath

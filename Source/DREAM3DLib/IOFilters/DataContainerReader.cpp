@@ -322,7 +322,7 @@ DataContainerArrayProxy DataContainerReader::readDataContainerArrayStructure()
   if (err < 0) {
     //std::cout << "Attribute '" << DREAM3D::HDF5::FileVersionName.toStdString() << " was not found" << std::endl;
     QString ss = QObject::tr("HDF5 Attribute '%1' was not found on the HDF5 root node and this is required.").arg(DREAM3D::HDF5::FileVersionName);
-    setErrorCondition(-72);
+    setErrorCondition(-73);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return proxy;
   }
@@ -333,7 +333,7 @@ DataContainerArrayProxy DataContainerReader::readDataContainerArrayStructure()
   hid_t dcArrayGroupId = H5Gopen(fileId, DREAM3D::StringConstants::DataContainerGroupName.toAscii().constData(), H5P_DEFAULT);
   if (dcArrayGroupId < 0) {
     QString ss = QObject::tr("Error opening HDF5 Group '%1' ").arg(DREAM3D::StringConstants::DataContainerGroupName);
-    setErrorCondition(-72);
+    setErrorCondition(-74);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return proxy;
   }

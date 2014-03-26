@@ -36,6 +36,7 @@ set(_PublicFilters
   RemoveArrays
   RenameAttributeMatrix
   RenameAttributeArray
+  RenameDataContainer
   ScaleVolume
   UpdateCellQuats
 )

@@ -149,16 +149,11 @@ void AttributeMatrixSelectionWidget::populateComboBoxes()
   QString curAmName = attributeMatrixList->currentText();
 
   // Get what is in the filter
-  QString selectedPath = m_Filter->property(PROPERTY_NAME_AS_CHAR).toString();
-  // Split the path up to make sure we have a valid path separated by the "|" character
+  QVariant qvSelectedPath = m_Filter->property(PROPERTY_NAME_AS_CHAR);
+  DataArrayPath selectedPath = qvSelectedPath.value<DataArrayPath>();
 
-  QString filtDcName;
-  QString filtAmName;
-  QStringList tokens = selectedPath.split(DREAM3D::PathSep);
-  if(tokens.size() == 3) {
-    filtDcName = tokens.at(0);
-    filtAmName = tokens.at(1);
-  }
+  QString filtDcName = selectedPath.getDataContainerName();
+  QString filtAmName = selectedPath.getAttributeMatrixName();
 
   // Now to figure out which one of these to use. If this is the first time through then what we picked up from the
   // gui will be empty strings because nothing is there. If there is something in the filter then we should use that.
@@ -178,7 +173,8 @@ void AttributeMatrixSelectionWidget::populateComboBoxes()
   if(dcIndex < 0 && dcName.isEmpty() == false) {
     dataContainerList->addItem(dcName);
   } // the string was not found so just set it to the first index
-  else {
+  else
+  {
     if(dcIndex < 0) { dcIndex = 0; } // Just set it to the first DataContainer in the list
     dataContainerList->setCurrentIndex(dcIndex);
     populateAttributeMatrixList();
@@ -322,7 +318,9 @@ void AttributeMatrixSelectionWidget::populateAttributeMatrixList()
 void AttributeMatrixSelectionWidget::on_attributeMatrixList_currentIndexChanged(int index)
 {
   // std::cout << "void AttributeMatrixSelectionWidget::on_attributeMatrixList_currentIndexChanged(int index)" << std::endl;
-
+  m_DidCausePreflight = true;
+  emit parametersChanged();
+  m_DidCausePreflight = false;
 }
 
 
@@ -360,8 +358,9 @@ void AttributeMatrixSelectionWidget::afterPreflight()
 void AttributeMatrixSelectionWidget::filterNeedsInputParameters(AbstractFilter* filter)
 {
   // Geenerate the path to the AttributeArray
-  QString path = QString("%1|%2").arg(dataContainerList->currentText()).arg(attributeMatrixList->currentText());
+  // QString path = QString("%1|%2").arg().arg();
 
+  DataArrayPath path(dataContainerList->currentText(), attributeMatrixList->currentText(), "");
   QVariant var;
   var.setValue(path);
   bool ok = false;

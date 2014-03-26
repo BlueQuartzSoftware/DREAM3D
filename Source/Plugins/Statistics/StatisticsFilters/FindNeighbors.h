@@ -65,12 +65,33 @@ class FindNeighbors : public AbstractFilter
     DREAM3D_TYPE_MACRO_SUPER(FindNeighbors, AbstractFilter)
 
     virtual ~FindNeighbors();
-    DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(CellFeatureAttributeMatrixName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
 
-    DREAM3D_INSTANCE_STRING_PROPERTY(SharedSurfaceAreaListArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(NeighborListArrayName)
+    //    DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
+    //    Q_PROPERTY(QString DataContainerName READ getDataContainerName WRITE setDataContainerName)
+
+    DREAM3D_FILTER_PARAMETER(DataArrayPath, CellFeatureAttributeMatrixPath)
+    Q_PROPERTY(DataArrayPath CellFeatureAttributeMatrixPath READ getCellFeatureAttributeMatrixPath WRITE setCellFeatureAttributeMatrixPath)
+
+    DREAM3D_FILTER_PARAMETER(DataArrayPath, CellAttributeMatrixPath)
+    Q_PROPERTY(DataArrayPath CellAttributeMatrixPath READ getCellAttributeMatrixPath WRITE setCellAttributeMatrixPath)
+
+    DREAM3D_FILTER_PARAMETER(DataArrayPath, SharedSurfaceAreaListArrayName)
+    Q_PROPERTY(DataArrayPath SharedSurfaceAreaListArrayName READ getSharedSurfaceAreaListArrayName WRITE setSharedSurfaceAreaListArrayName)
+
+    DREAM3D_FILTER_PARAMETER(DataArrayPath, NeighborListArrayName)
+    Q_PROPERTY(DataArrayPath NeighborListArrayName READ getNeighborListArrayName WRITE setNeighborListArrayName)
+
+
+    virtual const QString getCompiledLibraryName() { return Statistics::StatisticsBaseName; }
+    virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
+    virtual const QString getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
+    virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::MorphologicalFilters; }
+    virtual const QString getHumanLabel() { return "Find Feature Neighbors"; }
+
+    /**
+     * @brief setupFilterParameters
+     */
+    virtual void setupFilterParameters();
 
     /**
     * @brief This method will write the options to a file
@@ -84,17 +105,14 @@ class FindNeighbors : public AbstractFilter
     */
     virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
 
-    virtual void execute();
     virtual void preflight();
 
-    virtual const QString getCompiledLibraryName() { return Statistics::StatisticsBaseName; }
-    virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
-    virtual const QString getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
-    virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::MorphologicalFilters; }
-    virtual const QString getHumanLabel() { return "Find Feature Neighbors"; }
+    /**
+     * @brief Reimplemented from @see AbstractFilter class
+     */
+    virtual void execute();
 
-
-signals:
+  signals:
     void updateFilterParameters(AbstractFilter* filter);
     void parametersChanged();
     void preflightAboutToExecute();
@@ -108,8 +126,8 @@ signals:
     DEFINE_PTR_WEAKPTR_DATAARRAY(int8_t, SurfaceVoxels)
     DEFINE_PTR_WEAKPTR_DATAARRAY(bool, SurfaceFeatures)
     DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, NumNeighbors)
-    NeighborList<int>* m_NeighborList;
-    NeighborList<float>* m_SharedSurfaceAreaList;
+    NeighborList<int>::Pointer m_NeighborList;
+    NeighborList<float>::Pointer m_SharedSurfaceAreaList;
 
     void dataCheck();
 

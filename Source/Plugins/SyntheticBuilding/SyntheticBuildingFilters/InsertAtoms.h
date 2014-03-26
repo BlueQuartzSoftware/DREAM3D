@@ -64,6 +64,8 @@ class InsertAtoms : public AbstractFilter
 
     virtual ~InsertAtoms();
     DREAM3D_INSTANCE_STRING_PROPERTY(VolumeDataContainerName)
+    Q_PROPERTY(QString VolumeDataContainerName READ getVolumeDataContainerName WRITE setVolumeDataContainerName)
+
     DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceDataContainerName)
     DREAM3D_INSTANCE_STRING_PROPERTY(VertexDataContainerName)
     DREAM3D_INSTANCE_STRING_PROPERTY(VertexAttributeMatrixName)
@@ -80,6 +82,7 @@ class InsertAtoms : public AbstractFilter
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::SyntheticBuildingFilters; }
     virtual const QString getSubGroupName()  { return DREAM3D::FilterSubGroups::ResolutionFilters; }
     virtual const QString getHumanLabel() { return "Insert Atoms"; }
+    virtual const QString getBrandingString() { return SyntheticBuilding::SyntheticBuildingPluginDisplayName + " Filter"; }
 
     virtual void setupFilterParameters();
     /**

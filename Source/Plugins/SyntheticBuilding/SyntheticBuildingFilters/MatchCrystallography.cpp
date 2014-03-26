@@ -103,6 +103,23 @@ void MatchCrystallography::setupFilterParameters()
   FilterParameterVector parameters;
   {
     FilterParameter::Pointer parameter = FilterParameter::New();
+    parameter->setHumanLabel("Input Statistics");
+    parameter->setPropertyName("InputStatsArrayPath");
+    parameter->setWidgetType(FilterParameterWidgetType::DataArraySelectionWidget);
+    parameter->setValueType("DataArrayPath");
+    parameter->setUnits("");
+    parameters.push_back(parameter);
+  }
+  {
+    FilterParameter::Pointer parameter = FilterParameter::New();
+    parameter->setHumanLabel("Select Synthetic Volume DataContainer");
+    parameter->setPropertyName("DataContainerName");
+    parameter->setWidgetType(FilterParameterWidgetType::DataContainerSelectionWidget);
+    parameter->setValueType("QString");
+    parameters.push_back(parameter);
+  }
+  {
+    FilterParameter::Pointer parameter = FilterParameter::New();
     parameter->setHumanLabel("Maximum Number of Iterations (Swaps)");
     parameter->setPropertyName("MaxIterations");
     parameter->setWidgetType(FilterParameterWidgetType::IntWidget);
@@ -119,8 +136,10 @@ void MatchCrystallography::readFilterParameters(AbstractFilterParametersReader* 
 {
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
-  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN */
+  setDataContainerName( reader->readString("DataContainerName", getDataContainerName() ) );
   setMaxIterations( reader->readValue("MaxIterations", getMaxIterations()) );
+  setInputStatsArrayPath(reader->readDataArrayPath("InputStatsArrayPath", getInputStatsArrayPath() ) );
   /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }
@@ -131,8 +150,10 @@ void MatchCrystallography::readFilterParameters(AbstractFilterParametersReader* 
 int MatchCrystallography::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
+  writer->writeValue("DataContainerName", getDataContainerName() );
   writer->writeValue("MaxIterations", getMaxIterations() );
   writer->closeFilterGroup();
+  writer->writeValue("InputStatsArrayPath", getInputStatsArrayPath() );
   return ++index; // we want to return the next index that was just written to
 }
 
@@ -142,8 +163,10 @@ int MatchCrystallography::writeFilterParameters(AbstractFilterParametersWriter* 
 void MatchCrystallography::dataCheck()
 {
   setErrorCondition(0);
+  // This is for convenience
+  DataContainerArray::Pointer dca = getDataContainerArray();
 
-  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName(), false);
+  VolumeDataContainer* m = dca->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName(), false);
   if(getErrorCondition() < 0 || NULL == m) { return; }
   AttributeMatrix::Pointer cellAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), -301);
   if(getErrorCondition() < 0 || NULL == cellAttrMat.get() ) { return; }
@@ -153,12 +176,13 @@ void MatchCrystallography::dataCheck()
   AttributeMatrix::Pointer cellEnsembleAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellEnsembleAttributeMatrixName(), -303);
   if(getErrorCondition() < 0 || NULL == cellEnsembleAttrMat.get()) { return; }
 
-
   QVector<size_t> dims(1, 1);
   // Cell Data
-  m_FeatureIdsPtr = cellAttrMat->getPrereqArray<DataArray<int32_t>, AbstractFilter>(this,  m_FeatureIdsArrayName, -301, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_FeatureIdsPtr = dca->getPrereqArrayFromPath<Int32ArrayType, AbstractFilter>(this, getFeatureIdsPath(), dims);
+//  m_FeatureIdsPtr = cellAttrMat->getPrereqArray<DataArray<int32_t>, AbstractFilter>(this,  m_FeatureIdsArrayName, -301, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+
   dims[0] = 3;
   m_CellEulerAnglesPtr = cellAttrMat->createNonPrereqArray<DataArray<float>, AbstractFilter, float>(this,  m_CellEulerAnglesArrayName, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_CellEulerAnglesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
@@ -166,28 +190,35 @@ void MatchCrystallography::dataCheck()
 
   // Feature Data
   dims[0] = 1;
-  m_FeaturePhasesPtr = cellFeatureAttrMat->getPrereqArray<DataArray<int32_t>, AbstractFilter>(this,  m_FeaturePhasesArrayName, -301, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_FeaturePhasesPtr = dca->getPrereqArrayFromPath<Int32ArrayType, AbstractFilter>(this, m_FeaturePhasesPath, dims);
+ // m_FeaturePhasesPtr = cellFeatureAttrMat->getPrereqArray<DataArray<int32_t>, AbstractFilter>(this,  m_FeaturePhasesArrayName, -301, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_FeaturePhasesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_FeaturePhases = m_FeaturePhasesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+
   m_SurfaceFeaturesPtr = cellFeatureAttrMat->getPrereqArray<DataArray<bool>, AbstractFilter>(this,  m_SurfaceFeaturesArrayName, -301, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_SurfaceFeaturesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_SurfaceFeatures = m_SurfaceFeaturesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+
+
   m_VolumesPtr = cellFeatureAttrMat->createNonPrereqArray<DataArray<float>, AbstractFilter, float>(this,  m_VolumesArrayName, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_VolumesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_Volumes = m_VolumesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+
   dims[0] = 3;
   m_FeatureEulerAnglesPtr = cellFeatureAttrMat->createNonPrereqArray<DataArray<float>, AbstractFilter, float>(this,  m_FeatureEulerAnglesArrayName, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_FeatureEulerAnglesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_FeatureEulerAngles = m_FeatureEulerAnglesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+
   dims[0] = 4;
   m_AvgQuatsPtr = cellFeatureAttrMat->createNonPrereqArray<DataArray<float>, AbstractFilter, float>(this,  m_AvgQuatsArrayName, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_AvgQuatsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_AvgQuats = m_AvgQuatsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
+
+
   // Now we are going to get a "Pointer" to the NeighborList object out of the DataContainer
   if (NULL == m->getAttributeMatrix(m_CellFeatureAttributeMatrixName)->getAttributeArray(m_NeighborListArrayName).get())
   {
-
     QString ss = QObject::tr("'NeighborLists' are not available and are required for this filter to run. A filter that generates NeighborLists needs to be placed before this filter in the pipeline.");
     setErrorCondition(-305);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
@@ -209,17 +240,13 @@ void MatchCrystallography::dataCheck()
     m_SharedSurfaceAreaList = NeighborList<float>::SafeObjectDownCast<IDataArray*, NeighborList<float>*>(m->getAttributeMatrix(m_CellFeatureAttributeMatrixName)->getAttributeArray(DREAM3D::FeatureData::SharedSurfaceAreaList).get());
   }
 
-  if(NULL == m->getAttributeMatrix(m_CellEnsembleAttributeMatrixName)->getAttributeArray(m_StatsDataArrayName).get())
-  {
 
-    QString ss = QObject::tr("'Ensemble Statistics' are not available and are required for this filter to run. A filter that generates 'Shared SurfaceArea Lists' needs to be placed before this filter in the pipeline.");
-    setErrorCondition(-310);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-  }
-  else
-  {
-    m_StatsDataArray = StatsDataArray::SafeObjectDownCast<IDataArray*, StatsDataArray*>(m->getAttributeMatrix(m_CellEnsembleAttributeMatrixName)->getAttributeArray(m_StatsDataArrayName).get());
-  }
+  StatsDataArray::Pointer statsPtr = dca->getPrereqArrayFromPath<StatsDataArray, AbstractFilter>(this, getInputStatsArrayPath(), dims);
+  m_StatsDataArray = boost::dynamic_pointer_cast<StatsDataArray>(statsPtr);
+  //if( NULL != m_StatsDataArray.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  //{ m_StatsDataArray = m_StatsDataArray.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+
+
   // Ensemble Data
   typedef DataArray<unsigned int> XTalStructArrayType;
   typedef DataArray<unsigned int> PhaseTypeArrayType;
@@ -236,6 +263,7 @@ void MatchCrystallography::dataCheck()
   m_PhaseTypesPtr = cellEnsembleAttrMat->getPrereqArray<DataArray<unsigned int>, AbstractFilter>(this,  m_PhaseTypesArrayName, -301, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_PhaseTypesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_PhaseTypes = m_PhaseTypesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+
   m_NumFeaturesPtr = cellEnsembleAttrMat->createNonPrereqArray<DataArray<int32_t>, AbstractFilter, int32_t>(this,  m_NumFeaturesArrayName, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_NumFeaturesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_NumFeatures = m_NumFeaturesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
@@ -307,11 +335,7 @@ void MatchCrystallography::execute()
 // -----------------------------------------------------------------------------
 void MatchCrystallography::initializeArrays(int ensem)
 {
-  // VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-
-  StatsDataArray& statsDataArray = *m_StatsDataArray;
-
-  // size_t size = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
+  StatsDataArray& statsDataArray = *m_StatsDataArray.lock();
 
   if(m_PhaseTypes[ensem] == DREAM3D::PhaseType::PrecipitatePhase)
   {
@@ -421,7 +445,7 @@ void MatchCrystallography::determine_boundary_areas()
 void MatchCrystallography::assign_eulers(int ensem)
 {
   DREAM3D_RANDOMNG_NEW()
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+      VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
   int numbins = 0;
   float synea1 = 0, synea2 = 0, synea3 = 0;
@@ -495,13 +519,13 @@ void MatchCrystallography::MC_LoopBody1(int feature, int ensem, int j, float nei
   OrientationMath::AxisAngletoRod(w, n1, n2, n3, r1, r2, r3);
   newmisobin = m_OrientationOps[sym]->getMisoBin(n1, n2, n3);
   mdfchange = mdfchange
-              + (((actualmdf->getValue(curmisobin) - simmdf->getValue(curmisobin)) * (actualmdf->getValue(curmisobin) - simmdf->getValue(curmisobin)))
-                 - ((actualmdf->getValue(curmisobin) - (simmdf->getValue(curmisobin) - (neighsurfarea / m_TotalSurfaceArea[ensem])))
-                    * (actualmdf->getValue(curmisobin) - (simmdf->getValue(curmisobin) - (neighsurfarea / m_TotalSurfaceArea[ensem])))));
+      + (((actualmdf->getValue(curmisobin) - simmdf->getValue(curmisobin)) * (actualmdf->getValue(curmisobin) - simmdf->getValue(curmisobin)))
+         - ((actualmdf->getValue(curmisobin) - (simmdf->getValue(curmisobin) - (neighsurfarea / m_TotalSurfaceArea[ensem])))
+            * (actualmdf->getValue(curmisobin) - (simmdf->getValue(curmisobin) - (neighsurfarea / m_TotalSurfaceArea[ensem])))));
   mdfchange = mdfchange
-              + (((actualmdf->getValue(newmisobin) - simmdf->getValue(newmisobin)) * (actualmdf->getValue(newmisobin) - simmdf->getValue(newmisobin)))
-                 - ((actualmdf->getValue(newmisobin) - (simmdf->getValue(newmisobin) + (neighsurfarea / m_TotalSurfaceArea[ensem])))
-                    * (actualmdf->getValue(newmisobin) - (simmdf->getValue(newmisobin) + (neighsurfarea / m_TotalSurfaceArea[ensem])))));
+      + (((actualmdf->getValue(newmisobin) - simmdf->getValue(newmisobin)) * (actualmdf->getValue(newmisobin) - simmdf->getValue(newmisobin)))
+         - ((actualmdf->getValue(newmisobin) - (simmdf->getValue(newmisobin) + (neighsurfarea / m_TotalSurfaceArea[ensem])))
+            * (actualmdf->getValue(newmisobin) - (simmdf->getValue(newmisobin) + (neighsurfarea / m_TotalSurfaceArea[ensem])))));
 }
 
 // -----------------------------------------------------------------------------
@@ -547,7 +571,7 @@ void MatchCrystallography::matchCrystallography(int ensem)
   int64_t totalFeatures = m->getAttributeMatrix(m_CellFeatureAttributeMatrixName)->getNumTuples();
 
   DREAM3D_RANDOMNG_NEW()
-  int numbins = 0;
+      int numbins = 0;
   int iterations = 0, badtrycount = 0;
   float random = 0;
   size_t counter = 0;
@@ -615,12 +639,12 @@ void MatchCrystallography::matchCrystallography(int ensem)
         OrientationMath::EulertoQuat(g1ea1, g1ea2, g1ea3, q1);
 
         odfchange = ((actualodf->getValue(choose) - simodf->getValue(choose)) * (actualodf->getValue(choose) - simodf->getValue(choose)))
-                    - ((actualodf->getValue(choose) - (simodf->getValue(choose) + (m_Volumes[selectedfeature1] / unbiasedvol[ensem])))
-                       * (actualodf->getValue(choose) - (simodf->getValue(choose) + (m_Volumes[selectedfeature1] / unbiasedvol[ensem]))));
+            - ((actualodf->getValue(choose) - (simodf->getValue(choose) + (m_Volumes[selectedfeature1] / unbiasedvol[ensem])))
+               * (actualodf->getValue(choose) - (simodf->getValue(choose) + (m_Volumes[selectedfeature1] / unbiasedvol[ensem]))));
         odfchange = odfchange
-                    + (((actualodf->getValue(g1odfbin) - simodf->getValue(g1odfbin)) * (actualodf->getValue(g1odfbin) - simodf->getValue(g1odfbin)))
-                       - ((actualodf->getValue(g1odfbin) - (simodf->getValue(g1odfbin) - (m_Volumes[selectedfeature1] / unbiasedvol[ensem])))
-                          * (actualodf->getValue(g1odfbin) - (simodf->getValue(g1odfbin) - (m_Volumes[selectedfeature1] / unbiasedvol[ensem])))));
+            + (((actualodf->getValue(g1odfbin) - simodf->getValue(g1odfbin)) * (actualodf->getValue(g1odfbin) - simodf->getValue(g1odfbin)))
+               - ((actualodf->getValue(g1odfbin) - (simodf->getValue(g1odfbin) - (m_Volumes[selectedfeature1] / unbiasedvol[ensem])))
+                  * (actualodf->getValue(g1odfbin) - (simodf->getValue(g1odfbin) - (m_Volumes[selectedfeature1] / unbiasedvol[ensem])))));
 
         mdfchange = 0;
         size_t size = 0;
@@ -705,20 +729,20 @@ void MatchCrystallography::matchCrystallography(int ensem)
           g2odfbin = m_OrientationOps[m_CrystalStructures[ensem]]->getOdfBin(r1, r2, r3);
 
           odfchange = ((actualodf->getValue(g1odfbin) - simodf->getValue(g1odfbin)) * (actualodf->getValue(g1odfbin) - simodf->getValue(g1odfbin)))
-                      - ((actualodf->getValue(g1odfbin)
-                          - (simodf->getValue(g1odfbin) - (m_Volumes[selectedfeature1] / unbiasedvol[ensem])
-                             + (m_Volumes[selectedfeature2] / unbiasedvol[ensem])))
-                         * (actualodf->getValue(g1odfbin)
-                            - (simodf->getValue(g1odfbin) - (m_Volumes[selectedfeature1] / unbiasedvol[ensem])
-                               + (m_Volumes[selectedfeature2] / unbiasedvol[ensem]))));
+              - ((actualodf->getValue(g1odfbin)
+                  - (simodf->getValue(g1odfbin) - (m_Volumes[selectedfeature1] / unbiasedvol[ensem])
+                     + (m_Volumes[selectedfeature2] / unbiasedvol[ensem])))
+                 * (actualodf->getValue(g1odfbin)
+                    - (simodf->getValue(g1odfbin) - (m_Volumes[selectedfeature1] / unbiasedvol[ensem])
+                       + (m_Volumes[selectedfeature2] / unbiasedvol[ensem]))));
           odfchange = odfchange
-                      + (((actualodf->getValue(g2odfbin) - simodf->getValue(g2odfbin)) * (actualodf->getValue(g2odfbin) - simodf->getValue(g2odfbin)))
-                         - ((actualodf->getValue(g2odfbin)
-                             - (simodf->getValue(g2odfbin) - (m_Volumes[selectedfeature2] / unbiasedvol[ensem])
-                                + (m_Volumes[selectedfeature1] / unbiasedvol[ensem])))
-                            * (actualodf->getValue(g2odfbin)
-                               - (simodf->getValue(g2odfbin) - (m_Volumes[selectedfeature2] / unbiasedvol[ensem])
-                                  + (m_Volumes[selectedfeature1] / unbiasedvol[ensem])))));
+              + (((actualodf->getValue(g2odfbin) - simodf->getValue(g2odfbin)) * (actualodf->getValue(g2odfbin) - simodf->getValue(g2odfbin)))
+                 - ((actualodf->getValue(g2odfbin)
+                     - (simodf->getValue(g2odfbin) - (m_Volumes[selectedfeature2] / unbiasedvol[ensem])
+                        + (m_Volumes[selectedfeature1] / unbiasedvol[ensem])))
+                    * (actualodf->getValue(g2odfbin)
+                       - (simodf->getValue(g2odfbin) - (m_Volumes[selectedfeature2] / unbiasedvol[ensem])
+                          + (m_Volumes[selectedfeature1] / unbiasedvol[ensem])))));
 
           mdfchange = 0;
           OrientationMath::EulertoQuat(g2ea1, g2ea2, g2ea3, q1);
@@ -909,7 +933,10 @@ AbstractFilter::Pointer MatchCrystallography::newFilterInstance(bool copyFilterP
   MatchCrystallography::Pointer filter = MatchCrystallography::New();
   if(true == copyFilterParameters)
   {
+    filter->setDataContainerName(getDataContainerName() );
     filter->setMaxIterations( getMaxIterations() );
+    filter->setInputStatsArrayPath(getInputStatsArrayPath() );
+
   }
   return filter;
 }
