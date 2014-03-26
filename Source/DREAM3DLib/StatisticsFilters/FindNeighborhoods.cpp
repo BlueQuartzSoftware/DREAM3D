@@ -218,7 +218,7 @@ void FindNeighborhoods::find_neighborhoods()
   {
     m_Neighborhoods[i] = 0;
     aveDiam += m_EquivalentDiameters[i];
-  criticalDistance[i] = m_EquivalentDiameters[i] * m_MultiplesOfAverage;
+    criticalDistance[i] = m_EquivalentDiameters[i] * m_MultiplesOfAverage;
   }
   aveDiam /= totalFields;
   for (size_t i = 1; i < totalFields; i++)
@@ -226,11 +226,8 @@ void FindNeighborhoods::find_neighborhoods()
     criticalDistance[i] /= aveDiam;
   }
 
-  float aveCriticalDistance = aveDiam * m_MultiplesOfAverage;
-
   float m_OriginX, m_OriginY, m_OriginZ;
   m->getOrigin(m_OriginX, m_OriginY, m_OriginZ);
-
 
   int xbin, ybin, zbin; //, bin, bin1, bin2;
   std::vector<size_t> bins(3*totalFields, 0);
@@ -239,15 +236,14 @@ void FindNeighborhoods::find_neighborhoods()
     x = m_Centroids[3 * i];
     y = m_Centroids[3 * i + 1];
     z = m_Centroids[3 * i + 2];
-    xbin = int((x - m_OriginX) / aveCriticalDistance);
-    ybin = int((y - m_OriginY) / aveCriticalDistance);
-    zbin = int((z - m_OriginZ) / aveCriticalDistance);
-
-  bins[3*i] = xbin;
-  bins[3*i+1] = ybin;
-  bins[3*i+2] = zbin;
-
+    xbin = int((x - m_OriginX) / aveDiam);
+    ybin = int((y - m_OriginY) / aveDiam);
+    zbin = int((z - m_OriginZ) / aveDiam);
+    bins[3*i] = xbin;
+    bins[3*i+1] = ybin;
+    bins[3*i+2] = zbin;
   }
+
   int bin1x, bin2x, bin1y, bin2y, bin1z, bin2z;
   int dBinX, dBinY, dBinZ;
   int criticalDistance1, criticalDistance2;
@@ -259,36 +255,33 @@ void FindNeighborhoods::find_neighborhoods()
       ss << "Working On Grain " << i << " of " << totalFields;
       notifyStatusMessage(ss.str());
     }
-    x = m_Centroids[3 * i];
-    y = m_Centroids[3 * i + 1];
-    z = m_Centroids[3 * i + 2];
     bin1x = bins[3*i];
-  bin1y = bins[3*i+1];
-  bin1z = bins[3*i+2];
-  criticalDistance1 = criticalDistance[i];
+    bin1y = bins[3*i+1];
+    bin1z = bins[3*i+2];
+    criticalDistance1 = criticalDistance[i];
 
-  for (size_t j = i + 1; j < totalFields; j++)
+    for (size_t j = i + 1; j < totalFields; j++)
     {
       bin2x = bins[3*j];
-    bin2y = bins[3*j+1];
-    bin2z = bins[3*j+2];
-    criticalDistance2 = criticalDistance[j];
+      bin2y = bins[3*j+1];
+      bin2z = bins[3*j+2];
+      criticalDistance2 = criticalDistance[j];
 
-    dBinX = abs(bin2x - bin1x);
-    dBinY = abs(bin2y - bin1y);
-    dBinZ = abs(bin2z - bin1z);
+      dBinX = abs(bin2x - bin1x);
+      dBinY = abs(bin2y - bin1y);
+      dBinZ = abs(bin2z - bin1z);
 
-    if (dBinX < criticalDistance1 && dBinY < criticalDistance1 && dBinZ < criticalDistance1)
-    {
-    m_Neighborhoods[i]++;
-    neighborhoodlist[i].push_back(j);
-    }
+      if (dBinX < criticalDistance1 && dBinY < criticalDistance1 && dBinZ < criticalDistance1)
+      {
+        m_Neighborhoods[i]++;
+        neighborhoodlist[i].push_back(j);
+      }
 
-    if (dBinX < criticalDistance2 && dBinY < criticalDistance2 && dBinZ < criticalDistance2)
-    {
-    m_Neighborhoods[j]++;
-    neighborhoodlist[j].push_back(i);
-    }
+      if (dBinX < criticalDistance2 && dBinY < criticalDistance2 && dBinZ < criticalDistance2)
+      {
+        m_Neighborhoods[j]++;
+        neighborhoodlist[j].push_back(i);
+      }
     }
   }
   for (size_t i = 1; i < totalFields; i++)
