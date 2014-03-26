@@ -499,9 +499,9 @@ void CropSurfaceMesh::execute()
     TranslateSurfaceMesh::Pointer translate = TranslateSurfaceMesh::New();
     translate->setSurfaceMeshDataContainer(sm);
     translate->setMessagePrefix(getMessagePrefix());
-    translate->setXShift(-m_XMin * voxelResolution[0]);
-    translate->setYShift(-m_YMin * voxelResolution[1]);
-    translate->setZShift(-m_ZMin * voxelResolution[2]);
+    translate->setXShift(-m_XMin * voxelResolution[0]-sampleOrigin[0]);
+    translate->setYShift(-m_YMin * voxelResolution[1]-sampleOrigin[1]);
+    translate->setZShift(-m_ZMin * voxelResolution[2]-sampleOrigin[2]);
     translate->execute();
     setErrorCondition(translate->getErrorCondition());
     addErrorMessages(translate->getPipelineMessages());
