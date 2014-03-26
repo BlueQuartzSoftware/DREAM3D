@@ -21,6 +21,7 @@ set(_PublicFilters
   MoveGrain
   GenerateFaceMisorientationColors
   CropSurfaceMesh
+  TranslateSurfaceMesh
 )
 
 
