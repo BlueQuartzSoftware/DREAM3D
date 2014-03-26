@@ -73,6 +73,7 @@ GroupMicroTextureRegions::GroupMicroTextureRegions() :
   m_FieldParentIdsArrayName(DREAM3D::FieldData::ParentIds),
   m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
   m_CAxisTolerance(1.0f),
+  m_RandomizeGrainIds(true),
   m_UseNonContiguousNeighbors(false),
   m_GrainIds(NULL),
   m_CellParentIds(NULL),
@@ -233,7 +234,15 @@ void GroupMicroTextureRegions::execute()
   m_CAxisTolerance = m_CAxisTolerance * DREAM3D::Constants::k_Pi / 180.0f;
 
   notifyStatusMessage("Grouping MicroTexture Regions");
-  merge_micro_texture_regions();
+  int numParents = merge_micro_texture_regions();
+
+  // By default we randomize grains
+  if (true == m_RandomizeGrainIds)
+  {
+    int64_t totalPoints = m->getTotalPoints();
+    randomizeGrainIds(totalPoints, numParents);
+  }
+
 
   // If there is an error set this to something negative and also set a message
   notifyStatusMessage("GroupMicroTextureRegions Completed");
@@ -242,7 +251,51 @@ void GroupMicroTextureRegions::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void GroupMicroTextureRegions::merge_micro_texture_regions()
+void GroupMicroTextureRegions::randomizeGrainIds(int64_t totalPoints, size_t totalFields)
+{
+  notifyStatusMessage("Randomizing Parent Ids");
+  // Generate an even distribution of numbers between the min and max range
+  const size_t rangeMin = 0;
+  const size_t rangeMax = totalFields - 1;
+  initializeVoxelSeedGenerator(rangeMin, rangeMax);
+
+// Get a reference variable to the Generator object
+  Generator& numberGenerator = *m_NumberGenerator;
+
+  DataArray<int32_t>::Pointer rndNumbers = DataArray<int32_t>::CreateArray(totalFields, "New GrainIds");
+
+  int32_t* gid = rndNumbers->GetPointer(0);
+  gid[0] = 0;
+  for(size_t i = 1; i < totalFields; ++i)
+  {
+    gid[i] = i;
+  }
+
+  size_t r;
+  size_t temp;
+  //--- Shuffle elements by randomly exchanging each with one other.
+  for (size_t i = 1; i < totalFields; i++)
+  {
+    r = numberGenerator(); // Random remaining position.
+    if (r >= totalFields) {
+      continue;
+    }
+    temp = gid[i];
+    gid[i] = gid[r];
+    gid[r] = temp;
+  }
+
+  // Now adjust all the Grain Id values for each Voxel
+  for(int64_t i = 0; i < totalPoints; ++i)
+  {
+    m_CellParentIds[i] = gid[ m_CellParentIds[i] ];
+  }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int GroupMicroTextureRegions::merge_micro_texture_regions()
 {
   // Since this method is called from the 'execute' and the DataContainer validity
   // was checked there we are just going to get the Shared Pointer to the DataContainer
@@ -390,4 +443,24 @@ void GroupMicroTextureRegions::merge_micro_texture_regions()
     m_ParentDensity[k] = densities[parentnumbers[grainname]];
   }
 
+  return parentcount;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void GroupMicroTextureRegions::initializeVoxelSeedGenerator(const size_t rangeMin, const size_t rangeMax)
+{
+
+// The way we are using the boost random number generators is that we are asking for a NumberDistribution (see the typedef)
+// to guarantee the numbers are betwee a specific range and will only be generated once. We also keep a tally of the
+// total number of numbers generated as a way to make sure the while loops eventually terminate. This setup should
+// make sure that every voxel can be a seed point.
+//  const size_t rangeMin = 0;
+//  const size_t rangeMax = totalPoints - 1;
+  m_Distribution = boost::shared_ptr<NumberDistribution>(new NumberDistribution(rangeMin, rangeMax));
+  m_RandomNumberGenerator = boost::shared_ptr<RandomNumberGenerator>(new RandomNumberGenerator);
+  m_NumberGenerator = boost::shared_ptr<Generator>(new Generator(*m_RandomNumberGenerator, *m_Distribution));
+  m_RandomNumberGenerator->seed(static_cast<size_t>( MXA::getMilliSeconds() )); // seed with the current time
+  m_TotalRandomNumbersGenerated = 0;
 }

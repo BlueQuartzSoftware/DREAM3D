@@ -40,6 +40,15 @@
 #include <vector>
 #include <string>
 
+///Boost Random Number generator stuff
+#include <boost/random/mersenne_twister.hpp>
+#include <boost/random/uniform_int.hpp>
+#include <boost/random/variate_generator.hpp>
+
+typedef boost::uniform_int<int> NumberDistribution;
+typedef boost::mt19937 RandomNumberGenerator;
+typedef boost::variate_generator<RandomNumberGenerator&, NumberDistribution> Generator;
+
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/DataArrays/IDataArray.h"
@@ -90,6 +99,7 @@ class DREAM3DLib_EXPORT GroupMicroTextureRegions : public AbstractFilter
 
     DREAM3D_INSTANCE_PROPERTY(float, CAxisTolerance)
     DREAM3D_INSTANCE_PROPERTY(bool, UseNonContiguousNeighbors)
+    DREAM3D_INSTANCE_PROPERTY(bool, RandomizeGrainIds)
 
     virtual void setupFilterParameters();
     virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
@@ -109,8 +119,21 @@ class DREAM3DLib_EXPORT GroupMicroTextureRegions : public AbstractFilter
   protected:
     GroupMicroTextureRegions();
 
-    void merge_micro_texture_regions();
+    int merge_micro_texture_regions();
     void characterize_micro_texture_regions();
+
+    /**
+     * @brief randomizeGrainIds
+     * @param totalPoints
+     * @param totalFields
+     */
+    void randomizeGrainIds(int64_t totalPoints, size_t totalFields);
+
+    /**
+     * @brief initializeVoxelSeedGenerator
+     * @param totalPoints
+     */
+    void initializeVoxelSeedGenerator(const size_t rangeMin, const size_t rangeMax);
 
   private:
     int32_t* m_GrainIds;
@@ -134,6 +157,12 @@ class DREAM3DLib_EXPORT GroupMicroTextureRegions : public AbstractFilter
 
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
+    ///Boost Random Number generator stuff. We use the boost::shared_ptr to ensure the pointers are cleaned up when the
+    ///filter is deleted
+    boost::shared_ptr<NumberDistribution> m_Distribution;
+    boost::shared_ptr<RandomNumberGenerator> m_RandomNumberGenerator;
+    boost::shared_ptr<Generator> m_NumberGenerator;
+    size_t                       m_TotalRandomNumbersGenerated;
 
     GroupMicroTextureRegions(const GroupMicroTextureRegions&); // Copy Constructor Not Implemented
     void operator=(const GroupMicroTextureRegions&); // Operator '=' Not Implemented

@@ -133,7 +133,6 @@ void BridgeParentIdsStatisticsToGrainIds::dataCheck(bool preflight, size_t voxel
   if(afterLink == false)
   {
     GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldParentIds, ss, -302, int32_t, Int32ArrayType, fields, 1)
-    CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, OldGrainIds, ss, int32_t, Int32ArrayType, 0, voxels, 1)
 
     if (m_CalcUnbiasedLocalCAxis == true)
     {
@@ -308,6 +307,21 @@ void BridgeParentIdsStatisticsToGrainIds::execute()
 
       }
     }
+  }
+
+  RenameCellArray::Pointer rename_cell_array1 = RenameCellArray::New();
+  rename_cell_array1->setObservers(this->getObservers());
+  rename_cell_array1->setVoxelDataContainer(m);
+  rename_cell_array1->setMessagePrefix(getMessagePrefix());
+  rename_cell_array1->setSelectedCellArrayName(m_GrainIdsArrayName);
+  rename_cell_array1->setNewCellArrayName(m_OldGrainIdsArrayName);
+  rename_cell_array1->execute();
+  int err0 = rename_cell_array1->getErrorCondition();
+  if (err0 < 0)
+  {
+    setErrorCondition(rename_cell_array1->getErrorCondition());
+    addErrorMessages(rename_cell_array1->getPipelineMessages());
+    return;
   }
 
   RenameCellArray::Pointer rename_cell_array = RenameCellArray::New();
