@@ -70,6 +70,7 @@ GroupMicroTextureRegions::GroupMicroTextureRegions() :
   m_CellEnsembleAttributeMatrixName(DREAM3D::Defaults::CellEnsembleAttributeMatrixName),
   m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
   m_CAxisTolerance(1.0f),
+  m_RandomizeParentIds(true),
   m_UseRunningAverage(false),
   m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
   m_FeatureIds(NULL),
@@ -285,67 +286,18 @@ void GroupMicroTextureRegions::execute()
     return;
   }
 
-  size_t numParents = 0;
   size_t totalPoints = static_cast<size_t>(m->getTotalPoints());
   for (size_t k = 0; k < totalPoints; k++)
   {
     int featurename = m_FeatureIds[k];
     m_CellParentIds[k] = m_FeatureParentIds[featurename];
-    if(m_FeatureParentIds[featurename] > numParents) numParents = m_FeatureParentIds[featurename];
   }
-  numParents += 1;
 
-  //m_RandomizeParentIds = false;
+  // By default we randomize grains
   if (true == m_RandomizeParentIds)
   {
-    int64_t totalPoints = m->getAttributeMatrix(getCellAttributeMatrixName())->getNumTuples();
-
-    // Generate all the numbers up front
-    const int rangeMin = 1;
-    const int rangeMax = numParents - 1;
-    typedef boost::uniform_int<int> NumberDistribution;
-    typedef boost::mt19937 RandomNumberGenerator;
-    typedef boost::variate_generator < RandomNumberGenerator&,
-        NumberDistribution > Generator;
-
-    NumberDistribution distribution(rangeMin, rangeMax);
-    RandomNumberGenerator generator;
-    Generator numberGenerator(generator, distribution);
-    generator.seed(static_cast<boost::uint32_t>( QDateTime::currentMSecsSinceEpoch() )); // seed with the current time
-
-    DataArray<int32_t>::Pointer rndNumbers = DataArray<int32_t>::CreateArray(numParents, "New ParentIds");
-    int32_t* pid = rndNumbers->getPointer(0);
-    pid[0] = 0;
-    QSet<int32_t> parentIdSet;
-    parentIdSet.insert(0);
-    for(int i = 1; i < numParents; ++i)
-    {
-      pid[i] = i; //numberGenerator();
-      parentIdSet.insert(pid[i]);
-    }
-
-    int r;
-    size_t temp;
-    //--- Shuffle elements by randomly exchanging each with one other.
-    for (int i = 1; i < numParents; i++)
-    {
-      r = numberGenerator(); // Random remaining position.
-      if (r >= numParents)
-      {
-        continue;
-      }
-      temp = pid[i];
-      pid[i] = pid[r];
-      pid[r] = temp;
-    }
-
-    // Now adjust all the Feature Id values for each Voxel
-
-    for(int64_t i = 0; i < totalPoints; ++i)
-    {
-      m_CellParentIds[i] = pid[ m_CellParentIds[i] ];
-      m_FeatureParentIds[m_FeatureIds[i]] = m_CellParentIds[i];
-    }
+    int64_t totalPoints = m->getTotalPoints();
+    randomizeFeatureIds(totalPoints, totalFeatures);
   }
 
   notifyStatusMessage(getHumanLabel(), "Characterizing MicroTexture Regions");
@@ -353,6 +305,51 @@ void GroupMicroTextureRegions::execute()
 
   // If there is an error set this to something negative and also set a message
   notifyStatusMessage(getHumanLabel(), "GroupMicroTextureRegions Completed");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void GroupMicroTextureRegions::randomizeFeatureIds(int64_t totalPoints, size_t totalFeatures)
+{
+  notifyStatusMessage(getHumanLabel(), "Randomizing Parent Ids");
+  // Generate an even distribution of numbers between the min and max range
+  const size_t rangeMin = 0;
+  const size_t rangeMax = totalFeatures - 1;
+  initializeVoxelSeedGenerator(rangeMin, rangeMax);
+
+// Get a reference variable to the Generator object
+  Generator& numberGenerator = *m_NumberGenerator;
+
+  DataArray<int32_t>::Pointer rndNumbers = DataArray<int32_t>::CreateArray(totalFeatures, "New GrainIds");
+
+  int32_t* gid = rndNumbers->getPointer(0);
+  gid[0] = 0;
+  for(size_t i = 1; i < totalFeatures; ++i)
+  {
+    gid[i] = i;
+  }
+
+  size_t r;
+  size_t temp;
+  //--- Shuffle elements by randomly exchanging each with one other.
+  for (size_t i = 1; i < totalFeatures; i++)
+  {
+    r = numberGenerator(); // Random remaining position.
+    if (r >= totalFeatures) {
+      continue;
+    }
+    temp = gid[i];
+    gid[i] = gid[r];
+    gid[r] = temp;
+  }
+
+  // Now adjust all the Grain Id values for each Voxel
+  for(int64_t i = 0; i < totalPoints; ++i)
+  {
+      m_CellParentIds[i] = gid[ m_CellParentIds[i] ];
+      m_FeatureParentIds[m_FeatureIds[i]] = m_CellParentIds[i];
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -481,6 +478,25 @@ bool GroupMicroTextureRegions::determineGrouping(int referenceFeature, int neigh
     }
   }
   return false;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void GroupMicroTextureRegions::initializeVoxelSeedGenerator(const size_t rangeMin, const size_t rangeMax)
+{
+
+// The way we are using the boost random number generators is that we are asking for a NumberDistribution (see the typedef)
+// to guarantee the numbers are betwee a specific range and will only be generated once. We also keep a tally of the
+// total number of numbers generated as a way to make sure the while loops eventually terminate. This setup should
+// make sure that every voxel can be a seed point.
+//  const size_t rangeMin = 0;
+//  const size_t rangeMax = totalPoints - 1;
+  m_Distribution = boost::shared_ptr<NumberDistribution>(new NumberDistribution(rangeMin, rangeMax));
+  m_RandomNumberGenerator = boost::shared_ptr<RandomNumberGenerator>(new RandomNumberGenerator);
+  m_NumberGenerator = boost::shared_ptr<Generator>(new Generator(*m_RandomNumberGenerator, *m_Distribution));
+  m_RandomNumberGenerator->seed(static_cast<size_t>( QDateTime::currentMSecsSinceEpoch() )); // seed with the current time
+  m_TotalRandomNumbersGenerated = 0;
 }
 
 // -----------------------------------------------------------------------------

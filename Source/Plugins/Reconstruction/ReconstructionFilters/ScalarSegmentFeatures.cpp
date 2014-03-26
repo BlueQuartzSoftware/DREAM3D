@@ -403,63 +403,74 @@ void ScalarSegmentFeatures::execute()
     missingGoodVoxels = false;
   }
 
+  // Generate the random voxel indices that will be used for the seed points to start a new grain growth/agglomeration
+  const size_t rangeMin = 0;
+  const size_t rangeMax = totalPoints - 1;
+  initializeVoxelSeedGenerator(rangeMin, rangeMax);
+
   SegmentFeatures::execute();
 
-  if (true == m_RandomizeFeatureIds)
+  size_t totalFeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
+  if (totalFeatures < 2)
   {
-    totalPoints = m->getAttributeMatrix(getCellAttributeMatrixName())->getNumTuples();
-    size_t totalFeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
-
-    // Generate all the numbers up front
-    const int rangeMin = 1;
-    const int rangeMax = totalFeatures - 1;
-    typedef boost::uniform_int<int> NumberDistribution;
-    typedef boost::mt19937 RandomNumberGenerator;
-    typedef boost::variate_generator < RandomNumberGenerator&,
-            NumberDistribution > Generator;
-
-    NumberDistribution distribution(rangeMin, rangeMax);
-    RandomNumberGenerator generator;
-    Generator numberGenerator(generator, distribution);
-    generator.seed(static_cast<boost::uint32_t>( QDateTime::currentMSecsSinceEpoch() )); // seed with the current time
-
-    DataArray<int32_t>::Pointer rndNumbers = DataArray<int32_t>::CreateArray(totalFeatures, "New FeatureIds");
-    int32_t* gid = rndNumbers->getPointer(0);
-    gid[0] = 0;
-    QSet<int32_t> featureIdSet;
-    featureIdSet.insert(0);
-    for(size_t i = 1; i < totalFeatures; ++i)
-    {
-      gid[i] = i; //numberGenerator();
-      featureIdSet.insert(gid[i]);
-    }
-
-    size_t r;
-    size_t temp;
-    //--- Shuffle elements by randomly exchanging each with one other.
-    for (size_t i = 1; i < totalFeatures; i++)
-    {
-      r = numberGenerator(); // Random remaining position.
-      if (r >= totalFeatures)
-      {
-        continue;
-      }
-      temp = gid[i];
-      gid[i] = gid[r];
-      gid[r] = temp;
-    }
-
-    // Now adjust all the Feature Id values for each Voxel
-    for(int64_t i = 0; i < totalPoints; ++i)
-    {
-      m_FeatureIds[i] = gid[ m_FeatureIds[i] ];
-    }
+    setErrorCondition(-87000);
+    notifyErrorMessage(getHumanLabel(), "The number of Features was 0 or 1 which means no features were detected. Is a threshold value set to high?", getErrorCondition());
+    return;
   }
 
+  // By default we randomize grains
+  if (true == m_RandomizeFeatureIds)
+  {
+    totalPoints = m->getTotalPoints();
+    randomizeFeatureIds(totalPoints, totalFeatures);
+  }
   // If there is an error set this to something negative and also set a message
   notifyStatusMessage(getHumanLabel(), "Completed");
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ScalarSegmentFeatures::randomizeFeatureIds(int64_t totalPoints, size_t totalFeatures)
+{
+  notifyStatusMessage(getHumanLabel(), "Randomizing Feature Ids");
+  // Generate an even distribution of numbers between the min and max range
+  const size_t rangeMin = 0;
+  const size_t rangeMax = totalFeatures - 1;
+  initializeVoxelSeedGenerator(rangeMin, rangeMax);
+
+// Get a reference variable to the Generator object
+  Generator& numberGenerator = *m_NumberGenerator;
+
+  DataArray<int32_t>::Pointer rndNumbers = DataArray<int32_t>::CreateArray(totalFeatures, "New GrainIds");
+
+  int32_t* gid = rndNumbers->getPointer(0);
+  gid[0] = 0;
+  for(size_t i = 1; i < totalFeatures; ++i)
+  {
+    gid[i] = i;
+  }
+
+  size_t r;
+  size_t temp;
+  //--- Shuffle elements by randomly exchanging each with one other.
+  for (size_t i = 1; i < totalFeatures; i++)
+  {
+    r = numberGenerator(); // Random remaining position.
+    if (r >= totalFeatures) {
+      continue;
+    }
+    temp = gid[i];
+    gid[i] = gid[r];
+    gid[r] = temp;
+  }
+
+  // Now adjust all the Grain Id values for each Voxel
+  for(int64_t i = 0; i < totalPoints; ++i)
+  {
+    m_FeatureIds[i] = gid[ m_FeatureIds[i] ];
+  }
+}
 
 // -----------------------------------------------------------------------------
 //
@@ -470,22 +481,20 @@ int64_t ScalarSegmentFeatures::getSeed(size_t gnum)
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
   int64_t totalPoints = m->getTotalPoints();
-
-  DREAM3D_RANDOMNG_NEW()
-  int64_t seed = -1;
-  int64_t randpoint = 0;
-
-  // Pre-calculate some constants
-  int64_t totalPMinus1 = totalPoints - 1;
-
-  int64_t counter = 0;
-  randpoint = int64_t(float(rg.genrand_res53()) * float(totalPMinus1));
-  while (seed == -1 && counter < totalPoints)
+  int seed = -1;
+  Generator& numberGenerator = *m_NumberGenerator;
+  while(seed == -1 && m_TotalRandomNumbersGenerated < totalPoints)
   {
-    if (randpoint > totalPMinus1) { randpoint = static_cast<int64_t>( randpoint - totalPoints ); }
-    if ((m_GoodVoxels[randpoint] == true || missingGoodVoxels == true) && m_FeatureIds[randpoint] == 0) { seed = randpoint; }
-    randpoint++;
-    counter++;
+    // Get the next voxel index in the precomputed list of voxel seeds
+    size_t randpoint = numberGenerator();
+    m_TotalRandomNumbersGenerated++; // Increment this counter
+    if(m_FeatureIds[randpoint] == 0) // If the GrainId of the voxel is ZERO then we can use this as a seed point
+    {
+      if ((missingGoodVoxels == true || m_GoodVoxels[randpoint] == true))
+      {
+        seed = randpoint;
+      }
+    }
   }
   if (seed >= 0)
   {
@@ -512,6 +521,25 @@ bool ScalarSegmentFeatures::determineGrouping(int64_t referencepoint, int64_t ne
   {
     return false;
   }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ScalarSegmentFeatures::initializeVoxelSeedGenerator(const size_t rangeMin, const size_t rangeMax)
+{
+
+// The way we are using the boost random number generators is that we are asking for a NumberDistribution (see the typedef)
+// to guarantee the numbers are betwee a specific range and will only be generated once. We also keep a tally of the
+// total number of numbers generated as a way to make sure the while loops eventually terminate. This setup should
+// make sure that every voxel can be a seed point.
+//  const size_t rangeMin = 0;
+//  const size_t rangeMax = totalPoints - 1;
+  m_Distribution = boost::shared_ptr<NumberDistribution>(new NumberDistribution(rangeMin, rangeMax));
+  m_RandomNumberGenerator = boost::shared_ptr<RandomNumberGenerator>(new RandomNumberGenerator);
+  m_NumberGenerator = boost::shared_ptr<Generator>(new Generator(*m_RandomNumberGenerator, *m_Distribution));
+  m_RandomNumberGenerator->seed(static_cast<size_t>( QDateTime::currentMSecsSinceEpoch() )); // seed with the current time
+  m_TotalRandomNumbersGenerated = 0;
 }
 
 // -----------------------------------------------------------------------------

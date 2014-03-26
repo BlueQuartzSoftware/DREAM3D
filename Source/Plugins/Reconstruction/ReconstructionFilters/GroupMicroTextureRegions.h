@@ -41,6 +41,15 @@
 #include <vector>
 #include <QtCore/QString>
 
+///Boost Random Number generator stuff
+#include <boost/random/mersenne_twister.hpp>
+#include <boost/random/uniform_int.hpp>
+#include <boost/random/variate_generator.hpp>
+
+typedef boost::uniform_int<int> NumberDistribution;
+typedef boost::mt19937 RandomNumberGenerator;
+typedef boost::variate_generator<RandomNumberGenerator&, NumberDistribution> Generator;
+
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/DataArrays/IDataArray.h"
@@ -124,6 +133,19 @@ class GroupMicroTextureRegions : public GroupFeatures
     virtual bool determineGrouping(int referenceFeature, int neighborFeature, int newFid);
 
     void characterize_micro_texture_regions();
+    
+    /**
+     * @brief randomizeGrainIds
+     * @param totalPoints
+     * @param totalFields
+     */
+    void randomizeFeatureIds(int64_t totalPoints, size_t totalFeatures);
+
+    /**
+     * @brief initializeVoxelSeedGenerator
+     * @param totalPoints
+     */
+    void initializeVoxelSeedGenerator(const size_t rangeMin, const size_t rangeMax);
 
   private:
     DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeatureIds)
@@ -142,6 +164,13 @@ class GroupMicroTextureRegions : public GroupFeatures
 
     void dataCheck();
     void updateFeatureInstancePointers();
+
+    ///Boost Random Number generator stuff. We use the boost::shared_ptr to ensure the pointers are cleaned up when the
+    ///filter is deleted
+    boost::shared_ptr<NumberDistribution> m_Distribution;
+    boost::shared_ptr<RandomNumberGenerator> m_RandomNumberGenerator;
+    boost::shared_ptr<Generator> m_NumberGenerator;
+    size_t                       m_TotalRandomNumbersGenerated;
 
     GroupMicroTextureRegions(const GroupMicroTextureRegions&); // Copy Constructor Not Implemented
     void operator=(const GroupMicroTextureRegions&); // Operator '=' Not Implemented

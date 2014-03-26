@@ -144,17 +144,6 @@ void FindNeighborhoods::dataCheck()
     }
     m_NeighborhoodList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>* >
         (m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getAttributeArray(m_NeighborhoodListArrayName).get());
-
-    CreatedArrayHelpIndexEntry::Pointer e = CreatedArrayHelpIndexEntry::New();
-    e->setFilterName(this->getNameOfClass());
-    e->setFilterHumanLabel(this->getHumanLabel());
-    e->setFilterGroup(this->getGroupName());
-    e->setFilterSubGroup(this->getSubGroupName());
-    e->setArrayDefaultName(m_NeighborhoodListArrayName);
-    e->setArrayGroup("Feature");
-    e->setArrayNumComponents(0);
-    e->setArrayType("NeighborList");
-    addCreatedArrayHelpIndexEntry(e);
   }
 
   QVector<size_t> dims(1, 1);
@@ -232,8 +221,6 @@ void FindNeighborhoods::find_neighborhoods()
     criticalDistance[i] /= aveDiam;
   }
 
-  float aveCriticalDistance = aveDiam * m_MultiplesOfAverage;
-
   float m_OriginX, m_OriginY, m_OriginZ;
   m->getOrigin(m_OriginX, m_OriginY, m_OriginZ);
   size_t udims[3] = {0, 0, 0};
@@ -243,25 +230,6 @@ void FindNeighborhoods::find_neighborhoods()
 #else
   typedef int64_t DimType;
 #endif
-//  DimType dims[3] =
-//  {
-//    static_cast<DimType>(udims[0]),
-//    static_cast<DimType>(udims[1]),
-//    static_cast<DimType>(udims[2]),
-//  };
-
-  //  size_t xP = dims[0];
-  //  size_t yP = dims[1];
-  //  size_t zP = dims[2];
-  //  float xRes = m->getXRes();
-  //  float yRes = m->getYRes();
-  //  float zRes = m->getZRes();
-  //  float sizeX = float(xP) * xRes;
-  //  float sizeY = float(yP) * yRes;
-  //  float sizeZ = float(zP) * zRes;
-  //  int numXBins = int(sizeX / aveCriticalDistance);
-  //  int numYBins = int(sizeY / aveCriticalDistance);
-  //  int numZBins = int(sizeZ / aveCriticalDistance);
 
   int xbin, ybin, zbin;
   //int bin, bin1, bin2;
@@ -271,9 +239,9 @@ void FindNeighborhoods::find_neighborhoods()
     x = m_Centroids[3 * i];
     y = m_Centroids[3 * i + 1];
     z = m_Centroids[3 * i + 2];
-    xbin = int((x - m_OriginX) / aveCriticalDistance);
-    ybin = int((y - m_OriginY) / aveCriticalDistance);
-    zbin = int((z - m_OriginZ) / aveCriticalDistance);
+    xbin = int((x - m_OriginX) / aveDiam);
+    ybin = int((y - m_OriginY) / aveDiam);
+    zbin = int((z - m_OriginZ) / aveDiam);
     bins[3*i] = xbin;
     bins[3*i+1] = ybin;
     bins[3*i+2] = zbin;

@@ -178,7 +178,7 @@ void GroupFeatures::execute()
         if (m_UseNonContiguousNeighbors == true) { list2size = int(neighborlist2[firstfeature].size()); }
         for (int k = 0; k < 2; k++)
         {
-		  if (m_PatchGrouping == true) { k = 1; }
+          if (m_PatchGrouping == true) { k = 1; }
           if (k == 0) { listsize = list1size; }
           else if (k == 1) { listsize = list2size; }
           for (int l = 0; l < listsize; l++)
@@ -190,38 +190,38 @@ void GroupFeatures::execute()
             {
               if(determineGrouping(firstfeature, neigh, parentcount) == true)
               {
-				if (m_PatchGrouping == false) { grouplist.push_back(neigh); }
+                if (m_PatchGrouping == false) { grouplist.push_back(neigh); }
               }
             }
           }
         }
       }
-	  if (m_PatchGrouping == true) 
-	  {
-		if (growPatch(parentcount) == true)
-		{
-		  int stop = 0;
-		  for (size_t j = 0; j < grouplist.size(); j++)
-		  {
-			int firstfeature = grouplist[j];
-			listsize = int(neighborlist[firstfeature].size());
-			for (int l = 0; l < listsize; l++)
-			{
-			  neigh = neighborlist[firstfeature][l];
-			  if (neigh != firstfeature)
-			  {
-				if(growGrouping(firstfeature, neigh, parentcount) == true)
-				{
-				  grouplist.push_back(neigh);
-				  int grouplistsize = grouplist.size();
-				  int stop2 = 0;
-				}
-			  }
-			}
-		  }
-		}
-	  }
-	}
+      if (m_PatchGrouping == true) 
+      {
+        if (growPatch(parentcount) == true)
+        {
+          int stop = 0;
+          for (size_t j = 0; j < grouplist.size(); j++)
+          {
+            int firstfeature = grouplist[j];
+            listsize = int(neighborlist[firstfeature].size());
+            for (int l = 0; l < listsize; l++)
+            {
+              neigh = neighborlist[firstfeature][l];
+              if (neigh != firstfeature)
+              {
+                if(growGrouping(firstfeature, neigh, parentcount) == true)
+                {
+                  grouplist.push_back(neigh);
+                  int grouplistsize = grouplist.size();
+                  int stop2 = 0;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
     grouplist.clear();
   }
 

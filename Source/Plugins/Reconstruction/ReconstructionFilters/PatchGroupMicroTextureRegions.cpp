@@ -275,17 +275,6 @@ void PatchGroupMicroTextureRegions::dataCheck()
     }
     m_NeighborhoodList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>* >
         (m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getAttributeArray(m_NeighborhoodListArrayName).get());
-
-    CreatedArrayHelpIndexEntry::Pointer e = CreatedArrayHelpIndexEntry::New();
-    e->setFilterName(this->getNameOfClass());
-    e->setFilterHumanLabel(this->getHumanLabel());
-    e->setFilterGroup(this->getGroupName());
-    e->setFilterSubGroup(this->getSubGroupName());
-    e->setArrayDefaultName(m_NeighborhoodListArrayName);
-    e->setArrayGroup("Feature");
-    e->setArrayNumComponents(0);
-    e->setArrayType("NeighborList");
-    addCreatedArrayHelpIndexEntry(e);
   }
 
   m_NeighborhoodsPtr = cellFeatureAttrMat->createNonPrereqArray<DataArray<int32_t>, AbstractFilter, int32_t>(this, m_NeighborhoodsArrayName, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
@@ -541,13 +530,13 @@ size_t PatchGroupMicroTextureRegions::determinePatchFeatureCentroids()
 
   // if z dimension = 0
   if (udims[2] == 1) zPatch = 1;
-  else zPatch = int(floor(udims[2] / patchEdgeLengthZ));
+  else zPatch = int(udims[2] / patchEdgeLengthZ);
   // if y dimension = 0
   if (udims[1] == 1) yPatch = 1;
-  else yPatch = int(floor(udims[1] / patchEdgeLengthY));
+  else yPatch = int(udims[1] / patchEdgeLengthY);
   // if x dimension = 0
   if (udims[0] == 1) xPatch = 1;
-  else xPatch = int(floor(udims[0] / patchEdgeLengthX));
+  else xPatch = int(udims[0] / patchEdgeLengthX);
   size_t totalPatches = xPatch * yPatch * zPatch;
   patchFeatureVolumeFractions.resize(totalPatches+1);
   for (int i = 1; i < totalPatches; i++)
@@ -583,19 +572,19 @@ size_t PatchGroupMicroTextureRegions::determinePatchFeatureCentroids()
 	{
 	  for(size_t k = 0; k < xPoints; k++)
 	  {
-		patchIntervalZ = int(i/patchEdgeLengthZ) * int(zPoints/patchEdgeLengthZ);
-		patchIntervalY = int(j/patchEdgeLengthY) * int(yPoints/patchEdgeLengthY);
-		patchIntervalX = int(k/patchEdgeLengthX);
-		patchnum = patchIntervalZ + patchIntervalY + patchIntervalX;
-		m_CellParentIds[count] = patchnum + 1;
-		x = float(k) * xRes;
-		y = float(j) * yRes;
-		z = float(i) * zRes;
-		patchCenters[patchnum * 5 + 0]++;
-		patchCenters[patchnum * 5 + 1] = patchCenters[patchnum * 5 + 1] + x;
-		patchCenters[patchnum * 5 + 2] = patchCenters[patchnum * 5 + 2] + y;
-		patchCenters[patchnum * 5 + 3] = patchCenters[patchnum * 5 + 3] + z;
-		++count;
+      patchIntervalZ = int(i/patchEdgeLengthZ) * xPatch * yPatch;
+		  patchIntervalY = int(j/patchEdgeLengthY) * xPatch;
+		  patchIntervalX = int(k/patchEdgeLengthX);
+		  patchnum = patchIntervalZ + patchIntervalY + patchIntervalX;
+		  m_CellParentIds[count] = patchnum + 1;
+		  x = float(k) * xRes;
+		  y = float(j) * yRes;
+		  z = float(i) * zRes;
+		  patchCenters[patchnum * 5 + 0]++;
+		  patchCenters[patchnum * 5 + 1] = patchCenters[patchnum * 5 + 1] + x;
+		  patchCenters[patchnum * 5 + 2] = patchCenters[patchnum * 5 + 2] + y;
+		  patchCenters[patchnum * 5 + 3] = patchCenters[patchnum * 5 + 3] + z;
+		  ++count;
 	  }
 	}
   }
@@ -609,11 +598,11 @@ size_t PatchGroupMicroTextureRegions::determinePatchFeatureCentroids()
     patchCentroids[3 * i] = patchCenters[i * 5 + 1];
     patchCentroids[3 * i + 1] = patchCenters[i * 5 + 2];
     patchCentroids[3 * i + 2] = patchCenters[i * 5 + 3];
-	// debugging lines
-	float checkPatchCentersx = patchCentroids[3 * i];
-	float checkPatchCentersy = patchCentroids[3 * i + 1];
-	float checkPatchCentersz = patchCentroids[3 * i + 2];
-	int stop = 0;
+	  // debugging lines
+	  float checkPatchCentersx = patchCentroids[3 * i];
+	  float checkPatchCentersy = patchCentroids[3 * i + 1];
+	  float checkPatchCentersz = patchCentroids[3 * i + 2];
+	  int stop = 0;
   }
 
   return totalPatches;
@@ -719,16 +708,6 @@ void PatchGroupMicroTextureRegions::determinePatchFeatureVolumes(size_t totalPat
     m_NeighborhoodList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>* >
         (m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getAttributeArray(m_NeighborhoodListArrayName).get());
 
-    CreatedArrayHelpIndexEntry::Pointer e = CreatedArrayHelpIndexEntry::New();
-    e->setFilterName(this->getNameOfClass());
-    e->setFilterHumanLabel(this->getHumanLabel());
-    e->setFilterGroup(this->getGroupName());
-    e->setFilterSubGroup(this->getSubGroupName());
-    e->setArrayDefaultName(m_NeighborhoodListArrayName);
-    e->setArrayGroup("Feature");
-    e->setArrayNumComponents(0);
-    e->setArrayType("NeighborList");
-    addCreatedArrayHelpIndexEntry(e);
   }
   QVector<size_t> dims(1, 1);
   dims[0] = 1;
@@ -743,7 +722,7 @@ void PatchGroupMicroTextureRegions::determinePatchFeatureVolumes(size_t totalPat
   {
     if (i % 1000 == 0)
     {
-	  QString ss = QObject::tr("Working On Patch %1 of %2").arg(i).arg(totalPatches);
+      QString ss = QObject::tr("Working On Patch %1 of %2").arg(i).arg(totalPatches);
       notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
     }
     bin1x = patchBins[3*i];
@@ -760,17 +739,17 @@ void PatchGroupMicroTextureRegions::determinePatchFeatureVolumes(size_t totalPat
       dBinY = abs(bin2y - bin1y);
       dBinZ = abs(bin2z - bin1z);
 
-	  // if the bin separation is less than the critical distance in x,y,z then add it to the patch's feature list
+      // if the bin separation is less than the critical distance in x,y,z then add it to the patch's feature list
       if (dBinX < patchCriticalDistance && dBinY < patchCriticalDistance && dBinZ < patchCriticalDistance)
       {
-		m_Neighborhoods[i]++;
+        m_Neighborhoods[i]++;
         patchFeatureList[i].push_back(j);
-		patchFeatureVolume[i] += m_Volumes[j];
+        patchFeatureVolume[i] += m_Volumes[j];
       }
     }
-  // debugging lines
-  int test = m_Neighborhoods[i];
-  int stop = 0;
+    // debugging lines
+    int test = m_Neighborhoods[i];
+    int stop = 0;
   }
   for (size_t i = 1; i < totalPatches; i++)
   {
