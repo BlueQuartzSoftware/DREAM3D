@@ -78,7 +78,16 @@ void UnknownWidget::setupGui()
 
   if (m_FilterParameter != NULL)
   {
-    UnknownWidgetLabel->setText("Unknown Widget Type " + m_FilterParameter->getWidgetType() + " for " + m_FilterParameter->getHumanLabel());
+    QString units = m_FilterParameter->getUnits();
+    if(units.isEmpty() == false)
+    {
+      label->setText(m_FilterParameter->getHumanLabel() + " (" + units + ")");
+    }
+    else
+    {
+      label->setText(m_FilterParameter->getHumanLabel() );
+    }
+
   }
 }
 

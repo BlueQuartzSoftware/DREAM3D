@@ -80,7 +80,16 @@ JumbleOrientations::~JumbleOrientations()
 // -----------------------------------------------------------------------------
 void JumbleOrientations::setupFilterParameters()
 {
-
+  FilterParameterVector parameters;
+  {
+    FilterParameter::Pointer parameter = FilterParameter::New();
+    parameter->setHumanLabel("Select Synthetic Volume DataContainer");
+    parameter->setPropertyName("DataContainerName");
+    parameter->setWidgetType(FilterParameterWidgetType::DataContainerSelectionWidget);
+    parameter->setValueType("QString");
+    parameters.push_back(parameter);
+  }
+  setFilterParameters(parameters);
 }
 // -----------------------------------------------------------------------------
 //
@@ -89,7 +98,8 @@ void JumbleOrientations::readFilterParameters(AbstractFilterParametersReader* re
 {
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
-  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN */
+  setDataContainerName( reader->readString("DataContainerName", getDataContainerName() ) );
   /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }
@@ -100,6 +110,7 @@ void JumbleOrientations::readFilterParameters(AbstractFilterParametersReader* re
 int JumbleOrientations::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
+  writer->writeValue("DataContainerName", getDataContainerName() );
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }

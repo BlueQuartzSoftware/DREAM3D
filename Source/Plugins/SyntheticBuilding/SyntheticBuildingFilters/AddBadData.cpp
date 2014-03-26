@@ -73,6 +73,15 @@ AddBadData::~AddBadData()
 void AddBadData::setupFilterParameters()
 {
   FilterParameterVector parameters;
+
+  {
+    FilterParameter::Pointer parameter = FilterParameter::New();
+    parameter->setHumanLabel("Select Synthetic Volume DataContainer");
+    parameter->setPropertyName("DataContainerName");
+    parameter->setWidgetType(FilterParameterWidgetType::DataContainerSelectionWidget);
+    parameter->setValueType("QString");
+    parameters.push_back(parameter);
+  }
   {
     FilterParameter::Pointer parameter = FilterParameter::New();
     parameter->setHumanLabel("Add Random Noise");
@@ -115,6 +124,7 @@ void AddBadData::readFilterParameters(AbstractFilterParametersReader* reader, in
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
   /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+  setDataContainerName( reader->readString("DataContainerName", getDataContainerName()) );
   setPoissonNoise( reader->readValue("PoissonNoise", getPoissonNoise()) );
   setPoissonVolFraction( reader->readValue("PoissonVolFraction", getPoissonVolFraction()) );
   setBoundaryNoise( reader->readValue("BoundaryNoise", getBoundaryNoise()) );
@@ -129,6 +139,7 @@ void AddBadData::readFilterParameters(AbstractFilterParametersReader* reader, in
 int AddBadData::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
+  writer->writeValue("DataContainerName", getDataContainerName() );
   writer->writeValue("PoissonNoise", getPoissonNoise() );
   writer->writeValue("PoissonVolFraction", getPoissonVolFraction() );
   writer->writeValue("BoundaryNoise", getBoundaryNoise() );

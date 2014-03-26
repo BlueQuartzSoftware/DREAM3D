@@ -82,7 +82,16 @@ void ChoiceWidget::setupGui()
 
   if (m_FilterParameter != NULL)
   {
-    ChoiceWidgetLabel->setText(m_FilterParameter->getHumanLabel() );
+    QString units = m_FilterParameter->getUnits();
+    if(units.isEmpty() == false)
+    {
+      label->setText(m_FilterParameter->getHumanLabel() + " (" + units + ")");
+    }
+    else
+    {
+      label->setText(m_FilterParameter->getHumanLabel() );
+    }
+
     // setup the list of choices for the widget
     ChoiceFilterParameter* choice = dynamic_cast<ChoiceFilterParameter*>(m_FilterParameter);
     QList<QString> choices = choice->getChoices().toList();

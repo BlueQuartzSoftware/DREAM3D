@@ -39,7 +39,7 @@
 #include <QtCore/QList>
 #include <QtGui/QListWidgetItem>
 
-#include <DREAM3DLib/DataContainers/DataArrayPath.h>
+#include "DREAM3DLib/DataContainers/DataArrayPath.h"
 
 #include "FilterParameterWidgetsDialogs.h"
 
@@ -62,15 +62,42 @@ DataArraySelectionWidget::DataArraySelectionWidget(FilterParameter* parameter, A
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+DataArraySelectionWidget::DataArraySelectionWidget(QWidget* parent) :
+  QWidget(parent),
+  m_Filter(NULL),
+  m_FilterParameter(NULL),
+  m_DidCausePreflight(false)
+{
+  setupUi(this);
+  setupGui();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 DataArraySelectionWidget::~DataArraySelectionWidget()
 {}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void DataArraySelectionWidget::initializeWidget(FilterParameter* parameter, AbstractFilter* filter)
+{
+    m_Filter = filter;
+    m_FilterParameter = parameter;
+    setupGui();
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void DataArraySelectionWidget::setupGui()
 {
-
+  if(m_Filter == NULL)
+  {
+    return;
+  }
   // Catch when the filter is about to execute the preflight
   connect(m_Filter, SIGNAL(preflightAboutToExecute()),
           this, SLOT(beforePreflight()));
@@ -87,8 +114,15 @@ void DataArraySelectionWidget::setupGui()
   {
     return;
   }
-  label->setText(m_FilterParameter->getHumanLabel() );
-
+  QString units = m_FilterParameter->getUnits();
+  if(units.isEmpty() == false)
+  {
+    label->setText(m_FilterParameter->getHumanLabel() + " (" + units + ")");
+  }
+  else
+  {
+    label->setText(m_FilterParameter->getHumanLabel() );
+  }
 
   dataContainerList->blockSignals(true);
   attributeMatrixList->blockSignals(true);

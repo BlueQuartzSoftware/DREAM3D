@@ -66,7 +66,7 @@ EstablishMatrixPhase::EstablishMatrixPhase() :
   m_PhaseTypesArrayName(DREAM3D::EnsembleData::PhaseTypes),
   m_PhaseTypes(NULL)
 {
-
+  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------
@@ -75,12 +75,35 @@ EstablishMatrixPhase::EstablishMatrixPhase() :
 EstablishMatrixPhase::~EstablishMatrixPhase()
 {
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void EstablishMatrixPhase::setupFilterParameters()
+{
+  FilterParameterVector parameters;
+  {
+    FilterParameter::Pointer parameter = FilterParameter::New();
+    parameter->setHumanLabel("Select Synthetic Volume DataContainer");
+    parameter->setPropertyName("DataContainerName");
+    parameter->setWidgetType(FilterParameterWidgetType::DataContainerSelectionWidget);
+    parameter->setValueType("QString");
+    parameters.push_back(parameter);
+  }
+
+  setFilterParameters(parameters);
+}
+
+
+// -----------------------------------------------------------------------------
+//
 // -----------------------------------------------------------------------------
 void EstablishMatrixPhase::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
   /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+  setDataContainerName( reader->readString("DataContainerName", getDataContainerName()) );
   /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }
@@ -91,6 +114,7 @@ void EstablishMatrixPhase::readFilterParameters(AbstractFilterParametersReader* 
 int EstablishMatrixPhase::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
+  writer->writeValue("DataContainerName", getDataContainerName() );
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
@@ -165,7 +189,7 @@ void EstablishMatrixPhase::execute()
   setErrorCondition(err);
   DREAM3D_RANDOMNG_NEW()
 
-  dataCheck();
+      dataCheck();
   if(getErrorCondition() < 0) { return; }
 
   //VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
@@ -184,7 +208,7 @@ void  EstablishMatrixPhase::establish_matrix()
   notifyStatusMessage(getHumanLabel(), "Establishing Matrix");
   DREAM3D_RANDOMNG_NEW()
 
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+      VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
   StatsDataArray& statsDataArray = *m_StatsDataArray;
 
@@ -221,10 +245,10 @@ void  EstablishMatrixPhase::establish_matrix()
   }
   firstMatrixFeature = currentnumfeatures;
   // size_t index;
-//  int phase;
+  //  int phase;
   float random;
-//  int random2;
-//  float xc, yc, zc;
+  //  int random2;
+  //  float xc, yc, zc;
   float totalmatrixfractions = 0.0f;
 
 

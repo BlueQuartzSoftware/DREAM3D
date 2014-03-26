@@ -197,7 +197,8 @@ void DREAM3D_UI::on_actionExportPipeline_triggered()
 // -----------------------------------------------------------------------------
 void DREAM3D_UI::closeEvent(QCloseEvent *event)
 {
-  qint32 err = checkDirtyDocument();
+  //qint32 err = checkDirtyDocument();
+  qint32 err = 0;
   if (err < 0)
   {
     event->ignore();

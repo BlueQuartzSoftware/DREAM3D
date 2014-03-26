@@ -645,11 +645,11 @@ void StatsGeneratorUI::on_actionSave_triggered()
 
   int nPhases = phaseTabs->count()+1;
   DataContainerArray::Pointer dca = DataContainerArray::New();
-  VolumeDataContainer::Pointer m = VolumeDataContainer::New();
+  VolumeDataContainer::Pointer m = VolumeDataContainer::New(DREAM3D::Defaults::StatsGenerator);
   dca->pushBack(m);
   QVector<size_t> tDims(1, nPhases);
-  AttributeMatrix::Pointer cellEnsembleAttrMat = AttributeMatrix::New(tDims, "CellEnsembleData", DREAM3D::AttributeMatrixType::CellEnsemble);
-  m->addAttributeMatrix("CellEnsembleData", cellEnsembleAttrMat);
+  AttributeMatrix::Pointer cellEnsembleAttrMat = AttributeMatrix::New(tDims, DREAM3D::Defaults::CellEnsembleAttributeMatrixName, DREAM3D::AttributeMatrixType::CellEnsemble);
+  m->addAttributeMatrix(DREAM3D::Defaults::CellEnsembleAttributeMatrixName, cellEnsembleAttrMat);
 
   StatsDataArray::Pointer statsDataArray = StatsDataArray::New();
   statsDataArray->resize(nPhases);
@@ -808,11 +808,11 @@ void StatsGeneratorUI::openFile(QString h5file)
   phaseTabs->clear();
 
   DataContainerArray::Pointer dca = DataContainerArray::New();
-  VolumeDataContainer::Pointer m = VolumeDataContainer::New();
+  VolumeDataContainer::Pointer m = VolumeDataContainer::New(DREAM3D::Defaults::StatsGenerator);
   dca->pushBack(m);
   QVector<size_t> tDims(1, 0);
-  AttributeMatrix::Pointer cellEnsembleAttrMat = AttributeMatrix::New(tDims, "CellEnsembleData", DREAM3D::AttributeMatrixType::CellEnsemble);
-  m->addAttributeMatrix("CellEnsembleData", cellEnsembleAttrMat);
+  AttributeMatrix::Pointer cellEnsembleAttrMat = AttributeMatrix::New(tDims, DREAM3D::Defaults::CellEnsembleAttributeMatrixName, DREAM3D::AttributeMatrixType::CellEnsemble);
+  m->addAttributeMatrix(DREAM3D::Defaults::CellEnsembleAttributeMatrixName, cellEnsembleAttrMat);
 
   hid_t fileId = QH5Utilities::openFile(h5file, true); // Open the file Read Only
   if(fileId < 0)
@@ -823,11 +823,11 @@ void StatsGeneratorUI::openFile(QString h5file)
   }
   // This will make sure if we return early from this method that the HDF5 File is properly closed.
   HDF5ScopedFileSentinel scopedFileSentinel(&fileId, true);
-  hid_t dcaGid = H5Gopen(fileId, DREAM3D::StringConstants::DataContainerGroupName.toLatin1().data(), 0);
+  hid_t dcaGid = H5Gopen(fileId, DREAM3D::StringConstants::DataContainerGroupName.toLatin1().constData(), 0);
   scopedFileSentinel.addGroupId(&dcaGid);
-  hid_t dcGid = H5Gopen(dcaGid, "VolumeDataContainer", 0);
+  hid_t dcGid = H5Gopen(dcaGid, DREAM3D::Defaults::StatsGenerator.toLatin1().constData(), 0);
   scopedFileSentinel.addGroupId(&dcGid);
-  hid_t amGid = H5Gopen(dcGid, "CellEnsembleData", 0);
+  hid_t amGid = H5Gopen(dcGid, DREAM3D::Defaults::CellEnsembleAttributeMatrixName.toLatin1().constData(), 0);
   scopedFileSentinel.addGroupId(&amGid);
 
   cellEnsembleAttrMat->addAttributeArrayFromHDF5Path(amGid, "Statistics", false);

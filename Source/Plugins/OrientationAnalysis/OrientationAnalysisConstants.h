@@ -2,12 +2,20 @@
 #define _OrientationAnalysisConstants_H_
 
 #include <QtCore/QString>
-
+/**
+ * @namespace OrientationAnalysis
+ * @brief These are strings that the plugin uses for display in error and other information messages.
+ */
 namespace OrientationAnalysis {
   const QString OrientationAnalysisPluginFile("OrientationAnalysisPlugin");
   const QString OrientationAnalysisPluginDisplayName("OrientationAnalysisPlugin");
   const QString OrientationAnalysisBaseName("OrientationAnalysisPlugin");
 }
+
+/**
+ * @namespace FilterParameterWidgetType
+ * @brief If you create custom Filter Parameter Widgets for your classes then those need to be defined here
+ */
 namespace FilterParameterWidgetType
 {
 

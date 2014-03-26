@@ -21,6 +21,9 @@ set(DREAM3D_PARAMETER_WIDGETS
       DataContainerArrayProxyWidget
       ComparisonSelectionWidget
       AttributeMatrixSelectionWidget
+      DataContainerSelectionWidget
+      ShapeTypeSelectionWidget
+      PreflightUpdatedValueWidget
 #      CellArrayComparisonSelectionWidget
 #      FeatureArrayComparisonSelectionWidget
 #      EnsembleArrayComparisonSelectionWidget

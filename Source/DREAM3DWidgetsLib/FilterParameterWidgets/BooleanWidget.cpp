@@ -82,7 +82,16 @@ void BooleanWidget::setupGui()
 
   if (m_FilterParameter != NULL)
   {
-    BooleanWidgetLabel->setText(m_FilterParameter->getHumanLabel() );
+    QString units = m_FilterParameter->getUnits();
+    if(units.isEmpty() == false)
+    {
+      label->setText(m_FilterParameter->getHumanLabel() + " (" + units + ")");
+    }
+    else
+    {
+      label->setText(m_FilterParameter->getHumanLabel() );
+    }
+
     QVariant objValue = m_Filter->property(PROPERTY_NAME_AS_CHAR);
     if (objValue.isValid() == true)
     {

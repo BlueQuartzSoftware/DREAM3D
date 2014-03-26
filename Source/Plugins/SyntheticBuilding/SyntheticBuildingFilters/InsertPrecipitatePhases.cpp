@@ -129,6 +129,14 @@ void InsertPrecipitatePhases::setupFilterParameters()
   FilterParameterVector parameters;
   {
     FilterParameter::Pointer parameter = FilterParameter::New();
+    parameter->setHumanLabel("Select Synthetic Volume DataContainer");
+    parameter->setPropertyName("DataContainerName");
+    parameter->setWidgetType(FilterParameterWidgetType::DataContainerSelectionWidget);
+    parameter->setValueType("QString");
+    parameters.push_back(parameter);
+  }
+  {
+    FilterParameter::Pointer parameter = FilterParameter::New();
     parameter->setHumanLabel("Periodic Boundary");
     parameter->setPropertyName("PeriodicBoundaries");
     parameter->setWidgetType(FilterParameterWidgetType::BooleanWidget);
@@ -160,7 +168,8 @@ void InsertPrecipitatePhases::readFilterParameters(AbstractFilterParametersReade
 {
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
-  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN */
+  setDataContainerName( reader->readString("DataContainerName", getDataContainerName() ) );
   setPeriodicBoundaries( reader->readValue("PeriodicBoundaries", false) );
   setWriteGoalAttributes( reader->readValue("WriteGoalAttributes", false) );
   setCsvOutputFile( reader->readString( "CsvOutputFile", getCsvOutputFile() ) );
@@ -174,6 +183,7 @@ void InsertPrecipitatePhases::readFilterParameters(AbstractFilterParametersReade
 int InsertPrecipitatePhases::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
+  writer->writeValue("DataContainerName", getDataContainerName() );
   writer->writeValue("PeriodicBoundaries", getPeriodicBoundaries() );
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
@@ -327,15 +337,15 @@ void InsertPrecipitatePhases::execute()
   setErrorCondition(err);
   DREAM3D_RANDOMNG_NEW()
 
-  dataCheck();
+      dataCheck();
   if(getErrorCondition() < 0) { return; }
 
   notifyStatusMessage(getHumanLabel(), "Packing Precipitates - Generating and Placing Precipitates");
-// this initializes the arrays to hold the details of the locations of all of the features during packing
+  // this initializes the arrays to hold the details of the locations of all of the features during packing
   Int32ArrayType::Pointer featureOwnersPtr = initialize_packinggrid();
   // Get a pointer to the Feature Owners that was just initialized in the initialize_packinggrid() method
-//  int32_t* featureOwners = featureOwnersPtr->getPointer(0);
-//  size_t featureOwnersIdx = 0;
+  //  int32_t* featureOwners = featureOwnersPtr->getPointer(0);
+  //  size_t featureOwnersIdx = 0;
 
   place_precipitates(featureOwnersPtr);
 
@@ -382,7 +392,7 @@ void  InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer featur
   notifyStatusMessage(getHumanLabel(), "Placing Precipitates");
   DREAM3D_RANDOMNG_NEW()
 
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+      VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
   StatsDataArray& statsDataArray = *m_StatsDataArray;
 
@@ -404,7 +414,7 @@ void  InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer featur
 
   int64_t totalPoints = m->getAttributeMatrix(m_CellAttributeMatrixName)->getNumTuples();
 
-// figure out how many grains we already have so we can start the counter at +1 this
+  // figure out how many grains we already have so we can start the counter at +1 this
 
   int64_t currentnumfeatures = m->getAttributeMatrix(m_CellFeatureAttributeMatrixName)->getNumTuples();
   int64_t numensembles = m->getAttributeMatrix(m_CellEnsembleAttributeMatrixName)->getNumTuples();
@@ -520,7 +530,7 @@ void  InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer featur
     phase = precipitatephases[i];
     PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsDataArray[phase].get());
     clusteringdist[i].resize(pp->getBinNumbers()->getSize());
-//    int binNumbers = pp->getBinNumbers();
+    //    int binNumbers = pp->getBinNumbers();
     simclusteringdist[i].resize(pp->getBinNumbers()->getSize());
     VectorOfFloatArray Neighdist = pp->getFeatureSize_Clustering();
     float normalizer = 0;
@@ -581,7 +591,7 @@ void  InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer featur
     random = static_cast<float>(rg.genrand_res53());
     if(random <= precipboundaryfraction)
     {
-// figure out if we want this to be a boundary centroid voxel or not for the proposed precipitate
+      // figure out if we want this to be a boundary centroid voxel or not for the proposed precipitate
       random2 = int(rg.genrand_res53() * double(totalPoints - 1));
       while (m_SurfaceVoxels[random2] == 0 || m_FeatureIds[random2] >= firstPrecipitateFeature)
       {
@@ -605,47 +615,47 @@ void  InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer featur
     m_Centroids[3 * i + 1] = yc;
     m_Centroids[3 * i + 2] = zc;
     insert_precipitate(i);
-//    fillingerror = check_fillingerror(i, -1000, featureOwnersPtr);
+    //    fillingerror = check_fillingerror(i, -1000, featureOwnersPtr);
 
-// try moving precipitate around 10 times, figure out which one of those is the best
-//    for (int iter_fill = 0; iter_fill < 10; iter_fill++)
-//    {
-//      random = static_cast<float>(rg.genrand_res53());
-//      if(random <= precipboundaryfraction)
-//      {
-//        random2 = int(rg.genrand_res53() * double(totalPoints - 1));
-//        while (m_SurfaceVoxels[random2] == 0 || m_FeatureIds[random2] >= firstPrecipitateFeature)
-//        {
-//          random2++;
-//          if(random2 >= totalPoints) { random2 = static_cast<int>(random2 - totalPoints); }
-//        }
-//      }
-//      else if(random > precipboundaryfraction)
-//      {
-//        random2 = static_cast<int>(rg.genrand_res53() * (totalPoints - 1));
-//        while (m_SurfaceVoxels[random2] != 0 || m_FeatureIds[random2] >= firstPrecipitateFeature)
-//        {
-//          random2++;
-//          if(random2 >= totalPoints) { random2 = static_cast<int>(random2 - totalPoints); }
-//        }
-//      }
-//      xc = find_xcoord(random2);
-//      yc = find_ycoord(random2);
-//      zc = find_zcoord(random2);
-//      oldxc = m_Centroids[3 * i];
-//      oldyc = m_Centroids[3 * i + 1];
-//      oldzc = m_Centroids[3 * i + 2];
-//      oldfillingerror = fillingerror;
-//      fillingerror = check_fillingerror(-1000, i, featureOwnersPtr);
-//      move_precipitate(i, xc, yc, zc);
-//      fillingerror = check_fillingerror(i, -1000, featureOwnersPtr);
-//      if(fillingerror > oldfillingerror)
-//      {
-//        fillingerror = check_fillingerror(-1000, i, featureOwnersPtr);
-//        move_precipitate(i, oldxc, oldyc, oldzc);
-//        fillingerror = check_fillingerror(i, -1000, featureOwnersPtr);
-//      }
-//    }
+    // try moving precipitate around 10 times, figure out which one of those is the best
+    //    for (int iter_fill = 0; iter_fill < 10; iter_fill++)
+    //    {
+    //      random = static_cast<float>(rg.genrand_res53());
+    //      if(random <= precipboundaryfraction)
+    //      {
+    //        random2 = int(rg.genrand_res53() * double(totalPoints - 1));
+    //        while (m_SurfaceVoxels[random2] == 0 || m_FeatureIds[random2] >= firstPrecipitateFeature)
+    //        {
+    //          random2++;
+    //          if(random2 >= totalPoints) { random2 = static_cast<int>(random2 - totalPoints); }
+    //        }
+    //      }
+    //      else if(random > precipboundaryfraction)
+    //      {
+    //        random2 = static_cast<int>(rg.genrand_res53() * (totalPoints - 1));
+    //        while (m_SurfaceVoxels[random2] != 0 || m_FeatureIds[random2] >= firstPrecipitateFeature)
+    //        {
+    //          random2++;
+    //          if(random2 >= totalPoints) { random2 = static_cast<int>(random2 - totalPoints); }
+    //        }
+    //      }
+    //      xc = find_xcoord(random2);
+    //      yc = find_ycoord(random2);
+    //      zc = find_zcoord(random2);
+    //      oldxc = m_Centroids[3 * i];
+    //      oldyc = m_Centroids[3 * i + 1];
+    //      oldzc = m_Centroids[3 * i + 2];
+    //      oldfillingerror = fillingerror;
+    //      fillingerror = check_fillingerror(-1000, i, featureOwnersPtr);
+    //      move_precipitate(i, xc, yc, zc);
+    //      fillingerror = check_fillingerror(i, -1000, featureOwnersPtr);
+    //      if(fillingerror > oldfillingerror)
+    //      {
+    //        fillingerror = check_fillingerror(-1000, i, featureOwnersPtr);
+    //        move_precipitate(i, oldxc, oldyc, oldzc);
+    //        fillingerror = check_fillingerror(i, -1000, featureOwnersPtr);
+    //      }
+    //    }
   }
   for (size_t i = firstPrecipitateFeature; i < numfeatures; i++)
   {
@@ -726,10 +736,10 @@ void  InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer featur
       oldxc = m_Centroids[3 * randomfeature];
       oldyc = m_Centroids[3 * randomfeature + 1];
       oldzc = m_Centroids[3 * randomfeature + 2];
-//      oldfillingerror = fillingerror;
-//      fillingerror = check_fillingerror(-1000, static_cast<int>(randomfeature), featureOwnersPtr);
-//      move_precipitate(randomfeature, xc, yc, zc);
-//      fillingerror = check_fillingerror(static_cast<int>(randomfeature), -1000, featureOwnersPtr);
+      //      oldfillingerror = fillingerror;
+      //      fillingerror = check_fillingerror(-1000, static_cast<int>(randomfeature), featureOwnersPtr);
+      //      move_precipitate(randomfeature, xc, yc, zc);
+      //      fillingerror = check_fillingerror(static_cast<int>(randomfeature), -1000, featureOwnersPtr);
       currentclusteringerror = check_clusteringerror(-1000, randomfeature);
       move_precipitate(randomfeature, xc, yc, zc);
       currentclusteringerror = check_clusteringerror(randomfeature, -1000);
@@ -740,9 +750,9 @@ void  InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer featur
       }
       else if(currentclusteringerror < oldclusteringerror)
       {
-//      fillingerror = check_fillingerror(-1000, static_cast<int>(randomfeature), featureOwnersPtr);
-//      move_precipitate(randomfeature, oldxc, oldyc, oldzc);
-//      fillingerror = check_fillingerror(static_cast<int>(randomfeature), -1000, featureOwnersPtr);
+        //      fillingerror = check_fillingerror(-1000, static_cast<int>(randomfeature), featureOwnersPtr);
+        //      move_precipitate(randomfeature, oldxc, oldyc, oldzc);
+        //      fillingerror = check_fillingerror(static_cast<int>(randomfeature), -1000, featureOwnersPtr);
         currentclusteringerror = check_clusteringerror(-1000, randomfeature);
         move_precipitate(randomfeature, oldxc, oldyc, oldzc);
         currentclusteringerror = check_clusteringerror(randomfeature, -1000);
@@ -765,10 +775,10 @@ void  InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer featur
       xc = static_cast<float>(oldxc + ((2.0f * (rg.genrand_res53() - 0.5f)) * (2.0f * m_PackingRes[0])));
       yc = static_cast<float>(oldyc + ((2.0f * (rg.genrand_res53() - 0.5f)) * (2.0f * m_PackingRes[1])));
       zc = static_cast<float>(oldzc + ((2.0f * (rg.genrand_res53() - 0.5f)) * (2.0f * m_PackingRes[2])));
-//      oldfillingerror = fillingerror;
-//      fillingerror = check_fillingerror(-1000, static_cast<int>(randomfeature), featureOwnersPtr);
-//      move_precipitate(randomfeature, xc, yc, zc);
-//      fillingerror = check_fillingerror(static_cast<int>(randomfeature), -1000, featureOwnersPtr);
+      //      oldfillingerror = fillingerror;
+      //      fillingerror = check_fillingerror(-1000, static_cast<int>(randomfeature), featureOwnersPtr);
+      //      move_precipitate(randomfeature, xc, yc, zc);
+      //      fillingerror = check_fillingerror(static_cast<int>(randomfeature), -1000, featureOwnersPtr);
       currentclusteringerror = check_clusteringerror(-1000, randomfeature);
       move_precipitate(randomfeature, xc, yc, zc);
       currentclusteringerror = check_clusteringerror(randomfeature, -1000);
@@ -779,9 +789,9 @@ void  InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer featur
       }
       else if(currentclusteringerror < oldclusteringerror)
       {
-//      fillingerror = check_fillingerror(-1000, static_cast<int>(randomfeature), featureOwnersPtr);
-//      move_precipitate(randomfeature, oldxc, oldyc, oldzc);
-//      fillingerror = check_fillingerror(static_cast<int>(randomfeature), -1000, featureOwnersPtr);
+        //      fillingerror = check_fillingerror(-1000, static_cast<int>(randomfeature), featureOwnersPtr);
+        //      move_precipitate(randomfeature, oldxc, oldyc, oldzc);
+        //      fillingerror = check_fillingerror(static_cast<int>(randomfeature), -1000, featureOwnersPtr);
         currentclusteringerror = check_clusteringerror(-1000, randomfeature);
         move_precipitate(randomfeature, oldxc, oldyc, oldzc);
         currentclusteringerror = check_clusteringerror(randomfeature, -1000);
@@ -799,7 +809,7 @@ void InsertPrecipitatePhases::generate_precipitate(int phase, int seed, Precip* 
 {
   DREAM3D_RANDOMNG_NEW_SEEDED(seed)
 
-  StatsDataArray& statsDataArray = *m_StatsDataArray;
+      StatsDataArray& statsDataArray = *m_StatsDataArray;
 
   float r1 = 1;
   float a2 = 0, a3 = 0;
@@ -940,8 +950,8 @@ void InsertPrecipitatePhases::determine_clustering(size_t gnum, int add)
   typedef QVector<QVector<float> > VectOfVectFloat_t;
 
   PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsDataArray[phase].get());
-//  VectOfVectFloat_t& curSimClusteringDist = simclusteringdist[iter];
-//  size_t curSImClusteringDist_Size = curSimClusteringDist.size();
+  //  VectOfVectFloat_t& curSimClusteringDist = simclusteringdist[iter];
+  //  size_t curSImClusteringDist_Size = curSimClusteringDist.size();
   float oneOverClusteringDistStep = 1.0f / clusteringdiststep[iter];
 
   float maxFeatureDia = pp->getMaxFeatureDiameter();
@@ -962,17 +972,17 @@ void InsertPrecipitatePhases::determine_clustering(size_t gnum, int add)
       r = sqrtf((x - xn) * (x - xn) + (y - yn) * (y - yn) + (z - zn) * (z - zn));
 
       dia = m_EquivalentDiameters[gnum];
-//      dia2 = m_EquivalentDiameters[n];
+      //      dia2 = m_EquivalentDiameters[n];
       if(dia > maxFeatureDia) { dia = maxFeatureDia; }
       if(dia < minFeatureDia) { dia = minFeatureDia; }
-//      if(dia2 > maxFeatureDia) { dia2 = maxFeatureDia; }
-//      if(dia2 < minFeatureDia) { dia2 = minFeatureDia; }
+      //      if(dia2 > maxFeatureDia) { dia2 = maxFeatureDia; }
+      //      if(dia2 < minFeatureDia) { dia2 = minFeatureDia; }
       diabin = static_cast<size_t>(((dia - minFeatureDia) * oneOverBinStepSize) );
-//      dia2bin = static_cast<size_t>(((dia2 - minFeatureDia) * oneOverBinStepSize) );
+      //      dia2bin = static_cast<size_t>(((dia2 - minFeatureDia) * oneOverBinStepSize) );
       clusterbin = static_cast<size_t>( r * oneOverClusteringDistStep );
       if(clusterbin >= 40) { clusterbin = 39; }
       simclusteringdist[iter][diabin][clusterbin] += add;
-//      simclusteringdist[iter][dia2bin][clusterbin] += add;
+      //      simclusteringdist[iter][dia2bin][clusterbin] += add;
     }
   }
 }
@@ -982,7 +992,7 @@ void InsertPrecipitatePhases::determine_clustering(size_t gnum, int add)
 // -----------------------------------------------------------------------------
 float InsertPrecipitatePhases::check_clusteringerror(int gadd, int gremove)
 {
-//  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  //  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
   float clusteringerror;
   float bhattdist;
@@ -1220,9 +1230,9 @@ float InsertPrecipitatePhases::check_fillingerror(int gadd, int gremove, Int32Ar
 void InsertPrecipitatePhases::insert_precipitate(size_t gnum)
 {
   DREAM3D_RANDOMNG_NEW()
-  //   DataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-  //  float dist;
-  float inside = -1;
+      //   DataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+      //  float dist;
+      float inside = -1;
   int column, row, plane;
   int centercolumn, centerrow, centerplane;
   int xmin, xmax, ymin, ymax, zmin, zmax;
@@ -1443,10 +1453,10 @@ void InsertPrecipitatePhases::assign_voxels()
           if (iter2 > dims[1] - 1) { coords[1] = coords[1] + sizey; }
           if (iter3 < 0) { coords[2] = coords[2] - sizez; }
           if (iter3 > dims[2] - 1) { coords[2] = coords[2] + sizez; }
-//          dist = ((coords[0] - xc) * (coords[0] - xc)) + ((coords[1] - yc) * (coords[1] - yc)) + ((coords[2] - zc) * (coords[2] - zc));
-//          dist = sqrtf(dist);
-//          if (dist < radcur1)
-//          {
+          //          dist = ((coords[0] - xc) * (coords[0] - xc)) + ((coords[1] - yc) * (coords[1] - yc)) + ((coords[2] - zc) * (coords[2] - zc));
+          //          dist = sqrtf(dist);
+          //          if (dist < radcur1)
+          //          {
           coords[0] = coords[0] - xc;
           coords[1] = coords[1] - yc;
           coords[2] = coords[2] - zc;
@@ -1468,7 +1478,7 @@ void InsertPrecipitatePhases::assign_voxels()
               m_FeatureIds[currentpoint] = static_cast<int32_t>(i);
             }
           }
-//          }
+          //          }
         }
       }
     }

@@ -80,8 +80,6 @@ class DREAM3DWidgetsLib_EXPORT PipelineFilterWidget : public QFrame, private Ui:
 
     virtual AbstractFilter::Pointer getFilter();
 
-    virtual void setBorderColorStyle(QString s);
-    virtual QString getBorderColorStyle();
     virtual bool isSelected();
 
     virtual QString getHumanLabel();
@@ -103,7 +101,7 @@ class DREAM3DWidgetsLib_EXPORT PipelineFilterWidget : public QFrame, private Ui:
      */
     void setContextMenuActions(QList<QAction*> list);
 
-
+    DREAM3D_INSTANCE_PROPERTY(QString, BorderColorStyle)
 
   public slots:
 
@@ -155,10 +153,10 @@ class DREAM3DWidgetsLib_EXPORT PipelineFilterWidget : public QFrame, private Ui:
   private:
     QRect                     m_DeleteRect;
     QPoint                    dragStartPosition;
-    QTimer*                   m_timer;
-    unsigned char             m_CurrentBorderColorFactor;
-    unsigned char             m_BorderIncrement;
-    QString                   m_BorderColorStyle;
+  //  QTimer*                   m_timer;
+//    unsigned char             m_CurrentBorderColorFactor;
+//    unsigned char             m_BorderIncrement;
+//    QString                   m_BorderColorStyle;
     bool                      m_IsSelected;
     bool                      m_HasPreflightErrors;
     bool                      m_HasPreflightWarnings;

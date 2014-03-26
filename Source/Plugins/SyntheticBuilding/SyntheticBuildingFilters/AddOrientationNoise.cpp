@@ -76,6 +76,14 @@ void AddOrientationNoise::setupFilterParameters()
   FilterParameterVector parameters;
   {
     FilterParameter::Pointer parameter = FilterParameter::New();
+    parameter->setHumanLabel("Select Synthetic Volume DataContainer");
+    parameter->setPropertyName("DataContainerName");
+    parameter->setWidgetType(FilterParameterWidgetType::DataContainerSelectionWidget);
+    parameter->setValueType("QString");
+    parameters.push_back(parameter);
+  }
+  {
+    FilterParameter::Pointer parameter = FilterParameter::New();
     parameter->setHumanLabel("Magnitude of Orientation Noise");
     parameter->setPropertyName("Magnitude");
     parameter->setWidgetType(FilterParameterWidgetType::DoubleWidget);
@@ -93,7 +101,8 @@ void AddOrientationNoise::readFilterParameters(AbstractFilterParametersReader* r
 {
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
-  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN */
+  setDataContainerName( reader->readString("DataContainerName", getDataContainerName() ) );
   setMagnitude( reader->readValue("Magnitude", getMagnitude()) );
   /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
@@ -105,6 +114,7 @@ void AddOrientationNoise::readFilterParameters(AbstractFilterParametersReader* r
 int AddOrientationNoise::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
+  writer->writeValue("DataContainerName", getDataContainerName() );
   writer->writeValue("Magnitude", getMagnitude() );
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
@@ -149,7 +159,7 @@ void AddOrientationNoise::execute()
   setErrorCondition(err);
   DREAM3D_RANDOMNG_NEW()
 
-  dataCheck();
+      dataCheck();
   if(getErrorCondition() < 0) { return; }
 
   m_Magnitude = m_Magnitude * DREAM3D::Constants::k_Pi / 180.0;
@@ -168,7 +178,7 @@ void  AddOrientationNoise::add_orientation_noise()
   notifyStatusMessage(getHumanLabel(), "Adding Orientation Noise");
   DREAM3D_RANDOMNG_NEW()
 
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+      VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
   //float ea1, ea2, ea3;
   float g[3][3];

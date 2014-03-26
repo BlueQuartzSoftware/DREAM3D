@@ -36,6 +36,8 @@
 #ifndef _QMetaObjectUtilities_H_
 #define _QMetaObjectUtilities_H_
 
+#include <QtCore/QMetaType>
+#include <QtCore/QVector>
 
 #include "DREAM3DLib/DREAM3DLib.h"
 
@@ -55,5 +57,9 @@ class DREAM3DLib_EXPORT QMetaObjectUtilities
     QMetaObjectUtilities(const QMetaObjectUtilities&); // Copy Constructor Not Implemented
     void operator=(const QMetaObjectUtilities&); // Operator '=' Not Implemented
 };
+
+
+typedef struct { QVector<unsigned int> d; } UInt32Vector_t;
+Q_DECLARE_METATYPE(UInt32Vector_t)
 
 #endif /* _QMetaObjectUtilities_H_ */

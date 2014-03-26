@@ -536,12 +536,12 @@ void SGAxisODFWidget::on_m_CalculateODFBtn_clicked()
   }
   {
     // Now create a QImage that is mirrored vertically and has the Axis overlay applied to it
-    QImage image = PoleFigureImageUtilities::CreateQImageFromRgbaArray(figures[0].get(), imageSize, true);
+    QImage image = PoleFigureImageUtilities::CreateQImageFromRgbaArray(figures[1].get(), imageSize, true);
     m_011PF->setPixmap(QPixmap::fromImage(image));
   }
   {
     // Now create a QImage that is mirrored vertically and has the Axis overlay applied to it
-    QImage image = PoleFigureImageUtilities::CreateQImageFromRgbaArray(figures[0].get(), imageSize, true);
+    QImage image = PoleFigureImageUtilities::CreateQImageFromRgbaArray(figures[2].get(), imageSize, true);
     m_111PF->setPixmap(QPixmap::fromImage(image));
   }
 

@@ -155,7 +155,6 @@ set(${PLUGIN_NAME}_MODULE_SRCS
   ${${PLUGIN_NAME}_Widgets_UIS}
   ${${PLUGIN_NAME}_Widgets_Generated_MOC_SRCS}
   ${${PLUGIN_NAME}_Widgets_Generated_UI_HDRS}
-
 )
 
 # --------------------------------------------------------------------

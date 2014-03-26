@@ -41,13 +41,15 @@
 
 #include "DREAM3DWidgetsLib/Widgets/PipelineFilterWidget.h"
 
-
-
 #include "OrientationAnalysis/ui_ReadH5EbsdWidget.h"
+
 
 class QualityMetricTableModel;
 class ReadH5Ebsd;
 
+/**
+ * @brief The ReadH5EbsdWidget class
+ */
 class ReadH5EbsdWidget : public QWidget, private Ui::ReadH5EbsdWidget
 {
     Q_OBJECT
@@ -83,41 +85,6 @@ class ReadH5EbsdWidget : public QWidget, private Ui::ReadH5EbsdWidget
     void on_m_CellList_itemClicked(QListWidgetItem * item);
     void on_m_DataArraysCheckBox_stateChanged(int state);
 
-#if 0
-    virtual AbstractFilter::Pointer getFilter(bool defaultValues);
-
-    virtual void writeOptions(QSettings &prefs);
-    virtual void readOptions(QSettings &prefs);
-
-    PipelineFilterWidget* createDeepCopy();
-
-    QString getFilterGroup();
-
-    void setupGui();
-    QString  getInputFile();
-
-
-
-    Q_PROPERTY(int ZStartIndex READ getZStartIndex WRITE setZStartIndex)
-    void setZStartIndex(int value) { this->m_ZStartIndex->setValue(value); emit parametersChanged();}
-    int getZStartIndex() { return this->m_ZStartIndex->value(); }
-
-    Q_PROPERTY(int ZEndIndex READ getZEndIndex WRITE setZEndIndex)
-    void setZEndIndex(int value) { this->m_ZEndIndex->setValue(value); emit parametersChanged();}
-    int getZEndIndex() { return this->m_ZEndIndex->value(); }
-
-    Q_PROPERTY(QString RefFrameZDir READ getRefFrameZDir WRITE setRefFrameZDir)
-    void setRefFrameZDir(QString value) { this->m_RefFrameZDir->setText(value); emit parametersChanged();}
-    QString getRefFrameZDir() { return this->m_RefFrameZDir->text(); }
-
-    virtual void openHtmlHelpFile();
-
-
-  public slots:
-   // void setInputFile(const QString &v);
-    void arraySelectionWidgetChanged();
-
-#endif
 
   protected:
     static void setOpenDialogLastDirectory(QString val) { m_OpenDialogLastDirectory = val; }

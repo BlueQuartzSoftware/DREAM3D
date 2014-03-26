@@ -91,6 +91,6 @@ void SyntheticBuildingPlugin::readSettings(QSettings& prefs)
 
 }
 
-//#include "SurfaceMeshingFilters/RegisterKnownFilterWidgets.cpp"
 #include "SyntheticBuildingFilters/RegisterKnownFilters.cpp"
 
+#include "FilterParameterWidgets/RegisterKnownFilterParameterWidgets.cpp"

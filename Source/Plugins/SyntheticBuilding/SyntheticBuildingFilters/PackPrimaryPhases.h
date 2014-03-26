@@ -79,29 +79,41 @@ class PackPrimaryPhases : public AbstractFilter
     DREAM3D_TYPE_MACRO_SUPER(PackPrimaryPhases, AbstractFilter)
 
     virtual ~PackPrimaryPhases();
-    DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(CellFeatureAttributeMatrixName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(CellEnsembleAttributeMatrixName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(OutputDataContainerName)
+    Q_PROPERTY(QString OutputDataContainerName READ getOutputDataContainerName WRITE setOutputDataContainerName)
+
+    DREAM3D_INSTANCE_STRING_PROPERTY(OutputCellAttributeMatrixName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(OutputCellFeatureAttributeMatrixName)
+
 
     typedef boost::shared_array<float> SharedFloatArray;
     typedef boost::shared_array<int> SharedIntArray;
+
+    DREAM3D_FILTER_PARAMETER(DataArrayPath, InputStatsArrayPath)
+    Q_PROPERTY(DataArrayPath InputStatsArrayPath READ getInputStatsArrayPath WRITE setInputStatsArrayPath)
+
+    DREAM3D_FILTER_PARAMETER(DataArrayPath, InputPhaseTypesArrayPath)
+    Q_PROPERTY(DataArrayPath InputPhaseTypesArrayPath READ getInputPhaseTypesArrayPath WRITE setInputPhaseTypesArrayPath)
+
+    DREAM3D_FILTER_PARAMETER(DataArrayPath, InputShapeTypesArrayPath)
+    Q_PROPERTY(DataArrayPath InputShapeTypesArrayPath READ getInputShapeTypesArrayPath WRITE setInputShapeTypesArrayPath)
+
+    DREAM3D_FILTER_PARAMETER(QString, CsvOutputFile)
+    Q_PROPERTY(QString CsvOutputFile READ getCsvOutputFile WRITE setCsvOutputFile)
+
+    DREAM3D_FILTER_PARAMETER(bool, PeriodicBoundaries)
+    Q_PROPERTY(bool PeriodicBoundaries READ getPeriodicBoundaries WRITE setPeriodicBoundaries)
+
+    DREAM3D_FILTER_PARAMETER(bool, WriteGoalAttributes)
+    Q_PROPERTY(bool WriteGoalAttributes READ getWriteGoalAttributes WRITE setWriteGoalAttributes)
+
 
     virtual const QString getCompiledLibraryName() { return SyntheticBuilding::SyntheticBuildingBaseName; }
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::SyntheticBuildingFilters; }
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::PackingFilters; }
     virtual const QString getHumanLabel() { return "Pack Primary Phases"; }
-
-    DREAM3D_INSTANCE_STRING_PROPERTY(ErrorOutputFile)
-    DREAM3D_INSTANCE_STRING_PROPERTY(VtkOutputFile)
-    DREAM3D_FILTER_PARAMETER(QString, CsvOutputFile)
-    Q_PROPERTY(QString CsvOutputFile READ getCsvOutputFile WRITE setCsvOutputFile)
-    DREAM3D_FILTER_PARAMETER(bool, PeriodicBoundaries)
-    Q_PROPERTY(bool PeriodicBoundaries READ getPeriodicBoundaries WRITE setPeriodicBoundaries)
-    DREAM3D_FILTER_PARAMETER(bool, WriteGoalAttributes)
-    Q_PROPERTY(bool WriteGoalAttributes READ getWriteGoalAttributes WRITE setWriteGoalAttributes)
-
+    virtual const QString getBrandingString() { return SyntheticBuilding::SyntheticBuildingPluginDisplayName + " Filter"; }
 
     virtual void setupFilterParameters();
     /**
@@ -123,6 +135,9 @@ class PackPrimaryPhases : public AbstractFilter
      */
     virtual void execute();
 
+// THESE SHOULD GO AWAY THEY ARE FOR DEBUGGING ONLY
+    DREAM3D_INSTANCE_STRING_PROPERTY(ErrorOutputFile)
+    DREAM3D_INSTANCE_STRING_PROPERTY(VtkOutputFile)
 
   signals:
     void updateFilterParameters(AbstractFilter* filter);
@@ -181,7 +196,7 @@ class PackPrimaryPhases : public AbstractFilter
     // Ensemble Data - make sure these are all initialized to NULL in the constructor
     DEFINE_PTR_WEAKPTR_DATAARRAY(uint32_t, PhaseTypes)
     DEFINE_PTR_WEAKPTR_DATAARRAY(uint32_t, ShapeTypes)
-    StatsDataArray* m_StatsDataArray;
+    StatsDataArray::WeakPointer m_StatsDataArray;
 
     // All other private variables
     QMap<unsigned int, ShapeOps*> m_ShapeOps;

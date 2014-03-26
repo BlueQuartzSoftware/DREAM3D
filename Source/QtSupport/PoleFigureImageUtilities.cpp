@@ -385,7 +385,7 @@ QImage PoleFigureImageUtilities::PaintPoleFigureOverlay(int imageWidth, int imag
   int pxHigh = 0;
   int pxWide = 0;
 
-  QFont font("Ariel", 24, QFont::Bold);
+  QFont font("Ariel", 14, QFont::Bold);
   {
     QPainter painter;
     QImage pImage(100, 100, QImage::Format_ARGB32_Premultiplied);
@@ -400,8 +400,8 @@ QImage PoleFigureImageUtilities::PaintPoleFigureOverlay(int imageWidth, int imag
   }
 
 
-  int pxOffset = 2 * pxWide;
-  int pyOffset = 2 * pxHigh;
+  int pxOffset = 4 * pxWide;
+  int pyOffset = 4 * pxHigh;
   // Get a QPainter object to add some more details to the image
 
 

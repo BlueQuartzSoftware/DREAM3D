@@ -35,13 +35,17 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #include "InitializeSyntheticVolume.h"
 
+#include <QtCore/QFileInfo>
 
 #include "H5Support/QH5Utilities.h"
 #include "H5Support/QH5Lite.h"
 #include "H5Support/HDF5ScopedFileSentinel.h"
 
-
+#include "DREAM3DLib/Math/DREAM3DMath.h"
 #include "DREAM3DLib/IOFilters/DataContainerReader.h"
+#include "DREAM3DLib/DataArrays/StatsDataArray.h"
+#include "DREAM3DLib/Utilities/DREAM3DRandom.h"
+#include "SyntheticBuilding/SyntheticBuildingConstants.h"
 
 
 #define INIT_SYNTH_VOLUME_CHECK(var, errCond) \
@@ -57,24 +61,21 @@ InitializeSyntheticVolume::InitializeSyntheticVolume() :
   m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
   m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
   m_CellEnsembleAttributeMatrixName(DREAM3D::Defaults::CellEnsembleAttributeMatrixName),
-  m_ShapeTypesArrayName(DREAM3D::EnsembleData::ShapeTypes),
-  m_InputFile(""),
-  m_InputDataContainerName(""),
-  m_InputEnsembleAttributeMatrixName(""),
-  m_InputStatsAttributeArrayName(""),
-  m_XVoxels(50),
-  m_YVoxels(50),
-  m_ZVoxels(50),
-  m_XRes(0.15f),
-  m_YRes(0.15f),
-  m_ZRes(0.15f),
-  m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
-  m_FeatureIds(NULL),
-  m_CellPhasesArrayName(DREAM3D::CellData::Phases),
-  m_CellPhases(NULL),
-  m_GoodVoxelsArrayName(DREAM3D::CellData::GoodVoxels),
-  m_GoodVoxels(NULL)
+  m_EstimatedPrimaryFeatures(0)
 {
+
+  m_Dimensions.x = 128;
+  m_Dimensions.y = 128;
+  m_Dimensions.z = 128;
+
+  m_Resolution.x = 0.25;
+  m_Resolution.y = 0.25;
+  m_Resolution.z = 0.25;
+
+  m_Origin.x = 0.0f;
+  m_Origin.y = 0.0f;
+  m_Origin.z = 0.0f;
+
   setupFilterParameters();
 }
 
@@ -91,21 +92,102 @@ InitializeSyntheticVolume::~InitializeSyntheticVolume()
 void InitializeSyntheticVolume::setupFilterParameters()
 {
   FilterParameterVector parameters;
+  {
+    FilterParameter::Pointer parameter = FilterParameter::New();
+    parameter->setHumanLabel("New DataContainer Name");
+    parameter->setPropertyName("DataContainerName");
+    parameter->setWidgetType(FilterParameterWidgetType::StringWidget);
+    parameter->setValueType("QString");
+    parameter->setUnits("");
+    parameters.push_back(parameter);
+  }
+  {
+    FilterParameter::Pointer parameter = FilterParameter::New();
+    parameter->setHumanLabel("New Cell Data Name");
+    parameter->setPropertyName("CellAttributeMatrixName");
+    parameter->setWidgetType(FilterParameterWidgetType::StringWidget);
+    parameter->setValueType("QString");
+    parameter->setUnits("");
+    parameters.push_back(parameter);
+  }
+  {
+    FilterParameter::Pointer parameter = FilterParameter::New();
+    parameter->setHumanLabel("New Ensemble AttributeMatrix Name");
+    parameter->setPropertyName("CellEnsembleAttributeMatrixName");
+    parameter->setWidgetType(FilterParameterWidgetType::StringWidget);
+    parameter->setValueType("QString");
+    parameter->setUnits("");
+    parameters.push_back(parameter);
+  }
 
+  {
+    FilterParameter::Pointer parameter = FilterParameter::New();
+    parameter->setHumanLabel("Dimensions");
+    parameter->setPropertyName("Dimensions");
+    parameter->setWidgetType(FilterParameterWidgetType::IntVec3Widget);
+    parameter->setValueType("IntVec3_t");
+    parameter->setUnits("Voxels");
+    parameters.push_back(parameter);
+  }
+  {
+    FilterParameter::Pointer parameter = FilterParameter::New();
+    parameter->setHumanLabel("Resolution");
+    parameter->setPropertyName("Resolution");
+    parameter->setWidgetType(FilterParameterWidgetType::FloatVec3Widget);
+    parameter->setValueType("FloatVec3_t");
+    parameter->setUnits("Microns");
+    parameters.push_back(parameter);
+  }
+  {
+    FilterParameter::Pointer parameter = FilterParameter::New();
+    parameter->setHumanLabel("Origin");
+    parameter->setPropertyName("Origin");
+    parameter->setWidgetType(FilterParameterWidgetType::FloatVec3Widget);
+    parameter->setValueType("FloatVec3_t");
+    parameter->setUnits("XYZ");
+    parameters.push_back(parameter);
+  }
+  {
+    FilterParameter::Pointer parameter = FilterParameter::New();
+    parameter->setHumanLabel("Input Statistics");
+    parameter->setPropertyName("InputStatsArrayPath");
+    parameter->setWidgetType(FilterParameterWidgetType::DataArraySelectionWidget);
+    parameter->setValueType("DataArrayPath");
+    parameter->setUnits("");
+    parameters.push_back(parameter);
+  }
+  {
+    FilterParameter::Pointer parameter = FilterParameter::New();
+    parameter->setHumanLabel("Input Phase Types");
+    parameter->setPropertyName("InputPhaseTypesArrayPath");
+    parameter->setWidgetType(FilterParameterWidgetType::DataArraySelectionWidget);
+    parameter->setValueType("DataArrayPath");
+    parameter->setUnits("");
+    parameters.push_back(parameter);
+  }
+  {
+    FilterParameter::Pointer parameter = FilterParameter::New();
+    parameter->setHumanLabel("Estimated Primary Features");
+    parameter->setPropertyName("EstimatedPrimaryFeatures");
+    parameter->setWidgetType(FilterParameterWidgetType::PreflightUpdatedValueWidget);
+    parameter->setValueType("QString");
+    parameter->setUnits("");
+    parameters.push_back(parameter);
+  }
   setFilterParameters(parameters);
 }
 // -----------------------------------------------------------------------------
 void InitializeSyntheticVolume::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-  setInputFile(reader->readString("InputFile", getInputFile() ) );
-  setXVoxels( reader->readValue("XVoxels", getXVoxels() ) );
-  setYVoxels( reader->readValue("YVoxels", getYVoxels() ) );
-  setZVoxels( reader->readValue("ZVoxels", getZVoxels() ) );
-  setXRes( reader->readValue("XRes", getXRes() ) );
-  setYRes( reader->readValue("YRes", getYRes() ) );
-  setZRes( reader->readValue("ZRes", getZRes() ) );
-  setShapeTypes( reader->readArray("ShapeTypes", getShapeTypes() ) );
+  setDataContainerName(reader->readString("DataContainerName", getDataContainerName() ) );
+  setCellAttributeMatrixName(reader->readString("CellAttributeMatrixName", getCellAttributeMatrixName() ) );
+  setCellEnsembleAttributeMatrixName(reader->readString("CellEnsembleAttributeMatrixName", getCellEnsembleAttributeMatrixName() ) );
+  setDimensions( reader->readIntVec3("Dimensions", getDimensions() ) );
+  setResolution( reader->readFloatVec3("Resolution", getResolution() ) );
+  setOrigin( reader->readFloatVec3("Origin", getOrigin() ) );
+  setInputStatsArrayPath(reader->readDataArrayPath("InputStatsArrayPath", getInputStatsArrayPath() ) );
+  setInputPhaseTypesArrayPath(reader->readDataArrayPath("InputPhaseTypesArrayPath", getInputPhaseTypesArrayPath() ) );
   reader->closeFilterGroup();
 }
 
@@ -115,14 +197,14 @@ void InitializeSyntheticVolume::readFilterParameters(AbstractFilterParametersRea
 int InitializeSyntheticVolume::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  writer->writeValue("InputFile", getInputFile() );
-  writer->writeValue("XVoxels", getXVoxels() );
-  writer->writeValue("YVoxels", getYVoxels() );
-  writer->writeValue("ZVoxels", getZVoxels() );
-  writer->writeValue("XRes", getXRes() );
-  writer->writeValue("YRes", getYRes() );
-  writer->writeValue("ZRes", getZRes() );
-  writer->writeValue("ShapeTypes", getShapeTypes() );
+  writer->writeValue("DataContainerName", getDataContainerName() );
+  writer->writeValue("CellAttributeMatrixName", getCellAttributeMatrixName() );
+  writer->writeValue("CellEnsembleAttributeMatrixName", getCellEnsembleAttributeMatrixName() );
+  writer->writeValue("Dimensions", getDimensions() );
+  writer->writeValue("Resolution", getResolution() );
+  writer->writeValue("Origin", getOrigin() );
+  writer->writeValue("InputStatsArrayPath", getInputStatsArrayPath() );
+  writer->writeValue("InputPhaseTypesArrayPath", getInputPhaseTypesArrayPath() );
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
@@ -134,8 +216,23 @@ void InitializeSyntheticVolume::dataCheck()
 {
   setErrorCondition(0);
 
+  // Create the output Data Container
   VolumeDataContainer* m = getDataContainerArray()->createNonPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName());
   if(getErrorCondition() < 0) { return; }
+
+  // Sanity Check the Dimensions and Resolution
+  INIT_SYNTH_VOLUME_CHECK(Dimensions.x, -5000);
+  INIT_SYNTH_VOLUME_CHECK(Dimensions.y, -5001);
+  INIT_SYNTH_VOLUME_CHECK(Dimensions.z, -5002);
+  INIT_SYNTH_VOLUME_CHECK(Resolution.x, -5003);
+  INIT_SYNTH_VOLUME_CHECK(Resolution.y, -5004);
+  INIT_SYNTH_VOLUME_CHECK(Resolution.z, -5005);
+  // Set teh Dimensions, Resolution and Origin of the output data container
+  m->setDimensions(m_Dimensions.x, m_Dimensions.y, m_Dimensions.z);
+  m->setResolution(m_Resolution.x, m_Resolution.y, m_Resolution.z);
+  m->setOrigin(m_Origin.x, m_Origin.y, m_Origin.z);
+
+  // Create our output Cell and Ensemble Attribute Matrix objects
   QVector<size_t> tDims(3, 0);
   AttributeMatrix::Pointer cellAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::Cell);
   if(getErrorCondition() < 0) { return; }
@@ -144,42 +241,7 @@ void InitializeSyntheticVolume::dataCheck()
   AttributeMatrix::Pointer cellEnsembleAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellEnsembleAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::CellEnsemble);
   if(getErrorCondition() < 0) { return; }
 
-  QVector<size_t> dims(1, 1);
-  //Cell Data
-  m_FeatureIdsPtr = cellAttrMat->createNonPrereqArray<DataArray<int32_t>, AbstractFilter>(this, m_FeatureIdsArrayName, -1, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
-  { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-  m_CellPhasesPtr = cellAttrMat->createNonPrereqArray<DataArray<int32_t>, AbstractFilter>(this, m_CellPhasesArrayName, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_CellPhasesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
-  { m_CellPhases = m_CellPhasesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-  m_GoodVoxelsPtr = cellAttrMat->createNonPrereqArray<DataArray<bool>, AbstractFilter>(this, m_GoodVoxelsArrayName, true, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_GoodVoxelsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
-  { m_GoodVoxels = m_GoodVoxelsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-
-  if(m_InputFile.isEmpty() == true)
-  {
-    QString ss = QObject::tr("The intput file must be set before executing this filter.\n");
-    setErrorCondition(-800);
-    notifyErrorMessage(getHumanLabel(), ss, -800);
-  }
-
-  INIT_SYNTH_VOLUME_CHECK(XVoxels, -5000);
-  INIT_SYNTH_VOLUME_CHECK(YVoxels, -5001);
-  INIT_SYNTH_VOLUME_CHECK(ZVoxels, -5002);
-  INIT_SYNTH_VOLUME_CHECK(XRes, -5003);
-  INIT_SYNTH_VOLUME_CHECK(YRes, -5004);
-  INIT_SYNTH_VOLUME_CHECK(ZRes, -5005);
-
-  if (m_ShapeTypes.size() ==  0)
-  {
-    QString ss = QObject::tr("No ShapeTypes have been set and a shape type for each phase.\n");
-    setErrorCondition(-801);
-    notifyErrorMessage(getHumanLabel(), ss, -801);
-  }
-
-  m->setDimensions(m_XVoxels, m_YVoxels, m_ZVoxels);
-  m->setResolution(m_XRes, m_YRes, m_ZRes);
-  m->setOrigin(0.0, 0.0, 0.0);
+  m_EstimatedPrimaryFeatures = estimateNumFeatures(m_Dimensions, m_Resolution);
 }
 
 // -----------------------------------------------------------------------------
@@ -190,37 +252,6 @@ void InitializeSyntheticVolume::preflight()
   emit preflightAboutToExecute();
   emit updateFilterParameters(this);
   dataCheck();
-
-
-  hid_t fileId = QH5Utilities::openFile(m_InputFile, true); // Open the file Read Only
-  if(fileId < 0)
-  {
-    emit preflightExecuted(); // Be sure to emit this if we return early
-    QString ss = QObject::tr(": Error opening input file '%1'").arg(m_InputFile);
-    setErrorCondition(-150);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-    return;
-  }
-  // This will make sure if we return early from this method that the HDF5 File is properly closed.
-  HDF5ScopedFileSentinel scopedFileSentinel(&fileId, true);
-  hid_t dcaGid = H5Gopen(fileId, DREAM3D::StringConstants::DataContainerGroupName.toLatin1().data(), 0);
-  scopedFileSentinel.addGroupId(&dcaGid);
-  hid_t dcGid = H5Gopen(dcaGid, "VolumeDataContainer", 0);
-  scopedFileSentinel.addGroupId(&dcGid);
-  hid_t amGid = H5Gopen(dcGid, "CellEnsembleData", 0);
-  scopedFileSentinel.addGroupId(&amGid);
-
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-  AttributeMatrix::Pointer cellEnsembleAttrMat = m->getAttributeMatrix(getCellEnsembleAttributeMatrixName());
-  cellEnsembleAttrMat->addAttributeArrayFromHDF5Path(amGid, "Statistics", true);
-  cellEnsembleAttrMat->addAttributeArrayFromHDF5Path(amGid, "CrystalStructures", true);
-  cellEnsembleAttrMat->addAttributeArrayFromHDF5Path(amGid, "PhaseTypes", true);
-
-  QVector<size_t> dims(1, 1);
-  cellEnsembleAttrMat->createAndAddAttributeArray<DataArray<uint32_t>, uint32_t>(DREAM3D::EnsembleData::ShapeTypes, 0, dims);
-
-  QList<QString> check = cellEnsembleAttrMat->getAttributeArrayNameList();
-
   emit preflightExecuted();
 }
 
@@ -236,47 +267,125 @@ void InitializeSyntheticVolume::execute()
 
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
   AttributeMatrix::Pointer cellAttrMat = m->getAttributeMatrix(getCellAttributeMatrixName());
-  AttributeMatrix::Pointer cellEnsembleAttrMat = m->getAttributeMatrix(getCellEnsembleAttributeMatrixName());
 
+  // Resize the Cell AttributeMatrix to have the correct Tuple Dimensions.
   QVector<size_t> tDims(3, 0);
   tDims[0] = m->getXPoints();
   tDims[1] = m->getYPoints();
   tDims[2] = m->getZPoints();
   cellAttrMat->resizeAttributeArrays(tDims);
 
-  UInt32ArrayType::Pointer shapeTypes = UInt32ArrayType::FromQVector(m_ShapeTypes, DREAM3D::EnsembleData::ShapeTypes);
-  tDims.resize(1);
-  tDims[0] = shapeTypes->getNumberOfTuples();
-  cellEnsembleAttrMat->resizeAttributeArrays(tDims);
-  cellEnsembleAttrMat->addAttributeArray(DREAM3D::EnsembleData::ShapeTypes, shapeTypes);
-
-  //Now read the data out of the HDF5 file
-  hid_t fileId = QH5Utilities::openFile(m_InputFile, true); // Open the file Read Only
-  if(fileId < 0)
-  {
-
-    QString ss = QObject::tr(": Error opening input file '%1'").arg(m_InputFile);
-    setErrorCondition(-150);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-    return;
-  }
-  // This will make sure if we return early from this method that the HDF5 File is properly closed.
-  HDF5ScopedFileSentinel scopedFileSentinel(&fileId, true);
-  hid_t dcaGid = H5Gopen(fileId, DREAM3D::StringConstants::DataContainerGroupName.toLatin1().data(), 0);
-  scopedFileSentinel.addGroupId(&dcaGid);
-  hid_t dcGid = H5Gopen(dcaGid, "VolumeDataContainer", 0);
-  scopedFileSentinel.addGroupId(&dcGid);
-  hid_t amGid = H5Gopen(dcGid, "CellEnsembleData", 0);
-  scopedFileSentinel.addGroupId(&amGid);
-
-  cellEnsembleAttrMat->addAttributeArrayFromHDF5Path(amGid, "Statistics", false);
-  cellEnsembleAttrMat->addAttributeArrayFromHDF5Path(amGid, "CrystalStructures", false);
-  cellEnsembleAttrMat->addAttributeArrayFromHDF5Path(amGid, "PhaseTypes", false);
-
   // If there is an error set this to something negative and also set a message
-  notifyStatusMessage(getHumanLabel(), "InitializeSyntheticVolume Complete");
+  notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int InitializeSyntheticVolume::estimateNumFeatures(IntVec3_t dims, FloatVec3_t res)
+{
+
+  float totalvol;
+  int phase;
+
+
+  totalvol = (dims.x * res.x) * (dims.y * res.y) * (dims.z * res.z);
+  if (totalvol == 0.0)
+  {
+    return -1;
+  }
+
+  DataContainerArray::Pointer dca = getDataContainerArray();
+
+  // Get the PhaseTypes - Remember there is a Dummy PhaseType in the first slot of the array
+  QVector<size_t> compDims(1, 1); // This states that we are looking for an array with a single component
+  UInt32ArrayType::Pointer phaseType = dca->getPrereqArrayFromPath<UInt32ArrayType, AbstractFilter>(NULL, getInputPhaseTypesArrayPath(), compDims);
+  if(phaseType.get() == NULL)
+  {
+    QString ss = QObject::tr("PhaseTypes Array Not Found when estimating the number of grains");
+    notifyErrorMessage(getHumanLabel(), ss, -80000);
+    return 0;
+  }
+
+  QVector<size_t> statsDims(1, 1);
+  StatsDataArray::Pointer statsPtr = dca->getPrereqArrayFromPath<StatsDataArray, AbstractFilter>(this, getInputStatsArrayPath(), statsDims);
+  //  m_StatsDataArray = StatsDataArray::SafeObjectDownCast<IDataArray*, StatsDataArray*>(m->getAttributeMatrix(getCellEnsembleAttributeMatrixName())->getAttributeArray(DREAM3D::EnsembleData::Statistics).get());
+  if(statsPtr.get() == NULL)
+  {
+    QString ss = QObject::tr("Stats Array Not Found when estimating the number of grains");
+    notifyErrorMessage(getHumanLabel(), ss, -80001);
+    return 0;
+  }
+
+  // Create a Reference Variable so we can use the [] syntax
+  StatsDataArray& statsDataArray = *(statsPtr.get());
+
+  QVector<int> primaryphases;
+  QVector<double> primaryphasefractions;
+  double totalprimaryfractions = 0.0;
+  //StatsData::Pointer statsData = StatsData::NullPointer();
+  // find which phases are primary phases
+  for (size_t i = 1; i < phaseType->getNumberOfTuples(); ++i)
+  {
+    if(phaseType->getValue(i) == DREAM3D::PhaseType::PrimaryPhase)
+    {
+      PrimaryStatsData* pp = PrimaryStatsData::SafePointerDownCast(statsDataArray[i].get());
+      primaryphases.push_back(i);
+      primaryphasefractions.push_back(pp->getPhaseFraction());
+      totalprimaryfractions = totalprimaryfractions + pp->getPhaseFraction();
+    }
+  }
+  // scale the primary phase fractions to total to 1
+  for (size_t i = 0; i < primaryphasefractions.size(); i++)
+  {
+    primaryphasefractions[i] = primaryphasefractions[i] / totalprimaryfractions;
+  }
+
+    DREAM3D_RANDOMNG_NEW()
+  // generate the Features
+  int gid = 1;
+
+  float currentvol = 0.0;
+  float vol;
+  float diam;
+  int volgood = 0;
+  for (size_t j = 0; j < primaryphases.size(); ++j)
+  {
+    float curphasetotalvol = totalvol * primaryphasefractions[j];
+    while (currentvol < (curphasetotalvol))
+    {
+      volgood = 0;
+      phase = primaryphases[j];
+      PrimaryStatsData* pp = PrimaryStatsData::SafePointerDownCast(statsDataArray[phase].get());
+      while (volgood == 0)
+      {
+        volgood = 1;
+        // u = rg.genrand_res53();
+        if(pp->getFeatureSize_DistType() == DREAM3D::DistributionType::LogNormal)
+        {
+          float avgdiam = pp->getFeatureSizeDistribution().at(0)->getValue(0);
+          float sddiam = pp->getFeatureSizeDistribution().at(1)->getValue(0);
+          diam = rg.genrand_norm(avgdiam, sddiam);
+          diam = exp(diam);
+          if(diam >= pp->getMaxFeatureDiameter()) { volgood = 0; }
+          if(diam < pp->getMinFeatureDiameter()) { volgood = 0; }
+          vol = (4.0f / 3.0f) * (M_PI) * ((diam * 0.5f) * (diam * 0.5f) * (diam * 0.5f));
+        }
+      }
+      currentvol = currentvol + vol;
+      gid++;
+    }
+  }
+  return gid;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int InitializeSyntheticVolume::getEstimatedPrimaryFeatures()
+{
+  return m_EstimatedPrimaryFeatures;
+}
 
 // -----------------------------------------------------------------------------
 //
@@ -288,6 +397,14 @@ AbstractFilter::Pointer InitializeSyntheticVolume::newFilterInstance(bool copyFi
   InitializeSyntheticVolume::Pointer filter = InitializeSyntheticVolume::New();
   if(true == copyFilterParameters)
   {
+    filter->setDataContainerName(getDataContainerName() );
+    filter->setCellAttributeMatrixName(getCellAttributeMatrixName() );
+    filter->setCellEnsembleAttributeMatrixName(getCellEnsembleAttributeMatrixName() );
+    filter->setDimensions( getDimensions() );
+    filter->setOrigin( getOrigin() );
+    filter->setResolution( getResolution() );
+    filter->setInputStatsArrayPath(getInputStatsArrayPath() );
+    filter->setInputPhaseTypesArrayPath( getInputPhaseTypesArrayPath() );
   }
   return filter;
 }

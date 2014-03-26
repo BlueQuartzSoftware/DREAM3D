@@ -90,12 +90,21 @@ void IntVec3Widget::setupGui()
 
   if (m_FilterParameter != NULL)
   {
-    IntVec3WidgetLabel->setText(m_FilterParameter->getHumanLabel() );
+    QString units = m_FilterParameter->getUnits();
+    if(units.isEmpty() == false)
+    {
+      IntVec3WidgetLabel->setText(m_FilterParameter->getHumanLabel() + " (" + units + ")");
+    }
+    else
+    {
+      IntVec3WidgetLabel->setText(m_FilterParameter->getHumanLabel() );
+    }
+
     IntVec3_t data = m_Filter->property(PROPERTY_NAME_AS_CHAR).value<IntVec3_t>();
     xData->setText(QString::number(data.x) );
     yData->setText(QString::number(data.y) );
     zData->setText(QString::number(data.z) );
-  }
+   }
 }
 
 // -----------------------------------------------------------------------------

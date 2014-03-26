@@ -244,6 +244,13 @@ void InsertAtoms::setupFilterParameters()
   FilterParameterVector parameters;
   {
     FilterParameter::Pointer parameter = FilterParameter::New();
+    parameter->setHumanLabel("Select Volume DataContainer");
+    parameter->setPropertyName("VolumeDataContainerName");
+    parameter->setWidgetType(FilterParameterWidgetType::DataContainerSelectionWidget);
+    parameter->setValueType("QString");
+    parameters.push_back(parameter);
+  }  {
+    FilterParameter::Pointer parameter = FilterParameter::New();
     parameter->setHumanLabel("LatticeConstants");
     parameter->setPropertyName("LatticeConstants");
     parameter->setWidgetType(FilterParameterWidgetType::FloatVec3Widget);
@@ -274,6 +281,7 @@ void InsertAtoms::readFilterParameters(AbstractFilterParametersReader* reader, i
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
   /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+  setVolumeDataContainerName( reader->readString("VolumeDataContainerName", getVolumeDataContainerName()) );
   setLatticeConstants( reader->readFloatVec3("LatticeConstants", getLatticeConstants() ) );
   setBasis( reader->readValue("Basis", getBasis() ) );
   /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
@@ -286,6 +294,7 @@ void InsertAtoms::readFilterParameters(AbstractFilterParametersReader* reader, i
 int InsertAtoms::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
+  writer->writeValue("VolumeDataContainerName", getVolumeDataContainerName() );
   writer->writeValue("LatticeConstants", getLatticeConstants() );
   writer->writeValue("Basis", getBasis() );
   writer->closeFilterGroup();

@@ -35,6 +35,8 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #include "QMetaObjectUtilities.h"
 
+#include <QtCore/QVector>
+
 #include "DREAM3DLib/FilterParameters/FilterParameter.h"
 #include "DREAM3DLib/Common/PipelineMessage.h"
 #include "DREAM3DLib/Common/ComparisonInputs.h"
@@ -50,6 +52,7 @@ QDataStream& operator>>( QDataStream& in, IntVec3_t& v) { in >> v.x >> v.y >> v.
 
 QDataStream& operator<<( QDataStream& out, const FloatVec3_t& v) { out << v.x << v.y << v.z; return out; }
 QDataStream& operator>>( QDataStream& in, FloatVec3_t& v) { in >> v.x >> v.y >> v.z; return in; }
+
 
 
 // -----------------------------------------------------------------------------
@@ -77,6 +80,7 @@ void QMetaObjectUtilities::RegisterMetaTypes()
   qRegisterMetaType<IntVec3_t>("IntVec3_t");
   qRegisterMetaType<FloatVec3_t>("FloatVec3_t");
   qRegisterMetaType<PipelineMessage>("PipelineMessage");
+  qRegisterMetaType<UInt32Vector_t>("UInt32Vector_t");
 
   qRegisterMetaTypeStreamOperators<IntVec3_t>("IntVec3_t");
   qRegisterMetaTypeStreamOperators<FloatVec3_t>("FloatVec3_t");

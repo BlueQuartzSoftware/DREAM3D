@@ -1,15 +1,15 @@
-Erode/Dilate Bad Data {#erodedilatebaddata}
+Erode/Dilate Bad Data {#erodedilatemask}
 ======
 
 ## Group (Subgroup) ##
 Processing Filters (Cleanup)
 
 ## Description ##
-Bad data refers to a **Cell** that has a _GrainId_ of *0*, which means the **Cell** has failed some sort of test and been marked 
-as a *bad* **Cell**. 
+Bad data refers to a **Cell** that has a _GrainId_ of *0*, which means the **Cell** has failed some sort of test and been marked
+as a *bad* **Cell**.
 
 If the bad data is _dilated_, the filter grows the bad data by one **Cell** (in the directions specified by the user) in an iterative sequence for a user defined number of
- iterations.  During the *dilate* process the _GrainId_ of any **Cell** neighboring a *bad* Cell** will be changed to *0*.  
+ iterations.  During the *dilate* process the _GrainId_ of any **Cell** neighboring a *bad* Cell** will be changed to *0*.
 
 If the bad data is _eroded_ option, the filter shrinks the bad data by one **Cell** (in the directions specified by the user) in an iterative sequence for a user defined number of
  iterations.  During the *erode* process the _GrainId_ of the *bad* **Cell** is changed from *0* to the _GrainId_ of the majority
@@ -18,13 +18,13 @@ If the bad data is _eroded_ option, the filter shrinks the bad data by one **Cel
 Goals a user might be trying to accomplish with this Filter are
 
 - to remove small or thin regions of bad data by running a single
- (or two) iteration _erode_ operation. 
-- to increase the size of a "bad" data region by running an _dilate_ operation. This might be useful if the experimental technique 
-tends to underestimates the size of certain objects. 
+ (or two) iteration _erode_ operation.
+- to increase the size of a "bad" data region by running an _dilate_ operation. This might be useful if the experimental technique
+tends to underestimates the size of certain objects.
 For example, when running EBSD, the pores (which show up as
  bad data) are generally smaller in the scans than in the specimen, because the
  beam, when it is just inside the pore, still can pick up signal from the
- material just beneath the pore.  
+ material just beneath the pore.
 
 Running the _erode-dilate_ operations in pairs can
  often change the size of some objects without affecting others.  For

@@ -99,6 +99,14 @@ class DREAM3DLib_EXPORT DataContainerArray : public QObject
      * @return
      */
     virtual DataContainer::Pointer getDataContainer(const DataArrayPath& path);
+
+    /**
+     * @brief getAttributeMatrix
+     * @param path
+     * @return
+     */
+    virtual AttributeMatrix::Pointer getAttributeMatrix(const DataArrayPath& path);
+
     /**
      * @brief duplicateDataContainer
      * @param name
@@ -107,6 +115,8 @@ class DREAM3DLib_EXPORT DataContainerArray : public QObject
     virtual void duplicateDataContainer(const QString& name, const QString& newName);
     QList<QString> getDataContainerNames();
     QList<DataContainer::Pointer>& getDataContainerArray();
+    bool renameDataContainer(const QString& oldname, const QString& newname, bool overwrite);
+
 
     virtual void printDataContainerNames(QTextStream& out);
 
@@ -188,6 +198,27 @@ class DREAM3DLib_EXPORT DataContainerArray : public QObject
       return dataContainer.get();
     }
 
+
+    /**
+     * @brief getPrereqAttributeMatrixFromPath This function will return an AttributeMatrix if it is availabe
+     * at the path
+     * @param filter An AbstractFilter or subclass where error messages and error codes can be sent
+     * @param path The DataArrayPath object that has the path to the AttributeMatrix
+     * @param err The error code to display to the user
+     * @return
+     */
+    template<typename DataContainerType, typename Filter>
+    AttributeMatrix::Pointer getPrereqAttributeMatrixFromPath(Filter* filter, DataArrayPath path, int err)
+    {
+      // First try to get the Parent DataContainer. If an error occurs the error message will have been set
+      // so just return a NULL shared pointer
+      DataContainer* dc = getPrereqDataContainer<DataContainerType, Filter>(filter, path.getDataContainerName(), false);
+      if(NULL == dc) { return AttributeMatrix::NullPointer(); }
+
+      // Now just return what ever the DataContainer gives us. if the AttributeMatrix was not available then an
+      // error message and code will have been set into the "filter" object if that object was non-null itself.
+      return dc->getPrereqAttributeMatrix<Filter>(filter, path.getAttributeMatrixName(), err);
+    }
 
     /**
      * @brief getPrereqArrayFromPath
