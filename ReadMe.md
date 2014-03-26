@@ -20,7 +20,8 @@ For historical compatibility in versions prior to 4.2 the internal representatio
 
 ## Version 4.2 Bugs Fixed & Features Added ##
 
-### Version 4.2.4903 ###
+
+### Version 4.2.4905 ###
 + Fixed Issue no. 147: Adding a favorite may result in the favorite being written to the wrong directory
 + Added several filters from the 'develop' branch to determine microtexture regions in Titanium alloys
 + Fixing preflight error in the _RenameFieldArray_ filter
@@ -28,8 +29,7 @@ For historical compatibility in versions prior to 4.2 the internal representatio
 + Adding additional methods to the OrientationMath and QuaternionMath c++ classes
 + Fixing issue with writing the parameters of some filters into a pipeline file
 + Fixed Issue no. 148: Fixing issue where an .ang file was too short with respect to the headers. We now return a warning to the user stating there was not enough data in the file
-
-
++ Fixing bug when adding a Favorite Folder the user type was not set correctly and subsequent adding of a favorite to the folder would not work correctly.
 
 
 ### Version 4.2.4815 ###

@@ -475,7 +475,7 @@ void PipelineBuilderWidget::readFavoritePipelines()
 
 
   PipelineTreeWidget::ItemType itemType = PipelineTreeWidget::Favorite_Item_Type;
-  QString iconFileName(":/bullet_ball_yellow.png");
+  QString iconFileName(":/text.png");
   bool allowEditing = true;
   QString fileExtension("*.ini");
 
@@ -508,6 +508,7 @@ void PipelineBuilderWidget::addFiltersRecursively(QDir currentDir, QTreeWidgetIt
       nextDirItem = new QTreeWidgetItem(currentDirItem, PipelineTreeWidget::Favorite_Category_Item_Type);
       nextDirItem->setText(0, fi.baseName());
       nextDirItem->setData(0, Qt::UserRole, QVariant(fi.absoluteFilePath() ) );
+      nextDirItem->setIcon(0, QIcon(":/folder_blue.png"));
       addFiltersRecursively( QDir( fi.absoluteFilePath() ), nextDirItem, iconFileName, allowEditing, fileExtension, itemType );   // Recursive call
     }
   }
@@ -1654,7 +1655,7 @@ void PipelineBuilderWidget::actionAddFavoriteFolder_triggered()
   }
 
   filterLibraryTree->blockSignals(true);
-  QTreeWidgetItem* nextDirItem = new QTreeWidgetItem(currentDirItem, PipelineTreeWidget::Favorite_Item_Type);
+  QTreeWidgetItem* nextDirItem = new QTreeWidgetItem(currentDirItem, PipelineTreeWidget::Favorite_Category_Item_Type);
   nextDirItem->setText(0, favoriteTitle);
   nextDirItem->setData(0, Qt::UserRole, QVariant(folderPath) );
   nextDirItem->setIcon(0, QIcon(":/folder_blue.png"));
