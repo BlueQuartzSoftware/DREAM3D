@@ -436,21 +436,25 @@ void CropVolume::execute()
 
 
   float origin[3] = {0.0f, 0.0f, 0.0f};
+  m->getOrigin(origin);
 
-  if(m_UpdateOrigin == false)
+  if(m_UpdateOrigin)
+  {
+    origin[0]=0.0f;
+    origin[1]=0.0f;
+    origin[2]=0.0f;
+  }
+  else
   {
     float resolution[3] = {0.0f, 0.0f, 0.0f};
     m->getResolution(resolution);
 
-    float origin[3] = {0.0f, 0.0f, 0.0f};
-    m->getOrigin(origin);
     origin[0] = m_XMin * resolution[0]+oldOrigin[0];
     origin[1] = m_YMin * resolution[1]+oldOrigin[1];
     origin[2] = m_ZMin * resolution[2]+oldOrigin[2];
   }
 
   m->setOrigin(origin);
-
 
   notifyStatusMessage("Completed");
 }
