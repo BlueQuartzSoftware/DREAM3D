@@ -329,6 +329,10 @@ void CropVolume::execute()
     return;
   }
 
+  //get current origin
+  float oldOrigin[3] = {0.0f, 0.0f, 0.0f};
+  m->getOrigin(oldOrigin);
+
   std::stringstream ss;
   // Check to make sure the new dimensions are not "out of bounds" and warn the user if they are
   if (dims[0] <= m_XMax)
@@ -437,9 +441,9 @@ void CropVolume::execute()
 
     float origin[3] = {0.0f, 0.0f, 0.0f};
     m->getOrigin(origin);
-    origin[0] = m_XMin * resolution[0];
-    origin[1] = m_YMin * resolution[1];
-    origin[2] = m_ZMin * resolution[2];
+    origin[0] = m_XMin * resolution[0]+oldOrigin[0];
+    origin[1] = m_YMin * resolution[1]+oldOrigin[1];
+    origin[2] = m_ZMin * resolution[2]+oldOrigin[2];
 
     m->setOrigin(origin);
   }
