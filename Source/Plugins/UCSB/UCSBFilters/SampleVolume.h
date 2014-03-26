@@ -37,6 +37,7 @@ class SampleVolume : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(OutputDirectory)
     DREAM3D_INSTANCE_STRING_PROPERTY(FileName)
     DREAM3D_INSTANCE_PROPERTY(bool, WriteXdmf)
+    DREAM3D_INSTANCE_PROPERTY(bool, CopySurfaceMesh)
 
     /**
     * @brief This returns the group that the filter belonds to. You can select
@@ -97,6 +98,7 @@ class SampleVolume : public AbstractFilter
     * @param fields The number of fields
     * @param ensembles The number of ensembles
     */
+    void dataCheckSurfaceMesh(bool preflight, size_t voxels, size_t fields, size_t ensembles);
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
   private:

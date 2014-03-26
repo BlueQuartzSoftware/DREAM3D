@@ -325,9 +325,20 @@ void ReadOrientationData::readAngFile()
   err = reader.readFile();
   if (err < 0)
   {
-    setErrorCondition(reader.getErrorCode());
-    notifyErrorMessage(reader.getErrorMessage(), getErrorCondition());
-    return;
+    if (err != -600)
+    {
+      setErrorCondition(reader.getErrorCode());
+      notifyErrorMessage(reader.getErrorMessage(), getErrorCondition());
+      return;
+    }
+    else // Error -600 just means we ran out of file before we could read all teh data into the arrays
+    // so all the unused cells are just sitting with default values in them. While this may technically
+    // be bad we have decided to put the onus on the user to decide if they want to go on with their pipeline
+    // or do something else, like maybe crop the data
+    {
+      notifyWarningMessage(reader.getErrorMessage(), reader.getErrorCode() );
+      //setErrorCondition(reader.getErrorCode() );
+    }
   }
   VoxelDataContainer* m = getVoxelDataContainer();
 

@@ -339,9 +339,10 @@ void CropSurfaceMesh::execute()
   int m_ZP = ( (m_ZMax - m_ZMin)+1 );
 
   //get mesh
-  dataCheckSurfaceMesh(false, 0, getSurfaceMeshDataContainer()->getNumFaceTuples(), 0);
-  DREAM3D::SurfaceMesh::VertListPointer_t oldNodesPtr = getSurfaceMeshDataContainer()->getVertices();
-  DREAM3D::SurfaceMesh::FaceListPointer_t oldTrianglesPtr = getSurfaceMeshDataContainer()->getFaces();
+  SurfaceMeshDataContainer* sm = getSurfaceMeshDataContainer();
+  dataCheckSurfaceMesh(false, 0, sm->getNumFaceTuples(), 0);
+  DREAM3D::SurfaceMesh::VertListPointer_t oldNodesPtr = sm->getVertices();
+  DREAM3D::SurfaceMesh::FaceListPointer_t oldTrianglesPtr = sm->getFaces();
   DREAM3D::SurfaceMesh::Vert_t* oldNodes = oldNodesPtr->GetPointer(0);
   DREAM3D::SurfaceMesh::Face_t* oldTriangles = oldTrianglesPtr->GetPointer(0);
   size_t numberTriangles = oldTrianglesPtr->GetNumberOfTuples();
@@ -352,7 +353,6 @@ void CropSurfaceMesh::execute()
   m->getResolution(voxelResolution);
   float sampleOrigin[3] = {0.0f, 0.0f, 0.0f};
   m->getOrigin(sampleOrigin);
-
   float sampleBounds[3][2];
   sampleBounds[0][0]=m_XMin*voxelResolution[0]+sampleOrigin[0];
   sampleBounds[0][1]=(m_XMax+1)*voxelResolution[0]+sampleOrigin[0];
@@ -361,16 +361,16 @@ void CropSurfaceMesh::execute()
   sampleBounds[2][0]=m_ZMin*voxelResolution[2]+sampleOrigin[2];
   sampleBounds[2][1]=(m_ZMax+1)*voxelResolution[2]+sampleOrigin[2];
 
+  //find good nodes / triangles
   std::vector<bool> goodTrianglesList(numberTriangles);
   std::vector<int> goodNodesList(3*numberTriangles);
   int goodTriangles=0;
-
   for(int i=0; i<numberTriangles; i++)
   {
     goodTrianglesList[i]=false;
     int inBoundsNodes=0;
 
-    //check if all nodes are within bounds
+    //check each node
     for(int j=0; j<3; j++)
     {
       for(int k=0; k<3; k++)
@@ -382,7 +382,7 @@ void CropSurfaceMesh::execute()
       }
     }
 
-    //count if all nodes are in bounds
+    //triangle is good if all nodes are in bounds for x, y, and z
     if(9==inBoundsNodes)
     {
       goodTrianglesList[i]=true;
@@ -397,6 +397,7 @@ void CropSurfaceMesh::execute()
   //sort node list + remove duplicates
   std::sort(goodNodesList.begin(), goodNodesList.end());
   std::vector<int>::iterator it = std::unique(goodNodesList.begin(), goodNodesList.end());
+  goodNodesList.resize( std::distance(goodNodesList.begin(),it) );
 
   //build map of old to new nodes
   notifyStatusMessage("Building Map");
@@ -404,23 +405,25 @@ void CropSurfaceMesh::execute()
   std::map<int,int> nodeMap;
   for(it=goodNodesList.begin(); it!=goodNodesList.end(); ++it)
   {
-    nodeMap[it-goodNodesList.begin()]=goodNodes;
+    nodeMap[*it]=goodNodes;
     goodNodes++;
   }
   goodNodes++;
 
-  SurfaceMeshDataContainer* sm = getSurfaceMeshDataContainer();
-  DREAM3D::SurfaceMesh::FaceListPointer_t newTrianglesPtr = DREAM3D::SurfaceMesh::FaceList_t::CreateArray(goodTriangles, "New_SurfaceMeshFaces");
-  DREAM3D::SurfaceMesh::Face_t* newTriangles = newTrianglesPtr.get()->GetPointer(0);
 
+  //create new face + vertex containers
+  DREAM3D::SurfaceMesh::FaceListPointer_t newTrianglesPtr = DREAM3D::SurfaceMesh::FaceList_t::CreateArray(goodTriangles, "New_SurfaceMeshFaces");
+  DREAM3D::SurfaceMesh::VertListPointer_t newNodesPtr = DREAM3D::SurfaceMesh::VertList_t::CreateArray(goodNodes, DREAM3D::VertexData::SurfaceMeshNodes);
+  DREAM3D::SurfaceMesh::Face_t* newTriangles = newTrianglesPtr.get()->GetPointer(0);
+  DREAM3D::SurfaceMesh::Vert_t* newNodes = newNodesPtr.get()->GetPointer(0);
 
   //copy old node ids over for new triangle array
-  notifyStatusMessage("mapping");
+  notifyStatusMessage("Copying Data");
   std::map<int,int>::iterator mapIt;
 
   int index=0;
 
-  //get list of face arrays and create new arrays
+  //update face arrays
   std::list<std::string> faceArrayNames = sm->getFaceArrayNameList();
   for(int i=0; i<numberTriangles; i++)
   {
@@ -433,57 +436,37 @@ void CropSurfaceMesh::execute()
         if(mapIt!=nodeMap.end())
         {
           newTriangles[index].verts[j]=mapIt->second;
-          //newNodes[mapIt->second]=oldNodes[oldTriangles[i].verts[j]];
         }
       }
-
-       for (std::list<std::string>::iterator iter = faceArrayNames.begin(); iter != faceArrayNames.end(); ++iter)
+      for (std::list<std::string>::iterator iter = faceArrayNames.begin(); iter != faceArrayNames.end(); ++iter)
       {
         std::string name = *iter;
-        if(name.compare(DREAM3D::FaceData::SurfaceMeshFaces)!=0)
-        {
-          IDataArray::Pointer p = sm->getFaceData(*iter);
-          p->CopyTuple(i, index);//since goodNodeList was sorted low->high there shouldn't be any conflicts here
-        }
+        IDataArray::Pointer p = sm->getFaceData(*iter);
+        p->CopyTuple(i, index);//since goodNodeList was sorted low->high there shouldn't be any conflicts
       }
       index++;
     }
   }
-
-  //resize face arrays
   for (std::list<std::string>::iterator iter = faceArrayNames.begin(); iter != faceArrayNames.end(); ++iter)
   {
     std::string name = *iter;
-    if(name.compare(DREAM3D::FaceData::SurfaceMeshFaces)!=0)
-    {
-      IDataArray::Pointer p = sm->getFaceData(*iter);
-      err = p->Resize(goodTriangles);
-    }
+    IDataArray::Pointer p = sm->getFaceData(*iter);
+    err = p->Resize(goodTriangles);
   }
-  sm->removeFaceData(DREAM3D::FaceData::SurfaceMeshFaces);
-  sm->setFaces(newTrianglesPtr);
 
-
-  ///use node map for vertex data
-  //get list of node data and create new arrays
+  //update node arrays
   std::list<std::string> nodeArrayNames = sm->getPointArrayNameList();
-  for(int i=0; i<numberNodes; i++)
+  for(it=goodNodesList.begin(); it!=goodNodesList.end(); ++it)
   {
-    mapIt=nodeMap.find(i);
-    if(mapIt!=nodeMap.end())
+    int index_new=std::distance(goodNodesList.begin(), it);
+    newNodes[index_new]=oldNodes[*it];
+    for (std::list<std::string>::iterator iter = nodeArrayNames.begin(); iter != nodeArrayNames.end(); ++iter)
     {
-      //if found node will be copied, get new index
-      int index_old = mapIt->second;
-      for (std::list<std::string>::iterator iter = nodeArrayNames.begin(); iter != nodeArrayNames.end(); ++iter)
-      {
-        std::string name = *iter;
-        IDataArray::Pointer p = sm->getVertexData(*iter);
-        p->CopyTuple(index_old, i);//since goodNodeList was sorted low->high there shouldn't be any conflicts here
-      }
+      std::string name = *iter;
+      IDataArray::Pointer p = sm->getVertexData(*iter);
+      p->CopyTuple(*it, index_new);
     }
   }
-
-  //resize node arrays
   for (std::list<std::string>::iterator iter = nodeArrayNames.begin(); iter != nodeArrayNames.end(); ++iter)
   {
     std::string name = *iter;
@@ -498,7 +481,6 @@ void CropSurfaceMesh::execute()
     std::string name = *iter;
     sm->removeEdgeData(name);
   }
-
   std::list<std::string> fieldArrayNames = sm->getFieldArrayNameList();
   for (std::list<std::string>::iterator iter = fieldArrayNames.begin(); iter != fieldArrayNames.end(); ++iter)
   {
@@ -506,6 +488,11 @@ void CropSurfaceMesh::execute()
     sm->removeFieldData(name);
   }
 
+  //update faces + vertexes
+  sm->removeFaceData(DREAM3D::FaceData::SurfaceMeshFaces);
+  sm->removeVertexData(DREAM3D::VertexData::SurfaceMeshNodes);
+  sm->setFaces(newTrianglesPtr);
+  sm->setVertices(newNodesPtr);
 
   if(m_UpdateOrigin == true)
   {
@@ -514,7 +501,6 @@ void CropSurfaceMesh::execute()
     sampleOrigin[2] = m_ZMin * voxelResolution[2];
     m->setOrigin(sampleOrigin);
   }
-
 
   notifyStatusMessage("Completed");
 }
