@@ -38,6 +38,7 @@ class SampleVolume : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(FileName)
     DREAM3D_INSTANCE_PROPERTY(bool, WriteXdmf)
     DREAM3D_INSTANCE_PROPERTY(bool, CopySurfaceMesh)
+    DREAM3D_INSTANCE_PROPERTY(bool, UpdateOrigin)
 
     /**
     * @brief This returns the group that the filter belonds to. You can select

@@ -30,7 +30,8 @@ m_NumberVolumes(0),
 m_OutputDirectory(""),
 m_FileName(""),
 m_CopySurfaceMesh(true),
-m_WriteXdmf(false)
+m_WriteXdmf(false),
+m_UpdateOrigin(false)
 {
   m_BoxSize.x = 10;
   m_BoxSize.y = 50;
@@ -100,6 +101,14 @@ void SampleVolume::setupFilterParameters()
     option->setValueType("bool");
     parameters.push_back(option);
   }
+  {
+    FilterParameter::Pointer option = FilterParameter::New();
+    option->setHumanLabel("Update Origin");
+    option->setPropertyName("UpdateOrigin");
+    option->setWidgetType(FilterParameter::BooleanWidget);
+    option->setValueType("bool");
+    parameters.push_back(option);
+  }
   setFilterParameters(parameters);
 }
 
@@ -114,6 +123,7 @@ void SampleVolume::readFilterParameters(AbstractFilterParametersReader* reader, 
   setOutputDirectory( reader->readValue( "OutputDirectory", getOutputDirectory() ) );
   setFileName( reader->readValue( "FileName", getFileName() ) );
   setWriteXdmf( reader->readValue( "WriteXdmf", getWriteXdmf() ) );
+  setUpdateOrigin( reader->readValue( "UpdateOrigin", getUpdateOrigin() ) );
   reader->closeFilterGroup();
 }
 
@@ -129,6 +139,7 @@ int SampleVolume::writeFilterParameters(AbstractFilterParametersWriter* writer, 
   writer->writeValue("OutputDirectory", getOutputDirectory() );
   writer->writeValue("FileName", getFileName() );
   writer->writeValue("WriteXdmf", getWriteXdmf() );
+  writer->writeValue("UpdateOrigin", getUpdateOrigin() );
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
@@ -141,6 +152,7 @@ void SampleVolume::dataCheck(bool preflight, size_t voxels, size_t fields, size_
   setErrorCondition(0);
   std::stringstream ss;
   int32_t err = 0;
+  VoxelDataContainer* m = getVoxelDataContainer();
 
   //check for output director
   if (m_OutputDirectory.empty() == true)
@@ -148,17 +160,40 @@ void SampleVolume::dataCheck(bool preflight, size_t voxels, size_t fields, size_
     setErrorCondition(-1003);
     addErrorMessage(getHumanLabel(), "Output Directory is Not set correctly", -382);
   }
+
+  //make sure box fits within sample
+  if (m_BoxSize.x > static_cast<int64_t>(m->getXPoints()))
+  {
+    ss.str("");
+    ss << "The X sampling size you have entered of " << m_BoxSize.x << " is greater than your sample X size of " << static_cast<int64_t>(m->getXPoints());
+    addErrorMessage(getHumanLabel(), ss.str(), -5001);
+    setErrorCondition(-5001);
+  }
+  if (m_BoxSize.y > static_cast<int64_t>(m->getYPoints()))
+  {
+    ss.str("");
+    ss << "The Y sampling size you have entered of " << m_BoxSize.y << " is greater than your sample Y size of " << static_cast<int64_t>(m->getXPoints());
+    addErrorMessage(getHumanLabel(), ss.str(), -5002);
+    setErrorCondition(-5002);
+  }
+  if (m_BoxSize.z > static_cast<int64_t>(m->getZPoints()))
+  {
+    ss.str("");
+    ss << "The Z sampling size you have entered of " << m_BoxSize.z << " is greater than your sample Z size of " << static_cast<int64_t>(m->getXPoints());
+    addErrorMessage(getHumanLabel(), ss.str(), -5003);
+    setErrorCondition(-5003);
+  }
+
   if(getErrorCondition()>0)
   {
-
-  SubFilterPipeline::Pointer pipeline = buildPipeline(0, 0, 0, 0);
-  err = pipeline->preflightPipeline();
-  if(err<0)
-  {
-    setErrorCondition(-1);
-    addErrorMessage(getHumanLabel(), "Errors in sub-pipeline", err);
+    SubFilterPipeline::Pointer pipeline = buildPipeline(0, 0, 0, 0);
+    err = pipeline->preflightPipeline();
+    if(err<0)
+    {
+      setErrorCondition(-1);
+      addErrorMessage(getHumanLabel(), "Errors in sub-pipeline", err);
+    }
   }
-}
 }
 
 void SampleVolume::dataCheckSurfaceMesh(bool preflight, size_t voxels, size_t fields, size_t ensembles)
@@ -428,7 +463,7 @@ SubFilterPipeline::Pointer SampleVolume::buildPipeline(int append, int x, int y,
     smCrop->setXMax(x+m_BoxSize.x-1);
     smCrop->setYMax(y+m_BoxSize.y-1);
     smCrop->setZMax(z+m_BoxSize.z-1);
-    smCrop->setUpdateOrigin(false);
+    smCrop->setUpdateOrigin(m_UpdateOrigin);
     smCrop->setObservers(getObservers());
     pipeline->pushBack(smCrop);
   }
@@ -447,7 +482,7 @@ SubFilterPipeline::Pointer SampleVolume::buildPipeline(int append, int x, int y,
   crop->setYMax(y+m_BoxSize.y-1);
   crop->setZMax(z+m_BoxSize.z-1);
   crop->setRenumberGrains(false);
-  crop->setUpdateOrigin(true);
+  crop->setUpdateOrigin(m_UpdateOrigin);
   crop->setObservers(getObservers());
   pipeline->pushBack(crop);
 

@@ -6,7 +6,7 @@ UCSB (UCSB)
 
 
 ## Description ##
-This filter makes a copy of the dataset, picks a region of the specified dimensions at random, writes it to the specified location, and loops. Only the voxel data is copied and written.
+This filter makes a copy of the dataset, picks a region of the specified dimensions at random, writes it to the specified location, and loops. The voxel data is copied and written. The surface mesh data is copied and written only if selected.
 
 ## Parameters ##
 | Name             | Type |
@@ -15,6 +15,8 @@ This filter makes a copy of the dataset, picks a region of the specified dimensi
 | Sampling Size | 3x Int |
 | Output File Prefix | String |
 | Write Xdmf | Bool |
+| Write Surface Mesh | Bool |
+| Update Origin | Bool |
 | Output Directory | Path |
 
 ## Required Arrays ##

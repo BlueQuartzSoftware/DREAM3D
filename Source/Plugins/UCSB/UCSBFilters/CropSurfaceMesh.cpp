@@ -12,6 +12,7 @@
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Math/DREAM3DMath.h"
 #include "DREAM3DLib/Utilities/DREAM3DRandom.h"
+#include "TranslateSurfaceMesh.h"
 
 // -----------------------------------------------------------------------------
 //
@@ -268,8 +269,6 @@ void CropSurfaceMesh::preflight()
     addErrorMessage(getHumanLabel(), ss.str(), -5555);
     setErrorCondition(-5557);
   }
-
-  m->setDimensions((getXMax()-getXMin())-1,(getYMax()-getYMin())-1,(getZMax()-getZMin())-1);
 }
 
 // -----------------------------------------------------------------------------
@@ -363,7 +362,7 @@ void CropSurfaceMesh::execute()
 
   //find good nodes / triangles
   std::vector<bool> goodTrianglesList(numberTriangles);
-  std::vector<int> goodNodesList(3*numberTriangles);
+  std::vector<int> goodNodesList(3*numberTriangles, -1);
   int goodTriangles=0;
   for(int i=0; i<numberTriangles; i++)
   {
@@ -399,6 +398,9 @@ void CropSurfaceMesh::execute()
   std::vector<int>::iterator it = std::unique(goodNodesList.begin(), goodNodesList.end());
   goodNodesList.resize( std::distance(goodNodesList.begin(),it) );
 
+  //need to remove the -1 from bad nodes
+  goodNodesList.erase(goodNodesList.begin(),goodNodesList.begin()+1);
+
   //build map of old to new nodes
   notifyStatusMessage("Building Map");
   int goodNodes=0;
@@ -408,8 +410,6 @@ void CropSurfaceMesh::execute()
     nodeMap[*it]=goodNodes;
     goodNodes++;
   }
-  goodNodes++;
-
 
   //create new face + vertex containers
   DREAM3D::SurfaceMesh::FaceListPointer_t newTrianglesPtr = DREAM3D::SurfaceMesh::FaceList_t::CreateArray(goodTriangles, "New_SurfaceMeshFaces");
@@ -496,10 +496,15 @@ void CropSurfaceMesh::execute()
 
   if(m_UpdateOrigin == true)
   {
-    sampleOrigin[0] = m_XMin * voxelResolution[0];
-    sampleOrigin[1] = m_YMin * voxelResolution[1];
-    sampleOrigin[2] = m_ZMin * voxelResolution[2];
-    m->setOrigin(sampleOrigin);
+    TranslateSurfaceMesh::Pointer translate = TranslateSurfaceMesh::New();
+    translate->setSurfaceMeshDataContainer(sm);
+    translate->setMessagePrefix(getMessagePrefix());
+    translate->setXShift(-m_XMin * voxelResolution[0]);
+    translate->setYShift(-m_YMin * voxelResolution[1]);
+    translate->setZShift(-m_ZMin * voxelResolution[2]);
+    translate->execute();
+    setErrorCondition(translate->getErrorCondition());
+    addErrorMessages(translate->getPipelineMessages());
   }
 
   notifyStatusMessage("Completed");
