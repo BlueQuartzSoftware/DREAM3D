@@ -107,6 +107,9 @@ void FilterInputDockWidget::displayFilterParameters(PipelineFilterWidget* w)
   QWidget* widget = scrollArea->takeWidget();
   scrollArea->setWidget(w->getScrollWidgetContents() );
 
+  QWidget* advWidget = advScrollArea->takeWidget();
+  advScrollArea->setWidget(w->getAdvancedScrollWidgetContents() );
+
 #if 0
   // Remove all existing QWidgets from this Widget
   QObjectList objs = basicInputsScrollWidget->children();

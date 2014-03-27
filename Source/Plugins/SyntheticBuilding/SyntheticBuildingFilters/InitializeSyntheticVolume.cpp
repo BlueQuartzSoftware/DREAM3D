@@ -94,11 +94,32 @@ void InitializeSyntheticVolume::setupFilterParameters()
   FilterParameterVector parameters;
   {
     FilterParameter::Pointer parameter = FilterParameter::New();
+    parameter->setHumanLabel("Input Statistics");
+    parameter->setPropertyName("InputStatsArrayPath");
+    parameter->setWidgetType(FilterParameterWidgetType::DataArraySelectionWidget);
+    parameter->setValueType("DataArrayPath");
+    parameter->setUnits("");
+    parameter->setIsAdvanced(true);
+    parameters.push_back(parameter);
+  }
+  {
+    FilterParameter::Pointer parameter = FilterParameter::New();
+    parameter->setHumanLabel("Input Phase Types");
+    parameter->setPropertyName("InputPhaseTypesArrayPath");
+    parameter->setWidgetType(FilterParameterWidgetType::DataArraySelectionWidget);
+    parameter->setValueType("DataArrayPath");
+    parameter->setUnits("");
+    parameter->setIsAdvanced(true);
+    parameters.push_back(parameter);
+  }
+  {
+    FilterParameter::Pointer parameter = FilterParameter::New();
     parameter->setHumanLabel("New DataContainer Name");
     parameter->setPropertyName("DataContainerName");
     parameter->setWidgetType(FilterParameterWidgetType::StringWidget);
     parameter->setValueType("QString");
     parameter->setUnits("");
+    parameter->setIsAdvanced(true);
     parameters.push_back(parameter);
   }
   {
@@ -108,6 +129,7 @@ void InitializeSyntheticVolume::setupFilterParameters()
     parameter->setWidgetType(FilterParameterWidgetType::StringWidget);
     parameter->setValueType("QString");
     parameter->setUnits("");
+    parameter->setIsAdvanced(true);
     parameters.push_back(parameter);
   }
   {
@@ -117,9 +139,9 @@ void InitializeSyntheticVolume::setupFilterParameters()
     parameter->setWidgetType(FilterParameterWidgetType::StringWidget);
     parameter->setValueType("QString");
     parameter->setUnits("");
+    parameter->setIsAdvanced(true);
     parameters.push_back(parameter);
   }
-
   {
     FilterParameter::Pointer parameter = FilterParameter::New();
     parameter->setHumanLabel("Dimensions");
@@ -145,24 +167,6 @@ void InitializeSyntheticVolume::setupFilterParameters()
     parameter->setWidgetType(FilterParameterWidgetType::FloatVec3Widget);
     parameter->setValueType("FloatVec3_t");
     parameter->setUnits("XYZ");
-    parameters.push_back(parameter);
-  }
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Input Statistics");
-    parameter->setPropertyName("InputStatsArrayPath");
-    parameter->setWidgetType(FilterParameterWidgetType::DataArraySelectionWidget);
-    parameter->setValueType("DataArrayPath");
-    parameter->setUnits("");
-    parameters.push_back(parameter);
-  }
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Input Phase Types");
-    parameter->setPropertyName("InputPhaseTypesArrayPath");
-    parameter->setWidgetType(FilterParameterWidgetType::DataArraySelectionWidget);
-    parameter->setValueType("DataArrayPath");
-    parameter->setUnits("");
     parameters.push_back(parameter);
   }
   {
@@ -341,9 +345,9 @@ int InitializeSyntheticVolume::estimateNumFeatures(IntVec3_t dims, FloatVec3_t r
     primaryphasefractions[i] = primaryphasefractions[i] / totalprimaryfractions;
   }
 
-    DREAM3D_RANDOMNG_NEW()
-  // generate the Features
-  int gid = 1;
+  DREAM3D_RANDOMNG_NEW()
+      // generate the Features
+      int gid = 1;
 
   float currentvol = 0.0;
   float vol;

@@ -82,12 +82,13 @@ QString PipelineFilterWidget::m_OpenDialogLastDirectory = "";
 // -----------------------------------------------------------------------------
 PipelineFilterWidget::PipelineFilterWidget(QWidget* parent) :
   QFrame(parent),
-//  m_CurrentBorderColorFactor(0),
-//  m_BorderIncrement(16),
+  //  m_CurrentBorderColorFactor(0),
+  //  m_BorderIncrement(16),
   m_IsSelected(false),
   m_HasPreflightErrors(false),
   m_HasPreflightWarnings(false),
   m_BasicInputsScrollWidget(NULL),
+  m_AdvancedInputScrollWidget(NULL),
   m_Observer(NULL)
 {
   initialize(AbstractFilter::NullPointer() );
@@ -98,12 +99,13 @@ PipelineFilterWidget::PipelineFilterWidget(QWidget* parent) :
 // -----------------------------------------------------------------------------
 PipelineFilterWidget::PipelineFilterWidget(AbstractFilter::Pointer filter, IObserver* observer, QWidget* parent) :
   QFrame(parent),
-//  m_CurrentBorderColorFactor(0),
-//  m_BorderIncrement(16),
+  //  m_CurrentBorderColorFactor(0),
+  //  m_BorderIncrement(16),
   m_IsSelected(false),
   m_HasPreflightErrors(false),
   m_HasPreflightWarnings(false),
   m_BasicInputsScrollWidget(NULL),
+  m_AdvancedInputScrollWidget(NULL),
   m_Observer(observer)
 {
   initialize(filter);
@@ -125,8 +127,8 @@ void PipelineFilterWidget::initialize(AbstractFilter::Pointer filter)
   m_DeleteRect.setY(PADDING + BORDER);
   m_DeleteRect.setWidth(IMAGE_WIDTH);
   m_DeleteRect.setHeight(IMAGE_HEIGHT);
-//  m_timer = new QTimer(this);
-//  connect(m_timer, SIGNAL(timeout()), this, SLOT(changeStyle()));
+  //  m_timer = new QTimer(this);
+  //  connect(m_timer, SIGNAL(timeout()), this, SLOT(changeStyle()));
 
   // Set the AbstractFilter for this class
   m_Filter = filter;
@@ -136,13 +138,25 @@ void PipelineFilterWidget::initialize(AbstractFilter::Pointer filter)
   if (NULL != m_Filter.get())
   {
     // Create the Widget that will be placed into the Basic Inputs Scroll Area
+
     m_BasicInputsScrollWidget = new QWidget(this);
-    QString name = QString::fromUtf8("basicInputsScrollWidget_") + m_Filter->getNameOfClass();
-    m_BasicInputsScrollWidget->setObjectName(name);
+    QString basicname = QString::fromUtf8("basicInputsScrollWidget_") + m_Filter->getNameOfClass();
+    m_BasicInputsScrollWidget->setObjectName(basicname);
     m_BasicInputsScrollWidget->setGeometry(QRect(0, 0, 250, 267));
-    QVBoxLayout* verticalLayout = new QVBoxLayout(m_BasicInputsScrollWidget);
-    name = QString::fromUtf8("verticalLayout") + m_Filter->getNameOfClass();
-    verticalLayout->setObjectName(name);
+    QVBoxLayout* basicverticalLayout = new QVBoxLayout(m_BasicInputsScrollWidget);
+    basicname = QString::fromUtf8("verticalLayout") + m_Filter->getNameOfClass();
+    basicverticalLayout->setObjectName(basicname);
+
+
+
+    m_AdvancedInputScrollWidget = new QWidget(this);
+    QString advname = QString::fromUtf8("advancedInputsScrollWidget_") + m_Filter->getNameOfClass();
+    m_AdvancedInputScrollWidget->setObjectName(advname);
+    m_AdvancedInputScrollWidget->setGeometry(QRect(0, 0, 250, 267));
+    QVBoxLayout* advverticalLayout = new QVBoxLayout(m_AdvancedInputScrollWidget);
+    advname = QString::fromUtf8("verticalLayout") + m_Filter->getNameOfClass();
+    advverticalLayout->setObjectName(advname);
+
 
 
     // Set the Name of the filter into the FilterWidget
@@ -161,11 +175,19 @@ void PipelineFilterWidget::initialize(AbstractFilter::Pointer filter)
 
       if (NULL == w) continue;
       m_FilterParameterWidgets.push_back(w);
-      // Set the parent for the widget
-      w->setParent(m_BasicInputsScrollWidget);
-      // Add the FilterWidget to the layout
-      verticalLayout->addWidget(w);
 
+      if(option->getIsAdvanced() == true)
+      {
+        w->setParent(m_AdvancedInputScrollWidget);
+        advverticalLayout->addWidget(w);
+      }
+      else
+      {
+        // Set the parent for the widget
+        w->setParent(m_BasicInputsScrollWidget);
+        // Add the FilterWidget to the layout
+        basicverticalLayout->addWidget(w);
+      }
       connect(w, SIGNAL(parametersChanged() ),
               parent(), SLOT(preflightPipeline() ) );
       connect(w, SIGNAL(errorSettingFilterParameter(const QString&)),
@@ -173,8 +195,16 @@ void PipelineFilterWidget::initialize(AbstractFilter::Pointer filter)
 
     }
 
-    QSpacerItem* verticalSpacer = new QSpacerItem(20, 40, QSizePolicy::Minimum, QSizePolicy::Expanding);
-    verticalLayout->addItem(verticalSpacer);
+    {
+      QSpacerItem* verticalSpacer = new QSpacerItem(20, 40, QSizePolicy::Minimum, QSizePolicy::Expanding);
+      basicverticalLayout->addItem(verticalSpacer);
+    }
+
+    {
+      QSpacerItem* verticalSpacer = new QSpacerItem(20, 40, QSizePolicy::Minimum, QSizePolicy::Expanding);
+      advverticalLayout->addItem(verticalSpacer);
+    }
+
   }
 
 }
@@ -184,11 +214,11 @@ void PipelineFilterWidget::initialize(AbstractFilter::Pointer filter)
 // -----------------------------------------------------------------------------
 void PipelineFilterWidget::displayFilterParameterWidgetError(const QString& msg)
 {
- if(m_Observer)
- {
-   PipelineMessage pm("Filter Paramter Widget", msg, -1, PipelineMessage::Error);
+  if(m_Observer)
+  {
+    PipelineMessage pm("Filter Paramter Widget", msg, -1, PipelineMessage::Error);
     m_Observer->processPipelineMessage(pm);
- }
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -260,6 +290,14 @@ QWidget* PipelineFilterWidget::getScrollWidgetContents()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+QWidget* PipelineFilterWidget::getAdvancedScrollWidgetContents()
+{
+  return m_AdvancedInputScrollWidget;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void PipelineFilterWidget::setHasPreflightErrors(bool hasErrors)
 {
   m_HasPreflightErrors = hasErrors;
@@ -299,28 +337,28 @@ bool PipelineFilterWidget::isSelected()
 void PipelineFilterWidget::changeStyle()
 {
   QString style;
-//  int m_CurrentBorderColorFactor = 0;
-//  int m_BorderIncrement = 16;
+  //  int m_CurrentBorderColorFactor = 0;
+  //  int m_BorderIncrement = 16;
 
   if (m_HasPreflightErrors == true)
   {
-//    m_CurrentBorderColorFactor += m_BorderIncrement;
-//    if (m_CurrentBorderColorFactor > 127)
-//    {
-//      m_BorderIncrement = -16;
-//    }
-//    if (m_CurrentBorderColorFactor < 1)
-//    {
-//      m_BorderIncrement = 16;
-//    }
+    //    m_CurrentBorderColorFactor += m_BorderIncrement;
+    //    if (m_CurrentBorderColorFactor > 127)
+    //    {
+    //      m_BorderIncrement = -16;
+    //    }
+    //    if (m_CurrentBorderColorFactor < 1)
+    //    {
+    //      m_BorderIncrement = 16;
+    //    }
 
     style.append("border: 2px solid rgb(255, 0, 0);");
-//    style.append(QString::number(255 - m_CurrentBorderColorFactor, 10));
-//    style.append(", ");
-//    style.append(QString::number(m_CurrentBorderColorFactor, 10));
-//    style.append(", ");
-//    style.append(QString::number(m_CurrentBorderColorFactor, 10));
-//    style.append(");");
+    //    style.append(QString::number(255 - m_CurrentBorderColorFactor, 10));
+    //    style.append(", ");
+    //    style.append(QString::number(m_CurrentBorderColorFactor, 10));
+    //    style.append(", ");
+    //    style.append(QString::number(m_CurrentBorderColorFactor, 10));
+    //    style.append(");");
   }
   else if(m_HasPreflightWarnings)
   {
@@ -329,13 +367,13 @@ void PipelineFilterWidget::changeStyle()
   else if(m_IsSelected == true )
   {
     style.append("border: 2px solid purple;");
- //   m_CurrentBorderColorFactor = 0;
+    //   m_CurrentBorderColorFactor = 0;
   }
   else
   {
     style.append("border: 1px solid #515151;");
     style.append("margin: 1px;");
- //   m_CurrentBorderColorFactor = 0;
+    //   m_CurrentBorderColorFactor = 0;
   }
   setBorderColorStyle(style);
   updateWidgetStyle();

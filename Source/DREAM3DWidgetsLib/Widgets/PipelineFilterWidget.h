@@ -94,6 +94,8 @@ class DREAM3DWidgetsLib_EXPORT PipelineFilterWidget : public QFrame, private Ui:
     QVector<QWidget*>& getFilterParameterWidgets();
 
     QWidget* getScrollWidgetContents();
+    QWidget* getAdvancedScrollWidgetContents();
+
 
     /**
      * @brief Sets the actions that will be displayed as a context menu
@@ -164,6 +166,7 @@ class DREAM3DWidgetsLib_EXPORT PipelineFilterWidget : public QFrame, private Ui:
     AbstractFilter::Pointer   m_Filter;
     QVector<QWidget*>         m_FilterParameterWidgets;
     QWidget*                  m_BasicInputsScrollWidget;
+    QWidget*                  m_AdvancedInputScrollWidget;
     IObserver*                m_Observer;
     QMenu                     m_Menu;
     QList<QAction*>           m_MenuActions;

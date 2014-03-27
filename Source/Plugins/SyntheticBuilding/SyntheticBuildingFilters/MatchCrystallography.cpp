@@ -70,6 +70,7 @@ MatchCrystallography::MatchCrystallography() :
   m_OutputFeatureAttributeMatrix(Defaults::SyntheticVolume, Defaults::CellFeatureAttributeMatrixName, ""),
   m_SurfaceFeaturesArrayName(DREAM3D::FeatureData::SurfaceFeatures),
 
+
   // These are from the Data Container that the synthetic is being generated into
 //  m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
 //  m_CellFeatureAttributeMatrixName(DREAM3D::Defaults::CellFeatureAttributeMatrixName),
