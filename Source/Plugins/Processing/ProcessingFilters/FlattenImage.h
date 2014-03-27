@@ -103,7 +103,7 @@ signals:
 
   private:
     DEFINE_PTR_WEAKPTR_DATAARRAY(unsigned char, ImageData)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FlatImageData)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(unsigned char, FlatImageData)
 
     FlattenImage(const FlattenImage&); // Copy Constructor Not Implemented
     void operator=(const FlattenImage&); // Operator '=' Not Implemented

@@ -215,7 +215,7 @@ void GenericExample::setupFilterParameters()
     FilterParameter::Pointer parameter = FilterParameter::New();
     parameter->setHumanLabel("Volume Vertex Array Name");
     parameter->setPropertyName("SelectedVolumeVertexArrayName");
-    parameter->setWidgetType(FilterParameterWidgetType::SingleArraySelectionWidget);
+    parameter->setWidgetType(FilterParameterWidgetType::DataArraySelectionWidget);
     parameter->setValueType("QString");
     parameter->setUnits("");
     parameters.push_back(parameter);
@@ -225,7 +225,7 @@ void GenericExample::setupFilterParameters()
     FilterParameter::Pointer parameter = FilterParameter::New();
     parameter->setHumanLabel("Volume Edge Array Name");
     parameter->setPropertyName("SelectedVolumeEdgeArrayName");
-    parameter->setWidgetType(FilterParameterWidgetType::SingleArraySelectionWidget);
+    parameter->setWidgetType(FilterParameterWidgetType::DataArraySelectionWidget);
     parameter->setValueType("QString");
     parameter->setUnits("");
     parameters.push_back(parameter);
@@ -235,7 +235,7 @@ void GenericExample::setupFilterParameters()
     FilterParameter::Pointer parameter = FilterParameter::New();
     parameter->setHumanLabel("Volume Face Array Name");
     parameter->setPropertyName("SelectedVolumeFaceArrayName");
-    parameter->setWidgetType(FilterParameterWidgetType::SingleArraySelectionWidget);
+    parameter->setWidgetType(FilterParameterWidgetType::DataArraySelectionWidget);
     parameter->setValueType("QString");
     parameter->setUnits("");
     parameters.push_back(parameter);
@@ -245,7 +245,7 @@ void GenericExample::setupFilterParameters()
     FilterParameter::Pointer parameter = FilterParameter::New();
     parameter->setHumanLabel("Volume Cell Array Name");
     parameter->setPropertyName("SelectedVolumeCellArrayName");
-    parameter->setWidgetType(FilterParameterWidgetType::SingleArraySelectionWidget);
+    parameter->setWidgetType(FilterParameterWidgetType::DataArraySelectionWidget);
     parameter->setValueType("QString");
     parameter->setUnits("");
     parameters.push_back(parameter);
@@ -255,7 +255,7 @@ void GenericExample::setupFilterParameters()
     FilterParameter::Pointer parameter = FilterParameter::New();
     parameter->setHumanLabel("Volume Feature Array Name");
     parameter->setPropertyName("SelectedVolumeFeatureArrayName");
-    parameter->setWidgetType(FilterParameterWidgetType::SingleArraySelectionWidget);
+    parameter->setWidgetType(FilterParameterWidgetType::DataArraySelectionWidget);
     parameter->setValueType("QString");
     parameter->setUnits("");
     parameters.push_back(parameter);
@@ -265,7 +265,7 @@ void GenericExample::setupFilterParameters()
     FilterParameter::Pointer parameter = FilterParameter::New();
     parameter->setHumanLabel("Volume Ensemble Array Name");
     parameter->setPropertyName("SelectedVolumeEnsembleArrayName");
-    parameter->setWidgetType(FilterParameterWidgetType::SingleArraySelectionWidget);
+    parameter->setWidgetType(FilterParameterWidgetType::DataArraySelectionWidget);
     parameter->setValueType("QString");
     parameter->setUnits("");
     parameters.push_back(parameter);
@@ -276,7 +276,7 @@ void GenericExample::setupFilterParameters()
     FilterParameter::Pointer parameter = FilterParameter::New();
     parameter->setHumanLabel("Surface Vertex Array Name");
     parameter->setPropertyName("SelectedSurfaceVertexArrayName");
-    parameter->setWidgetType(FilterParameterWidgetType::SingleArraySelectionWidget);
+    parameter->setWidgetType(FilterParameterWidgetType::DataArraySelectionWidget);
     parameter->setValueType("QString");
     parameter->setUnits("");
     parameters.push_back(parameter);
@@ -286,7 +286,7 @@ void GenericExample::setupFilterParameters()
     FilterParameter::Pointer parameter = FilterParameter::New();
     parameter->setHumanLabel("Surface Edge Array Name");
     parameter->setPropertyName("SelectedSurfaceEdgeArrayName");
-    parameter->setWidgetType(FilterParameterWidgetType::SingleArraySelectionWidget);
+    parameter->setWidgetType(FilterParameterWidgetType::DataArraySelectionWidget);
     parameter->setValueType("QString");
     parameter->setUnits("");
     parameters.push_back(parameter);
@@ -296,7 +296,7 @@ void GenericExample::setupFilterParameters()
     FilterParameter::Pointer parameter = FilterParameter::New();
     parameter->setHumanLabel("Surface Face Array Name");
     parameter->setPropertyName("SelectedSurfaceFaceArrayName");
-    parameter->setWidgetType(FilterParameterWidgetType::SingleArraySelectionWidget);
+    parameter->setWidgetType(FilterParameterWidgetType::DataArraySelectionWidget);
     parameter->setValueType("QString");
     parameter->setUnits("");
     parameters.push_back(parameter);
@@ -306,7 +306,7 @@ void GenericExample::setupFilterParameters()
     FilterParameter::Pointer parameter = FilterParameter::New();
     parameter->setHumanLabel("Surface Feature Array Name");
     parameter->setPropertyName("SelectedSurfaceFeatureArrayName");
-    parameter->setWidgetType(FilterParameterWidgetType::SingleArraySelectionWidget);
+    parameter->setWidgetType(FilterParameterWidgetType::DataArraySelectionWidget);
     parameter->setValueType("QString");
     parameter->setUnits("");
     parameters.push_back(parameter);
@@ -316,7 +316,7 @@ void GenericExample::setupFilterParameters()
     FilterParameter::Pointer parameter = FilterParameter::New();
     parameter->setHumanLabel("Surface Ensemble Array Name");
     parameter->setPropertyName("SelectedSurfaceEnsembleArrayName");
-    parameter->setWidgetType(FilterParameterWidgetType::SingleArraySelectionWidget);
+    parameter->setWidgetType(FilterParameterWidgetType::DataArraySelectionWidget);
     parameter->setValueType("QString");
     parameter->setUnits("");
     parameters.push_back(parameter);
@@ -327,7 +327,7 @@ void GenericExample::setupFilterParameters()
     FilterParameter::Pointer parameter = FilterParameter::New();
     parameter->setHumanLabel("Edge Vertex Array Name");
     parameter->setPropertyName("SelectedEdgeVertexArrayName");
-    parameter->setWidgetType(FilterParameterWidgetType::SingleArraySelectionWidget);
+    parameter->setWidgetType(FilterParameterWidgetType::DataArraySelectionWidget);
     parameter->setValueType("QString");
     parameter->setUnits("");
     parameters.push_back(parameter);
@@ -337,7 +337,7 @@ void GenericExample::setupFilterParameters()
     FilterParameter::Pointer parameter = FilterParameter::New();
     parameter->setHumanLabel("Edge Edge Array Name");
     parameter->setPropertyName("SelectedEdgeEdgeArrayName");
-    parameter->setWidgetType(FilterParameterWidgetType::SingleArraySelectionWidget);
+    parameter->setWidgetType(FilterParameterWidgetType::DataArraySelectionWidget);
     parameter->setValueType("QString");
     parameter->setUnits("");
     parameters.push_back(parameter);
@@ -347,7 +347,7 @@ void GenericExample::setupFilterParameters()
     FilterParameter::Pointer parameter = FilterParameter::New();
     parameter->setHumanLabel("Edge Feature Array Name");
     parameter->setPropertyName("SelectedEdgeFeatureArrayName");
-    parameter->setWidgetType(FilterParameterWidgetType::SingleArraySelectionWidget);
+    parameter->setWidgetType(FilterParameterWidgetType::DataArraySelectionWidget);
     parameter->setValueType("QString");
     parameter->setUnits("");
     parameters.push_back(parameter);
@@ -357,7 +357,7 @@ void GenericExample::setupFilterParameters()
     FilterParameter::Pointer parameter = FilterParameter::New();
     parameter->setHumanLabel("Edge Ensemble Array Name");
     parameter->setPropertyName("SelectedEdgeEnsembleArrayName");
-    parameter->setWidgetType(FilterParameterWidgetType::SingleArraySelectionWidget);
+    parameter->setWidgetType(FilterParameterWidgetType::DataArraySelectionWidget);
     parameter->setValueType("QString");
     parameter->setUnits("");
     parameters.push_back(parameter);
@@ -368,7 +368,7 @@ void GenericExample::setupFilterParameters()
     FilterParameter::Pointer parameter = FilterParameter::New();
     parameter->setHumanLabel("Vertex Vertex Array Name");
     parameter->setPropertyName("SelectedVertexVertexArrayName");
-    parameter->setWidgetType(FilterParameterWidgetType::SingleArraySelectionWidget);
+    parameter->setWidgetType(FilterParameterWidgetType::DataArraySelectionWidget);
     parameter->setValueType("QString");
     parameter->setUnits("");
     parameters.push_back(parameter);
@@ -378,7 +378,7 @@ void GenericExample::setupFilterParameters()
     FilterParameter::Pointer parameter = FilterParameter::New();
     parameter->setHumanLabel("Vertex Feature Array Name");
     parameter->setPropertyName("SelectedVertexFeatureArrayName");
-    parameter->setWidgetType(FilterParameterWidgetType::SingleArraySelectionWidget);
+    parameter->setWidgetType(FilterParameterWidgetType::DataArraySelectionWidget);
     parameter->setValueType("QString");
     parameter->setUnits("");
     parameters.push_back(parameter);
@@ -388,7 +388,7 @@ void GenericExample::setupFilterParameters()
     FilterParameter::Pointer parameter = FilterParameter::New();
     parameter->setHumanLabel("Vertex Ensemble Array Name");
     parameter->setPropertyName("SelectedVertexEnsembleArrayName");
-    parameter->setWidgetType(FilterParameterWidgetType::SingleArraySelectionWidget);
+    parameter->setWidgetType(FilterParameterWidgetType::DataArraySelectionWidget);
     parameter->setValueType("QString");
     parameter->setUnits("");
     parameters.push_back(parameter);

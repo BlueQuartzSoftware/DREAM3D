@@ -79,9 +79,6 @@ namespace FilterParameterWidgetType
       const QString DataContainerSelectionWidget("DataContainerSelectionWidget");
       const QString ShapeTypeSelectionWidget("ShapeTypeSelectionWidget");
 
-      //// This just here to get stuff to compile. The Widget DOES NOT EXIST and WILL NOT EXIST.
-      const QString SingleArraySelectionWidget("SingleArraySelectionWidget"); // ComboBox where the Cell Array names are used to populate
-
       const QString PreflightUpdatedValueWidget("PreflightUpdatedValueWidget");
 #if 0
       /* **** DO NOT PUT ANY OTHER WIDGETS BETWEEN THIS ***** */

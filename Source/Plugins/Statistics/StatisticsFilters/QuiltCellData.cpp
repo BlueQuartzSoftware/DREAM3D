@@ -80,7 +80,7 @@ void QuiltCellData::setupFilterParameters()
     FilterParameter::Pointer parameter = FilterParameter::New();
     parameter->setHumanLabel("Cell Array To Quilt");
     parameter->setPropertyName("SelectedCellArrayName");
-    parameter->setWidgetType(FilterParameterWidgetType::SingleArraySelectionWidget);
+    parameter->setWidgetType(FilterParameterWidgetType::DataArraySelectionWidget);
     parameter->setValueType("QString");
     parameter->setUnits("");
     parameters.push_back(parameter);

@@ -129,8 +129,7 @@ ScalarSegmentFeatures::ScalarSegmentFeatures() :
   SegmentFeatures(),
   m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
   m_CellFeatureAttributeMatrixName(DREAM3D::Defaults::CellFeatureAttributeMatrixName),
-  m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
-  m_ScalarArrayName(""),
+  m_ScalarArrayPath("", "", ""),
   m_ScalarTolerance(5.0f),
   m_RandomizeFeatureIds(true),
   m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
@@ -164,9 +163,9 @@ void ScalarSegmentFeatures::setupFilterParameters()
   {
     FilterParameter::Pointer parameter = FilterParameter::New();
     parameter->setHumanLabel("Input Cell Array Name");
-    parameter->setPropertyName("ScalarArrayName");
-    parameter->setWidgetType(FilterParameterWidgetType::SingleArraySelectionWidget);
-    parameter->setValueType("QString");
+    parameter->setPropertyName("ScalarArrayPath");
+    parameter->setWidgetType(FilterParameterWidgetType::DataArraySelectionWidget);
+    parameter->setValueType("DataArrayPath");
     parameter->setUnits("");
     parameters.push_back(parameter);
   }
@@ -180,16 +179,7 @@ void ScalarSegmentFeatures::setupFilterParameters()
     parameter->setUnits("");
     parameters.push_back(parameter);
   }
-#if 0
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Randomly Reorder Generated Feature Ids");
-    parameter->setPropertyName("RandomizeFeatureIds");
-    parameter->setWidgetType(FilterParameterWidgetType::BooleanWidget);
-    parameter->setValueType("bool");
-    parameters.push_back(parameter);
-  }
-#endif
+
   setFilterParameters(parameters);
 }
 
@@ -201,7 +191,7 @@ void ScalarSegmentFeatures::readFilterParameters(AbstractFilterParametersReader*
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
   /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
-  setScalarArrayName( reader->readString( "ScalarArrayName", getScalarArrayName() ) );
+  setScalarArrayPath( reader->readDataArrayPath( "ScalarArrayPath", getScalarArrayPath() ) );
   setScalarTolerance( reader->readValue("ScalarTolerance", getScalarTolerance()) );
   /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
@@ -213,7 +203,7 @@ void ScalarSegmentFeatures::readFilterParameters(AbstractFilterParametersReader*
 int ScalarSegmentFeatures::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  writer->writeValue("ScalarArrayName", getScalarArrayName() );
+  writer->writeValue("ScalarArrayPath", getScalarArrayPath() );
   writer->writeValue("ScalarTolerance", getScalarTolerance() );
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
@@ -242,10 +232,10 @@ void ScalarSegmentFeatures::dataCheck()
   QVector<size_t> tDims(1, 0);
   AttributeMatrix::Pointer cellFeatureAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellFeatureAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::CellFeature);
   if(getErrorCondition() < 0) { return; }
-  AttributeMatrix::Pointer cellAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), -301);
+  AttributeMatrix::Pointer cellAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, m_ScalarArrayPath.getAttributeMatrixName(), -301);
   if(getErrorCondition() < 0 || NULL == cellAttrMat.get() ) { return; }
 
-  if(m_ScalarArrayName.isEmpty() == true)
+  if(m_ScalarArrayPath.isEmpty() == true)
   {
     setErrorCondition(-11000);
     notifyErrorMessage(getHumanLabel(), "An array from the Volume DataContainer must be selected.", getErrorCondition());
@@ -292,48 +282,15 @@ void ScalarSegmentFeatures::execute()
   // This runs a subfilter
   int64_t totalPoints = m->getAttributeMatrix(getCellAttributeMatrixName())->getNumTuples();
 
-  QString dcName;
-  QString amName;
-  QString daName;
+  QString dcName = m_ScalarArrayPath.getDataContainerName();
+  QString amName = m_ScalarArrayPath.getAttributeMatrixName();
+  QString daName = m_ScalarArrayPath.getDataArrayName();
 
-  QStringList tokens = m_ScalarArrayName.split(DREAM3D::PathSep);
-  // We should end up with 3 Tokens
-  if(tokens.size() != 3)
-  {
-    setErrorCondition(-11002);
-    QString ss = QObject::tr("The path to the Attribute Array is malformed. Each part should be separated by a '|' character.");
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-  }
-  else
-  {
-    dcName = tokens.at(0);
-    amName = tokens.at(1);
-    daName = tokens.at(2);
-
-    DataContainer::Pointer dc = getDataContainerArray()->getDataContainer(dcName);
-    if(NULL == dc.get())
-    {
-      setErrorCondition(-11003);
-      QString ss = QObject::tr("The DataContainer '%1' was not found in the DataContainerArray").arg(dcName);
-      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-      return;
-    }
-
-    AttributeMatrix::Pointer attrMat = dc->getAttributeMatrix(amName);
-      if(NULL == attrMat.get())
-    {
-      setErrorCondition(-11004);
-      QString ss = QObject::tr("The AttributeMatrix '%1' was not found in the DataContainer '%2'").arg(amName).arg(dcName);
-      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-      return;
-    }
-  }
-
-  m_InputData = m->getAttributeMatrix(getCellAttributeMatrixName())->getAttributeArray(daName);
+  m_InputData = getDataContainerArray()->getDataContainer(dcName)->getAttributeMatrix(amName)->getAttributeArray(daName);
   if (NULL == m_InputData.get())
   {
 
-    QString ss = QObject::tr("Selected array '%1' does not exist in the Voxel Data Container. Was it spelled correctly?").arg(m_ScalarArrayName);
+    QString ss = QObject::tr("Selected array '%1' does not exist in the Voxel Data Container. Was it spelled correctly?").arg(m_ScalarArrayPath.getDataArrayName());
     setErrorCondition(-11001);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;
@@ -424,6 +381,7 @@ void ScalarSegmentFeatures::execute()
     totalPoints = m->getTotalPoints();
     randomizeFeatureIds(totalPoints, totalFeatures);
   }
+
   // If there is an error set this to something negative and also set a message
   notifyStatusMessage(getHumanLabel(), "Completed");
 }
@@ -512,7 +470,7 @@ int64_t ScalarSegmentFeatures::getSeed(size_t gnum)
 bool ScalarSegmentFeatures::determineGrouping(int64_t referencepoint, int64_t neighborpoint, size_t gnum)
 {
 
-  if(m_FeatureIds[neighborpoint] == 0 && (m_GoodVoxels[neighborpoint] == true || missingGoodVoxels == true))
+  if(m_FeatureIds[neighborpoint] == 0 && (missingGoodVoxels == true || m_GoodVoxels[neighborpoint] == true))
   {
     return (*m_Compare)( (size_t)(referencepoint), (size_t)(neighborpoint), gnum );
   //     | Functor  ||calling the operator() method of the CompareFunctor Class |
@@ -554,7 +512,7 @@ AbstractFilter::Pointer ScalarSegmentFeatures::newFilterInstance(bool copyFilter
   ScalarSegmentFeatures::Pointer filter = ScalarSegmentFeatures::New();
   if(true == copyFilterParameters)
   {
-    filter->setScalarArrayName( getScalarArrayName() );
+    filter->setScalarArrayPath( getScalarArrayPath() );
     filter->setScalarTolerance( getScalarTolerance() );
   }
   return filter;

@@ -14,7 +14,7 @@ set(_PublicFilters
   FindBasalLoadingFactor
   FindAvgCAxes
   FindAvgOrientations
-  #FindAvgScalarValueForFeature
+  FindAvgScalarValueForFeatures
   FindBoundaryStrengths
   FindCAxisLocations
   FindEuclideanDistMap

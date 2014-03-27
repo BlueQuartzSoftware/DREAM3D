@@ -64,11 +64,9 @@ class FindProjectedImageStatistics : public AbstractFilter
     DREAM3D_TYPE_MACRO_SUPER(FindProjectedImageStatistics, AbstractFilter)
 
     virtual ~FindProjectedImageStatistics();
-    DREAM3D_INSTANCE_PROPERTY(QString, DataContainerName)
-    DREAM3D_INSTANCE_PROPERTY(QString, CellAttributeMatrixName)
 
-    DREAM3D_FILTER_PARAMETER(QString, SelectedArrayPath)
-    Q_PROPERTY(QString SelectedArrayPath READ getSelectedArrayPath WRITE setSelectedArrayPath)
+    DREAM3D_FILTER_PARAMETER(DataArrayPath, SelectedArrayPath)
+    Q_PROPERTY(DataArrayPath SelectedArrayPath READ getSelectedArrayPath WRITE setSelectedArrayPath)
     DREAM3D_FILTER_PARAMETER(unsigned int, Plane)
     Q_PROPERTY(unsigned int Plane READ getPlane WRITE setPlane)
 

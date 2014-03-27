@@ -47,8 +47,7 @@
 // -----------------------------------------------------------------------------
 SaveImages::SaveImages() :
   AbstractFilter(),
-  m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
-  m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
+  m_ColorsArrayPath("", "", ""),
   m_ImagePrefix(""),
   m_OutputPath(""),
   m_ImageFormat(0)
@@ -74,9 +73,9 @@ void SaveImages::setupFilterParameters()
   {
     FilterParameter::Pointer parameter = FilterParameter::New();
     parameter->setHumanLabel(" Colors Array");
-    parameter->setPropertyName("ColorsArrayName");
-    parameter->setWidgetType(FilterParameterWidgetType::SingleArraySelectionWidget);
-    parameter->setValueType("QString");
+    parameter->setPropertyName("ColorsArrayPath");
+    parameter->setWidgetType(FilterParameterWidgetType::DataArraySelectionWidget);
+    parameter->setValueType("DataArrayPath");
     parameter->setUnits("");
     parameters.push_back(parameter);
   }
@@ -125,7 +124,7 @@ void SaveImages::readFilterParameters(AbstractFilterParametersReader* reader, in
   /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
   setImagePrefix( reader->readString("ImagePrefix", getImagePrefix()) );
   setOutputPath( reader->readString("OutputPath", getOutputPath()) );
-  setColorsArrayName( reader->readString("ColorsArrayName", getColorsArrayName()) );
+  setColorsArrayPath( reader->readDataArrayPath("ColorsArrayPath", getColorsArrayPath()) );
   setImageFormat( reader->readValue("ImageFormat", getImageFormat()) );
   reader->closeFilterGroup();
 }
@@ -138,7 +137,7 @@ int SaveImages::writeFilterParameters(AbstractFilterParametersWriter* writer, in
   writer->openFilterGroup(this, index);
   writer->writeValue("ImagePrefix", getImagePrefix() );
   writer->writeValue("OutputPath", getOutputPath() );
-  writer->writeValue("ColorsArrayName", getColorsArrayName() );
+  writer->writeValue("ColorsArrayPath", getColorsArrayPath() );
   writer->writeValue("ImageFormat", getImageFormat() );
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
@@ -151,9 +150,9 @@ void SaveImages::dataCheck()
 {
   setErrorCondition(0);
 
-  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName(), false);
+  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, m_ColorsArrayPath.getDataContainerName(), false);
   if(getErrorCondition() < 0 || NULL == m) { return; }
-  AttributeMatrix::Pointer cellAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), -301);
+  AttributeMatrix::Pointer cellAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, m_ColorsArrayPath.getAttributeMatrixName(), -301);
   if(getErrorCondition() < 0 || NULL == cellAttrMat.get() ) { return; }
 
   QDir dir(getOutputPath());
@@ -169,7 +168,7 @@ void SaveImages::dataCheck()
     notifyWarningMessage(getHumanLabel(), ss, -1);
   }
 
-  if(m_ColorsArrayName.isEmpty() == true)
+  if(m_ColorsArrayPath.isEmpty() == true)
   {
     setErrorCondition(-1004);
     notifyErrorMessage(getHumanLabel(), "Input  Color Array name is empty", getErrorCondition());
@@ -177,11 +176,10 @@ void SaveImages::dataCheck()
   else
   {
     QVector<size_t> dims(1, 3);
-    m_ColorsPtr = cellAttrMat->getPrereqArray<DataArray<uint8_t>, AbstractFilter>(this, m_ColorsArrayName, -300, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+    m_ColorsPtr = cellAttrMat->getPrereqArray<DataArray<uint8_t>, AbstractFilter>(this, m_ColorsArrayPath.getDataArrayName(), -300, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
     if( NULL != m_ColorsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
     { m_Colors = m_ColorsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   }
-
 }
 
 
@@ -204,26 +202,15 @@ void SaveImages::preflight()
 void SaveImages::execute()
 {
   int err = 0;
-
   setErrorCondition(err);
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-  if(NULL == m)
-  {
-    setErrorCondition(-999);
-    notifyErrorMessage(getHumanLabel(), "The Voxel DataContainer Object was NULL", -999);
-    return;
-  }
-  setErrorCondition(0);
+  dataCheck();
+  if(getErrorCondition() < 0) { return; }
 
-
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(m_ColorsArrayPath.getDataContainerName());
 
   /* Place all your code to execute your filter here. */
   size_t dims[3];
   m->getDimensions(dims);
-
-  dataCheck();
-
-
 
   size_t index = 0;
   uint8_t* slice = NULL;
@@ -234,11 +221,7 @@ void SaveImages::execute()
     slice = m_Colors + index;
 
     err = saveImage(slice, z, dims);
-
   }
-
-
-
 
   /* Let the GUI know we are done with this filter */
   notifyStatusMessage(getHumanLabel(), "Complete");
@@ -319,7 +302,7 @@ AbstractFilter::Pointer SaveImages::newFilterInstance(bool copyFilterParameters)
   SaveImages::Pointer filter = SaveImages::New();
   if(true == copyFilterParameters)
   {
-    filter->setColorsArrayName( getColorsArrayName() );
+    filter->setColorsArrayPath( getColorsArrayPath() );
     filter->setImageFormat( getImageFormat() );
     filter->setImagePrefix( getImagePrefix() );
     filter->setOutputPath( getOutputPath() );

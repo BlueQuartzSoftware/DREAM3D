@@ -45,7 +45,7 @@ CopyFeatureArrayToCellArray::CopyFeatureArrayToCellArray() :
   m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
   m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
   m_CellFeatureAttributeMatrixName(DREAM3D::Defaults::CellFeatureAttributeMatrixName),
-  m_SelectedFeatureArrayName(""),
+  m_SelectedFeatureArrayName("", "", ""),
   m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
   m_FeatureIds(NULL)
 {
@@ -69,8 +69,8 @@ void CopyFeatureArrayToCellArray::setupFilterParameters()
     FilterParameter::Pointer parameter = FilterParameter::New();
     parameter->setHumanLabel("Feature Array Name");
     parameter->setPropertyName("SelectedFeatureArrayName");
-    parameter->setWidgetType(FilterParameterWidgetType::SingleArraySelectionWidget);
-    parameter->setValueType("QString");
+    parameter->setWidgetType(FilterParameterWidgetType::DataArraySelectionWidget);
+    parameter->setValueType("DataArrayPath");
     parameter->setUnits("");
     parameters.push_back(parameter);
   }
@@ -86,7 +86,7 @@ void CopyFeatureArrayToCellArray::readFilterParameters(AbstractFilterParametersR
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
   /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
-  setSelectedFeatureArrayName( reader->readString( "SelectedFeatureArrayName", getSelectedFeatureArrayName() ) );
+  setSelectedFeatureArrayName( reader->readDataArrayPath( "SelectedFeatureArrayName", getSelectedFeatureArrayName() ) );
   /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }
@@ -126,7 +126,7 @@ void CopyFeatureArrayToCellArray::dataCheck()
     setErrorCondition(-11000);
     notifyErrorMessage(getHumanLabel(), "An array from the Volume DataContainer must be selected.", getErrorCondition());
   }
-  if(cellFeatureAttrMat->doesAttributeArrayExist(m_SelectedFeatureArrayName) == false)
+  if(cellFeatureAttrMat->doesAttributeArrayExist(m_SelectedFeatureArrayName.getDataArrayName()) == false)
   {
     setErrorCondition(-11001);
     notifyErrorMessage(getHumanLabel(), "The array selected does not exist in the DataContainer selected.", getErrorCondition());
@@ -200,11 +200,11 @@ void CopyFeatureArrayToCellArray::execute()
 
   QString ss;
 
-  IDataArray::Pointer inputData = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getAttributeArray(m_SelectedFeatureArrayName);
+  IDataArray::Pointer inputData = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getAttributeArray(m_SelectedFeatureArrayName.getDataArrayName());
 
   if (NULL == inputData.get())
   {
-    ss = QObject::tr("Selected array '%1' does not exist in the Voxel Data Container. Was it spelled correctly?").arg(m_SelectedFeatureArrayName);
+    ss = QObject::tr("Selected array '%1' does not exist in the Voxel Data Container. Was it spelled correctly?").arg(m_SelectedFeatureArrayName.getDataArrayName());
     setErrorCondition(-11001);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;

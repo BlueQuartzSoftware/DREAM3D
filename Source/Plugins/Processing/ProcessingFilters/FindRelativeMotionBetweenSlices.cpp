@@ -114,9 +114,7 @@ class CalcRelativeMotion
 // -----------------------------------------------------------------------------
 FindRelativeMotionBetweenSlices::FindRelativeMotionBetweenSlices() :
   AbstractFilter(),
-  m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
-  m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
-  m_SelectedArrayPath(""),
+  m_SelectedArrayPath("", "", ""),
   m_Plane(0),
   m_MotionDirectionArrayName(DREAM3D::CellData::MotionDirection),
   m_MotionDirection(NULL)
@@ -141,8 +139,8 @@ void FindRelativeMotionBetweenSlices::setupFilterParameters()
     FilterParameter::Pointer parameter = FilterParameter::New();
     parameter->setHumanLabel("Cell Array To Track Motion");
     parameter->setPropertyName("SelectedArrayPath");
-    parameter->setWidgetType(FilterParameterWidgetType::SingleArraySelectionWidget);
-    parameter->setValueType("QString");
+    parameter->setWidgetType(FilterParameterWidgetType::DataArraySelectionWidget);
+    parameter->setValueType("DataArrayPath");
     parameter->setUnits("");
     parameters.push_back(parameter);
   }
@@ -207,7 +205,7 @@ void FindRelativeMotionBetweenSlices::readFilterParameters(AbstractFilterParamet
 {
   reader->openFilterGroup(this, index);
   /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
-  setSelectedArrayPath( reader->readString( "SelectedArrayPath", getSelectedArrayPath() ) );
+  setSelectedArrayPath( reader->readDataArrayPath( "SelectedArrayPath", getSelectedArrayPath() ) );
   setPlane( reader->readValue("Plane", getPlane()));
   setPSize1( reader->readValue("PSize1", getPSize1()));
   setPSize2( reader->readValue("PSize2", getPSize2()));
@@ -242,64 +240,15 @@ void FindRelativeMotionBetweenSlices::dataCheck()
 {
   setErrorCondition(0);
 
-  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName(), false);
+  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, m_SelectedArrayPath.getDataContainerName(), false);
   if(getErrorCondition() < 0 || NULL == m) { return; }
-  AttributeMatrix::Pointer cellAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), -301);
+  AttributeMatrix::Pointer cellAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, m_SelectedArrayPath.getAttributeMatrixName(), -301);
   if(getErrorCondition() < 0 || NULL == cellAttrMat.get() ) { return; }
 
-  if (m_SelectedArrayPath.isEmpty() == true)
-  {
-    setErrorCondition(-11001);
-    QString ss = QObject::tr("The complete path to the Attribute Array can not be empty. Please set an appropriate path.");
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-  }
-  else
-  {
-
-    QString dcName;
-    QString amName;
-    QString daName;
-
-    QStringList tokens = m_SelectedArrayPath.split(DREAM3D::PathSep);
-    // We should end up with 3 Tokens
-    if(tokens.size() != 3)
-    {
-      setErrorCondition(-11002);
-      QString ss = QObject::tr("The path to the Attribute Array is malformed. Each part should be separated by a '|' character.");
-      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-    }
-    else
-    {
-      dcName = tokens.at(0);
-      amName = tokens.at(1);
-      daName = tokens.at(2);
-
-      DataContainerArray::Pointer dca = getDataContainerArray();
-      if (NULL == dca.get() ) { return; }
-      DataContainer::Pointer dc = getDataContainerArray()->getDataContainer(dcName);
-      if(NULL == dc.get())
-      {
-        setErrorCondition(-11003);
-        QString ss = QObject::tr("The DataContainer '%1' was not found in the DataContainerArray").arg(dcName);
-        notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-        return;
-      }
-
-      AttributeMatrix::Pointer attrMat = dc->getAttributeMatrix(amName);
-       if(NULL == attrMat.get())
-      {
-        setErrorCondition(-11004);
-        QString ss = QObject::tr("The AttributeMatrix '%1' was not found in the DataContainer '%2'").arg(amName).arg(dcName);
-        notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-        return;
-      }
-
-      QVector<size_t> dims(1, 3);
-      m_MotionDirectionPtr = attrMat->createNonPrereqArray<DataArray<float>, AbstractFilter, float>(this, m_MotionDirectionArrayName, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-      if( NULL != m_MotionDirectionPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
-      { m_MotionDirection = m_MotionDirectionPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-    }
-  }
+  QVector<size_t> dims(1, 3);
+  m_MotionDirectionPtr = cellAttrMat->createNonPrereqArray<DataArray<float>, AbstractFilter, float>(this, m_MotionDirectionArrayName, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if( NULL != m_MotionDirectionPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  { m_MotionDirection = m_MotionDirectionPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
 
 
@@ -323,7 +272,7 @@ void FindRelativeMotionBetweenSlices::execute()
   dataCheck();
   if(getErrorCondition() < 0) { return; }
 
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(m_SelectedArrayPath.getDataContainerName());
 
   if(m->getXPoints() <= 1 && m->getYPoints() <= 1 && m->getZPoints() <= 1)
   {
@@ -334,27 +283,15 @@ void FindRelativeMotionBetweenSlices::execute()
 
   QString ss;
 
-  QString dcName;
-  QString amName;
-  QString daName;
-  QStringList tokens = m_SelectedArrayPath.split(DREAM3D::PathSep);
-  // We should end up with 3 Tokens
-  if(tokens.size() != 3)
-  {
-    setErrorCondition(-11002);
-    QString ss = QObject::tr("The path to the Attribute Array is malformed. Each part should be separated by a '|' character.");
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-    return;
-  }
+  QString dcName = m_SelectedArrayPath.getDataContainerName();
+  QString amName = m_SelectedArrayPath.getAttributeMatrixName();
+  QString daName = m_SelectedArrayPath.getDataArrayName();
 
-  dcName = tokens.at(0);
-  amName = tokens.at(1);
-  daName = tokens.at(2);
   // We the AttributeMatrix, now lets try to get the AttributeArray object and rename it if it exists
   IDataArray::Pointer inputData = getDataContainerArray()->getDataContainer(dcName)->getAttributeMatrix(amName)->getAttributeArray(daName);
   if (NULL == inputData.get())
   {
-    ss = QObject::tr("Selected array with path: '%1' does not exist in the Data Container. Was it spelled correctly?").arg(getSelectedArrayPath());
+    ss = QObject::tr("Selected array with path: '%1' does not exist in the Data Container. Was it spelled correctly?").arg(getSelectedArrayPath().getDataArrayName());
     setErrorCondition(-11001);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;
@@ -674,7 +611,7 @@ void FindRelativeMotionBetweenSlices::execute()
   }
   else if (dType.compare("bool") == 0)
   {
-    ss = QObject::tr("Selected array with path: '%1' cannot be of type bool").arg(getSelectedArrayPath());
+    ss = QObject::tr("Selected array with path: '%1' cannot be of type bool").arg(getSelectedArrayPath().getDataArrayName());
     setErrorCondition(-11001);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;

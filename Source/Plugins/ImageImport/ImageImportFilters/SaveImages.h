@@ -61,8 +61,6 @@ class SaveImages : public AbstractFilter
     DREAM3D_TYPE_MACRO_SUPER(SaveImages, AbstractFilter)
 
     virtual ~SaveImages();
-    DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
 
     /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
     DREAM3D_FILTER_PARAMETER(QString, ImagePrefix)
@@ -72,8 +70,8 @@ class SaveImages : public AbstractFilter
     DREAM3D_FILTER_PARAMETER(int, ImageFormat)
     Q_PROPERTY(int ImageFormat READ getImageFormat WRITE setImageFormat)
 
-    DREAM3D_FILTER_PARAMETER(QString, CellEulerAnglesArrayName)
-    Q_PROPERTY(QString ColorsArrayName READ getColorsArrayName WRITE setColorsArrayName)
+    DREAM3D_FILTER_PARAMETER(DataArrayPath, ColorsArrayPath)
+    Q_PROPERTY(DataArrayPath ColorsArrayPath READ getColorsArrayPath WRITE setColorsArrayPath)
 
     enum ImageFormatType
     {

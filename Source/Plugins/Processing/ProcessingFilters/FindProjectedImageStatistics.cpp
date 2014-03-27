@@ -127,9 +127,7 @@ class CalcProjectedStatsImpl
 // -----------------------------------------------------------------------------
 FindProjectedImageStatistics::FindProjectedImageStatistics() :
   AbstractFilter(),
-  m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
-  m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
-  m_SelectedArrayPath(""),
+  m_SelectedArrayPath("", "", ""),
   m_Plane(0),
   m_ProjectedImageMinArrayName(DREAM3D::CellData::ProjectedImageMin),
   m_ProjectedImageMin(NULL),
@@ -162,8 +160,8 @@ void FindProjectedImageStatistics::setupFilterParameters()
     FilterParameter::Pointer parameter = FilterParameter::New();
     parameter->setHumanLabel("Cell Array To Quantify");
     parameter->setPropertyName("SelectedArrayPath");
-    parameter->setWidgetType(FilterParameterWidgetType::SingleArraySelectionWidget);
-    parameter->setValueType("QString");
+    parameter->setWidgetType(FilterParameterWidgetType::DataArraySelectionWidget);
+    parameter->setValueType("DataArrayPath");
     parameter->setUnits("");
     parameters.push_back(parameter);
   }
@@ -188,7 +186,7 @@ void FindProjectedImageStatistics::readFilterParameters(AbstractFilterParameters
 {
   reader->openFilterGroup(this, index);
   /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
-  setSelectedArrayPath( reader->readString( "SelectedArrayPath", getSelectedArrayPath() ) );
+  setSelectedArrayPath( reader->readDataArrayPath( "SelectedArrayPath", getSelectedArrayPath() ) );
   setPlane( reader->readValue("Plane", getPlane()));
   /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
@@ -213,71 +211,28 @@ void FindProjectedImageStatistics::dataCheck()
 {
   setErrorCondition(0);
 
-  if (m_SelectedArrayPath.isEmpty() == true)
-  {
-    setErrorCondition(-11001);
-    QString ss = QObject::tr("The complete path to the Attribute Array can not be empty. Please set an appropriate path.");
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-  }
-  else
-  {
 
-    QString dcName;
-    QString amName;
-    QString daName;
+  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, m_SelectedArrayPath.getDataContainerName(), false);
+  if(getErrorCondition() < 0 || NULL == m) { return; }
+  AttributeMatrix::Pointer cellAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, m_SelectedArrayPath.getAttributeMatrixName(), -301);
+  if(getErrorCondition() < 0 || NULL == cellAttrMat.get() ) { return; }
 
-    QStringList tokens = m_SelectedArrayPath.split(DREAM3D::PathSep);
-    // We should end up with 3 Tokens
-    if(tokens.size() != 3)
-    {
-      setErrorCondition(-11002);
-      QString ss = QObject::tr("The path to the Attribute Array is malformed. Each part should be separated by a '|' character.");
-      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-    }
-    else
-    {
-      dcName = tokens.at(0);
-      amName = tokens.at(1);
-      daName = tokens.at(2);
-
-      DataContainerArray::Pointer dca = getDataContainerArray();
-      if (NULL == dca.get() ) { return; }
-      DataContainer::Pointer dc = getDataContainerArray()->getDataContainer(dcName);
-      if(NULL == dc.get())
-      {
-        setErrorCondition(-11003);
-        QString ss = QObject::tr("The DataContainer '%1' was not found in the DataContainerArray").arg(dcName);
-        notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-        return;
-      }
-
-      AttributeMatrix::Pointer attrMat = dc->getAttributeMatrix(amName);
-       if(NULL == attrMat.get())
-      {
-        setErrorCondition(-11004);
-        QString ss = QObject::tr("The AttributeMatrix '%1' was not found in the DataContainer '%2'").arg(amName).arg(dcName);
-        notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-        return;
-      }
-
-      QVector<size_t> dims(1, 1);
-      m_ProjectedImageMinPtr = attrMat->createNonPrereqArray<DataArray<float>, AbstractFilter, float>(this, m_ProjectedImageMinArrayName, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-      if( NULL != m_ProjectedImageMinPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
-      { m_ProjectedImageMin = m_ProjectedImageMinPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-      m_ProjectedImageMaxPtr = attrMat->createNonPrereqArray<DataArray<float>, AbstractFilter, float>(this, m_ProjectedImageMaxArrayName, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-      if( NULL != m_ProjectedImageMaxPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
-      { m_ProjectedImageMax = m_ProjectedImageMaxPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-      m_ProjectedImageAvgPtr = attrMat->createNonPrereqArray<DataArray<float>, AbstractFilter, float>(this, m_ProjectedImageAvgArrayName, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-      if( NULL != m_ProjectedImageAvgPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
-      { m_ProjectedImageAvg = m_ProjectedImageAvgPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-      m_ProjectedImageStdPtr = attrMat->createNonPrereqArray<DataArray<float>, AbstractFilter, float>(this, m_ProjectedImageStdArrayName, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-      if( NULL != m_ProjectedImageStdPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
-      { m_ProjectedImageStd = m_ProjectedImageStdPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-      m_ProjectedImageVarPtr = attrMat->createNonPrereqArray<DataArray<float>, AbstractFilter, float>(this, m_ProjectedImageVarArrayName, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-      if( NULL != m_ProjectedImageVarPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
-      { m_ProjectedImageVar = m_ProjectedImageVarPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-    }
-  }
+  QVector<size_t> dims(1, 1);
+  m_ProjectedImageMinPtr = cellAttrMat->createNonPrereqArray<DataArray<float>, AbstractFilter, float>(this, m_ProjectedImageMinArrayName, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if( NULL != m_ProjectedImageMinPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  { m_ProjectedImageMin = m_ProjectedImageMinPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  m_ProjectedImageMaxPtr = cellAttrMat->createNonPrereqArray<DataArray<float>, AbstractFilter, float>(this, m_ProjectedImageMaxArrayName, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if( NULL != m_ProjectedImageMaxPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  { m_ProjectedImageMax = m_ProjectedImageMaxPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  m_ProjectedImageAvgPtr = cellAttrMat->createNonPrereqArray<DataArray<float>, AbstractFilter, float>(this, m_ProjectedImageAvgArrayName, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if( NULL != m_ProjectedImageAvgPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  { m_ProjectedImageAvg = m_ProjectedImageAvgPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  m_ProjectedImageStdPtr = cellAttrMat->createNonPrereqArray<DataArray<float>, AbstractFilter, float>(this, m_ProjectedImageStdArrayName, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if( NULL != m_ProjectedImageStdPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  { m_ProjectedImageStd = m_ProjectedImageStdPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  m_ProjectedImageVarPtr = cellAttrMat->createNonPrereqArray<DataArray<float>, AbstractFilter, float>(this, m_ProjectedImageVarArrayName, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if( NULL != m_ProjectedImageVarPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  { m_ProjectedImageVar = m_ProjectedImageVarPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
 
 
@@ -301,7 +256,11 @@ void FindProjectedImageStatistics::execute()
   dataCheck();
   if(getErrorCondition() < 0) { return; }
 
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  QString dcName = m_SelectedArrayPath.getDataContainerName();
+  QString amName = m_SelectedArrayPath.getAttributeMatrixName();
+  QString daName = m_SelectedArrayPath.getDataArrayName();
+
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(dcName);
 
   if(m->getXPoints() <= 1 && m->getYPoints() <= 1 && m->getZPoints() <= 1)
   {
@@ -312,27 +271,11 @@ void FindProjectedImageStatistics::execute()
 
   QString ss;
 
-  QString dcName;
-  QString amName;
-  QString daName;
-  QStringList tokens = m_SelectedArrayPath.split(DREAM3D::PathSep);
-  // We should end up with 3 Tokens
-  if(tokens.size() != 3)
-  {
-    setErrorCondition(-11002);
-    QString ss = QObject::tr("The path to the Attribute Array is malformed. Each part should be separated by a '|' character.");
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-    return;
-  }
-
-  dcName = tokens.at(0);
-  amName = tokens.at(1);
-  daName = tokens.at(2);
   // We the AttributeMatrix, now lets try to get the AttributeArray object and rename it if it exists
   IDataArray::Pointer inputData = getDataContainerArray()->getDataContainer(dcName)->getAttributeMatrix(amName)->getAttributeArray(daName);
   if (NULL == inputData.get())
   {
-    ss = QObject::tr("Selected array with path: '%1' does not exist in the Data Container. Was it spelled correctly?").arg(getSelectedArrayPath());
+    ss = QObject::tr("Selected array with path: '%1' does not exist in the Data Container. Was it spelled correctly?").arg(getSelectedArrayPath().getDataArrayName());
     setErrorCondition(-11001);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;
@@ -574,7 +517,7 @@ void FindProjectedImageStatistics::execute()
   }
   else if (dType.compare("bool") == 0)
   {
-    ss = QObject::tr("Selected array with path: '%1' cannot be of type bool").arg(getSelectedArrayPath());
+    ss = QObject::tr("Selected array with path: '%1' cannot be of type bool").arg(getSelectedArrayPath().getDataArrayName());
     setErrorCondition(-11001);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;

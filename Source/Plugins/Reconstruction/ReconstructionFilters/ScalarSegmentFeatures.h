@@ -79,10 +79,9 @@ class ScalarSegmentFeatures : public SegmentFeatures
     virtual ~ScalarSegmentFeatures();
     DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellFeatureAttributeMatrixName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
 
-    DREAM3D_FILTER_PARAMETER(QString, ScalarArrayName)
-    Q_PROPERTY(QString ScalarArrayName READ getScalarArrayName WRITE setScalarArrayName)
+    DREAM3D_FILTER_PARAMETER(DataArrayPath, ScalarArrayPath)
+    Q_PROPERTY(DataArrayPath ScalarArrayPath READ getScalarArrayPath WRITE setScalarArrayPath)
 
     DREAM3D_FILTER_PARAMETER(float, ScalarTolerance)
     Q_PROPERTY(float ScalarTolerance READ getScalarTolerance WRITE setScalarTolerance)
