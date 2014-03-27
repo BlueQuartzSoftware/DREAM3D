@@ -78,6 +78,7 @@ namespace FilterParameterWidgetType
       const QString AttributeMatrixSelectionWidget("AttributeMatrixSelectionWidget");
       const QString DataContainerSelectionWidget("DataContainerSelectionWidget");
       const QString ShapeTypeSelectionWidget("ShapeTypeSelectionWidget");
+      const QString DataArrayCreationWidget("DataArrayCreationWidget");
 
       const QString PreflightUpdatedValueWidget("PreflightUpdatedValueWidget");
 #if 0
@@ -139,6 +140,7 @@ class FilterParameter
     DREAM3D_INSTANCE_STRING_PROPERTY(FileExtension)
     DREAM3D_INSTANCE_STRING_PROPERTY(FileType)
     DREAM3D_INSTANCE_STRING_PROPERTY(Units)
+    DREAM3D_INSTANCE_PROPERTY(bool, IsAdvanced)
 
 
   protected:
@@ -146,7 +148,8 @@ class FilterParameter
       m_ValueType("Not_Set"),
       m_FileExtension(""),
       m_FileType(""),
-      m_Units("")
+      m_Units(""),
+      m_IsAdvanced(false)
     {}
 
   private:

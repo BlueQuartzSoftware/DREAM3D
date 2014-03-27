@@ -94,7 +94,6 @@ namespace DREAM3D
     const DREAM3D_STRING VoxelDataName("VoxelData");
 
     const DREAM3D_STRING SyntheticVolume("SyntheticVolume");
-
     const DREAM3D_STRING StatsGenerator("StatsGenerator");
   }
 
