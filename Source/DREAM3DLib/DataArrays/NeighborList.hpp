@@ -74,6 +74,23 @@ class NeighborList : public IDataArray
     DREAM3D_INSTANCE_STRING_PROPERTY(NumNeighborsArrayName)
 
     /**
+     * @brief Static constructor
+     * @param numElements The number of elements in the internal array.
+     * @param name The name of the array
+     * @return Boost::Shared_Ptr wrapping an instance of DataArrayTemplate<T>
+     */
+    static Pointer CreateArray(size_t numElements, const QString& name)
+    {
+      if (name.isEmpty() == true)
+      {
+        return NullPointer();
+      }
+      Pointer ptr = NeighborList<T>::New();
+      return ptr;
+    }
+
+
+    /**
      * @brief createNewArray
      * @param numElements
      * @param rank

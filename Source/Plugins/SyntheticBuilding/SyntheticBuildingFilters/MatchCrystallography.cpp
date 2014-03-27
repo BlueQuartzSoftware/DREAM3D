@@ -64,19 +64,25 @@ MatchCrystallography::MatchCrystallography() :
   m_CrystalStructuresArrayPath(Defaults::StatsGenerator, Defaults::CellEnsembleAttributeMatrixName, EnsembleData::CrystalStructures),
   m_PhaseTypesArrayPath(Defaults::StatsGenerator, Defaults::CellEnsembleAttributeMatrixName, EnsembleData::PhaseTypes),
 
+  m_OutputCellAttributeMatrix(Defaults::SyntheticVolume, Defaults::CellAttributeMatrixName, ""),
+  m_CellEulerAnglesArrayName(CellData::EulerAngles),
+
+  m_OutputFeatureAttributeMatrix(Defaults::SyntheticVolume, Defaults::CellFeatureAttributeMatrixName, ""),
+  m_SurfaceFeaturesArrayName(DREAM3D::FeatureData::SurfaceFeatures),
+
   // These are from the Data Container that the synthetic is being generated into
-  m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
-  m_CellFeatureAttributeMatrixName(DREAM3D::Defaults::CellFeatureAttributeMatrixName),
-  m_CellEnsembleAttributeMatrixName(DREAM3D::Defaults::CellEnsembleAttributeMatrixName),
-  m_NeighborListArrayName(DREAM3D::FeatureData::NeighborList),
-  m_SharedSurfaceAreaListArrayName(DREAM3D::FeatureData::SharedSurfaceAreaList),
-  m_StatsDataArrayName(DREAM3D::EnsembleData::Statistics),
+//  m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
+//  m_CellFeatureAttributeMatrixName(DREAM3D::Defaults::CellFeatureAttributeMatrixName),
+//  m_CellEnsembleAttributeMatrixName(DREAM3D::Defaults::CellEnsembleAttributeMatrixName),
+//  m_NeighborListArrayName(DREAM3D::FeatureData::NeighborList),
+//  m_SharedSurfaceAreaListArrayName(DREAM3D::FeatureData::SharedSurfaceAreaList),
+//  m_StatsDataArrayName(DREAM3D::EnsembleData::Statistics),
   m_MaxIterations(1),
   m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
   m_FeatureIds(NULL),
-  m_CellEulerAnglesArrayName(DREAM3D::CellData::EulerAngles),
+
   m_CellEulerAngles(NULL),
-  m_SurfaceFeaturesArrayName(DREAM3D::FeatureData::SurfaceFeatures),
+
   m_SurfaceFeatures(NULL),
   m_FeaturePhasesArrayName(DREAM3D::FeatureData::Phases),
   m_FeaturePhases(NULL),
@@ -176,14 +182,48 @@ void MatchCrystallography::setupFilterParameters()
     parameters.push_back(parameter);
   }
 
+
+
   //// These arrays are created during this filter
+     {
+    FilterParameter::Pointer parameter = FilterParameter::New();
+    parameter->setHumanLabel("Output Cell Attribute Matrix");
+    parameter->setPropertyName("OutputCellAttributeMatrix");
+    parameter->setWidgetType(FilterParameterWidgetType::AttributeMatrixSelectionWidget);
+    parameter->setValueType("DataArrayPath");
+    parameter->setUnits("");
+    parameter->setIsAdvanced(false);
+    parameters.push_back(parameter);
+  }
     {
     FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Euler Angles Name");
-    parameter->setPropertyName("CellEulerAnglesArrayPath");
-    parameter->setWidgetType(FilterParameterWidgetType::DataArrayCreationWidget);
+    parameter->setHumanLabel("Created Euler Angles Array Name");
+    parameter->setPropertyName("CellEulerAnglesArrayName");
+    parameter->setWidgetType(FilterParameterWidgetType::StringWidget);
+    parameter->setValueType("QString");
+    parameter->setUnits("");
+    parameter->setIsAdvanced(true);
+    parameters.push_back(parameter);
+  }
+
+     {
+    FilterParameter::Pointer parameter = FilterParameter::New();
+    parameter->setHumanLabel("Output Feature Attribute Matrix");
+    parameter->setPropertyName("OutputFeatureAttributeMatrix");
+    parameter->setWidgetType(FilterParameterWidgetType::AttributeMatrixSelectionWidget);
     parameter->setValueType("DataArrayPath");
-    parameter->setUnits("Created Cell Data");
+    parameter->setUnits("");
+    parameter->setIsAdvanced(false);
+    parameters.push_back(parameter);
+  }
+    {
+    FilterParameter::Pointer parameter = FilterParameter::New();
+    parameter->setHumanLabel("Created Surface Features Array Name");
+    parameter->setPropertyName("SurfaceFeaturesArrayName");
+    parameter->setWidgetType(FilterParameterWidgetType::StringWidget);
+    parameter->setValueType("QString");
+    parameter->setUnits("");
+    parameter->setIsAdvanced(true);
     parameters.push_back(parameter);
   }
 
@@ -215,7 +255,8 @@ void MatchCrystallography::readFilterParameters(AbstractFilterParametersReader* 
   setFeatureIdsPath(reader->readDataArrayPath("FeatureIdsPath", getFeatureIdsPath() ) );
   setFeaturePhasesPath(reader->readDataArrayPath("FeaturePhasesPath", getFeaturePhasesPath() ) );
   setFeatureSurfaceFeaturesPath(reader->readDataArrayPath("FeatureSurfaceFeaturesPath", getFeatureSurfaceFeaturesPath() ) );
-  setCellEulerAnglesArrayPath(reader->readDataArrayPath("CellEulerAnglesArrayPath", getCellEulerAnglesArrayPath() ) );
+  setOutputCellAttributeMatrix(reader->readDataArrayPath("OutputCellAttributeMatrix", getOutputCellAttributeMatrix() ) );
+  setCellEulerAnglesArrayName(reader->readString("CellEulerAnglesArrayName", getCellEulerAnglesArrayName() ) );
   /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }
@@ -234,7 +275,8 @@ int MatchCrystallography::writeFilterParameters(AbstractFilterParametersWriter* 
   writer->writeValue("FeatureIdsPath", getFeatureIdsPath() );
   writer->writeValue("FeaturePhasesPath", getFeaturePhasesPath() );
   writer->writeValue("FeatureSurfaceFeaturesPath", getFeatureSurfaceFeaturesPath() );
-  writer->writeValue("CellEulerAnglesArrayPath", getCellEulerAnglesArrayPath() );
+  writer->writeValue("OutputCellAttributeMatrix", getOutputCellAttributeMatrix() );
+  writer->writeValue("CellEulerAnglesArrayName", getCellEulerAnglesArrayName() );
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
@@ -248,15 +290,15 @@ void MatchCrystallography::dataCheck()
   // This is for convenience
   DataContainerArray::Pointer dca = getDataContainerArray();
 
-  VolumeDataContainer* m = dca->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getOutputDataContainerName(), false);
-  if(getErrorCondition() < 0 || NULL == m) { return; }
-  AttributeMatrix::Pointer cellAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), -301);
-  if(getErrorCondition() < 0 || NULL == cellAttrMat.get() ) { return; }
-  AttributeMatrix::Pointer cellFeatureAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellFeatureAttributeMatrixName(), -302);
-  if(getErrorCondition() < 0 || NULL == cellFeatureAttrMat.get()) { return; }
+//  VolumeDataContainer* m = dca->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getOutputDataContainerName(), false);
+//  if(getErrorCondition() < 0 || NULL == m) { return; }
+//  AttributeMatrix::Pointer cellAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), -301);
+//  if(getErrorCondition() < 0 || NULL == cellAttrMat.get() ) { return; }
+//  AttributeMatrix::Pointer cellFeatureAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellFeatureAttributeMatrixName(), -302);
+//  if(getErrorCondition() < 0 || NULL == cellFeatureAttrMat.get()) { return; }
 
-  AttributeMatrix::Pointer cellEnsembleAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellEnsembleAttributeMatrixName(), -303);
-  if(getErrorCondition() < 0 || NULL == cellEnsembleAttrMat.get()) { return; }
+//  AttributeMatrix::Pointer cellEnsembleAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellEnsembleAttributeMatrixName(), -303);
+//  if(getErrorCondition() < 0 || NULL == cellEnsembleAttrMat.get()) { return; }
 
 
 /// FROM SYNTHETIC VOLUME
@@ -268,8 +310,10 @@ void MatchCrystallography::dataCheck()
   if( NULL != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
+  DataArrayPath path = getOutputCellAttributeMatrix();
+  path.setDataArrayName(getCellEulerAnglesArrayName() );
   dims[0] = 3;
-  m_CellEulerAnglesPtr = dca->createNonPrereqArrayFromPath<FloatArrayType, AbstractFilter>(this, getCellEulerAnglesArrayPath(), 0, dims);
+  m_CellEulerAnglesPtr = dca->createNonPrereqArrayFromPath<FloatArrayType, AbstractFilter>(this, path, 0, dims);
   //m_CellEulerAnglesPtr = cellAttrMat->createNonPrereqArray<DataArray<float>, AbstractFilter, float>(this,  m_CellEulerAnglesArrayName, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_CellEulerAnglesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_CellEulerAngles = m_CellEulerAnglesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
@@ -282,53 +326,66 @@ void MatchCrystallography::dataCheck()
   if( NULL != m_FeaturePhasesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_FeaturePhases = m_FeaturePhasesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
-  m_SurfaceFeaturesPtr = cellFeatureAttrMat->getPrereqArray<DataArray<bool>, AbstractFilter>(this,  m_SurfaceFeaturesArrayName, -301, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  path = getOutputFeatureAttributeMatrix();
+  path.setDataArrayName(getSurfaceFeaturesArrayName() );
+  m_SurfaceFeaturesPtr = dca->getPrereqArrayFromPath<DataArray<bool>, AbstractFilter>(this, path, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_SurfaceFeaturesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_SurfaceFeatures = m_SurfaceFeaturesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
-  m_VolumesPtr = cellFeatureAttrMat->createNonPrereqArray<DataArray<float>, AbstractFilter, float>(this,  m_VolumesArrayName, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  path.setDataArrayName(getVolumesArrayName() );
+  m_VolumesPtr = dca->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this,  path, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_VolumesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_Volumes = m_VolumesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   dims[0] = 3;
-  m_FeatureEulerAnglesPtr = cellFeatureAttrMat->createNonPrereqArray<DataArray<float>, AbstractFilter, float>(this,  m_FeatureEulerAnglesArrayName, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  path.setDataArrayName(getFeatureEulerAnglesArrayName() );
+  m_FeatureEulerAnglesPtr = dca->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this,  path, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_FeatureEulerAnglesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_FeatureEulerAngles = m_FeatureEulerAnglesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   dims[0] = 4;
-  m_AvgQuatsPtr = cellFeatureAttrMat->createNonPrereqArray<DataArray<float>, AbstractFilter, float>(this,  m_AvgQuatsArrayName, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  path.setDataArrayName(getAvgQuatsArrayName() );
+  m_AvgQuatsPtr = dca->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this,  path, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_AvgQuatsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_AvgQuats = m_AvgQuatsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
 
 
   // Now we are going to get a "Pointer" to the NeighborList object out of the DataContainer
-  if (NULL == m->getAttributeMatrix(m_CellFeatureAttributeMatrixName)->getAttributeArray(m_NeighborListArrayName).get())
-  {
-    QString ss = QObject::tr("'NeighborLists' are not available and are required for this filter to run. A filter that generates NeighborLists needs to be placed before this filter in the pipeline.");
-    setErrorCondition(-305);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-  }
-  else
-  {
-    m_NeighborList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>*>(m->getAttributeMatrix(m_CellFeatureAttributeMatrixName)->getAttributeArray(DREAM3D::FeatureData::NeighborList).get());
-  }
+  m_NeighborList = dca->getPrereqArrayFromPath<NeighborList<int>, AbstractFilter>(this, getNeighborListArrayPath(), dims);
 
-  if(NULL == m->getAttributeMatrix(m_CellFeatureAttributeMatrixName)->getAttributeArray(m_SharedSurfaceAreaListArrayName).get())
-  {
+//  if (NULL == m->getAttributeMatrix(m_CellFeatureAttributeMatrixName)->getAttributeArray(m_NeighborListArrayName).get())
+//  {
+//    QString ss = QObject::tr("'NeighborLists' are not available and are required for this filter to run. A filter that generates NeighborLists needs to be placed before this filter in the pipeline.");
+//    setErrorCondition(-305);
+//    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+//  }
+//  else
+//  {
+//    m_NeighborList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>*>(m->getAttributeMatrix(m_CellFeatureAttributeMatrixName)->getAttributeArray(DREAM3D::FeatureData::NeighborList).get());
+//  }
 
-    QString ss = QObject::tr("'SharedSurfaceAreaLists' are not available and are required for this filter to run. A filter that generates 'Shared SurfaceArea Lists' needs to be placed before this filter in the pipeline.");
-    setErrorCondition(-306);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-  }
-  else
-  {
-    m_SharedSurfaceAreaList = NeighborList<float>::SafeObjectDownCast<IDataArray*, NeighborList<float>*>(m->getAttributeMatrix(m_CellFeatureAttributeMatrixName)->getAttributeArray(DREAM3D::FeatureData::SharedSurfaceAreaList).get());
-  }
+  m_SharedSurfaceAreaList = dca->getPrereqArrayFromPath<NeighborList<float>, AbstractFilter>(this, getSharedSurfaceAreaListArrayPath(), dims);
+
+//  if(NULL == m->getAttributeMatrix(m_CellFeatureAttributeMatrixName)->getAttributeArray(m_SharedSurfaceAreaListArrayName).get())
+//  {
+
+//    QString ss = QObject::tr("'SharedSurfaceAreaLists' are not available and are required for this filter to run. A filter that generates 'Shared SurfaceArea Lists' needs to be placed before this filter in the pipeline.");
+//    setErrorCondition(-306);
+//    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+//  }
+//  else
+//  {
+//    m_SharedSurfaceAreaList = NeighborList<float>::SafeObjectDownCast<IDataArray*, NeighborList<float>*>(m->getAttributeMatrix(m_CellFeatureAttributeMatrixName)->getAttributeArray(DREAM3D::FeatureData::SharedSurfaceAreaList).get());
+//  }
 
 
 // Ensemble Data
-  m_NumFeaturesPtr = cellEnsembleAttrMat->createNonPrereqArray<DataArray<int32_t>, AbstractFilter, int32_t>(this,  m_NumFeaturesArrayName, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+
+  path = getOutputEnsembleAttributeMatrix();
+  path.setDataArrayName(getNumFeaturesArrayName() );
+  m_NumFeaturesPtr = dca->createNonPrereqArrayFromPath<Int32ArrayType, AbstractFilter, int32_t>(this, path, 0, dims);
+  //m_NumFeaturesPtr = dca->createNonPrereqArray<DataArray<int32_t>, AbstractFilter, int32_t>(this,  m_NumFeaturesArrayName, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_NumFeaturesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_NumFeatures = m_NumFeaturesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
@@ -387,7 +444,7 @@ void MatchCrystallography::execute()
 
   VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getOutputDataContainerName(), false);
 
-  int64_t totalEnsembles = m->getAttributeMatrix(m_CellEnsembleAttributeMatrixName)->getNumTuples();
+  int64_t totalEnsembles = m->getAttributeMatrix(getOutputEnsembleAttributeMatrix().getAttributeMatrixName())->getNumTuples();
 
   QString ss;
   ss = QObject::tr("Determining Volumes");
@@ -471,9 +528,9 @@ void MatchCrystallography::determine_volumes()
 {
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getOutputDataContainerName());
 
-  int64_t totalPoints = m->getAttributeMatrix(m_CellAttributeMatrixName)->getNumTuples();
-  int64_t totalFeatures = m->getAttributeMatrix(m_CellFeatureAttributeMatrixName)->getNumTuples();
-  int64_t totalEnsembles = m->getAttributeMatrix(m_CellEnsembleAttributeMatrixName)->getNumTuples();
+  int64_t totalPoints = m->getAttributeMatrix(getOutputCellAttributeMatrix().getAttributeMatrixName())->getNumTuples();
+  int64_t totalFeatures = m->getAttributeMatrix(getOutputFeatureAttributeMatrix().getAttributeMatrixName())->getNumTuples();
+  int64_t totalEnsembles = m->getAttributeMatrix(getOutputEnsembleAttributeMatrix().getAttributeMatrixName())->getNumTuples();
 
   unbiasedvol.resize(totalEnsembles);
   for (int64_t i = 1; i < totalFeatures; i++)
@@ -502,11 +559,11 @@ void MatchCrystallography::determine_boundary_areas()
 {
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getOutputDataContainerName());
 
-  NeighborList<int>& neighborlist = *m_NeighborList;
-  NeighborList<float>& neighborsurfacearealist = *m_SharedSurfaceAreaList;
+  NeighborList<int>& neighborlist = *(m_NeighborList.lock());
+  NeighborList<float>& neighborsurfacearealist = *(m_SharedSurfaceAreaList.lock() );
 
-  int64_t totalFeatures = m->getAttributeMatrix(m_CellFeatureAttributeMatrixName)->getNumTuples();
-  int64_t totalEnsembles = m->getAttributeMatrix(m_CellEnsembleAttributeMatrixName)->getNumTuples();
+  int64_t totalFeatures = m->getAttributeMatrix(getOutputFeatureAttributeMatrix().getAttributeMatrixName())->getNumTuples();
+  int64_t totalEnsembles = m->getAttributeMatrix(getOutputEnsembleAttributeMatrix().getAttributeMatrixName())->getNumTuples();
 
   m_TotalSurfaceArea.fill(0.0, totalEnsembles);
 
@@ -548,7 +605,7 @@ void MatchCrystallography::assign_eulers(int ensem)
   float random;
   int choose, phase;
 
-  int64_t totalFeatures = m->getAttributeMatrix(m_CellFeatureAttributeMatrixName)->getNumTuples();
+  int64_t totalFeatures = m->getAttributeMatrix(getOutputFeatureAttributeMatrix().getAttributeMatrixName())->getNumTuples();
 
   for (int64_t i = 1; i < totalFeatures; i++)
   {
@@ -658,11 +715,11 @@ void MatchCrystallography::matchCrystallography(int ensem)
   // But since a pointer is difficult to use operators with we will now create a
   // reference variable to the pointer with the correct variable name that allows
   // us to use the same syntax as the "vector of vectors"
-  NeighborList<int>& neighborlist = *m_NeighborList;
-  NeighborList<float>& neighborsurfacearealist = *m_SharedSurfaceAreaList;
 
-  int64_t totalPoints = m->getAttributeMatrix(m_CellAttributeMatrixName)->getNumTuples();
-  int64_t totalFeatures = m->getAttributeMatrix(m_CellFeatureAttributeMatrixName)->getNumTuples();
+  NeighborList<int>& neighborlist = *(m_NeighborList.lock());
+  NeighborList<float>& neighborsurfacearealist = *(m_SharedSurfaceAreaList.lock() );
+  int64_t totalPoints = m->getAttributeMatrix(getOutputCellAttributeMatrix().getAttributeMatrixName())->getNumTuples();
+  int64_t totalFeatures = m->getAttributeMatrix(getOutputFeatureAttributeMatrix().getAttributeMatrixName())->getNumTuples();
 
   DREAM3D_RANDOMNG_NEW()
       int numbins = 0;
@@ -947,8 +1004,10 @@ void MatchCrystallography::measure_misorientations(int ensem)
   // But since a pointer is difficult to use operators with we will now create a
   // reference variable to the pointer with the correct variable name that allows
   // us to use the same syntax as the "vector of vectors"
-  NeighborList<int>& neighborlist = *m_NeighborList;
-  NeighborList<float>& neighborsurfacearealist = *m_SharedSurfaceAreaList;
+  NeighborList<int>& neighborlist = *(m_NeighborList.lock());
+  NeighborList<float>& neighborsurfacearealist = *(m_SharedSurfaceAreaList.lock() );
+//  int64_t totalPoints = m->getAttributeMatrix(getOutputCellAttributeMatrix().getAttributeMatrixName())->getNumTuples();
+  int64_t totalFeatures = m->getAttributeMatrix(getOutputFeatureAttributeMatrix().getAttributeMatrixName())->getNumTuples();
 
   float w;
   float n1 = 0.0f, n2 = 0.0f, n3 = 0.0f;
@@ -959,8 +1018,6 @@ void MatchCrystallography::measure_misorientations(int ensem)
 
   unsigned int crys1;
   int mbin = 0;
-
-  int64_t totalFeatures = m->getAttributeMatrix(m_CellFeatureAttributeMatrixName)->getNumTuples();
 
   //float threshold = 0.0f;
 

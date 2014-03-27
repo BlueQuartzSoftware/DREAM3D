@@ -91,6 +91,7 @@ class MatchCrystallography : public AbstractFilter
     DREAM3D_FILTER_PARAMETER(DataArrayPath, PhaseTypesArrayPath)
     Q_PROPERTY(DataArrayPath PhaseTypesArrayPath READ getPhaseTypesArrayPath WRITE setPhaseTypesArrayPath)
 
+//// Input data from the Synthetic Data Container (or something equivalent)
     DREAM3D_FILTER_PARAMETER(DataArrayPath, FeatureIdsPath)
     Q_PROPERTY(DataArrayPath FeatureIdsPath READ getFeatureIdsPath WRITE setFeatureIdsPath)
 
@@ -100,21 +101,35 @@ class MatchCrystallography : public AbstractFilter
     DREAM3D_FILTER_PARAMETER(DataArrayPath, FeatureSurfaceFeaturesPath)
     Q_PROPERTY(DataArrayPath FeatureSurfaceFeaturesPath READ getFeatureSurfaceFeaturesPath WRITE setFeatureSurfaceFeaturesPath)
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, CellEulerAnglesArrayPath)
-    Q_PROPERTY(DataArrayPath CellEulerAnglesArrayPath READ getCellEulerAnglesArrayPath WRITE setCellEulerAnglesArrayPath)
-
-
-//    DREAM3D_FILTER_PARAMETER(DataArrayPath, FeatureVolumesPath)
-//    Q_PROPERTY(DataArrayPath FeatureVolumesPath READ getFeatureVolumesPath WRITE setFeatureVolumesPath)
-
-//    DREAM3D_FILTER_PARAMETER(DataArrayPath, FeatureEulerAnglesPath)
-//    Q_PROPERTY(DataArrayPath FeatureEulerAnglesPath READ getFeatureEulerAnglesPath WRITE setFeatureEulerAnglesPath)
-
-//    DREAM3D_FILTER_PARAMETER(DataArrayPath, FeatureAvgQuats)
-//    Q_PROPERTY(DataArrayPath FeatureAvgQuats READ getFeatureAvgQuats WRITE setFeatureAvgQuats)
 
 
 
+    DREAM3D_FILTER_PARAMETER(DataArrayPath, OutputCellAttributeMatrix)
+    Q_PROPERTY(DataArrayPath OutputCellAttributeMatrix READ getOutputCellAttributeMatrix WRITE setOutputCellAttributeMatrix)
+
+
+    Q_PROPERTY(QString CellEulerAnglesArrayName READ getCellEulerAnglesArrayName WRITE setCellEulerAnglesArrayName)
+
+    DREAM3D_FILTER_PARAMETER(DataArrayPath, OutputFeatureAttributeMatrix)
+    Q_PROPERTY(DataArrayPath OutputFeatureAttributeMatrix READ getOutputFeatureAttributeMatrix WRITE setOutputFeatureAttributeMatrix)
+
+    Q_PROPERTY(QString SurfaceFeaturesArrayName READ getSurfaceFeaturesArrayName WRITE setSurfaceFeaturesArrayName)
+    Q_PROPERTY(QString VolumesArrayName READ getVolumesArrayName WRITE setVolumesArrayName)
+    Q_PROPERTY(QString FeatureEulerAnglesArrayName READ getFeatureEulerAnglesArrayName WRITE setFeatureEulerAnglesArrayName)
+    Q_PROPERTY(QString AvgQuatsArrayName READ getAvgQuatsArrayName WRITE setAvgQuatsArrayName)
+
+    DREAM3D_FILTER_PARAMETER(DataArrayPath, NeighborListArrayPath)
+    Q_PROPERTY(DataArrayPath NeighborListArrayPath READ getNeighborListArrayPath WRITE setNeighborListArrayPath)
+    DREAM3D_FILTER_PARAMETER(DataArrayPath, SharedSurfaceAreaListArrayPath)
+    Q_PROPERTY(DataArrayPath SharedSurfaceAreaListArrayPath READ getSharedSurfaceAreaListArrayPath WRITE setSharedSurfaceAreaListArrayPath)
+
+    DREAM3D_FILTER_PARAMETER(DataArrayPath, OutputEnsembleAttributeMatrix)
+    Q_PROPERTY(DataArrayPath OutputEnsembleAttributeMatrix READ getOutputEnsembleAttributeMatrix WRITE setOutputEnsembleAttributeMatrix)
+
+
+    Q_PROPERTY(QString NumFeaturesArrayName READ getNumFeaturesArrayName WRITE setNumFeaturesArrayName)
+
+   // DREAM3D_INSTANCE_STRING_PROPERTY(StatsDataArrayName)
 
     DREAM3D_FILTER_PARAMETER(int, MaxIterations)
     Q_PROPERTY(int MaxIterations READ getMaxIterations WRITE setMaxIterations)
@@ -149,13 +164,12 @@ class MatchCrystallography : public AbstractFilter
 
     typedef boost::shared_array<float> SharedFloatArray;
     typedef boost::shared_array<int> SharedIntArray;
-    DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(CellFeatureAttributeMatrixName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(CellEnsembleAttributeMatrixName)
 
-    DREAM3D_INSTANCE_STRING_PROPERTY(NeighborListArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(SharedSurfaceAreaListArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(StatsDataArrayName)
+//    DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
+//    DREAM3D_INSTANCE_STRING_PROPERTY(CellFeatureAttributeMatrixName)
+//    DREAM3D_INSTANCE_STRING_PROPERTY(CellEnsembleAttributeMatrixName)
+
+
 
 
   signals:
@@ -190,8 +204,8 @@ class MatchCrystallography : public AbstractFilter
     DEFINE_PTR_WEAKPTR_DATAARRAY(float, Volumes)
     DEFINE_PTR_WEAKPTR_DATAARRAY(float, FeatureEulerAngles)
     DEFINE_PTR_WEAKPTR_DATAARRAY(float, AvgQuats)
-    NeighborList<int>* m_NeighborList;
-    NeighborList<float>* m_SharedSurfaceAreaList;
+    NeighborList<int>::WeakPointer m_NeighborList;
+    NeighborList<float>::WeakPointer m_SharedSurfaceAreaList;
 
     //Ensemble Data
     DEFINE_PTR_WEAKPTR_DATAARRAY(unsigned int, CrystalStructures)
