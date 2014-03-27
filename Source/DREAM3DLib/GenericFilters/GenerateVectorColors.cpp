@@ -46,9 +46,7 @@
 // -----------------------------------------------------------------------------
 GenerateVectorColors::GenerateVectorColors() :
   AbstractFilter(),
-  m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
-  m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
-  m_SelectedVectorArrayName(""),
+  m_SelectedVectorArrayPath("", "", ""),
   m_VectorsArrayName(""),
   m_Vectors(NULL),
   m_CellVectorColorsArrayName(DREAM3D::CellData::VectorColor),
@@ -75,9 +73,9 @@ void GenerateVectorColors::setupFilterParameters()
   {
     FilterParameter::Pointer parameter = FilterParameter::New();
     parameter->setHumanLabel("Vector Array Name");
-    parameter->setPropertyName("SelectedVectorArrayName");
+    parameter->setPropertyName("SelectedVectorArrayPath");
     parameter->setWidgetType(FilterParameterWidgetType::DataArraySelectionWidget);
-    parameter->setValueType("QString");
+    parameter->setValueType("DataArrayPath");
     parameter->setUnits("");
     parameters.push_back(parameter);
   }
@@ -92,7 +90,7 @@ void GenerateVectorColors::readFilterParameters(AbstractFilterParametersReader* 
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
   /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
-  setSelectedVectorArrayName( reader->readDataArrayPath( "SelectedVectorArrayName", getSelectedVectorArrayName() ) );
+  setSelectedVectorArrayPath( reader->readDataArrayPath( "SelectedVectorArrayPath", getSelectedVectorArrayPath() ) );
   /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }
@@ -105,7 +103,7 @@ int GenerateVectorColors::writeFilterParameters(AbstractFilterParametersWriter* 
   writer->openFilterGroup(this, index);
   /* Place code that will write the inputs values into a file. reference the
    AbstractFilterParametersWriter class for the proper API to use. */
-  writer->writeValue("SelectedVectorArrayName", getSelectedVectorArrayName() );
+  writer->writeValue("SelectedVectorArrayPath", getSelectedVectorArrayPath() );
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
@@ -117,65 +115,23 @@ void GenerateVectorColors::dataCheck()
 {
   setErrorCondition(0);
 
-  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName(), false);
+  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, m_SelectedVectorArrayPath.getDataContainerName(), false);
   if(getErrorCondition() < 0 || NULL == m) { return; }
-  AttributeMatrix::Pointer cellAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), -301);
+  AttributeMatrix::Pointer cellAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, m_SelectedVectorArrayPath.getAttributeMatrixName(), -301);
   if(getErrorCondition() < 0 || NULL == cellAttrMat.get() ) { return; }
 
-  if(m_SelectedVectorArrayName.isEmpty() == true)
+  if(m_SelectedVectorArrayPath.isEmpty() == true)
   {
     setErrorCondition(-11000);
     notifyErrorMessage(getHumanLabel(), "An array from the Volume DataContainer must be selected.", getErrorCondition());
-  }
-  else
-  {
-
-    QString dcName;
-    QString amName;
-    QString daName;
-
-    QStringList tokens = m_SelectedVectorArrayName.split(DREAM3D::PathSep);
-    // We should end up with 3 Tokens
-    if(tokens.size() != 3)
-    {
-      setErrorCondition(-11002);
-      QString ss = QObject::tr("The path to the Attribute Array is malformed. Each part should be separated by a '|' character.");
-      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-    }
-    else
-    {
-      dcName = tokens.at(0);
-      amName = tokens.at(1);
-      daName = tokens.at(2);
-
-      DataContainer::Pointer dc = getDataContainerArray()->getDataContainer(dcName);
-      if(NULL == dc.get())
-      {
-        setErrorCondition(-11003);
-        QString ss = QObject::tr("The DataContainer '%1' was not found in the DataContainerArray").arg(dcName);
-        notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-        return;
-      }
-
-      AttributeMatrix::Pointer attrMat = dc->getAttributeMatrix(amName);
-       if(NULL == attrMat.get())
-      {
-        setErrorCondition(-11004);
-        QString ss = QObject::tr("The AttributeMatrix '%1' was not found in the DataContainer '%2'").arg(amName).arg(dcName);
-        notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-        return;
-      }
-
-      m_VectorsArrayName = daName;
-
-      QVector<size_t> dims(1, 3);
-      m_VectorsPtr = cellAttrMat->getPrereqArray<DataArray<float>, AbstractFilter>(this, m_VectorsArrayName, -303, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-      if( NULL != m_VectorsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
-      { m_Vectors = m_VectorsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-    }
+    return;
   }
 
   QVector<size_t> dims(1, 3);
+  m_VectorsPtr = cellAttrMat->getPrereqArray<DataArray<float>, AbstractFilter>(this, m_SelectedVectorArrayPath.getDataArrayName(), -303, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if( NULL != m_VectorsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  { m_Vectors = m_VectorsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+
   m_CellVectorColorsPtr = cellAttrMat->createNonPrereqArray<DataArray<uint8_t>, AbstractFilter, uint8_t>(this, m_CellVectorColorsArrayName, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_CellVectorColorsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_CellVectorColors = m_CellVectorColorsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
@@ -211,9 +167,9 @@ void GenerateVectorColors::execute()
   dataCheck();
   if(getErrorCondition() < 0) { return; }
 
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(m_SelectedVectorArrayPath.getDataContainerName());
 
-  int64_t totalPoints = m->getAttributeMatrix(getCellAttributeMatrixName())->getNumTuples();
+  int64_t totalPoints = m->getAttributeMatrix(m_SelectedVectorArrayPath.getAttributeMatrixName())->getNumTuples();
 
   bool missingGoodVoxels = true;
   if (NULL != m_GoodVoxels)
@@ -299,7 +255,7 @@ AbstractFilter::Pointer GenerateVectorColors::newFilterInstance(bool copyFilterP
   GenerateVectorColors::Pointer filter = GenerateVectorColors::New();
   if(true == copyFilterParameters)
   {
-    filter->setSelectedVectorArrayName( getSelectedVectorArrayName() );
+    filter->setSelectedVectorArrayPath( getSelectedVectorArrayPath() );
   }
   return filter;
 }

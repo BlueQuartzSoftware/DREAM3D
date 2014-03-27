@@ -68,7 +68,7 @@ void RenameAttributeMatrix::setupFilterParameters()
     parameter->setHumanLabel("AttributeMatrix to Rename");
     parameter->setPropertyName("SelectedAttributeMatrixPath");
     parameter->setWidgetType(FilterParameterWidgetType::AttributeMatrixSelectionWidget);
-    parameter->setValueType("QString");
+    parameter->setValueType("DataArrayPath");
     parameter->setUnits("");
     parameters.push_back(parameter);
   }
@@ -94,7 +94,7 @@ void RenameAttributeMatrix::readFilterParameters(AbstractFilterParametersReader*
   /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
   //  setDataContainerName( reader->readString("DataContainerName", getDataContainerName()) );
   //  setAttributeMatrixName( reader->readString("AttributeMatrixName", getAttributeMatrixName()) );
-  setSelectedAttributeMatrixPath( reader->readString("SelectedAttributeMatrixPath", getSelectedAttributeMatrixPath()) );
+  setSelectedAttributeMatrixPath( reader->readDataArrayPath("SelectedAttributeMatrixPath", getSelectedAttributeMatrixPath()) );
   setNewAttributeMatrix( reader->readString( "NewAttributeMatrix", getNewAttributeMatrix() ) );
   /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();

@@ -372,7 +372,7 @@ int HexagonalLowOps::getOdfBin(float r1, float r2, float r3)
   return _calcODFBin(dim, bins, step, r1, r2, r3);
 }
 
-void HexagonalLowOps::getSchmidFactorAndSS(float loadx, float loady, float loadz, float& schmidfactor, int& slipsys)
+void HexagonalLowOps::getSchmidFactorAndSS(float load[3], float& schmidfactor, float angleComps[2], int& slipsys)
 {
   float theta1, theta2, theta3, theta4, theta5, theta6, theta7, theta8, theta9;
   float lambda1, lambda2, lambda3, lambda4, lambda5, lambda6, lambda7, lambda8, lambda9, lambda10;
@@ -436,6 +436,11 @@ void HexagonalLowOps::getSchmidFactorAndSS(float loadx, float loady, float loadz
   float ph1spnx10 = -0.57735f;
   float ph1spny10 = 0.57735f;
   //  float ph1spnz10 = 0.57735f;
+
+  float loadx = load[0];
+  float loady = load[1];
+  float loadz = load[2];
+
   float t1x = (0.866025f * ph1sdx1) + (0.0f * ph1sdy1) + (0.0f * ph1sdz1);
   float t1y = (-0.5f * ph1sdx1) + (1.0f * ph1sdy1) + (0.0f * ph1sdz1);
   float t1z = (0.0f * ph1sdx1) + (0.0f * ph1sdy1) + (caratio * ph1sdz1);
@@ -631,30 +636,30 @@ void HexagonalLowOps::getSchmidFactorAndSS(float loadx, float loady, float loadz
   schmid22 = theta9 * lambda10;
   schmid23 = theta9 * lambda7;
   schmid24 = theta5 * lambda7;
-  if(schmid1 > schmidfactor) { schmidfactor = schmid1, slipsys = 1; }
-  if(schmid2 > schmidfactor) { schmidfactor = schmid2, slipsys = 2; }
-  if(schmid3 > schmidfactor) { schmidfactor = schmid3, slipsys = 3; }
-  if(schmid4 > schmidfactor) { schmidfactor = schmid4, slipsys = 4; }
-  if(schmid5 > schmidfactor) { schmidfactor = schmid5, slipsys = 5; }
-  if(schmid6 > schmidfactor) { schmidfactor = schmid6, slipsys = 6; }
-  if(schmid7 > schmidfactor) { schmidfactor = schmid7, slipsys = 7; }
-  if(schmid8 > schmidfactor) { schmidfactor = schmid8, slipsys = 8; }
-  if(schmid9 > schmidfactor) { schmidfactor = schmid9, slipsys = 9; }
-  if(schmid10 > schmidfactor) { schmidfactor = schmid10, slipsys = 10; }
-  if(schmid11 > schmidfactor) { schmidfactor = schmid11, slipsys = 11; }
-  if(schmid12 > schmidfactor) { schmidfactor = schmid12, slipsys = 12; }
-  if(schmid13 > schmidfactor) { schmidfactor = schmid13, slipsys = 13; }
-  if(schmid14 > schmidfactor) { schmidfactor = schmid14, slipsys = 14; }
-  if(schmid15 > schmidfactor) { schmidfactor = schmid15, slipsys = 15; }
-  if(schmid16 > schmidfactor) { schmidfactor = schmid16, slipsys = 16; }
-  if(schmid17 > schmidfactor) { schmidfactor = schmid17, slipsys = 17; }
-  if(schmid18 > schmidfactor) { schmidfactor = schmid18, slipsys = 18; }
-  if(schmid19 > schmidfactor) { schmidfactor = schmid19, slipsys = 19; }
-  if(schmid20 > schmidfactor) { schmidfactor = schmid20, slipsys = 20; }
-  if(schmid21 > schmidfactor) { schmidfactor = schmid21, slipsys = 21; }
-  if(schmid22 > schmidfactor) { schmidfactor = schmid22, slipsys = 22; }
-  if(schmid23 > schmidfactor) { schmidfactor = schmid23, slipsys = 23; }
-  if(schmid24 > schmidfactor) { schmidfactor = schmid24, slipsys = 24; }
+  if(schmid1 > schmidfactor) { schmidfactor = schmid1, slipsys = 1, angleComps[0] = theta1, angleComps[1] = lambda1; }
+  if(schmid2 > schmidfactor) { schmidfactor = schmid2, slipsys = 2, angleComps[0] = theta2, angleComps[1] = lambda1; }
+  if(schmid3 > schmidfactor) { schmidfactor = schmid3, slipsys = 3, angleComps[0] = theta3, angleComps[1] = lambda1; }
+  if(schmid4 > schmidfactor) { schmidfactor = schmid4, slipsys = 4, angleComps[0] = theta1, angleComps[1] = lambda2; }
+  if(schmid5 > schmidfactor) { schmidfactor = schmid5, slipsys = 5, angleComps[0] = theta2, angleComps[1] = lambda3; }
+  if(schmid6 > schmidfactor) { schmidfactor = schmid6, slipsys = 6, angleComps[0] = theta3, angleComps[1] = lambda4; }
+  //if(schmid7 > schmidfactor) { schmidfactor = schmid7, slipsys = 7; }
+  //if(schmid8 > schmidfactor) { schmidfactor = schmid8, slipsys = 8; }
+  //if(schmid9 > schmidfactor) { schmidfactor = schmid9, slipsys = 9; }
+  //if(schmid10 > schmidfactor) { schmidfactor = schmid10, slipsys = 10; }
+  //if(schmid11 > schmidfactor) { schmidfactor = schmid11, slipsys = 11; }
+  //if(schmid12 > schmidfactor) { schmidfactor = schmid12, slipsys = 12; }
+  //if(schmid13 > schmidfactor) { schmidfactor = schmid13, slipsys = 13; }
+  //if(schmid14 > schmidfactor) { schmidfactor = schmid14, slipsys = 14; }
+  //if(schmid15 > schmidfactor) { schmidfactor = schmid15, slipsys = 15; }
+  //if(schmid16 > schmidfactor) { schmidfactor = schmid16, slipsys = 16; }
+  //if(schmid17 > schmidfactor) { schmidfactor = schmid17, slipsys = 17; }
+  //if(schmid18 > schmidfactor) { schmidfactor = schmid18, slipsys = 18; }
+  //if(schmid19 > schmidfactor) { schmidfactor = schmid19, slipsys = 19; }
+  //if(schmid20 > schmidfactor) { schmidfactor = schmid20, slipsys = 20; }
+  //if(schmid21 > schmidfactor) { schmidfactor = schmid21, slipsys = 21; }
+  //if(schmid22 > schmidfactor) { schmidfactor = schmid22, slipsys = 22; }
+  //if(schmid23 > schmidfactor) { schmidfactor = schmid23, slipsys = 23; }
+  //if(schmid24 > schmidfactor) { schmidfactor = schmid24, slipsys = 24; }
 }
 
 void HexagonalLowOps::getmPrime(QuatF& q1, QuatF& q2, float LD[3], float& mPrime)

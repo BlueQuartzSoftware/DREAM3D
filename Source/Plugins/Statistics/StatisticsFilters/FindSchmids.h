@@ -81,6 +81,8 @@ class FindSchmids : public AbstractFilter
 
     DREAM3D_FILTER_PARAMETER(FloatVec3_t, LoadingDir)
     Q_PROPERTY(FloatVec3_t LoadingDir READ getLoadingDir WRITE setLoadingDir)
+    DREAM3D_FILTER_PARAMETER(bool, StoreAngleComponents)
+    Q_PROPERTY(bool StoreAngleComponents READ getStoreAngleComponents WRITE setStoreAngleComponents)
 
 
     virtual void setupFilterParameters();
@@ -114,6 +116,8 @@ class FindSchmids : public AbstractFilter
     OrthoRhombicOps::Pointer m_OrthoOps;
 
     DEFINE_PTR_WEAKPTR_DATAARRAY(float, Schmids)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(float, Phis)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(float, Lambdas)
     DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, Poles)
     DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeaturePhases)
     DEFINE_PTR_WEAKPTR_DATAARRAY(float, AvgQuats)

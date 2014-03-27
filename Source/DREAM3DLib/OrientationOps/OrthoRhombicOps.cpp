@@ -334,7 +334,7 @@ int OrthoRhombicOps::getOdfBin(float r1, float r2, float r3)
   return _calcODFBin(dim, bins, step, r1, r2, r3);
 }
 
-void OrthoRhombicOps::getSchmidFactorAndSS(float loadx, float loady, float loadz, float& schmidfactor, int& slipsys)
+void OrthoRhombicOps::getSchmidFactorAndSS(float load[3], float& schmidfactor, float angleComps[2], int& slipsys)
 {
   schmidfactor = 0;
   slipsys = 0;

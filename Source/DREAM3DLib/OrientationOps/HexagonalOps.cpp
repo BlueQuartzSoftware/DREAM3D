@@ -427,7 +427,7 @@ int HexagonalOps::getOdfBin(float r1, float r2, float r3)
   return _calcODFBin(dim, bins, step, r1, r2, r3);
 }
 
-void HexagonalOps::getSchmidFactorAndSS(float loadx, float loady, float loadz, float& schmidfactor, int& slipsys)
+void HexagonalOps::getSchmidFactorAndSS(float load[3], float& schmidfactor, float angleComps[2], int& slipsys)
 {
   schmidfactor = 0.0;
   float theta1, theta2, theta3, theta4, theta5, theta6, theta7, theta8, theta9;
@@ -492,6 +492,11 @@ void HexagonalOps::getSchmidFactorAndSS(float loadx, float loady, float loadz, f
   float ph1spnx10 = -0.57735f;
   float ph1spny10 = 0.57735f;
   //  float ph1spnz10 = 0.57735f;
+
+  float loadx = load[0];
+  float loady = load[1];
+  float loadz = load[2];
+
   float t1x = (0.866025f * ph1sdx1) + (0.0f * ph1sdy1) + (0.0f * ph1sdz1);
   float t1y = (-0.5f * ph1sdx1) + (1.0f * ph1sdy1) + (0.0f * ph1sdz1);
   float t1z = (0.0f * ph1sdx1) + (0.0f * ph1sdy1) + (caratio * ph1sdz1);
@@ -687,12 +692,12 @@ void HexagonalOps::getSchmidFactorAndSS(float loadx, float loady, float loadz, f
   schmid22 = theta9 * lambda10;
   schmid23 = theta9 * lambda7;
   schmid24 = theta5 * lambda7;
-  if(schmid1 > schmidfactor) { schmidfactor = schmid1, slipsys = 1; }
-  if(schmid2 > schmidfactor) { schmidfactor = schmid2, slipsys = 2; }
-  if(schmid3 > schmidfactor) { schmidfactor = schmid3, slipsys = 3; }
-  if(schmid4 > schmidfactor) { schmidfactor = schmid4, slipsys = 4; }
-  if(schmid5 > schmidfactor) { schmidfactor = schmid5, slipsys = 5; }
-  if(schmid6 > schmidfactor) { schmidfactor = schmid6, slipsys = 6; }
+  if(schmid1 > schmidfactor) { schmidfactor = schmid1, slipsys = 1, angleComps[0] = theta1, angleComps[1] = lambda1; }
+  if(schmid2 > schmidfactor) { schmidfactor = schmid2, slipsys = 2, angleComps[0] = theta2, angleComps[1] = lambda1; }
+  if(schmid3 > schmidfactor) { schmidfactor = schmid3, slipsys = 3, angleComps[0] = theta3, angleComps[1] = lambda1; }
+  if(schmid4 > schmidfactor) { schmidfactor = schmid4, slipsys = 4, angleComps[0] = theta1, angleComps[1] = lambda2; }
+  if(schmid5 > schmidfactor) { schmidfactor = schmid5, slipsys = 5, angleComps[0] = theta2, angleComps[1] = lambda3; }
+  if(schmid6 > schmidfactor) { schmidfactor = schmid6, slipsys = 6, angleComps[0] = theta3, angleComps[1] = lambda4; }
   //if(schmid7 > schmidfactor) schmidfactor = schmid7, slipsys = 7;
   //if(schmid8 > schmidfactor) schmidfactor = schmid8, slipsys = 8;
   //if(schmid9 > schmidfactor) schmidfactor = schmid9, slipsys = 9;

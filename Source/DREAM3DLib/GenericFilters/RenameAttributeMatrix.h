@@ -68,8 +68,8 @@ class DREAM3DLib_EXPORT RenameAttributeMatrix : public AbstractFilter
     DREAM3D_INSTANCE_PROPERTY(QString, AttributeMatrixName)
 
 
-    DREAM3D_FILTER_PARAMETER(QString, SelectedAttributeMatrixPath)
-    Q_PROPERTY(QString SelectedAttributeMatrixPath READ getSelectedAttributeMatrixPath WRITE setSelectedAttributeMatrixPath)
+    DREAM3D_FILTER_PARAMETER(DataArrayPath, SelectedAttributeMatrixPath)
+    Q_PROPERTY(DataArrayPath SelectedAttributeMatrixPath READ getSelectedAttributeMatrixPath WRITE setSelectedAttributeMatrixPath)
 
     DREAM3D_FILTER_PARAMETER(QString, NewAttributeMatrix)
     Q_PROPERTY(QString NewAttributeMatrix READ getNewAttributeMatrix WRITE setNewAttributeMatrix)

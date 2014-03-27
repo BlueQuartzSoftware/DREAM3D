@@ -659,12 +659,16 @@ int CubicOps::getOdfBin(float r1, float r2, float r3)
   return _calcODFBin(dim, bins, step, r1, r2, r3);
 }
 
-void CubicOps::getSchmidFactorAndSS(float loadx, float loady, float loadz, float& schmidfactor, int& slipsys)
+void CubicOps::getSchmidFactorAndSS(float load[3], float& schmidfactor, float angleComps[2], int& slipsys)
 {
   schmidfactor = 0.0;
   float theta1, theta2, theta3, theta4;
   float lambda1, lambda2, lambda3, lambda4, lambda5, lambda6;
   float schmid1, schmid2, schmid3, schmid4, schmid5, schmid6, schmid7, schmid8, schmid9, schmid10, schmid11, schmid12;
+
+  float loadx = load[0];
+  float loady = load[1];
+  float loadz = load[2];
 
   float mag = loadx * loadx + loady * loady + loadz * loadz;
   mag = sqrt(mag);
@@ -700,19 +704,19 @@ void CubicOps::getSchmidFactorAndSS(float loadx, float loady, float loadz, float
   schmid10 = theta4 * lambda1;
   schmid11 = theta4 * lambda2;
   schmid12 = theta4 * lambda6;
-  schmidfactor = schmid1, slipsys = 0;
+  schmidfactor = schmid1, slipsys = 0, angleComps[0] = theta1, angleComps[1] = lambda6;
 
-  if (schmid2 > schmidfactor) { schmidfactor = schmid2, slipsys = 1; }
-  if (schmid3 > schmidfactor) { schmidfactor = schmid3, slipsys = 2; }
-  if (schmid4 > schmidfactor) { schmidfactor = schmid4, slipsys = 3; }
-  if (schmid5 > schmidfactor) { schmidfactor = schmid5, slipsys = 4; }
-  if (schmid6 > schmidfactor) { schmidfactor = schmid6, slipsys = 5; }
-  if (schmid7 > schmidfactor) { schmidfactor = schmid7, slipsys = 6; }
-  if (schmid8 > schmidfactor) { schmidfactor = schmid8, slipsys = 7; }
-  if (schmid9 > schmidfactor) { schmidfactor = schmid9, slipsys = 8; }
-  if (schmid10 > schmidfactor) { schmidfactor = schmid10, slipsys = 9; }
-  if (schmid11 > schmidfactor) { schmidfactor = schmid11, slipsys = 10; }
-  if (schmid12 > schmidfactor) { schmidfactor = schmid12, slipsys = 11; }
+  if (schmid2 > schmidfactor) { schmidfactor = schmid2, slipsys = 1, angleComps[0] = theta1, angleComps[1] = lambda4; }
+  if (schmid3 > schmidfactor) { schmidfactor = schmid3, slipsys = 2, angleComps[0] = theta1, angleComps[1] = lambda3; }
+  if (schmid4 > schmidfactor) { schmidfactor = schmid4, slipsys = 3, angleComps[0] = theta2, angleComps[1] = lambda3; }
+  if (schmid5 > schmidfactor) { schmidfactor = schmid5, slipsys = 4, angleComps[0] = theta2, angleComps[1] = lambda2; }
+  if (schmid6 > schmidfactor) { schmidfactor = schmid6, slipsys = 5, angleComps[0] = theta2, angleComps[1] = lambda5; }
+  if (schmid7 > schmidfactor) { schmidfactor = schmid7, slipsys = 6, angleComps[0] = theta3, angleComps[1] = lambda1; }
+  if (schmid8 > schmidfactor) { schmidfactor = schmid8, slipsys = 7, angleComps[0] = theta3, angleComps[1] = lambda5; }
+  if (schmid9 > schmidfactor) { schmidfactor = schmid9, slipsys = 8, angleComps[0] = theta3, angleComps[1] = lambda4; }
+  if (schmid10 > schmidfactor) { schmidfactor = schmid10, slipsys = 9, angleComps[0] = theta4, angleComps[1] = lambda1; }
+  if (schmid11 > schmidfactor) { schmidfactor = schmid11, slipsys = 10, angleComps[0] = theta4, angleComps[1] = lambda2; }
+  if (schmid12 > schmidfactor) { schmidfactor = schmid12, slipsys = 11, angleComps[0] = theta4, angleComps[1] = lambda6; }
 }
 
 void CubicOps::getmPrime(QuatF& q1, QuatF& q2, float LD[3], float& mPrime)

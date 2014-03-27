@@ -53,6 +53,11 @@ FindSchmids::FindSchmids() :
   m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
   m_SchmidsArrayName(DREAM3D::FeatureData::Schmids),
   m_Schmids(NULL),
+  m_StoreAngleComponents(false),
+  m_PhisArrayName("Schmid_Phis"),
+  m_Phis(NULL),
+  m_LambdasArrayName("Schmid_Lambdas"),
+  m_Lambdas(NULL),
   m_PolesArrayName(DREAM3D::FeatureData::Poles),
   m_Poles(NULL),
   m_FeaturePhasesArrayName(DREAM3D::FeatureData::Phases),
@@ -95,7 +100,14 @@ void FindSchmids::setupFilterParameters()
     parameter->setUnits("");
     parameters.push_back(parameter);
   }
-  setFilterParameters(parameters);
+  {
+    FilterParameter::Pointer parameter = FilterParameter::New();
+    parameter->setHumanLabel("Store Angle Components of Schmid Factor");
+    parameter->setPropertyName("StoreAngleComponents");
+    parameter->setWidgetType(FilterParameterWidgetType::BooleanWidget);
+    parameter->setValueType("bool");
+    parameters.push_back(parameter);
+  }  setFilterParameters(parameters);
 }
 // -----------------------------------------------------------------------------
 void FindSchmids::readFilterParameters(AbstractFilterParametersReader* reader, int index)
@@ -104,6 +116,7 @@ void FindSchmids::readFilterParameters(AbstractFilterParametersReader* reader, i
   /* Code to read the values goes between these statements */
   /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
   setLoadingDir( reader->readFloatVec3("LoadingDir", getLoadingDir() ) );
+  setStoreAngleComponents( reader->readValue("StoreAngleComponents", getStoreAngleComponents()) );
   /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }
@@ -115,6 +128,7 @@ int FindSchmids::writeFilterParameters(AbstractFilterParametersWriter* writer, i
 {
   writer->openFilterGroup(this, index);
   writer->writeValue("LoadingDirection", getLoadingDir() );
+  writer->writeValue("StoreAngleComponents", getStoreAngleComponents() );
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
@@ -156,6 +170,17 @@ void FindSchmids::dataCheck()
   m_AvgQuatsPtr = cellFeatureAttrMat->getPrereqArray<DataArray<float>, AbstractFilter>(this, m_AvgQuatsArrayName, -301, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_AvgQuatsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_AvgQuats = m_AvgQuatsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+
+  if(m_StoreAngleComponents == true)
+  {
+    dims[0] = 1;
+    m_PhisPtr = cellFeatureAttrMat->createNonPrereqArray<DataArray<float>, AbstractFilter, float>(this, m_PhisArrayName, -301, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+    if( NULL != m_PhisPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+    { m_Phis = m_PhisPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+    m_LambdasPtr = cellFeatureAttrMat->createNonPrereqArray<DataArray<float>, AbstractFilter, float>(this, m_LambdasArrayName, -301, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+    if( NULL != m_LambdasPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+    { m_Lambdas = m_LambdasPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  }
 }
 
 
@@ -189,6 +214,7 @@ void FindSchmids::execute()
   float g[3][3];
   float sampleLoading[3];
   float crystalLoading[3];
+  float angleComps[2];
   float schmid = 0;
 
   sampleLoading[0] = m_LoadingDir.x;
@@ -203,9 +229,14 @@ void FindSchmids::execute()
 
     MatrixMath::Multiply3x3with3x1(g, sampleLoading, crystalLoading);
 
-    m_OrientationOps[m_CrystalStructures[m_FeaturePhases[i]]]->getSchmidFactorAndSS(crystalLoading[0], crystalLoading[1], crystalLoading[2], schmid, ss);
+    m_OrientationOps[m_CrystalStructures[m_FeaturePhases[i]]]->getSchmidFactorAndSS(crystalLoading, schmid, angleComps, ss);
 
     m_Schmids[i] = schmid;
+    if(m_StoreAngleComponents == true)
+    {
+      m_Phis[i] = angleComps[0];
+      m_Lambdas[i] = angleComps[1];
+    }
     m_Poles[3 * i] = int32_t(crystalLoading[0] * 100);
     m_Poles[3 * i + 1] = int32_t(crystalLoading[1] * 100);
     m_Poles[3 * i + 2] = int32_t(crystalLoading[2] * 100);
@@ -227,6 +258,7 @@ AbstractFilter::Pointer FindSchmids::newFilterInstance(bool copyFilterParameters
   if(true == copyFilterParameters)
   {
     filter->setLoadingDir( getLoadingDir() );
+    filter->setStoreAngleComponents( getStoreAngleComponents() );
   }
   return filter;
 }

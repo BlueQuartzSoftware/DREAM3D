@@ -1,6 +1,7 @@
 /* ============================================================================
- * Copyright (c) 2012 Michael A. Jackson (BlueQuartz Software)
- * Copyright (c) 2012 Dr. Michael A. Groeber (US Air Force Research Laboratories)
+ * Copyright (c) 2011 Michael A. Jackson (BlueQuartz Software)
+ * Copyright (c) 2011 Dr. Michael A. Groeber (US Air Force Research Laboratories)
+ * Copyright (c) 2013 Dr. Joseph C. Tucker (UES, Inc.)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -13,10 +14,10 @@
  * list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
  *
- * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
- * BlueQuartz Software nor the names of its contributors may be used to endorse
- * or promote products derived from this software without specific prior written
- * permission.
+ * Neither the name of Joseph C. Tucker, Michael A. Groeber, Michael A. Jackson,
+ * UES, Inc., the US Air Force, BlueQuartz Software nor the names of its contributors
+ * may be used to endorse or promote products derived from this software without
+ * specific prior written permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -30,58 +31,63 @@
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  *  This code was written under United States Air Force Contract number
- *                           FA8650-07-D-5800
+ *                   FA8650-07-D-5800 and FA8650-10-D-5226
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef _GenerateVectorColors_H_
-#define _GenerateVectorColors_H_
+
+#ifndef FindAvgScalarValueForFeatures_H_
+#define FindAvgScalarValueForFeatures_H_
 
 #include <QtCore/QString>
+#include <set>
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/DataArrays/IDataArray.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/DataContainers/DataArrayPath.h"
 
+#include "DREAM3DLib/DataArrays/StatsDataArray.h"
+
+#include "DREAM3DLib/DataContainers/VolumeDataContainer.h"
+
+#include "Statistics/StatisticsConstants.h"
 /**
- * @class GenerateVectorColors GenerateVectorColors.h DREAM3DLib/GenericFilters/GenerateVectorColors.h
- * @brief This filter generates colors for each voxel based on the "Standard" IPF Triangle.
- * @author Michael A. Jackson for BlueQuartz Software
- * @date Feb 6, 2013
+ * @class FindAvgScalarValueForFeatures FindAvgScalarValueForFeatures.h /FilterCategoryFilters/FindAvgScalarValueForFeatures.h
+ * @brief
+ * @author
+ * @date
  * @version 1.0
  */
-class DREAM3DLib_EXPORT GenerateVectorColors : public AbstractFilter
+class FindAvgScalarValueForFeatures : public AbstractFilter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
-    DREAM3D_SHARED_POINTERS(GenerateVectorColors)
-    DREAM3D_STATIC_NEW_MACRO(GenerateVectorColors)
-    DREAM3D_TYPE_MACRO_SUPER(GenerateVectorColors, AbstractFilter)
+    DREAM3D_SHARED_POINTERS(FindAvgScalarValueForFeatures)
+    DREAM3D_STATIC_NEW_MACRO(FindAvgScalarValueForFeatures)
+    DREAM3D_TYPE_MACRO_SUPER(FindAvgScalarValueForFeatures, AbstractFilter)
 
-    virtual ~GenerateVectorColors();
+    virtual ~FindAvgScalarValueForFeatures();
+    DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(CellFeatureAttributeMatrixName)
 
-    /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, SelectedVectorArrayPath)
-    Q_PROPERTY(DataArrayPath SelectedVectorArrayPath READ getSelectedVectorArrayPath WRITE setSelectedVectorArrayPath)
-
+    DREAM3D_FILTER_PARAMETER(DataArrayPath, SelectedCellArrayPath)
+    Q_PROPERTY(DataArrayPath SelectedCellArrayPath READ getSelectedCellArrayPath WRITE setSelectedCellArrayPath)
 
     /**
     * @brief This returns the group that the filter belonds to. You can select
     * a different group if you want. The string returned here will be displayed
     * in the GUI for the filter
     */
-    virtual const QString getCompiledLibraryName() { return Generic::GenericBaseName; }
+    virtual const QString getCompiledLibraryName() { return Statistics::StatisticsBaseName; }
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
-    virtual const QString getGroupName() { return DREAM3D::FilterGroups::GenericFilters; }
-    virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::CrystallographyFilters; }
+    virtual const QString getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
+    virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::EnsembleStatsFilters; }
 
     /**
     * @brief This returns a string that is displayed in the GUI. It should be readable
     * and understandable by humans.
     */
-    virtual const QString getHumanLabel() { return "Generate Vector Colors"; }
+    virtual const QString getHumanLabel() { return "Find Average Value of Scalars For Feature"; }
 
     /**
     * @brief This method will instantiate all the end user settable options/parameters
@@ -119,7 +125,7 @@ class DREAM3DLib_EXPORT GenerateVectorColors : public AbstractFilter
     void preflightExecuted();
 
   protected:
-    GenerateVectorColors();
+    FindAvgScalarValueForFeatures();
 
     /**
     * @brief Checks for the appropriate parameter values and availability of
@@ -132,16 +138,13 @@ class DREAM3DLib_EXPORT GenerateVectorColors : public AbstractFilter
     void dataCheck();
 
   private:
-    DEFINE_PTR_WEAKPTR_DATAARRAY(float, Vectors)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(bool, GoodVoxels)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(uint8_t, CellVectorColors)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeatureIds)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(float, NewFeatureArray)
 
-    GenerateVectorColors(const GenerateVectorColors&); // Copy Constructor Not Implemented
-    void operator=(const GenerateVectorColors&); // Operator '=' Not Implemented
+    FindAvgScalarValueForFeatures(const FindAvgScalarValueForFeatures&); // Copy Constructor Not Implemented
+    void operator=(const FindAvgScalarValueForFeatures&); // Operator '=' Not Implemented
 };
 
-#endif /* _GenerateVectorColors_H_ */
-
-
+#endif /* FindAvgScalarValueForFeatures_H_ */
 
 
