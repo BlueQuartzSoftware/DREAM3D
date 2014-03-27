@@ -176,7 +176,7 @@ void PipelineFilterWidget::initialize(AbstractFilter::Pointer filter)
       if (NULL == w) continue;
       m_FilterParameterWidgets.push_back(w);
 
-      if(option->getIsAdvanced() == true)
+      if(option->getAdvanced() == true)
       {
         w->setParent(m_AdvancedInputScrollWidget);
         advverticalLayout->addWidget(w);

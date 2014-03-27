@@ -58,62 +58,62 @@ Q_DECLARE_METATYPE(AxisAngleInput_t)
 namespace FilterParameterWidgetType
 {
 
-      const QString StringWidget("StringWidget");
-      const QString IntWidget("IntWidget");
-      const QString DoubleWidget("DoubleWidget");
-      const QString InputFileWidget("InputFileWidget");
-      const QString InputPathWidget("InputPathWidget");
-      const QString OutputFileWidget("OutputFileWidget");
-      const QString OutputPathWidget("OutputPathWidget");
-      const QString BooleanWidget("BooleanWidget");
-      const QString ChoiceWidget("ChoiceWidget"); // Generic ComboBox Drop down where the filter provides the list of strings
-      const QString IntVec3Widget("IntVec3Widget");
-      const QString FloatVec3Widget("FloatVec3Widget");
-      const QString AxisAngleWidget("AxisAngleWidget");
-      const QString UnknownWidget("UnknownWidget");
-      const QString DataContainerArrayProxyWidget("DataContainerArrayProxyWidget");
-      const QString ArraySelectionWidget("ArraySelectionWidget"); // This is the generic array name selection tool where the user can select multiple arrays with checkboxes from all data containers
-      const QString DataArraySelectionWidget("DataArraySelectionWidget");
-      const QString ComparisonSelectionWidget("ComparisonSelectionWidget");
-      const QString AttributeMatrixSelectionWidget("AttributeMatrixSelectionWidget");
-      const QString DataContainerSelectionWidget("DataContainerSelectionWidget");
-      const QString ShapeTypeSelectionWidget("ShapeTypeSelectionWidget");
-      const QString DataArrayCreationWidget("DataArrayCreationWidget");
+  const QString StringWidget("StringWidget");
+  const QString IntWidget("IntWidget");
+  const QString DoubleWidget("DoubleWidget");
+  const QString InputFileWidget("InputFileWidget");
+  const QString InputPathWidget("InputPathWidget");
+  const QString OutputFileWidget("OutputFileWidget");
+  const QString OutputPathWidget("OutputPathWidget");
+  const QString BooleanWidget("BooleanWidget");
+  const QString ChoiceWidget("ChoiceWidget"); // Generic ComboBox Drop down where the filter provides the list of strings
+  const QString IntVec3Widget("IntVec3Widget");
+  const QString FloatVec3Widget("FloatVec3Widget");
+  const QString AxisAngleWidget("AxisAngleWidget");
+  const QString UnknownWidget("UnknownWidget");
+  const QString DataContainerArrayProxyWidget("DataContainerArrayProxyWidget");
+  const QString ArraySelectionWidget("ArraySelectionWidget"); // This is the generic array name selection tool where the user can select multiple arrays with checkboxes from all data containers
+  const QString DataArraySelectionWidget("DataArraySelectionWidget");
+  const QString ComparisonSelectionWidget("ComparisonSelectionWidget");
+  const QString AttributeMatrixSelectionWidget("AttributeMatrixSelectionWidget");
+  const QString DataContainerSelectionWidget("DataContainerSelectionWidget");
+  const QString ShapeTypeSelectionWidget("ShapeTypeSelectionWidget");
+  const QString DataArrayCreationWidget("DataArrayCreationWidget");
 
-      const QString PreflightUpdatedValueWidget("PreflightUpdatedValueWidget");
+  const QString PreflightUpdatedValueWidget("PreflightUpdatedValueWidget");
 #if 0
-      /* **** DO NOT PUT ANY OTHER WIDGETS BETWEEN THIS ***** */
-      const QString SingleArraySelectionWidget("SingleArraySelectionWidget"); // ComboBox where the Cell Array names are used to populate
-      const QString VolumeEdgeArrayNameSelectionWidget("VolumeEdgeArrayNameSelectionWidget"); //ComboBox where the Feature Array names are used to populate
-      const QString VolumeFaceArrayNameSelectionWidget("VolumeFaceArrayNameSelectionWidget"); //ComboBox where the Ensemble Array names are used to populate
-      const QString VolumeCellArrayNameSelectionWidget("VolumeCellArrayNameSelectionWidget"); // ComboBox where the Cell Array names are used to populate
-      const QString VolumeFeatureArrayNameSelectionWidget("VolumeFeatureArrayNameSelectionWidget"); //ComboBox where the Feature Array names are used to populate
-      const QString VolumeEnsembleArrayNameSelectionWidget("VolumeEnsembleArrayNameSelectionWidget"); //ComboBox where the Ensemble Array names are used to populate
-      const QString SurfaceVertexArrayNameSelectionWidget("SurfaceVertexArrayNameSelectionWidget");
-      const QString SurfaceFaceArrayNameSelectionWidget("SurfaceFaceArrayNameSelectionWidget");
-      const QString SurfaceEdgeArrayNameSelectionWidget("SurfaceEdgeArrayNameSelectionWidget");
-      const QString SurfaceFeatureArrayNameSelectionWidget("SurfaceFeatureArrayNameSelectionWidget");
-      const QString SurfaceEnsembleArrayNameSelectionWidget("SurfaceEnsembleArrayNameSelectionWidget");
-      const QString EdgeVertexArrayNameSelectionWidget("EdgeVertexArrayNameSelectionWidget");
-      const QString EdgeEdgeArrayNameSelectionWidget("EdgeEdgeArrayNameSelectionWidget");
-      const QString EdgeFeatureArrayNameSelectionWidget("EdgeFeatureArrayNameSelectionWidget");
-      const QString EdgeEnsembleArrayNameSelectionWidget("EdgeEnsembleArrayNameSelectionWidget");
-      const QString VertexVertexArrayNameSelectionWidget("VertexVertexArrayNameSelectionWidget");
-      const QString VertexFeatureArrayNameSelectionWidget("VertexFeatureArrayNameSelectionWidget");
-      const QString VertexEnsembleArrayNameSelectionWidget("VertexEnsembleArrayNameSelectionWidget");
-      /* ****  AND THIS LINE ******** */
+  /* **** DO NOT PUT ANY OTHER WIDGETS BETWEEN THIS ***** */
+  const QString SingleArraySelectionWidget("SingleArraySelectionWidget"); // ComboBox where the Cell Array names are used to populate
+  const QString VolumeEdgeArrayNameSelectionWidget("VolumeEdgeArrayNameSelectionWidget"); //ComboBox where the Feature Array names are used to populate
+  const QString VolumeFaceArrayNameSelectionWidget("VolumeFaceArrayNameSelectionWidget"); //ComboBox where the Ensemble Array names are used to populate
+  const QString VolumeCellArrayNameSelectionWidget("VolumeCellArrayNameSelectionWidget"); // ComboBox where the Cell Array names are used to populate
+  const QString VolumeFeatureArrayNameSelectionWidget("VolumeFeatureArrayNameSelectionWidget"); //ComboBox where the Feature Array names are used to populate
+  const QString VolumeEnsembleArrayNameSelectionWidget("VolumeEnsembleArrayNameSelectionWidget"); //ComboBox where the Ensemble Array names are used to populate
+  const QString SurfaceVertexArrayNameSelectionWidget("SurfaceVertexArrayNameSelectionWidget");
+  const QString SurfaceFaceArrayNameSelectionWidget("SurfaceFaceArrayNameSelectionWidget");
+  const QString SurfaceEdgeArrayNameSelectionWidget("SurfaceEdgeArrayNameSelectionWidget");
+  const QString SurfaceFeatureArrayNameSelectionWidget("SurfaceFeatureArrayNameSelectionWidget");
+  const QString SurfaceEnsembleArrayNameSelectionWidget("SurfaceEnsembleArrayNameSelectionWidget");
+  const QString EdgeVertexArrayNameSelectionWidget("EdgeVertexArrayNameSelectionWidget");
+  const QString EdgeEdgeArrayNameSelectionWidget("EdgeEdgeArrayNameSelectionWidget");
+  const QString EdgeFeatureArrayNameSelectionWidget("EdgeFeatureArrayNameSelectionWidget");
+  const QString EdgeEnsembleArrayNameSelectionWidget("EdgeEnsembleArrayNameSelectionWidget");
+  const QString VertexVertexArrayNameSelectionWidget("VertexVertexArrayNameSelectionWidget");
+  const QString VertexFeatureArrayNameSelectionWidget("VertexFeatureArrayNameSelectionWidget");
+  const QString VertexEnsembleArrayNameSelectionWidget("VertexEnsembleArrayNameSelectionWidget");
+  /* ****  AND THIS LINE ******** */
 #endif
-      /* This widget presents a blank table and the user clicks an "Add" button to add arrays and Opertors */
-      const QString CellArrayComparisonSelectionWidget("CellArrayComparisonSelectionWidget");
-      const QString FeatureArrayComparisonSelectionWidget("FeatureArrayComparisonSelectionWidget");
-      const QString EnsembleArrayComparisonSelectionWidget("EnsembleArrayComparisonSelectionWidget");
-      const QString VertexArrayComparisonSelectionWidget("VertexArrayComparisonSelectionWidget");
-      const QString FaceArrayComparisonSelectionWidget("FaceArrayComparisonSelectionWidget");
-      const QString EdgeArrayComparisonSelectionWidget("EdgeArrayComparisonSelectionWidget");
+  /* This widget presents a blank table and the user clicks an "Add" button to add arrays and Opertors */
+  const QString CellArrayComparisonSelectionWidget("CellArrayComparisonSelectionWidget");
+  const QString FeatureArrayComparisonSelectionWidget("FeatureArrayComparisonSelectionWidget");
+  const QString EnsembleArrayComparisonSelectionWidget("EnsembleArrayComparisonSelectionWidget");
+  const QString VertexArrayComparisonSelectionWidget("VertexArrayComparisonSelectionWidget");
+  const QString FaceArrayComparisonSelectionWidget("FaceArrayComparisonSelectionWidget");
+  const QString EdgeArrayComparisonSelectionWidget("EdgeArrayComparisonSelectionWidget");
 
 
 
-      const QString CustomWidget("CustomWidget");
+  const QString CustomWidget("CustomWidget");
 }
 
 /**
@@ -130,27 +130,30 @@ class FilterParameter
     DREAM3D_SHARED_POINTERS(FilterParameter)
     DREAM3D_STATIC_NEW_MACRO(FilterParameter)
     DREAM3D_TYPE_MACRO(FilterParameter)
-    virtual ~FilterParameter() {}
+
+    static Pointer New(const QString& humanLabel, const QString& propertyName,
+                       const QString& widgetType, const QString& valueType,
+                       bool advanced = true,
+                       const QString& units = QString(""),
+                       const QString& fileExtension = QString(""),
+                       const QString& fileType = QString(""),
+                       const QString& castableValueType = QString("") );
+
+
+    virtual ~FilterParameter();
 
     DREAM3D_INSTANCE_STRING_PROPERTY(HumanLabel)
     DREAM3D_INSTANCE_STRING_PROPERTY(PropertyName)
     DREAM3D_INSTANCE_STRING_PROPERTY(WidgetType)
     DREAM3D_INSTANCE_STRING_PROPERTY(ValueType)
-    DREAM3D_INSTANCE_STRING_PROPERTY(CastableValueType)
+    DREAM3D_INSTANCE_PROPERTY(bool, Advanced)
+    DREAM3D_INSTANCE_STRING_PROPERTY(Units)
     DREAM3D_INSTANCE_STRING_PROPERTY(FileExtension)
     DREAM3D_INSTANCE_STRING_PROPERTY(FileType)
-    DREAM3D_INSTANCE_STRING_PROPERTY(Units)
-    DREAM3D_INSTANCE_PROPERTY(bool, IsAdvanced)
+    DREAM3D_INSTANCE_STRING_PROPERTY(CastableValueType)
 
-
-  protected:
-    FilterParameter() :
-      m_ValueType("Not_Set"),
-      m_FileExtension(""),
-      m_FileType(""),
-      m_Units(""),
-      m_IsAdvanced(false)
-    {}
+    protected:
+      FilterParameter();
 
   private:
     FilterParameter(const FilterParameter&); // Copy Constructor Not Implemented
@@ -158,6 +161,7 @@ class FilterParameter
 };
 
 typedef QVector<FilterParameter::Pointer> FilterParameterVector;
+
 
 // -----------------------------------------------------------------------------
 //
@@ -175,8 +179,8 @@ class ConstrainedFilterParameter : public FilterParameter
     DREAM3D_INSTANCE_PROPERTY(T, Minimum)
     DREAM3D_INSTANCE_PROPERTY(T, Maximum)
 
-  protected:
-    ConstrainedFilterParameter() {}
+    protected:
+      ConstrainedFilterParameter() {}
 
   private:
     ConstrainedFilterParameter(const ConstrainedFilterParameter&); // Copy Constructor Not Implemented
@@ -194,14 +198,19 @@ class ChoiceFilterParameter : public FilterParameter
     DREAM3D_STATIC_NEW_MACRO(ChoiceFilterParameter)
     DREAM3D_TYPE_MACRO_SUPER(ChoiceFilterParameter, FilterParameter)
 
-    virtual ~ChoiceFilterParameter() {}
+    static Pointer New(const QString& humanLabel, const QString& propertyName,
+                       const QString& widgetType, const QString& valueType,
+                       QVector<QString> choices,
+                       bool editable,
+                       bool advanced = true );
+
+    virtual ~ChoiceFilterParameter();
 
     DREAM3D_INSTANCE_PROPERTY(QVector<QString>, Choices)
     DREAM3D_INSTANCE_PROPERTY(bool, Editable)
 
-  protected:
-    ChoiceFilterParameter() :
-      m_Editable(false) {}
+    protected:
+      ChoiceFilterParameter();
 
   private:
     ChoiceFilterParameter(const ChoiceFilterParameter&); // Copy Constructor Not Implemented
@@ -218,14 +227,20 @@ class ComparisonFilterParameter : public FilterParameter
     DREAM3D_STATIC_NEW_MACRO(ComparisonFilterParameter)
     DREAM3D_TYPE_MACRO_SUPER(ComparisonFilterParameter, FilterParameter)
 
-    virtual ~ComparisonFilterParameter() {}
+    static Pointer New(const QString& humanLabel, const QString& propertyName,
+                       const QString& widgetType, const QString& valueType,
+                       QVector<QString> choices,
+                       bool showOperators,
+                       bool advanced = true );
+
+
+    virtual ~ComparisonFilterParameter();
 
     DREAM3D_INSTANCE_PROPERTY(QVector<QString>, Choices)
     DREAM3D_INSTANCE_PROPERTY(bool, ShowOperators)
 
-  protected:
-    ComparisonFilterParameter() :
-      m_ShowOperators(true) {}
+    protected:
+      ComparisonFilterParameter();
 
   private:
     ComparisonFilterParameter(const ComparisonFilterParameter&); // Copy Constructor Not Implemented
@@ -242,14 +257,19 @@ class ShapeTypesFilterParameter : public FilterParameter
     DREAM3D_STATIC_NEW_MACRO(ShapeTypesFilterParameter)
     DREAM3D_TYPE_MACRO_SUPER(ShapeTypesFilterParameter, FilterParameter)
 
-    virtual ~ShapeTypesFilterParameter() {}
+    static Pointer New(const QString& humanLabel, const QString& propertyName,
+                       const QString& widgetType, const QString& valueType,
+                       const QString& phaseTypeCountProperty,
+                       const QString& phaseTypeArrayPathProperty,
+                       bool advanced = true );
+
+    virtual ~ShapeTypesFilterParameter();
 
     DREAM3D_INSTANCE_PROPERTY(QString, PhaseTypeCountProperty)
     DREAM3D_INSTANCE_PROPERTY(QString, PhaseTypeArrayPathProperty)
 
-  protected:
-    ShapeTypesFilterParameter()
-       {}
+    protected:
+      ShapeTypesFilterParameter();
 
   private:
     ShapeTypesFilterParameter(const ShapeTypesFilterParameter&); // Copy Constructor Not Implemented
@@ -268,12 +288,14 @@ class PreflightUpdatedValue : public FilterParameter
     DREAM3D_STATIC_NEW_MACRO(PreflightUpdatedValue)
     DREAM3D_TYPE_MACRO_SUPER(PreflightUpdatedValue, FilterParameter)
 
-    virtual ~PreflightUpdatedValue() {}
+    static Pointer New(const QString& humanLabel, const QString& propertyName,
+                       const QString& widgetType, const QString& valueType,
+                       bool advanced = true );
 
-    DREAM3D_INSTANCE_PROPERTY(QString, PropertyName)
+    virtual ~PreflightUpdatedValue();
 
-  protected:
-    PreflightUpdatedValue() {}
+    protected:
+      PreflightUpdatedValue();
 
   private:
     PreflightUpdatedValue(const PreflightUpdatedValue&); // Copy Constructor Not Implemented
@@ -291,13 +313,17 @@ class DataContainerArrayProxyFilterParameter : public FilterParameter
     DREAM3D_STATIC_NEW_MACRO(DataContainerArrayProxyFilterParameter)
     DREAM3D_TYPE_MACRO_SUPER(DataContainerArrayProxyFilterParameter, FilterParameter)
 
-    virtual ~DataContainerArrayProxyFilterParameter() {}
+    static Pointer New(const QString& humanLabel, const QString& propertyName,
+                       const QString& widgetType, const QString& valueType,
+                       DataContainerArrayProxy proxy,
+                       bool advanced = true );
+
+    virtual ~DataContainerArrayProxyFilterParameter();
 
     DREAM3D_INSTANCE_PROPERTY(DataContainerArrayProxy, DataContainerArrayProxy)
 
-  protected:
-    DataContainerArrayProxyFilterParameter()
-     {}
+    protected:
+      DataContainerArrayProxyFilterParameter();
 
   private:
     DataContainerArrayProxyFilterParameter(const DataContainerArrayProxyFilterParameter&); // Copy Constructor Not Implemented

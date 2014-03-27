@@ -193,7 +193,7 @@ void MatchCrystallography::setupFilterParameters()
     parameter->setWidgetType(FilterParameterWidgetType::AttributeMatrixSelectionWidget);
     parameter->setValueType("DataArrayPath");
     parameter->setUnits("");
-    parameter->setIsAdvanced(false);
+    parameter->setAdvanced(false);
     parameters.push_back(parameter);
   }
     {
@@ -203,7 +203,7 @@ void MatchCrystallography::setupFilterParameters()
     parameter->setWidgetType(FilterParameterWidgetType::StringWidget);
     parameter->setValueType("QString");
     parameter->setUnits("");
-    parameter->setIsAdvanced(true);
+    parameter->setAdvanced(true);
     parameters.push_back(parameter);
   }
 
@@ -214,7 +214,7 @@ void MatchCrystallography::setupFilterParameters()
     parameter->setWidgetType(FilterParameterWidgetType::AttributeMatrixSelectionWidget);
     parameter->setValueType("DataArrayPath");
     parameter->setUnits("");
-    parameter->setIsAdvanced(false);
+    parameter->setAdvanced(false);
     parameters.push_back(parameter);
   }
     {
@@ -224,7 +224,7 @@ void MatchCrystallography::setupFilterParameters()
     parameter->setWidgetType(FilterParameterWidgetType::StringWidget);
     parameter->setValueType("QString");
     parameter->setUnits("");
-    parameter->setIsAdvanced(true);
+    parameter->setAdvanced(true);
     parameters.push_back(parameter);
   }
 

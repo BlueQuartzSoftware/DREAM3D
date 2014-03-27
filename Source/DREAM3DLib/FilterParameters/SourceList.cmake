@@ -24,6 +24,7 @@ set(DREAM3DLib_FilterParameters_HDRS
 set(DREAM3DLib_FilterParameters_SRCS
   ${DREAM3DLib_SOURCE_DIR}/FilterParameters/AbstractFilterParametersReader.cpp
   ${DREAM3DLib_SOURCE_DIR}/FilterParameters/AbstractFilterParametersWriter.cpp
+  ${DREAM3DLib_SOURCE_DIR}/FilterParameters/FilterParameter.cpp
   ${DREAM3DLib_SOURCE_DIR}/FilterParameters/H5FilterParametersReader.cpp
   ${DREAM3DLib_SOURCE_DIR}/FilterParameters/H5FilterParametersWriter.cpp
   ${DREAM3DLib_SOURCE_DIR}/FilterParameters/QFilterParametersReader.cpp

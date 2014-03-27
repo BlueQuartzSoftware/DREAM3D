@@ -99,7 +99,7 @@ void InitializeSyntheticVolume::setupFilterParameters()
     parameter->setWidgetType(FilterParameterWidgetType::DataArraySelectionWidget);
     parameter->setValueType("DataArrayPath");
     parameter->setUnits("");
-    parameter->setIsAdvanced(true);
+    parameter->setAdvanced(true);
     parameters.push_back(parameter);
   }
   {
@@ -109,7 +109,7 @@ void InitializeSyntheticVolume::setupFilterParameters()
     parameter->setWidgetType(FilterParameterWidgetType::DataArraySelectionWidget);
     parameter->setValueType("DataArrayPath");
     parameter->setUnits("");
-    parameter->setIsAdvanced(true);
+    parameter->setAdvanced(true);
     parameters.push_back(parameter);
   }
   {
@@ -119,7 +119,7 @@ void InitializeSyntheticVolume::setupFilterParameters()
     parameter->setWidgetType(FilterParameterWidgetType::StringWidget);
     parameter->setValueType("QString");
     parameter->setUnits("");
-    parameter->setIsAdvanced(true);
+    parameter->setAdvanced(true);
     parameters.push_back(parameter);
   }
   {
@@ -129,7 +129,7 @@ void InitializeSyntheticVolume::setupFilterParameters()
     parameter->setWidgetType(FilterParameterWidgetType::StringWidget);
     parameter->setValueType("QString");
     parameter->setUnits("");
-    parameter->setIsAdvanced(true);
+    parameter->setAdvanced(true);
     parameters.push_back(parameter);
   }
   {
@@ -139,7 +139,7 @@ void InitializeSyntheticVolume::setupFilterParameters()
     parameter->setWidgetType(FilterParameterWidgetType::StringWidget);
     parameter->setValueType("QString");
     parameter->setUnits("");
-    parameter->setIsAdvanced(true);
+    parameter->setAdvanced(true);
     parameters.push_back(parameter);
   }
   {
