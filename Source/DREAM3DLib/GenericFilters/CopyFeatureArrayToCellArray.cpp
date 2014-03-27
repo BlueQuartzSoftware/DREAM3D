@@ -42,10 +42,8 @@
 // -----------------------------------------------------------------------------
 CopyFeatureArrayToCellArray::CopyFeatureArrayToCellArray() :
   AbstractFilter(),
-  m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
   m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
-  m_CellFeatureAttributeMatrixName(DREAM3D::Defaults::CellFeatureAttributeMatrixName),
-  m_SelectedFeatureArrayName("", "", ""),
+  m_SelectedFeatureArrayPath("", "", ""),
   m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
   m_FeatureIds(NULL)
 {
@@ -68,7 +66,7 @@ void CopyFeatureArrayToCellArray::setupFilterParameters()
   {
     FilterParameter::Pointer parameter = FilterParameter::New();
     parameter->setHumanLabel("Feature Array Name");
-    parameter->setPropertyName("SelectedFeatureArrayName");
+    parameter->setPropertyName("SelectedFeatureArrayPath");
     parameter->setWidgetType(FilterParameterWidgetType::DataArraySelectionWidget);
     parameter->setValueType("DataArrayPath");
     parameter->setUnits("");
@@ -86,7 +84,7 @@ void CopyFeatureArrayToCellArray::readFilterParameters(AbstractFilterParametersR
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
   /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
-  setSelectedFeatureArrayName( reader->readDataArrayPath( "SelectedFeatureArrayName", getSelectedFeatureArrayName() ) );
+  setSelectedFeatureArrayPath( reader->readDataArrayPath( "SelectedFeatureArrayPath", getSelectedFeatureArrayPath() ) );
   /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }
@@ -97,7 +95,7 @@ void CopyFeatureArrayToCellArray::readFilterParameters(AbstractFilterParametersR
 int CopyFeatureArrayToCellArray::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  writer->writeValue("SelectedFeatureArrayName", getSelectedFeatureArrayName() );
+  writer->writeValue("SelectedFeatureArrayPath", getSelectedFeatureArrayPath() );
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
@@ -109,11 +107,11 @@ void CopyFeatureArrayToCellArray::dataCheck()
 {
   setErrorCondition(0);
 
-  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName(), false);
+  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, m_SelectedFeatureArrayPath.getDataContainerName(), false);
   if(getErrorCondition() < 0 || NULL == m) { return; }
   AttributeMatrix::Pointer cellAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), -301);
   if(getErrorCondition() < 0 || NULL == cellAttrMat.get() ) { return; }
-  AttributeMatrix::Pointer cellFeatureAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellFeatureAttributeMatrixName(), -301);
+  AttributeMatrix::Pointer cellFeatureAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, m_SelectedFeatureArrayPath.getAttributeMatrixName(), -301);
   if(getErrorCondition() < 0) { return; }
 
   QVector<size_t> dims(1, 1);
@@ -121,12 +119,12 @@ void CopyFeatureArrayToCellArray::dataCheck()
   if( NULL != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
-  if(m_SelectedFeatureArrayName.isEmpty() == true)
+  if(m_SelectedFeatureArrayPath.isEmpty() == true)
   {
     setErrorCondition(-11000);
     notifyErrorMessage(getHumanLabel(), "An array from the Volume DataContainer must be selected.", getErrorCondition());
   }
-  if(cellFeatureAttrMat->doesAttributeArrayExist(m_SelectedFeatureArrayName.getDataArrayName()) == false)
+  if(cellFeatureAttrMat->doesAttributeArrayExist(m_SelectedFeatureArrayPath.getDataArrayName()) == false)
   {
     setErrorCondition(-11001);
     notifyErrorMessage(getHumanLabel(), "The array selected does not exist in the DataContainer selected.", getErrorCondition());
@@ -195,16 +193,16 @@ void CopyFeatureArrayToCellArray::execute()
   dataCheck();
   if(getErrorCondition() < 0) { return; }
 
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(m_SelectedFeatureArrayPath.getDataContainerName());
   int64_t totalPoints = m->getAttributeMatrix(getCellAttributeMatrixName())->getNumTuples();
 
   QString ss;
 
-  IDataArray::Pointer inputData = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getAttributeArray(m_SelectedFeatureArrayName.getDataArrayName());
+  IDataArray::Pointer inputData = m->getAttributeMatrix(m_SelectedFeatureArrayPath.getAttributeMatrixName())->getAttributeArray(m_SelectedFeatureArrayPath.getDataArrayName());
 
   if (NULL == inputData.get())
   {
-    ss = QObject::tr("Selected array '%1' does not exist in the Voxel Data Container. Was it spelled correctly?").arg(m_SelectedFeatureArrayName.getDataArrayName());
+    ss = QObject::tr("Selected array '%1' does not exist in the Voxel Data Container. Was it spelled correctly?").arg(m_SelectedFeatureArrayPath.getDataArrayName());
     setErrorCondition(-11001);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;
@@ -280,7 +278,7 @@ AbstractFilter::Pointer CopyFeatureArrayToCellArray::newFilterInstance(bool copy
   CopyFeatureArrayToCellArray::Pointer filter = CopyFeatureArrayToCellArray::New();
   if(true == copyFilterParameters)
   {
-    filter->setSelectedFeatureArrayName( getSelectedFeatureArrayName() );
+    filter->setSelectedFeatureArrayPath( getSelectedFeatureArrayPath() );
   }
   return filter;
 }

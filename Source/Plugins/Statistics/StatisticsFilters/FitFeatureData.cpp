@@ -48,10 +48,8 @@
 // -----------------------------------------------------------------------------
 FitFeatureData::FitFeatureData() :
   AbstractFilter(),
-  m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
-  m_CellFeatureAttributeMatrixName(DREAM3D::Defaults::CellFeatureAttributeMatrixName),
   m_CellEnsembleAttributeMatrixName(DREAM3D::Defaults::CellEnsembleAttributeMatrixName),
-  m_SelectedFeatureArrayName(""),
+  m_SelectedFeatureArrayPath("", "", ""),
   m_DistributionType(DREAM3D::DistributionType::UnknownDistributionType),
   m_RemoveBiasedFeatures(false),
   m_FeaturePhasesArrayName(DREAM3D::FeatureData::Phases),
@@ -80,9 +78,9 @@ void FitFeatureData::setupFilterParameters()
   {
     FilterParameter::Pointer parameter = FilterParameter::New();
     parameter->setHumanLabel("Feature Array To Fit");
-    parameter->setPropertyName("SelectedFeatureArrayName");
+    parameter->setPropertyName("SelectedFeatureArrayPath");
     parameter->setWidgetType(FilterParameterWidgetType::DataArraySelectionWidget);
-    parameter->setValueType("QString");
+    parameter->setValueType("DataArrayPath");
     parameter->setUnits("");
     parameters.push_back(parameter);
   }
@@ -119,7 +117,7 @@ void FitFeatureData::readFilterParameters(AbstractFilterParametersReader* reader
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
   /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
-  setSelectedFeatureArrayName( reader->readString( "SelectedFeatureArrayName", getSelectedFeatureArrayName() ) );
+  setSelectedFeatureArrayPath( reader->readDataArrayPath( "SelectedFeatureArrayPath", getSelectedFeatureArrayPath() ) );
   setDistributionType( reader->readValue( "DistributionType", getDistributionType() ) );
   setRemoveBiasedFeatures( reader->readValue( "RemoveBiasedFeatures", getRemoveBiasedFeatures() ) );
   /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
@@ -132,7 +130,7 @@ void FitFeatureData::readFilterParameters(AbstractFilterParametersReader* reader
 int FitFeatureData::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  writer->writeValue("SelectedFeatureArrayName", getSelectedFeatureArrayName() );
+  writer->writeValue("SelectedFeatureArrayPath", getSelectedFeatureArrayPath() );
   writer->writeValue("DistributionType", getDistributionType() );
   writer->writeValue("RemovedBiasedFeatures", getRemoveBiasedFeatures() );
   writer->closeFilterGroup();
@@ -146,9 +144,9 @@ void FitFeatureData::dataCheck()
 {
   setErrorCondition(0);
 
-  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName(), false);
+  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, m_SelectedFeatureArrayPath.getDataContainerName(), false);
   if(getErrorCondition() < 0 || NULL == m) { return; }
-  AttributeMatrix::Pointer cellFeatureAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellFeatureAttributeMatrixName(), -301);
+  AttributeMatrix::Pointer cellFeatureAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, m_SelectedFeatureArrayPath.getAttributeMatrixName(), -301);
   if(getErrorCondition() < 0) { return; }
   AttributeMatrix::Pointer cellEnsembleAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellEnsembleAttributeMatrixName(), -301);
   if(getErrorCondition() < 0) { return; }
@@ -158,7 +156,7 @@ void FitFeatureData::dataCheck()
   if( NULL != m_FeaturePhasesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_FeaturePhases = m_FeaturePhasesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
-  if(m_SelectedFeatureArrayName.isEmpty() == true)
+  if(m_SelectedFeatureArrayPath.isEmpty() == true)
   {
     setErrorCondition(-11000);
     notifyErrorMessage(getHumanLabel(), "An array from the Volume DataContainer must be selected.", getErrorCondition());
@@ -171,7 +169,7 @@ void FitFeatureData::dataCheck()
   else if (m_DistributionType == DREAM3D::DistributionType::LogNormal) { distType = "LogNormal", numComp = DREAM3D::DistributionType::LogNormalColumnCount; }
   else if (m_DistributionType == DREAM3D::DistributionType::Power) { distType = "PowerLaw", numComp = DREAM3D::DistributionType::PowerLawColumnCount; }
 
-  m_NewEnsembleArrayArrayName = m_SelectedFeatureArrayName + distType + QString("Fit");
+  m_NewEnsembleArrayArrayName = m_SelectedFeatureArrayPath.getDataArrayName() + distType + QString("Fit");
   dims[0] = numComp;
   m_NewEnsembleArrayPtr = cellEnsembleAttrMat->createNonPrereqArray<DataArray<float>, AbstractFilter>(this, m_NewEnsembleArrayArrayName, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_NewEnsembleArrayPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
@@ -268,15 +266,15 @@ void FitFeatureData::execute()
   dataCheck();
   if(getErrorCondition() < 0) { return; }
 
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(m_SelectedFeatureArrayPath.getDataContainerName());
   int32_t numEnsembles = m->getAttributeMatrix(getCellEnsembleAttributeMatrixName())->getNumTuples();
 
   QString ss;
 
-  IDataArray::Pointer inputData = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getAttributeArray(m_SelectedFeatureArrayName);
+  IDataArray::Pointer inputData = m->getAttributeMatrix(m_SelectedFeatureArrayPath.getAttributeMatrixName())->getAttributeArray(m_SelectedFeatureArrayPath.getDataArrayName());
   if (NULL == inputData.get())
   {
-    ss = QObject::tr("Selected array '%1' does not exist in the Voxel Data Container. Was it spelled correctly?").arg(m_SelectedFeatureArrayName);
+    ss = QObject::tr("Selected array '%1' does not exist in the Voxel Data Container. Was it spelled correctly?").arg(m_SelectedFeatureArrayPath.getDataArrayName());
     setErrorCondition(-11001);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;
@@ -346,7 +344,7 @@ AbstractFilter::Pointer FitFeatureData::newFilterInstance(bool copyFilterParamet
   FitFeatureData::Pointer filter = FitFeatureData::New();
   if(true == copyFilterParameters)
   {
-    filter->setSelectedFeatureArrayName( getSelectedFeatureArrayName() );
+    filter->setSelectedFeatureArrayPath( getSelectedFeatureArrayPath() );
     filter->setDistributionType( getDistributionType() );
     filter->setRemoveBiasedFeatures( getRemoveBiasedFeatures() );
   }

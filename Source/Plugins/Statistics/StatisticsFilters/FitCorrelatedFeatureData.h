@@ -68,14 +68,12 @@ class FitCorrelatedFeatureData : public AbstractFilter
     DREAM3D_TYPE_MACRO_SUPER(FitCorrelatedFeatureData, AbstractFilter)
 
     virtual ~FitCorrelatedFeatureData();
-    DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(CellFeatureAttributeMatrixName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellEnsembleAttributeMatrixName)
 
-    DREAM3D_FILTER_PARAMETER(QString, SelectedFeatureArrayName)
-    Q_PROPERTY(QString SelectedFeatureArrayName READ getSelectedFeatureArrayName WRITE setSelectedFeatureArrayName)
-    DREAM3D_FILTER_PARAMETER(QString, CorrelatedFeatureArrayName)
-    Q_PROPERTY(QString CorrelatedFeatureArrayName READ getCorrelatedFeatureArrayName WRITE setCorrelatedFeatureArrayName)
+    DREAM3D_FILTER_PARAMETER(DataArrayPath, SelectedFeatureArrayPath)
+    Q_PROPERTY(DataArrayPath SelectedFeatureArrayPath READ getSelectedFeatureArrayPath WRITE setSelectedFeatureArrayPath)
+    DREAM3D_FILTER_PARAMETER(DataArrayPath, CorrelatedFeatureArrayPath)
+    Q_PROPERTY(DataArrayPath CorrelatedFeatureArrayPath READ getCorrelatedFeatureArrayPath WRITE setCorrelatedFeatureArrayPath)
 
     DREAM3D_FILTER_PARAMETER(unsigned int, DistributionType)
     Q_PROPERTY(unsigned int DistributionType READ getDistributionType WRITE setDistributionType)

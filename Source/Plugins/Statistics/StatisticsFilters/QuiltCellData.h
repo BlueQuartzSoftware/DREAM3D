@@ -64,11 +64,9 @@ class QuiltCellData : public AbstractFilter
     virtual ~QuiltCellData();
     DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
 
-    DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
-
     // What Cell Array do they want to work on
-    DREAM3D_FILTER_PARAMETER(QString, SelectedCellArrayName)
-    Q_PROPERTY(QString SelectedCellArrayName READ getSelectedCellArrayName WRITE setSelectedCellArrayName)
+    DREAM3D_FILTER_PARAMETER(DataArrayPath, SelectedCellArrayPath)
+    Q_PROPERTY(DataArrayPath SelectedCellArrayPath READ getSelectedCellArrayPath WRITE setSelectedCellArrayPath)
 
     DREAM3D_FILTER_PARAMETER(IntVec3_t, QuiltStep)
     Q_PROPERTY(IntVec3_t QuiltStep READ getQuiltStep WRITE setQuiltStep)

@@ -63,12 +63,10 @@ class DREAM3DLib_EXPORT CopyFeatureArrayToCellArray : public AbstractFilter
     DREAM3D_TYPE_MACRO_SUPER(CopyFeatureArrayToCellArray, AbstractFilter)
 
     virtual ~CopyFeatureArrayToCellArray();
-    DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(CellFeatureAttributeMatrixName)
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, SelectedFeatureArrayName)
-    Q_PROPERTY(DataArrayPath SelectedFeatureArrayName READ getSelectedFeatureArrayName WRITE setSelectedFeatureArrayName)
+    DREAM3D_FILTER_PARAMETER(DataArrayPath, SelectedFeatureArrayPath)
+    Q_PROPERTY(DataArrayPath SelectedFeatureArrayPath READ getSelectedFeatureArrayPath WRITE setSelectedFeatureArrayPath)
 
     /**
     * @brief This returns the group that the filter belonds to. You can select

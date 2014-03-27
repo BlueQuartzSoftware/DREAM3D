@@ -48,11 +48,9 @@
 // -----------------------------------------------------------------------------
 FitCorrelatedFeatureData::FitCorrelatedFeatureData() :
   AbstractFilter(),
-  m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
-  m_CellFeatureAttributeMatrixName(DREAM3D::Defaults::CellFeatureAttributeMatrixName),
   m_CellEnsembleAttributeMatrixName(DREAM3D::Defaults::CellEnsembleAttributeMatrixName),
-  m_SelectedFeatureArrayName(""),
-  m_CorrelatedFeatureArrayName(""),
+  m_SelectedFeatureArrayPath("", "", ""),
+  m_CorrelatedFeatureArrayPath("", "", ""),
   m_DistributionType(DREAM3D::DistributionType::UnknownDistributionType),
   m_NumberOfCorrelatedBins(1),
   m_RemoveBiasedFeatures(false),
@@ -82,9 +80,9 @@ void FitCorrelatedFeatureData::setupFilterParameters()
   {
     FilterParameter::Pointer parameter = FilterParameter::New();
     parameter->setHumanLabel("Feature Array To Fit");
-    parameter->setPropertyName("SelectedFeatureArrayName");
+    parameter->setPropertyName("SelectedFeatureArrayPath");
     parameter->setWidgetType(FilterParameterWidgetType::DataArraySelectionWidget);
-    parameter->setValueType("QString");
+    parameter->setValueType("DataArrayPath");
     parameter->setUnits("");
     parameters.push_back(parameter);
   }
@@ -104,9 +102,9 @@ void FitCorrelatedFeatureData::setupFilterParameters()
   {
     FilterParameter::Pointer parameter = FilterParameter::New();
     parameter->setHumanLabel("Array To Correlate With");
-    parameter->setPropertyName("CorrelatedFeatureArrayName");
+    parameter->setPropertyName("CorrelatedFeatureArrayPath");
     parameter->setWidgetType(FilterParameterWidgetType::DataArraySelectionWidget);
-    parameter->setValueType("QString");
+    parameter->setValueType("DataArrayPath");
     parameter->setUnits("");
     parameters.push_back(parameter);
   }
@@ -139,7 +137,7 @@ void FitCorrelatedFeatureData::readFilterParameters(AbstractFilterParametersRead
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
   /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
-  setSelectedFeatureArrayName( reader->readString( "SelectedFeatureArrayName", getSelectedFeatureArrayName() ) );
+  setSelectedFeatureArrayPath( reader->readDataArrayPath( "SelectedFeatureArrayPath", getSelectedFeatureArrayPath() ) );
   setDistributionType( reader->readValue( "DistributionType", getDistributionType() ) );
   setRemoveBiasedFeatures( reader->readValue( "RemoveBiasedFeatures", getRemoveBiasedFeatures() ) );
   setNumberOfCorrelatedBins( reader->readValue( "NumberOfCorrelatedBins", getNumberOfCorrelatedBins() ) );
@@ -153,7 +151,7 @@ void FitCorrelatedFeatureData::readFilterParameters(AbstractFilterParametersRead
 int FitCorrelatedFeatureData::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  writer->writeValue("SelectedFeatureArrayName", getSelectedFeatureArrayName() );
+  writer->writeValue("SelectedFeatureArrayPath", getSelectedFeatureArrayPath() );
   writer->writeValue("DistributionType", getDistributionType() );
   writer->writeValue("RemovedBiasedFeatures", getRemoveBiasedFeatures() );
   writer->writeValue("NumberOfCorrelatedBins", getNumberOfCorrelatedBins() );
@@ -168,9 +166,9 @@ void FitCorrelatedFeatureData::dataCheck()
 {
   setErrorCondition(0);
 
-  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName(), false);
+  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, m_SelectedFeatureArrayPath.getDataContainerName(), false);
   if(getErrorCondition() < 0 || NULL == m) { return; }
-  AttributeMatrix::Pointer cellFeatureAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellFeatureAttributeMatrixName(), -301);
+  AttributeMatrix::Pointer cellFeatureAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, m_SelectedFeatureArrayPath.getAttributeMatrixName(), -301);
   if(getErrorCondition() < 0) { return; }
   AttributeMatrix::Pointer cellEnsembleAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellEnsembleAttributeMatrixName(), -301);
   if(getErrorCondition() < 0) { return; }
@@ -180,12 +178,12 @@ void FitCorrelatedFeatureData::dataCheck()
   if( NULL != m_FeaturePhasesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_FeaturePhases = m_FeaturePhasesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
-  if(m_SelectedFeatureArrayName.isEmpty() == true)
+  if(m_SelectedFeatureArrayPath.isEmpty() == true)
   {
     setErrorCondition(-11000);
     notifyErrorMessage(getHumanLabel(), "An array from the Volume DataContainer must be selected.", getErrorCondition());
   }
-  if(m_CorrelatedFeatureArrayName.isEmpty() == true)
+  if(m_CorrelatedFeatureArrayPath.isEmpty() == true)
   {
     setErrorCondition(-11000);
     notifyErrorMessage(getHumanLabel(), "An array from the Volume DataContainer must be selected.", getErrorCondition());
@@ -198,7 +196,7 @@ void FitCorrelatedFeatureData::dataCheck()
   else if (m_DistributionType == DREAM3D::DistributionType::LogNormal) { distType = "LogNormal", numComp = DREAM3D::DistributionType::LogNormalColumnCount; }
   else if (m_DistributionType == DREAM3D::DistributionType::Power) { distType = "PowerLaw", numComp = DREAM3D::DistributionType::PowerLawColumnCount; }
 
-  m_NewEnsembleArrayArrayName = m_SelectedFeatureArrayName + distType + QString("Fit") + QString("CorrelatedTo") + m_CorrelatedFeatureArrayName;
+  m_NewEnsembleArrayArrayName = m_SelectedFeatureArrayPath.getDataArrayName() + distType + QString("Fit") + QString("CorrelatedTo") + m_CorrelatedFeatureArrayPath.getDataArrayName();
   dims.resize(2);
   dims[0] = m_NumberOfCorrelatedBins;
   dims[1] = numComp;
@@ -343,23 +341,23 @@ void FitCorrelatedFeatureData::execute()
   dataCheck();
   if(getErrorCondition() < 0) { return; }
 
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(m_SelectedFeatureArrayPath.getDataContainerName());
   int64_t numEnsembles = m->getAttributeMatrix(getCellEnsembleAttributeMatrixName())->getNumTuples();
 
   QString ss;
 
-  IDataArray::Pointer inputData = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getAttributeArray(m_SelectedFeatureArrayName);
+  IDataArray::Pointer inputData = m->getAttributeMatrix(m_SelectedFeatureArrayPath.getAttributeMatrixName())->getAttributeArray(m_SelectedFeatureArrayPath.getDataArrayName());
   if (NULL == inputData.get())
   {
-    ss = QObject::tr("Selected array '%1' does not exist in the Voxel Data Container. Was it spelled correctly?").arg(m_SelectedFeatureArrayName);
+    ss = QObject::tr("Selected array '%1' does not exist in the Voxel Data Container. Was it spelled correctly?").arg(m_SelectedFeatureArrayPath.getDataArrayName());
     setErrorCondition(-11001);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;
   }
-  IDataArray::Pointer correlatedData = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getAttributeArray(m_CorrelatedFeatureArrayName);
+  IDataArray::Pointer correlatedData = m->getAttributeMatrix(m_CorrelatedFeatureArrayPath.getAttributeMatrixName())->getAttributeArray(m_CorrelatedFeatureArrayPath.getDataArrayName());
   if (NULL == correlatedData.get())
   {
-    ss = QObject::tr("Selected array '%1' does not exist in the Voxel Data Container. Was it spelled correctly?").arg(m_CorrelatedFeatureArrayName);
+    ss = QObject::tr("Selected array '%1' does not exist in the Voxel Data Container. Was it spelled correctly?").arg(m_CorrelatedFeatureArrayPath.getDataArrayName());
     setErrorCondition(-11001);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;
@@ -481,9 +479,9 @@ AbstractFilter::Pointer FitCorrelatedFeatureData::newFilterInstance(bool copyFil
   FitCorrelatedFeatureData::Pointer filter = FitCorrelatedFeatureData::New();
   if(true == copyFilterParameters)
   {
-    filter->setSelectedFeatureArrayName( getSelectedFeatureArrayName() );
+    filter->setSelectedFeatureArrayPath( getSelectedFeatureArrayPath() );
     filter->setDistributionType( getDistributionType() );
-    filter->setCorrelatedFeatureArrayName( getCorrelatedFeatureArrayName() );
+    filter->setCorrelatedFeatureArrayPath( getCorrelatedFeatureArrayPath() );
     filter->setNumberOfCorrelatedBins( getNumberOfCorrelatedBins() );
     filter->setRemoveBiasedFeatures( getRemoveBiasedFeatures() );
   }
