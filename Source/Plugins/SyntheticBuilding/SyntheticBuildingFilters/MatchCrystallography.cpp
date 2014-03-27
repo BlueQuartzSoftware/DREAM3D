@@ -49,6 +49,7 @@
 #include "DREAM3DLib/OrientationOps/OrthoRhombicOps.h"
 
 
+using namespace DREAM3D;
 
 // -----------------------------------------------------------------------------
 //
@@ -56,7 +57,14 @@
 
 MatchCrystallography::MatchCrystallography() :
   AbstractFilter(),
-  m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
+  m_OutputDataContainerName(DREAM3D::Defaults::SyntheticVolume),
+
+  // These are from the Data Container that has the statistics, crystal structures and Phase Types (ideally)
+  m_InputStatsArrayPath(Defaults::StatsGenerator, Defaults::CellEnsembleAttributeMatrixName, EnsembleData::Statistics),
+  m_CrystalStructuresArrayPath(Defaults::StatsGenerator, Defaults::CellEnsembleAttributeMatrixName, EnsembleData::CrystalStructures),
+  m_PhaseTypesArrayPath(Defaults::StatsGenerator, Defaults::CellEnsembleAttributeMatrixName, EnsembleData::PhaseTypes),
+
+  // These are from the Data Container that the synthetic is being generated into
   m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
   m_CellFeatureAttributeMatrixName(DREAM3D::Defaults::CellFeatureAttributeMatrixName),
   m_CellEnsembleAttributeMatrixName(DREAM3D::Defaults::CellEnsembleAttributeMatrixName),
@@ -103,21 +111,83 @@ void MatchCrystallography::setupFilterParameters()
   FilterParameterVector parameters;
   {
     FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Input Statistics");
+    parameter->setHumanLabel("Statistics");
     parameter->setPropertyName("InputStatsArrayPath");
     parameter->setWidgetType(FilterParameterWidgetType::DataArraySelectionWidget);
     parameter->setValueType("DataArrayPath");
-    parameter->setUnits("");
+    parameter->setUnits("Input");
     parameters.push_back(parameter);
   }
   {
     FilterParameter::Pointer parameter = FilterParameter::New();
+    parameter->setHumanLabel("Crystal Symmatry Array");
+    parameter->setPropertyName("CrystalStructuresArrayPath");
+    parameter->setWidgetType(FilterParameterWidgetType::DataArraySelectionWidget);
+    parameter->setValueType("DataArrayPath");
+    parameter->setUnits("Input");
+    parameters.push_back(parameter);
+  }
+  {
+    FilterParameter::Pointer parameter = FilterParameter::New();
+    parameter->setHumanLabel("Phase Type Array");
+    parameter->setPropertyName("PhaseTypesArrayPath");
+    parameter->setWidgetType(FilterParameterWidgetType::DataArraySelectionWidget);
+    parameter->setValueType("DataArrayPath");
+    parameter->setUnits("Input");
+    parameters.push_back(parameter);
+  }
+
+//// These are required Arrays
+
+  {
+    FilterParameter::Pointer parameter = FilterParameter::New();
+    parameter->setHumanLabel("Feature Ids");
+    parameter->setPropertyName("FeatureIdsPath");
+    parameter->setWidgetType(FilterParameterWidgetType::DataArraySelectionWidget);
+    parameter->setValueType("DataArrayPath");
+    parameter->setUnits("Input Cell Data");
+    parameters.push_back(parameter);
+  }
+  {
+    FilterParameter::Pointer parameter = FilterParameter::New();
+    parameter->setHumanLabel("Phases");
+    parameter->setPropertyName("FeaturePhasesPath");
+    parameter->setWidgetType(FilterParameterWidgetType::DataArraySelectionWidget);
+    parameter->setValueType("DataArrayPath");
+    parameter->setUnits("Input Feature Data");
+    parameters.push_back(parameter);
+  }
+  {
+    FilterParameter::Pointer parameter = FilterParameter::New();
+    parameter->setHumanLabel("Surface Features");
+    parameter->setPropertyName("FeatureSurfaceFeaturesPath");
+    parameter->setWidgetType(FilterParameterWidgetType::DataArraySelectionWidget);
+    parameter->setValueType("DataArrayPath");
+    parameter->setUnits("Input Feature Data");
+    parameters.push_back(parameter);
+  }
+
+  {
+    FilterParameter::Pointer parameter = FilterParameter::New();
     parameter->setHumanLabel("Select Synthetic Volume DataContainer");
-    parameter->setPropertyName("DataContainerName");
+    parameter->setPropertyName("OutputDataContainerName");
     parameter->setWidgetType(FilterParameterWidgetType::DataContainerSelectionWidget);
     parameter->setValueType("QString");
     parameters.push_back(parameter);
   }
+
+  //// These arrays are created during this filter
+    {
+    FilterParameter::Pointer parameter = FilterParameter::New();
+    parameter->setHumanLabel("Euler Angles Name");
+    parameter->setPropertyName("CellEulerAnglesArrayPath");
+    parameter->setWidgetType(FilterParameterWidgetType::DataArrayCreationWidget);
+    parameter->setValueType("DataArrayPath");
+    parameter->setUnits("Created Cell Data");
+    parameters.push_back(parameter);
+  }
+
+//// This is just an actual Parameter
   {
     FilterParameter::Pointer parameter = FilterParameter::New();
     parameter->setHumanLabel("Maximum Number of Iterations (Swaps)");
@@ -137,9 +207,15 @@ void MatchCrystallography::readFilterParameters(AbstractFilterParametersReader* 
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
   /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN */
-  setDataContainerName( reader->readString("DataContainerName", getDataContainerName() ) );
+  setOutputDataContainerName( reader->readString("OutputDataContainerName", getOutputDataContainerName() ) );
   setMaxIterations( reader->readValue("MaxIterations", getMaxIterations()) );
   setInputStatsArrayPath(reader->readDataArrayPath("InputStatsArrayPath", getInputStatsArrayPath() ) );
+  setCrystalStructuresArrayPath(reader->readDataArrayPath("CrystalStructuresArrayPath", getCrystalStructuresArrayPath() ) );
+  setPhaseTypesArrayPath(reader->readDataArrayPath("PhaseTypesArrayPath", getPhaseTypesArrayPath() ) );
+  setFeatureIdsPath(reader->readDataArrayPath("FeatureIdsPath", getFeatureIdsPath() ) );
+  setFeaturePhasesPath(reader->readDataArrayPath("FeaturePhasesPath", getFeaturePhasesPath() ) );
+  setFeatureSurfaceFeaturesPath(reader->readDataArrayPath("FeatureSurfaceFeaturesPath", getFeatureSurfaceFeaturesPath() ) );
+  setCellEulerAnglesArrayPath(reader->readDataArrayPath("CellEulerAnglesArrayPath", getCellEulerAnglesArrayPath() ) );
   /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }
@@ -150,10 +226,16 @@ void MatchCrystallography::readFilterParameters(AbstractFilterParametersReader* 
 int MatchCrystallography::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  writer->writeValue("DataContainerName", getDataContainerName() );
+  writer->writeValue("OutputDataContainerName", getOutputDataContainerName() );
   writer->writeValue("MaxIterations", getMaxIterations() );
-  writer->closeFilterGroup();
   writer->writeValue("InputStatsArrayPath", getInputStatsArrayPath() );
+  writer->writeValue("CrystalStructuresArrayPath", getCrystalStructuresArrayPath() );
+  writer->writeValue("PhaseTypesArrayPath", getPhaseTypesArrayPath() );
+  writer->writeValue("FeatureIdsPath", getFeatureIdsPath() );
+  writer->writeValue("FeaturePhasesPath", getFeaturePhasesPath() );
+  writer->writeValue("FeatureSurfaceFeaturesPath", getFeatureSurfaceFeaturesPath() );
+  writer->writeValue("CellEulerAnglesArrayPath", getCellEulerAnglesArrayPath() );
+  writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
 
@@ -166,7 +248,7 @@ void MatchCrystallography::dataCheck()
   // This is for convenience
   DataContainerArray::Pointer dca = getDataContainerArray();
 
-  VolumeDataContainer* m = dca->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName(), false);
+  VolumeDataContainer* m = dca->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getOutputDataContainerName(), false);
   if(getErrorCondition() < 0 || NULL == m) { return; }
   AttributeMatrix::Pointer cellAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), -301);
   if(getErrorCondition() < 0 || NULL == cellAttrMat.get() ) { return; }
@@ -176,29 +258,33 @@ void MatchCrystallography::dataCheck()
   AttributeMatrix::Pointer cellEnsembleAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellEnsembleAttributeMatrixName(), -303);
   if(getErrorCondition() < 0 || NULL == cellEnsembleAttrMat.get()) { return; }
 
+
+/// FROM SYNTHETIC VOLUME
+
   QVector<size_t> dims(1, 1);
   // Cell Data
   m_FeatureIdsPtr = dca->getPrereqArrayFromPath<Int32ArrayType, AbstractFilter>(this, getFeatureIdsPath(), dims);
-//  m_FeatureIdsPtr = cellAttrMat->getPrereqArray<DataArray<int32_t>, AbstractFilter>(this,  m_FeatureIdsArrayName, -301, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  //  m_FeatureIdsPtr = cellAttrMat->getPrereqArray<DataArray<int32_t>, AbstractFilter>(this,  m_FeatureIdsArrayName, -301, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   dims[0] = 3;
-  m_CellEulerAnglesPtr = cellAttrMat->createNonPrereqArray<DataArray<float>, AbstractFilter, float>(this,  m_CellEulerAnglesArrayName, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_CellEulerAnglesPtr = dca->createNonPrereqArrayFromPath<FloatArrayType, AbstractFilter>(this, getCellEulerAnglesArrayPath(), 0, dims);
+  //m_CellEulerAnglesPtr = cellAttrMat->createNonPrereqArray<DataArray<float>, AbstractFilter, float>(this,  m_CellEulerAnglesArrayName, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_CellEulerAnglesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_CellEulerAngles = m_CellEulerAnglesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+
 
   // Feature Data
   dims[0] = 1;
   m_FeaturePhasesPtr = dca->getPrereqArrayFromPath<Int32ArrayType, AbstractFilter>(this, m_FeaturePhasesPath, dims);
- // m_FeaturePhasesPtr = cellFeatureAttrMat->getPrereqArray<DataArray<int32_t>, AbstractFilter>(this,  m_FeaturePhasesArrayName, -301, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  // m_FeaturePhasesPtr = cellFeatureAttrMat->getPrereqArray<DataArray<int32_t>, AbstractFilter>(this,  m_FeaturePhasesArrayName, -301, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_FeaturePhasesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_FeaturePhases = m_FeaturePhasesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   m_SurfaceFeaturesPtr = cellFeatureAttrMat->getPrereqArray<DataArray<bool>, AbstractFilter>(this,  m_SurfaceFeaturesArrayName, -301, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_SurfaceFeaturesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_SurfaceFeatures = m_SurfaceFeaturesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-
 
   m_VolumesPtr = cellFeatureAttrMat->createNonPrereqArray<DataArray<float>, AbstractFilter, float>(this,  m_VolumesArrayName, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_VolumesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
@@ -241,6 +327,16 @@ void MatchCrystallography::dataCheck()
   }
 
 
+// Ensemble Data
+  m_NumFeaturesPtr = cellEnsembleAttrMat->createNonPrereqArray<DataArray<int32_t>, AbstractFilter, int32_t>(this,  m_NumFeaturesArrayName, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if( NULL != m_NumFeaturesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  { m_NumFeatures = m_NumFeaturesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+
+
+
+//// FROM STATS GENERATOR
+  dims.resize(1);
+  dims[0] = 1;
   StatsDataArray::Pointer statsPtr = dca->getPrereqArrayFromPath<StatsDataArray, AbstractFilter>(this, getInputStatsArrayPath(), dims);
   m_StatsDataArray = boost::dynamic_pointer_cast<StatsDataArray>(statsPtr);
   //if( NULL != m_StatsDataArray.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
@@ -251,22 +347,20 @@ void MatchCrystallography::dataCheck()
   typedef DataArray<unsigned int> XTalStructArrayType;
   typedef DataArray<unsigned int> PhaseTypeArrayType;
   dims[0] = 1;
-  QList<QString> check = cellEnsembleAttrMat->getAttributeArrayNameList();
-  for(QList<QString>::iterator it = check.begin(); it != check.end(); ++it)
-  {
-    QString name = *(it);
-    int stop = 0;
-  }
-  m_CrystalStructuresPtr = cellEnsembleAttrMat->getPrereqArray<DataArray<unsigned int>, AbstractFilter>(this,  m_CrystalStructuresArrayName, -301, dims);
+
+//// FROM STATS GENERATOR
+  m_CrystalStructuresPtr = dca->getPrereqArrayFromPath<UInt32ArrayType, AbstractFilter>(this, getCrystalStructuresArrayPath(), dims);
+//  m_CrystalStructuresPtr = cellEnsembleAttrMat->getPrereqArray<DataArray<unsigned int>, AbstractFilter>(this,  m_CrystalStructuresArrayName, -301, dims);
   if( NULL != m_CrystalStructuresPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   {m_CrystalStructures = m_CrystalStructuresPtr.lock()->getPointer(0);}
-  m_PhaseTypesPtr = cellEnsembleAttrMat->getPrereqArray<DataArray<unsigned int>, AbstractFilter>(this,  m_PhaseTypesArrayName, -301, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+
+//// FROM STATS GENERATOR
+  m_PhaseTypesPtr = dca->getPrereqArrayFromPath<UInt32ArrayType, AbstractFilter>(this, getPhaseTypesArrayPath(), dims);
+//  m_PhaseTypesPtr = cellEnsembleAttrMat->getPrereqArray<DataArray<unsigned int>, AbstractFilter>(this,  m_PhaseTypesArrayName, -301, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_PhaseTypesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_PhaseTypes = m_PhaseTypesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
-  m_NumFeaturesPtr = cellEnsembleAttrMat->createNonPrereqArray<DataArray<int32_t>, AbstractFilter, int32_t>(this,  m_NumFeaturesArrayName, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_NumFeaturesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
-  { m_NumFeatures = m_NumFeaturesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+
 }
 
 // -----------------------------------------------------------------------------
@@ -291,7 +385,7 @@ void MatchCrystallography::execute()
   dataCheck();
   if(getErrorCondition() < 0) { return; }
 
-  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName(), false);
+  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getOutputDataContainerName(), false);
 
   int64_t totalEnsembles = m->getAttributeMatrix(m_CellEnsembleAttributeMatrixName)->getNumTuples();
 
@@ -375,7 +469,7 @@ void MatchCrystallography::initializeArrays(int ensem)
 // -----------------------------------------------------------------------------
 void MatchCrystallography::determine_volumes()
 {
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getOutputDataContainerName());
 
   int64_t totalPoints = m->getAttributeMatrix(m_CellAttributeMatrixName)->getNumTuples();
   int64_t totalFeatures = m->getAttributeMatrix(m_CellFeatureAttributeMatrixName)->getNumTuples();
@@ -406,7 +500,7 @@ void MatchCrystallography::determine_volumes()
 // -----------------------------------------------------------------------------
 void MatchCrystallography::determine_boundary_areas()
 {
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getOutputDataContainerName());
 
   NeighborList<int>& neighborlist = *m_NeighborList;
   NeighborList<float>& neighborsurfacearealist = *m_SharedSurfaceAreaList;
@@ -445,7 +539,7 @@ void MatchCrystallography::determine_boundary_areas()
 void MatchCrystallography::assign_eulers(int ensem)
 {
   DREAM3D_RANDOMNG_NEW()
-      VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+      VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getOutputDataContainerName());
 
   int numbins = 0;
   float synea1 = 0, synea2 = 0, synea3 = 0;
@@ -559,7 +653,7 @@ void MatchCrystallography::MC_LoopBody2(int feature, int ensem, int j, float nei
 // -----------------------------------------------------------------------------
 void MatchCrystallography::matchCrystallography(int ensem)
 {
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getOutputDataContainerName());
 
   // But since a pointer is difficult to use operators with we will now create a
   // reference variable to the pointer with the correct variable name that allows
@@ -848,7 +942,7 @@ void MatchCrystallography::matchCrystallography(int ensem)
 // -----------------------------------------------------------------------------
 void MatchCrystallography::measure_misorientations(int ensem)
 {
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getOutputDataContainerName());
 
   // But since a pointer is difficult to use operators with we will now create a
   // reference variable to the pointer with the correct variable name that allows
@@ -933,10 +1027,12 @@ AbstractFilter::Pointer MatchCrystallography::newFilterInstance(bool copyFilterP
   MatchCrystallography::Pointer filter = MatchCrystallography::New();
   if(true == copyFilterParameters)
   {
-    filter->setDataContainerName(getDataContainerName() );
-    filter->setMaxIterations( getMaxIterations() );
+    filter->setOutputDataContainerName(getOutputDataContainerName() );
     filter->setInputStatsArrayPath(getInputStatsArrayPath() );
-
+    filter->setFeatureIdsPath(getFeatureIdsPath() );
+    filter->setFeaturePhasesPath(getFeaturePhasesPath() );
+    filter->setFeatureSurfaceFeaturesPath(getFeatureSurfaceFeaturesPath());
+    filter->setMaxIterations( getMaxIterations() );
   }
   return filter;
 }

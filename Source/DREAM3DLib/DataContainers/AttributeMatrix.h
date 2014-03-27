@@ -154,7 +154,7 @@ class DREAM3DLib_EXPORT AttributeMatrix : public Observable
         if(filter)
         {
           filter->setErrorCondition(err * 1030);
-          ss = QObject::tr("The AttributeMatrix named '%1' containes an array with name '%2' but this DataArray is not compatible with desired dimensions.").arg(getName()).arg(attributeArrayName);
+          ss = QObject::tr("The AttributeMatrix named '%1' contains an array with name '%2' but this DataArray is not compatible with desired dimensions.").arg(getName()).arg(attributeArrayName);
           filter->notifyErrorMessage(filter->getHumanLabel(), ss, filter->getErrorCondition());
         }
         return attributeArray;

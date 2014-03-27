@@ -76,23 +76,20 @@ class MatchCrystallography : public AbstractFilter
 
 
     virtual ~MatchCrystallography();
-    DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
-    Q_PROPERTY(QString DataContainerName READ getDataContainerName WRITE setDataContainerName)
-
-    DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(CellFeatureAttributeMatrixName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(CellEnsembleAttributeMatrixName)
-
-    DREAM3D_INSTANCE_STRING_PROPERTY(NeighborListArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(SharedSurfaceAreaListArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(StatsDataArrayName)
-
-    typedef boost::shared_array<float> SharedFloatArray;
-    typedef boost::shared_array<int> SharedIntArray;
+    DREAM3D_INSTANCE_STRING_PROPERTY(OutputDataContainerName)
+    Q_PROPERTY(QString OutputDataContainerName READ getOutputDataContainerName WRITE setOutputDataContainerName)
 
 
+
+//// Input data from the StatsGenerator Data Container (or something equivalent)
     DREAM3D_FILTER_PARAMETER(DataArrayPath, InputStatsArrayPath)
     Q_PROPERTY(DataArrayPath InputStatsArrayPath READ getInputStatsArrayPath WRITE setInputStatsArrayPath)
+
+    DREAM3D_FILTER_PARAMETER(DataArrayPath, CrystalStructuresArrayPath)
+    Q_PROPERTY(DataArrayPath CrystalStructuresArrayPath READ getCrystalStructuresArrayPath WRITE setCrystalStructuresArrayPath)
+
+    DREAM3D_FILTER_PARAMETER(DataArrayPath, PhaseTypesArrayPath)
+    Q_PROPERTY(DataArrayPath PhaseTypesArrayPath READ getPhaseTypesArrayPath WRITE setPhaseTypesArrayPath)
 
     DREAM3D_FILTER_PARAMETER(DataArrayPath, FeatureIdsPath)
     Q_PROPERTY(DataArrayPath FeatureIdsPath READ getFeatureIdsPath WRITE setFeatureIdsPath)
@@ -103,6 +100,10 @@ class MatchCrystallography : public AbstractFilter
     DREAM3D_FILTER_PARAMETER(DataArrayPath, FeatureSurfaceFeaturesPath)
     Q_PROPERTY(DataArrayPath FeatureSurfaceFeaturesPath READ getFeatureSurfaceFeaturesPath WRITE setFeatureSurfaceFeaturesPath)
 
+    DREAM3D_FILTER_PARAMETER(DataArrayPath, CellEulerAnglesArrayPath)
+    Q_PROPERTY(DataArrayPath CellEulerAnglesArrayPath READ getCellEulerAnglesArrayPath WRITE setCellEulerAnglesArrayPath)
+
+
 //    DREAM3D_FILTER_PARAMETER(DataArrayPath, FeatureVolumesPath)
 //    Q_PROPERTY(DataArrayPath FeatureVolumesPath READ getFeatureVolumesPath WRITE setFeatureVolumesPath)
 
@@ -111,6 +112,8 @@ class MatchCrystallography : public AbstractFilter
 
 //    DREAM3D_FILTER_PARAMETER(DataArrayPath, FeatureAvgQuats)
 //    Q_PROPERTY(DataArrayPath FeatureAvgQuats READ getFeatureAvgQuats WRITE setFeatureAvgQuats)
+
+
 
 
     DREAM3D_FILTER_PARAMETER(int, MaxIterations)
@@ -142,6 +145,18 @@ class MatchCrystallography : public AbstractFilter
      */
     virtual void execute();
     virtual void preflight();
+
+
+    typedef boost::shared_array<float> SharedFloatArray;
+    typedef boost::shared_array<int> SharedIntArray;
+    DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(CellFeatureAttributeMatrixName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(CellEnsembleAttributeMatrixName)
+
+    DREAM3D_INSTANCE_STRING_PROPERTY(NeighborListArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(SharedSurfaceAreaListArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(StatsDataArrayName)
+
 
   signals:
     void updateFilterParameters(AbstractFilter* filter);

@@ -46,10 +46,10 @@
 #include "DREAM3DLib/Math/MatrixMath.h"
 #include "DREAM3DLib/Math/OrientationMath.h"
 
-const static float m_piOver2 = static_cast<float>(M_PI/2.0);
-const static float m_pi = static_cast<float>(M_PI);
-const static float m_pi2 = static_cast<float>(2.0*M_PI);
-const static float m_180Overpi = static_cast<float>(180.0/M_PI);
+//const static float m_piOver2 = static_cast<float>(M_PI/2.0);
+//const static float m_pi = static_cast<float>(M_PI);
+//const static float m_pi2 = static_cast<float>(2.0*M_PI);
+//const static float m_180Overpi = static_cast<float>(180.0/M_PI);
 
 // -----------------------------------------------------------------------------
 //
@@ -337,9 +337,9 @@ void VisualizeGBCDGMT::execute()
   gbcdLimits[2] = 0.0;
   gbcdLimits[3] = -sqrt(DREAM3D::Constants::k_Pi / 2.0);
   gbcdLimits[4] = -sqrt(DREAM3D::Constants::k_Pi / 2.0);
-  gbcdLimits[5] = m_pi/2.0;
+  gbcdLimits[5] = M_PI/2.0;
   gbcdLimits[6] = 1.0;
-  gbcdLimits[7] = m_pi/2.0;
+  gbcdLimits[7] = M_PI/2.0;
   gbcdLimits[8] = sqrt(DREAM3D::Constants::k_Pi / 2.0);
   gbcdLimits[9] = sqrt(DREAM3D::Constants::k_Pi / 2.0);
 
