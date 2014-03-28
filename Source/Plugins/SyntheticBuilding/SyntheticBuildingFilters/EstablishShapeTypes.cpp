@@ -75,33 +75,9 @@ EstablishShapeTypes::~EstablishShapeTypes()
 void EstablishShapeTypes::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Input Phase Types");
-    parameter->setPropertyName("InputPhaseTypesArrayPath");
-    parameter->setWidgetType(FilterParameterWidgetType::DataArraySelectionWidget);
-    parameter->setValueType("DataArrayPath");
-    parameter->setUnits("");
-    parameters.push_back(parameter);
-  }
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Output AttributeMatrix");
-    parameter->setPropertyName("ShapeTypesAttributeMatrix");
-    parameter->setWidgetType(FilterParameterWidgetType::AttributeMatrixSelectionWidget);
-    parameter->setValueType("DataArrayPath");
-    parameter->setUnits("");
-    parameters.push_back(parameter);
-  }
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Output Shape Types Array Name");
-    parameter->setPropertyName("ShapeTypesArrayName");
-    parameter->setWidgetType(FilterParameterWidgetType::StringWidget);
-    parameter->setValueType("QString");
-    parameter->setUnits("");
-    parameters.push_back(parameter);
-  }
+  parameters.push_back(FilterParameter::New("Input Phase Types", "InputPhaseTypesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget,"DataArrayPath", false));
+  parameters.push_back(FilterParameter::New("Output AttributeMatrix", "ShapeTypesAttributeMatrix", FilterParameterWidgetType::AttributeMatrixSelectionWidget,"DataArrayPath", false));
+  parameters.push_back(FilterParameter::New("Output Shape Types Array Name", "ShapeTypesArrayName", FilterParameterWidgetType::StringWidget,"QString", false));
   {
     ShapeTypesFilterParameter::Pointer parameter = ShapeTypesFilterParameter::New();
     parameter->setHumanLabel("Shape Types");

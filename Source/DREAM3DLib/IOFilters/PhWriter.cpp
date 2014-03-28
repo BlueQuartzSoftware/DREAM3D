@@ -73,16 +73,7 @@ PhWriter::~PhWriter()
 void PhWriter::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Output File");
-    parameter->setPropertyName("OutputFile");
-    parameter->setWidgetType(FilterParameterWidgetType::OutputFileWidget);
-    parameter->setFileExtension("*.ph");
-    parameter->setFileType("CMU Feature Growth");
-    parameter->setValueType("QString");
-    parameters.push_back(parameter);
-  }
+  parameters.push_back(FilterParameter::New("Output File", "OutputFile", FilterParameterWidgetType::OutputFileWidget,"QString", false, "", "*.ph", "CMU Feature Growth"));
   setFilterParameters(parameters);
 }
 // -----------------------------------------------------------------------------

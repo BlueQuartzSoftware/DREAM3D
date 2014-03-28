@@ -242,22 +242,7 @@ InsertAtoms::~InsertAtoms()
 void InsertAtoms::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Select Volume DataContainer");
-    parameter->setPropertyName("VolumeDataContainerName");
-    parameter->setWidgetType(FilterParameterWidgetType::DataContainerSelectionWidget);
-    parameter->setValueType("QString");
-    parameters.push_back(parameter);
-  }  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("LatticeConstants");
-    parameter->setPropertyName("LatticeConstants");
-    parameter->setWidgetType(FilterParameterWidgetType::FloatVec3Widget);
-    parameter->setValueType("FloatVec3_t");
-    parameter->setUnits("Angstoms");
-    parameters.push_back(parameter);
-  }
+  parameters.push_back(FilterParameter::New("LatticeConstants", "LatticeConstants", FilterParameterWidgetType::FloatVec3Widget,"FloatVec3_t", false, "Angstoms"));
   {
     ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New();
     parameter->setHumanLabel("Crystal Basis");

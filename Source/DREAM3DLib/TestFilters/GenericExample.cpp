@@ -100,79 +100,22 @@ void GenericExample::setupFilterParameters()
   QVector<FilterParameter::Pointer> parameters;
   /* Place all your option initialization code here */
   /* For String input use this code */
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("STL Output Prefix");
-    parameter->setPropertyName("StlFilePrefix");
-    parameter->setWidgetType(FilterParameterWidgetType::StringWidget);
-    parameter->setValueType("QString");
-    parameters.push_back(parameter);
-  }
+  parameters.push_back(FilterParameter::New("STL Output Prefix", "StlFilePrefix", FilterParameterWidgetType::StringWidget,"QString", false));
   /*  For an Integer use this code*/
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Max Iterations");
-    parameter->setPropertyName("MaxIterations");
-    parameter->setWidgetType(FilterParameterWidgetType::IntWidget);
-    parameter->setValueType("int");
-    parameters.push_back(parameter);
-  }
+  parameters.push_back(FilterParameter::New("Max Iterations", "MaxIterations", FilterParameterWidgetType::IntWidget,"int", false));
   /*  For a Floating point value use this code*/
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Misorientation Tolerance");
-    parameter->setPropertyName("MisorientationTolerance");
-    parameter->setWidgetType(FilterParameterWidgetType::DoubleWidget);
-    parameter->setValueType("float");
-    parameter->setCastableValueType("double");
-    parameters.push_back(parameter);
-  }
+  parameters.push_back(FilterParameter::New("Misorientation Tolerance", "MisorientationTolerance", FilterParameterWidgetType::DoubleWidget,"float", false));
   /*   For an input file use this code*/
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Input File");
-    parameter->setPropertyName("InputFile");
-    parameter->setWidgetType(FilterParameterWidgetType::InputFileWidget);
-    parameter->setValueType("QString");
-    parameters.push_back(parameter);
-  }
+  parameters.push_back(FilterParameter::New("Input File", "InputFile", FilterParameterWidgetType::InputFileWidget,"QString", false));
   /*   For an input path use this code*/
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Input Path");
-    parameter->setPropertyName("InputPath");
-    parameter->setWidgetType(FilterParameterWidgetType::InputPathWidget);
-    parameter->setValueType("QString");
-    parameters.push_back(parameter);
-  }
+  parameters.push_back(FilterParameter::New("Input Path", "InputPath", FilterParameterWidgetType::InputPathWidget,"QString", false));
 
   /*   For an output file use this code*/
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Output File");
-    parameter->setPropertyName("OutputFile");
-    parameter->setWidgetType(FilterParameterWidgetType::OutputFileWidget);
-    parameter->setValueType("QString");
-    parameters.push_back(parameter);
-  }
+  parameters.push_back(FilterParameter::New("Output File", "OutputFile", FilterParameterWidgetType::OutputFileWidget,"QString", false));
   /*   For an output path use this code*/
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Output Path");
-    parameter->setPropertyName("OutputPath");
-    parameter->setWidgetType(FilterParameterWidgetType::OutputPathWidget);
-    parameter->setValueType("QString");
-    parameters.push_back(parameter);
-  }
+  parameters.push_back(FilterParameter::New("Output Path", "OutputPath", FilterParameterWidgetType::OutputPathWidget,"QString", false));
   /*   For a simple true/false boolean use this code*/
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Write Alignment Shift File");
-    parameter->setPropertyName("WriteAlignmentShifts");
-    parameter->setWidgetType(FilterParameterWidgetType::BooleanWidget);
-    parameter->setValueType("bool");
-    parameters.push_back(parameter);
-  }
+  parameters.push_back(FilterParameter::New("Write Alignment Shift File", "WriteAlignmentShifts", FilterParameterWidgetType::BooleanWidget,"bool", false));
   /*   For presenting a set of choices to the user use this code*/
   {
     ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New();
@@ -189,219 +132,53 @@ void GenericExample::setupFilterParameters()
 
 
   /* Display a group of 3 text boxes to collect 3 integer values */
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Dimensions");
-    parameter->setPropertyName("Dimensions");
-    parameter->setWidgetType(FilterParameterWidgetType::IntVec3Widget);
-    parameter->setValueType("IntVec3_t");
-    parameter->setUnits("XYZ");
-    parameters.push_back(parameter);
-  }
+  parameters.push_back(FilterParameter::New("Dimensions", "Dimensions", FilterParameterWidgetType::IntVec3Widget,"IntVec3_t", false, "XYZ"));
   /* Display a group of 3 text boxes to collect 3 float values */
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Origin");
-    parameter->setPropertyName("Origin");
-    parameter->setWidgetType(FilterParameterWidgetType::FloatVec3Widget);
-    parameter->setValueType("FloatVec3_t");
-    parameter->setUnits("XYZ");
-    parameters.push_back(parameter);
-  }
+  parameters.push_back(FilterParameter::New("Origin", "Origin", FilterParameterWidgetType::FloatVec3Widget,"FloatVec3_t", false, "XYZ"));
 
 
   /* To Display a Combobox with a list of current Volume Cell Arrays in it */
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Volume Vertex Array Name");
-    parameter->setPropertyName("SelectedVolumeVertexArrayName");
-    parameter->setWidgetType(FilterParameterWidgetType::DataArraySelectionWidget);
-    parameter->setValueType("QString");
-    parameter->setUnits("");
-    parameters.push_back(parameter);
-  }
+  parameters.push_back(FilterParameter::New("Volume Vertex Array Name", "SelectedVolumeVertexArrayName", FilterParameterWidgetType::DataArraySelectionWidget,"QString", false));
   /* To Display a Combobox with a list of current Volume Feature Arrays in it */
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Volume Edge Array Name");
-    parameter->setPropertyName("SelectedVolumeEdgeArrayName");
-    parameter->setWidgetType(FilterParameterWidgetType::DataArraySelectionWidget);
-    parameter->setValueType("QString");
-    parameter->setUnits("");
-    parameters.push_back(parameter);
-  }
+  parameters.push_back(FilterParameter::New("Volume Edge Array Name", "SelectedVolumeEdgeArrayName", FilterParameterWidgetType::DataArraySelectionWidget,"QString", false));
   /* To Display a Combobox with a list of current Volume Ensemble Arrays in it */
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Volume Face Array Name");
-    parameter->setPropertyName("SelectedVolumeFaceArrayName");
-    parameter->setWidgetType(FilterParameterWidgetType::DataArraySelectionWidget);
-    parameter->setValueType("QString");
-    parameter->setUnits("");
-    parameters.push_back(parameter);
-  }
+  parameters.push_back(FilterParameter::New("Volume Face Array Name", "SelectedVolumeFaceArrayName", FilterParameterWidgetType::DataArraySelectionWidget,"QString", false));
   /* To Display a Combobox with a list of current Volume Cell Arrays in it */
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Volume Cell Array Name");
-    parameter->setPropertyName("SelectedVolumeCellArrayName");
-    parameter->setWidgetType(FilterParameterWidgetType::DataArraySelectionWidget);
-    parameter->setValueType("QString");
-    parameter->setUnits("");
-    parameters.push_back(parameter);
-  }
+  parameters.push_back(FilterParameter::New("Volume Cell Array Name", "SelectedVolumeCellArrayName", FilterParameterWidgetType::DataArraySelectionWidget,"QString", false));
   /* To Display a Combobox with a list of current Volume Feature Arrays in it */
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Volume Feature Array Name");
-    parameter->setPropertyName("SelectedVolumeFeatureArrayName");
-    parameter->setWidgetType(FilterParameterWidgetType::DataArraySelectionWidget);
-    parameter->setValueType("QString");
-    parameter->setUnits("");
-    parameters.push_back(parameter);
-  }
+  parameters.push_back(FilterParameter::New("Volume Feature Array Name", "SelectedVolumeFeatureArrayName", FilterParameterWidgetType::DataArraySelectionWidget,"QString", false));
   /* To Display a Combobox with a list of current Volume Ensemble Arrays in it */
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Volume Ensemble Array Name");
-    parameter->setPropertyName("SelectedVolumeEnsembleArrayName");
-    parameter->setWidgetType(FilterParameterWidgetType::DataArraySelectionWidget);
-    parameter->setValueType("QString");
-    parameter->setUnits("");
-    parameters.push_back(parameter);
-  }
+  parameters.push_back(FilterParameter::New("Volume Ensemble Array Name", "SelectedVolumeEnsembleArrayName", FilterParameterWidgetType::DataArraySelectionWidget,"QString", false));
 
   /* To Display a Combobox with a list of current SurfaceMesh Point Arrays in it */
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Surface Vertex Array Name");
-    parameter->setPropertyName("SelectedSurfaceVertexArrayName");
-    parameter->setWidgetType(FilterParameterWidgetType::DataArraySelectionWidget);
-    parameter->setValueType("QString");
-    parameter->setUnits("");
-    parameters.push_back(parameter);
-  }
+  parameters.push_back(FilterParameter::New("Surface Vertex Array Name", "SelectedSurfaceVertexArrayName", FilterParameterWidgetType::DataArraySelectionWidget,"QString", false));
   /* To Display a Combobox with a list of current Surface Edge Arrays in it */
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Surface Edge Array Name");
-    parameter->setPropertyName("SelectedSurfaceEdgeArrayName");
-    parameter->setWidgetType(FilterParameterWidgetType::DataArraySelectionWidget);
-    parameter->setValueType("QString");
-    parameter->setUnits("");
-    parameters.push_back(parameter);
-  }
+  parameters.push_back(FilterParameter::New("Surface Edge Array Name", "SelectedSurfaceEdgeArrayName", FilterParameterWidgetType::DataArraySelectionWidget,"QString", false));
   /* To Display a Combobox with a list of current Surface Face Arrays in it */
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Surface Face Array Name");
-    parameter->setPropertyName("SelectedSurfaceFaceArrayName");
-    parameter->setWidgetType(FilterParameterWidgetType::DataArraySelectionWidget);
-    parameter->setValueType("QString");
-    parameter->setUnits("");
-    parameters.push_back(parameter);
-  }
+  parameters.push_back(FilterParameter::New("Surface Face Array Name", "SelectedSurfaceFaceArrayName", FilterParameterWidgetType::DataArraySelectionWidget,"QString", false));
   /* To Display a Combobox with a list of current Surface Edge Arrays in it */
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Surface Feature Array Name");
-    parameter->setPropertyName("SelectedSurfaceFeatureArrayName");
-    parameter->setWidgetType(FilterParameterWidgetType::DataArraySelectionWidget);
-    parameter->setValueType("QString");
-    parameter->setUnits("");
-    parameters.push_back(parameter);
-  }
+  parameters.push_back(FilterParameter::New("Surface Feature Array Name", "SelectedSurfaceFeatureArrayName", FilterParameterWidgetType::DataArraySelectionWidget,"QString", false));
   /* To Display a Combobox with a list of current Surface Face Arrays in it */
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Surface Ensemble Array Name");
-    parameter->setPropertyName("SelectedSurfaceEnsembleArrayName");
-    parameter->setWidgetType(FilterParameterWidgetType::DataArraySelectionWidget);
-    parameter->setValueType("QString");
-    parameter->setUnits("");
-    parameters.push_back(parameter);
-  }
+  parameters.push_back(FilterParameter::New("Surface Ensemble Array Name", "SelectedSurfaceEnsembleArrayName", FilterParameterWidgetType::DataArraySelectionWidget,"QString", false));
 
   /* To Display a Combobox with a list of current EdgeMesh Point Arrays in it */
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Edge Vertex Array Name");
-    parameter->setPropertyName("SelectedEdgeVertexArrayName");
-    parameter->setWidgetType(FilterParameterWidgetType::DataArraySelectionWidget);
-    parameter->setValueType("QString");
-    parameter->setUnits("");
-    parameters.push_back(parameter);
-  }
+  parameters.push_back(FilterParameter::New("Edge Vertex Array Name", "SelectedEdgeVertexArrayName", FilterParameterWidgetType::DataArraySelectionWidget,"QString", false));
   /* To Display a Combobox with a list of current Edge Edge Arrays in it */
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Edge Edge Array Name");
-    parameter->setPropertyName("SelectedEdgeEdgeArrayName");
-    parameter->setWidgetType(FilterParameterWidgetType::DataArraySelectionWidget);
-    parameter->setValueType("QString");
-    parameter->setUnits("");
-    parameters.push_back(parameter);
-  }
+  parameters.push_back(FilterParameter::New("Edge Edge Array Name", "SelectedEdgeEdgeArrayName", FilterParameterWidgetType::DataArraySelectionWidget,"QString", false));
   /* To Display a Combobox with a list of current Edge Edge Arrays in it */
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Edge Feature Array Name");
-    parameter->setPropertyName("SelectedEdgeFeatureArrayName");
-    parameter->setWidgetType(FilterParameterWidgetType::DataArraySelectionWidget);
-    parameter->setValueType("QString");
-    parameter->setUnits("");
-    parameters.push_back(parameter);
-  }
+  parameters.push_back(FilterParameter::New("Edge Feature Array Name", "SelectedEdgeFeatureArrayName", FilterParameterWidgetType::DataArraySelectionWidget,"QString", false));
   /* To Display a Combobox with a list of current Edge Face Arrays in it */
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Edge Ensemble Array Name");
-    parameter->setPropertyName("SelectedEdgeEnsembleArrayName");
-    parameter->setWidgetType(FilterParameterWidgetType::DataArraySelectionWidget);
-    parameter->setValueType("QString");
-    parameter->setUnits("");
-    parameters.push_back(parameter);
-  }
+  parameters.push_back(FilterParameter::New("Edge Ensemble Array Name", "SelectedEdgeEnsembleArrayName", FilterParameterWidgetType::DataArraySelectionWidget,"QString", false));
 
   /* To Display a Combobox with a list of current Vertex Point Arrays in it */
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Vertex Vertex Array Name");
-    parameter->setPropertyName("SelectedVertexVertexArrayName");
-    parameter->setWidgetType(FilterParameterWidgetType::DataArraySelectionWidget);
-    parameter->setValueType("QString");
-    parameter->setUnits("");
-    parameters.push_back(parameter);
-  }
+  parameters.push_back(FilterParameter::New("Vertex Vertex Array Name", "SelectedVertexVertexArrayName", FilterParameterWidgetType::DataArraySelectionWidget,"QString", false));
   /* To Display a Combobox with a list of current Vertex Face Arrays in it */
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Vertex Feature Array Name");
-    parameter->setPropertyName("SelectedVertexFeatureArrayName");
-    parameter->setWidgetType(FilterParameterWidgetType::DataArraySelectionWidget);
-    parameter->setValueType("QString");
-    parameter->setUnits("");
-    parameters.push_back(parameter);
-  }
+  parameters.push_back(FilterParameter::New("Vertex Feature Array Name", "SelectedVertexFeatureArrayName", FilterParameterWidgetType::DataArraySelectionWidget,"QString", false));
   /* To Display a Combobox with a list of current Vertex Edge Arrays in it */
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Vertex Ensemble Array Name");
-    parameter->setPropertyName("SelectedVertexEnsembleArrayName");
-    parameter->setWidgetType(FilterParameterWidgetType::DataArraySelectionWidget);
-    parameter->setValueType("QString");
-    parameter->setUnits("");
-    parameters.push_back(parameter);
-  }
+  parameters.push_back(FilterParameter::New("Vertex Ensemble Array Name", "SelectedVertexEnsembleArrayName", FilterParameterWidgetType::DataArraySelectionWidget,"QString", false));
 
   /* Display the AxisAngleWidget to collect Axis-Angle pairs from the user */
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Crystal Rotations");
-    parameter->setPropertyName("CrystalSymmetryRotations");
-    parameter->setWidgetType(FilterParameterWidgetType::AxisAngleWidget);
-    parameters.push_back(parameter);
-  }
+  parameters.push_back(FilterParameter::New("Crystal Rotations", "CrystalSymmetryRotations", FilterParameterWidgetType::AxisAngleWidget,"", false));
 
   setFilterParameters(parameters);
 }

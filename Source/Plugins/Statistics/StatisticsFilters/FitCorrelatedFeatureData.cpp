@@ -77,15 +77,7 @@ FitCorrelatedFeatureData::~FitCorrelatedFeatureData()
 void FitCorrelatedFeatureData::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Feature Array To Fit");
-    parameter->setPropertyName("SelectedFeatureArrayPath");
-    parameter->setWidgetType(FilterParameterWidgetType::DataArraySelectionWidget);
-    parameter->setValueType("DataArrayPath");
-    parameter->setUnits("");
-    parameters.push_back(parameter);
-  }
+  parameters.push_back(FilterParameter::New("Feature Array To Fit", "SelectedFeatureArrayPath", FilterParameterWidgetType::DataArraySelectionWidget,"DataArrayPath", false));
   {
     ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New();
     parameter->setHumanLabel("Distribution Type");
@@ -99,33 +91,9 @@ void FitCorrelatedFeatureData::setupFilterParameters()
     parameter->setChoices(choices);
     parameters.push_back(parameter);
   }
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Array To Correlate With");
-    parameter->setPropertyName("CorrelatedFeatureArrayPath");
-    parameter->setWidgetType(FilterParameterWidgetType::DataArraySelectionWidget);
-    parameter->setValueType("DataArrayPath");
-    parameter->setUnits("");
-    parameters.push_back(parameter);
-  }
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Number Of Bins For Correlated Array");
-    parameter->setPropertyName("NumberOfCorrelatedBins");
-    parameter->setWidgetType(FilterParameterWidgetType::IntWidget);
-    parameter->setValueType("int");
-    parameter->setUnits("");
-    parameters.push_back(parameter);
-  }
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Remove Biased Features");
-    parameter->setPropertyName("RemoveBiasedFeatures");
-    parameter->setWidgetType(FilterParameterWidgetType::BooleanWidget);
-    parameter->setValueType("bool");
-    parameter->setUnits("");
-    parameters.push_back(parameter);
-  }
+  parameters.push_back(FilterParameter::New("Array To Correlate With", "CorrelatedFeatureArrayPath", FilterParameterWidgetType::DataArraySelectionWidget,"DataArrayPath", false));
+  parameters.push_back(FilterParameter::New("Number Of Bins For Correlated Array", "NumberOfCorrelatedBins", FilterParameterWidgetType::IntWidget,"int", false));
+  parameters.push_back(FilterParameter::New("Remove Biased Features", "RemoveBiasedFeatures", FilterParameterWidgetType::BooleanWidget,"bool", false));
   setFilterParameters(parameters);
 }
 

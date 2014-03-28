@@ -198,15 +198,7 @@ void RawBinaryReader::setupFilterParameters()
   FilterParameterVector parameters;
   /* Place all your option initialization code here */
 
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Input File");
-    parameter->setPropertyName("InputFile");
-    parameter->setWidgetType(FilterParameterWidgetType::InputFileWidget);
-    parameter->setValueType("QString");
-    parameter->setFileExtension("*.raw *.bin");
-    parameters.push_back(parameter);
-  }
+  parameters.push_back(FilterParameter::New("Input File", "InputFile", FilterParameterWidgetType::InputFileWidget,"QString", false, "", "*.raw *.bin"));
   {
     ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New();
     parameter->setHumanLabel("Scalar Type");
@@ -227,22 +219,8 @@ void RawBinaryReader::setupFilterParameters()
     parameter->setChoices(choices);
     parameters.push_back(parameter);
   }
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Dimensionality");
-    parameter->setPropertyName("Dimensionality");
-    parameter->setWidgetType(FilterParameterWidgetType::IntWidget);
-    parameter->setValueType("int");
-    parameters.push_back(parameter);
-  }
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Number Of Components");
-    parameter->setPropertyName("NumberOfComponents");
-    parameter->setWidgetType(FilterParameterWidgetType::IntWidget);
-    parameter->setValueType("int");
-    parameters.push_back(parameter);
-  }
+  parameters.push_back(FilterParameter::New("Dimensionality", "Dimensionality", FilterParameterWidgetType::IntWidget,"int", false));
+  parameters.push_back(FilterParameter::New("Number Of Components", "NumberOfComponents", FilterParameterWidgetType::IntWidget,"int", false));
   {
     ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New();
     parameter->setHumanLabel("Endian");
@@ -255,57 +233,12 @@ void RawBinaryReader::setupFilterParameters()
     parameter->setChoices(choices);
     parameters.push_back(parameter);
   }
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Dimensions");
-    parameter->setPropertyName("Dimensions");
-    parameter->setWidgetType(FilterParameterWidgetType::IntVec3Widget);
-    parameter->setValueType("IntVec3_t");
-    parameter->setUnits("XYZ");
-    parameters.push_back(parameter);
-  }
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Origin");
-    parameter->setPropertyName("Origin");
-    parameter->setWidgetType(FilterParameterWidgetType::FloatVec3Widget);
-    parameter->setValueType("FloatVec3_t");
-    parameter->setUnits("XYZ");
-    parameters.push_back(parameter);
-  }
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Resolution");
-    parameter->setPropertyName("Resolution");
-    parameter->setWidgetType(FilterParameterWidgetType::FloatVec3Widget);
-    parameter->setValueType("FloatVec3_t");
-    parameter->setUnits("XYZ");
-    parameters.push_back(parameter);
-  }
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Over Ride Origin & Resolution");
-    parameter->setPropertyName("OverRideOriginResolution");
-    parameter->setWidgetType(FilterParameterWidgetType::BooleanWidget);
-    parameter->setValueType("bool");
-    parameters.push_back(parameter);
-  }
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Skip Header Bytes");
-    parameter->setPropertyName("SkipHeaderBytes");
-    parameter->setWidgetType(FilterParameterWidgetType::IntWidget);
-    parameter->setValueType("int");
-    parameters.push_back(parameter);
-  }
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Output Array Name");
-    parameter->setPropertyName("OutputArrayName");
-    parameter->setWidgetType(FilterParameterWidgetType::StringWidget);
-    parameter->setValueType("QString");
-    parameters.push_back(parameter);
-  }
+  parameters.push_back(FilterParameter::New("Dimensions", "Dimensions", FilterParameterWidgetType::IntVec3Widget,"IntVec3_t", false, "XYZ"));
+  parameters.push_back(FilterParameter::New("Origin", "Origin", FilterParameterWidgetType::FloatVec3Widget,"FloatVec3_t", false, "XYZ"));
+  parameters.push_back(FilterParameter::New("Resolution", "Resolution", FilterParameterWidgetType::FloatVec3Widget,"FloatVec3_t", false, "XYZ"));
+  parameters.push_back(FilterParameter::New("Over Ride Origin & Resolution", "OverRideOriginResolution", FilterParameterWidgetType::BooleanWidget,"bool", false));
+  parameters.push_back(FilterParameter::New("Skip Header Bytes", "SkipHeaderBytes", FilterParameterWidgetType::IntWidget,"int", false));
+  parameters.push_back(FilterParameter::New("Output Array Name", "OutputArrayName", FilterParameterWidgetType::StringWidget,"QString", false));
   setFilterParameters(parameters);
 }
 

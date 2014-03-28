@@ -332,16 +332,7 @@ FindGBCD::~FindGBCD()
 void FindGBCD::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setPropertyName("GBCDRes");
-    parameter->setHumanLabel("GBCD Resolution");
-    parameter->setWidgetType(FilterParameterWidgetType::DoubleWidget);
-    parameter->setValueType("float");
-    parameter->setCastableValueType("double");
-    parameter->setUnits("Degrees");
-    parameters.push_back(parameter);
-  }
+  parameters.push_back(FilterParameter::New("GBCD Resolution", "GBCDRes", FilterParameterWidgetType::DoubleWidget,"float", false, "Degrees"));
   setFilterParameters(parameters);
 }
 

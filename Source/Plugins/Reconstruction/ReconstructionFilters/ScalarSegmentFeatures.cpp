@@ -160,25 +160,8 @@ ScalarSegmentFeatures::~ScalarSegmentFeatures()
 void ScalarSegmentFeatures::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Input Cell Array Name");
-    parameter->setPropertyName("ScalarArrayPath");
-    parameter->setWidgetType(FilterParameterWidgetType::DataArraySelectionWidget);
-    parameter->setValueType("DataArrayPath");
-    parameter->setUnits("");
-    parameters.push_back(parameter);
-  }
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setPropertyName("ScalarTolerance");
-    parameter->setHumanLabel("Scalar Tolerance");
-    parameter->setWidgetType(FilterParameterWidgetType::DoubleWidget);
-    parameter->setValueType("float");
-    parameter->setCastableValueType("double");
-    parameter->setUnits("");
-    parameters.push_back(parameter);
-  }
+  parameters.push_back(FilterParameter::New("Input Cell Array Name", "ScalarArrayPath", FilterParameterWidgetType::DataArraySelectionWidget,"DataArrayPath", false));
+  parameters.push_back(FilterParameter::New("Scalar Tolerance", "ScalarTolerance", FilterParameterWidgetType::DoubleWidget,"float", false));
 
   setFilterParameters(parameters);
 }

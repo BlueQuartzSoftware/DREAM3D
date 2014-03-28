@@ -72,23 +72,8 @@ DataContainerReader::~DataContainerReader()
 void DataContainerReader::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Input File");
-    parameter->setPropertyName("InputFile");
-    parameter->setWidgetType(FilterParameterWidgetType::InputFileWidget);
-    parameter->setFileExtension("*.dream3d");
-    parameter->setValueType("QString");
-    parameters.push_back(parameter);
-  }
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Overwrite Existing DataContainers");
-    parameter->setPropertyName("OverwriteExistingDataContainers");
-    parameter->setWidgetType(FilterParameterWidgetType::BooleanWidget);
-    parameter->setValueType("bool");
-    parameters.push_back(parameter);
-  }
+  parameters.push_back(FilterParameter::New("Input File", "InputFile", FilterParameterWidgetType::InputFileWidget,"QString", false, "", "*.dream3d"));
+  parameters.push_back(FilterParameter::New("Overwrite Existing DataContainers", "OverwriteExistingDataContainers", FilterParameterWidgetType::BooleanWidget,"bool", false));
   {
     DataContainerArrayProxyFilterParameter::Pointer parameter = DataContainerArrayProxyFilterParameter::New();
     parameter->setHumanLabel("Selected Arrays");

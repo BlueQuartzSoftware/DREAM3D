@@ -76,16 +76,7 @@ FindNeighborhoods::~FindNeighborhoods()
 void FindNeighborhoods::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setPropertyName("MultiplesOfAverage");
-    parameter->setHumanLabel("Multiples Of Average Diameter");
-    parameter->setWidgetType(FilterParameterWidgetType::DoubleWidget);
-    parameter->setValueType("float");
-    parameter->setCastableValueType("double");
-    parameter->setUnits("");
-    parameters.push_back(parameter);
-  }
+  parameters.push_back(FilterParameter::New("Multiples Of Average Diameter", "MultiplesOfAverage", FilterParameterWidgetType::DoubleWidget,"float", false));
 
   setFilterParameters(parameters);
 }

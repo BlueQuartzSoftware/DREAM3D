@@ -92,22 +92,8 @@ YSChoiAbaqusReader::~YSChoiAbaqusReader()
 void YSChoiAbaqusReader::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Input File");
-    parameter->setPropertyName("InputFile");
-    parameter->setWidgetType(FilterParameterWidgetType::InputFileWidget);
-    parameter->setValueType("QString");
-    parameters.push_back(parameter);
-  }
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Input Feature Orientation File");
-    parameter->setPropertyName("InputFeatureInfoFile");
-    parameter->setWidgetType(FilterParameterWidgetType::InputFileWidget);
-    parameter->setValueType("QString");
-    parameters.push_back(parameter);
-  }
+  parameters.push_back(FilterParameter::New("Input File", "InputFile", FilterParameterWidgetType::InputFileWidget,"QString", false));
+  parameters.push_back(FilterParameter::New("Input Feature Orientation File", "InputFeatureInfoFile", FilterParameterWidgetType::InputFileWidget,"QString", false));
   setFilterParameters(parameters);
 }
 

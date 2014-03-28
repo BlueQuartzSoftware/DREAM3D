@@ -63,23 +63,8 @@ RenameAttributeMatrix::~RenameAttributeMatrix()
 void RenameAttributeMatrix::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("AttributeMatrix to Rename");
-    parameter->setPropertyName("SelectedAttributeMatrixPath");
-    parameter->setWidgetType(FilterParameterWidgetType::AttributeMatrixSelectionWidget);
-    parameter->setValueType("DataArrayPath");
-    parameter->setUnits("");
-    parameters.push_back(parameter);
-  }
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("New AttributeMatrix Name");
-    parameter->setPropertyName("NewAttributeMatrix");
-    parameter->setWidgetType(FilterParameterWidgetType::StringWidget);
-    parameter->setValueType("QString");
-    parameters.push_back(parameter);
-  }
+  parameters.push_back(FilterParameter::New("AttributeMatrix to Rename", "SelectedAttributeMatrixPath", FilterParameterWidgetType::AttributeMatrixSelectionWidget,"DataArrayPath", false));
+  parameters.push_back(FilterParameter::New("New AttributeMatrix Name", "NewAttributeMatrix", FilterParameterWidgetType::StringWidget,"QString", false));
 
   setFilterParameters(parameters);
 }

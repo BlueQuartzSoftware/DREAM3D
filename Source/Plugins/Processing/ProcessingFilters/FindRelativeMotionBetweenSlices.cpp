@@ -135,15 +135,7 @@ FindRelativeMotionBetweenSlices::~FindRelativeMotionBetweenSlices()
 void FindRelativeMotionBetweenSlices::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Cell Array To Track Motion");
-    parameter->setPropertyName("SelectedArrayPath");
-    parameter->setWidgetType(FilterParameterWidgetType::DataArraySelectionWidget);
-    parameter->setValueType("DataArrayPath");
-    parameter->setUnits("");
-    parameters.push_back(parameter);
-  }
+  parameters.push_back(FilterParameter::New("Cell Array To Track Motion", "SelectedArrayPath", FilterParameterWidgetType::DataArraySelectionWidget,"DataArrayPath", false));
   {
     ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New();
     parameter->setHumanLabel("Plane of Interest");
@@ -157,46 +149,11 @@ void FindRelativeMotionBetweenSlices::setupFilterParameters()
     parameter->setChoices(choices);
     parameters.push_back(parameter);
   }
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Patch Size 1 (Voxels)");
-    parameter->setPropertyName("PSize1");
-    parameter->setWidgetType(FilterParameterWidgetType::IntWidget);
-    parameter->setValueType("int");
-    parameters.push_back(parameter);
-  }
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Patch Size 2 (Voxels)");
-    parameter->setPropertyName("PSize2");
-    parameter->setWidgetType(FilterParameterWidgetType::IntWidget);
-    parameter->setValueType("int");
-    parameters.push_back(parameter);
-  }
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Search Distance 1 (Voxels)");
-    parameter->setPropertyName("SSize1");
-    parameter->setWidgetType(FilterParameterWidgetType::IntWidget);
-    parameter->setValueType("int");
-    parameters.push_back(parameter);
-  }
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Search Distance 2 (Voxels)");
-    parameter->setPropertyName("SSize2");
-    parameter->setWidgetType(FilterParameterWidgetType::IntWidget);
-    parameter->setValueType("int");
-    parameters.push_back(parameter);
-  }
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Slice Step (Voxels)");
-    parameter->setPropertyName("SliceStep");
-    parameter->setWidgetType(FilterParameterWidgetType::IntWidget);
-    parameter->setValueType("int");
-    parameters.push_back(parameter);
-  }
+  parameters.push_back(FilterParameter::New("Patch Size 1 (Voxels)", "PSize1", FilterParameterWidgetType::IntWidget,"int", false));
+  parameters.push_back(FilterParameter::New("Patch Size 2 (Voxels)", "PSize2", FilterParameterWidgetType::IntWidget,"int", false));
+  parameters.push_back(FilterParameter::New("Search Distance 1 (Voxels)", "SSize1", FilterParameterWidgetType::IntWidget,"int", false));
+  parameters.push_back(FilterParameter::New("Search Distance 2 (Voxels)", "SSize2", FilterParameterWidgetType::IntWidget,"int", false));
+  parameters.push_back(FilterParameter::New("Slice Step (Voxels)", "SliceStep", FilterParameterWidgetType::IntWidget,"int", false));
   setFilterParameters(parameters);
 }
 

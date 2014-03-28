@@ -74,57 +74,12 @@ QuiltCellData::~QuiltCellData()
 void QuiltCellData::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Cell Array To Quilt");
-    parameter->setPropertyName("SelectedCellArrayPath");
-    parameter->setWidgetType(FilterParameterWidgetType::DataArraySelectionWidget);
-    parameter->setValueType("DataArrayPath");
-    parameter->setUnits("");
-    parameters.push_back(parameter);
-  }
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Quilt Step");
-    parameter->setPropertyName("QuiltStep");
-    parameter->setWidgetType(FilterParameterWidgetType::IntVec3Widget);
-    parameter->setValueType("IntVec3_t");
-    parameter->setUnits("Voxels");
-    parameters.push_back(parameter);
-  }
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Patch Size");
-    parameter->setPropertyName("PatchSize");
-    parameter->setWidgetType(FilterParameterWidgetType::IntVec3Widget);
-    parameter->setValueType("IntVec3_t");
-    parameter->setUnits("Voxels");
-    parameters.push_back(parameter);
-  }
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Output DataContainer Name");
-    parameter->setPropertyName("OutputDataContainerName");
-    parameter->setWidgetType(FilterParameterWidgetType::StringWidget);
-    parameter->setValueType("QString");
-    parameters.push_back(parameter);
-  }
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Output AttributeMatrix Name");
-    parameter->setPropertyName("OutputAttributeMatrixName");
-    parameter->setWidgetType(FilterParameterWidgetType::StringWidget);
-    parameter->setValueType("QString");
-    parameters.push_back(parameter);
-  }
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Output Data Array Name");
-    parameter->setPropertyName("OutputArrayName");
-    parameter->setWidgetType(FilterParameterWidgetType::StringWidget);
-    parameter->setValueType("QString");
-    parameters.push_back(parameter);
-  }
+  parameters.push_back(FilterParameter::New("Cell Array To Quilt", "SelectedCellArrayPath", FilterParameterWidgetType::DataArraySelectionWidget,"DataArrayPath", false));
+  parameters.push_back(FilterParameter::New("Quilt Step", "QuiltStep", FilterParameterWidgetType::IntVec3Widget,"IntVec3_t", false, "Voxels"));
+  parameters.push_back(FilterParameter::New("Patch Size", "PatchSize", FilterParameterWidgetType::IntVec3Widget,"IntVec3_t", false, "Voxels"));
+  parameters.push_back(FilterParameter::New("Output DataContainer Name", "OutputDataContainerName", FilterParameterWidgetType::StringWidget,"QString", false));
+  parameters.push_back(FilterParameter::New("Output AttributeMatrix Name", "OutputAttributeMatrixName", FilterParameterWidgetType::StringWidget,"QString", false));
+  parameters.push_back(FilterParameter::New("Output Data Array Name", "OutputArrayName", FilterParameterWidgetType::StringWidget,"QString", false));
 
   setFilterParameters(parameters);
 }

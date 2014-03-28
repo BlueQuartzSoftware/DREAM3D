@@ -196,15 +196,7 @@ void ConvertData::setupFilterParameters()
   /* Place all your option initialization code here */
 
   /* To Display a Combobox with a list of current Voxel Cell Arrays in it */
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Attribute Array Name");
-    parameter->setPropertyName("SelectedCellArrayName");
-    parameter->setWidgetType(FilterParameterWidgetType::DataArraySelectionWidget);
-    parameter->setValueType("QString");
-    parameter->setUnits("");
-    parameters.push_back(parameter);
-  }
+  parameters.push_back(FilterParameter::New("Attribute Array Name", "SelectedCellArrayName", FilterParameterWidgetType::DataArraySelectionWidget,"QString", false));
   {
     ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New();
     parameter->setHumanLabel("Scalar Type");
@@ -225,14 +217,7 @@ void ConvertData::setupFilterParameters()
     parameter->setChoices(choices);
     parameters.push_back(parameter);
   }
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Output Array Name");
-    parameter->setPropertyName("OutputArrayName");
-    parameter->setWidgetType(FilterParameterWidgetType::StringWidget);
-    parameter->setValueType("QString");
-    parameters.push_back(parameter);
-  }
+  parameters.push_back(FilterParameter::New("Output Array Name", "OutputArrayName", FilterParameterWidgetType::StringWidget,"QString", false));
   setFilterParameters(parameters);
 }
 

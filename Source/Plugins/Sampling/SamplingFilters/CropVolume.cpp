@@ -80,84 +80,15 @@ CropVolume::~CropVolume()
 void CropVolume::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("X Min (Voxels)");
-    parameter->setPropertyName("XMin");
-    parameter->setWidgetType(FilterParameterWidgetType::IntWidget);
-    parameter->setValueType("int");
-    parameter->setUnits("Column");
-    parameters.push_back(parameter);
-  }
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Y Min (Voxels)");
-    parameter->setPropertyName("YMin");
-    parameter->setWidgetType(FilterParameterWidgetType::IntWidget);
-    parameter->setValueType("int");
-    parameter->setUnits("Row");
-    parameters.push_back(parameter);
-  }
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Z Min (Voxels)");
-    parameter->setPropertyName("ZMin");
-    parameter->setWidgetType(FilterParameterWidgetType::IntWidget);
-    parameter->setValueType("int");
-    parameter->setUnits("Plane");
-    parameters.push_back(parameter);
-  }
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("X Max (Voxels)");
-    parameter->setPropertyName("XMax");
-    parameter->setWidgetType(FilterParameterWidgetType::IntWidget);
-    parameter->setValueType("int");
-    parameter->setUnits("Column");
-    parameters.push_back(parameter);
-  }
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Y Max (Voxels)");
-    parameter->setPropertyName("YMax");
-    parameter->setWidgetType(FilterParameterWidgetType::IntWidget);
-    parameter->setValueType("int");
-    parameter->setUnits("Row");
-    parameters.push_back(parameter);
-  }
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Z Max (Voxels)");
-    parameter->setPropertyName("ZMax");
-    parameter->setWidgetType(FilterParameterWidgetType::IntWidget);
-    parameter->setValueType("int");
-    parameter->setUnits("Plane");
-    parameters.push_back(parameter);
-  }
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Renumber Features");
-    parameter->setPropertyName("RenumberFeatures");
-    parameter->setWidgetType(FilterParameterWidgetType::BooleanWidget);
-    parameter->setValueType("bool");
-    parameters.push_back(parameter);
-  }
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Save As New Data Container");
-    parameter->setPropertyName("SaveAsNewDataContainer");
-    parameter->setWidgetType(FilterParameterWidgetType::BooleanWidget);
-    parameter->setValueType("bool");
-    parameters.push_back(parameter);
-  }
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Update Origin");
-    parameter->setPropertyName("UpdateOrigin");
-    parameter->setWidgetType(FilterParameterWidgetType::BooleanWidget);
-    parameter->setValueType("bool");
-    parameters.push_back(parameter);
-  }
+  parameters.push_back(FilterParameter::New("X Min (Voxels)", "XMin", FilterParameterWidgetType::IntWidget,"int", false, "Column"));
+  parameters.push_back(FilterParameter::New("Y Min (Voxels)", "YMin", FilterParameterWidgetType::IntWidget,"int", false, "Row"));
+  parameters.push_back(FilterParameter::New("Z Min (Voxels)", "ZMin", FilterParameterWidgetType::IntWidget,"int", false, "Plane"));
+  parameters.push_back(FilterParameter::New("X Max (Voxels)", "XMax", FilterParameterWidgetType::IntWidget,"int", false, "Column"));
+  parameters.push_back(FilterParameter::New("Y Max (Voxels)", "YMax", FilterParameterWidgetType::IntWidget,"int", false, "Row"));
+  parameters.push_back(FilterParameter::New("Z Max (Voxels)", "ZMax", FilterParameterWidgetType::IntWidget,"int", false, "Plane"));
+  parameters.push_back(FilterParameter::New("Renumber Features", "RenumberFeatures", FilterParameterWidgetType::BooleanWidget,"bool", false));
+  parameters.push_back(FilterParameter::New("Save As New Data Container", "SaveAsNewDataContainer", FilterParameterWidgetType::BooleanWidget,"bool", false));
+  parameters.push_back(FilterParameter::New("Update Origin", "UpdateOrigin", FilterParameterWidgetType::BooleanWidget,"bool", false));
   setFilterParameters(parameters);
 }
 // -----------------------------------------------------------------------------

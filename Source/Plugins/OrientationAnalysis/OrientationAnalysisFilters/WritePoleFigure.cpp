@@ -125,15 +125,7 @@ void WritePoleFigure::setupFilterParameters()
   FilterParameterVector parameters;
   /* Place all your option initialization code here */
   /* To Display a Combobox with a list of current Voxel Cell Arrays in it */
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Eulers Array");
-    parameter->setPropertyName("CellEulerAnglesArrayName");
-    parameter->setWidgetType(FilterParameterWidgetType::DataArraySelectionWidget);
-    parameter->setValueType("QString");
-    parameter->setUnits("");
-    parameters.push_back(parameter);
-  }
+  parameters.push_back(FilterParameter::New("Eulers Array", "CellEulerAnglesArrayName", FilterParameterWidgetType::DataArraySelectionWidget,"QString", false));
   {
     ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New();
     parameter->setHumanLabel("Image Format");
@@ -149,48 +141,12 @@ void WritePoleFigure::setupFilterParameters()
     parameters.push_back(parameter);
   }
   /* For String input use this code */
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel(" Image Prefix");
-    parameter->setPropertyName("ImagePrefix");
-    parameter->setWidgetType(FilterParameterWidgetType::StringWidget);
-    parameter->setValueType("QString");
-    parameters.push_back(parameter);
-  }
+  parameters.push_back(FilterParameter::New(" Image Prefix", "ImagePrefix", FilterParameterWidgetType::StringWidget,"QString", false));
   /*   For an output path use this code*/
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Output Path");
-    parameter->setPropertyName("OutputPath");
-    parameter->setWidgetType(FilterParameterWidgetType::OutputPathWidget);
-    parameter->setValueType("QString");
-    parameters.push_back(parameter);
-  }
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setPropertyName("ImageSize");
-    parameter->setHumanLabel("Image Size (Square)");
-    parameter->setWidgetType(FilterParameterWidgetType::IntWidget);
-    parameter->setValueType("int");
-    parameter->setUnits("Pixels");
-    parameters.push_back(parameter);
-  }
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setPropertyName("LambertSize");
-    parameter->setHumanLabel("Lambert Image Size");
-    parameter->setWidgetType(FilterParameterWidgetType::IntWidget);
-    parameter->setValueType("int");
-    parameters.push_back(parameter);
-  }
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setPropertyName("NumColors");
-    parameter->setHumanLabel("Number of Colors");
-    parameter->setWidgetType(FilterParameterWidgetType::IntWidget);
-    parameter->setValueType("int");
-    parameters.push_back(parameter);
-  }
+  parameters.push_back(FilterParameter::New("Output Path", "OutputPath", FilterParameterWidgetType::OutputPathWidget,"QString", false));
+  parameters.push_back(FilterParameter::New("Image Size (Square)", "ImageSize", FilterParameterWidgetType::IntWidget,"int", false, "Pixels"));
+  parameters.push_back(FilterParameter::New("Lambert Image Size", "LambertSize", FilterParameterWidgetType::IntWidget,"int", false));
+  parameters.push_back(FilterParameter::New("Number of Colors", "NumColors", FilterParameterWidgetType::IntWidget,"int", false));
 
   setFilterParameters(parameters);
 }

@@ -72,15 +72,7 @@ FindAvgScalarValueForFeatures::~FindAvgScalarValueForFeatures()
 void FindAvgScalarValueForFeatures::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Cell Array To Average");
-    parameter->setPropertyName("SelectedCellArrayPath");
-    parameter->setWidgetType(FilterParameterWidgetType::DataArraySelectionWidget);
-    parameter->setValueType("DataArrayPath");
-    parameter->setUnits("");
-    parameters.push_back(parameter);
-  }
+  parameters.push_back(FilterParameter::New("Cell Array To Average", "SelectedCellArrayPath", FilterParameterWidgetType::DataArraySelectionWidget,"DataArrayPath", false));
   setFilterParameters(parameters);
 }
 

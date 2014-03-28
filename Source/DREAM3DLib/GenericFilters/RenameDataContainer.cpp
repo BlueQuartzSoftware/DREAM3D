@@ -62,31 +62,9 @@ RenameDataContainer::~RenameDataContainer()
 void RenameDataContainer::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("DataContainer to Rename");
-    parameter->setPropertyName("SelectedDataContainerName");
-    parameter->setWidgetType(FilterParameterWidgetType::DataContainerSelectionWidget);
-    parameter->setValueType("QString");
-    parameter->setUnits("");
-    parameters.push_back(parameter);
-  }
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("New DataContainer Name");
-    parameter->setPropertyName("NewDataContainerName");
-    parameter->setWidgetType(FilterParameterWidgetType::StringWidget);
-    parameter->setValueType("QString");
-    parameters.push_back(parameter);
-  }
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Replace Existing DataContainer");
-    parameter->setPropertyName("ReplaceExistingDataContainer");
-    parameter->setWidgetType(FilterParameterWidgetType::BooleanWidget);
-    parameter->setValueType("bool");
-    parameters.push_back(parameter);
-  }
+  parameters.push_back(FilterParameter::New("DataContainer to Rename", "SelectedDataContainerName", FilterParameterWidgetType::DataContainerSelectionWidget,"QString", false));
+  parameters.push_back(FilterParameter::New("New DataContainer Name", "NewDataContainerName", FilterParameterWidgetType::StringWidget,"QString", false));
+  parameters.push_back(FilterParameter::New("Replace Existing DataContainer", "ReplaceExistingDataContainer", FilterParameterWidgetType::BooleanWidget,"bool", false));
   setFilterParameters(parameters);
 }
 

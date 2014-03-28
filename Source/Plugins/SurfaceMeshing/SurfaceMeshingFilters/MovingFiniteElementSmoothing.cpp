@@ -156,46 +156,11 @@ MovingFiniteElementSmoothing::~MovingFiniteElementSmoothing()
 void MovingFiniteElementSmoothing::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Iteration Steps");
-    parameter->setPropertyName("IterationSteps");
-    parameter->setWidgetType(FilterParameterWidgetType::IntWidget);
-    parameter->setValueType("int");
-    parameters.push_back(parameter);
-  }
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Apply Node Contraints");
-    parameter->setPropertyName("NodeConstraints");
-    parameter->setWidgetType(FilterParameterWidgetType::BooleanWidget);
-    parameter->setValueType("bool");
-    parameters.push_back(parameter);
-  }
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Constrain Surface Nodes");
-    parameter->setPropertyName("ConstrainSurfaceNodes");
-    parameter->setWidgetType(FilterParameterWidgetType::BooleanWidget);
-    parameter->setValueType("bool");
-    parameters.push_back(parameter);
-  }
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Constrain Quad Points");
-    parameter->setPropertyName("ConstrainQuadPoints");
-    parameter->setWidgetType(FilterParameterWidgetType::BooleanWidget);
-    parameter->setValueType("bool");
-    parameters.push_back(parameter);
-  }
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Smooth Triple Lines");
-    parameter->setPropertyName("SmoothTripleLines");
-    parameter->setWidgetType(FilterParameterWidgetType::BooleanWidget);
-    parameter->setValueType("bool");
-    parameters.push_back(parameter);
-  }
+  parameters.push_back(FilterParameter::New("Iteration Steps", "IterationSteps", FilterParameterWidgetType::IntWidget,"int", false));
+  parameters.push_back(FilterParameter::New("Apply Node Contraints", "NodeConstraints", FilterParameterWidgetType::BooleanWidget,"bool", false));
+  parameters.push_back(FilterParameter::New("Constrain Surface Nodes", "ConstrainSurfaceNodes", FilterParameterWidgetType::BooleanWidget,"bool", false));
+  parameters.push_back(FilterParameter::New("Constrain Quad Points", "ConstrainQuadPoints", FilterParameterWidgetType::BooleanWidget,"bool", false));
+  parameters.push_back(FilterParameter::New("Smooth Triple Lines", "SmoothTripleLines", FilterParameterWidgetType::BooleanWidget,"bool", false));
   setFilterParameters(parameters);
 }
 

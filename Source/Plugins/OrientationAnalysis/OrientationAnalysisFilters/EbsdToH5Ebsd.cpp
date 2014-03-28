@@ -105,15 +105,7 @@ EbsdToH5Ebsd::~EbsdToH5Ebsd()
 void EbsdToH5Ebsd::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Import Orientation Data");
-    parameter->setPropertyName("OrientationData");
-    parameter->setWidgetType(FilterParameterWidgetType::EbsdToH5EbsdWidget);
-    parameter->setFileExtension("*.h5ebsd");
-    parameter->setValueType("OrientationImporter");
-    parameters.push_back(parameter);
-  }
+  parameters.push_back(FilterParameter::New("Import Orientation Data", "OrientationData", FilterParameterWidgetType::EbsdToH5EbsdWidget,"OrientationImporter", false, "", "*.h5ebsd"));
 
   setFilterParameters(parameters);
 }

@@ -90,24 +90,8 @@ GenerateMisorientationColors::~GenerateMisorientationColors()
 void GenerateMisorientationColors::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-
-    parameter->setHumanLabel("Reference Orientation Axis");
-    parameter->setPropertyName("ReferenceAxis");
-    parameter->setWidgetType(FilterParameterWidgetType::FloatVec3Widget);
-    parameter->setValueType("FloatVec3_t");
-    parameters.push_back(parameter);
-  }
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Reference Orientation Angle");
-    parameter->setPropertyName("ReferenceAngle");
-    parameter->setWidgetType(FilterParameterWidgetType::DoubleWidget);
-    parameter->setValueType("float");
-    parameter->setCastableValueType("double");
-    parameters.push_back(parameter);
-  }
+  parameters.push_back(FilterParameter::New("Reference Orientation Axis", "ReferenceAxis", FilterParameterWidgetType::FloatVec3Widget,"FloatVec3_t", false));
+  parameters.push_back(FilterParameter::New("Reference Orientation Angle", "ReferenceAngle", FilterParameterWidgetType::DoubleWidget,"float", false));
   setFilterParameters(parameters);
 }
 

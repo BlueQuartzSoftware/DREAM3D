@@ -121,15 +121,7 @@ ReadH5Ebsd::~ReadH5Ebsd()
 void ReadH5Ebsd::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Read H5Ebsd File");
-    parameter->setPropertyName("SelectedArrayNames");
-    parameter->setWidgetType(FilterParameterWidgetType::ReadH5EbsdWidget);
-    parameter->setFileExtension("*.h5ebsd");
-    parameter->setValueType("ReadH5Ebsd");
-    parameters.push_back(parameter);
-  }
+  parameters.push_back(FilterParameter::New("Read H5Ebsd File", "SelectedArrayNames", FilterParameterWidgetType::ReadH5EbsdWidget,"ReadH5Ebsd", false, "", "*.h5ebsd"));
 
 #if 0
   FilterParameterVector parameters;

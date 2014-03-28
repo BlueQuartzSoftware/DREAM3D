@@ -103,16 +103,7 @@ CAxisSegmentFeatures::~CAxisSegmentFeatures()
 void CAxisSegmentFeatures::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setPropertyName("MisorientationTolerance");
-    parameter->setHumanLabel("C-Axis Misorientation Tolerance");
-    parameter->setWidgetType(FilterParameterWidgetType::DoubleWidget);
-    parameter->setValueType("float");
-    parameter->setCastableValueType("double");
-    parameter->setUnits("Degrees");
-    parameters.push_back(parameter);
-  }
+  parameters.push_back(FilterParameter::New("C-Axis Misorientation Tolerance", "MisorientationTolerance", FilterParameterWidgetType::DoubleWidget,"float", false, "Degrees"));
 #if 0
   {
     FilterParameter::Pointer parameter = FilterParameter::New();

@@ -81,14 +81,7 @@ JumbleOrientations::~JumbleOrientations()
 void JumbleOrientations::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Select Synthetic Volume DataContainer");
-    parameter->setPropertyName("DataContainerName");
-    parameter->setWidgetType(FilterParameterWidgetType::DataContainerSelectionWidget);
-    parameter->setValueType("QString");
-    parameters.push_back(parameter);
-  }
+  parameters.push_back(FilterParameter::New("Select Synthetic Volume DataContainer", "DataContainerName", FilterParameterWidgetType::DataContainerSelectionWidget,"QString", false));
   setFilterParameters(parameters);
 }
 // -----------------------------------------------------------------------------

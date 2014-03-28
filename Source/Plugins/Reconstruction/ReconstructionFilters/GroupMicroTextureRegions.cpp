@@ -107,34 +107,9 @@ GroupMicroTextureRegions::~GroupMicroTextureRegions()
 void GroupMicroTextureRegions::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("C-Axis Alignment Tolerance");
-    parameter->setPropertyName("CAxisTolerance");
-    parameter->setWidgetType(FilterParameterWidgetType::DoubleWidget);
-    parameter->setValueType("float");
-    parameter->setCastableValueType("double");
-    parameter->setUnits("Degrees");
-    parameters.push_back(parameter);
-  }
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Use Non-Contiguous Neighbors");
-    parameter->setPropertyName("UseNonContiguousNeighbors");
-    parameter->setWidgetType(FilterParameterWidgetType::BooleanWidget);
-    parameter->setValueType("bool");
-    parameter->setUnits("");
-    parameters.push_back(parameter);
-  }
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Group C-Axes With Running Average");
-    parameter->setPropertyName("UseRunningAverage");
-    parameter->setWidgetType(FilterParameterWidgetType::BooleanWidget);
-    parameter->setValueType("bool");
-    parameter->setUnits("");
-    parameters.push_back(parameter);
-  }
+  parameters.push_back(FilterParameter::New("C-Axis Alignment Tolerance", "CAxisTolerance", FilterParameterWidgetType::DoubleWidget,"float", false, "Degrees"));
+  parameters.push_back(FilterParameter::New("Use Non-Contiguous Neighbors", "UseNonContiguousNeighbors", FilterParameterWidgetType::BooleanWidget,"bool", false));
+  parameters.push_back(FilterParameter::New("Group C-Axes With Running Average", "UseRunningAverage", FilterParameterWidgetType::BooleanWidget,"bool", false));
 
   setFilterParameters(parameters);
 }

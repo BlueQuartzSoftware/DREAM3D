@@ -72,30 +72,9 @@ void GenerateSurfaceMeshConnectivity::setupFilterParameters()
   /* Place all your option initialization code here */
 
   /*   For a simple true/false boolean use this code*/
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Generate Per Vertex Triangle List");
-    parameter->setPropertyName("GenerateVertexTriangleLists");
-    parameter->setWidgetType(FilterParameterWidgetType::BooleanWidget);
-    parameter->setValueType("bool");
-    parameters.push_back(parameter);
-  }
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Generate Triangle Neighbors List");
-    parameter->setPropertyName("GenerateTriangleNeighbors");
-    parameter->setWidgetType(FilterParameterWidgetType::BooleanWidget);
-    parameter->setValueType("bool");
-    parameters.push_back(parameter);
-  }
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Generate Edge Id List");
-    parameter->setPropertyName("GenerateEdgeIdList");
-    parameter->setWidgetType(FilterParameterWidgetType::BooleanWidget);
-    parameter->setValueType("bool");
-    parameters.push_back(parameter);
-  }
+  parameters.push_back(FilterParameter::New("Generate Per Vertex Triangle List", "GenerateVertexTriangleLists", FilterParameterWidgetType::BooleanWidget,"bool", false));
+  parameters.push_back(FilterParameter::New("Generate Triangle Neighbors List", "GenerateTriangleNeighbors", FilterParameterWidgetType::BooleanWidget,"bool", false));
+  parameters.push_back(FilterParameter::New("Generate Edge Id List", "GenerateEdgeIdList", FilterParameterWidgetType::BooleanWidget,"bool", false));
 
   setFilterParameters(parameters);
 }

@@ -78,24 +78,8 @@ FindNeighbors::~FindNeighbors()
 void FindNeighbors::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Create Cell Data in AttributeMatrix");
-    parameter->setPropertyName("CellAttributeMatrixPath");
-    parameter->setWidgetType(FilterParameterWidgetType::AttributeMatrixSelectionWidget);
-    parameter->setValueType("DataArrayPath");
-    parameter->setUnits("");
-    parameters.push_back(parameter);
-  }
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Create Feature Data in AttributeMatrix");
-    parameter->setPropertyName("CellFeatureAttributeMatrixPath");
-    parameter->setWidgetType(FilterParameterWidgetType::AttributeMatrixSelectionWidget);
-    parameter->setValueType("DataArrayPath");
-    parameter->setUnits("");
-    parameters.push_back(parameter);
-  }
+  parameters.push_back(FilterParameter::New("Create Cell Data in AttributeMatrix", "CellAttributeMatrixPath", FilterParameterWidgetType::AttributeMatrixSelectionWidget,"DataArrayPath", false));
+  parameters.push_back(FilterParameter::New("Create Feature Data in AttributeMatrix", "CellFeatureAttributeMatrixPath", FilterParameterWidgetType::AttributeMatrixSelectionWidget,"DataArrayPath", false));
 
   //    {
   //    FilterParameter::Pointer parameter = FilterParameter::New();

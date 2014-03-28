@@ -77,15 +77,7 @@ FindFeatureHistogram::~FindFeatureHistogram()
 void FindFeatureHistogram::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Feature Array To Bin");
-    parameter->setPropertyName("SelectedFeatureArrayName");
-    parameter->setWidgetType(FilterParameterWidgetType::DataArraySelectionWidget);
-    parameter->setValueType("QString");
-    parameter->setUnits("");
-    parameters.push_back(parameter);
-  }
+  parameters.push_back(FilterParameter::New("Feature Array To Bin", "SelectedFeatureArrayName", FilterParameterWidgetType::DataArraySelectionWidget,"QString", false));
   {
     ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New();
     parameter->setHumanLabel("Number of Bins");
@@ -94,15 +86,7 @@ void FindFeatureHistogram::setupFilterParameters()
     parameter->setValueType("int");
     parameters.push_back(parameter);
   }
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Remove Biased Features");
-    parameter->setPropertyName("RemoveBiasedFeatures");
-    parameter->setWidgetType(FilterParameterWidgetType::BooleanWidget);
-    parameter->setValueType("bool");
-    parameter->setUnits("");
-    parameters.push_back(parameter);
-  }
+  parameters.push_back(FilterParameter::New("Remove Biased Features", "RemoveBiasedFeatures", FilterParameterWidgetType::BooleanWidget,"bool", false));
   setFilterParameters(parameters);
 }
 

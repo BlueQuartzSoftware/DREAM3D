@@ -301,67 +301,13 @@ PackPrimaryPhases::~PackPrimaryPhases()
 void PackPrimaryPhases::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Input Statistics");
-    parameter->setPropertyName("InputStatsArrayPath");
-    parameter->setWidgetType(FilterParameterWidgetType::DataArraySelectionWidget);
-    parameter->setValueType("DataArrayPath");
-    parameter->setUnits("");
-    parameters.push_back(parameter);
-  }
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Input Phase Types");
-    parameter->setPropertyName("InputPhaseTypesArrayPath");
-    parameter->setWidgetType(FilterParameterWidgetType::DataArraySelectionWidget);
-    parameter->setValueType("DataArrayPath");
-    parameter->setUnits("");
-    parameters.push_back(parameter);
-  }
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Input Shape Types");
-    parameter->setPropertyName("InputShapeTypesArrayPath");
-    parameter->setWidgetType(FilterParameterWidgetType::DataArraySelectionWidget);
-    parameter->setValueType("DataArrayPath");
-    parameter->setUnits("");
-    parameters.push_back(parameter);
-  }
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Output Synthetic Volume DataContainer");
-    parameter->setPropertyName("OutputDataContainerName");
-    parameter->setWidgetType(FilterParameterWidgetType::DataContainerSelectionWidget);
-    parameter->setValueType("QString");
-    parameters.push_back(parameter);
-  }
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Periodic Boundary");
-    parameter->setPropertyName("PeriodicBoundaries");
-    parameter->setWidgetType(FilterParameterWidgetType::BooleanWidget);
-    parameter->setValueType("bool");
-    parameters.push_back(parameter);
-  }
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Write Goal Attributes");
-    parameter->setPropertyName("WriteGoalAttributes");
-    parameter->setWidgetType(FilterParameterWidgetType::BooleanWidget);
-    parameter->setValueType("bool");
-    parameters.push_back(parameter);
-  }
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Goal Attribute CSV File");
-    parameter->setPropertyName("CsvOutputFile");
-    parameter->setWidgetType(FilterParameterWidgetType::OutputFileWidget);
-    parameter->setFileExtension("*.csv");
-    parameter->setFileType("Comma Separated Data");
-    parameter->setValueType("QString");
-    parameters.push_back(parameter);
-  }
+  parameters.push_back(FilterParameter::New("Input Statistics", "InputStatsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget,"DataArrayPath", false));
+  parameters.push_back(FilterParameter::New("Input Phase Types", "InputPhaseTypesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget,"DataArrayPath", false));
+  parameters.push_back(FilterParameter::New("Input Shape Types", "InputShapeTypesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget,"DataArrayPath", false));
+  parameters.push_back(FilterParameter::New("Output Synthetic Volume DataContainer", "OutputDataContainerName", FilterParameterWidgetType::DataContainerSelectionWidget,"QString", false));
+  parameters.push_back(FilterParameter::New("Periodic Boundary", "PeriodicBoundaries", FilterParameterWidgetType::BooleanWidget,"bool", false));
+  parameters.push_back(FilterParameter::New("Write Goal Attributes", "WriteGoalAttributes", FilterParameterWidgetType::BooleanWidget,"bool", false));
+  parameters.push_back(FilterParameter::New("Goal Attribute CSV File", "CsvOutputFile", FilterParameterWidgetType::OutputFileWidget,"QString", false, "", "*.csv", "Comma Separated Data"));
 
   setFilterParameters(parameters);
 }

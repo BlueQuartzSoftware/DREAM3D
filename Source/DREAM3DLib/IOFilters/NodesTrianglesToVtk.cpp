@@ -72,46 +72,11 @@ NodesTrianglesToVtk::~NodesTrianglesToVtk()
 void NodesTrianglesToVtk::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Nodes File");
-    parameter->setPropertyName("NodesFile");
-    parameter->setWidgetType(FilterParameterWidgetType::InputFileWidget);
-    parameter->setValueType("QString");
-    parameters.push_back(parameter);
-  }
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Triangles File");
-    parameter->setPropertyName("TrianglesFile");
-    parameter->setWidgetType(FilterParameterWidgetType::InputFileWidget);
-    parameter->setValueType("QString");
-    parameters.push_back(parameter);
-  }
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Output Vtk File");
-    parameter->setPropertyName("OutputVtkFile");
-    parameter->setWidgetType(FilterParameterWidgetType::OutputFileWidget);
-    parameter->setValueType("QString");
-    parameters.push_back(parameter);
-  }
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Write Binary Vtk File");
-    parameter->setPropertyName("WriteBinaryFile");
-    parameter->setWidgetType(FilterParameterWidgetType::BooleanWidget);
-    parameter->setValueType("bool");
-    parameters.push_back(parameter);
-  }
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Write Conformal Mesh");
-    parameter->setPropertyName("WriteConformalMesh");
-    parameter->setWidgetType(FilterParameterWidgetType::BooleanWidget);
-    parameter->setValueType("bool");
-    parameters.push_back(parameter);
-  }
+  parameters.push_back(FilterParameter::New("Nodes File", "NodesFile", FilterParameterWidgetType::InputFileWidget,"QString", false));
+  parameters.push_back(FilterParameter::New("Triangles File", "TrianglesFile", FilterParameterWidgetType::InputFileWidget,"QString", false));
+  parameters.push_back(FilterParameter::New("Output Vtk File", "OutputVtkFile", FilterParameterWidgetType::OutputFileWidget,"QString", false));
+  parameters.push_back(FilterParameter::New("Write Binary Vtk File", "WriteBinaryFile", FilterParameterWidgetType::BooleanWidget,"bool", false));
+  parameters.push_back(FilterParameter::New("Write Conformal Mesh", "WriteConformalMesh", FilterParameterWidgetType::BooleanWidget,"bool", false));
 
   setFilterParameters(parameters);
 }
@@ -406,7 +371,7 @@ int NodesTrianglesToVtk::writeBinaryPointData(const QString& NodesFile, FILE* vt
   //#                       For the nodes on surfaces of microstructure, negative wrapper spins are treated as neighboring features.
   //#                       12 = on the feature boundary trace area at the surface of microstructure
   //#                       13 = on the feature boundary trace line
-  //#                 14 = on the triple point, and so onÃ¢ÂÂÃ ÃÂ¶Ã¢ÂÂÃÂ¢
+  //#                 14 = on the triple point, and so onÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ¶ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ¢
   //# column 3 to 5 = coordinates of nodes, x, y, and z
 
   int err = 0;
