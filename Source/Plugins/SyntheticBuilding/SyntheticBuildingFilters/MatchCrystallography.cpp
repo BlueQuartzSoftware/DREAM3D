@@ -117,7 +117,7 @@ void MatchCrystallography::setupFilterParameters()
 {
   FilterParameterVector parameters;
   parameters.push_back(FilterParameter::New("Statistics", "InputStatsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget,"DataArrayPath", false, "Input"));
-  parameters.push_back(FilterParameter::New("Crystal Symmatry Array", "CrystalStructuresArrayPath", FilterParameterWidgetType::DataArraySelectionWidget,"DataArrayPath", false, "Input"));
+  parameters.push_back(FilterParameter::New("Crystal Structures Array", "CrystalStructuresArrayPath", FilterParameterWidgetType::DataArraySelectionWidget,"DataArrayPath", false, "Input"));
   parameters.push_back(FilterParameter::New("Phase Type Array", "PhaseTypesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget,"DataArrayPath", false, "Input"));
 
 //// These are required Arrays

@@ -60,7 +60,7 @@ class DREAM3DWidgetsLib_EXPORT FilterListDockWidget : public QDockWidget, privat
 
     void on_filterSearch_textChanged (const QString& text);
 
-    void updateFilterList(const QStringList& list);
+    void updateFilterList(const QStringList& list, bool sortItems);
 
   signals:
 

@@ -119,7 +119,7 @@ class DREAM3DWidgetsLib_EXPORT  PrebuiltPipelinesDockWidget : public QDockWidget
      * @brief filterListGenerated
      * @param filterList
      */
-    void filterListGenerated(const QStringList& filterList);
+    void filterListGenerated(const QStringList& filterList, bool sort);
 
   private:
 

@@ -145,7 +145,7 @@ public slots:
      * @brief filterListGenerated
      * @param filterList
      */
-    void filterListGenerated(const QStringList& filterList);
+    void filterListGenerated(const QStringList& filterList, bool sort);
 
   private:
 

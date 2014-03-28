@@ -103,17 +103,18 @@ namespace FilterParameterWidgetType
   const QString VertexEnsembleArrayNameSelectionWidget("VertexEnsembleArrayNameSelectionWidget");
   /* ****  AND THIS LINE ******** */
 #endif
-  /* This widget presents a blank table and the user clicks an "Add" button to add arrays and Opertors */
+  /* This widget presents a blank table and the user clicks an "Add" button to add arrays and Opertors
   const QString CellArrayComparisonSelectionWidget("CellArrayComparisonSelectionWidget");
   const QString FeatureArrayComparisonSelectionWidget("FeatureArrayComparisonSelectionWidget");
   const QString EnsembleArrayComparisonSelectionWidget("EnsembleArrayComparisonSelectionWidget");
   const QString VertexArrayComparisonSelectionWidget("VertexArrayComparisonSelectionWidget");
   const QString FaceArrayComparisonSelectionWidget("FaceArrayComparisonSelectionWidget");
   const QString EdgeArrayComparisonSelectionWidget("EdgeArrayComparisonSelectionWidget");
-
-
-
   const QString CustomWidget("CustomWidget");
+*/
+
+
+
 }
 
 /**

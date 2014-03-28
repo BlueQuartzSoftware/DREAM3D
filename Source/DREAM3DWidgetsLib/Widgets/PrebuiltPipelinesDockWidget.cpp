@@ -75,8 +75,8 @@ PrebuiltPipelinesDockWidget::~PrebuiltPipelinesDockWidget()
 // -----------------------------------------------------------------------------
 void PrebuiltPipelinesDockWidget::connectFilterList(FilterListDockWidget* filterListWidget)
 {
-  connect(this, SIGNAL(filterListGenerated(const QStringList&)),
-          filterListWidget, SLOT(updateFilterList(const QStringList&) ) );
+  connect(this, SIGNAL(filterListGenerated(const QStringList&, bool)),
+          filterListWidget, SLOT(updateFilterList(const QStringList&, bool) ) );
 
 }
 
@@ -223,7 +223,7 @@ void PrebuiltPipelinesDockWidget::on_filterLibraryTree_itemClicked( QTreeWidgetI
 {
   QString favoritePath = item->data(0, Qt::UserRole).toString();
   QStringList filterList = generateFilterListFromPipelineFile(favoritePath);
-  emit filterListGenerated(filterList);
+  emit filterListGenerated(filterList, false);
 }
 
 // -----------------------------------------------------------------------------
