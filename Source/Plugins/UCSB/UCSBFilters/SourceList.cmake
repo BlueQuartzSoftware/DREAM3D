@@ -22,6 +22,7 @@ set(_PublicFilters
   GenerateFaceMisorientationColors
   CropSurfaceMesh
   TranslateSurfaceMesh
+  SegmentBoundaries
 )
 
 

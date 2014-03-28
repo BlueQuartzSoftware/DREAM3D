@@ -249,6 +249,7 @@ namespace DREAM3D
     const DREAM3D_STRING SurfaceMeshPrincipalCurvature2("PrincipalCurvature2");
     const DREAM3D_STRING SurfaceMeshPrincipalDirection1("PrincipalDirection1");
     const DREAM3D_STRING SurfaceMeshPrincipalDirection2("PrincipalDirection2");
+    const DREAM3D_STRING BoundaryIds("BoundaryIds");
   }
 
   namespace EdgeData
