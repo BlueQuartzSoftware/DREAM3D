@@ -75,9 +75,9 @@ EstablishShapeTypes::~EstablishShapeTypes()
 void EstablishShapeTypes::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(FilterParameter::New("Input Phase Types", "InputPhaseTypesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget,"DataArrayPath", false));
-  parameters.push_back(FilterParameter::New("Output AttributeMatrix", "ShapeTypesAttributeMatrix", FilterParameterWidgetType::AttributeMatrixSelectionWidget,"DataArrayPath", false));
-  parameters.push_back(FilterParameter::New("Output Shape Types Array Name", "ShapeTypesArrayName", FilterParameterWidgetType::StringWidget,"QString", false));
+  parameters.push_back(FilterParameter::New("Input Phase Types", "InputPhaseTypesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget,"DataArrayPath", true));
+  parameters.push_back(FilterParameter::New("Output AttributeMatrix", "ShapeTypesAttributeMatrix", FilterParameterWidgetType::AttributeMatrixSelectionWidget,"DataArrayPath", true));
+  parameters.push_back(FilterParameter::New("Output Shape Types Array Name", "ShapeTypesArrayName", FilterParameterWidgetType::StringWidget,"QString", true));
   {
     ShapeTypesFilterParameter::Pointer parameter = ShapeTypesFilterParameter::New();
     parameter->setHumanLabel("Shape Types");
