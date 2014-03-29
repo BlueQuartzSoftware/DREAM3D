@@ -60,10 +60,8 @@ InitializeSyntheticVolume::InitializeSyntheticVolume() :
   AbstractFilter(),
   m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
   m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
-  m_CellEnsembleAttributeMatrixName(DREAM3D::Defaults::CellEnsembleAttributeMatrixName),
   m_EstimatedPrimaryFeatures(0)
 {
-
   m_Dimensions.x = 128;
   m_Dimensions.y = 128;
   m_Dimensions.z = 128;
@@ -92,92 +90,24 @@ InitializeSyntheticVolume::~InitializeSyntheticVolume()
 void InitializeSyntheticVolume::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Input Statistics");
-    parameter->setPropertyName("InputStatsArrayPath");
-    parameter->setWidgetType(FilterParameterWidgetType::DataArraySelectionWidget);
-    parameter->setValueType("DataArrayPath");
-    parameter->setUnits("");
-    parameter->setAdvanced(true);
-    parameters.push_back(parameter);
-  }
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Input Phase Types");
-    parameter->setPropertyName("InputPhaseTypesArrayPath");
-    parameter->setWidgetType(FilterParameterWidgetType::DataArraySelectionWidget);
-    parameter->setValueType("DataArrayPath");
-    parameter->setUnits("");
-    parameter->setAdvanced(true);
-    parameters.push_back(parameter);
-  }
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("New DataContainer Name");
-    parameter->setPropertyName("DataContainerName");
-    parameter->setWidgetType(FilterParameterWidgetType::StringWidget);
-    parameter->setValueType("QString");
-    parameter->setUnits("");
-    parameter->setAdvanced(true);
-    parameters.push_back(parameter);
-  }
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("New Cell Data Name");
-    parameter->setPropertyName("CellAttributeMatrixName");
-    parameter->setWidgetType(FilterParameterWidgetType::StringWidget);
-    parameter->setValueType("QString");
-    parameter->setUnits("");
-    parameter->setAdvanced(true);
-    parameters.push_back(parameter);
-  }
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("New Ensemble AttributeMatrix Name");
-    parameter->setPropertyName("CellEnsembleAttributeMatrixName");
-    parameter->setWidgetType(FilterParameterWidgetType::StringWidget);
-    parameter->setValueType("QString");
-    parameter->setUnits("");
-    parameter->setAdvanced(true);
-    parameters.push_back(parameter);
-  }
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Dimensions");
-    parameter->setPropertyName("Dimensions");
-    parameter->setWidgetType(FilterParameterWidgetType::IntVec3Widget);
-    parameter->setValueType("IntVec3_t");
-    parameter->setUnits("Voxels");
-    parameters.push_back(parameter);
-  }
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Resolution");
-    parameter->setPropertyName("Resolution");
-    parameter->setWidgetType(FilterParameterWidgetType::FloatVec3Widget);
-    parameter->setValueType("FloatVec3_t");
-    parameter->setUnits("Microns");
-    parameters.push_back(parameter);
-  }
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Origin");
-    parameter->setPropertyName("Origin");
-    parameter->setWidgetType(FilterParameterWidgetType::FloatVec3Widget);
-    parameter->setValueType("FloatVec3_t");
-    parameter->setUnits("XYZ");
-    parameters.push_back(parameter);
-  }
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Estimated Primary Features");
-    parameter->setPropertyName("EstimatedPrimaryFeatures");
-    parameter->setWidgetType(FilterParameterWidgetType::PreflightUpdatedValueWidget);
-    parameter->setValueType("QString");
-    parameter->setUnits("");
-    parameters.push_back(parameter);
-  }
+
+  FilterParameter::Pointer parameter = FilterParameter::New("Input Statistics", "InputStatsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, "");
+  parameters.push_back(parameter);
+  parameter = FilterParameter::New("Input Phase Types", "InputPhaseTypesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, "");
+  parameters.push_back(parameter);
+  parameter = FilterParameter::New("New DataContainer Name", "DataContainerName", FilterParameterWidgetType::StringWidget, "QString", true, "");
+  parameters.push_back(parameter);
+  parameter = FilterParameter::New("New Cell Attribute Matrix Name", "CellAttributeMatrixName", FilterParameterWidgetType::StringWidget, "QString", true, "");
+  parameters.push_back(parameter);
+  parameter = FilterParameter::New("Dimensions", "Dimensions", FilterParameterWidgetType::IntVec3Widget, "IntVec3_t", false, "Voxels");
+  parameters.push_back(parameter);
+  parameter = FilterParameter::New("Resolution", "Resolution", FilterParameterWidgetType::FloatVec3Widget, "FloatVec3_t", false, "Microns");
+  parameters.push_back(parameter);
+  parameter = FilterParameter::New("Origin", "Origin", FilterParameterWidgetType::FloatVec3Widget, "FloatVec3_t", false, "Microns");
+  parameters.push_back(parameter);
+  parameter = FilterParameter::New("Estimated Primary Features", "EstimatedPrimaryFeatures", FilterParameterWidgetType::PreflightUpdatedValueWidget, "QString", false, "");
+  parameters.push_back(parameter);
+
   setFilterParameters(parameters);
 }
 // -----------------------------------------------------------------------------
@@ -186,7 +116,6 @@ void InitializeSyntheticVolume::readFilterParameters(AbstractFilterParametersRea
   reader->openFilterGroup(this, index);
   setDataContainerName(reader->readString("DataContainerName", getDataContainerName() ) );
   setCellAttributeMatrixName(reader->readString("CellAttributeMatrixName", getCellAttributeMatrixName() ) );
-  setCellEnsembleAttributeMatrixName(reader->readString("CellEnsembleAttributeMatrixName", getCellEnsembleAttributeMatrixName() ) );
   setDimensions( reader->readIntVec3("Dimensions", getDimensions() ) );
   setResolution( reader->readFloatVec3("Resolution", getResolution() ) );
   setOrigin( reader->readFloatVec3("Origin", getOrigin() ) );
@@ -203,7 +132,6 @@ int InitializeSyntheticVolume::writeFilterParameters(AbstractFilterParametersWri
   writer->openFilterGroup(this, index);
   writer->writeValue("DataContainerName", getDataContainerName() );
   writer->writeValue("CellAttributeMatrixName", getCellAttributeMatrixName() );
-  writer->writeValue("CellEnsembleAttributeMatrixName", getCellEnsembleAttributeMatrixName() );
   writer->writeValue("Dimensions", getDimensions() );
   writer->writeValue("Resolution", getResolution() );
   writer->writeValue("Origin", getOrigin() );
@@ -239,10 +167,6 @@ void InitializeSyntheticVolume::dataCheck()
   // Create our output Cell and Ensemble Attribute Matrix objects
   QVector<size_t> tDims(3, 0);
   AttributeMatrix::Pointer cellAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::Cell);
-  if(getErrorCondition() < 0) { return; }
-  tDims.resize(1);
-  tDims[0] = 0;
-  AttributeMatrix::Pointer cellEnsembleAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellEnsembleAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::CellEnsemble);
   if(getErrorCondition() < 0) { return; }
 
   m_EstimatedPrimaryFeatures = estimateNumFeatures(m_Dimensions, m_Resolution);
@@ -403,7 +327,6 @@ AbstractFilter::Pointer InitializeSyntheticVolume::newFilterInstance(bool copyFi
   {
     filter->setDataContainerName(getDataContainerName() );
     filter->setCellAttributeMatrixName(getCellAttributeMatrixName() );
-    filter->setCellEnsembleAttributeMatrixName(getCellEnsembleAttributeMatrixName() );
     filter->setDimensions( getDimensions() );
     filter->setOrigin( getOrigin() );
     filter->setResolution( getResolution() );

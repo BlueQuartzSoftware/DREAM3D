@@ -124,7 +124,7 @@ namespace FilterParameterWidgetType
  * @date Jan 17, 2012
  * @version 1.0
  */
-class FilterParameter
+class DREAM3DLib_EXPORT FilterParameter
 {
   public:
     DREAM3D_SHARED_POINTERS(FilterParameter)
@@ -133,7 +133,7 @@ class FilterParameter
 
     static Pointer New(const QString& humanLabel, const QString& propertyName,
                        const QString& widgetType, const QString& valueType,
-                       bool advanced = true,
+                       bool advanced = false,
                        const QString& units = QString(""),
                        const QString& fileExtension = QString(""),
                        const QString& fileType = QString(""),
@@ -167,7 +167,7 @@ typedef QVector<FilterParameter::Pointer> FilterParameterVector;
 //
 // -----------------------------------------------------------------------------
 template<typename T>
-class ConstrainedFilterParameter : public FilterParameter
+class DREAM3DLib_EXPORT ConstrainedFilterParameter : public FilterParameter
 {
   public:
     DREAM3D_SHARED_POINTERS(ConstrainedFilterParameter<T>)
@@ -191,7 +191,7 @@ class ConstrainedFilterParameter : public FilterParameter
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-class ChoiceFilterParameter : public FilterParameter
+class DREAM3DLib_EXPORT ChoiceFilterParameter : public FilterParameter
 {
   public:
     DREAM3D_SHARED_POINTERS(ChoiceFilterParameter)
@@ -202,7 +202,7 @@ class ChoiceFilterParameter : public FilterParameter
                        const QString& widgetType, const QString& valueType,
                        QVector<QString> choices,
                        bool editable,
-                       bool advanced = true );
+                       bool advanced = false );
 
     virtual ~ChoiceFilterParameter();
 
@@ -220,7 +220,7 @@ class ChoiceFilterParameter : public FilterParameter
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-class ComparisonFilterParameter : public FilterParameter
+class DREAM3DLib_EXPORT ComparisonFilterParameter : public FilterParameter
 {
   public:
     DREAM3D_SHARED_POINTERS(ComparisonFilterParameter)
@@ -231,7 +231,7 @@ class ComparisonFilterParameter : public FilterParameter
                        const QString& widgetType, const QString& valueType,
                        QVector<QString> choices,
                        bool showOperators,
-                       bool advanced = true );
+                       bool advanced = false );
 
 
     virtual ~ComparisonFilterParameter();
@@ -250,7 +250,7 @@ class ComparisonFilterParameter : public FilterParameter
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-class ShapeTypesFilterParameter : public FilterParameter
+class DREAM3DLib_EXPORT ShapeTypesFilterParameter : public FilterParameter
 {
   public:
     DREAM3D_SHARED_POINTERS(ShapeTypesFilterParameter)
@@ -261,7 +261,7 @@ class ShapeTypesFilterParameter : public FilterParameter
                        const QString& widgetType, const QString& valueType,
                        const QString& phaseTypeCountProperty,
                        const QString& phaseTypeArrayPathProperty,
-                       bool advanced = true );
+                       bool advanced = false );
 
     virtual ~ShapeTypesFilterParameter();
 
@@ -281,7 +281,7 @@ class ShapeTypesFilterParameter : public FilterParameter
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-class PreflightUpdatedValue : public FilterParameter
+class DREAM3DLib_EXPORT PreflightUpdatedValue : public FilterParameter
 {
   public:
     DREAM3D_SHARED_POINTERS(PreflightUpdatedValue)
@@ -290,7 +290,7 @@ class PreflightUpdatedValue : public FilterParameter
 
     static Pointer New(const QString& humanLabel, const QString& propertyName,
                        const QString& widgetType, const QString& valueType,
-                       bool advanced = true );
+                       bool advanced = false );
 
     virtual ~PreflightUpdatedValue();
 
@@ -306,7 +306,7 @@ class PreflightUpdatedValue : public FilterParameter
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-class DataContainerArrayProxyFilterParameter : public FilterParameter
+class DREAM3DLib_EXPORT DataContainerArrayProxyFilterParameter : public FilterParameter
 {
   public:
     DREAM3D_SHARED_POINTERS(DataContainerArrayProxyFilterParameter)
@@ -316,7 +316,7 @@ class DataContainerArrayProxyFilterParameter : public FilterParameter
     static Pointer New(const QString& humanLabel, const QString& propertyName,
                        const QString& widgetType, const QString& valueType,
                        DataContainerArrayProxy proxy,
-                       bool advanced = true );
+                       bool advanced = false );
 
     virtual ~DataContainerArrayProxyFilterParameter();
 

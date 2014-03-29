@@ -56,7 +56,6 @@
 // -----------------------------------------------------------------------------
 EstablishShapeTypes::EstablishShapeTypes() :
   AbstractFilter(),
-  m_ShapeTypesAttributeMatrix(DREAM3D::Defaults::CellEnsembleAttributeMatrixName),
   m_ShapeTypesArrayName(DREAM3D::EnsembleData::ShapeTypes)
 {
   setupFilterParameters();
@@ -75,44 +74,15 @@ EstablishShapeTypes::~EstablishShapeTypes()
 void EstablishShapeTypes::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Input Phase Types");
-    parameter->setPropertyName("InputPhaseTypesArrayPath");
-    parameter->setWidgetType(FilterParameterWidgetType::DataArraySelectionWidget);
-    parameter->setValueType("DataArrayPath");
-    parameter->setUnits("");
+
+    FilterParameter::Pointer parameter = FilterParameter::New("Phase Types Array Name", "InputPhaseTypesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, "");
     parameters.push_back(parameter);
-  }
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Output AttributeMatrix");
-    parameter->setPropertyName("ShapeTypesAttributeMatrix");
-    parameter->setWidgetType(FilterParameterWidgetType::AttributeMatrixSelectionWidget);
-    parameter->setValueType("DataArrayPath");
-    parameter->setUnits("");
+    parameter = FilterParameter::New("Shape Types Array Name", "ShapeTypesArrayName", FilterParameterWidgetType::StringWidget, "QString", true, "");
     parameters.push_back(parameter);
-  }
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Output Shape Types Array Name");
-    parameter->setPropertyName("ShapeTypesArrayName");
-    parameter->setWidgetType(FilterParameterWidgetType::StringWidget);
-    parameter->setValueType("QString");
-    parameter->setUnits("");
-    parameters.push_back(parameter);
-  }
-  {
-    ShapeTypesFilterParameter::Pointer parameter = ShapeTypesFilterParameter::New();
-    parameter->setHumanLabel("Shape Types");
-    parameter->setPropertyName("ShapeTypeData");
-    parameter->setWidgetType(FilterParameterWidgetType::ShapeTypeSelectionWidget);
-    parameter->setValueType("UInt32Vector_t");
-    parameter->setUnits("");
-    parameter->setPhaseTypeCountProperty("PhaseCount");
-    parameter->setPhaseTypeArrayPathProperty("InputPhaseTypesArrayPath");
-    parameters.push_back(parameter);
-  }
+    ShapeTypesFilterParameter::Pointer sType_parameter = ShapeTypesFilterParameter::New("Shape Types", "ShapeTypeData", FilterParameterWidgetType::ShapeTypeSelectionWidget, "UInt32Vector_t", false, "");
+    sType_parameter->setPhaseTypeCountProperty("PhaseCount");
+    sType_parameter->setPhaseTypeArrayPathProperty("InputPhaseTypesArrayPath");
+    parameters.push_back(sType_parameter);
 
   setFilterParameters(parameters);
 }
@@ -121,7 +91,6 @@ void EstablishShapeTypes::readFilterParameters(AbstractFilterParametersReader* r
 {
   reader->openFilterGroup(this, index);
   setInputPhaseTypesArrayPath(reader->readDataArrayPath("InputPhaseTypesArrayPath", getInputPhaseTypesArrayPath() ) );
-  setShapeTypesAttributeMatrix(reader->readDataArrayPath("ShapeTypesAttributeMatrix", getShapeTypesAttributeMatrix() ) );
   setShapeTypesArrayName(reader->readString("ShapeTypesArrayName", getShapeTypesArrayName() ) );
   QVector<uint32_t> data = getShapeTypeData().d;
   data = reader->readArray("ShapeTypeData", data);
@@ -138,7 +107,6 @@ int EstablishShapeTypes::writeFilterParameters(AbstractFilterParametersWriter* w
 {
   writer->openFilterGroup(this, index);
   writer->writeValue("InputPhaseTypesArrayPath", getInputPhaseTypesArrayPath() );
-  writer->writeValue("ShapeTypesAttributeMatrix", getShapeTypesAttributeMatrix() );
   writer->writeValue("ShapeTypesArrayName", getShapeTypesArrayName() );
   writer->writeValue("ShapeTypeData", getShapeTypeData().d );
   writer->closeFilterGroup();
@@ -159,15 +127,12 @@ void EstablishShapeTypes::dataCheck()
   if( NULL != m_PhaseTypesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_PhaseTypes = m_PhaseTypesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
-  // Get name of the Attribute Matrix that the user wants to store the Shape Types array in
-  DataArrayPath attrPath = getShapeTypesAttributeMatrix();
-
   // Get the DataContainer first
-  VolumeDataContainer* m = dca->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, attrPath.getDataContainerName());
+  VolumeDataContainer* m = dca->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getInputPhaseTypesArrayPath().getDataContainerName());
   if(getErrorCondition() < 0) { return; }
 
   // Now get the AttributeMatrix that the user wants to use to store the ShapeTypes array
-  AttributeMatrix::Pointer cellEnsembleAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, attrPath.getAttributeMatrixName(), -990);
+  AttributeMatrix::Pointer cellEnsembleAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getInputPhaseTypesArrayPath().getAttributeMatrixName(), -990);
   if(getErrorCondition() < 0) { return; }
   // Now create the output Shape Types Array
   m_ShapeTypesPtr = cellEnsembleAttrMat->createNonPrereqArray<UInt32ArrayType, AbstractFilter>(this, getShapeTypesArrayName(), true, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
@@ -239,7 +204,6 @@ AbstractFilter::Pointer EstablishShapeTypes::newFilterInstance(bool copyFilterPa
   if(true == copyFilterParameters)
   {
     filter->setInputPhaseTypesArrayPath(getInputPhaseTypesArrayPath() );
-    filter->setShapeTypesAttributeMatrix(getShapeTypesAttributeMatrix() );
     filter->setShapeTypesArrayName(getShapeTypesArrayName() );
     filter->setShapeTypeData(getShapeTypeData() );
   }
