@@ -512,6 +512,14 @@ void PackPrimaryPhases::preflight()
   emit updateFilterParameters(this);
   dataCheck();
   emit preflightExecuted();
+
+  getDataContainerArray()->getDataContainer(getOutputDataContainerName())->getAttributeMatrix(getOutputCellFeatureAttributeMatrixName())->removeAttributeArray(m_EquivalentDiametersArrayName);
+  getDataContainerArray()->getDataContainer(getOutputDataContainerName())->getAttributeMatrix(getOutputCellFeatureAttributeMatrixName())->removeAttributeArray(m_Omega3sArrayName);
+  getDataContainerArray()->getDataContainer(getOutputDataContainerName())->getAttributeMatrix(getOutputCellFeatureAttributeMatrixName())->removeAttributeArray(m_AxisEulerAnglesArrayName);
+  getDataContainerArray()->getDataContainer(getOutputDataContainerName())->getAttributeMatrix(getOutputCellFeatureAttributeMatrixName())->removeAttributeArray(m_AxisLengthsArrayName);
+  getDataContainerArray()->getDataContainer(getOutputDataContainerName())->getAttributeMatrix(getOutputCellFeatureAttributeMatrixName())->removeAttributeArray(m_VolumesArrayName);
+  getDataContainerArray()->getDataContainer(getOutputDataContainerName())->getAttributeMatrix(getOutputCellFeatureAttributeMatrixName())->removeAttributeArray(m_CentroidsArrayName);
+  getDataContainerArray()->getDataContainer(getOutputDataContainerName())->getAttributeMatrix(getOutputCellFeatureAttributeMatrixName())->removeAttributeArray(m_NeighborhoodsArrayName);
 }
 
 // -----------------------------------------------------------------------------
