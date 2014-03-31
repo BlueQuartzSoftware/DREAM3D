@@ -44,14 +44,14 @@
 //
 // -----------------------------------------------------------------------------
 VtkGrainIdReader::VtkGrainIdReader() :
-FileReader(),
-m_InputFile(""),
-m_Comment("DREAM3D Generated File"),
-m_DatasetType(""),
-m_FileIsBinary(true),
-m_GrainIdScalarName(DREAM3D::CellData::GrainIds),
-m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
-m_GrainIds(NULL)
+  FileReader(),
+  m_InputFile(""),
+  m_Comment("DREAM3D Generated File"),
+  m_DatasetType(""),
+  m_FileIsBinary(true),
+  m_GrainIdScalarName(DREAM3D::CellData::GrainIds),
+  m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
+  m_GrainIds(NULL)
 {
   setupFilterParameters();
 }
@@ -97,10 +97,10 @@ void VtkGrainIdReader::readFilterParameters(AbstractFilterParametersReader* read
 {
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
   setInputFile( reader->readValue( "InputFile", getInputFile() ) );
   setGrainIdScalarName( reader->readValue( "GrainIdScalarName", getGrainIdScalarName() ) );
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }
 
@@ -110,6 +110,8 @@ void VtkGrainIdReader::readFilterParameters(AbstractFilterParametersReader* read
 int VtkGrainIdReader::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
+  writer->writeValue("InputFile", getInputFile() );
+  writer->writeValue("GrainIdScalarName", getGrainIdScalarName() );
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
@@ -139,9 +141,9 @@ void VtkGrainIdReader::dataCheck(bool preflight, size_t voxels, size_t fields, s
 
   CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, int32_t, Int32ArrayType, 0, voxels, 1)
 
-  // Errors will get propagated to the user through the normal mechanism
-  // Reading the header will set the Dimensions, Resolution and Origin
-  readHeader();
+      // Errors will get propagated to the user through the normal mechanism
+      // Reading the header will set the Dimensions, Resolution and Origin
+      readHeader();
 
 
 }
@@ -288,9 +290,9 @@ int VtkGrainIdReader::readHeader()
     {
       std::stringstream ss;
       ss << "Error Reading the type of data set. Was expecting 2 fields but got " << n;
-    setErrorCondition(-51040);
-    addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
-    return getErrorCondition();
+      setErrorCondition(-51040);
+      addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
+      return getErrorCondition();
     }
     std::string dataset(&(text[16]));
     setDatasetType(dataset);
@@ -373,7 +375,7 @@ int VtkGrainIdReader::readFile()
 #if 0
   size_t dim = 0;
   // Now parse the X, coordinates.
- // ::memset(buf, 0, kBufferSize);
+  // ::memset(buf, 0, kBufferSize);
   err = readLine(instream, buf, kBufferSize);
   err = parseCoordinateLine(buf, dim);
   if (err < 0 || dim != dims[0])
@@ -387,7 +389,7 @@ int VtkGrainIdReader::readFile()
   err = skipVolume<float>(instream, 4, dim, 1, 1, xscale);
 
   // Now parse the Y coordinates.
- // ::memset(buf, 0, kBufferSize);
+  // ::memset(buf, 0, kBufferSize);
   err = readLine(instream, buf, kBufferSize);
   err = parseCoordinateLine(buf, dim);
   if (err < 0 || dim != dims[1])
@@ -401,7 +403,7 @@ int VtkGrainIdReader::readFile()
   err = skipVolume<float>(instream, 4, 1, dim, 1, yscale);
 
   // Now parse the Z coordinates.
-//  ::memset(buf, 0, kBufferSize);
+  //  ::memset(buf, 0, kBufferSize);
   err = readLine(instream, buf, kBufferSize);
   err = parseCoordinateLine(buf, dim);
   if (err < 0 || dim != dims[2])
@@ -442,14 +444,14 @@ int VtkGrainIdReader::readFile()
 
   //size_t index = 0;
   //Cell Data is one less in each direction
-//  getVoxelDataContainer()->setDimensions(dims[0] -1, dims[1] -1, dims[2] -1);
-//  getVoxelDataContainer()->getDimensions(dims);
+  //  getVoxelDataContainer()->setDimensions(dims[0] -1, dims[1] -1, dims[2] -1);
+  //  getVoxelDataContainer()->getDimensions(dims);
   size_t totalVoxels = dims[0] * dims[1] * dims[2];
   DataArray<int>::Pointer grainIds = DataArray<int>::CreateArray(totalVoxels, DREAM3D::CellData::GrainIds);
 
-  readLine(instream, buf, kBufferSize);
+  //  readLine(instream, buf, kBufferSize);
 
- // int i = 0;
+  // int i = 0;
   while (needGrainIds == true)
   {
     readLine(instream, buf, kBufferSize);
@@ -464,21 +466,21 @@ int VtkGrainIdReader::readFile()
       addErrorMessage(getHumanLabel(), ss.str(), -1);
       return -1;
     }
-    scalarName = std::string(text1);
-    typeByteSize = parseByteSize(text4);
+    scalarName = std::string(text2);
+    typeByteSize = parseByteSize(text3);
     if (typeByteSize == 0)
     {
       return -1;
     }
 
-   // readLine(instream, buf, kBufferSize); // Read Line 11
+     readLine(instream, buf, kBufferSize); // Read Line 11
 
     // Check to make sure we are reading the correct set of scalars and if we are
     // NOT then read all this particular Scalar Data and try again
 
     if (m_GrainIdScalarName.compare(scalarName) == 0)
     {
-    //  std::map<int, int> grainIdMap;
+      //  std::map<int, int> grainIdMap;
       if (getFileIsBinary() == true)
       {
         // Splat 0xAB across the entire array. that way if the read messes up we
@@ -498,18 +500,31 @@ int VtkGrainIdReader::readFile()
       else // ASCII VTK File
       {
         int grain_index = -1;
-        for (size_t i = 0; i < totalVoxels; ++i)
+        std::string delimeters(", ;\t"); /* delimeters to split the data */
+        std::vector<std::string> tokens; /* vector to store the split data */
+        size_t index = 0;
+        int error = 0;
+
+        for (std::string line; std::getline(instream, line);)
         {
-          instream >> grain_index;
-          grainIds->SetValue(i, grain_index);
-       //   grainIdMap[grain_index]++;
+          // Get the remaining lines of the header and ignore
+          tokens.clear();
+          error = 0;
+          tokenize(line, tokens, delimeters);
+          for (size_t in_spins = 0; in_spins < tokens.size(); in_spins++)
+          {
+            error += sscanf(tokens[in_spins].c_str(), "%d", &grain_index);
+            grainIds->SetValue(index, grain_index);
+            ++index;
+          }
+          if (index >= totalVoxels) { break; }
         }
       }
       needGrainIds = false;
     }
     else
     {
-        ignoreData(instream, typeByteSize, text3, dims[0], dims[1], dims[2]);
+      ignoreData(instream, typeByteSize, text3, dims[0], dims[1], dims[2]);
     }
 
   }
