@@ -352,8 +352,6 @@ int PackPrimaryPhases::writeFilterParameters(AbstractFilterParametersWriter* wri
   writer->openFilterGroup(this, index);
   writer->writeValue("CellPhasesArrayPath", getCellPhasesArrayPath() );
   writer->writeValue("FeatureIdsArrayPath", getFeatureIdsArrayPath() );
-  writer->writeValue("OutputDataContainerName", getOutputDataContainerName() );
-
   writer->writeValue("OutputCellAttributeMatrixName", getOutputCellAttributeMatrixName() );
   writer->writeValue("OutputCellFeatureAttributeMatrixName", getOutputCellFeatureAttributeMatrixName() );
   writer->writeValue("FeatureIdsArrayName", getFeatureIdsArrayName() );
@@ -2579,7 +2577,6 @@ AbstractFilter::Pointer PackPrimaryPhases::newFilterInstance(bool copyFilterPara
 
     filter->setCellPhasesArrayPath(getCellPhasesArrayPath());
     filter->setFeatureIdsArrayPath(getFeatureIdsArrayPath());
-    filter->setOutputDataContainerName( getOutputDataContainerName() );
     filter->setOutputCellAttributeMatrixName( getOutputCellAttributeMatrixName() );
     filter->setOutputCellFeatureAttributeMatrixName( getOutputCellFeatureAttributeMatrixName() );
     filter->setFeatureIdsArrayName( getFeatureIdsArrayName() );
