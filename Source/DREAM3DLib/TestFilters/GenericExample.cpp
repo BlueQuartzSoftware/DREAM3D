@@ -116,6 +116,10 @@ void GenericExample::setupFilterParameters()
   parameters.push_back(FilterParameter::New("Output Path", "OutputPath", FilterParameterWidgetType::OutputPathWidget,"QString", false));
   /*   For a simple true/false boolean use this code*/
   parameters.push_back(FilterParameter::New("Write Alignment Shift File", "WriteAlignmentShifts", FilterParameterWidgetType::BooleanWidget,"bool", false));
+
+  parameters.push_back(FilterParameter::New("Choice Example", "", FilterParameterWidgetType::SeparatorWidget, "QString", false));
+
+
   /*   For presenting a set of choices to the user use this code*/
   {
     ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New();
@@ -204,24 +208,24 @@ void GenericExample::readFilterParameters(AbstractFilterParametersReader* reader
   setOrigin( reader->readFloatVec3("Origin", getOrigin()) );
   setAxisAngleInputs(reader->readAxisAngles("AxisAngleInputs", getAxisAngleInputs()) );
 
-  setSelectedVolumeVertexArrayName( reader->readString("SelectedVolumeVertexArrayName", getSelectedVolumeVertexArrayName()) );
-  setSelectedVolumeEdgeArrayName( reader->readString("SelectedVolumeEdgeArrayName", getSelectedVolumeEdgeArrayName()) );
-  setSelectedVolumeFaceArrayName( reader->readString("SelectedVolumeFaceArrayName", getSelectedVolumeFaceArrayName()) );
-  setSelectedVolumeCellArrayName( reader->readString("SelectedVolumeCellArrayName", getSelectedVolumeCellArrayName()) );
-  setSelectedVolumeFeatureArrayName( reader->readString("SelectedVolumeFeatureArrayName", getSelectedVolumeFeatureArrayName()) );
-  setSelectedVolumeEnsembleArrayName( reader->readString("SelectedVolumeEnsembleArrayName", getSelectedVolumeEnsembleArrayName()) );
-  setSelectedSurfaceVertexArrayName( reader->readString("SelectedSurfaceVertexArrayName", getSelectedSurfaceVertexArrayName()) );
-  setSelectedSurfaceEdgeArrayName( reader->readString("SelectedSurfaceEdgeArrayName", getSelectedSurfaceEdgeArrayName()) );
-  setSelectedSurfaceFaceArrayName( reader->readString("SelectedSurfaceFaceArrayName", getSelectedSurfaceFaceArrayName()) );
-  setSelectedSurfaceFeatureArrayName( reader->readString("SelectedSurfaceFeatureArrayName", getSelectedSurfaceFeatureArrayName()) );
-  setSelectedSurfaceEnsembleArrayName( reader->readString("SelectedSurfaceEnsembleArrayName", getSelectedSurfaceEnsembleArrayName()) );
-  setSelectedEdgeVertexArrayName( reader->readString("SelectedEdgeVertexArrayName", getSelectedEdgeVertexArrayName()) );
-  setSelectedEdgeEdgeArrayName( reader->readString("SelectedEdgeEdgeArrayName", getSelectedEdgeEdgeArrayName()) );
-  setSelectedEdgeFeatureArrayName( reader->readString("SelectedEdgeFeatureArrayName", getSelectedEdgeFeatureArrayName()) );
-  setSelectedEdgeEnsembleArrayName( reader->readString("SelectedEdgeEnsembleArrayName", getSelectedEdgeEnsembleArrayName()) );
-  setSelectedVertexVertexArrayName( reader->readString("SelectedVertexVertexArrayName", getSelectedVertexVertexArrayName()) );
-  setSelectedVertexFeatureArrayName( reader->readString("SelectedVertexFeatureArrayName", getSelectedVertexFeatureArrayName()) );
-  setSelectedVertexEnsembleArrayName( reader->readString("SelectedVertexEnsembleArrayName", getSelectedVertexEnsembleArrayName()) );
+  setSelectedVolumeVertexArrayName( reader->readDataArrayPath("SelectedVolumeVertexArrayName", getSelectedVolumeVertexArrayName()) );
+  setSelectedVolumeEdgeArrayName( reader->readDataArrayPath("SelectedVolumeEdgeArrayName", getSelectedVolumeEdgeArrayName()) );
+  setSelectedVolumeFaceArrayName( reader->readDataArrayPath("SelectedVolumeFaceArrayName", getSelectedVolumeFaceArrayName()) );
+  setSelectedVolumeCellArrayName( reader->readDataArrayPath("SelectedVolumeCellArrayName", getSelectedVolumeCellArrayName()) );
+  setSelectedVolumeFeatureArrayName( reader->readDataArrayPath("SelectedVolumeFeatureArrayName", getSelectedVolumeFeatureArrayName()) );
+  setSelectedVolumeEnsembleArrayName( reader->readDataArrayPath("SelectedVolumeEnsembleArrayName", getSelectedVolumeEnsembleArrayName()) );
+  setSelectedSurfaceVertexArrayName( reader->readDataArrayPath("SelectedSurfaceVertexArrayName", getSelectedSurfaceVertexArrayName()) );
+  setSelectedSurfaceEdgeArrayName( reader->readDataArrayPath("SelectedSurfaceEdgeArrayName", getSelectedSurfaceEdgeArrayName()) );
+  setSelectedSurfaceFaceArrayName( reader->readDataArrayPath("SelectedSurfaceFaceArrayName", getSelectedSurfaceFaceArrayName()) );
+  setSelectedSurfaceFeatureArrayName( reader->readDataArrayPath("SelectedSurfaceFeatureArrayName", getSelectedSurfaceFeatureArrayName()) );
+  setSelectedSurfaceEnsembleArrayName( reader->readDataArrayPath("SelectedSurfaceEnsembleArrayName", getSelectedSurfaceEnsembleArrayName()) );
+  setSelectedEdgeVertexArrayName( reader->readDataArrayPath("SelectedEdgeVertexArrayName", getSelectedEdgeVertexArrayName()) );
+  setSelectedEdgeEdgeArrayName( reader->readDataArrayPath("SelectedEdgeEdgeArrayName", getSelectedEdgeEdgeArrayName()) );
+  setSelectedEdgeFeatureArrayName( reader->readDataArrayPath("SelectedEdgeFeatureArrayName", getSelectedEdgeFeatureArrayName()) );
+  setSelectedEdgeEnsembleArrayName( reader->readDataArrayPath("SelectedEdgeEnsembleArrayName", getSelectedEdgeEnsembleArrayName()) );
+  setSelectedVertexVertexArrayName( reader->readDataArrayPath("SelectedVertexVertexArrayName", getSelectedVertexVertexArrayName()) );
+  setSelectedVertexFeatureArrayName( reader->readDataArrayPath("SelectedVertexFeatureArrayName", getSelectedVertexFeatureArrayName()) );
+  setSelectedVertexEnsembleArrayName( reader->readDataArrayPath("SelectedVertexEnsembleArrayName", getSelectedVertexEnsembleArrayName()) );
 
 
   setInt8Array(reader->readArray("Int8Array", getInt8Array()) );

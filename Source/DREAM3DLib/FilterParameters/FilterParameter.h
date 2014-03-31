@@ -79,6 +79,7 @@ namespace FilterParameterWidgetType
   const QString DataContainerSelectionWidget("DataContainerSelectionWidget");
   const QString ShapeTypeSelectionWidget("ShapeTypeSelectionWidget");
   const QString DataArrayCreationWidget("DataArrayCreationWidget");
+  const QString SeparatorWidget("SeparatorWidget");
 
   const QString PreflightUpdatedValueWidget("PreflightUpdatedValueWidget");
 #if 0
