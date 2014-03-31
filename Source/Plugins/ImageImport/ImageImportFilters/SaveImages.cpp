@@ -99,7 +99,6 @@ void SaveImages::setupFilterParameters()
 void SaveImages::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
   setImagePrefix( reader->readString("ImagePrefix", getImagePrefix()) );
   setOutputPath( reader->readString("OutputPath", getOutputPath()) );
   setColorsArrayPath( reader->readDataArrayPath("ColorsArrayPath", getColorsArrayPath()) );

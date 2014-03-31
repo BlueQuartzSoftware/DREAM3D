@@ -94,10 +94,7 @@ void EstablishMatrixPhase::setupFilterParameters()
 void EstablishMatrixPhase::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-  /* Code to read the values goes between these statements */
-  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
   setDataContainerName( reader->readString("DataContainerName", getDataContainerName()) );
-  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }
 

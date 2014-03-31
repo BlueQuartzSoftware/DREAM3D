@@ -99,13 +99,10 @@ void AlignSectionsFeatureCentroid::setupFilterParameters()
 void AlignSectionsFeatureCentroid::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-  /* Code to read the values goes between these statements */
-  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
   setUseReferenceSlice( reader->readValue("UseReferenceSlice", false) );
   setReferenceSlice( reader->readValue("ReferenceSlice", getReferenceSlice()) );
   setWriteAlignmentShifts( reader->readValue("WriteAlignmentShifts", false) );
   setAlignmentShiftFileName( reader->readString( "AlignmentShiftFileName", getAlignmentShiftFileName() ) );
-  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }
 

@@ -161,7 +161,6 @@ void FindRelativeMotionBetweenSlices::setupFilterParameters()
 void FindRelativeMotionBetweenSlices::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
   setSelectedArrayPath( reader->readDataArrayPath( "SelectedArrayPath", getSelectedArrayPath() ) );
   setPlane( reader->readValue("Plane", getPlane()));
   setPSize1( reader->readValue("PSize1", getPSize1()));
@@ -169,7 +168,6 @@ void FindRelativeMotionBetweenSlices::readFilterParameters(AbstractFilterParamet
   setSSize1( reader->readValue("SSize1", getSSize1()));
   setSSize2( reader->readValue("SSize2", getSSize2()));
   setSliceStep( reader->readValue("SliceStep", getSliceStep()));
-  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }
 

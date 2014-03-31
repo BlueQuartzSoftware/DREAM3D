@@ -114,13 +114,10 @@ void LocalDislocationDensityCalculator::setupFilterParameters()
 void LocalDislocationDensityCalculator::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-  /* Code to read the values goes between these statements */
-  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
   setOutputDataContainerName( reader->readString( "OutputDataContainerName", getOutputDataContainerName() ) );
   setOutputAttributeMatrixName( reader->readString( "OutputAttributeMatrixName", getOutputAttributeMatrixName() ) );
   setOutputArrayName( reader->readString( "OutputArrayName", getOutputArrayName() ) );
   setCellSize( reader->readFloatVec3("CellSize", getCellSize() ) );
-  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }
 

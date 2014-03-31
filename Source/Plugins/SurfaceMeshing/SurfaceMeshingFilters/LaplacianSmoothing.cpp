@@ -201,8 +201,6 @@ void LaplacianSmoothing::setupFilterParameters()
 void LaplacianSmoothing::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-  /* Code to read the values goes between these statements */
-  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
   setIterationSteps( reader->readValue("IterationSteps", getIterationSteps()) );
   setLambda( reader->readValue("Lambda", getLambda()) );
   setTripleLineLambda( reader->readValue("TripleLineLambda", getTripleLineLambda()) );
@@ -210,7 +208,6 @@ void LaplacianSmoothing::readFilterParameters(AbstractFilterParametersReader* re
   setSurfacePointLambda( reader->readValue("SurfacePointLambda", getSurfacePointLambda()) );
   setSurfaceTripleLineLambda( reader->readValue("SurfaceTripleLineLambda", getSurfaceTripleLineLambda()) );
   setSurfaceQuadPointLambda( reader->readValue("SurfaceQuadPointLambda", getSurfaceQuadPointLambda()) );
-  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }
 

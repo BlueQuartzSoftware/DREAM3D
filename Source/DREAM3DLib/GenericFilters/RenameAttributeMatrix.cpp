@@ -75,13 +75,10 @@ void RenameAttributeMatrix::setupFilterParameters()
 void RenameAttributeMatrix::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-  /* Code to read the values goes between these statements */
-  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
   //  setDataContainerName( reader->readString("DataContainerName", getDataContainerName()) );
   //  setAttributeMatrixName( reader->readString("AttributeMatrixName", getAttributeMatrixName()) );
   setSelectedAttributeMatrixPath( reader->readDataArrayPath("SelectedAttributeMatrixPath", getSelectedAttributeMatrixPath()) );
   setNewAttributeMatrix( reader->readString( "NewAttributeMatrix", getNewAttributeMatrix() ) );
-  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }
 

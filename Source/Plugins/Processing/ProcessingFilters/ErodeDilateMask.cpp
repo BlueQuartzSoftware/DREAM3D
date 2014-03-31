@@ -104,15 +104,12 @@ void ErodeDilateMask::setupFilterParameters()
 void ErodeDilateMask::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-  /* Code to read the values goes between these statements */
-  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
   setSelectedArrayPath( reader->readString( "SelectedArrayPath", getSelectedArrayPath() ) );
   setDirection( reader->readValue("Direction", getDirection()) );
   setNumIterations( reader->readValue("NumIterations", getNumIterations()) );
   setXDirOn(reader->readValue("X Direction", getXDirOn()) );
   setYDirOn(reader->readValue("Y Direction", getYDirOn()) );
   setZDirOn(reader->readValue("Z Direction", getZDirOn()) );
-  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }
 

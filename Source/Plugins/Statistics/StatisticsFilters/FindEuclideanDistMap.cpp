@@ -321,13 +321,10 @@ void FindEuclideanDistMap::setupFilterParameters()
 void FindEuclideanDistMap::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-  /* Code to read the values goes between these statements */
-  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
   setdoBoundaries( reader->readValue("doBoundaries", false) );
   setdoTripleLines( reader->readValue("doTripleLines", false) );
   setdoQuadPoints( reader->readValue("doQuadPoints", false) );
   setCalcOnlyManhattanDist( reader->readValue("CalcOnlyManhattanDist", false) );
-  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }
 

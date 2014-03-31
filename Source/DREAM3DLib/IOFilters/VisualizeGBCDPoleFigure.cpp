@@ -138,14 +138,11 @@ void VisualizeGBCDPoleFigure::setupFilterParameters()
 void VisualizeGBCDPoleFigure::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-  /* Code to read the values goes between these statements */
-  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
 //  setMisAngle( reader->readValue("MisAngle", getMisAngle()) );
 //  setMisAxis( reader->readFloatVec3("MisAxis", getMisAxis() ) );
   setOutputFile( reader->readString( "OutputFile", getOutputFile() ) );
   setMisorientationRotation(reader->readAxisAngle("MisorientationRotation", getMisorientationRotation(), -1) );
   setCrystalStructure(reader->readValue("CrystalStructure", getCrystalStructure() ) );
-  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }
 

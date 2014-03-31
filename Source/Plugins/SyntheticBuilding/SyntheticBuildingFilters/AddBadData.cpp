@@ -85,14 +85,11 @@ void AddBadData::setupFilterParameters()
 void AddBadData::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-  /* Code to read the values goes between these statements */
-  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
   setDataContainerName( reader->readString("DataContainerName", getDataContainerName()) );
   setPoissonNoise( reader->readValue("PoissonNoise", getPoissonNoise()) );
   setPoissonVolFraction( reader->readValue("PoissonVolFraction", getPoissonVolFraction()) );
   setBoundaryNoise( reader->readValue("BoundaryNoise", getBoundaryNoise()) );
   setBoundaryVolFraction( reader->readValue("BoundaryVolFraction", getBoundaryVolFraction()) );
-  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }
 

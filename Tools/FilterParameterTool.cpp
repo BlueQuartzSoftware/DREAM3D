@@ -62,80 +62,96 @@ QString quote(const QString& str)
   return QString("\"%1\"").arg(str);
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void createReplacementDataCheck(QStringList &outLines, QString &line, QString searchString)
+{
+
+  qDebug() << "Found a Prereq Array";
+  // write out the old line commented out
+  outLines.push_back(QString("  //") + line);
+
+  int offset = line.indexOf(">(");
+  offset = offset + 2;
+  offset = line.indexOf(',', offset) + 1; // Find the first comma of the argument list
+  int offset2 = line.indexOf(',', offset + 1); // find the next comma. This should bracket the 2nd argument
+  QString arg = line.mid(offset, (offset2 - offset)).trimmed();
+  QString arrayName = arg;
+  arg = arg.mid(2);
+  offset = arg.indexOf("ArrayName");
+  arg = arg.mid(0, offset);
+  qDebug() << arg;
+
+
+  // Extract out the entire argument as a string
+  offset = line.indexOf(">(") + 1;
+  QString right = line.mid(offset);
+  right.replace(arrayName, "get" + arg + "Path()" );
+
+  // Extract the type of Array
+  offset = line.indexOf("->getPrereqArray<") + searchString.size();
+  offset2 = line.indexOf(',', offset);
+  QString type = line.mid(offset, offset2 - offset);
+  qDebug() << type;
+
+  QString buf;
+  QTextStream out(&buf);
+
+  out << "  m_" << arg << "Ptr = getDataContainerArray()->getPrereqArrayFromPath<" << type << ", AbstractFilter>" << right;
+  qDebug() << buf;
+  outLines.push_back(buf);
+
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-bool fixFile(FilterParameter::Pointer parameter, const QString &replacement, const QString &cppFile)
+bool fixFile( AbstractFilter::Pointer filter, const QString& hFile, const QString& cppFile)
 {
-  // Read the Source File
-  QFileInfo fi(cppFile);
-  QFile source(cppFile);
-  source.open(QFile::ReadOnly);
-  QString cpp = source.readAll();
-  source.close();
+  QString contents;
+  {
+    // Read the Source File
+    QFileInfo fi(cppFile);
+    if (fi.baseName().compare("FindSizes") != 0)
+    {
+      return false;
+    }
 
-  std::cout << "Filter: " << fi.baseName().toStdString() << "   Parameter: " << parameter->getHumanLabel().toStdString() << std::endl;
-//  if (fi.baseName().compare("EBSDSegmentFeatures") != 0)
-//  {
-//    return false;
-//  }
-
-  QStringList list;
+    QFile source(cppFile);
+    source.open(QFile::ReadOnly);
+    contents = source.readAll();
+    source.close();
+  }
 
   bool didReplace = false;
 
-  QString pType = parameter->getValueType();
-
-  QString pSearch = "FilterParameterVector parameters;";
-
-  QString cSearch = "FilterParameter::Pointer parameter = FilterParameter::New();";
-  QString searchString2 = "parameter->setHumanLabel(" + quote(parameter->getHumanLabel()) + ");";
-
-  QString buffer;
-  QTextStream ss(&buffer);
-
-  //  QString headerStr;
-  QStringList header;
+  QString searchString = "->getPrereqArray<";
 
 
-  list = cpp.split(QRegExp("\\n"));
+  QStringList outLines;
+
+
+  QStringList list = contents.split(QRegExp("\\n"));
   QStringListIterator sourceLines(list);
   while (sourceLines.hasNext())
   {
     QString line = sourceLines.next();
 
-    if(line.contains(searchString2) ) // we found the filter parameter section
+    if(line.contains(searchString) ) // we found the filter parameter section
     {
-      line = sourceLines.previous();
-      // Look for our specific human label, and then walk back up the lines until we find the constructor
-      while(sourceLines.hasPrevious())
-      {
-        line = sourceLines.previous();
-        header.pop_back();
-        if(line.contains("{") == true)
-        {
-          break;
-        }
-      }
-
-      // write in our Replacement code
-      std::cout << "   Replacing FilterParameter Code" << std::endl;
-      header << replacement; // This is the humanLabel we are looking for so use the replacement instead
+      createReplacementDataCheck(outLines, line, searchString);
       didReplace = true;
-      // Walk until we find the } character which should be the end of the scoped section
-      while(sourceLines.hasNext() )
-      {
-        line = sourceLines.next();
-        if(line.contains("}") == true) { break; } // Keep looping and eating lines until we find the "}" character.
-      }
     }
     else
     {
-      header.push_back(line);
+      outLines.push_back(line);
       //if(sourceLines.hasNext() == true) { ref << "\n"; }
     }
   }
+
+
+
 
   if(didReplace == true)
   {
@@ -148,91 +164,12 @@ bool fixFile(FilterParameter::Pointer parameter, const QString &replacement, con
 #endif
     hOut.open(QFile::WriteOnly);
     QTextStream stream( &hOut );
-    stream << header.join("\n");
+    stream << outLines.join("\n");
     hOut.close();
 
     qDebug() << "Saved File " << fi2.absoluteFilePath();
   }
   return didReplace;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void appendSignal(const QString& cppFile)
-{
-  // Read the Source File
-  QFileInfo fi(cppFile);
-  QFile source(cppFile);
-  source.open(QFile::ReadOnly);
-  QString cpp = source.readAll();
-  source.close();
-
-  QStringList list;
-
-  QString searchString = "protected:";
-
-
-  QString headerStr;
-  QTextStream header(&headerStr);
-
-  list = cpp.split(QRegExp("\\n"));
-  QStringListIterator sourceLines(list);
-  while (sourceLines.hasNext())
-  {
-    QString line = sourceLines.next();
-
-    if(line.contains(searchString) )
-    {
-      header << "  signals:\n    void parametersChanged();\n\n";
-    }
-    if (sourceLines.hasNext() ) { header << line << "\n"; }
-  }
-
-  QFileInfo fi2(cppFile);
-#if 0
-  QFile hOut(cppFile);
-#else
-  QString tmpPath = "/tmp/" + fi2.fileName();
-  QFile hOut(tmpPath);
-#endif
-  hOut.open(QFile::WriteOnly);
-  QTextStream stream( &hOut );
-  stream << headerStr;
-  hOut.close();
-
-  qDebug() << "Saved File " << fi2.absoluteFilePath();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void generateQProperties(AbstractFilter::Pointer filter, const QString &path)
-{
-  QString out;
-  QTextStream ss(&out);
-  bool addSignal = false;
-  ss << "  /* ** These are the Q_Properties for each of the input parameters. **  */\n";
-
-  QVector<FilterParameter::Pointer> parameters = filter->getFilterParameters();
-
-  for(int i = 0; i < parameters.size(); i++)
-  {
-    out = ""; // clear the string
-    QString pType = parameters[i]->getValueType();
-    QString pName = parameters[i]->getPropertyName();
-
-    ss << "    Q_PROPERTY(" << pType << " " << pName << " READ get" << pName << " WRITE set" << pName << " NOTIFY parametersChanged)\n";
-
-    addSignal = fixFile(parameters[i], out, path);
-  }
-
-  if(addSignal == true)
-  {
-    appendSignal(path);
-  }
-
-  std::cout << "Done" << std::endl;
 }
 
 // -----------------------------------------------------------------------------
@@ -273,11 +210,11 @@ QString findPath(const QString& groupName, const QString& filtName, const QStrin
 // -----------------------------------------------------------------------------
 void GenerateFilterParametersCode()
 {
-  qDebug() << "-------------- GenerateFilterParametersCode ------------------------------";
 
   FilterManager::Pointer fm = FilterManager::Instance();
   FilterManager::Collection factories = fm->getFactories();
   QMapIterator<QString, IFilterFactory::Pointer> iter(factories);
+  // Loop on each filter
   while(iter.hasNext())
   {
     iter.next();
@@ -285,67 +222,9 @@ void GenerateFilterParametersCode()
     AbstractFilter::Pointer filter = factory->create();
 
     QString cpp = findPath(filter->getGroupName(), filter->getNameOfClass(), ".cpp");
-    //std::cout << filter << " " << cpp.toStdString() << std::endl;
+    QString h = findPath(filter->getGroupName(), filter->getNameOfClass(), ".h");
 
-    const QMetaObject* meta = filter->metaObject();
-    std::string cn = filter->getNameOfClass().toStdString();
-
-    QStringList properties;
-    for(int i = meta->propertyOffset(); i < meta->propertyCount(); ++i)
-    {
-      properties << QString::fromLatin1(meta->property(i).name());
-    }
-    QVector<FilterParameter::Pointer> options = filter->getFilterParameters();
-    for (QVector<FilterParameter::Pointer>::iterator iter = options.begin(); iter != options.end(); ++iter )
-    {
-      std::stringstream ss;
-      ss << "  parameters.push_back(FilterParameter::New(";
-      FilterParameter* option = (*iter).get();
-      if (option->getNameOfClass().compare("FilterParameter") != 0) {
-        ss << "NOT UPDATING FILTER PARAMETER " << option->getNameOfClass().toStdString() << std::endl;
-        continue;
-      }
-
-      ss << quote(option->getHumanLabel()).toStdString() << ", ";
-      ss << quote(option->getPropertyName()).toStdString() << ", ";
-      ss << "FilterParameterWidgetType::" << option->getWidgetType().toStdString() << ",";
-      ss << quote(option->getValueType()).toStdString() << ", ";
-      if(option->getAdvanced()) {
-        ss << "true";
-      } else {
-        ss << "false";
-      }
-
-      QString units = option->getUnits();
-      QString fileExt = option->getFileExtension();
-      QString fType = option->getFileType();
-
-      if (units.isEmpty() && fileExt.isEmpty() && fType.isEmpty() )
-      {
-        //     std::cout << "));" << std::endl;
-      }
-      else if(fType.isEmpty() == false)
-      {
-        ss << ", ";
-        ss << quote(units).toStdString() << ", ";
-        ss << quote(fileExt).toStdString() << ", ";
-        ss << quote(fType).toStdString();
-      }
-      else if (fileExt.isEmpty() == false)
-      {
-        ss << ", ";
-        ss << quote(units).toStdString() << ", ";
-        ss << quote(fileExt).toStdString();
-      }
-      else if(units.isEmpty() == false)
-      {
-        ss << ", ";
-        ss << quote(units).toStdString();
-      }
-      ss << "));";
-
-      fixFile(*iter, QString::fromStdString(ss.str()), cpp);
-    }
+    fixFile(filter, h, cpp);
   }
 
 }
@@ -391,7 +270,7 @@ void LoopOnFilters()
 // -----------------------------------------------------------------------------
 int main(int argc, char *argv[])
 {
-  Q_ASSERT(false); // We don't want anyone to run this program.
+  Q_ASSERT(true); // We don't want anyone to run this program.
   // Instantiate the QCoreApplication that we need to get the current path and load plugins.
   QCoreApplication app(argc, argv);
   QCoreApplication::setOrganizationName("BlueQuartz Software");

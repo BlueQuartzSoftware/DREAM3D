@@ -127,7 +127,6 @@ void ThresholdExample::setupFilterParameters()
 // -----------------------------------------------------------------------------
 void ThresholdExample::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
-  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
 
   reader->openFilterGroup(this, index);
   setCellComparisonInputs(reader->readComparisonInputs("CellComparisonInputs", getCellComparisonInputs()));

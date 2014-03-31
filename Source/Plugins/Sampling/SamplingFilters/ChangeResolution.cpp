@@ -89,12 +89,9 @@ void ChangeResolution::setupFilterParameters()
 void ChangeResolution::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-  /* Code to read the values goes between these statements */
-  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
   setResolution( reader->readFloatVec3("Resolution", getResolution() ) );
   setRenumberFeatures( reader->readValue("RenumberFeatures", false) );
   setSaveAsNewDataContainer( reader->readValue("SaveAsNewDataContainer", false) );
-  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }
 

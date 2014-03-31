@@ -89,9 +89,7 @@ void FindLargestCrossSections::setupFilterParameters()
 void FindLargestCrossSections::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
   setPlane( reader->readValue("Plane", getPlane()));
-  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }
 

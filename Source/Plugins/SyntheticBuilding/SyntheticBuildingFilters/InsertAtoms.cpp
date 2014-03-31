@@ -264,12 +264,9 @@ void InsertAtoms::setupFilterParameters()
 void InsertAtoms::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-  /* Code to read the values goes between these statements */
-  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
   setVolumeDataContainerName( reader->readString("VolumeDataContainerName", getVolumeDataContainerName()) );
   setLatticeConstants( reader->readFloatVec3("LatticeConstants", getLatticeConstants() ) );
   setBasis( reader->readValue("Basis", getBasis() ) );
-  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }
 

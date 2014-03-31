@@ -372,10 +372,7 @@ void M3CSliceBySlice::setupFilterParameters()
 void M3CSliceBySlice::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-  /* Code to read the values goes between these statements */
-  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
   setDeleteTempFiles( reader->readValue("DeleteTempFiles", false) );
-  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }
 

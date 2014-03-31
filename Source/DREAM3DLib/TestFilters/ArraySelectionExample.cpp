@@ -75,7 +75,6 @@ void ArraySelectionExample::setupFilterParameters()
 // -----------------------------------------------------------------------------
 void ArraySelectionExample::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
-  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
 
   reader->openFilterGroup(this, index);
   //  setDataContainerName( reader->readString("DataContainerName", getDataContainerName()) );

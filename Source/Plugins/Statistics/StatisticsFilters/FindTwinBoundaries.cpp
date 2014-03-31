@@ -218,11 +218,8 @@ void FindTwinBoundaries::setupFilterParameters()
 void FindTwinBoundaries::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-  /* Code to read the values goes between these statements */
-  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
   setAxisTolerance( reader->readValue("AxisTolerance", getAxisTolerance() ) );
   setAngleTolerance( reader->readValue("AngleTolerance", getAngleTolerance()) );
-  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }
 

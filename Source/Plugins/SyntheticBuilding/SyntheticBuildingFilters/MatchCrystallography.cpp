@@ -147,7 +147,6 @@ void MatchCrystallography::setupFilterParameters()
 void MatchCrystallography::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-  /* Code to read the values goes between these statements */
   /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN */
   setOutputDataContainerName( reader->readString("OutputDataContainerName", getOutputDataContainerName() ) );
   setMaxIterations( reader->readValue("MaxIterations", getMaxIterations()) );
@@ -159,7 +158,6 @@ void MatchCrystallography::readFilterParameters(AbstractFilterParametersReader* 
   setFeatureSurfaceFeaturesPath(reader->readDataArrayPath("FeatureSurfaceFeaturesPath", getFeatureSurfaceFeaturesPath() ) );
   setOutputCellAttributeMatrix(reader->readDataArrayPath("OutputCellAttributeMatrix", getOutputCellAttributeMatrix() ) );
   setCellEulerAnglesArrayName(reader->readString("CellEulerAnglesArrayName", getCellEulerAnglesArrayName() ) );
-  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }
 

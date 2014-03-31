@@ -74,12 +74,9 @@ void RenameDataContainer::setupFilterParameters()
 void RenameDataContainer::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-  /* Code to read the values goes between these statements */
-  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
   setSelectedDataContainerName( reader->readString("SelectedDataContainerName", getSelectedDataContainerName()) );
   setNewDataContainerName( reader->readString( "NewDataContainerName", getNewDataContainerName() ) );
   setReplaceExistingDataContainer(reader->readValue("ReplaceExistingDataContainer", getReplaceExistingDataContainer() ) );
-  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }
 

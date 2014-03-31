@@ -85,15 +85,12 @@ void ClearData::setupFilterParameters()
 void ClearData::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-  /* Code to read the values goes between these statements */
-  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
   setXMin( reader->readValue("XMin", getXMin()) );
   setYMin( reader->readValue("YMin", getYMin()) );
   setZMin( reader->readValue("ZMin", getZMin()) );
   setXMax( reader->readValue("XMax", getXMax()) );
   setYMax( reader->readValue("YMax", getYMax()) );
   setZMax( reader->readValue("ZMax", getZMax()) );
-  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }
 

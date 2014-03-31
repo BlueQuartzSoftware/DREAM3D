@@ -120,13 +120,10 @@ void SingleThresholdFeatures::setupFilterParameters()
 void SingleThresholdFeatures::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-  /* Code to read the values goes between these statements */
-  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
   setSelectedFeatureArrayName( reader->readString( "SelectedFeatureArrayName", getSelectedFeatureArrayName() ) );
   setComparisonOperator( reader->readValue("ComparisonOperator", getComparisonOperator()) );
   setComparisonValue( reader->readValue("ComparisonValue", getComparisonValue()) );
   setOutputArrayName( reader->readString( "OutputArrayName", getOutputArrayName() ) );
-  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }
 

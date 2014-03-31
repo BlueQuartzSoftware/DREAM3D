@@ -85,8 +85,6 @@ void NodesTrianglesToStl::setupFilterParameters()
 void NodesTrianglesToStl::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-  /* Code to read the values goes between these statements */
-  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
   setNodesFile( reader->readString( "NodesFile", getNodesFile() ) );
   setTrianglesFile( reader->readString( "TrianglesFile", getTrianglesFile() ) );
   setOutputStlDirectory( reader->readString( "OutputStlDirectory", getOutputStlDirectory() ) );

@@ -87,14 +87,11 @@ void NodesTrianglesToVtk::setupFilterParameters()
 void NodesTrianglesToVtk::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-  /* Code to read the values goes between these statements */
-  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
   setNodesFile( reader->readString( "NodesFile", getNodesFile() ) );
   setTrianglesFile( reader->readString( "TrianglesFile", getTrianglesFile() ) );
   setOutputVtkFile( reader->readString( "OutputVtkFile", getOutputVtkFile() ) );
   setWriteBinaryFile( reader->readValue("WriteBinaryFile", getWriteBinaryFile()) );
   setWriteConformalMesh( reader->readValue("WriteConformalMesh", getWriteConformalMesh()) );
-  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }
 
