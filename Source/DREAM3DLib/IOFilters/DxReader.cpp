@@ -406,7 +406,6 @@ int DxReader::readFile()
       finished_data = true;
     }
 
-    // Allocate the DataArray at this point:
     if(finished_header && !finished_data)
     {
       for (size_t in_spins = 0; in_spins < tokens.size(); in_spins++)
