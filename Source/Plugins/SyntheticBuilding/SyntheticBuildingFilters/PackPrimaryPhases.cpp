@@ -232,8 +232,7 @@ class AssignVoxelsGapsImpl
 // -----------------------------------------------------------------------------
 PackPrimaryPhases::PackPrimaryPhases() :
   AbstractFilter(),
-  m_OutputDataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
-  m_OutputCellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
+  m_OutputCellAttributeMatrixName(DREAM3D::Defaults::SyntheticVolume, DREAM3D::Defaults::CellAttributeMatrixName, ""),
   m_OutputCellFeatureAttributeMatrixName(DREAM3D::Defaults::CellFeatureAttributeMatrixName),
   m_InputStatsArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellEnsembleAttributeMatrixName, DREAM3D::EnsembleData::Statistics),
   m_InputPhaseTypesArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellEnsembleAttributeMatrixName, DREAM3D::EnsembleData::PhaseTypes),
@@ -301,11 +300,12 @@ PackPrimaryPhases::~PackPrimaryPhases()
 void PackPrimaryPhases::setupFilterParameters()
 {
   FilterParameterVector parameters;
+  parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "QString", true));
   parameters.push_back(FilterParameter::New("Statistics Array", "InputStatsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget,"DataArrayPath", true));
   parameters.push_back(FilterParameter::New("Phase Types Array", "InputPhaseTypesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget,"DataArrayPath", true));
   parameters.push_back(FilterParameter::New("Shape Types Array", "InputShapeTypesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget,"DataArrayPath", true));
-  parameters.push_back(FilterParameter::New("Synthetic Volume DataContainer Name", "OutputDataContainerName", FilterParameterWidgetType::DataContainerSelectionWidget,"QString", true));
-  parameters.push_back(FilterParameter::New("Cell Attribute Matrix Name", "OutputCellAttributeMatrixName", FilterParameterWidgetType::StringWidget,"QString", true));
+  parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "QString", true));
+  parameters.push_back(FilterParameter::New("Cell Attribute Matrix Name", "OutputCellAttributeMatrixName", FilterParameterWidgetType::AttributeMatrixSelectionWidget,"DataArrayPath", true));
   parameters.push_back(FilterParameter::New("Cell Feature Attribute Matrix Name", "OutputCellFeatureAttributeMatrixName", FilterParameterWidgetType::StringWidget,"QString", true));
   parameters.push_back(FilterParameter::New("Feature Ids Array Name", "FeatureIdsArrayName", FilterParameterWidgetType::StringWidget,"QString", true));
   parameters.push_back(FilterParameter::New("Cell Phases Array Name", "CellPhasesArrayName", FilterParameterWidgetType::StringWidget,"QString", true));
@@ -316,14 +316,16 @@ void PackPrimaryPhases::setupFilterParameters()
 
   setFilterParameters(parameters);
 }
+
+// -----------------------------------------------------------------------------
+//
 // -----------------------------------------------------------------------------
 void PackPrimaryPhases::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
   /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN */
-  setOutputDataContainerName( reader->readString("OutputDataContainerName", getOutputDataContainerName() ) );
-  setOutputCellAttributeMatrixName( reader->readString("OutputCellAttributeMatrixName", getOutputCellAttributeMatrixName() ) );
+  setOutputCellAttributeMatrixName( reader->readDataArrayPath("OutputCellAttributeMatrixName", getOutputCellAttributeMatrixName() ) );
   setOutputCellFeatureAttributeMatrixName( reader->readString("OutputCellFeatureAttributeMatrixName", getOutputCellFeatureAttributeMatrixName() ) );
   setFeatureIdsArrayName( reader->readString("FeatureIdsArrayName", getFeatureIdsArrayName() ) );
   setCellPhasesArrayName( reader->readString("CellPhasesArrayName", getCellPhasesArrayName() ) );
@@ -344,7 +346,6 @@ void PackPrimaryPhases::readFilterParameters(AbstractFilterParametersReader* rea
 int PackPrimaryPhases::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  writer->writeValue("OutputDataContainerName", getOutputDataContainerName() );
   writer->writeValue("OutputCellAttributeMatrixName", getOutputCellAttributeMatrixName() );
   writer->writeValue("OutputCellFeatureAttributeMatrixName", getOutputCellFeatureAttributeMatrixName() );
   writer->writeValue("FeatureIdsArrayName", getFeatureIdsArrayName() );
@@ -408,14 +409,11 @@ void PackPrimaryPhases::dataCheck()
   DataContainerArray::Pointer dca = getDataContainerArray();
 
   // Make sure we have our input DataContainer with the proper Ensemble data
-  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getOutputDataContainerName(), false);
+  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getOutputCellAttributeMatrixName().getDataContainerName(), false);
   if(getErrorCondition() < 0 || NULL == m) { return; }
   //Input Ensemble Data That we require
   typedef DataArray<unsigned int> PhaseTypeArrayType;
   typedef DataArray<unsigned int> ShapeTypeArrayType;
-
-  //  AttributeMatrix::Pointer cellEnsembleAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellEnsembleAttributeMatrixName(), -303);
-  //  if(getErrorCondition() < 0 || NULL == cellEnsembleAttrMat.get()) { return; }
 
   QVector<size_t> dims(1, 1);
   m_PhaseTypesPtr = dca->getPrereqArrayFromPath<DataArray<unsigned int>, AbstractFilter>(this, getInputPhaseTypesArrayPath(), dims);
@@ -435,9 +433,8 @@ void PackPrimaryPhases::dataCheck()
     notifyErrorMessage(getHumanLabel(), ss, -308);
   }
 
-  AttributeMatrix::Pointer cellAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getOutputCellAttributeMatrixName(), -301);
+  AttributeMatrix::Pointer cellAttrMat = dca->getPrereqAttributeMatrixFromPath<VolumeDataContainer, AbstractFilter>(this, getOutputCellAttributeMatrixName(), -301);
   if(getErrorCondition() < 0 || NULL == cellAttrMat.get() ) { return; }
-
 
   dims[0] = 1;
   //Cell Data - Look for the data, if it is NOT found then create it
@@ -513,13 +510,13 @@ void PackPrimaryPhases::preflight()
   dataCheck();
   emit preflightExecuted();
 
-  getDataContainerArray()->getDataContainer(getOutputDataContainerName())->getAttributeMatrix(getOutputCellFeatureAttributeMatrixName())->removeAttributeArray(m_EquivalentDiametersArrayName);
-  getDataContainerArray()->getDataContainer(getOutputDataContainerName())->getAttributeMatrix(getOutputCellFeatureAttributeMatrixName())->removeAttributeArray(m_Omega3sArrayName);
-  getDataContainerArray()->getDataContainer(getOutputDataContainerName())->getAttributeMatrix(getOutputCellFeatureAttributeMatrixName())->removeAttributeArray(m_AxisEulerAnglesArrayName);
-  getDataContainerArray()->getDataContainer(getOutputDataContainerName())->getAttributeMatrix(getOutputCellFeatureAttributeMatrixName())->removeAttributeArray(m_AxisLengthsArrayName);
-  getDataContainerArray()->getDataContainer(getOutputDataContainerName())->getAttributeMatrix(getOutputCellFeatureAttributeMatrixName())->removeAttributeArray(m_VolumesArrayName);
-  getDataContainerArray()->getDataContainer(getOutputDataContainerName())->getAttributeMatrix(getOutputCellFeatureAttributeMatrixName())->removeAttributeArray(m_CentroidsArrayName);
-  getDataContainerArray()->getDataContainer(getOutputDataContainerName())->getAttributeMatrix(getOutputCellFeatureAttributeMatrixName())->removeAttributeArray(m_NeighborhoodsArrayName);
+  getDataContainerArray()->getDataContainer(getOutputCellAttributeMatrixName().getDataContainerName())->getAttributeMatrix(getOutputCellFeatureAttributeMatrixName())->removeAttributeArray(m_EquivalentDiametersArrayName);
+  getDataContainerArray()->getDataContainer(getOutputCellAttributeMatrixName().getDataContainerName())->getAttributeMatrix(getOutputCellFeatureAttributeMatrixName())->removeAttributeArray(m_Omega3sArrayName);
+  getDataContainerArray()->getDataContainer(getOutputCellAttributeMatrixName().getDataContainerName())->getAttributeMatrix(getOutputCellFeatureAttributeMatrixName())->removeAttributeArray(m_AxisEulerAnglesArrayName);
+  getDataContainerArray()->getDataContainer(getOutputCellAttributeMatrixName().getDataContainerName())->getAttributeMatrix(getOutputCellFeatureAttributeMatrixName())->removeAttributeArray(m_AxisLengthsArrayName);
+  getDataContainerArray()->getDataContainer(getOutputCellAttributeMatrixName().getDataContainerName())->getAttributeMatrix(getOutputCellFeatureAttributeMatrixName())->removeAttributeArray(m_VolumesArrayName);
+  getDataContainerArray()->getDataContainer(getOutputCellAttributeMatrixName().getDataContainerName())->getAttributeMatrix(getOutputCellFeatureAttributeMatrixName())->removeAttributeArray(m_CentroidsArrayName);
+  getDataContainerArray()->getDataContainer(getOutputCellAttributeMatrixName().getDataContainerName())->getAttributeMatrix(getOutputCellFeatureAttributeMatrixName())->removeAttributeArray(m_NeighborhoodsArrayName);
 }
 
 // -----------------------------------------------------------------------------
@@ -542,7 +539,7 @@ void PackPrimaryPhases::execute()
   m_Seed = QDateTime::currentMSecsSinceEpoch();
   DREAM3D_RANDOMNG_NEW_SEEDED(m_Seed);
 
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getOutputDataContainerName());
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getOutputCellAttributeMatrixName().getDataContainerName());
 
   //int64_t totalPoints = m->getAttributeMatrix(m_OutputCellAttributeMatrixName)->getNumTuples();
   int64_t totalFeatures = m->getAttributeMatrix(m_OutputCellFeatureAttributeMatrixName)->getNumTuples();
@@ -1225,7 +1222,7 @@ int PackPrimaryPhases::writeVtkFile(int32_t* featureOwners, bool* exclusionZones
 // -----------------------------------------------------------------------------
 void PackPrimaryPhases::initialize_packinggrid()
 {
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getOutputDataContainerName());
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getOutputCellAttributeMatrixName().getDataContainerName());
 
   m_PackingRes[0] = m->getXRes() * 2.0f;
   m_PackingRes[1] = m->getYRes() * 2.0f;
@@ -1392,7 +1389,7 @@ void PackPrimaryPhases::move_feature(size_t gnum, float xc, float yc, float zc)
 // -----------------------------------------------------------------------------
 void PackPrimaryPhases::determine_neighbors(size_t gnum, int add)
 {
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getOutputDataContainerName());
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getOutputCellAttributeMatrixName().getDataContainerName());
 
   float x, y, z;
   float xn, yn, zn;
@@ -1432,7 +1429,7 @@ void PackPrimaryPhases::determine_neighbors(size_t gnum, int add)
 float PackPrimaryPhases::check_neighborhooderror(int gadd, int gremove)
 {
   // Optimized Code
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getOutputDataContainerName());
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getOutputCellAttributeMatrixName().getDataContainerName());
 
   StatsDataArray& statsDataArray = *(m_StatsDataArray.lock().get());
 
@@ -1603,7 +1600,7 @@ void PackPrimaryPhases::compare_3Ddistributions(QVector<QVector<QVector<float> >
 // -----------------------------------------------------------------------------
 float PackPrimaryPhases::check_sizedisterror(Feature* feature)
 {
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getOutputDataContainerName());
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getOutputCellAttributeMatrixName().getDataContainerName());
 
   StatsDataArray& statsDataArray = *(m_StatsDataArray.lock().get());
 
@@ -1888,9 +1885,9 @@ void PackPrimaryPhases::assign_voxels()
 {
   notifyStatusMessage(getHumanLabel(), "Assigning Voxels");
 
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getOutputDataContainerName());
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getOutputCellAttributeMatrixName().getDataContainerName());
 
-  int64_t totalPoints = m->getAttributeMatrix(m_OutputCellAttributeMatrixName)->getNumTuples();
+  int64_t totalPoints = m->getAttributeMatrix(m_OutputCellAttributeMatrixName.getAttributeMatrixName())->getNumTuples();
 
   size_t udims[3] = {0, 0, 0};
   m->getDimensions(udims);
@@ -2067,7 +2064,7 @@ void PackPrimaryPhases::assign_gaps_only()
 {
   notifyStatusMessage(getHumanLabel(), "Assigning Gaps");
 
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getOutputDataContainerName());
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getOutputCellAttributeMatrixName().getDataContainerName());
 
   int featurename, feature;
   int current = 0;
@@ -2082,7 +2079,7 @@ void PackPrimaryPhases::assign_gaps_only()
   int xPoints = static_cast<int>(m->getXPoints());
   int yPoints = static_cast<int>(m->getYPoints());
   int zPoints = static_cast<int>(m->getZPoints());
-  int64_t totalPoints = m->getAttributeMatrix(m_OutputCellAttributeMatrixName)->getNumTuples();
+  int64_t totalPoints = m->getAttributeMatrix(m_OutputCellAttributeMatrixName.getAttributeMatrixName())->getNumTuples();
   int64_t totalFeatures = m->getAttributeMatrix(m_OutputCellFeatureAttributeMatrixName)->getNumTuples();
 
   int neighpoints[6];
@@ -2192,11 +2189,11 @@ void PackPrimaryPhases::cleanup_features()
 {
   notifyStatusMessage(getHumanLabel(), "Cleaning Up Features");
 
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getOutputDataContainerName());
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getOutputCellAttributeMatrixName().getDataContainerName());
 
   StatsDataArray& statsDataArray = *(m_StatsDataArray.lock().get());
 
-  int64_t totalPoints = m->getAttributeMatrix(m_OutputCellAttributeMatrixName)->getNumTuples();
+  int64_t totalPoints = m->getAttributeMatrix(m_OutputCellAttributeMatrixName.getAttributeMatrixName())->getNumTuples();
   int64_t totalFeatures = m->getAttributeMatrix(m_OutputCellFeatureAttributeMatrixName)->getNumTuples();
   size_t udims[3] = {0, 0, 0};
   m->getDimensions(udims);
@@ -2371,7 +2368,7 @@ int PackPrimaryPhases::estimate_numfeatures(int xpoints, int ypoints, int zpoint
   // This is for convenience
   DataContainerArray::Pointer dca = getDataContainerArray();
 
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getOutputDataContainerName());
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getOutputCellAttributeMatrixName().getDataContainerName());
   QVector<size_t> dims(1, 1);
   m_PhaseTypesPtr = dca->getPrereqArrayFromPath<DataArray<unsigned int>, AbstractFilter>(this, getInputPhaseTypesArrayPath(), dims);
   DataArray<uint32_t>* phaseType = m_PhaseTypesPtr.lock().get();
@@ -2465,7 +2462,7 @@ void PackPrimaryPhases::write_goal_attributes()
 {
   int err = 0;
   setErrorCondition(err);
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getOutputDataContainerName());
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getOutputCellAttributeMatrixName().getDataContainerName());
 
   int64_t totalFeatures = m->getAttributeMatrix(m_OutputCellFeatureAttributeMatrixName)->getNumTuples();
 
@@ -2574,7 +2571,6 @@ AbstractFilter::Pointer PackPrimaryPhases::newFilterInstance(bool copyFilterPara
   PackPrimaryPhases::Pointer filter = PackPrimaryPhases::New();
   if(true == copyFilterParameters)
   {
-    filter->setOutputDataContainerName( getOutputDataContainerName() );
     filter->setOutputCellAttributeMatrixName( getOutputCellAttributeMatrixName() );
     filter->setOutputCellFeatureAttributeMatrixName( getOutputCellFeatureAttributeMatrixName() );
     filter->setFeatureIdsArrayName( getFeatureIdsArrayName() );

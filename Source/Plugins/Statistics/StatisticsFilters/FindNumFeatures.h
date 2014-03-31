@@ -75,6 +75,11 @@ class FindNumFeatures : public AbstractFilter
     virtual const QString getHumanLabel() { return "Find Number of Features"; }
 
     /**
+     * @brief setupFilterParameters
+     */
+    virtual void setupFilterParameters();
+
+    /**
     * @brief This method will write the options to a file
     * @param writer The writer that is used to write the options to a file
     */

@@ -79,9 +79,11 @@ FindNeighbors::~FindNeighbors()
 void FindNeighbors::setupFilterParameters()
 {
   FilterParameterVector parameters;
+  parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "QString", true));
+  parameters.push_back(FilterParameter::New("Feature Ids Array Path", "FeatureIdsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget,"QString", true));
+  parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "QString", true));
   parameters.push_back(FilterParameter::New("Create Cell Data in AttributeMatrix", "CellAttributeMatrixPath", FilterParameterWidgetType::AttributeMatrixSelectionWidget,"DataArrayPath", true));
   parameters.push_back(FilterParameter::New("Create Feature Data in AttributeMatrix", "CellFeatureAttributeMatrixPath", FilterParameterWidgetType::AttributeMatrixSelectionWidget,"DataArrayPath", true));
-  parameters.push_back(FilterParameter::New("Feature Ids Array Path", "FeatureIdsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget,"QString", true));
   parameters.push_back(FilterParameter::New("Surface Voxels Array Name", "SurfaceVoxelsArrayName", FilterParameterWidgetType::StringWidget,"QString", true));
   parameters.push_back(FilterParameter::New("Surface Features Array Name", "SurfaceFeaturesArrayName", FilterParameterWidgetType::StringWidget,"QString", true));
   parameters.push_back(FilterParameter::New("Number Of Neighbors Array Name", "NumNeighborsArrayName", FilterParameterWidgetType::StringWidget,"QString", true));

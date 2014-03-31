@@ -53,7 +53,7 @@ FindNumFeatures::FindNumFeatures() :
   m_NumFeaturesArrayName(DREAM3D::EnsembleData::NumFeatures),
   m_NumFeatures(NULL)
 {
-
+  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------
@@ -62,12 +62,33 @@ FindNumFeatures::FindNumFeatures() :
 FindNumFeatures::~FindNumFeatures()
 {
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void FindNumFeatures::setupFilterParameters()
+{
+  FilterParameterVector parameters;
+  parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "QString", true));
+  parameters.push_back(FilterParameter::New("Feature Phases Array Path", "FeaturePhasesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget,"DataArrayPath", true));
+  parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "QString", true));
+  parameters.push_back(FilterParameter::New("Create Cell Ensemble Data in AttributeMatrix", "CellEnsembleAttributeMatrixPath", FilterParameterWidgetType::AttributeMatrixSelectionWidget,"DataArrayPath", true));
+  parameters.push_back(FilterParameter::New("Number of Features Array Name", "NumFeaturesArrayName", FilterParameterWidgetType::StringWidget,"QString", true));
+
+  setFilterParameters(parameters);
+}
+
+// -----------------------------------------------------------------------------
+//
 // -----------------------------------------------------------------------------
 void FindNumFeatures::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
   /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+  setFeaturePhasesArrayPath( reader->readDataArrayPath("FeaturePhasesArrayPath", getFeaturePhasesArrayPath() ) );
+  setCellEnsembleAttributeMatrixPath(reader->readDataArrayPath("CellEnsembleAttributeMatrixPath", getCellEnsembleAttributeMatrixPath() ) );
+  setNumFeaturesArrayName( reader->readString("NumFeaturesArrayName", getNumFeaturesArrayName() ) );
   /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }
@@ -78,6 +99,9 @@ void FindNumFeatures::readFilterParameters(AbstractFilterParametersReader* reade
 int FindNumFeatures::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
+  writer->writeValue("FeaturePhasesArrayPath", getFeaturePhasesArrayPath() );
+  writer->writeValue("CellEnsembleAttributeMatrixPath", getCellEnsembleAttributeMatrixPath() );
+  writer->writeValue("NumFeaturesArrayName", getNumFeaturesArrayName() );
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
@@ -89,9 +113,7 @@ void FindNumFeatures::dataCheck()
 {
   setErrorCondition(0);
 
-  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, m_CellEnsembleAttributeMatrixPath.getDataContainerName(), false);
-  if(getErrorCondition() < 0 || NULL == m) { return; }
-  AttributeMatrix::Pointer cellEnsembleAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellEnsembleAttributeMatrixPath().getAttributeMatrixName(), -304);
+  AttributeMatrix::Pointer cellEnsembleAttrMat = getDataContainerArray()->getPrereqAttributeMatrixFromPath<VolumeDataContainer, AbstractFilter>(this, getCellEnsembleAttributeMatrixPath(), -304);
   if(getErrorCondition() < 0) { return; }
  
   QVector<size_t> dims(1, 1);
@@ -149,6 +171,9 @@ AbstractFilter::Pointer FindNumFeatures::newFilterInstance(bool copyFilterParame
   FindNumFeatures::Pointer filter = FindNumFeatures::New();
   if(true == copyFilterParameters)
   {
+    filter->setFeaturePhasesArrayPath(getFeaturePhasesArrayPath());
+    filter->setCellEnsembleAttributeMatrixPath(getCellEnsembleAttributeMatrixPath());
+    filter->setNumFeaturesArrayName(getNumFeaturesArrayName());
   }
   return filter;
 }

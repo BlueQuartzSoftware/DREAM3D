@@ -79,11 +79,8 @@ class PackPrimaryPhases : public AbstractFilter
     DREAM3D_TYPE_MACRO_SUPER(PackPrimaryPhases, AbstractFilter)
 
     virtual ~PackPrimaryPhases();
-    DREAM3D_INSTANCE_STRING_PROPERTY(OutputDataContainerName)
-    Q_PROPERTY(QString OutputDataContainerName READ getOutputDataContainerName WRITE setOutputDataContainerName)
-
-    DREAM3D_INSTANCE_STRING_PROPERTY(OutputCellAttributeMatrixName)
-    Q_PROPERTY(QString OutputCellAttributeMatrixName READ getOutputCellAttributeMatrixName WRITE setOutputCellAttributeMatrixName)
+    DREAM3D_FILTER_PARAMETER(DataArrayPath, OutputCellAttributeMatrixName)
+    Q_PROPERTY(DataArrayPath OutputCellAttributeMatrixName READ getOutputCellAttributeMatrixName WRITE setOutputCellAttributeMatrixName)
 
     DREAM3D_INSTANCE_STRING_PROPERTY(OutputCellFeatureAttributeMatrixName)
     Q_PROPERTY(QString OutputCellFeatureAttributeMatrixName READ getOutputCellFeatureAttributeMatrixName WRITE setOutputCellFeatureAttributeMatrixName)
