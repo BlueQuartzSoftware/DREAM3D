@@ -110,7 +110,8 @@ RotateEulerRefFrame::RotateEulerRefFrame() :
   m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
   m_RotationAngle(0.0),
   m_CellEulerAnglesArrayName(DREAM3D::CellData::EulerAngles),
-  m_CellEulerAngles(NULL)
+  m_CellEulerAngles(NULL),
+/*[]*/m_CellEulerAnglesArrayPath(DREAM3D::Defaults::SomePath)
 {
   m_RotationAxis.x = 0.0;
   m_RotationAxis.y = 0.0;
@@ -152,6 +153,7 @@ void RotateEulerRefFrame::setupFilterParameters()
     parameter->setUnits("Degrees");
     parameters.push_back(parameter);
   }
+/*[]*/parameters.push_back(FilterParameter::New("CellEulerAngles", "CellEulerAnglesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
   setFilterParameters(parameters);
 }
 
@@ -161,6 +163,7 @@ void RotateEulerRefFrame::setupFilterParameters()
 void RotateEulerRefFrame::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
+  setCellEulerAnglesArrayPath(reader->readDataArrayPath("CellEulerAnglesArrayPath", getCellEulerAnglesArrayPath() ) );
   setRotationAxis( reader->readFloatVec3("RotationAxis", getRotationAxis() ) );
   setRotationAngle( reader->readValue("RotationAngle", getRotationAngle()) );
   reader->closeFilterGroup();
@@ -172,6 +175,7 @@ void RotateEulerRefFrame::readFilterParameters(AbstractFilterParametersReader* r
 int RotateEulerRefFrame::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
+  writer->writeValue("CellEulerAnglesArrayPath", getCellEulerAnglesArrayPath() );
   writer->writeValue("RotationAxis", getRotationAxis() );
   writer->writeValue("RotationAngle", getRotationAngle() );
   writer->closeFilterGroup();
@@ -197,7 +201,8 @@ void RotateEulerRefFrame::dataCheck()
     return;
   }
   QVector<size_t> dims(1, 3);
-  m_CellEulerAnglesPtr = cellAttrMat->getPrereqArray<DataArray<float>, AbstractFilter>(this, m_CellEulerAnglesArrayName, -301, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+////====>REMOVE THIS    m_CellEulerAnglesPtr = cellAttrMat->getPrereqArray<DataArray<float>, AbstractFilter>(this, m_CellEulerAnglesArrayName, -301, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_CellEulerAnglesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getCellEulerAnglesArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_CellEulerAnglesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_CellEulerAngles = m_CellEulerAnglesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
@@ -255,13 +260,10 @@ void RotateEulerRefFrame::execute()
 // -----------------------------------------------------------------------------
 AbstractFilter::Pointer RotateEulerRefFrame::newFilterInstance(bool copyFilterParameters)
 {
-  /*
-  * RotationAxis
-  * RotationAngle
-  */
   RotateEulerRefFrame::Pointer filter = RotateEulerRefFrame::New();
   if(true == copyFilterParameters)
   {
+    filter->setCellEulerAnglesArrayPath(getCellEulerAnglesArrayPath());
     filter->setRotationAxis( getRotationAxis() );
     filter->setRotationAngle( getRotationAngle() );
   }

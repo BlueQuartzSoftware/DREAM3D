@@ -67,6 +67,12 @@ class DREAM3DLib_EXPORT FindFeaturePhases : public AbstractFilter
     //------ Created Feature Data
 
 
+    DREAM3D_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
+    Q_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
+
+    DREAM3D_FILTER_PARAMETER(DataArrayPath, CellPhasesArrayPath)
+    Q_PROPERTY(DataArrayPath CellPhasesArrayPath READ getCellPhasesArrayPath WRITE setCellPhasesArrayPath)
+
     virtual const QString getCompiledLibraryName() { return Generic::GenericBaseName; }
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::GenericFilters; }

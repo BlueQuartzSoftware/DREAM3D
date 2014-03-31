@@ -77,6 +77,9 @@ class AddOrientationNoise : public AbstractFilter
     DREAM3D_FILTER_PARAMETER(float, Magnitude)
     Q_PROPERTY(float Magnitude READ getMagnitude WRITE setMagnitude)
 
+    DREAM3D_FILTER_PARAMETER(DataArrayPath, CellEulerAnglesArrayPath)
+    Q_PROPERTY(DataArrayPath CellEulerAnglesArrayPath READ getCellEulerAnglesArrayPath WRITE setCellEulerAnglesArrayPath)
+
     virtual const QString getCompiledLibraryName() { return SyntheticBuilding::SyntheticBuildingBaseName; }
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::SyntheticBuildingFilters; }

@@ -52,7 +52,9 @@ FindSurfaceVoxelFractions::FindSurfaceVoxelFractions() :
   m_SurfaceVoxelsArrayName(DREAM3D::CellData::SurfaceVoxels),
   m_SurfaceVoxels(NULL),
   m_SurfaceVoxelFractionsArrayName(DREAM3D::FeatureData::SurfaceVoxelFractions),
-  m_SurfaceVoxelFractions(NULL)
+  m_SurfaceVoxelFractions(NULL),
+/*[]*/m_FeatureIdsArrayPath(DREAM3D::Defaults::SomePath),
+/*[]*/m_SurfaceVoxelsArrayPath(DREAM3D::Defaults::SomePath)
 {
   setupFilterParameters();
 }
@@ -74,6 +76,8 @@ void FindSurfaceVoxelFractions::setupFilterParameters()
 void FindSurfaceVoxelFractions::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
+  setSurfaceVoxelsArrayPath(reader->readDataArrayPath("SurfaceVoxelsArrayPath", getSurfaceVoxelsArrayPath() ) );
+  setFeatureIdsArrayPath(reader->readDataArrayPath("FeatureIdsArrayPath", getFeatureIdsArrayPath() ) );
   reader->closeFilterGroup();
 }
 
@@ -83,6 +87,8 @@ void FindSurfaceVoxelFractions::readFilterParameters(AbstractFilterParametersRea
 int FindSurfaceVoxelFractions::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
+  writer->writeValue("SurfaceVoxelsArrayPath", getSurfaceVoxelsArrayPath() );
+  writer->writeValue("FeatureIdsArrayPath", getFeatureIdsArrayPath() );
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
@@ -102,10 +108,12 @@ void FindSurfaceVoxelFractions::dataCheck()
   if(getErrorCondition() < 0 || NULL == cellAttrMat.get() ) { return; }
 
   QVector<size_t> dims(1, 1);
-  m_FeatureIdsPtr = cellAttrMat->getPrereqArray<DataArray<int32_t>, AbstractFilter>(this, m_FeatureIdsArrayName, -300, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+////====>REMOVE THIS    m_FeatureIdsPtr = cellAttrMat->getPrereqArray<DataArray<int32_t>, AbstractFilter>(this, m_FeatureIdsArrayName, -300, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_FeatureIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeatureIdsArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-  m_SurfaceVoxelsPtr = cellAttrMat->getPrereqArray<DataArray<int8_t>, AbstractFilter>(this, m_SurfaceVoxelsArrayName, -301, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+////====>REMOVE THIS    m_SurfaceVoxelsPtr = cellAttrMat->getPrereqArray<DataArray<int8_t>, AbstractFilter>(this, m_SurfaceVoxelsArrayName, -301, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_SurfaceVoxelsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int8_t>, AbstractFilter>(this, getSurfaceVoxelsArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_SurfaceVoxelsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_SurfaceVoxels = m_SurfaceVoxelsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   m_SurfaceVoxelFractionsPtr = cellFeatureAttrMat->createNonPrereqArray<DataArray<float>, AbstractFilter, float>(this, m_SurfaceVoxelFractionsArrayName, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
@@ -182,6 +190,8 @@ AbstractFilter::Pointer FindSurfaceVoxelFractions::newFilterInstance(bool copyFi
   FindSurfaceVoxelFractions::Pointer filter = FindSurfaceVoxelFractions::New();
   if(true == copyFilterParameters)
   {
+    filter->setSurfaceVoxelsArrayPath(getSurfaceVoxelsArrayPath());
+    filter->setFeatureIdsArrayPath(getFeatureIdsArrayPath());
   }
   return filter;
 }

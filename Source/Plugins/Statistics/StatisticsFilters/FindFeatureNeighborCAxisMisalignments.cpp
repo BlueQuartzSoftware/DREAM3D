@@ -65,7 +65,10 @@ FindFeatureNeighborCAxisMisalignments::FindFeatureNeighborCAxisMisalignments()  
   m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
   m_CrystalStructures(NULL),
   m_NeighborList(NULL),
-  m_CAxisMisalignmentList(NULL)
+  m_CAxisMisalignmentList(NULL),
+/*[]*/m_AvgQuatsArrayPath(DREAM3D::Defaults::SomePath),
+/*[]*/m_FeaturePhasesArrayPath(DREAM3D::Defaults::SomePath),
+/*[]*/m_CrystalStructuresArrayPath(DREAM3D::Defaults::SomePath)
 {
   m_OrientationOps = OrientationOps::getOrientationOpsVector();
 
@@ -95,6 +98,9 @@ void FindFeatureNeighborCAxisMisalignments::setupFilterParameters()
     parameters.push_back(option);
   }
 
+/*[]*/parameters.push_back(FilterParameter::New("AvgQuats", "AvgQuatsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
+/*[]*/parameters.push_back(FilterParameter::New("FeaturePhases", "FeaturePhasesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
+/*[]*/parameters.push_back(FilterParameter::New("CrystalStructures", "CrystalStructuresArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
   setFilterParameters(parameters);
 }
 
@@ -104,6 +110,9 @@ void FindFeatureNeighborCAxisMisalignments::setupFilterParameters()
 void FindFeatureNeighborCAxisMisalignments::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
+  setCrystalStructuresArrayPath(reader->readDataArrayPath("CrystalStructuresArrayPath", getCrystalStructuresArrayPath() ) );
+  setFeaturePhasesArrayPath(reader->readDataArrayPath("FeaturePhasesArrayPath", getFeaturePhasesArrayPath() ) );
+  setAvgQuatsArrayPath(reader->readDataArrayPath("AvgQuatsArrayPath", getAvgQuatsArrayPath() ) );
   setFindAvgMisals( reader->readValue("UseFindAvgMisals", getFindAvgMisals()) );
   reader->closeFilterGroup();
 }
@@ -114,6 +123,9 @@ void FindFeatureNeighborCAxisMisalignments::readFilterParameters(AbstractFilterP
 int FindFeatureNeighborCAxisMisalignments::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
+  writer->writeValue("CrystalStructuresArrayPath", getCrystalStructuresArrayPath() );
+  writer->writeValue("FeaturePhasesArrayPath", getFeaturePhasesArrayPath() );
+  writer->writeValue("AvgQuatsArrayPath", getAvgQuatsArrayPath() );
   writer->writeValue("FindAvgMisals", getFindAvgMisals() );
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
@@ -135,11 +147,13 @@ void FindFeatureNeighborCAxisMisalignments::dataCheck()
 
   QVector<size_t> dims(1, 4);
   // Feature Data
-  m_AvgQuatsPtr = cellFeatureAttrMat->getPrereqArray<DataArray<float>, AbstractFilter>(this, m_AvgQuatsArrayName, -301, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+////====>REMOVE THIS    m_AvgQuatsPtr = cellFeatureAttrMat->getPrereqArray<DataArray<float>, AbstractFilter>(this, m_AvgQuatsArrayName, -301, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_AvgQuatsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getAvgQuatsArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_AvgQuatsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_AvgQuats = m_AvgQuatsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   dims[0] = 1;
-  m_FeaturePhasesPtr = cellFeatureAttrMat->getPrereqArray<DataArray<int32_t>, AbstractFilter>(this, m_FeaturePhasesArrayName, -303, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+////====>REMOVE THIS    m_FeaturePhasesPtr = cellFeatureAttrMat->getPrereqArray<DataArray<int32_t>, AbstractFilter>(this, m_FeaturePhasesArrayName, -303, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_FeaturePhasesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeaturePhasesArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_FeaturePhasesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_FeaturePhases = m_FeaturePhasesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
@@ -153,7 +167,8 @@ void FindFeatureNeighborCAxisMisalignments::dataCheck()
 
   // Ensemble Data
   typedef DataArray<unsigned int> XTalStructArrayType;
-  m_CrystalStructuresPtr = cellEnsembleAttrMat->getPrereqArray<DataArray<unsigned int>, AbstractFilter>(this, m_CrystalStructuresArrayName, -305, dims)
+////====>REMOVE THIS    m_CrystalStructuresPtr = cellEnsembleAttrMat->getPrereqArray<DataArray<unsigned int>, AbstractFilter>(this, m_CrystalStructuresArrayName, -305, dims)
+  m_CrystalStructuresPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<unsigned int>, AbstractFilter>(this, getCrystalStructuresArrayPath(), dims)
       ; /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_CrystalStructuresPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_CrystalStructures = m_CrystalStructuresPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
@@ -314,12 +329,12 @@ void FindFeatureNeighborCAxisMisalignments::execute()
 // -----------------------------------------------------------------------------
 AbstractFilter::Pointer FindFeatureNeighborCAxisMisalignments::newFilterInstance(bool copyFilterParameters)
 {
-  /*
-  * FindAvgMisals
-  */
   FindFeatureNeighborCAxisMisalignments::Pointer filter = FindFeatureNeighborCAxisMisalignments::New();
   if(true == copyFilterParameters)
   {
+    filter->setCrystalStructuresArrayPath(getCrystalStructuresArrayPath());
+    filter->setFeaturePhasesArrayPath(getFeaturePhasesArrayPath());
+    filter->setAvgQuatsArrayPath(getAvgQuatsArrayPath());
     filter->setFindAvgMisals( getFindAvgMisals() );
   }
   return filter;

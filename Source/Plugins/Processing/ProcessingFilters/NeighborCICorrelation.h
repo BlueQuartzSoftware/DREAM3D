@@ -78,6 +78,9 @@ class NeighborCICorrelation : public AbstractFilter
     DREAM3D_FILTER_PARAMETER(bool, Loop)
     Q_PROPERTY(bool Loop READ getLoop WRITE setLoop)
 
+    DREAM3D_FILTER_PARAMETER(DataArrayPath, ConfidenceIndexArrayPath)
+    Q_PROPERTY(DataArrayPath ConfidenceIndexArrayPath READ getConfidenceIndexArrayPath WRITE setConfidenceIndexArrayPath)
+
     virtual const QString getCompiledLibraryName() { return Processing::ProcessingBaseName; }
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::ProcessingFilters; }

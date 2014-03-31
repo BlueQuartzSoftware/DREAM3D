@@ -72,6 +72,12 @@ class FindShapes : public AbstractFilter
     DREAM3D_DECLARE_ARRAY(double, featuremoments, FeatureMoments) // N x 6 Array
     DREAM3D_DECLARE_ARRAY(double, featureeigenvals, FeatureEigenVals) // N x 3 Array
 
+    DREAM3D_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
+    Q_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
+
+    DREAM3D_FILTER_PARAMETER(DataArrayPath, CentroidsArrayPath)
+    Q_PROPERTY(DataArrayPath CentroidsArrayPath READ getCentroidsArrayPath WRITE setCentroidsArrayPath)
+
     virtual const QString getCompiledLibraryName() { return Statistics::StatisticsBaseName; }
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }

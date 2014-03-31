@@ -76,6 +76,9 @@ class ErodeDilateCoordinationNumber : public AbstractFilter
     DREAM3D_FILTER_PARAMETER(int, CoordinationNumber)
     Q_PROPERTY(int CoordinationNumber READ getCoordinationNumber WRITE setCoordinationNumber)
 
+    DREAM3D_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
+    Q_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
+
     virtual const QString getCompiledLibraryName() { return Processing::ProcessingBaseName; }
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::ProcessingFilters; }

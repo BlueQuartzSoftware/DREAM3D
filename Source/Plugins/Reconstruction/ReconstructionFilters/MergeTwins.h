@@ -80,6 +80,18 @@ class MergeTwins : public GroupFeatures
     Q_PROPERTY(float AngleTolerance READ getAngleTolerance WRITE setAngleTolerance)
     DREAM3D_INSTANCE_PROPERTY(bool, RandomizeParentIds)
 
+    DREAM3D_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
+    Q_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
+
+    DREAM3D_FILTER_PARAMETER(DataArrayPath, FeaturePhasesArrayPath)
+    Q_PROPERTY(DataArrayPath FeaturePhasesArrayPath READ getFeaturePhasesArrayPath WRITE setFeaturePhasesArrayPath)
+
+    DREAM3D_FILTER_PARAMETER(DataArrayPath, AvgQuatsArrayPath)
+    Q_PROPERTY(DataArrayPath AvgQuatsArrayPath READ getAvgQuatsArrayPath WRITE setAvgQuatsArrayPath)
+
+    DREAM3D_FILTER_PARAMETER(DataArrayPath, CrystalStructuresArrayPath)
+    Q_PROPERTY(DataArrayPath CrystalStructuresArrayPath READ getCrystalStructuresArrayPath WRITE setCrystalStructuresArrayPath)
+
     virtual const QString getCompiledLibraryName() { return Reconstruction::ReconstructionBaseName; }
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::ReconstructionFilters; }

@@ -163,6 +163,15 @@ class DREAM3DLib_EXPORT GenericExample : public AbstractFilter
     * a different group if you want. The string returned here will be displayed
     * in the GUI for the filter
     */
+    DREAM3D_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
+    Q_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
+
+    DREAM3D_FILTER_PARAMETER(DataArrayPath, CellPatternQualityArrayPath)
+    Q_PROPERTY(DataArrayPath CellPatternQualityArrayPath READ getCellPatternQualityArrayPath WRITE setCellPatternQualityArrayPath)
+
+    DREAM3D_FILTER_PARAMETER(DataArrayPath, GoodVoxelsArrayPath)
+    Q_PROPERTY(DataArrayPath GoodVoxelsArrayPath READ getGoodVoxelsArrayPath WRITE setGoodVoxelsArrayPath)
+
     virtual const QString getCompiledLibraryName() { return Test::TestBaseName; }
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::TestFilters; }

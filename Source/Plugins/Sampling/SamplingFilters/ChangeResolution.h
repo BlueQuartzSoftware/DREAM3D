@@ -75,6 +75,9 @@ class ChangeResolution : public AbstractFilter
     DREAM3D_FILTER_PARAMETER(bool, SaveAsNewDataContainer)
     Q_PROPERTY(bool SaveAsNewDataContainer READ getSaveAsNewDataContainer WRITE setSaveAsNewDataContainer)
 
+    DREAM3D_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
+    Q_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
+
     virtual const QString getCompiledLibraryName() { return Sampling::SamplingBaseName; }
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::SamplingFilters; }

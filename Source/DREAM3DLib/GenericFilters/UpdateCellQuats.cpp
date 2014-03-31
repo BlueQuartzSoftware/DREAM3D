@@ -50,7 +50,8 @@ UpdateCellQuats::UpdateCellQuats() :
   m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
   m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
   m_QuatsArrayName(DREAM3D::CellData::Quats),
-  m_Quats(NULL)
+  m_Quats(NULL),
+/*[]*/m_Quats5ArrayPath(DREAM3D::Defaults::SomePath)
 {
   m_OrientationOps = OrientationOps::getOrientationOpsVector();
 
@@ -67,6 +68,7 @@ UpdateCellQuats::~UpdateCellQuats()
 void UpdateCellQuats::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
+  setQuats5ArrayPath(reader->readDataArrayPath("Quats5ArrayPath", getQuats5ArrayPath() ) );
   reader->closeFilterGroup();
 }
 
@@ -76,6 +78,7 @@ void UpdateCellQuats::readFilterParameters(AbstractFilterParametersReader* reade
 int UpdateCellQuats::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
+  writer->writeValue("Quats5ArrayPath", getQuats5ArrayPath() );
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
@@ -93,7 +96,8 @@ void UpdateCellQuats::dataCheck()
   if(getErrorCondition() < 0 || NULL == cellAttrMat.get() ) { return; }
 
   QVector<size_t> dims(1, 5);
-  m_Quats5Ptr = cellAttrMat->getPrereqArray<DataArray<float>, AbstractFilter>(this, m_Quats5ArrayName, -301, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+////====>REMOVE THIS    m_Quats5Ptr = cellAttrMat->getPrereqArray<DataArray<float>, AbstractFilter>(this, m_Quats5ArrayName, -301, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_Quats5Ptr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getQuats5ArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_Quats5Ptr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_Quats5 = m_Quats5Ptr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   dims[0] = 4;
@@ -151,6 +155,7 @@ AbstractFilter::Pointer UpdateCellQuats::newFilterInstance(bool copyFilterParame
   UpdateCellQuats::Pointer filter = UpdateCellQuats::New();
   if(true == copyFilterParameters)
   {
+    filter->setQuats5ArrayPath(getQuats5ArrayPath());
   }
   return filter;
 }

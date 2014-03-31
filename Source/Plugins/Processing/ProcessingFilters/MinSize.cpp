@@ -60,7 +60,9 @@ MinSize::MinSize() :
   m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
   m_FeatureIds(NULL),
   m_FeaturePhasesArrayName(DREAM3D::FeatureData::Phases),
-  m_FeaturePhases(NULL)
+  m_FeaturePhases(NULL),
+/*[]*/m_FeatureIdsArrayPath(DREAM3D::Defaults::SomePath),
+/*[]*/m_FeaturePhasesArrayPath(DREAM3D::Defaults::SomePath)
 {
   setupFilterParameters();
 }
@@ -81,6 +83,8 @@ void MinSize::setupFilterParameters()
   parameters.push_back(FilterParameter::New("Minimum Allowed Feature Size", "MinAllowedFeatureSize", FilterParameterWidgetType::IntWidget,"int", false, "Pixels"));
   parameters.push_back(FilterParameter::New("Apply To All Phases", "ApplyToAll", FilterParameterWidgetType::BooleanWidget,"bool", false));
   parameters.push_back(FilterParameter::New("Phase Number to Run Min Size Filter on", "PhaseNumber", FilterParameterWidgetType::IntWidget,"int", false));
+/*[]*/parameters.push_back(FilterParameter::New("FeatureIds", "FeatureIdsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
+/*[]*/parameters.push_back(FilterParameter::New("FeaturePhases", "FeaturePhasesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
   setFilterParameters(parameters);
 }
 
@@ -90,6 +94,8 @@ void MinSize::setupFilterParameters()
 void MinSize::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
+  setFeaturePhasesArrayPath(reader->readDataArrayPath("FeaturePhasesArrayPath", getFeaturePhasesArrayPath() ) );
+  setFeatureIdsArrayPath(reader->readDataArrayPath("FeatureIdsArrayPath", getFeatureIdsArrayPath() ) );
   setMinAllowedFeatureSize( reader->readValue("MinAllowedFeatureSize", getMinAllowedFeatureSize()) );
   reader->closeFilterGroup();
 }
@@ -100,6 +106,8 @@ void MinSize::readFilterParameters(AbstractFilterParametersReader* reader, int i
 int MinSize::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
+  writer->writeValue("FeaturePhasesArrayPath", getFeaturePhasesArrayPath() );
+  writer->writeValue("FeatureIdsArrayPath", getFeatureIdsArrayPath() );
   writer->writeValue("MinAllowedFeatureSize", getMinAllowedFeatureSize() );
   writer->writeValue("ApplyToAll", getApplyToAll() );
   writer->writeValue("PhaseNumber", getPhaseNumber() );
@@ -122,12 +130,14 @@ void MinSize::dataCheck()
   if(getErrorCondition() < 0 || NULL == cellAttrMat.get() ) { return; }
 
   QVector<size_t> dims(1, 1);
-  m_FeatureIdsPtr = cellAttrMat->getPrereqArray<DataArray<int32_t>, AbstractFilter>(this, m_FeatureIdsArrayName, -301, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+////====>REMOVE THIS    m_FeatureIdsPtr = cellAttrMat->getPrereqArray<DataArray<int32_t>, AbstractFilter>(this, m_FeatureIdsArrayName, -301, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_FeatureIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeatureIdsArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   if(m_ApplyToAll == false)
   {
-    m_FeaturePhasesPtr = cellFeatureAttrMat->getPrereqArray<DataArray<int32_t>, AbstractFilter>(this, m_FeaturePhasesArrayName, -301, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+////====>REMOVE THIS      m_FeaturePhasesPtr = cellFeatureAttrMat->getPrereqArray<DataArray<int32_t>, AbstractFilter>(this, m_FeaturePhasesArrayName, -301, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_FeaturePhasesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeaturePhasesArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
     if( NULL != m_FeaturePhasesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
     { m_FeaturePhases = m_FeaturePhasesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   }
@@ -364,14 +374,11 @@ QVector<bool> MinSize::remove_smallfeatures()
 // -----------------------------------------------------------------------------
 AbstractFilter::Pointer MinSize::newFilterInstance(bool copyFilterParameters)
 {
-  /*
-  * MinAllowedFeatureSize
-  * ApplyToAll
-  * PhaseNumber
-  */
   MinSize::Pointer filter = MinSize::New();
   if(true == copyFilterParameters)
   {
+    filter->setFeaturePhasesArrayPath(getFeaturePhasesArrayPath());
+    filter->setFeatureIdsArrayPath(getFeatureIdsArrayPath());
     filter->setMinAllowedFeatureSize( getMinAllowedFeatureSize() );
     filter->setApplyToAll( getApplyToAll() );
     filter->setPhaseNumber( getPhaseNumber() );

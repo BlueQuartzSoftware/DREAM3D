@@ -72,6 +72,12 @@ class DREAM3DLib_EXPORT GenerateVectorColors : public AbstractFilter
     * a different group if you want. The string returned here will be displayed
     * in the GUI for the filter
     */
+    DREAM3D_FILTER_PARAMETER(DataArrayPath, SelectedVectorArrayPathArrayPath)
+    Q_PROPERTY(DataArrayPath SelectedVectorArrayPathArrayPath READ getSelectedVectorArrayPathArrayPath WRITE setSelectedVectorArrayPathArrayPath)
+
+    DREAM3D_FILTER_PARAMETER(DataArrayPath, GoodVoxelsArrayPath)
+    Q_PROPERTY(DataArrayPath GoodVoxelsArrayPath READ getGoodVoxelsArrayPath WRITE setGoodVoxelsArrayPath)
+
     virtual const QString getCompiledLibraryName() { return Generic::GenericBaseName; }
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::GenericFilters; }

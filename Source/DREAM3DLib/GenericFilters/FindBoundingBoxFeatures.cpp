@@ -52,7 +52,9 @@ FindBoundingBoxFeatures::FindBoundingBoxFeatures() :
   m_SurfaceFeaturesArrayName(DREAM3D::FeatureData::SurfaceFeatures),
   m_SurfaceFeatures(NULL),
   m_BiasedFeaturesArrayName(DREAM3D::FeatureData::BiasedFeatures),
-  m_BiasedFeatures(NULL)
+  m_BiasedFeatures(NULL),
+/*[]*/m_CentroidsArrayPath(DREAM3D::Defaults::SomePath),
+/*[]*/m_SurfaceFeaturesArrayPath(DREAM3D::Defaults::SomePath)
 {
 }
 
@@ -66,6 +68,8 @@ FindBoundingBoxFeatures::~FindBoundingBoxFeatures()
 void FindBoundingBoxFeatures::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
+  setSurfaceFeaturesArrayPath(reader->readDataArrayPath("SurfaceFeaturesArrayPath", getSurfaceFeaturesArrayPath() ) );
+  setCentroidsArrayPath(reader->readDataArrayPath("CentroidsArrayPath", getCentroidsArrayPath() ) );
   reader->closeFilterGroup();
 }
 
@@ -75,6 +79,8 @@ void FindBoundingBoxFeatures::readFilterParameters(AbstractFilterParametersReade
 int FindBoundingBoxFeatures::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
+  writer->writeValue("SurfaceFeaturesArrayPath", getSurfaceFeaturesArrayPath() );
+  writer->writeValue("CentroidsArrayPath", getCentroidsArrayPath() );
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
@@ -92,11 +98,13 @@ void FindBoundingBoxFeatures::dataCheck()
   if(getErrorCondition() < 0) { return; }
 
   QVector<size_t> dims(1, 3);
-  m_CentroidsPtr = cellFeatureAttrMat->getPrereqArray<DataArray<float>, AbstractFilter>(this, m_CentroidsArrayName, -301, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+////====>REMOVE THIS    m_CentroidsPtr = cellFeatureAttrMat->getPrereqArray<DataArray<float>, AbstractFilter>(this, m_CentroidsArrayName, -301, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_CentroidsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getCentroidsArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_CentroidsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_Centroids = m_CentroidsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   dims[0] = 1;
-  m_SurfaceFeaturesPtr = cellFeatureAttrMat->getPrereqArray<DataArray<bool>, AbstractFilter>(this, m_SurfaceFeaturesArrayName, -302, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+////====>REMOVE THIS    m_SurfaceFeaturesPtr = cellFeatureAttrMat->getPrereqArray<DataArray<bool>, AbstractFilter>(this, m_SurfaceFeaturesArrayName, -302, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_SurfaceFeaturesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<bool>, AbstractFilter>(this, getSurfaceFeaturesArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_SurfaceFeaturesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_SurfaceFeatures = m_SurfaceFeaturesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
@@ -284,6 +292,8 @@ AbstractFilter::Pointer FindBoundingBoxFeatures::newFilterInstance(bool copyFilt
   FindBoundingBoxFeatures::Pointer filter = FindBoundingBoxFeatures::New();
   if(true == copyFilterParameters)
   {
+    filter->setSurfaceFeaturesArrayPath(getSurfaceFeaturesArrayPath());
+    filter->setCentroidsArrayPath(getCentroidsArrayPath());
   }
   return filter;
 }

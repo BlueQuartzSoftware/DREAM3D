@@ -66,7 +66,8 @@ VectorSegmentFeatures::VectorSegmentFeatures() :
   m_GoodVoxelsArrayName(DREAM3D::CellData::GoodVoxels),
   m_GoodVoxels(NULL),
   m_ActiveArrayName(DREAM3D::FeatureData::Active),
-  m_Active(NULL)
+  m_Active(NULL),
+/*[]*/m_GoodVoxelsArrayPath(DREAM3D::Defaults::SomePath)
 {
   setupFilterParameters();
 }
@@ -86,6 +87,7 @@ void VectorSegmentFeatures::setupFilterParameters()
   FilterParameterVector parameters;
   parameters.push_back(FilterParameter::New("Vector Array Name", "SelectedVectorArrayPath", FilterParameterWidgetType::DataArraySelectionWidget,"DataArrayPath", false));
   parameters.push_back(FilterParameter::New("Angle Tolerance", "AngleTolerance", FilterParameterWidgetType::DoubleWidget,"float", false));
+/*[]*/parameters.push_back(FilterParameter::New("GoodVoxels", "GoodVoxelsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
   setFilterParameters(parameters);
 }
 
@@ -95,6 +97,7 @@ void VectorSegmentFeatures::setupFilterParameters()
 void VectorSegmentFeatures::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
+  setGoodVoxelsArrayPath(reader->readDataArrayPath("GoodVoxelsArrayPath", getGoodVoxelsArrayPath() ) );
   setSelectedVectorArrayPath( reader->readDataArrayPath( "SelectedVectorArrayPath", getSelectedVectorArrayPath() ) );
   setAngleTolerance( reader->readValue("AngleTolerance", getAngleTolerance()) );
   reader->closeFilterGroup();
@@ -106,6 +109,7 @@ void VectorSegmentFeatures::readFilterParameters(AbstractFilterParametersReader*
 int VectorSegmentFeatures::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
+  writer->writeValue("GoodVoxelsArrayPath", getGoodVoxelsArrayPath() );
   writer->writeValue("SelectedVectorArrayPath", getSelectedVectorArrayPath() );
   writer->writeValue("AngleTolerance", getAngleTolerance() );
   writer->closeFilterGroup();
@@ -149,7 +153,8 @@ void VectorSegmentFeatures::dataCheck()
   m_FeatureIdsPtr = cellAttrMat->createNonPrereqArray<DataArray<int32_t>, AbstractFilter, int32_t>(this, m_FeatureIdsArrayName, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-  m_GoodVoxelsPtr = cellAttrMat->getPrereqArray<DataArray<bool>, AbstractFilter>(NULL, m_GoodVoxelsArrayName, -304, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+////====>REMOVE THIS    m_GoodVoxelsPtr = cellAttrMat->getPrereqArray<DataArray<bool>, AbstractFilter>(NULL, m_GoodVoxelsArrayName, -304, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_GoodVoxelsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<bool>, AbstractFilter>(NULL, getGoodVoxelsArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_GoodVoxelsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_GoodVoxels = m_GoodVoxelsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   else {m_GoodVoxels = NULL;}
@@ -356,13 +361,10 @@ void VectorSegmentFeatures::initializeVoxelSeedGenerator(const size_t rangeMin, 
 // -----------------------------------------------------------------------------
 AbstractFilter::Pointer VectorSegmentFeatures::newFilterInstance(bool copyFilterParameters)
 {
-  /*
-  * ScalarArrayName
-  * ScalarTolerance
-  */
   VectorSegmentFeatures::Pointer filter = VectorSegmentFeatures::New();
   if(true == copyFilterParameters)
   {
+    filter->setGoodVoxelsArrayPath(getGoodVoxelsArrayPath());
     filter->setVectorsArrayName( getVectorsArrayName() );
     filter->setAngleTolerance( getAngleTolerance() );
   }

@@ -57,7 +57,9 @@ SurfaceMeshToStl::SurfaceMeshToStl() :
   m_SurfaceMeshFaceLabelsArrayName(DREAM3D::FaceData::SurfaceMeshFaceLabels),
   m_SurfaceMeshFaceLabels(NULL),
   m_SurfaceMeshFacePhasesArrayName(DREAM3D::FaceData::SurfaceMeshFacePhases),
-  m_SurfaceMeshFacePhases(NULL)
+  m_SurfaceMeshFacePhases(NULL),
+/*[]*/m_SurfaceMeshFaceLabelsArrayPath(DREAM3D::Defaults::SomePath),
+/*[]*/m_SurfaceMeshFacePhasesArrayPath(DREAM3D::Defaults::SomePath)
 {
   setupFilterParameters();
 }
@@ -78,6 +80,8 @@ void SurfaceMeshToStl::setupFilterParameters()
   parameters.push_back(FilterParameter::New("Output STL Directory", "OutputStlDirectory", FilterParameterWidgetType::OutputPathWidget,"QString", false));
   parameters.push_back(FilterParameter::New("Stl File Prefix", "OutputStlPrefix", FilterParameterWidgetType::StringWidget,"QString", false));
   parameters.push_back(FilterParameter::New("Group Files By Phase", "GroupByPhase", FilterParameterWidgetType::BooleanWidget,"bool", false));
+/*[]*/parameters.push_back(FilterParameter::New("SurfaceMeshFaceLabels", "SurfaceMeshFaceLabelsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
+/*[]*/parameters.push_back(FilterParameter::New("SurfaceMeshFacePhases", "SurfaceMeshFacePhasesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
   setFilterParameters(parameters);
 }
 
@@ -87,6 +91,8 @@ void SurfaceMeshToStl::setupFilterParameters()
 void SurfaceMeshToStl::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
+  setSurfaceMeshFacePhasesArrayPath(reader->readDataArrayPath("SurfaceMeshFacePhasesArrayPath", getSurfaceMeshFacePhasesArrayPath() ) );
+  setSurfaceMeshFaceLabelsArrayPath(reader->readDataArrayPath("SurfaceMeshFaceLabelsArrayPath", getSurfaceMeshFaceLabelsArrayPath() ) );
   setOutputStlDirectory( reader->readString( "OutputStlDirectory", getOutputStlDirectory() ) );
   setOutputStlPrefix( reader->readString( "OutputStlPrefix", getOutputStlPrefix() ) );
   reader->closeFilterGroup();
@@ -98,6 +104,8 @@ void SurfaceMeshToStl::readFilterParameters(AbstractFilterParametersReader* read
 int SurfaceMeshToStl::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
+  writer->writeValue("SurfaceMeshFacePhasesArrayPath", getSurfaceMeshFacePhasesArrayPath() );
+  writer->writeValue("SurfaceMeshFaceLabelsArrayPath", getSurfaceMeshFaceLabelsArrayPath() );
   writer->writeValue("OutputStlDirectory", getOutputStlDirectory() );
   writer->writeValue("OutputStlPrefix", getOutputStlPrefix() );
   writer->closeFilterGroup();
@@ -132,11 +140,13 @@ void SurfaceMeshToStl::dataCheck()
     notifyErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Nodes", getErrorCondition());
   }
   QVector<size_t> dims(1, 2);
-  m_SurfaceMeshFaceLabelsPtr = attrMat->getPrereqArray<DataArray<int32_t>, AbstractFilter>(this, m_SurfaceMeshFaceLabelsArrayName, -386, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+////====>REMOVE THIS    m_SurfaceMeshFaceLabelsPtr = attrMat->getPrereqArray<DataArray<int32_t>, AbstractFilter>(this, m_SurfaceMeshFaceLabelsArrayName, -386, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_SurfaceMeshFaceLabelsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getSurfaceMeshFaceLabelsArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_SurfaceMeshFaceLabelsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_SurfaceMeshFaceLabels = m_SurfaceMeshFaceLabelsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   if (m_GroupByPhase == true) {
-      m_SurfaceMeshFacePhasesPtr = attrMat->getPrereqArray<DataArray<int32_t>, AbstractFilter>(this, m_SurfaceMeshFacePhasesArrayName, -387, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+////====>REMOVE THIS        m_SurfaceMeshFacePhasesPtr = attrMat->getPrereqArray<DataArray<int32_t>, AbstractFilter>(this, m_SurfaceMeshFacePhasesArrayName, -387, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_SurfaceMeshFacePhasesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getSurfaceMeshFacePhasesArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
       if( NULL != m_SurfaceMeshFacePhasesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
       { m_SurfaceMeshFacePhases = m_SurfaceMeshFacePhasesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   }
@@ -366,14 +376,11 @@ int SurfaceMeshToStl::writeNumTrianglesToFile(const QString& filename, int triCo
 // -----------------------------------------------------------------------------
 AbstractFilter::Pointer SurfaceMeshToStl::newFilterInstance(bool copyFilterParameters)
 {
-  /*
-  * OutputStlDirectory
-  * OutputStlPrefix
-  * GroupByPhase
-  */
   SurfaceMeshToStl::Pointer filter = SurfaceMeshToStl::New();
   if(true == copyFilterParameters)
   {
+    filter->setSurfaceMeshFacePhasesArrayPath(getSurfaceMeshFacePhasesArrayPath());
+    filter->setSurfaceMeshFaceLabelsArrayPath(getSurfaceMeshFaceLabelsArrayPath());
     filter->setOutputStlDirectory( getOutputStlDirectory() );
     filter->setOutputStlPrefix( getOutputStlPrefix() );
     filter->setGroupByPhase( getGroupByPhase() );

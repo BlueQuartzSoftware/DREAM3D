@@ -138,7 +138,8 @@ MovingFiniteElementSmoothing::MovingFiniteElementSmoothing() :
   m_ConstrainQuadPoints(true),
   m_SmoothTripleLines(true),
   m_SurfaceMeshNodeTypeArrayName(DREAM3D::VertexData::SurfaceMeshNodeType),
-  m_SurfaceMeshNodeType(NULL)
+  m_SurfaceMeshNodeType(NULL),
+/*[]*/m_SurfaceMeshNodeTypeArrayPath(DREAM3D::Defaults::SomePath)
 {
   setupFilterParameters();
 }
@@ -161,6 +162,7 @@ void MovingFiniteElementSmoothing::setupFilterParameters()
   parameters.push_back(FilterParameter::New("Constrain Surface Nodes", "ConstrainSurfaceNodes", FilterParameterWidgetType::BooleanWidget,"bool", false));
   parameters.push_back(FilterParameter::New("Constrain Quad Points", "ConstrainQuadPoints", FilterParameterWidgetType::BooleanWidget,"bool", false));
   parameters.push_back(FilterParameter::New("Smooth Triple Lines", "SmoothTripleLines", FilterParameterWidgetType::BooleanWidget,"bool", false));
+/*[]*/parameters.push_back(FilterParameter::New("SurfaceMeshNodeType", "SurfaceMeshNodeTypeArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
   setFilterParameters(parameters);
 }
 
@@ -170,6 +172,7 @@ void MovingFiniteElementSmoothing::setupFilterParameters()
 void MovingFiniteElementSmoothing::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
+  setSurfaceMeshNodeTypeArrayPath(reader->readDataArrayPath("SurfaceMeshNodeTypeArrayPath", getSurfaceMeshNodeTypeArrayPath() ) );
   setIterationSteps( reader->readValue("IterationSteps", getIterationSteps()) );
   setNodeConstraints( reader->readValue("NodeConstraints", false) );
   setConstrainSurfaceNodes( reader->readValue("ConstrainSurfaceNodes", false) );
@@ -184,6 +187,7 @@ void MovingFiniteElementSmoothing::readFilterParameters(AbstractFilterParameters
 int MovingFiniteElementSmoothing::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
+  writer->writeValue("SurfaceMeshNodeTypeArrayPath", getSurfaceMeshNodeTypeArrayPath() );
   writer->writeValue("IterationSteps", getIterationSteps());
   writer->writeValue("ConstrainNodes", getNodeConstraints());
   writer->writeValue("ConstrainSurfaceNodes", getConstrainSurfaceNodes());
@@ -224,7 +228,8 @@ void MovingFiniteElementSmoothing::dataCheck()
     // Check for Node Type Array
     //int size = sm->getVertices()->getNumberOfTuples();
     QVector<size_t> dims(1, 1);
-    m_SurfaceMeshNodeTypePtr = vertexAttrMat->getPrereqArray<DataArray<int8_t>, AbstractFilter>(this, m_SurfaceMeshNodeTypeArrayName, -390, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+////====>REMOVE THIS      m_SurfaceMeshNodeTypePtr = vertexAttrMat->getPrereqArray<DataArray<int8_t>, AbstractFilter>(this, m_SurfaceMeshNodeTypeArrayName, -390, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_SurfaceMeshNodeTypePtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int8_t>, AbstractFilter>(this, getSurfaceMeshNodeTypeArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
     if( NULL != m_SurfaceMeshNodeTypePtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
     { m_SurfaceMeshNodeType = m_SurfaceMeshNodeTypePtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   }
@@ -1013,16 +1018,10 @@ void MovingFiniteElementSmoothing::execute()
 // -----------------------------------------------------------------------------
 AbstractFilter::Pointer MovingFiniteElementSmoothing::newFilterInstance(bool copyFilterParameters)
 {
-  /*
-  * IterationSteps
-  * NodeConstraints
-  * ConstrainSurfaceNodes
-  * ConstrainQuadPoints
-  * SmoothTripleLines
-  */
   MovingFiniteElementSmoothing::Pointer filter = MovingFiniteElementSmoothing::New();
   if(true == copyFilterParameters)
   {
+    filter->setSurfaceMeshNodeTypeArrayPath(getSurfaceMeshNodeTypeArrayPath());
     filter->setIterationSteps( getIterationSteps() );
     filter->setNodeConstraints( getNodeConstraints() );
     filter->setConstrainSurfaceNodes( getConstrainSurfaceNodes() );

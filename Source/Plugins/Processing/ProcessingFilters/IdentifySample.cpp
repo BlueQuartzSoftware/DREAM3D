@@ -55,7 +55,8 @@ IdentifySample::IdentifySample() :
   m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
   m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
   m_GoodVoxelsArrayName(DREAM3D::CellData::GoodVoxels),
-  m_GoodVoxels(NULL)
+  m_GoodVoxels(NULL),
+/*[]*/m_GoodVoxelsArrayPath(DREAM3D::Defaults::SomePath)
 {
   setupFilterParameters();
 }
@@ -78,6 +79,7 @@ void IdentifySample::setupFilterParameters()
 void IdentifySample::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
+  setGoodVoxelsArrayPath(reader->readDataArrayPath("GoodVoxelsArrayPath", getGoodVoxelsArrayPath() ) );
   reader->closeFilterGroup();
 }
 
@@ -87,6 +89,7 @@ void IdentifySample::readFilterParameters(AbstractFilterParametersReader* reader
 int IdentifySample::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
+  writer->writeValue("GoodVoxelsArrayPath", getGoodVoxelsArrayPath() );
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
@@ -110,7 +113,8 @@ void IdentifySample::dataCheck()
     return;
   }
   QVector<size_t> dims(1, 1);
-  m_GoodVoxelsPtr = cellAttrMat->getPrereqArray<DataArray<bool>, AbstractFilter>(this, m_GoodVoxelsArrayName, -301, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+////====>REMOVE THIS    m_GoodVoxelsPtr = cellAttrMat->getPrereqArray<DataArray<bool>, AbstractFilter>(this, m_GoodVoxelsArrayName, -301, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_GoodVoxelsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<bool>, AbstractFilter>(this, getGoodVoxelsArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_GoodVoxelsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_GoodVoxels = m_GoodVoxelsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
@@ -295,6 +299,7 @@ AbstractFilter::Pointer IdentifySample::newFilterInstance(bool copyFilterParamet
   IdentifySample::Pointer filter = IdentifySample::New();
   if(true == copyFilterParameters)
   {
+    filter->setGoodVoxelsArrayPath(getGoodVoxelsArrayPath());
   }
   return filter;
 }

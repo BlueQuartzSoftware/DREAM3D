@@ -59,7 +59,9 @@ FindFeatureHistogram::FindFeatureHistogram() :
   m_NewEnsembleArrayArrayName(""),
   m_NewEnsembleArray(NULL),
   m_FeaturePhasesArrayName(DREAM3D::FeatureData::Phases),
-  m_FeaturePhases(NULL)
+  m_FeaturePhases(NULL),
+/*[]*/m_FeaturePhasesArrayPath(DREAM3D::Defaults::SomePath),
+/*[]*/m_BiasedFeaturesArrayPath(DREAM3D::Defaults::SomePath)
 {
   setupFilterParameters();
 }
@@ -87,6 +89,8 @@ void FindFeatureHistogram::setupFilterParameters()
     parameters.push_back(parameter);
   }
   parameters.push_back(FilterParameter::New("Remove Biased Features", "RemoveBiasedFeatures", FilterParameterWidgetType::BooleanWidget,"bool", false));
+/*[]*/parameters.push_back(FilterParameter::New("FeaturePhases", "FeaturePhasesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
+/*[]*/parameters.push_back(FilterParameter::New("BiasedFeatures", "BiasedFeaturesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
   setFilterParameters(parameters);
 }
 
@@ -96,6 +100,8 @@ void FindFeatureHistogram::setupFilterParameters()
 void FindFeatureHistogram::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
+  setBiasedFeaturesArrayPath(reader->readDataArrayPath("BiasedFeaturesArrayPath", getBiasedFeaturesArrayPath() ) );
+  setFeaturePhasesArrayPath(reader->readDataArrayPath("FeaturePhasesArrayPath", getFeaturePhasesArrayPath() ) );
   setSelectedFeatureArrayName( reader->readString( "SelectedFeatureArrayName", getSelectedFeatureArrayName() ) );
   setNumBins( reader->readValue( "NumberOfBins", getNumBins() ) );
   setRemoveBiasedFeatures( reader->readValue( "RemoveBiasedFeatures", getRemoveBiasedFeatures() ) );
@@ -108,6 +114,8 @@ void FindFeatureHistogram::readFilterParameters(AbstractFilterParametersReader* 
 int FindFeatureHistogram::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
+  writer->writeValue("BiasedFeaturesArrayPath", getBiasedFeaturesArrayPath() );
+  writer->writeValue("FeaturePhasesArrayPath", getFeaturePhasesArrayPath() );
   writer->writeValue("SelectedFeatureArrayName", getSelectedFeatureArrayName() );
   writer->writeValue("NumberOfBins", getNumBins() );
   writer->writeValue("RemovedBiasedFeatures", getRemoveBiasedFeatures() );
@@ -130,7 +138,8 @@ void FindFeatureHistogram::dataCheck()
   if(getErrorCondition() < 0) { return; }
 
   QVector<size_t> dims(1, 1);
-  m_FeaturePhasesPtr = cellFeatureAttrMat->getPrereqArray<DataArray<int32_t>, AbstractFilter>(this, m_FeaturePhasesArrayName, -302, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+////====>REMOVE THIS    m_FeaturePhasesPtr = cellFeatureAttrMat->getPrereqArray<DataArray<int32_t>, AbstractFilter>(this, m_FeaturePhasesArrayName, -302, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_FeaturePhasesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeaturePhasesArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_FeaturePhasesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_FeaturePhases = m_FeaturePhasesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
@@ -150,7 +159,8 @@ void FindFeatureHistogram::dataCheck()
   if(m_RemoveBiasedFeatures == true)
   {
     dims[0] = 1;
-    m_BiasedFeaturesPtr = cellFeatureAttrMat->getPrereqArray<DataArray<bool>, AbstractFilter>(this, m_BiasedFeaturesArrayName, -302, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+////====>REMOVE THIS      m_BiasedFeaturesPtr = cellFeatureAttrMat->getPrereqArray<DataArray<bool>, AbstractFilter>(this, m_BiasedFeaturesArrayName, -302, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_BiasedFeaturesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<bool>, AbstractFilter>(this, getBiasedFeaturesArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
     if( NULL != m_BiasedFeaturesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
     { m_BiasedFeatures = m_BiasedFeaturesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   }
@@ -284,14 +294,11 @@ void FindFeatureHistogram::execute()
 // -----------------------------------------------------------------------------
 AbstractFilter::Pointer FindFeatureHistogram::newFilterInstance(bool copyFilterParameters)
 {
-  /*
-  * SelectedFeatureArrayName
-  * NumBins
-  * RemoveBiasedFeatures
-  */
   FindFeatureHistogram::Pointer filter = FindFeatureHistogram::New();
   if(true == copyFilterParameters)
   {
+    filter->setBiasedFeaturesArrayPath(getBiasedFeaturesArrayPath());
+    filter->setFeaturePhasesArrayPath(getFeaturePhasesArrayPath());
     filter->setSelectedFeatureArrayName( getSelectedFeatureArrayName() );
     filter->setNumBins( getNumBins() );
     filter->setRemoveBiasedFeatures( getRemoveBiasedFeatures() );

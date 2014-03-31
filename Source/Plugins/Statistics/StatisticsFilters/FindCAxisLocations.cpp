@@ -52,7 +52,8 @@ FindCAxisLocations::FindCAxisLocations() :
   m_QuatsArrayName(DREAM3D::CellData::Quats),
   m_Quats(NULL),
   m_CAxisLocationsArrayName(DREAM3D::CellData::CAxisLocation),
-  m_CAxisLocations(NULL)
+  m_CAxisLocations(NULL),
+/*[]*/m_QuatsArrayPath(DREAM3D::Defaults::SomePath)
 {
   m_OrientationOps = OrientationOps::getOrientationOpsVector();
 }
@@ -67,6 +68,7 @@ FindCAxisLocations::~FindCAxisLocations()
 void FindCAxisLocations::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
+  setQuatsArrayPath(reader->readDataArrayPath("QuatsArrayPath", getQuatsArrayPath() ) );
   reader->closeFilterGroup();
 }
 
@@ -76,6 +78,7 @@ void FindCAxisLocations::readFilterParameters(AbstractFilterParametersReader* re
 int FindCAxisLocations::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
+  writer->writeValue("QuatsArrayPath", getQuatsArrayPath() );
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
@@ -93,7 +96,8 @@ void FindCAxisLocations::dataCheck()
   if(getErrorCondition() < 0 || NULL == cellAttrMat.get() ) { return; }
 
   QVector<size_t> dims(1, 4);
-  m_QuatsPtr = cellAttrMat->getPrereqArray<DataArray<float>, AbstractFilter>(this, m_QuatsArrayName, -303, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+////====>REMOVE THIS    m_QuatsPtr = cellAttrMat->getPrereqArray<DataArray<float>, AbstractFilter>(this, m_QuatsArrayName, -303, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_QuatsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getQuatsArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_QuatsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_Quats = m_QuatsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   dims[0] = 3;
@@ -166,6 +170,7 @@ AbstractFilter::Pointer FindCAxisLocations::newFilterInstance(bool copyFilterPar
   FindCAxisLocations::Pointer filter = FindCAxisLocations::New();
   if(true == copyFilterParameters)
   {
+    filter->setQuatsArrayPath(getQuatsArrayPath());
   }
   return filter;
 }

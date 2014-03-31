@@ -54,7 +54,8 @@ AvizoRectilinearCoordinateWriter::AvizoRectilinearCoordinateWriter() :
   m_WriteFeatureIds(true),
   m_WriteBinaryFile(false),
   m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
-  m_FeatureIds(NULL)
+  m_FeatureIds(NULL),
+/*[]*/m_FeatureIdsArrayPath(DREAM3D::Defaults::SomePath)
 {
   setupFilterParameters();
 }
@@ -74,12 +75,14 @@ void AvizoRectilinearCoordinateWriter::setupFilterParameters()
   FilterParameterVector parameters;
   parameters.push_back(FilterParameter::New("Output File", "OutputFile", FilterParameterWidgetType::OutputFileWidget,"QString", false, "", "*.am", "Amira Mesh"));
   parameters.push_back(FilterParameter::New("Write Binary File", "WriteBinaryFile", FilterParameterWidgetType::BooleanWidget,"bool", false));
+/*[]*/parameters.push_back(FilterParameter::New("FeatureIds", "FeatureIdsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
   setFilterParameters(parameters);
 }
 // -----------------------------------------------------------------------------
 void AvizoRectilinearCoordinateWriter::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
+  setFeatureIdsArrayPath(reader->readDataArrayPath("FeatureIdsArrayPath", getFeatureIdsArrayPath() ) );
   setOutputFile( reader->readString( "OutputFile", getOutputFile() ) );
   setWriteBinaryFile( reader->readValue("WriteBinaryFile", getWriteBinaryFile()) );
   reader->closeFilterGroup();
@@ -91,6 +94,7 @@ void AvizoRectilinearCoordinateWriter::readFilterParameters(AbstractFilterParame
 int AvizoRectilinearCoordinateWriter::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
+  writer->writeValue("FeatureIdsArrayPath", getFeatureIdsArrayPath() );
   writer->writeValue("OutputFile", getOutputFile() );
   writer->writeValue("WriteBinaryFile", getWriteBinaryFile() );
   writer->closeFilterGroup();
@@ -118,7 +122,8 @@ void AvizoRectilinearCoordinateWriter::dataCheck()
   if(m_WriteFeatureIds == true)
   {
     QVector<size_t> dims(1, 1);
-    m_FeatureIdsPtr = cellAttrMat->getPrereqArray<DataArray<int32_t>, AbstractFilter>(this, m_FeatureIdsArrayName, -301, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+////====>REMOVE THIS      m_FeatureIdsPtr = cellAttrMat->getPrereqArray<DataArray<int32_t>, AbstractFilter>(this, m_FeatureIdsArrayName, -301, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_FeatureIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeatureIdsArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
     if( NULL != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
     { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   }
@@ -313,13 +318,10 @@ int AvizoRectilinearCoordinateWriter::writeData(QDataStream& out)
 // -----------------------------------------------------------------------------
 AbstractFilter::Pointer AvizoRectilinearCoordinateWriter::newFilterInstance(bool copyFilterParameters)
 {
-  /*
-  * OutputFile
-  * WriteBinaryFile
-  */
   AvizoRectilinearCoordinateWriter::Pointer filter = AvizoRectilinearCoordinateWriter::New();
   if(true == copyFilterParameters)
   {
+    filter->setFeatureIdsArrayPath(getFeatureIdsArrayPath());
     filter->setOutputFile( getOutputFile() );
     filter->setWriteBinaryFile( getWriteBinaryFile() );
   }

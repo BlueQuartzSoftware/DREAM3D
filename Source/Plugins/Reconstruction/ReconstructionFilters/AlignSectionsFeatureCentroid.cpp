@@ -67,7 +67,8 @@ AlignSectionsFeatureCentroid::AlignSectionsFeatureCentroid() :
   m_ReferenceSlice(0),
   m_UseReferenceSlice(false),
   m_GoodVoxelsArrayName(DREAM3D::CellData::GoodVoxels),
-  m_GoodVoxels(NULL)
+  m_GoodVoxels(NULL),
+/*[]*/m_GoodVoxelsArrayPath(DREAM3D::Defaults::SomePath)
 {
   setupFilterParameters();
 }
@@ -91,6 +92,7 @@ void AlignSectionsFeatureCentroid::setupFilterParameters()
   parameters.push_back(FilterParameter::New("Reference Slice", "ReferenceSlice", FilterParameterWidgetType::IntWidget,"int", false));
   parameters.push_back(FilterParameter::New("Write Alignment Shift File", "WriteAlignmentShifts", FilterParameterWidgetType::BooleanWidget,"bool", false));
   parameters.push_back(FilterParameter::New("Alignment File", "AlignmentShiftFileName", FilterParameterWidgetType::OutputFileWidget,"QString", false));
+/*[]*/parameters.push_back(FilterParameter::New("GoodVoxels", "GoodVoxelsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
   setFilterParameters(parameters);
 }
 // -----------------------------------------------------------------------------
@@ -99,6 +101,7 @@ void AlignSectionsFeatureCentroid::setupFilterParameters()
 void AlignSectionsFeatureCentroid::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
+  setGoodVoxelsArrayPath(reader->readDataArrayPath("GoodVoxelsArrayPath", getGoodVoxelsArrayPath() ) );
   setUseReferenceSlice( reader->readValue("UseReferenceSlice", false) );
   setReferenceSlice( reader->readValue("ReferenceSlice", getReferenceSlice()) );
   setWriteAlignmentShifts( reader->readValue("WriteAlignmentShifts", false) );
@@ -112,6 +115,7 @@ void AlignSectionsFeatureCentroid::readFilterParameters(AbstractFilterParameters
 int AlignSectionsFeatureCentroid::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
+  writer->writeValue("GoodVoxelsArrayPath", getGoodVoxelsArrayPath() );
   writer->writeValue("UseReferenceSlice", getUseReferenceSlice() );
   writer->writeValue("ReferenceSlice", getReferenceSlice() );
   writer->writeValue("WriteAlignmentShifts", getWriteAlignmentShifts());
@@ -140,7 +144,8 @@ void AlignSectionsFeatureCentroid::dataCheck()
   }
 
   QVector<size_t> dims(1, 1);
-  m_GoodVoxelsPtr = cellAttrMat->getPrereqArray<DataArray<bool>, AbstractFilter>(this, m_GoodVoxelsArrayName, -303, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+////====>REMOVE THIS    m_GoodVoxelsPtr = cellAttrMat->getPrereqArray<DataArray<bool>, AbstractFilter>(this, m_GoodVoxelsArrayName, -303, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_GoodVoxelsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<bool>, AbstractFilter>(this, getGoodVoxelsArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_GoodVoxelsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_GoodVoxels = m_GoodVoxelsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
@@ -266,13 +271,10 @@ void AlignSectionsFeatureCentroid::find_shifts(QVector<int>& xshifts, QVector<in
 // -----------------------------------------------------------------------------
 AbstractFilter::Pointer AlignSectionsFeatureCentroid::newFilterInstance(bool copyFilterParameters)
 {
-  /*
-  * ReferenceSlice
-  * UseReferenceSlice
-  */
   AlignSectionsFeatureCentroid::Pointer filter = AlignSectionsFeatureCentroid::New();
   if(true == copyFilterParameters)
   {
+    filter->setGoodVoxelsArrayPath(getGoodVoxelsArrayPath());
     filter->setUseReferenceSlice( getUseReferenceSlice() );
     filter->setReferenceSlice( getReferenceSlice() );
     filter->setWriteAlignmentShifts( getWriteAlignmentShifts() );

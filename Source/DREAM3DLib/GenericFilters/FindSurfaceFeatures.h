@@ -71,6 +71,9 @@ class DREAM3DLib_EXPORT FindSurfaceFeatures : public AbstractFilter
     //------ Required Cell Data
     //------ Created Feature Data
 
+    DREAM3D_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
+    Q_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
+
     virtual const QString getCompiledLibraryName() { return Generic::GenericBaseName; }
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::GenericFilters; }

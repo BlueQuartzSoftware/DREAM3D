@@ -56,7 +56,8 @@ NeighborCICorrelation::NeighborCICorrelation() :
   m_MinConfidence(0.1),
   m_Loop(false),
   m_ConfidenceIndexArrayName(DREAM3D::CellData::ConfidenceIndex),
-  m_ConfidenceIndex(NULL)
+  m_ConfidenceIndex(NULL),
+/*[]*/m_ConfidenceIndexArrayPath(DREAM3D::Defaults::SomePath)
 {
   m_OrientationOps = OrientationOps::getOrientationOpsVector();
   setupFilterParameters();
@@ -78,12 +79,14 @@ void NeighborCICorrelation::setupFilterParameters()
   parameters.push_back(FilterParameter::New("Minimum Confidence Index", "MinConfidence", FilterParameterWidgetType::DoubleWidget,"float", false));
   parameters.push_back(FilterParameter::New("Loop Until Gone", "Loop", FilterParameterWidgetType::BooleanWidget,"bool", false));
 
+/*[]*/parameters.push_back(FilterParameter::New("ConfidenceIndex", "ConfidenceIndexArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
   setFilterParameters(parameters);
 }
 // -----------------------------------------------------------------------------
 void NeighborCICorrelation::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
+  setConfidenceIndexArrayPath(reader->readDataArrayPath("ConfidenceIndexArrayPath", getConfidenceIndexArrayPath() ) );
   setMinConfidence( reader->readValue("MinConfidence", getMinConfidence()) );
   setLoop( reader->readValue("Loop", false) );
   reader->closeFilterGroup();
@@ -95,6 +98,7 @@ void NeighborCICorrelation::readFilterParameters(AbstractFilterParametersReader*
 int NeighborCICorrelation::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
+  writer->writeValue("ConfidenceIndexArrayPath", getConfidenceIndexArrayPath() );
   writer->writeValue("MinConfidence", getMinConfidence() );
   writer->writeValue("Loop", getLoop() );
   writer->closeFilterGroup();
@@ -114,7 +118,8 @@ void NeighborCICorrelation::dataCheck()
   if(getErrorCondition() < 0 || NULL == cellAttrMat.get() ) { return; }
 
   QVector<size_t> dims(1, 1);
-  m_ConfidenceIndexPtr = cellAttrMat->getPrereqArray<DataArray<float>, AbstractFilter>(this, m_ConfidenceIndexArrayName, -301, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+////====>REMOVE THIS    m_ConfidenceIndexPtr = cellAttrMat->getPrereqArray<DataArray<float>, AbstractFilter>(this, m_ConfidenceIndexArrayName, -301, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_ConfidenceIndexPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getConfidenceIndexArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_ConfidenceIndexPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_ConfidenceIndex = m_ConfidenceIndexPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
@@ -236,13 +241,10 @@ void NeighborCICorrelation::execute()
 // -----------------------------------------------------------------------------
 AbstractFilter::Pointer NeighborCICorrelation::newFilterInstance(bool copyFilterParameters)
 {
-  /*
-  * MinConfidence
-  * Loop
-  */
   NeighborCICorrelation::Pointer filter = NeighborCICorrelation::New();
   if(true == copyFilterParameters)
   {
+    filter->setConfidenceIndexArrayPath(getConfidenceIndexArrayPath());
     filter->setMinConfidence( getMinConfidence() );
     filter->setLoop( getLoop() );
   }

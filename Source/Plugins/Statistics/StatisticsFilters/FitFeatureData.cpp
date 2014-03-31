@@ -57,7 +57,9 @@ FitFeatureData::FitFeatureData() :
   m_NewEnsembleArrayArrayName(""),
   m_NewEnsembleArray(NULL),
   m_BiasedFeaturesArrayName(DREAM3D::FeatureData::BiasedFeatures),
-  m_BiasedFeatures(NULL)
+  m_BiasedFeatures(NULL),
+/*[]*/m_FeaturePhasesArrayPath(DREAM3D::Defaults::SomePath),
+/*[]*/m_BiasedFeaturesArrayPath(DREAM3D::Defaults::SomePath)
 {
   setupFilterParameters();
 }
@@ -90,6 +92,8 @@ void FitFeatureData::setupFilterParameters()
     parameters.push_back(parameter);
   }
   parameters.push_back(FilterParameter::New("Remove Biased Features", "RemoveBiasedFeatures", FilterParameterWidgetType::BooleanWidget,"bool", false));
+/*[]*/parameters.push_back(FilterParameter::New("FeaturePhases", "FeaturePhasesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
+/*[]*/parameters.push_back(FilterParameter::New("BiasedFeatures", "BiasedFeaturesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
   setFilterParameters(parameters);
 }
 
@@ -99,6 +103,8 @@ void FitFeatureData::setupFilterParameters()
 void FitFeatureData::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
+  setBiasedFeaturesArrayPath(reader->readDataArrayPath("BiasedFeaturesArrayPath", getBiasedFeaturesArrayPath() ) );
+  setFeaturePhasesArrayPath(reader->readDataArrayPath("FeaturePhasesArrayPath", getFeaturePhasesArrayPath() ) );
   setSelectedFeatureArrayPath( reader->readDataArrayPath( "SelectedFeatureArrayPath", getSelectedFeatureArrayPath() ) );
   setDistributionType( reader->readValue( "DistributionType", getDistributionType() ) );
   setRemoveBiasedFeatures( reader->readValue( "RemoveBiasedFeatures", getRemoveBiasedFeatures() ) );
@@ -111,6 +117,8 @@ void FitFeatureData::readFilterParameters(AbstractFilterParametersReader* reader
 int FitFeatureData::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
+  writer->writeValue("BiasedFeaturesArrayPath", getBiasedFeaturesArrayPath() );
+  writer->writeValue("FeaturePhasesArrayPath", getFeaturePhasesArrayPath() );
   writer->writeValue("SelectedFeatureArrayPath", getSelectedFeatureArrayPath() );
   writer->writeValue("DistributionType", getDistributionType() );
   writer->writeValue("RemovedBiasedFeatures", getRemoveBiasedFeatures() );
@@ -133,7 +141,8 @@ void FitFeatureData::dataCheck()
   if(getErrorCondition() < 0) { return; }
 
   QVector<size_t> dims(1, 1);
-  m_FeaturePhasesPtr = cellFeatureAttrMat->getPrereqArray<DataArray<int32_t>, AbstractFilter>(this, m_FeaturePhasesArrayName, -302, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+////====>REMOVE THIS    m_FeaturePhasesPtr = cellFeatureAttrMat->getPrereqArray<DataArray<int32_t>, AbstractFilter>(this, m_FeaturePhasesArrayName, -302, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_FeaturePhasesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeaturePhasesArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_FeaturePhasesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_FeaturePhases = m_FeaturePhasesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
@@ -159,7 +168,8 @@ void FitFeatureData::dataCheck()
   if(m_RemoveBiasedFeatures == true)
   {
     dims[0] = 1;
-    m_BiasedFeaturesPtr = cellFeatureAttrMat->getPrereqArray<DataArray<bool>, AbstractFilter>(this, m_BiasedFeaturesArrayName, -302, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+////====>REMOVE THIS      m_BiasedFeaturesPtr = cellFeatureAttrMat->getPrereqArray<DataArray<bool>, AbstractFilter>(this, m_BiasedFeaturesArrayName, -302, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_BiasedFeaturesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<bool>, AbstractFilter>(this, getBiasedFeaturesArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
     if( NULL != m_BiasedFeaturesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
     { m_BiasedFeatures = m_BiasedFeaturesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   }
@@ -317,14 +327,11 @@ void FitFeatureData::execute()
 // -----------------------------------------------------------------------------
 AbstractFilter::Pointer FitFeatureData::newFilterInstance(bool copyFilterParameters)
 {
-  /*
-  * SelectedFeatureArrayName
-  * DistributionType
-  * RemoveBiasedFeatures
-  */
   FitFeatureData::Pointer filter = FitFeatureData::New();
   if(true == copyFilterParameters)
   {
+    filter->setBiasedFeaturesArrayPath(getBiasedFeaturesArrayPath());
+    filter->setFeaturePhasesArrayPath(getFeaturePhasesArrayPath());
     filter->setSelectedFeatureArrayPath( getSelectedFeatureArrayPath() );
     filter->setDistributionType( getDistributionType() );
     filter->setRemoveBiasedFeatures( getRemoveBiasedFeatures() );

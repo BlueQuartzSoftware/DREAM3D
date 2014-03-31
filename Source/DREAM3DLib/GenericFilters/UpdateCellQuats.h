@@ -66,6 +66,9 @@ class DREAM3DLib_EXPORT UpdateCellQuats : public AbstractFilter
     //------ Required Cell Data
     //------ Created Cell Data
 
+    DREAM3D_FILTER_PARAMETER(DataArrayPath, Quats5ArrayPath)
+    Q_PROPERTY(DataArrayPath Quats5ArrayPath READ getQuats5ArrayPath WRITE setQuats5ArrayPath)
+
     virtual const QString getCompiledLibraryName() { return Generic::GenericBaseName; }
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::GenericFilters; }

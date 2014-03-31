@@ -68,6 +68,9 @@ class RotateEulerRefFrame : public AbstractFilter
     DREAM3D_FILTER_PARAMETER(float, RotationAngle)
     Q_PROPERTY(float RotationAngle READ getRotationAngle WRITE setRotationAngle)
 
+    DREAM3D_FILTER_PARAMETER(DataArrayPath, CellEulerAnglesArrayPath)
+    Q_PROPERTY(DataArrayPath CellEulerAnglesArrayPath READ getCellEulerAnglesArrayPath WRITE setCellEulerAnglesArrayPath)
+
     virtual const QString getCompiledLibraryName() { return Processing::ProcessingBaseName; }
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName()  { return DREAM3D::FilterGroups::ProcessingFilters; }

@@ -62,7 +62,8 @@ CropVolume::CropVolume() :
   m_SaveAsNewDataContainer(false),
   m_UpdateOrigin(true),
   m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
-  m_FeatureIds(NULL)
+  m_FeatureIds(NULL),
+/*[]*/m_FeatureIdsArrayPath(DREAM3D::Defaults::SomePath)
 {
   setupFilterParameters();
 }
@@ -89,12 +90,14 @@ void CropVolume::setupFilterParameters()
   parameters.push_back(FilterParameter::New("Renumber Features", "RenumberFeatures", FilterParameterWidgetType::BooleanWidget,"bool", false));
   parameters.push_back(FilterParameter::New("Save As New Data Container", "SaveAsNewDataContainer", FilterParameterWidgetType::BooleanWidget,"bool", false));
   parameters.push_back(FilterParameter::New("Update Origin", "UpdateOrigin", FilterParameterWidgetType::BooleanWidget,"bool", false));
+/*[]*/parameters.push_back(FilterParameter::New("FeatureIds", "FeatureIdsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
   setFilterParameters(parameters);
 }
 // -----------------------------------------------------------------------------
 void CropVolume::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
+  setFeatureIdsArrayPath(reader->readDataArrayPath("FeatureIdsArrayPath", getFeatureIdsArrayPath() ) );
   setXMin( reader->readValue("XMin", getXMin()) );
   setYMin( reader->readValue("YMin", getYMin()) );
   setZMin( reader->readValue("ZMin", getZMin()) );
@@ -113,6 +116,7 @@ void CropVolume::readFilterParameters(AbstractFilterParametersReader* reader, in
 int CropVolume::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
+  writer->writeValue("FeatureIdsArrayPath", getFeatureIdsArrayPath() );
   writer->writeValue("XMin", getXMin() );
   writer->writeValue("YMin", getYMin() );
   writer->writeValue("ZMin", getZMin() );
@@ -161,7 +165,8 @@ void CropVolume::dataCheck()
     if(getErrorCondition() < 0) { return; }
 
     QVector<size_t> dims(1, 1);
-    m_FeatureIdsPtr = cellAttrMat->getPrereqArray<DataArray<int32_t>, AbstractFilter>(this, m_FeatureIdsArrayName, -300, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+////====>REMOVE THIS      m_FeatureIdsPtr = cellAttrMat->getPrereqArray<DataArray<int32_t>, AbstractFilter>(this, m_FeatureIdsArrayName, -300, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_FeatureIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeatureIdsArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
     if( NULL != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
     { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   }
@@ -403,20 +408,10 @@ void CropVolume::execute()
 // -----------------------------------------------------------------------------
 AbstractFilter::Pointer CropVolume::newFilterInstance(bool copyFilterParameters)
 {
-  /*
-  * XMin
-  * YMin
-  * ZMin
-  * XMax
-  * YMax
-  * ZMax
-  * RenumberFeatures
-  * SaveAsNewDataContainer
-  * UpdateOrigin
-  */
   CropVolume::Pointer filter = CropVolume::New();
   if(true == copyFilterParameters)
   {
+    filter->setFeatureIdsArrayPath(getFeatureIdsArrayPath());
     filter->setXMin( getXMin() );
     filter->setYMin( getYMin() );
     filter->setZMin( getZMin() );

@@ -265,7 +265,9 @@ PackPrimaryPhases::PackPrimaryPhases() :
   m_PhaseTypesArrayName(DREAM3D::EnsembleData::PhaseTypes),
   m_PhaseTypes(NULL),
   m_ShapeTypesArrayName(DREAM3D::EnsembleData::ShapeTypes),
-  m_ShapeTypes(NULL)
+  m_ShapeTypes(NULL),
+/*[]*/m_FeatureIdsArrayPath(DREAM3D::Defaults::SomePath),
+/*[]*/m_CellPhasesArrayPath(DREAM3D::Defaults::SomePath)
 {
   m_EllipsoidOps = EllipsoidOps::New();
   m_ShapeOps[DREAM3D::ShapeType::EllipsoidShape] = m_EllipsoidOps.get();
@@ -314,6 +316,8 @@ void PackPrimaryPhases::setupFilterParameters()
   parameters.push_back(FilterParameter::New("Write Goal Attributes", "WriteGoalAttributes", FilterParameterWidgetType::BooleanWidget,"bool", false));
   parameters.push_back(FilterParameter::New("Goal Attribute CSV File", "CsvOutputFile", FilterParameterWidgetType::OutputFileWidget,"QString", false, "", "*.csv", "Comma Separated Data"));
 
+/*[]*/parameters.push_back(FilterParameter::New("FeatureIds", "FeatureIdsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
+/*[]*/parameters.push_back(FilterParameter::New("CellPhases", "CellPhasesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
   setFilterParameters(parameters);
 }
 
@@ -323,6 +327,8 @@ void PackPrimaryPhases::setupFilterParameters()
 void PackPrimaryPhases::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
+  setCellPhasesArrayPath(reader->readDataArrayPath("CellPhasesArrayPath", getCellPhasesArrayPath() ) );
+  setFeatureIdsArrayPath(reader->readDataArrayPath("FeatureIdsArrayPath", getFeatureIdsArrayPath() ) );
   /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN */
   setOutputCellAttributeMatrixName( reader->readDataArrayPath("OutputCellAttributeMatrixName", getOutputCellAttributeMatrixName() ) );
   setOutputCellFeatureAttributeMatrixName( reader->readString("OutputCellFeatureAttributeMatrixName", getOutputCellFeatureAttributeMatrixName() ) );
@@ -344,6 +350,10 @@ void PackPrimaryPhases::readFilterParameters(AbstractFilterParametersReader* rea
 int PackPrimaryPhases::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
+  writer->writeValue("CellPhasesArrayPath", getCellPhasesArrayPath() );
+  writer->writeValue("FeatureIdsArrayPath", getFeatureIdsArrayPath() );
+  writer->writeValue("OutputDataContainerName", getOutputDataContainerName() );
+
   writer->writeValue("OutputCellAttributeMatrixName", getOutputCellAttributeMatrixName() );
   writer->writeValue("OutputCellFeatureAttributeMatrixName", getOutputCellFeatureAttributeMatrixName() );
   writer->writeValue("FeatureIdsArrayName", getFeatureIdsArrayName() );
@@ -436,7 +446,8 @@ void PackPrimaryPhases::dataCheck()
 
   dims[0] = 1;
   //Cell Data - Look for the data, if it is NOT found then create it
-  m_FeatureIdsPtr = cellAttrMat->getPrereqArray<DataArray<int32_t>, AbstractFilter>(NULL,  m_FeatureIdsArrayName, -301, dims);
+////====>REMOVE THIS    m_FeatureIdsPtr = cellAttrMat->getPrereqArray<DataArray<int32_t>, AbstractFilter>(NULL,  m_FeatureIdsArrayName, -301, dims);
+  m_FeatureIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(NULL,  getFeatureIdsArrayPath(), dims);
   if( NULL != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   else
@@ -447,7 +458,8 @@ void PackPrimaryPhases::dataCheck()
     { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   }
 
-  m_CellPhasesPtr = cellAttrMat->getPrereqArray<DataArray<int32_t>, AbstractFilter>(NULL,  m_CellPhasesArrayName, -302, dims);
+////====>REMOVE THIS    m_CellPhasesPtr = cellAttrMat->getPrereqArray<DataArray<int32_t>, AbstractFilter>(NULL,  m_CellPhasesArrayName, -302, dims);
+  m_CellPhasesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(NULL,  getCellPhasesArrayPath(), dims);
   if( NULL != m_CellPhasesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_CellPhases = m_CellPhasesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   else
@@ -2561,14 +2573,13 @@ void PackPrimaryPhases::write_goal_attributes()
 // -----------------------------------------------------------------------------
 AbstractFilter::Pointer PackPrimaryPhases::newFilterInstance(bool copyFilterParameters)
 {
-  /*
-  * CsvOutputFile
-  * PeriodicBoundaries
-  * WriteGoalAttributes
-  */
   PackPrimaryPhases::Pointer filter = PackPrimaryPhases::New();
   if(true == copyFilterParameters)
   {
+
+    filter->setCellPhasesArrayPath(getCellPhasesArrayPath());
+    filter->setFeatureIdsArrayPath(getFeatureIdsArrayPath());
+    filter->setOutputDataContainerName( getOutputDataContainerName() );
     filter->setOutputCellAttributeMatrixName( getOutputCellAttributeMatrixName() );
     filter->setOutputCellFeatureAttributeMatrixName( getOutputCellFeatureAttributeMatrixName() );
     filter->setFeatureIdsArrayName( getFeatureIdsArrayName() );

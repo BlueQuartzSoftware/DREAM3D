@@ -49,7 +49,8 @@ DxReader::DxReader() :
   m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
   m_InputFile(""),
   m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
-  m_FeatureIds(NULL)
+  m_FeatureIds(NULL),
+/*[]*/m_FeatureIdsArrayPath(DREAM3D::Defaults::SomePath)
 {
   m_Origin.x = 0.0;
   m_Origin.y = 0.0;
@@ -81,6 +82,7 @@ void DxReader::setupFilterParameters()
   parameters.push_back(FilterParameter::New("Input File", "InputFile", FilterParameterWidgetType::InputFileWidget,"QString", false, "", "*.dx"));
   parameters.push_back(FilterParameter::New("Origin", "Origin", FilterParameterWidgetType::FloatVec3Widget,"FloatVec3_t", false, "XYZ"));
   parameters.push_back(FilterParameter::New("Resolution", "Resolution", FilterParameterWidgetType::FloatVec3Widget,"FloatVec3_t", false, "XYZ"));
+/*[]*/parameters.push_back(FilterParameter::New("FeatureIds", "FeatureIdsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
   setFilterParameters(parameters);
 }
 
@@ -88,6 +90,7 @@ void DxReader::setupFilterParameters()
 void DxReader::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
+  setFeatureIdsArrayPath(reader->readDataArrayPath("FeatureIdsArrayPath", getFeatureIdsArrayPath() ) );
   setInputFile( reader->readString( "InputFile", getInputFile() ) );
   setOrigin( reader->readFloatVec3("Origin", getOrigin() ) );
   setResolution( reader->readFloatVec3("Resolution", getResolution() ) );
@@ -100,6 +103,7 @@ void DxReader::readFilterParameters(AbstractFilterParametersReader* reader, int 
 int DxReader::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
+  writer->writeValue("FeatureIdsArrayPath", getFeatureIdsArrayPath() );
   writer->writeValue("InputFile", getInputFile() );
   writer->writeValue("Origin", getOrigin() );
   writer->writeValue("Resolution", getResolution() );
@@ -339,7 +343,8 @@ int DxReader::readFile()
   AttributeMatrix::Pointer cellAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), -301);
 
   QVector<size_t> dims(1, 1);
-  m_FeatureIdsPtr = cellAttrMat->getPrereqArray<DataArray<int32_t>, AbstractFilter>(this,  m_FeatureIdsArrayName, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+////====>REMOVE THIS    m_FeatureIdsPtr = cellAttrMat->getPrereqArray<DataArray<int32_t>, AbstractFilter>(this,  m_FeatureIdsArrayName, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_FeatureIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this,  getFeatureIdsArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
@@ -414,14 +419,10 @@ int DxReader::readFile()
 // -----------------------------------------------------------------------------
 AbstractFilter::Pointer DxReader::newFilterInstance(bool copyFilterParameters)
 {
-  /*
-  * InputFile
-  * Origin
-  * Resolution
-  */
   DxReader::Pointer filter = DxReader::New();
   if(true == copyFilterParameters)
   {
+    filter->setFeatureIdsArrayPath(getFeatureIdsArrayPath());
     filter->setInputFile( getInputFile() );
     filter->setOrigin( getOrigin() );
     filter->setResolution( getResolution() );

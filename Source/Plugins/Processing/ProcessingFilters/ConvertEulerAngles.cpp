@@ -86,7 +86,8 @@ ConvertEulerAngles::ConvertEulerAngles() :
   m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
   m_ConversionType(DREAM3D::EulerAngleConversionType::DegreesToRadians),
   m_CellEulerAnglesArrayName(DREAM3D::CellData::EulerAngles),
-  m_CellEulerAngles(NULL)
+  m_CellEulerAngles(NULL),
+/*[]*/m_CellEulerAnglesArrayPath(DREAM3D::Defaults::SomePath)
 {
   setupFilterParameters();
 }
@@ -117,6 +118,7 @@ void ConvertEulerAngles::setupFilterParameters()
     parameter->setChoices(choices);
     parameters.push_back(parameter);
   }
+/*[]*/parameters.push_back(FilterParameter::New("CellEulerAngles", "CellEulerAnglesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
   setFilterParameters(parameters);
 }
 
@@ -126,6 +128,7 @@ void ConvertEulerAngles::setupFilterParameters()
 void ConvertEulerAngles::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
+  setCellEulerAnglesArrayPath(reader->readDataArrayPath("CellEulerAnglesArrayPath", getCellEulerAnglesArrayPath() ) );
   setConversionType( reader->readValue("ConversionType", getConversionType()) );
   reader->closeFilterGroup();
 }
@@ -136,6 +139,7 @@ void ConvertEulerAngles::readFilterParameters(AbstractFilterParametersReader* re
 int ConvertEulerAngles::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
+  writer->writeValue("CellEulerAnglesArrayPath", getCellEulerAnglesArrayPath() );
   writer->writeValue("ConversionType", getConversionType() );
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
@@ -154,7 +158,8 @@ void ConvertEulerAngles::dataCheck()
   if(getErrorCondition() < 0 || NULL == cellAttrMat.get() ) { return; }
 
   QVector<size_t> dims(1, 3);
-  m_CellEulerAnglesPtr = cellAttrMat->getPrereqArray<DataArray<float>, AbstractFilter>(this, m_CellEulerAnglesArrayName, -301, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+////====>REMOVE THIS    m_CellEulerAnglesPtr = cellAttrMat->getPrereqArray<DataArray<float>, AbstractFilter>(this, m_CellEulerAnglesArrayName, -301, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_CellEulerAnglesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getCellEulerAnglesArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_CellEulerAnglesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_CellEulerAngles = m_CellEulerAnglesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
@@ -222,12 +227,10 @@ void ConvertEulerAngles::execute()
 // -----------------------------------------------------------------------------
 AbstractFilter::Pointer ConvertEulerAngles::newFilterInstance(bool copyFilterParameters)
 {
-  /*
-  * ConversionType
-  */
   ConvertEulerAngles::Pointer filter = ConvertEulerAngles::New();
   if(true == copyFilterParameters)
   {
+    filter->setCellEulerAnglesArrayPath(getCellEulerAnglesArrayPath());
     filter->setConversionType( getConversionType() );
   }
   return filter;

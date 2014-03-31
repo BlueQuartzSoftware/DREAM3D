@@ -55,7 +55,9 @@ FindAvgCAxes::FindAvgCAxes() :
   m_QuatsArrayName(DREAM3D::CellData::Quats),
   m_Quats(NULL),
   m_AvgCAxesArrayName(DREAM3D::FeatureData::AvgCAxes),
-  m_AvgCAxes(NULL)
+  m_AvgCAxes(NULL),
+/*[]*/m_QuatsArrayPath(DREAM3D::Defaults::SomePath),
+/*[]*/m_FeatureIdsArrayPath(DREAM3D::Defaults::SomePath)
 {
   m_OrientationOps = OrientationOps::getOrientationOpsVector();
 }
@@ -70,6 +72,8 @@ FindAvgCAxes::~FindAvgCAxes()
 void FindAvgCAxes::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
+  setFeatureIdsArrayPath(reader->readDataArrayPath("FeatureIdsArrayPath", getFeatureIdsArrayPath() ) );
+  setQuatsArrayPath(reader->readDataArrayPath("QuatsArrayPath", getQuatsArrayPath() ) );
   reader->closeFilterGroup();
 }
 
@@ -79,6 +83,8 @@ void FindAvgCAxes::readFilterParameters(AbstractFilterParametersReader* reader, 
 int FindAvgCAxes::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
+  writer->writeValue("FeatureIdsArrayPath", getFeatureIdsArrayPath() );
+  writer->writeValue("QuatsArrayPath", getQuatsArrayPath() );
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
@@ -98,11 +104,13 @@ void FindAvgCAxes::dataCheck()
   if(getErrorCondition() < 0 || NULL == cellAttrMat.get() ) { return; }
 
   QVector<size_t> dims(1, 4);
-  m_QuatsPtr = cellAttrMat->getPrereqArray<DataArray<float>, AbstractFilter>(this, m_QuatsArrayName, -303, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+////====>REMOVE THIS    m_QuatsPtr = cellAttrMat->getPrereqArray<DataArray<float>, AbstractFilter>(this, m_QuatsArrayName, -303, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_QuatsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getQuatsArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_QuatsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_Quats = m_QuatsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   dims[0] = 1;
-  m_FeatureIdsPtr = cellAttrMat->getPrereqArray<DataArray<int32_t>, AbstractFilter>(this, m_FeatureIdsArrayName, -300, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+////====>REMOVE THIS    m_FeatureIdsPtr = cellAttrMat->getPrereqArray<DataArray<int32_t>, AbstractFilter>(this, m_FeatureIdsArrayName, -300, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_FeatureIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeatureIdsArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   dims[0] = 3;
@@ -209,6 +217,8 @@ AbstractFilter::Pointer FindAvgCAxes::newFilterInstance(bool copyFilterParameter
   FindAvgCAxes::Pointer filter = FindAvgCAxes::New();
   if(true == copyFilterParameters)
   {
+    filter->setFeatureIdsArrayPath(getFeatureIdsArrayPath());
+    filter->setQuatsArrayPath(getQuatsArrayPath());
   }
   return filter;
 }

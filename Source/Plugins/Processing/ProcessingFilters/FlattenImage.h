@@ -66,6 +66,9 @@ class FlattenImage : public AbstractFilter
 
     virtual void preflight();
 
+    DREAM3D_FILTER_PARAMETER(DataArrayPath, ImageDataArrayPath)
+    Q_PROPERTY(DataArrayPath ImageDataArrayPath READ getImageDataArrayPath WRITE setImageDataArrayPath)
+
     virtual const QString getCompiledLibraryName() { return Processing::ProcessingBaseName; }
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName()  { return DREAM3D::FilterGroups::ProcessingFilters; }

@@ -52,7 +52,8 @@ DxWriter::DxWriter() :
   m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
   m_AddSurfaceLayer(false),
   m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
-  m_FeatureIds(NULL)
+  m_FeatureIds(NULL),
+/*[]*/m_FeatureIdsArrayPath(DREAM3D::Defaults::SomePath)
 {
   setupFilterParameters();
 }
@@ -73,6 +74,7 @@ void DxWriter::setupFilterParameters()
   FilterParameterVector parameters;
   parameters.push_back(FilterParameter::New("Output File", "OutputFile", FilterParameterWidgetType::OutputFileWidget,"QString", false, "", "*.dx", "Open DX Visualization"));
   parameters.push_back(FilterParameter::New("Add Surface Layer", "AddSurfaceLayer", FilterParameterWidgetType::BooleanWidget,"bool", false));
+/*[]*/parameters.push_back(FilterParameter::New("FeatureIds", "FeatureIdsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
   setFilterParameters(parameters);
 }
 
@@ -82,6 +84,7 @@ void DxWriter::setupFilterParameters()
 void DxWriter::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
+  setFeatureIdsArrayPath(reader->readDataArrayPath("FeatureIdsArrayPath", getFeatureIdsArrayPath() ) );
   setOutputFile( reader->readString( "OutputFile", getOutputFile() ) );
   setAddSurfaceLayer( reader->readValue("AddSurfaceLayer", getAddSurfaceLayer()) );
   reader->closeFilterGroup();
@@ -93,6 +96,7 @@ void DxWriter::readFilterParameters(AbstractFilterParametersReader* reader, int 
 int DxWriter::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
+  writer->writeValue("FeatureIdsArrayPath", getFeatureIdsArrayPath() );
   writer->writeValue("OutputFile", getOutputFile());
   writer->writeValue("AddSurfaceLayer", getAddSurfaceLayer());
   writer->closeFilterGroup();
@@ -131,7 +135,8 @@ void DxWriter::dataCheck()
   }
 
   QVector<size_t> dims(1, 1);
-  m_FeatureIdsPtr = cellAttrMat->getPrereqArray<DataArray<int32_t>, AbstractFilter>(this, m_FeatureIdsArrayName, -300, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+////====>REMOVE THIS    m_FeatureIdsPtr = cellAttrMat->getPrereqArray<DataArray<int32_t>, AbstractFilter>(this, m_FeatureIdsArrayName, -300, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_FeatureIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeatureIdsArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
@@ -350,12 +355,10 @@ int DxWriter::writeFile()
 // -----------------------------------------------------------------------------
 AbstractFilter::Pointer DxWriter::newFilterInstance(bool copyFilterParameters)
 {
-  /*
-  * AddSurfaceLayer
-  */
   DxWriter::Pointer filter = DxWriter::New();
   if(true == copyFilterParameters)
   {
+    filter->setFeatureIdsArrayPath(getFeatureIdsArrayPath());
     filter->setOutputFile( getOutputFile() );
     filter->setAddSurfaceLayer( getAddSurfaceLayer() );
   }

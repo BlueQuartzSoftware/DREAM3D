@@ -52,7 +52,8 @@ FindVolFractions::FindVolFractions() :
   m_CellPhasesArrayName(DREAM3D::CellData::Phases),
   m_CellPhases(NULL),
   m_VolFractionsArrayName(DREAM3D::EnsembleData::VolFractions),
-  m_VolFractions(NULL)
+  m_VolFractions(NULL),
+/*[]*/m_CellPhasesArrayPath(DREAM3D::Defaults::SomePath)
 {
 
 }
@@ -68,6 +69,7 @@ FindVolFractions::~FindVolFractions()
 void FindVolFractions::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
+  setCellPhasesArrayPath(reader->readDataArrayPath("CellPhasesArrayPath", getCellPhasesArrayPath() ) );
   reader->closeFilterGroup();
 }
 
@@ -77,6 +79,7 @@ void FindVolFractions::readFilterParameters(AbstractFilterParametersReader* read
 int FindVolFractions::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
+  writer->writeValue("CellPhasesArrayPath", getCellPhasesArrayPath() );
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
@@ -95,7 +98,8 @@ void FindVolFractions::dataCheck()
   if(getErrorCondition() < 0 || NULL == cellAttrMat.get() ) { return; }
 
   QVector<size_t> dims(1, 1);
-  m_CellPhasesPtr = cellAttrMat->getPrereqArray<DataArray<int32_t>, AbstractFilter>(this, m_CellPhasesArrayName, -301, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+////====>REMOVE THIS    m_CellPhasesPtr = cellAttrMat->getPrereqArray<DataArray<int32_t>, AbstractFilter>(this, m_CellPhasesArrayName, -301, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_CellPhasesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getCellPhasesArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_CellPhasesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_CellPhases = m_CellPhasesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   m_VolFractionsPtr = cellEnsembleAttrMat->createNonPrereqArray<DataArray<float>, AbstractFilter, float>(this, m_VolFractionsArrayName, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
@@ -147,6 +151,7 @@ AbstractFilter::Pointer FindVolFractions::newFilterInstance(bool copyFilterParam
   FindVolFractions::Pointer filter = FindVolFractions::New();
   if(true == copyFilterParameters)
   {
+    filter->setCellPhasesArrayPath(getCellPhasesArrayPath());
   }
   return filter;
 }

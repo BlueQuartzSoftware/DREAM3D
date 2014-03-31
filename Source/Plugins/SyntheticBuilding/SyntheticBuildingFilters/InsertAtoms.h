@@ -77,6 +77,12 @@ class InsertAtoms : public AbstractFilter
     DREAM3D_FILTER_PARAMETER(uint32_t, Basis)
     Q_PROPERTY(uint32_t Basis READ getBasis WRITE setBasis)
 
+    DREAM3D_FILTER_PARAMETER(DataArrayPath, SurfaceMeshFaceLabelsArrayPath)
+    Q_PROPERTY(DataArrayPath SurfaceMeshFaceLabelsArrayPath READ getSurfaceMeshFaceLabelsArrayPath WRITE setSurfaceMeshFaceLabelsArrayPath)
+
+    DREAM3D_FILTER_PARAMETER(DataArrayPath, AvgQuatsArrayPath)
+    Q_PROPERTY(DataArrayPath AvgQuatsArrayPath READ getAvgQuatsArrayPath WRITE setAvgQuatsArrayPath)
+
     virtual const QString getCompiledLibraryName() { return SyntheticBuilding::SyntheticBuildingBaseName; }
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::SyntheticBuildingFilters; }

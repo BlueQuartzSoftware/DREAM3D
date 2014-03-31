@@ -65,7 +65,8 @@ FeatureInfoReader::FeatureInfoReader() :
   m_FeaturePhasesArrayName(DREAM3D::FeatureData::Phases),
   m_FeaturePhases(NULL),
   m_FeatureEulerAnglesArrayName(DREAM3D::FeatureData::EulerAngles),
-  m_FeatureEulerAngles(NULL)
+  m_FeatureEulerAngles(NULL),
+/*[]*/m_FeatureIdsArrayPath(DREAM3D::Defaults::SomePath)
 {
   setupFilterParameters();
 }
@@ -87,6 +88,7 @@ void FeatureInfoReader::setupFilterParameters()
   parameters.push_back(FilterParameter::New("Input Feature Info File", "InputFile", FilterParameterWidgetType::InputFileWidget,"QString", false, "", "*.txt"));
   parameters.push_back(FilterParameter::New("Create Cell Level Arrays", "CreateCellLevelArrays", FilterParameterWidgetType::BooleanWidget,"bool", false));
   parameters.push_back(FilterParameter::New("Renumber Features", "RenumberFeatures", FilterParameterWidgetType::BooleanWidget,"bool", false));
+/*[]*/parameters.push_back(FilterParameter::New("FeatureIds", "FeatureIdsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
   setFilterParameters(parameters);
 }
 
@@ -96,6 +98,7 @@ void FeatureInfoReader::setupFilterParameters()
 void FeatureInfoReader::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
+  setFeatureIdsArrayPath(reader->readDataArrayPath("FeatureIdsArrayPath", getFeatureIdsArrayPath() ) );
   setInputFile( reader->readString( "InputFile", getInputFile() ) );
   setCreateCellLevelArrays( reader->readValue("CreateCellLevelArrays", getCreateCellLevelArrays()) );
   setRenumberFeatures( reader->readValue("RenumberFeatures", getRenumberFeatures()) );
@@ -108,6 +111,7 @@ void FeatureInfoReader::readFilterParameters(AbstractFilterParametersReader* rea
 int FeatureInfoReader::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
+  writer->writeValue("FeatureIdsArrayPath", getFeatureIdsArrayPath() );
   writer->writeValue("InputFile", getInputFile() );
   writer->writeValue("CreateCellLevelArrays", getCreateCellLevelArrays() );
   writer->writeValue("RenumberFeatures", getRenumberFeatures() );
@@ -157,7 +161,8 @@ void FeatureInfoReader::dataCheck()
   }
 
   QVector<size_t> dims(1, 1);
-  m_FeatureIdsPtr = cellAttrMat->getPrereqArray<DataArray<int32_t>, AbstractFilter>(this, m_FeatureIdsArrayName, -301, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+////====>REMOVE THIS    m_FeatureIdsPtr = cellAttrMat->getPrereqArray<DataArray<int32_t>, AbstractFilter>(this, m_FeatureIdsArrayName, -301, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_FeatureIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeatureIdsArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
@@ -288,14 +293,10 @@ int FeatureInfoReader::readFile()
 // -----------------------------------------------------------------------------
 AbstractFilter::Pointer FeatureInfoReader::newFilterInstance(bool copyFilterParameters)
 {
-  /*
-  * InputFile
-  * CreateCellLevelArrays
-  * RenumberFeatures
-  */
   FeatureInfoReader::Pointer filter = FeatureInfoReader::New();
   if(true == copyFilterParameters)
   {
+    filter->setFeatureIdsArrayPath(getFeatureIdsArrayPath());
     filter->setInputFile( getInputFile() );
     filter->setCreateCellLevelArrays( getCreateCellLevelArrays() );
     filter->setRenumberFeatures( getRenumberFeatures() );

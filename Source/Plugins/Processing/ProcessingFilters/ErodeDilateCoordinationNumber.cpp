@@ -56,7 +56,8 @@ ErodeDilateCoordinationNumber::ErodeDilateCoordinationNumber() :
   m_Loop(false),
   m_CoordinationNumber(6),
   m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
-  m_FeatureIds(NULL)
+  m_FeatureIds(NULL),
+/*[]*/m_FeatureIdsArrayPath(DREAM3D::Defaults::SomePath)
 {
   setupFilterParameters();
 }
@@ -76,6 +77,7 @@ void ErodeDilateCoordinationNumber::setupFilterParameters()
   FilterParameterVector parameters;
   parameters.push_back(FilterParameter::New("Coordination Number to Consider", "CoordinationNumber", FilterParameterWidgetType::IntWidget,"int", false));
   parameters.push_back(FilterParameter::New("Loop Until Gone", "Loop", FilterParameterWidgetType::BooleanWidget,"bool", false));
+/*[]*/parameters.push_back(FilterParameter::New("FeatureIds", "FeatureIdsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
   setFilterParameters(parameters);
 }
 
@@ -85,6 +87,7 @@ void ErodeDilateCoordinationNumber::setupFilterParameters()
 void ErodeDilateCoordinationNumber::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
+  setFeatureIdsArrayPath(reader->readDataArrayPath("FeatureIdsArrayPath", getFeatureIdsArrayPath() ) );
   setCoordinationNumber( reader->readValue("CoordinationNumber", getCoordinationNumber()) );
   setLoop( reader->readValue("Loop", false) );
   reader->closeFilterGroup();
@@ -96,6 +99,7 @@ void ErodeDilateCoordinationNumber::readFilterParameters(AbstractFilterParameter
 int ErodeDilateCoordinationNumber::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
+  writer->writeValue("FeatureIdsArrayPath", getFeatureIdsArrayPath() );
   writer->writeValue("CoordinationNumber", getCoordinationNumber() );
   writer->writeValue("Loop", getLoop() );
   writer->closeFilterGroup();
@@ -115,7 +119,8 @@ void ErodeDilateCoordinationNumber::dataCheck()
   if(getErrorCondition() < 0 || NULL == cellAttrMat.get() ) { return; }
 
   QVector<size_t> dims(1, 1);
-  m_FeatureIdsPtr = cellAttrMat->getPrereqArray<DataArray<int32_t>, AbstractFilter>(this, m_FeatureIdsArrayName, -301, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+////====>REMOVE THIS    m_FeatureIdsPtr = cellAttrMat->getPrereqArray<DataArray<int32_t>, AbstractFilter>(this, m_FeatureIdsArrayName, -301, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_FeatureIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeatureIdsArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
@@ -301,13 +306,10 @@ void ErodeDilateCoordinationNumber::execute()
 // -----------------------------------------------------------------------------
 AbstractFilter::Pointer ErodeDilateCoordinationNumber::newFilterInstance(bool copyFilterParameters)
 {
-  /*
-  * Loop
-  * CoordinationNumber
-  */
   ErodeDilateCoordinationNumber::Pointer filter = ErodeDilateCoordinationNumber::New();
   if(true == copyFilterParameters)
   {
+    filter->setFeatureIdsArrayPath(getFeatureIdsArrayPath());
     filter->setCoordinationNumber( getCoordinationNumber() );
     filter->setLoop( getLoop() );
   }

@@ -60,7 +60,8 @@ ErodeDilateMask::ErodeDilateMask() :
   m_YDirOn(true),
   m_ZDirOn(true),
   m_MaskArrayName(""),
-  m_Mask(NULL)
+  m_Mask(NULL),
+/*[]*/m_MaskArrayPath(DREAM3D::Defaults::SomePath)
 {
   setupFilterParameters();
 }
@@ -95,6 +96,7 @@ void ErodeDilateMask::setupFilterParameters()
   parameters.push_back(FilterParameter::New("X Direction", "XDirOn", FilterParameterWidgetType::BooleanWidget,"bool", false));
   parameters.push_back(FilterParameter::New("Y Direction", "YDirOn", FilterParameterWidgetType::BooleanWidget,"bool", false));
   parameters.push_back(FilterParameter::New("Z Direction", "ZDirOn", FilterParameterWidgetType::BooleanWidget,"bool", false));
+/*[]*/parameters.push_back(FilterParameter::New("Mask", "MaskArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
   setFilterParameters(parameters);
 }
 
@@ -104,6 +106,7 @@ void ErodeDilateMask::setupFilterParameters()
 void ErodeDilateMask::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
+  setMaskArrayPath(reader->readDataArrayPath("MaskArrayPath", getMaskArrayPath() ) );
   setSelectedArrayPath( reader->readString( "SelectedArrayPath", getSelectedArrayPath() ) );
   setDirection( reader->readValue("Direction", getDirection()) );
   setNumIterations( reader->readValue("NumIterations", getNumIterations()) );
@@ -119,6 +122,7 @@ void ErodeDilateMask::readFilterParameters(AbstractFilterParametersReader* reade
 int ErodeDilateMask::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
+  writer->writeValue("MaskArrayPath", getMaskArrayPath() );
   writer->writeValue("SelectedArrayPath", getSelectedArrayPath() );
   writer->writeValue("Direction", getDirection() );
   writer->writeValue("NumIterations", getNumIterations() );
@@ -182,7 +186,8 @@ void ErodeDilateMask::dataCheck()
       }
 
        QVector<size_t> dims(1, 1);
-       m_MaskPtr = cellAttrMat->getPrereqArray<DataArray<bool>, AbstractFilter>(this, m_MaskArrayName, -301, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+////====>REMOVE THIS         m_MaskPtr = cellAttrMat->getPrereqArray<DataArray<bool>, AbstractFilter>(this, m_MaskArrayName, -301, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_MaskPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<bool>, AbstractFilter>(this, getMaskArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
        if( NULL != m_MaskPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
        { m_Mask = m_MaskPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
     }

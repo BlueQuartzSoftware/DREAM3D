@@ -138,7 +138,8 @@ ScalarSegmentFeatures::ScalarSegmentFeatures() :
   m_GoodVoxels(NULL),
   m_ActiveArrayName(DREAM3D::FeatureData::Active),
   m_Active(NULL),
-  m_Compare(NULL)
+  m_Compare(NULL),
+/*[]*/m_GoodVoxelsArrayPath(DREAM3D::Defaults::SomePath)
 {
   setupFilterParameters();
 }
@@ -163,6 +164,7 @@ void ScalarSegmentFeatures::setupFilterParameters()
   parameters.push_back(FilterParameter::New("Input Cell Array Name", "ScalarArrayPath", FilterParameterWidgetType::DataArraySelectionWidget,"DataArrayPath", false));
   parameters.push_back(FilterParameter::New("Scalar Tolerance", "ScalarTolerance", FilterParameterWidgetType::DoubleWidget,"float", false));
 
+/*[]*/parameters.push_back(FilterParameter::New("GoodVoxels", "GoodVoxelsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
   setFilterParameters(parameters);
 }
 
@@ -172,6 +174,7 @@ void ScalarSegmentFeatures::setupFilterParameters()
 void ScalarSegmentFeatures::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
+  setGoodVoxelsArrayPath(reader->readDataArrayPath("GoodVoxelsArrayPath", getGoodVoxelsArrayPath() ) );
   setScalarArrayPath( reader->readDataArrayPath( "ScalarArrayPath", getScalarArrayPath() ) );
   setScalarTolerance( reader->readValue("ScalarTolerance", getScalarTolerance()) );
   reader->closeFilterGroup();
@@ -183,6 +186,7 @@ void ScalarSegmentFeatures::readFilterParameters(AbstractFilterParametersReader*
 int ScalarSegmentFeatures::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
+  writer->writeValue("GoodVoxelsArrayPath", getGoodVoxelsArrayPath() );
   writer->writeValue("ScalarArrayPath", getScalarArrayPath() );
   writer->writeValue("ScalarTolerance", getScalarTolerance() );
   writer->closeFilterGroup();
@@ -225,7 +229,8 @@ void ScalarSegmentFeatures::dataCheck()
   m_FeatureIdsPtr = cellAttrMat->createNonPrereqArray<DataArray<int32_t>, AbstractFilter, int32_t>(this, m_FeatureIdsArrayName, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-  m_GoodVoxelsPtr = cellAttrMat->getPrereqArray<DataArray<bool>, AbstractFilter>(NULL, m_GoodVoxelsArrayName, -304, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+////====>REMOVE THIS    m_GoodVoxelsPtr = cellAttrMat->getPrereqArray<DataArray<bool>, AbstractFilter>(NULL, m_GoodVoxelsArrayName, -304, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_GoodVoxelsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<bool>, AbstractFilter>(NULL, getGoodVoxelsArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_GoodVoxelsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_GoodVoxels = m_GoodVoxelsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   else {m_GoodVoxels = NULL;}
@@ -485,13 +490,10 @@ void ScalarSegmentFeatures::initializeVoxelSeedGenerator(const size_t rangeMin, 
 // -----------------------------------------------------------------------------
 AbstractFilter::Pointer ScalarSegmentFeatures::newFilterInstance(bool copyFilterParameters)
 {
-  /*
-  * ScalarArrayName
-  * ScalarTolerance
-  */
   ScalarSegmentFeatures::Pointer filter = ScalarSegmentFeatures::New();
   if(true == copyFilterParameters)
   {
+    filter->setGoodVoxelsArrayPath(getGoodVoxelsArrayPath());
     filter->setScalarArrayPath( getScalarArrayPath() );
     filter->setScalarTolerance( getScalarTolerance() );
   }

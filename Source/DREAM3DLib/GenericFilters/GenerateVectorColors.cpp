@@ -52,7 +52,9 @@ GenerateVectorColors::GenerateVectorColors() :
   m_CellVectorColorsArrayName(DREAM3D::CellData::VectorColor),
   m_CellVectorColors(NULL),
   m_GoodVoxelsArrayName(DREAM3D::CellData::GoodVoxels),
-  m_GoodVoxels(NULL)
+  m_GoodVoxels(NULL),
+/*[]*/m_SelectedVectorArrayPathArrayPath(DREAM3D::Defaults::SomePath),
+/*[]*/m_GoodVoxelsArrayPath(DREAM3D::Defaults::SomePath)
 {
   setupFilterParameters();
 }
@@ -71,6 +73,8 @@ void GenerateVectorColors::setupFilterParameters()
 {
   FilterParameterVector parameters;
   parameters.push_back(FilterParameter::New("Vector Array Name", "SelectedVectorArrayPath", FilterParameterWidgetType::DataArraySelectionWidget,"DataArrayPath", false));
+/*[]*/parameters.push_back(FilterParameter::New("SelectedVectorArrayPath", "SelectedVectorArrayPathArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
+/*[]*/parameters.push_back(FilterParameter::New("GoodVoxels", "GoodVoxelsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
   setFilterParameters(parameters);
 }
 
@@ -80,6 +84,8 @@ void GenerateVectorColors::setupFilterParameters()
 void GenerateVectorColors::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
+  setGoodVoxelsArrayPath(reader->readDataArrayPath("GoodVoxelsArrayPath", getGoodVoxelsArrayPath() ) );
+  setSelectedVectorArrayPathArrayPath(reader->readDataArrayPath("SelectedVectorArrayPathArrayPath", getSelectedVectorArrayPathArrayPath() ) );
   setSelectedVectorArrayPath( reader->readDataArrayPath( "SelectedVectorArrayPath", getSelectedVectorArrayPath() ) );
   reader->closeFilterGroup();
 }
@@ -90,6 +96,8 @@ void GenerateVectorColors::readFilterParameters(AbstractFilterParametersReader* 
 int GenerateVectorColors::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
+  writer->writeValue("GoodVoxelsArrayPath", getGoodVoxelsArrayPath() );
+  writer->writeValue("SelectedVectorArrayPathArrayPath", getSelectedVectorArrayPathArrayPath() );
   /* Place code that will write the inputs values into a file. reference the
    AbstractFilterParametersWriter class for the proper API to use. */
   writer->writeValue("SelectedVectorArrayPath", getSelectedVectorArrayPath() );
@@ -117,7 +125,8 @@ void GenerateVectorColors::dataCheck()
   }
 
   QVector<size_t> dims(1, 3);
-  m_VectorsPtr = cellAttrMat->getPrereqArray<DataArray<float>, AbstractFilter>(this, m_SelectedVectorArrayPath.getDataArrayName(), -303, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+////====>REMOVE THIS    m_VectorsPtr = cellAttrMat->getPrereqArray<DataArray<float>, AbstractFilter>(this, m_SelectedVectorArrayPath.getDataArrayName(), -303, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_VectorsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getSelectedVectorArrayPathArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_VectorsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_Vectors = m_VectorsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
@@ -126,7 +135,8 @@ void GenerateVectorColors::dataCheck()
   { m_CellVectorColors = m_CellVectorColorsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   // The good voxels array is optional, If it is available we are going to use it, otherwise we are going to create it
   dims[0] = 1;
-  m_GoodVoxelsPtr = cellAttrMat->getPrereqArray<DataArray<bool>, AbstractFilter>(NULL, m_GoodVoxelsArrayName, -304, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+////====>REMOVE THIS    m_GoodVoxelsPtr = cellAttrMat->getPrereqArray<DataArray<bool>, AbstractFilter>(NULL, m_GoodVoxelsArrayName, -304, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_GoodVoxelsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<bool>, AbstractFilter>(NULL, getGoodVoxelsArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_GoodVoxelsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_GoodVoxels = m_GoodVoxelsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   else {m_GoodVoxels = NULL;}
@@ -238,12 +248,11 @@ void GenerateVectorColors::execute()
 // -----------------------------------------------------------------------------
 AbstractFilter::Pointer GenerateVectorColors::newFilterInstance(bool copyFilterParameters)
 {
-  /*
-  * FlattenMethod
-  */
   GenerateVectorColors::Pointer filter = GenerateVectorColors::New();
   if(true == copyFilterParameters)
   {
+    filter->setGoodVoxelsArrayPath(getGoodVoxelsArrayPath());
+    filter->setSelectedVectorArrayPathArrayPath(getSelectedVectorArrayPathArrayPath());
     filter->setSelectedVectorArrayPath( getSelectedVectorArrayPath() );
   }
   return filter;

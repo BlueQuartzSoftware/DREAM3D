@@ -57,7 +57,8 @@ AddOrientationNoise::AddOrientationNoise() :
   m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
   m_Magnitude(1.0f),
   m_CellEulerAnglesArrayName(DREAM3D::CellData::EulerAngles),
-  m_CellEulerAngles(NULL)
+  m_CellEulerAngles(NULL),
+/*[]*/m_CellEulerAnglesArrayPath(DREAM3D::Defaults::SomePath)
 {
   setupFilterParameters();
 }
@@ -76,6 +77,7 @@ void AddOrientationNoise::setupFilterParameters()
   FilterParameterVector parameters;
   parameters.push_back(FilterParameter::New("Select Synthetic Volume DataContainer", "DataContainerName", FilterParameterWidgetType::DataContainerSelectionWidget,"QString", false));
   parameters.push_back(FilterParameter::New("Magnitude of Orientation Noise", "Magnitude", FilterParameterWidgetType::DoubleWidget,"float", false, "Degrees"));
+/*[]*/parameters.push_back(FilterParameter::New("CellEulerAngles", "CellEulerAnglesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
   setFilterParameters(parameters);
 }
 // -----------------------------------------------------------------------------
@@ -84,6 +86,7 @@ void AddOrientationNoise::setupFilterParameters()
 void AddOrientationNoise::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
+  setCellEulerAnglesArrayPath(reader->readDataArrayPath("CellEulerAnglesArrayPath", getCellEulerAnglesArrayPath() ) );
   /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN */
   setDataContainerName( reader->readString("DataContainerName", getDataContainerName() ) );
   setMagnitude( reader->readValue("Magnitude", getMagnitude()) );
@@ -96,6 +99,7 @@ void AddOrientationNoise::readFilterParameters(AbstractFilterParametersReader* r
 int AddOrientationNoise::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
+  writer->writeValue("CellEulerAnglesArrayPath", getCellEulerAnglesArrayPath() );
   writer->writeValue("DataContainerName", getDataContainerName() );
   writer->writeValue("Magnitude", getMagnitude() );
   writer->closeFilterGroup();
@@ -116,7 +120,8 @@ void AddOrientationNoise::dataCheck()
 
   // Cell Data
   QVector<size_t> dims(1, 3);
-  m_CellEulerAnglesPtr = cellAttrMat->getPrereqArray<DataArray<float>, AbstractFilter>(this, m_CellEulerAnglesArrayName, -302, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+////====>REMOVE THIS    m_CellEulerAnglesPtr = cellAttrMat->getPrereqArray<DataArray<float>, AbstractFilter>(this, m_CellEulerAnglesArrayName, -302, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_CellEulerAnglesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getCellEulerAnglesArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_CellEulerAnglesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_CellEulerAngles = m_CellEulerAnglesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
@@ -195,12 +200,10 @@ void  AddOrientationNoise::add_orientation_noise()
 // -----------------------------------------------------------------------------
 AbstractFilter::Pointer AddOrientationNoise::newFilterInstance(bool copyFilterParameters)
 {
-  /*
-  * Magnitude
-  */
   AddOrientationNoise::Pointer filter = AddOrientationNoise::New();
   if(true == copyFilterParameters)
   {
+    filter->setCellEulerAnglesArrayPath(getCellEulerAnglesArrayPath());
     filter->setMagnitude( getMagnitude() );
   }
   return filter;

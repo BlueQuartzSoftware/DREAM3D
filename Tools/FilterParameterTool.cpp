@@ -93,7 +93,7 @@ QString createReplacementDataCheck(QStringList &outLines, QString &line, QString
 
   qDebug() << "Found a Prereq Array";
   // write out the old line commented out
-  outLines.push_back(QString("  //") + line);
+  outLines.push_back(QString("////====>REMOVE THIS  ") + line);
 
   int offset = line.indexOf(">(");
   offset = offset + 2;
@@ -104,6 +104,11 @@ QString createReplacementDataCheck(QStringList &outLines, QString &line, QString
   arg = arg.mid(2);
   offset = arg.indexOf("ArrayName");
   arg = arg.mid(0, offset);
+  offset = arg.indexOf('.');
+  if (offset > 0)
+  {
+    arg = arg.mid(0, offset);
+  }
   qDebug() << arg;
 
 
@@ -111,6 +116,8 @@ QString createReplacementDataCheck(QStringList &outLines, QString &line, QString
   offset = line.indexOf(">(") + 1;
   QString right = line.mid(offset);
   right.replace(arrayName, "get" + arg + "ArrayPath()" );
+  QStringList tokens = right.split(',');
+  right = tokens[0] + "," + tokens[1] + "," + tokens[3];
 
   // Extract the type of Array
   offset = line.indexOf("->getPrereqArray<") + searchString.size();
@@ -134,7 +141,7 @@ QString createReplacementReader(QStringList &outLines, QString name)
 {
   QString str;
   QTextStream out(&str);
-  out << "  set" << name << "ArrayPath(reader->readDataArray(\"" << name << "ArrayPath\", get" << name << "ArrayPath() ) );";
+  out << "  set" << name << "ArrayPath(reader->readDataArrayPath(\"" << name << "ArrayPath\", get" << name << "ArrayPath() ) );";
   outLines.push_back(str);
   return "";
 }
@@ -159,19 +166,83 @@ QString createNewFilterInstance(QStringListIterator &sourceLines, QStringList &o
 {
   QString line = sourceLines.next();
   outLines.push_back(line);
+
   line = sourceLines.next();
+  // Eat up the comment block
+  if(line.contains("/*") )
+  {
+    while(sourceLines.hasNext() )
+    {
+      QString ll = sourceLines.next().trimmed();
+      if(ll.startsWith("*/") ) {
+        line = sourceLines.next(); break;
+      }
+    }
+  }
+
   outLines.push_back(line);
   line = sourceLines.next();
   outLines.push_back(line);
   line = sourceLines.next();
   outLines.push_back(line);
-    QString str;
+  QString str;
   QTextStream out(&str);
   out << "    filter->set" << name << "ArrayPath(get" << name << "ArrayPath());";
   outLines.push_back(str);
-
+  return "";
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString createSetupFilterParameters(QStringListIterator &sourceLines, QStringList &outLines, QString name)
+{
+  //  parameters.push_back(FilterParameter::New("Input Statistics", "InputStatsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
+  QString str;
+  QTextStream out(&str);
+  out << "/*[]*/parameters.push_back(FilterParameter::New(\"" << name << "\", \"" << name << "ArrayPath\", FilterParameterWidgetType::DataArraySelectionWidget, \"DataArrayPath\", true, \"\"));";
+  outLines.push_back(str);
+  return "";
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString createConstructorEntries(QStringListIterator &sourceLines, QStringList &outLines, QString name)
+{
+  QString line = sourceLines.next();
+  // Eat up the entries already there
+
+  while(line.contains(",") )
+  {
+    outLines.push_back(line);
+    line = sourceLines.next();
+  }
+
+  outLines.push_back(line + ",");
+
+
+
+  QString str;
+  QTextStream out(&str);
+  out << "/*[]*/m_" << name << "ArrayPath(DREAM3D::Defaults::SomePath)";
+  outLines.push_back(str);
+
+  return "";
+}
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString updateHeader(QStringList &outLines, QString name)
+{
+  QString str;
+  QTextStream out(&str);
+  out << "    DREAM3D_FILTER_PARAMETER(DataArrayPath, " << name << "ArrayPath)\n";
+  out << "    Q_PROPERTY(DataArrayPath " << name << "ArrayPath READ get" << name << "ArrayPath WRITE set" << name << "ArrayPath)\n";
+
+  outLines.push_back(str);
+  return "";
+}
 
 // -----------------------------------------------------------------------------
 //
@@ -182,10 +253,10 @@ bool fixFile( AbstractFilter::Pointer filter, const QString& hFile, const QStrin
   {
     // Read the Source File
     QFileInfo fi(cppFile);
-    if (fi.baseName().compare("FindSizes") != 0)
-    {
-      return false;
-    }
+//    if (fi.baseName().compare("EBSDSegmentFeatures") != 0)
+//    {
+//      return false;
+//    }
 
     QFile source(cppFile);
     source.open(QFile::ReadOnly);
@@ -193,7 +264,7 @@ bool fixFile( AbstractFilter::Pointer filter, const QString& hFile, const QStrin
     source.close();
   }
 
-  QString name;
+  QStringList names;
   bool didReplace = false;
   QString searchString = "->getPrereqArray<";
   QStringList outLines;
@@ -204,7 +275,7 @@ bool fixFile( AbstractFilter::Pointer filter, const QString& hFile, const QStrin
     QString line = sourceLines.next();
     if(line.contains(searchString) ) // we found the filter parameter section
     {
-      name = createReplacementDataCheck(outLines, line, searchString);
+      names.push_back(createReplacementDataCheck(outLines, line, searchString) );
       didReplace = true;
     }
     else
@@ -213,69 +284,147 @@ bool fixFile( AbstractFilter::Pointer filter, const QString& hFile, const QStrin
     }
   }
 
-  searchString = "reader->openFilterGroup(this, index);";
-  list = outLines;
-  sourceLines = QStringListIterator(list);
-  outLines.clear();
-  while (sourceLines.hasNext())
+
+  foreach(QString name, names)
   {
-    QString line = sourceLines.next();
-    if(line.contains(searchString) ) // we found the filter parameter section
+    searchString = "reader->openFilterGroup(this, index);";
+    list = outLines;
+    sourceLines = QStringListIterator(list);
+    outLines.clear();
+    while (sourceLines.hasNext())
     {
-      outLines.push_back(line);
-      createReplacementReader(outLines, name);
-      didReplace = true;
+      QString line = sourceLines.next();
+      if(line.contains(searchString) ) // we found the filter parameter section
+      {
+        outLines.push_back(line);
+        createReplacementReader(outLines, name);
+        didReplace = true;
+      }
+      else
+      {
+        outLines.push_back(line);
+      }
     }
-    else
+
+    searchString = "writer->openFilterGroup(this, index);";
+    list = outLines;
+    sourceLines = QStringListIterator(list);
+    outLines.clear();
+    while (sourceLines.hasNext())
     {
-      outLines.push_back(line);
+      QString line = sourceLines.next();
+      if(line.contains(searchString) ) // we found the filter parameter section
+      {
+        outLines.push_back(line);
+        createReplacementWriter(outLines, name);
+        didReplace = true;
+      }
+      else
+      {
+        outLines.push_back(line);
+      }
     }
+
+
+    searchString = "newFilterInstance(bool copyFilterParameters)";
+    list = outLines;
+    sourceLines = QStringListIterator(list);
+    outLines.clear();
+    while (sourceLines.hasNext())
+    {
+      QString line = sourceLines.next();
+      if(line.contains(searchString) ) // we found the filter parameter section
+      {
+        outLines.push_back(line);
+        createNewFilterInstance(sourceLines, outLines, name);
+        didReplace = true;
+      }
+      else
+      {
+        outLines.push_back(line);
+      }
+    }
+
+    searchString = "setFilterParameters(parameters);";
+    list = outLines;
+    sourceLines = QStringListIterator(list);
+    outLines.clear();
+    while (sourceLines.hasNext())
+    {
+      QString line = sourceLines.next();
+      if(line.contains(searchString) ) // we found the filter parameter section
+      {
+        createSetupFilterParameters(sourceLines, outLines, name);
+        outLines.push_back(line);
+        didReplace = true;
+      }
+      else
+      {
+        outLines.push_back(line);
+      }
+    }
+
+    searchString = filter->getNameOfClass() + "::" + filter->getNameOfClass();
+    list = outLines;
+    sourceLines = QStringListIterator(list);
+    outLines.clear();
+    while (sourceLines.hasNext())
+    {
+      QString line = sourceLines.next();
+      if(line.contains(searchString) ) // we found the filter parameter section
+      {
+        outLines.push_back(line);
+        createConstructorEntries(sourceLines, outLines, name);
+        didReplace = true;
+      }
+      else
+      {
+        outLines.push_back(line);
+      }
+    }
+
+    writeOutput(didReplace, outLines, cppFile);
   }
 
-  searchString = "writer->openFilterGroup(this, index);";
-  list = outLines;
-  sourceLines = QStringListIterator(list);
-  outLines.clear();
-  while (sourceLines.hasNext())
+
+
+  foreach(QString name, names)
   {
-    QString line = sourceLines.next();
-    if(line.contains(searchString) ) // we found the filter parameter section
+    /**************** NOW UPDATE THE HEADER FOR THE FILTER ***********************/
     {
-      outLines.push_back(line);
-      createReplacementWriter(outLines, name);
-      didReplace = true;
+      // Read the Source File
+      QFileInfo fi(hFile);
+      //    if (fi.baseName().compare("FindSizes") != 0)
+      //    {
+      //      return false;
+      //    }
+
+      QFile source(hFile);
+      source.open(QFile::ReadOnly);
+      contents = source.readAll();
+      source.close();
     }
-    else
+    searchString = "virtual const QString getCompiledLibraryName()";
+    list = contents.split(QRegExp("\\n"));;
+    sourceLines = QStringListIterator(list);
+    outLines.clear();
+    while (sourceLines.hasNext())
     {
-      outLines.push_back(line);
+      QString line = sourceLines.next();
+      if(line.contains(searchString) ) // we found the filter parameter section
+      {
+        updateHeader(outLines, name);
+        didReplace = true;
+        outLines.push_back(line);
+      }
+      else
+      {
+        outLines.push_back(line);
+      }
     }
+
+    writeOutput(didReplace, outLines, hFile);
   }
-
-
-  searchString = "newFilterInstance(bool copyFilterParameters)";
-  list = outLines;
-  sourceLines = QStringListIterator(list);
-  outLines.clear();
-  while (sourceLines.hasNext())
-  {
-    QString line = sourceLines.next();
-    if(line.contains(searchString) ) // we found the filter parameter section
-    {
-      outLines.push_back(line);
-      createNewFilterInstance(outLines, name);
-      didReplace = true;
-    }
-    else
-    {
-      outLines.push_back(line);
-    }
-  }
-
-
-
-  writeOutput(didReplace, outLines, cppFile);
-
-
   return didReplace;
 }
 
@@ -296,7 +445,7 @@ QString findPath(const QString& groupName, const QString& filtName, const QStrin
 
   prefix = prefix + "Plugins/";
   QStringList libs;
-  libs << "ImageImport" << "OrientationAnalysis" << "Processing" <<  "Reconstruction" << "Sampling" << "Statistics"  << "SurfaceMeshing" << "SyntheticBuilding";
+  libs << "DDDAnalysisToolbox" << "ImageImport" << "OrientationAnalysis" << "Processing" <<  "Reconstruction" << "Sampling" << "Statistics"  << "SurfaceMeshing" << "SyntheticBuilding";
 
   for (int i = 0; i < libs.size(); ++i)
   {

@@ -60,7 +60,9 @@ IdentifyDislocationSegments::IdentifyDislocationSegments() :
   m_DislocationIdsArrayName(DREAM3D::EdgeData::DislocationIds),
   m_DislocationIds(NULL),
   m_ActiveArrayName(DREAM3D::FeatureData::Active),
-  m_Active(NULL)
+  m_Active(NULL),
+/*[]*/m_BurgersVectorsArrayPath(DREAM3D::Defaults::SomePath),
+/*[]*/m_SlipPlaneNormalsArrayPath(DREAM3D::Defaults::SomePath)
 {
   setupFilterParameters();
 }
@@ -79,6 +81,8 @@ void IdentifyDislocationSegments::setupFilterParameters()
 {
   FilterParameterVector parameters;
 
+/*[]*/parameters.push_back(FilterParameter::New("BurgersVectors", "BurgersVectorsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
+/*[]*/parameters.push_back(FilterParameter::New("SlipPlaneNormals", "SlipPlaneNormalsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
   setFilterParameters(parameters);
 }
 
@@ -88,6 +92,8 @@ void IdentifyDislocationSegments::setupFilterParameters()
 void IdentifyDislocationSegments::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
+  setSlipPlaneNormalsArrayPath(reader->readDataArrayPath("SlipPlaneNormalsArrayPath", getSlipPlaneNormalsArrayPath() ) );
+  setBurgersVectorsArrayPath(reader->readDataArrayPath("BurgersVectorsArrayPath", getBurgersVectorsArrayPath() ) );
 
   reader->closeFilterGroup();
 }
@@ -98,6 +104,8 @@ void IdentifyDislocationSegments::readFilterParameters(AbstractFilterParametersR
 int IdentifyDislocationSegments::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
+  writer->writeValue("SlipPlaneNormalsArrayPath", getSlipPlaneNormalsArrayPath() );
+  writer->writeValue("BurgersVectorsArrayPath", getBurgersVectorsArrayPath() );
 
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
@@ -145,10 +153,12 @@ void IdentifyDislocationSegments::dataCheck()
 
   //Get the name and create the array in the new data attrMat
   QVector<size_t> dims(1, 3);
-  m_BurgersVectorsPtr = edgeAttrMat->getPrereqArray<DataArray<float>, AbstractFilter>(this,  m_BurgersVectorsArrayName, -301, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+////====>REMOVE THIS    m_BurgersVectorsPtr = edgeAttrMat->getPrereqArray<DataArray<float>, AbstractFilter>(this,  m_BurgersVectorsArrayName, -301, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_BurgersVectorsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this,  getBurgersVectorsArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_BurgersVectorsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_BurgersVectors = m_BurgersVectorsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-  m_SlipPlaneNormalsPtr = edgeAttrMat->getPrereqArray<DataArray<float>, AbstractFilter>(this,  m_SlipPlaneNormalsArrayName, -302, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+////====>REMOVE THIS    m_SlipPlaneNormalsPtr = edgeAttrMat->getPrereqArray<DataArray<float>, AbstractFilter>(this,  m_SlipPlaneNormalsArrayName, -302, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_SlipPlaneNormalsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this,  getSlipPlaneNormalsArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_SlipPlaneNormalsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_SlipPlaneNormals = m_SlipPlaneNormalsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   dims[0] = 1;

@@ -62,7 +62,8 @@ VisualizeGBCDGMT::VisualizeGBCDGMT() :
   m_OutputFile(""),
   m_CrystalStructure(Ebsd::CrystalStructure::UnknownCrystalStructure),
   m_GBCDArrayName(DREAM3D::EnsembleData::GBCD),
-  m_GBCD(NULL)
+  m_GBCD(NULL),
+/*[]*/m_GBCDArrayPath(DREAM3D::Defaults::SomePath)
 {
   m_MisorientationRotation.angle = 0.0f;
   m_MisorientationRotation.h = 0.0f;
@@ -129,6 +130,7 @@ void VisualizeGBCDGMT::setupFilterParameters()
 //    parameters.push_back(parameter);
 //  }
   parameters.push_back(FilterParameter::New("GMT Output File", "OutputFile", FilterParameterWidgetType::OutputFileWidget,"QString", false, "", "*.dat", "DAT File"));
+/*[]*/parameters.push_back(FilterParameter::New("GBCD", "GBCDArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
   setFilterParameters(parameters);
 }
 
@@ -138,6 +140,7 @@ void VisualizeGBCDGMT::setupFilterParameters()
 void VisualizeGBCDGMT::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
+  setGBCDArrayPath(reader->readDataArrayPath("GBCDArrayPath", getGBCDArrayPath() ) );
 //  setMisAngle( reader->readValue("MisAngle", getMisAngle()) );
 //  setMisAxis( reader->readFloatVec3("MisAxis", getMisAxis() ) );
   setOutputFile( reader->readString( "OutputFile", getOutputFile() ) );
@@ -152,6 +155,7 @@ void VisualizeGBCDGMT::readFilterParameters(AbstractFilterParametersReader* read
 int VisualizeGBCDGMT::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
+  writer->writeValue("GBCDArrayPath", getGBCDArrayPath() );
  // writer->writeValue("MisorientationAngle", getMisAngle() );
  // writer->writeValue("MisorientationAxis", getMisAxis() );
   writer->writeValue("OutputFile", getOutputFile() );
@@ -226,7 +230,8 @@ void VisualizeGBCDGMT::dataCheckSurfaceMesh()
       //get the component dimensions to use to pull down the GBCD array normally (not sure if this is all really necessary)
       QVector<size_t> dims = iDataArray->getComponentDimensions();
       iDataArray->NullPointer();
-      m_GBCDPtr = attrMat->getPrereqArray<DataArray<double>, AbstractFilter>(this, m_GBCDArrayName, -301, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+////====>REMOVE THIS        m_GBCDPtr = attrMat->getPrereqArray<DataArray<double>, AbstractFilter>(this, m_GBCDArrayName, -301, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_GBCDPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<double>, AbstractFilter>(this, getGBCDArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
       if( NULL != m_GBCDPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
       { m_GBCD = m_GBCDPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
     }
@@ -531,14 +536,10 @@ bool VisualizeGBCDGMT::getSquareCoord(float* xstl1_norm1, float* sqCoord)
 // -----------------------------------------------------------------------------
 AbstractFilter::Pointer VisualizeGBCDGMT::newFilterInstance(bool copyFilterParameters)
 {
-  /*
-  * OutputFile
-  * CrystalStructure
-  * MisorientationRotation
-  */
   VisualizeGBCDGMT::Pointer filter = VisualizeGBCDGMT::New();
   if(true == copyFilterParameters)
   {
+    filter->setGBCDArrayPath(getGBCDArrayPath());
     filter->setCrystalStructure( getCrystalStructure() );
     filter->setMisorientationRotation( getMisorientationRotation() );
     filter->setOutputFile( getOutputFile() );

@@ -56,7 +56,8 @@ ChangeResolution::ChangeResolution() :
   m_RenumberFeatures(true),
   m_SaveAsNewDataContainer(false),
   m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
-  m_FeatureIds(NULL)
+  m_FeatureIds(NULL),
+/*[]*/m_FeatureIdsArrayPath(DREAM3D::Defaults::SomePath)
 {
   m_Resolution.x = 1.0f;
   m_Resolution.y = 1.0f;
@@ -81,6 +82,7 @@ void ChangeResolution::setupFilterParameters()
   parameters.push_back(FilterParameter::New("Resolution", "Resolution", FilterParameterWidgetType::FloatVec3Widget,"FloatVec3_t", false, "Microns"));
   parameters.push_back(FilterParameter::New("Renumber Features", "RenumberFeatures", FilterParameterWidgetType::BooleanWidget,"bool", false));
   parameters.push_back(FilterParameter::New("Save As New Data Container", "SaveAsNewDataContainer", FilterParameterWidgetType::BooleanWidget,"bool", false));
+/*[]*/parameters.push_back(FilterParameter::New("FeatureIds", "FeatureIdsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
   setFilterParameters(parameters);
 }
 
@@ -89,6 +91,7 @@ void ChangeResolution::setupFilterParameters()
 void ChangeResolution::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
+  setFeatureIdsArrayPath(reader->readDataArrayPath("FeatureIdsArrayPath", getFeatureIdsArrayPath() ) );
   setResolution( reader->readFloatVec3("Resolution", getResolution() ) );
   setRenumberFeatures( reader->readValue("RenumberFeatures", false) );
   setSaveAsNewDataContainer( reader->readValue("SaveAsNewDataContainer", false) );
@@ -101,6 +104,7 @@ void ChangeResolution::readFilterParameters(AbstractFilterParametersReader* read
 int ChangeResolution::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
+  writer->writeValue("FeatureIdsArrayPath", getFeatureIdsArrayPath() );
   writer->writeValue("Resolution", getResolution() );
   writer->writeValue("RenumberFeatures", getRenumberFeatures() );
   writer->writeValue("SaveAsNewDataContiner", getSaveAsNewDataContainer() );
@@ -141,7 +145,8 @@ void ChangeResolution::dataCheck()
     if(getErrorCondition() < 0) { return; }
 
     QVector<size_t> dims(1, 1);
-    m_FeatureIdsPtr = cellAttrMat->getPrereqArray<DataArray<int32_t>, AbstractFilter>(this, m_FeatureIdsArrayName, -300, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+////====>REMOVE THIS      m_FeatureIdsPtr = cellAttrMat->getPrereqArray<DataArray<int32_t>, AbstractFilter>(this, m_FeatureIdsArrayName, -300, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_FeatureIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeatureIdsArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
     if( NULL != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
     { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   }
@@ -320,14 +325,10 @@ void ChangeResolution::execute()
 // -----------------------------------------------------------------------------
 AbstractFilter::Pointer ChangeResolution::newFilterInstance(bool copyFilterParameters)
 {
-  /*
-  * Resolution
-  * RenumberFeatures
-  * SaveAsNewDataContainer
-  */
   ChangeResolution::Pointer filter = ChangeResolution::New();
   if(true == copyFilterParameters)
   {
+    filter->setFeatureIdsArrayPath(getFeatureIdsArrayPath());
     filter->setResolution( getResolution() );
     filter->setRenumberFeatures( getRenumberFeatures() );
     filter->setSaveAsNewDataContainer( getSaveAsNewDataContainer() );

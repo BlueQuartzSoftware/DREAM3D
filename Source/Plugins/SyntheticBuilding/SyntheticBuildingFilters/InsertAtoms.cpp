@@ -220,7 +220,9 @@ InsertAtoms::InsertAtoms() :
   m_AvgQuatsArrayName(DREAM3D::FeatureData::AvgQuats),
   m_AvgQuats(NULL),
   m_AtomFeatureLabelsArrayName(DREAM3D::VertexData::AtomFeatureLabels),
-  m_AtomFeatureLabels(NULL)
+  m_AtomFeatureLabels(NULL),
+/*[]*/m_SurfaceMeshFaceLabelsArrayPath(DREAM3D::Defaults::SomePath),
+/*[]*/m_AvgQuatsArrayPath(DREAM3D::Defaults::SomePath)
 {
   m_LatticeConstants.x = 1.0f;
   m_LatticeConstants.y = 1.0f;
@@ -256,6 +258,8 @@ void InsertAtoms::setupFilterParameters()
     parameter->setChoices(choices);
     parameters.push_back(parameter);
   }
+/*[]*/parameters.push_back(FilterParameter::New("SurfaceMeshFaceLabels", "SurfaceMeshFaceLabelsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
+/*[]*/parameters.push_back(FilterParameter::New("AvgQuats", "AvgQuatsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
   setFilterParameters(parameters);
 }
 
@@ -264,6 +268,8 @@ void InsertAtoms::setupFilterParameters()
 void InsertAtoms::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
+  setAvgQuatsArrayPath(reader->readDataArrayPath("AvgQuatsArrayPath", getAvgQuatsArrayPath() ) );
+  setSurfaceMeshFaceLabelsArrayPath(reader->readDataArrayPath("SurfaceMeshFaceLabelsArrayPath", getSurfaceMeshFaceLabelsArrayPath() ) );
   setVolumeDataContainerName( reader->readString("VolumeDataContainerName", getVolumeDataContainerName()) );
   setLatticeConstants( reader->readFloatVec3("LatticeConstants", getLatticeConstants() ) );
   setBasis( reader->readValue("Basis", getBasis() ) );
@@ -276,6 +282,8 @@ void InsertAtoms::readFilterParameters(AbstractFilterParametersReader* reader, i
 int InsertAtoms::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
+  writer->writeValue("AvgQuatsArrayPath", getAvgQuatsArrayPath() );
+  writer->writeValue("SurfaceMeshFaceLabelsArrayPath", getSurfaceMeshFaceLabelsArrayPath() );
   writer->writeValue("VolumeDataContainerName", getVolumeDataContainerName() );
   writer->writeValue("LatticeConstants", getLatticeConstants() );
   writer->writeValue("Basis", getBasis() );
@@ -329,13 +337,15 @@ void InsertAtoms::dataCheck()
   else
   {
     QVector<size_t> dims(1, 2);
-    m_SurfaceMeshFaceLabelsPtr = faceAttrMat->getPrereqArray<DataArray<int32_t>, AbstractFilter>(this, m_SurfaceMeshFaceLabelsArrayName, -386, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+////====>REMOVE THIS      m_SurfaceMeshFaceLabelsPtr = faceAttrMat->getPrereqArray<DataArray<int32_t>, AbstractFilter>(this, m_SurfaceMeshFaceLabelsArrayName, -386, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_SurfaceMeshFaceLabelsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getSurfaceMeshFaceLabelsArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
     if( NULL != m_SurfaceMeshFaceLabelsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
     { m_SurfaceMeshFaceLabels = m_SurfaceMeshFaceLabelsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   }
   QVector<size_t> dims(1, 4);
   // Feature Data
-  m_AvgQuatsPtr = cellFeatureAttrMat->getPrereqArray<DataArray<float>, AbstractFilter>(this, m_AvgQuatsArrayName, -301, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+////====>REMOVE THIS    m_AvgQuatsPtr = cellFeatureAttrMat->getPrereqArray<DataArray<float>, AbstractFilter>(this, m_AvgQuatsArrayName, -301, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_AvgQuatsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getAvgQuatsArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_AvgQuatsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_AvgQuats = m_AvgQuatsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
@@ -531,12 +541,11 @@ void InsertAtoms::assign_points(QVector<VertexArray::Pointer> points, QVector<Bo
 // -----------------------------------------------------------------------------
 AbstractFilter::Pointer InsertAtoms::newFilterInstance(bool copyFilterParameters)
 {
-  /*
-  * LatticeConstants
-  */
   InsertAtoms::Pointer filter = InsertAtoms::New();
   if(true == copyFilterParameters)
   {
+    filter->setAvgQuatsArrayPath(getAvgQuatsArrayPath());
+    filter->setSurfaceMeshFaceLabelsArrayPath(getSurfaceMeshFaceLabelsArrayPath());
     filter->setLatticeConstants( getLatticeConstants() );
   }
   return filter;

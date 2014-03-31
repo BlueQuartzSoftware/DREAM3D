@@ -343,7 +343,8 @@ M3CSliceBySlice::M3CSliceBySlice() :
   m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
   m_FeatureIds(NULL),
   m_SurfaceMeshNodeTypeArrayName(DREAM3D::VertexData::SurfaceMeshNodeType),
-  m_SurfaceMeshNodeType(NULL)
+  m_SurfaceMeshNodeType(NULL),
+/*[]*/m_FeatureIdsArrayPath(DREAM3D::Defaults::SomePath)
 {
   setupFilterParameters();
 }
@@ -363,6 +364,7 @@ void M3CSliceBySlice::setupFilterParameters()
   FilterParameterVector parameters;
   parameters.push_back(FilterParameter::New("Delete Temp Files", "DeleteTempFiles", FilterParameterWidgetType::BooleanWidget,"bool", false));
 
+/*[]*/parameters.push_back(FilterParameter::New("FeatureIds", "FeatureIdsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
   setFilterParameters(parameters);
 }
 
@@ -372,6 +374,7 @@ void M3CSliceBySlice::setupFilterParameters()
 void M3CSliceBySlice::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
+  setFeatureIdsArrayPath(reader->readDataArrayPath("FeatureIdsArrayPath", getFeatureIdsArrayPath() ) );
   setDeleteTempFiles( reader->readValue("DeleteTempFiles", false) );
   reader->closeFilterGroup();
 }
@@ -382,6 +385,7 @@ void M3CSliceBySlice::readFilterParameters(AbstractFilterParametersReader* reade
 int M3CSliceBySlice::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
+  writer->writeValue("FeatureIdsArrayPath", getFeatureIdsArrayPath() );
   writer->writeValue("DeleteTempFiles", getDeleteTempFiles() );
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
@@ -400,7 +404,8 @@ void M3CSliceBySlice::dataCheck()
   if(getErrorCondition() < 0 || NULL == cellAttrMat.get() ) { return; }
 
   QVector<size_t> dims(1, 1);
-  m_FeatureIdsPtr = cellAttrMat->getPrereqArray<DataArray<int32_t>, AbstractFilter>(this, m_FeatureIdsArrayName, -300, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+////====>REMOVE THIS    m_FeatureIdsPtr = cellAttrMat->getPrereqArray<DataArray<int32_t>, AbstractFilter>(this, m_FeatureIdsArrayName, -300, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_FeatureIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeatureIdsArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
@@ -3048,12 +3053,10 @@ QVector<int> M3CSliceBySlice::findAdjacentTriangles(SurfaceMesh::M3C::Triangle* 
 // -----------------------------------------------------------------------------
 AbstractFilter::Pointer M3CSliceBySlice::newFilterInstance(bool copyFilterParameters)
 {
-  /*
-  * DeleteTempFiles
-  */
   M3CSliceBySlice::Pointer filter = M3CSliceBySlice::New();
   if(true == copyFilterParameters)
   {
+    filter->setFeatureIdsArrayPath(getFeatureIdsArrayPath());
     filter->setDeleteTempFiles( getDeleteTempFiles() );
   }
   return filter;

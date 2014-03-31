@@ -96,7 +96,8 @@ FlattenImage::FlattenImage() :
   m_ImageDataArrayName(DREAM3D::CellData::ImageData),
   m_ImageData(NULL),
   m_FlatImageDataArrayName(DREAM3D::CellData::FlatImageData),
-  m_FlatImageData(NULL)
+  m_FlatImageData(NULL),
+/*[]*/m_ImageDataArrayPath(DREAM3D::Defaults::SomePath)
 {
   setupFilterParameters();
 }
@@ -128,6 +129,7 @@ void FlattenImage::setupFilterParameters()
     parameter->setChoices(choices);
     parameters.push_back(parameter);
   }
+/*[]*/parameters.push_back(FilterParameter::New("ImageData", "ImageDataArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
   setFilterParameters(parameters);
 }
 
@@ -137,6 +139,7 @@ void FlattenImage::setupFilterParameters()
 void FlattenImage::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
+  setImageDataArrayPath(reader->readDataArrayPath("ImageDataArrayPath", getImageDataArrayPath() ) );
   setFlattenMethod( reader->readValue("FlattenMethod", getFlattenMethod()) );
   reader->closeFilterGroup();
 }
@@ -147,6 +150,7 @@ void FlattenImage::readFilterParameters(AbstractFilterParametersReader* reader, 
 int FlattenImage::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
+  writer->writeValue("ImageDataArrayPath", getImageDataArrayPath() );
   writer->writeValue("FlattenMethod", getFlattenMethod() );
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
@@ -176,7 +180,8 @@ void FlattenImage::dataCheck()
   }
 
   QVector<size_t> dims(1, numImageComp);
-  m_ImageDataPtr = cellAttrMat->getPrereqArray<DataArray<unsigned char>, AbstractFilter>(this, m_ImageDataArrayName, -301, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+////====>REMOVE THIS    m_ImageDataPtr = cellAttrMat->getPrereqArray<DataArray<unsigned char>, AbstractFilter>(this, m_ImageDataArrayName, -301, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_ImageDataPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<unsigned char>, AbstractFilter>(this, getImageDataArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_ImageDataPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_ImageData = m_ImageDataPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   dims[0] = 1;
@@ -255,12 +260,10 @@ void FlattenImage::execute()
 // -----------------------------------------------------------------------------
 AbstractFilter::Pointer FlattenImage::newFilterInstance(bool copyFilterParameters)
 {
-  /*
-  * FlattenMethod
-  */
   FlattenImage::Pointer filter = FlattenImage::New();
   if(true == copyFilterParameters)
   {
+    filter->setImageDataArrayPath(getImageDataArrayPath());
     filter->setFlattenMethod( getFlattenMethod() );
   }
   return filter;

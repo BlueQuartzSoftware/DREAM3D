@@ -72,7 +72,10 @@ GenericExample::GenericExample() :
   m_CellEulerAnglesArrayName(DREAM3D::CellData::EulerAngles),
   m_CellEulerAngles(NULL),
   m_GoodVoxelsArrayName(DREAM3D::CellData::GoodVoxels),
-  m_GoodVoxels(NULL)
+  m_GoodVoxels(NULL),
+/*[]*/m_FeatureIdsArrayPath(DREAM3D::Defaults::SomePath),
+/*[]*/m_CellPatternQualityArrayPath(DREAM3D::Defaults::SomePath),
+/*[]*/m_GoodVoxelsArrayPath(DREAM3D::Defaults::SomePath)
 {
   m_Dimensions.x = 0;
   m_Dimensions.y = 0;
@@ -184,6 +187,9 @@ void GenericExample::setupFilterParameters()
   /* Display the AxisAngleWidget to collect Axis-Angle pairs from the user */
   parameters.push_back(FilterParameter::New("Crystal Rotations", "CrystalSymmetryRotations", FilterParameterWidgetType::AxisAngleWidget,"", false));
 
+/*[]*/parameters.push_back(FilterParameter::New("FeatureIds", "FeatureIdsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
+/*[]*/parameters.push_back(FilterParameter::New("CellPatternQuality", "CellPatternQualityArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
+/*[]*/parameters.push_back(FilterParameter::New("GoodVoxels", "GoodVoxelsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
   setFilterParameters(parameters);
 }
 
@@ -194,6 +200,9 @@ void GenericExample::readFilterParameters(AbstractFilterParametersReader* reader
 {
 
   reader->openFilterGroup(this, index);
+  setGoodVoxelsArrayPath(reader->readDataArrayPath("GoodVoxelsArrayPath", getGoodVoxelsArrayPath() ) );
+  setCellPatternQualityArrayPath(reader->readDataArrayPath("CellPatternQualityArrayPath", getCellPatternQualityArrayPath() ) );
+  setFeatureIdsArrayPath(reader->readDataArrayPath("FeatureIdsArrayPath", getFeatureIdsArrayPath() ) );
   setStlFilePrefix( reader->readString("StlFilePrefix", getStlFilePrefix()) );
   setMaxIterations( reader->readValue("MaxIterations", getMaxIterations()) );
   setMisorientationTolerance( reader->readValue("MisorientationTolerance", getMisorientationTolerance()) );
@@ -260,6 +269,9 @@ void GenericExample::readFilterParameters(AbstractFilterParametersReader* reader
 int GenericExample::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
+  writer->writeValue("GoodVoxelsArrayPath", getGoodVoxelsArrayPath() );
+  writer->writeValue("CellPatternQualityArrayPath", getCellPatternQualityArrayPath() );
+  writer->writeValue("FeatureIdsArrayPath", getFeatureIdsArrayPath() );
   /* Place code that will write the inputs values into a file. reference the
    AbstractFilterParametersWriter class for the proper API to use. */
   writer->writeValue("StlFilePrefix", getStlFilePrefix());
@@ -338,10 +350,12 @@ void GenericExample::dataCheck()
 
   QVector<size_t> dims(1, 1);
   // Require the following Cell Data
-  m_FeatureIdsPtr = cellAttrMat->getPrereqArray<DataArray<int32_t>, AbstractFilter>(this, m_FeatureIdsArrayName, -301, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+////====>REMOVE THIS    m_FeatureIdsPtr = cellAttrMat->getPrereqArray<DataArray<int32_t>, AbstractFilter>(this, m_FeatureIdsArrayName, -301, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_FeatureIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeatureIdsArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-  m_CellPatternQualityPtr = cellAttrMat->getPrereqArray<DataArray<float>, AbstractFilter>(this, m_CellPatternQualityArrayName, -302, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+////====>REMOVE THIS    m_CellPatternQualityPtr = cellAttrMat->getPrereqArray<DataArray<float>, AbstractFilter>(this, m_CellPatternQualityArrayName, -302, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_CellPatternQualityPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getCellPatternQualityArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_CellPatternQualityPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_CellPatternQuality = m_CellPatternQualityPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
@@ -353,7 +367,8 @@ void GenericExample::dataCheck()
 
   // The good voxels array is optional, If it is available we are going to use it, otherwise we are going to create it
   dims[0] = 1;
-  m_GoodVoxelsPtr = cellAttrMat->getPrereqArray<DataArray<bool>, AbstractFilter>(this, m_GoodVoxelsArrayName, -304, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+////====>REMOVE THIS    m_GoodVoxelsPtr = cellAttrMat->getPrereqArray<DataArray<bool>, AbstractFilter>(this, m_GoodVoxelsArrayName, -304, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_GoodVoxelsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<bool>, AbstractFilter>(this, getGoodVoxelsArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_GoodVoxelsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_GoodVoxels = m_GoodVoxelsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   if(NULL == m_GoodVoxelsPtr.lock().get() )  // The Good Voxels array was NOT available so create it
@@ -440,41 +455,12 @@ void GenericExample::execute()
 // -----------------------------------------------------------------------------
 AbstractFilter::Pointer GenericExample::newFilterInstance(bool copyFilterParameters)
 {
-  /*
-  * StlFilePrefix
-  * MaxIterations
-  * MisorientationTolerance
-  * InputFile
-  * InputPath
-  * OutputFile
-  * OutputPath
-  * WriteAlignmentShifts
-  * ConversionType
-  * Dimensions
-  * Origin
-  * CrystalSymmetryRotations
-  * SelectedVolumeVertexArrayName
-  * SelectedVolumeEdgeArrayName
-  * SelectedVolumeFaceArrayName
-  * SelectedVolumeCellArrayName
-  * SelectedVolumeFeatureArrayName
-  * SelectedVolumeEnsembleArrayName
-  * SelectedSurfaceVertexArrayName
-  * SelectedSurfaceEdgeArrayName
-  * SelectedSurfaceFaceArrayName
-  * SelectedSurfaceFeatureArrayName
-  * SelectedSurfaceEnsembleArrayName
-  * SelectedEdgeVertexArrayName
-  * SelectedEdgeEdgeArrayName
-  * SelectedEdgeFeatureArrayName
-  * SelectedEdgeEnsembleArrayName
-  * SelectedVertexVertexArrayName
-  * SelectedVertexFeatureArrayName
-  * SelectedVertexEnsembleArrayName
-  */
   GenericExample::Pointer filter = GenericExample::New();
   if(true == copyFilterParameters)
   {
+    filter->setGoodVoxelsArrayPath(getGoodVoxelsArrayPath());
+    filter->setCellPatternQualityArrayPath(getCellPatternQualityArrayPath());
+    filter->setFeatureIdsArrayPath(getFeatureIdsArrayPath());
     filter->setStlFilePrefix( getStlFilePrefix() );
     filter->setMaxIterations( getMaxIterations() );
     filter->setMisorientationTolerance( getMisorientationTolerance() );

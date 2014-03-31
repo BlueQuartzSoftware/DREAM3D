@@ -71,6 +71,12 @@ class IdentifyDislocationSegments : public AbstractFilter
     * a different group if you want. The string returned here will be displayed
     * in the GUI for the filter
     */
+    DREAM3D_FILTER_PARAMETER(DataArrayPath, BurgersVectorsArrayPath)
+    Q_PROPERTY(DataArrayPath BurgersVectorsArrayPath READ getBurgersVectorsArrayPath WRITE setBurgersVectorsArrayPath)
+
+    DREAM3D_FILTER_PARAMETER(DataArrayPath, SlipPlaneNormalsArrayPath)
+    Q_PROPERTY(DataArrayPath SlipPlaneNormalsArrayPath READ getSlipPlaneNormalsArrayPath WRITE setSlipPlaneNormalsArrayPath)
+
     virtual const QString getCompiledLibraryName() { return DDDAnalysisToolbox::DDDAnalysisToolboxBaseName; }
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::DDDAnalysisFilters; }
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::FeatureIdentificationFilters; }
