@@ -250,8 +250,6 @@ int SPParksWriter::writeFile()
 // -----------------------------------------------------------------------------
 AbstractFilter::Pointer SPParksWriter::newFilterInstance(bool copyFilterParameters)
 {
-  /*
-  */
   SPParksWriter::Pointer filter = SPParksWriter::New();
   if(true == copyFilterParameters)
   {

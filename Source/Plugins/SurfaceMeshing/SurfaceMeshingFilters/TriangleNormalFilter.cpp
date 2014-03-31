@@ -245,8 +245,6 @@ void TriangleNormalFilter::execute()
 // -----------------------------------------------------------------------------
 AbstractFilter::Pointer TriangleNormalFilter::newFilterInstance(bool copyFilterParameters)
 {
-  /*
-  */
   TriangleNormalFilter::Pointer filter = TriangleNormalFilter::New();
   if(true == copyFilterParameters)
   {

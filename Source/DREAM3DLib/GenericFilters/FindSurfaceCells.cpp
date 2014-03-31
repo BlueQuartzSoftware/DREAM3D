@@ -187,8 +187,6 @@ void FindSurfaceCells::execute()
 // -----------------------------------------------------------------------------
 AbstractFilter::Pointer FindSurfaceCells::newFilterInstance(bool copyFilterParameters)
 {
-  /*
-  */
   FindSurfaceCells::Pointer filter = FindSurfaceCells::New();
   if(true == copyFilterParameters)
   {

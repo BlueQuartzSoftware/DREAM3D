@@ -234,8 +234,6 @@ void JumbleOrientations::execute()
 // -----------------------------------------------------------------------------
 AbstractFilter::Pointer JumbleOrientations::newFilterInstance(bool copyFilterParameters)
 {
-  /*
-  */
   JumbleOrientations::Pointer filter = JumbleOrientations::New();
   if(true == copyFilterParameters)
   {

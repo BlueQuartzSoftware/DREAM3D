@@ -235,8 +235,6 @@ int LosAlamosFFTWriter::writeFile()
 // -----------------------------------------------------------------------------
 AbstractFilter::Pointer LosAlamosFFTWriter::newFilterInstance(bool copyFilterParameters)
 {
-  /*
-  */
   LosAlamosFFTWriter::Pointer filter = LosAlamosFFTWriter::New();
   if(true == copyFilterParameters)
   {

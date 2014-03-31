@@ -148,8 +148,6 @@ void UpdateCellQuats::execute()
 // -----------------------------------------------------------------------------
 AbstractFilter::Pointer UpdateCellQuats::newFilterInstance(bool copyFilterParameters)
 {
-  /*
-  */
   UpdateCellQuats::Pointer filter = UpdateCellQuats::New();
   if(true == copyFilterParameters)
   {

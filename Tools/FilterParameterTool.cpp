@@ -65,7 +65,30 @@ QString quote(const QString& str)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void createReplacementDataCheck(QStringList &outLines, QString &line, QString searchString)
+void writeOutput(bool didReplace, QStringList &outLines, QString filename)
+{
+  if(didReplace == true)
+  {
+    QFileInfo fi2(filename);
+#if 1
+    QFile hOut(filename);
+#else
+    QString tmpPath = "/tmp/" + fi2.fileName();
+    QFile hOut(tmpPath);
+#endif
+    hOut.open(QFile::WriteOnly);
+    QTextStream stream( &hOut );
+    stream << outLines.join("\n");
+    hOut.close();
+
+    qDebug() << "Saved File " << fi2.absoluteFilePath();
+  }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString createReplacementDataCheck(QStringList &outLines, QString &line, QString searchString)
 {
 
   qDebug() << "Found a Prereq Array";
@@ -87,7 +110,7 @@ void createReplacementDataCheck(QStringList &outLines, QString &line, QString se
   // Extract out the entire argument as a string
   offset = line.indexOf(">(") + 1;
   QString right = line.mid(offset);
-  right.replace(arrayName, "get" + arg + "Path()" );
+  right.replace(arrayName, "get" + arg + "ArrayPath()" );
 
   // Extract the type of Array
   offset = line.indexOf("->getPrereqArray<") + searchString.size();
@@ -101,8 +124,54 @@ void createReplacementDataCheck(QStringList &outLines, QString &line, QString se
   out << "  m_" << arg << "Ptr = getDataContainerArray()->getPrereqArrayFromPath<" << type << ", AbstractFilter>" << right;
   qDebug() << buf;
   outLines.push_back(buf);
+  return arg;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString createReplacementReader(QStringList &outLines, QString name)
+{
+  QString str;
+  QTextStream out(&str);
+  out << "  set" << name << "ArrayPath(reader->readDataArray(\"" << name << "ArrayPath\", get" << name << "ArrayPath() ) );";
+  outLines.push_back(str);
+  return "";
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString createReplacementWriter(QStringList &outLines, QString name)
+{
+  QString str;
+  QTextStream out(&str);
+  out << "  writer->writeValue(\"" << name << "ArrayPath\", get" << name << "ArrayPath() );";
+  outLines.push_back(str);
+  return "";
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString createNewFilterInstance(QStringListIterator &sourceLines, QStringList &outLines, QString name)
+{
+  QString line = sourceLines.next();
+  outLines.push_back(line);
+  line = sourceLines.next();
+  outLines.push_back(line);
+  line = sourceLines.next();
+  outLines.push_back(line);
+  line = sourceLines.next();
+  outLines.push_back(line);
+    QString str;
+  QTextStream out(&str);
+  out << "    filter->set" << name << "ArrayPath(get" << name << "ArrayPath());";
+  outLines.push_back(str);
 
 }
+
 
 // -----------------------------------------------------------------------------
 //
@@ -124,51 +193,89 @@ bool fixFile( AbstractFilter::Pointer filter, const QString& hFile, const QStrin
     source.close();
   }
 
+  QString name;
   bool didReplace = false;
-
   QString searchString = "->getPrereqArray<";
-
-
   QStringList outLines;
-
-
   QStringList list = contents.split(QRegExp("\\n"));
   QStringListIterator sourceLines(list);
   while (sourceLines.hasNext())
   {
     QString line = sourceLines.next();
-
     if(line.contains(searchString) ) // we found the filter parameter section
     {
-      createReplacementDataCheck(outLines, line, searchString);
+      name = createReplacementDataCheck(outLines, line, searchString);
       didReplace = true;
     }
     else
     {
       outLines.push_back(line);
-      //if(sourceLines.hasNext() == true) { ref << "\n"; }
+    }
+  }
+
+  searchString = "reader->openFilterGroup(this, index);";
+  list = outLines;
+  sourceLines = QStringListIterator(list);
+  outLines.clear();
+  while (sourceLines.hasNext())
+  {
+    QString line = sourceLines.next();
+    if(line.contains(searchString) ) // we found the filter parameter section
+    {
+      outLines.push_back(line);
+      createReplacementReader(outLines, name);
+      didReplace = true;
+    }
+    else
+    {
+      outLines.push_back(line);
+    }
+  }
+
+  searchString = "writer->openFilterGroup(this, index);";
+  list = outLines;
+  sourceLines = QStringListIterator(list);
+  outLines.clear();
+  while (sourceLines.hasNext())
+  {
+    QString line = sourceLines.next();
+    if(line.contains(searchString) ) // we found the filter parameter section
+    {
+      outLines.push_back(line);
+      createReplacementWriter(outLines, name);
+      didReplace = true;
+    }
+    else
+    {
+      outLines.push_back(line);
+    }
+  }
+
+
+  searchString = "newFilterInstance(bool copyFilterParameters)";
+  list = outLines;
+  sourceLines = QStringListIterator(list);
+  outLines.clear();
+  while (sourceLines.hasNext())
+  {
+    QString line = sourceLines.next();
+    if(line.contains(searchString) ) // we found the filter parameter section
+    {
+      outLines.push_back(line);
+      createNewFilterInstance(outLines, name);
+      didReplace = true;
+    }
+    else
+    {
+      outLines.push_back(line);
     }
   }
 
 
 
+  writeOutput(didReplace, outLines, cppFile);
 
-  if(didReplace == true)
-  {
-    QFileInfo fi2(cppFile);
-#if 1
-    QFile hOut(cppFile);
-#else
-    QString tmpPath = "/tmp/" + fi2.fileName();
-    QFile hOut(tmpPath);
-#endif
-    hOut.open(QFile::WriteOnly);
-    QTextStream stream( &hOut );
-    stream << outLines.join("\n");
-    hOut.close();
 
-    qDebug() << "Saved File " << fi2.absoluteFilePath();
-  }
   return didReplace;
 }
 

@@ -232,8 +232,6 @@ void TriangleAreaFilter::execute()
 // -----------------------------------------------------------------------------
 AbstractFilter::Pointer TriangleAreaFilter::newFilterInstance(bool copyFilterParameters)
 {
-  /*
-  */
   TriangleAreaFilter::Pointer filter = TriangleAreaFilter::New();
   if(true == copyFilterParameters)
   {

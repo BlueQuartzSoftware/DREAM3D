@@ -197,8 +197,6 @@ void MakeVolumeDataContainer::execute()
 // -----------------------------------------------------------------------------
 AbstractFilter::Pointer MakeVolumeDataContainer::newFilterInstance(bool copyFilterParameters)
 {
-  /*
-  */
   MakeVolumeDataContainer::Pointer filter = MakeVolumeDataContainer::New();
   if(true == copyFilterParameters)
   {

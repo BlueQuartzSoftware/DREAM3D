@@ -259,8 +259,6 @@ SharedFeatureFaceFilter::SharedFeatureFaces_t& SharedFeatureFaceFilter::getShare
 // -----------------------------------------------------------------------------
 AbstractFilter::Pointer SharedFeatureFaceFilter::newFilterInstance(bool copyFilterParameters)
 {
-  /*
-  */
   SharedFeatureFaceFilter::Pointer filter = SharedFeatureFaceFilter::New();
   if(true == copyFilterParameters)
   {

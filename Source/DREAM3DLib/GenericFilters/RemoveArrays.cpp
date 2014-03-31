@@ -148,8 +148,6 @@ void RemoveArrays::execute()
 // -----------------------------------------------------------------------------
 AbstractFilter::Pointer RemoveArrays::newFilterInstance(bool copyFilterParameters)
 {
-  /*
-  */
   RemoveArrays::Pointer filter = RemoveArrays::New();
   if(true == copyFilterParameters)
   {

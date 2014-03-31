@@ -981,8 +981,6 @@ void GenerateEnsembleStatistics::gatherAxisODFStats()
 // -----------------------------------------------------------------------------
 AbstractFilter::Pointer GenerateEnsembleStatistics::newFilterInstance(bool copyFilterParameters)
 {
-  /*
-  */
   GenerateEnsembleStatistics::Pointer filter = GenerateEnsembleStatistics::New();
   if(true == copyFilterParameters)
   {

@@ -163,8 +163,6 @@ void FindNumFeatures::execute()
 // -----------------------------------------------------------------------------
 AbstractFilter::Pointer FindNumFeatures::newFilterInstance(bool copyFilterParameters)
 {
-  /*
-  */
   FindNumFeatures::Pointer filter = FindNumFeatures::New();
   if(true == copyFilterParameters)
   {

@@ -293,8 +293,6 @@ void FindSlipTransmissionMetrics::execute()
 // -----------------------------------------------------------------------------
 AbstractFilter::Pointer FindSlipTransmissionMetrics::newFilterInstance(bool copyFilterParameters)
 {
-  /*
-  */
   FindSlipTransmissionMetrics::Pointer filter = FindSlipTransmissionMetrics::New();
   if(true == copyFilterParameters)
   {

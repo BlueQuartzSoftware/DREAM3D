@@ -237,8 +237,6 @@ void GenerateRodriguesColors::execute()
 // -----------------------------------------------------------------------------
 AbstractFilter::Pointer GenerateRodriguesColors::newFilterInstance(bool copyFilterParameters)
 {
-  /*
-  */
   GenerateRodriguesColors::Pointer filter = GenerateRodriguesColors::New();
   if(true == copyFilterParameters)
   {

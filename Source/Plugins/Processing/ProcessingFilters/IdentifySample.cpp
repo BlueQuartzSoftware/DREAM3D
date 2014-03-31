@@ -292,8 +292,6 @@ void IdentifySample::execute()
 // -----------------------------------------------------------------------------
 AbstractFilter::Pointer IdentifySample::newFilterInstance(bool copyFilterParameters)
 {
-  /*
-  */
   IdentifySample::Pointer filter = IdentifySample::New();
   if(true == copyFilterParameters)
   {

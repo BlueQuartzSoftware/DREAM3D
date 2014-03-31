@@ -144,8 +144,6 @@ void FindVolFractions::execute()
 // -----------------------------------------------------------------------------
 AbstractFilter::Pointer FindVolFractions::newFilterInstance(bool copyFilterParameters)
 {
-  /*
-  */
   FindVolFractions::Pointer filter = FindVolFractions::New();
   if(true == copyFilterParameters)
   {

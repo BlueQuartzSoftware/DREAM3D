@@ -1009,8 +1009,6 @@ void QuickSurfaceMesh::execute()
 // -----------------------------------------------------------------------------
 AbstractFilter::Pointer QuickSurfaceMesh::newFilterInstance(bool copyFilterParameters)
 {
-  /*
-  */
   QuickSurfaceMesh::Pointer filter = QuickSurfaceMesh::New();
   if(true == copyFilterParameters)
   {

@@ -174,8 +174,6 @@ void FindCellQuats::execute()
 // -----------------------------------------------------------------------------
 AbstractFilter::Pointer FindCellQuats::newFilterInstance(bool copyFilterParameters)
 {
-  /*
-  */
   FindCellQuats::Pointer filter = FindCellQuats::New();
   if(true == copyFilterParameters)
   {

@@ -384,8 +384,6 @@ void GenerateFaceIPFColoring::execute()
 // -----------------------------------------------------------------------------
 AbstractFilter::Pointer GenerateFaceIPFColoring::newFilterInstance(bool copyFilterParameters)
 {
-  /*
-  */
   GenerateFaceIPFColoring::Pointer filter = GenerateFaceIPFColoring::New();
   if(true == copyFilterParameters)
   {

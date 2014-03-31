@@ -211,8 +211,6 @@ void FindAvgOrientations::execute()
 // -----------------------------------------------------------------------------
 AbstractFilter::Pointer FindAvgOrientations::newFilterInstance(bool copyFilterParameters)
 {
-  /*
-  */
   FindAvgOrientations::Pointer filter = FindAvgOrientations::New();
   if(true == copyFilterParameters)
   {

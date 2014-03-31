@@ -179,8 +179,6 @@ void FindSurfaceVoxelFractions::find_surface_voxel_fractions()
 // -----------------------------------------------------------------------------
 AbstractFilter::Pointer FindSurfaceVoxelFractions::newFilterInstance(bool copyFilterParameters)
 {
-  /*
-  */
   FindSurfaceVoxelFractions::Pointer filter = FindSurfaceVoxelFractions::New();
   if(true == copyFilterParameters)
   {

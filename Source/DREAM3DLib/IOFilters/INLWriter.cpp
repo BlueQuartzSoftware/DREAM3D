@@ -371,8 +371,6 @@ int INLWriter::writeFile()
 // -----------------------------------------------------------------------------
 AbstractFilter::Pointer INLWriter::newFilterInstance(bool copyFilterParameters)
 {
-  /*
-  */
   INLWriter::Pointer filter = INLWriter::New();
   if(true == copyFilterParameters)
   {

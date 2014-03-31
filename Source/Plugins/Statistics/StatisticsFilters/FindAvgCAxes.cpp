@@ -206,8 +206,6 @@ void FindAvgCAxes::execute()
 // -----------------------------------------------------------------------------
 AbstractFilter::Pointer FindAvgCAxes::newFilterInstance(bool copyFilterParameters)
 {
-  /*
-  */
   FindAvgCAxes::Pointer filter = FindAvgCAxes::New();
   if(true == copyFilterParameters)
   {

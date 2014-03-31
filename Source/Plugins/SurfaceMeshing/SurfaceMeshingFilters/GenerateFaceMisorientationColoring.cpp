@@ -336,8 +336,6 @@ void GenerateFaceMisorientationColoring::execute()
 // -----------------------------------------------------------------------------
 AbstractFilter::Pointer GenerateFaceMisorientationColoring::newFilterInstance(bool copyFilterParameters)
 {
-  /*
-  */
   GenerateFaceMisorientationColoring::Pointer filter = GenerateFaceMisorientationColoring::New();
   if(true == copyFilterParameters)
   {

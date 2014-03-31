@@ -578,8 +578,6 @@ void EbsdToH5Ebsd::execute()
 // -----------------------------------------------------------------------------
 AbstractFilter::Pointer EbsdToH5Ebsd::newFilterInstance(bool copyFilterParameters)
 {
-  /*
-  */
   EbsdToH5Ebsd::Pointer filter = EbsdToH5Ebsd::New();
   if(true == copyFilterParameters)
   {

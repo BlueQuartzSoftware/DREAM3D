@@ -316,8 +316,6 @@ int InitializeSyntheticVolume::getEstimatedPrimaryFeatures()
 // -----------------------------------------------------------------------------
 AbstractFilter::Pointer InitializeSyntheticVolume::newFilterInstance(bool copyFilterParameters)
 {
-  /*
-  */
   InitializeSyntheticVolume::Pointer filter = InitializeSyntheticVolume::New();
   if(true == copyFilterParameters)
   {

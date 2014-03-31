@@ -227,8 +227,6 @@ void TriangleCentroidFilter::execute()
 // -----------------------------------------------------------------------------
 AbstractFilter::Pointer TriangleCentroidFilter::newFilterInstance(bool copyFilterParameters)
 {
-  /*
-  */
   TriangleCentroidFilter::Pointer filter = TriangleCentroidFilter::New();
   if(true == copyFilterParameters)
   {

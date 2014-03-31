@@ -225,8 +225,6 @@ void ReverseTriangleWinding::execute()
 // -----------------------------------------------------------------------------
 AbstractFilter::Pointer ReverseTriangleWinding::newFilterInstance(bool copyFilterParameters)
 {
-  /*
-  */
   ReverseTriangleWinding::Pointer filter = ReverseTriangleWinding::New();
   if(true == copyFilterParameters)
   {

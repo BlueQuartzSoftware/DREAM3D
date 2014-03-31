@@ -163,8 +163,6 @@ void FindCAxisLocations::execute()
 // -----------------------------------------------------------------------------
 AbstractFilter::Pointer FindCAxisLocations::newFilterInstance(bool copyFilterParameters)
 {
-  /*
-  */
   FindCAxisLocations::Pointer filter = FindCAxisLocations::New();
   if(true == copyFilterParameters)
   {

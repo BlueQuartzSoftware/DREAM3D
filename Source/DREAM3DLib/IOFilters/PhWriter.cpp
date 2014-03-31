@@ -226,8 +226,6 @@ int PhWriter::writeFile()
 // -----------------------------------------------------------------------------
 AbstractFilter::Pointer PhWriter::newFilterInstance(bool copyFilterParameters)
 {
-  /*
-  */
   PhWriter::Pointer filter = PhWriter::New();
   if(true == copyFilterParameters)
   {

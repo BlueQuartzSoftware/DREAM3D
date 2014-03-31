@@ -257,8 +257,6 @@ void TriangleDihedralAngleFilter::execute()
 // -----------------------------------------------------------------------------
 AbstractFilter::Pointer TriangleDihedralAngleFilter::newFilterInstance(bool copyFilterParameters)
 {
-  /*
-  */
   TriangleDihedralAngleFilter::Pointer filter = TriangleDihedralAngleFilter::New();
   if(true == copyFilterParameters)
   {
