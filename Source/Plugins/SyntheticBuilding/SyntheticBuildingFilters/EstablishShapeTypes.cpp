@@ -136,7 +136,6 @@ void EstablishShapeTypes::dataCheck()
   m_ShapeTypesPtr = cellEnsembleAttrMat->createNonPrereqArray<UInt32ArrayType, AbstractFilter>(this, getShapeTypesArrayName(), true, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_ShapeTypesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_ShapeTypes = m_ShapeTypesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-
 }
 
 // -----------------------------------------------------------------------------

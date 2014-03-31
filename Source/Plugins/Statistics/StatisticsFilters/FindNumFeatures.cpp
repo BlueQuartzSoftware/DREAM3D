@@ -93,19 +93,15 @@ void FindNumFeatures::dataCheck()
   if(getErrorCondition() < 0 || NULL == m) { return; }
   AttributeMatrix::Pointer cellEnsembleAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellEnsembleAttributeMatrixPath().getAttributeMatrixName(), -304);
   if(getErrorCondition() < 0) { return; }
-  AttributeMatrix::Pointer cellFeatureAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, m_FeaturePhasesArrayPath.getAttributeMatrixName(), -301);
-  if(getErrorCondition() < 0) { return; }
-
+ 
   QVector<size_t> dims(1, 1);
-  m_FeaturePhasesPtr = cellFeatureAttrMat->getPrereqArray<DataArray<int32_t>, AbstractFilter>(this, m_FeaturePhasesArrayPath.getDataArrayName(), -301, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_FeaturePhasesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, m_FeaturePhasesArrayPath, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_FeaturePhasesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_FeaturePhases = m_FeaturePhasesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   m_NumFeaturesPtr = cellEnsembleAttrMat->createNonPrereqArray<DataArray<int32_t>, AbstractFilter, int32_t>(this, m_NumFeaturesArrayName, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_NumFeaturesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_NumFeatures = m_NumFeaturesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
-
-
 
 // -----------------------------------------------------------------------------
 //
