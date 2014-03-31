@@ -77,16 +77,7 @@ SPParksWriter::~SPParksWriter()
 void SPParksWriter::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Output File");
-    parameter->setPropertyName("OutputFile");
-    parameter->setWidgetType(FilterParameterWidgetType::OutputFileWidget);
-    parameter->setFileExtension("*.spparks");
-    parameter->setFileType("SPParks Sites File");
-    parameter->setValueType("QString");
-    parameters.push_back(parameter);
-  }
+  parameters.push_back(FilterParameter::New("Output File", "OutputFile", FilterParameterWidgetType::OutputFileWidget,"QString", false, "", "*.spparks", "SPParks Sites File"));
   setFilterParameters(parameters);
 }
 // -----------------------------------------------------------------------------

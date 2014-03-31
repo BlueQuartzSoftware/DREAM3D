@@ -98,16 +98,7 @@ EBSDSegmentFeatures::~EBSDSegmentFeatures()
 void EBSDSegmentFeatures::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setPropertyName("MisorientationTolerance");
-    parameter->setHumanLabel("Misorientation Tolerance");
-    parameter->setWidgetType(FilterParameterWidgetType::DoubleWidget);
-    parameter->setValueType("float");
-    parameter->setCastableValueType("double");
-    parameter->setUnits("Degrees");
-    parameters.push_back(parameter);
-  }
+  parameters.push_back(FilterParameter::New("Misorientation Tolerance", "MisorientationTolerance", FilterParameterWidgetType::DoubleWidget,"float", false, "Degrees"));
 
   setFilterParameters(parameters);
 }

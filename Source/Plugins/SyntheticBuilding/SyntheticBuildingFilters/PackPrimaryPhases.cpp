@@ -301,67 +301,18 @@ PackPrimaryPhases::~PackPrimaryPhases()
 void PackPrimaryPhases::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Input Statistics");
-    parameter->setPropertyName("InputStatsArrayPath");
-    parameter->setWidgetType(FilterParameterWidgetType::DataArraySelectionWidget);
-    parameter->setValueType("DataArrayPath");
-    parameter->setUnits("");
-    parameters.push_back(parameter);
-  }
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Input Phase Types");
-    parameter->setPropertyName("InputPhaseTypesArrayPath");
-    parameter->setWidgetType(FilterParameterWidgetType::DataArraySelectionWidget);
-    parameter->setValueType("DataArrayPath");
-    parameter->setUnits("");
-    parameters.push_back(parameter);
-  }
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Input Shape Types");
-    parameter->setPropertyName("InputShapeTypesArrayPath");
-    parameter->setWidgetType(FilterParameterWidgetType::DataArraySelectionWidget);
-    parameter->setValueType("DataArrayPath");
-    parameter->setUnits("");
-    parameters.push_back(parameter);
-  }
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Output Synthetic Volume DataContainer");
-    parameter->setPropertyName("OutputDataContainerName");
-    parameter->setWidgetType(FilterParameterWidgetType::DataContainerSelectionWidget);
-    parameter->setValueType("QString");
-    parameters.push_back(parameter);
-  }
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Periodic Boundary");
-    parameter->setPropertyName("PeriodicBoundaries");
-    parameter->setWidgetType(FilterParameterWidgetType::BooleanWidget);
-    parameter->setValueType("bool");
-    parameters.push_back(parameter);
-  }
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Write Goal Attributes");
-    parameter->setPropertyName("WriteGoalAttributes");
-    parameter->setWidgetType(FilterParameterWidgetType::BooleanWidget);
-    parameter->setValueType("bool");
-    parameters.push_back(parameter);
-  }
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Goal Attribute CSV File");
-    parameter->setPropertyName("CsvOutputFile");
-    parameter->setWidgetType(FilterParameterWidgetType::OutputFileWidget);
-    parameter->setFileExtension("*.csv");
-    parameter->setFileType("Comma Separated Data");
-    parameter->setValueType("QString");
-    parameters.push_back(parameter);
-  }
+  parameters.push_back(FilterParameter::New("Statistics Array", "InputStatsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget,"DataArrayPath", true));
+  parameters.push_back(FilterParameter::New("Phase Types Array", "InputPhaseTypesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget,"DataArrayPath", true));
+  parameters.push_back(FilterParameter::New("Shape Types Array", "InputShapeTypesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget,"DataArrayPath", true));
+  parameters.push_back(FilterParameter::New("Synthetic Volume DataContainer Name", "OutputDataContainerName", FilterParameterWidgetType::DataContainerSelectionWidget,"QString", true));
+  parameters.push_back(FilterParameter::New("Cell Attribute Matrix Name", "OutputCellAttributeMatrixName", FilterParameterWidgetType::StringWidget,"QString", true));
+  parameters.push_back(FilterParameter::New("Cell Feature Attribute Matrix Name", "OutputCellFeatureAttributeMatrixName", FilterParameterWidgetType::StringWidget,"QString", true));
+  parameters.push_back(FilterParameter::New("Feature Ids Array Name", "FeatureIdsArrayName", FilterParameterWidgetType::StringWidget,"QString", true));
+  parameters.push_back(FilterParameter::New("Cell Phases Array Name", "CellPhasesArrayName", FilterParameterWidgetType::StringWidget,"QString", true));
+  parameters.push_back(FilterParameter::New("Feature Phases Array Name", "FeaturePhasesArrayName", FilterParameterWidgetType::StringWidget,"QString", true));
+  parameters.push_back(FilterParameter::New("Periodic Boundaries", "PeriodicBoundaries", FilterParameterWidgetType::BooleanWidget,"bool", false));
+  parameters.push_back(FilterParameter::New("Write Goal Attributes", "WriteGoalAttributes", FilterParameterWidgetType::BooleanWidget,"bool", false));
+  parameters.push_back(FilterParameter::New("Goal Attribute CSV File", "CsvOutputFile", FilterParameterWidgetType::OutputFileWidget,"QString", false, "", "*.csv", "Comma Separated Data"));
 
   setFilterParameters(parameters);
 }
@@ -372,6 +323,11 @@ void PackPrimaryPhases::readFilterParameters(AbstractFilterParametersReader* rea
   /* Code to read the values goes between these statements */
   /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN */
   setOutputDataContainerName( reader->readString("OutputDataContainerName", getOutputDataContainerName() ) );
+  setOutputCellAttributeMatrixName( reader->readString("OutputCellAttributeMatrixName", getOutputCellAttributeMatrixName() ) );
+  setOutputCellFeatureAttributeMatrixName( reader->readString("OutputCellFeatureAttributeMatrixName", getOutputCellFeatureAttributeMatrixName() ) );
+  setFeatureIdsArrayName( reader->readString("FeatureIdsArrayName", getFeatureIdsArrayName() ) );
+  setCellPhasesArrayName( reader->readString("CellPhasesArrayName", getCellPhasesArrayName() ) );
+  setFeaturePhasesArrayName( reader->readString("FeaturePhasesArrayName", getFeaturePhasesArrayName() ) );
   setPeriodicBoundaries( reader->readValue("PeriodicBoundaries", false) );
   setWriteGoalAttributes( reader->readValue("WriteGoalAttributes", false) );
   setCsvOutputFile( reader->readString( "CsvOutputFile", getCsvOutputFile() ) );
@@ -389,6 +345,11 @@ int PackPrimaryPhases::writeFilterParameters(AbstractFilterParametersWriter* wri
 {
   writer->openFilterGroup(this, index);
   writer->writeValue("OutputDataContainerName", getOutputDataContainerName() );
+  writer->writeValue("OutputCellAttributeMatrixName", getOutputCellAttributeMatrixName() );
+  writer->writeValue("OutputCellFeatureAttributeMatrixName", getOutputCellFeatureAttributeMatrixName() );
+  writer->writeValue("FeatureIdsArrayName", getFeatureIdsArrayName() );
+  writer->writeValue("CellPhasesArrayName", getCellPhasesArrayName() );
+  writer->writeValue("FeaturePhasesArrayName", getFeaturePhasesArrayName() );
   writer->writeValue("PeriodicBoundaries", getPeriodicBoundaries() );
   writer->writeValue("WriteGoalAttributes", getWriteGoalAttributes() );
   writer->writeValue("CsvOutputFile", getCsvOutputFile() );
@@ -465,17 +426,6 @@ void PackPrimaryPhases::dataCheck()
   if( NULL != m_ShapeTypesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_ShapeTypes = m_ShapeTypesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
-#if 0
-  m_PhaseTypesPtr = cellEnsembleAttrMat->getPrereqArray<DataArray<unsigned int>, AbstractFilter>(this,  m_PhaseTypesArrayName, -301, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_PhaseTypesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
-  { m_PhaseTypes = m_PhaseTypesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-
-
-  m_ShapeTypesPtr = cellEnsembleAttrMat->getPrereqArray<DataArray<unsigned int>, AbstractFilter>(this,  m_ShapeTypesArrayName, -301, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_ShapeTypesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
-  { m_ShapeTypes = m_ShapeTypesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-#endif
-
   StatsDataArray::Pointer statsPtr = dca->getPrereqArrayFromPath<StatsDataArray, AbstractFilter>(this, getInputStatsArrayPath(), dims);
   m_StatsDataArray = boost::dynamic_pointer_cast<StatsDataArray>(statsPtr);
   if(m_StatsDataArray.lock().get() == NULL)
@@ -484,8 +434,6 @@ void PackPrimaryPhases::dataCheck()
     setErrorCondition(-308);
     notifyErrorMessage(getHumanLabel(), ss, -308);
   }
-
-
 
   AttributeMatrix::Pointer cellAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getOutputCellAttributeMatrixName(), -301);
   if(getErrorCondition() < 0 || NULL == cellAttrMat.get() ) { return; }
@@ -514,7 +462,6 @@ void PackPrimaryPhases::dataCheck()
     if( NULL != m_CellPhasesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
     { m_CellPhases = m_CellPhasesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   }
-
 
   QVector<size_t> tDims(1, 0);
   AttributeMatrix::Pointer cellFeatureAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getOutputCellFeatureAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::CellFeature);
@@ -547,8 +494,6 @@ void PackPrimaryPhases::dataCheck()
   if( NULL != m_AxisLengthsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_AxisLengths = m_AxisLengthsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
-
-
   // Validate the output file and the boolean to write the file
   if (m_WriteGoalAttributes == true && getCsvOutputFile().isEmpty() == true)
   {
@@ -556,8 +501,6 @@ void PackPrimaryPhases::dataCheck()
     notifyErrorMessage(getHumanLabel(), ss, -1);
     setErrorCondition(-387);
   }
-
-
 }
 
 // -----------------------------------------------------------------------------
@@ -598,7 +541,6 @@ void PackPrimaryPhases::execute()
 
   // Get the number of input ensembles from one of the input arrays that are located in the Input Ensemble AttributeMatrix
   int64_t totalEnsembles = m_PhaseTypesPtr.lock()->getNumberOfTuples();
-  //int64_t totalEnsembles = m->getAttributeMatrix(m_CellEnsembleAttributeMatrixName)->getNumTuples();
 
   StatsDataArray& statsDataArray = *(m_StatsDataArray.lock().get());
 
@@ -2624,6 +2566,12 @@ AbstractFilter::Pointer PackPrimaryPhases::newFilterInstance(bool copyFilterPara
   PackPrimaryPhases::Pointer filter = PackPrimaryPhases::New();
   if(true == copyFilterParameters)
   {
+    filter->setOutputDataContainerName( getOutputDataContainerName() );
+    filter->setOutputCellAttributeMatrixName( getOutputCellAttributeMatrixName() );
+    filter->setOutputCellFeatureAttributeMatrixName( getOutputCellFeatureAttributeMatrixName() );
+    filter->setFeatureIdsArrayName( getFeatureIdsArrayName() );
+    filter->setCellPhasesArrayName( getCellPhasesArrayName() );
+    filter->setFeaturePhasesArrayName( getFeaturePhasesArrayName() );
     filter->setPeriodicBoundaries( getPeriodicBoundaries() );
     filter->setWriteGoalAttributes( getWriteGoalAttributes() );
     filter->setCsvOutputFile( getCsvOutputFile() );

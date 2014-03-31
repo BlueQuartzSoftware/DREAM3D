@@ -58,6 +58,8 @@
 // -----------------------------------------------------------------------------
 InitializeSyntheticVolume::InitializeSyntheticVolume() :
   AbstractFilter(),
+  m_InputStatsArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellEnsembleAttributeMatrixName, DREAM3D::EnsembleData::Statistics),
+  m_InputPhaseTypesArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellEnsembleAttributeMatrixName, DREAM3D::EnsembleData::PhaseTypes),
   m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
   m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
   m_EstimatedPrimaryFeatures(0)
@@ -91,22 +93,14 @@ void InitializeSyntheticVolume::setupFilterParameters()
 {
   FilterParameterVector parameters;
 
-  FilterParameter::Pointer parameter = FilterParameter::New("Input Statistics", "InputStatsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, "");
-  parameters.push_back(parameter);
-  parameter = FilterParameter::New("Input Phase Types", "InputPhaseTypesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, "");
-  parameters.push_back(parameter);
-  parameter = FilterParameter::New("New DataContainer Name", "DataContainerName", FilterParameterWidgetType::StringWidget, "QString", true, "");
-  parameters.push_back(parameter);
-  parameter = FilterParameter::New("New Cell Attribute Matrix Name", "CellAttributeMatrixName", FilterParameterWidgetType::StringWidget, "QString", true, "");
-  parameters.push_back(parameter);
-  parameter = FilterParameter::New("Dimensions", "Dimensions", FilterParameterWidgetType::IntVec3Widget, "IntVec3_t", false, "Voxels");
-  parameters.push_back(parameter);
-  parameter = FilterParameter::New("Resolution", "Resolution", FilterParameterWidgetType::FloatVec3Widget, "FloatVec3_t", false, "Microns");
-  parameters.push_back(parameter);
-  parameter = FilterParameter::New("Origin", "Origin", FilterParameterWidgetType::FloatVec3Widget, "FloatVec3_t", false, "Microns");
-  parameters.push_back(parameter);
-  parameter = FilterParameter::New("Estimated Primary Features", "EstimatedPrimaryFeatures", FilterParameterWidgetType::PreflightUpdatedValueWidget, "QString", false, "");
-  parameters.push_back(parameter);
+  parameters.push_back(FilterParameter::New("Input Statistics", "InputStatsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
+  parameters.push_back(FilterParameter::New("Input Phase Types", "InputPhaseTypesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
+  parameters.push_back(FilterParameter::New("New DataContainer Name", "DataContainerName", FilterParameterWidgetType::StringWidget, "QString", true, ""));
+  parameters.push_back(FilterParameter::New("New Cell Attribute Matrix Name", "CellAttributeMatrixName", FilterParameterWidgetType::StringWidget, "QString", true, ""));
+  parameters.push_back(FilterParameter::New("Dimensions", "Dimensions", FilterParameterWidgetType::IntVec3Widget, "IntVec3_t", false, "Voxels"));
+  parameters.push_back(FilterParameter::New("Resolution", "Resolution", FilterParameterWidgetType::FloatVec3Widget, "FloatVec3_t", false, "Microns"));
+  parameters.push_back(FilterParameter::New("Origin", "Origin", FilterParameterWidgetType::FloatVec3Widget, "FloatVec3_t", false, "Microns"));
+  parameters.push_back(FilterParameter::New("Estimated Primary Features", "EstimatedPrimaryFeatures", FilterParameterWidgetType::PreflightUpdatedValueWidget, "QString", false, ""));
 
   setFilterParameters(parameters);
 }

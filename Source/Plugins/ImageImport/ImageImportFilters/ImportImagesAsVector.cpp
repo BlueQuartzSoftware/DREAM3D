@@ -93,14 +93,7 @@ void ImportImagesAsVector::setupFilterParameters()
 {
   QVector<FilterParameter::Pointer> parameters;
 
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Import Image Data");
-    parameter->setPropertyName("ImageVector");
-    parameter->setWidgetType(FilterParameterWidgetType::ImportImagesAsVectorWidget);
-    parameter->setValueType("int");
-    parameters.push_back(parameter);
-  }
+  parameters.push_back(FilterParameter::New("Import Image Data", "ImageVector", FilterParameterWidgetType::ImportImagesAsVectorWidget,"int", false));
 
 
 

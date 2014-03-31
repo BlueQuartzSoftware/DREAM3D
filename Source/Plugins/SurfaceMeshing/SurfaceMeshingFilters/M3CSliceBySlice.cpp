@@ -361,14 +361,7 @@ M3CSliceBySlice::~M3CSliceBySlice()
 void M3CSliceBySlice::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Delete Temp Files");
-    parameter->setPropertyName("DeleteTempFiles");
-    parameter->setWidgetType(FilterParameterWidgetType::BooleanWidget);
-    parameter->setValueType("bool");
-    parameters.push_back(parameter);
-  }
+  parameters.push_back(FilterParameter::New("Delete Temp Files", "DeleteTempFiles", FilterParameterWidgetType::BooleanWidget,"bool", false));
 
   setFilterParameters(parameters);
 }

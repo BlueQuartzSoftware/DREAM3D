@@ -1,43 +1,94 @@
 [PipelineBuilder]
-Number_Filters=7
 Name=(01) Single Cubic Phase Equiaxed
+Number_Filters=9
+Version=5.0.6397
 
 [0]
-Filter_Name=InitializeSyntheticVolume
+Filter_Name=DataContainerReader
+Filter_Human_Label=Read DREAM3D Data File
 InputFile=Data/CubicSingleEquiaxed.dream3d
-XResolution=0.5
-YResolution=0.5
-ZResolution=0.5
-XPoints=128
-YPoints=128
-ZPoints=128
+OverwriteExistingDataContainers=0
+DataContainerArrayProxy_DataContainerNames\size=1
+DataContainerArrayProxy_DataContainerNames\1\Name=StatsGenerator
+DataContainerArrayProxy_StatsGenerator\size=3
+DataContainerArrayProxy_StatsGenerator\1\ArrayName=CellEnsembleData/CrystalStructures
+DataContainerArrayProxy_StatsGenerator\2\ArrayName=CellEnsembleData/PhaseTypes
+DataContainerArrayProxy_StatsGenerator\3\ArrayName=CellEnsembleData/Statistics
 
 [1]
-Filter_Name=PackPrimaryPhases
-PeriodicBoundaries=false
-WriteGoalAttributes=false
-CsvOutputFile=
+Filter_Name=InitializeSyntheticVolume
+Filter_Human_Label=Initialize Synthetic Volume
+DataContainerName=SyntheticVolume
+CellAttributeMatrixName=CellData
+CellEnsembleAttributeMatrixName=CellEnsembleData
+Dimensions\size=3
+Dimensions\1\x=128
+Dimensions\2\y=128
+Dimensions\3\z=128
+Resolution\size=3
+Resolution\1\x=0.5
+Resolution\2\y=0.5
+Resolution\3\z=0.5
+Origin\size=3
+Origin\1\x=0
+Origin\2\y=0
+Origin\3\z=0
+InputStatsArrayPath=StatsGenerator|CellEnsembleData|Statistics
+InputPhaseTypesArrayPath=StatsGenerator|CellEnsembleData|PhaseTypes
 
 [2]
-Filter_Name=FindNeighbors
+Filter_Name=EstablishShapeTypes
+Filter_Human_Label=Establish Shape Types
+InputPhaseTypesArrayPath=StatsGenerator|CellEnsembleData|PhaseTypes
+ShapeTypesAttributeMatrix=SyntheticVolume|CellEnsembleData|
+ShapeTypesArrayName=ShapeTypes
+ShapeTypeData=999 0
 
 [3]
-Filter_Name=FindNumFields
+Filter_Name=PackPrimaryPhases
+Filter_Human_Label=Pack Primary Phases
+OutputDataContainerName=SyntheticVolume
+PeriodicBoundaries=0
+WriteGoalAttributes=0
+CsvOutputFile=
+InputStatsArrayPath=StatsGenerator|CellEnsembleData|Statistics
+InputPhaseTypesArrayPath=StatsGenerator|CellEnsembleData|PhaseTypes
+InputShapeTypesArrayPath=SyntheticVolume|CellEnsembleData|ShapeTypes
 
 [4]
-Filter_Name=MatchCrystallography
-MaxIterations=100000
+Filter_Name=FindNeighbors
+Filter_Human_Label=Find Feature Neighbors
+CellFeatureAttributeMatrixPath=SyntheticVolume|CellFeatureData|
+CellAttributeMatrixPath=SyntheticVolume|CellData|
 
 [5]
+Filter_Name=FindNumFeatures
+Filter_Human_Label=Find Number of Features
+
+[6]
+Filter_Name=MatchCrystallography
+Filter_Human_Label=Match Crystallography
+OutputDataContainerName=SyntheticVolume
+MaxIterations=100000
+InputStatsArrayPath=StatsGenerator|CellEnsembleData|Statistics
+CrystalStructuresArrayPath=StatsGenerator|CellEnsembleData|CrystalStructures
+PhaseTypesArrayPath=StatsGenerator|CellEnsembleData|PhaseTypes
+FeatureIdsPath=SyntheticVolume|CellData|FeatureIds
+FeaturePhasesPath=SyntheticVolume|CellData|Phases
+FeatureSurfaceFeaturesPath=SyntheticVolume|CellFeatureData|SurfaceFeatures
+OutputCellAttributeMatrix=SyntheticVolume|CellData|
+CellEulerAnglesArrayName=EulerAngles
+
+[7]
 Filter_Name=GenerateIPFColors
+Filter_Human_Label=Generate IPF Colors
 ReferenceDir\size=3
 ReferenceDir\1\x=0
 ReferenceDir\2\y=0
 ReferenceDir\3\z=1
 
-[6]
+[8]
 Filter_Name=DataContainerWriter
+Filter_Human_Label=Write DREAM3D Data File
 OutputFile=Data/Output/CubicSingleEquiaxedOut.dream3d
-WriteVoxelData=true
-WriteSurfaceMeshData=false
-WriteXdmfFile=true
+WriteXdmfFile=1

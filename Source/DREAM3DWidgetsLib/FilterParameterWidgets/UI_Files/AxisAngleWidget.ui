@@ -14,17 +14,11 @@
    <string>AxisAngleWidget</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
-   <property name="leftMargin">
+   <property name="margin">
     <number>2</number>
    </property>
-   <property name="topMargin">
-    <number>2</number>
-   </property>
-   <property name="rightMargin">
-    <number>2</number>
-   </property>
-   <property name="bottomMargin">
-    <number>2</number>
+   <property name="spacing">
+    <number>5</number>
    </property>
    <item row="1" column="2">
     <widget class="QLineEdit" name="axis_i"/>

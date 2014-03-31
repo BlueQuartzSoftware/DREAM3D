@@ -75,12 +75,17 @@ class FindNeighbors : public AbstractFilter
     DREAM3D_FILTER_PARAMETER(DataArrayPath, CellAttributeMatrixPath)
     Q_PROPERTY(DataArrayPath CellAttributeMatrixPath READ getCellAttributeMatrixPath WRITE setCellAttributeMatrixPath)
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, SharedSurfaceAreaListArrayName)
-    Q_PROPERTY(DataArrayPath SharedSurfaceAreaListArrayName READ getSharedSurfaceAreaListArrayName WRITE setSharedSurfaceAreaListArrayName)
+    DREAM3D_FILTER_PARAMETER(QString, SharedSurfaceAreaListArrayName)
+    Q_PROPERTY(QString SharedSurfaceAreaListArrayName READ getSharedSurfaceAreaListArrayName WRITE setSharedSurfaceAreaListArrayName)
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, NeighborListArrayName)
-    Q_PROPERTY(DataArrayPath NeighborListArrayName READ getNeighborListArrayName WRITE setNeighborListArrayName)
+    DREAM3D_FILTER_PARAMETER(QString, NeighborListArrayName)
+    Q_PROPERTY(QString NeighborListArrayName READ getNeighborListArrayName WRITE setNeighborListArrayName)
 
+    DREAM3D_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
+    Q_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
+    Q_PROPERTY(QString SurfaceVoxelsArrayName READ getSurfaceVoxelsArrayName WRITE setSurfaceVoxelsArrayName)
+    Q_PROPERTY(QString SurfaceFeaturesArrayName READ getSurfaceFeaturesArrayName WRITE setSurfaceFeaturesArrayName)
+    Q_PROPERTY(QString NumNeighborsArrayName READ getNumNeighborsArrayName WRITE setNumNeighborsArrayName)
 
     virtual const QString getCompiledLibraryName() { return Statistics::StatisticsBaseName; }
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);

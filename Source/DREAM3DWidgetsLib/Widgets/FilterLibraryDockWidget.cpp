@@ -69,8 +69,8 @@ FilterLibraryDockWidget::~FilterLibraryDockWidget()
 // -----------------------------------------------------------------------------
 void FilterLibraryDockWidget::connectFilterList(FilterListDockWidget* filterListWidget)
 {
-  connect(this, SIGNAL(filterListGenerated(const QStringList&)),
-          filterListWidget, SLOT(updateFilterList(const QStringList&) ) );
+  connect(this, SIGNAL(filterListGenerated(const QStringList&, bool)),
+          filterListWidget, SLOT(updateFilterList(const QStringList&, bool) ) );
 
 }
 
@@ -201,5 +201,5 @@ void FilterLibraryDockWidget::updateFilterGroupList(FilterManager::Collection& f
   {
     filterNames << factory.key();
   }
-  emit filterListGenerated(filterNames);
+  emit filterListGenerated(filterNames, true);
 }

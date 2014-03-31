@@ -64,15 +64,7 @@ LinkFeatureMapToCellArray::~LinkFeatureMapToCellArray()
 void LinkFeatureMapToCellArray::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Cell Array Name");
-    parameter->setPropertyName("SelectedCellDataArrayName");
-    parameter->setWidgetType(FilterParameterWidgetType::DataArraySelectionWidget);
-    parameter->setValueType("QString");
-    parameter->setUnits("");
-    parameters.push_back(parameter);
-  }
+  parameters.push_back(FilterParameter::New("Cell Array Name", "SelectedCellDataArrayName", FilterParameterWidgetType::DataArraySelectionWidget,"QString", false));
 
   setFilterParameters(parameters);
 }

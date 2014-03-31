@@ -115,32 +115,9 @@ ScaleVolume::~ScaleVolume()
 void ScaleVolume::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Apply to Voxel Volume");
-    parameter->setPropertyName("ApplyToVoxelVolume");
-    parameter->setWidgetType(FilterParameterWidgetType::BooleanWidget);
-    parameter->setValueType("bool");
-    parameters.push_back(parameter);
-  }
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Apply to Surface Mesh");
-    parameter->setPropertyName("ApplyToSurfaceMesh");
-    parameter->setWidgetType(FilterParameterWidgetType::BooleanWidget);
-    parameter->setValueType("bool");
-    parameters.push_back(parameter);
-  }
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-
-    parameter->setHumanLabel("Scaling Factor");
-    parameter->setPropertyName("ScaleFactor");
-    parameter->setWidgetType(FilterParameterWidgetType::FloatVec3Widget);
-    parameter->setValueType("FloatVec3_t");
-    //   parameter->setUnits("Microns");
-    parameters.push_back(parameter);
-  }
+  parameters.push_back(FilterParameter::New("Apply to Voxel Volume", "ApplyToVoxelVolume", FilterParameterWidgetType::BooleanWidget,"bool", false));
+  parameters.push_back(FilterParameter::New("Apply to Surface Mesh", "ApplyToSurfaceMesh", FilterParameterWidgetType::BooleanWidget,"bool", false));
+  parameters.push_back(FilterParameter::New("Scaling Factor", "ScaleFactor", FilterParameterWidgetType::FloatVec3Widget,"FloatVec3_t", false));
 
   setFilterParameters(parameters);
 }

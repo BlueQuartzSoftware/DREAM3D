@@ -103,25 +103,8 @@ DataContainerWriter::~DataContainerWriter()
 void DataContainerWriter::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Output File");
-    parameter->setPropertyName("OutputFile");
-    parameter->setWidgetType(FilterParameterWidgetType::OutputFileWidget);
-    parameter->setFileExtension("*.dream3d");
-    parameter->setFileType("DREAM.3D Data");
-    parameter->setValueType("QString");
-    parameters.push_back(parameter);
-  }
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Write Xdmf File");
-    parameter->setPropertyName("WriteXdmfFile");
-    parameter->setWidgetType(FilterParameterWidgetType::BooleanWidget);
-    parameter->setValueType("bool");
-    parameter->setUnits("ParaView Compatible File");
-    parameters.push_back(parameter);
-  }
+  parameters.push_back(FilterParameter::New("Output File", "OutputFile", FilterParameterWidgetType::OutputFileWidget,"QString", false, "", "*.dream3d", "DREAM.3D Data"));
+  parameters.push_back(FilterParameter::New("Write Xdmf File", "WriteXdmfFile", FilterParameterWidgetType::BooleanWidget,"bool", false, "ParaView Compatible File"));
 
   setFilterParameters(parameters);
 }

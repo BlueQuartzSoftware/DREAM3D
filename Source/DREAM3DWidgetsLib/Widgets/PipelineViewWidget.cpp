@@ -700,7 +700,16 @@ void PipelineViewWidget::dropEvent(QDropEvent* event)
     {
       fName = urlList[0].toLocalFile(); // convert first QUrl to local path
       fName = QDir::toNativeSeparators(fName);
-      emit pipelineFileDropped(fName);
+      QFileInfo fi(fName);
+      if(fi.suffix().endsWith("txt") == true || fi.suffix().endsWith("ini") == true)
+      {
+        loadPipelineFile(fName, QSettings::IniFormat, false);
+      }
+      else if (fi.suffix().endsWith("dream3d") == true )
+      {
+
+      }
+
     }
   }
   else if(m_FilterBeingDragged != NULL && event->dropAction() == Qt::MoveAction)

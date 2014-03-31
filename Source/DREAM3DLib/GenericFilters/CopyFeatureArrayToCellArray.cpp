@@ -63,15 +63,7 @@ CopyFeatureArrayToCellArray::~CopyFeatureArrayToCellArray()
 void CopyFeatureArrayToCellArray::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Feature Array Name");
-    parameter->setPropertyName("SelectedFeatureArrayPath");
-    parameter->setWidgetType(FilterParameterWidgetType::DataArraySelectionWidget);
-    parameter->setValueType("DataArrayPath");
-    parameter->setUnits("");
-    parameters.push_back(parameter);
-  }
+  parameters.push_back(FilterParameter::New("Feature Array Name", "SelectedFeatureArrayPath", FilterParameterWidgetType::DataArraySelectionWidget,"DataArrayPath", false));
 
   setFilterParameters(parameters);
 }

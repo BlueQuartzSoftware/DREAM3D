@@ -81,16 +81,7 @@ FindBasalLoadingFactor::~FindBasalLoadingFactor()
 void FindBasalLoadingFactor::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-
-    parameter->setHumanLabel("Loading Direction");
-    parameter->setPropertyName("LoadingDir");
-    parameter->setWidgetType(FilterParameterWidgetType::FloatVec3Widget);
-    parameter->setValueType("FloatVec3_t");
-    parameter->setUnits("");
-    parameters.push_back(parameter);
-  }
+  parameters.push_back(FilterParameter::New("Loading Direction", "LoadingDir", FilterParameterWidgetType::FloatVec3Widget,"FloatVec3_t", false));
   setFilterParameters(parameters);
 }
 // -----------------------------------------------------------------------------

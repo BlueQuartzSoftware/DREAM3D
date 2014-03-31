@@ -56,6 +56,7 @@
 // -----------------------------------------------------------------------------
 EstablishShapeTypes::EstablishShapeTypes() :
   AbstractFilter(),
+  m_InputPhaseTypesArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellEnsembleAttributeMatrixName, DREAM3D::EnsembleData::PhaseTypes),
   m_ShapeTypesArrayName(DREAM3D::EnsembleData::ShapeTypes)
 {
   setupFilterParameters();
@@ -74,11 +75,8 @@ EstablishShapeTypes::~EstablishShapeTypes()
 void EstablishShapeTypes::setupFilterParameters()
 {
   FilterParameterVector parameters;
-
-    FilterParameter::Pointer parameter = FilterParameter::New("Phase Types Array Name", "InputPhaseTypesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, "");
-    parameters.push_back(parameter);
-    parameter = FilterParameter::New("Shape Types Array Name", "ShapeTypesArrayName", FilterParameterWidgetType::StringWidget, "QString", true, "");
-    parameters.push_back(parameter);
+    parameters.push_back(FilterParameter::New("Phase Types Array Name", "InputPhaseTypesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
+    parameters.push_back(FilterParameter::New("Shape Types Array Name", "ShapeTypesArrayName", FilterParameterWidgetType::StringWidget, "QString", true, ""));
     ShapeTypesFilterParameter::Pointer sType_parameter = ShapeTypesFilterParameter::New("Shape Types", "ShapeTypeData", FilterParameterWidgetType::ShapeTypeSelectionWidget, "UInt32Vector_t", false, "");
     sType_parameter->setPhaseTypeCountProperty("PhaseCount");
     sType_parameter->setPhaseTypeArrayPathProperty("InputPhaseTypesArrayPath");

@@ -14,17 +14,11 @@
    <string>ShapeTypeSelectionWidget</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
-   <property name="leftMargin">
-    <number>4</number>
+   <property name="margin">
+    <number>2</number>
    </property>
-   <property name="topMargin">
-    <number>6</number>
-   </property>
-   <property name="rightMargin">
-    <number>4</number>
-   </property>
-   <property name="bottomMargin">
-    <number>4</number>
+   <property name="spacing">
+    <number>5</number>
    </property>
    <item row="2" column="1" colspan="2">
     <widget class="QScrollArea" name="m_ShapeTypeScrollArea">
@@ -42,8 +36,8 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>343</width>
-        <height>176</height>
+        <width>347</width>
+        <height>182</height>
        </rect>
       </property>
       <layout class="QFormLayout" name="formLayout_2">
@@ -53,16 +47,7 @@
        <property name="verticalSpacing">
         <number>6</number>
        </property>
-       <property name="leftMargin">
-        <number>4</number>
-       </property>
-       <property name="topMargin">
-        <number>4</number>
-       </property>
-       <property name="rightMargin">
-        <number>4</number>
-       </property>
-       <property name="bottomMargin">
+       <property name="margin">
         <number>4</number>
        </property>
       </layout>

@@ -74,24 +74,8 @@ RegularizeZSpacing::~RegularizeZSpacing()
 void RegularizeZSpacing::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Current Z Positions File");
-    parameter->setPropertyName("InputFile");
-    parameter->setWidgetType(FilterParameterWidgetType::InputFileWidget);
-    parameter->setValueType("QString");
-    parameters.push_back(parameter);
-  }
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("New Z Res");
-    parameter->setPropertyName("NewZRes");
-    parameter->setWidgetType(FilterParameterWidgetType::DoubleWidget);
-    parameter->setValueType("float");
-    parameter->setCastableValueType("double");
-    parameter->setUnits("Microns");
-    parameters.push_back(parameter);
-  }
+  parameters.push_back(FilterParameter::New("Current Z Positions File", "InputFile", FilterParameterWidgetType::InputFileWidget,"QString", false));
+  parameters.push_back(FilterParameter::New("New Z Res", "NewZRes", FilterParameterWidgetType::DoubleWidget,"float", false, "Microns"));
 
   setFilterParameters(parameters);
 }

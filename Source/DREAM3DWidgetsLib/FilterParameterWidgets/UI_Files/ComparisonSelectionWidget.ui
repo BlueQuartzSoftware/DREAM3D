@@ -11,20 +11,11 @@
    </rect>
   </property>
   <layout class="QGridLayout" name="gridLayout">
-   <property name="leftMargin">
-    <number>2</number>
-   </property>
-   <property name="topMargin">
-    <number>2</number>
-   </property>
-   <property name="rightMargin">
-    <number>2</number>
-   </property>
-   <property name="bottomMargin">
+   <property name="margin">
     <number>2</number>
    </property>
    <property name="spacing">
-    <number>4</number>
+    <number>5</number>
    </property>
    <item row="1" column="0">
     <layout class="QVBoxLayout" name="verticalLayout" stretch="0,0,0">

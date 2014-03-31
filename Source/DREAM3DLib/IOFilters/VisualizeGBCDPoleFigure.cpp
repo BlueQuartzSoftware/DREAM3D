@@ -107,14 +107,7 @@ void VisualizeGBCDPoleFigure::setupFilterParameters()
     option->setChoices(choices);
     parameters.push_back(option);
   }
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Misorientation Axis Angles");
-    parameter->setPropertyName("MisorientationRotation");
-    parameter->setWidgetType(FilterParameterWidgetType::AxisAngleWidget);
-    parameter->setCastableValueType("AxisAngleInput_t");
-    parameters.push_back(parameter);
-  }
+  parameters.push_back(FilterParameter::New("Misorientation Axis Angles", "MisorientationRotation", FilterParameterWidgetType::AxisAngleWidget,"", false));
 //  {
 //    FilterParameter::Pointer parameter = FilterParameter::New();
 //    parameter->setPropertyName("MisAngle");
@@ -135,16 +128,7 @@ void VisualizeGBCDPoleFigure::setupFilterParameters()
 //    parameter->setUnits("");
 //    parameters.push_back(parameter);
 //  }
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Regular Grid Pole Figure");
-    parameter->setPropertyName("OutputFile");
-    parameter->setWidgetType(FilterParameterWidgetType::OutputFileWidget);
-    parameter->setFileExtension("*.vtk");
-    parameter->setFileType("VTK File");
-    parameter->setValueType("QString");
-    parameters.push_back(parameter);
-  }
+  parameters.push_back(FilterParameter::New("Regular Grid Pole Figure", "OutputFile", FilterParameterWidgetType::OutputFileWidget,"QString", false, "", "*.vtk", "VTK File"));
   setFilterParameters(parameters);
 }
 

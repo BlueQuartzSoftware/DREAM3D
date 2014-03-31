@@ -63,23 +63,8 @@ RenameAttributeArray::~RenameAttributeArray()
 void RenameAttributeArray::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Array to Rename");
-    parameter->setPropertyName("SelectedArrayPath");
-    parameter->setWidgetType(FilterParameterWidgetType::DataArraySelectionWidget);
-    parameter->setValueType("QString");
-    parameter->setUnits("");
-    parameters.push_back(parameter);
-  }
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("New Array Name");
-    parameter->setPropertyName("NewArrayName");
-    parameter->setWidgetType(FilterParameterWidgetType::StringWidget);
-    parameter->setValueType("QString");
-    parameters.push_back(parameter);
-  }
+  parameters.push_back(FilterParameter::New("Array to Rename", "SelectedArrayPath", FilterParameterWidgetType::DataArraySelectionWidget,"QString", false));
+  parameters.push_back(FilterParameter::New("New Array Name", "NewArrayName", FilterParameterWidgetType::StringWidget,"QString", false));
 
   setFilterParameters(parameters);
 }

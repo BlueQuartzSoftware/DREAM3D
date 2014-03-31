@@ -73,60 +73,12 @@ ClearData::~ClearData()
 void ClearData::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("X Min");
-    parameter->setPropertyName("XMin");
-    parameter->setWidgetType(FilterParameterWidgetType::IntWidget);
-    parameter->setValueType("int");
-    parameter->setUnits("Column");
-    parameters.push_back(parameter);
-  }
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Y Min");
-    parameter->setPropertyName("YMin");
-    parameter->setWidgetType(FilterParameterWidgetType::IntWidget);
-    parameter->setValueType("int");
-    parameter->setUnits("Row");
-    parameters.push_back(parameter);
-  }
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Z Min");
-    parameter->setPropertyName("ZMin");
-    parameter->setWidgetType(FilterParameterWidgetType::IntWidget);
-    parameter->setValueType("int");
-    parameter->setUnits("Plane");
-    parameters.push_back(parameter);
-  }
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("X Max");
-    parameter->setPropertyName("XMax");
-    parameter->setWidgetType(FilterParameterWidgetType::IntWidget);
-    parameter->setValueType("int");
-    parameter->setUnits("Column");
-    parameters.push_back(parameter);
-  }
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Y Max");
-    parameter->setPropertyName("YMax");
-    parameter->setWidgetType(FilterParameterWidgetType::IntWidget);
-    parameter->setValueType("int");
-    parameter->setUnits("Row");
-    parameters.push_back(parameter);
-  }
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Z Max");
-    parameter->setPropertyName("ZMax");
-    parameter->setWidgetType(FilterParameterWidgetType::IntWidget);
-    parameter->setValueType("int");
-    parameter->setUnits("Plane");
-    parameters.push_back(parameter);
-  }
+  parameters.push_back(FilterParameter::New("X Min", "XMin", FilterParameterWidgetType::IntWidget,"int", false, "Column"));
+  parameters.push_back(FilterParameter::New("Y Min", "YMin", FilterParameterWidgetType::IntWidget,"int", false, "Row"));
+  parameters.push_back(FilterParameter::New("Z Min", "ZMin", FilterParameterWidgetType::IntWidget,"int", false, "Plane"));
+  parameters.push_back(FilterParameter::New("X Max", "XMax", FilterParameterWidgetType::IntWidget,"int", false, "Column"));
+  parameters.push_back(FilterParameter::New("Y Max", "YMax", FilterParameterWidgetType::IntWidget,"int", false, "Row"));
+  parameters.push_back(FilterParameter::New("Z Max", "ZMax", FilterParameterWidgetType::IntWidget,"int", false, "Plane"));
   setFilterParameters(parameters);
 }
 // -----------------------------------------------------------------------------

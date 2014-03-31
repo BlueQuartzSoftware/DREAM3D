@@ -90,24 +90,8 @@ FindSchmids::~FindSchmids()
 void FindSchmids::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-
-    parameter->setHumanLabel("Loading Direction");
-    parameter->setPropertyName("LoadingDir");
-    parameter->setWidgetType(FilterParameterWidgetType::FloatVec3Widget);
-    parameter->setValueType("FloatVec3_t");
-    parameter->setUnits("");
-    parameters.push_back(parameter);
-  }
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Store Angle Components of Schmid Factor");
-    parameter->setPropertyName("StoreAngleComponents");
-    parameter->setWidgetType(FilterParameterWidgetType::BooleanWidget);
-    parameter->setValueType("bool");
-    parameters.push_back(parameter);
-  }  setFilterParameters(parameters);
+  parameters.push_back(FilterParameter::New("Loading Direction", "LoadingDir", FilterParameterWidgetType::FloatVec3Widget,"FloatVec3_t", false));
+  parameters.push_back(FilterParameter::New("Store Angle Components of Schmid Factor", "StoreAngleComponents", FilterParameterWidgetType::BooleanWidget,"bool", false));
 }
 // -----------------------------------------------------------------------------
 void FindSchmids::readFilterParameters(AbstractFilterParametersReader* reader, int index)

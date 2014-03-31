@@ -142,15 +142,7 @@ FindOrientationFieldCurl::~FindOrientationFieldCurl()
 void FindOrientationFieldCurl::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Curl Radius");
-    parameter->setPropertyName("CurlSize");
-    parameter->setWidgetType(FilterParameterWidgetType::IntVec3Widget);
-    parameter->setValueType("IntVec3_t");
-    parameter->setUnits("Pixels");
-    parameters.push_back(parameter);
-  }
+  parameters.push_back(FilterParameter::New("Curl Radius", "CurlSize", FilterParameterWidgetType::IntVec3Widget,"IntVec3_t", false, "Pixels"));
 
   setFilterParameters(parameters);
 }

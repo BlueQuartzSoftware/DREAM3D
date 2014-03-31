@@ -91,7 +91,7 @@ class DREAM3DWidgetsLib_EXPORT FilterLibraryDockWidget : public QDockWidget, pri
 
 
 
-    void filterListGenerated(const QStringList& filterList);
+    void filterListGenerated(const QStringList& filterList, bool sort);
 
   private:
 

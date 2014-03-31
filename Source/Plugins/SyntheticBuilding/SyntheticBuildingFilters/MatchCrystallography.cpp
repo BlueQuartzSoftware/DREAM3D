@@ -116,128 +116,29 @@ MatchCrystallography::~MatchCrystallography()
 void MatchCrystallography::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Statistics");
-    parameter->setPropertyName("InputStatsArrayPath");
-    parameter->setWidgetType(FilterParameterWidgetType::DataArraySelectionWidget);
-    parameter->setValueType("DataArrayPath");
-    parameter->setUnits("Input");
-    parameters.push_back(parameter);
-  }
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Crystal Symmatry Array");
-    parameter->setPropertyName("CrystalStructuresArrayPath");
-    parameter->setWidgetType(FilterParameterWidgetType::DataArraySelectionWidget);
-    parameter->setValueType("DataArrayPath");
-    parameter->setUnits("Input");
-    parameters.push_back(parameter);
-  }
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Phase Type Array");
-    parameter->setPropertyName("PhaseTypesArrayPath");
-    parameter->setWidgetType(FilterParameterWidgetType::DataArraySelectionWidget);
-    parameter->setValueType("DataArrayPath");
-    parameter->setUnits("Input");
-    parameters.push_back(parameter);
-  }
+  parameters.push_back(FilterParameter::New("Statistics", "InputStatsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget,"DataArrayPath", false, "Input"));
+  parameters.push_back(FilterParameter::New("Crystal Structures Array", "CrystalStructuresArrayPath", FilterParameterWidgetType::DataArraySelectionWidget,"DataArrayPath", false, "Input"));
+  parameters.push_back(FilterParameter::New("Phase Type Array", "PhaseTypesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget,"DataArrayPath", false, "Input"));
 
 //// These are required Arrays
 
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Feature Ids");
-    parameter->setPropertyName("FeatureIdsPath");
-    parameter->setWidgetType(FilterParameterWidgetType::DataArraySelectionWidget);
-    parameter->setValueType("DataArrayPath");
-    parameter->setUnits("Input Cell Data");
-    parameters.push_back(parameter);
-  }
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Phases");
-    parameter->setPropertyName("FeaturePhasesPath");
-    parameter->setWidgetType(FilterParameterWidgetType::DataArraySelectionWidget);
-    parameter->setValueType("DataArrayPath");
-    parameter->setUnits("Input Feature Data");
-    parameters.push_back(parameter);
-  }
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Surface Features");
-    parameter->setPropertyName("FeatureSurfaceFeaturesPath");
-    parameter->setWidgetType(FilterParameterWidgetType::DataArraySelectionWidget);
-    parameter->setValueType("DataArrayPath");
-    parameter->setUnits("Input Feature Data");
-    parameters.push_back(parameter);
-  }
+  parameters.push_back(FilterParameter::New("Feature Ids", "FeatureIdsPath", FilterParameterWidgetType::DataArraySelectionWidget,"DataArrayPath", false, "Input Cell Data"));
+  parameters.push_back(FilterParameter::New("Phases", "FeaturePhasesPath", FilterParameterWidgetType::DataArraySelectionWidget,"DataArrayPath", false, "Input Feature Data"));
+  parameters.push_back(FilterParameter::New("Surface Features", "FeatureSurfaceFeaturesPath", FilterParameterWidgetType::DataArraySelectionWidget,"DataArrayPath", false, "Input Feature Data"));
 
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Select Synthetic Volume DataContainer");
-    parameter->setPropertyName("OutputDataContainerName");
-    parameter->setWidgetType(FilterParameterWidgetType::DataContainerSelectionWidget);
-    parameter->setValueType("QString");
-    parameters.push_back(parameter);
-  }
+  parameters.push_back(FilterParameter::New("Select Synthetic Volume DataContainer", "OutputDataContainerName", FilterParameterWidgetType::DataContainerSelectionWidget,"QString", false));
 
 
 
   //// These arrays are created during this filter
-     {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Output Cell Attribute Matrix");
-    parameter->setPropertyName("OutputCellAttributeMatrix");
-    parameter->setWidgetType(FilterParameterWidgetType::AttributeMatrixSelectionWidget);
-    parameter->setValueType("DataArrayPath");
-    parameter->setUnits("");
-    parameter->setAdvanced(false);
-    parameters.push_back(parameter);
-  }
-    {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Created Euler Angles Array Name");
-    parameter->setPropertyName("CellEulerAnglesArrayName");
-    parameter->setWidgetType(FilterParameterWidgetType::StringWidget);
-    parameter->setValueType("QString");
-    parameter->setUnits("");
-    parameter->setAdvanced(true);
-    parameters.push_back(parameter);
-  }
+  parameters.push_back(FilterParameter::New("Output Cell Attribute Matrix", "OutputCellAttributeMatrix", FilterParameterWidgetType::AttributeMatrixSelectionWidget,"DataArrayPath", false));
+  parameters.push_back(FilterParameter::New("Created Euler Angles Array Name", "CellEulerAnglesArrayName", FilterParameterWidgetType::StringWidget,"QString", true));
 
-     {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Output Feature Attribute Matrix");
-    parameter->setPropertyName("OutputFeatureAttributeMatrix");
-    parameter->setWidgetType(FilterParameterWidgetType::AttributeMatrixSelectionWidget);
-    parameter->setValueType("DataArrayPath");
-    parameter->setUnits("");
-    parameter->setAdvanced(false);
-    parameters.push_back(parameter);
-  }
-    {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Created Surface Features Array Name");
-    parameter->setPropertyName("SurfaceFeaturesArrayName");
-    parameter->setWidgetType(FilterParameterWidgetType::StringWidget);
-    parameter->setValueType("QString");
-    parameter->setUnits("");
-    parameter->setAdvanced(true);
-    parameters.push_back(parameter);
-  }
+  parameters.push_back(FilterParameter::New("Output Feature Attribute Matrix", "OutputFeatureAttributeMatrix", FilterParameterWidgetType::AttributeMatrixSelectionWidget,"DataArrayPath", false));
+  parameters.push_back(FilterParameter::New("Created Surface Features Array Name", "SurfaceFeaturesArrayName", FilterParameterWidgetType::StringWidget,"QString", true));
 
 //// This is just an actual Parameter
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Maximum Number of Iterations (Swaps)");
-    parameter->setPropertyName("MaxIterations");
-    parameter->setWidgetType(FilterParameterWidgetType::IntWidget);
-    parameter->setValueType("int");
-    parameter->setUnits("");
-    parameters.push_back(parameter);
-  }
+  parameters.push_back(FilterParameter::New("Maximum Number of Iterations (Swaps)", "MaxIterations", FilterParameterWidgetType::IntWidget,"int", false));
   setFilterParameters(parameters);
 }
 // -----------------------------------------------------------------------------

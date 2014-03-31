@@ -73,15 +73,7 @@ FillBadData::~FillBadData()
 void FillBadData::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Minimum Allowed Defect Size");
-    parameter->setPropertyName("MinAllowedDefectSize");
-    parameter->setWidgetType(FilterParameterWidgetType::IntWidget);
-    parameter->setValueType("int");
-    parameter->setUnits("Pixels");
-    parameters.push_back(parameter);
-  }
+  parameters.push_back(FilterParameter::New("Minimum Allowed Defect Size", "MinAllowedDefectSize", FilterParameterWidgetType::IntWidget,"int", false, "Pixels"));
 
   setFilterParameters(parameters);
 }

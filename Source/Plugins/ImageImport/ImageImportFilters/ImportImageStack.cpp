@@ -96,14 +96,7 @@ void ImportImageStack::setupFilterParameters()
 {
   QVector<FilterParameter::Pointer> parameters;
 
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Import Image Data");
-    parameter->setPropertyName("ImageStack");
-    parameter->setWidgetType(FilterParameterWidgetType::ImportImagesWidget);
-    parameter->setValueType("int");
-    parameters.push_back(parameter);
-  }
+  parameters.push_back(FilterParameter::New("Import Image Data", "ImageStack", FilterParameterWidgetType::ImportImagesWidget,"int", false));
 
 
 

@@ -183,75 +183,14 @@ void LaplacianSmoothing::setupFilterParameters()
 {
   FilterParameterVector parameters;
   /* Place all your option initialization code here */
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Iteration Steps");
-    parameter->setPropertyName("IterationSteps");
-    parameter->setWidgetType(FilterParameterWidgetType::IntWidget);
-    parameter->setValueType("int");
-    parameters.push_back(parameter);
-  }
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Default Lambda");
-    parameter->setPropertyName("Lambda");
-    parameter->setWidgetType(FilterParameterWidgetType::DoubleWidget);
-    //parameter->setUnits("Bulk Nodes");
-    parameter->setValueType("float");
-    parameter->setCastableValueType("double");
-    parameters.push_back(parameter);
-  }
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Triple Line Lambda");
-    parameter->setPropertyName("TripleLineLambda");
-    parameter->setWidgetType(FilterParameterWidgetType::DoubleWidget);
-    //parameter->setUnits("Zero will Lock them in Place");
-    parameter->setValueType("float");
-    parameter->setCastableValueType("double");
-    parameters.push_back(parameter);
-  }
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Quad Points Lambda");
-    parameter->setPropertyName("QuadPointLambda");
-    parameter->setWidgetType(FilterParameterWidgetType::DoubleWidget);
-    //parameter->setUnits("Zero will Lock them in Place");
-    parameter->setValueType("float");
-    parameter->setCastableValueType("double");
-    parameters.push_back(parameter);
-  }
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Outer Points Lambda");
-    parameter->setPropertyName("SurfacePointLambda");
-    parameter->setWidgetType(FilterParameterWidgetType::DoubleWidget);
-    //parameter->setUnits("Zero will Lock them in Place");
-    parameter->setValueType("float");
-    parameter->setCastableValueType("double");
-    parameters.push_back(parameter);
-  }
+  parameters.push_back(FilterParameter::New("Iteration Steps", "IterationSteps", FilterParameterWidgetType::IntWidget,"int", false));
+  parameters.push_back(FilterParameter::New("Default Lambda", "Lambda", FilterParameterWidgetType::DoubleWidget,"float", false));
+  parameters.push_back(FilterParameter::New("Triple Line Lambda", "TripleLineLambda", FilterParameterWidgetType::DoubleWidget,"float", false));
+  parameters.push_back(FilterParameter::New("Quad Points Lambda", "QuadPointLambda", FilterParameterWidgetType::DoubleWidget,"float", false));
+  parameters.push_back(FilterParameter::New("Outer Points Lambda", "SurfacePointLambda", FilterParameterWidgetType::DoubleWidget,"float", false));
 
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Outer Triple Line Lambda");
-    parameter->setPropertyName("SurfaceTripleLineLambda");
-    parameter->setWidgetType(FilterParameterWidgetType::DoubleWidget);
-    //parameter->setUnits("Zero will Lock them in Place");
-    parameter->setValueType("float");
-    parameter->setCastableValueType("double");
-    parameters.push_back(parameter);
-  }
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Outer Quad Points Lambda");
-    parameter->setPropertyName("SurfaceQuadPointLambda");
-    parameter->setWidgetType(FilterParameterWidgetType::DoubleWidget);
-    //parameter->setUnits("Zero will Lock them in Place");
-    parameter->setValueType("float");
-    parameter->setCastableValueType("double");
-    parameters.push_back(parameter);
-  }
+  parameters.push_back(FilterParameter::New("Outer Triple Line Lambda", "SurfaceTripleLineLambda", FilterParameterWidgetType::DoubleWidget,"float", false));
+  parameters.push_back(FilterParameter::New("Outer Quad Points Lambda", "SurfaceQuadPointLambda", FilterParameterWidgetType::DoubleWidget,"float", false));
 
   setFilterParameters(parameters);
 }

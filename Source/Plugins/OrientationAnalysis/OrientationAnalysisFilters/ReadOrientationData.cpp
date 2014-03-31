@@ -95,15 +95,7 @@ void ReadOrientationData::setupFilterParameters()
   FilterParameterVector parameters;
 
   /*   For an input file use this code*/
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Input File");
-    parameter->setPropertyName("InputFile");
-    parameter->setWidgetType(FilterParameterWidgetType::InputFileWidget);
-    parameter->setValueType("QString");
-    parameter->setFileExtension("*.ang *.ctf");
-    parameters.push_back(parameter);
-  }
+  parameters.push_back(FilterParameter::New("Input File", "InputFile", FilterParameterWidgetType::InputFileWidget,"QString", false, "", "*.ang *.ctf"));
   setFilterParameters(parameters);
 }
 

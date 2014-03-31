@@ -121,31 +121,9 @@ AdjustVolumeOrigin::~AdjustVolumeOrigin()
 void AdjustVolumeOrigin::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Apply to Voxel Volume");
-    parameter->setPropertyName("ApplyToVoxelVolume");
-    parameter->setWidgetType(FilterParameterWidgetType::BooleanWidget);
-    parameter->setValueType("bool");
-    parameters.push_back(parameter);
-  }
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Apply to Surface Mesh");
-    parameter->setPropertyName("ApplyToSurfaceMesh");
-    parameter->setWidgetType(FilterParameterWidgetType::BooleanWidget);
-    parameter->setValueType("bool");
-    parameters.push_back(parameter);
-  }
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Origin");
-    parameter->setPropertyName("Origin");
-    parameter->setWidgetType(FilterParameterWidgetType::FloatVec3Widget);
-    parameter->setValueType("FloatVec3_t");
-    parameter->setUnits("Microns");
-    parameters.push_back(parameter);
-  }
+  parameters.push_back(FilterParameter::New("Apply to Voxel Volume", "ApplyToVoxelVolume", FilterParameterWidgetType::BooleanWidget,"bool", false));
+  parameters.push_back(FilterParameter::New("Apply to Surface Mesh", "ApplyToSurfaceMesh", FilterParameterWidgetType::BooleanWidget,"bool", false));
+  parameters.push_back(FilterParameter::New("Origin", "Origin", FilterParameterWidgetType::FloatVec3Widget,"FloatVec3_t", false, "Microns"));
   setFilterParameters(parameters);
 }
 

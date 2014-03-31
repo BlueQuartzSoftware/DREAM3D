@@ -64,15 +64,7 @@ CreateFeatureArrayFromCellArray::~CreateFeatureArrayFromCellArray()
 void CreateFeatureArrayFromCellArray::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Cell Array Name");
-    parameter->setPropertyName("SelectedCellArrayPath");
-    parameter->setWidgetType(FilterParameterWidgetType::DataArraySelectionWidget);
-    parameter->setValueType("DataArrayPath");
-    parameter->setUnits("");
-    parameters.push_back(parameter);
-  }
+  parameters.push_back(FilterParameter::New("Cell Array Name", "SelectedCellArrayPath", FilterParameterWidgetType::DataArraySelectionWidget,"DataArrayPath", false));
 
   setFilterParameters(parameters);
 }

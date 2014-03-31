@@ -74,7 +74,7 @@ void FilterListDockWidget::setupGui()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FilterListDockWidget::updateFilterList(const QStringList& list)
+void FilterListDockWidget::updateFilterList(const QStringList& list, bool sortItems)
 {
   filterList->clear();
 
@@ -109,7 +109,10 @@ void FilterListDockWidget::updateFilterList(const QStringList& list)
     // filter widget manager.
     filterItem->setData( Qt::UserRole, filterName);
   }
-  filterList->sortItems(Qt::AscendingOrder);
+  if (sortItems) {
+    filterList->sortItems(Qt::AscendingOrder);
+  }
+  filterSearch->clear();
 }
 
 // -----------------------------------------------------------------------------
@@ -118,9 +121,11 @@ void FilterListDockWidget::updateFilterList(const QStringList& list)
 void FilterListDockWidget::on_filterSearch_textChanged (const QString& text)
 {
 
-#if 0
+
   FilterManager::Pointer fm = FilterManager::Instance();
   FilterManager::Collection factories = fm->getFactories(); // Get all the Factories
+
+#if 0
   QTreeWidgetItem* item = filterLibraryTree->currentItem();
   if (item->parent() == NULL && item->text(0).compare(DREAM3D::Settings::Library) == 0)
   {
@@ -141,6 +146,7 @@ void FilterListDockWidget::on_filterSearch_textChanged (const QString& text)
     updateFilterGroupList(factories);
     return;
   }
+
 
   // The user is typing something in the search box so lets search the filter class name and human label
   filterList->clear();
@@ -185,6 +191,22 @@ void FilterListDockWidget::on_filterSearch_textChanged (const QString& text)
     filterItem->setData( Qt::UserRole, filterName);
   }
 #endif
+
+  int listWidgetSize = filterList->count();
+
+  for (int k1 = 0; k1 < listWidgetSize; k1++)
+  {
+    if (filterList->item(k1)->text().contains(text))
+    {
+      filterList->item(k1)->setHidden(false);
+    }
+    else
+    {
+      filterList->item(k1)->setHidden(true);
+    }
+  }
+
+
 }
 
 
