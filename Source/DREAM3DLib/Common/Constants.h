@@ -93,8 +93,8 @@ namespace DREAM3D
 
     const DREAM3D_STRING VoxelDataName("VoxelData");
 
-    const DREAM3D_STRING SyntheticVolume("SyntheticVolume");
-    const DREAM3D_STRING StatsGenerator("StatsGenerator");
+    const DREAM3D_STRING SyntheticVolumeDataContainerName("SyntheticVolumeDataContainer");
+    const DREAM3D_STRING StatsGenerator("StatsGeneratorDataContainer");
 
     const DREAM3D_STRING SomePath("SomePath");
   }

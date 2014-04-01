@@ -176,7 +176,6 @@ void GenerateVectorColors::execute()
     missingGoodVoxels = false;
   }
 
-  int phase;
   size_t index = 0;
 
   DREAM3D::Rgb argb = 0x00000000;

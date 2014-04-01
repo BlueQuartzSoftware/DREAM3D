@@ -76,69 +76,40 @@ class MatchCrystallography : public AbstractFilter
 
 
     virtual ~MatchCrystallography();
-    DREAM3D_INSTANCE_STRING_PROPERTY(OutputDataContainerName)
-    Q_PROPERTY(QString OutputDataContainerName READ getOutputDataContainerName WRITE setOutputDataContainerName)
-
-
 
 //// Input data from the StatsGenerator Data Container (or something equivalent)
     DREAM3D_FILTER_PARAMETER(DataArrayPath, InputStatsArrayPath)
     Q_PROPERTY(DataArrayPath InputStatsArrayPath READ getInputStatsArrayPath WRITE setInputStatsArrayPath)
-
     DREAM3D_FILTER_PARAMETER(DataArrayPath, CrystalStructuresArrayPath)
     Q_PROPERTY(DataArrayPath CrystalStructuresArrayPath READ getCrystalStructuresArrayPath WRITE setCrystalStructuresArrayPath)
-
     DREAM3D_FILTER_PARAMETER(DataArrayPath, PhaseTypesArrayPath)
     Q_PROPERTY(DataArrayPath PhaseTypesArrayPath READ getPhaseTypesArrayPath WRITE setPhaseTypesArrayPath)
 
 //// Input data from the Synthetic Data Container (or something equivalent)
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, FeatureIdsPath)
-    Q_PROPERTY(DataArrayPath FeatureIdsPath READ getFeatureIdsPath WRITE setFeatureIdsPath)
-
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, FeaturePhasesPath)
-    Q_PROPERTY(DataArrayPath FeaturePhasesPath READ getFeaturePhasesPath WRITE setFeaturePhasesPath)
-
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, FeatureSurfaceFeaturesPath)
-    Q_PROPERTY(DataArrayPath FeatureSurfaceFeaturesPath READ getFeatureSurfaceFeaturesPath WRITE setFeatureSurfaceFeaturesPath)
-
-
-
-
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, OutputCellAttributeMatrix)
-    Q_PROPERTY(DataArrayPath OutputCellAttributeMatrix READ getOutputCellAttributeMatrix WRITE setOutputCellAttributeMatrix)
-
-
-    Q_PROPERTY(QString CellEulerAnglesArrayName READ getCellEulerAnglesArrayName WRITE setCellEulerAnglesArrayName)
-
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, OutputFeatureAttributeMatrix)
-    Q_PROPERTY(DataArrayPath OutputFeatureAttributeMatrix READ getOutputFeatureAttributeMatrix WRITE setOutputFeatureAttributeMatrix)
-
-    Q_PROPERTY(QString SurfaceFeaturesArrayName READ getSurfaceFeaturesArrayName WRITE setSurfaceFeaturesArrayName)
-    Q_PROPERTY(QString VolumesArrayName READ getVolumesArrayName WRITE setVolumesArrayName)
-    Q_PROPERTY(QString FeatureEulerAnglesArrayName READ getFeatureEulerAnglesArrayName WRITE setFeatureEulerAnglesArrayName)
-    Q_PROPERTY(QString AvgQuatsArrayName READ getAvgQuatsArrayName WRITE setAvgQuatsArrayName)
-
+    DREAM3D_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
+    Q_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
+    DREAM3D_FILTER_PARAMETER(DataArrayPath, FeaturePhasesArrayPath)
+    Q_PROPERTY(DataArrayPath FeaturePhasesArrayPath READ getFeaturePhasesArrayPath WRITE setFeaturePhasesArrayPath)
+    DREAM3D_FILTER_PARAMETER(DataArrayPath, SurfaceFeaturesArrayPath)
+    Q_PROPERTY(DataArrayPath SurfaceFeaturesArrayPath READ getSurfaceFeaturesArrayPath WRITE setSurfaceFeaturesArrayPath)
     DREAM3D_FILTER_PARAMETER(DataArrayPath, NeighborListArrayPath)
     Q_PROPERTY(DataArrayPath NeighborListArrayPath READ getNeighborListArrayPath WRITE setNeighborListArrayPath)
     DREAM3D_FILTER_PARAMETER(DataArrayPath, SharedSurfaceAreaListArrayPath)
     Q_PROPERTY(DataArrayPath SharedSurfaceAreaListArrayPath READ getSharedSurfaceAreaListArrayPath WRITE setSharedSurfaceAreaListArrayPath)
+    DREAM3D_FILTER_PARAMETER(DataArrayPath, NumFeaturesArrayPath)
+    Q_PROPERTY(DataArrayPath NumFeaturesArrayPath READ getNumFeaturesArrayPath WRITE setNumFeaturesArrayPath)
+
+//// Created Data Arrays
+    Q_PROPERTY(QString CellEulerAnglesArrayName READ getCellEulerAnglesArrayName WRITE setCellEulerAnglesArrayName)
+    Q_PROPERTY(QString VolumesArrayName READ getVolumesArrayName WRITE setVolumesArrayName)
+    Q_PROPERTY(QString FeatureEulerAnglesArrayName READ getFeatureEulerAnglesArrayName WRITE setFeatureEulerAnglesArrayName)
+    Q_PROPERTY(QString AvgQuatsArrayName READ getAvgQuatsArrayName WRITE setAvgQuatsArrayName)
 
     DREAM3D_FILTER_PARAMETER(DataArrayPath, OutputEnsembleAttributeMatrix)
     Q_PROPERTY(DataArrayPath OutputEnsembleAttributeMatrix READ getOutputEnsembleAttributeMatrix WRITE setOutputEnsembleAttributeMatrix)
 
-
-    Q_PROPERTY(QString NumFeaturesArrayName READ getNumFeaturesArrayName WRITE setNumFeaturesArrayName)
-
-   // DREAM3D_INSTANCE_STRING_PROPERTY(StatsDataArrayName)
-
     DREAM3D_FILTER_PARAMETER(int, MaxIterations)
     Q_PROPERTY(int MaxIterations READ getMaxIterations WRITE setMaxIterations)
-
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
-    Q_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
-
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, FeaturePhasesArrayPath)
-    Q_PROPERTY(DataArrayPath FeaturePhasesArrayPath READ getFeaturePhasesArrayPath WRITE setFeaturePhasesArrayPath)
 
     virtual const QString getCompiledLibraryName() { return SyntheticBuilding::SyntheticBuildingBaseName; }
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
@@ -160,23 +131,14 @@ class MatchCrystallography : public AbstractFilter
     */
     virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
 
-
     /**
      * @brief Reimplemented from @see AbstractFilter class
      */
     virtual void execute();
     virtual void preflight();
 
-
     typedef boost::shared_array<float> SharedFloatArray;
     typedef boost::shared_array<int> SharedIntArray;
-
-//    DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
-//    DREAM3D_INSTANCE_STRING_PROPERTY(CellFeatureAttributeMatrixName)
-//    DREAM3D_INSTANCE_STRING_PROPERTY(CellEnsembleAttributeMatrixName)
-
-
-
 
   signals:
     void updateFilterParameters(AbstractFilter* filter);
@@ -226,12 +188,10 @@ class MatchCrystallography : public AbstractFilter
     QVector<float> unbiasedvol;
     QVector<float> m_TotalSurfaceArea;
 
-
     FloatArrayType::Pointer actualodf;
     FloatArrayType::Pointer simodf;
     FloatArrayType::Pointer actualmdf;
     FloatArrayType::Pointer simmdf;
-
 
     QVector<QVector<float> > m_MisorientationLists;
 

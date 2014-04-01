@@ -60,7 +60,7 @@ InitializeSyntheticVolume::InitializeSyntheticVolume() :
   AbstractFilter(),
   m_InputStatsArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellEnsembleAttributeMatrixName, DREAM3D::EnsembleData::Statistics),
   m_InputPhaseTypesArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellEnsembleAttributeMatrixName, DREAM3D::EnsembleData::PhaseTypes),
-  m_DataContainerName(DREAM3D::Defaults::SyntheticVolume),
+  m_DataContainerName(DREAM3D::Defaults::SyntheticVolumeDataContainerName),
   m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
   m_EstimatedPrimaryFeatures(0)
 {

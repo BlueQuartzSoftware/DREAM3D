@@ -932,9 +932,9 @@ void InsertPrecipitatePhases::determine_clustering(size_t gnum, int add)
   float x, y, z;
   float xn, yn, zn;
   float r;
-  float dia, dia2;
+  float dia;
   int iter = 0;
-  int diabin, dia2bin, clusterbin;
+  int diabin, clusterbin;
 
   int phase = m_FeaturePhases[gnum];
   while (phase != precipitatephases[iter]) { iter++; }

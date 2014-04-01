@@ -66,14 +66,8 @@ class FindNeighbors : public AbstractFilter
 
     virtual ~FindNeighbors();
 
-    //    DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
-    //    Q_PROPERTY(QString DataContainerName READ getDataContainerName WRITE setDataContainerName)
-
     DREAM3D_FILTER_PARAMETER(DataArrayPath, CellFeatureAttributeMatrixPath)
     Q_PROPERTY(DataArrayPath CellFeatureAttributeMatrixPath READ getCellFeatureAttributeMatrixPath WRITE setCellFeatureAttributeMatrixPath)
-
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, CellAttributeMatrixPath)
-    Q_PROPERTY(DataArrayPath CellAttributeMatrixPath READ getCellAttributeMatrixPath WRITE setCellAttributeMatrixPath)
 
     DREAM3D_FILTER_PARAMETER(QString, SharedSurfaceAreaListArrayName)
     Q_PROPERTY(QString SharedSurfaceAreaListArrayName READ getSharedSurfaceAreaListArrayName WRITE setSharedSurfaceAreaListArrayName)

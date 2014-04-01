@@ -122,7 +122,6 @@ DataContainer::Pointer VertexDataContainer::deepCopy()
 {
   VertexDataContainer::Pointer dcCopy = VertexDataContainer::New(getName());
 
-  size_t dims[3];
   dcCopy->setName(getName());
   dcCopy->setVertices(getVertices());
 

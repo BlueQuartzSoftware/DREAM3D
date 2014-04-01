@@ -48,9 +48,7 @@
 // -----------------------------------------------------------------------------
 FindNeighbors::FindNeighbors() :
   AbstractFilter(),
-  //m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
   m_CellFeatureAttributeMatrixPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, ""),
-  m_CellAttributeMatrixPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, ""),
   m_SharedSurfaceAreaListArrayName(DREAM3D::FeatureData::SharedSurfaceAreaList),
   m_NeighborListArrayName(DREAM3D::FeatureData::NeighborList),
   m_FeatureIdsArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::FeatureIds),
@@ -80,10 +78,9 @@ void FindNeighbors::setupFilterParameters()
 {
   FilterParameterVector parameters;
   parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "QString", true));
-  parameters.push_back(FilterParameter::New("Feature Ids Array Path", "FeatureIdsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget,"QString", true));
+  parameters.push_back(FilterParameter::New("Feature Ids Array Path", "FeatureIdsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget,"DataArrayPath", true));
   parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "QString", true));
-  parameters.push_back(FilterParameter::New("Create Cell Data in AttributeMatrix", "CellAttributeMatrixPath", FilterParameterWidgetType::AttributeMatrixSelectionWidget,"DataArrayPath", true));
-  parameters.push_back(FilterParameter::New("Create Feature Data in AttributeMatrix", "CellFeatureAttributeMatrixPath", FilterParameterWidgetType::AttributeMatrixSelectionWidget,"DataArrayPath", true));
+  parameters.push_back(FilterParameter::New("Feature Data  Attribute Matrix", "CellFeatureAttributeMatrixPath", FilterParameterWidgetType::AttributeMatrixSelectionWidget,"DataArrayPath", true));
   parameters.push_back(FilterParameter::New("Surface Voxels Array Name", "SurfaceVoxelsArrayName", FilterParameterWidgetType::StringWidget,"QString", true));
   parameters.push_back(FilterParameter::New("Surface Features Array Name", "SurfaceFeaturesArrayName", FilterParameterWidgetType::StringWidget,"QString", true));
   parameters.push_back(FilterParameter::New("Number Of Neighbors Array Name", "NumNeighborsArrayName", FilterParameterWidgetType::StringWidget,"QString", true));
@@ -101,7 +98,6 @@ void FindNeighbors::readFilterParameters(AbstractFilterParametersReader* reader,
 {
   reader->openFilterGroup(this, index);
   setCellFeatureAttributeMatrixPath(reader->readDataArrayPath("CellFeatureAttributeMatrixPath", getCellFeatureAttributeMatrixPath() ) );
-  setCellAttributeMatrixPath(reader->readDataArrayPath("CellAttributeMatrixPath", getCellAttributeMatrixPath() ) );
   setFeatureIdsArrayPath(reader->readDataArrayPath("FeatureIdsArrayPath", getFeatureIdsArrayPath() ) );
   setSurfaceVoxelsArrayName(reader->readString("SurfaceVoxelsArrayName", getSurfaceVoxelsArrayName() ) );
   setSurfaceFeaturesArrayName(reader->readString("SurfaceFeaturesArrayName", getSurfaceFeaturesArrayName() ) );
@@ -118,7 +114,6 @@ int FindNeighbors::writeFilterParameters(AbstractFilterParametersWriter* writer,
 {
   writer->openFilterGroup(this, index);
   writer->writeValue("CellFeatureAttributeMatrixPath", getCellFeatureAttributeMatrixPath() );
-  writer->writeValue("CellAttributeMatrixPath", getCellAttributeMatrixPath() );
   writer->writeValue("FeatureIdsArrayPath", getFeatureIdsArrayPath() );
   writer->writeValue("SurfaceVoxelsArrayName", getSurfaceVoxelsArrayName() );
   writer->writeValue("SurfaceFeaturesArrayName", getSurfaceFeaturesArrayName() );
@@ -139,12 +134,8 @@ void FindNeighbors::dataCheck()
   // This is for convenience
   DataContainerArray::Pointer dca = getDataContainerArray();
 
-  //  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName(), false);
-  //  if(getErrorCondition() < 0 || NULL == m) { return; }
-
-  AttributeMatrix::Pointer cellAttrMat = getDataContainerArray()->getPrereqAttributeMatrixFromPath<VolumeDataContainer, AbstractFilter>(this, getCellAttributeMatrixPath(), -303);
+  AttributeMatrix::Pointer cellAttrMat = getDataContainerArray()->getPrereqAttributeMatrixFromPath<VolumeDataContainer, AbstractFilter>(this, getFeatureIdsArrayPath(), -303);
   if(getErrorCondition() < 0 || NULL == cellAttrMat.get() ) { return; }
-
 
   QVector<size_t> dims(1, 1);
   // Cell Data
@@ -234,13 +225,9 @@ void FindNeighbors::execute()
   dataCheck();
   if(getErrorCondition() < 0) { return; }
 
-  QString volDcName = getCellAttributeMatrixPath().getDataContainerName();
-  QString cellAmName = getCellAttributeMatrixPath().getAttributeMatrixName();
-  QString featAmName = getCellFeatureAttributeMatrixPath().getAttributeMatrixName();
-
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(volDcName);
-  int64_t totalPoints = m->getAttributeMatrix(cellAmName)->getNumTuples();
-  size_t totalFeatures = m->getAttributeMatrix(featAmName)->getNumTuples();
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(m_FeatureIdsArrayPath.getDataContainerName());
+  int64_t totalPoints = m_FeatureIdsPtr.lock()->getNumberOfComponents();
+  size_t totalFeatures = m_NumNeighborsPtr.lock()->getNumberOfComponents();
 
   size_t udims[3] = {0, 0, 0};
   m->getDimensions(udims);
@@ -332,10 +319,8 @@ void FindNeighbors::execute()
   // We do this to create new set of NeighborList objects
   //size_t totalEnsembles = 0;
   dataCheck();
-  size_t tCount = m->getAttributeMatrix(featAmName)->getNumTuples();
-  for (size_t i = 1; i < tCount; i++)
+  for (size_t i = 1; i < totalFeatures; i++)
   {
-
     QString ss = QObject::tr("Finding Neighbors - Calculating Surface Areas - %1 Percent Complete").arg(((float)i / totalFeatures) * 100);
     //  notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
 
@@ -347,7 +332,6 @@ void FindNeighbors::execute()
     {
       neighToCount[neighborlist[i][j]]++;
     }
-
 
     QMap<int, int>::Iterator neighiter = neighToCount.find(0);
     neighToCount.erase(neighiter);
@@ -392,7 +376,6 @@ AbstractFilter::Pointer FindNeighbors::newFilterInstance(bool copyFilterParamete
   if(true == copyFilterParameters)
   {
     filter->setCellFeatureAttributeMatrixPath(getCellFeatureAttributeMatrixPath() );
-    filter->setCellAttributeMatrixPath(getCellAttributeMatrixPath() );
     filter->setFeatureIdsArrayName(getFeatureIdsArrayName() );
     filter->setSurfaceVoxelsArrayName(getSurfaceVoxelsArrayName() );
     filter->setSurfaceFeaturesArrayName(getSurfaceFeaturesArrayName() );

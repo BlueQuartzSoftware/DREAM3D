@@ -232,7 +232,7 @@ class AssignVoxelsGapsImpl
 // -----------------------------------------------------------------------------
 PackPrimaryPhases::PackPrimaryPhases() :
   AbstractFilter(),
-  m_OutputCellAttributeMatrixName(DREAM3D::Defaults::SyntheticVolume, DREAM3D::Defaults::CellAttributeMatrixName, ""),
+  m_OutputCellAttributeMatrixName(DREAM3D::Defaults::SyntheticVolumeDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, ""),
   m_OutputCellFeatureAttributeMatrixName(DREAM3D::Defaults::CellFeatureAttributeMatrixName),
   m_InputStatsArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellEnsembleAttributeMatrixName, DREAM3D::EnsembleData::Statistics),
   m_InputPhaseTypesArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellEnsembleAttributeMatrixName, DREAM3D::EnsembleData::PhaseTypes),

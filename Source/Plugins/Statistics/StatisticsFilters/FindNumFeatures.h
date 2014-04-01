@@ -59,7 +59,6 @@ class FindNumFeatures : public AbstractFilter
     DREAM3D_TYPE_MACRO_SUPER(FindNumFeatures, AbstractFilter)
 
     virtual ~FindNumFeatures();
-    DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
 
     DREAM3D_FILTER_PARAMETER(DataArrayPath, CellEnsembleAttributeMatrixPath)
     Q_PROPERTY(DataArrayPath CellEnsembleAttributeMatrixPath READ getCellEnsembleAttributeMatrixPath WRITE setCellEnsembleAttributeMatrixPath)

@@ -137,9 +137,7 @@ void FindCAxisLocations::execute()
   float caxis[3] = {0, 0, 1};
   float c1[3];
 
-  float curCAxis[3];
   size_t index;
-  float w;
   for(int i = 0; i < totalPoints; i++)
   {
     index = 3 * i;

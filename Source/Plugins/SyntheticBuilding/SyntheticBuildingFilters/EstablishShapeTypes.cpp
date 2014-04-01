@@ -127,11 +127,11 @@ void EstablishShapeTypes::dataCheck()
   if( NULL != m_PhaseTypesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_PhaseTypes = m_PhaseTypesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
-  // Get the DataContainer first
+  // Get the DataContainer first - same as phase types
   VolumeDataContainer* m = dca->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getInputPhaseTypesArrayPath().getDataContainerName());
   if(getErrorCondition() < 0) { return; }
 
-  // Now get the AttributeMatrix that the user wants to use to store the ShapeTypes array
+  // Now get the AttributeMatrix that the user wants to use to store the ShapeTypes array - sme as phase types
   AttributeMatrix::Pointer cellEnsembleAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getInputPhaseTypesArrayPath().getAttributeMatrixName(), -990);
   if(getErrorCondition() < 0) { return; }
   // Now create the output Shape Types Array
@@ -165,7 +165,6 @@ void EstablishShapeTypes::execute()
   for(qint32 i = 0; i < m_ShapeTypeData.d.size(); i++)
   {
     m_ShapeTypesPtr.lock()->setValue(i, m_ShapeTypeData.d[i]);
-   // qDebug() << m_ShapeTypes[i];
   }
 
   // If there is an error set this to something negative and also set a message
@@ -179,10 +178,6 @@ int EstablishShapeTypes::getPhaseCount()
 {
   DataContainerArray::Pointer dca = getDataContainerArray();
 
-  //QString inputPhaseTypeDataContainerName = getInputPhaseTypesArrayPath().getDataContainerName();
-  //QString inputPhaseTypeAttrMatName = getInputPhaseTypesArrayPath().getAttributeMatrixName();
-
-  //DataContainer::Pointer inputDataContainer = dca->getDataContainer(getInputPhaseTypesArrayPath() );
   AttributeMatrix::Pointer inputAttrMat = dca->getAttributeMatrix(getInputPhaseTypesArrayPath());
   if (NULL == inputAttrMat.get() ) { return 0; }
   QVector<size_t> tupleDims = inputAttrMat->getTupleDimensions();
