@@ -13,11 +13,16 @@ START_FILTER_GROUP(${ImageProcessing_BINARY_DIR} "${_filterGroupName}" "ImagePro
 #---------
 # List your public filters here
 set(_PublicFilters
-  GaussianBlur
   DiscreteGaussianBlur
   ImageRegistration
   Watershed
   Threshold
+)
+
+#---------
+# List your privatefilters here
+set(_PrivateFilters
+  GaussianBlur #discrete gaussian blur should be enough but this is still a useful example for people learning the plugin
 )
 
 

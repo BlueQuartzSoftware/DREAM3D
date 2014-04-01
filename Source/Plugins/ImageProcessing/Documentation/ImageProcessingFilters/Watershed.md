@@ -6,36 +6,33 @@ ImageProcessing (ImageProcessing)
 
 
 ## Description ##
-This filter does the following...
+This filter segments grayscale images into grains using ITK's watershed segmentation
 
 ## Parameters ##
 | Name             | Type |
 |------------------|------|
-| Field Array Name | String |
+| Array to Process | String |
+| Watershed threshold | float |
+| Watershed level | float |
 
 ## Required Arrays ##
 
 | Type | Default Array Name | Description | Comment |
 |------|--------------------|-------------|---------|
-| Int  | SomeName           | ....        | other   |
+| Int  | ImageData | 8 bit image data        | |
 
 
 ## Created Arrays ##
 
 | Type | Default Array Name | Description | Comment |
 |------|--------------------|-------------|---------|
-| Int  | SomeName           | ....        | other   |
-
+| Int  | Grain ID | | |
 
 
 ## Authors: ##
 
-**Copyright:** Who holds the copyright for the code
+**Contact Info:** Will Lente willlenthe@gmail.com
 
-**Contact Info:** email address
-
-**Version:** x.y.z
-
-**License:**  What is the license for this code
+**Version:** 1.0.0
 
 
