@@ -226,8 +226,8 @@ void FindNeighbors::execute()
   if(getErrorCondition() < 0) { return; }
 
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(m_FeatureIdsArrayPath.getDataContainerName());
-  int64_t totalPoints = m_FeatureIdsPtr.lock()->getNumberOfComponents();
-  size_t totalFeatures = m_NumNeighborsPtr.lock()->getNumberOfComponents();
+  int64_t totalPoints = m_FeatureIdsPtr.lock()->getNumberOfTuples();
+  size_t totalFeatures = m_NumNeighborsPtr.lock()->getNumberOfTuples();
 
   size_t udims[3] = {0, 0, 0};
   m->getDimensions(udims);
@@ -317,8 +317,6 @@ void FindNeighbors::execute()
   }
 
   // We do this to create new set of NeighborList objects
-  //size_t totalEnsembles = 0;
-  dataCheck();
   for (size_t i = 1; i < totalFeatures; i++)
   {
     QString ss = QObject::tr("Finding Neighbors - Calculating Surface Areas - %1 Percent Complete").arg(((float)i / totalFeatures) * 100);
@@ -376,7 +374,7 @@ AbstractFilter::Pointer FindNeighbors::newFilterInstance(bool copyFilterParamete
   if(true == copyFilterParameters)
   {
     filter->setCellFeatureAttributeMatrixPath(getCellFeatureAttributeMatrixPath() );
-    filter->setFeatureIdsArrayName(getFeatureIdsArrayName() );
+    filter->setFeatureIdsArrayPath(getFeatureIdsArrayPath() );
     filter->setSurfaceVoxelsArrayName(getSurfaceVoxelsArrayName() );
     filter->setSurfaceFeaturesArrayName(getSurfaceFeaturesArrayName() );
     filter->setNumNeighborsArrayName(getNumNeighborsArrayName() );

@@ -444,7 +444,6 @@ void PackPrimaryPhases::dataCheck()
 
   dims[0] = 1;
   //Cell Data - Look for the data, if it is NOT found then create it
-////====>REMOVE THIS    m_FeatureIdsPtr = cellAttrMat->getPrereqArray<DataArray<int32_t>, AbstractFilter>(NULL,  m_FeatureIdsArrayName, -301, dims);
   m_FeatureIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(NULL,  getFeatureIdsArrayPath(), dims);
   if( NULL != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
@@ -456,7 +455,6 @@ void PackPrimaryPhases::dataCheck()
     { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   }
 
-////====>REMOVE THIS    m_CellPhasesPtr = cellAttrMat->getPrereqArray<DataArray<int32_t>, AbstractFilter>(NULL,  m_CellPhasesArrayName, -302, dims);
   m_CellPhasesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(NULL,  getCellPhasesArrayPath(), dims);
   if( NULL != m_CellPhasesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_CellPhases = m_CellPhasesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
@@ -518,13 +516,18 @@ void PackPrimaryPhases::preflight()
   dataCheck();
   emit preflightExecuted();
 
-  getDataContainerArray()->getDataContainer(getOutputCellAttributeMatrixName().getDataContainerName())->getAttributeMatrix(getOutputCellFeatureAttributeMatrixName())->removeAttributeArray(m_EquivalentDiametersArrayName);
-  getDataContainerArray()->getDataContainer(getOutputCellAttributeMatrixName().getDataContainerName())->getAttributeMatrix(getOutputCellFeatureAttributeMatrixName())->removeAttributeArray(m_Omega3sArrayName);
-  getDataContainerArray()->getDataContainer(getOutputCellAttributeMatrixName().getDataContainerName())->getAttributeMatrix(getOutputCellFeatureAttributeMatrixName())->removeAttributeArray(m_AxisEulerAnglesArrayName);
-  getDataContainerArray()->getDataContainer(getOutputCellAttributeMatrixName().getDataContainerName())->getAttributeMatrix(getOutputCellFeatureAttributeMatrixName())->removeAttributeArray(m_AxisLengthsArrayName);
-  getDataContainerArray()->getDataContainer(getOutputCellAttributeMatrixName().getDataContainerName())->getAttributeMatrix(getOutputCellFeatureAttributeMatrixName())->removeAttributeArray(m_VolumesArrayName);
-  getDataContainerArray()->getDataContainer(getOutputCellAttributeMatrixName().getDataContainerName())->getAttributeMatrix(getOutputCellFeatureAttributeMatrixName())->removeAttributeArray(m_CentroidsArrayName);
-  getDataContainerArray()->getDataContainer(getOutputCellAttributeMatrixName().getDataContainerName())->getAttributeMatrix(getOutputCellFeatureAttributeMatrixName())->removeAttributeArray(m_NeighborhoodsArrayName);
+  DataContainer::Pointer dc = getDataContainerArray()->getDataContainer(getOutputCellAttributeMatrixName());
+  if(dc == NULL) return;
+  AttributeMatrix::Pointer attrMat = dc->getAttributeMatrix(getOutputCellFeatureAttributeMatrixName());
+  if(attrMat == NULL) return;
+
+  attrMat->removeAttributeArray(m_EquivalentDiametersArrayName);
+  attrMat->removeAttributeArray(m_Omega3sArrayName);
+  attrMat->removeAttributeArray(m_AxisEulerAnglesArrayName);
+  attrMat->removeAttributeArray(m_AxisLengthsArrayName);
+  attrMat->removeAttributeArray(m_VolumesArrayName);
+  attrMat->removeAttributeArray(m_CentroidsArrayName);
+  attrMat->removeAttributeArray(m_NeighborhoodsArrayName);
 }
 
 // -----------------------------------------------------------------------------
