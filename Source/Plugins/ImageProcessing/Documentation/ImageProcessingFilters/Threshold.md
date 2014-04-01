@@ -6,7 +6,7 @@ ImageProcessing (ImageProcessing)
 
 
 ## Description ##
-Thresholds an 8 bit array to 0 and 255 using the selected method
+Thresholds an 8 bit array to 0 and 255 using the selected method. Values below the selected value will be set to 0 (black) and above will be set to 255 (white). Manual Parameter is threshold value for manual selection and power for robust automatic selection.
 
 ## Parameters ##
 | Name             | Type |
@@ -16,6 +16,7 @@ Thresholds an 8 bit array to 0 and 255 using the selected method
 | Created Array Name | String |
 | Threshold Method | String |
 | Slice at a Time | Bool|
+| Manual Parameter | Int |
 
 ## Required Arrays ##
 

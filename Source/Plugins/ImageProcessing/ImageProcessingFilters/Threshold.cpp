@@ -8,9 +8,11 @@
 
 #include "ITKUtilities.h"
 
+//histogram calculation
 #include "itkImageToHistogramFilter.h"
-#include "itkHistogramThresholdCalculator.h"
 
+//histogram based selectors
+#include "itkHistogramThresholdCalculator.h"
 #include "itkHuangThresholdCalculator.h"
 #include "itkIntermodesThresholdCalculator.h"
 #include "itkIsoDataThresholdCalculator.h"
@@ -24,6 +26,11 @@
 #include "itkTriangleThresholdCalculator.h"
 #include "itkYenThresholdCalculator.h"
 
+//robust automatic selection
+//#include "itkGradientMagnitudeImageFilter.h"
+//#include "itkRobustAutomaticThresholdCalculator.h"
+
+//thresholding filter
 #include "itkBinaryThresholdImageFilter.h"
 
 
@@ -39,6 +46,7 @@ m_NewCellArrayName("ProcessedArray"),
 m_OverwriteArray(true),
 m_Slice(false),
 m_Method(7),
+m_ManualParameter(128),
 m_RawImageData(NULL),
 m_ProcessedImageData(NULL)
 {
@@ -98,11 +106,21 @@ void Threshold::setupFilterParameters()
     choices.push_back("Maximum Entropy");
     choices.push_back("Moments");
     choices.push_back("Otsu");
-    choices.push_back("Enyi");
+    choices.push_back("Renyi Entropy");
     choices.push_back("Shanbhag");
     choices.push_back("Triangle");
     choices.push_back("Yen");
+    choices.push_back("Manual Selection");
+    //choices.push_back("Robust Automatic");
     parameter->setChoices(choices);
+    options.push_back(parameter);
+  }
+  {
+    FilterParameter::Pointer parameter = FilterParameter::New();
+    parameter->setHumanLabel("Manual Value");
+    parameter->setPropertyName("ManualParameter");
+    parameter->setWidgetType(FilterParameter::IntWidget);
+    parameter->setValueType("int");
     options.push_back(parameter);
   }
   {
@@ -126,6 +144,7 @@ void Threshold::readFilterParameters(AbstractFilterParametersReader* reader, int
   setNewCellArrayName( reader->readValue( "NewCellArrayName", getNewCellArrayName() ) );
   setOverwriteArray( reader->readValue( "OverwriteArray", getOverwriteArray() ) );
   setSlice( reader->readValue( "Slice", getSlice() ) );
+  setManualParameter( reader->readValue( "ManualParameter", getManualParameter() ) );
   reader->closeFilterGroup();
 }
 
@@ -140,6 +159,7 @@ int Threshold::writeFilterParameters(AbstractFilterParametersWriter* writer, int
   writer->writeValue("NewCellArrayName", getNewCellArrayName() );
   writer->writeValue("OverwriteArray", getOverwriteArray() );
   writer->writeValue("Slice", getSlice() );
+  writer->writeValue("ManualParameter", getManualParameter() );
   writer->closeFilterGroup();
   return ++index;
 }
@@ -216,161 +236,194 @@ void Threshold::execute()
     return;
   }
 
-   //wrap m_RawImageData as itk::image define / create histogram filter
-  typedef itk::Statistics::ImageToHistogramFilter<ImageProcessing::UInt8ImageType> HistogramGenerator;
-  HistogramGenerator::Pointer histogramFilter = HistogramGenerator::New();
-  ImageProcessing::UInt8ImageType::Pointer inputImage=ITKUtilities::Dream3DtoITK(m, m_RawImageData);
+  //get dims
+  size_t udims[3] = {0,0,0};
+  m->getDimensions(udims);
+#if (CMP_SIZEOF_SIZE_T == 4)
+  typedef int32_t DimType;
+#else
+  typedef int64_t DimType;
+#endif
+  DimType dims[3] = {
+    static_cast<DimType>(udims[0]),
+    static_cast<DimType>(udims[1]),
+    static_cast<DimType>(udims[2]),
+  };
 
-  //specify number of bins / bounds
-  typedef HistogramGenerator::HistogramSizeType SizeType;
-  SizeType size( 1 );
-  size[0] = 255;
-  histogramFilter->SetHistogramSize( size );
-  histogramFilter->SetMarginalScale( 10.0 );
-  HistogramGenerator::HistogramMeasurementVectorType lowerBound( 1 );
-  HistogramGenerator::HistogramMeasurementVectorType upperBound( 1 );
-  lowerBound[0] = 0;
-  upperBound[0] = 256;
-  histogramFilter->SetHistogramBinMinimum( lowerBound );
-  histogramFilter->SetHistogramBinMaximum( upperBound );
+    //wrap input as itk image
+    ImageProcessing::UInt8ImageType::Pointer inputImage=ITKUtilities::Dream3DtoITK(m, m_RawImageData);
 
-  //find threshold value w/ histogram
-  itk::HistogramThresholdCalculator< HistogramGenerator::HistogramType, uint8_t >::Pointer calculator;
+    //define threshold filters
+    typedef itk::BinaryThresholdImageFilter <ImageProcessing::UInt8ImageType, ImageProcessing::UInt8ImageType> BinaryThresholdImageFilterType;
+    typedef itk::BinaryThresholdImageFilter <ImageProcessing::UInt8SliceType, ImageProcessing::UInt8SliceType> BinaryThresholdImageFilterType2D;
 
-  typedef itk::HuangThresholdCalculator< HistogramGenerator::HistogramType, uint8_t > HuangCalculatorType;
-  typedef itk::IntermodesThresholdCalculator< HistogramGenerator::HistogramType, uint8_t > IntermodesCalculatorType;
-  typedef itk::IsoDataThresholdCalculator< HistogramGenerator::HistogramType, uint8_t > IsoDataCalculatorType;
-  typedef itk::KittlerIllingworthThresholdCalculator< HistogramGenerator::HistogramType, uint8_t > KittlerIllingowrthCalculatorType;
-  typedef itk::LiThresholdCalculator< HistogramGenerator::HistogramType, uint8_t > LiCalculatorType;
-  typedef itk::MaximumEntropyThresholdCalculator< HistogramGenerator::HistogramType, uint8_t > MaximumEntropyCalculatorType;
-  typedef itk::MomentsThresholdCalculator< HistogramGenerator::HistogramType, uint8_t > MomentsCalculatorType;
-  typedef itk::OtsuThresholdCalculator< HistogramGenerator::HistogramType, uint8_t > OtsuCalculatorType;
-  typedef itk::RenyiEntropyThresholdCalculator< HistogramGenerator::HistogramType, uint8_t > RenyiEntropyCalculatorType;
-  typedef itk::ShanbhagThresholdCalculator< HistogramGenerator::HistogramType, uint8_t > ShanbhagCalculatorType;
-  typedef itk::TriangleThresholdCalculator< HistogramGenerator::HistogramType, uint8_t > TriangleCalculatorType;
-  typedef itk::YenThresholdCalculator< HistogramGenerator::HistogramType, uint8_t > YenCalculatorType;
-
-  switch(m_Method)
+  if(m_Method>=0 && m_Method<=11)
   {
-    case 0:
-      {
-        calculator = HuangCalculatorType::New();
-      }
-      break;
+     //define hitogram generator (will make the same kind of histogram for 2 and 3d images
+    typedef itk::Statistics::ImageToHistogramFilter<ImageProcessing::UInt8ImageType> HistogramGenerator;
 
-    case 1:
-      {
-        calculator = IntermodesCalculatorType::New();
-      }
-      break;
+    //find threshold value w/ histogram
+    itk::HistogramThresholdCalculator< HistogramGenerator::HistogramType, uint8_t >::Pointer calculator;
 
-    case 2:
-      {
-        calculator = IsoDataCalculatorType::New();
-      }
-      break;
+    typedef itk::HuangThresholdCalculator< HistogramGenerator::HistogramType, uint8_t > HuangCalculatorType;
+    typedef itk::IntermodesThresholdCalculator< HistogramGenerator::HistogramType, uint8_t > IntermodesCalculatorType;
+    typedef itk::IsoDataThresholdCalculator< HistogramGenerator::HistogramType, uint8_t > IsoDataCalculatorType;
+    typedef itk::KittlerIllingworthThresholdCalculator< HistogramGenerator::HistogramType, uint8_t > KittlerIllingowrthCalculatorType;
+    typedef itk::LiThresholdCalculator< HistogramGenerator::HistogramType, uint8_t > LiCalculatorType;
+    typedef itk::MaximumEntropyThresholdCalculator< HistogramGenerator::HistogramType, uint8_t > MaximumEntropyCalculatorType;
+    typedef itk::MomentsThresholdCalculator< HistogramGenerator::HistogramType, uint8_t > MomentsCalculatorType;
+    typedef itk::OtsuThresholdCalculator< HistogramGenerator::HistogramType, uint8_t > OtsuCalculatorType;
+    typedef itk::RenyiEntropyThresholdCalculator< HistogramGenerator::HistogramType, uint8_t > RenyiEntropyCalculatorType;
+    typedef itk::ShanbhagThresholdCalculator< HistogramGenerator::HistogramType, uint8_t > ShanbhagCalculatorType;
+    typedef itk::TriangleThresholdCalculator< HistogramGenerator::HistogramType, uint8_t > TriangleCalculatorType;
+    typedef itk::YenThresholdCalculator< HistogramGenerator::HistogramType, uint8_t > YenCalculatorType;
 
-    case 3:
-      {
-        calculator = KittlerIllingowrthCalculatorType::New();
-      }
-      break;
-
-    case 4:
-      {
-        calculator = LiCalculatorType::New();
-      }
-      break;
-
-    case 5:
-      {
-        calculator = MaximumEntropyCalculatorType::New();
-      }
-      break;
-
-    case 6:
-      {
-        calculator = MomentsCalculatorType::New();
-      }
-      break;
-
-    case 7:
-      {
-        calculator = OtsuCalculatorType::New();
-      }
-      break;
-
-    case 8:
-      {
-        calculator = RenyiEntropyCalculatorType::New();
-      }
-      break;
-
-    case 9:
-      {
-        calculator = ShanbhagCalculatorType::New();
-      }
-      break;
-
-    case 10:
-      {
-        calculator = TriangleCalculatorType::New();
-      }
-      break;
-
-    case 11:
-      {
-        calculator = YenCalculatorType::New();
-      }
-      break;
-  }
-
-  if(m_Slice)
-  {
-    //get dims
-    size_t udims[3] = {0,0,0};
-    m->getDimensions(udims);
-  #if (CMP_SIZEOF_SIZE_T == 4)
-    typedef int32_t DimType;
-  #else
-    typedef int64_t DimType;
-  #endif
-    DimType dims[3] = {
-      static_cast<DimType>(udims[0]),
-      static_cast<DimType>(udims[1]),
-      static_cast<DimType>(udims[2]),
-    };
-
-    //define 2d histogram generator
-    typedef itk::Statistics::ImageToHistogramFilter<ImageProcessing::UInt8SliceType> HistogramGenerator2D;
-    HistogramGenerator2D::Pointer histogramFilter2D = HistogramGenerator2D::New();
-
-    //specify number of bins / bounds
-    typedef HistogramGenerator2D::HistogramSizeType SizeType;
-    SizeType size( 1 );
-    size[0] = 255;
-    histogramFilter2D->SetHistogramSize( size );
-    histogramFilter2D->SetMarginalScale( 10.0 );
-    HistogramGenerator2D::HistogramMeasurementVectorType lowerBound( 1 );
-    HistogramGenerator2D::HistogramMeasurementVectorType upperBound( 1 );
-    lowerBound[0] = 0;
-    upperBound[0] = 256;
-    histogramFilter2D->SetHistogramBinMinimum( lowerBound );
-    histogramFilter2D->SetHistogramBinMaximum( upperBound );
-
-    //loop over slices
-    for(int i=0; i<dims[2]; i++)
+    switch(m_Method)
     {
+      case 0:
+        {
+          calculator = HuangCalculatorType::New();
+        }
+        break;
+
+      case 1:
+        {
+          calculator = IntermodesCalculatorType::New();
+        }
+        break;
+
+      case 2:
+        {
+          calculator = IsoDataCalculatorType::New();
+        }
+        break;
+
+      case 3:
+        {
+          calculator = KittlerIllingowrthCalculatorType::New();
+        }
+        break;
+
+      case 4:
+        {
+          calculator = LiCalculatorType::New();
+        }
+        break;
+
+      case 5:
+        {
+          calculator = MaximumEntropyCalculatorType::New();
+        }
+        break;
+
+      case 6:
+        {
+          calculator = MomentsCalculatorType::New();
+        }
+        break;
+
+      case 7:
+        {
+          calculator = OtsuCalculatorType::New();
+        }
+        break;
+
+      case 8:
+        {
+          calculator = RenyiEntropyCalculatorType::New();
+        }
+        break;
+
+      case 9:
+        {
+          calculator = ShanbhagCalculatorType::New();
+        }
+        break;
+
+      case 10:
+        {
+          calculator = TriangleCalculatorType::New();
+        }
+        break;
+
+      case 11:
+        {
+          calculator = YenCalculatorType::New();
+        }
+        break;
+    }
+
+    if(m_Slice)
+    {
+      //define 2d histogram generator
+      typedef itk::Statistics::ImageToHistogramFilter<ImageProcessing::UInt8SliceType> HistogramGenerator2D;
+      HistogramGenerator2D::Pointer histogramFilter2D = HistogramGenerator2D::New();
+
+      //specify number of bins / bounds
+      typedef HistogramGenerator2D::HistogramSizeType SizeType;
+      SizeType size( 1 );
+      size[0] = 255;
+      histogramFilter2D->SetHistogramSize( size );
+      histogramFilter2D->SetMarginalScale( 10.0 );
+      HistogramGenerator2D::HistogramMeasurementVectorType lowerBound( 1 );
+      HistogramGenerator2D::HistogramMeasurementVectorType upperBound( 1 );
+      lowerBound[0] = 0;
+      upperBound[0] = 256;
+      histogramFilter2D->SetHistogramBinMinimum( lowerBound );
+      histogramFilter2D->SetHistogramBinMaximum( upperBound );
+
       //wrap output buffer as image
       ImageProcessing::UInt8ImageType::Pointer outputImage=ITKUtilities::Dream3DtoITK(m, m_ProcessedImageData);
 
-      //get slice
-      ImageProcessing::UInt8SliceType::Pointer slice = ITKUtilities::ExtractSlice<ImageProcessing::UInt8PixelType>(inputImage, ImageProcessing::ZSlice, i);
+      //loop over slices
+      for(int i=0; i<dims[2]; i++)
+      {
+        //get slice
+        ImageProcessing::UInt8SliceType::Pointer slice = ITKUtilities::ExtractSlice<ImageProcessing::UInt8PixelType>(inputImage, ImageProcessing::ZSlice, i);
+
+        //find histogram
+        histogramFilter2D->SetInput( slice );
+        histogramFilter2D->Update();
+        const HistogramGenerator::HistogramType * histogram = histogramFilter2D->GetOutput();
+
+        //calculate threshold level
+        calculator->SetInput(histogram);
+        calculator->Update();
+        const uint8_t thresholdValue = calculator->GetThreshold();
+
+        //threshold
+        BinaryThresholdImageFilterType2D::Pointer thresholdFilter = BinaryThresholdImageFilterType2D::New();
+        thresholdFilter->SetInput(slice);
+        thresholdFilter->SetLowerThreshold(thresholdValue);
+        thresholdFilter->SetUpperThreshold(255);
+        thresholdFilter->SetInsideValue(255);
+        thresholdFilter->SetOutsideValue(0);
+        thresholdFilter->Update();
+
+        //copy back into volume
+        ITKUtilities::SetSlice<ImageProcessing::UInt8PixelType>(outputImage, thresholdFilter->GetOutput(), ImageProcessing::ZSlice, i);
+      }
+    }
+    else
+    {
+      //specify number of bins / bounds
+      HistogramGenerator::Pointer histogramFilter = HistogramGenerator::New();
+      typedef HistogramGenerator::HistogramSizeType SizeType;
+      SizeType size( 1 );
+      size[0] = 255;
+      histogramFilter->SetHistogramSize( size );
+      histogramFilter->SetMarginalScale( 10.0 );
+      HistogramGenerator::HistogramMeasurementVectorType lowerBound( 1 );
+      HistogramGenerator::HistogramMeasurementVectorType upperBound( 1 );
+      lowerBound[0] = 0;
+      upperBound[0] = 256;
+      histogramFilter->SetHistogramBinMinimum( lowerBound );
+      histogramFilter->SetHistogramBinMaximum( upperBound );
 
       //find histogram
-      histogramFilter2D->SetInput( slice );
-      histogramFilter2D->Update();
-      const HistogramGenerator::HistogramType * histogram = histogramFilter2D->GetOutput();
+      histogramFilter->SetInput( inputImage );
+      histogramFilter->Update();
+      const HistogramGenerator::HistogramType * histogram = histogramFilter->GetOutput();
 
       //calculate threshold level
       calculator->SetInput(histogram);
@@ -378,44 +431,101 @@ void Threshold::execute()
       const uint8_t thresholdValue = calculator->GetThreshold();
 
       //threshold
-      typedef itk::BinaryThresholdImageFilter <ImageProcessing::UInt8SliceType, ImageProcessing::UInt8SliceType> BinaryThresholdImageFilterType;
       BinaryThresholdImageFilterType::Pointer thresholdFilter = BinaryThresholdImageFilterType::New();
-      thresholdFilter->SetInput(slice);
+      thresholdFilter->SetInput(inputImage);
       thresholdFilter->SetLowerThreshold(thresholdValue);
       thresholdFilter->SetUpperThreshold(255);
       thresholdFilter->SetInsideValue(255);
       thresholdFilter->SetOutsideValue(0);
+      thresholdFilter->GetOutput()->GetPixelContainer()->SetImportPointer(m_ProcessedImageData, totalPoints, false);
       thresholdFilter->Update();
-
-      //copy back into volume
-
-      ITKUtilities::SetSlice<ImageProcessing::UInt8PixelType>(outputImage, thresholdFilter->GetOutput(), ImageProcessing::ZSlice, i);
-
     }
   }
-  else
+  else if(m_Method==12)//manual
   {
-    //find histogram
-    histogramFilter->SetInput( inputImage );
-    histogramFilter->Update();
-    const HistogramGenerator::HistogramType * histogram = histogramFilter->GetOutput();
-
-    //calculate threshold level
-    calculator->SetInput(histogram);
-    calculator->Update();
-    const uint8_t thresholdValue = calculator->GetThreshold();
-
     //threshold
-    typedef itk::BinaryThresholdImageFilter <ImageProcessing::UInt8ImageType, ImageProcessing::UInt8ImageType> BinaryThresholdImageFilterType;
     BinaryThresholdImageFilterType::Pointer thresholdFilter = BinaryThresholdImageFilterType::New();
     thresholdFilter->SetInput(inputImage);
-    thresholdFilter->SetLowerThreshold(thresholdValue);
+    thresholdFilter->SetLowerThreshold(m_ManualParameter);
     thresholdFilter->SetUpperThreshold(255);
     thresholdFilter->SetInsideValue(255);
     thresholdFilter->SetOutsideValue(0);
     thresholdFilter->GetOutput()->GetPixelContainer()->SetImportPointer(m_ProcessedImageData, totalPoints, false);
     thresholdFilter->Update();
   }
+  /*
+  else if(m_Method==13)//robust automatic
+  {
+    typedef itk::GradientMagnitudeImageFilter<ImageProcessing::UInt8ImageType, ImageProcessing::UInt8ImageType>  GradientMagnitudeType;
+    typedef itk::GradientMagnitudeImageFilter<ImageProcessing::UInt8SliceType, ImageProcessing::UInt8SliceType>  GradientMagnitudeType2D;
+
+    typedef itk::itkRobustAutomaticThresholdCalculator<ImageProcessing::UInt8ImageType,ImageProcessing::UInt8ImageType> SelectionType;
+    typedef itk::itkRobustAutomaticThresholdCalculator<ImageProcessing::UInt8SliceType,ImageProcessing::UInt8SliceType> SelectionType2D;
+
+    if(m_slice)
+    {
+      //wrap output buffer as image
+      ImageProcessing::UInt8ImageType::Pointer outputImage=ITKUtilities::Dream3DtoITK(m, m_ProcessedImageData);
+
+      //loop over slices
+      for(int i=0; i<dims[2]; i++)
+      {
+        //get slice
+        ImageProcessing::UInt8SliceType::Pointer slice = ITKUtilities::ExtractSlice<ImageProcessing::UInt8PixelType>(inputImage, ImageProcessing::ZSlice, i);
+
+        //find gradient
+        GradientMagnitudeType2D::Pointer gradientFilter = GradientMagnitudeType2D::New();
+        gradientFilter->setInput(slice);
+        gradientFilter->Update();
+
+        //calculate thershold
+        SelectionType2D::Pointer calculatorFilter = SelectionType2D::New();
+        calculatorFilter->SetInput(slice);
+        calculatorFilter->SetGradientImage(gradientFilter->GetOutput());
+        calculatorFilter->SetPow(m_ManualParameter);
+        calculatorFilter->Update();
+        const uint8_t thresholdValue = calculatorFilter->GetOutput();
+
+        //threshold
+        BinaryThresholdImageFilterType::Pointer thresholdFilter = BinaryThresholdImageFilterType::New();
+        thresholdFilter->SetInput(inputImage);
+        thresholdFilter->SetLowerThreshold(thresholdValue);
+        thresholdFilter->SetUpperThreshold(255);
+        thresholdFilter->SetInsideValue(255);
+        thresholdFilter->SetOutsideValue(0);
+        thresholdFilter->Update();
+
+        //copy back into volume
+        ITKUtilities::SetSlice<ImageProcessing::UInt8PixelType>(outputImage, thresholdFilter->GetOutput(), ImageProcessing::ZSlice, i);
+      }
+    }
+    else
+    {
+      //find gradient
+      GradientMagnitudeType::Pointer gradientFilter = GradientMagnitudeType::New();
+      gradientFilter->setInput(inputImage);
+      gradientFilter->Update();
+
+      //calculate threshold
+      SelectionType::Pointer calculatorFilter = SelectionType::New();
+      calculatorFilter->SetInput(inputImage);
+      calculatorFilter->SetGradientImage(gradientFilter->GetOutput());
+      calculatorFilter->SetPow(m_ManualParameter);
+      calculatorFilter->Update();
+      const uint8_t thresholdValue = calculatorFilter->GetOutput();
+
+      //threshold
+      BinaryThresholdImageFilterType::Pointer thresholdFilter = BinaryThresholdImageFilterType::New();
+      thresholdFilter->SetInput(inputImage);
+      thresholdFilter->SetLowerThreshold(thresholdValue);
+      thresholdFilter->SetUpperThreshold(255);
+      thresholdFilter->SetInsideValue(255);
+      thresholdFilter->SetOutsideValue(0);
+      thresholdFilter->GetOutput()->GetPixelContainer()->SetImportPointer(m_ProcessedImageData, totalPoints, false);
+      thresholdFilter->Update();
+    }
+  }
+  */
 
 
   //array name changing/cleanup

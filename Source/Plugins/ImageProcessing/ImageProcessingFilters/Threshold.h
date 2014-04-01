@@ -42,6 +42,7 @@ class Threshold : public AbstractFilter
     DREAM3D_INSTANCE_PROPERTY(bool, OverwriteArray)
     DREAM3D_INSTANCE_PROPERTY(bool, Slice)
     DREAM3D_INSTANCE_PROPERTY(int, Method)
+    DREAM3D_INSTANCE_PROPERTY(int, ManualParameter)
 
     /**
     * @brief This returns the group that the filter belonds to. You can select
