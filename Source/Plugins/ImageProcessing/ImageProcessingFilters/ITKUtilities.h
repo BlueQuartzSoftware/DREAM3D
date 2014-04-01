@@ -227,6 +227,37 @@ class DREAM3DLib_EXPORT ITKUtilities
       return extractSlice->GetOutput();
     }
 
+    //update a slice
+    template<typename T>
+    static void SetSlice(typename itk::Image<T,ImageProcessing::ImageDimension>::Pointer image, typename itk::Image<T,ImageProcessing::SliceDimension>::Pointer slice, int sliceType, int sliceNum)
+    {
+      //get region to replace
+      typename itk::Image<T,ImageProcessing::ImageDimension>::RegionType volumeRegion = image->GetLargestPossibleRegion();
+      typename itk::Image<T,ImageProcessing::ImageDimension>::SizeType size = volumeRegion.GetSize();
+      size[sliceType]=1;
+      volumeRegion.SetSize(size);
+      typename itk::Image<T,ImageProcessing::ImageDimension>::IndexType start = volumeRegion.GetIndex();
+      start.Fill(0);
+      start[sliceType]=sliceNum;
+      volumeRegion.SetIndex(start);
+
+      //get iterator for slice and image
+      typedef typename itk::ImageRegionConstIterator<itk::Image<T, ImageProcessing::SliceDimension> > SliceIteratorType;
+      typedef typename itk::ImageRegionIterator<itk::Image<T, ImageProcessing::ImageDimension> > VolumeIteratorType;
+      SliceIteratorType sliceIt(slice, slice->GetLargestPossibleRegion());
+      VolumeIteratorType volIt(image, volumeRegion);
+
+      //copy slice into volume
+      volIt.GoToBegin();
+      sliceIt.GoToBegin();
+      while(!volIt.IsAtEnd())
+      {
+        volIt.Set(sliceIt.Get());
+        ++volIt;
+        ++sliceIt;
+      }
+    }
+
     /*
     template<typename T>
     static typename itk::Image<typename T,ImageProcessing::ImageDimension>::Pointer ConvertDataArray(int* dims, float* resolution, float* origin, typename DataArray<T>::Pointer inData)

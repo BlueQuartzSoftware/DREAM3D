@@ -11,7 +11,11 @@
 #include "itkLinearInterpolateImageFunction.h"
 #include "itkImageFileReader.h"
 #include "itkImageFileWriter.h"
+
 #include "itkMeanSquaresImageToImageMetric.h"
+#include "itkNormalizedCorrelationImageToImageMetric.h"
+#include "itkMeanReciprocalSquareDifferenceImageToImageMetric.h" //Pattern Intensity
+
 #include "itkRegularStepGradientDescentOptimizer.h"
 #include "itkResampleImageFilter.h"
 #include "itkRescaleIntensityImageFilter.h"
@@ -27,6 +31,12 @@ AbstractFilter(),
 m_RawImageDataArrayName("RawImageData"),
 m_SelectedCellArrayName(""),
 m_AlignmentShiftFileName(""),
+m_WriteShifts(false),
+m_ApplyShifts(true),
+m_Metric(0),
+m_MinStep(0.01f),
+m_MaxStep(4.00f),
+m_MaxIterations(200),
 m_RawImageData(NULL)
 {
   setupFilterParameters();
@@ -55,6 +65,63 @@ void ImageRegistration::setupFilterParameters()
     options.push_back(parameter);
   }
   {
+    ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New();
+    parameter->setHumanLabel("Similarity Metric");
+    parameter->setPropertyName("Metric");
+    parameter->setWidgetType(FilterParameter::ChoiceWidget);
+    parameter->setValueType("unsigned int");
+    std::vector<std::string> choices;
+    choices.push_back("Mean Squares");
+    choices.push_back("Normalized Correlation");
+    choices.push_back("Pattern Intensity");
+    parameter->setChoices(choices);
+    options.push_back(parameter);
+  }
+  {
+    FilterParameter::Pointer option = FilterParameter::New();
+    option->setHumanLabel("Minimum Step Size");
+    option->setPropertyName("MinStep");
+    option->setWidgetType(FilterParameter::DoubleWidget);
+    option->setValueType("float");
+    option->setCastableValueType("double");
+    option->setUnits("pixels");
+    options.push_back(option);
+  }
+  {
+    FilterParameter::Pointer option = FilterParameter::New();
+    option->setHumanLabel("Maximum Step Size");
+    option->setPropertyName("MaxStep");
+    option->setWidgetType(FilterParameter::DoubleWidget);
+    option->setValueType("float");
+    option->setCastableValueType("double");
+    option->setUnits("piexls");
+    options.push_back(option);
+  }
+  {
+    FilterParameter::Pointer option = FilterParameter::New();
+    option->setHumanLabel("Maximum Iterations");
+    option->setPropertyName("MaxIterations");
+    option->setWidgetType(FilterParameter::IntWidget);
+    option->setValueType("int");
+    options.push_back(option);
+  }
+  {
+    FilterParameter::Pointer parameter = FilterParameter::New();
+    parameter->setHumanLabel("Apply Shifts");
+    parameter->setPropertyName("ApplyShifts");
+    parameter->setWidgetType(FilterParameter::BooleanWidget);
+    parameter->setValueType("bool");
+    options.push_back(parameter);
+  }
+  {
+    FilterParameter::Pointer parameter = FilterParameter::New();
+    parameter->setHumanLabel("Write Alignment Shift File");
+    parameter->setPropertyName("WriteShifts");
+    parameter->setWidgetType(FilterParameter::BooleanWidget);
+    parameter->setValueType("bool");
+    options.push_back(parameter);
+  }
+  {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Alignment File");
     option->setPropertyName("AlignmentShiftFileName");
@@ -73,6 +140,12 @@ void ImageRegistration::readFilterParameters(AbstractFilterParametersReader* rea
   reader->openFilterGroup(this, index);
   setSelectedCellArrayName( reader->readValue( "SelectedCellArrayName", getSelectedCellArrayName() ) );
   setAlignmentShiftFileName( reader->readValue( "AlignmentShiftFileName", getAlignmentShiftFileName() ) );
+  setMinStep( reader->readValue( "MinStep", getMinStep() ) );
+  setMaxStep( reader->readValue( "MaxStep", getMaxStep() ) );
+  setMaxIterations( reader->readValue( "MaxIterations", getMaxIterations() ) );
+  setWriteShifts( reader->readValue( "WriteShifts", getWriteShifts() ) );
+  setMetric( reader->readValue( "Metric", getMetric() ) );
+  setApplyShifts( reader->readValue( "ApplyShifts", getApplyShifts() ) );
   reader->closeFilterGroup();
 }
 
@@ -85,6 +158,12 @@ int ImageRegistration::writeFilterParameters(AbstractFilterParametersWriter* wri
   writer->openFilterGroup(this, index);
   writer->writeValue("SelectedCellArrayName", getSelectedCellArrayName() );
   writer->writeValue("AlignmentShiftFileName", getAlignmentShiftFileName());
+  writer->writeValue("MinStep", getMinStep());
+  writer->writeValue("MaxStep", getMaxStep());
+  writer->writeValue("MaxIterations", getMaxIterations());
+  writer->writeValue("WriteShifts", getWriteShifts());
+  writer->writeValue("ApplyShifts", getApplyShifts());
+  writer->writeValue("Metric", getMetric());
   writer->closeFilterGroup();
   return ++index;
 }
@@ -108,9 +187,20 @@ void ImageRegistration::dataCheck(bool preflight, size_t voxels, size_t fields, 
   {
     m_RawImageDataArrayName=m_SelectedCellArrayName;
     GET_PREREQ_DATA(m, DREAM3D, CellData, RawImageData, ss, -300, uint8_t, UInt8ArrayType, voxels, 1)
+    //dont want subpixel shifts if there is information other than image data
+    if(m_ApplyShifts)
+    {
+      if(m->getNumCellArrays()>1)
+      {
+        ss.str("");
+        ss << "Shifts cannot be applied if other cell arrays exist (" << m->getNumCellArrays()-1 << " other array(s) present).";
+        setErrorCondition(-1);
+        addErrorMessage(getHumanLabel(), ss.str(), -1);
+      }
+    }
   }
 
-  if(true == m_AlignmentShiftFileName.empty())
+  if(m_WriteShifts && true == m_AlignmentShiftFileName.empty())
   {
     ss.str("");
     ss << "The Alignment Shift file name must be set before executing this filter.";
@@ -171,7 +261,7 @@ void ImageRegistration::execute()
 
   //open file to write alignments
   std::ofstream outFile;
-  outFile.open(getAlignmentShiftFileName().c_str());
+  if(m_WriteShifts) outFile.open(getAlignmentShiftFileName().c_str());
 
   //wrap data as itk image
   ImageProcessing::UInt8ImageType::Pointer inputImage=ITKUtilities::Dream3DtoITK(m, m_RawImageData);
@@ -187,11 +277,11 @@ void ImageRegistration::execute()
   //  The metric will compare how well the two images match each other. Metric
   //  types are usually parameterized by the image types as it can be seen in
   //  the following type declaration.
-  typedef itk::MeanSquaresImageToImageMetric<
-      ImageProcessing::UInt8SliceType,
-      ImageProcessing::UInt8SliceType >    MetricType;
+  typedef itk::MeanSquaresImageToImageMetric<ImageProcessing::UInt8SliceType, ImageProcessing::UInt8SliceType >  MeanSquaresMetricType;
+  typedef itk::NormalizedCorrelationImageToImageMetric<ImageProcessing::UInt8SliceType, ImageProcessing::UInt8SliceType >  NormalizedCorrelationMetricType;
+  typedef itk::MeanReciprocalSquareDifferenceImageToImageMetric<ImageProcessing::UInt8SliceType, ImageProcessing::UInt8SliceType >  PatternIntensityMetricType;
 
-  //  Finally, the type of the interpolator is declared. The interpolator will
+ //  Finally, the type of the interpolator is declared. The interpolator will
   //  evaluate the intensities of the moving image at non-grid positions.
   typedef itk:: LinearInterpolateImageFunction<
       ImageProcessing::UInt8SliceType,
@@ -205,23 +295,43 @@ void ImageRegistration::execute()
       ImageProcessing::UInt8SliceType >    RegistrationType;
 
   // Create components
-  MetricType::Pointer         metric        = MetricType::New();
+  //MetricType::Pointer         metric        = MetricType::New();
   TransformType::Pointer      transform     = TransformType::New();
   OptimizerType::Pointer      optimizer     = OptimizerType::New();
   InterpolatorType::Pointer   interpolator  = InterpolatorType::New();
   RegistrationType::Pointer   registration  = RegistrationType::New();
 
   // Each component is now connected to the instance of the registration method.
-  registration->SetMetric(        metric        );
+  //registration->SetMetric(        metric        );
+  switch(m_Metric)
+  {
+    case 0:
+      {
+        registration->SetMetric(        MeanSquaresMetricType::New()        );
+      }
+      break;
+
+    case 1:
+      {
+        registration->SetMetric(        NormalizedCorrelationMetricType::New()        );
+      }
+      break;
+
+    case 2:
+      {
+        registration->SetMetric(        PatternIntensityMetricType::New()        );
+      }
+      break;
+  }
   registration->SetOptimizer(     optimizer     );
   registration->SetTransform(     transform     );
   registration->SetInterpolator(  interpolator  );
 
-  for(int i=dims[2]-1; i>0; i--)
+  for(int i=1; i<dims[2]; ++i)
   {
     //update gui
     ss.str("");
-    ss << "Aligning Slice "<< dims[2]-i << "/" << dims[2];
+    ss << "Aligning Slice "<< i << "/" << dims[2];
     notifyStatusMessage(ss.str());
 
     //get and register 2 images
@@ -244,11 +354,11 @@ void ImageRegistration::execute()
 
     registration->SetInitialTransformParameters( initialParameters );
 
-    optimizer->SetMaximumStepLength( 4.00 );
-    optimizer->SetMinimumStepLength( 1.00 );
+    optimizer->SetMaximumStepLength( m_MaxStep );
+    optimizer->SetMinimumStepLength( m_MinStep );
 
     // Set a stopping criterion
-    optimizer->SetNumberOfIterations( 200 );
+    optimizer->SetNumberOfIterations( m_MaxIterations );
 
     try
     {
@@ -275,41 +385,26 @@ void ImageRegistration::execute()
 
     const double TranslationAlongX = finalParameters[0];
     const double TranslationAlongY = finalParameters[1];
+    if(m_WriteShifts) outFile << i << " " << TranslationAlongX << " " << TranslationAlongY << std::endl;
 
-    int xShift=0;
-    int yShift=0;
-
-    if(TranslationAlongX>0)
+    //  A resampling filter is created and the moving image is connected as  its input.
+     if(m_ApplyShifts)
     {
-      xShift=floor(TranslationAlongX);
-    } else
-    {
-      xShift=ceil(TranslationAlongX);
+      typedef itk::ResampleImageFilter<ImageProcessing::UInt8SliceType, ImageProcessing::UInt8SliceType>    ResampleFilterType;
+      ResampleFilterType::Pointer resampler = ResampleFilterType::New();
+      resampler->SetInput( movingImage);
+      resampler->SetTransform( registration->GetOutput()->Get() );
+      resampler->SetSize( fixedImage->GetLargestPossibleRegion().GetSize() );
+      resampler->SetOutputOrigin(  fixedImage->GetOrigin() );
+      resampler->SetOutputSpacing( fixedImage->GetSpacing() );
+      resampler->SetOutputDirection( fixedImage->GetDirection() );
+      resampler->SetDefaultPixelValue( 0 );
+      resampler->Update();
+      ITKUtilities::SetSlice<ImageProcessing::UInt8PixelType>(inputImage, resampler->GetOutput(), ImageProcessing::ZSlice, i);
     }
-    if((fabsf(TranslationAlongX)-abs(xShift))>0.5)
-    {
-      if(xShift>0)xShift++;
-      if(xShift<0)xShift--;
-    }
-    if(TranslationAlongY>0)
-    {
-      yShift=floor(TranslationAlongY);
-    } else
-    {
-      yShift=ceil(TranslationAlongY);
-    }
-    if((fabsf(TranslationAlongY)-abs(xShift))>0.5)
-    {
-      if(yShift>0)yShift++;
-      if(yShift<0)yShift--;
-    }
-
-    outFile << i << " " << -xShift << " " << -yShift << std::endl;
   }
 
-  outFile.close();
-
-  //array name changing/cleanup
+  if(m_WriteShifts) outFile.close();
 
   /* Let the GUI know we are done with this filter */
    notifyStatusMessage("Complete");
