@@ -40,6 +40,7 @@ class DiscreteGaussianBlur : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(SelectedCellArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(NewCellArrayName)
     DREAM3D_INSTANCE_PROPERTY(bool, OverwriteArray)
+    DREAM3D_INSTANCE_PROPERTY(float, Stdev)
 
     /**
     * @brief This returns the group that the filter belonds to. You can select
@@ -104,7 +105,7 @@ class DiscreteGaussianBlur : public AbstractFilter
 
   private:
     uint8_t* m_RawImageData;
-    float* m_ProcessedImageData;
+    uint8_t* m_ProcessedImageData;
 
     DiscreteGaussianBlur(const DiscreteGaussianBlur&); // Copy Constructor Not Implemented
     void operator=(const DiscreteGaussianBlur&); // Operator '=' Not Implemented

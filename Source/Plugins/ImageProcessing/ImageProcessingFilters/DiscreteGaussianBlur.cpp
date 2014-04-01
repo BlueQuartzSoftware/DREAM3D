@@ -21,6 +21,7 @@ m_SelectedCellArrayName(""),
 m_NewCellArrayName("ProcessedArray"),
 m_OverwriteArray(true),
 m_RawImageData(NULL),
+m_Stdev(2),
 m_ProcessedImageData(NULL)
 {
   setupFilterParameters();
@@ -64,6 +65,16 @@ void DiscreteGaussianBlur::setupFilterParameters()
     parameter->setValueType("string");
     options.push_back(parameter);
   }
+  {
+    FilterParameter::Pointer option = FilterParameter::New();
+    option->setHumanLabel("Standard Deviation");
+    option->setPropertyName("Stdev");
+    option->setWidgetType(FilterParameter::DoubleWidget);
+    option->setValueType("float");
+    option->setCastableValueType("double");
+    option->setUnits("gray levels");
+    options.push_back(option);
+  }
   setFilterParameters(options);
 }
 
@@ -76,6 +87,7 @@ void DiscreteGaussianBlur::readFilterParameters(AbstractFilterParametersReader* 
   setSelectedCellArrayName( reader->readValue( "SelectedCellArrayName", getSelectedCellArrayName() ) );
   setNewCellArrayName( reader->readValue( "NewCellArrayName", getNewCellArrayName() ) );
   setOverwriteArray( reader->readValue( "OverwriteArray", getOverwriteArray() ) );
+  setStdev( reader->readValue( "Stdev", getStdev() ) );
   reader->closeFilterGroup();
 }
 
@@ -89,6 +101,7 @@ int DiscreteGaussianBlur::writeFilterParameters(AbstractFilterParametersWriter* 
   writer->writeValue("SelectedCellArrayName", getSelectedCellArrayName() );
   writer->writeValue("NewCellArrayName", getNewCellArrayName() );
   writer->writeValue("OverwriteArray", getOverwriteArray() );
+  writer->writeValue("Stdev", getStdev() );
   writer->closeFilterGroup();
   return ++index;
 }
@@ -119,7 +132,7 @@ void DiscreteGaussianBlur::dataCheck(bool preflight, size_t voxels, size_t field
     }
     else
     {
-      CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, ProcessedImageData, ss, float, FloatArrayType, 0, voxels, 1)
+      CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, ProcessedImageData, ss, uint8_t, UInt8ArrayType, 0, voxels, 1)
       m->renameCellData(m_ProcessedImageDataArrayName, m_NewCellArrayName);
     }
   }
@@ -158,7 +171,7 @@ void DiscreteGaussianBlur::execute()
   dataCheck(false, totalPoints, totalFields, totalEnsembles);
   if(m_OverwriteArray)
   {
-    CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, ProcessedImageData, ss, float, FloatArrayType, 0, totalPoints, 1)
+    CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, ProcessedImageData, ss, uint8_t, UInt8ArrayType, 0, totalPoints, 1)
   }
   if (getErrorCondition() < 0)
   {
@@ -169,10 +182,10 @@ void DiscreteGaussianBlur::execute()
   ImageProcessing::UInt8ImageType::Pointer inputImage=ITKUtilities::Dream3DtoITK(m, m_RawImageData);
 
   //create guassian blur filter
-  typedef itk::DiscreteGaussianImageFilter< ImageProcessing::UInt8ImageType,  ImageProcessing::FloatImageType > GuassianFilterType;
+  typedef itk::DiscreteGaussianImageFilter< ImageProcessing::UInt8ImageType,  ImageProcessing::UInt8ImageType > GuassianFilterType;
   GuassianFilterType::Pointer guassianFilter = GuassianFilterType::New();
   guassianFilter->SetInput(inputImage);
-  guassianFilter->SetVariance(4);
+  guassianFilter->SetVariance(m_Stdev*m_Stdev);
 
   //have filter write to dream3d array instead of creating its own buffer
   ITKUtilities::SetITKOutput(guassianFilter->GetOutput(), m_ProcessedImageData, totalPoints);

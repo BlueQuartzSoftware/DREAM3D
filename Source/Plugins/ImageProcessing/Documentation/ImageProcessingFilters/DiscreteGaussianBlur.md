@@ -4,38 +4,37 @@ DiscreteGaussianBlur {#discretegaussianblur}
 ## Group (Subgroup) ##
 ImageProcessing (ImageProcessing)
 
-
 ## Description ##
-This filter does the following...
+Applies a 3d guassian kernel of the specified standard deviation to the selected array
 
 ## Parameters ##
 | Name             | Type |
 |------------------|------|
-| Field Array Name | String |
+| Array to Process | String |
+| Overwrite Array| Bool |
+| Created Array Name | String |
+| Standard Devitation| float |
+
 
 ## Required Arrays ##
 
 | Type | Default Array Name | Description | Comment |
 |------|--------------------|-------------|---------|
-| Int  | SomeName           | ....        | other   |
+| Int | ImageData | 8 bit image data       | |
 
 
 ## Created Arrays ##
 
 | Type | Default Array Name | Description | Comment |
 |------|--------------------|-------------|---------|
-| Int  | SomeName           | ....        | other   |
+| Int | ProcessedArray | 8 bit image data       | |
 
 
 
 ## Authors: ##
 
-**Copyright:** Who holds the copyright for the code
+**Contact Info:** Will Lente willlenthe@gmail.com
 
-**Contact Info:** email address
-
-**Version:** x.y.z
-
-**License:**  What is the license for this code
+**Version:** 1.0.0
 
 
