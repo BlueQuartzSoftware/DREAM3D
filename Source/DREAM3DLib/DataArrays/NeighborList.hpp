@@ -86,6 +86,8 @@ class NeighborList : public IDataArray
         return NullPointer();
       }
       Pointer ptr = NeighborList<T>::New();
+      ptr->setName(name);
+      ptr->resize(numElements);
       return ptr;
     }
 
