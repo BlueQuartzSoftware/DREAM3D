@@ -8,19 +8,63 @@
 
 #include "ITKUtilities.h"
 #include "itkImageRegistrationMethod.h"
+#include "itkTranslationTransform.h"
+#include "itkResampleImageFilter.h"
 #include "itkLinearInterpolateImageFunction.h"
-#include "itkImageFileReader.h"
-#include "itkImageFileWriter.h"
 
+//image metrics
 #include "itkMeanSquaresImageToImageMetric.h"
 #include "itkNormalizedCorrelationImageToImageMetric.h"
-#include "itkMeanReciprocalSquareDifferenceImageToImageMetric.h" //Pattern Intensity
+#include "itkMeanReciprocalSquareDifferenceImageToImageMetric.h"
+#include "itkMattesMutualInformationImageToImageMetric.h"
 
+//search optimizers
+#include "itkGradientDescentOptimizer.h"
 #include "itkRegularStepGradientDescentOptimizer.h"
-#include "itkResampleImageFilter.h"
-#include "itkRescaleIntensityImageFilter.h"
-#include "itkSpatialObjectToImageFilter.h"
-#include "itkTranslationTransform.h"
+#include "itkLBFGSOptimizer.h"
+#include "itkAmoebaOptimizer.h"
+#include "itkOnePlusOneEvolutionaryOptimizer.h"
+  #include "itkNormalVariateGenerator.h"
+
+//#include "itkRescaleIntensityImageFilter.h"
+//#include "itkSpatialObjectToImageFilter.h"
+
+#include "itkCommand.h"
+#include "itkSingleValuedNonLinearOptimizer.h"
+class CommandIterationUpdate : public itk::Command
+{
+    public:
+    typedef CommandIterationUpdate Self;
+    typedef itk::Command Superclass;
+    typedef itk::SmartPointer<Self> Pointer;
+    itkNewMacro( Self );
+
+  protected:
+    CommandIterationUpdate()
+    {
+      m_IterationNumber=0;
+    }
+
+  public:
+    typedef itk::SingleValuedNonLinearOptimizer OptimizerType;
+    typedef const OptimizerType * OptimizerPointer;
+    void Execute(itk::Object *caller, const itk::EventObject & event)
+    {
+      Execute( (const itk::Object *)caller, event);
+    }
+
+    void Execute(const itk::Object * object, const itk::EventObject & event)
+    {
+      OptimizerPointer optimizer = dynamic_cast< OptimizerPointer >( object );
+      if( ! itk::IterationEvent().CheckEvent( &event ) )
+      {
+        return;
+      }
+    }
+
+  private:
+    unsigned long m_IterationNumber;
+};
 
 
 // -----------------------------------------------------------------------------
@@ -34,9 +78,10 @@ m_AlignmentShiftFileName(""),
 m_WriteShifts(false),
 m_ApplyShifts(true),
 m_Metric(0),
-m_MinStep(0.01f),
-m_MaxStep(4.00f),
-m_MaxIterations(200),
+m_Optimizer(1),
+m_OptimizerParameter1(0.0f),
+m_OptimizerParameter2(0.0f),
+m_Iterations(200),
 m_RawImageData(NULL)
 {
   setupFilterParameters();
@@ -73,34 +118,48 @@ void ImageRegistration::setupFilterParameters()
     std::vector<std::string> choices;
     choices.push_back("Mean Squares");
     choices.push_back("Normalized Correlation");
-    choices.push_back("Pattern Intensity");
+    choices.push_back("Mean Reciprocal Square Difference");
+    //choices.push_back("Mattes Mutual Information");
+    parameter->setChoices(choices);
+    options.push_back(parameter);
+  }
+  {
+    ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New();
+    parameter->setHumanLabel("Optimizer");
+    parameter->setPropertyName("Optimizer");
+    parameter->setWidgetType(FilterParameter::ChoiceWidget);
+    parameter->setValueType("unsigned int");
+    std::vector<std::string> choices;
+    choices.push_back("Gradient Descent");
+    choices.push_back("Regular Step Gradient Descent");
+    choices.push_back("LBFGS");
+    choices.push_back("Amoeba");
+    choices.push_back("One Plus One Evolutionary");
     parameter->setChoices(choices);
     options.push_back(parameter);
   }
   {
     FilterParameter::Pointer option = FilterParameter::New();
-    option->setHumanLabel("Minimum Step Size");
-    option->setPropertyName("MinStep");
+    option->setHumanLabel("Optimizer Parameter 1");
+    option->setPropertyName("OptimizerParameter1");
     option->setWidgetType(FilterParameter::DoubleWidget);
     option->setValueType("float");
     option->setCastableValueType("double");
-    option->setUnits("pixels");
     options.push_back(option);
   }
   {
     FilterParameter::Pointer option = FilterParameter::New();
-    option->setHumanLabel("Maximum Step Size");
-    option->setPropertyName("MaxStep");
+    option->setHumanLabel("Optimizer Parameter 2");
+    option->setPropertyName("OptimizerParameter2");
     option->setWidgetType(FilterParameter::DoubleWidget);
     option->setValueType("float");
     option->setCastableValueType("double");
-    option->setUnits("piexls");
     options.push_back(option);
   }
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Maximum Iterations");
-    option->setPropertyName("MaxIterations");
+    option->setPropertyName("Iterations");
     option->setWidgetType(FilterParameter::IntWidget);
     option->setValueType("int");
     options.push_back(option);
@@ -140,11 +199,12 @@ void ImageRegistration::readFilterParameters(AbstractFilterParametersReader* rea
   reader->openFilterGroup(this, index);
   setSelectedCellArrayName( reader->readValue( "SelectedCellArrayName", getSelectedCellArrayName() ) );
   setAlignmentShiftFileName( reader->readValue( "AlignmentShiftFileName", getAlignmentShiftFileName() ) );
-  setMinStep( reader->readValue( "MinStep", getMinStep() ) );
-  setMaxStep( reader->readValue( "MaxStep", getMaxStep() ) );
-  setMaxIterations( reader->readValue( "MaxIterations", getMaxIterations() ) );
+  setOptimizerParameter1( reader->readValue( "OptimizerParameter1", getOptimizerParameter1() ) );
+  setOptimizerParameter2( reader->readValue( "OptimizerParameter2", getOptimizerParameter2() ) );
+  setIterations( reader->readValue( "Iterations", getIterations() ) );
   setWriteShifts( reader->readValue( "WriteShifts", getWriteShifts() ) );
   setMetric( reader->readValue( "Metric", getMetric() ) );
+  setOptimizer( reader->readValue( "Optimizer", getOptimizer() ) );
   setApplyShifts( reader->readValue( "ApplyShifts", getApplyShifts() ) );
   reader->closeFilterGroup();
 }
@@ -158,12 +218,13 @@ int ImageRegistration::writeFilterParameters(AbstractFilterParametersWriter* wri
   writer->openFilterGroup(this, index);
   writer->writeValue("SelectedCellArrayName", getSelectedCellArrayName() );
   writer->writeValue("AlignmentShiftFileName", getAlignmentShiftFileName());
-  writer->writeValue("MinStep", getMinStep());
-  writer->writeValue("MaxStep", getMaxStep());
-  writer->writeValue("MaxIterations", getMaxIterations());
+  writer->writeValue("OptimizerParameter1", getOptimizerParameter1());
+  writer->writeValue("OptimizerParameter2", getOptimizerParameter2());
+  writer->writeValue("Iterations", getIterations());
   writer->writeValue("WriteShifts", getWriteShifts());
   writer->writeValue("ApplyShifts", getApplyShifts());
   writer->writeValue("Metric", getMetric());
+  writer->writeValue("Optimizer", getOptimizer());
   writer->closeFilterGroup();
   return ++index;
 }
@@ -266,67 +327,117 @@ void ImageRegistration::execute()
   //wrap data as itk image
   ImageProcessing::UInt8ImageType::Pointer inputImage=ITKUtilities::Dream3DtoITK(m, m_RawImageData);
 
-  ///setup registration
-   //  The transform that will map the fixed image into the moving image.
+  //translation transform
   typedef itk::TranslationTransform< double, ImageProcessing::SliceDimension > TransformType;
+  TransformType::Pointer transform = TransformType::New();
 
-  //  An optimizer is required to explore the parameter space of the transform
-  //  in search of optimal values of the metric.
-  typedef itk::RegularStepGradientDescentOptimizer       OptimizerType;
+  //linearly interpolate pixels
+  typedef itk:: LinearInterpolateImageFunction<ImageProcessing::UInt8SliceType, double > InterpolatorType;
+  InterpolatorType::Pointer interpolator = InterpolatorType::New();
 
-  //  The metric will compare how well the two images match each other. Metric
-  //  types are usually parameterized by the image types as it can be seen in
-  //  the following type declaration.
-  typedef itk::MeanSquaresImageToImageMetric<ImageProcessing::UInt8SliceType, ImageProcessing::UInt8SliceType >  MeanSquaresMetricType;
-  typedef itk::NormalizedCorrelationImageToImageMetric<ImageProcessing::UInt8SliceType, ImageProcessing::UInt8SliceType >  NormalizedCorrelationMetricType;
-  typedef itk::MeanReciprocalSquareDifferenceImageToImageMetric<ImageProcessing::UInt8SliceType, ImageProcessing::UInt8SliceType >  PatternIntensityMetricType;
-
- //  Finally, the type of the interpolator is declared. The interpolator will
-  //  evaluate the intensities of the moving image at non-grid positions.
-  typedef itk:: LinearInterpolateImageFunction<
-      ImageProcessing::UInt8SliceType,
-      double          >    InterpolatorType;
-
-  //  The registration method type is instantiated using the types of the
-  //  fixed and moving images. This class is responsible for interconnecting
-  //  all the components that we have described so far.
-  typedef itk::ImageRegistrationMethod<
-      ImageProcessing::UInt8SliceType,
-      ImageProcessing::UInt8SliceType >    RegistrationType;
-
-  // Create components
-  //MetricType::Pointer         metric        = MetricType::New();
-  TransformType::Pointer      transform     = TransformType::New();
-  OptimizerType::Pointer      optimizer     = OptimizerType::New();
-  InterpolatorType::Pointer   interpolator  = InterpolatorType::New();
-  RegistrationType::Pointer   registration  = RegistrationType::New();
-
-  // Each component is now connected to the instance of the registration method.
-  //registration->SetMetric(        metric        );
+  //set image comparison metric
+  itk::ImageToImageMetric<ImageProcessing::UInt8SliceType,ImageProcessing::UInt8SliceType>::Pointer metric;
   switch(m_Metric)
   {
-    case 0:
-      {
-        registration->SetMetric(        MeanSquaresMetricType::New()        );
-      }
-      break;
+    case 0: {
+        metric = itk::MeanSquaresImageToImageMetric<ImageProcessing::UInt8SliceType, ImageProcessing::UInt8SliceType >::New();
+      } break;
 
-    case 1:
-      {
-        registration->SetMetric(        NormalizedCorrelationMetricType::New()        );
-      }
-      break;
+    case 1: {
+        metric = itk::NormalizedCorrelationImageToImageMetric<ImageProcessing::UInt8SliceType, ImageProcessing::UInt8SliceType >::New();
+      } break;
 
-    case 2:
-      {
-        registration->SetMetric(        PatternIntensityMetricType::New()        );
-      }
-      break;
+    case 2: {
+        metric = itk::MeanReciprocalSquareDifferenceImageToImageMetric<ImageProcessing::UInt8SliceType, ImageProcessing::UInt8SliceType >::New();
+      } break;
+
+    case 3: {
+        typedef itk::MattesMutualInformationImageToImageMetric<ImageProcessing::UInt8SliceType, ImageProcessing::UInt8SliceType > MattesMetricType;
+        MattesMetricType::Pointer mattesMetric = MattesMetricType::New();
+        mattesMetric->SetNumberOfHistogramBins( 20 ); // 20-24
+        mattesMetric->SetNumberOfSpatialSamples( 10000 );
+        //mattesMetric->SetUseExplicitPDFDerivatives( false );
+        metric = mattesMetric;
+      } break;
   }
-  registration->SetOptimizer(     optimizer     );
-  registration->SetTransform(     transform     );
-  registration->SetInterpolator(  interpolator  );
 
+  //set up optimization
+  itk::SingleValuedNonLinearOptimizer::Pointer optimizer;
+  switch(m_Metric)
+  {
+    case 0: {
+        itk::GradientDescentOptimizer::Pointer gradientDescentOptimizer = itk::GradientDescentOptimizer::New();
+        gradientDescentOptimizer->SetLearningRate( m_OptimizerParameter1 ); // 0.001-5.0
+        gradientDescentOptimizer->SetNumberOfIterations( m_Iterations ); // 200
+        CommandIterationUpdate::Pointer observer = CommandIterationUpdate::New();
+        gradientDescentOptimizer->AddObserver( itk::IterationEvent(), observer );
+        //if(3==m_Metric)gradientDescentOptimizer->MinimizeOn();
+        optimizer = gradientDescentOptimizer;
+      } break;
+
+    case 1: {
+        itk::RegularStepGradientDescentOptimizer::Pointer regularStepOptimizer = itk::RegularStepGradientDescentOptimizer::New();
+        regularStepOptimizer->SetMinimumStepLength( m_OptimizerParameter1 ); // 0.0001-0.01
+        regularStepOptimizer->SetMaximumStepLength( m_OptimizerParameter2 ); // 0.1-4.0
+        regularStepOptimizer->SetNumberOfIterations( m_Iterations ); // 200-500
+        //if(3==m_Metric)regularStepOptimizer->MinimizeOn();
+        optimizer = regularStepOptimizer;
+      } break;
+
+    case 2: {
+        itk::LBFGSOptimizer::Pointer lbfgsOptimizer = itk::LBFGSOptimizer::New();
+        lbfgsOptimizer->SetGradientConvergenceTolerance( 0.05 ); //0.01-0.05 ?0.1-0.25 (pixels)
+        lbfgsOptimizer->SetLineSearchAccuracy( m_OptimizerParameter1 ); // 0.9
+        lbfgsOptimizer->SetDefaultStepLength( m_OptimizerParameter2 ); // 1.5 (pixels)
+        lbfgsOptimizer->SetMaximumNumberOfFunctionEvaluations( m_Iterations ); // 1000
+        lbfgsOptimizer->TraceOn();
+        //if(3==m_Metric)lbfgsOptimizer->MinimizeOn();
+        optimizer = lbfgsOptimizer;
+      } break;
+
+    case 3: {
+        itk::AmoebaOptimizer::Pointer amoebaOptimizer = itk::AmoebaOptimizer::New();
+        amoebaOptimizer->SetParametersConvergenceTolerance( m_OptimizerParameter1 ); // 0.1-0.25 (pixels)
+        amoebaOptimizer->SetFunctionConvergenceTolerance( m_OptimizerParameter2 ); // 0.001 (0.1%)
+        amoebaOptimizer->SetMaximumNumberOfIterations( m_Iterations ); // 200
+        CommandIterationUpdate::Pointer observer = CommandIterationUpdate::New();
+        amoebaOptimizer->AddObserver( itk::IterationEvent(), observer );
+        metric->ComputeGradientOff();
+        //if(3==m_Metric)amoebaOptimizer->MinimizeOn();
+        optimizer = amoebaOptimizer;
+      } break;
+
+    case 4: {
+        typedef itk::Statistics::NormalVariateGenerator GeneratorType;
+        GeneratorType::Pointer generator = GeneratorType::New();
+        generator->Initialize(12345);///need to replace seed with random number (time)
+
+        itk::OnePlusOneEvolutionaryOptimizer::Pointer evolutionaryOptimizer = itk::OnePlusOneEvolutionaryOptimizer::New();
+        evolutionaryOptimizer->SetNormalVariateGenerator( generator );
+        itk::OnePlusOneEvolutionaryOptimizer::ScalesType optimizerScales ( transform->GetNumberOfParameters() );
+        ImageProcessing::UInt8ImageType::SpacingType spacing = inputImage->GetSpacing();
+        optimizerScales[0] = 1.0 / ( 0.1 * dims[0] * spacing[0] );
+        optimizerScales[1] = 1.0 / ( 0.1 * dims[1] * spacing[1] );
+        optimizer->SetScales( optimizerScales );
+        evolutionaryOptimizer->Initialize( m_OptimizerParameter1 ); // 0.01-0.05
+        evolutionaryOptimizer->SetEpsilon( m_OptimizerParameter2 ); // 0.001
+        evolutionaryOptimizer->SetMaximumIteration( m_Iterations ); // 2000-4000
+        CommandIterationUpdate::Pointer observer = CommandIterationUpdate::New();
+        evolutionaryOptimizer->AddObserver( itk::IterationEvent(), observer );
+        //if(3==m_Metric)evolutionaryOptimizer->MinimizeOn();
+        optimizer = evolutionaryOptimizer;
+      } break;
+  }
+
+  //define and create registration
+  typedef itk::ImageRegistrationMethod<ImageProcessing::UInt8SliceType, ImageProcessing::UInt8SliceType > RegistrationType;
+  RegistrationType::Pointer   registration  = RegistrationType::New();
+  registration->SetTransform( transform );
+  registration->SetInterpolator( interpolator );
+  registration->SetMetric( metric );
+  registration->SetOptimizer( optimizer );
+
+  //loop over slices applying registration
   for(int i=1; i<dims[2]; ++i)
   {
     //update gui
@@ -338,27 +449,17 @@ void ImageRegistration::execute()
     ImageProcessing::UInt8SliceType::Pointer fixedImage = ITKUtilities::ExtractSlice<ImageProcessing::UInt8PixelType>(inputImage, ImageProcessing::ZSlice, i-1);
     ImageProcessing::UInt8SliceType::Pointer movingImage = ITKUtilities::ExtractSlice<ImageProcessing::UInt8PixelType>(inputImage, ImageProcessing::ZSlice, i);
 
-    // Set the registration inputs
+    // Set the registration inputs and range
     registration->SetFixedImage(fixedImage);
     registration->SetMovingImage(movingImage);
-
-    registration->SetFixedImageRegion(
-    fixedImage->GetLargestPossibleRegion() );
+    registration->SetFixedImageRegion( fixedImage->GetLargestPossibleRegion() );
 
     //  Initialize the transform
     typedef RegistrationType::ParametersType ParametersType;
     ParametersType initialParameters( transform->GetNumberOfParameters() );
-
     initialParameters[0] = 0.0;  // Initial offset along X
     initialParameters[1] = 0.0;  // Initial offset along Y
-
     registration->SetInitialTransformParameters( initialParameters );
-
-    optimizer->SetMaximumStepLength( m_MaxStep );
-    optimizer->SetMinimumStepLength( m_MinStep );
-
-    // Set a stopping criterion
-    optimizer->SetNumberOfIterations( m_MaxIterations );
 
     try
     {
@@ -367,28 +468,22 @@ void ImageRegistration::execute()
     catch( itk::ExceptionObject & err )
     {
       ss.str("");
-      ss << "ExceptionObject caught!: "<< err;
+      ss << "ITK Exception: "<< err;
       setErrorCondition(-800);
       notifyErrorMessage(ss.str(), -800);
       return;
     }
 
-    //  The result of the registration process is an array of parameters that
-    //  defines the spatial transformation in an unique way. This final result is
-    //  obtained using the \code{GetLastTransformParameters()} method.
-
+    //get final registration parameters
     ParametersType finalParameters = registration->GetLastTransformParameters();
-
-    //  In the case of the \doxygen{TranslationTransform}, there is a
-    //  straightforward interpretation of the parameters.  Each element of the
-    //  array corresponds to a translation along one spatial dimension.
-
     const double TranslationAlongX = finalParameters[0];
     const double TranslationAlongY = finalParameters[1];
+
+    //write shifts to file
     if(m_WriteShifts) outFile << i << " " << TranslationAlongX << " " << TranslationAlongY << std::endl;
 
-    //  A resampling filter is created and the moving image is connected as  its input.
-     if(m_ApplyShifts)
+    //apply shifts
+    if(m_ApplyShifts)
     {
       typedef itk::ResampleImageFilter<ImageProcessing::UInt8SliceType, ImageProcessing::UInt8SliceType>    ResampleFilterType;
       ResampleFilterType::Pointer resampler = ResampleFilterType::New();

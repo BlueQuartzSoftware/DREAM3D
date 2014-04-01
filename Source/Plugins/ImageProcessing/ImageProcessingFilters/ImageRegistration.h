@@ -37,12 +37,13 @@ class ImageRegistration : public AbstractFilter
     //filter parameters
     DREAM3D_INSTANCE_STRING_PROPERTY(SelectedCellArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(AlignmentShiftFileName)
-    DREAM3D_INSTANCE_PROPERTY(float, MinStep)
-    DREAM3D_INSTANCE_PROPERTY(float, MaxStep)
-    DREAM3D_INSTANCE_PROPERTY(int, MaxIterations)
+    DREAM3D_INSTANCE_PROPERTY(float, OptimizerParameter1)
+    DREAM3D_INSTANCE_PROPERTY(float, OptimizerParameter2)
+    DREAM3D_INSTANCE_PROPERTY(int, Iterations)
     DREAM3D_INSTANCE_PROPERTY(bool, WriteShifts)
     DREAM3D_INSTANCE_PROPERTY(bool, ApplyShifts)
     DREAM3D_INSTANCE_PROPERTY(int, Metric)
+    DREAM3D_INSTANCE_PROPERTY(int, Optimizer)
 
     /**
     * @brief This returns the group that the filter belonds to. You can select
