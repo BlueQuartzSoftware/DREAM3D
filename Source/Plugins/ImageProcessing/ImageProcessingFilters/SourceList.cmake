@@ -17,6 +17,7 @@ set(_PublicFilters
   DiscreteGaussianBlur
   ImageRegistration
   Watershed
+  Threshold
 )
 
 
