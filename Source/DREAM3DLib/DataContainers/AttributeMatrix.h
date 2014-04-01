@@ -257,7 +257,7 @@ class DREAM3DLib_EXPORT AttributeMatrix : public Observable
         return false;
       }
       // Make sure the sizes are equal to what is being asked for
-      if (getNumTuples() * numComp != iDataArray->getSize())
+      if (getNumTuples() != iDataArray->getNumberOfTuples())
       {
         if (NULL != filter)
         {
