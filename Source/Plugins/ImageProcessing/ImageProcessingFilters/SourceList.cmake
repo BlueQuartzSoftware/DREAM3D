@@ -18,6 +18,7 @@ set(_PublicFilters
   Watershed
   Threshold
   SobelEdge
+  HoughCircles
 )
 
 #---------
