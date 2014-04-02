@@ -17,6 +17,7 @@ set(_PublicFilters
   ImageRegistration
   Watershed
   Threshold
+  SobelEdge
 )
 
 #---------
