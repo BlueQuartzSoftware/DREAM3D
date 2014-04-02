@@ -1,5 +1,9 @@
 # DREAM3D Release Notes #
 
+## Citing DREAM3D in Publications ##
+
+Users wishing to cite DREAM3D in their research publications are referred to [http://www.immijournal.com/content/3/1/5/abstract](http://www.immijournal.com/content/3/1/5/abstract) for the proper citations.
+
 ## Important Changes in Version 4.2 ##
 
 ### TSL Reference Frame Changes ###
@@ -60,7 +64,7 @@ For historical compatibility in versions prior to 4.2 the internal representatio
 + Updating issue no. *114*: Adding Experimental "Write Pole Figure" filter which is only allowable for some Laue groups
 + Fixed issue no. *128*: Fixing Bugs in the Alignment filters due to mis-use of C++ inheritance rules.
 + Fixed issue no. *110*: Adding an "Update Favorite" to the DREAM3D contextual menu. This will update the selected favorite with the current pipeline.
-+ Fixed issue no. *109*: Backporting all the Crystal Orientation Operations classes from the development branch to allow more functionality in certain filters
++ Fixed issue no. *109*: Back porting all the Crystal Orientation Operations classes from the development branch to allow more functionality in certain filters
 + Fixed issue no. *129*: Fixing issue with "Import Orientation Data" filter when large EBSD scans were imported the Reference Frame Dialog would resize larger than the screen making use of the dialog impossible. This has been fixed with a QGraphicsView layout and basic zooming capabilities.
 + Fixed issue with the EBSD .ang reader to report an error if the "Phase" header entry is never found which can happen on some TSL "combo" scans.
 + Fixed issue no. *130*: Estimated Time remaining for Synthetic generation was not correct.
