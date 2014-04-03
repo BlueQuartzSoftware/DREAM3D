@@ -84,7 +84,12 @@ class IdentifySample : public AbstractFilter
     virtual const QString getSubGroupName()  { return DREAM3D::FilterSubGroups::CleanupFilters; }
     virtual const QString getHumanLabel() { return "Identify Sample"; }
 
+    /**
+    * @brief This method will instantiate all the end user settable options/parameters
+    * for this filter
+    */
     virtual void setupFilterParameters();
+
     virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
 
     /**

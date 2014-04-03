@@ -162,6 +162,7 @@ void MovingFiniteElementSmoothing::setupFilterParameters()
   parameters.push_back(FilterParameter::New("Constrain Surface Nodes", "ConstrainSurfaceNodes", FilterParameterWidgetType::BooleanWidget,"bool", false));
   parameters.push_back(FilterParameter::New("Constrain Quad Points", "ConstrainQuadPoints", FilterParameterWidgetType::BooleanWidget,"bool", false));
   parameters.push_back(FilterParameter::New("Smooth Triple Lines", "SmoothTripleLines", FilterParameterWidgetType::BooleanWidget,"bool", false));
+  parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "QString", true));
 /*[]*/parameters.push_back(FilterParameter::New("SurfaceMeshNodeType", "SurfaceMeshNodeTypeArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
   setFilterParameters(parameters);
 }

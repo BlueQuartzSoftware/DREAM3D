@@ -79,6 +79,9 @@ class RegularGridSampleSurfaceMesh : public SampleSurfaceMesh
     DREAM3D_FILTER_PARAMETER(FloatVec3_t, Resolution)
     Q_PROPERTY(FloatVec3_t Resolution READ getResolution WRITE setResolution)
 
+    DREAM3D_FILTER_PARAMETER(QString, FeatureIdsArrayName)
+    Q_PROPERTY(QString FeatureIdsArrayName READ getFeatureIdsArrayName WRITE setFeatureIdsArrayName)
+
     virtual const QString getCompiledLibraryName() { return Sampling::SamplingBaseName; }
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::SamplingFilters; }
@@ -127,7 +130,7 @@ class RegularGridSampleSurfaceMesh : public SampleSurfaceMesh
     virtual void assign_points(Int32ArrayType::Pointer iArray);
 
   private:
-    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeatureIds)
+    DEFINE_CREATED_DATAARRAY(int32_t, FeatureIds)
 
     RegularGridSampleSurfaceMesh(const RegularGridSampleSurfaceMesh&); // Copy Constructor Not Implemented
     void operator=(const RegularGridSampleSurfaceMesh&); // Operator '=' Not Implemented

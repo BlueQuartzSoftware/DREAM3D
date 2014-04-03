@@ -92,8 +92,13 @@ void QuickSurfaceMesh::setupFilterParameters()
     parameter->setValueType("bool");
     parameters.push_back(parameter);
   }
+  parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "QString", true));
 /*[]*/parameters.push_back(FilterParameter::New("FeatureIds", "FeatureIdsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
 /*[]*/parameters.push_back(FilterParameter::New("CellPhases", "CellPhasesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
+  parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "QString", true));
+/*##*/parameters.push_back(FilterParameter::New("FaceLabels", "FaceLabelsArrayName", FilterParameterWidgetType::StringWidget, "QString", true, ""));
+/*##*/parameters.push_back(FilterParameter::New("NodeTypes", "NodeTypesArrayName", FilterParameterWidgetType::StringWidget, "QString", true, ""));
+/*##*/parameters.push_back(FilterParameter::New("FacePhases", "FacePhasesArrayName", FilterParameterWidgetType::StringWidget, "QString", true, ""));
   setFilterParameters(parameters);
 }
 
@@ -103,6 +108,9 @@ void QuickSurfaceMesh::setupFilterParameters()
 void QuickSurfaceMesh::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
+/*[]*/setFacePhasesArrayName(reader->readString("FacePhasesArrayName", getFacePhasesArrayName() ) );
+/*[]*/setNodeTypesArrayName(reader->readString("NodeTypesArrayName", getNodeTypesArrayName() ) );
+/*[]*/setFaceLabelsArrayName(reader->readString("FaceLabelsArrayName", getFaceLabelsArrayName() ) );
   setCellPhasesArrayPath(reader->readDataArrayPath("CellPhasesArrayPath", getCellPhasesArrayPath() ) );
   setFeatureIdsArrayPath(reader->readDataArrayPath("FeatureIdsArrayPath", getFeatureIdsArrayPath() ) );
   setTransferPhaseId(reader->readValue("TransferPhaseId", getTransferPhaseId()));
@@ -115,6 +123,9 @@ void QuickSurfaceMesh::readFilterParameters(AbstractFilterParametersReader* read
 int QuickSurfaceMesh::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
+/*[]*/writer->writeValue("FacePhasesArrayName", getFacePhasesArrayName() );
+/*[]*/writer->writeValue("NodeTypesArrayName", getNodeTypesArrayName() );
+/*[]*/writer->writeValue("FaceLabelsArrayName", getFaceLabelsArrayName() );
   writer->writeValue("CellPhasesArrayPath", getCellPhasesArrayPath() );
   writer->writeValue("FeatureIdsArrayPath", getFeatureIdsArrayPath() );
   writer->writeValue("TransferPhaseId", getTransferPhaseId() );
@@ -154,6 +165,7 @@ void QuickSurfaceMesh::updateFaceInstancePointers()
 // -----------------------------------------------------------------------------
 void QuickSurfaceMesh::dataCheck()
 {
+  DataArrayPath tempPath;
   setErrorCondition(0);
 
   VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName(), false);
@@ -162,14 +174,12 @@ void QuickSurfaceMesh::dataCheck()
   if(getErrorCondition() < 0 || NULL == cellAttrMat.get() ) { return; }
 
   QVector<size_t> dims(1, 1);
-////====>REMOVE THIS    m_FeatureIdsPtr = cellAttrMat->getPrereqArray<DataArray<int32_t>, AbstractFilter>(this, m_FeatureIdsArrayName, -300, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   m_FeatureIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeatureIdsArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   if(m_TransferPhaseId == true)
   {
-////====>REMOVE THIS      m_CellPhasesPtr = cellAttrMat->getPrereqArray<DataArray<int32_t>, AbstractFilter>(this, m_CellPhasesArrayName, -301, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   m_CellPhasesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getCellPhasesArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
     if( NULL != m_CellPhasesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
     { m_CellPhases = m_CellPhasesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
@@ -190,10 +200,14 @@ void QuickSurfaceMesh::dataCheck()
   sm->setFaces(triangles);
   dims[0] = 2;
   m_FaceLabelsPtr = faceAttrMat->createNonPrereqArray<DataArray<int32_t>, AbstractFilter>(this, m_FaceLabelsArrayName, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+////==>MIKE_GROEBER_FIX tempPath.update(DATACONTAINER_NAME, ATTRIBUTEMATRIX_NAME, getFaceLabelsArrayName() );
+////==>MIKE_GROEBER_FIX m_FaceLabelsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, m_FaceLabelsArrayName, 0, dims); /* Assigns the shared_ptr<>(this, tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_FaceLabelsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_FaceLabels = m_FaceLabelsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   dims[0] = 1;
   m_NodeTypesPtr = vertexAttrMat->createNonPrereqArray<DataArray<int8_t>, AbstractFilter>(this, m_NodeTypesArrayName, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+////==>MIKE_GROEBER_FIX tempPath.update(DATACONTAINER_NAME, ATTRIBUTEMATRIX_NAME, getNodeTypesArrayName() );
+////==>MIKE_GROEBER_FIX m_NodeTypesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int8_t>, AbstractFilter, m_NodeTypesArrayName, 0, dims); /* Assigns the shared_ptr<>(this, tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_NodeTypesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_NodeTypes = m_NodeTypesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
@@ -201,6 +215,8 @@ void QuickSurfaceMesh::dataCheck()
   {
     dims[0] = 2;
     m_FacePhasesPtr = faceAttrMat->createNonPrereqArray<DataArray<int32_t>, AbstractFilter>(this, m_FacePhasesArrayName, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+////==>MIKE_GROEBER_FIX tempPath.update(DATACONTAINER_NAME, ATTRIBUTEMATRIX_NAME, getFacePhasesArrayName() );
+////==>MIKE_GROEBER_FIX m_FacePhasesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, m_FacePhasesArrayName, 0, dims); /* Assigns the shared_ptr<>(this, tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
     if( NULL != m_FacePhasesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
     { m_FacePhases = m_FacePhasesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   }
@@ -1022,6 +1038,9 @@ AbstractFilter::Pointer QuickSurfaceMesh::newFilterInstance(bool copyFilterParam
   QuickSurfaceMesh::Pointer filter = QuickSurfaceMesh::New();
   if(true == copyFilterParameters)
   {
+    filter->setFacePhasesArrayName(getFacePhasesArrayName());
+    filter->setNodeTypesArrayName(getNodeTypesArrayName());
+    filter->setFaceLabelsArrayName(getFaceLabelsArrayName());
     filter->setCellPhasesArrayPath(getCellPhasesArrayPath());
     filter->setFeatureIdsArrayPath(getFeatureIdsArrayPath());
   }

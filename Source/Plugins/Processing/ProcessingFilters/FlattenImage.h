@@ -69,6 +69,9 @@ class FlattenImage : public AbstractFilter
     DREAM3D_FILTER_PARAMETER(DataArrayPath, ImageDataArrayPath)
     Q_PROPERTY(DataArrayPath ImageDataArrayPath READ getImageDataArrayPath WRITE setImageDataArrayPath)
 
+    DREAM3D_FILTER_PARAMETER(QString, FlatImageDataArrayName)
+    Q_PROPERTY(QString FlatImageDataArrayName READ getFlatImageDataArrayName WRITE setFlatImageDataArrayName)
+
     virtual const QString getCompiledLibraryName() { return Processing::ProcessingBaseName; }
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName()  { return DREAM3D::FilterGroups::ProcessingFilters; }
@@ -106,7 +109,7 @@ signals:
 
   private:
     DEFINE_PTR_WEAKPTR_DATAARRAY(unsigned char, ImageData)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(unsigned char, FlatImageData)
+    DEFINE_CREATED_DATAARRAY(unsigned char, FlatImageData)
 
     FlattenImage(const FlattenImage&); // Copy Constructor Not Implemented
     void operator=(const FlattenImage&); // Operator '=' Not Implemented

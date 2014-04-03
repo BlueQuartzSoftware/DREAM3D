@@ -64,9 +64,22 @@ FindSurfaceCells::~FindSurfaceCells()
 {
 }
 // -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void FindSurfaceCells::setupFilterParameters()
+{
+  FilterParameterVector parameters;
+  parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "QString", true));
+/*[]*/parameters.push_back(FilterParameter::New("FeatureIds", "FeatureIdsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
+  parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "QString", true));
+/*##*/parameters.push_back(FilterParameter::New("SurfaceVoxels", "SurfaceVoxelsArrayName", FilterParameterWidgetType::StringWidget, "QString", true, ""));
+  setFilterParameters(parameters);
+}
+// -----------------------------------------------------------------------------
 void FindSurfaceCells::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
+/*[]*/setSurfaceVoxelsArrayName(reader->readString("SurfaceVoxelsArrayName", getSurfaceVoxelsArrayName() ) );
   setFeatureIdsArrayPath(reader->readDataArrayPath("FeatureIdsArrayPath", getFeatureIdsArrayPath() ) );
   reader->closeFilterGroup();
 }
@@ -77,6 +90,7 @@ void FindSurfaceCells::readFilterParameters(AbstractFilterParametersReader* read
 int FindSurfaceCells::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
+/*[]*/writer->writeValue("SurfaceVoxelsArrayName", getSurfaceVoxelsArrayName() );
   writer->writeValue("FeatureIdsArrayPath", getFeatureIdsArrayPath() );
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
@@ -87,6 +101,7 @@ int FindSurfaceCells::writeFilterParameters(AbstractFilterParametersWriter* writ
 // -----------------------------------------------------------------------------
 void FindSurfaceCells::dataCheck()
 {
+  DataArrayPath tempPath;
   setErrorCondition(0);
 
   VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName(), false);
@@ -95,11 +110,12 @@ void FindSurfaceCells::dataCheck()
   if(getErrorCondition() < 0 || NULL == cellAttrMat.get() ) { return; }
 
   QVector<size_t> dims(1, 1);
-////====>REMOVE THIS    m_FeatureIdsPtr = cellAttrMat->getPrereqArray<DataArray<int32_t>, AbstractFilter>(this, m_FeatureIdsArrayName, -300, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   m_FeatureIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeatureIdsArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   m_SurfaceVoxelsPtr = cellAttrMat->createNonPrereqArray<DataArray<int8_t>, AbstractFilter, int8_t>(this, m_SurfaceVoxelsArrayName, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+////==>MIKE_GROEBER_FIX tempPath.update(DATACONTAINER_NAME, ATTRIBUTEMATRIX_NAME, getSurfaceVoxelsArrayName() );
+////==>MIKE_GROEBER_FIX m_SurfaceVoxelsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int8_t>, AbstractFilter, int8_t>(this, tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_SurfaceVoxelsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_SurfaceVoxels = m_SurfaceVoxelsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
@@ -194,6 +210,7 @@ AbstractFilter::Pointer FindSurfaceCells::newFilterInstance(bool copyFilterParam
   FindSurfaceCells::Pointer filter = FindSurfaceCells::New();
   if(true == copyFilterParameters)
   {
+    filter->setSurfaceVoxelsArrayName(getSurfaceVoxelsArrayName());
     filter->setFeatureIdsArrayPath(getFeatureIdsArrayPath());
   }
   return filter;

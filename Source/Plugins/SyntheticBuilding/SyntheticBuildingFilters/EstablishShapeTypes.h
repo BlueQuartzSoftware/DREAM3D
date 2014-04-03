@@ -75,6 +75,9 @@ class EstablishShapeTypes : public AbstractFilter
     int getPhaseCount();
     Q_PROPERTY(int PhaseCount READ getPhaseCount)
 
+    DREAM3D_FILTER_PARAMETER(QString, tShapeTypesArrayName)
+    Q_PROPERTY(QString tShapeTypesArrayName READ gettShapeTypesArrayName WRITE settShapeTypesArrayName)
+
     virtual const QString getCompiledLibraryName() { return SyntheticBuilding::SyntheticBuildingBaseName; }
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName() {return DREAM3D::FilterGroups::SyntheticBuildingFilters;}

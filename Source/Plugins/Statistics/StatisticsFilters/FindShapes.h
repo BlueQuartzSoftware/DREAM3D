@@ -78,18 +78,33 @@ class FindShapes : public AbstractFilter
     DREAM3D_FILTER_PARAMETER(DataArrayPath, CentroidsArrayPath)
     Q_PROPERTY(DataArrayPath CentroidsArrayPath READ getCentroidsArrayPath WRITE setCentroidsArrayPath)
 
+    DREAM3D_FILTER_PARAMETER(QString, Omega3sArrayName)
+    Q_PROPERTY(QString Omega3sArrayName READ getOmega3sArrayName WRITE setOmega3sArrayName)
+
+    DREAM3D_FILTER_PARAMETER(QString, VolumesArrayName)
+    Q_PROPERTY(QString VolumesArrayName READ getVolumesArrayName WRITE setVolumesArrayName)
+
+    DREAM3D_FILTER_PARAMETER(QString, AxisLengthsArrayName)
+    Q_PROPERTY(QString AxisLengthsArrayName READ getAxisLengthsArrayName WRITE setAxisLengthsArrayName)
+
+    DREAM3D_FILTER_PARAMETER(QString, AxisEulerAnglesArrayName)
+    Q_PROPERTY(QString AxisEulerAnglesArrayName READ getAxisEulerAnglesArrayName WRITE setAxisEulerAnglesArrayName)
+
+    DREAM3D_FILTER_PARAMETER(QString, AspectRatiosArrayName)
+    Q_PROPERTY(QString AspectRatiosArrayName READ getAspectRatiosArrayName WRITE setAspectRatiosArrayName)
+
     virtual const QString getCompiledLibraryName() { return Statistics::StatisticsBaseName; }
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::MorphologicalFilters; }
     virtual const QString getHumanLabel() { return "Find Feature Shapes"; }
 
-
     /**
-     * @brief Reimplemented from @see AbstractFilter class
-     */
-
+    * @brief This method will instantiate all the end user settable options/parameters
+    * for this filter
+    */
     virtual void setupFilterParameters();
+
     /**
     * @brief This method will write the options to a file
     * @param writer The writer that is used to write the options to a file
@@ -106,7 +121,7 @@ class FindShapes : public AbstractFilter
     virtual void preflight();
 
 
-signals:
+  signals:
     void updateFilterParameters(AbstractFilter* filter);
     void parametersChanged();
     void preflightAboutToExecute();
@@ -127,12 +142,12 @@ signals:
 
   private:
     DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeatureIds)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(float, AxisEulerAngles)
+    DEFINE_CREATED_DATAARRAY(float, AxisEulerAngles)
     DEFINE_PTR_WEAKPTR_DATAARRAY(float, Centroids)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(float, AxisLengths)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(float, Omega3s)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(float, Volumes)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(float, AspectRatios)
+    DEFINE_CREATED_DATAARRAY(float, AxisLengths)
+    DEFINE_CREATED_DATAARRAY(float, Omega3s)
+    DEFINE_CREATED_DATAARRAY(float, Volumes)
+    DEFINE_CREATED_DATAARRAY(float, AspectRatios)
 
     void dataCheck();
 

@@ -118,6 +118,7 @@ void ConvertEulerAngles::setupFilterParameters()
     parameter->setChoices(choices);
     parameters.push_back(parameter);
   }
+  parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "QString", true));
 /*[]*/parameters.push_back(FilterParameter::New("CellEulerAngles", "CellEulerAnglesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
   setFilterParameters(parameters);
 }

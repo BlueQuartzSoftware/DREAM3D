@@ -78,6 +78,9 @@ class FindOrientationFieldCurl : public AbstractFilter
     DREAM3D_FILTER_PARAMETER(DataArrayPath, QuatsArrayPath)
     Q_PROPERTY(DataArrayPath QuatsArrayPath READ getQuatsArrayPath WRITE setQuatsArrayPath)
 
+    DREAM3D_FILTER_PARAMETER(QString, DislocationTensorsArrayName)
+    Q_PROPERTY(QString DislocationTensorsArrayName READ getDislocationTensorsArrayName WRITE setDislocationTensorsArrayName)
+
     virtual const QString getCompiledLibraryName() { return Statistics::StatisticsBaseName; }
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
@@ -120,7 +123,7 @@ class FindOrientationFieldCurl : public AbstractFilter
     QVector<OrientationOps::Pointer> m_OrientationOps;
 
     DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, CellPhases)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(float, DislocationTensors)
+    DEFINE_CREATED_DATAARRAY(float, DislocationTensors)
     DEFINE_PTR_WEAKPTR_DATAARRAY(float, Quats)
 
     DEFINE_PTR_WEAKPTR_DATAARRAY(unsigned int, CrystalStructures)

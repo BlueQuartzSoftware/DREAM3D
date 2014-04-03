@@ -97,6 +97,8 @@ void ImportImagesAsVector::setupFilterParameters()
 
 
 
+  parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "QString", true));
+/*##*/parameters.push_back(FilterParameter::New("VectorData", "VectorDataArrayName", FilterParameterWidgetType::StringWidget, "QString", true, ""));
   setFilterParameters(parameters);
 }
 
@@ -106,6 +108,7 @@ void ImportImagesAsVector::setupFilterParameters()
 void ImportImagesAsVector::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
+/*[]*/setVectorDataArrayName(reader->readString("VectorDataArrayName", getVectorDataArrayName() ) );
   setVectorDataArrayName( reader->readString("VectorDataArrayName", getVectorDataArrayName()) );
   setStartIndex( reader->readValue("StartIndex", getStartIndex()) );
   setEndIndex( reader->readValue("EndIndex", getEndIndex()) );
@@ -125,6 +128,7 @@ void ImportImagesAsVector::readFilterParameters(AbstractFilterParametersReader* 
 int ImportImagesAsVector::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
+/*[]*/writer->writeValue("VectorDataArrayName", getVectorDataArrayName() );
   writer->writeValue("VectorDataArrayName", getVectorDataArrayName() );
   writer->writeValue("StartIndex", getStartIndex() );
   writer->writeValue("EndIndex", getEndIndex() );
@@ -144,6 +148,7 @@ int ImportImagesAsVector::writeFilterParameters(AbstractFilterParametersWriter* 
 // -----------------------------------------------------------------------------
 void ImportImagesAsVector::dataCheck()
 {
+  DataArrayPath tempPath;
   setErrorCondition(0);
   QString ss;
 
@@ -229,6 +234,8 @@ void ImportImagesAsVector::dataCheck()
     QVector<size_t> arraydims(1, fileList.size());
     // This would be for a gray scale image
     m_VectorDataPtr = cellAttrMat->createNonPrereqArray<DataArray<uint8_t>, AbstractFilter, uint8_t>(this, m_VectorDataArrayName, 0, arraydims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+////==>MIKE_GROEBER_FIX tempPath.update(DATACONTAINER_NAME, ATTRIBUTEMATRIX_NAME, getVectorDataArrayName() );
+////==>MIKE_GROEBER_FIX m_VectorDataPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<uint8_t>, AbstractFilter, uint8_t>(this, tempPath, 0, arraydims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
     if( NULL != m_VectorDataPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
     { m_VectorData = m_VectorDataPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   }
@@ -262,6 +269,8 @@ void ImportImagesAsVector::dataCheck()
     QVector<size_t> arraydims(1, fileList.size());
     // This would be for a gray scale image
     m_VectorDataPtr = cellAttrMat->createNonPrereqArray<DataArray<uint8_t>, AbstractFilter, uint8_t>(this, m_VectorDataArrayName, 0, arraydims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+////==>MIKE_GROEBER_FIX tempPath.update(DATACONTAINER_NAME, ATTRIBUTEMATRIX_NAME, getVectorDataArrayName() );
+////==>MIKE_GROEBER_FIX m_VectorDataPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<uint8_t>, AbstractFilter, uint8_t>(this, tempPath, 0, arraydims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
     if( NULL != m_VectorDataPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
     { m_VectorData = m_VectorDataPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   }
@@ -396,6 +405,7 @@ AbstractFilter::Pointer ImportImagesAsVector::newFilterInstance(bool copyFilterP
   ImportImagesAsVector::Pointer filter = ImportImagesAsVector::New();
   if(true == copyFilterParameters)
   {
+    filter->setVectorDataArrayName(getVectorDataArrayName());
     filter->setStartIndex( getStartIndex() );
     filter->setEndIndex( getEndIndex() );
     filter->setResolution( getResolution() );

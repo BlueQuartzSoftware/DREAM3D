@@ -98,6 +98,9 @@ class FindTwinBoundarySchmidFactors : public AbstractFilter
     DREAM3D_FILTER_PARAMETER(DataArrayPath, SurfaceMeshTwinBoundaryArrayPath)
     Q_PROPERTY(DataArrayPath SurfaceMeshTwinBoundaryArrayPath READ getSurfaceMeshTwinBoundaryArrayPath WRITE setSurfaceMeshTwinBoundaryArrayPath)
 
+    DREAM3D_FILTER_PARAMETER(QString, SurfaceMeshTwinBoundarySchmidFactorsArrayName)
+    Q_PROPERTY(QString SurfaceMeshTwinBoundarySchmidFactorsArrayName READ getSurfaceMeshTwinBoundarySchmidFactorsArrayName WRITE setSurfaceMeshTwinBoundarySchmidFactorsArrayName)
+
     virtual const QString getCompiledLibraryName() { return Statistics::StatisticsBaseName; }
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
@@ -144,7 +147,7 @@ class FindTwinBoundarySchmidFactors : public AbstractFilter
     DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, SurfaceMeshFaceLabels)
     DEFINE_PTR_WEAKPTR_DATAARRAY(double, SurfaceMeshFaceNormals)
     DEFINE_PTR_WEAKPTR_DATAARRAY(bool, SurfaceMeshTwinBoundary)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(float, SurfaceMeshTwinBoundarySchmidFactors)
+    DEFINE_CREATED_DATAARRAY(float, SurfaceMeshTwinBoundarySchmidFactors)
 
     void dataCheckVoxel();
     void dataCheckSurfaceMesh();

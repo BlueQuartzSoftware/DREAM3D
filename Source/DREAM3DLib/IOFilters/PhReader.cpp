@@ -91,6 +91,8 @@ void PhReader::setupFilterParameters()
   parameters.push_back(FilterParameter::New("Input File", "InputFile", FilterParameterWidgetType::InputFileWidget,"QString", false, "", "*.ph", "CMU Grain Growth"));
   parameters.push_back(FilterParameter::New("Origin", "Origin", FilterParameterWidgetType::FloatVec3Widget,"FloatVec3_t", false, "XYZ"));
   parameters.push_back(FilterParameter::New("Resolution", "Resolution", FilterParameterWidgetType::FloatVec3Widget,"FloatVec3_t", false, "XYZ"));
+  parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "QString", true));
+/*##*/parameters.push_back(FilterParameter::New("FeatureIds", "FeatureIdsArrayName", FilterParameterWidgetType::StringWidget, "QString", true, ""));
   setFilterParameters(parameters);
 }
 
@@ -100,6 +102,7 @@ void PhReader::setupFilterParameters()
 void PhReader::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
+/*[]*/setFeatureIdsArrayName(reader->readString("FeatureIdsArrayName", getFeatureIdsArrayName() ) );
   setInputFile( reader->readString( "InputFile", getInputFile() ) );
   setOrigin( reader->readFloatVec3("Origin", getOrigin() ) );
   setResolution( reader->readFloatVec3("Resolution", getResolution() ) );
@@ -112,6 +115,7 @@ void PhReader::readFilterParameters(AbstractFilterParametersReader* reader, int 
 int PhReader::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
+/*[]*/writer->writeValue("FeatureIdsArrayName", getFeatureIdsArrayName() );
   writer->writeValue("InputFile", getInputFile() );
   writer->writeValue("Origin", getOrigin() );
   writer->writeValue("Resolution", getResolution() );
@@ -124,6 +128,7 @@ int PhReader::writeFilterParameters(AbstractFilterParametersWriter* writer, int 
 // -----------------------------------------------------------------------------
 void PhReader::dataCheck()
 {
+  DataArrayPath tempPath;
   setErrorCondition(0);
   VolumeDataContainer* m = getDataContainerArray()->createNonPrereqDataContainer<VolumeDataContainer, PhReader>(this, getDataContainerName());
   if(getErrorCondition() < 0) { return; }
@@ -147,6 +152,8 @@ void PhReader::dataCheck()
 
   QVector<size_t> dims(1, 1);
   m_FeatureIdsPtr = attrMat->createNonPrereqArray<DataArray<int32_t>, AbstractFilter, int32_t>(this,  m_FeatureIdsArrayName, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+////==>MIKE_GROEBER_FIX tempPath.update(DATACONTAINER_NAME, ATTRIBUTEMATRIX_NAME, getFeatureIdsArrayName() );
+////==>MIKE_GROEBER_FIX m_FeatureIdsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(this,  tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
@@ -287,14 +294,10 @@ int  PhReader::readFile()
 // -----------------------------------------------------------------------------
 AbstractFilter::Pointer PhReader::newFilterInstance(bool copyFilterParameters)
 {
-  /*
-  * InputFile
-  * Origin
-  * Resolution
-  */
   PhReader::Pointer filter = PhReader::New();
   if(true == copyFilterParameters)
   {
+    filter->setFeatureIdsArrayName(getFeatureIdsArrayName());
     filter->setInputFile( getInputFile() );
     filter->setOrigin( getOrigin() );
     filter->setResolution( getResolution() );

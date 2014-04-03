@@ -97,6 +97,15 @@ class FindLocalAverageCAxisMisalignments : public AbstractFilter
     DREAM3D_FILTER_PARAMETER(DataArrayPath, CrystalStructuresArrayPath)
     Q_PROPERTY(DataArrayPath CrystalStructuresArrayPath READ getCrystalStructuresArrayPath WRITE setCrystalStructuresArrayPath)
 
+    DREAM3D_FILTER_PARAMETER(QString, UnbiasedLocalCAxisMisalignmentsArrayName)
+    Q_PROPERTY(QString UnbiasedLocalCAxisMisalignmentsArrayName READ getUnbiasedLocalCAxisMisalignmentsArrayName WRITE setUnbiasedLocalCAxisMisalignmentsArrayName)
+
+    DREAM3D_FILTER_PARAMETER(QString, LocalCAxisMisalignmentsArrayName)
+    Q_PROPERTY(QString LocalCAxisMisalignmentsArrayName READ getLocalCAxisMisalignmentsArrayName WRITE setLocalCAxisMisalignmentsArrayName)
+
+    DREAM3D_FILTER_PARAMETER(QString, NumFeaturesPerParentArrayName)
+    Q_PROPERTY(QString NumFeaturesPerParentArrayName READ getNumFeaturesPerParentArrayName WRITE setNumFeaturesPerParentArrayName)
+
     virtual const QString getCompiledLibraryName() { return Statistics::StatisticsBaseName; }
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
@@ -145,10 +154,10 @@ class FindLocalAverageCAxisMisalignments : public AbstractFilter
     DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeatureIds)
     DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, CellParentIds)
     DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeatureParentIds)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, NumFeaturesPerParent)
+    DEFINE_CREATED_DATAARRAY(int32_t, NumFeaturesPerParent)
     DEFINE_PTR_WEAKPTR_DATAARRAY(float, AvgCAxisMisalignments)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(float, LocalCAxisMisalignments)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(float, UnbiasedLocalCAxisMisalignments)
+    DEFINE_CREATED_DATAARRAY(float, LocalCAxisMisalignments)
+    DEFINE_CREATED_DATAARRAY(float, UnbiasedLocalCAxisMisalignments)
     DEFINE_PTR_WEAKPTR_DATAARRAY(unsigned int, CrystalStructures)
 
     Int32NeighborListType::Pointer m_NeighborList;

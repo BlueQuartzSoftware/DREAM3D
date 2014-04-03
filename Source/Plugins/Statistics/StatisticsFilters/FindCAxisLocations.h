@@ -74,11 +74,20 @@ class FindCAxisLocations : public AbstractFilter
     DREAM3D_FILTER_PARAMETER(DataArrayPath, QuatsArrayPath)
     Q_PROPERTY(DataArrayPath QuatsArrayPath READ getQuatsArrayPath WRITE setQuatsArrayPath)
 
+    DREAM3D_FILTER_PARAMETER(QString, CAxisLocationsArrayName)
+    Q_PROPERTY(QString CAxisLocationsArrayName READ getCAxisLocationsArrayName WRITE setCAxisLocationsArrayName)
+
     virtual const QString getCompiledLibraryName() { return Statistics::StatisticsBaseName; }
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::CrystallographicFilters; }
     virtual const QString getHumanLabel() { return "Find C-Axis Locations"; }
+
+    /**
+    * @brief This method will instantiate all the end user settable options/parameters
+    * for this filter
+    */
+    virtual void setupFilterParameters();
 
     virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
 
@@ -110,7 +119,7 @@ signals:
     OrthoRhombicOps::Pointer m_OrthoOps;
 
     DEFINE_PTR_WEAKPTR_DATAARRAY(float, Quats)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(float, CAxisLocations)
+    DEFINE_CREATED_DATAARRAY(float, CAxisLocations)
 
     void dataCheck();
 

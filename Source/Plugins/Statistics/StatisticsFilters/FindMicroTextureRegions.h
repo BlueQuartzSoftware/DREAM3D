@@ -72,6 +72,12 @@ class FindMicroTextureRegions : public AbstractFilter
     DREAM3D_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
     Q_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
 
+    DREAM3D_FILTER_PARAMETER(QString, MicroTextureRegionNumCellsArrayName)
+    Q_PROPERTY(QString MicroTextureRegionNumCellsArrayName READ getMicroTextureRegionNumCellsArrayName WRITE setMicroTextureRegionNumCellsArrayName)
+
+    DREAM3D_FILTER_PARAMETER(QString, MicroTextureRegionFractionOccupiedArrayName)
+    Q_PROPERTY(QString MicroTextureRegionFractionOccupiedArrayName READ getMicroTextureRegionFractionOccupiedArrayName WRITE setMicroTextureRegionFractionOccupiedArrayName)
+
     virtual const QString getCompiledLibraryName() { return Statistics::StatisticsBaseName; }
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
@@ -79,10 +85,15 @@ class FindMicroTextureRegions : public AbstractFilter
     virtual const QString getHumanLabel() { return "Find MicroTexture Regions"; }
 
     /**
+    * @brief This method will instantiate all the end user settable options/parameters
+    * for this filter
+    */
+    virtual void setupFilterParameters();
+
+    /**
      * @brief Reimplemented from @see AbstractFilter class
      */
 
-    virtual void setupFilterParameters();
     virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
 
     /**
@@ -105,8 +116,8 @@ signals:
     void find_microtextureregions();
 
   private:
-    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, MicroTextureRegionNumCells)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(float, MicroTextureRegionFractionOccupied)
+    DEFINE_CREATED_DATAARRAY(int32_t, MicroTextureRegionNumCells)
+    DEFINE_CREATED_DATAARRAY(float, MicroTextureRegionFractionOccupied)
     DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeatureIds)
 
     void dataCheck();

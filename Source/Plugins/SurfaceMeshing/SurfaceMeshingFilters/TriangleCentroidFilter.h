@@ -73,6 +73,9 @@ class TriangleCentroidFilter : public SurfaceMeshFilter
     * a different group if you want. The string returned here will be displayed
     * in the GUI for the filter
     */
+    DREAM3D_FILTER_PARAMETER(QString, SurfaceMeshTriangleCentroidsArrayName)
+    Q_PROPERTY(QString SurfaceMeshTriangleCentroidsArrayName READ getSurfaceMeshTriangleCentroidsArrayName WRITE setSurfaceMeshTriangleCentroidsArrayName)
+
     virtual const QString getCompiledLibraryName() { return SurfaceMeshing::SurfaceMeshingBaseName; }
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::SurfaceMeshingFilters; }
@@ -133,7 +136,7 @@ signals:
     void dataCheck();
 
   private:
-    DEFINE_PTR_WEAKPTR_DATAARRAY(double, SurfaceMeshTriangleCentroids)
+    DEFINE_CREATED_DATAARRAY(double, SurfaceMeshTriangleCentroids)
 
     TriangleCentroidFilter(const TriangleCentroidFilter&); // Copy Constructor Not Implemented
     void operator=(const TriangleCentroidFilter&); // Operator '=' Not Implemented

@@ -55,7 +55,7 @@ FindAvgScalarValueForFeatures::FindAvgScalarValueForFeatures() :
   m_NewFeatureArrayArrayName(""),
   m_NewFeatureArray(NULL),
   m_SelectedCellArrayPath("", "", ""),
-/*[]*/m_FeatureIdsArrayPath(DREAM3D::Defaults::SomePath)
+  /*[]*/m_FeatureIdsArrayPath(DREAM3D::Defaults::SomePath)
 {
 
   setupFilterParameters();
@@ -75,7 +75,10 @@ void FindAvgScalarValueForFeatures::setupFilterParameters()
 {
   FilterParameterVector parameters;
   parameters.push_back(FilterParameter::New("Cell Array To Average", "SelectedCellArrayPath", FilterParameterWidgetType::DataArraySelectionWidget,"DataArrayPath", false));
+  parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "QString", true));
 /*[]*/parameters.push_back(FilterParameter::New("FeatureIds", "FeatureIdsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
+  parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "QString", true));
+/*##*/parameters.push_back(FilterParameter::New("NewFeatureArray", "NewFeatureArrayArrayName", FilterParameterWidgetType::StringWidget, "QString", true, ""));
   setFilterParameters(parameters);
 }
 
@@ -85,6 +88,7 @@ void FindAvgScalarValueForFeatures::setupFilterParameters()
 void FindAvgScalarValueForFeatures::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
+/*[]*/setNewFeatureArrayArrayName(reader->readString("NewFeatureArrayArrayName", getNewFeatureArrayArrayName() ) );
   setFeatureIdsArrayPath(reader->readDataArrayPath("FeatureIdsArrayPath", getFeatureIdsArrayPath() ) );
   setSelectedCellArrayPath( reader->readDataArrayPath( "SelectedCellArrayPath", getSelectedCellArrayPath() ) );
   reader->closeFilterGroup();
@@ -96,6 +100,7 @@ void FindAvgScalarValueForFeatures::readFilterParameters(AbstractFilterParameter
 int FindAvgScalarValueForFeatures::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
+/*[]*/writer->writeValue("NewFeatureArrayArrayName", getNewFeatureArrayArrayName() );
   writer->writeValue("FeatureIdsArrayPath", getFeatureIdsArrayPath() );
   writer->writeValue("SelectedCellArrayPath", getSelectedCellArrayPath() );
   writer->closeFilterGroup();
@@ -107,6 +112,7 @@ int FindAvgScalarValueForFeatures::writeFilterParameters(AbstractFilterParameter
 // -----------------------------------------------------------------------------
 void FindAvgScalarValueForFeatures::dataCheck()
 {
+  DataArrayPath tempPath;
   setErrorCondition(0);
 
   QString cellAttrMatName = getSelectedCellArrayPath().getAttributeMatrixName();
@@ -119,7 +125,6 @@ void FindAvgScalarValueForFeatures::dataCheck()
   if(getErrorCondition() < 0) { return; }
 
   QVector<size_t> dims(1, 1);
-////====>REMOVE THIS    m_FeatureIdsPtr = cellAttrMat->getPrereqArray<DataArray<int32_t>, AbstractFilter>(this, m_FeatureIdsArrayName, -301, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   m_FeatureIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeatureIdsArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
@@ -134,6 +139,8 @@ void FindAvgScalarValueForFeatures::dataCheck()
   QString m_NewFeatureArrayArrayName = QString("Average") + m_SelectedCellArrayPath.getDataArrayName();
   dims[0] = 1;
   m_NewFeatureArrayPtr = cellFeatureAttrMat->createNonPrereqArray<DataArray<float>, AbstractFilter, float>(this, m_NewFeatureArrayArrayName, 0.0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+////==>MIKE_GROEBER_FIX tempPath.update(DATACONTAINER_NAME, ATTRIBUTEMATRIX_NAME, getNewFeatureArrayArrayName() );
+////==>MIKE_GROEBER_FIX m_NewFeatureArrayPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0.0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_NewFeatureArrayPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_NewFeatureArray = m_NewFeatureArrayPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
@@ -264,6 +271,7 @@ AbstractFilter::Pointer FindAvgScalarValueForFeatures::newFilterInstance(bool co
   FindAvgScalarValueForFeatures::Pointer filter = FindAvgScalarValueForFeatures::New();
   if(true == copyFilterParameters)
   {
+    filter->setNewFeatureArrayArrayName(getNewFeatureArrayArrayName());
     filter->setFeatureIdsArrayPath(getFeatureIdsArrayPath());
     filter->setSelectedCellArrayPath( getSelectedCellArrayPath() );
   }

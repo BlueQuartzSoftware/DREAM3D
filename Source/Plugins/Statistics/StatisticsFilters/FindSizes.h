@@ -71,6 +71,15 @@ class FindSizes : public AbstractFilter
     DREAM3D_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
     Q_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
 
+    DREAM3D_FILTER_PARAMETER(QString, VolumesArrayName)
+    Q_PROPERTY(QString VolumesArrayName READ getVolumesArrayName WRITE setVolumesArrayName)
+
+    DREAM3D_FILTER_PARAMETER(QString, EquivalentDiametersArrayName)
+    Q_PROPERTY(QString EquivalentDiametersArrayName READ getEquivalentDiametersArrayName WRITE setEquivalentDiametersArrayName)
+
+    DREAM3D_FILTER_PARAMETER(QString, NumCellsArrayName)
+    Q_PROPERTY(QString NumCellsArrayName READ getNumCellsArrayName WRITE setNumCellsArrayName)
+
     virtual const QString getCompiledLibraryName() { return Statistics::StatisticsBaseName; }
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
@@ -78,10 +87,14 @@ class FindSizes : public AbstractFilter
     virtual const QString getHumanLabel() { return "Find Feature Sizes"; }
 
     /**
+    * @brief This method will instantiate all the end user settable options/parameters
+    * for this filter
+    */
+    virtual void setupFilterParameters();
+
+    /**
      * @brief Reimplemented from @see AbstractFilter class
      */
-
-    virtual void setupFilterParameters();
     virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
 
     /**
@@ -106,9 +119,9 @@ signals:
 
   private:
     DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeatureIds)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(float, Volumes)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(float, EquivalentDiameters)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, NumCells)
+    DEFINE_CREATED_DATAARRAY(float, Volumes)
+    DEFINE_CREATED_DATAARRAY(float, EquivalentDiameters)
+    DEFINE_CREATED_DATAARRAY(int32_t, NumCells)
 
     void dataCheck();
 

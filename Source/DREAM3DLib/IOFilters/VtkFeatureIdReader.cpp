@@ -72,6 +72,8 @@ void VtkFeatureIdReader::setupFilterParameters()
   FilterParameterVector parameters;
   parameters.push_back(FilterParameter::New("Input Vtk File", "InputFile", FilterParameterWidgetType::InputFileWidget,"QString", false));
   parameters.push_back(FilterParameter::New("Feature Id Scalar Name", "FeatureIdScalarName", FilterParameterWidgetType::StringWidget,"QString", false));
+  parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "QString", true));
+/*##*/parameters.push_back(FilterParameter::New("FeatureIds", "FeatureIdsArrayName", FilterParameterWidgetType::StringWidget, "QString", true, ""));
   setFilterParameters(parameters);
 }
 
@@ -82,6 +84,7 @@ void VtkFeatureIdReader::setupFilterParameters()
 void VtkFeatureIdReader::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
+/*[]*/setFeatureIdsArrayName(reader->readString("FeatureIdsArrayName", getFeatureIdsArrayName() ) );
   setInputFile( reader->readString( "InputFile", getInputFile() ) );
   setFeatureIdScalarName( reader->readString( "FeatureIdScalarName", getFeatureIdScalarName() ) );
   reader->closeFilterGroup();
@@ -93,6 +96,7 @@ void VtkFeatureIdReader::readFilterParameters(AbstractFilterParametersReader* re
 int VtkFeatureIdReader::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
+/*[]*/writer->writeValue("FeatureIdsArrayName", getFeatureIdsArrayName() );
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
@@ -102,6 +106,7 @@ int VtkFeatureIdReader::writeFilterParameters(AbstractFilterParametersWriter* wr
 // -----------------------------------------------------------------------------
 void VtkFeatureIdReader::dataCheck()
 {
+  DataArrayPath tempPath;
 
   setErrorCondition(0);
   VolumeDataContainer* m = getDataContainerArray()->createNonPrereqDataContainer<VolumeDataContainer, VtkFeatureIdReader>(this, getDataContainerName());
@@ -126,6 +131,8 @@ void VtkFeatureIdReader::dataCheck()
 
   QVector<size_t> dims(1, 1);
   m_FeatureIdsPtr = attrMat->createNonPrereqArray<DataArray<int32_t>, AbstractFilter, int32_t>(this,  m_FeatureIdsArrayName, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+////==>MIKE_GROEBER_FIX tempPath.update(DATACONTAINER_NAME, ATTRIBUTEMATRIX_NAME, getFeatureIdsArrayName() );
+////==>MIKE_GROEBER_FIX m_FeatureIdsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(this,  tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
@@ -440,13 +447,10 @@ int VtkFeatureIdReader::readFile()
 // -----------------------------------------------------------------------------
 AbstractFilter::Pointer VtkFeatureIdReader::newFilterInstance(bool copyFilterParameters)
 {
-  /*
-  * InputFile
-  * FeatureIdScalarName
-  */
   VtkFeatureIdReader::Pointer filter = VtkFeatureIdReader::New();
   if(true == copyFilterParameters)
   {
+    filter->setFeatureIdsArrayName(getFeatureIdsArrayName());
     filter->setInputFile( getInputFile() );
     filter->setFeatureIdScalarName( getFeatureIdScalarName() );
   }

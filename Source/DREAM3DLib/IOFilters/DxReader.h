@@ -76,6 +76,9 @@ class DREAM3DLib_EXPORT DxReader : public FileReader
     DREAM3D_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
     Q_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
 
+    DREAM3D_FILTER_PARAMETER(QString, FeatureIdsArrayName)
+    Q_PROPERTY(QString FeatureIdsArrayName READ getFeatureIdsArrayName WRITE setFeatureIdsArrayName)
+
     virtual const QString getCompiledLibraryName() { return IO::IOBaseName; }
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
@@ -113,7 +116,7 @@ class DREAM3DLib_EXPORT DxReader : public FileReader
     void dataCheck();
 
   private:
-    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeatureIds)
+    DEFINE_CREATED_DATAARRAY(int32_t, FeatureIds)
     size_t m_Dims[3];
     QFile  m_InStream;
 

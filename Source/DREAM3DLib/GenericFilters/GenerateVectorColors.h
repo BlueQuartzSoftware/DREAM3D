@@ -78,6 +78,9 @@ class DREAM3DLib_EXPORT GenerateVectorColors : public AbstractFilter
     DREAM3D_FILTER_PARAMETER(DataArrayPath, GoodVoxelsArrayPath)
     Q_PROPERTY(DataArrayPath GoodVoxelsArrayPath READ getGoodVoxelsArrayPath WRITE setGoodVoxelsArrayPath)
 
+    DREAM3D_FILTER_PARAMETER(QString, CellVectorColorsArrayName)
+    Q_PROPERTY(QString CellVectorColorsArrayName READ getCellVectorColorsArrayName WRITE setCellVectorColorsArrayName)
+
     virtual const QString getCompiledLibraryName() { return Generic::GenericBaseName; }
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::GenericFilters; }
@@ -140,7 +143,7 @@ class DREAM3DLib_EXPORT GenerateVectorColors : public AbstractFilter
   private:
     DEFINE_PTR_WEAKPTR_DATAARRAY(float, Vectors)
     DEFINE_PTR_WEAKPTR_DATAARRAY(bool, GoodVoxels)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(uint8_t, CellVectorColors)
+    DEFINE_CREATED_DATAARRAY(uint8_t, CellVectorColors)
 
     GenerateVectorColors(const GenerateVectorColors&); // Copy Constructor Not Implemented
     void operator=(const GenerateVectorColors&); // Operator '=' Not Implemented

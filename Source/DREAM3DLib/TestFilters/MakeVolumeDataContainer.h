@@ -73,6 +73,21 @@ class DREAM3DLib_EXPORT MakeVolumeDataContainer : public AbstractFilter
   * a different group if you want. The string returned here will be displayed
   * in the GUI for the filter
   */
+    DREAM3D_FILTER_PARAMETER(QString, FeatureIdsArrayName)
+    Q_PROPERTY(QString FeatureIdsArrayName READ getFeatureIdsArrayName WRITE setFeatureIdsArrayName)
+
+    DREAM3D_FILTER_PARAMETER(QString, CellEulerAnglesArrayName)
+    Q_PROPERTY(QString CellEulerAnglesArrayName READ getCellEulerAnglesArrayName WRITE setCellEulerAnglesArrayName)
+
+    DREAM3D_FILTER_PARAMETER(QString, CellPhasesArrayName)
+    Q_PROPERTY(QString CellPhasesArrayName READ getCellPhasesArrayName WRITE setCellPhasesArrayName)
+
+    DREAM3D_FILTER_PARAMETER(QString, CrystalStructuresArrayName)
+    Q_PROPERTY(QString CrystalStructuresArrayName READ getCrystalStructuresArrayName WRITE setCrystalStructuresArrayName)
+
+    DREAM3D_FILTER_PARAMETER(QString, LatticeConstantsArrayName)
+    Q_PROPERTY(QString LatticeConstantsArrayName READ getLatticeConstantsArrayName WRITE setLatticeConstantsArrayName)
+
     virtual const QString getCompiledLibraryName() { return Test::TestBaseName; }
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::TestFilters; }
@@ -82,6 +97,12 @@ class DREAM3DLib_EXPORT MakeVolumeDataContainer : public AbstractFilter
   * and understandable by humans.
   */
     virtual const QString getHumanLabel() { return "Make Volume DataContainer"; }
+
+    /**
+    * @brief This method will instantiate all the end user settable options/parameters
+    * for this filter
+    */
+    virtual void setupFilterParameters();
 
     /**
   * @brief This returns a string that is displayed in the GUI and helps to sort the filters into
@@ -135,11 +156,11 @@ class DREAM3DLib_EXPORT MakeVolumeDataContainer : public AbstractFilter
     void dataCheck();
 
   private:
-    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeatureIds)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, CellPhases)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(float, CellEulerAngles)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(uint32_t, CrystalStructures)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(float, LatticeConstants)
+    DEFINE_CREATED_DATAARRAY(int32_t, FeatureIds)
+    DEFINE_CREATED_DATAARRAY(int32_t, CellPhases)
+    DEFINE_CREATED_DATAARRAY(float, CellEulerAngles)
+    DEFINE_CREATED_DATAARRAY(uint32_t, CrystalStructures)
+    DEFINE_CREATED_DATAARRAY(float, LatticeConstants)
 
     MakeVolumeDataContainer(const MakeVolumeDataContainer&); // Copy Constructor Not Implemented
     void operator=(const MakeVolumeDataContainer&); // Operator '=' Not Implemented

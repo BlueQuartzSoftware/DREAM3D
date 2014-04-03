@@ -63,11 +63,24 @@ UpdateCellQuats::UpdateCellQuats() :
 UpdateCellQuats::~UpdateCellQuats()
 {
 }
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void UpdateCellQuats::setupFilterParameters()
+{
+  FilterParameterVector parameters;
+  parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "QString", true));
+/*[]*/parameters.push_back(FilterParameter::New("Quats5", "Quats5ArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
+  parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "QString", true));
+/*##*/parameters.push_back(FilterParameter::New("Quats", "QuatsArrayName", FilterParameterWidgetType::StringWidget, "QString", true, ""));
+  setFilterParameters(parameters);
+}
 
 // -----------------------------------------------------------------------------
 void UpdateCellQuats::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
+/*[]*/setQuatsArrayName(reader->readString("QuatsArrayName", getQuatsArrayName() ) );
   setQuats5ArrayPath(reader->readDataArrayPath("Quats5ArrayPath", getQuats5ArrayPath() ) );
   reader->closeFilterGroup();
 }
@@ -78,6 +91,7 @@ void UpdateCellQuats::readFilterParameters(AbstractFilterParametersReader* reade
 int UpdateCellQuats::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
+/*[]*/writer->writeValue("QuatsArrayName", getQuatsArrayName() );
   writer->writeValue("Quats5ArrayPath", getQuats5ArrayPath() );
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
@@ -88,6 +102,7 @@ int UpdateCellQuats::writeFilterParameters(AbstractFilterParametersWriter* write
 // -----------------------------------------------------------------------------
 void UpdateCellQuats::dataCheck()
 {
+  DataArrayPath tempPath;
   setErrorCondition(0);
 
   VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName(), false);
@@ -96,12 +111,13 @@ void UpdateCellQuats::dataCheck()
   if(getErrorCondition() < 0 || NULL == cellAttrMat.get() ) { return; }
 
   QVector<size_t> dims(1, 5);
-////====>REMOVE THIS    m_Quats5Ptr = cellAttrMat->getPrereqArray<DataArray<float>, AbstractFilter>(this, m_Quats5ArrayName, -301, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   m_Quats5Ptr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getQuats5ArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_Quats5Ptr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_Quats5 = m_Quats5Ptr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   dims[0] = 4;
   m_QuatsPtr = cellAttrMat->createNonPrereqArray<DataArray<float>, AbstractFilter, float>(this, m_QuatsArrayName, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+////==>MIKE_GROEBER_FIX tempPath.update(DATACONTAINER_NAME, ATTRIBUTEMATRIX_NAME, getQuatsArrayName() );
+////==>MIKE_GROEBER_FIX m_QuatsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_QuatsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_Quats = m_QuatsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
@@ -155,6 +171,7 @@ AbstractFilter::Pointer UpdateCellQuats::newFilterInstance(bool copyFilterParame
   UpdateCellQuats::Pointer filter = UpdateCellQuats::New();
   if(true == copyFilterParameters)
   {
+    filter->setQuatsArrayName(getQuatsArrayName());
     filter->setQuats5ArrayPath(getQuats5ArrayPath());
   }
   return filter;

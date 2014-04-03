@@ -72,12 +72,6 @@ class MultiThresholdObjects : public AbstractFilter
     DREAM3D_FILTER_PARAMETER(ComparisonInputs, SelectedThresholds)
     Q_PROPERTY(ComparisonInputs SelectedThresholds READ getSelectedThresholds WRITE setSelectedThresholds)
 
-
-    /**
-    * @brief This returns the group that the filter belongs to. You can select
-    * a different group if you want. The string returned here will be displayed
-    * in the GUI for the filter
-    */
     virtual const QString getCompiledLibraryName() { return Processing::ProcessingBaseName; }
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::ProcessingFilters; }

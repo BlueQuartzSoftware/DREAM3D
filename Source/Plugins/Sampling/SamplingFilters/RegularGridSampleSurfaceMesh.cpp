@@ -83,6 +83,8 @@ void RegularGridSampleSurfaceMesh::setupFilterParameters()
   parameters.push_back(FilterParameter::New("Y Points (Voxels)", "YPoints", FilterParameterWidgetType::IntWidget,"int", false, "Row"));
   parameters.push_back(FilterParameter::New("Z Points (Voxels)", "ZPoints", FilterParameterWidgetType::IntWidget,"int", false, "Plane"));
   parameters.push_back(FilterParameter::New("Resolution", "Resolution", FilterParameterWidgetType::FloatVec3Widget,"FloatVec3_t", false, "Microns"));
+  parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "QString", true));
+/*##*/parameters.push_back(FilterParameter::New("FeatureIds", "FeatureIdsArrayName", FilterParameterWidgetType::StringWidget, "QString", true, ""));
   setFilterParameters(parameters);
 }
 
@@ -91,6 +93,7 @@ void RegularGridSampleSurfaceMesh::setupFilterParameters()
 void RegularGridSampleSurfaceMesh::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
+/*[]*/setFeatureIdsArrayName(reader->readString("FeatureIdsArrayName", getFeatureIdsArrayName() ) );
   reader->closeFilterGroup();
 }
 
@@ -100,6 +103,7 @@ void RegularGridSampleSurfaceMesh::readFilterParameters(AbstractFilterParameters
 int RegularGridSampleSurfaceMesh::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
+/*[]*/writer->writeValue("FeatureIdsArrayName", getFeatureIdsArrayName() );
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
@@ -109,6 +113,7 @@ int RegularGridSampleSurfaceMesh::writeFilterParameters(AbstractFilterParameters
 // -----------------------------------------------------------------------------
 void RegularGridSampleSurfaceMesh::dataCheck()
 {
+  DataArrayPath tempPath;
   setErrorCondition(0);
 
   VolumeDataContainer* m = getDataContainerArray()->createNonPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName());
@@ -122,6 +127,8 @@ void RegularGridSampleSurfaceMesh::dataCheck()
 
   QVector<size_t> dims(1, 1);
   m_FeatureIdsPtr = cellAttrMat->createNonPrereqArray<DataArray<int32_t>, AbstractFilter, int32_t>(this, m_FeatureIdsArrayName, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+////==>MIKE_GROEBER_FIX tempPath.update(DATACONTAINER_NAME, ATTRIBUTEMATRIX_NAME, getFeatureIdsArrayName() );
+////==>MIKE_GROEBER_FIX m_FeatureIdsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(this, tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
@@ -207,15 +214,10 @@ void RegularGridSampleSurfaceMesh::assign_points(Int32ArrayType::Pointer iArray)
 // -----------------------------------------------------------------------------
 AbstractFilter::Pointer RegularGridSampleSurfaceMesh::newFilterInstance(bool copyFilterParameters)
 {
-  /*
-  * XPoints
-  * YPoints
-  * ZPoints
-  * Resolution
-  */
   RegularGridSampleSurfaceMesh::Pointer filter = RegularGridSampleSurfaceMesh::New();
   if(true == copyFilterParameters)
   {
+    filter->setFeatureIdsArrayName(getFeatureIdsArrayName());
     filter->setXPoints( getXPoints() );
     filter->setYPoints( getYPoints() );
     filter->setZPoints( getZPoints() );

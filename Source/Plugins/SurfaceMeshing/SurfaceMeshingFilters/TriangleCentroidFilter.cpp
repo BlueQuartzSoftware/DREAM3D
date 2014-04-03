@@ -113,6 +113,8 @@ TriangleCentroidFilter::~TriangleCentroidFilter()
 void TriangleCentroidFilter::setupFilterParameters()
 {
   FilterParameterVector parameters;
+  parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "QString", true));
+/*##*/parameters.push_back(FilterParameter::New("SurfaceMeshTriangleCentroids", "SurfaceMeshTriangleCentroidsArrayName", FilterParameterWidgetType::StringWidget, "QString", true, ""));
   setFilterParameters(parameters);
 }
 
@@ -122,6 +124,7 @@ void TriangleCentroidFilter::setupFilterParameters()
 void TriangleCentroidFilter::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
+/*[]*/setSurfaceMeshTriangleCentroidsArrayName(reader->readString("SurfaceMeshTriangleCentroidsArrayName", getSurfaceMeshTriangleCentroidsArrayName() ) );
   reader->closeFilterGroup();
 }
 
@@ -131,6 +134,7 @@ void TriangleCentroidFilter::readFilterParameters(AbstractFilterParametersReader
 int TriangleCentroidFilter::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
+/*[]*/writer->writeValue("SurfaceMeshTriangleCentroidsArrayName", getSurfaceMeshTriangleCentroidsArrayName() );
   /* Place code that will write the inputs values into a file. reference the
    AbstractFilterParametersWriter class for the proper API to use. */
   /*  writer->writeValue("OutputFile", getOutputFile() ); */
@@ -143,6 +147,7 @@ int TriangleCentroidFilter::writeFilterParameters(AbstractFilterParametersWriter
 // -----------------------------------------------------------------------------
 void TriangleCentroidFilter::dataCheck()
 {
+  DataArrayPath tempPath;
   SurfaceDataContainer* sm = getDataContainerArray()->getPrereqDataContainer<SurfaceDataContainer, AbstractFilter>(this, getSurfaceDataContainerName(), false);
   if(getErrorCondition() < 0) { return; } 
   AttributeMatrix::Pointer faceAttrMat = sm->getPrereqAttributeMatrix<AbstractFilter>(this, getFaceAttributeMatrixName(), -300);
@@ -165,6 +170,8 @@ void TriangleCentroidFilter::dataCheck()
   {
     QVector<size_t> dims(1, 3);
     m_SurfaceMeshTriangleCentroidsPtr = faceAttrMat->createNonPrereqArray<DataArray<double>, AbstractFilter, double>(this, m_SurfaceMeshTriangleCentroidsArrayName, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+////==>MIKE_GROEBER_FIX tempPath.update(DATACONTAINER_NAME, ATTRIBUTEMATRIX_NAME, getSurfaceMeshTriangleCentroidsArrayName() );
+////==>MIKE_GROEBER_FIX m_SurfaceMeshTriangleCentroidsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<double>, AbstractFilter, double>(this, tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
     if( NULL != m_SurfaceMeshTriangleCentroidsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
     { m_SurfaceMeshTriangleCentroids = m_SurfaceMeshTriangleCentroidsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   }
@@ -230,6 +237,7 @@ AbstractFilter::Pointer TriangleCentroidFilter::newFilterInstance(bool copyFilte
   TriangleCentroidFilter::Pointer filter = TriangleCentroidFilter::New();
   if(true == copyFilterParameters)
   {
+    filter->setSurfaceMeshTriangleCentroidsArrayName(getSurfaceMeshTriangleCentroidsArrayName());
   }
   return filter;
 }

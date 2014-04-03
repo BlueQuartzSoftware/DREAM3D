@@ -77,6 +77,12 @@ class IdentifyDislocationSegments : public AbstractFilter
     DREAM3D_FILTER_PARAMETER(DataArrayPath, SlipPlaneNormalsArrayPath)
     Q_PROPERTY(DataArrayPath SlipPlaneNormalsArrayPath READ getSlipPlaneNormalsArrayPath WRITE setSlipPlaneNormalsArrayPath)
 
+    DREAM3D_FILTER_PARAMETER(QString, tDislocationIdsArrayName)
+    Q_PROPERTY(QString tDislocationIdsArrayName READ gettDislocationIdsArrayName WRITE settDislocationIdsArrayName)
+
+    DREAM3D_FILTER_PARAMETER(QString, ActiveArrayName)
+    Q_PROPERTY(QString ActiveArrayName READ getActiveArrayName WRITE setActiveArrayName)
+
     virtual const QString getCompiledLibraryName() { return DDDAnalysisToolbox::DDDAnalysisToolboxBaseName; }
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::DDDAnalysisFilters; }
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::FeatureIdentificationFilters; }
@@ -140,7 +146,7 @@ class IdentifyDislocationSegments : public AbstractFilter
     DEFINE_PTR_WEAKPTR_DATAARRAY(float, BurgersVectors)
     DEFINE_PTR_WEAKPTR_DATAARRAY(float, SlipPlaneNormals)
     DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, DislocationIds)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(bool, Active)
+    DEFINE_CREATED_DATAARRAY(bool, Active)
 
     IdentifyDislocationSegments(const IdentifyDislocationSegments&); // Copy Constructor Not Implemented
     void operator=(const IdentifyDislocationSegments&); // Operator '=' Not Implemented

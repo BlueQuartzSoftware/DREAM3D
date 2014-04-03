@@ -66,11 +66,20 @@ class FindVolFractions : public AbstractFilter
     DREAM3D_FILTER_PARAMETER(DataArrayPath, CellPhasesArrayPath)
     Q_PROPERTY(DataArrayPath CellPhasesArrayPath READ getCellPhasesArrayPath WRITE setCellPhasesArrayPath)
 
+    DREAM3D_FILTER_PARAMETER(QString, VolFractionsArrayName)
+    Q_PROPERTY(QString VolFractionsArrayName READ getVolFractionsArrayName WRITE setVolFractionsArrayName)
+
     virtual const QString getCompiledLibraryName() { return Statistics::StatisticsBaseName; }
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::MorphologicalFilters; }
     virtual const QString getHumanLabel() { return "Find Volume Fractions of Phases"; }
+
+    /**
+    * @brief This method will instantiate all the end user settable options/parameters
+    * for this filter
+    */
+    virtual void setupFilterParameters();
 
     /**
     * @brief This method will write the options to a file
@@ -99,7 +108,7 @@ signals:
   private:
     DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, CellPhases)
 
-    DEFINE_PTR_WEAKPTR_DATAARRAY(float, VolFractions)
+    DEFINE_CREATED_DATAARRAY(float, VolFractions)
 
     void dataCheck();
 

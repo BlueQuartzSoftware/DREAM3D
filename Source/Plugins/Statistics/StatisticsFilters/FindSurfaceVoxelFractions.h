@@ -74,6 +74,9 @@ class FindSurfaceVoxelFractions : public AbstractFilter
     DREAM3D_FILTER_PARAMETER(DataArrayPath, SurfaceVoxelsArrayPath)
     Q_PROPERTY(DataArrayPath SurfaceVoxelsArrayPath READ getSurfaceVoxelsArrayPath WRITE setSurfaceVoxelsArrayPath)
 
+    DREAM3D_FILTER_PARAMETER(QString, SurfaceVoxelFractionsArrayName)
+    Q_PROPERTY(QString SurfaceVoxelFractionsArrayName READ getSurfaceVoxelFractionsArrayName WRITE setSurfaceVoxelFractionsArrayName)
+
     virtual const QString getCompiledLibraryName() { return Statistics::StatisticsBaseName; }
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
@@ -81,10 +84,14 @@ class FindSurfaceVoxelFractions : public AbstractFilter
     virtual const QString getHumanLabel() { return "Find Feature Surface Voxel Fractions"; }
 
     /**
+    * @brief This method will instantiate all the end user settable options/parameters
+    * for this filter
+    */
+    virtual void setupFilterParameters();
+
+    /**
      * @brief Reimplemented from @see AbstractFilter class
      */
-
-    virtual void setupFilterParameters();
     virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
 
     /**
@@ -110,7 +117,7 @@ signals:
   private:
     DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeatureIds)
     DEFINE_PTR_WEAKPTR_DATAARRAY(int8_t, SurfaceVoxels)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(float, SurfaceVoxelFractions)
+    DEFINE_CREATED_DATAARRAY(float, SurfaceVoxelFractions)
 
     void dataCheck();
 

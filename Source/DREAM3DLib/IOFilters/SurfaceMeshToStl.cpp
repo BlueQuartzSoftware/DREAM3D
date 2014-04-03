@@ -80,6 +80,7 @@ void SurfaceMeshToStl::setupFilterParameters()
   parameters.push_back(FilterParameter::New("Output STL Directory", "OutputStlDirectory", FilterParameterWidgetType::OutputPathWidget,"QString", false));
   parameters.push_back(FilterParameter::New("Stl File Prefix", "OutputStlPrefix", FilterParameterWidgetType::StringWidget,"QString", false));
   parameters.push_back(FilterParameter::New("Group Files By Phase", "GroupByPhase", FilterParameterWidgetType::BooleanWidget,"bool", false));
+  parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "QString", true));
 /*[]*/parameters.push_back(FilterParameter::New("SurfaceMeshFaceLabels", "SurfaceMeshFaceLabelsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
 /*[]*/parameters.push_back(FilterParameter::New("SurfaceMeshFacePhases", "SurfaceMeshFacePhasesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
   setFilterParameters(parameters);

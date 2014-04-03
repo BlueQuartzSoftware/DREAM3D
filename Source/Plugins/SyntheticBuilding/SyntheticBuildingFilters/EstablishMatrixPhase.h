@@ -82,6 +82,12 @@ class EstablishMatrixPhase : public AbstractFilter
     DREAM3D_FILTER_PARAMETER(DataArrayPath, PhaseTypesArrayPath)
     Q_PROPERTY(DataArrayPath PhaseTypesArrayPath READ getPhaseTypesArrayPath WRITE setPhaseTypesArrayPath)
 
+    DREAM3D_FILTER_PARAMETER(QString, FeaturePhasesArrayName)
+    Q_PROPERTY(QString FeaturePhasesArrayName READ getFeaturePhasesArrayName WRITE setFeaturePhasesArrayName)
+
+    DREAM3D_FILTER_PARAMETER(QString, ActiveArrayName)
+    Q_PROPERTY(QString ActiveArrayName READ getActiveArrayName WRITE setActiveArrayName)
+
     virtual const QString getCompiledLibraryName() { return SyntheticBuilding::SyntheticBuildingBaseName; }
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::SyntheticBuildingFilters; }
@@ -134,8 +140,8 @@ signals:
     DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeatureIds)
     DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, CellPhases)
 
-    DEFINE_PTR_WEAKPTR_DATAARRAY(bool, Active)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeaturePhases)
+    DEFINE_CREATED_DATAARRAY(bool, Active)
+    DEFINE_CREATED_DATAARRAY(int32_t, FeaturePhases)
 
     DEFINE_PTR_WEAKPTR_DATAARRAY(uint32_t, PhaseTypes)
     StatsDataArray* m_StatsDataArray;

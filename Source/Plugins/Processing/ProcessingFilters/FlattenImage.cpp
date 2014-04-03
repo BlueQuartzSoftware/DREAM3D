@@ -129,7 +129,10 @@ void FlattenImage::setupFilterParameters()
     parameter->setChoices(choices);
     parameters.push_back(parameter);
   }
+  parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "QString", true));
 /*[]*/parameters.push_back(FilterParameter::New("ImageData", "ImageDataArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
+  parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "QString", true));
+/*##*/parameters.push_back(FilterParameter::New("FlatImageData", "FlatImageDataArrayName", FilterParameterWidgetType::StringWidget, "QString", true, ""));
   setFilterParameters(parameters);
 }
 
@@ -139,6 +142,7 @@ void FlattenImage::setupFilterParameters()
 void FlattenImage::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
+/*[]*/setFlatImageDataArrayName(reader->readString("FlatImageDataArrayName", getFlatImageDataArrayName() ) );
   setImageDataArrayPath(reader->readDataArrayPath("ImageDataArrayPath", getImageDataArrayPath() ) );
   setFlattenMethod( reader->readValue("FlattenMethod", getFlattenMethod()) );
   reader->closeFilterGroup();
@@ -150,6 +154,7 @@ void FlattenImage::readFilterParameters(AbstractFilterParametersReader* reader, 
 int FlattenImage::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
+/*[]*/writer->writeValue("FlatImageDataArrayName", getFlatImageDataArrayName() );
   writer->writeValue("ImageDataArrayPath", getImageDataArrayPath() );
   writer->writeValue("FlattenMethod", getFlattenMethod() );
   writer->closeFilterGroup();
@@ -161,6 +166,7 @@ int FlattenImage::writeFilterParameters(AbstractFilterParametersWriter* writer, 
 // -----------------------------------------------------------------------------
 void FlattenImage::dataCheck()
 {
+  DataArrayPath tempPath;
   setErrorCondition(0);
 
   VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName(), false);
@@ -180,12 +186,13 @@ void FlattenImage::dataCheck()
   }
 
   QVector<size_t> dims(1, numImageComp);
-////====>REMOVE THIS    m_ImageDataPtr = cellAttrMat->getPrereqArray<DataArray<unsigned char>, AbstractFilter>(this, m_ImageDataArrayName, -301, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   m_ImageDataPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<unsigned char>, AbstractFilter>(this, getImageDataArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_ImageDataPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_ImageData = m_ImageDataPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   dims[0] = 1;
   m_FlatImageDataPtr = cellAttrMat->createNonPrereqArray<DataArray<unsigned char>, AbstractFilter, unsigned char>(this, m_FlatImageDataArrayName, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+////==>MIKE_GROEBER_FIX tempPath.update(DATACONTAINER_NAME, ATTRIBUTEMATRIX_NAME, getFlatImageDataArrayName() );
+////==>MIKE_GROEBER_FIX m_FlatImageDataPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<unsigned char>, AbstractFilter, unsigned char>(this, tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_FlatImageDataPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_FlatImageData = m_FlatImageDataPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
@@ -263,6 +270,7 @@ AbstractFilter::Pointer FlattenImage::newFilterInstance(bool copyFilterParameter
   FlattenImage::Pointer filter = FlattenImage::New();
   if(true == copyFilterParameters)
   {
+    filter->setFlatImageDataArrayName(getFlatImageDataArrayName());
     filter->setImageDataArrayPath(getImageDataArrayPath());
     filter->setFlattenMethod( getFlattenMethod() );
   }

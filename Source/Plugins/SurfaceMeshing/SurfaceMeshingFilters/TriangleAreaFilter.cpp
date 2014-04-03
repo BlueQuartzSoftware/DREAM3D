@@ -118,6 +118,8 @@ TriangleAreaFilter::~TriangleAreaFilter()
 void TriangleAreaFilter::setupFilterParameters()
 {
   FilterParameterVector parameters;
+  parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "QString", true));
+/*##*/parameters.push_back(FilterParameter::New("SurfaceMeshTriangleAreas", "SurfaceMeshTriangleAreasArrayName", FilterParameterWidgetType::StringWidget, "QString", true, ""));
   setFilterParameters(parameters);
 }
 
@@ -127,6 +129,7 @@ void TriangleAreaFilter::setupFilterParameters()
 void TriangleAreaFilter::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
+/*[]*/setSurfaceMeshTriangleAreasArrayName(reader->readString("SurfaceMeshTriangleAreasArrayName", getSurfaceMeshTriangleAreasArrayName() ) );
   reader->closeFilterGroup();
 }
 
@@ -136,6 +139,7 @@ void TriangleAreaFilter::readFilterParameters(AbstractFilterParametersReader* re
 int TriangleAreaFilter::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
+/*[]*/writer->writeValue("SurfaceMeshTriangleAreasArrayName", getSurfaceMeshTriangleAreasArrayName() );
   /* Place code that will write the inputs values into a file. reference the
    AbstractFilterParametersWriter class for the proper API to use. */
   /*  writer->writeValue("OutputFile", getOutputFile() ); */
@@ -148,6 +152,7 @@ int TriangleAreaFilter::writeFilterParameters(AbstractFilterParametersWriter* wr
 // -----------------------------------------------------------------------------
 void TriangleAreaFilter::dataCheck()
 {
+  DataArrayPath tempPath;
   SurfaceDataContainer* sm = getDataContainerArray()->getPrereqDataContainer<SurfaceDataContainer, AbstractFilter>(this, getSurfaceDataContainerName(), false);
   if(getErrorCondition() < 0) { return; }
   AttributeMatrix::Pointer faceAttrMat = sm->getPrereqAttributeMatrix<AbstractFilter>(this, getFaceAttributeMatrixName(), -300);
@@ -170,6 +175,8 @@ void TriangleAreaFilter::dataCheck()
   {
     QVector<size_t> dims(1, 1);
     m_SurfaceMeshTriangleAreasPtr = faceAttrMat->createNonPrereqArray<DataArray<double>, AbstractFilter, double>(this, m_SurfaceMeshTriangleAreasArrayName, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+////==>MIKE_GROEBER_FIX tempPath.update(DATACONTAINER_NAME, ATTRIBUTEMATRIX_NAME, getSurfaceMeshTriangleAreasArrayName() );
+////==>MIKE_GROEBER_FIX m_SurfaceMeshTriangleAreasPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<double>, AbstractFilter, double>(this, tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
     if( NULL != m_SurfaceMeshTriangleAreasPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
     { m_SurfaceMeshTriangleAreas = m_SurfaceMeshTriangleAreasPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   }
@@ -235,6 +242,7 @@ AbstractFilter::Pointer TriangleAreaFilter::newFilterInstance(bool copyFilterPar
   TriangleAreaFilter::Pointer filter = TriangleAreaFilter::New();
   if(true == copyFilterParameters)
   {
+    filter->setSurfaceMeshTriangleAreasArrayName(getSurfaceMeshTriangleAreasArrayName());
   }
   return filter;
 }

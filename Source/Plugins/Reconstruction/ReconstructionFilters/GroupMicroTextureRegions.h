@@ -104,6 +104,15 @@ class GroupMicroTextureRegions : public GroupFeatures
     DREAM3D_FILTER_PARAMETER(DataArrayPath, CrystalStructuresArrayPath)
     Q_PROPERTY(DataArrayPath CrystalStructuresArrayPath READ getCrystalStructuresArrayPath WRITE setCrystalStructuresArrayPath)
 
+    DREAM3D_FILTER_PARAMETER(QString, CellParentIdsArrayName)
+    Q_PROPERTY(QString CellParentIdsArrayName READ getCellParentIdsArrayName WRITE setCellParentIdsArrayName)
+
+    DREAM3D_FILTER_PARAMETER(QString, FeatureParentIdsArrayName)
+    Q_PROPERTY(QString FeatureParentIdsArrayName READ getFeatureParentIdsArrayName WRITE setFeatureParentIdsArrayName)
+
+    DREAM3D_FILTER_PARAMETER(QString, ActiveArrayName)
+    Q_PROPERTY(QString ActiveArrayName READ getActiveArrayName WRITE setActiveArrayName)
+
     virtual const QString getCompiledLibraryName() { return Reconstruction::ReconstructionBaseName; }
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::ReconstructionFilters; }
@@ -164,10 +173,10 @@ class GroupMicroTextureRegions : public GroupFeatures
 
   private:
     DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeatureIds)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, CellParentIds)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeatureParentIds)
+    DEFINE_CREATED_DATAARRAY(int32_t, CellParentIds)
+    DEFINE_CREATED_DATAARRAY(int32_t, FeatureParentIds)
     DEFINE_PTR_WEAKPTR_DATAARRAY(float, AvgQuats)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(bool, Active)
+    DEFINE_CREATED_DATAARRAY(bool, Active)
     DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeaturePhases)
     DEFINE_PTR_WEAKPTR_DATAARRAY(float, Volumes)
 

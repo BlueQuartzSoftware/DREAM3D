@@ -95,6 +95,12 @@ class FindTwinBoundaries : public AbstractFilter
     DREAM3D_FILTER_PARAMETER(DataArrayPath, SurfaceMeshFaceNormalsArrayPath)
     Q_PROPERTY(DataArrayPath SurfaceMeshFaceNormalsArrayPath READ getSurfaceMeshFaceNormalsArrayPath WRITE setSurfaceMeshFaceNormalsArrayPath)
 
+    DREAM3D_FILTER_PARAMETER(QString, SurfaceMeshTwinBoundaryArrayName)
+    Q_PROPERTY(QString SurfaceMeshTwinBoundaryArrayName READ getSurfaceMeshTwinBoundaryArrayName WRITE setSurfaceMeshTwinBoundaryArrayName)
+
+    DREAM3D_FILTER_PARAMETER(QString, SurfaceMeshTwinBoundaryIncoherenceArrayName)
+    Q_PROPERTY(QString SurfaceMeshTwinBoundaryIncoherenceArrayName READ getSurfaceMeshTwinBoundaryIncoherenceArrayName WRITE setSurfaceMeshTwinBoundaryIncoherenceArrayName)
+
     virtual const QString getCompiledLibraryName() { return Statistics::StatisticsBaseName; }
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
@@ -140,8 +146,8 @@ class FindTwinBoundaries : public AbstractFilter
     DEFINE_PTR_WEAKPTR_DATAARRAY(unsigned int, CrystalStructures)
     DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, SurfaceMeshFaceLabels)
     DEFINE_PTR_WEAKPTR_DATAARRAY(double, SurfaceMeshFaceNormals)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(bool, SurfaceMeshTwinBoundary)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(float, SurfaceMeshTwinBoundaryIncoherence)
+    DEFINE_CREATED_DATAARRAY(bool, SurfaceMeshTwinBoundary)
+    DEFINE_CREATED_DATAARRAY(float, SurfaceMeshTwinBoundaryIncoherence)
 
     void dataCheckVoxel();
     void dataCheckSurfaceMesh();

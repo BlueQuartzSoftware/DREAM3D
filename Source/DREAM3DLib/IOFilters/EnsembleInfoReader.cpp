@@ -78,6 +78,9 @@ void EnsembleInfoReader::setupFilterParameters()
   FilterParameterVector parameters;
   parameters.push_back(FilterParameter::New("Input Ensemble Info File", "InputFile", FilterParameterWidgetType::InputFileWidget,"QString", false, "", "*.txt"));
 
+  parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "QString", true));
+/*##*/parameters.push_back(FilterParameter::New("CrystalStructures", "CrystalStructuresArrayName", FilterParameterWidgetType::StringWidget, "QString", true, ""));
+/*##*/parameters.push_back(FilterParameter::New("PhaseTypes", "PhaseTypesArrayName", FilterParameterWidgetType::StringWidget, "QString", true, ""));
   setFilterParameters(parameters);
 }
 
@@ -87,6 +90,8 @@ void EnsembleInfoReader::setupFilterParameters()
 void EnsembleInfoReader::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
+/*[]*/setPhaseTypesArrayName(reader->readString("PhaseTypesArrayName", getPhaseTypesArrayName() ) );
+/*[]*/setCrystalStructuresArrayName(reader->readString("CrystalStructuresArrayName", getCrystalStructuresArrayName() ) );
   setInputFile( reader->readString( "InputFile", getInputFile() ) );
   reader->closeFilterGroup();
 }
@@ -97,6 +102,8 @@ void EnsembleInfoReader::readFilterParameters(AbstractFilterParametersReader* re
 int EnsembleInfoReader::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
+/*[]*/writer->writeValue("PhaseTypesArrayName", getPhaseTypesArrayName() );
+/*[]*/writer->writeValue("CrystalStructuresArrayName", getCrystalStructuresArrayName() );
   writer->writeValue("InputFile", getInputFile() );
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
@@ -107,6 +114,7 @@ int EnsembleInfoReader::writeFilterParameters(AbstractFilterParametersWriter* wr
 // -----------------------------------------------------------------------------
 void EnsembleInfoReader::dataCheck()
 {
+  DataArrayPath tempPath;
   setErrorCondition(0);
   VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName());
   if(getErrorCondition() < 0) { return; }
@@ -132,9 +140,13 @@ void EnsembleInfoReader::dataCheck()
   typedef DataArray<unsigned int> PTypeArrayType;
   QVector<size_t> dims(1, 1);
   m_CrystalStructuresPtr = cellEnsembleAttrMat->createNonPrereqArray<DataArray<uint32_t>, AbstractFilter, uint32_t>(this,  m_CrystalStructuresArrayName, Ebsd::CrystalStructure::Cubic_High, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+////==>MIKE_GROEBER_FIX tempPath.update(DATACONTAINER_NAME, ATTRIBUTEMATRIX_NAME, getCrystalStructuresArrayName() );
+////==>MIKE_GROEBER_FIX m_CrystalStructuresPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<uint32_t>, AbstractFilter, uint32_t>(this,  tempPath, Ebsd::CrystalStructure::Cubic_High, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_CrystalStructuresPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_CrystalStructures = m_CrystalStructuresPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   m_PhaseTypesPtr = cellEnsembleAttrMat->createNonPrereqArray<DataArray<uint32_t>, AbstractFilter, uint32_t>(this,  m_PhaseTypesArrayName, DREAM3D::PhaseType::PrimaryPhase, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+////==>MIKE_GROEBER_FIX tempPath.update(DATACONTAINER_NAME, ATTRIBUTEMATRIX_NAME, getPhaseTypesArrayName() );
+////==>MIKE_GROEBER_FIX m_PhaseTypesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<uint32_t>, AbstractFilter, uint32_t>(this,  tempPath, DREAM3D::PhaseType::PrimaryPhase, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_PhaseTypesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_PhaseTypes = m_PhaseTypesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
@@ -205,12 +217,11 @@ int EnsembleInfoReader::readFile()
 // -----------------------------------------------------------------------------
 AbstractFilter::Pointer EnsembleInfoReader::newFilterInstance(bool copyFilterParameters)
 {
-  /*
-  * InputFile
-  */
   EnsembleInfoReader::Pointer filter = EnsembleInfoReader::New();
   if(true == copyFilterParameters)
   {
+    filter->setPhaseTypesArrayName(getPhaseTypesArrayName());
+    filter->setCrystalStructuresArrayName(getCrystalStructuresArrayName());
     filter->setInputFile( getInputFile() );
   }
   return filter;

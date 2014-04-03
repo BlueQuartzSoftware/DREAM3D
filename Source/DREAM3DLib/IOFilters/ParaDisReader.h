@@ -72,6 +72,18 @@ class DREAM3DLib_EXPORT ParaDisReader : public FileReader
     DREAM3D_FILTER_PARAMETER(float, BurgersVector)
     Q_PROPERTY(float BurgersVector READ getBurgersVector WRITE setBurgersVector)
 
+    DREAM3D_FILTER_PARAMETER(QString, NumberOfArmsArrayName)
+    Q_PROPERTY(QString NumberOfArmsArrayName READ getNumberOfArmsArrayName WRITE setNumberOfArmsArrayName)
+
+    DREAM3D_FILTER_PARAMETER(QString, NodeConstraintsArrayName)
+    Q_PROPERTY(QString NodeConstraintsArrayName READ getNodeConstraintsArrayName WRITE setNodeConstraintsArrayName)
+
+    DREAM3D_FILTER_PARAMETER(QString, BurgersVectorsArrayName)
+    Q_PROPERTY(QString BurgersVectorsArrayName READ getBurgersVectorsArrayName WRITE setBurgersVectorsArrayName)
+
+    DREAM3D_FILTER_PARAMETER(QString, SlipPlaneNormalsArrayName)
+    Q_PROPERTY(QString SlipPlaneNormalsArrayName READ getSlipPlaneNormalsArrayName WRITE setSlipPlaneNormalsArrayName)
+
     virtual const QString getCompiledLibraryName() { return IO::IOBaseName; }
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
@@ -111,10 +123,10 @@ class DREAM3DLib_EXPORT ParaDisReader : public FileReader
     void updateEdgeInstancePointers();
 
   private:
-    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, NumberOfArms)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, NodeConstraints)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(float, BurgersVectors)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(float, SlipPlaneNormals)
+    DEFINE_CREATED_DATAARRAY(int32_t, NumberOfArms)
+    DEFINE_CREATED_DATAARRAY(int32_t, NodeConstraints)
+    DEFINE_CREATED_DATAARRAY(float, BurgersVectors)
+    DEFINE_CREATED_DATAARRAY(float, SlipPlaneNormals)
     QFile  m_InStream;
 
     int numVerts;

@@ -89,6 +89,9 @@ class FindFeatureNeighborCAxisMisalignments : public AbstractFilter
     DREAM3D_FILTER_PARAMETER(DataArrayPath, CrystalStructuresArrayPath)
     Q_PROPERTY(DataArrayPath CrystalStructuresArrayPath READ getCrystalStructuresArrayPath WRITE setCrystalStructuresArrayPath)
 
+    DREAM3D_FILTER_PARAMETER(QString, AvgCAxisMisalignmentsArrayName)
+    Q_PROPERTY(QString AvgCAxisMisalignmentsArrayName READ getAvgCAxisMisalignmentsArrayName WRITE setAvgCAxisMisalignmentsArrayName)
+
     virtual const QString getCompiledLibraryName() { return Statistics::StatisticsBaseName; }
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
@@ -135,7 +138,7 @@ class FindFeatureNeighborCAxisMisalignments : public AbstractFilter
 
     DEFINE_PTR_WEAKPTR_DATAARRAY(float, AvgQuats)
     DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeaturePhases)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(float, AvgCAxisMisalignments)
+    DEFINE_CREATED_DATAARRAY(float, AvgCAxisMisalignments)
     DEFINE_PTR_WEAKPTR_DATAARRAY(unsigned int, CrystalStructures)
     NeighborList<int>* m_NeighborList;
     NeighborList<float>* m_CAxisMisalignmentList;

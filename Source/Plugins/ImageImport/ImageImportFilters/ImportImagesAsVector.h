@@ -85,6 +85,9 @@ class ImportImagesAsVector : public AbstractFilter
     * a different group if you want. The string returned here will be displayed
     * in the GUI for the filter
     */
+    DREAM3D_FILTER_PARAMETER(QString, VectorDataArrayName)
+    Q_PROPERTY(QString VectorDataArrayName READ getVectorDataArrayName WRITE setVectorDataArrayName)
+
     virtual const QString getCompiledLibraryName() { return ImageImport::ImageImportBaseName; }
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
@@ -152,7 +155,7 @@ signals:
     void generateFileList();
 
   private:
-    DEFINE_PTR_WEAKPTR_DATAARRAY(uint8_t, VectorData)
+    DEFINE_CREATED_DATAARRAY(uint8_t, VectorData)
 
     ImportImagesAsVector(const ImportImagesAsVector&); // Copy Constructor Not Implemented
     void operator=(const ImportImagesAsVector&); // Operator '=' Not Implemented

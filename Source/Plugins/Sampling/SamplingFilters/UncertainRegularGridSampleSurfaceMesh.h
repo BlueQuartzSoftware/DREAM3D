@@ -81,6 +81,9 @@ class UncertainRegularGridSampleSurfaceMesh : public SampleSurfaceMesh
     DREAM3D_FILTER_PARAMETER(FloatVec3_t, Uncertainty)
     Q_PROPERTY(FloatVec3_t Uncertainty READ getUncertainty WRITE setUncertainty)
 
+    DREAM3D_FILTER_PARAMETER(QString, FeatureIdsArrayName)
+    Q_PROPERTY(QString FeatureIdsArrayName READ getFeatureIdsArrayName WRITE setFeatureIdsArrayName)
+
     virtual const QString getCompiledLibraryName() { return Sampling::SamplingBaseName; }
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::SamplingFilters; }
@@ -129,7 +132,7 @@ class UncertainRegularGridSampleSurfaceMesh : public SampleSurfaceMesh
     virtual void assign_points(Int32ArrayType::Pointer iArray);
 
   private:
-    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeatureIds)
+    DEFINE_CREATED_DATAARRAY(int32_t, FeatureIds)
 
     UncertainRegularGridSampleSurfaceMesh(const UncertainRegularGridSampleSurfaceMesh&); // Copy Constructor Not Implemented
     void operator=(const UncertainRegularGridSampleSurfaceMesh&); // Operator '=' Not Implemented

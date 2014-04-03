@@ -68,11 +68,20 @@ class DREAM3DLib_EXPORT FindSurfaceCells : public AbstractFilter
     DREAM3D_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
     Q_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
 
+    DREAM3D_FILTER_PARAMETER(QString, SurfaceVoxelsArrayName)
+    Q_PROPERTY(QString SurfaceVoxelsArrayName READ getSurfaceVoxelsArrayName WRITE setSurfaceVoxelsArrayName)
+
     virtual const QString getCompiledLibraryName() { return Generic::GenericBaseName; }
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::GenericFilters; }
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::SpatialFilters; }
     virtual const QString getHumanLabel() { return "Find Boundary Cells"; }
+
+    /**
+    * @brief This method will instantiate all the end user settable options/parameters
+    * for this filter
+    */
+    virtual void setupFilterParameters();
 
     virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
 
@@ -96,7 +105,7 @@ signals:
 
   private:
     DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeatureIds)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(int8_t, SurfaceVoxels)
+    DEFINE_CREATED_DATAARRAY(int8_t, SurfaceVoxels)
 
     void dataCheck();
 

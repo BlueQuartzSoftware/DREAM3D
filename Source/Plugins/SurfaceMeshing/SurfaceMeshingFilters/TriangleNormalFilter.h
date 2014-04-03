@@ -74,6 +74,9 @@ class TriangleNormalFilter : public SurfaceMeshFilter
     * a different group if you want. The string returned here will be displayed
     * in the GUI for the filter
     */
+    DREAM3D_FILTER_PARAMETER(QString, SurfaceMeshTriangleNormalsArrayName)
+    Q_PROPERTY(QString SurfaceMeshTriangleNormalsArrayName READ getSurfaceMeshTriangleNormalsArrayName WRITE setSurfaceMeshTriangleNormalsArrayName)
+
     virtual const QString getCompiledLibraryName() { return SurfaceMeshing::SurfaceMeshingBaseName; }
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::SurfaceMeshingFilters; }
@@ -134,7 +137,7 @@ signals:
     void dataCheck();
 
   private:
-    DEFINE_PTR_WEAKPTR_DATAARRAY(double, SurfaceMeshTriangleNormals)
+    DEFINE_CREATED_DATAARRAY(double, SurfaceMeshTriangleNormals)
 
     TriangleNormalFilter(const TriangleNormalFilter&); // Copy Constructor Not Implemented
     void operator=(const TriangleNormalFilter&); // Operator '=' Not Implemented

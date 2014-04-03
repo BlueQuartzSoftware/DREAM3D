@@ -84,6 +84,12 @@ class JumbleOrientations : public AbstractFilter
     DREAM3D_FILTER_PARAMETER(DataArrayPath, FeaturePhasesArrayPath)
     Q_PROPERTY(DataArrayPath FeaturePhasesArrayPath READ getFeaturePhasesArrayPath WRITE setFeaturePhasesArrayPath)
 
+    DREAM3D_FILTER_PARAMETER(QString, FeatureEulerAnglesArrayName)
+    Q_PROPERTY(QString FeatureEulerAnglesArrayName READ getFeatureEulerAnglesArrayName WRITE setFeatureEulerAnglesArrayName)
+
+    DREAM3D_FILTER_PARAMETER(QString, AvgQuatsArrayName)
+    Q_PROPERTY(QString AvgQuatsArrayName READ getAvgQuatsArrayName WRITE setAvgQuatsArrayName)
+
     virtual const QString getCompiledLibraryName() { return SyntheticBuilding::SyntheticBuildingBaseName; }
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName() {return DREAM3D::FilterGroups::SyntheticBuildingFilters;}
@@ -123,8 +129,8 @@ signals:
 
     // Feature Data
     DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeaturePhases)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(float, FeatureEulerAngles)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(float, AvgQuats)
+    DEFINE_CREATED_DATAARRAY(float, FeatureEulerAngles)
+    DEFINE_CREATED_DATAARRAY(float, AvgQuats)
 
     void dataCheck();
 

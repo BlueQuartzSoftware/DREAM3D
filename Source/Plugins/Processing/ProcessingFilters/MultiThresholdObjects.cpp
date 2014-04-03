@@ -68,8 +68,6 @@ MultiThresholdObjects::~MultiThresholdObjects()
 void MultiThresholdObjects::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(FilterParameter::New("Output Array Name", "OutputArrayName", FilterParameterWidgetType::StringWidget,"QString", false));
-
   {
     ComparisonFilterParameter::Pointer parameter = ComparisonFilterParameter::New();
     parameter->setHumanLabel("Select Arrays to Threshold");
@@ -80,6 +78,8 @@ void MultiThresholdObjects::setupFilterParameters()
     parameters.push_back(parameter);
   }
 
+  parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "QString", true));
+/*##*/parameters.push_back(FilterParameter::New("Output", "OutputArrayName", FilterParameterWidgetType::StringWidget, "QString", true, ""));
   setFilterParameters(parameters);
 }
 
@@ -89,7 +89,7 @@ void MultiThresholdObjects::setupFilterParameters()
 void MultiThresholdObjects::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-  setOutputArrayName(reader->readString( "OutputArrayName", getOutputArrayName()));
+/*[]*/setOutputArrayName(reader->readString("OutputArrayName", getOutputArrayName() ) );
   setSelectedThresholds(reader->readComparisonInputs("SelectedThresholds", getSelectedThresholds()));
   reader->closeFilterGroup();
 }
@@ -100,7 +100,7 @@ void MultiThresholdObjects::readFilterParameters(AbstractFilterParametersReader*
 int MultiThresholdObjects::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  writer->writeValue("OutputArrayName", getOutputArrayName());
+/*[]*/writer->writeValue("OutputArrayName", getOutputArrayName() );
   writer->writeValue("SelectedThresholds", getSelectedThresholds());
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
@@ -111,6 +111,7 @@ int MultiThresholdObjects::writeFilterParameters(AbstractFilterParametersWriter*
 // -----------------------------------------------------------------------------
 void MultiThresholdObjects::dataCheck()
 {
+  DataArrayPath tempPath;
   setErrorCondition(0);
 
 
@@ -137,7 +138,7 @@ void MultiThresholdObjects::dataCheck()
       AttributeMatrix::Pointer attrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, comp.attributeMatrixName, -301);
       if(getErrorCondition() < 0 || NULL == attrMat.get() ) { return; }
     }
-    
+
     // Enforce that right now all the arrays MUST come from the same data container and attribute matrix
     if(dcSet.size() != 1)
     {
@@ -165,9 +166,11 @@ void MultiThresholdObjects::dataCheck()
       if(getErrorCondition() < 0 || NULL == attrMat.get() ) { return; }
       QVector<size_t> dims(1, 1);
       m_DestinationPtr = attrMat->createNonPrereqArray<DataArray<bool>, AbstractFilter, bool>(this, m_OutputArrayName, true, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+////==>MIKE_GROEBER_FIX tempPath.update(DATACONTAINER_NAME, ATTRIBUTEMATRIX_NAME, getOutputArrayName() );
+////==>MIKE_GROEBER_FIX m_OutputPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<bool>, AbstractFilter, bool>(this, tempPath, true, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
       if( NULL != m_DestinationPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
       { m_Destination = m_DestinationPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-    
+
     }
   }
 
@@ -263,14 +266,10 @@ void MultiThresholdObjects::execute()
 // -----------------------------------------------------------------------------
 AbstractFilter::Pointer MultiThresholdObjects::newFilterInstance(bool copyFilterParameters)
 {
-  /*
-  * OutputArrayName
-  * SelectedThresholds
-  */
   MultiThresholdObjects::Pointer filter = MultiThresholdObjects::New();
   if(true == copyFilterParameters)
   {
-    filter->setOutputArrayName( getOutputArrayName() );
+    filter->setOutputArrayName(getOutputArrayName());
     filter->setSelectedThresholds( getSelectedThresholds() );
   }
   return filter;

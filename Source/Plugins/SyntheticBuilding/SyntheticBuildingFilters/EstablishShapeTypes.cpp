@@ -84,12 +84,15 @@ void EstablishShapeTypes::setupFilterParameters()
     sType_parameter->setPhaseTypeArrayPathProperty("InputPhaseTypesArrayPath");
     parameters.push_back(sType_parameter);
 
+  parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "QString", true));
+/*##*/parameters.push_back(FilterParameter::New("tShapeTypes", "tShapeTypesArrayName", FilterParameterWidgetType::StringWidget, "QString", true, ""));
   setFilterParameters(parameters);
 }
 // -----------------------------------------------------------------------------
 void EstablishShapeTypes::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
+/*[]*/settShapeTypesArrayName(reader->readString("tShapeTypesArrayName", gettShapeTypesArrayName() ) );
   setInputPhaseTypesArrayPath(reader->readDataArrayPath("InputPhaseTypesArrayPath", getInputPhaseTypesArrayPath() ) );
   setShapeTypesArrayName(reader->readString("ShapeTypesArrayName", getShapeTypesArrayName() ) );
   QVector<uint32_t> data = getShapeTypeData().d;
@@ -106,6 +109,7 @@ void EstablishShapeTypes::readFilterParameters(AbstractFilterParametersReader* r
 int EstablishShapeTypes::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
+/*[]*/writer->writeValue("tShapeTypesArrayName", gettShapeTypesArrayName() );
   writer->writeValue("InputPhaseTypesArrayPath", getInputPhaseTypesArrayPath() );
   writer->writeValue("ShapeTypesArrayName", getShapeTypesArrayName() );
   writer->writeValue("ShapeTypeData", getShapeTypeData().d );
@@ -118,6 +122,7 @@ int EstablishShapeTypes::writeFilterParameters(AbstractFilterParametersWriter* w
 // -----------------------------------------------------------------------------
 void EstablishShapeTypes::dataCheck()
 {
+  DataArrayPath tempPath;
   setErrorCondition(0);
 
   DataContainerArray::Pointer dca = getDataContainerArray();
@@ -136,6 +141,8 @@ void EstablishShapeTypes::dataCheck()
   if(getErrorCondition() < 0) { return; }
   // Now create the output Shape Types Array
   m_ShapeTypesPtr = cellEnsembleAttrMat->createNonPrereqArray<UInt32ArrayType, AbstractFilter>(this, getShapeTypesArrayName(), true, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+////==>MIKE_GROEBER_FIX tempPath.update(DATACONTAINER_NAME, ATTRIBUTEMATRIX_NAME, gettShapeTypesArrayName() );
+////==>MIKE_GROEBER_FIX m_tShapeTypesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<UInt32ArrayType, AbstractFilter, getShapeTypesArrayName(), true, dims); /* Assigns the shared_ptr<>(this, tempPath, true, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_ShapeTypesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_ShapeTypes = m_ShapeTypesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
@@ -197,6 +204,7 @@ AbstractFilter::Pointer EstablishShapeTypes::newFilterInstance(bool copyFilterPa
   EstablishShapeTypes::Pointer filter = EstablishShapeTypes::New();
   if(true == copyFilterParameters)
   {
+    filter->settShapeTypesArrayName(gettShapeTypesArrayName());
     filter->setInputPhaseTypesArrayPath(getInputPhaseTypesArrayPath() );
     filter->setShapeTypesArrayName(getShapeTypesArrayName() );
     filter->setShapeTypeData(getShapeTypeData() );

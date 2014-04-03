@@ -91,6 +91,12 @@ class FindFeatureReferenceMisorientations : public AbstractFilter
     DREAM3D_FILTER_PARAMETER(DataArrayPath, GBEuclideanDistancesArrayPath)
     Q_PROPERTY(DataArrayPath GBEuclideanDistancesArrayPath READ getGBEuclideanDistancesArrayPath WRITE setGBEuclideanDistancesArrayPath)
 
+    DREAM3D_FILTER_PARAMETER(QString, FeatureAvgMisorientationsArrayName)
+    Q_PROPERTY(QString FeatureAvgMisorientationsArrayName READ getFeatureAvgMisorientationsArrayName WRITE setFeatureAvgMisorientationsArrayName)
+
+    DREAM3D_FILTER_PARAMETER(QString, FeatureReferenceMisorientationsArrayName)
+    Q_PROPERTY(QString FeatureReferenceMisorientationsArrayName READ getFeatureReferenceMisorientationsArrayName WRITE setFeatureReferenceMisorientationsArrayName)
+
     virtual const QString getCompiledLibraryName() { return Statistics::StatisticsBaseName; }
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
@@ -135,9 +141,9 @@ class FindFeatureReferenceMisorientations : public AbstractFilter
     DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeatureIds)
     DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, CellPhases)
     DEFINE_PTR_WEAKPTR_DATAARRAY(float, GBEuclideanDistances)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(float, FeatureReferenceMisorientations)
+    DEFINE_CREATED_DATAARRAY(float, FeatureReferenceMisorientations)
     DEFINE_PTR_WEAKPTR_DATAARRAY(float, AvgQuats)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(float, FeatureAvgMisorientations)
+    DEFINE_CREATED_DATAARRAY(float, FeatureAvgMisorientations)
     DEFINE_PTR_WEAKPTR_DATAARRAY(float, Quats)
 
     DEFINE_PTR_WEAKPTR_DATAARRAY(unsigned int, CrystalStructures)

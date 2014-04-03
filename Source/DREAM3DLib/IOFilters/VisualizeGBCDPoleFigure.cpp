@@ -130,6 +130,7 @@ void VisualizeGBCDPoleFigure::setupFilterParameters()
 //    parameters.push_back(parameter);
 //  }
   parameters.push_back(FilterParameter::New("Regular Grid Pole Figure", "OutputFile", FilterParameterWidgetType::OutputFileWidget,"QString", false, "", "*.vtk", "VTK File"));
+  parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "QString", true));
 /*[]*/parameters.push_back(FilterParameter::New("GBCD", "GBCDArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
   setFilterParameters(parameters);
 }

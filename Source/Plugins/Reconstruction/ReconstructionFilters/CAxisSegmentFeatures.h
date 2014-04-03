@@ -93,6 +93,15 @@ class CAxisSegmentFeatures : public SegmentFeatures
     DREAM3D_FILTER_PARAMETER(DataArrayPath, QuatsArrayPath)
     Q_PROPERTY(DataArrayPath QuatsArrayPath READ getQuatsArrayPath WRITE setQuatsArrayPath)
 
+    DREAM3D_FILTER_PARAMETER(QString, GoodVoxelsArrayName)
+    Q_PROPERTY(QString GoodVoxelsArrayName READ getGoodVoxelsArrayName WRITE setGoodVoxelsArrayName)
+
+    DREAM3D_FILTER_PARAMETER(QString, FeatureIdsArrayName)
+    Q_PROPERTY(QString FeatureIdsArrayName READ getFeatureIdsArrayName WRITE setFeatureIdsArrayName)
+
+    DREAM3D_FILTER_PARAMETER(QString, ActiveArrayName)
+    Q_PROPERTY(QString ActiveArrayName READ getActiveArrayName WRITE setActiveArrayName)
+
     virtual const QString getCompiledLibraryName() { return Reconstruction::ReconstructionBaseName; }
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::ReconstructionFilters; }
@@ -134,11 +143,11 @@ class CAxisSegmentFeatures : public SegmentFeatures
   private:
     QVector<OrientationOps::Pointer> m_OrientationOps;
 
-    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeatureIds)
+    DEFINE_CREATED_DATAARRAY(int32_t, FeatureIds)
     DEFINE_PTR_WEAKPTR_DATAARRAY(float, Quats)
     DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, CellPhases)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(bool, GoodVoxels)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(bool, Active)
+    DEFINE_CREATED_DATAARRAY(bool, GoodVoxels)
+    DEFINE_CREATED_DATAARRAY(bool, Active)
 
     DEFINE_PTR_WEAKPTR_DATAARRAY(unsigned int, CrystalStructures)
 

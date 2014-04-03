@@ -82,6 +82,21 @@ class FindSchmids : public AbstractFilter
     DREAM3D_FILTER_PARAMETER(DataArrayPath, AvgQuatsArrayPath)
     Q_PROPERTY(DataArrayPath AvgQuatsArrayPath READ getAvgQuatsArrayPath WRITE setAvgQuatsArrayPath)
 
+    DREAM3D_FILTER_PARAMETER(QString, SchmidsArrayName)
+    Q_PROPERTY(QString SchmidsArrayName READ getSchmidsArrayName WRITE setSchmidsArrayName)
+
+    DREAM3D_FILTER_PARAMETER(QString, SlipSystemsArrayName)
+    Q_PROPERTY(QString SlipSystemsArrayName READ getSlipSystemsArrayName WRITE setSlipSystemsArrayName)
+
+    DREAM3D_FILTER_PARAMETER(QString, PolesArrayName)
+    Q_PROPERTY(QString PolesArrayName READ getPolesArrayName WRITE setPolesArrayName)
+
+    DREAM3D_FILTER_PARAMETER(QString, PhisArrayName)
+    Q_PROPERTY(QString PhisArrayName READ getPhisArrayName WRITE setPhisArrayName)
+
+    DREAM3D_FILTER_PARAMETER(QString, LambdasArrayName)
+    Q_PROPERTY(QString LambdasArrayName READ getLambdasArrayName WRITE setLambdasArrayName)
+
     virtual const QString getCompiledLibraryName() { return Statistics::StatisticsBaseName; }
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
@@ -94,7 +109,19 @@ class FindSchmids : public AbstractFilter
     Q_PROPERTY(bool StoreAngleComponents READ getStoreAngleComponents WRITE setStoreAngleComponents)
 
 
+
+    /**
+    * @brief This method will instantiate all the end user settable options/parameters
+    * for this filter
+    */
     virtual void setupFilterParameters();
+
+    /**
+     * @brief writeFilterParameters
+     * @param writer
+     * @param index
+     * @return
+     */
     virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
 
     /**
@@ -124,13 +151,13 @@ class FindSchmids : public AbstractFilter
     HexagonalOps::Pointer m_HexOps;
     OrthoRhombicOps::Pointer m_OrthoOps;
 
-    DEFINE_PTR_WEAKPTR_DATAARRAY(float, Schmids)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(float, Phis)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(float, Lambdas)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, Poles)
+    DEFINE_CREATED_DATAARRAY(float, Schmids)
+    DEFINE_CREATED_DATAARRAY(float, Phis)
+    DEFINE_CREATED_DATAARRAY(float, Lambdas)
+    DEFINE_CREATED_DATAARRAY(int32_t, Poles)
     DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeaturePhases)
     DEFINE_PTR_WEAKPTR_DATAARRAY(float, AvgQuats)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, SlipSystems)
+    DEFINE_CREATED_DATAARRAY(int32_t, SlipSystems)
 
     DEFINE_PTR_WEAKPTR_DATAARRAY(unsigned int, CrystalStructures)
 

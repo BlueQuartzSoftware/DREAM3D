@@ -69,11 +69,20 @@ class DREAM3DLib_EXPORT UpdateCellQuats : public AbstractFilter
     DREAM3D_FILTER_PARAMETER(DataArrayPath, Quats5ArrayPath)
     Q_PROPERTY(DataArrayPath Quats5ArrayPath READ getQuats5ArrayPath WRITE setQuats5ArrayPath)
 
+    DREAM3D_FILTER_PARAMETER(QString, QuatsArrayName)
+    Q_PROPERTY(QString QuatsArrayName READ getQuatsArrayName WRITE setQuatsArrayName)
+
     virtual const QString getCompiledLibraryName() { return Generic::GenericBaseName; }
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::GenericFilters; }
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::CrystallographyFilters; }
     virtual const QString getHumanLabel() { return "Update Cell Quaternions"; }
+
+    /**
+    * @brief This method will instantiate all the end user settable options/parameters
+    * for this filter
+    */
+    virtual void setupFilterParameters();
 
     /**
     * @brief This method will write the options to a file
@@ -100,8 +109,8 @@ signals:
     UpdateCellQuats();
 
   private:
-    DEFINE_PTR_WEAKPTR_DATAARRAY(float, Quats)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(float, Quats5)
+    DEFINE_CREATED_DATAARRAY(float, Quats)
+    DEFINE_CREATED_DATAARRAY(float, Quats5)
 
     QVector<OrientationOps::Pointer> m_OrientationOps;
 

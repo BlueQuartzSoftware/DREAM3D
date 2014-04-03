@@ -70,6 +70,12 @@ class DREAM3DLib_EXPORT EnsembleInfoReader : public FileReader
     DREAM3D_FILTER_PARAMETER(QString, InputFile)
     Q_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile)
 
+    DREAM3D_FILTER_PARAMETER(QString, CrystalStructuresArrayName)
+    Q_PROPERTY(QString CrystalStructuresArrayName READ getCrystalStructuresArrayName WRITE setCrystalStructuresArrayName)
+
+    DREAM3D_FILTER_PARAMETER(QString, PhaseTypesArrayName)
+    Q_PROPERTY(QString PhaseTypesArrayName READ getPhaseTypesArrayName WRITE setPhaseTypesArrayName)
+
     virtual const QString getCompiledLibraryName() { return IO::IOBaseName; }
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
@@ -106,8 +112,8 @@ class DREAM3DLib_EXPORT EnsembleInfoReader : public FileReader
     void dataCheck();
 
   private:
-    DEFINE_PTR_WEAKPTR_DATAARRAY(unsigned int, CrystalStructures)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(uint32_t, PhaseTypes)
+    DEFINE_CREATED_DATAARRAY(unsigned int, CrystalStructures)
+    DEFINE_CREATED_DATAARRAY(uint32_t, PhaseTypes)
 
     EnsembleInfoReader(const EnsembleInfoReader&); //Not Implemented
     void operator=(const EnsembleInfoReader&); //Not Implemented

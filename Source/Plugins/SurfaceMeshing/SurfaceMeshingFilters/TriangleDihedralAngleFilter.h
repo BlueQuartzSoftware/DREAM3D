@@ -73,6 +73,9 @@ class TriangleDihedralAngleFilter : public SurfaceMeshFilter
     * a different group if you want. The string returned here will be displayed
     * in the GUI for the filter
     */
+    DREAM3D_FILTER_PARAMETER(QString, SurfaceMeshTriangleDihedralAnglesArrayName)
+    Q_PROPERTY(QString SurfaceMeshTriangleDihedralAnglesArrayName READ getSurfaceMeshTriangleDihedralAnglesArrayName WRITE setSurfaceMeshTriangleDihedralAnglesArrayName)
+
     virtual const QString getCompiledLibraryName() { return SurfaceMeshing::SurfaceMeshingBaseName; }
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::SurfaceMeshingFilters; }
@@ -133,7 +136,7 @@ signals:
     void dataCheck();
 
   private:
-    DEFINE_PTR_WEAKPTR_DATAARRAY(double, SurfaceMeshTriangleDihedralAngles)
+    DEFINE_CREATED_DATAARRAY(double, SurfaceMeshTriangleDihedralAngles)
 
     TriangleDihedralAngleFilter(const TriangleDihedralAngleFilter&); // Copy Constructor Not Implemented
     void operator=(const TriangleDihedralAngleFilter&); // Operator '=' Not Implemented

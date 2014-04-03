@@ -46,6 +46,7 @@
 
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/DataContainers/VolumeDataContainer.h"
+#include "Processing/ProcessingConstants.h"
 
 /**
  * @class FindRelativeMotionBetweenSlices FindRelativeMotionBetweenSlices.h DREAM3DLib/GenericFilters/FindRelativeMotionBetweenSlices.h
@@ -79,7 +80,10 @@ class FindRelativeMotionBetweenSlices : public AbstractFilter
     DREAM3D_FILTER_PARAMETER(int, SliceStep)
     Q_PROPERTY(int SliceStep READ getSliceStep WRITE setSliceStep NOTIFY parametersChanged)
 
+    DREAM3D_FILTER_PARAMETER(QString, MotionDirectionArrayName)
+    Q_PROPERTY(QString MotionDirectionArrayName READ getMotionDirectionArrayName WRITE setMotionDirectionArrayName)
 
+    virtual const QString getCompiledLibraryName() { return Processing::ProcessingBaseName; }
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::ProcessingFilters; }
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::ImageFilters; }
@@ -125,7 +129,7 @@ class FindRelativeMotionBetweenSlices : public AbstractFilter
     void find_crosssections();
 
   private:
-    DEFINE_PTR_WEAKPTR_DATAARRAY(float, MotionDirection)
+    DEFINE_CREATED_DATAARRAY(float, MotionDirection)
 
     void dataCheck();
 

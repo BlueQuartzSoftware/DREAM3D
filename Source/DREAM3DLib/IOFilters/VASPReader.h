@@ -71,6 +71,12 @@ class DREAM3DLib_EXPORT VASPReader : public FileReader
 
     //------ Created Cell Data
 
+    DREAM3D_FILTER_PARAMETER(QString, AtomVelocitiesArrayName)
+    Q_PROPERTY(QString AtomVelocitiesArrayName READ getAtomVelocitiesArrayName WRITE setAtomVelocitiesArrayName)
+
+    DREAM3D_FILTER_PARAMETER(QString, AtomTypesArrayName)
+    Q_PROPERTY(QString AtomTypesArrayName READ getAtomTypesArrayName WRITE setAtomTypesArrayName)
+
     virtual const QString getCompiledLibraryName() { return IO::IOBaseName; }
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
@@ -109,8 +115,8 @@ class DREAM3DLib_EXPORT VASPReader : public FileReader
     void updateVertexInstancePointers();
 
   private:
-    DEFINE_PTR_WEAKPTR_DATAARRAY(float, AtomVelocities)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, AtomTypes)
+    DEFINE_CREATED_DATAARRAY(float, AtomVelocities)
+    DEFINE_CREATED_DATAARRAY(int32_t, AtomTypes)
     QFile  m_InStream;
 
     float latticeConstant;

@@ -81,6 +81,9 @@ class FindKernelAvgMisorientations : public AbstractFilter
     DREAM3D_FILTER_PARAMETER(DataArrayPath, QuatsArrayPath)
     Q_PROPERTY(DataArrayPath QuatsArrayPath READ getQuatsArrayPath WRITE setQuatsArrayPath)
 
+    DREAM3D_FILTER_PARAMETER(QString, KernelAverageMisorientationsArrayName)
+    Q_PROPERTY(QString KernelAverageMisorientationsArrayName READ getKernelAverageMisorientationsArrayName WRITE setKernelAverageMisorientationsArrayName)
+
     virtual const QString getCompiledLibraryName() { return Statistics::StatisticsBaseName; }
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
@@ -124,7 +127,7 @@ class FindKernelAvgMisorientations : public AbstractFilter
 
     DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeatureIds)
     DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, CellPhases)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(float, KernelAverageMisorientations)
+    DEFINE_CREATED_DATAARRAY(float, KernelAverageMisorientations)
     DEFINE_PTR_WEAKPTR_DATAARRAY(float, Quats)
 
     DEFINE_PTR_WEAKPTR_DATAARRAY(unsigned int, CrystalStructures)

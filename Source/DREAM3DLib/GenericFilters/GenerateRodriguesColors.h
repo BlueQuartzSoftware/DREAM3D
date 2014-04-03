@@ -85,6 +85,9 @@ class DREAM3DLib_EXPORT GenerateRodriguesColors : public AbstractFilter
     DREAM3D_FILTER_PARAMETER(DataArrayPath, GoodVoxelsArrayPath)
     Q_PROPERTY(DataArrayPath GoodVoxelsArrayPath READ getGoodVoxelsArrayPath WRITE setGoodVoxelsArrayPath)
 
+    DREAM3D_FILTER_PARAMETER(QString, CellRodriguesColorsArrayName)
+    Q_PROPERTY(QString CellRodriguesColorsArrayName READ getCellRodriguesColorsArrayName WRITE setCellRodriguesColorsArrayName)
+
     virtual const QString getCompiledLibraryName() { return Generic::GenericBaseName; }
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::GenericFilters; }
@@ -148,7 +151,7 @@ signals:
     DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, CellPhases)
     DEFINE_PTR_WEAKPTR_DATAARRAY(float, CellEulerAngles)
     DEFINE_PTR_WEAKPTR_DATAARRAY(unsigned int, CrystalStructures)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(uint8_t, CellRodriguesColors)
+    DEFINE_CREATED_DATAARRAY(uint8_t, CellRodriguesColors)
     DEFINE_PTR_WEAKPTR_DATAARRAY(bool, GoodVoxels)
 
     GenerateRodriguesColors(const GenerateRodriguesColors&); // Copy Constructor Not Implemented

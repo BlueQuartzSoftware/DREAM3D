@@ -89,6 +89,9 @@ class GenerateFaceMisorientationColoring : public SurfaceMeshFilter
     DREAM3D_FILTER_PARAMETER(DataArrayPath, CrystalStructuresArrayPath)
     Q_PROPERTY(DataArrayPath CrystalStructuresArrayPath READ getCrystalStructuresArrayPath WRITE setCrystalStructuresArrayPath)
 
+    DREAM3D_FILTER_PARAMETER(QString, SurfaceMeshFaceMisorientationColorsArrayName)
+    Q_PROPERTY(QString SurfaceMeshFaceMisorientationColorsArrayName READ getSurfaceMeshFaceMisorientationColorsArrayName WRITE setSurfaceMeshFaceMisorientationColorsArrayName)
+
     virtual const QString getCompiledLibraryName() { return SurfaceMeshing::SurfaceMeshingBaseName; }
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::SurfaceMeshingFilters; }
@@ -151,7 +154,7 @@ signals:
 
   private:
     DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, SurfaceMeshFaceLabels)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(float, SurfaceMeshFaceMisorientationColors)
+    DEFINE_CREATED_DATAARRAY(float, SurfaceMeshFaceMisorientationColors)
     DEFINE_PTR_WEAKPTR_DATAARRAY(float, AvgQuats)
     DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeaturePhases)
     DEFINE_PTR_WEAKPTR_DATAARRAY(unsigned int, CrystalStructures)

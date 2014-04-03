@@ -156,3 +156,13 @@ QStringList DataArrayPath::split(QString NOT_USED) const
   l << m_DataContainerName << m_AttributeMatrixName << m_DataArrayName;
   return l;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DataArrayPath::update(const QString& dcName, const QString& amName, const QString& daName)
+{
+  m_DataContainerName = dcName;
+  m_AttributeMatrixName = amName;
+  m_DataArrayName = daName;
+}

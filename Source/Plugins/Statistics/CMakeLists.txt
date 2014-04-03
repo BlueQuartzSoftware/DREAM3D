@@ -154,6 +154,19 @@ set(${PLUGIN_NAME}_MODULE_SRCS
   ${${PLUGIN_NAME}_HDRS}
   ${${PLUGIN_NAME}_SRCS}
   ${${PLUGIN_NAME}_MODULE_MOC_SRCS}
+  ${${PLUGIN_NAME}_MISC_HDRS}
+  # -- Add in the Filter Parameter Widgets
+  ${${PLUGIN_NAME}_ParameterWidgets_HDRS}
+  ${${PLUGIN_NAME}_ParameterWidgets_SRCS}
+  ${${PLUGIN_NAME}_ParameterWidgets_UIS}
+  ${${PLUGIN_NAME}_ParameterWidgets_Generated_MOC_SRCS}
+  ${${PLUGIN_NAME}_ParameterWidgets_Generated_UI_HDRS}
+  # -- Add in the plain Widgets
+  ${${PLUGIN_NAME}_Widgets_HDRS}
+  ${${PLUGIN_NAME}_Widgets_SRCS}
+  ${${PLUGIN_NAME}_Widgets_UIS}
+  ${${PLUGIN_NAME}_Widgets_Generated_MOC_SRCS}
+  ${${PLUGIN_NAME}_Widgets_Generated_UI_HDRS}
 )
 
 # --------------------------------------------------------------------

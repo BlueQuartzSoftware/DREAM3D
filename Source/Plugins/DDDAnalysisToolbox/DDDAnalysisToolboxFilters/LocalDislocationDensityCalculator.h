@@ -85,6 +85,9 @@ class LocalDislocationDensityCalculator : public AbstractFilter
     * a different group if you want. The string returned here will be displayed
     * in the GUI for the filter
     */
+    DREAM3D_FILTER_PARAMETER(QString, tOutputArrayName)
+    Q_PROPERTY(QString tOutputArrayName READ gettOutputArrayName WRITE settOutputArrayName)
+
     virtual const QString getCompiledLibraryName() { return DDDAnalysisToolbox::DDDAnalysisToolboxBaseName; }
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::DDDAnalysisFilters; }
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::StatisticsFilters; }

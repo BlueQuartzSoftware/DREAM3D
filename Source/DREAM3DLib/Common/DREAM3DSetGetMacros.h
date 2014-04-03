@@ -456,7 +456,10 @@
   DataArray<type>::WeakPointer m_##name##Ptr;\
   type* m_##name;
 
-
+#define DEFINE_CREATED_DATAARRAY(type, name)\
+  private:\
+    DataArray<type>::WeakPointer m_##name##Ptr;\
+    type* m_##name;
 
 // -----------------------------------------------------------------------------
 //

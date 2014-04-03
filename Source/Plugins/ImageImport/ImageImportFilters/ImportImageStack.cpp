@@ -100,6 +100,8 @@ void ImportImageStack::setupFilterParameters()
 
 
 
+  parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "QString", true));
+/*##*/parameters.push_back(FilterParameter::New("ImageData", "ImageDataArrayName", FilterParameterWidgetType::StringWidget, "QString", true, ""));
   setFilterParameters(parameters);
 }
 
@@ -109,6 +111,7 @@ void ImportImageStack::setupFilterParameters()
 void ImportImageStack::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
+/*[]*/setImageDataArrayName(reader->readString("ImageDataArrayName", getImageDataArrayName() ) );
   setImageDataArrayName( reader->readString("ImageDataArrayName", getImageDataArrayName()) );
   setZStartIndex( reader->readValue("ZStartIndex", getZStartIndex()) );
   setZEndIndex( reader->readValue("ZEndIndex", getZEndIndex()) );
@@ -129,6 +132,7 @@ void ImportImageStack::readFilterParameters(AbstractFilterParametersReader* read
 int ImportImageStack::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
+/*[]*/writer->writeValue("ImageDataArrayName", getImageDataArrayName() );
   writer->writeValue("ImageDataArrayName", getImageDataArrayName() );
   writer->writeValue("ZStartIndex", getZStartIndex() );
   writer->writeValue("ZEndIndex", getZEndIndex() );
@@ -149,6 +153,7 @@ int ImportImageStack::writeFilterParameters(AbstractFilterParametersWriter* writ
 // -----------------------------------------------------------------------------
 void ImportImageStack::dataCheck()
 {
+  DataArrayPath tempPath;
   setErrorCondition(0);
   QString ss;
 
@@ -230,6 +235,8 @@ void ImportImageStack::dataCheck()
     QVector<size_t> arraydims(1, 1);
     // This would be for a gray scale image
     m_ImageDataPtr = cellAttrMat->createNonPrereqArray<DataArray<uint8_t>, AbstractFilter, uint8_t>(this, m_ImageDataArrayName, 0, arraydims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+////==>MIKE_GROEBER_FIX tempPath.update(DATACONTAINER_NAME, ATTRIBUTEMATRIX_NAME, getImageDataArrayName() );
+////==>MIKE_GROEBER_FIX m_ImageDataPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<uint8_t>, AbstractFilter, uint8_t>(this, tempPath, 0, arraydims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
     if( NULL != m_ImageDataPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
     { m_ImageData = m_ImageDataPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   }
@@ -351,12 +358,10 @@ void ImportImageStack::execute()
 // -----------------------------------------------------------------------------
 AbstractFilter::Pointer ImportImageStack::newFilterInstance(bool copyFilterParameters)
 {
-  /*
-  * ImageStack
-  */
   ImportImageStack::Pointer filter = ImportImageStack::New();
   if(true == copyFilterParameters)
   {
+    filter->setImageDataArrayName(getImageDataArrayName());
     filter->setZStartIndex( getZStartIndex() );
     filter->setZEndIndex( getZEndIndex() );
     filter->setResolution( getResolution() );

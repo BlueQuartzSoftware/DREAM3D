@@ -77,6 +77,15 @@ class QuickSurfaceMesh : public AbstractFilter
     DREAM3D_FILTER_PARAMETER(DataArrayPath, CellPhasesArrayPath)
     Q_PROPERTY(DataArrayPath CellPhasesArrayPath READ getCellPhasesArrayPath WRITE setCellPhasesArrayPath)
 
+    DREAM3D_FILTER_PARAMETER(QString, FaceLabelsArrayName)
+    Q_PROPERTY(QString FaceLabelsArrayName READ getFaceLabelsArrayName WRITE setFaceLabelsArrayName)
+
+    DREAM3D_FILTER_PARAMETER(QString, NodeTypesArrayName)
+    Q_PROPERTY(QString NodeTypesArrayName READ getNodeTypesArrayName WRITE setNodeTypesArrayName)
+
+    DREAM3D_FILTER_PARAMETER(QString, FacePhasesArrayName)
+    Q_PROPERTY(QString FacePhasesArrayName READ getFacePhasesArrayName WRITE setFacePhasesArrayName)
+
     virtual const QString getCompiledLibraryName() { return SurfaceMeshing::SurfaceMeshingBaseName; }
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::SurfaceMeshingFilters; }
@@ -107,9 +116,9 @@ signals:
   private:
     DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeatureIds)
     DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, CellPhases)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FaceLabels)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(int8_t, NodeTypes)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FacePhases)
+    DEFINE_CREATED_DATAARRAY(int32_t, FaceLabels)
+    DEFINE_CREATED_DATAARRAY(int8_t, NodeTypes)
+    DEFINE_CREATED_DATAARRAY(int32_t, FacePhases)
 
     void dataCheck();
     void updateFaceInstancePointers();

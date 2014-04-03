@@ -115,6 +115,33 @@ class InsertPrecipitatePhases : public AbstractFilter
     DREAM3D_FILTER_PARAMETER(DataArrayPath, ShapeTypesArrayPath)
     Q_PROPERTY(DataArrayPath ShapeTypesArrayPath READ getShapeTypesArrayPath WRITE setShapeTypesArrayPath)
 
+    DREAM3D_FILTER_PARAMETER(QString, FeaturePhasesArrayName)
+    Q_PROPERTY(QString FeaturePhasesArrayName READ getFeaturePhasesArrayName WRITE setFeaturePhasesArrayName)
+
+    DREAM3D_FILTER_PARAMETER(QString, NumCellsArrayName)
+    Q_PROPERTY(QString NumCellsArrayName READ getNumCellsArrayName WRITE setNumCellsArrayName)
+
+    DREAM3D_FILTER_PARAMETER(QString, EquivalentDiametersArrayName)
+    Q_PROPERTY(QString EquivalentDiametersArrayName READ getEquivalentDiametersArrayName WRITE setEquivalentDiametersArrayName)
+
+    DREAM3D_FILTER_PARAMETER(QString, VolumesArrayName)
+    Q_PROPERTY(QString VolumesArrayName READ getVolumesArrayName WRITE setVolumesArrayName)
+
+    DREAM3D_FILTER_PARAMETER(QString, Omega3sArrayName)
+    Q_PROPERTY(QString Omega3sArrayName READ getOmega3sArrayName WRITE setOmega3sArrayName)
+
+    DREAM3D_FILTER_PARAMETER(QString, CentroidsArrayName)
+    Q_PROPERTY(QString CentroidsArrayName READ getCentroidsArrayName WRITE setCentroidsArrayName)
+
+    DREAM3D_FILTER_PARAMETER(QString, AxisEulerAnglesArrayName)
+    Q_PROPERTY(QString AxisEulerAnglesArrayName READ getAxisEulerAnglesArrayName WRITE setAxisEulerAnglesArrayName)
+
+    DREAM3D_FILTER_PARAMETER(QString, AxisLengthsArrayName)
+    Q_PROPERTY(QString AxisLengthsArrayName READ getAxisLengthsArrayName WRITE setAxisLengthsArrayName)
+
+    DREAM3D_FILTER_PARAMETER(QString, NumFeaturesArrayName)
+    Q_PROPERTY(QString NumFeaturesArrayName READ getNumFeaturesArrayName WRITE setNumFeaturesArrayName)
+
     virtual const QString getCompiledLibraryName() { return SyntheticBuilding::SyntheticBuildingBaseName; }
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::SyntheticBuildingFilters; }
@@ -203,19 +230,19 @@ class InsertPrecipitatePhases : public AbstractFilter
     DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, CellPhases)
     DEFINE_PTR_WEAKPTR_DATAARRAY(int8_t, SurfaceVoxels)
 
-    DEFINE_PTR_WEAKPTR_DATAARRAY(float, AxisEulerAngles)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(float, Centroids)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(float, AxisLengths)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(float, Volumes)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(float, Omega3s)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(float, EquivalentDiameters)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeaturePhases)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, NumCells)
+    DEFINE_CREATED_DATAARRAY(float, AxisEulerAngles)
+    DEFINE_CREATED_DATAARRAY(float, Centroids)
+    DEFINE_CREATED_DATAARRAY(float, AxisLengths)
+    DEFINE_CREATED_DATAARRAY(float, Volumes)
+    DEFINE_CREATED_DATAARRAY(float, Omega3s)
+    DEFINE_CREATED_DATAARRAY(float, EquivalentDiameters)
+    DEFINE_CREATED_DATAARRAY(int32_t, FeaturePhases)
+    DEFINE_CREATED_DATAARRAY(int32_t, NumCells)
     NeighborList<float>* m_ClusteringList;
 
     DEFINE_PTR_WEAKPTR_DATAARRAY(uint32_t, PhaseTypes)
     DEFINE_PTR_WEAKPTR_DATAARRAY(uint32_t, ShapeTypes)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, NumFeatures)
+    DEFINE_CREATED_DATAARRAY(int32_t, NumFeatures)
     StatsDataArray* m_StatsDataArray;
 
     OrthoRhombicOps::Pointer m_OrthoOps;

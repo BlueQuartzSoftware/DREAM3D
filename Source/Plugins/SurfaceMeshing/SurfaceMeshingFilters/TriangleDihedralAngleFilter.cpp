@@ -143,6 +143,8 @@ TriangleDihedralAngleFilter::~TriangleDihedralAngleFilter()
 void TriangleDihedralAngleFilter::setupFilterParameters()
 {
   FilterParameterVector parameters;
+  parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "QString", true));
+/*##*/parameters.push_back(FilterParameter::New("SurfaceMeshTriangleDihedralAngles", "SurfaceMeshTriangleDihedralAnglesArrayName", FilterParameterWidgetType::StringWidget, "QString", true, ""));
   setFilterParameters(parameters);
 }
 
@@ -152,6 +154,7 @@ void TriangleDihedralAngleFilter::setupFilterParameters()
 void TriangleDihedralAngleFilter::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
+/*[]*/setSurfaceMeshTriangleDihedralAnglesArrayName(reader->readString("SurfaceMeshTriangleDihedralAnglesArrayName", getSurfaceMeshTriangleDihedralAnglesArrayName() ) );
   reader->closeFilterGroup();
 }
 
@@ -161,6 +164,7 @@ void TriangleDihedralAngleFilter::readFilterParameters(AbstractFilterParametersR
 int TriangleDihedralAngleFilter::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
+/*[]*/writer->writeValue("SurfaceMeshTriangleDihedralAnglesArrayName", getSurfaceMeshTriangleDihedralAnglesArrayName() );
   /* Place code that will write the inputs values into a file. reference the
    AbstractFilterParametersWriter class for the proper API to use. */
   /*  writer->writeValue("OutputFile", getOutputFile() ); */
@@ -173,6 +177,7 @@ int TriangleDihedralAngleFilter::writeFilterParameters(AbstractFilterParametersW
 // -----------------------------------------------------------------------------
 void TriangleDihedralAngleFilter::dataCheck()
 {
+  DataArrayPath tempPath;
   SurfaceDataContainer* sm = getDataContainerArray()->getPrereqDataContainer<SurfaceDataContainer, AbstractFilter>(this, getSurfaceDataContainerName(), false);
   if(getErrorCondition() < 0) { return; }
   AttributeMatrix::Pointer faceAttrMat = sm->getPrereqAttributeMatrix<AbstractFilter>(this, getFaceAttributeMatrixName(), -300);
@@ -195,6 +200,8 @@ void TriangleDihedralAngleFilter::dataCheck()
   {
     QVector<size_t> dims(1, 1);
     m_SurfaceMeshTriangleDihedralAnglesPtr = faceAttrMat->createNonPrereqArray<DataArray<double>, AbstractFilter, double>(this, m_SurfaceMeshTriangleDihedralAnglesArrayName, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+////==>MIKE_GROEBER_FIX tempPath.update(DATACONTAINER_NAME, ATTRIBUTEMATRIX_NAME, getSurfaceMeshTriangleDihedralAnglesArrayName() );
+////==>MIKE_GROEBER_FIX m_SurfaceMeshTriangleDihedralAnglesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<double>, AbstractFilter, double>(this, tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
     if( NULL != m_SurfaceMeshTriangleDihedralAnglesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
     { m_SurfaceMeshTriangleDihedralAngles = m_SurfaceMeshTriangleDihedralAnglesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   }
@@ -260,6 +267,7 @@ AbstractFilter::Pointer TriangleDihedralAngleFilter::newFilterInstance(bool copy
   TriangleDihedralAngleFilter::Pointer filter = TriangleDihedralAngleFilter::New();
   if(true == copyFilterParameters)
   {
+    filter->setSurfaceMeshTriangleDihedralAnglesArrayName(getSurfaceMeshTriangleDihedralAnglesArrayName());
   }
   return filter;
 }

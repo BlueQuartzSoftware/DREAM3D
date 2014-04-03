@@ -81,6 +81,8 @@ void QuiltCellData::setupFilterParameters()
   parameters.push_back(FilterParameter::New("Output AttributeMatrix Name", "OutputAttributeMatrixName", FilterParameterWidgetType::StringWidget,"QString", false));
   parameters.push_back(FilterParameter::New("Output Data Array Name", "OutputArrayName", FilterParameterWidgetType::StringWidget,"QString", false));
 
+  parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "QString", true));
+/*##*/parameters.push_back(FilterParameter::New("tOutput", "tOutputArrayName", FilterParameterWidgetType::StringWidget, "QString", true, ""));
   setFilterParameters(parameters);
 }
 
@@ -90,6 +92,7 @@ void QuiltCellData::setupFilterParameters()
 void QuiltCellData::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
+/*[]*/settOutputArrayName(reader->readString("tOutputArrayName", gettOutputArrayName() ) );
   setSelectedCellArrayPath( reader->readDataArrayPath( "SelectedCellArrayPath", getSelectedCellArrayPath() ) );
   setOutputDataContainerName( reader->readString( "OutputDataContainerName", getOutputDataContainerName() ) );
   setOutputAttributeMatrixName( reader->readString( "OutputAttributeMatrixName", getOutputAttributeMatrixName() ) );
@@ -105,6 +108,7 @@ void QuiltCellData::readFilterParameters(AbstractFilterParametersReader* reader,
 int QuiltCellData::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
+/*[]*/writer->writeValue("tOutputArrayName", gettOutputArrayName() );
   writer->writeValue("SelectedCellArrayPath", getSelectedCellArrayPath() );
   writer->writeValue("OutputDataContainerName", getOutputDataContainerName() );
   writer->writeValue("OutputAttributeMatrixName", getOutputAttributeMatrixName() );
@@ -120,6 +124,7 @@ int QuiltCellData::writeFilterParameters(AbstractFilterParametersWriter* writer,
 // -----------------------------------------------------------------------------
 void QuiltCellData::dataCheck()
 {
+  DataArrayPath tempPath;
   setErrorCondition(0);
 
   // First sanity check the inputs and output names. All must be filled in
@@ -207,6 +212,8 @@ void QuiltCellData::dataCheck()
   //Get the name and create the array in the new data attrMat
   QVector<size_t> dims(1, 1);
   m_OutputArrayPtr = newCellAttrMat->createNonPrereqArray<DataArray<float>, AbstractFilter, float>(this, getOutputArrayName(), 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+////==>MIKE_GROEBER_FIX tempPath.update(DATACONTAINER_NAME, ATTRIBUTEMATRIX_NAME, gettOutputArrayName() );
+////==>MIKE_GROEBER_FIX m_tOutputPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_OutputArrayPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_OutputArray = m_OutputArrayPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
@@ -364,17 +371,10 @@ void QuiltCellData::execute()
 // -----------------------------------------------------------------------------
 AbstractFilter::Pointer QuiltCellData::newFilterInstance(bool copyFilterParameters)
 {
-  /*
-  * SelectedCellArrayName
-  * QuiltStep
-  * PatchSize
-  * OutputDataContainerName
-  * OutputAttributeMatrixName
-  * OutputArrayName
-  */
   QuiltCellData::Pointer filter = QuiltCellData::New();
   if(true == copyFilterParameters)
   {
+    filter->settOutputArrayName(gettOutputArrayName());
     filter->setSelectedCellArrayPath( getSelectedCellArrayPath() );
     filter->setQuiltStep( getQuiltStep() );
     filter->setPatchSize( getPatchSize() );

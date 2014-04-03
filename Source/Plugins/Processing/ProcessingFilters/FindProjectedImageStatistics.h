@@ -70,6 +70,21 @@ class FindProjectedImageStatistics : public AbstractFilter
     DREAM3D_FILTER_PARAMETER(unsigned int, Plane)
     Q_PROPERTY(unsigned int Plane READ getPlane WRITE setPlane)
 
+    DREAM3D_FILTER_PARAMETER(QString, ProjectedImageMinArrayName)
+    Q_PROPERTY(QString ProjectedImageMinArrayName READ getProjectedImageMinArrayName WRITE setProjectedImageMinArrayName)
+
+    DREAM3D_FILTER_PARAMETER(QString, ProjectedImageMaxArrayName)
+    Q_PROPERTY(QString ProjectedImageMaxArrayName READ getProjectedImageMaxArrayName WRITE setProjectedImageMaxArrayName)
+
+    DREAM3D_FILTER_PARAMETER(QString, ProjectedImageAvgArrayName)
+    Q_PROPERTY(QString ProjectedImageAvgArrayName READ getProjectedImageAvgArrayName WRITE setProjectedImageAvgArrayName)
+
+    DREAM3D_FILTER_PARAMETER(QString, ProjectedImageStdArrayName)
+    Q_PROPERTY(QString ProjectedImageStdArrayName READ getProjectedImageStdArrayName WRITE setProjectedImageStdArrayName)
+
+    DREAM3D_FILTER_PARAMETER(QString, ProjectedImageVarArrayName)
+    Q_PROPERTY(QString ProjectedImageVarArrayName READ getProjectedImageVarArrayName WRITE setProjectedImageVarArrayName)
+
     virtual const QString getCompiledLibraryName() { return Processing::ProcessingBaseName; }
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::ProcessingFilters; }
@@ -116,11 +131,11 @@ class FindProjectedImageStatistics : public AbstractFilter
     void find_crosssections();
 
   private:
-    DEFINE_PTR_WEAKPTR_DATAARRAY(float, ProjectedImageMin)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(float, ProjectedImageMax)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(float, ProjectedImageAvg)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(float, ProjectedImageStd)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(float, ProjectedImageVar)
+    DEFINE_CREATED_DATAARRAY(float, ProjectedImageMin)
+    DEFINE_CREATED_DATAARRAY(float, ProjectedImageMax)
+    DEFINE_CREATED_DATAARRAY(float, ProjectedImageAvg)
+    DEFINE_CREATED_DATAARRAY(float, ProjectedImageStd)
+    DEFINE_CREATED_DATAARRAY(float, ProjectedImageVar)
 
     void dataCheck();
 

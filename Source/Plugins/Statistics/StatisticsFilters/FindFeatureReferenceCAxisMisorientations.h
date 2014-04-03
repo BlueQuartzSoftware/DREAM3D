@@ -84,13 +84,33 @@ class FindFeatureReferenceCAxisMisorientations : public AbstractFilter
     DREAM3D_FILTER_PARAMETER(DataArrayPath, QuatsArrayPath)
     Q_PROPERTY(DataArrayPath QuatsArrayPath READ getQuatsArrayPath WRITE setQuatsArrayPath)
 
+    DREAM3D_FILTER_PARAMETER(QString, FeatureAvgCAxisMisorientationsArrayName)
+    Q_PROPERTY(QString FeatureAvgCAxisMisorientationsArrayName READ getFeatureAvgCAxisMisorientationsArrayName WRITE setFeatureAvgCAxisMisorientationsArrayName)
+
+    DREAM3D_FILTER_PARAMETER(QString, FeatureStdevCAxisMisorientationsArrayName)
+    Q_PROPERTY(QString FeatureStdevCAxisMisorientationsArrayName READ getFeatureStdevCAxisMisorientationsArrayName WRITE setFeatureStdevCAxisMisorientationsArrayName)
+
+    DREAM3D_FILTER_PARAMETER(QString, FeatureReferenceCAxisMisorientationsArrayName)
+    Q_PROPERTY(QString FeatureReferenceCAxisMisorientationsArrayName READ getFeatureReferenceCAxisMisorientationsArrayName WRITE setFeatureReferenceCAxisMisorientationsArrayName)
+
     virtual const QString getCompiledLibraryName() { return Statistics::StatisticsBaseName; }
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::CrystallographicFilters; }
     virtual const QString getHumanLabel() { return "Find Feature Reference C-Axis Misorientations"; }
 
+    /**
+    * @brief This method will instantiate all the end user settable options/parameters
+    * for this filter
+    */
     virtual void setupFilterParameters();
+
+    /**
+     * @brief writeFilterParameters
+     * @param writer
+     * @param index
+     * @return
+     */
     virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
 
     /**
@@ -125,9 +145,9 @@ signals:
     DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, CellPhases)
     DEFINE_PTR_WEAKPTR_DATAARRAY(float, Quats)
     DEFINE_PTR_WEAKPTR_DATAARRAY(float, AvgCAxes)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(float, FeatureReferenceCAxisMisorientations)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(float, FeatureAvgCAxisMisorientations)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(float, FeatureStdevCAxisMisorientations)
+    DEFINE_CREATED_DATAARRAY(float, FeatureReferenceCAxisMisorientations)
+    DEFINE_CREATED_DATAARRAY(float, FeatureAvgCAxisMisorientations)
+    DEFINE_CREATED_DATAARRAY(float, FeatureStdevCAxisMisorientations)
 
     void dataCheck();
 

@@ -88,6 +88,9 @@ class DREAM3DLib_EXPORT GenerateMisorientationColors : public AbstractFilter
     DREAM3D_FILTER_PARAMETER(DataArrayPath, GoodVoxelsArrayPath)
     Q_PROPERTY(DataArrayPath GoodVoxelsArrayPath READ getGoodVoxelsArrayPath WRITE setGoodVoxelsArrayPath)
 
+    DREAM3D_FILTER_PARAMETER(QString, MisorientationColorArrayName)
+    Q_PROPERTY(QString MisorientationColorArrayName READ getMisorientationColorArrayName WRITE setMisorientationColorArrayName)
+
     virtual const QString getCompiledLibraryName() { return Generic::GenericBaseName; }
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::GenericFilters; }
@@ -151,7 +154,7 @@ class DREAM3DLib_EXPORT GenerateMisorientationColors : public AbstractFilter
     DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, CellPhases)
     DEFINE_PTR_WEAKPTR_DATAARRAY(float, Quats)
     DEFINE_PTR_WEAKPTR_DATAARRAY(unsigned int, CrystalStructures)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(uint8_t, MisorientationColor)
+    DEFINE_CREATED_DATAARRAY(uint8_t, MisorientationColor)
     DEFINE_PTR_WEAKPTR_DATAARRAY(bool, GoodVoxels)
 
     GenerateMisorientationColors(const GenerateMisorientationColors&); // Copy Constructor Not Implemented

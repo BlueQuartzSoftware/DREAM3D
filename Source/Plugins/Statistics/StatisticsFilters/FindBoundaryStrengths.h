@@ -101,6 +101,18 @@ class FindBoundaryStrengths : public AbstractFilter
     DREAM3D_FILTER_PARAMETER(DataArrayPath, CrystalStructuresArrayPath)
     Q_PROPERTY(DataArrayPath CrystalStructuresArrayPath READ getCrystalStructuresArrayPath WRITE setCrystalStructuresArrayPath)
 
+    DREAM3D_FILTER_PARAMETER(QString, SurfaceMeshF1sArrayName)
+    Q_PROPERTY(QString SurfaceMeshF1sArrayName READ getSurfaceMeshF1sArrayName WRITE setSurfaceMeshF1sArrayName)
+
+    DREAM3D_FILTER_PARAMETER(QString, SurfaceMeshF1sptsArrayName)
+    Q_PROPERTY(QString SurfaceMeshF1sptsArrayName READ getSurfaceMeshF1sptsArrayName WRITE setSurfaceMeshF1sptsArrayName)
+
+    DREAM3D_FILTER_PARAMETER(QString, SurfaceMeshF7sArrayName)
+    Q_PROPERTY(QString SurfaceMeshF7sArrayName READ getSurfaceMeshF7sArrayName WRITE setSurfaceMeshF7sArrayName)
+
+    DREAM3D_FILTER_PARAMETER(QString, SurfaceMeshmPrimesArrayName)
+    Q_PROPERTY(QString SurfaceMeshmPrimesArrayName READ getSurfaceMeshmPrimesArrayName WRITE setSurfaceMeshmPrimesArrayName)
+
     virtual const QString getCompiledLibraryName() { return Statistics::StatisticsBaseName; }
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
@@ -147,10 +159,10 @@ class FindBoundaryStrengths : public AbstractFilter
     DEFINE_PTR_WEAKPTR_DATAARRAY(unsigned int, CrystalStructures)
 
     DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, SurfaceMeshFaceLabels)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(float, SurfaceMeshF1s)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(float, SurfaceMeshF1spts)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(float, SurfaceMeshF7s)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(float, SurfaceMeshmPrimes)
+    DEFINE_CREATED_DATAARRAY(float, SurfaceMeshF1s)
+    DEFINE_CREATED_DATAARRAY(float, SurfaceMeshF1spts)
+    DEFINE_CREATED_DATAARRAY(float, SurfaceMeshF7s)
+    DEFINE_CREATED_DATAARRAY(float, SurfaceMeshmPrimes)
 
     void dataCheckVoxel();
     void dataCheckSurfaceMesh();

@@ -118,6 +118,14 @@ class DREAM3DLib_EXPORT DataArrayPath : public QObject
      */
     QStringList split(QString NOT_USED = "|") const;
 
+    /**
+     * @brief Updates the DataArrayPath with the values in the arguments
+     * @param dcName The DataContainer Name
+     * @param amName The AttributeMatrix Name
+     * @param daName The DataArray Name
+     */
+    void update(const QString& dcName, const QString& amName, const QString& daName);
+
   private:
 
 

@@ -113,6 +113,18 @@ class ReadH5Ebsd : public AbstractFilter
     //-------------------------------------------------------
 
 
+    DREAM3D_FILTER_PARAMETER(QString, CellEulerAnglesArrayName)
+    Q_PROPERTY(QString CellEulerAnglesArrayName READ getCellEulerAnglesArrayName WRITE setCellEulerAnglesArrayName)
+
+    DREAM3D_FILTER_PARAMETER(QString, CellPhasesArrayName)
+    Q_PROPERTY(QString CellPhasesArrayName READ getCellPhasesArrayName WRITE setCellPhasesArrayName)
+
+    DREAM3D_FILTER_PARAMETER(QString, CrystalStructuresArrayName)
+    Q_PROPERTY(QString CrystalStructuresArrayName READ getCrystalStructuresArrayName WRITE setCrystalStructuresArrayName)
+
+    DREAM3D_FILTER_PARAMETER(QString, LatticeConstantsArrayName)
+    Q_PROPERTY(QString LatticeConstantsArrayName READ getLatticeConstantsArrayName WRITE setLatticeConstantsArrayName)
+
     virtual const QString getCompiledLibraryName() { return OrientationAnalysis::OrientationAnalysisBaseName; }
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
@@ -233,10 +245,10 @@ class ReadH5Ebsd : public AbstractFilter
     }
 
   private:
-    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, CellPhases)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(float, CellEulerAngles)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(uint32_t, CrystalStructures)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(float, LatticeConstants)
+    DEFINE_CREATED_DATAARRAY(int32_t, CellPhases)
+    DEFINE_CREATED_DATAARRAY(float, CellEulerAngles)
+    DEFINE_CREATED_DATAARRAY(uint32_t, CrystalStructures)
+    DEFINE_CREATED_DATAARRAY(float, LatticeConstants)
     StringDataArray::WeakPointer  m_MaterialNamesPtr;
 
     int tempxpoints;

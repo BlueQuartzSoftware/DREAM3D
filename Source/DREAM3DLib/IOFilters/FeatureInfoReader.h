@@ -78,6 +78,18 @@ class DREAM3DLib_EXPORT FeatureInfoReader : public FileReader
     DREAM3D_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
     Q_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
 
+    DREAM3D_FILTER_PARAMETER(QString, CellPhasesArrayName)
+    Q_PROPERTY(QString CellPhasesArrayName READ getCellPhasesArrayName WRITE setCellPhasesArrayName)
+
+    DREAM3D_FILTER_PARAMETER(QString, CellEulerAnglesArrayName)
+    Q_PROPERTY(QString CellEulerAnglesArrayName READ getCellEulerAnglesArrayName WRITE setCellEulerAnglesArrayName)
+
+    DREAM3D_FILTER_PARAMETER(QString, FeaturePhasesArrayName)
+    Q_PROPERTY(QString FeaturePhasesArrayName READ getFeaturePhasesArrayName WRITE setFeaturePhasesArrayName)
+
+    DREAM3D_FILTER_PARAMETER(QString, FeatureEulerAnglesArrayName)
+    Q_PROPERTY(QString FeatureEulerAnglesArrayName READ getFeatureEulerAnglesArrayName WRITE setFeatureEulerAnglesArrayName)
+
     virtual const QString getCompiledLibraryName() { return IO::IOBaseName; }
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
@@ -116,10 +128,10 @@ class DREAM3DLib_EXPORT FeatureInfoReader : public FileReader
 
   private:
     DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeatureIds)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, CellPhases)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(float, CellEulerAngles)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeaturePhases)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(float, FeatureEulerAngles)
+    DEFINE_CREATED_DATAARRAY(int32_t, CellPhases)
+    DEFINE_CREATED_DATAARRAY(float, CellEulerAngles)
+    DEFINE_CREATED_DATAARRAY(int32_t, FeaturePhases)
+    DEFINE_CREATED_DATAARRAY(float, FeatureEulerAngles)
 
     FeatureInfoReader(const FeatureInfoReader&); //Not Implemented
     void operator=(const FeatureInfoReader&); //Not Implemented

@@ -74,6 +74,8 @@ void FindNumFeatures::setupFilterParameters()
   parameters.push_back(FilterParameter::New("Ensemble Data Attribute Matrix", "CellEnsembleAttributeMatrixPath", FilterParameterWidgetType::AttributeMatrixSelectionWidget,"DataArrayPath", true));
   parameters.push_back(FilterParameter::New("Number of Features Array Name", "NumFeaturesArrayName", FilterParameterWidgetType::StringWidget,"QString", true));
 
+  parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "QString", true));
+/*##*/parameters.push_back(FilterParameter::New("NumFeatures", "NumFeaturesArrayName", FilterParameterWidgetType::StringWidget, "QString", true, ""));
   setFilterParameters(parameters);
 }
 
@@ -83,6 +85,7 @@ void FindNumFeatures::setupFilterParameters()
 void FindNumFeatures::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
+/*[]*/setNumFeaturesArrayName(reader->readString("NumFeaturesArrayName", getNumFeaturesArrayName() ) );
   setFeaturePhasesArrayPath( reader->readDataArrayPath("FeaturePhasesArrayPath", getFeaturePhasesArrayPath() ) );
   setCellEnsembleAttributeMatrixPath(reader->readDataArrayPath("CellEnsembleAttributeMatrixPath", getCellEnsembleAttributeMatrixPath() ) );
   setNumFeaturesArrayName( reader->readString("NumFeaturesArrayName", getNumFeaturesArrayName() ) );
@@ -95,6 +98,7 @@ void FindNumFeatures::readFilterParameters(AbstractFilterParametersReader* reade
 int FindNumFeatures::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
+/*[]*/writer->writeValue("NumFeaturesArrayName", getNumFeaturesArrayName() );
   writer->writeValue("FeaturePhasesArrayPath", getFeaturePhasesArrayPath() );
   writer->writeValue("CellEnsembleAttributeMatrixPath", getCellEnsembleAttributeMatrixPath() );
   writer->writeValue("NumFeaturesArrayName", getNumFeaturesArrayName() );
@@ -107,6 +111,7 @@ int FindNumFeatures::writeFilterParameters(AbstractFilterParametersWriter* write
 // -----------------------------------------------------------------------------
 void FindNumFeatures::dataCheck()
 {
+  DataArrayPath tempPath;
   setErrorCondition(0);
 
   AttributeMatrix::Pointer cellEnsembleAttrMat = getDataContainerArray()->getPrereqAttributeMatrixFromPath<VolumeDataContainer, AbstractFilter>(this, getCellEnsembleAttributeMatrixPath(), -304);
@@ -117,6 +122,8 @@ void FindNumFeatures::dataCheck()
   if( NULL != m_FeaturePhasesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_FeaturePhases = m_FeaturePhasesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   m_NumFeaturesPtr = cellEnsembleAttrMat->createNonPrereqArray<DataArray<int32_t>, AbstractFilter, int32_t>(this, m_NumFeaturesArrayName, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+////==>MIKE_GROEBER_FIX tempPath.update(DATACONTAINER_NAME, ATTRIBUTEMATRIX_NAME, getNumFeaturesArrayName() );
+////==>MIKE_GROEBER_FIX m_NumFeaturesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(this, tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_NumFeaturesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_NumFeatures = m_NumFeaturesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
@@ -164,6 +171,7 @@ AbstractFilter::Pointer FindNumFeatures::newFilterInstance(bool copyFilterParame
   FindNumFeatures::Pointer filter = FindNumFeatures::New();
   if(true == copyFilterParameters)
   {
+    filter->setNumFeaturesArrayName(getNumFeaturesArrayName());
     filter->setFeaturePhasesArrayPath(getFeaturePhasesArrayPath());
     filter->setCellEnsembleAttributeMatrixPath(getCellEnsembleAttributeMatrixPath());
     filter->setNumFeaturesArrayName(getNumFeaturesArrayName());

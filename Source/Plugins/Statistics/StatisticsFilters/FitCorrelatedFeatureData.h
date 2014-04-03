@@ -93,6 +93,9 @@ class FitCorrelatedFeatureData : public AbstractFilter
     DREAM3D_FILTER_PARAMETER(DataArrayPath, BiasedFeaturesArrayPath)
     Q_PROPERTY(DataArrayPath BiasedFeaturesArrayPath READ getBiasedFeaturesArrayPath WRITE setBiasedFeaturesArrayPath)
 
+    DREAM3D_FILTER_PARAMETER(QString, NewEnsembleArrayArrayName)
+    Q_PROPERTY(QString NewEnsembleArrayArrayName READ getNewEnsembleArrayArrayName WRITE setNewEnsembleArrayArrayName)
+
     virtual const QString getCompiledLibraryName() { return Statistics::StatisticsBaseName; }
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
@@ -154,7 +157,7 @@ class FitCorrelatedFeatureData : public AbstractFilter
 
   private:
     DEFINE_PTR_WEAKPTR_DATAARRAY(bool, BiasedFeatures)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(float, NewEnsembleArray)
+    DEFINE_CREATED_DATAARRAY(float, NewEnsembleArray)
     DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeaturePhases)
 
     FitCorrelatedFeatureData(const FitCorrelatedFeatureData&); // Copy Constructor Not Implemented

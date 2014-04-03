@@ -86,6 +86,9 @@ class ImportImageStack : public AbstractFilter
     * a different group if you want. The string returned here will be displayed
     * in the GUI for the filter
     */
+    DREAM3D_FILTER_PARAMETER(QString, ImageDataArrayName)
+    Q_PROPERTY(QString ImageDataArrayName READ getImageDataArrayName WRITE setImageDataArrayName)
+
     virtual const QString getCompiledLibraryName() { return ImageImport::ImageImportBaseName; }
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
@@ -154,7 +157,7 @@ signals:
     void generateFileList();
 
   private:
-    DEFINE_PTR_WEAKPTR_DATAARRAY(uint8_t, ImageData)
+    DEFINE_CREATED_DATAARRAY(uint8_t, ImageData)
 
     ImportImageStack(const ImportImageStack&); // Copy Constructor Not Implemented
     void operator=(const ImportImageStack&); // Operator '=' Not Implemented

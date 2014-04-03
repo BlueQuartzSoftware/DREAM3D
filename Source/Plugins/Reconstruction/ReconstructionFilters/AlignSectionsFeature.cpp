@@ -77,14 +77,15 @@ AlignSectionsFeature::AlignSectionsFeature() :
 AlignSectionsFeature::~AlignSectionsFeature()
 {
 }
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 void AlignSectionsFeature::setupFilterParameters()
 {
-  // Run the superclass first.
-  //AlignSections::setupFilterParameters();
+  FilterParameterVector parameters;
+  parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "QString", true));
+/*[]*/parameters.push_back(FilterParameter::New("GoodVoxels", "GoodVoxelsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
+  setFilterParameters(parameters);
 }
 
 // -----------------------------------------------------------------------------

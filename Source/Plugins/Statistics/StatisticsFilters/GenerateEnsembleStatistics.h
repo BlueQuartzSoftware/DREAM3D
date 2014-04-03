@@ -114,11 +114,20 @@ class GenerateEnsembleStatistics : public AbstractFilter
     DREAM3D_FILTER_PARAMETER(DataArrayPath, AvgQuatsArrayPath)
     Q_PROPERTY(DataArrayPath AvgQuatsArrayPath READ getAvgQuatsArrayPath WRITE setAvgQuatsArrayPath)
 
+    DREAM3D_FILTER_PARAMETER(QString, PhaseTypesArrayName)
+    Q_PROPERTY(QString PhaseTypesArrayName READ getPhaseTypesArrayName WRITE setPhaseTypesArrayName)
+
     virtual const QString getCompiledLibraryName() { return Statistics::StatisticsBaseName; }
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::EnsembleStatsFilters; }
     virtual const QString getHumanLabel() { return "Generate Ensemble Statistics"; }
+
+    /**
+    * @brief This method will instantiate all the end user settable options/parameters
+    * for this filter
+    */
+    virtual void setupFilterParameters();
 
     DREAM3D_INSTANCE_PROPERTY(float, SizeCorrelationResolution)
     DREAM3D_INSTANCE_PROPERTY(bool, SizeDistribution)
@@ -187,7 +196,7 @@ signals:
     DEFINE_PTR_WEAKPTR_DATAARRAY(float, EquivalentDiameters)
     DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, Neighborhoods)
     DEFINE_PTR_WEAKPTR_DATAARRAY(unsigned int, CrystalStructures)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(uint32_t, PhaseTypes)
+    DEFINE_CREATED_DATAARRAY(uint32_t, PhaseTypes)
 
     NeighborList<int>* m_NeighborList;
     NeighborList<float>* m_SharedSurfaceAreaList;

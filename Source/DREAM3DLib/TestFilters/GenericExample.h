@@ -172,6 +172,12 @@ class DREAM3DLib_EXPORT GenericExample : public AbstractFilter
     DREAM3D_FILTER_PARAMETER(DataArrayPath, GoodVoxelsArrayPath)
     Q_PROPERTY(DataArrayPath GoodVoxelsArrayPath READ getGoodVoxelsArrayPath WRITE setGoodVoxelsArrayPath)
 
+    DREAM3D_FILTER_PARAMETER(QString, CellEulerAnglesArrayName)
+    Q_PROPERTY(QString CellEulerAnglesArrayName READ getCellEulerAnglesArrayName WRITE setCellEulerAnglesArrayName)
+
+    DREAM3D_FILTER_PARAMETER(QString, GoodVoxelsArrayName)
+    Q_PROPERTY(QString GoodVoxelsArrayName READ getGoodVoxelsArrayName WRITE setGoodVoxelsArrayName)
+
     virtual const QString getCompiledLibraryName() { return Test::TestBaseName; }
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::TestFilters; }
@@ -242,8 +248,8 @@ class DREAM3DLib_EXPORT GenericExample : public AbstractFilter
   private:
     DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeatureIds)
     DEFINE_PTR_WEAKPTR_DATAARRAY(float, CellPatternQuality)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(float, CellEulerAngles)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(bool, GoodVoxels)
+    DEFINE_CREATED_DATAARRAY(float, CellEulerAngles)
+    DEFINE_CREATED_DATAARRAY(bool, GoodVoxels)
 
     GenericExample(const GenericExample&); // Copy Constructor Not Implemented
     void operator=(const GenericExample&); // Operator '=' Not Implemented

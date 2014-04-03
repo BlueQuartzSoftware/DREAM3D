@@ -128,6 +128,8 @@ TriangleNormalFilter::~TriangleNormalFilter()
 void TriangleNormalFilter::setupFilterParameters()
 {
   FilterParameterVector parameters;
+  parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "QString", true));
+/*##*/parameters.push_back(FilterParameter::New("SurfaceMeshTriangleNormals", "SurfaceMeshTriangleNormalsArrayName", FilterParameterWidgetType::StringWidget, "QString", true, ""));
   setFilterParameters(parameters);
 }
 
@@ -137,6 +139,7 @@ void TriangleNormalFilter::setupFilterParameters()
 void TriangleNormalFilter::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
+/*[]*/setSurfaceMeshTriangleNormalsArrayName(reader->readString("SurfaceMeshTriangleNormalsArrayName", getSurfaceMeshTriangleNormalsArrayName() ) );
   reader->closeFilterGroup();
 }
 
@@ -146,6 +149,7 @@ void TriangleNormalFilter::readFilterParameters(AbstractFilterParametersReader* 
 int TriangleNormalFilter::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
+/*[]*/writer->writeValue("SurfaceMeshTriangleNormalsArrayName", getSurfaceMeshTriangleNormalsArrayName() );
   /* Place code that will write the inputs values into a file. reference the
    AbstractFilterParametersWriter class for the proper API to use. */
   /*  writer->writeValue("OutputFile", getOutputFile() ); */
@@ -158,6 +162,7 @@ int TriangleNormalFilter::writeFilterParameters(AbstractFilterParametersWriter* 
 // -----------------------------------------------------------------------------
 void TriangleNormalFilter::dataCheck()
 {
+  DataArrayPath tempPath;
   SurfaceDataContainer* sm = getDataContainerArray()->getPrereqDataContainer<SurfaceDataContainer, AbstractFilter>(this, getSurfaceDataContainerName(), false);
   if(getErrorCondition() < 0) { return; }
   AttributeMatrix::Pointer faceAttrMat = sm->getPrereqAttributeMatrix<AbstractFilter>(this, getFaceAttributeMatrixName(), -300);
@@ -180,6 +185,8 @@ void TriangleNormalFilter::dataCheck()
   {
     QVector<size_t> dims(1, 3);
     m_SurfaceMeshTriangleNormalsPtr = faceAttrMat->createNonPrereqArray<DataArray<double>, AbstractFilter, double>(this, m_SurfaceMeshTriangleNormalsArrayName, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+////==>MIKE_GROEBER_FIX tempPath.update(DATACONTAINER_NAME, ATTRIBUTEMATRIX_NAME, getSurfaceMeshTriangleNormalsArrayName() );
+////==>MIKE_GROEBER_FIX m_SurfaceMeshTriangleNormalsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<double>, AbstractFilter, double>(this, tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
     if( NULL != m_SurfaceMeshTriangleNormalsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
     { m_SurfaceMeshTriangleNormals = m_SurfaceMeshTriangleNormalsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   }
@@ -248,6 +255,7 @@ AbstractFilter::Pointer TriangleNormalFilter::newFilterInstance(bool copyFilterP
   TriangleNormalFilter::Pointer filter = TriangleNormalFilter::New();
   if(true == copyFilterParameters)
   {
+    filter->setSurfaceMeshTriangleNormalsArrayName(getSurfaceMeshTriangleNormalsArrayName());
   }
   return filter;
 }

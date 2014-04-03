@@ -96,7 +96,7 @@ namespace DREAM3D
     const DREAM3D_STRING SyntheticVolumeDataContainerName("SyntheticVolumeDataContainer");
     const DREAM3D_STRING StatsGenerator("StatsGeneratorDataContainer");
 
-    const DREAM3D_STRING SomePath("SomePath");
+    const DREAM3D_STRING SomePath("SomeDataContainer|SomeAttributeMatrix|SomeDataArray");
   }
 
   namespace FilterGroups

@@ -74,6 +74,9 @@ class FindLargestCrossSections : public AbstractFilter
     DREAM3D_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
     Q_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
 
+    DREAM3D_FILTER_PARAMETER(QString, LargestCrossSectionsArrayName)
+    Q_PROPERTY(QString LargestCrossSectionsArrayName READ getLargestCrossSectionsArrayName WRITE setLargestCrossSectionsArrayName)
+
     virtual const QString getCompiledLibraryName() { return Statistics::StatisticsBaseName; }
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
@@ -121,7 +124,7 @@ class FindLargestCrossSections : public AbstractFilter
 
   private:
     DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeatureIds)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(float, LargestCrossSections)
+    DEFINE_CREATED_DATAARRAY(float, LargestCrossSections)
 
     void dataCheck();
 

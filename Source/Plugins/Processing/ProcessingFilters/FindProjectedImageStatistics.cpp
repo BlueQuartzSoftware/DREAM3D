@@ -170,6 +170,12 @@ void FindProjectedImageStatistics::setupFilterParameters()
     parameter->setChoices(choices);
     parameters.push_back(parameter);
   }
+  parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "QString", true));
+/*##*/parameters.push_back(FilterParameter::New("ProjectedImageMin", "ProjectedImageMinArrayName", FilterParameterWidgetType::StringWidget, "QString", true, ""));
+/*##*/parameters.push_back(FilterParameter::New("ProjectedImageMax", "ProjectedImageMaxArrayName", FilterParameterWidgetType::StringWidget, "QString", true, ""));
+/*##*/parameters.push_back(FilterParameter::New("ProjectedImageAvg", "ProjectedImageAvgArrayName", FilterParameterWidgetType::StringWidget, "QString", true, ""));
+/*##*/parameters.push_back(FilterParameter::New("ProjectedImageStd", "ProjectedImageStdArrayName", FilterParameterWidgetType::StringWidget, "QString", true, ""));
+/*##*/parameters.push_back(FilterParameter::New("ProjectedImageVar", "ProjectedImageVarArrayName", FilterParameterWidgetType::StringWidget, "QString", true, ""));
   setFilterParameters(parameters);
 }
 
@@ -177,6 +183,11 @@ void FindProjectedImageStatistics::setupFilterParameters()
 void FindProjectedImageStatistics::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
+/*[]*/setProjectedImageVarArrayName(reader->readString("ProjectedImageVarArrayName", getProjectedImageVarArrayName() ) );
+/*[]*/setProjectedImageStdArrayName(reader->readString("ProjectedImageStdArrayName", getProjectedImageStdArrayName() ) );
+/*[]*/setProjectedImageAvgArrayName(reader->readString("ProjectedImageAvgArrayName", getProjectedImageAvgArrayName() ) );
+/*[]*/setProjectedImageMaxArrayName(reader->readString("ProjectedImageMaxArrayName", getProjectedImageMaxArrayName() ) );
+/*[]*/setProjectedImageMinArrayName(reader->readString("ProjectedImageMinArrayName", getProjectedImageMinArrayName() ) );
   setSelectedArrayPath( reader->readDataArrayPath( "SelectedArrayPath", getSelectedArrayPath() ) );
   setPlane( reader->readValue("Plane", getPlane()));
   reader->closeFilterGroup();
@@ -188,6 +199,11 @@ void FindProjectedImageStatistics::readFilterParameters(AbstractFilterParameters
 int FindProjectedImageStatistics::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
+/*[]*/writer->writeValue("ProjectedImageVarArrayName", getProjectedImageVarArrayName() );
+/*[]*/writer->writeValue("ProjectedImageStdArrayName", getProjectedImageStdArrayName() );
+/*[]*/writer->writeValue("ProjectedImageAvgArrayName", getProjectedImageAvgArrayName() );
+/*[]*/writer->writeValue("ProjectedImageMaxArrayName", getProjectedImageMaxArrayName() );
+/*[]*/writer->writeValue("ProjectedImageMinArrayName", getProjectedImageMinArrayName() );
   writer->writeValue("SelectedArrayPath", getSelectedArrayPath() );
   writer->writeValue("Plane", getPlane());
   writer->closeFilterGroup();
@@ -199,6 +215,7 @@ int FindProjectedImageStatistics::writeFilterParameters(AbstractFilterParameters
 // -----------------------------------------------------------------------------
 void FindProjectedImageStatistics::dataCheck()
 {
+  DataArrayPath tempPath;
   setErrorCondition(0);
 
 
@@ -209,18 +226,28 @@ void FindProjectedImageStatistics::dataCheck()
 
   QVector<size_t> dims(1, 1);
   m_ProjectedImageMinPtr = cellAttrMat->createNonPrereqArray<DataArray<float>, AbstractFilter, float>(this, m_ProjectedImageMinArrayName, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+////==>MIKE_GROEBER_FIX tempPath.update(DATACONTAINER_NAME, ATTRIBUTEMATRIX_NAME, getProjectedImageMinArrayName() );
+////==>MIKE_GROEBER_FIX m_ProjectedImageMinPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_ProjectedImageMinPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_ProjectedImageMin = m_ProjectedImageMinPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   m_ProjectedImageMaxPtr = cellAttrMat->createNonPrereqArray<DataArray<float>, AbstractFilter, float>(this, m_ProjectedImageMaxArrayName, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+////==>MIKE_GROEBER_FIX tempPath.update(DATACONTAINER_NAME, ATTRIBUTEMATRIX_NAME, getProjectedImageMaxArrayName() );
+////==>MIKE_GROEBER_FIX m_ProjectedImageMaxPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_ProjectedImageMaxPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_ProjectedImageMax = m_ProjectedImageMaxPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   m_ProjectedImageAvgPtr = cellAttrMat->createNonPrereqArray<DataArray<float>, AbstractFilter, float>(this, m_ProjectedImageAvgArrayName, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+////==>MIKE_GROEBER_FIX tempPath.update(DATACONTAINER_NAME, ATTRIBUTEMATRIX_NAME, getProjectedImageAvgArrayName() );
+////==>MIKE_GROEBER_FIX m_ProjectedImageAvgPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_ProjectedImageAvgPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_ProjectedImageAvg = m_ProjectedImageAvgPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   m_ProjectedImageStdPtr = cellAttrMat->createNonPrereqArray<DataArray<float>, AbstractFilter, float>(this, m_ProjectedImageStdArrayName, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+////==>MIKE_GROEBER_FIX tempPath.update(DATACONTAINER_NAME, ATTRIBUTEMATRIX_NAME, getProjectedImageStdArrayName() );
+////==>MIKE_GROEBER_FIX m_ProjectedImageStdPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_ProjectedImageStdPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_ProjectedImageStd = m_ProjectedImageStdPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   m_ProjectedImageVarPtr = cellAttrMat->createNonPrereqArray<DataArray<float>, AbstractFilter, float>(this, m_ProjectedImageVarArrayName, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+////==>MIKE_GROEBER_FIX tempPath.update(DATACONTAINER_NAME, ATTRIBUTEMATRIX_NAME, getProjectedImageVarArrayName() );
+////==>MIKE_GROEBER_FIX m_ProjectedImageVarPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_ProjectedImageVarPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_ProjectedImageVar = m_ProjectedImageVarPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
@@ -521,13 +548,14 @@ void FindProjectedImageStatistics::execute()
 // -----------------------------------------------------------------------------
 AbstractFilter::Pointer FindProjectedImageStatistics::newFilterInstance(bool copyFilterParameters)
 {
-  /*
-  * SelectedArrayPath
-  * Plane
-  */
   FindProjectedImageStatistics::Pointer filter = FindProjectedImageStatistics::New();
   if(true == copyFilterParameters)
   {
+    filter->setProjectedImageVarArrayName(getProjectedImageVarArrayName());
+    filter->setProjectedImageStdArrayName(getProjectedImageStdArrayName());
+    filter->setProjectedImageAvgArrayName(getProjectedImageAvgArrayName());
+    filter->setProjectedImageMaxArrayName(getProjectedImageMaxArrayName());
+    filter->setProjectedImageMinArrayName(getProjectedImageMinArrayName());
     filter->setSelectedArrayPath( getSelectedArrayPath() );
     filter->setPlane( getPlane() );
   }

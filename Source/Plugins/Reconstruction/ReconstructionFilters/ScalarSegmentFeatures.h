@@ -90,6 +90,12 @@ class ScalarSegmentFeatures : public SegmentFeatures
     DREAM3D_FILTER_PARAMETER(DataArrayPath, GoodVoxelsArrayPath)
     Q_PROPERTY(DataArrayPath GoodVoxelsArrayPath READ getGoodVoxelsArrayPath WRITE setGoodVoxelsArrayPath)
 
+    DREAM3D_FILTER_PARAMETER(QString, FeatureIdsArrayName)
+    Q_PROPERTY(QString FeatureIdsArrayName READ getFeatureIdsArrayName WRITE setFeatureIdsArrayName)
+
+    DREAM3D_FILTER_PARAMETER(QString, ActiveArrayName)
+    Q_PROPERTY(QString ActiveArrayName READ getActiveArrayName WRITE setActiveArrayName)
+
     virtual const QString getCompiledLibraryName() { return Reconstruction::ReconstructionBaseName; }
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::ReconstructionFilters; }
@@ -130,9 +136,9 @@ class ScalarSegmentFeatures : public SegmentFeatures
   private:
     IDataArray::Pointer m_InputData;
 
-    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeatureIds)
+    DEFINE_CREATED_DATAARRAY(int32_t, FeatureIds)
     DEFINE_PTR_WEAKPTR_DATAARRAY(bool, GoodVoxels)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(bool, Active)
+    DEFINE_CREATED_DATAARRAY(bool, Active)
 
     ///Boost Random Number generator stuff. We use the boost::shared_ptr to ensure the pointers are cleaned up when the
     ///filter is deleted

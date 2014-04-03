@@ -78,11 +78,20 @@ class FindAvgCAxes : public AbstractFilter
     DREAM3D_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
     Q_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
 
+    DREAM3D_FILTER_PARAMETER(QString, AvgCAxesArrayName)
+    Q_PROPERTY(QString AvgCAxesArrayName READ getAvgCAxesArrayName WRITE setAvgCAxesArrayName)
+
     virtual const QString getCompiledLibraryName() { return Statistics::StatisticsBaseName; }
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::CrystallographicFilters; }
     virtual const QString getHumanLabel() { return "Find Average C-Axis Orientations"; }
+
+    /**
+    * @brief This method will instantiate all the end user settable options/parameters
+    * for this filter
+    */
+    virtual void setupFilterParameters();
 
     virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
 
@@ -115,7 +124,7 @@ signals:
 
     DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeatureIds)
     DEFINE_PTR_WEAKPTR_DATAARRAY(float, Quats)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(float, AvgCAxes)
+    DEFINE_CREATED_DATAARRAY(float, AvgCAxes)
 
     void dataCheck();
 

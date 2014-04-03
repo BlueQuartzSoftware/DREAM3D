@@ -70,6 +70,18 @@ class FindEuclideanDistMap : public AbstractFilter
     DREAM3D_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
     Q_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
 
+    DREAM3D_FILTER_PARAMETER(QString, GBEuclideanDistancesArrayName)
+    Q_PROPERTY(QString GBEuclideanDistancesArrayName READ getGBEuclideanDistancesArrayName WRITE setGBEuclideanDistancesArrayName)
+
+    DREAM3D_FILTER_PARAMETER(QString, TJEuclideanDistancesArrayName)
+    Q_PROPERTY(QString TJEuclideanDistancesArrayName READ getTJEuclideanDistancesArrayName WRITE setTJEuclideanDistancesArrayName)
+
+    DREAM3D_FILTER_PARAMETER(QString, QPEuclideanDistancesArrayName)
+    Q_PROPERTY(QString QPEuclideanDistancesArrayName READ getQPEuclideanDistancesArrayName WRITE setQPEuclideanDistancesArrayName)
+
+    DREAM3D_FILTER_PARAMETER(QString, NearestNeighborsArrayName)
+    Q_PROPERTY(QString NearestNeighborsArrayName READ getNearestNeighborsArrayName WRITE setNearestNeighborsArrayName)
+
     virtual const QString getCompiledLibraryName() { return Statistics::StatisticsBaseName; }
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
@@ -113,10 +125,10 @@ signals:
 
   private:
     DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeatureIds)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, NearestNeighbors)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(float, GBEuclideanDistances)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(float, TJEuclideanDistances)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(float, QPEuclideanDistances)
+    DEFINE_CREATED_DATAARRAY(int32_t, NearestNeighbors)
+    DEFINE_CREATED_DATAARRAY(float, GBEuclideanDistances)
+    DEFINE_CREATED_DATAARRAY(float, TJEuclideanDistances)
+    DEFINE_CREATED_DATAARRAY(float, QPEuclideanDistances)
 
     void dataCheck();
 

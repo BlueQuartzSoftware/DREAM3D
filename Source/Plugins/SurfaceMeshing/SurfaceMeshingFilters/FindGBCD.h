@@ -104,6 +104,9 @@ class FindGBCD : public SurfaceMeshFilter
     DREAM3D_FILTER_PARAMETER(DataArrayPath, CrystalStructuresArrayPath)
     Q_PROPERTY(DataArrayPath CrystalStructuresArrayPath READ getCrystalStructuresArrayPath WRITE setCrystalStructuresArrayPath)
 
+    DREAM3D_FILTER_PARAMETER(QString, GBCDArrayName)
+    Q_PROPERTY(QString GBCDArrayName READ getGBCDArrayName WRITE setGBCDArrayName)
+
     virtual const QString getCompiledLibraryName() { return SurfaceMeshing::SurfaceMeshingBaseName; }
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
@@ -175,7 +178,7 @@ class FindGBCD : public SurfaceMeshFilter
     DEFINE_PTR_WEAKPTR_DATAARRAY(float, FeatureEulerAngles)
     DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeaturePhases)
     DEFINE_PTR_WEAKPTR_DATAARRAY(unsigned int, CrystalStructures)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(double, GBCD)
+    DEFINE_CREATED_DATAARRAY(double, GBCD)
 
     FloatArrayType::Pointer gbcdDeltasArray;
     FloatArrayType::Pointer gbcdLimitsArray;

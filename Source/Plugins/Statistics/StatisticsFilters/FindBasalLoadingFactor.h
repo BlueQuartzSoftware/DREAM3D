@@ -82,6 +82,9 @@ class FindBasalLoadingFactor : public AbstractFilter
     DREAM3D_FILTER_PARAMETER(DataArrayPath, CrystalStructuresArrayPath)
     Q_PROPERTY(DataArrayPath CrystalStructuresArrayPath READ getCrystalStructuresArrayPath WRITE setCrystalStructuresArrayPath)
 
+    DREAM3D_FILTER_PARAMETER(QString, BasalLoadingFactorArrayName)
+    Q_PROPERTY(QString BasalLoadingFactorArrayName READ getBasalLoadingFactorArrayName WRITE setBasalLoadingFactorArrayName)
+
     virtual const QString getCompiledLibraryName() { return Statistics::StatisticsBaseName; }
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
@@ -119,7 +122,7 @@ class FindBasalLoadingFactor : public AbstractFilter
   private:
     QVector<OrientationOps::Pointer> m_OrientationOps;
 
-    DEFINE_PTR_WEAKPTR_DATAARRAY(float, BasalLoadingFactor)
+    DEFINE_CREATED_DATAARRAY(float, BasalLoadingFactor)
     DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeaturePhases)
     DEFINE_PTR_WEAKPTR_DATAARRAY(float, AvgQuats)
 

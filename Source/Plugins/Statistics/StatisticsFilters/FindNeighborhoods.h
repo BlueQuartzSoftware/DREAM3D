@@ -83,6 +83,9 @@ class FindNeighborhoods : public AbstractFilter
     DREAM3D_FILTER_PARAMETER(DataArrayPath, CentroidsArrayPath)
     Q_PROPERTY(DataArrayPath CentroidsArrayPath READ getCentroidsArrayPath WRITE setCentroidsArrayPath)
 
+    DREAM3D_FILTER_PARAMETER(QString, NeighborhoodsArrayName)
+    Q_PROPERTY(QString NeighborhoodsArrayName READ getNeighborhoodsArrayName WRITE setNeighborhoodsArrayName)
+
     virtual const QString getCompiledLibraryName() { return Statistics::StatisticsBaseName; }
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
@@ -124,7 +127,7 @@ class FindNeighborhoods : public AbstractFilter
     DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeaturePhases)
     DEFINE_PTR_WEAKPTR_DATAARRAY(float, Centroids)
     DEFINE_PTR_WEAKPTR_DATAARRAY(float, EquivalentDiameters)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, Neighborhoods)
+    DEFINE_CREATED_DATAARRAY(int32_t, Neighborhoods)
     NeighborList<int>* m_NeighborhoodList;
 
     void dataCheck();

@@ -73,7 +73,14 @@ FindFeatureClustering::~FindFeatureClustering()
 // -----------------------------------------------------------------------------
 void FindFeatureClustering::setupFilterParameters()
 {
+  FilterParameterVector parameters;
+  parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "QString", true));
+/*[]*/parameters.push_back(FilterParameter::New("EquivalentDiameters", "EquivalentDiametersArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
+/*[]*/parameters.push_back(FilterParameter::New("FeaturePhases", "FeaturePhasesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
+/*[]*/parameters.push_back(FilterParameter::New("Centroids", "CentroidsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
+  setFilterParameters(parameters);
 }
+
 // -----------------------------------------------------------------------------
 void FindFeatureClustering::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {

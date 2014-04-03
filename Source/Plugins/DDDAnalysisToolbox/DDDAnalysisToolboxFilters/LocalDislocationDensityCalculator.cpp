@@ -105,6 +105,8 @@ void LocalDislocationDensityCalculator::setupFilterParameters()
     parameters.push_back(parameter);
   }
 
+  parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "QString", true));
+/*##*/parameters.push_back(FilterParameter::New("tOutput", "tOutputArrayName", FilterParameterWidgetType::StringWidget, "QString", true, ""));
   setFilterParameters(parameters);
 }
 
@@ -114,6 +116,7 @@ void LocalDislocationDensityCalculator::setupFilterParameters()
 void LocalDislocationDensityCalculator::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
+/*[]*/settOutputArrayName(reader->readString("tOutputArrayName", gettOutputArrayName() ) );
   setOutputDataContainerName( reader->readString( "OutputDataContainerName", getOutputDataContainerName() ) );
   setOutputAttributeMatrixName( reader->readString( "OutputAttributeMatrixName", getOutputAttributeMatrixName() ) );
   setOutputArrayName( reader->readString( "OutputArrayName", getOutputArrayName() ) );
@@ -127,6 +130,7 @@ void LocalDislocationDensityCalculator::readFilterParameters(AbstractFilterParam
 int LocalDislocationDensityCalculator::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
+/*[]*/writer->writeValue("tOutputArrayName", gettOutputArrayName() );
   writer->writeValue("OutputDataContainerName", getOutputDataContainerName() );
   writer->writeValue("OutputAttributeMatrixName", getOutputAttributeMatrixName() );
   writer->writeValue("OutputArrayName", getOutputArrayName() );
@@ -151,6 +155,7 @@ void LocalDislocationDensityCalculator::updateCellInstancePointers()
 // -----------------------------------------------------------------------------
 void LocalDislocationDensityCalculator::dataCheck()
 {
+  DataArrayPath tempPath;
   setErrorCondition(0);
 
   // First sanity check the inputs and output names. All must be filled in
@@ -208,6 +213,8 @@ void LocalDislocationDensityCalculator::dataCheck()
   //Get the name and create the array in the new data attrMat
   QVector<size_t> dims(1, 1);
   m_OutputArrayPtr = newCellAttrMat->createNonPrereqArray<DataArray<float>, AbstractFilter, float>(this, getOutputArrayName(), 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+////==>MIKE_GROEBER_FIX tempPath.update(DATACONTAINER_NAME, ATTRIBUTEMATRIX_NAME, gettOutputArrayName() );
+////==>MIKE_GROEBER_FIX m_tOutputPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_OutputArrayPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_OutputArray = m_OutputArrayPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 }

@@ -89,10 +89,12 @@ class FindFeatureClustering : public AbstractFilter
     virtual const QString getHumanLabel() { return "Find Feature Clustering"; }
 
     /**
-    * @brief Reimplemented from @see AbstractFilter class
+    * @brief This method will instantiate all the end user settable options/parameters
+    * for this filter
     */
-
     virtual void setupFilterParameters();
+
+
     /**
     * @brief This method will write the options to a file
     * @param writer The writer that is used to write the options to a file

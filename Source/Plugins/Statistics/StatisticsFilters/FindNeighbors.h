@@ -81,6 +81,15 @@ class FindNeighbors : public AbstractFilter
     Q_PROPERTY(QString SurfaceFeaturesArrayName READ getSurfaceFeaturesArrayName WRITE setSurfaceFeaturesArrayName)
     Q_PROPERTY(QString NumNeighborsArrayName READ getNumNeighborsArrayName WRITE setNumNeighborsArrayName)
 
+    DREAM3D_FILTER_PARAMETER(QString, SurfaceVoxelsArrayName)
+    Q_PROPERTY(QString SurfaceVoxelsArrayName READ getSurfaceVoxelsArrayName WRITE setSurfaceVoxelsArrayName)
+
+    DREAM3D_FILTER_PARAMETER(QString, NumNeighborsArrayName)
+    Q_PROPERTY(QString NumNeighborsArrayName READ getNumNeighborsArrayName WRITE setNumNeighborsArrayName)
+
+    DREAM3D_FILTER_PARAMETER(QString, SurfaceFeaturesArrayName)
+    Q_PROPERTY(QString SurfaceFeaturesArrayName READ getSurfaceFeaturesArrayName WRITE setSurfaceFeaturesArrayName)
+
     virtual const QString getCompiledLibraryName() { return Statistics::StatisticsBaseName; }
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
@@ -122,9 +131,9 @@ class FindNeighbors : public AbstractFilter
 
   private:
     DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeatureIds)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(int8_t, SurfaceVoxels)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(bool, SurfaceFeatures)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, NumNeighbors)
+    DEFINE_CREATED_DATAARRAY(int8_t, SurfaceVoxels)
+    DEFINE_CREATED_DATAARRAY(bool, SurfaceFeatures)
+    DEFINE_CREATED_DATAARRAY(int32_t, NumNeighbors)
     NeighborList<int>::Pointer m_NeighborList;
     NeighborList<float>::Pointer m_SharedSurfaceAreaList;
 

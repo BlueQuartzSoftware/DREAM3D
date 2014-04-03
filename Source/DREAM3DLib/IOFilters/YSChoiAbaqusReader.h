@@ -63,6 +63,27 @@ class DREAM3DLib_EXPORT YSChoiAbaqusReader : public FileReader
     DREAM3D_FILTER_PARAMETER(QString, InputFeatureInfoFile)
     Q_PROPERTY(QString InputFeatureInfoFile READ getInputFeatureInfoFile WRITE setInputFeatureInfoFile)
 
+    DREAM3D_FILTER_PARAMETER(QString, CellEulerAnglesArrayName)
+    Q_PROPERTY(QString CellEulerAnglesArrayName READ getCellEulerAnglesArrayName WRITE setCellEulerAnglesArrayName)
+
+    DREAM3D_FILTER_PARAMETER(QString, QuatsArrayName)
+    Q_PROPERTY(QString QuatsArrayName READ getQuatsArrayName WRITE setQuatsArrayName)
+
+    DREAM3D_FILTER_PARAMETER(QString, AvgQuatsArrayName)
+    Q_PROPERTY(QString AvgQuatsArrayName READ getAvgQuatsArrayName WRITE setAvgQuatsArrayName)
+
+    DREAM3D_FILTER_PARAMETER(QString, CellPhasesArrayName)
+    Q_PROPERTY(QString CellPhasesArrayName READ getCellPhasesArrayName WRITE setCellPhasesArrayName)
+
+    DREAM3D_FILTER_PARAMETER(QString, SurfaceFeaturesArrayName)
+    Q_PROPERTY(QString SurfaceFeaturesArrayName READ getSurfaceFeaturesArrayName WRITE setSurfaceFeaturesArrayName)
+
+    DREAM3D_FILTER_PARAMETER(QString, FeatureIdsArrayName)
+    Q_PROPERTY(QString FeatureIdsArrayName READ getFeatureIdsArrayName WRITE setFeatureIdsArrayName)
+
+    DREAM3D_FILTER_PARAMETER(QString, CrystalStructuresArrayName)
+    Q_PROPERTY(QString CrystalStructuresArrayName READ getCrystalStructuresArrayName WRITE setCrystalStructuresArrayName)
+
     virtual const QString getCompiledLibraryName() { return IO::IOBaseName; }
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
@@ -92,14 +113,14 @@ class DREAM3DLib_EXPORT YSChoiAbaqusReader : public FileReader
 
 
   private:
-    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeatureIds)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, CellPhases)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(bool, SurfaceFeatures)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(float, Quats)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(float, AvgQuats)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(float, CellEulerAngles)
+    DEFINE_CREATED_DATAARRAY(int32_t, FeatureIds)
+    DEFINE_CREATED_DATAARRAY(int32_t, CellPhases)
+    DEFINE_CREATED_DATAARRAY(bool, SurfaceFeatures)
+    DEFINE_CREATED_DATAARRAY(float, Quats)
+    DEFINE_CREATED_DATAARRAY(float, AvgQuats)
+    DEFINE_CREATED_DATAARRAY(float, CellEulerAngles)
 
-    DEFINE_PTR_WEAKPTR_DATAARRAY(unsigned int, CrystalStructures)
+    DEFINE_CREATED_DATAARRAY(unsigned int, CrystalStructures)
 
     void dataCheck();
 
