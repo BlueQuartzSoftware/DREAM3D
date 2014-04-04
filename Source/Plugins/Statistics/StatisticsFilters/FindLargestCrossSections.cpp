@@ -48,11 +48,11 @@ FindLargestCrossSections::FindLargestCrossSections() :
   m_CellFeatureAttributeMatrixName(DREAM3D::Defaults::CellFeatureAttributeMatrixName),
   m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
   m_Plane(0),
+/*[]*/m_FeatureIdsArrayPath(DREAM3D::Defaults::SomePath),
+  m_LargestCrossSectionsArrayName(DREAM3D::FeatureData::LargestCrossSections),
   m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
   m_FeatureIds(NULL),
-  m_LargestCrossSectionsArrayName(DREAM3D::FeatureData::LargestCrossSections),
-  m_LargestCrossSections(NULL),
-/*[]*/m_FeatureIdsArrayPath(DREAM3D::Defaults::SomePath)
+  m_LargestCrossSections(NULL)
 {
   setupFilterParameters();
 }

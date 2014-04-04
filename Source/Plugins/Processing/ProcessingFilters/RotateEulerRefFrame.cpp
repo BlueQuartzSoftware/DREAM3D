@@ -109,9 +109,9 @@ RotateEulerRefFrame::RotateEulerRefFrame() :
   m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
   m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
   m_RotationAngle(0.0),
+/*[]*/m_CellEulerAnglesArrayPath(DREAM3D::Defaults::SomePath),
   m_CellEulerAnglesArrayName(DREAM3D::CellData::EulerAngles),
-  m_CellEulerAngles(NULL),
-/*[]*/m_CellEulerAnglesArrayPath(DREAM3D::Defaults::SomePath)
+  m_CellEulerAngles(NULL)
 {
   m_RotationAxis.x = 0.0;
   m_RotationAxis.y = 0.0;

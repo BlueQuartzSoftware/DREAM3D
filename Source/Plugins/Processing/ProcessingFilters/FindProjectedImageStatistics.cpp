@@ -130,14 +130,14 @@ FindProjectedImageStatistics::FindProjectedImageStatistics() :
   m_SelectedArrayPath("", "", ""),
   m_Plane(0),
   m_ProjectedImageMinArrayName(DREAM3D::CellData::ProjectedImageMin),
-  m_ProjectedImageMin(NULL),
   m_ProjectedImageMaxArrayName(DREAM3D::CellData::ProjectedImageMax),
-  m_ProjectedImageMax(NULL),
   m_ProjectedImageAvgArrayName(DREAM3D::CellData::ProjectedImageAvg),
-  m_ProjectedImageAvg(NULL),
   m_ProjectedImageStdArrayName(DREAM3D::CellData::ProjectedImageStd),
-  m_ProjectedImageStd(NULL),
   m_ProjectedImageVarArrayName(DREAM3D::CellData::ProjectedImageVar),
+  m_ProjectedImageMin(NULL),
+  m_ProjectedImageMax(NULL),
+  m_ProjectedImageAvg(NULL),
+  m_ProjectedImageStd(NULL),
   m_ProjectedImageVar(NULL)
 {
   setupFilterParameters();

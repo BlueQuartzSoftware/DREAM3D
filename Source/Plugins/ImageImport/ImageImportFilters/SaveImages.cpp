@@ -47,10 +47,10 @@
 // -----------------------------------------------------------------------------
 SaveImages::SaveImages() :
   AbstractFilter(),
-  m_ColorsArrayPath("", "", ""),
   m_ImagePrefix(""),
   m_OutputPath(""),
   m_ImageFormat(0),
+  m_ColorsArrayPath("", "", ""),
   /*[]*/m_ColorsArrayPathArrayPath(DREAM3D::Defaults::SomePath)
 {
   setupFilterParameters();

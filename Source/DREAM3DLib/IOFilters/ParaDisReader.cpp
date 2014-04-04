@@ -53,12 +53,12 @@ ParaDisReader::ParaDisReader() :
   m_EdgeAttributeMatrixName(DREAM3D::Defaults::EdgeAttributeMatrixName),
   m_InputFile(""),
   m_NumberOfArmsArrayName(DREAM3D::VertexData::NumberOfArms),
-  m_NumberOfArms(NULL),
   m_NodeConstraintsArrayName(DREAM3D::VertexData::NodeConstraints),
-  m_NodeConstraints(NULL),
   m_BurgersVectorsArrayName(DREAM3D::EdgeData::BurgersVectors),
-  m_BurgersVectors(NULL),
   m_SlipPlaneNormalsArrayName(DREAM3D::EdgeData::SlipPlaneNormals),
+  m_NumberOfArms(NULL),
+  m_NodeConstraints(NULL),
+  m_BurgersVectors(NULL),
   m_SlipPlaneNormals(NULL)
 {
   setupFilterParameters();

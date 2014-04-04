@@ -51,8 +51,8 @@ VASPReader::VASPReader() :
   m_VertexAttributeMatrixName(DREAM3D::Defaults::VertexAttributeMatrixName),
   m_InputFile(""),
   m_AtomVelocitiesArrayName(DREAM3D::VertexData::AtomVelocities),
-  m_AtomVelocities(NULL),
   m_AtomTypesArrayName(DREAM3D::VertexData::AtomTypes),
+  m_AtomVelocities(NULL),
   m_AtomTypes(NULL)
 {
   setupFilterParameters();

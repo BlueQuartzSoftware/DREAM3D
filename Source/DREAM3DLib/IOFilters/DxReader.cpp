@@ -48,9 +48,9 @@ DxReader::DxReader() :
   m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
   m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
   m_InputFile(""),
+/*[]*/m_FeatureIdsArrayPath(DREAM3D::Defaults::SomePath),
   m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
-  m_FeatureIds(NULL),
-/*[]*/m_FeatureIdsArrayPath(DREAM3D::Defaults::SomePath)
+  m_FeatureIds(NULL)
 {
   m_Origin.x = 0.0;
   m_Origin.y = 0.0;

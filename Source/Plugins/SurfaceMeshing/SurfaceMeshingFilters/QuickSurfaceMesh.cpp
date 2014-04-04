@@ -55,18 +55,18 @@ QuickSurfaceMesh::QuickSurfaceMesh() :
   m_VertexAttributeMatrixName(DREAM3D::Defaults::VertexAttributeMatrixName),
   m_FaceAttributeMatrixName(DREAM3D::Defaults::FaceAttributeMatrixName),
   m_TransferPhaseId(false),
+/*[]*/m_FeatureIdsArrayPath(DREAM3D::Defaults::SomePath),
+/*[]*/m_CellPhasesArrayPath(DREAM3D::Defaults::SomePath),
+  m_FaceLabelsArrayName(DREAM3D::FaceData::SurfaceMeshFaceLabels),
+  m_NodeTypesArrayName(DREAM3D::VertexData::SurfaceMeshNodeType),
+  m_FacePhasesArrayName(DREAM3D::FaceData::SurfaceMeshFacePhases),
   m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
   m_FeatureIds(NULL),
   m_CellPhasesArrayName(DREAM3D::CellData::Phases),
   m_CellPhases(NULL),
-  m_FaceLabelsArrayName(DREAM3D::FaceData::SurfaceMeshFaceLabels),
   m_FaceLabels(NULL),
-  m_NodeTypesArrayName(DREAM3D::VertexData::SurfaceMeshNodeType),
   m_NodeTypes(NULL),
-  m_FacePhasesArrayName(DREAM3D::FaceData::SurfaceMeshFacePhases),
-  m_FacePhases(NULL),
-/*[]*/m_FeatureIdsArrayPath(DREAM3D::Defaults::SomePath),
-/*[]*/m_CellPhasesArrayPath(DREAM3D::Defaults::SomePath)
+  m_FacePhases(NULL)
 {
 
   setupFilterParameters();

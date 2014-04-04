@@ -47,14 +47,14 @@
 GenerateVectorColors::GenerateVectorColors() :
   AbstractFilter(),
   m_SelectedVectorArrayPath("", "", ""),
+/*[]*/m_SelectedVectorArrayPathArrayPath(DREAM3D::Defaults::SomePath),
+/*[]*/m_GoodVoxelsArrayPath(DREAM3D::Defaults::SomePath),
+  m_CellVectorColorsArrayName(DREAM3D::CellData::VectorColor),
   m_VectorsArrayName(""),
   m_Vectors(NULL),
-  m_CellVectorColorsArrayName(DREAM3D::CellData::VectorColor),
-  m_CellVectorColors(NULL),
   m_GoodVoxelsArrayName(DREAM3D::CellData::GoodVoxels),
   m_GoodVoxels(NULL),
-/*[]*/m_SelectedVectorArrayPathArrayPath(DREAM3D::Defaults::SomePath),
-/*[]*/m_GoodVoxelsArrayPath(DREAM3D::Defaults::SomePath)
+  m_CellVectorColors(NULL)
 {
   setupFilterParameters();
 }

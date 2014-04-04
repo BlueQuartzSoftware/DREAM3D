@@ -58,12 +58,11 @@ VisualizeGBCDGMT::VisualizeGBCDGMT() :
   AbstractFilter(),
   m_SurfaceDataContainerName(DREAM3D::Defaults::SurfaceDataContainerName),
   m_FaceEnsembleAttributeMatrixName(DREAM3D::Defaults::FaceEnsembleAttributeMatrixName),
-  m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
   m_OutputFile(""),
   m_CrystalStructure(Ebsd::CrystalStructure::UnknownCrystalStructure),
+  /*[]*/m_GBCDArrayPath(DREAM3D::Defaults::SomePath),
   m_GBCDArrayName(DREAM3D::EnsembleData::GBCD),
-  m_GBCD(NULL),
-/*[]*/m_GBCDArrayPath(DREAM3D::Defaults::SomePath)
+  m_GBCD(NULL)
 {
   m_MisorientationRotation.angle = 0.0f;
   m_MisorientationRotation.h = 0.0f;
@@ -109,29 +108,29 @@ void VisualizeGBCDGMT::setupFilterParameters()
     parameters.push_back(option);
   }
   parameters.push_back(FilterParameter::New("Misorientation Axis Angles", "MisorientationRotation", FilterParameterWidgetType::AxisAngleWidget,"", false));
-//  {
-//    FilterParameter::Pointer parameter = FilterParameter::New();
-//    parameter->setPropertyName("MisAngle");
-//    parameter->setHumanLabel("Misorientation Angle");
-//    parameter->setWidgetType(FilterParameterWidgetType::DoubleWidget);
-//    parameter->setValueType("float");
-//    parameter->setCastableValueType("double");
-//    parameter->setUnits("Degrees");
-//    parameters.push_back(parameter);
-//  }
-//  {
-//    FilterParameter::Pointer parameter = FilterParameter::New();
+  //  {
+  //    FilterParameter::Pointer parameter = FilterParameter::New();
+  //    parameter->setPropertyName("MisAngle");
+  //    parameter->setHumanLabel("Misorientation Angle");
+  //    parameter->setWidgetType(FilterParameterWidgetType::DoubleWidget);
+  //    parameter->setValueType("float");
+  //    parameter->setCastableValueType("double");
+  //    parameter->setUnits("Degrees");
+  //    parameters.push_back(parameter);
+  //  }
+  //  {
+  //    FilterParameter::Pointer parameter = FilterParameter::New();
 
-//    parameter->setHumanLabel("Misorientation Axis");
-//    parameter->setPropertyName("MisAxis");
-//    parameter->setWidgetType(FilterParameterWidgetType::FloatVec3Widget);
-//    parameter->setValueType("FloatVec3_t");
-//    parameter->setUnits("");
-//    parameters.push_back(parameter);
-//  }
+  //    parameter->setHumanLabel("Misorientation Axis");
+  //    parameter->setPropertyName("MisAxis");
+  //    parameter->setWidgetType(FilterParameterWidgetType::FloatVec3Widget);
+  //    parameter->setValueType("FloatVec3_t");
+  //    parameter->setUnits("");
+  //    parameters.push_back(parameter);
+  //  }
   parameters.push_back(FilterParameter::New("GMT Output File", "OutputFile", FilterParameterWidgetType::OutputFileWidget,"QString", false, "", "*.dat", "DAT File"));
   parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "QString", true));
-/*[]*/parameters.push_back(FilterParameter::New("GBCD", "GBCDArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
+  /*[]*/parameters.push_back(FilterParameter::New("GBCD", "GBCDArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
   setFilterParameters(parameters);
 }
 
@@ -142,8 +141,8 @@ void VisualizeGBCDGMT::readFilterParameters(AbstractFilterParametersReader* read
 {
   reader->openFilterGroup(this, index);
   setGBCDArrayPath(reader->readDataArrayPath("GBCDArrayPath", getGBCDArrayPath() ) );
-//  setMisAngle( reader->readValue("MisAngle", getMisAngle()) );
-//  setMisAxis( reader->readFloatVec3("MisAxis", getMisAxis() ) );
+  //  setMisAngle( reader->readValue("MisAngle", getMisAngle()) );
+  //  setMisAxis( reader->readFloatVec3("MisAxis", getMisAxis() ) );
   setOutputFile( reader->readString( "OutputFile", getOutputFile() ) );
   setMisorientationRotation(reader->readAxisAngle("MisorientationRotation", getMisorientationRotation(), -1) );
   setCrystalStructure(reader->readValue("CrystalStructure", getCrystalStructure() ) );
@@ -157,8 +156,8 @@ int VisualizeGBCDGMT::writeFilterParameters(AbstractFilterParametersWriter* writ
 {
   writer->openFilterGroup(this, index);
   writer->writeValue("GBCDArrayPath", getGBCDArrayPath() );
- // writer->writeValue("MisorientationAngle", getMisAngle() );
- // writer->writeValue("MisorientationAxis", getMisAxis() );
+  // writer->writeValue("MisorientationAngle", getMisAngle() );
+  // writer->writeValue("MisorientationAxis", getMisAxis() );
   writer->writeValue("OutputFile", getOutputFile() );
   writer->writeValue("MisorientationRotation", getMisorientationRotation() );
   writer->writeValue("CrystalStructure", getCrystalStructure() );
@@ -231,8 +230,8 @@ void VisualizeGBCDGMT::dataCheckSurfaceMesh()
       //get the component dimensions to use to pull down the GBCD array normally (not sure if this is all really necessary)
       QVector<size_t> dims = iDataArray->getComponentDimensions();
       iDataArray->NullPointer();
-////====>REMOVE THIS        m_GBCDPtr = attrMat->getPrereqArray<DataArray<double>, AbstractFilter>(this, m_GBCDArrayName, -301, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  m_GBCDPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<double>, AbstractFilter>(this, getGBCDArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+      ////====>REMOVE THIS        m_GBCDPtr = attrMat->getPrereqArray<DataArray<double>, AbstractFilter>(this, m_GBCDArrayName, -301, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+      m_GBCDPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<double>, AbstractFilter>(this, getGBCDArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
       if( NULL != m_GBCDPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
       { m_GBCD = m_GBCDPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
     }
@@ -247,7 +246,7 @@ void VisualizeGBCDGMT::preflight()
   emit preflightAboutToExecute();
   emit updateFilterParameters(this);
   dataCheckSurfaceMesh();
-    emit preflightExecuted();
+  emit preflightExecuted();
 }
 
 // -----------------------------------------------------------------------------
@@ -291,7 +290,7 @@ void VisualizeGBCDGMT::execute()
   VertexArray::Pointer nodesPtr = sm->getVertices();
 
   FaceArray::Pointer trianglesPtr = sm->getFaces();
- // size_t totalFaces = trianglesPtr->getNumberOfTuples();
+  // size_t totalFaces = trianglesPtr->getNumberOfTuples();
 
   FloatArrayType::Pointer gbcdDeltasArray = FloatArrayType::CreateArray(5, "GBCDDeltas");
   gbcdDeltasArray->initializeWithZeros();
@@ -431,14 +430,14 @@ void VisualizeGBCDGMT::execute()
             int location3 = int((mis_euler1[2]-gbcdLimits[2])/gbcdDeltas[2]);
             //find symmetric poles using the first symmetry operator
             MatrixMath::Multiply3x3with3x1(sym1, vec, rotNormal);
-//            if(rotNormal[2] < 0.0) MatrixMath::Multiply3x1withConstant(rotNormal, -1);
+            //            if(rotNormal[2] < 0.0) MatrixMath::Multiply3x1withConstant(rotNormal, -1);
             //get coordinates in square projection of crystal normal parallel to boundary normal
             nhCheck = getSquareCoord(rotNormal, sqCoord);
             //Note the switch to have theta in the 4 slot and cos(Phi) int he 3 slot
             int location4 = int((sqCoord[0]-gbcdLimits[3])/gbcdDeltas[3]);
             int location5 = int((sqCoord[1]-gbcdLimits[4])/gbcdDeltas[4]);
             if(location1 >= 0 && location2 >= 0 && location3 >= 0 && location4 >= 0 && location5 >= 0 &&
-              location1 < gbcdSizes[0] && location2 < gbcdSizes[1] && location3 < gbcdSizes[2] && location4 < gbcdSizes[3] && location5 < gbcdSizes[4])
+               location1 < gbcdSizes[0] && location2 < gbcdSizes[1] && location3 < gbcdSizes[2] && location4 < gbcdSizes[3] && location5 < gbcdSizes[4])
             {
               hemisphere = 0;
               if(nhCheck == false) hemisphere = 1;
@@ -462,14 +461,14 @@ void VisualizeGBCDGMT::execute()
             int location3 = int((mis_euler1[2]-gbcdLimits[2])/gbcdDeltas[2]);
             //find symmetric poles using the first symmetry operator
             MatrixMath::Multiply3x3with3x1(sym1, vec2, rotNormal2);
-//            if(rotNormal2[2] < 0.0) MatrixMath::Multiply3x1withConstant(rotNormal2, -1);
+            //            if(rotNormal2[2] < 0.0) MatrixMath::Multiply3x1withConstant(rotNormal2, -1);
             //get coordinates in square projection of crystal normal parallel to boundary normal
             nhCheck = getSquareCoord(rotNormal2, sqCoord);
             //Note the switch to have theta in the 4 slot and cos(Phi) int he 3 slot
             int location4 = int((sqCoord[0]-gbcdLimits[3])/gbcdDeltas[3]);
             int location5 = int((sqCoord[1]-gbcdLimits[4])/gbcdDeltas[4]);
             if(location1 >= 0 && location2 >= 0 && location3 >= 0 && location4 >= 0 && location5 >= 0 &&
-              location1 < gbcdSizes[0] && location2 < gbcdSizes[1] && location3 < gbcdSizes[2] && location4 < gbcdSizes[3] && location5 < gbcdSizes[4])
+               location1 < gbcdSizes[0] && location2 < gbcdSizes[1] && location3 < gbcdSizes[2] && location4 < gbcdSizes[3] && location5 < gbcdSizes[4])
             {
               hemisphere = 0;
               if(nhCheck == false) hemisphere = 1;

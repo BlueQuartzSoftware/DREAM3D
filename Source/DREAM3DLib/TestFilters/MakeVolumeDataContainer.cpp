@@ -55,14 +55,14 @@ MakeVolumeDataContainer::MakeVolumeDataContainer() :
   m_PhaseNameArrayName("Phase"),
   m_MaterialNameArrayName(DREAM3D::EnsembleData::MaterialName),
   m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
-  m_FeatureIds(NULL),
-  m_CellPhasesArrayName(DREAM3D::CellData::Phases),
-  m_CellPhases(NULL),
   m_CellEulerAnglesArrayName(DREAM3D::CellData::EulerAngles),
-  m_CellEulerAngles(NULL),
+  m_CellPhasesArrayName(DREAM3D::CellData::Phases),
   m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
-  m_CrystalStructures(NULL),
   m_LatticeConstantsArrayName(DREAM3D::EnsembleData::LatticeConstants),
+  m_FeatureIds(NULL),
+  m_CellPhases(NULL),
+  m_CellEulerAngles(NULL),
+  m_CrystalStructures(NULL),
   m_LatticeConstants(NULL)
 {
 

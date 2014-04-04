@@ -50,12 +50,12 @@ FindAvgScalarValueForFeatures::FindAvgScalarValueForFeatures() :
   AbstractFilter(),
   m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
   m_CellFeatureAttributeMatrixName(DREAM3D::Defaults::CellFeatureAttributeMatrixName),
+  m_SelectedCellArrayPath("", "", ""),
+  /*[]*/m_FeatureIdsArrayPath(DREAM3D::Defaults::SomePath),
+  m_NewFeatureArrayArrayName(""),
   m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
   m_FeatureIds(NULL),
-  m_NewFeatureArrayArrayName(""),
-  m_NewFeatureArray(NULL),
-  m_SelectedCellArrayPath("", "", ""),
-  /*[]*/m_FeatureIdsArrayPath(DREAM3D::Defaults::SomePath)
+  m_NewFeatureArray(NULL)
 {
 
   setupFilterParameters();

@@ -249,21 +249,21 @@ FindEuclideanDistMap::FindEuclideanDistMap() :
   AbstractFilter(),
   m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
   m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
+/*[]*/m_FeatureIdsArrayPath(DREAM3D::Defaults::SomePath),
+  m_GBEuclideanDistancesArrayName(DREAM3D::CellData::GBEuclideanDistances),
+  m_TJEuclideanDistancesArrayName(DREAM3D::CellData::TJEuclideanDistances),
+  m_QPEuclideanDistancesArrayName(DREAM3D::CellData::QPEuclideanDistances),
+  m_NearestNeighborsArrayName(DREAM3D::CellData::NearestNeighbors),
   m_doBoundaries(false),
   m_doTripleLines(false),
   m_doQuadPoints(false),
   m_CalcOnlyManhattanDist(false),
   m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
   m_FeatureIds(NULL),
-  m_NearestNeighborsArrayName(DREAM3D::CellData::NearestNeighbors),
   m_NearestNeighbors(NULL),
-  m_GBEuclideanDistancesArrayName(DREAM3D::CellData::GBEuclideanDistances),
   m_GBEuclideanDistances(NULL),
-  m_TJEuclideanDistancesArrayName(DREAM3D::CellData::TJEuclideanDistances),
   m_TJEuclideanDistances(NULL),
-  m_QPEuclideanDistancesArrayName(DREAM3D::CellData::QPEuclideanDistances),
-  m_QPEuclideanDistances(NULL),
-/*[]*/m_FeatureIdsArrayPath(DREAM3D::Defaults::SomePath)
+  m_QPEuclideanDistances(NULL)
 {
   setupFilterParameters();
 }

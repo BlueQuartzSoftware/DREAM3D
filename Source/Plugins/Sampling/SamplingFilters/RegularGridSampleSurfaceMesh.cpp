@@ -56,7 +56,6 @@ RegularGridSampleSurfaceMesh::RegularGridSampleSurfaceMesh() :
   m_XPoints(0),
   m_YPoints(0),
   m_ZPoints(0),
-
   m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
   m_FeatureIds(NULL)
 {

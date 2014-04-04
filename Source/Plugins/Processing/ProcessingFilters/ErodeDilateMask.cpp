@@ -59,9 +59,9 @@ ErodeDilateMask::ErodeDilateMask() :
   m_XDirOn(true),
   m_YDirOn(true),
   m_ZDirOn(true),
+/*[]*/m_MaskArrayPath(DREAM3D::Defaults::SomePath),
   m_MaskArrayName(""),
-  m_Mask(NULL),
-/*[]*/m_MaskArrayPath(DREAM3D::Defaults::SomePath)
+  m_Mask(NULL)
 {
   setupFilterParameters();
 }

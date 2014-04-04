@@ -47,14 +47,14 @@ FindBoundingBoxFeatures::FindBoundingBoxFeatures() :
   m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
   m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
   m_CellFeatureAttributeMatrixName(DREAM3D::Defaults::CellFeatureAttributeMatrixName),
+/*[]*/m_CentroidsArrayPath(DREAM3D::Defaults::SomePath),
+/*[]*/m_SurfaceFeaturesArrayPath(DREAM3D::Defaults::SomePath),
+  m_BiasedFeaturesArrayName(DREAM3D::FeatureData::BiasedFeatures),
   m_CentroidsArrayName(DREAM3D::FeatureData::Centroids),
   m_Centroids(NULL),
   m_SurfaceFeaturesArrayName(DREAM3D::FeatureData::SurfaceFeatures),
   m_SurfaceFeatures(NULL),
-  m_BiasedFeaturesArrayName(DREAM3D::FeatureData::BiasedFeatures),
-  m_BiasedFeatures(NULL),
-/*[]*/m_CentroidsArrayPath(DREAM3D::Defaults::SomePath),
-/*[]*/m_SurfaceFeaturesArrayPath(DREAM3D::Defaults::SomePath)
+  m_BiasedFeatures(NULL)
 {
   setupFilterParameters();
 }

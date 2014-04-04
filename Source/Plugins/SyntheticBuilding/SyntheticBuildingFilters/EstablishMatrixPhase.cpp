@@ -55,19 +55,19 @@ EstablishMatrixPhase::EstablishMatrixPhase() :
   m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
   m_CellFeatureAttributeMatrixName(DREAM3D::Defaults::CellFeatureAttributeMatrixName),
   m_CellEnsembleAttributeMatrixName(DREAM3D::Defaults::CellEnsembleAttributeMatrixName),
+/*[]*/m_FeatureIdsArrayPath(DREAM3D::Defaults::SomePath),
+/*[]*/m_CellPhasesArrayPath(DREAM3D::Defaults::SomePath),
+/*[]*/m_PhaseTypesArrayPath(DREAM3D::Defaults::SomePath),
+  m_FeaturePhasesArrayName(DREAM3D::FeatureData::Phases),
+  m_ActiveArrayName(DREAM3D::FeatureData::Active),
   m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
   m_FeatureIds(NULL),
   m_CellPhasesArrayName(DREAM3D::CellData::Phases),
   m_CellPhases(NULL),
-  m_ActiveArrayName(DREAM3D::FeatureData::Active),
   m_Active(NULL),
-  m_FeaturePhasesArrayName(DREAM3D::FeatureData::Phases),
   m_FeaturePhases(NULL),
   m_PhaseTypesArrayName(DREAM3D::EnsembleData::PhaseTypes),
-  m_PhaseTypes(NULL),
-/*[]*/m_FeatureIdsArrayPath(DREAM3D::Defaults::SomePath),
-/*[]*/m_CellPhasesArrayPath(DREAM3D::Defaults::SomePath),
-/*[]*/m_PhaseTypesArrayPath(DREAM3D::Defaults::SomePath)
+  m_PhaseTypes(NULL)
 {
   setupFilterParameters();
 }

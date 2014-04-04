@@ -93,11 +93,10 @@ FlattenImage::FlattenImage() :
   m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
   m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
   m_FlattenMethod(DREAM3D::FlattenImageMethod::Luminosity),
-  m_ImageDataArrayName(DREAM3D::CellData::ImageData),
-  m_ImageData(NULL),
+/*[]*/m_ImageDataArrayPath(DREAM3D::Defaults::SomePath),
   m_FlatImageDataArrayName(DREAM3D::CellData::FlatImageData),
-  m_FlatImageData(NULL),
-/*[]*/m_ImageDataArrayPath(DREAM3D::Defaults::SomePath)
+  m_ImageData(NULL),
+  m_FlatImageData(NULL)
 {
   setupFilterParameters();
 }

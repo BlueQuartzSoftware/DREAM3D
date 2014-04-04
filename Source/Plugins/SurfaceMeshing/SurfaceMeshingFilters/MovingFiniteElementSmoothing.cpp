@@ -137,9 +137,9 @@ MovingFiniteElementSmoothing::MovingFiniteElementSmoothing() :
   m_ConstrainSurfaceNodes(true),
   m_ConstrainQuadPoints(true),
   m_SmoothTripleLines(true),
+/*[]*/m_SurfaceMeshNodeTypeArrayPath(DREAM3D::Defaults::SomePath),
   m_SurfaceMeshNodeTypeArrayName(DREAM3D::VertexData::SurfaceMeshNodeType),
-  m_SurfaceMeshNodeType(NULL),
-/*[]*/m_SurfaceMeshNodeTypeArrayPath(DREAM3D::Defaults::SomePath)
+  m_SurfaceMeshNodeType(NULL)
 {
   setupFilterParameters();
 }

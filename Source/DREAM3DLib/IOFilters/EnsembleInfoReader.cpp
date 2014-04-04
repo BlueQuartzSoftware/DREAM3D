@@ -55,8 +55,8 @@ EnsembleInfoReader::EnsembleInfoReader() :
   m_CellEnsembleAttributeMatrixName(DREAM3D::Defaults::CellEnsembleAttributeMatrixName),
   m_InputFile(""),
   m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
-  m_CrystalStructures(NULL),
   m_PhaseTypesArrayName(DREAM3D::EnsembleData::PhaseTypes),
+  m_CrystalStructures(NULL),
   m_PhaseTypes(NULL)
 {
   setupFilterParameters();

@@ -48,8 +48,8 @@ FindNumFeatures::FindNumFeatures() :
   AbstractFilter(),
   m_CellEnsembleAttributeMatrixPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellEnsembleAttributeMatrixName, ""),
   m_FeaturePhasesArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, DREAM3D::FeatureData::Phases),
-  m_FeaturePhases(NULL),
   m_NumFeaturesArrayName(DREAM3D::EnsembleData::NumFeatures),
+  m_FeaturePhases(NULL),
   m_NumFeatures(NULL)
 {
   setupFilterParameters();

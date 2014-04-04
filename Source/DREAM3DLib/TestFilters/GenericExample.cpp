@@ -65,17 +65,17 @@ GenericExample::GenericExample() :
   m_UInt64Value(0),
   m_FloatValue(0.0),
   m_DoubleValue(0.0),
+/*[]*/m_FeatureIdsArrayPath(DREAM3D::Defaults::SomePath),
+/*[]*/m_CellPatternQualityArrayPath(DREAM3D::Defaults::SomePath),
+/*[]*/m_GoodVoxelsArrayPath(DREAM3D::Defaults::SomePath),
+  m_CellEulerAnglesArrayName(DREAM3D::CellData::EulerAngles),
+  m_GoodVoxelsArrayName(DREAM3D::CellData::GoodVoxels),
   m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
   m_FeatureIds(NULL),
   m_CellPatternQualityArrayName("Pattern Quality"),
   m_CellPatternQuality(NULL),
-  m_CellEulerAnglesArrayName(DREAM3D::CellData::EulerAngles),
   m_CellEulerAngles(NULL),
-  m_GoodVoxelsArrayName(DREAM3D::CellData::GoodVoxels),
-  m_GoodVoxels(NULL),
-/*[]*/m_FeatureIdsArrayPath(DREAM3D::Defaults::SomePath),
-/*[]*/m_CellPatternQualityArrayPath(DREAM3D::Defaults::SomePath),
-/*[]*/m_GoodVoxelsArrayPath(DREAM3D::Defaults::SomePath)
+  m_GoodVoxels(NULL)
 {
   m_Dimensions.x = 0;
   m_Dimensions.y = 0;

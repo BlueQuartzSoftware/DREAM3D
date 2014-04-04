@@ -49,11 +49,11 @@ FindVolFractions::FindVolFractions() :
   m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
   m_CellEnsembleAttributeMatrixName(DREAM3D::Defaults::CellEnsembleAttributeMatrixName),
   m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
+/*[]*/m_CellPhasesArrayPath(DREAM3D::Defaults::SomePath),
+  m_VolFractionsArrayName(DREAM3D::EnsembleData::VolFractions),
   m_CellPhasesArrayName(DREAM3D::CellData::Phases),
   m_CellPhases(NULL),
-  m_VolFractionsArrayName(DREAM3D::EnsembleData::VolFractions),
-  m_VolFractions(NULL),
-/*[]*/m_CellPhasesArrayPath(DREAM3D::Defaults::SomePath)
+  m_VolFractions(NULL)
 {
 
   setupFilterParameters();

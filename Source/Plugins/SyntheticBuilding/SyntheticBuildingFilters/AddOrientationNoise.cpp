@@ -56,9 +56,9 @@ AddOrientationNoise::AddOrientationNoise() :
   m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
   m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
   m_Magnitude(1.0f),
+/*[]*/m_CellEulerAnglesArrayPath(DREAM3D::Defaults::SomePath),
   m_CellEulerAnglesArrayName(DREAM3D::CellData::EulerAngles),
-  m_CellEulerAngles(NULL),
-/*[]*/m_CellEulerAnglesArrayPath(DREAM3D::Defaults::SomePath)
+  m_CellEulerAngles(NULL)
 {
   setupFilterParameters();
 }
