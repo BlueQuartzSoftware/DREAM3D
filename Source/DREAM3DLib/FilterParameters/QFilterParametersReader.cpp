@@ -885,6 +885,10 @@ DataContainerArrayProxy QFilterParametersReader::readDataContainerArrayProxy(con
 DataArrayPath QFilterParametersReader::readDataArrayPath(const QString &name, DataArrayPath def)
 {
   BOOST_ASSERT(m_Prefs != NULL);
+  if(m_Prefs->contains(name) == false)
+  {
+    return def;
+  }
   QString defPath("");
   QString str = m_Prefs->value(name, defPath).toString();
   DataArrayPath path(str);
