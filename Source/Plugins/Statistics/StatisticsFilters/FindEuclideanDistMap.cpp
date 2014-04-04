@@ -249,7 +249,7 @@ FindEuclideanDistMap::FindEuclideanDistMap() :
   AbstractFilter(),
   m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
   m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
-/*[]*/m_FeatureIdsArrayPath(DREAM3D::Defaults::SomePath),
+/*[]*/m_FeatureIdsArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::FeatureIds),
   m_GBEuclideanDistancesArrayName(DREAM3D::CellData::GBEuclideanDistances),
   m_TJEuclideanDistancesArrayName(DREAM3D::CellData::TJEuclideanDistances),
   m_QPEuclideanDistancesArrayName(DREAM3D::CellData::QPEuclideanDistances),

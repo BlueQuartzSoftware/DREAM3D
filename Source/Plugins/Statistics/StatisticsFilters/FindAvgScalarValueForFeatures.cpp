@@ -51,7 +51,7 @@ FindAvgScalarValueForFeatures::FindAvgScalarValueForFeatures() :
   m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
   m_CellFeatureAttributeMatrixName(DREAM3D::Defaults::CellFeatureAttributeMatrixName),
   m_SelectedCellArrayPath("", "", ""),
-  /*[]*/m_FeatureIdsArrayPath(DREAM3D::Defaults::SomePath),
+  /*[]*/m_FeatureIdsArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::FeatureIds),
   m_NewFeatureArrayArrayName(""),
   m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
   m_FeatureIds(NULL),

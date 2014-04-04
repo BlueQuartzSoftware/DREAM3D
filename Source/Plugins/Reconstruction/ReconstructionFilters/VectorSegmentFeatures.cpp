@@ -59,7 +59,7 @@ VectorSegmentFeatures::VectorSegmentFeatures() :
   m_SelectedVectorArrayPath("", "", ""),
   m_AngleTolerance(5.0f),
   m_RandomizeFeatureIds(true),
-/*[]*/m_GoodVoxelsArrayPath(DREAM3D::Defaults::SomePath),
+/*[]*/m_GoodVoxelsArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::GoodVoxels),
   m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
   m_ActiveArrayName(DREAM3D::FeatureData::Active),
   m_VectorsArrayName(""),

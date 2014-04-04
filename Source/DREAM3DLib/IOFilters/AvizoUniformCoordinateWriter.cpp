@@ -52,7 +52,7 @@ AvizoUniformCoordinateWriter::AvizoUniformCoordinateWriter() :
   m_OutputFile(""),
   m_WriteFeatureIds(true),
   m_WriteBinaryFile(false),
-/*[]*/m_FeatureIdsArrayPath(DREAM3D::Defaults::SomePath),
+/*[]*/m_FeatureIdsArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::FeatureIds),
   m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
   m_FeatureIds(NULL)
 {

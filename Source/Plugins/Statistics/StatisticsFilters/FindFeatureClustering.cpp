@@ -50,7 +50,7 @@ FindFeatureClustering::FindFeatureClustering() :
   m_ClusteringListArrayName(DREAM3D::FeatureData::ClusteringList),
   m_ErrorOutputFile(),
 /*[]*/m_EquivalentDiametersArrayPath(DREAM3D::Defaults::SomePath),
-/*[]*/m_FeaturePhasesArrayPath(DREAM3D::Defaults::SomePath),
+/*[]*/m_FeaturePhasesArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, DREAM3D::FeatureData::Phases),
 /*[]*/m_CentroidsArrayPath(DREAM3D::Defaults::SomePath),
   m_FeaturePhasesArrayName(DREAM3D::FeatureData::Phases),
   m_FeaturePhases(NULL),

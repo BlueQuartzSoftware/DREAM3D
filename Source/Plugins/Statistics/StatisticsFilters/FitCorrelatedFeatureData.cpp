@@ -54,7 +54,7 @@ FitCorrelatedFeatureData::FitCorrelatedFeatureData() :
   m_DistributionType(DREAM3D::DistributionType::UnknownDistributionType),
   m_NumberOfCorrelatedBins(1),
   m_RemoveBiasedFeatures(false),
-/*[]*/m_FeaturePhasesArrayPath(DREAM3D::Defaults::SomePath),
+/*[]*/m_FeaturePhasesArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, DREAM3D::FeatureData::Phases),
 /*[]*/m_BiasedFeaturesArrayPath(DREAM3D::Defaults::SomePath),
   m_NewEnsembleArrayArrayName(""),
   m_BiasedFeaturesArrayName(DREAM3D::FeatureData::BiasedFeatures),

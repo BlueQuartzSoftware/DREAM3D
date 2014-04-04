@@ -48,7 +48,7 @@ GenerateVectorColors::GenerateVectorColors() :
   AbstractFilter(),
   m_SelectedVectorArrayPath("", "", ""),
 /*[]*/m_SelectedVectorArrayPathArrayPath(DREAM3D::Defaults::SomePath),
-/*[]*/m_GoodVoxelsArrayPath(DREAM3D::Defaults::SomePath),
+/*[]*/m_GoodVoxelsArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::GoodVoxels),
   m_CellVectorColorsArrayName(DREAM3D::CellData::VectorColor),
   m_VectorsArrayName(""),
   m_Vectors(NULL),

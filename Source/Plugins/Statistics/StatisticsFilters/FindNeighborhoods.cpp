@@ -53,7 +53,7 @@ FindNeighborhoods::FindNeighborhoods() :
   m_NumNeighborsArrayName(DREAM3D::FeatureData::NumNeighbors),
   m_MultiplesOfAverage(1.0f),
 /*[]*/m_EquivalentDiametersArrayPath(DREAM3D::Defaults::SomePath),
-/*[]*/m_FeaturePhasesArrayPath(DREAM3D::Defaults::SomePath),
+/*[]*/m_FeaturePhasesArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, DREAM3D::FeatureData::Phases),
 /*[]*/m_CentroidsArrayPath(DREAM3D::Defaults::SomePath),
   m_NeighborhoodsArrayName(DREAM3D::FeatureData::Neighborhoods),
   m_FeaturePhasesArrayName(DREAM3D::FeatureData::Phases),
