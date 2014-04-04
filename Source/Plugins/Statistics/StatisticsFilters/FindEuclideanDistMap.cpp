@@ -265,6 +265,7 @@ FindEuclideanDistMap::FindEuclideanDistMap() :
   m_QPEuclideanDistances(NULL),
 /*[]*/m_FeatureIdsArrayPath(DREAM3D::Defaults::SomePath)
 {
+  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

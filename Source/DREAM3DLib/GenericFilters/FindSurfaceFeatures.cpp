@@ -53,6 +53,7 @@ FindSurfaceFeatures::FindSurfaceFeatures() :
   m_SurfaceFeatures(NULL),
 /*[]*/m_FeatureIdsArrayPath(DREAM3D::Defaults::SomePath)
 {
+  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

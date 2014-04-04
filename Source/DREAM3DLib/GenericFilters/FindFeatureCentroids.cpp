@@ -57,6 +57,7 @@ FindFeatureCentroids::FindFeatureCentroids() :
 {
   INIT_DataArray(m_FeatureCenters, float)
   featurecenters = NULL;
+  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

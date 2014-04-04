@@ -69,6 +69,7 @@ QuickSurfaceMesh::QuickSurfaceMesh() :
 /*[]*/m_CellPhasesArrayPath(DREAM3D::Defaults::SomePath)
 {
 
+  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

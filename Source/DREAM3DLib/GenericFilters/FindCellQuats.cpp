@@ -65,6 +65,7 @@ FindCellQuats::FindCellQuats() :
 {
   m_OrientationOps = OrientationOps::getOrientationOpsVector();
 
+  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

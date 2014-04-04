@@ -66,6 +66,7 @@ MakeVolumeDataContainer::MakeVolumeDataContainer() :
   m_LatticeConstants(NULL)
 {
 
+  setupFilterParameters();
 }
 
 

@@ -55,6 +55,7 @@ UpdateCellQuats::UpdateCellQuats() :
 {
   m_OrientationOps = OrientationOps::getOrientationOpsVector();
 
+  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

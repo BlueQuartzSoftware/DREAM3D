@@ -56,6 +56,7 @@ FindBoundingBoxFeatures::FindBoundingBoxFeatures() :
 /*[]*/m_CentroidsArrayPath(DREAM3D::Defaults::SomePath),
 /*[]*/m_SurfaceFeaturesArrayPath(DREAM3D::Defaults::SomePath)
 {
+  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

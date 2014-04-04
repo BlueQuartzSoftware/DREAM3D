@@ -55,6 +55,7 @@ FindSurfaceCells::FindSurfaceCells() :
 /*[]*/m_FeatureIdsArrayPath(DREAM3D::Defaults::SomePath)
 {
 
+  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

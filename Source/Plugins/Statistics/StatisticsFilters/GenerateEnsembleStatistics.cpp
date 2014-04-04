@@ -110,6 +110,7 @@ GenerateEnsembleStatistics::GenerateEnsembleStatistics()  :
   m_DistributionAnalysis.push_back(PowerLawOps::New());
 
   m_OrientationOps = OrientationOps::getOrientationOpsVector();
+  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

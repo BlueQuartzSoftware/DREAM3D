@@ -60,6 +60,7 @@ FindAvgCAxes::FindAvgCAxes() :
 /*[]*/m_FeatureIdsArrayPath(DREAM3D::Defaults::SomePath)
 {
   m_OrientationOps = OrientationOps::getOrientationOpsVector();
+  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

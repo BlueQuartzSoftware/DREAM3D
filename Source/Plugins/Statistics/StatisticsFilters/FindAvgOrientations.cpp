@@ -68,6 +68,7 @@ FindAvgOrientations::FindAvgOrientations() :
 /*[]*/m_CrystalStructuresArrayPath(DREAM3D::Defaults::SomePath)
 {
   m_OrientationOps = OrientationOps::getOrientationOpsVector();
+  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

@@ -59,6 +59,7 @@ FindFeaturePhases::FindFeaturePhases() :
 /*[]*/m_CellPhasesArrayPath(DREAM3D::Defaults::SomePath)
 {
 
+  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

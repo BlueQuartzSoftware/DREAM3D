@@ -56,6 +56,7 @@ FindCAxisLocations::FindCAxisLocations() :
 /*[]*/m_QuatsArrayPath(DREAM3D::Defaults::SomePath)
 {
   m_OrientationOps = OrientationOps::getOrientationOpsVector();
+  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------
