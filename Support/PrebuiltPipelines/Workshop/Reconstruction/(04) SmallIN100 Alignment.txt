@@ -4,36 +4,37 @@ Name=(04) SmallIN100 Alignment
 
 [0]
 Filter_Name=ReadH5Ebsd
+Filter_Human_Label=Read H5Ebsd File
+LatticeConstantsArrayName=LatticeConstants
+CrystalStructuresArrayName=CrystalStructures
+CellPhasesArrayName=Phases
+CellEulerAnglesArrayName=EulerAngles
 InputFile=Data/Output/SmallIN100.h5ebsd
+RefFrameZDir=1
 ZStartIndex=1
 ZEndIndex=117
-UseTransformations=true
-ArraySelections_VoxelCell\size=4
-ArraySelections_VoxelCell\1\VoxelCell=Confidence Index
-ArraySelections_VoxelCell\2\VoxelCell=EulerAngles
-ArraySelections_VoxelCell\3\VoxelCell=Image Quality
-ArraySelections_VoxelCell\4\VoxelCell=Phases
-ArraySelections_VoxelField\size=0
-ArraySelections_VoxelEnsemble\size=2
-ArraySelections_VoxelEnsemble\1\VoxelEnsemble=CrystalStructures
-ArraySelections_VoxelEnsemble\2\VoxelEnsemble=MaterialName
-ArraySelections_SurfaceMeshPoint\size=0
-ArraySelections_SurfaceMeshFace\size=0
-ArraySelections_SurfaceMeshEdge\size=0
-ArraySelections_SolidMeshPoint\size=0
-ArraySelections_SolidMeshFace\size=0
-ArraySelections_SolidMeshEnsemble\size=0
+UseTransformations=1
+ArraySelections_SelectedArrayNames\size=4
+ArraySelections_SelectedArrayNames\1\SelectedArrayNames=EulerAngles
+ArraySelections_SelectedArrayNames\2\SelectedArrayNames=Phases
+ArraySelections_SelectedArrayNames\3\SelectedArrayNames=Confidence Index
+ArraySelections_SelectedArrayNames\4\SelectedArrayNames=Image Quality
 
 [1]
-Filter_Name=MultiThresholdCells
+Filter_Name=MultiThresholdObjects
+Filter_Human_Label=Threshold Objects
 OutputArrayName=GoodVoxels
-ComparisonInputs\size=2
-ComparisonInputs\1\ArrayName=Image Quality
-ComparisonInputs\1\CompOperator=1
-ComparisonInputs\1\CompValue=120
-ComparisonInputs\2\ArrayName=Confidence Index
-ComparisonInputs\2\CompOperator=1
-ComparisonInputs\2\CompValue=0.100000001490116
+SelectedThresholds\size=2
+SelectedThresholds\1\DataContainerName=VolumeDataContainer
+SelectedThresholds\1\AttributeMatrixName=CellData
+SelectedThresholds\1\AttributeArrayName=Confidence Index
+SelectedThresholds\1\CompOperator=1
+SelectedThresholds\1\CompValue=0.100000001490116
+SelectedThresholds\2\DataContainerName=VolumeDataContainer
+SelectedThresholds\2\AttributeMatrixName=CellData
+SelectedThresholds\2\AttributeArrayName=Image Quality
+SelectedThresholds\2\CompOperator=1
+SelectedThresholds\2\CompValue=120
 
 [2]
 Filter_Name=FindCellQuats

@@ -82,9 +82,6 @@ class WritePoleFigure : public AbstractFilter
     DREAM3D_FILTER_PARAMETER(int, NumColors)
     Q_PROPERTY(int NumColors READ getNumColors WRITE setNumColors)
 
-    // Need this here because the Array Name is declared in another macro in the private section
-    Q_PROPERTY(QString CellEulerAnglesArrayName READ getCellEulerAnglesArrayName WRITE setCellEulerAnglesArrayName)
-
     enum ImageFormatType
     {
       TifImageType = 0,
@@ -93,11 +90,7 @@ class WritePoleFigure : public AbstractFilter
       JpgImageType = 3
     };
 
-    /**
-    * @brief This returns the group that the filter belonds to. You can select
-    * a different group if you want. The string returned here will be displayed
-    * in the GUI for the filter
-    */
+
     DREAM3D_FILTER_PARAMETER(DataArrayPath, CellEulerAnglesArrayPath)
     Q_PROPERTY(DataArrayPath CellEulerAnglesArrayPath READ getCellEulerAnglesArrayPath WRITE setCellEulerAnglesArrayPath)
 

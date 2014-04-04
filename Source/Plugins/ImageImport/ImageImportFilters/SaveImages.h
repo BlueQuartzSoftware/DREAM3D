@@ -86,9 +86,6 @@ class SaveImages : public AbstractFilter
     * a different group if you want. The string returned here will be displayed
     * in the GUI for the filter
     */
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, ColorsArrayPathArrayPath)
-    Q_PROPERTY(DataArrayPath ColorsArrayPathArrayPath READ getColorsArrayPathArrayPath WRITE setColorsArrayPathArrayPath)
-
     virtual const QString getCompiledLibraryName() { return ImageImport::ImageImportBaseName; }
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::IOFilters; }

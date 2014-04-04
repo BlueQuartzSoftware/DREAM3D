@@ -49,7 +49,6 @@
 MultiThresholdObjects::MultiThresholdObjects() :
   AbstractFilter(),
   m_OutputArrayName(DREAM3D::CellData::GoodVoxels),
-  m_DestinationArrayName(""),
   m_Destination(NULL)
 {
   setupFilterParameters();
@@ -164,10 +163,11 @@ void MultiThresholdObjects::dataCheck()
       if(getErrorCondition() < 0 || NULL == m) { return; }
       AttributeMatrix::Pointer attrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, comp.attributeMatrixName, -302);
       if(getErrorCondition() < 0 || NULL == attrMat.get() ) { return; }
+
       QVector<size_t> dims(1, 1);
-      m_DestinationPtr = attrMat->createNonPrereqArray<DataArray<bool>, AbstractFilter, bool>(this, m_OutputArrayName, true, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-////==>MIKE_GROEBER_FIX tempPath.update(DATACONTAINER_NAME, ATTRIBUTEMATRIX_NAME, getOutputArrayName() );
-////==>MIKE_GROEBER_FIX m_OutputPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<bool>, AbstractFilter, bool>(this, tempPath, true, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+      //m_DestinationPtr = attrMat->createNonPrereqArray<DataArray<bool>, AbstractFilter, bool>(this, m_OutputArrayName, true, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+      tempPath.update(comp.dataContainerName, comp.attributeMatrixName, getOutputArrayName() );
+      m_DestinationPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<bool>, AbstractFilter, bool>(this, tempPath, true, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
       if( NULL != m_DestinationPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
       { m_Destination = m_DestinationPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
