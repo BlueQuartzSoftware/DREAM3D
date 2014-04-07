@@ -732,6 +732,34 @@ void PatchGroupMicroTextureRegions::determinePatchFeatureVolumes(size_t totalPat
   { m_Neighborhoods = m_NeighborhoodsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   // find patch neighboorhoods comparing the critical distance binned features and patches
+
+
+  int xPoints = static_cast<int>(m->getXPoints());
+  int yPoints = static_cast<int>(m->getYPoints());
+  int zPoints = static_cast<int>(m->getZPoints());
+
+  float xRes = m->getXRes();
+  float yRes = m->getYRes();
+  float zRes = m->getZRes();
+
+  size_t zStride, yStride;
+  for (size_t l = 0; l < totalFeatures * 3; l+=3)
+  {   
+	int i = m_Centroids[l+0] * xRes;
+	int j = m_Centroids[l+1] * yRes;
+	int k = m_Centroids[l+2] * zRes;
+    zStride = i * xPoints * yPoints;
+    yStride = j * xPoints;
+    int pnum = m_CellParentIds[zStride + yStride + k];
+	int fnum = m_FeatureIds[int(l * 0.3333333f)];
+	patchFeatureList[pnum].push_back(fnum); 
+	// debugging line
+	int stop = 0;
+  }
+
+/*
+
+
   int bin1x, bin2x, bin1y, bin2y, bin1z, bin2z, dBinX, dBinY, dBinZ;;
   QVector<float> patchFeatureVolume(totalPatches, 0.0f);
   for (size_t i = 1; i < totalPatches; i++)
@@ -767,6 +795,9 @@ void PatchGroupMicroTextureRegions::determinePatchFeatureVolumes(size_t totalPat
     int test = m_Neighborhoods[i];
     int stop = 0;
   }
+
+  */
+
   for (size_t i = 1; i < totalPatches; i++)
   {
     // Set the vector for each list into the NeighborhoodList Object
