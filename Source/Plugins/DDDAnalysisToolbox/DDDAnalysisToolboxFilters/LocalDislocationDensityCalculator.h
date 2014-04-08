@@ -63,9 +63,7 @@ class LocalDislocationDensityCalculator : public AbstractFilter
     DREAM3D_TYPE_MACRO_SUPER(LocalDislocationDensityCalculator, AbstractFilter)
 
     virtual ~LocalDislocationDensityCalculator();
-    DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
-
-    DREAM3D_INSTANCE_STRING_PROPERTY(EdgeAttributeMatrixName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(EdgeDataContainerName)
 
     DREAM3D_FILTER_PARAMETER(FloatVec3_t, CellSize)
     Q_PROPERTY(FloatVec3_t CellSize READ getCellSize WRITE setCellSize)
@@ -85,10 +83,8 @@ class LocalDislocationDensityCalculator : public AbstractFilter
     * a different group if you want. The string returned here will be displayed
     * in the GUI for the filter
     */
-    DREAM3D_FILTER_PARAMETER(QString, tOutputArrayName)
-    Q_PROPERTY(QString tOutputArrayName READ gettOutputArrayName WRITE settOutputArrayName)
-
     virtual const QString getCompiledLibraryName() { return DDDAnalysisToolbox::DDDAnalysisToolboxBaseName; }
+    virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::DDDAnalysisFilters; }
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::StatisticsFilters; }
 
@@ -148,7 +144,7 @@ class LocalDislocationDensityCalculator : public AbstractFilter
     void updateCellInstancePointers();
 
   private:
-    DEFINE_PTR_WEAKPTR_DATAARRAY(float, OutputArray)
+    DEFINE_CREATED_DATAARRAY(float, OutputArray)
 
     LocalDislocationDensityCalculator(const LocalDislocationDensityCalculator&); // Copy Constructor Not Implemented
     void operator=(const LocalDislocationDensityCalculator&); // Operator '=' Not Implemented

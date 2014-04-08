@@ -67,6 +67,7 @@ class FindRelativeMotionBetweenSlices : public AbstractFilter
 
     DREAM3D_FILTER_PARAMETER(DataArrayPath, SelectedArrayPath)
     Q_PROPERTY(DataArrayPath SelectedArrayPath READ getSelectedArrayPath WRITE setSelectedArrayPath NOTIFY parametersChanged)
+
     DREAM3D_FILTER_PARAMETER(unsigned int, Plane)
     Q_PROPERTY(unsigned int Plane READ getPlane WRITE setPlane NOTIFY parametersChanged)
     DREAM3D_FILTER_PARAMETER(int, PSize1)

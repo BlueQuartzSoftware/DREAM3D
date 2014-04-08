@@ -98,10 +98,10 @@ void ImportImageStack::setupFilterParameters()
 
   parameters.push_back(FilterParameter::New("Import Image Data", "ImageStack", FilterParameterWidgetType::ImportImagesWidget,"int", false));
 
-
-
   parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "QString", true));
-/*##*/parameters.push_back(FilterParameter::New("ImageData", "ImageDataArrayName", FilterParameterWidgetType::StringWidget, "QString", true, ""));
+  parameters.push_back(FilterParameter::New("Data Container Name", "DataContainerName", FilterParameterWidgetType::StringWidget, "QString", true, ""));
+  parameters.push_back(FilterParameter::New("Cell Attribute Matrix Name", "CellAttributeMatrixName", FilterParameterWidgetType::StringWidget, "QString", true, ""));
+  parameters.push_back(FilterParameter::New("ImageData", "ImageDataArrayName", FilterParameterWidgetType::StringWidget, "QString", true, ""));
   setFilterParameters(parameters);
 }
 
@@ -111,8 +111,9 @@ void ImportImageStack::setupFilterParameters()
 void ImportImageStack::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-/*[]*/setImageDataArrayName(reader->readString("ImageDataArrayName", getImageDataArrayName() ) );
-  setImageDataArrayName( reader->readString("ImageDataArrayName", getImageDataArrayName()) );
+  setDataContainerName(reader->readString("DataContainerName", getDataContainerName() ) );
+  setCellAttributeMatrixName(reader->readString("CellAttributeMatrixName", getCellAttributeMatrixName() ) );
+  setImageDataArrayName(reader->readString("ImageDataArrayName", getImageDataArrayName() ) );
   setZStartIndex( reader->readValue("ZStartIndex", getZStartIndex()) );
   setZEndIndex( reader->readValue("ZEndIndex", getZEndIndex()) );
   setPaddingDigits( reader->readValue("PaddingDigits", getPaddingDigits()) );
@@ -132,7 +133,8 @@ void ImportImageStack::readFilterParameters(AbstractFilterParametersReader* read
 int ImportImageStack::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-/*[]*/writer->writeValue("ImageDataArrayName", getImageDataArrayName() );
+  writer->writeValue("DataContainerName", getDataContainerName() );
+  writer->writeValue("CellAttributeMatrixName", getCellAttributeMatrixName() );
   writer->writeValue("ImageDataArrayName", getImageDataArrayName() );
   writer->writeValue("ZStartIndex", getZStartIndex() );
   writer->writeValue("ZEndIndex", getZEndIndex() );
@@ -234,13 +236,11 @@ void ImportImageStack::dataCheck()
     if(getErrorCondition() < 0) { return; }
     QVector<size_t> arraydims(1, 1);
     // This would be for a gray scale image
-    m_ImageDataPtr = cellAttrMat->createNonPrereqArray<DataArray<uint8_t>, AbstractFilter, uint8_t>(this, m_ImageDataArrayName, 0, arraydims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-////==>MIKE_GROEBER_FIX tempPath.update(DATACONTAINER_NAME, ATTRIBUTEMATRIX_NAME, getImageDataArrayName() );
-////==>MIKE_GROEBER_FIX m_ImageDataPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<uint8_t>, AbstractFilter, uint8_t>(this, tempPath, 0, arraydims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+    tempPath.update(getDataContainerName(), getCellAttributeMatrixName(), getImageDataArrayName() );
+    m_ImageDataPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<uint8_t>, AbstractFilter, uint8_t>(this, tempPath, 0, arraydims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
     if( NULL != m_ImageDataPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
     { m_ImageData = m_ImageDataPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   }
-
 }
 
 
@@ -278,7 +278,6 @@ void ImportImageStack::execute()
   int totalPixels = 0;
   int height = 0;
   int width = 0;
-  //  int bytesPerLine = 0;
 
   int64_t z = m_ZStartIndex;
   int64_t zSpot;
@@ -311,7 +310,6 @@ void ImportImageStack::execute()
     height = image.height();
     width = image.width();
     totalPixels = width * height;
-    //  bytesPerLine = image.bytesPerLine();
     // This is the first image so we need to create our block of data to store the data
     if (z == m_ZStartIndex)
     {
@@ -361,6 +359,8 @@ AbstractFilter::Pointer ImportImageStack::newFilterInstance(bool copyFilterParam
   ImportImageStack::Pointer filter = ImportImageStack::New();
   if(true == copyFilterParameters)
   {
+    filter->setDataContainerName(getDataContainerName());
+    filter->setCellAttributeMatrixName(getCellAttributeMatrixName());
     filter->setImageDataArrayName(getImageDataArrayName());
     filter->setZStartIndex( getZStartIndex() );
     filter->setZEndIndex( getZEndIndex() );

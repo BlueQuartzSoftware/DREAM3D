@@ -47,8 +47,6 @@
 
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/DataContainers/VolumeDataContainer.h"
-#include "DREAM3DLib/OrientationOps/OrientationOps.h"
-#include "DREAM3DLib/DataArrays/NeighborList.hpp"
 
 #include "Processing/ProcessingConstants.h"
 
@@ -68,10 +66,6 @@ class NeighborCICorrelation : public AbstractFilter
     DREAM3D_TYPE_MACRO_SUPER(NeighborCICorrelation, AbstractFilter)
 
     virtual ~NeighborCICorrelation();
-    DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
-
-    //------ Required Cell Data
 
     DREAM3D_FILTER_PARAMETER(float, MinConfidence)
     Q_PROPERTY(float MinConfidence READ getMinConfidence WRITE setMinConfidence)
@@ -111,8 +105,6 @@ class NeighborCICorrelation : public AbstractFilter
 
 
   private:
-    QVector<OrientationOps::Pointer> m_OrientationOps;
-
     DEFINE_PTR_WEAKPTR_DATAARRAY(float, ConfidenceIndex)
 
     void dataCheck();

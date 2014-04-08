@@ -61,9 +61,10 @@ class ImportImageStack : public AbstractFilter
 
     virtual ~ImportImageStack();
 
-    DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
-
+    DREAM3D_FILTER_PARAMETER(QString, DataContainerName)
+    Q_PROPERTY(QString DataContainerName READ getDataContainerName WRITE setDataContainerName)
+    DREAM3D_FILTER_PARAMETER(QString, CellAttributeMatrixName)
+    Q_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
 
     DREAM3D_FILTER_PARAMETER(int64_t, ZStartIndex)
     DREAM3D_FILTER_PARAMETER(int64_t, ZEndIndex)
@@ -79,7 +80,6 @@ class ImportImageStack : public AbstractFilter
 
     DREAM3D_FILTER_PARAMETER(int, ImageStack)
     Q_PROPERTY(int ImageStack READ getImageStack WRITE setImageStack)
-
 
     /**
     * @brief This returns the group that the filter belonds to. You can select

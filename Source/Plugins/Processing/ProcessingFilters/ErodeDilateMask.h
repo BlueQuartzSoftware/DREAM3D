@@ -68,11 +68,7 @@ class ErodeDilateMask : public AbstractFilter
     DREAM3D_TYPE_MACRO_SUPER(ErodeDilateMask, AbstractFilter)
 
     virtual ~ErodeDilateMask();
-    DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
 
-    DREAM3D_FILTER_PARAMETER(QString, SelectedArrayPath)
-    Q_PROPERTY(QString SelectedArrayPath READ getSelectedArrayPath WRITE setSelectedArrayPath)
     DREAM3D_FILTER_PARAMETER(unsigned int, Direction)
     Q_PROPERTY(unsigned int Direction READ getDirection WRITE setDirection)
     DREAM3D_FILTER_PARAMETER(int, NumIterations)
@@ -88,6 +84,7 @@ class ErodeDilateMask : public AbstractFilter
     Q_PROPERTY(DataArrayPath MaskArrayPath READ getMaskArrayPath WRITE setMaskArrayPath)
 
     virtual const QString getCompiledLibraryName() { return Processing::ProcessingBaseName; }
+    virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::ProcessingFilters; }
     virtual const QString getSubGroupName()  { return DREAM3D::FilterSubGroups::CleanupFilters; }
     virtual const QString getHumanLabel() { return "Erode/Dilate Mask"; }

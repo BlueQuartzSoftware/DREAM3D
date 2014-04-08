@@ -90,14 +90,12 @@ class FlattenImageImpl
 // -----------------------------------------------------------------------------
 FlattenImage::FlattenImage() :
   AbstractFilter(),
-  m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
-  m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
   m_FlattenMethod(DREAM3D::FlattenImageMethod::Luminosity),
   m_ImageDataArrayName(DREAM3D::CellData::ImageData),
   m_ImageData(NULL),
   m_FlatImageDataArrayName(DREAM3D::CellData::FlatImageData),
   m_FlatImageData(NULL),
-/*[]*/m_ImageDataArrayPath(DREAM3D::Defaults::SomePath)
+  m_ImageDataArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::ImageData)
 {
   setupFilterParameters();
 }
@@ -130,9 +128,9 @@ void FlattenImage::setupFilterParameters()
     parameters.push_back(parameter);
   }
   parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "QString", true));
-/*[]*/parameters.push_back(FilterParameter::New("ImageData", "ImageDataArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
+  parameters.push_back(FilterParameter::New("ImageData", "ImageDataArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
   parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "QString", true));
-/*##*/parameters.push_back(FilterParameter::New("FlatImageData", "FlatImageDataArrayName", FilterParameterWidgetType::StringWidget, "QString", true, ""));
+  parameters.push_back(FilterParameter::New("FlatImageData", "FlatImageDataArrayName", FilterParameterWidgetType::StringWidget, "QString", true, ""));
   setFilterParameters(parameters);
 }
 
@@ -142,7 +140,7 @@ void FlattenImage::setupFilterParameters()
 void FlattenImage::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-/*[]*/setFlatImageDataArrayName(reader->readString("FlatImageDataArrayName", getFlatImageDataArrayName() ) );
+  setFlatImageDataArrayName(reader->readString("FlatImageDataArrayName", getFlatImageDataArrayName() ) );
   setImageDataArrayPath(reader->readDataArrayPath("ImageDataArrayPath", getImageDataArrayPath() ) );
   setFlattenMethod( reader->readValue("FlattenMethod", getFlattenMethod()) );
   reader->closeFilterGroup();
@@ -154,7 +152,7 @@ void FlattenImage::readFilterParameters(AbstractFilterParametersReader* reader, 
 int FlattenImage::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-/*[]*/writer->writeValue("FlatImageDataArrayName", getFlatImageDataArrayName() );
+  writer->writeValue("FlatImageDataArrayName", getFlatImageDataArrayName() );
   writer->writeValue("ImageDataArrayPath", getImageDataArrayPath() );
   writer->writeValue("FlattenMethod", getFlattenMethod() );
   writer->closeFilterGroup();
@@ -169,13 +167,8 @@ void FlattenImage::dataCheck()
   DataArrayPath tempPath;
   setErrorCondition(0);
 
-  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName(), false);
-  if(getErrorCondition() < 0 || NULL == m) { return; }
-  AttributeMatrix::Pointer cellAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), -301);
-  if(getErrorCondition() < 0 || NULL == cellAttrMat.get() ) { return; }
-
   int numImageComp = 1;
-  IDataArray::Pointer iDataArray = m->getAttributeMatrix(getCellAttributeMatrixName())->getAttributeArray(m_ImageDataArrayName);
+  IDataArray::Pointer iDataArray = getDataContainerArray()->getAttributeMatrix(m_ImageDataArrayPath)->getAttributeArray(m_ImageDataArrayPath.getDataArrayName());
   if(NULL != iDataArray.get())
   {
     UInt8ArrayType* imageDataPtr = UInt8ArrayType::SafePointerDownCast(iDataArray.get());
@@ -190,9 +183,8 @@ void FlattenImage::dataCheck()
   if( NULL != m_ImageDataPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_ImageData = m_ImageDataPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   dims[0] = 1;
-  m_FlatImageDataPtr = cellAttrMat->createNonPrereqArray<DataArray<unsigned char>, AbstractFilter, unsigned char>(this, m_FlatImageDataArrayName, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-////==>MIKE_GROEBER_FIX tempPath.update(DATACONTAINER_NAME, ATTRIBUTEMATRIX_NAME, getFlatImageDataArrayName() );
-////==>MIKE_GROEBER_FIX m_FlatImageDataPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<unsigned char>, AbstractFilter, unsigned char>(this, tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  tempPath.update(m_ImageDataArrayPath.getDataContainerName(), m_ImageDataArrayPath.getAttributeMatrixName(), getFlatImageDataArrayName() );
+  m_FlatImageDataPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<unsigned char>, AbstractFilter, unsigned char>(this, tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_FlatImageDataPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_FlatImageData = m_FlatImageDataPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
@@ -218,8 +210,7 @@ void FlattenImage::execute()
   dataCheck();
   if(getErrorCondition() < 0) { return; }
 
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-  int64_t totalPoints = m->getAttributeMatrix(getCellAttributeMatrixName())->getNumTuples();
+  int64_t totalPoints = m_ImageDataPtr.lock()->getNumberOfTuples();
 
   float Rfactor = 1.0;
   float Gfactor = 1.0;
@@ -242,7 +233,7 @@ void FlattenImage::execute()
   bool doParallel = true;
 #endif
 
-  size_t comp = m->getAttributeMatrix(getCellAttributeMatrixName())->getAttributeArray(m_ImageDataArrayName)->getNumberOfComponents();
+  size_t comp = m_ImageDataPtr.lock()->getNumberOfComponents();
 
   //  qDebug() << "FlattenImage: " << m_ConversionFactor << "\n";
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS

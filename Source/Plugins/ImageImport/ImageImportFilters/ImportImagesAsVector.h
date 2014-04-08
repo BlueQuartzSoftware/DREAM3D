@@ -61,9 +61,10 @@ class ImportImagesAsVector : public AbstractFilter
 
     virtual ~ImportImagesAsVector();
 
-    DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
-
+    DREAM3D_FILTER_PARAMETER(QString, DataContainerName)
+    Q_PROPERTY(QString DataContainerName READ getDataContainerName WRITE setDataContainerName)
+    DREAM3D_FILTER_PARAMETER(QString, CellAttributeMatrixName)
+    Q_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
 
     DREAM3D_FILTER_PARAMETER(int64_t, StartIndex)
     DREAM3D_FILTER_PARAMETER(int64_t, EndIndex)
@@ -78,7 +79,6 @@ class ImportImagesAsVector : public AbstractFilter
 
     DREAM3D_FILTER_PARAMETER(int, ImageVector)
     Q_PROPERTY(int ImageVector READ getImageVector WRITE setImageVector)
-
 
     /**
     * @brief This returns the group that the filter belonds to. You can select

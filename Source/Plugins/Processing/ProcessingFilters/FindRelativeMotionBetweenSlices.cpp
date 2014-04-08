@@ -155,7 +155,7 @@ void FindRelativeMotionBetweenSlices::setupFilterParameters()
   parameters.push_back(FilterParameter::New("Search Distance 2 (Voxels)", "SSize2", FilterParameterWidgetType::IntWidget,"int", false));
   parameters.push_back(FilterParameter::New("Slice Step (Voxels)", "SliceStep", FilterParameterWidgetType::IntWidget,"int", false));
   parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "QString", true));
-/*##*/parameters.push_back(FilterParameter::New("MotionDirection", "MotionDirectionArrayName", FilterParameterWidgetType::StringWidget, "QString", true, ""));
+  parameters.push_back(FilterParameter::New("MotionDirection", "MotionDirectionArrayName", FilterParameterWidgetType::StringWidget, "QString", true, ""));
   setFilterParameters(parameters);
 }
 
@@ -163,7 +163,7 @@ void FindRelativeMotionBetweenSlices::setupFilterParameters()
 void FindRelativeMotionBetweenSlices::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-/*[]*/setMotionDirectionArrayName(reader->readString("MotionDirectionArrayName", getMotionDirectionArrayName() ) );
+  setMotionDirectionArrayName(reader->readString("MotionDirectionArrayName", getMotionDirectionArrayName() ) );
   setSelectedArrayPath( reader->readDataArrayPath( "SelectedArrayPath", getSelectedArrayPath() ) );
   setPlane( reader->readValue("Plane", getPlane()));
   setPSize1( reader->readValue("PSize1", getPSize1()));
@@ -180,7 +180,7 @@ void FindRelativeMotionBetweenSlices::readFilterParameters(AbstractFilterParamet
 int FindRelativeMotionBetweenSlices::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-/*[]*/writer->writeValue("MotionDirectionArrayName", getMotionDirectionArrayName() );
+  writer->writeValue("MotionDirectionArrayName", getMotionDirectionArrayName() );
   writer->writeValue("SelectedArrayPath", getSelectedArrayPath() );
   writer->writeValue("Plane", getPlane());
   writer->writeValue("PSize1", getPSize1());
@@ -200,15 +200,9 @@ void FindRelativeMotionBetweenSlices::dataCheck()
   DataArrayPath tempPath;
   setErrorCondition(0);
 
-  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, m_SelectedArrayPath.getDataContainerName(), false);
-  if(getErrorCondition() < 0 || NULL == m) { return; }
-  AttributeMatrix::Pointer cellAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, m_SelectedArrayPath.getAttributeMatrixName(), -301);
-  if(getErrorCondition() < 0 || NULL == cellAttrMat.get() ) { return; }
-
   QVector<size_t> dims(1, 3);
-  m_MotionDirectionPtr = cellAttrMat->createNonPrereqArray<DataArray<float>, AbstractFilter, float>(this, m_MotionDirectionArrayName, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-////==>MIKE_GROEBER_FIX tempPath.update(DATACONTAINER_NAME, ATTRIBUTEMATRIX_NAME, getMotionDirectionArrayName() );
-////==>MIKE_GROEBER_FIX m_MotionDirectionPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  tempPath.update(m_SelectedArrayPath.getDataContainerName(), m_SelectedArrayPath.getAttributeMatrixName(), getMotionDirectionArrayName() );
+  m_MotionDirectionPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_MotionDirectionPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_MotionDirection = m_MotionDirectionPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 }

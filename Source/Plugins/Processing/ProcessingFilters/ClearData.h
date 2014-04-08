@@ -63,8 +63,9 @@ class ClearData : public AbstractFilter
     DREAM3D_TYPE_MACRO_SUPER(ClearData, AbstractFilter)
 
     virtual ~ClearData();
-    DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
+
+    DREAM3D_FILTER_PARAMETER(DataArrayPath, CellAttributeMatrixName)
+    Q_PROPERTY(DataArrayPath CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
 
     DREAM3D_FILTER_PARAMETER(int, XMin)
     Q_PROPERTY(int XMin READ getXMin WRITE setXMin)

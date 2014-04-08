@@ -68,8 +68,6 @@ class ErodeDilateBadData : public AbstractFilter
     DREAM3D_TYPE_MACRO_SUPER(ErodeDilateBadData, AbstractFilter)
 
     virtual ~ErodeDilateBadData();
-    DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
 
     DREAM3D_FILTER_PARAMETER(unsigned int, Direction)
     Q_PROPERTY(unsigned int Direction READ getDirection WRITE setDirection)

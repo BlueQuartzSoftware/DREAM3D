@@ -123,55 +123,10 @@ void ReadH5Ebsd::setupFilterParameters()
   FilterParameterVector parameters;
   parameters.push_back(FilterParameter::New("Read H5Ebsd File", "SelectedArrayNames", FilterParameterWidgetType::ReadH5EbsdWidget,"ReadH5Ebsd", false, "", "*.h5ebsd"));
 
-#if 0
-  FilterParameterVector parameters;
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Input File");
-    parameter->setPropertyName("InputFile");
-    parameter->setWidgetType(FilterParameterWidgetType::InputFileWidget);
-    parameter->setFileExtension("*.h5ebsd");
-    parameter->setValueType("QString");
-    parameters.push_back(parameter);
-  }
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Z Start Index");
-    parameter->setPropertyName("ZStartIndex");
-    parameter->setWidgetType(FilterParameterWidgetType::IntWidget);
-    parameter->setValueType("int");
-    parameters.push_back(parameter);
-  }
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Z End Index");
-    parameter->setPropertyName("ZEndIndex");
-    parameter->setWidgetType(FilterParameterWidgetType::IntWidget);
-    parameter->setValueType("int");
-    parameters.push_back(parameter);
-  }
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Use Transformations");
-    parameter->setPropertyName("UseTransformations");
-    parameter->setWidgetType(FilterParameterWidgetType::BooleanWidget);
-    parameter->setValueType("bool");
-    parameters.push_back(parameter);
-  }
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Array to Read");
-    parameter->setPropertyName("SelectedArrayNames");
-    parameter->setWidgetType(FilterParameterWidgetType::ArraySelectionWidget);
-    parameters.push_back(parameter);
-  }
-#endif
-
   parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "QString", true));
-/*##*/parameters.push_back(FilterParameter::New("CellEulerAngles", "CellEulerAnglesArrayName", FilterParameterWidgetType::StringWidget, "QString", true, ""));
-/*##*/parameters.push_back(FilterParameter::New("CellPhases", "CellPhasesArrayName", FilterParameterWidgetType::StringWidget, "QString", true, ""));
-/*##*/parameters.push_back(FilterParameter::New("CrystalStructures", "CrystalStructuresArrayName", FilterParameterWidgetType::StringWidget, "QString", true, ""));
-/*##*/parameters.push_back(FilterParameter::New("LatticeConstants", "LatticeConstantsArrayName", FilterParameterWidgetType::StringWidget, "QString", true, ""));
+  parameters.push_back(FilterParameter::New("Data Container Name", "DataContainerName", FilterParameterWidgetType::StringWidget, "QString", true, ""));
+  parameters.push_back(FilterParameter::New("Cell Attribute Matrix Name", "CellAttributeMatrixName", FilterParameterWidgetType::StringWidget, "QString", true, ""));
+  parameters.push_back(FilterParameter::New("Cell Ensemble Attribute Matrix Name", "CellEnsembleAttributeMatrixName", FilterParameterWidgetType::StringWidget, "QString", true, ""));
   setFilterParameters(parameters);
 }
 
@@ -180,10 +135,9 @@ void ReadH5Ebsd::setupFilterParameters()
 void ReadH5Ebsd::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-/*[]*/setLatticeConstantsArrayName(reader->readString("LatticeConstantsArrayName", getLatticeConstantsArrayName() ) );
-/*[]*/setCrystalStructuresArrayName(reader->readString("CrystalStructuresArrayName", getCrystalStructuresArrayName() ) );
-/*[]*/setCellPhasesArrayName(reader->readString("CellPhasesArrayName", getCellPhasesArrayName() ) );
-/*[]*/setCellEulerAnglesArrayName(reader->readString("CellEulerAnglesArrayName", getCellEulerAnglesArrayName() ) );
+  setDataContainerName(reader->readString("DataContainerName", getDataContainerName() ) );
+  setCellAttributeMatrixName(reader->readString("CellAttributeMatrixName", getCellAttributeMatrixName() ) );
+  setCellEnsembleAttributeMatrixName(reader->readString("CellEnsembleAttributeMatrixName", getCellEnsembleAttributeMatrixName() ) );
   setInputFile(reader->readString("InputFile", getInputFile() ) );
   setRefFrameZDir( ( reader->readValue("RefFrameZDir", getRefFrameZDir() ) ) );
   setZStartIndex( reader->readValue("ZStartIndex", getZStartIndex() ) );
@@ -199,10 +153,9 @@ void ReadH5Ebsd::readFilterParameters(AbstractFilterParametersReader* reader, in
 int ReadH5Ebsd::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-/*[]*/writer->writeValue("LatticeConstantsArrayName", getLatticeConstantsArrayName() );
-/*[]*/writer->writeValue("CrystalStructuresArrayName", getCrystalStructuresArrayName() );
-/*[]*/writer->writeValue("CellPhasesArrayName", getCellPhasesArrayName() );
-/*[]*/writer->writeValue("CellEulerAnglesArrayName", getCellEulerAnglesArrayName() );
+  writer->writeValue("DataContainerName", getDataContainerName() );
+  writer->writeValue("CellAttributeMatrixName", getCellAttributeMatrixName() );
+  writer->writeValue("CellEnsembleAttributeMatrixName", getCellEnsembleAttributeMatrixName() );
   writer->writeValue("InputFile", getInputFile() );
   writer->writeValue("RefFrameZDir", getRefFrameZDir());
   writer->writeValue("ZStartIndex", getZStartIndex() );
@@ -373,8 +326,6 @@ void ReadH5Ebsd::dataCheck()
   AttributeMatrix::Pointer cellEnsembleAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellEnsembleAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::CellEnsemble);
   if(getErrorCondition() < 0) { return; }
 
-
-
   volumeInfoReader->setFileName(m_InputFile);
   H5EbsdVolumeReader::Pointer reader;
   QVector<QString> names;
@@ -466,9 +417,8 @@ void ReadH5Ebsd::dataCheck()
   if(m_SelectedArrayNames.contains(DREAM3D::CellData::EulerAngles) )
   {
     cDims[0] = 3;
-    m_CellEulerAnglesPtr = cellAttrMat->createNonPrereqArray<DataArray<float>, AbstractFilter, float>(this,  m_CellEulerAnglesArrayName, 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-////==>MIKE_GROEBER_FIX tempPath.update(DATACONTAINER_NAME, ATTRIBUTEMATRIX_NAME, getCellEulerAnglesArrayName() );
-////==>MIKE_GROEBER_FIX m_CellEulerAnglesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this,  tempPath, 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+    tempPath.update(getDataContainerName(), getCellAttributeMatrixName(), getCellEulerAnglesArrayName() );
+    m_CellEulerAnglesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this,  tempPath, 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
     if( NULL != m_CellEulerAnglesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
     { m_CellEulerAngles = m_CellEulerAnglesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   }
@@ -477,9 +427,8 @@ void ReadH5Ebsd::dataCheck()
   if(m_SelectedArrayNames.contains(DREAM3D::CellData::Phases) )
   {
     cDims[0] = 1;
-    m_CellPhasesPtr = cellAttrMat->createNonPrereqArray<DataArray<int32_t>, AbstractFilter, int32_t>(this,  m_CellPhasesArrayName, 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-////==>MIKE_GROEBER_FIX tempPath.update(DATACONTAINER_NAME, ATTRIBUTEMATRIX_NAME, getCellPhasesArrayName() );
-////==>MIKE_GROEBER_FIX m_CellPhasesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(this,  tempPath, 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+    tempPath.update(getDataContainerName(), getCellAttributeMatrixName(), getCellPhasesArrayName() );
+    m_CellPhasesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(this,  tempPath, 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
     if( NULL != m_CellPhasesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
     { m_CellPhases = m_CellPhasesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   }
@@ -487,9 +436,8 @@ void ReadH5Ebsd::dataCheck()
   // Now create the Ensemble arrays for the XTal Structures, Material Names and LatticeConstants
   cDims[0] = 1;
   typedef DataArray<unsigned int> XTalStructArrayType;
-  m_CrystalStructuresPtr = cellEnsembleAttrMat->createNonPrereqArray<DataArray<uint32_t>, AbstractFilter, uint32_t>(this,  m_CrystalStructuresArrayName, Ebsd::CrystalStructure::UnknownCrystalStructure, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-////==>MIKE_GROEBER_FIX tempPath.update(DATACONTAINER_NAME, ATTRIBUTEMATRIX_NAME, getCrystalStructuresArrayName() );
-////==>MIKE_GROEBER_FIX m_CrystalStructuresPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<uint32_t>, AbstractFilter, uint32_t>(this,  tempPath, Ebsd::CrystalStructure::UnknownCrystalStructure, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  tempPath.update(getDataContainerName(), getCellEnsembleAttributeMatrixName(), getCrystalStructuresArrayName() );
+  m_CrystalStructuresPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<uint32_t>, AbstractFilter, uint32_t>(this,  tempPath, Ebsd::CrystalStructure::UnknownCrystalStructure, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_CrystalStructuresPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_CrystalStructures = m_CrystalStructuresPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
@@ -498,9 +446,8 @@ void ReadH5Ebsd::dataCheck()
   m_MaterialNamesPtr = materialNamesPtr;
 
   cDims[0] = 6;
-  m_LatticeConstantsPtr = cellEnsembleAttrMat->createNonPrereqArray<DataArray<float>, AbstractFilter, float>(this,  m_LatticeConstantsArrayName, 0.0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-////==>MIKE_GROEBER_FIX tempPath.update(DATACONTAINER_NAME, ATTRIBUTEMATRIX_NAME, getLatticeConstantsArrayName() );
-////==>MIKE_GROEBER_FIX m_LatticeConstantsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this,  tempPath, 0.0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  tempPath.update(getDataContainerName(), getCellEnsembleAttributeMatrixName(), getLatticeConstantsArrayName() );
+  m_LatticeConstantsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this,  tempPath, 0.0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_LatticeConstantsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_LatticeConstants = m_LatticeConstantsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
@@ -1149,10 +1096,9 @@ AbstractFilter::Pointer ReadH5Ebsd::newFilterInstance(bool copyFilterParameters)
   ReadH5Ebsd::Pointer filter = ReadH5Ebsd::New();
   if(true == copyFilterParameters)
   {
-    filter->setLatticeConstantsArrayName(getLatticeConstantsArrayName());
-    filter->setCrystalStructuresArrayName(getCrystalStructuresArrayName());
-    filter->setCellPhasesArrayName(getCellPhasesArrayName());
-    filter->setCellEulerAnglesArrayName(getCellEulerAnglesArrayName());
+    filter->setCellAttributeMatrixName(getCellAttributeMatrixName());
+    filter->setCellEnsembleAttributeMatrixName(getCellEnsembleAttributeMatrixName());
+    filter->setDataContainerName(getDataContainerName());
     filter->setInputFile( getInputFile() );
     filter->setZStartIndex( getZStartIndex() );
     filter->setZEndIndex( getZEndIndex() );

@@ -60,7 +60,7 @@ class CellArray
 
     typedef struct
     {
-      int32_t verts[3];
+      int32_t verts[4];
     } Cell_t;
 
     typedef QSet<int32_t> UniqueCellIds_t;
@@ -115,6 +115,7 @@ class CellArray
       verts[0] = Cell.verts[0];
       verts[1] = Cell.verts[1];
       verts[2] = Cell.verts[2];
+      verts[3] = Cell.verts[3];
     }
 
     // -----------------------------------------------------------------------------
@@ -126,6 +127,7 @@ class CellArray
       Cell.verts[0] = verts[0];
       Cell.verts[1] = verts[1];
       Cell.verts[2] = verts[2];
+      Cell.verts[3] = verts[3];
     }
 
     // -----------------------------------------------------------------------------
@@ -161,14 +163,14 @@ class CellArray
       ::memset(linkLoc, 0, numPts*sizeof(int32_t));
 
 
-      size_t pts[3];
+      size_t pts[4];
 
       //vtkPolyData *pdata = static_cast<vtkPolyData *>(data);
       // traverse data to determine number of uses of each point
       for (cellId=0; cellId < numCells; cellId++)
       {
         getVerts(cellId, pts);
-        for (size_t j=0; j < 3; j++)
+        for (size_t j=0; j < 4; j++)
         {
          linkCount[pts[j]]++;
         }
@@ -180,7 +182,7 @@ class CellArray
       for (cellId=0; cellId < numCells; cellId++)
       {
         getVerts(cellId, pts);
-        for (size_t j=0; j < 3; j++)
+        for (size_t j=0; j < 4; j++)
         {
           m_CellsContainingVert->insertCellReference(pts[j], (linkLoc[pts[j]])++, cellId);
         }
@@ -221,7 +223,7 @@ class CellArray
       {
         //   qDebug() << "Analyzing Cell " << t << "\n";
         Cell_t& seedCell = *(m_Array->getPointer(t));
-        for(size_t v = 0; v < 3; ++v)
+        for(size_t v = 0; v < 4; ++v)
         {
           //   qDebug() << " vert " << v << "\n";
           int nCs = m_CellsContainingVert->getNumberOfElements(seedCell.verts[v]);
@@ -241,24 +243,30 @@ class CellArray
             int seedCellVert0 = seedCell.verts[0];
             int seedCellVert1 = seedCell.verts[1];
             int seedCellVert2 = seedCell.verts[2];
+            int seedCellVert3 = seedCell.verts[3];
             int trgtCellVert0 = vertCell.verts[0];
             int trgtCellVert1 = vertCell.verts[1];
             int trgtCellVert2 = vertCell.verts[2];
+            int trgtCellVert3 = vertCell.verts[3];
 
-            if (seedCellVert0 == trgtCellVert0 || seedCellVert0 == trgtCellVert1 || seedCellVert0 == trgtCellVert2  )
+            if (seedCellVert0 == trgtCellVert0 || seedCellVert0 == trgtCellVert1 || seedCellVert0 == trgtCellVert2 || seedCellVert0 == trgtCellVert3)
             {
               vCount++;
             }
-            if (seedCellVert1 == trgtCellVert0 || seedCellVert1 == trgtCellVert1 || seedCellVert1 == trgtCellVert2  )
+            if (seedCellVert1 == trgtCellVert0 || seedCellVert1 == trgtCellVert1 || seedCellVert1 == trgtCellVert2 || seedCellVert1 == trgtCellVert3)
             {
               vCount++;
             }
-            if (seedCellVert2 == trgtCellVert0 || seedCellVert2 == trgtCellVert1 || seedCellVert2 == trgtCellVert2  )
+            if (seedCellVert2 == trgtCellVert0 || seedCellVert2 == trgtCellVert1 || seedCellVert2 == trgtCellVert2 || seedCellVert2 == trgtCellVert3)
+            {
+              vCount++;
+            }
+            if (seedCellVert3 == trgtCellVert0 || seedCellVert3 == trgtCellVert1 || seedCellVert3 == trgtCellVert2 || seedCellVert3 == trgtCellVert3)
             {
               vCount++;
             }
 
-            BOOST_ASSERT(vCount < 3); // No way 2 edges can share both vertices. Something is VERY wrong at this point
+            BOOST_ASSERT(vCount < 4); // No way 2 edges can share both vertices. Something is VERY wrong at this point
 
             // So if our vertex match count is 2 and we have not visited the triangle in question then add this triangle index
             // into the list of Cell Indices as neighbors for the source triangle.

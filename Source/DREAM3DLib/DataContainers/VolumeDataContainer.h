@@ -126,7 +126,8 @@ class DREAM3DLib_EXPORT VolumeDataContainer : public SurfaceDataContainer
   protected:
     VolumeDataContainer();
 
-    virtual void writeXdmfMeshStructureHeader(QTextStream& out, QString hdfFileName);
+    virtual void writeXdmfPolyMeshStructureHeader(QTextStream& out, QString hdfFileName);
+    virtual void writeXdmfRectMeshStructureHeader(QTextStream& out, QString hdfFileName);
 
     virtual int gatherMetaData(hid_t dcId, int64_t volDims[3], float spacing[3], float origin[3]);
 

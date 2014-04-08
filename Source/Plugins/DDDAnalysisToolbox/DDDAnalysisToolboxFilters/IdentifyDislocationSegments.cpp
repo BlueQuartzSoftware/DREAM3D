@@ -50,8 +50,6 @@
 // -----------------------------------------------------------------------------
 IdentifyDislocationSegments::IdentifyDislocationSegments() :
   AbstractFilter(),
-  m_DataContainerName(DREAM3D::Defaults::EdgeDataContainerName),
-  m_EdgeAttributeMatrixName(DREAM3D::Defaults::EdgeAttributeMatrixName),
   m_EdgeFeatureAttributeMatrixName(DREAM3D::Defaults::EdgeFeatureAttributeMatrixName),
   m_BurgersVectorsArrayName(DREAM3D::EdgeData::BurgersVectors),
   m_BurgersVectors(NULL),
@@ -61,8 +59,8 @@ IdentifyDislocationSegments::IdentifyDislocationSegments() :
   m_DislocationIds(NULL),
   m_ActiveArrayName(DREAM3D::FeatureData::Active),
   m_Active(NULL),
-/*[]*/m_BurgersVectorsArrayPath(DREAM3D::Defaults::SomePath),
-/*[]*/m_SlipPlaneNormalsArrayPath(DREAM3D::Defaults::SomePath)
+  m_BurgersVectorsArrayPath(DREAM3D::Defaults::EdgeDataContainerName, DREAM3D::Defaults::EdgeAttributeMatrixName, DREAM3D::EdgeData::BurgersVectors),
+  m_SlipPlaneNormalsArrayPath(DREAM3D::Defaults::EdgeDataContainerName, DREAM3D::Defaults::EdgeAttributeMatrixName, DREAM3D::EdgeData::SlipPlaneNormals)
 {
   setupFilterParameters();
 }
@@ -82,11 +80,12 @@ void IdentifyDislocationSegments::setupFilterParameters()
   FilterParameterVector parameters;
 
   parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "QString", true));
-/*[]*/parameters.push_back(FilterParameter::New("BurgersVectors", "BurgersVectorsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
-/*[]*/parameters.push_back(FilterParameter::New("SlipPlaneNormals", "SlipPlaneNormalsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
+  parameters.push_back(FilterParameter::New("Edge Feature Attribute Matrix Name", "EdgeFeatureAttributeMatrixName", FilterParameterWidgetType::SeparatorWidget, "QString", true, ""));
+  parameters.push_back(FilterParameter::New("BurgersVectors", "BurgersVectorsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
+  parameters.push_back(FilterParameter::New("SlipPlaneNormals", "SlipPlaneNormalsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
   parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "QString", true));
-/*##*/parameters.push_back(FilterParameter::New("tDislocationIds", "tDislocationIdsArrayName", FilterParameterWidgetType::StringWidget, "QString", true, ""));
-/*##*/parameters.push_back(FilterParameter::New("Active", "ActiveArrayName", FilterParameterWidgetType::StringWidget, "QString", true, ""));
+  parameters.push_back(FilterParameter::New("DislocationIds", "DislocationIdsArrayName", FilterParameterWidgetType::StringWidget, "QString", true, ""));
+  parameters.push_back(FilterParameter::New("Active", "ActiveArrayName", FilterParameterWidgetType::StringWidget, "QString", true, ""));
   setFilterParameters(parameters);
 }
 
@@ -96,8 +95,9 @@ void IdentifyDislocationSegments::setupFilterParameters()
 void IdentifyDislocationSegments::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-/*[]*/setActiveArrayName(reader->readString("ActiveArrayName", getActiveArrayName() ) );
-/*[]*/settDislocationIdsArrayName(reader->readString("tDislocationIdsArrayName", gettDislocationIdsArrayName() ) );
+  setEdgeFeatureAttributeMatrixName(reader->readString("EdgeFeatureAttributeMatrixName", getEdgeFeatureAttributeMatrixName() ) );
+  setActiveArrayName(reader->readString("ActiveArrayName", getActiveArrayName() ) );
+  setDislocationIdsArrayName(reader->readString("DislocationIdsArrayName", getDislocationIdsArrayName() ) );
   setSlipPlaneNormalsArrayPath(reader->readDataArrayPath("SlipPlaneNormalsArrayPath", getSlipPlaneNormalsArrayPath() ) );
   setBurgersVectorsArrayPath(reader->readDataArrayPath("BurgersVectorsArrayPath", getBurgersVectorsArrayPath() ) );
 
@@ -110,8 +110,9 @@ void IdentifyDislocationSegments::readFilterParameters(AbstractFilterParametersR
 int IdentifyDislocationSegments::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-/*[]*/writer->writeValue("ActiveArrayName", getActiveArrayName() );
-/*[]*/writer->writeValue("tDislocationIdsArrayName", gettDislocationIdsArrayName() );
+  writer->writeValue("EdgeFeatureAttributeMatrixName", getEdgeFeatureAttributeMatrixName() );
+  writer->writeValue("ActiveArrayName", getActiveArrayName() );
+  writer->writeValue("DislocationIdsArrayName", getDislocationIdsArrayName() );
   writer->writeValue("SlipPlaneNormalsArrayPath", getSlipPlaneNormalsArrayPath() );
   writer->writeValue("BurgersVectorsArrayPath", getBurgersVectorsArrayPath() );
 
@@ -139,9 +140,7 @@ void IdentifyDislocationSegments::dataCheck()
   setErrorCondition(0);
 
   // Next check the existing DataContainer/AttributeMatrix
-  EdgeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<EdgeDataContainer, AbstractFilter>(this, getDataContainerName());
-  if(getErrorCondition() < 0) { return; }
-  AttributeMatrix::Pointer edgeAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getEdgeAttributeMatrixName(), -301);
+  EdgeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<EdgeDataContainer, AbstractFilter>(this, getBurgersVectorsArrayPath().getDataContainerName());
   if(getErrorCondition() < 0) { return; }
   QVector<size_t> tDims(1, 0);
   AttributeMatrix::Pointer edgeFeatureAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getEdgeFeatureAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::EdgeFeature);
@@ -169,14 +168,12 @@ void IdentifyDislocationSegments::dataCheck()
   if( NULL != m_SlipPlaneNormalsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_SlipPlaneNormals = m_SlipPlaneNormalsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   dims[0] = 1;
-  m_DislocationIdsPtr = edgeAttrMat->createNonPrereqArray<DataArray<int32_t>, AbstractFilter, int32_t>(this, getDislocationIdsArrayName(), 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-////==>MIKE_GROEBER_FIX tempPath.update(DATACONTAINER_NAME, ATTRIBUTEMATRIX_NAME, gettDislocationIdsArrayName() );
-////==>MIKE_GROEBER_FIX m_tDislocationIdsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(this, tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  tempPath.update(getBurgersVectorsArrayPath().getDataContainerName(), getEdgeFeatureAttributeMatrixName(), getDislocationIdsArrayName() );
+  m_DislocationIdsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(this, tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_DislocationIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_DislocationIds = m_DislocationIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-  m_ActivePtr = edgeFeatureAttrMat->createNonPrereqArray<DataArray<bool>, AbstractFilter, bool>(this, m_ActiveArrayName, true, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-////==>MIKE_GROEBER_FIX tempPath.update(DATACONTAINER_NAME, ATTRIBUTEMATRIX_NAME, getActiveArrayName() );
-////==>MIKE_GROEBER_FIX m_ActivePtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<bool>, AbstractFilter, bool>(this, tempPath, true, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  tempPath.update(getBurgersVectorsArrayPath().getDataContainerName(), getEdgeFeatureAttributeMatrixName(), getActiveArrayName() );
+  m_ActivePtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<bool>, AbstractFilter, bool>(this, tempPath, true, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_ActivePtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_Active = m_ActivePtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
@@ -202,7 +199,7 @@ void IdentifyDislocationSegments::execute()
   dataCheck();
   if(getErrorCondition() < 0) { return; }
 
-  EdgeDataContainer* edc = getDataContainerArray()->getDataContainerAs<EdgeDataContainer>(getDataContainerName());
+  EdgeDataContainer* edc = getDataContainerArray()->getDataContainerAs<EdgeDataContainer>(getBurgersVectorsArrayPath().getDataContainerName());
   AttributeMatrix::Pointer edgeFeatureAttrMat = edc->getAttributeMatrix(getEdgeFeatureAttributeMatrixName());
 
   VertexArray::Pointer nodesPtr = edc->getVertices();
@@ -330,4 +327,19 @@ void IdentifyDislocationSegments::execute()
   notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
-
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AbstractFilter::Pointer IdentifyDislocationSegments::newFilterInstance(bool copyFilterParameters)
+{
+  IdentifyDislocationSegments::Pointer filter = IdentifyDislocationSegments::New();
+  if(true == copyFilterParameters)
+  {
+    filter->setActiveArrayName(getActiveArrayName());
+    filter->setBurgersVectorsArrayPath(getBurgersVectorsArrayPath());
+    filter->setDislocationIdsArrayName(getDislocationIdsArrayName());
+    filter->setEdgeFeatureAttributeMatrixName(getEdgeFeatureAttributeMatrixName());
+    filter->setSlipPlaneNormalsArrayPath(getSlipPlaneNormalsArrayPath());
+  }
+  return filter;
+}

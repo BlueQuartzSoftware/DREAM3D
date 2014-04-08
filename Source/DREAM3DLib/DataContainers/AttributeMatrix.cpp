@@ -538,7 +538,7 @@ QString AttributeMatrix::writeXdmfAttributeDataHelper(int numComp, const QString
   QString dimStr = tupleStr + QString::number(array->getNumberOfComponents());
   QString dimStrHalf = tupleStr + QString::number(array->getNumberOfComponents() / 2);
 
-  if((numComp % 2) == 1)
+  if((numComp % 2) == 1 || numComp == 6)
   {
     out << "    <Attribute Name=\"" << array->getName() << "\" ";
     out << "AttributeType=\"" << attrType << "\" ";
@@ -611,8 +611,10 @@ QString AttributeMatrix::writeXdmfAttributeData(IDataArray::Pointer array, const
     return xdmfText;
   }
   int numComp = array->getNumberOfComponents();
-  QString attrType = "Scalar";
-  if(numComp > 2) { attrType = "Vector"; }
+  QString attrType = "Vector";
+  if(numComp == 1) { attrType = "Scalar"; }
+  if(numComp == 6) { attrType = "Tensor6"; }
+  if(numComp == 9) { attrType = "Tensor"; }
 
   QString block = writeXdmfAttributeDataHelper(numComp, attrType, dataContainerName, array, centering, precision, xdmfTypeName, hdfFileName, gridType);
 

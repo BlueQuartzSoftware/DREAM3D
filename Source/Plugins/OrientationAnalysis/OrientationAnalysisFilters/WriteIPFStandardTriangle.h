@@ -74,8 +74,6 @@ class WriteIPFStandardTriangle : public AbstractFilter
     Q_PROPERTY(int ImageSize READ getImageSize WRITE setImageSize)
     DREAM3D_INSTANCE_PROPERTY(float, ColorCorrectionFactor)
 
-
-
     enum ImageFormatType
     {
       TifImageType = 0,
@@ -169,9 +167,6 @@ class WriteIPFStandardTriangle : public AbstractFilter
 
 
   private:
-    float* m_CellEulerAngles;
-    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, CellPhases)
-    unsigned int* m_CrystalStructures;
 
     WriteIPFStandardTriangle(const WriteIPFStandardTriangle&); // Copy Constructor Not Implemented
     void operator=(const WriteIPFStandardTriangle&); // Operator '=' Not Implemented

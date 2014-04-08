@@ -50,16 +50,13 @@
 // -----------------------------------------------------------------------------
 MinNeighbors::MinNeighbors() :
   AbstractFilter(),
-  m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
-  m_CellFeatureAttributeMatrixName(DREAM3D::Defaults::CellFeatureAttributeMatrixName),
-  m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
   m_MinNumNeighbors(1),
   m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
   m_FeatureIds(NULL),
   m_NumNeighborsArrayName(DREAM3D::FeatureData::NumNeighbors),
   m_NumNeighbors(NULL),
-/*[]*/m_FeatureIdsArrayPath(DREAM3D::Defaults::SomePath),
-/*[]*/m_NumNeighborsArrayPath(DREAM3D::Defaults::SomePath)
+  m_FeatureIdsArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::FeatureIds),
+  m_NumNeighborsArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, DREAM3D::FeatureData::NumNeighbors)
 {
   setupFilterParameters();
 }
@@ -80,8 +77,8 @@ void MinNeighbors::setupFilterParameters()
   parameters.push_back(FilterParameter::New("Minimum Number Neighbors", "MinNumNeighbors", FilterParameterWidgetType::IntWidget,"int", false));
 
   parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "QString", true));
-/*[]*/parameters.push_back(FilterParameter::New("FeatureIds", "FeatureIdsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
-/*[]*/parameters.push_back(FilterParameter::New("NumNeighbors", "NumNeighborsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
+  parameters.push_back(FilterParameter::New("FeatureIds", "FeatureIdsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
+  parameters.push_back(FilterParameter::New("NumNeighbors", "NumNeighborsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
   setFilterParameters(parameters);
 }
 // -----------------------------------------------------------------------------
@@ -114,24 +111,14 @@ void MinNeighbors::dataCheck()
 {
   setErrorCondition(0);
 
-  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName(), false);
-  if(getErrorCondition() < 0 || NULL == m) { return; }
-  AttributeMatrix::Pointer cellFeatureAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellFeatureAttributeMatrixName(), -301);
-  if(getErrorCondition() < 0) { return; }
-  AttributeMatrix::Pointer cellAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), -301);
-  if(getErrorCondition() < 0 || NULL == cellAttrMat.get() ) { return; }
-
   QVector<size_t> dims(1, 1);
-////====>REMOVE THIS    m_FeatureIdsPtr = cellAttrMat->getPrereqArray<DataArray<int32_t>, AbstractFilter>(this, m_FeatureIdsArrayName, -301, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   m_FeatureIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeatureIdsArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-////====>REMOVE THIS    m_NumNeighborsPtr = cellFeatureAttrMat->getPrereqArray<DataArray<int32_t>, AbstractFilter>(this, m_NumNeighborsArrayName, -304, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   m_NumNeighborsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getNumNeighborsArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_NumNeighborsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_NumNeighbors = m_NumNeighborsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
-
 
 // -----------------------------------------------------------------------------
 //
@@ -144,8 +131,8 @@ void MinNeighbors::preflight()
   emit preflightExecuted();
   if(getErrorCondition() < 0) { return; }
 
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-  AttributeMatrix::Pointer cellFeatureAttrMat = m->getAttributeMatrix(getCellFeatureAttributeMatrixName());
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(m_NumNeighborsArrayPath.getDataContainerName());
+  AttributeMatrix::Pointer cellFeatureAttrMat = m->getAttributeMatrix(m_NumNeighborsArrayPath.getAttributeMatrixName());
   QVector<bool> activeObjects(cellFeatureAttrMat->getNumTuples(), true);
   cellFeatureAttrMat->removeInactiveObjects(activeObjects, m_FeatureIdsPtr.lock());
 }
@@ -163,8 +150,8 @@ void MinNeighbors::execute()
   QVector<bool> activeObjects = merge_containedfeatures();
   assign_badpoints();
 
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-  AttributeMatrix::Pointer cellFeatureAttrMat = m->getAttributeMatrix(getCellFeatureAttributeMatrixName());
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(m_NumNeighborsArrayPath.getDataContainerName());
+  AttributeMatrix::Pointer cellFeatureAttrMat = m->getAttributeMatrix(m_NumNeighborsArrayPath.getAttributeMatrixName());
   cellFeatureAttrMat->removeInactiveObjects(activeObjects, m_FeatureIdsPtr.lock());
 
   // If there is an error set this to something negative and also set a message
@@ -176,9 +163,9 @@ void MinNeighbors::execute()
 // -----------------------------------------------------------------------------
 void MinNeighbors::assign_badpoints()
 {
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(m_NumNeighborsArrayPath.getDataContainerName());
 
-  int64_t totalPoints = m->getTotalPoints();
+  int64_t totalPoints = m_FeatureIdsPtr.lock()->getNumberOfTuples();
   size_t udims[3] = {0, 0, 0};
   m->getDimensions(udims);
 #if (CMP_SIZEOF_SIZE_T == 4)
@@ -202,7 +189,7 @@ void MinNeighbors::assign_badpoints()
   int current = 0;
   int most = 0;
   int neighpoint;
-  size_t numfeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
+  size_t numfeatures = m_NumNeighborsPtr.lock()->getNumberOfTuples();
 
   int neighpoints[6];
   neighpoints[0] = static_cast<int>(-dims[0] * dims[1]);
@@ -283,7 +270,8 @@ void MinNeighbors::assign_badpoints()
         }
       }
     }
-    QList<QString> voxelArrayNames = m->getAttributeMatrix(getCellAttributeMatrixName())->getAttributeArrayNameList();
+    QString attrMatName = m_FeatureIdsArrayPath.getAttributeMatrixName();
+    QList<QString> voxelArrayNames = m->getAttributeMatrix(attrMatName)->getAttributeArrayNameList();
     for (int64_t j = 0; j < totalPoints; j++)
     {
       featurename = m_FeatureIds[j];
@@ -293,7 +281,7 @@ void MinNeighbors::assign_badpoints()
         for(QList<QString>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
         {
           QString name = *iter;
-          IDataArray::Pointer p = m->getAttributeMatrix(getCellAttributeMatrixName())->getAttributeArray(*iter);
+          IDataArray::Pointer p = m->getAttributeMatrix(attrMatName)->getAttributeArray(*iter);
           p->copyTuple(neighbor, j);
         }
       }
@@ -305,12 +293,12 @@ QVector<bool> MinNeighbors::merge_containedfeatures()
 {
   // Since this method is called from the 'execute' and the DataContainer validity
   // was checked there we are just going to get the Shared Pointer to the DataContainer
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(m_NumNeighborsArrayPath.getDataContainerName());
 
   bool good = false;
 
   size_t totalPoints = static_cast<size_t>(m->getTotalPoints());
-  size_t totalFeatures = static_cast<size_t>(m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples());
+  size_t totalFeatures = static_cast<size_t>(m_NumNeighborsPtr.lock()->getNumberOfTuples());
 
   QVector<bool> activeObjects(totalFeatures, true);
 

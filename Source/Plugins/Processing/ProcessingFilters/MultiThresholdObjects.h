@@ -60,14 +60,10 @@ class MultiThresholdObjects : public AbstractFilter
     DREAM3D_TYPE_MACRO_SUPER(MultiThresholdObjects, AbstractFilter)
 
     virtual ~MultiThresholdObjects();
-#if 0
-    DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(AttributeMatrixName)
-#endif
 
     /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
-    DREAM3D_FILTER_PARAMETER(QString, OutputArrayName)
-    Q_PROPERTY(QString OutputArrayName READ getOutputArrayName WRITE setOutputArrayName)
+    DREAM3D_FILTER_PARAMETER(QString, DestinationArrayName)
+    Q_PROPERTY(QString DestinationArrayName READ getDestinationArrayName WRITE setDestinationArrayName)
 
     DREAM3D_FILTER_PARAMETER(ComparisonInputs, SelectedThresholds)
     Q_PROPERTY(ComparisonInputs SelectedThresholds READ getSelectedThresholds WRITE setSelectedThresholds)
@@ -132,7 +128,7 @@ class MultiThresholdObjects : public AbstractFilter
     void dataCheck();
 
   private:
-    DEFINE_PTR_WEAKPTR_DATAARRAY(bool, Destination)
+    DEFINE_CREATED_DATAARRAY(bool, Destination)
 
     MultiThresholdObjects(const MultiThresholdObjects&); // Copy Constructor Not Implemented
     void operator=(const MultiThresholdObjects&); // Operator '=' Not Implemented

@@ -51,17 +51,14 @@
 // -----------------------------------------------------------------------------
 ErodeDilateMask::ErodeDilateMask() :
   AbstractFilter(),
-  m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
-  m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
-  m_SelectedArrayPath(""),
   m_Direction(0),
   m_NumIterations(1),
   m_XDirOn(true),
   m_YDirOn(true),
   m_ZDirOn(true),
-  m_MaskArrayName(""),
+  m_MaskArrayName(DREAM3D::CellData::GoodVoxels),
   m_Mask(NULL),
-/*[]*/m_MaskArrayPath(DREAM3D::Defaults::SomePath)
+  m_MaskArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::GoodVoxels)
 {
   setupFilterParameters();
 }
@@ -79,7 +76,6 @@ ErodeDilateMask::~ErodeDilateMask()
 void ErodeDilateMask::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(FilterParameter::New("Cell Mask Array", "SelectedArrayPath", FilterParameterWidgetType::DataArraySelectionWidget,"QString", false));
   {
     ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New();
     parameter->setHumanLabel("Operation");
@@ -97,7 +93,7 @@ void ErodeDilateMask::setupFilterParameters()
   parameters.push_back(FilterParameter::New("Y Direction", "YDirOn", FilterParameterWidgetType::BooleanWidget,"bool", false));
   parameters.push_back(FilterParameter::New("Z Direction", "ZDirOn", FilterParameterWidgetType::BooleanWidget,"bool", false));
   parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "QString", true));
-/*[]*/parameters.push_back(FilterParameter::New("Mask", "MaskArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
+  parameters.push_back(FilterParameter::New("Cell Mask Array", "MaskArrayPath", FilterParameterWidgetType::DataArraySelectionWidget,"DataArrayPath", false));
   setFilterParameters(parameters);
 }
 
@@ -108,7 +104,6 @@ void ErodeDilateMask::readFilterParameters(AbstractFilterParametersReader* reade
 {
   reader->openFilterGroup(this, index);
   setMaskArrayPath(reader->readDataArrayPath("MaskArrayPath", getMaskArrayPath() ) );
-  setSelectedArrayPath( reader->readString( "SelectedArrayPath", getSelectedArrayPath() ) );
   setDirection( reader->readValue("Direction", getDirection()) );
   setNumIterations( reader->readValue("NumIterations", getNumIterations()) );
   setXDirOn(reader->readValue("X Direction", getXDirOn()) );
@@ -124,7 +119,6 @@ int ErodeDilateMask::writeFilterParameters(AbstractFilterParametersWriter* write
 {
   writer->openFilterGroup(this, index);
   writer->writeValue("MaskArrayPath", getMaskArrayPath() );
-  writer->writeValue("SelectedArrayPath", getSelectedArrayPath() );
   writer->writeValue("Direction", getDirection() );
   writer->writeValue("NumIterations", getNumIterations() );
   writer->writeValue("X Direction", getXDirOn() );
@@ -141,58 +135,10 @@ void ErodeDilateMask::dataCheck()
 {
   setErrorCondition(0);
 
-  if (m_SelectedArrayPath.isEmpty() == true)
-  {
-    setErrorCondition(-11001);
-    QString ss = QObject::tr("The complete path to the Attribute Array can not be empty. Please set an appropriate path.");
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-  }
-  else
-  {
-
-    QString dcName;
-    QString amName;
-    QString daName;
-
-    QStringList tokens = m_SelectedArrayPath.split(DREAM3D::PathSep);
-    // We should end up with 3 Tokens
-    if(tokens.size() != 3)
-    {
-      setErrorCondition(-11002);
-      QString ss = QObject::tr("The path to the Attribute Array is malformed. Each part should be separated by a '|' character.");
-      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-    }
-    else
-    {
-      m_DataContainerName = tokens.at(0);
-      m_CellAttributeMatrixName = tokens.at(1);
-      m_MaskArrayName = tokens.at(2);
-
-      DataContainer::Pointer dc = getDataContainerArray()->getDataContainer(m_DataContainerName);
-      if(NULL == dc.get())
-      {
-        setErrorCondition(-11003);
-        QString ss = QObject::tr("The DataContainer '%1' was not found in the DataContainerArray").arg(dcName);
-        notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-        return;
-      }
-
-      AttributeMatrix::Pointer cellAttrMat = dc->getAttributeMatrix(m_CellAttributeMatrixName);
-       if(NULL == cellAttrMat.get())
-      {
-        setErrorCondition(-11004);
-        QString ss = QObject::tr("The AttributeMatrix '%1' was not found in the DataContainer '%2'").arg(amName).arg(dcName);
-        notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-        return;
-      }
-
-       QVector<size_t> dims(1, 1);
-////====>REMOVE THIS         m_MaskPtr = cellAttrMat->getPrereqArray<DataArray<bool>, AbstractFilter>(this, m_MaskArrayName, -301, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  QVector<size_t> dims(1, 1);
   m_MaskPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<bool>, AbstractFilter>(this, getMaskArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-       if( NULL != m_MaskPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
-       { m_Mask = m_MaskPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-    }
-  }
+  if( NULL != m_MaskPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  { m_Mask = m_MaskPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
 
 
@@ -217,8 +163,8 @@ void ErodeDilateMask::execute()
   dataCheck();
   if(getErrorCondition() < 0) { return; }
 
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-  int64_t totalPoints = m->getAttributeMatrix(getCellAttributeMatrixName())->getNumTuples();
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(m_MaskArrayPath.getDataContainerName());
+  int64_t totalPoints = m_MaskPtr.lock()->getNumberOfTuples();
 
   BoolArrayType::Pointer maskCopyPtr = BoolArrayType::CreateArray(totalPoints, "MaskCopy");
   m_MaskCopy = maskCopyPtr->getPointer(0);
@@ -299,5 +245,23 @@ void ErodeDilateMask::execute()
 
   // If there is an error set this to something negative and also set a message
   notifyStatusMessage(getHumanLabel(), "Complete");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AbstractFilter::Pointer ErodeDilateMask::newFilterInstance(bool copyFilterParameters)
+{
+  ErodeDilateMask::Pointer filter = ErodeDilateMask::New();
+  if(true == copyFilterParameters)
+  {
+    filter->setDirection(getDirection());
+    filter->setMaskArrayPath(getMaskArrayPath());
+    filter->setNumIterations(getNumIterations());
+    filter->setXDirOn(getXDirOn());
+    filter->setYDirOn(getYDirOn());
+    filter->setZDirOn(getZDirOn());
+  }
+  return filter;
 }
 

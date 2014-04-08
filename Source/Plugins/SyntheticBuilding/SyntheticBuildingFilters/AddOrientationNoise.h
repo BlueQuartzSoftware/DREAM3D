@@ -66,13 +66,6 @@ class AddOrientationNoise : public AbstractFilter
     DREAM3D_TYPE_MACRO_SUPER(AddOrientationNoise, AbstractFilter)
 
     virtual ~AddOrientationNoise();
-    DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
-    Q_PROPERTY(QString DataContainerName READ getDataContainerName WRITE setDataContainerName)
-
-    DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
-
-    //------ Required Cell Data
-
 
     DREAM3D_FILTER_PARAMETER(float, Magnitude)
     Q_PROPERTY(float Magnitude READ getMagnitude WRITE setMagnitude)

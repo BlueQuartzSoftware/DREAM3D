@@ -89,9 +89,6 @@
 // -----------------------------------------------------------------------------
 WritePoleFigure::WritePoleFigure() :
   AbstractFilter(),
-  m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
-  m_CellEnsembleAttributeMatrixName(DREAM3D::Defaults::CellEnsembleAttributeMatrixName),
-  m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
   m_ImagePrefix(""),
   m_OutputPath(""),
   m_ImageFormat(0),
@@ -106,10 +103,10 @@ WritePoleFigure::WritePoleFigure() :
   m_CrystalStructures(NULL),
   m_GoodVoxelsArrayName(DREAM3D::CellData::GoodVoxels),
   m_GoodVoxels(NULL),
-/*[]*/m_CellEulerAnglesArrayPath(DREAM3D::Defaults::SomePath),
-/*[]*/m_CellPhasesArrayPath(DREAM3D::Defaults::SomePath),
-/*[]*/m_CrystalStructuresArrayPath(DREAM3D::Defaults::SomePath),
-/*[]*/m_GoodVoxelsArrayPath(DREAM3D::Defaults::SomePath)
+  m_CellEulerAnglesArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::EulerAngles),
+  m_CellPhasesArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::Phases),
+  m_CrystalStructuresArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellEnsembleAttributeMatrixName, DREAM3D::Defaults::SomePath),
+  m_GoodVoxelsArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::GoodVoxels)
 {
   setupFilterParameters();
 }
@@ -129,7 +126,6 @@ void WritePoleFigure::setupFilterParameters()
   FilterParameterVector parameters;
   /* Place all your option initialization code here */
   /* To Display a Combobox with a list of current Voxel Cell Arrays in it */
-  parameters.push_back(FilterParameter::New("Eulers Array", "CellEulerAnglesArrayName", FilterParameterWidgetType::DataArraySelectionWidget,"QString", false));
   {
     ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New();
     parameter->setHumanLabel("Image Format");
@@ -145,7 +141,7 @@ void WritePoleFigure::setupFilterParameters()
     parameters.push_back(parameter);
   }
   /* For String input use this code */
-  parameters.push_back(FilterParameter::New(" Image Prefix", "ImagePrefix", FilterParameterWidgetType::StringWidget,"QString", false));
+  parameters.push_back(FilterParameter::New("Image Prefix", "ImagePrefix", FilterParameterWidgetType::StringWidget,"QString", false));
   /*   For an output path use this code*/
   parameters.push_back(FilterParameter::New("Output Path", "OutputPath", FilterParameterWidgetType::OutputPathWidget,"QString", false));
   parameters.push_back(FilterParameter::New("Image Size (Square)", "ImageSize", FilterParameterWidgetType::IntWidget,"int", false, "Pixels"));
@@ -153,10 +149,10 @@ void WritePoleFigure::setupFilterParameters()
   parameters.push_back(FilterParameter::New("Number of Colors", "NumColors", FilterParameterWidgetType::IntWidget,"int", false));
 
   parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "QString", true));
-/*[]*/parameters.push_back(FilterParameter::New("CellEulerAngles", "CellEulerAnglesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
-/*[]*/parameters.push_back(FilterParameter::New("CellPhases", "CellPhasesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
-/*[]*/parameters.push_back(FilterParameter::New("CrystalStructures", "CrystalStructuresArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
-/*[]*/parameters.push_back(FilterParameter::New("GoodVoxels", "GoodVoxelsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
+  parameters.push_back(FilterParameter::New("CellEulerAngles", "CellEulerAnglesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
+  parameters.push_back(FilterParameter::New("CellPhases", "CellPhasesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
+  parameters.push_back(FilterParameter::New("CrystalStructures", "CrystalStructuresArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
+  parameters.push_back(FilterParameter::New("GoodVoxels", "GoodVoxelsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
   setFilterParameters(parameters);
 }
 
@@ -172,7 +168,6 @@ void WritePoleFigure::readFilterParameters(AbstractFilterParametersReader* reade
   setCellEulerAnglesArrayPath(reader->readDataArrayPath("CellEulerAnglesArrayPath", getCellEulerAnglesArrayPath() ) );
   setImagePrefix( reader->readString("ImagePrefix", getImagePrefix()));
   setOutputPath( reader->readString("OutputPath", getOutputPath()));
-  setCellEulerAnglesArrayName( reader->readString("CellEulerAnglesArrayName", getCellEulerAnglesArrayName()));
   setImageFormat( reader->readValue("ImageFormat", getImageFormat()));
   setImageSize( reader->readValue("ImageSize", getImageSize()));
   setLambertSize( reader->readValue("LambertSize", getLambertSize()));
@@ -191,7 +186,6 @@ int WritePoleFigure::writeFilterParameters(AbstractFilterParametersWriter* write
   writer->writeValue("CellEulerAnglesArrayPath", getCellEulerAnglesArrayPath() );
   writer->writeValue("ImagePrefix", getImagePrefix() );
   writer->writeValue("OutputPath", getOutputPath() );
-  writer->writeValue("CellEulerAnglesArrayName", getCellEulerAnglesArrayName() );
   writer->writeValue("ImageFormat", getImageFormat() );
   writer->writeValue("ImageSize", getImageSize() );
   writer->writeValue("LambertSize", getLambertSize() );
@@ -206,12 +200,6 @@ void WritePoleFigure::dataCheck()
 {
   setErrorCondition(0);
 
-  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName(), false);
-  if(getErrorCondition() < 0 || NULL == m) { return; }
-  AttributeMatrix::Pointer cellEnsembleAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellEnsembleAttributeMatrixName(), -301);
-  if(getErrorCondition() < 0) { return; }
-  AttributeMatrix::Pointer cellAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), -301);
-  if(getErrorCondition() < 0 || NULL == cellAttrMat.get() ) { return; }
   /* Example code for preflighting looking for a valid string for the output file
    * but not necessarily the fact that the file exists: Example code to make sure
    * we have something in a string before proceeding.*/
@@ -236,26 +224,22 @@ void WritePoleFigure::dataCheck()
   else
   {
     QVector<size_t> dims(1, 3);
-////====>REMOVE THIS      m_CellEulerAnglesPtr = cellAttrMat->getPrereqArray<DataArray<float>, AbstractFilter>(this, m_CellEulerAnglesArrayName, -300, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  m_CellEulerAnglesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getCellEulerAnglesArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+    m_CellEulerAnglesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getCellEulerAnglesArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
     if( NULL != m_CellEulerAnglesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
     { m_CellEulerAngles = m_CellEulerAnglesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
     dims[0] = 1;
-////====>REMOVE THIS      m_CellPhasesPtr = cellAttrMat->getPrereqArray<DataArray<int32_t>, AbstractFilter>(this, m_CellPhasesArrayName, -301, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  m_CellPhasesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getCellPhasesArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+    m_CellPhasesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getCellPhasesArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
     if( NULL != m_CellPhasesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
     { m_CellPhases = m_CellPhasesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
     typedef DataArray<unsigned int> XTalStructArrayType;
-////====>REMOVE THIS      m_CrystalStructuresPtr = cellEnsembleAttrMat->getPrereqArray<DataArray<uint32_t>, AbstractFilter>(this, m_CrystalStructuresArrayName, -304, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  m_CrystalStructuresPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<uint32_t>, AbstractFilter>(this, getCrystalStructuresArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+    m_CrystalStructuresPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<uint32_t>, AbstractFilter>(this, getCrystalStructuresArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
     if( NULL != m_CrystalStructuresPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
     { m_CrystalStructures = m_CrystalStructuresPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   }
 
   // The good voxels array is optional, If it is available we are going to use it, otherwise we are going to create it
   QVector<size_t> dims(1, 1);
-////====>REMOVE THIS    m_GoodVoxelsPtr = cellAttrMat->getPrereqArray<DataArray<bool>, AbstractFilter>(this, m_GoodVoxelsArrayName, -304, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   m_GoodVoxelsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<bool>, AbstractFilter>(this, getGoodVoxelsArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if(NULL != m_GoodVoxelsPtr.lock().get())
   {
@@ -301,20 +285,14 @@ void WritePoleFigure::execute()
 {
   int err = 0;
   setErrorCondition(err);
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-  if(NULL == m)
-  {
-    setErrorCondition(-999);
-    notifyErrorMessage(getHumanLabel(), "The Voxel DataContainer Object was NULL", -999);
-    return;
-  }
-  setErrorCondition(0);
+  dataCheck();
+  if(getErrorCondition() < 0) { return; }
+
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(m_CellPhasesArrayPath.getDataContainerName());
 
   /* Place all your code to execute your filter here. */
   size_t dims[3];
   m->getDimensions(dims);
-
-
 
   // Make sure any directory path is also available as the user may have just typed
   // in a path without actually creating the full path
@@ -325,14 +303,6 @@ void WritePoleFigure::execute()
     QString ss = QObject::tr("Error creating parent path '%1'").arg(path.absolutePath());
     notifyErrorMessage(getHumanLabel(), ss, -1);
     setErrorCondition(-1);
-    return;
-  }
-
-  //int64_t totalPoints = m->getAttributeMatrix(getCellAttributeMatrixName())->getNumTuples();
-  //size_t totalEnsembles = m->getAttributeMatrix(getCellEnsembleAttributeMatrixName())->getNumTuples();
-  dataCheck();
-  if (getErrorCondition() < 0)
-  {
     return;
   }
 
@@ -567,7 +537,6 @@ AbstractFilter::Pointer WritePoleFigure::newFilterInstance(bool copyFilterParame
     filter->setCrystalStructuresArrayPath(getCrystalStructuresArrayPath());
     filter->setCellPhasesArrayPath(getCellPhasesArrayPath());
     filter->setCellEulerAnglesArrayPath(getCellEulerAnglesArrayPath());
-    filter->setCellEulerAnglesArrayName( getCellEulerAnglesArrayName() );
     filter->setImageFormat( getImageFormat() );
     filter->setImagePrefix( getImagePrefix() );
     filter->setOutputPath( getOutputPath() );

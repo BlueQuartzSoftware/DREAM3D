@@ -67,9 +67,6 @@ class MinSize : public AbstractFilter
     DREAM3D_TYPE_MACRO_SUPER(MinSize, AbstractFilter)
 
     virtual ~MinSize();
-    DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(CellFeatureAttributeMatrixName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
 
     DREAM3D_FILTER_PARAMETER(int, MinAllowedFeatureSize)
     Q_PROPERTY(int MinAllowedFeatureSize READ getMinAllowedFeatureSize WRITE setMinAllowedFeatureSize)

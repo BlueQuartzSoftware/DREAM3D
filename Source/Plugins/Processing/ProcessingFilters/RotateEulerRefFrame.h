@@ -58,10 +58,6 @@ class RotateEulerRefFrame : public AbstractFilter
     DREAM3D_STATIC_NEW_MACRO(RotateEulerRefFrame)
     DREAM3D_TYPE_MACRO_SUPER(RotateEulerRefFrame, AbstractFilter)
     virtual ~RotateEulerRefFrame();
-    DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
-
-    //------ Required Cell Data
 
     DREAM3D_FILTER_PARAMETER(FloatVec3_t, RotationAxis)
     Q_PROPERTY(FloatVec3_t RotationAxis READ getRotationAxis WRITE setRotationAxis)

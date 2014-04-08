@@ -66,9 +66,12 @@ class ReadOrientationData : public AbstractFilter
     DREAM3D_TYPE_MACRO_SUPER(ReadOrientationData, AbstractFilter)
 
     virtual ~ReadOrientationData();
-    DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(CellEnsembleAttributeMatrixName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
+    DREAM3D_FILTER_PARAMETER(QString, DataContainerName)
+    Q_PROPERTY(QString DataContainerName READ getDataContainerName WRITE setDataContainerName)
+    DREAM3D_FILTER_PARAMETER(QString, CellEnsembleAttributeMatrixName)
+    Q_PROPERTY(QString CellEnsembleAttributeMatrixName READ getCellEnsembleAttributeMatrixName WRITE setCellEnsembleAttributeMatrixName)
+    DREAM3D_FILTER_PARAMETER(QString, CellAttributeMatrixName)
+    Q_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
 
     DREAM3D_INSTANCE_STRING_PROPERTY(PhaseNameArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(MaterialNameArrayName)
@@ -76,24 +79,11 @@ class ReadOrientationData : public AbstractFilter
     DREAM3D_FILTER_PARAMETER(QString, InputFile)
     Q_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile)
 
-
     /**
     * @brief This returns the group that the filter belonds to. You can select
     * a different group if you want. The string returned here will be displayed
     * in the GUI for the filter
     */
-    DREAM3D_FILTER_PARAMETER(QString, CellEulerAnglesArrayName)
-    Q_PROPERTY(QString CellEulerAnglesArrayName READ getCellEulerAnglesArrayName WRITE setCellEulerAnglesArrayName)
-
-    DREAM3D_FILTER_PARAMETER(QString, CellPhasesArrayName)
-    Q_PROPERTY(QString CellPhasesArrayName READ getCellPhasesArrayName WRITE setCellPhasesArrayName)
-
-    DREAM3D_FILTER_PARAMETER(QString, CrystalStructuresArrayName)
-    Q_PROPERTY(QString CrystalStructuresArrayName READ getCrystalStructuresArrayName WRITE setCrystalStructuresArrayName)
-
-    DREAM3D_FILTER_PARAMETER(QString, LatticeConstantsArrayName)
-    Q_PROPERTY(QString LatticeConstantsArrayName READ getLatticeConstantsArrayName WRITE setLatticeConstantsArrayName)
-
     virtual const QString getCompiledLibraryName() { return OrientationAnalysis::OrientationAnalysisBaseName; }
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
@@ -179,8 +169,6 @@ signals:
      */
     void readMicFile();
 
-
-
     /**
      * @brief This method reads the values for the phase type, crystal structure
      * and precipitate fractions from the EBSD file.
@@ -192,8 +180,6 @@ signals:
     template<typename EbsdReader, typename EbsdPhase>
     int loadInfo(EbsdReader* reader)
     {
-
-
       QVector<typename EbsdPhase::Pointer> phases = reader->getPhaseVector();
       if (phases.size() == 0)
       {
@@ -251,7 +237,6 @@ signals:
       if( NULL != m_CrystalStructuresPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
       { m_CrystalStructures = m_CrystalStructuresPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
-
       m_LatticeConstantsPtr = latticeConstants;
       if( NULL != m_LatticeConstantsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
       { m_LatticeConstants = m_LatticeConstantsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
@@ -259,10 +244,10 @@ signals:
     }
 
   private:
-    DEFINE_CREATED_DATAARRAY(int32_t, CellPhases)
-    DEFINE_CREATED_DATAARRAY(float, CellEulerAngles)
-    DEFINE_CREATED_DATAARRAY(uint32_t, CrystalStructures)
-    DEFINE_CREATED_DATAARRAY(float, LatticeConstants)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, CellPhases)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(float, CellEulerAngles)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(uint32_t, CrystalStructures)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(float, LatticeConstants)
 
     ReadOrientationData(const ReadOrientationData&); // Copy Constructor Not Implemented
     void operator=(const ReadOrientationData&); // Operator '=' Not Implemented

@@ -66,10 +66,6 @@ class AddBadData : public AbstractFilter
     DREAM3D_TYPE_MACRO_SUPER(AddBadData, AbstractFilter)
 
     virtual ~AddBadData();
-    DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
-    Q_PROPERTY(QString DataContainerName READ getDataContainerName WRITE setDataContainerName)
-
-    DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
 
     DREAM3D_FILTER_PARAMETER(DataArrayPath, GBEuclideanDistancesArrayPath)
     Q_PROPERTY(DataArrayPath GBEuclideanDistancesArrayPath READ getGBEuclideanDistancesArrayPath WRITE setGBEuclideanDistancesArrayPath)

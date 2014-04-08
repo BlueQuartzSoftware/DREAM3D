@@ -47,11 +47,10 @@
 // -----------------------------------------------------------------------------
 SaveImages::SaveImages() :
   AbstractFilter(),
-  m_ColorsArrayPath("", "", ""),
   m_ImagePrefix(""),
   m_OutputPath(""),
   m_ImageFormat(0),
-  /*[]*/m_ColorsArrayPathArrayPath(DREAM3D::Defaults::SomePath)
+  m_ColorsArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::IPFColor)
 {
   setupFilterParameters();
 }
@@ -71,7 +70,6 @@ void SaveImages::setupFilterParameters()
   FilterParameterVector parameters;
   /* Place all your option initialization code here */
   /* To Display a Combobox with a list of current Voxel Cell Arrays in it */
-  parameters.push_back(FilterParameter::New(" Colors Array", "ColorsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget,"DataArrayPath", false));
   {
     ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New();
     parameter->setHumanLabel("Image Format");
@@ -89,10 +87,8 @@ void SaveImages::setupFilterParameters()
   parameters.push_back(FilterParameter::New(" Image Prefix", "ImagePrefix", FilterParameterWidgetType::StringWidget,"QString", false));
   /*   For an output path use this code*/
   parameters.push_back(FilterParameter::New("Output Path", "OutputPath", FilterParameterWidgetType::OutputPathWidget,"QString", false));
-
-
   parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "QString", true));
-  /*[]*/parameters.push_back(FilterParameter::New("ColorsArrayPath", "ColorsArrayPathArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
+  parameters.push_back(FilterParameter::New("ColorsArrayPath", "ColorsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
   setFilterParameters(parameters);
 }
 
@@ -102,7 +98,6 @@ void SaveImages::setupFilterParameters()
 void SaveImages::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-  setColorsArrayPathArrayPath(reader->readDataArrayPath("ColorsArrayPathArrayPath", getColorsArrayPathArrayPath() ) );
   setImagePrefix( reader->readString("ImagePrefix", getImagePrefix()) );
   setOutputPath( reader->readString("OutputPath", getOutputPath()) );
   setColorsArrayPath( reader->readDataArrayPath("ColorsArrayPath", getColorsArrayPath()) );
@@ -116,7 +111,6 @@ void SaveImages::readFilterParameters(AbstractFilterParametersReader* reader, in
 int SaveImages::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  writer->writeValue("ColorsArrayPathArrayPath", getColorsArrayPathArrayPath() );
   writer->writeValue("ImagePrefix", getImagePrefix() );
   writer->writeValue("OutputPath", getOutputPath() );
   writer->writeValue("ColorsArrayPath", getColorsArrayPath() );
@@ -131,11 +125,6 @@ int SaveImages::writeFilterParameters(AbstractFilterParametersWriter* writer, in
 void SaveImages::dataCheck()
 {
   setErrorCondition(0);
-
-  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, m_ColorsArrayPath.getDataContainerName(), false);
-  if(getErrorCondition() < 0 || NULL == m) { return; }
-  AttributeMatrix::Pointer cellAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, m_ColorsArrayPath.getAttributeMatrixName(), -301);
-  if(getErrorCondition() < 0 || NULL == cellAttrMat.get() ) { return; }
 
   QDir dir(getOutputPath());
 
@@ -158,8 +147,7 @@ void SaveImages::dataCheck()
   else
   {
     QVector<size_t> dims(1, 3);
-    ////====>REMOVE THIS      m_ColorsPtr = cellAttrMat->getPrereqArray<DataArray<uint8_t>, AbstractFilter>(this, m_ColorsArrayPath.getDataArrayName(), -300, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-    m_ColorsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<uint8_t>, AbstractFilter>(this, getColorsArrayPathArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+    m_ColorsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<uint8_t>, AbstractFilter>(this, getColorsArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
     if( NULL != m_ColorsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
     { m_Colors = m_ColorsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   }
@@ -279,7 +267,6 @@ AbstractFilter::Pointer SaveImages::newFilterInstance(bool copyFilterParameters)
   SaveImages::Pointer filter = SaveImages::New();
   if(true == copyFilterParameters)
   {
-    filter->setColorsArrayPathArrayPath(getColorsArrayPathArrayPath());
     filter->setColorsArrayPath( getColorsArrayPath() );
     filter->setImageFormat( getImageFormat() );
     filter->setImagePrefix( getImagePrefix() );

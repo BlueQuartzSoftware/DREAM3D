@@ -62,9 +62,8 @@ class IdentifyDislocationSegments : public AbstractFilter
     DREAM3D_TYPE_MACRO_SUPER(IdentifyDislocationSegments, AbstractFilter)
 
     virtual ~IdentifyDislocationSegments();
-    DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(EdgeAttributeMatrixName)
     DREAM3D_INSTANCE_STRING_PROPERTY(EdgeFeatureAttributeMatrixName)
+    Q_PROPERTY(QString EdgeFeatureAttributeMatrixName READ getEdgeFeatureAttributeMatrixName WRITE setEdgeFeatureAttributeMatrixName)
 
     /**
     * @brief This returns the group that the filter belonds to. You can select
@@ -77,13 +76,14 @@ class IdentifyDislocationSegments : public AbstractFilter
     DREAM3D_FILTER_PARAMETER(DataArrayPath, SlipPlaneNormalsArrayPath)
     Q_PROPERTY(DataArrayPath SlipPlaneNormalsArrayPath READ getSlipPlaneNormalsArrayPath WRITE setSlipPlaneNormalsArrayPath)
 
-    DREAM3D_FILTER_PARAMETER(QString, tDislocationIdsArrayName)
-    Q_PROPERTY(QString tDislocationIdsArrayName READ gettDislocationIdsArrayName WRITE settDislocationIdsArrayName)
+    DREAM3D_FILTER_PARAMETER(QString, DislocationIdsArrayName)
+    Q_PROPERTY(QString DislocationIdsArrayName READ getDislocationIdsArrayName WRITE setDislocationIdsArrayName)
 
     DREAM3D_FILTER_PARAMETER(QString, ActiveArrayName)
     Q_PROPERTY(QString ActiveArrayName READ getActiveArrayName WRITE setActiveArrayName)
 
     virtual const QString getCompiledLibraryName() { return DDDAnalysisToolbox::DDDAnalysisToolboxBaseName; }
+    virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::DDDAnalysisFilters; }
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::FeatureIdentificationFilters; }
 
@@ -145,7 +145,7 @@ class IdentifyDislocationSegments : public AbstractFilter
   private:
     DEFINE_PTR_WEAKPTR_DATAARRAY(float, BurgersVectors)
     DEFINE_PTR_WEAKPTR_DATAARRAY(float, SlipPlaneNormals)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, DislocationIds)
+    DEFINE_CREATED_DATAARRAY(int32_t, DislocationIds)
     DEFINE_CREATED_DATAARRAY(bool, Active)
 
     IdentifyDislocationSegments(const IdentifyDislocationSegments&); // Copy Constructor Not Implemented

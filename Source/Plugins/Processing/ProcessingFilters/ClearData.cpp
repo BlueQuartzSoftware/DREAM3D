@@ -48,8 +48,7 @@
 // -----------------------------------------------------------------------------
 ClearData::ClearData() :
   AbstractFilter(),
-  m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
-  m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
+  m_CellAttributeMatrixName(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, ""),
   m_XMin(0),
   m_YMin(0),
   m_ZMin(0),
@@ -79,12 +78,15 @@ void ClearData::setupFilterParameters()
   parameters.push_back(FilterParameter::New("X Max", "XMax", FilterParameterWidgetType::IntWidget,"int", false, "Column"));
   parameters.push_back(FilterParameter::New("Y Max", "YMax", FilterParameterWidgetType::IntWidget,"int", false, "Row"));
   parameters.push_back(FilterParameter::New("Z Max", "ZMax", FilterParameterWidgetType::IntWidget,"int", false, "Plane"));
+  parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "QString", true));
+  parameters.push_back(FilterParameter::New("Cell Attribute Matrix Name", "CellAttributeMatrixName", FilterParameterWidgetType::AttributeMatrixSelectionWidget,"DataArrayPath", true));
   setFilterParameters(parameters);
 }
 // -----------------------------------------------------------------------------
 void ClearData::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
+  setCellAttributeMatrixName( reader->readDataArrayPath("CellAttributeMatrixName", getCellAttributeMatrixName() ) );
   setXMin( reader->readValue("XMin", getXMin()) );
   setYMin( reader->readValue("YMin", getYMin()) );
   setZMin( reader->readValue("ZMin", getZMin()) );
@@ -100,6 +102,7 @@ void ClearData::readFilterParameters(AbstractFilterParametersReader* reader, int
 int ClearData::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
+  writer->writeValue("CellAttributeMatrixName", getCellAttributeMatrixName() );
   writer->writeValue("XMin", getXMin() );
   writer->writeValue("YMin", getYMin() );
   writer->writeValue("ZMin", getZMin() );
@@ -117,10 +120,7 @@ void ClearData::dataCheck()
 {
   setErrorCondition(0);
 
-  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName(), false);
-  if(getErrorCondition() < 0 || NULL == m) { return; }
-  AttributeMatrix::Pointer cellAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), -301);
-  if(getErrorCondition() < 0 || NULL == cellAttrMat.get() ) { return; }
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(m_CellAttributeMatrixName.getDataContainerName());
 
   if (getXMax() < getXMin())
   {
@@ -201,7 +201,7 @@ void ClearData::execute()
   dataCheck();
   if(getErrorCondition() < 0) { return; }
 
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(m_CellAttributeMatrixName.getDataContainerName());
 
   size_t udims[3] =
   { 0, 0, 0 };
@@ -215,7 +215,8 @@ void ClearData::execute()
   { static_cast<DimType>(udims[0]), static_cast<DimType>(udims[1]), static_cast<DimType>(udims[2]), };
 
   int index;
-  QList<QString> voxelArrayNames = m->getAttributeMatrix(getCellAttributeMatrixName())->getAttributeArrayNameList();
+  QString attrMatName = m_CellAttributeMatrixName.getAttributeMatrixName();
+  QList<QString> voxelArrayNames = m->getAttributeMatrix(attrMatName)->getAttributeArrayNameList();
   for (int k = m_ZMin; k < m_ZMax + 1; k++)
   {
     for (int j = m_YMin; j < m_YMax + 1; j++)
@@ -226,7 +227,7 @@ void ClearData::execute()
         for (QList<QString>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
         {
           QString name = *iter;
-          IDataArray::Pointer p = m->getAttributeMatrix(getCellAttributeMatrixName())->getAttributeArray(*iter);
+          IDataArray::Pointer p = m->getAttributeMatrix(attrMatName)->getAttributeArray(*iter);
           p->initializeTuple(index, 0);
         }
       }
@@ -241,17 +242,10 @@ void ClearData::execute()
 // -----------------------------------------------------------------------------
 AbstractFilter::Pointer ClearData::newFilterInstance(bool copyFilterParameters)
 {
-  /*
-  * XMin
-  * YMin
-  * ZMin
-  * XMax
-  * YMax
-  * ZMax
-  */
   ClearData::Pointer filter = ClearData::New();
   if(true == copyFilterParameters)
   {
+    filter->setCellAttributeMatrixName(getCellAttributeMatrixName() );
     filter->setXMin( getXMin() );
     filter->setYMin( getYMin() );
     filter->setZMin( getZMin() );

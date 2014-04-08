@@ -68,8 +68,6 @@ class ErodeDilateCoordinationNumber : public AbstractFilter
     DREAM3D_TYPE_MACRO_SUPER(ErodeDilateCoordinationNumber, AbstractFilter)
 
     virtual ~ErodeDilateCoordinationNumber();
-    DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
 
     DREAM3D_FILTER_PARAMETER(bool, Loop)
     Q_PROPERTY(bool Loop READ getLoop WRITE setLoop)

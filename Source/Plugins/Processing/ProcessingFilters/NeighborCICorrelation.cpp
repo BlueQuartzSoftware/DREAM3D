@@ -51,15 +51,12 @@
 // -----------------------------------------------------------------------------
 NeighborCICorrelation::NeighborCICorrelation() :
   AbstractFilter(),
-  m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
-  m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
   m_MinConfidence(0.1),
   m_Loop(false),
   m_ConfidenceIndexArrayName(DREAM3D::CellData::ConfidenceIndex),
   m_ConfidenceIndex(NULL),
-/*[]*/m_ConfidenceIndexArrayPath(DREAM3D::Defaults::SomePath)
+  m_ConfidenceIndexArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::ConfidenceIndex)
 {
-  m_OrientationOps = OrientationOps::getOrientationOpsVector();
   setupFilterParameters();
 }
 
@@ -78,9 +75,8 @@ void NeighborCICorrelation::setupFilterParameters()
   FilterParameterVector parameters;
   parameters.push_back(FilterParameter::New("Minimum Confidence Index", "MinConfidence", FilterParameterWidgetType::DoubleWidget,"float", false));
   parameters.push_back(FilterParameter::New("Loop Until Gone", "Loop", FilterParameterWidgetType::BooleanWidget,"bool", false));
-
   parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "QString", true));
-/*[]*/parameters.push_back(FilterParameter::New("ConfidenceIndex", "ConfidenceIndexArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
+  parameters.push_back(FilterParameter::New("ConfidenceIndex", "ConfidenceIndexArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
   setFilterParameters(parameters);
 }
 // -----------------------------------------------------------------------------
@@ -113,13 +109,7 @@ void NeighborCICorrelation::dataCheck()
 {
   setErrorCondition(0);
 
-  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName(), false);
-  if(getErrorCondition() < 0 || NULL == m) { return; }
-  AttributeMatrix::Pointer cellAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), -301);
-  if(getErrorCondition() < 0 || NULL == cellAttrMat.get() ) { return; }
-
   QVector<size_t> dims(1, 1);
-////====>REMOVE THIS    m_ConfidenceIndexPtr = cellAttrMat->getPrereqArray<DataArray<float>, AbstractFilter>(this, m_ConfidenceIndexArrayName, -301, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   m_ConfidenceIndexPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getConfidenceIndexArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_ConfidenceIndexPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_ConfidenceIndex = m_ConfidenceIndexPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
@@ -147,8 +137,8 @@ void NeighborCICorrelation::execute()
   dataCheck();
   if(getErrorCondition() < 0) { return; }
 
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-  int64_t totalPoints = m->getAttributeMatrix(getCellAttributeMatrixName())->getNumTuples();
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(m_ConfidenceIndexArrayPath.getDataContainerName());
+  int64_t totalPoints = m_ConfidenceIndexPtr.lock()->getNumberOfTuples();
 
   size_t udims[3] = {0, 0, 0};
   m->getDimensions(udims);
@@ -216,7 +206,8 @@ void NeighborCICorrelation::execute()
         }
       }
     }
-    QList<QString> voxelArrayNames = m->getAttributeMatrix(getCellAttributeMatrixName())->getAttributeArrayNameList();
+    QString attrMatName = m_ConfidenceIndexArrayPath.getAttributeMatrixName();
+    QList<QString> voxelArrayNames = m->getAttributeMatrix(attrMatName)->getAttributeArrayNameList();
     for (int64_t j = 0; j < totalPoints; j++)
     {
       neighbor = bestNeighbor[j];
@@ -225,7 +216,7 @@ void NeighborCICorrelation::execute()
         for(QList<QString>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
         {
           QString name = *iter;
-          IDataArray::Pointer p = m->getAttributeMatrix(getCellAttributeMatrixName())->getAttributeArray(*iter);
+          IDataArray::Pointer p = m->getAttributeMatrix(attrMatName)->getAttributeArray(*iter);
           p->copyTuple(neighbor, j);
         }
       }

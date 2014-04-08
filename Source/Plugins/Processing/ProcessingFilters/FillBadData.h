@@ -68,8 +68,6 @@ class FillBadData : public AbstractFilter
     DREAM3D_TYPE_MACRO_SUPER(FillBadData, AbstractFilter)
 
     virtual ~FillBadData();
-    DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
 
     DREAM3D_FILTER_PARAMETER(int, MinAllowedDefectSize)
     Q_PROPERTY(int MinAllowedDefectSize READ getMinAllowedDefectSize WRITE setMinAllowedDefectSize)

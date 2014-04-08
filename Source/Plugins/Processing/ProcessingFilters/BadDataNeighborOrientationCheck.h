@@ -68,9 +68,6 @@ class BadDataNeighborOrientationCheck : public AbstractFilter
     DREAM3D_TYPE_MACRO_SUPER(BadDataNeighborOrientationCheck, AbstractFilter)
 
     virtual ~BadDataNeighborOrientationCheck();
-    DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(CellEnsembleAttributeMatrixName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
 
     DREAM3D_FILTER_PARAMETER(float, MisorientationTolerance)
     Q_PROPERTY(float MisorientationTolerance READ getMisorientationTolerance WRITE setMisorientationTolerance)

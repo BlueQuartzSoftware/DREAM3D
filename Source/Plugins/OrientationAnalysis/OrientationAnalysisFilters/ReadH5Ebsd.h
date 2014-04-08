@@ -86,7 +86,6 @@ class ReadH5Ebsd : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(PhaseNameArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(MaterialNameArrayName)
 
-
     DREAM3D_FILTER_PARAMETER(QString, InputFile)
     Q_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile)
     DREAM3D_FILTER_PARAMETER(int, ZStartIndex)
@@ -99,7 +98,6 @@ class ReadH5Ebsd : public AbstractFilter
     DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedArrayNames)
     Q_PROPERTY(QSet<QString> SelectedArrayNames READ getSelectedArrayNames WRITE setSelectedArrayNames)
 
-
     DREAM3D_INSTANCE_PROPERTY(QSet<QString>, DataArrayNames) // These are for reading the names of the arrays during a preflight
     Q_PROPERTY(QSet<QString> DataArrayNames READ getDataArrayNames WRITE setDataArrayNames)
 
@@ -111,19 +109,6 @@ class ReadH5Ebsd : public AbstractFilter
     DREAM3D_INSTANCE_PROPERTY(AxisAngleInput_t, SampleTransformation)
     DREAM3D_INSTANCE_PROPERTY(AxisAngleInput_t, EulerTransformation)
     //-------------------------------------------------------
-
-
-    DREAM3D_FILTER_PARAMETER(QString, CellEulerAnglesArrayName)
-    Q_PROPERTY(QString CellEulerAnglesArrayName READ getCellEulerAnglesArrayName WRITE setCellEulerAnglesArrayName)
-
-    DREAM3D_FILTER_PARAMETER(QString, CellPhasesArrayName)
-    Q_PROPERTY(QString CellPhasesArrayName READ getCellPhasesArrayName WRITE setCellPhasesArrayName)
-
-    DREAM3D_FILTER_PARAMETER(QString, CrystalStructuresArrayName)
-    Q_PROPERTY(QString CrystalStructuresArrayName READ getCrystalStructuresArrayName WRITE setCrystalStructuresArrayName)
-
-    DREAM3D_FILTER_PARAMETER(QString, LatticeConstantsArrayName)
-    Q_PROPERTY(QString LatticeConstantsArrayName READ getLatticeConstantsArrayName WRITE setLatticeConstantsArrayName)
 
     virtual const QString getCompiledLibraryName() { return OrientationAnalysis::OrientationAnalysisBaseName; }
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
@@ -245,10 +230,10 @@ class ReadH5Ebsd : public AbstractFilter
     }
 
   private:
-    DEFINE_CREATED_DATAARRAY(int32_t, CellPhases)
-    DEFINE_CREATED_DATAARRAY(float, CellEulerAngles)
-    DEFINE_CREATED_DATAARRAY(uint32_t, CrystalStructures)
-    DEFINE_CREATED_DATAARRAY(float, LatticeConstants)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, CellPhases)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(float, CellEulerAngles)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(uint32_t, CrystalStructures)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(float, LatticeConstants)
     StringDataArray::WeakPointer  m_MaterialNamesPtr;
 
     int tempxpoints;

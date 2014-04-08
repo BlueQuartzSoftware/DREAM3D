@@ -68,9 +68,6 @@ class MinNeighbors : public AbstractFilter
     DREAM3D_TYPE_MACRO_SUPER(MinNeighbors, AbstractFilter)
 
     virtual ~MinNeighbors();
-    DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(CellFeatureAttributeMatrixName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
 
     DREAM3D_FILTER_PARAMETER(int, MinNumNeighbors)
     Q_PROPERTY(int MinNumNeighbors READ getMinNumNeighbors WRITE setMinNumNeighbors)

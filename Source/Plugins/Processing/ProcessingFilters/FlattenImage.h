@@ -58,8 +58,6 @@ class FlattenImage : public AbstractFilter
     DREAM3D_STATIC_NEW_MACRO(FlattenImage)
     DREAM3D_TYPE_MACRO_SUPER(FlattenImage, AbstractFilter)
     virtual ~FlattenImage();
-    DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
 
     DREAM3D_FILTER_PARAMETER(quint32, FlattenMethod)
     Q_PROPERTY(quint32 FlattenMethod READ getFlattenMethod WRITE setFlattenMethod)

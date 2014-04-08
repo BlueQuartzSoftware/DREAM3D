@@ -85,19 +85,26 @@ VolumeDataContainer::~VolumeDataContainer()
 int VolumeDataContainer::writeMeshToHDF5(hid_t dcGid, bool writeXdmf)
 {
   herr_t err = 0;
-  writeVerticesToHDF5(dcGid, writeXdmf);
-  writeEdgesToHDF5(dcGid);
-  writeFacesToHDF5(dcGid);
-  writeCellsToHDF5(dcGid);
-  int64_t volDims[3] =
-  { getXPoints(), getYPoints(), getZPoints() };
-  float spacing[3] =
-  { getXRes(), getYRes(), getZRes() };
-  float origin[3] =
-  { 0.0f, 0.0f, 0.0f };
-  getOrigin(origin);
-  QString name = getName(); // we need this because getName() returns a non-const value
-  err = writeMetaInfo(dcGid, name, volDims, spacing, origin);
+  CellArray::Pointer cellsPtr = getCells();
+  if (cellsPtr.get() != NULL)
+  {
+    writeVerticesToHDF5(dcGid, writeXdmf);
+    writeEdgesToHDF5(dcGid);
+    writeFacesToHDF5(dcGid);
+    writeCellsToHDF5(dcGid);
+  }
+  else
+  {
+    int64_t volDims[3] =
+    { getXPoints(), getYPoints(), getZPoints() };
+    float spacing[3] =
+    { getXRes(), getYRes(), getZRes() };
+    float origin[3] =
+    { 0.0f, 0.0f, 0.0f };
+    getOrigin(origin);
+    QString name = getName(); // we need this because getName() returns a non-const value
+    err = writeMetaInfo(dcGid, name, volDims, spacing, origin);
+  }
   return err;
 }
 
@@ -141,7 +148,7 @@ int VolumeDataContainer::writeCellsToHDF5(hid_t dcGid)
   if (cellsPtr.get() != NULL)
   {
     int32_t rank = 2; // THIS NEEDS TO BE THE SAME AS THE NUMBER OF ELEMENTS IN THE Structure from SurcellMesh::DataStruc
-    hsize_t dims[2] = {cellsPtr->getNumberOfTuples(), 3};
+    hsize_t dims[2] = {cellsPtr->getNumberOfTuples(), 4};
 
     int32_t* data = reinterpret_cast<int32_t*>(cellsPtr->getPointer(0));
 
@@ -282,7 +289,15 @@ int VolumeDataContainer::writeXdmf(QTextStream& out, QString hdfFileName)
   uint8_t gridType = DREAM3D::XdmfGridType::RectilinearGrid;
 
   // Write the Mesh Structure to the XDMF file
-  writeXdmfMeshStructureHeader(out, hdfFileName);
+  CellArray::Pointer cellsPtr = getCells();
+  if (cellsPtr.get() != NULL)
+  {
+    writeXdmfPolyMeshStructureHeader(out, hdfFileName);
+  }
+  else
+  {
+    writeXdmfRectMeshStructureHeader(out, hdfFileName);
+  }
   // Get all of our AttributeMatrices
   AttributeMatrixMap_t amMap = getAttributeMatrices();
   // Loop over each AttributeMatrix and write the meta data to the Xdmf file
@@ -306,7 +321,38 @@ int VolumeDataContainer::writeXdmf(QTextStream& out, QString hdfFileName)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void VolumeDataContainer::writeXdmfMeshStructureHeader(QTextStream& out, QString hdfFileName)
+void VolumeDataContainer::writeXdmfPolyMeshStructureHeader(QTextStream& out, QString hdfFileName)
+{
+  CellArray::Pointer cells = getCells();
+  if (NULL == cells.get())
+  {
+    return;
+  }
+  VertexArray::Pointer verts = getVertices();
+  if(NULL == verts.get())
+  {
+    return;
+  }
+
+  out << "  <Grid Name=\"" << getName() << "\">" << "\n";
+  out << "    <Topology TopologyType=\"Quadrilateral\" NumberOfElements=\"" << cells->getNumberOfTuples() << "\">" << "\n";
+  out << "      <DataItem Format=\"HDF\" NumberType=\"Int\" Dimensions=\"" << cells->getNumberOfTuples() << " 4\">" << "\n";
+  out << "        " << hdfFileName << ":/DataContainers/" << getName() << "/Cells" << "\n";
+  out << "      </DataItem>" << "\n";
+  out << "    </Topology>" << "\n";
+
+  out << "    <Geometry Type=\"XYZ\">" << "\n";
+  out << "      <DataItem Format=\"HDF\"  Dimensions=\"" << verts->getNumberOfTuples() << " 3\" NumberType=\"Float\" Precision=\"4\">" << "\n";
+  out << "        " << hdfFileName << ":/DataContainers/" << getName() << "/Vertices" << "\n";
+  out << "      </DataItem>" << "\n";
+  out << "    </Geometry>" << "\n";
+  out << "" << "\n";
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void VolumeDataContainer::writeXdmfRectMeshStructureHeader(QTextStream& out, QString hdfFileName)
 {
   int64_t volDims[3] =
   { getXPoints(), getYPoints(), getZPoints() };

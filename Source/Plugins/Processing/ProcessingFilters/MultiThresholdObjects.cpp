@@ -48,8 +48,7 @@
 // -----------------------------------------------------------------------------
 MultiThresholdObjects::MultiThresholdObjects() :
   AbstractFilter(),
-  m_OutputArrayName(DREAM3D::CellData::GoodVoxels),
-  m_DestinationArrayName(""),
+  m_DestinationArrayName(DREAM3D::CellData::GoodVoxels),
   m_Destination(NULL)
 {
   setupFilterParameters();
@@ -79,7 +78,7 @@ void MultiThresholdObjects::setupFilterParameters()
   }
 
   parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "QString", true));
-/*##*/parameters.push_back(FilterParameter::New("Output", "OutputArrayName", FilterParameterWidgetType::StringWidget, "QString", true, ""));
+  parameters.push_back(FilterParameter::New("Output", "DestinationArrayName", FilterParameterWidgetType::StringWidget, "QString", true, ""));
   setFilterParameters(parameters);
 }
 
@@ -89,7 +88,7 @@ void MultiThresholdObjects::setupFilterParameters()
 void MultiThresholdObjects::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-/*[]*/setOutputArrayName(reader->readString("OutputArrayName", getOutputArrayName() ) );
+  setDestinationArrayName(reader->readString("DestinationArrayName", getDestinationArrayName() ) );
   setSelectedThresholds(reader->readComparisonInputs("SelectedThresholds", getSelectedThresholds()));
   reader->closeFilterGroup();
 }
@@ -100,7 +99,7 @@ void MultiThresholdObjects::readFilterParameters(AbstractFilterParametersReader*
 int MultiThresholdObjects::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-/*[]*/writer->writeValue("OutputArrayName", getOutputArrayName() );
+  writer->writeValue("DestinationArrayName", getDestinationArrayName() );
   writer->writeValue("SelectedThresholds", getSelectedThresholds());
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
@@ -114,7 +113,6 @@ void MultiThresholdObjects::dataCheck()
   DataArrayPath tempPath;
   setErrorCondition(0);
 
-
   if (m_SelectedThresholds.size() == 0)
   {
     setErrorCondition(-12000);
@@ -124,19 +122,14 @@ void MultiThresholdObjects::dataCheck()
   {
     DataContainerArray::Pointer dca = getDataContainerArray();
     int count = m_SelectedThresholds.size();
-     QSet<QString> dcSet;
-     QSet<QString> amSet;
+    QSet<QString> dcSet;
+    QSet<QString> amSet;
     // Loop through each selected threshold item which will have the complete path and check that path
     for(int i = 0; i < count; i++)
     {
       ComparisonInput_t comp = m_SelectedThresholds[i];
       dcSet.insert(comp.dataContainerName);
       amSet.insert(comp.attributeMatrixName);
-
-      VolumeDataContainer* m = dca->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, comp.dataContainerName, false);
-      if(getErrorCondition() < 0 || NULL == m) { return; }
-      AttributeMatrix::Pointer attrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, comp.attributeMatrixName, -301);
-      if(getErrorCondition() < 0 || NULL == attrMat.get() ) { return; }
     }
 
     // Enforce that right now all the arrays MUST come from the same data container and attribute matrix
@@ -160,14 +153,9 @@ void MultiThresholdObjects::dataCheck()
       ComparisonInput_t comp = m_SelectedThresholds[0];
       // At this point we are going to just grab the DataContainer Name and AttributeMatrix Name
       // from the first entry and use that to create a new AttributeArray
-      VolumeDataContainer* m = dca->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, comp.dataContainerName, false);
-      if(getErrorCondition() < 0 || NULL == m) { return; }
-      AttributeMatrix::Pointer attrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, comp.attributeMatrixName, -302);
-      if(getErrorCondition() < 0 || NULL == attrMat.get() ) { return; }
       QVector<size_t> dims(1, 1);
-      m_DestinationPtr = attrMat->createNonPrereqArray<DataArray<bool>, AbstractFilter, bool>(this, m_OutputArrayName, true, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-////==>MIKE_GROEBER_FIX tempPath.update(DATACONTAINER_NAME, ATTRIBUTEMATRIX_NAME, getOutputArrayName() );
-////==>MIKE_GROEBER_FIX m_OutputPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<bool>, AbstractFilter, bool>(this, tempPath, true, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+      tempPath.update(comp.dataContainerName, comp.attributeMatrixName, getDestinationArrayName() );
+      m_DestinationPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<bool>, AbstractFilter, bool>(this, tempPath, true, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
       if( NULL != m_DestinationPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
       { m_Destination = m_DestinationPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
@@ -269,7 +257,7 @@ AbstractFilter::Pointer MultiThresholdObjects::newFilterInstance(bool copyFilter
   MultiThresholdObjects::Pointer filter = MultiThresholdObjects::New();
   if(true == copyFilterParameters)
   {
-    filter->setOutputArrayName(getOutputArrayName());
+    filter->setDestinationArrayName(getDestinationArrayName());
     filter->setSelectedThresholds( getSelectedThresholds() );
   }
   return filter;

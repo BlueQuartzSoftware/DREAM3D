@@ -49,15 +49,13 @@
 // -----------------------------------------------------------------------------
 AddBadData::AddBadData() :
   AbstractFilter(),
-  m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
-  m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
   m_PoissonNoise(false),
   m_PoissonVolFraction(0.0f),
   m_BoundaryNoise(false),
   m_BoundaryVolFraction(0.0f),
   m_GBEuclideanDistancesArrayName(DREAM3D::CellData::GBEuclideanDistances),
   m_GBEuclideanDistances(NULL),
-/*[]*/m_GBEuclideanDistancesArrayPath(DREAM3D::Defaults::SomePath)
+  m_GBEuclideanDistancesArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::GBEuclideanDistances)
 {
   setupFilterParameters();
 }
@@ -75,13 +73,12 @@ void AddBadData::setupFilterParameters()
 {
   FilterParameterVector parameters;
 
-  parameters.push_back(FilterParameter::New("Select Synthetic Volume DataContainer", "DataContainerName", FilterParameterWidgetType::DataContainerSelectionWidget,"QString", false));
   parameters.push_back(FilterParameter::New("Add Random Noise", "PoissonNoise", FilterParameterWidgetType::BooleanWidget,"bool", false));
   parameters.push_back(FilterParameter::New("Volume Fraction of Random Noise", "PoissonVolFraction", FilterParameterWidgetType::DoubleWidget,"float", false));
   parameters.push_back(FilterParameter::New("Add Boundary Noise", "BoundaryNoise", FilterParameterWidgetType::BooleanWidget,"bool", false));
   parameters.push_back(FilterParameter::New("Volume Fraction of Boundary Noise", "BoundaryVolFraction", FilterParameterWidgetType::DoubleWidget,"float", false));
   parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "QString", true));
-/*[]*/parameters.push_back(FilterParameter::New("GBEuclideanDistances", "GBEuclideanDistancesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
+  parameters.push_back(FilterParameter::New("GBEuclideanDistances", "GBEuclideanDistancesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
   setFilterParameters(parameters);
 }
 // -----------------------------------------------------------------------------
@@ -89,7 +86,6 @@ void AddBadData::readFilterParameters(AbstractFilterParametersReader* reader, in
 {
   reader->openFilterGroup(this, index);
   setGBEuclideanDistancesArrayPath(reader->readDataArrayPath("GBEuclideanDistancesArrayPath", getGBEuclideanDistancesArrayPath() ) );
-  setDataContainerName( reader->readString("DataContainerName", getDataContainerName()) );
   setPoissonNoise( reader->readValue("PoissonNoise", getPoissonNoise()) );
   setPoissonVolFraction( reader->readValue("PoissonVolFraction", getPoissonVolFraction()) );
   setBoundaryNoise( reader->readValue("BoundaryNoise", getBoundaryNoise()) );
@@ -104,7 +100,6 @@ int AddBadData::writeFilterParameters(AbstractFilterParametersWriter* writer, in
 {
   writer->openFilterGroup(this, index);
   writer->writeValue("GBEuclideanDistancesArrayPath", getGBEuclideanDistancesArrayPath() );
-  writer->writeValue("DataContainerName", getDataContainerName() );
   writer->writeValue("PoissonNoise", getPoissonNoise() );
   writer->writeValue("PoissonVolFraction", getPoissonVolFraction() );
   writer->writeValue("BoundaryNoise", getBoundaryNoise() );
@@ -120,14 +115,8 @@ void AddBadData::dataCheck()
 {
   setErrorCondition(0);
 
-  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName(), false);
-  if(getErrorCondition() < 0 || NULL == m) { return; }
-  AttributeMatrix::Pointer cellAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), -301);
-  if(getErrorCondition() < 0 || NULL == cellAttrMat.get() ) { return; }
-
   // Cell Data
   QVector<size_t> dims(1, 1);
-////====>REMOVE THIS    m_GBEuclideanDistancesPtr = cellAttrMat->getPrereqArray<DataArray<float>, AbstractFilter>(this, m_GBEuclideanDistancesArrayName, -302, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   m_GBEuclideanDistancesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getGBEuclideanDistancesArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_GBEuclideanDistancesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_GBEuclideanDistances = m_GBEuclideanDistancesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
@@ -170,9 +159,10 @@ void  AddBadData::add_noise()
   notifyStatusMessage(getHumanLabel(), "Adding Noise");
   DREAM3D_RANDOMNG_NEW()
 
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getGBEuclideanDistancesArrayPath().getDataContainerName());
 
-  QList<QString> voxelArrayNames = m->getAttributeMatrix(m_CellAttributeMatrixName)->getAttributeArrayNameList();
+  QString attMatName = getGBEuclideanDistancesArrayPath().getAttributeMatrixName();
+  QList<QString> voxelArrayNames = m->getAttributeMatrix(attMatName)->getAttributeArrayNameList();
 
   float random = 0.0;
   int64_t totalPoints = m->getTotalPoints();
@@ -186,7 +176,7 @@ void  AddBadData::add_noise()
         for(QList<QString>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
         {
           QString name = *iter;
-          IDataArray::Pointer p = m->getAttributeMatrix(m_CellAttributeMatrixName)->getAttributeArray(*iter);
+          IDataArray::Pointer p = m->getAttributeMatrix(attMatName)->getAttributeArray(*iter);
           p->initializeTuple(i, 0);
         }
       }
@@ -199,14 +189,13 @@ void  AddBadData::add_noise()
         for(QList<QString>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
         {
           QString name = *iter;
-          IDataArray::Pointer p = m->getAttributeMatrix(m_CellAttributeMatrixName)->getAttributeArray(*iter);
+          IDataArray::Pointer p = m->getAttributeMatrix(attMatName)->getAttributeArray(*iter);
           p->initializeTuple(i, 0);
         }
       }
     }
   }
 }
-
 
 // -----------------------------------------------------------------------------
 //

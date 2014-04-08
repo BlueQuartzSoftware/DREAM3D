@@ -43,13 +43,10 @@
 #include <tbb/task_scheduler_init.h>
 #endif
 
-
 #include "DREAM3DLib/Math/DREAM3DMath.h"
 #include "DREAM3DLib/OrientationOps/OrientationOps.h"
 #include "DREAM3DLib/Math/MatrixMath.h"
 #include "DREAM3DLib/Math/OrientationMath.h"
-
-
 
 
 class RotateEulerRefFrameImpl
@@ -96,22 +93,17 @@ class RotateEulerRefFrameImpl
     }
 #endif
 
-
 };
-
-
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 RotateEulerRefFrame::RotateEulerRefFrame() :
   AbstractFilter(),
-  m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
-  m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
   m_RotationAngle(0.0),
   m_CellEulerAnglesArrayName(DREAM3D::CellData::EulerAngles),
   m_CellEulerAngles(NULL),
-/*[]*/m_CellEulerAnglesArrayPath(DREAM3D::Defaults::SomePath)
+  m_CellEulerAnglesArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::EulerAngles)
 {
   m_RotationAxis.x = 0.0;
   m_RotationAxis.y = 0.0;
@@ -154,7 +146,7 @@ void RotateEulerRefFrame::setupFilterParameters()
     parameters.push_back(parameter);
   }
   parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "QString", true));
-/*[]*/parameters.push_back(FilterParameter::New("CellEulerAngles", "CellEulerAnglesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
+  parameters.push_back(FilterParameter::New("CellEulerAngles", "CellEulerAnglesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
   setFilterParameters(parameters);
 }
 
@@ -190,19 +182,7 @@ void RotateEulerRefFrame::dataCheck()
 {
   setErrorCondition(0);
 
-  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName(), false);
-  if(getErrorCondition() < 0 || NULL == m) { return; }
-  AttributeMatrix::Pointer cellAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), -301);
-  if(getErrorCondition() < 0 || NULL == cellAttrMat.get() ) { return; }
-  if(NULL == m)
-  {
-    QString ss = QObject::tr("The Volume Data Container with name '%1'' was not found in the Data Container Array.").arg(getDataContainerName());
-    setErrorCondition(-1001);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-    return;
-  }
   QVector<size_t> dims(1, 3);
-////====>REMOVE THIS    m_CellEulerAnglesPtr = cellAttrMat->getPrereqArray<DataArray<float>, AbstractFilter>(this, m_CellEulerAnglesArrayName, -301, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   m_CellEulerAnglesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getCellEulerAnglesArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_CellEulerAnglesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_CellEulerAngles = m_CellEulerAnglesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
@@ -229,8 +209,7 @@ void RotateEulerRefFrame::execute()
   dataCheck();
   if(getErrorCondition() < 0) { return; }
 
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-  int64_t totalPoints = m->getAttributeMatrix(getCellAttributeMatrixName())->getNumTuples();
+  int64_t totalPoints = m_CellEulerAnglesPtr.lock()->getNumberOfTuples();
 
   m_RotationAngle = m_RotationAngle * DREAM3D::Constants::k_Pi / 180.0;
 
