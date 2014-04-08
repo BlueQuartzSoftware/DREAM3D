@@ -19,6 +19,7 @@ set(_PublicFilters
   Threshold
   SobelEdge
   HoughCircles
+  AlignSectionsPhaseCorrelation
 )
 
 #---------
