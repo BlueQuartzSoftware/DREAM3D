@@ -124,11 +124,9 @@ void StringWidget::widgetChanged(const QString &text)
 void StringWidget::filterNeedsInputParameters(AbstractFilter* filter)
 {
   bool ok = filter->setProperty(PROPERTY_NAME_AS_CHAR, value->text());
-  if (false == ok)
+  if(false == ok)
   {
-    QString ss = QObject::tr("Error occurred setting Filter Parameter %1").arg(m_FilterParameter->getPropertyName());
-    emit errorSettingFilterParameter(ss);
-    qDebug() << ss;
+    FilterParameterWidgetsDialogs::ShowCouldNotSetFilterParameter(m_Filter, m_FilterParameter);
   }
 }
 
