@@ -67,7 +67,7 @@ AlignSectionsFeature::AlignSectionsFeature() :
   m_GoodVoxels(NULL)
 {
   //only setting up the child parameters because the parent constructor has already been called
-  setupChildUniqueFilterParameters();
+  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------
@@ -79,7 +79,7 @@ AlignSectionsFeature::~AlignSectionsFeature()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AlignSectionsFeature::setupChildUniqueFilterParameters()
+void AlignSectionsFeature::setupFilterParameters()
 {
   //getting the current parameters that were set by the parent and adding to it before resetting it
   FilterParameterVector parameters = getFilterParameters();
@@ -91,8 +91,9 @@ void AlignSectionsFeature::setupChildUniqueFilterParameters()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AlignSectionsFeature::readChildUniqueFilterParameters(AbstractFilterParametersReader* reader, int index)
+void AlignSectionsFeature::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
+  AlignSections::readFilterParameters(reader, index);
   reader->openFilterGroup(this, index);
   setGoodVoxelsArrayPath(reader->readDataArrayPath("GoodVoxelsArrayPath", getGoodVoxelsArrayPath() ) );
   reader->closeFilterGroup();
@@ -101,11 +102,13 @@ void AlignSectionsFeature::readChildUniqueFilterParameters(AbstractFilterParamet
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AlignSectionsFeature::writeChildUniqueFilterParameters(AbstractFilterParametersWriter* writer, int index)
+int AlignSectionsFeature::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
+  AlignSections::writeFilterParameters(writer, index);
   writer->openFilterGroup(this, index);
   writer->writeValue("GoodVoxelsArrayPath", getGoodVoxelsArrayPath() );
   writer->closeFilterGroup();
+  return ++index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------

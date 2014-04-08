@@ -110,8 +110,6 @@ void AlignSections::readFilterParameters(AbstractFilterParametersReader* reader,
   setAlignmentShiftFileName( reader->readString("AlignmentShiftFileName", getAlignmentShiftFileName()));
   setWriteAlignmentShifts( reader->readValue("WriteAlignmentShifts", getWriteAlignmentShifts()));
   reader->closeFilterGroup();
-
-  readChildUniqueFilterParameters(reader, index);
 }
 
 // -----------------------------------------------------------------------------
@@ -123,8 +121,6 @@ int AlignSections::writeFilterParameters(AbstractFilterParametersWriter* writer,
   writer->writeValue("AlignmentShiftFileName", getAlignmentShiftFileName());
   writer->writeValue("WriteAlignmentShifts", getWriteAlignmentShifts());
   writer->closeFilterGroup();
-
-  writeChildUniqueFilterParameters(writer, index);
 
   return ++index; // we want to return the next index that was just written to
 }
@@ -258,20 +254,4 @@ void AlignSections::execute()
 void AlignSections::find_shifts(QVector<int>& xshifts, QVector<int>& yshifts)
 {
 
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void AlignSections::readChildUniqueFilterParameters(AbstractFilterParametersReader* reader, int index)
-{
-  return;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void AlignSections::writeChildUniqueFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  return;
 }

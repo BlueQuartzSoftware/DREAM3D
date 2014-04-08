@@ -107,9 +107,9 @@ class AlignSectionsMisorientation : public AlignSections
 
     virtual void find_shifts(QVector<int>& xshifts, QVector<int>& yshifts);
 
-    virtual void setupChildUniqueFilterParameters();
-    virtual void writeChildUniqueFilterParameters(AbstractFilterParametersWriter* writer, int index);
-    virtual void readChildUniqueFilterParameters(AbstractFilterParametersReader* reader, int index);
+    virtual void setupFilterParameters();
+    virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
+    virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
 
   private:
     DEFINE_PTR_WEAKPTR_DATAARRAY(float, Quats)

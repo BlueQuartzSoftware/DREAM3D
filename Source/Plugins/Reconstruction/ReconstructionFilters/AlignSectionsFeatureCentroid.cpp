@@ -69,7 +69,7 @@ AlignSectionsFeatureCentroid::AlignSectionsFeatureCentroid() :
   m_GoodVoxels(NULL)
 {
   //only setting up the child parameters because the parent constructor has already been called
-  setupChildUniqueFilterParameters();
+  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------
@@ -82,7 +82,7 @@ AlignSectionsFeatureCentroid::~AlignSectionsFeatureCentroid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AlignSectionsFeatureCentroid::setupChildUniqueFilterParameters()
+void AlignSectionsFeatureCentroid::setupFilterParameters()
 {
   //getting the current parameters that were set by the parent and adding to it before resetting it
   FilterParameterVector parameters = getFilterParameters();
@@ -95,8 +95,9 @@ void AlignSectionsFeatureCentroid::setupChildUniqueFilterParameters()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AlignSectionsFeatureCentroid::readChildUniqueFilterParameters(AbstractFilterParametersReader* reader, int index)
+void AlignSectionsFeatureCentroid::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
+  AlignSections::readFilterParameters(reader, index);
   reader->openFilterGroup(this, index);
   setGoodVoxelsArrayPath(reader->readDataArrayPath("GoodVoxelsArrayPath", getGoodVoxelsArrayPath() ) );
   setUseReferenceSlice( reader->readValue("UseReferenceSlice", false) );
@@ -107,13 +108,15 @@ void AlignSectionsFeatureCentroid::readChildUniqueFilterParameters(AbstractFilte
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AlignSectionsFeatureCentroid::writeChildUniqueFilterParameters(AbstractFilterParametersWriter* writer, int index)
+int AlignSectionsFeatureCentroid::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
+  AlignSections::writeFilterParameters(writer, index);
   writer->openFilterGroup(this, index);
   writer->writeValue("GoodVoxelsArrayPath", getGoodVoxelsArrayPath() );
   writer->writeValue("UseReferenceSlice", getUseReferenceSlice() );
   writer->writeValue("ReferenceSlice", getReferenceSlice() );
   writer->closeFilterGroup();
+  return ++index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------

@@ -76,7 +76,7 @@ AlignSectionsMisorientation::AlignSectionsMisorientation() :
   m_OrientationOps = OrientationOps::getOrientationOpsVector();
 
   //only setting up the child parameters because the parent constructor has already been called
-  setupChildUniqueFilterParameters();
+  setupFilterParameters();
 
 }
 
@@ -90,7 +90,7 @@ AlignSectionsMisorientation::~AlignSectionsMisorientation()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AlignSectionsMisorientation::setupChildUniqueFilterParameters()
+void AlignSectionsMisorientation::setupFilterParameters()
 {
   //getting the current parameters that were set by the parent and adding to it before resetting it
   FilterParameterVector parameters = getFilterParameters();
@@ -106,8 +106,9 @@ void AlignSectionsMisorientation::setupChildUniqueFilterParameters()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AlignSectionsMisorientation::readChildUniqueFilterParameters(AbstractFilterParametersReader* reader, int index)
+void AlignSectionsMisorientation::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
+  AlignSections::readFilterParameters(reader, index);
   reader->openFilterGroup(this, index);
   setCrystalStructuresArrayPath(reader->readDataArrayPath("CrystalStructuresArrayPath", getCrystalStructuresArrayPath() ) );
   setGoodVoxelsArrayPath(reader->readDataArrayPath("GoodVoxelsArrayPath", getGoodVoxelsArrayPath() ) );
@@ -120,8 +121,9 @@ void AlignSectionsMisorientation::readChildUniqueFilterParameters(AbstractFilter
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AlignSectionsMisorientation::writeChildUniqueFilterParameters(AbstractFilterParametersWriter* writer, int index)
+int AlignSectionsMisorientation::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
+  AlignSections::writeFilterParameters(writer, index);
   writer->openFilterGroup(this, index);
   writer->writeValue("CrystalStructuresArrayPath", getCrystalStructuresArrayPath() );
   writer->writeValue("GoodVoxelsArrayPath", getGoodVoxelsArrayPath() );
@@ -129,6 +131,7 @@ void AlignSectionsMisorientation::writeChildUniqueFilterParameters(AbstractFilte
   writer->writeValue("QuatsArrayPath", getQuatsArrayPath() );
   writer->writeValue("MisorientationTolerance", getMisorientationTolerance() );
   writer->closeFilterGroup();
+  return ++index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------

@@ -63,7 +63,7 @@ AlignSectionsList::AlignSectionsList() :
   m_InputFile("")
 {
   //only setting up the child parameters because the parent constructor has already been called
-  setupChildUniqueFilterParameters();
+  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------
@@ -76,7 +76,7 @@ AlignSectionsList::~AlignSectionsList()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AlignSectionsList::setupChildUniqueFilterParameters()
+void AlignSectionsList::setupFilterParameters()
 {
   //getting the current parameters that were set by the parent and adding to it before resetting it
   FilterParameterVector parameters = getFilterParameters();
@@ -87,8 +87,9 @@ void AlignSectionsList::setupChildUniqueFilterParameters()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AlignSectionsList::readChildUniqueFilterParameters(AbstractFilterParametersReader* reader, int index)
+void AlignSectionsList::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
+  AlignSections::readFilterParameters(reader, index);
   reader->openFilterGroup(this, index);
   setInputFile( reader->readString( "InputFile", getInputFile() ) );
   reader->closeFilterGroup();
@@ -97,11 +98,13 @@ void AlignSectionsList::readChildUniqueFilterParameters(AbstractFilterParameters
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AlignSectionsList::writeChildUniqueFilterParameters(AbstractFilterParametersWriter* writer, int index)
+int AlignSectionsList::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
+  AlignSections::writeFilterParameters(writer, index);
   writer->openFilterGroup(this, index);
   writer->writeValue("InputFile", getInputFile() );
   writer->closeFilterGroup();
+  return ++index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------

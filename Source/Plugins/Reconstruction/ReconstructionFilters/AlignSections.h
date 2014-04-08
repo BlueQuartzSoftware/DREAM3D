@@ -86,14 +86,12 @@ class AlignSections : public AbstractFilter
     * @param writer The writer that is used to write the options to a file
     */
     virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
-    virtual void writeChildUniqueFilterParameters(AbstractFilterParametersWriter* writer, int index);
 
     /**
     * @brief This method will read the options from a file
     * @param reader The reader that is used to read the options from a file
     */
     virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
-    virtual void readChildUniqueFilterParameters(AbstractFilterParametersReader* reader, int index);
 
     /**
      * @brief Reimplemented from @see AbstractFilter class

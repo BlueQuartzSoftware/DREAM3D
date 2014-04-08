@@ -50,9 +50,6 @@
 #define ERROR_TXT_OUT1 1
 
 
-
-
-
 #define NEW_SHARED_ARRAY(var, m_msgType, size)\
   boost::shared_array<m_msgType> var##Array(new m_msgType[size]);\
   m_msgType* var = var##Array.get();
@@ -85,7 +82,7 @@ AlignSectionsMutualInformation::AlignSectionsMutualInformation() :
   featurecounts = NULL;
   INIT_DataArray(m_FeatureCounts, int);
   //only setting up the child parameters because the parent constructor has already been called
-  setupChildUniqueFilterParameters();
+  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------
@@ -98,7 +95,7 @@ AlignSectionsMutualInformation::~AlignSectionsMutualInformation()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AlignSectionsMutualInformation::setupChildUniqueFilterParameters()
+void AlignSectionsMutualInformation::setupFilterParameters()
 {
   //getting the current parameters that were set by the parent and adding to it before resetting it
   FilterParameterVector parameters = getFilterParameters();
@@ -114,8 +111,9 @@ void AlignSectionsMutualInformation::setupChildUniqueFilterParameters()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AlignSectionsMutualInformation::readChildUniqueFilterParameters(AbstractFilterParametersReader* reader, int index)
+void AlignSectionsMutualInformation::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
+  AlignSections::readFilterParameters(reader, index);
   reader->openFilterGroup(this, index);
   setCrystalStructuresArrayPath(reader->readDataArrayPath("CrystalStructuresArrayPath", getCrystalStructuresArrayPath() ) );
   setGoodVoxelsArrayPath(reader->readDataArrayPath("GoodVoxelsArrayPath", getGoodVoxelsArrayPath() ) );
@@ -128,8 +126,9 @@ void AlignSectionsMutualInformation::readChildUniqueFilterParameters(AbstractFil
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AlignSectionsMutualInformation::writeChildUniqueFilterParameters(AbstractFilterParametersWriter* writer, int index)
+int AlignSectionsMutualInformation::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
+  AlignSections::writeFilterParameters(writer, index);
   writer->openFilterGroup(this, index);
   writer->writeValue("CrystalStructuresArrayPath", getCrystalStructuresArrayPath() );
   writer->writeValue("GoodVoxelsArrayPath", getGoodVoxelsArrayPath() );
@@ -137,6 +136,7 @@ void AlignSectionsMutualInformation::writeChildUniqueFilterParameters(AbstractFi
   writer->writeValue("QuatsArrayPath", getQuatsArrayPath() );
   writer->writeValue("MisorientationTolerance", getMisorientationTolerance() );
   writer->closeFilterGroup();
+  return ++index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------
