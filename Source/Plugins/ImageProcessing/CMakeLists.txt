@@ -133,6 +133,15 @@ find_package(ITK COMPONENTS
 
 include(${ITK_USE_FILE})
 
+# --------------------------------------------------------------------
+# What image bit depth should be used
+# --------------------------------------------------------------------
+set(${PLUGIN_NAME}_BitDepth "8" CACHE STRING "Bitdepth for ${PLUGIN_NAME} filters (8, 16, or 32)")
+if( ${PLUGIN_NAME}_BitDepth STREQUAL "8" OR ${PLUGIN_NAME}_BitDepth STREQUAL "16" OR ${PLUGIN_NAME}_BitDepth STREQUAL "32")
+  add_definitions(-D${PLUGIN_NAME}_BitDepth=${${PLUGIN_NAME}_BitDepth})
+else()
+  message( WARNING "unsupported ${PLUGIN_NAME}_BitDepth (default bitdepth will be used)" )
+endif()
 
 
 set(${PLUGIN_NAME}_Project_SRCS "")

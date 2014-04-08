@@ -29,8 +29,19 @@ namespace ImageProcessing
   typedef double DoublePixelType;
 
   //define default pixel type
+  #if ImageProcessing_BitDepth == 8
   typedef UInt8PixelType DefaultPixelType;
   typedef UInt8ArrayType DefaultArrayType;
+  #elif ImageProcessing_BitDepth == 16
+  typedef UInt16PixelType DefaultPixelType;
+  typedef UInt16ArrayType DefaultArrayType;
+  #elif ImageProcessing_BitDepth == 32
+  typedef FloatPixelType DefaultPixelType;
+  typedef FloatArrayType DefaultArrayType;
+  #else
+  typedef UInt8PixelType DefaultPixelType;
+  typedef UInt8ArrayType DefaultArrayType;
+  #endif
 
   //multicomponent pixels
   typedef itk::RGBPixel <uint8_t> RGBUInt8PixelType; //ipf color etc
