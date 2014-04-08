@@ -148,7 +148,7 @@ void HoughCircles::dataCheck(bool preflight, size_t voxels, size_t fields, size_
   else
   {
     m_RawImageDataArrayName=m_SelectedCellArrayName;
-    GET_PREREQ_DATA(m, DREAM3D, CellData, RawImageData, ss, -300, uint8_t, UInt8ArrayType, voxels, 1)
+    GET_PREREQ_DATA(m, DREAM3D, CellData, RawImageData, ss, -300, ImageProcessing::DefaultPixelType, ImageProcessing::DefaultArrayType, voxels, 1)
 
     if(m_OverwriteArray)
     {
@@ -156,7 +156,7 @@ void HoughCircles::dataCheck(bool preflight, size_t voxels, size_t fields, size_
     }
     else
     {
-      CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, ProcessedImageData, ss, uint8_t, UInt8ArrayType, 0, voxels, 1)
+      CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, ProcessedImageData, ss, ImageProcessing::DefaultPixelType, ImageProcessing::DefaultArrayType, 0, voxels, 1)
       m->renameCellData(m_ProcessedImageDataArrayName, m_NewCellArrayName);
     }
   }
@@ -195,7 +195,7 @@ void HoughCircles::execute()
   dataCheck(false, totalPoints, totalFields, totalEnsembles);
   if(m_OverwriteArray)
   {
-    CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, ProcessedImageData, ss, uint8_t, UInt8ArrayType, 0, totalPoints, 1)
+    CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, ProcessedImageData, ss, ImageProcessing::DefaultPixelType, ImageProcessing::DefaultArrayType, 0, totalPoints, 1)
   }
   if (getErrorCondition() < 0)
   {
@@ -222,11 +222,11 @@ void HoughCircles::execute()
   }
 
   //wrap raw and processed image data as itk::images
-  ImageProcessing::UInt8ImageType::Pointer inputImage=ITKUtilities::Dream3DtoITK(m, m_RawImageData);
-  ImageProcessing::UInt8ImageType::Pointer outputImage=ITKUtilities::Dream3DtoITK(m, m_ProcessedImageData);
+  ImageProcessing::DefaultImageType::Pointer inputImage=ITKUtilities::Dream3DtoITK(m, m_RawImageData);
+  ImageProcessing::DefaultImageType::Pointer outputImage=ITKUtilities::Dream3DtoITK(m, m_ProcessedImageData);
 
-  ImageProcessing::UInt8SliceType::IndexType localIndex;
-  typedef itk::HoughTransform2DCirclesImageFilter<ImageProcessing::UInt8PixelType, ImageProcessing::FloatPixelType> HoughTransformFilterType;
+  ImageProcessing::DefaultSliceType::IndexType localIndex;
+  typedef itk::HoughTransform2DCirclesImageFilter<ImageProcessing::DefaultPixelType, ImageProcessing::FloatPixelType> HoughTransformFilterType;
   HoughTransformFilterType::Pointer houghFilter = HoughTransformFilterType::New();
   houghFilter->SetNumberOfCircles( m_NumberCircles );
   houghFilter->SetMinimumRadius( m_MinRadius );
@@ -245,7 +245,7 @@ void HoughCircles::execute()
     ss.str("");
     ss << "Hough Transforming Slice "<< i+1 << "/" << dims[2];
     notifyStatusMessage(ss.str());
-    ImageProcessing::UInt8SliceType::Pointer inputSlice = ITKUtilities::ExtractSlice<ImageProcessing::UInt8PixelType>(inputImage, ImageProcessing::ZSlice, i);
+    ImageProcessing::DefaultSliceType::Pointer inputSlice = ITKUtilities::ExtractSlice<ImageProcessing::DefaultPixelType>(inputImage, ImageProcessing::ZSlice, i);
     houghFilter->SetInput( inputSlice );
     houghFilter->Update();
     ImageProcessing::FloatSliceType::Pointer localAccumulator = houghFilter->GetOutput();
@@ -257,8 +257,8 @@ void HoughCircles::execute()
     HoughTransformFilterType::CirclesListType circles = houghFilter->GetCircles( m_NumberCircles );
 
     //create blank slice of same dimensions
-    ImageProcessing::UInt8SliceType::Pointer outputSlice = ImageProcessing::UInt8SliceType::New();
-    ImageProcessing::UInt8SliceType::RegionType region;
+    ImageProcessing::DefaultSliceType::Pointer outputSlice = ImageProcessing::DefaultSliceType::New();
+    ImageProcessing::DefaultSliceType::RegionType region;
     region.SetSize(inputSlice->GetLargestPossibleRegion().GetSize());
     region.SetIndex(inputSlice->GetLargestPossibleRegion().GetIndex());
     outputSlice->SetRegions( region );
@@ -281,7 +281,7 @@ void HoughCircles::execute()
         + (*itCircles)->GetRadius()[0]*vcl_cos(angle));
         localIndex[1] = (long int)((*itCircles)->GetObjectToParentTransform()->GetOffset()[1]
         + (*itCircles)->GetRadius()[0]*vcl_sin(angle));
-        ImageProcessing::UInt8SliceType::RegionType outputRegion = outputSlice->GetLargestPossibleRegion();
+        ImageProcessing::DefaultSliceType::RegionType outputRegion = outputSlice->GetLargestPossibleRegion();
         if( outputRegion.IsInside( localIndex ) )
         {
           outputSlice->SetPixel( localIndex, 255 );
@@ -291,7 +291,7 @@ void HoughCircles::execute()
     }
 
     //copy slice into output
-    ITKUtilities::SetSlice<ImageProcessing::UInt8PixelType>(outputImage, outputSlice, ImageProcessing::ZSlice, i);
+    ITKUtilities::SetSlice<ImageProcessing::DefaultPixelType>(outputImage, outputSlice, ImageProcessing::ZSlice, i);
   }
 
   //array name changing/cleanup

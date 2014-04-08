@@ -123,7 +123,7 @@ void SobelEdge::dataCheck(bool preflight, size_t voxels, size_t fields, size_t e
   else
   {
     m_RawImageDataArrayName=m_SelectedCellArrayName;
-    GET_PREREQ_DATA(m, DREAM3D, CellData, RawImageData, ss, -300, uint8_t, UInt8ArrayType, voxels, 1)
+    GET_PREREQ_DATA(m, DREAM3D, CellData, RawImageData, ss, -300, ImageProcessing::DefaultPixelType, ImageProcessing::DefaultArrayType, voxels, 1)
 
     if(m_OverwriteArray)
     {
@@ -131,7 +131,7 @@ void SobelEdge::dataCheck(bool preflight, size_t voxels, size_t fields, size_t e
     }
     else
     {
-      CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, ProcessedImageData, ss, uint8_t, UInt8ArrayType, 0, voxels, 1)
+      CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, ProcessedImageData, ss, ImageProcessing::DefaultPixelType, ImageProcessing::DefaultArrayType, 0, voxels, 1)
       m->renameCellData(m_ProcessedImageDataArrayName, m_NewCellArrayName);
     }
   }
@@ -170,7 +170,7 @@ void SobelEdge::execute()
   dataCheck(false, totalPoints, totalFields, totalEnsembles);
   if(m_OverwriteArray)
   {
-    CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, ProcessedImageData, ss, uint8_t, UInt8ArrayType, 0, totalPoints, 1)
+    CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, ProcessedImageData, ss, ImageProcessing::DefaultPixelType, ImageProcessing::DefaultArrayType, 0, totalPoints, 1)
   }
   if (getErrorCondition() < 0)
   {
@@ -178,12 +178,12 @@ void SobelEdge::execute()
   }
 
   //wrap m_RawImageData as itk::image
-  ImageProcessing::UInt8ImageType::Pointer inputImage=ITKUtilities::Dream3DtoITK(m, m_RawImageData);
+  ImageProcessing::DefaultImageType::Pointer inputImage=ITKUtilities::Dream3DtoITK(m, m_RawImageData);
 
   if(m_Slice)
   {
     //wrap output array
-    ImageProcessing::UInt8ImageType::Pointer outputImage=ITKUtilities::Dream3DtoITK(m, m_ProcessedImageData);
+    ImageProcessing::DefaultImageType::Pointer outputImage=ITKUtilities::Dream3DtoITK(m, m_ProcessedImageData);
 
     //get dimensions
     size_t udims[3] = {0,0,0};
@@ -200,11 +200,11 @@ void SobelEdge::execute()
     };
 
     //create edge filter
-    typedef itk::SobelEdgeDetectionImageFilter < ImageProcessing::UInt8SliceType,  ImageProcessing::FloatSliceType > SobelFilterType;
+    typedef itk::SobelEdgeDetectionImageFilter < ImageProcessing::DefaultSliceType,  ImageProcessing::FloatSliceType > SobelFilterType;
     SobelFilterType::Pointer sobelFilter = SobelFilterType::New();
 
     //convert result back to uint8
-    typedef itk::RescaleIntensityImageFilter<ImageProcessing::FloatSliceType, ImageProcessing::UInt8SliceType> RescaleImageType;
+    typedef itk::RescaleIntensityImageFilter<ImageProcessing::FloatSliceType, ImageProcessing::DefaultSliceType> RescaleImageType;
     RescaleImageType::Pointer rescaleFilter = RescaleImageType::New();
     rescaleFilter->SetOutputMinimum(0);
     rescaleFilter->SetOutputMaximum(255);
@@ -217,7 +217,7 @@ void SobelEdge::execute()
       notifyStatusMessage(ss.str());
 
       //get slice
-      ImageProcessing::UInt8SliceType::Pointer inputSlice = ITKUtilities::ExtractSlice<ImageProcessing::UInt8PixelType>(inputImage, ImageProcessing::ZSlice, i);
+      ImageProcessing::DefaultSliceType::Pointer inputSlice = ITKUtilities::ExtractSlice<ImageProcessing::DefaultPixelType>(inputImage, ImageProcessing::ZSlice, i);
 
       //run filters
       sobelFilter->SetInput(inputSlice);
@@ -226,18 +226,18 @@ void SobelEdge::execute()
       rescaleFilter->Update();
 
       //copy into volume
-      ITKUtilities::SetSlice<ImageProcessing::UInt8PixelType>(outputImage, rescaleFilter->GetOutput(), ImageProcessing::ZSlice, i);
+      ITKUtilities::SetSlice<ImageProcessing::DefaultPixelType>(outputImage, rescaleFilter->GetOutput(), ImageProcessing::ZSlice, i);
     }
   }
   else
   {
     //create edge filter
-    typedef itk::SobelEdgeDetectionImageFilter < ImageProcessing::UInt8ImageType,  ImageProcessing::FloatImageType > SobelFilterType;
+    typedef itk::SobelEdgeDetectionImageFilter < ImageProcessing::DefaultImageType,  ImageProcessing::FloatImageType > SobelFilterType;
     SobelFilterType::Pointer sobelFilter = SobelFilterType::New();
     sobelFilter->SetInput(inputImage);
 
     //convert result back to uint8
-    typedef itk::RescaleIntensityImageFilter<ImageProcessing::FloatImageType, ImageProcessing::UInt8ImageType> RescaleImageType;
+    typedef itk::RescaleIntensityImageFilter<ImageProcessing::FloatImageType, ImageProcessing::DefaultImageType> RescaleImageType;
     RescaleImageType::Pointer rescaleFilter = RescaleImageType::New();
     rescaleFilter->SetInput(sobelFilter->GetOutput());
     rescaleFilter->SetOutputMinimum(0);

@@ -115,7 +115,7 @@ void Watershed::dataCheck(bool preflight, size_t voxels, size_t fields, size_t e
   else
   {
     m_RawImageDataArrayName=m_SelectedCellArrayName;
-    GET_PREREQ_DATA(m, DREAM3D, CellData, RawImageData, ss, -300, uint8_t, UInt8ArrayType, voxels, 1)
+    GET_PREREQ_DATA(m, DREAM3D, CellData, RawImageData, ss, -300, ImageProcessing::DefaultPixelType, ImageProcessing::DefaultArrayType, voxels, 1)
   }
 
   CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, int32_t, Int32ArrayType, 0, voxels, 1)
@@ -159,18 +159,18 @@ void Watershed::execute()
   }
 
   //wrap m_RawImageData as itk::image
-  ImageProcessing::UInt8ImageType::Pointer inputImage=ITKUtilities::Dream3DtoITK(m, m_RawImageData);
+  ImageProcessing::DefaultImageType::Pointer inputImage=ITKUtilities::Dream3DtoITK(m, m_RawImageData);
 
   //create gradient magnitude filter
   notifyStatusMessage("Calculating Gradient Magnitude");
-  typedef itk::GradientMagnitudeImageFilter<ImageProcessing::UInt8ImageType, ImageProcessing::UInt8ImageType >  GradientMagnitudeImageFilterType;
+  typedef itk::GradientMagnitudeImageFilter<ImageProcessing::DefaultImageType, ImageProcessing::DefaultImageType >  GradientMagnitudeImageFilterType;
   GradientMagnitudeImageFilterType::Pointer gradientMagnitudeImageFilter = GradientMagnitudeImageFilterType::New();
   gradientMagnitudeImageFilter->SetInput(inputImage);
   gradientMagnitudeImageFilter->Update();
 
   //watershed image
   notifyStatusMessage("Watershedding");
-  typedef itk::WatershedImageFilter<ImageProcessing::UInt8ImageType> WatershedFilterType;
+  typedef itk::WatershedImageFilter<ImageProcessing::DefaultImageType> WatershedFilterType;
   WatershedFilterType::Pointer watershed = WatershedFilterType::New();
   watershed->SetThreshold(m_Threshold);
   watershed->SetLevel(m_Level);

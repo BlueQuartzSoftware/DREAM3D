@@ -247,7 +247,7 @@ void ImageRegistration::dataCheck(bool preflight, size_t voxels, size_t fields, 
   else
   {
     m_RawImageDataArrayName=m_SelectedCellArrayName;
-    GET_PREREQ_DATA(m, DREAM3D, CellData, RawImageData, ss, -300, uint8_t, UInt8ArrayType, voxels, 1)
+    GET_PREREQ_DATA(m, DREAM3D, CellData, RawImageData, ss, -300, ImageProcessing::DefaultPixelType, ImageProcessing::DefaultArrayType, voxels, 1)
     //dont want subpixel shifts if there is information other than image data
     if(m_ApplyShifts)
     {
@@ -325,34 +325,34 @@ void ImageRegistration::execute()
   if(m_WriteShifts) outFile.open(getAlignmentShiftFileName().c_str());
 
   //wrap data as itk image
-  ImageProcessing::UInt8ImageType::Pointer inputImage=ITKUtilities::Dream3DtoITK(m, m_RawImageData);
+  ImageProcessing::DefaultImageType::Pointer inputImage=ITKUtilities::Dream3DtoITK(m, m_RawImageData);
 
   //translation transform
   typedef itk::TranslationTransform< double, ImageProcessing::SliceDimension > TransformType;
   TransformType::Pointer transform = TransformType::New();
 
   //linearly interpolate pixels
-  typedef itk:: LinearInterpolateImageFunction<ImageProcessing::UInt8SliceType, double > InterpolatorType;
+  typedef itk:: LinearInterpolateImageFunction<ImageProcessing::DefaultSliceType, double > InterpolatorType;
   InterpolatorType::Pointer interpolator = InterpolatorType::New();
 
   //set image comparison metric
-  itk::ImageToImageMetric<ImageProcessing::UInt8SliceType,ImageProcessing::UInt8SliceType>::Pointer metric;
+  itk::ImageToImageMetric<ImageProcessing::DefaultSliceType,ImageProcessing::DefaultSliceType>::Pointer metric;
   switch(m_Metric)
   {
     case 0: {
-        metric = itk::MeanSquaresImageToImageMetric<ImageProcessing::UInt8SliceType, ImageProcessing::UInt8SliceType >::New();
+        metric = itk::MeanSquaresImageToImageMetric<ImageProcessing::DefaultSliceType, ImageProcessing::DefaultSliceType >::New();
       } break;
 
     case 1: {
-        metric = itk::NormalizedCorrelationImageToImageMetric<ImageProcessing::UInt8SliceType, ImageProcessing::UInt8SliceType >::New();
+        metric = itk::NormalizedCorrelationImageToImageMetric<ImageProcessing::DefaultSliceType, ImageProcessing::DefaultSliceType >::New();
       } break;
 
     case 2: {
-        metric = itk::MeanReciprocalSquareDifferenceImageToImageMetric<ImageProcessing::UInt8SliceType, ImageProcessing::UInt8SliceType >::New();
+        metric = itk::MeanReciprocalSquareDifferenceImageToImageMetric<ImageProcessing::DefaultSliceType, ImageProcessing::DefaultSliceType >::New();
       } break;
 
     case 3: {
-        typedef itk::MattesMutualInformationImageToImageMetric<ImageProcessing::UInt8SliceType, ImageProcessing::UInt8SliceType > MattesMetricType;
+        typedef itk::MattesMutualInformationImageToImageMetric<ImageProcessing::DefaultSliceType, ImageProcessing::DefaultSliceType > MattesMetricType;
         MattesMetricType::Pointer mattesMetric = MattesMetricType::New();
         mattesMetric->SetNumberOfHistogramBins( 20 ); // 20-24
         mattesMetric->SetNumberOfSpatialSamples( 10000 );
@@ -386,7 +386,7 @@ void ImageRegistration::execute()
 
     case 2: {
         itk::LBFGSOptimizer::Pointer lbfgsOptimizer = itk::LBFGSOptimizer::New();
-        lbfgsOptimizer->SetGradientConvergenceTolerance( 0.05 ); //0.01-0.05 ?0.1-0.25 (pixels)
+        lbfgsOptimizer->SetGradientConvergenceTolerance( 0.1 ); //0.01-0.25 (pixels)
         lbfgsOptimizer->SetLineSearchAccuracy( m_OptimizerParameter1 ); // 0.9
         lbfgsOptimizer->SetDefaultStepLength( m_OptimizerParameter2 ); // 1.5 (pixels)
         lbfgsOptimizer->SetMaximumNumberOfFunctionEvaluations( m_Iterations ); // 1000
@@ -415,7 +415,7 @@ void ImageRegistration::execute()
         itk::OnePlusOneEvolutionaryOptimizer::Pointer evolutionaryOptimizer = itk::OnePlusOneEvolutionaryOptimizer::New();
         evolutionaryOptimizer->SetNormalVariateGenerator( generator );
         itk::OnePlusOneEvolutionaryOptimizer::ScalesType optimizerScales ( transform->GetNumberOfParameters() );
-        ImageProcessing::UInt8ImageType::SpacingType spacing = inputImage->GetSpacing();
+        ImageProcessing::DefaultImageType::SpacingType spacing = inputImage->GetSpacing();
         optimizerScales[0] = 1.0 / ( 0.1 * dims[0] * spacing[0] );
         optimizerScales[1] = 1.0 / ( 0.1 * dims[1] * spacing[1] );
         optimizer->SetScales( optimizerScales );
@@ -430,7 +430,7 @@ void ImageRegistration::execute()
   }
 
   //define and create registration
-  typedef itk::ImageRegistrationMethod<ImageProcessing::UInt8SliceType, ImageProcessing::UInt8SliceType > RegistrationType;
+  typedef itk::ImageRegistrationMethod<ImageProcessing::DefaultSliceType, ImageProcessing::DefaultSliceType > RegistrationType;
   RegistrationType::Pointer   registration  = RegistrationType::New();
   registration->SetTransform( transform );
   registration->SetInterpolator( interpolator );
@@ -446,8 +446,8 @@ void ImageRegistration::execute()
     notifyStatusMessage(ss.str());
 
     //get and register 2 images
-    ImageProcessing::UInt8SliceType::Pointer fixedImage = ITKUtilities::ExtractSlice<ImageProcessing::UInt8PixelType>(inputImage, ImageProcessing::ZSlice, i-1);
-    ImageProcessing::UInt8SliceType::Pointer movingImage = ITKUtilities::ExtractSlice<ImageProcessing::UInt8PixelType>(inputImage, ImageProcessing::ZSlice, i);
+    ImageProcessing::DefaultSliceType::Pointer fixedImage = ITKUtilities::ExtractSlice<ImageProcessing::DefaultPixelType>(inputImage, ImageProcessing::ZSlice, i-1);
+    ImageProcessing::DefaultSliceType::Pointer movingImage = ITKUtilities::ExtractSlice<ImageProcessing::DefaultPixelType>(inputImage, ImageProcessing::ZSlice, i);
 
     // Set the registration inputs and range
     registration->SetFixedImage(fixedImage);
@@ -485,7 +485,7 @@ void ImageRegistration::execute()
     //apply shifts
     if(m_ApplyShifts)
     {
-      typedef itk::ResampleImageFilter<ImageProcessing::UInt8SliceType, ImageProcessing::UInt8SliceType>    ResampleFilterType;
+      typedef itk::ResampleImageFilter<ImageProcessing::DefaultSliceType, ImageProcessing::DefaultSliceType>    ResampleFilterType;
       ResampleFilterType::Pointer resampler = ResampleFilterType::New();
       resampler->SetInput( movingImage);
       resampler->SetTransform( registration->GetOutput()->Get() );
@@ -495,7 +495,7 @@ void ImageRegistration::execute()
       resampler->SetOutputDirection( fixedImage->GetDirection() );
       resampler->SetDefaultPixelValue( 0 );
       resampler->Update();
-      ITKUtilities::SetSlice<ImageProcessing::UInt8PixelType>(inputImage, resampler->GetOutput(), ImageProcessing::ZSlice, i);
+      ITKUtilities::SetSlice<ImageProcessing::DefaultPixelType>(inputImage, resampler->GetOutput(), ImageProcessing::ZSlice, i);
     }
   }
 

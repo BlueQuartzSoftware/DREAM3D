@@ -13,6 +13,7 @@
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/DataArrays/IDataArray.h"
+#include "Plugins/ImageProcessing/ImageProcessingConstants.h"
 
 /**
  * @class ImageRegistration ImageRegistration.h ImageProcessing/Code/ImageProcessingFilters/ImageRegistration.h
@@ -107,7 +108,8 @@ class ImageRegistration : public AbstractFilter
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
   private:
-    uint8_t* m_RawImageData;uint8_t* m_ProcessedImageData;
+    ImageProcessing::DefaultPixelType* m_RawImageData;
+    ImageProcessing::DefaultPixelType* m_ProcessedImageData;
 
     ImageRegistration(const ImageRegistration&); // Copy Constructor Not Implemented
     void operator=(const ImageRegistration&); // Operator '=' Not Implemented

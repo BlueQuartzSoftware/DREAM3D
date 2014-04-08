@@ -124,7 +124,7 @@ void DiscreteGaussianBlur::dataCheck(bool preflight, size_t voxels, size_t field
   else
   {
     m_RawImageDataArrayName=m_SelectedCellArrayName;
-    GET_PREREQ_DATA(m, DREAM3D, CellData, RawImageData, ss, -300, uint8_t, UInt8ArrayType, voxels, 1)
+    GET_PREREQ_DATA(m, DREAM3D, CellData, RawImageData, ss, -300, ImageProcessing::DefaultPixelType, ImageProcessing::DefaultArrayType, voxels, 1)
 
     if(m_OverwriteArray)
     {
@@ -132,7 +132,7 @@ void DiscreteGaussianBlur::dataCheck(bool preflight, size_t voxels, size_t field
     }
     else
     {
-      CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, ProcessedImageData, ss, uint8_t, UInt8ArrayType, 0, voxels, 1)
+      CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, ProcessedImageData, ss, ImageProcessing::DefaultPixelType, ImageProcessing::DefaultArrayType, 0, voxels, 1)
       m->renameCellData(m_ProcessedImageDataArrayName, m_NewCellArrayName);
     }
   }
@@ -171,7 +171,7 @@ void DiscreteGaussianBlur::execute()
   dataCheck(false, totalPoints, totalFields, totalEnsembles);
   if(m_OverwriteArray)
   {
-    CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, ProcessedImageData, ss, uint8_t, UInt8ArrayType, 0, totalPoints, 1)
+    CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, ProcessedImageData, ss, ImageProcessing::DefaultPixelType, ImageProcessing::DefaultArrayType, 0, totalPoints, 1)
   }
   if (getErrorCondition() < 0)
   {
@@ -179,10 +179,10 @@ void DiscreteGaussianBlur::execute()
   }
 
   //wrap m_RawImageData as itk::image
-  ImageProcessing::UInt8ImageType::Pointer inputImage=ITKUtilities::Dream3DtoITK(m, m_RawImageData);
+  ImageProcessing::DefaultImageType::Pointer inputImage=ITKUtilities::Dream3DtoITK(m, m_RawImageData);
 
   //create guassian blur filter
-  typedef itk::DiscreteGaussianImageFilter< ImageProcessing::UInt8ImageType,  ImageProcessing::UInt8ImageType > GuassianFilterType;
+  typedef itk::DiscreteGaussianImageFilter< ImageProcessing::DefaultImageType,  ImageProcessing::DefaultImageType > GuassianFilterType;
   GuassianFilterType::Pointer guassianFilter = GuassianFilterType::New();
   guassianFilter->SetInput(inputImage);
   guassianFilter->SetVariance(m_Stdev*m_Stdev);

@@ -28,6 +28,10 @@ namespace ImageProcessing
   typedef float FloatPixelType;
   typedef double DoublePixelType;
 
+  //define default pixel type
+  typedef UInt8PixelType DefaultPixelType;
+  typedef UInt8ArrayType DefaultArrayType;
+
   //multicomponent pixels
   typedef itk::RGBPixel <uint8_t> RGBUInt8PixelType; //ipf color etc
   //typedef itk::RGBAPixel <float> RGBAFloatPixelType; //may be able to handle quats with this?
@@ -42,6 +46,7 @@ namespace ImageProcessing
   const unsigned int ZSlice = 2;
 
   //define image types
+  typedef itk::Image< DefaultPixelType, ImageDimension > DefaultImageType;
   typedef itk::Image< Int8PixelType, ImageDimension > Int8ImageType;
   typedef itk::Image< UInt8PixelType, ImageDimension > UInt8ImageType;
   typedef itk::Image< Int16PixelType, ImageDimension > Int16ImageType;
@@ -56,6 +61,7 @@ namespace ImageProcessing
   typedef itk::Image< ImageProcessing::RGBUInt8PixelType, ImageProcessing::ImageDimension > RGBUInt8ImageType;
   //typedef itk::Image< RGBAFloatPixelType, ImageDimension > RGBAFloatImageType;
 
+  typedef itk::Image< DefaultPixelType, SliceDimension > DefaultSliceType;
   typedef itk::Image< Int8PixelType, SliceDimension > Int8SliceType;
   typedef itk::Image< UInt8PixelType, SliceDimension > UInt8SliceType;
   typedef itk::Image< Int16PixelType, SliceDimension > Int16SliceType;

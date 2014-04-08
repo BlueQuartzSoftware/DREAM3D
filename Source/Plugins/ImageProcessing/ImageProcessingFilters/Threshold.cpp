@@ -117,7 +117,7 @@ void Threshold::setupFilterParameters()
   }
   {
     FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Manual Value");
+    parameter->setHumanLabel("Manual Parameter");
     parameter->setPropertyName("ManualParameter");
     parameter->setWidgetType(FilterParameter::IntWidget);
     parameter->setValueType("int");
@@ -182,7 +182,7 @@ void Threshold::dataCheck(bool preflight, size_t voxels, size_t fields, size_t e
   else
   {
     m_RawImageDataArrayName=m_SelectedCellArrayName;
-    GET_PREREQ_DATA(m, DREAM3D, CellData, RawImageData, ss, -300, uint8_t, UInt8ArrayType, voxels, 1)
+    GET_PREREQ_DATA(m, DREAM3D, CellData, RawImageData, ss, -300, ImageProcessing::DefaultPixelType, ImageProcessing::DefaultArrayType, voxels, 1)
 
     if(m_OverwriteArray)
     {
@@ -190,7 +190,7 @@ void Threshold::dataCheck(bool preflight, size_t voxels, size_t fields, size_t e
     }
     else
     {
-      CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, ProcessedImageData, ss, uint8_t, UInt8ArrayType, 0, voxels, 1)
+      CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, ProcessedImageData, ss, ImageProcessing::DefaultPixelType, ImageProcessing::DefaultArrayType, 0, voxels, 1)
       m->renameCellData(m_ProcessedImageDataArrayName, m_NewCellArrayName);
     }
   }
@@ -229,7 +229,7 @@ void Threshold::execute()
   dataCheck(false, totalPoints, totalFields, totalEnsembles);
   if(m_OverwriteArray)
   {
-    CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, ProcessedImageData, ss, uint8_t, UInt8ArrayType, 0, totalPoints, 1)
+    CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, ProcessedImageData, ss, ImageProcessing::DefaultPixelType, ImageProcessing::DefaultArrayType, 0, totalPoints, 1)
   }
   if (getErrorCondition() < 0)
   {
@@ -251,16 +251,16 @@ void Threshold::execute()
   };
 
     //wrap input as itk image
-    ImageProcessing::UInt8ImageType::Pointer inputImage=ITKUtilities::Dream3DtoITK(m, m_RawImageData);
+    ImageProcessing::DefaultImageType::Pointer inputImage=ITKUtilities::Dream3DtoITK(m, m_RawImageData);
 
     //define threshold filters
-    typedef itk::BinaryThresholdImageFilter <ImageProcessing::UInt8ImageType, ImageProcessing::UInt8ImageType> BinaryThresholdImageFilterType;
-    typedef itk::BinaryThresholdImageFilter <ImageProcessing::UInt8SliceType, ImageProcessing::UInt8SliceType> BinaryThresholdImageFilterType2D;
+    typedef itk::BinaryThresholdImageFilter <ImageProcessing::DefaultImageType, ImageProcessing::DefaultImageType> BinaryThresholdImageFilterType;
+    typedef itk::BinaryThresholdImageFilter <ImageProcessing::DefaultSliceType, ImageProcessing::DefaultSliceType> BinaryThresholdImageFilterType2D;
 
   if(m_Method>=0 && m_Method<=11)
   {
      //define hitogram generator (will make the same kind of histogram for 2 and 3d images
-    typedef itk::Statistics::ImageToHistogramFilter<ImageProcessing::UInt8ImageType> HistogramGenerator;
+    typedef itk::Statistics::ImageToHistogramFilter<ImageProcessing::DefaultImageType> HistogramGenerator;
 
     //find threshold value w/ histogram
     itk::HistogramThresholdCalculator< HistogramGenerator::HistogramType, uint8_t >::Pointer calculator;
@@ -356,7 +356,7 @@ void Threshold::execute()
     if(m_Slice)
     {
       //define 2d histogram generator
-      typedef itk::Statistics::ImageToHistogramFilter<ImageProcessing::UInt8SliceType> HistogramGenerator2D;
+      typedef itk::Statistics::ImageToHistogramFilter<ImageProcessing::DefaultSliceType> HistogramGenerator2D;
       HistogramGenerator2D::Pointer histogramFilter2D = HistogramGenerator2D::New();
 
       //specify number of bins / bounds
@@ -373,13 +373,13 @@ void Threshold::execute()
       histogramFilter2D->SetHistogramBinMaximum( upperBound );
 
       //wrap output buffer as image
-      ImageProcessing::UInt8ImageType::Pointer outputImage=ITKUtilities::Dream3DtoITK(m, m_ProcessedImageData);
+      ImageProcessing::DefaultImageType::Pointer outputImage=ITKUtilities::Dream3DtoITK(m, m_ProcessedImageData);
 
       //loop over slices
       for(int i=0; i<dims[2]; i++)
       {
         //get slice
-        ImageProcessing::UInt8SliceType::Pointer slice = ITKUtilities::ExtractSlice<ImageProcessing::UInt8PixelType>(inputImage, ImageProcessing::ZSlice, i);
+        ImageProcessing::DefaultSliceType::Pointer slice = ITKUtilities::ExtractSlice<ImageProcessing::DefaultPixelType>(inputImage, ImageProcessing::ZSlice, i);
 
         //find histogram
         histogramFilter2D->SetInput( slice );
@@ -401,7 +401,7 @@ void Threshold::execute()
         thresholdFilter->Update();
 
         //copy back into volume
-        ITKUtilities::SetSlice<ImageProcessing::UInt8PixelType>(outputImage, thresholdFilter->GetOutput(), ImageProcessing::ZSlice, i);
+        ITKUtilities::SetSlice<ImageProcessing::DefaultPixelType>(outputImage, thresholdFilter->GetOutput(), ImageProcessing::ZSlice, i);
       }
     }
     else
@@ -456,22 +456,22 @@ void Threshold::execute()
   /*
   else if(m_Method==13)//robust automatic
   {
-    typedef itk::GradientMagnitudeImageFilter<ImageProcessing::UInt8ImageType, ImageProcessing::UInt8ImageType>  GradientMagnitudeType;
-    typedef itk::GradientMagnitudeImageFilter<ImageProcessing::UInt8SliceType, ImageProcessing::UInt8SliceType>  GradientMagnitudeType2D;
+    typedef itk::GradientMagnitudeImageFilter<ImageProcessing::DefaultImageType, ImageProcessing::DefaultImageType>  GradientMagnitudeType;
+    typedef itk::GradientMagnitudeImageFilter<ImageProcessing::DefaultSliceType, ImageProcessing::DefaultSliceType>  GradientMagnitudeType2D;
 
-    typedef itk::itkRobustAutomaticThresholdCalculator<ImageProcessing::UInt8ImageType,ImageProcessing::UInt8ImageType> SelectionType;
-    typedef itk::itkRobustAutomaticThresholdCalculator<ImageProcessing::UInt8SliceType,ImageProcessing::UInt8SliceType> SelectionType2D;
+    typedef itk::itkRobustAutomaticThresholdCalculator<ImageProcessing::DefaultImageType,ImageProcessing::DefaultImageType> SelectionType;
+    typedef itk::itkRobustAutomaticThresholdCalculator<ImageProcessing::DefaultSliceType,ImageProcessing::DefaultSliceType> SelectionType2D;
 
     if(m_slice)
     {
       //wrap output buffer as image
-      ImageProcessing::UInt8ImageType::Pointer outputImage=ITKUtilities::Dream3DtoITK(m, m_ProcessedImageData);
+      ImageProcessing::DefaultImageType::Pointer outputImage=ITKUtilities::Dream3DtoITK(m, m_ProcessedImageData);
 
       //loop over slices
       for(int i=0; i<dims[2]; i++)
       {
         //get slice
-        ImageProcessing::UInt8SliceType::Pointer slice = ITKUtilities::ExtractSlice<ImageProcessing::UInt8PixelType>(inputImage, ImageProcessing::ZSlice, i);
+        ImageProcessing::DefaultSliceType::Pointer slice = ITKUtilities::ExtractSlice<ImageProcessing::DefaultPixelType>(inputImage, ImageProcessing::ZSlice, i);
 
         //find gradient
         GradientMagnitudeType2D::Pointer gradientFilter = GradientMagnitudeType2D::New();
@@ -496,7 +496,7 @@ void Threshold::execute()
         thresholdFilter->Update();
 
         //copy back into volume
-        ITKUtilities::SetSlice<ImageProcessing::UInt8PixelType>(outputImage, thresholdFilter->GetOutput(), ImageProcessing::ZSlice, i);
+        ITKUtilities::SetSlice<ImageProcessing::DefaultPixelType>(outputImage, thresholdFilter->GetOutput(), ImageProcessing::ZSlice, i);
       }
     }
     else

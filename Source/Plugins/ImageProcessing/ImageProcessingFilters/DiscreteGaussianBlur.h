@@ -13,6 +13,7 @@
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/DataArrays/IDataArray.h"
+#include "Plugins/ImageProcessing/ImageProcessingConstants.h"
 
 /**
  * @class DiscreteGaussianBlur DiscreteGaussianBlur.h ImageProcessing/Code/ImageProcessingFilters/DiscreteGaussianBlur.h
@@ -104,8 +105,8 @@ class DiscreteGaussianBlur : public AbstractFilter
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
   private:
-    uint8_t* m_RawImageData;
-    uint8_t* m_ProcessedImageData;
+    ImageProcessing::DefaultPixelType* m_RawImageData;
+    ImageProcessing::DefaultPixelType* m_ProcessedImageData;
 
     DiscreteGaussianBlur(const DiscreteGaussianBlur&); // Copy Constructor Not Implemented
     void operator=(const DiscreteGaussianBlur&); // Operator '=' Not Implemented

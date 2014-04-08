@@ -13,6 +13,7 @@
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/DataArrays/IDataArray.h"
+#include "Plugins/ImageProcessing/ImageProcessingConstants.h"
 
 /**
  * @class Threshold Threshold.h ImageProcessing/Code/ImageProcessingFilters/Threshold.h
@@ -106,8 +107,8 @@ class Threshold : public AbstractFilter
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
   private:
-    uint8_t* m_RawImageData;
-    uint8_t* m_ProcessedImageData;
+    ImageProcessing::DefaultPixelType* m_RawImageData;
+    ImageProcessing::DefaultPixelType* m_ProcessedImageData;
 
     Threshold(const Threshold&); // Copy Constructor Not Implemented
     void operator=(const Threshold&); // Operator '=' Not Implemented

@@ -13,6 +13,7 @@
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/DataArrays/IDataArray.h"
+#include "Plugins/ImageProcessing/ImageProcessingConstants.h"
 
 /**
  * @class Watershed Watershed.h ImageProcessing/Code/ImageProcessingFilters/Watershed.h
@@ -103,7 +104,7 @@ class Watershed : public AbstractFilter
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
   private:
-    uint8_t* m_RawImageData;
+    ImageProcessing::DefaultPixelType* m_RawImageData;
     int32_t* m_GrainIds;
 
     Watershed(const Watershed&); // Copy Constructor Not Implemented
