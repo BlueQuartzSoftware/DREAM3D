@@ -68,8 +68,6 @@ class AlignSectionsFeature : public AlignSections
     DREAM3D_TYPE_MACRO_SUPER(AlignSectionsFeature, AlignSections)
 
     virtual ~AlignSectionsFeature();
-    DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
 
     DREAM3D_FILTER_PARAMETER(DataArrayPath, GoodVoxelsArrayPath)
     Q_PROPERTY(DataArrayPath GoodVoxelsArrayPath READ getGoodVoxelsArrayPath WRITE setGoodVoxelsArrayPath)
@@ -81,24 +79,6 @@ class AlignSectionsFeature : public AlignSections
     virtual const QString getHumanLabel() { return "Align Sections (Feature)"; }
 
     /**
-    * @brief This method will instantiate all the end user settable options/parameters
-    * for this filter
-    */
-    virtual void setupFilterParameters();
-
-    /**
-    * @brief This method will write the options to a file
-    * @param writer The writer that is used to write the options to a file
-    */
-    virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
-
-    /**
-    * @brief This method will read the options from a file
-    * @param reader The reader that is used to read the options from a file
-    */
-    virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
-
-    /**
      * @brief Reimplemented from @see AbstractFilter class
      */
     virtual void execute();
@@ -108,6 +88,10 @@ class AlignSectionsFeature : public AlignSections
     AlignSectionsFeature();
 
     virtual void find_shifts(QVector<int>& xshifts, QVector<int>& yshifts);
+
+    virtual void setupChildUniqueFilterParameters(FilterParameterVector parameters);
+    virtual void writeChildUniqueFilterParameters(AbstractFilterParametersWriter* writer, int index);
+    virtual void readChildUniqueFilterParameters(AbstractFilterParametersReader* reader, int index);
 
   private:
     DEFINE_PTR_WEAKPTR_DATAARRAY(bool, GoodVoxels)

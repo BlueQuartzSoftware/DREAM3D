@@ -60,8 +60,7 @@
 // -----------------------------------------------------------------------------
 SegmentFeatures::SegmentFeatures() :
   AbstractFilter(),
-  m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
-  m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName)
+  m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName)
 {
 
 }
@@ -99,9 +98,6 @@ int SegmentFeatures::writeFilterParameters(AbstractFilterParametersWriter* write
 void SegmentFeatures::dataCheck()
 {
   setErrorCondition(0);
-
-  //VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName(), false);
-  //if(getErrorCondition() < 0) { return; }
 }
 
 // -----------------------------------------------------------------------------

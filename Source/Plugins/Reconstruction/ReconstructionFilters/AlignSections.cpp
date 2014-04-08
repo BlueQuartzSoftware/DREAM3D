@@ -55,9 +55,6 @@
 
 using namespace std;
 
-
-
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -101,6 +98,8 @@ void AlignSections::setupFilterParameters()
     parameters.push_back(parameter);
   }
 
+  setupChildUniqueFilterParameters(parameters);
+
   setFilterParameters(parameters);
 }
 
@@ -110,8 +109,11 @@ void AlignSections::setupFilterParameters()
 void AlignSections::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-////!!##
+  setAlignmentShiftFileName( reader->readString("AlignmentShiftFileName", getAlignmentShiftFileName()));
+  setWriteAlignmentShifts( reader->readValue("WriteAlignmentShifts", getWriteAlignmentShifts()));
   reader->closeFilterGroup();
+
+  readChildUniqueFilterParameters(reader, index);
 }
 
 // -----------------------------------------------------------------------------
@@ -123,6 +125,9 @@ int AlignSections::writeFilterParameters(AbstractFilterParametersWriter* writer,
   writer->writeValue("AlignmentShiftFileName", getAlignmentShiftFileName());
   writer->writeValue("WriteAlignmentShifts", getWriteAlignmentShifts());
   writer->closeFilterGroup();
+
+  writeChildUniqueFilterParameters(writer, index);
+
   return ++index; // we want to return the next index that was just written to
 }
 
@@ -195,7 +200,6 @@ void AlignSections::execute()
   DimType prog = 1;
   int progressInt = 0;
 
-
   for (DimType i = 1; i < dims[2]; i++)
   {
     if (i > prog)
@@ -258,3 +262,26 @@ void AlignSections::find_shifts(QVector<int>& xshifts, QVector<int>& yshifts)
 
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void AlignSections::setupChildUniqueFilterParameters(FilterParameterVector parameters)
+{
+  return;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void AlignSections::readChildUniqueFilterParameters(AbstractFilterParametersReader* reader, int index)
+{
+  return;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void AlignSections::writeChildUniqueFilterParameters(AbstractFilterParametersWriter* writer, int index)
+{
+  return;
+}

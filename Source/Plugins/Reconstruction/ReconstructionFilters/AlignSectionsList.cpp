@@ -55,15 +55,11 @@
 
 using namespace std;
 
-
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 AlignSectionsList::AlignSectionsList() :
   AlignSections(),
-  m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
-  m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
   m_InputFile("")
 {
   setupFilterParameters();
@@ -79,18 +75,16 @@ AlignSectionsList::~AlignSectionsList()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AlignSectionsList::setupFilterParameters()
+void AlignSectionsList::setupChildUniqueFilterParameters(FilterParameterVector parameters)
 {
   // Now append our options
-  FilterParameterVector parameters;
   parameters.push_back(FilterParameter::New("Input File", "InputFile", FilterParameterWidgetType::InputFileWidget,"QString", false));
-  setFilterParameters(parameters);
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AlignSectionsList::readFilterParameters(AbstractFilterParametersReader* reader, int index)
+void AlignSectionsList::readChildUniqueFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
   setInputFile( reader->readString( "InputFile", getInputFile() ) );
@@ -100,12 +94,11 @@ void AlignSectionsList::readFilterParameters(AbstractFilterParametersReader* rea
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int AlignSectionsList::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
+void AlignSectionsList::writeChildUniqueFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
   writer->writeValue("InputFile", getInputFile() );
   writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------
@@ -121,8 +114,6 @@ void AlignSectionsList::dataCheck()
     setErrorCondition(-1);
     notifyErrorMessage(getHumanLabel(), ss, -1);
   }
-
-
 }
 
 // -----------------------------------------------------------------------------
@@ -195,9 +186,6 @@ void AlignSectionsList::find_shifts(QVector<int>& xshifts, QVector<int>& yshifts
 // -----------------------------------------------------------------------------
 AbstractFilter::Pointer AlignSectionsList::newFilterInstance(bool copyFilterParameters)
 {
-  /*
-  * InputFile
-  */
   AlignSectionsList::Pointer filter = AlignSectionsList::New();
   if(true == copyFilterParameters)
   {

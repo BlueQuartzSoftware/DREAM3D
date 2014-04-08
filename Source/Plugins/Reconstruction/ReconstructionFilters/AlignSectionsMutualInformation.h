@@ -67,9 +67,6 @@ class AlignSectionsMutualInformation : public AlignSections
     DREAM3D_TYPE_MACRO_SUPER(AlignSectionsMutualInformation, AlignSections)
 
     virtual ~AlignSectionsMutualInformation();
-    DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(CellEnsembleAttributeMatrixName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
 
     DREAM3D_FILTER_PARAMETER(float, MisorientationTolerance)
     Q_PROPERTY(float MisorientationTolerance READ getMisorientationTolerance WRITE setMisorientationTolerance)
@@ -93,19 +90,6 @@ class AlignSectionsMutualInformation : public AlignSections
     virtual const QString getSubGroupName() {return DREAM3D::FilterSubGroups::AlignmentFilters;}
     virtual const QString getHumanLabel() { return "Align Sections (Mutual Information)"; }
 
-    virtual void setupFilterParameters();
-    /**
-    * @brief This method will write the options to a file
-    * @param writer The writer that is used to write the options to a file
-    */
-    virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
-
-    /**
-    * @brief This method will read the options from a file
-    * @param reader The reader that is used to read the options from a file
-    */
-    virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
-
     /**
      * @brief Reimplemented from @see AbstractFilter class
      */
@@ -123,6 +107,10 @@ class AlignSectionsMutualInformation : public AlignSections
 
     virtual void find_shifts(QVector<int>& xshifts, QVector<int>& yshifts);
     void form_features_sections();
+
+    virtual void setupChildUniqueFilterParameters(FilterParameterVector parameters);
+    virtual void writeChildUniqueFilterParameters(AbstractFilterParametersWriter* writer, int index);
+    virtual void readChildUniqueFilterParameters(AbstractFilterParametersReader* reader, int index);
 
   private:
     DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeatureIds)

@@ -68,8 +68,6 @@ class AlignSectionsList : public AlignSections
     DREAM3D_TYPE_MACRO_SUPER(AlignSectionsList, AlignSections)
 
     virtual ~AlignSectionsList();
-    DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
 
     DREAM3D_FILTER_PARAMETER(QString, InputFile)
     Q_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile)
@@ -79,15 +77,6 @@ class AlignSectionsList : public AlignSections
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::ReconstructionFilters; }
     virtual const QString getSubGroupName() {return DREAM3D::FilterSubGroups::AlignmentFilters;}
     virtual const QString getHumanLabel() { return "Align Sections (List)"; }
-
-    virtual void setupFilterParameters();
-    virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
-
-    /**
-    * @brief This method will read the options from a file
-    * @param reader The reader that is used to read the options from a file
-    */
-    virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
 
     /**
      * @brief Reimplemented from @see AbstractFilter class
@@ -106,6 +95,10 @@ class AlignSectionsList : public AlignSections
     AlignSectionsList();
 
     virtual void find_shifts(QVector<int>& xshifts, QVector<int>& yshifts);
+
+    virtual void setupChildUniqueFilterParameters(FilterParameterVector parameters);
+    virtual void writeChildUniqueFilterParameters(AbstractFilterParametersWriter* writer, int index);
+    virtual void readChildUniqueFilterParameters(AbstractFilterParametersReader* reader, int index);
 
   private:
 
