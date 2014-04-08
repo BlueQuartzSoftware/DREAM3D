@@ -51,12 +51,12 @@
 MinNeighbors::MinNeighbors() :
   AbstractFilter(),
   m_MinNumNeighbors(1),
+  m_FeatureIdsArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::FeatureIds),
+  m_NumNeighborsArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, DREAM3D::FeatureData::NumNeighbors),
   m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
   m_FeatureIds(NULL),
   m_NumNeighborsArrayName(DREAM3D::FeatureData::NumNeighbors),
-  m_NumNeighbors(NULL),
-  m_FeatureIdsArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::FeatureIds),
-  m_NumNeighborsArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, DREAM3D::FeatureData::NumNeighbors)
+  m_NumNeighbors(NULL)
 {
   setupFilterParameters();
 }

@@ -51,16 +51,16 @@
 IdentifyDislocationSegments::IdentifyDislocationSegments() :
   AbstractFilter(),
   m_EdgeFeatureAttributeMatrixName(DREAM3D::Defaults::EdgeFeatureAttributeMatrixName),
+  m_BurgersVectorsArrayPath(DREAM3D::Defaults::EdgeDataContainerName, DREAM3D::Defaults::EdgeAttributeMatrixName, DREAM3D::EdgeData::BurgersVectors),
+  m_SlipPlaneNormalsArrayPath(DREAM3D::Defaults::EdgeDataContainerName, DREAM3D::Defaults::EdgeAttributeMatrixName, DREAM3D::EdgeData::SlipPlaneNormals),
+  m_DislocationIdsArrayName(DREAM3D::EdgeData::DislocationIds),
+  m_ActiveArrayName(DREAM3D::FeatureData::Active),
   m_BurgersVectorsArrayName(DREAM3D::EdgeData::BurgersVectors),
   m_BurgersVectors(NULL),
   m_SlipPlaneNormalsArrayName(DREAM3D::EdgeData::SlipPlaneNormals),
   m_SlipPlaneNormals(NULL),
-  m_DislocationIdsArrayName(DREAM3D::EdgeData::DislocationIds),
   m_DislocationIds(NULL),
-  m_ActiveArrayName(DREAM3D::FeatureData::Active),
-  m_Active(NULL),
-  m_BurgersVectorsArrayPath(DREAM3D::Defaults::EdgeDataContainerName, DREAM3D::Defaults::EdgeAttributeMatrixName, DREAM3D::EdgeData::BurgersVectors),
-  m_SlipPlaneNormalsArrayPath(DREAM3D::Defaults::EdgeDataContainerName, DREAM3D::Defaults::EdgeAttributeMatrixName, DREAM3D::EdgeData::SlipPlaneNormals)
+  m_Active(NULL)
 {
   setupFilterParameters();
 }

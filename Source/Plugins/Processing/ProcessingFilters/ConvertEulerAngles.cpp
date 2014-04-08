@@ -83,9 +83,9 @@ class ConvertEulerAnglesImpl
 ConvertEulerAngles::ConvertEulerAngles() :
   AbstractFilter(),
   m_ConversionType(DREAM3D::EulerAngleConversionType::DegreesToRadians),
+  m_CellEulerAnglesArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::EulerAngles),
   m_CellEulerAnglesArrayName(DREAM3D::CellData::EulerAngles),
-  m_CellEulerAngles(NULL),
-  m_CellEulerAnglesArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::EulerAngles)
+  m_CellEulerAngles(NULL)
 {
   setupFilterParameters();
 }

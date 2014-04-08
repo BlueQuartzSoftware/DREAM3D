@@ -210,6 +210,17 @@ float positionInHeader(const QString hFile, const QString var, bool isPointer)
     QString line = sourceLines.next();
     if(line.contains(searchString) )
     {
+      int offset = line.indexOf(searchString);
+      int size = searchString.size();
+      // Make sure we find the whole word?
+      if(line.at(offset + size).isLetterOrNumber())
+      {
+        continue;
+      }
+      if(line.contains("Q_PROPERTY") )
+      {
+        continue;
+      }
       line = sourceLines.next();
       found = true;
       return (float)lineNum;
@@ -308,10 +319,10 @@ bool fixFile( AbstractFilter::Pointer filter, const QString& hFile, const QStrin
   {
     // Read the Source File
     QFileInfo fi(cppFile);
-//    if (fi.baseName().compare("FeatureDataCSVWriter") != 0)
-//    {
-//      return false;
-//    }
+    if (fi.baseName().compare("SurfaceMeshToNonconformalVtk") != 0)
+    {
+      return false;
+    }
 
     QFile source(cppFile);
     source.open(QFile::ReadOnly);

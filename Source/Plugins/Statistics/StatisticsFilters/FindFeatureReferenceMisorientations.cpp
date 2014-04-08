@@ -69,9 +69,9 @@ FindFeatureReferenceMisorientations::FindFeatureReferenceMisorientations() :
   m_GBEuclideanDistancesArrayName(DREAM3D::CellData::GBEuclideanDistances),
   m_GBEuclideanDistances(NULL),
   m_FeatureReferenceMisorientations(NULL),
-  m_FeatureAvgMisorientations(NULL),
   m_QuatsArrayName(DREAM3D::CellData::Quats),
   m_Quats(NULL),
+  m_FeatureAvgMisorientations(NULL),
   m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
   m_CrystalStructures(NULL)
 {

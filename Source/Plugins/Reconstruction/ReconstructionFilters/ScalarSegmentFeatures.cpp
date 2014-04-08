@@ -133,11 +133,11 @@ ScalarSegmentFeatures::ScalarSegmentFeatures() :
   m_RandomizeFeatureIds(true),
   m_GoodVoxelsArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::GoodVoxels),
   m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
-  m_FeatureIds(NULL),
   m_ActiveArrayName(DREAM3D::FeatureData::Active),
-  m_Active(NULL),
+  m_FeatureIds(NULL),
   m_GoodVoxelsArrayName(DREAM3D::CellData::GoodVoxels),
   m_GoodVoxels(NULL),
+  m_Active(NULL),
   m_Compare(NULL)
 {
   setupFilterParameters();
@@ -389,7 +389,7 @@ void ScalarSegmentFeatures::randomizeFeatureIds(int64_t totalPoints, size_t tota
   const size_t rangeMax = totalFeatures - 1;
   initializeVoxelSeedGenerator(rangeMin, rangeMax);
 
-// Get a reference variable to the Generator object
+  // Get a reference variable to the Generator object
   Generator& numberGenerator = *m_NumberGenerator;
 
   DataArray<int32_t>::Pointer rndNumbers = DataArray<int32_t>::CreateArray(totalFeatures, "New GrainIds");
@@ -465,7 +465,7 @@ bool ScalarSegmentFeatures::determineGrouping(int64_t referencepoint, int64_t ne
   if(m_FeatureIds[neighborpoint] == 0 && (missingGoodVoxels == true || m_GoodVoxels[neighborpoint] == true))
   {
     return (*m_Compare)( (size_t)(referencepoint), (size_t)(neighborpoint), gnum );
-  //     | Functor  ||calling the operator() method of the CompareFunctor Class |
+    //     | Functor  ||calling the operator() method of the CompareFunctor Class |
   }
   else
   {
@@ -479,12 +479,12 @@ bool ScalarSegmentFeatures::determineGrouping(int64_t referencepoint, int64_t ne
 void ScalarSegmentFeatures::initializeVoxelSeedGenerator(const size_t rangeMin, const size_t rangeMax)
 {
 
-// The way we are using the boost random number generators is that we are asking for a NumberDistribution (see the typedef)
-// to guarantee the numbers are betwee a specific range and will only be generated once. We also keep a tally of the
-// total number of numbers generated as a way to make sure the while loops eventually terminate. This setup should
-// make sure that every voxel can be a seed point.
-//  const size_t rangeMin = 0;
-//  const size_t rangeMax = totalPoints - 1;
+  // The way we are using the boost random number generators is that we are asking for a NumberDistribution (see the typedef)
+  // to guarantee the numbers are betwee a specific range and will only be generated once. We also keep a tally of the
+  // total number of numbers generated as a way to make sure the while loops eventually terminate. This setup should
+  // make sure that every voxel can be a seed point.
+  //  const size_t rangeMin = 0;
+  //  const size_t rangeMax = totalPoints - 1;
   m_Distribution = boost::shared_ptr<NumberDistribution>(new NumberDistribution(rangeMin, rangeMax));
   m_RandomNumberGenerator = boost::shared_ptr<RandomNumberGenerator>(new RandomNumberGenerator);
   m_NumberGenerator = boost::shared_ptr<Generator>(new Generator(*m_RandomNumberGenerator, *m_Distribution));

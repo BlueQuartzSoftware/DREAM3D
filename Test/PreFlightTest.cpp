@@ -225,6 +225,9 @@ void verifyFilterParameters()
         qDebug() << "Filter: " << filter->getNameOfClass() << "  Missing Property: " << option->getPropertyName();
       }
     }
+
+    // If something is wrong with the newFilterInstance then the next line will assert
+    AbstractFilter::Pointer nFilter = filter->newFilterInstance(true);
   }
 }
 

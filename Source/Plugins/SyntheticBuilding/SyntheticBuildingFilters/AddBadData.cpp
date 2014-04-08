@@ -49,13 +49,13 @@
 // -----------------------------------------------------------------------------
 AddBadData::AddBadData() :
   AbstractFilter(),
+  m_GBEuclideanDistancesArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::GBEuclideanDistances),
   m_PoissonNoise(false),
   m_PoissonVolFraction(0.0f),
   m_BoundaryNoise(false),
   m_BoundaryVolFraction(0.0f),
   m_GBEuclideanDistancesArrayName(DREAM3D::CellData::GBEuclideanDistances),
-  m_GBEuclideanDistances(NULL),
-  m_GBEuclideanDistancesArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::GBEuclideanDistances)
+  m_GBEuclideanDistances(NULL)
 {
   setupFilterParameters();
 }

@@ -162,34 +162,31 @@ QString createReplacementWriter(QStringList &outLines, QString name)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QString createNewFilterInstance(QStringListIterator &sourceLines, QStringList &outLines, QString name)
+void createNewFilterInstance(QStringListIterator &sourceLines, QStringList &outLines)
 {
-  QString line = sourceLines.next();
-  outLines.push_back(line);
 
-  line = sourceLines.next();
-  // Eat up the comment block
-  if(line.contains("/*") )
-  {
-    while(sourceLines.hasNext() )
-    {
-      QString ll = sourceLines.next().trimmed();
-      if(ll.startsWith("*/") ) {
-        line = sourceLines.next(); break;
-      }
-    }
-  }
+    outLines.push_back("    //Loop over each Filter Parameter that is registered to the filter either through this class or a parent class");
+    outLines.push_back("    // and copy the value from the current instance of the object into the \"new\" instance that was just created");
+    outLines.push_back("    QVector<FilterParameter::Pointer> options = getFilterParameters(); // Get the current set of filter parameters");
+    outLines.push_back("    for (QVector<FilterParameter::Pointer>::iterator iter = options.begin(); iter != options.end(); ++iter )");
+    outLines.push_back("    {");
+    outLines.push_back("      FilterParameter* parameter = (*iter).get();");
+    outLines.push_back("      if (parameter->getWidgetType().compare(FilterParameterWidgetType::SeparatorWidget) == 0 )");
+    outLines.push_back("      {");
+    outLines.push_back("        continue; // Skip this type of filter parameter as it has nothing to do with anything in the filter.");
+    outLines.push_back("      }");
 
-  outLines.push_back(line);
-  line = sourceLines.next();
-  outLines.push_back(line);
-  line = sourceLines.next();
-  outLines.push_back(line);
-  QString str;
-  QTextStream out(&str);
-  out << "    filter->set" << name << "ArrayPath(get" << name << "ArrayPath());";
-  outLines.push_back(str);
-  return "";
+    outLines.push_back("      // Get the property from the current instance of the filter");
+    outLines.push_back("      QVariant var = property(parameter->getPropertyName().toLatin1().constData());");
+    outLines.push_back("      bool ok = filter->setProperty(parameter->getPropertyName().toLatin1().constData(), var);");
+    outLines.push_back("      if(false == ok)");
+    outLines.push_back("      {");
+    outLines.push_back("        QString ss = QString(\"Error occurred transferring the Filter Parameter '%1' in Filter '%2' to the filter instance. The pipeline may run but the underlying filter will NOT be using the values from the GUI.\"");
+    outLines.push_back("                             \" Please report this issue to the developers of this filter.\").arg(parameter->getPropertyName()).arg(filter->getHumanLabel());");
+    outLines.push_back("        Q_ASSERT_X(ok, __FILE__, ss.toLatin1().constData());");
+    outLines.push_back("      }");
+    outLines.push_back("    }");
+
 }
 
 // -----------------------------------------------------------------------------
@@ -269,261 +266,49 @@ bool fixFile( AbstractFilter::Pointer filter, const QString& hFile, const QStrin
 
   QStringList names;
   bool didReplace = false;
-  QString searchString = "->getPrereqArray<";
+  QString searchString = "newFilterInstance(bool copyFilterParameters)";
   QStringList outLines;
   QStringList list = contents.split(QRegExp("\\n"));
   QStringListIterator sourceLines(list);
+
   while (sourceLines.hasNext())
   {
     QString line = sourceLines.next();
     if(line.contains(searchString) ) // we found the filter parameter section
     {
-      names.push_back(createReplacementDataCheck(outLines, line, searchString) );
-      didReplace = true;
-    }
-    else
-    {
       outLines.push_back(line);
-    }
-  }
-
-
-  // Remove Duplicates
-  names.removeDuplicates();
-
-  bool foundSetupFilterParameters = false;
-
-  searchString = "setFilterParameters(parameters);";
-  list = outLines;
-  sourceLines = QStringListIterator(list);
-  outLines.clear();
-  while (sourceLines.hasNext())
-  {
-    QString line = sourceLines.next();
-    if(line.contains(searchString) )
-    {
-      outLines.push_back(line);
-      didReplace = true;
-      foundSetupFilterParameters = true;
-    }
-    else
-    {
-      outLines.push_back(line);
-    }
-  }
-
-  if(foundSetupFilterParameters == false)
-  {
-    searchString = filter->getNameOfClass() + "::~" + filter->getNameOfClass();
-    list = outLines;
-    sourceLines = QStringListIterator(list);
-    outLines.clear();
-    int index = 0;
-    while (sourceLines.hasNext())
-    {
-      QString line = sourceLines.next();
-      if(line.contains(searchString) )
+      while(sourceLines.hasNext() )
       {
-        outLines.push_back(line);
-        while(sourceLines.hasNext() )
+        line = sourceLines.next();
+
+        if(line.contains("filter->set") )
         {
-          line = sourceLines.next();
-          if(line.contains("{") ) { index++; }
-          if(line.contains("}") ) { index--; }
-          outLines.push_back(line);
-          if (index == 0) { break; }
+
         }
-
-        outLines.push_back(QString("// -----------------------------------------------------------------------------"));
-        outLines.push_back(QString("//"));
-        outLines.push_back(QString("// -----------------------------------------------------------------------------"));
-        outLines.push_back(QString("void %1::setupFilterParameters()").arg(filter->getNameOfClass()));
-        outLines.push_back(QString("{"));
-        outLines.push_back(QString("  FilterParameterVector parameters;"));
-        outLines.push_back(QString("  setFilterParameters(parameters);"));
-        outLines.push_back(QString("}"));
-
-        didReplace = true;
-      }
-      else
-      {
-        outLines.push_back(line);
-      }
-    }
-  }
-
-
-  int index = 0;
-  foreach(QString name, names)
-  {
-    searchString = "reader->openFilterGroup(this, index);";
-    list = outLines;
-    sourceLines = QStringListIterator(list);
-    outLines.clear();
-    while (sourceLines.hasNext())
-    {
-      QString line = sourceLines.next();
-      if(line.contains(searchString) ) // we found the filter parameter section
-      {
-        outLines.push_back(line);
-        createReplacementReader(outLines, name);
-        didReplace = true;
-      }
-      else
-      {
-        outLines.push_back(line);
-      }
-    }
-
-    searchString = "writer->openFilterGroup(this, index);";
-    list = outLines;
-    sourceLines = QStringListIterator(list);
-    outLines.clear();
-    while (sourceLines.hasNext())
-    {
-      QString line = sourceLines.next();
-      if(line.contains(searchString) ) // we found the filter parameter section
-      {
-        outLines.push_back(line);
-        createReplacementWriter(outLines, name);
-        didReplace = true;
-      }
-      else
-      {
-        outLines.push_back(line);
-      }
-    }
-
-
-    searchString = "newFilterInstance(bool copyFilterParameters)";
-    list = outLines;
-    sourceLines = QStringListIterator(list);
-    outLines.clear();
-    while (sourceLines.hasNext())
-    {
-      QString line = sourceLines.next();
-      if(line.contains(searchString) ) // we found the filter parameter section
-      {
-        outLines.push_back(line);
-        createNewFilterInstance(sourceLines, outLines, name);
-        didReplace = true;
-      }
-      else
-      {
-        outLines.push_back(line);
-      }
-    }
-
-    searchString = "setFilterParameters(parameters);";
-    list = outLines;
-    sourceLines = QStringListIterator(list);
-    outLines.clear();
-    while (sourceLines.hasNext())
-    {
-      QString line = sourceLines.next();
-      if(line.contains(searchString) ) // we found the filter parameter section
-      {
-        createSetupFilterParameters(sourceLines, outLines, name, index);
-        outLines.push_back(line);
-        didReplace = true;
-      }
-      else
-      {
-        outLines.push_back(line);
-      }
-    }
-
-    searchString = filter->getNameOfClass() + "::" + filter->getNameOfClass();
-    list = outLines;
-    sourceLines = QStringListIterator(list);
-    outLines.clear();
-    while (sourceLines.hasNext())
-    {
-      QString line = sourceLines.next();
-      if(line.contains(searchString) ) // we found the filter parameter section
-      {
-        outLines.push_back(line);
-        createConstructorEntries(sourceLines, outLines, name);
-        didReplace = true;
-      }
-      else
-      {
-        outLines.push_back(line);
-      }
-    }
-
-    writeOutput(didReplace, outLines, cppFile);
-    index++;
-  }
-
-
-  index = 0;
-  foreach(QString name, names)
-  {
-    /**************** NOW UPDATE THE HEADER FOR THE FILTER ***********************/
-    {
-      // Read the Source File
-      QFileInfo fi(hFile);
-      //    if (fi.baseName().compare("FindSizes") != 0)
-      //    {
-      //      return false;
-      //    }
-
-      QFile source(hFile);
-      source.open(QFile::ReadOnly);
-      contents = source.readAll();
-      source.close();
-    }
-    searchString = "virtual const QString getCompiledLibraryName()";
-    list = contents.split(QRegExp("\\n"));;
-    sourceLines = QStringListIterator(list);
-    outLines.clear();
-    while (sourceLines.hasNext())
-    {
-      QString line = sourceLines.next();
-      if(line.contains(searchString) ) // we found the filter parameter section
-      {
-        updateHeader(outLines, name);
-        didReplace = true;
-        outLines.push_back(line);
-      }
-      else
-      {
-        outLines.push_back(line);
-      }
-    }
-
-    if (foundSetupFilterParameters == false && index == 0)
-    {
-      searchString = "virtual const QString getHumanLabel()";
-      list = outLines;
-      sourceLines = QStringListIterator(list);
-      outLines.clear();
-      while (sourceLines.hasNext())
-      {
-        QString line = sourceLines.next();
-        if(line.contains(searchString) )
+        else if(line.contains("}") )
         {
+          createNewFilterInstance(sourceLines, outLines);
           outLines.push_back(line);
-          outLines.push_back("");
-          outLines.push_back(QString("    /**"));
-          outLines.push_back(QString("    * @brief This method will instantiate all the end user settable options/parameters"));
-          outLines.push_back(QString("    * for this filter"));
-          outLines.push_back(QString("    */"));
-          outLines.push_back(QString("    virtual void setupFilterParameters();"));
-
-          didReplace = true;
+          break;
         }
         else
         {
           outLines.push_back(line);
         }
-      }
-    }
 
-    writeOutput(didReplace, outLines, hFile);
-    index++;
+      }
+
+
+      didReplace = true;
+    }
+    else
+    {
+      outLines.push_back(line);
+    }
   }
+
+  writeOutput(didReplace, outLines, cppFile);
+
   return didReplace;
 }
 
