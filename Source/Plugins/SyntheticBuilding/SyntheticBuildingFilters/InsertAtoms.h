@@ -74,8 +74,8 @@ class InsertAtoms : public AbstractFilter
 
     DREAM3D_FILTER_PARAMETER(FloatVec3_t, LatticeConstants)
     Q_PROPERTY(FloatVec3_t LatticeConstants READ getLatticeConstants WRITE setLatticeConstants)
-    DREAM3D_FILTER_PARAMETER(uint32_t, Basis)
-    Q_PROPERTY(uint32_t Basis READ getBasis WRITE setBasis)
+    DREAM3D_FILTER_PARAMETER(int, Basis)
+    Q_PROPERTY(int Basis READ getBasis WRITE setBasis)
 
     DREAM3D_FILTER_PARAMETER(DataArrayPath, SurfaceMeshFaceLabelsArrayPath)
     Q_PROPERTY(DataArrayPath SurfaceMeshFaceLabelsArrayPath READ getSurfaceMeshFaceLabelsArrayPath WRITE setSurfaceMeshFaceLabelsArrayPath)

@@ -89,7 +89,7 @@ class AlignSectionsFeature : public AlignSections
 
     virtual void find_shifts(QVector<int>& xshifts, QVector<int>& yshifts);
 
-    virtual void setupChildUniqueFilterParameters(FilterParameterVector parameters);
+    virtual void setupChildUniqueFilterParameters();
     virtual void writeChildUniqueFilterParameters(AbstractFilterParametersWriter* writer, int index);
     virtual void readChildUniqueFilterParameters(AbstractFilterParametersReader* reader, int index);
 

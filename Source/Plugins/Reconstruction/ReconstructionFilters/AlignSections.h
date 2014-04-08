@@ -80,7 +80,7 @@ class AlignSections : public AbstractFilter
     virtual const QString getHumanLabel() { return "Align Sections"; }
 
     virtual void setupFilterParameters();
-    virtual void setupChildUniqueFilterParameters(FilterParameterVector parameters);
+
     /**
     * @brief This method will write the options to a file
     * @param writer The writer that is used to write the options to a file

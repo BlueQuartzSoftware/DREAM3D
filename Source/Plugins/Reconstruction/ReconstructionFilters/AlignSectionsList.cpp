@@ -62,7 +62,8 @@ AlignSectionsList::AlignSectionsList() :
   AlignSections(),
   m_InputFile("")
 {
-  setupFilterParameters();
+  //only setting up the child parameters because the parent constructor has already been called
+  setupChildUniqueFilterParameters();
 }
 
 // -----------------------------------------------------------------------------
@@ -75,10 +76,12 @@ AlignSectionsList::~AlignSectionsList()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AlignSectionsList::setupChildUniqueFilterParameters(FilterParameterVector parameters)
+void AlignSectionsList::setupChildUniqueFilterParameters()
 {
-  // Now append our options
+  //getting the current parameters that were set by the parent and adding to it before resetting it
+  FilterParameterVector parameters = getFilterParameters();
   parameters.push_back(FilterParameter::New("Input File", "InputFile", FilterParameterWidgetType::InputFileWidget,"QString", false));
+  setFilterParameters(parameters);
 }
 
 // -----------------------------------------------------------------------------

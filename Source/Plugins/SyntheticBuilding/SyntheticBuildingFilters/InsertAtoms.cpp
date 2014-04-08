@@ -244,13 +244,13 @@ InsertAtoms::~InsertAtoms()
 void InsertAtoms::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(FilterParameter::New("LatticeConstants", "LatticeConstants", FilterParameterWidgetType::FloatVec3Widget,"FloatVec3_t", false, "Angstoms"));
+  parameters.push_back(FilterParameter::New("LatticeConstants", "LatticeConstants", FilterParameterWidgetType::FloatVec3Widget,"FloatVec3_t", false, "Angstroms"));
   {
     ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New();
     parameter->setHumanLabel("Crystal Basis");
     parameter->setPropertyName("Basis");
     parameter->setWidgetType(FilterParameterWidgetType::ChoiceWidget);
-    parameter->setValueType("quint32");
+    parameter->setValueType("int");
     QVector<QString> choices;
     choices.push_back("Simple Cubic");
     choices.push_back("Body Centered Cubic");

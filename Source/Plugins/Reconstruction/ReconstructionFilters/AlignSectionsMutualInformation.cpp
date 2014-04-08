@@ -84,7 +84,8 @@ AlignSectionsMutualInformation::AlignSectionsMutualInformation() :
 
   featurecounts = NULL;
   INIT_DataArray(m_FeatureCounts, int);
-  setupFilterParameters();
+  //only setting up the child parameters because the parent constructor has already been called
+  setupChildUniqueFilterParameters();
 }
 
 // -----------------------------------------------------------------------------
@@ -97,15 +98,17 @@ AlignSectionsMutualInformation::~AlignSectionsMutualInformation()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AlignSectionsMutualInformation::setupChildUniqueFilterParameters(FilterParameterVector parameters)
+void AlignSectionsMutualInformation::setupChildUniqueFilterParameters()
 {
+  //getting the current parameters that were set by the parent and adding to it before resetting it
+  FilterParameterVector parameters = getFilterParameters();
   parameters.push_back(FilterParameter::New("Misorientation Tolerance", "MisorientationTolerance", FilterParameterWidgetType::DoubleWidget,"float", false));
   parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "QString", true));
   parameters.push_back(FilterParameter::New("Quats", "QuatsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
   parameters.push_back(FilterParameter::New("CellPhases", "CellPhasesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
   parameters.push_back(FilterParameter::New("GoodVoxels", "GoodVoxelsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
   parameters.push_back(FilterParameter::New("CrystalStructures", "CrystalStructuresArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
-
+  setFilterParameters(parameters);
 }
 
 // -----------------------------------------------------------------------------

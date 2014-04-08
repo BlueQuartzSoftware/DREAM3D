@@ -65,7 +65,7 @@ AlignSections::AlignSections() :
   m_WriteAlignmentShifts(false),
   m_AlignmentShiftFileName("")
 {
-
+  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------
@@ -97,8 +97,6 @@ void AlignSections::setupFilterParameters()
     parameter->setValueType("QString");
     parameters.push_back(parameter);
   }
-
-  setupChildUniqueFilterParameters(parameters);
 
   setFilterParameters(parameters);
 }
@@ -260,14 +258,6 @@ void AlignSections::execute()
 void AlignSections::find_shifts(QVector<int>& xshifts, QVector<int>& yshifts)
 {
 
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void AlignSections::setupChildUniqueFilterParameters(FilterParameterVector parameters)
-{
-  return;
 }
 
 // -----------------------------------------------------------------------------
