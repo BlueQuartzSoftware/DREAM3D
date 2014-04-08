@@ -132,14 +132,14 @@ ScalarSegmentFeatures::ScalarSegmentFeatures() :
   m_ScalarArrayPath("", "", ""),
   m_ScalarTolerance(5.0f),
   m_RandomizeFeatureIds(true),
+/*[]*/m_GoodVoxelsArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::GoodVoxels),
   m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
+  m_ActiveArrayName(DREAM3D::FeatureData::Active),
   m_FeatureIds(NULL),
   m_GoodVoxelsArrayName(DREAM3D::CellData::GoodVoxels),
   m_GoodVoxels(NULL),
-  m_ActiveArrayName(DREAM3D::FeatureData::Active),
   m_Active(NULL),
-  m_Compare(NULL),
-/*[]*/m_GoodVoxelsArrayPath(DREAM3D::Defaults::SomePath)
+  m_Compare(NULL)
 {
   setupFilterParameters();
 }

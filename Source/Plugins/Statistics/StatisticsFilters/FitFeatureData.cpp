@@ -52,14 +52,14 @@ FitFeatureData::FitFeatureData() :
   m_SelectedFeatureArrayPath("", "", ""),
   m_DistributionType(DREAM3D::DistributionType::UnknownDistributionType),
   m_RemoveBiasedFeatures(false),
-  m_FeaturePhasesArrayName(DREAM3D::FeatureData::Phases),
-  m_FeaturePhases(NULL),
+/*[]*/m_FeaturePhasesArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, DREAM3D::FeatureData::Phases),
+/*[]*/m_BiasedFeaturesArrayPath(DREAM3D::Defaults::SomePath),
   m_NewEnsembleArrayArrayName(""),
-  m_NewEnsembleArray(NULL),
   m_BiasedFeaturesArrayName(DREAM3D::FeatureData::BiasedFeatures),
   m_BiasedFeatures(NULL),
-/*[]*/m_FeaturePhasesArrayPath(DREAM3D::Defaults::SomePath),
-/*[]*/m_BiasedFeaturesArrayPath(DREAM3D::Defaults::SomePath)
+  m_NewEnsembleArray(NULL),
+  m_FeaturePhasesArrayName(DREAM3D::FeatureData::Phases),
+  m_FeaturePhases(NULL)
 {
   setupFilterParameters();
 }

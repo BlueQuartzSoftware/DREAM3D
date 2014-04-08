@@ -54,9 +54,9 @@ VtkRectilinearGridWriter::VtkRectilinearGridWriter() :
   m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
   m_OutputFile(""),
   m_WriteBinaryFile(false),
+/*[]*/m_FeatureIdsArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::FeatureIds),
   m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
-  m_FeatureIds(NULL),
-/*[]*/m_FeatureIdsArrayPath(DREAM3D::Defaults::SomePath)
+  m_FeatureIds(NULL)
 {
   setupFilterParameters();
 }

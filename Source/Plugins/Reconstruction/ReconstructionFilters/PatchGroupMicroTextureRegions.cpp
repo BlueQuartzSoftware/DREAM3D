@@ -69,28 +69,28 @@ PatchGroupMicroTextureRegions::PatchGroupMicroTextureRegions() :
   m_NewCellFeatureAttributeMatrixName(DREAM3D::Defaults::NewCellFeatureAttributeMatrixName),
   m_CellEnsembleAttributeMatrixName(DREAM3D::Defaults::CellEnsembleAttributeMatrixName),
   m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
+  m_NeighborhoodListArrayName(DREAM3D::FeatureData::NeighborhoodList),
   m_CAxisTolerance(1.0f),
   m_UseRunningAverage(false),
   m_MinMTRSize(1.0f),
   m_PatchVolumeFractionForMTRGrowth(1.0f),
-  m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
-  m_CellParentIdsArrayName(DREAM3D::CellData::ParentIds),
-  m_FeatureParentIdsArrayName(DREAM3D::FeatureData::ParentIds),
-  m_AvgQuatsArrayName(DREAM3D::FeatureData::AvgQuats),
-  m_ActiveArrayName(DREAM3D::FeatureData::Active),
-  m_FeaturePhasesArrayName(DREAM3D::FeatureData::Phases),
-  m_VolumesArrayName(DREAM3D::FeatureData::Volumes),
-  m_NumCellsArrayName(DREAM3D::FeatureData::NumCells),
-  m_CentroidsArrayName(DREAM3D::FeatureData::Centroids),
-  m_NeighborhoodListArrayName(DREAM3D::FeatureData::NeighborhoodList),
-  m_NeighborhoodsArrayName(DREAM3D::FeatureData::Neighborhoods),
-  m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
-/*[]*/m_FeatureIdsArrayPath(DREAM3D::Defaults::SomePath),
-/*[]*/m_FeaturePhasesArrayPath(DREAM3D::Defaults::SomePath),
+/*[]*/m_FeatureIdsArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::FeatureIds),
+/*[]*/m_FeaturePhasesArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, DREAM3D::FeatureData::Phases),
 /*[]*/m_VolumesArrayPath(DREAM3D::Defaults::SomePath),
 /*[]*/m_CentroidsArrayPath(DREAM3D::Defaults::SomePath),
-/*[]*/m_AvgQuatsArrayPath(DREAM3D::Defaults::SomePath),
-/*[]*/m_CrystalStructuresArrayPath(DREAM3D::Defaults::SomePath)
+/*[]*/m_AvgQuatsArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, DREAM3D::FeatureData::AvgQuats),
+/*[]*/m_CrystalStructuresArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellEnsembleAttributeMatrixName, DREAM3D::EnsembleData::CrystalStructures),
+  m_CellParentIdsArrayName(DREAM3D::CellData::ParentIds),
+  m_FeatureParentIdsArrayName(DREAM3D::FeatureData::ParentIds),
+  m_NumCellsArrayName(DREAM3D::FeatureData::NumCells),
+  m_ActiveArrayName(DREAM3D::FeatureData::Active),
+  m_NeighborhoodsArrayName(DREAM3D::FeatureData::Neighborhoods),
+  m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
+  m_AvgQuatsArrayName(DREAM3D::FeatureData::AvgQuats),
+  m_FeaturePhasesArrayName(DREAM3D::FeatureData::Phases),
+  m_VolumesArrayName(DREAM3D::FeatureData::Volumes),
+  m_CentroidsArrayName(DREAM3D::FeatureData::Centroids),
+  m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures)
 {
   m_OrientationOps = OrientationOps::getOrientationOpsVector();
 
@@ -732,6 +732,34 @@ void PatchGroupMicroTextureRegions::determinePatchFeatureVolumes(size_t totalPat
   { m_Neighborhoods = m_NeighborhoodsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   // find patch neighboorhoods comparing the critical distance binned features and patches
+
+
+  int xPoints = static_cast<int>(m->getXPoints());
+  int yPoints = static_cast<int>(m->getYPoints());
+  int zPoints = static_cast<int>(m->getZPoints());
+
+  float xRes = m->getXRes();
+  float yRes = m->getYRes();
+  float zRes = m->getZRes();
+
+  size_t zStride, yStride;
+  for (size_t l = 0; l < totalFeatures * 3; l+=3)
+  {   
+	int i = m_Centroids[l+0] * xRes;
+	int j = m_Centroids[l+1] * yRes;
+	int k = m_Centroids[l+2] * zRes;
+    zStride = i * xPoints * yPoints;
+    yStride = j * xPoints;
+    int pnum = m_CellParentIds[zStride + yStride + k];
+	int fnum = m_FeatureIds[int(l * 0.3333333f)];
+	patchFeatureList[pnum].push_back(fnum); 
+	// debugging line
+	int stop = 0;
+  }
+
+/*
+
+
   int bin1x, bin2x, bin1y, bin2y, bin1z, bin2z, dBinX, dBinY, dBinZ;;
   QVector<float> patchFeatureVolume(totalPatches, 0.0f);
   for (size_t i = 1; i < totalPatches; i++)
@@ -767,6 +795,9 @@ void PatchGroupMicroTextureRegions::determinePatchFeatureVolumes(size_t totalPat
     int test = m_Neighborhoods[i];
     int stop = 0;
   }
+
+  */
+
   for (size_t i = 1; i < totalPatches; i++)
   {
     // Set the vector for each list into the NeighborhoodList Object

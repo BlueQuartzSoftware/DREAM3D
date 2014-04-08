@@ -49,12 +49,13 @@ UpdateCellQuats::UpdateCellQuats() :
   AbstractFilter(),
   m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
   m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
+/*[]*/m_Quats5ArrayPath(DREAM3D::Defaults::SomePath),
   m_QuatsArrayName(DREAM3D::CellData::Quats),
-  m_Quats(NULL),
-/*[]*/m_Quats5ArrayPath(DREAM3D::Defaults::SomePath)
+  m_Quats(NULL)
 {
   m_OrientationOps = OrientationOps::getOrientationOpsVector();
 
+  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

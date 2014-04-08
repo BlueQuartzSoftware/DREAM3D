@@ -52,17 +52,17 @@ FindNeighborhoods::FindNeighborhoods() :
   m_NeighborhoodListArrayName(DREAM3D::FeatureData::NeighborhoodList),
   m_NumNeighborsArrayName(DREAM3D::FeatureData::NumNeighbors),
   m_MultiplesOfAverage(1.0f),
+/*[]*/m_EquivalentDiametersArrayPath(DREAM3D::Defaults::SomePath),
+/*[]*/m_FeaturePhasesArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, DREAM3D::FeatureData::Phases),
+/*[]*/m_CentroidsArrayPath(DREAM3D::Defaults::SomePath),
+  m_NeighborhoodsArrayName(DREAM3D::FeatureData::Neighborhoods),
   m_FeaturePhasesArrayName(DREAM3D::FeatureData::Phases),
   m_FeaturePhases(NULL),
   m_CentroidsArrayName(DREAM3D::FeatureData::Centroids),
   m_Centroids(NULL),
   m_EquivalentDiametersArrayName(DREAM3D::FeatureData::EquivalentDiameters),
   m_EquivalentDiameters(NULL),
-  m_NeighborhoodsArrayName(DREAM3D::FeatureData::Neighborhoods),
-  m_Neighborhoods(NULL),
-/*[]*/m_EquivalentDiametersArrayPath(DREAM3D::Defaults::SomePath),
-/*[]*/m_FeaturePhasesArrayPath(DREAM3D::Defaults::SomePath),
-/*[]*/m_CentroidsArrayPath(DREAM3D::Defaults::SomePath)
+  m_Neighborhoods(NULL)
 {
   setupFilterParameters();
 }

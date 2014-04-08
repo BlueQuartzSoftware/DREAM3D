@@ -49,16 +49,17 @@ FindFeaturePhases::FindFeaturePhases() :
   m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
   m_CellFeatureAttributeMatrixName(DREAM3D::Defaults::CellFeatureAttributeMatrixName),
   m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
+/*[]*/m_FeatureIdsArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::FeatureIds),
+/*[]*/m_CellPhasesArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::Phases),
+  m_FeaturePhasesArrayName(DREAM3D::FeatureData::Phases),
   m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
   m_FeatureIds(NULL),
   m_CellPhasesArrayName(DREAM3D::CellData::Phases),
   m_CellPhases(NULL),
-  m_FeaturePhasesArrayName(DREAM3D::FeatureData::Phases),
-  m_FeaturePhases(NULL),
-/*[]*/m_FeatureIdsArrayPath(DREAM3D::Defaults::SomePath),
-/*[]*/m_CellPhasesArrayPath(DREAM3D::Defaults::SomePath)
+  m_FeaturePhases(NULL)
 {
 
+  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

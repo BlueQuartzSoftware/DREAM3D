@@ -49,14 +49,15 @@ FindFeatureCentroids::FindFeatureCentroids() :
   m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
   m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
   m_CellFeatureAttributeMatrixName(DREAM3D::Defaults::CellFeatureAttributeMatrixName),
+/*[]*/m_FeatureIdsArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::FeatureIds),
+  m_CentroidsArrayName(DREAM3D::FeatureData::Centroids),
   m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
   m_FeatureIds(NULL),
-  m_CentroidsArrayName(DREAM3D::FeatureData::Centroids),
-  m_Centroids(NULL),
-/*[]*/m_FeatureIdsArrayPath(DREAM3D::Defaults::SomePath)
+  m_Centroids(NULL)
 {
   INIT_DataArray(m_FeatureCenters, float)
   featurecenters = NULL;
+  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

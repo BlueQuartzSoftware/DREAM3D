@@ -35,21 +35,91 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #include "GenerateIPFColors.h"
 
+
+
+#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
+#include <tbb/parallel_for.h>
+#include <tbb/blocked_range.h>
+#include <tbb/partitioner.h>
+#include <tbb/task_scheduler_init.h>
+#endif
+
+
 #include "DREAM3DLib/Math/MatrixMath.h"
 #include "DREAM3DLib/Math/OrientationMath.h"
 #include "DREAM3DLib/Math/MatrixMath.h"
-#include "DREAM3DLib/OrientationOps/CubicOps.h"
-#include "DREAM3DLib/OrientationOps/CubicLowOps.h"
-#include "DREAM3DLib/OrientationOps/HexagonalOps.h"
-#include "DREAM3DLib/OrientationOps/HexagonalLowOps.h"
-#include "DREAM3DLib/OrientationOps/TrigonalOps.h"
-#include "DREAM3DLib/OrientationOps/TrigonalLowOps.h"
-#include "DREAM3DLib/OrientationOps/TetragonalOps.h"
-#include "DREAM3DLib/OrientationOps/TetragonalLowOps.h"
-#include "DREAM3DLib/OrientationOps/OrthoRhombicOps.h"
-#include "DREAM3DLib/OrientationOps/MonoclinicOps.h"
-#include "DREAM3DLib/OrientationOps/TriclinicOps.h"
 #include "DREAM3DLib/Utilities/ColorTable.h"
+#include "DREAM3DLib/OrientationOps/OrientationOps.h"
+
+
+class GenerateIPFColorsImpl
+{
+
+  public:
+    GenerateIPFColorsImpl(FloatVec3_t referenceDir, float* eulers, int32_t* phases, unsigned int* crystalStructures,
+                          bool* goodVoxels, uint8_t* colors) :
+      m_ReferenceDir(referenceDir),
+      m_CellEulerAngles(eulers),
+      m_CellPhases(phases),
+      m_CrystalStructures(crystalStructures),
+      m_GoodVoxels(goodVoxels),
+      m_CellIPFColors(colors)
+    {}
+    virtual ~GenerateIPFColorsImpl(){}
+
+    void convert(size_t start, size_t end) const
+    {
+      QVector<OrientationOps::Pointer> ops = OrientationOps::getOrientationOpsVector();
+      double refDir[3] = {m_ReferenceDir.x, m_ReferenceDir.y, m_ReferenceDir.z};
+      double dEuler[3] = {0.0, 0.0, 0.0};
+      DREAM3D::Rgb argb = 0x00000000;
+      bool missingGoodVoxels = false;
+      if(NULL == m_GoodVoxels)
+      {
+        missingGoodVoxels = true;
+      }
+      int phase = 0;
+      size_t index = 0;
+      for (size_t i = start; i < end; i++)
+      {
+        phase = m_CellPhases[i];
+        index = i * 3;
+        m_CellIPFColors[index] = 0;
+        m_CellIPFColors[index + 1] = 0;
+        m_CellIPFColors[index + 2] = 0;
+        dEuler[0] = m_CellEulerAngles[index];
+        dEuler[1] = m_CellEulerAngles[index + 1];
+        dEuler[2] = m_CellEulerAngles[index + 2];
+
+        // Make sure we are using a valid Euler Angles with valid crystal symmetry
+        if( (missingGoodVoxels == true || m_GoodVoxels[i] == true)
+            && m_CrystalStructures[phase] < Ebsd::CrystalStructure::LaueGroupEnd )
+        {
+          argb = ops[m_CrystalStructures[phase]]->generateIPFColor(dEuler, refDir, false);
+          m_CellIPFColors[index] = RgbColor::dRed(argb);
+          m_CellIPFColors[index + 1] = RgbColor::dGreen(argb);
+          m_CellIPFColors[index + 2] = RgbColor::dBlue(argb);
+        }
+      }
+    }
+
+#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
+    void operator()(const tbb::blocked_range<size_t> &r) const
+    {
+      convert(r.begin(), r.end());
+    }
+#endif
+  private:
+    FloatVec3_t  m_ReferenceDir;
+    float* m_CellEulerAngles;
+    int32_t* m_CellPhases;
+    unsigned int* m_CrystalStructures;
+    bool* m_GoodVoxels;
+    uint8_t* m_CellIPFColors;
+
+};
+
+
 
 // -----------------------------------------------------------------------------
 //
@@ -59,6 +129,10 @@ GenerateIPFColors::GenerateIPFColors() :
   m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
   m_CellEnsembleAttributeMatrixName(DREAM3D::Defaults::CellEnsembleAttributeMatrixName),
   m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
+  m_CellPhasesArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::CellPhases),
+  m_CellEulerAnglesArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::EulerAngles),
+  m_CrystalStructuresArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellEnsembleAttributeMatrixName, DREAM3D::EnsembleData::CrystalStructures),
+  m_GoodVoxelsArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::GoodVoxels),
   m_CellPhasesArrayName(DREAM3D::CellData::Phases),
   m_CellPhases(NULL),
   m_CellEulerAnglesArrayName(DREAM3D::CellData::EulerAngles),
@@ -68,11 +142,7 @@ GenerateIPFColors::GenerateIPFColors() :
   m_CellIPFColorsArrayName(DREAM3D::CellData::IPFColor),
   m_CellIPFColors(NULL),
   m_GoodVoxelsArrayName(DREAM3D::CellData::GoodVoxels),
-  m_GoodVoxels(NULL),
-  m_CellPhasesArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::CellPhases),
-  m_CellEulerAnglesArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::EulerAngles),
-  m_CrystalStructuresArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellEnsembleAttributeMatrixName, DREAM3D::EnsembleData::CrystalStructures),
-  m_GoodVoxelsArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::GoodVoxels)
+  m_GoodVoxels(NULL)
 {
 
   m_ReferenceDir.x = 0.0f;
@@ -200,9 +270,9 @@ void GenerateIPFColors::execute()
   dataCheck();
   if(getErrorCondition() < 0) { return; }
 
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  DataContainerArray::Pointer dca = getDataContainerArray();
 
-  int64_t totalPoints = m->getAttributeMatrix(getCellAttributeMatrixName())->getNumTuples();
+  int64_t totalPoints = m_CellEulerAnglesPtr.lock()->getNumberOfTuples();
 
   bool missingGoodVoxels = true;
   if (NULL != m_GoodVoxels)
@@ -210,51 +280,32 @@ void GenerateIPFColors::execute()
     missingGoodVoxels = false;
   }
 
-  int phase;
-  size_t index = 0;
-
   // Make sure we are dealing with a unit 1 vector.
-  MatrixMath::Normalize3x1(m_ReferenceDir.x, m_ReferenceDir.y, m_ReferenceDir.z);
+  FloatVec3_t normRefDir = m_ReferenceDir; // Make a copy of the reference Direction
+
+  MatrixMath::Normalize3x1(normRefDir.x, normRefDir.y, normRefDir.z);
   // Create 1 of every type of Ops class. This condenses the code below
-  QVector<OrientationOps::Pointer> ops;
-  ops.push_back(HexagonalOps::New());
-  ops.push_back(CubicOps::New());
-  ops.push_back(HexagonalLowOps::New());
-  ops.push_back(CubicLowOps::New());
-  ops.push_back(TriclinicOps::New());
-  ops.push_back(MonoclinicOps::New());
-  ops.push_back(OrthoRhombicOps::New());
-  ops.push_back(TetragonalLowOps::New());
-  ops.push_back(TetragonalOps::New());
-  ops.push_back(TrigonalLowOps::New());
-  ops.push_back(TrigonalOps::New());
 
-  double refDir[3] = {m_ReferenceDir.x, m_ReferenceDir.y, m_ReferenceDir.z};
-  double dEuler[3] = {0.0, 0.0, 0.0};
-  DREAM3D::Rgb argb = 0x00000000;
+#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
+  tbb::task_scheduler_init init;
+  bool doParallel = true;
+#endif
 
-  // Write the IPF Coloring Cell Data
-  for (int64_t i = 0; i < totalPoints; i++)
+#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
+  if (doParallel == true)
   {
-    phase = m_CellPhases[i];
-    index = i * 3;
-    m_CellIPFColors[index] = 0;
-    m_CellIPFColors[index + 1] = 0;
-    m_CellIPFColors[index + 2] = 0;
-    dEuler[0] = m_CellEulerAngles[index];
-    dEuler[1] = m_CellEulerAngles[index + 1];
-    dEuler[2] = m_CellEulerAngles[index + 2];
+    tbb::parallel_for(tbb::blocked_range<size_t>(0, totalPoints),
+                      GenerateIPFColorsImpl(normRefDir, m_CellEulerAngles, m_CellPhases, m_CrystalStructures, m_GoodVoxels, m_CellIPFColors), tbb::auto_partitioner());
 
-    // Make sure we are using a valid Euler Angles with valid crystal symmetry
-    if( (missingGoodVoxels == true || m_GoodVoxels[i] == true)
-        && m_CrystalStructures[phase] < Ebsd::CrystalStructure::LaueGroupEnd )
-    {
-      argb = ops[m_CrystalStructures[phase]]->generateIPFColor(dEuler, refDir, false);
-      m_CellIPFColors[index] = RgbColor::dRed(argb);
-      m_CellIPFColors[index + 1] = RgbColor::dGreen(argb);
-      m_CellIPFColors[index + 2] = RgbColor::dBlue(argb);
-    }
   }
+  else
+#endif
+  {
+    GenerateIPFColorsImpl serial(normRefDir, m_CellEulerAngles, m_CellPhases, m_CrystalStructures, m_GoodVoxels, m_CellIPFColors);
+    serial.convert(0, totalPoints);
+  }
+
+
 
   /* Let the GUI know we are done with this filter */
   notifyStatusMessage(getHumanLabel(), "Complete");

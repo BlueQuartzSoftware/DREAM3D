@@ -130,6 +130,14 @@ void DataArraySelectionWidget::setupGui()
   dataContainerList->clear();
   attributeMatrixList->clear();
   attributeArrayList->clear();
+
+
+  // Get what is in the filter
+  DataArrayPath defaultPath = m_Filter->property(PROPERTY_NAME_AS_CHAR).value<DataArrayPath>();
+  dataContainerList->addItem(defaultPath.getDataContainerName());
+  attributeMatrixList->addItem(defaultPath.getAttributeMatrixName() );
+  attributeArrayList->addItem(defaultPath.getDataArrayName() );
+
   // Now let the gui send signals like normal
   dataContainerList->blockSignals(false);
   attributeMatrixList->blockSignals(false);

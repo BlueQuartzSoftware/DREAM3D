@@ -67,15 +67,15 @@ FeatureFaceCurvatureFilter::FeatureFaceCurvatureFilter() :
   m_ComputeMeanCurvature(false),
   m_ComputeGaussianCurvature(false),
   m_UseNormalsForCurveFitting(true),
+/*[]*/m_SurfaceMeshFaceLabelsArrayPath(DREAM3D::Defaults::SomePath),
+/*[]*/m_SurfaceMeshFaceNormalsArrayPath(DREAM3D::Defaults::SomePath),
+/*[]*/m_SurfaceMeshTriangleCentroidsArrayPath(DREAM3D::Defaults::SomePath),
   m_SurfaceMeshFaceLabelsArrayName(DREAM3D::FaceData::SurfaceMeshFaceLabels),
   m_SurfaceMeshFaceLabels(NULL),
   m_SurfaceMeshTriangleCentroidsArrayName(DREAM3D::FaceData::SurfaceMeshFaceCentroids),
   m_SurfaceMeshTriangleCentroids(NULL),
   m_SurfaceMeshFaceNormalsArrayName(DREAM3D::FaceData::SurfaceMeshFaceNormals),
-  m_SurfaceMeshFaceNormals(NULL),
-/*[]*/m_SurfaceMeshFaceLabelsArrayPath(DREAM3D::Defaults::SomePath),
-/*[]*/m_SurfaceMeshFaceNormalsArrayPath(DREAM3D::Defaults::SomePath),
-/*[]*/m_SurfaceMeshTriangleCentroidsArrayPath(DREAM3D::Defaults::SomePath)
+  m_SurfaceMeshFaceNormals(NULL)
 {
   setupFilterParameters();
 }

@@ -91,11 +91,10 @@ class FlattenImageImpl
 FlattenImage::FlattenImage() :
   AbstractFilter(),
   m_FlattenMethod(DREAM3D::FlattenImageMethod::Luminosity),
-  m_ImageDataArrayName(DREAM3D::CellData::ImageData),
-  m_ImageData(NULL),
   m_FlatImageDataArrayName(DREAM3D::CellData::FlatImageData),
   m_FlatImageData(NULL),
-  m_ImageDataArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::ImageData)
+  m_ImageDataArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::ImageData),
+  m_ImageData(NULL)
 {
   setupFilterParameters();
 }

@@ -4,18 +4,21 @@ Name=(03) SmallIN100 Threshold
 
 [0]
 Filter_Name=ReadH5Ebsd
+Filter_Human_Label=Read H5Ebsd File
+LatticeConstantsArrayName=LatticeConstants
+CrystalStructuresArrayName=CrystalStructures
+CellPhasesArrayName=Phases
+CellEulerAnglesArrayName=EulerAngles
 InputFile=Data/Output/SmallIN100.h5ebsd
 RefFrameZDir=1
 ZStartIndex=1
 ZEndIndex=117
 UseTransformations=1
-ArraySelections_SelectedArrayNames\size=6
+ArraySelections_SelectedArrayNames\size=4
 ArraySelections_SelectedArrayNames\1\SelectedArrayNames=EulerAngles
-ArraySelections_SelectedArrayNames\2\SelectedArrayNames=SEM Signal
-ArraySelections_SelectedArrayNames\3\SelectedArrayNames=Phases
-ArraySelections_SelectedArrayNames\4\SelectedArrayNames=Confidence Index
-ArraySelections_SelectedArrayNames\5\SelectedArrayNames=Fit
-ArraySelections_SelectedArrayNames\6\SelectedArrayNames=Image Quality
+ArraySelections_SelectedArrayNames\2\SelectedArrayNames=Phases
+ArraySelections_SelectedArrayNames\3\SelectedArrayNames=Confidence Index
+ArraySelections_SelectedArrayNames\4\SelectedArrayNames=Image Quality
 
 
 [1]
@@ -30,7 +33,7 @@ SelectedThresholds\1\CompOperator=1
 SelectedThresholds\1\CompValue=0.100000001490116
 SelectedThresholds\2\DataContainerName=VolumeDataContainer
 SelectedThresholds\2\AttributeMatrixName=CellData
-SelectedThresholds\2\AttributeArrayName=Confidence Index
+SelectedThresholds\2\AttributeArrayName=Image Quality
 SelectedThresholds\2\CompOperator=1
 SelectedThresholds\2\CompValue=120
 

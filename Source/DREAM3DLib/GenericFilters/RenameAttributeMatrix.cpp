@@ -75,8 +75,6 @@ void RenameAttributeMatrix::setupFilterParameters()
 void RenameAttributeMatrix::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-  //  setDataContainerName( reader->readString("DataContainerName", getDataContainerName()) );
-  //  setAttributeMatrixName( reader->readString("AttributeMatrixName", getAttributeMatrixName()) );
   setSelectedAttributeMatrixPath( reader->readDataArrayPath("SelectedAttributeMatrixPath", getSelectedAttributeMatrixPath()) );
   setNewAttributeMatrix( reader->readString( "NewAttributeMatrix", getNewAttributeMatrix() ) );
   reader->closeFilterGroup();
@@ -88,8 +86,6 @@ void RenameAttributeMatrix::readFilterParameters(AbstractFilterParametersReader*
 int RenameAttributeMatrix::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  //  writer->writeValue("DataContainerName", getDataContainerName());
-  //  writer->writeValue("AttributeMatrixName", getAttributeMatrixName());
   writer->writeValue("SelectedAttributeMatrixPath", getSelectedAttributeMatrixPath() );
   writer->writeValue("NewAttributeMatrix", getNewAttributeMatrix() );
   writer->closeFilterGroup();
@@ -119,52 +115,39 @@ void RenameAttributeMatrix::dataCheck()
   else
   {
 
-    QString dcName;
-    QString amName;
+    QString dcName = m_SelectedAttributeMatrixPath.getDataContainerName();
+    QString amName = m_SelectedAttributeMatrixPath.getAttributeMatrixName();
 
-    QStringList tokens = m_SelectedAttributeMatrixPath.split(DREAM3D::PathSep);
-    // We should end up with 3 Tokens
-    if(tokens.size() != 2)
+    DataContainerArray::Pointer dca = getDataContainerArray();
+    if (NULL == dca.get() ) { return; }
+    DataContainer::Pointer dc = getDataContainerArray()->getDataContainer(dcName);
+    if(NULL == dc.get())
     {
-      setErrorCondition(-11002);
-      QString ss = QObject::tr("The path to the Attribute Array is malformed. Each part should be separated by a '|' character.");
+      setErrorCondition(-11003);
+      QString ss = QObject::tr("The DataContainer '%1' was not found in the DataContainerArray").arg(dcName);
+      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+      return;
+    }
+
+    AttributeMatrix::Pointer attrMat = dc->getAttributeMatrix(amName);
+    if(NULL == attrMat.get())
+    {
+      setErrorCondition(-11004);
+      QString ss = QObject::tr("The AttributeMatrix '%1' was not found in the DataContainer '%2'").arg(amName).arg(dcName);
+      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+      return;
+    }
+
+    bool check = dc->renameAttributeMatrix(amName, getNewAttributeMatrix() );
+    if(check == false)
+    {
+      setErrorCondition(-11006);
+      QString ss = QObject::tr("Attempt to rename AttributeMatrix '%1' to '%2' Failed.").arg(amName).arg(getNewAttributeMatrix());
       notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     }
-    else
-    {
-      dcName = tokens.at(0);
-      amName = tokens.at(1);
 
-      DataContainerArray::Pointer dca = getDataContainerArray();
-      if (NULL == dca.get() ) { return; }
-      DataContainer::Pointer dc = getDataContainerArray()->getDataContainer(dcName);
-      if(NULL == dc.get())
-      {
-        setErrorCondition(-11003);
-        QString ss = QObject::tr("The DataContainer '%1' was not found in the DataContainerArray").arg(dcName);
-        notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-        return;
-      }
-
-      AttributeMatrix::Pointer attrMat = dc->getAttributeMatrix(amName);
-      if(NULL == attrMat.get())
-      {
-        setErrorCondition(-11004);
-        QString ss = QObject::tr("The AttributeMatrix '%1' was not found in the DataContainer '%2'").arg(amName).arg(dcName);
-        notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-        return;
-      }
-
-      bool check = dc->renameAttributeMatrix(amName, getNewAttributeMatrix() );
-      if(check == false)
-      {
-        setErrorCondition(-11006);
-        QString ss = QObject::tr("Attempt to rename AttributeMatrix '%1' to '%2' Failed.").arg(amName).arg(getNewAttributeMatrix());
-        notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-      }
-
-    }
   }
+
 }
 
 

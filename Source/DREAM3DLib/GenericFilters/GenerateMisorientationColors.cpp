@@ -33,21 +33,107 @@
 #include "GenerateMisorientationColors.h"
 
 
+#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
+#include <tbb/parallel_for.h>
+#include <tbb/blocked_range.h>
+#include <tbb/partitioner.h>
+#include <tbb/task_scheduler_init.h>
+#endif
+
+
 #include "DREAM3DLib/Math/MatrixMath.h"
 #include "DREAM3DLib/Math/OrientationMath.h"
 #include "DREAM3DLib/Math/MatrixMath.h"
-#include "DREAM3DLib/OrientationOps/CubicOps.h"
-#include "DREAM3DLib/OrientationOps/CubicLowOps.h"
-#include "DREAM3DLib/OrientationOps/HexagonalOps.h"
-#include "DREAM3DLib/OrientationOps/HexagonalLowOps.h"
-#include "DREAM3DLib/OrientationOps/TrigonalOps.h"
-#include "DREAM3DLib/OrientationOps/TrigonalLowOps.h"
-#include "DREAM3DLib/OrientationOps/TetragonalOps.h"
-#include "DREAM3DLib/OrientationOps/TetragonalLowOps.h"
-#include "DREAM3DLib/OrientationOps/OrthoRhombicOps.h"
-#include "DREAM3DLib/OrientationOps/MonoclinicOps.h"
-#include "DREAM3DLib/OrientationOps/TriclinicOps.h"
 #include "DREAM3DLib/Utilities/ColorTable.h"
+#include "DREAM3DLib/OrientationOps/OrientationOps.h"
+
+
+
+class GenerateMisorientationColorsImpl
+{
+
+  public:
+    GenerateMisorientationColorsImpl(FloatVec3_t referenceAxis, float refAngle, QuatF* quats, int32_t* phases, unsigned int* crystalStructures,
+                                     bool* goodVoxels, uint8_t* notSupported, uint8_t* colors) :
+      m_ReferenceAxis(referenceAxis),
+      m_ReferenceAngle(refAngle),
+      m_Quats(quats),
+      m_CellPhases(phases),
+      m_CrystalStructures(crystalStructures),
+      m_GoodVoxels(goodVoxels),
+      m_NotSupported(notSupported),
+      m_MisorientationColor(colors)
+    {}
+    virtual ~GenerateMisorientationColorsImpl(){}
+
+    void convert(size_t start, size_t end) const
+    {
+      QVector<OrientationOps::Pointer> ops = OrientationOps::getOrientationOpsVector();
+
+      QuatF refQuat = {m_ReferenceAxis.x * sin(m_ReferenceAngle), m_ReferenceAxis.y * sin(m_ReferenceAngle), m_ReferenceAxis.z * sin(m_ReferenceAngle), cos(m_ReferenceAngle)};
+      QuatF cellQuat = {0.0f, 0.0f, 0.0f, 1.0f};
+      DREAM3D::Rgb argb = 0x00000000;
+
+      bool missingGoodVoxels = false;
+      if(NULL == m_GoodVoxels)
+      {
+        missingGoodVoxels = true;
+      }
+      int phase = 0;
+      size_t index = 0;
+      for (size_t i = start; i < end; i++)
+      {
+        phase = m_CellPhases[i];
+        index = i * 3;
+        m_MisorientationColor[index] = 0;
+        m_MisorientationColor[index + 1] = 0;
+        m_MisorientationColor[index + 2] = 0;
+        cellQuat = m_Quats[i];
+
+        if(m_CrystalStructures[phase] != Ebsd::CrystalStructure::Cubic_High)
+        {
+          uint32_t idx = m_CrystalStructures[phase];
+          if(idx == Ebsd::CrystalStructure::UnknownCrystalStructure)
+          {
+            idx = 12;
+          }
+          m_NotSupported[idx] = 1;
+          m_MisorientationColor[index] = 0;
+          m_MisorientationColor[index + 1] = 0;
+          m_MisorientationColor[index + 2] = 0;
+
+        }
+        // Make sure we are using a valid Euler Angles with valid crystal symmetry
+        else if( (missingGoodVoxels == true || m_GoodVoxels[i] == true)
+                 && m_CrystalStructures[phase] < Ebsd::CrystalStructure::LaueGroupEnd )
+        {
+          argb = ops[m_CrystalStructures[phase]]->generateMisorientationColor(cellQuat, refQuat);
+          m_MisorientationColor[index] = RgbColor::dRed(argb);
+          m_MisorientationColor[index + 1] = RgbColor::dGreen(argb);
+          m_MisorientationColor[index + 2] = RgbColor::dBlue(argb);
+        }
+      }
+    }
+
+#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
+    void operator()(const tbb::blocked_range<size_t> &r) const
+    {
+      convert(r.begin(), r.end());
+    }
+#endif
+  private:
+    FloatVec3_t  m_ReferenceAxis;
+    float m_ReferenceAngle;
+    QuatF* m_Quats;
+    int32_t* m_CellPhases;
+    unsigned int* m_CrystalStructures;
+    bool* m_GoodVoxels;
+    uint8_t* m_NotSupported;
+    uint8_t* m_MisorientationColor;
+
+};
+
+
 
 // -----------------------------------------------------------------------------
 //
@@ -58,20 +144,20 @@ GenerateMisorientationColors::GenerateMisorientationColors() :
   m_CellEnsembleAttributeMatrixName(DREAM3D::Defaults::CellEnsembleAttributeMatrixName),
   m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
   m_ReferenceAngle(0.0f),
+/*[]*/m_CellPhasesArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::Phases),
+/*[]*/m_QuatsArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::Quats),
+/*[]*/m_CrystalStructuresArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellEnsembleAttributeMatrixName, DREAM3D::EnsembleData::CrystalStructures),
+/*[]*/m_GoodVoxelsArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::GoodVoxels),
+  m_MisorientationColorArrayName(DREAM3D::CellData::MisorientationColor),
   m_CellPhasesArrayName(DREAM3D::CellData::Phases),
   m_CellPhases(NULL),
   m_QuatsArrayName(DREAM3D::CellData::Quats),
   m_Quats(NULL),
   m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
   m_CrystalStructures(NULL),
-  m_MisorientationColorArrayName(DREAM3D::CellData::MisorientationColor),
   m_MisorientationColor(NULL),
   m_GoodVoxelsArrayName(DREAM3D::CellData::GoodVoxels),
-  m_GoodVoxels(NULL),
-/*[]*/m_CellPhasesArrayPath(DREAM3D::Defaults::SomePath),
-/*[]*/m_QuatsArrayPath(DREAM3D::Defaults::SomePath),
-/*[]*/m_CrystalStructuresArrayPath(DREAM3D::Defaults::SomePath),
-/*[]*/m_GoodVoxelsArrayPath(DREAM3D::Defaults::SomePath)
+  m_GoodVoxels(NULL)
 {
   m_ReferenceAxis.x = 0.0f;
   m_ReferenceAxis.y = 0.0f;
@@ -223,85 +309,53 @@ void GenerateMisorientationColors::execute()
   {
     missingGoodVoxels = false;
   }
-  int phase;
-  size_t index = 0;
+
 
   // Make sure we are dealing with a unit 1 vector.
-  MatrixMath::Normalize3x1(m_ReferenceAxis.x, m_ReferenceAxis.y, m_ReferenceAxis.z);
+  FloatVec3_t normRefDir = m_ReferenceAxis; // Make a copy of the reference Direction
+
+  MatrixMath::Normalize3x1(normRefDir.x, normRefDir.y, normRefDir.z);
   // Create 1 of every type of Ops class. This condenses the code below
-  std::vector<OrientationOps::Pointer> ops;
-  ops.push_back(HexagonalOps::New());
-  ops.push_back(CubicOps::New());
-  ops.push_back(HexagonalLowOps::New());
-  ops.push_back(CubicLowOps::New());
-  ops.push_back(TriclinicOps::New());
-  ops.push_back(MonoclinicOps::New());
-  ops.push_back(OrthoRhombicOps::New());
-  ops.push_back(TetragonalLowOps::New());
-  ops.push_back(TetragonalOps::New());
-  ops.push_back(TrigonalLowOps::New());
-  ops.push_back(TrigonalOps::New());
-
-  QuatF* quats = reinterpret_cast<QuatF*>(m_Quats);
-
-  QuatF refQuat = {m_ReferenceAxis.x * sin(m_ReferenceAngle),
-                   m_ReferenceAxis.y * sin(m_ReferenceAngle),
-                   m_ReferenceAxis.z * sin(m_ReferenceAngle),
-                   cos(m_ReferenceAngle)
-                  };
-  QuatF cellQuat = {0.0f, 0.0f, 0.0f, 1.0f};
-  DREAM3D::Rgb argb = 0x00000000;
-
   UInt8ArrayType::Pointer notSupported = UInt8ArrayType::CreateArray(13, "NotSupportedArray");
   notSupported->initializeWithZeros();
 
-  // Write the Misorientation Coloring Cell Data
-  for (int64_t i = 0; i < totalPoints; i++)
+#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
+  tbb::task_scheduler_init init;
+  bool doParallel = true;
+#endif
+
+#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
+  if (doParallel == true)
   {
-    phase = m_CellPhases[i];
-    index = i * 3;
-    m_MisorientationColor[index] = 0;
-    m_MisorientationColor[index + 1] = 0;
-    m_MisorientationColor[index + 2] = 0;
-    cellQuat = quats[i];
+    tbb::parallel_for(tbb::blocked_range<size_t>(0, totalPoints),
+                      GenerateMisorientationColorsImpl( normRefDir, m_ReferenceAngle, reinterpret_cast<QuatF*>(m_Quats), m_CellPhases, m_CrystalStructures, m_GoodVoxels, notSupported->getPointer(0), m_MisorientationColor), tbb::auto_partitioner());
 
-    if(m_CrystalStructures[phase] != Ebsd::CrystalStructure::Cubic_High)
-    {
-      uint32_t idx = m_CrystalStructures[phase];
-      if(idx == Ebsd::CrystalStructure::UnknownCrystalStructure)
-      {
-        idx = 12;
-      }
-      notSupported->setValue(idx, 1);
-      m_MisorientationColor[index] = 0;
-      m_MisorientationColor[index + 1] = 0;
-      m_MisorientationColor[index + 2] = 0;
-
-    }
-    // Make sure we are using a valid Euler Angles with valid crystal symmetry
-    else if( (missingGoodVoxels == true || m_GoodVoxels[i] == true)
-             && m_CrystalStructures[phase] < Ebsd::CrystalStructure::LaueGroupEnd )
-    {
-      argb = ops[m_CrystalStructures[phase]]->generateMisorientationColor(cellQuat, refQuat);
-      m_MisorientationColor[index] = RgbColor::dRed(argb);
-      m_MisorientationColor[index + 1] = RgbColor::dGreen(argb);
-      m_MisorientationColor[index + 2] = RgbColor::dBlue(argb);
-    }
+  }
+  else
+#endif
+  {
+    GenerateMisorientationColorsImpl serial( normRefDir, m_ReferenceAngle, reinterpret_cast<QuatF*>(m_Quats), m_CellPhases, m_CrystalStructures, m_GoodVoxels, notSupported->getPointer(0), m_MisorientationColor);
+    serial.convert(0, totalPoints);
   }
 
+   QVector<OrientationOps::Pointer> ops = OrientationOps::getOrientationOpsVector();
+
+  // Check and warn about unsupported crystal symmetries in the computation which will show as black
   for(size_t i = 0; i < notSupported->getNumberOfTuples() - 1; i++)
   {
     if (notSupported->getValue(i) == 1)
     {
-      QString ss = QObject::tr("The Symmetry of %1  is not currently supported for Misorientation Coloring. Voxels with this symmetry have been set to black.").arg(ops[i]->getSymmetryName());
-      notifyErrorMessage(getHumanLabel(), ss, -500);
+      QString msg("The Symmetry of ");
+      msg.append(ops[i]->getSymmetryName()).append(" is not currently supported for Misorientation Coloring. Voxels with this symmetry have been set to black.");
+      notifyWarningMessage(getHumanLabel(), msg, -500);
     }
   }
 
+  // Check for bad voxels which will show up as black also.
   if (notSupported->getValue(12) == 1)
   {
-    QString ss("There were voxels with an unknown crystal symmetry due most likely being marked as a 'Bad Voxel'. These voxels have been colored black BUT black is a valid color for Misorientation coloring. Please understand this when visualizing your data.");
-    notifyErrorMessage(getHumanLabel(), ss, -500);
+    QString msg("There were voxels with an unknown crystal symmetry due most likely being marked as a 'Bad Voxel'. These voxels have been colored black BUT black is a valid color for Misorientation coloring. Please understand this when visualizing your data.");
+    notifyWarningMessage(getHumanLabel(), msg, -501);
   }
 
   /* Let the GUI know we are done with this filter */

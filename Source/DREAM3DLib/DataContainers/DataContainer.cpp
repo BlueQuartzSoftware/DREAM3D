@@ -128,7 +128,7 @@ void DataContainer::addAttributeMatrix(const QString& name, AttributeMatrix::Poi
     qDebug() << "Adding Attribute Array with different array name than key name";
     qDebug() << "Key name: " << name;
     qDebug() << "Array Name:" << data->getName();
-    qDebug() << "This action is NOT typical of DREAM3D Usage. Are you sure you want to be doing this?";
+    qDebug() << "This action is NOT typical of DREAM3D Usage. Are you sure you want to be doing this? We are forcing the name of the AttributeMatrix to be the same as the key";
     data->setName(name);
   }
   m_AttributeMatrices[name] = data;

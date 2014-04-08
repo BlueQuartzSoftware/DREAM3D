@@ -54,12 +54,12 @@ SurfaceMeshToStl::SurfaceMeshToStl() :
   m_FaceAttributeMatrixName(DREAM3D::Defaults::FaceAttributeMatrixName),
   m_OutputStlDirectory(""),
   m_OutputStlPrefix(""),
+/*[]*/m_SurfaceMeshFaceLabelsArrayPath(DREAM3D::Defaults::SomePath),
+/*[]*/m_SurfaceMeshFacePhasesArrayPath(DREAM3D::Defaults::SomePath),
   m_SurfaceMeshFaceLabelsArrayName(DREAM3D::FaceData::SurfaceMeshFaceLabels),
   m_SurfaceMeshFaceLabels(NULL),
   m_SurfaceMeshFacePhasesArrayName(DREAM3D::FaceData::SurfaceMeshFacePhases),
-  m_SurfaceMeshFacePhases(NULL),
-/*[]*/m_SurfaceMeshFaceLabelsArrayPath(DREAM3D::Defaults::SomePath),
-/*[]*/m_SurfaceMeshFacePhasesArrayPath(DREAM3D::Defaults::SomePath)
+  m_SurfaceMeshFacePhases(NULL)
 {
   setupFilterParameters();
 }

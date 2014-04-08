@@ -50,6 +50,10 @@ GBCDTriangleDumper::GBCDTriangleDumper() :
   m_FaceAttributeMatrixName(DREAM3D::Defaults::FaceAttributeMatrixName),
   m_SurfaceDataContainerName(DREAM3D::Defaults::SurfaceDataContainerName),
   m_OutputFile(""),
+/*[]*/m_SurfaceMeshFaceLabelsArrayPath(DREAM3D::Defaults::SomePath),
+/*[]*/m_SurfaceMeshFaceNormalsArrayPath(DREAM3D::Defaults::SomePath),
+/*[]*/m_SurfaceMeshFaceAreasArrayPath(DREAM3D::Defaults::SomePath),
+/*[]*/m_FeatureEulerAnglesArrayPath(DREAM3D::Defaults::SomePath),
   m_SurfaceMeshFaceAreasArrayName(DREAM3D::FaceData::SurfaceMeshFaceAreas),
   m_SurfaceMeshFaceAreas(NULL),
   m_SurfaceMeshFaceLabelsArrayName(DREAM3D::FaceData::SurfaceMeshFaceLabels),
@@ -57,11 +61,7 @@ GBCDTriangleDumper::GBCDTriangleDumper() :
   m_SurfaceMeshFaceNormalsArrayName(DREAM3D::FaceData::SurfaceMeshFaceNormals),
   m_SurfaceMeshFaceNormals(NULL),
   m_FeatureEulerAnglesArrayName(DREAM3D::FeatureData::EulerAngles),
-  m_FeatureEulerAngles(NULL),
-/*[]*/m_SurfaceMeshFaceLabelsArrayPath(DREAM3D::Defaults::SomePath),
-/*[]*/m_SurfaceMeshFaceNormalsArrayPath(DREAM3D::Defaults::SomePath),
-/*[]*/m_SurfaceMeshFaceAreasArrayPath(DREAM3D::Defaults::SomePath),
-/*[]*/m_FeatureEulerAnglesArrayPath(DREAM3D::Defaults::SomePath)
+  m_FeatureEulerAngles(NULL)
 {
   setupFilterParameters();
 }

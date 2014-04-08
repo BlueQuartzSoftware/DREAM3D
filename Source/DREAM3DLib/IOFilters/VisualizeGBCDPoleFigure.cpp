@@ -45,11 +45,7 @@
 
 #include "DREAM3DLib/Math/MatrixMath.h"
 #include "DREAM3DLib/Math/OrientationMath.h"
-
-const static float m_piOver2 = static_cast<float>(M_PI/2.0);
-const static float m_pi = static_cast<float>(M_PI);
-const static float m_pi2 = static_cast<float>(2.0*M_PI);
-const static float m_180Overpi = static_cast<float>(180.0/M_PI);
+#include "DREAM3DLib/Math/DREAM3DMath.h"
 
 // -----------------------------------------------------------------------------
 //
@@ -58,12 +54,11 @@ VisualizeGBCDPoleFigure::VisualizeGBCDPoleFigure() :
   AbstractFilter(),
   m_SurfaceDataContainerName(DREAM3D::Defaults::SurfaceDataContainerName),
   m_FaceEnsembleAttributeMatrixName(DREAM3D::Defaults::FaceEnsembleAttributeMatrixName),
-  m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
   m_OutputFile(""),
   m_CrystalStructure(Ebsd::CrystalStructure::UnknownCrystalStructure),
+/*[]*/m_GBCDArrayPath(DREAM3D::Defaults::SomePath),
   m_GBCDArrayName(DREAM3D::EnsembleData::GBCD),
-  m_GBCD(NULL),
-/*[]*/m_GBCDArrayPath(DREAM3D::Defaults::SomePath)
+  m_GBCD(NULL)
 {
   m_MisorientationRotation.angle = 0.0f;
   m_MisorientationRotation.h = 0.0f;
@@ -322,13 +317,13 @@ void VisualizeGBCDPoleFigure::execute()
   gbcdLimits[0] = 0.0;
   gbcdLimits[1] = 0.0;
   gbcdLimits[2] = 0.0;
-  gbcdLimits[3] = -sqrt(DREAM3D::Constants::k_Pi / 2.0);
-  gbcdLimits[4] = -sqrt(DREAM3D::Constants::k_Pi / 2.0);
-  gbcdLimits[5] = m_pi/2.0;
+  gbcdLimits[3] = -sqrt(DREAM3D::Constants::k_PiOver2);
+  gbcdLimits[4] = -sqrt(DREAM3D::Constants::k_PiOver2);
+  gbcdLimits[5] = DREAM3D::Constants::k_PiOver2;
   gbcdLimits[6] = 1.0;
-  gbcdLimits[7] = m_pi/2.0;
-  gbcdLimits[8] = sqrt(DREAM3D::Constants::k_Pi / 2.0);
-  gbcdLimits[9] = sqrt(DREAM3D::Constants::k_Pi / 2.0);
+  gbcdLimits[7] = DREAM3D::Constants::k_PiOver2;
+  gbcdLimits[8] = sqrt(DREAM3D::Constants::k_PiOver2);
+  gbcdLimits[9] = sqrt(DREAM3D::Constants::k_PiOver2);
 
   //get num components of GBCD
   QVector<size_t> cDims = m_GBCDPtr.lock()->getComponentDimensions();

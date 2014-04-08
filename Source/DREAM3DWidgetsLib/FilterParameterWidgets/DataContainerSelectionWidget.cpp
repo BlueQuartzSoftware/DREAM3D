@@ -166,6 +166,29 @@ void DataContainerSelectionWidget::populateComboBoxes()
     DataContainerProxy dc = iter.next();
     if(dataContainerList->findText(dc.name) == -1 ) {
       dataContainerList->addItem(dc.name);
+      qDebug() << "[1] Adding " << dc.name;
+    }
+  }
+
+  //remove items in the combo that are NOT in the Data Container Array
+  int count = dataContainerList->count();
+  for(int i = count - 1; i >= 0; i--)
+  {
+    QString str0 = dataContainerList->itemText(i);
+    iter.toFront();
+    bool boo = false;
+    while(iter.hasNext() )
+    {
+      DataContainerProxy dc = iter.next();
+      if(dc.name.compare(str0) == 0)
+      {
+        boo = true; // found in the list
+      }
+    }
+    if(boo == false)
+    {
+      dataContainerList->removeItem(i);
+      qDebug() << "[2] Removing " << str0;
     }
   }
 
@@ -206,6 +229,7 @@ void DataContainerSelectionWidget::populateComboBoxes()
   int dcIndex = dataContainerList->findText(dcName);
   if(dcIndex < 0 && dcName.isEmpty() == false) {
     dataContainerList->addItem(dcName);
+    qDebug() << "[2] Adding " << dcName;
   } // the string was not found so just set it to the first index
   else {
     if(dcIndex < 0) { dcIndex = 0; } // Just set it to the first DataContainer in the list

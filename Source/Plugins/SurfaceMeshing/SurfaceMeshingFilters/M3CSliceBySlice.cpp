@@ -340,11 +340,11 @@ M3CSliceBySlice::M3CSliceBySlice() :
   m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
   m_SurfaceMeshTriangleLabelsArrayName(DREAM3D::FaceData::SurfaceMeshFaceLabels),
   m_DeleteTempFiles(true),
+/*[]*/m_FeatureIdsArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::FeatureIds),
   m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
   m_FeatureIds(NULL),
   m_SurfaceMeshNodeTypeArrayName(DREAM3D::VertexData::SurfaceMeshNodeType),
-  m_SurfaceMeshNodeType(NULL),
-/*[]*/m_FeatureIdsArrayPath(DREAM3D::Defaults::SomePath)
+  m_SurfaceMeshNodeType(NULL)
 {
   setupFilterParameters();
 }
