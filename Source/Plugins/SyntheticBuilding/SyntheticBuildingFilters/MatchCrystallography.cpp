@@ -931,20 +931,26 @@ AbstractFilter::Pointer MatchCrystallography::newFilterInstance(bool copyFilterP
   MatchCrystallography::Pointer filter = MatchCrystallography::New();
   if(true == copyFilterParameters)
   {
-    filter->setPhaseTypesArrayPath(getPhaseTypesArrayPath());
-    filter->setCrystalStructuresArrayPath(getCrystalStructuresArrayPath());
-    filter->setInputStatsArrayPath(getInputStatsArrayPath() );
-    filter->setFeaturePhasesArrayPath(getFeaturePhasesArrayPath());
-    filter->setFeatureIdsArrayPath(getFeatureIdsArrayPath());
-    filter->setSurfaceFeaturesArrayPath(getSurfaceFeaturesArrayPath());
-    filter->setMaxIterations( getMaxIterations() );
-    filter->setNeighborListArrayPath(getNeighborListArrayPath() );
-    filter->setSharedSurfaceAreaListArrayPath(getSharedSurfaceAreaListArrayPath() );
-    filter->setNumFeaturesArrayPath(getNumFeaturesArrayPath() );
-    filter->setCellEulerAnglesArrayName(getCellEulerAnglesArrayName() );
-    filter->setVolumesArrayName(getVolumesArrayName() );
-    filter->setFeatureEulerAnglesArrayName(getFeatureEulerAnglesArrayName() );
-    filter->setAvgQuatsArrayName(getAvgQuatsArrayName() );
+    //Loop over each Filter Parameter that is registered to the filter either through this class or a parent class
+    // and copy the value from the current instance of the object into the "new" instance that was just created
+    QVector<FilterParameter::Pointer> options = getFilterParameters(); // Get the current set of filter parameters
+    for (QVector<FilterParameter::Pointer>::iterator iter = options.begin(); iter != options.end(); ++iter )
+    {
+      FilterParameter* parameter = (*iter).get();
+      if (parameter->getWidgetType().compare(FilterParameterWidgetType::SeparatorWidget) == 0 )
+      {
+        continue; // Skip this type of filter parameter as it has nothing to do with anything in the filter.
+      }
+      // Get the property from the current instance of the filter
+      QVariant var = property(parameter->getPropertyName().toLatin1().constData());
+      bool ok = filter->setProperty(parameter->getPropertyName().toLatin1().constData(), var);
+      if(false == ok)
+      {
+        QString ss = QString("Error occurred transferring the Filter Parameter '%1' in Filter '%2' to the filter instance. The pipeline may run but the underlying filter will NOT be using the values from the GUI."
+                             " Please report this issue to the developers of this filter.").arg(parameter->getPropertyName()).arg(filter->getHumanLabel());
+        Q_ASSERT_X(ok, __FILE__, ss.toLatin1().constData());
+      }
+    }
   }
   return filter;
 }

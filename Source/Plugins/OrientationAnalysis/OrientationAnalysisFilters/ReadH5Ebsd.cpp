@@ -1096,14 +1096,26 @@ AbstractFilter::Pointer ReadH5Ebsd::newFilterInstance(bool copyFilterParameters)
   ReadH5Ebsd::Pointer filter = ReadH5Ebsd::New();
   if(true == copyFilterParameters)
   {
-    filter->setCellAttributeMatrixName(getCellAttributeMatrixName());
-    filter->setCellEnsembleAttributeMatrixName(getCellEnsembleAttributeMatrixName());
-    filter->setDataContainerName(getDataContainerName());
-    filter->setInputFile( getInputFile() );
-    filter->setZStartIndex( getZStartIndex() );
-    filter->setZEndIndex( getZEndIndex() );
-    filter->setUseTransformations( getUseTransformations() );
-    filter->setSelectedArrayNames( getSelectedArrayNames() );
+    //Loop over each Filter Parameter that is registered to the filter either through this class or a parent class
+    // and copy the value from the current instance of the object into the "new" instance that was just created
+    QVector<FilterParameter::Pointer> options = getFilterParameters(); // Get the current set of filter parameters
+    for (QVector<FilterParameter::Pointer>::iterator iter = options.begin(); iter != options.end(); ++iter )
+    {
+      FilterParameter* parameter = (*iter).get();
+      if (parameter->getWidgetType().compare(FilterParameterWidgetType::SeparatorWidget) == 0 )
+      {
+        continue; // Skip this type of filter parameter as it has nothing to do with anything in the filter.
+      }
+      // Get the property from the current instance of the filter
+      QVariant var = property(parameter->getPropertyName().toLatin1().constData());
+      bool ok = filter->setProperty(parameter->getPropertyName().toLatin1().constData(), var);
+      if(false == ok)
+      {
+        QString ss = QString("Error occurred transferring the Filter Parameter '%1' in Filter '%2' to the filter instance. The pipeline may run but the underlying filter will NOT be using the values from the GUI."
+                             " Please report this issue to the developers of this filter.").arg(parameter->getPropertyName()).arg(filter->getHumanLabel());
+        Q_ASSERT_X(ok, __FILE__, ss.toLatin1().constData());
+      }
+    }
   }
   return filter;
 }

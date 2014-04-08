@@ -468,41 +468,26 @@ AbstractFilter::Pointer GenericExample::newFilterInstance(bool copyFilterParamet
   GenericExample::Pointer filter = GenericExample::New();
   if(true == copyFilterParameters)
   {
-    filter->setGoodVoxelsArrayName(getGoodVoxelsArrayName());
-    filter->setCellEulerAnglesArrayName(getCellEulerAnglesArrayName());
-    filter->setGoodVoxelsArrayPath(getGoodVoxelsArrayPath());
-    filter->setCellPatternQualityArrayPath(getCellPatternQualityArrayPath());
-    filter->setFeatureIdsArrayPath(getFeatureIdsArrayPath());
-    filter->setStlFilePrefix( getStlFilePrefix() );
-    filter->setMaxIterations( getMaxIterations() );
-    filter->setMisorientationTolerance( getMisorientationTolerance() );
-    filter->setInputFile( getInputFile() );
-    filter->setInputPath( getInputPath() );
-    filter->setOutputFile( getOutputFile() );
-    filter->setOutputPath( getOutputPath() );
-    filter->setWriteAlignmentShifts( getWriteAlignmentShifts() );
-    filter->setConversionType( getConversionType() );
-    filter->setDimensions( getDimensions() );
-    filter->setOrigin( getOrigin() );
-    filter->setSelectedVolumeVertexArrayName( getSelectedVolumeVertexArrayName() );
-    filter->setSelectedVolumeEdgeArrayName( getSelectedVolumeEdgeArrayName() );
-    filter->setSelectedVolumeFaceArrayName( getSelectedVolumeFaceArrayName() );
-    filter->setSelectedVolumeCellArrayName( getSelectedVolumeCellArrayName() );
-    filter->setSelectedVolumeFeatureArrayName( getSelectedVolumeFeatureArrayName() );
-    filter->setSelectedVolumeEnsembleArrayName( getSelectedVolumeEnsembleArrayName() );
-    filter->setSelectedSurfaceVertexArrayName( getSelectedSurfaceVertexArrayName() );
-    filter->setSelectedSurfaceEdgeArrayName( getSelectedSurfaceEdgeArrayName() );
-    filter->setSelectedSurfaceFaceArrayName( getSelectedSurfaceFaceArrayName() );
-    filter->setSelectedSurfaceFeatureArrayName( getSelectedSurfaceFeatureArrayName() );
-    filter->setSelectedSurfaceEnsembleArrayName( getSelectedSurfaceEnsembleArrayName() );
-    filter->setSelectedEdgeVertexArrayName( getSelectedEdgeVertexArrayName() );
-    filter->setSelectedEdgeEdgeArrayName( getSelectedEdgeEdgeArrayName() );
-    filter->setSelectedEdgeFeatureArrayName( getSelectedEdgeFeatureArrayName() );
-    filter->setSelectedEdgeEnsembleArrayName( getSelectedEdgeEnsembleArrayName() );
-    filter->setSelectedVertexVertexArrayName( getSelectedVertexVertexArrayName() );
-    filter->setSelectedVertexFeatureArrayName( getSelectedVertexFeatureArrayName() );
-    filter->setSelectedVertexEnsembleArrayName( getSelectedVertexEnsembleArrayName() );
-    filter->setCrystalSymmetryRotations( getCrystalSymmetryRotations() );
+    //Loop over each Filter Parameter that is registered to the filter either through this class or a parent class
+    // and copy the value from the current instance of the object into the "new" instance that was just created
+    QVector<FilterParameter::Pointer> options = getFilterParameters(); // Get the current set of filter parameters
+    for (QVector<FilterParameter::Pointer>::iterator iter = options.begin(); iter != options.end(); ++iter )
+    {
+      FilterParameter* parameter = (*iter).get();
+      if (parameter->getWidgetType().compare(FilterParameterWidgetType::SeparatorWidget) == 0 )
+      {
+        continue; // Skip this type of filter parameter as it has nothing to do with anything in the filter.
+      }
+      // Get the property from the current instance of the filter
+      QVariant var = property(parameter->getPropertyName().toLatin1().constData());
+      bool ok = filter->setProperty(parameter->getPropertyName().toLatin1().constData(), var);
+      if(false == ok)
+      {
+        QString ss = QString("Error occurred transferring the Filter Parameter '%1' in Filter '%2' to the filter instance. The pipeline may run but the underlying filter will NOT be using the values from the GUI."
+                             " Please report this issue to the developers of this filter.").arg(parameter->getPropertyName()).arg(filter->getHumanLabel());
+        Q_ASSERT_X(ok, __FILE__, ss.toLatin1().constData());
+      }
+    }
   }
   return filter;
 }
