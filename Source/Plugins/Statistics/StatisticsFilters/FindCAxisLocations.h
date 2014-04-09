@@ -68,8 +68,6 @@ class FindCAxisLocations : public AbstractFilter
     DREAM3D_TYPE_MACRO_SUPER(FindCAxisLocations, AbstractFilter)
 
     virtual ~FindCAxisLocations();
-    DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
 
     DREAM3D_FILTER_PARAMETER(DataArrayPath, QuatsArrayPath)
     Q_PROPERTY(DataArrayPath QuatsArrayPath READ getQuatsArrayPath WRITE setQuatsArrayPath)
