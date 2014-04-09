@@ -20,6 +20,7 @@ set(_PublicFilters
   SobelEdge
   HoughCircles
   AlignSectionsPhaseCorrelation
+  WriteImage
 )
 
 #---------
