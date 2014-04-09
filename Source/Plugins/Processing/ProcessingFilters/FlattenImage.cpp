@@ -167,7 +167,14 @@ void FlattenImage::dataCheck()
   setErrorCondition(0);
 
   int numImageComp = 1;
-  IDataArray::Pointer iDataArray = getDataContainerArray()->getAttributeMatrix(m_ImageDataArrayPath)->getAttributeArray(m_ImageDataArrayPath.getDataArrayName());
+
+  VolumeDataContainer* m = m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, m_ImageDataArrayPath.getDataContainerName());
+  if(getErrorCondition() < 0 || NULL == m) { return; }
+  AttributeMatrix::Pointer attrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, m_ImageDataArrayPath.getAttributeMatrixName(), -301);
+  if(getErrorCondition() < 0) { return; }
+
+  IDataArray::Pointer iDataArray = attrMat->getAttributeArray(m_ImageDataArrayPath.getDataArrayName());
+  if(getErrorCondition() < 0) { return; }
   if(NULL != iDataArray.get())
   {
     UInt8ArrayType* imageDataPtr = UInt8ArrayType::SafePointerDownCast(iDataArray.get());

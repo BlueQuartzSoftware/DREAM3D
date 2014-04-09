@@ -121,6 +121,7 @@ void ClearData::dataCheck()
   setErrorCondition(0);
 
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(m_CellAttributeMatrixName.getDataContainerName());
+  if(getErrorCondition() < 0 || NULL == m) { return; }
 
   if (getXMax() < getXMin())
   {
