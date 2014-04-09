@@ -67,8 +67,8 @@ class FindAvgScalarValueForFeatures : public AbstractFilter
     DREAM3D_TYPE_MACRO_SUPER(FindAvgScalarValueForFeatures, AbstractFilter)
 
     virtual ~FindAvgScalarValueForFeatures();
-    DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(CellFeatureAttributeMatrixName)
+    DREAM3D_FILTER_PARAMETER(DataArrayPath, CellFeatureAttributeMatrixName)
+    Q_PROPERTY(DataArrayPath CellFeatureAttributeMatrixName READ getCellFeatureAttributeMatrixName WRITE setCellFeatureAttributeMatrixName)
 
     DREAM3D_FILTER_PARAMETER(DataArrayPath, SelectedCellArrayPath)
     Q_PROPERTY(DataArrayPath SelectedCellArrayPath READ getSelectedCellArrayPath WRITE setSelectedCellArrayPath)

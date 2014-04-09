@@ -72,11 +72,14 @@ class GenerateEnsembleStatistics : public AbstractFilter
     DREAM3D_TYPE_MACRO_SUPER(GenerateEnsembleStatistics, AbstractFilter)
 
     virtual ~GenerateEnsembleStatistics();
-    DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(CellEnsembleAttributeMatrixName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(CellFeatureAttributeMatrixName)
+    DREAM3D_FILTER_PARAMETER(DataArrayPath, CellEnsembleAttributeMatrixName)
+    Q_PROPERTY(DataArrayPath CellEnsembleAttributeMatrixName READ getCellEnsembleAttributeMatrixName WRITE setCellEnsembleAttributeMatrixName)
 
-    DREAM3D_INSTANCE_STRING_PROPERTY(TotalSurfaceAreasArrayName)
+    DREAM3D_FILTER_PARAMETER(DataArrayPath, NeighborListArrayPath)
+    Q_PROPERTY(DataArrayPath NeighborListArrayPath READ getNeighborListArrayPath WRITE setNeighborListArrayPath)
+
+    DREAM3D_FILTER_PARAMETER(DataArrayPath, SharedSurfaceAreaListArrayPath)
+    Q_PROPERTY(DataArrayPath SharedSurfaceAreaListArrayPath READ getSharedSurfaceAreaListArrayPath WRITE setSharedSurfaceAreaListArrayPath)
 
     DREAM3D_FILTER_PARAMETER(DataArrayPath, FeaturePhasesArrayPath)
     Q_PROPERTY(DataArrayPath FeaturePhasesArrayPath READ getFeaturePhasesArrayPath WRITE setFeaturePhasesArrayPath)
@@ -116,6 +119,9 @@ class GenerateEnsembleStatistics : public AbstractFilter
 
     DREAM3D_FILTER_PARAMETER(QString, PhaseTypesArrayName)
     Q_PROPERTY(QString PhaseTypesArrayName READ getPhaseTypesArrayName WRITE setPhaseTypesArrayName)
+
+    DREAM3D_FILTER_PARAMETER(QString, StatisticsArrayName)
+    Q_PROPERTY(QString StatisticsArrayName READ getStatisticsArrayName WRITE setStatisticsArrayName)
 
     virtual const QString getCompiledLibraryName() { return Statistics::StatisticsBaseName; }
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
@@ -198,10 +204,10 @@ signals:
     DEFINE_PTR_WEAKPTR_DATAARRAY(unsigned int, CrystalStructures)
     DEFINE_CREATED_DATAARRAY(uint32_t, PhaseTypes)
 
-    NeighborList<int>* m_NeighborList;
-    NeighborList<float>* m_SharedSurfaceAreaList;
+    NeighborList<int>::WeakPointer m_NeighborList;
+    NeighborList<float>::WeakPointer m_SharedSurfaceAreaList;
 
-    StatsDataArray* m_StatsDataArray;
+    StatsDataArray::WeakPointer m_StatsDataArray;
 
     QVector<DistributionAnalysisOps::Pointer> m_DistributionAnalysis;
 

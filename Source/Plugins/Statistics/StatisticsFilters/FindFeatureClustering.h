@@ -66,11 +66,6 @@ class FindFeatureClustering : public AbstractFilter
 
     virtual ~FindFeatureClustering();
 
-    DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(CellFeatureAttributeMatrixName)
-
-    DREAM3D_INSTANCE_STRING_PROPERTY(ClusteringListArrayName)
-
     DREAM3D_INSTANCE_STRING_PROPERTY(ErrorOutputFile)
 
     DREAM3D_FILTER_PARAMETER(DataArrayPath, EquivalentDiametersArrayPath)
@@ -81,6 +76,9 @@ class FindFeatureClustering : public AbstractFilter
 
     DREAM3D_FILTER_PARAMETER(DataArrayPath, CentroidsArrayPath)
     Q_PROPERTY(DataArrayPath CentroidsArrayPath READ getCentroidsArrayPath WRITE setCentroidsArrayPath)
+
+    DREAM3D_FILTER_PARAMETER(QString, ClusteringListArrayName)
+    Q_PROPERTY(QString ClusteringListArrayName READ getClusteringListArrayName WRITE setClusteringListArrayName)
 
     virtual const QString getCompiledLibraryName() { return Statistics::StatisticsBaseName; }
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
@@ -125,7 +123,7 @@ signals:
     DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeaturePhases)
     DEFINE_PTR_WEAKPTR_DATAARRAY(float, Centroids)
     DEFINE_PTR_WEAKPTR_DATAARRAY(float, EquivalentDiameters)
-    NeighborList<float>* m_ClusteringList;
+    NeighborList<float>::WeakPointer m_ClusteringList;
 
     void dataCheck();
 

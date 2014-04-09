@@ -50,23 +50,22 @@
 // -----------------------------------------------------------------------------
 GenerateEnsembleStatistics::GenerateEnsembleStatistics()  :
   AbstractFilter(),
-  m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
-  m_CellEnsembleAttributeMatrixName(DREAM3D::Defaults::CellEnsembleAttributeMatrixName),
-  m_CellFeatureAttributeMatrixName(DREAM3D::Defaults::CellFeatureAttributeMatrixName),
-  m_TotalSurfaceAreasArrayName(DREAM3D::EnsembleData::TotalSurfaceAreas),
-/*[]*/m_FeaturePhasesArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, DREAM3D::FeatureData::Phases),
-/*[]*/m_BiasedFeaturesArrayPath(DREAM3D::Defaults::SomePath),
-/*[]*/m_EquivalentDiametersArrayPath(DREAM3D::Defaults::SomePath),
-/*[]*/m_NeighborhoodsArrayPath(DREAM3D::Defaults::SomePath),
-/*[]*/m_AspectRatiosArrayPath(DREAM3D::Defaults::SomePath),
-/*[]*/m_Omega3sArrayPath(DREAM3D::Defaults::SomePath),
-/*[]*/m_AxisEulerAnglesArrayPath(DREAM3D::Defaults::SomePath),
-/*[]*/m_CrystalStructuresArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellEnsembleAttributeMatrixName, DREAM3D::EnsembleData::CrystalStructures),
-/*[]*/m_SurfaceFeaturesArrayPath(DREAM3D::Defaults::SomePath),
-/*[]*/m_VolumesArrayPath(DREAM3D::Defaults::SomePath),
-/*[]*/m_FeatureEulerAnglesArrayPath(DREAM3D::Defaults::SomePath),
-/*[]*/m_AvgQuatsArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, DREAM3D::FeatureData::AvgQuats),
-  m_PhaseTypesArrayName(DREAM3D::EnsembleData::PhaseTypes),
+  m_CellEnsembleAttributeMatrixName(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellEnsembleAttributeMatrixName, ""),
+  m_NeighborListArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, DREAM3D::FeatureData::NeighborList),
+  m_SharedSurfaceAreaListArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, DREAM3D::FeatureData::SharedSurfaceAreaList),
+  m_FeaturePhasesArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, DREAM3D::FeatureData::Phases),
+  m_BiasedFeaturesArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, DREAM3D::FeatureData::BiasedFeatures),
+  m_EquivalentDiametersArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, DREAM3D::FeatureData::EquivalentDiameters),
+  m_NeighborhoodsArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, DREAM3D::FeatureData::Neighborhoods),
+  m_AspectRatiosArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, DREAM3D::FeatureData::AspectRatios),
+  m_Omega3sArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, DREAM3D::FeatureData::Omega3s),
+  m_AxisEulerAnglesArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, DREAM3D::FeatureData::AxisEulerAngles),
+  m_CrystalStructuresArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellEnsembleAttributeMatrixName, DREAM3D::EnsembleData::CrystalStructures),
+  m_SurfaceFeaturesArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, DREAM3D::FeatureData::SurfaceFeatures),
+  m_VolumesArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, DREAM3D::FeatureData::Volumes),
+  m_FeatureEulerAnglesArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, DREAM3D::FeatureData::EulerAngles),
+  m_AvgQuatsArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, DREAM3D::FeatureData::AvgQuats),
+  m_StatisticsArrayName(DREAM3D::EnsembleData::Statistics),
   m_SizeCorrelationResolution(1),
   m_SizeDistribution(false),
   m_SizeDistributionFitType(DREAM3D::DistributionType::LogNormal),
@@ -103,6 +102,7 @@ GenerateEnsembleStatistics::GenerateEnsembleStatistics()  :
   m_Neighborhoods(NULL),
   m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
   m_CrystalStructures(NULL),
+  m_PhaseTypesArrayName(DREAM3D::EnsembleData::PhaseTypes),
   m_PhaseTypes(NULL)
 {
   m_DistributionAnalysis.push_back(BetaOps::New());
@@ -126,27 +126,33 @@ void GenerateEnsembleStatistics::setupFilterParameters()
 {
   FilterParameterVector parameters;
   parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "QString", true));
-/*[]*/parameters.push_back(FilterParameter::New("FeaturePhases", "FeaturePhasesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
-/*[]*/parameters.push_back(FilterParameter::New("BiasedFeatures", "BiasedFeaturesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
-/*[]*/parameters.push_back(FilterParameter::New("EquivalentDiameters", "EquivalentDiametersArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
-/*[]*/parameters.push_back(FilterParameter::New("Neighborhoods", "NeighborhoodsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
-/*[]*/parameters.push_back(FilterParameter::New("AspectRatios", "AspectRatiosArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
-/*[]*/parameters.push_back(FilterParameter::New("Omega3s", "Omega3sArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
-/*[]*/parameters.push_back(FilterParameter::New("AxisEulerAngles", "AxisEulerAnglesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
-/*[]*/parameters.push_back(FilterParameter::New("CrystalStructures", "CrystalStructuresArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
-/*[]*/parameters.push_back(FilterParameter::New("SurfaceFeatures", "SurfaceFeaturesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
-/*[]*/parameters.push_back(FilterParameter::New("Volumes", "VolumesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
-/*[]*/parameters.push_back(FilterParameter::New("FeatureEulerAngles", "FeatureEulerAnglesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
-/*[]*/parameters.push_back(FilterParameter::New("AvgQuats", "AvgQuatsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
+  parameters.push_back(FilterParameter::New("Neighbor List Array Name", "NeighborListArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
+  parameters.push_back(FilterParameter::New("Shared Surface Area List Array Name", "SharedSurfaceAreaListArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
+  parameters.push_back(FilterParameter::New("FeaturePhases", "FeaturePhasesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
+  parameters.push_back(FilterParameter::New("BiasedFeatures", "BiasedFeaturesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
+  parameters.push_back(FilterParameter::New("EquivalentDiameters", "EquivalentDiametersArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
+  parameters.push_back(FilterParameter::New("Neighborhoods", "NeighborhoodsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
+  parameters.push_back(FilterParameter::New("AspectRatios", "AspectRatiosArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
+  parameters.push_back(FilterParameter::New("Omega3s", "Omega3sArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
+  parameters.push_back(FilterParameter::New("AxisEulerAngles", "AxisEulerAnglesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
+  parameters.push_back(FilterParameter::New("CrystalStructures", "CrystalStructuresArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
+  parameters.push_back(FilterParameter::New("SurfaceFeatures", "SurfaceFeaturesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
+  parameters.push_back(FilterParameter::New("Volumes", "VolumesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
+  parameters.push_back(FilterParameter::New("FeatureEulerAngles", "FeatureEulerAnglesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
+  parameters.push_back(FilterParameter::New("AvgQuats", "AvgQuatsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
+  parameters.push_back(FilterParameter::New("Cell Ensemble Attribute Matrix Name", "CellEnsembleAttributeMatrixName", FilterParameterWidgetType::AttributeMatrixSelectionWidget, "DataArrayPath", true, ""));
   parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "QString", true));
-/*##*/parameters.push_back(FilterParameter::New("PhaseTypes", "PhaseTypesArrayName", FilterParameterWidgetType::StringWidget, "QString", true, ""));
+  parameters.push_back(FilterParameter::New("PhaseTypes", "PhaseTypesArrayName", FilterParameterWidgetType::StringWidget, "QString", true, ""));
+  parameters.push_back(FilterParameter::New("Statistics", "StatisticsArrayName", FilterParameterWidgetType::StringWidget, "QString", true, ""));
   setFilterParameters(parameters);
 }
 // -----------------------------------------------------------------------------
 void GenerateEnsembleStatistics::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-/*[]*/setPhaseTypesArrayName(reader->readString("PhaseTypesArrayName", getPhaseTypesArrayName() ) );
+  setCellEnsembleAttributeMatrixName(reader->readDataArrayPath("CellEnsembleAttributeMatrixName", getCellEnsembleAttributeMatrixName()));
+  setPhaseTypesArrayName(reader->readString("PhaseTypesArrayName", getPhaseTypesArrayName() ) );
+  setStatisticsArrayName(reader->readString("StatisticsArrayName", getStatisticsArrayName() ) );
   setAvgQuatsArrayPath(reader->readDataArrayPath("AvgQuatsArrayPath", getAvgQuatsArrayPath() ) );
   setFeatureEulerAnglesArrayPath(reader->readDataArrayPath("FeatureEulerAnglesArrayPath", getFeatureEulerAnglesArrayPath() ) );
   setVolumesArrayPath(reader->readDataArrayPath("VolumesArrayPath", getVolumesArrayPath() ) );
@@ -181,7 +187,9 @@ void GenerateEnsembleStatistics::readFilterParameters(AbstractFilterParametersRe
 int GenerateEnsembleStatistics::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-/*[]*/writer->writeValue("PhaseTypesArrayName", getPhaseTypesArrayName() );
+  writer->writeValue("CellEnsembleAttributeMatrixName", getCellEnsembleAttributeMatrixName());
+  writer->writeValue("PhaseTypesArrayName", getPhaseTypesArrayName() );
+  writer->writeValue("StatisticsArrayName", getStatisticsArrayName() );
   writer->writeValue("AvgQuatsArrayPath", getAvgQuatsArrayPath() );
   writer->writeValue("FeatureEulerAnglesArrayPath", getFeatureEulerAnglesArrayPath() );
   writer->writeValue("VolumesArrayPath", getVolumesArrayPath() );
@@ -219,105 +227,82 @@ void GenerateEnsembleStatistics::dataCheck()
   DataArrayPath tempPath;
   setErrorCondition(0);
 
-  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName(), false);
-  if(getErrorCondition() < 0 || NULL == m) { return; }
-  AttributeMatrix::Pointer cellEnsembleAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellEnsembleAttributeMatrixName(), -301);
-  if(getErrorCondition() < 0) { return; }
-  AttributeMatrix::Pointer cellFeatureAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellFeatureAttributeMatrixName(), -301);
-  if(getErrorCondition() < 0) { return; }
-
   QVector<size_t> dims(1, 1);
   m_FeaturePhasesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeaturePhasesArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_FeaturePhasesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_FeaturePhases = m_FeaturePhasesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   if(m_SizeDistribution == true || m_Omega3Distribution == true
-      || m_AspectRatioDistribution == true || m_NeighborhoodDistribution == true || m_CalculateAxisODF == true)
+    || m_AspectRatioDistribution == true || m_NeighborhoodDistribution == true || m_CalculateAxisODF == true)
   {
-  m_BiasedFeaturesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<bool>, AbstractFilter>(this, getBiasedFeaturesArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+    m_BiasedFeaturesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<bool>, AbstractFilter>(this, getBiasedFeaturesArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
     if( NULL != m_BiasedFeaturesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
     { m_BiasedFeatures = m_BiasedFeaturesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-  m_EquivalentDiametersPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getEquivalentDiametersArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+    m_EquivalentDiametersPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getEquivalentDiametersArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
     if( NULL != m_EquivalentDiametersPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
     { m_EquivalentDiameters = m_EquivalentDiametersPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   }
   if(m_NeighborhoodDistribution == true)
   {
-  m_NeighborhoodsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getNeighborhoodsArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+    m_NeighborhoodsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getNeighborhoodsArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
     if( NULL != m_NeighborhoodsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
     { m_Neighborhoods = m_NeighborhoodsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   }
   if(m_AspectRatioDistribution == true)
   {
     dims[0] = 2;
-  m_AspectRatiosPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getAspectRatiosArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+    m_AspectRatiosPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getAspectRatiosArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
     if( NULL != m_AspectRatiosPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
     { m_AspectRatios = m_AspectRatiosPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   }
   if(m_Omega3Distribution == true)
   {
     dims[0] = 1;
-  m_Omega3sPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getOmega3sArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+    m_Omega3sPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getOmega3sArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
     if( NULL != m_Omega3sPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
     { m_Omega3s = m_Omega3sPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   }
   if(m_CalculateAxisODF == true)
   {
     dims[0] = 3;
-  m_AxisEulerAnglesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getAxisEulerAnglesArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+    m_AxisEulerAnglesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getAxisEulerAnglesArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
     if( NULL != m_AxisEulerAnglesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
     { m_AxisEulerAngles = m_AxisEulerAnglesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   }
-
 
   if(m_CalculateODF == true || m_CalculateMDF == true)
   {
     dims[0] = 1;
     typedef DataArray<unsigned int> XTalStructArrayType;
-  m_CrystalStructuresPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<unsigned int>, AbstractFilter>(this, getCrystalStructuresArrayPath(), dims)
-                             ; /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+    m_CrystalStructuresPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<unsigned int>, AbstractFilter>(this, getCrystalStructuresArrayPath(), dims)
+      ; /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
     if( NULL != m_CrystalStructuresPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
     { m_CrystalStructures = m_CrystalStructuresPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-  m_SurfaceFeaturesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<bool>, AbstractFilter>(this, getSurfaceFeaturesArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+    m_SurfaceFeaturesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<bool>, AbstractFilter>(this, getSurfaceFeaturesArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
     if( NULL != m_SurfaceFeaturesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
     { m_SurfaceFeatures = m_SurfaceFeaturesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   }
   if(m_CalculateODF == true)
   {
     dims[0] = 1;
-  m_VolumesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getVolumesArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+    m_VolumesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getVolumesArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
     if( NULL != m_VolumesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
     { m_Volumes = m_VolumesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
     dims[0] = 3;
-  m_FeatureEulerAnglesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getFeatureEulerAnglesArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+    m_FeatureEulerAnglesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getFeatureEulerAnglesArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
     if( NULL != m_FeatureEulerAnglesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
     { m_FeatureEulerAngles = m_FeatureEulerAnglesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   }
   if(m_CalculateMDF == true)
   {
     dims[0] = 4;
-  m_AvgQuatsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getAvgQuatsArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+    m_AvgQuatsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getAvgQuatsArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
     if( NULL != m_AvgQuatsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
     { m_AvgQuats = m_AvgQuatsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-    m_SharedSurfaceAreaList = NeighborList<float>::SafeObjectDownCast<IDataArray*, NeighborList<float>*>(m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getAttributeArray(DREAM3D::FeatureData::SharedSurfaceAreaList).get());
-    if(m_SharedSurfaceAreaList == NULL)
-    {
-
-      QString ss = QObject::tr("SurfaceAreaLists Array Not Initialized correctly");
-      setErrorCondition(-306);
-      notifyErrorMessage(getHumanLabel(), ss, -306);
-    }
     // Now we are going to get a "Pointer" to the NeighborList object out of the DataContainer
-    m_NeighborList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>*>(m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getAttributeArray(DREAM3D::FeatureData::NeighborList).get());
-    if(m_NeighborList == NULL)
-    {
-
-      QString ss = QObject::tr("NeighborLists Array Not Initialized correctly");
-      setErrorCondition(-305);
-      notifyErrorMessage(getHumanLabel(), ss, -305);
-    }
+    m_SharedSurfaceAreaList = getDataContainerArray()->getPrereqArrayFromPath<NeighborList<float>, AbstractFilter>(this, getSharedSurfaceAreaListArrayPath(), dims);
+    m_NeighborList = getDataContainerArray()->getPrereqArrayFromPath<NeighborList<int>, AbstractFilter>(this, getNeighborListArrayPath(), dims);
   }
-
 
   if (m_PhaseTypeArray.size() <= 1)
   {
@@ -327,20 +312,21 @@ void GenerateEnsembleStatistics::dataCheck()
   {
     dims[0] = 1;
     typedef DataArray<unsigned int> PhaseTypeArrayType;
-    m_PhaseTypesPtr = cellEnsembleAttrMat->createNonPrereqArray<DataArray<uint32_t>, AbstractFilter, uint32_t>(this, m_PhaseTypesArrayName, DREAM3D::PhaseType::UnknownPhaseType, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-////==>MIKE_GROEBER_FIX tempPath.update(DATACONTAINER_NAME, ATTRIBUTEMATRIX_NAME, getPhaseTypesArrayName() );
-////==>MIKE_GROEBER_FIX m_PhaseTypesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<uint32_t>, AbstractFilter, uint32_t>(this, tempPath, DREAM3D::PhaseType::UnknownPhaseType, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+    tempPath.update(getCellEnsembleAttributeMatrixName().getDataContainerName(), getCellEnsembleAttributeMatrixName().getAttributeMatrixName(), getPhaseTypesArrayName() );
+    m_PhaseTypesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<uint32_t>, AbstractFilter, uint32_t>(this, tempPath, DREAM3D::PhaseType::UnknownPhaseType, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
     if( NULL != m_PhaseTypesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
     { m_PhaseTypes = m_PhaseTypesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   }
-  m_StatsDataArray = StatsDataArray::SafeObjectDownCast<IDataArray*, StatsDataArray*>(m->getAttributeMatrix(m_CellEnsembleAttributeMatrixName)->getAttributeArray(DREAM3D::EnsembleData::Statistics).get());
-  if(m_StatsDataArray == NULL)
-  {
-    StatsDataArray::Pointer p = StatsDataArray::New();
-    m_StatsDataArray = p.get();
-    m_StatsDataArray->fillArrayWithNewStatsData(cellEnsembleAttrMat->getNumTuples(), m_PhaseTypes);
-    m->getAttributeMatrix(getCellEnsembleAttributeMatrixName())->addAttributeArray(DREAM3D::EnsembleData::Statistics, p);
-  }
+
+  //now create and add the stats array itself
+  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getCellEnsembleAttributeMatrixName().getDataArrayName());
+  if(getErrorCondition() < 0 || m == NULL) { return; }
+  AttributeMatrix::Pointer attrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellEnsembleAttributeMatrixName().getAttributeMatrixName(), -301);
+  if(getErrorCondition() < 0 || attrMat == NULL) { return; }
+
+  m_StatsDataArray = StatsDataArray::New();
+  m_StatsDataArray.lock()->fillArrayWithNewStatsData(m_PhaseTypesPtr.lock()->getNumberOfTuples(), m_PhaseTypes);
+  attrMat->addAttributeArray(DREAM3D::EnsembleData::Statistics, m_StatsDataArray.lock());
 
   if (m_SizeDistributionFitType != DREAM3D::DistributionType::LogNormal)
   {
@@ -358,7 +344,6 @@ void GenerateEnsembleStatistics::dataCheck()
   {
     notifyWarningMessage(getHumanLabel(), "The Neighborhood type needs to be a Log Normal Distribution otherwise unpredictable results may occur.", -1000);
   }
-
 }
 
 // -----------------------------------------------------------------------------
@@ -380,8 +365,7 @@ void GenerateEnsembleStatistics::execute()
   dataCheck();
   if(getErrorCondition() < 0) { return; }
 
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-  int totalEnsembles = m->getAttributeMatrix(getCellEnsembleAttributeMatrixName())->getNumTuples();
+  int totalEnsembles = m_PhaseTypesPtr.lock()->getNumberOfTuples();
 
   // Check to see if the user has over ridden the phase types for this filter
   if (m_PhaseTypeArray.size() > 0)
@@ -405,11 +389,6 @@ void GenerateEnsembleStatistics::execute()
       m_PhaseTypes[r] = m_PhaseTypeArray[r];
     }
   }
-
-  StatsDataArray::Pointer p = StatsDataArray::New();
-  m_StatsDataArray = p.get();
-  m_StatsDataArray->fillArrayWithNewStatsData(totalEnsembles, m_PhaseTypes);
-  m->getAttributeMatrix(getCellEnsembleAttributeMatrixName())->addAttributeArray(DREAM3D::EnsembleData::Statistics, p);
 
   if(m_SizeDistribution == true)
   {
@@ -448,9 +427,7 @@ void GenerateEnsembleStatistics::execute()
 // -----------------------------------------------------------------------------
 void GenerateEnsembleStatistics::gatherSizeStats()
 {
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-
-  StatsDataArray& statsDataArray = *m_StatsDataArray;
+  StatsDataArray& statsDataArray = *(m_StatsDataArray.lock());
 
   float maxdiam;
   float mindiam;
@@ -459,8 +436,8 @@ void GenerateEnsembleStatistics::gatherSizeStats()
   QVector<QVector<QVector<float > > > values;
 
   FloatArrayType::Pointer binnumbers;
-  size_t numfeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
-  size_t numensembles = m->getAttributeMatrix(getCellEnsembleAttributeMatrixName())->getNumTuples();
+  size_t numfeatures = m_EquivalentDiametersPtr.lock()->getNumberOfTuples();
+  size_t numensembles = m_PhaseTypesPtr.lock()->getNumberOfTuples();
 
   QVector<float> fractions(numensembles, 0.0);
   sizedist.resize(numensembles);
@@ -530,11 +507,10 @@ void GenerateEnsembleStatistics::gatherSizeStats()
 }
 void GenerateEnsembleStatistics::gatherAspectRatioStats()
 {
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
   StatsData::Pointer stats_data = StatsData::New();
 
-  StatsDataArray& statsDataArray = *m_StatsDataArray;
+  StatsDataArray& statsDataArray = *(m_StatsDataArray.lock());
 
   size_t bin;
 
@@ -544,8 +520,8 @@ void GenerateEnsembleStatistics::gatherAspectRatioStats()
   QVector<QVector<QVector<float> > > cvalues;
   QVector<float> mindiams;
   QVector<float> binsteps;
-  size_t numfeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
-  size_t numensembles = m->getAttributeMatrix(getCellEnsembleAttributeMatrixName())->getNumTuples();
+  size_t numfeatures = m_AspectRatiosPtr.lock()->getNumberOfTuples();
+  size_t numensembles = m_PhaseTypesPtr.lock()->getNumberOfTuples();
 
   boveras.resize(numensembles);
   coveras.resize(numensembles);
@@ -630,9 +606,7 @@ void GenerateEnsembleStatistics::gatherAspectRatioStats()
 // -----------------------------------------------------------------------------
 void GenerateEnsembleStatistics::gatherOmega3Stats()
 {
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-
-  StatsDataArray& statsDataArray = *m_StatsDataArray;
+  StatsDataArray& statsDataArray = *(m_StatsDataArray.lock());
 
   size_t bin;
 
@@ -640,8 +614,8 @@ void GenerateEnsembleStatistics::gatherOmega3Stats()
   QVector<QVector<QVector<float> > > values;
   QVector<float> mindiams;
   QVector<float> binsteps;
-  size_t numfeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
-  size_t numensembles = m->getAttributeMatrix(getCellEnsembleAttributeMatrixName())->getNumTuples();
+  size_t numfeatures = m_Omega3sPtr.lock()->getNumberOfTuples();
+  size_t numensembles = m_PhaseTypesPtr.lock()->getNumberOfTuples();
 
   omega3s.resize(numensembles);
   values.resize(numensembles);
@@ -706,17 +680,15 @@ void GenerateEnsembleStatistics::gatherOmega3Stats()
 }
 void GenerateEnsembleStatistics::gatherNeighborhoodStats()
 {
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-
-  StatsDataArray& statsDataArray = *m_StatsDataArray;
+  StatsDataArray& statsDataArray = *(m_StatsDataArray.lock());
 
   size_t bin;
   QVector<VectorOfFloatArray> neighborhoods;
   QVector<QVector<QVector<float > > > values;
   QVector<float> mindiams;
   QVector<float> binsteps;
-  size_t numfeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
-  size_t numensembles = m->getAttributeMatrix(getCellEnsembleAttributeMatrixName())->getNumTuples();
+  size_t numfeatures = m_NeighborhoodsPtr.lock()->getNumberOfTuples();
+  size_t numensembles = m_PhaseTypesPtr.lock()->getNumberOfTuples();
 
   neighborhoods.resize(numensembles);
   values.resize(numensembles);
@@ -783,19 +755,14 @@ void GenerateEnsembleStatistics::gatherNeighborhoodStats()
 }
 void GenerateEnsembleStatistics::gatherODFStats()
 {
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-
-  setErrorCondition(0);
-
-  StatsDataArray& statsDataArray = *m_StatsDataArray;
+  StatsDataArray& statsDataArray = *(m_StatsDataArray.lock());
 
   size_t bin;
-  size_t numfeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
+  size_t numfeatures = m_FeatureEulerAnglesPtr.lock()->getNumberOfTuples();
+  size_t numensembles = m_PhaseTypesPtr.lock()->getNumberOfTuples();
   int phase;
   QVector<float> totalvol;
   QVector<FloatArrayType::Pointer> eulerodf;
-
-  size_t numensembles = m->getAttributeMatrix(getCellEnsembleAttributeMatrixName())->getNumTuples();
 
   totalvol.resize(numensembles);
   eulerodf.resize(numensembles);
@@ -867,18 +834,14 @@ void GenerateEnsembleStatistics::gatherODFStats()
 }
 void GenerateEnsembleStatistics::gatherMDFStats()
 {
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-
-  setErrorCondition(0);
-
-  StatsDataArray& statsDataArray = *m_StatsDataArray;
+  StatsDataArray& statsDataArray = *(m_StatsDataArray.lock());
 
   // But since a pointer is difficult to use operators with we will now create a
   // reference variable to the pointer with the correct variable name that allows
   // us to use the same syntax as the "vector of vectors"
-  NeighborList<int>& neighborlist = *m_NeighborList;
+  NeighborList<int>& neighborlist = *(m_NeighborList.lock());
   // And we do the same for the SharedSurfaceArea list
-  NeighborList<float>& neighborsurfacearealist = *m_SharedSurfaceAreaList;
+  NeighborList<float>& neighborsurfacearealist = *(m_SharedSurfaceAreaList.lock());
 
   float n1 = 0.0f, n2 = 0.0f, n3 = 0.0f;
   float r1 = 0.0f, r2 = 0.0f, r3 = 0.0f;
@@ -888,13 +851,12 @@ void GenerateEnsembleStatistics::gatherMDFStats()
   QuatF q2;
   QuatF* avgQuats = reinterpret_cast<QuatF*>(m_AvgQuats);
 
-  size_t numfeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
+  size_t numfeatures = m_FeaturePhasesPtr.lock()->getNumberOfTuples();
+  size_t numensembles = m_PhaseTypesPtr.lock()->getNumberOfTuples();
   unsigned int phase1, phase2;
   QVector<float> totalSurfaceArea;
   QVector<FloatArrayType::Pointer> misobin;
   int numbins = 0;
-
-  size_t numensembles = m->getAttributeMatrix(getCellEnsembleAttributeMatrixName())->getNumTuples();
 
   misobin.resize(numensembles);
   totalSurfaceArea.resize(numensembles);
@@ -977,17 +939,14 @@ void GenerateEnsembleStatistics::gatherMDFStats()
 // -----------------------------------------------------------------------------
 void GenerateEnsembleStatistics::gatherAxisODFStats()
 {
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-
-  setErrorCondition(0);
-
-  StatsDataArray& statsDataArray = *m_StatsDataArray;
+  StatsDataArray& statsDataArray = *(m_StatsDataArray.lock());
 
   float r1, r2, r3;
   int bin;
   QVector<FloatArrayType::Pointer> axisodf;
   QVector<float> totalaxes;
-  size_t numXTals = m->getAttributeMatrix(getCellEnsembleAttributeMatrixName())->getNumTuples();
+  size_t numfeatures = m_AxisEulerAnglesPtr.lock()->getNumberOfTuples();
+  size_t numXTals = m_PhaseTypesPtr.lock()->getNumberOfTuples();
   axisodf.resize(numXTals);
   totalaxes.resize(numXTals);
   for (size_t i = 1; i < numXTals; i++)
@@ -999,7 +958,6 @@ void GenerateEnsembleStatistics::gatherAxisODFStats()
       axisodf[i]->setValue(j, 0.0);
     }
   }
-  size_t numfeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
   for (size_t i = 1; i < numfeatures; i++)
   {
     if(m_SurfaceFeatures[i] == false)

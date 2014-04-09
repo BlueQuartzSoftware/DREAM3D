@@ -48,15 +48,15 @@
 // -----------------------------------------------------------------------------
 FitFeatureData::FitFeatureData() :
   AbstractFilter(),
-  m_CellEnsembleAttributeMatrixName(DREAM3D::Defaults::CellEnsembleAttributeMatrixName),
+  m_CellEnsembleAttributeMatrixName(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellEnsembleAttributeMatrixName, ""),
   m_SelectedFeatureArrayPath("", "", ""),
   m_DistributionType(DREAM3D::DistributionType::UnknownDistributionType),
   m_RemoveBiasedFeatures(false),
-/*[]*/m_FeaturePhasesArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, DREAM3D::FeatureData::Phases),
-/*[]*/m_BiasedFeaturesArrayPath(DREAM3D::Defaults::SomePath),
-  m_NewEnsembleArrayArrayName(""),
+  m_FeaturePhasesArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, DREAM3D::FeatureData::Phases),
+  m_BiasedFeaturesArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, DREAM3D::FeatureData::BiasedFeatures),
   m_BiasedFeaturesArrayName(DREAM3D::FeatureData::BiasedFeatures),
   m_BiasedFeatures(NULL),
+  m_NewEnsembleArrayArrayName(""),
   m_NewEnsembleArray(NULL),
   m_FeaturePhasesArrayName(DREAM3D::FeatureData::Phases),
   m_FeaturePhases(NULL)
@@ -93,10 +93,11 @@ void FitFeatureData::setupFilterParameters()
   }
   parameters.push_back(FilterParameter::New("Remove Biased Features", "RemoveBiasedFeatures", FilterParameterWidgetType::BooleanWidget,"bool", false));
   parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "QString", true));
-/*[]*/parameters.push_back(FilterParameter::New("FeaturePhases", "FeaturePhasesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
-/*[]*/parameters.push_back(FilterParameter::New("BiasedFeatures", "BiasedFeaturesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
+  parameters.push_back(FilterParameter::New("FeaturePhases", "FeaturePhasesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
+  parameters.push_back(FilterParameter::New("BiasedFeatures", "BiasedFeaturesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
+  parameters.push_back(FilterParameter::New("Cell Ensemble Attribute Matrix Name", "CellEnsembleAttributeMatrixName", FilterParameterWidgetType::AttributeMatrixSelectionWidget, "DataArrayPath", true, ""));
   parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "QString", true));
-/*##*/parameters.push_back(FilterParameter::New("NewEnsembleArray", "NewEnsembleArrayArrayName", FilterParameterWidgetType::StringWidget, "QString", true, ""));
+  parameters.push_back(FilterParameter::New("NewEnsembleArray", "NewEnsembleArrayArrayName", FilterParameterWidgetType::StringWidget, "QString", true, ""));
   setFilterParameters(parameters);
 }
 
@@ -106,7 +107,8 @@ void FitFeatureData::setupFilterParameters()
 void FitFeatureData::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-/*[]*/setNewEnsembleArrayArrayName(reader->readString("NewEnsembleArrayArrayName", getNewEnsembleArrayArrayName() ) );
+  setCellEnsembleAttributeMatrixName(reader->readDataArrayPath("CellEnsembleAttributeMatrixName", getCellEnsembleAttributeMatrixName()));
+  setNewEnsembleArrayArrayName(reader->readString("NewEnsembleArrayArrayName", getNewEnsembleArrayArrayName() ) );
   setBiasedFeaturesArrayPath(reader->readDataArrayPath("BiasedFeaturesArrayPath", getBiasedFeaturesArrayPath() ) );
   setFeaturePhasesArrayPath(reader->readDataArrayPath("FeaturePhasesArrayPath", getFeaturePhasesArrayPath() ) );
   setSelectedFeatureArrayPath( reader->readDataArrayPath( "SelectedFeatureArrayPath", getSelectedFeatureArrayPath() ) );
@@ -121,7 +123,8 @@ void FitFeatureData::readFilterParameters(AbstractFilterParametersReader* reader
 int FitFeatureData::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-/*[]*/writer->writeValue("NewEnsembleArrayArrayName", getNewEnsembleArrayArrayName() );
+  writer->writeValue("CellEnsembleAttributeMatrixName", getCellEnsembleAttributeMatrixName());
+  writer->writeValue("NewEnsembleArrayArrayName", getNewEnsembleArrayArrayName() );
   writer->writeValue("BiasedFeaturesArrayPath", getBiasedFeaturesArrayPath() );
   writer->writeValue("FeaturePhasesArrayPath", getFeaturePhasesArrayPath() );
   writer->writeValue("SelectedFeatureArrayPath", getSelectedFeatureArrayPath() );
@@ -138,13 +141,6 @@ void FitFeatureData::dataCheck()
 {
   DataArrayPath tempPath;
   setErrorCondition(0);
-
-  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, m_SelectedFeatureArrayPath.getDataContainerName(), false);
-  if(getErrorCondition() < 0 || NULL == m) { return; }
-  AttributeMatrix::Pointer cellFeatureAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, m_SelectedFeatureArrayPath.getAttributeMatrixName(), -301);
-  if(getErrorCondition() < 0) { return; }
-  AttributeMatrix::Pointer cellEnsembleAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellEnsembleAttributeMatrixName(), -301);
-  if(getErrorCondition() < 0) { return; }
 
   QVector<size_t> dims(1, 1);
   m_FeaturePhasesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeaturePhasesArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
@@ -166,16 +162,15 @@ void FitFeatureData::dataCheck()
 
   m_NewEnsembleArrayArrayName = m_SelectedFeatureArrayPath.getDataArrayName() + distType + QString("Fit");
   dims[0] = numComp;
-  m_NewEnsembleArrayPtr = cellEnsembleAttrMat->createNonPrereqArray<DataArray<float>, AbstractFilter>(this, m_NewEnsembleArrayArrayName, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-////==>MIKE_GROEBER_FIX tempPath.update(DATACONTAINER_NAME, ATTRIBUTEMATRIX_NAME, getNewEnsembleArrayArrayName() );
-////==>MIKE_GROEBER_FIX m_NewEnsembleArrayPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, m_NewEnsembleArrayArrayName, 0, dims); /* Assigns the shared_ptr<>(this, tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  tempPath.update(getCellEnsembleAttributeMatrixName().getDataContainerName(), getCellEnsembleAttributeMatrixName().getAttributeMatrixName(), getNewEnsembleArrayArrayName() );
+  m_NewEnsembleArrayPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, tempPath, 0, dims); /* Assigns the shared_ptr<>(this, tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_NewEnsembleArrayPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_NewEnsembleArray = m_NewEnsembleArrayPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   if(m_RemoveBiasedFeatures == true)
   {
     dims[0] = 1;
-  m_BiasedFeaturesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<bool>, AbstractFilter>(this, getBiasedFeaturesArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+    m_BiasedFeaturesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<bool>, AbstractFilter>(this, getBiasedFeaturesArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
     if( NULL != m_BiasedFeaturesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
     { m_BiasedFeatures = m_BiasedFeaturesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   }
@@ -264,7 +259,7 @@ void FitFeatureData::execute()
   if(getErrorCondition() < 0) { return; }
 
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(m_SelectedFeatureArrayPath.getDataContainerName());
-  int32_t numEnsembles = m->getAttributeMatrix(getCellEnsembleAttributeMatrixName())->getNumTuples();
+  int32_t numEnsembles = m_NewEnsembleArrayPtr.lock()->getNumberOfTuples();
 
   QString ss;
 

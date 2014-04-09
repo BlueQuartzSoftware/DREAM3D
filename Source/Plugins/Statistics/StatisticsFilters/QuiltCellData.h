@@ -62,7 +62,6 @@ class QuiltCellData : public AbstractFilter
     DREAM3D_TYPE_MACRO_SUPER(QuiltCellData, AbstractFilter)
 
     virtual ~QuiltCellData();
-    DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
 
     // What Cell Array do they want to work on
     DREAM3D_FILTER_PARAMETER(DataArrayPath, SelectedCellArrayPath)
@@ -82,16 +81,6 @@ class QuiltCellData : public AbstractFilter
     // Give the created data array a name
     DREAM3D_FILTER_PARAMETER(QString, OutputArrayName)
     Q_PROPERTY(QString OutputArrayName READ getOutputArrayName WRITE setOutputArrayName)
-
-
-
-    /**
-    * @brief This returns the group that the filter belonds to. You can select
-    * a different group if you want. The string returned here will be displayed
-    * in the GUI for the filter
-    */
-    DREAM3D_FILTER_PARAMETER(QString, tOutputArrayName)
-    Q_PROPERTY(QString tOutputArrayName READ gettOutputArrayName WRITE settOutputArrayName)
 
     virtual const QString getCompiledLibraryName() { return Statistics::StatisticsBaseName; }
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);

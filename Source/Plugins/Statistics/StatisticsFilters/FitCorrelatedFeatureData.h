@@ -68,7 +68,8 @@ class FitCorrelatedFeatureData : public AbstractFilter
     DREAM3D_TYPE_MACRO_SUPER(FitCorrelatedFeatureData, AbstractFilter)
 
     virtual ~FitCorrelatedFeatureData();
-    DREAM3D_INSTANCE_STRING_PROPERTY(CellEnsembleAttributeMatrixName)
+    DREAM3D_FILTER_PARAMETER(DataArrayPath, CellEnsembleAttributeMatrixName)
+    Q_PROPERTY(DataArrayPath CellEnsembleAttributeMatrixName READ getCellEnsembleAttributeMatrixName WRITE setCellEnsembleAttributeMatrixName)
 
     DREAM3D_FILTER_PARAMETER(DataArrayPath, SelectedFeatureArrayPath)
     Q_PROPERTY(DataArrayPath SelectedFeatureArrayPath READ getSelectedFeatureArrayPath WRITE setSelectedFeatureArrayPath)

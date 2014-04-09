@@ -74,15 +74,14 @@ QuiltCellData::~QuiltCellData()
 void QuiltCellData::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(FilterParameter::New("Cell Array To Quilt", "SelectedCellArrayPath", FilterParameterWidgetType::DataArraySelectionWidget,"DataArrayPath", false));
   parameters.push_back(FilterParameter::New("Quilt Step", "QuiltStep", FilterParameterWidgetType::IntVec3Widget,"IntVec3_t", false, "Voxels"));
   parameters.push_back(FilterParameter::New("Patch Size", "PatchSize", FilterParameterWidgetType::IntVec3Widget,"IntVec3_t", false, "Voxels"));
-  parameters.push_back(FilterParameter::New("Output DataContainer Name", "OutputDataContainerName", FilterParameterWidgetType::StringWidget,"QString", false));
-  parameters.push_back(FilterParameter::New("Output AttributeMatrix Name", "OutputAttributeMatrixName", FilterParameterWidgetType::StringWidget,"QString", false));
-  parameters.push_back(FilterParameter::New("Output Data Array Name", "OutputArrayName", FilterParameterWidgetType::StringWidget,"QString", false));
-
+  parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "QString", true));
+  parameters.push_back(FilterParameter::New("Cell Array To Quilt", "SelectedCellArrayPath", FilterParameterWidgetType::DataArraySelectionWidget,"DataArrayPath", false));
   parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "QString", true));
-/*##*/parameters.push_back(FilterParameter::New("tOutput", "tOutputArrayName", FilterParameterWidgetType::StringWidget, "QString", true, ""));
+  parameters.push_back(FilterParameter::New("Output DataContainer Name", "OutputDataContainerName", FilterParameterWidgetType::StringWidget,"QString", true));
+  parameters.push_back(FilterParameter::New("Output AttributeMatrix Name", "OutputAttributeMatrixName", FilterParameterWidgetType::StringWidget,"QString", true));
+  parameters.push_back(FilterParameter::New("Output Data Array Name", "OutputArrayName", FilterParameterWidgetType::StringWidget,"QString", true));
   setFilterParameters(parameters);
 }
 
@@ -92,7 +91,6 @@ void QuiltCellData::setupFilterParameters()
 void QuiltCellData::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-/*[]*/settOutputArrayName(reader->readString("tOutputArrayName", gettOutputArrayName() ) );
   setSelectedCellArrayPath( reader->readDataArrayPath( "SelectedCellArrayPath", getSelectedCellArrayPath() ) );
   setOutputDataContainerName( reader->readString( "OutputDataContainerName", getOutputDataContainerName() ) );
   setOutputAttributeMatrixName( reader->readString( "OutputAttributeMatrixName", getOutputAttributeMatrixName() ) );
@@ -108,7 +106,6 @@ void QuiltCellData::readFilterParameters(AbstractFilterParametersReader* reader,
 int QuiltCellData::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-/*[]*/writer->writeValue("tOutputArrayName", gettOutputArrayName() );
   writer->writeValue("SelectedCellArrayPath", getSelectedCellArrayPath() );
   writer->writeValue("OutputDataContainerName", getOutputDataContainerName() );
   writer->writeValue("OutputAttributeMatrixName", getOutputAttributeMatrixName() );
@@ -134,6 +131,7 @@ void QuiltCellData::dataCheck()
     QString ss = QObject::tr("The input array name is empty. Please select a name for the input array");
     setErrorCondition(-11000);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    return;
   }
 
   if(getOutputDataContainerName().isEmpty() == true)
@@ -141,14 +139,15 @@ void QuiltCellData::dataCheck()
     QString ss = QObject::tr("The output DataContainer name is empty. Please assign a name for the created DataContainer");
     setErrorCondition(-11001);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    return;
   }
-
 
   if(getOutputAttributeMatrixName().isEmpty() == true)
   {
     QString ss = QObject::tr("The output AttributeMatrix name is empty. Please assign a name for the created AttributeMatrix");
     setErrorCondition(-11002);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    return;
   }
 
   if(getOutputArrayName().isEmpty() == true)
@@ -156,6 +155,7 @@ void QuiltCellData::dataCheck()
     QString ss = QObject::tr("The output array name is empty. Please assign a name for the created array");
     setErrorCondition(-11003);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    return;
   }
 
   // Check to make sure the QuiltStep and Patch Size are non-zero
@@ -164,6 +164,7 @@ void QuiltCellData::dataCheck()
     QString ss = QObject::tr("The QuiltStep parameter is invalid because one of the values is Negative or Zero. Value=(%1, %2, %3)").arg(m_QuiltStep.x).arg(m_QuiltStep.y).arg(m_QuiltStep.z);
     setErrorCondition(-11004);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    return;
   }
   // Check to make sure the QuiltStep and Patch Size are non-zero
   if(m_PatchSize.x < 1 || m_PatchSize.y < 1 || m_PatchSize.z < 1)
@@ -171,12 +172,6 @@ void QuiltCellData::dataCheck()
     QString ss = QObject::tr("The Patch Size parameter is invalid because one of the values is Negative or Zero. Value=(%1, %2, %3)").arg(m_PatchSize.x).arg(m_PatchSize.y).arg(m_PatchSize.z);
     setErrorCondition(-11005);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-  }
-
-
-  // we can not go any further until all of the names are set.
-  if(getErrorCondition() < 0)
-  {
     return;
   }
 
@@ -184,8 +179,6 @@ void QuiltCellData::dataCheck()
   // Next check the existing DataContainer/AttributeMatrix
   VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, m_SelectedCellArrayPath.getDataContainerName());
   if(getErrorCondition() < 0) { return; }
-  AttributeMatrix::Pointer cellAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, m_SelectedCellArrayPath.getAttributeMatrixName(), -301);
-  if(getErrorCondition() < 0 || NULL == cellAttrMat.get() ) { return; }
 
   //Establish the dimensions, resolutions and origin of the new data container
   size_t dcDims[3] = { 0,0,0};
@@ -208,12 +201,10 @@ void QuiltCellData::dataCheck()
   AttributeMatrix::Pointer newCellAttrMat = m2->createNonPrereqAttributeMatrix<AbstractFilter>(this, getOutputAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::Cell);
   if(getErrorCondition() < 0) { return; }
 
-
   //Get the name and create the array in the new data attrMat
   QVector<size_t> dims(1, 1);
-  m_OutputArrayPtr = newCellAttrMat->createNonPrereqArray<DataArray<float>, AbstractFilter, float>(this, getOutputArrayName(), 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-////==>MIKE_GROEBER_FIX tempPath.update(DATACONTAINER_NAME, ATTRIBUTEMATRIX_NAME, gettOutputArrayName() );
-////==>MIKE_GROEBER_FIX m_tOutputPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  tempPath.update(getOutputDataContainerName(), getOutputAttributeMatrixName(), getOutputArrayName() );
+  m_OutputArrayPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_OutputArrayPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_OutputArray = m_OutputArrayPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 }

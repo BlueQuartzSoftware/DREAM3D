@@ -48,17 +48,17 @@
 // -----------------------------------------------------------------------------
 FitCorrelatedFeatureData::FitCorrelatedFeatureData() :
   AbstractFilter(),
-  m_CellEnsembleAttributeMatrixName(DREAM3D::Defaults::CellEnsembleAttributeMatrixName),
+  m_CellEnsembleAttributeMatrixName(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellEnsembleAttributeMatrixName, ""),
   m_SelectedFeatureArrayPath("", "", ""),
   m_CorrelatedFeatureArrayPath("", "", ""),
   m_DistributionType(DREAM3D::DistributionType::UnknownDistributionType),
   m_NumberOfCorrelatedBins(1),
   m_RemoveBiasedFeatures(false),
-/*[]*/m_FeaturePhasesArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, DREAM3D::FeatureData::Phases),
-/*[]*/m_BiasedFeaturesArrayPath(DREAM3D::Defaults::SomePath),
-  m_NewEnsembleArrayArrayName(""),
+  m_FeaturePhasesArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, DREAM3D::FeatureData::Phases),
+  m_BiasedFeaturesArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, DREAM3D::FeatureData::BiasedFeatures),
   m_BiasedFeaturesArrayName(DREAM3D::FeatureData::BiasedFeatures),
   m_BiasedFeatures(NULL),
+  m_NewEnsembleArrayArrayName(""),
   m_NewEnsembleArray(NULL),
   m_FeaturePhasesArrayName(DREAM3D::FeatureData::Phases),
   m_FeaturePhases(NULL)
@@ -80,6 +80,7 @@ void FitCorrelatedFeatureData::setupFilterParameters()
 {
   FilterParameterVector parameters;
   parameters.push_back(FilterParameter::New("Feature Array To Fit", "SelectedFeatureArrayPath", FilterParameterWidgetType::DataArraySelectionWidget,"DataArrayPath", false));
+  parameters.push_back(FilterParameter::New("Array To Correlate With", "CorrelatedFeatureArrayPath", FilterParameterWidgetType::DataArraySelectionWidget,"DataArrayPath", false));
   {
     ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New();
     parameter->setHumanLabel("Distribution Type");
@@ -93,14 +94,14 @@ void FitCorrelatedFeatureData::setupFilterParameters()
     parameter->setChoices(choices);
     parameters.push_back(parameter);
   }
-  parameters.push_back(FilterParameter::New("Array To Correlate With", "CorrelatedFeatureArrayPath", FilterParameterWidgetType::DataArraySelectionWidget,"DataArrayPath", false));
   parameters.push_back(FilterParameter::New("Number Of Bins For Correlated Array", "NumberOfCorrelatedBins", FilterParameterWidgetType::IntWidget,"int", false));
   parameters.push_back(FilterParameter::New("Remove Biased Features", "RemoveBiasedFeatures", FilterParameterWidgetType::BooleanWidget,"bool", false));
   parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "QString", true));
-/*[]*/parameters.push_back(FilterParameter::New("FeaturePhases", "FeaturePhasesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
-/*[]*/parameters.push_back(FilterParameter::New("BiasedFeatures", "BiasedFeaturesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
+  parameters.push_back(FilterParameter::New("FeaturePhases", "FeaturePhasesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
+  parameters.push_back(FilterParameter::New("BiasedFeatures", "BiasedFeaturesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
+  parameters.push_back(FilterParameter::New("Cell Ensemble Attribute Matrix Name", "CellEnsembleAttributeMatrixName", FilterParameterWidgetType::AttributeMatrixSelectionWidget, "DataArrayPath", true, ""));
   parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "QString", true));
-/*##*/parameters.push_back(FilterParameter::New("NewEnsembleArray", "NewEnsembleArrayArrayName", FilterParameterWidgetType::StringWidget, "QString", true, ""));
+  parameters.push_back(FilterParameter::New("NewEnsembleArray", "NewEnsembleArrayArrayName", FilterParameterWidgetType::StringWidget, "QString", true, ""));
   setFilterParameters(parameters);
 }
 
@@ -110,10 +111,12 @@ void FitCorrelatedFeatureData::setupFilterParameters()
 void FitCorrelatedFeatureData::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-/*[]*/setNewEnsembleArrayArrayName(reader->readString("NewEnsembleArrayArrayName", getNewEnsembleArrayArrayName() ) );
+  setCellEnsembleAttributeMatrixName(reader->readDataArrayPath("CellEnsembleAttributeMatrixName", getCellEnsembleAttributeMatrixName()));
+  setNewEnsembleArrayArrayName(reader->readString("NewEnsembleArrayArrayName", getNewEnsembleArrayArrayName() ) );
   setBiasedFeaturesArrayPath(reader->readDataArrayPath("BiasedFeaturesArrayPath", getBiasedFeaturesArrayPath() ) );
   setFeaturePhasesArrayPath(reader->readDataArrayPath("FeaturePhasesArrayPath", getFeaturePhasesArrayPath() ) );
   setSelectedFeatureArrayPath( reader->readDataArrayPath( "SelectedFeatureArrayPath", getSelectedFeatureArrayPath() ) );
+  setCorrelatedFeatureArrayPath( reader->readDataArrayPath( "CorrelatedFeatureArrayPath", getCorrelatedFeatureArrayPath() ) );
   setDistributionType( reader->readValue( "DistributionType", getDistributionType() ) );
   setRemoveBiasedFeatures( reader->readValue( "RemoveBiasedFeatures", getRemoveBiasedFeatures() ) );
   setNumberOfCorrelatedBins( reader->readValue( "NumberOfCorrelatedBins", getNumberOfCorrelatedBins() ) );
@@ -126,10 +129,12 @@ void FitCorrelatedFeatureData::readFilterParameters(AbstractFilterParametersRead
 int FitCorrelatedFeatureData::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-/*[]*/writer->writeValue("NewEnsembleArrayArrayName", getNewEnsembleArrayArrayName() );
+  writer->writeValue("CellEnsembleAttributeMatrixName", getCellEnsembleAttributeMatrixName());
+  writer->writeValue("NewEnsembleArrayArrayName", getNewEnsembleArrayArrayName() );
   writer->writeValue("BiasedFeaturesArrayPath", getBiasedFeaturesArrayPath() );
   writer->writeValue("FeaturePhasesArrayPath", getFeaturePhasesArrayPath() );
   writer->writeValue("SelectedFeatureArrayPath", getSelectedFeatureArrayPath() );
+  writer->writeValue("CorrelatedFeatureArrayPath", getSelectedFeatureArrayPath() );
   writer->writeValue("DistributionType", getDistributionType() );
   writer->writeValue("RemovedBiasedFeatures", getRemoveBiasedFeatures() );
   writer->writeValue("NumberOfCorrelatedBins", getNumberOfCorrelatedBins() );
@@ -144,13 +149,6 @@ void FitCorrelatedFeatureData::dataCheck()
 {
   DataArrayPath tempPath;
   setErrorCondition(0);
-
-  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, m_SelectedFeatureArrayPath.getDataContainerName(), false);
-  if(getErrorCondition() < 0 || NULL == m) { return; }
-  AttributeMatrix::Pointer cellFeatureAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, m_SelectedFeatureArrayPath.getAttributeMatrixName(), -301);
-  if(getErrorCondition() < 0) { return; }
-  AttributeMatrix::Pointer cellEnsembleAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellEnsembleAttributeMatrixName(), -301);
-  if(getErrorCondition() < 0) { return; }
 
   QVector<size_t> dims(1, 1);
   m_FeaturePhasesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeaturePhasesArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
@@ -179,9 +177,8 @@ void FitCorrelatedFeatureData::dataCheck()
   dims.resize(2);
   dims[0] = m_NumberOfCorrelatedBins;
   dims[1] = numComp;
-  m_NewEnsembleArrayPtr = cellEnsembleAttrMat->createNonPrereqArray<DataArray<float>, AbstractFilter>(this, m_NewEnsembleArrayArrayName, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-////==>MIKE_GROEBER_FIX tempPath.update(DATACONTAINER_NAME, ATTRIBUTEMATRIX_NAME, getNewEnsembleArrayArrayName() );
-////==>MIKE_GROEBER_FIX m_NewEnsembleArrayPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, m_NewEnsembleArrayArrayName, 0, dims); /* Assigns the shared_ptr<>(this, tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  tempPath.update(getCellEnsembleAttributeMatrixName().getDataContainerName(), getCellEnsembleAttributeMatrixName().getAttributeMatrixName(), getNewEnsembleArrayArrayName() );
+  m_NewEnsembleArrayPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, tempPath, 0, dims); /* Assigns the shared_ptr<>(this, tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_NewEnsembleArrayPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_NewEnsembleArray = m_NewEnsembleArrayPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
@@ -189,7 +186,7 @@ void FitCorrelatedFeatureData::dataCheck()
   {
     dims.resize(1);
     dims[0] = 1;
-  m_BiasedFeaturesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<bool>, AbstractFilter>(this, getBiasedFeaturesArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+    m_BiasedFeaturesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<bool>, AbstractFilter>(this, getBiasedFeaturesArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
     if( NULL != m_BiasedFeaturesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
     { m_BiasedFeatures = m_BiasedFeaturesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   }
@@ -323,7 +320,7 @@ void FitCorrelatedFeatureData::execute()
   if(getErrorCondition() < 0) { return; }
 
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(m_SelectedFeatureArrayPath.getDataContainerName());
-  int64_t numEnsembles = m->getAttributeMatrix(getCellEnsembleAttributeMatrixName())->getNumTuples();
+  int64_t numEnsembles = m_NewEnsembleArrayPtr.lock()->getNumberOfTuples();
 
   QString ss;
 
@@ -394,7 +391,6 @@ void FitCorrelatedFeatureData::execute()
 
   // fit the data
   dType = inputData->getTypeAsString();
-  IDataArray::Pointer p = IDataArray::NullPointer();
   if (dType.compare("int8_t") == 0)
   {
     fitData<int8_t>(inputData, m_NewEnsembleArray, m_FeaturePhases, numEnsembles, m_DistributionType, binArray, m_NumberOfCorrelatedBins, m_RemoveBiasedFeatures, m_BiasedFeatures);
@@ -440,7 +436,6 @@ void FitCorrelatedFeatureData::execute()
     fitData<bool>(inputData, m_NewEnsembleArray, m_FeaturePhases, numEnsembles, m_DistributionType, binArray, m_NumberOfCorrelatedBins, m_RemoveBiasedFeatures, m_BiasedFeatures);
   }
 
-  m->getAttributeMatrix(getCellEnsembleAttributeMatrixName())->addAttributeArray(p->getName(), p);
   notifyStatusMessage(getHumanLabel(), "Complete");
 }
 

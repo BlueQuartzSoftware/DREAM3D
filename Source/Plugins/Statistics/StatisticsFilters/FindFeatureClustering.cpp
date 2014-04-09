@@ -45,13 +45,11 @@
 // -----------------------------------------------------------------------------
 FindFeatureClustering::FindFeatureClustering() :
   AbstractFilter(),
-  m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
-  m_CellFeatureAttributeMatrixName(DREAM3D::Defaults::CellFeatureAttributeMatrixName),
   m_ClusteringListArrayName(DREAM3D::FeatureData::ClusteringList),
   m_ErrorOutputFile(),
-/*[]*/m_EquivalentDiametersArrayPath(DREAM3D::Defaults::SomePath),
-/*[]*/m_FeaturePhasesArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, DREAM3D::FeatureData::Phases),
-/*[]*/m_CentroidsArrayPath(DREAM3D::Defaults::SomePath),
+  m_EquivalentDiametersArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, DREAM3D::FeatureData::EquivalentDiameters),
+  m_FeaturePhasesArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, DREAM3D::FeatureData::Phases),
+  m_CentroidsArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, DREAM3D::FeatureData::Centroids),
   m_FeaturePhasesArrayName(DREAM3D::FeatureData::Phases),
   m_FeaturePhases(NULL),
   m_CentroidsArrayName(DREAM3D::FeatureData::Centroids),
@@ -75,9 +73,10 @@ void FindFeatureClustering::setupFilterParameters()
 {
   FilterParameterVector parameters;
   parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "QString", true));
-/*[]*/parameters.push_back(FilterParameter::New("EquivalentDiameters", "EquivalentDiametersArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
-/*[]*/parameters.push_back(FilterParameter::New("FeaturePhases", "FeaturePhasesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
-/*[]*/parameters.push_back(FilterParameter::New("Centroids", "CentroidsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
+  parameters.push_back(FilterParameter::New("EquivalentDiameters", "EquivalentDiametersArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
+  parameters.push_back(FilterParameter::New("FeaturePhases", "FeaturePhasesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
+  parameters.push_back(FilterParameter::New("Centroids", "CentroidsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
+  parameters.push_back(FilterParameter::New("Clustering List Array Name", "ClusteringListArrayName", FilterParameterWidgetType::StringWidget,"QString", true));
   setFilterParameters(parameters);
 }
 
@@ -85,6 +84,7 @@ void FindFeatureClustering::setupFilterParameters()
 void FindFeatureClustering::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
+  setClusteringListArrayName(reader->readString("ClusteringListArrayName", getClusteringListArrayName() ) );
   setCentroidsArrayPath(reader->readDataArrayPath("CentroidsArrayPath", getCentroidsArrayPath() ) );
   setFeaturePhasesArrayPath(reader->readDataArrayPath("FeaturePhasesArrayPath", getFeaturePhasesArrayPath() ) );
   setEquivalentDiametersArrayPath(reader->readDataArrayPath("EquivalentDiametersArrayPath", getEquivalentDiametersArrayPath() ) );
@@ -97,6 +97,7 @@ void FindFeatureClustering::readFilterParameters(AbstractFilterParametersReader*
 int FindFeatureClustering::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
+  writer->writeValue("ClusteringListArrayName", getClusteringListArrayName() );
   writer->writeValue("CentroidsArrayPath", getCentroidsArrayPath() );
   writer->writeValue("FeaturePhasesArrayPath", getFeaturePhasesArrayPath() );
   writer->writeValue("EquivalentDiametersArrayPath", getEquivalentDiametersArrayPath() );
@@ -109,51 +110,23 @@ int FindFeatureClustering::writeFilterParameters(AbstractFilterParametersWriter*
 // -----------------------------------------------------------------------------
 void FindFeatureClustering::dataCheck()
 {
+  DataArrayPath tempPath;
   setErrorCondition(0);
 
-  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName(), false);
-  if(getErrorCondition() < 0 || NULL == m) { return; }
-  AttributeMatrix::Pointer cellFeatureAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellFeatureAttributeMatrixName(), -301);
-  if(getErrorCondition() < 0) { return; }
-
-  // Feature Data
-  // Do this whole block FIRST otherwise the side effect is that a call to m->getNumFeatureTuples will = 0
-  // because we are just creating an empty NeighborList object.
-  // Now we are going to get a "Pointer" to the NeighborList object out of the DataContainer
-  m_ClusteringList = NeighborList<float>::SafeObjectDownCast<IDataArray*, NeighborList<float>* >
-                     (m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getAttributeArray(m_ClusteringListArrayName).get());
-  if(m_ClusteringList == NULL)
-  {
-    NeighborList<float>::Pointer clusteringPtr = NeighborList<float>::New();
-    clusteringPtr->setName(m_ClusteringListArrayName);
-    clusteringPtr->resize(cellFeatureAttrMat->getNumTuples());
-    clusteringPtr->setNumNeighborsArrayName(m_ClusteringListArrayName);
-    m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->addAttributeArray(m_ClusteringListArrayName, clusteringPtr);
-    if (clusteringPtr.get() == NULL)
-    {
-      QString ss = QObject::tr("Clustering Array Not Initialized at Beginning of FindFeatureClustering Filter");
-      setErrorCondition(-308);
-      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-    }
-    m_ClusteringList = NeighborList<float>::SafeObjectDownCast<IDataArray*, NeighborList<float>* >
-                       (m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getAttributeArray(m_ClusteringListArrayName).get());
-  }
-
   QVector<size_t> dims(1, 1);
-////====>REMOVE THIS    m_EquivalentDiametersPtr = cellFeatureAttrMat->getPrereqArray<DataArray<float>, AbstractFilter>(this, m_EquivalentDiametersArrayName, -302, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   m_EquivalentDiametersPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getEquivalentDiametersArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_EquivalentDiametersPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_EquivalentDiameters = m_EquivalentDiametersPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-
-////====>REMOVE THIS    m_FeaturePhasesPtr = cellFeatureAttrMat->getPrereqArray<DataArray<int32_t>, AbstractFilter>(this, m_FeaturePhasesArrayName, -304, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   m_FeaturePhasesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeaturePhasesArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_FeaturePhasesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_FeaturePhases = m_FeaturePhasesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   dims[0] = 3;
-////====>REMOVE THIS    m_CentroidsPtr = cellFeatureAttrMat->getPrereqArray<DataArray<float>, AbstractFilter>(this, m_CentroidsArrayName, -305, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   m_CentroidsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getCentroidsArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_CentroidsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_Centroids = m_CentroidsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+
+  tempPath.update(getFeaturePhasesArrayPath().getDataContainerName(), getFeaturePhasesArrayPath().getAttributeMatrixName(), getClusteringListArrayName() );
+  m_ClusteringList = getDataContainerArray()->createNonPrereqArrayFromPath<NeighborList<float>, AbstractFilter, float>(this, tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
 }
 
 
@@ -193,15 +166,13 @@ void FindFeatureClustering::find_clustering()
     writeErrorFile = true;
   }
 
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-
   float x, y, z;
   float xn, yn, zn;
   float r;
 
   std::vector<std::vector<float> > clusteringlist;
 
-  int totalFeatures = int(m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples());
+  int totalFeatures = int(m_FeaturePhasesPtr.lock()->getNumberOfTuples());
 
   clusteringlist.resize(totalFeatures);
 
@@ -245,7 +216,7 @@ void FindFeatureClustering::find_clustering()
     // Set the vector for each list into the Clustering Object
     NeighborList<float>::SharedVectorType sharedClustLst(new std::vector<float>);
     sharedClustLst->assign(clusteringlist[i].begin(), clusteringlist[i].end());
-    m_ClusteringList->setList(static_cast<int>(i), sharedClustLst);
+    m_ClusteringList.lock()->setList(static_cast<int>(i), sharedClustLst);
   }
 }
 

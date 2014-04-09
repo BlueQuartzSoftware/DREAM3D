@@ -67,12 +67,11 @@ class FindFeatureHistogram : public AbstractFilter
     DREAM3D_TYPE_MACRO_SUPER(FindFeatureHistogram, AbstractFilter)
 
     virtual ~FindFeatureHistogram();
-    DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(CellFeatureAttributeMatrixName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(CellEnsembleAttributeMatrixName)
+    DREAM3D_FILTER_PARAMETER(DataArrayPath, CellEnsembleAttributeMatrixName)
+    Q_PROPERTY(DataArrayPath CellEnsembleAttributeMatrixName READ getCellEnsembleAttributeMatrixName WRITE setCellEnsembleAttributeMatrixName)
 
-    DREAM3D_FILTER_PARAMETER(QString, SelectedFeatureArrayName)
-    Q_PROPERTY(QString SelectedFeatureArrayName READ getSelectedFeatureArrayName WRITE setSelectedFeatureArrayName)
+    DREAM3D_FILTER_PARAMETER(DataArrayPath, SelectedFeatureArrayPath)
+    Q_PROPERTY(DataArrayPath SelectedFeatureArrayPath READ getSelectedFeatureArrayPath WRITE setSelectedFeatureArrayPath)
 
     DREAM3D_FILTER_PARAMETER(int, NumBins)
     Q_PROPERTY(int NumBins READ getNumBins WRITE setNumBins)

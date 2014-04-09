@@ -81,6 +81,59 @@ class DREAM3DLib_EXPORT StatsDataArray : public IDataArray
       return ptr;
     }
 
+    static Pointer CreateArray(size_t numTuples, int rank, size_t* dims, const QString& name)
+    {
+      if (name.isEmpty() == true)
+      {
+        return NullPointer();
+      }
+      StatsDataArray::Pointer ptr = StatsDataArray::New();
+      std::vector<unsigned int> phase_types(numTuples, DREAM3D::PhaseType::UnknownPhaseType);
+      ptr->fillArrayWithNewStatsData(numTuples, &(phase_types.front()) );
+      return ptr;
+    }
+
+    static Pointer CreateArray(size_t numTuples, std::vector<size_t> cDims, const QString& name)
+    {
+      if (name.isEmpty() == true)
+      {
+        return NullPointer();
+      }
+      StatsDataArray::Pointer ptr = StatsDataArray::New();
+      std::vector<unsigned int> phase_types(numTuples, DREAM3D::PhaseType::UnknownPhaseType);
+      ptr->fillArrayWithNewStatsData(numTuples, &(phase_types.front()) );
+      return ptr;
+    }
+
+    static Pointer CreateArray(size_t numTuples, QVector<size_t> cDims, const QString& name)
+    {
+      if (name.isEmpty() == true)
+      {
+        return NullPointer();
+      }
+      StatsDataArray::Pointer ptr = StatsDataArray::New();
+      std::vector<unsigned int> phase_types(numTuples, DREAM3D::PhaseType::UnknownPhaseType);
+      ptr->fillArrayWithNewStatsData(numTuples, &(phase_types.front()) );
+      return ptr;
+    }
+
+    static Pointer CreateArray(QVector<size_t> tDims, QVector<size_t> cDims, const QString& name)
+    {
+      if (name.isEmpty() == true)
+      {
+        return NullPointer();
+      }
+      size_t numTuples = tDims[0];
+      for(size_t iter=1;iter<tDims.size();iter)
+      {
+        numTuples *= tDims[iter];
+      }
+      StatsDataArray::Pointer ptr = StatsDataArray::New();
+      std::vector<unsigned int> phase_types(numTuples, DREAM3D::PhaseType::UnknownPhaseType);
+      ptr->fillArrayWithNewStatsData(numTuples, &(phase_types.front()) );
+      return ptr;
+    }
+
     /**
      * @brief GetTypeName Returns a string representation of the type of data that is stored by this class. This
      * can be a primitive like char, float, int or the name of a class.
@@ -123,7 +176,6 @@ class DREAM3DLib_EXPORT StatsDataArray : public IDataArray
     {
       return m_IsAllocated;
     }
-
 
     /**
      *
