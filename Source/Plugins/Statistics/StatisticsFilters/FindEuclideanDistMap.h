@@ -64,8 +64,6 @@ class FindEuclideanDistMap : public AbstractFilter
     DREAM3D_TYPE_MACRO_SUPER(FindEuclideanDistMap, AbstractFilter)
 
     virtual ~FindEuclideanDistMap();
-    DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
 
     DREAM3D_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
     Q_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)

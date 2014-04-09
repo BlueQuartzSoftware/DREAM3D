@@ -69,11 +69,6 @@ class FindTwinBoundaries : public AbstractFilter
     DREAM3D_TYPE_MACRO_SUPER(FindTwinBoundaries, AbstractFilter)
 
     virtual ~FindTwinBoundaries();
-    DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceDataContainerName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(FaceAttributeMatrixName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(CellEnsembleAttributeMatrixName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(CellFeatureAttributeMatrixName)
 
     DREAM3D_FILTER_PARAMETER(float, AxisTolerance)
     Q_PROPERTY(float AxisTolerance READ getAxisTolerance WRITE setAxisTolerance)

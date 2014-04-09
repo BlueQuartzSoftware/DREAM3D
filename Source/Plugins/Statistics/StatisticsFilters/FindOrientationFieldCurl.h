@@ -65,9 +65,6 @@ class FindOrientationFieldCurl : public AbstractFilter
     DREAM3D_TYPE_MACRO_SUPER(FindOrientationFieldCurl, AbstractFilter)
 
     virtual ~FindOrientationFieldCurl();
-    DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(CellEnsembleAttributeMatrixName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
 
     DREAM3D_FILTER_PARAMETER(DataArrayPath, CellPhasesArrayPath)
     Q_PROPERTY(DataArrayPath CellPhasesArrayPath READ getCellPhasesArrayPath WRITE setCellPhasesArrayPath)

@@ -69,11 +69,6 @@ class FindTwinBoundarySchmidFactors : public AbstractFilter
     DREAM3D_TYPE_MACRO_SUPER(FindTwinBoundarySchmidFactors, AbstractFilter)
 
     virtual ~FindTwinBoundarySchmidFactors();
-    DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceDataContainerName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(FaceAttributeMatrixName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(CellEnsembleAttributeMatrixName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(CellFeatureAttributeMatrixName)
 
     DREAM3D_FILTER_PARAMETER(QString, TwinBoundarySchmidFactorsFile)
     Q_PROPERTY(QString TwinBoundarySchmidFactorsFile READ getTwinBoundarySchmidFactorsFile WRITE setTwinBoundarySchmidFactorsFile)

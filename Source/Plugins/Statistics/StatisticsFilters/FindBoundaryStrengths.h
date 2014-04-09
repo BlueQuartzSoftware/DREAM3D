@@ -80,11 +80,6 @@ class FindBoundaryStrengths : public AbstractFilter
     DREAM3D_TYPE_MACRO_SUPER(FindBoundaryStrengths, AbstractFilter)
 
     virtual ~FindBoundaryStrengths();
-    DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceDataContainerName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(FaceAttributeMatrixName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(CellFeatureAttributeMatrixName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(CellEnsembleAttributeMatrixName)
 
     DREAM3D_FILTER_PARAMETER(FloatVec3_t, Loading)
     Q_PROPERTY(FloatVec3_t Loading READ getLoading WRITE setLoading)
