@@ -68,13 +68,8 @@ class PatchGroupMicroTextureRegions : public GroupFeatures
 
 
     virtual ~PatchGroupMicroTextureRegions();
-    DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(CellFeatureAttributeMatrixName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(NewCellFeatureAttributeMatrixName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(CellEnsembleAttributeMatrixName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
-
-    DREAM3D_INSTANCE_STRING_PROPERTY(NeighborhoodListArrayName)
+    DREAM3D_FILTER_PARAMETER(QString, NewCellFeatureAttributeMatrixName)
+    Q_PROPERTY(QString NewCellFeatureAttributeMatrixName READ getNewCellFeatureAttributeMatrixName WRITE setNewCellFeatureAttributeMatrixName)
 
     DREAM3D_FILTER_PARAMETER(float, CAxisTolerance)
     Q_PROPERTY(float CAxisTolerance READ getCAxisTolerance WRITE setCAxisTolerance)
@@ -118,6 +113,9 @@ class PatchGroupMicroTextureRegions : public GroupFeatures
 
     DREAM3D_FILTER_PARAMETER(QString, NeighborhoodsArrayName)
     Q_PROPERTY(QString NeighborhoodsArrayName READ getNeighborhoodsArrayName WRITE setNeighborhoodsArrayName)
+
+    DREAM3D_FILTER_PARAMETER(QString, NeighborhoodListArrayName)
+    Q_PROPERTY(QString NeighborhoodListArrayName READ getNeighborhoodListArrayName WRITE setNeighborhoodListArrayName)
 
     virtual const QString getCompiledLibraryName() { return Reconstruction::ReconstructionBaseName; }
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
@@ -182,7 +180,7 @@ class PatchGroupMicroTextureRegions : public GroupFeatures
 
     DEFINE_PTR_WEAKPTR_DATAARRAY(unsigned int, CrystalStructures)
 
-    NeighborList<int>* m_NeighborhoodList;
+    NeighborList<int>::WeakPointer m_NeighborhoodList;
 
   	float avgCaxes[3];
     QVector<float> patchCentroids;

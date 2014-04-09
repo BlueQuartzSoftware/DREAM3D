@@ -91,6 +91,77 @@ class NeighborList : public IDataArray
       return ptr;
     }
 
+    static Pointer CreateArray(size_t numTuples, int rank, size_t* dims, const QString& name)
+    {
+      if (name.isEmpty() == true)
+      {
+        return NullPointer();
+      }
+      Pointer ptr = NeighborList<T>::New();
+      ptr->setName(name);
+      size_t numElements = numTuples;
+      for(int iter=0;iter<rank;iter++)
+      {
+        numElements *= dims[iter];
+      }
+      ptr->resize(numElements);
+      return ptr;
+    }
+
+    static Pointer CreateArray(size_t numTuples, std::vector<size_t> cDims, const QString& name)
+    {
+      if (name.isEmpty() == true)
+      {
+        return NullPointer();
+      }
+      Pointer ptr = NeighborList<T>::New();
+      ptr->setName(name);
+      size_t numElements = numTuples;
+      for(int iter=0;iter<cDims.size();iter++)
+      {
+        numElements *= cDims[iter];
+      }
+      ptr->resize(numElements);
+      return ptr;
+    }
+
+    static Pointer CreateArray(size_t numTuples, QVector<size_t> cDims, const QString& name)
+    {
+      if (name.isEmpty() == true)
+      {
+        return NullPointer();
+      }
+      Pointer ptr = NeighborList<T>::New();
+      ptr->setName(name);
+      size_t numElements = numTuples;
+      for(int iter=0;iter<cDims.size();iter++)
+      {
+        numElements *= cDims[iter];
+      }
+      ptr->resize(numElements);
+      return ptr;
+    }
+
+    static Pointer CreateArray(QVector<size_t> tDims, QVector<size_t> cDims, const QString& name)
+    {
+      if (name.isEmpty() == true)
+      {
+        return NullPointer();
+      }
+      Pointer ptr = NeighborList<T>::New();
+      ptr->setName(name);
+      size_t numElements = tDims[0];
+      for(int iter=1;iter<tDims.size();iter++)
+      {
+        numElements *= tDims[iter];
+      }
+      for(int iter=0;iter<cDims.size();iter++)
+      {
+        numElements *= cDims[iter];
+      }
+      ptr->resize(numElements);
+      return ptr;
+    }
 
     /**
      * @brief createNewArray
@@ -141,6 +212,22 @@ class NeighborList : public IDataArray
      */
     virtual bool isAllocated() { return true; }
 
+    /**
+     * @brief Gives this array a human readable name
+     * @param name The name of this array
+     */
+    virtual void setInitValue(T initValue)
+    {
+      m_InitValue = initValue;
+    }
+
+    /**
+     * @brief Sets all the values to value.
+     */
+    virtual void initializeWithValue(T initValue, size_t offset = 0)
+    {
+
+    }
 
     /**
      * @brief getTypeName Returns a string representation of the type of data that is stored by this class. This
@@ -778,6 +865,8 @@ class NeighborList : public IDataArray
     QString m_Name;
 
     QVector<SharedVectorType> _data;
+      
+    T m_InitValue;
 
     NeighborList(const NeighborList&); // Copy Constructor Not Implemented
     void operator=(const NeighborList&); // Operator '=' Not Implemented

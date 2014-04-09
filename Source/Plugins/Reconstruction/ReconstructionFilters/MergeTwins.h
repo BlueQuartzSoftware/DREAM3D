@@ -68,11 +68,8 @@ class MergeTwins : public GroupFeatures
     DREAM3D_TYPE_MACRO_SUPER(MergeTwins, AbstractFilter)
 
     virtual ~MergeTwins();
-    DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(CellFeatureAttributeMatrixName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(NewCellFeatureAttributeMatrixName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(CellEnsembleAttributeMatrixName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
+    DREAM3D_FILTER_PARAMETER(QString, NewCellFeatureAttributeMatrixName)
+    Q_PROPERTY(QString NewCellFeatureAttributeMatrixName READ getNewCellFeatureAttributeMatrixName WRITE setNewCellFeatureAttributeMatrixName)
 
     DREAM3D_FILTER_PARAMETER(float, AxisTolerance)
     Q_PROPERTY(float AxisTolerance READ getAxisTolerance WRITE setAxisTolerance)

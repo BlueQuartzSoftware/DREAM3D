@@ -68,11 +68,11 @@ class GroupFeatures : public AbstractFilter
     DREAM3D_TYPE_MACRO_SUPER(GroupFeatures, AbstractFilter)
 
     virtual ~GroupFeatures();
-    DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(CellFeatureAttributeMatrixName)
-
-    DREAM3D_INSTANCE_STRING_PROPERTY(ContiguousNeighborListArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(NonContiguousNeighborListArrayName)
+ 
+    DREAM3D_FILTER_PARAMETER(DataArrayPath, ContiguousNeighborListArrayPath)
+    Q_PROPERTY(DataArrayPath ContiguousNeighborListArrayPath READ getContiguousNeighborListArrayPath WRITE setContiguousNeighborListArrayPath)
+    DREAM3D_FILTER_PARAMETER(DataArrayPath, NonContiguousNeighborListArrayPath)
+    Q_PROPERTY(DataArrayPath NonContiguousNeighborListArrayPath READ getNonContiguousNeighborListArrayPath WRITE setNonContiguousNeighborListArrayPath)
 
     DREAM3D_FILTER_PARAMETER(bool, UseNonContiguousNeighbors)
     Q_PROPERTY(float UseNonContiguousNeighbors READ getUseNonContiguousNeighbors WRITE setUseNonContiguousNeighbors)
@@ -81,8 +81,9 @@ class GroupFeatures : public AbstractFilter
 
     virtual const QString getGroupName() {return DREAM3D::FilterGroups::ReconstructionFilters;}
     virtual const QString getSubGroupName() {return DREAM3D::FilterSubGroups::SegmentationFilters;}
-    virtual const QString getHumanLabel() {return "Segment Features";}
+    virtual const QString getHumanLabel() {return "Group Features";}
 
+    virtual void setupFilterParameters();
     /**
     * @brief This method will write the options to a file
     * @param writer The writer that is used to write the options to a file
@@ -116,8 +117,8 @@ class GroupFeatures : public AbstractFilter
     virtual bool growGrouping(int referenceFeature, int neighborFeature, int newFid);
 
   private:
-    NeighborList<int>* m_ContiguousNeighborList;
-    NeighborList<int>* m_NonContiguousNeighborList;
+    NeighborList<int>::WeakPointer m_ContiguousNeighborList;
+    NeighborList<int>::WeakPointer m_NonContiguousNeighborList;
 
     void dataCheck();
 

@@ -56,14 +56,12 @@
 // -----------------------------------------------------------------------------
 GroupFeatures::GroupFeatures() :
   AbstractFilter(),
-  m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
-  m_CellFeatureAttributeMatrixName(DREAM3D::Defaults::CellFeatureAttributeMatrixName),
-  m_ContiguousNeighborListArrayName(DREAM3D::FeatureData::NeighborList),
-  m_NonContiguousNeighborListArrayName(DREAM3D::FeatureData::NeighborhoodList),
+  m_ContiguousNeighborListArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, DREAM3D::FeatureData::NeighborList),
+  m_NonContiguousNeighborListArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, DREAM3D::FeatureData::NeighborhoodList),
   m_UseNonContiguousNeighbors(false),
   m_PatchGrouping(false)
 {
-
+  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------
@@ -76,10 +74,25 @@ GroupFeatures::~GroupFeatures()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void GroupFeatures::setupFilterParameters()
+{
+  FilterParameterVector parameters;
+  parameters.push_back(FilterParameter::New("Use Non-Contiguous Neighbors", "UseNonContiguousNeighbors", FilterParameterWidgetType::BooleanWidget,"bool", false));
+  parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "QString", true));
+  parameters.push_back(FilterParameter::New("Contiguous NeighborList Array", "ContiguousNeighborListArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
+  parameters.push_back(FilterParameter::New("NonContiguous NeighborList Array", "NonContiguousNeighborListArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
+  setFilterParameters(parameters);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void GroupFeatures::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-
+  setUseNonContiguousNeighbors( reader->readValue("UseNonContiguousNeighbors", getUseNonContiguousNeighbors()) );
+  setContiguousNeighborListArrayPath( reader->readDataArrayPath("ContiguousNeighborListArrayPath", getContiguousNeighborListArrayPath()));
+  setNonContiguousNeighborListArrayPath( reader->readDataArrayPath("NonContiguousNeighborListArrayPath", getNonContiguousNeighborListArrayPath()));
   reader->closeFilterGroup();
 }
 
@@ -89,6 +102,9 @@ void GroupFeatures::readFilterParameters(AbstractFilterParametersReader* reader,
 int GroupFeatures::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
+  writer->writeValue("UseNonContiguousNeighbors", getUseNonContiguousNeighbors() );
+  writer->writeValue("ContiguousNeighborListArrayPath", getContiguousNeighborListArrayPath());
+  writer->writeValue("NonContiguousNeighborListArrayPath", getNonContiguousNeighborListArrayPath());
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
@@ -100,29 +116,14 @@ void GroupFeatures::dataCheck()
 {
   setErrorCondition(0);
 
-  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName(), false);
-  if(getErrorCondition() < 0 || NULL == m) { return; }
-  AttributeMatrix::Pointer cellFeatureAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellFeatureAttributeMatrixName(), -301);
-  if(getErrorCondition() < 0) { return; }
-
+  QVector<size_t> dims(1, 1);
   // Now we are going to get a "Pointer" to the NeighborList object out of the DataContainer
-  m_ContiguousNeighborList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>*>(m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getAttributeArray(DREAM3D::FeatureData::NeighborList).get());
-  if(m_ContiguousNeighborList == NULL)
-  {
-    QString ss = QObject::tr("NeighborLists Array Not Initialized correctly");
-    setErrorCondition(-304);
-    notifyErrorMessage(getHumanLabel(), ss, -1);
-  }
+  m_ContiguousNeighborList = getDataContainerArray()->getPrereqArrayFromPath<NeighborList<int>, AbstractFilter>(this, getContiguousNeighborListArrayPath(), dims);
+
   if(m_UseNonContiguousNeighbors == true)
   {
     // Now we are going to get a "Pointer" to the NeighborList object out of the DataContainer
-    m_NonContiguousNeighborList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>*>(m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getAttributeArray(DREAM3D::FeatureData::NeighborhoodList).get());
-    if(m_NonContiguousNeighborList == NULL)
-    {
-      QString ss = QObject::tr("NeighborhoodLists Array Not Initialized correctly");
-      setErrorCondition(-305);
-      notifyErrorMessage(getHumanLabel(), ss, -1);
-    }
+    m_NonContiguousNeighborList = getDataContainerArray()->getPrereqArrayFromPath<NeighborList<int>, AbstractFilter>(this, getNonContiguousNeighborListArrayPath(), dims);
   }
 }
 
@@ -142,22 +143,18 @@ void GroupFeatures::preflight()
 // -----------------------------------------------------------------------------
 void GroupFeatures::execute()
 {
-  // Since this method is called from the 'execute' and the DataContainer validity
-  // was checked there we are just going to get the Shared Pointer to the DataContainer
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  setErrorCondition(0);
+  dataCheck();
+  if(getErrorCondition() < 0) { return; }
 
-  // Now we are going to get a "Pointer" to the NeighborList object out of the DataContainer
-  m_ContiguousNeighborList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>* >(m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getAttributeArray(DREAM3D::FeatureData::NeighborList).get());
-  if(m_UseNonContiguousNeighbors == true) m_NonContiguousNeighborList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>* >(m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getAttributeArray(DREAM3D::FeatureData::NeighborhoodList).get());
   // But since a pointer is difficult to use operators with we will now create a
   // reference variable to the pointer with the correct variable name that allows
   // us to use the same syntax as the "vector of vectors"
-  NeighborList<int>& neighborlist = *m_ContiguousNeighborList;
-  NeighborList<int>& neighborlist2 = *m_NonContiguousNeighborList;
+  NeighborList<int>& neighborlist = *(m_ContiguousNeighborList.lock());
+  NeighborList<int>& neighborlist2 = *(m_NonContiguousNeighborList.lock());
 
   QVector<int> grouplist;
 
-  //int numfeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
   int parentcount = 0;
   int seed = 0;
   int list1size=0, list2size=0, listsize=0;
