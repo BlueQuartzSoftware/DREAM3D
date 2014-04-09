@@ -64,12 +64,9 @@ class FindNeighborhoods : public AbstractFilter
     DREAM3D_TYPE_MACRO_SUPER(FindNeighborhoods, AbstractFilter)
 
     virtual ~FindNeighborhoods();
-    DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(CellFeatureAttributeMatrixName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
 
-    DREAM3D_INSTANCE_STRING_PROPERTY(NeighborhoodListArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(NumNeighborsArrayName)
+    DREAM3D_FILTER_PARAMETER(QString, NeighborhoodListArrayName)
+    Q_PROPERTY(QString NeighborhoodListArrayName READ getNeighborhoodListArrayName WRITE setNeighborhoodListArrayName)
 
     DREAM3D_FILTER_PARAMETER(float, MultiplesOfAverage)
     Q_PROPERTY(float MultiplesOfAverage READ getMultiplesOfAverage WRITE setMultiplesOfAverage)
@@ -128,7 +125,7 @@ class FindNeighborhoods : public AbstractFilter
     DEFINE_PTR_WEAKPTR_DATAARRAY(float, Centroids)
     DEFINE_PTR_WEAKPTR_DATAARRAY(float, EquivalentDiameters)
     DEFINE_CREATED_DATAARRAY(int32_t, Neighborhoods)
-    NeighborList<int>* m_NeighborhoodList;
+    NeighborList<int>::WeakPointer m_NeighborhoodList;
 
     void dataCheck();
 

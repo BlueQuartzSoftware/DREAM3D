@@ -70,12 +70,12 @@ class FindMisorientations : public AbstractFilter
     DREAM3D_TYPE_MACRO_SUPER(FindMisorientations, AbstractFilter)
 
     virtual ~FindMisorientations();
-    DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(CellEnsembleAttributeMatrixName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(CellFeatureAttributeMatrixName)
 
-    DREAM3D_INSTANCE_STRING_PROPERTY(NeighborListArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(MisorientationListArrayName)
+    DREAM3D_FILTER_PARAMETER(DataArrayPath, NeighborListArrayPath)
+    Q_PROPERTY(DataArrayPath NeighborListArrayPath READ getNeighborListArrayPath WRITE setNeighborListArrayPath)
+
+    DREAM3D_FILTER_PARAMETER(QString, MisorientationListArrayName)
+    Q_PROPERTY(QString MisorientationListArrayName READ getMisorientationListArrayName WRITE setMisorientationListArrayName)
 
     DREAM3D_FILTER_PARAMETER(DataArrayPath, AvgQuatsArrayPath)
     Q_PROPERTY(DataArrayPath AvgQuatsArrayPath READ getAvgQuatsArrayPath WRITE setAvgQuatsArrayPath)
@@ -135,8 +135,8 @@ class FindMisorientations : public AbstractFilter
 
     DEFINE_PTR_WEAKPTR_DATAARRAY(float, AvgQuats)
     DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeaturePhases)
-    NeighborList<int>* m_NeighborList;
-    NeighborList<float>* m_MisorientationList;
+    NeighborList<int>::WeakPointer m_NeighborList;
+    NeighborList<float>::WeakPointer m_MisorientationList;
     DEFINE_CREATED_DATAARRAY(float, AvgMisorientations)
 
     DEFINE_PTR_WEAKPTR_DATAARRAY(unsigned int, CrystalStructures)

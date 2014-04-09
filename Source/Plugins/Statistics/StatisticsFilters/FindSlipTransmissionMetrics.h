@@ -82,14 +82,21 @@ class FindSlipTransmissionMetrics : public AbstractFilter
     DREAM3D_TYPE_MACRO_SUPER(FindSlipTransmissionMetrics, AbstractFilter)
 
     virtual ~FindSlipTransmissionMetrics();
-    DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(CellEnsembleAttributeMatrixName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(CellFeatureAttributeMatrixName)
 
-    DREAM3D_INSTANCE_STRING_PROPERTY(F1ArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(F1sptArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(F7ArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(mPrimeArrayName)
+    DREAM3D_FILTER_PARAMETER(DataArrayPath, NeighborListArrayPath)
+    Q_PROPERTY(DataArrayPath NeighborListArrayPath READ getNeighborListArrayPath WRITE setNeighborListArrayPath)
+
+    DREAM3D_FILTER_PARAMETER(QString, F1ListArrayName)
+    Q_PROPERTY(QString F1ListArrayName READ getF1ListArrayName WRITE setF1ListArrayName)
+
+    DREAM3D_FILTER_PARAMETER(QString, F1sptListArrayName)
+    Q_PROPERTY(QString F1sptListArrayName READ getF1sptListArrayName WRITE setF1sptListArrayName)
+
+    DREAM3D_FILTER_PARAMETER(QString, F7ListArrayName)
+    Q_PROPERTY(QString F7ListArrayName READ getF7ListArrayName WRITE setF7ListArrayName)
+
+    DREAM3D_FILTER_PARAMETER(QString, mPrimeListArrayName)
+    Q_PROPERTY(QString mPrimeListArrayName READ getmPrimeListArrayName WRITE setmPrimeListArrayName)
 
     DREAM3D_FILTER_PARAMETER(DataArrayPath, AvgQuatsArrayPath)
     Q_PROPERTY(DataArrayPath AvgQuatsArrayPath READ getAvgQuatsArrayPath WRITE setAvgQuatsArrayPath)
@@ -148,11 +155,11 @@ signals:
 
     DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeaturePhases)
     DEFINE_PTR_WEAKPTR_DATAARRAY(float, AvgQuats)
-    NeighborList<float>* m_F1;
-    NeighborList<float>* m_F1spt;
-    NeighborList<float>* m_F7;
-    NeighborList<float>* m_mPrime;
-    NeighborList<int>* m_NeighborList;
+    NeighborList<float>::WeakPointer m_F1List;
+    NeighborList<float>::WeakPointer m_F1sptList;
+    NeighborList<float>::WeakPointer m_F7List;
+    NeighborList<float>::WeakPointer m_mPrimeList;
+    NeighborList<int>::WeakPointer m_NeighborList;
     DEFINE_PTR_WEAKPTR_DATAARRAY(unsigned int, CrystalStructures)
 
     void dataCheck();

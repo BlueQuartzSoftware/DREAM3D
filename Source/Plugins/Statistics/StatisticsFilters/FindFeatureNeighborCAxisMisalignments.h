@@ -71,14 +71,14 @@ class FindFeatureNeighborCAxisMisalignments : public AbstractFilter
 
     virtual ~FindFeatureNeighborCAxisMisalignments();
 
-    DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(CellEnsembleAttributeMatrixName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(CellFeatureAttributeMatrixName)
-
-    DREAM3D_INSTANCE_STRING_PROPERTY(NeighborListArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(CAxisMisalignmentListArrayName)
     DREAM3D_FILTER_PARAMETER(bool, FindAvgMisals)
     Q_PROPERTY(bool FindAvgMisals READ getFindAvgMisals WRITE setFindAvgMisals)
+
+    DREAM3D_FILTER_PARAMETER(DataArrayPath, NeighborListArrayPath)
+    Q_PROPERTY(DataArrayPath NeighborListArrayPath READ getNeighborListArrayPath WRITE setNeighborListArrayPath)
+
+    DREAM3D_FILTER_PARAMETER(QString, CAxisMisalignmentListArrayName)
+    Q_PROPERTY(QString CAxisMisalignmentListArrayName READ getCAxisMisalignmentListArrayName WRITE setCAxisMisalignmentListArrayName)
 
     DREAM3D_FILTER_PARAMETER(DataArrayPath, AvgQuatsArrayPath)
     Q_PROPERTY(DataArrayPath AvgQuatsArrayPath READ getAvgQuatsArrayPath WRITE setAvgQuatsArrayPath)
@@ -140,8 +140,8 @@ class FindFeatureNeighborCAxisMisalignments : public AbstractFilter
     DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeaturePhases)
     DEFINE_CREATED_DATAARRAY(float, AvgCAxisMisalignments)
     DEFINE_PTR_WEAKPTR_DATAARRAY(unsigned int, CrystalStructures)
-    NeighborList<int>* m_NeighborList;
-    NeighborList<float>* m_CAxisMisalignmentList;
+    NeighborList<int>::WeakPointer m_NeighborList;
+    NeighborList<float>::WeakPointer m_CAxisMisalignmentList;
 
     void dataCheck();
 

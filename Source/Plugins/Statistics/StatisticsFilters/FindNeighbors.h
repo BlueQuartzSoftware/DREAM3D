@@ -77,9 +77,6 @@ class FindNeighbors : public AbstractFilter
 
     DREAM3D_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
     Q_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
-    Q_PROPERTY(QString SurfaceVoxelsArrayName READ getSurfaceVoxelsArrayName WRITE setSurfaceVoxelsArrayName)
-    Q_PROPERTY(QString SurfaceFeaturesArrayName READ getSurfaceFeaturesArrayName WRITE setSurfaceFeaturesArrayName)
-    Q_PROPERTY(QString NumNeighborsArrayName READ getNumNeighborsArrayName WRITE setNumNeighborsArrayName)
 
     DREAM3D_FILTER_PARAMETER(QString, SurfaceVoxelsArrayName)
     Q_PROPERTY(QString SurfaceVoxelsArrayName READ getSurfaceVoxelsArrayName WRITE setSurfaceVoxelsArrayName)
@@ -134,8 +131,8 @@ class FindNeighbors : public AbstractFilter
     DEFINE_CREATED_DATAARRAY(int8_t, SurfaceVoxels)
     DEFINE_CREATED_DATAARRAY(bool, SurfaceFeatures)
     DEFINE_CREATED_DATAARRAY(int32_t, NumNeighbors)
-    NeighborList<int>::Pointer m_NeighborList;
-    NeighborList<float>::Pointer m_SharedSurfaceAreaList;
+    NeighborList<int>::WeakPointer m_NeighborList;
+    NeighborList<float>::WeakPointer m_SharedSurfaceAreaList;
 
     void dataCheck();
 

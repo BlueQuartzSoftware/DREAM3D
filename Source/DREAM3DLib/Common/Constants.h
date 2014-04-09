@@ -216,9 +216,9 @@ namespace DREAM3D
     const DREAM3D_STRING ElasticStrains("ElasticStrains");
     const DREAM3D_STRING EquivalentDiameters("EquivalentDiameters");
     const DREAM3D_STRING EulerAngles("EulerAngles");
-    const DREAM3D_STRING F1("F1");
-    const DREAM3D_STRING F1spt("F1spt");
-    const DREAM3D_STRING F7("F7");
+    const DREAM3D_STRING F1List("F1List");
+    const DREAM3D_STRING F1sptList("F1sptList");
+    const DREAM3D_STRING F7List("F7List");
     const DREAM3D_STRING FarFeatureOrientations("FarFeatureOrientations");
     const DREAM3D_STRING FeaturePhases("Phases");
     const DREAM3D_STRING GoodFeatures("GoodFeatures");
@@ -251,7 +251,7 @@ namespace DREAM3D
     const DREAM3D_STRING SurfaceVoxelFractions("SurfaceVoxelFractions");
     const DREAM3D_STRING Volumes("Volumes");
     const DREAM3D_STRING AvgMisorientations("AvgMisorientations");
-    const DREAM3D_STRING mPrime("mPrime");
+    const DREAM3D_STRING mPrimeList("mPrimeList");
     const DREAM3D_STRING NumBins("NumBins");
 
   }

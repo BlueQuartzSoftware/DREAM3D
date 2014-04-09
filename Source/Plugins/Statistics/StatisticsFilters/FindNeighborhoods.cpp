@@ -46,22 +46,18 @@
 // -----------------------------------------------------------------------------
 FindNeighborhoods::FindNeighborhoods() :
   AbstractFilter(),
-  m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
-  m_CellFeatureAttributeMatrixName(DREAM3D::Defaults::CellFeatureAttributeMatrixName),
-  m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
   m_NeighborhoodListArrayName(DREAM3D::FeatureData::NeighborhoodList),
-  m_NumNeighborsArrayName(DREAM3D::FeatureData::NumNeighbors),
   m_MultiplesOfAverage(1.0f),
-/*[]*/m_EquivalentDiametersArrayPath(DREAM3D::Defaults::SomePath),
-/*[]*/m_FeaturePhasesArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, DREAM3D::FeatureData::Phases),
-/*[]*/m_CentroidsArrayPath(DREAM3D::Defaults::SomePath),
-  m_NeighborhoodsArrayName(DREAM3D::FeatureData::Neighborhoods),
+  m_EquivalentDiametersArrayPath(DREAM3D::Defaults::SomePath),
+  m_FeaturePhasesArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, DREAM3D::FeatureData::Phases),
+  m_CentroidsArrayPath(DREAM3D::Defaults::SomePath),
   m_FeaturePhasesArrayName(DREAM3D::FeatureData::Phases),
   m_FeaturePhases(NULL),
   m_CentroidsArrayName(DREAM3D::FeatureData::Centroids),
   m_Centroids(NULL),
   m_EquivalentDiametersArrayName(DREAM3D::FeatureData::EquivalentDiameters),
   m_EquivalentDiameters(NULL),
+  m_NeighborhoodsArrayName(DREAM3D::FeatureData::Neighborhoods),
   m_Neighborhoods(NULL)
 {
   setupFilterParameters();
@@ -82,18 +78,20 @@ void FindNeighborhoods::setupFilterParameters()
   parameters.push_back(FilterParameter::New("Multiples Of Average Diameter", "MultiplesOfAverage", FilterParameterWidgetType::DoubleWidget,"float", false));
 
   parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "QString", true));
-/*[]*/parameters.push_back(FilterParameter::New("EquivalentDiameters", "EquivalentDiametersArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
-/*[]*/parameters.push_back(FilterParameter::New("FeaturePhases", "FeaturePhasesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
-/*[]*/parameters.push_back(FilterParameter::New("Centroids", "CentroidsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
+  parameters.push_back(FilterParameter::New("EquivalentDiameters", "EquivalentDiametersArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
+  parameters.push_back(FilterParameter::New("FeaturePhases", "FeaturePhasesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
+  parameters.push_back(FilterParameter::New("Centroids", "CentroidsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
   parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "QString", true));
-/*##*/parameters.push_back(FilterParameter::New("Neighborhoods", "NeighborhoodsArrayName", FilterParameterWidgetType::StringWidget, "QString", true, ""));
+  parameters.push_back(FilterParameter::New("Neighborhoods", "NeighborhoodsArrayName", FilterParameterWidgetType::StringWidget, "QString", true, ""));
+  parameters.push_back(FilterParameter::New("NeighborhoodList", "NeighborhoodListArrayName", FilterParameterWidgetType::StringWidget, "QString", true, ""));
   setFilterParameters(parameters);
 }
 // -----------------------------------------------------------------------------
 void FindNeighborhoods::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-/*[]*/setNeighborhoodsArrayName(reader->readString("NeighborhoodsArrayName", getNeighborhoodsArrayName() ) );
+  setNeighborhoodsArrayName(reader->readString("NeighborhoodsArrayName", getNeighborhoodsArrayName() ) );
+  setNeighborhoodListArrayName(reader->readString("NeighborhoodListArrayName", getNeighborhoodListArrayName() ) );
   setCentroidsArrayPath(reader->readDataArrayPath("CentroidsArrayPath", getCentroidsArrayPath() ) );
   setFeaturePhasesArrayPath(reader->readDataArrayPath("FeaturePhasesArrayPath", getFeaturePhasesArrayPath() ) );
   setEquivalentDiametersArrayPath(reader->readDataArrayPath("EquivalentDiametersArrayPath", getEquivalentDiametersArrayPath() ) );
@@ -107,7 +105,8 @@ void FindNeighborhoods::readFilterParameters(AbstractFilterParametersReader* rea
 int FindNeighborhoods::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-/*[]*/writer->writeValue("NeighborhoodsArrayName", getNeighborhoodsArrayName() );
+  writer->writeValue("NeighborhoodsArrayName", getNeighborhoodsArrayName() );
+  writer->writeValue("NeighborhoodListArrayName", getNeighborhoodListArrayName() );
   writer->writeValue("CentroidsArrayPath", getCentroidsArrayPath() );
   writer->writeValue("FeaturePhasesArrayPath", getFeaturePhasesArrayPath() );
   writer->writeValue("EquivalentDiametersArrayPath", getEquivalentDiametersArrayPath() );
@@ -124,44 +123,22 @@ void FindNeighborhoods::dataCheck()
   DataArrayPath tempPath;
   setErrorCondition(0);
 
-  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName(), false);
-  if(getErrorCondition() < 0 || NULL == m) { return; }
-  AttributeMatrix::Pointer cellFeatureAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellFeatureAttributeMatrixName(), -301);
-  if(getErrorCondition() < 0) { return; }
-
   // Feature Data
   // Do this whole block FIRST otherwise the side effect is that a call to m->getNumCellFeatureTuples will = 0
   // because we are just creating an empty NeighborList object.
   // Now we are going to get a "Pointer" to the NeighborList object out of the DataContainer
-  m_NeighborhoodList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>* >
-      (m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getAttributeArray(m_NeighborhoodListArrayName).get());
-  if(m_NeighborhoodList == NULL)
-  {
-    NeighborList<int>::Pointer neighborhoodlistPtr = NeighborList<int>::New();
-    neighborhoodlistPtr->setName(m_NeighborhoodListArrayName);
-    neighborhoodlistPtr->resize(cellFeatureAttrMat->getNumTuples());
-    neighborhoodlistPtr->setNumNeighborsArrayName(m_NeighborhoodsArrayName);
-    m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->addAttributeArray(m_NeighborhoodListArrayName, neighborhoodlistPtr);
-
-    if (neighborhoodlistPtr.get() == NULL)
-    {
-      QString ss = QObject::tr("NeighborhoodLists Array Not Initialized at Beginning of FindNeighbors Filter");
-      setErrorCondition(-308);
-    }
-    m_NeighborhoodList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>* >
-        (m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getAttributeArray(m_NeighborhoodListArrayName).get());
-  }
-
   QVector<size_t> dims(1, 1);
+  tempPath.update(m_EquivalentDiametersArrayPath.getDataContainerName(), m_EquivalentDiametersArrayPath.getAttributeMatrixName(), getNeighborhoodListArrayName() );
+  m_NeighborhoodList = getDataContainerArray()->createNonPrereqArrayFromPath<NeighborList<int32_t>, AbstractFilter, int32_t>(this, tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+
   m_EquivalentDiametersPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getEquivalentDiametersArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_EquivalentDiametersPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_EquivalentDiameters = m_EquivalentDiametersPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   m_FeaturePhasesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeaturePhasesArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_FeaturePhasesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_FeaturePhases = m_FeaturePhasesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-  m_NeighborhoodsPtr = cellFeatureAttrMat->createNonPrereqArray<DataArray<int32_t>, AbstractFilter, int32_t>(this, m_NeighborhoodsArrayName, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-////==>MIKE_GROEBER_FIX tempPath.update(DATACONTAINER_NAME, ATTRIBUTEMATRIX_NAME, getNeighborhoodsArrayName() );
-////==>MIKE_GROEBER_FIX m_NeighborhoodsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(this, tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  tempPath.update(m_EquivalentDiametersArrayPath.getDataContainerName(), m_EquivalentDiametersArrayPath.getAttributeMatrixName(), getNeighborhoodsArrayName() );
+  m_NeighborhoodsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(this, tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_NeighborhoodsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_Neighborhoods = m_NeighborhoodsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   dims[0] = 3;
@@ -199,8 +176,6 @@ void FindNeighborhoods::execute()
 // -----------------------------------------------------------------------------
 void FindNeighborhoods::find_neighborhoods()
 {
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-
   float x, y, z;
   //  float xn, yn, zn;
   //  float dx, dy, dz;
@@ -208,10 +183,8 @@ void FindNeighborhoods::find_neighborhoods()
   QVector<QVector<int> > neighborhoodlist;
   QVector<float> criticalDistance;
 
-  //int64_t totalPoints = m->getTotalPoints();
-  size_t totalFeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
-  // size_t totalEnsembles = 0;
-  dataCheck();
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(m_EquivalentDiametersArrayPath.getDataContainerName());
+  size_t totalFeatures = m_EquivalentDiametersPtr.lock()->getNumberOfTuples();
 
   neighborhoodlist.resize(totalFeatures);
   criticalDistance.resize(totalFeatures);
@@ -304,7 +277,7 @@ void FindNeighborhoods::find_neighborhoods()
     // Set the vector for each list into the NeighborhoodList Object
     NeighborList<int>::SharedVectorType sharedNeiLst(new std::vector<int>);
     sharedNeiLst->assign(neighborhoodlist[i].begin(), neighborhoodlist[i].end());
-    m_NeighborhoodList->setList(static_cast<int>(i), sharedNeiLst);
+    m_NeighborhoodList.lock()->setList(static_cast<int>(i), sharedNeiLst);
   }
 }
 

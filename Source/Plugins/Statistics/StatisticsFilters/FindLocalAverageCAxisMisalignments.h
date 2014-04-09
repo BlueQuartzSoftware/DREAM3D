@@ -68,19 +68,19 @@ class FindLocalAverageCAxisMisalignments : public AbstractFilter
 
     virtual ~FindLocalAverageCAxisMisalignments();
 
-    DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(CellFeatureAttributeMatrixName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(NewCellFeatureAttributeMatrixName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(CellEnsembleAttributeMatrixName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
-
-    DREAM3D_INSTANCE_STRING_PROPERTY(NeighborListArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(CAxisMisalignmentListArrayName)
+    DREAM3D_FILTER_PARAMETER(DataArrayPath, NewCellFeatureAttributeMatrixName)
+    Q_PROPERTY(DataArrayPath NewCellFeatureAttributeMatrixName READ getNewCellFeatureAttributeMatrixName WRITE setNewCellFeatureAttributeMatrixName)
 
     DREAM3D_FILTER_PARAMETER(bool, CalcUnbiasedAvg)
     Q_PROPERTY(bool CalcUnbiasedAvg READ getCalcUnbiasedAvg WRITE setCalcUnbiasedAvg)
     DREAM3D_FILTER_PARAMETER(bool, CalcBiasedAvg)
     Q_PROPERTY(bool CalcBiasedAvg READ getCalcBiasedAvg WRITE setCalcBiasedAvg)
+
+    DREAM3D_FILTER_PARAMETER(DataArrayPath, NeighborListArrayPath)
+    Q_PROPERTY(DataArrayPath NeighborListArrayPath READ getNeighborListArrayPath WRITE setNeighborListArrayPath)
+
+    DREAM3D_FILTER_PARAMETER(DataArrayPath, CAxisMisalignmentListArrayPath)
+    Q_PROPERTY(DataArrayPath CAxisMisalignmentListArrayPath READ getCAxisMisalignmentListArrayPath WRITE setCAxisMisalignmentListArrayPath)
 
     DREAM3D_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
     Q_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
@@ -160,8 +160,8 @@ class FindLocalAverageCAxisMisalignments : public AbstractFilter
     DEFINE_CREATED_DATAARRAY(float, UnbiasedLocalCAxisMisalignments)
     DEFINE_PTR_WEAKPTR_DATAARRAY(unsigned int, CrystalStructures)
 
-    Int32NeighborListType::Pointer m_NeighborList;
-    FloatNeighborListType::Pointer m_CAxisMisalignmentList;
+    NeighborList<int>::WeakPointer m_NeighborList;
+    NeighborList<float>::WeakPointer m_CAxisMisalignmentList;
     QVector<OrientationOps::Pointer> m_OrientationOps;
 
     void dataCheck();

@@ -45,13 +45,11 @@
 // -----------------------------------------------------------------------------
 FindMicroTextureRegions::FindMicroTextureRegions() :
   AbstractFilter(),
-  m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
-  m_CellFeatureAttributeMatrixName(DREAM3D::Defaults::CellFeatureAttributeMatrixName),
-  m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
-/*[]*/m_FeatureIdsArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::FeatureIds),
+  m_CellFeatureAttributeMatrixName(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, ""),
+  m_FeatureIdsArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::FeatureIds),
   m_MicroTextureRegionNumCellsArrayName(DREAM3D::FeatureData::MicroTextureRegionNumCells),
-  m_MicroTextureRegionFractionOccupiedArrayName(DREAM3D::FeatureData::MicroTextureRegionFractionOccupied),
   m_MicroTextureRegionNumCells(NULL),
+  m_MicroTextureRegionFractionOccupiedArrayName(DREAM3D::FeatureData::MicroTextureRegionFractionOccupied),
   m_MicroTextureRegionFractionOccupied(NULL),
   m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
   m_FeatureIds(NULL)
@@ -72,10 +70,11 @@ void FindMicroTextureRegions::setupFilterParameters()
 {
   FilterParameterVector parameters;
   parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "QString", true));
-/*[]*/parameters.push_back(FilterParameter::New("FeatureIds", "FeatureIdsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
+  parameters.push_back(FilterParameter::New("FeatureIds", "FeatureIdsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
+  parameters.push_back(FilterParameter::New("Cell Feature Attribute Matrix Name", "CellFeatureAttributeMatrixName", FilterParameterWidgetType::AttributeMatrixSelectionWidget, "DataArrayPath", true, ""));
   parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "QString", true));
-/*##*/parameters.push_back(FilterParameter::New("MicroTextureRegionNumCells", "MicroTextureRegionNumCellsArrayName", FilterParameterWidgetType::StringWidget, "QString", true, ""));
-/*##*/parameters.push_back(FilterParameter::New("MicroTextureRegionFractionOccupied", "MicroTextureRegionFractionOccupiedArrayName", FilterParameterWidgetType::StringWidget, "QString", true, ""));
+  parameters.push_back(FilterParameter::New("MicroTextureRegionNumCells", "MicroTextureRegionNumCellsArrayName", FilterParameterWidgetType::StringWidget, "QString", true, ""));
+  parameters.push_back(FilterParameter::New("MicroTextureRegionFractionOccupied", "MicroTextureRegionFractionOccupiedArrayName", FilterParameterWidgetType::StringWidget, "QString", true, ""));
   setFilterParameters(parameters);
 }
 
@@ -83,8 +82,9 @@ void FindMicroTextureRegions::setupFilterParameters()
 void FindMicroTextureRegions::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-/*[]*/setMicroTextureRegionFractionOccupiedArrayName(reader->readString("MicroTextureRegionFractionOccupiedArrayName", getMicroTextureRegionFractionOccupiedArrayName() ) );
-/*[]*/setMicroTextureRegionNumCellsArrayName(reader->readString("MicroTextureRegionNumCellsArrayName", getMicroTextureRegionNumCellsArrayName() ) );
+  setCellFeatureAttributeMatrixName(reader->readDataArrayPath("CellFeatureAttributeMatrixName", getCellFeatureAttributeMatrixName()));
+  setMicroTextureRegionFractionOccupiedArrayName(reader->readString("MicroTextureRegionFractionOccupiedArrayName", getMicroTextureRegionFractionOccupiedArrayName() ) );
+  setMicroTextureRegionNumCellsArrayName(reader->readString("MicroTextureRegionNumCellsArrayName", getMicroTextureRegionNumCellsArrayName() ) );
   setFeatureIdsArrayPath(reader->readDataArrayPath("FeatureIdsArrayPath", getFeatureIdsArrayPath() ) );
   reader->closeFilterGroup();
 }
@@ -95,8 +95,9 @@ void FindMicroTextureRegions::readFilterParameters(AbstractFilterParametersReade
 int FindMicroTextureRegions::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-/*[]*/writer->writeValue("MicroTextureRegionFractionOccupiedArrayName", getMicroTextureRegionFractionOccupiedArrayName() );
-/*[]*/writer->writeValue("MicroTextureRegionNumCellsArrayName", getMicroTextureRegionNumCellsArrayName() );
+  writer->writeValue("CellFeatureAttributeMatrixName", getCellFeatureAttributeMatrixName());
+  writer->writeValue("MicroTextureRegionFractionOccupiedArrayName", getMicroTextureRegionFractionOccupiedArrayName() );
+  writer->writeValue("MicroTextureRegionNumCellsArrayName", getMicroTextureRegionNumCellsArrayName() );
   writer->writeValue("FeatureIdsArrayPath", getFeatureIdsArrayPath() );
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
@@ -110,13 +111,6 @@ void FindMicroTextureRegions::dataCheck()
   DataArrayPath tempPath;
   setErrorCondition(0);
 
-  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName(), false);
-  if(getErrorCondition() < 0 || NULL == m) { return; }
-  AttributeMatrix::Pointer cellFeatureAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellFeatureAttributeMatrixName(), -304);
-  if(getErrorCondition() < 0) { return; }
-  AttributeMatrix::Pointer cellAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), -301);
-  if(getErrorCondition() < 0 || NULL == cellAttrMat.get() ) { return; }
-
   QVector<size_t> dims(1, 1);
   // Cell Data
   m_FeatureIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeatureIdsArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
@@ -124,14 +118,12 @@ void FindMicroTextureRegions::dataCheck()
   { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   // Feature Data
-  m_MicroTextureRegionNumCellsPtr = cellFeatureAttrMat->createNonPrereqArray<DataArray<int32_t>, AbstractFilter, int32_t>(this, m_MicroTextureRegionNumCellsArrayName, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-////==>MIKE_GROEBER_FIX tempPath.update(DATACONTAINER_NAME, ATTRIBUTEMATRIX_NAME, getMicroTextureRegionNumCellsArrayName() );
-////==>MIKE_GROEBER_FIX m_MicroTextureRegionNumCellsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(this, tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  tempPath.update(getCellFeatureAttributeMatrixName().getDataContainerName(), getCellFeatureAttributeMatrixName().getAttributeMatrixName(), getMicroTextureRegionNumCellsArrayName() );
+  m_MicroTextureRegionNumCellsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(this, tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_MicroTextureRegionNumCellsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_MicroTextureRegionNumCells = m_MicroTextureRegionNumCellsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-  m_MicroTextureRegionFractionOccupiedPtr = cellFeatureAttrMat->createNonPrereqArray<DataArray<float>, AbstractFilter, float>(this, m_MicroTextureRegionFractionOccupiedArrayName, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-////==>MIKE_GROEBER_FIX tempPath.update(DATACONTAINER_NAME, ATTRIBUTEMATRIX_NAME, getMicroTextureRegionFractionOccupiedArrayName() );
-////==>MIKE_GROEBER_FIX m_MicroTextureRegionFractionOccupiedPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  tempPath.update(getCellFeatureAttributeMatrixName().getDataContainerName(), getCellFeatureAttributeMatrixName().getAttributeMatrixName(), getMicroTextureRegionFractionOccupiedArrayName() );
+  m_MicroTextureRegionFractionOccupiedPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_MicroTextureRegionFractionOccupiedPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_MicroTextureRegionFractionOccupied = m_MicroTextureRegionFractionOccupiedPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
@@ -165,10 +157,10 @@ void FindMicroTextureRegions::execute()
 // -----------------------------------------------------------------------------
 void FindMicroTextureRegions::find_microtextureregions()
 {
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(m_FeatureIdsArrayPath.getDataContainerName());
 
-  int64_t totalPoints = m->getAttributeMatrix(getCellAttributeMatrixName())->getNumTuples();
-  size_t nummicrotextureregions = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
+  int64_t totalPoints = m_FeatureIdsPtr.lock()->getNumberOfTuples();
+  size_t nummicrotextureregions = m_MicroTextureRegionNumCellsPtr.lock()->getNumberOfTuples();
 
   DataArray<double>::Pointer m_MicroTextureRegionCounts = DataArray<double>::CreateArray(nummicrotextureregions, "MicroTextureRegionCounts");
   DataArray<double>::Pointer m_MicroTextureRegionXMaxs = DataArray<double>::CreateArray(nummicrotextureregions, "MicroTextureRegionCounts");

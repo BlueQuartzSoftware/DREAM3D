@@ -45,19 +45,16 @@
 // -----------------------------------------------------------------------------
 FindMisorientations::FindMisorientations()  :
   AbstractFilter(),
-  m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
-  m_CellEnsembleAttributeMatrixName(DREAM3D::Defaults::CellEnsembleAttributeMatrixName),
-  m_CellFeatureAttributeMatrixName(DREAM3D::Defaults::CellFeatureAttributeMatrixName),
-  m_NeighborListArrayName(DREAM3D::FeatureData::NeighborList),
+  m_NeighborListArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, DREAM3D::FeatureData::NeighborList),
   m_MisorientationListArrayName(DREAM3D::FeatureData::MisorientationList),
-/*[]*/m_AvgQuatsArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, DREAM3D::FeatureData::AvgQuats),
-/*[]*/m_FeaturePhasesArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, DREAM3D::FeatureData::Phases),
-/*[]*/m_CrystalStructuresArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellEnsembleAttributeMatrixName, DREAM3D::EnsembleData::CrystalStructures),
-  m_AvgMisorientationsArrayName(DREAM3D::FeatureData::AvgMisorientations),
+  m_AvgQuatsArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, DREAM3D::FeatureData::AvgQuats),
+  m_FeaturePhasesArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, DREAM3D::FeatureData::Phases),
+  m_CrystalStructuresArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellEnsembleAttributeMatrixName, DREAM3D::EnsembleData::CrystalStructures),
   m_AvgQuatsArrayName(DREAM3D::FeatureData::AvgQuats),
   m_AvgQuats(NULL),
   m_FeaturePhasesArrayName(DREAM3D::FeatureData::Phases),
   m_FeaturePhases(NULL),
+  m_AvgMisorientationsArrayName(DREAM3D::FeatureData::AvgMisorientations),
   m_AvgMisorientations(NULL),
   m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
   m_CrystalStructures(NULL)
@@ -91,11 +88,13 @@ void FindMisorientations::setupFilterParameters()
   }
 
   parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "QString", true));
-/*[]*/parameters.push_back(FilterParameter::New("AvgQuats", "AvgQuatsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
-/*[]*/parameters.push_back(FilterParameter::New("FeaturePhases", "FeaturePhasesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
-/*[]*/parameters.push_back(FilterParameter::New("CrystalStructures", "CrystalStructuresArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
+  parameters.push_back(FilterParameter::New("Neighbor List Array Name", "NeighborListArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
+  parameters.push_back(FilterParameter::New("AvgQuats", "AvgQuatsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
+  parameters.push_back(FilterParameter::New("FeaturePhases", "FeaturePhasesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
+  parameters.push_back(FilterParameter::New("CrystalStructures", "CrystalStructuresArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
   parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "QString", true));
-/*##*/parameters.push_back(FilterParameter::New("AvgMisorientations", "AvgMisorientationsArrayName", FilterParameterWidgetType::StringWidget, "QString", true, ""));
+  parameters.push_back(FilterParameter::New("AvgMisorientations", "AvgMisorientationsArrayName", FilterParameterWidgetType::StringWidget, "QString", true, ""));
+  parameters.push_back(FilterParameter::New("Misorientation List Array Name", "MisorientationListArrayName", FilterParameterWidgetType::StringWidget, "QString", true, ""));
   setFilterParameters(parameters);
 }
 
@@ -105,10 +104,12 @@ void FindMisorientations::setupFilterParameters()
 void FindMisorientations::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-/*[]*/setAvgMisorientationsArrayName(reader->readString("AvgMisorientationsArrayName", getAvgMisorientationsArrayName() ) );
+  setAvgMisorientationsArrayName(reader->readString("AvgMisorientationsArrayName", getAvgMisorientationsArrayName() ) );
+  setMisorientationListArrayName(reader->readString("MisorientationListArrayName", getMisorientationListArrayName() ) );
   setCrystalStructuresArrayPath(reader->readDataArrayPath("CrystalStructuresArrayPath", getCrystalStructuresArrayPath() ) );
   setFeaturePhasesArrayPath(reader->readDataArrayPath("FeaturePhasesArrayPath", getFeaturePhasesArrayPath() ) );
   setAvgQuatsArrayPath(reader->readDataArrayPath("AvgQuatsArrayPath", getAvgQuatsArrayPath() ) );
+  setNeighborListArrayPath(reader->readDataArrayPath("NeighborListArrayPath", getNeighborListArrayPath() ) );
   setFindAvgMisors( reader->readValue("UseFindAvgMisors", getFindAvgMisors()) );
   reader->closeFilterGroup();
 }
@@ -119,10 +120,12 @@ void FindMisorientations::readFilterParameters(AbstractFilterParametersReader* r
 int FindMisorientations::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-/*[]*/writer->writeValue("AvgMisorientationsArrayName", getAvgMisorientationsArrayName() );
+  writer->writeValue("AvgMisorientationsArrayName", getAvgMisorientationsArrayName() );
+  writer->writeValue("MisorientationListArrayName", getMisorientationListArrayName() );
   writer->writeValue("CrystalStructuresArrayPath", getCrystalStructuresArrayPath() );
   writer->writeValue("FeaturePhasesArrayPath", getFeaturePhasesArrayPath() );
   writer->writeValue("AvgQuatsArrayPath", getAvgQuatsArrayPath() );
+  writer->writeValue("NeighborListArrayPath", getNeighborListArrayPath() );
   writer->writeValue("FindAvgMisors", getFindAvgMisors() );
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
@@ -135,13 +138,6 @@ void FindMisorientations::dataCheck()
 {
   DataArrayPath tempPath;
   setErrorCondition(0);
-
-  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName(), false);
-  if(getErrorCondition() < 0 || NULL == m) { return; }
-  AttributeMatrix::Pointer cellEnsembleAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellEnsembleAttributeMatrixName(), -301);
-  if(getErrorCondition() < 0) { return; }
-  AttributeMatrix::Pointer cellFeatureAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellFeatureAttributeMatrixName(), -301);
-  if(getErrorCondition() < 0) { return; }
 
   QVector<size_t> dims(1, 4);
   // Cell Data
@@ -158,11 +154,10 @@ void FindMisorientations::dataCheck()
   // New Feature Data
   if(m_FindAvgMisors == true)
   {
-  m_AvgMisorientationsPtr = cellFeatureAttrMat->createNonPrereqArray<DataArray<float>, AbstractFilter, float>(this, m_AvgMisorientationsArrayName, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-////==>MIKE_GROEBER_FIX tempPath.update(DATACONTAINER_NAME, ATTRIBUTEMATRIX_NAME, getAvgMisorientationsArrayName() );
-////==>MIKE_GROEBER_FIX m_AvgMisorientationsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_AvgMisorientationsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
-  { m_AvgMisorientations = m_AvgMisorientationsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+    tempPath.update(m_FeaturePhasesArrayPath.getDataContainerName(), m_FeaturePhasesArrayPath.getAttributeMatrixName(), getAvgMisorientationsArrayName() );
+    m_AvgMisorientationsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+    if( NULL != m_AvgMisorientationsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+    { m_AvgMisorientations = m_AvgMisorientationsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   }
   // Ensemble Data
   typedef DataArray<unsigned int> XTalStructArrayType;
@@ -172,38 +167,10 @@ void FindMisorientations::dataCheck()
   { m_CrystalStructures = m_CrystalStructuresPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   // Now we are going to get a "Pointer" to the NeighborList object out of the DataContainer
-  IDataArray::Pointer neighborListPtr = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getAttributeArray(m_NeighborListArrayName);
-  if (NULL == neighborListPtr.get())
-  {
-    QString ss = QObject::tr("NeighborLists are not available and are required for this filter to run. A filter that generates NeighborLists needs to be placed before this filter in the pipeline.");
-    setErrorCondition(-305);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-  }
-  else
-  {
-    m_NeighborList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>*>(neighborListPtr.get());
-  }
+  m_NeighborList = getDataContainerArray()->getPrereqArrayFromPath<NeighborList<int>, AbstractFilter>(this, getNeighborListArrayPath(), dims);
 
-  IDataArray::Pointer misorientationPtr = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getAttributeArray(m_MisorientationListArrayName);
-  if(NULL == misorientationPtr.get())
-  {
-    NeighborList<float>::Pointer misorientationListPtr = NeighborList<float>::New();
-    misorientationListPtr->setName(m_MisorientationListArrayName);
-    misorientationListPtr->resize(cellFeatureAttrMat->getNumTuples());
-    m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->addAttributeArray(m_MisorientationListArrayName, misorientationListPtr);
-    m_MisorientationList = misorientationListPtr.get();
-    if (misorientationListPtr.get() == NULL)
-    {
-      QString ss = QObject::tr("MisorientationLists Array Not Initialized correctly");
-      setErrorCondition(-308);
-      notifyErrorMessage(getHumanLabel(), ss, -308);
-    }
-  }
-  else
-  {
-    m_MisorientationList = NeighborList<float>::SafeObjectDownCast<IDataArray*, NeighborList<float>*>(misorientationPtr.get());
-    m_MisorientationList->resize(cellFeatureAttrMat->getNumTuples());
-  }
+  tempPath.update(m_NeighborListArrayPath.getDataContainerName(), m_NeighborListArrayPath.getAttributeMatrixName(), getMisorientationListArrayName() );
+  m_MisorientationList = getDataContainerArray()->createNonPrereqArrayFromPath<NeighborList<float>, AbstractFilter, float>(this, tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
 }
 
 // -----------------------------------------------------------------------------
@@ -225,13 +192,12 @@ void FindMisorientations::execute()
   dataCheck();
   if(getErrorCondition() < 0) { return; }
 
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-  size_t totalFeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
+  size_t totalFeatures = m_FeaturePhasesPtr.lock()->getNumberOfTuples();
 
   // But since a pointer is difficult to use operators with we will now create a
   // reference variable to the pointer with the correct variable name that allows
   // us to use the same syntax as the "vector of vectors"
-  NeighborList<int>& neighborlist = *m_NeighborList;
+  NeighborList<int>& neighborlist = *(m_NeighborList.lock());
 
   QVector<QVector<float> > misorientationlists;
 
@@ -282,16 +248,12 @@ void FindMisorientations::execute()
     }
   }
 
-  // We do this to create new set of MisorientationList objects
-  totalFeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
-  dataCheck();
-
   for (size_t i = 1; i < totalFeatures; i++)
   {
     // Set the vector for each list into the NeighborList Object
     NeighborList<float>::SharedVectorType misoL(new std::vector<float>);
     misoL->assign(misorientationlists[i].begin(), misorientationlists[i].end());
-    m_MisorientationList->setList(static_cast<int>(i), misoL);
+    m_MisorientationList.lock()->setList(static_cast<int>(i), misoL);
   }
   notifyStatusMessage(getHumanLabel(), "FindMisorientations Completed");
 }

@@ -50,24 +50,20 @@
 // -----------------------------------------------------------------------------
 FindFeatureNeighborCAxisMisalignments::FindFeatureNeighborCAxisMisalignments()  :
   AbstractFilter(),
-  m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
-  m_CellEnsembleAttributeMatrixName(DREAM3D::Defaults::CellEnsembleAttributeMatrixName),
-  m_CellFeatureAttributeMatrixName(DREAM3D::Defaults::CellFeatureAttributeMatrixName),
-  m_NeighborListArrayName(DREAM3D::FeatureData::NeighborList),
+  m_NeighborListArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, DREAM3D::FeatureData::NeighborList),
+  m_CAxisMisalignmentListArrayName(DREAM3D::FeatureData::CAxisMisalignmentList),
   m_FindAvgMisals(false),
-/*[]*/m_AvgQuatsArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, DREAM3D::FeatureData::AvgQuats),
-/*[]*/m_FeaturePhasesArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, DREAM3D::FeatureData::Phases),
-/*[]*/m_CrystalStructuresArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellEnsembleAttributeMatrixName, DREAM3D::EnsembleData::CrystalStructures),
-  m_AvgCAxisMisalignmentsArrayName(DREAM3D::FeatureData::AvgCAxisMisalignments),
+  m_AvgQuatsArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, DREAM3D::FeatureData::AvgQuats),
+  m_FeaturePhasesArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, DREAM3D::FeatureData::Phases),
+  m_CrystalStructuresArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellEnsembleAttributeMatrixName, DREAM3D::EnsembleData::CrystalStructures),
   m_AvgQuatsArrayName(DREAM3D::FeatureData::AvgQuats),
   m_AvgQuats(NULL),
   m_FeaturePhasesArrayName(DREAM3D::FeatureData::Phases),
   m_FeaturePhases(NULL),
+  m_AvgCAxisMisalignmentsArrayName(DREAM3D::FeatureData::AvgCAxisMisalignments),
   m_AvgCAxisMisalignments(NULL),
   m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
-  m_CrystalStructures(NULL),
-  m_NeighborList(NULL),
-  m_CAxisMisalignmentList(NULL)
+  m_CrystalStructures(NULL)
 {
   m_OrientationOps = OrientationOps::getOrientationOpsVector();
 
@@ -98,11 +94,13 @@ void FindFeatureNeighborCAxisMisalignments::setupFilterParameters()
   }
 
   parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "QString", true));
-/*[]*/parameters.push_back(FilterParameter::New("AvgQuats", "AvgQuatsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
-/*[]*/parameters.push_back(FilterParameter::New("FeaturePhases", "FeaturePhasesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
-/*[]*/parameters.push_back(FilterParameter::New("CrystalStructures", "CrystalStructuresArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
+  parameters.push_back(FilterParameter::New("Neighbor List Array Name", "NeighborListArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
+  parameters.push_back(FilterParameter::New("AvgQuats", "AvgQuatsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
+  parameters.push_back(FilterParameter::New("FeaturePhases", "FeaturePhasesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
+  parameters.push_back(FilterParameter::New("CrystalStructures", "CrystalStructuresArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
   parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "QString", true));
-/*##*/parameters.push_back(FilterParameter::New("AvgCAxisMisalignments", "AvgCAxisMisalignmentsArrayName", FilterParameterWidgetType::StringWidget, "QString", true, ""));
+  parameters.push_back(FilterParameter::New("AvgCAxisMisalignments", "AvgCAxisMisalignmentsArrayName", FilterParameterWidgetType::StringWidget, "QString", true, ""));
+  parameters.push_back(FilterParameter::New("CAxis Misalignment List Array Name", "CAxisMisalignmentListArrayName", FilterParameterWidgetType::StringWidget, "QString", true, ""));
   setFilterParameters(parameters);
 }
 
@@ -112,7 +110,9 @@ void FindFeatureNeighborCAxisMisalignments::setupFilterParameters()
 void FindFeatureNeighborCAxisMisalignments::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-/*[]*/setAvgCAxisMisalignmentsArrayName(reader->readString("AvgCAxisMisalignmentsArrayName", getAvgCAxisMisalignmentsArrayName() ) );
+  setNeighborListArrayPath(reader->readDataArrayPath("NeighborListArrayPath", getNeighborListArrayPath() ) );
+  setCAxisMisalignmentListArrayName(reader->readString("CAxisMisalignmentListArrayName", getCAxisMisalignmentListArrayName() ) );
+  setAvgCAxisMisalignmentsArrayName(reader->readString("AvgCAxisMisalignmentsArrayName", getAvgCAxisMisalignmentsArrayName() ) );
   setCrystalStructuresArrayPath(reader->readDataArrayPath("CrystalStructuresArrayPath", getCrystalStructuresArrayPath() ) );
   setFeaturePhasesArrayPath(reader->readDataArrayPath("FeaturePhasesArrayPath", getFeaturePhasesArrayPath() ) );
   setAvgQuatsArrayPath(reader->readDataArrayPath("AvgQuatsArrayPath", getAvgQuatsArrayPath() ) );
@@ -126,9 +126,11 @@ void FindFeatureNeighborCAxisMisalignments::readFilterParameters(AbstractFilterP
 int FindFeatureNeighborCAxisMisalignments::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-/*[]*/writer->writeValue("AvgCAxisMisalignmentsArrayName", getAvgCAxisMisalignmentsArrayName() );
+  writer->writeValue("AvgCAxisMisalignmentsArrayName", getAvgCAxisMisalignmentsArrayName() );
+  writer->writeValue("CAxisMisalignmentListArrayName", getCAxisMisalignmentListArrayName() );
   writer->writeValue("CrystalStructuresArrayPath", getCrystalStructuresArrayPath() );
   writer->writeValue("FeaturePhasesArrayPath", getFeaturePhasesArrayPath() );
+  writer->writeValue("NeighborListArrayPath", getNeighborListArrayPath() );
   writer->writeValue("AvgQuatsArrayPath", getAvgQuatsArrayPath() );
   writer->writeValue("FindAvgMisals", getFindAvgMisals() );
   writer->closeFilterGroup();
@@ -142,13 +144,6 @@ void FindFeatureNeighborCAxisMisalignments::dataCheck()
 {
   DataArrayPath tempPath;
   setErrorCondition(0);
-  QString ss;
-  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName(), false);
-  if(getErrorCondition() < 0 || NULL == m) { return; }
-  AttributeMatrix::Pointer cellEnsembleAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellEnsembleAttributeMatrixName(), -301);
-  if(getErrorCondition() < 0) { return; }
-  AttributeMatrix::Pointer cellFeatureAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellFeatureAttributeMatrixName(), -301);
-  if(getErrorCondition() < 0) { return; }
 
   QVector<size_t> dims(1, 4);
   // Feature Data
@@ -163,53 +158,23 @@ void FindFeatureNeighborCAxisMisalignments::dataCheck()
   // New Feature Data
   if(m_FindAvgMisals == true)
   {
-    m_AvgCAxisMisalignmentsPtr = cellFeatureAttrMat->createNonPrereqArray<DataArray<float>, AbstractFilter, float>(this, m_AvgCAxisMisalignmentsArrayName, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-////==>MIKE_GROEBER_FIX tempPath.update(DATACONTAINER_NAME, ATTRIBUTEMATRIX_NAME, getAvgCAxisMisalignmentsArrayName() );
-////==>MIKE_GROEBER_FIX m_AvgCAxisMisalignmentsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+    tempPath.update(m_FeaturePhasesArrayPath.getDataContainerName(), m_FeaturePhasesArrayPath.getAttributeMatrixName(), getAvgCAxisMisalignmentsArrayName() );
+    m_AvgCAxisMisalignmentsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
     if( NULL != m_AvgCAxisMisalignmentsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
     { m_AvgCAxisMisalignments = m_AvgCAxisMisalignmentsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   }
 
   // Ensemble Data
   typedef DataArray<unsigned int> XTalStructArrayType;
-  m_CrystalStructuresPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<unsigned int>, AbstractFilter>(this, getCrystalStructuresArrayPath(), dims)
-      ; /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_CrystalStructuresPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<unsigned int>, AbstractFilter>(this, getCrystalStructuresArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_CrystalStructuresPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_CrystalStructures = m_CrystalStructuresPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   // Now we are going to get a "Pointer" to the NeighborList object out of the DataContainer
-  IDataArray::Pointer neighborListPtr = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getAttributeArray(m_NeighborListArrayName);
-  if (NULL == neighborListPtr.get())
-  {
-    ss = QObject::tr("NeighborLists are not available and are required for this filter to run. A filter that generates NeighborLists needs to be placed before this filter in the pipeline.");
-    setErrorCondition(-305);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-  }
-  else
-  {
-    m_NeighborList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>*>(neighborListPtr.get());
-  }
+  m_NeighborList = getDataContainerArray()->getPrereqArrayFromPath<NeighborList<int>, AbstractFilter>(this, getNeighborListArrayPath(), dims);
 
-  IDataArray::Pointer misalignmentPtr = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getAttributeArray(m_CAxisMisalignmentListArrayName);
-  if(NULL == misalignmentPtr.get())
-  {
-    NeighborList<float>::Pointer misalignmentListPtr = NeighborList<float>::New();
-    misalignmentListPtr->setName(m_CAxisMisalignmentListArrayName);
-    misalignmentListPtr->resize(cellFeatureAttrMat->getNumTuples());
-    m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->addAttributeArray(m_CAxisMisalignmentListArrayName, misalignmentListPtr);
-    m_CAxisMisalignmentList = misalignmentListPtr.get();
-    if (misalignmentListPtr.get() == NULL)
-    {
-      ss = QObject::tr("MisalignmentLists Array Not Initialized correctly");
-      setErrorCondition(-308);
-      notifyErrorMessage(getHumanLabel(), ss, -308);
-    }
-  }
-  else
-  {
-    m_CAxisMisalignmentList = NeighborList<float>::SafeObjectDownCast<IDataArray*, NeighborList<float>*>(misalignmentPtr.get());
-    m_CAxisMisalignmentList->resize(cellFeatureAttrMat->getNumTuples());
-  }
+  tempPath.update(m_NeighborListArrayPath.getDataContainerName(), m_NeighborListArrayPath.getAttributeMatrixName(), getCAxisMisalignmentListArrayName() );
+  m_CAxisMisalignmentList = getDataContainerArray()->createNonPrereqArrayFromPath<NeighborList<float>, AbstractFilter, float>(this, tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
 }
 
 // -----------------------------------------------------------------------------
@@ -231,13 +196,12 @@ void FindFeatureNeighborCAxisMisalignments::execute()
   dataCheck();
   if(getErrorCondition() < 0) { return; }
 
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-  size_t totalFeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
+  size_t totalFeatures = m_FeaturePhasesPtr.lock()->getNumberOfTuples();
 
   // But since a pointer is difficult to use operators with we will now create a
   // reference variable to the pointer with the correct variable name that allows
   // us to use the same syntax as the "vector of vectors"
-  NeighborList<int>& neighborlist = *m_NeighborList;
+  NeighborList<int>& neighborlist = *(m_NeighborList.lock());
 
   std::vector<std::vector<float> > misalignmentlists;
 
@@ -314,16 +278,12 @@ void FindFeatureNeighborCAxisMisalignments::execute()
     }
   }
 
-  // We do this to create new set of MisalignmentList objects
-  totalFeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
-  dataCheck();
-
   for (size_t i = 1; i < totalFeatures; i++)
   {
     // Set the vector for each list into the NeighborList Object
     NeighborList<float>::SharedVectorType misaL(new std::vector<float>);
     misaL->assign(misalignmentlists[i].begin(), misalignmentlists[i].end());
-    m_CAxisMisalignmentList->setList(static_cast<int>(i), misaL);
+    m_CAxisMisalignmentList.lock()->setList(static_cast<int>(i), misaL);
   }
 
   notifyStatusMessage(getHumanLabel(), "FindFeatureNeighborCAxisMisalignments Completed");
