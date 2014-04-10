@@ -63,8 +63,10 @@ class DREAM3DLib_EXPORT ScaleVolume : public AbstractFilter
     DREAM3D_TYPE_MACRO_SUPER(ScaleVolume, AbstractFilter)
 
     virtual ~ScaleVolume();
-    DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceDataContainerName)
+    DREAM3D_FILTER_PARAMETER(QString, DataContainerName)
+    Q_PROPERTY(QString DataContainerName READ getDataContainerName WRITE setDataContainerName)
+    DREAM3D_FILTER_PARAMETER(QString, SurfaceDataContainerName)
+    Q_PROPERTY(QString SurfaceDataContainerName READ getSurfaceDataContainerName WRITE setSurfaceDataContainerName)
 
     DREAM3D_FILTER_PARAMETER(bool, ApplyToVoxelVolume)
     Q_PROPERTY(bool ApplyToVoxelVolume READ getApplyToVoxelVolume WRITE setApplyToVoxelVolume)

@@ -118,7 +118,8 @@ void ScaleVolume::setupFilterParameters()
   parameters.push_back(FilterParameter::New("Apply to Voxel Volume", "ApplyToVoxelVolume", FilterParameterWidgetType::BooleanWidget,"bool", false));
   parameters.push_back(FilterParameter::New("Apply to Surface Mesh", "ApplyToSurfaceMesh", FilterParameterWidgetType::BooleanWidget,"bool", false));
   parameters.push_back(FilterParameter::New("Scaling Factor", "ScaleFactor", FilterParameterWidgetType::FloatVec3Widget,"FloatVec3_t", false));
-
+  parameters.push_back(FilterParameter::New("Data Container To Apply To", "DataContainerName", FilterParameterWidgetType::DataContainerSelectionWidget,"QString", false));
+  parameters.push_back(FilterParameter::New("Surface Data Container To Apply To", "SurfaceDataContainerName", FilterParameterWidgetType::DataContainerSelectionWidget,"QString", false));
   setFilterParameters(parameters);
 }
 
@@ -131,6 +132,8 @@ void ScaleVolume::readFilterParameters(AbstractFilterParametersReader* reader, i
   setApplyToVoxelVolume( reader->readValue("ApplyToVoxelVolume", getApplyToVoxelVolume()) );
   setApplyToSurfaceMesh( reader->readValue("ApplyToSurfaceMesh", getApplyToSurfaceMesh()) );
   setScaleFactor( reader->readFloatVec3("ScaleFactor", getScaleFactor() ) );
+  setDataContainerName(reader->readString("DataContainerName", getDataContainerName()));
+  setSurfaceDataContainerName(reader->readString("SurfaceDataContainerName", getSurfaceDataContainerName()));
   reader->closeFilterGroup();
 }
 
@@ -143,6 +146,8 @@ int ScaleVolume::writeFilterParameters(AbstractFilterParametersWriter* writer, i
   writer->writeValue("ScaleFactor", getScaleFactor() );
   writer->writeValue("ApplyToVoxelVolume", getApplyToVoxelVolume() );
   writer->writeValue("ApplyToSurfaceMesh", getApplyToSurfaceMesh() );
+  writer->writeValue("DataContainerName", getDataContainerName());
+  writer->writeValue("SurfaceDataContainerName", getSurfaceDataContainerName());
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
@@ -172,7 +177,6 @@ void ScaleVolume::dataCheck()
   }
 }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -183,7 +187,6 @@ void ScaleVolume::preflight()
   dataCheck();
   emit preflightExecuted();
 }
-
 
 // -----------------------------------------------------------------------------
 //
@@ -209,8 +212,6 @@ void ScaleVolume::execute()
 
   if (m_ApplyToSurfaceMesh == true)
   {
- //   SurfaceDataContainer* m = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
-
     updateSurfaceMesh();
   }
 
@@ -225,7 +226,6 @@ void ScaleVolume::updateSurfaceMesh()
   int err = 0;
   QString ss;
   setErrorCondition(err);
- // SurfaceDataContainer* m = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
 
   notifyStatusMessage(getHumanLabel(), "Starting");
 

@@ -63,11 +63,14 @@ class DREAM3DLib_EXPORT LinkFeatureMapToCellArray : public AbstractFilter
     DREAM3D_TYPE_MACRO_SUPER(LinkFeatureMapToCellArray, AbstractFilter)
 
     virtual ~LinkFeatureMapToCellArray();
-    DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(CellFeatureAttributeMatrixName)
+    DREAM3D_FILTER_PARAMETER(QString, CellFeatureAttributeMatrixName)
+    Q_PROPERTY(QString CellFeatureAttributeMatrixName READ getCellFeatureAttributeMatrixName WRITE setCellFeatureAttributeMatrixName)
 
-    Q_PROPERTY(QString SelectedCellDataArrayName READ getSelectedCellDataArrayName WRITE setSelectedCellDataArrayName)
+    DREAM3D_FILTER_PARAMETER(DataArrayPath, SelectedCellArrayPath)
+    Q_PROPERTY(DataArrayPath SelectedCellArrayPath READ getSelectedCellArrayPath WRITE setSelectedCellArrayPath)
+
+    DREAM3D_FILTER_PARAMETER(QString, ActiveArrayName)
+    Q_PROPERTY(QString ActiveArrayName READ getActiveArrayName WRITE setActiveArrayName)
 
     /**
     * @brief This returns the group that the filter belonds to. You can select
@@ -132,9 +135,11 @@ signals:
     * @param ensembles The number of ensembles
     */
     void dataCheck();
+    void updateFeatureInstancePointers();
 
   private:
     DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, SelectedCellData)
+    DEFINE_CREATED_DATAARRAY(bool, Active)
 
     LinkFeatureMapToCellArray(const LinkFeatureMapToCellArray&); // Copy Constructor Not Implemented
     void operator=(const LinkFeatureMapToCellArray&); // Operator '=' Not Implemented

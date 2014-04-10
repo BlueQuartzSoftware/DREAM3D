@@ -63,8 +63,6 @@ class DREAM3DLib_EXPORT ConvertData : public AbstractFilter
     DREAM3D_TYPE_MACRO_SUPER(ConvertData, AbstractFilter)
 
     virtual ~ConvertData();
-    DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
 
     typedef struct { int x; int y; int z; } Dimensions_t;
 
@@ -74,9 +72,8 @@ class DREAM3DLib_EXPORT ConvertData : public AbstractFilter
 
     DREAM3D_FILTER_PARAMETER(QString, OutputArrayName)
     Q_PROPERTY(QString OutputArrayName READ getOutputArrayName WRITE setOutputArrayName)
-    DREAM3D_FILTER_PARAMETER(QString, SelectedCellArrayName)
-    Q_PROPERTY(QString SelectedCellArrayName READ getSelectedCellArrayName WRITE setSelectedCellArrayName)
-
+    DREAM3D_FILTER_PARAMETER(DataArrayPath, SelectedCellArrayPath)
+    Q_PROPERTY(DataArrayPath SelectedCellArrayPath READ getSelectedCellArrayPath WRITE setSelectedCellArrayPath)
 
     /**
     * @brief This returns the group that the filter belonds to. You can select

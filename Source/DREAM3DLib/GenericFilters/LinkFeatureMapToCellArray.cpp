@@ -42,11 +42,12 @@
 // -----------------------------------------------------------------------------
 LinkFeatureMapToCellArray::LinkFeatureMapToCellArray() :
   AbstractFilter(),
-  m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
-  m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
   m_CellFeatureAttributeMatrixName(DREAM3D::Defaults::CellFeatureAttributeMatrixName),
+  m_SelectedCellArrayPath("", "", ""),
   m_SelectedCellDataArrayName(""),
-  m_SelectedCellData(NULL)
+  m_SelectedCellData(NULL),
+  m_ActiveArrayName(""),
+  m_Active(NULL)
 {
   setupFilterParameters();
 }
@@ -64,8 +65,10 @@ LinkFeatureMapToCellArray::~LinkFeatureMapToCellArray()
 void LinkFeatureMapToCellArray::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(FilterParameter::New("Cell Array Name", "SelectedCellDataArrayName", FilterParameterWidgetType::DataArraySelectionWidget,"QString", false));
-
+  parameters.push_back(FilterParameter::New("Cell Array", "SelectedCellArrayPath", FilterParameterWidgetType::DataArraySelectionWidget,"DataArrayPath", false));
+  parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "QString", true));
+  parameters.push_back(FilterParameter::New("Active", "ActiveArrayName", FilterParameterWidgetType::StringWidget, "QString", true, ""));
+  parameters.push_back(FilterParameter::New("Cell Feature Attribute Matrix Name", "CellFeatureAttributeMatrixName", FilterParameterWidgetType::StringWidget, "QString", true, ""));
   setFilterParameters(parameters);
 }
 
@@ -75,7 +78,9 @@ void LinkFeatureMapToCellArray::setupFilterParameters()
 void LinkFeatureMapToCellArray::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-  setSelectedCellDataArrayName( reader->readString( "SelectedCellDataArrayName", getSelectedCellDataArrayName() ) );
+  setCellFeatureAttributeMatrixName(reader->readString("CellFeatureAttributeMatrixName", getCellFeatureAttributeMatrixName()));
+  setActiveArrayName(reader->readString("ActiveArrayName", getActiveArrayName()));
+  setSelectedCellArrayPath( reader->readDataArrayPath( "SelectedCellArrayPath", getSelectedCellArrayPath() ) );
   reader->closeFilterGroup();
 }
 
@@ -85,7 +90,9 @@ void LinkFeatureMapToCellArray::readFilterParameters(AbstractFilterParametersRea
 int LinkFeatureMapToCellArray::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  writer->writeValue("SelectedCellDataArrayName", getSelectedCellDataArrayName() );
+  writer->writeValue("ActiveArrayName", getActiveArrayName());
+  writer->writeValue("CellFeatureAttributeMatrixName", getCellFeatureAttributeMatrixName());
+  writer->writeValue("SelectedCellArrayPath", getSelectedCellArrayPath() );
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
@@ -93,46 +100,38 @@ int LinkFeatureMapToCellArray::writeFilterParameters(AbstractFilterParametersWri
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void LinkFeatureMapToCellArray::dataCheck()
+void LinkFeatureMapToCellArray::updateFeatureInstancePointers()
 {
   setErrorCondition(0);
 
-  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName(), false);
-  if(getErrorCondition() < 0 || NULL == m) { return; }
-  AttributeMatrix::Pointer cellAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), -301);
-  if(getErrorCondition() < 0 || NULL == cellAttrMat.get() ) { return; }
-  AttributeMatrix::Pointer cellFeatureAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellFeatureAttributeMatrixName(), -301);
-  if(getErrorCondition() < 0) { return; }
-
-  IDataArray::Pointer data = cellAttrMat->getAttributeArray(m_SelectedCellDataArrayName);
-  if (NULL == data.get())
-  {
-    QString ss = QObject::tr("Selected array '%1' does not exist in the Voxel Data Container. Was it spelled correctly?").arg(m_SelectedCellDataArrayName);
-    setErrorCondition(-11001);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-    return;
-  }
-
-  QString dType = data->getTypeAsString();
-  IDataArray::Pointer p = IDataArray::NullPointer();
-  if (dType.compare("int32_t") == 0)
-  {
-    DataArray<int32_t>* feature = DataArray<int32_t>::SafePointerDownCast(data.get());
-    m_SelectedCellData = feature->getPointer(0);
-  }
-  else
-  {
-    QString ss = QObject::tr("Selected array '%1' is not an Integer array. Is this the array you want to use?").arg(m_SelectedCellDataArrayName);
-    setErrorCondition(-11001);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-    return;
-  }
-
-  cellFeatureAttrMat->clearAttributeArrays();
-  QVector<size_t> dims(1, 1);
-  cellFeatureAttrMat->createAndAddAttributeArray<DataArray<bool>, bool>(DREAM3D::FeatureData::Active, false, dims);
+  if( NULL != m_ActivePtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  { m_Active = m_ActivePtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void LinkFeatureMapToCellArray::dataCheck()
+{
+  DataArrayPath tempPath;
+  setErrorCondition(0);
+
+  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getSelectedCellArrayPath().getDataContainerName(), false);
+  if(getErrorCondition() < 0 || NULL == m) { return; }
+  QVector<size_t> tDims(1, 0);
+  AttributeMatrix::Pointer cellFeatureAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellFeatureAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::CellFeature);
+  if(getErrorCondition() < 0) { return; }
+
+  QVector<size_t> dims(1, 1);
+  m_SelectedCellDataPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getSelectedCellArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if( NULL != m_SelectedCellDataPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  { m_SelectedCellData = m_SelectedCellDataPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+
+  tempPath.update(getSelectedCellArrayPath().getDataContainerName(), getCellFeatureAttributeMatrixName(), getActiveArrayName() );
+  m_ActivePtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<bool>, AbstractFilter, bool>(this, tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if( NULL != m_ActivePtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  { m_Active = m_ActivePtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+}
 
 // -----------------------------------------------------------------------------
 //
@@ -145,7 +144,6 @@ void LinkFeatureMapToCellArray::preflight()
   emit preflightExecuted();
 }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -155,12 +153,8 @@ void LinkFeatureMapToCellArray::execute()
   dataCheck();
   if(getErrorCondition() < 0) { return; }
 
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-  int64_t totalPoints = m->getAttributeMatrix(getCellAttributeMatrixName())->getNumTuples();
-
-  // We get the attribute maxtrix here but no need to check it as that should have been done in the "dataCheck()" function
-  AttributeMatrix::Pointer attrMatrix = m->getAttributeMatrix(getCellFeatureAttributeMatrixName());
-  attrMatrix->clearAttributeArrays();
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getSelectedCellArrayPath().getDataContainerName());
+  int64_t totalPoints = m_SelectedCellDataPtr.lock()->getNumberOfTuples();
 
   int maxIndex = 0;
   std::vector<bool> active;
@@ -175,17 +169,17 @@ void LinkFeatureMapToCellArray::execute()
     }
   }
 
-  BoolArrayType::Pointer m_Active = BoolArrayType::CreateArray(maxIndex, DREAM3D::FeatureData::Active);
-  bool* mActive = m_Active->getPointer(0);
+  QVector<size_t> tDims(1, maxIndex);
+  m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->resizeAttributeArrays(tDims);
+  updateFeatureInstancePointers();
+
   for(int i = 0; i < maxIndex; i++)
   {
-    mActive[i] = active[i];
+    m_Active[i] = active[i];
   }
-  attrMatrix->addAttributeArray(DREAM3D::FeatureData::Active, m_Active);
 
   notifyStatusMessage(getHumanLabel(), "Complete");
 }
-
 
 // -----------------------------------------------------------------------------
 //

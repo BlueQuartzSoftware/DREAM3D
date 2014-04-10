@@ -64,10 +64,6 @@ class DREAM3DLib_EXPORT RenameDataContainer : public AbstractFilter
 
     virtual ~RenameDataContainer();
 
-//    DREAM3D_INSTANCE_PROPERTY(QString, DataContainerName)
-//    DREAM3D_INSTANCE_PROPERTY(QString, AttributeMatrixName)
-
-
     DREAM3D_FILTER_PARAMETER(QString, SelectedDataContainerName)
     Q_PROPERTY(QString SelectedDataContainerName READ getSelectedDataContainerName WRITE setSelectedDataContainerName)
 

@@ -171,11 +171,9 @@ namespace Detail
 // -----------------------------------------------------------------------------
 ConvertData::ConvertData() :
   AbstractFilter(),
-  m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
-  m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
   m_ScalarType(0),
   m_OutputArrayName(""),
-  m_SelectedCellArrayName("")
+  m_SelectedCellArrayPath("","","")
 {
   setupFilterParameters();
 }
@@ -196,7 +194,7 @@ void ConvertData::setupFilterParameters()
   /* Place all your option initialization code here */
 
   /* To Display a Combobox with a list of current Voxel Cell Arrays in it */
-  parameters.push_back(FilterParameter::New("Attribute Array Name", "SelectedCellArrayName", FilterParameterWidgetType::DataArraySelectionWidget,"QString", false));
+  parameters.push_back(FilterParameter::New("Attribute Array Name", "SelectedCellArrayPath", FilterParameterWidgetType::DataArraySelectionWidget,"DataArrayPath", false));
   {
     ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New();
     parameter->setHumanLabel("Scalar Type");
@@ -227,7 +225,7 @@ void ConvertData::setupFilterParameters()
 void ConvertData::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-  setSelectedCellArrayName( reader->readString( "SelectedCellArrayName", getSelectedCellArrayName() ) );
+  setSelectedCellArrayPath( reader->readDataArrayPath( "SelectedCellArrayPath", getSelectedCellArrayPath() ) );
   setScalarType( reader->readValue("ScalarType", getScalarType()) );
   setOutputArrayName( reader->readString( "OutputArrayName", getOutputArrayName() ) );
   reader->closeFilterGroup();
@@ -243,7 +241,7 @@ int ConvertData::writeFilterParameters(AbstractFilterParametersWriter* writer, i
    AbstractFilterParametersWriter class for the proper API to use. */
   writer->writeValue("ScalarType", getScalarType() );
   writer->writeValue("OutputArrayName", getOutputArrayName() );
-  writer->writeValue("SelectedCellArrayName", getSelectedCellArrayName() );
+  writer->writeValue("SelectedCellArrayPath", getSelectedCellArrayPath() );
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
@@ -255,13 +253,13 @@ void ConvertData::dataCheck(bool preflight)
 {
   setErrorCondition(0);
 
-  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName(), false);
+  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, m_SelectedCellArrayPath.getDataContainerName(), false);
   if(getErrorCondition() < 0 || NULL == m) { return; }
-  AttributeMatrix::Pointer cellAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), -301);
+  AttributeMatrix::Pointer cellAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, m_SelectedCellArrayPath.getAttributeMatrixName(), -301);
   if(getErrorCondition() < 0 || NULL == cellAttrMat.get() ) { return; }
 
   QString ss;
-  if(m_SelectedCellArrayName.isEmpty() == true)
+  if(m_SelectedCellArrayPath.isEmpty() == true)
   {
     ss = QObject::tr("The Input Voxel Cell Array Name is blank (empty) and a value must be filled in for the pipeline to complete.");
     setErrorCondition(-397);
@@ -279,10 +277,10 @@ void ConvertData::dataCheck(bool preflight)
   if (true == preflight)
   {
     //  IDataArray::Pointer  = IDataArray::NullPointer();
-    IDataArray::Pointer p = cellAttrMat->getAttributeArray(m_SelectedCellArrayName);
+    IDataArray::Pointer p = cellAttrMat->getAttributeArray(m_SelectedCellArrayPath.getDataArrayName());
     if (NULL == p.get())
     {
-      ss = QObject::tr("The input array '%1' was not found in the AttributeMatrix '%2'.").arg(m_SelectedCellArrayName).arg(m_CellAttributeMatrixName);
+      ss = QObject::tr("The input array '%1' was not found in the AttributeMatrix '%2'.").arg(m_SelectedCellArrayPath.getDataArrayName()).arg(m_SelectedCellArrayPath.getAttributeMatrixName());
       setErrorCondition(-398);
       notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
       return;
@@ -331,7 +329,7 @@ void ConvertData::dataCheck(bool preflight)
     {
       p = DoubleArrayType::CreateArray(voxels, dims, m_OutputArrayName);
     }
-    m->getAttributeMatrix(getCellAttributeMatrixName())->addAttributeArray(p->getName(), p);
+    cellAttrMat->addAttributeArray(p->getName(), p);
   }
 }
 
@@ -355,28 +353,27 @@ void ConvertData::execute()
 {
   int err = 0;
   setErrorCondition(err);
-
   dataCheck(false);
   if(getErrorCondition() < 0) { return; }
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
-  IDataArray::Pointer iArray = m->getAttributeMatrix(getCellAttributeMatrixName())->getAttributeArray(m_SelectedCellArrayName);
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(m_SelectedCellArrayPath.getDataContainerName());
+
+  IDataArray::Pointer iArray = m->getAttributeMatrix(m_SelectedCellArrayPath.getAttributeMatrixName())->getAttributeArray(m_SelectedCellArrayPath.getDataArrayName());
   bool completed = false;
 
-  CHECK_AND_CONVERT(UInt8ArrayType, m, m_ScalarType, iArray, getCellAttributeMatrixName(), m_OutputArrayName)
-      CHECK_AND_CONVERT(Int8ArrayType, m, m_ScalarType, iArray, getCellAttributeMatrixName(), m_OutputArrayName)
-      CHECK_AND_CONVERT(UInt16ArrayType, m, m_ScalarType, iArray, getCellAttributeMatrixName(), m_OutputArrayName)
-      CHECK_AND_CONVERT(Int16ArrayType, m, m_ScalarType, iArray, getCellAttributeMatrixName(), m_OutputArrayName)
-      CHECK_AND_CONVERT(UInt32ArrayType, m, m_ScalarType, iArray, getCellAttributeMatrixName(), m_OutputArrayName)
-      CHECK_AND_CONVERT(Int32ArrayType, m, m_ScalarType, iArray, getCellAttributeMatrixName(), m_OutputArrayName)
-      CHECK_AND_CONVERT(UInt64ArrayType, m, m_ScalarType, iArray, getCellAttributeMatrixName(), m_OutputArrayName)
-      CHECK_AND_CONVERT(Int64ArrayType, m, m_ScalarType, iArray, getCellAttributeMatrixName(), m_OutputArrayName)
+  CHECK_AND_CONVERT(UInt8ArrayType, m, m_ScalarType, iArray, m_SelectedCellArrayPath.getAttributeMatrixName(), m_OutputArrayName)
+  CHECK_AND_CONVERT(Int8ArrayType, m, m_ScalarType, iArray, m_SelectedCellArrayPath.getAttributeMatrixName(), m_OutputArrayName)
+  CHECK_AND_CONVERT(UInt16ArrayType, m, m_ScalarType, iArray, m_SelectedCellArrayPath.getAttributeMatrixName(), m_OutputArrayName)
+  CHECK_AND_CONVERT(Int16ArrayType, m, m_ScalarType, iArray, m_SelectedCellArrayPath.getAttributeMatrixName(), m_OutputArrayName)
+  CHECK_AND_CONVERT(UInt32ArrayType, m, m_ScalarType, iArray, m_SelectedCellArrayPath.getAttributeMatrixName(), m_OutputArrayName)
+  CHECK_AND_CONVERT(Int32ArrayType, m, m_ScalarType, iArray, m_SelectedCellArrayPath.getAttributeMatrixName(), m_OutputArrayName)
+  CHECK_AND_CONVERT(UInt64ArrayType, m, m_ScalarType, iArray, m_SelectedCellArrayPath.getAttributeMatrixName(), m_OutputArrayName)
+  CHECK_AND_CONVERT(Int64ArrayType, m, m_ScalarType, iArray, m_SelectedCellArrayPath.getAttributeMatrixName(), m_OutputArrayName)
+  CHECK_AND_CONVERT(FloatArrayType, m, m_ScalarType, iArray, m_SelectedCellArrayPath.getAttributeMatrixName(), m_OutputArrayName)
+  CHECK_AND_CONVERT(DoubleArrayType, m, m_ScalarType, iArray, m_SelectedCellArrayPath.getAttributeMatrixName(), m_OutputArrayName)
 
-      CHECK_AND_CONVERT(FloatArrayType, m, m_ScalarType, iArray, getCellAttributeMatrixName(), m_OutputArrayName)
-      CHECK_AND_CONVERT(DoubleArrayType, m, m_ScalarType, iArray, getCellAttributeMatrixName(), m_OutputArrayName)
-
-      /* Let the GUI know we are done with this filter */
-      notifyStatusMessage(getHumanLabel(), "Complete");
+  /* Let the GUI know we are done with this filter */
+  notifyStatusMessage(getHumanLabel(), "Complete");
 }
 // -----------------------------------------------------------------------------
 //

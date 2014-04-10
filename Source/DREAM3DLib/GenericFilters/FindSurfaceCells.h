@@ -59,11 +59,6 @@ class DREAM3DLib_EXPORT FindSurfaceCells : public AbstractFilter
     DREAM3D_TYPE_MACRO_SUPER(FindSurfaceCells, AbstractFilter)
 
     virtual ~FindSurfaceCells();
-    DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
-
-    //------ Required Cell Data
-    //------ Created Cell Data
 
     DREAM3D_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
     Q_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)

@@ -57,19 +57,12 @@ class DREAM3DLib_EXPORT GenerateMisorientationColors : public AbstractFilter
     DREAM3D_TYPE_MACRO_SUPER(GenerateMisorientationColors, AbstractFilter)
 
     virtual ~GenerateMisorientationColors();
-    DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(CellEnsembleAttributeMatrixName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
-    //------ Required Cell Data
-    //------ Required Ensemble Data
-    //------ Created Cell Data
 
     /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
     DREAM3D_FILTER_PARAMETER(FloatVec3_t, ReferenceAxis)
     Q_PROPERTY(FloatVec3_t ReferenceAxis READ getReferenceAxis WRITE setReferenceAxis)
     DREAM3D_FILTER_PARAMETER(float, ReferenceAngle)
     Q_PROPERTY(float ReferenceAngle READ getReferenceAngle WRITE setReferenceAngle)
-
 
     /**
     * @brief This returns the group that the filter belonds to. You can select

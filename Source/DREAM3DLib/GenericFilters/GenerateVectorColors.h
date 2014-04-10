@@ -62,18 +62,8 @@ class DREAM3DLib_EXPORT GenerateVectorColors : public AbstractFilter
 
     virtual ~GenerateVectorColors();
 
-    /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, SelectedVectorArrayPath)
-    Q_PROPERTY(DataArrayPath SelectedVectorArrayPath READ getSelectedVectorArrayPath WRITE setSelectedVectorArrayPath)
-
-
-    /**
-    * @brief This returns the group that the filter belonds to. You can select
-    * a different group if you want. The string returned here will be displayed
-    * in the GUI for the filter
-    */
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, SelectedVectorArrayPathArrayPath)
-    Q_PROPERTY(DataArrayPath SelectedVectorArrayPathArrayPath READ getSelectedVectorArrayPathArrayPath WRITE setSelectedVectorArrayPathArrayPath)
+    DREAM3D_FILTER_PARAMETER(DataArrayPath, VectorsArrayPath)
+    Q_PROPERTY(DataArrayPath VectorsArrayPath READ getVectorsArrayPath WRITE setVectorsArrayPath)
 
     DREAM3D_FILTER_PARAMETER(DataArrayPath, GoodVoxelsArrayPath)
     Q_PROPERTY(DataArrayPath GoodVoxelsArrayPath READ getGoodVoxelsArrayPath WRITE setGoodVoxelsArrayPath)

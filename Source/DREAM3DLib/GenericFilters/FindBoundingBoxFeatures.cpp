@@ -44,16 +44,13 @@
 // -----------------------------------------------------------------------------
 FindBoundingBoxFeatures::FindBoundingBoxFeatures() :
   AbstractFilter(),
-  m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
-  m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
-  m_CellFeatureAttributeMatrixName(DREAM3D::Defaults::CellFeatureAttributeMatrixName),
-/*[]*/m_CentroidsArrayPath(DREAM3D::Defaults::SomePath),
-/*[]*/m_SurfaceFeaturesArrayPath(DREAM3D::Defaults::SomePath),
-  m_BiasedFeaturesArrayName(DREAM3D::FeatureData::BiasedFeatures),
+  m_CentroidsArrayPath(DREAM3D::Defaults::SomePath),
+  m_SurfaceFeaturesArrayPath(DREAM3D::Defaults::SomePath),
   m_CentroidsArrayName(DREAM3D::FeatureData::Centroids),
   m_Centroids(NULL),
   m_SurfaceFeaturesArrayName(DREAM3D::FeatureData::SurfaceFeatures),
   m_SurfaceFeatures(NULL),
+  m_BiasedFeaturesArrayName(DREAM3D::FeatureData::BiasedFeatures),
   m_BiasedFeatures(NULL)
 {
   setupFilterParameters();
@@ -72,17 +69,17 @@ void FindBoundingBoxFeatures::setupFilterParameters()
 {
   FilterParameterVector parameters;
   parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "QString", true));
-/*[]*/parameters.push_back(FilterParameter::New("Centroids", "CentroidsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
-/*[]*/parameters.push_back(FilterParameter::New("SurfaceFeatures", "SurfaceFeaturesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
+  parameters.push_back(FilterParameter::New("Centroids", "CentroidsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
+  parameters.push_back(FilterParameter::New("SurfaceFeatures", "SurfaceFeaturesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
   parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "QString", true));
-/*##*/parameters.push_back(FilterParameter::New("BiasedFeatures", "BiasedFeaturesArrayName", FilterParameterWidgetType::StringWidget, "QString", true, ""));
+  parameters.push_back(FilterParameter::New("BiasedFeatures", "BiasedFeaturesArrayName", FilterParameterWidgetType::StringWidget, "QString", true, ""));
   setFilterParameters(parameters);
 }
 // -----------------------------------------------------------------------------
 void FindBoundingBoxFeatures::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-/*[]*/setBiasedFeaturesArrayName(reader->readString("BiasedFeaturesArrayName", getBiasedFeaturesArrayName() ) );
+  setBiasedFeaturesArrayName(reader->readString("BiasedFeaturesArrayName", getBiasedFeaturesArrayName() ) );
   setSurfaceFeaturesArrayPath(reader->readDataArrayPath("SurfaceFeaturesArrayPath", getSurfaceFeaturesArrayPath() ) );
   setCentroidsArrayPath(reader->readDataArrayPath("CentroidsArrayPath", getCentroidsArrayPath() ) );
   reader->closeFilterGroup();
@@ -94,7 +91,7 @@ void FindBoundingBoxFeatures::readFilterParameters(AbstractFilterParametersReade
 int FindBoundingBoxFeatures::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-/*[]*/writer->writeValue("BiasedFeaturesArrayName", getBiasedFeaturesArrayName() );
+  writer->writeValue("BiasedFeaturesArrayName", getBiasedFeaturesArrayName() );
   writer->writeValue("SurfaceFeaturesArrayPath", getSurfaceFeaturesArrayPath() );
   writer->writeValue("CentroidsArrayPath", getCentroidsArrayPath() );
   writer->closeFilterGroup();
@@ -109,11 +106,6 @@ void FindBoundingBoxFeatures::dataCheck()
   DataArrayPath tempPath;
   setErrorCondition(0);
 
-  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName(), false);
-  if(getErrorCondition() < 0 || NULL == m) { return; }
-  AttributeMatrix::Pointer cellFeatureAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellFeatureAttributeMatrixName(), -301);
-  if(getErrorCondition() < 0) { return; }
-
   QVector<size_t> dims(1, 3);
   m_CentroidsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getCentroidsArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_CentroidsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
@@ -123,9 +115,8 @@ void FindBoundingBoxFeatures::dataCheck()
   if( NULL != m_SurfaceFeaturesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_SurfaceFeatures = m_SurfaceFeaturesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
-  m_BiasedFeaturesPtr = cellFeatureAttrMat->createNonPrereqArray<DataArray<bool>, AbstractFilter, bool>(this, m_BiasedFeaturesArrayName, false, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-////==>MIKE_GROEBER_FIX tempPath.update(DATACONTAINER_NAME, ATTRIBUTEMATRIX_NAME, getBiasedFeaturesArrayName() );
-////==>MIKE_GROEBER_FIX m_BiasedFeaturesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<bool>, AbstractFilter, bool>(this, tempPath, false, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  tempPath.update(getCentroidsArrayPath().getDataContainerName(), getCentroidsArrayPath().getAttributeMatrixName(), getBiasedFeaturesArrayName() );
+  m_BiasedFeaturesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<bool>, AbstractFilter, bool>(this, tempPath, false, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_BiasedFeaturesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_BiasedFeatures = m_BiasedFeaturesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
@@ -151,7 +142,7 @@ void FindBoundingBoxFeatures::execute()
   dataCheck();
   if(getErrorCondition() < 0) { return; }
 
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getCentroidsArrayPath().getDataContainerName());
 
   if(m->getXPoints() > 1 && m->getYPoints() > 1 && m->getZPoints() > 1) { find_boundingboxfeatures(); }
   if(m->getXPoints() == 1 || m->getYPoints() == 1 || m->getZPoints() == 1) { find_boundingboxfeatures2D(); }
@@ -163,9 +154,9 @@ void FindBoundingBoxFeatures::execute()
 // -----------------------------------------------------------------------------
 void FindBoundingBoxFeatures::find_boundingboxfeatures()
 {
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getCentroidsArrayPath().getDataContainerName());
 
-  size_t size = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
+  size_t size = m_CentroidsPtr.lock()->getNumberOfTuples();
   float boundbox[7];
   float coords[7];
   float x, y, z;
@@ -223,9 +214,9 @@ void FindBoundingBoxFeatures::find_boundingboxfeatures()
 }
 void FindBoundingBoxFeatures::find_boundingboxfeatures2D()
 {
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getCentroidsArrayPath().getDataContainerName());
 
-  size_t size = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples();
+  size_t size = m_CentroidsPtr.lock()->getNumberOfTuples();
   float boundbox[5];
   float coords[5];
   float x, y;

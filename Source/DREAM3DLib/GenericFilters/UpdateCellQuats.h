@@ -61,11 +61,6 @@ class DREAM3DLib_EXPORT UpdateCellQuats : public AbstractFilter
 
     virtual ~UpdateCellQuats();
 
-    DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
-    //------ Required Cell Data
-    //------ Created Cell Data
-
     DREAM3D_FILTER_PARAMETER(DataArrayPath, Quats5ArrayPath)
     Q_PROPERTY(DataArrayPath Quats5ArrayPath READ getQuats5ArrayPath WRITE setQuats5ArrayPath)
 
@@ -110,7 +105,7 @@ signals:
 
   private:
     DEFINE_CREATED_DATAARRAY(float, Quats)
-    DEFINE_CREATED_DATAARRAY(float, Quats5)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(float, Quats5)
 
     QVector<OrientationOps::Pointer> m_OrientationOps;
 

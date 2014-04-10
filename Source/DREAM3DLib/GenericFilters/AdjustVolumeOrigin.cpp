@@ -124,6 +124,8 @@ void AdjustVolumeOrigin::setupFilterParameters()
   parameters.push_back(FilterParameter::New("Apply to Voxel Volume", "ApplyToVoxelVolume", FilterParameterWidgetType::BooleanWidget,"bool", false));
   parameters.push_back(FilterParameter::New("Apply to Surface Mesh", "ApplyToSurfaceMesh", FilterParameterWidgetType::BooleanWidget,"bool", false));
   parameters.push_back(FilterParameter::New("Origin", "Origin", FilterParameterWidgetType::FloatVec3Widget,"FloatVec3_t", false, "Microns"));
+  parameters.push_back(FilterParameter::New("Data Container To Apply To", "DataContainerName", FilterParameterWidgetType::DataContainerSelectionWidget,"QString", false));
+  parameters.push_back(FilterParameter::New("Surface Data Container To Apply To", "SurfaceDataContainerName", FilterParameterWidgetType::DataContainerSelectionWidget,"QString", false));
   setFilterParameters(parameters);
 }
 
@@ -136,6 +138,8 @@ void AdjustVolumeOrigin::readFilterParameters(AbstractFilterParametersReader* re
   setApplyToVoxelVolume( reader->readValue("ApplyToVoxelVolume", false) );
   setApplyToSurfaceMesh( reader->readValue("ApplyToSurfaceMesh", false) );
   setOrigin( reader->readFloatVec3("Origin", getOrigin() ) );
+  setDataContainerName(reader->readString("DataContainerName", getDataContainerName()));
+  setSurfaceDataContainerName(reader->readString("SurfaceDataContainerName", getSurfaceDataContainerName()));
   reader->closeFilterGroup();
 }
 
@@ -148,6 +152,8 @@ int AdjustVolumeOrigin::writeFilterParameters(AbstractFilterParametersWriter* wr
   writer->writeValue("Origin", getOrigin() );
   writer->writeValue("ApplyToVoxelVolume", getApplyToVoxelVolume() );
   writer->writeValue("ApplyToSurfaceMesh", getApplyToSurfaceMesh() );
+  writer->writeValue("DataContainerName", getDataContainerName());
+  writer->writeValue("SurfaceDataContainerName", getSurfaceDataContainerName());
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
@@ -158,16 +164,17 @@ int AdjustVolumeOrigin::writeFilterParameters(AbstractFilterParametersWriter* wr
 void AdjustVolumeOrigin::dataCheck()
 {
   setErrorCondition(0);
-
   if (m_ApplyToVoxelVolume == true)
   {
     VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName());
     if(getErrorCondition() < 0) { return; }
   }
+
   if (m_ApplyToSurfaceMesh == true)
   {
     SurfaceDataContainer* sm = getDataContainerArray()->getPrereqDataContainer<SurfaceDataContainer, AbstractFilter>(this, getSurfaceDataContainerName());
     if(getErrorCondition() < 0) { return; }
+    // We MUST have Nodes
     if(sm->getVertices().get() == NULL)
     {
       setErrorCondition(-384);
@@ -220,9 +227,7 @@ void AdjustVolumeOrigin::execute()
 void AdjustVolumeOrigin::updateSurfaceMesh()
 {
   int err = 0;
-
   setErrorCondition(err);
-  SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
 
   notifyStatusMessage(getHumanLabel(), "Starting");
 
@@ -231,7 +236,7 @@ void AdjustVolumeOrigin::updateSurfaceMesh()
   bool doParallel = true;
 #endif
 
-  VertexArray::Pointer nodesPtr = sm->getVertices();
+  VertexArray::Pointer nodesPtr = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName())->getVertices();
   VertexArray::Vert_t* nodes = nodesPtr->getPointer(0);
 
   // First get the min/max coords.

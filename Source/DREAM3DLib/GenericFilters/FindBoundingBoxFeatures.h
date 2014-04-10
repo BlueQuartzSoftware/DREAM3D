@@ -64,12 +64,6 @@ class DREAM3DLib_EXPORT FindBoundingBoxFeatures : public AbstractFilter
     DREAM3D_TYPE_MACRO_SUPER(FindBoundingBoxFeatures, AbstractFilter)
 
     virtual ~FindBoundingBoxFeatures();
-    DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(CellFeatureAttributeMatrixName)
-
-    DECLARE_WRAPPED_ARRAY(totalsurfacearea, m_TotalSurfaceArea, float)
-
     DREAM3D_FILTER_PARAMETER(DataArrayPath, CentroidsArrayPath)
     Q_PROPERTY(DataArrayPath CentroidsArrayPath READ getCentroidsArrayPath WRITE setCentroidsArrayPath)
 

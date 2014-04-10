@@ -42,9 +42,7 @@
 // -----------------------------------------------------------------------------
 RenameAttributeArray::RenameAttributeArray() :
   AbstractFilter(),
-  m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
-  m_AttributeMatrixName(DREAM3D::Defaults::AttributeMatrixName),
-  m_SelectedArrayPath(""),
+  m_SelectedArrayPath("", "", ""),
   m_NewArrayName("")
 {
   setupFilterParameters();
@@ -63,7 +61,7 @@ RenameAttributeArray::~RenameAttributeArray()
 void RenameAttributeArray::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(FilterParameter::New("Array to Rename", "SelectedArrayPath", FilterParameterWidgetType::DataArraySelectionWidget,"QString", false));
+  parameters.push_back(FilterParameter::New("Array to Rename", "SelectedArrayPath", FilterParameterWidgetType::DataArraySelectionWidget,"DataArrayPath", false));
   parameters.push_back(FilterParameter::New("New Array Name", "NewArrayName", FilterParameterWidgetType::StringWidget,"QString", false));
 
   setFilterParameters(parameters);
@@ -86,8 +84,6 @@ void RenameAttributeArray::readFilterParameters(AbstractFilterParametersReader* 
 int RenameAttributeArray::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  //  writer->writeValue("DataContainerName", getDataContainerName());
-  //  writer->writeValue("AttributeMatrixName", getAttributeMatrixName());
   writer->writeValue("SelectedArrayPath", getSelectedArrayPath() );
   writer->writeValue("NewArrayName", getNewArrayName() );
   writer->closeFilterGroup();
@@ -116,68 +112,43 @@ void RenameAttributeArray::dataCheck()
   }
   else
   {
+    QString dcName = m_SelectedArrayPath.getDataContainerName();
+    QString amName = m_SelectedArrayPath.getAttributeMatrixName();
+    QString daName = m_SelectedArrayPath.getDataArrayName();
 
-    QString dcName;
-    QString amName;
-    QString daName;
-
-    QStringList tokens = m_SelectedArrayPath.split(DREAM3D::PathSep);
-    // We should end up with 3 Tokens
-    if(tokens.size() != 3)
+    DataContainer::Pointer dc = getDataContainerArray()->getDataContainer(dcName);
+    if(NULL == dc.get())
     {
-      setErrorCondition(-11002);
-      QString ss = QObject::tr("The path to the Attribute Array is malformed. Each part should be separated by a '|' character.");
+      setErrorCondition(-11003);
+      QString ss = QObject::tr("The DataContainer '%1' was not found in the DataContainerArray").arg(dcName);
       notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+      return;
     }
-    else
+
+    AttributeMatrix::Pointer attrMat = dc->getAttributeMatrix(amName);
+      if(NULL == attrMat.get())
     {
-      dcName = tokens.at(0);
-      amName = tokens.at(1);
-      daName = tokens.at(2);
+      setErrorCondition(-11004);
+      QString ss = QObject::tr("The AttributeMatrix '%1' was not found in the DataContainer '%2'").arg(amName).arg(dcName);
+      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+      return;
+    }
 
-
-      //  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName(), false);
-      //  if(getErrorCondition() < 0 || NULL == m) { return; }
-      //  AttributeMatrix::Pointer cellAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getAttributeMatrixName(), -301);
-      //  if(getErrorCondition() < 0 || NULL == cellAttrMat.get() ) { return; }
-      DataContainerArray::Pointer dca = getDataContainerArray();
-      if (NULL == dca.get() ) { return; }
-      DataContainer::Pointer dc = getDataContainerArray()->getDataContainer(dcName);
-      if(NULL == dc.get())
-      {
-        setErrorCondition(-11003);
-        QString ss = QObject::tr("The DataContainer '%1' was not found in the DataContainerArray").arg(dcName);
-        notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-        return;
-      }
-
-      AttributeMatrix::Pointer attrMat = dc->getAttributeMatrix(amName);
-       if(NULL == attrMat.get())
-      {
-        setErrorCondition(-11004);
-        QString ss = QObject::tr("The AttributeMatrix '%1' was not found in the DataContainer '%2'").arg(amName).arg(dcName);
-        notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-        return;
-      }
-
-
-      // We the AttributeMatrix, now lets try to get the AttributeArray object and rename it if it exists
-      IDataArray::Pointer dataArray = attrMat->getAttributeArray(daName);
-
-      if(NULL == dataArray.get() )
-      {
-        setErrorCondition(-11005);
-        QString ss = QObject::tr("A DataArray with the name '%1' was not found in the AttributeMatrix").arg(daName);
-        notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-        return;
-      }
-      bool check = attrMat->renameAttributeArray(daName, m_NewArrayName);
-      if(check == false)
-      {
-        setErrorCondition(-11006);
-        QString ss = QObject::tr("Attempt to rename AttributeArray '%1' to '%2' Failed.").arg(daName).arg(m_NewArrayName);
-        notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-      }
+    // We the AttributeMatrix, now lets try to get the AttributeArray object and rename it if it exists
+    IDataArray::Pointer dataArray = attrMat->getAttributeArray(daName);
+    if(NULL == dataArray.get() )
+    {
+      setErrorCondition(-11005);
+      QString ss = QObject::tr("A DataArray with the name '%1' was not found in the AttributeMatrix").arg(daName);
+      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+      return;
+    }
+    bool check = attrMat->renameAttributeArray(daName, m_NewArrayName);
+    if(check == false)
+    {
+      setErrorCondition(-11006);
+      QString ss = QObject::tr("Attempt to rename AttributeArray '%1' to '%2' Failed.").arg(daName).arg(m_NewArrayName);
+      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     }
   }
 }

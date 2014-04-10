@@ -107,28 +107,17 @@ void RenameDataContainer::dataCheck()
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 
-  if (getSelectedDataContainerName().isEmpty() == true)
+  DataContainerArray::Pointer dca = getDataContainerArray();
+  if (NULL == dca.get() ) { return; }
+
+  bool check = dca->renameDataContainer(getSelectedDataContainerName(), getNewDataContainerName(), getReplaceExistingDataContainer());
+  if(check == false)
   {
-    setErrorCondition(-11001);
-    QString ss = QObject::tr("The complete path to the Data Container can not be empty. Please set an appropriate name.");
+    setErrorCondition(-11006);
+    QString ss = QObject::tr("Attempt to rename DataContainer '%1' to '%2' Failed.").arg(getSelectedDataContainerName()).arg(getNewDataContainerName());
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
-  else
-  {
-    DataContainerArray::Pointer dca = getDataContainerArray();
-    if (NULL == dca.get() ) { return; }
-
-    bool check = dca->renameDataContainer(getSelectedDataContainerName(), getNewDataContainerName(), getReplaceExistingDataContainer());
-    if(check == false)
-    {
-      setErrorCondition(-11006);
-      QString ss = QObject::tr("Attempt to rename DataContainer '%1' to '%2' Failed.").arg(getSelectedDataContainerName()).arg(getNewDataContainerName());
-      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-    }
-
-  }
 }
-
 
 // -----------------------------------------------------------------------------
 //

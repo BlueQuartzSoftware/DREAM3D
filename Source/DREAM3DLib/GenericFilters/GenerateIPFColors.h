@@ -61,20 +61,11 @@ class DREAM3DLib_EXPORT GenerateIPFColors : public AbstractFilter
     DREAM3D_TYPE_MACRO_SUPER(GenerateIPFColors, AbstractFilter)
 
     virtual ~GenerateIPFColors();
-    DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(CellEnsembleAttributeMatrixName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
 
     /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
     DREAM3D_FILTER_PARAMETER(FloatVec3_t, ReferenceDir)
     Q_PROPERTY(FloatVec3_t ReferenceDir READ getReferenceDir WRITE setReferenceDir)
 
-
-    /**
-    * @brief This returns the group that the filter belonds to. You can select
-    * a different group if you want. The string returned here will be displayed
-    * in the GUI for the filter
-    */
     DREAM3D_FILTER_PARAMETER(DataArrayPath, CellPhasesArrayPath)
     Q_PROPERTY(DataArrayPath CellPhasesArrayPath READ getCellPhasesArrayPath WRITE setCellPhasesArrayPath)
 
@@ -87,6 +78,7 @@ class DREAM3DLib_EXPORT GenerateIPFColors : public AbstractFilter
     DREAM3D_FILTER_PARAMETER(DataArrayPath, GoodVoxelsArrayPath)
     Q_PROPERTY(DataArrayPath GoodVoxelsArrayPath READ getGoodVoxelsArrayPath WRITE setGoodVoxelsArrayPath)
 
+    DREAM3D_FILTER_PARAMETER(QString, CellIPFColorsArrayName)
     Q_PROPERTY(QString CellIPFColorsArrayName READ getCellIPFColorsArrayName WRITE setCellIPFColorsArrayName)
 
     virtual const QString getCompiledLibraryName() { return Generic::GenericBaseName; }
@@ -152,7 +144,7 @@ class DREAM3DLib_EXPORT GenerateIPFColors : public AbstractFilter
     DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, CellPhases)
     DEFINE_PTR_WEAKPTR_DATAARRAY(float, CellEulerAngles)
     DEFINE_PTR_WEAKPTR_DATAARRAY(unsigned int, CrystalStructures)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(uint8_t, CellIPFColors)
+    DEFINE_CREATED_DATAARRAY(uint8_t, CellIPFColors)
     DEFINE_PTR_WEAKPTR_DATAARRAY(bool, GoodVoxels)
 
     GenerateIPFColors(const GenerateIPFColors&); // Copy Constructor Not Implemented

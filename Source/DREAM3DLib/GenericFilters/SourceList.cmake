@@ -28,6 +28,7 @@ set(_PublicFilters
   FindFeaturePhases
   FindSurfaceCells
   FindSurfaceFeatures
+  GenerateEulerColors
   GenerateIPFColors
   GenerateMisorientationColors
   GenerateRodriguesColors
@@ -57,7 +58,6 @@ endforeach()
 # be able to use them from the DREAM3D user interface.
 set(_PrivateFilters
   EmptyFilter
-  GenerateEulerColors
 )
 
 #-----------------

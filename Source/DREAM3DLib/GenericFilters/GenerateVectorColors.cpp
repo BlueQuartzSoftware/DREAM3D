@@ -46,14 +46,13 @@
 // -----------------------------------------------------------------------------
 GenerateVectorColors::GenerateVectorColors() :
   AbstractFilter(),
-  m_SelectedVectorArrayPath("", "", ""),
-/*[]*/m_SelectedVectorArrayPathArrayPath(DREAM3D::Defaults::SomePath),
-/*[]*/m_GoodVoxelsArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::GoodVoxels),
-  m_CellVectorColorsArrayName(DREAM3D::CellData::VectorColor),
+  m_VectorsArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::VectorData),
+  m_GoodVoxelsArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::GoodVoxels),
   m_VectorsArrayName(""),
   m_Vectors(NULL),
   m_GoodVoxelsArrayName(DREAM3D::CellData::GoodVoxels),
   m_GoodVoxels(NULL),
+  m_CellVectorColorsArrayName(DREAM3D::CellData::VectorColor),
   m_CellVectorColors(NULL)
 {
   setupFilterParameters();
@@ -72,12 +71,11 @@ GenerateVectorColors::~GenerateVectorColors()
 void GenerateVectorColors::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(FilterParameter::New("Vector Array Name", "SelectedVectorArrayPath", FilterParameterWidgetType::DataArraySelectionWidget,"DataArrayPath", false));
   parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "QString", true));
-/*[]*/parameters.push_back(FilterParameter::New("SelectedVectorArrayPath", "SelectedVectorArrayPathArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
-/*[]*/parameters.push_back(FilterParameter::New("GoodVoxels", "GoodVoxelsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
+  parameters.push_back(FilterParameter::New("Vector Array Name", "VectorsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget,"DataArrayPath", true));
+  parameters.push_back(FilterParameter::New("GoodVoxels", "GoodVoxelsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
   parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "QString", true));
-/*##*/parameters.push_back(FilterParameter::New("CellVectorColors", "CellVectorColorsArrayName", FilterParameterWidgetType::StringWidget, "QString", true, ""));
+  parameters.push_back(FilterParameter::New("CellVectorColors", "CellVectorColorsArrayName", FilterParameterWidgetType::StringWidget, "QString", true, ""));
   setFilterParameters(parameters);
 }
 
@@ -87,10 +85,9 @@ void GenerateVectorColors::setupFilterParameters()
 void GenerateVectorColors::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-/*[]*/setCellVectorColorsArrayName(reader->readString("CellVectorColorsArrayName", getCellVectorColorsArrayName() ) );
+  setCellVectorColorsArrayName(reader->readString("CellVectorColorsArrayName", getCellVectorColorsArrayName() ) );
   setGoodVoxelsArrayPath(reader->readDataArrayPath("GoodVoxelsArrayPath", getGoodVoxelsArrayPath() ) );
-  setSelectedVectorArrayPathArrayPath(reader->readDataArrayPath("SelectedVectorArrayPathArrayPath", getSelectedVectorArrayPathArrayPath() ) );
-  setSelectedVectorArrayPath( reader->readDataArrayPath( "SelectedVectorArrayPath", getSelectedVectorArrayPath() ) );
+  setVectorsArrayPath(reader->readDataArrayPath("VectorsArrayPath", getVectorsArrayPath() ) );
   reader->closeFilterGroup();
 }
 
@@ -100,12 +97,9 @@ void GenerateVectorColors::readFilterParameters(AbstractFilterParametersReader* 
 int GenerateVectorColors::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-/*[]*/writer->writeValue("CellVectorColorsArrayName", getCellVectorColorsArrayName() );
+  writer->writeValue("CellVectorColorsArrayName", getCellVectorColorsArrayName() );
   writer->writeValue("GoodVoxelsArrayPath", getGoodVoxelsArrayPath() );
-  writer->writeValue("SelectedVectorArrayPathArrayPath", getSelectedVectorArrayPathArrayPath() );
-  /* Place code that will write the inputs values into a file. reference the
-   AbstractFilterParametersWriter class for the proper API to use. */
-  writer->writeValue("SelectedVectorArrayPath", getSelectedVectorArrayPath() );
+  writer->writeValue("VectorsArrayPath", getVectorsArrayPath() );
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
@@ -118,12 +112,7 @@ void GenerateVectorColors::dataCheck()
   DataArrayPath tempPath;
   setErrorCondition(0);
 
-  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, m_SelectedVectorArrayPath.getDataContainerName(), false);
-  if(getErrorCondition() < 0 || NULL == m) { return; }
-  AttributeMatrix::Pointer cellAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, m_SelectedVectorArrayPath.getAttributeMatrixName(), -301);
-  if(getErrorCondition() < 0 || NULL == cellAttrMat.get() ) { return; }
-
-  if(m_SelectedVectorArrayPath.isEmpty() == true)
+  if(m_VectorsArrayPath.isEmpty() == true)
   {
     setErrorCondition(-11000);
     notifyErrorMessage(getHumanLabel(), "An array from the Volume DataContainer must be selected.", getErrorCondition());
@@ -131,16 +120,15 @@ void GenerateVectorColors::dataCheck()
   }
 
   QVector<size_t> dims(1, 3);
-  m_VectorsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getSelectedVectorArrayPathArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_VectorsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getVectorsArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_VectorsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_Vectors = m_VectorsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
-  m_CellVectorColorsPtr = cellAttrMat->createNonPrereqArray<DataArray<uint8_t>, AbstractFilter, uint8_t>(this, m_CellVectorColorsArrayName, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-////==>MIKE_GROEBER_FIX tempPath.update(DATACONTAINER_NAME, ATTRIBUTEMATRIX_NAME, getCellVectorColorsArrayName() );
-////==>MIKE_GROEBER_FIX m_CellVectorColorsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<uint8_t>, AbstractFilter, uint8_t>(this, tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  tempPath.update(getVectorsArrayPath().getDataContainerName(), getVectorsArrayPath().getAttributeMatrixName(), getCellVectorColorsArrayName() );
+  m_CellVectorColorsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<uint8_t>, AbstractFilter, uint8_t>(this, tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_CellVectorColorsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_CellVectorColors = m_CellVectorColorsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-  // The good voxels array is optional, If it is available we are going to use it, otherwise we are going to create it
+  // The good voxels array is optional, If it is available we are going to use it, otherwise we are going to ignore it
   dims[0] = 1;
   m_GoodVoxelsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<bool>, AbstractFilter>(NULL, getGoodVoxelsArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_GoodVoxelsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
@@ -168,13 +156,10 @@ void GenerateVectorColors::execute()
   int err = 0;
   QString ss;
   setErrorCondition(err);
-
   dataCheck();
   if(getErrorCondition() < 0) { return; }
 
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(m_SelectedVectorArrayPath.getDataContainerName());
-
-  int64_t totalPoints = m->getAttributeMatrix(m_SelectedVectorArrayPath.getAttributeMatrixName())->getNumTuples();
+  int64_t totalPoints = m_VectorsPtr.lock()->getNumberOfTuples();
 
   bool missingGoodVoxels = true;
   if (NULL != m_GoodVoxels)
@@ -193,7 +178,6 @@ void GenerateVectorColors::execute()
     m_CellVectorColors[index] = 0;
     m_CellVectorColors[index + 1] = 0;
     m_CellVectorColors[index + 2] = 0;
-
 
     float dir[3];
     float r, g, b;
