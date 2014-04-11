@@ -63,12 +63,12 @@ class RegularizeZSpacing : public AbstractFilter
     DREAM3D_TYPE_MACRO_SUPER(RegularizeZSpacing, AbstractFilter)
 
     virtual ~RegularizeZSpacing();
-    DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
+
+    DREAM3D_FILTER_PARAMETER(DataArrayPath, CellAttributeMatrixPath)
+    Q_PROPERTY(DataArrayPath CellAttributeMatrixPath READ getCellAttributeMatrixPath WRITE setCellAttributeMatrixPath)
 
     DREAM3D_FILTER_PARAMETER(QString, InputFile)
     Q_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile)
-
 
     DREAM3D_FILTER_PARAMETER(float, NewZRes)
     Q_PROPERTY(float NewZRes READ getNewZRes WRITE setNewZRes)

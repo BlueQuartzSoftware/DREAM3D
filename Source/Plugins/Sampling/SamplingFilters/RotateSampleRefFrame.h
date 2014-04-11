@@ -56,8 +56,9 @@ class RotateSampleRefFrame : public AbstractFilter
     DREAM3D_STATIC_NEW_MACRO(RotateSampleRefFrame)
     DREAM3D_TYPE_MACRO_SUPER(RotateSampleRefFrame, AbstractFilter)
     virtual ~RotateSampleRefFrame();
-    DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
+
+    DREAM3D_FILTER_PARAMETER(DataArrayPath, CellAttributeMatrixPath)
+    Q_PROPERTY(DataArrayPath CellAttributeMatrixPath READ getCellAttributeMatrixPath WRITE setCellAttributeMatrixPath)
 
     DREAM3D_FILTER_PARAMETER(FloatVec3_t, RotationAxis)
     Q_PROPERTY(FloatVec3_t RotationAxis READ getRotationAxis WRITE setRotationAxis)
@@ -90,7 +91,6 @@ class RotateSampleRefFrame : public AbstractFilter
      * @brief Reimplemented from @see AbstractFilter class
      */
     virtual void preflight();
-
 
     virtual void execute();
 

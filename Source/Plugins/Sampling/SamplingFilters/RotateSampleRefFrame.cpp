@@ -156,8 +156,7 @@ class RotateSampleRefFrameImpl
 // -----------------------------------------------------------------------------
 RotateSampleRefFrame::RotateSampleRefFrame() :
   AbstractFilter(),
-  m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
-  m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
+  m_CellAttributeMatrixPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, ""),
   m_RotationAngle(0.0),
   m_SliceBySlice(false)
 {
@@ -200,6 +199,8 @@ void RotateSampleRefFrame::setupFilterParameters()
     parameter->setUnits("Degrees");
     parameters.push_back(parameter);
   }
+  parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "QString", true));
+  parameters.push_back(FilterParameter::New("Cell Attribute Matrix", "CellAttributeMatrixPath", FilterParameterWidgetType::AttributeMatrixSelectionWidget,"DataArrayPath", true));
   setFilterParameters(parameters);
 }
 
@@ -209,6 +210,7 @@ void RotateSampleRefFrame::setupFilterParameters()
 void RotateSampleRefFrame::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
+  setCellAttributeMatrixPath( reader->readDataArrayPath("CellAttributeMatrixPath", getCellAttributeMatrixPath() ) );
   setRotationAxis( reader->readFloatVec3("RotationAxis", getRotationAxis() ) );
   setRotationAngle( reader->readValue("RotationAngle", getRotationAngle()) );
   reader->closeFilterGroup();
@@ -220,6 +222,7 @@ void RotateSampleRefFrame::readFilterParameters(AbstractFilterParametersReader* 
 int RotateSampleRefFrame::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
+  writer->writeValue("CellAttributeMatrixPath", getCellAttributeMatrixPath() );
   writer->writeValue("RotationAxis", getRotationAxis() );
   writer->writeValue("RotationAngle", getRotationAngle() );
   writer->closeFilterGroup();
@@ -232,9 +235,7 @@ int RotateSampleRefFrame::writeFilterParameters(AbstractFilterParametersWriter* 
 void RotateSampleRefFrame::dataCheck()
 {
   setErrorCondition(0);
-//  QString ss;
-//  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName(), false);
-//  if(getErrorCondition() < 0) { return; }
+
 }
 
 // -----------------------------------------------------------------------------
@@ -249,10 +250,9 @@ void RotateSampleRefFrame::preflight()
   emit preflightExecuted();
   if(getErrorCondition() < 0) { return; }
 
-
-  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName(), false);
+  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getCellAttributeMatrixPath().getDataContainerName(), false);
   if (getErrorCondition() < 0) { return; }
-  AttributeMatrix::Pointer cellAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), -301);
+  AttributeMatrix::Pointer cellAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixPath().getAttributeMatrixName(), -301);
   if (getErrorCondition() < 0) { return; }
 
   m_RotationAngle = m_RotationAngle * DREAM3D::Constants::k_Pi / 180.0;
@@ -355,7 +355,7 @@ void RotateSampleRefFrame::execute()
   dataCheck();
   if(getErrorCondition() < 0) { return; }
 
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getCellAttributeMatrixPath().getDataContainerName());
 
   m_RotationAngle = m_RotationAngle * DREAM3D::Constants::k_Pi / 180.0;
 
@@ -474,11 +474,12 @@ void RotateSampleRefFrame::execute()
 
   // This could technically be parallelized also where each thred takes an array to adjust. Except
   // that the DataContainer is NOT thread safe or re-entrant so that would actually be a BAD idea.
-  QList<QString> voxelArrayNames = m->getAttributeMatrix(getCellAttributeMatrixName())->getAttributeArrayNameList();
+  QString attrMatName = getCellAttributeMatrixPath().getAttributeMatrixName();
+  QList<QString> voxelArrayNames = m->getAttributeMatrix(attrMatName)->getAttributeArrayNameList();
   for (QList<QString>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
   {
     //QString name = *iter;
-    IDataArray::Pointer p = m->getAttributeMatrix(getCellAttributeMatrixName())->getAttributeArray(*iter);
+    IDataArray::Pointer p = m->getAttributeMatrix(attrMatName)->getAttributeArray(*iter);
     // Make a copy of the 'p' array that has the same name. When placed into
     // the data container this will over write the current array with
     // the same name.
@@ -501,7 +502,7 @@ void RotateSampleRefFrame::execute()
         data->initializeTuple(i, 0);
       }
     }
-    m->getAttributeMatrix(getCellAttributeMatrixName())->addAttributeArray(*iter, data);
+    m->getAttributeMatrix(attrMatName)->addAttributeArray(*iter, data);
   }
   m->setResolution(params.xResNew, params.yResNew, params.zResNew);
   m->setDimensions(params.xpNew, params.ypNew, params.zpNew);

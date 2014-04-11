@@ -53,8 +53,7 @@ using namespace std;
 // -----------------------------------------------------------------------------
 RegularizeZSpacing::RegularizeZSpacing() :
   AbstractFilter(),
-  m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
-  m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
+  m_CellAttributeMatrixPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, ""),
   m_InputFile(""),
   m_NewZRes(1.0f)
 {
@@ -76,6 +75,8 @@ void RegularizeZSpacing::setupFilterParameters()
   FilterParameterVector parameters;
   parameters.push_back(FilterParameter::New("Current Z Positions File", "InputFile", FilterParameterWidgetType::InputFileWidget,"QString", false));
   parameters.push_back(FilterParameter::New("New Z Res", "NewZRes", FilterParameterWidgetType::DoubleWidget,"float", false, "Microns"));
+  parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "QString", true));
+  parameters.push_back(FilterParameter::New("Cell Attribute Matrix", "CellAttributeMatrixPath", FilterParameterWidgetType::AttributeMatrixSelectionWidget,"DataArrayPath", true));
 
   setFilterParameters(parameters);
 }
@@ -86,6 +87,7 @@ void RegularizeZSpacing::setupFilterParameters()
 void RegularizeZSpacing::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
+  setCellAttributeMatrixPath( reader->readDataArrayPath("CellAttributeMatrixPath", getCellAttributeMatrixPath() ) );
   setInputFile( reader->readString( "InputFile", getInputFile() ) );
   setNewZRes( reader->readValue("NewZRes", getNewZRes()) );
   reader->closeFilterGroup();
@@ -97,6 +99,7 @@ void RegularizeZSpacing::readFilterParameters(AbstractFilterParametersReader* re
 int RegularizeZSpacing::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
+  writer->writeValue("CellAttributeMatrixPath", getCellAttributeMatrixPath() );
   writer->writeValue("InputFile", getInputFile() );
   writer->writeValue("NewZRes", getNewZRes() );
   writer->closeFilterGroup();
@@ -110,8 +113,10 @@ void RegularizeZSpacing::dataCheck(bool preflight)
 {
   setErrorCondition(0);
 
-  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName(), false);
-  if(getErrorCondition() < 0 || NULL == m) { return; }
+  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getCellAttributeMatrixPath().getDataContainerName(), false);
+  if (getErrorCondition() < 0) { return; }
+  AttributeMatrix::Pointer cellAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixPath().getAttributeMatrixName(), -301);
+  if (getErrorCondition() < 0) { return; }
 
   ifstream inFile;
   inFile.open(m_InputFile.toLatin1().data());
@@ -123,7 +128,15 @@ void RegularizeZSpacing::dataCheck(bool preflight)
   }
   size_t zP = static_cast<size_t>(zval / getNewZRes());
 
-  if(preflight == true) m->setDimensions(m->getXPoints(), m->getYPoints(), zP);
+  if(preflight == true)
+  {
+    m->setDimensions(m->getXPoints(), m->getYPoints(), zP);
+    QVector<size_t> tDims(3,0);
+    tDims[0] = m->getXPoints();
+    tDims[1] = m->getYPoints();
+    tDims[2] = zP;
+    cellAttrMat->resizeAttributeArrays(tDims);
+  }
 
   inFile.close();
 }
@@ -150,7 +163,7 @@ void RegularizeZSpacing::execute()
   if(getErrorCondition() < 0) { return; }
 
   DREAM3D_RANDOMNG_NEW()
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getCellAttributeMatrixPath().getDataContainerName());
 
   size_t dims[3];
   m->getDimensions(dims);
@@ -197,7 +210,7 @@ void RegularizeZSpacing::execute()
     }
   }
 
-  AttributeMatrix::Pointer cellAttrMat = m->getAttributeMatrix(getCellAttributeMatrixName());
+  AttributeMatrix::Pointer cellAttrMat = m->getAttributeMatrix(getCellAttributeMatrixPath().getAttributeMatrixName());
   QVector<size_t> tDims(3, 0);
   tDims[0] = m_XP;
   tDims[1] = m_YP;
@@ -208,7 +221,7 @@ void RegularizeZSpacing::execute()
   for (QList<QString>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
   {
     QString name = *iter;
-    IDataArray::Pointer p = m->getAttributeMatrix(getCellAttributeMatrixName())->getAttributeArray(*iter);
+    IDataArray::Pointer p = cellAttrMat->getAttributeArray(*iter);
     // Make a copy of the 'p' array that has the same name. When placed into
     // the data container this will over write the current array with
     // the same name. At least in theory
@@ -231,8 +244,8 @@ void RegularizeZSpacing::execute()
   }
   m->setResolution(xRes, yRes, m_NewZRes);
   m->setDimensions(m_XP, m_YP, m_ZP);
-  m->removeAttributeMatrix(getCellAttributeMatrixName());
-  m->addAttributeMatrix(getCellAttributeMatrixName(), newCellAttrMat);
+  m->removeAttributeMatrix(getCellAttributeMatrixPath().getAttributeMatrixName());
+  m->addAttributeMatrix(getCellAttributeMatrixPath().getAttributeMatrixName(), newCellAttrMat);
 
   notifyStatusMessage(getHumanLabel(), "Changing Resolution Complete");
 }

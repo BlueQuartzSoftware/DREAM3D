@@ -286,20 +286,11 @@ void SampleSurfaceMesh::execute()
   iArray->initializeWithZeros();
   int32_t* polyIds = iArray->getPointer(0);
 
-//  char code;
-//  float radius;
-
-//  int zStride, yStride;
-
-//  int count = 0;
-//  float coords[3];
-
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
   if (doParallel == true)
   {
     tbb::parallel_for(tbb::blocked_range<size_t>(0, numFeatures),
                       SampleSurfaceMeshImpl(faces, faceLists, faceBBs, points, polyIds), tbb::auto_partitioner());
-
   }
   else
 #endif
