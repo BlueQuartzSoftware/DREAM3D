@@ -124,7 +124,8 @@ class DREAM3DLib_EXPORT StatsDataArray : public IDataArray
         return NullPointer();
       }
       size_t numTuples = tDims[0];
-      for(size_t iter=1;iter<tDims.size();iter)
+      qint32 size = tDims.size();
+      for(qint32 iter = 1; iter < size; iter++)
       {
         numTuples *= tDims[iter];
       }
