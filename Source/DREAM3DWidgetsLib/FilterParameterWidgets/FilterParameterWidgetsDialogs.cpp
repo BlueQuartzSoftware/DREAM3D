@@ -69,6 +69,19 @@ void FilterParameterWidgetsDialogs::ShowCouldNotSetFilterParameter(AbstractFilte
   reply = QMessageBox::critical(NULL, QString("Filter Parameter Error"), ss, QMessageBox::Ok);
 }
 
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void FilterParameterWidgetsDialogs::ShowCouldNotSetConditionalFilterParameter(AbstractFilter* filter, FilterParameter* filterParameter)
+{
+  QString ss = QString("Error occurred transferring the Conditional Filter Parameter '%1' in Filter '%2' to the filter instance. The pipeline may run but the underlying filter will NOT be using the values from the GUI."
+    " Please report this issue to the developers of this filter.").arg(filterParameter->getPropertyName()).arg(filter->getHumanLabel());
+  QMessageBox::StandardButton reply;
+  reply = QMessageBox::critical(NULL, QString("Filter Parameter Error"), ss, QMessageBox::Ok);
+}
+
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

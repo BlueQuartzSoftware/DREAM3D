@@ -154,6 +154,10 @@ class DREAM3DLib_EXPORT FilterParameter
     DREAM3D_INSTANCE_STRING_PROPERTY(FileType)
     DREAM3D_INSTANCE_STRING_PROPERTY(CastableValueType)
 
+    DREAM3D_BOOL_PROPERTY(Conditional)
+    DREAM3D_INSTANCE_STRING_PROPERTY(ConditionalProperty)
+    DREAM3D_INSTANCE_STRING_PROPERTY(ConditionalLabel)
+
     protected:
       FilterParameter();
 

@@ -83,9 +83,9 @@ DataArraySelectionWidget::~DataArraySelectionWidget()
 // -----------------------------------------------------------------------------
 void DataArraySelectionWidget::initializeWidget(FilterParameter* parameter, AbstractFilter* filter)
 {
-    m_Filter = filter;
-    m_FilterParameter = parameter;
-    setupGui();
+  m_Filter = filter;
+  m_FilterParameter = parameter;
+  setupGui();
 }
 
 
@@ -143,9 +143,35 @@ void DataArraySelectionWidget::setupGui()
   attributeMatrixList->blockSignals(false);
   attributeArrayList->blockSignals(false);
 
+  // is the filter parameter tied to a boolean property of the Filter Instance, if it is then we need to make the check box visible
+  conditionalCB->setVisible(m_FilterParameter->isConditional());
+  if(m_FilterParameter->isConditional() == true)
+  {
+    bool boolProp = m_Filter->property(m_FilterParameter->getConditionalProperty().toLatin1().constData() ).toBool();
+    conditionalCB->setChecked(boolProp);
+    conditionalCB->setText(m_FilterParameter->getConditionalLabel());
+    dataContainerList->setEnabled(boolProp);
+    attributeMatrixList->setEnabled(boolProp);
+    attributeArrayList->setEnabled(boolProp);
+  }
+
   populateComboBoxes();
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DataArraySelectionWidget::on_conditionalCB_stateChanged(int state)
+{
+  bool boolProp = conditionalCB->isChecked();
+  dataContainerList->setEnabled(boolProp);
+  attributeMatrixList->setEnabled(boolProp);
+  attributeArrayList->setEnabled(boolProp);
+    m_DidCausePreflight = true;
+  emit parametersChanged();
+  m_DidCausePreflight = false;
+
+}
 
 // -----------------------------------------------------------------------------
 //
@@ -528,6 +554,16 @@ void DataArraySelectionWidget::filterNeedsInputParameters(AbstractFilter* filter
   if(false == ok)
   {
     FilterParameterWidgetsDialogs::ShowCouldNotSetFilterParameter(m_Filter, m_FilterParameter);
+  }
+
+  if(m_FilterParameter->isConditional() )
+  {
+    var.setValue(conditionalCB->isChecked());
+    ok = filter->setProperty(m_FilterParameter->getConditionalProperty().toLatin1().constData(), var);
+    if(false == ok)
+    {
+      FilterParameterWidgetsDialogs::ShowCouldNotSetConditionalFilterParameter(m_Filter, m_FilterParameter);
+    }
   }
 
 }
