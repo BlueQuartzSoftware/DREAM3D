@@ -52,6 +52,7 @@ SurfaceMeshToVtk::SurfaceMeshToVtk() :
   m_SurfaceDataContainerName(DREAM3D::Defaults::SurfaceDataContainerName),
   m_FaceAttributeMatrixName(DREAM3D::Defaults::FaceAttributeMatrixName),
   m_VertexAttributeMatrixName(DREAM3D::Defaults::VertexAttributeMatrixName),
+  m_SurfaceMeshNodeTypeArrayName(DREAM3D::VertexData::SurfaceMeshNodeType),
   m_OutputVtkFile(""),
   m_WriteBinaryFile(false),
   m_WriteConformalMesh(true),
@@ -59,7 +60,6 @@ SurfaceMeshToVtk::SurfaceMeshToVtk() :
 /*[]*/m_SurfaceMeshNodeTypeArrayPath(DREAM3D::Defaults::SomePath),
   m_SurfaceMeshFaceLabelsArrayName(DREAM3D::FaceData::SurfaceMeshFaceLabels),
   m_SurfaceMeshFaceLabels(NULL),
-  m_SurfaceMeshNodeTypeArrayName(DREAM3D::VertexData::SurfaceMeshNodeType),
   m_SurfaceMeshNodeType(NULL)
 {
   setupFilterParameters();

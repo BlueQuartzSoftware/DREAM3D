@@ -221,6 +221,7 @@ FindTwinBoundarySchmidFactors::FindTwinBoundarySchmidFactors()  :
   m_SurfaceMeshFaceLabelsArrayPath(DREAM3D::Defaults::SomePath),
   m_SurfaceMeshFaceNormalsArrayPath(DREAM3D::Defaults::SomePath),
   m_SurfaceMeshTwinBoundaryArrayPath(DREAM3D::Defaults::SomePath),
+  m_SurfaceMeshTwinBoundarySchmidFactorsArrayName(DREAM3D::FaceData::SurfaceMeshTwinBoundarySchmidFactors),
   m_AvgQuatsArrayName(DREAM3D::FeatureData::AvgQuats),
   m_AvgQuats(NULL),
   m_FeaturePhasesArrayName(DREAM3D::FeatureData::Phases),
@@ -233,7 +234,6 @@ FindTwinBoundarySchmidFactors::FindTwinBoundarySchmidFactors()  :
   m_SurfaceMeshFaceNormals(NULL),
   m_SurfaceMeshTwinBoundaryArrayName(DREAM3D::FaceData::SurfaceMeshTwinBoundary),
   m_SurfaceMeshTwinBoundary(NULL),
-  m_SurfaceMeshTwinBoundarySchmidFactorsArrayName(DREAM3D::FaceData::SurfaceMeshTwinBoundarySchmidFactors),
   m_SurfaceMeshTwinBoundarySchmidFactors(NULL)
 {
   m_LoadingDir.x = 1.0f;

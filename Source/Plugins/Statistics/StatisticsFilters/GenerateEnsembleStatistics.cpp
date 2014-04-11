@@ -65,6 +65,7 @@ GenerateEnsembleStatistics::GenerateEnsembleStatistics()  :
   m_VolumesArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, DREAM3D::FeatureData::Volumes),
   m_FeatureEulerAnglesArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, DREAM3D::FeatureData::EulerAngles),
   m_AvgQuatsArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, DREAM3D::FeatureData::AvgQuats),
+  m_PhaseTypesArrayName(DREAM3D::EnsembleData::PhaseTypes),
   m_StatisticsArrayName(DREAM3D::EnsembleData::Statistics),
   m_SizeCorrelationResolution(1),
   m_SizeDistribution(false),
@@ -102,7 +103,6 @@ GenerateEnsembleStatistics::GenerateEnsembleStatistics()  :
   m_Neighborhoods(NULL),
   m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
   m_CrystalStructures(NULL),
-  m_PhaseTypesArrayName(DREAM3D::EnsembleData::PhaseTypes),
   m_PhaseTypes(NULL)
 {
   m_DistributionAnalysis.push_back(BetaOps::New());

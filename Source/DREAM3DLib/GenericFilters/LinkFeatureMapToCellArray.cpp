@@ -44,9 +44,9 @@ LinkFeatureMapToCellArray::LinkFeatureMapToCellArray() :
   AbstractFilter(),
   m_CellFeatureAttributeMatrixName(DREAM3D::Defaults::CellFeatureAttributeMatrixName),
   m_SelectedCellArrayPath("", "", ""),
+  m_ActiveArrayName(""),
   m_SelectedCellDataArrayName(""),
   m_SelectedCellData(NULL),
-  m_ActiveArrayName(""),
   m_Active(NULL)
 {
   setupFilterParameters();

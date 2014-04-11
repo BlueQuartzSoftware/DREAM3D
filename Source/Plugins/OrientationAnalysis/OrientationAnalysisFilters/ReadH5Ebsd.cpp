@@ -1097,7 +1097,7 @@ AbstractFilter::Pointer ReadH5Ebsd::newFilterInstance(bool copyFilterParameters)
   if(true == copyFilterParameters)
   {
     filter->setFilterParameters(getFilterParameters() );
-    
+
     //Loop over each Filter Parameter that is registered to the filter either through this class or a parent class
     // and copy the value from the current instance of the object into the "new" instance that was just created
     QVector<FilterParameter::Pointer> options = getFilterParameters(); // Get the current set of filter parameters

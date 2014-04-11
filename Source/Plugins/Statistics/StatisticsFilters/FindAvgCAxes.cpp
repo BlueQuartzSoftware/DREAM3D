@@ -50,11 +50,11 @@ FindAvgCAxes::FindAvgCAxes() :
   m_CellFeatureAttributeMatrixName(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, ""),
   m_QuatsArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::Quats),
   m_FeatureIdsArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::FeatureIds),
+  m_AvgCAxesArrayName(DREAM3D::FeatureData::AvgCAxes),
   m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
   m_FeatureIds(NULL),
   m_QuatsArrayName(DREAM3D::CellData::Quats),
   m_Quats(NULL),
-  m_AvgCAxesArrayName(DREAM3D::FeatureData::AvgCAxes),
   m_AvgCAxes(NULL)
 {
   m_OrientationOps = OrientationOps::getOrientationOpsVector();

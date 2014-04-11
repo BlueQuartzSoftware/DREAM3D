@@ -52,13 +52,13 @@ FindNeighbors::FindNeighbors() :
   m_SharedSurfaceAreaListArrayName(DREAM3D::FeatureData::SharedSurfaceAreaList),
   m_NeighborListArrayName(DREAM3D::FeatureData::NeighborList),
   m_FeatureIdsArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::FeatureIds),
+  m_SurfaceVoxelsArrayName(DREAM3D::CellData::SurfaceVoxels),
+  m_NumNeighborsArrayName(DREAM3D::FeatureData::NumNeighbors),
+  m_SurfaceFeaturesArrayName(DREAM3D::FeatureData::SurfaceFeatures),
   m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
   m_FeatureIds(NULL),
-  m_SurfaceVoxelsArrayName(DREAM3D::CellData::SurfaceVoxels),
   m_SurfaceVoxels(NULL),
-  m_SurfaceFeaturesArrayName(DREAM3D::FeatureData::SurfaceFeatures),
   m_SurfaceFeatures(NULL),
-  m_NumNeighborsArrayName(DREAM3D::FeatureData::NumNeighbors),
   m_NumNeighbors(NULL)
 {
   setupFilterParameters();

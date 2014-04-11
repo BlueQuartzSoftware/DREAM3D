@@ -50,6 +50,10 @@ FindBoundaryStrengths::FindBoundaryStrengths() :
   m_AvgQuatsArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, DREAM3D::FeatureData::AvgQuats),
   m_FeaturePhasesArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, DREAM3D::FeatureData::Phases),
   m_CrystalStructuresArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellEnsembleAttributeMatrixName, DREAM3D::EnsembleData::CrystalStructures),
+  m_SurfaceMeshF1sArrayName(DREAM3D::FaceData::SurfaceMeshF1s),
+  m_SurfaceMeshF1sptsArrayName(DREAM3D::FaceData::SurfaceMeshF1spts),
+  m_SurfaceMeshF7sArrayName(DREAM3D::FaceData::SurfaceMeshF7s),
+  m_SurfaceMeshmPrimesArrayName(DREAM3D::FaceData::SurfaceMeshmPrimes),
   m_FeaturePhasesArrayName(DREAM3D::FeatureData::Phases),
   m_FeaturePhases(NULL),
   m_AvgQuatsArrayName(DREAM3D::FeatureData::AvgQuats),
@@ -58,13 +62,9 @@ FindBoundaryStrengths::FindBoundaryStrengths() :
   m_CrystalStructures(NULL),
   m_SurfaceMeshFaceLabelsArrayName(DREAM3D::FaceData::SurfaceMeshFaceLabels),
   m_SurfaceMeshFaceLabels(NULL),
-  m_SurfaceMeshF1sArrayName(DREAM3D::FaceData::SurfaceMeshF1s),
   m_SurfaceMeshF1s(NULL),
-  m_SurfaceMeshF1sptsArrayName(DREAM3D::FaceData::SurfaceMeshF1spts),
   m_SurfaceMeshF1spts(NULL),
-  m_SurfaceMeshF7sArrayName(DREAM3D::FaceData::SurfaceMeshF7s),
   m_SurfaceMeshF7s(NULL),
-  m_SurfaceMeshmPrimesArrayName(DREAM3D::FaceData::SurfaceMeshmPrimes),
   m_SurfaceMeshmPrimes(NULL)
 {
   m_OrientationOps = OrientationOps::getOrientationOpsVector();

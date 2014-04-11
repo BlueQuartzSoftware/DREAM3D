@@ -179,6 +179,8 @@ FindTwinBoundaries::FindTwinBoundaries()  :
   m_CrystalStructuresArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellEnsembleAttributeMatrixName, DREAM3D::EnsembleData::CrystalStructures),
   m_SurfaceMeshFaceLabelsArrayPath(DREAM3D::Defaults::SomePath),
   m_SurfaceMeshFaceNormalsArrayPath(DREAM3D::Defaults::SomePath),
+  m_SurfaceMeshTwinBoundaryArrayName(DREAM3D::FaceData::SurfaceMeshTwinBoundary),
+  m_SurfaceMeshTwinBoundaryIncoherenceArrayName(DREAM3D::FaceData::SurfaceMeshTwinBoundaryIncoherence),
   m_AvgQuatsArrayName(DREAM3D::FeatureData::AvgQuats),
   m_AvgQuats(NULL),
   m_FeaturePhasesArrayName(DREAM3D::FeatureData::Phases),
@@ -189,9 +191,7 @@ FindTwinBoundaries::FindTwinBoundaries()  :
   m_SurfaceMeshFaceLabels(NULL),
   m_SurfaceMeshFaceNormalsArrayName(DREAM3D::FaceData::SurfaceMeshFaceNormals),
   m_SurfaceMeshFaceNormals(NULL),
-  m_SurfaceMeshTwinBoundaryArrayName(DREAM3D::FaceData::SurfaceMeshTwinBoundary),
   m_SurfaceMeshTwinBoundary(NULL),
-  m_SurfaceMeshTwinBoundaryIncoherenceArrayName(DREAM3D::FaceData::SurfaceMeshTwinBoundaryIncoherence),
   m_SurfaceMeshTwinBoundaryIncoherence(NULL)
 {
   m_OrientationOps = OrientationOps::getOrientationOpsVector();

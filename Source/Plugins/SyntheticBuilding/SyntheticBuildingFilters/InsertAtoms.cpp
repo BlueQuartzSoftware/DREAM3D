@@ -213,11 +213,11 @@ InsertAtoms::InsertAtoms() :
   m_Basis(0),
   m_SurfaceMeshFaceLabelsArrayPath(DREAM3D::Defaults::SomePath),
   m_AvgQuatsArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, DREAM3D::FeatureData::AvgQuats),
+  m_AtomFeatureLabelsArrayName(DREAM3D::VertexData::AtomFeatureLabels),
   m_SurfaceMeshFaceLabelsArrayName(DREAM3D::FaceData::SurfaceMeshFaceLabels),
   m_SurfaceMeshFaceLabels(NULL),
   m_AvgQuatsArrayName(DREAM3D::FeatureData::AvgQuats),
   m_AvgQuats(NULL),
-  m_AtomFeatureLabelsArrayName(DREAM3D::VertexData::AtomFeatureLabels),
   m_AtomFeatureLabels(NULL)
 {
   m_LatticeConstants.x = 1.0f;

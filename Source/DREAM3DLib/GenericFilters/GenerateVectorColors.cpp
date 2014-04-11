@@ -48,11 +48,11 @@ GenerateVectorColors::GenerateVectorColors() :
   AbstractFilter(),
   m_VectorsArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::VectorData),
   m_GoodVoxelsArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::GoodVoxels),
+  m_CellVectorColorsArrayName(DREAM3D::CellData::VectorColor),
   m_VectorsArrayName(""),
   m_Vectors(NULL),
   m_GoodVoxelsArrayName(DREAM3D::CellData::GoodVoxels),
   m_GoodVoxels(NULL),
-  m_CellVectorColorsArrayName(DREAM3D::CellData::VectorColor),
   m_CellVectorColors(NULL)
 {
   setupFilterParameters();

@@ -55,6 +55,9 @@ FindFeatureReferenceCAxisMisorientations::FindFeatureReferenceCAxisMisorientatio
   m_CellPhasesArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::Phases),
   m_AvgCAxesArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, DREAM3D::FeatureData::AvgCAxes),
   m_QuatsArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::Quats),
+  m_FeatureAvgCAxisMisorientationsArrayName(DREAM3D::FeatureData::FeatureAvgCAxisMisorientations),
+  m_FeatureStdevCAxisMisorientationsArrayName(DREAM3D::FeatureData::FeatureStdevCAxisMisorientations),
+  m_FeatureReferenceCAxisMisorientationsArrayName(DREAM3D::CellData::FeatureReferenceCAxisMisorientations),
   m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
   m_FeatureIds(NULL),
   m_CellPhasesArrayName(DREAM3D::CellData::Phases),
@@ -63,11 +66,8 @@ FindFeatureReferenceCAxisMisorientations::FindFeatureReferenceCAxisMisorientatio
   m_Quats(NULL),
   m_AvgCAxesArrayName(DREAM3D::FeatureData::AvgCAxes),
   m_AvgCAxes(NULL),
-  m_FeatureReferenceCAxisMisorientationsArrayName(DREAM3D::CellData::FeatureReferenceCAxisMisorientations),
   m_FeatureReferenceCAxisMisorientations(NULL),
-  m_FeatureAvgCAxisMisorientationsArrayName(DREAM3D::FeatureData::FeatureAvgCAxisMisorientations),
   m_FeatureAvgCAxisMisorientations(NULL),
-  m_FeatureStdevCAxisMisorientationsArrayName(DREAM3D::FeatureData::FeatureStdevCAxisMisorientations),
   m_FeatureStdevCAxisMisorientations(NULL)
 {
   setupFilterParameters();

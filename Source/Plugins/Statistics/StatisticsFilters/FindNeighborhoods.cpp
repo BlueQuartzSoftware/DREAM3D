@@ -51,13 +51,13 @@ FindNeighborhoods::FindNeighborhoods() :
   m_EquivalentDiametersArrayPath(DREAM3D::Defaults::SomePath),
   m_FeaturePhasesArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, DREAM3D::FeatureData::Phases),
   m_CentroidsArrayPath(DREAM3D::Defaults::SomePath),
+  m_NeighborhoodsArrayName(DREAM3D::FeatureData::Neighborhoods),
   m_FeaturePhasesArrayName(DREAM3D::FeatureData::Phases),
   m_FeaturePhases(NULL),
   m_CentroidsArrayName(DREAM3D::FeatureData::Centroids),
   m_Centroids(NULL),
   m_EquivalentDiametersArrayName(DREAM3D::FeatureData::EquivalentDiameters),
   m_EquivalentDiameters(NULL),
-  m_NeighborhoodsArrayName(DREAM3D::FeatureData::Neighborhoods),
   m_Neighborhoods(NULL)
 {
   setupFilterParameters();
