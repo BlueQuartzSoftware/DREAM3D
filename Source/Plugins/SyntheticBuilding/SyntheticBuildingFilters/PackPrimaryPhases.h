@@ -85,15 +85,36 @@ class PackPrimaryPhases : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(OutputCellFeatureAttributeMatrixName)
     Q_PROPERTY(QString OutputCellFeatureAttributeMatrixName READ getOutputCellFeatureAttributeMatrixName WRITE setOutputCellFeatureAttributeMatrixName)
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
-    Q_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
-
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, CellPhasesArrayPath)
-    Q_PROPERTY(DataArrayPath CellPhasesArrayPath READ getCellPhasesArrayPath WRITE setCellPhasesArrayPath)
-
+    DREAM3D_FILTER_PARAMETER(QString, FeatureIdsArrayName)
     Q_PROPERTY(QString FeatureIdsArrayName READ getFeatureIdsArrayName WRITE setFeatureIdsArrayName)
+
+    DREAM3D_FILTER_PARAMETER(QString, CellPhasesArrayName)
     Q_PROPERTY(QString CellPhasesArrayName READ getCellPhasesArrayName WRITE setCellPhasesArrayName)
+
+    DREAM3D_FILTER_PARAMETER(QString, FeaturePhasesArrayName)
     Q_PROPERTY(QString FeaturePhasesArrayName READ getFeaturePhasesArrayName WRITE setFeaturePhasesArrayName)
+
+    DREAM3D_FILTER_PARAMETER(QString, NeighborhoodsArrayName)
+    Q_PROPERTY(QString NeighborhoodsArrayName READ getNeighborhoodsArrayName WRITE setNeighborhoodsArrayName)
+
+    DREAM3D_FILTER_PARAMETER(QString, CentroidsArrayName)
+    Q_PROPERTY(QString CentroidsArrayName READ getCentroidsArrayName WRITE setCentroidsArrayName)
+
+    DREAM3D_FILTER_PARAMETER(QString, VolumesArrayName)
+    Q_PROPERTY(QString VolumesArrayName READ getVolumesArrayName WRITE setVolumesArrayName)
+
+    DREAM3D_FILTER_PARAMETER(QString, AxisLengthsArrayName)
+    Q_PROPERTY(QString AxisLengthsArrayName READ getAxisLengthsArrayName WRITE setAxisLengthsArrayName)
+
+    DREAM3D_FILTER_PARAMETER(QString, AxisEulerAnglesArrayName)
+    Q_PROPERTY(QString AxisEulerAnglesArrayName READ getAxisEulerAnglesArrayName WRITE setAxisEulerAnglesArrayName)
+
+    DREAM3D_FILTER_PARAMETER(QString, Omega3sArrayName)
+    Q_PROPERTY(QString Omega3sArrayName READ getOmega3sArrayName WRITE setOmega3sArrayName)
+
+    DREAM3D_FILTER_PARAMETER(QString, EquivalentDiametersArrayName)
+    Q_PROPERTY(QString EquivalentDiametersArrayName READ getEquivalentDiametersArrayName WRITE setEquivalentDiametersArrayName)
+
 
     typedef boost::shared_array<float> SharedFloatArray;
     typedef boost::shared_array<int> SharedIntArray;
@@ -187,19 +208,19 @@ class PackPrimaryPhases : public AbstractFilter
     int32_t* m_Neighbors;
 
     // Cell Data - make sure these are all initialized to NULL in the constructor
-    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeatureIds)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, CellPhases)
+    DEFINE_CREATED_DATAARRAY(int32_t, FeatureIds)
+    DEFINE_CREATED_DATAARRAY(int32_t, CellPhases)
     int8_t*  m_SurfaceVoxels;
 
     // Feature Data - make sure these are all initialized to NULL in the constructor
-    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeaturePhases)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, Neighborhoods)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(float, Centroids)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(float, Volumes)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(float, AxisLengths)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(float, AxisEulerAngles)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(float, Omega3s)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(float, EquivalentDiameters)
+    DEFINE_CREATED_DATAARRAY(int32_t, FeaturePhases)
+    DEFINE_CREATED_DATAARRAY(int32_t, Neighborhoods)
+    DEFINE_CREATED_DATAARRAY(float, Centroids)
+    DEFINE_CREATED_DATAARRAY(float, Volumes)
+    DEFINE_CREATED_DATAARRAY(float, AxisLengths)
+    DEFINE_CREATED_DATAARRAY(float, AxisEulerAngles)
+    DEFINE_CREATED_DATAARRAY(float, Omega3s)
+    DEFINE_CREATED_DATAARRAY(float, EquivalentDiameters)
 
     // Ensemble Data - make sure these are all initialized to NULL in the constructor
     DEFINE_PTR_WEAKPTR_DATAARRAY(uint32_t, PhaseTypes)
@@ -258,7 +279,6 @@ class PackPrimaryPhases : public AbstractFilter
     float currentsizedisterror, oldsizedisterror;
 
     void dataCheck();
-    void updateCellInstancePointers();
     void updateFeatureInstancePointers();
 
     PackPrimaryPhases(const PackPrimaryPhases&); // Copy Constructor Not Implemented

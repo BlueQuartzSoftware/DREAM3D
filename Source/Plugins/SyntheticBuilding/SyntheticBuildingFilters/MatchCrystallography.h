@@ -55,8 +55,6 @@
 #include "DREAM3DLib/OrientationOps/OrientationOps.h"
 #include "DREAM3DLib/StatsData/StatsData.h"
 
-
-
 #include "SyntheticBuilding/SyntheticBuildingConstants.h"
 
 /**
@@ -73,7 +71,6 @@ class MatchCrystallography : public AbstractFilter
     DREAM3D_SHARED_POINTERS(MatchCrystallography)
     DREAM3D_STATIC_NEW_MACRO(MatchCrystallography)
     DREAM3D_TYPE_MACRO_SUPER(MatchCrystallography, AbstractFilter)
-
 
     virtual ~MatchCrystallography();
 
@@ -100,13 +97,14 @@ class MatchCrystallography : public AbstractFilter
     Q_PROPERTY(DataArrayPath NumFeaturesArrayPath READ getNumFeaturesArrayPath WRITE setNumFeaturesArrayPath)
 
 //// Created Data Arrays
+    DREAM3D_FILTER_PARAMETER(QString, CellEulerAnglesArrayName)
     Q_PROPERTY(QString CellEulerAnglesArrayName READ getCellEulerAnglesArrayName WRITE setCellEulerAnglesArrayName)
+    DREAM3D_FILTER_PARAMETER(QString, VolumesArrayName)
     Q_PROPERTY(QString VolumesArrayName READ getVolumesArrayName WRITE setVolumesArrayName)
+    DREAM3D_FILTER_PARAMETER(QString, FeatureEulerAnglesArrayName)
     Q_PROPERTY(QString FeatureEulerAnglesArrayName READ getFeatureEulerAnglesArrayName WRITE setFeatureEulerAnglesArrayName)
+    DREAM3D_FILTER_PARAMETER(QString, AvgQuatsArrayName)
     Q_PROPERTY(QString AvgQuatsArrayName READ getAvgQuatsArrayName WRITE setAvgQuatsArrayName)
-
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, OutputEnsembleAttributeMatrix)
-    Q_PROPERTY(DataArrayPath OutputEnsembleAttributeMatrix READ getOutputEnsembleAttributeMatrix WRITE setOutputEnsembleAttributeMatrix)
 
     DREAM3D_FILTER_PARAMETER(int, MaxIterations)
     Q_PROPERTY(int MaxIterations READ getMaxIterations WRITE setMaxIterations)
@@ -164,14 +162,14 @@ class MatchCrystallography : public AbstractFilter
 
     // Cell Data
     DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeatureIds)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(float, CellEulerAngles)
+    DEFINE_CREATED_DATAARRAY(float, CellEulerAngles)
 
     // Feature Data
     DEFINE_PTR_WEAKPTR_DATAARRAY(bool, SurfaceFeatures)
     DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeaturePhases)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(float, Volumes)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(float, FeatureEulerAngles)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(float, AvgQuats)
+    DEFINE_CREATED_DATAARRAY(float, Volumes)
+    DEFINE_CREATED_DATAARRAY(float, FeatureEulerAngles)
+    DEFINE_CREATED_DATAARRAY(float, AvgQuats)
     NeighborList<int>::WeakPointer m_NeighborList;
     NeighborList<float>::WeakPointer m_SharedSurfaceAreaList;
 

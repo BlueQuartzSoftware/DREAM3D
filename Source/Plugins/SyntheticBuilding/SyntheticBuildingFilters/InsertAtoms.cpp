@@ -208,20 +208,16 @@ class InsertAtomsImpl
 // -----------------------------------------------------------------------------
 InsertAtoms::InsertAtoms() :
   AbstractFilter(),
-  m_VolumeDataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
-  m_SurfaceDataContainerName(DREAM3D::Defaults::SurfaceDataContainerName),
   m_VertexDataContainerName(DREAM3D::Defaults::VertexDataContainerName),
   m_VertexAttributeMatrixName(DREAM3D::Defaults::VertexAttributeMatrixName),
-  m_FaceAttributeMatrixName(DREAM3D::Defaults::FaceAttributeMatrixName),
-  m_CellFeatureAttributeMatrixName(DREAM3D::Defaults::CellFeatureAttributeMatrixName),
   m_Basis(0),
-/*[]*/m_SurfaceMeshFaceLabelsArrayPath(DREAM3D::Defaults::SomePath),
-/*[]*/m_AvgQuatsArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, DREAM3D::FeatureData::AvgQuats),
-  m_AtomFeatureLabelsArrayName(DREAM3D::VertexData::AtomFeatureLabels),
+  m_SurfaceMeshFaceLabelsArrayPath(DREAM3D::Defaults::SomePath),
+  m_AvgQuatsArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, DREAM3D::FeatureData::AvgQuats),
   m_SurfaceMeshFaceLabelsArrayName(DREAM3D::FaceData::SurfaceMeshFaceLabels),
   m_SurfaceMeshFaceLabels(NULL),
   m_AvgQuatsArrayName(DREAM3D::FeatureData::AvgQuats),
   m_AvgQuats(NULL),
+  m_AtomFeatureLabelsArrayName(DREAM3D::VertexData::AtomFeatureLabels),
   m_AtomFeatureLabels(NULL)
 {
   m_LatticeConstants.x = 1.0f;
@@ -259,10 +255,12 @@ void InsertAtoms::setupFilterParameters()
     parameters.push_back(parameter);
   }
   parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "QString", true));
-/*[]*/parameters.push_back(FilterParameter::New("SurfaceMeshFaceLabels", "SurfaceMeshFaceLabelsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
-/*[]*/parameters.push_back(FilterParameter::New("AvgQuats", "AvgQuatsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
+  parameters.push_back(FilterParameter::New("SurfaceMeshFaceLabels", "SurfaceMeshFaceLabelsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
+  parameters.push_back(FilterParameter::New("AvgQuats", "AvgQuatsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
   parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "QString", true));
-/*##*/parameters.push_back(FilterParameter::New("AtomFeatureLabels", "AtomFeatureLabelsArrayName", FilterParameterWidgetType::StringWidget, "QString", true, ""));
+  parameters.push_back(FilterParameter::New("Vertex Data Container Name", "VertexDataContainerName", FilterParameterWidgetType::StringWidget, "QString", true, ""));
+  parameters.push_back(FilterParameter::New("Vertex Attribute Matrix Name", "VertexAttributeMatrixName", FilterParameterWidgetType::StringWidget, "QString", true, ""));
+  parameters.push_back(FilterParameter::New("AtomFeatureLabels", "AtomFeatureLabelsArrayName", FilterParameterWidgetType::StringWidget, "QString", true, ""));
   setFilterParameters(parameters);
 }
 
@@ -271,10 +269,11 @@ void InsertAtoms::setupFilterParameters()
 void InsertAtoms::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-/*[]*/setAtomFeatureLabelsArrayName(reader->readString("AtomFeatureLabelsArrayName", getAtomFeatureLabelsArrayName() ) );
+  setVertexDataContainerName(reader->readString("VertexDataContainerName", getVertexDataContainerName() ) );
+  setVertexAttributeMatrixName(reader->readString("VertexAttributeMatrixName", getVertexAttributeMatrixName() ) );
+  setAtomFeatureLabelsArrayName(reader->readString("AtomFeatureLabelsArrayName", getAtomFeatureLabelsArrayName() ) );
   setAvgQuatsArrayPath(reader->readDataArrayPath("AvgQuatsArrayPath", getAvgQuatsArrayPath() ) );
   setSurfaceMeshFaceLabelsArrayPath(reader->readDataArrayPath("SurfaceMeshFaceLabelsArrayPath", getSurfaceMeshFaceLabelsArrayPath() ) );
-  setVolumeDataContainerName( reader->readString("VolumeDataContainerName", getVolumeDataContainerName()) );
   setLatticeConstants( reader->readFloatVec3("LatticeConstants", getLatticeConstants() ) );
   setBasis( reader->readValue("Basis", getBasis() ) );
   reader->closeFilterGroup();
@@ -286,10 +285,11 @@ void InsertAtoms::readFilterParameters(AbstractFilterParametersReader* reader, i
 int InsertAtoms::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-/*[]*/writer->writeValue("AtomFeatureLabelsArrayName", getAtomFeatureLabelsArrayName() );
+  writer->writeValue("VertexDataContainerName", getVertexDataContainerName() );
+  writer->writeValue("VertexAttributeMatrixName", getVertexAttributeMatrixName() );
+  writer->writeValue("AtomFeatureLabelsArrayName", getAtomFeatureLabelsArrayName() );
   writer->writeValue("AvgQuatsArrayPath", getAvgQuatsArrayPath() );
   writer->writeValue("SurfaceMeshFaceLabelsArrayPath", getSurfaceMeshFaceLabelsArrayPath() );
-  writer->writeValue("VolumeDataContainerName", getVolumeDataContainerName() );
   writer->writeValue("LatticeConstants", getLatticeConstants() );
   writer->writeValue("Basis", getBasis() );
   writer->closeFilterGroup();
@@ -313,16 +313,12 @@ void InsertAtoms::updateVertexInstancePointers()
 void InsertAtoms::dataCheck()
 {
   DataArrayPath tempPath;
-  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getVolumeDataContainerName(), false);
-  if(getErrorCondition() < 0) { return; }
-  SurfaceDataContainer* sm = getDataContainerArray()->getPrereqDataContainer<SurfaceDataContainer, AbstractFilter>(this, getSurfaceDataContainerName());
+
+  SurfaceDataContainer* sm = getDataContainerArray()->getPrereqDataContainer<SurfaceDataContainer, AbstractFilter>(this, m_SurfaceMeshFaceLabelsArrayPath.getDataContainerName());
   if(getErrorCondition() < 0) { return; }
   VertexDataContainer* v = getDataContainerArray()->createNonPrereqDataContainer<VertexDataContainer, AbstractFilter>(this, getVertexDataContainerName());
   if(getErrorCondition() < 0) { return; }
-  AttributeMatrix::Pointer cellFeatureAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellFeatureAttributeMatrixName(), -301);
-  if(getErrorCondition() < 0) { return; }
-  AttributeMatrix::Pointer faceAttrMat = sm->getPrereqAttributeMatrix<AbstractFilter>(this, getFaceAttributeMatrixName(), -301);
-  if(getErrorCondition() < 0) { return; }
+
   QVector<size_t> tDims(1, 0);
   AttributeMatrix::Pointer vertexAttrMat = v->createNonPrereqAttributeMatrix<AbstractFilter>(this, getVertexAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::Vertex);
   if(getErrorCondition() < 0) { return; }
@@ -343,7 +339,7 @@ void InsertAtoms::dataCheck()
   else
   {
     QVector<size_t> dims(1, 2);
-  m_SurfaceMeshFaceLabelsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getSurfaceMeshFaceLabelsArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+    m_SurfaceMeshFaceLabelsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getSurfaceMeshFaceLabelsArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
     if( NULL != m_SurfaceMeshFaceLabelsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
     { m_SurfaceMeshFaceLabels = m_SurfaceMeshFaceLabelsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   }
@@ -354,9 +350,8 @@ void InsertAtoms::dataCheck()
   { m_AvgQuats = m_AvgQuatsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   dims[0] = 1;
-  m_AtomFeatureLabelsPtr = vertexAttrMat->createNonPrereqArray<DataArray<int32_t>, AbstractFilter>(this, m_AtomFeatureLabelsArrayName, -301, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-////==>MIKE_GROEBER_FIX tempPath.update(DATACONTAINER_NAME, ATTRIBUTEMATRIX_NAME, getAtomFeatureLabelsArrayName() );
-////==>MIKE_GROEBER_FIX m_AtomFeatureLabelsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, m_AtomFeatureLabelsArrayName, -301, dims); /* Assigns the shared_ptr<>(this, tempPath, -301, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  tempPath.update(getVertexDataContainerName(), getVertexAttributeMatrixName(), getAtomFeatureLabelsArrayName() );
+  m_AtomFeatureLabelsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(this, tempPath, -301, dims); /* Assigns the shared_ptr<>(this, tempPath, -301, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_AtomFeatureLabelsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_AtomFeatureLabels = m_AtomFeatureLabelsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
@@ -378,7 +373,6 @@ void InsertAtoms::preflight()
 void InsertAtoms::execute()
 {
   setErrorCondition(0);
-
   dataCheck();
   if(getErrorCondition() < 0) { return; }
 
@@ -386,7 +380,7 @@ void InsertAtoms::execute()
   m_LatticeConstants.y = m_LatticeConstants.y/10000.0;
   m_LatticeConstants.z = m_LatticeConstants.z/10000.0;
 
-  SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
+  SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceMeshFaceLabelsArrayPath().getDataContainerName());
   DREAM3D_RANDOMNG_NEW()
 
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
@@ -398,7 +392,7 @@ void InsertAtoms::execute()
 
   //pull down faces
   FaceArray::Pointer faces = sm->getFaces();
-  int numFaces = sm->getAttributeMatrix(getFaceAttributeMatrixName())->getNumTuples();
+  int numFaces = m_SurfaceMeshFaceLabelsPtr.lock()->getNumberOfTuples();
 
   //create array to hold bounding vertices for each face
   VertexArray::Vert_t ll, ur;

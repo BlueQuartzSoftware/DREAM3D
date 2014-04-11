@@ -66,27 +66,26 @@ class EstablishMatrixPhase : public AbstractFilter
     DREAM3D_TYPE_MACRO_SUPER(EstablishMatrixPhase, AbstractFilter)
 
     virtual ~EstablishMatrixPhase();
-    DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
-    Q_PROPERTY(QString DataContainerName READ getDataContainerName WRITE setDataContainerName)
+    DREAM3D_FILTER_PARAMETER(DataArrayPath, OutputCellAttributeMatrixName)
+    Q_PROPERTY(DataArrayPath OutputCellAttributeMatrixName READ getOutputCellAttributeMatrixName WRITE setOutputCellAttributeMatrixName)
 
-    DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(CellFeatureAttributeMatrixName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(CellEnsembleAttributeMatrixName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(OutputCellFeatureAttributeMatrixName)
+    Q_PROPERTY(QString OutputCellFeatureAttributeMatrixName READ getOutputCellFeatureAttributeMatrixName WRITE setOutputCellFeatureAttributeMatrixName)
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
-    Q_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
+    DREAM3D_FILTER_PARAMETER(QString, FeatureIdsArrayName)
+    Q_PROPERTY(QString FeatureIdsArrayName READ getFeatureIdsArrayName WRITE setFeatureIdsArrayName)
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, CellPhasesArrayPath)
-    Q_PROPERTY(DataArrayPath CellPhasesArrayPath READ getCellPhasesArrayPath WRITE setCellPhasesArrayPath)
-
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, PhaseTypesArrayPath)
-    Q_PROPERTY(DataArrayPath PhaseTypesArrayPath READ getPhaseTypesArrayPath WRITE setPhaseTypesArrayPath)
+    DREAM3D_FILTER_PARAMETER(QString, CellPhasesArrayName)
+    Q_PROPERTY(QString CellPhasesArrayName READ getCellPhasesArrayName WRITE setCellPhasesArrayName)
 
     DREAM3D_FILTER_PARAMETER(QString, FeaturePhasesArrayName)
     Q_PROPERTY(QString FeaturePhasesArrayName READ getFeaturePhasesArrayName WRITE setFeaturePhasesArrayName)
 
-    DREAM3D_FILTER_PARAMETER(QString, ActiveArrayName)
-    Q_PROPERTY(QString ActiveArrayName READ getActiveArrayName WRITE setActiveArrayName)
+    DREAM3D_FILTER_PARAMETER(DataArrayPath, InputStatsArrayPath)
+    Q_PROPERTY(DataArrayPath InputStatsArrayPath READ getInputStatsArrayPath WRITE setInputStatsArrayPath)
+
+    DREAM3D_FILTER_PARAMETER(DataArrayPath, InputPhaseTypesArrayPath)
+    Q_PROPERTY(DataArrayPath InputPhaseTypesArrayPath READ getInputPhaseTypesArrayPath WRITE setInputPhaseTypesArrayPath)
 
     virtual const QString getCompiledLibraryName() { return SyntheticBuilding::SyntheticBuildingBaseName; }
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
@@ -128,7 +127,6 @@ signals:
 
   private:
 
-
     size_t firstMatrixFeature;
     unsigned long long int Seed;
     float sizex;
@@ -136,17 +134,14 @@ signals:
     float sizez;
     float totalvol;
 
-
-    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeatureIds)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, CellPhases)
-
-    DEFINE_CREATED_DATAARRAY(bool, Active)
+    DEFINE_CREATED_DATAARRAY(int32_t, FeatureIds)
+    DEFINE_CREATED_DATAARRAY(int32_t, CellPhases)
     DEFINE_CREATED_DATAARRAY(int32_t, FeaturePhases)
-
     DEFINE_PTR_WEAKPTR_DATAARRAY(uint32_t, PhaseTypes)
-    StatsDataArray* m_StatsDataArray;
+    StatsDataArray::WeakPointer m_StatsDataArray;
 
     void dataCheck();
+    void updateFeatureInstancePointers();
 
     EstablishMatrixPhase(const EstablishMatrixPhase&); // Copy Constructor Not Implemented
     void operator=(const EstablishMatrixPhase&); // Operator '=' Not Implemented

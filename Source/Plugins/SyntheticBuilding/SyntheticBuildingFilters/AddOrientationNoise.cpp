@@ -85,7 +85,6 @@ void AddOrientationNoise::readFilterParameters(AbstractFilterParametersReader* r
 {
   reader->openFilterGroup(this, index);
   setCellEulerAnglesArrayPath(reader->readDataArrayPath("CellEulerAnglesArrayPath", getCellEulerAnglesArrayPath() ) );
-  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN */
   setMagnitude( reader->readValue("Magnitude", getMagnitude()) );
   reader->closeFilterGroup();
 }

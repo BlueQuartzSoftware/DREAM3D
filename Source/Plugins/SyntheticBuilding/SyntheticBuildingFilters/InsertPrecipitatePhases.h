@@ -83,12 +83,6 @@ class InsertPrecipitatePhases : public AbstractFilter
     DREAM3D_TYPE_MACRO_SUPER(InsertPrecipitatePhases, AbstractFilter)
 
     virtual ~InsertPrecipitatePhases();
-    DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
-    Q_PROPERTY(QString DataContainerName READ getDataContainerName WRITE setDataContainerName)
-
-    DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(CellFeatureAttributeMatrixName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(CellEnsembleAttributeMatrixName)
 
     DREAM3D_INSTANCE_STRING_PROPERTY(ClusteringListArrayName)
 
@@ -100,6 +94,18 @@ class InsertPrecipitatePhases : public AbstractFilter
     DREAM3D_FILTER_PARAMETER(bool, WriteGoalAttributes)
     Q_PROPERTY(bool WriteGoalAttributes READ getWriteGoalAttributes WRITE setWriteGoalAttributes)
 
+    DREAM3D_FILTER_PARAMETER(DataArrayPath, OutputCellFeatureAttributeMatrixName)
+    Q_PROPERTY(DataArrayPath OutputCellFeatureAttributeMatrixName READ getOutputCellFeatureAttributeMatrixName WRITE setOutputCellFeatureAttributeMatrixName)
+
+    DREAM3D_FILTER_PARAMETER(DataArrayPath, InputStatsArrayPath)
+    Q_PROPERTY(DataArrayPath InputStatsArrayPath READ getInputStatsArrayPath WRITE setInputStatsArrayPath)
+
+    DREAM3D_FILTER_PARAMETER(DataArrayPath, InputPhaseTypesArrayPath)
+    Q_PROPERTY(DataArrayPath InputPhaseTypesArrayPath READ getInputPhaseTypesArrayPath WRITE setInputPhaseTypesArrayPath)
+
+    DREAM3D_FILTER_PARAMETER(DataArrayPath, InputShapeTypesArrayPath)
+    Q_PROPERTY(DataArrayPath InputShapeTypesArrayPath READ getInputShapeTypesArrayPath WRITE setInputShapeTypesArrayPath)
+
     DREAM3D_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
     Q_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
 
@@ -108,12 +114,6 @@ class InsertPrecipitatePhases : public AbstractFilter
 
     DREAM3D_FILTER_PARAMETER(DataArrayPath, SurfaceVoxelsArrayPath)
     Q_PROPERTY(DataArrayPath SurfaceVoxelsArrayPath READ getSurfaceVoxelsArrayPath WRITE setSurfaceVoxelsArrayPath)
-
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, PhaseTypesArrayPath)
-    Q_PROPERTY(DataArrayPath PhaseTypesArrayPath READ getPhaseTypesArrayPath WRITE setPhaseTypesArrayPath)
-
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, ShapeTypesArrayPath)
-    Q_PROPERTY(DataArrayPath ShapeTypesArrayPath READ getShapeTypesArrayPath WRITE setShapeTypesArrayPath)
 
     DREAM3D_FILTER_PARAMETER(QString, FeaturePhasesArrayName)
     Q_PROPERTY(QString FeaturePhasesArrayName READ getFeaturePhasesArrayName WRITE setFeaturePhasesArrayName)
@@ -238,12 +238,12 @@ class InsertPrecipitatePhases : public AbstractFilter
     DEFINE_CREATED_DATAARRAY(float, EquivalentDiameters)
     DEFINE_CREATED_DATAARRAY(int32_t, FeaturePhases)
     DEFINE_CREATED_DATAARRAY(int32_t, NumCells)
-    NeighborList<float>* m_ClusteringList;
+    NeighborList<float>::WeakPointer m_ClusteringList;
 
     DEFINE_PTR_WEAKPTR_DATAARRAY(uint32_t, PhaseTypes)
     DEFINE_PTR_WEAKPTR_DATAARRAY(uint32_t, ShapeTypes)
     DEFINE_CREATED_DATAARRAY(int32_t, NumFeatures)
-    StatsDataArray* m_StatsDataArray;
+    StatsDataArray::WeakPointer m_StatsDataArray;
 
     OrthoRhombicOps::Pointer m_OrthoOps;
 
@@ -275,7 +275,6 @@ class InsertPrecipitatePhases : public AbstractFilter
     float currentsizedisterror, oldsizedisterror;
 
     void dataCheck();
-    void updateCellInstancePointers();
     void updateFeatureInstancePointers();
 
     InsertPrecipitatePhases(const InsertPrecipitatePhases&); // Copy Constructor Not Implemented

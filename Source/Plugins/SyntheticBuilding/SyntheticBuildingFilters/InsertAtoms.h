@@ -63,14 +63,11 @@ class InsertAtoms : public AbstractFilter
     DREAM3D_TYPE_MACRO_SUPER(InsertAtoms, AbstractFilter)
 
     virtual ~InsertAtoms();
-    DREAM3D_INSTANCE_STRING_PROPERTY(VolumeDataContainerName)
-    Q_PROPERTY(QString VolumeDataContainerName READ getVolumeDataContainerName WRITE setVolumeDataContainerName)
 
-    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceDataContainerName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(VertexDataContainerName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(VertexAttributeMatrixName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(FaceAttributeMatrixName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(CellFeatureAttributeMatrixName)
+    DREAM3D_FILTER_PARAMETER(QString, VertexDataContainerName)
+    Q_PROPERTY(QString VertexDataContainerName READ getVertexDataContainerName WRITE setVertexDataContainerName)
+    DREAM3D_FILTER_PARAMETER(QString, VertexAttributeMatrixName)
+    Q_PROPERTY(QString VertexAttributeMatrixName READ getVertexAttributeMatrixName WRITE setVertexAttributeMatrixName)
 
     DREAM3D_FILTER_PARAMETER(FloatVec3_t, LatticeConstants)
     Q_PROPERTY(FloatVec3_t LatticeConstants READ getLatticeConstants WRITE setLatticeConstants)

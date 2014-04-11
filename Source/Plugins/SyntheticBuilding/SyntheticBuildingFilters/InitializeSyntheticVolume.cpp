@@ -208,10 +208,8 @@ void InitializeSyntheticVolume::execute()
 // -----------------------------------------------------------------------------
 int InitializeSyntheticVolume::estimateNumFeatures(IntVec3_t dims, FloatVec3_t res)
 {
-
   float totalvol;
   int phase;
-
 
   totalvol = (dims.x * res.x) * (dims.y * res.y) * (dims.z * res.z);
   if (totalvol == 0.0)
