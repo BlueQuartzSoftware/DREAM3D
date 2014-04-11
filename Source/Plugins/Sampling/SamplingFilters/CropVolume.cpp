@@ -48,10 +48,9 @@
 // -----------------------------------------------------------------------------
 CropVolume::CropVolume() :
   AbstractFilter(),
-  m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
   m_NewDataContainerName(DREAM3D::Defaults::NewVolumeDataContainerName),
-  m_CellFeatureAttributeMatrixName(DREAM3D::Defaults::CellFeatureAttributeMatrixName),
-  m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
+  m_CellAttributeMatrixPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, ""),
+  m_CellFeatureAttributeMatrixPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, ""),
   m_XMin(0),
   m_YMin(0),
   m_ZMin(0),
@@ -61,7 +60,7 @@ CropVolume::CropVolume() :
   m_RenumberFeatures(true),
   m_SaveAsNewDataContainer(false),
   m_UpdateOrigin(true),
-/*[]*/m_FeatureIdsArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::FeatureIds),
+  m_FeatureIdsArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::FeatureIds),
   m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
   m_FeatureIds(NULL)
 {
@@ -91,13 +90,20 @@ void CropVolume::setupFilterParameters()
   parameters.push_back(FilterParameter::New("Save As New Data Container", "SaveAsNewDataContainer", FilterParameterWidgetType::BooleanWidget,"bool", false));
   parameters.push_back(FilterParameter::New("Update Origin", "UpdateOrigin", FilterParameterWidgetType::BooleanWidget,"bool", false));
   parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "QString", true));
-/*[]*/parameters.push_back(FilterParameter::New("FeatureIds", "FeatureIdsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
+  parameters.push_back(FilterParameter::New("Cell Attribute Matrix", "CellAttributeMatrixPath", FilterParameterWidgetType::AttributeMatrixSelectionWidget,"DataArrayPath", true));
+  parameters.push_back(FilterParameter::New("Cell Feature Attribute Matrix", "CellFeatureAttributeMatrixPath", FilterParameterWidgetType::AttributeMatrixSelectionWidget,"DataArrayPath", true));
+  parameters.push_back(FilterParameter::New("FeatureIds", "FeatureIdsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
+  parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "QString", true));
+  parameters.push_back(FilterParameter::New("New Data Container Name", "NewDataContainerName", FilterParameterWidgetType::StringWidget,"QString", true));
   setFilterParameters(parameters);
 }
 // -----------------------------------------------------------------------------
 void CropVolume::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
+  setNewDataContainerName( reader->readString("NewDataContainerName", getNewDataContainerName() ) );
+  setCellAttributeMatrixPath( reader->readDataArrayPath("CellAttributeMatrixPath", getCellAttributeMatrixPath() ) );
+  setCellFeatureAttributeMatrixPath( reader->readDataArrayPath("CellFeatureAttributeMatrixPath", getCellFeatureAttributeMatrixPath() ) );
   setFeatureIdsArrayPath(reader->readDataArrayPath("FeatureIdsArrayPath", getFeatureIdsArrayPath() ) );
   setXMin( reader->readValue("XMin", getXMin()) );
   setYMin( reader->readValue("YMin", getYMin()) );
@@ -117,6 +123,9 @@ void CropVolume::readFilterParameters(AbstractFilterParametersReader* reader, in
 int CropVolume::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
+  writer->writeValue("NewDataContainerName", getNewDataContainerName() );
+  writer->writeValue("CellAttributeMatrixPath", getCellAttributeMatrixPath() );
+  writer->writeValue("CellFeatureAttributeMatrixPath", getCellFeatureAttributeMatrixPath() );
   writer->writeValue("FeatureIdsArrayPath", getFeatureIdsArrayPath() );
   writer->writeValue("XMin", getXMin() );
   writer->writeValue("YMin", getYMin() );
@@ -150,29 +159,22 @@ void CropVolume::dataCheck()
   setErrorCondition(0);
 
   VolumeDataContainer* m;
-  if(m_SaveAsNewDataContainer == false) m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName());
+  if(m_SaveAsNewDataContainer == false) m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getCellAttributeMatrixPath().getDataContainerName());
   else
   {
-    getDataContainerArray()->duplicateDataContainer(getDataContainerName(), getNewDataContainerName());
+    getDataContainerArray()->duplicateDataContainer(getCellAttributeMatrixPath().getDataContainerName(), getNewDataContainerName());
     m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getNewDataContainerName());
   }
   if(getErrorCondition() < 0 || NULL == m) { return; }
 
   if (m_RenumberFeatures == true)
   {
-    AttributeMatrix::Pointer cellAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), -301);
-    if(getErrorCondition() < 0) { return; }
-    AttributeMatrix::Pointer cellFeatureAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellFeatureAttributeMatrixName(), -301);
-    if(getErrorCondition() < 0) { return; }
-
     QVector<size_t> dims(1, 1);
-////====>REMOVE THIS      m_FeatureIdsPtr = cellAttrMat->getPrereqArray<DataArray<int32_t>, AbstractFilter>(this, m_FeatureIdsArrayName, -300, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  m_FeatureIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeatureIdsArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+    m_FeatureIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeatureIdsArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
     if( NULL != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
     { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   }
 }
-
 
 // -----------------------------------------------------------------------------
 //
@@ -186,7 +188,7 @@ void CropVolume::preflight()
   if(getErrorCondition() < 0) { return; }
 
   VolumeDataContainer* m;
-  if(m_SaveAsNewDataContainer == false) m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  if(m_SaveAsNewDataContainer == false) m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getCellAttributeMatrixPath().getDataContainerName());
   else m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getNewDataContainerName());
 
   if (getXMax() < getXMin())
@@ -248,12 +250,12 @@ void CropVolume::preflight()
   tDims[0] = (getXMax() - getXMin()) + 1;
   tDims[1] = (getYMax() - getYMin()) + 1;
   tDims[2] = (getZMax() - getZMin()) + 1;
-  m->getAttributeMatrix(getCellAttributeMatrixName())->setTupleDimensions(tDims);
+  m->getAttributeMatrix(getCellAttributeMatrixPath().getAttributeMatrixName())->setTupleDimensions(tDims);
   m->setDimensions(tDims[0], tDims[1], tDims[2]);
 
   if(m_RenumberFeatures == true)
   {
-    AttributeMatrix::Pointer cellFeatureAttrMat = m->getAttributeMatrix(getCellFeatureAttributeMatrixName());
+    AttributeMatrix::Pointer cellFeatureAttrMat = m->getAttributeMatrix(getCellFeatureAttributeMatrixPath().getAttributeMatrixName());
     QVector<bool> activeObjects(cellFeatureAttrMat->getNumTuples(), true);
     cellFeatureAttrMat->removeInactiveObjects(activeObjects, m_FeatureIdsPtr.lock());
   }
@@ -270,10 +272,11 @@ void CropVolume::execute()
   if(getErrorCondition() < 0) { return; }
 
   VolumeDataContainer* m;
-  if(m_SaveAsNewDataContainer == false) m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  if(m_SaveAsNewDataContainer == false) m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getCellAttributeMatrixPath().getDataContainerName());
   else m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getNewDataContainerName());
 
-  int64_t totalPoints = m->getAttributeMatrix(getCellAttributeMatrixName())->getNumTuples();
+  AttributeMatrix::Pointer cellAttrMat = m->getAttributeMatrix(getCellAttributeMatrixPath().getAttributeMatrixName());
+  int64_t totalPoints = cellAttrMat->getNumTuples();
 
   size_t udims[3] =
   { 0, 0, 0 };
@@ -326,7 +329,7 @@ void CropVolume::execute()
   int64_t colold, rowold, planeold;
   int64_t index;
   int64_t index_old;
-  QList<QString> voxelArrayNames = m->getAttributeMatrix(getCellAttributeMatrixName())->getAttributeArrayNameList();
+  QList<QString> voxelArrayNames = cellAttrMat->getAttributeArrayNameList();
   for (int64_t i = 0; i < m_ZP; i++)
   {
     QString ss = QObject::tr("Cropping Volume - Slice %1 of %2 Complete").arg(i).arg(m_ZP);
@@ -346,7 +349,7 @@ void CropVolume::execute()
         for (QList<QString>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
         {
           QString name = *iter;
-          IDataArray::Pointer p = m->getAttributeMatrix(getCellAttributeMatrixName())->getAttributeArray(*iter);
+          IDataArray::Pointer p = cellAttrMat->getAttributeArray(*iter);
           p->copyTuple(index_old, index);
         }
       }
@@ -358,13 +361,13 @@ void CropVolume::execute()
   tDims[0] = m_XP;
   tDims[1] = m_YP;
   tDims[2] = m_ZP;
-  m->getAttributeMatrix(getCellAttributeMatrixName())->setTupleDimensions(tDims);
+  cellAttrMat->setTupleDimensions(tDims);
 
   // Feature Ids MUST already be renumbered.
   if (m_RenumberFeatures == true)
   {
     totalPoints = m->getTotalPoints();
-    AttributeMatrix::Pointer cellFeatureAttrMat = m->getAttributeMatrix(getCellFeatureAttributeMatrixName());
+    AttributeMatrix::Pointer cellFeatureAttrMat = m->getAttributeMatrix(getCellFeatureAttributeMatrixPath().getAttributeMatrixName());
     size_t totalFeatures = cellFeatureAttrMat->getNumTuples();
     QVector<bool> activeObjects(totalFeatures, false);
     if (0 == totalFeatures)
@@ -395,7 +398,6 @@ void CropVolume::execute()
     origin[0] = m_XMin * resolution[0]+oldOrigin[0];
     origin[1] = m_YMin * resolution[1]+oldOrigin[1];
     origin[2] = m_ZMin * resolution[2]+oldOrigin[2];
-
 
     m->setOrigin(origin);
   }
