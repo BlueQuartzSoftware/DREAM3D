@@ -80,6 +80,7 @@ class DREAM3DWidgetsLib_EXPORT IntVec3Widget : public QWidget, private Ui::IntVe
     void beforePreflight();
     void afterPreflight();
     void filterNeedsInputParameters(AbstractFilter* filter);
+    void on_conditionalCB_stateChanged(int state);
 
 
   signals:
@@ -89,6 +90,7 @@ class DREAM3DWidgetsLib_EXPORT IntVec3Widget : public QWidget, private Ui::IntVe
   private:
     AbstractFilter*   m_Filter;
     FilterParameter*  m_FilterParameter;
+    bool m_DidCausePreflight;
 
     IntVec3Widget(const IntVec3Widget&); // Copy Constructor Not Implemented
     void operator=(const IntVec3Widget&); // Operator '=' Not Implemented

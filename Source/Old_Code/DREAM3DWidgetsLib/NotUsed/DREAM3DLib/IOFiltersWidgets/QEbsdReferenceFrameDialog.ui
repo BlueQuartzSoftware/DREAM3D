@@ -13,7 +13,7 @@
   <property name="windowTitle">
    <string>Advanced Reference Frame Options</string>
   </property>
-  <layout class="QGridLayout" name="gridLayout">
+  <layout class="QGridLayout" name="widgetLayout">
    <property name="margin">
     <number>6</number>
    </property>

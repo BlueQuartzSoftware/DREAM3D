@@ -4,9 +4,10 @@
   <file>Check-16x16.png</file>
   <file>DREAM3D.png</file>
   <file>Delete-16x16.png</file>
-  <file>delete.png</file>
   <file>Generic_Icon.png</file>
   <file>IO_Icon.png</file>
+  <file>Link_Left.png</file>
+  <file>Link_Right.png</file>
   <file>MaxCutOff_Eqn.png</file>
   <file>MinCutOff_Eqn.png</file>
   <file>Plugin_Icon.png</file>
@@ -39,6 +40,7 @@
   <file>debug_error.png</file>
   <file>delete-corner-pressed.png</file>
   <file>delete-corner.png</file>
+  <file>delete.png</file>
   <file>delete2.png</file>
   <file>disk_blue.png</file>
   <file>filterWidgetBorder.png</file>
@@ -49,6 +51,7 @@
   <file>flash.png</file>
   <file>flash_add.png</file>
   <file>flash_delete.png</file>
+  <file>folder_blue.png</file>
   <file>gear_add.png</file>
   <file>gear_delete.png</file>
   <file>gear_edit.png</file>
@@ -68,10 +71,10 @@
   <file>reload.png</file>
   <file>scroll.png</file>
   <file>signpost.png</file>
+  <file>text.png</file>
   <file>warning.png</file>
   <file>zoomIn.png</file>
   <file>zoomOut.png</file>
-  <file>folder_blue.png</file>
-  <file>text.png</file>
+
  </qresource>
  </RCC>

@@ -133,6 +133,21 @@ class DREAM3DLib_EXPORT FilterParameter
     DREAM3D_STATIC_NEW_MACRO(FilterParameter)
     DREAM3D_TYPE_MACRO(FilterParameter)
 
+    /**
+     * @brief Creates a new Filter Parameter from the arguments. This is good for a general filter parameter that is needed.
+     * @param humanLabel What is displayed to the user in the GUI
+     * @param propertyName The name of the property that this FilterParameter controls. It should be an exact match for a Q_PROPERTY
+     * that is in the header of the filter
+     * @param widgetType The type of widget that will be used for display and gather the input value from the user
+     * @param valueType The type of data structure that is used to store the data
+     * @param advanced Is this parameter an advanced or basic. If it is advanced then the Filter Parameter will only
+     * show up on the 'Advanced' Tab of the Input widget
+     * @param units Optional argument that allows the programmer to set Units to help clarify an input value
+     * @param fileExtension What file extension should this parameter use
+     * @param fileType What type of file does this filter parameter represent (TIFF, STL, ...)
+     * @param castableValueType What value can the input value be cast back to.
+     * @return
+     */
     static Pointer New(const QString& humanLabel, const QString& propertyName,
                        const QString& widgetType, const QString& valueType,
                        bool advanced = false,
@@ -141,6 +156,28 @@ class DREAM3DLib_EXPORT FilterParameter
                        const QString& fileType = QString(""),
                        const QString& castableValueType = QString("") );
 
+    /**
+     * @brief Creates a new Filter Parameter that has conditional logic associated with it through an additional boolean
+     * Q_PROPERTY in the filter's header file. On the GUI this manifests itself as a checkbox that enables or disables the
+     * widget and will also set both the boolean property and the actual filter parameter property
+     * @param humanLabel What is displayed to the user in the GUI
+     * @param propertyName The name of the property that this FilterParameter controls. It should be an exact match for a Q_PROPERTY
+     * that is in the header of the filter
+     * @param widgetType The type of widget that will be used for display and gather the input value from the user
+     * @param valueType The type of data structure that is used to store the data
+     * @param advanced Is this parameter an advanced or basic. If it is advanced then the Filter Parameter will only
+     * show up on the 'Advanced' Tab of the Input widget
+     * @param isConditional Does this FilterParameter have conditional logic
+     * @param conditionalProperty What Q_PROPERTY does this condition link back to
+     * @param conditionalLabel The text to display next to the check box to help the user understand what is going on
+     * @return
+     */
+    static Pointer New(const QString& humanLabel, const QString& propertyName,
+                       const QString& widgetType, const QString& valueType,
+                       bool advanced,
+                       bool isConditional,
+                       const QString& conditionalProperty,
+                       const QString& conditionalLabel);
 
     virtual ~FilterParameter();
 
@@ -300,8 +337,8 @@ class DREAM3DLib_EXPORT PreflightUpdatedValue : public FilterParameter
 
     virtual ~PreflightUpdatedValue();
 
-    protected:
-      PreflightUpdatedValue();
+  protected:
+    PreflightUpdatedValue();
 
   private:
     PreflightUpdatedValue(const PreflightUpdatedValue&); // Copy Constructor Not Implemented

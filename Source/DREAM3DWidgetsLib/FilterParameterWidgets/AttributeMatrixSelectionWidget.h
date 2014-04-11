@@ -92,6 +92,7 @@ class DREAM3DWidgetsLib_EXPORT AttributeMatrixSelectionWidget : public QWidget, 
     void on_dataContainerList_currentIndexChanged(int index);
 
     void on_attributeMatrixList_currentIndexChanged(int index);
+    void on_conditionalCB_stateChanged(int state);
 
 
   protected:

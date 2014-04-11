@@ -80,6 +80,7 @@ class DREAM3DWidgetsLib_EXPORT AxisAngleWidget : public QWidget, private Ui::Axi
     void beforePreflight();
     void afterPreflight();
     void filterNeedsInputParameters(AbstractFilter* filter);
+    void on_conditionalCB_stateChanged(int state);
 
   signals:
     void errorSettingFilterParameter(const QString& msg);
@@ -88,6 +89,7 @@ class DREAM3DWidgetsLib_EXPORT AxisAngleWidget : public QWidget, private Ui::Axi
   private:
     AbstractFilter*   m_Filter;
     FilterParameter*  m_FilterParameter;
+    bool m_DidCausePreflight;
 
     AxisAngleWidget(const AxisAngleWidget&); // Copy Constructor Not Implemented
     void operator=(const AxisAngleWidget&); // Operator '=' Not Implemented

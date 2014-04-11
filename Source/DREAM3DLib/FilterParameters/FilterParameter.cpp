@@ -49,7 +49,8 @@ FilterParameter::FilterParameter() :
   m_FileType(""),
   m_CastableValueType(""),
   m_Conditional(false),
-  m_ConditionalProperty("")
+  m_ConditionalProperty(""),
+  m_ConditionalLabel("")
 {}
 
 // -----------------------------------------------------------------------------
@@ -76,6 +77,33 @@ FilterParameter::Pointer FilterParameter::New(const QString& humanLabel, const Q
   ptr->setCastableValueType(castableValueType);
   return ptr;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+FilterParameter::Pointer FilterParameter::New(const QString& humanLabel, const QString& propertyName,
+                       const QString& widgetType, const QString& valueType,
+                       bool advanced,
+                       bool isConditional,
+                       const QString& conditionalProperty,
+                       const QString& conditionalLabel)
+{
+  FilterParameter::Pointer ptr = FilterParameter::New();
+  ptr->setHumanLabel(humanLabel);
+  ptr->setPropertyName(propertyName);
+  ptr->setWidgetType(widgetType);
+  ptr->setValueType(valueType);
+  ptr->setAdvanced(advanced);
+  ptr->setConditional(isConditional);
+  ptr->setConditionalProperty(conditionalProperty);
+  ptr->setConditionalLabel(conditionalLabel);
+  ptr->setUnits("");
+  ptr->setFileExtension("");
+  ptr->setFileType("");
+  ptr->setCastableValueType("");
+  return ptr;
+}
+
 
 // -----------------------------------------------------------------------------
 //

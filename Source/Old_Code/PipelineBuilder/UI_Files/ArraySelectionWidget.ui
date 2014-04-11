@@ -281,7 +281,7 @@ font-size: 11pt;
    <attribute name="title">
     <string>Volume DataContainer</string>
    </attribute>
-   <layout class="QGridLayout" name="gridLayout">
+   <layout class="QGridLayout" name="widgetLayout">
     <property name="horizontalSpacing">
      <number>4</number>
     </property>

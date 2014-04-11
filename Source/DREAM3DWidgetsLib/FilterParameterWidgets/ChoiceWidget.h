@@ -82,6 +82,7 @@ class DREAM3DWidgetsLib_EXPORT ChoiceWidget : public QWidget, private Ui::Choice
     void filterNeedsInputParameters(AbstractFilter* filter); // When the filter is ready for us to update its input parameter(s) that we are responsible for
     void beforePreflight(); // Called just before the "dataCheck()" is called
     void afterPreflight(); // Called just after the dataCheck() is called.
+    void on_conditionalCB_stateChanged(int state);
 
   signals:
     void errorSettingFilterParameter(const QString& msg);
@@ -91,6 +92,7 @@ class DREAM3DWidgetsLib_EXPORT ChoiceWidget : public QWidget, private Ui::Choice
   private:
     AbstractFilter*   m_Filter;
     FilterParameter*  m_FilterParameter;
+    bool m_DidCausePreflight;
 
     ChoiceWidget(const ChoiceWidget&); // Copy Constructor Not Implemented
     void operator=(const ChoiceWidget&); // Operator '=' Not Implemented

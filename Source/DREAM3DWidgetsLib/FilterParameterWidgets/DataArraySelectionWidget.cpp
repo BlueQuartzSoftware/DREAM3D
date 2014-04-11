@@ -143,8 +143,9 @@ void DataArraySelectionWidget::setupGui()
   attributeMatrixList->blockSignals(false);
   attributeArrayList->blockSignals(false);
 
+  populateComboBoxes();
+
   // is the filter parameter tied to a boolean property of the Filter Instance, if it is then we need to make the check box visible
-  conditionalCB->setVisible(m_FilterParameter->isConditional());
   if(m_FilterParameter->isConditional() == true)
   {
     bool boolProp = m_Filter->property(m_FilterParameter->getConditionalProperty().toLatin1().constData() ).toBool();
@@ -154,8 +155,17 @@ void DataArraySelectionWidget::setupGui()
     attributeMatrixList->setEnabled(boolProp);
     attributeArrayList->setEnabled(boolProp);
   }
+  else
+  {
+    widgetLayout->removeWidget(conditionalCB);
+    conditionalCB->deleteLater();
+    widgetLayout->removeWidget(linkLeft);
+    linkLeft->deleteLater();
+    widgetLayout->removeWidget(linkRight);
+    linkRight->deleteLater();
+  }
 
-  populateComboBoxes();
+
 }
 
 // -----------------------------------------------------------------------------
@@ -167,7 +177,7 @@ void DataArraySelectionWidget::on_conditionalCB_stateChanged(int state)
   dataContainerList->setEnabled(boolProp);
   attributeMatrixList->setEnabled(boolProp);
   attributeArrayList->setEnabled(boolProp);
-    m_DidCausePreflight = true;
+  m_DidCausePreflight = true;
   emit parametersChanged();
   m_DidCausePreflight = false;
 

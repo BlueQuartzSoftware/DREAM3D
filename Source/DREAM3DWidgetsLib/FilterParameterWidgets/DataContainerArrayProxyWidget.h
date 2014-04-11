@@ -82,6 +82,7 @@ class DREAM3DWidgetsLib_EXPORT DataContainerArrayProxyWidget : public QWidget, p
     void afterPreflight();
     void filterNeedsInputParameters(AbstractFilter* filter);
     void itemActivated(const QModelIndex& index);
+    void on_conditionalCB_stateChanged(int state);
 
   signals:
     void errorSettingFilterParameter(const QString& msg);

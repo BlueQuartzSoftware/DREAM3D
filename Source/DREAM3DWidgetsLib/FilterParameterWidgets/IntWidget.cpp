@@ -97,7 +97,41 @@ void IntWidget::setupGui()
     QString str = m_Filter->property(PROPERTY_NAME_AS_CHAR).toString();
     value->setText(str);
   }
+
+  // is the filter parameter tied to a boolean property of the Filter Instance, if it is then we need to make the check box visible
+  if(m_FilterParameter->isConditional() == true)
+  {
+    bool boolProp = m_Filter->property(m_FilterParameter->getConditionalProperty().toLatin1().constData() ).toBool();
+    conditionalCB->setChecked(boolProp);
+    conditionalCB->setText(m_FilterParameter->getConditionalLabel());
+    value->setEnabled(boolProp);
+  }
+  else
+  {
+    widgetLayout->removeWidget(conditionalCB);
+    conditionalCB->deleteLater();
+    widgetLayout->removeWidget(linkLeft);
+    linkLeft->deleteLater();
+    widgetLayout->removeWidget(linkRight);
+    linkRight->deleteLater();
+  }
+
+
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void IntWidget::on_conditionalCB_stateChanged(int state)
+{
+  bool boolProp = conditionalCB->isChecked();
+  value->setEnabled(boolProp);
+  m_DidCausePreflight = true;
+  emit parametersChanged();
+  m_DidCausePreflight = false;
+
+}
+
 
 // -----------------------------------------------------------------------------
 //
@@ -120,6 +154,17 @@ void IntWidget::filterNeedsInputParameters(AbstractFilter* filter)
   {
     FilterParameterWidgetsDialogs::ShowCouldNotSetFilterParameter(m_Filter, m_FilterParameter);
   }
+
+  if(m_FilterParameter->isConditional() )
+  {
+    QVariant var(conditionalCB->isChecked());
+    ok = filter->setProperty(m_FilterParameter->getConditionalProperty().toLatin1().constData(), var);
+    if(false == ok)
+    {
+      FilterParameterWidgetsDialogs::ShowCouldNotSetConditionalFilterParameter(m_Filter, m_FilterParameter);
+    }
+  }
+
 }
 
 // -----------------------------------------------------------------------------

@@ -99,6 +99,7 @@ class DREAM3DWidgetsLib_EXPORT DataContainerSelectionWidget : public QWidget, pr
     void filterNeedsInputParameters(AbstractFilter* filter);
 
     void on_dataContainerList_currentIndexChanged(int index);
+    void on_conditionalCB_stateChanged(int state);
 
   protected:
     void populateComboBoxes();

@@ -10,7 +10,7 @@ set(DREAM3D_WIDGETS
     AddFavoriteWidget
     DREAM3DUpdateCheckDialog
     FavoritesDockWidget
-    FilterInputDockWidget
+    FilterInputWidget
     FilterLibraryDockWidget
     FilterListDockWidget
     IssuesDockWidget

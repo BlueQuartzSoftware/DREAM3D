@@ -311,8 +311,12 @@ void PackPrimaryPhases::setupFilterParameters()
   parameters.push_back(FilterParameter::New("Cell Phases Array Name", "CellPhasesArrayName", FilterParameterWidgetType::StringWidget,"QString", true));
   parameters.push_back(FilterParameter::New("Feature Phases Array Name", "FeaturePhasesArrayName", FilterParameterWidgetType::StringWidget,"QString", true));
   parameters.push_back(FilterParameter::New("Periodic Boundaries", "PeriodicBoundaries", FilterParameterWidgetType::BooleanWidget,"bool", false));
-  parameters.push_back(FilterParameter::New("Write Goal Attributes", "WriteGoalAttributes", FilterParameterWidgetType::BooleanWidget,"bool", false));
+
   parameters.push_back(FilterParameter::New("Goal Attribute CSV File", "CsvOutputFile", FilterParameterWidgetType::OutputFileWidget,"QString", false, "", "*.csv", "Comma Separated Data"));
+  FilterParameter::Pointer param = parameters.back();
+  param->setConditional(true);
+  param->setConditionalProperty("WriteGoalAttributes");
+  param->setConditionalLabel("Write Goal Attributes");
   setFilterParameters(parameters);
 }
 
@@ -2546,7 +2550,7 @@ AbstractFilter::Pointer PackPrimaryPhases::newFilterInstance(bool copyFilterPara
   if(true == copyFilterParameters)
   {
     filter->setFilterParameters(getFilterParameters() );
-    
+
     //Loop over each Filter Parameter that is registered to the filter either through this class or a parent class
     // and copy the value from the current instance of the object into the "new" instance that was just created
     QVector<FilterParameter::Pointer> options = getFilterParameters(); // Get the current set of filter parameters

@@ -48,7 +48,7 @@ sss</string>
      <height>16777215</height>
     </size>
    </property>
-   <layout class="QGridLayout" name="gridLayout">
+   <layout class="QGridLayout" name="widgetLayout">
     <property name="leftMargin">
      <number>0</number>
     </property>
@@ -194,7 +194,7 @@ color: white;
         </item>
        </layout>
       </widget>
-      <widget class="FilterInputDockWidget" name="filterInputWidget" native="true">
+      <widget class="FilterInputWidget" name="filterInputWidget" native="true">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
          <horstretch>0</horstretch>
@@ -500,9 +500,9 @@ border: 2px solid;
    <container>1</container>
   </customwidget>
   <customwidget>
-   <class>FilterInputDockWidget</class>
+   <class>FilterInputWidget</class>
    <extends>QWidget</extends>
-   <header location="global">FilterInputDockWidget.h</header>
+   <header location="global">FilterInputWidget.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>

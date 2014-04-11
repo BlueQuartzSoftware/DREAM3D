@@ -6,41 +6,42 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>566</width>
-    <height>55</height>
+    <width>569</width>
+    <height>53</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>AxisAngleWidget</string>
   </property>
-  <layout class="QGridLayout" name="gridLayout">
+  <layout class="QGridLayout" name="widgetLayout">
    <property name="margin">
     <number>2</number>
    </property>
    <property name="spacing">
     <number>5</number>
    </property>
-   <item row="1" column="2">
-    <widget class="QLineEdit" name="axis_i"/>
-   </item>
-   <item row="1" column="1">
-    <widget class="QLineEdit" name="angle"/>
-   </item>
-   <item row="1" column="3">
-    <widget class="QLineEdit" name="axis_j"/>
-   </item>
-   <item row="1" column="0">
-    <widget class="QLabel" name="label">
+   <item row="1" column="5">
+    <widget class="QLabel" name="axisLabel">
+     <property name="font">
+      <font>
+       <italic>true</italic>
+      </font>
+     </property>
      <property name="text">
-      <string>Property</string>
+      <string>Axis</string>
+     </property>
+     <property name="alignment">
+      <set>Qt::AlignCenter</set>
      </property>
     </widget>
    </item>
-   <item row="1" column="4">
-    <widget class="QLineEdit" name="axis_k"/>
-   </item>
-   <item row="0" column="1">
+   <item row="1" column="3">
     <widget class="QLabel" name="angleLable">
+     <property name="font">
+      <font>
+       <italic>true</italic>
+      </font>
+     </property>
      <property name="text">
       <string>Angle</string>
      </property>
@@ -49,18 +50,59 @@
      </property>
     </widget>
    </item>
-   <item row="0" column="2" colspan="3">
-    <widget class="QLabel" name="axisLabel">
+   <item row="1" column="7">
+    <widget class="QLineEdit" name="axis_j"/>
+   </item>
+   <item row="1" column="4">
+    <widget class="QLineEdit" name="angle"/>
+   </item>
+   <item row="1" column="6">
+    <widget class="QLineEdit" name="axis_i"/>
+   </item>
+   <item row="1" column="2">
+    <widget class="QLabel" name="label">
      <property name="text">
-      <string>|----------------- Axis -----------------|</string>
+      <string>Property</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="8">
+    <widget class="QLineEdit" name="axis_k"/>
+   </item>
+   <item row="0" column="1" rowspan="2">
+    <widget class="QLabel" name="linkLeft">
+     <property name="text">
+      <string/>
+     </property>
+     <property name="pixmap">
+      <pixmap resource="../../../../Resources/icons/images/Icons.qrc">:/Link_Left.png</pixmap>
      </property>
      <property name="alignment">
-      <set>Qt::AlignCenter</set>
+      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="10" rowspan="2">
+    <widget class="QLabel" name="linkRight">
+     <property name="text">
+      <string/>
+     </property>
+     <property name="pixmap">
+      <pixmap resource="../../../../Resources/icons/images/Icons.qrc">:/Link_Right.png</pixmap>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="2" colspan="7">
+    <widget class="QCheckBox" name="conditionalCB">
+     <property name="text">
+      <string>CheckBox</string>
      </property>
     </widget>
    </item>
   </layout>
  </widget>
- <resources/>
+ <resources>
+  <include location="../../../../Resources/icons/images/Icons.qrc"/>
+ </resources>
  <connections/>
 </ui>
