@@ -111,9 +111,9 @@ FindOrientationFieldCurl::FindOrientationFieldCurl() :
   m_CellPhasesArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::Phases),
   m_CrystalStructuresArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellEnsembleAttributeMatrixName, DREAM3D::EnsembleData::CrystalStructures),
   m_QuatsArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::Quats),
+  m_DislocationTensorsArrayName(DREAM3D::CellData::DislocationTensors),
   m_CellPhasesArrayName(DREAM3D::CellData::Phases),
   m_CellPhases(NULL),
-  m_DislocationTensorsArrayName(DREAM3D::CellData::DislocationTensors),
   m_DislocationTensors(NULL),
   m_QuatsArrayName(DREAM3D::CellData::Quats),
   m_Quats(NULL),
@@ -437,6 +437,8 @@ AbstractFilter::Pointer FindOrientationFieldCurl::newFilterInstance(bool copyFil
   FindOrientationFieldCurl::Pointer filter = FindOrientationFieldCurl::New();
   if(true == copyFilterParameters)
   {
+    filter->setFilterParameters(getFilterParameters() );
+    
     //Loop over each Filter Parameter that is registered to the filter either through this class or a parent class
     // and copy the value from the current instance of the object into the "new" instance that was just created
     QVector<FilterParameter::Pointer> options = getFilterParameters(); // Get the current set of filter parameters
@@ -455,6 +457,22 @@ AbstractFilter::Pointer FindOrientationFieldCurl::newFilterInstance(bool copyFil
         QString ss = QString("Error occurred transferring the Filter Parameter '%1' in Filter '%2' to the filter instance. The pipeline may run but the underlying filter will NOT be using the values from the GUI."
                              " Please report this issue to the developers of this filter.").arg(parameter->getPropertyName()).arg(filter->getHumanLabel());
         Q_ASSERT_X(ok, __FILE__, ss.toLatin1().constData());
+      }
+
+      if(parameter->isConditional() == true)
+      {
+        QVariant cond = property(parameter->getConditionalProperty().toLatin1().constData() );
+        ok = filter->setProperty(parameter->getConditionalProperty().toLatin1().constData(), cond);
+        if(false == ok)
+        {
+          QString ss = QString("%1::newFilterInstance()\nError occurred transferring the Filter Parameter '%2' in Filter '%3' to the filter instance. "
+                              " The filter parameter has a conditional property '%4'. The transfer of this property from the old filter to the new filter failed."
+                              " Please report this issue to the developers of this filter.").arg(filter->getNameOfClass())
+                              .arg(parameter->getPropertyName())
+                              .arg(filter->getHumanLabel())
+                              .arg(parameter->getConditionalProperty());
+          Q_ASSERT_X(ok, __FILE__, ss.toLatin1().constData());
+        }
       }
     }
   }

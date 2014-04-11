@@ -13,28 +13,41 @@
   <property name="windowTitle">
    <string>DataArraySelectionWidget</string>
   </property>
-  <layout class="QHBoxLayout" name="horizontalLayout">
-   <property name="spacing">
-    <number>5</number>
-   </property>
-   <property name="margin">
+  <layout class="QGridLayout" name="gridLayout">
+   <property name="leftMargin">
     <number>2</number>
    </property>
-   <item>
+   <property name="topMargin">
+    <number>2</number>
+   </property>
+   <property name="rightMargin">
+    <number>2</number>
+   </property>
+   <property name="bottomMargin">
+    <number>2</number>
+   </property>
+   <item row="1" column="1">
+    <widget class="QComboBox" name="dataContainerList"/>
+   </item>
+   <item row="1" column="0">
     <widget class="QLabel" name="label">
      <property name="text">
       <string>Property</string>
      </property>
     </widget>
    </item>
-   <item>
-    <widget class="QComboBox" name="dataContainerList"/>
+   <item row="1" column="3">
+    <widget class="QComboBox" name="attributeArrayList"/>
    </item>
-   <item>
+   <item row="1" column="2">
     <widget class="QComboBox" name="attributeMatrixList"/>
    </item>
-   <item>
-    <widget class="QComboBox" name="attributeArrayList"/>
+   <item row="0" column="0" colspan="4">
+    <widget class="QCheckBox" name="conditionalCB">
+     <property name="text">
+      <string>CheckBox</string>
+     </property>
+    </widget>
    </item>
   </layout>
  </widget>

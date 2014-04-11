@@ -54,9 +54,9 @@ FitFeatureData::FitFeatureData() :
   m_RemoveBiasedFeatures(false),
   m_FeaturePhasesArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, DREAM3D::FeatureData::Phases),
   m_BiasedFeaturesArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, DREAM3D::FeatureData::BiasedFeatures),
+  m_NewEnsembleArrayArrayName(""),
   m_BiasedFeaturesArrayName(DREAM3D::FeatureData::BiasedFeatures),
   m_BiasedFeatures(NULL),
-  m_NewEnsembleArrayArrayName(""),
   m_NewEnsembleArray(NULL),
   m_FeaturePhasesArrayName(DREAM3D::FeatureData::Phases),
   m_FeaturePhases(NULL)
@@ -163,7 +163,7 @@ void FitFeatureData::dataCheck()
   m_NewEnsembleArrayArrayName = m_SelectedFeatureArrayPath.getDataArrayName() + distType + QString("Fit");
   dims[0] = numComp;
   tempPath.update(getCellEnsembleAttributeMatrixName().getDataContainerName(), getCellEnsembleAttributeMatrixName().getAttributeMatrixName(), getNewEnsembleArrayArrayName() );
-  m_NewEnsembleArrayPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, tempPath, 0, dims); /* Assigns the shared_ptr<>(this, tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_NewEnsembleArrayPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, tempPath, 0, dims); /* Assigns the shared_ptr<>(this, tempPath, 0, dims); Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_NewEnsembleArrayPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_NewEnsembleArray = m_NewEnsembleArrayPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
@@ -331,6 +331,8 @@ AbstractFilter::Pointer FitFeatureData::newFilterInstance(bool copyFilterParamet
   FitFeatureData::Pointer filter = FitFeatureData::New();
   if(true == copyFilterParameters)
   {
+    filter->setFilterParameters(getFilterParameters() );
+    
     //Loop over each Filter Parameter that is registered to the filter either through this class or a parent class
     // and copy the value from the current instance of the object into the "new" instance that was just created
     QVector<FilterParameter::Pointer> options = getFilterParameters(); // Get the current set of filter parameters
@@ -349,6 +351,22 @@ AbstractFilter::Pointer FitFeatureData::newFilterInstance(bool copyFilterParamet
         QString ss = QString("Error occurred transferring the Filter Parameter '%1' in Filter '%2' to the filter instance. The pipeline may run but the underlying filter will NOT be using the values from the GUI."
                              " Please report this issue to the developers of this filter.").arg(parameter->getPropertyName()).arg(filter->getHumanLabel());
         Q_ASSERT_X(ok, __FILE__, ss.toLatin1().constData());
+      }
+
+      if(parameter->isConditional() == true)
+      {
+        QVariant cond = property(parameter->getConditionalProperty().toLatin1().constData() );
+        ok = filter->setProperty(parameter->getConditionalProperty().toLatin1().constData(), cond);
+        if(false == ok)
+        {
+          QString ss = QString("%1::newFilterInstance()\nError occurred transferring the Filter Parameter '%2' in Filter '%3' to the filter instance. "
+                              " The filter parameter has a conditional property '%4'. The transfer of this property from the old filter to the new filter failed."
+                              " Please report this issue to the developers of this filter.").arg(filter->getNameOfClass())
+                              .arg(parameter->getPropertyName())
+                              .arg(filter->getHumanLabel())
+                              .arg(parameter->getConditionalProperty());
+          Q_ASSERT_X(ok, __FILE__, ss.toLatin1().constData());
+        }
       }
     }
   }

@@ -302,6 +302,15 @@
   DREAM3D_SET_PROPERTY(type, prpty)\
   DREAM3D_GET_PROPERTY(type, prpty)
 
+
+#define DREAM3D_BOOL_PROPERTY(prpty)\
+  private:\
+    bool m_##prpty;\
+  public:\
+    DREAM3D_SET_PROPERTY(bool, prpty)\
+    bool is##prpty() { return m_##prpty; }
+
+
 /**
 * @brief
 */

@@ -56,28 +56,27 @@
 FindLocalAverageCAxisMisalignments::FindLocalAverageCAxisMisalignments() :
   AbstractFilter(),
   m_NewCellFeatureAttributeMatrixName(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::NewCellFeatureAttributeMatrixName, ""),
-  m_NeighborListArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, DREAM3D::FeatureData::NeighborList),
-  m_CAxisMisalignmentListArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, DREAM3D::FeatureData::CAxisMisalignmentList),
   m_CalcUnbiasedAvg(false),
   m_CalcBiasedAvg(false),
+  m_NeighborListArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, DREAM3D::FeatureData::NeighborList),
+  m_CAxisMisalignmentListArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, DREAM3D::FeatureData::CAxisMisalignmentList),
   m_FeatureIdsArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::FeatureIds),
   m_CellParentIdsArrayPath(DREAM3D::Defaults::SomePath),
   m_AvgCAxisMisalignmentsArrayPath(DREAM3D::Defaults::SomePath),
   m_FeatureParentIdsArrayPath(DREAM3D::Defaults::SomePath),
   m_CrystalStructuresArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellEnsembleAttributeMatrixName, DREAM3D::EnsembleData::CrystalStructures),
+  m_UnbiasedLocalCAxisMisalignmentsArrayName(DREAM3D::FeatureData::UnbiasedLocalCAxisMisalignments),
+  m_NumFeaturesPerParentArrayName(DREAM3D::FeatureData::NumFeaturesPerParent),
   m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
   m_FeatureIds(NULL),
   m_CellParentIdsArrayName(DREAM3D::CellData::ParentIds),
   m_CellParentIds(NULL),
   m_FeatureParentIdsArrayName(DREAM3D::FeatureData::ParentIds),
   m_FeatureParentIds(NULL),
-  m_NumFeaturesPerParentArrayName(DREAM3D::FeatureData::NumFeaturesPerParent),
   m_NumFeaturesPerParent(NULL),
   m_AvgCAxisMisalignmentsArrayName(DREAM3D::FeatureData::AvgCAxisMisalignments),
   m_AvgCAxisMisalignments(NULL),
-  m_LocalCAxisMisalignmentsArrayName(DREAM3D::FeatureData::LocalCAxisMisalignments),
   m_LocalCAxisMisalignments(NULL),
-  m_UnbiasedLocalCAxisMisalignmentsArrayName(DREAM3D::FeatureData::UnbiasedLocalCAxisMisalignments),
   m_UnbiasedLocalCAxisMisalignments(NULL),
   m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
   m_CrystalStructures(NULL)
@@ -312,6 +311,8 @@ AbstractFilter::Pointer FindLocalAverageCAxisMisalignments::newFilterInstance(bo
   FindLocalAverageCAxisMisalignments::Pointer filter = FindLocalAverageCAxisMisalignments::New();
   if(true == copyFilterParameters)
   {
+    filter->setFilterParameters(getFilterParameters() );
+    
     //Loop over each Filter Parameter that is registered to the filter either through this class or a parent class
     // and copy the value from the current instance of the object into the "new" instance that was just created
     QVector<FilterParameter::Pointer> options = getFilterParameters(); // Get the current set of filter parameters
@@ -330,6 +331,22 @@ AbstractFilter::Pointer FindLocalAverageCAxisMisalignments::newFilterInstance(bo
         QString ss = QString("Error occurred transferring the Filter Parameter '%1' in Filter '%2' to the filter instance. The pipeline may run but the underlying filter will NOT be using the values from the GUI."
                              " Please report this issue to the developers of this filter.").arg(parameter->getPropertyName()).arg(filter->getHumanLabel());
         Q_ASSERT_X(ok, __FILE__, ss.toLatin1().constData());
+      }
+
+      if(parameter->isConditional() == true)
+      {
+        QVariant cond = property(parameter->getConditionalProperty().toLatin1().constData() );
+        ok = filter->setProperty(parameter->getConditionalProperty().toLatin1().constData(), cond);
+        if(false == ok)
+        {
+          QString ss = QString("%1::newFilterInstance()\nError occurred transferring the Filter Parameter '%2' in Filter '%3' to the filter instance. "
+                              " The filter parameter has a conditional property '%4'. The transfer of this property from the old filter to the new filter failed."
+                              " Please report this issue to the developers of this filter.").arg(filter->getNameOfClass())
+                              .arg(parameter->getPropertyName())
+                              .arg(filter->getHumanLabel())
+                              .arg(parameter->getConditionalProperty());
+          Q_ASSERT_X(ok, __FILE__, ss.toLatin1().constData());
+        }
       }
     }
   }

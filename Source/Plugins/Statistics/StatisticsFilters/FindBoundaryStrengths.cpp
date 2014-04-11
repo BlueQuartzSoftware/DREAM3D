@@ -50,6 +50,10 @@ FindBoundaryStrengths::FindBoundaryStrengths() :
   m_AvgQuatsArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, DREAM3D::FeatureData::AvgQuats),
   m_FeaturePhasesArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, DREAM3D::FeatureData::Phases),
   m_CrystalStructuresArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellEnsembleAttributeMatrixName, DREAM3D::EnsembleData::CrystalStructures),
+  m_SurfaceMeshF1sArrayName(DREAM3D::FaceData::SurfaceMeshF1s),
+  m_SurfaceMeshF1sptsArrayName(DREAM3D::FaceData::SurfaceMeshF1spts),
+  m_SurfaceMeshF7sArrayName(DREAM3D::FaceData::SurfaceMeshF7s),
+  m_SurfaceMeshmPrimesArrayName(DREAM3D::FaceData::SurfaceMeshmPrimes),
   m_FeaturePhasesArrayName(DREAM3D::FeatureData::Phases),
   m_FeaturePhases(NULL),
   m_AvgQuatsArrayName(DREAM3D::FeatureData::AvgQuats),
@@ -58,13 +62,9 @@ FindBoundaryStrengths::FindBoundaryStrengths() :
   m_CrystalStructures(NULL),
   m_SurfaceMeshFaceLabelsArrayName(DREAM3D::FaceData::SurfaceMeshFaceLabels),
   m_SurfaceMeshFaceLabels(NULL),
-  m_SurfaceMeshF1sArrayName(DREAM3D::FaceData::SurfaceMeshF1s),
   m_SurfaceMeshF1s(NULL),
-  m_SurfaceMeshF1sptsArrayName(DREAM3D::FaceData::SurfaceMeshF1spts),
   m_SurfaceMeshF1spts(NULL),
-  m_SurfaceMeshF7sArrayName(DREAM3D::FaceData::SurfaceMeshF7s),
   m_SurfaceMeshF7s(NULL),
-  m_SurfaceMeshmPrimesArrayName(DREAM3D::FaceData::SurfaceMeshmPrimes),
   m_SurfaceMeshmPrimes(NULL)
 {
   m_OrientationOps = OrientationOps::getOrientationOpsVector();
@@ -316,6 +316,8 @@ AbstractFilter::Pointer FindBoundaryStrengths::newFilterInstance(bool copyFilter
   FindBoundaryStrengths::Pointer filter = FindBoundaryStrengths::New();
   if(true == copyFilterParameters)
   {
+    filter->setFilterParameters(getFilterParameters() );
+    
     //Loop over each Filter Parameter that is registered to the filter either through this class or a parent class
     // and copy the value from the current instance of the object into the "new" instance that was just created
     QVector<FilterParameter::Pointer> options = getFilterParameters(); // Get the current set of filter parameters
@@ -334,6 +336,22 @@ AbstractFilter::Pointer FindBoundaryStrengths::newFilterInstance(bool copyFilter
         QString ss = QString("Error occurred transferring the Filter Parameter '%1' in Filter '%2' to the filter instance. The pipeline may run but the underlying filter will NOT be using the values from the GUI."
                              " Please report this issue to the developers of this filter.").arg(parameter->getPropertyName()).arg(filter->getHumanLabel());
         Q_ASSERT_X(ok, __FILE__, ss.toLatin1().constData());
+      }
+
+      if(parameter->isConditional() == true)
+      {
+        QVariant cond = property(parameter->getConditionalProperty().toLatin1().constData() );
+        ok = filter->setProperty(parameter->getConditionalProperty().toLatin1().constData(), cond);
+        if(false == ok)
+        {
+          QString ss = QString("%1::newFilterInstance()\nError occurred transferring the Filter Parameter '%2' in Filter '%3' to the filter instance. "
+                              " The filter parameter has a conditional property '%4'. The transfer of this property from the old filter to the new filter failed."
+                              " Please report this issue to the developers of this filter.").arg(filter->getNameOfClass())
+                              .arg(parameter->getPropertyName())
+                              .arg(filter->getHumanLabel())
+                              .arg(parameter->getConditionalProperty());
+          Q_ASSERT_X(ok, __FILE__, ss.toLatin1().constData());
+        }
       }
     }
   }

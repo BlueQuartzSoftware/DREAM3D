@@ -65,7 +65,6 @@
 PatchGroupMicroTextureRegions::PatchGroupMicroTextureRegions() :
   GroupFeatures(),
   m_NewCellFeatureAttributeMatrixName(DREAM3D::Defaults::NewCellFeatureAttributeMatrixName),
-  m_NeighborhoodListArrayName(DREAM3D::FeatureData::NeighborhoodList),
   m_CAxisTolerance(1.0f),
   m_UseRunningAverage(false),
   m_MinMTRSize(1.0f),
@@ -77,25 +76,26 @@ PatchGroupMicroTextureRegions::PatchGroupMicroTextureRegions() :
   m_AvgQuatsArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, DREAM3D::FeatureData::AvgQuats),
   m_CrystalStructuresArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellEnsembleAttributeMatrixName, DREAM3D::EnsembleData::CrystalStructures),
   m_CellParentIdsArrayName(DREAM3D::CellData::ParentIds),
-  m_CellParentIds(NULL),
   m_FeatureParentIdsArrayName(DREAM3D::FeatureData::ParentIds),
-  m_FeatureParentIds(NULL),
   m_NumCellsArrayName(DREAM3D::FeatureData::NumCells),
-  m_NumCells(NULL),
   m_ActiveArrayName(DREAM3D::FeatureData::Active),
-  m_Active(NULL),
   m_NeighborhoodsArrayName(DREAM3D::FeatureData::Neighborhoods),
-  m_Neighborhoods(NULL),
+  m_NeighborhoodListArrayName(DREAM3D::FeatureData::NeighborhoodList),
   m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
   m_FeatureIds(NULL),
+  m_CellParentIds(NULL),
+  m_FeatureParentIds(NULL),
   m_AvgQuatsArrayName(DREAM3D::FeatureData::AvgQuats),
   m_AvgQuats(NULL),
+  m_Active(NULL),
   m_FeaturePhasesArrayName(DREAM3D::FeatureData::Phases),
   m_FeaturePhases(NULL),
   m_VolumesArrayName(DREAM3D::FeatureData::Volumes),
   m_Volumes(NULL),
+  m_NumCells(NULL),
   m_CentroidsArrayName(DREAM3D::FeatureData::Centroids),
   m_Centroids(NULL),
+  m_Neighborhoods(NULL),
   m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
   m_CrystalStructures(NULL)
 {
@@ -559,24 +559,24 @@ size_t PatchGroupMicroTextureRegions::determinePatchFeatureCentroids()
   for(size_t i = 0; i < zPoints; i++)
   {
     for (size_t j = 0; j < yPoints; j++)
-	{
-	  for(size_t k = 0; k < xPoints; k++)
-	  {
+  {
+    for(size_t k = 0; k < xPoints; k++)
+    {
       patchIntervalZ = int(i/patchEdgeLengthZ) * xPatch * yPatch;
-		  patchIntervalY = int(j/patchEdgeLengthY) * xPatch;
-		  patchIntervalX = int(k/patchEdgeLengthX);
-		  patchnum = patchIntervalZ + patchIntervalY + patchIntervalX;
-		  m_CellParentIds[count] = patchnum + 1;
-		  x = float(k) * xRes;
-		  y = float(j) * yRes;
-		  z = float(i) * zRes;
-		  patchCenters[patchnum * 5 + 0]++;
-		  patchCenters[patchnum * 5 + 1] = patchCenters[patchnum * 5 + 1] + x;
-		  patchCenters[patchnum * 5 + 2] = patchCenters[patchnum * 5 + 2] + y;
-		  patchCenters[patchnum * 5 + 3] = patchCenters[patchnum * 5 + 3] + z;
-		  ++count;
-	  }
-	}
+      patchIntervalY = int(j/patchEdgeLengthY) * xPatch;
+      patchIntervalX = int(k/patchEdgeLengthX);
+      patchnum = patchIntervalZ + patchIntervalY + patchIntervalX;
+      m_CellParentIds[count] = patchnum + 1;
+      x = float(k) * xRes;
+      y = float(j) * yRes;
+      z = float(i) * zRes;
+      patchCenters[patchnum * 5 + 0]++;
+      patchCenters[patchnum * 5 + 1] = patchCenters[patchnum * 5 + 1] + x;
+      patchCenters[patchnum * 5 + 2] = patchCenters[patchnum * 5 + 2] + y;
+      patchCenters[patchnum * 5 + 3] = patchCenters[patchnum * 5 + 3] + z;
+      ++count;
+    }
+  }
   }
 
   // FIX - check for some roundoff error
@@ -588,11 +588,11 @@ size_t PatchGroupMicroTextureRegions::determinePatchFeatureCentroids()
     patchCentroids[3 * i] = patchCenters[i * 5 + 1];
     patchCentroids[3 * i + 1] = patchCenters[i * 5 + 2];
     patchCentroids[3 * i + 2] = patchCenters[i * 5 + 3];
-	  // debugging lines
-	  float checkPatchCentersx = patchCentroids[3 * i];
-	  float checkPatchCentersy = patchCentroids[3 * i + 1];
-	  float checkPatchCentersz = patchCentroids[3 * i + 2];
-	  int stop = 0;
+    // debugging lines
+//	  float checkPatchCentersx = patchCentroids[3 * i];
+//	  float checkPatchCentersy = patchCentroids[3 * i + 1];
+//	  float checkPatchCentersz = patchCentroids[3 * i + 2];
+//	  int stop = 0;
   }
 
   return totalPatches;
@@ -616,21 +616,21 @@ void PatchGroupMicroTextureRegions::determinePatchFeatureVolumes(size_t totalPat
 #endif
 
   // taking sphere (circle) eq dia as the critical distance
-  float patchCriticalDistance, patchVolume, radsquared, radcubed, res_scalar = 0.0f;
+  float patchCriticalDistance, patchVolume, radsquared, radcubed = 0.0f;
   // if 2D...
   if (m->getXPoints() == 1 || m->getYPoints() == 1 || m->getZPoints() == 1)
   {
-	patchVolume = m_MinMTRSize * m_MinMTRSize;
-	radsquared = patchVolume / DREAM3D::Constants::k_Pi;
-	patchCriticalDistance = 2.0f * sqrtf(radsquared);
+  patchVolume = m_MinMTRSize * m_MinMTRSize;
+  radsquared = patchVolume / DREAM3D::Constants::k_Pi;
+  patchCriticalDistance = 2.0f * sqrtf(radsquared);
   }
   // if 3D...
   else
   {
-	float vol_term = static_cast<double>( (4.0f / 3.0f) * DREAM3D::Constants::k_Pi );
-	patchVolume = m_MinMTRSize * m_MinMTRSize * m_MinMTRSize;
-	radcubed = patchVolume / vol_term;
-	patchCriticalDistance = 2.0f * powf(radcubed, 0.3333333333f);
+  float vol_term = static_cast<double>( (4.0f / 3.0f) * DREAM3D::Constants::k_Pi );
+  patchVolume = m_MinMTRSize * m_MinMTRSize * m_MinMTRSize;
+  radcubed = patchVolume / vol_term;
+  patchCriticalDistance = 2.0f * powf(radcubed, 0.3333333333f);
   }
 
   // bin features according to critical distance
@@ -699,17 +699,17 @@ void PatchGroupMicroTextureRegions::determinePatchFeatureVolumes(size_t totalPat
 
   size_t zStride, yStride;
   for (size_t l = 0; l < totalFeatures * 3; l+=3)
-  {   
-	int i = m_Centroids[l+0] * xRes;
-	int j = m_Centroids[l+1] * yRes;
-	int k = m_Centroids[l+2] * zRes;
+  {
+  int i = m_Centroids[l+0] * xRes;
+  int j = m_Centroids[l+1] * yRes;
+  int k = m_Centroids[l+2] * zRes;
     zStride = i * xPoints * yPoints;
     yStride = j * xPoints;
     int pnum = m_CellParentIds[zStride + yStride + k];
-	int fnum = m_FeatureIds[int(l * 0.3333333f)];
-	patchFeatureList[pnum].push_back(fnum); 
-	// debugging line
-	int stop = 0;
+  int fnum = m_FeatureIds[int(l * 0.3333333f)];
+  patchFeatureList[pnum].push_back(fnum);
+  // debugging line
+  int stop = 0;
   }
 
 /*
@@ -771,10 +771,10 @@ bool PatchGroupMicroTextureRegions::growPatch(int currentPatch)
   float patchVolume = 0.0f;
   if (m->getXPoints() == 1 || m->getYPoints() == 1 || m->getZPoints() == 1) { patchVolume = m_MinMTRSize * m_MinMTRSize; }
   else { patchVolume = m_MinMTRSize * m_MinMTRSize * m_MinMTRSize; }
-  // debugging lines
-  float check1 = patchFeatureVolumeFractions[currentPatch];
-  float check = patchFeatureVolumeFractions[currentPatch] / patchVolume;
-  int stop = 0;
+//  // debugging lines
+//  float check1 = patchFeatureVolumeFractions[currentPatch];
+//  float check = patchFeatureVolumeFractions[currentPatch] / patchVolume;
+//  int stop = 0;
   // only flag as an MTR if above the threshold volume fraction of c-axis aligns alpha globs within the patch
   if ((patchFeatureVolumeFractions[currentPatch] / patchVolume) > m_PatchVolumeFractionForMTRGrowth) { return true; }
   else { return false; }
@@ -834,7 +834,7 @@ bool PatchGroupMicroTextureRegions::growGrouping(int referenceFeature, int neigh
     }
     phase2 = m_CrystalStructures[m_FeaturePhases[neighborFeature]];
 
-	// only line that is different from determine grouping
+  // only line that is different from determine grouping
     if (growPatch(newFid) == true) { m_FeatureParentIds[neighborFeature] = newFid; }
     if (phase1 == phase2 && (phase1 == Ebsd::CrystalStructure::Hexagonal_High) )
     {
@@ -875,6 +875,8 @@ AbstractFilter::Pointer PatchGroupMicroTextureRegions::newFilterInstance(bool co
   PatchGroupMicroTextureRegions::Pointer filter = PatchGroupMicroTextureRegions::New();
   if(true == copyFilterParameters)
   {
+    filter->setFilterParameters(getFilterParameters() );
+
     //Loop over each Filter Parameter that is registered to the filter either through this class or a parent class
     // and copy the value from the current instance of the object into the "new" instance that was just created
     QVector<FilterParameter::Pointer> options = getFilterParameters(); // Get the current set of filter parameters
@@ -893,6 +895,22 @@ AbstractFilter::Pointer PatchGroupMicroTextureRegions::newFilterInstance(bool co
         QString ss = QString("Error occurred transferring the Filter Parameter '%1' in Filter '%2' to the filter instance. The pipeline may run but the underlying filter will NOT be using the values from the GUI."
                              " Please report this issue to the developers of this filter.").arg(parameter->getPropertyName()).arg(filter->getHumanLabel());
         Q_ASSERT_X(ok, __FILE__, ss.toLatin1().constData());
+      }
+
+      if(parameter->isConditional() == true)
+      {
+        QVariant cond = property(parameter->getConditionalProperty().toLatin1().constData() );
+        ok = filter->setProperty(parameter->getConditionalProperty().toLatin1().constData(), cond);
+        if(false == ok)
+        {
+          QString ss = QString("%1::newFilterInstance()\nError occurred transferring the Filter Parameter '%2' in Filter '%3' to the filter instance. "
+                              " The filter parameter has a conditional property '%4'. The transfer of this property from the old filter to the new filter failed."
+                              " Please report this issue to the developers of this filter.").arg(filter->getNameOfClass())
+                              .arg(parameter->getPropertyName())
+                              .arg(filter->getHumanLabel())
+                              .arg(parameter->getConditionalProperty());
+          Q_ASSERT_X(ok, __FILE__, ss.toLatin1().constData());
+        }
       }
     }
   }

@@ -104,6 +104,8 @@ class DREAM3DWidgetsLib_EXPORT DataArraySelectionWidget : public QWidget, privat
 
     void on_attributeArrayList_currentIndexChanged(int index);
 
+    void on_conditionalCB_stateChanged(int state);
+
   protected:
     void populateComboBoxes();
     void populateAttributeMatrixList();

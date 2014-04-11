@@ -47,7 +47,9 @@ FilterParameter::FilterParameter() :
   m_Units(""),
   m_FileExtension(""),
   m_FileType(""),
-  m_CastableValueType("")
+  m_CastableValueType(""),
+  m_Conditional(false),
+  m_ConditionalProperty("")
 {}
 
 // -----------------------------------------------------------------------------

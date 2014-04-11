@@ -47,6 +47,7 @@ public:
   ~FilterParameterWidgetsDialogs();
 
   static void ShowCouldNotSetFilterParameter(AbstractFilter* filter, FilterParameter* filterParameter);
+  static void ShowCouldNotSetConditionalFilterParameter(AbstractFilter* filter, FilterParameter* filterParameter);
   static void ShowFilterPropertyCastError(AbstractFilter* filter, FilterParameter* filterParameter, const QString& filtType, const QString& widgetType);
 
 protected:
