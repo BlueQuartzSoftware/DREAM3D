@@ -34,7 +34,7 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include "FilterInputDockWidget.h"
+#include "FilterInputWidget.h"
 
 #include <QtCore/QFileInfo>
 #include <QtGui/QLabel>
@@ -46,12 +46,12 @@
 
 #include "DREAM3DWidgetsLib/Widgets/PipelineFilterWidget.h"
 
-#include "DREAM3DWidgetsLib/moc_FilterInputDockWidget.cpp"
+#include "DREAM3DWidgetsLib/moc_FilterInputWidget.cpp"
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FilterInputDockWidget::FilterInputDockWidget(QWidget* parent) :
+FilterInputWidget::FilterInputWidget(QWidget* parent) :
   QWidget(parent)
 {
   setupUi(this);
@@ -62,7 +62,7 @@ FilterInputDockWidget::FilterInputDockWidget(QWidget* parent) :
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FilterInputDockWidget::~FilterInputDockWidget()
+FilterInputWidget::~FilterInputWidget()
 {
 }
 
@@ -71,14 +71,14 @@ FilterInputDockWidget::~FilterInputDockWidget()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FilterInputDockWidget::setupGui()
+void FilterInputWidget::setupGui()
 {
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FilterInputDockWidget::clearInputWidgets()
+void FilterInputWidget::clearInputWidgets()
 {
   QWidget* widget = scrollArea->takeWidget();
   scrollArea->setWidget(new QFrame);
@@ -87,7 +87,7 @@ void FilterInputDockWidget::clearInputWidgets()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FilterInputDockWidget::removeWidgetInputs(PipelineFilterWidget* w)
+void FilterInputWidget::removeWidgetInputs(PipelineFilterWidget* w)
 {
   // Check to see if the filter that just got removed from the pipeline is the one we are displaying
   // the inputs for.
@@ -101,7 +101,7 @@ void FilterInputDockWidget::removeWidgetInputs(PipelineFilterWidget* w)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FilterInputDockWidget::displayFilterParameters(PipelineFilterWidget* w)
+void FilterInputWidget::displayFilterParameters(PipelineFilterWidget* w)
 {
 
   QWidget* widget = scrollArea->takeWidget();

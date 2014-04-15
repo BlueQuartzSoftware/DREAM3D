@@ -84,6 +84,7 @@ class DREAM3DWidgetsLib_EXPORT OutputPathWidget : public QWidget, private Ui::Ou
     void on_value_textChanged(const QString& text);
     void on_value_editingFinished();
     void on_selectBtn_clicked();
+    void on_conditionalCB_stateChanged(int state);
 
   signals:
     void errorSettingFilterParameter(const QString& msg);
@@ -95,6 +96,7 @@ class DREAM3DWidgetsLib_EXPORT OutputPathWidget : public QWidget, private Ui::Ou
     AbstractFilter*   m_Filter;
     FilterParameter*  m_FilterParameter;
     static QString    m_OpenDialogLastDirectory;
+    bool m_DidCausePreflight;
 
     OutputPathWidget(const OutputPathWidget&); // Copy Constructor Not Implemented
     void operator=(const OutputPathWidget&); // Operator '=' Not Implemented

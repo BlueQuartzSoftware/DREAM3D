@@ -89,6 +89,7 @@ class DREAM3DWidgetsLib_EXPORT InputPathWidget : public QWidget, private Ui::Inp
     void on_value_textChanged(const QString& text);
     void on_value_editingFinished();
     void on_selectBtn_clicked();
+    void on_conditionalCB_stateChanged(int state);
 
   signals:
     void errorSettingFilterParameter(const QString& msg);
@@ -98,6 +99,7 @@ class DREAM3DWidgetsLib_EXPORT InputPathWidget : public QWidget, private Ui::Inp
     AbstractFilter*   m_Filter;
     FilterParameter*  m_FilterParameter;
     static QString    m_OpenDialogLastDirectory;
+    bool m_DidCausePreflight;
 
     InputPathWidget(const InputPathWidget&); // Copy Constructor Not Implemented
     void operator=(const InputPathWidget&); // Operator '=' Not Implemented

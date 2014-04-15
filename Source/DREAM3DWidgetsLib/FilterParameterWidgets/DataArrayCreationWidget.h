@@ -104,6 +104,7 @@ class DREAM3DWidgetsLib_EXPORT DataArrayCreationWidget : public QWidget, private
 
     void on_dataArrayName_textChanged(const QString& string);
     void on_dataArrayName_returnPressed();
+    void on_conditionalCB_stateChanged(int state);
 
   protected:
     void populateComboBoxes();

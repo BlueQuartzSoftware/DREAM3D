@@ -92,6 +92,7 @@ class ComparisonSelectionWidget : public QWidget, private Ui::ComparisonSelectio
     void beforePreflight();
     void afterPreflight();
     void filterNeedsInputParameters(AbstractFilter* filter);
+    void on_conditionalCB_stateChanged(int state);
 
   signals:
     void errorSettingFilterParameter(const QString& msg);

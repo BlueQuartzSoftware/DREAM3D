@@ -10,7 +10,7 @@
     <height>203</height>
    </rect>
   </property>
-  <layout class="QGridLayout" name="gridLayout">
+  <layout class="QGridLayout" name="widgetLayout">
    <property name="margin">
     <number>2</number>
    </property>

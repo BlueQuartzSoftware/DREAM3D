@@ -25,7 +25,7 @@
   <property name="windowTitle">
    <string>About PluginMaker©</string>
   </property>
-  <layout class="QGridLayout" name="gridLayout">
+  <layout class="QGridLayout" name="widgetLayout">
    <item row="0" column="0" colspan="2">
     <widget class="QTextEdit" name="textEdit">
      <property name="sizePolicy">

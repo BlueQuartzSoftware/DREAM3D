@@ -82,6 +82,7 @@ class DREAM3DWidgetsLib_EXPORT StringWidget : public QWidget, private Ui::String
 
     void widgetChanged(const QString& msg);
     void on_value_returnPressed();
+    void on_conditionalCB_stateChanged(int state);
 
   signals:
     void errorSettingFilterParameter(const QString& msg);
@@ -90,6 +91,7 @@ class DREAM3DWidgetsLib_EXPORT StringWidget : public QWidget, private Ui::String
   private:
     AbstractFilter*   m_Filter;
     FilterParameter*  m_FilterParameter;
+    bool m_DidCausePreflight;
 
     StringWidget(const StringWidget&); // Copy Constructor Not Implemented
     void operator=(const StringWidget&); // Operator '=' Not Implemented

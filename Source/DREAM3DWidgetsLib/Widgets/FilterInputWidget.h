@@ -33,8 +33,8 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef _FilterInputDockWidget_H_
-#define _FilterInputDockWidget_H_
+#ifndef _FilterInputWidget_H_
+#define _FilterInputWidget_H_
 
 
 #include <QtGui/QWidget>
@@ -43,20 +43,20 @@
 
 #include "DREAM3DWidgetsLib/DREAM3DWidgetsLib.h"
 
-#include "ui_FilterInputDockWidget.h"
+#include "ui_FilterInputWidget.h"
 
 class PipelineFilterWidget;
 
 /**
- * @brief The FilterInputDockWidget class
+ * @brief The FilterInputWidget class
  */
-class DREAM3DWidgetsLib_EXPORT FilterInputDockWidget : public QWidget, private Ui::FilterInputDockWidget
+class DREAM3DWidgetsLib_EXPORT FilterInputWidget : public QWidget, private Ui::FilterInputWidget
 {
 
     Q_OBJECT
   public:
-    FilterInputDockWidget(QWidget* parent = NULL);
-    virtual ~FilterInputDockWidget();
+    FilterInputWidget(QWidget* parent = NULL);
+    virtual ~FilterInputWidget();
 
     virtual void setupGui();
 
@@ -75,10 +75,10 @@ class DREAM3DWidgetsLib_EXPORT FilterInputDockWidget : public QWidget, private U
   private:
 
 
-    FilterInputDockWidget(const FilterInputDockWidget&); // Copy Constructor Not Implemented
-    void operator=(const FilterInputDockWidget&); // Operator '=' Not Implemented
+    FilterInputWidget(const FilterInputWidget&); // Copy Constructor Not Implemented
+    void operator=(const FilterInputWidget&); // Operator '=' Not Implemented
 
 
 };
 
-#endif /* end FilterInputDockWidget */
+#endif /* end FilterInputWidget */

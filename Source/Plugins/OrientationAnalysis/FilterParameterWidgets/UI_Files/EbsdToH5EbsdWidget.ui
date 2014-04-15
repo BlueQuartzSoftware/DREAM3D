@@ -457,7 +457,7 @@ font-size: 12px;
     </layout>
    </item>
    <item row="0" column="0">
-    <layout class="QGridLayout" name="gridLayout">
+    <layout class="QGridLayout" name="widgetLayout">
      <property name="topMargin">
       <number>0</number>
      </property>

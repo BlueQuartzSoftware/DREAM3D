@@ -22,7 +22,7 @@
   <property name="title">
    <string/>
   </property>
-  <layout class="QGridLayout" name="gridLayout">
+  <layout class="QGridLayout" name="widgetLayout">
    <property name="verticalSpacing">
     <number>4</number>
    </property>

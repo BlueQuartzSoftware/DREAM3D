@@ -81,6 +81,7 @@ class DREAM3DWidgetsLib_EXPORT IntWidget : public QWidget, private Ui::IntWidget
     void beforePreflight();
     void afterPreflight();
     void filterNeedsInputParameters(AbstractFilter* filter);
+    void on_conditionalCB_stateChanged(int state);
 
   signals:
     void errorSettingFilterParameter(const QString& msg);
@@ -89,6 +90,7 @@ class DREAM3DWidgetsLib_EXPORT IntWidget : public QWidget, private Ui::IntWidget
   private:
     AbstractFilter*   m_Filter;
     FilterParameter*  m_FilterParameter;
+    bool m_DidCausePreflight;
 
     IntWidget(const IntWidget&); // Copy Constructor Not Implemented
     void operator=(const IntWidget&); // Operator '=' Not Implemented

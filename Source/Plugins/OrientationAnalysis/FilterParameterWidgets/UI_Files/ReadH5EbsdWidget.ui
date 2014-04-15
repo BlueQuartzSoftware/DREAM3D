@@ -716,7 +716,7 @@ font-size: 10px;
     </layout>
    </item>
    <item>
-    <layout class="QGridLayout" name="gridLayout">
+    <layout class="QGridLayout" name="widgetLayout">
      <item row="2" column="2">
       <widget class="QSpinBox" name="m_ZEndIndex">
        <property name="minimumSize">

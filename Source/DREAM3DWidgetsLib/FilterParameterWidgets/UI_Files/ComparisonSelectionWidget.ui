@@ -6,21 +6,12 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>498</width>
-    <height>203</height>
+    <width>564</width>
+    <height>129</height>
    </rect>
   </property>
-  <layout class="QGridLayout" name="gridLayout">
-   <property name="leftMargin">
-    <number>2</number>
-   </property>
-   <property name="topMargin">
-    <number>2</number>
-   </property>
-   <property name="rightMargin">
-    <number>2</number>
-   </property>
-   <property name="bottomMargin">
+  <layout class="QGridLayout" name="widgetLayout">
+   <property name="margin">
     <number>2</number>
    </property>
    <property name="spacing">

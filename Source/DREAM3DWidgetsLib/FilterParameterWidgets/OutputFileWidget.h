@@ -91,6 +91,7 @@ class DREAM3DWidgetsLib_EXPORT OutputFileWidget : public QWidget, private Ui::Ou
     void on_value_editingFinished();
     void on_value_textChanged(const QString& text);
     void on_selectBtn_clicked();
+    void on_conditionalCB_stateChanged(int state);
 
   protected:
     static void setOpenDialogLastDirectory(QString val) { m_OpenDialogLastDirectory = val; }
@@ -104,6 +105,7 @@ class DREAM3DWidgetsLib_EXPORT OutputFileWidget : public QWidget, private Ui::Ou
     AbstractFilter*   m_Filter;
     FilterParameter*  m_FilterParameter;
     static QString    m_OpenDialogLastDirectory;
+    bool m_DidCausePreflight;
 
     OutputFileWidget(const OutputFileWidget&); // Copy Constructor Not Implemented
     void operator=(const OutputFileWidget&); // Operator '=' Not Implemented
