@@ -63,14 +63,6 @@ class GenerateFaceIPFColoring : public SurfaceMeshFilter
     DREAM3D_TYPE_MACRO_SUPER(GenerateFaceIPFColoring, SurfaceMeshFilter)
 
     virtual ~GenerateFaceIPFColoring();
-    DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(CellFeatureAttributeMatrixName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(CellEnsembleAttributeMatrixName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(FaceAttributeMatrixName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceDataContainerName)
-
-
-    /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
 
     /**
     * @brief This returns the group that the filter belonds to. You can select

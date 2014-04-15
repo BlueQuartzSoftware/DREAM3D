@@ -66,12 +66,8 @@ class FindGBCD : public SurfaceMeshFilter
     DREAM3D_TYPE_MACRO_SUPER(FindGBCD, SurfaceMeshFilter)
 
     virtual ~FindGBCD();
-    DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceDataContainerName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(FaceAttributeMatrixName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(FaceEnsembleAttributeMatrixName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(CellFeatureAttributeMatrixName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(CellEnsembleAttributeMatrixName)
+    DREAM3D_FILTER_PARAMETER(QString, FaceEnsembleAttributeMatrixName)
+    Q_PROPERTY(QString FaceEnsembleAttributeMatrixName READ getFaceEnsembleAttributeMatrixName WRITE setFaceEnsembleAttributeMatrixName)
 
     DREAM3D_FILTER_PARAMETER(float, GBCDRes)
     Q_PROPERTY(float GBCDRes READ getGBCDRes WRITE setGBCDRes)

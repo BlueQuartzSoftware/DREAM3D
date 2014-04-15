@@ -188,7 +188,6 @@ void LaplacianSmoothing::setupFilterParameters()
   parameters.push_back(FilterParameter::New("Triple Line Lambda", "TripleLineLambda", FilterParameterWidgetType::DoubleWidget,"float", false));
   parameters.push_back(FilterParameter::New("Quad Points Lambda", "QuadPointLambda", FilterParameterWidgetType::DoubleWidget,"float", false));
   parameters.push_back(FilterParameter::New("Outer Points Lambda", "SurfacePointLambda", FilterParameterWidgetType::DoubleWidget,"float", false));
-
   parameters.push_back(FilterParameter::New("Outer Triple Line Lambda", "SurfaceTripleLineLambda", FilterParameterWidgetType::DoubleWidget,"float", false));
   parameters.push_back(FilterParameter::New("Outer Quad Points Lambda", "SurfaceQuadPointLambda", FilterParameterWidgetType::DoubleWidget,"float", false));
 
@@ -217,9 +216,6 @@ void LaplacianSmoothing::readFilterParameters(AbstractFilterParametersReader* re
 int LaplacianSmoothing::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  /* Place code that will write the inputs values into a file. reference the
-   AbstractFilterParametersWriter class for the proper API to use. */
-
   writer->writeValue("IterationSteps", getIterationSteps());
   writer->writeValue("Lambda", getLambda() );
   writer->writeValue("TripleLineLambda", getTripleLineLambda());

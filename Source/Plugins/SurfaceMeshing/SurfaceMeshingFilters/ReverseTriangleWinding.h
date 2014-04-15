@@ -61,7 +61,8 @@ class ReverseTriangleWinding : public SurfaceMeshFilter
     DREAM3D_TYPE_MACRO_SUPER(ReverseTriangleWinding, SurfaceMeshFilter)
 
     virtual ~ReverseTriangleWinding();
-    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceDataContainerName)
+    DREAM3D_FILTER_PARAMETER(QString, SurfaceDataContainerName)
+    Q_PROPERTY(QString SurfaceDataContainerName READ getSurfaceDataContainerName WRITE setSurfaceDataContainerName)
 
     /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
 

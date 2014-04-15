@@ -105,17 +105,18 @@ class M3CSliceBySlice : public AbstractFilter
     DREAM3D_TYPE_MACRO_SUPER(M3CSliceBySlice, AbstractFilter)
 
     virtual ~M3CSliceBySlice();
-    DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceDataContainerName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(VertexAttributeMatrixName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(FaceAttributeMatrixName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
+    DREAM3D_FILTER_PARAMETER(QString, SurfaceDataContainerName)
+    Q_PROPERTY(QString SurfaceDataContainerName READ getSurfaceDataContainerName WRITE setSurfaceDataContainerName)
+    DREAM3D_FILTER_PARAMETER(QString, VertexAttributeMatrixName)
+    Q_PROPERTY(QString VertexAttributeMatrixName READ getVertexAttributeMatrixName WRITE setVertexAttributeMatrixName)
+    DREAM3D_FILTER_PARAMETER(QString, FaceAttributeMatrixName)
+    Q_PROPERTY(QString FaceAttributeMatrixName READ getFaceAttributeMatrixName WRITE setFaceAttributeMatrixName)
 
-    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshTriangleLabelsArrayName)
+    DREAM3D_FILTER_PARAMETER(QString, FaceLabelsArrayName)
+    Q_PROPERTY(QString FaceLabelsArrayName READ getFaceLabelsArrayName WRITE setFaceLabelsArrayName)
 
     DREAM3D_FILTER_PARAMETER(bool, DeleteTempFiles)
     Q_PROPERTY(bool DeleteTempFiles READ getDeleteTempFiles WRITE setDeleteTempFiles)
-
 
     virtual void preflight();
 
@@ -415,6 +416,7 @@ class M3CSliceBySlice : public AbstractFilter
   private:
     DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeatureIds)
     DEFINE_PTR_WEAKPTR_DATAARRAY(int8_t, SurfaceMeshNodeType)
+    DEFINE_CREATED_DATAARRAY(int32_t, FaceLabels)
     int numfeatures;
 
     float m_OriginX, m_OriginY, m_OriginZ;

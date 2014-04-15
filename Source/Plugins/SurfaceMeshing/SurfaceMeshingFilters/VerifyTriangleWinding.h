@@ -62,15 +62,11 @@ class VerifyTriangleWinding : public SurfaceMeshFilter
 
     virtual ~VerifyTriangleWinding();
     DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceDataContainerName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(FaceAttributeMatrixName)
     DREAM3D_INSTANCE_STRING_PROPERTY(EdgeAttributeMatrixName)
     DREAM3D_INSTANCE_STRING_PROPERTY(VertexAttributeMatrixName)
 
     DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshUniqueEdgesArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshNodeFacesArrayName)
-
-    /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
-
 
     typedef QMap<int, QSet<int> >                      LabelFaceMap_t;
     typedef QVector<int32_t>                               FaceList_t;
@@ -162,7 +158,6 @@ signals:
      * @return
      */
     int32_t getSeedTriangle(int32_t label, QSet<int32_t>& triangleIndices);
-
 
   private:
     DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, SurfaceMeshFaceLabels)

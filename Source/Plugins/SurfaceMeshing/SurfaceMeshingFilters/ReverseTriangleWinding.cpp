@@ -117,7 +117,8 @@ ReverseTriangleWinding::~ReverseTriangleWinding()
 void ReverseTriangleWinding::setupFilterParameters()
 {
   FilterParameterVector parameters;
-
+  parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "QString", true));
+  parameters.push_back(FilterParameter::New("Surface Data Contaienr Name", "SurfaceDataContainerName", FilterParameterWidgetType::DataContainerSelectionWidget, "QString", true, ""));
   setFilterParameters(parameters);
 }
 
@@ -127,6 +128,7 @@ void ReverseTriangleWinding::setupFilterParameters()
 void ReverseTriangleWinding::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
+  setSurfaceDataContainerName(reader->readString("SurfaceDataContainerName", getSurfaceDataContainerName() ) );
   reader->closeFilterGroup();
 }
 
@@ -136,9 +138,7 @@ void ReverseTriangleWinding::readFilterParameters(AbstractFilterParametersReader
 int ReverseTriangleWinding::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  /* Place code that will write the inputs values into a file. reference the
-   AbstractFilterParametersWriter class for the proper API to use. */
-  /*  writer->writeValue("OutputFile", getOutputFile() ); */
+  writer->writeValue("SurfaceDataContainerName", getSurfaceDataContainerName() );
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
