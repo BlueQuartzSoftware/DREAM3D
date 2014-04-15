@@ -63,8 +63,6 @@ class DREAM3DLib_EXPORT LosAlamosFFTWriter : public FileWriter
 
 
     virtual ~LosAlamosFFTWriter();
-    DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
 
     DREAM3D_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
     Q_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
@@ -112,8 +110,8 @@ signals:
     DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeatureIds)
     DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, CellPhases)
     DEFINE_PTR_WEAKPTR_DATAARRAY(float, CellEulerAngles)
-    unsigned int* m_CrystalStructures;
-    StringDataArray::Pointer m_MaterialNames;
+    //unsigned int* m_CrystalStructures;
+    //StringDataArray::Pointer m_MaterialNames;
 
     void dataCheck();
 
