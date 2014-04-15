@@ -35,9 +35,6 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #include "AvizoRectilinearCoordinateWriter.h"
 
-
-
-
 #include <QtCore/QFileInfo>
 #include <QtCore/QDir>
 #include <QtCore/QFile>
@@ -48,12 +45,10 @@
 // -----------------------------------------------------------------------------
 AvizoRectilinearCoordinateWriter::AvizoRectilinearCoordinateWriter() :
   AbstractFilter(),
-  m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
-  m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
   m_OutputFile(""),
   m_WriteFeatureIds(true),
   m_WriteBinaryFile(false),
-/*[]*/m_FeatureIdsArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::FeatureIds),
+  m_FeatureIdsArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::FeatureIds),
   m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
   m_FeatureIds(NULL)
 {
@@ -76,7 +71,7 @@ void AvizoRectilinearCoordinateWriter::setupFilterParameters()
   parameters.push_back(FilterParameter::New("Output File", "OutputFile", FilterParameterWidgetType::OutputFileWidget,"QString", false, "", "*.am", "Amira Mesh"));
   parameters.push_back(FilterParameter::New("Write Binary File", "WriteBinaryFile", FilterParameterWidgetType::BooleanWidget,"bool", false));
   parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "QString", true));
-/*[]*/parameters.push_back(FilterParameter::New("FeatureIds", "FeatureIdsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
+  parameters.push_back(FilterParameter::New("FeatureIds", "FeatureIdsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
   setFilterParameters(parameters);
 }
 // -----------------------------------------------------------------------------
@@ -109,11 +104,6 @@ void AvizoRectilinearCoordinateWriter::dataCheck()
 {
   setErrorCondition(0);
 
-  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName(), false);
-  if(getErrorCondition() < 0 || NULL == m) { return; }
-  AttributeMatrix::Pointer cellAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), -301);
-  if(getErrorCondition() < 0 || NULL == cellAttrMat.get() ) { return; }
-
   if(m_OutputFile.isEmpty() == true)
   {
     QString ss = QObject::tr("The output file must be set before executing this filter.");
@@ -123,8 +113,7 @@ void AvizoRectilinearCoordinateWriter::dataCheck()
   if(m_WriteFeatureIds == true)
   {
     QVector<size_t> dims(1, 1);
-////====>REMOVE THIS      m_FeatureIdsPtr = cellAttrMat->getPrereqArray<DataArray<int32_t>, AbstractFilter>(this, m_FeatureIdsArrayName, -301, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  m_FeatureIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeatureIdsArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+    m_FeatureIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeatureIdsArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
     if( NULL != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
     { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   }
@@ -149,7 +138,6 @@ void AvizoRectilinearCoordinateWriter::execute()
 {
   int err = 0;
   setErrorCondition(err);
-
   dataCheck();
   if(getErrorCondition() < 0) { return; }
 
@@ -205,7 +193,7 @@ void AvizoRectilinearCoordinateWriter::generateHeader(QDataStream& ss)
   ss << "\n";
   ss << "# Dimensions in x-, y-, and z-direction\n";
   size_t x = 0, y = 0, z = 0;
-  getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName())->getDimensions(x, y, z);
+  getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(m_FeatureIdsArrayPath.getDataContainerName())->getDimensions(x, y, z);
   ss << "define Lattice " << (qint64)x << " " << (qint64)y << (qint64)z << "\n";
   ss << "define Coordinates " << (qint64)(x + y + z) << "\n\n";
 
@@ -219,9 +207,9 @@ void AvizoRectilinearCoordinateWriter::generateHeader(QDataStream& ss)
   ss << "         Coordinates \"microns\"\n";
   ss << "     }\n";
   float origin[3];
-  getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName())->getOrigin(origin);
+  getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(m_FeatureIdsArrayPath.getDataContainerName())->getOrigin(origin);
   float res[3];
-  getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName())->getResolution(res);
+  getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(m_FeatureIdsArrayPath.getDataContainerName())->getResolution(res);
 
   ss << "     CoordType \"rectilinear\"\n";
   ss << "}\n\n";
@@ -237,7 +225,7 @@ void AvizoRectilinearCoordinateWriter::generateHeader(QDataStream& ss)
 // -----------------------------------------------------------------------------
 int AvizoRectilinearCoordinateWriter::writeData(QDataStream& out)
 {
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(m_FeatureIdsArrayPath.getDataContainerName());
   size_t dims[3];
   m->getDimensions(dims);
   float origin[3];
@@ -249,14 +237,14 @@ int AvizoRectilinearCoordinateWriter::writeData(QDataStream& out)
   out << start;
   if (true == m_WriteBinaryFile)
   {
-    out.writeRawData(reinterpret_cast<char*>(m_FeatureIds), getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName())->getTotalPoints() * sizeof(int32_t));
+    out.writeRawData(reinterpret_cast<char*>(m_FeatureIds), m_FeatureIdsPtr.lock()->getNumberOfTuples() * sizeof(int32_t));
     //writer.writeArray(m_FeatureIds, getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName())->getTotalPoints());
     out << "\n";
   }
   else
   {
     // The "20 Items" is purely arbitrary and is put in to try and save some space in the ASCII file
-    int64_t totalPoints = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName())->getTotalPoints();
+    int64_t totalPoints = m_FeatureIdsPtr.lock()->getNumberOfTuples();
     int count = 0;
     QString ss;
     for (int64_t i = 0; i < totalPoints; ++i)
@@ -279,8 +267,6 @@ int AvizoRectilinearCoordinateWriter::writeData(QDataStream& out)
     // Pick up any remaining data that was not written because we did not have 20 items on a line.
     out << ss;
   }
-
-
 
   start = "@2 # x coordinates, then y, then z\n";
   out << start;

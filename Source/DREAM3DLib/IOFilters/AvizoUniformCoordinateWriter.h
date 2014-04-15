@@ -64,8 +64,6 @@ class DREAM3DLib_EXPORT AvizoUniformCoordinateWriter : public AbstractFilter
     DREAM3D_TYPE_MACRO_SUPER(AvizoUniformCoordinateWriter, AbstractFilter)
 
     virtual ~AvizoUniformCoordinateWriter();
-    DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
 
     DREAM3D_FILTER_PARAMETER(QString, OutputFile)
     Q_PROPERTY(QString OutputFile READ getOutputFile WRITE setOutputFile)

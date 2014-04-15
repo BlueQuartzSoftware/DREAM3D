@@ -47,12 +47,10 @@
 // -----------------------------------------------------------------------------
 AvizoUniformCoordinateWriter::AvizoUniformCoordinateWriter() :
   AbstractFilter(),
-  m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
-  m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
   m_OutputFile(""),
   m_WriteFeatureIds(true),
   m_WriteBinaryFile(false),
-/*[]*/m_FeatureIdsArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::FeatureIds),
+  m_FeatureIdsArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::FeatureIds),
   m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
   m_FeatureIds(NULL)
 {
@@ -75,7 +73,7 @@ void AvizoUniformCoordinateWriter::setupFilterParameters()
   parameters.push_back(FilterParameter::New("Output File", "OutputFile", FilterParameterWidgetType::OutputFileWidget,"QString", false, "", "*.am", "Amira Mesh"));
   parameters.push_back(FilterParameter::New("Write Binary File", "WriteBinaryFile", FilterParameterWidgetType::BooleanWidget,"bool", false));
   parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "QString", true));
-/*[]*/parameters.push_back(FilterParameter::New("FeatureIds", "FeatureIdsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
+  parameters.push_back(FilterParameter::New("FeatureIds", "FeatureIdsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
   setFilterParameters(parameters);
 }
 
@@ -109,11 +107,6 @@ void AvizoUniformCoordinateWriter::dataCheck()
 {
   setErrorCondition(0);
 
-  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName(), false);
-  if(getErrorCondition() < 0 || NULL == m) { return; }
-  AttributeMatrix::Pointer cellAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), -301);
-  if(getErrorCondition() < 0 || NULL == cellAttrMat.get() ) { return; }
-
   if(m_OutputFile.isEmpty() == true)
   {
     QString ss = QObject::tr("The output file must be set before executing this filter.");
@@ -123,8 +116,7 @@ void AvizoUniformCoordinateWriter::dataCheck()
   if(m_WriteFeatureIds == true)
   {
     QVector<size_t> dims(1, 1);
-////====>REMOVE THIS      m_FeatureIdsPtr = cellAttrMat->getPrereqArray<DataArray<int32_t>, AbstractFilter>(this, m_FeatureIdsArrayName, -301, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  m_FeatureIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeatureIdsArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+    m_FeatureIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeatureIdsArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
     if( NULL != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
     { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   }
@@ -148,7 +140,6 @@ void AvizoUniformCoordinateWriter::execute()
 {
   int err = 0;
   setErrorCondition(err);
-
   dataCheck();
   if(getErrorCondition() < 0) { return; }
 
@@ -203,7 +194,7 @@ void AvizoUniformCoordinateWriter::generateHeader(QDataStream& ss)
   ss << "\n";
   ss << "# Dimensions in x-, y-, and z-direction\n";
   size_t x = 0, y = 0, z = 0;
-  getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName())->getDimensions(x, y, z);
+  getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(m_FeatureIdsArrayPath.getDataContainerName())->getDimensions(x, y, z);
   ss << "define Lattice " << (qint32)x << " " << (qint32)y << " " << (qint32)z << "\n\n";
 
   ss << "Parameters {\n";
@@ -217,9 +208,9 @@ void AvizoUniformCoordinateWriter::generateHeader(QDataStream& ss)
   ss << "     }\n";
   ss << "     Content \"" << (qint32)x << "x" << (qint32)y << "x" << (qint32)z << " int, uniform coordinates\",\n";
   float origin[3];
-  getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName())->getOrigin(origin);
+  getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(m_FeatureIdsArrayPath.getDataContainerName())->getOrigin(origin);
   float res[3];
-  getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName())->getResolution(res);
+  getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(m_FeatureIdsArrayPath.getDataContainerName())->getResolution(res);
   ss << "     # Bounding Box is xmin xmax ymin ymax zmin zmax\n";
   ss << "     BoundingBox " << origin[0] << " " << origin[0] + (res[0] * x);
   ss << " " << origin[1] << " " << origin[1] + (res[1] * x);
@@ -243,12 +234,12 @@ int AvizoUniformCoordinateWriter::writeData(QDataStream& out)
   out << start;
   if(true == m_WriteBinaryFile)
   {
-    out.writeRawData(reinterpret_cast<char*>(m_FeatureIds), getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName())->getTotalPoints() * sizeof(int32_t));
+    out.writeRawData(reinterpret_cast<char*>(m_FeatureIds), m_FeatureIdsPtr.lock()->getNumberOfTuples() * sizeof(int32_t));
   }
   else
   {
     // The "20 Items" is purely arbitrary and is put in to try and save some space in the ASCII file
-    int64_t totalPoints = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName())->getTotalPoints();
+    int64_t totalPoints = m_FeatureIdsPtr.lock()->getNumberOfTuples();
     int count = 0;
     for (int64_t i = 0; i < totalPoints; ++i)
     {
@@ -269,7 +260,6 @@ int AvizoUniformCoordinateWriter::writeData(QDataStream& out)
   }
   return 1;
 }
-
 
 // -----------------------------------------------------------------------------
 //

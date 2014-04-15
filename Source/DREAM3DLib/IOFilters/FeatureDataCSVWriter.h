@@ -64,9 +64,8 @@ class DREAM3DLib_EXPORT FeatureDataCSVWriter : public AbstractFilter
     DREAM3D_TYPE_MACRO_SUPER(FeatureDataCSVWriter, AbstractFilter)
 
     virtual ~FeatureDataCSVWriter();
-    DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(CellFeatureAttributeMatrixName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
+    DREAM3D_FILTER_PARAMETER(DataArrayPath, CellFeatureAttributeMatrixPath)
+    Q_PROPERTY(DataArrayPath CellFeatureAttributeMatrixPath READ getCellFeatureAttributeMatrixPath WRITE setCellFeatureAttributeMatrixPath)
 
     DREAM3D_FILTER_PARAMETER(QString, FeatureDataFile)
     Q_PROPERTY(QString FeatureDataFile READ getFeatureDataFile WRITE setFeatureDataFile)

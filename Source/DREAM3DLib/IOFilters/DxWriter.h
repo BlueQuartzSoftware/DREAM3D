@@ -60,10 +60,7 @@ class DREAM3DLib_EXPORT DxWriter : public FileWriter
     DREAM3D_STATIC_NEW_MACRO(DxWriter)
     DREAM3D_TYPE_MACRO_SUPER(DxWriter, FileWriter)
 
-
     virtual ~DxWriter();
-    DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
 
     DREAM3D_FILTER_PARAMETER(bool, AddSurfaceLayer)
     Q_PROPERTY(bool AddSurfaceLayer READ getAddSurfaceLayer WRITE setAddSurfaceLayer)

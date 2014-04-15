@@ -52,9 +52,7 @@
 // -----------------------------------------------------------------------------
 FeatureDataCSVWriter::FeatureDataCSVWriter() :
   AbstractFilter(),
-  m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
-  m_CellFeatureAttributeMatrixName(DREAM3D::Defaults::CellFeatureAttributeMatrixName),
-  m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
+  m_CellFeatureAttributeMatrixPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, ""),
   m_FeatureDataFile(""),
   m_WriteNeighborListData(false),
   m_Delimiter(',')
@@ -76,6 +74,8 @@ void FeatureDataCSVWriter::setupFilterParameters()
   FilterParameterVector parameters;
   parameters.push_back(FilterParameter::New("Output File", "FeatureDataFile", FilterParameterWidgetType::OutputFileWidget,"QString", false, "", "*.csv", "Comma Separated Data"));
   parameters.push_back(FilterParameter::New("Write Neighbor Data", "WriteNeighborListData", FilterParameterWidgetType::BooleanWidget,"bool", false));
+  parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "QString", true));
+  parameters.push_back(FilterParameter::New("Cell Feature Attribute Matrix", "CellFeatureAttributeMatrixPath", FilterParameterWidgetType::AttributeMatrixSelectionWidget, "DataArrayPath", true, ""));
   setFilterParameters(parameters);
 }
 
@@ -85,6 +85,7 @@ void FeatureDataCSVWriter::setupFilterParameters()
 void FeatureDataCSVWriter::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
+  setCellFeatureAttributeMatrixPath( reader->readDataArrayPath( "CellFeatureAttributeMatrixPath", getCellFeatureAttributeMatrixPath() ) );
   setFeatureDataFile( reader->readString( "FeatureDataFile", getFeatureDataFile() ) );
   setWriteNeighborListData( reader->readValue("WriteNeighborListData", getWriteNeighborListData()) );
   reader->closeFilterGroup();
@@ -96,6 +97,7 @@ void FeatureDataCSVWriter::readFilterParameters(AbstractFilterParametersReader* 
 int FeatureDataCSVWriter::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
+  writer->writeValue("CellFeatureAttributeMatrixPath", getCellFeatureAttributeMatrixPath() );
   writer->writeValue("FeatureDataFile", getFeatureDataFile() );
   writer->writeValue("WriteNeighborData", getWriteNeighborListData() );
   writer->closeFilterGroup();
@@ -108,9 +110,6 @@ int FeatureDataCSVWriter::writeFilterParameters(AbstractFilterParametersWriter* 
 void FeatureDataCSVWriter::dataCheck()
 {
   setErrorCondition(0);
-
-  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName(), false);
-  if(getErrorCondition() < 0 || NULL == m) { return; }
 
   if (getFeatureDataFile().isEmpty() == true)
   {
@@ -150,11 +149,8 @@ void FeatureDataCSVWriter::execute()
 {
   int err = 0;
   setErrorCondition(err);
-
   dataCheck();
   if(getErrorCondition() < 0) { return; }
-
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
   // Make sure any directory path is also available as the user may have just typed
   // in a path without actually creating the full path
@@ -180,10 +176,12 @@ void FeatureDataCSVWriter::execute()
 
   QTextStream outFile(&file);
 
+  AttributeMatrix::Pointer cellFeatureAttrMat = getDataContainerArray()->getAttributeMatrix(getCellFeatureAttributeMatrixPath());
+
   // Write the total number of features
-  outFile << m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumTuples() - 1 << "\n";
+  outFile << cellFeatureAttrMat->getNumTuples() - 1 << "\n";
   // Get all the names of the arrays from the Data Container
-  QList<QString> headers = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getAttributeArrayNameList();
+  QList<QString> headers = cellFeatureAttrMat->getAttributeArrayNameList();
 
   std::vector<IDataArray::Pointer> data;
 
@@ -196,7 +194,7 @@ void FeatureDataCSVWriter::execute()
   for(QList<QString>::iterator iter = headers.begin(); iter != headers.end(); ++iter)
   {
     // Only get the array if the name does NOT match those listed
-    IDataArray::Pointer p = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getAttributeArray(*iter);
+    IDataArray::Pointer p = cellFeatureAttrMat->getAttributeArray(*iter);
     if(p->getNameOfClass().compare(neighborlistPtr->getNameOfClass()) != 0)
     {
       if (p->getNumberOfComponents() == 1)
@@ -254,7 +252,7 @@ void FeatureDataCSVWriter::execute()
     for(QList<QString>::iterator iter = headers.begin(); iter != headers.end(); ++iter)
     {
       // Only get the array if the name does NOT match those listed
-      IDataArray::Pointer p = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getAttributeArray(*iter);
+      IDataArray::Pointer p = cellFeatureAttrMat->getAttributeArray(*iter);
       if(p->getNameOfClass().compare(neighborlistPtr->getNameOfClass()) == 0)
       {
         outFile << DREAM3D::FeatureData::FeatureID << m_Delimiter << DREAM3D::FeatureData::NumNeighbors << m_Delimiter << (*iter) << "\n";
@@ -280,12 +278,6 @@ void FeatureDataCSVWriter::execute()
   notifyStatusMessage(getHumanLabel(), "FeatureDataCSVWriter Completed");
 
 }
-
-
-
-
-
-
 
 
 // -----------------------------------------------------------------------------
