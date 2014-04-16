@@ -63,9 +63,12 @@ class DREAM3DLib_EXPORT ParaDisReader : public FileReader
     DREAM3D_TYPE_MACRO_SUPER(ParaDisReader, FileReader)
 
     virtual ~ParaDisReader();
-    DREAM3D_INSTANCE_STRING_PROPERTY(EdgeDataContainerName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(VertexAttributeMatrixName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(EdgeAttributeMatrixName)
+    DREAM3D_FILTER_PARAMETER(QString, EdgeDataContainerName)
+    Q_PROPERTY(QString EdgeDataContainerName READ getEdgeDataContainerName WRITE setEdgeDataContainerName)
+    DREAM3D_FILTER_PARAMETER(QString, VertexAttributeMatrixName)
+    Q_PROPERTY(QString VertexAttributeMatrixName READ getVertexAttributeMatrixName WRITE setVertexAttributeMatrixName)
+    DREAM3D_FILTER_PARAMETER(QString, EdgeAttributeMatrixName)
+    Q_PROPERTY(QString EdgeAttributeMatrixName READ getEdgeAttributeMatrixName WRITE setEdgeAttributeMatrixName)
 
     DREAM3D_FILTER_PARAMETER(QString, InputFile)
     Q_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile)

@@ -61,9 +61,6 @@ class DREAM3DLib_EXPORT SurfaceMeshToNonconformalVtk : public AbstractFilter
     DREAM3D_TYPE_MACRO_SUPER(SurfaceMeshToNonconformalVtk, AbstractFilter)
 
     virtual ~SurfaceMeshToNonconformalVtk();
-    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceDataContainerName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(FaceAttributeMatrixName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(VertexAttributeMatrixName)
 
     /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
     DREAM3D_FILTER_PARAMETER(QString, OutputVtkFile)

@@ -63,9 +63,10 @@ class DREAM3DLib_EXPORT FeatureInfoReader : public FileReader
     DREAM3D_TYPE_MACRO_SUPER(FeatureInfoReader, FileReader)
 
     virtual ~FeatureInfoReader();
-    DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(CellFeatureAttributeMatrixName)
+    DREAM3D_FILTER_PARAMETER(DataArrayPath, CellAttributeMatrixName)
+    Q_PROPERTY(DataArrayPath CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
+    DREAM3D_FILTER_PARAMETER(QString, CellFeatureAttributeMatrixName)
+    Q_PROPERTY(QString CellFeatureAttributeMatrixName READ getCellFeatureAttributeMatrixName WRITE setCellFeatureAttributeMatrixName)
 
     /* Input Parameters */
     DREAM3D_FILTER_PARAMETER(QString, InputFile)

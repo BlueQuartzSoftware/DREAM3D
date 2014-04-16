@@ -51,7 +51,6 @@
 EnsembleInfoReader::EnsembleInfoReader() :
   FileReader(),
   m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
-  m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
   m_CellEnsembleAttributeMatrixName(DREAM3D::Defaults::CellEnsembleAttributeMatrixName),
   m_InputFile(""),
   m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
@@ -77,10 +76,12 @@ void EnsembleInfoReader::setupFilterParameters()
 {
   FilterParameterVector parameters;
   parameters.push_back(FilterParameter::New("Input Ensemble Info File", "InputFile", FilterParameterWidgetType::InputFileWidget,"QString", false, "", "*.txt"));
-
+  parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "QString", true));
+  parameters.push_back(FilterParameter::New("Data Container Name", "DataContainerName", FilterParameterWidgetType::DataContainerSelectionWidget, "QString", true, ""));
   parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "QString", true));
-/*##*/parameters.push_back(FilterParameter::New("CrystalStructures", "CrystalStructuresArrayName", FilterParameterWidgetType::StringWidget, "QString", true, ""));
-/*##*/parameters.push_back(FilterParameter::New("PhaseTypes", "PhaseTypesArrayName", FilterParameterWidgetType::StringWidget, "QString", true, ""));
+  parameters.push_back(FilterParameter::New("Cell Ensemble Attribute Matrix", "CellEnsembleAttributeMatrixName", FilterParameterWidgetType::StringWidget, "QString", true, ""));
+  parameters.push_back(FilterParameter::New("CrystalStructures", "CrystalStructuresArrayName", FilterParameterWidgetType::StringWidget, "QString", true, ""));
+  parameters.push_back(FilterParameter::New("PhaseTypes", "PhaseTypesArrayName", FilterParameterWidgetType::StringWidget, "QString", true, ""));
   setFilterParameters(parameters);
 }
 
@@ -90,8 +91,10 @@ void EnsembleInfoReader::setupFilterParameters()
 void EnsembleInfoReader::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-/*[]*/setPhaseTypesArrayName(reader->readString("PhaseTypesArrayName", getPhaseTypesArrayName() ) );
-/*[]*/setCrystalStructuresArrayName(reader->readString("CrystalStructuresArrayName", getCrystalStructuresArrayName() ) );
+  setDataContainerName(reader->readString("DataContainerName", getDataContainerName() ) );
+  setCellEnsembleAttributeMatrixName(reader->readString("CellEnsembleAttributeMatrixName", getCellEnsembleAttributeMatrixName() ) );
+  setPhaseTypesArrayName(reader->readString("PhaseTypesArrayName", getPhaseTypesArrayName() ) );
+  setCrystalStructuresArrayName(reader->readString("CrystalStructuresArrayName", getCrystalStructuresArrayName() ) );
   setInputFile( reader->readString( "InputFile", getInputFile() ) );
   reader->closeFilterGroup();
 }
@@ -102,12 +105,28 @@ void EnsembleInfoReader::readFilterParameters(AbstractFilterParametersReader* re
 int EnsembleInfoReader::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-/*[]*/writer->writeValue("PhaseTypesArrayName", getPhaseTypesArrayName() );
-/*[]*/writer->writeValue("CrystalStructuresArrayName", getCrystalStructuresArrayName() );
+  writer->writeValue("DataContainerName", getDataContainerName() );
+  writer->writeValue("CellEnsembleAttributeMatrixName", getCellEnsembleAttributeMatrixName() );
+  writer->writeValue("PhaseTypesArrayName", getPhaseTypesArrayName() );
+  writer->writeValue("CrystalStructuresArrayName", getCrystalStructuresArrayName() );
   writer->writeValue("InputFile", getInputFile() );
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void EnsembleInfoReader::updateEnsembleInstancePointers()
+{
+  setErrorCondition(0);
+
+  if( NULL != m_CrystalStructuresPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  { m_CrystalStructures = m_CrystalStructuresPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  if( NULL != m_PhaseTypesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  { m_PhaseTypes = m_PhaseTypesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+}
+
 
 // -----------------------------------------------------------------------------
 //
@@ -139,14 +158,12 @@ void EnsembleInfoReader::dataCheck()
   typedef DataArray<unsigned int> XTalStructArrayType;
   typedef DataArray<unsigned int> PTypeArrayType;
   QVector<size_t> dims(1, 1);
-  m_CrystalStructuresPtr = cellEnsembleAttrMat->createNonPrereqArray<DataArray<uint32_t>, AbstractFilter, uint32_t>(this,  m_CrystalStructuresArrayName, Ebsd::CrystalStructure::Cubic_High, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-////==>MIKE_GROEBER_FIX tempPath.update(DATACONTAINER_NAME, ATTRIBUTEMATRIX_NAME, getCrystalStructuresArrayName() );
-////==>MIKE_GROEBER_FIX m_CrystalStructuresPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<uint32_t>, AbstractFilter, uint32_t>(this,  tempPath, Ebsd::CrystalStructure::Cubic_High, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  tempPath.update(getDataContainerName(), getCellEnsembleAttributeMatrixName(), getCrystalStructuresArrayName() );
+  m_CrystalStructuresPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<uint32_t>, AbstractFilter, uint32_t>(this,  tempPath, Ebsd::CrystalStructure::UnknownCrystalStructure, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_CrystalStructuresPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_CrystalStructures = m_CrystalStructuresPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-  m_PhaseTypesPtr = cellEnsembleAttrMat->createNonPrereqArray<DataArray<uint32_t>, AbstractFilter, uint32_t>(this,  m_PhaseTypesArrayName, DREAM3D::PhaseType::PrimaryPhase, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-////==>MIKE_GROEBER_FIX tempPath.update(DATACONTAINER_NAME, ATTRIBUTEMATRIX_NAME, getPhaseTypesArrayName() );
-////==>MIKE_GROEBER_FIX m_PhaseTypesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<uint32_t>, AbstractFilter, uint32_t>(this,  tempPath, DREAM3D::PhaseType::PrimaryPhase, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  tempPath.update(getDataContainerName(), getCellEnsembleAttributeMatrixName(), getPhaseTypesArrayName() );
+  m_PhaseTypesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<uint32_t>, AbstractFilter, uint32_t>(this,  tempPath, DREAM3D::PhaseType::UnknownPhaseType, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_PhaseTypesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_PhaseTypes = m_PhaseTypesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
@@ -178,6 +195,7 @@ int EnsembleInfoReader::readFile()
   dataCheck();
 
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  AttributeMatrix::Pointer cellensembleAttrMat = m->getAttributeMatrix(getCellEnsembleAttributeMatrixName());
 
   std::ifstream inFile;
   inFile.open(getInputFile().toLatin1().data(), std::ios_base::binary);
@@ -192,22 +210,16 @@ int EnsembleInfoReader::readFile()
   unsigned int crystruct, ptype;
   inFile >> numphases;
 
-  typedef DataArray<unsigned int> XTalStructArrayType;
-  typedef DataArray<unsigned int> PTypeArrayType;
-  XTalStructArrayType::Pointer m_XTalStructData = XTalStructArrayType::CreateArray(numphases + 1, DREAM3D::EnsembleData::CrystalStructures);
-  PTypeArrayType::Pointer m_PhaseTypeData = PTypeArrayType::CreateArray(numphases + 1, DREAM3D::EnsembleData::PhaseTypes);
-  //Initialize the arrays with the "Unknown" value
-  m_XTalStructData->initializeWithValue(999);
-  m_PhaseTypeData->initializeWithValue(999);
+  QVector<size_t> tDims(1, numphases+1);
+  cellensembleAttrMat->resizeAttributeArrays(tDims);
+  updateEnsembleInstancePointers();
 
   for(int i = 0; i < numphases; i++)
   {
     inFile >> pnum >> crystruct >> ptype;
-    m_XTalStructData->setValue(pnum, crystruct);
-    m_PhaseTypeData->setValue(pnum, ptype);
+    m_CrystalStructures[pnum] = crystruct;
+    m_PhaseTypes[pnum] = ptype;
   }
-  m->getAttributeMatrix(getCellEnsembleAttributeMatrixName())->addAttributeArray(DREAM3D::EnsembleData::CrystalStructures, m_XTalStructData);
-  m->getAttributeMatrix(getCellEnsembleAttributeMatrixName())->addAttributeArray(DREAM3D::EnsembleData::PhaseTypes, m_PhaseTypeData);
 
   notifyStatusMessage(getHumanLabel(), "Complete");
   return 0;

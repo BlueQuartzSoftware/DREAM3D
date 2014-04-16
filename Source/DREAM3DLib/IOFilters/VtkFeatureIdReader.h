@@ -58,8 +58,10 @@ class DREAM3DLib_EXPORT VtkFeatureIdReader : public FileReader
 
 
     virtual ~VtkFeatureIdReader();
-    DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
+    DREAM3D_FILTER_PARAMETER(QString, DataContainerName)
+    Q_PROPERTY(QString DataContainerName READ getDataContainerName WRITE setDataContainerName)
+    DREAM3D_FILTER_PARAMETER(QString, CellAttributeMatrixName)
+    Q_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
 
     DREAM3D_FILTER_PARAMETER(QString, InputFile)
     Q_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile)
@@ -67,10 +69,6 @@ class DREAM3DLib_EXPORT VtkFeatureIdReader : public FileReader
     DREAM3D_INSTANCE_STRING_PROPERTY(Comment)
     DREAM3D_INSTANCE_STRING_PROPERTY(DatasetType)
     DREAM3D_INSTANCE_PROPERTY(bool, FileIsBinary)
-    DREAM3D_FILTER_PARAMETER(QString, FeatureIdScalarName)
-    Q_PROPERTY(QString FeatureIdScalarName READ getFeatureIdScalarName WRITE setFeatureIdScalarName)
-
-    //------ Created Cell Data
 
     DREAM3D_FILTER_PARAMETER(QString, FeatureIdsArrayName)
     Q_PROPERTY(QString FeatureIdsArrayName READ getFeatureIdsArrayName WRITE setFeatureIdsArrayName)
@@ -107,7 +105,7 @@ class DREAM3DLib_EXPORT VtkFeatureIdReader : public FileReader
     VtkFeatureIdReader();
 
     void dataCheck();
-
+    void updateCellInstancePointers();
 
     /**
      * @brief Reads the VTK header and sets the values that are described in the header
@@ -230,8 +228,6 @@ class DREAM3DLib_EXPORT VtkFeatureIdReader : public FileReader
       }
       return err;
     }
-
-
 
   private:
     DEFINE_CREATED_DATAARRAY(int32_t, FeatureIds)

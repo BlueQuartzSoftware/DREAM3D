@@ -63,9 +63,10 @@ class DREAM3DLib_EXPORT EnsembleInfoReader : public FileReader
     DREAM3D_TYPE_MACRO_SUPER(EnsembleInfoReader, FileReader)
 
     virtual ~EnsembleInfoReader();
-    DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(CellEnsembleAttributeMatrixName)
+    DREAM3D_FILTER_PARAMETER(QString, DataContainerName)
+    Q_PROPERTY(QString DataContainerName READ getDataContainerName WRITE setDataContainerName)
+    DREAM3D_FILTER_PARAMETER(QString, CellEnsembleAttributeMatrixName)
+    Q_PROPERTY(QString CellEnsembleAttributeMatrixName READ getCellEnsembleAttributeMatrixName WRITE setCellEnsembleAttributeMatrixName)
 
     DREAM3D_FILTER_PARAMETER(QString, InputFile)
     Q_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile)
@@ -110,6 +111,7 @@ class DREAM3DLib_EXPORT EnsembleInfoReader : public FileReader
     virtual int readFile();
 
     void dataCheck();
+    void updateEnsembleInstancePointers();
 
   private:
     DEFINE_CREATED_DATAARRAY(unsigned int, CrystalStructures)

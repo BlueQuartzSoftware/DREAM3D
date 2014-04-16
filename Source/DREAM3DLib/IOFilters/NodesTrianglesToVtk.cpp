@@ -48,8 +48,6 @@
 // -----------------------------------------------------------------------------
 NodesTrianglesToVtk::NodesTrianglesToVtk() :
   AbstractFilter(),
-  m_SurfaceDataContainerName(DREAM3D::Defaults::SurfaceDataContainerName),
-  m_NodeTypeArrayName(DREAM3D::VertexData::SurfaceMeshNodeType),
   m_NodesFile(""),
   m_TrianglesFile(""),
   m_OutputVtkFile(""),

@@ -56,11 +56,9 @@
 // -----------------------------------------------------------------------------
 VisualizeGBCDGMT::VisualizeGBCDGMT() :
   AbstractFilter(),
-  m_SurfaceDataContainerName(DREAM3D::Defaults::SurfaceDataContainerName),
-  m_FaceEnsembleAttributeMatrixName(DREAM3D::Defaults::FaceEnsembleAttributeMatrixName),
   m_OutputFile(""),
   m_CrystalStructure(Ebsd::CrystalStructure::UnknownCrystalStructure),
-  /*[]*/m_GBCDArrayPath(DREAM3D::Defaults::SomePath),
+  m_GBCDArrayPath(DREAM3D::Defaults::SomePath),
   m_GBCDArrayName(DREAM3D::EnsembleData::GBCD),
   m_GBCD(NULL)
 {
@@ -108,29 +106,9 @@ void VisualizeGBCDGMT::setupFilterParameters()
     parameters.push_back(option);
   }
   parameters.push_back(FilterParameter::New("Misorientation Axis Angles", "MisorientationRotation", FilterParameterWidgetType::AxisAngleWidget,"", false));
-  //  {
-  //    FilterParameter::Pointer parameter = FilterParameter::New();
-  //    parameter->setPropertyName("MisAngle");
-  //    parameter->setHumanLabel("Misorientation Angle");
-  //    parameter->setWidgetType(FilterParameterWidgetType::DoubleWidget);
-  //    parameter->setValueType("float");
-  //    parameter->setCastableValueType("double");
-  //    parameter->setUnits("Degrees");
-  //    parameters.push_back(parameter);
-  //  }
-  //  {
-  //    FilterParameter::Pointer parameter = FilterParameter::New();
-
-  //    parameter->setHumanLabel("Misorientation Axis");
-  //    parameter->setPropertyName("MisAxis");
-  //    parameter->setWidgetType(FilterParameterWidgetType::FloatVec3Widget);
-  //    parameter->setValueType("FloatVec3_t");
-  //    parameter->setUnits("");
-  //    parameters.push_back(parameter);
-  //  }
   parameters.push_back(FilterParameter::New("GMT Output File", "OutputFile", FilterParameterWidgetType::OutputFileWidget,"QString", false, "", "*.dat", "DAT File"));
   parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "QString", true));
-  /*[]*/parameters.push_back(FilterParameter::New("GBCD", "GBCDArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
+  parameters.push_back(FilterParameter::New("GBCD", "GBCDArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
   setFilterParameters(parameters);
 }
 
@@ -141,8 +119,6 @@ void VisualizeGBCDGMT::readFilterParameters(AbstractFilterParametersReader* read
 {
   reader->openFilterGroup(this, index);
   setGBCDArrayPath(reader->readDataArrayPath("GBCDArrayPath", getGBCDArrayPath() ) );
-  //  setMisAngle( reader->readValue("MisAngle", getMisAngle()) );
-  //  setMisAxis( reader->readFloatVec3("MisAxis", getMisAxis() ) );
   setOutputFile( reader->readString( "OutputFile", getOutputFile() ) );
   setMisorientationRotation(reader->readAxisAngle("MisorientationRotation", getMisorientationRotation(), -1) );
   setCrystalStructure(reader->readValue("CrystalStructure", getCrystalStructure() ) );
@@ -156,8 +132,6 @@ int VisualizeGBCDGMT::writeFilterParameters(AbstractFilterParametersWriter* writ
 {
   writer->openFilterGroup(this, index);
   writer->writeValue("GBCDArrayPath", getGBCDArrayPath() );
-  // writer->writeValue("MisorientationAngle", getMisAngle() );
-  // writer->writeValue("MisorientationAxis", getMisAxis() );
   writer->writeValue("OutputFile", getOutputFile() );
   writer->writeValue("MisorientationRotation", getMisorientationRotation() );
   writer->writeValue("CrystalStructure", getCrystalStructure() );
@@ -172,9 +146,7 @@ void VisualizeGBCDGMT::dataCheckSurfaceMesh()
 {
   setErrorCondition(0);
 
-  SurfaceDataContainer* sm = getDataContainerArray()->getPrereqDataContainer<SurfaceDataContainer, AbstractFilter>(this, getSurfaceDataContainerName(), false);
-  if(getErrorCondition() < 0) { return; }
-  AttributeMatrix::Pointer attrMat = sm->getPrereqAttributeMatrix<AbstractFilter>(this, getFaceEnsembleAttributeMatrixName(), -301);
+  SurfaceDataContainer* sm = getDataContainerArray()->getPrereqDataContainer<SurfaceDataContainer, AbstractFilter>(this, getGBCDArrayPath().getDataContainerName(), false);
   if(getErrorCondition() < 0) { return; }
 
   if(getCrystalStructure() == Ebsd::CrystalStructure::UnknownCrystalStructure)
@@ -219,7 +191,7 @@ void VisualizeGBCDGMT::dataCheckSurfaceMesh()
   else
   {
     //pull down GBCD as iData to get the component dimensions.
-    IDataArray::Pointer iDataArray = sm->getAttributeMatrix(getFaceEnsembleAttributeMatrixName())->getAttributeArray(DREAM3D::EnsembleData::GBCD);
+    IDataArray::Pointer iDataArray = getDataContainerArray()->getAttributeMatrix(getGBCDArrayPath())->getAttributeArray(DREAM3D::EnsembleData::GBCD);
     if (NULL == iDataArray.get())
     {
       setErrorCondition(-387);
@@ -230,7 +202,6 @@ void VisualizeGBCDGMT::dataCheckSurfaceMesh()
       //get the component dimensions to use to pull down the GBCD array normally (not sure if this is all really necessary)
       QVector<size_t> dims = iDataArray->getComponentDimensions();
       iDataArray->NullPointer();
-      ////====>REMOVE THIS        m_GBCDPtr = attrMat->getPrereqArray<DataArray<double>, AbstractFilter>(this, m_GBCDArrayName, -301, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
       m_GBCDPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<double>, AbstractFilter>(this, getGBCDArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
       if( NULL != m_GBCDPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
       { m_GBCD = m_GBCDPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
@@ -260,7 +231,7 @@ void VisualizeGBCDGMT::execute()
   dataCheckSurfaceMesh();
   if(getErrorCondition() < 0) { return; }
 
-  SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
+  SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getGBCDArrayPath().getDataContainerName());
 
   notifyStatusMessage(getHumanLabel(), "Starting");
 

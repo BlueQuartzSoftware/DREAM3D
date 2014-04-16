@@ -49,7 +49,6 @@ VtkFeatureIdReader::VtkFeatureIdReader() :
   m_Comment("DREAM3D Generated File"),
   m_DatasetType(""),
   m_FileIsBinary(true),
-  m_FeatureIdScalarName(DREAM3D::CellData::FeatureIds),
   m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
   m_FeatureIds(NULL)
 {
@@ -73,7 +72,9 @@ void VtkFeatureIdReader::setupFilterParameters()
   parameters.push_back(FilterParameter::New("Input Vtk File", "InputFile", FilterParameterWidgetType::InputFileWidget,"QString", false));
   parameters.push_back(FilterParameter::New("Feature Id Scalar Name", "FeatureIdScalarName", FilterParameterWidgetType::StringWidget,"QString", false));
   parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "QString", true));
-/*##*/parameters.push_back(FilterParameter::New("FeatureIds", "FeatureIdsArrayName", FilterParameterWidgetType::StringWidget, "QString", true, ""));
+  parameters.push_back(FilterParameter::New("Data Container", "DataContainerName", FilterParameterWidgetType::StringWidget, "QString", true, ""));
+  parameters.push_back(FilterParameter::New("Cell Attribute Matrix", "CellAttributeMatrixName", FilterParameterWidgetType::StringWidget, "QString", true, ""));
+  parameters.push_back(FilterParameter::New("FeatureIds", "FeatureIdsArrayName", FilterParameterWidgetType::StringWidget, "QString", true, ""));
   setFilterParameters(parameters);
 }
 
@@ -84,9 +85,10 @@ void VtkFeatureIdReader::setupFilterParameters()
 void VtkFeatureIdReader::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-/*[]*/setFeatureIdsArrayName(reader->readString("FeatureIdsArrayName", getFeatureIdsArrayName() ) );
+  setDataContainerName(reader->readString("DataContainerName", getDataContainerName() ) );
+  setCellAttributeMatrixName(reader->readString("CellAttributeMatrixName", getCellAttributeMatrixName() ) );
+  setFeatureIdsArrayName(reader->readString("FeatureIdsArrayName", getFeatureIdsArrayName() ) );
   setInputFile( reader->readString( "InputFile", getInputFile() ) );
-  setFeatureIdScalarName( reader->readString( "FeatureIdScalarName", getFeatureIdScalarName() ) );
   reader->closeFilterGroup();
 }
 
@@ -96,10 +98,24 @@ void VtkFeatureIdReader::readFilterParameters(AbstractFilterParametersReader* re
 int VtkFeatureIdReader::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-/*[]*/writer->writeValue("FeatureIdsArrayName", getFeatureIdsArrayName() );
+  writer->writeValue("DataContainerName", getDataContainerName() );
+  writer->writeValue("CellAttributeMatrixName", getCellAttributeMatrixName() );
+  writer->writeValue("FeatureIdsArrayName", getFeatureIdsArrayName() );
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void VtkFeatureIdReader::updateCellInstancePointers()
+{
+  setErrorCondition(0);
+
+  if( NULL != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+}
+
 
 // -----------------------------------------------------------------------------
 //
@@ -130,9 +146,8 @@ void VtkFeatureIdReader::dataCheck()
   }
 
   QVector<size_t> dims(1, 1);
-  m_FeatureIdsPtr = attrMat->createNonPrereqArray<DataArray<int32_t>, AbstractFilter, int32_t>(this,  m_FeatureIdsArrayName, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-////==>MIKE_GROEBER_FIX tempPath.update(DATACONTAINER_NAME, ATTRIBUTEMATRIX_NAME, getFeatureIdsArrayName() );
-////==>MIKE_GROEBER_FIX m_FeatureIdsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(this,  tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  tempPath.update(getDataContainerName(), getCellAttributeMatrixName(), getFeatureIdsArrayName() );
+  m_FeatureIdsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(this,  tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
@@ -371,7 +386,7 @@ int VtkFeatureIdReader::readFile()
   tDims[1] = dims[1];
   tDims[2] = dims[2];
   m->getAttributeMatrix(getCellAttributeMatrixName())->resizeAttributeArrays(tDims);
-  dataCheck();
+  updateCellInstancePointers();
 
   buf = instream.readLine();
   QList<QByteArray> tokens;
@@ -401,7 +416,7 @@ int VtkFeatureIdReader::readFile()
     // Check to make sure we are reading the correct set of scalars and if we are
     // NOT then read all this particular Scalar Data and try again
 
-    if (m_FeatureIdScalarName.compare(scalarName) == 0)
+    if (m_FeatureIdsArrayName.compare(scalarName) == 0)
     {
       //  QMap<int, int> featureIdMap;
       if (getFileIsBinary() == true)

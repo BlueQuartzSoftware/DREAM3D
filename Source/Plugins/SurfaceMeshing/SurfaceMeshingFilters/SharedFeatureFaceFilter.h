@@ -62,15 +62,13 @@ class SharedFeatureFaceFilter : public SurfaceMeshFilter
     DREAM3D_TYPE_MACRO_SUPER(SharedFeatureFaceFilter, SurfaceMeshFilter)
 
     virtual ~SharedFeatureFaceFilter();
-    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceDataContainerName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(FaceAttributeMatrixName)
 
     /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
     typedef QVector<int> FaceIds_t;
     typedef QMap<int32_t, FaceIds_t> SharedFeatureFaces_t;
 
-
-    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshFeatureFaceIdArrayName)
+    DREAM3D_FILTER_PARAMETER(QString, SurfaceMeshFeatureFaceIdsArrayName)
+    Q_PROPERTY(QString SurfaceMeshFeatureFaceIdsArrayName READ getSurfaceMeshFeatureFaceIdsArrayName WRITE setSurfaceMeshFeatureFaceIdsArrayName)
 
     /**
     * @brief This returns the group that the filter belonds to. You can select
@@ -144,6 +142,7 @@ signals:
 
   private:
     DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, SurfaceMeshFaceLabels)
+    DEFINE_CREATED_DATAARRAY(int64_t, SurfaceMeshFeatureFaceIds)
 
     SharedFeatureFaces_t m_SharedFeatureFaces;
 

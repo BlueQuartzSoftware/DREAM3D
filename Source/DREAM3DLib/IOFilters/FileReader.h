@@ -59,8 +59,6 @@ class DREAM3DLib_EXPORT FileReader : public AbstractFilter
 
     virtual ~FileReader();
 
-    DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
-
     /* This will internally call readHeader() and readFile() with appropriate
      * error checkes after each one. Subclasses should just implement the readHeader
      * and readFile methods unless special setups are needed.

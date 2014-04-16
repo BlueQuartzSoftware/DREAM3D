@@ -45,8 +45,7 @@
 //
 // -----------------------------------------------------------------------------
 FileReader::FileReader() :
-  AbstractFilter(),
-  m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName)
+  AbstractFilter()
 {
 }
 

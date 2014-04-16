@@ -48,14 +48,11 @@
 // -----------------------------------------------------------------------------
 SurfaceMeshToNodesTrianglesEdges::SurfaceMeshToNodesTrianglesEdges() :
   AbstractFilter(),
-  m_SurfaceDataContainerName(DREAM3D::Defaults::SurfaceDataContainerName),
-  m_FaceAttributeMatrixName(DREAM3D::Defaults::FaceAttributeMatrixName),
-  m_VertexAttributeMatrixName(DREAM3D::Defaults::VertexAttributeMatrixName),
   m_OutputNodesFile(""),
   m_OutputEdgesFile(""),
   m_OutputTrianglesFile(""),
-/*[]*/m_SurfaceMeshFaceLabelsArrayPath(DREAM3D::Defaults::SomePath),
-/*[]*/m_SurfaceMeshNodeTypeArrayPath(DREAM3D::Defaults::SomePath),
+  m_SurfaceMeshFaceLabelsArrayPath(DREAM3D::Defaults::SurfaceDataContainerName, DREAM3D::Defaults::FaceAttributeMatrixName, DREAM3D::FaceData::SurfaceMeshFaceLabels),
+  m_SurfaceMeshNodeTypeArrayPath(DREAM3D::Defaults::SurfaceDataContainerName, DREAM3D::Defaults::VertexAttributeMatrixName, DREAM3D::VertexData::SurfaceMeshNodeType),
   m_SurfaceMeshFaceLabelsArrayName(DREAM3D::FaceData::SurfaceMeshFaceLabels),
   m_SurfaceMeshFaceLabels(NULL),
   m_SurfaceMeshNodeTypeArrayName(DREAM3D::VertexData::SurfaceMeshNodeType),
@@ -91,8 +88,8 @@ void SurfaceMeshToNodesTrianglesEdges::setupFilterParameters()
 #endif
 
   parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "QString", true));
-/*[]*/parameters.push_back(FilterParameter::New("SurfaceMeshFaceLabels", "SurfaceMeshFaceLabelsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
-/*[]*/parameters.push_back(FilterParameter::New("SurfaceMeshNodeType", "SurfaceMeshNodeTypeArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
+  parameters.push_back(FilterParameter::New("SurfaceMeshFaceLabels", "SurfaceMeshFaceLabelsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
+  parameters.push_back(FilterParameter::New("SurfaceMeshNodeType", "SurfaceMeshNodeTypeArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
   setFilterParameters(parameters);
 }
 
@@ -149,11 +146,7 @@ void SurfaceMeshToNodesTrianglesEdges::dataCheck()
     notifyErrorMessage(getHumanLabel(), "The output Triangles file needs to be set", getErrorCondition());
   }
 
-  SurfaceDataContainer* sm = getDataContainerArray()->getPrereqDataContainer<SurfaceDataContainer, AbstractFilter>(this, getSurfaceDataContainerName(), false);
-  if(getErrorCondition() < 0) { return; }
-  AttributeMatrix::Pointer amV = sm->getPrereqAttributeMatrix<AbstractFilter>(this, getVertexAttributeMatrixName(), -301);
-  if(getErrorCondition() < 0) { return; }
-  AttributeMatrix::Pointer amF = sm->getPrereqAttributeMatrix<AbstractFilter>(this, getFaceAttributeMatrixName(), -301);
+  SurfaceDataContainer* sm = getDataContainerArray()->getPrereqDataContainer<SurfaceDataContainer, AbstractFilter>(this, m_SurfaceMeshFaceLabelsArrayPath.getDataContainerName(), false);
   if(getErrorCondition() < 0) { return; }
 
   if (sm->getFaces().get() == NULL)
@@ -175,12 +168,10 @@ void SurfaceMeshToNodesTrianglesEdges::dataCheck()
   }
 #endif
   QVector<size_t> dims(1, 2);
-////====>REMOVE THIS    m_SurfaceMeshFaceLabelsPtr = amF->getPrereqArray<DataArray<int32_t>, AbstractFilter>(this, m_SurfaceMeshFaceLabelsArrayName, -386, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   m_SurfaceMeshFaceLabelsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getSurfaceMeshFaceLabelsArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_SurfaceMeshFaceLabelsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_SurfaceMeshFaceLabels = m_SurfaceMeshFaceLabelsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   dims[0] = 1;
-////====>REMOVE THIS    m_SurfaceMeshNodeTypePtr = amV->getPrereqArray<DataArray<int8_t>, AbstractFilter>(this, m_SurfaceMeshNodeTypeArrayName, -386, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   m_SurfaceMeshNodeTypePtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int8_t>, AbstractFilter>(this, getSurfaceMeshNodeTypeArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_SurfaceMeshNodeTypePtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_SurfaceMeshNodeType = m_SurfaceMeshNodeTypePtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
@@ -209,7 +200,7 @@ void SurfaceMeshToNodesTrianglesEdges::execute()
   dataCheck();
   if(getErrorCondition() < 0) { return; }
 
-  SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
+  SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(m_SurfaceMeshFaceLabelsArrayPath.getDataContainerName());
 
   VertexArray::Pointer nodes = sm->getVertices();
   FaceArray::Pointer triangles = sm->getFaces();

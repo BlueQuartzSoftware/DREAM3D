@@ -52,10 +52,8 @@
 // -----------------------------------------------------------------------------
 AbaqusSurfaceMeshWriter::AbaqusSurfaceMeshWriter() :
   AbstractFilter(),
-  m_SurfaceDataContainerName(DREAM3D::Defaults::SurfaceDataContainerName),
-  m_FaceAttributeMatrixName(DREAM3D::Defaults::FaceAttributeMatrixName),
   m_OutputFile(""),
-/*[]*/m_SurfaceMeshFaceLabelsArrayPath(DREAM3D::Defaults::SomePath),
+  m_SurfaceMeshFaceLabelsArrayPath(DREAM3D::Defaults::SomePath),
   m_SurfaceMeshFaceLabelsArrayName(DREAM3D::FaceData::SurfaceMeshFaceLabels),
   m_SurfaceMeshFaceLabels(NULL)
 {
@@ -77,7 +75,7 @@ void AbaqusSurfaceMeshWriter::setupFilterParameters()
   FilterParameterVector parameters;
   parameters.push_back(FilterParameter::New("Output File", "OutputFile", FilterParameterWidgetType::OutputFileWidget,"QString", false, "", "*.inp"));
   parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "QString", true));
-/*[]*/parameters.push_back(FilterParameter::New("SurfaceMeshFaceLabels", "SurfaceMeshFaceLabelsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
+  parameters.push_back(FilterParameter::New("SurfaceMeshFaceLabels", "SurfaceMeshFaceLabelsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
   setFilterParameters(parameters);
 }
 
@@ -116,9 +114,7 @@ void AbaqusSurfaceMeshWriter::dataCheck()
     notifyErrorMessage(getHumanLabel(), "Stl Output Directory is Not set correctly", -1003);
   }
 
-  SurfaceDataContainer* sm = getDataContainerArray()->getPrereqDataContainer<SurfaceDataContainer, AbstractFilter>(this, getSurfaceDataContainerName(), false);
-  if(getErrorCondition() < 0) { return; }
-  AttributeMatrix::Pointer attrMat = sm->getPrereqAttributeMatrix<AbstractFilter>(this, getFaceAttributeMatrixName(), -301);
+  SurfaceDataContainer* sm = getDataContainerArray()->getPrereqDataContainer<SurfaceDataContainer, AbstractFilter>(this, getSurfaceMeshFaceLabelsArrayPath().getDataContainerName(), false);
   if(getErrorCondition() < 0) { return; }
 
   if (sm->getFaces().get() == NULL)
@@ -129,8 +125,7 @@ void AbaqusSurfaceMeshWriter::dataCheck()
   else
   {
     QVector<size_t> dims(1, 2);
-////====>REMOVE THIS      m_SurfaceMeshFaceLabelsPtr = attrMat->getPrereqArray<DataArray<int32_t>, AbstractFilter>(this, m_SurfaceMeshFaceLabelsArrayName, -386, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  m_SurfaceMeshFaceLabelsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getSurfaceMeshFaceLabelsArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+    m_SurfaceMeshFaceLabelsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getSurfaceMeshFaceLabelsArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
     if( NULL != m_SurfaceMeshFaceLabelsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
     { m_SurfaceMeshFaceLabels = m_SurfaceMeshFaceLabelsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   }
@@ -163,7 +158,7 @@ void AbaqusSurfaceMeshWriter::execute()
   dataCheck();
   if(getErrorCondition() < 0) { return; }
 
-  SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
+  SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceMeshFaceLabelsArrayPath().getDataContainerName());
 
   // Make sure any directory path is also available as the user may have just typed
   // in a path without actually creating the full path
@@ -227,7 +222,7 @@ int AbaqusSurfaceMeshWriter::writeHeader(FILE* f, int nodeCount, int triCount, i
 // -----------------------------------------------------------------------------
 int AbaqusSurfaceMeshWriter::writeNodes(FILE* f)
 {
-  VertexArray::Pointer nodesPtr = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName())->getVertices();
+  VertexArray::Pointer nodesPtr = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceMeshFaceLabelsArrayPath().getDataContainerName())->getVertices();
   VertexArray::Vert_t* nodes = nodesPtr->getPointer(0);
   size_t numNodes = nodesPtr->getNumberOfTuples();
   int err = 0;
@@ -250,7 +245,7 @@ int AbaqusSurfaceMeshWriter::writeNodes(FILE* f)
 int AbaqusSurfaceMeshWriter::writeTriangles(FILE* f)
 {
   int err = 0;
-  FaceArray& triangles = *(getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName())->getFaces());
+  FaceArray& triangles = *(getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceMeshFaceLabelsArrayPath().getDataContainerName())->getFaces());
   size_t numTri = triangles.getNumberOfTuples();
 
   fprintf(f, "*ELEMENT, TYPE=%s\n", TRI_ELEMENT_TYPE);
@@ -276,8 +271,8 @@ int AbaqusSurfaceMeshWriter::writeFeatures(FILE* f)
 
   int err = 0;
 
-  VertexArray::Pointer nodesPtr = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName())->getVertices();
-  FaceArray::Pointer trianglePtr = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName())->getFaces();
+  VertexArray::Pointer nodesPtr = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceMeshFaceLabelsArrayPath().getDataContainerName())->getVertices();
+  FaceArray::Pointer trianglePtr = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceMeshFaceLabelsArrayPath().getDataContainerName())->getFaces();
   // Get the Labels(FeatureIds or Region Ids) for the triangles
 
   int nTriangles = trianglePtr->getNumberOfTuples();

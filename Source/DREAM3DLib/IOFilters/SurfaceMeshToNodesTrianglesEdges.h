@@ -63,9 +63,6 @@ class DREAM3DLib_EXPORT SurfaceMeshToNodesTrianglesEdges : public AbstractFilter
     DREAM3D_TYPE_MACRO_SUPER(SurfaceMeshToNodesTrianglesEdges, AbstractFilter);
 
     virtual ~SurfaceMeshToNodesTrianglesEdges();
-    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceDataContainerName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(FaceAttributeMatrixName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(VertexAttributeMatrixName)
 
     DREAM3D_FILTER_PARAMETER(QString, OutputNodesFile);
     Q_PROPERTY(QString OutputNodesFile READ getOutputNodesFile WRITE setOutputNodesFile)

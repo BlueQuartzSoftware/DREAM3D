@@ -156,9 +156,6 @@ void NodesTrianglesToStl::dataCheck(bool preflight)
     setErrorCondition(-1003);
     notifyErrorMessage(getHumanLabel(), "Stl Output Directory is Not set correctly", -1003);
   }
-
-
-
 }
 
 // -----------------------------------------------------------------------------

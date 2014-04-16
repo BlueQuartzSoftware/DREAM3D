@@ -61,8 +61,6 @@ class FeatureFaceCurvatureFilter : public SurfaceMeshFilter
     DREAM3D_TYPE_MACRO_SUPER(FeatureFaceCurvatureFilter, SurfaceMeshFilter)
 
     virtual ~FeatureFaceCurvatureFilter();
-    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceDataContainerName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(FaceAttributeMatrixName)
     DREAM3D_INSTANCE_STRING_PROPERTY(EdgeAttributeMatrixName)
     DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshUniqueEdgesArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(PrincipalCurvature1ArrayName)

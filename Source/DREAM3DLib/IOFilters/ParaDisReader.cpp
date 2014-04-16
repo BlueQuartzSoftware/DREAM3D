@@ -80,10 +80,13 @@ void ParaDisReader::setupFilterParameters()
   parameters.push_back(FilterParameter::New("Input File", "InputFile", FilterParameterWidgetType::InputFileWidget,"QString", false, "", "*"));
   parameters.push_back(FilterParameter::New("Burgers Vector Length", "BurgersVector", FilterParameterWidgetType::DoubleWidget,"float", false, "Angstroms"));
   parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "QString", true));
-/*##*/parameters.push_back(FilterParameter::New("NumberOfArms", "NumberOfArmsArrayName", FilterParameterWidgetType::StringWidget, "QString", true, ""));
-/*##*/parameters.push_back(FilterParameter::New("NodeConstraints", "NodeConstraintsArrayName", FilterParameterWidgetType::StringWidget, "QString", true, ""));
-/*##*/parameters.push_back(FilterParameter::New("BurgersVectors", "BurgersVectorsArrayName", FilterParameterWidgetType::StringWidget, "QString", true, ""));
-/*##*/parameters.push_back(FilterParameter::New("SlipPlaneNormals", "SlipPlaneNormalsArrayName", FilterParameterWidgetType::StringWidget, "QString", true, ""));
+  parameters.push_back(FilterParameter::New("Edge Data Container", "EdgeDataContainerName", FilterParameterWidgetType::StringWidget, "QString", true, ""));
+  parameters.push_back(FilterParameter::New("Vertex Attribute Matrix", "VertexAttributeMatrixName", FilterParameterWidgetType::StringWidget, "QString", true, ""));
+  parameters.push_back(FilterParameter::New("Edge Attribute Matrix", "EdgeAttributeMatrixName", FilterParameterWidgetType::StringWidget, "QString", true, ""));
+  parameters.push_back(FilterParameter::New("NumberOfArms", "NumberOfArmsArrayName", FilterParameterWidgetType::StringWidget, "QString", true, ""));
+  parameters.push_back(FilterParameter::New("NodeConstraints", "NodeConstraintsArrayName", FilterParameterWidgetType::StringWidget, "QString", true, ""));
+  parameters.push_back(FilterParameter::New("BurgersVectors", "BurgersVectorsArrayName", FilterParameterWidgetType::StringWidget, "QString", true, ""));
+  parameters.push_back(FilterParameter::New("SlipPlaneNormals", "SlipPlaneNormalsArrayName", FilterParameterWidgetType::StringWidget, "QString", true, ""));
   setFilterParameters(parameters);
 }
 
@@ -91,10 +94,13 @@ void ParaDisReader::setupFilterParameters()
 void ParaDisReader::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-/*[]*/setSlipPlaneNormalsArrayName(reader->readString("SlipPlaneNormalsArrayName", getSlipPlaneNormalsArrayName() ) );
-/*[]*/setBurgersVectorsArrayName(reader->readString("BurgersVectorsArrayName", getBurgersVectorsArrayName() ) );
-/*[]*/setNodeConstraintsArrayName(reader->readString("NodeConstraintsArrayName", getNodeConstraintsArrayName() ) );
-/*[]*/setNumberOfArmsArrayName(reader->readString("NumberOfArmsArrayName", getNumberOfArmsArrayName() ) );
+  setEdgeDataContainerName(reader->readString("EdgeDataContainerName", getEdgeDataContainerName() ) );
+  setVertexAttributeMatrixName(reader->readString("VertexAttributeMatrixName", getVertexAttributeMatrixName() ) );
+  setEdgeAttributeMatrixName(reader->readString("EdgeAttributeMatrixName", getEdgeAttributeMatrixName() ) );
+  setSlipPlaneNormalsArrayName(reader->readString("SlipPlaneNormalsArrayName", getSlipPlaneNormalsArrayName() ) );
+  setBurgersVectorsArrayName(reader->readString("BurgersVectorsArrayName", getBurgersVectorsArrayName() ) );
+  setNodeConstraintsArrayName(reader->readString("NodeConstraintsArrayName", getNodeConstraintsArrayName() ) );
+  setNumberOfArmsArrayName(reader->readString("NumberOfArmsArrayName", getNumberOfArmsArrayName() ) );
   setInputFile( reader->readString( "InputFile", getInputFile() ) );
   setBurgersVector( reader->readValue( "BurgersVector", getBurgersVector() ) );
   reader->closeFilterGroup();
@@ -106,10 +112,13 @@ void ParaDisReader::readFilterParameters(AbstractFilterParametersReader* reader,
 int ParaDisReader::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-/*[]*/writer->writeValue("SlipPlaneNormalsArrayName", getSlipPlaneNormalsArrayName() );
-/*[]*/writer->writeValue("BurgersVectorsArrayName", getBurgersVectorsArrayName() );
-/*[]*/writer->writeValue("NodeConstraintsArrayName", getNodeConstraintsArrayName() );
-/*[]*/writer->writeValue("NumberOfArmsArrayName", getNumberOfArmsArrayName() );
+  writer->writeValue("EdgeDataContainerName", getEdgeDataContainerName() );
+  writer->writeValue("VertexAttributeMatrixName", getVertexAttributeMatrixName() );
+  writer->writeValue("EdgeAttributeMatrixName", getEdgeAttributeMatrixName() );
+  writer->writeValue("SlipPlaneNormalsArrayName", getSlipPlaneNormalsArrayName() );
+  writer->writeValue("BurgersVectorsArrayName", getBurgersVectorsArrayName() );
+  writer->writeValue("NodeConstraintsArrayName", getNodeConstraintsArrayName() );
+  writer->writeValue("NumberOfArmsArrayName", getNumberOfArmsArrayName() );
   writer->writeValue("InputFile", getInputFile() );
   writer->writeValue("BurgersVector", getBurgersVector() );
   writer->closeFilterGroup();
@@ -172,25 +181,21 @@ void ParaDisReader::dataCheck()
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
   QVector<size_t> dims(1, 1);
-  m_NumberOfArmsPtr = amV->createNonPrereqArray<DataArray<int32_t>, AbstractFilter, int32_t>(this,  m_NumberOfArmsArrayName, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-////==>MIKE_GROEBER_FIX tempPath.update(DATACONTAINER_NAME, ATTRIBUTEMATRIX_NAME, getNumberOfArmsArrayName() );
-////==>MIKE_GROEBER_FIX m_NumberOfArmsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(this,  tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  tempPath.update(getEdgeDataContainerName(), getVertexAttributeMatrixName(), getNumberOfArmsArrayName() );
+  m_NumberOfArmsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(this,  tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_NumberOfArmsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_NumberOfArms = m_NumberOfArmsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-  m_NodeConstraintsPtr = amV->createNonPrereqArray<DataArray<int32_t>, AbstractFilter, int32_t>(this,  m_NodeConstraintsArrayName, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-////==>MIKE_GROEBER_FIX tempPath.update(DATACONTAINER_NAME, ATTRIBUTEMATRIX_NAME, getNodeConstraintsArrayName() );
-////==>MIKE_GROEBER_FIX m_NodeConstraintsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(this,  tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  tempPath.update(getEdgeDataContainerName(), getVertexAttributeMatrixName(), getNodeConstraintsArrayName() );
+  m_NodeConstraintsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(this,  tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_NodeConstraintsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_NodeConstraints = m_NodeConstraintsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   dims[0] = 3;
-  m_BurgersVectorsPtr = amE->createNonPrereqArray<DataArray<float>, AbstractFilter, float>(this,  m_BurgersVectorsArrayName, 0.0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-////==>MIKE_GROEBER_FIX tempPath.update(DATACONTAINER_NAME, ATTRIBUTEMATRIX_NAME, getBurgersVectorsArrayName() );
-////==>MIKE_GROEBER_FIX m_BurgersVectorsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this,  tempPath, 0.0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  tempPath.update(getEdgeDataContainerName(), getEdgeAttributeMatrixName(), getBurgersVectorsArrayName() );
+  m_BurgersVectorsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this,  tempPath, 0.0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_BurgersVectorsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_BurgersVectors = m_BurgersVectorsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-  m_SlipPlaneNormalsPtr = amE->createNonPrereqArray<DataArray<float>, AbstractFilter, float>(this,  m_SlipPlaneNormalsArrayName, 0.0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-////==>MIKE_GROEBER_FIX tempPath.update(DATACONTAINER_NAME, ATTRIBUTEMATRIX_NAME, getSlipPlaneNormalsArrayName() );
-////==>MIKE_GROEBER_FIX m_SlipPlaneNormalsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this,  tempPath, 0.0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  tempPath.update(getEdgeDataContainerName(), getEdgeAttributeMatrixName(), getSlipPlaneNormalsArrayName() );
+  m_SlipPlaneNormalsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this,  tempPath, 0.0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_SlipPlaneNormalsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_SlipPlaneNormals = m_SlipPlaneNormalsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 

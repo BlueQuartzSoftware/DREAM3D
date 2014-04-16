@@ -63,8 +63,10 @@ class DREAM3DLib_EXPORT DxReader : public FileReader
     DREAM3D_TYPE_MACRO_SUPER(DxReader, FileReader)
 
     virtual ~DxReader();
-    DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
+    DREAM3D_FILTER_PARAMETER(QString, VolumeDataContainerName)
+    Q_PROPERTY(QString VolumeDataContainerName READ getVolumeDataContainerName WRITE setVolumeDataContainerName)
+    DREAM3D_FILTER_PARAMETER(QString, CellAttributeMatrixName)
+    Q_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
 
     DREAM3D_FILTER_PARAMETER(QString, InputFile)
     Q_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile)
@@ -72,9 +74,6 @@ class DREAM3DLib_EXPORT DxReader : public FileReader
     Q_PROPERTY(FloatVec3_t Origin READ getOrigin WRITE setOrigin)
     DREAM3D_FILTER_PARAMETER(FloatVec3_t, Resolution)
     Q_PROPERTY(FloatVec3_t Resolution READ getResolution WRITE setResolution)
-
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
-    Q_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
 
     DREAM3D_FILTER_PARAMETER(QString, FeatureIdsArrayName)
     Q_PROPERTY(QString FeatureIdsArrayName READ getFeatureIdsArrayName WRITE setFeatureIdsArrayName)
@@ -114,6 +113,7 @@ class DREAM3DLib_EXPORT DxReader : public FileReader
     virtual int readFile();
 
     void dataCheck();
+    void updateCellInstancePointers();
 
   private:
     DEFINE_CREATED_DATAARRAY(int32_t, FeatureIds)

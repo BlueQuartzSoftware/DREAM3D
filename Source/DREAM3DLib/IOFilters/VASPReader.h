@@ -63,13 +63,13 @@ class DREAM3DLib_EXPORT VASPReader : public FileReader
     DREAM3D_TYPE_MACRO_SUPER(VASPReader, FileReader)
 
     virtual ~VASPReader();
-    DREAM3D_INSTANCE_STRING_PROPERTY(VertexDataContainerName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(VertexAttributeMatrixName)
+    DREAM3D_FILTER_PARAMETER(QString, VertexDataContainerName)
+    Q_PROPERTY(QString VertexDataContainerName READ getVertexDataContainerName WRITE setVertexDataContainerName)
+    DREAM3D_FILTER_PARAMETER(QString, VertexAttributeMatrixName)
+    Q_PROPERTY(QString VertexAttributeMatrixName READ getVertexAttributeMatrixName WRITE setVertexAttributeMatrixName)
 
     DREAM3D_FILTER_PARAMETER(QString, InputFile)
     Q_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile)
-
-    //------ Created Cell Data
 
     DREAM3D_FILTER_PARAMETER(QString, AtomVelocitiesArrayName)
     Q_PROPERTY(QString AtomVelocitiesArrayName READ getAtomVelocitiesArrayName WRITE setAtomVelocitiesArrayName)

@@ -239,6 +239,9 @@ void RawBinaryReader::setupFilterParameters()
   parameters.push_back(FilterParameter::New("Over Ride Origin & Resolution", "OverRideOriginResolution", FilterParameterWidgetType::BooleanWidget,"bool", false));
   parameters.push_back(FilterParameter::New("Skip Header Bytes", "SkipHeaderBytes", FilterParameterWidgetType::IntWidget,"int", false));
   parameters.push_back(FilterParameter::New("Output Array Name", "OutputArrayName", FilterParameterWidgetType::StringWidget,"QString", false));
+  parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "QString", true));
+  parameters.push_back(FilterParameter::New("Data Container Name", "DataContainerName", FilterParameterWidgetType::StringWidget,"QString", false));
+  parameters.push_back(FilterParameter::New("Cell Attribute Matrix Name", "CellAttributeMatrixName", FilterParameterWidgetType::StringWidget,"QString", false));
   setFilterParameters(parameters);
 }
 
@@ -248,6 +251,8 @@ void RawBinaryReader::setupFilterParameters()
 void RawBinaryReader::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
+  setDataContainerName(reader->readString("DataContainerName", getDataContainerName() ) );
+  setCellAttributeMatrixName(reader->readString("CellAttributeMatrixName", getCellAttributeMatrixName() ) );
   setInputFile( reader->readString( "InputFile", getInputFile() ) );
   setScalarType( reader->readValue("ScalarType", getScalarType()) );
   setDimensionality( reader->readValue("Dimensionality", getDimensionality()) );
@@ -268,8 +273,8 @@ void RawBinaryReader::readFilterParameters(AbstractFilterParametersReader* reade
 int RawBinaryReader::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  /* Place code that will write the inputs values into a file. reference the
-   AbstractFilterParametersWriter class for the proper API to use. */
+  writer->writeValue("DataContainerName", getDataContainerName() );
+  writer->writeValue("CellAttributeMatrixName", getCellAttributeMatrixName() );
   writer->writeValue("ScalarType", getScalarType() );
   writer->writeValue("Dimensionality", getDimensionality() );
   writer->writeValue("NumberOfComponents", getNumberOfComponents() );

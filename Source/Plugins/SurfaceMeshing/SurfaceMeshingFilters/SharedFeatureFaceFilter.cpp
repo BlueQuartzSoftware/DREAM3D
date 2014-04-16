@@ -45,12 +45,11 @@
 // -----------------------------------------------------------------------------
 SharedFeatureFaceFilter::SharedFeatureFaceFilter() :
   SurfaceMeshFilter(),
-  m_SurfaceDataContainerName(DREAM3D::Defaults::SurfaceDataContainerName),
-  m_FaceAttributeMatrixName(DREAM3D::Defaults::FaceAttributeMatrixName),
-  m_SurfaceMeshFeatureFaceIdArrayName(DREAM3D::FaceData::SurfaceMeshFeatureFaceId),
-/*[]*/m_SurfaceMeshFaceLabelsArrayPath(DREAM3D::Defaults::SomePath),
+  m_SurfaceMeshFaceLabelsArrayPath(DREAM3D::Defaults::SurfaceDataContainerName, DREAM3D::Defaults::FaceAttributeMatrixName, DREAM3D::Defaults::SomePath),
   m_SurfaceMeshFaceLabelsArrayName(DREAM3D::FaceData::SurfaceMeshFaceLabels),
-  m_SurfaceMeshFaceLabels(NULL)
+  m_SurfaceMeshFaceLabels(NULL),
+  m_SurfaceMeshFeatureFaceIdsArrayName(DREAM3D::FaceData::SurfaceMeshFeatureFaceId),
+  m_SurfaceMeshFeatureFaceIds(NULL)
 {
   setupFilterParameters();
 }
@@ -69,7 +68,9 @@ void SharedFeatureFaceFilter::setupFilterParameters()
 {
   FilterParameterVector parameters;
   parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "QString", true));
-/*[]*/parameters.push_back(FilterParameter::New("SurfaceMeshFaceLabels", "SurfaceMeshFaceLabelsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
+  parameters.push_back(FilterParameter::New("SurfaceMeshFaceLabels", "SurfaceMeshFaceLabelsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
+  parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "QString", true));
+  parameters.push_back(FilterParameter::New("SurfaceMeshFeatureFaceIds", "SurfaceMeshFeatureFaceIdsArrayName", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
   setFilterParameters(parameters);
 }
 
@@ -79,6 +80,7 @@ void SharedFeatureFaceFilter::setupFilterParameters()
 void SharedFeatureFaceFilter::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
+  setSurfaceMeshFeatureFaceIdsArrayName(reader->readString("SurfaceMeshFeatureFaceIdsArrayName", getSurfaceMeshFeatureFaceIdsArrayName() ) );
   setSurfaceMeshFaceLabelsArrayPath(reader->readDataArrayPath("SurfaceMeshFaceLabelsArrayPath", getSurfaceMeshFaceLabelsArrayPath() ) );
   reader->closeFilterGroup();
 }
@@ -89,10 +91,8 @@ void SharedFeatureFaceFilter::readFilterParameters(AbstractFilterParametersReade
 int SharedFeatureFaceFilter::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
+  writer->writeValue("SurfaceMeshFeatureFaceIdsArrayName", getSurfaceMeshFeatureFaceIdsArrayName() );
   writer->writeValue("SurfaceMeshFaceLabelsArrayPath", getSurfaceMeshFaceLabelsArrayPath() );
-  /* Place code that will write the inputs values into a file. reference the
-   AbstractFilterParametersWriter class for the proper API to use. */
-  /*  writer->writeValue("OutputFile", getOutputFile() ); */
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
@@ -102,9 +102,8 @@ int SharedFeatureFaceFilter::writeFilterParameters(AbstractFilterParametersWrite
 // -----------------------------------------------------------------------------
 void SharedFeatureFaceFilter::dataCheck()
 {
-  SurfaceDataContainer* sm = getDataContainerArray()->getPrereqDataContainer<SurfaceDataContainer, AbstractFilter>(this, getSurfaceDataContainerName(), false);
-  if(getErrorCondition() < 0) { return; }
-  AttributeMatrix::Pointer faceAttrMat = sm->getPrereqAttributeMatrix<AbstractFilter>(this, getFaceAttributeMatrixName(), -301);
+  DataArrayPath tempPath;
+  SurfaceDataContainer* sm = getDataContainerArray()->getPrereqDataContainer<SurfaceDataContainer, AbstractFilter>(this, m_SurfaceMeshFaceLabelsArrayPath.getDataContainerName(), false);
   if(getErrorCondition() < 0) { return; }
 
   if(NULL == sm)
@@ -128,17 +127,17 @@ void SharedFeatureFaceFilter::dataCheck()
   }
 
   QVector<size_t> dims(1, 2);
-////====>REMOVE THIS    m_SurfaceMeshFaceLabelsPtr = faceAttrMat->getPrereqArray<DataArray<int32_t>, AbstractFilter>(this, m_SurfaceMeshFaceLabelsArrayName, -386, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   m_SurfaceMeshFaceLabelsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getSurfaceMeshFaceLabelsArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_SurfaceMeshFaceLabelsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_SurfaceMeshFaceLabels = m_SurfaceMeshFaceLabelsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   // List any arrays that are created during this filter
   dims[0] = 1;
-  Int32ArrayType::Pointer featureFaceId = Int32ArrayType::CreateArray(1, dims, DREAM3D::FaceData::SurfaceMeshFeatureFaceId);
-  sm->getAttributeMatrix(getFaceAttributeMatrixName())->addAttributeArray(DREAM3D::FaceData::SurfaceMeshFeatureFaceId, featureFaceId);
+  tempPath.update(m_SurfaceMeshFaceLabelsArrayPath.getDataContainerName(), m_SurfaceMeshFaceLabelsArrayPath.getAttributeMatrixName(), getSurfaceMeshFeatureFaceIdsArrayName() );
+  m_SurfaceMeshFeatureFaceIdsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int64_t>, AbstractFilter, int64_t>(this,  tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if( NULL != m_SurfaceMeshFeatureFaceIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  { m_SurfaceMeshFeatureFaceIds = m_SurfaceMeshFeatureFaceIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
-
 
 // -----------------------------------------------------------------------------
 //
@@ -170,9 +169,6 @@ void SharedFeatureFaceFilter::execute()
 //  FaceArray::Face_t* triangles = trianglesPtr->getPointer(0);
   size_t totalPoints = trianglesPtr->getNumberOfTuples();
 
-  Int32ArrayType::Pointer featureFaceId = Int32ArrayType::CreateArray(trianglesPtr->getNumberOfTuples(), DREAM3D::FaceData::SurfaceMeshFeatureFaceId);
-  featureFaceId->initializeWithZeros();
-
   QMap<uint64_t, int> faceSizeMap;
   QMap<uint64_t, int32_t> faceIdMap; // This maps a unique 64 bit integer to an increasing 32 bit integer
   uint32_t index = 0;
@@ -201,13 +197,13 @@ void SharedFeatureFaceFilter::execute()
     {
       faceSizeMap[*faceId_64] = 1;
       faceIdMap[*faceId_64] = index;
-      featureFaceId->setValue(t, index);
+      m_SurfaceMeshFeatureFaceIds[t] = index;
       ++index;
     }
     else
     {
       faceSizeMap[*faceId_64]++;
-      featureFaceId->setValue(t, faceIdMap[*faceId_64]);
+      m_SurfaceMeshFeatureFaceIds[t] = faceIdMap[*faceId_64];
     }
   }
 
@@ -239,14 +235,12 @@ void SharedFeatureFaceFilter::execute()
     }
     index = faceIdMap[*faceId_64];
 #else
-    index = featureFaceId->getValue(t);
+    index = m_SurfaceMeshFeatureFaceIds[t];
 #endif
     faces[index].push_back(t);
   }
 
   m_SharedFeatureFaces = faces;
-
-  sm->getAttributeMatrix(getFaceAttributeMatrixName())->addAttributeArray(DREAM3D::FaceData::SurfaceMeshFeatureFaceId, featureFaceId);
 
   /* Let the GUI know we are done with this filter */
   notifyStatusMessage(getHumanLabel(), "Complete");

@@ -63,8 +63,10 @@ class DREAM3DLib_EXPORT RawBinaryReader : public AbstractFilter
     DREAM3D_TYPE_MACRO_SUPER(RawBinaryReader, AbstractFilter)
 
     virtual ~RawBinaryReader();
-    DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
+    DREAM3D_FILTER_PARAMETER(QString, DataContainerName)
+    Q_PROPERTY(QString DataContainerName READ getDataContainerName WRITE setDataContainerName)
+    DREAM3D_FILTER_PARAMETER(QString, CellAttributeMatrixName)
+    Q_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
 
     typedef struct { int x; int y; int z; } Dimensions_t;
 

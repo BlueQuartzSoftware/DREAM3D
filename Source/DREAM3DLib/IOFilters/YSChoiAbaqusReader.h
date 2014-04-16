@@ -53,10 +53,14 @@ class DREAM3DLib_EXPORT YSChoiAbaqusReader : public FileReader
 
 
     virtual ~YSChoiAbaqusReader();
-    DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(CellEnsembleAttributeMatrixName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(CellFeatureAttributeMatrixName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
+    DREAM3D_FILTER_PARAMETER(QString, DataContainerName)
+    Q_PROPERTY(QString DataContainerName READ getDataContainerName WRITE setDataContainerName)
+    DREAM3D_FILTER_PARAMETER(QString, CellEnsembleAttributeMatrixName)
+    Q_PROPERTY(QString CellEnsembleAttributeMatrixName READ getCellEnsembleAttributeMatrixName WRITE setCellEnsembleAttributeMatrixName)
+    DREAM3D_FILTER_PARAMETER(QString, CellFeatureAttributeMatrixName)
+    Q_PROPERTY(QString CellFeatureAttributeMatrixName READ getCellFeatureAttributeMatrixName WRITE setCellFeatureAttributeMatrixName)
+    DREAM3D_FILTER_PARAMETER(QString, CellAttributeMatrixName)
+    Q_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
 
     DREAM3D_FILTER_PARAMETER(QString, InputFile)
     Q_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile)
@@ -123,6 +127,9 @@ class DREAM3DLib_EXPORT YSChoiAbaqusReader : public FileReader
     DEFINE_CREATED_DATAARRAY(unsigned int, CrystalStructures)
 
     void dataCheck();
+    void updateCellInstancePointers();
+    void updateFeatureInstancePointers();
+    void updateEnsembleInstancePointers();
 
     YSChoiAbaqusReader(const YSChoiAbaqusReader&); // Copy Constructor Not Implemented
     void operator=(const YSChoiAbaqusReader&); // Operator '=' Not Implemented
