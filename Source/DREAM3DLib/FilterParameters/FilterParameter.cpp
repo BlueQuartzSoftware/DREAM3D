@@ -81,7 +81,7 @@ FilterParameter::Pointer FilterParameter::New(const QString& humanLabel, const Q
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FilterParameter::Pointer FilterParameter::New(const QString& humanLabel, const QString& propertyName,
+FilterParameter::Pointer FilterParameter::NewConditional(const QString& humanLabel, const QString& propertyName,
                        const QString& widgetType, const QString& valueType,
                        bool advanced,
                        bool isConditional,

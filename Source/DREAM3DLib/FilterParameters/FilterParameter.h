@@ -172,7 +172,7 @@ class DREAM3DLib_EXPORT FilterParameter
      * @param conditionalLabel The text to display next to the check box to help the user understand what is going on
      * @return
      */
-    static Pointer New(const QString& humanLabel, const QString& propertyName,
+    static Pointer NewConditional(const QString& humanLabel, const QString& propertyName,
                        const QString& widgetType, const QString& valueType,
                        bool advanced,
                        bool isConditional,
