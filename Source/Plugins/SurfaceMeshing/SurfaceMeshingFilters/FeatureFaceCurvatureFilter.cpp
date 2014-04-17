@@ -55,11 +55,6 @@
 FeatureFaceCurvatureFilter::FeatureFaceCurvatureFilter() :
   SurfaceMeshFilter(),
   m_EdgeAttributeMatrixName(DREAM3D::Defaults::EdgeAttributeMatrixName),
-  m_SurfaceMeshUniqueEdgesArrayName(DREAM3D::EdgeData::SurfaceMeshUniqueEdges),
-  m_PrincipalCurvature1ArrayName(DREAM3D::FaceData::SurfaceMeshPrincipalCurvature1),
-  m_PrincipalCurvature2ArrayName(DREAM3D::FaceData::SurfaceMeshPrincipalCurvature2),
-  m_PrincipalDirection1ArrayName(DREAM3D::FaceData::SurfaceMeshPrincipalDirection1),
-  m_PrincipalDirection2ArrayName(DREAM3D::FaceData::SurfaceMeshPrincipalDirection1),
   m_NRing(3),
   m_ComputePrincipalDirectionVectors(true),
   m_ComputeMeanCurvature(false),
@@ -68,6 +63,20 @@ FeatureFaceCurvatureFilter::FeatureFaceCurvatureFilter() :
   m_SurfaceMeshFaceLabelsArrayPath(DREAM3D::Defaults::SurfaceDataContainerName, DREAM3D::Defaults::FaceAttributeMatrixName, DREAM3D::FaceData::SurfaceMeshFaceLabels),
   m_SurfaceMeshFaceNormalsArrayPath(DREAM3D::Defaults::SurfaceDataContainerName, DREAM3D::Defaults::FaceAttributeMatrixName, DREAM3D::FaceData::SurfaceMeshFaceNormals),
   m_SurfaceMeshTriangleCentroidsArrayPath(DREAM3D::Defaults::SurfaceDataContainerName, DREAM3D::Defaults::FaceAttributeMatrixName, DREAM3D::FaceData::SurfaceMeshFaceCentroids),
+  m_SurfaceMeshUniqueEdgesArrayName(DREAM3D::EdgeData::SurfaceMeshUniqueEdges),
+  m_SurfaceMeshUniqueEdges(NULL),
+  m_SurfaceMeshPrincipalCurvature1sArrayName(DREAM3D::FaceData::SurfaceMeshPrincipalCurvature1),
+  m_SurfaceMeshPrincipalCurvature1s(NULL),
+  m_SurfaceMeshPrincipalCurvature2sArrayName(DREAM3D::FaceData::SurfaceMeshPrincipalCurvature2),
+  m_SurfaceMeshPrincipalCurvature2s(NULL),
+  m_SurfaceMeshPrincipalDirection1sArrayName(DREAM3D::FaceData::SurfaceMeshPrincipalDirection1),
+  m_SurfaceMeshPrincipalDirection1s(NULL),
+  m_SurfaceMeshPrincipalDirection2sArrayName(DREAM3D::FaceData::SurfaceMeshPrincipalDirection2),
+  m_SurfaceMeshPrincipalDirection2s(NULL),
+  m_SurfaceMeshGaussianCurvaturesArrayName(DREAM3D::FaceData::SurfaceMeshGaussianCurvatures),
+  m_SurfaceMeshGaussianCurvatures(NULL),
+  m_SurfaceMeshMeanCurvaturesArrayName(DREAM3D::FaceData::SurfaceMeshMeanCurvatures),
+  m_SurfaceMeshMeanCurvatures(NULL),
   m_SurfaceMeshFaceLabelsArrayName(DREAM3D::FaceData::SurfaceMeshFaceLabels),
   m_SurfaceMeshFaceLabels(NULL),
   m_SurfaceMeshTriangleCentroidsArrayName(DREAM3D::FaceData::SurfaceMeshFaceCentroids),
@@ -100,6 +109,15 @@ void FeatureFaceCurvatureFilter::setupFilterParameters()
   parameters.push_back(FilterParameter::New("SurfaceMeshFaceLabels", "SurfaceMeshFaceLabelsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
   parameters.push_back(FilterParameter::New("SurfaceMeshFaceNormals", "SurfaceMeshFaceNormalsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
   parameters.push_back(FilterParameter::New("SurfaceMeshTriangleCentroids", "SurfaceMeshTriangleCentroidsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
+  parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "QString", true));
+  parameters.push_back(FilterParameter::New("Edge Attribute Matrix Name", "EdgeAttributeMatrixName", FilterParameterWidgetType::StringWidget, "QString", true, ""));
+  parameters.push_back(FilterParameter::New("SurfaceMeshPrincipalCurvature1sArrayName", "SurfaceMeshPrincipalCurvature1sArrayName", FilterParameterWidgetType::StringWidget, "QString", true, ""));
+  parameters.push_back(FilterParameter::New("SurfaceMeshPrincipalCurvature2sArrayName", "SurfaceMeshPrincipalCurvature2sArrayName", FilterParameterWidgetType::StringWidget, "QString", true, ""));
+  parameters.push_back(FilterParameter::New("SurfaceMeshPrincipalDirection1sArrayName", "SurfaceMeshPrincipalDirection1sArrayName", FilterParameterWidgetType::StringWidget, "QString", true, ""));
+  parameters.push_back(FilterParameter::New("SurfaceMeshPrincipalDirection2sArrayName", "SurfaceMeshPrincipalDirection2sArrayName", FilterParameterWidgetType::StringWidget, "QString", true, ""));
+  parameters.push_back(FilterParameter::New("SurfaceMeshGaussianCurvaturesArrayName", "SurfaceMeshGaussianCurvaturesArrayName", FilterParameterWidgetType::StringWidget, "QString", true, ""));
+  parameters.push_back(FilterParameter::New("SurfaceMeshMeanCurvaturesArrayName", "SurfaceMeshMeanCurvaturesArrayName", FilterParameterWidgetType::StringWidget, "QString", true, ""));
+  parameters.push_back(FilterParameter::New("SurfaceMeshUniqueEdgesArrayName", "SurfaceMeshUniqueEdgesArrayName", FilterParameterWidgetType::StringWidget, "QString", true, ""));
   setFilterParameters(parameters);
 }
 
@@ -109,6 +127,14 @@ void FeatureFaceCurvatureFilter::setupFilterParameters()
 void FeatureFaceCurvatureFilter::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
+  setEdgeAttributeMatrixName(reader->readString("EdgeAttributeMatrixName", getEdgeAttributeMatrixName() ) );
+  setSurfaceMeshPrincipalCurvature1sArrayName(reader->readString("SurfaceMeshPrincipalCurvature1sArrayName", getSurfaceMeshPrincipalCurvature1sArrayName() ) );
+  setSurfaceMeshPrincipalCurvature2sArrayName(reader->readString("SurfaceMeshPrincipalCurvature2sArrayName", getSurfaceMeshPrincipalCurvature2sArrayName() ) );
+  setSurfaceMeshPrincipalDirection1sArrayName(reader->readString("SurfaceMeshPrincipalDirection1sArrayName", getSurfaceMeshPrincipalDirection1sArrayName() ) );
+  setSurfaceMeshPrincipalDirection2sArrayName(reader->readString("SurfaceMeshPrincipalDirection2sArrayName", getSurfaceMeshPrincipalDirection2sArrayName() ) );
+  setSurfaceMeshGaussianCurvaturesArrayName(reader->readString("SurfaceMeshGaussianCurvaturesArrayName", getSurfaceMeshGaussianCurvaturesArrayName() ) );
+  setSurfaceMeshMeanCurvaturesArrayName(reader->readString("SurfaceMeshMeanCurvaturesArrayName", getSurfaceMeshMeanCurvaturesArrayName() ) );
+  setSurfaceMeshUniqueEdgesArrayName(reader->readString("SurfaceMeshUniqueEdgesArrayName", getSurfaceMeshUniqueEdgesArrayName() ) );
   setSurfaceMeshTriangleCentroidsArrayPath(reader->readDataArrayPath("SurfaceMeshTriangleCentroidsArrayPath", getSurfaceMeshTriangleCentroidsArrayPath() ) );
   setSurfaceMeshFaceNormalsArrayPath(reader->readDataArrayPath("SurfaceMeshFaceNormalsArrayPath", getSurfaceMeshFaceNormalsArrayPath() ) );
   setSurfaceMeshFaceLabelsArrayPath(reader->readDataArrayPath("SurfaceMeshFaceLabelsArrayPath", getSurfaceMeshFaceLabelsArrayPath() ) );
@@ -126,6 +152,14 @@ void FeatureFaceCurvatureFilter::readFilterParameters(AbstractFilterParametersRe
 int FeatureFaceCurvatureFilter::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
+  writer->writeValue("EdgeAttributeMatrixName", getEdgeAttributeMatrixName() );
+  writer->writeValue("SurfaceMeshPrincipalCurvature1sArrayName", getSurfaceMeshPrincipalCurvature1sArrayName() );
+  writer->writeValue("SurfaceMeshPrincipalCurvature2sArrayName", getSurfaceMeshPrincipalCurvature2sArrayName() );
+  writer->writeValue("SurfaceMeshPrincipalDirection1sArrayName", getSurfaceMeshPrincipalDirection1sArrayName() );
+  writer->writeValue("SurfaceMeshPrincipalDirection2sArrayName", getSurfaceMeshPrincipalDirection2sArrayName() );
+  writer->writeValue("SurfaceMeshGaussianCurvaturesArrayName", getSurfaceMeshGaussianCurvaturesArrayName() );
+  writer->writeValue("SurfaceMeshMeanCurvaturesArrayName", getSurfaceMeshMeanCurvaturesArrayName() );
+  writer->writeValue("SurfaceMeshUniqueEdgesArrayName", getSurfaceMeshUniqueEdgesArrayName() );
   writer->writeValue("SurfaceMeshTriangleCentroidsArrayPath", getSurfaceMeshTriangleCentroidsArrayPath() );
   writer->writeValue("SurfaceMeshFaceNormalsArrayPath", getSurfaceMeshFaceNormalsArrayPath() );
   writer->writeValue("SurfaceMeshFaceLabelsArrayPath", getSurfaceMeshFaceLabelsArrayPath() );
@@ -143,9 +177,13 @@ int FeatureFaceCurvatureFilter::writeFilterParameters(AbstractFilterParametersWr
 // -----------------------------------------------------------------------------
 void FeatureFaceCurvatureFilter::dataCheck()
 {
+  DataArrayPath tempPath;
+  setErrorCondition(0);
+
   SurfaceDataContainer* sm = getDataContainerArray()->getPrereqDataContainer<SurfaceDataContainer, AbstractFilter>(this, m_SurfaceMeshFaceLabelsArrayPath.getDataContainerName(), false);
   if(getErrorCondition() < 0) { return; }
-  AttributeMatrix::Pointer edgeAttrMat = sm->getPrereqAttributeMatrix<AbstractFilter>(this, getEdgeAttributeMatrixName(), -301);
+  QVector<size_t> tDims(1, 0);
+  AttributeMatrix::Pointer edgeAttrMat = sm->createNonPrereqAttributeMatrix<AbstractFilter>(this, getEdgeAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::Edge);
   if(getErrorCondition() < 0) { return; }
 
   // We MUST have Triangles defined also.
@@ -158,35 +196,49 @@ void FeatureFaceCurvatureFilter::dataCheck()
   // We do not know the size of the array so we can not use the macro so we just manually call
   // the needed methods that will propagate these array additions to the pipeline
   QVector<size_t> dims(1, 2);
-  DataArray<int>::Pointer uniqueEdgesArray = DataArray<int>::CreateArray(1, dims, DREAM3D::EdgeData::SurfaceMeshUniqueEdges);
-  edgeAttrMat->addAttributeArray(DREAM3D::EdgeData::SurfaceMeshUniqueEdges, uniqueEdgesArray);
+  tempPath.update(m_SurfaceMeshFaceLabelsArrayPath.getDataContainerName(), getEdgeAttributeMatrixName(), getSurfaceMeshUniqueEdgesArrayName() );
+  m_SurfaceMeshUniqueEdgesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int64_t>, AbstractFilter, int64_t>(this, tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if( NULL != m_SurfaceMeshUniqueEdgesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  { m_SurfaceMeshUniqueEdges = m_SurfaceMeshUniqueEdgesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
-  DoubleArrayType::Pointer principalCurv1 = DoubleArrayType::CreateArray(1, DREAM3D::FaceData::SurfaceMeshPrincipalCurvature1);
-  faceAttrMat->addAttributeArray(DREAM3D::FaceData::SurfaceMeshPrincipalCurvature1, principalCurv1);
+  tempPath.update(m_SurfaceMeshFaceLabelsArrayPath.getDataContainerName(), getEdgeAttributeMatrixName(), getSurfaceMeshPrincipalCurvature1sArrayName() );
+  m_SurfaceMeshPrincipalCurvature1sPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<double>, AbstractFilter, double>(this, tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if( NULL != m_SurfaceMeshPrincipalCurvature1sPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  { m_SurfaceMeshPrincipalCurvature1s = m_SurfaceMeshPrincipalCurvature1sPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
-  DoubleArrayType::Pointer principalCurv2 = DoubleArrayType::CreateArray(1, DREAM3D::FaceData::SurfaceMeshPrincipalCurvature2);
-  faceAttrMat->addAttributeArray(DREAM3D::FaceData::SurfaceMeshPrincipalCurvature2, principalCurv2);
+  tempPath.update(m_SurfaceMeshFaceLabelsArrayPath.getDataContainerName(), getEdgeAttributeMatrixName(), getSurfaceMeshPrincipalCurvature2sArrayName() );
+  m_SurfaceMeshPrincipalCurvature2sPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<double>, AbstractFilter, double>(this, tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if( NULL != m_SurfaceMeshPrincipalCurvature2sPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  { m_SurfaceMeshPrincipalCurvature2s = m_SurfaceMeshPrincipalCurvature2sPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   if (m_ComputeGaussianCurvature == true)
   {
-    DoubleArrayType::Pointer gaussianCurv = DoubleArrayType::CreateArray(1, DREAM3D::FaceData::SurfaceMeshGaussianCurvatures);
-    faceAttrMat->addAttributeArray(DREAM3D::FaceData::SurfaceMeshGaussianCurvatures, gaussianCurv);
+    tempPath.update(m_SurfaceMeshFaceLabelsArrayPath.getDataContainerName(), getEdgeAttributeMatrixName(), getSurfaceMeshGaussianCurvaturesArrayName() );
+    m_SurfaceMeshGaussianCurvaturesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<double>, AbstractFilter, double>(this, tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+    if( NULL != m_SurfaceMeshGaussianCurvaturesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+    { m_SurfaceMeshGaussianCurvatures = m_SurfaceMeshGaussianCurvaturesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   }
 
   if (m_ComputeMeanCurvature == true)
   {
-    DoubleArrayType::Pointer meanCurv = DoubleArrayType::CreateArray(1, DREAM3D::FaceData::SurfaceMeshMeanCurvatures);
-    faceAttrMat->addAttributeArray(DREAM3D::FaceData::SurfaceMeshMeanCurvatures, meanCurv);
+    tempPath.update(m_SurfaceMeshFaceLabelsArrayPath.getDataContainerName(), getEdgeAttributeMatrixName(), getSurfaceMeshMeanCurvaturesArrayName() );
+    m_SurfaceMeshMeanCurvaturesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<double>, AbstractFilter, double>(this, tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+    if( NULL != m_SurfaceMeshMeanCurvaturesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+    { m_SurfaceMeshMeanCurvatures = m_SurfaceMeshMeanCurvaturesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   }
 
   if (m_ComputePrincipalDirectionVectors == true)
   {
     QVector<size_t> dims(1, 3);
-    DoubleArrayType::Pointer prinDir1 = DoubleArrayType::CreateArray(1, dims, DREAM3D::FaceData::SurfaceMeshPrincipalDirection1);
-    faceAttrMat->addAttributeArray(DREAM3D::FaceData::SurfaceMeshPrincipalDirection1, prinDir1);
+    tempPath.update(m_SurfaceMeshFaceLabelsArrayPath.getDataContainerName(), getEdgeAttributeMatrixName(), getSurfaceMeshPrincipalDirection1sArrayName() );
+    m_SurfaceMeshPrincipalDirection1sPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<double>, AbstractFilter, double>(this, tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+    if( NULL != m_SurfaceMeshPrincipalDirection1sPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+    { m_SurfaceMeshPrincipalDirection1s = m_SurfaceMeshPrincipalDirection1sPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
-    DoubleArrayType::Pointer prinDir2 = DoubleArrayType::CreateArray(1, dims, DREAM3D::FaceData::SurfaceMeshPrincipalDirection2);
-    faceAttrMat->addAttributeArray(DREAM3D::FaceData::SurfaceMeshPrincipalDirection2, prinDir2);
+    tempPath.update(m_SurfaceMeshFaceLabelsArrayPath.getDataContainerName(), getEdgeAttributeMatrixName(), getSurfaceMeshPrincipalDirection2sArrayName() );
+    m_SurfaceMeshPrincipalDirection2sPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<double>, AbstractFilter, double>(this, tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+    if( NULL != m_SurfaceMeshPrincipalDirection2sPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+    { m_SurfaceMeshPrincipalDirection2s = m_SurfaceMeshPrincipalDirection2sPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   }
 
   dims[0] = 2;
@@ -201,9 +253,7 @@ void FeatureFaceCurvatureFilter::dataCheck()
   m_SurfaceMeshTriangleCentroidsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<double>, AbstractFilter>(this, getSurfaceMeshTriangleCentroidsArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_SurfaceMeshTriangleCentroidsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_SurfaceMeshTriangleCentroids = m_SurfaceMeshTriangleCentroidsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-
 }
-
 
 // -----------------------------------------------------------------------------
 //
@@ -226,7 +276,7 @@ void FeatureFaceCurvatureFilter::execute()
   dataCheck();
   if(getErrorCondition() < 0) { return; }
 
-  SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
+  SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceMeshFaceLabelsArrayPath().getDataContainerName());
 
   // Get our Reference counted Array of Face Structures
   FaceArray::Pointer trianglesPtr = sm->getFaces();
@@ -262,38 +312,6 @@ void FeatureFaceCurvatureFilter::execute()
   // get the QMap from the SharedFeatureFaces filter
   SharedFeatureFaceFilter::SharedFeatureFaces_t& sharedFeatureFaces = sharedFeatureFacesFilter->getSharedFeatureFaces();
 
-  DoubleArrayType::Pointer principalCurvature1 = DoubleArrayType::CreateArray(numTriangles, DREAM3D::FaceData::SurfaceMeshPrincipalCurvature1);
-  principalCurvature1->initializeWithZeros();
-  DoubleArrayType::Pointer principalCurvature2 = DoubleArrayType::CreateArray(numTriangles, DREAM3D::FaceData::SurfaceMeshPrincipalCurvature2);
-  principalCurvature2->initializeWithZeros();
-
-  DoubleArrayType::Pointer principalDirection1;
-  DoubleArrayType::Pointer principalDirection2;
-  if (m_ComputePrincipalDirectionVectors == true)
-  {
-    QVector<size_t> dims(1, 3);
-    principalDirection1 = DoubleArrayType::CreateArray(numTriangles, dims, DREAM3D::FaceData::SurfaceMeshPrincipalDirection1);
-    principalDirection1->initializeWithZeros();
-
-    principalDirection2 = DoubleArrayType::CreateArray(numTriangles, dims, DREAM3D::FaceData::SurfaceMeshPrincipalDirection2);
-    principalDirection2->initializeWithZeros();
-  }
-
-  // Check if the user wants to calculate the Gaussian Curvature
-  DoubleArrayType::Pointer gaussianCurvature;
-  if (m_ComputeGaussianCurvature == true)
-  {
-    gaussianCurvature = DoubleArrayType::CreateArray(numTriangles, DREAM3D::FaceData::SurfaceMeshGaussianCurvatures);
-    gaussianCurvature->initializeWithZeros();
-  }
-  // Check if the user wants to calculate the Mean Curvature
-  DoubleArrayType::Pointer meanCurvature;
-  if (m_ComputeGaussianCurvature == true)
-  {
-    meanCurvature = DoubleArrayType::CreateArray(numTriangles, DREAM3D::FaceData::SurfaceMeshMeanCurvatures);
-    meanCurvature->initializeWithZeros();
-  }
-
   int index = 0;
   m_TotalFeatureFaces = sharedFeatureFaces.size();
   m_CompletedFeatureFaces = 0;
@@ -327,9 +345,9 @@ void FeatureFaceCurvatureFilter::execute()
     if (doParallel == true)
     {
       g->run(CalculateTriangleGroupCurvatures(m_NRing, triangleIds, m_UseNormalsForCurveFitting,
-                                              principalCurvature1, principalCurvature2,
-                                              principalDirection1, principalDirection2,
-                                              gaussianCurvature, meanCurvature, sm,
+                                              m_SurfaceMeshPrincipalCurvature1sPtr.lock(), m_SurfaceMeshPrincipalCurvature2sPtr.lock(),
+                                              m_SurfaceMeshPrincipalDirection1sPtr.lock(), m_SurfaceMeshPrincipalDirection2sPtr.lock(),
+                                              m_SurfaceMeshGaussianCurvaturesPtr.lock(), m_SurfaceMeshMeanCurvaturesPtr.lock(), sm,
                                               m_SurfaceMeshFaceLabelsPtr.lock(),
                                               m_SurfaceMeshFaceNormalsPtr.lock(),
                                               m_SurfaceMeshTriangleCentroidsPtr.lock(),
@@ -339,9 +357,9 @@ void FeatureFaceCurvatureFilter::execute()
 #endif
     {
       CalculateTriangleGroupCurvatures curvature(m_NRing, triangleIds, m_UseNormalsForCurveFitting,
-                                                 principalCurvature1, principalCurvature2,
-                                                 principalDirection1, principalDirection2,
-                                                 gaussianCurvature, meanCurvature, sm,
+                                                 m_SurfaceMeshPrincipalCurvature1sPtr.lock(), m_SurfaceMeshPrincipalCurvature2sPtr.lock(),
+                                                 m_SurfaceMeshPrincipalDirection1sPtr.lock(), m_SurfaceMeshPrincipalDirection2sPtr.lock(),
+                                                 m_SurfaceMeshGaussianCurvaturesPtr.lock(), m_SurfaceMeshMeanCurvaturesPtr.lock(), sm,
                                                  m_SurfaceMeshFaceLabelsPtr.lock(),
                                                  m_SurfaceMeshFaceNormalsPtr.lock(),
                                                  m_SurfaceMeshTriangleCentroidsPtr.lock(),
@@ -357,26 +375,7 @@ void FeatureFaceCurvatureFilter::execute()
   delete g;
 #endif
 
-  AttributeMatrix::Pointer faceAttrMat = sm->getAttributeMatrix(getFaceAttributeMatrixName());
-
-  faceAttrMat->addAttributeArray(principalCurvature1->getName(), principalCurvature1);
-  faceAttrMat->addAttributeArray(principalCurvature2->getName(), principalCurvature2);
-  if (m_ComputePrincipalDirectionVectors == true)
-  {
-    faceAttrMat->addAttributeArray(principalDirection1->getName(), principalDirection1);
-    faceAttrMat->addAttributeArray(principalDirection2->getName(), principalDirection2);
-  }
-
-  if (m_ComputeGaussianCurvature == true)
-  {
-    faceAttrMat->addAttributeArray(gaussianCurvature->getName(), gaussianCurvature);
-  }
-  if (m_ComputeMeanCurvature == true)
-  {
-    faceAttrMat->addAttributeArray(meanCurvature->getName(), meanCurvature);
-  }
-
-  faceAttrMat->removeAttributeArray(DREAM3D::FaceData::SurfaceMeshFeatureFaceId);
+  getDataContainerArray()->getAttributeMatrix(getSurfaceMeshFaceLabelsArrayPath())->removeAttributeArray(DREAM3D::FaceData::SurfaceMeshFeatureFaceId);
   if (clearMeshLinks == true)
   {
     trianglesPtr->deleteFacesContainingVert();

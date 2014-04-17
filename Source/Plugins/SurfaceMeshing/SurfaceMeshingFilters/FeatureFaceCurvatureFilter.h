@@ -61,13 +61,22 @@ class FeatureFaceCurvatureFilter : public SurfaceMeshFilter
     DREAM3D_TYPE_MACRO_SUPER(FeatureFaceCurvatureFilter, SurfaceMeshFilter)
 
     virtual ~FeatureFaceCurvatureFilter();
-    DREAM3D_INSTANCE_STRING_PROPERTY(EdgeAttributeMatrixName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshUniqueEdgesArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(PrincipalCurvature1ArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(PrincipalCurvature2ArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(PrincipalDirection1ArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(PrincipalDirection2ArrayName)
-
+    DREAM3D_FILTER_PARAMETER(QString, EdgeAttributeMatrixName)
+    Q_PROPERTY(QString EdgeAttributeMatrixName READ getEdgeAttributeMatrixName WRITE setEdgeAttributeMatrixName)
+    DREAM3D_FILTER_PARAMETER(QString, SurfaceMeshUniqueEdgesArrayName)
+    Q_PROPERTY(QString SurfaceMeshUniqueEdgesArrayName READ getSurfaceMeshUniqueEdgesArrayName WRITE setSurfaceMeshUniqueEdgesArrayName)
+    DREAM3D_FILTER_PARAMETER(QString, SurfaceMeshPrincipalCurvature1sArrayName)
+    Q_PROPERTY(QString SurfaceMeshPrincipalCurvature1sArrayName READ getSurfaceMeshPrincipalCurvature1sArrayName WRITE setSurfaceMeshPrincipalCurvature1sArrayName)
+    DREAM3D_FILTER_PARAMETER(QString, SurfaceMeshPrincipalCurvature2sArrayName)
+    Q_PROPERTY(QString SurfaceMeshPrincipalCurvature2sArrayName READ getSurfaceMeshPrincipalCurvature2sArrayName WRITE setSurfaceMeshPrincipalCurvature2sArrayName)
+    DREAM3D_FILTER_PARAMETER(QString, SurfaceMeshPrincipalDirection1sArrayName)
+    Q_PROPERTY(QString SurfaceMeshPrincipalDirection1sArrayName READ getSurfaceMeshPrincipalDirection1sArrayName WRITE setSurfaceMeshPrincipalDirection1sArrayName)
+    DREAM3D_FILTER_PARAMETER(QString, SurfaceMeshPrincipalDirection2sArrayName)
+    Q_PROPERTY(QString SurfaceMeshPrincipalDirection2sArrayName READ getSurfaceMeshPrincipalDirection2sArrayName WRITE setSurfaceMeshPrincipalDirection2sArrayName)
+    DREAM3D_FILTER_PARAMETER(QString, SurfaceMeshGaussianCurvaturesArrayName)
+    Q_PROPERTY(QString SurfaceMeshGaussianCurvaturesArrayName READ getSurfaceMeshGaussianCurvaturesArrayName WRITE setSurfaceMeshGaussianCurvaturesArrayName)
+    DREAM3D_FILTER_PARAMETER(QString, SurfaceMeshMeanCurvaturesArrayName)
+    Q_PROPERTY(QString SurfaceMeshMeanCurvaturesArrayName READ getSurfaceMeshMeanCurvaturesArrayName WRITE setSurfaceMeshMeanCurvaturesArrayName)
 
     /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
     DREAM3D_FILTER_PARAMETER(int, NRing)
@@ -162,8 +171,14 @@ class FeatureFaceCurvatureFilter : public SurfaceMeshFilter
     DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, SurfaceMeshFaceLabels)
     DEFINE_PTR_WEAKPTR_DATAARRAY(double, SurfaceMeshTriangleCentroids)
     DEFINE_PTR_WEAKPTR_DATAARRAY(double, SurfaceMeshFaceNormals)
+    DEFINE_CREATED_DATAARRAY(int64_t, SurfaceMeshUniqueEdges)
+    DEFINE_CREATED_DATAARRAY(double, SurfaceMeshPrincipalCurvature1s)
+    DEFINE_CREATED_DATAARRAY(double, SurfaceMeshPrincipalCurvature2s)
+    DEFINE_CREATED_DATAARRAY(double, SurfaceMeshPrincipalDirection1s)
+    DEFINE_CREATED_DATAARRAY(double, SurfaceMeshPrincipalDirection2s)
+    DEFINE_CREATED_DATAARRAY(double, SurfaceMeshGaussianCurvatures)
+    DEFINE_CREATED_DATAARRAY(double, SurfaceMeshMeanCurvatures)
 
-    int32_t* m_SurfaceMeshUniqueEdges;
     int32_t* m_SurfaceMeshFaceEdges;
     int32_t  m_TotalFeatureFaces;
     int32_t  m_CompletedFeatureFaces;
