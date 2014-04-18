@@ -66,11 +66,12 @@ class BinaryNodesTrianglesReader : public SurfaceMeshFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(VertexAttributeMatrixName)
     DREAM3D_INSTANCE_STRING_PROPERTY(FaceAttributeMatrixName)
 
+    DREAM3D_INSTANCE_STRING_PROPERTY(FaceLabelsArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshNodeTypesArrayName)
+
     /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
     DREAM3D_INSTANCE_STRING_PROPERTY(BinaryNodesFile)
     DREAM3D_INSTANCE_STRING_PROPERTY(BinaryTrianglesFile)
-
-
 
     /**
     * @brief This returns the group that the filter belonds to. You can select
@@ -132,10 +133,14 @@ signals:
     * @param ensembles The number of ensembles
     */
     void dataCheck();
-
+    void updateVertexInstancePointers();
+    void updateFaceInstancePointers();
 
     int read();
+
   private:
+    DEFINE_CREATED_DATAARRAY(int8_t, SurfaceMeshNodeTypes)
+    DEFINE_CREATED_DATAARRAY(int32_t, FaceLabels)
 
     BinaryNodesTrianglesReader(const BinaryNodesTrianglesReader&); // Copy Constructor Not Implemented
     void operator=(const BinaryNodesTrianglesReader&); // Operator '=' Not Implemented

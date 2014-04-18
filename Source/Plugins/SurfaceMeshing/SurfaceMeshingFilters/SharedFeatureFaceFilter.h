@@ -67,17 +67,20 @@ class SharedFeatureFaceFilter : public SurfaceMeshFilter
     typedef QVector<int> FaceIds_t;
     typedef QMap<int32_t, FaceIds_t> SharedFeatureFaces_t;
 
+    DREAM3D_FILTER_PARAMETER(QString, FaceFeatureAttributeMatrixName)
+    Q_PROPERTY(QString FaceFeatureAttributeMatrixName READ getFaceFeatureAttributeMatrixName WRITE setFaceFeatureAttributeMatrixName)
+
     DREAM3D_FILTER_PARAMETER(QString, SurfaceMeshFeatureFaceIdsArrayName)
     Q_PROPERTY(QString SurfaceMeshFeatureFaceIdsArrayName READ getSurfaceMeshFeatureFaceIdsArrayName WRITE setSurfaceMeshFeatureFaceIdsArrayName)
+
+    DREAM3D_FILTER_PARAMETER(DataArrayPath, SurfaceMeshFaceLabelsArrayPath)
+    Q_PROPERTY(DataArrayPath SurfaceMeshFaceLabelsArrayPath READ getSurfaceMeshFaceLabelsArrayPath WRITE setSurfaceMeshFaceLabelsArrayPath)
 
     /**
     * @brief This returns the group that the filter belonds to. You can select
     * a different group if you want. The string returned here will be displayed
     * in the GUI for the filter
     */
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, SurfaceMeshFaceLabelsArrayPath)
-    Q_PROPERTY(DataArrayPath SurfaceMeshFaceLabelsArrayPath READ getSurfaceMeshFaceLabelsArrayPath WRITE setSurfaceMeshFaceLabelsArrayPath)
-
     virtual const QString getCompiledLibraryName() { return SurfaceMeshing::SurfaceMeshingBaseName; }
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::SurfaceMeshingFilters; }
@@ -118,9 +121,6 @@ class SharedFeatureFaceFilter : public SurfaceMeshFilter
     */
     virtual void preflight();
 
-
-    SharedFeatureFaces_t& getSharedFeatureFaces();
-
 signals:
     void updateFilterParameters(AbstractFilter* filter);
     void parametersChanged();
@@ -142,9 +142,7 @@ signals:
 
   private:
     DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, SurfaceMeshFaceLabels)
-    DEFINE_CREATED_DATAARRAY(int64_t, SurfaceMeshFeatureFaceIds)
-
-    SharedFeatureFaces_t m_SharedFeatureFaces;
+    DEFINE_CREATED_DATAARRAY(int32_t, SurfaceMeshFeatureFaceIds)
 
     SharedFeatureFaceFilter(const SharedFeatureFaceFilter&); // Copy Constructor Not Implemented
     void operator=(const SharedFeatureFaceFilter&); // Operator '=' Not Implemented

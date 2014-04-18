@@ -151,8 +151,6 @@ namespace Detail
     { 0, 3, 2, 1, 1, 0, 3, 2 }
   };
 
-
-
 }
 
 /**
@@ -341,9 +339,7 @@ M3CSliceBySlice::M3CSliceBySlice() :
   m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
   m_FeatureIds(NULL),
   m_FaceLabelsArrayName(DREAM3D::FaceData::SurfaceMeshFaceLabels),
-  m_FaceLabels(NULL),
-  m_SurfaceMeshNodeTypeArrayName(DREAM3D::VertexData::SurfaceMeshNodeType),
-  m_SurfaceMeshNodeType(NULL)
+  m_SurfaceMeshNodeTypesArrayName(DREAM3D::VertexData::SurfaceMeshNodeType)
 {
   setupFilterParameters();
 }
@@ -382,7 +378,7 @@ void M3CSliceBySlice::readFilterParameters(AbstractFilterParametersReader* reade
   setSurfaceDataContainerName(reader->readString("SurfaceDataContainerName", getSurfaceDataContainerName() ) );
   setVertexAttributeMatrixName(reader->readString("VertexAttributeMatrixName", getVertexAttributeMatrixName() ) );
   setFaceAttributeMatrixName(reader->readString("FaceAttributeMatrixName", getFaceAttributeMatrixName() ) );
-  setSurfaceMeshNodeTypeArrayName(reader->readString("SurfaceMeshNodeTypeArrayName", getSurfaceMeshNodeTypeArrayName() ) );
+  setSurfaceMeshNodeTypesArrayName(reader->readString("SurfaceMeshNodeTypesArrayName", getSurfaceMeshNodeTypesArrayName() ) );
   setFaceLabelsArrayName(reader->readString("FaceLabelsArrayName", getFaceLabelsArrayName() ) );
   setFeatureIdsArrayPath(reader->readDataArrayPath("FeatureIdsArrayPath", getFeatureIdsArrayPath() ) );
   setDeleteTempFiles( reader->readValue("DeleteTempFiles", false) );
@@ -398,7 +394,7 @@ int M3CSliceBySlice::writeFilterParameters(AbstractFilterParametersWriter* write
   writer->writeValue("SurfaceDataContainerName", getSurfaceDataContainerName() );
   writer->writeValue("VertexAttributeMatrixName", getVertexAttributeMatrixName() );
   writer->writeValue("FaceAttributeMatrixName", getFaceAttributeMatrixName() );
-  writer->writeValue("SurfaceMeshNodeTypeArrayName", getSurfaceMeshNodeTypeArrayName() );
+  writer->writeValue("SurfaceMeshNodeTypesArrayName", getSurfaceMeshNodeTypesArrayName() );
   writer->writeValue("FaceLabelsArrayName", getFaceLabelsArrayName() );
   writer->writeValue("FeatureIdsArrayPath", getFeatureIdsArrayPath() );
   writer->writeValue("DeleteTempFiles", getDeleteTempFiles() );
@@ -418,30 +414,6 @@ void M3CSliceBySlice::dataCheck()
   m_FeatureIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeatureIdsArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-
-  SurfaceDataContainer* sm = getDataContainerArray()->createNonPrereqDataContainer<SurfaceDataContainer, AbstractFilter>(this, getSurfaceDataContainerName());
-  if(getErrorCondition() < 0) { return; }
-  QVector<size_t> tDims(1, 0);
-  AttributeMatrix::Pointer vertexAttrMat = sm->createNonPrereqAttributeMatrix<AbstractFilter>(this, getVertexAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::Vertex);
-  if(getErrorCondition() < 0) { return; }
-  AttributeMatrix::Pointer faceAttrMat = sm->createNonPrereqAttributeMatrix<AbstractFilter>(this, getFaceAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::Face);
-  if(getErrorCondition() < 0) { return; }
-
-  VertexArray::Pointer vertices = VertexArray::CreateArray(1, DREAM3D::VertexData::SurfaceMeshNodes);
-  FaceArray::Pointer triangles = FaceArray::CreateArray(1, DREAM3D::FaceData::SurfaceMeshFaces, vertices.get());
-
-  sm->setVertices(vertices);
-  sm->setFaces(triangles);
-  dims[0] = 2;
-  tempPath.update(getSurfaceDataContainerName(), getFaceAttributeMatrixName(), getFaceLabelsArrayName() );
-  m_FaceLabelsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, tempPath, 0, dims); /* Assigns the shared_ptr<>(this, tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_FaceLabelsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
-  { m_FaceLabels = m_FaceLabelsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-  dims[0] = 1;
-  tempPath.update(getSurfaceDataContainerName(), getVertexAttributeMatrixName(), getSurfaceMeshNodeTypeArrayName() );
-  m_SurfaceMeshNodeTypePtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int8_t>, AbstractFilter>(this, tempPath, 0, dims); /* Assigns the shared_ptr<>(this, tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_SurfaceMeshNodeTypePtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
-  { m_SurfaceMeshNodeType = m_SurfaceMeshNodeTypePtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
 
 // -----------------------------------------------------------------------------
@@ -453,6 +425,32 @@ void M3CSliceBySlice::preflight()
   emit updateFilterParameters(this);
   dataCheck();
   emit preflightExecuted();
+
+  QString nodesFile = QDir::tempPath() + Detail::NodesFile;
+  SMTempFile::Pointer nodesTempFile = SMTempFile::New();
+  nodesTempFile->setFilePath(nodesFile);
+  nodesTempFile->setAutoDelete(this->m_DeleteTempFiles);
+
+  QString trianglesFile = QDir::tempPath() + Detail::TrianglesFile;
+  SMTempFile::Pointer trianglesTempFile = SMTempFile::New();
+  trianglesTempFile->setFilePath(trianglesFile);
+  trianglesTempFile->setAutoDelete(this->m_DeleteTempFiles);
+
+  // This will read the mesh from the temp file and store it in the SurfaceMesh Data container
+  BinaryNodesTrianglesReader::Pointer binaryReader = BinaryNodesTrianglesReader::New();
+  binaryReader->setBinaryNodesFile(nodesFile);
+  binaryReader->setBinaryTrianglesFile(trianglesFile);
+  binaryReader->setDataContainerArray(getDataContainerArray());
+  binaryReader->setSurfaceDataContainerName(getSurfaceDataContainerName());
+  binaryReader->setVertexAttributeMatrixName(getVertexAttributeMatrixName());
+  binaryReader->setFaceAttributeMatrixName(getFaceAttributeMatrixName());
+  binaryReader->setFaceLabelsArrayName(getFaceLabelsArrayName());
+  binaryReader->setSurfaceMeshNodeTypesArrayName(getSurfaceMeshNodeTypesArrayName());
+  binaryReader->preflight();
+  if(binaryReader->getErrorCondition() < 0)
+  {
+    setErrorCondition(binaryReader->getErrorCondition());
+  }
 }
 
 
@@ -677,14 +675,18 @@ void M3CSliceBySlice::execute()
 
   // This will read the mesh from the temp file and store it in the SurfaceMesh Data container
   BinaryNodesTrianglesReader::Pointer binaryReader = BinaryNodesTrianglesReader::New();
-  binaryReader->setBinaryNodesFile(nodesFile);
-  binaryReader->setBinaryTrianglesFile(trianglesFile);
-
   QString ss = QObject::tr("%1 |--> %2").arg( getMessagePrefix()).arg(binaryReader->getNameOfClass());
   binaryReader->setMessagePrefix(ss);
   connect(binaryReader.get(), SIGNAL(filterGeneratedMessage(const PipelineMessage&)),
           this, SLOT(broadcastPipelineMessage(const PipelineMessage&)));
+  binaryReader->setBinaryNodesFile(nodesFile);
+  binaryReader->setBinaryTrianglesFile(trianglesFile);
   binaryReader->setDataContainerArray(getDataContainerArray());
+  binaryReader->setSurfaceDataContainerName(getSurfaceDataContainerName());
+  binaryReader->setVertexAttributeMatrixName(getVertexAttributeMatrixName());
+  binaryReader->setFaceAttributeMatrixName(getFaceAttributeMatrixName());
+  binaryReader->setFaceLabelsArrayName(getFaceLabelsArrayName());
+  binaryReader->setSurfaceMeshNodeTypesArrayName(getSurfaceMeshNodeTypesArrayName());
   binaryReader->execute();
   if(binaryReader->getErrorCondition() < 0)
   {
@@ -695,7 +697,6 @@ void M3CSliceBySlice::execute()
   // DeleteTempFiles setting
   trianglesTempFile = SMTempFile::NullPointer();
   nodesTempFile = SMTempFile::NullPointer();
-
 
   if (renumberFeatureValue != 0)
   {

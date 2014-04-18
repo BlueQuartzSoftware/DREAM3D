@@ -130,14 +130,12 @@ double AngleLineCurvature(Node& n0, Node& n1, Node& n2)
 // -----------------------------------------------------------------------------
 MovingFiniteElementSmoothing::MovingFiniteElementSmoothing() :
   SurfaceMeshFilter(),
-  m_SurfaceDataContainerName(DREAM3D::Defaults::SurfaceDataContainerName),
-  m_VertexAttributeMatrixName(DREAM3D::Defaults::VertexAttributeMatrixName),
   m_IterationSteps(1),
   m_NodeConstraints(true),
   m_ConstrainSurfaceNodes(true),
   m_ConstrainQuadPoints(true),
   m_SmoothTripleLines(true),
-/*[]*/m_SurfaceMeshNodeTypeArrayPath(DREAM3D::Defaults::SomePath),
+  m_SurfaceMeshNodeTypeArrayPath(DREAM3D::Defaults::SomePath),
   m_SurfaceMeshNodeTypeArrayName(DREAM3D::VertexData::SurfaceMeshNodeType),
   m_SurfaceMeshNodeType(NULL)
 {
@@ -163,7 +161,7 @@ void MovingFiniteElementSmoothing::setupFilterParameters()
   parameters.push_back(FilterParameter::New("Constrain Quad Points", "ConstrainQuadPoints", FilterParameterWidgetType::BooleanWidget,"bool", false));
   parameters.push_back(FilterParameter::New("Smooth Triple Lines", "SmoothTripleLines", FilterParameterWidgetType::BooleanWidget,"bool", false));
   parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "QString", true));
-/*[]*/parameters.push_back(FilterParameter::New("SurfaceMeshNodeType", "SurfaceMeshNodeTypeArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
+  parameters.push_back(FilterParameter::New("SurfaceMeshNodeType", "SurfaceMeshNodeTypeArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
   setFilterParameters(parameters);
 }
 
@@ -205,9 +203,7 @@ void MovingFiniteElementSmoothing::dataCheck()
 {
   setErrorCondition(0);
 
-  SurfaceDataContainer* sm = getDataContainerArray()->getPrereqDataContainer<SurfaceDataContainer, AbstractFilter>(this, getSurfaceDataContainerName(), false);
-  if(getErrorCondition() < 0) { return; }
-  AttributeMatrix::Pointer vertexAttrMat = sm->getPrereqAttributeMatrix<AbstractFilter>(this, getVertexAttributeMatrixName(), -301);
+  SurfaceDataContainer* sm = getDataContainerArray()->getPrereqDataContainer<SurfaceDataContainer, AbstractFilter>(this, getSurfaceMeshNodeTypeArrayPath().getDataContainerName(), false);
   if(getErrorCondition() < 0) { return; }
 
   // We MUST have Nodes
@@ -229,8 +225,7 @@ void MovingFiniteElementSmoothing::dataCheck()
     // Check for Node Type Array
     //int size = sm->getVertices()->getNumberOfTuples();
     QVector<size_t> dims(1, 1);
-////====>REMOVE THIS      m_SurfaceMeshNodeTypePtr = vertexAttrMat->getPrereqArray<DataArray<int8_t>, AbstractFilter>(this, m_SurfaceMeshNodeTypeArrayName, -390, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  m_SurfaceMeshNodeTypePtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int8_t>, AbstractFilter>(this, getSurfaceMeshNodeTypeArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+    m_SurfaceMeshNodeTypePtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int8_t>, AbstractFilter>(this, getSurfaceMeshNodeTypeArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
     if( NULL != m_SurfaceMeshNodeTypePtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
     { m_SurfaceMeshNodeType = m_SurfaceMeshNodeTypePtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   }
@@ -266,7 +261,7 @@ void MovingFiniteElementSmoothing::execute()
   dataCheck();
   if(getErrorCondition() < 0) { return; }
 
-  SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
+  SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceMeshNodeTypeArrayPath().getDataContainerName());
 
   VertexArray::Pointer floatNodesPtr = sm->getVertices();
   FaceArray::Pointer trianglesPtr = sm->getFaces();
@@ -315,7 +310,6 @@ void MovingFiniteElementSmoothing::execute()
     qDebug() << "\n";
   }
 
-
   QVector<int> tid(ntri);
   QVector<int> nodeConstraint(numberNodes); //  0=unconstrained, 1=constrained in X, 2= in Y, 4= in Z
 
@@ -339,8 +333,6 @@ void MovingFiniteElementSmoothing::execute()
   {
     return;
   }
-
-
 
 #if 1
 #if __APPLE__
@@ -767,8 +759,6 @@ void MovingFiniteElementSmoothing::execute()
         }
       }
     }
-
-
     // add epsilon to the diagonal
     for (int r = 0; r < numberNodes; r++)
     {
@@ -811,7 +801,6 @@ void MovingFiniteElementSmoothing::execute()
     }
     else
     {
-
       //Update the history of Q_max
       for (size_t i = 0; i < Q_max_hist.size() - 1; i++)
       {
@@ -1007,7 +996,6 @@ void MovingFiniteElementSmoothing::execute()
     nodesF[n].pos[1] = nodes[n].pos[1];
     nodesF[n].pos[2] = nodes[n].pos[2];
   }
-
 
   /* Let the GUI know we are done with this filter */
   notifyStatusMessage(getHumanLabel(), "Complete");

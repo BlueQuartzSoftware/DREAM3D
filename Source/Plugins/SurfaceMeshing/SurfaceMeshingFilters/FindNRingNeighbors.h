@@ -60,8 +60,6 @@ class FindNRingNeighbors
 
     virtual ~FindNRingNeighbors();
 
-    DREAM3D_INSTANCE_PROPERTY(SurfaceDataContainer*, SurfaceDataContainer)
-
     DREAM3D_INSTANCE_PROPERTY(int, TriangleId)
 
     /**
@@ -90,7 +88,7 @@ class FindNRingNeighbors
      * "value" for each key is a QSet that is the set of triangle ids that that particular
      * node is a part of.
      */
-    void generate(int32_t* faceLabels);
+    void generate(FaceArray::Pointer trianglesPtr, int32_t* faceLabels);
 
 
     DREAM3D_INSTANCE_PROPERTY(bool, WriteBinaryFile)
@@ -99,12 +97,6 @@ class FindNRingNeighbors
   protected:
     FindNRingNeighbors();
 
-    /**
-    * @brief writeVTKFile
-    * @param node2Triangle
-    * @param twoRingNeighbors
-    */
-    int writeVTKFile(const QString& outputFile);
 
   private:
     FaceArray::UniqueFaceIds_t  m_NRingTriangles;

@@ -62,25 +62,30 @@ class DREAM3DLib_EXPORT GoldfeatherReader : public AbstractFilter
     DREAM3D_TYPE_MACRO_SUPER(GoldfeatherReader, AbstractFilter);
 
     virtual ~GoldfeatherReader();
-    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceDataContainerName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(VertexAttributeMatrixName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(FaceAttributeMatrixName)
+    DREAM3D_FILTER_PARAMETER(QString, SurfaceDataContainerName)
+    Q_PROPERTY(QString SurfaceDataContainerName READ getSurfaceDataContainerName WRITE setSurfaceDataContainerName)
+    DREAM3D_FILTER_PARAMETER(QString, VertexAttributeMatrixName)
+    Q_PROPERTY(QString VertexAttributeMatrixName READ getVertexAttributeMatrixName WRITE setVertexAttributeMatrixName)
+    DREAM3D_FILTER_PARAMETER(QString, FaceAttributeMatrixName)
+    Q_PROPERTY(QString FaceAttributeMatrixName READ getFaceAttributeMatrixName WRITE setFaceAttributeMatrixName)
 
-    DREAM3D_INSTANCE_STRING_PROPERTY(Principal_Curvature_1ArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(Principal_Curvature_2ArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(Principal_Direction_1ArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(Principal_Direction_2ArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshNodeNormalsArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshTriangleLabelsArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshTriangleNormalsArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshTrianglesArrayName)
-
-
+    DREAM3D_FILTER_PARAMETER(QString, SurfaceMeshPrincipalCurvature1sArrayName)
+    Q_PROPERTY(QString SurfaceMeshPrincipalCurvature1sArrayName READ getSurfaceMeshPrincipalCurvature1sArrayName WRITE setSurfaceMeshPrincipalCurvature1sArrayName)
+    DREAM3D_FILTER_PARAMETER(QString, SurfaceMeshPrincipalCurvature2sArrayName)
+    Q_PROPERTY(QString SurfaceMeshPrincipalCurvature2sArrayName READ getSurfaceMeshPrincipalCurvature2sArrayName WRITE setSurfaceMeshPrincipalCurvature2sArrayName)
+    DREAM3D_FILTER_PARAMETER(QString, SurfaceMeshPrincipalDirection1sArrayName)
+    Q_PROPERTY(QString SurfaceMeshPrincipalDirection1sArrayName READ getSurfaceMeshPrincipalDirection1sArrayName WRITE setSurfaceMeshPrincipalDirection1sArrayName)
+    DREAM3D_FILTER_PARAMETER(QString, SurfaceMeshPrincipalDirection2sArrayName)
+    Q_PROPERTY(QString SurfaceMeshPrincipalDirection2sArrayName READ getSurfaceMeshPrincipalDirection2sArrayName WRITE setSurfaceMeshPrincipalDirection2sArrayName)
+    DREAM3D_FILTER_PARAMETER(QString, SurfaceMeshNodeNormalsArrayName)
+    Q_PROPERTY(QString SurfaceMeshNodeNormalsArrayName READ getSurfaceMeshNodeNormalsArrayName WRITE setSurfaceMeshNodeNormalsArrayName)
+    DREAM3D_FILTER_PARAMETER(QString, SurfaceMeshFaceLabelsArrayName)
+    Q_PROPERTY(QString SurfaceMeshFaceLabelsArrayName READ getSurfaceMeshFaceLabelsArrayName WRITE setSurfaceMeshFaceLabelsArrayName)
+    DREAM3D_FILTER_PARAMETER(QString, SurfaceMeshFaceNormalsArrayName)
+    Q_PROPERTY(QString SurfaceMeshFaceNormalsArrayName READ getSurfaceMeshFaceNormalsArrayName WRITE setSurfaceMeshFaceNormalsArrayName)
 
     /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
     DREAM3D_INSTANCE_STRING_PROPERTY(InputFile)
-
-
 
     /**
     * @brief This returns the group that the filter belonds to. You can select
@@ -143,8 +148,17 @@ signals:
     * @param ensembles The number of ensembles
     */
     void dataCheck();
+    void updateVertexInstancePointers();
+    void updateFaceInstancePointers();
 
   private:
+    DEFINE_CREATED_DATAARRAY(double, SurfaceMeshPrincipalCurvature1s)
+    DEFINE_CREATED_DATAARRAY(double, SurfaceMeshPrincipalCurvature2s)
+    DEFINE_CREATED_DATAARRAY(double, SurfaceMeshPrincipalDirection1s)
+    DEFINE_CREATED_DATAARRAY(double, SurfaceMeshPrincipalDirection2s)
+    DEFINE_CREATED_DATAARRAY(double, SurfaceMeshNodeNormals)
+    DEFINE_CREATED_DATAARRAY(double, SurfaceMeshFaceNormals)
+    DEFINE_CREATED_DATAARRAY(int32_t, SurfaceMeshFaceLabels)
 
     GoldfeatherReader(const GoldfeatherReader&); // Copy Constructor Not Implemented
     void operator=(const GoldfeatherReader&); // Operator '=' Not Implemented

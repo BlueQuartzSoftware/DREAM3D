@@ -66,9 +66,6 @@ class MovingFiniteElementSmoothing : public SurfaceMeshFilter
     DREAM3D_TYPE_MACRO_SUPER(MovingFiniteElementSmoothing, SurfaceMeshFilter)
 
     virtual ~MovingFiniteElementSmoothing();
-    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceDataContainerName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(VertexAttributeMatrixName)
-
 
     /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
     DREAM3D_FILTER_PARAMETER(int, IterationSteps)
@@ -81,8 +78,6 @@ class MovingFiniteElementSmoothing : public SurfaceMeshFilter
     Q_PROPERTY(bool ConstrainQuadPoints READ getConstrainQuadPoints WRITE setConstrainQuadPoints)
     DREAM3D_FILTER_PARAMETER(bool, SmoothTripleLines)
     Q_PROPERTY(bool SmoothTripleLines READ getSmoothTripleLines WRITE setSmoothTripleLines)
-
-
 
     /**
     * @brief This returns the group that the filter belonds to. You can select
@@ -153,7 +148,6 @@ class MovingFiniteElementSmoothing : public SurfaceMeshFilter
 
   private:
     DEFINE_PTR_WEAKPTR_DATAARRAY(int8_t, SurfaceMeshNodeType)
-
 
     MovingFiniteElementSmoothing(const MovingFiniteElementSmoothing&); // Copy Constructor Not Implemented
     void operator=(const MovingFiniteElementSmoothing&); // Operator '=' Not Implemented

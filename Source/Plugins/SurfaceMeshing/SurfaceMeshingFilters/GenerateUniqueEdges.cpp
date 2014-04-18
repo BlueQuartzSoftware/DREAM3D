@@ -54,8 +54,8 @@ typedef EdgeSet_t::iterator EdgesIdSetIterator_t;
 GenerateUniqueEdges::GenerateUniqueEdges() :
   SurfaceMeshFilter(),
   m_SurfaceDataContainerName(DREAM3D::Defaults::SurfaceDataContainerName),
-  m_EdgeAttributeMatrixName(DREAM3D::Defaults::EdgeAttributeMatrixName),
   m_VertexAttributeMatrixName(DREAM3D::Defaults::VertexAttributeMatrixName),
+  m_EdgeAttributeMatrixName(DREAM3D::Defaults::EdgeAttributeMatrixName),
   m_SurfaceMeshUniqueEdgesArrayName(DREAM3D::EdgeData::SurfaceMeshUniqueEdges),
   m_SurfaceMeshUniqueEdges(NULL)
 {
@@ -75,7 +75,12 @@ GenerateUniqueEdges::~GenerateUniqueEdges()
 void GenerateUniqueEdges::setupFilterParameters()
 {
   FilterParameterVector parameters;
-
+  parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "QString", true));
+  parameters.push_back(FilterParameter::New("Surface Data Container", "SurfaceDataContainerName", FilterParameterWidgetType::DataContainerSelectionWidget, "QString", true, ""));
+  parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "QString", true));
+  parameters.push_back(FilterParameter::New("Vertex Attribute Matrix", "VertexAttributeMatrixName", FilterParameterWidgetType::StringWidget, "QString", true, ""));
+  parameters.push_back(FilterParameter::New("Edge Attribute Matrix", "EdgeAttributeMatrixName", FilterParameterWidgetType::StringWidget, "QString", true, ""));
+  parameters.push_back(FilterParameter::New("SurfaceMeshUniqueEdges", "SurfaceMeshUniqueEdgesArrayName", FilterParameterWidgetType::StringWidget, "QString", true, ""));
   setFilterParameters(parameters);
 }
 
@@ -85,7 +90,10 @@ void GenerateUniqueEdges::setupFilterParameters()
 void GenerateUniqueEdges::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-////!!##
+  setSurfaceDataContainerName(reader->readString("SurfaceDataContainerName", getSurfaceDataContainerName() ) );
+  setVertexAttributeMatrixName(reader->readString("VertexAttributeMatrixName", getVertexAttributeMatrixName() ) );
+  setEdgeAttributeMatrixName(reader->readString("EdgeAttributeMatrixName", getEdgeAttributeMatrixName() ) );
+  setSurfaceMeshUniqueEdgesArrayName(reader->readString("SurfaceMeshUniqueEdgesArrayName", getSurfaceMeshUniqueEdgesArrayName() ) );
   reader->closeFilterGroup();
 }
 
@@ -95,9 +103,10 @@ void GenerateUniqueEdges::readFilterParameters(AbstractFilterParametersReader* r
 int GenerateUniqueEdges::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  /* Place code that will write the inputs values into a file. reference the
-   AbstractFilterParametersWriter class for the proper API to use. */
-  /*  writer->writeValue("OutputFile", getOutputFile() ); */
+  writer->writeValue("SurfaceDataContainerName", getSurfaceDataContainerName() );
+  writer->writeValue("VertexAttributeMatrixName", getVertexAttributeMatrixName() );
+  writer->writeValue("EdgeAttributeMatrixName", getEdgeAttributeMatrixName() );
+  writer->writeValue("SurfaceMeshUniqueEdgesArrayName", getSurfaceMeshUniqueEdgesArrayName() );
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
@@ -118,6 +127,8 @@ void GenerateUniqueEdges::updateEdgeInstancePointers()
 // -----------------------------------------------------------------------------
 void GenerateUniqueEdges::dataCheck()
 {
+  DataArrayPath tempPath;
+
   SurfaceDataContainer* sm = getDataContainerArray()->getPrereqDataContainer<SurfaceDataContainer, AbstractFilter>(this, getSurfaceDataContainerName(), false);
   if(getErrorCondition() < 0) { return; }
 
@@ -136,16 +147,17 @@ void GenerateUniqueEdges::dataCheck()
   }
 
   QVector<size_t> tDims(1, 0);
+  AttributeMatrix::Pointer vertAttrMat = sm->createNonPrereqAttributeMatrix<AbstractFilter>(this, getVertexAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::Vertex);
   AttributeMatrix::Pointer edgeAttrMat = sm->createNonPrereqAttributeMatrix<AbstractFilter>(this, getEdgeAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::Edge);
 
   // We do not know the size of the array so we can not use the macro so we just manually call
   // the needed methods that will propagate these array additions to the pipeline
   QVector<size_t> dims(1, 2);
-  m_SurfaceMeshUniqueEdgesPtr = edgeAttrMat->createNonPrereqArray<DataArray<int32_t>, AbstractFilter>(this, m_SurfaceMeshUniqueEdgesArrayName, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  tempPath.update(getSurfaceDataContainerName(), getEdgeAttributeMatrixName(), m_SurfaceMeshUniqueEdgesArrayName);
+  m_SurfaceMeshUniqueEdgesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_SurfaceMeshUniqueEdgesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_SurfaceMeshUniqueEdges = m_SurfaceMeshUniqueEdgesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
-
 
 // -----------------------------------------------------------------------------
 //
@@ -252,6 +264,7 @@ void GenerateUniqueEdges::generateEdgeTriangleConnectivity()
   notifyStatusMessage(getHumanLabel(), "Generating edge list for mesh. Stage 1 of 2");
   // Get our Reference counted Array of Triangle Structures
   SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
+  AttributeMatrix::Pointer edgeAttrMat = sm->getAttributeMatrix(getEdgeAttributeMatrixName());
   FaceArray::Pointer trianglesPtr = sm->getFaces();
   int ntri = trianglesPtr->getNumberOfTuples();
 
@@ -345,9 +358,10 @@ void GenerateUniqueEdges::generateEdgeTriangleConnectivity()
   notifyStatusMessage(getHumanLabel(), "Generating edge list for mesh. Stage 2 of 2");
   // Now copy the unique Edges out of the map and into an array at the proper index (which is the "value" that goes with the "key" to the map.
   int index = 0;
-  QVector<size_t> dims(1, 2);
-  Int32ArrayType::Pointer uniqueEdgesArrayPtr = Int32ArrayType::CreateArray(uedges_id_map.size(), dims, DREAM3D::EdgeData::SurfaceMeshUniqueEdges);
-  m_SurfaceMeshUniqueEdges = uniqueEdgesArrayPtr->getPointer(0);
+
+  QVector<size_t> tDims(1, uedges_id_map.size());
+  edgeAttrMat->resizeAttributeArrays(tDims);
+  updateEdgeInstancePointers();
 
   ManagedArrayOfArrays<int>::Pointer edgeTriangleArray = ManagedArrayOfArrays<int>::CreateArray(edgeTriangleSet.size(), DREAM3D::EdgeData::SurfaceMeshEdgeFaces);
 
@@ -387,8 +401,8 @@ void GenerateUniqueEdges::generateEdgeTriangleConnectivity()
   }
 
   // Finally push both the arrays into the Data Container for the pipeline
-  sm->getAttributeMatrix(getVertexAttributeMatrixName())->addAttributeArray(uniqueEdgesArrayPtr->getName(), uniqueEdgesArrayPtr);
-  sm->getAttributeMatrix(getVertexAttributeMatrixName())->addAttributeArray(edgeTriangleArray->getName(), edgeTriangleArray);
+  //sm->getAttributeMatrix(getVertexAttributeMatrixName())->addAttributeArray(uniqueEdgesArrayPtr->getName(), uniqueEdgesArrayPtr);
+  //sm->getAttributeMatrix(getVertexAttributeMatrixName())->addAttributeArray(edgeTriangleArray->getName(), edgeTriangleArray);
 
   notifyStatusMessage(getHumanLabel(), "Complete");
   return;

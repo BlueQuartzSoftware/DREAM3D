@@ -114,6 +114,8 @@ class M3CSliceBySlice : public AbstractFilter
 
     DREAM3D_FILTER_PARAMETER(QString, FaceLabelsArrayName)
     Q_PROPERTY(QString FaceLabelsArrayName READ getFaceLabelsArrayName WRITE setFaceLabelsArrayName)
+    DREAM3D_FILTER_PARAMETER(QString, SurfaceMeshNodeTypesArrayName)
+    Q_PROPERTY(QString SurfaceMeshNodeTypesArrayName READ getSurfaceMeshNodeTypesArrayName WRITE setSurfaceMeshNodeTypesArrayName)
 
     DREAM3D_FILTER_PARAMETER(bool, DeleteTempFiles)
     Q_PROPERTY(bool DeleteTempFiles READ getDeleteTempFiles WRITE setDeleteTempFiles)
@@ -415,8 +417,7 @@ class M3CSliceBySlice : public AbstractFilter
 
   private:
     DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeatureIds)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(int8_t, SurfaceMeshNodeType)
-    DEFINE_CREATED_DATAARRAY(int32_t, FaceLabels)
+
     int numfeatures;
 
     float m_OriginX, m_OriginY, m_OriginZ;

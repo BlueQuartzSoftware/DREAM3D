@@ -68,12 +68,15 @@ class GenerateUniqueEdges : public SurfaceMeshFilter
     DREAM3D_TYPE_MACRO_SUPER(GenerateUniqueEdges, SurfaceMeshFilter)
 
     virtual ~GenerateUniqueEdges();
-    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceDataContainerName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(EdgeAttributeMatrixName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(VertexAttributeMatrixName)
+    DREAM3D_FILTER_PARAMETER(QString, SurfaceDataContainerName)
+    Q_PROPERTY(QString SurfaceDataContainerName READ getSurfaceDataContainerName WRITE setSurfaceDataContainerName)
+    DREAM3D_FILTER_PARAMETER(QString, VertexAttributeMatrixName)
+    Q_PROPERTY(QString VertexAttributeMatrixName READ getVertexAttributeMatrixName WRITE setVertexAttributeMatrixName)
+    DREAM3D_FILTER_PARAMETER(QString, EdgeAttributeMatrixName)
+    Q_PROPERTY(QString EdgeAttributeMatrixName READ getEdgeAttributeMatrixName WRITE setEdgeAttributeMatrixName)
 
-    /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
-
+    DREAM3D_FILTER_PARAMETER(QString, SurfaceMeshUniqueEdgesArrayName)
+    Q_PROPERTY(QString SurfaceMeshUniqueEdgesArrayName READ getSurfaceMeshUniqueEdgesArrayName WRITE setSurfaceMeshUniqueEdgesArrayName)
 
     /**
     * @brief This returns the group that the filter belonds to. You can select
@@ -138,7 +141,7 @@ signals:
     void updateEdgeInstancePointers();
 
   private:
-    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, SurfaceMeshUniqueEdges)
+    DEFINE_CREATED_DATAARRAY(int32_t, SurfaceMeshUniqueEdges)
 
     /**
      * @brief generateConnectivity This is the method that actually implements the algorithm.

@@ -54,6 +54,10 @@ BinaryNodesTrianglesReader::BinaryNodesTrianglesReader() :
   m_SurfaceDataContainerName(DREAM3D::Defaults::SurfaceDataContainerName),
   m_VertexAttributeMatrixName(DREAM3D::Defaults::VertexAttributeMatrixName),
   m_FaceAttributeMatrixName(DREAM3D::Defaults::FaceAttributeMatrixName),
+  m_FaceLabelsArrayName(DREAM3D::FaceData::SurfaceMeshFaceLabels),
+  m_FaceLabels(NULL),
+  m_SurfaceMeshNodeTypesArrayName(DREAM3D::VertexData::SurfaceMeshNodeType),
+  m_SurfaceMeshNodeTypes(NULL),
   m_BinaryNodesFile(""),
   m_BinaryTrianglesFile("")
 {
@@ -121,24 +125,71 @@ int BinaryNodesTrianglesReader::writeFilterParameters(AbstractFilterParametersWr
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void BinaryNodesTrianglesReader::updateVertexInstancePointers()
+{
+  setErrorCondition(0);
+
+  if( NULL != m_SurfaceMeshNodeTypesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  { m_SurfaceMeshNodeTypes = m_SurfaceMeshNodeTypesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void BinaryNodesTrianglesReader::updateFaceInstancePointers()
+{
+  setErrorCondition(0);
+
+  if( NULL != m_FaceLabelsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  { m_FaceLabels = m_FaceLabelsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void BinaryNodesTrianglesReader::dataCheck()
 {
+  if (getBinaryNodesFile().isEmpty() == true)
+  {
+    QString ss = QObject::tr("%1 needs the Binary Nodes File path set and it was not.").arg(ClassName());
+    setErrorCondition(-387);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+  }
+
+  if (getBinaryNodesFile().isEmpty() == true)
+  {
+    QString ss = QObject::tr("%1 needs the Binary Nodes File path set and it was not.").arg(ClassName());
+    setErrorCondition(-387);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+  }
+
+  DataArrayPath tempPath;
+
+  QVector<size_t> dims(1, 1);
+
   SurfaceDataContainer* sm = getDataContainerArray()->createNonPrereqDataContainer<SurfaceDataContainer, AbstractFilter>(this, getSurfaceDataContainerName());
   if(getErrorCondition() < 0) { return; }
+  QVector<size_t> tDims(1, 0);
+  AttributeMatrix::Pointer vertexAttrMat = sm->createNonPrereqAttributeMatrix<AbstractFilter>(this, getVertexAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::Vertex);
+  if(getErrorCondition() < 0) { return; }
+  AttributeMatrix::Pointer faceAttrMat = sm->createNonPrereqAttributeMatrix<AbstractFilter>(this, getFaceAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::Face);
+  if(getErrorCondition() < 0) { return; }
 
-  if (getBinaryNodesFile().isEmpty() == true)
-  {
-    QString ss = QObject::tr("%1 needs the Binary Nodes File path set and it was not.").arg(ClassName());
-    setErrorCondition(-387);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-  }
+  VertexArray::Pointer vertices = VertexArray::CreateArray(1, DREAM3D::VertexData::SurfaceMeshNodes);
+  FaceArray::Pointer triangles = FaceArray::CreateArray(1, DREAM3D::FaceData::SurfaceMeshFaces, vertices.get());
 
-  if (getBinaryNodesFile().isEmpty() == true)
-  {
-    QString ss = QObject::tr("%1 needs the Binary Nodes File path set and it was not.").arg(ClassName());
-    setErrorCondition(-387);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-  }
+  sm->setVertices(vertices);
+  sm->setFaces(triangles);
+  dims[0] = 2;
+  tempPath.update(getSurfaceDataContainerName(), getFaceAttributeMatrixName(), getFaceLabelsArrayName() );
+  m_FaceLabelsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, tempPath, 0, dims); /* Assigns the shared_ptr<>(this, tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if( NULL != m_FaceLabelsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  { m_FaceLabels = m_FaceLabelsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  dims[0] = 1;
+  tempPath.update(getSurfaceDataContainerName(), getVertexAttributeMatrixName(), getSurfaceMeshNodeTypesArrayName() );
+  m_SurfaceMeshNodeTypesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int8_t>, AbstractFilter>(this, tempPath, 0, dims); /* Assigns the shared_ptr<>(this, tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if( NULL != m_SurfaceMeshNodeTypesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  { m_SurfaceMeshNodeTypes = m_SurfaceMeshNodeTypesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
 }
 
@@ -183,6 +234,8 @@ int BinaryNodesTrianglesReader::read()
   setErrorCondition(err);
 
   SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
+  AttributeMatrix::Pointer vertAttrMat = sm->getAttributeMatrix(getVertexAttributeMatrixName());
+  AttributeMatrix::Pointer faceAttrMat = sm->getAttributeMatrix(getFaceAttributeMatrixName());
 
   // Open the Nodes file for reading
   FILE* nodesFile = fopen(m_BinaryNodesFile.toLatin1().data(), "rb+");
@@ -244,10 +297,9 @@ int BinaryNodesTrianglesReader::read()
   VertexArray::Pointer m_NodeListPtr = VertexArray::CreateArray(nNodes, DREAM3D::VertexData::SurfaceMeshNodes);
   VertexArray::Vert_t* m_NodeList = m_NodeListPtr->getPointer(0);
 
-  QVector<size_t> dims(1, 1);
-  Int8ArrayType::Pointer nodeTypePtr = Int8ArrayType::CreateArray(nNodes, dims, DREAM3D::VertexData::SurfaceMeshNodeType);
-  nodeTypePtr->initializeWithZeros();
-  int8_t* nodeType = nodeTypePtr->getPointer(0);
+  QVector<size_t> tDims(1, nNodes);
+  vertAttrMat->resizeAttributeArrays(tDims);
+  updateVertexInstancePointers();
 
   {
     QString ss  = QObject::tr("Reading Nodes file into Memory");
@@ -267,7 +319,7 @@ int BinaryNodesTrianglesReader::read()
     node.pos[0] = nRecord.x;
     node.pos[1] = nRecord.y;
     node.pos[2] = nRecord.z;
-    nodeType[nRecord.nodeId] = nRecord.nodeKind;
+    m_SurfaceMeshNodeTypes[nRecord.nodeId] = nRecord.nodeKind;
   }
 
   {
@@ -281,11 +333,9 @@ int BinaryNodesTrianglesReader::read()
   FaceArray::Face_t* m_TriangleList = m_TriangleListPtr->getPointer(0);
   ::memset(m_TriangleList, 0xAB, sizeof(FaceArray::Face_t) * nTriangles);
 
-  QVector<size_t> dim(1, 2);
-  DataArray<int32_t>::Pointer faceLabelPtr = DataArray<int32_t>::CreateArray(nTriangles, dim, DREAM3D::FaceData::SurfaceMeshFaceLabels);
-  int32_t* faceLabels = faceLabelPtr->getPointer(0);
-  faceLabelPtr->initializeWithZeros();
-
+  tDims[0] = nTriangles;
+  faceAttrMat->resizeAttributeArrays(tDims);
+  updateFaceInstancePointers();
 
   SurfaceMesh::TrianglesFile::TrianglesFileRecord_t tRecord;
   for (size_t i = 0; i < nTriangles; i++)
@@ -302,14 +352,12 @@ int BinaryNodesTrianglesReader::read()
     triangle.verts[0] = tRecord.nodeId_0;
     triangle.verts[1] = tRecord.nodeId_1;
     triangle.verts[2] = tRecord.nodeId_2;
-    faceLabels[tRecord.triId * 2] = tRecord.label_0;
-    faceLabels[tRecord.triId * 2 + 1] = tRecord.label_1;
+    m_FaceLabels[tRecord.triId * 2] = tRecord.label_0;
+    m_FaceLabels[tRecord.triId * 2 + 1] = tRecord.label_1;
   }
 
   sm->setVertices(m_NodeListPtr);
   sm->setFaces(m_TriangleListPtr);
-  sm->getAttributeMatrix(getFaceAttributeMatrixName())->addAttributeArray(faceLabelPtr->getName(), faceLabelPtr);
-  sm->getAttributeMatrix(getVertexAttributeMatrixName())->addAttributeArray(nodeTypePtr->getName(), nodeTypePtr);
 
   // The ScopedFileMonitor classes will take care of closing the files
 

@@ -43,7 +43,6 @@
 //
 // -----------------------------------------------------------------------------
 FindNRingNeighbors::FindNRingNeighbors() :
-  m_SurfaceDataContainer(NULL),
   m_TriangleId(-1),
   m_RegionId0(0),
   m_RegionId1(0),
@@ -82,28 +81,16 @@ FaceArray::UniqueFaceIds_t& FindNRingNeighbors::getNRingTriangles()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FindNRingNeighbors::generate(int32_t* faceLabels)
+void FindNRingNeighbors::generate(FaceArray::Pointer trianglesPtr, int32_t* faceLabels)
 {
-  BOOST_ASSERT(m_SurfaceDataContainer != NULL);
-  SurfaceDataContainer* sm = getSurfaceDataContainer();
-
-  // Clear out any previous triangles
-  m_NRingTriangles.clear();
-
-  // Get the Triangle List from the Data Container
-  FaceArray::Pointer trianglesPtr = sm->getFaces();
-  if(trianglesPtr == NULL)
-  {
-    return;
-  }
   FaceArray::Face_t* triangles = trianglesPtr->getPointer(0);
 
   // Make sure we have the proper connectivity built
   Int32DynamicListArray::Pointer node2TrianglePtr = trianglesPtr->getFacesContainingVert();
   if (node2TrianglePtr.get() == NULL)
   {
-    sm->getFaces()->findFacesContainingVert();
-    node2TrianglePtr = sm->getFaces()->getFacesContainingVert();
+    trianglesPtr->findFacesContainingVert();
+    node2TrianglePtr = trianglesPtr->getFacesContainingVert();
   }
 
   // Figure out these boolean values for a sanity check
@@ -156,123 +143,3 @@ void FindNRingNeighbors::generate(int32_t* faceLabels)
   }
 
 }
-
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int FindNRingNeighbors::writeVTKFile(const QString& outputVtkFile)
-{
-
-  SurfaceDataContainer* m = getSurfaceDataContainer();  /* Place all your code to execute your filter here. */
-  VertexArray& nodes = *(m->getVertices());
-  int nNodes = nodes.getNumberOfTuples();
-
-  FILE* vtkFile = NULL;
-  vtkFile = fopen(outputVtkFile.toLatin1().data(), "wb");
-  if (NULL == vtkFile)
-  {
-    // QString ss = QObject::tr("Error creating file '%1'").arg(outputVtkFile);
-    return -100;
-  }
-  ScopedFileMonitor vtkFileMonitor(vtkFile);
-
-  fprintf(vtkFile, "# vtk DataFile Version 2.0\n");
-  fprintf(vtkFile, "Data set from DREAM.3D Surface Meshing Module\n");
-  if (m_WriteBinaryFile)
-  {
-    fprintf(vtkFile, "BINARY\n");
-  }
-  else
-  {
-    fprintf(vtkFile, "ASCII\n");
-  }
-  fprintf(vtkFile, "DATASET POLYDATA\n");
-
-
-  fprintf(vtkFile, "POINTS %d float\n", nNodes);
-  float pos[3] = {0.0f, 0.0f, 0.0f};
-
-  size_t totalWritten = 0;
-  // Write the POINTS data (Vertex)
-  for (int i = 0; i < nNodes; i++)
-  {
-    VertexArray::Vert_t& n = nodes[i]; // Get the current Node
-    //  if (m_SurfaceMeshNodeType[i] > 0)
-    {
-      pos[0] = static_cast<float>(n.pos[0]);
-      pos[1] = static_cast<float>(n.pos[1]);
-      pos[2] = static_cast<float>(n.pos[2]);
-      if (m_WriteBinaryFile == true)
-      {
-        DREAM3D::Endian::FromSystemToBig::convert<float>(pos[0]);
-        DREAM3D::Endian::FromSystemToBig::convert<float>(pos[1]);
-        DREAM3D::Endian::FromSystemToBig::convert<float>(pos[2]);
-        totalWritten = fwrite(pos, sizeof(float), 3, vtkFile);
-        if (totalWritten != sizeof(float) * 3)
-        {
-
-        }
-      }
-      else
-      {
-        fprintf(vtkFile, "%f %f %f\n", pos[0], pos[1], pos[2]); // Write the positions to the output file
-      }
-    }
-  }
-
-  // Write the triangle indices into the vtk File
-  FaceArray& triangles = *(m->getFaces());
-
-  int tData[4];
-  int nT = m_NRingTriangles.size();
-  int triangleCount = nT;
-  //  int tn1, tn2, tn3;
-  if (false == m_WriteConformalMesh)
-  {
-    triangleCount = nT * 2;
-  }
-  // Write the CELLS Data
-  fprintf(vtkFile, "POLYGONS %d %d\n", triangleCount, (triangleCount * 4));
-  for (QSet<int32_t>::iterator iter = m_NRingTriangles.begin(); iter != m_NRingTriangles.end(); ++iter)
-  {
-    int32_t tid = *iter;
-    tData[1] = triangles[tid].verts[0];
-    tData[2] = triangles[tid].verts[1];
-    tData[3] = triangles[tid].verts[2];
-    if (m_WriteBinaryFile == true)
-    {
-      tData[0] = 3; // Push on the total number of entries for this entry
-      DREAM3D::Endian::FromSystemToBig::convert<int>(tData[0]);
-      DREAM3D::Endian::FromSystemToBig::convert<int>(tData[1]); // Index of Vertex 0
-      DREAM3D::Endian::FromSystemToBig::convert<int>(tData[2]); // Index of Vertex 1
-      DREAM3D::Endian::FromSystemToBig::convert<int>(tData[3]); // Index of Vertex 2
-      fwrite(tData, sizeof(int), 4, vtkFile);
-      if (false == m_WriteConformalMesh)
-      {
-        tData[0] = tData[1];
-        tData[1] = tData[3];
-        tData[3] = tData[0];
-        tData[0] = 3;
-        DREAM3D::Endian::FromSystemToBig::convert<int>(tData[0]);
-        fwrite(tData, sizeof(int), 4, vtkFile);
-      }
-    }
-    else
-    {
-      fprintf(vtkFile, "3 %d %d %d\n", tData[1], tData[2], tData[3]);
-      if (false == m_WriteConformalMesh)
-      {
-        fprintf(vtkFile, "3 %d %d %d\n", tData[3], tData[2], tData[1]);
-      }
-    }
-  }
-
-
-
-  fprintf(vtkFile, "\n");
-  return 0;
-}
-
-
-

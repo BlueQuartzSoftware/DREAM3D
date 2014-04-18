@@ -61,6 +61,10 @@ class FeatureFaceCurvatureFilter : public SurfaceMeshFilter
     DREAM3D_TYPE_MACRO_SUPER(FeatureFaceCurvatureFilter, SurfaceMeshFilter)
 
     virtual ~FeatureFaceCurvatureFilter();
+
+    typedef QVector<int> FaceIds_t;
+    typedef QMap<int32_t, FaceIds_t> SharedFeatureFaces_t;
+
     DREAM3D_FILTER_PARAMETER(QString, EdgeAttributeMatrixName)
     Q_PROPERTY(QString EdgeAttributeMatrixName READ getEdgeAttributeMatrixName WRITE setEdgeAttributeMatrixName)
     DREAM3D_FILTER_PARAMETER(QString, SurfaceMeshUniqueEdgesArrayName)
@@ -97,6 +101,9 @@ class FeatureFaceCurvatureFilter : public SurfaceMeshFilter
     */
     DREAM3D_FILTER_PARAMETER(DataArrayPath, SurfaceMeshFaceLabelsArrayPath)
     Q_PROPERTY(DataArrayPath SurfaceMeshFaceLabelsArrayPath READ getSurfaceMeshFaceLabelsArrayPath WRITE setSurfaceMeshFaceLabelsArrayPath)
+
+    DREAM3D_FILTER_PARAMETER(DataArrayPath, SurfaceMeshFeatureFaceIdsArrayPath)
+    Q_PROPERTY(DataArrayPath SurfaceMeshFeatureFaceIdsArrayPath READ getSurfaceMeshFeatureFaceIdsArrayPath WRITE setSurfaceMeshFeatureFaceIdsArrayPath)
 
     DREAM3D_FILTER_PARAMETER(DataArrayPath, SurfaceMeshFaceNormalsArrayPath)
     Q_PROPERTY(DataArrayPath SurfaceMeshFaceNormalsArrayPath READ getSurfaceMeshFaceNormalsArrayPath WRITE setSurfaceMeshFaceNormalsArrayPath)
@@ -171,7 +178,8 @@ class FeatureFaceCurvatureFilter : public SurfaceMeshFilter
     DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, SurfaceMeshFaceLabels)
     DEFINE_PTR_WEAKPTR_DATAARRAY(double, SurfaceMeshTriangleCentroids)
     DEFINE_PTR_WEAKPTR_DATAARRAY(double, SurfaceMeshFaceNormals)
-    DEFINE_CREATED_DATAARRAY(int64_t, SurfaceMeshUniqueEdges)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, SurfaceMeshFeatureFaceIds)
+    DEFINE_CREATED_DATAARRAY(int32_t, SurfaceMeshUniqueEdges)
     DEFINE_CREATED_DATAARRAY(double, SurfaceMeshPrincipalCurvature1s)
     DEFINE_CREATED_DATAARRAY(double, SurfaceMeshPrincipalCurvature2s)
     DEFINE_CREATED_DATAARRAY(double, SurfaceMeshPrincipalDirection1s)
@@ -182,7 +190,6 @@ class FeatureFaceCurvatureFilter : public SurfaceMeshFilter
     int32_t* m_SurfaceMeshFaceEdges;
     int32_t  m_TotalFeatureFaces;
     int32_t  m_CompletedFeatureFaces;
-
 
     FeatureFaceCurvatureFilter(const FeatureFaceCurvatureFilter&); // Copy Constructor Not Implemented
     void operator=(const FeatureFaceCurvatureFilter&); // Operator '=' Not Implemented

@@ -61,7 +61,7 @@ CalculateTriangleGroupCurvatures::CalculateTriangleGroupCurvatures(int nring,
     DoubleArrayType::Pointer principleDirection2,
     DoubleArrayType::Pointer gaussianCurvature,
     DoubleArrayType::Pointer meanCurvature,
-    SurfaceDataContainer* sm,
+    FaceArray::Pointer trianglesPtr,
     DataArray<int32_t>::Pointer surfaceMeshFaceLabels,
     DataArray<double>::Pointer surfaceMeshFaceNormals,
     DataArray<double>::Pointer surfaceMeshTriangleCentroids,
@@ -75,7 +75,7 @@ CalculateTriangleGroupCurvatures::CalculateTriangleGroupCurvatures(int nring,
   m_PrincipleDirection2(principleDirection2),
   m_GaussianCurvature(gaussianCurvature),
   m_MeanCurvature(meanCurvature),
-  m_SurfaceDataContainer(sm),
+  m_TrianglesPtr(trianglesPtr),
   m_SurfaceMeshFaceLabels(surfaceMeshFaceLabels),
   m_SurfaceMeshFaceNormals(surfaceMeshFaceNormals),
   m_SurfaceMeshTriangleCentroids(surfaceMeshTriangleCentroids),
@@ -153,8 +153,7 @@ void CalculateTriangleGroupCurvatures::operator()() const
     nRingNeighborAlg->setRegionId0(feature0);
     nRingNeighborAlg->setRegionId1(feature1);
     nRingNeighborAlg->setRing(m_NRing);
-    nRingNeighborAlg->setSurfaceDataContainer(m_SurfaceDataContainer);
-    nRingNeighborAlg->generate(faceLabels);
+    nRingNeighborAlg->generate(m_TrianglesPtr, faceLabels);
 
     FaceArray::UniqueFaceIds_t triPatch = nRingNeighborAlg->getNRingTriangles();
     BOOST_ASSERT(triPatch.size() > 1);
