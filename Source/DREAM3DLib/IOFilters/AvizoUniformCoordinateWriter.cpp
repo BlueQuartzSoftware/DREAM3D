@@ -213,8 +213,8 @@ void AvizoUniformCoordinateWriter::generateHeader(QDataStream& ss)
   getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(m_FeatureIdsArrayPath.getDataContainerName())->getResolution(res);
   ss << "     # Bounding Box is xmin xmax ymin ymax zmin zmax\n";
   ss << "     BoundingBox " << origin[0] << " " << origin[0] + (res[0] * x);
-  ss << " " << origin[1] << " " << origin[1] + (res[1] * x);
-  ss << " " << origin[2] << " " << origin[2] + (res[2] * x);
+  ss << " " << origin[1] << " " << origin[1] + (res[1] * y);
+  ss << " " << origin[2] << " " << origin[2] + (res[2] * z);
   ss << ",\n";
   ss << "     CoordType \"uniform\"\n";
   ss << "}\n\n";
