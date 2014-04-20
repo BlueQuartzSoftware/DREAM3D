@@ -234,7 +234,6 @@ ShapeTypesFilterParameter::Pointer ShapeTypesFilterParameter::New(const QString&
   return ptr;
 }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

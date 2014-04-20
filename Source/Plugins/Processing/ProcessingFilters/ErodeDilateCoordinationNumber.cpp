@@ -51,8 +51,8 @@
 // -----------------------------------------------------------------------------
 ErodeDilateCoordinationNumber::ErodeDilateCoordinationNumber() :
   AbstractFilter(),
-  m_CoordinationNumber(6),
   m_Loop(false),
+  m_CoordinationNumber(6),
   m_FeatureIdsArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::FeatureIds),
   m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
   m_FeatureIds(NULL)
@@ -304,7 +304,7 @@ AbstractFilter::Pointer ErodeDilateCoordinationNumber::newFilterInstance(bool co
   if(true == copyFilterParameters)
   {
     filter->setFilterParameters(getFilterParameters() );
-    
+
     //Loop over each Filter Parameter that is registered to the filter either through this class or a parent class
     // and copy the value from the current instance of the object into the "new" instance that was just created
     QVector<FilterParameter::Pointer> options = getFilterParameters(); // Get the current set of filter parameters

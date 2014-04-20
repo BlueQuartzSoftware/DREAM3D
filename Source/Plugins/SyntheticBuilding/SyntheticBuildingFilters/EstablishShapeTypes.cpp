@@ -79,9 +79,9 @@ void EstablishShapeTypes::setupFilterParameters()
   parameters.push_back(FilterParameter::New("Phase Types Array Name", "InputPhaseTypesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
   parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "QString", true));
   parameters.push_back(FilterParameter::New("Shape Types Array Name", "ShapeTypesArrayName", FilterParameterWidgetType::StringWidget, "QString", true, ""));
-  ShapeTypesFilterParameter::Pointer sType_parameter = ShapeTypesFilterParameter::New("Shape Types", "ShapeTypeData", FilterParameterWidgetType::ShapeTypeSelectionWidget, "UInt32Vector_t", false, "");
-  sType_parameter->setPhaseTypeCountProperty("PhaseCount");
-  sType_parameter->setPhaseTypeArrayPathProperty("InputPhaseTypesArrayPath");
+  ShapeTypesFilterParameter::Pointer sType_parameter = ShapeTypesFilterParameter::New(
+        "Shape Types", "ShapeTypeData", FilterParameterWidgetType::ShapeTypeSelectionWidget,
+        "UInt32Vector_t", "PhaseCount", "InputPhaseTypesArrayPath", false);
   parameters.push_back(sType_parameter);
   setFilterParameters(parameters);
 }

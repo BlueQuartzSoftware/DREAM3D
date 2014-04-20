@@ -46,10 +46,10 @@
 SharedFeatureFaceFilter::SharedFeatureFaceFilter() :
   SurfaceMeshFilter(),
     m_FaceFeatureAttributeMatrixName(DREAM3D::Defaults::FaceFeatureAttributeMatrixName),
+  m_SurfaceMeshFeatureFaceIdsArrayName(DREAM3D::FaceData::SurfaceMeshFeatureFaceId),
   m_SurfaceMeshFaceLabelsArrayPath(DREAM3D::Defaults::SurfaceDataContainerName, DREAM3D::Defaults::FaceAttributeMatrixName, DREAM3D::Defaults::SomePath),
   m_SurfaceMeshFaceLabelsArrayName(DREAM3D::FaceData::SurfaceMeshFaceLabels),
   m_SurfaceMeshFaceLabels(NULL),
-  m_SurfaceMeshFeatureFaceIdsArrayName(DREAM3D::FaceData::SurfaceMeshFeatureFaceId),
   m_SurfaceMeshFeatureFaceIds(NULL)
 {
   setupFilterParameters();
