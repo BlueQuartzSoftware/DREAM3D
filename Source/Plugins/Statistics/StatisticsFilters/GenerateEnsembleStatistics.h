@@ -207,7 +207,7 @@ signals:
     NeighborList<int>::WeakPointer m_NeighborList;
     NeighborList<float>::WeakPointer m_SharedSurfaceAreaList;
 
-    StatsDataArray::WeakPointer m_StatsDataArray;
+    StatsDataArray::Pointer m_StatsDataArray;
 
     QVector<DistributionAnalysisOps::Pointer> m_DistributionAnalysis;
 

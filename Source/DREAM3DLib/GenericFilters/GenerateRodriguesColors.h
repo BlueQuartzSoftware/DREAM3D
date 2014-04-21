@@ -77,6 +77,9 @@ class DREAM3DLib_EXPORT GenerateRodriguesColors : public AbstractFilter
     DREAM3D_FILTER_PARAMETER(QString, CellRodriguesColorsArrayName)
     Q_PROPERTY(QString CellRodriguesColorsArrayName READ getCellRodriguesColorsArrayName WRITE setCellRodriguesColorsArrayName)
 
+    DREAM3D_FILTER_PARAMETER(bool, UseGoodVoxels)
+    Q_PROPERTY(bool UseGoodVoxels READ getUseGoodVoxels WRITE setUseGoodVoxels)
+
     virtual const QString getCompiledLibraryName() { return Generic::GenericBaseName; }
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::GenericFilters; }

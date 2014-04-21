@@ -86,10 +86,14 @@ class FindEuclideanDistMap : public AbstractFilter
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::MorphologicalFilters; }
     virtual const QString getHumanLabel() { return "Find Euclidean Distance Map"; }
 
-    DREAM3D_INSTANCE_PROPERTY(bool, doBoundaries)
-    DREAM3D_INSTANCE_PROPERTY(bool, doTripleLines)
-    DREAM3D_INSTANCE_PROPERTY(bool, doQuadPoints)
-    DREAM3D_INSTANCE_PROPERTY(bool, CalcOnlyManhattanDist)
+    DREAM3D_FILTER_PARAMETER(bool, doBoundaries)
+    Q_PROPERTY(bool doBoundaries READ getdoBoundaries WRITE setdoBoundaries)
+    DREAM3D_FILTER_PARAMETER(bool, doTripleLines)
+    Q_PROPERTY(bool doTripleLines READ getdoTripleLines WRITE setdoTripleLines)
+    DREAM3D_FILTER_PARAMETER(bool, doQuadPoints)
+    Q_PROPERTY(bool doQuadPoints READ getdoQuadPoints WRITE setdoQuadPoints)
+    DREAM3D_FILTER_PARAMETER(bool, CalcOnlyManhattanDist)
+    Q_PROPERTY(bool CalcOnlyManhattanDist READ getCalcOnlyManhattanDist WRITE setCalcOnlyManhattanDist)
 
     virtual void setupFilterParameters();
     /**

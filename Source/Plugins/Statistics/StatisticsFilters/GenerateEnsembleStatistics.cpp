@@ -300,6 +300,7 @@ void GenerateEnsembleStatistics::dataCheck()
     if( NULL != m_AvgQuatsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
     { m_AvgQuats = m_AvgQuatsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
     // Now we are going to get a "Pointer" to the NeighborList object out of the DataContainer
+    dims[0] = 1;
     m_SharedSurfaceAreaList = getDataContainerArray()->getPrereqArrayFromPath<NeighborList<float>, AbstractFilter>(this, getSharedSurfaceAreaListArrayPath(), dims);
     m_NeighborList = getDataContainerArray()->getPrereqArrayFromPath<NeighborList<int>, AbstractFilter>(this, getNeighborListArrayPath(), dims);
   }
@@ -319,14 +320,14 @@ void GenerateEnsembleStatistics::dataCheck()
   }
 
   //now create and add the stats array itself
-  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getCellEnsembleAttributeMatrixName().getDataArrayName());
+  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getCellEnsembleAttributeMatrixName().getDataContainerName());
   if(getErrorCondition() < 0 || m == NULL) { return; }
   AttributeMatrix::Pointer attrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellEnsembleAttributeMatrixName().getAttributeMatrixName(), -301);
   if(getErrorCondition() < 0 || attrMat == NULL) { return; }
 
-  m_StatsDataArray = StatsDataArray::New();
-  m_StatsDataArray.lock()->fillArrayWithNewStatsData(m_PhaseTypesPtr.lock()->getNumberOfTuples(), m_PhaseTypes);
-  attrMat->addAttributeArray(DREAM3D::EnsembleData::Statistics, m_StatsDataArray.lock());
+  m_StatsDataArray = StatsDataArray::CreateArray(m_PhaseTypesPtr.lock()->getNumberOfTuples(), getStatisticsArrayName());
+  m_StatsDataArray->fillArrayWithNewStatsData(m_PhaseTypesPtr.lock()->getNumberOfTuples(), m_PhaseTypes);
+  attrMat->addAttributeArray(DREAM3D::EnsembleData::Statistics, m_StatsDataArray);
 
   if (m_SizeDistributionFitType != DREAM3D::DistributionType::LogNormal)
   {
@@ -427,7 +428,7 @@ void GenerateEnsembleStatistics::execute()
 // -----------------------------------------------------------------------------
 void GenerateEnsembleStatistics::gatherSizeStats()
 {
-  StatsDataArray& statsDataArray = *(m_StatsDataArray.lock());
+  StatsDataArray& statsDataArray = *(m_StatsDataArray);
 
   float maxdiam;
   float mindiam;
@@ -510,7 +511,7 @@ void GenerateEnsembleStatistics::gatherAspectRatioStats()
 
   StatsData::Pointer stats_data = StatsData::New();
 
-  StatsDataArray& statsDataArray = *(m_StatsDataArray.lock());
+  StatsDataArray& statsDataArray = *(m_StatsDataArray);
 
   size_t bin;
 
@@ -606,7 +607,7 @@ void GenerateEnsembleStatistics::gatherAspectRatioStats()
 // -----------------------------------------------------------------------------
 void GenerateEnsembleStatistics::gatherOmega3Stats()
 {
-  StatsDataArray& statsDataArray = *(m_StatsDataArray.lock());
+  StatsDataArray& statsDataArray = *(m_StatsDataArray);
 
   size_t bin;
 
@@ -680,7 +681,7 @@ void GenerateEnsembleStatistics::gatherOmega3Stats()
 }
 void GenerateEnsembleStatistics::gatherNeighborhoodStats()
 {
-  StatsDataArray& statsDataArray = *(m_StatsDataArray.lock());
+  StatsDataArray& statsDataArray = *(m_StatsDataArray);
 
   size_t bin;
   QVector<VectorOfFloatArray> neighborhoods;
@@ -755,7 +756,7 @@ void GenerateEnsembleStatistics::gatherNeighborhoodStats()
 }
 void GenerateEnsembleStatistics::gatherODFStats()
 {
-  StatsDataArray& statsDataArray = *(m_StatsDataArray.lock());
+  StatsDataArray& statsDataArray = *(m_StatsDataArray);
 
   size_t bin;
   size_t numfeatures = m_FeatureEulerAnglesPtr.lock()->getNumberOfTuples();
@@ -834,7 +835,7 @@ void GenerateEnsembleStatistics::gatherODFStats()
 }
 void GenerateEnsembleStatistics::gatherMDFStats()
 {
-  StatsDataArray& statsDataArray = *(m_StatsDataArray.lock());
+  StatsDataArray& statsDataArray = *(m_StatsDataArray);
 
   // But since a pointer is difficult to use operators with we will now create a
   // reference variable to the pointer with the correct variable name that allows
@@ -939,7 +940,7 @@ void GenerateEnsembleStatistics::gatherMDFStats()
 // -----------------------------------------------------------------------------
 void GenerateEnsembleStatistics::gatherAxisODFStats()
 {
-  StatsDataArray& statsDataArray = *(m_StatsDataArray.lock());
+  StatsDataArray& statsDataArray = *(m_StatsDataArray);
 
   float r1, r2, r3;
   int bin;
