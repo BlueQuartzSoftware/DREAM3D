@@ -152,7 +152,7 @@ float positionInHeader(const QString hFile, const QString var, bool isPointer)
   }
 
 
-  QStringList names;
+  //QStringList names;
   bool found = false;
   int lineNum = 1;
   QString searchString = var;
@@ -172,9 +172,13 @@ float positionInHeader(const QString hFile, const QString var, bool isPointer)
       QString line = sourceLines.next();
       if(line.contains(searchString) && line.contains("DEFINE_PTR_WEAKPTR_DATAARRAY") )
       {
-        line = sourceLines.next();
-        found = true;
-        return (float)lineNum + 0.1f;
+        int index = line.indexOf(var); // Verify we actually found the whole word
+        if(line.at(index - 1).isSpace() )
+        {
+          line = sourceLines.next();
+          found = true;
+          return (float)lineNum + 0.1f;
+        }
       }
       lineNum++;
     }
@@ -243,9 +247,13 @@ float positionInHeader(const QString hFile, const QString var, bool isPointer)
       QString line = sourceLines.next();
       if(line.contains(searchString) && line.contains("DEFINE_PTR_WEAKPTR_DATAARRAY") )
       {
-        line = sourceLines.next();
-        found = true;
-        return (float)lineNum;
+        int index = line.indexOf(searchString); // Verify we actually found the whole word
+        if(index > -1 && line.at(index - 1).isSpace() )
+        {
+          line = sourceLines.next();
+          found = true;
+          return (float)lineNum;
+        }
       }
       lineNum++;
     }
@@ -286,10 +294,10 @@ void fixInitializerList(QStringListIterator &sourceLines, QStringList &outLines,
     }
     float index = positionInHeader(hFile, var, isPointer);
     orderedInitList[index] = line;
-//    qDebug() << "index: " << index << "   line:" << line;
+    //    qDebug() << "index: " << index << "   line:" << line;
   }
 
-//qDebug() << "--------------------------------";
+  //qDebug() << "--------------------------------";
   QMapIterator<float, QString> i(orderedInitList);
   while (i.hasNext())
   {
@@ -319,7 +327,7 @@ bool fixFile( AbstractFilter::Pointer filter, const QString& hFile, const QStrin
   {
     // Read the Source File
 //    QFileInfo fi(cppFile);
-//    if (fi.baseName().compare("SurfaceMeshToNonconformalVtk") != 0)
+//    if (fi.baseName().compare("ErodeDilateCoordinationNumber") != 0)
 //    {
 //      return false;
 //    }
@@ -429,7 +437,7 @@ void GenerateFilterParametersCode()
 // -----------------------------------------------------------------------------
 int main(int argc, char *argv[])
 {
-  Q_ASSERT(false); // We don't want anyone to run this program.
+  Q_ASSERT(true); // We don't want anyone to run this program.
   // Instantiate the QCoreApplication that we need to get the current path and load plugins.
   QCoreApplication app(argc, argv);
   QCoreApplication::setOrganizationName("BlueQuartz Software");

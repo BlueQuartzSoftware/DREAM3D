@@ -20,4 +20,4 @@
 #--exclude=MXA
 #--exclude=PipelineBuilder
 #--exclude=QtSupport
-#--exclude=tclap
+--exclude=tclap

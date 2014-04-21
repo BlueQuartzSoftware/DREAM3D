@@ -34,8 +34,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef ErodeDilateCoordinationNumber_H_
-#define ErodeDilateCoordinationNumber_H_
+#ifndef _ErodeDilateCoordination_Number_H_
+#define _ErodeDilateCoordination_Number_H_
 
 #include <vector>
 #include <QtCore/QString>
@@ -71,6 +71,7 @@ class ErodeDilateCoordinationNumber : public AbstractFilter
 
     DREAM3D_FILTER_PARAMETER(bool, Loop)
     Q_PROPERTY(bool Loop READ getLoop WRITE setLoop)
+
     DREAM3D_FILTER_PARAMETER(int, CoordinationNumber)
     Q_PROPERTY(int CoordinationNumber READ getCoordinationNumber WRITE setCoordinationNumber)
 
@@ -124,6 +125,6 @@ class ErodeDilateCoordinationNumber : public AbstractFilter
     void operator=(const ErodeDilateCoordinationNumber&); // Operator '=' Not Implemented
 };
 
-#endif /* ErodeDilateCoordinationNumber_H_ */
+#endif /* _ErodeDilateCoordination_Number_H_ */
 
 
