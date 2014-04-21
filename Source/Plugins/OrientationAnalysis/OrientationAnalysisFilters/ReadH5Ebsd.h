@@ -79,9 +79,12 @@ class ReadH5Ebsd : public AbstractFilter
     DREAM3D_TYPE_MACRO_SUPER(ReadH5Ebsd, AbstractFilter)
 
     virtual ~ReadH5Ebsd();
-    DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(CellEnsembleAttributeMatrixName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
+    DREAM3D_FILTER_PARAMETER(QString, DataContainerName)
+    Q_PROPERTY(QString DataContainerName READ getDataContainerName WRITE setDataContainerName)
+    DREAM3D_FILTER_PARAMETER(QString, CellEnsembleAttributeMatrixName)
+    Q_PROPERTY(QString CellEnsembleAttributeMatrixName READ getCellEnsembleAttributeMatrixName WRITE setCellEnsembleAttributeMatrixName)
+    DREAM3D_FILTER_PARAMETER(QString, CellAttributeMatrixName)
+    Q_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
 
     DREAM3D_INSTANCE_STRING_PROPERTY(PhaseNameArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(MaterialNameArrayName)
