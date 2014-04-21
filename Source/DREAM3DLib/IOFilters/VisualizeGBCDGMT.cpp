@@ -58,7 +58,7 @@ VisualizeGBCDGMT::VisualizeGBCDGMT() :
   AbstractFilter(),
   m_OutputFile(""),
   m_CrystalStructure(Ebsd::CrystalStructure::UnknownCrystalStructure),
-  m_GBCDArrayPath(DREAM3D::Defaults::SomePath),
+  m_GBCDArrayPath(DREAM3D::Defaults::SurfaceDataContainerName, DREAM3D::Defaults::FaceEnsembleAttributeMatrixName, DREAM3D::EnsembleData::GBCD),
   m_GBCDArrayName(DREAM3D::EnsembleData::GBCD),
   m_GBCD(NULL)
 {

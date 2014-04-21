@@ -47,9 +47,11 @@
 
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/DataContainers/VertexArray.h"
+#include "DREAM3DLib/DataContainers/EdgeArray.hpp"
 #include "DREAM3DLib/DataContainers/DynamicListArray.hpp"
 
-
+typedef QSet<int64_t>  EdgeSet_t;
+typedef EdgeSet_t::iterator EdgesIdSetIterator_t;
 
 /**
  * @brief The MeshLinks class contains arrays of Faces for each Node in the mesh. This allows quick query to the node
@@ -76,7 +78,7 @@ class FaceArray
     // -----------------------------------------------------------------------------
     virtual ~FaceArray(){ }
 
-
+    DREAM3D_INSTANCE_PROPERTY(EdgeArray::Pointer, UniqueEdges)
     DREAM3D_INSTANCE_PROPERTY(Int32DynamicListArray::Pointer, FacesContainingVert)
     DREAM3D_INSTANCE_PROPERTY(Int32DynamicListArray::Pointer, FaceNeighbors)
 
@@ -147,6 +149,59 @@ class FaceArray
     void deleteFacesContainingVert()
     {
       m_FacesContainingVert = Int32DynamicListArray::NullPointer();
+    }
+
+    // -----------------------------------------------------------------------------
+    //
+    // -----------------------------------------------------------------------------
+    void generateUniqueEdgeIds()
+    {
+      int32_t numCells = m_Array->getNumberOfTuples();
+      Face_t* faces = m_Array->getPointer(0);
+
+      struct  { int32_t v0; int32_t v1; } edge;
+      int64_t* u64Edge = reinterpret_cast<int64_t*>(&edge); // This pointer is a 64 bit integer interpretation of the above struct variable
+
+      EdgeSet_t uedges_id_set;
+      for(size_t t = 0; t < numCells; ++t)
+      {
+        //Get the Triangle
+        Face_t& tri = faces[t];
+
+        //Edge 0
+        int i = 0;
+        edge.v0 = tri.verts[i];
+        edge.v1 = tri.verts[i + 1];
+        if (edge.v0 > edge.v1) { edge.v0 = tri.verts[i + 1]; edge.v1 = tri.verts[i]; }
+        uedges_id_set.insert(*u64Edge);
+
+        //Edge 1
+        i = 1;
+        edge.v0 = tri.verts[i];
+        edge.v1 = tri.verts[i + 1];
+        if (edge.v0 > edge.v1) { edge.v0 = tri.verts[i + 1]; edge.v1 = tri.verts[i]; }
+        uedges_id_set.insert(*u64Edge);
+
+        // Edge 2
+        i = 2;
+        edge.v0 = tri.verts[i];
+        edge.v1 = tri.verts[0];
+        if (edge.v0 > edge.v1) { edge.v0 = tri.verts[0]; edge.v1 = tri.verts[i]; }
+        uedges_id_set.insert(*u64Edge);
+      }
+
+      EdgeArray::Pointer uEdges = EdgeArray::CreateArray(uedges_id_set.size(), "uniqueEdges", m_Verts);
+      EdgeArray::Edge_t* uEdge = uEdges->getPointer(0);
+
+      int index = 0;
+      for(EdgeSet_t::iterator iter = uedges_id_set.begin(); iter != uedges_id_set.end(); ++iter)
+      {
+        *u64Edge = *iter;
+        uEdge[index].verts[0] = edge.v0;
+        uEdge[index].verts[1] = edge.v1;
+        ++index;
+      }
+      setUniqueEdges(uEdges);
     }
 
     // -----------------------------------------------------------------------------

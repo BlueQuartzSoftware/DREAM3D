@@ -44,8 +44,8 @@
 // -----------------------------------------------------------------------------
 FindBoundingBoxFeatures::FindBoundingBoxFeatures() :
   AbstractFilter(),
-  m_CentroidsArrayPath(DREAM3D::Defaults::SomePath),
-  m_SurfaceFeaturesArrayPath(DREAM3D::Defaults::SomePath),
+  m_CentroidsArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, DREAM3D::FeatureData::Centroids),
+  m_SurfaceFeaturesArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, DREAM3D::FeatureData::SurfaceFeatures),
   m_BiasedFeaturesArrayName(DREAM3D::FeatureData::BiasedFeatures),
   m_CentroidsArrayName(DREAM3D::FeatureData::Centroids),
   m_Centroids(NULL),

@@ -47,7 +47,7 @@ FindShapes::FindShapes()  :
   AbstractFilter(),
   m_CellFeatureAttributeMatrixName(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, ""),
   m_FeatureIdsArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::FeatureIds),
-  m_CentroidsArrayPath(DREAM3D::Defaults::SomePath),
+  m_CentroidsArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, DREAM3D::FeatureData::Centroids),
   m_Omega3sArrayName(DREAM3D::FeatureData::Omega3s),
   m_VolumesArrayName(DREAM3D::FeatureData::Volumes),
   m_AxisLengthsArrayName(DREAM3D::FeatureData::AxisLengths),

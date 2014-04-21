@@ -62,10 +62,7 @@ class VerifyTriangleWinding : public SurfaceMeshFilter
 
     virtual ~VerifyTriangleWinding();
     DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceDataContainerName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(EdgeAttributeMatrixName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(VertexAttributeMatrixName)
 
-    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshUniqueEdgesArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshNodeFacesArrayName)
 
     typedef QMap<int, QSet<int> >                      LabelFaceMap_t;
@@ -162,7 +159,6 @@ signals:
   private:
     DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, SurfaceMeshFaceLabels)
 
-    bool m_DoUniqueEdgesFilter;
     bool m_DoNodeFaceConnectivityFilter;
 
     VerifyTriangleWinding(const VerifyTriangleWinding&); // Copy Constructor Not Implemented

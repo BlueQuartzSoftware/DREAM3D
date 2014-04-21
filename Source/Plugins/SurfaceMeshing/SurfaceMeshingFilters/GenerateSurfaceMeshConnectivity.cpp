@@ -37,8 +37,6 @@
 
 #include "GenerateSurfaceMeshConnectivity.h"
 
-#include "SurfaceMeshing/SurfaceMeshingFilters/GenerateUniqueEdges.h"
-
 
 
 // -----------------------------------------------------------------------------
@@ -47,8 +45,6 @@
 GenerateSurfaceMeshConnectivity::GenerateSurfaceMeshConnectivity() :
   SurfaceMeshFilter(),
   m_SurfaceDataContainerName(DREAM3D::Defaults::SurfaceDataContainerName),
-  m_EdgeAttributeMatrixName(DREAM3D::Defaults::EdgeAttributeMatrixName),
-  m_VertexAttributeMatrixName(DREAM3D::Defaults::VertexAttributeMatrixName),
   m_GenerateVertexTriangleLists(true),
   m_GenerateTriangleNeighbors(true),
   m_GenerateEdgeIdList(false)
@@ -75,6 +71,8 @@ void GenerateSurfaceMeshConnectivity::setupFilterParameters()
   parameters.push_back(FilterParameter::New("Generate Per Vertex Triangle List", "GenerateVertexTriangleLists", FilterParameterWidgetType::BooleanWidget,"bool", false));
   parameters.push_back(FilterParameter::New("Generate Triangle Neighbors List", "GenerateTriangleNeighbors", FilterParameterWidgetType::BooleanWidget,"bool", false));
   parameters.push_back(FilterParameter::New("Generate Edge Id List", "GenerateEdgeIdList", FilterParameterWidgetType::BooleanWidget,"bool", false));
+  parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "QString", true));
+  parameters.push_back(FilterParameter::New("Surface Data Container", "SurfaceDataContainerName", FilterParameterWidgetType::DataContainerSelectionWidget, "QString", true, ""));
 
   setFilterParameters(parameters);
 }
@@ -85,6 +83,7 @@ void GenerateSurfaceMeshConnectivity::setupFilterParameters()
 void GenerateSurfaceMeshConnectivity::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
+  setSurfaceDataContainerName(reader->readString("SurfaceDataContainerName", getSurfaceDataContainerName() ) );
   setGenerateVertexTriangleLists( reader->readValue("GenerateVertexTriangleLists", false) );
   setGenerateTriangleNeighbors( reader->readValue("GenerateTriangleNeighbors", false) );
   setGenerateEdgeIdList( reader->readValue("GenerateEdgeIdList", false) );
@@ -97,8 +96,7 @@ void GenerateSurfaceMeshConnectivity::readFilterParameters(AbstractFilterParamet
 int GenerateSurfaceMeshConnectivity::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  /* Place code that will write the inputs values into a file. reference the
-   AbstractFilterParametersWriter class for the proper API to use. */
+  writer->writeValue("SurfaceDataContainerName", getSurfaceDataContainerName() );
   writer->writeValue("GenerateVertexTriangleLists", getGenerateVertexTriangleLists() );
   writer->writeValue("GenerateTriangleNeighbors", getGenerateTriangleNeighbors() );
   writer->writeValue("GenerateEdgeIdList", getGenerateEdgeIdList() );
@@ -166,22 +164,8 @@ void GenerateSurfaceMeshConnectivity::execute()
 
   if (m_GenerateEdgeIdList == true)
   {
-    // There was no Edge connectivity before this filter so delete it when we are done with it
-    GenerateUniqueEdges::Pointer conn = GenerateUniqueEdges::New();
-    QString ss = QObject::tr("%1 |->Generating Unique Edge Ids |->").arg(getMessagePrefix());
-    conn->setMessagePrefix(ss);
-    connect(conn.get(), SIGNAL(filterGeneratedMessage(const PipelineMessage&)),
-            this, SLOT(broadcastPipelineMessage(const PipelineMessage&)));
-    conn->setDataContainerArray(getDataContainerArray());
-    conn->setSurfaceDataContainerName(getSurfaceDataContainerName());
-    conn->setEdgeAttributeMatrixName(getEdgeAttributeMatrixName());
-    conn->setVertexAttributeMatrixName(getVertexAttributeMatrixName());
-    conn->execute();
-    if(conn->getErrorCondition() < 0)
-    {
-      setErrorCondition(conn->getErrorCondition());
-      return;
-    }
+    notifyStatusMessage(getHumanLabel(), "Generating Unique Edges List");
+    getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName())->getFaces()->generateUniqueEdgeIds();
   }
 
   /* Let the GUI know we are done with this filter */

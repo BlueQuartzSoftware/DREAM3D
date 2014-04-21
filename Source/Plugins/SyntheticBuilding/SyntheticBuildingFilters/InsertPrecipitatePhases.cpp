@@ -70,7 +70,7 @@ InsertPrecipitatePhases::InsertPrecipitatePhases() :
   m_InputShapeTypesArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellEnsembleAttributeMatrixName, DREAM3D::EnsembleData::ShapeTypes),
   m_FeatureIdsArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::FeatureIds),
   m_CellPhasesArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::Phases),
-  m_SurfaceVoxelsArrayPath(DREAM3D::Defaults::SomePath),
+  m_SurfaceVoxelsArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::SurfaceVoxels),
   m_FeaturePhasesArrayName(DREAM3D::FeatureData::Phases),
   m_NumCellsArrayName(DREAM3D::FeatureData::NumCells),
   m_EquivalentDiametersArrayName(DREAM3D::FeatureData::EquivalentDiameters),

@@ -47,7 +47,7 @@
 // -----------------------------------------------------------------------------
 UpdateCellQuats::UpdateCellQuats() :
   AbstractFilter(),
-  m_Quats5ArrayPath(DREAM3D::Defaults::SomePath),
+  m_Quats5ArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::Quats),
   m_QuatsArrayName(DREAM3D::CellData::Quats),
   m_Quats(NULL)
 {

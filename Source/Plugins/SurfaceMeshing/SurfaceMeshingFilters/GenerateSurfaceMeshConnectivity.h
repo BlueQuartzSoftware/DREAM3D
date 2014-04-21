@@ -63,9 +63,8 @@ class GenerateSurfaceMeshConnectivity : public SurfaceMeshFilter
     DREAM3D_TYPE_MACRO_SUPER(GenerateSurfaceMeshConnectivity, SurfaceMeshFilter)
 
     virtual ~GenerateSurfaceMeshConnectivity();
-    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceDataContainerName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(EdgeAttributeMatrixName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(VertexAttributeMatrixName)
+    DREAM3D_FILTER_PARAMETER(QString, SurfaceDataContainerName)
+    Q_PROPERTY(QString SurfaceDataContainerName READ getSurfaceDataContainerName WRITE setSurfaceDataContainerName)
 
     /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
     DREAM3D_FILTER_PARAMETER(bool, GenerateVertexTriangleLists)

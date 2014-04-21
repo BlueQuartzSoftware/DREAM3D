@@ -67,14 +67,15 @@ class LaplacianSmoothing : public SurfaceMeshFilter
     DREAM3D_TYPE_MACRO_SUPER(LaplacianSmoothing, SurfaceMeshFilter)
 
     virtual ~LaplacianSmoothing();
-    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceDataContainerName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(FaceAttributeMatrixName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(EdgeAttributeMatrixName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(VertexAttributeMatrixName)
+    DREAM3D_FILTER_PARAMETER(QString, SurfaceDataContainerName)
+    Q_PROPERTY(QString SurfaceDataContainerName READ getSurfaceDataContainerName WRITE setSurfaceDataContainerName)
 
     // We need these arrays for this filter to work correctly
-    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshUniqueEdgesArrayName)
-
+    DREAM3D_FILTER_PARAMETER(DataArrayPath, SurfaceMeshNodeTypeArrayPath)
+    Q_PROPERTY(DataArrayPath SurfaceMeshNodeTypeArrayPath READ getSurfaceMeshNodeTypeArrayPath WRITE setSurfaceMeshNodeTypeArrayPath)
+    DREAM3D_FILTER_PARAMETER(DataArrayPath, SurfaceMeshFaceLabelsArrayPath)
+    Q_PROPERTY(DataArrayPath SurfaceMeshFaceLabelsArrayPath READ getSurfaceMeshFaceLabelsArrayPath WRITE setSurfaceMeshFaceLabelsArrayPath)
+    
     /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
     DREAM3D_FILTER_PARAMETER(int, IterationSteps)
     Q_PROPERTY(int IterationSteps READ getIterationSteps WRITE setIterationSteps)
@@ -170,7 +171,7 @@ class LaplacianSmoothing : public SurfaceMeshFilter
      * @brief This method generates the Lambda array that will be use during the smoothing
      * @return
      */
-    virtual int generateLambdaArray(DataArray<int8_t>* nodeTypePtr);
+    virtual int generateLambdaArray();
 
     /**
      * @brief This version of the smoothing algorithm uses Edge->Vertex connectivity information for its algorithm
@@ -185,12 +186,12 @@ class LaplacianSmoothing : public SurfaceMeshFilter
     virtual int vertexBasedSmoothing();
 
   private:
-    bool m_DoConnectivityFilter;
+    DEFINE_PTR_WEAKPTR_DATAARRAY(int8_t, SurfaceMeshNodeType)
+    DEFINE_PTR_WEAKPTR_DATAARRAY(int8_t, SurfaceMeshFaceLabels)
 
 #if OUTPUT_DEBUG_VTK_FILES
     void writeVTKFile(const QString& outputVtkFile);
 #endif
-
 
     LaplacianSmoothing(const LaplacianSmoothing&); // Copy Constructor Not Implemented
     void operator=(const LaplacianSmoothing&); // Operator '=' Not Implemented

@@ -57,7 +57,6 @@
 #include "SurfaceMeshing/SurfaceMeshingFilters/util/Vector3.h"
 #include "SurfaceMeshing/SurfaceMeshingFilters/util/Plane.h"
 #include "SurfaceMeshing/SurfaceMeshingFilters/util/TriangleOps.h"
-#include "SurfaceMeshing/SurfaceMeshingFilters/GenerateUniqueEdges.h"
 #include "SurfaceMeshing/SurfaceMeshingFilters/ReverseTriangleWinding.h"
 
 // -----------------------------------------------------------------------------
@@ -210,11 +209,8 @@ class LabelVisitorInfo
 VerifyTriangleWinding::VerifyTriangleWinding() :
   SurfaceMeshFilter(),
   m_SurfaceDataContainerName(DREAM3D::Defaults::SurfaceDataContainerName),
-  m_EdgeAttributeMatrixName(DREAM3D::Defaults::EdgeAttributeMatrixName),
-  m_VertexAttributeMatrixName(DREAM3D::Defaults::VertexAttributeMatrixName),
-  m_SurfaceMeshUniqueEdgesArrayName(DREAM3D::EdgeData::SurfaceMeshUniqueEdges),
   m_SurfaceMeshNodeFacesArrayName(DREAM3D::VertexData::SurfaceMeshNodeFaces),
-  m_SurfaceMeshFaceLabelsArrayPath(DREAM3D::Defaults::SomePath),
+  m_SurfaceMeshFaceLabelsArrayPath(DREAM3D::Defaults::SurfaceDataContainerName, DREAM3D::Defaults::FaceAttributeMatrixName, DREAM3D::FaceData::SurfaceMeshFaceLabels),
   m_SurfaceMeshFaceLabelsArrayName(DREAM3D::FaceData::SurfaceMeshFaceLabels),
   m_SurfaceMeshFaceLabels(NULL)
 {
@@ -287,15 +283,6 @@ void VerifyTriangleWinding::dataCheck()
   m_SurfaceMeshFaceLabelsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getSurfaceMeshFaceLabelsArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_SurfaceMeshFaceLabelsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   {m_SurfaceMeshFaceLabels = m_SurfaceMeshFaceLabelsPtr.lock()->getPointer(0);} /* Now assign the raw pointer to data from the DataArray<T> object */
-
-  if (sm->getAttributeMatrix(getEdgeAttributeMatrixName())->getAttributeArray(m_SurfaceMeshUniqueEdgesArrayName).get() == NULL)
-  {
-    m_DoUniqueEdgesFilter = true;
-  }
-  else
-  {
-    m_DoUniqueEdgesFilter = false;
-  }
 }
 
 // -----------------------------------------------------------------------------
@@ -321,69 +308,21 @@ void VerifyTriangleWinding::execute()
 
   SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceMeshFaceLabelsArrayPath().getDataContainerName());
 
-  //  Generate the Unique Edges
-  if (m_DoUniqueEdgesFilter == true)
-  {
-    // There was no Edge connectivity before this filter so delete it when we are done with it
-    GenerateUniqueEdges::Pointer conn = GenerateUniqueEdges::New();
-    QString ss = QObject::tr("%1 |->Generating Unique Edge Ids |->").arg(getMessagePrefix());
-    conn->setMessagePrefix(ss);
-    connect(conn.get(), SIGNAL(filterGeneratedMessage(const PipelineMessage&)),
-            this, SLOT(broadcastPipelineMessage(const PipelineMessage&)));
-    conn->setSurfaceMeshUniqueEdgesArrayName(getSurfaceMeshUniqueEdgesArrayName());
-    conn->setDataContainerArray(getDataContainerArray());
-    conn->setSurfaceDataContainerName(getSurfaceDataContainerName());
-    conn->setEdgeAttributeMatrixName(getEdgeAttributeMatrixName());
-    conn->setVertexAttributeMatrixName(getVertexAttributeMatrixName());
-    conn->execute();
-    if(conn->getErrorCondition() < 0)
-    {
-      setErrorCondition(conn->getErrorCondition());
-      return;
-    }
-  }
-  if (getCancel() == true) { return; }
+  FaceArray::Pointer facesPtr = sm->getFaces();
 
   notifyStatusMessage(getHumanLabel(), "Generating Face List for each Node");
   // Make sure the Face Connectivity is created because the FindNRing algorithm needs this and will
   // assert if the data is NOT in the SurfaceMesh Data Container
-  bool clearMeshLinks = false;
-  FaceArray::Pointer facesPtr = sm->getFaces();
-  if(facesPtr == NULL)
-  {
-    return;
-  }
-  if (NULL == facesPtr->getFacesContainingVert())
-  {
-    clearMeshLinks = true; // This was not explicitly set in the pipeline so we are going to clear it when the filter is complete
-    sm->getFaces()->findFacesContainingVert();
-  }
+  if (NULL == facesPtr->getFacesContainingVert()) facesPtr->findFacesContainingVert();
   if (getCancel() == true) { return; }
-  bool clearFaceNeighbors = false;
-  if (NULL == facesPtr->getFaceNeighbors())
-  {
-    clearFaceNeighbors = true;
-    facesPtr->findFaceNeighbors();
-  }
+  if (NULL == facesPtr->getFaceNeighbors()) facesPtr->findFaceNeighbors();
+  if (getCancel() == true) { return; }
+  if(facesPtr->getUniqueEdges() == NULL) facesPtr->generateUniqueEdgeIds();
 
   // Execute the actual verification step.
   notifyStatusMessage(getHumanLabel(), "Generating Connectivity Complete. Starting Analysis");
   verifyTriangleWinding();
 
-  // Clean up any arrays that were designated as temp
-  if (m_DoUniqueEdgesFilter == true)
-  {
-    IDataArray::Pointer removedConnectviity = sm->getAttributeMatrix(getEdgeAttributeMatrixName())->removeAttributeArray(m_SurfaceMeshUniqueEdgesArrayName);
-    BOOST_ASSERT(removedConnectviity.get() != NULL);
-  }
-  if (clearMeshLinks == true)
-  {
-    facesPtr->deleteFacesContainingVert();
-  }
-  if (clearFaceNeighbors == true)
-  {
-    facesPtr->deleteFaceNeighbors();
-  }
   /* Let the GUI know we are done with this filter */
   notifyStatusMessage(getHumanLabel(), "Complete");
 }
