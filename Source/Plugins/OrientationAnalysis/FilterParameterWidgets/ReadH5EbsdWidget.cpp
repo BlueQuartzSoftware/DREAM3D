@@ -79,6 +79,8 @@ ReadH5EbsdWidget::ReadH5EbsdWidget(FilterParameter* parameter, AbstractFilter* f
   m_Filter = qobject_cast<ReadH5Ebsd*>(filter);
   Q_ASSERT_X(NULL != m_Filter, "ReadH5EbsdWidget can ONLY be used with ReadH5Ebsd filter", __FILE__);
 
+  qRegisterMetaType<QSet<QString> >("QSet<QString>");
+
   if ( getOpenDialogLastDirectory().isEmpty() )
   {
     setOpenDialogLastDirectory( QDir::homePath() );

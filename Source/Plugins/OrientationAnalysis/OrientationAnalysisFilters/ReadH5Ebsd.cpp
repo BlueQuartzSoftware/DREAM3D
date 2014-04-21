@@ -121,8 +121,7 @@ ReadH5Ebsd::~ReadH5Ebsd()
 void ReadH5Ebsd::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(FilterParameter::New("Read H5Ebsd File", "SelectedArrayNames", FilterParameterWidgetType::ReadH5EbsdWidget,"ReadH5Ebsd", false, "", "*.h5ebsd"));
-
+  parameters.push_back(FilterParameter::New("Read H5Ebsd File", "SelectedArrayNames", FilterParameterWidgetType::ReadH5EbsdWidget, "ReadH5Ebsd", false, "", "*.h5ebsd"));
   parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "QString", true));
   parameters.push_back(FilterParameter::New("Data Container Name", "DataContainerName", FilterParameterWidgetType::StringWidget, "QString", true, ""));
   parameters.push_back(FilterParameter::New("Cell Attribute Matrix Name", "CellAttributeMatrixName", FilterParameterWidgetType::StringWidget, "QString", true, ""));
@@ -1113,8 +1112,8 @@ AbstractFilter::Pointer ReadH5Ebsd::newFilterInstance(bool copyFilterParameters)
       bool ok = filter->setProperty(parameter->getPropertyName().toLatin1().constData(), var);
       if(false == ok)
       {
-        QString ss = QString("Error occurred transferring the Filter Parameter '%1' in Filter '%2' to the filter instance. The pipeline may run but the underlying filter will NOT be using the values from the GUI."
-                             " Please report this issue to the developers of this filter.").arg(parameter->getPropertyName()).arg(filter->getHumanLabel());
+        QString ss = QString("%1::newFilterInstance(%2) Error occurred transferring the Parameter '%3' of type '%4' to the new filter instance."
+                             " Please report this issue to the developers of this filter.").arg(getNameOfClass()).arg(__LINE__).arg(parameter->getPropertyName()).arg(parameter->getValueType());
         Q_ASSERT_X(ok, __FILE__, ss.toLatin1().constData());
       }
 
