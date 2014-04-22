@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>557</width>
+    <width>468</width>
     <height>57</height>
    </rect>
   </property>
@@ -14,7 +14,16 @@
    <string>DataArraySelectionWidget</string>
   </property>
   <layout class="QGridLayout" name="widgetLayout">
-   <property name="margin">
+   <property name="leftMargin">
+    <number>2</number>
+   </property>
+   <property name="topMargin">
+    <number>2</number>
+   </property>
+   <property name="rightMargin">
+    <number>2</number>
+   </property>
+   <property name="bottomMargin">
     <number>2</number>
    </property>
    <item row="1" column="0" rowspan="2">
@@ -38,13 +47,34 @@
     </widget>
    </item>
    <item row="2" column="2">
-    <widget class="QComboBox" name="dataContainerList"/>
+    <widget class="QComboBox" name="dataContainerList">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+    </widget>
    </item>
    <item row="2" column="3">
-    <widget class="QComboBox" name="attributeMatrixList"/>
+    <widget class="QComboBox" name="attributeMatrixList">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+    </widget>
    </item>
    <item row="2" column="4">
-    <widget class="QComboBox" name="attributeArrayList"/>
+    <widget class="QComboBox" name="attributeArrayList">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+    </widget>
    </item>
    <item row="1" column="1" colspan="4">
     <widget class="QCheckBox" name="conditionalCB">
@@ -63,7 +93,7 @@
      </property>
     </widget>
    </item>
-   <item row="2" column="7">
+   <item row="1" column="6" rowspan="2">
     <spacer name="horizontalSpacer">
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
