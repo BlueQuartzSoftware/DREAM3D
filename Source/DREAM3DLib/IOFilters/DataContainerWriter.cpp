@@ -278,7 +278,7 @@ void DataContainerWriter::execute()
     writer->execute();
     if (writer->getErrorCondition() < 0)
     {
-      notifyErrorMessage("Error Writing the Voxel Data", -803);
+      notifyErrorMessage("Error Writing the Voxel Data", writer->getErrorCondition());
       return;
     }
   }
