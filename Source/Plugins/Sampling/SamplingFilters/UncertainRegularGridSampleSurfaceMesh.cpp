@@ -80,7 +80,7 @@ UncertainRegularGridSampleSurfaceMesh::~UncertainRegularGridSampleSurfaceMesh()
 // -----------------------------------------------------------------------------
 void UncertainRegularGridSampleSurfaceMesh::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVector parameters = getFilterParameters();
   parameters.push_back(FilterParameter::New("X Points (Voxels)", "XPoints", FilterParameterWidgetType::IntWidget,"int", false, "Column"));
   parameters.push_back(FilterParameter::New("Y Points (Voxels)", "YPoints", FilterParameterWidgetType::IntWidget,"int", false, "Row"));
   parameters.push_back(FilterParameter::New("Z Points (Voxels)", "ZPoints", FilterParameterWidgetType::IntWidget,"int", false, "Plane"));

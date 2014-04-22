@@ -90,7 +90,7 @@ class UncertainRegularGridSampleSurfaceMesh : public SampleSurfaceMesh
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::SamplingFilters; }
     virtual const QString getSubGroupName()  { return DREAM3D::FilterSubGroups::ResolutionFilters; }
-    virtual const QString getHumanLabel() { return "Sample Surface Mesh on Regular Grid"; }
+    virtual const QString getHumanLabel() { return "Sample Surface Mesh on Uncertain Regular Grid"; }
 
     virtual void setupFilterParameters();
     /**
