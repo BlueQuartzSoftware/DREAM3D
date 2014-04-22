@@ -108,9 +108,8 @@ GroupMicroTextureRegions::~GroupMicroTextureRegions()
 void GroupMicroTextureRegions::setupFilterParameters()
 {
   FilterParameterVector parameters = getFilterParameters();
-  parameters.push_back(FilterParameter::New("C-Axis Alignment Tolerance", "CAxisTolerance", FilterParameterWidgetType::DoubleWidget,"float", false, "Degrees"));
-  parameters.push_back(FilterParameter::New("Use Non-Contiguous Neighbors", "UseNonContiguousNeighbors", FilterParameterWidgetType::BooleanWidget,"bool", false));
-  parameters.push_back(FilterParameter::New("Group C-Axes With Running Average", "UseRunningAverage", FilterParameterWidgetType::BooleanWidget,"bool", false));
+  parameters.push_front(FilterParameter::New("C-Axis Alignment Tolerance", "CAxisTolerance", FilterParameterWidgetType::DoubleWidget,"float", false, "Degrees"));
+  parameters.push_front(FilterParameter::New("Group C-Axes With Running Average", "UseRunningAverage", FilterParameterWidgetType::BooleanWidget,"bool", false));
   parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "QString", true));
   parameters.push_back(FilterParameter::New("FeatureIds", "FeatureIdsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
   parameters.push_back(FilterParameter::New("FeaturePhases", "FeaturePhasesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
@@ -142,7 +141,6 @@ void GroupMicroTextureRegions::readFilterParameters(AbstractFilterParametersRead
   setFeaturePhasesArrayPath(reader->readDataArrayPath("FeaturePhasesArrayPath", getFeaturePhasesArrayPath() ) );
   setFeatureIdsArrayPath(reader->readDataArrayPath("FeatureIdsArrayPath", getFeatureIdsArrayPath() ) );
   setCAxisTolerance( reader->readValue("CAxisTolerance", getCAxisTolerance()) );
-  setUseNonContiguousNeighbors( reader->readValue("UseNonContiguousNeighbors", getUseNonContiguousNeighbors()) );
   setUseRunningAverage( reader->readValue("UseRunningAverage", getUseRunningAverage()) );
   reader->closeFilterGroup();
 }
@@ -164,7 +162,6 @@ int GroupMicroTextureRegions::writeFilterParameters(AbstractFilterParametersWrit
   writer->writeValue("FeaturePhasesArrayPath", getFeaturePhasesArrayPath() );
   writer->writeValue("FeatureIdsArrayPath", getFeatureIdsArrayPath() );
   writer->writeValue("CAxisTolerance", getCAxisTolerance() );
-  writer->writeValue("UseNonContiguousNeighbors", getUseNonContiguousNeighbors() );
   writer->writeValue("UseRunningAverage", getUseRunningAverage() );
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to

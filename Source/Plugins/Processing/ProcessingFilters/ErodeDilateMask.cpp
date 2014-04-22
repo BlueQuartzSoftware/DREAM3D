@@ -93,7 +93,7 @@ void ErodeDilateMask::setupFilterParameters()
   parameters.push_back(FilterParameter::New("Y Direction", "YDirOn", FilterParameterWidgetType::BooleanWidget,"bool", false));
   parameters.push_back(FilterParameter::New("Z Direction", "ZDirOn", FilterParameterWidgetType::BooleanWidget,"bool", false));
   parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "QString", true));
-  parameters.push_back(FilterParameter::New("Cell Mask Array", "MaskArrayPath", FilterParameterWidgetType::DataArraySelectionWidget,"DataArrayPath", false));
+  parameters.push_back(FilterParameter::New("Cell Mask Array", "MaskArrayPath", FilterParameterWidgetType::DataArraySelectionWidget,"DataArrayPath", true));
   setFilterParameters(parameters);
 }
 

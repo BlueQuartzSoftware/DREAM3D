@@ -80,10 +80,10 @@ void IdentifyDislocationSegments::setupFilterParameters()
   FilterParameterVector parameters;
 
   parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "QString", true));
-  parameters.push_back(FilterParameter::New("Edge Feature Attribute Matrix Name", "EdgeFeatureAttributeMatrixName", FilterParameterWidgetType::SeparatorWidget, "QString", true, ""));
   parameters.push_back(FilterParameter::New("BurgersVectors", "BurgersVectorsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
   parameters.push_back(FilterParameter::New("SlipPlaneNormals", "SlipPlaneNormalsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
   parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "QString", true));
+  parameters.push_back(FilterParameter::New("Edge Feature Attribute Matrix Name", "EdgeFeatureAttributeMatrixName", FilterParameterWidgetType::StringWidget, "QString", true, ""));
   parameters.push_back(FilterParameter::New("DislocationIds", "DislocationIdsArrayName", FilterParameterWidgetType::StringWidget, "QString", true, ""));
   parameters.push_back(FilterParameter::New("Active", "ActiveArrayName", FilterParameterWidgetType::StringWidget, "QString", true, ""));
   setFilterParameters(parameters);

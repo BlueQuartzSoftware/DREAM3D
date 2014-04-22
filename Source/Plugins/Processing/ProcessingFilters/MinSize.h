@@ -70,8 +70,8 @@ class MinSize : public AbstractFilter
 
     DREAM3D_FILTER_PARAMETER(int, MinAllowedFeatureSize)
     Q_PROPERTY(int MinAllowedFeatureSize READ getMinAllowedFeatureSize WRITE setMinAllowedFeatureSize)
-    DREAM3D_FILTER_PARAMETER(bool, ApplyToAll)
-    Q_PROPERTY(bool ApplyToAll READ getApplyToAll WRITE setApplyToAll)
+    DREAM3D_FILTER_PARAMETER(bool, ApplyToSinglePhase)
+    Q_PROPERTY(bool ApplyToSinglePhase READ getApplyToSinglePhase WRITE setApplyToSinglePhase)
     DREAM3D_FILTER_PARAMETER(int, PhaseNumber)
     Q_PROPERTY(int PhaseNumber READ getPhaseNumber WRITE setPhaseNumber)
 
@@ -85,7 +85,7 @@ class MinSize : public AbstractFilter
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::ProcessingFilters; }
     virtual const QString getSubGroupName()  { return DREAM3D::FilterSubGroups::CleanupFilters; }
-    virtual const QString getHumanLabel() { return "Minimum Size Filter (All Phases)"; }
+    virtual const QString getHumanLabel() { return "Minimum Size Filter"; }
 
     virtual void setupFilterParameters();
     /**
@@ -113,6 +113,7 @@ class MinSize : public AbstractFilter
     MinSize();
 
     int32_t* m_Neighbors;
+    size_t numFeatures;
 
     DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeatureIds)
     DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeaturePhases)

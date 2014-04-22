@@ -81,22 +81,11 @@ AlignSections::~AlignSections()
 void AlignSections::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Write Alignment Shift File");
-    parameter->setPropertyName("WriteAlignmentShifts");
-    parameter->setWidgetType(FilterParameterWidgetType::BooleanWidget);
-    parameter->setValueType("bool");
-    parameters.push_back(parameter);
-  }
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Alignment File");
-    parameter->setPropertyName("AlignmentShiftFileName");
-    parameter->setWidgetType(FilterParameterWidgetType::OutputFileWidget);
-    parameter->setValueType("QString");
-    parameters.push_back(parameter);
-  }
+  parameters.push_back(FilterParameter::New("Alignment File", "AlignmentShiftFileName", FilterParameterWidgetType::OutputFileWidget,"QString", false));
+  FilterParameter::Pointer param = parameters.back();
+  param->setConditional(true);
+  param->setConditionalProperty("WriteAlignmentShifts");
+  param->setConditionalLabel("Write Alignment Shift File");
 
   setFilterParameters(parameters);
 }

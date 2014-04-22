@@ -121,11 +121,17 @@ AdjustVolumeOrigin::~AdjustVolumeOrigin()
 void AdjustVolumeOrigin::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(FilterParameter::New("Apply to Voxel Volume", "ApplyToVoxelVolume", FilterParameterWidgetType::BooleanWidget,"bool", false));
-  parameters.push_back(FilterParameter::New("Apply to Surface Mesh", "ApplyToSurfaceMesh", FilterParameterWidgetType::BooleanWidget,"bool", false));
   parameters.push_back(FilterParameter::New("Origin", "Origin", FilterParameterWidgetType::FloatVec3Widget,"FloatVec3_t", false, "Microns"));
   parameters.push_back(FilterParameter::New("Data Container To Apply To", "DataContainerName", FilterParameterWidgetType::DataContainerSelectionWidget,"QString", false));
+  FilterParameter::Pointer param = parameters.back();
+  param->setConditional(true);
+  param->setConditionalProperty("ApplyToVoxelVolume");
+  param->setConditionalLabel("Apply to Voxel Volume");
   parameters.push_back(FilterParameter::New("Surface Data Container To Apply To", "SurfaceDataContainerName", FilterParameterWidgetType::DataContainerSelectionWidget,"QString", false));
+  param = parameters.back();
+  param->setConditional(true);
+  param->setConditionalProperty("ApplyToSurfaceMesh");
+  param->setConditionalLabel("Apply to Surface Mesh");
   setFilterParameters(parameters);
 }
 

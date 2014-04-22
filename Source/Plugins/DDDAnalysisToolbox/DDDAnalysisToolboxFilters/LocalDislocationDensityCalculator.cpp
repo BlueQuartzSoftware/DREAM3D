@@ -80,33 +80,11 @@ void LocalDislocationDensityCalculator::setupFilterParameters()
     parameter->setUnits("microns");
     parameters.push_back(parameter);
   }
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Output DataContainer Name");
-    parameter->setPropertyName("OutputDataContainerName");
-    parameter->setWidgetType(FilterParameterWidgetType::StringWidget);
-    parameter->setValueType("QString");
-    parameters.push_back(parameter);
-  }
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Output AttributeMatrix Name");
-    parameter->setPropertyName("OutputAttributeMatrixName");
-    parameter->setWidgetType(FilterParameterWidgetType::StringWidget);
-    parameter->setValueType("QString");
-    parameters.push_back(parameter);
-  }
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Output Data Array Name");
-    parameter->setPropertyName("OutputArrayName");
-    parameter->setWidgetType(FilterParameterWidgetType::StringWidget);
-    parameter->setValueType("QString");
-    parameters.push_back(parameter);
-  }
 
   parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "QString", true));
-parameters.push_back(FilterParameter::New("Dislocation Line Density Array Name", "OutputArrayName", FilterParameterWidgetType::StringWidget, "QString", true, ""));
+  parameters.push_back(FilterParameter::New("Volume Data Container", "OutputDataContainerName", FilterParameterWidgetType::StringWidget, "QString", true, ""));
+  parameters.push_back(FilterParameter::New("Cell Attribute Matrix", "OutputAttributeMatrixName", FilterParameterWidgetType::StringWidget, "QString", true, ""));
+  parameters.push_back(FilterParameter::New("Dislocation Line Density Array Name", "OutputArrayName", FilterParameterWidgetType::StringWidget, "QString", true, ""));
   setFilterParameters(parameters);
 }
 

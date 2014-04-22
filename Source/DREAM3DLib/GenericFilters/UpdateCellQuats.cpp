@@ -108,6 +108,13 @@ void UpdateCellQuats::dataCheck()
   m_Quats5Ptr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getQuats5ArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_Quats5Ptr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_Quats5 = m_Quats5Ptr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  oldQuats = DataArray<float>::CreateArray(m_Quats5Ptr.lock()->getNumberOfTuples(), m_Quats5Ptr.lock()->getComponentDimensions(), m_QuatsPtr.lock()->getName());
+  float* quats5 = oldQuats->getPointer(0);
+  size_t totalElements = m_Quats5Ptr.lock()->getNumberOfTuples()*m_Quats5Ptr.lock()->getNumberOfComponents();
+  for(int iter=0;iter<totalElements;iter++)
+  {
+    quats5[iter] = m_Quats5[iter];
+  }
   dims[0] = 4;
   tempPath.update(getQuats5ArrayPath().getDataContainerName(), getQuats5ArrayPath().getAttributeMatrixName(), getQuatsArrayName() );
   m_QuatsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
@@ -135,7 +142,8 @@ void UpdateCellQuats::execute()
   dataCheck();
   if(getErrorCondition() < 0) { return; }
 
-  int64_t totalPoints = m_Quats5Ptr.lock()->getNumberOfTuples();
+  int64_t totalPoints = oldQuats->getNumberOfTuples();
+  float* quats5 = oldQuats->getPointer(0);
 
   //copying the 5 component quaternions into the new 4 component quaternions
   // This is a special case for dealing with this conversion. If you are dealing with
@@ -144,7 +152,7 @@ void UpdateCellQuats::execute()
   {
     for(int j = 0; j < 4; j++)
     {
-      m_Quats[4 * i + j] = m_Quats5[5 * i + (j + 1)];
+      m_Quats[4 * i + j] = quats5[5 * i + (j + 1)];
     }
   }
 
