@@ -316,17 +316,17 @@ class NeighborList : public IDataArray
         err = H5Lite::writeVectorDataset(parentId, m_NumNeighborsArrayName, dims, numNeighbors);
         if(err < 0)
         {
-          return -603;
+          return -601;
         }
         err = H5Lite::writeScalarAttribute(parentId, m_NumNeighborsArrayName, std::string(H5_NUMCOMPONENTS), 1);
         if(err < 0)
         {
-          return -605;
+          return -602;
         }
         err = H5Lite::writeStringAttribute(parentId, m_NumNeighborsArrayName, DREAM3D::HDF5::ObjectType, "DataArray<T>");
         if(err < 0)
         {
-          return -604;
+          return -603;
         }
       }
       else
@@ -337,7 +337,7 @@ class NeighborList : public IDataArray
         err = H5Lite::readVectorDataset(parentId, m_NumNeighborsArrayName, fileNumNeigh);
         if (err < 0)
         {
-          return -602;
+          return -604;
         }
 
         // Compare the 2 vectors to make sure they are exactly the same;
@@ -364,17 +364,17 @@ class NeighborList : public IDataArray
         err = H5Lite::replacePointerDataset(parentId, m_NumNeighborsArrayName, rank, dims, &(numNeighbors.front()) );
         if(err < 0)
         {
-          return -603;
+          return -605;
         }
         err = H5Lite::writeScalarAttribute(parentId, m_NumNeighborsArrayName, std::string(H5_NUMCOMPONENTS), 1);
         if(err < 0)
         {
-          return -605;
+          return -606;
         }
         err = H5Lite::writeStringAttribute(parentId, m_NumNeighborsArrayName, DREAM3D::HDF5::ObjectType, "DataArray<T>");
         if(err < 0)
         {
-          return -604;
+          return -607;
         }
       }
 
@@ -403,24 +403,24 @@ class NeighborList : public IDataArray
         err = H5Lite::writePointerDataset(parentId, GetName(), rank, dims, &(flat.front()));
         if(err < 0)
         {
-          return -605;
+          return -608;
         }
         err = H5Lite::writeScalarAttribute(parentId, GetName(), std::string(H5_NUMCOMPONENTS), 1);
         if(err < 0)
         {
-          return -606;
+          return -609;
         }
 
         err = H5Lite::writeStringAttribute(parentId, GetName(), DREAM3D::HDF5::ObjectType, getNameOfClass());
         if(err < 0)
         {
-          return -607;
+          return -610;
         }
 
         err = H5Lite::writeStringAttribute(parentId, GetName(), "Linked NumNeighbors Dataset", m_NumNeighborsArrayName);
         if(err < 0)
         {
-          return -608;
+          return -611;
         }
       }
       return err;
@@ -667,7 +667,9 @@ class NeighborList : public IDataArray
      * @brief NeighborList
      */
     NeighborList() :
-      m_Name("NeighborList")  {    }
+      m_Name("NeighborList"),
+      m_NumNeighborsArrayName(DREAM3D::FieldData::NumNeighbors)
+    {}
 
   private:
     std::string m_Name;
