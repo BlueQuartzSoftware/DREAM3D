@@ -21,6 +21,8 @@ set(_PublicFilters
   HoughCircles
   AlignSectionsPhaseCorrelation
   WriteImage
+  MedianKernel
+  MeanKernel
 )
 
 #---------
