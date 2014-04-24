@@ -186,8 +186,8 @@ class LaplacianSmoothing : public SurfaceMeshFilter
     virtual int vertexBasedSmoothing();
 
   private:
-    DEFINE_PTR_WEAKPTR_DATAARRAY(int8_t, SurfaceMeshNodeType)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(int8_t, SurfaceMeshFaceLabels)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int8_t, SurfaceMeshNodeType)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int8_t, SurfaceMeshFaceLabels)
 
 #if OUTPUT_DEBUG_VTK_FILES
     void writeVTKFile(const QString& outputVtkFile);

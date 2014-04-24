@@ -157,7 +157,7 @@ signals:
     int32_t getSeedTriangle(int32_t label, QSet<int32_t>& triangleIndices);
 
   private:
-    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, SurfaceMeshFaceLabels)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, SurfaceMeshFaceLabels)
 
     bool m_DoNodeFaceConnectivityFilter;
 

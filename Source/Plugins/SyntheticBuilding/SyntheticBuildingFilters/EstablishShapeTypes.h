@@ -118,8 +118,8 @@ class EstablishShapeTypes : public AbstractFilter
 
   private:
     // Cell Data - make sure these are all initialized to NULL in the constructor
-    DEFINE_PTR_WEAKPTR_DATAARRAY(unsigned int, PhaseTypes)
-    DEFINE_CREATED_DATAARRAY(unsigned int, ShapeTypes)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(unsigned int, PhaseTypes)
+    DEFINE_CREATED_DATAARRAY_VARIABLE(unsigned int, ShapeTypes)
 
     void dataCheck();
 

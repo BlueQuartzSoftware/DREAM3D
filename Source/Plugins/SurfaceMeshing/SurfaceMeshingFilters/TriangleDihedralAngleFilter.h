@@ -133,7 +133,7 @@ signals:
     void dataCheck();
 
   private:
-    DEFINE_CREATED_DATAARRAY(double, SurfaceMeshTriangleDihedralAngles)
+    DEFINE_CREATED_DATAARRAY_VARIABLE(double, SurfaceMeshTriangleDihedralAngles)
 
     TriangleDihedralAngleFilter(const TriangleDihedralAngleFilter&); // Copy Constructor Not Implemented
     void operator=(const TriangleDihedralAngleFilter&); // Operator '=' Not Implemented

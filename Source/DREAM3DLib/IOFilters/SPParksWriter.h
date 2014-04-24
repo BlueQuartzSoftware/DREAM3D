@@ -137,7 +137,7 @@ signals:
     virtual int writeFile();
 
   private:
-    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeatureIds)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, FeatureIds)
 
     SPParksWriter(const SPParksWriter&); // Copy Constructor Not Implemented
     void operator=(const SPParksWriter&); // Operator '=' Not Implemented

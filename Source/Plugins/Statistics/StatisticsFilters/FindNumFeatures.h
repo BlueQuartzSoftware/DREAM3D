@@ -106,8 +106,8 @@ signals:
     FindNumFeatures();
 
   private:
-    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeaturePhases)
-    DEFINE_CREATED_DATAARRAY(int32_t, NumFeatures)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, FeaturePhases)
+    DEFINE_CREATED_DATAARRAY_VARIABLE(int32_t, NumFeatures)
 
     void dataCheck();
 

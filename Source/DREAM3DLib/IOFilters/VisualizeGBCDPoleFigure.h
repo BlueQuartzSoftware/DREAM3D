@@ -152,7 +152,7 @@ class VisualizeGBCDPoleFigure : public AbstractFilter
   private:
     QVector<OrientationOps::Pointer> m_OrientationOps;
 
-    DEFINE_PTR_WEAKPTR_DATAARRAY(double, GBCD)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(double, GBCD)
 
     /**
      * @brief This function writes a set of Axis coordinates to that are needed

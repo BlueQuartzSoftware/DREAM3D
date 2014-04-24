@@ -167,18 +167,18 @@ class PatchGroupMicroTextureRegions : public GroupFeatures
     void characterize_micro_texture_regions();
 
   private:
-    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeatureIds)
-    DEFINE_CREATED_DATAARRAY(int32_t, CellParentIds)
-    DEFINE_CREATED_DATAARRAY(int32_t, FeatureParentIds)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(float, AvgQuats)
-    DEFINE_CREATED_DATAARRAY(bool, Active)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeaturePhases)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(float, Volumes)
-    DEFINE_CREATED_DATAARRAY(int32_t, NumCells)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(float, Centroids)
-    DEFINE_CREATED_DATAARRAY(int32_t, Neighborhoods)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, FeatureIds)
+    DEFINE_CREATED_DATAARRAY_VARIABLE(int32_t, CellParentIds)
+    DEFINE_CREATED_DATAARRAY_VARIABLE(int32_t, FeatureParentIds)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, AvgQuats)
+    DEFINE_CREATED_DATAARRAY_VARIABLE(bool, Active)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, FeaturePhases)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, Volumes)
+    DEFINE_CREATED_DATAARRAY_VARIABLE(int32_t, NumCells)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, Centroids)
+    DEFINE_CREATED_DATAARRAY_VARIABLE(int32_t, Neighborhoods)
 
-    DEFINE_PTR_WEAKPTR_DATAARRAY(unsigned int, CrystalStructures)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(unsigned int, CrystalStructures)
 
     NeighborList<int>::WeakPointer m_NeighborhoodList;
 

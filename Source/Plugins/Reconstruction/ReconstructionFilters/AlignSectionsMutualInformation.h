@@ -113,12 +113,12 @@ class AlignSectionsMutualInformation : public AlignSections
     virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
 
   private:
-    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeatureIds)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(float, Quats)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, CellPhases)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(bool, GoodVoxels)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, FeatureIds)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, Quats)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, CellPhases)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(bool, GoodVoxels)
 
-    DEFINE_PTR_WEAKPTR_DATAARRAY(unsigned int, CrystalStructures)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(unsigned int, CrystalStructures)
 
     QVector<OrientationOps::Pointer> m_OrientationOps;
 

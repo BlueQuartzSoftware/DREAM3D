@@ -175,17 +175,17 @@ class FeatureFaceCurvatureFilter : public SurfaceMeshFilter
     void dataCheck();
 
   private:
-    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, SurfaceMeshFaceLabels)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(double, SurfaceMeshTriangleCentroids)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(double, SurfaceMeshFaceNormals)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, SurfaceMeshFeatureFaceIds)
-    DEFINE_CREATED_DATAARRAY(int32_t, SurfaceMeshUniqueEdges)
-    DEFINE_CREATED_DATAARRAY(double, SurfaceMeshPrincipalCurvature1s)
-    DEFINE_CREATED_DATAARRAY(double, SurfaceMeshPrincipalCurvature2s)
-    DEFINE_CREATED_DATAARRAY(double, SurfaceMeshPrincipalDirection1s)
-    DEFINE_CREATED_DATAARRAY(double, SurfaceMeshPrincipalDirection2s)
-    DEFINE_CREATED_DATAARRAY(double, SurfaceMeshGaussianCurvatures)
-    DEFINE_CREATED_DATAARRAY(double, SurfaceMeshMeanCurvatures)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, SurfaceMeshFaceLabels)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(double, SurfaceMeshTriangleCentroids)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(double, SurfaceMeshFaceNormals)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, SurfaceMeshFeatureFaceIds)
+    DEFINE_CREATED_DATAARRAY_VARIABLE(int32_t, SurfaceMeshUniqueEdges)
+    DEFINE_CREATED_DATAARRAY_VARIABLE(double, SurfaceMeshPrincipalCurvature1s)
+    DEFINE_CREATED_DATAARRAY_VARIABLE(double, SurfaceMeshPrincipalCurvature2s)
+    DEFINE_CREATED_DATAARRAY_VARIABLE(double, SurfaceMeshPrincipalDirection1s)
+    DEFINE_CREATED_DATAARRAY_VARIABLE(double, SurfaceMeshPrincipalDirection2s)
+    DEFINE_CREATED_DATAARRAY_VARIABLE(double, SurfaceMeshGaussianCurvatures)
+    DEFINE_CREATED_DATAARRAY_VARIABLE(double, SurfaceMeshMeanCurvatures)
 
     int32_t* m_SurfaceMeshFaceEdges;
     int32_t  m_TotalFeatureFaces;

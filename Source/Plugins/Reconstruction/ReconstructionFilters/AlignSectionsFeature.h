@@ -94,7 +94,7 @@ class AlignSectionsFeature : public AlignSections
     virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
 
   private:
-    DEFINE_PTR_WEAKPTR_DATAARRAY(bool, GoodVoxels)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(bool, GoodVoxels)
 
     void dataCheck();
 

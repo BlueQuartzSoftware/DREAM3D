@@ -142,7 +142,7 @@ class QuiltCellData : public AbstractFilter
     void dataCheck();
 
   private:
-    DEFINE_PTR_WEAKPTR_DATAARRAY(float, OutputArray)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, OutputArray)
 
     QuiltCellData(const QuiltCellData&); // Copy Constructor Not Implemented
     void operator=(const QuiltCellData&); // Operator '=' Not Implemented

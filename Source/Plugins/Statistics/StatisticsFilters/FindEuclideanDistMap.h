@@ -126,11 +126,11 @@ signals:
     void find_euclideandistmap();
 
   private:
-    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeatureIds)
-    DEFINE_CREATED_DATAARRAY(int32_t, NearestNeighbors)
-    DEFINE_CREATED_DATAARRAY(float, GBEuclideanDistances)
-    DEFINE_CREATED_DATAARRAY(float, TJEuclideanDistances)
-    DEFINE_CREATED_DATAARRAY(float, QPEuclideanDistances)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, FeatureIds)
+    DEFINE_CREATED_DATAARRAY_VARIABLE(int32_t, NearestNeighbors)
+    DEFINE_CREATED_DATAARRAY_VARIABLE(float, GBEuclideanDistances)
+    DEFINE_CREATED_DATAARRAY_VARIABLE(float, TJEuclideanDistances)
+    DEFINE_CREATED_DATAARRAY_VARIABLE(float, QPEuclideanDistances)
 
     void dataCheck();
 

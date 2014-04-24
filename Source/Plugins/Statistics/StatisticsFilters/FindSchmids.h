@@ -149,15 +149,15 @@ class FindSchmids : public AbstractFilter
     HexagonalOps::Pointer m_HexOps;
     OrthoRhombicOps::Pointer m_OrthoOps;
 
-    DEFINE_CREATED_DATAARRAY(float, Schmids)
-    DEFINE_CREATED_DATAARRAY(float, Phis)
-    DEFINE_CREATED_DATAARRAY(float, Lambdas)
-    DEFINE_CREATED_DATAARRAY(int32_t, Poles)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeaturePhases)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(float, AvgQuats)
-    DEFINE_CREATED_DATAARRAY(int32_t, SlipSystems)
+    DEFINE_CREATED_DATAARRAY_VARIABLE(float, Schmids)
+    DEFINE_CREATED_DATAARRAY_VARIABLE(float, Phis)
+    DEFINE_CREATED_DATAARRAY_VARIABLE(float, Lambdas)
+    DEFINE_CREATED_DATAARRAY_VARIABLE(int32_t, Poles)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, FeaturePhases)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, AvgQuats)
+    DEFINE_CREATED_DATAARRAY_VARIABLE(int32_t, SlipSystems)
 
-    DEFINE_PTR_WEAKPTR_DATAARRAY(unsigned int, CrystalStructures)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(unsigned int, CrystalStructures)
 
     void dataCheck();
 

@@ -153,9 +153,9 @@ class FitFeatureData : public AbstractFilter
     void dataCheck();
 
   private:
-    DEFINE_PTR_WEAKPTR_DATAARRAY(bool, BiasedFeatures)
-    DEFINE_CREATED_DATAARRAY(float, NewEnsembleArray)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeaturePhases)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(bool, BiasedFeatures)
+    DEFINE_CREATED_DATAARRAY_VARIABLE(float, NewEnsembleArray)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, FeaturePhases)
 
     FitFeatureData(const FitFeatureData&); // Copy Constructor Not Implemented
     void operator=(const FitFeatureData&); // Operator '=' Not Implemented

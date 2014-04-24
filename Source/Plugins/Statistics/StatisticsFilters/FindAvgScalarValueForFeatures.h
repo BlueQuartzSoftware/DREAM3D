@@ -144,8 +144,8 @@ class FindAvgScalarValueForFeatures : public AbstractFilter
     void dataCheck();
 
   private:
-    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeatureIds)
-    DEFINE_CREATED_DATAARRAY(float, NewFeatureArray)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, FeatureIds)
+    DEFINE_CREATED_DATAARRAY_VARIABLE(float, NewFeatureArray)
 
     FindAvgScalarValueForFeatures(const FindAvgScalarValueForFeatures&); // Copy Constructor Not Implemented
     void operator=(const FindAvgScalarValueForFeatures&); // Operator '=' Not Implemented

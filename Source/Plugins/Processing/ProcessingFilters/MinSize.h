@@ -115,8 +115,8 @@ class MinSize : public AbstractFilter
     int32_t* m_Neighbors;
     size_t numFeatures;
 
-    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeatureIds)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeaturePhases)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, FeatureIds)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, FeaturePhases)
 
     std::vector<std::vector<int> > voxellists;
     std::vector<int> nuclei;

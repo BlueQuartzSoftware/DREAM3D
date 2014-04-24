@@ -110,9 +110,9 @@ signals:
     FindBoundingBoxFeatures();
 
   private:
-    DEFINE_PTR_WEAKPTR_DATAARRAY(float, Centroids)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(bool, SurfaceFeatures)
-    DEFINE_CREATED_DATAARRAY(bool, BiasedFeatures)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, Centroids)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(bool, SurfaceFeatures)
+    DEFINE_CREATED_DATAARRAY_VARIABLE(bool, BiasedFeatures)
 
     void dataCheck();
 

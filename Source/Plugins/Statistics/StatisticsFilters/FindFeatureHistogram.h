@@ -152,9 +152,9 @@ class FindFeatureHistogram : public AbstractFilter
     void dataCheck();
 
   private:
-    DEFINE_PTR_WEAKPTR_DATAARRAY(bool, BiasedFeatures)
-    DEFINE_CREATED_DATAARRAY(int32_t, NewEnsembleArray)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeaturePhases)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(bool, BiasedFeatures)
+    DEFINE_CREATED_DATAARRAY_VARIABLE(int32_t, NewEnsembleArray)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, FeaturePhases)
 
     FindFeatureHistogram(const FindFeatureHistogram&); // Copy Constructor Not Implemented
     void operator=(const FindFeatureHistogram&); // Operator '=' Not Implemented

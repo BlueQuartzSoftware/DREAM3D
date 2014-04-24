@@ -143,10 +143,10 @@ class IdentifyDislocationSegments : public AbstractFilter
     void updateEdgeFeatureInstancePointers();
 
   private:
-    DEFINE_PTR_WEAKPTR_DATAARRAY(float, BurgersVectors)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(float, SlipPlaneNormals)
-    DEFINE_CREATED_DATAARRAY(int32_t, DislocationIds)
-    DEFINE_CREATED_DATAARRAY(bool, Active)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, BurgersVectors)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, SlipPlaneNormals)
+    DEFINE_CREATED_DATAARRAY_VARIABLE(int32_t, DislocationIds)
+    DEFINE_CREATED_DATAARRAY_VARIABLE(bool, Active)
 
     IdentifyDislocationSegments(const IdentifyDislocationSegments&); // Copy Constructor Not Implemented
     void operator=(const IdentifyDislocationSegments&); // Operator '=' Not Implemented

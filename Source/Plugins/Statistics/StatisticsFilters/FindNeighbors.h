@@ -127,10 +127,10 @@ class FindNeighbors : public AbstractFilter
     FindNeighbors();
 
   private:
-    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeatureIds)
-    DEFINE_CREATED_DATAARRAY(int8_t, SurfaceVoxels)
-    DEFINE_CREATED_DATAARRAY(bool, SurfaceFeatures)
-    DEFINE_CREATED_DATAARRAY(int32_t, NumNeighbors)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, FeatureIds)
+    DEFINE_CREATED_DATAARRAY_VARIABLE(int8_t, SurfaceVoxels)
+    DEFINE_CREATED_DATAARRAY_VARIABLE(bool, SurfaceFeatures)
+    DEFINE_CREATED_DATAARRAY_VARIABLE(int32_t, NumNeighbors)
     NeighborList<int>::WeakPointer m_NeighborList;
     NeighborList<float>::WeakPointer m_SharedSurfaceAreaList;
 

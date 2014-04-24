@@ -142,16 +142,16 @@ class MergeColonies : public GroupFeatures
     void identify_globAlpha();
 
   private:
-    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeatureIds)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, CellPhases)
-    DEFINE_CREATED_DATAARRAY(int32_t, CellParentIds)
-    DEFINE_CREATED_DATAARRAY(int32_t, FeatureParentIds)
-    DEFINE_CREATED_DATAARRAY(int32_t, GlobAlpha)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(float, AvgQuats)
-    DEFINE_CREATED_DATAARRAY(bool, Active)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeaturePhases)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, FeatureIds)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, CellPhases)
+    DEFINE_CREATED_DATAARRAY_VARIABLE(int32_t, CellParentIds)
+    DEFINE_CREATED_DATAARRAY_VARIABLE(int32_t, FeatureParentIds)
+    DEFINE_CREATED_DATAARRAY_VARIABLE(int32_t, GlobAlpha)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, AvgQuats)
+    DEFINE_CREATED_DATAARRAY_VARIABLE(bool, Active)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, FeaturePhases)
 
-    DEFINE_PTR_WEAKPTR_DATAARRAY(unsigned int, CrystalStructures)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(unsigned int, CrystalStructures)
 
     QVector<OrientationOps::Pointer> m_OrientationOps;
 

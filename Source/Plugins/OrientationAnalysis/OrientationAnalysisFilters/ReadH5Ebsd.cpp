@@ -1098,6 +1098,9 @@ AbstractFilter::Pointer ReadH5Ebsd::newFilterInstance(bool copyFilterParameters)
   ReadH5Ebsd::Pointer filter = ReadH5Ebsd::New();
   if(true == copyFilterParameters)
   {
+    filter->setFilterParameters(getFilterParameters() );
+    // We are going to hand copy all of the parameters because the other way of copying the parameters are going to
+    // miss some of them because we are not enumerating all of them.
     filter->setFilterParameters(getFilterParameters());
     filter->setDataContainerName(getDataContainerName());
     filter->setCellEnsembleAttributeMatrixName(getCellEnsembleAttributeMatrixName());

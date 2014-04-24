@@ -138,8 +138,8 @@ signals:
     void updateFeatureInstancePointers();
 
   private:
-    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, SelectedCellData)
-    DEFINE_CREATED_DATAARRAY(bool, Active)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, SelectedCellData)
+    DEFINE_CREATED_DATAARRAY_VARIABLE(bool, Active)
 
     LinkFeatureMapToCellArray(const LinkFeatureMapToCellArray&); // Copy Constructor Not Implemented
     void operator=(const LinkFeatureMapToCellArray&); // Operator '=' Not Implemented

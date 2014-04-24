@@ -140,13 +140,13 @@ class FindShapes : public AbstractFilter
     float find_zcoord(size_t index);
 
   private:
-    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeatureIds)
-    DEFINE_CREATED_DATAARRAY(float, AxisEulerAngles)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(float, Centroids)
-    DEFINE_CREATED_DATAARRAY(float, AxisLengths)
-    DEFINE_CREATED_DATAARRAY(float, Omega3s)
-    DEFINE_CREATED_DATAARRAY(float, Volumes)
-    DEFINE_CREATED_DATAARRAY(float, AspectRatios)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, FeatureIds)
+    DEFINE_CREATED_DATAARRAY_VARIABLE(float, AxisEulerAngles)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, Centroids)
+    DEFINE_CREATED_DATAARRAY_VARIABLE(float, AxisLengths)
+    DEFINE_CREATED_DATAARRAY_VARIABLE(float, Omega3s)
+    DEFINE_CREATED_DATAARRAY_VARIABLE(float, Volumes)
+    DEFINE_CREATED_DATAARRAY_VARIABLE(float, AspectRatios)
 
     void dataCheck();
 

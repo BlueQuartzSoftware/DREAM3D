@@ -122,8 +122,8 @@ class FindLargestCrossSections : public AbstractFilter
     void find_crosssections();
 
   private:
-    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeatureIds)
-    DEFINE_CREATED_DATAARRAY(float, LargestCrossSections)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, FeatureIds)
+    DEFINE_CREATED_DATAARRAY_VARIABLE(float, LargestCrossSections)
 
     void dataCheck();
 

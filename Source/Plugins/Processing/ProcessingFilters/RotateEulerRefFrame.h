@@ -104,7 +104,7 @@ class RotateEulerRefFrame : public AbstractFilter
     void dataCheck();
 
   private:
-    DEFINE_PTR_WEAKPTR_DATAARRAY(float, CellEulerAngles)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, CellEulerAngles)
 
     RotateEulerRefFrame(const RotateEulerRefFrame&); // Copy Constructor Not Implemented
     void operator=(const RotateEulerRefFrame&); // Operator '=' Not Implemented

@@ -145,11 +145,11 @@ signals:
     void dataCheckVoxel();
 
   private:
-    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, SurfaceMeshFaceLabels)
-    DEFINE_CREATED_DATAARRAY(float, SurfaceMeshFaceMisorientationColors)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(float, AvgQuats)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeaturePhases)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(unsigned int, CrystalStructures)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, SurfaceMeshFaceLabels)
+    DEFINE_CREATED_DATAARRAY_VARIABLE(float, SurfaceMeshFaceMisorientationColors)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, AvgQuats)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, FeaturePhases)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(unsigned int, CrystalStructures)
 
     GenerateFaceMisorientationColoring(const GenerateFaceMisorientationColoring&); // Copy Constructor Not Implemented
     void operator=(const GenerateFaceMisorientationColoring&); // Operator '=' Not Implemented

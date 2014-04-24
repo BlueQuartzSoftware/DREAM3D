@@ -106,8 +106,8 @@ signals:
     void dataCheck();
 
   private:
-    DEFINE_PTR_WEAKPTR_DATAARRAY(unsigned char, ImageData)
-    DEFINE_CREATED_DATAARRAY(unsigned char, FlatImageData)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(unsigned char, ImageData)
+    DEFINE_CREATED_DATAARRAY_VARIABLE(unsigned char, FlatImageData)
 
     FlattenImage(const FlattenImage&); // Copy Constructor Not Implemented
     void operator=(const FlattenImage&); // Operator '=' Not Implemented

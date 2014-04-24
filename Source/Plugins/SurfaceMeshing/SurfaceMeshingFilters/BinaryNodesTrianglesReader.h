@@ -139,8 +139,8 @@ signals:
     int read();
 
   private:
-    DEFINE_CREATED_DATAARRAY(int8_t, SurfaceMeshNodeTypes)
-    DEFINE_CREATED_DATAARRAY(int32_t, FaceLabels)
+    DEFINE_CREATED_DATAARRAY_VARIABLE(int8_t, SurfaceMeshNodeTypes)
+    DEFINE_CREATED_DATAARRAY_VARIABLE(int32_t, FaceLabels)
 
     BinaryNodesTrianglesReader(const BinaryNodesTrianglesReader&); // Copy Constructor Not Implemented
     void operator=(const BinaryNodesTrianglesReader&); // Operator '=' Not Implemented

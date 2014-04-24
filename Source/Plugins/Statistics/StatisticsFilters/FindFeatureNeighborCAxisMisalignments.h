@@ -136,10 +136,10 @@ class FindFeatureNeighborCAxisMisalignments : public AbstractFilter
     HexagonalOps::Pointer m_HexOps;
     OrthoRhombicOps::Pointer m_OrthoOps;
 
-    DEFINE_PTR_WEAKPTR_DATAARRAY(float, AvgQuats)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeaturePhases)
-    DEFINE_CREATED_DATAARRAY(float, AvgCAxisMisalignments)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(unsigned int, CrystalStructures)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, AvgQuats)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, FeaturePhases)
+    DEFINE_CREATED_DATAARRAY_VARIABLE(float, AvgCAxisMisalignments)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(unsigned int, CrystalStructures)
     NeighborList<int>::WeakPointer m_NeighborList;
     NeighborList<float>::WeakPointer m_CAxisMisalignmentList;
 

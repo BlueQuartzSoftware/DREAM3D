@@ -116,7 +116,7 @@ class ChangeResolution : public AbstractFilter
 
 
   private:
-    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeatureIds)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, FeatureIds)
 
     void dataCheck();
     void updateCellInstancePointers();

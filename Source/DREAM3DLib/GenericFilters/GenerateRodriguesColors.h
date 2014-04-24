@@ -140,11 +140,11 @@ signals:
     void dataCheck();
 
   private:
-    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, CellPhases)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(float, CellEulerAngles)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(unsigned int, CrystalStructures)
-    DEFINE_CREATED_DATAARRAY(uint8_t, CellRodriguesColors)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(bool, GoodVoxels)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, CellPhases)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, CellEulerAngles)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(unsigned int, CrystalStructures)
+    DEFINE_CREATED_DATAARRAY_VARIABLE(uint8_t, CellRodriguesColors)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(bool, GoodVoxels)
 
     GenerateRodriguesColors(const GenerateRodriguesColors&); // Copy Constructor Not Implemented
     void operator=(const GenerateRodriguesColors&); // Operator '=' Not Implemented

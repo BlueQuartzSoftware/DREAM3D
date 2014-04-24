@@ -233,10 +233,10 @@ class ReadH5Ebsd : public AbstractFilter
     }
 
   private:
-    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, CellPhases)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(float, CellEulerAngles)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(uint32_t, CrystalStructures)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(float, LatticeConstants)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, CellPhases)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, CellEulerAngles)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(uint32_t, CrystalStructures)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, LatticeConstants)
     StringDataArray::WeakPointer  m_MaterialNamesPtr;
 
     int tempxpoints;

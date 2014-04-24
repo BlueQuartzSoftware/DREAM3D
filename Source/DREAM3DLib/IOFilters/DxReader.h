@@ -116,7 +116,7 @@ class DREAM3DLib_EXPORT DxReader : public FileReader
     void updateCellInstancePointers();
 
   private:
-    DEFINE_CREATED_DATAARRAY(int32_t, FeatureIds)
+    DEFINE_CREATED_DATAARRAY_VARIABLE(int32_t, FeatureIds)
     size_t m_Dims[3];
     QFile  m_InStream;
 

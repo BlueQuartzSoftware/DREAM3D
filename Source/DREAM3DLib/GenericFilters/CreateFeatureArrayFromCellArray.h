@@ -138,7 +138,7 @@ class DREAM3DLib_EXPORT CreateFeatureArrayFromCellArray : public AbstractFilter
     void dataCheck();
 
   private:
-    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeatureIds)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, FeatureIds)
 
     CreateFeatureArrayFromCellArray(const CreateFeatureArrayFromCellArray&); // Copy Constructor Not Implemented
     void operator=(const CreateFeatureArrayFromCellArray&); // Operator '=' Not Implemented

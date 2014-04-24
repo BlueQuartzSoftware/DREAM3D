@@ -108,8 +108,8 @@ signals:
     void find_centroids();
 
   private:
-    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeatureIds)
-    DEFINE_CREATED_DATAARRAY(float, Centroids)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, FeatureIds)
+    DEFINE_CREATED_DATAARRAY_VARIABLE(float, Centroids)
 
     DECLARE_WRAPPED_ARRAY(featurecenters, m_FeatureCenters, float) // N x 5 Array
 

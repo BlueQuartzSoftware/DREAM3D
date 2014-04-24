@@ -115,8 +115,8 @@ class DREAM3DLib_EXPORT VASPReader : public FileReader
     void updateVertexInstancePointers();
 
   private:
-    DEFINE_CREATED_DATAARRAY(float, AtomVelocities)
-    DEFINE_CREATED_DATAARRAY(int32_t, AtomTypes)
+    DEFINE_CREATED_DATAARRAY_VARIABLE(float, AtomVelocities)
+    DEFINE_CREATED_DATAARRAY_VARIABLE(int32_t, AtomTypes)
     QFile  m_InStream;
 
     float latticeConstant;

@@ -118,10 +118,10 @@ class NeighborOrientationCorrelation : public AbstractFilter
   private:
     QVector<OrientationOps::Pointer> m_OrientationOps;
 
-    DEFINE_PTR_WEAKPTR_DATAARRAY(float, ConfidenceIndex)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(float, Quats)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, CellPhases)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(unsigned int, CrystalStructures)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, ConfidenceIndex)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, Quats)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, CellPhases)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(unsigned int, CrystalStructures)
 
     void dataCheck();
 

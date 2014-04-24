@@ -119,13 +119,13 @@ signals:
 
   private:
     // Cell Data
-    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeatureIds)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(float, CellEulerAngles)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, FeatureIds)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, CellEulerAngles)
 
     // Feature Data
-    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeaturePhases)
-    DEFINE_CREATED_DATAARRAY(float, FeatureEulerAngles)
-    DEFINE_CREATED_DATAARRAY(float, AvgQuats)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, FeaturePhases)
+    DEFINE_CREATED_DATAARRAY_VARIABLE(float, FeatureEulerAngles)
+    DEFINE_CREATED_DATAARRAY_VARIABLE(float, AvgQuats)
 
     void dataCheck();
 

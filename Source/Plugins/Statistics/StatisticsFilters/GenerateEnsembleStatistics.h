@@ -190,19 +190,19 @@ signals:
     HexagonalOps::Pointer m_HexOps;
     OrthoRhombicOps::Pointer m_OrthoOps;
 
-    DEFINE_PTR_WEAKPTR_DATAARRAY(float, AvgQuats)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(float, FeatureEulerAngles)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(float, Volumes)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(bool, BiasedFeatures)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(bool, SurfaceFeatures)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeaturePhases)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(float, AxisEulerAngles)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(float, Omega3s)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(float, AspectRatios)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(float, EquivalentDiameters)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, Neighborhoods)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(unsigned int, CrystalStructures)
-    DEFINE_CREATED_DATAARRAY(uint32_t, PhaseTypes)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, AvgQuats)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, FeatureEulerAngles)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, Volumes)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(bool, BiasedFeatures)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(bool, SurfaceFeatures)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, FeaturePhases)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, AxisEulerAngles)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, Omega3s)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, AspectRatios)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, EquivalentDiameters)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, Neighborhoods)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(unsigned int, CrystalStructures)
+    DEFINE_CREATED_DATAARRAY_VARIABLE(uint32_t, PhaseTypes)
 
     NeighborList<int>::WeakPointer m_NeighborList;
     NeighborList<float>::WeakPointer m_SharedSurfaceAreaList;

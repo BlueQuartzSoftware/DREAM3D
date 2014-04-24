@@ -152,7 +152,7 @@ class VisualizeGBCDGMT : public AbstractFilter
 
     QVector<float> gmtValues;
 
-    DEFINE_PTR_WEAKPTR_DATAARRAY(double, GBCD)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(double, GBCD)
 
     VisualizeGBCDGMT(const VisualizeGBCDGMT&); // Copy Constructor Not Implemented
     void operator=(const VisualizeGBCDGMT&); // Operator '=' Not Implemented

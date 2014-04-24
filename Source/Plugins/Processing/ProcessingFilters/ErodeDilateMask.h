@@ -116,7 +116,7 @@ class ErodeDilateMask : public AbstractFilter
 
   private:
     bool* m_MaskCopy;
-    DEFINE_PTR_WEAKPTR_DATAARRAY(bool, Mask)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(bool, Mask)
 
     QVector<QVector<int> > voxellists;
     QVector<int> nuclei;

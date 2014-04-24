@@ -134,15 +134,15 @@ class FindFeatureReferenceMisorientations : public AbstractFilter
     HexagonalOps::Pointer m_HexOps;
     OrthoRhombicOps::Pointer m_OrthoOps;
 
-    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeatureIds)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, CellPhases)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(float, GBEuclideanDistances)
-    DEFINE_CREATED_DATAARRAY(float, FeatureReferenceMisorientations)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(float, AvgQuats)
-    DEFINE_CREATED_DATAARRAY(float, FeatureAvgMisorientations)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(float, Quats)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, FeatureIds)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, CellPhases)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, GBEuclideanDistances)
+    DEFINE_CREATED_DATAARRAY_VARIABLE(float, FeatureReferenceMisorientations)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, AvgQuats)
+    DEFINE_CREATED_DATAARRAY_VARIABLE(float, FeatureAvgMisorientations)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, Quats)
 
-    DEFINE_PTR_WEAKPTR_DATAARRAY(unsigned int, CrystalStructures)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(unsigned int, CrystalStructures)
 
     void dataCheck();
 
