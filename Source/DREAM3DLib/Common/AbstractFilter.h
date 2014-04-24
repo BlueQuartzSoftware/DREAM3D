@@ -181,6 +181,11 @@ class DREAM3DLib_EXPORT AbstractFilter : public Observable
      */
     bool getCancel();
 
+    /**
+     * @brief copyFilterParameterInstanceVariables
+     * @param filter
+     */
+    virtual void copyFilterParameterInstanceVariables(AbstractFilter* filter);
 
   public slots:
 
