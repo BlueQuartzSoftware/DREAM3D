@@ -312,6 +312,9 @@ void ReadH5Ebsd::dataCheck()
   QFileInfo fi(getInputFile());
   if(fi.exists() == false)
   {
+    QString ss = QObject::tr("The input file was not specified or was empty.");
+    setErrorCondition(-10);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;
   }
 
@@ -336,8 +339,8 @@ void ReadH5Ebsd::dataCheck()
   if(err < 0)
   {
     QString ss = QObject::tr("%1:  File counld not be read properly").arg(getHumanLabel());
-    setErrorCondition(-1);
-    notifyErrorMessage(getHumanLabel(), ss, -1);
+    setErrorCondition(-11);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;
   }
   QString manufacturer = volumeInfoReader->getManufacturer();
@@ -1095,44 +1098,18 @@ AbstractFilter::Pointer ReadH5Ebsd::newFilterInstance(bool copyFilterParameters)
   ReadH5Ebsd::Pointer filter = ReadH5Ebsd::New();
   if(true == copyFilterParameters)
   {
-    filter->setFilterParameters(getFilterParameters() );
-
-    //Loop over each Filter Parameter that is registered to the filter either through this class or a parent class
-    // and copy the value from the current instance of the object into the "new" instance that was just created
-    QVector<FilterParameter::Pointer> options = getFilterParameters(); // Get the current set of filter parameters
-    for (QVector<FilterParameter::Pointer>::iterator iter = options.begin(); iter != options.end(); ++iter )
-    {
-      FilterParameter* parameter = (*iter).get();
-      if (parameter->getWidgetType().compare(FilterParameterWidgetType::SeparatorWidget) == 0 )
-      {
-        continue; // Skip this type of filter parameter as it has nothing to do with anything in the filter.
-      }
-      // Get the property from the current instance of the filter
-      QVariant var = property(parameter->getPropertyName().toLatin1().constData());
-      bool ok = filter->setProperty(parameter->getPropertyName().toLatin1().constData(), var);
-      if(false == ok)
-      {
-        QString ss = QString("%1::newFilterInstance(%2) Error occurred transferring the Parameter '%3' of type '%4' to the new filter instance."
-                             " Please report this issue to the developers of this filter.").arg(getNameOfClass()).arg(__LINE__).arg(parameter->getPropertyName()).arg(parameter->getValueType());
-        Q_ASSERT_X(ok, __FILE__, ss.toLatin1().constData());
-      }
-
-      if(parameter->isConditional() == true)
-      {
-        QVariant cond = property(parameter->getConditionalProperty().toLatin1().constData() );
-        ok = filter->setProperty(parameter->getConditionalProperty().toLatin1().constData(), cond);
-        if(false == ok)
-        {
-          QString ss = QString("%1::newFilterInstance()\nError occurred transferring the Filter Parameter '%2' in Filter '%3' to the filter instance. "
-                              " The filter parameter has a conditional property '%4'. The transfer of this property from the old filter to the new filter failed."
-                              " Please report this issue to the developers of this filter.").arg(filter->getNameOfClass())
-                              .arg(parameter->getPropertyName())
-                              .arg(filter->getHumanLabel())
-                              .arg(parameter->getConditionalProperty());
-          Q_ASSERT_X(ok, __FILE__, ss.toLatin1().constData());
-        }
-      }
-    }
+    filter->setFilterParameters(getFilterParameters());
+    filter->setDataContainerName(getDataContainerName());
+    filter->setCellEnsembleAttributeMatrixName(getCellEnsembleAttributeMatrixName());
+    filter->setCellAttributeMatrixName(getCellAttributeMatrixName());
+    filter->setPhaseNameArrayName(getPhaseNameArrayName());
+    filter->setMaterialNameArrayName(getMaterialNameArrayName());
+    filter->setInputFile(getInputFile());
+    filter->setZStartIndex(getZStartIndex());
+    filter->setZEndIndex(getZEndIndex());
+    filter->setUseTransformations(getUseTransformations());
+    filter->setSelectedArrayNames(getSelectedArrayNames());
+    filter->setDataArrayNames(getDataArrayNames());
   }
   return filter;
 }
