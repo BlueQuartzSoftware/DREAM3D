@@ -113,6 +113,7 @@ void FindNeighbors::dataCheck(bool preflight, size_t voxels, size_t fields, size
     NeighborList<int>::Pointer neighborlistPtr = NeighborList<int>::New();
     neighborlistPtr->SetName(m_NeighborListArrayName);
     neighborlistPtr->Resize(fields);
+    neighborlistPtr->setNumNeighborsArrayName(getNumNeighborsArrayName());
     m->addFieldData(m_NeighborListArrayName, neighborlistPtr);
     if (neighborlistPtr.get() == NULL) {
       ss << "NeighborLists Array Not Initialized at Beginning of FindNeighbors Filter" << std::endl;
@@ -141,6 +142,7 @@ void FindNeighbors::dataCheck(bool preflight, size_t voxels, size_t fields, size
     NeighborList<float>::Pointer sharedSurfaceAreaListPtr = NeighborList<float>::New();
     sharedSurfaceAreaListPtr->SetName(m_SharedSurfaceAreaListArrayName);
     sharedSurfaceAreaListPtr->Resize(fields);
+    sharedSurfaceAreaListPtr->setNumNeighborsArrayName(getNumNeighborsArrayName());
     m->addFieldData(m_SharedSurfaceAreaListArrayName, sharedSurfaceAreaListPtr);
     if (sharedSurfaceAreaListPtr.get() == NULL)
     {

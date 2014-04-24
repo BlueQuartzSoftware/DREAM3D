@@ -75,8 +75,8 @@ void FindMisorientations::readFilterParameters(AbstractFilterParametersReader* r
 {
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }
 
@@ -105,18 +105,16 @@ void FindMisorientations::dataCheck(bool preflight, size_t voxels, size_t fields
 
 
   // Now we are going to get a "Pointer" to the NeighborList object out of the DataContainer
-  IDataArray::Pointer neighborListPtr = m->getFieldData(m_NeighborListArrayName);
-  if (NULL == neighborListPtr.get())
+  m_NeighborList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>* >(m->getFieldData(m_NeighborListArrayName).get());
+  if (NULL == m_NeighborList)
   {
     ss.str("");
     ss << "NeighborLists are not available and are required for this filter to run. A filter that generates NeighborLists needs to be placed before this filter in the pipeline." << std::endl;
     setErrorCondition(-305);
     addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
+    return;
   }
-  else
-  {
-    m_NeighborList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>*>(neighborListPtr.get());
-  }
+
 
   IDataArray::Pointer misorientationPtr = m->getFieldData(m_MisorientationListArrayName);
   if(NULL == misorientationPtr.get())
@@ -124,6 +122,7 @@ void FindMisorientations::dataCheck(bool preflight, size_t voxels, size_t fields
     NeighborList<float>::Pointer misorientationListPtr = NeighborList<float>::New();
     misorientationListPtr->SetName(m_MisorientationListArrayName);
     misorientationListPtr->Resize(fields);
+    misorientationListPtr->setNumNeighborsArrayName(m_NeighborList->getNumNeighborsArrayName());
     m->addFieldData(m_MisorientationListArrayName, misorientationListPtr);
     m_MisorientationList = misorientationListPtr.get();
     if (misorientationListPtr.get() == NULL)
