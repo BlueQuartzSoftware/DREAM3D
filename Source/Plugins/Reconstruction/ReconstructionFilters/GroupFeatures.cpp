@@ -151,13 +151,12 @@ void GroupFeatures::execute()
   // reference variable to the pointer with the correct variable name that allows
   // us to use the same syntax as the "vector of vectors"
   NeighborList<int>& neighborlist = *(m_ContiguousNeighborList.lock());
-  NeighborList<int>& neighborlist2 = *(m_NonContiguousNeighborList.lock());
 
   QVector<int> grouplist;
 
   int parentcount = 0;
   int seed = 0;
-  int list1size=0, list2size=0, listsize=0;
+  int listsize=0;
   int neigh;
 
   while (seed >= 0)
@@ -169,19 +168,19 @@ void GroupFeatures::execute()
       grouplist.push_back(seed);
       for (size_t j = 0; j < grouplist.size(); j++)
       {
-        int firstfeature = grouplist[j];
-        list1size = int(neighborlist[firstfeature].size());
-        if (m_UseNonContiguousNeighbors == true) { list2size = int(neighborlist2[firstfeature].size()); }
         for (int k = 0; k < 2; k++)
         {
+          int firstfeature = grouplist[j];
+          if (m_UseNonContiguousNeighbors == true && k == 1) 
+          {
+            NeighborList<int>& neighborlist = *(m_NonContiguousNeighborList.lock());
+          }
+          listsize = int(neighborlist[firstfeature].size());
           if (m_PatchGrouping == true) { k = 1; }
-          if (k == 0) { listsize = list1size; }
-          else if (k == 1) { listsize = list2size; }
           for (int l = 0; l < listsize; l++)
           {
             //int twin = 0;
-            if (k == 0) { neigh = neighborlist[firstfeature][l]; }
-            else if (k == 1) { neigh = neighborlist2[firstfeature][l]; }
+            neigh = neighborlist[firstfeature][l];
             if (neigh != firstfeature)
             {
               if(determineGrouping(firstfeature, neigh, parentcount) == true)
