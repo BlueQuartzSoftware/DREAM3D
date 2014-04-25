@@ -16,6 +16,7 @@ set(DREAM3DLib_DataArrays_HDRS
   ${DREAM3DLib_SOURCE_DIR}/DataArrays/StatsDataArray.h
   ${DREAM3DLib_SOURCE_DIR}/DataArrays/StringDataArray.hpp
   ${DREAM3DLib_SOURCE_DIR}/DataArrays/StructArray.hpp
+  ${DREAM3DLib_SOURCE_DIR}/DataArrays/NeighborList.hpp
 )
 
 set(DREAM3DLib_DataArrays_SRCS

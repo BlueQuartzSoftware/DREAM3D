@@ -125,50 +125,59 @@ void FindSlipTransmissionMetrics::dataCheck(bool preflight, size_t voxels, size_
     ss << "NeighborLists Array Not Initialized correctly" << std::endl;
     setErrorCondition(-305);
     addErrorMessage(getHumanLabel(), ss.str(), -305);
-  }
+    return;
+ }
 
   NeighborList<float>::Pointer f1Ptr = NeighborList<float>::New();
   f1Ptr->SetName(DREAM3D::FieldData::F1);
   f1Ptr->Resize(fields);
+  f1Ptr->setNumNeighborsArrayName(m_NeighborList->getNumNeighborsArrayName());
   m->addFieldData(DREAM3D::FieldData::F1, f1Ptr);
   if (f1Ptr.get() == NULL)
   {
     ss << "F1 Array Not Initialized At Beginning of FindSlipTransmissionMetrics Filter" << std::endl;
     setErrorCondition(-308);
     addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
+    return;
   }
 
   NeighborList<float>::Pointer f1sptPtr = NeighborList<float>::New();
   f1sptPtr->SetName(DREAM3D::FieldData::F1spt);
   f1sptPtr->Resize(fields);
+  f1sptPtr->setNumNeighborsArrayName(m_NeighborList->getNumNeighborsArrayName());
   m->addFieldData(DREAM3D::FieldData::F1spt, f1sptPtr);
   if (f1sptPtr.get() == NULL)
   {
     ss << "F1spt Array Not Initialized At Beginning of FindSlipTransmissionMetrics Filter" << std::endl;
     setErrorCondition(-308);
     addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
+    return;
   }
 
   NeighborList<float>::Pointer f7Ptr = NeighborList<float>::New();
   f7Ptr->SetName(DREAM3D::FieldData::F7);
   f7Ptr->Resize(fields);
+  f7Ptr->setNumNeighborsArrayName(m_NeighborList->getNumNeighborsArrayName());
   m->addFieldData(DREAM3D::FieldData::F7, f7Ptr);
   if (f7Ptr.get() == NULL)
   {
     ss << "F7 Array Not Initialized At Beginning of FindSlipTransmissionMetrics Filter" << std::endl;
     setErrorCondition(-308);
     addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
+    return;
   }
 
   NeighborList<float>::Pointer mPrimePtr = NeighborList<float>::New();
   mPrimePtr->SetName(DREAM3D::FieldData::mPrime);
   mPrimePtr->Resize(fields);
+  mPrimePtr->setNumNeighborsArrayName(m_NeighborList->getNumNeighborsArrayName());
   m->addFieldData(DREAM3D::FieldData::mPrime, mPrimePtr);
   if (mPrimePtr.get() == NULL)
   {
     ss << "mPrime Array Not Initialized At Beginning of FindSlipTransmissionMetrics Filter" << std::endl;
     setErrorCondition(-308);
     addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
+    return;
   }
 
   typedef DataArray<unsigned int> XTalStructArrayType;
