@@ -8,7 +8,6 @@
 
 #include "ITKUtilities.h"
 
-#include "itkImageToHistogramFilter.h"
 #include "itkOtsuMultipleThresholdsImageFilter.h"
 
 // -----------------------------------------------------------------------------
@@ -148,7 +147,7 @@ void MultiOtsuThreshold::dataCheck(bool preflight, size_t voxels, size_t fields,
 
     if(m_Levels<1)
     {
-      ss << "Must threshold into at least 2 levels";
+      ss << "Must threshold with at least 1 level (2 classes)";
       setErrorCondition(-1001);
       addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
     }
