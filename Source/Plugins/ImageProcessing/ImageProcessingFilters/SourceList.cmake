@@ -23,6 +23,7 @@ set(_PublicFilters
   WriteImage
   MedianKernel
   MeanKernel
+  ImageCalculator
 )
 
 #---------
