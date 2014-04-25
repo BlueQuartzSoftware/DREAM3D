@@ -66,13 +66,13 @@ namespace Functor
     {
       const double dA = static_cast< double >( A );
 
-      if(dA>std::numeric_limits<TInput>::max())
+      if(dA>std::numeric_limits<TOutput>::max())
       {
-        return std::numeric_limits<TInput>::max();
+        return std::numeric_limits<TOutput>::max();
       }
-      else if(dA<std::numeric_limits<TInput>::min())
+      else if(dA<std::numeric_limits<TOutput>::min())
       {
-        return std::numeric_limits<TInput>::min();
+        return std::numeric_limits<TOutput>::min();
       }
 
       //round if needed
