@@ -167,6 +167,7 @@ void ComparisonSelectionWidget::setupGui()
 
 }
 
+#if 0
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -181,7 +182,7 @@ void ComparisonSelectionWidget::on_conditionalCB_stateChanged(int state)
 //  m_DidCausePreflight = false;
 
 }
-
+#endif
 
 
 // -----------------------------------------------------------------------------

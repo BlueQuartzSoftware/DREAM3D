@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>468</width>
+    <width>513</width>
     <height>57</height>
    </rect>
   </property>
@@ -14,18 +14,32 @@
    <string>DataArraySelectionWidget</string>
   </property>
   <layout class="QGridLayout" name="widgetLayout">
-   <property name="leftMargin">
+   <property name="margin">
     <number>2</number>
    </property>
-   <property name="topMargin">
-    <number>2</number>
-   </property>
-   <property name="rightMargin">
-    <number>2</number>
-   </property>
-   <property name="bottomMargin">
-    <number>2</number>
-   </property>
+   <item row="1" column="7" rowspan="2">
+    <widget class="QLabel" name="linkRight">
+     <property name="text">
+      <string/>
+     </property>
+     <property name="pixmap">
+      <pixmap resource="../../../../Resources/icons/images/Icons.qrc">:/Link_Right.png</pixmap>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="8" rowspan="2">
+    <spacer name="horizontalSpacer">
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="sizeHint" stdset="0">
+      <size>
+       <width>40</width>
+       <height>20</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
    <item row="1" column="0" rowspan="2">
     <widget class="QLabel" name="linkLeft">
      <property name="text">
@@ -39,72 +53,56 @@
      </property>
     </widget>
    </item>
-   <item row="2" column="1">
-    <widget class="QLabel" name="label">
-     <property name="text">
-      <string>Property</string>
-     </property>
-    </widget>
-   </item>
    <item row="2" column="2">
-    <widget class="QComboBox" name="dataContainerList">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
+    <layout class="QHBoxLayout" name="horizontalLayout">
+     <property name="leftMargin">
+      <number>0</number>
      </property>
-    </widget>
+     <item>
+      <widget class="QLabel" name="label">
+       <property name="text">
+        <string>Property</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QComboBox" name="dataContainerList">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QComboBox" name="attributeMatrixList">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QComboBox" name="attributeArrayList">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+      </widget>
+     </item>
+    </layout>
    </item>
-   <item row="2" column="3">
-    <widget class="QComboBox" name="attributeMatrixList">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
-    </widget>
-   </item>
-   <item row="2" column="4">
-    <widget class="QComboBox" name="attributeArrayList">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
-    </widget>
-   </item>
-   <item row="1" column="1" colspan="4">
+   <item row="1" column="2">
     <widget class="QCheckBox" name="conditionalCB">
      <property name="text">
       <string>CheckBox</string>
      </property>
     </widget>
-   </item>
-   <item row="1" column="5" rowspan="2">
-    <widget class="QLabel" name="linkRight">
-     <property name="text">
-      <string/>
-     </property>
-     <property name="pixmap">
-      <pixmap resource="../../../../Resources/icons/images/Icons.qrc">:/Link_Right.png</pixmap>
-     </property>
-    </widget>
-   </item>
-   <item row="1" column="6" rowspan="2">
-    <spacer name="horizontalSpacer">
-     <property name="orientation">
-      <enum>Qt::Horizontal</enum>
-     </property>
-     <property name="sizeHint" stdset="0">
-      <size>
-       <width>40</width>
-       <height>20</height>
-      </size>
-     </property>
-    </spacer>
    </item>
   </layout>
  </widget>

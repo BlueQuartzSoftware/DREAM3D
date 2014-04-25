@@ -64,9 +64,10 @@ class DREAM3DLib_EXPORT RemoveArrays : public AbstractFilter
 
 
     virtual ~RemoveArrays();
-    typedef QMap<QString, QSet<QString> > MapOfAttributeArrays_t;
-    typedef QMap<QString, MapOfAttributeArrays_t> MapOfAttributeMatrices_t;
-    DREAM3D_INSTANCE_PROPERTY(MapOfAttributeMatrices_t, DataToRemove)
+
+    DREAM3D_FILTER_PARAMETER(DataContainerArrayProxy, DataArraysToRemove)
+    Q_PROPERTY(DataContainerArrayProxy DataArraysToRemove READ getDataArraysToRemove WRITE setDataArraysToRemove)
+
 
     /**
     * @brief This returns the group that the filter belonds to. You can select

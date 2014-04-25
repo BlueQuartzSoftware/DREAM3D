@@ -840,7 +840,7 @@ QVector<AxisAngleInput_t> QFilterParametersReader::readAxisAngles(const QString 
 QSet<QString> QFilterParametersReader::readArraySelections(const QString name, QSet<QString> v)
 {
   BOOST_ASSERT(m_Prefs != NULL);
- // if(m_Prefs->contains(name) == false){ return v; }
+  // if(m_Prefs->contains(name) == false){ return v; }
   QString defValue;
   int count = m_Prefs->beginReadArray("ArraySelections_" + name);
   QSet<QString> values;
@@ -861,49 +861,56 @@ QSet<QString> QFilterParametersReader::readArraySelections(const QString name, Q
 DataContainerArrayProxy QFilterParametersReader::readDataContainerArrayProxy(const QString& name, DataContainerArrayProxy v)
 {
   BOOST_ASSERT(m_Prefs != NULL);
-  if(m_Prefs->contains(name) == false){ return v; }
+
   DataContainerArrayProxy dcaProxy;
   QString defValue;
-  int count = m_Prefs->beginReadArray(name + "_DataContainerNames");
-  if (count == 0) { m_Prefs->endArray(); return v; } // If there is nothing to read return the default value
-  // First, gather the list of DataContainers
+  int count = m_Prefs->beginReadArray(name);
+  //  QStringList paths;
+  //  QStringList flags;
 
   for(int i = 0; i < count; i++)
   {
     m_Prefs->setArrayIndex(i);
-    QString data = m_Prefs->value("Name", defValue).toString();
-    DataContainerProxy dcProxy(data, Qt::Checked);
-    dcaProxy.list.push_back(dcProxy);
-    // qDebug() << "Found DataContainer: " << data;
+    DataArrayPath dap(m_Prefs->value("Path", defValue).toString());
+    QString dcFlag = m_Prefs->value("DCFlag", defValue).toString();
+    QString attrFlag = m_Prefs->value("ATTRFlag", defValue).toString();
+    QString daFlag = m_Prefs->value("DAFlag", defValue).toString();
+    // Add the data container proxy if it does not exist
+    if (dcaProxy.contains(dap.getDataContainerName()) == false)
+    {
+      DataContainerProxy dcp(dap.getDataContainerName());
+      if (dcFlag.compare("0") == 0) { dcp.flag = Qt::Unchecked; }
+      else if (dcFlag.compare("1") == 0) { dcp.flag = Qt::PartiallyChecked; }
+      else { dcp.flag = Qt::Checked; }
+      dcaProxy.list.push_back(dcp);
+    }
+
+    // Now we check for the AttributeMatrix
+    DataContainerProxy& dcProxy = dcaProxy.getDataContainerProxy(dap.getDataContainerName());
+    if(dcProxy.attributeMatricies.find(dap.getAttributeMatrixName()) == dcProxy.attributeMatricies.end())
+    {
+      AttributeMatrixProxy attrProxy(dap.getAttributeMatrixName());
+      if (attrFlag.compare("0") == 0) { attrProxy.flag = Qt::Unchecked; }
+      else if (attrFlag.compare("1") == 0) { attrProxy.flag = Qt::PartiallyChecked; }
+      else { attrProxy.flag = Qt::Checked; }
+      dcProxy.attributeMatricies.insert(dap.getAttributeMatrixName(), attrProxy);
+    }
+
+    // Now we have the attribute matrix
+    AttributeMatrixProxy& attrProxy = dcProxy.attributeMatricies[dap.getAttributeMatrixName()];
+
+
+    // Now check for the data array
+    if(attrProxy.dataArrays.find(dap.getDataArrayName()) == attrProxy.dataArrays.end() )
+    {
+      DataArrayProxy proxy(QString("%1|%2").arg(dap.getDataContainerName()).arg(dap.getAttributeMatrixName()), dap.getDataArrayName());
+      if (daFlag.compare("0") == 0) { proxy.flag = Qt::Unchecked; }
+      else if (daFlag.compare("1") == 0) { proxy.flag = Qt::PartiallyChecked; }
+      else { proxy.flag = Qt::Checked; }
+      attrProxy.dataArrays.insert(dap.getDataArrayName(), proxy);
+    }
   }
   m_Prefs->endArray();
-
-  //Next, we are going to loop over all the DataContainers and read up their attribute matricies.
-  for(int i = 0; i < dcaProxy.list.size(); i++)
-  {
-    DataContainerProxy& dcProxy = dcaProxy.list[i];
-    count = m_Prefs->beginReadArray(name + "_" + dcProxy.name);
-    for(int a = 0; a < count; a++)
-    {
-      m_Prefs->setArrayIndex(a);
-
-      QString data = m_Prefs->value("ArrayName", defValue).toString(); // This gives the combined AttributeMatrixName + DataArrayName
-      // Split the string into 2 parts using the '/' charater. First is the name of the AttributeMatrix, second is the data array
-      QStringList tokens = data.split("/");
-      if(dcProxy.attributeMatricies.find(tokens[0]) == dcProxy.attributeMatricies.end() ) // AttributeMatrix does not exist.
-      {
-        AttributeMatrixProxy amProxy(tokens[0], Qt::Checked);
-        dcProxy.attributeMatricies[tokens[0]] = amProxy; // Add it to the DataContainerProxy
-      }
-
-      AttributeMatrixProxy& amProxy = dcProxy.attributeMatricies[tokens[0]];
-      QString path = DREAM3D::StringConstants::DataContainerGroupName + "/" + dcProxy.name + "/" + amProxy.name;
-      DataArrayProxy daProxy(path, tokens[1], Qt::Checked);
-      amProxy.dataArrays.insert(daProxy.name, daProxy);
-      // qDebug() << "Found AttributeMatrix/DataArray: " << data;
-    }
-    m_Prefs->endArray();
-  }
   dcaProxy.isValid = true;
   return dcaProxy;
 }

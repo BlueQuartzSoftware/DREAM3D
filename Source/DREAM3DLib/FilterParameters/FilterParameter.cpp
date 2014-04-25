@@ -273,7 +273,9 @@ PreflightUpdatedValue::Pointer PreflightUpdatedValue::New(const QString& humanLa
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-DataContainerArrayProxyFilterParameter::DataContainerArrayProxyFilterParameter()
+DataContainerArrayProxyFilterParameter::DataContainerArrayProxyFilterParameter() :
+FilterParameter(),
+m_DefaultFlagValue(Qt::Checked)
 {
 }
 
@@ -288,7 +290,7 @@ DataContainerArrayProxyFilterParameter::~DataContainerArrayProxyFilterParameter(
 // -----------------------------------------------------------------------------
 DataContainerArrayProxyFilterParameter::Pointer DataContainerArrayProxyFilterParameter::New(const QString& humanLabel, const QString& propertyName,
                                                                   const QString& widgetType, const QString& valueType,
-                                                                  DataContainerArrayProxy proxy,
+                                                                  DataContainerArrayProxy proxy, Qt::CheckState defValue,
                                                                   bool advanced)
 {
   DataContainerArrayProxyFilterParameter::Pointer ptr = DataContainerArrayProxyFilterParameter::New();
@@ -301,6 +303,7 @@ DataContainerArrayProxyFilterParameter::Pointer DataContainerArrayProxyFilterPar
   ptr->setFileExtension("");
   ptr->setFileType("");
   ptr->setCastableValueType("");
+  ptr->setDefaultFlagValue(defValue);
 
   ptr->setDataContainerArrayProxy(proxy);
   return ptr;

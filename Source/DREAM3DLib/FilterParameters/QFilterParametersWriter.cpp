@@ -587,43 +587,25 @@ int QFilterParametersWriter::writeValue(const QString name, DataContainerArrayPr
 {
   int err = 0;
   QListIterator<DataContainerProxy> dcIter(v.list);
-  QStringList dcnames;
-  while (dcIter.hasNext()) // DataContainerLevel
-  {
-    const DataContainerProxy& dcProxy =  dcIter.next();
-    if(dcProxy.flag == Qt::Unchecked) { continue; } // Skip to the next DataContainer if we are not reading this one.
-    dcnames << dcProxy.name;
-  }
-  // Now write the array with the names of the data containers
-  {
-    qint32 count = dcnames.size();
-    m_Prefs->beginWriteArray(name + "_DataContainerNames", count);
-    count = 0;
-    QStringListIterator i(dcnames);
-    while (i.hasNext())
-    {
-      QString data = i.next();
-      m_Prefs->setArrayIndex(count);
-      m_Prefs->setValue("Name", data);
-      count++;
-    }
-    m_Prefs->endArray();
-  }
-
   // Reset the iterator to the start of the QList
   dcIter.toFront();
+  QStringList flat;
+  QStringList daFlags;
+  QStringList dcFlags;
+  QStringList attrFlags;
+
   while (dcIter.hasNext()) // DataContainerLevel
   {
     const DataContainerProxy& dcProxy =  dcIter.next();
-    if(dcProxy.flag == Qt::Unchecked) { continue; } // Skip to the next DataContainer if we are not reading this one.
-    QStringList flat;
+   // if(dcProxy.flag == Qt::Unchecked) { continue; } // Skip to the next DataContainer if we are not reading this one.
+
     QMapIterator<QString, AttributeMatrixProxy> amIter(dcProxy.attributeMatricies);
     while(amIter.hasNext()) // AttributeMatrixLevel
     {
       amIter.next();
 
       const AttributeMatrixProxy& amProxy = amIter.value();
-      if(amProxy.flag == Qt::Unchecked) { continue; } // Skip to the next AttributeMatrix if not reading this one
+     // if(amProxy.flag == Qt::Unchecked) { continue; } // Skip to the next AttributeMatrix if not reading this one
 
       QMapIterator<QString, DataArrayProxy> dIter(amProxy.dataArrays);
       while(dIter.hasNext()) // DataArray Level
@@ -633,24 +615,36 @@ int QFilterParametersWriter::writeValue(const QString name, DataContainerArrayPr
         const DataArrayProxy& daProxy = dIter.value();
         if(daProxy.flag == DREAM3D::Unchecked) { continue; } // Skip to the next DataArray if not reading this one
 
-        QString path = QString("%1/%2").arg(amProxy.name).arg(dIter.value().name);
+        QString path = QString("%1|%2|%3").arg(dcProxy.name).arg(amProxy.name).arg(daProxy.name);
         flat << path;
+        dcFlags << QString("%1").arg(dcProxy.flag);
+        attrFlags << QString("%1").arg(amProxy.flag);
+        daFlags << QString("%1").arg(daProxy.flag);
+
       }
     }
-    qint32 count = flat.size();
-    m_Prefs->beginWriteArray(name + "_" + dcProxy.name, count);
-    count = 0;
-    QStringListIterator i(flat);
-    while (i.hasNext())
-    {
-      QString data = i.next();
-      m_Prefs->setArrayIndex(count);
-      m_Prefs->setValue("ArrayName", data);
-      count++;
-    }
-    m_Prefs->endArray();
+
   }
 
+  qint32 count = flat.size();
+  m_Prefs->beginWriteArray(name, count);
+  QStringListIterator i(flat);
+  for(int i = 0; i < count; i++)
+  {
+    QString data = flat.at(i);
+    m_Prefs->setArrayIndex(i);
+    m_Prefs->setValue("Path", data);
+
+    data = dcFlags.at(i);
+    m_Prefs->setValue("DCFlag", data);
+
+    data = attrFlags.at(i);
+    m_Prefs->setValue("ATTRFlag", data);
+
+    data = daFlags.at(i);
+    m_Prefs->setValue("DAFlag", data);
+  }
+  m_Prefs->endArray();
   return err;
 }
 

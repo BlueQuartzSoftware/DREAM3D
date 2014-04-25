@@ -47,9 +47,11 @@
 DataContainerArrayProxyWidget::DataContainerArrayProxyWidget(FilterParameter* parameter, AbstractFilter* filter, QWidget* parent) :
   QWidget(parent),
   m_Filter(filter),
-  m_FilterParameter(parameter),
   m_DidCausePreflight(false)
 {
+
+  m_FilterParameter = dynamic_cast<DataContainerArrayProxyFilterParameter*>(parameter);
+
   setupUi(this);
   setupGui();
 }
@@ -134,6 +136,7 @@ void DataContainerArrayProxyWidget::setupGui()
 
 }
 
+#if 0
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -148,7 +151,7 @@ void DataContainerArrayProxyWidget::on_conditionalCB_stateChanged(int state)
 //  m_DidCausePreflight = false;
 
 }
-
+#endif
 
 // -----------------------------------------------------------------------------
 //
@@ -393,7 +396,7 @@ void DataContainerArrayProxyWidget::updateProxyFromModel()
         QString daName = dataArraysIter.key();
         //    qDebug() << "#### " << daName;
         QStandardItem* daItem = updateProxyItem<DataArrayProxy>(amItem, daName, daProxy);
-
+        Q_UNUSED(daItem)
       }
     }
   }
@@ -593,6 +596,7 @@ void DataContainerArrayProxyWidget::beforePreflight()
     // to select from.
     DataContainerArray::Pointer dca = m_Filter->getDataContainerArray();
     DataContainerArrayProxy incomingProxy = DataContainerArrayProxy(dca.get() );
+    incomingProxy.setAllFlags(m_FilterParameter->getDefaultFlagValue());
     //incomingProxy.print("BeforePreflight INCOMING");
     //Now the idea becomes to save the selections that the user has made and transfer those changes to the incoming
     // proxy object

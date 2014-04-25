@@ -358,12 +358,13 @@ class DREAM3DLib_EXPORT DataContainerArrayProxyFilterParameter : public FilterPa
 
     static Pointer New(const QString& humanLabel, const QString& propertyName,
                        const QString& widgetType, const QString& valueType,
-                       DataContainerArrayProxy proxy,
+                       DataContainerArrayProxy proxy, Qt::CheckState defState,
                        bool advanced = false );
 
     virtual ~DataContainerArrayProxyFilterParameter();
 
     DREAM3D_INSTANCE_PROPERTY(DataContainerArrayProxy, DataContainerArrayProxy)
+    DREAM3D_INSTANCE_PROPERTY(Qt::CheckState,  DefaultFlagValue)
 
     protected:
       DataContainerArrayProxyFilterParameter();
