@@ -25,6 +25,7 @@ set(_PublicFilters
   MeanKernel
   ImageCalculator
   ImageMath
+  MultiOtsuThreshold
 )
 
 #---------
