@@ -157,7 +157,7 @@ signals:
     void generateFileList();
 
   private:
-    DEFINE_CREATED_DATAARRAY(uint8_t, ImageData)
+    DEFINE_CREATED_DATAARRAY_VARIABLE(uint8_t, ImageData)
 
     ImportImageStack(const ImportImageStack&); // Copy Constructor Not Implemented
     void operator=(const ImportImageStack&); // Operator '=' Not Implemented

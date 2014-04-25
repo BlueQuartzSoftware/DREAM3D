@@ -153,14 +153,14 @@ signals:
     HexagonalOps::Pointer m_HexOps;
     OrthoRhombicOps::Pointer m_OrthoOps;
 
-    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeaturePhases)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(float, AvgQuats)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, FeaturePhases)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, AvgQuats)
     NeighborList<float>::WeakPointer m_F1List;
     NeighborList<float>::WeakPointer m_F1sptList;
     NeighborList<float>::WeakPointer m_F7List;
     NeighborList<float>::WeakPointer m_mPrimeList;
     NeighborList<int>::WeakPointer m_NeighborList;
-    DEFINE_PTR_WEAKPTR_DATAARRAY(unsigned int, CrystalStructures)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(unsigned int, CrystalStructures)
 
     void dataCheck();
 

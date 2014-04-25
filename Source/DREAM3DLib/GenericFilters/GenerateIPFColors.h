@@ -144,11 +144,11 @@ class DREAM3DLib_EXPORT GenerateIPFColors : public AbstractFilter
     void dataCheck();
 
   private:
-    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, CellPhases)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(float, CellEulerAngles)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(unsigned int, CrystalStructures)
-    DEFINE_CREATED_DATAARRAY(uint8_t, CellIPFColors)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(bool, GoodVoxels)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, CellPhases)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, CellEulerAngles)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(unsigned int, CrystalStructures)
+    DEFINE_CREATED_DATAARRAY_VARIABLE(uint8_t, CellIPFColors)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(bool, GoodVoxels)
 
     GenerateIPFColors(const GenerateIPFColors&); // Copy Constructor Not Implemented
     void operator=(const GenerateIPFColors&); // Operator '=' Not Implemented

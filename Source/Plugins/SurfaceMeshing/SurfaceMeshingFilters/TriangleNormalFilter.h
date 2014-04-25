@@ -135,7 +135,7 @@ signals:
     void dataCheck();
 
   private:
-    DEFINE_CREATED_DATAARRAY(double, SurfaceMeshTriangleNormals)
+    DEFINE_CREATED_DATAARRAY_VARIABLE(double, SurfaceMeshTriangleNormals)
 
     TriangleNormalFilter(const TriangleNormalFilter&); // Copy Constructor Not Implemented
     void operator=(const TriangleNormalFilter&); // Operator '=' Not Implemented

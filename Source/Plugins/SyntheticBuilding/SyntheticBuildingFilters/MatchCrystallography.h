@@ -161,22 +161,22 @@ class MatchCrystallography : public AbstractFilter
   private:
 
     // Cell Data
-    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeatureIds)
-    DEFINE_CREATED_DATAARRAY(float, CellEulerAngles)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, FeatureIds)
+    DEFINE_CREATED_DATAARRAY_VARIABLE(float, CellEulerAngles)
 
     // Feature Data
-    DEFINE_PTR_WEAKPTR_DATAARRAY(bool, SurfaceFeatures)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeaturePhases)
-    DEFINE_CREATED_DATAARRAY(float, Volumes)
-    DEFINE_CREATED_DATAARRAY(float, FeatureEulerAngles)
-    DEFINE_CREATED_DATAARRAY(float, AvgQuats)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(bool, SurfaceFeatures)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, FeaturePhases)
+    DEFINE_CREATED_DATAARRAY_VARIABLE(float, Volumes)
+    DEFINE_CREATED_DATAARRAY_VARIABLE(float, FeatureEulerAngles)
+    DEFINE_CREATED_DATAARRAY_VARIABLE(float, AvgQuats)
     NeighborList<int>::WeakPointer m_NeighborList;
     NeighborList<float>::WeakPointer m_SharedSurfaceAreaList;
 
     //Ensemble Data
-    DEFINE_PTR_WEAKPTR_DATAARRAY(unsigned int, CrystalStructures)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(uint32_t, PhaseTypes)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, NumFeatures)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(unsigned int, CrystalStructures)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(uint32_t, PhaseTypes)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, NumFeatures)
     StatsDataArray::WeakPointer m_StatsDataArray;
 
     // All other private instance variables

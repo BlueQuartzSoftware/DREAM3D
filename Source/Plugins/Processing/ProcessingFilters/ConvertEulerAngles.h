@@ -103,7 +103,7 @@ signals:
     void dataCheck();
 
   private:
-    DEFINE_PTR_WEAKPTR_DATAARRAY(float, CellEulerAngles)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, CellEulerAngles)
 
     ConvertEulerAngles(const ConvertEulerAngles&); // Copy Constructor Not Implemented
     void operator=(const ConvertEulerAngles&); // Operator '=' Not Implemented

@@ -105,8 +105,8 @@ signals:
     FindVolFractions();
 
   private:
-    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, CellPhases)
-    DEFINE_CREATED_DATAARRAY(float, VolFractions)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, CellPhases)
+    DEFINE_CREATED_DATAARRAY_VARIABLE(float, VolFractions)
 
     void dataCheck();
 

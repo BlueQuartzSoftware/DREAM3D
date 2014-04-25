@@ -141,8 +141,8 @@ class DREAM3DLib_EXPORT SurfaceMeshToNodesTrianglesEdges : public AbstractFilter
     void dataCheck();
 
   private:
-    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, SurfaceMeshFaceLabels)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(int8_t, SurfaceMeshNodeType)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, SurfaceMeshFaceLabels)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int8_t, SurfaceMeshNodeType)
 
     SurfaceMeshToNodesTrianglesEdges(const SurfaceMeshToNodesTrianglesEdges&); // Copy Constructor Not Implemented
     void operator=(const SurfaceMeshToNodesTrianglesEdges&); // Operator '=' Not Implemented

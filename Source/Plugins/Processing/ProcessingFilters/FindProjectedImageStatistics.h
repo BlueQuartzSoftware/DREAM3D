@@ -132,11 +132,11 @@ class FindProjectedImageStatistics : public AbstractFilter
     void find_crosssections();
 
   private:
-    DEFINE_CREATED_DATAARRAY(float, ProjectedImageMin)
-    DEFINE_CREATED_DATAARRAY(float, ProjectedImageMax)
-    DEFINE_CREATED_DATAARRAY(float, ProjectedImageAvg)
-    DEFINE_CREATED_DATAARRAY(float, ProjectedImageStd)
-    DEFINE_CREATED_DATAARRAY(float, ProjectedImageVar)
+    DEFINE_CREATED_DATAARRAY_VARIABLE(float, ProjectedImageMin)
+    DEFINE_CREATED_DATAARRAY_VARIABLE(float, ProjectedImageMax)
+    DEFINE_CREATED_DATAARRAY_VARIABLE(float, ProjectedImageAvg)
+    DEFINE_CREATED_DATAARRAY_VARIABLE(float, ProjectedImageStd)
+    DEFINE_CREATED_DATAARRAY_VARIABLE(float, ProjectedImageVar)
 
     void dataCheck();
 

@@ -230,7 +230,7 @@ class DREAM3DLib_EXPORT VtkFeatureIdReader : public FileReader
     }
 
   private:
-    DEFINE_CREATED_DATAARRAY(int32_t, FeatureIds)
+    DEFINE_CREATED_DATAARRAY_VARIABLE(int32_t, FeatureIds)
 
     VtkFeatureIdReader(const VtkFeatureIdReader&); // Copy Constructor Not Implemented
     void operator=(const VtkFeatureIdReader&); // Operator '=' Not Implemented

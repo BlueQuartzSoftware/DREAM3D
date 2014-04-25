@@ -141,8 +141,8 @@ signals:
     void dataCheck();
 
   private:
-    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, SurfaceMeshFaceLabels)
-    DEFINE_CREATED_DATAARRAY(int32_t, SurfaceMeshFeatureFaceIds)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, SurfaceMeshFaceLabels)
+    DEFINE_CREATED_DATAARRAY_VARIABLE(int32_t, SurfaceMeshFeatureFaceIds)
 
     SharedFeatureFaceFilter(const SharedFeatureFaceFilter&); // Copy Constructor Not Implemented
     void operator=(const SharedFeatureFaceFilter&); // Operator '=' Not Implemented

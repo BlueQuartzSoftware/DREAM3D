@@ -115,9 +115,9 @@ signals:
     void find_microtextureregions();
 
   private:
-    DEFINE_CREATED_DATAARRAY(int32_t, MicroTextureRegionNumCells)
-    DEFINE_CREATED_DATAARRAY(float, MicroTextureRegionFractionOccupied)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeatureIds)
+    DEFINE_CREATED_DATAARRAY_VARIABLE(int32_t, MicroTextureRegionNumCells)
+    DEFINE_CREATED_DATAARRAY_VARIABLE(float, MicroTextureRegionFractionOccupied)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, FeatureIds)
 
     void dataCheck();
 

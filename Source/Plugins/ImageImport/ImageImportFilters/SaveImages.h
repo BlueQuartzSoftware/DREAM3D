@@ -159,7 +159,7 @@ class SaveImages : public AbstractFilter
     void dataCheck();
 
   private:
-    DEFINE_PTR_WEAKPTR_DATAARRAY(uint8_t, Colors)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(uint8_t, Colors)
 
     SaveImages(const SaveImages&); // Copy Constructor Not Implemented
     void operator=(const SaveImages&); // Operator '=' Not Implemented

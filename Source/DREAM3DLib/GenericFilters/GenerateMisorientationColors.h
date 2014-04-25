@@ -147,11 +147,11 @@ class DREAM3DLib_EXPORT GenerateMisorientationColors : public AbstractFilter
     void dataCheck();
 
   private:
-    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, CellPhases)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(float, Quats)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(unsigned int, CrystalStructures)
-    DEFINE_CREATED_DATAARRAY(uint8_t, MisorientationColor)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(bool, GoodVoxels)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, CellPhases)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, Quats)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(unsigned int, CrystalStructures)
+    DEFINE_CREATED_DATAARRAY_VARIABLE(uint8_t, MisorientationColor)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(bool, GoodVoxels)
 
     GenerateMisorientationColors(const GenerateMisorientationColors&); // Copy Constructor Not Implemented
     void operator=(const GenerateMisorientationColors&); // Operator '=' Not Implemented

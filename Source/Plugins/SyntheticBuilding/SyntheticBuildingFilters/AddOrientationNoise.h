@@ -112,7 +112,7 @@ class AddOrientationNoise : public AbstractFilter
     void add_orientation_noise();
 
   private:
-    DEFINE_PTR_WEAKPTR_DATAARRAY(float, CellEulerAngles)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, CellEulerAngles)
 
     void dataCheck();
 

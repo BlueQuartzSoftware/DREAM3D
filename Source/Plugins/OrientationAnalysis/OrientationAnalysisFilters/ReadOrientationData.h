@@ -244,10 +244,10 @@ signals:
     }
 
   private:
-    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, CellPhases)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(float, CellEulerAngles)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(uint32_t, CrystalStructures)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(float, LatticeConstants)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, CellPhases)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, CellEulerAngles)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(uint32_t, CrystalStructures)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, LatticeConstants)
 
     ReadOrientationData(const ReadOrientationData&); // Copy Constructor Not Implemented
     void operator=(const ReadOrientationData&); // Operator '=' Not Implemented

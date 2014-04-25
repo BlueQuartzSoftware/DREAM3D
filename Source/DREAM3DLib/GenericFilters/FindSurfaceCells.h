@@ -99,8 +99,8 @@ signals:
     FindSurfaceCells();
 
   private:
-    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeatureIds)
-    DEFINE_CREATED_DATAARRAY(int8_t, SurfaceVoxels)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, FeatureIds)
+    DEFINE_CREATED_DATAARRAY_VARIABLE(int8_t, SurfaceVoxels)
 
     void dataCheck();
 

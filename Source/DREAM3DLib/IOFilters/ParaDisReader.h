@@ -126,10 +126,10 @@ class DREAM3DLib_EXPORT ParaDisReader : public FileReader
     void updateEdgeInstancePointers();
 
   private:
-    DEFINE_CREATED_DATAARRAY(int32_t, NumberOfArms)
-    DEFINE_CREATED_DATAARRAY(int32_t, NodeConstraints)
-    DEFINE_CREATED_DATAARRAY(float, BurgersVectors)
-    DEFINE_CREATED_DATAARRAY(float, SlipPlaneNormals)
+    DEFINE_CREATED_DATAARRAY_VARIABLE(int32_t, NumberOfArms)
+    DEFINE_CREATED_DATAARRAY_VARIABLE(int32_t, NodeConstraints)
+    DEFINE_CREATED_DATAARRAY_VARIABLE(float, BurgersVectors)
+    DEFINE_CREATED_DATAARRAY_VARIABLE(float, SlipPlaneNormals)
     QFile  m_InStream;
 
     int numVerts;

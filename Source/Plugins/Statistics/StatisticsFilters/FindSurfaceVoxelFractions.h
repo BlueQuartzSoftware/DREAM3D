@@ -114,9 +114,9 @@ signals:
     void find_surface_voxel_fractions();
 
   private:
-    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeatureIds)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(int8_t, SurfaceVoxels)
-    DEFINE_CREATED_DATAARRAY(float, SurfaceVoxelFractions)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, FeatureIds)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int8_t, SurfaceVoxels)
+    DEFINE_CREATED_DATAARRAY_VARIABLE(float, SurfaceVoxelFractions)
 
     void dataCheck();
 

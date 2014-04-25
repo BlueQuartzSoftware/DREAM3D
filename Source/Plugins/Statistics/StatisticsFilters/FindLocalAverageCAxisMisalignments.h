@@ -151,14 +151,14 @@ class FindLocalAverageCAxisMisalignments : public AbstractFilter
     FindLocalAverageCAxisMisalignments();
 
   private:
-    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeatureIds)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, CellParentIds)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeatureParentIds)
-    DEFINE_CREATED_DATAARRAY(int32_t, NumFeaturesPerParent)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(float, AvgCAxisMisalignments)
-    DEFINE_CREATED_DATAARRAY(float, LocalCAxisMisalignments)
-    DEFINE_CREATED_DATAARRAY(float, UnbiasedLocalCAxisMisalignments)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(unsigned int, CrystalStructures)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, FeatureIds)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, CellParentIds)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, FeatureParentIds)
+    DEFINE_CREATED_DATAARRAY_VARIABLE(int32_t, NumFeaturesPerParent)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, AvgCAxisMisalignments)
+    DEFINE_CREATED_DATAARRAY_VARIABLE(float, LocalCAxisMisalignments)
+    DEFINE_CREATED_DATAARRAY_VARIABLE(float, UnbiasedLocalCAxisMisalignments)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(unsigned int, CrystalStructures)
 
     NeighborList<int>::WeakPointer m_NeighborList;
     NeighborList<float>::WeakPointer m_CAxisMisalignmentList;

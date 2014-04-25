@@ -133,7 +133,7 @@ signals:
     void dataCheck();
 
   private:
-    DEFINE_CREATED_DATAARRAY(double, SurfaceMeshTriangleAreas)
+    DEFINE_CREATED_DATAARRAY_VARIABLE(double, SurfaceMeshTriangleAreas)
 
     TriangleAreaFilter(const TriangleAreaFilter&); // Copy Constructor Not Implemented
     void operator=(const TriangleAreaFilter&); // Operator '=' Not Implemented

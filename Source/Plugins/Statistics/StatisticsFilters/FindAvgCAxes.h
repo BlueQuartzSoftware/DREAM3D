@@ -121,9 +121,9 @@ signals:
     HexagonalOps::Pointer m_HexOps;
     OrthoRhombicOps::Pointer m_OrthoOps;
 
-    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeatureIds)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(float, Quats)
-    DEFINE_CREATED_DATAARRAY(float, AvgCAxes)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, FeatureIds)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, Quats)
+    DEFINE_CREATED_DATAARRAY_VARIABLE(float, AvgCAxes)
 
     void dataCheck();
 

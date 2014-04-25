@@ -132,7 +132,7 @@ class RegularGridSampleSurfaceMesh : public SampleSurfaceMesh
     virtual void assign_points(Int32ArrayType::Pointer iArray);
 
   private:
-    DEFINE_CREATED_DATAARRAY(int32_t, FeatureIds)
+    DEFINE_CREATED_DATAARRAY_VARIABLE(int32_t, FeatureIds)
 
     RegularGridSampleSurfaceMesh(const RegularGridSampleSurfaceMesh&); // Copy Constructor Not Implemented
     void operator=(const RegularGridSampleSurfaceMesh&); // Operator '=' Not Implemented

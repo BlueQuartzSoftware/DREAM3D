@@ -147,7 +147,7 @@ class MovingFiniteElementSmoothing : public SurfaceMeshFilter
     void dataCheck();
 
   private:
-    DEFINE_PTR_WEAKPTR_DATAARRAY(int8_t, SurfaceMeshNodeType)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int8_t, SurfaceMeshNodeType)
 
     MovingFiniteElementSmoothing(const MovingFiniteElementSmoothing&); // Copy Constructor Not Implemented
     void operator=(const MovingFiniteElementSmoothing&); // Operator '=' Not Implemented

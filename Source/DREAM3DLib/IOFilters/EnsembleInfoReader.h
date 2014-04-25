@@ -114,8 +114,8 @@ class DREAM3DLib_EXPORT EnsembleInfoReader : public FileReader
     void updateEnsembleInstancePointers();
 
   private:
-    DEFINE_CREATED_DATAARRAY(unsigned int, CrystalStructures)
-    DEFINE_CREATED_DATAARRAY(uint32_t, PhaseTypes)
+    DEFINE_CREATED_DATAARRAY_VARIABLE(unsigned int, CrystalStructures)
+    DEFINE_CREATED_DATAARRAY_VARIABLE(uint32_t, PhaseTypes)
 
     EnsembleInfoReader(const EnsembleInfoReader&); //Not Implemented
     void operator=(const EnsembleInfoReader&); //Not Implemented

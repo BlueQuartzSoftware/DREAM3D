@@ -117,14 +117,14 @@ class DREAM3DLib_EXPORT YSChoiAbaqusReader : public FileReader
 
 
   private:
-    DEFINE_CREATED_DATAARRAY(int32_t, FeatureIds)
-    DEFINE_CREATED_DATAARRAY(int32_t, CellPhases)
-    DEFINE_CREATED_DATAARRAY(bool, SurfaceFeatures)
-    DEFINE_CREATED_DATAARRAY(float, Quats)
-    DEFINE_CREATED_DATAARRAY(float, AvgQuats)
-    DEFINE_CREATED_DATAARRAY(float, CellEulerAngles)
+    DEFINE_CREATED_DATAARRAY_VARIABLE(int32_t, FeatureIds)
+    DEFINE_CREATED_DATAARRAY_VARIABLE(int32_t, CellPhases)
+    DEFINE_CREATED_DATAARRAY_VARIABLE(bool, SurfaceFeatures)
+    DEFINE_CREATED_DATAARRAY_VARIABLE(float, Quats)
+    DEFINE_CREATED_DATAARRAY_VARIABLE(float, AvgQuats)
+    DEFINE_CREATED_DATAARRAY_VARIABLE(float, CellEulerAngles)
 
-    DEFINE_CREATED_DATAARRAY(unsigned int, CrystalStructures)
+    DEFINE_CREATED_DATAARRAY_VARIABLE(unsigned int, CrystalStructures)
 
     void dataCheck();
     void updateCellInstancePointers();

@@ -132,9 +132,9 @@ class InsertAtoms : public AbstractFilter
     virtual void assign_points(QVector<VertexArray::Pointer> points, QVector<BoolArrayType::Pointer> inFeature);
 
   private:
-    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, SurfaceMeshFaceLabels)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(float, AvgQuats)
-    DEFINE_CREATED_DATAARRAY(int32_t, AtomFeatureLabels)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, SurfaceMeshFaceLabels)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, AvgQuats)
+    DEFINE_CREATED_DATAARRAY_VARIABLE(int32_t, AtomFeatureLabels)
 
     InsertAtoms(const InsertAtoms&); // Copy Constructor Not Implemented
     void operator=(const InsertAtoms&); // Operator '=' Not Implemented

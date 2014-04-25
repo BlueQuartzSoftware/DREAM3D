@@ -149,15 +149,15 @@ class FindBoundaryStrengths : public AbstractFilter
     HexagonalOps::Pointer m_HexOps;
     OrthoRhombicOps::Pointer m_OrthoOps;
 
-    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeaturePhases)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(float, AvgQuats)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(unsigned int, CrystalStructures)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, FeaturePhases)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, AvgQuats)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(unsigned int, CrystalStructures)
 
-    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, SurfaceMeshFaceLabels)
-    DEFINE_CREATED_DATAARRAY(float, SurfaceMeshF1s)
-    DEFINE_CREATED_DATAARRAY(float, SurfaceMeshF1spts)
-    DEFINE_CREATED_DATAARRAY(float, SurfaceMeshF7s)
-    DEFINE_CREATED_DATAARRAY(float, SurfaceMeshmPrimes)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, SurfaceMeshFaceLabels)
+    DEFINE_CREATED_DATAARRAY_VARIABLE(float, SurfaceMeshF1s)
+    DEFINE_CREATED_DATAARRAY_VARIABLE(float, SurfaceMeshF1spts)
+    DEFINE_CREATED_DATAARRAY_VARIABLE(float, SurfaceMeshF7s)
+    DEFINE_CREATED_DATAARRAY_VARIABLE(float, SurfaceMeshmPrimes)
 
     void dataCheckVoxel();
     void dataCheckSurfaceMesh();

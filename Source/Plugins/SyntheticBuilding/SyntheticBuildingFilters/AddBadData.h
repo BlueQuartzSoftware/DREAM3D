@@ -114,7 +114,7 @@ class AddBadData : public AbstractFilter
     void add_noise();
 
   private:
-    DEFINE_PTR_WEAKPTR_DATAARRAY(float, GBEuclideanDistances)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, GBEuclideanDistances)
 
     void dataCheck();
 

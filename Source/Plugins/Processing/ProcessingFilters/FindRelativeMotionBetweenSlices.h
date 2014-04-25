@@ -130,7 +130,7 @@ class FindRelativeMotionBetweenSlices : public AbstractFilter
     void find_crosssections();
 
   private:
-    DEFINE_CREATED_DATAARRAY(float, MotionDirection)
+    DEFINE_CREATED_DATAARRAY_VARIABLE(float, MotionDirection)
 
     void dataCheck();
 

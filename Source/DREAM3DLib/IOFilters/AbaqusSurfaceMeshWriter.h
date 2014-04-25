@@ -139,7 +139,7 @@ class DREAM3DLib_EXPORT AbaqusSurfaceMeshWriter : public AbstractFilter
     int writeTriangles(FILE* f);
     int writeFeatures(FILE* f);
 
-    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, SurfaceMeshFaceLabels)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, SurfaceMeshFaceLabels)
 
     AbaqusSurfaceMeshWriter(const AbaqusSurfaceMeshWriter&); // Copy Constructor Not Implemented
     void operator=(const AbaqusSurfaceMeshWriter&); // Operator '=' Not Implemented

@@ -117,10 +117,10 @@ signals:
     void find_sizes2D();
 
   private:
-    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeatureIds)
-    DEFINE_CREATED_DATAARRAY(float, Volumes)
-    DEFINE_CREATED_DATAARRAY(float, EquivalentDiameters)
-    DEFINE_CREATED_DATAARRAY(int32_t, NumCells)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, FeatureIds)
+    DEFINE_CREATED_DATAARRAY_VARIABLE(float, Volumes)
+    DEFINE_CREATED_DATAARRAY_VARIABLE(float, EquivalentDiameters)
+    DEFINE_CREATED_DATAARRAY_VARIABLE(int32_t, NumCells)
 
     void dataCheck();
 

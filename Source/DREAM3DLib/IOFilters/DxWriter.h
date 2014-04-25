@@ -102,7 +102,7 @@ class DREAM3DLib_EXPORT DxWriter : public FileWriter
     virtual int writeFile();
 
   private:
-    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeatureIds)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, FeatureIds)
 
     void dataCheck();
 

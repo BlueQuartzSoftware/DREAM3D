@@ -104,8 +104,8 @@ signals:
     UpdateCellQuats();
 
   private:
-    DEFINE_CREATED_DATAARRAY(float, Quats)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(float, Quats5)
+    DEFINE_CREATED_DATAARRAY_VARIABLE(float, Quats)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, Quats5)
     DataArray<float>::Pointer oldQuats;
 
     QVector<OrientationOps::Pointer> m_OrientationOps;

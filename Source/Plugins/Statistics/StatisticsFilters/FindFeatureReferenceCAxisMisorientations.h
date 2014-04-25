@@ -138,13 +138,13 @@ signals:
     HexagonalOps::Pointer m_HexOps;
     OrthoRhombicOps::Pointer m_OrthoOps;
 
-    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeatureIds)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, CellPhases)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(float, Quats)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(float, AvgCAxes)
-    DEFINE_CREATED_DATAARRAY(float, FeatureReferenceCAxisMisorientations)
-    DEFINE_CREATED_DATAARRAY(float, FeatureAvgCAxisMisorientations)
-    DEFINE_CREATED_DATAARRAY(float, FeatureStdevCAxisMisorientations)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, FeatureIds)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, CellPhases)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, Quats)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, AvgCAxes)
+    DEFINE_CREATED_DATAARRAY_VARIABLE(float, FeatureReferenceCAxisMisorientations)
+    DEFINE_CREATED_DATAARRAY_VARIABLE(float, FeatureAvgCAxisMisorientations)
+    DEFINE_CREATED_DATAARRAY_VARIABLE(float, FeatureStdevCAxisMisorientations)
 
     void dataCheck();
 

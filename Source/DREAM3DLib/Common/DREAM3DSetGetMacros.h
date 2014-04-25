@@ -459,16 +459,22 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-#define DEFINE_PTR_WEAKPTR_DATAARRAY(type, name)\
+#define DEFINE_REQUIRED_DATAARRAY_VARIABLE(type, name)\
   DREAM3D_INSTANCE_STRING_PROPERTY(name##ArrayName);\
   private:\
   DataArray<type>::WeakPointer m_##name##Ptr;\
   type* m_##name;
 
-#define DEFINE_CREATED_DATAARRAY(type, name)\
+#define DEFINE_CREATED_DATAARRAY_VARIABLE(type, name)\
   private:\
     DataArray<type>::WeakPointer m_##name##Ptr;\
     type* m_##name;
+
+
+
+#define DREAM3D_COPY_INSTANCEVAR(name)\
+  filter->set##name(get##name());
+
 
 // -----------------------------------------------------------------------------
 //

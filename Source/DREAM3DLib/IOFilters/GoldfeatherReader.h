@@ -152,13 +152,13 @@ signals:
     void updateFaceInstancePointers();
 
   private:
-    DEFINE_CREATED_DATAARRAY(double, SurfaceMeshPrincipalCurvature1s)
-    DEFINE_CREATED_DATAARRAY(double, SurfaceMeshPrincipalCurvature2s)
-    DEFINE_CREATED_DATAARRAY(double, SurfaceMeshPrincipalDirection1s)
-    DEFINE_CREATED_DATAARRAY(double, SurfaceMeshPrincipalDirection2s)
-    DEFINE_CREATED_DATAARRAY(double, SurfaceMeshNodeNormals)
-    DEFINE_CREATED_DATAARRAY(double, SurfaceMeshFaceNormals)
-    DEFINE_CREATED_DATAARRAY(int32_t, SurfaceMeshFaceLabels)
+    DEFINE_CREATED_DATAARRAY_VARIABLE(double, SurfaceMeshPrincipalCurvature1s)
+    DEFINE_CREATED_DATAARRAY_VARIABLE(double, SurfaceMeshPrincipalCurvature2s)
+    DEFINE_CREATED_DATAARRAY_VARIABLE(double, SurfaceMeshPrincipalDirection1s)
+    DEFINE_CREATED_DATAARRAY_VARIABLE(double, SurfaceMeshPrincipalDirection2s)
+    DEFINE_CREATED_DATAARRAY_VARIABLE(double, SurfaceMeshNodeNormals)
+    DEFINE_CREATED_DATAARRAY_VARIABLE(double, SurfaceMeshFaceNormals)
+    DEFINE_CREATED_DATAARRAY_VARIABLE(int32_t, SurfaceMeshFaceLabels)
 
     GoldfeatherReader(const GoldfeatherReader&); // Copy Constructor Not Implemented
     void operator=(const GoldfeatherReader&); // Operator '=' Not Implemented

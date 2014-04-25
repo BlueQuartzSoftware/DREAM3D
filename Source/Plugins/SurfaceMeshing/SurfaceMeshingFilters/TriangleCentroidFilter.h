@@ -133,7 +133,7 @@ signals:
     void dataCheck();
 
   private:
-    DEFINE_CREATED_DATAARRAY(double, SurfaceMeshTriangleCentroids)
+    DEFINE_CREATED_DATAARRAY_VARIABLE(double, SurfaceMeshTriangleCentroids)
 
     TriangleCentroidFilter(const TriangleCentroidFilter&); // Copy Constructor Not Implemented
     void operator=(const TriangleCentroidFilter&); // Operator '=' Not Implemented

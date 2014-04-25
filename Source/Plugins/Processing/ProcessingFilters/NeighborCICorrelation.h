@@ -105,7 +105,7 @@ class NeighborCICorrelation : public AbstractFilter
 
 
   private:
-    DEFINE_PTR_WEAKPTR_DATAARRAY(float, ConfidenceIndex)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, ConfidenceIndex)
 
     void dataCheck();
 

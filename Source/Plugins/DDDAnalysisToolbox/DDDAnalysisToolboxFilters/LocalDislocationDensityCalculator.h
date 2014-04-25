@@ -144,7 +144,7 @@ class LocalDislocationDensityCalculator : public AbstractFilter
     void updateCellInstancePointers();
 
   private:
-    DEFINE_CREATED_DATAARRAY(float, OutputArray)
+    DEFINE_CREATED_DATAARRAY_VARIABLE(float, OutputArray)
 
     LocalDislocationDensityCalculator(const LocalDislocationDensityCalculator&); // Copy Constructor Not Implemented
     void operator=(const LocalDislocationDensityCalculator&); // Operator '=' Not Implemented

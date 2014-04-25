@@ -246,10 +246,10 @@ class DREAM3DLib_EXPORT GenericExample : public AbstractFilter
     void dataCheck2();
 
   private:
-    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeatureIds)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(float, CellPatternQuality)
-    DEFINE_CREATED_DATAARRAY(float, CellEulerAngles)
-    DEFINE_CREATED_DATAARRAY(bool, GoodVoxels)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, FeatureIds)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, CellPatternQuality)
+    DEFINE_CREATED_DATAARRAY_VARIABLE(float, CellEulerAngles)
+    DEFINE_CREATED_DATAARRAY_VARIABLE(bool, GoodVoxels)
 
     GenericExample(const GenericExample&); // Copy Constructor Not Implemented
     void operator=(const GenericExample&); // Operator '=' Not Implemented

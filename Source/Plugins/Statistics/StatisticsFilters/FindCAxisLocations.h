@@ -116,8 +116,8 @@ signals:
     HexagonalOps::Pointer m_HexOps;
     OrthoRhombicOps::Pointer m_OrthoOps;
 
-    DEFINE_PTR_WEAKPTR_DATAARRAY(float, Quats)
-    DEFINE_CREATED_DATAARRAY(float, CAxisLocations)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, Quats)
+    DEFINE_CREATED_DATAARRAY_VARIABLE(float, CAxisLocations)
 
     void dataCheck();
 

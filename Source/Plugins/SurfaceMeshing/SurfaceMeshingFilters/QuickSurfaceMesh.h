@@ -115,11 +115,11 @@ signals:
     QuickSurfaceMesh();
 
   private:
-    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeatureIds)
-    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, CellPhases)
-    DEFINE_CREATED_DATAARRAY(int32_t, FaceLabels)
-    DEFINE_CREATED_DATAARRAY(int8_t, NodeTypes)
-    DEFINE_CREATED_DATAARRAY(int32_t, FacePhases)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, FeatureIds)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, CellPhases)
+    DEFINE_CREATED_DATAARRAY_VARIABLE(int32_t, FaceLabels)
+    DEFINE_CREATED_DATAARRAY_VARIABLE(int8_t, NodeTypes)
+    DEFINE_CREATED_DATAARRAY_VARIABLE(int32_t, FacePhases)
 
     void dataCheck();
     void updateFaceInstancePointers();

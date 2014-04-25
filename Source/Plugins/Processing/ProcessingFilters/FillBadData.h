@@ -106,7 +106,7 @@ class FillBadData : public AbstractFilter
     bool* m_AlreadyChecked;
     int32_t* m_Neighbors;
 
-    DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, FeatureIds)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, FeatureIds)
 
     QVector<QVector<int> > voxellists;
     QVector<int> nuclei;

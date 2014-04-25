@@ -108,7 +108,7 @@ signals:
     bool* m_AlreadyChecked;
     int32_t* m_Neighbors;
 
-    DEFINE_PTR_WEAKPTR_DATAARRAY(bool, GoodVoxels)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(bool, GoodVoxels)
 
     QVector<QVector<int> > voxellists;
     QVector<int> nuclei;

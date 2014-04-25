@@ -155,7 +155,7 @@ signals:
     void generateFileList();
 
   private:
-    DEFINE_CREATED_DATAARRAY(uint8_t, VectorData)
+    DEFINE_CREATED_DATAARRAY_VARIABLE(uint8_t, VectorData)
 
     ImportImagesAsVector(const ImportImagesAsVector&); // Copy Constructor Not Implemented
     void operator=(const ImportImagesAsVector&); // Operator '=' Not Implemented
