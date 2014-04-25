@@ -24,6 +24,7 @@ set(_PublicFilters
   MedianKernel
   MeanKernel
   ImageCalculator
+  ImageMath
 )
 
 #---------
