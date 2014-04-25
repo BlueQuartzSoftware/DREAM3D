@@ -26,6 +26,7 @@ set(_PublicFilters
   ImageCalculator
   ImageMath
   MultiOtsuThreshold
+  KMeans
 )
 
 #---------
