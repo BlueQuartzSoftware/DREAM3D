@@ -198,9 +198,9 @@ void DataContainerArrayProxy::print(const QString header)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DataContainerArrayProxy::removeSelectionsFromDataContainerArray(DataContainerArray* dca)
+void DataContainerArrayProxy::removeSelectionsFromDataContainerArray(DataContainerArray* dca, Qt::CheckState state)
 {
- // Loop over the data containers until we find the proper data container
+  // Loop over the data containers until we find the proper data container
   QList<DataContainerProxy> containers = list;
   QListIterator<DataContainerProxy> containerIter(containers);
   QStringList dcList;
@@ -212,7 +212,7 @@ void DataContainerArrayProxy::removeSelectionsFromDataContainerArray(DataContain
     assert(dcItem.get()   != NULL);
     // Check to see if the DataContainer is checked, if it is NOT checked then we remove the entire DataContainer from
     // the DataContainerArray
-    if (dcProxy.flag == Qt::Unchecked)
+    if (dcProxy.flag == state)
     {
       dca->removeDataContainer(dcProxy.name); // Remove it out
       continue; // Continue to the next DataContainer
@@ -227,7 +227,7 @@ void DataContainerArrayProxy::removeSelectionsFromDataContainerArray(DataContain
       assert(amItem.get() != NULL);
       AttributeMatrixProxy attrProxy = attrMatsIter.value();
       // Check to see if this AttributeMatrix is checked, if not then remove it from the DataContainer and go to the next loop
-      if(attrProxy.flag == Qt::Unchecked)
+      if(attrProxy.flag == state)
       {
         dcItem->removeAttributeMatrix(amName);
         continue;
@@ -243,7 +243,7 @@ void DataContainerArrayProxy::removeSelectionsFromDataContainerArray(DataContain
         assert(daItem.get() != NULL);
         DataArrayProxy daProxy = dataArraysIter.value();
         // Check to see if the user selected this item
-        if(daProxy.flag == Qt::Unchecked)
+        if(daProxy.flag == state)
         {
           amItem->removeAttributeArray(daName);
           continue;
@@ -251,4 +251,126 @@ void DataContainerArrayProxy::removeSelectionsFromDataContainerArray(DataContain
       }
     }
   }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DataContainerArrayProxy::setAllFlags(Qt::CheckState state)
+{
+  QMutableListIterator<DataContainerProxy> dcIter(list);
+
+  while (dcIter.hasNext()) // DataContainerLevel
+  {
+    DataContainerProxy& dcProxy =  dcIter.next();
+    dcProxy.flag = state;
+    QMutableMapIterator<QString, AttributeMatrixProxy> amIter(dcProxy.attributeMatricies);
+    while(amIter.hasNext()) // AttributeMatrixLevel
+    {
+      amIter.next();
+      AttributeMatrixProxy& amProxy = amIter.value();
+      amProxy.flag = state;
+      QMutableMapIterator<QString, DataArrayProxy> dIter(amProxy.dataArrays);
+      while(dIter.hasNext()) // DataArray Level
+      {
+        dIter.next();
+        DataArrayProxy& daProxy = dIter.value();
+        daProxy.flag = state;
+      }
+    }
+  }
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DataContainerArrayProxy::reverseFlags()
+{
+  QMutableListIterator<DataContainerProxy> dcIter(list);
+
+  while (dcIter.hasNext()) // DataContainerLevel
+  {
+    DataContainerProxy& dcProxy =  dcIter.next();
+    if(dcProxy.flag == Qt::Checked) { dcProxy.flag = Qt::Unchecked; }
+    else if(dcProxy.flag == Qt::Unchecked) { dcProxy.flag = Qt::Checked; }
+
+    QMutableMapIterator<QString, AttributeMatrixProxy> amIter(dcProxy.attributeMatricies);
+    while(amIter.hasNext()) // AttributeMatrixLevel
+    {
+      amIter.next();
+      AttributeMatrixProxy& amProxy = amIter.value();
+      if(amProxy.flag == Qt::Checked) { amProxy.flag = Qt::Unchecked; }
+      else if(amProxy.flag == Qt::Unchecked) { amProxy.flag = Qt::Checked; }
+      QMutableMapIterator<QString, DataArrayProxy> dIter(amProxy.dataArrays);
+      while(dIter.hasNext()) // DataArray Level
+      {
+        dIter.next();
+        DataArrayProxy& daProxy = dIter.value();
+        if(daProxy.flag == Qt::Checked) { daProxy.flag = Qt::Unchecked; }
+        else if(daProxy.flag == Qt::Unchecked) { daProxy.flag = Qt::Checked; }
+      }
+    }
+  }
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QStringList DataContainerArrayProxy::serialize()
+{
+
+  QStringList entries;
+
+  QMutableListIterator<DataContainerProxy> dcIter(list);
+
+  while (dcIter.hasNext()) // DataContainerLevel
+  {
+    DataContainerProxy& dcProxy =  dcIter.next();
+    QMutableMapIterator<QString, AttributeMatrixProxy> amIter(dcProxy.attributeMatricies);
+    while(amIter.hasNext()) // AttributeMatrixLevel
+    {
+      amIter.next();
+      AttributeMatrixProxy& amProxy = amIter.value();
+      QMutableMapIterator<QString, DataArrayProxy> dIter(amProxy.dataArrays);
+      while(dIter.hasNext()) // DataArray Level
+      {
+        dIter.next();
+        DataArrayProxy& daProxy = dIter.value();
+
+        QString str = QString("[PATH=%1|%2|%3][FLAG=%4]").arg(dcProxy.name).arg(amProxy.name).arg(daProxy.name).arg(daProxy.flag);
+        entries << str;
+      }
+    }
+  }
+  return entries;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+bool DataContainerArrayProxy::contains(const QString &name)
+{
+  QListIterator<DataContainerProxy> iter(list);
+  while(iter.hasNext())
+  {
+    const DataContainerProxy dc = iter.next();
+    if(dc.name.compare(name) == 0) { return true;}
+  }
+  return false;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+DataContainerProxy& DataContainerArrayProxy::getDataContainerProxy(const QString& name)
+{
+  QMutableListIterator<DataContainerProxy> iter(list);
+  while(iter.hasNext())
+  {
+    DataContainerProxy& dc = iter.next();
+    if(dc.name.compare(name) == 0) { return dc;}
+  }
+
 }

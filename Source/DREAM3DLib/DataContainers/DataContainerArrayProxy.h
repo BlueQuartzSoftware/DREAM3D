@@ -101,7 +101,39 @@ class DREAM3DLib_EXPORT DataContainerArrayProxy
      * DataArray items that are flagged as selected by the user/programmer.
      * @param dca
      */
-    void removeSelectionsFromDataContainerArray(DataContainerArray* dca);
+    void removeSelectionsFromDataContainerArray(DataContainerArray* dca, Qt::CheckState state = Qt::Unchecked);
+
+    /**
+     * @brief setAllFlags
+     * @param state
+     */
+    void setAllFlags(Qt::CheckState state);
+
+    /**
+     * @brief reverseFlags
+     */
+    void reverseFlags();
+
+    /**
+     * @brief serialize
+     * @return
+     */
+    QStringList serialize();
+
+    /**
+     * @brief Does this contain a DataContainer for the given name
+     * @param name
+     * @return
+     */
+    bool contains(const QString& name);
+
+    /**
+     * @brief getDataContainerProxy
+     * @param name
+     * @return
+     */
+    DataContainerProxy& getDataContainerProxy(const QString& name);
+
 
 
     //----- Our variables, publicly available

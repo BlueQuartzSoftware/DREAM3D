@@ -61,7 +61,15 @@ RemoveArrays::~RemoveArrays()
 void RemoveArrays::setupFilterParameters()
 {
   FilterParameterVector parameters;
-
+  {
+    DataContainerArrayProxyFilterParameter::Pointer parameter = DataContainerArrayProxyFilterParameter::New();
+    parameter->setHumanLabel("Arrays to Delete");
+    parameter->setPropertyName("DataArraysToRemove");
+    parameter->setWidgetType(FilterParameterWidgetType::DataContainerArrayProxyWidget);
+    parameter->setValueType("DataContainerArrayProxy");
+    parameter->setDefaultFlagValue(Qt::Unchecked);
+    parameters.push_back(parameter);
+  }
   setFilterParameters(parameters);
 }
 
@@ -71,6 +79,8 @@ void RemoveArrays::setupFilterParameters()
 void RemoveArrays::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
+  DataContainerArrayProxy proxy = reader->readDataContainerArrayProxy("DataArraysToRemove", getDataArraysToRemove() );
+  setDataArraysToRemove(proxy);
   reader->closeFilterGroup();
 }
 
@@ -80,6 +90,8 @@ void RemoveArrays::readFilterParameters(AbstractFilterParametersReader* reader, 
 int RemoveArrays::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
+  DataContainerArrayProxy dcaProxy = getDataArraysToRemove(); // This line makes a COPY of the DataContainerArrayProxy that is stored in the current instance
+  writer->writeValue("DataArraysToRemove", dcaProxy );
   writer->closeFilterGroup();
   return ++index;
 }
@@ -89,34 +101,9 @@ int RemoveArrays::writeFilterParameters(AbstractFilterParametersWriter* writer, 
 // -----------------------------------------------------------------------------
 void RemoveArrays::dataCheck()
 {
-  setErrorCondition(-1);
-
-  for(MapOfAttributeMatrices_t::iterator iter = m_DataToRemove.begin(); iter != m_DataToRemove.end(); ++iter)
-  {
-    DataContainer::Pointer m = getDataContainerArray()->getDataContainer(iter.key());
-    if(NULL == m)
-    {
-      setErrorCondition(-999);
-      notifyErrorMessage(getHumanLabel(), "The DataContainer Object was NULL", getErrorCondition());
-      return;
-    }
-    MapOfAttributeArrays_t mapOfArraysToRemove = iter.value();
-    for(MapOfAttributeArrays_t::iterator iter = mapOfArraysToRemove.begin(); iter != mapOfArraysToRemove.end(); ++iter)
-    {
-      AttributeMatrix::Pointer attrMatrix = m->getAttributeMatrix(iter.key());
-      if(NULL == attrMatrix)
-      {
-        setErrorCondition(-999);
-        notifyErrorMessage(getHumanLabel(), "The Attribute Matrix Object was NULL", getErrorCondition());
-        return;
-      }
-      QSet<QString> arraysToRemove = iter.value();
-      foreach (const QString & value, arraysToRemove)
-      {
-        attrMatrix->removeAttributeArray(value);
-      }
-    }
-  }
+  setErrorCondition(0);
+  // Remove all the arrays, but only if they are CHECKED. This is opposite of the default
+  m_DataArraysToRemove.removeSelectionsFromDataContainerArray(getDataContainerArray().get(), Qt::Checked);
 }
 
 // -----------------------------------------------------------------------------
