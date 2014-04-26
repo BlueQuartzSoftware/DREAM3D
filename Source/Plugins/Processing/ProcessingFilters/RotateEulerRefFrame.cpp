@@ -211,7 +211,7 @@ void RotateEulerRefFrame::execute()
 
   int64_t totalPoints = m_CellEulerAnglesPtr.lock()->getNumberOfTuples();
 
-  m_RotationAngle = m_RotationAngle * DREAM3D::Constants::k_Pi / 180.0;
+  float rotAngle = m_RotationAngle * DREAM3D::Constants::k_Pi / 180.0;
 
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
   tbb::task_scheduler_init init;
@@ -222,13 +222,13 @@ void RotateEulerRefFrame::execute()
   if (doParallel == true)
   {
     tbb::parallel_for(tbb::blocked_range<size_t>(0, totalPoints),
-                      RotateEulerRefFrameImpl(m_CellEulerAngles, m_RotationAngle, m_RotationAxis), tbb::auto_partitioner());
+                      RotateEulerRefFrameImpl(m_CellEulerAngles, rotAngle, m_RotationAxis), tbb::auto_partitioner());
 
   }
   else
 #endif
   {
-    RotateEulerRefFrameImpl serial(m_CellEulerAngles, m_RotationAngle, m_RotationAxis);
+    RotateEulerRefFrameImpl serial(m_CellEulerAngles, rotAngle, m_RotationAxis);
     serial.convert(0, totalPoints);
   }
 

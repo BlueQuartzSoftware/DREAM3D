@@ -144,6 +144,8 @@ class MergeTwins : public GroupFeatures
     unsigned long long int Seed;
     QVector<OrientationOps::Pointer> m_OrientationOps;
 
+    float axisTolerance;
+
     void dataCheck();
     void updateFeatureInstancePointers();
 

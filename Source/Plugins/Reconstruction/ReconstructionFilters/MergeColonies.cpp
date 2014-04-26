@@ -334,7 +334,7 @@ void MergeColonies::execute()
   dataCheck();
   if(getErrorCondition() < 0) { return; }
 
-  m_AxisTolerance = m_AxisTolerance * DREAM3D::Constants::k_Pi / 180.0f;
+  axisTolerance = m_AxisTolerance * DREAM3D::Constants::k_Pi / 180.0f;
 
   // Tell the user we are starting the filter
   notifyStatusMessage(getHumanLabel(), "Starting");
@@ -484,19 +484,19 @@ bool MergeColonies::determineGrouping(int referenceFeature, int neighborFeature,
       w = w * (180.0f / DREAM3D::Constants::k_Pi);
       float angdiff1 = fabs(w - 10.53f);
       float axisdiff1 = acosf(fabs(n1) * 0.0000f + fabs(n2) * 0.0000f + fabs(n3) * 1.0000f);
-      if(angdiff1 < m_AngleTolerance && axisdiff1 < m_AxisTolerance) { colony = true; }
+      if(angdiff1 < m_AngleTolerance && axisdiff1 < axisTolerance) { colony = true; }
       float angdiff2 = fabs(w - 90.00f);
       float axisdiff2 = acosf(fabs(n1) * 0.9958f + fabs(n2) * 0.0917f + fabs(n3) * 0.0000f);
-      if(angdiff2 < m_AngleTolerance && axisdiff2 < m_AxisTolerance) { colony = true; }
+      if(angdiff2 < m_AngleTolerance && axisdiff2 < axisTolerance) { colony = true; }
       float angdiff3 = fabs(w - 60.00f);
       float axisdiff3 = acosf(fabs(n1) * 1.0000f + fabs(n2) * 0.0000f + fabs(n3) * 0.0000f);
-      if(angdiff3 < m_AngleTolerance && axisdiff3 < m_AxisTolerance) { colony = true; }
+      if(angdiff3 < m_AngleTolerance && axisdiff3 < axisTolerance) { colony = true; }
       float angdiff4 = fabs(w - 60.83f);
       float axisdiff4 = acosf(fabs(n1) * 0.9834f + fabs(n2) * 0.0905f + fabs(n3) * 0.1570f);
-      if(angdiff4 < m_AngleTolerance && axisdiff4 < m_AxisTolerance) { colony = true; }
+      if(angdiff4 < m_AngleTolerance && axisdiff4 < axisTolerance) { colony = true; }
       float angdiff5 = fabs(w - 63.26f);
       float axisdiff5 = acosf(fabs(n1) * 0.9549f + fabs(n2) * 0.0000f + fabs(n3) * 0.2969f);
-      if(angdiff5 < m_AngleTolerance && axisdiff5 < m_AxisTolerance) { colony = true; }
+      if(angdiff5 < m_AngleTolerance && axisdiff5 < axisTolerance) { colony = true; }
       if (colony == true)
       {
         m_FeatureParentIds[neighborFeature] = newFid;

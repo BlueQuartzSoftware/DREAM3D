@@ -305,7 +305,7 @@ void PatchGroupMicroTextureRegions::execute()
   if(getErrorCondition() < 0) { return; }
 
   // Convert user defined tolerance to radians.
-  m_CAxisTolerance = m_CAxisTolerance * DREAM3D::Constants::k_Pi / 180.0f;
+  caxisTolerance = m_CAxisTolerance * DREAM3D::Constants::k_Pi / 180.0f;
 
   avgCaxes[0] = 0.0f;
   avgCaxes[1] = 0.0f;
@@ -478,7 +478,7 @@ bool PatchGroupMicroTextureRegions::determineGrouping(int referenceFeature, int 
       else w = GeometryMath::CosThetaBetweenVectors(c1, c2);
       DREAM3DMath::boundF(w, -1, 1);
       w = acosf(w);
-      if (w <= m_CAxisTolerance || (DREAM3D::Constants::k_Pi - w) <= m_CAxisTolerance)
+      if (w <= caxisTolerance || (DREAM3D::Constants::k_Pi - w) <= caxisTolerance)
       {
         if (m_UseRunningAverage == true)
         {
@@ -852,7 +852,7 @@ bool PatchGroupMicroTextureRegions::growGrouping(int referenceFeature, int neigh
       else w = GeometryMath::CosThetaBetweenVectors(c1, c2);
       DREAM3DMath::boundF(w, -1, 1);
       w = acosf(w);
-      if (w <= m_CAxisTolerance || (DREAM3D::Constants::k_Pi - w) <= m_CAxisTolerance)
+      if (w <= caxisTolerance || (DREAM3D::Constants::k_Pi - w) <= caxisTolerance)
       {
         if (m_UseRunningAverage == true)
         {

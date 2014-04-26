@@ -148,6 +148,8 @@ class VectorSegmentFeatures : public SegmentFeatures
     boost::shared_ptr<Generator> m_NumberGenerator;
     size_t                       m_TotalRandomNumbersGenerated;
 
+    float angleTolerance;
+
     /**
      * @brief randomizeGrainIds
      * @param totalPoints

@@ -193,6 +193,8 @@ class GroupMicroTextureRegions : public GroupFeatures
     boost::shared_ptr<Generator> m_NumberGenerator;
     size_t                       m_TotalRandomNumbersGenerated;
 
+    float caxisTolerance;
+
     GroupMicroTextureRegions(const GroupMicroTextureRegions&); // Copy Constructor Not Implemented
     void operator=(const GroupMicroTextureRegions&); // Operator '=' Not Implemented
 };

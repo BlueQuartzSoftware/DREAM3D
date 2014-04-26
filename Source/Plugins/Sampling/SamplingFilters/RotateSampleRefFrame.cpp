@@ -254,7 +254,7 @@ void RotateSampleRefFrame::preflight()
   AttributeMatrix::Pointer cellAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixPath().getAttributeMatrixName(), -301);
   if (getErrorCondition() < 0) { return; }
 
-  m_RotationAngle = m_RotationAngle * DREAM3D::Constants::k_Pi / 180.0;
+  float rotAngle = m_RotationAngle * DREAM3D::Constants::k_Pi / 180.0;
 
   int32_t xp, yp, zp;
   float xRes, yRes, zRes;
@@ -282,7 +282,7 @@ void RotateSampleRefFrame::preflight()
   float newcoords[3];
   float xMin = 100000000, xMax = 0, yMin = 100000000, yMax = 0, zMin = 100000000, zMax = 0;
 
-  OrientationMath::AxisAngletoMat(m_RotationAngle, m_RotationAxis.x, m_RotationAxis.y, m_RotationAxis.z, rotMat);
+  OrientationMath::AxisAngletoMat(rotAngle, m_RotationAxis.x, m_RotationAxis.y, m_RotationAxis.z, rotMat);
   for(int i = 0; i < 8; i++)
   {
     if(i == 0) { col = 0, row = 0, plane = 0; }
@@ -356,14 +356,13 @@ void RotateSampleRefFrame::execute()
 
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getCellAttributeMatrixPath().getDataContainerName());
 
-  m_RotationAngle = m_RotationAngle * DREAM3D::Constants::k_Pi / 180.0;
+  float rotAngle = m_RotationAngle * DREAM3D::Constants::k_Pi / 180.0;
 
   int32_t xp, yp, zp;
   float xRes, yRes, zRes;
   int32_t xpNew, ypNew, zpNew;
   float xResNew, yResNew, zResNew;
   RotateSampleRefFrameImplArg_t params;
-
 
   xp = static_cast<int32_t>(m->getXPoints());
   xRes = m->getXRes();
@@ -385,7 +384,7 @@ void RotateSampleRefFrame::execute()
   float newcoords[3];
   float xMin = 100000000, xMax = 0, yMin = 100000000, yMax = 0, zMin = 100000000, zMax = 0;
 
-  OrientationMath::AxisAngletoMat(m_RotationAngle, m_RotationAxis.x, m_RotationAxis.y, m_RotationAxis.z, rotMat);
+  OrientationMath::AxisAngletoMat(rotAngle, m_RotationAxis.x, m_RotationAxis.y, m_RotationAxis.z, rotMat);
   for(int i = 0; i < 8; i++)
   {
     if(i == 0) { col = 0, row = 0, plane = 0; }
@@ -396,6 +395,9 @@ void RotateSampleRefFrame::execute()
     if(i == 5) { col = xp - 1, row = 0, plane = zp - 1; }
     if(i == 6) { col = 0, row = yp - 1, plane = zp - 1; }
     if(i == 7) { col = xp - 1, row = yp - 1, plane = zp - 1; }
+    if(col < 0) col = 0;
+    if(row < 0) row = 0;
+    if(plane < 0) plane = 0;
     coords[0] = col * xRes;
     coords[1] = row * yRes;
     coords[2] = plane * zRes;
@@ -446,7 +448,6 @@ void RotateSampleRefFrame::execute()
 
   size_t newNumCellTuples = params.xpNew * params.ypNew * params.zpNew;
 
-
   DataArray<int64_t>::Pointer newIndiciesPtr = DataArray<int64_t>::CreateArray(newNumCellTuples, "RotateSampleRef_NewIndicies");
   newIndiciesPtr->initializeWithValue(-1);
   int64_t* newindicies = newIndiciesPtr->getPointer(0);
@@ -469,7 +470,6 @@ void RotateSampleRefFrame::execute()
     RotateSampleRefFrameImpl serial(newIndiciesPtr, &params, rotMat, m_SliceBySlice);
     serial.convert(0, params.zpNew, 0, params.ypNew, 0, params.xpNew);
   }
-
 
   // This could technically be parallelized also where each thred takes an array to adjust. Except
   // that the DataContainer is NOT thread safe or re-entrant so that would actually be a BAD idea.

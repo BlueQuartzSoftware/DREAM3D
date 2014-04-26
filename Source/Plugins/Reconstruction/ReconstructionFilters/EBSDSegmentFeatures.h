@@ -156,6 +156,8 @@ class EBSDSegmentFeatures : public SegmentFeatures
     boost::shared_ptr<Generator> m_NumberGenerator;
     size_t                       m_TotalRandomNumbersGenerated;
 
+    float misoTolerance;
+
     /**
      * @brief randomizeGrainIds
      * @param totalPoints

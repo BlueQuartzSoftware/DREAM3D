@@ -235,7 +235,7 @@ void EBSDSegmentFeatures::execute()
   notifyStatusMessage(getHumanLabel(), "Starting");
 
   //Convert user defined tolerance to radians.
-  m_MisorientationTolerance = m_MisorientationTolerance * DREAM3D::Constants::k_Pi / 180.0f;
+  misoTolerance = m_MisorientationTolerance * DREAM3D::Constants::k_Pi / 180.0f;
   for(int64_t i = 0; i < totalPoints; i++)
   {
     m_FeatureIds[i] = 0;
@@ -373,7 +373,7 @@ bool EBSDSegmentFeatures::determineGrouping(int64_t referencepoint, int64_t neig
     QuaternionMathF::Copy(quats[neighborpoint], q2);
 
     if (m_CellPhases[referencepoint] == m_CellPhases[neighborpoint]) { w = m_OrientationOps[phase1]->getMisoQuat( q1, q2, n1, n2, n3); }
-    if (w < m_MisorientationTolerance)
+    if (w < misoTolerance)
     {
       group = true;
       m_FeatureIds[neighborpoint] = gnum;

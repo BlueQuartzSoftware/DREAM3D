@@ -206,7 +206,7 @@ void VectorSegmentFeatures::execute()
   notifyStatusMessage(getHumanLabel(), "Starting");
 
   //Convert user defined tolerance to radians.
-  m_AngleTolerance = m_AngleTolerance * DREAM3D::Constants::k_Pi / 180.0f;
+  angleTolerance = m_AngleTolerance * DREAM3D::Constants::k_Pi / 180.0f;
   for(int64_t i = 0; i < totalPoints; i++)
   {
     m_FeatureIds[i] = 0;
@@ -339,7 +339,7 @@ bool VectorSegmentFeatures::determineGrouping(int64_t referencepoint, int64_t ne
     v2[2] = m_Vectors[3*neighborpoint+2];
     float w = GeometryMath::CosThetaBetweenVectors(v1, v2);
     w = acos(w);
-    if(w < m_AngleTolerance || (DREAM3D::Constants::k_Pi-w) < m_AngleTolerance)
+    if(w < angleTolerance || (DREAM3D::Constants::k_Pi-w) < angleTolerance)
     {
       group = true;
       m_FeatureIds[neighborpoint] = gnum;

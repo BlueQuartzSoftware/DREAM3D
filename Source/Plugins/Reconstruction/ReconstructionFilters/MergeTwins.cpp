@@ -237,7 +237,7 @@ void MergeTwins::execute()
   dataCheck();
   if(getErrorCondition() < 0) { return; }
 
-  m_AxisTolerance = m_AxisTolerance * DREAM3D::Constants::k_Pi / 180.0f;
+  axisTolerance = m_AxisTolerance * DREAM3D::Constants::k_Pi / 180.0f;
 
   // Tell the user we are starting the filter
   notifyStatusMessage(getHumanLabel(), "Starting");
@@ -379,7 +379,7 @@ bool MergeTwins::determineGrouping(int referenceFeature, int neighborFeature, in
       w = w * (180.0f / DREAM3D::Constants::k_Pi);
       float axisdiff111 = acosf(fabs(n1) * 0.57735f + fabs(n2) * 0.57735f + fabs(n3) * 0.57735f);
       float angdiff60 = fabs(w - 60.0f);
-      if (axisdiff111 < m_AxisTolerance && angdiff60 < m_AngleTolerance) { twin = true; }
+      if (axisdiff111 < axisTolerance && angdiff60 < m_AngleTolerance) { twin = true; }
       if (twin == true)
       {
         m_FeatureParentIds[neighborFeature] = newFid;

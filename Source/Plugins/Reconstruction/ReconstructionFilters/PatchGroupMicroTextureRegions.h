@@ -182,6 +182,8 @@ class PatchGroupMicroTextureRegions : public GroupFeatures
 
     NeighborList<int>::WeakPointer m_NeighborhoodList;
 
+    float caxisTolerance;
+
   	float avgCaxes[3];
     QVector<float> patchCentroids;
 	QVector<float> patchFeatureVolumeFractions;

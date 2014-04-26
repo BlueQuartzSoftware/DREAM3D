@@ -155,6 +155,8 @@ class MergeColonies : public GroupFeatures
 
     QVector<OrientationOps::Pointer> m_OrientationOps;
 
+    float axisTolerance;
+
     void dataCheck();
     void updateFeatureInstancePointers();
 

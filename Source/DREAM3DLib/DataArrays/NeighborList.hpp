@@ -795,6 +795,13 @@ class NeighborList : public IDataArray
       return static_cast<int>(_data[grainId]->size());
     }
 
+ VectorType& getListReference(int grainId)
+    {
+    #ifndef NDEBUG
+      if (_data.size() > 0u) { BOOST_ASSERT(grainId < static_cast<int>(_data.size()));}
+#endif
+      return *(_data[grainId]);
+    }
 
     /**
      * @brief getList

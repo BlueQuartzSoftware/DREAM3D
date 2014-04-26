@@ -238,7 +238,7 @@ void CAxisSegmentFeatures::execute()
   m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->resizeAttributeArrays(tDims);
 
   //Convert user defined tolerance to radians.
-  m_MisorientationTolerance = m_MisorientationTolerance * DREAM3D::Constants::k_Pi / 180.0f;
+  misoTolerance = m_MisorientationTolerance * DREAM3D::Constants::k_Pi / 180.0f;
   for(int64_t i = 0; i < totalPoints; i++)
   {
     m_FeatureIds[i] = 0;
@@ -400,7 +400,7 @@ bool CAxisSegmentFeatures::determineGrouping(int64_t referencepoint, int64_t nei
 
       w = ((c1[0] * c2[0]) + (c1[1] * c2[1]) + (c1[2] * c2[2]));
       w = acosf(w);
-      if (w <= m_MisorientationTolerance || (DREAM3D::Constants::k_Pi - w) <= m_MisorientationTolerance)
+      if (w <= misoTolerance || (DREAM3D::Constants::k_Pi - w) <= misoTolerance)
       {
         group = true;
         m_FeatureIds[neighborpoint] = gnum;
