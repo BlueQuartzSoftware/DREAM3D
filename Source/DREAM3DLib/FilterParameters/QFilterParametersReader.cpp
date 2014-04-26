@@ -669,15 +669,14 @@ QVector<double> QFilterParametersReader::readArray(const QString name, QVector<d
 IntVec3_t QFilterParametersReader::readIntVec3(const QString name, IntVec3_t defaultValue)
 {
   BOOST_ASSERT(m_Prefs != NULL);
-  if(m_Prefs->contains(name) == false){ return defaultValue; }
-
   bool ok = false;
   IntVec3_t v3;
   v3.x = 0;
   v3.y = 0;
   v3.z = 0;
 
-  m_Prefs->beginReadArray(name);
+  int count = m_Prefs->beginReadArray(name);
+  if (count == 0) { return defaultValue;}
   m_Prefs->setArrayIndex(0);
   v3.x = m_Prefs->value("x", v3.x).toInt(&ok);
   if(!ok) { v3.x = defaultValue.x; }
@@ -701,11 +700,13 @@ IntVec3_t QFilterParametersReader::readIntVec3(const QString name, IntVec3_t def
 FloatVec3_t QFilterParametersReader::readFloatVec3(const QString name, FloatVec3_t defaultValue)
 {
   BOOST_ASSERT(m_Prefs != NULL);
-  if(m_Prefs->contains(name) == false){ return defaultValue; }
-  QVariant var = m_Prefs->value(name);
   bool ok = false;
-  FloatVec3_t v3 = var.value<FloatVec3_t>();
-  m_Prefs->beginReadArray(name);
+  FloatVec3_t v3;
+  v3.x = 0.0f;
+  v3.y = 0.0f;
+  v3.z = 0.0f;
+  int count = m_Prefs->beginReadArray(name);
+  if (count == 0) { return defaultValue;}
   m_Prefs->setArrayIndex(0);
   v3.x = m_Prefs->value("x", v3.x).toFloat(&ok);
   if(!ok) { v3.x = defaultValue.x; }
