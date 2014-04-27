@@ -765,8 +765,8 @@ DREAM3D::Rgb OrthoRhombicOps::generateMisorientationColor(const QuatF& q, const 
 
   //eq c1.4
   k = fmodf(atan2f(y2, x2) + 2.0f * M_PI, 2.0f * M_PI);
-  x3 = cos(k) * sqrt((x2 * x2 + y2 * y2) / 2.0f) * sin(M_PI / 6.0f + fmodf(k, 2.0f * M_PI / 3.0f)) / 0.5f;
-  y3 = sin(k) * sqrt((x2 * x2 + y2 * y2) / 2.0f) * sin(M_PI / 6.0f + fmodf(k, 2.0f * M_PI / 3.0f)) / 0.5f;
+  x3 = cos(k) * sqrt((x2 * x2 + y2 * y2) / 2.0) * sin(M_PI / 6.0 + fmodf(k, 2.0f * M_PI / 3.0f)) / 0.5f;
+  y3 = sin(k) * sqrt((x2 * x2 + y2 * y2) / 2.0) * sin(M_PI / 6.0 + fmodf(k, 2.0f * M_PI / 3.0f)) / 0.5f;
   z3 = z2 - 1.0f;
 
   //eq c1.5

@@ -158,8 +158,8 @@ void MakeVolumeDataContainer::dataCheck()
 
 
 
-  m->setResolution(0.1, 0.2, 0.3);
-  m->setOrigin(100.3, 987.234, 0.0);
+  m->setResolution(0.1f, 0.2f, 0.3f);
+  m->setOrigin(100.3f, 987.234f, 0.0f);
 
 
   QVector<size_t> dim(1, 3);

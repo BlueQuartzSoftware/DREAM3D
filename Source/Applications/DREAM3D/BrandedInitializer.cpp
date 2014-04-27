@@ -38,6 +38,9 @@
 #include <QtCore/QTime>
 #include <QtCore/QPluginLoader>
 #include <QtCore/QCoreApplication>
+#include <QtCore/QFileInfo>
+#include <QtCore/QDir>
+#include <QtGui/QApplication>
 #include <QtGui/QSplashScreen>
 #include <QtGui/QBitmap>
 #include <QtGui/QMessageBox>

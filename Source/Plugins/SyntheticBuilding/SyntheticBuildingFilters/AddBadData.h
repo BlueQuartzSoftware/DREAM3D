@@ -37,6 +37,7 @@
 #ifndef AddBadData_H_
 #define AddBadData_H_
 
+#include <QtCore/QObject>
 #include <QtCore/QString>
 #include <vector>
 

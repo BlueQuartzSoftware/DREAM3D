@@ -105,7 +105,7 @@ DREAM3D_UI::DREAM3D_UI(QWidget *parent) :
   m_IssuesBtn(NULL)
 {
   // First thing, set the title of the window
-  setWindowTitle("DREAM.3D Version " + DREAM3DLib::Version::Package());
+	setWindowTitle("[*] DREAM.3D Version " + DREAM3DLib::Version::Package());
 
   m_OpenDialogLastDirectory = QDir::homePath();
 
