@@ -10,9 +10,7 @@
     <height>55</height>
    </rect>
   </property>
-  <property name="windowTitle">
-   <string>DataArraySelectionWidget</string>
-  </property>
+
   <layout class="QGridLayout" name="widgetLayout">
    <property name="margin">
     <number>2</number>

@@ -10,9 +10,7 @@
     <height>126</height>
    </rect>
   </property>
-  <property name="windowTitle">
-   <string>DataContainerArrayProxyWidget</string>
-  </property>
+
   <layout class="QHBoxLayout" name="horizontalLayout">
    <property name="spacing">
     <number>4</number>

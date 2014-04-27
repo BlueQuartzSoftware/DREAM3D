@@ -10,9 +10,7 @@
     <height>652</height>
    </rect>
   </property>
-  <property name="windowTitle">
-   <string>Form</string>
-  </property>
+
   <property name="title" stdset="0">
    <string>Image Stack Import</string>
   </property>

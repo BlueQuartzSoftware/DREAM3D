@@ -10,9 +10,7 @@
     <height>188</height>
    </rect>
   </property>
-  <property name="windowTitle">
-   <string>ShapeTypeSelectionWidget</string>
-  </property>
+
   <layout class="QGridLayout" name="widgetLayout">
    <property name="margin">
     <number>2</number>

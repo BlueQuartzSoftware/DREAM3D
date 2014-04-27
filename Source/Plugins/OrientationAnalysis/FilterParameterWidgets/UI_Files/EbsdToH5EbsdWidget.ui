@@ -10,9 +10,7 @@
     <height>648</height>
    </rect>
   </property>
-  <property name="windowTitle">
-   <string>Form</string>
-  </property>
+
   <layout class="QGridLayout" name="gridLayout_3">
    <property name="leftMargin">
     <number>6</number>
