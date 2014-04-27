@@ -31,7 +31,7 @@ padding-left: 5px;
 </string>
   </property>
   <property name="windowTitle">
-   <string>Favorite Pipelines</string>
+   <string>[*]Favorite Pipelines</string>
   </property>
   <widget class="QWidget" name="dockWidgetContents">
    <layout class="QHBoxLayout" name="horizontalLayout">

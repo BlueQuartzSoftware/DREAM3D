@@ -34,7 +34,7 @@ padding-left: 5px;
    <set>QDockWidget::AllDockWidgetFeatures</set>
   </property>
   <property name="windowTitle">
-   <string>Filter Library</string>
+   <string>[*]Filter Library</string>
   </property>
   <widget class="QWidget" name="dockWidgetContents">
    <layout class="QHBoxLayout" name="horizontalLayout">

@@ -17,7 +17,7 @@
    </sizepolicy>
   </property>
   <property name="windowTitle">
-   <string>ActiveDocument.txt</string>
+   <string>[*]ActiveDocument.txt</string>
   </property>
   <property name="styleSheet">
    <string notr="true"> QStatusBar {
@@ -276,7 +276,7 @@ border: 2px solid;
   <widget class="QStatusBar" name="statusbar"/>
   <widget class="FavoritesDockWidget" name="favoritesDockWidget">
    <property name="windowTitle">
-    <string>Favorite Pipelines</string>
+    <string>[*]Favorite Pipelines</string>
    </property>
    <attribute name="dockWidgetArea">
     <number>1</number>
@@ -284,7 +284,7 @@ border: 2px solid;
   </widget>
   <widget class="IssuesDockWidget" name="issuesDockWidget">
    <property name="windowTitle">
-    <string>Pipeline Issues</string>
+    <string>[*]Pipeline Issues</string>
    </property>
    <attribute name="dockWidgetArea">
     <number>1</number>
@@ -292,7 +292,7 @@ border: 2px solid;
   </widget>
   <widget class="PrebuiltPipelinesDockWidget" name="prebuiltPipelinesDockWidget">
    <property name="windowTitle">
-    <string>Prebuilt Pipelines</string>
+    <string>[*]Prebuilt Pipelines</string>
    </property>
    <attribute name="dockWidgetArea">
     <number>1</number>
@@ -300,7 +300,7 @@ border: 2px solid;
   </widget>
   <widget class="FilterLibraryDockWidget" name="filterLibraryDockWidget">
    <property name="windowTitle">
-    <string>Filter Library</string>
+    <string>[*]Filter Library</string>
    </property>
    <attribute name="dockWidgetArea">
     <number>1</number>
@@ -308,7 +308,7 @@ border: 2px solid;
   </widget>
   <widget class="FilterListDockWidget" name="filterListDockWidget">
    <property name="windowTitle">
-    <string>Filter List</string>
+    <string>[*]Filter List</string>
    </property>
    <attribute name="dockWidgetArea">
     <number>1</number>
