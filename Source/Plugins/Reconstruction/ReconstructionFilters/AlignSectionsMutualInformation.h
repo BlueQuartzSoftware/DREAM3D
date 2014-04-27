@@ -96,11 +96,6 @@ class AlignSectionsMutualInformation : public AlignSections
     virtual void execute();
     virtual void preflight();
 
-  signals:
-    void updateFilterParameters(AbstractFilter* filter);
-    void parametersChanged();
-    void preflightAboutToExecute();
-    void preflightExecuted();
 
   protected:
     AlignSectionsMutualInformation();

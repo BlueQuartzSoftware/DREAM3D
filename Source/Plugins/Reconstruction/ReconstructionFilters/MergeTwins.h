@@ -119,11 +119,14 @@ class MergeTwins : public GroupFeatures
     virtual void execute();
     virtual void preflight();
 
-  signals:
-    void updateFilterParameters(AbstractFilter* filter);
-    void parametersChanged();
-    void preflightAboutToExecute();
-    void preflightExecuted();
+#if 0
+signals:
+	void updateFilterParameters(AbstractFilter* filter);
+	void parametersChanged();
+	void preflightAboutToExecute();
+	void preflightExecuted();
+#endif // 0
+
 
   protected:
     MergeTwins();
