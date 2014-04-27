@@ -478,7 +478,6 @@ void InitializeSyntheticVolumeWidget::on_m_XResolution_valueChanged(double v)
 int InitializeSyntheticVolumeWidget::estimate_numFeatures(int xpoints, int ypoints, int zpoints, float xres, float yres, float zres)
 {
   float totalvol;
-  int phase;
   int gid = 1;
 
   totalvol = (xpoints * xres) * (ypoints * yres) * (zpoints * zres);

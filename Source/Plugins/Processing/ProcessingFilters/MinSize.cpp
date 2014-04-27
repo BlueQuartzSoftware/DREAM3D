@@ -165,7 +165,7 @@ void MinSize::execute()
 
   numFeatures = 0;
   int64_t totalPoints = m_FeatureIdsPtr.lock()->getNumberOfTuples();
-  for(size_t iter=0;iter<totalPoints;iter++)
+  for (int64_t iter = 0; iter<totalPoints; iter++)
   {
     if(m_FeatureIds[iter] > numFeatures) numFeatures = m_FeatureIds[iter];
   }

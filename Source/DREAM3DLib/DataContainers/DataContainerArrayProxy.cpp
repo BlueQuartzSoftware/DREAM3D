@@ -372,5 +372,7 @@ DataContainerProxy& DataContainerArrayProxy::getDataContainerProxy(const QString
     DataContainerProxy& dc = iter.next();
     if(dc.name.compare(name) == 0) { return dc;}
   }
-
+  DataContainerProxy proxy;
+  list.push_back(proxy);
+  return list.back();
 }
