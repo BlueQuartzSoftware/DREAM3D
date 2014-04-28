@@ -62,7 +62,7 @@ class HoughCircles : public AbstractFilter
     * @brief This returns a string that is displayed in the GUI and helps to sort the filters into
     * a subgroup. It should be readable and understandable by humans.
     */
-    virtual const std::string getSubGroupName() { return "Misc"; }
+    virtual const std::string getSubGroupName() { return ImageProcessing::FilterSubGroups::Processing; }
 
     /**
     * @brief This method will instantiate all the end user settable options/parameters

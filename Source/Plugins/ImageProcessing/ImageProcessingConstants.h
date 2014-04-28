@@ -114,6 +114,12 @@ namespace ImageProcessing
 
   typedef itk::ImageRegionConstIterator< ImageProcessing::RGBUInt8PixelType > RGBUInt8ConstIteratorType;
   //typedef itk::ImageRegionConstIterator< RGBAFloatPixelType > RGBAFloatConstIteratorType;
+
+  namespace FilterSubGroups
+  {
+    const std::string Filtering("Filtering");
+    const std::string Processing("Processing");
+  }
 }
 
 #endif /* _ImageProcessingConstants_H_ */
