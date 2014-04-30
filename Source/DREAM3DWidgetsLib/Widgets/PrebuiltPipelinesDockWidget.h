@@ -98,7 +98,7 @@ class DREAM3DWidgetsLib_EXPORT  PrebuiltPipelinesDockWidget : public QDockWidget
     virtual QDir findPipelinesDirectory();
     virtual void readPipelines();
     void addPipelinesRecursively(QDir currentDir, QTreeWidgetItem* currentDirItem, QString iconFileName,
-                                 bool allowEditing, QString fileExtension, FilterLibraryTreeWidget::ItemType itemType);
+                                 bool allowEditing, QStringList filters, FilterLibraryTreeWidget::ItemType itemType);
     virtual QStringList generateFilterListFromPipelineFile(QString path);
 
 
