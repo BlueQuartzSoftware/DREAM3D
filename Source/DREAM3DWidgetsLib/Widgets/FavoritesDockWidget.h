@@ -110,7 +110,7 @@ public slots:
     bool hasDuplicateFavorites(QList<QTreeWidgetItem*> favoritesList, QString favoritePath, QString newFavoriteTitle, QTreeWidgetItem* item);
 
     void addPipelinesRecursively(QDir currentDir, QTreeWidgetItem* currentDirItem, QString iconFileName,
-                               bool allowEditing, QString fileExtension, FilterLibraryTreeWidget::ItemType itemType);
+                               bool allowEditing, QStringList filters, FilterLibraryTreeWidget::ItemType itemType);
 
 
 

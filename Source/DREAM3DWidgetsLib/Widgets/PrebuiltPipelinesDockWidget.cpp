@@ -151,7 +151,9 @@ void PrebuiltPipelinesDockWidget::readPipelines()
   FilterLibraryTreeWidget::ItemType itemType = FilterLibraryTreeWidget::Leaf_Item_Type;
   QString iconFileName(":/text.png");
   bool allowEditing = false;
-  QString fileExtension("*.txt");
+  QStringList fileExtension;
+  fileExtension.append("*.txt");
+  fileExtension.append("*.ini");
   // Need to add the path to the prebuilts directory to the root item since we may use this later on.
   filterLibraryTree->invisibleRootItem()->setData(0, Qt::UserRole, QVariant(pipelinesDir.absolutePath()));
 
@@ -165,7 +167,7 @@ void PrebuiltPipelinesDockWidget::readPipelines()
 //
 // -----------------------------------------------------------------------------
 void PrebuiltPipelinesDockWidget::addPipelinesRecursively(QDir currentDir, QTreeWidgetItem* currentDirItem, QString iconFileName,
-                                                bool allowEditing, QString fileExtension, FilterLibraryTreeWidget::ItemType itemType)
+                                                bool allowEditing, QStringList filters, FilterLibraryTreeWidget::ItemType itemType)
 {
 
 
@@ -187,12 +189,11 @@ void PrebuiltPipelinesDockWidget::addPipelinesRecursively(QDir currentDir, QTree
       nextDirItem->setText(0, fi.baseName());
       nextDirItem->setIcon(0, QIcon(":/folder_blue.png"));
       nextDirItem->setData(0, Qt::UserRole, QVariant(fi.absoluteFilePath() ) );
-      addPipelinesRecursively( QDir( fi.absoluteFilePath() ), nextDirItem, iconFileName, allowEditing, fileExtension, itemType );   // Recursive call
+      addPipelinesRecursively( QDir( fi.absoluteFilePath() ), nextDirItem, iconFileName, allowEditing, filters, itemType );   // Recursive call
     }
   }
 
-  QStringList filters;
-  filters << fileExtension;
+
   QFileInfoList itemList = currentDir.entryInfoList(filters);
   foreach(QFileInfo itemInfo, itemList)
   {
