@@ -510,7 +510,7 @@ void EbsdToH5EbsdWidget::on_m_RefFrameOptionsBtn_clicked()
     }
     QString ebsdFileName = (fileList[0]);
 
-    m_IdentifyRefFrame();
+    identifyRefFrame();
 
     QEbsdReferenceFrameDialog d(ebsdFileName, this);
     d.setEbsdFileName(ebsdFileName);
@@ -531,53 +531,61 @@ void EbsdToH5EbsdWidget::on_m_RefFrameOptionsBtn_clicked()
     }
 }
 
-
-void EbsdToH5EbsdWidget::m_IdentifyRefFrame()
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void EbsdToH5EbsdWidget::identifyRefFrame()
 {
-    // TSL/EDAX
-    if (      m_SampleTransformation.angle == 180
-           && m_SampleTransformation.h == 0
-           && m_SampleTransformation.k == 1
-           && m_SampleTransformation.l == 0
+  m_TSLchecked = false;
+  m_HKLchecked = false;
+  m_NoTranschecked = false;
+  m_HEDMchecked = false;
 
-           && m_EulerTransformation.angle == 90
-           && m_EulerTransformation.h == 0
-           && m_EulerTransformation.k == 0
-           && m_EulerTransformation.l == 1
+  // TSL/EDAX
+  if (      m_SampleTransformation.angle == 180.0f
+            && m_SampleTransformation.h == 0.0f
+            && m_SampleTransformation.k == 1.0f
+            && m_SampleTransformation.l == 0.0f
+
+            && m_EulerTransformation.angle == 90.0f
+            && m_EulerTransformation.h == 0.0f
+            && m_EulerTransformation.k == 0.0f
+            && m_EulerTransformation.l == 1.0f
             )
 
-    {m_TSLchecked = true;
-     m_NoTranschecked = false;}
+  {
+    m_TSLchecked = true;
+    m_NoTranschecked = false;
+  } else if (       m_SampleTransformation.angle == 180.0f    // HKL
+                    && m_SampleTransformation.h == 0.0f
+                    && m_SampleTransformation.k == 1.0f
+                    && m_SampleTransformation.l == 0.0f
 
-    // HKL
-    else if (       m_SampleTransformation.angle == 180
-            && m_SampleTransformation.h == 0
-            && m_SampleTransformation.k == 1
-            && m_SampleTransformation.l == 0
+                    && m_EulerTransformation.angle == 0.0f
+                    && m_EulerTransformation.h == 0.0f
+                    && m_EulerTransformation.k == 0.0f
+                    && m_EulerTransformation.l == 1.0f
+                    )
 
-            && m_EulerTransformation.angle == 0
-            && m_EulerTransformation.h == 0
-            && m_EulerTransformation.k == 0
-            && m_EulerTransformation.l == 1
-            )
+  {
+    m_HKLchecked = true;
+    m_NoTranschecked = false;
+  }
+  else if (       m_SampleTransformation.angle == 0.0f     // HEDM
+                  && m_SampleTransformation.h == 0.0f
+                  && m_SampleTransformation.k == 0.0f
+                  && m_SampleTransformation.l == 1.0f
 
-    {m_HKLchecked = true;
-     m_NoTranschecked = false;}
+                  && m_EulerTransformation.angle == 0.0f
+                  && m_EulerTransformation.h == 0.0f
+                  && m_EulerTransformation.k == 0.0f
+                  && m_EulerTransformation.l == 1.0f
+                  )
 
-    // HEDM
-    else if (       m_SampleTransformation.angle == 0
-            && m_SampleTransformation.h == 0
-            && m_SampleTransformation.k == 0
-            && m_SampleTransformation.l == 1
-
-            && m_EulerTransformation.angle == 0
-            && m_EulerTransformation.h == 0
-            && m_EulerTransformation.k == 0
-            && m_EulerTransformation.l == 1
-            )
-
-    {m_HEDMchecked = true;
-     m_NoTranschecked = false;}
+  {
+    m_HEDMchecked = true;
+    m_NoTranschecked = false;
+  }
 
 
 }
