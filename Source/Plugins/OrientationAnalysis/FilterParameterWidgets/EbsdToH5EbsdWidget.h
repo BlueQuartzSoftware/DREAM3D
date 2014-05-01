@@ -161,7 +161,8 @@ class EbsdToH5EbsdWidget : public QWidget, private Ui::EbsdToH5EbsdWidget
     /**
      * @brief IdentifyRefFrame
      */
-    void IdentifyRefFrame();
+
+    void identifyRefFrame();
 
 
 
