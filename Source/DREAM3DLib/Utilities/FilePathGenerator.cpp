@@ -61,8 +61,14 @@ QVector<QString> FilePathGenerator::GenerateFileList(int start, int end, bool &h
                                                       const QString& fileSuffix, const QString& fileExtension,
                                                       int paddingDigits)
 {
-  int index = 0;
   QVector<QString> fileList;
+    QDir dir(inputPath);
+    if(dir.exists() == false)
+    {
+        return fileList;
+    }
+    int index = 0;
+
   QString filename;
   for (int i = 0; i < (end-start)+1; ++i)
   {
