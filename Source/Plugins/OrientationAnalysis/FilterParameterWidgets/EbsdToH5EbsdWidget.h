@@ -55,6 +55,8 @@
 
 #include "ui_EbsdToH5EbsdWidget.h"
 
+#include "EbsdLib/EbsdTransform.h"
+
 
 class EbsdToH5Ebsd;
 

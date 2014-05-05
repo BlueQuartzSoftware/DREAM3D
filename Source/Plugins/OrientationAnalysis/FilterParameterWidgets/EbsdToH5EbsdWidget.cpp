@@ -544,54 +544,23 @@ void EbsdToH5EbsdWidget::identifyRefFrame()
   m_NoTranschecked = false;
   m_HEDMchecked = false;
 
-  // TSL/EDAX
-  if (      m_SampleTransformation.angle == 180.0f
-            && m_SampleTransformation.h == 0.0f
-            && m_SampleTransformation.k == 1.0f
-            && m_SampleTransformation.l == 0.0f
+    if (EbsdTransform::IdentifyStandardTransformation(m_SampleTransformation, m_EulerTransformation)==Ebsd::TSLdefault)
+    {
+        m_TSLchecked = true;
+        m_NoTranschecked = false;
+    }
 
+    if(EbsdTransform::IdentifyStandardTransformation(m_SampleTransformation, m_EulerTransformation)==Ebsd::HKLdefault)
+    {
+        m_HKLchecked = true;
+        m_NoTranschecked = false;
+    }
 
-            && m_EulerTransformation.angle == 90.0f
-            && m_EulerTransformation.h == 0.0f
-            && m_EulerTransformation.k == 0.0f
-            && m_EulerTransformation.l == 1.0f
-            )
-
-
-  {
-    m_TSLchecked = true;
-    m_NoTranschecked = false;
-  } else if (       m_SampleTransformation.angle == 180.0f    // HKL
-                    && m_SampleTransformation.h == 0.0f
-                    && m_SampleTransformation.k == 1.0f
-                    && m_SampleTransformation.l == 0.0f
-
-                    && m_EulerTransformation.angle == 0.0f
-                    && m_EulerTransformation.h == 0.0f
-                    && m_EulerTransformation.k == 0.0f
-                    && m_EulerTransformation.l == 1.0f
-                    )
-
-  {
-    m_HKLchecked = true;
-    m_NoTranschecked = false;
-  }
-  else if (       m_SampleTransformation.angle == 0.0f     // HEDM
-                  && m_SampleTransformation.h == 0.0f
-                  && m_SampleTransformation.k == 0.0f
-                  && m_SampleTransformation.l == 1.0f
-
-                  && m_EulerTransformation.angle == 0.0f
-                  && m_EulerTransformation.h == 0.0f
-                  && m_EulerTransformation.k == 0.0f
-                  && m_EulerTransformation.l == 1.0f
-                  )
-
-  {
-    m_HEDMchecked = true;
-    m_NoTranschecked = false;
-  }
-
+    if(EbsdTransform::IdentifyStandardTransformation(m_SampleTransformation, m_EulerTransformation)==Ebsd::HEDMdefault)
+    {
+        m_HEDMchecked = true;
+        m_NoTranschecked = false;
+    }
 
 
 }

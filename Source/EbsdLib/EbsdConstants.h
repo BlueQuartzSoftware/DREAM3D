@@ -44,6 +44,7 @@
  * @brief This file contains many constants that are generic to the EBSD library
  */
 
+typedef struct { float angle; float h; float k; float l; } AxisAngleInput_t;
 
 namespace Ebsd
 {
