@@ -250,7 +250,7 @@ void VectorSegmentFeatures::randomizeFeatureIds(int64_t totalPoints, size_t tota
 {
   notifyStatusMessage(getHumanLabel(), "Randomizing Feature Ids");
   // Generate an even distribution of numbers between the min and max range
-  const size_t rangeMin = 0;
+  const size_t rangeMin = 1;
   const size_t rangeMax = totalFeatures - 1;
   initializeVoxelSeedGenerator(rangeMin, rangeMax);
 
@@ -337,12 +337,26 @@ bool VectorSegmentFeatures::determineGrouping(int64_t referencepoint, int64_t ne
     v2[0] = m_Vectors[3*neighborpoint+0];
     v2[1] = m_Vectors[3*neighborpoint+1];
     v2[2] = m_Vectors[3*neighborpoint+2];
+    if(v1[2] < 0) MatrixMath::Multiply3x1withConstant(v1, -1);
+    if(v2[2] < 0) MatrixMath::Multiply3x1withConstant(v2, -1);
     float w = GeometryMath::CosThetaBetweenVectors(v1, v2);
     w = acos(w);
-    if(w < angleTolerance || (DREAM3D::Constants::k_Pi-w) < angleTolerance)
+    if(w < angleTolerance)
     {
       group = true;
       m_FeatureIds[neighborpoint] = gnum;
+    }
+    else
+    {
+      v2[0] *= -1;
+      v2[1] *= -1;
+      w = GeometryMath::CosThetaBetweenVectors(v1, v2);
+      w = acos(w);
+      if(w < angleTolerance)
+      {
+        group = true;
+        m_FeatureIds[neighborpoint] = gnum;
+      }
     }
   }
 

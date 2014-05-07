@@ -280,7 +280,7 @@ void EBSDSegmentFeatures::randomizeFeatureIds(int64_t totalPoints, size_t totalF
 {
   notifyStatusMessage(getHumanLabel(), "Randomizing Feature Ids");
   // Generate an even distribution of numbers between the min and max range
-  const size_t rangeMin = 0;
+  const size_t rangeMin = 1;
   const size_t rangeMax = totalFeatures - 1;
   initializeVoxelSeedGenerator(rangeMin, rangeMax);
 
