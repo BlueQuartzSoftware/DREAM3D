@@ -78,6 +78,7 @@ class AlignSections : public AbstractFilter
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::ReconstructionFilters; }
     virtual const QString getSubGroupName() {return DREAM3D::FilterSubGroups::AlignmentFilters;}
     virtual const QString getHumanLabel() { return "Align Sections"; }
+    virtual const QString getBrandingString() { return "DREAM3D Reconstruction Plugin"; }
 
     virtual void setupFilterParameters();
 
