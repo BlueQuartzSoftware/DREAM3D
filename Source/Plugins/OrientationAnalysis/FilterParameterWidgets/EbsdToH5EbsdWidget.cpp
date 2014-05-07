@@ -513,7 +513,6 @@ void EbsdToH5EbsdWidget::on_m_RefFrameOptionsBtn_clicked()
 
     identifyRefFrame();
 
-
     QEbsdReferenceFrameDialog d(ebsdFileName, this);
     d.setEbsdFileName(ebsdFileName);
     d.setTSLDefault(m_TSLchecked);
@@ -544,6 +543,7 @@ void EbsdToH5EbsdWidget::identifyRefFrame()
   m_NoTranschecked = false;
   m_HEDMchecked = false;
 
+
     if (EbsdTransform::IdentifyStandardTransformation(m_SampleTransformation, m_EulerTransformation)==Ebsd::TSLdefault)
     {
         m_TSLchecked = true;
@@ -563,6 +563,7 @@ void EbsdToH5EbsdWidget::identifyRefFrame()
     }
 
 
+
 }
 
 // -----------------------------------------------------------------------------
@@ -573,6 +574,7 @@ void EbsdToH5EbsdWidget::m_findEbsdMaxSliceAndPrefix()
     if (m_InputDir->text().length() == 0) { return; }
     QDir dir(m_InputDir->text());
     m_FileExt->setText("");
+
     {
         QString ext = ".ang";
         QStringList filters;

@@ -145,6 +145,7 @@ void DataArraySelectionWidget::setupGui()
 
   populateComboBoxes();
 
+  blockSignals(true);
   // is the filter parameter tied to a boolean property of the Filter Instance, if it is then we need to make the check box visible
   if(m_FilterParameter->isConditional() == true)
   {
@@ -154,6 +155,7 @@ void DataArraySelectionWidget::setupGui()
     dataContainerList->setEnabled(boolProp);
     attributeMatrixList->setEnabled(boolProp);
     attributeArrayList->setEnabled(boolProp);
+    on_conditionalCB_stateChanged(conditionalCB->checkState());
   }
   else
   {
@@ -164,7 +166,7 @@ void DataArraySelectionWidget::setupGui()
     widgetLayout->removeWidget(linkRight);
     linkRight->deleteLater();
   }
-
+  blockSignals(false);
 
 }
 

@@ -105,7 +105,7 @@ DREAM3D_UI::DREAM3D_UI(QWidget *parent) :
   m_IssuesBtn(NULL)
 {
   // First thing, set the title of the window
-	setWindowTitle("[*] DREAM.3D Version " + DREAM3DLib::Version::Package());
+  setWindowTitle("[*] DREAM.3D Version " + DREAM3DLib::Version::Package());
 
   m_OpenDialogLastDirectory = QDir::homePath();
 
@@ -180,10 +180,10 @@ void DREAM3D_UI::on_actionImportPipeline_triggered()
 // -----------------------------------------------------------------------------
 void DREAM3D_UI::on_actionExportPipeline_triggered()
 {
-  QString proposedFile = m_OpenDialogLastDirectory + QDir::separator() + "Untitled.txt";
+  QString proposedFile = m_OpenDialogLastDirectory + QDir::separator() + "Untitled";
   QString filePath = QFileDialog::getSaveFileName(this, tr("Save Pipeline To File"),
                                                   proposedFile,
-                                                  tr("Pipeline File (*.txt *.ini)") );
+                                                  tr("Pipeline File (*.txt *.ini);;All Files(*.*)") );
   if ( true == filePath.isEmpty() ) { return; }
 
   //If the filePath already exists - delete it so that we get a clean write to the file
@@ -1281,7 +1281,7 @@ void DREAM3D_UI::updateAndSyncDockWidget(QAction* action, QDockWidget* dock, QTo
   action->setChecked(b);
   btn->setChecked(b);
   dock->setVisible(b);
-
+#if 0
   if(b == false)
   {
     QString text = action->text().replace("Show", "Hide");
@@ -1292,7 +1292,7 @@ void DREAM3D_UI::updateAndSyncDockWidget(QAction* action, QDockWidget* dock, QTo
     QString text = action->text().replace("Hide", "Show");
     action->setText(text);
   }
-
+#endif
   action->blockSignals(false);
   dock->blockSignals(false);
   btn->blockSignals(false);

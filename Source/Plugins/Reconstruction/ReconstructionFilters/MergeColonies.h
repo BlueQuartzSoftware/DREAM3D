@@ -101,6 +101,7 @@ class MergeColonies : public GroupFeatures
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::ReconstructionFilters; }
     virtual const QString getSubGroupName() {return DREAM3D::FilterSubGroups::GroupingFilters;}
     virtual const QString getHumanLabel() { return "Reconstruct Prior Beta Features"; }
+    virtual const QString getBrandingString() { return "DREAM3D Reconstruction Plugin"; }
 
     DREAM3D_FILTER_PARAMETER(float, AxisTolerance)
     Q_PROPERTY(float AxisTolerance READ getAxisTolerance WRITE setAxisTolerance)

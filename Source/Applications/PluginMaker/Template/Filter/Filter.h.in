@@ -22,18 +22,23 @@ class @ClassName@ : public AbstractFilter
 {
       Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
-    DREAM3D_SHARED_POINTERS(@ClassName@);
-    DREAM3D_STATIC_NEW_MACRO(@ClassName@);
-    DREAM3D_TYPE_MACRO_SUPER(@ClassName@, AbstractFilter);
+    DREAM3D_SHARED_POINTERS(@ClassName@)
+    DREAM3D_STATIC_NEW_MACRO(@ClassName@)
+    DREAM3D_TYPE_MACRO_SUPER(@ClassName@, AbstractFilter)
 
     virtual ~@ClassName@();
 
-    /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to
-    DREAM3D_FILTER_PARAMETER(QString, ImagePrefix)
-    Q_PROPERTY(QString ImagePrefix READ getImagePrefix WRITE setImagePrefix)
-    DREAM3D_FILTER_PARAMETER(int, ImageSize)
-    Q_PROPERTY(int ImageSize READ getImageSize WRITE setImageSize)
-    */
+    /* Place your input parameters here using the DREAM3D macros to declare the Filter Parameters
+     * or other instance variables
+     */
+    //DREAM3D_FILTER_PARAMETER(QString, ImagePrefix)
+    /* If you declare a filter parameter above then you MUST create a Q_PROPERTY for that FilterParameter */
+    //Q_PROPERTY(QString ImagePrefix READ getImagePrefix WRITE setImagePrefix)
+
+    /* Here is another example of declaring an integer FilterParameter */
+    // DREAM3D_FILTER_PARAMETER(int, ImageSize)
+    // Q_PROPERTY(int ImageSize READ getImageSize WRITE setImageSize)
+
 
 
     /**
@@ -41,14 +46,6 @@ class @ClassName@ : public AbstractFilter
      * @return
      */
     virtual const QString getCompiledLibraryName();
-
-    /**
-     * @brief newFilterInstance Returns a new instance of the filter optionally copying the filter parameters from the
-     * current filter to the new instance.
-     * @param copyFilterParameters
-     * @return
-     */
-    virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
 
     /**
     * @brief This returns the group that the filter belonds to. You can select
@@ -101,11 +98,19 @@ class @ClassName@ : public AbstractFilter
     */
     virtual void preflight();
 
+    /**
+     * @brief newFilterInstance Returns a new instance of the filter optionally copying the filter parameters from the
+     * current filter to the new instance.
+     * @param copyFilterParameters
+     * @return
+     */
+    virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
+
   signals:
     /**
      * @brief updateFilterParameters This is emitted when the filter requests all the latest Filter Parameters need to be
      * pushed from a user facing control such as the FilterParameter Widget
-     * @param filter
+     * @param filter The filter to push the values into
      */
     void updateFilterParameters(AbstractFilter* filter);
 

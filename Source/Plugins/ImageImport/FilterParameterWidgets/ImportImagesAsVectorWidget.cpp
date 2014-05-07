@@ -37,28 +37,13 @@
 #include "ImportImagesAsVectorWidget.h"
 
 //-- Qt Includes
-//#include <QtCore/QFileInfo>
-//#include <QtCore/QFile>
 #include <QtCore/QDir>
-//#include <QtCore/QString>
-//#include <QtCore/QUrl>
-//#include <QtCore/QThread>
-//#include <QtCore/QFileInfoList>
 #include <QtGui/QFileDialog>
-//#include <QtGui/QCloseEvent>
-//#include <QtGui/QMessageBox>
-//#include <QtGui/QListWidget>
-//#include <QtGui/QListWidgetItem>
-//#include <QtGui/QButtonGroup>
 
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Utilities/FilePathGenerator.h"
 
-//#include "QtSupport/QCheckboxDialog.h"
 #include "QtSupport/QFileCompleter.h"
-//#include "QtSupport/DREAM3DQtMacros.h"
-//#include "QtSupport/DREAM3DHelpUrlGenerator.h"
-
 
 #include "ImageImport/ImageImportFilters/ImportImagesAsVector.h"
 
@@ -129,12 +114,60 @@ void ImportImagesAsVectorWidget::setupGui()
   QObject::connect( com, SIGNAL(activated(const QString &)),
                     this, SLOT(on_m_InputDir_textChanged(const QString &)));
 
+  {
+    QDoubleValidator* validator = new QDoubleValidator(xRes);
+    validator->setDecimals(4);
+    xRes->setValidator(validator);
+  }
+  {
+    QDoubleValidator* validator = new QDoubleValidator(yRes);
+    validator->setDecimals(4);
+    yRes->setValidator(validator);
+  }
+  {
+    QDoubleValidator* validator = new QDoubleValidator(zRes);
+    validator->setDecimals(4);
+    zRes->setValidator(validator);
+  }
+  {
+    QDoubleValidator* validator = new QDoubleValidator(xOrigin);
+    validator->setDecimals(4);
+    xOrigin->setValidator(validator);
+  }
+  {
+    QDoubleValidator* validator = new QDoubleValidator(yOrigin);
+    validator->setDecimals(4);
+    yOrigin->setValidator(validator);
+  }
+  {
+    QDoubleValidator* validator = new QDoubleValidator(zOrigin);
+    validator->setDecimals(4);
+    zOrigin->setValidator(validator);
+  }
 
   m_WidgetList << m_InputDir << m_InputDirBtn;
   m_WidgetList << m_FileExt << m_ErrorMessage << m_TotalDigits;
   m_WidgetList << m_FilePrefix << m_TotalSlices << m_StartIndex << m_EndIndex;
+  m_WidgetList << xRes << yRes << zRes;
+  m_WidgetList << xOrigin << yOrigin << zOrigin;
+
   m_ErrorMessage->setVisible(false);
 
+
+  // Manually hook up these signals/slots
+  connect(xRes, SIGNAL(textChanged(const QString&)),
+          this, SLOT(resolutionChanged(const QString&)));
+  connect(yRes, SIGNAL(textChanged(const QString&)),
+          this, SLOT(resolutionChanged(const QString&)));
+  connect(zRes, SIGNAL(textChanged(const QString&)),
+          this, SLOT(resolutionChanged(const QString&)));
+
+  connect(xOrigin, SIGNAL(textChanged(const QString&)),
+          this, SLOT(originChanged(const QString&)));
+  connect(yOrigin, SIGNAL(textChanged(const QString&)),
+          this, SLOT(originChanged(const QString&)));
+  connect(zOrigin, SIGNAL(textChanged(const QString&)),
+          this, SLOT(originChanged(const QString&)));
 
   getGuiParametersFromFilter();
 }
@@ -144,18 +177,25 @@ void ImportImagesAsVectorWidget::setupGui()
 // -----------------------------------------------------------------------------
 void ImportImagesAsVectorWidget::getGuiParametersFromFilter()
 {
+  blockSignals(true);
+  m_InputDir->setText(m_Filter->getInputPath());
+
   m_StartIndex->setValue( m_Filter->getStartIndex() );
   m_EndIndex->setValue( m_Filter->getEndIndex() );
 
   setResolutionValues();
   setOriginValues();
 
-  m_InputDir->setText(m_Filter->getInputPath());
   m_FilePrefix->setText(m_Filter->getFilePrefix());
   m_FileSuffix->setText(m_Filter->getFileSuffix());
-  m_FileExt->setText(m_Filter->getFileExtension());
+  QString ext = m_Filter->getFileExtension();
+  if(ext.isEmpty()) // Default to placing tif as the file extension instead of nothing.
+  {
+    ext = "tif";
+  }
+  m_FileExt->setText(ext);
   m_TotalDigits->setValue(m_Filter->getPaddingDigits());
-
+  blockSignals(false);
 }
 
 // -----------------------------------------------------------------------------
@@ -178,6 +218,23 @@ void ImportImagesAsVectorWidget::setOriginValues()
   xOrigin->setText(QString::number(data.x) );
   yOrigin->setText(QString::number(data.y) );
   zOrigin->setText(QString::number(data.z) );
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ImportImagesAsVectorWidget::resolutionChanged(const QString &string)
+{
+  emit parametersChanged();
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ImportImagesAsVectorWidget::originChanged(const QString &string)
+{
+  emit parametersChanged();
 }
 
 // -----------------------------------------------------------------------------
@@ -250,15 +307,6 @@ void ImportImagesAsVectorWidget::on_m_InputDir_textChanged(const QString & text)
   {
     m_FileListView->clear();
   }
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void ImportImagesAsVectorWidget::stackingOrderChanged(bool checked)
-{
-  generateExampleInputFile();
-  emit parametersChanged();
 }
 
 // -----------------------------------------------------------------------------
@@ -377,7 +425,7 @@ void ImportImagesAsVectorWidget::findMaxSliceAndPrefix()
 {
   if (m_InputDir->text().length() == 0) { return; }
   QDir dir(m_InputDir->text());
-  #if 0
+#if 0
   m_FileExt->setText("");
   {
     QString ext = ".ang";
@@ -490,22 +538,26 @@ void ImportImagesAsVectorWidget::widgetChanged(const QString &text)
 // -----------------------------------------------------------------------------
 void ImportImagesAsVectorWidget::filterNeedsInputParameters(AbstractFilter* filter)
 {
-  if (NULL == m_Filter)
+  if (NULL == filter)
   {
-    QString ss = QObject::tr("Error Setting ImportImagesAsVector Gui values to Filter instance. Filter instance was NULL.").arg(m_FilterParameter->getPropertyName());
+    QString ss = QObject::tr("Error Setting ImportImageStack Gui values to Filter instance. Filter instance was NULL.").arg(m_FilterParameter->getPropertyName());
     emit errorSettingFilterParameter(ss);
   }
-  bool ok = false;
-  m_Filter->setStartIndex(m_StartIndex->text().toLongLong(&ok));
-  m_Filter->setEndIndex(m_EndIndex->text().toLongLong(&ok));
-  m_Filter->setResolution(getResolutionValues());
-  m_Filter->setOrigin(getOriginValues());
 
-  m_Filter->setInputPath(m_InputDir->text());
-  m_Filter->setFilePrefix(m_FilePrefix->text());
-  m_Filter->setFileSuffix(m_FileSuffix->text());
-  m_Filter->setFileExtension(m_FileExt->text());
-  m_Filter->setPaddingDigits(m_TotalDigits->value());
+  ImportImagesAsVector* f = qobject_cast<ImportImagesAsVector*>(filter);
+  Q_ASSERT_X(NULL != m_Filter, "ImportImagesAsVectorWidget can ONLY be used with ImportImagesAsVector filter", __FILE__);
+
+  bool ok = false;
+  f->setInputPath(m_InputDir->text());
+  f->setResolution(getResolutionValues());
+  f->setOrigin(getOriginValues());
+
+  f->setFilePrefix(m_FilePrefix->text());
+  f->setFileSuffix(m_FileSuffix->text());
+  f->setFileExtension(m_FileExt->text());
+  f->setStartIndex(m_StartIndex->text().toLongLong(&ok));
+  f->setEndIndex(m_EndIndex->text().toLongLong(&ok));
+  f->setPaddingDigits(m_TotalDigits->value());
 }
 
 // -----------------------------------------------------------------------------

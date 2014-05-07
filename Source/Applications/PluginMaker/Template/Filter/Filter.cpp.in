@@ -175,7 +175,19 @@ AbstractFilter::Pointer @ClassName@::newFilterInstance(bool copyFilterParameters
   @ClassName@::Pointer filter = @ClassName@::New();
   if(true == copyFilterParameters)
   {
-    /* filter->setOutputFile( getOutputFile() ); */
+    /* If the filter uses all the standard Filter Parameter Widgets you can probabaly get
+     * away with using this method to copy the filter parameters from the current instance
+     * into the new instance
+     */
+    copyFilterParameterInstanceVariables(filter.get());
+    /* If your filter is using a lot of custom Filter Parameter widgets @see ReadH5Ebsd then you
+     * may need to copy each filter parameter explicitly plus any other instance variables that
+     * are needed into the new instance. Here is some example code from ReadH5Ebsd
+     */
+  //    DREAM3D_COPY_INSTANCEVAR(OutputFile)
+  //    DREAM3D_COPY_INSTANCEVAR(ZStartIndex)
+  //    DREAM3D_COPY_INSTANCEVAR(ZEndIndex)
+  //    DREAM3D_COPY_INSTANCEVAR(ZResolution)
   }
   return filter;
 }
