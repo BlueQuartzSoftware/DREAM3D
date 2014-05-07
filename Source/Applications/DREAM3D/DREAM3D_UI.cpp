@@ -1281,7 +1281,7 @@ void DREAM3D_UI::updateAndSyncDockWidget(QAction* action, QDockWidget* dock, QTo
   action->setChecked(b);
   btn->setChecked(b);
   dock->setVisible(b);
-
+#if 0
   if(b == false)
   {
     QString text = action->text().replace("Show", "Hide");
@@ -1292,7 +1292,7 @@ void DREAM3D_UI::updateAndSyncDockWidget(QAction* action, QDockWidget* dock, QTo
     QString text = action->text().replace("Hide", "Show");
     action->setText(text);
   }
-
+#endif
   action->blockSignals(false);
   dock->blockSignals(false);
   btn->blockSignals(false);

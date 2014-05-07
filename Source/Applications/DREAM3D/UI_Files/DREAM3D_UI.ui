@@ -316,7 +316,7 @@ border: 2px solid;
   </widget>
   <action name="actionShow_Filter_Library">
    <property name="text">
-    <string>Show Filter Library</string>
+    <string>Filter Library</string>
    </property>
    <property name="iconVisibleInMenu">
     <bool>false</bool>
@@ -324,7 +324,7 @@ border: 2px solid;
   </action>
   <action name="actionShow_Prebuilt_Pipelines">
    <property name="text">
-    <string>Show Prebuilt Pipelines</string>
+    <string>Prebuilt Pipelines</string>
    </property>
    <property name="iconVisibleInMenu">
     <bool>false</bool>
@@ -356,7 +356,7 @@ border: 2px solid;
   </action>
   <action name="actionShow_Favorites">
    <property name="text">
-    <string>Show Favorites</string>
+    <string>Favorites</string>
    </property>
    <property name="iconVisibleInMenu">
     <bool>false</bool>
@@ -377,7 +377,7 @@ border: 2px solid;
   </action>
   <action name="actionShow_Issues">
    <property name="text">
-    <string>Show Issues</string>
+    <string>Issues</string>
    </property>
    <property name="iconVisibleInMenu">
     <bool>false</bool>
@@ -385,7 +385,7 @@ border: 2px solid;
   </action>
   <action name="actionShow_Filter_List">
    <property name="text">
-    <string>Show Filter List</string>
+    <string>Filter List</string>
    </property>
    <property name="iconVisibleInMenu">
     <bool>false</bool>
