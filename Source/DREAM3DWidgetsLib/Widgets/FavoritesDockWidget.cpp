@@ -173,9 +173,9 @@ void FavoritesDockWidget::addPipelinesRecursively(QDir currentDir, QTreeWidgetIt
       // At this point we have the first level of directories and we want to do 2 things:
       // 1.Create an entry in the tree widget with this name
       // 2.drop into the directory and look for all the .txt files and add entries for those items.
-      qDebug() << fi.absoluteFilePath() << "\n";
+    //  qDebug() << fi.absoluteFilePath() << "\n";
       // Add a tree widget item for this  Group
-      qDebug() << fi.absoluteFilePath();
+    //  qDebug() << fi.absoluteFilePath();
       nextDirItem = new QTreeWidgetItem(currentDirItem, FilterLibraryTreeWidget::Node_Item_Type);
       nextDirItem->setText(0, fi.baseName());
       nextDirItem->setIcon(0, QIcon(":/folder_blue.png"));
