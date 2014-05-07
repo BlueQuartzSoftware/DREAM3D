@@ -114,6 +114,9 @@ class ImportImagesWidget : public QWidget, private Ui::ImportImagesWidget
     void on_m_ZStartIndex_valueChanged(int value);
     void on_m_ZEndIndex_valueChanged(int value);
 
+    void resolutionChanged(const QString &string);
+    void originChanged(const QString &string);
+
     void stackingOrderChanged(bool checked);
 
   protected:

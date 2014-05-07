@@ -101,6 +101,7 @@ class VectorSegmentFeatures : public SegmentFeatures
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::ReconstructionFilters; }
     virtual const QString getSubGroupName() {return DREAM3D::FilterSubGroups::SegmentationFilters;}
     virtual const QString getHumanLabel() { return "Segment Features (Vector)"; }
+    virtual const QString getBrandingString() { return "DREAM3D Reconstruction Plugin"; }
 
     virtual void setupFilterParameters();
     /**

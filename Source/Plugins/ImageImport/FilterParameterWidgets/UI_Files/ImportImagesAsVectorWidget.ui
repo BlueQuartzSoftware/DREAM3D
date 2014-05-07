@@ -10,7 +10,6 @@
     <height>652</height>
    </rect>
   </property>
-
   <property name="title" stdset="0">
    <string>Image Stack Import</string>
   </property>
@@ -515,6 +514,23 @@ font-size: 11px;
    <header location="global">QFSDropLineEdit.h</header>
   </customwidget>
  </customwidgets>
+ <tabstops>
+  <tabstop>m_InputDir</tabstop>
+  <tabstop>m_InputDirBtn</tabstop>
+  <tabstop>xOrigin</tabstop>
+  <tabstop>yOrigin</tabstop>
+  <tabstop>zOrigin</tabstop>
+  <tabstop>xRes</tabstop>
+  <tabstop>yRes</tabstop>
+  <tabstop>zRes</tabstop>
+  <tabstop>m_FilePrefix</tabstop>
+  <tabstop>m_FileSuffix</tabstop>
+  <tabstop>m_FileExt</tabstop>
+  <tabstop>m_StartIndex</tabstop>
+  <tabstop>m_EndIndex</tabstop>
+  <tabstop>m_TotalDigits</tabstop>
+  <tabstop>m_FileListView</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

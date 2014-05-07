@@ -158,6 +158,13 @@ class EbsdToH5EbsdWidget : public QWidget, private Ui::EbsdToH5EbsdWidget
      */
     void getGuiParametersFromFilter();
 
+    /**
+     * @brief m_IdentifyRefFrame
+     */
+    void identifyRefFrame();
+
+
+
 
   private:
     EbsdToH5Ebsd*               m_Filter;

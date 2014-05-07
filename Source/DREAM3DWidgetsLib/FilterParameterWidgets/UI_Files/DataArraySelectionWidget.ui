@@ -10,9 +10,17 @@
     <height>57</height>
    </rect>
   </property>
-
   <layout class="QGridLayout" name="widgetLayout">
-   <property name="margin">
+   <property name="leftMargin">
+    <number>2</number>
+   </property>
+   <property name="topMargin">
+    <number>2</number>
+   </property>
+   <property name="rightMargin">
+    <number>2</number>
+   </property>
+   <property name="bottomMargin">
     <number>2</number>
    </property>
    <item row="1" column="7" rowspan="2">
@@ -71,6 +79,9 @@
          <verstretch>0</verstretch>
         </sizepolicy>
        </property>
+       <property name="toolTip">
+        <string>This is the DataContainer selection</string>
+       </property>
       </widget>
      </item>
      <item>
@@ -81,6 +92,9 @@
          <verstretch>0</verstretch>
         </sizepolicy>
        </property>
+       <property name="toolTip">
+        <string>This is the AttributeMatrix selection</string>
+       </property>
       </widget>
      </item>
      <item>
@@ -90,6 +104,9 @@
          <horstretch>0</horstretch>
          <verstretch>0</verstretch>
         </sizepolicy>
+       </property>
+       <property name="toolTip">
+        <string>This is the Data Array selection</string>
        </property>
       </widget>
      </item>

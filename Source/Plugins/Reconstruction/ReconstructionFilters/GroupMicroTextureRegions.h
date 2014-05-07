@@ -115,6 +115,7 @@ class GroupMicroTextureRegions : public GroupFeatures
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::ReconstructionFilters; }
     virtual const QString getSubGroupName() {return DREAM3D::FilterSubGroups::GroupingFilters;}
     virtual const QString getHumanLabel() { return "Identify MicroTexture (C-Axis Misalignment)"; }
+    virtual const QString getBrandingString() { return "DREAM3D Reconstruction Plugin"; }
 
     /**
      * @brief setupFilterParameters
@@ -154,7 +155,7 @@ class GroupMicroTextureRegions : public GroupFeatures
     virtual bool determineGrouping(int referenceFeature, int neighborFeature, int newFid);
 
     void characterize_micro_texture_regions();
-    
+
     /**
      * @brief randomizeGrainIds
      * @param totalPoints
@@ -179,7 +180,7 @@ class GroupMicroTextureRegions : public GroupFeatures
 
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(unsigned int, CrystalStructures)
 
-  	float avgCaxes[3];
+    float avgCaxes[3];
 
     QVector<OrientationOps::Pointer> m_OrientationOps;
 
