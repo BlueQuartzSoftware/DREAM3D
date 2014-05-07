@@ -112,7 +112,10 @@ class ImportImagesAsVectorWidget : public QWidget, private Ui::ImportImagesAsVec
     void on_m_StartIndex_valueChanged(int value);
     void on_m_EndIndex_valueChanged(int value);
 
-    void stackingOrderChanged(bool checked);
+    void resolutionChanged(const QString &string);
+    void originChanged(const QString &string);
+
+ //   void stackingOrderChanged(bool checked);
 
   protected:
     static void setOpenDialogLastDirectory(QString val) { m_OpenDialogLastDirectory = val; }
