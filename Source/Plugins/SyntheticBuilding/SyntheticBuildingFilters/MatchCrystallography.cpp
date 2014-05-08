@@ -435,6 +435,7 @@ void MatchCrystallography::assign_eulers(int ensem)
       choose = pick_euler(random, numbins);
 
       m_OrientationOps[m_CrystalStructures[ensem]]->determineEulerAngles(choose, synea1, synea2, synea3);
+      m_OrientationOps[m_CrystalStructures[ensem]]->randomizeEulerAngles(synea1, synea2, synea3);
       m_FeatureEulerAngles[3 * i] = synea1;
       m_FeatureEulerAngles[3 * i + 1] = synea2;
       m_FeatureEulerAngles[3 * i + 2] = synea3;
@@ -600,6 +601,7 @@ void MatchCrystallography::matchCrystallography(int ensem)
         choose = pick_euler(random, numbins);
 
         m_OrientationOps[m_CrystalStructures[ensem]]->determineEulerAngles(choose, g1ea1, g1ea2, g1ea3);
+        m_OrientationOps[m_CrystalStructures[ensem]]->randomizeEulerAngles(synea1, synea2, synea3);
         OrientationMath::EulertoQuat(g1ea1, g1ea2, g1ea3, q1);
 
         odfchange = ((actualodf->getValue(choose) - simodf->getValue(choose)) * (actualodf->getValue(choose) - simodf->getValue(choose)))
