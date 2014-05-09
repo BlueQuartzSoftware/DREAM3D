@@ -283,7 +283,7 @@ void ImageCalculator::execute()
   typedef itk::XorImageFilter<ImageProcessing::DefaultImageType, ImageProcessing::DefaultImageType, ImageProcessing::DefaultImageType> XorType;
   typedef itk::MinimumImageFilter<ImageProcessing::DefaultImageType, ImageProcessing::DefaultImageType, ImageProcessing::DefaultImageType> MinType;
   typedef itk::MaximumImageFilter<ImageProcessing::DefaultImageType, ImageProcessing::DefaultImageType, ImageProcessing::DefaultImageType> MaxType;
-  typedef itk::BinaryFunctorImageFilter<ImageProcessing::DefaultImageType, ImageProcessing::DefaultImageType, ImageProcessing::FloatImageType, Functor::Mean<ImageProcessing::DefaultPixelType>> MeanType;
+  typedef itk::BinaryFunctorImageFilter<ImageProcessing::DefaultImageType, ImageProcessing::DefaultImageType, ImageProcessing::FloatImageType, Functor::Mean<ImageProcessing::DefaultPixelType> > MeanType;
   typedef itk::AbsoluteValueDifferenceImageFilter<ImageProcessing::DefaultImageType, ImageProcessing::DefaultImageType, ImageProcessing::FloatImageType> DifferenceType;
 
   //set up filters to cap image ranges
