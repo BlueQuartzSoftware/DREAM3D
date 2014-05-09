@@ -182,7 +182,7 @@ void AbstractFilter::copyFilterParameterInstanceVariables(AbstractFilter *filter
   for (QVector<FilterParameter::Pointer>::iterator iter = options.begin(); iter != options.end(); ++iter )
   {
     FilterParameter* parameter = (*iter).get();
-    if (parameter->getWidgetType().compare(FilterParameterWidgetType::SeparatorWidget) == 0 )
+    if (parameter->getReadOnly() == true )
     {
       continue; // Skip this type of filter parameter as it has nothing to do with anything in the filter.
     }
