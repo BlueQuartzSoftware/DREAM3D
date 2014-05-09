@@ -538,7 +538,7 @@ QString AttributeMatrix::writeXdmfAttributeDataHelper(int numComp, const QString
   QString dimStr = tupleStr + QString::number(array->getNumberOfComponents());
   QString dimStrHalf = tupleStr + QString::number(array->getNumberOfComponents() / 2);
 
-  if((numComp % 2) == 1 || numComp == 6)
+  if(numComp == 1 || numComp == 3 || numComp == 6 || numComp == 9)
   {
     out << "    <Attribute Name=\"" << array->getName() << "\" ";
     out << "AttributeType=\"" << attrType << "\" ";
@@ -550,7 +550,7 @@ QString AttributeMatrix::writeXdmfAttributeDataHelper(int numComp, const QString
     out << "      </DataItem>" << "\n";
     out << "    </Attribute>" << "\n" << "\n";
   }
-  else
+  else if(numComp == 2)
   {
     //First Slab
     out << "    <Attribute Name=\"" << array->getName() << " (Feature 0)\" ";
@@ -611,8 +611,11 @@ QString AttributeMatrix::writeXdmfAttributeData(IDataArray::Pointer array, const
     return xdmfText;
   }
   int numComp = array->getNumberOfComponents();
-  QString attrType = "Vector";
+  QString attrType = "";
   if(numComp == 1) { attrType = "Scalar"; }
+  //we are assuming a component of 2 is for scalars on either side of a single object (ie faceIds)
+  if(numComp == 2) { attrType = "Scalar"; }
+  if(numComp == 3) { attrType = "Vector"; }
   if(numComp == 6) { attrType = "Tensor6"; }
   if(numComp == 9) { attrType = "Tensor"; }
 
