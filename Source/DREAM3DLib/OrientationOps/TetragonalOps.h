@@ -85,6 +85,7 @@ class DREAM3DLib_EXPORT TetragonalOps : public OrientationOps
     virtual int getMisoBin(float r1, float r2, float r3);
     virtual bool inUnitTriangle(float eta, float chi);
     virtual void determineEulerAngles(int choose, float& synea1, float& synea2, float& synea3);
+    virtual void randomizeEulerAngles(float& synea1, float& synea2, float& synea3);
     virtual void determineRodriguesVector(int choose, float& r1, float& r2, float& r3);
     virtual int getOdfBin(float r1, float r2, float r3);
     virtual void getSchmidFactorAndSS(float loadx, float loady, float loadz, float& schmidfactor, int& slipsys);
