@@ -48,6 +48,7 @@ FilterParameter::FilterParameter() :
   m_FileExtension(""),
   m_FileType(""),
   m_CastableValueType(""),
+  m_ReadOnly(false),
   m_Conditional(false),
   m_ConditionalProperty(""),
   m_ConditionalLabel("")
@@ -75,6 +76,10 @@ FilterParameter::Pointer FilterParameter::New(const QString& humanLabel, const Q
   ptr->setFileExtension(fileExtension);
   ptr->setFileType(fileType);
   ptr->setCastableValueType(castableValueType);
+  if(ptr->getWidgetType().compare(FilterParameterWidgetType::SeparatorWidget) == 0)
+  {
+    ptr->setReadOnly(true);
+  }
   return ptr;
 }
 
@@ -82,11 +87,11 @@ FilterParameter::Pointer FilterParameter::New(const QString& humanLabel, const Q
 //
 // -----------------------------------------------------------------------------
 FilterParameter::Pointer FilterParameter::NewConditional(const QString& humanLabel, const QString& propertyName,
-                       const QString& widgetType, const QString& valueType,
-                       bool advanced,
-                       bool isConditional,
-                       const QString& conditionalProperty,
-                       const QString& conditionalLabel)
+                                                         const QString& widgetType, const QString& valueType,
+                                                         bool advanced,
+                                                         bool isConditional,
+                                                         const QString& conditionalProperty,
+                                                         const QString& conditionalLabel)
 {
   FilterParameter::Pointer ptr = FilterParameter::New();
   ptr->setHumanLabel(humanLabel);
@@ -101,6 +106,10 @@ FilterParameter::Pointer FilterParameter::NewConditional(const QString& humanLab
   ptr->setFileExtension("");
   ptr->setFileType("");
   ptr->setCastableValueType("");
+  if(ptr->getWidgetType().compare(FilterParameterWidgetType::SeparatorWidget) == 0)
+  {
+    ptr->setReadOnly(true);
+  }
   return ptr;
 }
 
@@ -150,6 +159,11 @@ ChoiceFilterParameter::Pointer ChoiceFilterParameter::New(const QString& humanLa
   ptr->setChoices(choices);
   ptr->setEditable(editable);
 
+  if(ptr->getWidgetType().compare(FilterParameterWidgetType::SeparatorWidget) == 0)
+  {
+    ptr->setReadOnly(true);
+  }
+
   return ptr;
 }
 
@@ -189,7 +203,10 @@ ComparisonFilterParameter::Pointer ComparisonFilterParameter::New(const QString&
 
   ptr->setChoices(choices);
   ptr->setShowOperators(showOperators);
-
+  if(ptr->getWidgetType().compare(FilterParameterWidgetType::SeparatorWidget) == 0)
+  {
+    ptr->setReadOnly(true);
+  }
   return ptr;
 }
 
@@ -230,7 +247,10 @@ ShapeTypesFilterParameter::Pointer ShapeTypesFilterParameter::New(const QString&
 
   ptr->setPhaseTypeCountProperty(phaseTypeCountProperty);
   ptr->setPhaseTypeArrayPathProperty(phaseTypeArrayPathProperty);
-
+  if(ptr->getWidgetType().compare(FilterParameterWidgetType::SeparatorWidget) == 0)
+  {
+    ptr->setReadOnly(true);
+  }
   return ptr;
 }
 
@@ -251,8 +271,8 @@ PreflightUpdatedValue::~PreflightUpdatedValue()
 //
 // -----------------------------------------------------------------------------
 PreflightUpdatedValue::Pointer PreflightUpdatedValue::New(const QString& humanLabel, const QString& propertyName,
-                                                                  const QString& widgetType, const QString& valueType,
-                                                                  bool advanced)
+                                                          const QString& widgetType, const QString& valueType,
+                                                          bool advanced)
 {
   PreflightUpdatedValue::Pointer ptr = PreflightUpdatedValue::New();
   ptr->setHumanLabel(humanLabel);
@@ -264,7 +284,10 @@ PreflightUpdatedValue::Pointer PreflightUpdatedValue::New(const QString& humanLa
   ptr->setFileExtension("");
   ptr->setFileType("");
   ptr->setCastableValueType("");
-
+  if(ptr->getWidgetType().compare(FilterParameterWidgetType::SeparatorWidget) == 0)
+  {
+    ptr->setReadOnly(true);
+  }
   return ptr;
 }
 
@@ -274,8 +297,8 @@ PreflightUpdatedValue::Pointer PreflightUpdatedValue::New(const QString& humanLa
 //
 // -----------------------------------------------------------------------------
 DataContainerArrayProxyFilterParameter::DataContainerArrayProxyFilterParameter() :
-FilterParameter(),
-m_DefaultFlagValue(Qt::Checked)
+  FilterParameter(),
+  m_DefaultFlagValue(Qt::Checked)
 {
 }
 
@@ -289,9 +312,9 @@ DataContainerArrayProxyFilterParameter::~DataContainerArrayProxyFilterParameter(
 //
 // -----------------------------------------------------------------------------
 DataContainerArrayProxyFilterParameter::Pointer DataContainerArrayProxyFilterParameter::New(const QString& humanLabel, const QString& propertyName,
-                                                                  const QString& widgetType, const QString& valueType,
-                                                                  DataContainerArrayProxy proxy, Qt::CheckState defValue,
-                                                                  bool advanced)
+                                                                                            const QString& widgetType, const QString& valueType,
+                                                                                            DataContainerArrayProxy proxy, Qt::CheckState defValue,
+                                                                                            bool advanced)
 {
   DataContainerArrayProxyFilterParameter::Pointer ptr = DataContainerArrayProxyFilterParameter::New();
   ptr->setHumanLabel(humanLabel);
@@ -304,8 +327,12 @@ DataContainerArrayProxyFilterParameter::Pointer DataContainerArrayProxyFilterPar
   ptr->setFileType("");
   ptr->setCastableValueType("");
   ptr->setDefaultFlagValue(defValue);
-
   ptr->setDataContainerArrayProxy(proxy);
+
+  if(ptr->getWidgetType().compare(FilterParameterWidgetType::SeparatorWidget) == 0)
+  {
+    ptr->setReadOnly(true);
+  }
   return ptr;
 }
 
