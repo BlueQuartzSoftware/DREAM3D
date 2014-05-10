@@ -13,7 +13,7 @@
 #include <limits>
 
 //-- TIFF Headers
-#include <tif_config.h>
+#include <tiffconf.h>
 #include <tiffio.h>
 
 
