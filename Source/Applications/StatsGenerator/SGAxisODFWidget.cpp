@@ -309,8 +309,8 @@ void SGAxisODFWidget::initQwtPlot(QString xAxisName, QString yAxisName, QwtPlot*
   plot->setAxisTitle(QwtPlot::xBottom, xAxisName);
   plot->setAxisTitle(QwtPlot::yLeft, yAxisName);
   plot->setCanvasBackground(QColor(Qt::white));
-  plot->setCanvasLineWidth(2);
-  plot->canvas()->setFrameShape(QFrame::NoFrame);
+  //plot->setCanvasLineWidth(2);
+  //plot->canvas()->setFrameShape(QFrame::NoFrame);
 
   // Lock the Axis Min/Max to -1 to 1 effectively cropping the plot. If there are
   // data points outside of that range they will never be shown.

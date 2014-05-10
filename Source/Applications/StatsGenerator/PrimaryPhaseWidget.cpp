@@ -268,8 +268,8 @@ void PrimaryPhaseWidget::setupGui()
   m_grid = new QwtPlotGrid;
   m_grid->enableXMin(true);
   m_grid->enableYMin(true);
-  m_grid->setMajPen(QPen(Qt::gray, 0, Qt::SolidLine));
-  m_grid->setMinPen(QPen(Qt::lightGray, 0, Qt::DotLine));
+  m_grid->setMajorPen(QPen(Qt::gray, 0, Qt::SolidLine));
+  m_grid->setMinorPen(QPen(Qt::lightGray, 0, Qt::DotLine));
   m_grid->attach(m_SizeDistributionPlot);
 
   // For the ODF Tab we want the MDF functionality
