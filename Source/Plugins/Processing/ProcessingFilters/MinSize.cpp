@@ -170,6 +170,8 @@ void MinSize::execute()
     if(m_FeatureIds[iter] > m_NumFeatures) m_NumFeatures = m_FeatureIds[iter];
   }
 
+  numFeatures += 1;
+
   QVector<bool> activeObjects = remove_smallfeatures();
   assign_badpoints();
 
@@ -329,9 +331,9 @@ QVector<bool> MinSize::remove_smallfeatures()
   bool good = false;
   int gnum;
 
-  size_t featureCount = m_NumFeatures+1;
-  QVector<int> voxcounts(featureCount, 0);
-  QVector<bool> activeObjects(featureCount, true);
+
+  QVector<int> voxcounts(m_NumFeatures, 0);
+  QVector<bool> activeObjects(m_NumFeatures, true);
 
   for (int64_t i = 0; i < totalPoints; i++)
   {
@@ -339,7 +341,7 @@ QVector<bool> MinSize::remove_smallfeatures()
     if(gnum >= 0) { voxcounts[gnum]++; }
     std::cout << "i: " << i  << std::endl;
   }
-  for (size_t i = 1; i <  static_cast<size_t>(featureCount); i++)
+  for (size_t i = 1; i <  static_cast<size_t>(m_NumFeatures); i++)
   {
     if(m_ApplyToSinglePhase == false)
     {
