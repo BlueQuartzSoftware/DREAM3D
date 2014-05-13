@@ -532,6 +532,18 @@ void OrientationMath::EulertoRod(float ea1, float ea2, float ea3, float& r1, flo
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void OrientationMath::EulerToAxisAngle(float ea1, float ea2, float ea3, float& w, float& n1, float& n2, float& n3)
+{
+  float r1, r2, r3;
+  // First Convert to Rodrigues
+  EulertoRod(ea1, ea2, ea3, r1, r2, r3);
+  // Convert the Rodrigues to Axis Angle
+  RodtoAxisAngle(r1, r2, r3, w, n1, n2, n3);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void OrientationMath::RodtoEuler(float r1, float r2, float r3, float& ea1, float& ea2, float& ea3)
 {
   float sum = atan(r3);

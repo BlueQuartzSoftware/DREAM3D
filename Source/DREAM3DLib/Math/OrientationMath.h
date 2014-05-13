@@ -144,6 +144,8 @@ class DREAM3DLib_EXPORT OrientationMath
     static void EulertoMat(float ea1, float ea2, float ea3, float g[3][3]);
     static void EulertoRod(float ea1, float ea2, float ea3, float& r1, float& r2, float& r3);
 
+    static void EulerToAxisAngle(float ea1, float ea2, float ea3, float& w, float& n1, float& n2, float& n3);
+
     /**
      * @brief EulertoMatActive This function converts an Euler Angle triplet (Bunge) into a <b>ACTIVE</b> Orientation Matrix. This
      * is taking a Crystal Coordinate system and transforming it to the Sample Coordinate System (C->S). Note that to convert
