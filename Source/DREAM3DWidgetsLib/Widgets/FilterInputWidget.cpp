@@ -110,7 +110,7 @@ void FilterInputWidget::displayFilterParameters(PipelineFilterWidget* w)
   QWidget* advWidget = advScrollArea->takeWidget();
   advScrollArea->setWidget(w->getAdvancedScrollWidgetContents() );
 
-  filterInputTabWidget->setCurrentIndex(0);
+//  filterInputTabWidget->setCurrentIndex(0);
 #if 0
   // Remove all existing QWidgets from this Widget
   QObjectList objs = basicInputsScrollWidget->children();

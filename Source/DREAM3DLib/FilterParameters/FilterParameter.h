@@ -72,7 +72,6 @@ namespace FilterParameterWidgetType
   const QString AxisAngleWidget("AxisAngleWidget");
   const QString UnknownWidget("UnknownWidget");
   const QString DataContainerArrayProxyWidget("DataContainerArrayProxyWidget");
-  const QString ArraySelectionWidget("ArraySelectionWidget"); // This is the generic array name selection tool where the user can select multiple arrays with checkboxes from all data containers
   const QString DataArraySelectionWidget("DataArraySelectionWidget");
   const QString ComparisonSelectionWidget("ComparisonSelectionWidget");
   const QString AttributeMatrixSelectionWidget("AttributeMatrixSelectionWidget");
