@@ -295,7 +295,7 @@ void DREAM3D_UI::readVersionSettings()
 
 
 // -----------------------------------------------------------------------------
-//  Read the prefs from the local storage file
+//
 // -----------------------------------------------------------------------------
 void DREAM3D_UI::readLastPipeline()
 {
@@ -306,7 +306,7 @@ void DREAM3D_UI::readLastPipeline()
 #endif
   QString filePath;
   {
-    QSettings prefs(format, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName());
+    QSettings prefs(format, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName() + "_LastPipeline");
 
     filePath = prefs.fileName();
   }
@@ -336,16 +336,20 @@ void DREAM3D_UI::writeSettings()
     writeVersionCheckSettings(prefs);
   }
 
-  // Typically we would use the function in the PipelineViewWidget but it will remove the prefs file and that is NOT
-  // what we want to do here. We want to append in our prefs to the current file, not delete it first.
-  QFileInfo fi(filePath);
-  // pipelineViewWidget->savePipeline(filePath, fi.baseName(), format);
-  // Create a Pipeline Object and fill it with the filters from this View
-  FilterPipeline::Pointer pipeline = pipelineViewWidget->getFilterPipeline();
-  int err = QFilterParametersWriter::WritePipelineToFile(pipeline, fi.absoluteFilePath(), fi.baseName(), format, NULL);
-  if (err < 0)
   {
 
+    QSettings prefs(format, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName() + "_LastPipeline");
+    filePath = prefs.fileName();
+    QFileInfo fi(filePath);
+
+    pipelineViewWidget->savePipeline(filePath, fi.baseName(), format);
+    // Create a Pipeline Object and fill it with the filters from this View
+//    FilterPipeline::Pointer pipeline = pipelineViewWidget->getFilterPipeline();
+//    int err = QFilterParametersWriter::WritePipelineToFile(pipeline, fi.absoluteFilePath(), fi.baseName(), format, NULL);
+//    if (err < 0)
+//    {
+
+//    }
   }
 }
 
@@ -773,7 +777,7 @@ void DREAM3D_UI::pipelineFileLoaded(QString file, QSettings::Format format, bool
   QFileInfo fi(file);
   pipelineTitle->setText(fi.fileName());
   setWindowFilePath(file);
- // setWindowTitle(QString("[*] ") + fi.fileName());
+  // setWindowTitle(QString("[*] ") + fi.fileName());
   setWindowModified(false);
 }
 
@@ -808,7 +812,7 @@ void DREAM3D_UI::on_pipelineViewWidget_pipelineFileDropped(QString& file)
   QFileInfo fi(file);
   pipelineTitle->setText(fi.fileName());
   setWindowFilePath(file);
-//  setWindowTitle(QString("[*] ") + fi.fileName());
+  //  setWindowTitle(QString("[*] ") + fi.fileName());
   setWindowModified(false);
 }
 
@@ -967,12 +971,12 @@ void DREAM3D_UI::on_startPipelineBtn_clicked()
   {
     qDebug() << "canceling from GUI...." << "\n";
     emit pipelineCanceled();
-//    m_WorkerThread->wait(); // Wait until the thread is complete
-//    if (m_WorkerThread->isFinished() == true)
-//    {
-//      delete m_WorkerThread;
-//      m_WorkerThread = NULL;
-//    }
+    //    m_WorkerThread->wait(); // Wait until the thread is complete
+    //    if (m_WorkerThread->isFinished() == true)
+    //    {
+    //      delete m_WorkerThread;
+    //      m_WorkerThread = NULL;
+    //    }
     return;
   }
 

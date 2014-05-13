@@ -378,7 +378,7 @@ void RotateSampleRefFrame::execute()
   params.zp = zp;
   params.zRes = zRes;
 
-  size_t col, row, plane;
+  int32_t col = 0, row = 0, plane = 0;
   float rotMat[3][3];
   float coords[3];
   float newcoords[3];

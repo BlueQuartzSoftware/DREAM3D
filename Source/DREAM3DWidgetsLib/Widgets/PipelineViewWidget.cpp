@@ -384,7 +384,7 @@ void PipelineViewWidget::loadPipelineFile(const QString& filePath, QSettings::Fo
   emit pipelineIssuesCleared();
   // Load the pipeline from the file resulting in a FilterPipeline Object
   FilterPipeline::Pointer pipeline = QFilterParametersReader::ReadPipelineFromFile(filePath, format, dynamic_cast<IObserver*>(m_PipelineMessageObserver) );
-
+  if (NULL == pipeline.get()) { clearWidgets(); return; }
   // Clear the Pipeline First
   if (false == append) { clearWidgets(); }
   // get a reference to the filters which are in some type of container object.
