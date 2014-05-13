@@ -61,122 +61,56 @@ class DREAM3DLib_EXPORT GenericExample : public AbstractFilter
 
     virtual ~GenericExample();
 
-    DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
-
-
     /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
     DREAM3D_FILTER_PARAMETER(QString, StlFilePrefix)
     Q_PROPERTY(QString StlFilePrefix READ getStlFilePrefix WRITE setStlFilePrefix)
+
     DREAM3D_FILTER_PARAMETER(int, MaxIterations)
     Q_PROPERTY(int MaxIterations READ getMaxIterations WRITE setMaxIterations)
+
     DREAM3D_FILTER_PARAMETER(double, MisorientationTolerance)
     Q_PROPERTY(double MisorientationTolerance READ getMisorientationTolerance WRITE setMisorientationTolerance)
+
     DREAM3D_FILTER_PARAMETER(QString, InputFile)
     Q_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile)
+
     DREAM3D_FILTER_PARAMETER(QString, InputPath)
     Q_PROPERTY(QString InputPath READ getInputPath WRITE setInputPath)
+
     DREAM3D_FILTER_PARAMETER(QString, OutputFile)
     Q_PROPERTY(QString OutputFile READ getOutputFile WRITE setOutputFile)
+
     DREAM3D_FILTER_PARAMETER(QString, OutputPath)
     Q_PROPERTY(QString OutputPath READ getOutputPath WRITE setOutputPath)
+
     DREAM3D_FILTER_PARAMETER(bool, WriteAlignmentShifts)
     Q_PROPERTY(bool WriteAlignmentShifts READ getWriteAlignmentShifts WRITE setWriteAlignmentShifts)
+
     DREAM3D_FILTER_PARAMETER(int, ConversionType)
     Q_PROPERTY(int ConversionType READ getConversionType WRITE setConversionType)
 
+
     DREAM3D_FILTER_PARAMETER(IntVec3_t, Dimensions)
     Q_PROPERTY(IntVec3_t Dimensions READ getDimensions WRITE setDimensions)
+
     DREAM3D_FILTER_PARAMETER(FloatVec3_t, Origin)
     Q_PROPERTY(FloatVec3_t Origin READ getOrigin WRITE setOrigin)
+
     DREAM3D_FILTER_PARAMETER(AxisAngleInput_t, CrystalSymmetryRotations)
     Q_PROPERTY(AxisAngleInput_t CrystalSymmetryRotations READ getCrystalSymmetryRotations WRITE setCrystalSymmetryRotations)
 
 
-    DREAM3D_INSTANCE_PROPERTY(QVector<AxisAngleInput_t>, AxisAngleInputs)
-
-    DREAM3D_INSTANCE_PROPERTY(QVector<QString>, StrVector)
-
-    DREAM3D_INSTANCE_PROPERTY(QVector<int8_t>, Int8Array)
-    DREAM3D_INSTANCE_PROPERTY(QVector<int16_t>, Int16Array)
-    DREAM3D_INSTANCE_PROPERTY(QVector<int32_t>, Int32Array)
-    DREAM3D_INSTANCE_PROPERTY(QVector<int64_t>, Int64Array)
-    DREAM3D_INSTANCE_PROPERTY(QVector<uint8_t>, UInt8Array)
-    DREAM3D_INSTANCE_PROPERTY(QVector<uint16_t>, UInt16Array)
-    DREAM3D_INSTANCE_PROPERTY(QVector<uint32_t>, UInt32Array)
-    DREAM3D_INSTANCE_PROPERTY(QVector<uint64_t>, UInt64Array)
-    DREAM3D_INSTANCE_PROPERTY(QVector<float>, FloatArray)
-    DREAM3D_INSTANCE_PROPERTY(QVector<double>, DoubleArray)
-
-    DREAM3D_INSTANCE_PROPERTY(int8_t, Int8Value)
-    DREAM3D_INSTANCE_PROPERTY(int16_t, Int16Value)
-    DREAM3D_INSTANCE_PROPERTY(int32_t, Int32Value)
-    DREAM3D_INSTANCE_PROPERTY(int64_t, Int64Value)
-    DREAM3D_INSTANCE_PROPERTY(uint8_t, UInt8Value)
-    DREAM3D_INSTANCE_PROPERTY(uint16_t, UInt16Value)
-    DREAM3D_INSTANCE_PROPERTY(uint32_t, UInt32Value)
-    DREAM3D_INSTANCE_PROPERTY(uint64_t, UInt64Value)
-    DREAM3D_INSTANCE_PROPERTY(float, FloatValue)
-    DREAM3D_INSTANCE_PROPERTY(double, DoubleValue)
-
-
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, SelectedVolumeVertexArrayName)
-    Q_PROPERTY(DataArrayPath SelectedVolumeVertexArrayName READ getSelectedVolumeVertexArrayName WRITE setSelectedVolumeVertexArrayName)
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, SelectedVolumeEdgeArrayName)
-    Q_PROPERTY(DataArrayPath SelectedVolumeEdgeArrayName READ getSelectedVolumeEdgeArrayName WRITE setSelectedVolumeEdgeArrayName)
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, SelectedVolumeFaceArrayName)
-    Q_PROPERTY(DataArrayPath SelectedVolumeFaceArrayName READ getSelectedVolumeFaceArrayName WRITE setSelectedVolumeFaceArrayName)
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, SelectedVolumeCellArrayName)
-    Q_PROPERTY(DataArrayPath SelectedVolumeCellArrayName READ getSelectedVolumeCellArrayName WRITE setSelectedVolumeCellArrayName)
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, SelectedVolumeFeatureArrayName)
-    Q_PROPERTY(DataArrayPath SelectedVolumeFeatureArrayName READ getSelectedVolumeFeatureArrayName WRITE setSelectedVolumeFeatureArrayName)
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, SelectedVolumeEnsembleArrayName)
-    Q_PROPERTY(DataArrayPath SelectedVolumeEnsembleArrayName READ getSelectedVolumeEnsembleArrayName WRITE setSelectedVolumeEnsembleArrayName)
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, SelectedSurfaceVertexArrayName)
-    Q_PROPERTY(DataArrayPath SelectedSurfaceVertexArrayName READ getSelectedSurfaceVertexArrayName WRITE setSelectedSurfaceVertexArrayName)
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, SelectedSurfaceEdgeArrayName)
-    Q_PROPERTY(DataArrayPath SelectedSurfaceEdgeArrayName READ getSelectedSurfaceEdgeArrayName WRITE setSelectedSurfaceEdgeArrayName)
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, SelectedSurfaceFaceArrayName)
-    Q_PROPERTY(DataArrayPath SelectedSurfaceFaceArrayName READ getSelectedSurfaceFaceArrayName WRITE setSelectedSurfaceFaceArrayName)
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, SelectedSurfaceFeatureArrayName)
-    Q_PROPERTY(DataArrayPath SelectedSurfaceFeatureArrayName READ getSelectedSurfaceFeatureArrayName WRITE setSelectedSurfaceFeatureArrayName)
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, SelectedSurfaceEnsembleArrayName)
-    Q_PROPERTY(DataArrayPath SelectedSurfaceEnsembleArrayName READ getSelectedSurfaceEnsembleArrayName WRITE setSelectedSurfaceEnsembleArrayName)
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, SelectedEdgeVertexArrayName)
-    Q_PROPERTY(DataArrayPath SelectedEdgeVertexArrayName READ getSelectedEdgeVertexArrayName WRITE setSelectedEdgeVertexArrayName)
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, SelectedEdgeEdgeArrayName)
-    Q_PROPERTY(DataArrayPath SelectedEdgeEdgeArrayName READ getSelectedEdgeEdgeArrayName WRITE setSelectedEdgeEdgeArrayName)
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, SelectedEdgeFeatureArrayName)
-    Q_PROPERTY(DataArrayPath SelectedEdgeFeatureArrayName READ getSelectedEdgeFeatureArrayName WRITE setSelectedEdgeFeatureArrayName)
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, SelectedEdgeEnsembleArrayName)
-    Q_PROPERTY(DataArrayPath SelectedEdgeEnsembleArrayName READ getSelectedEdgeEnsembleArrayName WRITE setSelectedEdgeEnsembleArrayName)
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, SelectedVertexVertexArrayName)
-    Q_PROPERTY(DataArrayPath SelectedVertexVertexArrayName READ getSelectedVertexVertexArrayName WRITE setSelectedVertexVertexArrayName)
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, SelectedVertexFeatureArrayName)
-    Q_PROPERTY(DataArrayPath SelectedVertexFeatureArrayName READ getSelectedVertexFeatureArrayName WRITE setSelectedVertexFeatureArrayName)
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, SelectedVertexEnsembleArrayName)
-    Q_PROPERTY(DataArrayPath SelectedVertexEnsembleArrayName READ getSelectedVertexEnsembleArrayName WRITE setSelectedVertexEnsembleArrayName)
-
-
-    /**
-    * @brief This returns the group that the filter belonds to. You can select
-    * a different group if you want. The string returned here will be displayed
-    * in the GUI for the filter
-    */
     DREAM3D_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
     Q_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, CellPatternQualityArrayPath)
-    Q_PROPERTY(DataArrayPath CellPatternQualityArrayPath READ getCellPatternQualityArrayPath WRITE setCellPatternQualityArrayPath)
+    DREAM3D_FILTER_PARAMETER(DataArrayPath, AttributeMatrixPath)
+    Q_PROPERTY(DataArrayPath AttributeMatrixPath READ getAttributeMatrixPath WRITE setAttributeMatrixPath)
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, GoodVoxelsArrayPath)
-    Q_PROPERTY(DataArrayPath GoodVoxelsArrayPath READ getGoodVoxelsArrayPath WRITE setGoodVoxelsArrayPath)
+    DREAM3D_FILTER_PARAMETER(QString, DataContainerName)
+    Q_PROPERTY(QString DataContainerName READ getDataContainerName WRITE setDataContainerName)
 
-    DREAM3D_FILTER_PARAMETER(QString, CellEulerAnglesArrayName)
-    Q_PROPERTY(QString CellEulerAnglesArrayName READ getCellEulerAnglesArrayName WRITE setCellEulerAnglesArrayName)
-
-    DREAM3D_FILTER_PARAMETER(QString, GoodVoxelsArrayName)
-    Q_PROPERTY(QString GoodVoxelsArrayName READ getGoodVoxelsArrayName WRITE setGoodVoxelsArrayName)
+    DREAM3D_FILTER_PARAMETER(DataArrayPath, CreatedDataArray)
+    Q_PROPERTY(DataArrayPath CreatedDataArray READ getCreatedDataArray WRITE setCreatedDataArray)
 
     virtual const QString getCompiledLibraryName() { return Test::TestBaseName; }
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
@@ -246,10 +180,6 @@ class DREAM3DLib_EXPORT GenericExample : public AbstractFilter
     void dataCheck2();
 
   private:
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, FeatureIds)
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, CellPatternQuality)
-    DEFINE_CREATED_DATAARRAY_VARIABLE(float, CellEulerAngles)
-    DEFINE_CREATED_DATAARRAY_VARIABLE(bool, GoodVoxels)
 
     GenericExample(const GenericExample&); // Copy Constructor Not Implemented
     void operator=(const GenericExample&); // Operator '=' Not Implemented
