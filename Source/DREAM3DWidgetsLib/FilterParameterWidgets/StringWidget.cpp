@@ -37,6 +37,8 @@
 
 #include <QtCore/QMetaProperty>
 
+#include <QtCore/QPropertyAnimation>
+#include <QtCore/QSequentialAnimationGroup>
 
 #include "FilterParameterWidgetsDialogs.h"
 
@@ -65,21 +67,6 @@ StringWidget::~StringWidget()
 void StringWidget::setupGui()
 {
 
-  // Catch when the filter is about to execute the preflight
-  connect(m_Filter, SIGNAL(preflightAboutToExecute()),
-          this, SLOT(beforePreflight()));
-
-  // Catch when the filter is finished running the preflight
-  connect(m_Filter, SIGNAL(preflightExecuted()),
-          this, SLOT(afterPreflight()));
-
-  // Catch when the filter wants its values updated
-  connect(m_Filter, SIGNAL(updateFilterParameters(AbstractFilter*)),
-          this, SLOT(filterNeedsInputParameters(AbstractFilter*)));
-
-
-  connect(value, SIGNAL(textChanged(const QString&)),
-          this, SLOT(widgetChanged(const QString&)));
 
   blockSignals(true);
   if (m_FilterParameter != NULL)
@@ -106,6 +93,7 @@ void StringWidget::setupGui()
     conditionalCB->setChecked(boolProp);
     conditionalCB->setText(m_FilterParameter->getConditionalLabel());
     value->setEnabled(boolProp);
+    on_conditionalCB_stateChanged(conditionalCB->checkState());
   }
   else
   {
@@ -117,6 +105,23 @@ void StringWidget::setupGui()
     linkRight->deleteLater();
   }
 
+  applyChangesBtn->setVisible(false);
+
+  // Catch when the filter is about to execute the preflight
+  connect(m_Filter, SIGNAL(preflightAboutToExecute()),
+          this, SLOT(beforePreflight()));
+
+  // Catch when the filter is finished running the preflight
+  connect(m_Filter, SIGNAL(preflightExecuted()),
+          this, SLOT(afterPreflight()));
+
+  // Catch when the filter wants its values updated
+  connect(m_Filter, SIGNAL(updateFilterParameters(AbstractFilter*)),
+          this, SLOT(filterNeedsInputParameters(AbstractFilter*)));
+
+
+  connect(value, SIGNAL(textChanged(const QString&)),
+          this, SLOT(widgetChanged(const QString&)));
 
 }
 
@@ -127,20 +132,64 @@ void StringWidget::on_conditionalCB_stateChanged(int state)
 {
   bool boolProp = conditionalCB->isChecked();
   value->setEnabled(boolProp);
+  applyChangesBtn->setEnabled(boolProp);
+
+  value->setVisible(boolProp);
+
+  label->setVisible(boolProp);
+  linkLeft->setVisible(boolProp);
+  linkRight->setVisible(boolProp);
+
   m_DidCausePreflight = true;
   emit parametersChanged();
   m_DidCausePreflight = false;
-
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void StringWidget::fadeInWidget(QWidget* widget)
+{
+  if (faderWidget) {
+    faderWidget->close();
+  }
+  faderWidget = new FaderWidget(widget);
+  faderWidget->start();
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 void StringWidget::on_value_returnPressed()
 {
-  qDebug() << "StringWidget::on_value_returnPressed() " << this;
+  on_applyChangesBtn_clicked();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void StringWidget::on_applyChangesBtn_clicked()
+{
+  value->setStyleSheet(QString(""));
   emit parametersChanged();
+
+  if (faderWidget) {
+    faderWidget->close();
+  }
+  faderWidget = new FaderWidget(applyChangesBtn);
+  faderWidget->setFadeOut();
+  connect(faderWidget, SIGNAL(animationComplete() ),
+          this, SLOT(hideButton()));
+  faderWidget->start();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void StringWidget::hideButton()
+{
+  value->setToolTip("");
+  applyChangesBtn->setVisible(false);
 }
 
 // -----------------------------------------------------------------------------
@@ -148,8 +197,13 @@ void StringWidget::on_value_returnPressed()
 // -----------------------------------------------------------------------------
 void StringWidget::widgetChanged(const QString &text)
 {
-  //  qDebug() << "StringWidget::widgetChanged(const QString &text)";
-  //  emit parametersChanged();
+  value->setStyleSheet(QString::fromLatin1("color: rgb(0, 0, 255);"));
+  value->setToolTip("Press the 'Return' key to apply your changes");
+  if(applyChangesBtn->isVisible() == false)
+  {
+    applyChangesBtn->setVisible(true);
+    fadeInWidget(applyChangesBtn);
+  }
 }
 
 // -----------------------------------------------------------------------------

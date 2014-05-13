@@ -36,7 +36,7 @@ FaderWidget::FaderWidget(QWidget *parent)
   fadeIn = true;
 
   currentAlpha = 0;
-  duration = 500;
+  duration = 300;
 
   timer = new QTimer(this);
   connect(timer, SIGNAL(timeout()), this, SLOT(update()));

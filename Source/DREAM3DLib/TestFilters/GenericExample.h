@@ -65,6 +65,9 @@ class DREAM3DLib_EXPORT GenericExample : public AbstractFilter
     DREAM3D_FILTER_PARAMETER(QString, StlFilePrefix)
     Q_PROPERTY(QString StlFilePrefix READ getStlFilePrefix WRITE setStlFilePrefix)
 
+    DREAM3D_FILTER_PARAMETER(bool, ShowPrefix)
+    Q_PROPERTY(bool ShowPrefix READ getShowPrefix WRITE setShowPrefix)
+
     DREAM3D_FILTER_PARAMETER(int, MaxIterations)
     Q_PROPERTY(int MaxIterations READ getMaxIterations WRITE setMaxIterations)
 

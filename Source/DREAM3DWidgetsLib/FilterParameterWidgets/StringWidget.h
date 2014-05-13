@@ -40,8 +40,10 @@
 
 
 #include <QtCore/QObject>
+#include <QtCore/QPointer>
 #include <QtGui/QWidget>
 
+#include "QtSupport/FaderWidget.h"
 
 #include "DREAM3DLib/Common/AbstractFilter.h"
 
@@ -51,7 +53,7 @@
 
 
 /**
-* @brief
+* @brief This widget is for Filter Parameters that are of a string type.
 * @author
 * @version
 */
@@ -83,10 +85,18 @@ class DREAM3DWidgetsLib_EXPORT StringWidget : public QWidget, private Ui::String
     void widgetChanged(const QString& msg);
     void on_value_returnPressed();
     void on_conditionalCB_stateChanged(int state);
+    void on_applyChangesBtn_clicked();
+
+    void hideButton();
 
   signals:
     void errorSettingFilterParameter(const QString& msg);
     void parametersChanged();
+
+  private slots:
+      void fadeInWidget(QWidget *widget);
+  private:
+      QPointer<FaderWidget> faderWidget;
 
   private:
     AbstractFilter*   m_Filter;
