@@ -198,9 +198,6 @@ void DataArraySelectionWidget::on_conditionalCB_stateChanged(int state)
 // -----------------------------------------------------------------------------
 void DataArraySelectionWidget::populateComboBoxes()
 {
-  //  std::cout << "void DataArraySelectionWidget::populateComboBoxesWithSelection()" << std::endl;
-
-
   // Now get the DataContainerArray from the Filter instance
   // We are going to use this to get all the current DataContainers
   DataContainerArray::Pointer dca = m_Filter->getDataContainerArray();
@@ -209,6 +206,9 @@ void DataArraySelectionWidget::populateComboBoxes()
   // Check to see if we have any DataContainers to actually populate drop downs with.
   if(dca->getDataContainerArray().size() == 0)
   {
+    dataContainerList->clear();
+    attributeMatrixList->clear();
+    attributeArrayList->clear();
     return;
   }
   // Cache the DataContainerArray Structure for our use during all the selections
