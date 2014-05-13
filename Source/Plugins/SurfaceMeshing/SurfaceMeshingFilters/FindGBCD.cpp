@@ -474,7 +474,7 @@ void FindGBCD::preflight()
   emit updateFilterParameters(this);
   dataCheckVoxel();
   //order here matters...because we are going to use the size of the crystal structures out of the dataCheckVoxel to size the faceAttrMat in dataCheckSurfaceMesh
-  dataCheckSurfaceMesh();
+  if (getErrorCondition() >= 0) { dataCheckSurfaceMesh(); }
   emit preflightExecuted();
 }
 

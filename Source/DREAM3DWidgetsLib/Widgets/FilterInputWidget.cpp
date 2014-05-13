@@ -82,6 +82,9 @@ void FilterInputWidget::clearInputWidgets()
 {
   QWidget* widget = scrollArea->takeWidget();
   scrollArea->setWidget(new QFrame);
+
+  widget = advScrollArea->takeWidget();
+  advScrollArea->setWidget(new QFrame);
 }
 
 // -----------------------------------------------------------------------------
