@@ -115,6 +115,7 @@ void IntVec3Widget::setupGui()
     xData->setEnabled(boolProp);
     yData->setEnabled(boolProp);
     zData->setEnabled(boolProp);
+    on_conditionalCB_stateChanged(conditionalCB->checkState());
   }
   else
   {

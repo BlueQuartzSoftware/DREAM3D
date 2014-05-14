@@ -39,6 +39,9 @@
 #include <QtCore/QList>
 #include <QtGui/QListWidgetItem>
 
+
+#include "DREAM3DLib/Common/AbstractFilter.h"
+#include "DREAM3DLib/FilterParameters/FilterParameter.h"
 #include "DREAM3DLib/DataContainers/DataArrayPath.h"
 
 #include "FilterParameterWidgetsDialogs.h"
@@ -94,26 +97,18 @@ void DataArraySelectionWidget::initializeWidget(FilterParameter* parameter, Abst
 // -----------------------------------------------------------------------------
 void DataArraySelectionWidget::setupGui()
 {
+
+  // Sanity Check the filter and the filter parameter
   if(m_Filter == NULL)
   {
     return;
   }
-  // Catch when the filter is about to execute the preflight
-  connect(m_Filter, SIGNAL(preflightAboutToExecute()),
-          this, SLOT(beforePreflight()));
-
-  // Catch when the filter is finished running the preflight
-  connect(m_Filter, SIGNAL(preflightExecuted()),
-          this, SLOT(afterPreflight()));
-
-  // Catch when the filter wants its values updated
-  connect(m_Filter, SIGNAL(updateFilterParameters(AbstractFilter*)),
-          this, SLOT(filterNeedsInputParameters(AbstractFilter*)));
-
   if (m_FilterParameter == NULL)
   {
     return;
   }
+
+  // Generate the text for the QLabel
   QString units = m_FilterParameter->getUnits();
   if(units.isEmpty() == false)
   {
@@ -124,27 +119,28 @@ void DataArraySelectionWidget::setupGui()
     label->setText(m_FilterParameter->getHumanLabel() );
   }
 
+  // Get the default path from the Filter instance to cache
+  m_DefaultPath = m_Filter->property(PROPERTY_NAME_AS_CHAR).value<DataArrayPath>();
+//  dataContainerList->addItem(m_DefaultPath.getDataContainerName());
+//  attributeMatrixList->addItem(m_DefaultPath.getAttributeMatrixName() );
+//  attributeArrayList->addItem(m_DefaultPath.getDataArrayName() );
+
+  // Block Signals from teh ComboBoxes while we clear them
   dataContainerList->blockSignals(true);
   attributeMatrixList->blockSignals(true);
   attributeArrayList->blockSignals(true);
+
   dataContainerList->clear();
   attributeMatrixList->clear();
   attributeArrayList->clear();
 
-
-  // Get what is in the filter
-  DataArrayPath defaultPath = m_Filter->property(PROPERTY_NAME_AS_CHAR).value<DataArrayPath>();
-  dataContainerList->addItem(defaultPath.getDataContainerName());
-  attributeMatrixList->addItem(defaultPath.getAttributeMatrixName() );
-  attributeArrayList->addItem(defaultPath.getDataArrayName() );
-
-  // Now let the gui send signals like normal
   dataContainerList->blockSignals(false);
   attributeMatrixList->blockSignals(false);
   attributeArrayList->blockSignals(false);
 
-  populateComboBoxes();
 
+// Now figure out if the Filter Parameter is conditional or not. If it is NOT conditional then we remove some of the GUI
+// widgets
   blockSignals(true);
   // is the filter parameter tied to a boolean property of the Filter Instance, if it is then we need to make the check box visible
   if(m_FilterParameter->isConditional() == true)
@@ -167,6 +163,24 @@ void DataArraySelectionWidget::setupGui()
     linkRight->deleteLater();
   }
   blockSignals(false);
+
+
+
+  populateComboBoxes();
+
+
+  // Lastly, hook up the filter's signals and slots to our own signals and slots
+  // Catch when the filter is about to execute the preflight
+  connect(m_Filter, SIGNAL(preflightAboutToExecute()),
+          this, SLOT(beforePreflight()));
+
+  // Catch when the filter is finished running the preflight
+  connect(m_Filter, SIGNAL(preflightExecuted()),
+          this, SLOT(afterPreflight()));
+
+  // Catch when the filter wants its values updated
+  connect(m_Filter, SIGNAL(updateFilterParameters(AbstractFilter*)),
+          this, SLOT(filterNeedsInputParameters(AbstractFilter*)));
 
 }
 

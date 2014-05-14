@@ -117,6 +117,7 @@ void AttributeMatrixSelectionWidget::setupGui()
     conditionalCB->setText(m_FilterParameter->getConditionalLabel());
     dataContainerList->setEnabled(boolProp);
     attributeMatrixList->setEnabled(boolProp);
+    on_conditionalCB_stateChanged(conditionalCB->checkState());
   }
   else
   {
@@ -139,10 +140,16 @@ void AttributeMatrixSelectionWidget::on_conditionalCB_stateChanged(int state)
   bool boolProp = conditionalCB->isChecked();
   dataContainerList->setEnabled(boolProp);
   attributeMatrixList->setEnabled(boolProp);
+  dataContainerList->setVisible(boolProp);
+  attributeMatrixList->setVisible(boolProp);
+
+
+  label->setVisible(boolProp);
+  linkLeft->setVisible(boolProp);
+  linkRight->setVisible(boolProp);
   m_DidCausePreflight = true;
   emit parametersChanged();
   m_DidCausePreflight = false;
-
 }
 
 

@@ -83,9 +83,9 @@ DataArrayCreationWidget::~DataArrayCreationWidget()
 // -----------------------------------------------------------------------------
 void DataArrayCreationWidget::initializeWidget(FilterParameter* parameter, AbstractFilter* filter)
 {
-    m_Filter = filter;
-    m_FilterParameter = parameter;
-    setupGui();
+  m_Filter = filter;
+  m_FilterParameter = parameter;
+  setupGui();
 }
 
 
@@ -146,6 +146,7 @@ void DataArrayCreationWidget::setupGui()
     dataContainerList->setEnabled(boolProp);
     attributeMatrixList->setEnabled(boolProp);
     dataArrayName->setEnabled(boolProp);
+    on_conditionalCB_stateChanged(conditionalCB->checkState());
   }
   else
   {
@@ -167,12 +168,18 @@ void DataArrayCreationWidget::on_conditionalCB_stateChanged(int state)
 {
   bool boolProp = conditionalCB->isChecked();
   dataContainerList->setEnabled(boolProp);
+  dataContainerList->setVisible(boolProp);
   attributeMatrixList->setEnabled(boolProp);
+  attributeMatrixList->setVisible(boolProp);
   dataArrayName->setEnabled(boolProp);
+  dataArrayName->setVisible(boolProp);
+
+  label->setVisible(boolProp);
+  linkLeft->setVisible(boolProp);
+  linkRight->setVisible(boolProp);
   m_DidCausePreflight = true;
   emit parametersChanged();
   m_DidCausePreflight = false;
-
 }
 
 

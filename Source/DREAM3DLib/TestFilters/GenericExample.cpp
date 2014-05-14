@@ -54,7 +54,7 @@ GenericExample::GenericExample() :
   m_OutputPath("/Some/Path"),
   m_WriteAlignmentShifts(false),
   m_ConversionType(0),
-  m_FeatureIdsArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::FeatureIds),
+  m_FeatureIdsArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, "Garbly Gook"),
   m_AttributeMatrixPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::NewCellFeatureAttributeMatrixName, ""),
   m_DataContainerName(DREAM3D::Defaults::StatsGenerator),
   m_CreatedDataArray(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::EulerColor)
@@ -131,7 +131,7 @@ void GenericExample::setupFilterParameters()
   /* Display the AxisAngleWidget to collect Axis-Angle pairs from the user */
   parameters.push_back(FilterParameter::New("Crystal Rotations", "CrystalSymmetryRotations", FilterParameterWidgetType::AxisAngleWidget,"", false));
 
-  parameters.push_back(FilterParameter::New("FeatureIds", "FeatureIdsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "", false, ""));
+  parameters.push_back(FilterParameter::New("Feature Ids", "FeatureIdsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "", false, ""));
 
   parameters.push_back(FilterParameter::New("Attribute Matrix", "AttributeMatrixPath", FilterParameterWidgetType::AttributeMatrixSelectionWidget, "", false, ""));
 

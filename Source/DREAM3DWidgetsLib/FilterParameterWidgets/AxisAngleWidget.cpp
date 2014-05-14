@@ -130,6 +130,7 @@ void AxisAngleWidget::setupGui()
     axis_j->setEnabled(boolProp);
     axis_k->setEnabled(boolProp);
     angle->setEnabled(boolProp);
+    on_conditionalCB_stateChanged(conditionalCB->checkState());
   }
   else
   {
@@ -154,10 +155,18 @@ void AxisAngleWidget::on_conditionalCB_stateChanged(int state)
   axis_j->setEnabled(boolProp);
   axis_k->setEnabled(boolProp);
   angle->setEnabled(boolProp);
+  axis_i->setVisible(boolProp);
+  axis_j->setVisible(boolProp);
+  axis_k->setVisible(boolProp);
+  angle->setVisible(boolProp);
+
+
+  label->setVisible(boolProp);
+  linkLeft->setVisible(boolProp);
+  linkRight->setVisible(boolProp);
   m_DidCausePreflight = true;
   emit parametersChanged();
   m_DidCausePreflight = false;
-
 }
 
 

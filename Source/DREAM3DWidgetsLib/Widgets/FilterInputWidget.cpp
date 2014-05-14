@@ -85,6 +85,9 @@ void FilterInputWidget::clearInputWidgets()
 
   widget = advScrollArea->takeWidget();
   advScrollArea->setWidget(new QFrame);
+
+  filterHumanLabel->setText("No Filter Selected");
+  brandingLabel->clear();
 }
 
 // -----------------------------------------------------------------------------
