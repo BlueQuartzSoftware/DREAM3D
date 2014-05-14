@@ -296,8 +296,10 @@ void DataArraySelectionWidget::populateComboBoxes()
   if(!attributeArrayList->signalsBlocked()) { didBlock = true; }
   attributeArrayList->blockSignals(true);
   int daIndex = attributeArrayList->findText(daName);
-  if(daIndex < 0 && daName.isEmpty() == false) { attributeArrayList->addItem(daName); } // The name of the attribute array was not found in the list
-  {
+  if(daIndex < 0 && daName.isEmpty() == false) {
+      attributeArrayList->addItem(daName);
+  } // The name of the attribute array was not found in the list
+  else {
     if (daIndex < 0) { daIndex = 0; }
     attributeArrayList->setCurrentIndex(daIndex); // we set the selection but we are NOT triggering anything so we shoudl
   }
