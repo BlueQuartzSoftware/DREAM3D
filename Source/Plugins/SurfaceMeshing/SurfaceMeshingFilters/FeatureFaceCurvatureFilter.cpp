@@ -100,11 +100,11 @@ FeatureFaceCurvatureFilter::~FeatureFaceCurvatureFilter()
 void FeatureFaceCurvatureFilter::setupFilterParameters()
 {
   QVector<FilterParameter::Pointer> parameters;
-  parameters.push_back(FilterParameter::New("Neighborhood Ring Count", "NRing", FilterParameterWidgetType::IntWidget,"int", false));
-  parameters.push_back(FilterParameter::New("Compute Principal Direction Vectors", "ComputePrincipalDirectionVectors", FilterParameterWidgetType::BooleanWidget,"bool", false));
-  parameters.push_back(FilterParameter::New("Compute Gaussian Curvature", "ComputeGaussianCurvature", FilterParameterWidgetType::BooleanWidget,"bool", false));
-  parameters.push_back(FilterParameter::New("Compute Mean Curvature", "ComputeMeanCurvature", FilterParameterWidgetType::BooleanWidget,"bool", false));
-  parameters.push_back(FilterParameter::New("Use Face Normals for Curve Fitting", "UseNormalsForCurveFitting", FilterParameterWidgetType::BooleanWidget,"bool", false));
+  parameters.push_back(FilterParameter::New("Neighborhood Ring Count", "NRing", FilterParameterWidgetType::IntWidget, "int", false));
+  parameters.push_back(FilterParameter::New("Compute Principal Direction Vectors", "ComputePrincipalDirectionVectors", FilterParameterWidgetType::BooleanWidget, "bool", false));
+  parameters.push_back(FilterParameter::New("Compute Gaussian Curvature", "ComputeGaussianCurvature", FilterParameterWidgetType::BooleanWidget, "bool", false));
+  parameters.push_back(FilterParameter::New("Compute Mean Curvature", "ComputeMeanCurvature", FilterParameterWidgetType::BooleanWidget, "bool", false));
+  parameters.push_back(FilterParameter::New("Use Face Normals for Curve Fitting", "UseNormalsForCurveFitting", FilterParameterWidgetType::BooleanWidget, "bool", false));
   parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "QString", true));
   parameters.push_back(FilterParameter::New("SurfaceMeshFaceLabels", "SurfaceMeshFaceLabelsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
   parameters.push_back(FilterParameter::New("SurfaceMeshFeatureFaceIds", "SurfaceMeshFeatureFaceIdsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
@@ -304,7 +304,7 @@ void FeatureFaceCurvatureFilter::execute()
   int maxFaceId = 0;
   for(size_t t = 0; t < numTriangles; ++t)
   {
-    if(m_SurfaceMeshFeatureFaceIds[t] > maxFaceId) maxFaceId = m_SurfaceMeshFeatureFaceIds[t];
+    if(m_SurfaceMeshFeatureFaceIds[t] > maxFaceId) { maxFaceId = m_SurfaceMeshFeatureFaceIds[t]; }
   }
   QVector<int> faceSizes(maxFaceId, 0);
   // Loop through all the Triangles and assign each one to a unique Feature Face Id.
@@ -312,7 +312,7 @@ void FeatureFaceCurvatureFilter::execute()
   {
     faceSizes[m_SurfaceMeshFeatureFaceIds[t]]++;
   }
-  
+
   // Allocate all the vectors that we need
   for(int iter = 0; iter < faceSizes.size(); ++iter)
   {

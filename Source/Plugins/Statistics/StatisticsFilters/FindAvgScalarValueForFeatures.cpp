@@ -73,7 +73,7 @@ FindAvgScalarValueForFeatures::~FindAvgScalarValueForFeatures()
 void FindAvgScalarValueForFeatures::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(FilterParameter::New("Cell Array To Average", "SelectedCellArrayPath", FilterParameterWidgetType::DataArraySelectionWidget,"DataArrayPath", false));
+  parameters.push_back(FilterParameter::New("Cell Array To Average", "SelectedCellArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", false));
   parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "QString", true));
   parameters.push_back(FilterParameter::New("FeatureIds", "FeatureIdsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
   parameters.push_back(FilterParameter::New("Cell Feature Attribute Matrix Name", "CellFeatureAttributeMatrixName", FilterParameterWidgetType::AttributeMatrixSelectionWidget, "DataArrayPath", true, ""));
@@ -155,7 +155,7 @@ template<typename T>
 void findAverage(IDataArray::Pointer inputData, FloatArrayType::Pointer averageArray, int32_t* fIds)
 {
   DataArray<T>* cellArray = DataArray<T>::SafePointerDownCast(inputData.get());
-  if (NULL == cellArray) return;
+  if (NULL == cellArray) { return; }
 
   T* cPtr = cellArray->getPointer(0);
   float* aPtr = averageArray->getPointer(0);
@@ -175,8 +175,8 @@ void findAverage(IDataArray::Pointer inputData, FloatArrayType::Pointer averageA
   }
   for (size_t i = 1; i < numFeatures; i++)
   {
-    if(counts[i] == 0) aPtr[i] = 0;
-    else aPtr[i] /= float(counts[i]);
+    if(counts[i] == 0) { aPtr[i] = 0; }
+    else { aPtr[i] /= float(counts[i]); }
   }
 }
 

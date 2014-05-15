@@ -184,10 +184,10 @@ ComparisonFilterParameter::~ComparisonFilterParameter()
 //
 // -----------------------------------------------------------------------------
 ComparisonFilterParameter::Pointer ComparisonFilterParameter::New(const QString& humanLabel, const QString& propertyName,
-                                                                  const QString& widgetType, const QString& valueType,
-                                                                  QVector<QString> choices,
-                                                                  bool showOperators,
-                                                                  bool advanced)
+    const QString& widgetType, const QString& valueType,
+    QVector<QString> choices,
+    bool showOperators,
+    bool advanced)
 
 {
   ComparisonFilterParameter::Pointer ptr = ComparisonFilterParameter::New();
@@ -229,10 +229,10 @@ ShapeTypesFilterParameter::~ShapeTypesFilterParameter()
 //
 // -----------------------------------------------------------------------------
 ShapeTypesFilterParameter::Pointer ShapeTypesFilterParameter::New(const QString& humanLabel, const QString& propertyName,
-                                                                  const QString& widgetType, const QString& valueType,
-                                                                  const QString& phaseTypeCountProperty,
-                                                                  const QString& phaseTypeArrayPathProperty,
-                                                                  bool advanced)
+    const QString& widgetType, const QString& valueType,
+    const QString& phaseTypeCountProperty,
+    const QString& phaseTypeArrayPathProperty,
+    bool advanced)
 {
   ShapeTypesFilterParameter::Pointer ptr = ShapeTypesFilterParameter::New();
   ptr->setHumanLabel(humanLabel);
@@ -312,9 +312,9 @@ DataContainerArrayProxyFilterParameter::~DataContainerArrayProxyFilterParameter(
 //
 // -----------------------------------------------------------------------------
 DataContainerArrayProxyFilterParameter::Pointer DataContainerArrayProxyFilterParameter::New(const QString& humanLabel, const QString& propertyName,
-                                                                                            const QString& widgetType, const QString& valueType,
-                                                                                            DataContainerArrayProxy proxy, Qt::CheckState defValue,
-                                                                                            bool advanced)
+    const QString& widgetType, const QString& valueType,
+    DataContainerArrayProxy proxy, Qt::CheckState defValue,
+    bool advanced)
 {
   DataContainerArrayProxyFilterParameter::Pointer ptr = DataContainerArrayProxyFilterParameter::New();
   ptr->setHumanLabel(humanLabel);

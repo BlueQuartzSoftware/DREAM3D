@@ -98,7 +98,7 @@
  */
 class M3CSliceBySlice : public AbstractFilter
 {
-	Q_OBJECT
+    Q_OBJECT
   public:
     DREAM3D_SHARED_POINTERS(M3CSliceBySlice)
     DREAM3D_STATIC_NEW_MACRO(M3CSliceBySlice)

@@ -183,13 +183,13 @@ void LaplacianSmoothing::setupFilterParameters()
 {
   FilterParameterVector parameters;
   /* Place all your option initialization code here */
-  parameters.push_back(FilterParameter::New("Iteration Steps", "IterationSteps", FilterParameterWidgetType::IntWidget,"int", false));
-  parameters.push_back(FilterParameter::New("Default Lambda", "Lambda", FilterParameterWidgetType::DoubleWidget,"float", false));
-  parameters.push_back(FilterParameter::New("Triple Line Lambda", "TripleLineLambda", FilterParameterWidgetType::DoubleWidget,"float", false));
-  parameters.push_back(FilterParameter::New("Quad Points Lambda", "QuadPointLambda", FilterParameterWidgetType::DoubleWidget,"float", false));
-  parameters.push_back(FilterParameter::New("Outer Points Lambda", "SurfacePointLambda", FilterParameterWidgetType::DoubleWidget,"float", false));
-  parameters.push_back(FilterParameter::New("Outer Triple Line Lambda", "SurfaceTripleLineLambda", FilterParameterWidgetType::DoubleWidget,"float", false));
-  parameters.push_back(FilterParameter::New("Outer Quad Points Lambda", "SurfaceQuadPointLambda", FilterParameterWidgetType::DoubleWidget,"float", false));
+  parameters.push_back(FilterParameter::New("Iteration Steps", "IterationSteps", FilterParameterWidgetType::IntWidget, "int", false));
+  parameters.push_back(FilterParameter::New("Default Lambda", "Lambda", FilterParameterWidgetType::DoubleWidget, "float", false));
+  parameters.push_back(FilterParameter::New("Triple Line Lambda", "TripleLineLambda", FilterParameterWidgetType::DoubleWidget, "float", false));
+  parameters.push_back(FilterParameter::New("Quad Points Lambda", "QuadPointLambda", FilterParameterWidgetType::DoubleWidget, "float", false));
+  parameters.push_back(FilterParameter::New("Outer Points Lambda", "SurfacePointLambda", FilterParameterWidgetType::DoubleWidget, "float", false));
+  parameters.push_back(FilterParameter::New("Outer Triple Line Lambda", "SurfaceTripleLineLambda", FilterParameterWidgetType::DoubleWidget, "float", false));
+  parameters.push_back(FilterParameter::New("Outer Quad Points Lambda", "SurfaceQuadPointLambda", FilterParameterWidgetType::DoubleWidget, "float", false));
   parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "QString", true));
   parameters.push_back(FilterParameter::New("SurfaceMeshNodeType", "SurfaceMeshNodeTypeArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
   parameters.push_back(FilterParameter::New("SurfaceMeshFaceLabels", "SurfaceMeshFaceLabelsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
@@ -372,7 +372,7 @@ int LaplacianSmoothing::edgeBasedSmoothing()
 
   //  Generate the Unique Edges
   FaceArray::Pointer trianglesPtr = sm->getFaces();
-  if(trianglesPtr->getUniqueEdges() == NULL) trianglesPtr->generateUniqueEdgeIds();
+  if(trianglesPtr->getUniqueEdges() == NULL) { trianglesPtr->generateUniqueEdgeIds(); }
 
   notifyStatusMessage(getHumanLabel(), "Starting to Smooth Vertices");
   // Get the unique Edges from the data container

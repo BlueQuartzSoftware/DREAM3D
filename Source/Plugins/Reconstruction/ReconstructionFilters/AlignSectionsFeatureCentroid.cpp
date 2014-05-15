@@ -86,7 +86,7 @@ void AlignSectionsFeatureCentroid::setupFilterParameters()
 {
   //getting the current parameters that were set by the parent and adding to it before resetting it
   FilterParameterVector parameters = getFilterParameters();
-  parameters.push_front(FilterParameter::New("Reference Slice", "ReferenceSlice", FilterParameterWidgetType::IntWidget,"int", false));
+  parameters.push_front(FilterParameter::New("Reference Slice", "ReferenceSlice", FilterParameterWidgetType::IntWidget, "int", false));
   FilterParameter::Pointer param = parameters.front();
   param->setConditional(true);
   param->setConditionalProperty("UseReferenceSlice");

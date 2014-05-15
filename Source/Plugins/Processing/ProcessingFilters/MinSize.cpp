@@ -77,8 +77,8 @@ MinSize::~MinSize()
 void MinSize::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(FilterParameter::New("Minimum Allowed Feature Size", "MinAllowedFeatureSize", FilterParameterWidgetType::IntWidget,"int", false, "Pixels"));
-  parameters.push_back(FilterParameter::New("Phase Number to Run Min Size Filter on", "PhaseNumber", FilterParameterWidgetType::IntWidget,"int", false));
+  parameters.push_back(FilterParameter::New("Minimum Allowed Feature Size", "MinAllowedFeatureSize", FilterParameterWidgetType::IntWidget, "int", false, "Pixels"));
+  parameters.push_back(FilterParameter::New("Phase Number to Run Min Size Filter on", "PhaseNumber", FilterParameterWidgetType::IntWidget, "int", false));
   FilterParameter::Pointer param = parameters.back();
   param->setConditional(true);
   param->setConditionalProperty("ApplyToSinglePhase");
@@ -165,9 +165,9 @@ void MinSize::execute()
 
   numFeatures = 0;
   int64_t totalPoints = m_FeatureIdsPtr.lock()->getNumberOfTuples();
-  for (int64_t iter = 0; iter<totalPoints; iter++)
+  for (int64_t iter = 0; iter < totalPoints; iter++)
   {
-    if(m_FeatureIds[iter] > numFeatures) numFeatures = m_FeatureIds[iter];
+    if(m_FeatureIds[iter] > numFeatures) { numFeatures = m_FeatureIds[iter]; }
   }
   numFeatures += 1;
 

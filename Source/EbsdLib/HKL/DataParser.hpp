@@ -43,8 +43,8 @@ class DataParser
     virtual ~DataParser() {}
 
     virtual bool allocateArray(size_t numberOfElements) { (void)(numberOfElements); return false;}
-    virtual void* getVoidPointer(){ return NULL; }
-    virtual void  setVoidPointer(void* p){}
+    virtual void* getVoidPointer() { return NULL; }
+    virtual void  setVoidPointer(void* p) {}
 
     EBSD_INSTANCE_PROPERTY(bool, ManageMemory)
     EBSD_INSTANCE_PROPERTY(size_t, Size)
@@ -52,9 +52,9 @@ class DataParser
     EBSD_INSTANCE_PROPERTY(int, ColumnIndex)
 
 
-    virtual void parse(const QByteArray &token, size_t index){}
+    virtual void parse(const QByteArray& token, size_t index) {}
   protected:
-    DataParser(){}
+    DataParser() {}
 
   private:
     DataParser(const DataParser&); // Copy Constructor Not Implemented
@@ -69,7 +69,7 @@ class Int32Parser : public DataParser
   public:
     EBSD_SHARED_POINTERS(Int32Parser)
     EBSD_TYPE_MACRO(Int32Parser)
-    static Pointer New(int32_t* ptr, size_t size, const QString &name, int index)
+    static Pointer New(int32_t* ptr, size_t size, const QString& name, int index)
     {
       Pointer sharedPtr (new Int32Parser(ptr, size, name, index));
       return sharedPtr;
@@ -106,14 +106,14 @@ class Int32Parser : public DataParser
     int32_t* getPointer(size_t offset) { return m_Ptr + offset; }
 
 
-    virtual void parse(const QByteArray &token, size_t index)
+    virtual void parse(const QByteArray& token, size_t index)
     {
       bool ok = false;
       m_Ptr[index] = token.toInt(&ok, 10);
     }
 
   protected:
-    Int32Parser(int32_t* ptr, size_t size, const QString &name, int index) :
+    Int32Parser(int32_t* ptr, size_t size, const QString& name, int index) :
       m_Ptr(ptr)
     {
       setManageMemory(true);
@@ -137,7 +137,7 @@ class FloatParser : public DataParser
   public:
     EBSD_SHARED_POINTERS(FloatParser)
     EBSD_TYPE_MACRO(FloatParser)
-    static Pointer New(float* ptr, size_t size, const QString &name, int index)
+    static Pointer New(float* ptr, size_t size, const QString& name, int index)
     {
       Pointer sharedPtr (new FloatParser(ptr, size, name, index));
       return sharedPtr;
@@ -173,14 +173,14 @@ class FloatParser : public DataParser
 
     float* getPointer(size_t offset) { return m_Ptr + offset; }
 
-    virtual void parse(const QByteArray &token, size_t index)
+    virtual void parse(const QByteArray& token, size_t index)
     {
       bool ok = false;
       m_Ptr[index] = token.toFloat(&ok);
     }
 
   protected:
-    FloatParser(float* ptr, size_t size, const QString &name, int index) :
+    FloatParser(float* ptr, size_t size, const QString& name, int index) :
       m_Ptr(ptr)
     {
       setManageMemory(true);

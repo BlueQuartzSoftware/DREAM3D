@@ -155,7 +155,7 @@ class DREAM3DWidgetsLib_EXPORT PipelineFilterWidget : public QFrame, private Ui:
   private:
     QRect                     m_DeleteRect;
     QPoint                    dragStartPosition;
-  //  QTimer*                   m_timer;
+    //  QTimer*                   m_timer;
 //    unsigned char             m_CurrentBorderColorFactor;
 //    unsigned char             m_BorderIncrement;
 //    QString                   m_BorderColorStyle;

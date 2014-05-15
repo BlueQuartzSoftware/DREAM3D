@@ -143,7 +143,7 @@ class DREAM3DLib_EXPORT DataContainerReader : public AbstractFilter
     */
     void dataCheck();
 
-    void readData(bool preflight, DataContainerArrayProxy &proxy);
+    void readData(bool preflight, DataContainerArrayProxy& proxy);
 
   private:
     FilterPipeline::Pointer m_PipelineFromFile;
@@ -154,7 +154,7 @@ class DREAM3DLib_EXPORT DataContainerReader : public AbstractFilter
      * @param proxy
      * @param h5InternalPath
      */
-    void readDataContainers(hid_t dcArrayGroupId, DataContainerArrayProxy &proxy, QString h5InternalPath);
+    void readDataContainers(hid_t dcArrayGroupId, DataContainerArrayProxy& proxy, QString h5InternalPath);
 
     /**
      * @brief readAttributeMatrix
@@ -170,7 +170,7 @@ class DREAM3DLib_EXPORT DataContainerReader : public AbstractFilter
      * @param attrMatrix
      * @param h5InternalPath
      */
-    void readDataArrays(hid_t attrMatGid, AttributeMatrixProxy &attrMatrix, QString h5InternalPath);
+    void readDataArrays(hid_t attrMatGid, AttributeMatrixProxy& attrMatrix, QString h5InternalPath);
 
 
 

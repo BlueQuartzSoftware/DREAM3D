@@ -94,7 +94,7 @@ void WriteIPFStandardTriangle::setupFilterParameters()
 {
   FilterParameterVector parameters;
   /* Place all your option initialization code here */
-  parameters.push_back(FilterParameter::New("Output File", "OutputFile", FilterParameterWidgetType::OutputFileWidget,"QString", false));
+  parameters.push_back(FilterParameter::New("Output File", "OutputFile", FilterParameterWidgetType::OutputFileWidget, "QString", false));
   {
     ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New();
     parameter->setHumanLabel("Image Format");
@@ -109,7 +109,7 @@ void WriteIPFStandardTriangle::setupFilterParameters()
     parameter->setChoices(choices);
     parameters.push_back(parameter);
   }
-  parameters.push_back(FilterParameter::New("Image Size (Square)", "ImageSize", FilterParameterWidgetType::IntWidget,"int", false, "Pixels"));
+  parameters.push_back(FilterParameter::New("Image Size (Square)", "ImageSize", FilterParameterWidgetType::IntWidget, "int", false, "Pixels"));
 //  {
 //    FilterParameter::Pointer parameter = FilterParameter::New();
 //    parameter->setPropertyName("ColorCorrectionFactor");

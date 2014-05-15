@@ -70,10 +70,10 @@ NodesTrianglesToStl::~NodesTrianglesToStl()
 void NodesTrianglesToStl::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(FilterParameter::New("Nodes File", "NodesFile", FilterParameterWidgetType::InputFileWidget,"QString", false));
-  parameters.push_back(FilterParameter::New("Triangles File", "TrianglesFile", FilterParameterWidgetType::InputFileWidget,"QString", false));
-  parameters.push_back(FilterParameter::New("Output STL Directory", "OutputStlDirectory", FilterParameterWidgetType::OutputPathWidget,"QString", false));
-  parameters.push_back(FilterParameter::New("Stl File Prefix", "OutputStlPrefix", FilterParameterWidgetType::StringWidget,"QString", false));
+  parameters.push_back(FilterParameter::New("Nodes File", "NodesFile", FilterParameterWidgetType::InputFileWidget, "QString", false));
+  parameters.push_back(FilterParameter::New("Triangles File", "TrianglesFile", FilterParameterWidgetType::InputFileWidget, "QString", false));
+  parameters.push_back(FilterParameter::New("Output STL Directory", "OutputStlDirectory", FilterParameterWidgetType::OutputPathWidget, "QString", false));
+  parameters.push_back(FilterParameter::New("Stl File Prefix", "OutputStlPrefix", FilterParameterWidgetType::StringWidget, "QString", false));
 
 
   setFilterParameters(parameters);

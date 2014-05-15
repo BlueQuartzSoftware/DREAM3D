@@ -71,7 +71,7 @@ VASPReader::~VASPReader()
 void VASPReader::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(FilterParameter::New("Input File", "InputFile", FilterParameterWidgetType::InputFileWidget,"QString", false, "", "*"));
+  parameters.push_back(FilterParameter::New("Input File", "InputFile", FilterParameterWidgetType::InputFileWidget, "QString", false, "", "*"));
   parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "QString", true));
   parameters.push_back(FilterParameter::New("Vertex Data Container", "VertexDataContainerName", FilterParameterWidgetType::StringWidget, "QString", true, ""));
   parameters.push_back(FilterParameter::New("Vertex Attribute Matrix", "VertexAttributematrixName", FilterParameterWidgetType::StringWidget, "QString", true, ""));
@@ -299,7 +299,7 @@ int VASPReader::readHeader()
 
   QVector<size_t> tDims(1, totalAtoms);
   vertexAttrMat->resizeAttributeArrays(tDims);
-  updateVertexInstancePointers(); 
+  updateVertexInstancePointers();
 
   return error;
 }

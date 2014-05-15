@@ -180,7 +180,7 @@ RotateSampleRefFrame::~RotateSampleRefFrame()
 void RotateSampleRefFrame::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(FilterParameter::New("Cell Attribute Matrix", "CellAttributeMatrixPath", FilterParameterWidgetType::AttributeMatrixSelectionWidget,"DataArrayPath", false));
+  parameters.push_back(FilterParameter::New("Cell Attribute Matrix", "CellAttributeMatrixPath", FilterParameterWidgetType::AttributeMatrixSelectionWidget, "DataArrayPath", false));
   {
     ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New();
     parameter->setHumanLabel("Rotation Axis");
@@ -395,9 +395,9 @@ void RotateSampleRefFrame::execute()
     if(i == 5) { col = xp - 1, row = 0, plane = zp - 1; }
     if(i == 6) { col = 0, row = yp - 1, plane = zp - 1; }
     if(i == 7) { col = xp - 1, row = yp - 1, plane = zp - 1; }
-    if(col < 0) col = 0;
-    if(row < 0) row = 0;
-    if(plane < 0) plane = 0;
+    if(col < 0) { col = 0; }
+    if(row < 0) { row = 0; }
+    if(plane < 0) { plane = 0; }
     coords[0] = col * xRes;
     coords[1] = row * yRes;
     coords[2] = plane * zRes;

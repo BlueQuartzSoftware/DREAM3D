@@ -39,8 +39,8 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-SGWidget::SGWidget(QWidget *parent) :
-QWidget(parent)
+SGWidget::SGWidget(QWidget* parent) :
+  QWidget(parent)
 {
 
 }
@@ -65,7 +65,7 @@ void SGWidget::extractStatsData(AttributeMatrix::Pointer attrMat, int index)
 // -----------------------------------------------------------------------------
 QString SGWidget::getComboString()
 {
- return QString("SGWidget - THIS IS BAD. YOU SHOULD NOT BE SEEING THIS.");
+  return QString("SGWidget - THIS IS BAD. YOU SHOULD NOT BE SEEING THIS.");
 }
 
 // -----------------------------------------------------------------------------
@@ -81,7 +81,7 @@ int SGWidget::gatherStatsData(AttributeMatrix::Pointer attrMat)
 // -----------------------------------------------------------------------------
 void SGWidget::on_m_GenerateDefaultData_clicked()
 {
- // BOOST_ASSERT(false);
+// BOOST_ASSERT(false);
 }
 
 // -----------------------------------------------------------------------------

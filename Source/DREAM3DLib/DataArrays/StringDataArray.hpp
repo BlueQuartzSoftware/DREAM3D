@@ -392,7 +392,7 @@ class StringDataArray : public IDataArray
       }
       max = max + 1; // make sure we are 1 greater than the largest to make sure it is null terminated
 
-     // QVector<size_t> tDims(1, m_Array.size());
+      // QVector<size_t> tDims(1, m_Array.size());
       QVector<size_t> cDims(1, max);
 
       // We are going to encode the strings into a 2D matrix where the number of Rows is the number of tuples (number

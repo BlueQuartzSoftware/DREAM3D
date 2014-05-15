@@ -520,7 +520,7 @@ class StructArray : public IDataArray
       IDataArray::Pointer daCopy = createNewArray(getNumberOfTuples(), getComponentDimensions(), getName());
       T* src = getPointer(0);
       void* dest = daCopy->getVoidPointer(0);
-      size_t totalBytes = (getNumberOfTuples()*getNumberOfComponents()*sizeof(T));
+      size_t totalBytes = (getNumberOfTuples() * getNumberOfComponents() * sizeof(T));
       ::memcpy(dest, src, totalBytes);
       return daCopy;
     }

@@ -58,10 +58,10 @@
  */
 class SGMDFItemDelegate : public QStyledItemDelegate
 {
-  Q_OBJECT
+    Q_OBJECT
 
   public:
-    explicit SGMDFItemDelegate(QObject *parent = 0) :
+    explicit SGMDFItemDelegate(QObject* parent = 0) :
       QStyledItemDelegate(parent)
     {
     }
@@ -69,7 +69,7 @@ class SGMDFItemDelegate : public QStyledItemDelegate
     // -----------------------------------------------------------------------------
     //
     // -----------------------------------------------------------------------------
-    void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
+    void paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const
     {
       QStyledItemDelegate::paint(painter, option, index);
     }
@@ -77,7 +77,7 @@ class SGMDFItemDelegate : public QStyledItemDelegate
     // -----------------------------------------------------------------------------
     //
     // -----------------------------------------------------------------------------
-    QWidget* createEditor(QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const
+    QWidget* createEditor(QWidget* parent, const QStyleOptionViewItem& option, const QModelIndex& index) const
     {
       QLineEdit* editor;
       QDoubleValidator* weightValidator;
@@ -113,7 +113,7 @@ class SGMDFItemDelegate : public QStyledItemDelegate
     // -----------------------------------------------------------------------------
     //
     // -----------------------------------------------------------------------------
-    void setEditorData(QWidget *editor, const QModelIndex &index) const
+    void setEditorData(QWidget* editor, const QModelIndex& index) const
     {
       qint32 col = index.column();
       if (col == SGMDFTableModel::Angle
@@ -124,13 +124,13 @@ class SGMDFItemDelegate : public QStyledItemDelegate
         Q_ASSERT(lineEdit);
         lineEdit->setText(index.model()->data(index).toString());
       }
-      else QStyledItemDelegate::setEditorData(editor, index);
+      else { QStyledItemDelegate::setEditorData(editor, index); }
     }
 
     // -----------------------------------------------------------------------------
     //
     // -----------------------------------------------------------------------------
-    void setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const
+    void setModelData(QWidget* editor, QAbstractItemModel* model, const QModelIndex& index) const
     {
       //  qDebug() << "SGMDFItemDelegate::setModelData" << "\n";
       qint32 col = index.column();
@@ -149,13 +149,13 @@ class SGMDFItemDelegate : public QStyledItemDelegate
         Q_ASSERT(lineEdit);
         model->setData(index, lineEdit->text());
       }
-      else QStyledItemDelegate::setModelData(editor, model, index);
+      else { QStyledItemDelegate::setModelData(editor, model, index); }
     }
 
   private:
     QModelIndex m_Index;
-   // QWidget* m_Widget;
-  //  QAbstractItemModel* m_Model;
+    // QWidget* m_Widget;
+    //  QAbstractItemModel* m_Model;
 
 };
 

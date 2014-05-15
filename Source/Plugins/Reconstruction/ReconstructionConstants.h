@@ -3,7 +3,8 @@
 
 #include <QtCore/QString>
 
-namespace Reconstruction {
+namespace Reconstruction
+{
   const QString ReconstructionPluginFile("ReconstructionPlugin");
   const QString ReconstructionPluginDisplayName("ReconstructionPlugin");
   const QString ReconstructionBaseName("ReconstructionPlugin");

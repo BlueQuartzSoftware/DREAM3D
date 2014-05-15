@@ -101,7 +101,7 @@ class AssignVoxelsGapsImpl
   public:
     AssignVoxelsGapsImpl(DimType* dimensions, float* resolution, int32_t* featureIds, float* radCur,
                          float* xx, ShapeOps* shapeOps, float gA[3][3], float* size, int cur_feature,
-    Int32ArrayType::Pointer newowners, FloatArrayType::Pointer ellipfuncs) :
+                         Int32ArrayType::Pointer newowners, FloatArrayType::Pointer ellipfuncs) :
       m_FeatureIds(featureIds),
       m_ShapeOps(shapeOps),
       curFeature(cur_feature)
@@ -300,19 +300,19 @@ PackPrimaryPhases::~PackPrimaryPhases()
 void PackPrimaryPhases::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(FilterParameter::New("Periodic Boundaries", "PeriodicBoundaries", FilterParameterWidgetType::BooleanWidget,"bool", false));
+  parameters.push_back(FilterParameter::New("Periodic Boundaries", "PeriodicBoundaries", FilterParameterWidgetType::BooleanWidget, "bool", false));
   parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "QString", true));
-  parameters.push_back(FilterParameter::New("Statistics Array", "InputStatsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget,"DataArrayPath", true));
-  parameters.push_back(FilterParameter::New("Phase Types Array", "InputPhaseTypesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget,"DataArrayPath", true));
-  parameters.push_back(FilterParameter::New("Shape Types Array", "InputShapeTypesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget,"DataArrayPath", true));
+  parameters.push_back(FilterParameter::New("Statistics Array", "InputStatsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true));
+  parameters.push_back(FilterParameter::New("Phase Types Array", "InputPhaseTypesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true));
+  parameters.push_back(FilterParameter::New("Shape Types Array", "InputShapeTypesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true));
   parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "QString", true));
-  parameters.push_back(FilterParameter::New("Cell Attribute Matrix Name", "OutputCellAttributeMatrixName", FilterParameterWidgetType::AttributeMatrixSelectionWidget,"DataArrayPath", true));
-  parameters.push_back(FilterParameter::New("Cell Feature Attribute Matrix Name", "OutputCellFeatureAttributeMatrixName", FilterParameterWidgetType::StringWidget,"QString", true));
-  parameters.push_back(FilterParameter::New("Feature Ids Array Name", "FeatureIdsArrayName", FilterParameterWidgetType::StringWidget,"QString", true));
-  parameters.push_back(FilterParameter::New("Cell Phases Array Name", "CellPhasesArrayName", FilterParameterWidgetType::StringWidget,"QString", true));
-  parameters.push_back(FilterParameter::New("Feature Phases Array Name", "FeaturePhasesArrayName", FilterParameterWidgetType::StringWidget,"QString", true));
+  parameters.push_back(FilterParameter::New("Cell Attribute Matrix Name", "OutputCellAttributeMatrixName", FilterParameterWidgetType::AttributeMatrixSelectionWidget, "DataArrayPath", true));
+  parameters.push_back(FilterParameter::New("Cell Feature Attribute Matrix Name", "OutputCellFeatureAttributeMatrixName", FilterParameterWidgetType::StringWidget, "QString", true));
+  parameters.push_back(FilterParameter::New("Feature Ids Array Name", "FeatureIdsArrayName", FilterParameterWidgetType::StringWidget, "QString", true));
+  parameters.push_back(FilterParameter::New("Cell Phases Array Name", "CellPhasesArrayName", FilterParameterWidgetType::StringWidget, "QString", true));
+  parameters.push_back(FilterParameter::New("Feature Phases Array Name", "FeaturePhasesArrayName", FilterParameterWidgetType::StringWidget, "QString", true));
 
-  parameters.push_back(FilterParameter::New("Goal Attribute CSV File", "CsvOutputFile", FilterParameterWidgetType::OutputFileWidget,"QString", false, "", "*.csv", "Comma Separated Data"));
+  parameters.push_back(FilterParameter::New("Goal Attribute CSV File", "CsvOutputFile", FilterParameterWidgetType::OutputFileWidget, "QString", false, "", "*.csv", "Comma Separated Data"));
   FilterParameter::Pointer param = parameters.back();
   param->setConditional(true);
   param->setConditionalProperty("WriteGoalAttributes");
@@ -371,7 +371,7 @@ void PackPrimaryPhases::updateFeatureInstancePointers()
   if( NULL != m_FeaturePhasesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_FeaturePhases = m_FeaturePhasesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   if( NULL != m_NeighborhoodsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
-    m_Neighborhoods = m_NeighborhoodsPtr.lock()->getPointer(0);
+  { m_Neighborhoods = m_NeighborhoodsPtr.lock()->getPointer(0); }
   if( NULL != m_EquivalentDiametersPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_EquivalentDiameters = m_EquivalentDiametersPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   if( NULL != m_VolumesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
@@ -490,9 +490,9 @@ void PackPrimaryPhases::preflight()
   emit preflightExecuted();
 
   DataContainer::Pointer dc = getDataContainerArray()->getDataContainer(getOutputCellAttributeMatrixName());
-  if(dc == NULL) return;
+  if(dc == NULL) { return; }
   AttributeMatrix::Pointer attrMat = dc->getAttributeMatrix(getOutputCellFeatureAttributeMatrixName());
-  if(attrMat == NULL) return;
+  if(attrMat == NULL) { return; }
 
   attrMat->removeAttributeArray(m_EquivalentDiametersArrayName);
   attrMat->removeAttributeArray(m_Omega3sArrayName);
@@ -592,7 +592,7 @@ void PackPrimaryPhases::execute()
         QString ss = QObject::tr("Tried to cast a statsDataArray[%1].get() to a PrimaryStatsData* "
                                  "pointer but this resulted in a NULL pointer. The value at m_PhaseTypes[%2] = %3 does not match up "
                                  "with the type of pointer stored in the StatsDataArray (PrimaryStatsData)\n")
-            .arg(i).arg(i).arg(m_PhaseTypes[i]);
+                     .arg(i).arg(i).arg(m_PhaseTypes[i]);
         notifyErrorMessage(getHumanLabel(), ss, -666);
         setErrorCondition(-666);
         return;
@@ -698,7 +698,7 @@ void PackPrimaryPhases::execute()
         notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
         if (gid + 1 >= static_cast<int>(m->getAttributeMatrix(m_OutputCellFeatureAttributeMatrixName)->getNumTuples()))
         {
-          tDims[0] = gid+1;
+          tDims[0] = gid + 1;
           m->getAttributeMatrix(m_OutputCellFeatureAttributeMatrixName)->resizeAttributeArrays(tDims);
           //need to update pointers after resize, buut do not need to run full data check because pointers are still valid
           updateFeatureInstancePointers();
@@ -745,7 +745,7 @@ void PackPrimaryPhases::execute()
           notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
           if (gid + 1 >= static_cast<int>(m->getAttributeMatrix(m_OutputCellFeatureAttributeMatrixName)->getNumTuples()) )
           {
-            tDims[0] = gid+1;
+            tDims[0] = gid + 1;
             m->getAttributeMatrix(m_OutputCellFeatureAttributeMatrixName)->resizeAttributeArrays(tDims);
             //need to update pointers after resize, buut do not need to run full data check because pointers are still valid
             updateFeatureInstancePointers();
@@ -1237,7 +1237,7 @@ void PackPrimaryPhases::generate_feature(int phase, int Seed, Feature* feature, 
 {
   DREAM3D_RANDOMNG_NEW_SEEDED(Seed)
 
-      StatsDataArray& statsDataArray = *(m_StatsDataArray.lock().get());
+  StatsDataArray& statsDataArray = *(m_StatsDataArray.lock().get());
 
   float r1 = 1;
   float a2 = 0, a3 = 0;
@@ -2384,7 +2384,7 @@ int PackPrimaryPhases::estimate_numfeatures(int xpoints, int ypoints, int zpoint
 
   DREAM3D_RANDOMNG_NEW()
 
-      QVector<int> primaryPhasesLocal;
+  QVector<int> primaryPhasesLocal;
   QVector<double> primaryPhaseFractionsLocal;
   double totalprimaryfractions = 0.0;
   StatsData::Pointer statsData = StatsData::NullPointer();
@@ -2578,11 +2578,11 @@ AbstractFilter::Pointer PackPrimaryPhases::newFilterInstance(bool copyFilterPara
         if(false == ok)
         {
           QString ss = QString("%1::newFilterInstance()\nError occurred transferring the Filter Parameter '%2' in Filter '%3' to the filter instance. "
-                              " The filter parameter has a conditional property '%4'. The transfer of this property from the old filter to the new filter failed."
-                              " Please report this issue to the developers of this filter.").arg(filter->getNameOfClass())
-                              .arg(parameter->getPropertyName())
-                              .arg(filter->getHumanLabel())
-                              .arg(parameter->getConditionalProperty());
+                               " The filter parameter has a conditional property '%4'. The transfer of this property from the old filter to the new filter failed."
+                               " Please report this issue to the developers of this filter.").arg(filter->getNameOfClass())
+                       .arg(parameter->getPropertyName())
+                       .arg(filter->getHumanLabel())
+                       .arg(parameter->getConditionalProperty());
           Q_ASSERT_X(ok, __FILE__, ss.toLatin1().constData());
         }
       }

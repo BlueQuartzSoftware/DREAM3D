@@ -95,7 +95,7 @@ class DREAM3DLib_EXPORT DataContainer : public Observable
      * @param proxy
      * @param h5InternalPath
      */
-    static void ReadDataContainerStructure(hid_t dcArrayGroupId, DataContainerArrayProxy &proxy, QString h5InternalPath);
+    static void ReadDataContainerStructure(hid_t dcArrayGroupId, DataContainerArrayProxy& proxy, QString h5InternalPath);
 
     /**
     * @brief

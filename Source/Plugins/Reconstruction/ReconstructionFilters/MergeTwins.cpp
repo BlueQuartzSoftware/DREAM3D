@@ -99,8 +99,8 @@ MergeTwins::~MergeTwins()
 void MergeTwins::setupFilterParameters()
 {
   FilterParameterVector parameters = getFilterParameters();
-  parameters.push_back(FilterParameter::New("Axis Tolerance", "AxisTolerance", FilterParameterWidgetType::DoubleWidget,"float", false, "Degrees"));
-  parameters.push_back(FilterParameter::New("Angle Tolerance", "AngleTolerance", FilterParameterWidgetType::DoubleWidget,"float", false, "Degrees"));
+  parameters.push_back(FilterParameter::New("Axis Tolerance", "AxisTolerance", FilterParameterWidgetType::DoubleWidget, "float", false, "Degrees"));
+  parameters.push_back(FilterParameter::New("Angle Tolerance", "AngleTolerance", FilterParameterWidgetType::DoubleWidget, "float", false, "Degrees"));
   parameters.push_back(FilterParameter::New("FeatureIds", "FeatureIdsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
   parameters.push_back(FilterParameter::New("FeaturePhases", "FeaturePhasesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
   parameters.push_back(FilterParameter::New("AvgQuats", "AvgQuatsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
@@ -258,14 +258,14 @@ void MergeTwins::execute()
   {
     int featurename = m_FeatureIds[k];
     m_CellParentIds[k] = m_FeatureParentIds[featurename];
-    if(m_FeatureParentIds[featurename] > numParents) numParents = m_FeatureParentIds[featurename];
+    if(m_FeatureParentIds[featurename] > numParents) { numParents = m_FeatureParentIds[featurename]; }
   }
   numParents += 1;
 
   notifyStatusMessage(getHumanLabel(), "Characterizing Twins");
   characterize_twins();
 
- // m_RandomizeParentIds = false;
+// m_RandomizeParentIds = false;
   if (true == m_RandomizeParentIds)
   {
     // Generate all the numbers up front
@@ -347,7 +347,7 @@ int MergeTwins::getSeed(int newFid)
   if (seed >= 0)
   {
     m_FeatureParentIds[seed] = newFid;
-    QVector<size_t> tDims(1, newFid+1);
+    QVector<size_t> tDims(1, newFid + 1);
     getDataContainerArray()->getDataContainer(m_FeatureIdsArrayPath.getDataContainerName())->getAttributeMatrix(getNewCellFeatureAttributeMatrixName())->resizeAttributeArrays(tDims);
     updateFeatureInstancePointers();
   }

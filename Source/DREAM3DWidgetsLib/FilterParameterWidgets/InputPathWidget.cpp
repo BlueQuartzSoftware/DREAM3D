@@ -88,8 +88,8 @@ void InputPathWidget::setupGui()
 
   QFileCompleter* com = new QFileCompleter(this, false);
   value->setCompleter(com);
-  QObject::connect( com, SIGNAL(activated(const QString &)),
-                    this, SLOT(widgetChanged(const QString &)));
+  QObject::connect( com, SIGNAL(activated(const QString&)),
+                    this, SLOT(widgetChanged(const QString&)));
 
   if (m_FilterParameter != NULL)
   {
@@ -213,7 +213,7 @@ void InputPathWidget::on_selectBtn_clicked()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void InputPathWidget::widgetChanged(const QString &text)
+void InputPathWidget::widgetChanged(const QString& text)
 {
   verifyPathExists(text, value);
   emit parametersChanged();

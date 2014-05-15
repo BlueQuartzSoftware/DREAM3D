@@ -75,7 +75,7 @@ class LaplacianSmoothing : public SurfaceMeshFilter
     Q_PROPERTY(DataArrayPath SurfaceMeshNodeTypeArrayPath READ getSurfaceMeshNodeTypeArrayPath WRITE setSurfaceMeshNodeTypeArrayPath)
     DREAM3D_FILTER_PARAMETER(DataArrayPath, SurfaceMeshFaceLabelsArrayPath)
     Q_PROPERTY(DataArrayPath SurfaceMeshFaceLabelsArrayPath READ getSurfaceMeshFaceLabelsArrayPath WRITE setSurfaceMeshFaceLabelsArrayPath)
-    
+
     /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
     DREAM3D_FILTER_PARAMETER(int, IterationSteps)
     Q_PROPERTY(int IterationSteps READ getIterationSteps WRITE setIterationSteps)

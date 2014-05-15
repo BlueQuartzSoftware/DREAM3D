@@ -264,8 +264,8 @@ int InitializeSyntheticVolume::estimateNumFeatures(IntVec3_t dims, FloatVec3_t r
   }
 
   DREAM3D_RANDOMNG_NEW()
-      // generate the Features
-      int gid = 1;
+  // generate the Features
+  int gid = 1;
 
   float currentvol = 0.0;
   float vol;

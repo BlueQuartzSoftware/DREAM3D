@@ -159,7 +159,7 @@ void FloatVec3Widget::on_conditionalCB_stateChanged(int state)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FloatVec3Widget::widgetChanged(const QString &text)
+void FloatVec3Widget::widgetChanged(const QString& text)
 {
   emit parametersChanged();
 }

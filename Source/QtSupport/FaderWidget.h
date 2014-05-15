@@ -33,12 +33,12 @@ class FaderWidget : public QWidget
     Q_OBJECT
     Q_PROPERTY(QColor fadeColor READ fadeColor WRITE setFadeColor)
     Q_PROPERTY(int fadeDuration READ fadeDuration WRITE setFadeDuration)
-public:
+  public:
 
-    FaderWidget(QWidget *parent);
+    FaderWidget(QWidget* parent);
 
     QColor fadeColor() const { return startColor; }
-    void setFadeColor(const QColor &newColor) { startColor = newColor; }
+    void setFadeColor(const QColor& newColor) { startColor = newColor; }
 
     void setFadeIn();
     void setFadeOut();
@@ -48,14 +48,14 @@ public:
 
     void start();
 
-signals:
+  signals:
     void animationComplete();
 
-protected:
-    void paintEvent(QPaintEvent *event);
+  protected:
+    void paintEvent(QPaintEvent* event);
 
-private:
-    QTimer *timer;
+  private:
+    QTimer* timer;
     QColor startColor;
     int currentAlpha;
     int duration;

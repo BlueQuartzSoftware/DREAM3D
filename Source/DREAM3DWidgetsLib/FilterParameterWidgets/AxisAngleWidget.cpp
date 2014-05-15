@@ -173,7 +173,7 @@ void AxisAngleWidget::on_conditionalCB_stateChanged(int state)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AxisAngleWidget::widgetChanged(const QString &text)
+void AxisAngleWidget::widgetChanged(const QString& text)
 {
   emit parametersChanged();
 }

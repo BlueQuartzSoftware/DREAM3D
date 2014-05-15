@@ -69,8 +69,8 @@ VtkFeatureIdReader::~VtkFeatureIdReader()
 void VtkFeatureIdReader::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(FilterParameter::New("Input Vtk File", "InputFile", FilterParameterWidgetType::InputFileWidget,"QString", false));
-  parameters.push_back(FilterParameter::New("Feature Id Scalar Name", "FeatureIdScalarName", FilterParameterWidgetType::StringWidget,"QString", false));
+  parameters.push_back(FilterParameter::New("Input Vtk File", "InputFile", FilterParameterWidgetType::InputFileWidget, "QString", false));
+  parameters.push_back(FilterParameter::New("Feature Id Scalar Name", "FeatureIdScalarName", FilterParameterWidgetType::StringWidget, "QString", false));
   parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "QString", true));
   parameters.push_back(FilterParameter::New("Data Container", "DataContainerName", FilterParameterWidgetType::StringWidget, "QString", true, ""));
   parameters.push_back(FilterParameter::New("Cell Attribute Matrix", "CellAttributeMatrixName", FilterParameterWidgetType::StringWidget, "QString", true, ""));

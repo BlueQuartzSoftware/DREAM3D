@@ -150,7 +150,8 @@ void StringWidget::on_conditionalCB_stateChanged(int state)
 // -----------------------------------------------------------------------------
 void StringWidget::fadeInWidget(QWidget* widget)
 {
-  if (faderWidget) {
+  if (faderWidget)
+  {
     faderWidget->close();
   }
   faderWidget = new FaderWidget(widget);
@@ -173,7 +174,8 @@ void StringWidget::on_applyChangesBtn_clicked()
   value->setStyleSheet(QString(""));
   emit parametersChanged();
 
-  if (faderWidget) {
+  if (faderWidget)
+  {
     faderWidget->close();
   }
   faderWidget = new FaderWidget(applyChangesBtn);
@@ -195,7 +197,7 @@ void StringWidget::hideButton()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void StringWidget::widgetChanged(const QString &text)
+void StringWidget::widgetChanged(const QString& text)
 {
   value->setStyleSheet(QString::fromLatin1("color: rgb(0, 0, 255);"));
   value->setToolTip("Press the 'Return' key to apply your changes");

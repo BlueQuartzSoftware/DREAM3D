@@ -57,7 +57,7 @@
 */
 class DREAM3DWidgetsLib_EXPORT AxisAngleWidget : public QWidget, private Ui::AxisAngleWidget
 {
-  Q_OBJECT
+    Q_OBJECT
 
   public:
     /**

@@ -137,7 +137,7 @@ void IntWidget::on_conditionalCB_stateChanged(int state)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void IntWidget::widgetChanged(const QString &text)
+void IntWidget::widgetChanged(const QString& text)
 {
   emit parametersChanged();
 }

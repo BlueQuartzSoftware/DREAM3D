@@ -51,10 +51,10 @@ class PMDirGenerator : public QObject
   public:
 
     PMDirGenerator(QString outputDir, QString pathTemplate,
-             QString dirName,
-             QString codeTemplateResourcePath,
-             QTreeWidgetItem* wi,
-             QObject* parent = 0);
+                   QString dirName,
+                   QString codeTemplateResourcePath,
+                   QTreeWidgetItem* wi,
+                   QObject* parent = 0);
 
 
     virtual ~PMDirGenerator();
@@ -84,13 +84,13 @@ class PMDirGenerator : public QObject
     virtual QString generateFileContents();
 
   protected slots:
-   virtual void pluginNameChanged (const QString &plugname);
-   virtual void outputDirChanged (const QString &outputDir);
-   virtual void generateOutput();
+    virtual void pluginNameChanged (const QString& plugname);
+    virtual void outputDirChanged (const QString& outputDir);
+    virtual void generateOutput();
 
   signals:
-   void outputError(const QString &message);
-   void filterSourceError(const QString &message);
+    void outputError(const QString& message);
+    void filterSourceError(const QString& message);
 
 
   private:

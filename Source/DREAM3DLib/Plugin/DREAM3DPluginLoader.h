@@ -53,7 +53,7 @@ class DREAM3DLib_EXPORT DREAM3DPluginLoader
 
     virtual ~DREAM3DPluginLoader();
 
-    static void LoadPluginFilters(FilterManager *filterManager);
+    static void LoadPluginFilters(FilterManager* filterManager);
 
 
   protected:

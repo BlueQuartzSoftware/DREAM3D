@@ -77,7 +77,7 @@ FindFeatureHistogram::~FindFeatureHistogram()
 void FindFeatureHistogram::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(FilterParameter::New("Feature Array To Bin", "SelectedFeatureArrayPath", FilterParameterWidgetType::DataArraySelectionWidget,"DataArrayPath", false));
+  parameters.push_back(FilterParameter::New("Feature Array To Bin", "SelectedFeatureArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", false));
   {
     ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New();
     parameter->setHumanLabel("Number of Bins");
@@ -86,7 +86,7 @@ void FindFeatureHistogram::setupFilterParameters()
     parameter->setValueType("int");
     parameters.push_back(parameter);
   }
-  parameters.push_back(FilterParameter::New("Remove Biased Features", "RemoveBiasedFeatures", FilterParameterWidgetType::BooleanWidget,"bool", false));
+  parameters.push_back(FilterParameter::New("Remove Biased Features", "RemoveBiasedFeatures", FilterParameterWidgetType::BooleanWidget, "bool", false));
   parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "QString", true));
   parameters.push_back(FilterParameter::New("FeaturePhases", "FeaturePhasesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
   parameters.push_back(FilterParameter::New("BiasedFeatures", "BiasedFeaturesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
@@ -211,7 +211,7 @@ void findHistogram(IDataArray::Pointer inputData, int32_t* ensembleArray, int32_
       ensemble = eIds[i];
       bin = (fPtr[i] - min) / stepsize;
       if(bin >= NumBins) { bin = NumBins - 1; }
-      ensembleArray[(NumBins*ensemble) + bin]++;
+      ensembleArray[(NumBins * ensemble) + bin]++;
     }
   }
 }

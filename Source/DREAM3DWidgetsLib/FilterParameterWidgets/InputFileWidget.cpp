@@ -181,7 +181,7 @@ void InputFileWidget::on_value_textChanged(const QString& text)
 {
   setOpenDialogLastDirectory(text);
   // Set/Remove the red outline if the file does exist
-  if (verifyPathExists(text, value)==true)
+  if (verifyPathExists(text, value) == true)
   {
     emit parametersChanged(); // This should force the preflight to run because we are emitting a signal
   }
@@ -194,7 +194,7 @@ void InputFileWidget::on_value_fileDropped(const QString& text)
 {
   setOpenDialogLastDirectory(text);
   // Set/Remove the red outline if the file does exist
-  if (verifyPathExists(text, value)==true)
+  if (verifyPathExists(text, value) == true)
   {
     emit parametersChanged(); // This should force the preflight to run because we are emitting a signal
   }

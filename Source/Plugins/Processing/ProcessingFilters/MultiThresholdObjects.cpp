@@ -195,7 +195,7 @@ void MultiThresholdObjects::execute()
   QString amName = comp_0.attributeMatrixName;
 
   DataContainerArray::Pointer dca = getDataContainerArray();
-  VolumeDataContainer* m =dca->getDataContainerAs<VolumeDataContainer>(dcName);
+  VolumeDataContainer* m = dca->getDataContainerAs<VolumeDataContainer>(dcName);
 
   // Prime our output array with the result of the first comparison
   {

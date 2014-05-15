@@ -105,7 +105,7 @@ EbsdToH5Ebsd::~EbsdToH5Ebsd()
 void EbsdToH5Ebsd::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(FilterParameter::New("Import Orientation Data", "OrientationData", FilterParameterWidgetType::EbsdToH5EbsdWidget,"EbsdToH5Ebsd", false, "", "*.h5ebsd"));
+  parameters.push_back(FilterParameter::New("Import Orientation Data", "OrientationData", FilterParameterWidgetType::EbsdToH5EbsdWidget, "EbsdToH5Ebsd", false, "", "*.h5ebsd"));
 
   setFilterParameters(parameters);
 }
@@ -184,9 +184,9 @@ void EbsdToH5Ebsd::dataCheck()
 
   // Now generate all the file names the user is asking for and populate the table
   QVector<QString> fileList = FilePathGenerator::GenerateFileList(m_ZStartIndex, m_ZEndIndex,
-                                              hasMissingFiles, stackLowToHigh, m_InputPath,
-                                              m_FilePrefix, m_FileSuffix, m_FileExtension,
-                                              m_PaddingDigits);
+                              hasMissingFiles, stackLowToHigh, m_InputPath,
+                              m_FilePrefix, m_FileSuffix, m_FileExtension,
+                              m_PaddingDigits);
 
   if (fileList.size() == 0)
   {
@@ -367,9 +367,9 @@ void EbsdToH5Ebsd::execute()
 
   // Now generate all the file names the user is asking for and populate the table
   QVector<QString> fileList = FilePathGenerator::GenerateFileList(m_ZStartIndex, m_ZEndIndex,
-                                              hasMissingFiles, stackLowToHigh, m_InputPath,
-                                              m_FilePrefix, m_FileSuffix, m_FileExtension,
-                                              m_PaddingDigits);
+                              hasMissingFiles, stackLowToHigh, m_InputPath,
+                              m_FilePrefix, m_FileSuffix, m_FileExtension,
+                              m_PaddingDigits);
 
   EbsdImporter::Pointer fileImporter;
 

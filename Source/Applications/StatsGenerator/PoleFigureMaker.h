@@ -49,22 +49,26 @@
  */
 class PoleFigureData : QObject
 {
-  Q_OBJECT
+    Q_OBJECT
 
   public:
     PoleFigureData()
     {
-      imageSize[0] = 0;         imageSize[1] = 0;
-      kernelRadius[0] = 3;      kernelRadius[1] = 3;
+      imageSize[0] = 0;
+      imageSize[1] = 0;
+      kernelRadius[0] = 3;
+      kernelRadius[1] = 3;
     }
 
-    PoleFigureData(QVector<float> xData, QVector<float> yData, const QString &s, qint32* kernelRad, qint32* size) :
-    xData(xData),
-    yData(yData),
-    label(s)
+    PoleFigureData(QVector<float> xData, QVector<float> yData, const QString& s, qint32* kernelRad, qint32* size) :
+      xData(xData),
+      yData(yData),
+      label(s)
     {
-      imageSize[0] = size[0]; imageSize[1] = size[1];
-      kernelRadius[0] = kernelRad[0]; kernelRadius[1] = kernelRad[1];
+      imageSize[0] = size[0];
+      imageSize[1] = size[1];
+      kernelRadius[0] = kernelRad[0];
+      kernelRadius[1] = kernelRad[1];
     }
 
     // We need a copy constructor
@@ -80,7 +84,7 @@ class PoleFigureData : QObject
       this->kernelRadius[1] = rhs.kernelRadius[1];
     }
 
-    virtual ~PoleFigureData(){}
+    virtual ~PoleFigureData() {}
 
     QVector<float> xData;
     QVector<float> yData;
@@ -118,16 +122,16 @@ class PoleFigureMaker
     PoleFigureMaker();
     virtual ~PoleFigureMaker();
 
-    QImage generateColorPoleFigureImage(const PoleFigureData &config);
+    QImage generateColorPoleFigureImage(const PoleFigureData& config);
 
-    QImage generatePoleFigureImage(const PoleFigureData &config);
+    QImage generatePoleFigureImage(const PoleFigureData& config);
 
 
     int countPixelNeighbors(int imageWidth, int imageHeight, int pX, int pY,
-                            QVector<qint32> &data, QVector<qint32> &counts,
+                            QVector<qint32>& data, QVector<qint32>& counts,
                             int kX, int kY, bool genmask = false);
     void getColorCorrespondingTovalue(float val,
-                                      float &r, float &g, float &b,
+                                      float& r, float& g, float& b,
                                       float max, float min);
 
     void generateKernelWeigths(int kernelWidth, int kernelHeight);

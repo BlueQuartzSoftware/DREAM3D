@@ -158,12 +158,12 @@ namespace Detail
 
 #define CHECK_AND_CONVERT(Type, DataContainer, ScalarType, Array, AttributeMatrixName, OutputName)\
   if(false == completed) {\
-  Type* Type##Ptr = Type::SafePointerDownCast(Array.get());\
-  if (NULL != Type##Ptr) {\
-  QVector<size_t> dims = Array->getComponentDimensions();\
-  Detail::ConvertData<Type>(Type##Ptr, dims, DataContainer, ScalarType, AttributeMatrixName, OutputName);\
-  completed = true;\
-  }\
+    Type* Type##Ptr = Type::SafePointerDownCast(Array.get());\
+    if (NULL != Type##Ptr) {\
+      QVector<size_t> dims = Array->getComponentDimensions();\
+      Detail::ConvertData<Type>(Type##Ptr, dims, DataContainer, ScalarType, AttributeMatrixName, OutputName);\
+      completed = true;\
+    }\
   }
 
 // -----------------------------------------------------------------------------
@@ -173,7 +173,7 @@ ConvertData::ConvertData() :
   AbstractFilter(),
   m_ScalarType(0),
   m_OutputArrayName(""),
-  m_SelectedCellArrayPath("","","")
+  m_SelectedCellArrayPath("", "", "")
 {
   setupFilterParameters();
 }
@@ -194,7 +194,7 @@ void ConvertData::setupFilterParameters()
   /* Place all your option initialization code here */
 
   /* To Display a Combobox with a list of current Voxel Cell Arrays in it */
-  parameters.push_back(FilterParameter::New("Attribute Array Name", "SelectedCellArrayPath", FilterParameterWidgetType::DataArraySelectionWidget,"DataArrayPath", false));
+  parameters.push_back(FilterParameter::New("Attribute Array Name", "SelectedCellArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", false));
   {
     ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New();
     parameter->setHumanLabel("Scalar Type");
@@ -215,7 +215,7 @@ void ConvertData::setupFilterParameters()
     parameter->setChoices(choices);
     parameters.push_back(parameter);
   }
-  parameters.push_back(FilterParameter::New("Output Array Name", "OutputArrayName", FilterParameterWidgetType::StringWidget,"QString", false));
+  parameters.push_back(FilterParameter::New("Output Array Name", "OutputArrayName", FilterParameterWidgetType::StringWidget, "QString", false));
   setFilterParameters(parameters);
 }
 

@@ -85,25 +85,25 @@ void GenericExample::setupFilterParameters()
   QVector<FilterParameter::Pointer> parameters;
   /* Place all your option initialization code here */
   /* For String input use this code */
-  parameters.push_back(FilterParameter::New("STL Output Prefix", "StlFilePrefix", FilterParameterWidgetType::StringWidget,"QString", false));
+  parameters.push_back(FilterParameter::New("STL Output Prefix", "StlFilePrefix", FilterParameterWidgetType::StringWidget, "QString", false));
   parameters[0]->setConditional(true);
   parameters[0]->setConditionalLabel("Show Prefix");
   parameters[0]->setConditionalProperty("ShowPrefix");
   /*  For an Integer use this code*/
-  parameters.push_back(FilterParameter::New("Max Iterations", "MaxIterations", FilterParameterWidgetType::IntWidget,"int", false));
+  parameters.push_back(FilterParameter::New("Max Iterations", "MaxIterations", FilterParameterWidgetType::IntWidget, "int", false));
   /*  For a Floating point value use this code*/
-  parameters.push_back(FilterParameter::New("Misorientation Tolerance", "MisorientationTolerance", FilterParameterWidgetType::DoubleWidget,"float", false));
+  parameters.push_back(FilterParameter::New("Misorientation Tolerance", "MisorientationTolerance", FilterParameterWidgetType::DoubleWidget, "float", false));
   /*   For an input file use this code*/
-  parameters.push_back(FilterParameter::New("Input File", "InputFile", FilterParameterWidgetType::InputFileWidget,"QString", false));
+  parameters.push_back(FilterParameter::New("Input File", "InputFile", FilterParameterWidgetType::InputFileWidget, "QString", false));
   /*   For an input path use this code*/
-  parameters.push_back(FilterParameter::New("Input Path", "InputPath", FilterParameterWidgetType::InputPathWidget,"QString", false));
+  parameters.push_back(FilterParameter::New("Input Path", "InputPath", FilterParameterWidgetType::InputPathWidget, "QString", false));
 
   /*   For an output file use this code*/
-  parameters.push_back(FilterParameter::New("Output File", "OutputFile", FilterParameterWidgetType::OutputFileWidget,"QString", false));
+  parameters.push_back(FilterParameter::New("Output File", "OutputFile", FilterParameterWidgetType::OutputFileWidget, "QString", false));
   /*   For an output path use this code*/
-  parameters.push_back(FilterParameter::New("Output Path", "OutputPath", FilterParameterWidgetType::OutputPathWidget,"QString", false));
+  parameters.push_back(FilterParameter::New("Output Path", "OutputPath", FilterParameterWidgetType::OutputPathWidget, "QString", false));
   /*   For a simple true/false boolean use this code*/
-  parameters.push_back(FilterParameter::New("Write Alignment Shift File", "WriteAlignmentShifts", FilterParameterWidgetType::BooleanWidget,"bool", false));
+  parameters.push_back(FilterParameter::New("Write Alignment Shift File", "WriteAlignmentShifts", FilterParameterWidgetType::BooleanWidget, "bool", false));
 
   parameters.push_back(FilterParameter::New("Choice Example", "", FilterParameterWidgetType::SeparatorWidget, "QString", false));
 
@@ -124,12 +124,12 @@ void GenericExample::setupFilterParameters()
 
 
   /* Display a group of 3 text boxes to collect 3 integer values */
-  parameters.push_back(FilterParameter::New("Dimensions", "Dimensions", FilterParameterWidgetType::IntVec3Widget,"IntVec3_t", false, "XYZ"));
+  parameters.push_back(FilterParameter::New("Dimensions", "Dimensions", FilterParameterWidgetType::IntVec3Widget, "IntVec3_t", false, "XYZ"));
   /* Display a group of 3 text boxes to collect 3 float values */
-  parameters.push_back(FilterParameter::New("Origin", "Origin", FilterParameterWidgetType::FloatVec3Widget,"FloatVec3_t", false, "XYZ"));
+  parameters.push_back(FilterParameter::New("Origin", "Origin", FilterParameterWidgetType::FloatVec3Widget, "FloatVec3_t", false, "XYZ"));
 
   /* Display the AxisAngleWidget to collect Axis-Angle pairs from the user */
-  parameters.push_back(FilterParameter::New("Crystal Rotations", "CrystalSymmetryRotations", FilterParameterWidgetType::AxisAngleWidget,"", false));
+  parameters.push_back(FilterParameter::New("Crystal Rotations", "CrystalSymmetryRotations", FilterParameterWidgetType::AxisAngleWidget, "", false));
 
   parameters.push_back(FilterParameter::New("Feature Ids", "FeatureIdsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "", false, ""));
 

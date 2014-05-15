@@ -232,18 +232,18 @@ void FindMisorientations::execute()
       {
         w = m_OrientationOps[phase1]->getMisoQuat( q1, q2, n1, n2, n3);
         misorientationlists[i][j] = DREAM3D::Constants::k_180OverPi;
-		if (m_FindAvgMisors == true) m_AvgMisorientations[i] += misorientationlists[i][j];
+        if (m_FindAvgMisors == true) { m_AvgMisorientations[i] += misorientationlists[i][j]; }
       }
       else
       {
-        if (m_FindAvgMisors == true) tempMisoList--;
+        if (m_FindAvgMisors == true) { tempMisoList--; }
         misorientationlists[i][j] = -100.0f;
       }
     }
     if (m_FindAvgMisors == true)
     {
-      if (tempMisoList > 0) m_AvgMisorientations[i] /= tempMisoList;
-      else m_AvgMisorientations[i] = -100.0f;
+      if (tempMisoList > 0) { m_AvgMisorientations[i] /= tempMisoList; }
+      else { m_AvgMisorientations[i] = -100.0f; }
       tempMisoList = 0;
     }
   }

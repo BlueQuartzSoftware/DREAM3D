@@ -70,11 +70,11 @@ NodesTrianglesToVtk::~NodesTrianglesToVtk()
 void NodesTrianglesToVtk::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(FilterParameter::New("Nodes File", "NodesFile", FilterParameterWidgetType::InputFileWidget,"QString", false));
-  parameters.push_back(FilterParameter::New("Triangles File", "TrianglesFile", FilterParameterWidgetType::InputFileWidget,"QString", false));
-  parameters.push_back(FilterParameter::New("Output Vtk File", "OutputVtkFile", FilterParameterWidgetType::OutputFileWidget,"QString", false));
-  parameters.push_back(FilterParameter::New("Write Binary Vtk File", "WriteBinaryFile", FilterParameterWidgetType::BooleanWidget,"bool", false));
-  parameters.push_back(FilterParameter::New("Write Conformal Mesh", "WriteConformalMesh", FilterParameterWidgetType::BooleanWidget,"bool", false));
+  parameters.push_back(FilterParameter::New("Nodes File", "NodesFile", FilterParameterWidgetType::InputFileWidget, "QString", false));
+  parameters.push_back(FilterParameter::New("Triangles File", "TrianglesFile", FilterParameterWidgetType::InputFileWidget, "QString", false));
+  parameters.push_back(FilterParameter::New("Output Vtk File", "OutputVtkFile", FilterParameterWidgetType::OutputFileWidget, "QString", false));
+  parameters.push_back(FilterParameter::New("Write Binary Vtk File", "WriteBinaryFile", FilterParameterWidgetType::BooleanWidget, "bool", false));
+  parameters.push_back(FilterParameter::New("Write Conformal Mesh", "WriteConformalMesh", FilterParameterWidgetType::BooleanWidget, "bool", false));
 
   setFilterParameters(parameters);
 }

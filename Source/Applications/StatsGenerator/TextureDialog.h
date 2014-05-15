@@ -57,19 +57,19 @@
  */
 class TextureDialog : public QDialog , private Ui::TextureDialog
 {
-  Q_OBJECT
+    Q_OBJECT
 
   public:
-    TextureDialog(unsigned int xtal, QWidget *parent = 0);
+    TextureDialog(unsigned int xtal, QWidget* parent = 0);
     virtual ~TextureDialog();
 
     DREAM3D_INSTANCE_PROPERTY(unsigned int, CrystalStructure)
 
-    void getODFEntry(float &e1, float &e2, float &e3, float &weight, float &sigma);
+    void getODFEntry(float& e1, float& e2, float& e3, float& weight, float& sigma);
 
   protected slots:
     void on_presetListWidget_itemSelectionChanged ();
-    void on_presetListWidget_itemDoubleClicked ( QListWidgetItem * item );
+    void on_presetListWidget_itemDoubleClicked ( QListWidgetItem* item );
 
 
   protected:

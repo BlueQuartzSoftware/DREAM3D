@@ -182,7 +182,8 @@ void AttributeMatrixSelectionWidget::populateComboBoxes()
   while(iter.hasNext() )
   {
     DataContainerProxy dc = iter.next();
-    if(dataContainerList->findText(dc.name) == -1 ) {
+    if(dataContainerList->findText(dc.name) == -1 )
+    {
       dataContainerList->addItem(dc.name);
     }
   }
@@ -213,7 +214,8 @@ void AttributeMatrixSelectionWidget::populateComboBoxes()
   if (!dataContainerList->signalsBlocked()) { didBlock = true; }
   dataContainerList->blockSignals(true);
   int dcIndex = dataContainerList->findText(dcName);
-  if(dcIndex < 0 && dcName.isEmpty() == false) {
+  if(dcIndex < 0 && dcName.isEmpty() == false)
+  {
     dataContainerList->addItem(dcName);
   } // the string was not found so just set it to the first index
   else
@@ -229,7 +231,8 @@ void AttributeMatrixSelectionWidget::populateComboBoxes()
   attributeMatrixList->blockSignals(true);
   int amIndex = attributeMatrixList->findText(amName);
   if(amIndex < 0 && amName.isEmpty() == false) { attributeMatrixList->addItem(amName); } // The name of the attributeMatrix was not found so just set the first one
-  else {
+  else
+  {
     if(amIndex < 0) { amIndex = 0; }
     attributeMatrixList->setCurrentIndex(amIndex);
   }

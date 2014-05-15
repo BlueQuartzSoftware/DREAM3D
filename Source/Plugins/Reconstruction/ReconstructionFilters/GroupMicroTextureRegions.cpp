@@ -108,8 +108,8 @@ GroupMicroTextureRegions::~GroupMicroTextureRegions()
 void GroupMicroTextureRegions::setupFilterParameters()
 {
   FilterParameterVector parameters = getFilterParameters();
-  parameters.push_front(FilterParameter::New("Group C-Axes With Running Average", "UseRunningAverage", FilterParameterWidgetType::BooleanWidget,"bool", false));
-  parameters.push_front(FilterParameter::New("C-Axis Alignment Tolerance", "CAxisTolerance", FilterParameterWidgetType::DoubleWidget,"float", false, "Degrees"));
+  parameters.push_front(FilterParameter::New("Group C-Axes With Running Average", "UseRunningAverage", FilterParameterWidgetType::BooleanWidget, "bool", false));
+  parameters.push_front(FilterParameter::New("C-Axis Alignment Tolerance", "CAxisTolerance", FilterParameterWidgetType::DoubleWidget, "float", false, "Degrees"));
   parameters.push_back(FilterParameter::New("FeatureIds", "FeatureIdsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
   parameters.push_back(FilterParameter::New("FeaturePhases", "FeaturePhasesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
   parameters.push_back(FilterParameter::New("Volumes", "VolumesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
@@ -230,7 +230,7 @@ void GroupMicroTextureRegions::dataCheck()
   // Ensemble Data
   typedef DataArray<unsigned int> XTalStructArrayType;
   m_CrystalStructuresPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<unsigned int>, AbstractFilter>(this, getCrystalStructuresArrayPath(), dims)
-      ; /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+                           ; /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_CrystalStructuresPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_CrystalStructures = m_CrystalStructuresPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
@@ -323,7 +323,8 @@ void GroupMicroTextureRegions::randomizeFeatureIds(int64_t totalPoints, size_t t
   for (size_t i = 1; i < totalFeatures; i++)
   {
     r = numberGenerator(); // Random remaining position.
-    if (r >= totalFeatures) {
+    if (r >= totalFeatures)
+    {
       continue;
     }
     temp = gid[i];
@@ -334,8 +335,8 @@ void GroupMicroTextureRegions::randomizeFeatureIds(int64_t totalPoints, size_t t
   // Now adjust all the Grain Id values for each Voxel
   for(int64_t i = 0; i < totalPoints; ++i)
   {
-      m_CellParentIds[i] = gid[ m_CellParentIds[i] ];
-      m_FeatureParentIds[m_FeatureIds[i]] = m_CellParentIds[i];
+    m_CellParentIds[i] = gid[ m_CellParentIds[i] ];
+    m_FeatureParentIds[m_FeatureIds[i]] = m_CellParentIds[i];
   }
 }
 
@@ -357,7 +358,7 @@ int GroupMicroTextureRegions::getSeed(int newFid)
   float g1t[3][3];
 
   DREAM3D_RANDOMNG_NEW()
-      int seed = -1;
+  int seed = -1;
   int randfeature = 0;
 
   // Precalculate some constants
@@ -375,7 +376,7 @@ int GroupMicroTextureRegions::getSeed(int newFid)
   if (seed >= 0)
   {
     m_FeatureParentIds[seed] = newFid;
-    QVector<size_t> tDims(1, newFid+1);
+    QVector<size_t> tDims(1, newFid + 1);
     getDataContainerArray()->getDataContainer(m_FeatureIdsArrayPath.getDataContainerName())->getAttributeMatrix(getNewCellFeatureAttributeMatrixName())->resizeAttributeArrays(tDims);
     updateFeatureInstancePointers();
 
@@ -392,8 +393,8 @@ int GroupMicroTextureRegions::getSeed(int newFid)
       //dividing by the magnitudes (they would be 1)
       MatrixMath::Normalize3x1(c1);
 
-      MatrixMath::Copy3x1(c1,avgCaxes);
-      MatrixMath::Multiply3x1withConstant(avgCaxes,m_Volumes[seed]);
+      MatrixMath::Copy3x1(c1, avgCaxes);
+      MatrixMath::Multiply3x1withConstant(avgCaxes, m_Volumes[seed]);
     }
   }
   return seed;
@@ -447,8 +448,8 @@ bool GroupMicroTextureRegions::determineGrouping(int referenceFeature, int neigh
       //dividing by the magnitudes (they would be 1)
       MatrixMath::Normalize3x1(c2);
 
-      if (m_UseRunningAverage == true) w = GeometryMath::CosThetaBetweenVectors(avgCaxes, c2);
-      else w = GeometryMath::CosThetaBetweenVectors(c1, c2);
+      if (m_UseRunningAverage == true) { w = GeometryMath::CosThetaBetweenVectors(avgCaxes, c2); }
+      else { w = GeometryMath::CosThetaBetweenVectors(c1, c2); }
       DREAM3DMath::boundF(w, -1, 1);
       w = acosf(w);
       if (w <= caxisTolerance || (DREAM3D::Constants::k_Pi - w) <= caxisTolerance)

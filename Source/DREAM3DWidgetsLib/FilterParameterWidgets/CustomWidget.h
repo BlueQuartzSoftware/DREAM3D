@@ -58,7 +58,7 @@
 */
 class FilterWidgetsLib_EXPORT CustomWidget : public QWidget, private Ui::CustomWidget
 {
-  Q_OBJECT
+    Q_OBJECT
 
   public:
     /**
@@ -68,9 +68,9 @@ class FilterWidgetsLib_EXPORT CustomWidget : public QWidget, private Ui::CustomW
     * @param parent The parent QWidget for this Widget
     */
     CustomWidget(FilterParameter* parameter, AbstractFilter* filter = NULL, QWidget* parent = NULL);
-    
+
     virtual ~CustomWidget();
-    
+
     /**
     * @brief This method does additional GUI widget connections
     */

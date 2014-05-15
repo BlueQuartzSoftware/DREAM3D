@@ -74,16 +74,16 @@ class FindMisorientationVectorsImpl
         for(int j = 0; j < 3; j++)
         {
           QuaternionMathF::Copy(m_Quats[i], q1);
-          if(m_Neighbors[3*i+j] > 0)
+          if(m_Neighbors[3 * i + j] > 0)
           {
-            QuaternionMathF::Copy(m_Quats[m_Neighbors[3*i+j]], q2);
+            QuaternionMathF::Copy(m_Quats[m_Neighbors[3 * i + j]], q2);
             QuaternionMathF::Conjugate(q2);
             QuaternionMathF::Multiply(q2, q1, delq);
             m_OrientationOps[1]->getFZQuat(delq);
             QuaternionMathF::GetMisorientationVector(delq, misoVec);
-            m_MisoVecs[3*m_FaceIds[3*i+j]+0] = misoVec[0];
-            m_MisoVecs[3*m_FaceIds[3*i+j]+1] = misoVec[1];
-            m_MisoVecs[3*m_FaceIds[3*i+j]+2] = misoVec[2];
+            m_MisoVecs[3 * m_FaceIds[3 * i + j] + 0] = misoVec[0];
+            m_MisoVecs[3 * m_FaceIds[3 * i + j] + 1] = misoVec[1];
+            m_MisoVecs[3 * m_FaceIds[3 * i + j] + 2] = misoVec[2];
           }
         }
       }
@@ -142,7 +142,7 @@ FindOrientationFieldCurl::~FindOrientationFieldCurl()
 void FindOrientationFieldCurl::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(FilterParameter::New("Curl Radius", "CurlSize", FilterParameterWidgetType::IntVec3Widget,"IntVec3_t", false, "Pixels"));
+  parameters.push_back(FilterParameter::New("Curl Radius", "CurlSize", FilterParameterWidgetType::IntVec3Widget, "IntVec3_t", false, "Pixels"));
 
   parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "QString", true));
   parameters.push_back(FilterParameter::New("CellPhases", "CellPhasesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
@@ -238,13 +238,13 @@ void FindOrientationFieldCurl::execute()
   size_t zP = m->getZPoints();
 
   QuatF* quats = reinterpret_cast<QuatF*>(m_Quats);
-  size_t totalFaces = ((xP+1)*yP*zP)+((yP+1)*xP*zP)+((zP+1)*xP*yP);
+  size_t totalFaces = ((xP + 1) * yP * zP) + ((yP + 1) * xP * zP) + ((zP + 1) * xP * yP);
   QVector<size_t> tDims(1, totalFaces);
   QVector<size_t> cDims(1, 3);
   FloatArrayType::Pointer misoVecsPtr = FloatArrayType::CreateArray(tDims, cDims, "misoVecs");
   misoVecsPtr->initializeWithValue(0);
   float* misoVecs = misoVecsPtr->getPointer(0);
-  tDims[0] = (xP*yP*zP);
+  tDims[0] = (xP * yP * zP);
   Int64ArrayType::Pointer neighborsPtr = Int64ArrayType::CreateArray(tDims, cDims, "neighbors");
   neighborsPtr->initializeWithValue(-1);
   int64_t* neighbors = neighborsPtr->getPointer(0);
@@ -253,8 +253,8 @@ void FindOrientationFieldCurl::execute()
   int64_t* faceIds = faceIdsPtr->getPointer(0);
 
   size_t count = 0;
-  size_t yshift = (xP+1)*yP*zP;
-  size_t zshift = ((xP+1)*yP*zP) + ((yP+1)*xP*zP);
+  size_t yshift = (xP + 1) * yP * zP;
+  size_t zshift = ((xP + 1) * yP * zP) + ((yP + 1) * xP * zP);
 
   for(size_t i = 0; i < zP; i++)
   {
@@ -262,9 +262,9 @@ void FindOrientationFieldCurl::execute()
     {
       for(size_t k = 0; k < xP; k++)
       {
-        if(k != xP-1) neighbors[3*count+0] = count+1, faceIds[3*count+0] = k + (j*(xP+1)) + (i*(xP+1)*yP) + 1;
-        if(j != yP-1) neighbors[3*count+1] = count+xP, faceIds[3*count+1] = j + (k*(yP+1)) + (i*(yP+1)*xP) + yshift + 1;
-        if(i != zP-1) neighbors[3*count+2] = count+(xP*yP), faceIds[3*count+2] = i + (k*(zP+1)) + (j*(zP+1)*xP) + zshift + 1;
+        if(k != xP - 1) { neighbors[3 * count + 0] = count + 1, faceIds[3 * count + 0] = k + (j * (xP + 1)) + (i * (xP + 1) * yP) + 1; }
+        if(j != yP - 1) { neighbors[3 * count + 1] = count + xP, faceIds[3 * count + 1] = j + (k * (yP + 1)) + (i * (yP + 1) * xP) + yshift + 1; }
+        if(i != zP - 1) { neighbors[3 * count + 2] = count + (xP * yP), faceIds[3 * count + 2] = i + (k * (zP + 1)) + (j * (zP + 1) * xP) + zshift + 1; }
         count++;
       }
     }
@@ -279,7 +279,7 @@ void FindOrientationFieldCurl::execute()
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
   if (doParallel == true)
   {
-    tbb::parallel_for(tbb::blocked_range<size_t>(0, (xP*yP*zP)),
+    tbb::parallel_for(tbb::blocked_range<size_t>(0, (xP * yP * zP)),
                       FindMisorientationVectorsImpl(quats, misoVecs, neighbors, faceIds), tbb::auto_partitioner());
 
   }
@@ -287,7 +287,7 @@ void FindOrientationFieldCurl::execute()
 #endif
   {
     FindMisorientationVectorsImpl serial(quats, misoVecs, neighbors, faceIds);
-    serial.convert(0, (xP*yP*zP));
+    serial.convert(0, (xP * yP * zP));
   }
 
 
@@ -311,7 +311,7 @@ void FindOrientationFieldCurl::execute()
   DimType point;
   size_t neighbor = 0;
   DimType rowShift = xPoints;
-  DimType planeShift = xPoints*yPoints;
+  DimType planeShift = xPoints * yPoints;
   DimType rowStride;
   DimType planeStride;
 
@@ -352,10 +352,10 @@ void FindOrientationFieldCurl::execute()
             else if(plane + j >= zPoints - 1) { good = 0; }
             if(good == 1)
             {
-              neighbor = point + (j*planeShift);
-              kappa13 += misoVecs[3*faceIds[3*neighbor+2]];
-              kappa23 += misoVecs[3*faceIds[3*neighbor+2]+1];
-              kappa33 += misoVecs[3*faceIds[3*neighbor+2]+2];
+              neighbor = point + (j * planeShift);
+              kappa13 += misoVecs[3 * faceIds[3 * neighbor + 2]];
+              kappa23 += misoVecs[3 * faceIds[3 * neighbor + 2] + 1];
+              kappa33 += misoVecs[3 * faceIds[3 * neighbor + 2] + 2];
               count++;
             }
           }
@@ -375,10 +375,10 @@ void FindOrientationFieldCurl::execute()
             else if(row + k >= yPoints - 1) { good = 0; }
             if(good == 1)
             {
-              neighbor = point + (k*rowShift);
-              kappa12 += misoVecs[3*faceIds[3*neighbor+1]];
-              kappa22 += misoVecs[3*faceIds[3*neighbor+1]+1];
-              kappa32 += misoVecs[3*faceIds[3*neighbor+1]+2];
+              neighbor = point + (k * rowShift);
+              kappa12 += misoVecs[3 * faceIds[3 * neighbor + 1]];
+              kappa22 += misoVecs[3 * faceIds[3 * neighbor + 1] + 1];
+              kappa32 += misoVecs[3 * faceIds[3 * neighbor + 1] + 2];
               count++;
             }
           }
@@ -398,9 +398,9 @@ void FindOrientationFieldCurl::execute()
             if(good == 1)
             {
               neighbor = point + l;
-              kappa11 += misoVecs[3*faceIds[3*neighbor]];
-              kappa21 += misoVecs[3*faceIds[3*neighbor]+1];
-              kappa31 += misoVecs[3*faceIds[3*neighbor]+2];
+              kappa11 += misoVecs[3 * faceIds[3 * neighbor]];
+              kappa21 += misoVecs[3 * faceIds[3 * neighbor] + 1];
+              kappa31 += misoVecs[3 * faceIds[3 * neighbor] + 2];
               count++;
             }
           }
@@ -412,15 +412,15 @@ void FindOrientationFieldCurl::execute()
             count = 0;
           }
 
-          m_DislocationTensors[9*point] = -kappa22-kappa33;
-          m_DislocationTensors[9*point+1] = kappa21;
-          m_DislocationTensors[9*point+2] = kappa31;
-          m_DislocationTensors[9*point+3] = kappa12;
-          m_DislocationTensors[9*point+4] = -kappa11-kappa33;
-          m_DislocationTensors[9*point+5] = kappa32;
-          m_DislocationTensors[9*point+6] = kappa13;
-          m_DislocationTensors[9*point+7] = kappa23;
-          m_DislocationTensors[9*point+8] = -kappa11-kappa22;
+          m_DislocationTensors[9 * point] = -kappa22 - kappa33;
+          m_DislocationTensors[9 * point + 1] = kappa21;
+          m_DislocationTensors[9 * point + 2] = kappa31;
+          m_DislocationTensors[9 * point + 3] = kappa12;
+          m_DislocationTensors[9 * point + 4] = -kappa11 - kappa33;
+          m_DislocationTensors[9 * point + 5] = kappa32;
+          m_DislocationTensors[9 * point + 6] = kappa13;
+          m_DislocationTensors[9 * point + 7] = kappa23;
+          m_DislocationTensors[9 * point + 8] = -kappa11 - kappa22;
         }
       }
     }

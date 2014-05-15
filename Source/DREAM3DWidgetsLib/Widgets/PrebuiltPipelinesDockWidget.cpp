@@ -127,7 +127,7 @@ QDir PrebuiltPipelinesDockWidget::findPipelinesDirectory()
 #else
   // We are on Linux - I think
   QFileInfo fi(pipelinesDir.absolutePath() + QDir::separator() + dirName);
- // qDebug() << fi.absolutePath();
+// qDebug() << fi.absolutePath();
   // Look for the "PrebuiltPipelines" directory in the current app directory
   if (fi.exists() == false)
   {
@@ -157,7 +157,7 @@ void PrebuiltPipelinesDockWidget::readPipelines()
   // Need to add the path to the prebuilts directory to the root item since we may use this later on.
   filterLibraryTree->invisibleRootItem()->setData(0, Qt::UserRole, QVariant(pipelinesDir.absolutePath()));
 
-    // Now block signals and load up all the pipelines in the folder
+  // Now block signals and load up all the pipelines in the folder
   filterLibraryTree->blockSignals(true);
   addPipelinesRecursively(pipelinesDir, filterLibraryTree->invisibleRootItem(), iconFileName, allowEditing, fileExtension, itemType);
   filterLibraryTree->blockSignals(false);
@@ -167,7 +167,7 @@ void PrebuiltPipelinesDockWidget::readPipelines()
 //
 // -----------------------------------------------------------------------------
 void PrebuiltPipelinesDockWidget::addPipelinesRecursively(QDir currentDir, QTreeWidgetItem* currentDirItem, QString iconFileName,
-                                                bool allowEditing, QStringList filters, FilterLibraryTreeWidget::ItemType itemType)
+                                                          bool allowEditing, QStringList filters, FilterLibraryTreeWidget::ItemType itemType)
 {
 
 

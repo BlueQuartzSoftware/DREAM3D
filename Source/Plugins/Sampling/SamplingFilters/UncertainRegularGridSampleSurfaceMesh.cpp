@@ -81,11 +81,11 @@ UncertainRegularGridSampleSurfaceMesh::~UncertainRegularGridSampleSurfaceMesh()
 void UncertainRegularGridSampleSurfaceMesh::setupFilterParameters()
 {
   FilterParameterVector parameters = getFilterParameters();
-  parameters.push_back(FilterParameter::New("X Points (Voxels)", "XPoints", FilterParameterWidgetType::IntWidget,"int", false, "Column"));
-  parameters.push_back(FilterParameter::New("Y Points (Voxels)", "YPoints", FilterParameterWidgetType::IntWidget,"int", false, "Row"));
-  parameters.push_back(FilterParameter::New("Z Points (Voxels)", "ZPoints", FilterParameterWidgetType::IntWidget,"int", false, "Plane"));
-  parameters.push_back(FilterParameter::New("Resolution", "Resolution", FilterParameterWidgetType::FloatVec3Widget,"FloatVec3_t", false, "Microns"));
-  parameters.push_back(FilterParameter::New("Uncertainty", "Uncertainty", FilterParameterWidgetType::FloatVec3Widget,"FloatVec3_t", false, "Microns"));
+  parameters.push_back(FilterParameter::New("X Points (Voxels)", "XPoints", FilterParameterWidgetType::IntWidget, "int", false, "Column"));
+  parameters.push_back(FilterParameter::New("Y Points (Voxels)", "YPoints", FilterParameterWidgetType::IntWidget, "int", false, "Row"));
+  parameters.push_back(FilterParameter::New("Z Points (Voxels)", "ZPoints", FilterParameterWidgetType::IntWidget, "int", false, "Plane"));
+  parameters.push_back(FilterParameter::New("Resolution", "Resolution", FilterParameterWidgetType::FloatVec3Widget, "FloatVec3_t", false, "Microns"));
+  parameters.push_back(FilterParameter::New("Uncertainty", "Uncertainty", FilterParameterWidgetType::FloatVec3Widget, "FloatVec3_t", false, "Microns"));
   parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "QString", true));
   parameters.push_back(FilterParameter::New("New DataContainer Name", "DataContainerName", FilterParameterWidgetType::StringWidget, "QString", true, ""));
   parameters.push_back(FilterParameter::New("New Cell Attribute Matrix Name", "CellAttributeMatrixName", FilterParameterWidgetType::StringWidget, "QString", true, ""));
@@ -129,7 +129,7 @@ void UncertainRegularGridSampleSurfaceMesh::dataCheck()
 
   VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName(), false);
   if(getErrorCondition() < 0 || NULL == m) { return; }
-  QVector<size_t> tDims(3, 0);  
+  QVector<size_t> tDims(3, 0);
   AttributeMatrix::Pointer cellAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::Cell);
   if(getErrorCondition() < 0) { return; }
 

@@ -77,7 +77,7 @@ GroupFeatures::~GroupFeatures()
 void GroupFeatures::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(FilterParameter::New("Use Non-Contiguous Neighbors", "UseNonContiguousNeighbors", FilterParameterWidgetType::BooleanWidget,"bool", false));
+  parameters.push_back(FilterParameter::New("Use Non-Contiguous Neighbors", "UseNonContiguousNeighbors", FilterParameterWidgetType::BooleanWidget, "bool", false));
   parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "QString", true));
   parameters.push_back(FilterParameter::New("Contiguous NeighborList Array", "ContiguousNeighborListArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
   parameters.push_back(FilterParameter::New("NonContiguous NeighborList Array", "NonContiguousNeighborListArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
@@ -157,7 +157,7 @@ void GroupFeatures::execute()
 
   int parentcount = 0;
   int seed = 0;
-  int list1size=0, list2size=0, listsize=0;
+  int list1size = 0, list2size = 0, listsize = 0;
   int neigh;
 
   while (seed >= 0)
@@ -171,7 +171,7 @@ void GroupFeatures::execute()
       {
         int firstfeature = grouplist[j];
         list1size = int(neighborlist[firstfeature].size());
-        if (m_UseNonContiguousNeighbors == true) list2size = nonContigNeighList->getListSize(firstfeature); 
+        if (m_UseNonContiguousNeighbors == true) { list2size = nonContigNeighList->getListSize(firstfeature); }
         for (int k = 0; k < 2; k++)
         {
           if (m_PatchGrouping == true) { k = 1; }
@@ -192,7 +192,7 @@ void GroupFeatures::execute()
           }
         }
       }
-      if (m_PatchGrouping == true) 
+      if (m_PatchGrouping == true)
       {
         if (growPatch(parentcount) == true)
         {

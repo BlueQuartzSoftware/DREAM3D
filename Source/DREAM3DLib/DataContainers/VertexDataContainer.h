@@ -96,7 +96,7 @@ class DREAM3DLib_EXPORT VertexDataContainer : public DataContainer
     virtual DataContainer::Pointer deepCopy();
     virtual int writeMeshToHDF5(hid_t dcGid, bool writeXdmf);
     virtual int writeVerticesToHDF5(hid_t dcGid, bool writeXdmf);
-    virtual int writeXdmf(QTextStream &out, QString hdfFileName);
+    virtual int writeXdmf(QTextStream& out, QString hdfFileName);
     virtual int readVertices(hid_t dcGid, bool preflight);
     virtual int readMeshDataFromHDF5(hid_t dcGid, bool preflight);
 

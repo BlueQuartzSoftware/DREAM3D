@@ -73,7 +73,7 @@ class CellArray
     // -----------------------------------------------------------------------------
     //
     // -----------------------------------------------------------------------------
-    virtual ~CellArray(){ }
+    virtual ~CellArray() { }
 
 
     DREAM3D_INSTANCE_PROPERTY(Int32DynamicListArray::Pointer, CellsContainingVert)
@@ -93,7 +93,7 @@ class CellArray
     // -----------------------------------------------------------------------------
     //
     // -----------------------------------------------------------------------------
-    static Pointer CreateArray(size_t numElements, const QString &name, VertexArray* verts)
+    static Pointer CreateArray(size_t numElements, const QString& name, VertexArray* verts)
     {
       if (name.isEmpty() == true)
       {
@@ -160,29 +160,29 @@ class CellArray
       SharedInt32Array_t linkLocPtr(new int32_t[numPts]);
       linkLoc = linkLocPtr.get();
 
-      ::memset(linkLoc, 0, numPts*sizeof(int32_t));
+      ::memset(linkLoc, 0, numPts * sizeof(int32_t));
 
 
       size_t pts[4];
 
       //vtkPolyData *pdata = static_cast<vtkPolyData *>(data);
       // traverse data to determine number of uses of each point
-      for (cellId=0; cellId < numCells; cellId++)
+      for (cellId = 0; cellId < numCells; cellId++)
       {
         getVerts(cellId, pts);
-        for (size_t j=0; j < 4; j++)
+        for (size_t j = 0; j < 4; j++)
         {
-         linkCount[pts[j]]++;
+          linkCount[pts[j]]++;
         }
       }
 
       // now allocate storage for the links
       m_CellsContainingVert->allocateLists(linkCount);
 
-      for (cellId=0; cellId < numCells; cellId++)
+      for (cellId = 0; cellId < numCells; cellId++)
       {
         getVerts(cellId, pts);
-        for (size_t j=0; j < 4; j++)
+        for (size_t j = 0; j < 4; j++)
         {
           m_CellsContainingVert->insertCellReference(pts[j], (linkLoc[pts[j]])++, cellId);
         }
@@ -287,7 +287,7 @@ class CellArray
         }
         BOOST_ASSERT(linkCount[t] > 2);
         // Reset all the visited triangle indexs back to false (zero)
-        for(size_t k = 0;k < linkCount[t]; ++k)
+        for(size_t k = 0; k < linkCount[t]; ++k)
         {
           visited[loop_neighbors[k]] = false;
         }
@@ -304,20 +304,20 @@ class CellArray
       return m_Array->getPointer(i);
     }
 
-     /**
-     * @brief Returns reference to the Face_t at the index i
-     * @param i
-     * @return
-     */
+    /**
+    * @brief Returns reference to the Face_t at the index i
+    * @param i
+    * @return
+    */
     inline Cell_t& operator[](size_t i)
     {
       return (*m_Array)[i];
     }
-     /**
-     * @brief Returns reference to the Face_t at the index i
-     * @param i
-     * @return
-     */
+    /**
+    * @brief Returns reference to the Face_t at the index i
+    * @param i
+    * @return
+    */
     inline Cell_t& getcell(size_t i)
     {
       return (*m_Array)[i];
@@ -325,7 +325,7 @@ class CellArray
 
   protected:
     CellArray() :
-    m_Verts(NULL)
+      m_Verts(NULL)
     {
       m_Array = CellContainerType::CreateArray(0, "CellArray_Internal_Use_Only");
     }

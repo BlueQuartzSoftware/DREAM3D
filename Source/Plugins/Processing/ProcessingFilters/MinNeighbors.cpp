@@ -74,7 +74,7 @@ MinNeighbors::~MinNeighbors()
 void MinNeighbors::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(FilterParameter::New("Minimum Number Neighbors", "MinNumNeighbors", FilterParameterWidgetType::IntWidget,"int", false));
+  parameters.push_back(FilterParameter::New("Minimum Number Neighbors", "MinNumNeighbors", FilterParameterWidgetType::IntWidget, "int", false));
 
   parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "QString", true));
   parameters.push_back(FilterParameter::New("FeatureIds", "FeatureIdsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));

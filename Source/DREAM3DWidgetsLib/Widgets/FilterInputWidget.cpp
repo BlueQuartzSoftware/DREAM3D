@@ -128,7 +128,8 @@ void FilterInputWidget::displayFilterParameters(PipelineFilterWidget* w)
 
   // Remove the Layout itself
   QLayoutItem* wItem = basicInputsScrollWidget->layout()->takeAt(0);
-  while (wItem != NULL) {
+  while (wItem != NULL)
+  {
     //delete wItem;
     wItem = basicInputsScrollWidget->layout()->takeAt(0);
   }
@@ -161,7 +162,7 @@ void FilterInputWidget::displayFilterParameters(PipelineFilterWidget* w)
     QWidget* fpw = filterParameterWidgets[i];
     qDebug() << "    Pointer: " << fpw << "\n";
     // Make sure we do not have a NULL widget
-    if (NULL == filterParameterWidgets.at(i)) continue;
+    if (NULL == filterParameterWidgets.at(i)) { continue; }
     // Set the parent for the widget
     filterParameterWidgets[i]->setParent(basicInputsScrollWidget);
     // Add the FilterWidget to the layout

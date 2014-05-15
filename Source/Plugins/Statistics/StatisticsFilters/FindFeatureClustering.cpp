@@ -76,7 +76,7 @@ void FindFeatureClustering::setupFilterParameters()
   parameters.push_back(FilterParameter::New("EquivalentDiameters", "EquivalentDiametersArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
   parameters.push_back(FilterParameter::New("FeaturePhases", "FeaturePhasesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
   parameters.push_back(FilterParameter::New("Centroids", "CentroidsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
-  parameters.push_back(FilterParameter::New("Clustering List Array Name", "ClusteringListArrayName", FilterParameterWidgetType::StringWidget,"QString", true));
+  parameters.push_back(FilterParameter::New("Clustering List Array Name", "ClusteringListArrayName", FilterParameterWidgetType::StringWidget, "QString", true));
   setFilterParameters(parameters);
 }
 

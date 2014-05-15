@@ -63,7 +63,7 @@ void ArraySelectionExample::setupFilterParameters()
 {
   QVector<FilterParameter::Pointer> parameters;
   /* To select arrays */
-  parameters.push_back(FilterParameter::New("Array to Select", "DataContainerArrayProxy", FilterParameterWidgetType::DataContainerArrayProxyWidget,"", false));
+  parameters.push_back(FilterParameter::New("Array to Select", "DataContainerArrayProxy", FilterParameterWidgetType::DataContainerArrayProxyWidget, "", false));
 
 
   setFilterParameters(parameters);

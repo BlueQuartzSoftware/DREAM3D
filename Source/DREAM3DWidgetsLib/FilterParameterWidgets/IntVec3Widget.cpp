@@ -149,7 +149,7 @@ void IntVec3Widget::on_conditionalCB_stateChanged(int state)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void IntVec3Widget::widgetChanged(const QString &text)
+void IntVec3Widget::widgetChanged(const QString& text)
 {
   emit parametersChanged();
 }

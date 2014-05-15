@@ -142,7 +142,7 @@ void DoubleWidget::on_conditionalCB_stateChanged(int state)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DoubleWidget::widgetChanged(const QString &text)
+void DoubleWidget::widgetChanged(const QString& text)
 {
   emit parametersChanged();
 }

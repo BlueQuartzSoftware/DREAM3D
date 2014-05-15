@@ -160,9 +160,9 @@ class PatchGroupMicroTextureRegions : public GroupFeatures
 
     virtual int getSeed(int newFid);
     virtual bool determineGrouping(int referenceFeature, int neighborFeature, int newFid);
-  virtual size_t determinePatchFeatureCentroids();
-  virtual void determinePatchFeatureVolumes(size_t totalPatches);
-  virtual bool growPatch(int currentPatch);
+    virtual size_t determinePatchFeatureCentroids();
+    virtual void determinePatchFeatureVolumes(size_t totalPatches);
+    virtual bool growPatch(int currentPatch);
     virtual bool growGrouping(int referenceFeature, int neighborFeature, int newFid);
 
     void characterize_micro_texture_regions();
@@ -187,7 +187,7 @@ class PatchGroupMicroTextureRegions : public GroupFeatures
 
     float avgCaxes[3];
     QVector<float> patchCentroids;
-  QVector<float> patchFeatureVolumeFractions;
+    QVector<float> patchFeatureVolumeFractions;
 
     QVector<OrientationOps::Pointer> m_OrientationOps;
 

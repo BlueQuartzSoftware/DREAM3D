@@ -57,7 +57,7 @@
 */
 class DREAM3DWidgetsLib_EXPORT SeparatorWidget : public QWidget, private Ui::SeparatorWidget
 {
-  Q_OBJECT
+    Q_OBJECT
 
   public:
     /**

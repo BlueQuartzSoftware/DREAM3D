@@ -73,9 +73,9 @@ RegularizeZSpacing::~RegularizeZSpacing()
 void RegularizeZSpacing::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(FilterParameter::New("Cell Attribute Matrix", "CellAttributeMatrixPath", FilterParameterWidgetType::AttributeMatrixSelectionWidget,"DataArrayPath", false));
-  parameters.push_back(FilterParameter::New("Current Z Positions File", "InputFile", FilterParameterWidgetType::InputFileWidget,"QString", false));
-  parameters.push_back(FilterParameter::New("New Z Res", "NewZRes", FilterParameterWidgetType::DoubleWidget,"float", false, "Microns"));
+  parameters.push_back(FilterParameter::New("Cell Attribute Matrix", "CellAttributeMatrixPath", FilterParameterWidgetType::AttributeMatrixSelectionWidget, "DataArrayPath", false));
+  parameters.push_back(FilterParameter::New("Current Z Positions File", "InputFile", FilterParameterWidgetType::InputFileWidget, "QString", false));
+  parameters.push_back(FilterParameter::New("New Z Res", "NewZRes", FilterParameterWidgetType::DoubleWidget, "float", false, "Microns"));
   setFilterParameters(parameters);
 }
 
@@ -129,7 +129,7 @@ void RegularizeZSpacing::dataCheck(bool preflight)
   if(preflight == true)
   {
     m->setDimensions(m->getXPoints(), m->getYPoints(), zP);
-    QVector<size_t> tDims(3,0);
+    QVector<size_t> tDims(3, 0);
     tDims[0] = m->getXPoints();
     tDims[1] = m->getYPoints();
     tDims[2] = zP;

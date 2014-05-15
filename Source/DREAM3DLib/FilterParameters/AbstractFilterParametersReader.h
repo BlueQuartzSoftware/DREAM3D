@@ -108,9 +108,9 @@ class DREAM3DLib_EXPORT AbstractFilterParametersReader
     virtual QVector<AxisAngleInput_t> readAxisAngles(const QString name, QVector<AxisAngleInput_t> v) = 0;
     virtual QSet<QString> readArraySelections(const QString name, QSet<QString> v) = 0;
 
-    virtual DataContainerArrayProxy readDataContainerArrayProxy(const QString &name, DataContainerArrayProxy v) = 0;
+    virtual DataContainerArrayProxy readDataContainerArrayProxy(const QString& name, DataContainerArrayProxy v) = 0;
 
-    virtual DataArrayPath readDataArrayPath(const QString &name, DataArrayPath v) = 0;
+    virtual DataArrayPath readDataArrayPath(const QString& name, DataArrayPath v) = 0;
 
   protected:
     AbstractFilterParametersReader();

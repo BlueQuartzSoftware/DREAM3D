@@ -95,7 +95,7 @@ class DREAM3DWidgetsLib_EXPORT FilterWidgetManager
        */
     void addFilterWidgetFactory(const QString& widgetType, IFilterWidgetFactory::Pointer factory);
 
-    QWidget* createWidget(FilterParameter *parameter, AbstractFilter* filter);
+    QWidget* createWidget(FilterParameter* parameter, AbstractFilter* filter);
 
   protected:
     FilterWidgetManager();

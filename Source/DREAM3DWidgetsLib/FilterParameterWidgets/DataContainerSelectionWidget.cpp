@@ -203,7 +203,8 @@ void DataContainerSelectionWidget::populateComboBoxes()
   while(iter.hasNext() )
   {
     DataContainerProxy dc = iter.next();
-    if(dataContainerList->findText(dc.name) == -1 ) {
+    if(dataContainerList->findText(dc.name) == -1 )
+    {
       dataContainerList->addItem(dc.name);
       qDebug() << "[1] Adding " << dc.name;
     }
@@ -266,11 +267,13 @@ void DataContainerSelectionWidget::populateComboBoxes()
   if (!dataContainerList->signalsBlocked()) { didBlock = true; }
   dataContainerList->blockSignals(true);
   int dcIndex = dataContainerList->findText(dcName);
-  if(dcIndex < 0 && dcName.isEmpty() == false) {
+  if(dcIndex < 0 && dcName.isEmpty() == false)
+  {
     dataContainerList->addItem(dcName);
     qDebug() << "[2] Adding " << dcName;
   } // the string was not found so just set it to the first index
-  else {
+  else
+  {
     if(dcIndex < 0) { dcIndex = 0; } // Just set it to the first DataContainer in the list
     dataContainerList->setCurrentIndex(dcIndex);
   }

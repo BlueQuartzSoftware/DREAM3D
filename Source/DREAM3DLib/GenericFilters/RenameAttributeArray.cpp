@@ -61,8 +61,8 @@ RenameAttributeArray::~RenameAttributeArray()
 void RenameAttributeArray::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(FilterParameter::New("Array to Rename", "SelectedArrayPath", FilterParameterWidgetType::DataArraySelectionWidget,"DataArrayPath", false));
-  parameters.push_back(FilterParameter::New("New Array Name", "NewArrayName", FilterParameterWidgetType::StringWidget,"QString", false));
+  parameters.push_back(FilterParameter::New("Array to Rename", "SelectedArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", false));
+  parameters.push_back(FilterParameter::New("New Array Name", "NewArrayName", FilterParameterWidgetType::StringWidget, "QString", false));
 
   setFilterParameters(parameters);
 }
@@ -126,7 +126,7 @@ void RenameAttributeArray::dataCheck()
     }
 
     AttributeMatrix::Pointer attrMat = dc->getAttributeMatrix(amName);
-      if(NULL == attrMat.get())
+    if(NULL == attrMat.get())
     {
       setErrorCondition(-11004);
       QString ss = QObject::tr("The AttributeMatrix '%1' was not found in the DataContainer '%2'").arg(amName).arg(dcName);

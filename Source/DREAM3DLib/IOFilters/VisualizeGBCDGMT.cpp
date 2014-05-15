@@ -105,8 +105,8 @@ void VisualizeGBCDGMT::setupFilterParameters()
     option->setChoices(choices);
     parameters.push_back(option);
   }
-  parameters.push_back(FilterParameter::New("Misorientation Axis Angles", "MisorientationRotation", FilterParameterWidgetType::AxisAngleWidget,"", false));
-  parameters.push_back(FilterParameter::New("GMT Output File", "OutputFile", FilterParameterWidgetType::OutputFileWidget,"QString", false, "", "*.dat", "DAT File"));
+  parameters.push_back(FilterParameter::New("Misorientation Axis Angles", "MisorientationRotation", FilterParameterWidgetType::AxisAngleWidget, "", false));
+  parameters.push_back(FilterParameter::New("GMT Output File", "OutputFile", FilterParameterWidgetType::OutputFileWidget, "QString", false, "", "*.dat", "DAT File"));
   parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "QString", true));
   parameters.push_back(FilterParameter::New("GBCD", "GBCDArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
   setFilterParameters(parameters);
@@ -294,9 +294,9 @@ void VisualizeGBCDGMT::execute()
   gbcdLimits[2] = 0.0;
   gbcdLimits[3] = -sqrt(DREAM3D::Constants::k_Pi / 2.0);
   gbcdLimits[4] = -sqrt(DREAM3D::Constants::k_Pi / 2.0);
-  gbcdLimits[5] = M_PI/2.0;
+  gbcdLimits[5] = M_PI / 2.0;
   gbcdLimits[6] = 1.0;
-  gbcdLimits[7] = M_PI/2.0;
+  gbcdLimits[7] = M_PI / 2.0;
   gbcdLimits[8] = sqrt(DREAM3D::Constants::k_Pi / 2.0);
   gbcdLimits[9] = sqrt(DREAM3D::Constants::k_Pi / 2.0);
 
@@ -309,11 +309,11 @@ void VisualizeGBCDGMT::execute()
   gbcdSizes[3] = cDims[3];
   gbcdSizes[4] = cDims[4];
 
-  gbcdDeltas[0] = (gbcdLimits[5]-gbcdLimits[0])/float(gbcdSizes[0]);
-  gbcdDeltas[1] = (gbcdLimits[6]-gbcdLimits[1])/float(gbcdSizes[1]);
-  gbcdDeltas[2] = (gbcdLimits[7]-gbcdLimits[2])/float(gbcdSizes[2]);
-  gbcdDeltas[3] = (gbcdLimits[8]-gbcdLimits[3])/float(gbcdSizes[3]);
-  gbcdDeltas[4] = (gbcdLimits[9]-gbcdLimits[4])/float(gbcdSizes[4]);
+  gbcdDeltas[0] = (gbcdLimits[5] - gbcdLimits[0]) / float(gbcdSizes[0]);
+  gbcdDeltas[1] = (gbcdLimits[6] - gbcdLimits[1]) / float(gbcdSizes[1]);
+  gbcdDeltas[2] = (gbcdLimits[7] - gbcdLimits[2]) / float(gbcdSizes[2]);
+  gbcdDeltas[3] = (gbcdLimits[8] - gbcdLimits[3]) / float(gbcdSizes[3]);
+  gbcdDeltas[4] = (gbcdLimits[9] - gbcdLimits[4]) / float(gbcdSizes[4]);
 
   float vec[3];
   float vec2[3];
@@ -344,8 +344,8 @@ void VisualizeGBCDGMT::execute()
   int thetaPoints = 120;
   int phiPoints = 30;
   //int zpoints = 1;
-  float thetaRes = 360.0/float(thetaPoints);
-  float phiRes = 90.0/float(phiPoints);
+  float thetaRes = 360.0 / float(thetaPoints);
+  float phiRes = 90.0 / float(phiPoints);
   float theta, phi;
   float thetaRad, phiRad;
   float degToRad = DREAM3D::Constants::k_PiOver180;
@@ -355,103 +355,103 @@ void VisualizeGBCDGMT::execute()
   int hemisphere;
 
   int shift1 = gbcdSizes[0];
-  int shift2 = gbcdSizes[0]*gbcdSizes[1];
-  int shift3 = gbcdSizes[0]*gbcdSizes[1]*gbcdSizes[2];
-  int shift4 = gbcdSizes[0]*gbcdSizes[1]*gbcdSizes[2]*gbcdSizes[3];
+  int shift2 = gbcdSizes[0] * gbcdSizes[1];
+  int shift3 = gbcdSizes[0] * gbcdSizes[1] * gbcdSizes[2];
+  int shift4 = gbcdSizes[0] * gbcdSizes[1] * gbcdSizes[2] * gbcdSizes[3];
 
   std::vector<float> gmtValues;
 
-  for (int64_t k = 0; k < phiPoints+1; k++)
+  for (int64_t k = 0; k < phiPoints + 1; k++)
   {
-    for (int64_t l = 0; l < thetaPoints+1; l++)
+    for (int64_t l = 0; l < thetaPoints + 1; l++)
     {
       //get (x,y) for stereographic projection pixel
-      theta = float(l)*thetaRes;
-      phi = float(k)*phiRes;
-      thetaRad = theta*degToRad;
-      phiRad = phi*degToRad;
+      theta = float(l) * thetaRes;
+      phi = float(k) * phiRes;
+      thetaRad = theta * degToRad;
+      phiRad = phi * degToRad;
       sum = 0;
       count = 0;
-      vec[0] = sinf(phiRad)*cosf(thetaRad);
-      vec[1] = sinf(phiRad)*sinf(thetaRad);
+      vec[0] = sinf(phiRad) * cosf(thetaRad);
+      vec[1] = sinf(phiRad) * sinf(thetaRad);
       vec[2] = cosf(phiRad);
       MatrixMath::Multiply3x3with3x1(dgt, vec, vec2);
 
       // Loop over all the symetry operators in the given cystal symmetry
-      for(int i=0; i<n_sym; i++)
+      for(int i = 0; i < n_sym; i++)
       {
         //get symmetry operator1
         orientOps->getMatSymOp(i, sym1);
-        for(int j=0; j<n_sym; j++)
+        for(int j = 0; j < n_sym; j++)
         {
           //get symmetry operator2
           orientOps->getMatSymOp(j, sym2);
-          MatrixMath::Transpose3x3(sym2,sym2t);
+          MatrixMath::Transpose3x3(sym2, sym2t);
           //calculate symmetric misorientation
-          MatrixMath::Multiply3x3with3x3(dg,sym2t,dg1);
-          MatrixMath::Multiply3x3with3x3(sym1,dg1,dg2);
+          MatrixMath::Multiply3x3with3x3(dg, sym2t, dg1);
+          MatrixMath::Multiply3x3with3x3(sym1, dg1, dg2);
           //convert to euler angle
           OrientationMath::MattoEuler(dg2, mis_euler1[0], mis_euler1[1], mis_euler1[2]);
           if(mis_euler1[0] < DREAM3D::Constants::k_PiOver2 && mis_euler1[1] < DREAM3D::Constants::k_PiOver2 && mis_euler1[2] < DREAM3D::Constants::k_PiOver2)
           {
             mis_euler1[1] = cosf(mis_euler1[1]);
             //find bins in GBCD
-            int location1 = int((mis_euler1[0]-gbcdLimits[0])/gbcdDeltas[0]);
-            int location2 = int((mis_euler1[1]-gbcdLimits[1])/gbcdDeltas[1]);
-            int location3 = int((mis_euler1[2]-gbcdLimits[2])/gbcdDeltas[2]);
+            int location1 = int((mis_euler1[0] - gbcdLimits[0]) / gbcdDeltas[0]);
+            int location2 = int((mis_euler1[1] - gbcdLimits[1]) / gbcdDeltas[1]);
+            int location3 = int((mis_euler1[2] - gbcdLimits[2]) / gbcdDeltas[2]);
             //find symmetric poles using the first symmetry operator
             MatrixMath::Multiply3x3with3x1(sym1, vec, rotNormal);
             //            if(rotNormal[2] < 0.0) MatrixMath::Multiply3x1withConstant(rotNormal, -1);
             //get coordinates in square projection of crystal normal parallel to boundary normal
             nhCheck = getSquareCoord(rotNormal, sqCoord);
             //Note the switch to have theta in the 4 slot and cos(Phi) int he 3 slot
-            int location4 = int((sqCoord[0]-gbcdLimits[3])/gbcdDeltas[3]);
-            int location5 = int((sqCoord[1]-gbcdLimits[4])/gbcdDeltas[4]);
+            int location4 = int((sqCoord[0] - gbcdLimits[3]) / gbcdDeltas[3]);
+            int location5 = int((sqCoord[1] - gbcdLimits[4]) / gbcdDeltas[4]);
             if(location1 >= 0 && location2 >= 0 && location3 >= 0 && location4 >= 0 && location5 >= 0 &&
-               location1 < gbcdSizes[0] && location2 < gbcdSizes[1] && location3 < gbcdSizes[2] && location4 < gbcdSizes[3] && location5 < gbcdSizes[4])
+                location1 < gbcdSizes[0] && location2 < gbcdSizes[1] && location3 < gbcdSizes[2] && location4 < gbcdSizes[3] && location5 < gbcdSizes[4])
             {
               hemisphere = 0;
-              if(nhCheck == false) hemisphere = 1;
-              sum += m_GBCD[2*((location5*shift4)+(location4*shift3)+(location3*shift2)+(location2*shift1)+location1) + hemisphere];
+              if(nhCheck == false) { hemisphere = 1; }
+              sum += m_GBCD[2 * ((location5 * shift4) + (location4 * shift3) + (location3 * shift2) + (location2 * shift1) + location1) + hemisphere];
               count++;
             }
           }
 
           //again in second crystal reference frame
           //calculate symmetric misorientation
-          MatrixMath::Multiply3x3with3x3(dgt,sym2,dg1);
-          MatrixMath::Multiply3x3with3x3(sym1,dg1,dg2);
+          MatrixMath::Multiply3x3with3x3(dgt, sym2, dg1);
+          MatrixMath::Multiply3x3with3x3(sym1, dg1, dg2);
           //convert to euler angle
           OrientationMath::MattoEuler(dg2, mis_euler1[0], mis_euler1[1], mis_euler1[2]);
           if(mis_euler1[0] < DREAM3D::Constants::k_PiOver2 && mis_euler1[1] < DREAM3D::Constants::k_PiOver2 && mis_euler1[2] < DREAM3D::Constants::k_PiOver2)
           {
             mis_euler1[1] = cosf(mis_euler1[1]);
             //find bins in GBCD
-            int location1 = int((mis_euler1[0]-gbcdLimits[0])/gbcdDeltas[0]);
-            int location2 = int((mis_euler1[1]-gbcdLimits[1])/gbcdDeltas[1]);
-            int location3 = int((mis_euler1[2]-gbcdLimits[2])/gbcdDeltas[2]);
+            int location1 = int((mis_euler1[0] - gbcdLimits[0]) / gbcdDeltas[0]);
+            int location2 = int((mis_euler1[1] - gbcdLimits[1]) / gbcdDeltas[1]);
+            int location3 = int((mis_euler1[2] - gbcdLimits[2]) / gbcdDeltas[2]);
             //find symmetric poles using the first symmetry operator
             MatrixMath::Multiply3x3with3x1(sym1, vec2, rotNormal2);
             //            if(rotNormal2[2] < 0.0) MatrixMath::Multiply3x1withConstant(rotNormal2, -1);
             //get coordinates in square projection of crystal normal parallel to boundary normal
             nhCheck = getSquareCoord(rotNormal2, sqCoord);
             //Note the switch to have theta in the 4 slot and cos(Phi) int he 3 slot
-            int location4 = int((sqCoord[0]-gbcdLimits[3])/gbcdDeltas[3]);
-            int location5 = int((sqCoord[1]-gbcdLimits[4])/gbcdDeltas[4]);
+            int location4 = int((sqCoord[0] - gbcdLimits[3]) / gbcdDeltas[3]);
+            int location5 = int((sqCoord[1] - gbcdLimits[4]) / gbcdDeltas[4]);
             if(location1 >= 0 && location2 >= 0 && location3 >= 0 && location4 >= 0 && location5 >= 0 &&
-               location1 < gbcdSizes[0] && location2 < gbcdSizes[1] && location3 < gbcdSizes[2] && location4 < gbcdSizes[3] && location5 < gbcdSizes[4])
+                location1 < gbcdSizes[0] && location2 < gbcdSizes[1] && location3 < gbcdSizes[2] && location4 < gbcdSizes[3] && location5 < gbcdSizes[4])
             {
               hemisphere = 0;
-              if(nhCheck == false) hemisphere = 1;
-              sum += m_GBCD[2*((location5*shift4)+(location4*shift3)+(location3*shift2)+(location2*shift1)+location1) + hemisphere];
+              if(nhCheck == false) { hemisphere = 1; }
+              sum += m_GBCD[2 * ((location5 * shift4) + (location4 * shift3) + (location3 * shift2) + (location2 * shift1) + location1) + hemisphere];
               count++;
             }
           }
         }
       }
       gmtValues.push_back(theta);
-      gmtValues.push_back((90-phi));
-      gmtValues.push_back(sum/float(count));
+      gmtValues.push_back((90 - phi));
+      gmtValues.push_back(sum / float(count));
     }
   }
 
@@ -466,11 +466,11 @@ void VisualizeGBCDGMT::execute()
 
   // Remember to use the original Angle in Degrees!!!!
   fprintf(f, "%.1f %.1f %.1f %.1f\n", m_MisorientationRotation.h, m_MisorientationRotation.k, m_MisorientationRotation.l, m_MisorientationRotation.angle);
-  size_t size = gmtValues.size()/3;
+  size_t size = gmtValues.size() / 3;
 
   for(size_t i = 0; i < size; i++)
   {
-    fprintf(f, "%f %f %f\n", gmtValues[3*i], gmtValues[3*i+1], gmtValues[3*i+2]);
+    fprintf(f, "%f %f %f\n", gmtValues[3 * i], gmtValues[3 * i + 1], gmtValues[3 * i + 2]);
   }
   fclose(f);
 

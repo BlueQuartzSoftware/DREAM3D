@@ -73,8 +73,8 @@ ErodeDilateCoordinationNumber::~ErodeDilateCoordinationNumber()
 void ErodeDilateCoordinationNumber::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(FilterParameter::New("Coordination Number to Consider", "CoordinationNumber", FilterParameterWidgetType::IntWidget,"int", false));
-  parameters.push_back(FilterParameter::New("Loop Until Gone", "Loop", FilterParameterWidgetType::BooleanWidget,"bool", false));
+  parameters.push_back(FilterParameter::New("Coordination Number to Consider", "CoordinationNumber", FilterParameterWidgetType::IntWidget, "int", false));
+  parameters.push_back(FilterParameter::New("Loop Until Gone", "Loop", FilterParameterWidgetType::BooleanWidget, "bool", false));
   parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "QString", true));
   parameters.push_back(FilterParameter::New("FeatureIds", "FeatureIdsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
   setFilterParameters(parameters);
@@ -332,11 +332,11 @@ AbstractFilter::Pointer ErodeDilateCoordinationNumber::newFilterInstance(bool co
         if(false == ok)
         {
           QString ss = QString("%1::newFilterInstance()\nError occurred transferring the Filter Parameter '%2' in Filter '%3' to the filter instance. "
-                              " The filter parameter has a conditional property '%4'. The transfer of this property from the old filter to the new filter failed."
-                              " Please report this issue to the developers of this filter.").arg(filter->getNameOfClass())
-                              .arg(parameter->getPropertyName())
-                              .arg(filter->getHumanLabel())
-                              .arg(parameter->getConditionalProperty());
+                               " The filter parameter has a conditional property '%4'. The transfer of this property from the old filter to the new filter failed."
+                               " Please report this issue to the developers of this filter.").arg(filter->getNameOfClass())
+                       .arg(parameter->getPropertyName())
+                       .arg(filter->getHumanLabel())
+                       .arg(parameter->getConditionalProperty());
           Q_ASSERT_X(ok, __FILE__, ss.toLatin1().constData());
         }
       }

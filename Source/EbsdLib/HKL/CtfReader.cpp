@@ -409,9 +409,9 @@ int CtfReader::readData(QFile& in)
         {
 
           if(in.atEnd() == true && buf.isEmpty() == true) // We have to have read to the end of the file AND the buffer is empty
-          // otherwise we read EXACTLY the last line and we still need to parse the line.
+            // otherwise we read EXACTLY the last line and we still need to parse the line.
           {
-          //  ++counter; // We need to make sure this gets incremented before leaving
+            //  ++counter; // We need to make sure this gets incremented before leaving
             break;
           }
           parseDataLine(buf, row, col, counter, xCells, yCells);

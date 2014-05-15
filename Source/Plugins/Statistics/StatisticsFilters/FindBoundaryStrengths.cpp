@@ -89,7 +89,7 @@ FindBoundaryStrengths::~FindBoundaryStrengths()
 void FindBoundaryStrengths::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(FilterParameter::New("Loading", "Loading", FilterParameterWidgetType::FloatVec3Widget,"FloatVec3_t", false, "XYZ"));
+  parameters.push_back(FilterParameter::New("Loading", "Loading", FilterParameterWidgetType::FloatVec3Widget, "FloatVec3_t", false, "XYZ"));
   parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "QString", true));
   parameters.push_back(FilterParameter::New("SurfaceMeshFaceLabels", "SurfaceMeshFaceLabelsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
   parameters.push_back(FilterParameter::New("AvgQuats", "AvgQuatsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));

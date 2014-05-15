@@ -47,10 +47,10 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-DREAM3DGraphicsView::DREAM3DGraphicsView(QWidget *parent)
-: QGraphicsView(parent),
-  m_ImageGraphicsItem(NULL),
-  m_UseColorTable(false)
+DREAM3DGraphicsView::DREAM3DGraphicsView(QWidget* parent)
+  : QGraphicsView(parent),
+    m_ImageGraphicsItem(NULL),
+    m_UseColorTable(false)
 {
   setAcceptDrops(true);
   setDragMode(RubberBandDrag);
@@ -120,7 +120,8 @@ void DREAM3DGraphicsView::setZoomIndex(int index)
   if (index == 9)
   {
     QGraphicsScene* scenePtr = scene();
-    if (NULL != scenePtr) {
+    if (NULL != scenePtr)
+    {
       QRectF r = scenePtr->sceneRect();
       fitInView(r, Qt::KeepAspectRatio);
     }
@@ -138,9 +139,9 @@ void DREAM3DGraphicsView::setZoomIndex(int index)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DREAM3DGraphicsView::dragEnterEvent(QDragEnterEvent *event)
+void DREAM3DGraphicsView::dragEnterEvent(QDragEnterEvent* event)
 {
- // qWarning("QFSDroppableGraphicsView::dragEnterEvent(QDragEnterEvent *event)");
+// qWarning("QFSDroppableGraphicsView::dragEnterEvent(QDragEnterEvent *event)");
   // accept just text/uri-list mime format
   if (event->mimeData()->hasFormat("text/uri-list"))
   {
@@ -152,7 +153,7 @@ void DREAM3DGraphicsView::dragEnterEvent(QDragEnterEvent *event)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DREAM3DGraphicsView::dragLeaveEvent(QDragLeaveEvent *event)
+void DREAM3DGraphicsView::dragLeaveEvent(QDragLeaveEvent* event)
 {
 //  qWarning("QFSDroppableGraphicsView::dragLeaveEvent(QDragLeaveEvent *event)");
   this->setStyleSheet("");
@@ -161,7 +162,7 @@ void DREAM3DGraphicsView::dragLeaveEvent(QDragLeaveEvent *event)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DREAM3DGraphicsView::dropEvent(QDropEvent *event)
+void DREAM3DGraphicsView::dropEvent(QDropEvent* event)
 {
   this->setStyleSheet("");
 //  qWarning("QFSDroppableGraphicsView::dropEvent(QDropEvent *event)");
@@ -206,61 +207,63 @@ void DREAM3DGraphicsView::dropEvent(QDropEvent *event)
 // -----------------------------------------------------------------------------
 QImage& DREAM3DGraphicsView::blend(QImage& src, QImage& dst, float opacity)
 {
-    if (src.width() <= 0 || src.height() <= 0)
-        return dst;
-    if (dst.width() <= 0 || dst.height() <= 0)
-        return dst;
+  if (src.width() <= 0 || src.height() <= 0)
+  { return dst; }
+  if (dst.width() <= 0 || dst.height() <= 0)
+  { return dst; }
 
-    if (src.width() != dst.width() || src.height() != dst.height()) {
+  if (src.width() != dst.width() || src.height() != dst.height())
+  {
 #ifndef NDEBUG
-        std::cerr << "WARNING: ImageEffect::blend : src and destination images are not the same size\n";
+    std::cerr << "WARNING: ImageEffect::blend : src and destination images are not the same size\n";
 #endif
-        return dst;
-    }
-
-    if (opacity < 0.0 || opacity > 1.0) {
-#ifndef NDEBUG
-        std::cerr << "WARNING: ImageEffect::blend : invalid opacity. Range [0, 1]\n";
-#endif
-        return dst;
-    }
-
-    if (src.depth() != 32) src = src.convertToFormat(QImage::Format_ARGB32);
-    if (dst.depth() != 32) dst = dst.convertToFormat(QImage::Format_ARGB32);
-
-    int pixels = src.width() * src.height();
-    {
-#ifdef WORDS_BIGENDIAN   // ARGB (skip alpha)
-        register unsigned char *data1 = (unsigned char *)dst.bits() + 1;
-        register unsigned char *data2 = (unsigned char *)src.bits() + 1;
-#else                    // BGRA
-        register unsigned char *data1 = (unsigned char *)dst.bits();
-        register unsigned char *data2 = (unsigned char *)src.bits();
-#endif
-
-        for (register int i=0; i<pixels; i++)
-        {
-#ifdef WORDS_BIGENDIAN
-            *data1 += (unsigned char)((*(data2++) - *data1) * opacity);
-            data1++;
-            *data1 += (unsigned char)((*(data2++) - *data1) * opacity);
-            data1++;
-            *data1 += (unsigned char)((*(data2++) - *data1) * opacity);
-            data1++;
-#else
-            *data1 += (unsigned char)((*(data2++) - *data1) * opacity);
-            data1++;
-            *data1 += (unsigned char)((*(data2++) - *data1) * opacity);
-            data1++;
-            *data1 += (unsigned char)((*(data2++) - *data1) * opacity);
-            data1++;
-#endif
-            data1++; // skip alpha
-            data2++;
-        }
-    }
-
     return dst;
+  }
+
+  if (opacity < 0.0 || opacity > 1.0)
+  {
+#ifndef NDEBUG
+    std::cerr << "WARNING: ImageEffect::blend : invalid opacity. Range [0, 1]\n";
+#endif
+    return dst;
+  }
+
+  if (src.depth() != 32) { src = src.convertToFormat(QImage::Format_ARGB32); }
+  if (dst.depth() != 32) { dst = dst.convertToFormat(QImage::Format_ARGB32); }
+
+  int pixels = src.width() * src.height();
+  {
+#ifdef WORDS_BIGENDIAN   // ARGB (skip alpha)
+    register unsigned char* data1 = (unsigned char*)dst.bits() + 1;
+    register unsigned char* data2 = (unsigned char*)src.bits() + 1;
+#else                    // BGRA
+    register unsigned char* data1 = (unsigned char*)dst.bits();
+    register unsigned char* data2 = (unsigned char*)src.bits();
+#endif
+
+    for (register int i = 0; i < pixels; i++)
+    {
+#ifdef WORDS_BIGENDIAN
+      *data1 += (unsigned char)((*(data2++) - *data1) * opacity);
+      data1++;
+      *data1 += (unsigned char)((*(data2++) - *data1) * opacity);
+      data1++;
+      *data1 += (unsigned char)((*(data2++) - *data1) * opacity);
+      data1++;
+#else
+      *data1 += (unsigned char)((*(data2++) - *data1) * opacity);
+      data1++;
+      *data1 += (unsigned char)((*(data2++) - *data1) * opacity);
+      data1++;
+      *data1 += (unsigned char)((*(data2++) - *data1) * opacity);
+      data1++;
+#endif
+      data1++; // skip alpha
+      data2++;
+    }
+  }
+
+  return dst;
 }
 
 // -----------------------------------------------------------------------------
@@ -274,7 +277,7 @@ void DREAM3DGraphicsView::updateDisplay()
   QSize pSize(0, 0);
   if (m_BaseImage.isNull() == false)
   {
-   pSize = m_BaseImage.size();
+    pSize = m_BaseImage.size();
   }
   else
   {
@@ -296,7 +299,7 @@ void DREAM3DGraphicsView::updateDisplay()
   {
     return;
   }
-  QGraphicsPixmapItem *pixItem = qgraphicsitem_cast<QGraphicsPixmapItem*> (m_ImageGraphicsItem);
+  QGraphicsPixmapItem* pixItem = qgraphicsitem_cast<QGraphicsPixmapItem*> (m_ImageGraphicsItem);
   pixItem->setPixmap(QPixmap::fromImage(paintImage));
 
   this->update();
@@ -314,7 +317,7 @@ void DREAM3DGraphicsView::setImageDisplayType(EmMpm_Constants::ImageDisplayType 
 //
 // -----------------------------------------------------------------------------
 #if 0
-void DREAM3DGraphicsView::loadBaseImageFile(const QString &filename)
+void DREAM3DGraphicsView::loadBaseImageFile(const QString& filename)
 {
   m_BaseImage = QImage(filename);
   if (m_BaseImage.isNull() == true)
@@ -377,7 +380,7 @@ void DREAM3DGraphicsView::loadBaseImageFile(const QString &filename)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DREAM3DGraphicsView::loadOverlayImageFile(const QString &filename)
+void DREAM3DGraphicsView::loadOverlayImageFile(const QString& filename)
 {
 
   m_OverlayImage = QImage(filename);
@@ -406,7 +409,7 @@ QImage DREAM3DGraphicsView::getOverlayImage()
 // -----------------------------------------------------------------------------
 void DREAM3DGraphicsView::setBaseImage(QImage image)
 {
- if (image.isNull() == true)
+  if (image.isNull() == true)
   {
     return;
   }
@@ -485,7 +488,7 @@ void DREAM3DGraphicsView::updateColorTables( QVector<QRgb> colorTable)
   qint32 size = colorTable.size();
   for(qint32 index = 0; index < size; ++index)
   {
-      m_CustomColorTable[index] = colorTable[index];
+    m_CustomColorTable[index] = colorTable[index];
   }
 
 }
@@ -499,35 +502,78 @@ void DREAM3DGraphicsView::setCompositeMode(EmMpm_Constants::CompositeType mode)
   m_ImageDisplayType = EmMpm_Constants::CompositedImage;
   switch(mode)
   {
-    case EmMpm_Constants::Exclusion: m_composition_mode = QPainter::CompositionMode_Exclusion; break;
-    case EmMpm_Constants::Difference: m_composition_mode = QPainter::CompositionMode_Difference; break;
+    case EmMpm_Constants::Exclusion:
+      m_composition_mode = QPainter::CompositionMode_Exclusion;
+      break;
+    case EmMpm_Constants::Difference:
+      m_composition_mode = QPainter::CompositionMode_Difference;
+      break;
     case EmMpm_Constants::Alpha_Blend:
       m_composition_mode = QPainter::CompositionMode_SourceOver;
       break;
 
-    case EmMpm_Constants::Plus: m_composition_mode = QPainter::CompositionMode_Plus; break;
-    case EmMpm_Constants::Multiply: m_composition_mode = QPainter::CompositionMode_Multiply; break;
-    case EmMpm_Constants::Screen: m_composition_mode = QPainter::CompositionMode_Screen; break;
-    case EmMpm_Constants::Darken: m_composition_mode = QPainter::CompositionMode_Darken; break;
-    case EmMpm_Constants::Lighten: m_composition_mode = QPainter::CompositionMode_Lighten; break;
-    case EmMpm_Constants::ColorDodge: m_composition_mode = QPainter::CompositionMode_ColorDodge; break;
-    case EmMpm_Constants::ColorBurn: m_composition_mode = QPainter::CompositionMode_ColorBurn; break;
-    case EmMpm_Constants::HardLight: m_composition_mode = QPainter::CompositionMode_HardLight; break;
-    case EmMpm_Constants::SoftLight: m_composition_mode = QPainter::CompositionMode_SoftLight; break;
+    case EmMpm_Constants::Plus:
+      m_composition_mode = QPainter::CompositionMode_Plus;
+      break;
+    case EmMpm_Constants::Multiply:
+      m_composition_mode = QPainter::CompositionMode_Multiply;
+      break;
+    case EmMpm_Constants::Screen:
+      m_composition_mode = QPainter::CompositionMode_Screen;
+      break;
+    case EmMpm_Constants::Darken:
+      m_composition_mode = QPainter::CompositionMode_Darken;
+      break;
+    case EmMpm_Constants::Lighten:
+      m_composition_mode = QPainter::CompositionMode_Lighten;
+      break;
+    case EmMpm_Constants::ColorDodge:
+      m_composition_mode = QPainter::CompositionMode_ColorDodge;
+      break;
+    case EmMpm_Constants::ColorBurn:
+      m_composition_mode = QPainter::CompositionMode_ColorBurn;
+      break;
+    case EmMpm_Constants::HardLight:
+      m_composition_mode = QPainter::CompositionMode_HardLight;
+      break;
+    case EmMpm_Constants::SoftLight:
+      m_composition_mode = QPainter::CompositionMode_SoftLight;
+      break;
 
-    case EmMpm_Constants::Destination: m_composition_mode = QPainter::CompositionMode_Destination; break;
-    case EmMpm_Constants::Source: m_composition_mode = QPainter::CompositionMode_Source; break;
-    case EmMpm_Constants::DestinationOver: m_composition_mode = QPainter::CompositionMode_DestinationOver; break;
-    case EmMpm_Constants::SourceIn: m_composition_mode = QPainter::CompositionMode_SourceIn; break;
-    case EmMpm_Constants::DestinationIn: m_composition_mode = QPainter::CompositionMode_DestinationIn; break;
-    case EmMpm_Constants::DestinationOut: m_composition_mode = QPainter::CompositionMode_DestinationOut; break;
-    case EmMpm_Constants::SourceAtop: m_composition_mode = QPainter::CompositionMode_SourceAtop; break;
-    case EmMpm_Constants::DestinationAtop: m_composition_mode = QPainter::CompositionMode_DestinationAtop; break;
-    case EmMpm_Constants::Overlay: m_composition_mode = QPainter::CompositionMode_Overlay; break;
-    case EmMpm_Constants::Clear: m_composition_mode = QPainter::CompositionMode_Clear; break;
+    case EmMpm_Constants::Destination:
+      m_composition_mode = QPainter::CompositionMode_Destination;
+      break;
+    case EmMpm_Constants::Source:
+      m_composition_mode = QPainter::CompositionMode_Source;
+      break;
+    case EmMpm_Constants::DestinationOver:
+      m_composition_mode = QPainter::CompositionMode_DestinationOver;
+      break;
+    case EmMpm_Constants::SourceIn:
+      m_composition_mode = QPainter::CompositionMode_SourceIn;
+      break;
+    case EmMpm_Constants::DestinationIn:
+      m_composition_mode = QPainter::CompositionMode_DestinationIn;
+      break;
+    case EmMpm_Constants::DestinationOut:
+      m_composition_mode = QPainter::CompositionMode_DestinationOut;
+      break;
+    case EmMpm_Constants::SourceAtop:
+      m_composition_mode = QPainter::CompositionMode_SourceAtop;
+      break;
+    case EmMpm_Constants::DestinationAtop:
+      m_composition_mode = QPainter::CompositionMode_DestinationAtop;
+      break;
+    case EmMpm_Constants::Overlay:
+      m_composition_mode = QPainter::CompositionMode_Overlay;
+      break;
+    case EmMpm_Constants::Clear:
+      m_composition_mode = QPainter::CompositionMode_Clear;
+      break;
 
-  default:
-    m_composition_mode = QPainter::CompositionMode_Exclusion; break;
+    default:
+      m_composition_mode = QPainter::CompositionMode_Exclusion;
+      break;
   }
 
   this->setImageDisplayType(m_ImageDisplayType);

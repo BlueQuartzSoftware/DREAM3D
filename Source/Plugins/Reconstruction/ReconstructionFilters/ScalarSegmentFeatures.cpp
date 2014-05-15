@@ -160,8 +160,8 @@ ScalarSegmentFeatures::~ScalarSegmentFeatures()
 void ScalarSegmentFeatures::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(FilterParameter::New("Scalar Array Name", "ScalarArrayPath", FilterParameterWidgetType::DataArraySelectionWidget,"DataArrayPath", false));
-  parameters.push_back(FilterParameter::New("Scalar Tolerance", "ScalarTolerance", FilterParameterWidgetType::DoubleWidget,"float", false));
+  parameters.push_back(FilterParameter::New("Scalar Array Name", "ScalarArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", false));
+  parameters.push_back(FilterParameter::New("Scalar Tolerance", "ScalarTolerance", FilterParameterWidgetType::DoubleWidget, "float", false));
   parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "QString", true));
   parameters.push_back(FilterParameter::New("GoodVoxels", "GoodVoxelsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
   parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "QString", true));
@@ -406,7 +406,8 @@ void ScalarSegmentFeatures::randomizeFeatureIds(int64_t totalPoints, size_t tota
   for (size_t i = 1; i < totalFeatures; i++)
   {
     r = numberGenerator(); // Random remaining position.
-    if (r >= totalFeatures) {
+    if (r >= totalFeatures)
+    {
       continue;
     }
     temp = gid[i];
@@ -448,7 +449,7 @@ int64_t ScalarSegmentFeatures::getSeed(size_t gnum)
   if (seed >= 0)
   {
     m_FeatureIds[seed] = gnum;
-    QVector<size_t> tDims(1, gnum+1);
+    QVector<size_t> tDims(1, gnum + 1);
     m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->resizeAttributeArrays(tDims);
     updateFeatureInstancePointers();
   }
@@ -528,11 +529,11 @@ AbstractFilter::Pointer ScalarSegmentFeatures::newFilterInstance(bool copyFilter
         if(false == ok)
         {
           QString ss = QString("%1::newFilterInstance()\nError occurred transferring the Filter Parameter '%2' in Filter '%3' to the filter instance. "
-                              " The filter parameter has a conditional property '%4'. The transfer of this property from the old filter to the new filter failed."
-                              " Please report this issue to the developers of this filter.").arg(filter->getNameOfClass())
-                              .arg(parameter->getPropertyName())
-                              .arg(filter->getHumanLabel())
-                              .arg(parameter->getConditionalProperty());
+                               " The filter parameter has a conditional property '%4'. The transfer of this property from the old filter to the new filter failed."
+                               " Please report this issue to the developers of this filter.").arg(filter->getNameOfClass())
+                       .arg(parameter->getPropertyName())
+                       .arg(filter->getHumanLabel())
+                       .arg(parameter->getConditionalProperty());
           Q_ASSERT_X(ok, __FILE__, ss.toLatin1().constData());
         }
       }

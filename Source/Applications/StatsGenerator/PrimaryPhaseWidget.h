@@ -35,7 +35,7 @@ class PrimaryPhaseWidget : public SGWidget, private Ui::PrimaryPhaseWidget
     Q_OBJECT
 
   public:
-    PrimaryPhaseWidget(QWidget *parent = 0);
+    PrimaryPhaseWidget(QWidget* parent = 0);
     virtual ~PrimaryPhaseWidget();
 
     void updatePlots();
@@ -58,19 +58,19 @@ class PrimaryPhaseWidget : public SGWidget, private Ui::PrimaryPhaseWidget
     int computeBinsAndCutOffs( float mu, float sigma,
                                float minCutOff, float maxCutOff,
                                float binStepSize,
-                               QwtArray<float> &binsizes,
-                               QwtArray<float> &xCo,
-                               QwtArray<float> &yCo,
-                               float &xMax, float &yMax,
-                               QwtArray<float> &x,
-                               QwtArray<float> &y);
+                               QwtArray<float>& binsizes,
+                               QwtArray<float>& xCo,
+                               QwtArray<float>& yCo,
+                               float& xMax, float& yMax,
+                               QwtArray<float>& x,
+                               QwtArray<float>& y);
 
     QString getComboString();
     QString getTabTitle();
 
     void calculateNumberOfBins();
     int calculateNumberOfBins(float mu, float sigma, float minCutOff, float maxCutOff, float stepSize);
-    int gatherSizeDistributionFromGui(float &mu, float &sigma, float &minCutOff, float &maxCutOff, float &stepSize);
+    int gatherSizeDistributionFromGui(float& mu, float& sigma, float& minCutOff, float& maxCutOff, float& stepSize);
 
     int gatherStatsData(AttributeMatrix::Pointer attrMat);
 
@@ -79,10 +79,10 @@ class PrimaryPhaseWidget : public SGWidget, private Ui::PrimaryPhaseWidget
 
   protected slots:
     void on_m_GenerateDefaultData_clicked();
-    void on_m_Mu_SizeDistribution_textChanged(const QString &text);
-    void on_m_Sigma_SizeDistribution_textChanged(const QString &text);
-    void on_m_MinSigmaCutOff_textChanged(const QString &text);
-    void on_m_MaxSigmaCutOff_textChanged(const QString &text);
+    void on_m_Mu_SizeDistribution_textChanged(const QString& text);
+    void on_m_Sigma_SizeDistribution_textChanged(const QString& text);
+    void on_m_MinSigmaCutOff_textChanged(const QString& text);
+    void on_m_MaxSigmaCutOff_textChanged(const QString& text);
     void on_m_BinStepSize_valueChanged(double v);
 
     void on_microstructurePresetCombo_currentIndexChanged(int index);

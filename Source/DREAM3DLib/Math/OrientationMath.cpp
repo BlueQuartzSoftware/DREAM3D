@@ -446,7 +446,7 @@ void OrientationMath::EulertoMat(float ea1, float ea2, float ea3, float g[3][3])
 
   // 1) find rotation matrix from Euler angles
   // g[row][col]
-  g[0][0] = cp1*cp2 - sp1*sp2*cp;
+  g[0][0] = cp1 * cp2 - sp1 * sp2 * cp;
   g[0][1] = sp1 * cp2 + cp1 * sp2 * cp;
   g[0][2] = sp2 * sp;
   g[1][0] = -cp1 * sp2 - sp1 * cp2 * cp;
@@ -472,9 +472,15 @@ void OrientationMath::EulertoMatActive(float ea1, float ea2, float ea3, float g[
 
   // 1) find rotation matrix from Euler angles
   // g[row][col] This is an ACTIVE rotation
-  g[0][0] =  cp1*cp2 - sp1*sp2*cp;       g[0][1] = -cp1 * sp2 - sp1 * cp2 * cp;  g[0][2] =  sp1 * sp;
-  g[1][0] = sp1 * cp2 + cp1 * sp2 * cp;  g[1][1] = -sp1 * sp2 + cp1 * cp2 * cp;  g[1][2] = -cp1 * sp;
-  g[2][0] = sp2 * sp;                    g[2][1] = cp2 * sp;                     g[2][2] = cp;
+  g[0][0] =  cp1 * cp2 - sp1 * sp2 * cp;
+  g[0][1] = -cp1 * sp2 - sp1 * cp2 * cp;
+  g[0][2] =  sp1 * sp;
+  g[1][0] = sp1 * cp2 + cp1 * sp2 * cp;
+  g[1][1] = -sp1 * sp2 + cp1 * cp2 * cp;
+  g[1][2] = -cp1 * sp;
+  g[2][0] = sp2 * sp;
+  g[2][1] = cp2 * sp;
+  g[2][2] = cp;
 }
 
 
@@ -494,16 +500,18 @@ void OrientationMath::MattoEuler(float g[3][3], float& phi1, float& Phi, float& 
 {
   if(closeEnough(g[2][2], 1.0) )
   {
-    phi1 = atan(g[0][1]/g[0][0]) / 2.0f;
+    phi1 = atan(g[0][1] / g[0][0]) / 2.0f;
     Phi = 0.0;
     phi2 = phi1;
   }
   else if ( closeEnough(g[2][2], -1.0) )
   {
-    phi1 = atan(g[0][1]/g[0][0]) / 2.0f;
+    phi1 = atan(g[0][1] / g[0][0]) / 2.0f;
     Phi = 180.0;
     phi2 = -phi1;
-  } else {
+  }
+  else
+  {
     Phi = acos(g[2][2]);
     double s = sin(Phi);
     phi1 = atan2(g[2][0] / s, -g[2][1] / s );
