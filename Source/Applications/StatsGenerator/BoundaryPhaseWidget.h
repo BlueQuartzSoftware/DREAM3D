@@ -31,7 +31,7 @@ class BoundaryPhaseWidget : public SGWidget, private Ui::BoundaryPhaseWidget
     Q_OBJECT
 
   public:
-    BoundaryPhaseWidget(QWidget *parent = 0);
+    BoundaryPhaseWidget(QWidget* parent = 0);
     virtual ~BoundaryPhaseWidget();
 
     void updatePlots();

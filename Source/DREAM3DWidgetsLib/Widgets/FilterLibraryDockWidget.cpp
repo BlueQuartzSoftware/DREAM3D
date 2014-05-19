@@ -50,7 +50,7 @@
 //
 // -----------------------------------------------------------------------------
 FilterLibraryDockWidget::FilterLibraryDockWidget(QWidget* parent) :
-QDockWidget(parent)
+  QDockWidget(parent)
 {
   setupUi(this);
   setupGui();
@@ -79,49 +79,49 @@ void FilterLibraryDockWidget::connectFilterList(FilterListDockWidget* filterList
 // -----------------------------------------------------------------------------
 void FilterLibraryDockWidget::refreshFilterGroups()
 {
-    FilterManager::Pointer fm = FilterManager::Instance();
-    QSet<QString> grpNames = fm->getGroupNames();
+  FilterManager::Pointer fm = FilterManager::Instance();
+  QSet<QString> grpNames = fm->getGroupNames();
 
-     QList<QString> grpNameSorted = grpNames.toList();
-    qSort(grpNameSorted);
+  QList<QString> grpNameSorted = grpNames.toList();
+  qSort(grpNameSorted);
 
-    // Clear out the default stuff
-    filterLibraryTree->clear();
+  // Clear out the default stuff
+  filterLibraryTree->clear();
 
 #if 1
-    QTreeWidgetItem* library = new QTreeWidgetItem(filterLibraryTree);
-    library->setText(0, DREAM3D::Settings::Library);
-    library->setIcon(0, QIcon(":/cubes.png"));
+  QTreeWidgetItem* library = new QTreeWidgetItem(filterLibraryTree);
+  library->setText(0, DREAM3D::Settings::Library);
+  library->setIcon(0, QIcon(":/cubes.png"));
 #else
-    QTreeWidgetItem* library = filterLibraryTree->invisibleRootItem();
-    library->setText(0, DREAM3D::Settings::Library);
-    library->setIcon(0, QIcon(":/cubes.png"));
+  QTreeWidgetItem* library = filterLibraryTree->invisibleRootItem();
+  library->setText(0, DREAM3D::Settings::Library);
+  library->setIcon(0, QIcon(":/cubes.png"));
 #endif
-    for(QList<QString>::iterator iter = grpNameSorted.begin(); iter != grpNameSorted.end(); ++iter)
+  for(QList<QString>::iterator iter = grpNameSorted.begin(); iter != grpNameSorted.end(); ++iter)
+  {
+    //   qDebug() << *iter << "\n";
+    QString iconName(":/");
+    iconName.append( (*iter));
+    iconName.append("_Icon.png");
+    // Validate the icon is in the resource system
+    QFileInfo iconInfo(iconName);
+    if (iconInfo.exists() == false)
     {
-      //   qDebug() << *iter << "\n";
-      QString iconName(":/");
-      iconName.append( (*iter));
-      iconName.append("_Icon.png");
-      // Validate the icon is in the resource system
-      QFileInfo iconInfo(iconName);
-      if (iconInfo.exists() == false)
-      {
-        iconName = ":/Plugin_Icon.png"; // Switch to our generic icon for Plugins that do not provide their own
-      }
-
-      QIcon icon(iconName);
-      QTreeWidgetItem* filterGroup = new QTreeWidgetItem(library);
-      filterGroup->setText(0, (*iter));
-      filterGroup->setIcon(0, icon);
-      QSet<QString> subGroupNames = fm->getSubGroupNames(*iter);
-      for(QSet<QString>::iterator iter2 = subGroupNames.begin(); iter2 != subGroupNames.end(); ++iter2)
-      {
-        QTreeWidgetItem* filterSubGroup = new QTreeWidgetItem(filterGroup);
-        filterSubGroup->setText(0, (*iter2));
-      }
+      iconName = ":/Plugin_Icon.png"; // Switch to our generic icon for Plugins that do not provide their own
     }
-    library->setExpanded(true);
+
+    QIcon icon(iconName);
+    QTreeWidgetItem* filterGroup = new QTreeWidgetItem(library);
+    filterGroup->setText(0, (*iter));
+    filterGroup->setIcon(0, icon);
+    QSet<QString> subGroupNames = fm->getSubGroupNames(*iter);
+    for(QSet<QString>::iterator iter2 = subGroupNames.begin(); iter2 != subGroupNames.end(); ++iter2)
+    {
+      QTreeWidgetItem* filterSubGroup = new QTreeWidgetItem(filterGroup);
+      filterSubGroup->setText(0, (*iter2));
+    }
+  }
+  library->setExpanded(true);
 }
 
 // -----------------------------------------------------------------------------

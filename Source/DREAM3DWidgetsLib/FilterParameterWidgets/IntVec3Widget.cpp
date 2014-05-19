@@ -115,6 +115,7 @@ void IntVec3Widget::setupGui()
     xData->setEnabled(boolProp);
     yData->setEnabled(boolProp);
     zData->setEnabled(boolProp);
+    on_conditionalCB_stateChanged(conditionalCB->checkState());
   }
   else
   {
@@ -148,7 +149,7 @@ void IntVec3Widget::on_conditionalCB_stateChanged(int state)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void IntVec3Widget::widgetChanged(const QString &text)
+void IntVec3Widget::widgetChanged(const QString& text)
 {
   emit parametersChanged();
 }

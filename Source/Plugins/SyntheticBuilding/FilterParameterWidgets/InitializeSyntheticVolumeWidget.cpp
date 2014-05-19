@@ -111,7 +111,8 @@ InitializeSyntheticVolumeWidget::~InitializeSyntheticVolumeWidget()
 // -----------------------------------------------------------------------------
 void InitializeSyntheticVolumeWidget::setWidgetListEnabled(bool b)
 {
-  foreach (QWidget* w, m_WidgetList) {
+  foreach (QWidget * w, m_WidgetList)
+  {
     w->setEnabled(b);
   }
 }
@@ -222,7 +223,7 @@ void InitializeSyntheticVolumeWidget::on_m_InputFile_textChanged(const QString& 
 
 
 
-  if (true) return;
+  if (true) { return; }
 
 
   DataContainerReader::Pointer reader = DataContainerReader::New();
@@ -646,12 +647,12 @@ void InitializeSyntheticVolumeWidget::writeOptions(QSettings& prefs)
   WRITE_STRING_SETTING(prefs, m_, InputFile)
 
 
-      WRITE_SETTING(prefs, m_, XResolution )
-      WRITE_SETTING(prefs, m_, YResolution )
-      WRITE_SETTING(prefs, m_, ZResolution )
-      WRITE_SETTING(prefs, m_, XPoints )
-      WRITE_SETTING(prefs, m_, YPoints )
-      WRITE_SETTING(prefs, m_, ZPoints )
+  WRITE_SETTING(prefs, m_, XResolution )
+  WRITE_SETTING(prefs, m_, YResolution )
+  WRITE_SETTING(prefs, m_, ZResolution )
+  WRITE_SETTING(prefs, m_, XPoints )
+  WRITE_SETTING(prefs, m_, YPoints )
+  WRITE_SETTING(prefs, m_, ZPoints )
 
 }
 

@@ -72,13 +72,13 @@ ClearData::~ClearData()
 void ClearData::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(FilterParameter::New("Cell Attribute Matrix Name", "CellAttributeMatrixName", FilterParameterWidgetType::AttributeMatrixSelectionWidget,"DataArrayPath", false));
-  parameters.push_back(FilterParameter::New("X Min", "XMin", FilterParameterWidgetType::IntWidget,"int", false, "Column"));
-  parameters.push_back(FilterParameter::New("Y Min", "YMin", FilterParameterWidgetType::IntWidget,"int", false, "Row"));
-  parameters.push_back(FilterParameter::New("Z Min", "ZMin", FilterParameterWidgetType::IntWidget,"int", false, "Plane"));
-  parameters.push_back(FilterParameter::New("X Max", "XMax", FilterParameterWidgetType::IntWidget,"int", false, "Column"));
-  parameters.push_back(FilterParameter::New("Y Max", "YMax", FilterParameterWidgetType::IntWidget,"int", false, "Row"));
-  parameters.push_back(FilterParameter::New("Z Max", "ZMax", FilterParameterWidgetType::IntWidget,"int", false, "Plane"));
+  parameters.push_back(FilterParameter::New("Cell Attribute Matrix Name", "CellAttributeMatrixName", FilterParameterWidgetType::AttributeMatrixSelectionWidget, "DataArrayPath", false));
+  parameters.push_back(FilterParameter::New("X Min", "XMin", FilterParameterWidgetType::IntWidget, "int", false, "Column"));
+  parameters.push_back(FilterParameter::New("Y Min", "YMin", FilterParameterWidgetType::IntWidget, "int", false, "Row"));
+  parameters.push_back(FilterParameter::New("Z Min", "ZMin", FilterParameterWidgetType::IntWidget, "int", false, "Plane"));
+  parameters.push_back(FilterParameter::New("X Max", "XMax", FilterParameterWidgetType::IntWidget, "int", false, "Column"));
+  parameters.push_back(FilterParameter::New("Y Max", "YMax", FilterParameterWidgetType::IntWidget, "int", false, "Row"));
+  parameters.push_back(FilterParameter::New("Z Max", "ZMax", FilterParameterWidgetType::IntWidget, "int", false, "Plane"));
   setFilterParameters(parameters);
 }
 // -----------------------------------------------------------------------------

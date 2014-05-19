@@ -65,10 +65,10 @@ class HelpDialog;
  */
 class StatsGeneratorUI : public QMainWindow, private Ui::StatsGeneratorUI
 {
-  Q_OBJECT
+    Q_OBJECT
 
   public:
-    StatsGeneratorUI(QWidget *parent = 0);
+    StatsGeneratorUI(QWidget* parent = 0);
     virtual ~StatsGeneratorUI();
 
     void adjustWindowTitle();
@@ -85,7 +85,7 @@ class StatsGeneratorUI : public QMainWindow, private Ui::StatsGeneratorUI
     void displayDialogBox(QString title, QString text, QMessageBox::Icon icon);
 
   signals:
-      void windowIsClosing(StatsGeneratorUI*);
+    void windowIsClosing(StatsGeneratorUI*);
 
   protected slots:
 
@@ -116,7 +116,7 @@ class StatsGeneratorUI : public QMainWindow, private Ui::StatsGeneratorUI
      * @brief Implements the CloseEvent to Quit the application and write settings
      * to the preference file
      */
-    void closeEvent(QCloseEvent *event);
+    void closeEvent(QCloseEvent* event);
 
     /**
      * @brief Reads the Preferences from the users pref file
@@ -163,7 +163,7 @@ class StatsGeneratorUI : public QMainWindow, private Ui::StatsGeneratorUI
      * should be connected to the Signal QRecentFileList->fileListChanged
      * @param file The newly added file.
      */
-    void updateRecentFileList(const QString &file);
+    void updateRecentFileList(const QString& file);
 
     /**
      * @brief Qt Slot that fires in response to a click on a "Recent File' Menu entry.
@@ -173,13 +173,13 @@ class StatsGeneratorUI : public QMainWindow, private Ui::StatsGeneratorUI
   private:
     QString              m_FilePath;
     bool                 m_FileSelected;
-  //  QVector<SGWidget*>   m_SGWidgets;
+    //  QVector<SGWidget*>   m_SGWidgets;
     HelpDialog*          m_HelpDialog;
 
     QString m_OpenDialogLastDirectory; // Must be last in the list
     StatsGeneratorUI(const StatsGeneratorUI&); // Copy Constructor Not Implemented
     void operator=(const StatsGeneratorUI&); // Operator '=' Not Implemented
-  };
+};
 
 #endif /* _STATSGENERATOR_H_ */
 

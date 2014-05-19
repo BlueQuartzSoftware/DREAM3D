@@ -45,7 +45,7 @@
 
 class HelpWidget : public QWidget, public Ui::helpWidget
 {
-  Q_OBJECT
+    Q_OBJECT
 
   public:
     HelpWidget(QWidget* parent = 0);

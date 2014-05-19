@@ -35,7 +35,7 @@ class PrecipitatePhaseWidget : public SGWidget, private Ui::PrecipitatePhaseWidg
     Q_OBJECT
 
   public:
-    PrecipitatePhaseWidget(QWidget *parent = 0);
+    PrecipitatePhaseWidget(QWidget* parent = 0);
     virtual ~PrecipitatePhaseWidget();
 
     void updatePlots();
@@ -57,19 +57,19 @@ class PrecipitatePhaseWidget : public SGWidget, private Ui::PrecipitatePhaseWidg
     int computeBinsAndCutOffs( float mu, float sigma,
                                float minCutOff, float maxCutOff,
                                float binStepSize,
-                               QwtArray<float> &binsizes,
-                               QwtArray<float> &xCo,
-                               QwtArray<float> &yCo,
-                               float &xMax, float &yMax,
-                               QwtArray<float> &x,
-                               QwtArray<float> &y);
+                               QwtArray<float>& binsizes,
+                               QwtArray<float>& xCo,
+                               QwtArray<float>& yCo,
+                               float& xMax, float& yMax,
+                               QwtArray<float>& x,
+                               QwtArray<float>& y);
 
     QString getComboString();
     QString getTabTitle();
 
     void calculateNumberOfBins();
     int calculateNumberOfBins(float mu, float sigma, float minCutOff, float maxCutOff, float stepSize);
-    int gatherSizeDistributionFromGui(float &mu, float &sigma, float &minCutOff, float &maxCutOff, float &stepSize);
+    int gatherSizeDistributionFromGui(float& mu, float& sigma, float& minCutOff, float& maxCutOff, float& stepSize);
 
     int gatherStatsData(AttributeMatrix::Pointer attrMat);
 
@@ -78,10 +78,10 @@ class PrecipitatePhaseWidget : public SGWidget, private Ui::PrecipitatePhaseWidg
 
   protected slots:
 
-    void on_m_Mu_SizeDistribution_textChanged(const QString &text);
-    void on_m_Sigma_SizeDistribution_textChanged(const QString &text);
-    void on_m_MinSigmaCutOff_textChanged(const QString &text);
-    void on_m_MaxSigmaCutOff_textChanged(const QString &text);
+    void on_m_Mu_SizeDistribution_textChanged(const QString& text);
+    void on_m_Sigma_SizeDistribution_textChanged(const QString& text);
+    void on_m_MinSigmaCutOff_textChanged(const QString& text);
+    void on_m_MaxSigmaCutOff_textChanged(const QString& text);
     void on_m_BinStepSize_valueChanged(double v);
 
     void on_microstructurePresetCombo_currentIndexChanged(int index);

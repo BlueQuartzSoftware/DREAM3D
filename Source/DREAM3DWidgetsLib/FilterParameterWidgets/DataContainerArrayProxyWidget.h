@@ -59,7 +59,7 @@ class QStandardItemModel;
 */
 class DREAM3DWidgetsLib_EXPORT DataContainerArrayProxyWidget : public QWidget, private Ui::DataContainerArrayProxyWidget
 {
-  Q_OBJECT
+    Q_OBJECT
 
   public:
     /**
@@ -82,17 +82,17 @@ class DREAM3DWidgetsLib_EXPORT DataContainerArrayProxyWidget : public QWidget, p
     void afterPreflight();
     void filterNeedsInputParameters(AbstractFilter* filter);
     void itemActivated(const QModelIndex& index);
-   // void on_conditionalCB_stateChanged(int state);
+    // void on_conditionalCB_stateChanged(int state);
 
   signals:
     void errorSettingFilterParameter(const QString& msg);
     void parametersChanged();
 
   protected:
-     void updateProxyFromModel();
+    void updateProxyFromModel();
 
-     void updateModelFromProxy(DataContainerArrayProxy &proxy);
-     void updateProxyFromProxy(DataContainerArrayProxy &current, DataContainerArrayProxy &incoming);
+    void updateModelFromProxy(DataContainerArrayProxy& proxy);
+    void updateProxyFromProxy(DataContainerArrayProxy& current, DataContainerArrayProxy& incoming);
 
   private:
     AbstractFilter*   m_Filter;

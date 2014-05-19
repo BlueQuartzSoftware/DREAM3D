@@ -68,7 +68,7 @@ typedef boost::variate_generator<RandomNumberGenerator&, NumberDistribution> Gen
  */
 class CAxisSegmentFeatures : public SegmentFeatures
 {
-  Q_OBJECT
+    Q_OBJECT
   public:
     DREAM3D_SHARED_POINTERS(CAxisSegmentFeatures)
     DREAM3D_STATIC_NEW_MACRO(CAxisSegmentFeatures)

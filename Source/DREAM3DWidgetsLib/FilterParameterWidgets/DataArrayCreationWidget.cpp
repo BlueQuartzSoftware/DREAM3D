@@ -83,9 +83,9 @@ DataArrayCreationWidget::~DataArrayCreationWidget()
 // -----------------------------------------------------------------------------
 void DataArrayCreationWidget::initializeWidget(FilterParameter* parameter, AbstractFilter* filter)
 {
-    m_Filter = filter;
-    m_FilterParameter = parameter;
-    setupGui();
+  m_Filter = filter;
+  m_FilterParameter = parameter;
+  setupGui();
 }
 
 
@@ -146,6 +146,7 @@ void DataArrayCreationWidget::setupGui()
     dataContainerList->setEnabled(boolProp);
     attributeMatrixList->setEnabled(boolProp);
     dataArrayName->setEnabled(boolProp);
+    on_conditionalCB_stateChanged(conditionalCB->checkState());
   }
   else
   {
@@ -167,12 +168,18 @@ void DataArrayCreationWidget::on_conditionalCB_stateChanged(int state)
 {
   bool boolProp = conditionalCB->isChecked();
   dataContainerList->setEnabled(boolProp);
+  dataContainerList->setVisible(boolProp);
   attributeMatrixList->setEnabled(boolProp);
+  attributeMatrixList->setVisible(boolProp);
   dataArrayName->setEnabled(boolProp);
+  dataArrayName->setVisible(boolProp);
+
+  label->setVisible(boolProp);
+  linkLeft->setVisible(boolProp);
+  linkRight->setVisible(boolProp);
   m_DidCausePreflight = true;
   emit parametersChanged();
   m_DidCausePreflight = false;
-
 }
 
 
@@ -205,7 +212,8 @@ void DataArrayCreationWidget::populateComboBoxes()
   while(iter.hasNext() )
   {
     DataContainerProxy dc = iter.next();
-    if(dataContainerList->findText(dc.name) == -1 ) {
+    if(dataContainerList->findText(dc.name) == -1 )
+    {
       dataContainerList->addItem(dc.name);
     }
   }
@@ -240,10 +248,12 @@ void DataArrayCreationWidget::populateComboBoxes()
   if (!dataContainerList->signalsBlocked()) { didBlock = true; }
   dataContainerList->blockSignals(true);
   int dcIndex = dataContainerList->findText(dcName);
-  if(dcIndex < 0 && dcName.isEmpty() == false) {
+  if(dcIndex < 0 && dcName.isEmpty() == false)
+  {
     dataContainerList->addItem(dcName);
   } // the string was not found so just set it to the first index
-  else {
+  else
+  {
     if(dcIndex < 0) { dcIndex = 0; } // Just set it to the first DataContainer in the list
     dataContainerList->setCurrentIndex(dcIndex);
     populateAttributeMatrixList();
@@ -255,7 +265,8 @@ void DataArrayCreationWidget::populateComboBoxes()
   attributeMatrixList->blockSignals(true);
   int amIndex = attributeMatrixList->findText(amName);
   if(amIndex < 0 && amName.isEmpty() == false) { attributeMatrixList->addItem(amName); } // The name of the attributeMatrix was not found so just set the first one
-  else {
+  else
+  {
     if(amIndex < 0) { amIndex = 0; }
     attributeMatrixList->setCurrentIndex(amIndex);
 

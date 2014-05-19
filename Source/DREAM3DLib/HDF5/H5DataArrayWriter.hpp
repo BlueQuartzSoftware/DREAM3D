@@ -83,14 +83,14 @@ class H5DataArrayWriter
       qint32 count = tDims.size() - 1;
       for (int i = count; i >= 0; i--)
       {
-   //     std::cout << "  " << tDims[i] << std::endl;
+        //     std::cout << "  " << tDims[i] << std::endl;
         h5Dims[count - i] = tDims[i];
       }
-    //  std::cout << "  Comp Dims: " << std::endl;
+      //  std::cout << "  Comp Dims: " << std::endl;
       count = cDims.size() - 1;
       for (int i = count; i >= 0; i--)
       {
-    //    std::cout << "  " << cDims[i] << std::endl;
+        //    std::cout << "  " << cDims[i] << std::endl;
         h5Dims[count - i + tDims.size()] = cDims[i];
       }
 
@@ -102,7 +102,7 @@ class H5DataArrayWriter
         h5Dims[i] = tDims[i];
       }
       //  std::cout << "  Comp Dims: " << std::endl;
-      for(int i = 0;i < cDims.size(); i++)
+      for(int i = 0; i < cDims.size(); i++)
       {
         //   std::cout << (i+tDims.size()) << "  " << cDims[i] << std::endl;
         h5Dims[i + tDims.size()] = cDims[i];
@@ -184,7 +184,7 @@ class H5DataArrayWriter
       {
         h5Dims[i] = tDims[i];
       }
-      for(int i = 0;i < cDims.size(); i++)
+      for(int i = 0; i < cDims.size(); i++)
       {
         h5Dims[i + tDims.size()] = cDims[i];
       }

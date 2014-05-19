@@ -63,7 +63,7 @@ class SGODFItemDelegate : public QStyledItemDelegate
     Q_OBJECT
 
   public:
-    explicit SGODFItemDelegate(unsigned int crystalStructure, QObject *parent = 0) :
+    explicit SGODFItemDelegate(unsigned int crystalStructure, QObject* parent = 0) :
       QStyledItemDelegate(parent),
       m_CrystalStructure(crystalStructure)
     {
@@ -72,7 +72,7 @@ class SGODFItemDelegate : public QStyledItemDelegate
     // -----------------------------------------------------------------------------
     //
     // -----------------------------------------------------------------------------
-    void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
+    void paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const
     {
       QStyledItemDelegate::paint(painter, option, index);
     }
@@ -80,7 +80,7 @@ class SGODFItemDelegate : public QStyledItemDelegate
     // -----------------------------------------------------------------------------
     //
     // -----------------------------------------------------------------------------
-    QWidget* createEditor(QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const
+    QWidget* createEditor(QWidget* parent, const QStyleOptionViewItem& option, const QModelIndex& index) const
     {
       QLineEdit* editor;
       QDoubleValidator* validator;
@@ -120,7 +120,7 @@ class SGODFItemDelegate : public QStyledItemDelegate
     // -----------------------------------------------------------------------------
     //
     // -----------------------------------------------------------------------------
-    void setEditorData(QWidget *editor, const QModelIndex &index) const
+    void setEditorData(QWidget* editor, const QModelIndex& index) const
     {
       qint32 col = index.column();
       if (col < SGODFTableModel::ColumnCount)
@@ -129,13 +129,13 @@ class SGODFItemDelegate : public QStyledItemDelegate
         Q_ASSERT(lineEdit);
         lineEdit->setText(index.model()->data(index).toString());
       }
-      else QStyledItemDelegate::setEditorData(editor, index);
+      else { QStyledItemDelegate::setEditorData(editor, index); }
     }
 
     // -----------------------------------------------------------------------------
     //
     // -----------------------------------------------------------------------------
-    void setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const
+    void setModelData(QWidget* editor, QAbstractItemModel* model, const QModelIndex& index) const
     {
       qint32 col = index.column();
       if (col < SGODFTableModel::ColumnCount)
@@ -146,7 +146,7 @@ class SGODFItemDelegate : public QStyledItemDelegate
         double v = lineEdit->text().toFloat(&ok);
         model->setData(index, v);
       }
-      else QStyledItemDelegate::setModelData(editor, model, index);
+      else { QStyledItemDelegate::setModelData(editor, model, index); }
     }
 
   private:

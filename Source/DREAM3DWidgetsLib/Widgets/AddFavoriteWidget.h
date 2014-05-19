@@ -44,7 +44,7 @@
 
 class DREAM3DWidgetsLib_EXPORT AddFavoriteWidget : public QDialog, public Ui::AddFavoriteDialog
 {
-  Q_OBJECT
+    Q_OBJECT
 
   public:
     AddFavoriteWidget(QString text, QWidget* parent = 0);
@@ -54,7 +54,7 @@ class DREAM3DWidgetsLib_EXPORT AddFavoriteWidget : public QDialog, public Ui::Ad
   protected slots:
     void on_addfavoriteOKButton_clicked();
     void on_addfavoriteCancelButton_clicked();
-    void on_favoriteName_textChanged(const QString & text);
+    void on_favoriteName_textChanged(const QString& text);
 
   private:
     bool BtnClicked;

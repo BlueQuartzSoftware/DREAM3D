@@ -102,8 +102,8 @@ void InitializeSyntheticVolume::setupFilterParameters()
   parameters.push_back(FilterParameter::New("Dimensions", "Dimensions", FilterParameterWidgetType::IntVec3Widget, "IntVec3_t", false, "Voxels"));
   parameters.push_back(FilterParameter::New("Resolution", "Resolution", FilterParameterWidgetType::FloatVec3Widget, "FloatVec3_t", false, "Microns"));
   parameters.push_back(FilterParameter::New("Origin", "Origin", FilterParameterWidgetType::FloatVec3Widget, "FloatVec3_t", false, "Microns"));
-  parameters.push_back(FilterParameter::New("Estimated Primary Features", "EstimatedPrimaryFeatures", FilterParameterWidgetType::PreflightUpdatedValueWidget, "QString", false, ""));
-
+  parameters.push_back(FilterParameter::New("Estimated Primary Features", "EstimatedPrimaryFeatures", FilterParameterWidgetType::PreflightUpdatedValueWidget, "QVariant", false, ""));
+  parameters.back()->setReadOnly(true);
   setFilterParameters(parameters);
 }
 // -----------------------------------------------------------------------------
@@ -264,8 +264,8 @@ int InitializeSyntheticVolume::estimateNumFeatures(IntVec3_t dims, FloatVec3_t r
   }
 
   DREAM3D_RANDOMNG_NEW()
-      // generate the Features
-      int gid = 1;
+  // generate the Features
+  int gid = 1;
 
   float currentvol = 0.0;
   float vol;

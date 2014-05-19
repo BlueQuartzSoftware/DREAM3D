@@ -53,8 +53,8 @@ PMFileGenerator::PMFileGenerator(QString outputDir,
                                  QString codeTemplateResourcePath,
                                  QTreeWidgetItem* wi,
                                  QObject* parent):
-PMDirGenerator(outputDir, pathTemplate, QString(""), codeTemplateResourcePath, wi, parent),
-m_FileName(fileName)
+  PMDirGenerator(outputDir, pathTemplate, QString(""), codeTemplateResourcePath, wi, parent),
+  m_FileName(fileName)
 {
   if (NULL != wi)
   {
@@ -82,7 +82,7 @@ QString PMFileGenerator::getFileName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PMFileGenerator::pluginNameChanged(const QString &pluginName)
+void PMFileGenerator::pluginNameChanged(const QString& pluginName)
 {
 //  qDebug() << "PMFileGenerator::pluginNameChanged" << "\n";
 
@@ -91,7 +91,9 @@ void PMFileGenerator::pluginNameChanged(const QString &pluginName)
   if (pin.isEmpty() == true)
   {
     setPluginName("Unknown Plugin Name");
-  } else {
+  }
+  else
+  {
     setPluginName(pin);
   }
 
@@ -112,7 +114,7 @@ void PMFileGenerator::pluginNameChanged(const QString &pluginName)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PMFileGenerator::outputDirChanged(const QString &outputDir)
+void PMFileGenerator::outputDirChanged(const QString& outputDir)
 {
 //  qDebug() << "PMFileGenerator::outputDirChanged" << "\n";
   setOutputDir(outputDir);
@@ -135,51 +137,55 @@ void PMFileGenerator::generateOutput()
 
   if (pluginName.isEmpty() == true || pluginDir.isEmpty() == true)
   {
-      return;
+    return;
   }
 
 //  QString classNameLowerCase = m_ClassName.toLower();
 
   //Open file
-    QFile rfile(getCodeTemplateResourcePath());
-    if ( rfile.open(QIODevice::ReadOnly | QIODevice::Text) ) {
-      QTextStream in(&rfile);
-      QString text = in.readAll();
-      text.replace("@PluginName@", pluginName);
-      QFileInfo fi(m_FileName);
-      QString className = fi.baseName();
-      text.replace("@ClassName@", className);
-      text.replace("@MD_FILE_NAME@", m_FileName);
-      text.replace("@ClassNameLowerCase@", className.toLower());
-      text.replace("@FilterGroup@", pluginName);
-      text.replace("@FilterSubgroup@", pluginName);
+  QFile rfile(getCodeTemplateResourcePath());
+  if ( rfile.open(QIODevice::ReadOnly | QIODevice::Text) )
+  {
+    QTextStream in(&rfile);
+    QString text = in.readAll();
+    text.replace("@PluginName@", pluginName);
+    QFileInfo fi(m_FileName);
+    QString className = fi.baseName();
+    text.replace("@ClassName@", className);
+    text.replace("@MD_FILE_NAME@", m_FileName);
+    text.replace("@ClassNameLowerCase@", className.toLower());
+    text.replace("@FilterGroup@", pluginName);
+    text.replace("@FilterSubgroup@", pluginName);
 
-      QString parentPath = getOutputDir() + QDir::separator() + getPathTemplate().replace("@PluginName@", getPluginName());
-      parentPath = QDir::toNativeSeparators(parentPath);
+    QString parentPath = getOutputDir() + QDir::separator() + getPathTemplate().replace("@PluginName@", getPluginName());
+    parentPath = QDir::toNativeSeparators(parentPath);
 
-      QDir dir(parentPath);
-      dir.mkpath(parentPath);
+    QDir dir(parentPath);
+    dir.mkpath(parentPath);
 
-      parentPath = parentPath + QDir::separator() + m_FileName;
-      //Write to file
-      QFile f(parentPath);
-      if ( f.open(QIODevice::WriteOnly | QIODevice::Text) ) {
-        QTextStream out(&f);
-        out << text;
-      }
+    parentPath = parentPath + QDir::separator() + m_FileName;
+    //Write to file
+    QFile f(parentPath);
+    if ( f.open(QIODevice::WriteOnly | QIODevice::Text) )
+    {
+      QTextStream out(&f);
+      out << text;
     }
+  }
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QString PMFileGenerator::generateFileContents() {
+QString PMFileGenerator::generateFileContents()
+{
   QString pluginName = getPluginName();
   QString text = "";
 
   //Open file
   QFile rfile( getCodeTemplateResourcePath() );
-  if ( rfile.open(QIODevice::ReadOnly | QIODevice::Text) ) {
+  if ( rfile.open(QIODevice::ReadOnly | QIODevice::Text) )
+  {
     QTextStream in(&rfile);
     text = in.readAll();
     text.replace("@PluginName@", pluginName);

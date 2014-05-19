@@ -68,9 +68,9 @@ void GenerateSurfaceMeshConnectivity::setupFilterParameters()
   /* Place all your option initialization code here */
 
   /*   For a simple true/false boolean use this code*/
-  parameters.push_back(FilterParameter::New("Generate Per Vertex Triangle List", "GenerateVertexTriangleLists", FilterParameterWidgetType::BooleanWidget,"bool", false));
-  parameters.push_back(FilterParameter::New("Generate Triangle Neighbors List", "GenerateTriangleNeighbors", FilterParameterWidgetType::BooleanWidget,"bool", false));
-  parameters.push_back(FilterParameter::New("Generate Edge Id List", "GenerateEdgeIdList", FilterParameterWidgetType::BooleanWidget,"bool", false));
+  parameters.push_back(FilterParameter::New("Generate Per Vertex Triangle List", "GenerateVertexTriangleLists", FilterParameterWidgetType::BooleanWidget, "bool", false));
+  parameters.push_back(FilterParameter::New("Generate Triangle Neighbors List", "GenerateTriangleNeighbors", FilterParameterWidgetType::BooleanWidget, "bool", false));
+  parameters.push_back(FilterParameter::New("Generate Edge Id List", "GenerateEdgeIdList", FilterParameterWidgetType::BooleanWidget, "bool", false));
   parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "QString", true));
   parameters.push_back(FilterParameter::New("Surface Data Container", "SurfaceDataContainerName", FilterParameterWidgetType::DataContainerSelectionWidget, "QString", true, ""));
 

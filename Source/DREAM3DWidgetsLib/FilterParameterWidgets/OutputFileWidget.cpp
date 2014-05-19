@@ -112,6 +112,7 @@ void OutputFileWidget::setupGui()
     conditionalCB->setChecked(boolProp);
     conditionalCB->setText(m_FilterParameter->getConditionalLabel());
     value->setEnabled(boolProp);
+    on_conditionalCB_stateChanged(conditionalCB->checkState());
   }
   else
   {

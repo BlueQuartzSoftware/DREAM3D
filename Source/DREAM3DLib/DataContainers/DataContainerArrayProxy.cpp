@@ -350,7 +350,7 @@ QStringList DataContainerArrayProxy::serialize()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-bool DataContainerArrayProxy::contains(const QString &name)
+bool DataContainerArrayProxy::contains(const QString& name)
 {
   QListIterator<DataContainerProxy> iter(list);
   while(iter.hasNext())

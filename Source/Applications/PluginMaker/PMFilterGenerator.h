@@ -28,17 +28,17 @@ class PMFilterGenerator : public PMFileGenerator
     virtual ~PMFilterGenerator();
 
   protected slots:
-   virtual void pluginNameChanged (const QString &plugname);
-   virtual void outputDirChanged (const QString &outputDir);
-   virtual void generateOutput();
+    virtual void pluginNameChanged (const QString& plugname);
+    virtual void outputDirChanged (const QString& outputDir);
+    virtual void generateOutput();
 
   signals:
-   void outputError(const QString &message);
-   void filterSourceError(const QString &message);
+    void outputError(const QString& message);
+    void filterSourceError(const QString& message);
 
 
   private:
-   QString m_ClassName;
+    QString m_ClassName;
 
 
 };

@@ -72,7 +72,6 @@ namespace FilterParameterWidgetType
   const QString AxisAngleWidget("AxisAngleWidget");
   const QString UnknownWidget("UnknownWidget");
   const QString DataContainerArrayProxyWidget("DataContainerArrayProxyWidget");
-  const QString ArraySelectionWidget("ArraySelectionWidget"); // This is the generic array name selection tool where the user can select multiple arrays with checkboxes from all data containers
   const QString DataArraySelectionWidget("DataArraySelectionWidget");
   const QString ComparisonSelectionWidget("ComparisonSelectionWidget");
   const QString AttributeMatrixSelectionWidget("AttributeMatrixSelectionWidget");
@@ -112,7 +111,7 @@ namespace FilterParameterWidgetType
   const QString FaceArrayComparisonSelectionWidget("FaceArrayComparisonSelectionWidget");
   const QString EdgeArrayComparisonSelectionWidget("EdgeArrayComparisonSelectionWidget");
   const QString CustomWidget("CustomWidget");
-*/
+  */
 
 
 
@@ -173,11 +172,11 @@ class DREAM3DLib_EXPORT FilterParameter
      * @return
      */
     static Pointer NewConditional(const QString& humanLabel, const QString& propertyName,
-                       const QString& widgetType, const QString& valueType,
-                       bool advanced,
-                       bool isConditional,
-                       const QString& conditionalProperty,
-                       const QString& conditionalLabel);
+                                  const QString& widgetType, const QString& valueType,
+                                  bool advanced,
+                                  bool isConditional,
+                                  const QString& conditionalProperty,
+                                  const QString& conditionalLabel);
 
     virtual ~FilterParameter();
 
@@ -190,13 +189,14 @@ class DREAM3DLib_EXPORT FilterParameter
     DREAM3D_INSTANCE_STRING_PROPERTY(FileExtension)
     DREAM3D_INSTANCE_STRING_PROPERTY(FileType)
     DREAM3D_INSTANCE_STRING_PROPERTY(CastableValueType)
+    DREAM3D_INSTANCE_PROPERTY(bool, ReadOnly)
 
     DREAM3D_BOOL_PROPERTY(Conditional)
     DREAM3D_INSTANCE_STRING_PROPERTY(ConditionalProperty)
     DREAM3D_INSTANCE_STRING_PROPERTY(ConditionalLabel)
 
-    protected:
-      FilterParameter();
+  protected:
+    FilterParameter();
 
   private:
     FilterParameter(const FilterParameter&); // Copy Constructor Not Implemented
@@ -222,8 +222,8 @@ class DREAM3DLib_EXPORT ConstrainedFilterParameter : public FilterParameter
     DREAM3D_INSTANCE_PROPERTY(T, Minimum)
     DREAM3D_INSTANCE_PROPERTY(T, Maximum)
 
-    protected:
-      ConstrainedFilterParameter() {}
+  protected:
+    ConstrainedFilterParameter() {}
 
   private:
     ConstrainedFilterParameter(const ConstrainedFilterParameter&); // Copy Constructor Not Implemented
@@ -252,8 +252,8 @@ class DREAM3DLib_EXPORT ChoiceFilterParameter : public FilterParameter
     DREAM3D_INSTANCE_PROPERTY(QVector<QString>, Choices)
     DREAM3D_INSTANCE_PROPERTY(bool, Editable)
 
-    protected:
-      ChoiceFilterParameter();
+  protected:
+    ChoiceFilterParameter();
 
   private:
     ChoiceFilterParameter(const ChoiceFilterParameter&); // Copy Constructor Not Implemented
@@ -282,8 +282,8 @@ class DREAM3DLib_EXPORT ComparisonFilterParameter : public FilterParameter
     DREAM3D_INSTANCE_PROPERTY(QVector<QString>, Choices)
     DREAM3D_INSTANCE_PROPERTY(bool, ShowOperators)
 
-    protected:
-      ComparisonFilterParameter();
+  protected:
+    ComparisonFilterParameter();
 
   private:
     ComparisonFilterParameter(const ComparisonFilterParameter&); // Copy Constructor Not Implemented
@@ -311,8 +311,8 @@ class DREAM3DLib_EXPORT ShapeTypesFilterParameter : public FilterParameter
     DREAM3D_INSTANCE_PROPERTY(QString, PhaseTypeCountProperty)
     DREAM3D_INSTANCE_PROPERTY(QString, PhaseTypeArrayPathProperty)
 
-    protected:
-      ShapeTypesFilterParameter();
+  protected:
+    ShapeTypesFilterParameter();
 
   private:
     ShapeTypesFilterParameter(const ShapeTypesFilterParameter&); // Copy Constructor Not Implemented
@@ -366,8 +366,8 @@ class DREAM3DLib_EXPORT DataContainerArrayProxyFilterParameter : public FilterPa
     DREAM3D_INSTANCE_PROPERTY(DataContainerArrayProxy, DataContainerArrayProxy)
     DREAM3D_INSTANCE_PROPERTY(Qt::CheckState,  DefaultFlagValue)
 
-    protected:
-      DataContainerArrayProxyFilterParameter();
+  protected:
+    DataContainerArrayProxyFilterParameter();
 
   private:
     DataContainerArrayProxyFilterParameter(const DataContainerArrayProxyFilterParameter&); // Copy Constructor Not Implemented

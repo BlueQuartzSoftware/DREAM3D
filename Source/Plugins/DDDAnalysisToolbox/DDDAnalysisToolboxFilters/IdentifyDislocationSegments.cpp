@@ -131,7 +131,7 @@ void IdentifyDislocationSegments::updateEdgeFeatureInstancePointers()
   { m_Active = m_ActivePtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
 
-  // -----------------------------------------------------------------------------
+// -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 void IdentifyDislocationSegments::dataCheck()
@@ -231,37 +231,37 @@ void IdentifyDislocationSegments::execute()
       m_DislocationIds[i] = dnum;
       edgeslist[size] = i;
       size++;
-      tDims[0] = dnum+1;
+      tDims[0] = dnum + 1;
       edgeFeatureAttrMat->resizeAttributeArrays(tDims);
       updateEdgeFeatureInstancePointers();
       m_Active[dnum] = true;
       while(size > 0)
       {
-        int64_t currentEdge = edgeslist[size-1];
-        refBV[0] = m_BurgersVectors[3*currentEdge+0];
-        refBV[1] = m_BurgersVectors[3*currentEdge+1];
-        refBV[2] = m_BurgersVectors[3*currentEdge+2];
-        refSPN[0] = m_SlipPlaneNormals[3*currentEdge+0];
-        refSPN[1] = m_SlipPlaneNormals[3*currentEdge+1];
-        refSPN[2] = m_SlipPlaneNormals[3*currentEdge+2];
+        int64_t currentEdge = edgeslist[size - 1];
+        refBV[0] = m_BurgersVectors[3 * currentEdge + 0];
+        refBV[1] = m_BurgersVectors[3 * currentEdge + 1];
+        refBV[2] = m_BurgersVectors[3 * currentEdge + 2];
+        refSPN[0] = m_SlipPlaneNormals[3 * currentEdge + 0];
+        refSPN[1] = m_SlipPlaneNormals[3 * currentEdge + 1];
+        refSPN[2] = m_SlipPlaneNormals[3 * currentEdge + 2];
         size -= 1;
         for(int iter = 0; iter < 2; iter++)
         {
           uint16_t eCount = edgesContainingVert->getNumberOfElements(edges[currentEdge].verts[iter]);
           int32_t* data = edgesContainingVert->getElementListPointer(edges[currentEdge].verts[iter]);
-          for(uint16_t j=0;j<eCount;j++)
+          for(uint16_t j = 0; j < eCount; j++)
           {
             if(m_DislocationIds[data[j]] == 0)
             {
-              neighBV[0] = m_BurgersVectors[3*data[j]+0];
-              neighBV[1] = m_BurgersVectors[3*data[j]+1];
-              neighBV[2] = m_BurgersVectors[3*data[j]+2];
-              neighSPN[0] = m_SlipPlaneNormals[3*data[j]+0];
-              neighSPN[1] = m_SlipPlaneNormals[3*data[j]+1];
-              neighSPN[2] = m_SlipPlaneNormals[3*data[j]+2];
+              neighBV[0] = m_BurgersVectors[3 * data[j] + 0];
+              neighBV[1] = m_BurgersVectors[3 * data[j] + 1];
+              neighBV[2] = m_BurgersVectors[3 * data[j] + 2];
+              neighSPN[0] = m_SlipPlaneNormals[3 * data[j] + 0];
+              neighSPN[1] = m_SlipPlaneNormals[3 * data[j] + 1];
+              neighSPN[2] = m_SlipPlaneNormals[3 * data[j] + 2];
               angleBV = GeometryMath::AngleBetweenVectors(refBV, neighBV);
               angleSPN = GeometryMath::AngleBetweenVectors(refSPN, neighSPN);
-              if((angleBV < angleTol || (DREAM3D::Constants::k_Pi-angleBV) < angleTol) && (angleSPN < angleTol || (DREAM3D::Constants::k_Pi-angleSPN) < angleTol))
+              if((angleBV < angleTol || (DREAM3D::Constants::k_Pi - angleBV) < angleTol) && (angleSPN < angleTol || (DREAM3D::Constants::k_Pi - angleSPN) < angleTol))
               {
                 m_DislocationIds[data[j]] = dnum;
                 edgeslist[size] = data[j];

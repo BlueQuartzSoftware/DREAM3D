@@ -54,9 +54,9 @@ class QAbstractItemDelegate;
 class SGLogNormalTableModel : public SGAbstractTableModel
 {
 
-Q_OBJECT
+    Q_OBJECT
 
-    public:
+  public:
 
     enum ColumnIndexes
     {
@@ -70,16 +70,16 @@ Q_OBJECT
     SGLogNormalTableModel(QObject* parent = 0);
     virtual ~SGLogNormalTableModel();
 
-    Qt::ItemFlags flags(const QModelIndex &index) const;
-    QVariant data(const QModelIndex &index,
-        int role=Qt::DisplayRole) const;
+    Qt::ItemFlags flags(const QModelIndex& index) const;
+    QVariant data(const QModelIndex& index,
+                  int role = Qt::DisplayRole) const;
     QVariant headerData(int section, Qt::Orientation orientation,
-        int role=Qt::DisplayRole) const;
-    int rowCount(const QModelIndex &parent=QModelIndex()) const;
-    int columnCount(const QModelIndex &parent=QModelIndex()) const;
+                        int role = Qt::DisplayRole) const;
+    int rowCount(const QModelIndex& parent = QModelIndex()) const;
+    int columnCount(const QModelIndex& parent = QModelIndex()) const;
 
-    bool setData(const QModelIndex &index, const QVariant &value,
-        int role=Qt::EditRole);
+    bool setData(const QModelIndex& index, const QVariant& value,
+                 int role = Qt::EditRole);
     /**
      *
      * @param col
@@ -88,13 +88,13 @@ Q_OBJECT
      * @param role
      * @return
      */
-    bool setHeaderData(int col, Qt::Orientation orientation, const QVariant& data, int role=Qt::EditRole)
+    bool setHeaderData(int col, Qt::Orientation orientation, const QVariant& data, int role = Qt::EditRole)
     { return false;}
 
     bool insertRows(int row, int count,
-        const QModelIndex &parent=QModelIndex());
+                    const QModelIndex& parent = QModelIndex());
     bool removeRows(int row, int count,
-        const QModelIndex &parent=QModelIndex());
+                    const QModelIndex& parent = QModelIndex());
 
     QAbstractItemDelegate* getItemDelegate();
 
@@ -112,7 +112,7 @@ Q_OBJECT
 
     virtual QVector<float> getData(int col);
     virtual float getDataValue(int col, int row);
-    virtual void setColumnData(int col, QVector<float> &data);
+    virtual void setColumnData(int col, QVector<float>& data);
 
     QVector<float>& getAvergaes()
     { return m_Average;}
@@ -124,7 +124,7 @@ Q_OBJECT
     float getStdDev(qint32 row)
     { return m_StdDev[row];}
 
-    private:
+  private:
     int m_ColumnCount;
     int m_RowCount;
 
@@ -135,7 +135,7 @@ Q_OBJECT
 
     SGLogNormalTableModel(const SGLogNormalTableModel&); // Copy Constructor Not Implemented
     void operator=(const SGLogNormalTableModel&); // Operator '=' Not Implemented
-  };
+};
 
 #endif /* _SG_LOG_NORMAL_TABLEMODEL_H_ */
 

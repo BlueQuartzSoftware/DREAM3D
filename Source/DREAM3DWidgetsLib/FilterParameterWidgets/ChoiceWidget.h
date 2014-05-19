@@ -58,7 +58,7 @@
 */
 class DREAM3DWidgetsLib_EXPORT ChoiceWidget : public QWidget, private Ui::ChoiceWidget
 {
-  Q_OBJECT
+    Q_OBJECT
 
   public:
     /**

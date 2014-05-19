@@ -63,7 +63,7 @@ DREAM3DPluginLoader::~DREAM3DPluginLoader()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DREAM3DPluginLoader::LoadPluginFilters(FilterManager *filterManager)
+void DREAM3DPluginLoader::LoadPluginFilters(FilterManager* filterManager)
 {
   // THIS IS A VERY IMPORTANT LINE: It will register all the known filters in the dream3d library. This
   // will NOT however get filters from plugins. We are going to have to figure out how to compile filters
@@ -148,12 +148,12 @@ void DREAM3DPluginLoader::LoadPluginFilters(FilterManager *filterManager)
     QPluginLoader loader(path);
     QFileInfo fi(path);
     QString fileName = fi.fileName();
-    QObject *plugin = loader.instance();
+    QObject* plugin = loader.instance();
     qDebug() << "    Pointer: " << plugin << "\n";
     if (plugin && m_PluginFileNames.contains(fileName, Qt::CaseSensitive) == false)
     {
       //populateMenus(plugin);
-      DREAM3DPluginInterface* ipPlugin = qobject_cast<DREAM3DPluginInterface * > (plugin);
+      DREAM3DPluginInterface* ipPlugin = qobject_cast<DREAM3DPluginInterface* > (plugin);
       if (ipPlugin)
       {
         m_LoadedPlugins.push_back(ipPlugin);

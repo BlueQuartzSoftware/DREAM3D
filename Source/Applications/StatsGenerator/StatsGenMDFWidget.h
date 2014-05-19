@@ -64,10 +64,10 @@ class QwtPlotCurve;
  */
 class StatsGenMDFWidget : public QWidget, private Ui::StatsGenMDFWidget
 {
-  Q_OBJECT
+    Q_OBJECT
 
   public:
-    StatsGenMDFWidget(QWidget *parent = 0);
+    StatsGenMDFWidget(QWidget* parent = 0);
     virtual ~StatsGenMDFWidget();
 
     void setupGui();
@@ -82,7 +82,7 @@ class StatsGenMDFWidget : public QWidget, private Ui::StatsGenMDFWidget
 
     QVector<float> generateODFData();
 
-    void updateMDFPlot(QVector<float> &odf);
+    void updateMDFPlot(QVector<float>& odf);
 
     SGMDFTableModel* tableModel();
 

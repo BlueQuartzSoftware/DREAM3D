@@ -110,7 +110,7 @@ class EbsdLib_EXPORT CtfReader : public EbsdReader
     EBSD_POINTER_PROP(GrainRandomColourR, GrainRandomColourR, int)
     EBSD_POINTER_PROP(GrainRandomColourG, GrainRandomColourG, int)
     EBSD_POINTER_PROP(GrainRandomColourB, GrainRandomColourB, int)
-    
+
     /**
      * @brief Returns the pointer to the data for a given feature
      * @param featureName The name of the feature to return the pointer to.

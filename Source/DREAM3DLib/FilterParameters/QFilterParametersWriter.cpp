@@ -70,7 +70,7 @@ QFilterParametersWriter::~QFilterParametersWriter()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int QFilterParametersWriter::WritePipelineToFile(FilterPipeline::Pointer pipeline, const QString& filePath, const QString &name, QSettings::Format format, IObserver* obs)
+int QFilterParametersWriter::WritePipelineToFile(FilterPipeline::Pointer pipeline, const QString& filePath, const QString& name, QSettings::Format format, IObserver* obs)
 {
 
   if(NULL == pipeline.get())
@@ -597,7 +597,7 @@ int QFilterParametersWriter::writeValue(const QString name, DataContainerArrayPr
   while (dcIter.hasNext()) // DataContainerLevel
   {
     const DataContainerProxy& dcProxy =  dcIter.next();
-   // if(dcProxy.flag == Qt::Unchecked) { continue; } // Skip to the next DataContainer if we are not reading this one.
+    // if(dcProxy.flag == Qt::Unchecked) { continue; } // Skip to the next DataContainer if we are not reading this one.
 
     QMapIterator<QString, AttributeMatrixProxy> amIter(dcProxy.attributeMatricies);
     while(amIter.hasNext()) // AttributeMatrixLevel
@@ -605,7 +605,7 @@ int QFilterParametersWriter::writeValue(const QString name, DataContainerArrayPr
       amIter.next();
 
       const AttributeMatrixProxy& amProxy = amIter.value();
-     // if(amProxy.flag == Qt::Unchecked) { continue; } // Skip to the next AttributeMatrix if not reading this one
+      // if(amProxy.flag == Qt::Unchecked) { continue; } // Skip to the next AttributeMatrix if not reading this one
 
       QMapIterator<QString, DataArrayProxy> dIter(amProxy.dataArrays);
       while(dIter.hasNext()) // DataArray Level

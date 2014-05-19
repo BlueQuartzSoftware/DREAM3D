@@ -3,7 +3,8 @@
 
 #include <QtCore/QString>
 
-namespace Processing {
+namespace Processing
+{
   const QString ProcessingPluginFile("ProcessingPlugin");
   const QString ProcessingPluginDisplayName("ProcessingPlugin");
   const QString ProcessingBaseName("ProcessingPlugin");

@@ -135,7 +135,7 @@ class ReadOrientationData : public AbstractFilter
     DREAM3D_INSTANCE_PROPERTY(int, Manufacturer)
 
 
-signals:
+  signals:
     void updateFilterParameters(AbstractFilter* filter);
     void parametersChanged();
     void preflightAboutToExecute();

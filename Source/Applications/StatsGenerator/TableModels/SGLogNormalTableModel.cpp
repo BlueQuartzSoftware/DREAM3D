@@ -13,8 +13,8 @@
  * list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
  *
- * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force, 
- * BlueQuartz Software nor the names of its contributors may be used to endorse 
+ * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
+ * BlueQuartz Software nor the names of its contributors may be used to endorse
  * or promote products derived from this software without specific prior written
  * permission.
  *
@@ -62,7 +62,7 @@ SGLogNormalTableModel::~SGLogNormalTableModel()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-Qt::ItemFlags SGLogNormalTableModel::flags(const QModelIndex &index) const
+Qt::ItemFlags SGLogNormalTableModel::flags(const QModelIndex& index) const
 {
   //  qDebug() << "SGLogNormalTableModel::flags" << "\n";
   if (!index.isValid())
@@ -98,7 +98,7 @@ Qt::ItemFlags SGLogNormalTableModel::flags(const QModelIndex &index) const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QVariant SGLogNormalTableModel::data(const QModelIndex &index, qint32 role) const
+QVariant SGLogNormalTableModel::data(const QModelIndex& index, qint32 role) const
 {
 
   if (!index.isValid())
@@ -116,21 +116,21 @@ QVariant SGLogNormalTableModel::data(const QModelIndex &index, qint32 role) cons
       {
         comboBox.currentText = QString("101");
         const QString header = headerData(BinNumber, Qt::Horizontal, Qt::DisplayRole).toString();
-        if (header.length() > comboBox.currentText.length()) comboBox.currentText = header;
+        if (header.length() > comboBox.currentText.length()) { comboBox.currentText = header; }
         break;
       }
       case Average:
       {
         comboBox.currentText = QString("10001");
         const QString header = headerData(BinNumber, Qt::Horizontal, Qt::DisplayRole).toString();
-        if (header.length() > comboBox.currentText.length()) comboBox.currentText = header;
+        if (header.length() > comboBox.currentText.length()) { comboBox.currentText = header; }
         break;
       }
       case StdDev:
       {
         comboBox.currentText = QString("10001");
         const QString header = headerData(BinNumber, Qt::Horizontal, Qt::DisplayRole).toString();
-        if (header.length() > comboBox.currentText.length()) comboBox.currentText = header;
+        if (header.length() > comboBox.currentText.length()) { comboBox.currentText = header; }
         break;
       }
       case LineColor:
@@ -211,7 +211,7 @@ QVariant SGLogNormalTableModel::headerData(int section, Qt::Orientation orientat
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int SGLogNormalTableModel::rowCount(const QModelIndex &index) const
+int SGLogNormalTableModel::rowCount(const QModelIndex& index) const
 {
   return index.isValid() ? 0 : m_RowCount;
 }
@@ -219,7 +219,7 @@ int SGLogNormalTableModel::rowCount(const QModelIndex &index) const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int SGLogNormalTableModel::columnCount(const QModelIndex &index) const
+int SGLogNormalTableModel::columnCount(const QModelIndex& index) const
 {
   return index.isValid() ? 0 : m_ColumnCount;
 }
@@ -227,7 +227,7 @@ int SGLogNormalTableModel::columnCount(const QModelIndex &index) const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-bool SGLogNormalTableModel::setData(const QModelIndex & index, const QVariant & value, int role)
+bool SGLogNormalTableModel::setData(const QModelIndex& index, const QVariant& value, int role)
 {
   // qDebug() << "SGLogNormalTableModel::setData " << value.toString() << "\n";
   if (!index.isValid() || role != Qt::EditRole || index.row() < 0 || index.row() >= m_BinNumbers.count() || index.column() < 0 || index.column()
@@ -320,9 +320,11 @@ QVector<float > SGLogNormalTableModel::getData(int col)
   switch(col)
   {
     case Average:
-      return m_Average;break;
+      return m_Average;
+      break;
     case StdDev:
-      return m_StdDev;break;
+      return m_StdDev;
+      break;
     default:
       Q_ASSERT(false);
   }
@@ -337,9 +339,11 @@ float SGLogNormalTableModel::getDataValue(int col, int row)
   switch(col)
   {
     case Average:
-      return m_Average[row];break;
+      return m_Average[row];
+      break;
     case StdDev:
-      return m_StdDev[row];break;
+      return m_StdDev[row];
+      break;
     default:
       Q_ASSERT(false);
   }
@@ -349,7 +353,7 @@ float SGLogNormalTableModel::getDataValue(int col, int row)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SGLogNormalTableModel::setColumnData(int col, QVector<float> &data)
+void SGLogNormalTableModel::setColumnData(int col, QVector<float>& data)
 {
   switch(col)
   {
@@ -357,7 +361,8 @@ void SGLogNormalTableModel::setColumnData(int col, QVector<float> &data)
       m_Average = data;
       break;
     case StdDev:
-      m_StdDev = data;break;
+      m_StdDev = data;
+      break;
     default:
       Q_ASSERT(false);
   }
@@ -370,7 +375,7 @@ void SGLogNormalTableModel::setColumnData(int col, QVector<float> &data)
 void SGLogNormalTableModel::setTableData(QVector<float> bins, QVector<QVector<float> > data, QVector<QString> colors)
 {
   qint32 count = bins.count();
-  // Now make sure we _really_ have the correct count because the number of 
+  // Now make sure we _really_ have the correct count because the number of
   // bins may NOT really reflect what is in the 'data' vectors. This discrepency
   // can happen if not all of the data was written to the stats file
   for(int i = 0; i < data.count(); ++i)
@@ -381,7 +386,7 @@ void SGLogNormalTableModel::setTableData(QVector<float> bins, QVector<QVector<fl
   // Remove all the current rows in the table model
   removeRows(0, rowCount());
 
-  int offset = row + count -1; 
+  int offset = row + count - 1;
   if (offset < 0) { offset = 0;}
   // Now mass insert the data to the table then emit that the data has changed
   beginInsertRows(QModelIndex(), row, offset);

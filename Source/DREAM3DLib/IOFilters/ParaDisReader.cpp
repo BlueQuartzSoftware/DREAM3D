@@ -77,8 +77,8 @@ ParaDisReader::~ParaDisReader()
 void ParaDisReader::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(FilterParameter::New("Input File", "InputFile", FilterParameterWidgetType::InputFileWidget,"QString", false, "", "*"));
-  parameters.push_back(FilterParameter::New("Burgers Vector Length", "BurgersVector", FilterParameterWidgetType::DoubleWidget,"float", false, "Angstroms"));
+  parameters.push_back(FilterParameter::New("Input File", "InputFile", FilterParameterWidgetType::InputFileWidget, "QString", false, "", "*"));
+  parameters.push_back(FilterParameter::New("Burgers Vector Length", "BurgersVector", FilterParameterWidgetType::DoubleWidget, "float", false, "Angstroms"));
   parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "QString", true));
   parameters.push_back(FilterParameter::New("Edge Data Container", "EdgeDataContainerName", FilterParameterWidgetType::StringWidget, "QString", true, ""));
   parameters.push_back(FilterParameter::New("Vertex Attribute Matrix", "VertexAttributeMatrixName", FilterParameterWidgetType::StringWidget, "QString", true, ""));
@@ -298,7 +298,7 @@ int ParaDisReader::readHeader()
   fileVersion = tokens[2].toInt(&ok, 10);
 
   int keepgoing = 1;
-  //read until get to nodeCount line 
+  //read until get to nodeCount line
   while(keepgoing == 1)
   {
     buf = m_InStream.readLine();
@@ -313,7 +313,7 @@ int ParaDisReader::readHeader()
     }
   }
   keepgoing = 1;
-  //read until get to nodalData line 
+  //read until get to nodalData line
   while(keepgoing == 1)
   {
     buf = m_InStream.readLine();
@@ -335,7 +335,7 @@ int ParaDisReader::readHeader()
 
   QVector<size_t> tDims(1, numVerts);
   vertexAttrMat->resizeAttributeArrays(tDims);
-  updateVertexInstancePointers(); 
+  updateVertexInstancePointers();
 
   return error;
 }
@@ -383,7 +383,7 @@ int ParaDisReader::readFile()
   float spNorm[3];
 
   //turn burgers vector into microns from angstroms
-  m_BurgersVector = m_BurgersVector/10000;
+  m_BurgersVector = m_BurgersVector / 10000;
 
   for(int j = 0; j < numVerts; j++)
   {
@@ -399,9 +399,9 @@ int ParaDisReader::readFile()
     if(nodeNum == -1)
     {
       nodeNum = nodeCounter;
-      vertex[nodeNum].pos[0] = tokens[1].toFloat(&ok)*m_BurgersVector;
-      vertex[nodeNum].pos[1] = tokens[2].toFloat(&ok)*m_BurgersVector;
-      vertex[nodeNum].pos[2] = tokens[3].toFloat(&ok)*m_BurgersVector;
+      vertex[nodeNum].pos[0] = tokens[1].toFloat(&ok) * m_BurgersVector;
+      vertex[nodeNum].pos[1] = tokens[2].toFloat(&ok) * m_BurgersVector;
+      vertex[nodeNum].pos[2] = tokens[3].toFloat(&ok) * m_BurgersVector;
       m_NumberOfArms[nodeNum] = tokens[4].toInt(&ok, 10);
       m_NodeConstraints[nodeNum] = tokens[5].toInt(&ok, 10);
       vertNumbers.insert(*ptr64, nodeNum);
@@ -409,9 +409,9 @@ int ParaDisReader::readFile()
     }
     else
     {
-      vertex[nodeNum].pos[0] = tokens[1].toFloat(&ok)*m_BurgersVector;
-      vertex[nodeNum].pos[1] = tokens[2].toFloat(&ok)*m_BurgersVector;
-      vertex[nodeNum].pos[2] = tokens[3].toFloat(&ok)*m_BurgersVector;
+      vertex[nodeNum].pos[0] = tokens[1].toFloat(&ok) * m_BurgersVector;
+      vertex[nodeNum].pos[1] = tokens[2].toFloat(&ok) * m_BurgersVector;
+      vertex[nodeNum].pos[2] = tokens[3].toFloat(&ok) * m_BurgersVector;
       m_NumberOfArms[nodeNum] = tokens[4].toInt(&ok, 10);
       m_NodeConstraints[nodeNum] = tokens[5].toInt(&ok, 10);
     }
@@ -441,9 +441,9 @@ int ParaDisReader::readFile()
         numEdges++;
         firstNodes.push_back(nodeNum);
         secondNodes.push_back(neighborNode);
-        burgVec[0] = tokens[1].toFloat(&ok)*m_BurgersVector;
-        burgVec[1] = tokens[2].toFloat(&ok)*m_BurgersVector;
-        burgVec[2] = tokens[3].toFloat(&ok)*m_BurgersVector;
+        burgVec[0] = tokens[1].toFloat(&ok) * m_BurgersVector;
+        burgVec[1] = tokens[2].toFloat(&ok) * m_BurgersVector;
+        burgVec[2] = tokens[3].toFloat(&ok) * m_BurgersVector;
         burgerXs.push_back(burgVec[0]);
         burgerYs.push_back(burgVec[1]);
         burgerZs.push_back(burgVec[2]);
@@ -472,7 +472,7 @@ int ParaDisReader::readFile()
   // Resize the edge attribute matrix to the number of vertices
   QVector<size_t> tDims (1, numEdges);
   edgeAttrMat->resizeAttributeArrays(tDims);
-  updateEdgeInstancePointers(); 
+  updateEdgeInstancePointers();
 
   for(int i = 0; i < numEdges; i++)
   {

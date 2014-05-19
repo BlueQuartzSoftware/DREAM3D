@@ -257,11 +257,11 @@ class PipelineMessage
 
 
   private:
- //   QString m_FilterHumanLabel;
- //   QString m_Text;          // Message Text
- //   int m_Code;                 // Error/Warning Code
+//   QString m_FilterHumanLabel;
+//   QString m_Text;          // Message Text
+//   int m_Code;                 // Error/Warning Code
 //    MessageType m_Type;      // Type of Message (see enumeration "MessageType")
- //   int m_ProgressValue;             // Progress integer
+//   int m_ProgressValue;             // Progress integer
 
 };
 

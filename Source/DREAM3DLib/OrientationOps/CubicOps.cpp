@@ -322,10 +322,10 @@ float CubicOps::_calcMisoQuat(const QuatF quatsym[24], int numsym,
   float sin_wmin_over_2 = 0.0;
 
   QuaternionMathF::Conjugate(q2, q2inv); // Computes the Conjugate of q2 and places the result in q2inv
-/*
- * Dave's Code will have this looking "opposite". he will do (q1, q2Inv, qc) because Dave's Quaternions are active
- * where as DREAM3D seems to define a passive Quat
- */
+  /*
+   * Dave's Code will have this looking "opposite". he will do (q1, q2Inv, qc) because Dave's Quaternions are active
+   * where as DREAM3D seems to define a passive Quat
+   */
 
   QuaternionMathF::Multiply(q2inv, q1, qc);
   QuaternionMathF::ElementWiseAbs(qc);
@@ -616,6 +616,16 @@ void CubicOps::determineEulerAngles(int choose, float& synea1, float& synea2, fl
   OrientationMath::HomochorictoRod(r1, r2, r3);
   getODFFZRod(r1, r2, r3);
   OrientationMath::RodtoEuler(r1, r2, r3, synea1, synea2, synea3);
+}
+
+void CubicOps::randomizeEulerAngles(float& synea1, float& synea2, float& synea3)
+{
+  QuatF q;
+  QuatF qc;
+  OrientationMath::EulertoQuat(synea1, synea2, synea3, q);
+  int symOp = k_NumSymQuats * rand();
+  QuaternionMathF::Multiply(q, CubicQuatSym[symOp], qc);
+  OrientationMath::QuattoEuler(qc, synea1, synea2, synea3);
 }
 
 void CubicOps::determineRodriguesVector(int choose, float& r1, float& r2, float& r3)

@@ -42,41 +42,43 @@
 class UserInitArea;
 class EmMpmWorkbench;
 
-namespace EmMpm_Constants {
-
-enum ImageDisplayType {
-  OriginalImage = 0,
-  SegmentedImage,
-  CompositedImage,
-  UnknownDisplayType
-};
-
-enum CompositeType
+namespace EmMpm_Constants
 {
-  Exclusion,
-  Difference,
-  Alpha_Blend,
-  Plus,
-  Multiply,
-  Screen,
-  Darken,
-  Lighten,
-  ColorDodge,
-  ColorBurn,
-  HardLight,
-  SoftLight,
-  Destination,
-  Source,
-  DestinationOver,
-  SourceIn,
-  DestinationIn,
-  DestinationOut,
-  SourceAtop,
-  DestinationAtop,
-  Overlay,
-  Clear,
-  UnknownCompositeType
-};
+
+  enum ImageDisplayType
+  {
+    OriginalImage = 0,
+    SegmentedImage,
+    CompositedImage,
+    UnknownDisplayType
+  };
+
+  enum CompositeType
+  {
+    Exclusion,
+    Difference,
+    Alpha_Blend,
+    Plus,
+    Multiply,
+    Screen,
+    Darken,
+    Lighten,
+    ColorDodge,
+    ColorBurn,
+    HardLight,
+    SoftLight,
+    Destination,
+    Source,
+    DestinationOver,
+    SourceIn,
+    DestinationIn,
+    DestinationOut,
+    SourceAtop,
+    DestinationAtop,
+    Overlay,
+    Clear,
+    UnknownCompositeType
+  };
 
 }
 
@@ -86,25 +88,25 @@ class DREAM3DGraphicsView : public QGraphicsView
 
   public:
 
-    DREAM3DGraphicsView( QWidget *parent = NULL);
+    DREAM3DGraphicsView( QWidget* parent = NULL);
 
     /**
     * @brief Over-riding implementation from base class
     * @param event QDragEnterEvent Event fired when dragging enters the QGraphicsView
     */
-    void dragEnterEvent(QDragEnterEvent *event);
+    void dragEnterEvent(QDragEnterEvent* event);
 
     /**
     * @brief Over-riding implementation from base class
     * @param event QDropEvent Event fired when object is dropped on QGraphicsView
     */
-    void dropEvent(QDropEvent *event);
+    void dropEvent(QDropEvent* event);
 
     /**
     * @brief Over-riding implementation from base class
     * @param event QDragLeaveEvent Event fired when dragging leaves QGraphicsView
     */
-    void dragLeaveEvent(QDragLeaveEvent *event);
+    void dragLeaveEvent(QDragLeaveEvent* event);
 
 //    void mousePressEvent( QMouseEvent* event );
 //    void mouseMoveEvent( QMouseEvent* event );
@@ -144,31 +146,31 @@ class DREAM3DGraphicsView : public QGraphicsView
 
 
   signals:
-   void fireBaseImageFileLoaded(const QString &filename);
-   void fireOverlayImageFileLoaded(const QString &filename);
+    void fireBaseImageFileLoaded(const QString& filename);
+    void fireOverlayImageFileLoaded(const QString& filename);
 
   protected:
 
 
   private:
-   QGraphicsItem* m_ImageGraphicsItem;
-   QImage         m_BaseImage;
+    QGraphicsItem* m_ImageGraphicsItem;
+    QImage         m_BaseImage;
 
-   QPoint         m_MouseClickOrigin;
-   float          m_ZoomFactors[10];
+    QPoint         m_MouseClickOrigin;
+    float          m_ZoomFactors[10];
 
-   EmMpm_Constants::ImageDisplayType           m_ImageDisplayType;
-   bool           m_ShowOverlayImage;
-   QPainter::CompositionMode m_composition_mode;
-   float          m_OverlayTransparency;
+    EmMpm_Constants::ImageDisplayType           m_ImageDisplayType;
+    bool           m_ShowOverlayImage;
+    QPainter::CompositionMode m_composition_mode;
+    float          m_OverlayTransparency;
 
-   bool           m_UseColorTable;
+    bool           m_UseColorTable;
 
-   QVector<QRgb> m_CustomColorTable;
-   QVector<QRgb> m_OriginalColorTable;
+    QVector<QRgb> m_CustomColorTable;
+    QVector<QRgb> m_OriginalColorTable;
 
-   DREAM3DGraphicsView(const DREAM3DGraphicsView&); // Copy Constructor Not Implemented
-   void operator=(const DREAM3DGraphicsView&); // Operator '=' Not Implemented
+    DREAM3DGraphicsView(const DREAM3DGraphicsView&); // Copy Constructor Not Implemented
+    void operator=(const DREAM3DGraphicsView&); // Operator '=' Not Implemented
 };
 
 #endif /* _EMMPM_GRAPHICS_VIEW_H_ */

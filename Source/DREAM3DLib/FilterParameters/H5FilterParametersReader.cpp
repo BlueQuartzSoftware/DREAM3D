@@ -728,7 +728,7 @@ DataContainerArrayProxy H5FilterParametersReader::readDataContainerArrayProxy(co
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-DataArrayPath H5FilterParametersReader::readDataArrayPath(const QString &name, DataArrayPath def)
+DataArrayPath H5FilterParametersReader::readDataArrayPath(const QString& name, DataArrayPath def)
 {
   QString value;
   int err = 0;

@@ -73,7 +73,7 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-StatsGeneratorUI::StatsGeneratorUI(QWidget *parent) :
+StatsGeneratorUI::StatsGeneratorUI(QWidget* parent) :
   QMainWindow(parent),
   m_FileSelected(false),
   m_HelpDialog(NULL)
@@ -84,7 +84,7 @@ StatsGeneratorUI::StatsGeneratorUI(QWidget *parent) :
   setupGui();
 
   QRecentFileList* recentFileList = QRecentFileList::instance();
-  connect(recentFileList, SIGNAL (fileListChanged(const QString &)), this, SLOT(updateRecentFileList(const QString &)));
+  connect(recentFileList, SIGNAL (fileListChanged(const QString&)), this, SLOT(updateRecentFileList(const QString&)));
   // Get out initial Recent File List
   this->updateRecentFileList(QString::null);
 }
@@ -107,7 +107,7 @@ void StatsGeneratorUI::on_actionExit_triggered()
 // -----------------------------------------------------------------------------
 //  Called when the main window is closed.
 // -----------------------------------------------------------------------------
-void StatsGeneratorUI::closeEvent(QCloseEvent *event)
+void StatsGeneratorUI::closeEvent(QCloseEvent* event)
 {
   qint32 err = checkDirtyDocument();
   if (err < 0)
@@ -320,12 +320,12 @@ void StatsGeneratorUI::on_editPhase_clicked()
   else if(dialog.getPhaseType() == DREAM3D::PhaseType::PrecipitatePhase)
   {
     PrecipitatePhaseWidget* ppw = qobject_cast<PrecipitatePhaseWidget*>(sgwidget);
-    if (ppw) dialog.setPptFraction(ppw->getPptFraction());
+    if (ppw) { dialog.setPptFraction(ppw->getPptFraction()); }
   }
   else if(dialog.getPhaseType() == DREAM3D::PhaseType::TransformationPhase)
   {
     TransformationPhaseWidget* tpw = qobject_cast<TransformationPhaseWidget*>(sgwidget);
-    if (tpw) dialog.setParentPhase(tpw->getParentPhase());
+    if (tpw) { dialog.setParentPhase(tpw->getParentPhase()); }
   }
   else if(dialog.getPhaseType() == DREAM3D::PhaseType::MatrixPhase)
   {
@@ -408,7 +408,7 @@ void StatsGeneratorUI::on_phaseTabs_tabCloseRequested ( int index )
     for (int p = 0; p < phaseTabs->count(); ++p)
     {
       SGWidget* sgwidget = qobject_cast<SGWidget*>(phaseTabs->widget(p));
-      sgwidget->setPhaseIndex(p+1);
+      sgwidget->setPhaseIndex(p + 1);
       sgwidget->setObjectName(sgwidget->getComboString());
     }
 
@@ -445,7 +445,7 @@ qint32 StatsGeneratorUI::checkDirtyDocument()
   if (isWindowModified() == true)
   {
     int r = QMessageBox::warning(this, tr("StatsGenerator"), tr("The Data has been modified.\nDo you want to save your changes?"), QMessageBox::Save
-        | QMessageBox::Default, QMessageBox::Discard, QMessageBox::Cancel | QMessageBox::Escape);
+                                 | QMessageBox::Default, QMessageBox::Discard, QMessageBox::Cancel | QMessageBox::Escape);
     if (r == QMessageBox::Save)
     {
       on_actionSave_triggered(); // Save the hdf5 file
@@ -521,7 +521,7 @@ bool StatsGeneratorUI::verifyPathExists(QString outFilePath, QLineEdit* lineEdit
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void StatsGeneratorUI::updateRecentFileList(const QString &file)
+void StatsGeneratorUI::updateRecentFileList(const QString& file)
 {
   // qDebug() << "IPHelperMainWindow::updateRecentFileList" << "\n";
 
@@ -531,14 +531,14 @@ void StatsGeneratorUI::updateRecentFileList(const QString &file)
   // Get the list from the static object
   QStringList files = QRecentFileList::instance()->fileList();
   foreach (QString file, files)
-    {
-      QAction* action = new QAction(this->menu_RecentFiles);
-      action->setText(QRecentFileList::instance()->parentAndFileName(file));
-      action->setData(file);
-      action->setVisible(true);
-      this->menu_RecentFiles->addAction(action);
-      connect(action, SIGNAL(triggered()), this, SLOT(openRecentFile()));
-    }
+  {
+    QAction* action = new QAction(this->menu_RecentFiles);
+    action->setText(QRecentFileList::instance()->parentAndFileName(file));
+    action->setData(file);
+    action->setVisible(true);
+    this->menu_RecentFiles->addAction(action);
+    connect(action, SIGNAL(triggered()), this, SLOT(openRecentFile()));
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -548,7 +548,7 @@ void StatsGeneratorUI::openRecentFile()
 {
   //qDebug() << "QRecentFileList::openRecentFile()" << "\n";
 
-  QAction *action = qobject_cast<QAction * > (sender());
+  QAction* action = qobject_cast<QAction* > (sender());
   if (action)
   {
     //qDebug() << "Opening Recent file: " << action->data().toString() << "\n";
@@ -564,9 +564,9 @@ void StatsGeneratorUI::on_actionSaveAs_triggered()
 {
   QString proposedFile = m_OpenDialogLastDirectory + QDir::separator() + "Untitled";
   QString h5file = QFileDialog::getSaveFileName(this, tr("Save DREAM3D File"),
-    proposedFile,
-    tr("DREAM3D Files (*.dream3d)") );
-  if ( true == h5file.isEmpty() ){ return;  }
+                                                proposedFile,
+                                                tr("DREAM3D Files (*.dream3d)") );
+  if ( true == h5file.isEmpty() ) { return;  }
   m_FilePath = h5file;
   QFileInfo fi (m_FilePath);
   QString ext = fi.suffix();
@@ -580,7 +580,7 @@ void StatsGeneratorUI::on_actionSaveAs_triggered()
 // -----------------------------------------------------------------------------
 void StatsGeneratorUI::on_action_OpenDREAM3D_triggered()
 {
-    QString appPath = qApp->applicationDirPath();
+  QString appPath = qApp->applicationDirPath();
 
   QDir appDir = QDir(appPath);
   QString s("file://");
@@ -628,8 +628,8 @@ void StatsGeneratorUI::on_actionSave_triggered()
     //QString proposedFile = m_OpenDialogLastDirectory + QDir::separator() + m_FileName;
     QString h5file = QFileDialog::getSaveFileName(this, tr("Save DREAM3D File"),
                                                   m_FilePath,
-                                                   tr("DREAM3D Files (*.dream3d)") );
-    if ( true == h5file.isEmpty() ){ return;  }
+                                                  tr("DREAM3D Files (*.dream3d)") );
+    if ( true == h5file.isEmpty() ) { return;  }
     m_FilePath = h5file;
     QFileInfo fi (m_FilePath);
     QString ext = fi.suffix();
@@ -643,7 +643,7 @@ void StatsGeneratorUI::on_actionSave_triggered()
     phaseFractionTotal += sgwidget->getPhaseFraction();
   }
 
-  int nPhases = phaseTabs->count()+1;
+  int nPhases = phaseTabs->count() + 1;
   DataContainerArray::Pointer dca = DataContainerArray::New();
   VolumeDataContainer::Pointer m = VolumeDataContainer::New(DREAM3D::Defaults::StatsGenerator);
   dca->pushBack(m);
@@ -750,9 +750,9 @@ void StatsGeneratorUI::on_actionOpen_triggered()
 {
   QString proposedFile = m_OpenDialogLastDirectory + QDir::separator() + "Untitled.dream3d";
   QString h5file = QFileDialog::getOpenFileName(this,
-                  tr("Open Statistics File"),
-                  proposedFile,
-                  tr("DREAM3D Files (*.dream3d);;H5Stats Files(*.h5stats);;HDF5 Files(*.h5 *.hdf5);;All Files(*.*)"));
+                                                tr("Open Statistics File"),
+                                                proposedFile,
+                                                tr("DREAM3D Files (*.dream3d);;H5Stats Files(*.h5stats);;HDF5 Files(*.h5 *.hdf5);;All Files(*.*)"));
   if(true == h5file.isEmpty())
   {
     return;
@@ -802,7 +802,7 @@ void StatsGeneratorUI::openFile(QString h5file)
   m_FilePath = h5file;
   m_FileSelected = true;
 
- // QString path;
+// QString path;
 
   // Delete any existing phases from the GUI
   phaseTabs->clear();
@@ -986,7 +986,7 @@ QUrl StatsGeneratorUI::htmlHelpIndexFile()
 
 
 
- #if defined(Q_OS_WIN)
+#if defined(Q_OS_WIN)
   QFileInfo fi( helpDir.absolutePath() + "/Help/DREAM3D/index.html");
   if (fi.exists() == false)
   {
@@ -994,7 +994,7 @@ QUrl StatsGeneratorUI::htmlHelpIndexFile()
     // Try up one more directory
     helpDir.cdUp();
   }
- #endif
+#endif
 
   s = s + helpDir.absolutePath() + "/Help/DREAM3D/index.html";
   return QUrl(s);
@@ -1022,14 +1022,14 @@ void StatsGeneratorUI::displayDialogBox(QString title, QString text, QMessageBox
 // -----------------------------------------------------------------------------
 void StatsGeneratorUI::on_actionStatsGenerator_Help_triggered()
 {
-   // m_HelpDialog->setContentFile(htmlHelpIndexFile());
-   QUrl url = htmlHelpIndexFile();
-   bool didOpen = QDesktopServices::openUrl(url);
-   if(false == didOpen)
-   {
-   //  qDebug() << "Could not open URL: " << url.path() << "\n";
-       displayDialogBox(("Error Opening Help File"),
-         QString::fromAscii("DREAM3D could not open the help file path ") + url.path(),
-         QMessageBox::Critical);
-   }
+  // m_HelpDialog->setContentFile(htmlHelpIndexFile());
+  QUrl url = htmlHelpIndexFile();
+  bool didOpen = QDesktopServices::openUrl(url);
+  if(false == didOpen)
+  {
+    //  qDebug() << "Could not open URL: " << url.path() << "\n";
+    displayDialogBox(("Error Opening Help File"),
+                     QString::fromAscii("DREAM3D could not open the help file path ") + url.path(),
+                     QMessageBox::Critical);
+  }
 }

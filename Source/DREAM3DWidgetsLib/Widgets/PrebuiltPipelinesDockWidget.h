@@ -80,7 +80,7 @@ class DREAM3DWidgetsLib_EXPORT  PrebuiltPipelinesDockWidget : public QDockWidget
      * @brief connectFilterList
      * @param filterListWidget
      */
-    void connectFilterList(FilterListDockWidget *filterListWidget);
+    void connectFilterList(FilterListDockWidget* filterListWidget);
 
     /**
      * @brief getFilterLibraryTreeWidget
@@ -113,7 +113,7 @@ class DREAM3DWidgetsLib_EXPORT  PrebuiltPipelinesDockWidget : public QDockWidget
      * @param filePath The absolute path to the pipeline file
      * @param append Should the pipeline be appended to the current pipeline
      */
-    void pipelineFileActivated(const QString &filePath, QSettings::Format, bool append);
+    void pipelineFileActivated(const QString& filePath, QSettings::Format, bool append);
 
     /**
      * @brief filterListGenerated

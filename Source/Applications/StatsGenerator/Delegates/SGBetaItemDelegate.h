@@ -59,10 +59,10 @@
  */
 class SGBetaItemDelegate : public QStyledItemDelegate
 {
-  Q_OBJECT
+    Q_OBJECT
 
   public:
-    explicit SGBetaItemDelegate(QObject *parent = 0) :
+    explicit SGBetaItemDelegate(QObject* parent = 0) :
       QStyledItemDelegate(parent)
     {
     }
@@ -70,7 +70,7 @@ class SGBetaItemDelegate : public QStyledItemDelegate
     // -----------------------------------------------------------------------------
     //
     // -----------------------------------------------------------------------------
-    void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
+    void paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const
     {
       QStyledItemDelegate::paint(painter, option, index);
     }
@@ -78,7 +78,7 @@ class SGBetaItemDelegate : public QStyledItemDelegate
     // -----------------------------------------------------------------------------
     //
     // -----------------------------------------------------------------------------
-    QWidget* createEditor(QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const
+    QWidget* createEditor(QWidget* parent, const QStyleOptionViewItem& option, const QModelIndex& index) const
     {
       QLineEdit* alpha;
       QLineEdit* beta;
@@ -119,13 +119,13 @@ class SGBetaItemDelegate : public QStyledItemDelegate
     // -----------------------------------------------------------------------------
     //
     // -----------------------------------------------------------------------------
-    void setEditorData(QWidget *editor, const QModelIndex &index) const
+    void setEditorData(QWidget* editor, const QModelIndex& index) const
     {
       qint32 col = index.column();
-   //   bool ok = false;
+      //   bool ok = false;
       if (col == SGBetaTableModel::Alpha || col == SGBetaTableModel::Beta)
       {
-   //     double value = index.model()->data(index).toFloat(&ok);
+        //     double value = index.model()->data(index).toFloat(&ok);
         QLineEdit* lineEdit = qobject_cast<QLineEdit* > (editor);
         Q_ASSERT(lineEdit);
         lineEdit->setText(index.model()->data(index).toString());
@@ -137,13 +137,13 @@ class SGBetaItemDelegate : public QStyledItemDelegate
         Q_ASSERT(comboBox);
         comboBox->setCurrentIndex(comboBox->findText(state));
       }
-      else QStyledItemDelegate::setEditorData(editor, index);
+      else { QStyledItemDelegate::setEditorData(editor, index); }
     }
 
     // -----------------------------------------------------------------------------
     //
     // -----------------------------------------------------------------------------
-    void setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const
+    void setModelData(QWidget* editor, QAbstractItemModel* model, const QModelIndex& index) const
     {
       //  qDebug() << "SGBetaItemDelegate::setModelData" << "\n";
       qint32 col = index.column();
@@ -158,11 +158,11 @@ class SGBetaItemDelegate : public QStyledItemDelegate
       }
       else if (col == SGBetaTableModel::LineColor)
       {
-        ColorComboPicker *comboBox = qobject_cast<ColorComboPicker* > (editor);
+        ColorComboPicker* comboBox = qobject_cast<ColorComboPicker* > (editor);
         Q_ASSERT(comboBox);
         model->setData(index, comboBox->currentText());
       }
-      else QStyledItemDelegate::setModelData(editor, model, index);
+      else { QStyledItemDelegate::setModelData(editor, model, index); }
 
     }
 

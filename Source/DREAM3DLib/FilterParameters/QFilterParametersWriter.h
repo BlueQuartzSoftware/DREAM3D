@@ -72,7 +72,7 @@ class DREAM3DLib_EXPORT QFilterParametersWriter : public AbstractFilterParameter
      * @return
      */
     static int WritePipelineToFile(FilterPipeline::Pointer pipeline, const QString& path, const QString& name,
-                                    QSettings::Format format = QSettings::IniFormat, IObserver* obs = NULL);
+                                   QSettings::Format format = QSettings::IniFormat, IObserver* obs = NULL);
 
     QSettings* getPrefs();
 

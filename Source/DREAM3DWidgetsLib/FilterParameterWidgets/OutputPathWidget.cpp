@@ -86,8 +86,8 @@ void OutputPathWidget::setupGui()
 
   QFileCompleter* com = new QFileCompleter(this, false);
   value->setCompleter(com);
-  QObject::connect( com, SIGNAL(activated(const QString &)),
-                    this, SLOT(on_value_textChanged(const QString &)));
+  QObject::connect( com, SIGNAL(activated(const QString&)),
+                    this, SLOT(on_value_textChanged(const QString&)));
 
   if (m_FilterParameter != NULL)
   {
@@ -112,6 +112,7 @@ void OutputPathWidget::setupGui()
     conditionalCB->setChecked(boolProp);
     conditionalCB->setText(m_FilterParameter->getConditionalLabel());
     value->setEnabled(boolProp);
+    on_conditionalCB_stateChanged(conditionalCB->checkState());
   }
   else
   {

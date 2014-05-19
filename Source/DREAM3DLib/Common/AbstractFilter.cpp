@@ -172,7 +172,7 @@ AbstractFilter::Pointer AbstractFilter::newFilterInstance(bool copyFilterParamet
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AbstractFilter::copyFilterParameterInstanceVariables(AbstractFilter *filter)
+void AbstractFilter::copyFilterParameterInstanceVariables(AbstractFilter* filter)
 {
   filter->setFilterParameters(getFilterParameters() );
 
@@ -182,7 +182,7 @@ void AbstractFilter::copyFilterParameterInstanceVariables(AbstractFilter *filter
   for (QVector<FilterParameter::Pointer>::iterator iter = options.begin(); iter != options.end(); ++iter )
   {
     FilterParameter* parameter = (*iter).get();
-    if (parameter->getWidgetType().compare(FilterParameterWidgetType::SeparatorWidget) == 0 )
+    if (parameter->getReadOnly() == true )
     {
       continue; // Skip this type of filter parameter as it has nothing to do with anything in the filter.
     }
@@ -205,9 +205,9 @@ void AbstractFilter::copyFilterParameterInstanceVariables(AbstractFilter *filter
         QString ss = QString("%1::newFilterInstance()\nError occurred transferring the Filter Parameter '%2' in Filter '%3' to the filter instance. "
                              " The filter parameter has a conditional property '%4'. The transfer of this property from the old filter to the new filter failed."
                              " Please report this issue to the developers of this filter.").arg(filter->getNameOfClass())
-            .arg(parameter->getPropertyName())
-            .arg(filter->getHumanLabel())
-            .arg(parameter->getConditionalProperty());
+                     .arg(parameter->getPropertyName())
+                     .arg(filter->getHumanLabel())
+                     .arg(parameter->getConditionalProperty());
         Q_ASSERT_X(ok, __FILE__, ss.toLatin1().constData());
       }
     }

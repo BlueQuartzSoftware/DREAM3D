@@ -52,8 +52,8 @@ PMFilterGenerator::PMFilterGenerator(QString outputDir, QString pathTemplate,
                                      QString codeTemplateResourcePath,
                                      QTreeWidgetItem* wi,
                                      QObject* parent) :
-PMFileGenerator(outputDir, pathTemplate, fileName, codeTemplateResourcePath, wi, parent),
-m_ClassName(className)
+  PMFileGenerator(outputDir, pathTemplate, fileName, codeTemplateResourcePath, wi, parent),
+  m_ClassName(className)
 {
 
 }
@@ -69,9 +69,9 @@ PMFilterGenerator::~PMFilterGenerator()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PMFilterGenerator::pluginNameChanged(const QString &pluginName)
+void PMFilterGenerator::pluginNameChanged(const QString& pluginName)
 {
- // qDebug() << "PMFilterGenerator::pluginNameChanged" << "\n";
+// qDebug() << "PMFilterGenerator::pluginNameChanged" << "\n";
   // Just call the super class's implementation
   PMFileGenerator::pluginNameChanged(pluginName);
 
@@ -80,9 +80,9 @@ void PMFilterGenerator::pluginNameChanged(const QString &pluginName)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PMFilterGenerator::outputDirChanged(const QString &outputDir)
+void PMFilterGenerator::outputDirChanged(const QString& outputDir)
 {
- // qDebug() << "PMFilterGenerator::outputDirChanged" << "\n";
+// qDebug() << "PMFilterGenerator::outputDirChanged" << "\n";
   setOutputDir(outputDir);
 }
 
@@ -91,7 +91,7 @@ void PMFilterGenerator::outputDirChanged(const QString &outputDir)
 // -----------------------------------------------------------------------------
 void PMFilterGenerator::generateOutput()
 {
- // qDebug() << "PMFilterGenerator::generateOutput" << "\n";
+// qDebug() << "PMFilterGenerator::generateOutput" << "\n";
   if (doesGenerateOutput() == false)
   {
     return;
@@ -103,38 +103,40 @@ void PMFilterGenerator::generateOutput()
 
   if (pluginName.isEmpty() == true || pluginDir.isEmpty() == true)
   {
-      return;
+    return;
   }
   QString classNameLowerCase = m_ClassName.toLower();
 
   //Open file
-    QFile rfile(getCodeTemplateResourcePath());
-    if ( rfile.open(QIODevice::ReadOnly | QIODevice::Text) ) {
-      QTextStream in(&rfile);
-      QString text = in.readAll();
-      text.replace("@PluginName@", pluginName);
-      text.replace("@ClassName@", m_ClassName);
-      text.replace("@MD_FILE_NAME@", m_ClassName + ".md");
-      text.replace("@ClassNameLowerCase@", classNameLowerCase);
-      text.replace("@FilterGroup@", pluginName);
-      text.replace("@FilterSubgroup@", pluginName);
+  QFile rfile(getCodeTemplateResourcePath());
+  if ( rfile.open(QIODevice::ReadOnly | QIODevice::Text) )
+  {
+    QTextStream in(&rfile);
+    QString text = in.readAll();
+    text.replace("@PluginName@", pluginName);
+    text.replace("@ClassName@", m_ClassName);
+    text.replace("@MD_FILE_NAME@", m_ClassName + ".md");
+    text.replace("@ClassNameLowerCase@", classNameLowerCase);
+    text.replace("@FilterGroup@", pluginName);
+    text.replace("@FilterSubgroup@", pluginName);
 
 
-      QString parentPath = getOutputDir() + QDir::separator() + getPathTemplate().replace("@PluginName@", getPluginName());
-      parentPath = QDir::toNativeSeparators(parentPath);
+    QString parentPath = getOutputDir() + QDir::separator() + getPathTemplate().replace("@PluginName@", getPluginName());
+    parentPath = QDir::toNativeSeparators(parentPath);
 
-      QDir dir(parentPath);
-      dir.mkpath(parentPath);
+    QDir dir(parentPath);
+    dir.mkpath(parentPath);
 
-      parentPath = parentPath + QDir::separator() + getFileName();
-      //Write to file
-      QFile f(parentPath);
-      if ( f.open(QIODevice::WriteOnly | QIODevice::Text) ) {
-        QTextStream out(&f);
-        out << text;
-      }
-
+    parentPath = parentPath + QDir::separator() + getFileName();
+    //Write to file
+    QFile f(parentPath);
+    if ( f.open(QIODevice::WriteOnly | QIODevice::Text) )
+    {
+      QTextStream out(&f);
+      out << text;
     }
+
+  }
 
 
 

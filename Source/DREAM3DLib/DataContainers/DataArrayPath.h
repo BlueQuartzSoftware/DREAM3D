@@ -72,7 +72,7 @@ class DREAM3DLib_EXPORT DataArrayPath : public QObject
     /**
      * @brief DataArrayPath
      */
-    DataArrayPath(const DataArrayPath&rhs);
+    DataArrayPath(const DataArrayPath& rhs);
 
     /**
      * @brief operator =

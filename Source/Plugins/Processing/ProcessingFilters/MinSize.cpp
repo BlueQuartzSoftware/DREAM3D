@@ -77,8 +77,8 @@ MinSize::~MinSize()
 void MinSize::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(FilterParameter::New("Minimum Allowed Feature Size", "MinAllowedFeatureSize", FilterParameterWidgetType::IntWidget,"int", false, "Pixels"));
-  parameters.push_back(FilterParameter::New("Phase Number to Run Min Size Filter on", "PhaseNumber", FilterParameterWidgetType::IntWidget,"int", false));
+  parameters.push_back(FilterParameter::New("Minimum Allowed Feature Size", "MinAllowedFeatureSize", FilterParameterWidgetType::IntWidget, "int", false, "Pixels"));
+  parameters.push_back(FilterParameter::New("Phase Number to Run Min Size Filter on", "PhaseNumber", FilterParameterWidgetType::IntWidget, "int", false));
   FilterParameter::Pointer param = parameters.back();
   param->setConditional(true);
   param->setConditionalProperty("ApplyToSinglePhase");
@@ -163,14 +163,13 @@ void MinSize::execute()
   dataCheck();
   if(getErrorCondition() < 0) { return; }
 
-  m_NumFeatures = 0;
+  numFeatures = 0;
   int64_t totalPoints = m_FeatureIdsPtr.lock()->getNumberOfTuples();
-  for (int64_t iter = 0; iter<totalPoints; iter++)
+  for (int64_t iter = 0; iter < totalPoints; iter++)
   {
-    if(m_FeatureIds[iter] > m_NumFeatures) m_NumFeatures = m_FeatureIds[iter];
+    if(m_FeatureIds[iter] > numFeatures) { numFeatures = m_FeatureIds[iter]; }
   }
-
-  m_NumFeatures += 1;
+  numFeatures += 1;
 
   QVector<bool> activeObjects = remove_smallfeatures();
   assign_badpoints();
@@ -233,7 +232,7 @@ void MinSize::assign_badpoints()
   int kstride, jstride;
   int featurename, feature;
   int neighbor;
-  QVector<int > n(m_NumFeatures + 1, 0);
+  QVector<int > n(numFeatures + 1, 0);
   while (counter != 0)
   {
     counter = 0;
@@ -331,17 +330,15 @@ QVector<bool> MinSize::remove_smallfeatures()
   bool good = false;
   int gnum;
 
-
-  QVector<int> voxcounts(m_NumFeatures, 0);
-  QVector<bool> activeObjects(m_NumFeatures, true);
+  QVector<int> voxcounts(numFeatures, 0);
+  QVector<bool> activeObjects(numFeatures, true);
 
   for (int64_t i = 0; i < totalPoints; i++)
   {
     gnum = m_FeatureIds[i];
     if(gnum >= 0) { voxcounts[gnum]++; }
-    std::cout << "i: " << i  << std::endl;
   }
-  for (size_t i = 1; i <  static_cast<size_t>(m_NumFeatures); i++)
+  for (size_t i = 1; i <  static_cast<size_t>(numFeatures); i++)
   {
     if(m_ApplyToSinglePhase == false)
     {

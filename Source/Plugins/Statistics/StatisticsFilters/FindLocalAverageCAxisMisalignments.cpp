@@ -260,13 +260,13 @@ void FindLocalAverageCAxisMisalignments::execute()
   size_t numFeatures = m_FeatureParentIdsPtr.lock()->getNumberOfTuples();
   size_t newNumFeatures = m_NumFeaturesPerParentPtr.lock()->getNumberOfTuples();
 
-  QVector<int32_t> NumUnbiasedFeaturesPerParent(numFeatures,0);
+  QVector<int32_t> NumUnbiasedFeaturesPerParent(numFeatures, 0);
 
   if(m_CalcUnbiasedAvg == true)
   {
     NeighborList<int>& neighborlist = *(m_NeighborList.lock());
     NeighborList<float>& caxismisalignmentList = *(m_CAxisMisalignmentList.lock());
-    for(int i=1;i<numFeatures;i++)
+    for(int i = 1; i < numFeatures; i++)
     {
       int parentid = m_FeatureParentIds[i];
       for (size_t j = 0; j < neighborlist[i].size(); j++)
@@ -274,7 +274,7 @@ void FindLocalAverageCAxisMisalignments::execute()
         if (m_FeatureParentIds[neighborlist[i][j]] == m_FeatureParentIds[i])
         {
           m_UnbiasedLocalCAxisMisalignments[parentid] += caxismisalignmentList[i][j];
-    		  NumUnbiasedFeaturesPerParent[parentid]++;
+          NumUnbiasedFeaturesPerParent[parentid]++;
         }
       }
     }
@@ -282,7 +282,7 @@ void FindLocalAverageCAxisMisalignments::execute()
 
   if (m_CalcBiasedAvg == true)
   {
-    for(int i=1;i<numFeatures;i++)
+    for(int i = 1; i < numFeatures; i++)
     {
       int parentid = m_FeatureParentIds[i];
       m_NumFeaturesPerParent[parentid]++;
@@ -290,13 +290,13 @@ void FindLocalAverageCAxisMisalignments::execute()
     }
   }
 
-  for(int i=1;i<newNumFeatures;i++)
+  for(int i = 1; i < newNumFeatures; i++)
   {
-    if (m_CalcBiasedAvg == true) m_LocalCAxisMisalignments[i] /= m_NumFeaturesPerParent[i];
+    if (m_CalcBiasedAvg == true) { m_LocalCAxisMisalignments[i] /= m_NumFeaturesPerParent[i]; }
     if (m_CalcUnbiasedAvg == true)
     {
-      if(NumUnbiasedFeaturesPerParent[i] > 0) m_UnbiasedLocalCAxisMisalignments[i] /= NumUnbiasedFeaturesPerParent[i];
-      else m_UnbiasedLocalCAxisMisalignments[i] = 0.0f;
+      if(NumUnbiasedFeaturesPerParent[i] > 0) { m_UnbiasedLocalCAxisMisalignments[i] /= NumUnbiasedFeaturesPerParent[i]; }
+      else { m_UnbiasedLocalCAxisMisalignments[i] = 0.0f; }
     }
   }
 
