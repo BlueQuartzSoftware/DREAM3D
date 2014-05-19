@@ -156,7 +156,7 @@ FindProjectedImageStatistics::~FindProjectedImageStatistics()
 void FindProjectedImageStatistics::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(FilterParameter::New("Cell Array To Quantify", "SelectedArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", false));
+  parameters.push_back(FilterParameter::New("Cell Array To Quantify", "SelectedArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getSelectedArrayPath(), false));
   {
     ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New();
     parameter->setHumanLabel("Plane of Interest");
@@ -170,12 +170,12 @@ void FindProjectedImageStatistics::setupFilterParameters()
     parameter->setChoices(choices);
     parameters.push_back(parameter);
   }
-  parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "QString", true));
-  parameters.push_back(FilterParameter::New("ProjectedImageMin", "ProjectedImageMinArrayName", FilterParameterWidgetType::StringWidget, "QString", true, ""));
-  parameters.push_back(FilterParameter::New("ProjectedImageMax", "ProjectedImageMaxArrayName", FilterParameterWidgetType::StringWidget, "QString", true, ""));
-  parameters.push_back(FilterParameter::New("ProjectedImageAvg", "ProjectedImageAvgArrayName", FilterParameterWidgetType::StringWidget, "QString", true, ""));
-  parameters.push_back(FilterParameter::New("ProjectedImageStd", "ProjectedImageStdArrayName", FilterParameterWidgetType::StringWidget, "QString", true, ""));
-  parameters.push_back(FilterParameter::New("ProjectedImageVar", "ProjectedImageVarArrayName", FilterParameterWidgetType::StringWidget, "QString", true, ""));
+  parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
+  parameters.push_back(FilterParameter::New("ProjectedImageMin", "ProjectedImageMinArrayName", FilterParameterWidgetType::StringWidget, getProjectedImageMinArrayName(), true, ""));
+  parameters.push_back(FilterParameter::New("ProjectedImageMax", "ProjectedImageMaxArrayName", FilterParameterWidgetType::StringWidget, getProjectedImageMaxArrayName(), true, ""));
+  parameters.push_back(FilterParameter::New("ProjectedImageAvg", "ProjectedImageAvgArrayName", FilterParameterWidgetType::StringWidget, getProjectedImageAvgArrayName(), true, ""));
+  parameters.push_back(FilterParameter::New("ProjectedImageStd", "ProjectedImageStdArrayName", FilterParameterWidgetType::StringWidget, getProjectedImageStdArrayName(), true, ""));
+  parameters.push_back(FilterParameter::New("ProjectedImageVar", "ProjectedImageVarArrayName", FilterParameterWidgetType::StringWidget, getProjectedImageVarArrayName(), true, ""));
   setFilterParameters(parameters);
 }
 

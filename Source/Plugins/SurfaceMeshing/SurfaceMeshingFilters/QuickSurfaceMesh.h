@@ -71,6 +71,7 @@ class QuickSurfaceMesh : public AbstractFilter
     Q_PROPERTY(QString FaceAttributeMatrixName READ getFaceAttributeMatrixName WRITE setFaceAttributeMatrixName)
 
     DREAM3D_INSTANCE_PROPERTY(bool, TransferPhaseId)
+    Q_PROPERTY(bool TransferPhaseId READ getTransferPhaseId WRITE setTransferPhaseId)
 
     DREAM3D_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
     Q_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)

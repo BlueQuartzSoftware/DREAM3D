@@ -68,8 +68,8 @@ SaveImages::~SaveImages()
 void SaveImages::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "QString", false));
-  parameters.push_back(FilterParameter::New("Select RGB Color Data", "ColorsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", false, ""));
+  parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "", false));
+  parameters.push_back(FilterParameter::New("Select RGB Color Data", "ColorsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getColorsArrayPath(), false, ""));
 
   /* To Display a Combobox with a list of current Voxel Cell Arrays in it */
   {
@@ -85,9 +85,9 @@ void SaveImages::setupFilterParameters()
     parameters.push_back(parameter);
   }
   /* For String input use this code */
-  parameters.push_back(FilterParameter::New("Image File Prefix", "ImagePrefix", FilterParameterWidgetType::StringWidget, "QString", false));
+  parameters.push_back(FilterParameter::New("Image File Prefix", "ImagePrefix", FilterParameterWidgetType::StringWidget, getImagePrefix(), false));
   /*   For an output path use this code*/
-  parameters.push_back(FilterParameter::New("Output Path", "OutputPath", FilterParameterWidgetType::OutputPathWidget, "QString", false));
+  parameters.push_back(FilterParameter::New("Output Path", "OutputPath", FilterParameterWidgetType::OutputPathWidget, getOutputPath(), false));
   setFilterParameters(parameters);
 }
 

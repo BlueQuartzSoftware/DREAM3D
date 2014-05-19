@@ -46,10 +46,10 @@ VtkFeatureIdReader::VtkFeatureIdReader() :
   m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
   m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
   m_InputFile(""),
+  m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
   m_Comment("DREAM3D Generated File"),
   m_DatasetType(""),
   m_FileIsBinary(true),
-  m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
   m_FeatureIds(NULL)
 {
   setupFilterParameters();
@@ -69,12 +69,12 @@ VtkFeatureIdReader::~VtkFeatureIdReader()
 void VtkFeatureIdReader::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(FilterParameter::New("Input Vtk File", "InputFile", FilterParameterWidgetType::InputFileWidget, "QString", false));
-  parameters.push_back(FilterParameter::New("Feature Id Scalar Name", "FeatureIdScalarName", FilterParameterWidgetType::StringWidget, "QString", false));
-  parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "QString", true));
-  parameters.push_back(FilterParameter::New("Data Container", "DataContainerName", FilterParameterWidgetType::StringWidget, "QString", true, ""));
-  parameters.push_back(FilterParameter::New("Cell Attribute Matrix", "CellAttributeMatrixName", FilterParameterWidgetType::StringWidget, "QString", true, ""));
-  parameters.push_back(FilterParameter::New("FeatureIds", "FeatureIdsArrayName", FilterParameterWidgetType::StringWidget, "QString", true, ""));
+  parameters.push_back(FilterParameter::New("Input Vtk File", "InputFile", FilterParameterWidgetType::InputFileWidget, getInputFile(), false));
+  parameters.push_back(FilterParameter::New("Scalar Name", "FeatureIdScalarName", FilterParameterWidgetType::StringWidget, getFeatureIdScalarName(), false));
+  parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
+  parameters.push_back(FilterParameter::New("Data Container", "DataContainerName", FilterParameterWidgetType::StringWidget, getDataContainerName(), true, ""));
+  parameters.push_back(FilterParameter::New("Cell Attribute Matrix", "CellAttributeMatrixName", FilterParameterWidgetType::StringWidget, getCellAttributeMatrixName(), true, ""));
+  parameters.push_back(FilterParameter::New("FeatureIds", "FeatureIdsArrayName", FilterParameterWidgetType::StringWidget, getFeatureIdsArrayName(), true, ""));
   setFilterParameters(parameters);
 }
 
@@ -390,7 +390,7 @@ int VtkFeatureIdReader::readFile()
 
   buf = instream.readLine();
   QList<QByteArray> tokens;
-// int i = 0;
+  // int i = 0;
   while (needFeatureIds == true)
   {
     buf = instream.readLine();

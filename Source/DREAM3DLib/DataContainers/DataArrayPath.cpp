@@ -35,7 +35,16 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #include "DataArrayPath.h"
 
+
+
 #include "DREAM3DLib/Common/Constants.h"
+
+
+QDebug operator<<(QDebug out, const DataArrayPath& v)
+{
+  out << v.getDataContainerName() << "|" << v.getAttributeMatrixName() << "|" << v.getDataArrayName();
+  return out;
+}
 
 // -----------------------------------------------------------------------------
 //

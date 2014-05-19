@@ -304,11 +304,14 @@ void DataArraySelectionWidget::populateComboBoxes()
     // The DataArray Name was empty, lets instantiate the filter and get the default value and try that
   if(daIndex < 0)
   {
-    AbstractFilter::Pointer ptr = m_Filter->newFilterInstance(false);
-    DataArrayPath path = ptr->property(PROPERTY_NAME_AS_CHAR).value<DataArrayPath>();
+    QVariant var = m_FilterParameter->getDefaultValue();
+    DataArrayPath path = var.value<DataArrayPath>();
+
+    //AbstractFilter::Pointer ptr = m_Filter->newFilterInstance(false);
+    //DataArrayPath path = ptr->property(PROPERTY_NAME_AS_CHAR).value<DataArrayPath>();
     daName = path.getDataArrayName(); // Pick up the DataArray Name from a Default instantiation of the filter
     daIndex = attributeArrayList->findText(daName);
-    qDebug() << "Trying default value for DataArrayPath.dataArrayName: " << daName;
+   // qDebug() << "Trying default value for DataArrayPath.dataArrayName: " << daName;
   }
 
 
@@ -330,10 +333,10 @@ void DataArraySelectionWidget::populateComboBoxes()
 // -----------------------------------------------------------------------------
 QString DataArraySelectionWidget::checkStringValues(QString curDcName, QString filtDcName)
 {
-  if(curDcName.isEmpty() == true && filtDcName.isEmpty() == true)
-  {
-    qDebug() << "curDcName EMPTY && filtDcName EMPTY";
-  }
+//  if(curDcName.isEmpty() == true && filtDcName.isEmpty() == true)
+//  {
+//    qDebug() << "curDcName EMPTY && filtDcName EMPTY";
+//  }
   if(curDcName.isEmpty() == true && filtDcName.isEmpty() == false)
   {return filtDcName;}
   else if(curDcName.isEmpty() == false && filtDcName.isEmpty() == true)

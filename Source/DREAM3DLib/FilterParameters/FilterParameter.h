@@ -162,6 +162,26 @@ class DREAM3DLib_EXPORT FilterParameter
                        const QString& fileExtension = QString(""),
                        const QString& fileType = QString(""));
 
+    static Pointer New(const QString& humanLabel, const QString& propertyName,
+                       const QString& widgetType, const IntVec3_t& defaultValue,
+                       bool advanced = false,
+                       const QString& units = QString(""),
+                       const QString& fileExtension = QString(""),
+                       const QString& fileType = QString(""));
+
+    static Pointer New(const QString& humanLabel, const QString& propertyName,
+                       const QString& widgetType, const DataArrayPath& defaultValue,
+                       bool advanced = false,
+                       const QString& units = QString(""),
+                       const QString& fileExtension = QString(""),
+                       const QString& fileType = QString(""));
+
+    static Pointer New(const QString& humanLabel, const QString& propertyName,
+                       const QString& widgetType, const AxisAngleInput_t& defaultValue,
+                       bool advanced = false,
+                       const QString& units = QString(""),
+                       const QString& fileExtension = QString(""),
+                       const QString& fileType = QString(""));
     /**
      * @brief Creates a new Filter Parameter that has conditional logic associated with it through an additional boolean
      * Q_PROPERTY in the filter's header file. On the GUI this manifests itself as a checkbox that enables or disables the

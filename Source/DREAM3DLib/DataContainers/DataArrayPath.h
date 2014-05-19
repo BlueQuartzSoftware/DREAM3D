@@ -38,6 +38,7 @@
 
 
 #include <QtCore/QObject>
+#include <QtCore/QDebug>
 #include <QtCore/QString>
 #include <QtCore/QVector>
 #include <QtCore/QStringList>
@@ -126,6 +127,7 @@ class DREAM3DLib_EXPORT DataArrayPath : public QObject
      */
     void update(const QString& dcName, const QString& amName, const QString& daName);
 
+
   private:
 
 
@@ -134,5 +136,7 @@ class DREAM3DLib_EXPORT DataArrayPath : public QObject
 
 
 Q_DECLARE_METATYPE(DataArrayPath)
+
+
 
 #endif /* _DataArrayPath_H_ */

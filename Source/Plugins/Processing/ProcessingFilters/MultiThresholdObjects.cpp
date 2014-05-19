@@ -77,8 +77,8 @@ void MultiThresholdObjects::setupFilterParameters()
     parameters.push_back(parameter);
   }
 
-  parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "QString", true));
-  parameters.push_back(FilterParameter::New("Output", "DestinationArrayName", FilterParameterWidgetType::StringWidget, "QString", true, ""));
+  parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
+  parameters.push_back(FilterParameter::New("Output", "DestinationArrayName", FilterParameterWidgetType::StringWidget, getDestinationArrayName(), true, ""));
   setFilterParameters(parameters);
 }
 

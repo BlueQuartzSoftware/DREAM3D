@@ -51,6 +51,7 @@
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Plugin/DREAM3DPluginInterface.h"
 #include "DREAM3DLib/Plugin/DREAM3DPluginLoader.h"
+#include "DREAM3DLib/Utilities/QMetaObjectUtilities.h"
 #include "DREAM3DLib/DREAM3DFilters.h"
 
 #include "UnitTestSupport.hpp"
@@ -192,6 +193,7 @@ void GenerateCopyCode()
 }
 
 
+#define PROPERTY_NAME_AS_CHAR option->getPropertyName().toLatin1().constData()
 
 
 
@@ -212,18 +214,22 @@ void verifyFilterParameters()
     IFilterFactory::Pointer factory = iter.value();
     AbstractFilter::Pointer filter = factory->create();
     const QMetaObject* meta = filter->metaObject();
-
+//    qDebug() << filter->getNameOfClass() << "Default Values";
     QVector<FilterParameter::Pointer> options = filter->getFilterParameters();
     for (QVector<FilterParameter::Pointer>::iterator iter = options.begin(); iter != options.end(); ++iter )
     {
-
       FilterParameter* option = (*iter).get();
+      if (option->getHumanLabel().compare("Required Information") == 0
+          || option->getHumanLabel().compare("Created Information") == 0
+          || option->getHumanLabel().compare("Optional Information") == 0)
+          { continue; }
       QByteArray normType = QString("%1").arg( option->getPropertyName()).toLatin1();
       int index = meta->indexOfProperty(normType);
       if (index < 0)
       {
-        qDebug() << "Filter: " << filter->getNameOfClass() << "  Missing Property: " << option->getPropertyName();
+        qDebug() << "Filter: " << filter->getNameOfClass() << "  Missing Property: " << option->getHumanLabel() << "  "  << option->getPropertyName();
       }
+//      qDebug() << "    " << option->getHumanLabel() << "::" << filter->property(PROPERTY_NAME_AS_CHAR);
     }
 
     // If something is wrong with the newFilterInstance then the next line will assert
@@ -374,6 +380,7 @@ int main(int argc, char** argv)
   // into their own plugin and load the plugins from a command line.
   fm->RegisterKnownFilters(fm.get());
 
+  QMetaObjectUtilities::RegisterMetaTypes();
 
   //// These functions are just to verify that the filters have certain signals and properties available.
   verifyPreflightEmitsProperly();

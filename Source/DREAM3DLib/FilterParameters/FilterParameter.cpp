@@ -112,6 +112,93 @@ FilterParameter::Pointer FilterParameter::New(const QString& humanLabel, const Q
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+FilterParameter::Pointer FilterParameter::New(const QString& humanLabel, const QString& propertyName,
+                                              const QString& widgetType, const IntVec3_t& defaultValue,
+                                              bool advanced,
+                                              const QString& units,
+                                              const QString& fileExtension,
+                                              const QString& fileType)
+{
+
+  FilterParameter::Pointer ptr = FilterParameter::New();
+  ptr->setHumanLabel(humanLabel);
+  ptr->setPropertyName(propertyName);
+  ptr->setWidgetType(widgetType);
+  QVariant v;
+  v.setValue(defaultValue);
+  ptr->setDefaultValue(v);
+  ptr->setAdvanced(advanced);
+  ptr->setUnits(units);
+  ptr->setFileExtension(fileExtension);
+  ptr->setFileType(fileType);
+  if(ptr->getWidgetType().compare(FilterParameterWidgetType::SeparatorWidget) == 0)
+  {
+    ptr->setReadOnly(true);
+  }
+  return ptr;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+FilterParameter::Pointer FilterParameter::New(const QString& humanLabel, const QString& propertyName,
+                                              const QString& widgetType, const DataArrayPath& defaultValue,
+                                              bool advanced,
+                                              const QString& units,
+                                              const QString& fileExtension,
+                                              const QString& fileType)
+{
+
+  FilterParameter::Pointer ptr = FilterParameter::New();
+  ptr->setHumanLabel(humanLabel);
+  ptr->setPropertyName(propertyName);
+  ptr->setWidgetType(widgetType);
+  QVariant v;
+  v.setValue(defaultValue);
+  ptr->setDefaultValue(v);
+  ptr->setAdvanced(advanced);
+  ptr->setUnits(units);
+  ptr->setFileExtension(fileExtension);
+  ptr->setFileType(fileType);
+  if(ptr->getWidgetType().compare(FilterParameterWidgetType::SeparatorWidget) == 0)
+  {
+    ptr->setReadOnly(true);
+  }
+  return ptr;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+FilterParameter::Pointer FilterParameter::New(const QString& humanLabel, const QString& propertyName,
+                                              const QString& widgetType, const AxisAngleInput_t& defaultValue,
+                                              bool advanced,
+                                              const QString& units,
+                                              const QString& fileExtension,
+                                              const QString& fileType)
+{
+
+  FilterParameter::Pointer ptr = FilterParameter::New();
+  ptr->setHumanLabel(humanLabel);
+  ptr->setPropertyName(propertyName);
+  ptr->setWidgetType(widgetType);
+  QVariant v;
+  v.setValue(defaultValue);
+  ptr->setDefaultValue(v);
+  ptr->setAdvanced(advanced);
+  ptr->setUnits(units);
+  ptr->setFileExtension(fileExtension);
+  ptr->setFileType(fileType);
+  if(ptr->getWidgetType().compare(FilterParameterWidgetType::SeparatorWidget) == 0)
+  {
+    ptr->setReadOnly(true);
+  }
+  return ptr;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 FilterParameter::Pointer FilterParameter::NewConditional(const QString& humanLabel, const QString& propertyName,
                                                          const QString& widgetType, const QVariant& defaultValue,
                                                          bool advanced,
