@@ -152,8 +152,15 @@ class DREAM3DLib_EXPORT FilterParameter
                        bool advanced = false,
                        const QString& units = QString(""),
                        const QString& fileExtension = QString(""),
-                       const QString& fileType = QString(""),
-                       const QString& castableValueType = QString("") );
+                       const QString& fileType = QString(""));
+
+
+    static Pointer New(const QString& humanLabel, const QString& propertyName,
+                       const QString& widgetType, const FloatVec3_t& defaultValue,
+                       bool advanced = false,
+                       const QString& units = QString(""),
+                       const QString& fileExtension = QString(""),
+                       const QString& fileType = QString(""));
 
     /**
      * @brief Creates a new Filter Parameter that has conditional logic associated with it through an additional boolean
@@ -183,7 +190,7 @@ class DREAM3DLib_EXPORT FilterParameter
     DREAM3D_INSTANCE_STRING_PROPERTY(HumanLabel)
     DREAM3D_INSTANCE_STRING_PROPERTY(PropertyName)
     DREAM3D_INSTANCE_STRING_PROPERTY(WidgetType)
-    DREAM3D_INSTANCE_PROPERTY(QVariant, DefaultValue)
+    DREAM3D_VIRTUAL_INSTANCE_PROPERTY(QVariant, DefaultValue)
     DREAM3D_INSTANCE_PROPERTY(bool, Advanced)
     DREAM3D_INSTANCE_STRING_PROPERTY(Units)
     DREAM3D_INSTANCE_STRING_PROPERTY(FileExtension)
@@ -203,6 +210,7 @@ class DREAM3DLib_EXPORT FilterParameter
 };
 
 typedef QVector<FilterParameter::Pointer> FilterParameterVector;
+
 
 
 // -----------------------------------------------------------------------------

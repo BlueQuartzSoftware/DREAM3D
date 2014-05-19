@@ -42,12 +42,10 @@ FilterParameter::FilterParameter() :
   m_HumanLabel(""),
   m_PropertyName(""),
   m_WidgetType(""),
-  //m_ValueType(""),
   m_Advanced(false),
   m_Units(""),
   m_FileExtension(""),
   m_FileType(""),
-  //m_CastableValueType(""),
   m_ReadOnly(false),
   m_Conditional(false),
   m_ConditionalProperty(""),
@@ -62,8 +60,7 @@ FilterParameter::Pointer FilterParameter::New(const QString& humanLabel, const Q
                                               bool advanced,
                                               const QString& units,
                                               const QString& fileExtension,
-                                              const QString& fileType,
-                                              const QString& castableValueType)
+                                              const QString& fileType)
 {
 
   FilterParameter::Pointer ptr = FilterParameter::New();
@@ -71,6 +68,36 @@ FilterParameter::Pointer FilterParameter::New(const QString& humanLabel, const Q
   ptr->setPropertyName(propertyName);
   ptr->setWidgetType(widgetType);
   ptr->setDefaultValue(defaultValue);
+  ptr->setAdvanced(advanced);
+  ptr->setUnits(units);
+  ptr->setFileExtension(fileExtension);
+  ptr->setFileType(fileType);
+  if(ptr->getWidgetType().compare(FilterParameterWidgetType::SeparatorWidget) == 0)
+  {
+    ptr->setReadOnly(true);
+  }
+  return ptr;
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+FilterParameter::Pointer FilterParameter::New(const QString& humanLabel, const QString& propertyName,
+                                              const QString& widgetType, const FloatVec3_t& defaultValue,
+                                              bool advanced,
+                                              const QString& units,
+                                              const QString& fileExtension,
+                                              const QString& fileType)
+{
+
+  FilterParameter::Pointer ptr = FilterParameter::New();
+  ptr->setHumanLabel(humanLabel);
+  ptr->setPropertyName(propertyName);
+  ptr->setWidgetType(widgetType);
+  QVariant v;
+  v.setValue(defaultValue);
+  ptr->setDefaultValue(v);
   ptr->setAdvanced(advanced);
   ptr->setUnits(units);
   ptr->setFileExtension(fileExtension);
