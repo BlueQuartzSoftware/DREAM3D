@@ -170,7 +170,7 @@ void MinSize::execute()
     if(m_FeatureIds[iter] > m_NumFeatures) m_NumFeatures = m_FeatureIds[iter];
   }
 
-  numFeatures += 1;
+  m_NumFeatures += 1;
 
   QVector<bool> activeObjects = remove_smallfeatures();
   assign_badpoints();
