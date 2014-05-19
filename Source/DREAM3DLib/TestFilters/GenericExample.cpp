@@ -114,7 +114,7 @@ void GenericExample::setupFilterParameters()
     parameter->setHumanLabel("Conversion Type");
     parameter->setPropertyName("ConversionType");
     parameter->setWidgetType(FilterParameterWidgetType::ChoiceWidget);
-    parameter->setValueType("unsigned int");
+    ////parameter->setValueType("unsigned int");
     QVector<QString> choices;
     choices.push_back("Degrees To Radians");
     choices.push_back("Radians To Degrees");

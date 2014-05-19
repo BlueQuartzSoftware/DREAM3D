@@ -94,7 +94,7 @@ void GoldfeatherReader::setupFilterParameters()
     parameter->setHumanLabel("Input File");
     parameter->setPropertyName("InputFile");
     parameter->setWidgetType(FilterParameterWidgetType::InputFileWidget);
-    parameter->setValueType("QString");
+    ////parameter->setValueType("QString");
     parameters.push_back(parameter);
   }
   parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "QString", true));

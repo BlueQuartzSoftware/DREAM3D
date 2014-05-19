@@ -204,7 +204,7 @@ void RawBinaryReader::setupFilterParameters()
     parameter->setHumanLabel("Scalar Type");
     parameter->setPropertyName("ScalarType");
     parameter->setWidgetType(FilterParameterWidgetType::ChoiceWidget);
-    parameter->setValueType("unsigned int");
+    ////parameter->setValueType("unsigned int");
     QVector<QString> choices;
     choices.push_back("signed   int 8  bit");
     choices.push_back("unsigned int 8  bit");
@@ -226,7 +226,7 @@ void RawBinaryReader::setupFilterParameters()
     parameter->setHumanLabel("Endian");
     parameter->setPropertyName("Endian");
     parameter->setWidgetType(FilterParameterWidgetType::ChoiceWidget);
-    parameter->setValueType("unsigned int");
+    ////parameter->setValueType("unsigned int");
     QVector<QString> choices;
     choices.push_back("Little");
     choices.push_back("Big");

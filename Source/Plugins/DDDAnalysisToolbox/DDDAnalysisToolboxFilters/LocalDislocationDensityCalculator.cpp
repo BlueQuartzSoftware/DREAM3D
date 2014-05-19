@@ -76,7 +76,6 @@ void LocalDislocationDensityCalculator::setupFilterParameters()
     parameter->setHumanLabel("Cell Size");
     parameter->setPropertyName("CellSize");
     parameter->setWidgetType(FilterParameterWidgetType::FloatVec3Widget);
-    parameter->setValueType("FloatVec3_t");
     parameter->setUnits("microns");
     parameters.push_back(parameter);
   }

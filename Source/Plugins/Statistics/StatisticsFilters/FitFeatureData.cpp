@@ -83,7 +83,7 @@ void FitFeatureData::setupFilterParameters()
     parameter->setHumanLabel("Distribution Type");
     parameter->setPropertyName("DistributionType");
     parameter->setWidgetType(FilterParameterWidgetType::ChoiceWidget);
-    parameter->setValueType("unsigned int");
+    //parameter->setValueType("unsigned int");
     QVector<QString> choices;
     choices.push_back("Beta");
     choices.push_back("LogNormal");

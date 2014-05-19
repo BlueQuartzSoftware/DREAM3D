@@ -78,13 +78,13 @@ void FindMisorientations::setupFilterParameters()
 {
   FilterParameterVector parameters;
   {
-    FilterParameter::Pointer option = FilterParameter::New();
-    option->setHumanLabel("Find Average Misorientations");
-    option->setPropertyName("FindAvgMisors");
-    option->setWidgetType(FilterParameterWidgetType::BooleanWidget);
-    option->setValueType("bool");
-    option->setUnits("");
-    parameters.push_back(option);
+    FilterParameter::Pointer parameter = FilterParameter::New();
+    parameter->setHumanLabel("Find Average Misorientations");
+    parameter->setPropertyName("FindAvgMisors");
+    parameter->setWidgetType(FilterParameterWidgetType::BooleanWidget);
+   // parameter->setValueType("bool");
+    parameter->setUnits("");
+    parameters.push_back(parameter);
   }
 
   parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "QString", true));

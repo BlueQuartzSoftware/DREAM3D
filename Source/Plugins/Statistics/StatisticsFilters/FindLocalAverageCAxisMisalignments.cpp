@@ -100,22 +100,22 @@ void FindLocalAverageCAxisMisalignments::setupFilterParameters()
 {
   FilterParameterVector parameters;
   {
-    FilterParameter::Pointer option = FilterParameter::New();
-    option->setHumanLabel("Calculate Unbiased Local C-Axis Misalignments");
-    option->setPropertyName("CalcUnbiasedAvg");
-    option->setWidgetType(FilterParameterWidgetType::BooleanWidget);
-    option->setValueType("bool");
-    option->setUnits("");
-    parameters.push_back(option);
+    FilterParameter::Pointer parameter = FilterParameter::New();
+    parameter->setHumanLabel("Calculate Unbiased Local C-Axis Misalignments");
+    parameter->setPropertyName("CalcUnbiasedAvg");
+    parameter->setWidgetType(FilterParameterWidgetType::BooleanWidget);
+  //  parameter->setValueType("bool");
+    parameter->setUnits("");
+    parameters.push_back(parameter);
   }
   {
-    FilterParameter::Pointer option = FilterParameter::New();
-    option->setHumanLabel("Calculate Local C-Axis Misalignments");
-    option->setPropertyName("CalcBiasedAvg");
-    option->setWidgetType(FilterParameterWidgetType::BooleanWidget);
-    option->setValueType("bool");
-    option->setUnits("");
-    parameters.push_back(option);
+    FilterParameter::Pointer parameter = FilterParameter::New();
+    parameter->setHumanLabel("Calculate Local C-Axis Misalignments");
+    parameter->setPropertyName("CalcBiasedAvg");
+    parameter->setWidgetType(FilterParameterWidgetType::BooleanWidget);
+   // option->setValueType("bool");
+    parameter->setUnits("");
+    parameters.push_back(parameter);
   }
 
   parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "QString", true));

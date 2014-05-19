@@ -88,7 +88,6 @@ void FindFeatureNeighborCAxisMisalignments::setupFilterParameters()
     option->setHumanLabel("Find Average C-Axis Misalignments");
     option->setPropertyName("FindAvgMisals");
     option->setWidgetType(FilterParameterWidgetType::BooleanWidget);
-    option->setValueType("bool");
     option->setUnits("");
     parameters.push_back(option);
   }

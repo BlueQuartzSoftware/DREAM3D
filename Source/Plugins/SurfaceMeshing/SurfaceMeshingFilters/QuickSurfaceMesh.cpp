@@ -43,7 +43,7 @@
 
 #define QSM_GETCOORD(index, res, coord, origin)\
   coord = float((float(index)*float(res)) + float(origin));\
-   
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -88,7 +88,7 @@ void QuickSurfaceMesh::setupFilterParameters()
     parameter->setHumanLabel("Transfer Phase Id");
     parameter->setPropertyName("TransferPhaseId");
     parameter->setWidgetType(FilterParameterWidgetType::BooleanWidget);
-    parameter->setValueType("bool");
+    ////parameter->setValueType("bool");
     parameters.push_back(parameter);
   }
   parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "QString", true));

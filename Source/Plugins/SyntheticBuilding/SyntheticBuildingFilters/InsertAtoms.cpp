@@ -246,7 +246,7 @@ void InsertAtoms::setupFilterParameters()
     parameter->setHumanLabel("Crystal Basis");
     parameter->setPropertyName("Basis");
     parameter->setWidgetType(FilterParameterWidgetType::ChoiceWidget);
-    parameter->setValueType("int");
+    //parameter->setValueType("int");
     QVector<QString> choices;
     choices.push_back("Simple Cubic");
     choices.push_back("Body Centered Cubic");

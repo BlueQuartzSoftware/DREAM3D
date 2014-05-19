@@ -148,7 +148,7 @@ class DREAM3DLib_EXPORT FilterParameter
      * @return
      */
     static Pointer New(const QString& humanLabel, const QString& propertyName,
-                       const QString& widgetType, const QString& valueType,
+                       const QString& widgetType, const QVariant& defaultValue,
                        bool advanced = false,
                        const QString& units = QString(""),
                        const QString& fileExtension = QString(""),
@@ -172,7 +172,7 @@ class DREAM3DLib_EXPORT FilterParameter
      * @return
      */
     static Pointer NewConditional(const QString& humanLabel, const QString& propertyName,
-                                  const QString& widgetType, const QString& valueType,
+                                  const QString& widgetType, const QVariant& defaultValue,
                                   bool advanced,
                                   bool isConditional,
                                   const QString& conditionalProperty,
@@ -183,12 +183,11 @@ class DREAM3DLib_EXPORT FilterParameter
     DREAM3D_INSTANCE_STRING_PROPERTY(HumanLabel)
     DREAM3D_INSTANCE_STRING_PROPERTY(PropertyName)
     DREAM3D_INSTANCE_STRING_PROPERTY(WidgetType)
-    DREAM3D_INSTANCE_STRING_PROPERTY(ValueType)
+    DREAM3D_INSTANCE_PROPERTY(QVariant, DefaultValue)
     DREAM3D_INSTANCE_PROPERTY(bool, Advanced)
     DREAM3D_INSTANCE_STRING_PROPERTY(Units)
     DREAM3D_INSTANCE_STRING_PROPERTY(FileExtension)
     DREAM3D_INSTANCE_STRING_PROPERTY(FileType)
-    DREAM3D_INSTANCE_STRING_PROPERTY(CastableValueType)
     DREAM3D_INSTANCE_PROPERTY(bool, ReadOnly)
 
     DREAM3D_BOOL_PROPERTY(Conditional)
@@ -242,7 +241,7 @@ class DREAM3DLib_EXPORT ChoiceFilterParameter : public FilterParameter
     DREAM3D_TYPE_MACRO_SUPER(ChoiceFilterParameter, FilterParameter)
 
     static Pointer New(const QString& humanLabel, const QString& propertyName,
-                       const QString& widgetType, const QString& valueType,
+                       const QString& widgetType, const QVariant& defaultValue,
                        QVector<QString> choices,
                        bool editable,
                        bool advanced = false );
@@ -271,7 +270,7 @@ class DREAM3DLib_EXPORT ComparisonFilterParameter : public FilterParameter
     DREAM3D_TYPE_MACRO_SUPER(ComparisonFilterParameter, FilterParameter)
 
     static Pointer New(const QString& humanLabel, const QString& propertyName,
-                       const QString& widgetType, const QString& valueType,
+                       const QString& widgetType, const QVariant& defaultValue,
                        QVector<QString> choices,
                        bool showOperators,
                        bool advanced = false );
@@ -301,7 +300,7 @@ class DREAM3DLib_EXPORT ShapeTypesFilterParameter : public FilterParameter
     DREAM3D_TYPE_MACRO_SUPER(ShapeTypesFilterParameter, FilterParameter)
 
     static Pointer New(const QString& humanLabel, const QString& propertyName,
-                       const QString& widgetType, const QString& valueType,
+                       const QString& widgetType, const QVariant& defaultValue,
                        const QString& phaseTypeCountProperty,
                        const QString& phaseTypeArrayPathProperty,
                        bool advanced = false );
@@ -332,7 +331,7 @@ class DREAM3DLib_EXPORT PreflightUpdatedValue : public FilterParameter
     DREAM3D_TYPE_MACRO_SUPER(PreflightUpdatedValue, FilterParameter)
 
     static Pointer New(const QString& humanLabel, const QString& propertyName,
-                       const QString& widgetType, const QString& valueType,
+                       const QString& widgetType, const QVariant& defaultValue,
                        bool advanced = false );
 
     virtual ~PreflightUpdatedValue();
@@ -357,7 +356,7 @@ class DREAM3DLib_EXPORT DataContainerArrayProxyFilterParameter : public FilterPa
     DREAM3D_TYPE_MACRO_SUPER(DataContainerArrayProxyFilterParameter, FilterParameter)
 
     static Pointer New(const QString& humanLabel, const QString& propertyName,
-                       const QString& widgetType, const QString& valueType,
+                       const QString& widgetType, const QVariant& defaultValue,
                        DataContainerArrayProxy proxy, Qt::CheckState defState,
                        bool advanced = false );
 

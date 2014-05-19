@@ -299,7 +299,7 @@ void FindEuclideanDistMap::setupFilterParameters()
     parameter->setHumanLabel("Calculate Manhattan Distance Only");
     parameter->setPropertyName("CalcOnlyManhattanDist");
     parameter->setWidgetType(FilterParameterWidgetType::BooleanWidget);
-    parameter->setValueType("bool");
+    ////parameter->setValueType("bool");
     parameters.push_back(parameter);
   }
   parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "QString", true));

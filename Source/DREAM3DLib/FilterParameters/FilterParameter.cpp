@@ -42,12 +42,12 @@ FilterParameter::FilterParameter() :
   m_HumanLabel(""),
   m_PropertyName(""),
   m_WidgetType(""),
-  m_ValueType(""),
+  //m_ValueType(""),
   m_Advanced(false),
   m_Units(""),
   m_FileExtension(""),
   m_FileType(""),
-  m_CastableValueType(""),
+  //m_CastableValueType(""),
   m_ReadOnly(false),
   m_Conditional(false),
   m_ConditionalProperty(""),
@@ -58,7 +58,7 @@ FilterParameter::FilterParameter() :
 //
 // -----------------------------------------------------------------------------
 FilterParameter::Pointer FilterParameter::New(const QString& humanLabel, const QString& propertyName,
-                                              const QString& widgetType, const QString& valueType,
+                                              const QString& widgetType, const QVariant& defaultValue,
                                               bool advanced,
                                               const QString& units,
                                               const QString& fileExtension,
@@ -70,12 +70,11 @@ FilterParameter::Pointer FilterParameter::New(const QString& humanLabel, const Q
   ptr->setHumanLabel(humanLabel);
   ptr->setPropertyName(propertyName);
   ptr->setWidgetType(widgetType);
-  ptr->setValueType(valueType);
+  ptr->setDefaultValue(defaultValue);
   ptr->setAdvanced(advanced);
   ptr->setUnits(units);
   ptr->setFileExtension(fileExtension);
   ptr->setFileType(fileType);
-  ptr->setCastableValueType(castableValueType);
   if(ptr->getWidgetType().compare(FilterParameterWidgetType::SeparatorWidget) == 0)
   {
     ptr->setReadOnly(true);
@@ -87,7 +86,7 @@ FilterParameter::Pointer FilterParameter::New(const QString& humanLabel, const Q
 //
 // -----------------------------------------------------------------------------
 FilterParameter::Pointer FilterParameter::NewConditional(const QString& humanLabel, const QString& propertyName,
-                                                         const QString& widgetType, const QString& valueType,
+                                                         const QString& widgetType, const QVariant& defaultValue,
                                                          bool advanced,
                                                          bool isConditional,
                                                          const QString& conditionalProperty,
@@ -97,7 +96,7 @@ FilterParameter::Pointer FilterParameter::NewConditional(const QString& humanLab
   ptr->setHumanLabel(humanLabel);
   ptr->setPropertyName(propertyName);
   ptr->setWidgetType(widgetType);
-  ptr->setValueType(valueType);
+  ptr->setDefaultValue(defaultValue);
   ptr->setAdvanced(advanced);
   ptr->setConditional(isConditional);
   ptr->setConditionalProperty(conditionalProperty);
@@ -105,7 +104,6 @@ FilterParameter::Pointer FilterParameter::NewConditional(const QString& humanLab
   ptr->setUnits("");
   ptr->setFileExtension("");
   ptr->setFileType("");
-  ptr->setCastableValueType("");
   if(ptr->getWidgetType().compare(FilterParameterWidgetType::SeparatorWidget) == 0)
   {
     ptr->setReadOnly(true);
@@ -139,7 +137,7 @@ ChoiceFilterParameter::~ChoiceFilterParameter()
 //
 // -----------------------------------------------------------------------------
 ChoiceFilterParameter::Pointer ChoiceFilterParameter::New(const QString& humanLabel, const QString& propertyName,
-                                                          const QString& widgetType, const QString& valueType,
+                                                          const QString& widgetType, const QVariant &defaultValue,
                                                           QVector<QString> choices,
                                                           bool editable,
                                                           bool advanced)
@@ -149,13 +147,11 @@ ChoiceFilterParameter::Pointer ChoiceFilterParameter::New(const QString& humanLa
   ptr->setHumanLabel(humanLabel);
   ptr->setPropertyName(propertyName);
   ptr->setWidgetType(widgetType);
-  ptr->setValueType(valueType);
+  ptr->setDefaultValue(defaultValue);
   ptr->setAdvanced(advanced);
   ptr->setUnits("");
   ptr->setFileExtension("");
   ptr->setFileType("");
-  ptr->setCastableValueType("");
-
   ptr->setChoices(choices);
   ptr->setEditable(editable);
 
@@ -184,7 +180,7 @@ ComparisonFilterParameter::~ComparisonFilterParameter()
 //
 // -----------------------------------------------------------------------------
 ComparisonFilterParameter::Pointer ComparisonFilterParameter::New(const QString& humanLabel, const QString& propertyName,
-    const QString& widgetType, const QString& valueType,
+    const QString& widgetType, const QVariant &defaultValue,
     QVector<QString> choices,
     bool showOperators,
     bool advanced)
@@ -194,13 +190,11 @@ ComparisonFilterParameter::Pointer ComparisonFilterParameter::New(const QString&
   ptr->setHumanLabel(humanLabel);
   ptr->setPropertyName(propertyName);
   ptr->setWidgetType(widgetType);
-  ptr->setValueType(valueType);
+  ptr->setDefaultValue(defaultValue);
   ptr->setAdvanced(advanced);
   ptr->setUnits("");
   ptr->setFileExtension("");
   ptr->setFileType("");
-  ptr->setCastableValueType("");
-
   ptr->setChoices(choices);
   ptr->setShowOperators(showOperators);
   if(ptr->getWidgetType().compare(FilterParameterWidgetType::SeparatorWidget) == 0)
@@ -229,7 +223,7 @@ ShapeTypesFilterParameter::~ShapeTypesFilterParameter()
 //
 // -----------------------------------------------------------------------------
 ShapeTypesFilterParameter::Pointer ShapeTypesFilterParameter::New(const QString& humanLabel, const QString& propertyName,
-    const QString& widgetType, const QString& valueType,
+    const QString& widgetType, const QVariant &defaultValue,
     const QString& phaseTypeCountProperty,
     const QString& phaseTypeArrayPathProperty,
     bool advanced)
@@ -238,12 +232,12 @@ ShapeTypesFilterParameter::Pointer ShapeTypesFilterParameter::New(const QString&
   ptr->setHumanLabel(humanLabel);
   ptr->setPropertyName(propertyName);
   ptr->setWidgetType(widgetType);
-  ptr->setValueType(valueType);
+  ptr->setDefaultValue(defaultValue);
   ptr->setAdvanced(advanced);
   ptr->setUnits("");
   ptr->setFileExtension("");
   ptr->setFileType("");
-  ptr->setCastableValueType("");
+  //ptr->setCastableValueType("");
 
   ptr->setPhaseTypeCountProperty(phaseTypeCountProperty);
   ptr->setPhaseTypeArrayPathProperty(phaseTypeArrayPathProperty);
@@ -271,19 +265,18 @@ PreflightUpdatedValue::~PreflightUpdatedValue()
 //
 // -----------------------------------------------------------------------------
 PreflightUpdatedValue::Pointer PreflightUpdatedValue::New(const QString& humanLabel, const QString& propertyName,
-                                                          const QString& widgetType, const QString& valueType,
+                                                          const QString& widgetType, const QVariant &defaultValue,
                                                           bool advanced)
 {
   PreflightUpdatedValue::Pointer ptr = PreflightUpdatedValue::New();
   ptr->setHumanLabel(humanLabel);
   ptr->setPropertyName(propertyName);
   ptr->setWidgetType(widgetType);
-  ptr->setValueType(valueType);
+  ptr->setDefaultValue(defaultValue);
   ptr->setAdvanced(advanced);
   ptr->setUnits("");
   ptr->setFileExtension("");
   ptr->setFileType("");
-  ptr->setCastableValueType("");
   if(ptr->getWidgetType().compare(FilterParameterWidgetType::SeparatorWidget) == 0)
   {
     ptr->setReadOnly(true);
@@ -312,7 +305,7 @@ DataContainerArrayProxyFilterParameter::~DataContainerArrayProxyFilterParameter(
 //
 // -----------------------------------------------------------------------------
 DataContainerArrayProxyFilterParameter::Pointer DataContainerArrayProxyFilterParameter::New(const QString& humanLabel, const QString& propertyName,
-    const QString& widgetType, const QString& valueType,
+    const QString& widgetType, const QVariant &defaultValue,
     DataContainerArrayProxy proxy, Qt::CheckState defValue,
     bool advanced)
 {
@@ -320,12 +313,11 @@ DataContainerArrayProxyFilterParameter::Pointer DataContainerArrayProxyFilterPar
   ptr->setHumanLabel(humanLabel);
   ptr->setPropertyName(propertyName);
   ptr->setWidgetType(widgetType);
-  ptr->setValueType(valueType);
+  ptr->setDefaultValue(defaultValue);
   ptr->setAdvanced(advanced);
   ptr->setUnits("");
   ptr->setFileExtension("");
   ptr->setFileType("");
-  ptr->setCastableValueType("");
   ptr->setDefaultFlagValue(defValue);
   ptr->setDataContainerArrayProxy(proxy);
 

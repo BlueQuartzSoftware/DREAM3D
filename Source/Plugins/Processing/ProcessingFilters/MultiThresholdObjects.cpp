@@ -72,7 +72,7 @@ void MultiThresholdObjects::setupFilterParameters()
     parameter->setHumanLabel("Select Arrays to Threshold");
     parameter->setPropertyName("SelectedThresholds");
     parameter->setWidgetType(FilterParameterWidgetType::ComparisonSelectionWidget);
-    parameter->setValueType("ComparisonInputs");
+    ////parameter->setValueType("ComparisonInputs");
     parameter->setShowOperators(true);
     parameters.push_back(parameter);
   }

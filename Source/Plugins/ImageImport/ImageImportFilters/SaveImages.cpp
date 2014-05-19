@@ -77,7 +77,6 @@ void SaveImages::setupFilterParameters()
     parameter->setHumanLabel("Image Format");
     parameter->setPropertyName("ImageFormat");
     parameter->setWidgetType(FilterParameterWidgetType::ChoiceWidget);
-    parameter->setValueType("unsigned int");
     QVector<QString> choices;
     choices.push_back("tif");
     choices.push_back("bmp");

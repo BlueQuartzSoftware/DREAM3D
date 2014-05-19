@@ -121,9 +121,9 @@ void DataArraySelectionWidget::setupGui()
 
   // Get the default path from the Filter instance to cache
   m_DefaultPath = m_Filter->property(PROPERTY_NAME_AS_CHAR).value<DataArrayPath>();
-//  dataContainerList->addItem(m_DefaultPath.getDataContainerName());
-//  attributeMatrixList->addItem(m_DefaultPath.getAttributeMatrixName() );
-//  attributeArrayList->addItem(m_DefaultPath.getDataArrayName() );
+  //  dataContainerList->addItem(m_DefaultPath.getDataContainerName());
+  //  attributeMatrixList->addItem(m_DefaultPath.getAttributeMatrixName() );
+  //  attributeArrayList->addItem(m_DefaultPath.getDataArrayName() );
 
   // Block Signals from teh ComboBoxes while we clear them
   dataContainerList->blockSignals(true);
@@ -139,8 +139,8 @@ void DataArraySelectionWidget::setupGui()
   attributeArrayList->blockSignals(false);
 
 
-// Now figure out if the Filter Parameter is conditional or not. If it is NOT conditional then we remove some of the GUI
-// widgets
+  // Now figure out if the Filter Parameter is conditional or not. If it is NOT conditional then we remove some of the GUI
+  // widgets
   blockSignals(true);
   // is the filter parameter tied to a boolean property of the Filter Instance, if it is then we need to make the check box visible
   if(m_FilterParameter->isConditional() == true)
@@ -300,11 +300,25 @@ void DataArraySelectionWidget::populateComboBoxes()
   if(!attributeArrayList->signalsBlocked()) { didBlock = true; }
   attributeArrayList->blockSignals(true);
   int daIndex = attributeArrayList->findText(daName);
-  if(daIndex < 0 && daName.isEmpty() == false) {
-      attributeArrayList->addItem(daName);
+
+    // The DataArray Name was empty, lets instantiate the filter and get the default value and try that
+  if(daIndex < 0)
+  {
+    AbstractFilter::Pointer ptr = m_Filter->newFilterInstance(false);
+    DataArrayPath path = ptr->property(PROPERTY_NAME_AS_CHAR).value<DataArrayPath>();
+    daName = path.getDataArrayName(); // Pick up the DataArray Name from a Default instantiation of the filter
+    daIndex = attributeArrayList->findText(daName);
+    qDebug() << "Trying default value for DataArrayPath.dataArrayName: " << daName;
+  }
+
+
+  //if(daIndex < 0 && daName.isEmpty() == false)
+  {
+    // attributeArrayList->addItem(daName);
   } // The name of the attribute array was not found in the list
-  else {
-    if (daIndex < 0) { daIndex = 0; }
+  //else
+  {
+    //if (daIndex < 0) { daIndex = 0; }
     attributeArrayList->setCurrentIndex(daIndex); // we set the selection but we are NOT triggering anything so we shoudl
   }
   if(didBlock) { attributeArrayList->blockSignals(false); didBlock = false; }// not be triggering an infinte recursion of preflights
@@ -316,6 +330,10 @@ void DataArraySelectionWidget::populateComboBoxes()
 // -----------------------------------------------------------------------------
 QString DataArraySelectionWidget::checkStringValues(QString curDcName, QString filtDcName)
 {
+  if(curDcName.isEmpty() == true && filtDcName.isEmpty() == true)
+  {
+    qDebug() << "curDcName EMPTY && filtDcName EMPTY";
+  }
   if(curDcName.isEmpty() == true && filtDcName.isEmpty() == false)
   {return filtDcName;}
   else if(curDcName.isEmpty() == false && filtDcName.isEmpty() == true)

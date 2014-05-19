@@ -27,14 +27,14 @@ SDK_INSTALL=$HOME/DREAM3D_SDK
 
 # If you are on a Multicore system and want to build faster set the variable to the number
 # of cores/CPUs available to you.
-PARALLEL_BUILD=8
+PARALLEL_BUILD=16
 
 HOST_SYSTEM=`uname`
 echo "Host System: $HOST_SYSTEM"
 # Adjust these to "0" if you want to skip those compilations. The default is to build
 # everything.
 BUILD_CMAKE="0"
-BUILD_MXABOOST="1"
+BUILD_BOOST="1"
 BUILD_HDF5="1"
 BUILD_QWT="1"
 BUILD_EIGEN="1"
@@ -208,7 +208,7 @@ then
 fi
 
 
-if [ "$BUILD_MXABOOST" == "1" ];
+if [ "$BUILD_BOOST" == "1" ];
 then
 #------------------------------------------------------------------------------
 # We now need Boost on the system
@@ -229,18 +229,19 @@ then
 # ./bootstrap.sh
 # fi
 
-  if [ ! -e "$SDK_SOURCE/boost-trunk" ];
+  if [ ! -e "$SDK_SOURCE/modular-boost" ];
     then
     echo "-------------------------------------------"
-    echo " Checking out boost from SVN"
+    echo " Checking out modular boost from GitHub"
     echo "-------------------------------------------"
-    svn co http://svn.boost.org/svn/boost/trunk boost-trunk
+    git clone --recursive git@github.com:boostorg/boost.git modular-boost
   fi
 
-  cd "$SDK_SOURCE/boost-trunk"
+  cd "$SDK_SOURCE/modular-boost"
   ./bootstrap.sh
-  ./b2 -j$PARALLEL_BUILD --prefix=$SDK_INSTALL/boost-trunk --build-type=minimal --build-dir=x64 --architecture=x86 address-model=64 --with-thread install
-  echo "set(BOOST_ROOT \"\${DREAM3D_SDK_ROOT}/boost-trunk\" CACHE PATH \"\")" >> "$SDK_INSTALL/DREAM3D_SDK.cmake"
+  ./b2 headers
+  ./b2 -j$PARALLEL_BUILD --prefix=$SDK_INSTALL/boost --build-type=minimal --build-dir=x64 --architecture=x86 address-model=64 --with-thread install
+  echo "set(BOOST_ROOT \"\${DREAM3D_SDK_ROOT}/boost\" CACHE PATH \"\")" >> "$SDK_INSTALL/DREAM3D_SDK.cmake"
 fi
 
 
@@ -249,78 +250,76 @@ then
 
   # Build the HDF5 libraries we need and set our Environment Variable.
   cd $SDK_SOURCE
-  if [ ! -e "$SDK_SOURCE/hdf5-1.8.12.tar.gz" ];
+  if [ ! -e "$SDK_SOURCE/hdf5-1.8.13.tar.gz" ];
   then
     echo "-------------------------------------------"
-    echo " Downloading HDF5 Version 1.8.12 "
+    echo " Downloading HDF5 Version 1.8.13 "
     echo "-------------------------------------------"
-    $DOWNLOAD_PROG  "http://www.hdfgroup.org/ftp/HDF5/prev-releases/hdf5-1.8.12/src/hdf5-1.8.12.tar.gz" -o hdf5-1.8.12.tar.gz
+    $DOWNLOAD_PROG  "http://www.hdfgroup.org/ftp/HDF5/current/src/hdf5-1.8.13.tar.gz" -o hdf5-1.8.13.tar.gz
   fi
 
-  if [ ! -e "$SDK_SOURCE/hdf5-1.8.12" ];
+  if [ ! -e "$SDK_SOURCE/hdf5-1.8.13" ];
   then
-    tar -xvzf hdf5-1.8.12.tar.gz
+    tar -xvzf hdf5-1.8.13.tar.gz
   fi
   # We assume we already have downloaded the source for HDF5 Version 1.8.7 and have it in a folder
   # called hdf5-188
-  cd hdf5-1.8.12
+  cd hdf5-1.8.13
   mkdir Build
   cd Build
-  cmake cmake -DBUILD_SHARED_LIBS=ON -DCMAKE_BUILD_TYPE=Debug -DCMAKE_INSTALL_PREFIX=$SDK_INSTALL/hdf5-1.8.12 -DHDF5_ENABLE_DEPRECATED_SYMBOLS=OFF  -DHDF5_BUILD_WITH_INSTALL_NAME=ON ../
+  cmake cmake -DBUILD_SHARED_LIBS=ON -DCMAKE_BUILD_TYPE=Debug -DCMAKE_INSTALL_PREFIX=$SDK_INSTALL/hdf5-1.8.13 -DHDF5_ENABLE_DEPRECATED_SYMBOLS=OFF  -DHDF5_BUILD_WITH_INSTALL_NAME=ON -DHDF5_BUILD_CPP_LIB=ON -DHDF5_BUILD_HL_LIB=ON ../
   make -j$PARALLEL_BUILD
   make install
   cd ../
   mkdir zRel
   cd zRel
-  cmake cmake -DBUILD_SHARED_LIBS=ON -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=$SDK_INSTALL/hdf5-1.8.12 -DHDF5_ENABLE_DEPRECATED_SYMBOLS=OFF  -DHDF5_BUILD_WITH_INSTALL_NAME=ON ../
+  cmake cmake -DBUILD_SHARED_LIBS=ON -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=$SDK_INSTALL/hdf5-1.8.13 -DHDF5_ENABLE_DEPRECATED_SYMBOLS=OFF  -DHDF5_BUILD_WITH_INSTALL_NAME=ON -DHDF5_BUILD_CPP_LIB=ON -DHDF5_BUILD_HL_LIB=ON -DHDF5_BUILD_TOOLS=ON ../
   make -j$PARALLEL_BUILD
   make install
-  export HDF5_INSTALL=$SDK_INSTALL/hdf5-1.8.12
+  export HDF5_INSTALL=$SDK_INSTALL/hdf5-1.8.13
 
-  echo "set(HDF5_INSTALL \"\${DREAM3D_SDK_ROOT}/hdf5-1.8.12\" CACHE PATH \"\")" >>  "$SDK_INSTALL/DREAM3D_SDK.cmake"
+  echo "set(HDF5_INSTALL \"\${DREAM3D_SDK_ROOT}/hdf5-1.8.13\" CACHE PATH \"\")" >>  "$SDK_INSTALL/DREAM3D_SDK.cmake"
 fi
 
 
 QMAKE=`type -P qmake`
 if [[ $QMAKE == "" ]];
   then
-  echo "An installation of Qt is required. Please install a version of Qt of at least 4.6 or greater."
+  echo "An installation of Qt is required. Please install a version of Qt of at least 4.8.5 or greater."
   exit 1
 fi
 
 echo "set(QT_QMAKE_EXECUTABLE "$QMAKE" CACHE FILEPATH \"\")" >>  "$SDK_INSTALL/DREAM3D_SDK.cmake"
 
+
+
 if [ "$BUILD_QWT" = "1" ];
 then
-
-echo "-------------------------------------------"
-echo " Downloading Qwt 5.2.2"
-echo "-------------------------------------------"
-cd $SDK_SOURCE
-# Remove any previous Qwt
-#rm -rf Qwt
-git clone --recursive git://scm.bluequartz.net/Qwt.git Qwt
-cd Qwt
-mkdir Build
-cd Build
-# On OS X we need to set the "install_name" correctly on Libraries that will get used which is
-# what the variable will do.
-if [ "$HOST_SYSTEM" = "Darwin" ];
+  
+  cd $SDK_SOURCE
+  if [ ! -e "$SDK_SOURCE/hdf5-1.8.13.tar.gz" ];
   then
-  ADDITIONAL_ARGS="-DCMP_BUILD_WITH_INSTALL_NAME=ON"
-fi
-echo "Additional Args: $ADDITIONAL_ARGS"
-cmake $ADDITIONAL_ARGS -DCMAKE_BUILD_TYPE=Debug -DCMAKE_INSTALL_PREFIX=$SDK_INSTALL/Qwt -DBUILD_SHARED_LIBS=ON ../
-$make_command -j $PARALLEL_BUILD
-$make_command install
-cd ../
-mkdir zRel
-cd zRel
-cmake $ADDITIONAL_ARGS -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=$SDK_INSTALL/Qwt -DBUILD_SHARED_LIBS=ON ../
-$make_command -j $PARALLEL_BUILD
-$make_command install
-export QWT_INSTALL=$SDK_INSTALL/Qwt
-echo "set(QWT_INSTALL \"\${DREAM3D_SDK_ROOT}/Qwt\" CACHE PATH \"\")" >>  "$SDK_INSTALL/DREAM3D_SDK.cmake"
+    echo "-------------------------------------------"
+    echo " Downloading Qwt 6.1.0"
+    echo "-------------------------------------------"
+    $DOWNLOAD_PROG  "http://iweb.dl.sourceforge.net/project/qwt/qwt/6.1.0/qwt-6.1.0.tar.bz2" -o qwt-6.1.0.tar.bz2
+  fi
+ 
+  if [ ! -e "$SDK_SOURCE/qwt-6.1.0.tar.bz2" ];
+  then
+    tar -xvzf qwt-6.1.0.tar.bz2
+  fi
+  
+  cd "$SDK_SOURCE/qwt-6.1.0"
+  
+  # Change the install prefix to our 
+  sed -i -e "s@\/usr\/local@${SDK_INSTALL}@g" qwtconfig.pri
+  # Run QMake to generate our make files
+  qmake
+  $make_command -j $PARALLEL_BUILD install
+  # Now export our variables and write the install path into the DREAM3D_SDK.cmake file
+  export QWT_INSTALL=$SDK_INSTALL/Qwt
+  echo "set(QWT_INSTALL \"\${DREAM3D_SDK_ROOT}/Qwt\" CACHE PATH \"\")" >>  "$SDK_INSTALL/DREAM3D_SDK.cmake"
 fi
 
 

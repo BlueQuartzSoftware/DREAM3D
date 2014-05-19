@@ -100,7 +100,6 @@ void WriteIPFStandardTriangle::setupFilterParameters()
     parameter->setHumanLabel("Image Format");
     parameter->setPropertyName("ImageFormat");
     parameter->setWidgetType(FilterParameterWidgetType::ChoiceWidget);
-    parameter->setValueType("unsigned int");
     QVector<QString> choices;
     choices.push_back("tif");
     choices.push_back("bmp");
@@ -116,7 +115,7 @@ void WriteIPFStandardTriangle::setupFilterParameters()
 //    parameter->setHumanLabel("Color Correction Factor");
 //    parameter->setUnits("0 <= x < 1");
 //    parameter->setWidgetType(FilterParameterWidgetType::DoubleWidget);
-//    parameter->setValueType("float");
+//    //parameter->setValueType("float");
 //    parameters.push_back(parameter);
 //  }
 

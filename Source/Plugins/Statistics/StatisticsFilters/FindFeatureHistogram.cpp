@@ -83,7 +83,6 @@ void FindFeatureHistogram::setupFilterParameters()
     parameter->setHumanLabel("Number of Bins");
     parameter->setPropertyName("NumBins");
     parameter->setWidgetType(FilterParameterWidgetType::IntWidget);
-    parameter->setValueType("int");
     parameters.push_back(parameter);
   }
   parameters.push_back(FilterParameter::New("Remove Biased Features", "RemoveBiasedFeatures", FilterParameterWidgetType::BooleanWidget, "bool", false));
