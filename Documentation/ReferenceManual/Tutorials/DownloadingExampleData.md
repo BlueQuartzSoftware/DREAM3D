@@ -7,9 +7,8 @@ In order to use the prebuilt pipelines that are in the _Workshop_ folder the use
 
 ![Correct Setup of DREAM3D Example Data Directory: Mac OS X](Images/DownloadExampleData1.png)
 
-@latexonly
+
 @image latex Images/DownloadExampleData1.png "Correct Setup of DREAM3D Example Data Directory" width=2in
-@endlatexonly
 
 
 

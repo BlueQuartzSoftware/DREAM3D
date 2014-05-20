@@ -383,6 +383,15 @@ void HexagonalOps::determineEulerAngles(int choose, float& synea1, float& synea2
   OrientationMath::RodtoEuler(r1, r2, r3, synea1, synea2, synea3);
 }
 
+void HexagonalOps::randomizeEulerAngles(float& synea1, float& synea2, float& synea3)
+{
+  QuatF q;
+  QuatF qc;
+  OrientationMath::EulertoQuat(q, synea1, synea2, synea3);
+  int symOp = rand() % k_NumSymQuats + 1;
+  QuaternionMathF::Multiply(q, HexQuatSym[symOp], qc);
+  OrientationMath::QuattoEuler(qc, synea1, synea2, synea3);
+}
 
 void HexagonalOps::determineRodriguesVector( int choose, float& r1, float& r2, float& r3)
 {

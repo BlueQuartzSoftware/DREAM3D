@@ -283,7 +283,7 @@ void GenerateEnsembleStatistics::execute()
       ss.str("");
       ss << "The number of PhaseTypes entered is more than the number of Ensembles, only the first " << totalEnsembles-1 << " will be used";
       notifyWarningMessage(ss.str(), -999);
-      return;
+     // return;
     }
     PhaseTypeArrayType::Pointer phaseTypes = PhaseTypeArrayType::CreateArray(totalEnsembles, m_PhaseTypesArrayName);
     for(int r = 0; r < totalEnsembles; ++r)
@@ -728,7 +728,7 @@ void GenerateEnsembleStatistics::gatherODFStats()
   }
   for (size_t i = 1; i < numgrains; i++)
   {
-    if (m_SurfaceFields[i] == false)
+    if (m_SurfaceFields[i] == false && m_FieldPhases[i] > 0)
     {
       ea1 = m_FieldEulerAngles[3*i];
       ea2 = m_FieldEulerAngles[3*i+1];
@@ -922,7 +922,11 @@ void GenerateEnsembleStatistics::gatherAxisODFStats()
       OrientationMath::EulerToRod( ea1,  ea2,  ea3, r1,  r2,  r3);
       m_OrientationOps[Ebsd::CrystalStructure::OrthoRhombic]->getODFFZRod(r1, r2, r3);
       bin = m_OrientationOps[Ebsd::CrystalStructure::OrthoRhombic]->getOdfBin(r1, r2, r3);
-      axisodf[m_FieldPhases[i]]->SetValue(bin, (axisodf[m_FieldPhases[i]]->GetValue(bin) + static_cast<float>((1.0 / totalaxes[m_FieldPhases[i]]))));
+      int32_t fieldPhases = m_FieldPhases[i];
+      if(fieldPhases > 0)
+      {
+        axisodf[fieldPhases]->SetValue(bin, (axisodf[fieldPhases]->GetValue(bin) + static_cast<float>((1.0 / totalaxes[m_FieldPhases[i]]))));
+      }
     }
   }
   // int err;

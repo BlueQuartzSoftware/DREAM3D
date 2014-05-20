@@ -1,4 +1,4 @@
-/* ============================================================================
+ /* ============================================================================
  * Copyright (c) 2010, Michael A. Jackson (BlueQuartz Software)
  * Copyright (c) 2010, Dr. Michael A. Groeber (US Air Force Research Laboratories
  * All rights reserved.
@@ -315,6 +315,15 @@ void TetragonalOps::determineEulerAngles(int choose, float& synea1, float& synea
   OrientationMath::RodtoEuler(r1, r2, r3, synea1, synea2, synea3);
 }
 
+void TetragonalOps::randomizeEulerAngles(float& synea1, float& synea2, float& synea3)
+{
+  QuatF q;
+  QuatF qc;
+  OrientationMath::EulertoQuat(q, synea1, synea2, synea3);
+  int symOp = rand() % k_NumSymQuats + 1;
+  QuaternionMathF::Multiply(q, TetraQuatSym[symOp], qc);
+  OrientationMath::QuattoEuler(qc, synea1, synea2, synea3);
+}
 
 void TetragonalOps::determineRodriguesVector( int choose, float& r1, float& r2, float& r3)
 {
