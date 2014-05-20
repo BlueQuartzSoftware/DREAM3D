@@ -74,9 +74,9 @@ class QAbstractItemDelegate;
  */
 class SGAbstractTableModel : public QAbstractTableModel
 {
-Q_OBJECT
+    Q_OBJECT
 
-    public:
+  public:
 
     enum ColumnIndexes
     {
@@ -91,7 +91,7 @@ Q_OBJECT
      * @param index
      * @return
      */
-    virtual Qt::ItemFlags flags(const QModelIndex &index) const = 0;
+    virtual Qt::ItemFlags flags(const QModelIndex& index) const = 0;
 
     /**
      *
@@ -99,7 +99,7 @@ Q_OBJECT
      * @param role
      * @return
      */
-    virtual QVariant data(const QModelIndex &index, int role=Qt::DisplayRole) const = 0;
+    virtual QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const = 0;
 
     /**
      *
@@ -108,21 +108,21 @@ Q_OBJECT
      * @param role
      * @return
      */
-    virtual QVariant headerData(int section, Qt::Orientation orientation, int role=Qt::DisplayRole) const = 0;
+    virtual QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const = 0;
 
     /**
      *
      * @param parent
      * @return
      */
-    virtual int rowCount(const QModelIndex &parent=QModelIndex()) const = 0;
+    virtual int rowCount(const QModelIndex& parent = QModelIndex()) const = 0;
 
     /**
      *
      * @param parent
      * @return
      */
-    virtual int columnCount(const QModelIndex &parent=QModelIndex()) const = 0;
+    virtual int columnCount(const QModelIndex& parent = QModelIndex()) const = 0;
 
     /**
      *
@@ -131,7 +131,7 @@ Q_OBJECT
      * @param role
      * @return
      */
-    virtual bool setData(const QModelIndex &index, const QVariant &value, int role=Qt::EditRole) = 0;
+    virtual bool setData(const QModelIndex& index, const QVariant& value, int role = Qt::EditRole) = 0;
 
     /**
      *
@@ -141,7 +141,7 @@ Q_OBJECT
      * @param role
      * @return
      */
-    virtual bool setHeaderData(int col, Qt::Orientation orientation, const QVariant& data, int role=Qt::EditRole) = 0;
+    virtual bool setHeaderData(int col, Qt::Orientation orientation, const QVariant& data, int role = Qt::EditRole) = 0;
 
     /**
      *
@@ -150,7 +150,7 @@ Q_OBJECT
      * @param parent
      * @return
      */
-    virtual bool insertRows(int row, int count, const QModelIndex &parent=QModelIndex()) = 0;
+    virtual bool insertRows(int row, int count, const QModelIndex& parent = QModelIndex()) = 0;
 
     /**
      *
@@ -159,7 +159,7 @@ Q_OBJECT
      * @param parent
      * @return
      */
-    virtual bool removeRows(int row, int count, const QModelIndex &parent=QModelIndex()) = 0;
+    virtual bool removeRows(int row, int count, const QModelIndex& parent = QModelIndex()) = 0;
 
     /**
      *
@@ -217,15 +217,15 @@ Q_OBJECT
     virtual float getDataValue(int col, int row) = 0;
 
 
-    virtual void setColumnData(int col, QVector<float> &data) = 0;
+    virtual void setColumnData(int col, QVector<float>& data) = 0;
 
 
-    private:
+  private:
 
     SGAbstractTableModel(const SGAbstractTableModel&); // Copy Constructor Not Implemented
     void operator=(const SGAbstractTableModel&); // Operator '=' Not Implemented
 
-  };
+};
 
 #endif /* SGABSTRACTTABLEMODEL_H_ */
 

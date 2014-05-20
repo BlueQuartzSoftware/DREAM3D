@@ -59,10 +59,10 @@
  */
 class SGLogNormalItemDelegate : public QStyledItemDelegate
 {
-  Q_OBJECT
+    Q_OBJECT
 
   public:
-    explicit SGLogNormalItemDelegate(QObject *parent = 0) :
+    explicit SGLogNormalItemDelegate(QObject* parent = 0) :
       QStyledItemDelegate(parent)
     {
     }
@@ -70,7 +70,7 @@ class SGLogNormalItemDelegate : public QStyledItemDelegate
     // -----------------------------------------------------------------------------
     //
     // -----------------------------------------------------------------------------
-    void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
+    void paint(QPainter* painter, const QStyleOptionViewItem& option, const QModelIndex& index) const
     {
       QStyledItemDelegate::paint(painter, option, index);
     }
@@ -78,7 +78,7 @@ class SGLogNormalItemDelegate : public QStyledItemDelegate
     // -----------------------------------------------------------------------------
     //
     // -----------------------------------------------------------------------------
-    QWidget* createEditor(QWidget *parent, const QStyleOptionViewItem &option, const QModelIndex &index) const
+    QWidget* createEditor(QWidget* parent, const QStyleOptionViewItem& option, const QModelIndex& index) const
     {
       QLineEdit* avg;
       QLineEdit* stdDev;
@@ -119,10 +119,10 @@ class SGLogNormalItemDelegate : public QStyledItemDelegate
     // -----------------------------------------------------------------------------
     //
     // -----------------------------------------------------------------------------
-    void setEditorData(QWidget *editor, const QModelIndex &index) const
+    void setEditorData(QWidget* editor, const QModelIndex& index) const
     {
       qint32 col = index.column();
-    //  bool ok = false;
+      //  bool ok = false;
       if (col == SGLogNormalTableModel::Average || col == SGLogNormalTableModel::StdDev)
       {
         //     double value = index.model()->data(index).toFloat(&ok);
@@ -137,13 +137,13 @@ class SGLogNormalItemDelegate : public QStyledItemDelegate
         Q_ASSERT(comboBox);
         comboBox->setCurrentIndex(comboBox->findText(state));
       }
-      else QStyledItemDelegate::setEditorData(editor, index);
+      else { QStyledItemDelegate::setEditorData(editor, index); }
     }
 
     // -----------------------------------------------------------------------------
     //
     // -----------------------------------------------------------------------------
-    void setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const
+    void setModelData(QWidget* editor, QAbstractItemModel* model, const QModelIndex& index) const
     {
       //  qDebug() << "SGLogNormalItemDelegate::setModelData" << "\n";
       qint32 col = index.column();
@@ -158,11 +158,11 @@ class SGLogNormalItemDelegate : public QStyledItemDelegate
       }
       else if (col == SGLogNormalTableModel::LineColor)
       {
-        ColorComboPicker *comboBox = qobject_cast<ColorComboPicker* > (editor);
+        ColorComboPicker* comboBox = qobject_cast<ColorComboPicker* > (editor);
         Q_ASSERT(comboBox);
         model->setData(index, comboBox->currentText());
       }
-      else QStyledItemDelegate::setModelData(editor, model, index);
+      else { QStyledItemDelegate::setModelData(editor, model, index); }
     }
 
   private:

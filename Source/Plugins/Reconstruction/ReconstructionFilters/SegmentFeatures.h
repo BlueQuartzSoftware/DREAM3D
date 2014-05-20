@@ -72,6 +72,7 @@ class SegmentFeatures : public AbstractFilter
     virtual const QString getGroupName() {return DREAM3D::FilterGroups::ReconstructionFilters;}
     virtual const QString getSubGroupName() {return DREAM3D::FilterSubGroups::SegmentationFilters;}
     virtual const QString getHumanLabel() {return "Segment Features";}
+    virtual const QString getBrandingString() { return "DREAM3D Reconstruction Plugin"; }
 
     /**
     * @brief This method will write the options to a file
@@ -91,7 +92,7 @@ class SegmentFeatures : public AbstractFilter
     virtual void execute();
     virtual void preflight();
 
-signals:
+  signals:
     void updateFilterParameters(AbstractFilter* filter);
     void parametersChanged();
     void preflightAboutToExecute();

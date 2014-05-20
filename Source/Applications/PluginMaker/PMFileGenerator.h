@@ -60,13 +60,13 @@ class PMFileGenerator : public PMDirGenerator
     virtual QString generateFileContents();
 
   protected slots:
-   virtual void pluginNameChanged (const QString &plugname);
-   virtual void outputDirChanged (const QString &outputDir);
-   virtual void generateOutput();
+    virtual void pluginNameChanged (const QString& plugname);
+    virtual void outputDirChanged (const QString& outputDir);
+    virtual void generateOutput();
 
 
   private:
-   QString m_FileName;
+    QString m_FileName;
 
 };
 

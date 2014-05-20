@@ -44,19 +44,19 @@ class PMGeneratorTreeItem : public QTreeWidgetItem
 {
 
   public:
-    PMGeneratorTreeItem(QTreeWidget *view, int type = Type) :
-    QTreeWidgetItem(view, type),
-    fileGenPtr(NULL)
+    PMGeneratorTreeItem(QTreeWidget* view, int type = Type) :
+      QTreeWidgetItem(view, type),
+      fileGenPtr(NULL)
     {}
 
-    PMGeneratorTreeItem(PMDirGenerator* fileGen, QTreeWidget *view, int type = Type) :
-    QTreeWidgetItem(view, type),
-    fileGenPtr(fileGen)
+    PMGeneratorTreeItem(PMDirGenerator* fileGen, QTreeWidget* view, int type = Type) :
+      QTreeWidgetItem(view, type),
+      fileGenPtr(fileGen)
     {}
 
-    PMGeneratorTreeItem(QTreeWidgetItem *parent, int type = Type) :
-    QTreeWidgetItem(parent, type),
-    fileGenPtr(NULL)
+    PMGeneratorTreeItem(QTreeWidgetItem* parent, int type = Type) :
+      QTreeWidgetItem(parent, type),
+      fileGenPtr(NULL)
     {}
 
     PMDirGenerator* getFileGenPtr() const { return fileGenPtr; }

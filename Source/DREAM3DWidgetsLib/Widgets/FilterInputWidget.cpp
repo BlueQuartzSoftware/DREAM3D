@@ -82,6 +82,12 @@ void FilterInputWidget::clearInputWidgets()
 {
   QWidget* widget = scrollArea->takeWidget();
   scrollArea->setWidget(new QFrame);
+
+  widget = advScrollArea->takeWidget();
+  advScrollArea->setWidget(new QFrame);
+
+  filterHumanLabel->setText("No Filter Selected");
+  brandingLabel->clear();
 }
 
 // -----------------------------------------------------------------------------
@@ -110,7 +116,7 @@ void FilterInputWidget::displayFilterParameters(PipelineFilterWidget* w)
   QWidget* advWidget = advScrollArea->takeWidget();
   advScrollArea->setWidget(w->getAdvancedScrollWidgetContents() );
 
-  filterInputTabWidget->setCurrentIndex(0);
+//  filterInputTabWidget->setCurrentIndex(0);
 #if 0
   // Remove all existing QWidgets from this Widget
   QObjectList objs = basicInputsScrollWidget->children();
@@ -122,7 +128,8 @@ void FilterInputWidget::displayFilterParameters(PipelineFilterWidget* w)
 
   // Remove the Layout itself
   QLayoutItem* wItem = basicInputsScrollWidget->layout()->takeAt(0);
-  while (wItem != NULL) {
+  while (wItem != NULL)
+  {
     //delete wItem;
     wItem = basicInputsScrollWidget->layout()->takeAt(0);
   }
@@ -155,7 +162,7 @@ void FilterInputWidget::displayFilterParameters(PipelineFilterWidget* w)
     QWidget* fpw = filterParameterWidgets[i];
     qDebug() << "    Pointer: " << fpw << "\n";
     // Make sure we do not have a NULL widget
-    if (NULL == filterParameterWidgets.at(i)) continue;
+    if (NULL == filterParameterWidgets.at(i)) { continue; }
     // Set the parent for the widget
     filterParameterWidgets[i]->setParent(basicInputsScrollWidget);
     // Add the FilterWidget to the layout

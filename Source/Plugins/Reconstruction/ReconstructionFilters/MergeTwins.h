@@ -103,6 +103,7 @@ class MergeTwins : public GroupFeatures
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::ReconstructionFilters; }
     virtual const QString getSubGroupName() {return DREAM3D::FilterSubGroups::GroupingFilters;}
     virtual const QString getHumanLabel() { return "Merge Twins"; }
+    virtual const QString getBrandingString() { return "DREAM3D Reconstruction Plugin"; }
 
     virtual void setupFilterParameters();
     virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
@@ -120,11 +121,11 @@ class MergeTwins : public GroupFeatures
     virtual void preflight();
 
 #if 0
-signals:
-	void updateFilterParameters(AbstractFilter* filter);
-	void parametersChanged();
-	void preflightAboutToExecute();
-	void preflightExecuted();
+  signals:
+    void updateFilterParameters(AbstractFilter* filter);
+    void parametersChanged();
+    void preflightAboutToExecute();
+    void preflightExecuted();
 #endif // 0
 
 

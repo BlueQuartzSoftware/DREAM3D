@@ -37,27 +37,13 @@
 #include "ImportImagesWidget.h"
 
 //-- Qt Includes
-//#include <QtCore/QFileInfo>
-//#include <QtCore/QFile>
 #include <QtCore/QDir>
-//#include <QtCore/QString>
-//#include <QtCore/QUrl>
-//#include <QtCore/QThread>
-//#include <QtCore/QFileInfoList>
 #include <QtGui/QFileDialog>
-//#include <QtGui/QCloseEvent>
-//#include <QtGui/QMessageBox>
-//#include <QtGui/QListWidget>
-//#include <QtGui/QListWidgetItem>
-//#include <QtGui/QButtonGroup>
 
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Utilities/FilePathGenerator.h"
 
-//#include "QtSupport/QCheckboxDialog.h"
 #include "QtSupport/QFileCompleter.h"
-//#include "QtSupport/DREAM3DQtMacros.h"
-//#include "QtSupport/DREAM3DHelpUrlGenerator.h"
 
 
 #include "ImageImport/ImageImportFilters/ImportImageStack.h"
@@ -101,7 +87,8 @@ ImportImagesWidget::~ImportImagesWidget()
 // -----------------------------------------------------------------------------
 void ImportImagesWidget::setWidgetListEnabled(bool b)
 {
-  foreach (QWidget* w, m_WidgetList) {
+  foreach (QWidget * w, m_WidgetList)
+  {
     w->setEnabled(b);
   }
 }
@@ -127,13 +114,45 @@ void ImportImagesWidget::setupGui()
 
   QFileCompleter* com = new QFileCompleter(this, true);
   m_InputDir->setCompleter(com);
-  QObject::connect( com, SIGNAL(activated(const QString &)),
-                    this, SLOT(on_m_InputDir_textChanged(const QString &)));
+  QObject::connect( com, SIGNAL(activated(const QString&)),
+                    this, SLOT(on_m_InputDir_textChanged(const QString&)));
 
-
+  {
+    QDoubleValidator* validator = new QDoubleValidator(xRes);
+    validator->setDecimals(4);
+    xRes->setValidator(validator);
+  }
+  {
+    QDoubleValidator* validator = new QDoubleValidator(yRes);
+    validator->setDecimals(4);
+    yRes->setValidator(validator);
+  }
+  {
+    QDoubleValidator* validator = new QDoubleValidator(zRes);
+    validator->setDecimals(4);
+    zRes->setValidator(validator);
+  }
+  {
+    QDoubleValidator* validator = new QDoubleValidator(xOrigin);
+    validator->setDecimals(4);
+    xOrigin->setValidator(validator);
+  }
+  {
+    QDoubleValidator* validator = new QDoubleValidator(yOrigin);
+    validator->setDecimals(4);
+    yOrigin->setValidator(validator);
+  }
+  {
+    QDoubleValidator* validator = new QDoubleValidator(zOrigin);
+    validator->setDecimals(4);
+    zOrigin->setValidator(validator);
+  }
   m_WidgetList << m_InputDir << m_InputDirBtn;
   m_WidgetList << m_FileExt << m_ErrorMessage << m_TotalDigits;
   m_WidgetList << m_FilePrefix << m_TotalSlices << m_ZStartIndex << m_ZEndIndex;
+  m_WidgetList << xRes << yRes << zRes;
+  m_WidgetList << xOrigin << yOrigin << zOrigin;
+
   m_ErrorMessage->setVisible(false);
 
   m_StackingGroup = new QButtonGroup(this);
@@ -143,6 +162,20 @@ void ImportImagesWidget::setupGui()
   connect(m_StackLowToHigh, SIGNAL(toggled(bool)),
           this, SLOT(stackingOrderChanged(bool)));
 
+  // Manually hook up these signals/slots
+  connect(xRes, SIGNAL(textChanged(const QString&)),
+          this, SLOT(resolutionChanged(const QString&)));
+  connect(yRes, SIGNAL(textChanged(const QString&)),
+          this, SLOT(resolutionChanged(const QString&)));
+  connect(zRes, SIGNAL(textChanged(const QString&)),
+          this, SLOT(resolutionChanged(const QString&)));
+
+  connect(xOrigin, SIGNAL(textChanged(const QString&)),
+          this, SLOT(originChanged(const QString&)));
+  connect(yOrigin, SIGNAL(textChanged(const QString&)),
+          this, SLOT(originChanged(const QString&)));
+  connect(zOrigin, SIGNAL(textChanged(const QString&)),
+          this, SLOT(originChanged(const QString&)));
 
   getGuiParametersFromFilter();
 }
@@ -152,20 +185,28 @@ void ImportImagesWidget::setupGui()
 // -----------------------------------------------------------------------------
 void ImportImagesWidget::getGuiParametersFromFilter()
 {
+  blockSignals(true);
+  m_InputDir->setText(m_Filter->getInputPath());
+
   m_ZStartIndex->setValue( m_Filter->getZStartIndex() );
   m_ZEndIndex->setValue( m_Filter->getZEndIndex() );
 
   setResolutionValues();
   setOriginValues();
 
-  setRefFrameZDir( m_Filter->getRefFrameZDir() );
 
-  m_InputDir->setText(m_Filter->getInputPath());
   m_FilePrefix->setText(m_Filter->getFilePrefix());
   m_FileSuffix->setText(m_Filter->getFileSuffix());
-  m_FileExt->setText(m_Filter->getFileExtension());
+  QString ext = m_Filter->getFileExtension();
+  if(ext.isEmpty()) // Default to placing tif as the file extension instead of nothing.
+  {
+    ext = "tif";
+  }
+  m_FileExt->setText(ext);
   m_TotalDigits->setValue(m_Filter->getPaddingDigits());
 
+  setRefFrameZDir( m_Filter->getRefFrameZDir() );
+  blockSignals(false);
 }
 
 // -----------------------------------------------------------------------------
@@ -177,6 +218,23 @@ void ImportImagesWidget::setResolutionValues()
   xRes->setText(QString::number(data.x) );
   yRes->setText(QString::number(data.y) );
   zRes->setText(QString::number(data.z) );
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ImportImagesWidget::resolutionChanged(const QString& string)
+{
+  emit parametersChanged();
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ImportImagesWidget::originChanged(const QString& string)
+{
+  emit parametersChanged();
 }
 
 // -----------------------------------------------------------------------------
@@ -241,7 +299,7 @@ void ImportImagesWidget::on_m_InputDirBtn_clicked()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ImportImagesWidget::on_m_InputDir_textChanged(const QString & text)
+void ImportImagesWidget::on_m_InputDir_textChanged(const QString& text)
 {
   if (verifyPathExists(m_InputDir->text(), m_InputDir) )
   {
@@ -267,8 +325,8 @@ void ImportImagesWidget::on_m_InputDir_textChanged(const QString & text)
 // -----------------------------------------------------------------------------
 uint32_t ImportImagesWidget::getRefFrameZDir()
 {
-  if (m_StackLowToHigh->isChecked()) return Ebsd::RefFrameZDir::LowtoHigh;
-  if (m_StackHighToLow->isChecked()) return Ebsd::RefFrameZDir::HightoLow;
+  if (m_StackLowToHigh->isChecked()) { return Ebsd::RefFrameZDir::LowtoHigh; }
+  if (m_StackHighToLow->isChecked()) { return Ebsd::RefFrameZDir::HightoLow; }
   return Ebsd::RefFrameZDir::UnknownRefFrameZDirection;
 }
 
@@ -327,7 +385,7 @@ void ImportImagesWidget::on_m_TotalDigits_valueChanged(int value)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ImportImagesWidget::on_m_FileExt_textChanged(const QString &string)
+void ImportImagesWidget::on_m_FileExt_textChanged(const QString& string)
 {
   generateExampleInputFile();
   emit parametersChanged();
@@ -336,7 +394,7 @@ void ImportImagesWidget::on_m_FileExt_textChanged(const QString &string)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ImportImagesWidget::on_m_FileSuffix_textChanged(const QString &string)
+void ImportImagesWidget::on_m_FileSuffix_textChanged(const QString& string)
 {
   generateExampleInputFile();
   emit parametersChanged();
@@ -345,7 +403,7 @@ void ImportImagesWidget::on_m_FileSuffix_textChanged(const QString &string)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ImportImagesWidget::on_m_FilePrefix_textChanged(const QString &string)
+void ImportImagesWidget::on_m_FilePrefix_textChanged(const QString& string)
 {
   generateExampleInputFile();
   emit parametersChanged();
@@ -360,8 +418,8 @@ void ImportImagesWidget::generateExampleInputFile()
 {
 
   QString filename = QString("%1%2%3.%4").arg(m_FilePrefix->text())
-      .arg(m_ZStartIndex->text(), m_TotalDigits->value(), '0')
-      .arg(m_FileSuffix->text()).arg(m_FileExt->text());
+                     .arg(m_ZStartIndex->text(), m_TotalDigits->value(), '0')
+                     .arg(m_FileSuffix->text()).arg(m_FileExt->text());
   m_GeneratedFileNameExample->setText(filename);
 
   int start = m_ZStartIndex->value();
@@ -370,11 +428,11 @@ void ImportImagesWidget::generateExampleInputFile()
 
   // Now generate all the file names the user is asking for and populate the table
   QVector<QString> fileList = FilePathGenerator::GenerateFileList(start, end, hasMissingFiles, m_StackLowToHigh->isChecked(),
-                                                                  m_InputDir->text(),
-                                                                  m_FilePrefix->text(),
-                                                                  m_FileSuffix->text(),
-                                                                  m_FileExt->text(),
-                                                                  m_TotalDigits->value());
+                              m_InputDir->text(),
+                              m_FilePrefix->text(),
+                              m_FileSuffix->text(),
+                              m_FileExt->text(),
+                              m_TotalDigits->value());
   m_FileListView->clear();
   QIcon greenDot = QIcon(QString(":/green-dot.png"));
   QIcon redDot = QIcon(QString(":/red-dot.png"));
@@ -413,7 +471,7 @@ void ImportImagesWidget::findMaxSliceAndPrefix()
 {
   if (m_InputDir->text().length() == 0) { return; }
   QDir dir(m_InputDir->text());
-  #if 0
+#if 0
   m_FileExt->setText("");
   {
     QString ext = ".ang";
@@ -475,8 +533,8 @@ void ImportImagesWidget::findMaxSliceAndPrefix()
       QString fn = fi.baseName();
       QString fns = fn;
       int length =  fn.length();
-      digitEnd = length-1;
-      while(digitEnd >= 0 && fn[digitEnd] >= '0' && fn[digitEnd]<='9')
+      digitEnd = length - 1;
+      while(digitEnd >= 0 && fn[digitEnd] >= '0' && fn[digitEnd] <= '9')
       {
         --digitEnd;
       }
@@ -490,14 +548,15 @@ void ImportImagesWidget::findMaxSliceAndPrefix()
         fPrefix = fn.left(pos);
         pos += rx.matchedLength();
       }
-      while(digitEnd >= 0 && fn[digitEnd] >= '0' && fn[digitEnd]<='9')
+      while(digitEnd >= 0 && fn[digitEnd] >= '0' && fn[digitEnd] <= '9')
       {
         ++digitEnd;
       }
 
       if ( digitEnd - digitStart < minTotalDigits) { minTotalDigits = digitEnd - digitStart; }
       m_TotalDigits->setValue(minTotalDigits);
-      if (list.size() > 0) {
+      if (list.size() > 0)
+      {
         currValue = list.front().toInt(&ok);
         if (false == flag) { minSlice = currValue; flag = true;}
         if (currValue > maxSlice) { maxSlice = currValue; }
@@ -516,7 +575,7 @@ void ImportImagesWidget::findMaxSliceAndPrefix()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ImportImagesWidget::widgetChanged(const QString &text)
+void ImportImagesWidget::widgetChanged(const QString& text)
 {
   emit parametersChanged();
 }
@@ -526,24 +585,28 @@ void ImportImagesWidget::widgetChanged(const QString &text)
 // -----------------------------------------------------------------------------
 void ImportImagesWidget::filterNeedsInputParameters(AbstractFilter* filter)
 {
-  if (NULL == m_Filter)
+  if (NULL == filter)
   {
     QString ss = QObject::tr("Error Setting ImportImageStack Gui values to Filter instance. Filter instance was NULL.").arg(m_FilterParameter->getPropertyName());
     emit errorSettingFilterParameter(ss);
   }
+
+  ImportImageStack* f = qobject_cast<ImportImageStack*>(filter);
+  Q_ASSERT_X(NULL != m_Filter, "ImportImagesWidget can ONLY be used with ImportImageStack filter", __FILE__);
+
   bool ok = false;
-  m_Filter->setZStartIndex(m_ZStartIndex->text().toLongLong(&ok));
-  m_Filter->setZEndIndex(m_ZEndIndex->text().toLongLong(&ok));
-  m_Filter->setResolution(getResolutionValues());
-  m_Filter->setOrigin(getOriginValues());
+  f->setInputPath(m_InputDir->text());
+  f->setResolution(getResolutionValues());
+  f->setOrigin(getOriginValues());
 
-  m_Filter->setInputPath(m_InputDir->text());
-  m_Filter->setFilePrefix(m_FilePrefix->text());
-  m_Filter->setFileSuffix(m_FileSuffix->text());
-  m_Filter->setFileExtension(m_FileExt->text());
-  m_Filter->setPaddingDigits(m_TotalDigits->value());
+  f->setFilePrefix(m_FilePrefix->text());
+  f->setFileSuffix(m_FileSuffix->text());
+  f->setFileExtension(m_FileExt->text());
+  f->setZStartIndex(m_ZStartIndex->text().toLongLong(&ok));
+  f->setZEndIndex(m_ZEndIndex->text().toLongLong(&ok));
+  f->setPaddingDigits(m_TotalDigits->value());
 
-  m_Filter->setRefFrameZDir( getRefFrameZDir() );
+  f->setRefFrameZDir( getRefFrameZDir() );
 }
 
 // -----------------------------------------------------------------------------

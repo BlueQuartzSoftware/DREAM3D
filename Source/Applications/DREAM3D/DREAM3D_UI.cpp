@@ -89,7 +89,7 @@ namespace Detail
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-DREAM3D_UI::DREAM3D_UI(QWidget *parent) :
+DREAM3D_UI::DREAM3D_UI(QWidget* parent) :
   QMainWindow(parent),
   m_WorkerThread(NULL),
   //  m_PluginActionGroup(NULL),
@@ -105,7 +105,7 @@ DREAM3D_UI::DREAM3D_UI(QWidget *parent) :
   m_IssuesBtn(NULL)
 {
   // First thing, set the title of the window
-	setWindowTitle("[*] DREAM.3D Version " + DREAM3DLib::Version::Package());
+  setWindowTitle("[*] DREAM.3D Version " + DREAM3DLib::Version::Package());
 
   m_OpenDialogLastDirectory = QDir::homePath();
 
@@ -150,7 +150,7 @@ DREAM3D_UI::~DREAM3D_UI()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DREAM3D_UI::resizeEvent ( QResizeEvent * event )
+void DREAM3D_UI::resizeEvent ( QResizeEvent* event )
 {
   emit parentResized();
 }
@@ -180,10 +180,10 @@ void DREAM3D_UI::on_actionImportPipeline_triggered()
 // -----------------------------------------------------------------------------
 void DREAM3D_UI::on_actionExportPipeline_triggered()
 {
-  QString proposedFile = m_OpenDialogLastDirectory + QDir::separator() + "Untitled.txt";
+  QString proposedFile = m_OpenDialogLastDirectory + QDir::separator() + "Untitled";
   QString filePath = QFileDialog::getSaveFileName(this, tr("Save Pipeline To File"),
                                                   proposedFile,
-                                                  tr("Pipeline File (*.txt *.ini)") );
+                                                  tr("Pipeline File (*.txt *.ini);;All Files(*.*)") );
   if ( true == filePath.isEmpty() ) { return; }
 
   //If the filePath already exists - delete it so that we get a clean write to the file
@@ -195,7 +195,7 @@ void DREAM3D_UI::on_actionExportPipeline_triggered()
 // -----------------------------------------------------------------------------
 //  Called when the main window is closed.
 // -----------------------------------------------------------------------------
-void DREAM3D_UI::closeEvent(QCloseEvent *event)
+void DREAM3D_UI::closeEvent(QCloseEvent* event)
 {
   //qint32 err = checkDirtyDocument();
   qint32 err = 0;
@@ -295,7 +295,7 @@ void DREAM3D_UI::readVersionSettings()
 
 
 // -----------------------------------------------------------------------------
-//  Read the prefs from the local storage file
+//
 // -----------------------------------------------------------------------------
 void DREAM3D_UI::readLastPipeline()
 {
@@ -306,7 +306,7 @@ void DREAM3D_UI::readLastPipeline()
 #endif
   QString filePath;
   {
-    QSettings prefs(format, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName());
+    QSettings prefs(format, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName() + "_LastPipeline");
 
     filePath = prefs.fileName();
   }
@@ -336,23 +336,27 @@ void DREAM3D_UI::writeSettings()
     writeVersionCheckSettings(prefs);
   }
 
-  // Typically we would use the function in the PipelineViewWidget but it will remove the prefs file and that is NOT
-  // what we want to do here. We want to append in our prefs to the current file, not delete it first.
-  QFileInfo fi(filePath);
-  // pipelineViewWidget->savePipeline(filePath, fi.baseName(), format);
-  // Create a Pipeline Object and fill it with the filters from this View
-  FilterPipeline::Pointer pipeline = pipelineViewWidget->getFilterPipeline();
-  int err = QFilterParametersWriter::WritePipelineToFile(pipeline, fi.absoluteFilePath(), fi.baseName(), format, NULL);
-  if (err < 0)
   {
 
+    QSettings prefs(format, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName() + "_LastPipeline");
+    filePath = prefs.fileName();
+    QFileInfo fi(filePath);
+
+    pipelineViewWidget->savePipeline(filePath, fi.baseName(), format);
+    // Create a Pipeline Object and fill it with the filters from this View
+//    FilterPipeline::Pointer pipeline = pipelineViewWidget->getFilterPipeline();
+//    int err = QFilterParametersWriter::WritePipelineToFile(pipeline, fi.absoluteFilePath(), fi.baseName(), format, NULL);
+//    if (err < 0)
+//    {
+
+//    }
   }
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DREAM3D_UI::writeVersionCheckSettings(QSettings &prefs)
+void DREAM3D_UI::writeVersionCheckSettings(QSettings& prefs)
 {
 
 }
@@ -360,7 +364,7 @@ void DREAM3D_UI::writeVersionCheckSettings(QSettings &prefs)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DREAM3D_UI::writeWindowSettings(QSettings &prefs)
+void DREAM3D_UI::writeWindowSettings(QSettings& prefs)
 {
   prefs.beginGroup("WindowSettings");
   QByteArray geo_data = saveGeometry();
@@ -385,7 +389,7 @@ void DREAM3D_UI::writeWindowSettings(QSettings &prefs)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DREAM3D_UI::writeDockWidgetSettings(QSettings &prefs, QDockWidget *dw)
+void DREAM3D_UI::writeDockWidgetSettings(QSettings& prefs, QDockWidget* dw)
 {
   prefs.setValue(dw->objectName(), dw->isHidden() );
 }
@@ -773,7 +777,7 @@ void DREAM3D_UI::pipelineFileLoaded(QString file, QSettings::Format format, bool
   QFileInfo fi(file);
   pipelineTitle->setText(fi.fileName());
   setWindowFilePath(file);
- // setWindowTitle(QString("[*] ") + fi.fileName());
+  // setWindowTitle(QString("[*] ") + fi.fileName());
   setWindowModified(false);
 }
 
@@ -808,7 +812,7 @@ void DREAM3D_UI::on_pipelineViewWidget_pipelineFileDropped(QString& file)
   QFileInfo fi(file);
   pipelineTitle->setText(fi.fileName());
   setWindowFilePath(file);
-//  setWindowTitle(QString("[*] ") + fi.fileName());
+  //  setWindowTitle(QString("[*] ") + fi.fileName());
   setWindowModified(false);
 }
 
@@ -919,7 +923,7 @@ qint32 DREAM3D_UI::checkDirtyDocument()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DREAM3D_UI::updateRecentFileList(const QString &file)
+void DREAM3D_UI::updateRecentFileList(const QString& file)
 {
   // qDebug() << "DREAM3D_UI::updateRecentFileList" << "\n";
 
@@ -947,7 +951,7 @@ void DREAM3D_UI::openRecentFile()
 {
   //qDebug() << "QRecentFileList::openRecentFile()" << "\n";
 
-  QAction *action = qobject_cast<QAction *>(sender());
+  QAction* action = qobject_cast<QAction*>(sender());
   if (action)
   {
     //qDebug() << "Opening Recent file: " << action->data().toString() << "\n";
@@ -967,12 +971,12 @@ void DREAM3D_UI::on_startPipelineBtn_clicked()
   {
     qDebug() << "canceling from GUI...." << "\n";
     emit pipelineCanceled();
-//    m_WorkerThread->wait(); // Wait until the thread is complete
-//    if (m_WorkerThread->isFinished() == true)
-//    {
-//      delete m_WorkerThread;
-//      m_WorkerThread = NULL;
-//    }
+    //    m_WorkerThread->wait(); // Wait until the thread is complete
+    //    if (m_WorkerThread->isFinished() == true)
+    //    {
+    //      delete m_WorkerThread;
+    //      m_WorkerThread = NULL;
+    //    }
     return;
   }
 
@@ -1047,7 +1051,7 @@ void DREAM3D_UI::on_startPipelineBtn_clicked()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DREAM3D_UI::populateMenus(QObject *plugin)
+void DREAM3D_UI::populateMenus(QObject* plugin)
 {
 
 }
@@ -1056,7 +1060,7 @@ void DREAM3D_UI::populateMenus(QObject *plugin)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DREAM3D_UI::processPipelineMessage(const PipelineMessage &msg)
+void DREAM3D_UI::processPipelineMessage(const PipelineMessage& msg)
 {
   switch(msg.getType())
   {
@@ -1272,7 +1276,7 @@ void DREAM3D_UI::on_actionShow_Issues_triggered(bool b)
 // -----------------------------------------------------------------------------
 void DREAM3D_UI::updateAndSyncDockWidget(QAction* action, QDockWidget* dock, QToolButton* btn, bool b)
 {
-  if(m_FilterListBtn == NULL || m_FilterLibraryBtn == NULL || m_FavoritesBtn == NULL || m_PrebuiltBtn == NULL || m_IssuesBtn == NULL) return;
+  if(m_FilterListBtn == NULL || m_FilterLibraryBtn == NULL || m_FavoritesBtn == NULL || m_PrebuiltBtn == NULL || m_IssuesBtn == NULL) { return; }
 
   action->blockSignals(true);
   dock->blockSignals(true);
@@ -1281,7 +1285,7 @@ void DREAM3D_UI::updateAndSyncDockWidget(QAction* action, QDockWidget* dock, QTo
   action->setChecked(b);
   btn->setChecked(b);
   dock->setVisible(b);
-
+#if 0
   if(b == false)
   {
     QString text = action->text().replace("Show", "Hide");
@@ -1292,7 +1296,7 @@ void DREAM3D_UI::updateAndSyncDockWidget(QAction* action, QDockWidget* dock, QTo
     QString text = action->text().replace("Hide", "Show");
     action->setText(text);
   }
-
+#endif
   action->blockSignals(false);
   dock->blockSignals(false);
   btn->blockSignals(false);

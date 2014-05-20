@@ -57,7 +57,7 @@
 */
 class DREAM3DWidgetsLib_EXPORT BooleanWidget : public QWidget, private Ui::BooleanWidget
 {
-  Q_OBJECT
+    Q_OBJECT
 
   public:
     /**

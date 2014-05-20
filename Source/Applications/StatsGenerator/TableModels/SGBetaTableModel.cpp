@@ -13,8 +13,8 @@
  * list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
  *
- * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force, 
- * BlueQuartz Software nor the names of its contributors may be used to endorse 
+ * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
+ * BlueQuartz Software nor the names of its contributors may be used to endorse
  * or promote products derived from this software without specific prior written
  * permission.
  *
@@ -62,7 +62,7 @@ SGBetaTableModel::~SGBetaTableModel()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-Qt::ItemFlags SGBetaTableModel::flags(const QModelIndex &index) const
+Qt::ItemFlags SGBetaTableModel::flags(const QModelIndex& index) const
 {
   //  qDebug() << "SGBetaTableModel::flags" << "\n";
   if (!index.isValid())
@@ -98,7 +98,7 @@ Qt::ItemFlags SGBetaTableModel::flags(const QModelIndex &index) const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QVariant SGBetaTableModel::data(const QModelIndex &index, qint32 role) const
+QVariant SGBetaTableModel::data(const QModelIndex& index, qint32 role) const
 {
 
   if (!index.isValid())
@@ -116,21 +116,21 @@ QVariant SGBetaTableModel::data(const QModelIndex &index, qint32 role) const
       {
         comboBox.currentText = QString("101");
         const QString header = headerData(BinNumber, Qt::Horizontal, Qt::DisplayRole).toString();
-        if (header.length() > comboBox.currentText.length()) comboBox.currentText = header;
+        if (header.length() > comboBox.currentText.length()) { comboBox.currentText = header; }
         break;
       }
       case Alpha:
       {
         comboBox.currentText = QString("10001");
         const QString header = headerData(BinNumber, Qt::Horizontal, Qt::DisplayRole).toString();
-        if (header.length() > comboBox.currentText.length()) comboBox.currentText = header;
+        if (header.length() > comboBox.currentText.length()) { comboBox.currentText = header; }
         break;
       }
       case Beta:
       {
         comboBox.currentText = QString("10001");
         const QString header = headerData(BinNumber, Qt::Horizontal, Qt::DisplayRole).toString();
-        if (header.length() > comboBox.currentText.length()) comboBox.currentText = header;
+        if (header.length() > comboBox.currentText.length()) { comboBox.currentText = header; }
         break;
       }
       case LineColor:
@@ -211,7 +211,7 @@ QVariant SGBetaTableModel::headerData(int section, Qt::Orientation orientation, 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int SGBetaTableModel::rowCount(const QModelIndex &index) const
+int SGBetaTableModel::rowCount(const QModelIndex& index) const
 {
   return index.isValid() ? 0 : m_RowCount;
 }
@@ -219,7 +219,7 @@ int SGBetaTableModel::rowCount(const QModelIndex &index) const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int SGBetaTableModel::columnCount(const QModelIndex &index) const
+int SGBetaTableModel::columnCount(const QModelIndex& index) const
 {
   return index.isValid() ? 0 : m_ColumnCount;
 }
@@ -227,7 +227,7 @@ int SGBetaTableModel::columnCount(const QModelIndex &index) const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-bool SGBetaTableModel::setData(const QModelIndex & index, const QVariant & value, int role)
+bool SGBetaTableModel::setData(const QModelIndex& index, const QVariant& value, int role)
 {
   // qDebug() << "SGBetaTableModel::setData " << value.toString() << "\n";
   if (!index.isValid() || role != Qt::EditRole || index.row() < 0 || index.row() >= m_BinNumbers.count() || index.column() < 0 || index.column()
@@ -320,9 +320,11 @@ QVector<float > SGBetaTableModel::getData(int col)
   switch(col)
   {
     case Alpha:
-      return m_Alpha;break;
+      return m_Alpha;
+      break;
     case Beta:
-      return m_Beta;break;
+      return m_Beta;
+      break;
     default:
       Q_ASSERT(false);
   }
@@ -337,9 +339,11 @@ float SGBetaTableModel::getDataValue(int col, int row)
   switch(col)
   {
     case Alpha:
-      return m_Alpha[row];break;
+      return m_Alpha[row];
+      break;
     case Beta:
-      return m_Beta[row];break;
+      return m_Beta[row];
+      break;
     default:
       Q_ASSERT(false);
   }
@@ -349,7 +353,7 @@ float SGBetaTableModel::getDataValue(int col, int row)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SGBetaTableModel::setColumnData(int col, QVector<float> &data)
+void SGBetaTableModel::setColumnData(int col, QVector<float>& data)
 {
   switch(col)
   {
@@ -357,8 +361,8 @@ void SGBetaTableModel::setColumnData(int col, QVector<float> &data)
       m_Alpha = data;
       break;
     case Beta:
-     m_Beta = data;
-     break;
+      m_Beta = data;
+      break;
     default:
       Q_ASSERT(false);
   }
@@ -379,7 +383,7 @@ QAbstractItemDelegate* SGBetaTableModel::getItemDelegate()
 void SGBetaTableModel::setTableData(QVector<float> bins, QVector<QVector<float> > data, QVector<QString> colors)
 {
   qint32 count = bins.count();
-  // Now make sure we _really_ have the correct count because the number of 
+  // Now make sure we _really_ have the correct count because the number of
   // bins may NOT really reflect what is in the 'data' vectors. This discrepency
   // can happen if not all of the data was written to the stats file
   for(int i = 0; i < data.count(); ++i)
@@ -390,7 +394,7 @@ void SGBetaTableModel::setTableData(QVector<float> bins, QVector<QVector<float> 
   // Remove all the current rows in the table model
   removeRows(0, rowCount());
 
-  int offset = row + count -1; 
+  int offset = row + count - 1;
   if (offset < 0) { offset = 0;}
   // Now mass insert the data to the table then emit that the data has changed
   beginInsertRows(QModelIndex(), row, offset);

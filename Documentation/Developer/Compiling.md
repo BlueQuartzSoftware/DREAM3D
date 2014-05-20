@@ -9,9 +9,11 @@ A Compiler suite for your Operating System (Visual Studio, Xcode, GCC). The foll
 |  ------	| ------	|  
 | Visual Studio 2008 Standard SP1 | 32 and 64 Bit builds |  
 | Visual Studio 2010 Pro SP1 | 32 and 64 Bit builds |  
-| Visual Studio 2012 Express SP1 | 32 and 64 Bit builds |  
+| Visual Studio 2012 Pro & Express SP1 | 32 and 64 Bit builds |  
+| Visual Studio 2013 Pro & Express SP1 | 64 Bit builds |  
 | Xcode 3.2.6 (OS X Version 10.6.8) | 64 bit Intel Only |  
 | Xcode 4.6.2 (OS X Version 10.7 & 10.8) | 64 bit Intel Only |  
+| Xcode 5.1.1 (OS X Version 10.8 & 10.9) | 64 bit Intel Only |  
 | GCC 4.2.2 (CentOS 6.4) | 64 Bit Intel Only |  
 | GCC 4.7.x (Ubuntu 12.04) | 64 Bit Intel Only |  
 
@@ -28,11 +30,11 @@ Due to incompatibilities of HDF5 and these environments we can not support compi
 |  ------	| ------	| ------	|  
 | Git | 1.7.x | [http://www.git-scm.com](http://www.git-scm.com) |  
 | CMake | 2.8.12 | [http://www.cmake.org/cmake/resources/software.html](http://www.cmake.org/cmake/resources/software.html) |
-| Doxygen | 1.8.3 | [http://www.stack.nl/~dimitri/doxygen/download.html](http://www.stack.nl/~dimitri/doxygen/download.html) |  
-| HDF5 | 1.8.12 | [http://www.hdfgroup.org/HDF5/release/obtain5.html](http://www.hdfgroup.org/HDF5/release/obtain5.html) |  
-| Boost | 1.55.0 | [http://www.boost.org](http://www.boost.org) |  
+| Doxygen | 1.8.7 | [http://www.stack.nl/~dimitri/doxygen/download.html](http://www.stack.nl/~dimitri/doxygen/download.html) |  
+| HDF5 | 1.8.13 | [http://www.hdfgroup.org/HDF5/release/obtain5.html](http://www.hdfgroup.org/HDF5/release/obtain5.html) |  
+| Boost | 1.56.0 | [http://www.boost.org](http://www.boost.org) |  
 | Eigen | 3.1.2 | [Eigen Home Page](http://eigen.tuxfamily.org/index.php?title=Main_Page) |  
-| Intel Threading Building Blocks | tbb41_20121003oss | [http://threadingbuildingblocks.org/download](http://threadingbuildingblocks.org/download) |  
+| Intel Threading Building Blocks | tbb42_20140122oss | [http://threadingbuildingblocks.org/download](http://threadingbuildingblocks.org/download) |  
 | Qt | 4.8.5 (Qt 5.x will NOT work) | [http://www.qt-project.org](http://www.qt-project.org) |  
 | Qwt | 5.2.2 | git clone git://scm.bluequartz.net/support-libraries/qwt.git qwt |  
 

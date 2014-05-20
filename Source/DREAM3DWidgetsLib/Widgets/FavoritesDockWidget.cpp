@@ -41,6 +41,7 @@
 #include <QtCore/QFile>
 #include <QtCore/QString>
 #include <QtCore/QUrl>
+#include <QtCore/QDebug>
 
 #include <QtGui/QMessageBox>
 #include <QtGui/QDesktopServices>
@@ -136,7 +137,9 @@ void FavoritesDockWidget::readPipelines()
   FilterLibraryTreeWidget::ItemType itemType = FilterLibraryTreeWidget::Leaf_Item_Type;
   QString iconFileName(":/text.png");
   bool allowEditing = true;
-  QString fileExtension("*.ini");
+  QStringList fileExtension;
+  fileExtension.append("*.txt");
+  fileExtension.append("*.ini");
 
   // Need to add the path to the favorites directory to the root item since we may use this later on.
   filterLibraryTree->invisibleRootItem()->setData(0, Qt::UserRole, QVariant(pipelinesDir.absolutePath()));
@@ -155,7 +158,7 @@ void FavoritesDockWidget::readPipelines()
 //
 // -----------------------------------------------------------------------------
 void FavoritesDockWidget::addPipelinesRecursively(QDir currentDir, QTreeWidgetItem* currentDirItem, QString iconFileName,
-                                                  bool allowEditing, QString fileExtension, FilterLibraryTreeWidget::ItemType itemType)
+                                                  bool allowEditing, QStringList filters, FilterLibraryTreeWidget::ItemType itemType)
 {
 
 
@@ -170,19 +173,17 @@ void FavoritesDockWidget::addPipelinesRecursively(QDir currentDir, QTreeWidgetIt
       // At this point we have the first level of directories and we want to do 2 things:
       // 1.Create an entry in the tree widget with this name
       // 2.drop into the directory and look for all the .txt files and add entries for those items.
-      //qDebug() << fi.absoluteFilePath() << "\n";
+      //  qDebug() << fi.absoluteFilePath() << "\n";
       // Add a tree widget item for this  Group
-      //qDebug() << fi.absoluteFilePath();
+      //  qDebug() << fi.absoluteFilePath();
       nextDirItem = new QTreeWidgetItem(currentDirItem, FilterLibraryTreeWidget::Node_Item_Type);
       nextDirItem->setText(0, fi.baseName());
       nextDirItem->setIcon(0, QIcon(":/folder_blue.png"));
       nextDirItem->setData(0, Qt::UserRole, QVariant(fi.absoluteFilePath() ) );
-      addPipelinesRecursively( QDir( fi.absoluteFilePath() ), nextDirItem, iconFileName, allowEditing, fileExtension, itemType );   // Recursive call
+      addPipelinesRecursively( QDir( fi.absoluteFilePath() ), nextDirItem, iconFileName, allowEditing, filters, itemType );   // Recursive call
     }
   }
 
-  QStringList filters;
-  filters << fileExtension;
   QFileInfoList itemList = currentDir.entryInfoList(filters);
   foreach(QFileInfo itemInfo, itemList)
   {
@@ -439,7 +440,8 @@ void FavoritesDockWidget::actionAddFavoriteFolder_triggered()
         // Display error message
         int reply = QMessageBox::critical(this, tr("Rename Favorite"), tr(displayText.toLatin1().data()),
                                           QMessageBox::Ok | QMessageBox::Cancel, QMessageBox::Ok);
-        if(reply == QMessageBox::Cancel) {
+        if(reply == QMessageBox::Cancel)
+        {
           done = true;
           cancel = true;
         }
@@ -460,7 +462,6 @@ void FavoritesDockWidget::actionAddFavoriteFolder_triggered()
   if(fi.isFile() == true)
   {
     currentDirItem = currentDirItem->parent(); // We need to step up one level to get the parent item which should be a folder
-    path = currentDirItem->data(0, Qt::UserRole).toString(); // Update the path string
   }
 
   QString folderPath = path + QDir::separator() + favoriteTitle + QDir::separator();
@@ -512,7 +513,8 @@ void FavoritesDockWidget::actionAddFavorite_triggered()
         // Display error message
         int reply = QMessageBox::critical(this, tr("Rename Favorite"), tr(displayText.toLatin1().data()),
                                           QMessageBox::Ok | QMessageBox::Cancel, QMessageBox::Ok);
-        if(reply == QMessageBox::Cancel) {
+        if(reply == QMessageBox::Cancel)
+        {
           done = true;
           cancel = true;
         }
@@ -529,7 +531,7 @@ void FavoritesDockWidget::actionAddFavorite_triggered()
   filterLibraryTree->blockSignals(true);
   QTreeWidgetItem* selection = filterLibraryTree->currentItem();
 
-    // Sanity check to make sure we actually have selected a folder to add a favorite into the tree. If the user has
+  // Sanity check to make sure we actually have selected a folder to add a favorite into the tree. If the user has
   // selected an actual favorite item, get it's parent which MUST be a folder
   if(NULL != selection && selection->type() == FilterLibraryTreeWidget::Leaf_Item_Type)
   {

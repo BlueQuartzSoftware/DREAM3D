@@ -97,7 +97,7 @@ class DREAM3DLib_EXPORT SurfaceDataContainer : public EdgeDataContainer
     virtual DataContainer::Pointer deepCopy();
     virtual int writeMeshToHDF5(hid_t dcGid, bool writeXdmf);
     virtual int writeFacesToHDF5(hid_t dcGid);
-    virtual int writeXdmf(QTextStream &out, QString hdfFileName);
+    virtual int writeXdmf(QTextStream& out, QString hdfFileName);
     virtual int readFaces(hid_t dcGid, bool preflight);
     virtual int readMeshDataFromHDF5(hid_t dcGid, bool preflight);
 

@@ -252,9 +252,9 @@ bool AttributeMatrix::removeInactiveObjects(QVector<bool> activeObjects, Int32Ar
   bool acceptableMatrix = false;
   //Only valid for feature or ensemble type matrices
   if(m_Type == DREAM3D::AttributeMatrixType::VertexFeature || m_Type == DREAM3D::AttributeMatrixType::VertexEnsemble ||
-     m_Type == DREAM3D::AttributeMatrixType::EdgeFeature || m_Type == DREAM3D::AttributeMatrixType::EdgeEnsemble ||
-     m_Type == DREAM3D::AttributeMatrixType::FaceFeature || m_Type == DREAM3D::AttributeMatrixType::FaceEnsemble ||
-     m_Type == DREAM3D::AttributeMatrixType::CellFeature || m_Type == DREAM3D::AttributeMatrixType::CellEnsemble) acceptableMatrix = true;
+      m_Type == DREAM3D::AttributeMatrixType::EdgeFeature || m_Type == DREAM3D::AttributeMatrixType::EdgeEnsemble ||
+      m_Type == DREAM3D::AttributeMatrixType::FaceFeature || m_Type == DREAM3D::AttributeMatrixType::FaceEnsemble ||
+      m_Type == DREAM3D::AttributeMatrixType::CellFeature || m_Type == DREAM3D::AttributeMatrixType::CellEnsemble) { acceptableMatrix = true; }
   size_t totalTuples = getNumTuples();
   if(activeObjects.size() == totalTuples && acceptableMatrix == true)
   {
@@ -412,12 +412,12 @@ int AttributeMatrix::addAttributeArrayFromHDF5Path(hid_t gid, QString name, bool
   if(classType.startsWith("DataArray") == true)
   {
     dPtr = H5DataArrayReader::readIDataArray(gid, name, preflight);
-    if(preflight == true) dPtr->resize(getNumTuples());
+    if(preflight == true) { dPtr->resize(getNumTuples()); }
   }
   else if(classType.compare("StringDataArray") == 0)
   {
     dPtr = H5DataArrayReader::readStringDataArray(gid, name, preflight);
-    if(preflight == true) dPtr->resize(getNumTuples());
+    if(preflight == true) { dPtr->resize(getNumTuples()); }
   }
   else if(classType.compare("vector") == 0)
   {
@@ -426,7 +426,7 @@ int AttributeMatrix::addAttributeArrayFromHDF5Path(hid_t gid, QString name, bool
   else if(classType.compare("NeighborList<T>") == 0)
   {
     dPtr = H5DataArrayReader::readNeighborListData(gid, name, preflight);
-    if(preflight == true) dPtr->resize(getNumTuples());
+    if(preflight == true) { dPtr->resize(getNumTuples()); }
   }
   else if ( name.compare(DREAM3D::EnsembleData::Statistics) == 0)
   {
@@ -434,7 +434,7 @@ int AttributeMatrix::addAttributeArrayFromHDF5Path(hid_t gid, QString name, bool
     statsData->setName(DREAM3D::EnsembleData::Statistics);
     statsData->readH5Data(gid);
     dPtr = statsData;
-    if(preflight == true) dPtr->resize(getNumTuples());
+    if(preflight == true) { dPtr->resize(getNumTuples()); }
   }
 
   if (NULL != dPtr.get())
@@ -457,7 +457,7 @@ int AttributeMatrix::readAttributeArraysFromHDF5(hid_t amGid, bool preflight, At
   for (QMap<QString, DataArrayProxy>::iterator iter = dasToRead.begin(); iter != dasToRead.end(); ++iter)
   {
     //qDebug() << "Reading the " << iter->name << " Array from the " << m_Name << " Attribute Matrix \n";
-    if(iter->flag == DREAM3D::Unchecked) continue;
+    if(iter->flag == DREAM3D::Unchecked) { continue; }
     QH5Lite::readStringAttribute(amGid, iter->name, DREAM3D::HDF5::ObjectType, classType);
     //   qDebug() << groupName << " Array: " << *iter << " with C++ ClassType of " << classType << "\n";
     IDataArray::Pointer dPtr = IDataArray::NullPointer();
@@ -465,12 +465,12 @@ int AttributeMatrix::readAttributeArraysFromHDF5(hid_t amGid, bool preflight, At
     if(classType.startsWith("DataArray") == true)
     {
       dPtr = H5DataArrayReader::readIDataArray(amGid, iter->name, preflight);
-      if(preflight == true) dPtr->resize(getNumTuples());
+      if(preflight == true) { dPtr->resize(getNumTuples()); }
     }
     else if(classType.compare("StringDataArray") == 0)
     {
       dPtr = H5DataArrayReader::readStringDataArray(amGid, iter->name, preflight);
-      if(preflight == true) dPtr->resize(getNumTuples());
+      if(preflight == true) { dPtr->resize(getNumTuples()); }
     }
     else if(classType.compare("vector") == 0)
     {
@@ -479,7 +479,7 @@ int AttributeMatrix::readAttributeArraysFromHDF5(hid_t amGid, bool preflight, At
     else if(classType.compare("NeighborList<T>") == 0)
     {
       dPtr = H5DataArrayReader::readNeighborListData(amGid, iter->name, preflight);
-      if(preflight == true) dPtr->resize(getNumTuples());
+      if(preflight == true) { dPtr->resize(getNumTuples()); }
     }
     else if ( (iter->name).compare(DREAM3D::EnsembleData::Statistics) == 0)
     {
@@ -487,7 +487,7 @@ int AttributeMatrix::readAttributeArraysFromHDF5(hid_t amGid, bool preflight, At
       statsData->setName(DREAM3D::EnsembleData::Statistics);
       statsData->readH5Data(amGid);
       dPtr = statsData;
-      if(preflight == true) dPtr->resize(getNumTuples());
+      if(preflight == true) { dPtr->resize(getNumTuples()); }
     }
 
     if (NULL != dPtr.get())
@@ -538,7 +538,7 @@ QString AttributeMatrix::writeXdmfAttributeDataHelper(int numComp, const QString
   QString dimStr = tupleStr + QString::number(array->getNumberOfComponents());
   QString dimStrHalf = tupleStr + QString::number(array->getNumberOfComponents() / 2);
 
-  if((numComp % 2) == 1 || numComp == 6)
+  if(numComp == 1 || numComp == 3 || numComp == 6 || numComp == 9)
   {
     out << "    <Attribute Name=\"" << array->getName() << "\" ";
     out << "AttributeType=\"" << attrType << "\" ";
@@ -550,7 +550,7 @@ QString AttributeMatrix::writeXdmfAttributeDataHelper(int numComp, const QString
     out << "      </DataItem>" << "\n";
     out << "    </Attribute>" << "\n" << "\n";
   }
-  else
+  else if(numComp == 2)
   {
     //First Slab
     out << "    <Attribute Name=\"" << array->getName() << " (Feature 0)\" ";
@@ -611,8 +611,11 @@ QString AttributeMatrix::writeXdmfAttributeData(IDataArray::Pointer array, const
     return xdmfText;
   }
   int numComp = array->getNumberOfComponents();
-  QString attrType = "Vector";
+  QString attrType = "";
   if(numComp == 1) { attrType = "Scalar"; }
+  //we are assuming a component of 2 is for scalars on either side of a single object (ie faceIds)
+  if(numComp == 2) { attrType = "Scalar"; }
+  if(numComp == 3) { attrType = "Vector"; }
   if(numComp == 6) { attrType = "Tensor6"; }
   if(numComp == 9) { attrType = "Tensor"; }
 

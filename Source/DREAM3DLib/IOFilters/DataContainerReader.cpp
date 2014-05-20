@@ -72,14 +72,14 @@ DataContainerReader::~DataContainerReader()
 void DataContainerReader::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(FilterParameter::New("Input File", "InputFile", FilterParameterWidgetType::InputFileWidget,"QString", false, "", "*.dream3d"));
-  parameters.push_back(FilterParameter::New("Overwrite Existing DataContainers", "OverwriteExistingDataContainers", FilterParameterWidgetType::BooleanWidget,"bool", false));
+  parameters.push_back(FilterParameter::New("Input File", "InputFile", FilterParameterWidgetType::InputFileWidget, getInputFile(), false, "", "*.dream3d"));
+  parameters.push_back(FilterParameter::New("Overwrite Existing DataContainers", "OverwriteExistingDataContainers", FilterParameterWidgetType::BooleanWidget, getOverwriteExistingDataContainers(), false));
   {
     DataContainerArrayProxyFilterParameter::Pointer parameter = DataContainerArrayProxyFilterParameter::New();
     parameter->setHumanLabel("Selected Arrays");
     parameter->setPropertyName("DataContainerArrayProxy");
     parameter->setWidgetType(FilterParameterWidgetType::DataContainerArrayProxyWidget);
-    parameter->setValueType("DataContainerArrayProxy");
+    ////parameter->setValueType("DataContainerArrayProxy");
     parameters.push_back(parameter);
   }
   setFilterParameters(parameters);
@@ -198,7 +198,7 @@ void DataContainerReader::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DataContainerReader::readData(bool preflight, DataContainerArrayProxy &proxy)
+void DataContainerReader::readData(bool preflight, DataContainerArrayProxy& proxy)
 {
   setErrorCondition(0);
   QString ss;
@@ -273,7 +273,8 @@ void DataContainerReader::readData(bool preflight, DataContainerArrayProxy &prox
 DataContainerArrayProxy DataContainerReader::readDataContainerArrayStructure()
 {
   DataContainerArrayProxy proxy(false);
-  if (getInputFile().isEmpty() == true) {
+  if (getInputFile().isEmpty() == true)
+  {
     QString ss = QObject::tr("DREAM3D File Path is empty.");
     setErrorCondition(-70);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
@@ -281,7 +282,8 @@ DataContainerArrayProxy DataContainerReader::readDataContainerArrayStructure()
   }
   herr_t err = 0;
   hid_t fileId = QH5Utilities::openFile(getInputFile(), true);
-  if(fileId < 0) {
+  if(fileId < 0)
+  {
     QString ss = QObject::tr("Error opening DREAM3D file location at %1").arg(getInputFile());
     setErrorCondition(-71);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
@@ -292,7 +294,8 @@ DataContainerArrayProxy DataContainerReader::readDataContainerArrayStructure()
   //Check the DREAM3D File Version to make sure we are reading the proper version
   QString d3dVersion;
   err = QH5Lite::readStringAttribute(fileId, "/", DREAM3D::HDF5::DREAM3DVersion, d3dVersion);
-  if (err < 0) {
+  if (err < 0)
+  {
     QString ss = QObject::tr("HDF5 Attribute '%1' was not found on the HDF5 root node and this is required.").arg(DREAM3D::HDF5::DREAM3DVersion);
     setErrorCondition(-72);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
@@ -304,7 +307,8 @@ DataContainerArrayProxy DataContainerReader::readDataContainerArrayStructure()
 
   QString fileVersion;
   err = QH5Lite::readStringAttribute(fileId, "/", DREAM3D::HDF5::FileVersionName, fileVersion);
-  if (err < 0) {
+  if (err < 0)
+  {
     //std::cout << "Attribute '" << DREAM3D::HDF5::FileVersionName.toStdString() << " was not found" << std::endl;
     QString ss = QObject::tr("HDF5 Attribute '%1' was not found on the HDF5 root node and this is required.").arg(DREAM3D::HDF5::FileVersionName);
     setErrorCondition(-73);
@@ -316,7 +320,8 @@ DataContainerArrayProxy DataContainerReader::readDataContainerArrayStructure()
   //  }
 
   hid_t dcArrayGroupId = H5Gopen(fileId, DREAM3D::StringConstants::DataContainerGroupName.toAscii().constData(), H5P_DEFAULT);
-  if (dcArrayGroupId < 0) {
+  if (dcArrayGroupId < 0)
+  {
     QString ss = QObject::tr("Error opening HDF5 Group '%1' ").arg(DREAM3D::StringConstants::DataContainerGroupName);
     setErrorCondition(-74);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
@@ -410,6 +415,11 @@ AbstractFilter::Pointer DataContainerReader::newFilterInstance(bool copyFilterPa
   if(true == copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
+#if 0
+    filter->setInputFile(getInputFile());
+    filter->setOverwriteExistingDataContainers(getOverwriteExistingDataContainers());
+    filter->setDataContainerArrayProxy(getDataContainerArrayProxy());
+#endif
   }
   return filter;
 }

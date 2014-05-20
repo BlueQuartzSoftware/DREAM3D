@@ -68,7 +68,7 @@ class DREAM3DWidgetsLib_EXPORT IssuesDockWidget : public QDockWidget, public IOb
     void on_errorTableWidget_itemClicked( QTableWidgetItem* item );
   signals:
 
-protected:
+  protected:
     void setupGui();
 
 

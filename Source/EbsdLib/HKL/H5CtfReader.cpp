@@ -234,7 +234,7 @@ int H5CtfReader::readHeader(hid_t parId)
         deallocateArrayData(_##name); /*deallocate the array*/\
         setErrorCode(-90020);\
         ss << "Error reading dataset '" << #name << "' from the HDF5 file. This data set is required to be in the file because either "\
-        "the program is set to read ALL the Data arrays or the program was instructed to read this array.";\
+           "the program is set to read ALL the Data arrays or the program was instructed to read this array.";\
         setErrorMessage(ss.string());\
         err = H5Gclose(gid);\
         return -90020;\

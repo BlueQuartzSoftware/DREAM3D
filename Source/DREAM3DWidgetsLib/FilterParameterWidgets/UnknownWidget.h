@@ -57,23 +57,23 @@
 */
 class DREAM3DWidgetsLib_EXPORT UnknownWidget : public QWidget, private Ui::UnknownWidget
 {
-  Q_OBJECT
+    Q_OBJECT
 
-public:
-  /**
-  * @brief Constructor
-  * @param parameter The FilterParameter object that this widget represents
-  * @param filter The instance of the filter that this parameter is a part of
-  * @param parent The parent QWidget for this Widget
-  */
-  UnknownWidget(FilterParameter* parameter, AbstractFilter* filter = NULL, QWidget* parent = NULL);
+  public:
+    /**
+    * @brief Constructor
+    * @param parameter The FilterParameter object that this widget represents
+    * @param filter The instance of the filter that this parameter is a part of
+    * @param parent The parent QWidget for this Widget
+    */
+    UnknownWidget(FilterParameter* parameter, AbstractFilter* filter = NULL, QWidget* parent = NULL);
 
-  virtual ~UnknownWidget();
+    virtual ~UnknownWidget();
 
-  /**
-  * @brief This method does additional GUI widget connections
-  */
-  void setupGui();
+    /**
+    * @brief This method does additional GUI widget connections
+    */
+    void setupGui();
 
   public slots:
     void widgetChanged(const QString& msg);
@@ -85,12 +85,12 @@ public:
     void errorSettingFilterParameter(const QString& msg);
     void parametersChanged();
 
-private:
-  AbstractFilter*   m_Filter;
-  FilterParameter*  m_FilterParameter;
+  private:
+    AbstractFilter*   m_Filter;
+    FilterParameter*  m_FilterParameter;
 
-  UnknownWidget(const UnknownWidget&); // Copy Constructor Not Implemented
-  void operator=(const UnknownWidget&); // Operator '=' Not Implemented
+    UnknownWidget(const UnknownWidget&); // Copy Constructor Not Implemented
+    void operator=(const UnknownWidget&); // Operator '=' Not Implemented
 
 };
 

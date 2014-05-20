@@ -60,10 +60,10 @@ class QGraphicsPixmapItem;
  */
 class QEbsdReferenceFrameDialog : public QDialog, private Ui::QEbsdReferenceFrameDialog
 {
-  Q_OBJECT
+    Q_OBJECT
 
   public:
-    QEbsdReferenceFrameDialog(QString filename, QWidget *parent = 0);
+    QEbsdReferenceFrameDialog(QString filename, QWidget* parent = 0);
     virtual ~QEbsdReferenceFrameDialog();
 
     void setEbsdFileName(QString filename);
@@ -81,8 +81,8 @@ class QEbsdReferenceFrameDialog : public QDialog, private Ui::QEbsdReferenceFram
     bool getHKLchecked();
     bool getHEDMchecked();
     bool getNoTranschecked();
-    void getSampleTranformation(AxisAngleInput_t &input);
-    void getEulerTranformation(AxisAngleInput_t &input);
+    void getSampleTranformation(AxisAngleInput_t& input);
+    void getEulerTranformation(AxisAngleInput_t& input);
 
   protected slots:
     void originChanged(bool checked);

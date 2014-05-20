@@ -57,7 +57,7 @@
 */
 class DREAM3DWidgetsLib_EXPORT IntVec3Widget : public QWidget, private Ui::IntVec3Widget
 {
-  Q_OBJECT
+    Q_OBJECT
 
   public:
     /**

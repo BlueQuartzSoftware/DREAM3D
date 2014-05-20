@@ -72,13 +72,13 @@ void MultiThresholdObjects::setupFilterParameters()
     parameter->setHumanLabel("Select Arrays to Threshold");
     parameter->setPropertyName("SelectedThresholds");
     parameter->setWidgetType(FilterParameterWidgetType::ComparisonSelectionWidget);
-    parameter->setValueType("ComparisonInputs");
+    ////parameter->setValueType("ComparisonInputs");
     parameter->setShowOperators(true);
     parameters.push_back(parameter);
   }
 
-  parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "QString", true));
-  parameters.push_back(FilterParameter::New("Output", "DestinationArrayName", FilterParameterWidgetType::StringWidget, "QString", true, ""));
+  parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
+  parameters.push_back(FilterParameter::New("Output", "DestinationArrayName", FilterParameterWidgetType::StringWidget, getDestinationArrayName(), true, ""));
   setFilterParameters(parameters);
 }
 
@@ -195,7 +195,7 @@ void MultiThresholdObjects::execute()
   QString amName = comp_0.attributeMatrixName;
 
   DataContainerArray::Pointer dca = getDataContainerArray();
-  VolumeDataContainer* m =dca->getDataContainerAs<VolumeDataContainer>(dcName);
+  VolumeDataContainer* m = dca->getDataContainerAs<VolumeDataContainer>(dcName);
 
   // Prime our output array with the result of the first comparison
   {

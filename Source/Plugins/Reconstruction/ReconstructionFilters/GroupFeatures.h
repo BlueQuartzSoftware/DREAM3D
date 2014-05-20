@@ -68,7 +68,7 @@ class GroupFeatures : public AbstractFilter
     DREAM3D_TYPE_MACRO_SUPER(GroupFeatures, AbstractFilter)
 
     virtual ~GroupFeatures();
- 
+
     DREAM3D_FILTER_PARAMETER(DataArrayPath, ContiguousNeighborListArrayPath)
     Q_PROPERTY(DataArrayPath ContiguousNeighborListArrayPath READ getContiguousNeighborListArrayPath WRITE setContiguousNeighborListArrayPath)
     DREAM3D_FILTER_PARAMETER(DataArrayPath, NonContiguousNeighborListArrayPath)
@@ -82,6 +82,7 @@ class GroupFeatures : public AbstractFilter
     virtual const QString getGroupName() {return DREAM3D::FilterGroups::ReconstructionFilters;}
     virtual const QString getSubGroupName() {return DREAM3D::FilterSubGroups::SegmentationFilters;}
     virtual const QString getHumanLabel() {return "Group Features";}
+    virtual const QString getBrandingString() { return "DREAM3D Reconstruction Plugin"; }
 
     virtual void setupFilterParameters();
     /**
@@ -113,7 +114,7 @@ class GroupFeatures : public AbstractFilter
 
     virtual int getSeed(int newFid);
     virtual bool determineGrouping(int referenceFeature, int neighborFeature, int newFid);
-	virtual bool growPatch(int currentPatch);
+    virtual bool growPatch(int currentPatch);
     virtual bool growGrouping(int referenceFeature, int neighborFeature, int newFid);
 
   private:

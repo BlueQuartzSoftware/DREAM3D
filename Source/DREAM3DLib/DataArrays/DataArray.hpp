@@ -176,7 +176,7 @@ class DataArray : public IDataArray
       {
         return NullPointer();
       }
-      QVector<size_t> cDims(1,1);
+      QVector<size_t> cDims(1, 1);
       DataArray<T>* d = new DataArray<T>(numElements, cDims, name, true);
       if (d->Allocate() < 0)
       {
@@ -660,7 +660,7 @@ class DataArray : public IDataArray
       {return -1;}
       T* src = m_Array + (currentPos * m_NumComponents);
       T* dest = m_Array + (newPos * m_NumComponents);
-      size_t bytes = sizeof(T)* m_NumComponents;
+      size_t bytes = sizeof(T) * m_NumComponents;
       ::memcpy(dest, src, bytes);
       return 0;
     }
@@ -832,7 +832,7 @@ class DataArray : public IDataArray
     virtual int32_t resize(size_t numTuples)
     {
       int32_t check = resizeTotalElements(numTuples * m_NumComponents);
-      if(check > 0) m_NumTuples = numTuples;
+      if(check > 0) { m_NumTuples = numTuples; }
       return check;
     }
 
@@ -948,7 +948,7 @@ class DataArray : public IDataArray
       IDataArray::Pointer daCopy = createNewArray(getNumberOfTuples(), getComponentDimensions(), getName());
       T* src = getPointer(0);
       void* dest = daCopy->getVoidPointer(0);
-      size_t totalBytes = (getNumberOfTuples()*getNumberOfComponents()*sizeof(T));
+      size_t totalBytes = (getNumberOfTuples() * getNumberOfComponents() * sizeof(T));
       ::memcpy(dest, src, totalBytes);
       return daCopy;
     }
@@ -961,11 +961,11 @@ class DataArray : public IDataArray
     virtual int writeH5Data(hid_t parentId, QVector<size_t> tDims)
     {
       if (m_Array == NULL) { return -85648; }
-      #if 0
-  return H5DataArrayWriter<T>::writeArray(parentId, getName(), getNumberOfTuples(), getNumberOfComponents(), getRank(), getDims(), getClassVersion(), m_Array, getFullNameOfClass());
-      #else
-        return H5DataArrayWriter::writeDataArray<Self>(parentId, this, tDims);
-      #endif
+#if 0
+      return H5DataArrayWriter<T>::writeArray(parentId, getName(), getNumberOfTuples(), getNumberOfComponents(), getRank(), getDims(), getClassVersion(), m_Array, getFullNameOfClass());
+#else
+      return H5DataArrayWriter::writeDataArray<Self>(parentId, this, tDims);
+#endif
     }
 
     /**
@@ -1162,9 +1162,10 @@ class DataArray : public IDataArray
      */
     virtual int32_t resizeTotalElements(size_t size)
     {
-      if (size == 0) {
-      clear();
-      return 1;
+      if (size == 0)
+      {
+        clear();
+        return 1;
       }
       T* ptr = resizeAndExtend(size);
       if ( NULL != ptr)

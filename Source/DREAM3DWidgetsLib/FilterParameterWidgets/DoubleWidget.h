@@ -57,7 +57,7 @@
 */
 class DREAM3DWidgetsLib_EXPORT DoubleWidget : public QWidget, private Ui::DoubleWidget
 {
-  Q_OBJECT
+    Q_OBJECT
 
   public:
     /**

@@ -102,7 +102,8 @@ ReadH5EbsdWidget::~ReadH5EbsdWidget()
 // -----------------------------------------------------------------------------
 void ReadH5EbsdWidget::setWidgetListEnabled(bool b)
 {
-  foreach (QWidget* w, m_WidgetList) {
+  foreach (QWidget * w, m_WidgetList)
+  {
     w->setEnabled(b);
   }
 }
@@ -127,8 +128,8 @@ void ReadH5EbsdWidget::setupGui()
 
   QFileCompleter* com = new QFileCompleter(this, false);
   m_InputFile->setCompleter(com);
-  QObject::connect( com, SIGNAL(activated(const QString &)),
-                    this, SLOT(on_m_InputFile_textChanged(const QString &)));
+  QObject::connect( com, SIGNAL(activated(const QString&)),
+                    this, SLOT(on_m_InputFile_textChanged(const QString&)));
 
 
   // Setup the GUI widgets from what ever is in the Filter instance
@@ -173,7 +174,7 @@ void ReadH5EbsdWidget::on_m_InputFileBtn_clicked()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ReadH5EbsdWidget::on_m_InputFile_textChanged(const QString &text)
+void ReadH5EbsdWidget::on_m_InputFile_textChanged(const QString& text)
 {
   setOpenDialogLastDirectory(m_InputFile->text());
   verifyPathExists(m_InputFile->text(), m_InputFile);
@@ -198,7 +199,7 @@ void ReadH5EbsdWidget::on_m_InputFile_textChanged(const QString &text)
 // -----------------------------------------------------------------------------
 // Any time something gets clicked, emit the preflight
 // -----------------------------------------------------------------------------
-void ReadH5EbsdWidget::on_m_CellList_itemClicked(QListWidgetItem * item)
+void ReadH5EbsdWidget::on_m_CellList_itemClicked(QListWidgetItem* item)
 {
   m_DidCausePreflight = true;
   int checkCount = 0;
@@ -310,7 +311,8 @@ QSet<QString> ReadH5EbsdWidget::getSelectedArrayNames()
   int count = m_CellList->count();
   for(int i = 0; i < count; i++)
   {
-    if(m_CellList->item(i)->checkState() == Qt::Checked) {
+    if(m_CellList->item(i)->checkState() == Qt::Checked)
+    {
       selections.insert(m_CellList->item(i)->text());
     }
   }
@@ -366,7 +368,7 @@ void ReadH5EbsdWidget::afterPreflight()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ReadH5EbsdWidget::updateModelFromFilter(QSet<QString> &arrayNames, bool setChecked)
+void ReadH5EbsdWidget::updateModelFromFilter(QSet<QString>& arrayNames, bool setChecked)
 {
   m_CellList->blockSignals(true);
   // Get the items that are checked, which is different that being selected.

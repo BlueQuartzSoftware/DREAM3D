@@ -104,15 +104,18 @@ class ImportImagesWidget : public QWidget, private Ui::ImportImagesWidget
 
     void on_m_InputDirBtn_clicked();
     // slots to catch signals emittd by the various QLineEdit widgets
-    void on_m_InputDir_textChanged(const QString & text);
+    void on_m_InputDir_textChanged(const QString& text);
 
 
-    void on_m_FilePrefix_textChanged(const QString &string);
-    void on_m_FileSuffix_textChanged(const QString &string);
-    void on_m_FileExt_textChanged(const QString &string);
+    void on_m_FilePrefix_textChanged(const QString& string);
+    void on_m_FileSuffix_textChanged(const QString& string);
+    void on_m_FileExt_textChanged(const QString& string);
     void on_m_TotalDigits_valueChanged(int value);
     void on_m_ZStartIndex_valueChanged(int value);
     void on_m_ZEndIndex_valueChanged(int value);
+
+    void resolutionChanged(const QString& string);
+    void originChanged(const QString& string);
 
     void stackingOrderChanged(bool checked);
 
@@ -181,7 +184,7 @@ class ImportImagesWidget : public QWidget, private Ui::ImportImagesWidget
     QButtonGroup*               m_OriginGroup;
     QButtonGroup*               m_zSpacingGroup;
 
-    static QString								m_OpenDialogLastDirectory;
+    static QString                m_OpenDialogLastDirectory;
     bool m_DidCausePreflight;
 
 

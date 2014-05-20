@@ -75,12 +75,12 @@ SurfaceMeshToStl::~SurfaceMeshToStl()
 void SurfaceMeshToStl::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(FilterParameter::New("Output STL Directory", "OutputStlDirectory", FilterParameterWidgetType::OutputPathWidget,"QString", false));
-  parameters.push_back(FilterParameter::New("Stl File Prefix", "OutputStlPrefix", FilterParameterWidgetType::StringWidget,"QString", false));
-  parameters.push_back(FilterParameter::New("Group Files By Phase", "GroupByPhase", FilterParameterWidgetType::BooleanWidget,"bool", false));
-  parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "QString", true));
-  parameters.push_back(FilterParameter::New("SurfaceMeshFaceLabels", "SurfaceMeshFaceLabelsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
-  parameters.push_back(FilterParameter::New("SurfaceMeshFacePhases", "SurfaceMeshFacePhasesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
+  parameters.push_back(FilterParameter::New("Output STL Directory", "OutputStlDirectory", FilterParameterWidgetType::OutputPathWidget, getOutputStlDirectory(), false));
+  parameters.push_back(FilterParameter::New("Stl File Prefix", "OutputStlPrefix", FilterParameterWidgetType::StringWidget, getOutputStlPrefix(), false));
+  parameters.push_back(FilterParameter::New("Group Files By Phase", "GroupByPhase", FilterParameterWidgetType::BooleanWidget, getGroupByPhase(), false));
+  parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
+  parameters.push_back(FilterParameter::New("SurfaceMeshFaceLabels", "SurfaceMeshFaceLabelsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getSurfaceMeshFaceLabelsArrayPath(), true, ""));
+  parameters.push_back(FilterParameter::New("SurfaceMeshFacePhases", "SurfaceMeshFacePhasesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getSurfaceMeshFacePhasesArrayPath(), true, ""));
   setFilterParameters(parameters);
 }
 
@@ -190,19 +190,20 @@ void SurfaceMeshToStl::execute()
 
   // Store all the unique Spins
   QMap<int, int> uniqueGrainIdtoPhase;
-  if (m_GroupByPhase == true) {
+  if (m_GroupByPhase == true)
+  {
     for (int i = 0; i < nTriangles; i++)
     {
-      uniqueGrainIdtoPhase.insert(m_SurfaceMeshFaceLabels[i*2], m_SurfaceMeshFacePhases[i*2]);
-      uniqueGrainIdtoPhase.insert(m_SurfaceMeshFaceLabels[i*2+1], m_SurfaceMeshFacePhases[i*2+1]);
+      uniqueGrainIdtoPhase.insert(m_SurfaceMeshFaceLabels[i * 2], m_SurfaceMeshFacePhases[i * 2]);
+      uniqueGrainIdtoPhase.insert(m_SurfaceMeshFaceLabels[i * 2 + 1], m_SurfaceMeshFacePhases[i * 2 + 1]);
     }
   }
   else
   {
     for (int i = 0; i < nTriangles; i++)
     {
-      uniqueGrainIdtoPhase.insert(m_SurfaceMeshFaceLabels[i*2], 0);
-      uniqueGrainIdtoPhase.insert(m_SurfaceMeshFaceLabels[i*2+1], 0);
+      uniqueGrainIdtoPhase.insert(m_SurfaceMeshFaceLabels[i * 2], 0);
+      uniqueGrainIdtoPhase.insert(m_SurfaceMeshFaceLabels[i * 2 + 1], 0);
     }
   }
 
@@ -243,7 +244,8 @@ void SurfaceMeshToStl::execute()
     }
 
     QString header = "DREAM3D Generated For Feature ID " + QString::number(spin);
-    if (m_GroupByPhase == true) {
+    if (m_GroupByPhase == true)
+    {
       header = header + " Phase " + QString::number(spinIter.value());
     }
     err = writeHeader(f, header, 0);

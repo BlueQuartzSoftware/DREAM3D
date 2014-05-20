@@ -59,7 +59,7 @@ class SGWidget : public QWidget
     Q_OBJECT
 
   public:
-    SGWidget(QWidget *parent = 0);
+    SGWidget(QWidget* parent = 0);
     virtual ~SGWidget();
 
     DREAM3D_VIRTUAL_INSTANCE_PROPERTY(unsigned int, PhaseType)

@@ -56,7 +56,7 @@ float GeometryMath::CosThetaBetweenVectors(float a[3], float b[3])
 {
   float norm1 = sqrt(a[0] * a[0] + a[1] * a[1] + a[2] * a[2]);
   float norm2 = sqrt(b[0] * b[0] + b[1] * b[1] + b[2] * b[2]);
-  if(norm1 == 0 || norm2 == 0) return 1.0;
+  if(norm1 == 0 || norm2 == 0) { return 1.0; }
   return (a[0] * b[0] + a[1] * b[1] + a[2] * b[2]) / (norm1 * norm2);
 }
 
@@ -84,41 +84,41 @@ bool GeometryMath::PointInBox(const VertexArray::Vert_t& p, const VertexArray::V
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-bool GeometryMath::RayIntersectsBox(const VertexArray::Vert_t &p,
-                                  const VertexArray::Vert_t &q,
-                                  const VertexArray::Vert_t &ll,
-                                  const VertexArray::Vert_t &ur)
+bool GeometryMath::RayIntersectsBox(const VertexArray::Vert_t& p,
+                                    const VertexArray::Vert_t& q,
+                                    const VertexArray::Vert_t& ll,
+                                    const VertexArray::Vert_t& ur)
 {
-    if((ll.pos[0] > p.pos[0]) && (ll.pos[0] > q.pos[0])) { return false; }
-    else if((ur.pos[0] < p.pos[0]) && (ur.pos[0] < q.pos[0])) { return false; }
-    else if((ll.pos[1] > p.pos[1]) && (ll.pos[1] > q.pos[1])) { return false; }
-    else if((ur.pos[1] < p.pos[1]) && (ur.pos[1] < q.pos[1])) { return false; }
-    else if((ll.pos[2] > p.pos[2]) && (ll.pos[2] > q.pos[2])) { return false; }
-    else if((ur.pos[2] < p.pos[2]) && (ur.pos[2] < q.pos[2])) { return false; }
+  if((ll.pos[0] > p.pos[0]) && (ll.pos[0] > q.pos[0])) { return false; }
+  else if((ur.pos[0] < p.pos[0]) && (ur.pos[0] < q.pos[0])) { return false; }
+  else if((ll.pos[1] > p.pos[1]) && (ll.pos[1] > q.pos[1])) { return false; }
+  else if((ur.pos[1] < p.pos[1]) && (ur.pos[1] < q.pos[1])) { return false; }
+  else if((ll.pos[2] > p.pos[2]) && (ll.pos[2] > q.pos[2])) { return false; }
+  else if((ur.pos[2] < p.pos[2]) && (ur.pos[2] < q.pos[2])) { return false; }
   return true;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-float GeometryMath::LengthOfRayInBox(const VertexArray::Vert_t &p,
-                                  const VertexArray::Vert_t &q,
-                                  const VertexArray::Vert_t &ll,
-                                  const VertexArray::Vert_t &ur)
+float GeometryMath::LengthOfRayInBox(const VertexArray::Vert_t& p,
+                                     const VertexArray::Vert_t& q,
+                                     const VertexArray::Vert_t& ll,
+                                     const VertexArray::Vert_t& ur)
 {
   float length = 0.0;
   float frac = 0.0;
-  
+
   float x1 = p.pos[0];
   float y1 = p.pos[1];
   float z1 = p.pos[2];
   float x2 = q.pos[0];
   float y2 = q.pos[1];
   float z2 = q.pos[2];
-  
-  float delX = x2-x1;
-  float delY = y2-y1;
-  float delZ = z2-z1;
+
+  float delX = x2 - x1;
+  float delY = y2 - y1;
+  float delZ = z2 - z1;
 
   float c1x = ll.pos[0];
   float c1y = ll.pos[1];
@@ -130,17 +130,17 @@ float GeometryMath::LengthOfRayInBox(const VertexArray::Vert_t &p,
   //clip ray by min x face of box
   if(x1 < c1x && x2 > c1x)
   {
-    frac = ((c1x-x1)/delX);
-    x1 = x1+(frac*delX);
-    y1 = y1+(frac*delY);
-    z1 = z1+(frac*delZ);
+    frac = ((c1x - x1) / delX);
+    x1 = x1 + (frac * delX);
+    y1 = y1 + (frac * delY);
+    z1 = z1 + (frac * delZ);
   }
   else if(x1 > c1x && x2 < c1x)
   {
-    frac = ((c1x-x2)/delX);
-    x1 = x1+(frac*delX);
-    y1 = y1+(frac*delY);
-    z1 = z1+(frac*delZ);
+    frac = ((c1x - x2) / delX);
+    x1 = x1 + (frac * delX);
+    y1 = y1 + (frac * delY);
+    z1 = z1 + (frac * delZ);
   }
   else if(x1 < c1x && x2 < c1x)
   {
@@ -149,17 +149,17 @@ float GeometryMath::LengthOfRayInBox(const VertexArray::Vert_t &p,
   //clip ray by min y face of box
   if(y1 < c1y && y2 > c1y)
   {
-    frac = ((c1y-y1)/delY);
-    x1 = x1+(frac*delX);
-    y1 = y1+(frac*delY);
-    z1 = z1+(frac*delZ);
+    frac = ((c1y - y1) / delY);
+    x1 = x1 + (frac * delX);
+    y1 = y1 + (frac * delY);
+    z1 = z1 + (frac * delZ);
   }
   else if(y1 > c1y && y2 < c1y)
   {
-    frac = ((c1y-y2)/delY);
-    x1 = x1+(frac*delX);
-    y1 = y1+(frac*delY);
-    z1 = z1+(frac*delZ);
+    frac = ((c1y - y2) / delY);
+    x1 = x1 + (frac * delX);
+    y1 = y1 + (frac * delY);
+    z1 = z1 + (frac * delZ);
   }
   else if(y1 < c1y && y2 < c1y)
   {
@@ -168,17 +168,17 @@ float GeometryMath::LengthOfRayInBox(const VertexArray::Vert_t &p,
   //clip ray by min z face of box
   if(z1 < c1z && z2 > c1z)
   {
-    frac = ((c1z-z1)/delZ);
-    x1 = x1+(frac*delX);
-    y1 = y1+(frac*delY);
-    z1 = z1+(frac*delZ);
+    frac = ((c1z - z1) / delZ);
+    x1 = x1 + (frac * delX);
+    y1 = y1 + (frac * delY);
+    z1 = z1 + (frac * delZ);
   }
   else if(z1 > c1z && z2 < c1z)
   {
-    frac = ((c1z-z2)/delZ);
-    x1 = x1+(frac*delX);
-    y1 = y1+(frac*delY);
-    z1 = z1+(frac*delZ);
+    frac = ((c1z - z2) / delZ);
+    x1 = x1 + (frac * delX);
+    y1 = y1 + (frac * delY);
+    z1 = z1 + (frac * delZ);
   }
   else if(z1 < c1z && z2 < c1z)
   {
@@ -187,17 +187,17 @@ float GeometryMath::LengthOfRayInBox(const VertexArray::Vert_t &p,
   //clip ray by max x face of box
   if(x1 > c2x && x2 < c2x)
   {
-    frac = ((c2x-x1)/delX);
-    x1 = x1+(frac*delX);
-    y1 = y1+(frac*delY);
-    z1 = z1+(frac*delZ);
+    frac = ((c2x - x1) / delX);
+    x1 = x1 + (frac * delX);
+    y1 = y1 + (frac * delY);
+    z1 = z1 + (frac * delZ);
   }
   else if(x1 < c2x && x2 > c2x)
   {
-    frac = ((c2x-x2)/delX);
-    x1 = x1+(frac*delX);
-    y1 = y1+(frac*delY);
-    z1 = z1+(frac*delZ);
+    frac = ((c2x - x2) / delX);
+    x1 = x1 + (frac * delX);
+    y1 = y1 + (frac * delY);
+    z1 = z1 + (frac * delZ);
   }
   else if(x1 > c2x && x2 > c2x)
   {
@@ -206,17 +206,17 @@ float GeometryMath::LengthOfRayInBox(const VertexArray::Vert_t &p,
   //clip ray by max y face of box
   if(y1 > c2y && y2 < c2y)
   {
-    frac = ((c2y-y1)/delY);
-    x1 = x1+(frac*delX);
-    y1 = y1+(frac*delY);
-    z1 = z1+(frac*delZ);
+    frac = ((c2y - y1) / delY);
+    x1 = x1 + (frac * delX);
+    y1 = y1 + (frac * delY);
+    z1 = z1 + (frac * delZ);
   }
   else if(y1 < c2y && y2 > c2y)
   {
-    frac = ((c2y-y2)/delY);
-    x1 = x1+(frac*delX);
-    y1 = y1+(frac*delY);
-    z1 = z1+(frac*delZ);
+    frac = ((c2y - y2) / delY);
+    x1 = x1 + (frac * delX);
+    y1 = y1 + (frac * delY);
+    z1 = z1 + (frac * delZ);
   }
   else if(y1 > c2y && y2 > c2y)
   {
@@ -225,24 +225,24 @@ float GeometryMath::LengthOfRayInBox(const VertexArray::Vert_t &p,
   //clip ray by max z face of box
   if(z1 > c2z && z2 < c2z)
   {
-    frac = ((c2z-z1)/delZ);
-    x1 = x1+(frac*delX);
-    y1 = y1+(frac*delY);
-    z1 = z1+(frac*delZ);
+    frac = ((c2z - z1) / delZ);
+    x1 = x1 + (frac * delX);
+    y1 = y1 + (frac * delY);
+    z1 = z1 + (frac * delZ);
   }
   else if(z1 < c2z && z2 > c2z)
   {
-    frac = ((c2z-z2)/delZ);
-    x1 = x1+(frac*delX);
-    y1 = y1+(frac*delY);
-    z1 = z1+(frac*delZ);
+    frac = ((c2z - z2) / delZ);
+    x1 = x1 + (frac * delX);
+    y1 = y1 + (frac * delY);
+    z1 = z1 + (frac * delZ);
   }
   else if(z1 > c2z && z2 > c2z)
   {
     return 0.0;
   }
 
-  length = ((x2-x1)*(x2-x1))+((y2-y1)*(y2-y1))+((z2-z1)*(z2-z1));
+  length = ((x2 - x1) * (x2 - x1)) + ((y2 - y1) * (y2 - y1)) + ((z2 - z1) * (z2 - z1));
   length = sqrt(length);
 
   return length;
@@ -344,7 +344,7 @@ void GeometryMath::FindBoundingBoxOfRotatedFaces(FaceArray::Pointer faces, Int32
   ur.pos[2] = 0.0;
 
   VertexArray::Vert_t facell, faceur;
-  
+
   int numFaces = faceIds.ncells;
   int32_t* faceId = faceIds.cells;
   for(int i = 0; i < numFaces; i++)
@@ -625,11 +625,11 @@ char GeometryMath::RayCrossesTriangle(const VertexArray::Vert_t& a, const Vertex
 //
 // -----------------------------------------------------------------------------
 char GeometryMath::PointInPolyhedron(const FaceArray::Pointer faces,
-                                     const Int32DynamicListArray::ElementList &faceIds,
+                                     const Int32DynamicListArray::ElementList& faceIds,
                                      const VertexArray::Pointer faceBBs,
-                                     const VertexArray::Vert_t &q,
-                                     const VertexArray::Vert_t &ll,
-                                     const VertexArray::Vert_t &ur,
+                                     const VertexArray::Vert_t& q,
+                                     const VertexArray::Vert_t& ll,
+                                     const VertexArray::Vert_t& ur,
                                      float radius)
 {
   float ray[3];  /* Ray */

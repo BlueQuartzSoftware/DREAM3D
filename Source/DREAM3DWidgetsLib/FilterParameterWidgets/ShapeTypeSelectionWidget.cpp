@@ -186,7 +186,7 @@ void ShapeTypeSelectionWidget::updateComboBoxes()
     formLayout_2->setWidget(i, QFormLayout::FieldRole, cb);
     if (i + 1 < dataFromFilter.size())
     {
-      cb->setCurrentIndex(dataFromFilter[i+1]);
+      cb->setCurrentIndex(dataFromFilter[i + 1]);
     }
     connect(cb, SIGNAL(currentIndexChanged(int)),
             this, SLOT(on_combobox_changed(int)) );

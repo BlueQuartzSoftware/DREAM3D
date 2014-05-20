@@ -55,7 +55,7 @@ class BrandedInitializer : public QObject
     BrandedInitializer();
     virtual ~BrandedInitializer();
 
-    bool initialize(int argc, char *argv[]);
+    bool initialize(int argc, char* argv[]);
   protected:
     void loadPlugins();
 

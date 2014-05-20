@@ -312,10 +312,11 @@ int DataContainerArray::readDataContainersFromHDF5(bool preflight,
   while (dcIter.hasNext()) // DataContainerLevel
   {
     const DataContainerProxy& dcProxy =  dcIter.next();
-    if(dcProxy.flag == Qt::Unchecked) continue;
+    if(dcProxy.flag == Qt::Unchecked) { continue; }
     if (this->contains(dcProxy.name) == true )
     {
-      if(NULL != obs) {
+      if(NULL != obs)
+      {
         QString ss = QObject::tr("A Data Container with name %1 already exists in Memory. Reading a Data Container with the same name would over write the one in memory. Currently this is not allowed.").arg(dcProxy.name);
         obs->notifyErrorMessage(getNameOfClass(), ss, -198745600);
       }
@@ -324,7 +325,8 @@ int DataContainerArray::readDataContainersFromHDF5(bool preflight,
     err = QH5Lite::readScalarAttribute(dcaGid, dcProxy.name, DREAM3D::StringConstants::DataContainerType, dcType);
     if (err < 0)
     {
-      if(NULL != obs) {
+      if(NULL != obs)
+      {
         QString ss = QObject::tr("The DataContainer is missing the 'DataContainerType' attribute on the '%1' Data Container").arg(dcProxy.name);
         obs->notifyErrorMessage(getNameOfClass(), ss, -198745601);
       }
@@ -359,7 +361,8 @@ int DataContainerArray::readDataContainersFromHDF5(bool preflight,
     hid_t dcGid = H5Gopen(dcaGid, dcProxy.name.toLatin1().data(), H5P_DEFAULT );
     if (dcGid < 0)
     {
-      if(NULL != obs) {
+      if(NULL != obs)
+      {
         QString ss = QObject::tr("Error opening Group '%1'").arg(dcProxy.name);
         obs->notifyErrorMessage(getNameOfClass(), ss, -198745602);
       }
@@ -369,7 +372,8 @@ int DataContainerArray::readDataContainersFromHDF5(bool preflight,
     err = this->getDataContainer(dcProxy.name)->readMeshDataFromHDF5(dcGid, preflight);
     if(err < 0)
     {
-      if(NULL != obs) {
+      if(NULL != obs)
+      {
         QString ss = QObject::tr("Error reading Mesh Data from '%1'").arg(dcProxy.name);
         obs->notifyErrorMessage(getNameOfClass(), ss, -198745603);
       }
@@ -378,7 +382,8 @@ int DataContainerArray::readDataContainersFromHDF5(bool preflight,
     err = this->getDataContainer(dcProxy.name)->readAttributeMatricesFromHDF5(preflight, dcGid, dcProxy);
     if (err < 0)
     {
-      if(NULL != obs) {
+      if(NULL != obs)
+      {
         QString ss = QObject::tr("Error reading AttributeMatrix Data from '%1'").arg(dcProxy.name);
         obs->notifyErrorMessage(getNameOfClass(), ss, -198745604);
       }

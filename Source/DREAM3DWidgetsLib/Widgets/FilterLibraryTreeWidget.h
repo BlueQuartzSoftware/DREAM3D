@@ -108,8 +108,8 @@ class DREAM3DWidgetsLib_EXPORT FilterLibraryTreeWidget : public QTreeWidget
 
   private:
     QMenu                     m_Menu;
-    QList<QAction*>						m_NodeActions;
-    QList<QAction*>						m_LeafActions;
+    QList<QAction*>           m_NodeActions;
+    QList<QAction*>           m_LeafActions;
 };
 
 #endif /* _TREEWIDGETBUILDER_H_ */

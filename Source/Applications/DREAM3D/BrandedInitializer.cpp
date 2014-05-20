@@ -84,8 +84,9 @@ BrandedInitializer::~BrandedInitializer()
 // -----------------------------------------------------------------------------
 void delay(int seconds)
 {
-  QTime dieTime= QTime::currentTime().addSecs(seconds);
-  while( QTime::currentTime() < dieTime ) {
+  QTime dieTime = QTime::currentTime().addSecs(seconds);
+  while( QTime::currentTime() < dieTime )
+  {
     QCoreApplication::processEvents(QEventLoop::AllEvents, 100);
   }
 }
@@ -236,7 +237,7 @@ void BrandedInitializer::loadPlugins()
     QPluginLoader loader(path);
     QFileInfo fi(path);
     QString fileName = fi.fileName();
-    QObject *plugin = loader.instance();
+    QObject* plugin = loader.instance();
     qDebug() << "    Pointer: " << plugin << "\n";
     if (plugin )
     {

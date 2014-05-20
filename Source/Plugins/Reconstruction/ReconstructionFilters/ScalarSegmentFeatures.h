@@ -70,7 +70,7 @@ class CompareFunctor;
  */
 class ScalarSegmentFeatures : public SegmentFeatures
 {
-	Q_OBJECT
+    Q_OBJECT
   public:
     DREAM3D_SHARED_POINTERS(ScalarSegmentFeatures)
     DREAM3D_STATIC_NEW_MACRO(ScalarSegmentFeatures)
@@ -101,6 +101,7 @@ class ScalarSegmentFeatures : public SegmentFeatures
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::ReconstructionFilters; }
     virtual const QString getSubGroupName() {return DREAM3D::FilterSubGroups::SegmentationFilters;}
     virtual const QString getHumanLabel() { return "Segment Features (Scalar)"; }
+    virtual const QString getBrandingString() { return "DREAM3D Reconstruction Plugin"; }
 
     virtual void setupFilterParameters();
     /**

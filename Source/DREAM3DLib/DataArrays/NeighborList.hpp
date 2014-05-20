@@ -100,7 +100,7 @@ class NeighborList : public IDataArray
       Pointer ptr = NeighborList<T>::New();
       ptr->setName(name);
       size_t numElements = numTuples;
-      for(int iter=0;iter<rank;iter++)
+      for(int iter = 0; iter < rank; iter++)
       {
         numElements *= dims[iter];
       }
@@ -117,7 +117,7 @@ class NeighborList : public IDataArray
       Pointer ptr = NeighborList<T>::New();
       ptr->setName(name);
       size_t numElements = numTuples;
-      for(int iter=0;iter<cDims.size();iter++)
+      for(int iter = 0; iter < cDims.size(); iter++)
       {
         numElements *= cDims[iter];
       }
@@ -134,7 +134,7 @@ class NeighborList : public IDataArray
       Pointer ptr = NeighborList<T>::New();
       ptr->setName(name);
       size_t numElements = numTuples;
-      for(int iter=0;iter<cDims.size();iter++)
+      for(int iter = 0; iter < cDims.size(); iter++)
       {
         numElements *= cDims[iter];
       }
@@ -151,11 +151,11 @@ class NeighborList : public IDataArray
       Pointer ptr = NeighborList<T>::New();
       ptr->setName(name);
       size_t numElements = tDims[0];
-      for(int iter=1;iter<tDims.size();iter++)
+      for(int iter = 1; iter < tDims.size(); iter++)
       {
         numElements *= tDims[iter];
       }
-      for(int iter=0;iter<cDims.size();iter++)
+      for(int iter = 0; iter < cDims.size(); iter++)
       {
         numElements *= cDims[iter];
       }
@@ -438,7 +438,7 @@ class NeighborList : public IDataArray
       daCopyPtr->resize(getNumberOfTuples());
 
       //NeighborList<T>* daCopy = NeighborList<T>::SafeObjectDownCast<IDataArray*, NeighborList<T>*>(daCopyPtr.get());
-      for(size_t i=0;i<getNumberOfTuples();i++)
+      for(size_t i = 0; i < getNumberOfTuples(); i++)
       {
         typename NeighborList<T>::SharedVectorType sharedNeiLst(new std::vector<T>);
         sharedNeiLst = _data[i];
@@ -795,9 +795,9 @@ class NeighborList : public IDataArray
       return static_cast<int>(_data[grainId]->size());
     }
 
- VectorType& getListReference(int grainId)
+    VectorType& getListReference(int grainId)
     {
-    #ifndef NDEBUG
+#ifndef NDEBUG
       if (_data.size() > 0u) { BOOST_ASSERT(grainId < static_cast<int>(_data.size()));}
 #endif
       return *(_data[grainId]);
@@ -872,7 +872,7 @@ class NeighborList : public IDataArray
     QString m_Name;
 
     QVector<SharedVectorType> _data;
-      
+
     T m_InitValue;
 
     NeighborList(const NeighborList&); // Copy Constructor Not Implemented

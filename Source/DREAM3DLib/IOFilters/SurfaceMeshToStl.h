@@ -63,7 +63,7 @@ class DREAM3DLib_EXPORT SurfaceMeshToStl : public AbstractFilter
     DREAM3D_TYPE_MACRO_SUPER(SurfaceMeshToStl, AbstractFilter)
 
     virtual ~SurfaceMeshToStl();
-    
+
     /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
     DREAM3D_FILTER_PARAMETER(QString, OutputStlDirectory)
     Q_PROPERTY(QString OutputStlDirectory READ getOutputStlDirectory WRITE setOutputStlDirectory)
@@ -71,7 +71,7 @@ class DREAM3DLib_EXPORT SurfaceMeshToStl : public AbstractFilter
     Q_PROPERTY(QString OutputStlPrefix READ getOutputStlPrefix WRITE setOutputStlPrefix)
     DREAM3D_FILTER_PARAMETER(bool, GroupByPhase)
     Q_PROPERTY(bool GroupByPhase READ getGroupByPhase WRITE setGroupByPhase)
-    
+
     /**
     * @brief This returns the group that the filter belonds to. You can select
     * a different group if you want. The string returned here will be displayed

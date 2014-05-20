@@ -88,7 +88,7 @@ void DataContainerArrayProxyWidget::setupGui()
   delete oldModel;
 
   //  void activated(const QModelIndex& index);
-  connect(dcaProxyView, SIGNAL(clicked(const QModelIndex &)),
+  connect(dcaProxyView, SIGNAL(clicked(const QModelIndex&)),
           this, SLOT(itemActivated(const QModelIndex)));
 
   if (m_FilterParameter != NULL)
@@ -122,6 +122,7 @@ void DataContainerArrayProxyWidget::setupGui()
     dataContainerList->setEnabled(boolProp);
     attributeMatrixList->setEnabled(boolProp);
     attributeArrayList->setEnabled(boolProp);
+    on_conditionalCB_stateChanged(conditionalCB->checkState());
   }
   else
   {
@@ -142,14 +143,20 @@ void DataContainerArrayProxyWidget::setupGui()
 // -----------------------------------------------------------------------------
 void DataContainerArrayProxyWidget::on_conditionalCB_stateChanged(int state)
 {
-//  bool boolProp = conditionalCB->isChecked();
-//  dataContainerList->setEnabled(boolProp);
-//  attributeMatrixList->setEnabled(boolProp);
-//  attributeArrayList->setEnabled(boolProp);
-//  m_DidCausePreflight = true;
-//  emit parametersChanged();
-//  m_DidCausePreflight = false;
+  bool boolProp = conditionalCB->isChecked();
+  dataContainerList->setEnabled(boolProp);
+  dataContainerList->setVisible(boolProp);
+  attributeMatrixList->setEnabled(boolProp);
+  attributeMatrixList->setVisible(boolProp);
+  dataArrayName->setEnabled(boolProp);
+  dataArrayName->setVisible(boolProp);
 
+  label->setVisible(boolProp);
+  linkLeft->setVisible(boolProp);
+  linkRight->setVisible(boolProp);
+  m_DidCausePreflight = true;
+  emit parametersChanged();
+  m_DidCausePreflight = false;
 }
 #endif
 
@@ -222,7 +229,7 @@ void removeNonExistantChildren(QStandardItem* parent, QStringList possibleNames)
   int childCount = parent->rowCount();
 
   // iterate from back to front as we may pop values out of the model which would screw up the index
-  for(int i = childCount-1; i >= 0; i--)
+  for(int i = childCount - 1; i >= 0; i--)
   {
     QStandardItem* item = parent->child(i);
     QStringList list = possibleNames.filter(item->text() );
@@ -240,12 +247,13 @@ void removeNonExistantChildren(QStandardItem* parent, QStringList possibleNames)
 //
 // -----------------------------------------------------------------------------
 template<typename T>
-QStandardItem* getColumnItem(QStandardItem* parent, QString name, T &proxy)
+QStandardItem* getColumnItem(QStandardItem* parent, QString name, T& proxy)
 {
   QStandardItem* item = NULL;
   QList<QStandardItem*> items = findChildItems(parent, name);
   if (items.count() == 0)
-  { // Create a new item because we did not find this item already
+  {
+    // Create a new item because we did not find this item already
     item = new QStandardItem(proxy.name);
     item->setCheckState( (proxy.flag == 2 ? Qt::Checked : Qt::Unchecked) );
     item->setCheckable(true);
@@ -269,7 +277,7 @@ QStandardItem* getColumnItem(QStandardItem* parent, QString name, T &proxy)
 //
 // -----------------------------------------------------------------------------
 template<typename T>
-QStandardItem* updateProxyItem(QStandardItem* parent, QString name, T &proxy)
+QStandardItem* updateProxyItem(QStandardItem* parent, QString name, T& proxy)
 {
   QStandardItem* item = NULL;
   if(NULL == parent) { return item; }
@@ -287,7 +295,7 @@ QStandardItem* updateProxyItem(QStandardItem* parent, QString name, T &proxy)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DataContainerArrayProxyWidget::updateModelFromProxy(DataContainerArrayProxy &proxy)
+void DataContainerArrayProxyWidget::updateModelFromProxy(DataContainerArrayProxy& proxy)
 {
   QStandardItemModel* model = qobject_cast<QStandardItemModel*>(dcaProxyView->model());
   if(!model)
@@ -466,7 +474,7 @@ void transferDataContainFlags(const DataContainerProxy& source, DataContainerArr
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void transferAttributeMatrixFlags(const QString dcName, const AttributeMatrixProxy& source, DataContainerArrayProxy &dest)
+void transferAttributeMatrixFlags(const QString dcName, const AttributeMatrixProxy& source, DataContainerArrayProxy& dest)
 {
 
   QMutableListIterator<DataContainerProxy> dcaIter(dest.list);
@@ -496,7 +504,7 @@ void transferAttributeMatrixFlags(const QString dcName, const AttributeMatrixPro
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void transferDataArrayFlags(const QString dc_name, const QString am_name, const DataArrayProxy& source, DataContainerArrayProxy &dest)
+void transferDataArrayFlags(const QString dc_name, const QString am_name, const DataArrayProxy& source, DataContainerArrayProxy& dest)
 {
 
   QMutableListIterator<DataContainerProxy> dcaIter(dest.list);
@@ -538,7 +546,7 @@ void transferDataArrayFlags(const QString dc_name, const QString am_name, const 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DataContainerArrayProxyWidget::updateProxyFromProxy(DataContainerArrayProxy &current, DataContainerArrayProxy &incoming)
+void DataContainerArrayProxyWidget::updateProxyFromProxy(DataContainerArrayProxy& current, DataContainerArrayProxy& incoming)
 {
   //  qDebug() << m_Filter->getNameOfClass() << " DataContainerArrayProxyWidget::mergeProxies";
 

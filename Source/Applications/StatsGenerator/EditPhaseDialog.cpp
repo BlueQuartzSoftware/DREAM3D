@@ -42,11 +42,11 @@
 //
 // -----------------------------------------------------------------------------
 EditPhaseDialog::EditPhaseDialog(QWidget* parent) :
-QDialog(parent),
-m_OtherPhaseFractions(0.0),
-m_PhaseFractionValidator(NULL),
-m_ParentPhaseValidator(NULL),
-m_PptFractionValidator(NULL)
+  QDialog(parent),
+  m_OtherPhaseFractions(0.0),
+  m_PhaseFractionValidator(NULL),
+  m_ParentPhaseValidator(NULL),
+  m_PptFractionValidator(NULL)
 {
   setupUi(this);
   setupGui();
@@ -84,7 +84,7 @@ float EditPhaseDialog::getPhaseFraction()
 {
   bool ok = false;
   float d = phaseFraction->text().toFloat(&ok);
-  if (ok) return d;
+  if (ok) { return d; }
   return -1.0;
 }
 
@@ -103,7 +103,7 @@ float EditPhaseDialog::getPptFraction()
 {
   bool ok = false;
   float d = pptFraction->text().toFloat(&ok);
-  if (ok) return d;
+  if (ok) { return d; }
   return -1.0;
 }
 
@@ -122,7 +122,7 @@ unsigned int EditPhaseDialog::getParentPhase()
 {
   bool ok = false;
   unsigned int d = ParentPhase->text().toInt(&ok);
-  if (ok) return d;
+  if (ok) { return d; }
   return 0;
 }
 
@@ -163,10 +163,10 @@ void EditPhaseDialog::setupGui()
   m_PptFractionValidator->setBottom(0.0);
   m_PptFractionValidator->setTop(1.0);
   m_PptFractionValidator->setDecimals(6);
-  if(m_EditFlag == true) phaseTypeCombo->setEnabled(false);
-  if(m_EditFlag == false) phaseTypeCombo->setEnabled(true);
-  if(m_EditFlag == true) phaseTypeComboLabel->setEnabled(false);
-  if(m_EditFlag == false) phaseTypeComboLabel->setEnabled(true);
+  if(m_EditFlag == true) { phaseTypeCombo->setEnabled(false); }
+  if(m_EditFlag == false) { phaseTypeCombo->setEnabled(true); }
+  if(m_EditFlag == true) { phaseTypeComboLabel->setEnabled(false); }
+  if(m_EditFlag == false) { phaseTypeComboLabel->setEnabled(true); }
   pptFraction->setEnabled(false);
   ParentPhase->setEnabled(false);
   pptFractionLabel->setEnabled(false);
@@ -177,15 +177,15 @@ void EditPhaseDialog::setupGui()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void EditPhaseDialog::on_phaseFraction_textChanged(const QString &string)
+void EditPhaseDialog::on_phaseFraction_textChanged(const QString& string)
 {
   bool ok = false;
   float d = phaseFraction->text().toFloat(&ok);
   if (ok)
   {
-     float total = d + m_OtherPhaseFractions;
-     total = d / total;
-     calcPhaseFraction->setText(QString::number(total));
+    float total = d + m_OtherPhaseFractions;
+    total = d / total;
+    calcPhaseFraction->setText(QString::number(total));
   }
 }
 

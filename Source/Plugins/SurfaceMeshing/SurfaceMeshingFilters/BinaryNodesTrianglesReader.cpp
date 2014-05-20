@@ -82,7 +82,6 @@ void BinaryNodesTrianglesReader::setupFilterParameters()
     parameter->setHumanLabel("Binary Nodes Input File");
     parameter->setPropertyName("BinaryNodesFile");
     parameter->setWidgetType(FilterParameterWidgetType::InputFileWidget);
-    parameter->setValueType("QString");
     parameters.push_back(parameter);
   }
   {
@@ -90,7 +89,6 @@ void BinaryNodesTrianglesReader::setupFilterParameters()
     parameter->setHumanLabel("Binary Triangles Input File");
     parameter->setPropertyName("BinaryTrianglesFile");
     parameter->setWidgetType(FilterParameterWidgetType::InputFileWidget);
-    parameter->setValueType("QString");
     parameters.push_back(parameter);
   }
 

@@ -84,7 +84,7 @@ FilterPipeline::Pointer QFilterParametersReader::ReadPipelineFromFile(QString fi
 
   FilterManager::Pointer filtManager = FilterManager::Instance();
   FilterFactory<EmptyFilter>::Pointer emptyFilterFactory = FilterFactory<EmptyFilter>::New();
-  filtManager->addFilterFactory("EmptyFilter",emptyFilterFactory);
+  filtManager->addFilterFactory("EmptyFilter", emptyFilterFactory);
 
   QFilterParametersReader::Pointer paramsReader = QFilterParametersReader::New();
   paramsReader->openFile(filePath, format);
@@ -131,7 +131,8 @@ FilterPipeline::Pointer QFilterParametersReader::ReadPipelineFromFile(QString fi
         filter->setOriginalFilterName(filterName);
         pipeline->pushBack(filter);
 
-        if (NULL != obs) {
+        if (NULL != obs)
+        {
           QString ss = QObject::tr("An implementation for filter '%1' could not be located. Possible reasons include a name change of the filter, plugin not loading or a simple spelling mistake? A blank filter has been inserted in its place.").arg(filterName);
           PipelineMessage pm(filterName, ss, -66066, PipelineMessage::Error);
           pm.setPrefix("QFilterParametersReader::ReadPipelineFromFile()");
@@ -147,7 +148,8 @@ FilterPipeline::Pointer QFilterParametersReader::ReadPipelineFromFile(QString fi
       filter->setOriginalFilterName(filterName);
       pipeline->pushBack(filter);
 
-      if (NULL != obs) {
+      if (NULL != obs)
+      {
         QString ss = QObject::tr("A filter for index '%1' is missing in the file. Is the numbering of the filters correct in the pipeline file?").arg(gName);
         PipelineMessage pm(filterName, ss, -66067, PipelineMessage::Error);
         pm.setPrefix("QFilterParametersReader::ReadPipelineFromFile()");
@@ -218,7 +220,7 @@ int QFilterParametersReader::closeFilterGroup()
 QString QFilterParametersReader::readString(const QString name, QString value)
 {
   BOOST_ASSERT(m_Prefs != NULL);
-  if(m_Prefs->contains(name) == false){ return value; }
+  if(m_Prefs->contains(name) == false) { return value; }
   return m_Prefs->value(name, value).toString();
 }
 
@@ -228,7 +230,7 @@ QString QFilterParametersReader::readString(const QString name, QString value)
 QVector<QString> QFilterParametersReader::readStrings(const QString name, QVector<QString> value)
 {
   BOOST_ASSERT(m_Prefs != NULL);
-  if(m_Prefs->contains(name) == false){ return value; }
+  if(m_Prefs->contains(name) == false) { return value; }
 
   QString data = m_Prefs->value(name).toByteArray();
   if(data.size() == 0)
@@ -253,7 +255,7 @@ QVector<QString> QFilterParametersReader::readStrings(const QString name, QVecto
 int8_t QFilterParametersReader::readValue(const QString name, int8_t value)
 {
   BOOST_ASSERT(m_Prefs != NULL);
-  if(m_Prefs->contains(name) == false){ return value; }
+  if(m_Prefs->contains(name) == false) { return value; }
   bool ok = false;
   int8_t def = value;
   value = m_Prefs->value(name, def).toInt(&ok);
@@ -267,7 +269,7 @@ int8_t QFilterParametersReader::readValue(const QString name, int8_t value)
 int16_t QFilterParametersReader::readValue(const QString name, int16_t value)
 {
   BOOST_ASSERT(m_Prefs != NULL);
-  if(m_Prefs->contains(name) == false){ return value; }
+  if(m_Prefs->contains(name) == false) { return value; }
   bool ok = false;
   int16_t def = value;
   value = m_Prefs->value(name, def).toInt(&ok);
@@ -281,7 +283,7 @@ int16_t QFilterParametersReader::readValue(const QString name, int16_t value)
 int32_t QFilterParametersReader::readValue(const QString name, int32_t value)
 {
   BOOST_ASSERT(m_Prefs != NULL);
-  if(m_Prefs->contains(name) == false){ return value; }
+  if(m_Prefs->contains(name) == false) { return value; }
   bool ok = false;
   int32_t def = value;
   value = m_Prefs->value(name, def).toInt(&ok);
@@ -295,7 +297,7 @@ int32_t QFilterParametersReader::readValue(const QString name, int32_t value)
 int64_t QFilterParametersReader::readValue(const QString name, int64_t v)
 {
   BOOST_ASSERT(m_Prefs != NULL);
-  if(m_Prefs->contains(name) == false){ return v; }
+  if(m_Prefs->contains(name) == false) { return v; }
   bool ok = false;
   qint64 def = static_cast<qint64>(v);
   QVariant var = m_Prefs->value(name, def);
@@ -310,7 +312,7 @@ int64_t QFilterParametersReader::readValue(const QString name, int64_t v)
 uint8_t QFilterParametersReader::readValue(const QString name, uint8_t value)
 {
   BOOST_ASSERT(m_Prefs != NULL);
-  if(m_Prefs->contains(name) == false){ return value; }
+  if(m_Prefs->contains(name) == false) { return value; }
   bool ok = false;
   uint8_t def = value;
   value = m_Prefs->value(name, def).toUInt(&ok);
@@ -324,7 +326,7 @@ uint8_t QFilterParametersReader::readValue(const QString name, uint8_t value)
 uint16_t QFilterParametersReader::readValue(const QString name, uint16_t value)
 {
   BOOST_ASSERT(m_Prefs != NULL);
-  if(m_Prefs->contains(name) == false){ return value; }
+  if(m_Prefs->contains(name) == false) { return value; }
   bool ok = false;
   uint16_t def = value;
   value = m_Prefs->value(name, def).toUInt(&ok);
@@ -338,7 +340,7 @@ uint16_t QFilterParametersReader::readValue(const QString name, uint16_t value)
 uint32_t QFilterParametersReader::readValue(const QString name, uint32_t value)
 {
   BOOST_ASSERT(m_Prefs != NULL);
-  if(m_Prefs->contains(name) == false){ return value; }
+  if(m_Prefs->contains(name) == false) { return value; }
   bool ok = false;
   uint32_t def = value;
   value = m_Prefs->value(name, def).toUInt(&ok);
@@ -352,7 +354,7 @@ uint32_t QFilterParametersReader::readValue(const QString name, uint32_t value)
 uint64_t QFilterParametersReader::readValue(const QString name, uint64_t v)
 {
   BOOST_ASSERT(m_Prefs != NULL);
-  if(m_Prefs->contains(name) == false){ return v; }
+  if(m_Prefs->contains(name) == false) { return v; }
   bool ok = false;
   quint64 def = static_cast<quint64>(v);
   QVariant var = m_Prefs->value(name, def);
@@ -367,7 +369,7 @@ uint64_t QFilterParametersReader::readValue(const QString name, uint64_t v)
 float QFilterParametersReader::readValue(const QString name, float def)
 {
   BOOST_ASSERT(m_Prefs != NULL);
-  if(m_Prefs->contains(name) == false){ return def; }
+  if(m_Prefs->contains(name) == false) { return def; }
   bool ok = false;
   QVariant var = m_Prefs->value(name, def);
   double value = var.toDouble(&ok);
@@ -381,7 +383,7 @@ float QFilterParametersReader::readValue(const QString name, float def)
 double QFilterParametersReader::readValue(const QString name, double def)
 {
   BOOST_ASSERT(m_Prefs != NULL);
-  if(m_Prefs->contains(name) == false){ return def; }
+  if(m_Prefs->contains(name) == false) { return def; }
 
   bool ok = false;
   QVariant var = m_Prefs->value(name, def);
@@ -396,7 +398,7 @@ double QFilterParametersReader::readValue(const QString name, double def)
 bool QFilterParametersReader::readValue(const QString name, bool def)
 {
   BOOST_ASSERT(m_Prefs != NULL);
-  if(m_Prefs->contains(name) == false){ return def; }
+  if(m_Prefs->contains(name) == false) { return def; }
 
   QVariant var = m_Prefs->value(name, def);
   return var.toBool();
@@ -408,7 +410,7 @@ bool QFilterParametersReader::readValue(const QString name, bool def)
 QVector<int8_t> QFilterParametersReader::readArray(const QString name, QVector<int8_t> value)
 {
   BOOST_ASSERT(m_Prefs != NULL);
-  if(m_Prefs->contains(name) == false){ return value; }
+  if(m_Prefs->contains(name) == false) { return value; }
   bool ok = false;
 
   QString data = m_Prefs->value(name).toByteArray();
@@ -434,7 +436,7 @@ QVector<int8_t> QFilterParametersReader::readArray(const QString name, QVector<i
 QVector<int16_t> QFilterParametersReader::readArray(const QString name, QVector<int16_t> value)
 {
   BOOST_ASSERT(m_Prefs != NULL);
-  if(m_Prefs->contains(name) == false){ return value; }
+  if(m_Prefs->contains(name) == false) { return value; }
   bool ok = false;
 
   QString data = m_Prefs->value(name).toByteArray();
@@ -460,7 +462,7 @@ QVector<int16_t> QFilterParametersReader::readArray(const QString name, QVector<
 QVector<int32_t> QFilterParametersReader::readArray(const QString name, QVector<int32_t> value)
 {
   BOOST_ASSERT(m_Prefs != NULL);
-  if(m_Prefs->contains(name) == false){ return value; }
+  if(m_Prefs->contains(name) == false) { return value; }
   bool ok = false;
 
   QString data = m_Prefs->value(name).toByteArray();
@@ -486,7 +488,7 @@ QVector<int32_t> QFilterParametersReader::readArray(const QString name, QVector<
 QVector<int64_t> QFilterParametersReader::readArray(const QString name, QVector<int64_t> value)
 {
   BOOST_ASSERT(m_Prefs != NULL);
-  if(m_Prefs->contains(name) == false){ return value; }
+  if(m_Prefs->contains(name) == false) { return value; }
   bool ok = false;
 
   QString data = m_Prefs->value(name).toByteArray();
@@ -512,7 +514,7 @@ QVector<int64_t> QFilterParametersReader::readArray(const QString name, QVector<
 QVector<uint8_t> QFilterParametersReader::readArray(const QString name, QVector<uint8_t> value)
 {
   BOOST_ASSERT(m_Prefs != NULL);
-  if(m_Prefs->contains(name) == false){ return value; }
+  if(m_Prefs->contains(name) == false) { return value; }
   bool ok = false;
 
   QString data = m_Prefs->value(name).toByteArray();
@@ -538,7 +540,7 @@ QVector<uint8_t> QFilterParametersReader::readArray(const QString name, QVector<
 QVector<uint16_t> QFilterParametersReader::readArray(const QString name, QVector<uint16_t> value)
 {
   BOOST_ASSERT(m_Prefs != NULL);
-  if(m_Prefs->contains(name) == false){ return value; }
+  if(m_Prefs->contains(name) == false) { return value; }
   bool ok = false;
 
   QString data = m_Prefs->value(name).toByteArray();
@@ -564,7 +566,7 @@ QVector<uint16_t> QFilterParametersReader::readArray(const QString name, QVector
 QVector<uint32_t> QFilterParametersReader::readArray(const QString name, QVector<uint32_t> value)
 {
   BOOST_ASSERT(m_Prefs != NULL);
-  if(m_Prefs->contains(name) == false){ return value; }
+  if(m_Prefs->contains(name) == false) { return value; }
   bool ok = false;
 
   QString data = m_Prefs->value(name).toByteArray();
@@ -590,7 +592,7 @@ QVector<uint32_t> QFilterParametersReader::readArray(const QString name, QVector
 QVector<uint64_t> QFilterParametersReader::readArray(const QString name, QVector<uint64_t> value)
 {
   BOOST_ASSERT(m_Prefs != NULL);
-  if(m_Prefs->contains(name) == false){ return value; }
+  if(m_Prefs->contains(name) == false) { return value; }
   bool ok = false;
 
   QString data = m_Prefs->value(name).toByteArray();
@@ -616,7 +618,7 @@ QVector<uint64_t> QFilterParametersReader::readArray(const QString name, QVector
 QVector<float> QFilterParametersReader::readArray(const QString name, QVector<float> value)
 {
   BOOST_ASSERT(m_Prefs != NULL);
-  if(m_Prefs->contains(name) == false){ return value; }
+  if(m_Prefs->contains(name) == false) { return value; }
   bool ok = false;
 
   QString data = m_Prefs->value(name).toByteArray();
@@ -642,7 +644,7 @@ QVector<float> QFilterParametersReader::readArray(const QString name, QVector<fl
 QVector<double> QFilterParametersReader::readArray(const QString name, QVector<double> value)
 {
   BOOST_ASSERT(m_Prefs != NULL);
-  if(m_Prefs->contains(name) == false){ return value; }
+  if(m_Prefs->contains(name) == false) { return value; }
 
   bool ok = false;
 
@@ -809,7 +811,7 @@ AxisAngleInput_t QFilterParametersReader::readAxisAngle(const QString name, Axis
 QVector<AxisAngleInput_t> QFilterParametersReader::readAxisAngles(const QString name, QVector<AxisAngleInput_t> v)
 {
   BOOST_ASSERT(m_Prefs != NULL);
-  if(m_Prefs->contains(name) == false){ return v; }
+  if(m_Prefs->contains(name) == false) { return v; }
   AxisAngleInput_t defValue;
   defValue.angle = 0.0f;
   defValue.h = 0.0f;
@@ -919,10 +921,10 @@ DataContainerArrayProxy QFilterParametersReader::readDataContainerArrayProxy(con
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-DataArrayPath QFilterParametersReader::readDataArrayPath(const QString &name, DataArrayPath def)
+DataArrayPath QFilterParametersReader::readDataArrayPath(const QString& name, DataArrayPath def)
 {
   BOOST_ASSERT(m_Prefs != NULL);
-  if(m_Prefs->contains(name) == false){ return def; }
+  if(m_Prefs->contains(name) == false) { return def; }
   QString defPath("");
   QString str = m_Prefs->value(name, defPath).toString();
   DataArrayPath path(str);

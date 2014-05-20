@@ -66,9 +66,8 @@ class DREAM3DLib_EXPORT VtkFeatureIdReader : public FileReader
     DREAM3D_FILTER_PARAMETER(QString, InputFile)
     Q_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile)
 
-    DREAM3D_INSTANCE_STRING_PROPERTY(Comment)
-    DREAM3D_INSTANCE_STRING_PROPERTY(DatasetType)
-    DREAM3D_INSTANCE_PROPERTY(bool, FileIsBinary)
+    DREAM3D_FILTER_PARAMETER(QString, FeatureIdScalarName)
+    Q_PROPERTY(QString FeatureIdScalarName READ getFeatureIdScalarName WRITE setFeatureIdScalarName)
 
     DREAM3D_FILTER_PARAMETER(QString, FeatureIdsArrayName)
     Q_PROPERTY(QString FeatureIdsArrayName READ getFeatureIdsArrayName WRITE setFeatureIdsArrayName)
@@ -94,6 +93,13 @@ class DREAM3DLib_EXPORT VtkFeatureIdReader : public FileReader
     virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
 
     virtual void preflight();
+
+
+    // Normal Instance Variables that are not Filter Parameters
+    DREAM3D_INSTANCE_STRING_PROPERTY(Comment)
+    DREAM3D_INSTANCE_STRING_PROPERTY(DatasetType)
+    DREAM3D_INSTANCE_PROPERTY(bool, FileIsBinary)
+
 
   signals:
     void updateFilterParameters(AbstractFilter* filter);

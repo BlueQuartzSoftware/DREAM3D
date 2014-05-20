@@ -117,7 +117,8 @@ EbsdToH5EbsdWidget::~EbsdToH5EbsdWidget()
 // -----------------------------------------------------------------------------
 void EbsdToH5EbsdWidget::setWidgetListEnabled(bool b)
 {
-  foreach (QWidget* w, m_WidgetList) {
+  foreach (QWidget * w, m_WidgetList)
+  {
     w->setEnabled(b);
   }
 }
@@ -143,13 +144,13 @@ void EbsdToH5EbsdWidget::setupGui()
 
   QFileCompleter* com = new QFileCompleter(this, true);
   m_InputDir->setCompleter(com);
-  QObject::connect( com, SIGNAL(activated(const QString &)),
-                    this, SLOT(on_m_InputDir_textChanged(const QString &)));
+  QObject::connect( com, SIGNAL(activated(const QString&)),
+                    this, SLOT(on_m_InputDir_textChanged(const QString&)));
 
   QFileCompleter* com1 = new QFileCompleter(this, false);
   m_OutputFile->setCompleter(com1);
-  QObject::connect( com1, SIGNAL(activated(const QString &)),
-                    this, SLOT(on_m_OutputFile_textChanged(const QString &)));
+  QObject::connect( com1, SIGNAL(activated(const QString&)),
+                    this, SLOT(on_m_OutputFile_textChanged(const QString&)));
 
   m_WidgetList << m_InputDir << m_InputDirBtn << m_OutputFile << m_OutputFileBtn;
   m_WidgetList << m_FileExt << m_ErrorMessage << m_TotalDigits;
@@ -176,13 +177,20 @@ void EbsdToH5EbsdWidget::setupGui()
 // -----------------------------------------------------------------------------
 void EbsdToH5EbsdWidget::getGuiParametersFromFilter()
 {
+  m_InputDir->setText(m_Filter->getInputPath());
+
+  QObjectList obs = children();
+  foreach(QObject * ob, obs)
+  {
+    ob->blockSignals(true);
+  }
+
   m_OutputFile->setText( m_Filter->getOutputFile() );
   m_ZStartIndex->setValue( m_Filter->getZStartIndex() );
   m_ZEndIndex->setValue( m_Filter->getZEndIndex() );
   m_zSpacing->setText( QString::number(m_Filter->getZResolution()) );
   setRefFrameZDir( m_Filter->getRefFrameZDir() );
 
-  m_InputDir->setText(m_Filter->getInputPath());
   m_FilePrefix->setText(m_Filter->getFilePrefix());
   m_FileSuffix->setText(m_Filter->getFileSuffix());
   m_FileExt->setText(m_Filter->getFileExtension());
@@ -190,6 +198,14 @@ void EbsdToH5EbsdWidget::getGuiParametersFromFilter()
 
   m_SampleTransformation = m_Filter->getSampleTransformation();
   m_EulerTransformation = m_Filter->getEulerTransformation();
+
+  foreach(QObject * ob, obs)
+  {
+    ob->blockSignals(false);
+  }
+
+  m_generateExampleEbsdInputFile();
+
 }
 
 
@@ -209,7 +225,7 @@ d.getEulerTranformation(m_EulerTransformationAngle, m_EulerTransformationAxis[0]
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void EbsdToH5EbsdWidget::on_m_OutputFile_textChanged(const QString & text)
+void EbsdToH5EbsdWidget::on_m_OutputFile_textChanged(const QString& text)
 {
   //if (verifyPathExists(text, m_OutputFile) == true )
   {
@@ -256,7 +272,7 @@ void EbsdToH5EbsdWidget::on_m_OutputFileBtn_clicked()
   QString file = QFileDialog::getSaveFileName(this, tr("Save HDF5 EBSD File"),
                                               getOpenDialogLastDirectory(),
                                               tr("HDF5 EBSD Files (*.h5ebsd)") );
-  if ( true == file.isEmpty() ){ return;  }
+  if ( true == file.isEmpty() ) { return;  }
   QFileInfo fi (file);
   QString ext = fi.suffix();
   m_OutputFile->setText(fi.absoluteFilePath());
@@ -285,7 +301,7 @@ void EbsdToH5EbsdWidget::on_m_InputDirBtn_clicked()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void EbsdToH5EbsdWidget::on_m_InputDir_textChanged(const QString & text)
+void EbsdToH5EbsdWidget::on_m_InputDir_textChanged(const QString& text)
 {
   if (verifyPathExists(m_InputDir->text(), m_InputDir) )
   {
@@ -310,6 +326,7 @@ void EbsdToH5EbsdWidget::on_m_InputDir_textChanged(const QString & text)
   {
     m_FileListView->clear();
   }
+  emit parametersChanged();
 }
 
 // -----------------------------------------------------------------------------
@@ -317,8 +334,8 @@ void EbsdToH5EbsdWidget::on_m_InputDir_textChanged(const QString & text)
 // -----------------------------------------------------------------------------
 uint32_t EbsdToH5EbsdWidget::getRefFrameZDir()
 {
-  if (m_StackLowToHigh->isChecked()) return Ebsd::RefFrameZDir::LowtoHigh;
-  if (m_StackHighToLow->isChecked()) return Ebsd::RefFrameZDir::HightoLow;
+  if (m_StackLowToHigh->isChecked()) { return Ebsd::RefFrameZDir::LowtoHigh; }
+  if (m_StackHighToLow->isChecked()) { return Ebsd::RefFrameZDir::HightoLow; }
   return Ebsd::RefFrameZDir::UnknownRefFrameZDirection;
 }
 
@@ -343,7 +360,7 @@ void EbsdToH5EbsdWidget::setRefFrameZDir(uint32_t ref)
 // -----------------------------------------------------------------------------
 void EbsdToH5EbsdWidget::on_m_zSpacing_textChanged(const QString& string)
 {
-   emit parametersChanged();
+  emit parametersChanged();
 }
 
 
@@ -385,7 +402,7 @@ void EbsdToH5EbsdWidget::on_m_TotalDigits_valueChanged(int value)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void EbsdToH5EbsdWidget::on_m_FileExt_textChanged(const QString &string)
+void EbsdToH5EbsdWidget::on_m_FileExt_textChanged(const QString& string)
 {
   m_generateExampleEbsdInputFile();
   emit parametersChanged();
@@ -394,7 +411,7 @@ void EbsdToH5EbsdWidget::on_m_FileExt_textChanged(const QString &string)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void EbsdToH5EbsdWidget::on_m_FileSuffix_textChanged(const QString &string)
+void EbsdToH5EbsdWidget::on_m_FileSuffix_textChanged(const QString& string)
 {
   m_generateExampleEbsdInputFile();
   emit parametersChanged();
@@ -403,7 +420,7 @@ void EbsdToH5EbsdWidget::on_m_FileSuffix_textChanged(const QString &string)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void EbsdToH5EbsdWidget::on_m_FilePrefix_textChanged(const QString &string)
+void EbsdToH5EbsdWidget::on_m_FilePrefix_textChanged(const QString& string)
 {
   m_generateExampleEbsdInputFile();
   emit parametersChanged();
@@ -416,8 +433,8 @@ void EbsdToH5EbsdWidget::m_generateExampleEbsdInputFile()
 {
 
   QString filename = QString("%1%2%3.%4").arg(m_FilePrefix->text())
-      .arg(m_ZStartIndex->text(), m_TotalDigits->value(), '0')
-      .arg(m_FileSuffix->text()).arg(m_FileExt->text());
+                     .arg(m_ZStartIndex->text(), m_TotalDigits->value(), '0')
+                     .arg(m_FileSuffix->text()).arg(m_FileExt->text());
   m_GeneratedFileNameExample->setText(filename);
 
   int start = m_ZStartIndex->value();
@@ -426,11 +443,11 @@ void EbsdToH5EbsdWidget::m_generateExampleEbsdInputFile()
 
   // Now generate all the file names the user is asking for and populate the table
   QVector<QString> fileList = FilePathGenerator::GenerateFileList(start, end, hasMissingFiles, m_StackLowToHigh->isChecked(),
-                                                                  m_InputDir->text(),
-                                                                  m_FilePrefix->text(),
-                                                                  m_FileSuffix->text(),
-                                                                  m_FileExt->text(),
-                                                                  m_TotalDigits->value());
+                              m_InputDir->text(),
+                              m_FilePrefix->text(),
+                              m_FileSuffix->text(),
+                              m_FileExt->text(),
+                              m_TotalDigits->value());
   m_FileListView->clear();
   QIcon greenDot = QIcon(QString(":/green-dot.png"));
   QIcon redDot = QIcon(QString(":/red-dot.png"));
@@ -483,16 +500,18 @@ void EbsdToH5EbsdWidget::on_m_RefFrameOptionsBtn_clicked()
 
   // Now generate all the file names the user is asking for and populate the table
   QVector<QString> fileList = FilePathGenerator::GenerateFileList(start, end, hasMissingFiles, m_StackLowToHigh->isChecked(),
-                                                                  m_InputDir->text(),
-                                                                  m_FilePrefix->text(),
-                                                                  m_FileSuffix->text(),
-                                                                  m_FileExt->text(),
-                                                                  m_TotalDigits->value());
+                              m_InputDir->text(),
+                              m_FilePrefix->text(),
+                              m_FileSuffix->text(),
+                              m_FileExt->text(),
+                              m_TotalDigits->value());
   if (fileList.size() == 0)
   {
     return;
   }
   QString ebsdFileName = (fileList[0]);
+
+  identifyRefFrame();
 
   QEbsdReferenceFrameDialog d(ebsdFileName, this);
   d.setEbsdFileName(ebsdFileName);
@@ -511,6 +530,66 @@ void EbsdToH5EbsdWidget::on_m_RefFrameOptionsBtn_clicked()
     d.getEulerTranformation(m_EulerTransformation);
     emit parametersChanged(); // emit to let the system know to preflight
   }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void EbsdToH5EbsdWidget::identifyRefFrame()
+{
+  m_TSLchecked = false;
+  m_HKLchecked = false;
+  m_NoTranschecked = false;
+  m_HEDMchecked = false;
+
+  // TSL/EDAX
+  if (      m_SampleTransformation.angle == 180.0f
+            && m_SampleTransformation.h == 0.0f
+            && m_SampleTransformation.k == 1.0f
+            && m_SampleTransformation.l == 0.0f
+
+            && m_EulerTransformation.angle == 90.0f
+            && m_EulerTransformation.h == 0.0f
+            && m_EulerTransformation.k == 0.0f
+            && m_EulerTransformation.l == 1.0f
+     )
+
+  {
+    m_TSLchecked = true;
+    m_NoTranschecked = false;
+  }
+  else if (       m_SampleTransformation.angle == 180.0f      // HKL
+                  && m_SampleTransformation.h == 0.0f
+                  && m_SampleTransformation.k == 1.0f
+                  && m_SampleTransformation.l == 0.0f
+
+                  && m_EulerTransformation.angle == 0.0f
+                  && m_EulerTransformation.h == 0.0f
+                  && m_EulerTransformation.k == 0.0f
+                  && m_EulerTransformation.l == 1.0f
+          )
+
+  {
+    m_HKLchecked = true;
+    m_NoTranschecked = false;
+  }
+  else if (       m_SampleTransformation.angle == 0.0f     // HEDM
+                  && m_SampleTransformation.h == 0.0f
+                  && m_SampleTransformation.k == 0.0f
+                  && m_SampleTransformation.l == 1.0f
+
+                  && m_EulerTransformation.angle == 0.0f
+                  && m_EulerTransformation.h == 0.0f
+                  && m_EulerTransformation.k == 0.0f
+                  && m_EulerTransformation.l == 1.0f
+          )
+
+  {
+    m_HEDMchecked = true;
+    m_NoTranschecked = false;
+  }
+
+
 }
 
 // -----------------------------------------------------------------------------
@@ -581,8 +660,8 @@ void EbsdToH5EbsdWidget::m_findEbsdMaxSliceAndPrefix()
       QString fn = fi.baseName();
       QString fns = fn;
       int length =  fn.length();
-      digitEnd = length-1;
-      while(digitEnd >= 0 && fn[digitEnd] >= '0' && fn[digitEnd]<='9')
+      digitEnd = length - 1;
+      while(digitEnd >= 0 && fn[digitEnd] >= '0' && fn[digitEnd] <= '9')
       {
         --digitEnd;
       }
@@ -596,14 +675,15 @@ void EbsdToH5EbsdWidget::m_findEbsdMaxSliceAndPrefix()
         fPrefix = fn.left(pos);
         pos += rx.matchedLength();
       }
-      while(digitEnd >= 0 && fn[digitEnd] >= '0' && fn[digitEnd]<='9')
+      while(digitEnd >= 0 && fn[digitEnd] >= '0' && fn[digitEnd] <= '9')
       {
         ++digitEnd;
       }
 
       if ( digitEnd - digitStart < minTotalDigits) { minTotalDigits = digitEnd - digitStart; }
       m_TotalDigits->setValue(minTotalDigits);
-      if (list.size() > 0) {
+      if (list.size() > 0)
+      {
         currValue = list.front().toInt(&ok);
         if (false == flag) { minSlice = currValue; flag = true;}
         if (currValue > maxSlice) { maxSlice = currValue; }
@@ -624,7 +704,7 @@ void EbsdToH5EbsdWidget::m_findEbsdMaxSliceAndPrefix()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void EbsdToH5EbsdWidget::widgetChanged(const QString &text)
+void EbsdToH5EbsdWidget::widgetChanged(const QString& text)
 {
   emit parametersChanged();
 }

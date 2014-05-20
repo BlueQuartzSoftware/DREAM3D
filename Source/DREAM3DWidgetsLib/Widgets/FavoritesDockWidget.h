@@ -78,7 +78,7 @@ class DREAM3DWidgetsLib_EXPORT FavoritesDockWidget : public QDockWidget, private
      * @brief connectFilterList
      * @param filterListWidget
      */
-    void connectFilterList(FilterListDockWidget *filterListWidget);
+    void connectFilterList(FilterListDockWidget* filterListWidget);
 
     /**
      * @brief getFilterLibraryTreeWidget
@@ -86,7 +86,7 @@ class DREAM3DWidgetsLib_EXPORT FavoritesDockWidget : public QDockWidget, private
      */
     FilterLibraryTreeWidget* getFilterLibraryTreeWidget();
 
-public slots:
+  public slots:
     //// Slots to catch signals from main menu or context menu
     void actionAddFavoriteFolder_triggered();
     void actionAddFavorite_triggered();
@@ -99,7 +99,7 @@ public slots:
 
   protected:
 
- //   void addFavorite(QString path, QString favoriteTitle);
+//   void addFavorite(QString path, QString favoriteTitle);
     virtual QDir findPipelinesDirectory();
     virtual void readPipelines();
     QStringList generateFilterListFromPipelineFile(QString path);
@@ -110,7 +110,7 @@ public slots:
     bool hasDuplicateFavorites(QList<QTreeWidgetItem*> favoritesList, QString favoritePath, QString newFavoriteTitle, QTreeWidgetItem* item);
 
     void addPipelinesRecursively(QDir currentDir, QTreeWidgetItem* currentDirItem, QString iconFileName,
-                               bool allowEditing, QString fileExtension, FilterLibraryTreeWidget::ItemType itemType);
+                                 bool allowEditing, QStringList filters, FilterLibraryTreeWidget::ItemType itemType);
 
 
 
@@ -139,7 +139,7 @@ public slots:
      * @param filePath The absolute path to the pipeline file
      * @param append Should the pipeline be appended to the current pipeline
      */
-    void pipelineFileActivated(const QString &filePath, QSettings::Format, bool append);
+    void pipelineFileActivated(const QString& filePath, QSettings::Format, bool append);
 
     /**
      * @brief filterListGenerated

@@ -37,7 +37,8 @@
 
 #include "AddFavoriteWidget.h"
 
-AddFavoriteWidget::AddFavoriteWidget(QString text, QWidget *parent) {
+AddFavoriteWidget::AddFavoriteWidget(QString text, QWidget* parent)
+{
   setupUi(this);
   addfavoriteOKButton->setEnabled(false);
   BtnClicked = false;
@@ -47,7 +48,8 @@ AddFavoriteWidget::AddFavoriteWidget(QString text, QWidget *parent) {
 // -----------------------------------------------------------------------------
 //  Called when the OK button is clicked.
 // -----------------------------------------------------------------------------
-void AddFavoriteWidget::on_addfavoriteOKButton_clicked() {
+void AddFavoriteWidget::on_addfavoriteOKButton_clicked()
+{
   BtnClicked = true;
   this->close();
 }
@@ -55,7 +57,8 @@ void AddFavoriteWidget::on_addfavoriteOKButton_clicked() {
 // -----------------------------------------------------------------------------
 //  Called when the Cancel button is clicked.
 // -----------------------------------------------------------------------------
-void AddFavoriteWidget::on_addfavoriteCancelButton_clicked() {
+void AddFavoriteWidget::on_addfavoriteCancelButton_clicked()
+{
   BtnClicked = false;
   this->close();
 }
@@ -63,25 +66,30 @@ void AddFavoriteWidget::on_addfavoriteCancelButton_clicked() {
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-bool AddFavoriteWidget::getBtnClicked() {
+bool AddFavoriteWidget::getBtnClicked()
+{
   return BtnClicked;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QString AddFavoriteWidget::getFavoriteName() {
+QString AddFavoriteWidget::getFavoriteName()
+{
   return ( favoriteName->text() );
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AddFavoriteWidget::on_favoriteName_textChanged(const QString & text) {
-  if (favoriteName->text() == "") {
+void AddFavoriteWidget::on_favoriteName_textChanged(const QString& text)
+{
+  if (favoriteName->text() == "")
+  {
     addfavoriteOKButton->setEnabled(false);
   }
-  else {
+  else
+  {
     addfavoriteOKButton->setEnabled(true);
   }
 }

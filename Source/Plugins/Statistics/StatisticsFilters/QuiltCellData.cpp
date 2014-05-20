@@ -74,14 +74,14 @@ QuiltCellData::~QuiltCellData()
 void QuiltCellData::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(FilterParameter::New("Quilt Step", "QuiltStep", FilterParameterWidgetType::IntVec3Widget,"IntVec3_t", false, "Voxels"));
-  parameters.push_back(FilterParameter::New("Patch Size", "PatchSize", FilterParameterWidgetType::IntVec3Widget,"IntVec3_t", false, "Voxels"));
-  parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "QString", true));
-  parameters.push_back(FilterParameter::New("Cell Array To Quilt", "SelectedCellArrayPath", FilterParameterWidgetType::DataArraySelectionWidget,"DataArrayPath", false));
-  parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "QString", true));
-  parameters.push_back(FilterParameter::New("Output DataContainer Name", "OutputDataContainerName", FilterParameterWidgetType::StringWidget,"QString", true));
-  parameters.push_back(FilterParameter::New("Output AttributeMatrix Name", "OutputAttributeMatrixName", FilterParameterWidgetType::StringWidget,"QString", true));
-  parameters.push_back(FilterParameter::New("Output Data Array Name", "OutputArrayName", FilterParameterWidgetType::StringWidget,"QString", true));
+  parameters.push_back(FilterParameter::New("Quilt Step", "QuiltStep", FilterParameterWidgetType::IntVec3Widget, getQuiltStep(), false, "Voxels"));
+  parameters.push_back(FilterParameter::New("Patch Size", "PatchSize", FilterParameterWidgetType::IntVec3Widget, getPatchSize(), false, "Voxels"));
+  parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
+  parameters.push_back(FilterParameter::New("Cell Array To Quilt", "SelectedCellArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getSelectedCellArrayPath(), false));
+  parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
+  parameters.push_back(FilterParameter::New("Output DataContainer Name", "OutputDataContainerName", FilterParameterWidgetType::StringWidget, getOutputDataContainerName(), true));
+  parameters.push_back(FilterParameter::New("Output AttributeMatrix Name", "OutputAttributeMatrixName", FilterParameterWidgetType::StringWidget, getOutputAttributeMatrixName(), true));
+  parameters.push_back(FilterParameter::New("Output Data Array Name", "OutputArrayName", FilterParameterWidgetType::StringWidget, getOutputArrayName(), true));
   setFilterParameters(parameters);
 }
 
@@ -181,15 +181,15 @@ void QuiltCellData::dataCheck()
   if(getErrorCondition() < 0) { return; }
 
   //Establish the dimensions, resolutions and origin of the new data container
-  size_t dcDims[3] = { 0,0,0};
+  size_t dcDims[3] = { 0, 0, 0};
   m->getDimensions(dcDims[0], dcDims[1], dcDims[2]);
-  float res[3] = {m_QuiltStep.x*m->getXRes(), m_QuiltStep.y*m->getYRes(), m_QuiltStep.z*m->getZRes()};
+  float res[3] = {m_QuiltStep.x* m->getXRes(), m_QuiltStep.y* m->getYRes(), m_QuiltStep.z* m->getZRes()};
 
   // Create a new DataContainer
   VolumeDataContainer* m2 = getDataContainerArray()->createNonPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getOutputDataContainerName());
   if(getErrorCondition() < 0) { return; }
 
-  m2->setDimensions(int(dcDims[0]/m_QuiltStep.x), int(dcDims[1]/m_QuiltStep.y), int(dcDims[2]/m_QuiltStep.z));
+  m2->setDimensions(int(dcDims[0] / m_QuiltStep.x), int(dcDims[1] / m_QuiltStep.y), int(dcDims[2] / m_QuiltStep.z));
   m2->setResolution(res);
   m2->setOrigin(0.0f, 0.0f, 0.0f);
 
@@ -237,21 +237,21 @@ float quiltData(IDataArray::Pointer inputData, int xc, int yc, int zc, IntVec3_t
 
   int zStride, yStride;
   float count = 0;
-  for(int k = -(pSize.z/2); k < (pSize.z/2); k++)
+  for(int k = -(pSize.z / 2); k < (pSize.z / 2); k++)
   {
-    if((zc+k) >= 0 && (zc+k) < zDim)
+    if((zc + k) >= 0 && (zc + k) < zDim)
     {
-      zStride = ((zc+k)*xDim*yDim);
-      for(int j = -(pSize.z/2); j < (pSize.y/2); j++)
+      zStride = ((zc + k) * xDim * yDim);
+      for(int j = -(pSize.z / 2); j < (pSize.y / 2); j++)
       {
-        if((yc+j) >= 0 && (yc+j) < yDim)
+        if((yc + j) >= 0 && (yc + j) < yDim)
         {
-          yStride = ((yc+j)*xDim);
-          for(int i = -(pSize.x/2); i < (pSize.x/2); i++)
+          yStride = ((yc + j) * xDim);
+          for(int i = -(pSize.x / 2); i < (pSize.x / 2); i++)
           {
-            if((xc+i) >= 0 && (xc+i) < xDim)
+            if((xc + i) >= 0 && (xc + i) < xDim)
             {
-              value += cPtr[zStride+yStride+(xc+i)];
+              value += cPtr[zStride + yStride + (xc + i)];
               count++;
             }
           }
@@ -277,9 +277,9 @@ void QuiltCellData::execute()
 
   size_t dcDims[3];
   m->getDimensions(dcDims[0], dcDims[1], dcDims[2]);
-  int newXP = int(dcDims[0]/m_QuiltStep.x);
-  int newYP = int(dcDims[1]/m_QuiltStep.y);
-  int newZP = int(dcDims[2]/m_QuiltStep.z);
+  int newXP = int(dcDims[0] / m_QuiltStep.x);
+  int newYP = int(dcDims[1] / m_QuiltStep.y);
+  int newZP = int(dcDims[2] / m_QuiltStep.z);
 
   IDataArray::Pointer inputData = m->getAttributeMatrix(m_SelectedCellArrayPath.getAttributeMatrixName())->getAttributeArray(m_SelectedCellArrayPath.getDataArrayName());
   if (NULL == inputData.get())
@@ -296,58 +296,58 @@ void QuiltCellData::execute()
   int xc, yc, zc;
   for(int k = 0; k < newZP; k++)
   {
-    zStride = (k*newXP*newYP);
+    zStride = (k * newXP * newYP);
     for(int j = 0; j < newYP; j++)
     {
-      yStride = (j*newXP);
+      yStride = (j * newXP);
       for(int i = 0; i < newXP; i++)
       {
-        xc = i*m_QuiltStep.x + m_QuiltStep.x/2;
-        yc = j*m_QuiltStep.y + m_QuiltStep.y/2;
-        zc = k*m_QuiltStep.z + m_QuiltStep.z/2;
+        xc = i * m_QuiltStep.x + m_QuiltStep.x / 2;
+        yc = j * m_QuiltStep.y + m_QuiltStep.y / 2;
+        zc = k * m_QuiltStep.z + m_QuiltStep.z / 2;
         if (dType.compare("int8_t") == 0)
         {
-          m_OutputArray[zStride+yStride+i] = quiltData<int8_t>(inputData, xc, yc, zc, m_PatchSize, dcDims[0], dcDims[1], dcDims[2]);
+          m_OutputArray[zStride + yStride + i] = quiltData<int8_t>(inputData, xc, yc, zc, m_PatchSize, dcDims[0], dcDims[1], dcDims[2]);
         }
         else if (dType.compare("uint8_t") == 0)
         {
-          m_OutputArray[zStride+yStride+i] = quiltData<uint8_t>(inputData, xc, yc, zc, m_PatchSize, dcDims[0], dcDims[1], dcDims[2]);
+          m_OutputArray[zStride + yStride + i] = quiltData<uint8_t>(inputData, xc, yc, zc, m_PatchSize, dcDims[0], dcDims[1], dcDims[2]);
         }
         else if (dType.compare("int16_t") == 0)
         {
-          m_OutputArray[zStride+yStride+i] = quiltData<int16_t>(inputData, xc, yc, zc, m_PatchSize, dcDims[0], dcDims[1], dcDims[2]);
+          m_OutputArray[zStride + yStride + i] = quiltData<int16_t>(inputData, xc, yc, zc, m_PatchSize, dcDims[0], dcDims[1], dcDims[2]);
         }
         else if (dType.compare("uint16_t") == 0)
         {
-          m_OutputArray[zStride+yStride+i] = quiltData<uint16_t>(inputData, xc, yc, zc, m_PatchSize, dcDims[0], dcDims[1], dcDims[2]);
+          m_OutputArray[zStride + yStride + i] = quiltData<uint16_t>(inputData, xc, yc, zc, m_PatchSize, dcDims[0], dcDims[1], dcDims[2]);
         }
         else if (dType.compare("int32_t") == 0)
         {
-          m_OutputArray[zStride+yStride+i] = quiltData<int32_t>(inputData, xc, yc, zc, m_PatchSize, dcDims[0], dcDims[1], dcDims[2]);
+          m_OutputArray[zStride + yStride + i] = quiltData<int32_t>(inputData, xc, yc, zc, m_PatchSize, dcDims[0], dcDims[1], dcDims[2]);
         }
         else if (dType.compare("uint32_t") == 0)
         {
-          m_OutputArray[zStride+yStride+i] = quiltData<uint32_t>(inputData, xc, yc, zc, m_PatchSize, dcDims[0], dcDims[1], dcDims[2]);
+          m_OutputArray[zStride + yStride + i] = quiltData<uint32_t>(inputData, xc, yc, zc, m_PatchSize, dcDims[0], dcDims[1], dcDims[2]);
         }
         else if (dType.compare("int64_t") == 0)
         {
-          m_OutputArray[zStride+yStride+i] = quiltData<int64_t>(inputData, xc, yc, zc, m_PatchSize, dcDims[0], dcDims[1], dcDims[2]);
+          m_OutputArray[zStride + yStride + i] = quiltData<int64_t>(inputData, xc, yc, zc, m_PatchSize, dcDims[0], dcDims[1], dcDims[2]);
         }
         else if (dType.compare("uint64_t") == 0)
         {
-          m_OutputArray[zStride+yStride+i] = quiltData<uint64_t>(inputData, xc, yc, zc, m_PatchSize, dcDims[0], dcDims[1], dcDims[2]);
+          m_OutputArray[zStride + yStride + i] = quiltData<uint64_t>(inputData, xc, yc, zc, m_PatchSize, dcDims[0], dcDims[1], dcDims[2]);
         }
         else if (dType.compare("float") == 0)
         {
-          m_OutputArray[zStride+yStride+i] = quiltData<float>(inputData, xc, yc, zc, m_PatchSize, dcDims[0], dcDims[1], dcDims[2]);
+          m_OutputArray[zStride + yStride + i] = quiltData<float>(inputData, xc, yc, zc, m_PatchSize, dcDims[0], dcDims[1], dcDims[2]);
         }
         else if (dType.compare("double") == 0)
         {
-          m_OutputArray[zStride+yStride+i] = quiltData<double>(inputData, xc, yc, zc, m_PatchSize, dcDims[0], dcDims[1], dcDims[2]);
+          m_OutputArray[zStride + yStride + i] = quiltData<double>(inputData, xc, yc, zc, m_PatchSize, dcDims[0], dcDims[1], dcDims[2]);
         }
         else if (dType.compare("bool") == 0)
         {
-          m_OutputArray[zStride+yStride+i] = quiltData<bool>(inputData, xc, yc, zc, m_PatchSize, dcDims[0], dcDims[1], dcDims[2]);
+          m_OutputArray[zStride + yStride + i] = quiltData<bool>(inputData, xc, yc, zc, m_PatchSize, dcDims[0], dcDims[1], dcDims[2]);
         }
       }
     }
