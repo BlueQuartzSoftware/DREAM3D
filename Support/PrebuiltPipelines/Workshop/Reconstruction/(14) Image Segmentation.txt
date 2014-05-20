@@ -1,7 +1,7 @@
 [PipelineBuilder]
 Name=(14) Image Segmentation
-Number_Filters=5
-Version=5.0.6538
+Number_Filters=6
+Version=5.0.6545
 
 [0]
 Filter_Name=ImportImageStack
@@ -27,16 +27,28 @@ Resolution\2\y=2
 Resolution\3\z=4
 
 [1]
+Filter_Name=MultiThresholdObjects
+Filter_Human_Label=Threshold Objects
+DestinationArrayName=GoodVoxels
+SelectedThresholds\size=1
+SelectedThresholds\1\DataContainerName=VolumeDataContainer
+SelectedThresholds\1\AttributeMatrixName=CellData
+SelectedThresholds\1\AttributeArrayName=ImageData
+SelectedThresholds\1\CompOperator=2
+SelectedThresholds\1\CompValue=0
+
+[2]
 Filter_Name=ScalarSegmentFeatures
 Filter_Human_Label=Segment Features (Scalar)
 CellFeatureAttributeMatrixName=CellFeatureData
 ActiveArrayName=Active
 FeatureIdsArrayName=FeatureIds
-GoodVoxelsArrayPath=VolumeDataContainer|CellData|ImageData
+GoodVoxelsArrayPath=VolumeDataContainer|CellData|GoodVoxels
+UseGoodVoxels=1
 ScalarArrayPath=VolumeDataContainer|CellData|ImageData
 ScalarTolerance=10
 
-[2]
+[3]
 Filter_Name=FindSizes
 Filter_Human_Label=Find Feature Sizes
 CellFeatureAttributeMatrixName=VolumeDataContainer|CellData|
@@ -45,13 +57,13 @@ EquivalentDiametersArrayName=EquivalentDiameters
 VolumesArrayName=Volumes
 FeatureIdsArrayPath=VolumeDataContainer|CellData|FeatureIds
 
-[3]
+[4]
 Filter_Name=CopyFeatureArrayToCellArray
 Filter_Human_Label=Create Cell Array From Feature Array
 FeatureIdsArrayPath=VolumeDataContainer|CellData|FeatureIds
 SelectedFeatureArrayPath=VolumeDataContainer|CellData|EquivalentDiameters
 
-[4]
+[5]
 Filter_Name=DataContainerWriter
 Filter_Human_Label=Write DREAM3D Data File
 OutputFile=Data/Output/Images.dream3d
