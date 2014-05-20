@@ -87,6 +87,9 @@ class VectorSegmentFeatures : public SegmentFeatures
     Q_PROPERTY(float AngleTolerance READ getAngleTolerance WRITE setAngleTolerance)
     DREAM3D_INSTANCE_PROPERTY(bool, RandomizeFeatureIds)
 
+    DREAM3D_FILTER_PARAMETER(bool, UseGoodVoxels)
+    Q_PROPERTY(bool UseGoodVoxels READ getUseGoodVoxels WRITE setUseGoodVoxels)
+
     DREAM3D_FILTER_PARAMETER(DataArrayPath, GoodVoxelsArrayPath)
     Q_PROPERTY(DataArrayPath GoodVoxelsArrayPath READ getGoodVoxelsArrayPath WRITE setGoodVoxelsArrayPath)
 
