@@ -43,8 +43,7 @@
 RenameDataContainer::RenameDataContainer() :
   AbstractFilter(),
   m_SelectedDataContainerName(""),
-  m_NewDataContainerName(""),
-  m_ReplaceExistingDataContainer(false)
+  m_NewDataContainerName("")
 {
   setupFilterParameters();
 }
@@ -64,7 +63,6 @@ void RenameDataContainer::setupFilterParameters()
   FilterParameterVector parameters;
   parameters.push_back(FilterParameter::New("DataContainer to Rename", "SelectedDataContainerName", FilterParameterWidgetType::DataContainerSelectionWidget, getSelectedDataContainerName(), false));
   parameters.push_back(FilterParameter::New("New DataContainer Name", "NewDataContainerName", FilterParameterWidgetType::StringWidget, getNewDataContainerName(), false));
-  parameters.push_back(FilterParameter::New("Replace Existing DataContainer", "ReplaceExistingDataContainer", FilterParameterWidgetType::BooleanWidget, getReplaceExistingDataContainer(), false));
   setFilterParameters(parameters);
 }
 
@@ -76,7 +74,6 @@ void RenameDataContainer::readFilterParameters(AbstractFilterParametersReader* r
   reader->openFilterGroup(this, index);
   setSelectedDataContainerName( reader->readString("SelectedDataContainerName", getSelectedDataContainerName()) );
   setNewDataContainerName( reader->readString( "NewDataContainerName", getNewDataContainerName() ) );
-  setReplaceExistingDataContainer(reader->readValue("ReplaceExistingDataContainer", getReplaceExistingDataContainer() ) );
   reader->closeFilterGroup();
 }
 
@@ -88,7 +85,6 @@ int RenameDataContainer::writeFilterParameters(AbstractFilterParametersWriter* w
   writer->openFilterGroup(this, index);
   writer->writeValue("SelectedDataContainerName", getSelectedDataContainerName() );
   writer->writeValue("NewDataContainerName", getNewDataContainerName() );
-  writer->writeValue("ReplaceExistingDataContainer", getReplaceExistingDataContainer() );
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
@@ -110,7 +106,7 @@ void RenameDataContainer::dataCheck()
   DataContainerArray::Pointer dca = getDataContainerArray();
   if (NULL == dca.get() ) { return; }
 
-  bool check = dca->renameDataContainer(getSelectedDataContainerName(), getNewDataContainerName(), getReplaceExistingDataContainer());
+  bool check = dca->renameDataContainer(getSelectedDataContainerName(), getNewDataContainerName());
   if(check == false)
   {
     setErrorCondition(-11006);

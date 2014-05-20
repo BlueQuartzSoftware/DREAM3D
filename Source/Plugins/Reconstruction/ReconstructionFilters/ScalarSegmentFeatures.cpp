@@ -130,6 +130,7 @@ ScalarSegmentFeatures::ScalarSegmentFeatures() :
   m_CellFeatureAttributeMatrixName(DREAM3D::Defaults::CellFeatureAttributeMatrixName),
   m_ScalarArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, ""),
   m_ScalarTolerance(5.0f),
+  m_UseGoodVoxels(true),
   m_RandomizeFeatureIds(true),
   m_GoodVoxelsArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::GoodVoxels),
   m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
@@ -164,6 +165,10 @@ void ScalarSegmentFeatures::setupFilterParameters()
   parameters.push_back(FilterParameter::New("Scalar Tolerance", "ScalarTolerance", FilterParameterWidgetType::DoubleWidget, getScalarTolerance(), false));
   parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
   parameters.push_back(FilterParameter::New("GoodVoxels", "GoodVoxelsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getGoodVoxelsArrayPath(), true, ""));
+  FilterParameter::Pointer param = parameters.back();
+  param->setConditional(true);
+  param->setConditionalProperty("UseGoodVoxels");
+  param->setConditionalLabel("Use GoodVoxels Array");
   parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
   parameters.push_back(FilterParameter::New("FeatureIds", "FeatureIdsArrayName", FilterParameterWidgetType::StringWidget, getFeatureIdsArrayName(), true, ""));
   parameters.push_back(FilterParameter::New("Cell Feature Attribute Matrix Name", "CellFeatureAttributeMatrixName", FilterParameterWidgetType::StringWidget, getCellFeatureAttributeMatrixName(), true, ""));
@@ -181,6 +186,7 @@ void ScalarSegmentFeatures::readFilterParameters(AbstractFilterParametersReader*
   setCellFeatureAttributeMatrixName(reader->readString("CellFeatureAttributeMatrixName", getCellFeatureAttributeMatrixName() ) );
   setFeatureIdsArrayName(reader->readString("FeatureIdsArrayName", getFeatureIdsArrayName() ) );
   setGoodVoxelsArrayPath(reader->readDataArrayPath("GoodVoxelsArrayPath", getGoodVoxelsArrayPath() ) );
+  setUseGoodVoxels(reader->readValue("UseGoodVoxels", getUseGoodVoxels() ) );
   setScalarArrayPath( reader->readDataArrayPath( "ScalarArrayPath", getScalarArrayPath() ) );
   setScalarTolerance( reader->readValue("ScalarTolerance", getScalarTolerance()) );
   reader->closeFilterGroup();
@@ -196,6 +202,7 @@ int ScalarSegmentFeatures::writeFilterParameters(AbstractFilterParametersWriter*
   writer->writeValue("ActiveArrayName", getActiveArrayName() );
   writer->writeValue("FeatureIdsArrayName", getFeatureIdsArrayName() );
   writer->writeValue("GoodVoxelsArrayPath", getGoodVoxelsArrayPath() );
+  writer->writeValue("UseGoodVoxels", getUseGoodVoxels() );
   writer->writeValue("ScalarArrayPath", getScalarArrayPath() );
   writer->writeValue("ScalarTolerance", getScalarTolerance() );
   writer->closeFilterGroup();
@@ -235,10 +242,12 @@ void ScalarSegmentFeatures::dataCheck()
   m_FeatureIdsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(this, tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-  m_GoodVoxelsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<bool>, AbstractFilter>(NULL, getGoodVoxelsArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_GoodVoxelsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
-  { m_GoodVoxels = m_GoodVoxelsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-  else {m_GoodVoxels = NULL;}
+  if(m_UseGoodVoxels == true)
+  {
+    m_GoodVoxelsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<bool>, AbstractFilter>(this, getGoodVoxelsArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+    if( NULL != m_GoodVoxelsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+    { m_GoodVoxels = m_GoodVoxelsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  }
   tempPath.update(getDataContainerName(), getCellFeatureAttributeMatrixName(), getActiveArrayName() );
   m_ActivePtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<bool>, AbstractFilter, bool>(this, tempPath, true, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_ActivePtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
@@ -345,12 +354,6 @@ void ScalarSegmentFeatures::execute()
     m_Compare =  new TSpecificCompareFunctor<double>(m_InputData->getVoidPointer(0), m_InputData->getNumberOfTuples(), m_ScalarTolerance, m_FeatureIds);
   }
 
-  missingGoodVoxels = true;
-  if (NULL != m_GoodVoxels)
-  {
-    missingGoodVoxels = false;
-  }
-
   // Generate the random voxel indices that will be used for the seed points to start a new grain growth/agglomeration
   const size_t rangeMin = 0;
   const size_t rangeMax = totalPoints - 1;
@@ -440,7 +443,7 @@ int64_t ScalarSegmentFeatures::getSeed(size_t gnum)
     m_TotalRandomNumbersGenerated++; // Increment this counter
     if(m_FeatureIds[randpoint] == 0) // If the GrainId of the voxel is ZERO then we can use this as a seed point
     {
-      if ((missingGoodVoxels == true || m_GoodVoxels[randpoint] == true))
+      if (m_UseGoodVoxels == false || m_GoodVoxels[randpoint] == true)
       {
         seed = randpoint;
       }
@@ -462,7 +465,7 @@ int64_t ScalarSegmentFeatures::getSeed(size_t gnum)
 bool ScalarSegmentFeatures::determineGrouping(int64_t referencepoint, int64_t neighborpoint, size_t gnum)
 {
 
-  if(m_FeatureIds[neighborpoint] == 0 && (missingGoodVoxels == true || m_GoodVoxels[neighborpoint] == true))
+  if(m_FeatureIds[neighborpoint] == 0 && (m_UseGoodVoxels == false || m_GoodVoxels[neighborpoint] == true))
   {
     return (*m_Compare)( (size_t)(referencepoint), (size_t)(neighborpoint), gnum );
     //     | Functor  ||calling the operator() method of the CompareFunctor Class |

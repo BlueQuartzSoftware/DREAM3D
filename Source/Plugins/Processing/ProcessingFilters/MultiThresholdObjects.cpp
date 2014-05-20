@@ -48,7 +48,7 @@
 // -----------------------------------------------------------------------------
 MultiThresholdObjects::MultiThresholdObjects() :
   AbstractFilter(),
-  m_DestinationArrayName(DREAM3D::CellData::GoodVoxels),
+  m_DestinationArrayName(DREAM3D::GeneralData::ThresholdArray),
   m_Destination(NULL)
 {
   setupFilterParameters();

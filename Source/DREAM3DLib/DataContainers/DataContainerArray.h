@@ -115,7 +115,7 @@ class DREAM3DLib_EXPORT DataContainerArray : public QObject
     virtual void duplicateDataContainer(const QString& name, const QString& newName);
     QList<QString> getDataContainerNames();
     QList<DataContainer::Pointer>& getDataContainerArray();
-    bool renameDataContainer(const QString& oldname, const QString& newname, bool overwrite);
+    bool renameDataContainer(const QString& oldname, const QString& newname);
 
 
     virtual void printDataContainerNames(QTextStream& out);
