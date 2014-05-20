@@ -1,16 +1,22 @@
 [PipelineBuilder]
-Number_Filters=2
 Name=(13) Image Initial Visualization
+Number_Filters=2
+Version=5.0.6538
 
 [0]
 Filter_Name=ImportImageStack
-InputDir=Data/Image
-FilePrefix=Slice_
-FileSuffix=
-FileExt=tif
+Filter_Human_Label=Import Images (3D Stack)
+DataContainerName=VolumeDataContainer
+CellAttributeMatrixName=CellData
+ImageDataArrayName=ImageData
 ZStartIndex=11
 ZEndIndex=174
-TotalDigits=1
+PaddingDigits=2
+RefFrameZDir=0
+InputPath=Data/Image
+FilePrefix=slice_
+FileSuffix=
+FileExtension=tif
 Origin\size=3
 Origin\1\x=0
 Origin\2\y=0
@@ -22,7 +28,6 @@ Resolution\3\z=4
 
 [1]
 Filter_Name=DataContainerWriter
+Filter_Human_Label=Write DREAM3D Data File
 OutputFile=Data/Output/Images.dream3d
-WriteVoxelData=true
-WriteSurfaceMeshData=true
-WriteXdmfFile=true
+WriteXdmfFile=1

@@ -163,13 +163,13 @@ void MinSize::execute()
   dataCheck();
   if(getErrorCondition() < 0) { return; }
 
-  numFeatures = 0;
+  m_NumFeatures = 0;
   int64_t totalPoints = m_FeatureIdsPtr.lock()->getNumberOfTuples();
   for (int64_t iter = 0; iter < totalPoints; iter++)
   {
-    if(m_FeatureIds[iter] > numFeatures) { numFeatures = m_FeatureIds[iter]; }
+    if(m_FeatureIds[iter] > m_NumFeatures) { m_NumFeatures = m_FeatureIds[iter]; }
   }
-  numFeatures += 1;
+  m_NumFeatures += 1;
 
   QVector<bool> activeObjects = remove_smallfeatures();
   assign_badpoints();
@@ -232,7 +232,7 @@ void MinSize::assign_badpoints()
   int kstride, jstride;
   int featurename, feature;
   int neighbor;
-  QVector<int > n(numFeatures + 1, 0);
+  QVector<int > n(m_NumFeatures + 1, 0);
   while (counter != 0)
   {
     counter = 0;
@@ -330,15 +330,15 @@ QVector<bool> MinSize::remove_smallfeatures()
   bool good = false;
   int gnum;
 
-  QVector<int> voxcounts(numFeatures, 0);
-  QVector<bool> activeObjects(numFeatures, true);
+  QVector<int> voxcounts(m_NumFeatures, 0);
+  QVector<bool> activeObjects(m_NumFeatures, true);
 
   for (int64_t i = 0; i < totalPoints; i++)
   {
     gnum = m_FeatureIds[i];
     if(gnum >= 0) { voxcounts[gnum]++; }
   }
-  for (size_t i = 1; i <  static_cast<size_t>(numFeatures); i++)
+  for (size_t i = 1; i <  static_cast<size_t>(m_NumFeatures); i++)
   {
     if(m_ApplyToSinglePhase == false)
     {
