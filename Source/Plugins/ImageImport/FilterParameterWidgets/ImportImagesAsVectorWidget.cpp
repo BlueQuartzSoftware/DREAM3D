@@ -85,7 +85,8 @@ ImportImagesAsVectorWidget::~ImportImagesAsVectorWidget()
 // -----------------------------------------------------------------------------
 void ImportImagesAsVectorWidget::setWidgetListEnabled(bool b)
 {
-  foreach (QWidget* w, m_WidgetList) {
+  foreach (QWidget * w, m_WidgetList)
+  {
     w->setEnabled(b);
   }
 }
@@ -111,8 +112,8 @@ void ImportImagesAsVectorWidget::setupGui()
 
   QFileCompleter* com = new QFileCompleter(this, true);
   m_InputDir->setCompleter(com);
-  QObject::connect( com, SIGNAL(activated(const QString &)),
-                    this, SLOT(on_m_InputDir_textChanged(const QString &)));
+  QObject::connect( com, SIGNAL(activated(const QString&)),
+                    this, SLOT(on_m_InputDir_textChanged(const QString&)));
 
   {
     QDoubleValidator* validator = new QDoubleValidator(xRes);
@@ -223,7 +224,7 @@ void ImportImagesAsVectorWidget::setOriginValues()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ImportImagesAsVectorWidget::resolutionChanged(const QString &string)
+void ImportImagesAsVectorWidget::resolutionChanged(const QString& string)
 {
   emit parametersChanged();
 }
@@ -232,7 +233,7 @@ void ImportImagesAsVectorWidget::resolutionChanged(const QString &string)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ImportImagesAsVectorWidget::originChanged(const QString &string)
+void ImportImagesAsVectorWidget::originChanged(const QString& string)
 {
   emit parametersChanged();
 }
@@ -288,7 +289,7 @@ void ImportImagesAsVectorWidget::on_m_InputDirBtn_clicked()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ImportImagesAsVectorWidget::on_m_InputDir_textChanged(const QString & text)
+void ImportImagesAsVectorWidget::on_m_InputDir_textChanged(const QString& text)
 {
   if (verifyPathExists(m_InputDir->text(), m_InputDir) )
   {
@@ -339,7 +340,7 @@ void ImportImagesAsVectorWidget::on_m_TotalDigits_valueChanged(int value)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ImportImagesAsVectorWidget::on_m_FileExt_textChanged(const QString &string)
+void ImportImagesAsVectorWidget::on_m_FileExt_textChanged(const QString& string)
 {
   generateExampleInputFile();
   emit parametersChanged();
@@ -348,7 +349,7 @@ void ImportImagesAsVectorWidget::on_m_FileExt_textChanged(const QString &string)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ImportImagesAsVectorWidget::on_m_FileSuffix_textChanged(const QString &string)
+void ImportImagesAsVectorWidget::on_m_FileSuffix_textChanged(const QString& string)
 {
   generateExampleInputFile();
   emit parametersChanged();
@@ -357,7 +358,7 @@ void ImportImagesAsVectorWidget::on_m_FileSuffix_textChanged(const QString &stri
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ImportImagesAsVectorWidget::on_m_FilePrefix_textChanged(const QString &string)
+void ImportImagesAsVectorWidget::on_m_FilePrefix_textChanged(const QString& string)
 {
   generateExampleInputFile();
   emit parametersChanged();
@@ -372,8 +373,8 @@ void ImportImagesAsVectorWidget::generateExampleInputFile()
 {
 
   QString filename = QString("%1%2%3.%4").arg(m_FilePrefix->text())
-      .arg(m_StartIndex->text(), m_TotalDigits->value(), '0')
-      .arg(m_FileSuffix->text()).arg(m_FileExt->text());
+                     .arg(m_StartIndex->text(), m_TotalDigits->value(), '0')
+                     .arg(m_FileSuffix->text()).arg(m_FileExt->text());
   m_GeneratedFileNameExample->setText(filename);
 
   int start = m_StartIndex->value();
@@ -382,11 +383,11 @@ void ImportImagesAsVectorWidget::generateExampleInputFile()
 
   // Now generate all the file names the user is asking for and populate the table
   QVector<QString> fileList = FilePathGenerator::GenerateFileList(start, end, hasMissingFiles, false,
-                                                                  m_InputDir->text(),
-                                                                  m_FilePrefix->text(),
-                                                                  m_FileSuffix->text(),
-                                                                  m_FileExt->text(),
-                                                                  m_TotalDigits->value());
+                              m_InputDir->text(),
+                              m_FilePrefix->text(),
+                              m_FileSuffix->text(),
+                              m_FileExt->text(),
+                              m_TotalDigits->value());
   m_FileListView->clear();
   QIcon greenDot = QIcon(QString(":/green-dot.png"));
   QIcon redDot = QIcon(QString(":/red-dot.png"));
@@ -487,8 +488,8 @@ void ImportImagesAsVectorWidget::findMaxSliceAndPrefix()
       QString fn = fi.baseName();
       QString fns = fn;
       int length =  fn.length();
-      digitEnd = length-1;
-      while(digitEnd >= 0 && fn[digitEnd] >= '0' && fn[digitEnd]<='9')
+      digitEnd = length - 1;
+      while(digitEnd >= 0 && fn[digitEnd] >= '0' && fn[digitEnd] <= '9')
       {
         --digitEnd;
       }
@@ -502,14 +503,15 @@ void ImportImagesAsVectorWidget::findMaxSliceAndPrefix()
         fPrefix = fn.left(pos);
         pos += rx.matchedLength();
       }
-      while(digitEnd >= 0 && fn[digitEnd] >= '0' && fn[digitEnd]<='9')
+      while(digitEnd >= 0 && fn[digitEnd] >= '0' && fn[digitEnd] <= '9')
       {
         ++digitEnd;
       }
 
       if ( digitEnd - digitStart < minTotalDigits) { minTotalDigits = digitEnd - digitStart; }
       m_TotalDigits->setValue(minTotalDigits);
-      if (list.size() > 0) {
+      if (list.size() > 0)
+      {
         currValue = list.front().toInt(&ok);
         if (false == flag) { minSlice = currValue; flag = true;}
         if (currValue > maxSlice) { maxSlice = currValue; }
@@ -528,7 +530,7 @@ void ImportImagesAsVectorWidget::findMaxSliceAndPrefix()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ImportImagesAsVectorWidget::widgetChanged(const QString &text)
+void ImportImagesAsVectorWidget::widgetChanged(const QString& text)
 {
   emit parametersChanged();
 }

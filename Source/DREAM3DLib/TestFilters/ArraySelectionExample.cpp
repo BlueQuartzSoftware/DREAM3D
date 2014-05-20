@@ -63,7 +63,7 @@ void ArraySelectionExample::setupFilterParameters()
 {
   QVector<FilterParameter::Pointer> parameters;
   /* To select arrays */
-  parameters.push_back(FilterParameter::New("Array to Select", "DataContainerArrayProxy", FilterParameterWidgetType::DataContainerArrayProxyWidget,"", false));
+  parameters.push_back(FilterParameter::New("Array to Select", "DataContainerArrayProxy", FilterParameterWidgetType::DataContainerArrayProxyWidget, "", false));
 
 
   setFilterParameters(parameters);
@@ -148,7 +148,7 @@ AbstractFilter::Pointer ArraySelectionExample::newFilterInstance(bool copyFilter
   ArraySelectionExample::Pointer filter = ArraySelectionExample::New();
   if(true == copyFilterParameters)
   {
-    copyFilterParameterInstanceVariables(filter.get());
+    filter->setDataContainerArrayProxy(getDataContainerArrayProxy());
   }
   return filter;
 }

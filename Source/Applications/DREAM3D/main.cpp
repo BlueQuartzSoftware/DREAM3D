@@ -40,7 +40,7 @@
 /**
  * @brief The Main entry point for the application
  */
-int main (int argc, char *argv[])
+int main (int argc, char* argv[])
 {
   QApplication app(argc, argv);
   QCoreApplication::setOrganizationName("BlueQuartz Software");
@@ -59,7 +59,7 @@ int main (int argc, char *argv[])
 #endif
   QRecentFileList::instance()->readList(prefs);
 
-  DREAM3D_UI *viewer = new DREAM3D_UI;
+  DREAM3D_UI* viewer = new DREAM3D_UI;
   viewer->show();
   int app_return = app.exec();
 
@@ -100,7 +100,7 @@ int main(int argc, char* argv[])
   qtapp.setQuitOnLastWindowClosed( true );
 #endif //APPLE
 
-  setlocale(LC_NUMERIC,"C");
+  setlocale(LC_NUMERIC, "C");
   BrandedInitializer pvInitializer;
   if (!pvInitializer.initialize(argc, argv))
   {

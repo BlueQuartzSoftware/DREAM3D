@@ -64,7 +64,7 @@ FilterParameterWidgetsDialogs::~FilterParameterWidgetsDialogs()
 void FilterParameterWidgetsDialogs::ShowCouldNotSetFilterParameter(AbstractFilter* filter, FilterParameter* filterParameter)
 {
   QString ss = QString("Error occurred transferring the Filter Parameter '%1' in Filter '%2' to the filter instance. The pipeline may run but the underlying filter will NOT be using the values from the GUI."
-    " Please report this issue to the developers of this filter.").arg(filterParameter->getPropertyName()).arg(filter->getHumanLabel());
+                       " Please report this issue to the developers of this filter.").arg(filterParameter->getPropertyName()).arg(filter->getHumanLabel());
   QMessageBox::StandardButton reply;
   reply = QMessageBox::critical(NULL, QString("Filter Parameter Error"), ss, QMessageBox::Ok);
 }
@@ -76,7 +76,7 @@ void FilterParameterWidgetsDialogs::ShowCouldNotSetFilterParameter(AbstractFilte
 void FilterParameterWidgetsDialogs::ShowCouldNotSetConditionalFilterParameter(AbstractFilter* filter, FilterParameter* filterParameter)
 {
   QString ss = QString("Error occurred transferring the Conditional Filter Parameter '%1' in Filter '%2' to the filter instance. The pipeline may run but the underlying filter will NOT be using the values from the GUI."
-    " Please report this issue to the developers of this filter.").arg(filterParameter->getPropertyName()).arg(filter->getHumanLabel());
+                       " Please report this issue to the developers of this filter.").arg(filterParameter->getPropertyName()).arg(filter->getHumanLabel());
   QMessageBox::StandardButton reply;
   reply = QMessageBox::critical(NULL, QString("Filter Parameter Error"), ss, QMessageBox::Ok);
 }
@@ -88,7 +88,7 @@ void FilterParameterWidgetsDialogs::ShowCouldNotSetConditionalFilterParameter(Ab
 void FilterParameterWidgetsDialogs::ShowFilterPropertyCastError(AbstractFilter* filter, FilterParameter* filterParameter, const QString& filtType, const QString& paramType)
 {
   QString ss = QString("Filter Parameter mismatch for parameter '%1' in Filter '%2' from the type described in the FilterParameter.getCastableType() to the type returned by the filter. Type in FilterParameter is %3. Type Widget expecting is %4"
-    " Please report this issue to the developers of this filter.").arg(filterParameter->getPropertyName()).arg(filter->getHumanLabel()).arg(filtType).arg(paramType);
+                       " Please report this issue to the developers of this filter.").arg(filterParameter->getPropertyName()).arg(filter->getHumanLabel()).arg(filtType).arg(paramType);
   QMessageBox::StandardButton reply;
   reply = QMessageBox::critical(NULL, QString("Filter Parameter Error"), ss, QMessageBox::Ok);
 }

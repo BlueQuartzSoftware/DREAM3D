@@ -129,19 +129,19 @@ void ComparisonSelectionWidget::setupGui()
 
   // Now connect all the signals and slots
   connect(m_ComparisonSelectionTableModel, SIGNAL(dataChanged(const QModelIndex&, const QModelIndex)),
-    this, SLOT(tableDataWasChanged(const QModelIndex&, const QModelIndex&)));
+          this, SLOT(tableDataWasChanged(const QModelIndex&, const QModelIndex&)));
 
   // Catch when the filter is about to execute the preflight
   connect(m_Filter, SIGNAL(preflightAboutToExecute()),
-    this, SLOT(beforePreflight()));
+          this, SLOT(beforePreflight()));
 
   // Catch when the filter is finished running the preflight
   connect(m_Filter, SIGNAL(preflightExecuted()),
-    this, SLOT(afterPreflight()));
+          this, SLOT(afterPreflight()));
 
   // Catch when the filter wants its values updated
   connect(m_Filter, SIGNAL(updateFilterParameters(AbstractFilter*)),
-    this, SLOT(filterNeedsInputParameters(AbstractFilter*)));
+          this, SLOT(filterNeedsInputParameters(AbstractFilter*)));
 
 #if 0
   // is the filter parameter tied to a boolean property of the Filter Instance, if it is then we need to make the check box visible
@@ -173,13 +173,20 @@ void ComparisonSelectionWidget::setupGui()
 // -----------------------------------------------------------------------------
 void ComparisonSelectionWidget::on_conditionalCB_stateChanged(int state)
 {
-//  bool boolProp = conditionalCB->isChecked();
-//  dataContainerList->setEnabled(boolProp);
-//  attributeMatrixList->setEnabled(boolProp);
-//  attributeArrayList->setEnabled(boolProp);
-//  m_DidCausePreflight = true;
-//  emit parametersChanged();
-//  m_DidCausePreflight = false;
+  bool boolProp = conditionalCB->isChecked();
+  dataContainerList->setEnabled(boolProp);
+  dataContainerList->setVisible(boolProp);
+  attributeMatrixList->setEnabled(boolProp);
+  attributeMatrixList->setVisible(boolProp);
+  attributeArrayList->setEnabled(boolProp);
+  attributeArrayList->setVisible(boolProp);
+
+  label->setVisible(boolProp);
+  linkLeft->setVisible(boolProp);
+  linkRight->setVisible(boolProp);
+  m_DidCausePreflight = true;
+  emit parametersChanged();
+  m_DidCausePreflight = false;
 
 }
 #endif
@@ -213,7 +220,8 @@ void ComparisonSelectionWidget::populateComboBoxes()
   while(iter.hasNext() )
   {
     DataContainerProxy dc = iter.next();
-    if(dataContainerList->findText(dc.name) == -1 ) {
+    if(dataContainerList->findText(dc.name) == -1 )
+    {
       dataContainerList->addItem(dc.name);
     }
   }
@@ -227,7 +235,8 @@ void ComparisonSelectionWidget::populateComboBoxes()
   ComparisonInputs comps = m_Filter->property(PROPERTY_NAME_AS_CHAR).value<ComparisonInputs>();
   // Split the path up to make sure we have a valid path separated by the "|" character
   ComparisonInput_t comp;
-  if(comps.size() > 0) {
+  if(comps.size() > 0)
+  {
     comp = comps[0]; // Get the first threshold value;
   }
   QString filtDcName = comp.dataContainerName;
@@ -251,10 +260,12 @@ void ComparisonSelectionWidget::populateComboBoxes()
   if (!dataContainerList->signalsBlocked()) { didBlock = true; }
   dataContainerList->blockSignals(true);
   int dcIndex = dataContainerList->findText(dcName);
-  if(dcIndex < 0 && dcName.isEmpty() == false) {
+  if(dcIndex < 0 && dcName.isEmpty() == false)
+  {
     dataContainerList->addItem(dcName);
   } // the string was not found so just set it to the first index
-  else {
+  else
+  {
     if(dcIndex < 0) { dcIndex = 0; } // Just set it to the first DataContainer in the list
     dataContainerList->setCurrentIndex(dcIndex);
     populateAttributeMatrixList();
@@ -266,7 +277,8 @@ void ComparisonSelectionWidget::populateComboBoxes()
   attributeMatrixList->blockSignals(true);
   int amIndex = attributeMatrixList->findText(amName);
   if(amIndex < 0 && amName.isEmpty() == false) { attributeMatrixList->addItem(amName); } // The name of the attributeMatrix was not found so just set the first one
-  else {
+  else
+  {
     if(amIndex < 0) { amIndex = 0; }
     // Set the selected index in the Attribute Matrix
     attributeMatrixList->setCurrentIndex(amIndex);

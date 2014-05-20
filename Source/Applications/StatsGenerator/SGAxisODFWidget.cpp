@@ -75,7 +75,7 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-SGAxisODFWidget::SGAxisODFWidget(QWidget *parent) :
+SGAxisODFWidget::SGAxisODFWidget(QWidget* parent) :
   QWidget(parent),
   m_EnableAxisDecorations(false),
   m_Initializing(true),
@@ -123,7 +123,8 @@ void SGAxisODFWidget::extractStatsData(int index, StatsData* statsData, unsigned
     TransformationStatsData* tp = TransformationStatsData::SafePointerDownCast(statsData);
     arrays = tp->getAxisODF_Weights();
   }
-  if (arrays.size() > 0 ) {
+  if (arrays.size() > 0 )
+  {
     QVector<float> e1(static_cast<int>(arrays[0]->getNumberOfTuples()));
     ::memcpy( &(e1.front()), arrays[0]->getVoidPointer(0), sizeof(float)*e1.size() );
 
@@ -171,9 +172,9 @@ int SGAxisODFWidget::getOrientationData(StatsData* statsData, unsigned int phase
 
   for(qint32 i = 0; i < e1s.size(); i++)
   {
-    e1s[i] = e1s[i]*M_PI/180.0;
-    e2s[i] = e2s[i]*M_PI/180.0;
-    e3s[i] = e3s[i]*M_PI/180.0;
+    e1s[i] = e1s[i] * M_PI / 180.0;
+    e2s[i] = e2s[i] * M_PI / 180.0;
+    e3s[i] = e3s[i] * M_PI / 180.0;
   }
   size_t numEntries = e1s.size();
 
@@ -355,15 +356,15 @@ void SGAxisODFWidget::drawODFPlotGrid(QwtPlot* plot)
   // Draw the outer Circle
   QwtArray<double> circleX(900); // 900 because our plots are hard set to 450 pixels
   QwtArray<double> circleY(900);
-  float inc = 2.0f/449.0f;
+  float inc = 2.0f / 449.0f;
 
   for(int i = 0; i < 450; ++i)
   {
     circleX[i] = 1.0f - (i * inc);
-    circleX[450+i] = -1.0f + (i * inc);
+    circleX[450 + i] = -1.0f + (i * inc);
 
-    circleY[i] = sqrt(1.0f-(circleX[i]*circleX[i]));
-    circleY[450+i] = -circleY[i];
+    circleY[i] = sqrt(1.0f - (circleX[i] * circleX[i]));
+    circleY[450 + i] = -circleY[i];
   }
   m_CircleGrid = new QwtPlotCurve;
 #if QWT_VERSION >= 0x060000
@@ -382,9 +383,9 @@ void SGAxisODFWidget::drawODFPlotGrid(QwtPlot* plot)
     QwtArray<double> rotCrossX(2);
     QwtArray<double> rotCrossY(2);
     rotCrossX[0] = 0.7071067811f;
-    rotCrossY[0] = sqrt(1.0-(rotCrossX[0]*rotCrossX[0]));
+    rotCrossY[0] = sqrt(1.0 - (rotCrossX[0] * rotCrossX[0]));
     rotCrossX[1] = -0.7071067811f;
-    rotCrossY[1] = -sqrt(1.0-(rotCrossX[1]*rotCrossX[1]));
+    rotCrossY[1] = -sqrt(1.0 - (rotCrossX[1] * rotCrossX[1]));
     m_RotCross0 = new QwtPlotCurve;
 #if QWT_VERSION >= 0x060000
     m_RotCross0->setSamples(rotCrossX, rotCrossY);
@@ -402,9 +403,9 @@ void SGAxisODFWidget::drawODFPlotGrid(QwtPlot* plot)
     QwtArray<double> rotCrossX(2);
     QwtArray<double> rotCrossY(2);
     rotCrossX[0] = 0.7071067811f;
-    rotCrossY[0] = -sqrt(1.0-(rotCrossX[0]*rotCrossX[0]));
+    rotCrossY[0] = -sqrt(1.0 - (rotCrossX[0] * rotCrossX[0]));
     rotCrossX[1] = -0.7071067811f;
-    rotCrossY[1] = sqrt(1.0-(rotCrossX[1]*rotCrossX[1]));
+    rotCrossY[1] = sqrt(1.0 - (rotCrossX[1] * rotCrossX[1]));
     m_RotCross1 = new QwtPlotCurve;
 #if QWT_VERSION >= 0x060000
     m_RotCross1->setSamples(rotCrossX, rotCrossY);
@@ -465,7 +466,7 @@ void SGAxisODFWidget::poleFigureGenerationComplete()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QImage generateAxisODFPoleFigure(const PoleFigureData &data)
+QImage generateAxisODFPoleFigure(const PoleFigureData& data)
 {
   //  PoleFigureImageUtilities colorPoleFigure;
   //#if COLOR_POLE_FIGURES
@@ -498,7 +499,7 @@ void SGAxisODFWidget::on_m_CalculateODFBtn_clicked()
   weights = m_ODFTableModel->getData(SGODFTableModel::Weight);
   sigmas = m_ODFTableModel->getData(SGODFTableModel::Sigma);
 
-  for(int i=0;i<e1s.size();i++)
+  for(int i = 0; i < e1s.size(); i++)
   {
     e1s[i] = e1s[i] * M_PI / 180.0;
     e2s[i] = e2s[i] * M_PI / 180.0;
@@ -571,7 +572,7 @@ void SGAxisODFWidget::on_addODFTextureBtn_clicked()
   int r = t.exec();
   if (r == QDialog::Accepted)
   {
-    if (!m_ODFTableModel->insertRow(m_ODFTableModel->rowCount())) return;
+    if (!m_ODFTableModel->insertRow(m_ODFTableModel->rowCount())) { return; }
     // Gather values from the dialog and push them to the Table Model
     float e1 = 0.0;
     float e2 = 0.0;
@@ -596,10 +597,10 @@ void SGAxisODFWidget::on_addODFTextureBtn_clicked()
 // -----------------------------------------------------------------------------
 void SGAxisODFWidget::on_deleteODFTextureBtn_clicked()
 {
-  QItemSelectionModel *selectionModel = m_ODFTableView->selectionModel();
-  if (!selectionModel->hasSelection()) return;
+  QItemSelectionModel* selectionModel = m_ODFTableView->selectionModel();
+  if (!selectionModel->hasSelection()) { return; }
   QModelIndex index = selectionModel->currentIndex();
-  if (!index.isValid()) return;
+  if (!index.isValid()) { return; }
   m_ODFTableModel->removeRow(index.row(), index.parent());
   if (m_ODFTableModel->rowCount() > 0)
   {
@@ -631,7 +632,7 @@ void SGAxisODFWidget::on_loadODFTextureBtn_clicked()
     {
       inFile >> e1 >> e2 >> e3 >> weight >> sigma;
 
-      if (!m_ODFTableModel->insertRow(m_ODFTableModel->rowCount())) return;
+      if (!m_ODFTableModel->insertRow(m_ODFTableModel->rowCount())) { return; }
       int row = m_ODFTableModel->rowCount() - 1;
       m_ODFTableModel->setRowData(row, e1, e2, e3, weight, sigma);
 

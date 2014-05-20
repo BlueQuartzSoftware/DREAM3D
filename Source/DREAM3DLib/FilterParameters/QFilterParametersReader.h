@@ -118,7 +118,7 @@ class DREAM3DLib_EXPORT QFilterParametersReader : public AbstractFilterParameter
     virtual QSet<QString> readArraySelections(const QString name, QSet<QString> v);
 
     virtual DataContainerArrayProxy readDataContainerArrayProxy(const QString& name, DataContainerArrayProxy v);
-    virtual DataArrayPath readDataArrayPath(const QString &name, DataArrayPath v);
+    virtual DataArrayPath readDataArrayPath(const QString& name, DataArrayPath v);
 
   protected:
     QFilterParametersReader();

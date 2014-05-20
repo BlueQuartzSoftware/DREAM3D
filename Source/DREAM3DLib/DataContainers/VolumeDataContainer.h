@@ -119,7 +119,7 @@ class DREAM3DLib_EXPORT VolumeDataContainer : public SurfaceDataContainer
     virtual int writeMeshToHDF5(hid_t dcGid, bool writeXdmf);
     virtual int writeCellsToHDF5(hid_t dcGid);
     virtual int writeMetaInfo(hid_t dcGid, QString& hdfPath, int64_t volDims[3], float spacing[3], float origin[3]);
-    virtual int writeXdmf(QTextStream &out, QString hdfFileName);
+    virtual int writeXdmf(QTextStream& out, QString hdfFileName);
     virtual int readCells(hid_t dcGid, bool preflight);
     virtual int readMeshDataFromHDF5(hid_t dcGid, bool preflight);
 

@@ -231,7 +231,7 @@ IDataArray::Pointer StatsDataArray::deepCopy()
   StatsDataArray::Pointer daCopyPtr = StatsDataArray::New();
   daCopyPtr->resize(getNumberOfTuples());
   StatsDataArray& daCopy = *daCopyPtr;
-  for(size_t i=0;i<getNumberOfTuples();i++)
+  for(size_t i = 0; i < getNumberOfTuples(); i++)
   {
     daCopy[i] = m_StatsDataArray[i];
   }

@@ -48,8 +48,8 @@
 
 
 /**
-*                                                                     
-*/                                                                    
+*
+*/
 class DREAM3DWidgetsLib_EXPORT UpdateCheckData : public QObject
 {
     Q_OBJECT

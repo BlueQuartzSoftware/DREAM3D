@@ -97,7 +97,8 @@ namespace Ebsd
   }
 
   /** @brief Constants defined for the 5 orientation options */
-  namespace RefFrameZDir {
+  namespace RefFrameZDir
+  {
     static const unsigned int LowtoHigh = 0;
     static const unsigned int HightoLow = 1;
     static const unsigned int UnknownRefFrameZDirection = 2;

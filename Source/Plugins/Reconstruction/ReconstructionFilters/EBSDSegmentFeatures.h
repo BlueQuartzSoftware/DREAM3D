@@ -68,7 +68,7 @@ typedef boost::variate_generator<RandomNumberGenerator&, NumberDistribution> Gen
  */
 class EBSDSegmentFeatures : public SegmentFeatures
 {
-  Q_OBJECT
+    Q_OBJECT
   public:
     DREAM3D_SHARED_POINTERS(EBSDSegmentFeatures)
     DREAM3D_STATIC_NEW_MACRO(EBSDSegmentFeatures)

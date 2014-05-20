@@ -51,7 +51,7 @@
 
 class PluginMaker : public QMainWindow, public Ui::PluginMaker
 {
-  Q_OBJECT
+    Q_OBJECT
 
   public:
     PluginMaker(QWidget* parent = 0);
@@ -59,41 +59,41 @@ class PluginMaker : public QMainWindow, public Ui::PluginMaker
   protected:
     void setupGui();
 
-	QString generateFileSystemPath(QString);
+    QString generateFileSystemPath(QString);
 
-protected slots:
-  void on_selectButton_clicked();
-  void on_generateButton_clicked();
+  protected slots:
+    void on_selectButton_clicked();
+    void on_generateButton_clicked();
 
-  void on_m_PluginName_textChanged(const QString & text);
-  void on_m_OutputDir_textChanged(const QString & text);
+    void on_m_PluginName_textChanged(const QString& text);
+    void on_m_OutputDir_textChanged(const QString& text);
 
-  void on_treeWidget_itemSelectionChanged();
-  void generationError(const QString& test);
+    void on_treeWidget_itemSelectionChanged();
+    void generationError(const QString& test);
 
-  void on_actionPlugin_Maker_Help_triggered();
-  void on_actionAbout_triggered();
+    void on_actionPlugin_Maker_Help_triggered();
+    void on_actionAbout_triggered();
 
-  void on_addFilterBtn_clicked();
-  void on_removeFilterBtn_clicked();
+    void on_addFilterBtn_clicked();
+    void on_removeFilterBtn_clicked();
 
-private:
-  QString m_OpenDialogLastDirectory;
-  QString cleanName(QString name);
-  QString cleanName_filters(QString name);
-  void closeEvent(QCloseEvent *event);
-  qint32 checkDirtyDocument();
-  void writeSettings();
-  void readSettings();
-  void readWindowSettings(QSettings &prefs);
-  void writeWindowSettings(QSettings &prefs);
-  QString generateCmakeContents();
- // QString generateQrcContents();
+  private:
+    QString m_OpenDialogLastDirectory;
+    QString cleanName(QString name);
+    QString cleanName_filters(QString name);
+    void closeEvent(QCloseEvent* event);
+    qint32 checkDirtyDocument();
+    void writeSettings();
+    void readSettings();
+    void readWindowSettings(QSettings& prefs);
+    void writeWindowSettings(QSettings& prefs);
+    QString generateCmakeContents();
+// QString generateQrcContents();
 
-  QVector<FilterBundler> m_FilterBundles;
-  QTreeWidgetItem* F_name;
-  QTreeWidgetItem* F_doc;
-  QTreeWidgetItem* F_namefilters;
+    QVector<FilterBundler> m_FilterBundles;
+    QTreeWidgetItem* F_name;
+    QTreeWidgetItem* F_doc;
+    QTreeWidgetItem* F_namefilters;
 
 };
 

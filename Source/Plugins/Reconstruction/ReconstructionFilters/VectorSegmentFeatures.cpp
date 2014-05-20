@@ -84,14 +84,14 @@ VectorSegmentFeatures::~VectorSegmentFeatures()
 void VectorSegmentFeatures::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(FilterParameter::New("Vector Array Name", "SelectedVectorArrayPath", FilterParameterWidgetType::DataArraySelectionWidget,"DataArrayPath", false));
-  parameters.push_back(FilterParameter::New("Angle Tolerance", "AngleTolerance", FilterParameterWidgetType::DoubleWidget,"float", false));
-  parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "QString", true));
-  parameters.push_back(FilterParameter::New("GoodVoxels Array Name", "GoodVoxelsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
-  parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "QString", true));
-  parameters.push_back(FilterParameter::New("FeatureIds", "FeatureIdsArrayName", FilterParameterWidgetType::StringWidget, "QString", true, ""));
-  parameters.push_back(FilterParameter::New("Cell Feature Attribute Matrix Name", "CellFeatureAttributeMatrixName", FilterParameterWidgetType::StringWidget, "QString", true, ""));
-  parameters.push_back(FilterParameter::New("Active", "ActiveArrayName", FilterParameterWidgetType::StringWidget, "QString", true, ""));
+  parameters.push_back(FilterParameter::New("Vector Array Name", "SelectedVectorArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getSelectedVectorArrayPath(), false));
+  parameters.push_back(FilterParameter::New("Angle Tolerance", "AngleTolerance", FilterParameterWidgetType::DoubleWidget, getAngleTolerance(), false));
+  parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
+  parameters.push_back(FilterParameter::New("GoodVoxels Array Name", "GoodVoxelsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getGoodVoxelsArrayPath(), true, ""));
+  parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
+  parameters.push_back(FilterParameter::New("FeatureIds", "FeatureIdsArrayName", FilterParameterWidgetType::StringWidget, getFeatureIdsArrayName(), true, ""));
+  parameters.push_back(FilterParameter::New("Cell Feature Attribute Matrix Name", "CellFeatureAttributeMatrixName", FilterParameterWidgetType::StringWidget, getCellFeatureAttributeMatrixName(), true, ""));
+  parameters.push_back(FilterParameter::New("Active", "ActiveArrayName", FilterParameterWidgetType::StringWidget, getActiveArrayName(), true, ""));
   setFilterParameters(parameters);
 }
 
@@ -272,7 +272,8 @@ void VectorSegmentFeatures::randomizeFeatureIds(int64_t totalPoints, size_t tota
   for (size_t i = 1; i < totalFeatures; i++)
   {
     r = numberGenerator(); // Random remaining position.
-    if (r >= totalFeatures) {
+    if (r >= totalFeatures)
+    {
       continue;
     }
     temp = gid[i];
@@ -314,7 +315,7 @@ int64_t VectorSegmentFeatures::getSeed(size_t gnum)
   if (seed >= 0)
   {
     m_FeatureIds[seed] = gnum;
-    QVector<size_t> tDims(1, gnum+1);
+    QVector<size_t> tDims(1, gnum + 1);
     m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->resizeAttributeArrays(tDims);
     updateFeatureInstancePointers();
   }
@@ -331,14 +332,14 @@ bool VectorSegmentFeatures::determineGrouping(int64_t referencepoint, int64_t ne
   float v2[3];
   if(m_FeatureIds[neighborpoint] == 0 && (missingGoodVoxels == true || m_GoodVoxels[neighborpoint] == true))
   {
-    v1[0] = m_Vectors[3*referencepoint+0];
-    v1[1] = m_Vectors[3*referencepoint+1];
-    v1[2] = m_Vectors[3*referencepoint+2];
-    v2[0] = m_Vectors[3*neighborpoint+0];
-    v2[1] = m_Vectors[3*neighborpoint+1];
-    v2[2] = m_Vectors[3*neighborpoint+2];
-    if(v1[2] < 0) MatrixMath::Multiply3x1withConstant(v1, -1);
-    if(v2[2] < 0) MatrixMath::Multiply3x1withConstant(v2, -1);
+    v1[0] = m_Vectors[3 * referencepoint + 0];
+    v1[1] = m_Vectors[3 * referencepoint + 1];
+    v1[2] = m_Vectors[3 * referencepoint + 2];
+    v2[0] = m_Vectors[3 * neighborpoint + 0];
+    v2[1] = m_Vectors[3 * neighborpoint + 1];
+    v2[2] = m_Vectors[3 * neighborpoint + 2];
+    if(v1[2] < 0) { MatrixMath::Multiply3x1withConstant(v1, -1); }
+    if(v2[2] < 0) { MatrixMath::Multiply3x1withConstant(v2, -1); }
     float w = GeometryMath::CosThetaBetweenVectors(v1, v2);
     w = acos(w);
     if(w < angleTolerance)

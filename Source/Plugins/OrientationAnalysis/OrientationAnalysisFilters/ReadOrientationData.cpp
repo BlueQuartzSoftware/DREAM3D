@@ -95,11 +95,11 @@ void ReadOrientationData::setupFilterParameters()
   FilterParameterVector parameters;
 
   /*   For an input file use this code*/
-  parameters.push_back(FilterParameter::New("Input File", "InputFile", FilterParameterWidgetType::InputFileWidget,"QString", false, "", "*.ang *.ctf"));
-  parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "QString", true));
-  parameters.push_back(FilterParameter::New("Data Container Name", "DataContainerName", FilterParameterWidgetType::StringWidget, "QString", true, ""));
-  parameters.push_back(FilterParameter::New("Cell Attribute Matrix Name", "CellAttributeMatrixName", FilterParameterWidgetType::StringWidget, "QString", true, ""));
-  parameters.push_back(FilterParameter::New("Cell Ensemble Attribute Matrix Name", "CellEnsembleAttributeMatrixName", FilterParameterWidgetType::StringWidget, "QString", true, ""));
+  parameters.push_back(FilterParameter::New("Input File", "InputFile", FilterParameterWidgetType::InputFileWidget, getInputFile(), false, "", "*.ang *.ctf"));
+  parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
+  parameters.push_back(FilterParameter::New("Data Container Name", "DataContainerName", FilterParameterWidgetType::StringWidget, getDataContainerName(), true, ""));
+  parameters.push_back(FilterParameter::New("Cell Attribute Matrix Name", "CellAttributeMatrixName", FilterParameterWidgetType::StringWidget, getCellAttributeMatrixName(), true, ""));
+  parameters.push_back(FilterParameter::New("Cell Ensemble Attribute Matrix Name", "CellEnsembleAttributeMatrixName", FilterParameterWidgetType::StringWidget, getCellEnsembleAttributeMatrixName(), true, ""));
   setFilterParameters(parameters);
 }
 
@@ -352,7 +352,7 @@ void ReadOrientationData::readAngFile()
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
   AttributeMatrix::Pointer ebsdAttrMat = m->getAttributeMatrix(getCellAttributeMatrixName());
 
-  QVector<size_t> tDims(3,0); // Create an array for the Tuple Dimensions
+  QVector<size_t> tDims(3, 0); // Create an array for the Tuple Dimensions
   tDims[0] = reader.getXDimension();
   tDims[1] = reader.getYDimension();
   tDims[2] = 1; // We are reading a single slice
@@ -360,7 +360,7 @@ void ReadOrientationData::readAngFile()
   ebsdAttrMat->setType(DREAM3D::AttributeMatrixType::Cell);
   ebsdAttrMat->setTupleDimensions(tDims);
 
-  QVector<size_t> cDims(1,1);
+  QVector<size_t> cDims(1, 1);
   m->setDimensions(tDims[0], tDims[1], tDims[2]);
   m->setResolution(reader.getXStep(), reader.getYStep(), 1.0);
   m->setOrigin(0.0f, 0.0f, 0.0f);
@@ -715,11 +715,11 @@ AbstractFilter::Pointer ReadOrientationData::newFilterInstance(bool copyFilterPa
         if(false == ok)
         {
           QString ss = QString("%1::newFilterInstance()\nError occurred transferring the Filter Parameter '%2' in Filter '%3' to the filter instance. "
-                              " The filter parameter has a conditional property '%4'. The transfer of this property from the old filter to the new filter failed."
-                              " Please report this issue to the developers of this filter.").arg(filter->getNameOfClass())
-                              .arg(parameter->getPropertyName())
-                              .arg(filter->getHumanLabel())
-                              .arg(parameter->getConditionalProperty());
+                               " The filter parameter has a conditional property '%4'. The transfer of this property from the old filter to the new filter failed."
+                               " Please report this issue to the developers of this filter.").arg(filter->getNameOfClass())
+                       .arg(parameter->getPropertyName())
+                       .arg(filter->getHumanLabel())
+                       .arg(parameter->getConditionalProperty());
           Q_ASSERT_X(ok, __FILE__, ss.toLatin1().constData());
         }
       }

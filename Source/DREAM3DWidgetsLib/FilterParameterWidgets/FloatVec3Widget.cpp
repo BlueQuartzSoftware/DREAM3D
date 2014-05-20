@@ -118,6 +118,7 @@ void FloatVec3Widget::setupGui()
     xData->setEnabled(boolProp);
     yData->setEnabled(boolProp);
     zData->setEnabled(boolProp);
+    on_conditionalCB_stateChanged(conditionalCB->checkState());
   }
   else
   {
@@ -139,12 +140,18 @@ void FloatVec3Widget::on_conditionalCB_stateChanged(int state)
 {
   bool boolProp = conditionalCB->isChecked();
   xData->setEnabled(boolProp);
+  xData->setVisible(boolProp);
   yData->setEnabled(boolProp);
+  yData->setVisible(boolProp);
   zData->setEnabled(boolProp);
+  zData->setVisible(boolProp);
+
+  label->setVisible(boolProp);
+  linkLeft->setVisible(boolProp);
+  linkRight->setVisible(boolProp);
   m_DidCausePreflight = true;
   emit parametersChanged();
   m_DidCausePreflight = false;
-
 }
 
 
@@ -152,7 +159,7 @@ void FloatVec3Widget::on_conditionalCB_stateChanged(int state)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FloatVec3Widget::widgetChanged(const QString &text)
+void FloatVec3Widget::widgetChanged(const QString& text)
 {
   emit parametersChanged();
 }

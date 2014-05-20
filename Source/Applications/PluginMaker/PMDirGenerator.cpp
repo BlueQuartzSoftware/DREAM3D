@@ -42,16 +42,16 @@
 //
 // -----------------------------------------------------------------------------
 PMDirGenerator::PMDirGenerator(QString outputDir, QString pathTemplate, QString dirName,
-                   QString codeTemplateResourcePath, QTreeWidgetItem* wi,
-                   QObject* parent) :
-QObject(parent),
-m_OutputDir(outputDir),
-m_PathTemplate(pathTemplate),
-m_DirName(dirName),
-m_CodeTemplateResourcePath(codeTemplateResourcePath),
-m_NameChangeable(false),
-m_DoesGenerateOutput(false),
-m_TreeWidgetItem(wi)
+                               QString codeTemplateResourcePath, QTreeWidgetItem* wi,
+                               QObject* parent) :
+  QObject(parent),
+  m_OutputDir(outputDir),
+  m_PathTemplate(pathTemplate),
+  m_DirName(dirName),
+  m_CodeTemplateResourcePath(codeTemplateResourcePath),
+  m_NameChangeable(false),
+  m_DoesGenerateOutput(false),
+  m_TreeWidgetItem(wi)
 {
 
 }
@@ -160,7 +160,7 @@ QTreeWidgetItem* PMDirGenerator::getTreeWidgetItem()
 // -----------------------------------------------------------------------------
 void PMDirGenerator::setDisplaySuffix(QString v)
 {
-m_DisplaySuffix = v;
+  m_DisplaySuffix = v;
 }
 
 // -----------------------------------------------------------------------------
@@ -176,13 +176,13 @@ QString PMDirGenerator::getDisplaySuffix()
 // -----------------------------------------------------------------------------
 void PMDirGenerator::setPluginName(QString pluginName)
 {
-    m_PluginName = pluginName;
+  m_PluginName = pluginName;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PMDirGenerator::pluginNameChanged(const QString &pluginname)
+void PMDirGenerator::pluginNameChanged(const QString& pluginname)
 {
 //  qDebug() << "PMDirGenerator::pluginNameChanged" << "\n";
   if (isNameChangeable() == false)
@@ -202,7 +202,7 @@ void PMDirGenerator::pluginNameChanged(const QString &pluginname)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PMDirGenerator::outputDirChanged(const QString &outputDir)
+void PMDirGenerator::outputDirChanged(const QString& outputDir)
 {
 //  qDebug() << "PMDirGenerator::outputDirChanged" << "\n";
   m_OutputDir = outputDir;
@@ -234,6 +234,7 @@ QString PMDirGenerator::cleanName(QString name)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QString PMDirGenerator::generateFileContents() {
+QString PMDirGenerator::generateFileContents()
+{
   return "";
 }

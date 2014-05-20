@@ -59,7 +59,7 @@
 */
 class DREAM3DWidgetsLib_EXPORT StringWidget : public QWidget, private Ui::StringWidget
 {
-  Q_OBJECT
+    Q_OBJECT
 
   public:
     /**
@@ -94,9 +94,9 @@ class DREAM3DWidgetsLib_EXPORT StringWidget : public QWidget, private Ui::String
     void parametersChanged();
 
   private slots:
-      void fadeInWidget(QWidget *widget);
+    void fadeInWidget(QWidget* widget);
   private:
-      QPointer<FaderWidget> faderWidget;
+    QPointer<FaderWidget> faderWidget;
 
   private:
     AbstractFilter*   m_Filter;

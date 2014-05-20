@@ -25,13 +25,13 @@
 
 #include "FaderWidget.h"
 
-FaderWidget::FaderWidget(QWidget *parent)
+FaderWidget::FaderWidget(QWidget* parent)
   : QWidget(parent)
 {
   if (parent)
-    startColor = Qt::white; //parent->palette().window().color();
+  { startColor = Qt::white; } //parent->palette().window().color();
   else
-    startColor = Qt::white;
+  { startColor = Qt::white; }
 
   fadeIn = true;
 
@@ -45,7 +45,8 @@ FaderWidget::FaderWidget(QWidget *parent)
   resize(parent->size());
 }
 
-void FaderWidget::setFadeIn(){
+void FaderWidget::setFadeIn()
+{
   fadeIn = true;
   currentAlpha = 1;
 }
@@ -64,7 +65,7 @@ void FaderWidget::start()
   show();
 }
 
-void FaderWidget::paintEvent(QPaintEvent * /* event */)
+void FaderWidget::paintEvent(QPaintEvent* /* event */)
 {
   QPainter painter(this);
   QColor semiTransparentColor = startColor;
@@ -73,9 +74,10 @@ void FaderWidget::paintEvent(QPaintEvent * /* event */)
   if(fadeIn) { currentAlpha -= 255 * timer->interval() / duration;}
   else { currentAlpha += 255 * timer->interval() / duration; }
 
- // qDebug() << currentAlpha;
+// qDebug() << currentAlpha;
 
-  if (currentAlpha <= 0 || currentAlpha >= 255) {
+  if (currentAlpha <= 0 || currentAlpha >= 255)
+  {
     timer->stop();
     close();
     emit animationComplete();

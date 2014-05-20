@@ -89,7 +89,7 @@ namespace Detail
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-DREAM3D_UI::DREAM3D_UI(QWidget *parent) :
+DREAM3D_UI::DREAM3D_UI(QWidget* parent) :
   QMainWindow(parent),
   m_WorkerThread(NULL),
   //  m_PluginActionGroup(NULL),
@@ -150,7 +150,7 @@ DREAM3D_UI::~DREAM3D_UI()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DREAM3D_UI::resizeEvent ( QResizeEvent * event )
+void DREAM3D_UI::resizeEvent ( QResizeEvent* event )
 {
   emit parentResized();
 }
@@ -195,7 +195,7 @@ void DREAM3D_UI::on_actionExportPipeline_triggered()
 // -----------------------------------------------------------------------------
 //  Called when the main window is closed.
 // -----------------------------------------------------------------------------
-void DREAM3D_UI::closeEvent(QCloseEvent *event)
+void DREAM3D_UI::closeEvent(QCloseEvent* event)
 {
   //qint32 err = checkDirtyDocument();
   qint32 err = 0;
@@ -356,7 +356,7 @@ void DREAM3D_UI::writeSettings()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DREAM3D_UI::writeVersionCheckSettings(QSettings &prefs)
+void DREAM3D_UI::writeVersionCheckSettings(QSettings& prefs)
 {
 
 }
@@ -364,7 +364,7 @@ void DREAM3D_UI::writeVersionCheckSettings(QSettings &prefs)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DREAM3D_UI::writeWindowSettings(QSettings &prefs)
+void DREAM3D_UI::writeWindowSettings(QSettings& prefs)
 {
   prefs.beginGroup("WindowSettings");
   QByteArray geo_data = saveGeometry();
@@ -389,7 +389,7 @@ void DREAM3D_UI::writeWindowSettings(QSettings &prefs)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DREAM3D_UI::writeDockWidgetSettings(QSettings &prefs, QDockWidget *dw)
+void DREAM3D_UI::writeDockWidgetSettings(QSettings& prefs, QDockWidget* dw)
 {
   prefs.setValue(dw->objectName(), dw->isHidden() );
 }
@@ -923,7 +923,7 @@ qint32 DREAM3D_UI::checkDirtyDocument()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DREAM3D_UI::updateRecentFileList(const QString &file)
+void DREAM3D_UI::updateRecentFileList(const QString& file)
 {
   // qDebug() << "DREAM3D_UI::updateRecentFileList" << "\n";
 
@@ -951,7 +951,7 @@ void DREAM3D_UI::openRecentFile()
 {
   //qDebug() << "QRecentFileList::openRecentFile()" << "\n";
 
-  QAction *action = qobject_cast<QAction *>(sender());
+  QAction* action = qobject_cast<QAction*>(sender());
   if (action)
   {
     //qDebug() << "Opening Recent file: " << action->data().toString() << "\n";
@@ -1051,7 +1051,7 @@ void DREAM3D_UI::on_startPipelineBtn_clicked()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DREAM3D_UI::populateMenus(QObject *plugin)
+void DREAM3D_UI::populateMenus(QObject* plugin)
 {
 
 }
@@ -1060,7 +1060,7 @@ void DREAM3D_UI::populateMenus(QObject *plugin)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DREAM3D_UI::processPipelineMessage(const PipelineMessage &msg)
+void DREAM3D_UI::processPipelineMessage(const PipelineMessage& msg)
 {
   switch(msg.getType())
   {
@@ -1276,7 +1276,7 @@ void DREAM3D_UI::on_actionShow_Issues_triggered(bool b)
 // -----------------------------------------------------------------------------
 void DREAM3D_UI::updateAndSyncDockWidget(QAction* action, QDockWidget* dock, QToolButton* btn, bool b)
 {
-  if(m_FilterListBtn == NULL || m_FilterLibraryBtn == NULL || m_FavoritesBtn == NULL || m_PrebuiltBtn == NULL || m_IssuesBtn == NULL) return;
+  if(m_FilterListBtn == NULL || m_FilterLibraryBtn == NULL || m_FavoritesBtn == NULL || m_PrebuiltBtn == NULL || m_IssuesBtn == NULL) { return; }
 
   action->blockSignals(true);
   dock->blockSignals(true);

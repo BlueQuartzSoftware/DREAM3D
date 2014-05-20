@@ -318,7 +318,7 @@ void TetragonalOps::randomizeEulerAngles(float& synea1, float& synea2, float& sy
   QuatF q;
   QuatF qc;
   OrientationMath::EulertoQuat(synea1, synea2, synea3, q);
-  int symOp = k_NumSymQuats*rand();
+  int symOp = k_NumSymQuats * rand();
   QuaternionMathF::Multiply(q, TetraQuatSym[symOp], qc);
   OrientationMath::QuattoEuler(qc, synea1, synea2, synea3);
 }

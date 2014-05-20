@@ -105,7 +105,7 @@ class DREAM3DLib_EXPORT SPParksWriter : public FileWriter
     */
     virtual void preflight();
 
-signals:
+  signals:
     void updateFilterParameters(AbstractFilter* filter);
     void parametersChanged();
     void preflightAboutToExecute();

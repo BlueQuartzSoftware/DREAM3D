@@ -57,7 +57,7 @@
 */
 class DREAM3DWidgetsLib_EXPORT PreflightUpdatedValueWidget : public QWidget, private Ui::PreflightUpdatedValueWidget
 {
-  Q_OBJECT
+    Q_OBJECT
 
   public:
     /**

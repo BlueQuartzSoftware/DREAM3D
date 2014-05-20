@@ -60,16 +60,16 @@ template<typename T>
 class QuaternionMath
 {
   public:
-      // -----------------------------------------------------------------------------
+    // -----------------------------------------------------------------------------
     /**
     * @brief
     */
     typedef struct
     {
-        T x;
-        T y;
-        T z;
-        T w;
+      T x;
+      T y;
+      T z;
+      T w;
     } Quaternion;
 
 
@@ -81,7 +81,7 @@ class QuaternionMath
       m_Quat.y = 0.0;
       m_Quat.z = 0.0f;
     }
-    virtual ~QuaternionMath(){}
+    virtual ~QuaternionMath() {}
 
     /**
      * @brief QuaternionMath Copy Constructor
@@ -292,9 +292,9 @@ class QuaternionMath
       out.y = q2.y * q1.w + q2.w * q1.y + q2.x * q1.z - q2.z * q1.x;
       out.z = q2.z * q1.w + q2.w * q1.z + q2.y * q1.x - q2.x * q1.y;
 
-     /* Dave R.
-      out.vec = w1(q2.vec) + w2(q1.vec) + cross(q1.vec, q2.vec)
-      */
+      /* Dave R.
+       out.vec = w1(q2.vec) + w2(q1.vec) + cross(q1.vec, q2.vec)
+       */
 
       /* Verified */
       out.w = q2.w * q1.w - q2.x * q1.x - q2.y * q1.y - q2.z * q1.z;
@@ -388,8 +388,8 @@ class QuaternionMath
     {
       float qw = qr.w;
       DREAM3DMath::boundF(qw, -1, 1);
-      double constVal = 2*acos(qw)/(sqrt(1-(qw*qw)));
-      if(qw == 1.0 || qw == -1.0) constVal = 0.0;
+      double constVal = 2 * acos(qw) / (sqrt(1 - (qw * qw)));
+      if(qw == 1.0 || qw == -1.0) { constVal = 0.0; }
       misoVec[0] = float( qr.x * constVal );
       misoVec[1] = float( qr.y * constVal );
       misoVec[2] = float( qr.z * constVal );
@@ -412,13 +412,15 @@ class QuaternionMath
       // Cross r into vtemp resulting in temp
       MatrixMath::CrossProduct( r, v, temp );
 
-      for (int j=0; j<3; j++) {
+      for (int j = 0; j < 3; j++)
+      {
         temp[j] += w * v[j];
       }
 
       MatrixMath::CrossProduct( r, temp, temp2 );
 
-      for (int j=0; j<3; j++) {
+      for (int j = 0; j < 3; j++)
+      {
         out[j] = v[j] + (2.0 * temp2[j]);
       }
     }

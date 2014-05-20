@@ -78,15 +78,15 @@ class CalcRelativeMotion
             for(size_t k = 0; k < m_NumPatchPoints; k++)
             {
               patchPoint = i + m_PatchPoints[k];
-              comparePoint = patchPoint + m_SearchPoints[4*j];
-              val += float((m_Data[patchPoint]-m_Data[comparePoint]))*float((m_Data[patchPoint]-m_Data[comparePoint]));
+              comparePoint = patchPoint + m_SearchPoints[4 * j];
+              val += float((m_Data[patchPoint] - m_Data[comparePoint])) * float((m_Data[patchPoint] - m_Data[comparePoint]));
             }
             if(val < minVal)
             {
               minVal = val;
-              m_MotionDirection[3*i+0] = m_SearchPoints[4*j+1];
-              m_MotionDirection[3*i+1] = m_SearchPoints[4*j+2];
-              m_MotionDirection[3*i+2] = m_SearchPoints[4*j+3];
+              m_MotionDirection[3 * i + 0] = m_SearchPoints[4 * j + 1];
+              m_MotionDirection[3 * i + 1] = m_SearchPoints[4 * j + 2];
+              m_MotionDirection[3 * i + 2] = m_SearchPoints[4 * j + 3];
             }
           }
         }
@@ -135,13 +135,13 @@ FindRelativeMotionBetweenSlices::~FindRelativeMotionBetweenSlices()
 void FindRelativeMotionBetweenSlices::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(FilterParameter::New("Cell Array To Track Motion", "SelectedArrayPath", FilterParameterWidgetType::DataArraySelectionWidget,"DataArrayPath", false));
+  parameters.push_back(FilterParameter::New("Cell Array To Track Motion", "SelectedArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getSelectedArrayPath(), false));
   {
     ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New();
     parameter->setHumanLabel("Plane of Interest");
     parameter->setPropertyName("Plane");
     parameter->setWidgetType(FilterParameterWidgetType::ChoiceWidget);
-    parameter->setValueType("unsigned int");
+    //parameter->setValueType("unsigned int");
     QVector<QString> choices;
     choices.push_back("XY");
     choices.push_back("XZ");
@@ -149,13 +149,13 @@ void FindRelativeMotionBetweenSlices::setupFilterParameters()
     parameter->setChoices(choices);
     parameters.push_back(parameter);
   }
-  parameters.push_back(FilterParameter::New("Patch Size 1 (Voxels)", "PSize1", FilterParameterWidgetType::IntWidget,"int", false));
-  parameters.push_back(FilterParameter::New("Patch Size 2 (Voxels)", "PSize2", FilterParameterWidgetType::IntWidget,"int", false));
-  parameters.push_back(FilterParameter::New("Search Distance 1 (Voxels)", "SSize1", FilterParameterWidgetType::IntWidget,"int", false));
-  parameters.push_back(FilterParameter::New("Search Distance 2 (Voxels)", "SSize2", FilterParameterWidgetType::IntWidget,"int", false));
-  parameters.push_back(FilterParameter::New("Slice Step (Voxels)", "SliceStep", FilterParameterWidgetType::IntWidget,"int", false));
-  parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "QString", true));
-  parameters.push_back(FilterParameter::New("MotionDirection", "MotionDirectionArrayName", FilterParameterWidgetType::StringWidget, "QString", true, ""));
+  parameters.push_back(FilterParameter::New("Patch Size 1 (Voxels)", "PSize1", FilterParameterWidgetType::IntWidget, getPSize1(), false));
+  parameters.push_back(FilterParameter::New("Patch Size 2 (Voxels)", "PSize2", FilterParameterWidgetType::IntWidget, getPSize2(), false));
+  parameters.push_back(FilterParameter::New("Search Distance 1 (Voxels)", "SSize1", FilterParameterWidgetType::IntWidget, getSSize1(), false));
+  parameters.push_back(FilterParameter::New("Search Distance 2 (Voxels)", "SSize2", FilterParameterWidgetType::IntWidget, getSSize2(), false));
+  parameters.push_back(FilterParameter::New("Slice Step (Voxels)", "SliceStep", FilterParameterWidgetType::IntWidget, getSliceStep(), false));
+  parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
+  parameters.push_back(FilterParameter::New("MotionDirection", "MotionDirectionArrayName", FilterParameterWidgetType::StringWidget, getMotionDirectionArrayName(), true, ""));
   setFilterParameters(parameters);
 }
 
@@ -260,14 +260,14 @@ void FindRelativeMotionBetweenSlices::execute()
 
   size_t xP, yP, zP;
   m->getDimensions(xP, yP, zP);
-  size_t totalPoints = xP*yP*zP;
+  size_t totalPoints = xP * yP * zP;
 
-  int32_t buffer1 = (m_PSize1/2)+(m_SSize1/2);
-  int32_t buffer2 = (m_PSize2/2)+(m_SSize1/2);
+  int32_t buffer1 = (m_PSize1 / 2) + (m_SSize1 / 2);
+  int32_t buffer2 = (m_PSize2 / 2) + (m_SSize1 / 2);
 
   QVector<size_t> cDims(1, 4);
-  Int32ArrayType::Pointer patchPointsPtr = Int32ArrayType::CreateArray((m_PSize1*m_PSize2), "patchPoints");
-  Int32ArrayType::Pointer searchPointsPtr = Int32ArrayType::CreateArray((m_SSize1*m_SSize2), cDims, "searchPoints");
+  Int32ArrayType::Pointer patchPointsPtr = Int32ArrayType::CreateArray((m_PSize1 * m_PSize2), "patchPoints");
+  Int32ArrayType::Pointer searchPointsPtr = Int32ArrayType::CreateArray((m_SSize1 * m_SSize2), cDims, "searchPoints");
   BoolArrayType::Pointer validPointsPtr = BoolArrayType::CreateArray(totalPoints, "validPoints");
   validPointsPtr->initializeWithValue(false);
   int32_t* patchPoints = patchPointsPtr->getPointer(0);
@@ -278,117 +278,117 @@ void FindRelativeMotionBetweenSlices::execute()
   size_t numPatchPoints, numSearchPoints;
   if(m_Plane == 0)
   {
-    for(int j = -(m_PSize2/2); j < (m_PSize2/2); j++)
+    for(int j = -(m_PSize2 / 2); j < (m_PSize2 / 2); j++)
     {
-      yStride = (j*xP);
-      for(int i = -(m_PSize1/2); i < (m_PSize1/2); i++)
+      yStride = (j * xP);
+      for(int i = -(m_PSize1 / 2); i < (m_PSize1 / 2); i++)
       {
-        patchPoints[count] = yStride+i;
+        patchPoints[count] = yStride + i;
         count++;
       }
     }
     numPatchPoints = count;
     count = 0;
-    for(int j = -(m_SSize2/2); j <= (m_SSize2/2); j++)
+    for(int j = -(m_SSize2 / 2); j <= (m_SSize2 / 2); j++)
     {
-      yStride = (j*xP);
-      for(int i = -(m_SSize1/2); i <= (m_SSize1/2); i++)
+      yStride = (j * xP);
+      for(int i = -(m_SSize1 / 2); i <= (m_SSize1 / 2); i++)
       {
-        searchPoints[4*count] = (m_SliceStep*xP*yP)+yStride+i;
-        searchPoints[4*count+1] = i;
-        searchPoints[4*count+2] = j;
-        searchPoints[4*count+3] = m_SliceStep;
+        searchPoints[4 * count] = (m_SliceStep * xP * yP) + yStride + i;
+        searchPoints[4 * count + 1] = i;
+        searchPoints[4 * count + 2] = j;
+        searchPoints[4 * count + 3] = m_SliceStep;
         count++;
       }
     }
     numSearchPoints = count;
-    for(int k=0;k<zP-m_SliceStep;k++)
+    for(int k = 0; k < zP - m_SliceStep; k++)
     {
-      zStride = k*xP*yP;
-      for(int j=buffer2;j<(yP-buffer2);j++)
+      zStride = k * xP * yP;
+      for(int j = buffer2; j < (yP - buffer2); j++)
       {
-        yStride = j*xP;
-        for(int i=buffer1;i<(xP-buffer1);i++)
+        yStride = j * xP;
+        for(int i = buffer1; i < (xP - buffer1); i++)
         {
-          validPoints[zStride+yStride+i] = true;
+          validPoints[zStride + yStride + i] = true;
         }
       }
     }
   }
   if(m_Plane == 1)
   {
-    for(int j = -(m_PSize2/2); j < (m_PSize2/2); j++)
+    for(int j = -(m_PSize2 / 2); j < (m_PSize2 / 2); j++)
     {
-      yStride = (j*xP*yP);
-      for(int i = -(m_PSize1/2); i < (m_PSize1/2); i++)
+      yStride = (j * xP * yP);
+      for(int i = -(m_PSize1 / 2); i < (m_PSize1 / 2); i++)
       {
-        patchPoints[count] = yStride+i;
+        patchPoints[count] = yStride + i;
         count++;
       }
     }
     numPatchPoints = count;
     count = 0;
-    for(int j = -(m_SSize2/2); j <= (m_SSize2/2); j++)
+    for(int j = -(m_SSize2 / 2); j <= (m_SSize2 / 2); j++)
     {
-      yStride = (j*xP*yP);
-      for(int i = -(m_SSize1/2); i <= (m_SSize1/2); i++)
+      yStride = (j * xP * yP);
+      for(int i = -(m_SSize1 / 2); i <= (m_SSize1 / 2); i++)
       {
-        searchPoints[count] = (m_SliceStep*xP)+yStride+i;
-        searchPoints[4*count+1] = i;
-        searchPoints[4*count+2] = m_SliceStep;
-        searchPoints[4*count+3] = j;
+        searchPoints[count] = (m_SliceStep * xP) + yStride + i;
+        searchPoints[4 * count + 1] = i;
+        searchPoints[4 * count + 2] = m_SliceStep;
+        searchPoints[4 * count + 3] = j;
         count++;
       }
     }
     numSearchPoints = count;
-    for(int k=buffer2;k<(zP-buffer2);k++)
+    for(int k = buffer2; k < (zP - buffer2); k++)
     {
-      zStride = k*xP*yP;
-      for(int j=0;j<yP-m_SliceStep;j++)
+      zStride = k * xP * yP;
+      for(int j = 0; j < yP - m_SliceStep; j++)
       {
-        yStride = j*xP;
-        for(int i=buffer1;i<(xP-buffer1);i++)
+        yStride = j * xP;
+        for(int i = buffer1; i < (xP - buffer1); i++)
         {
-          validPoints[zStride+yStride+i] = true;
+          validPoints[zStride + yStride + i] = true;
         }
       }
     }
   }
   if(m_Plane == 2)
   {
-    for(int j = -(m_PSize2/2); j < (m_PSize2/2); j++)
+    for(int j = -(m_PSize2 / 2); j < (m_PSize2 / 2); j++)
     {
-      yStride = (j*xP*yP);
-      for(int i = -(m_PSize1/2); i < (m_PSize1/2); i++)
+      yStride = (j * xP * yP);
+      for(int i = -(m_PSize1 / 2); i < (m_PSize1 / 2); i++)
       {
-        patchPoints[count] = yStride+(i*xP);
+        patchPoints[count] = yStride + (i * xP);
         count++;
       }
     }
     numPatchPoints = count;
     count = 0;
-    for(int j = -(m_SSize2/2); j <= (m_SSize2/2); j++)
+    for(int j = -(m_SSize2 / 2); j <= (m_SSize2 / 2); j++)
     {
-      yStride = (j*xP*yP);
-      for(int i = -(m_SSize1/2); i <= (m_SSize1/2); i++)
+      yStride = (j * xP * yP);
+      for(int i = -(m_SSize1 / 2); i <= (m_SSize1 / 2); i++)
       {
-        searchPoints[count] = (m_SliceStep)+yStride+(i*xP);
-        searchPoints[4*count+1] = m_SliceStep;
-        searchPoints[4*count+2] = i;
-        searchPoints[4*count+3] = j;
+        searchPoints[count] = (m_SliceStep) + yStride + (i * xP);
+        searchPoints[4 * count + 1] = m_SliceStep;
+        searchPoints[4 * count + 2] = i;
+        searchPoints[4 * count + 3] = j;
         count++;
       }
     }
     numSearchPoints = count;
-    for(int k=buffer2;k<(zP-buffer2);k++)
+    for(int k = buffer2; k < (zP - buffer2); k++)
     {
-      zStride = k*xP*yP;
-      for(int j=buffer1;j<(yP-buffer1);j++)
+      zStride = k * xP * yP;
+      for(int j = buffer1; j < (yP - buffer1); j++)
       {
-        yStride = j*xP;
-        for(int i=0;i<xP-m_SliceStep;i++)
+        yStride = j * xP;
+        for(int i = 0; i < xP - m_SliceStep; i++)
         {
-          validPoints[zStride+yStride+i] = true;
+          validPoints[zStride + yStride + i] = true;
         }
       }
     }
@@ -398,7 +398,7 @@ void FindRelativeMotionBetweenSlices::execute()
   if (dType.compare("int8_t") == 0)
   {
     DataArray<int8_t>* cellArray = DataArray<int8_t>::SafePointerDownCast(inputData.get());
-    if (NULL == cellArray) return;
+    if (NULL == cellArray) { return; }
     int8_t* cPtr = cellArray->getPointer(0);
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
     if (doParallel == true)
@@ -415,7 +415,7 @@ void FindRelativeMotionBetweenSlices::execute()
   else if (dType.compare("uint8_t") == 0)
   {
     DataArray<uint8_t>* cellArray = DataArray<uint8_t>::SafePointerDownCast(inputData.get());
-    if (NULL == cellArray) return;
+    if (NULL == cellArray) { return; }
     uint8_t* cPtr = cellArray->getPointer(0);
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
     if (doParallel == true)
@@ -432,7 +432,7 @@ void FindRelativeMotionBetweenSlices::execute()
   else if (dType.compare("int16_t") == 0)
   {
     DataArray<int16_t>* cellArray = DataArray<int16_t>::SafePointerDownCast(inputData.get());
-    if (NULL == cellArray) return;
+    if (NULL == cellArray) { return; }
     int16_t* cPtr = cellArray->getPointer(0);
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
     if (doParallel == true)
@@ -449,7 +449,7 @@ void FindRelativeMotionBetweenSlices::execute()
   else if (dType.compare("uint16_t") == 0)
   {
     DataArray<uint16_t>* cellArray = DataArray<uint16_t>::SafePointerDownCast(inputData.get());
-    if (NULL == cellArray) return;
+    if (NULL == cellArray) { return; }
     uint16_t* cPtr = cellArray->getPointer(0);
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
     if (doParallel == true)
@@ -466,7 +466,7 @@ void FindRelativeMotionBetweenSlices::execute()
   else if (dType.compare("int32_t") == 0)
   {
     DataArray<int32_t>* cellArray = DataArray<int32_t>::SafePointerDownCast(inputData.get());
-    if (NULL == cellArray) return;
+    if (NULL == cellArray) { return; }
     int32_t* cPtr = cellArray->getPointer(0);
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
     if (doParallel == true)
@@ -483,7 +483,7 @@ void FindRelativeMotionBetweenSlices::execute()
   else if (dType.compare("uint32_t") == 0)
   {
     DataArray<uint32_t>* cellArray = DataArray<uint32_t>::SafePointerDownCast(inputData.get());
-    if (NULL == cellArray) return;
+    if (NULL == cellArray) { return; }
     uint32_t* cPtr = cellArray->getPointer(0);
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
     if (doParallel == true)
@@ -500,7 +500,7 @@ void FindRelativeMotionBetweenSlices::execute()
   else if (dType.compare("int64_t") == 0)
   {
     DataArray<int64_t>* cellArray = DataArray<int64_t>::SafePointerDownCast(inputData.get());
-    if (NULL == cellArray) return;
+    if (NULL == cellArray) { return; }
     int64_t* cPtr = cellArray->getPointer(0);
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
     if (doParallel == true)
@@ -517,7 +517,7 @@ void FindRelativeMotionBetweenSlices::execute()
   else if (dType.compare("uint64_t") == 0)
   {
     DataArray<uint64_t>* cellArray = DataArray<uint64_t>::SafePointerDownCast(inputData.get());
-    if (NULL == cellArray) return;
+    if (NULL == cellArray) { return; }
     uint64_t* cPtr = cellArray->getPointer(0);
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
     if (doParallel == true)
@@ -534,7 +534,7 @@ void FindRelativeMotionBetweenSlices::execute()
   else if (dType.compare("float") == 0)
   {
     DataArray<float>* cellArray = DataArray<float>::SafePointerDownCast(inputData.get());
-    if (NULL == cellArray) return;
+    if (NULL == cellArray) { return; }
     float* cPtr = cellArray->getPointer(0);
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
     if (doParallel == true)
@@ -551,7 +551,7 @@ void FindRelativeMotionBetweenSlices::execute()
   else if (dType.compare("double") == 0)
   {
     DataArray<double>* cellArray = DataArray<double>::SafePointerDownCast(inputData.get());
-    if (NULL == cellArray) return;
+    if (NULL == cellArray) { return; }
     double* cPtr = cellArray->getPointer(0);
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
     if (doParallel == true)
@@ -577,15 +577,15 @@ void FindRelativeMotionBetweenSlices::execute()
   float xRes = m->getXRes();
   float yRes = m->getYRes();
   float zRes = m->getZRes();
-  for(size_t i=0; i<totalPoints; i++)
+  for(size_t i = 0; i < totalPoints; i++)
   {
-    v[0] = m_MotionDirection[3*i+0]*xRes;
-    v[1] = m_MotionDirection[3*i+1]*yRes;
-    v[2] = m_MotionDirection[3*i+2]*zRes;
+    v[0] = m_MotionDirection[3 * i + 0] * xRes;
+    v[1] = m_MotionDirection[3 * i + 1] * yRes;
+    v[2] = m_MotionDirection[3 * i + 2] * zRes;
     MatrixMath::Normalize3x1(v);
-    m_MotionDirection[3*i+0] = v[0];
-    m_MotionDirection[3*i+1] = v[1];
-    m_MotionDirection[3*i+2] = v[2];
+    m_MotionDirection[3 * i + 0] = v[0];
+    m_MotionDirection[3 * i + 1] = v[1];
+    m_MotionDirection[3 * i + 2] = v[2];
   }
 
   notifyStatusMessage(getHumanLabel(), "FindRelativeMotionBetweenSlices Completed");

@@ -77,7 +77,7 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-StatsGenMDFWidget::StatsGenMDFWidget(QWidget *parent) :
+StatsGenMDFWidget::StatsGenMDFWidget(QWidget* parent) :
   QWidget(parent),
   m_PhaseIndex(-1),
   m_CrystalStructure(Ebsd::CrystalStructure::Cubic_High),
@@ -146,7 +146,7 @@ void StatsGenMDFWidget::on_m_MDFUpdateBtn_clicked()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void StatsGenMDFWidget::updateMDFPlot(QVector<float> &odf)
+void StatsGenMDFWidget::updateMDFPlot(QVector<float>& odf)
 {
   int err = 0;
 
@@ -239,11 +239,11 @@ QVector<float> StatsGenMDFWidget::generateODFData()
   weights = m_ODFTableModel->getData(SGODFTableModel::Weight);
   sigmas = m_ODFTableModel->getData(SGODFTableModel::Sigma);
 
-  for(qint32 i=0;i<e1s.size();i++)
+  for(qint32 i = 0; i < e1s.size(); i++)
   {
-    e1s[i] = e1s[i]*M_PI/180.0;
-    e2s[i] = e2s[i]*M_PI/180.0;
-    e3s[i] = e3s[i]*M_PI/180.0;
+    e1s[i] = e1s[i] * M_PI / 180.0;
+    e2s[i] = e2s[i] * M_PI / 180.0;
+    e3s[i] = e3s[i] * M_PI / 180.0;
   }
   size_t numEntries = e1s.size();
 
@@ -259,8 +259,8 @@ QVector<float> StatsGenMDFWidget::generateODFData()
   {
     odf.resize(HexagonalOps::k_OdfSize);
     Texture::CalculateHexODFData(e1s.data(), e2s.data(), e3s.data(),
-                                   weights.data(), sigmas.data(), true,
-                                   odf.data(), numEntries);
+                                 weights.data(), sigmas.data(), true,
+                                 odf.data(), numEntries);
   }
   return odf;
 }
@@ -270,7 +270,7 @@ QVector<float> StatsGenMDFWidget::generateODFData()
 // -----------------------------------------------------------------------------
 void StatsGenMDFWidget::on_addMDFRowBtn_clicked()
 {
-  if (!m_MDFTableModel->insertRow(m_MDFTableModel->rowCount())) return;
+  if (!m_MDFTableModel->insertRow(m_MDFTableModel->rowCount())) { return; }
   m_MDFTableView->resizeColumnsToContents();
   m_MDFTableView->scrollToBottom();
   m_MDFTableView->setFocus();
@@ -283,10 +283,10 @@ void StatsGenMDFWidget::on_addMDFRowBtn_clicked()
 // -----------------------------------------------------------------------------
 void StatsGenMDFWidget::on_deleteMDFRowBtn_clicked()
 {
-  QItemSelectionModel *selectionModel = m_MDFTableView->selectionModel();
-  if (!selectionModel->hasSelection()) return;
+  QItemSelectionModel* selectionModel = m_MDFTableView->selectionModel();
+  if (!selectionModel->hasSelection()) { return; }
   QModelIndex index = selectionModel->currentIndex();
-  if (!index.isValid()) return;
+  if (!index.isValid()) { return; }
   m_MDFTableModel->removeRow(index.row(), index.parent());
   if (m_MDFTableModel->rowCount() > 0)
   {
@@ -322,7 +322,7 @@ void StatsGenMDFWidget::on_loadMDFBtn_clicked()
 
       QString axis = QString("<" + QString::fromStdString(n1) + "," + QString::fromStdString(n2) + "," + QString::fromStdString(n3) + ">");
 
-      if (!m_MDFTableModel->insertRow(m_MDFTableModel->rowCount())) return;
+      if (!m_MDFTableModel->insertRow(m_MDFTableModel->rowCount())) { return; }
       int row = m_MDFTableModel->rowCount() - 1;
       m_MDFTableModel->setRowData(row, angle, axis, weight);
 
@@ -356,7 +356,8 @@ void StatsGenMDFWidget::extractStatsData(int index, StatsData* statsData, unsign
     TransformationStatsData* tp = TransformationStatsData::SafePointerDownCast(statsData);
     arrays = tp->getMDF_Weights();
   }
-  if (arrays.size() > 0 ) {
+  if (arrays.size() > 0 )
+  {
     QVector<float> angle(static_cast<int>(arrays[0]->getNumberOfTuples()));
     ::memcpy( &(angle.front()), arrays[0]->getVoidPointer(0), sizeof(float)*angle.size() );
 

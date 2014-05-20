@@ -305,10 +305,10 @@
 
 #define DREAM3D_BOOL_PROPERTY(prpty)\
   private:\
-    bool m_##prpty;\
+  bool m_##prpty;\
   public:\
-    DREAM3D_SET_PROPERTY(bool, prpty)\
-    bool is##prpty() { return m_##prpty; }
+  DREAM3D_SET_PROPERTY(bool, prpty)\
+  bool is##prpty() { return m_##prpty; }
 
 
 /**
@@ -467,8 +467,8 @@
 
 #define DEFINE_CREATED_DATAARRAY_VARIABLE(type, name)\
   private:\
-    DataArray<type>::WeakPointer m_##name##Ptr;\
-    type* m_##name;
+  DataArray<type>::WeakPointer m_##name##Ptr;\
+  type* m_##name;
 
 
 
@@ -493,7 +493,7 @@
     updatePipelineProgress(0);\
     pipelineFinished();\
     return;}\
-
+   
 
 #define CHECK_FOR_ERROR(FuncClass, Message, err)\
   if(err < 0) {\

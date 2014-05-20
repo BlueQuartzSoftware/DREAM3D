@@ -75,15 +75,15 @@ FindNeighborhoods::~FindNeighborhoods()
 void FindNeighborhoods::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(FilterParameter::New("Multiples Of Average Diameter", "MultiplesOfAverage", FilterParameterWidgetType::DoubleWidget,"float", false));
+  parameters.push_back(FilterParameter::New("Multiples Of Average Diameter", "MultiplesOfAverage", FilterParameterWidgetType::DoubleWidget, getMultiplesOfAverage(), false));
 
-  parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "QString", true));
-  parameters.push_back(FilterParameter::New("EquivalentDiameters", "EquivalentDiametersArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
-  parameters.push_back(FilterParameter::New("FeaturePhases", "FeaturePhasesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
-  parameters.push_back(FilterParameter::New("Centroids", "CentroidsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
-  parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "QString", true));
-  parameters.push_back(FilterParameter::New("Neighborhoods", "NeighborhoodsArrayName", FilterParameterWidgetType::StringWidget, "QString", true, ""));
-  parameters.push_back(FilterParameter::New("NeighborhoodList", "NeighborhoodListArrayName", FilterParameterWidgetType::StringWidget, "QString", true, ""));
+  parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
+  parameters.push_back(FilterParameter::New("EquivalentDiameters", "EquivalentDiametersArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getEquivalentDiametersArrayPath(), true, ""));
+  parameters.push_back(FilterParameter::New("FeaturePhases", "FeaturePhasesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeaturePhasesArrayPath(), true, ""));
+  parameters.push_back(FilterParameter::New("Centroids", "CentroidsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getCentroidsArrayPath(), true, ""));
+  parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
+  parameters.push_back(FilterParameter::New("Neighborhoods", "NeighborhoodsArrayName", FilterParameterWidgetType::StringWidget, getNeighborhoodsArrayName(), true, ""));
+  parameters.push_back(FilterParameter::New("NeighborhoodList", "NeighborhoodListArrayName", FilterParameterWidgetType::StringWidget, getNeighborhoodListArrayName(), true, ""));
   setFilterParameters(parameters);
 }
 // -----------------------------------------------------------------------------
@@ -214,7 +214,7 @@ void FindNeighborhoods::find_neighborhoods()
 
   int xbin, ybin, zbin;
   //int bin, bin1, bin2;
-  QVector<size_t> bins(3*totalFeatures, 0);
+  QVector<size_t> bins(3 * totalFeatures, 0);
   for (size_t i = 1; i < totalFeatures; i++)
   {
     x = m_Centroids[3 * i];
@@ -223,9 +223,9 @@ void FindNeighborhoods::find_neighborhoods()
     xbin = int((x - m_OriginX) / aveDiam);
     ybin = int((y - m_OriginY) / aveDiam);
     zbin = int((z - m_OriginZ) / aveDiam);
-    bins[3*i] = xbin;
-    bins[3*i+1] = ybin;
-    bins[3*i+2] = zbin;
+    bins[3 * i] = xbin;
+    bins[3 * i + 1] = ybin;
+    bins[3 * i + 2] = zbin;
   }
 
   int bin1x, bin2x, bin1y, bin2y, bin1z, bin2z;
@@ -243,16 +243,16 @@ void FindNeighborhoods::find_neighborhoods()
     x = m_Centroids[3 * i];
     y = m_Centroids[3 * i + 1];
     z = m_Centroids[3 * i + 2];
-    bin1x = bins[3*i];
-    bin1y = bins[3*i+1];
-    bin1z = bins[3*i+2];
+    bin1x = bins[3 * i];
+    bin1y = bins[3 * i + 1];
+    bin1z = bins[3 * i + 2];
     criticalDistance1 = criticalDistance[i];
 
     for (size_t j = i + 1; j < totalFeatures; j++)
     {
-      bin2x = bins[3*j];
-      bin2y = bins[3*j+1];
-      bin2z = bins[3*j+2];
+      bin2x = bins[3 * j];
+      bin2y = bins[3 * j + 1];
+      bin2z = bins[3 * j + 2];
       criticalDistance2 = criticalDistance[j];
 
       dBinX = abs(bin2x - bin1x);

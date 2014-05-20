@@ -109,7 +109,8 @@ void FilterListDockWidget::updateFilterList(const QStringList& list, bool sortIt
     // filter widget manager.
     filterItem->setData( Qt::UserRole, filterName);
   }
-  if (sortItems) {
+  if (sortItems)
+  {
     filterList->sortItems(Qt::AscendingOrder);
   }
   filterSearch->clear();

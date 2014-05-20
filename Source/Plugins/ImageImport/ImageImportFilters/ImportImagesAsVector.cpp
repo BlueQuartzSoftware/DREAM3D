@@ -93,11 +93,11 @@ void ImportImagesAsVector::setupFilterParameters()
 {
   QVector<FilterParameter::Pointer> parameters;
 
-  parameters.push_back(FilterParameter::New("Import Image Data", "ImageVector", FilterParameterWidgetType::ImportImagesAsVectorWidget,"int", false));
-  parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "QString", true));
-  parameters.push_back(FilterParameter::New("Data Container Name", "DataContainerName", FilterParameterWidgetType::StringWidget, "QString", true, ""));
-  parameters.push_back(FilterParameter::New("Cell Attribute Matrix Name", "CellAttributeMatrixName", FilterParameterWidgetType::StringWidget, "QString", true, ""));
-  parameters.push_back(FilterParameter::New("VectorData", "VectorDataArrayName", FilterParameterWidgetType::StringWidget, "QString", true, ""));
+  parameters.push_back(FilterParameter::New("Import Image Data", "ImageVector", FilterParameterWidgetType::ImportImagesAsVectorWidget, getImageVector(), false));
+  parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
+  parameters.push_back(FilterParameter::New("Data Container Name", "DataContainerName", FilterParameterWidgetType::StringWidget, getDataContainerName(), true, ""));
+  parameters.push_back(FilterParameter::New("Cell Attribute Matrix Name", "CellAttributeMatrixName", FilterParameterWidgetType::StringWidget, getCellAttributeMatrixName(), true, ""));
+  parameters.push_back(FilterParameter::New("VectorData", "VectorDataArrayName", FilterParameterWidgetType::StringWidget, getVectorDataArrayName(), true, ""));
   setFilterParameters(parameters);
 }
 
@@ -167,9 +167,9 @@ void ImportImagesAsVector::dataCheck()
   bool stackLowToHigh = false;
   // Now generate all the file names the user is asking for and populate the table
   QVector<QString> fileList = FilePathGenerator::GenerateFileList(m_StartIndex, m_EndIndex,
-                                                                  hasMissingFiles, stackLowToHigh, m_InputPath,
-                                                                  m_FilePrefix, m_FileSuffix, m_FileExtension,
-                                                                  m_PaddingDigits);
+                              hasMissingFiles, stackLowToHigh, m_InputPath,
+                              m_FilePrefix, m_FileSuffix, m_FileExtension,
+                              m_PaddingDigits);
   if (fileList.size() == 0)
   {
     QString ss = QObject::tr("No files have been selected for import. Have you set the input directory?");
@@ -209,7 +209,7 @@ void ImportImagesAsVector::dataCheck()
     {
       err = -1;
       QString ss = QObject::tr("One of the dimensions is greater than the max index for this sysem. Try the 64 bit version."
-                                " dim[0]=%1  dim[1]=%2  dim[2]=%3").arg(dims[0]).arg(dims[1]).arg(dims[2]);
+                               " dim[0]=%1  dim[1]=%2  dim[2]=%3").arg(dims[0]).arg(dims[1]).arg(dims[2]);
       setErrorCondition(err);
       notifyErrorMessage(getHumanLabel(), ss, err);
     }
@@ -226,7 +226,7 @@ void ImportImagesAsVector::dataCheck()
     m->setOrigin(m_Origin.x, m_Origin.y, m_Origin.z);
 
     QVector<size_t> tDims(3, 0);
-    for(int i=0;i<3; i++)
+    for(int i = 0; i < 3; i++)
     {
       tDims[i] = dims[i];
     }
@@ -255,7 +255,7 @@ void ImportImagesAsVector::dataCheck()
       notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
       return;
     }
-    for(int i=0;i<tDims.size();i++)
+    for(int i = 0; i < tDims.size(); i++)
     {
       if(tDims[i] != dims[i])
       {
@@ -316,9 +316,9 @@ void ImportImagesAsVector::execute()
 
   // Now generate all the file names the user is asking for and populate the table
   QVector<QString> fileList = FilePathGenerator::GenerateFileList(m_StartIndex, m_EndIndex,
-                                                                  hasMissingFiles, stackLowToHigh, m_InputPath,
-                                                                  m_FilePrefix, m_FileSuffix, m_FileExtension,
-                                                                  m_PaddingDigits);
+                              hasMissingFiles, stackLowToHigh, m_InputPath,
+                              m_FilePrefix, m_FileSuffix, m_FileExtension,
+                              m_PaddingDigits);
 
 
   for (QVector<QString>::iterator filepath = fileList.begin(); filepath != fileList.end(); ++filepath)
@@ -349,18 +349,18 @@ void ImportImagesAsVector::execute()
       {
         pixelBytes = 4;
       }
-      QVector<size_t> compDims(1, pixelBytes*numComps);
+      QVector<size_t> compDims(1, pixelBytes * numComps);
 
-      data = UInt8ArrayType::CreateArray(height*width, compDims, m_VectorDataArrayName);
+      data = UInt8ArrayType::CreateArray(height * width, compDims, m_VectorDataArrayName);
 
     }
 
     imagePtr = data->getPointer(0);
 
     // Get the current position in the array to copy the image into
-    int totalComps = pixelBytes*numComps;
+    int totalComps = pixelBytes * numComps;
     compSpot = (comp - m_StartIndex);
-    size_t compStride = (compSpot*pixelBytes);
+    size_t compStride = (compSpot * pixelBytes);
     size_t src = 0;
     size_t dst = 0;
     size_t hStride;
@@ -368,14 +368,14 @@ void ImportImagesAsVector::execute()
     {
       uint8_t* source = image.scanLine(i);
       src = 0;
-      hStride = i*width;
+      hStride = i * width;
       for(size_t j = 0; j < width; ++j)
       {
-        dst = totalComps*(hStride+j)+compStride;
-        src = j*pixelBytes;
+        dst = totalComps * (hStride + j) + compStride;
+        src = j * pixelBytes;
         for(size_t k = 0; k < pixelBytes; ++k)
         {
-          imagePtr[dst+k] = source[src+k];
+          imagePtr[dst + k] = source[src + k];
         }
       }
     }

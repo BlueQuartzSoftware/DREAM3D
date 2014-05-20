@@ -82,7 +82,6 @@ void ErodeDilateMask::setupFilterParameters()
     parameter->setHumanLabel("Operation");
     parameter->setPropertyName("Direction");
     parameter->setWidgetType(FilterParameterWidgetType::ChoiceWidget);
-    parameter->setValueType("unsigned int");
     QVector<QString> choices;
     choices.push_back("Dilate");
     choices.push_back("Erode");

@@ -71,12 +71,12 @@ VASPReader::~VASPReader()
 void VASPReader::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(FilterParameter::New("Input File", "InputFile", FilterParameterWidgetType::InputFileWidget,"QString", false, "", "*"));
-  parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "QString", true));
-  parameters.push_back(FilterParameter::New("Vertex Data Container", "VertexDataContainerName", FilterParameterWidgetType::StringWidget, "QString", true, ""));
-  parameters.push_back(FilterParameter::New("Vertex Attribute Matrix", "VertexAttributematrixName", FilterParameterWidgetType::StringWidget, "QString", true, ""));
-  parameters.push_back(FilterParameter::New("AtomVelocities", "AtomVelocitiesArrayName", FilterParameterWidgetType::StringWidget, "QString", true, ""));
-  parameters.push_back(FilterParameter::New("AtomTypes", "AtomTypesArrayName", FilterParameterWidgetType::StringWidget, "QString", true, ""));
+  parameters.push_back(FilterParameter::New("Input File", "InputFile", FilterParameterWidgetType::InputFileWidget, getInputFile(), false, "", "*"));
+  parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
+  parameters.push_back(FilterParameter::New("Vertex Data Container", "VertexDataContainerName", FilterParameterWidgetType::StringWidget, getVertexDataContainerName(), true, ""));
+  parameters.push_back(FilterParameter::New("Vertex Attribute Matrix", "VertexAttributeMatrixName", FilterParameterWidgetType::StringWidget, getVertexAttributeMatrixName(), true, ""));
+  parameters.push_back(FilterParameter::New("AtomVelocities", "AtomVelocitiesArrayName", FilterParameterWidgetType::StringWidget, getAtomVelocitiesArrayName(), true, ""));
+  parameters.push_back(FilterParameter::New("AtomTypes", "AtomTypesArrayName", FilterParameterWidgetType::StringWidget, getAtomTypesArrayName(), true, ""));
   setFilterParameters(parameters);
 }
 
@@ -299,7 +299,7 @@ int VASPReader::readHeader()
 
   QVector<size_t> tDims(1, totalAtoms);
   vertexAttrMat->resizeAttributeArrays(tDims);
-  updateVertexInstancePointers(); 
+  updateVertexInstancePointers();
 
   return error;
 }

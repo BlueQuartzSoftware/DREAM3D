@@ -45,9 +45,9 @@
 //
 // -----------------------------------------------------------------------------
 UnknownWidget::UnknownWidget(FilterParameter* parameter, AbstractFilter* filter, QWidget* parent) :
-QWidget(parent),
-m_Filter(filter),
-m_FilterParameter(parameter)
+  QWidget(parent),
+  m_Filter(filter),
+  m_FilterParameter(parameter)
 {
   setupUi(this);
   setupGui();
@@ -94,7 +94,7 @@ void UnknownWidget::setupGui()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void UnknownWidget::widgetChanged(const QString &text)
+void UnknownWidget::widgetChanged(const QString& text)
 {
   emit parametersChanged();
 }

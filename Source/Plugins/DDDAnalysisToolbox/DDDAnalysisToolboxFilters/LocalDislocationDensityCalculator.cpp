@@ -76,7 +76,6 @@ void LocalDislocationDensityCalculator::setupFilterParameters()
     parameter->setHumanLabel("Cell Size");
     parameter->setPropertyName("CellSize");
     parameter->setWidgetType(FilterParameterWidgetType::FloatVec3Widget);
-    parameter->setValueType("FloatVec3_t");
     parameter->setUnits("microns");
     parameters.push_back(parameter);
   }
@@ -130,7 +129,7 @@ void LocalDislocationDensityCalculator::updateCellInstancePointers()
   { m_OutputArray = m_OutputArrayPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
 
-  // -----------------------------------------------------------------------------
+// -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 void LocalDislocationDensityCalculator::dataCheck()
@@ -238,24 +237,24 @@ void LocalDislocationDensityCalculator::execute()
   float yMax = 0.0;
   float zMax = 0.0;
   float x, y, z;
-  for(size_t i=0;i<numNodes;i++)
+  for(size_t i = 0; i < numNodes; i++)
   {
     x = nodes[i].pos[0];
     y = nodes[i].pos[1];
     z = nodes[i].pos[2];
-    if(x < xMin) xMin = x;
-    if(x > xMax) xMax = x;
-    if(y < yMin) yMin = y;
-    if(y > yMax) yMax = y;
-    if(z < zMin) zMin = z;
-    if(z > zMax) zMax = z;
+    if(x < xMin) { xMin = x; }
+    if(x > xMax) { xMax = x; }
+    if(y < yMin) { yMin = y; }
+    if(y > yMax) { yMax = y; }
+    if(z < zMin) { zMin = z; }
+    if(z > zMax) { zMax = z; }
   }
 
   vdc->setOrigin(xMin, yMin, zMin);
   size_t dcDims[3];
-  dcDims[0] = size_t((xMax-xMin)/m_CellSize.x)+1;
-  dcDims[1] = size_t((yMax-yMin)/m_CellSize.y)+1;
-  dcDims[2] = size_t((zMax-zMin)/m_CellSize.z)+1;
+  dcDims[0] = size_t((xMax - xMin) / m_CellSize.x) + 1;
+  dcDims[1] = size_t((yMax - yMin) / m_CellSize.y) + 1;
+  dcDims[2] = size_t((zMax - zMin) / m_CellSize.z) + 1;
   vdc->setDimensions(dcDims[0], dcDims[1], dcDims[2]);
   vdc->setResolution(m_CellSize.x, m_CellSize.y, m_CellSize.z);
 
@@ -277,51 +276,51 @@ void LocalDislocationDensityCalculator::execute()
   {
     point1 = nodes[edges[i].verts[0]];
     point2 = nodes[edges[i].verts[1]];
-    x1 = (point1.pos[0]-xMin);
-    y1 = (point1.pos[1]-yMin);
-    z1 = (point1.pos[2]-zMin);
-    x2 = (point2.pos[0]-xMin);
-    y2 = (point2.pos[1]-yMin);
-    z2 = (point2.pos[2]-zMin);
-    if(x1 > x2) xCellMin = size_t(x2/m_CellSize.x), xCellMax = size_t(x1/m_CellSize.x);
-    else xCellMin = size_t(x1/m_CellSize.x), xCellMax = size_t(x2/m_CellSize.x);
-    if(y1 > y2) yCellMin = size_t(y2/m_CellSize.y), yCellMax = size_t(y1/m_CellSize.y);
-    else yCellMin = size_t(y1/m_CellSize.y), yCellMax = size_t(y2/m_CellSize.y);
-    if(z1 > z2) zCellMin = size_t(z2/m_CellSize.z), zCellMax = size_t(z1/m_CellSize.z);
-    else zCellMin = size_t(z1/m_CellSize.z), zCellMax = size_t(z2/m_CellSize.z);
+    x1 = (point1.pos[0] - xMin);
+    y1 = (point1.pos[1] - yMin);
+    z1 = (point1.pos[2] - zMin);
+    x2 = (point2.pos[0] - xMin);
+    y2 = (point2.pos[1] - yMin);
+    z2 = (point2.pos[2] - zMin);
+    if(x1 > x2) { xCellMin = size_t(x2 / m_CellSize.x), xCellMax = size_t(x1 / m_CellSize.x); }
+    else { xCellMin = size_t(x1 / m_CellSize.x), xCellMax = size_t(x2 / m_CellSize.x); }
+    if(y1 > y2) { yCellMin = size_t(y2 / m_CellSize.y), yCellMax = size_t(y1 / m_CellSize.y); }
+    else { yCellMin = size_t(y1 / m_CellSize.y), yCellMax = size_t(y2 / m_CellSize.y); }
+    if(z1 > z2) { zCellMin = size_t(z2 / m_CellSize.z), zCellMax = size_t(z1 / m_CellSize.z); }
+    else { zCellMin = size_t(z1 / m_CellSize.z), zCellMax = size_t(z2 / m_CellSize.z); }
     for(size_t j = zCellMin; j <= zCellMax; j++)
     {
-      zStride = j*tDims[0]*tDims[1];
-      corner1.pos[2] = j*m_CellSize.z + zMin;
-      corner2.pos[2] = (j+1)*m_CellSize.z + zMin;
+      zStride = j * tDims[0] * tDims[1];
+      corner1.pos[2] = j * m_CellSize.z + zMin;
+      corner2.pos[2] = (j + 1) * m_CellSize.z + zMin;
       for(size_t k = yCellMin; k <= yCellMax; k++)
       {
-        yStride = k*tDims[0];
-        corner1.pos[1] = k*m_CellSize.y + yMin;
-        corner2.pos[1] = (k+1)*m_CellSize.y + yMin;
+        yStride = k * tDims[0];
+        corner1.pos[1] = k * m_CellSize.y + yMin;
+        corner2.pos[1] = (k + 1) * m_CellSize.y + yMin;
         for(size_t l = xCellMin; l <= xCellMax; l++)
         {
-          corner1.pos[0] = l*m_CellSize.x + xMin;
-          corner2.pos[0] = (l+1)*m_CellSize.x  + xMin;
+          corner1.pos[0] = l * m_CellSize.x + xMin;
+          corner2.pos[0] = (l + 1) * m_CellSize.x  + xMin;
           length = GeometryMath::LengthOfRayInBox(point1, point2, corner1, corner2);
-          m_OutputArray[zStride+yStride+l] += length;
+          m_OutputArray[zStride + yStride + l] += length;
         }
       }
     }
   }
 
-  float cellVolume = m_CellSize.x*m_CellSize.y*m_CellSize.z;
+  float cellVolume = m_CellSize.x * m_CellSize.y * m_CellSize.z;
   for(size_t j = 0; j < tDims[2]; j++)
   {
-    zStride = j*tDims[0]*tDims[1];
+    zStride = j * tDims[0] * tDims[1];
     for(size_t k = 0; k < tDims[1]; k++)
     {
-      yStride = k*tDims[0];
+      yStride = k * tDims[0];
       for(size_t l = 0; l < tDims[0]; l++)
       {
-        m_OutputArray[zStride+yStride+l] /= cellVolume;
+        m_OutputArray[zStride + yStride + l] /= cellVolume;
         //convert to m/mm^3 from um/um^3
-        m_OutputArray[zStride+yStride+l] *= 1000000000000.0;
+        m_OutputArray[zStride + yStride + l] *= 1000000000000.0;
       }
     }
   }

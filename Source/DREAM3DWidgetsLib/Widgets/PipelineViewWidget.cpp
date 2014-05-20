@@ -308,7 +308,7 @@ FilterPipeline::Pointer PipelineViewWidget::copyFilterPipeline()
 
 
   // Create a Pipeline Object and fill it with the filters from this View
- // Create a Pipeline Object and fill it with the filters from this View
+// Create a Pipeline Object and fill it with the filters from this View
   FilterPipeline::Pointer pipeline = FilterPipeline::New();
 
   qint32 count = filterCount();
@@ -329,7 +329,8 @@ FilterPipeline::Pointer PipelineViewWidget::copyFilterPipeline()
   // now write it out to a normal Pipeline File
   QString tempPath;
   QTemporaryFile file;
-  if (file.open()) {
+  if (file.open())
+  {
     tempPath = file.fileName();// returns the unique file name
   }
   file.close(); // Close up the file
@@ -350,7 +351,7 @@ FilterPipeline::Pointer PipelineViewWidget::copyFilterPipeline()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PipelineViewWidget::savePipeline(const QString& filePath, const QString &name, QSettings::Format format)
+void PipelineViewWidget::savePipeline(const QString& filePath, const QString& name, QSettings::Format format)
 {
 
   //If the filePath already exists - delete it so that we get a clean write to the file
@@ -488,7 +489,8 @@ void PipelineViewWidget::addFilterWidget(PipelineFilterWidget* w, AbstractFilter
           this, SLOT(setFilterBeingDragged(PipelineFilterWidget*)) );
 
   // Conditionally when the filter widget is selected, show the inputs on another widget
-  if (NULL != m_InputParametersWidget) {
+  if (NULL != m_InputParametersWidget)
+  {
     connect(w, SIGNAL(widgetSelected(PipelineFilterWidget*)),
             m_InputParametersWidget, SLOT(displayFilterParameters(PipelineFilterWidget*)));
     connect(w, SIGNAL(filterWidgetRemoved(PipelineFilterWidget*)),
@@ -855,7 +857,7 @@ void PipelineViewWidget::on_customContextMenuRequested(const QPoint& pos)
 void PipelineViewWidget::showContextMenu(const QPoint& globalPos)
 {
   m_Menu.clear();
-  for (int i=0; i<m_MenuActions.size(); i++)
+  for (int i = 0; i < m_MenuActions.size(); i++)
   {
     m_Menu.addAction(m_MenuActions[i]);
   }

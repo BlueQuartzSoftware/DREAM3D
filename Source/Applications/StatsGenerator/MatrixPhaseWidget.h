@@ -31,7 +31,7 @@ class MatrixPhaseWidget : public SGWidget, private Ui::MatrixPhaseWidget
     Q_OBJECT
 
   public:
-    MatrixPhaseWidget(QWidget *parent = 0);
+    MatrixPhaseWidget(QWidget* parent = 0);
     virtual ~MatrixPhaseWidget();
 
     void updatePlots();

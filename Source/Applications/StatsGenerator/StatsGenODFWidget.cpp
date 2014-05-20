@@ -75,7 +75,7 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-StatsGenODFWidget::StatsGenODFWidget(QWidget *parent) :
+StatsGenODFWidget::StatsGenODFWidget(QWidget* parent) :
   QWidget(parent),
   m_EnableAxisDecorations(false),
   m_Initializing(true),
@@ -144,9 +144,9 @@ void StatsGenODFWidget::extractStatsData(int index, StatsData* statsData, unsign
     // Convert from Radians to Degrees for the Euler Angles
     for(int i = 0; i < e1.size(); ++i)
     {
-      e1[i] = e1[i] * 180.0f/M_PI;
-      e2[i] = e2[i] * 180.0f/M_PI;
-      e3[i] = e3[i] * 180.0f/M_PI;
+      e1[i] = e1[i] * 180.0f / M_PI;
+      e2[i] = e2[i] * 180.0f / M_PI;
+      e3[i] = e3[i] * 180.0f / M_PI;
     }
 
     if(e1.size() > 0)
@@ -419,15 +419,15 @@ void StatsGenODFWidget::drawODFPlotGrid(QwtPlot* plot)
   // Draw the outer Circle
   QwtArray<double> circleX(900); // 900 because our plots are hard set to 450 pixels
   QwtArray<double> circleY(900);
-  float inc = 2.0f/449.0f;
+  float inc = 2.0f / 449.0f;
 
   for(int i = 0; i < 450; ++i)
   {
     circleX[i] = 1.0 - (i * inc);
-    circleX[450+i] = -1.0 + (i * inc);
+    circleX[450 + i] = -1.0 + (i * inc);
 
-    circleY[i] = sqrt(1.0-(circleX[i]*circleX[i]));
-    circleY[450+i] = -circleY[i];
+    circleY[i] = sqrt(1.0 - (circleX[i] * circleX[i]));
+    circleY[450 + i] = -circleY[i];
   }
   m_CircleGrid = new QwtPlotCurve;
 #if QWT_VERSION >= 0x060000
@@ -446,9 +446,9 @@ void StatsGenODFWidget::drawODFPlotGrid(QwtPlot* plot)
     QwtArray<double> rotCrossX(2);
     QwtArray<double> rotCrossY(2);
     rotCrossX[0] = 0.7071067811f;
-    rotCrossY[0] = sqrt(1.0-(rotCrossX[0]*rotCrossX[0]));
+    rotCrossY[0] = sqrt(1.0 - (rotCrossX[0] * rotCrossX[0]));
     rotCrossX[1] = -0.7071067811f;
-    rotCrossY[1] = -sqrt(1.0-(rotCrossX[1]*rotCrossX[1]));
+    rotCrossY[1] = -sqrt(1.0 - (rotCrossX[1] * rotCrossX[1]));
     m_RotCross0 = new QwtPlotCurve;
 #if QWT_VERSION >= 0x060000
     m_RotCross0->setSamples(rotCrossX, rotCrossY);
@@ -466,9 +466,9 @@ void StatsGenODFWidget::drawODFPlotGrid(QwtPlot* plot)
     QwtArray<double> rotCrossX(2);
     QwtArray<double> rotCrossY(2);
     rotCrossX[0] = 0.7071067811f;
-    rotCrossY[0] = -sqrt(1.0-(rotCrossX[0]*rotCrossX[0]));
+    rotCrossY[0] = -sqrt(1.0 - (rotCrossX[0] * rotCrossX[0]));
     rotCrossX[1] = -0.7071067811f;
-    rotCrossY[1] = sqrt(1.0-(rotCrossX[1]*rotCrossX[1]));
+    rotCrossY[1] = sqrt(1.0 - (rotCrossX[1] * rotCrossX[1]));
     m_RotCross1 = new QwtPlotCurve;
 #if QWT_VERSION >= 0x060000
     m_RotCross1->setSamples(rotCrossX, rotCrossY);
@@ -530,7 +530,7 @@ void StatsGenODFWidget::poleFigureGenerationComplete()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QImage generateODFPoleFigure(const PoleFigureData &data)
+QImage generateODFPoleFigure(const PoleFigureData& data)
 {
 //  PoleFigureImageUtilities colorPoleFigure;
 //#if COLOR_POLE_FIGURES
@@ -538,7 +538,7 @@ QImage generateODFPoleFigure(const PoleFigureData &data)
 //#else
 //  return colorPoleFigure.generatePoleFigureImage(data);
 //#endif
-return QImage();
+  return QImage();
 }
 
 // -----------------------------------------------------------------------------
@@ -563,11 +563,11 @@ void StatsGenODFWidget::on_m_CalculateODFBtn_clicked()
   sigmas = m_ODFTableModel->getData(SGODFTableModel::Sigma);
 
   // Convert from Degrees to Radians
-  for(int i=0;i<e1s.size();i++)
+  for(int i = 0; i < e1s.size(); i++)
   {
-    e1s[i] = e1s[i]*M_PI/180.0;
-    e2s[i] = e2s[i]*M_PI/180.0;
-    e3s[i] = e3s[i]*M_PI/180.0;
+    e1s[i] = e1s[i] * M_PI / 180.0;
+    e2s[i] = e2s[i] * M_PI / 180.0;
+    e3s[i] = e3s[i] * M_PI / 180.0;
   }
   size_t numEntries = e1s.size();
 
@@ -652,8 +652,8 @@ void StatsGenODFWidget::on_m_CalculateODFBtn_clicked()
 //    // We now need to resize all the arrays here to make sure they are all allocated
     odf.resize(OrthoRhombicOps::k_OdfSize);
     Texture::CalculateOrthoRhombicODFData(e1s.data(), e2s.data(), e3s.data(),
-                                 weights.data(), sigmas.data(), true,
-                                 odf.data(), numEntries);
+                                          weights.data(), sigmas.data(), true,
+                                          odf.data(), numEntries);
 
     err = StatsGen::GenOrthoRhombicODFPlotData(odf.data(), eulers->getPointer(0), npoints);
 
@@ -731,7 +731,7 @@ void StatsGenODFWidget::on_addODFTextureBtn_clicked()
   int r = t.exec();
   if (r == QDialog::Accepted)
   {
-    if (!m_ODFTableModel->insertRow(m_ODFTableModel->rowCount())) return;
+    if (!m_ODFTableModel->insertRow(m_ODFTableModel->rowCount())) { return; }
     // Gather values from the dialog and push them to the Table Model
     float e1 = 0.0;
     float e2 = 0.0;
@@ -846,10 +846,10 @@ void StatsGenODFWidget::on_loadODFTextureBtn_clicked()
 // -----------------------------------------------------------------------------
 void StatsGenODFWidget::on_deleteODFTextureBtn_clicked()
 {
-  QItemSelectionModel *selectionModel = m_ODFTableView->selectionModel();
-  if (!selectionModel->hasSelection()) return;
+  QItemSelectionModel* selectionModel = m_ODFTableView->selectionModel();
+  if (!selectionModel->hasSelection()) { return; }
   QModelIndex index = selectionModel->currentIndex();
-  if (!index.isValid()) return;
+  if (!index.isValid()) { return; }
   m_ODFTableModel->removeRow(index.row(), index.parent());
   if (m_ODFTableModel->rowCount() > 0)
   {

@@ -105,17 +105,17 @@ class EbsdToH5EbsdWidget : public QWidget, private Ui::EbsdToH5EbsdWidget
     void on_m_OutputFileBtn_clicked();
     void on_m_RefFrameOptionsBtn_clicked();
 
-    void on_m_FilePrefix_textChanged(const QString &string);
-    void on_m_FileSuffix_textChanged(const QString &string);
-    void on_m_FileExt_textChanged(const QString &string);
+    void on_m_FilePrefix_textChanged(const QString& string);
+    void on_m_FileSuffix_textChanged(const QString& string);
+    void on_m_FileExt_textChanged(const QString& string);
     void on_m_TotalDigits_valueChanged(int value);
     void on_m_ZStartIndex_valueChanged(int value);
     void on_m_ZEndIndex_valueChanged(int value);
     void on_m_zSpacing_textChanged(const QString& string);
 
     // slots to catch signals emitted by the various QLineEdit widgets
-    void on_m_InputDir_textChanged(const QString & text);
-    void on_m_OutputFile_textChanged(const QString & text);
+    void on_m_InputDir_textChanged(const QString& text);
+    void on_m_OutputFile_textChanged(const QString& text);
 
     void stackingOrderChanged(bool checked);
 
@@ -181,7 +181,7 @@ class EbsdToH5EbsdWidget : public QWidget, private Ui::EbsdToH5EbsdWidget
     AxisAngleInput_t m_SampleTransformation;
     AxisAngleInput_t m_EulerTransformation;
 
-    static QString								m_OpenDialogLastDirectory;
+    static QString                m_OpenDialogLastDirectory;
     bool m_DidCausePreflight;
 
 

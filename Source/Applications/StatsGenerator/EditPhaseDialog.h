@@ -13,8 +13,8 @@
  * list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
  *
- * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force, 
- * BlueQuartz Software nor the names of its contributors may be used to endorse 
+ * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
+ * BlueQuartz Software nor the names of its contributors may be used to endorse
  * or promote products derived from this software without specific prior written
  * permission.
  *
@@ -54,10 +54,10 @@
  */
 class EditPhaseDialog : public QDialog, private Ui::EditPhaseDialog
 {
-  Q_OBJECT
+    Q_OBJECT
 
   public:
-    EditPhaseDialog(QWidget *parent = 0);
+    EditPhaseDialog(QWidget* parent = 0);
     virtual ~EditPhaseDialog();
 
     unsigned int getCrystalStructure();
@@ -80,8 +80,8 @@ class EditPhaseDialog : public QDialog, private Ui::EditPhaseDialog
     void setParentPhase(unsigned int d);
 
   protected slots:
-  void on_phaseFraction_textChanged(const QString &string);
-  void on_phaseTypeCombo_currentIndexChanged(int index);
+    void on_phaseFraction_textChanged(const QString& string);
+    void on_phaseTypeCombo_currentIndexChanged(int index);
 
 
   protected:
@@ -89,7 +89,7 @@ class EditPhaseDialog : public QDialog, private Ui::EditPhaseDialog
 
   private:
     float m_OtherPhaseFractions;
-	bool m_EditFlag;
+    bool m_EditFlag;
     QDoubleValidator* m_PhaseFractionValidator;
     QDoubleValidator* m_ParentPhaseValidator;
     QDoubleValidator* m_PptFractionValidator;

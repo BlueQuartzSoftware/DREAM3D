@@ -86,7 +86,7 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
     Q_OBJECT
 
   public:
-    DREAM3D_UI(QWidget *parent = 0);
+    DREAM3D_UI(QWidget* parent = 0);
     virtual ~DREAM3D_UI();
 
 
@@ -148,7 +148,7 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
      * should be connected to the Signal QRecentFileList->fileListChanged
      * @param file The newly added file.
      */
-    void updateRecentFileList(const QString &file);
+    void updateRecentFileList(const QString& file);
 
     /**
      * @brief Qt Slot that fires in response to a click on a "Recent File' Menu entry.
@@ -198,7 +198,7 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
      * @brief populateMenus This is a planned API that plugins would use to add Menus to the main application
      * @param plugin
      */
-    void populateMenus(QObject *plugin);
+    void populateMenus(QObject* plugin);
 
     /**
      * @brief setupPipelineMenu This will collect specific menu items and allow them to be used from a contextual menu
@@ -212,7 +212,7 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
      * @brief Implements the CloseEvent to Quit the application and write settings
      * to the preference file
      */
-    void closeEvent(QCloseEvent *event);
+    void closeEvent(QCloseEvent* event);
 
     /**
      * @brief Drag and drop implementation
@@ -228,8 +228,8 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
      *
      * @param prefs
      */
-    void writeWindowSettings(QSettings &prefs);
-    void writeVersionCheckSettings(QSettings &prefs);
+    void writeWindowSettings(QSettings& prefs);
+    void writeVersionCheckSettings(QSettings& prefs);
 
 
     void readWindowSettings();
@@ -258,7 +258,7 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
     void writeDockWidgetSettings(QSettings& prefs, QDockWidget* dw);
 
 
-    void makeStatusBarButton(QString text, QDockWidget *dockWidget, QToolButton *btn, int index);
+    void makeStatusBarButton(QString text, QDockWidget* dockWidget, QToolButton* btn, int index);
 
     void updateAndSyncDockWidget(QAction* action, QDockWidget* dock, QToolButton* btn, bool b);
 
@@ -272,7 +272,7 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
      * @brief Over ride the resize event
      * @param event The event to process
      */
-    void resizeEvent ( QResizeEvent * event );
+    void resizeEvent ( QResizeEvent* event );
 
   private:
     QThread*                    m_WorkerThread;

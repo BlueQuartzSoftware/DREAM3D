@@ -50,35 +50,35 @@
 #define EBSD_VOLREADER_READ_HEADER(fileId, path, var)\
   err = H5Lite::readScalarDataset(fileId, path.toStdString(), var);\
   if (err < 0) {\
-  qDebug() << "H5EbsdVolumeInfo Error: Could not load header value for " << path ;\
-  err = H5Utilities::closeFile(fileId);\
-  return err;\
+    qDebug() << "H5EbsdVolumeInfo Error: Could not load header value for " << path ;\
+    err = H5Utilities::closeFile(fileId);\
+    return err;\
   }
 
 #define EBSD_VOLREADER_READ_VECTOR_HEADER(fileId, path, var, type)\
-{\
-  std::vector<type> data;\
-  err = H5Lite::readVectorDataset(fileId, path.toStdString(), data);\
-  if (err < 0) {\
-  qDebug() << "H5EbsdVolumeInfo Error: Could not load header value for " << path ;\
-  err = H5Utilities::closeFile(fileId);\
-  return err;\
-  } else {\
-  var.resize(static_cast<qint32>(data.size()));\
-  ::memcpy(var.data(), &(data.front()), sizeof(type) * var.size());\
-  }\
+  {\
+    std::vector<type> data;\
+    err = H5Lite::readVectorDataset(fileId, path.toStdString(), data);\
+    if (err < 0) {\
+      qDebug() << "H5EbsdVolumeInfo Error: Could not load header value for " << path ;\
+      err = H5Utilities::closeFile(fileId);\
+      return err;\
+    } else {\
+      var.resize(static_cast<qint32>(data.size()));\
+      ::memcpy(var.data(), &(data.front()), sizeof(type) * var.size());\
+    }\
   }
 
 
 #define EBSD_VOLREADER_READ_HEADER_CAST(fileId, path, var, m_msgType, cast)\
-{ cast t;\
-  err = H5Lite::readScalarDataset(fileId, path.toStdString(), t);\
-  if (err < 0) {\
-  qDebug() << "H5EbsdVolumeInfo Error: Could not load header value for " << path ;\
-  err = H5Utilities::closeFile(fileId);\
-  return err;\
-  }\
-  var = static_cast<m_msgType>(t); }
+  { cast t;\
+    err = H5Lite::readScalarDataset(fileId, path.toStdString(), t);\
+    if (err < 0) {\
+      qDebug() << "H5EbsdVolumeInfo Error: Could not load header value for " << path ;\
+      err = H5Utilities::closeFile(fileId);\
+      return err;\
+    }\
+    var = static_cast<m_msgType>(t); }
 
 #if defined (H5Support_NAMESPACE)
 using namespace H5Support_NAMESPACE;
@@ -263,8 +263,8 @@ int H5EbsdVolumeInfo::readVolumeInfo()
   if(m_Manufacturer.compare(Ebsd::Ang::Manufacturer) == 0)
   {
     if(m_DataArrayNames.contains(Ebsd::Ang::Phi1)
-       && m_DataArrayNames.contains(Ebsd::Ang::Phi)
-       && m_DataArrayNames.contains(Ebsd::Ang::Phi2) )
+        && m_DataArrayNames.contains(Ebsd::Ang::Phi)
+        && m_DataArrayNames.contains(Ebsd::Ang::Phi2) )
     {
       m_DataArrayNames.remove(Ebsd::Ang::Phi1);
       m_DataArrayNames.remove(Ebsd::Ang::Phi);
@@ -280,8 +280,8 @@ int H5EbsdVolumeInfo::readVolumeInfo()
   else if(m_Manufacturer.compare(Ebsd::Ctf::Manufacturer) == 0)
   {
     if(m_DataArrayNames.contains(Ebsd::Ctf::Euler1)
-       && m_DataArrayNames.contains(Ebsd::Ctf::Euler2)
-       && m_DataArrayNames.contains(Ebsd::Ctf::Euler3) )
+        && m_DataArrayNames.contains(Ebsd::Ctf::Euler2)
+        && m_DataArrayNames.contains(Ebsd::Ctf::Euler3) )
     {
       m_DataArrayNames.remove(Ebsd::Ctf::Euler1);
       m_DataArrayNames.remove(Ebsd::Ctf::Euler2);
@@ -297,8 +297,8 @@ int H5EbsdVolumeInfo::readVolumeInfo()
   else if(m_Manufacturer.compare(Ebsd::Mic::Manufacturer) == 0)
   {
     if(m_DataArrayNames.contains(Ebsd::Mic::Euler1)
-       && m_DataArrayNames.contains(Ebsd::Mic::Euler2)
-       && m_DataArrayNames.contains(Ebsd::Mic::Euler3) )
+        && m_DataArrayNames.contains(Ebsd::Mic::Euler2)
+        && m_DataArrayNames.contains(Ebsd::Mic::Euler3) )
     {
       m_DataArrayNames.remove(Ebsd::Mic::Euler1);
       m_DataArrayNames.remove(Ebsd::Mic::Euler2);

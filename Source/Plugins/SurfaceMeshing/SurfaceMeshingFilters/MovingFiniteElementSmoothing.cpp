@@ -155,13 +155,13 @@ MovingFiniteElementSmoothing::~MovingFiniteElementSmoothing()
 void MovingFiniteElementSmoothing::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(FilterParameter::New("Iteration Steps", "IterationSteps", FilterParameterWidgetType::IntWidget,"int", false));
-  parameters.push_back(FilterParameter::New("Apply Node Contraints", "NodeConstraints", FilterParameterWidgetType::BooleanWidget,"bool", false));
-  parameters.push_back(FilterParameter::New("Constrain Surface Nodes", "ConstrainSurfaceNodes", FilterParameterWidgetType::BooleanWidget,"bool", false));
-  parameters.push_back(FilterParameter::New("Constrain Quad Points", "ConstrainQuadPoints", FilterParameterWidgetType::BooleanWidget,"bool", false));
-  parameters.push_back(FilterParameter::New("Smooth Triple Lines", "SmoothTripleLines", FilterParameterWidgetType::BooleanWidget,"bool", false));
-  parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "QString", true));
-  parameters.push_back(FilterParameter::New("SurfaceMeshNodeType", "SurfaceMeshNodeTypeArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
+  parameters.push_back(FilterParameter::New("Iteration Steps", "IterationSteps", FilterParameterWidgetType::IntWidget, getIterationSteps(), false));
+  parameters.push_back(FilterParameter::New("Apply Node Contraints", "NodeConstraints", FilterParameterWidgetType::BooleanWidget, getNodeConstraints(), false));
+  parameters.push_back(FilterParameter::New("Constrain Surface Nodes", "ConstrainSurfaceNodes", FilterParameterWidgetType::BooleanWidget, getConstrainSurfaceNodes(), false));
+  parameters.push_back(FilterParameter::New("Constrain Quad Points", "ConstrainQuadPoints", FilterParameterWidgetType::BooleanWidget, getConstrainQuadPoints(), false));
+  parameters.push_back(FilterParameter::New("Smooth Triple Lines", "SmoothTripleLines", FilterParameterWidgetType::BooleanWidget, getSmoothTripleLines(), false));
+  parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
+  parameters.push_back(FilterParameter::New("SurfaceMeshNodeType", "SurfaceMeshNodeTypeArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getSurfaceMeshNodeTypeArrayPath(), true, ""));
   setFilterParameters(parameters);
 }
 

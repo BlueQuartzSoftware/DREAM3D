@@ -55,7 +55,7 @@ class AttributeMatrixProxy
       flag(0),
       name(""),
       amType(DREAM3D::AttributeMatrixType::Unknown)
-      {}
+    {}
 
     /**
      * @brief AttributeMatrixProxy
@@ -67,7 +67,7 @@ class AttributeMatrixProxy
       flag(read_am),
       name(am_name),
       amType(am_type)
-      {}
+    {}
 
     /**
     * @brief Copy Constructor
