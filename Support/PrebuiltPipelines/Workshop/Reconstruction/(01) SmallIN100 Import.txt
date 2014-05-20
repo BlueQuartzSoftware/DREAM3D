@@ -1,7 +1,7 @@
 [PipelineBuilder]
 Name=(01) SmallIN100 Import
 Number_Filters=1
-Version=5.0.6491
+Version=5.0.6545
 
 [0]
 Filter_Name=EbsdToH5Ebsd
@@ -11,7 +11,7 @@ ZStartIndex=1
 ZEndIndex=117
 ZResolution=0.25
 RefFrameZDir=1
-InputPath=/Users/Shared/Data/IN100_Raw_Data_Original/OSC DATA FILES/Slices 1-117 (Jun26-28)-ang
+InputPath=Data/Slices 1-117 (Jun26-28)-ang
 FilePrefix=Slice_
 FileSuffix=
 FileExtension=ang
