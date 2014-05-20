@@ -1,6 +1,6 @@
 [PipelineBuilder]
 Name=(16) MicroTextureReconstruction
-Number_Filters=9
+Number_Filters=7
 Version=5.0.6545
 
 [0]
@@ -46,7 +46,7 @@ Filter_Name=EBSDSegmentFeatures
 Filter_Human_Label=Segment Features (Misorientation)
 CellFeatureAttributeMatrixName=CellFeatureData
 ActiveArrayName=Active
-FeatureIdsArrayName=FeatureIds
+FeatureIdsArrayName=GrainIds(Miso)
 QuatsArrayPath=VolumeDataContainer|CellData|Quats
 CrystalStructuresArrayPath=VolumeDataContainer|CellEnsembleData|CrystalStructures
 CellPhasesArrayPath=VolumeDataContainer|CellData|Phases
@@ -55,17 +55,11 @@ UseGoodVoxels=1
 MisorientationTolerance=5
 
 [4]
-Filter_Name=RenameAttributeArray
-Filter_Human_Label=Rename Attribute Array
-SelectedArrayPath=VolumeDataContainer|CellData|FeatureIds
-NewArrayName=GrainIds(Miso)
-
-[5]
 Filter_Name=CAxisSegmentFeatures
 Filter_Human_Label=Segment Features (C-Axis Misorientation)
 CellFeatureAttributeMatrixName=CellFeatureData_caxis
 ActiveArrayName=Active
-FeatureIdsArrayName=FeatureIds
+FeatureIdsArrayName=GrainIDs(C-Axis)
 QuatsArrayPath=VolumeDataContainer|CellData|Quats
 CrystalStructuresArrayPath=VolumeDataContainer|CellEnsembleData|CrystalStructures
 CellPhasesArrayPath=VolumeDataContainer|CellData|Phases
@@ -73,13 +67,7 @@ GoodVoxelsArrayPath=VolumeDataContainer|CellData|GoodVoxels
 UseGoodVoxels=1
 MisorientationTolerance=5
 
-[6]
-Filter_Name=RenameAttributeArray
-Filter_Human_Label=Rename Attribute Array
-SelectedArrayPath=VolumeDataContainer|CellData|FeatureIds
-NewArrayName=GrainIDs(C-Axis)
-
-[7]
+[5]
 Filter_Name=GenerateIPFColors
 Filter_Human_Label=Generate IPF Colors
 UseGoodVoxels=0
@@ -93,7 +81,7 @@ ReferenceDir\1\x=0
 ReferenceDir\2\y=0
 ReferenceDir\3\z=1
 
-[8]
+[6]
 Filter_Name=DataContainerWriter
 Filter_Human_Label=Write DREAM3D Data File
 OutputFile=Data/Output/MicrotexturedTi.dream3d
