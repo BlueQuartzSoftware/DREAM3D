@@ -142,7 +142,7 @@ DataContainer::Pointer DataContainerArray::removeDataContainer(const QString& na
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-bool DataContainerArray::renameDataContainer(const QString& oldname, const QString& newname, bool overwrite)
+bool DataContainerArray::renameDataContainer(const QString& oldname, const QString& newname)
 {
   DataContainer::Pointer f = DataContainer::NullPointer();
 
@@ -156,29 +156,7 @@ bool DataContainerArray::renameDataContainer(const QString& oldname, const QStri
     }
   }
 
-  if (NULL != f.get() && overwrite == true)
-  {
-    // We found an existing data container with the new name but we want to over write that data container
-    // First remove the existing one
-
-
-    // Now find the data container we want to rename
-    for(QList<DataContainer::Pointer>::iterator it = m_Array.begin(); it != m_Array.end(); ++it)
-    {
-      if((*it)->getName().compare(oldname) == 0)
-      {
-        // we have an existing DataContainer that matches our "oldname" that we want to rename so all is good.
-        // Remove the DataContainer that we are going to over write
-        DataContainer::Pointer dc = removeDataContainer(newname);
-        dc = DataContainer::NullPointer(); // Set it to NULL to release all the resources
-        f = *it;
-        f->setName(newname);
-        return true;
-      }
-    }
-
-  }
-  else if(NULL == f)
+  if(NULL == f)
   {
     // We did not find any data container that matches the new name so we can rename if we find one that matches
     // the 'oldname' argument
@@ -194,7 +172,7 @@ bool DataContainerArray::renameDataContainer(const QString& oldname, const QStri
       }
     }
   }
-  else if (NULL != f && overwrite == false)
+  else if (NULL != f)
   {
     // We found an existing Data Container with the 'newname' but we do NOT want to over write it so just bail out now
     return false;

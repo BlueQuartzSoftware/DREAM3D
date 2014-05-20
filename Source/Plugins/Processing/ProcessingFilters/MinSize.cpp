@@ -169,6 +169,7 @@ void MinSize::execute()
   {
     if(m_FeatureIds[iter] > numFeatures) numFeatures = m_FeatureIds[iter];
   }
+  //need to add 1 to account for the zero grain.
   numFeatures += 1;
 
   QVector<bool> activeObjects = remove_smallfeatures();

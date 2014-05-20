@@ -146,6 +146,11 @@ namespace DREAM3D
     const DREAM3D_STRING MiscFilters("Misc");
   }
 
+  namespace GeneralData
+  {
+    const DREAM3D_STRING ThresholdArray("ThresholdArray");
+  }
+
   namespace CellData
   {
     const DREAM3D_STRING BC("BandContrasts");

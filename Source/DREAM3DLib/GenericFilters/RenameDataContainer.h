@@ -70,9 +70,6 @@ class DREAM3DLib_EXPORT RenameDataContainer : public AbstractFilter
     DREAM3D_FILTER_PARAMETER(QString, NewDataContainerName)
     Q_PROPERTY(QString NewDataContainerName READ getNewDataContainerName WRITE setNewDataContainerName)
 
-    DREAM3D_FILTER_PARAMETER(bool, ReplaceExistingDataContainer)
-    Q_PROPERTY(bool ReplaceExistingDataContainer READ getReplaceExistingDataContainer WRITE setReplaceExistingDataContainer)
-
     /**
     * @brief This returns the group that the filter belonds to. You can select
     * a different group if you want. The string returned here will be displayed

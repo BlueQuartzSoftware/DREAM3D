@@ -48,7 +48,7 @@ LocalDislocationDensityCalculator::LocalDislocationDensityCalculator() :
   m_EdgeDataContainerName(DREAM3D::Defaults::EdgeDataContainerName),
   m_OutputDataContainerName(DREAM3D::Defaults::NewVolumeDataContainerName),
   m_OutputAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
-  m_OutputArrayName("DilocationLineDensity"),
+  m_OutputArrayName("DislocationLineDensity"),
   m_OutputArray(NULL)
 {
   m_CellSize.x = 2.0;
@@ -81,6 +81,8 @@ void LocalDislocationDensityCalculator::setupFilterParameters()
     parameters.push_back(parameter);
   }
 
+  parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "QString", true));
+  parameters.push_back(FilterParameter::New("Edge Data Container", "EdgeDataContainerName", FilterParameterWidgetType::DataContainerSelectionWidget, "QString", true, ""));
   parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "QString", true));
   parameters.push_back(FilterParameter::New("Volume Data Container", "OutputDataContainerName", FilterParameterWidgetType::StringWidget, "QString", true, ""));
   parameters.push_back(FilterParameter::New("Cell Attribute Matrix", "OutputAttributeMatrixName", FilterParameterWidgetType::StringWidget, "QString", true, ""));
@@ -94,6 +96,7 @@ void LocalDislocationDensityCalculator::setupFilterParameters()
 void LocalDislocationDensityCalculator::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
+  setEdgeDataContainerName( reader->readString( "EdgeDataContainerName", getEdgeDataContainerName() ) );
   setOutputDataContainerName( reader->readString( "OutputDataContainerName", getOutputDataContainerName() ) );
   setOutputAttributeMatrixName( reader->readString( "OutputAttributeMatrixName", getOutputAttributeMatrixName() ) );
   setOutputArrayName( reader->readString( "OutputArrayName", getOutputArrayName() ) );
@@ -107,6 +110,7 @@ void LocalDislocationDensityCalculator::readFilterParameters(AbstractFilterParam
 int LocalDislocationDensityCalculator::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
+  writer->writeValue("EdgeDataContainerName", getEdgeDataContainerName() );
   writer->writeValue("OutputDataContainerName", getOutputDataContainerName() );
   writer->writeValue("OutputAttributeMatrixName", getOutputAttributeMatrixName() );
   writer->writeValue("OutputArrayName", getOutputArrayName() );

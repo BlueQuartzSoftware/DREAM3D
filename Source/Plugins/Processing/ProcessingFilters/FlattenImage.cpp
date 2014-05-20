@@ -113,6 +113,7 @@ FlattenImage::~FlattenImage()
 void FlattenImage::setupFilterParameters()
 {
   FilterParameterVector parameters;
+  parameters.push_back(FilterParameter::New("ImageData", "ImageDataArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", false, ""));
   {
     ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New();
     parameter->setHumanLabel("Flattening Method");
@@ -126,8 +127,6 @@ void FlattenImage::setupFilterParameters()
     parameter->setChoices(choices);
     parameters.push_back(parameter);
   }
-  parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "QString", true));
-  parameters.push_back(FilterParameter::New("ImageData", "ImageDataArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
   parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "QString", true));
   parameters.push_back(FilterParameter::New("FlatImageData", "FlatImageDataArrayName", FilterParameterWidgetType::StringWidget, "QString", true, ""));
   setFilterParameters(parameters);
