@@ -1,21 +1,28 @@
 [PipelineBuilder]
-Number_Filters=1
 Name=(01) SmallIN100 Import
+Number_Filters=1
+Version=5.0.6491
 
 [0]
 Filter_Name=EbsdToH5Ebsd
-InputDir=Data/SmallIN100
-FilePrefix=Small_IN100_
-FileSuffix=
-FileExt=ang
+Filter_Human_Label=Import Orientation File(s) to H5Ebsd
+OutputFile=Data/Output/SmallIN100.h5ebsd
 ZStartIndex=1
 ZEndIndex=117
-zSpacing=0.25
-TotalDigits=1
-OutputFile=Data/Output/SmallIN100.h5ebsd
-StackHighToLow=true
-StackLowToHigh=false
-TSLchecked=true
-HKLchecked=false
-HEDMchecked=false
-NoTranschecked=false
+ZResolution=0.25
+RefFrameZDir=1
+InputPath=/Users/Shared/Data/IN100_Raw_Data_Original/OSC DATA FILES/Slices 1-117 (Jun26-28)-ang
+FilePrefix=Slice_
+FileSuffix=
+FileExtension=ang
+PaddingDigits=1
+SampleTransformation\size=0
+SampleTransformation\1\Angle=180
+SampleTransformation\1\H=0
+SampleTransformation\1\K=1
+SampleTransformation\1\L=0
+EulerTransformation\size=0
+EulerTransformation\1\Angle=90
+EulerTransformation\1\H=0
+EulerTransformation\1\K=0
+EulerTransformation\1\L=1
