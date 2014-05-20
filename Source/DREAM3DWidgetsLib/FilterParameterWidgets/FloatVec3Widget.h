@@ -57,7 +57,7 @@
 */
 class DREAM3DWidgetsLib_EXPORT FloatVec3Widget : public QWidget, private Ui::FloatVec3Widget
 {
-  Q_OBJECT
+    Q_OBJECT
 
   public:
     /**

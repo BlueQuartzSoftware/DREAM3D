@@ -58,11 +58,11 @@ class DREAM3DLib_EXPORT FilePathGenerator
      * @param filename Example File Name
      * @return
      */
-    static QVector<QString> GenerateFileList(int start, int end, bool &hasMissingFiles,
-                                                      bool stackLowToHigh,const QString& inputPath,
-                                                      const QString& filePrefix,
-                                                      const QString& fileSuffix, const QString& fileExtension,
-                                                      int paddingDigits);
+    static QVector<QString> GenerateFileList(int start, int end, bool& hasMissingFiles,
+                                             bool stackLowToHigh, const QString& inputPath,
+                                             const QString& filePrefix,
+                                             const QString& fileSuffix, const QString& fileExtension,
+                                             int paddingDigits);
   protected:
     FilePathGenerator();
 

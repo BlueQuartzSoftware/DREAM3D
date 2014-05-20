@@ -57,7 +57,7 @@
 */
 class DREAM3DWidgetsLib_EXPORT InputPathWidget : public QWidget, private Ui::InputPathWidget
 {
-  Q_OBJECT
+    Q_OBJECT
 
   public:
     /**

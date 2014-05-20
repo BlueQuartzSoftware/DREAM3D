@@ -41,7 +41,7 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-TextureDialog::TextureDialog(unsigned int xtal, QWidget *parent) :
+TextureDialog::TextureDialog(unsigned int xtal, QWidget* parent) :
   QDialog(parent),
   m_CrystalStructure(xtal)
 {
@@ -116,7 +116,7 @@ void TextureDialog::setupGui()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void TextureDialog::on_presetListWidget_itemDoubleClicked ( QListWidgetItem * item )
+void TextureDialog::on_presetListWidget_itemDoubleClicked ( QListWidgetItem* item )
 {
   int index = presetListWidget->currentRow();
   TexturePreset::Pointer t = m_Presets[index];
@@ -148,7 +148,7 @@ void TextureDialog::on_presetListWidget_itemSelectionChanged()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void TextureDialog::getODFEntry(float &e1, float &e2, float &e3, float &w, float &s)
+void TextureDialog::getODFEntry(float& e1, float& e2, float& e3, float& w, float& s)
 {
   bool ok = false;
   e1 = euler1->text().toFloat(&ok);

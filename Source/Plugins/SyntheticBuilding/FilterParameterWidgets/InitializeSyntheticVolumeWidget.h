@@ -103,7 +103,7 @@ class InitializeSyntheticVolumeWidget : public QWidget, private Ui::InitializeSy
      * @brief setInputFile
      * @param v
      */
-    void setInputFile(const QString &v);
+    void setInputFile(const QString& v);
 
     /**
      * @brief setWidgetListEnabled
@@ -162,7 +162,7 @@ class InitializeSyntheticVolumeWidget : public QWidget, private Ui::InitializeSy
     QList<QWidget*>                    m_WidgetList;
 
     bool                             m_Version4Warning;
-    static QString								   m_OpenDialogLastDirectory;
+    static QString                   m_OpenDialogLastDirectory;
     bool                             m_DidCausePreflight;
     bool                             m_NewFileLoaded;
 

@@ -69,47 +69,47 @@ class SGODFTableModel : public QAbstractTableModel
       * @param index
       * @return
       */
-     virtual Qt::ItemFlags flags(const QModelIndex &index) const;
+    virtual Qt::ItemFlags flags(const QModelIndex& index) const;
 
-     /**
-      *
-      * @param index
-      * @param role
-      * @return
-      */
-     virtual QVariant data(const QModelIndex &index, int role=Qt::DisplayRole) const;
+    /**
+     *
+     * @param index
+     * @param role
+     * @return
+     */
+    virtual QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const;
 
-     /**
-      *
-      * @param section
-      * @param orientation
-      * @param role
-      * @return
-      */
-     virtual QVariant headerData(int section, Qt::Orientation orientation, int role=Qt::DisplayRole) const;
+    /**
+     *
+     * @param section
+     * @param orientation
+     * @param role
+     * @return
+     */
+    virtual QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const;
 
-     /**
-      *
-      * @param parent
-      * @return
-      */
-     virtual int rowCount(const QModelIndex &parent=QModelIndex()) const;
+    /**
+     *
+     * @param parent
+     * @return
+     */
+    virtual int rowCount(const QModelIndex& parent = QModelIndex()) const;
 
-     /**
-      *
-      * @param parent
-      * @return
-      */
-     virtual int columnCount(const QModelIndex &parent=QModelIndex()) const;
+    /**
+     *
+     * @param parent
+     * @return
+     */
+    virtual int columnCount(const QModelIndex& parent = QModelIndex()) const;
 
-     /**
-      *
-      * @param index
-      * @param value
-      * @param role
-      * @return
-      */
-     virtual bool setData(const QModelIndex &index, const QVariant &value, int role=Qt::EditRole);
+    /**
+     *
+     * @param index
+     * @param value
+     * @param role
+     * @return
+     */
+    virtual bool setData(const QModelIndex& index, const QVariant& value, int role = Qt::EditRole);
 
     /**
      *
@@ -119,58 +119,58 @@ class SGODFTableModel : public QAbstractTableModel
      * @param role
      * @return
      */
-     virtual bool setHeaderData(int col, Qt::Orientation orientation, const QVariant& data, int role=Qt::EditRole);
+    virtual bool setHeaderData(int col, Qt::Orientation orientation, const QVariant& data, int role = Qt::EditRole);
 
-     /**
-      *
-      * @param row
-      * @param count
-      * @param parent
-      * @return
-      */
-     virtual bool insertRows(int row, int count, const QModelIndex &parent=QModelIndex());
+    /**
+     *
+     * @param row
+     * @param count
+     * @param parent
+     * @return
+     */
+    virtual bool insertRows(int row, int count, const QModelIndex& parent = QModelIndex());
 
-     /**
-      *
-      * @param row
-      * @param count
-      * @param parent
-      * @return
-      */
-     virtual bool removeRows(int row, int count, const QModelIndex &parent=QModelIndex());
+    /**
+     *
+     * @param row
+     * @param count
+     * @param parent
+     * @return
+     */
+    virtual bool removeRows(int row, int count, const QModelIndex& parent = QModelIndex());
 
-     /**
-      *
-      * @return
-      */
-     virtual QAbstractItemDelegate* getItemDelegate();
+    /**
+     *
+     * @return
+     */
+    virtual QAbstractItemDelegate* getItemDelegate();
 
-     /**
-      *
-      * @param col
-      * @return
-      */
-     virtual QVector<float> getData(int col);
+    /**
+     *
+     * @param col
+     * @return
+     */
+    virtual QVector<float> getData(int col);
 
-     /**
-      *
-      * @param col
-      * @param row
-      * @return
-      */
-     virtual float getDataValue(int col, int row);
+    /**
+     *
+     * @param col
+     * @param row
+     * @return
+     */
+    virtual float getDataValue(int col, int row);
 
 
-     virtual void setColumnData(int col, QVector<float> &data);
+    virtual void setColumnData(int col, QVector<float>& data);
 
-     virtual void setRowData(int row, float e1, float e2, float e3, float weight, float sigma);
+    virtual void setRowData(int row, float e1, float e2, float e3, float weight, float sigma);
 
-     virtual void setInitialValues();
+    virtual void setInitialValues();
 
-     void setTableData(QVector<float> e1, QVector<float> e2, QVector<float> e3, QVector<float> weights, QVector<float> sigmas);
+    void setTableData(QVector<float> e1, QVector<float> e2, QVector<float> e3, QVector<float> weights, QVector<float> sigmas);
 
-     void setCrystalStructure(unsigned int value);
-     unsigned int getCrystalStructure();
+    void setCrystalStructure(unsigned int value);
+    unsigned int getCrystalStructure();
 
 
   private:

@@ -44,7 +44,7 @@
   out[2] = q2[2] * q1[4] + q2[4] * q1[2] + q2[1] * q1[3] - q2[3] * q1[1];\
   out[3] = q2[3] * q1[4] + q2[4] * q1[3] + q2[2] * q1[1] - q2[1] * q1[2];\
   out[4] = q2[4] * q1[4] - q2[1] * q1[1] - q2[2] * q1[2] - q2[3] * q1[3];\
-
+   
 #endif
 
 /*
@@ -130,7 +130,7 @@ class DREAM3DLib_EXPORT OrientationMath
      */
     static void EulertoQuat(float ea1, float ea2, float ea3, QuatF& q);
     static QuatF EulertoQuat(float ea1, float ea2, float ea3);
-    static void EulertoQuat(const float *euler, QuatF& q);
+    static void EulertoQuat(const float* euler, QuatF& q);
     static QuatF EulertoQuat(const float* ea);
 
     /**
@@ -143,6 +143,8 @@ class DREAM3DLib_EXPORT OrientationMath
      */
     static void EulertoMat(float ea1, float ea2, float ea3, float g[3][3]);
     static void EulertoRod(float ea1, float ea2, float ea3, float& r1, float& r2, float& r3);
+
+    static void EulerToAxisAngle(float ea1, float ea2, float ea3, float& w, float& n1, float& n2, float& n3);
 
     /**
      * @brief EulertoMatActive This function converts an Euler Angle triplet (Bunge) into a <b>ACTIVE</b> Orientation Matrix. This

@@ -88,19 +88,18 @@ void FindFeatureNeighborCAxisMisalignments::setupFilterParameters()
     option->setHumanLabel("Find Average C-Axis Misalignments");
     option->setPropertyName("FindAvgMisals");
     option->setWidgetType(FilterParameterWidgetType::BooleanWidget);
-    option->setValueType("bool");
     option->setUnits("");
     parameters.push_back(option);
   }
 
-  parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "QString", true));
-  parameters.push_back(FilterParameter::New("Neighbor List Array Name", "NeighborListArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
-  parameters.push_back(FilterParameter::New("AvgQuats", "AvgQuatsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
-  parameters.push_back(FilterParameter::New("FeaturePhases", "FeaturePhasesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
-  parameters.push_back(FilterParameter::New("CrystalStructures", "CrystalStructuresArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
-  parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "QString", true));
-  parameters.push_back(FilterParameter::New("AvgCAxisMisalignments", "AvgCAxisMisalignmentsArrayName", FilterParameterWidgetType::StringWidget, "QString", true, ""));
-  parameters.push_back(FilterParameter::New("CAxis Misalignment List Array Name", "CAxisMisalignmentListArrayName", FilterParameterWidgetType::StringWidget, "QString", true, ""));
+  parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
+  parameters.push_back(FilterParameter::New("Neighbor List Array Name", "NeighborListArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getNeighborListArrayPath(), true, ""));
+  parameters.push_back(FilterParameter::New("AvgQuats", "AvgQuatsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getAvgQuatsArrayPath(), true, ""));
+  parameters.push_back(FilterParameter::New("FeaturePhases", "FeaturePhasesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeaturePhasesArrayPath(), true, ""));
+  parameters.push_back(FilterParameter::New("CrystalStructures", "CrystalStructuresArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getCrystalStructuresArrayPath(), true, ""));
+  parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
+  parameters.push_back(FilterParameter::New("AvgCAxisMisalignments", "AvgCAxisMisalignmentsArrayName", FilterParameterWidgetType::StringWidget, getAvgCAxisMisalignmentsArrayName(), true, ""));
+  parameters.push_back(FilterParameter::New("CAxis Misalignment List Array Name", "CAxisMisalignmentListArrayName", FilterParameterWidgetType::StringWidget, getCAxisMisalignmentListArrayName(), true, ""));
   setFilterParameters(parameters);
 }
 
@@ -259,21 +258,21 @@ void FindFeatureNeighborCAxisMisalignments::execute()
         w = GeometryMath::CosThetaBetweenVectors(c1, c2);
         DREAM3DMath::boundF(w, -1, 1);
         w = acosf(w);
-        if (w > (DREAM3D::Constants::k_Pi / 2)) w = DREAM3D::Constants::k_Pi - w;
+        if (w > (DREAM3D::Constants::k_Pi / 2)) { w = DREAM3D::Constants::k_Pi - w; }
 
         misalignmentlists[i][j] = w * DREAM3D::Constants::k_180OverPi;
-        if (m_FindAvgMisals == true) m_AvgCAxisMisalignments[i] += misalignmentlists[i][j];
+        if (m_FindAvgMisals == true) { m_AvgCAxisMisalignments[i] += misalignmentlists[i][j]; }
       }
       else
       {
-        if (m_FindAvgMisals == true) hexneighborlistsize--;
+        if (m_FindAvgMisals == true) { hexneighborlistsize--; }
         misalignmentlists[i][j] = -100.0f;
       }
     }
     if (m_FindAvgMisals == true)
     {
-      if (hexneighborlistsize > 0) m_AvgCAxisMisalignments[i] /= hexneighborlistsize;
-      else m_AvgCAxisMisalignments[i] = -100.0f;
+      if (hexneighborlistsize > 0) { m_AvgCAxisMisalignments[i] /= hexneighborlistsize; }
+      else { m_AvgCAxisMisalignments[i] = -100.0f; }
       hexneighborlistsize = 0;
     }
   }

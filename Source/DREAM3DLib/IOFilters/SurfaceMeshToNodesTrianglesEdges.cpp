@@ -74,22 +74,22 @@ SurfaceMeshToNodesTrianglesEdges::~SurfaceMeshToNodesTrianglesEdges()
 void SurfaceMeshToNodesTrianglesEdges::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(FilterParameter::New("Output Nodes File", "OutputNodesFile", FilterParameterWidgetType::OutputFileWidget,"QString", false));
-  parameters.push_back(FilterParameter::New("Output Triangles File", "OutputTrianglesFile", FilterParameterWidgetType::OutputFileWidget,"QString", false));
+  parameters.push_back(FilterParameter::New("Output Nodes File", "OutputNodesFile", FilterParameterWidgetType::OutputFileWidget, getOutputNodesFile(), false));
+  parameters.push_back(FilterParameter::New("Output Triangles File", "OutputTrianglesFile", FilterParameterWidgetType::OutputFileWidget, getOutputTrianglesFile(), false));
 #if WRITE_EDGES_FILE
   {
     FilterParameter::Pointer parameter = FilterParameter::New();
     parameter->setHumanLabel("Output Edges File");
     parameter->setPropertyName("OutputEdgesFile");
     parameter->setWidgetType(FilterParameterWidgetType::OutputFileWidget);
-    parameter->setValueType("QString");
+    //parameter->setValueType("QString");
     parameters.push_back(parameter);
   }
 #endif
 
-  parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "QString", true));
-  parameters.push_back(FilterParameter::New("SurfaceMeshFaceLabels", "SurfaceMeshFaceLabelsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
-  parameters.push_back(FilterParameter::New("SurfaceMeshNodeType", "SurfaceMeshNodeTypeArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
+  parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
+  parameters.push_back(FilterParameter::New("SurfaceMeshFaceLabels", "SurfaceMeshFaceLabelsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getSurfaceMeshFaceLabelsArrayPath(), true, ""));
+  parameters.push_back(FilterParameter::New("SurfaceMeshNodeType", "SurfaceMeshNodeTypeArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getSurfaceMeshNodeTypeArrayPath(), true, ""));
   setFilterParameters(parameters);
 }
 

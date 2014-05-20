@@ -39,6 +39,9 @@
 #include <QtCore/QList>
 #include <QtGui/QListWidgetItem>
 
+
+#include "DREAM3DLib/Common/AbstractFilter.h"
+#include "DREAM3DLib/FilterParameters/FilterParameter.h"
 #include "DREAM3DLib/DataContainers/DataArrayPath.h"
 
 #include "FilterParameterWidgetsDialogs.h"
@@ -94,26 +97,18 @@ void DataArraySelectionWidget::initializeWidget(FilterParameter* parameter, Abst
 // -----------------------------------------------------------------------------
 void DataArraySelectionWidget::setupGui()
 {
+
+  // Sanity Check the filter and the filter parameter
   if(m_Filter == NULL)
   {
     return;
   }
-  // Catch when the filter is about to execute the preflight
-  connect(m_Filter, SIGNAL(preflightAboutToExecute()),
-          this, SLOT(beforePreflight()));
-
-  // Catch when the filter is finished running the preflight
-  connect(m_Filter, SIGNAL(preflightExecuted()),
-          this, SLOT(afterPreflight()));
-
-  // Catch when the filter wants its values updated
-  connect(m_Filter, SIGNAL(updateFilterParameters(AbstractFilter*)),
-          this, SLOT(filterNeedsInputParameters(AbstractFilter*)));
-
   if (m_FilterParameter == NULL)
   {
     return;
   }
+
+  // Generate the text for the QLabel
   QString units = m_FilterParameter->getUnits();
   if(units.isEmpty() == false)
   {
@@ -124,27 +119,28 @@ void DataArraySelectionWidget::setupGui()
     label->setText(m_FilterParameter->getHumanLabel() );
   }
 
+  // Get the default path from the Filter instance to cache
+  m_DefaultPath = m_Filter->property(PROPERTY_NAME_AS_CHAR).value<DataArrayPath>();
+  //  dataContainerList->addItem(m_DefaultPath.getDataContainerName());
+  //  attributeMatrixList->addItem(m_DefaultPath.getAttributeMatrixName() );
+  //  attributeArrayList->addItem(m_DefaultPath.getDataArrayName() );
+
+  // Block Signals from teh ComboBoxes while we clear them
   dataContainerList->blockSignals(true);
   attributeMatrixList->blockSignals(true);
   attributeArrayList->blockSignals(true);
+
   dataContainerList->clear();
   attributeMatrixList->clear();
   attributeArrayList->clear();
 
-
-  // Get what is in the filter
-  DataArrayPath defaultPath = m_Filter->property(PROPERTY_NAME_AS_CHAR).value<DataArrayPath>();
-  dataContainerList->addItem(defaultPath.getDataContainerName());
-  attributeMatrixList->addItem(defaultPath.getAttributeMatrixName() );
-  attributeArrayList->addItem(defaultPath.getDataArrayName() );
-
-  // Now let the gui send signals like normal
   dataContainerList->blockSignals(false);
   attributeMatrixList->blockSignals(false);
   attributeArrayList->blockSignals(false);
 
-  populateComboBoxes();
 
+  // Now figure out if the Filter Parameter is conditional or not. If it is NOT conditional then we remove some of the GUI
+  // widgets
   blockSignals(true);
   // is the filter parameter tied to a boolean property of the Filter Instance, if it is then we need to make the check box visible
   if(m_FilterParameter->isConditional() == true)
@@ -167,6 +163,24 @@ void DataArraySelectionWidget::setupGui()
     linkRight->deleteLater();
   }
   blockSignals(false);
+
+
+
+  populateComboBoxes();
+
+
+  // Lastly, hook up the filter's signals and slots to our own signals and slots
+  // Catch when the filter is about to execute the preflight
+  connect(m_Filter, SIGNAL(preflightAboutToExecute()),
+          this, SLOT(beforePreflight()));
+
+  // Catch when the filter is finished running the preflight
+  connect(m_Filter, SIGNAL(preflightExecuted()),
+          this, SLOT(afterPreflight()));
+
+  // Catch when the filter wants its values updated
+  connect(m_Filter, SIGNAL(updateFilterParameters(AbstractFilter*)),
+          this, SLOT(filterNeedsInputParameters(AbstractFilter*)));
 
 }
 
@@ -198,9 +212,6 @@ void DataArraySelectionWidget::on_conditionalCB_stateChanged(int state)
 // -----------------------------------------------------------------------------
 void DataArraySelectionWidget::populateComboBoxes()
 {
-  //  std::cout << "void DataArraySelectionWidget::populateComboBoxesWithSelection()" << std::endl;
-
-
   // Now get the DataContainerArray from the Filter instance
   // We are going to use this to get all the current DataContainers
   DataContainerArray::Pointer dca = m_Filter->getDataContainerArray();
@@ -209,6 +220,9 @@ void DataArraySelectionWidget::populateComboBoxes()
   // Check to see if we have any DataContainers to actually populate drop downs with.
   if(dca->getDataContainerArray().size() == 0)
   {
+    dataContainerList->clear();
+    attributeMatrixList->clear();
+    attributeArrayList->clear();
     return;
   }
   // Cache the DataContainerArray Structure for our use during all the selections
@@ -221,7 +235,8 @@ void DataArraySelectionWidget::populateComboBoxes()
   while(iter.hasNext() )
   {
     DataContainerProxy dc = iter.next();
-    if(dataContainerList->findText(dc.name) == -1 ) {
+    if(dataContainerList->findText(dc.name) == -1 )
+    {
       dataContainerList->addItem(dc.name);
     }
   }
@@ -256,10 +271,12 @@ void DataArraySelectionWidget::populateComboBoxes()
   if (!dataContainerList->signalsBlocked()) { didBlock = true; }
   dataContainerList->blockSignals(true);
   int dcIndex = dataContainerList->findText(dcName);
-  if(dcIndex < 0 && dcName.isEmpty() == false) {
+  if(dcIndex < 0 && dcName.isEmpty() == false)
+  {
     dataContainerList->addItem(dcName);
   } // the string was not found so just set it to the first index
-  else {
+  else
+  {
     if(dcIndex < 0) { dcIndex = 0; } // Just set it to the first DataContainer in the list
     dataContainerList->setCurrentIndex(dcIndex);
     populateAttributeMatrixList();
@@ -271,7 +288,8 @@ void DataArraySelectionWidget::populateComboBoxes()
   attributeMatrixList->blockSignals(true);
   int amIndex = attributeMatrixList->findText(amName);
   if(amIndex < 0 && amName.isEmpty() == false) { attributeMatrixList->addItem(amName); } // The name of the attributeMatrix was not found so just set the first one
-  else {
+  else
+  {
     if(amIndex < 0) { amIndex = 0; }
     attributeMatrixList->setCurrentIndex(amIndex);
     populateAttributeArrayList();
@@ -282,9 +300,28 @@ void DataArraySelectionWidget::populateComboBoxes()
   if(!attributeArrayList->signalsBlocked()) { didBlock = true; }
   attributeArrayList->blockSignals(true);
   int daIndex = attributeArrayList->findText(daName);
-  if(daIndex < 0 && daName.isEmpty() == false) { attributeArrayList->addItem(daName); } // The name of the attribute array was not found in the list
+
+    // The DataArray Name was empty, lets instantiate the filter and get the default value and try that
+  if(daIndex < 0)
   {
-    if (daIndex < 0) { daIndex = 0; }
+    QVariant var = m_FilterParameter->getDefaultValue();
+    DataArrayPath path = var.value<DataArrayPath>();
+
+    //AbstractFilter::Pointer ptr = m_Filter->newFilterInstance(false);
+    //DataArrayPath path = ptr->property(PROPERTY_NAME_AS_CHAR).value<DataArrayPath>();
+    daName = path.getDataArrayName(); // Pick up the DataArray Name from a Default instantiation of the filter
+    daIndex = attributeArrayList->findText(daName);
+   // qDebug() << "Trying default value for DataArrayPath.dataArrayName: " << daName;
+  }
+
+
+  //if(daIndex < 0 && daName.isEmpty() == false)
+  {
+    // attributeArrayList->addItem(daName);
+  } // The name of the attribute array was not found in the list
+  //else
+  {
+    //if (daIndex < 0) { daIndex = 0; }
     attributeArrayList->setCurrentIndex(daIndex); // we set the selection but we are NOT triggering anything so we shoudl
   }
   if(didBlock) { attributeArrayList->blockSignals(false); didBlock = false; }// not be triggering an infinte recursion of preflights
@@ -296,6 +333,10 @@ void DataArraySelectionWidget::populateComboBoxes()
 // -----------------------------------------------------------------------------
 QString DataArraySelectionWidget::checkStringValues(QString curDcName, QString filtDcName)
 {
+//  if(curDcName.isEmpty() == true && filtDcName.isEmpty() == true)
+//  {
+//    qDebug() << "curDcName EMPTY && filtDcName EMPTY";
+//  }
   if(curDcName.isEmpty() == true && filtDcName.isEmpty() == false)
   {return filtDcName;}
   else if(curDcName.isEmpty() == false && filtDcName.isEmpty() == true)

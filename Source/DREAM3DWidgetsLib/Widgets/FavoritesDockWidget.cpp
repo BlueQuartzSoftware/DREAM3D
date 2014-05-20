@@ -173,9 +173,9 @@ void FavoritesDockWidget::addPipelinesRecursively(QDir currentDir, QTreeWidgetIt
       // At this point we have the first level of directories and we want to do 2 things:
       // 1.Create an entry in the tree widget with this name
       // 2.drop into the directory and look for all the .txt files and add entries for those items.
-    //  qDebug() << fi.absoluteFilePath() << "\n";
+      //  qDebug() << fi.absoluteFilePath() << "\n";
       // Add a tree widget item for this  Group
-    //  qDebug() << fi.absoluteFilePath();
+      //  qDebug() << fi.absoluteFilePath();
       nextDirItem = new QTreeWidgetItem(currentDirItem, FilterLibraryTreeWidget::Node_Item_Type);
       nextDirItem->setText(0, fi.baseName());
       nextDirItem->setIcon(0, QIcon(":/folder_blue.png"));
@@ -440,7 +440,8 @@ void FavoritesDockWidget::actionAddFavoriteFolder_triggered()
         // Display error message
         int reply = QMessageBox::critical(this, tr("Rename Favorite"), tr(displayText.toLatin1().data()),
                                           QMessageBox::Ok | QMessageBox::Cancel, QMessageBox::Ok);
-        if(reply == QMessageBox::Cancel) {
+        if(reply == QMessageBox::Cancel)
+        {
           done = true;
           cancel = true;
         }
@@ -512,7 +513,8 @@ void FavoritesDockWidget::actionAddFavorite_triggered()
         // Display error message
         int reply = QMessageBox::critical(this, tr("Rename Favorite"), tr(displayText.toLatin1().data()),
                                           QMessageBox::Ok | QMessageBox::Cancel, QMessageBox::Ok);
-        if(reply == QMessageBox::Cancel) {
+        if(reply == QMessageBox::Cancel)
+        {
           done = true;
           cancel = true;
         }
@@ -529,7 +531,7 @@ void FavoritesDockWidget::actionAddFavorite_triggered()
   filterLibraryTree->blockSignals(true);
   QTreeWidgetItem* selection = filterLibraryTree->currentItem();
 
-    // Sanity check to make sure we actually have selected a folder to add a favorite into the tree. If the user has
+  // Sanity check to make sure we actually have selected a folder to add a favorite into the tree. If the user has
   // selected an actual favorite item, get it's parent which MUST be a folder
   if(NULL != selection && selection->type() == FilterLibraryTreeWidget::Leaf_Item_Type)
   {

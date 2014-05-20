@@ -140,7 +140,7 @@ IDataArray::Pointer H5DataArrayReader::readStringDataArray(hid_t gid, const QStr
 
     // Read the component dimensions as  an attribute
     QVector<size_t> cDims;
-    err = QH5Lite::readVectorAttribute(gid, name, DREAM3D::HDF5::ComponentDimensions,cDims);
+    err = QH5Lite::readVectorAttribute(gid, name, DREAM3D::HDF5::ComponentDimensions, cDims);
     if (err < 0)
     {
       return ptr;
@@ -168,7 +168,7 @@ IDataArray::Pointer H5DataArrayReader::readStringDataArray(hid_t gid, const QStr
     }
 
     if(H5Tequal(typeId, H5T_STD_U8BE) || H5Tequal(typeId, H5T_STD_U8LE)
-       || H5Tequal(typeId, H5T_STD_I8BE) || H5Tequal(typeId, H5T_STD_I8LE) )
+        || H5Tequal(typeId, H5T_STD_I8BE) || H5Tequal(typeId, H5T_STD_I8LE) )
     {
       if (preflightOnly == false)
       {
@@ -255,7 +255,7 @@ IDataArray::Pointer H5DataArrayReader::readIDataArray(hid_t gid, const QString& 
 
     // Read the component dimensions as  an attribute
     QVector<size_t> cDims;
-    err = QH5Lite::readVectorAttribute(gid, name, DREAM3D::HDF5::ComponentDimensions,cDims);
+    err = QH5Lite::readVectorAttribute(gid, name, DREAM3D::HDF5::ComponentDimensions, cDims);
     if (err < 0)
     {
       qDebug() << "Missing ComponentDimensions for Array with Name: " << name;
@@ -273,23 +273,23 @@ IDataArray::Pointer H5DataArrayReader::readIDataArray(hid_t gid, const QString& 
     * by this issue. There are attributes in the .dream3d file on the actual data set that help to fully describe
     * the ordering of the data and what dimension goes with which axis.
     */
-     qint32 count = tDims.size() - 1;
-     QVector<size_t> temp(tDims.size());
-      for (int i = count; i >= 0; i--)
-      {
-   //     std::cout << "  " << tDims[i] << std::endl;
-        temp[count - i] = tDims[i];
-      }
-      tDims = temp;
+    qint32 count = tDims.size() - 1;
+    QVector<size_t> temp(tDims.size());
+    for (int i = count; i >= 0; i--)
+    {
+      //     std::cout << "  " << tDims[i] << std::endl;
+      temp[count - i] = tDims[i];
+    }
+    tDims = temp;
     //  std::cout << "  Comp Dims: " << std::endl;
-      count = cDims.size() - 1;
-      temp.resize(cDims.size());
-      for (int i = count; i >= 0; i--)
-      {
-    //    std::cout << "  " << cDims[i] << std::endl;
-        temp[count - i] = cDims[i];
-      }
-      cDims = temp;
+    count = cDims.size() - 1;
+    temp.resize(cDims.size());
+    for (int i = count; i >= 0; i--)
+    {
+      //    std::cout << "  " << cDims[i] << std::endl;
+      temp[count - i] = cDims[i];
+    }
+    cDims = temp;
 #endif
 
 

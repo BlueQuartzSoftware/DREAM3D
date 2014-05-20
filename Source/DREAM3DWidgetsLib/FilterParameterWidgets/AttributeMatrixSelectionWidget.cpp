@@ -117,6 +117,7 @@ void AttributeMatrixSelectionWidget::setupGui()
     conditionalCB->setText(m_FilterParameter->getConditionalLabel());
     dataContainerList->setEnabled(boolProp);
     attributeMatrixList->setEnabled(boolProp);
+    on_conditionalCB_stateChanged(conditionalCB->checkState());
   }
   else
   {
@@ -139,10 +140,16 @@ void AttributeMatrixSelectionWidget::on_conditionalCB_stateChanged(int state)
   bool boolProp = conditionalCB->isChecked();
   dataContainerList->setEnabled(boolProp);
   attributeMatrixList->setEnabled(boolProp);
+  dataContainerList->setVisible(boolProp);
+  attributeMatrixList->setVisible(boolProp);
+
+
+  label->setVisible(boolProp);
+  linkLeft->setVisible(boolProp);
+  linkRight->setVisible(boolProp);
   m_DidCausePreflight = true;
   emit parametersChanged();
   m_DidCausePreflight = false;
-
 }
 
 
@@ -175,7 +182,8 @@ void AttributeMatrixSelectionWidget::populateComboBoxes()
   while(iter.hasNext() )
   {
     DataContainerProxy dc = iter.next();
-    if(dataContainerList->findText(dc.name) == -1 ) {
+    if(dataContainerList->findText(dc.name) == -1 )
+    {
       dataContainerList->addItem(dc.name);
     }
   }
@@ -206,7 +214,8 @@ void AttributeMatrixSelectionWidget::populateComboBoxes()
   if (!dataContainerList->signalsBlocked()) { didBlock = true; }
   dataContainerList->blockSignals(true);
   int dcIndex = dataContainerList->findText(dcName);
-  if(dcIndex < 0 && dcName.isEmpty() == false) {
+  if(dcIndex < 0 && dcName.isEmpty() == false)
+  {
     dataContainerList->addItem(dcName);
   } // the string was not found so just set it to the first index
   else
@@ -222,7 +231,8 @@ void AttributeMatrixSelectionWidget::populateComboBoxes()
   attributeMatrixList->blockSignals(true);
   int amIndex = attributeMatrixList->findText(amName);
   if(amIndex < 0 && amName.isEmpty() == false) { attributeMatrixList->addItem(amName); } // The name of the attributeMatrix was not found so just set the first one
-  else {
+  else
+  {
     if(amIndex < 0) { amIndex = 0; }
     attributeMatrixList->setCurrentIndex(amIndex);
   }

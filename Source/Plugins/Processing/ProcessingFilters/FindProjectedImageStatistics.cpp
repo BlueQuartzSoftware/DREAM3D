@@ -76,28 +76,28 @@ class CalcProjectedStatsImpl
         m_Avg[point] = m_Data[point];
         for(size_t j = 0; j < m_Depth; j++)
         {
-          newPoint = point + (j*m_Stride);
+          newPoint = point + (j * m_Stride);
           val = m_Data[newPoint];
-          if(val < m_Min[point]) m_Min[point] = val;
-          if(val > m_Max[point]) m_Max[point] = val;
+          if(val < m_Min[point]) { m_Min[point] = val; }
+          if(val > m_Max[point]) { m_Max[point] = val; }
           m_Avg[point] += val;
         }
         m_Avg[point] /= m_Depth;
         for(size_t j = 0; j < m_Depth; j++)
         {
-          newPoint = point + (j*m_Stride);
+          newPoint = point + (j * m_Stride);
           val = m_Data[newPoint];
           m_Min[newPoint] = m_Min[point];
           m_Max[newPoint] = m_Max[point];
           m_Avg[newPoint] = m_Avg[point];
-          m_Std[point] += ((val-m_Avg[point])*(val-m_Avg[point]));
+          m_Std[point] += ((val - m_Avg[point]) * (val - m_Avg[point]));
         }
         m_Std[point] /= m_Depth;
         m_Var[point] = m_Std[point];
         m_Std[point] = sqrt(m_Std[point]);
         for(size_t j = 0; j < m_Depth; j++)
         {
-          newPoint = point + (j*m_Stride);
+          newPoint = point + (j * m_Stride);
           m_Std[newPoint] = m_Std[point];
           m_Var[newPoint] = m_Var[point];
         }
@@ -156,13 +156,13 @@ FindProjectedImageStatistics::~FindProjectedImageStatistics()
 void FindProjectedImageStatistics::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(FilterParameter::New("Cell Array To Quantify", "SelectedArrayPath", FilterParameterWidgetType::DataArraySelectionWidget,"DataArrayPath", false));
+  parameters.push_back(FilterParameter::New("Cell Array To Quantify", "SelectedArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getSelectedArrayPath(), false));
   {
     ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New();
     parameter->setHumanLabel("Plane of Interest");
     parameter->setPropertyName("Plane");
     parameter->setWidgetType(FilterParameterWidgetType::ChoiceWidget);
-    parameter->setValueType("unsigned int");
+    //parameter->setValueType("unsigned int");
     QVector<QString> choices;
     choices.push_back("XY");
     choices.push_back("XZ");
@@ -170,12 +170,12 @@ void FindProjectedImageStatistics::setupFilterParameters()
     parameter->setChoices(choices);
     parameters.push_back(parameter);
   }
-  parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "QString", true));
-  parameters.push_back(FilterParameter::New("ProjectedImageMin", "ProjectedImageMinArrayName", FilterParameterWidgetType::StringWidget, "QString", true, ""));
-  parameters.push_back(FilterParameter::New("ProjectedImageMax", "ProjectedImageMaxArrayName", FilterParameterWidgetType::StringWidget, "QString", true, ""));
-  parameters.push_back(FilterParameter::New("ProjectedImageAvg", "ProjectedImageAvgArrayName", FilterParameterWidgetType::StringWidget, "QString", true, ""));
-  parameters.push_back(FilterParameter::New("ProjectedImageStd", "ProjectedImageStdArrayName", FilterParameterWidgetType::StringWidget, "QString", true, ""));
-  parameters.push_back(FilterParameter::New("ProjectedImageVar", "ProjectedImageVarArrayName", FilterParameterWidgetType::StringWidget, "QString", true, ""));
+  parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
+  parameters.push_back(FilterParameter::New("ProjectedImageMin", "ProjectedImageMinArrayName", FilterParameterWidgetType::StringWidget, getProjectedImageMinArrayName(), true, ""));
+  parameters.push_back(FilterParameter::New("ProjectedImageMax", "ProjectedImageMaxArrayName", FilterParameterWidgetType::StringWidget, getProjectedImageMaxArrayName(), true, ""));
+  parameters.push_back(FilterParameter::New("ProjectedImageAvg", "ProjectedImageAvgArrayName", FilterParameterWidgetType::StringWidget, getProjectedImageAvgArrayName(), true, ""));
+  parameters.push_back(FilterParameter::New("ProjectedImageStd", "ProjectedImageStdArrayName", FilterParameterWidgetType::StringWidget, getProjectedImageStdArrayName(), true, ""));
+  parameters.push_back(FilterParameter::New("ProjectedImageVar", "ProjectedImageVarArrayName", FilterParameterWidgetType::StringWidget, getProjectedImageVarArrayName(), true, ""));
   setFilterParameters(parameters);
 }
 
@@ -303,14 +303,14 @@ void FindProjectedImageStatistics::execute()
   QVector<size_t> cDims(1, 1);
   if(m_Plane == 0)
   {
-    startingPoints->resize(xP*yP);
+    startingPoints->resize(xP * yP);
     startPoints = startingPoints->getPointer(0);
-    stride = xP*yP;
+    stride = xP * yP;
     depth = zP;
-    for(int i=0;i<yP;i++)
+    for(int i = 0; i < yP; i++)
     {
-      yStride = i*xP;
-      for(int j=0;j<xP;j++)
+      yStride = i * xP;
+      for(int j = 0; j < xP; j++)
       {
         startPoints[count] = yStride + j;
         count++;
@@ -319,14 +319,14 @@ void FindProjectedImageStatistics::execute()
   }
   if(m_Plane == 1)
   {
-    startingPoints->resize(xP*zP);
+    startingPoints->resize(xP * zP);
     startPoints = startingPoints->getPointer(0);
     stride = xP;
     depth = yP;
-    for(int i=0;i<zP;i++)
+    for(int i = 0; i < zP; i++)
     {
-      yStride = i*xP*yP;
-      for(int j=0;j<xP;j++)
+      yStride = i * xP * yP;
+      for(int j = 0; j < xP; j++)
       {
         startPoints[count] = yStride + j;
         count++;
@@ -335,16 +335,16 @@ void FindProjectedImageStatistics::execute()
   }
   if(m_Plane == 2)
   {
-    startingPoints->resize(yP*zP);
+    startingPoints->resize(yP * zP);
     startPoints = startingPoints->getPointer(0);
     stride = 1;
     depth = xP;
-    for(int i=0;i<zP;i++)
+    for(int i = 0; i < zP; i++)
     {
-      yStride = i*xP*yP;
-      for(int j=0;j<yP;j++)
+      yStride = i * xP * yP;
+      for(int j = 0; j < yP; j++)
       {
-        startPoints[count] = yStride + (j*xP);
+        startPoints[count] = yStride + (j * xP);
         count++;
       }
     }
@@ -354,7 +354,7 @@ void FindProjectedImageStatistics::execute()
   if (dType.compare("int8_t") == 0)
   {
     DataArray<int8_t>* cellArray = DataArray<int8_t>::SafePointerDownCast(inputData.get());
-    if (NULL == cellArray) return;
+    if (NULL == cellArray) { return; }
     int8_t* cPtr = cellArray->getPointer(0);
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
     if (doParallel == true)
@@ -371,7 +371,7 @@ void FindProjectedImageStatistics::execute()
   else if (dType.compare("uint8_t") == 0)
   {
     DataArray<uint8_t>* cellArray = DataArray<uint8_t>::SafePointerDownCast(inputData.get());
-    if (NULL == cellArray) return;
+    if (NULL == cellArray) { return; }
     uint8_t* cPtr = cellArray->getPointer(0);
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
     if (doParallel == true)
@@ -388,7 +388,7 @@ void FindProjectedImageStatistics::execute()
   else if (dType.compare("int16_t") == 0)
   {
     DataArray<int16_t>* cellArray = DataArray<int16_t>::SafePointerDownCast(inputData.get());
-    if (NULL == cellArray) return;
+    if (NULL == cellArray) { return; }
     int16_t* cPtr = cellArray->getPointer(0);
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
     if (doParallel == true)
@@ -405,7 +405,7 @@ void FindProjectedImageStatistics::execute()
   else if (dType.compare("uint16_t") == 0)
   {
     DataArray<uint16_t>* cellArray = DataArray<uint16_t>::SafePointerDownCast(inputData.get());
-    if (NULL == cellArray) return;
+    if (NULL == cellArray) { return; }
     uint16_t* cPtr = cellArray->getPointer(0);
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
     if (doParallel == true)
@@ -422,7 +422,7 @@ void FindProjectedImageStatistics::execute()
   else if (dType.compare("int32_t") == 0)
   {
     DataArray<int32_t>* cellArray = DataArray<int32_t>::SafePointerDownCast(inputData.get());
-    if (NULL == cellArray) return;
+    if (NULL == cellArray) { return; }
     int32_t* cPtr = cellArray->getPointer(0);
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
     if (doParallel == true)
@@ -439,7 +439,7 @@ void FindProjectedImageStatistics::execute()
   else if (dType.compare("uint32_t") == 0)
   {
     DataArray<uint32_t>* cellArray = DataArray<uint32_t>::SafePointerDownCast(inputData.get());
-    if (NULL == cellArray) return;
+    if (NULL == cellArray) { return; }
     uint32_t* cPtr = cellArray->getPointer(0);
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
     if (doParallel == true)
@@ -456,7 +456,7 @@ void FindProjectedImageStatistics::execute()
   else if (dType.compare("int64_t") == 0)
   {
     DataArray<int64_t>* cellArray = DataArray<int64_t>::SafePointerDownCast(inputData.get());
-    if (NULL == cellArray) return;
+    if (NULL == cellArray) { return; }
     int64_t* cPtr = cellArray->getPointer(0);
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
     if (doParallel == true)
@@ -473,7 +473,7 @@ void FindProjectedImageStatistics::execute()
   else if (dType.compare("uint64_t") == 0)
   {
     DataArray<uint64_t>* cellArray = DataArray<uint64_t>::SafePointerDownCast(inputData.get());
-    if (NULL == cellArray) return;
+    if (NULL == cellArray) { return; }
     uint64_t* cPtr = cellArray->getPointer(0);
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
     if (doParallel == true)
@@ -490,7 +490,7 @@ void FindProjectedImageStatistics::execute()
   else if (dType.compare("float") == 0)
   {
     DataArray<float>* cellArray = DataArray<float>::SafePointerDownCast(inputData.get());
-    if (NULL == cellArray) return;
+    if (NULL == cellArray) { return; }
     float* cPtr = cellArray->getPointer(0);
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
     if (doParallel == true)
@@ -507,7 +507,7 @@ void FindProjectedImageStatistics::execute()
   else if (dType.compare("double") == 0)
   {
     DataArray<double>* cellArray = DataArray<double>::SafePointerDownCast(inputData.get());
-    if (NULL == cellArray) return;
+    if (NULL == cellArray) { return; }
     double* cPtr = cellArray->getPointer(0);
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
     if (doParallel == true)

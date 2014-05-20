@@ -13,8 +13,8 @@
  * list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
  *
- * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force, 
- * BlueQuartz Software nor the names of its contributors may be used to endorse 
+ * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
+ * BlueQuartz Software nor the names of its contributors may be used to endorse
  * or promote products derived from this software without specific prior written
  * permission.
  *
@@ -45,7 +45,7 @@
 /**
  * @brief The Main entry point for the application
  */
-int main (int argc, char *argv[])
+int main (int argc, char* argv[])
 {
   SGApplication app(argc, argv);
   QCoreApplication::setOrganizationName("BlueQuartz Software");
@@ -64,7 +64,7 @@ int main (int argc, char *argv[])
   QRecentFileList::instance()->readList(prefs);
 
 
-  StatsGeneratorUI *viewer = app.createNewStatsGenerator();
+  StatsGeneratorUI* viewer = app.createNewStatsGenerator();
   viewer->show();
   int app_return = app.exec();
 

@@ -69,7 +69,7 @@ class DREAM3DWidgetsLib_EXPORT FilterLibraryDockWidget : public QDockWidget, pri
      * @brief connectFilterList
      * @param filterListWidget
      */
-    void connectFilterList(FilterListDockWidget *filterListWidget);
+    void connectFilterList(FilterListDockWidget* filterListWidget);
 
     /**
      * @brief refreshFilterGroups

@@ -158,7 +158,7 @@ class CalculateGBCDImpl
               m_OrientationOps[cryst]->getMatSymOp(j, sym1);
               MatrixMath::Multiply3x3with3x3(sym1, g1, g1s);
               //get the crystal directions along the triangle normals
-              MatrixMath::Multiply3x3with3x1(g1s, normal,xstl1_norm1);
+              MatrixMath::Multiply3x3with3x1(g1s, normal, xstl1_norm1);
               //get coordinates in square projection of crystal normal parallel to boundary normal
               nhCheck = getSquareCoord(xstl1_norm1, sqCoord);
               if(inversion == 1)
@@ -205,7 +205,7 @@ class CalculateGBCDImpl
                     SYMcounter++;
                   }
                 }
-                else SYMcounter += 2;
+                else { SYMcounter += 2; }
               }
             }
           }
@@ -302,6 +302,7 @@ FindGBCD::FindGBCD() :
   m_FeatureEulerAnglesArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, DREAM3D::FeatureData::EulerAngles),
   m_FeaturePhasesArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, DREAM3D::FeatureData::Phases),
   m_CrystalStructuresArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellEnsembleAttributeMatrixName, DREAM3D::EnsembleData::CrystalStructures),
+  m_GBCDArrayName(DREAM3D::EnsembleData::GBCD),
   m_SurfaceMeshFaceAreasArrayName(DREAM3D::FaceData::SurfaceMeshFaceAreas),
   m_SurfaceMeshFaceAreas(NULL),
   m_SurfaceMeshFaceLabelsArrayName(DREAM3D::FaceData::SurfaceMeshFaceLabels),
@@ -314,7 +315,6 @@ FindGBCD::FindGBCD() :
   m_FeaturePhases(NULL),
   m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
   m_CrystalStructures(NULL),
-  m_GBCDArrayName(DREAM3D::EnsembleData::GBCD),
   m_GBCD(NULL)
 {
   setupFilterParameters();
@@ -333,17 +333,17 @@ FindGBCD::~FindGBCD()
 void FindGBCD::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(FilterParameter::New("GBCD Resolution", "GBCDRes", FilterParameterWidgetType::DoubleWidget,"float", false, "Degrees"));
-  parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "QString", true));
-  parameters.push_back(FilterParameter::New("SurfaceMeshFaceLabels", "SurfaceMeshFaceLabelsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
-  parameters.push_back(FilterParameter::New("SurfaceMeshFaceNormals", "SurfaceMeshFaceNormalsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
-  parameters.push_back(FilterParameter::New("SurfaceMeshFaceAreas", "SurfaceMeshFaceAreasArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
-  parameters.push_back(FilterParameter::New("FeatureEulerAngles", "FeatureEulerAnglesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
-  parameters.push_back(FilterParameter::New("FeaturePhases", "FeaturePhasesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
-  parameters.push_back(FilterParameter::New("CrystalStructures", "CrystalStructuresArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
-  parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "QString", true));
-  parameters.push_back(FilterParameter::New("Face Ensemble Attribute Matrix Name", "FaceEnsembleAttributeMatrixName", FilterParameterWidgetType::StringWidget, "QString", true, ""));
-  parameters.push_back(FilterParameter::New("GBCD", "GBCDArrayName", FilterParameterWidgetType::StringWidget, "QString", true, ""));
+  parameters.push_back(FilterParameter::New("GBCD Resolution", "GBCDRes", FilterParameterWidgetType::DoubleWidget, getGBCDRes(), false, "Degrees"));
+  parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
+  parameters.push_back(FilterParameter::New("SurfaceMeshFaceLabels", "SurfaceMeshFaceLabelsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getSurfaceMeshFaceLabelsArrayPath(), true, ""));
+  parameters.push_back(FilterParameter::New("SurfaceMeshFaceNormals", "SurfaceMeshFaceNormalsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getSurfaceMeshFaceNormalsArrayPath(), true, ""));
+  parameters.push_back(FilterParameter::New("SurfaceMeshFaceAreas", "SurfaceMeshFaceAreasArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getSurfaceMeshFaceAreasArrayPath(), true, ""));
+  parameters.push_back(FilterParameter::New("FeatureEulerAngles", "FeatureEulerAnglesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeatureEulerAnglesArrayPath(), true, ""));
+  parameters.push_back(FilterParameter::New("FeaturePhases", "FeaturePhasesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeaturePhasesArrayPath(), true, ""));
+  parameters.push_back(FilterParameter::New("CrystalStructures", "CrystalStructuresArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getCrystalStructuresArrayPath(), true, ""));
+  parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
+  parameters.push_back(FilterParameter::New("Face Ensemble Attribute Matrix Name", "FaceEnsembleAttributeMatrixName", FilterParameterWidgetType::StringWidget, getFaceEnsembleAttributeMatrixName(), true, ""));
+  parameters.push_back(FilterParameter::New("GBCD", "GBCDArrayName", FilterParameterWidgetType::StringWidget, getGBCDArrayName(), true, ""));
   setFilterParameters(parameters);
 }
 
@@ -474,7 +474,7 @@ void FindGBCD::preflight()
   emit updateFilterParameters(this);
   dataCheckVoxel();
   //order here matters...because we are going to use the size of the crystal structures out of the dataCheckVoxel to size the faceAttrMat in dataCheckSurfaceMesh
-  dataCheckSurfaceMesh();
+  if (getErrorCondition() >= 0) { dataCheckSurfaceMesh(); }
   emit preflightExecuted();
 }
 
@@ -631,24 +631,24 @@ void FindGBCD::sizeGBCD(int faceChunkSize, int numMisoReps)
   m_GBCDlimits[8] = 1.0;
   m_GBCDlimits[9] = DREAM3D::Constants::k_2Pi;
 
-  float binsize = m_GBCDRes*DREAM3D::Constants::k_PiOver180;
-  float binsize2 = binsize*(2.0/DREAM3D::Constants::k_Pi);
+  float binsize = m_GBCDRes * DREAM3D::Constants::k_PiOver180;
+  float binsize2 = binsize * (2.0 / DREAM3D::Constants::k_Pi);
   m_GBCDdeltas[0] = binsize;
   m_GBCDdeltas[1] = binsize2;
   m_GBCDdeltas[2] = binsize;
   m_GBCDdeltas[3] = binsize2;
   m_GBCDdeltas[4] = binsize;
 
-  m_GBCDsizes[0] = int(0.5+(m_GBCDlimits[5]-m_GBCDlimits[0])/m_GBCDdeltas[0]);
-  m_GBCDsizes[1] = int(0.5+(m_GBCDlimits[6]-m_GBCDlimits[1])/m_GBCDdeltas[1]);
-  m_GBCDsizes[2] = int(0.5+(m_GBCDlimits[7]-m_GBCDlimits[2])/m_GBCDdeltas[2]);
-  m_GBCDsizes[3] = int(0.5+(m_GBCDlimits[8]-m_GBCDlimits[3])/m_GBCDdeltas[3]);
-  m_GBCDsizes[4] = int(0.5+(m_GBCDlimits[9]-m_GBCDlimits[4])/m_GBCDdeltas[4]);
+  m_GBCDsizes[0] = int(0.5 + (m_GBCDlimits[5] - m_GBCDlimits[0]) / m_GBCDdeltas[0]);
+  m_GBCDsizes[1] = int(0.5 + (m_GBCDlimits[6] - m_GBCDlimits[1]) / m_GBCDdeltas[1]);
+  m_GBCDsizes[2] = int(0.5 + (m_GBCDlimits[7] - m_GBCDlimits[2]) / m_GBCDdeltas[2]);
+  m_GBCDsizes[3] = int(0.5 + (m_GBCDlimits[8] - m_GBCDlimits[3]) / m_GBCDdeltas[3]);
+  m_GBCDsizes[4] = int(0.5 + (m_GBCDlimits[9] - m_GBCDlimits[4]) / m_GBCDdeltas[4]);
 
   //reset the 3rd and 4th dimensions using the square grid approach
   float totalNormalBins = m_GBCDsizes[3] * m_GBCDsizes[4];
-  m_GBCDsizes[3] = int(sqrt(totalNormalBins)+0.5);
-  m_GBCDsizes[4] = int(sqrt(totalNormalBins)+0.5);
+  m_GBCDsizes[3] = int(sqrt(totalNormalBins) + 0.5);
+  m_GBCDsizes[4] = int(sqrt(totalNormalBins) + 0.5);
   m_GBCDlimits[3] = -sqrt(DREAM3D::Constants::k_PiOver2);
   m_GBCDlimits[4] = -sqrt(DREAM3D::Constants::k_PiOver2);
   m_GBCDlimits[8] = sqrt(DREAM3D::Constants::k_PiOver2);

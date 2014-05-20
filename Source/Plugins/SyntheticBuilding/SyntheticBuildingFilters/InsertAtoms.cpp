@@ -87,7 +87,7 @@ class InsertAtomsImpl
 
       for(int iter = start; iter < end; iter++)
       {
-        Int32DynamicListArray::ElementList &faceIds = m_FaceIds->getElementList(iter);
+        Int32DynamicListArray::ElementList& faceIds = m_FaceIds->getElementList(iter);
 
         OrientationMath::QuattoMat(m_AvgQuats[iter], g);
         //find bounding box for current feature
@@ -134,17 +134,17 @@ class InsertAtomsImpl
       float maxx = ur.pos[0];
       float maxy = ur.pos[1];
       float maxz = ur.pos[2];
-      float deltaX = maxx-minx;
-      float deltaY = maxy-miny;
-      float deltaZ = maxz-minz;
+      float deltaX = maxx - minx;
+      float deltaY = maxy - miny;
+      float deltaZ = maxz - minz;
       size_t atomMult = 1;
-      if(basis == 0) atomMult = 1;
-      if(basis == 1) atomMult = 2;
-      if(basis == 2) atomMult = 4;
-      size_t xPoints = atomMult*(size_t(deltaX/latticeConstants.x)+1);
-      size_t yPoints = atomMult*(size_t(deltaY/latticeConstants.y)+1);
-      size_t zPoints = atomMult*(size_t(deltaZ/latticeConstants.z)+1);
-      size_t nPoints = xPoints*yPoints*zPoints;
+      if(basis == 0) { atomMult = 1; }
+      if(basis == 1) { atomMult = 2; }
+      if(basis == 2) { atomMult = 4; }
+      size_t xPoints = atomMult * (size_t(deltaX / latticeConstants.x) + 1);
+      size_t yPoints = atomMult * (size_t(deltaY / latticeConstants.y) + 1);
+      size_t zPoints = atomMult * (size_t(deltaZ / latticeConstants.z) + 1);
+      size_t nPoints = xPoints * yPoints * zPoints;
 
       points[iter]->resizeArray(nPoints);
       inFeature[iter]->resize(nPoints);
@@ -166,9 +166,9 @@ class InsertAtomsImpl
             count++;
             if(basis == 1)
             {
-              coords[0] = coords[0] + (0.5*latticeConstants.x);
-              coords[1] = coords[1] + (0.5*latticeConstants.y);
-              coords[2] = coords[2] + (0.5*latticeConstants.z);
+              coords[0] = coords[0] + (0.5 * latticeConstants.x);
+              coords[1] = coords[1] + (0.5 * latticeConstants.y);
+              coords[2] = coords[2] + (0.5 * latticeConstants.z);
               MatrixMath::Multiply3x3with3x1(gT, coords, coordsT);
               points[iter]->setCoords(count, coordsT);
               count++;
@@ -176,22 +176,22 @@ class InsertAtomsImpl
             if(basis == 2)
             {
               //makes the (0.5,0.5,0) atom
-              coords[0] = coords[0] + (0.5*latticeConstants.x);
-              coords[1] = coords[1] + (0.5*latticeConstants.y);
+              coords[0] = coords[0] + (0.5 * latticeConstants.x);
+              coords[1] = coords[1] + (0.5 * latticeConstants.y);
               coords[2] = coords[2];
               MatrixMath::Multiply3x3with3x1(gT, coords, coordsT);
               points[iter]->setCoords(count, coordsT);
               count++;
               //makes the (0.5,0,0.5) atom
               coords[0] = coords[0];
-              coords[1] = coords[1] - (0.5*latticeConstants.y);
-              coords[2] = coords[2] + (0.5*latticeConstants.z);
+              coords[1] = coords[1] - (0.5 * latticeConstants.y);
+              coords[2] = coords[2] + (0.5 * latticeConstants.z);
               MatrixMath::Multiply3x3with3x1(gT, coords, coordsT);
               points[iter]->setCoords(count, coordsT);
               count++;
               //makes the (0,0.5,0.5) atom
-              coords[0] = coords[0] - (0.5*latticeConstants.x);
-              coords[1] = coords[1] + (0.5*latticeConstants.y);
+              coords[0] = coords[0] - (0.5 * latticeConstants.x);
+              coords[1] = coords[1] + (0.5 * latticeConstants.y);
               coords[2] = coords[2];
               MatrixMath::Multiply3x3with3x1(gT, coords, coordsT);
               points[iter]->setCoords(count, coordsT);
@@ -240,13 +240,13 @@ InsertAtoms::~InsertAtoms()
 void InsertAtoms::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(FilterParameter::New("LatticeConstants", "LatticeConstants", FilterParameterWidgetType::FloatVec3Widget,"FloatVec3_t", false, "Angstroms"));
+  parameters.push_back(FilterParameter::New("LatticeConstants", "LatticeConstants", FilterParameterWidgetType::FloatVec3Widget, getLatticeConstants(), false, "Angstroms"));
   {
     ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New();
     parameter->setHumanLabel("Crystal Basis");
     parameter->setPropertyName("Basis");
     parameter->setWidgetType(FilterParameterWidgetType::ChoiceWidget);
-    parameter->setValueType("int");
+    //parameter->setValueType("int");
     QVector<QString> choices;
     choices.push_back("Simple Cubic");
     choices.push_back("Body Centered Cubic");
@@ -254,13 +254,13 @@ void InsertAtoms::setupFilterParameters()
     parameter->setChoices(choices);
     parameters.push_back(parameter);
   }
-  parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "QString", true));
-  parameters.push_back(FilterParameter::New("SurfaceMeshFaceLabels", "SurfaceMeshFaceLabelsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
-  parameters.push_back(FilterParameter::New("AvgQuats", "AvgQuatsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
-  parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "QString", true));
-  parameters.push_back(FilterParameter::New("Vertex Data Container Name", "VertexDataContainerName", FilterParameterWidgetType::StringWidget, "QString", true, ""));
-  parameters.push_back(FilterParameter::New("Vertex Attribute Matrix Name", "VertexAttributeMatrixName", FilterParameterWidgetType::StringWidget, "QString", true, ""));
-  parameters.push_back(FilterParameter::New("AtomFeatureLabels", "AtomFeatureLabelsArrayName", FilterParameterWidgetType::StringWidget, "QString", true, ""));
+  parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
+  parameters.push_back(FilterParameter::New("SurfaceMeshFaceLabels", "SurfaceMeshFaceLabelsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getSurfaceMeshFaceLabelsArrayPath(), true, ""));
+  parameters.push_back(FilterParameter::New("AvgQuats", "AvgQuatsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getAvgQuatsArrayPath(), true, ""));
+  parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
+  parameters.push_back(FilterParameter::New("Vertex Data Container Name", "VertexDataContainerName", FilterParameterWidgetType::StringWidget, getVertexDataContainerName(), true, ""));
+  parameters.push_back(FilterParameter::New("Vertex Attribute Matrix Name", "VertexAttributeMatrixName", FilterParameterWidgetType::StringWidget, getVertexAttributeMatrixName(), true, ""));
+  parameters.push_back(FilterParameter::New("AtomFeatureLabels", "AtomFeatureLabelsArrayName", FilterParameterWidgetType::StringWidget, getAtomFeatureLabelsArrayName(), true, ""));
   setFilterParameters(parameters);
 }
 
@@ -376,9 +376,9 @@ void InsertAtoms::execute()
   dataCheck();
   if(getErrorCondition() < 0) { return; }
 
-  m_LatticeConstants.x = m_LatticeConstants.x/10000.0;
-  m_LatticeConstants.y = m_LatticeConstants.y/10000.0;
-  m_LatticeConstants.z = m_LatticeConstants.z/10000.0;
+  m_LatticeConstants.x = m_LatticeConstants.x / 10000.0;
+  m_LatticeConstants.y = m_LatticeConstants.y / 10000.0;
+  m_LatticeConstants.z = m_LatticeConstants.z / 10000.0;
 
   SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceMeshFaceLabelsArrayPath().getDataContainerName());
   DREAM3D_RANDOMNG_NEW()
@@ -452,7 +452,7 @@ void InsertAtoms::execute()
   //generate the list of sampling points fom subclass
   QVector<VertexArray::Pointer> points(numFeatures);
   QVector<BoolArrayType::Pointer> inFeature(numFeatures);
-  for(int i=0;i<numFeatures;i++)
+  for(int i = 0; i < numFeatures; i++)
   {
     points[i] = VertexArray::CreateArray(0, "points");
     inFeature[i] = BoolArrayType::CreateArray(0, "inside");
@@ -488,13 +488,13 @@ void InsertAtoms::assign_points(QVector<VertexArray::Pointer> points, QVector<Bo
 {
   size_t count = 0;
   size_t numFeatures = points.size();
-  for(int i=0;i<numFeatures;i++)
+  for(int i = 0; i < numFeatures; i++)
   {
     size_t numPoints = points[i]->getNumberOfTuples();
     bool* inside = inFeature[i]->getPointer(0);
-    for(int j=0;j<numPoints;j++)
+    for(int j = 0; j < numPoints; j++)
     {
-      if(inside[j] == true) count++;
+      if(inside[j] == true) { count++; }
     }
   }
 
@@ -515,11 +515,11 @@ void InsertAtoms::assign_points(QVector<VertexArray::Pointer> points, QVector<Bo
   notifyStatusMessage(getHumanLabel(), "Making Verts");
   count = 0;
   float coords[3];
-  for(int i=0;i<numFeatures;i++)
+  for(int i = 0; i < numFeatures; i++)
   {
     size_t numPoints = points[i]->getNumberOfTuples();
     bool* inside = inFeature[i]->getPointer(0);
-    for(int j=0;j<numPoints;j++)
+    for(int j = 0; j < numPoints; j++)
     {
       if(inside[j] == true)
       {
@@ -573,11 +573,11 @@ AbstractFilter::Pointer InsertAtoms::newFilterInstance(bool copyFilterParameters
         if(false == ok)
         {
           QString ss = QString("%1::newFilterInstance()\nError occurred transferring the Filter Parameter '%2' in Filter '%3' to the filter instance. "
-                              " The filter parameter has a conditional property '%4'. The transfer of this property from the old filter to the new filter failed."
-                              " Please report this issue to the developers of this filter.").arg(filter->getNameOfClass())
-                              .arg(parameter->getPropertyName())
-                              .arg(filter->getHumanLabel())
-                              .arg(parameter->getConditionalProperty());
+                               " The filter parameter has a conditional property '%4'. The transfer of this property from the old filter to the new filter failed."
+                               " Please report this issue to the developers of this filter.").arg(filter->getNameOfClass())
+                       .arg(parameter->getPropertyName())
+                       .arg(filter->getHumanLabel())
+                       .arg(parameter->getConditionalProperty());
           Q_ASSERT_X(ok, __FILE__, ss.toLatin1().constData());
         }
       }

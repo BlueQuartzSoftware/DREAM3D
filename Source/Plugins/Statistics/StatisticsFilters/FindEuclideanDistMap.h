@@ -114,7 +114,7 @@ class FindEuclideanDistMap : public AbstractFilter
     virtual void execute();
     virtual void preflight();
 
-signals:
+  signals:
     void updateFilterParameters(AbstractFilter* filter);
     void parametersChanged();
     void preflightAboutToExecute();

@@ -107,17 +107,18 @@ void FilterWidgetManager::RegisterKnownFilterWidgets()
 {
   FilterWidgetManager::Pointer idManager = FilterWidgetManager::Instance();
   // This next file is generated with CMake
-  #include "DREAM3DWidgetsLib/FilterWidgetManager_RegisterWidgets.cpp"
+#include "DREAM3DWidgetsLib/FilterWidgetManager_RegisterWidgets.cpp"
 
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QWidget* FilterWidgetManager::createWidget(FilterParameter* parameter, AbstractFilter *filter)
+QWidget* FilterWidgetManager::createWidget(FilterParameter* parameter, AbstractFilter* filter)
 {
   IFilterWidgetFactory::Pointer factory = m_Factories.value(parameter->getWidgetType());
-  if(NULL != factory.get()) {
+  if(NULL != factory.get())
+  {
     return factory->createWidget(parameter, filter, NULL);
   }
 

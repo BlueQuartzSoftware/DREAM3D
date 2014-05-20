@@ -75,10 +75,10 @@ class StatsGenMDFWidget;
  */
 class SGAxisODFWidget : public QWidget, private Ui::SGAxisODFWidget
 {
-  Q_OBJECT
+    Q_OBJECT
 
   public:
-    SGAxisODFWidget(QWidget *parent = 0);
+    SGAxisODFWidget(QWidget* parent = 0);
     virtual ~SGAxisODFWidget();
 
     void setupGui();
@@ -104,35 +104,35 @@ class SGAxisODFWidget : public QWidget, private Ui::SGAxisODFWidget
 
     void drawODFPlotGrid(QwtPlot* plot);
 
-    protected slots:
-      void on_m_CalculateODFBtn_clicked();
-      void on_addODFTextureBtn_clicked();
-      void on_deleteODFTextureBtn_clicked();
-      void on_loadODFTextureBtn_clicked();
+  protected slots:
+    void on_m_CalculateODFBtn_clicked();
+    void on_addODFTextureBtn_clicked();
+    void on_deleteODFTextureBtn_clicked();
+    void on_loadODFTextureBtn_clicked();
 
-      // Slots for the QFutureWatcher to connect to
-      void showPoleFigure(int imageIndex);
-      void poleFigureGenerationComplete();
+    // Slots for the QFutureWatcher to connect to
+    void showPoleFigure(int imageIndex);
+    void poleFigureGenerationComplete();
 
-    protected:
-      DREAM3D_INSTANCE_PROPERTY(bool, Initializing)
+  protected:
+    DREAM3D_INSTANCE_PROPERTY(bool, Initializing)
 
-    private:
-      int      m_PhaseIndex;
-      unsigned int      m_CrystalStructure;
-      SGODFTableModel*        m_ODFTableModel;
-      StatsGenMDFWidget*      m_MDFWidget;
-      QVector<QwtPlotCurve*>  m_PlotCurves;
-      QwtPlotMarker*          m_PlotGrid;
-      QwtPlotCurve*           m_CircleGrid;
-      QwtPlotCurve*           m_RotCross0;
-      QwtPlotCurve*           m_RotCross1;
+  private:
+    int      m_PhaseIndex;
+    unsigned int      m_CrystalStructure;
+    SGODFTableModel*        m_ODFTableModel;
+    StatsGenMDFWidget*      m_MDFWidget;
+    QVector<QwtPlotCurve*>  m_PlotCurves;
+    QwtPlotMarker*          m_PlotGrid;
+    QwtPlotCurve*           m_CircleGrid;
+    QwtPlotCurve*           m_RotCross0;
+    QwtPlotCurve*           m_RotCross1;
 
-      QFutureWatcher<QImage>*   m_PoleFigureFuture;
+    QFutureWatcher<QImage>*   m_PoleFigureFuture;
 
-      QString m_OpenDialogLastDirectory; // Must be last in the list
-      SGAxisODFWidget(const SGAxisODFWidget&); // Copy Constructor Not Implemented
-      void operator=(const SGAxisODFWidget&); // Operator '=' Not Implemented
+    QString m_OpenDialogLastDirectory; // Must be last in the list
+    SGAxisODFWidget(const SGAxisODFWidget&); // Copy Constructor Not Implemented
+    void operator=(const SGAxisODFWidget&); // Operator '=' Not Implemented
 
 };
 

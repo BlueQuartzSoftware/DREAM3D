@@ -81,8 +81,8 @@ class ReadH5EbsdWidget : public QWidget, private Ui::ReadH5EbsdWidget
 
   protected slots:
     void on_m_InputFileBtn_clicked();
-    void on_m_InputFile_textChanged(const QString & text);
-    void on_m_CellList_itemClicked(QListWidgetItem * item);
+    void on_m_InputFile_textChanged(const QString& text);
+    void on_m_CellList_itemClicked(QListWidgetItem* item);
     void on_m_DataArraysCheckBox_stateChanged(int state);
 
 
@@ -95,7 +95,7 @@ class ReadH5EbsdWidget : public QWidget, private Ui::ReadH5EbsdWidget
      * @brief setInputFile
      * @param v
      */
-    void setInputFile(const QString &v);
+    void setInputFile(const QString& v);
 
     /**
      * @brief setWidgetListEnabled
@@ -133,7 +133,7 @@ class ReadH5EbsdWidget : public QWidget, private Ui::ReadH5EbsdWidget
     */
     QSet<QString> getSelectedEnsembleNames();
 
-    void updateModelFromFilter(QSet<QString> &arrayNames, bool setChecked = false);
+    void updateModelFromFilter(QSet<QString>& arrayNames, bool setChecked = false);
 
 
   private:
@@ -143,7 +143,7 @@ class ReadH5EbsdWidget : public QWidget, private Ui::ReadH5EbsdWidget
     AxisAngleInput_t m_SampleTransformation;
     AxisAngleInput_t m_EulerTransformation;
     bool m_Version4Warning;
-    static QString								m_OpenDialogLastDirectory;
+    static QString                m_OpenDialogLastDirectory;
     bool m_DidCausePreflight;
     bool m_NewFileLoaded;
 

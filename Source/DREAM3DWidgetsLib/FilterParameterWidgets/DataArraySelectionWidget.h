@@ -40,15 +40,19 @@
 
 
 #include <QtCore/QObject>
+#include <QtCore/QString>
 #include <QtGui/QWidget>
 
 
-#include "DREAM3DLib/Common/AbstractFilter.h"
+#include "DREAM3DLib/DataContainers/DataArrayPath.h"
+#include "DREAM3DLib/DataContainers/DataContainerArrayProxy.h"
 
 #include "DREAM3DWidgetsLib/DREAM3DWidgetsLib.h"
 
 #include "DREAM3DWidgetsLib/ui_DataArraySelectionWidget.h"
 
+class AbstractFilter;
+class FilterParameter;
 
 /**
 * @brief
@@ -125,6 +129,7 @@ class DREAM3DWidgetsLib_EXPORT DataArraySelectionWidget : public QWidget, privat
     bool m_DidCausePreflight;
 
     DataContainerArrayProxy m_DcaProxy;
+    DataArrayPath  m_DefaultPath;
 
     DataArraySelectionWidget(const DataArraySelectionWidget&); // Copy Constructor Not Implemented
     void operator=(const DataArraySelectionWidget&); // Operator '=' Not Implemented

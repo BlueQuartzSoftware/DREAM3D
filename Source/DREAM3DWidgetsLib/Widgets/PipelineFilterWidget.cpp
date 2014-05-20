@@ -173,7 +173,7 @@ void PipelineFilterWidget::initialize(AbstractFilter::Pointer filter)
 
       QWidget* w = fwm->createWidget(option, m_Filter.get());
 
-      if (NULL == w) continue;
+      if (NULL == w) { continue; }
       m_FilterParameterWidgets.push_back(w);
 
       if(option->getAdvanced() == true)
@@ -243,7 +243,7 @@ void PipelineFilterWidget::on_helpBtn_clicked()
 QString PipelineFilterWidget::getHumanLabel()
 {
   if (NULL != m_Filter.get())
-    return m_Filter->getHumanLabel();
+  { return m_Filter->getHumanLabel(); }
 
   return "";
 }
@@ -254,7 +254,7 @@ QString PipelineFilterWidget::getHumanLabel()
 QString PipelineFilterWidget::getFilterGroup()
 {
   if (NULL != m_Filter.get())
-    return m_Filter->getGroupName();
+  { return m_Filter->getGroupName(); }
 
   return "";
 }
@@ -265,7 +265,7 @@ QString PipelineFilterWidget::getFilterGroup()
 QString PipelineFilterWidget::getFilterSubGroup()
 {
   if (NULL != m_Filter.get())
-    return m_Filter->getSubGroupName();
+  { return m_Filter->getSubGroupName(); }
 
   return "";
 }

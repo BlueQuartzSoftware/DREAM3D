@@ -103,22 +103,22 @@ MatchCrystallography::~MatchCrystallography()
 void MatchCrystallography::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(FilterParameter::New("Maximum Number of Iterations (Swaps)", "MaxIterations", FilterParameterWidgetType::IntWidget,"int", false));
-  parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "QString", true));
-  parameters.push_back(FilterParameter::New("Statistics", "InputStatsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget,"DataArrayPath", true, ""));
-  parameters.push_back(FilterParameter::New("Crystal Structures Array", "CrystalStructuresArrayPath", FilterParameterWidgetType::DataArraySelectionWidget,"DataArrayPath", true, ""));
-  parameters.push_back(FilterParameter::New("Phase Type Array", "PhaseTypesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget,"DataArrayPath", true, ""));
-  parameters.push_back(FilterParameter::New("Feature Ids", "FeatureIdsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget,"DataArrayPath", true, ""));
-  parameters.push_back(FilterParameter::New("Feature Phases", "FeaturePhasesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget,"DataArrayPath", true, ""));
-  parameters.push_back(FilterParameter::New("Surface Features", "SurfaceFeaturesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget,"DataArrayPath", true, ""));
-  parameters.push_back(FilterParameter::New("Neighbor Lists", "NeighborListArrayPath", FilterParameterWidgetType::DataArraySelectionWidget,"DataArrayPath", true, ""));
-  parameters.push_back(FilterParameter::New("Surface Area Lists", "SharedSurfaceAreaListArrayPath", FilterParameterWidgetType::DataArraySelectionWidget,"DataArrayPath", true, ""));
-  parameters.push_back(FilterParameter::New("Number of Features", "NumFeaturesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget,"DataArrayPath", true, ""));
-  parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "QString", true));
-  parameters.push_back(FilterParameter::New("Cell Euler Angles Array Name", "CellEulerAnglesArrayName", FilterParameterWidgetType::StringWidget,"QString", true));
-  parameters.push_back(FilterParameter::New("Volumes Array Name", "VolumesArrayName", FilterParameterWidgetType::StringWidget,"QString", true));
-  parameters.push_back(FilterParameter::New("Feature Euler Angles Array Name", "FeatureEulerAnglesArrayName", FilterParameterWidgetType::StringWidget,"QString", true));
-  parameters.push_back(FilterParameter::New("Avg Quats Array Name", "AvgQuatsArrayName", FilterParameterWidgetType::StringWidget,"QString", true));
+  parameters.push_back(FilterParameter::New("Maximum Number of Iterations (Swaps)", "MaxIterations", FilterParameterWidgetType::IntWidget, getMaxIterations(), false));
+  parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
+  parameters.push_back(FilterParameter::New("Statistics", "InputStatsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getInputStatsArrayPath(), true, ""));
+  parameters.push_back(FilterParameter::New("Crystal Structures Array", "CrystalStructuresArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getCrystalStructuresArrayPath(), true, ""));
+  parameters.push_back(FilterParameter::New("Phase Type Array", "PhaseTypesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getPhaseTypesArrayPath(), true, ""));
+  parameters.push_back(FilterParameter::New("Feature Ids", "FeatureIdsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeatureIdsArrayPath(), true, ""));
+  parameters.push_back(FilterParameter::New("Feature Phases", "FeaturePhasesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeaturePhasesArrayPath(), true, ""));
+  parameters.push_back(FilterParameter::New("Surface Features", "SurfaceFeaturesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getSurfaceFeaturesArrayPath(), true, ""));
+  parameters.push_back(FilterParameter::New("Neighbor Lists", "NeighborListArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getNeighborListArrayPath(), true, ""));
+  parameters.push_back(FilterParameter::New("Surface Area Lists", "SharedSurfaceAreaListArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getSharedSurfaceAreaListArrayPath(), true, ""));
+  parameters.push_back(FilterParameter::New("Number of Features", "NumFeaturesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getNumFeaturesArrayPath(), true, ""));
+  parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
+  parameters.push_back(FilterParameter::New("Cell Euler Angles Array Name", "CellEulerAnglesArrayName", FilterParameterWidgetType::StringWidget, getCellEulerAnglesArrayName(), true));
+  parameters.push_back(FilterParameter::New("Volumes Array Name", "VolumesArrayName", FilterParameterWidgetType::StringWidget, getVolumesArrayName(), true));
+  parameters.push_back(FilterParameter::New("Feature Euler Angles Array Name", "FeatureEulerAnglesArrayName", FilterParameterWidgetType::StringWidget, getFeatureEulerAnglesArrayName(), true));
+  parameters.push_back(FilterParameter::New("Avg Quats Array Name", "AvgQuatsArrayName", FilterParameterWidgetType::StringWidget, getAvgQuatsArrayName(), true));
   setFilterParameters(parameters);
 }
 // -----------------------------------------------------------------------------
@@ -435,6 +435,7 @@ void MatchCrystallography::assign_eulers(int ensem)
       choose = pick_euler(random, numbins);
 
       m_OrientationOps[m_CrystalStructures[ensem]]->determineEulerAngles(choose, synea1, synea2, synea3);
+      m_OrientationOps[m_CrystalStructures[ensem]]->randomizeEulerAngles(synea1, synea2, synea3);
       m_FeatureEulerAngles[3 * i] = synea1;
       m_FeatureEulerAngles[3 * i + 1] = synea2;
       m_FeatureEulerAngles[3 * i + 2] = synea3;
@@ -485,13 +486,13 @@ void MatchCrystallography::MC_LoopBody1(int feature, int ensem, int j, float nei
   OrientationMath::AxisAngletoRod(w, n1, n2, n3, r1, r2, r3);
   newmisobin = m_OrientationOps[sym]->getMisoBin(n1, n2, n3);
   mdfchange = mdfchange
-      + (((actualmdf->getValue(curmisobin) - simmdf->getValue(curmisobin)) * (actualmdf->getValue(curmisobin) - simmdf->getValue(curmisobin)))
-         - ((actualmdf->getValue(curmisobin) - (simmdf->getValue(curmisobin) - (neighsurfarea / m_TotalSurfaceArea[ensem])))
-            * (actualmdf->getValue(curmisobin) - (simmdf->getValue(curmisobin) - (neighsurfarea / m_TotalSurfaceArea[ensem])))));
+              + (((actualmdf->getValue(curmisobin) - simmdf->getValue(curmisobin)) * (actualmdf->getValue(curmisobin) - simmdf->getValue(curmisobin)))
+                 - ((actualmdf->getValue(curmisobin) - (simmdf->getValue(curmisobin) - (neighsurfarea / m_TotalSurfaceArea[ensem])))
+                    * (actualmdf->getValue(curmisobin) - (simmdf->getValue(curmisobin) - (neighsurfarea / m_TotalSurfaceArea[ensem])))));
   mdfchange = mdfchange
-      + (((actualmdf->getValue(newmisobin) - simmdf->getValue(newmisobin)) * (actualmdf->getValue(newmisobin) - simmdf->getValue(newmisobin)))
-         - ((actualmdf->getValue(newmisobin) - (simmdf->getValue(newmisobin) + (neighsurfarea / m_TotalSurfaceArea[ensem])))
-            * (actualmdf->getValue(newmisobin) - (simmdf->getValue(newmisobin) + (neighsurfarea / m_TotalSurfaceArea[ensem])))));
+              + (((actualmdf->getValue(newmisobin) - simmdf->getValue(newmisobin)) * (actualmdf->getValue(newmisobin) - simmdf->getValue(newmisobin)))
+                 - ((actualmdf->getValue(newmisobin) - (simmdf->getValue(newmisobin) + (neighsurfarea / m_TotalSurfaceArea[ensem])))
+                    * (actualmdf->getValue(newmisobin) - (simmdf->getValue(newmisobin) + (neighsurfarea / m_TotalSurfaceArea[ensem])))));
 }
 
 // -----------------------------------------------------------------------------
@@ -535,7 +536,7 @@ void MatchCrystallography::matchCrystallography(int ensem)
   int64_t totalFeatures = m_FeaturePhasesPtr.lock()->getNumberOfTuples();
 
   DREAM3D_RANDOMNG_NEW()
-      int numbins = 0;
+  int numbins = 0;
   int iterations = 0, badtrycount = 0;
   float random = 0;
   size_t counter = 0;
@@ -600,15 +601,16 @@ void MatchCrystallography::matchCrystallography(int ensem)
         choose = pick_euler(random, numbins);
 
         m_OrientationOps[m_CrystalStructures[ensem]]->determineEulerAngles(choose, g1ea1, g1ea2, g1ea3);
+        m_OrientationOps[m_CrystalStructures[ensem]]->randomizeEulerAngles(g1ea1, g1ea2, g1ea3);
         OrientationMath::EulertoQuat(g1ea1, g1ea2, g1ea3, q1);
 
         odfchange = ((actualodf->getValue(choose) - simodf->getValue(choose)) * (actualodf->getValue(choose) - simodf->getValue(choose)))
-            - ((actualodf->getValue(choose) - (simodf->getValue(choose) + (m_Volumes[selectedfeature1] / unbiasedvol[ensem])))
-               * (actualodf->getValue(choose) - (simodf->getValue(choose) + (m_Volumes[selectedfeature1] / unbiasedvol[ensem]))));
+                    - ((actualodf->getValue(choose) - (simodf->getValue(choose) + (m_Volumes[selectedfeature1] / unbiasedvol[ensem])))
+                       * (actualodf->getValue(choose) - (simodf->getValue(choose) + (m_Volumes[selectedfeature1] / unbiasedvol[ensem]))));
         odfchange = odfchange
-            + (((actualodf->getValue(g1odfbin) - simodf->getValue(g1odfbin)) * (actualodf->getValue(g1odfbin) - simodf->getValue(g1odfbin)))
-               - ((actualodf->getValue(g1odfbin) - (simodf->getValue(g1odfbin) - (m_Volumes[selectedfeature1] / unbiasedvol[ensem])))
-                  * (actualodf->getValue(g1odfbin) - (simodf->getValue(g1odfbin) - (m_Volumes[selectedfeature1] / unbiasedvol[ensem])))));
+                    + (((actualodf->getValue(g1odfbin) - simodf->getValue(g1odfbin)) * (actualodf->getValue(g1odfbin) - simodf->getValue(g1odfbin)))
+                       - ((actualodf->getValue(g1odfbin) - (simodf->getValue(g1odfbin) - (m_Volumes[selectedfeature1] / unbiasedvol[ensem])))
+                          * (actualodf->getValue(g1odfbin) - (simodf->getValue(g1odfbin) - (m_Volumes[selectedfeature1] / unbiasedvol[ensem])))));
 
         mdfchange = 0;
         size_t size = 0;
@@ -693,20 +695,20 @@ void MatchCrystallography::matchCrystallography(int ensem)
           g2odfbin = m_OrientationOps[m_CrystalStructures[ensem]]->getOdfBin(r1, r2, r3);
 
           odfchange = ((actualodf->getValue(g1odfbin) - simodf->getValue(g1odfbin)) * (actualodf->getValue(g1odfbin) - simodf->getValue(g1odfbin)))
-              - ((actualodf->getValue(g1odfbin)
-                  - (simodf->getValue(g1odfbin) - (m_Volumes[selectedfeature1] / unbiasedvol[ensem])
-                     + (m_Volumes[selectedfeature2] / unbiasedvol[ensem])))
-                 * (actualodf->getValue(g1odfbin)
-                    - (simodf->getValue(g1odfbin) - (m_Volumes[selectedfeature1] / unbiasedvol[ensem])
-                       + (m_Volumes[selectedfeature2] / unbiasedvol[ensem]))));
+                      - ((actualodf->getValue(g1odfbin)
+                          - (simodf->getValue(g1odfbin) - (m_Volumes[selectedfeature1] / unbiasedvol[ensem])
+                             + (m_Volumes[selectedfeature2] / unbiasedvol[ensem])))
+                         * (actualodf->getValue(g1odfbin)
+                            - (simodf->getValue(g1odfbin) - (m_Volumes[selectedfeature1] / unbiasedvol[ensem])
+                               + (m_Volumes[selectedfeature2] / unbiasedvol[ensem]))));
           odfchange = odfchange
-              + (((actualodf->getValue(g2odfbin) - simodf->getValue(g2odfbin)) * (actualodf->getValue(g2odfbin) - simodf->getValue(g2odfbin)))
-                 - ((actualodf->getValue(g2odfbin)
-                     - (simodf->getValue(g2odfbin) - (m_Volumes[selectedfeature2] / unbiasedvol[ensem])
-                        + (m_Volumes[selectedfeature1] / unbiasedvol[ensem])))
-                    * (actualodf->getValue(g2odfbin)
-                       - (simodf->getValue(g2odfbin) - (m_Volumes[selectedfeature2] / unbiasedvol[ensem])
-                          + (m_Volumes[selectedfeature1] / unbiasedvol[ensem])))));
+                      + (((actualodf->getValue(g2odfbin) - simodf->getValue(g2odfbin)) * (actualodf->getValue(g2odfbin) - simodf->getValue(g2odfbin)))
+                         - ((actualodf->getValue(g2odfbin)
+                             - (simodf->getValue(g2odfbin) - (m_Volumes[selectedfeature2] / unbiasedvol[ensem])
+                                + (m_Volumes[selectedfeature1] / unbiasedvol[ensem])))
+                            * (actualodf->getValue(g2odfbin)
+                               - (simodf->getValue(g2odfbin) - (m_Volumes[selectedfeature2] / unbiasedvol[ensem])
+                                  + (m_Volumes[selectedfeature1] / unbiasedvol[ensem])))));
 
           mdfchange = 0;
           OrientationMath::EulertoQuat(g2ea1, g2ea2, g2ea3, q1);

@@ -33,9 +33,9 @@
  *                           FA8650-10-D-5210
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
- #include "IObserver.h"
+#include "IObserver.h"
 
- #include <iostream>
+#include <iostream>
 
 // -----------------------------------------------------------------------------
 //
@@ -52,7 +52,7 @@ IObserver::~IObserver()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void IObserver::processPipelineMessage(const PipelineMessage &pm)
+void IObserver::processPipelineMessage(const PipelineMessage& pm)
 {
   PipelineMessage msg = pm;
   QString filterHumanLabel = pm.getFilterHumanLabel();

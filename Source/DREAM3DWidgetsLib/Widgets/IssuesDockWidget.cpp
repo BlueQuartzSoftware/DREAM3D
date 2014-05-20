@@ -105,7 +105,7 @@ void IssuesDockWidget::clearIssues()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void IssuesDockWidget::processPipelineMessage(const PipelineMessage &msg)
+void IssuesDockWidget::processPipelineMessage(const PipelineMessage& msg)
 {
   //  std::cout << "IssuesDockWidget::processPipelineMessage(PipelineMessage& message)" << std::endl;
   // Create error hyperlink
@@ -119,38 +119,38 @@ void IssuesDockWidget::processPipelineMessage(const PipelineMessage &msg)
       msgColor.setRed(255);
       msgColor.setGreen(191);
       msgColor.setBlue(193);
-    {
-      QBrush msgBrush(msgColor);
-
-      QString msgDesc = (msg.getText());
-      int msgCode = msg.getCode();
-
-      int rc = errorTableWidget->rowCount();
-
-      errorTableWidget->insertRow(rc);
-
-      QString msgPrefix = (msg.getPrefix());
-      QTableWidgetItem* filterNameWidgetItem = new QTableWidgetItem(msgPrefix);
-      filterNameWidgetItem->setTextAlignment(Qt::AlignCenter);
-      QTableWidgetItem* descriptionWidgetItem = new QTableWidgetItem(msgDesc);
-      QTableWidgetItem* codeWidgetItem = new QTableWidgetItem(QString::number(msgCode));
-      codeWidgetItem->setTextAlignment(Qt::AlignCenter);
-
-      filterNameWidgetItem->setBackground(msgBrush);
-      descriptionWidgetItem->setBackground(msgBrush);
-      codeWidgetItem->setBackground(msgBrush);
-
-      if (hyperlinkLabel == NULL)
       {
-        errorTableWidget->setItem(rc, 0, filterNameWidgetItem);
+        QBrush msgBrush(msgColor);
+
+        QString msgDesc = (msg.getText());
+        int msgCode = msg.getCode();
+
+        int rc = errorTableWidget->rowCount();
+
+        errorTableWidget->insertRow(rc);
+
+        QString msgPrefix = (msg.getPrefix());
+        QTableWidgetItem* filterNameWidgetItem = new QTableWidgetItem(msgPrefix);
+        filterNameWidgetItem->setTextAlignment(Qt::AlignCenter);
+        QTableWidgetItem* descriptionWidgetItem = new QTableWidgetItem(msgDesc);
+        QTableWidgetItem* codeWidgetItem = new QTableWidgetItem(QString::number(msgCode));
+        codeWidgetItem->setTextAlignment(Qt::AlignCenter);
+
+        filterNameWidgetItem->setBackground(msgBrush);
+        descriptionWidgetItem->setBackground(msgBrush);
+        codeWidgetItem->setBackground(msgBrush);
+
+        if (hyperlinkLabel == NULL)
+        {
+          errorTableWidget->setItem(rc, 0, filterNameWidgetItem);
+        }
+        else
+        {
+          errorTableWidget->setCellWidget(rc, 0, hyperlinkLabel);
+        }
+        errorTableWidget->setItem(rc, 1, descriptionWidgetItem);
+        errorTableWidget->setItem(rc, 2, codeWidgetItem);
       }
-      else
-      {
-        errorTableWidget->setCellWidget(rc, 0, hyperlinkLabel);
-      }
-      errorTableWidget->setItem(rc, 1, descriptionWidgetItem);
-      errorTableWidget->setItem(rc, 2, codeWidgetItem);
-    }
       break;
 
     case PipelineMessage::Warning:
@@ -159,38 +159,38 @@ void IssuesDockWidget::processPipelineMessage(const PipelineMessage &msg)
       msgColor.setGreen(254);
       msgColor.setBlue(137);
 
-    {
-      QBrush msgBrush(msgColor);
-
-      QString msgName = (msg.getPrefix());
-      QString msgDesc = (msg.getText());
-      int msgCode = msg.getCode();
-
-      int rc = errorTableWidget->rowCount();
-
-      errorTableWidget->insertRow(rc);
-
-      QTableWidgetItem* filterNameWidgetItem = new QTableWidgetItem(msgName);
-      filterNameWidgetItem->setTextAlignment(Qt::AlignCenter);
-      QTableWidgetItem* descriptionWidgetItem = new QTableWidgetItem(msgDesc);
-      QTableWidgetItem* codeWidgetItem = new QTableWidgetItem(QString::number(msgCode));
-      codeWidgetItem->setTextAlignment(Qt::AlignCenter);
-
-      filterNameWidgetItem->setBackground(msgBrush);
-      descriptionWidgetItem->setBackground(msgBrush);
-      codeWidgetItem->setBackground(msgBrush);
-
-      if (hyperlinkLabel == NULL)
       {
-        errorTableWidget->setItem(rc, 0, filterNameWidgetItem);
+        QBrush msgBrush(msgColor);
+
+        QString msgName = (msg.getPrefix());
+        QString msgDesc = (msg.getText());
+        int msgCode = msg.getCode();
+
+        int rc = errorTableWidget->rowCount();
+
+        errorTableWidget->insertRow(rc);
+
+        QTableWidgetItem* filterNameWidgetItem = new QTableWidgetItem(msgName);
+        filterNameWidgetItem->setTextAlignment(Qt::AlignCenter);
+        QTableWidgetItem* descriptionWidgetItem = new QTableWidgetItem(msgDesc);
+        QTableWidgetItem* codeWidgetItem = new QTableWidgetItem(QString::number(msgCode));
+        codeWidgetItem->setTextAlignment(Qt::AlignCenter);
+
+        filterNameWidgetItem->setBackground(msgBrush);
+        descriptionWidgetItem->setBackground(msgBrush);
+        codeWidgetItem->setBackground(msgBrush);
+
+        if (hyperlinkLabel == NULL)
+        {
+          errorTableWidget->setItem(rc, 0, filterNameWidgetItem);
+        }
+        else
+        {
+          errorTableWidget->setCellWidget(rc, 0, hyperlinkLabel);
+        }
+        errorTableWidget->setItem(rc, 1, descriptionWidgetItem);
+        errorTableWidget->setItem(rc, 2, codeWidgetItem);
       }
-      else
-      {
-        errorTableWidget->setCellWidget(rc, 0, hyperlinkLabel);
-      }
-      errorTableWidget->setItem(rc, 1, descriptionWidgetItem);
-      errorTableWidget->setItem(rc, 2, codeWidgetItem);
-    }
       break;
 
     default:

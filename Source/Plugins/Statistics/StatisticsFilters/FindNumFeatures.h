@@ -96,7 +96,7 @@ class FindNumFeatures : public AbstractFilter
     virtual void preflight();
 
 
-signals:
+  signals:
     void updateFilterParameters(AbstractFilter* filter);
     void parametersChanged();
     void preflightAboutToExecute();

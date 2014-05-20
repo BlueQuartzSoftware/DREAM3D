@@ -85,15 +85,15 @@ FindFeatureReferenceCAxisMisorientations::~FindFeatureReferenceCAxisMisorientati
 void FindFeatureReferenceCAxisMisorientations::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "QString", true));
-  parameters.push_back(FilterParameter::New("FeatureIds", "FeatureIdsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
-  parameters.push_back(FilterParameter::New("CellPhases", "CellPhasesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
-  parameters.push_back(FilterParameter::New("AvgCAxes", "AvgCAxesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
-  parameters.push_back(FilterParameter::New("Quats", "QuatsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
-  parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "QString", true));
-  parameters.push_back(FilterParameter::New("FeatureAvgCAxisMisorientations", "FeatureAvgCAxisMisorientationsArrayName", FilterParameterWidgetType::StringWidget, "QString", true, ""));
-  parameters.push_back(FilterParameter::New("FeatureStdevCAxisMisorientations", "FeatureStdevCAxisMisorientationsArrayName", FilterParameterWidgetType::StringWidget, "QString", true, ""));
-  parameters.push_back(FilterParameter::New("FeatureReferenceCAxisMisorientations", "FeatureReferenceCAxisMisorientationsArrayName", FilterParameterWidgetType::StringWidget, "QString", true, ""));
+  parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
+  parameters.push_back(FilterParameter::New("FeatureIds", "FeatureIdsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeatureIdsArrayPath(), true, ""));
+  parameters.push_back(FilterParameter::New("CellPhases", "CellPhasesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getCellPhasesArrayPath(), true, ""));
+  parameters.push_back(FilterParameter::New("AvgCAxes", "AvgCAxesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getAvgCAxesArrayPath(), true, ""));
+  parameters.push_back(FilterParameter::New("Quats", "QuatsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getQuatsArrayPath(), true, ""));
+  parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
+  parameters.push_back(FilterParameter::New("FeatureAvgCAxisMisorientations", "FeatureAvgCAxisMisorientationsArrayName", FilterParameterWidgetType::StringWidget, getFeatureAvgCAxisMisorientationsArrayName(), true, ""));
+  parameters.push_back(FilterParameter::New("FeatureStdevCAxisMisorientations", "FeatureStdevCAxisMisorientationsArrayName", FilterParameterWidgetType::StringWidget, getFeatureStdevCAxisMisorientationsArrayName(), true, ""));
+  parameters.push_back(FilterParameter::New("FeatureReferenceCAxisMisorientations", "FeatureReferenceCAxisMisorientationsArrayName", FilterParameterWidgetType::StringWidget, getFeatureReferenceCAxisMisorientationsArrayName(), true, ""));
   setFilterParameters(parameters);
 }
 

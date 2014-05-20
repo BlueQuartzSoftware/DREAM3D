@@ -78,23 +78,23 @@ void FindMisorientations::setupFilterParameters()
 {
   FilterParameterVector parameters;
   {
-    FilterParameter::Pointer option = FilterParameter::New();
-    option->setHumanLabel("Find Average Misorientations");
-    option->setPropertyName("FindAvgMisors");
-    option->setWidgetType(FilterParameterWidgetType::BooleanWidget);
-    option->setValueType("bool");
-    option->setUnits("");
-    parameters.push_back(option);
+    FilterParameter::Pointer parameter = FilterParameter::New();
+    parameter->setHumanLabel("Find Average Misorientations");
+    parameter->setPropertyName("FindAvgMisors");
+    parameter->setWidgetType(FilterParameterWidgetType::BooleanWidget);
+   // parameter->setValueType("bool");
+    parameter->setUnits("");
+    parameters.push_back(parameter);
   }
 
-  parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "QString", true));
-  parameters.push_back(FilterParameter::New("Neighbor List Array Name", "NeighborListArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
-  parameters.push_back(FilterParameter::New("AvgQuats", "AvgQuatsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
-  parameters.push_back(FilterParameter::New("FeaturePhases", "FeaturePhasesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
-  parameters.push_back(FilterParameter::New("CrystalStructures", "CrystalStructuresArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
-  parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "QString", true));
-  parameters.push_back(FilterParameter::New("AvgMisorientations", "AvgMisorientationsArrayName", FilterParameterWidgetType::StringWidget, "QString", true, ""));
-  parameters.push_back(FilterParameter::New("Misorientation List Array Name", "MisorientationListArrayName", FilterParameterWidgetType::StringWidget, "QString", true, ""));
+  parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
+  parameters.push_back(FilterParameter::New("Neighbor List Array Name", "NeighborListArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getNeighborListArrayPath(), true, ""));
+  parameters.push_back(FilterParameter::New("AvgQuats", "AvgQuatsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getAvgQuatsArrayPath(), true, ""));
+  parameters.push_back(FilterParameter::New("FeaturePhases", "FeaturePhasesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeaturePhasesArrayPath(), true, ""));
+  parameters.push_back(FilterParameter::New("CrystalStructures", "CrystalStructuresArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getCrystalStructuresArrayPath(), true, ""));
+  parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
+  parameters.push_back(FilterParameter::New("AvgMisorientations", "AvgMisorientationsArrayName", FilterParameterWidgetType::StringWidget, getAvgMisorientationsArrayName(), true, ""));
+  parameters.push_back(FilterParameter::New("Misorientation List Array Name", "MisorientationListArrayName", FilterParameterWidgetType::StringWidget, getMisorientationListArrayName(), true, ""));
   setFilterParameters(parameters);
 }
 
@@ -232,18 +232,18 @@ void FindMisorientations::execute()
       {
         w = m_OrientationOps[phase1]->getMisoQuat( q1, q2, n1, n2, n3);
         misorientationlists[i][j] = DREAM3D::Constants::k_180OverPi;
-		if (m_FindAvgMisors == true) m_AvgMisorientations[i] += misorientationlists[i][j];
+        if (m_FindAvgMisors == true) { m_AvgMisorientations[i] += misorientationlists[i][j]; }
       }
       else
       {
-        if (m_FindAvgMisors == true) tempMisoList--;
+        if (m_FindAvgMisors == true) { tempMisoList--; }
         misorientationlists[i][j] = -100.0f;
       }
     }
     if (m_FindAvgMisors == true)
     {
-      if (tempMisoList > 0) m_AvgMisorientations[i] /= tempMisoList;
-      else m_AvgMisorientations[i] = -100.0f;
+      if (tempMisoList > 0) { m_AvgMisorientations[i] /= tempMisoList; }
+      else { m_AvgMisorientations[i] = -100.0f; }
       tempMisoList = 0;
     }
   }

@@ -96,40 +96,88 @@ void Print(std::ostream& o, QuatF &q)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+QuatF EulertoQuatActive(const float* e)
+{
+  QuatF q;
+  float s, c, s1, c1, s2, c2;
+  s = sinf(0.5f * e[1]);
+  c = cosf(0.5f * e[1]);
+  s1 = sinf(0.5f * (e[0] - e[2]));
+  c1 = cosf(0.5f * (e[0] - e[2]));
+  s2 = sinf(0.5f * (e[0] + e[2]));
+  c2 = cosf(0.5f * (e[0] + e[2]));
+
+  q.w = c * c2;
+
+  if(q.w < 0.0)
+  {
+    q.w = -q.w;
+    q.x = s * c1;
+    q.y = s * s1;
+    q.z = c * s2;
+  }
+  else
+  {
+
+    q.x = -s * c1;
+    q.y = -s * s1;
+    q.z = -c * s2;
+  }
+  return q;
+}
+
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void TestQuatMath()
 {
 
-  float euler[3] = {  2.72167, 0.148401, 0.148886 };
+  float euler[3] = {  2.72167, 3.148401, 0.148886 };
   printf("Euler Angle & %0.6f, %0.6f, %0.6f\n", euler[0], euler[1], euler[2]);
-
 
   QuatF q;
   OrientationMath::EulertoQuat(euler, q);
 
-  printf("Euler to Quaternion & (%0.6f <%0.6f, %0.6f, %0.6f>)\n", q.w, q.x, q.y, q.z);
+  printf("DREAM3D & %0.6f & %0.6f & %0.6f & %0.6f\n", q.w, q.x, q.y, q.z);
+
+  q = EulertoQuatActive(euler);
+  printf("MARC & %0.6f & %0.6f & %0.6f & %0.6f\n", q.w, q.x, q.y, q.z);
 
   OrientationMath::EulertoRod(euler[0], euler[1], euler[2], r1, r2, r3);
   printf("Euler to Rodrigues & %0.6f, %0.6f, %0.6f\n", r1, r2, r3);
   printf("Euler To Homochoric & MISSING\n");
 
+  // Convert the Rodrigues to a Quaternion
+  QuatF r2q;
+  OrientationMath::RodtoQuat(r2q, r1,r2,r3);
+  printf("--------------------------\n");
+  printf("DREAM3D & %0.6f & %0.6f & %0.6f & %0.6f\n", r2q.w, r2q.x, r2q.y, r2q.z);
+  OrientationMath::QuattoMat(r2q, g);
+
+  printf("%0.6f & %0.6f & %0.6f\n", g[0][0] , g[0][1] , g[0][2]);
+  printf("%0.6f & %0.6f & %0.6f\n", g[1][0] , g[1][1] , g[1][2]);
+  printf("%0.6f & %0.6f & %0.6f\n", g[2][0] , g[2][1] , g[2][2]);
+  printf("--------------------------\n");
 
   OrientationMath::EulertoMat(euler[0], euler[1], euler[2], g);
-//  printf("Euler to Passive Rotation Matrix & %0.6f  %0.6f  %0.6f\n", g[0][0] , g[0][1] , g[0][2]);
-//  printf("                                 & %0.6f  %0.6f  %0.6f\n", g[1][0] , g[1][1] , g[1][2]);
-//  printf("                                 & %0.6f  %0.6f  %0.6f\n", g[2][0] , g[2][1] , g[2][2]);
+  //  printf("Euler to Passive Rotation Matrix & %0.6f  %0.6f  %0.6f\n", g[0][0] , g[0][1] , g[0][2]);
+  //  printf("                                 & %0.6f  %0.6f  %0.6f\n", g[1][0] , g[1][1] , g[1][2]);
+  //  printf("                                 & %0.6f  %0.6f  %0.6f\n", g[2][0] , g[2][1] , g[2][2]);
 
 
-printf("\\begin{equation}\n\\textbf{R}_{Passive} = \\begin{bmatrix}\n");
-printf("%0.6f & %0.6f & %0.6f\\\\\n", g[0][0] , g[0][1] , g[0][2]);
-printf("%0.6f & %0.6f & %0.6f\\\\\n", g[1][0] , g[1][1] , g[1][2]);
-printf("%0.6f & %0.6f & %0.6f\n", g[2][0] , g[2][1] , g[2][2]);
-printf("\\end{bmatrix}\n\\end{equation}\n");
+  printf("\\begin{equation}\n\\textbf{R}_{Passive} = \\begin{bmatrix}\n");
+  printf("%0.6f & %0.6f & %0.6f\\\\\n", g[0][0] , g[0][1] , g[0][2]);
+  printf("%0.6f & %0.6f & %0.6f\\\\\n", g[1][0] , g[1][1] , g[1][2]);
+  printf("%0.6f & %0.6f & %0.6f\n", g[2][0] , g[2][1] , g[2][2]);
+  printf("\\end{bmatrix}\n\\end{equation}\n");
 
 
   OrientationMath::EulertoMatActive(euler[0], euler[1], euler[2], g);
-//  printf("Euler to Active Rotation Matrix & %0.6f  %0.6f  %0.6f\n", g[0][0] , g[0][1] , g[0][2]);
-//  printf("                                &  %0.6f  %0.6f  %0.6f\n", g[1][0] , g[1][1] , g[1][2]);
-//  printf("                                &  %0.6f  %0.6f  %0.6f\n", g[2][0] , g[2][1] , g[2][2]);
+  //  printf("Euler to Active Rotation Matrix & %0.6f  %0.6f  %0.6f\n", g[0][0] , g[0][1] , g[0][2]);
+  //  printf("                                &  %0.6f  %0.6f  %0.6f\n", g[1][0] , g[1][1] , g[1][2]);
+  //  printf("                                &  %0.6f  %0.6f  %0.6f\n", g[2][0] , g[2][1] , g[2][2]);
 
   printf("\\begin{equation}\n\\textbf{R}_{Active} = \\begin{bmatrix}\n");
   printf("%0.6f & %0.6f & %0.6f\\\\\n", g[0][0] , g[0][1] , g[0][2]);
@@ -141,6 +189,11 @@ printf("\\end{bmatrix}\n\\end{equation}\n");
 
   QuatF quat = OrientationMath::EulertoQuat(euler);
   quat = OrientationMath::EulertoQuat(euler[0], euler[1], euler[2]);
+
+  float aa[4];
+  OrientationMath::EulerToAxisAngle(euler[0], euler[1], euler[2], aa[0], aa[1], aa[2], aa[3]);
+  printf("Euler to Axis Angle\n");
+  printf("%0.8f, %0.8f, %0.8f, Angle=%0.8f\n", aa[1], aa[2], aa[3], aa[0]*DREAM3D::Constants::k_180OverPi);
 
 }
 

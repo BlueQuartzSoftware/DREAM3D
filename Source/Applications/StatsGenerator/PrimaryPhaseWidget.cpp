@@ -85,26 +85,26 @@
 
 #define CHECK_ERROR_ON_WRITE(var, msg)\
   if (err < 0) {\
-  QMessageBox::critical(this, tr("StatsGenerator"),\
-  tr("There was an error writing the " msg " to the HDF5 file"),\
-  QMessageBox::Ok,\
-  QMessageBox::Ok);\
-  return err;\
+    QMessageBox::critical(this, tr("StatsGenerator"),\
+                          tr("There was an error writing the " msg " to the HDF5 file"),\
+                          QMessageBox::Ok,\
+                          QMessageBox::Ok);\
+    return err;\
   }
 
 
 #define CHECK_STATS_READ_ERROR(err, group, dataset)\
   if (err < 0) {\
-  qDebug() << "PrimaryPhaseWidget::on_actionOpen_triggered Error: Could not read '" << group << "' data set '" << dataset << "'" << "\n";\
-  qDebug() << "  File: " << __FILE__ << "\n";\
-  qDebug() << "  Line: " << __LINE__ << "\n";\
-  return err;\
+    qDebug() << "PrimaryPhaseWidget::on_actionOpen_triggered Error: Could not read '" << group << "' data set '" << dataset << "'" << "\n";\
+    qDebug() << "  File: " << __FILE__ << "\n";\
+    qDebug() << "  Line: " << __LINE__ << "\n";\
+    return err;\
   }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-PrimaryPhaseWidget::PrimaryPhaseWidget(QWidget *parent) :
+PrimaryPhaseWidget::PrimaryPhaseWidget(QWidget* parent) :
   SGWidget(parent),
   m_PhaseType(DREAM3D::PhaseType::PrimaryPhase),
   m_PhaseFraction(1.0),
@@ -351,7 +351,7 @@ QString PrimaryPhaseWidget::getComboString()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int PrimaryPhaseWidget::gatherSizeDistributionFromGui(float &mu, float &sigma, float &minCutOff, float &maxCutOff, float &stepSize)
+int PrimaryPhaseWidget::gatherSizeDistributionFromGui(float& mu, float& sigma, float& minCutOff, float& maxCutOff, float& stepSize)
 {
   bool ok = false;
   mu = m_Mu_SizeDistribution->text().toFloat(&ok);
@@ -410,7 +410,7 @@ void PrimaryPhaseWidget::dataWasEdited()
 // -----------------------------------------------------------------------------
 void PrimaryPhaseWidget::setWidgetListEnabled(bool b)
 {
-  foreach (QWidget* w, m_WidgetList)
+  foreach (QWidget * w, m_WidgetList)
   {
     w->setEnabled(b);
   }
@@ -442,7 +442,7 @@ void PrimaryPhaseWidget::on_m_GenerateDefaultData_clicked()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PrimaryPhaseWidget::on_m_Mu_SizeDistribution_textChanged(const QString &text)
+void PrimaryPhaseWidget::on_m_Mu_SizeDistribution_textChanged(const QString& text)
 {
   updateSizeDistributionPlot();
   m_Mu_SizeDistribution->setFocus();
@@ -451,7 +451,7 @@ void PrimaryPhaseWidget::on_m_Mu_SizeDistribution_textChanged(const QString &tex
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PrimaryPhaseWidget::on_m_Sigma_SizeDistribution_textChanged(const QString &text)
+void PrimaryPhaseWidget::on_m_Sigma_SizeDistribution_textChanged(const QString& text)
 {
   updateSizeDistributionPlot();
   m_Sigma_SizeDistribution->setFocus();
@@ -461,7 +461,7 @@ void PrimaryPhaseWidget::on_m_Sigma_SizeDistribution_textChanged(const QString &
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PrimaryPhaseWidget::on_m_MinSigmaCutOff_textChanged(const QString &text)
+void PrimaryPhaseWidget::on_m_MinSigmaCutOff_textChanged(const QString& text)
 {
   updateSizeDistributionPlot();
   m_MinSigmaCutOff->setFocus();
@@ -471,7 +471,7 @@ void PrimaryPhaseWidget::on_m_MinSigmaCutOff_textChanged(const QString &text)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PrimaryPhaseWidget::on_m_MaxSigmaCutOff_textChanged(const QString &text)
+void PrimaryPhaseWidget::on_m_MaxSigmaCutOff_textChanged(const QString& text)
 {
   updateSizeDistributionPlot();
   m_MaxSigmaCutOff->setFocus();
@@ -525,12 +525,12 @@ int PrimaryPhaseWidget::calculateNumberOfBins(float mu, float sigma, float minCu
 int PrimaryPhaseWidget::computeBinsAndCutOffs( float mu, float sigma,
                                                float minCutOff, float maxCutOff,
                                                float binStepSize,
-                                               QwtArray<float> &binsizes,
-                                               QwtArray<float> &xCo,
-                                               QwtArray<float> &yCo,
-                                               float &xMax, float &yMax,
-                                               QwtArray<float> &x,
-                                               QwtArray<float> &y)
+                                               QwtArray<float>& binsizes,
+                                               QwtArray<float>& xCo,
+                                               QwtArray<float>& yCo,
+                                               float& xMax, float& yMax,
+                                               QwtArray<float>& x,
+                                               QwtArray<float>& y)
 {
   int err = 0;
   int size = 250;
@@ -703,13 +703,13 @@ void PrimaryPhaseWidget::plotSizeDistribution()
 
 #define SGWIGET_WRITE_ERROR_CHECK(var)\
   if (err < 0)  {\
-  QString msg ("Error Writing Data ");\
-  msg.append((var));\
-  msg.append(" to the HDF5 file");\
-  QMessageBox::critical(this, tr("StatsGenerator"),\
-  msg,\
-  QMessageBox::Default);\
-  retErr = -1;\
+    QString msg ("Error Writing Data ");\
+    msg.append((var));\
+    msg.append(" to the HDF5 file");\
+    QMessageBox::critical(this, tr("StatsGenerator"),\
+                          msg,\
+                          QMessageBox::Default);\
+    retErr = -1;\
   }
 
 // -----------------------------------------------------------------------------
@@ -883,8 +883,8 @@ void PrimaryPhaseWidget::extractStatsData(AttributeMatrix::Pointer attrMat, int 
   m_Mu_SizeDistribution->blockSignals(false);
   m_Sigma_SizeDistribution->blockSignals(false);
 
-  minCutOff = (mu - log(minFeatureSize))/sigma;
-  maxCutOff = (log(maxFeatureSize) - mu)/sigma;
+  minCutOff = (mu - log(minFeatureSize)) / sigma;
+  maxCutOff = (log(maxFeatureSize) - mu) / sigma;
 
   m_MinSigmaCutOff->blockSignals(true);
   m_MinSigmaCutOff->setText(QString::number(minCutOff));

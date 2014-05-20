@@ -231,8 +231,8 @@ void VerifyTriangleWinding::setupFilterParameters()
 {
   FilterParameterVector parameters;
 
-  parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "QString", true));
-  parameters.push_back(FilterParameter::New("SurfaceMeshFaceLabels", "SurfaceMeshFaceLabelsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
+  parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
+  parameters.push_back(FilterParameter::New("SurfaceMeshFaceLabels", "SurfaceMeshFaceLabelsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getSurfaceMeshFaceLabelsArrayPath(), true, ""));
   setFilterParameters(parameters);
 }
 
@@ -313,11 +313,11 @@ void VerifyTriangleWinding::execute()
   notifyStatusMessage(getHumanLabel(), "Generating Face List for each Node");
   // Make sure the Face Connectivity is created because the FindNRing algorithm needs this and will
   // assert if the data is NOT in the SurfaceMesh Data Container
-  if (NULL == facesPtr->getFacesContainingVert()) facesPtr->findFacesContainingVert();
+  if (NULL == facesPtr->getFacesContainingVert()) { facesPtr->findFacesContainingVert(); }
   if (getCancel() == true) { return; }
-  if (NULL == facesPtr->getFaceNeighbors()) facesPtr->findFaceNeighbors();
+  if (NULL == facesPtr->getFaceNeighbors()) { facesPtr->findFaceNeighbors(); }
   if (getCancel() == true) { return; }
-  if(facesPtr->getUniqueEdges() == NULL) facesPtr->generateUniqueEdgeIds();
+  if(facesPtr->getUniqueEdges() == NULL) { facesPtr->generateUniqueEdgeIds(); }
 
   // Execute the actual verification step.
   notifyStatusMessage(getHumanLabel(), "Generating Connectivity Complete. Starting Analysis");

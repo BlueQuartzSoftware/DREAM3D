@@ -35,7 +35,16 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #include "DataArrayPath.h"
 
+
+
 #include "DREAM3DLib/Common/Constants.h"
+
+
+QDebug operator<<(QDebug out, const DataArrayPath& v)
+{
+  out << v.getDataContainerName() << "|" << v.getAttributeMatrixName() << "|" << v.getDataArrayName();
+  return out;
+}
 
 // -----------------------------------------------------------------------------
 //
@@ -61,11 +70,11 @@ DataArrayPath::DataArrayPath(const QString& dcName, const QString& amName, const
 // -----------------------------------------------------------------------------
 DataArrayPath::DataArrayPath(const QString& path)
 {
-    QStringList tokens = path.split(DREAM3D::PathSep);
+  QStringList tokens = path.split(DREAM3D::PathSep);
 
-    if(tokens.size() > 0) { m_DataContainerName = tokens.at(0); }
-    if(tokens.size() > 1) { m_AttributeMatrixName = tokens.at(1); }
-    if(tokens.size() > 2) { m_DataArrayName = tokens.at(2); }
+  if(tokens.size() > 0) { m_DataContainerName = tokens.at(0); }
+  if(tokens.size() > 1) { m_AttributeMatrixName = tokens.at(1); }
+  if(tokens.size() > 2) { m_DataArrayName = tokens.at(2); }
 }
 
 // -----------------------------------------------------------------------------
@@ -142,7 +151,7 @@ bool DataArrayPath::isEmpty() const
 // -----------------------------------------------------------------------------
 bool DataArrayPath::isValid() const
 {
-    if (m_DataContainerName.isEmpty() == false && m_AttributeMatrixName.isEmpty() == false && m_DataArrayName.isEmpty() == false )
+  if (m_DataContainerName.isEmpty() == false && m_AttributeMatrixName.isEmpty() == false && m_DataArrayName.isEmpty() == false )
   { return true; }
   return false;
 }

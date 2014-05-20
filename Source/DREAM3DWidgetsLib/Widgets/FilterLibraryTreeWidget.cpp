@@ -39,14 +39,14 @@
 
 
 
-FilterLibraryTreeWidget::FilterLibraryTreeWidget(QWidget *parent) :
-QTreeWidget(parent)
+FilterLibraryTreeWidget::FilterLibraryTreeWidget(QWidget* parent) :
+  QTreeWidget(parent)
 {
   setContextMenuPolicy(Qt::CustomContextMenu);
 
   connect(this,
-    SIGNAL(customContextMenuRequested(const QPoint&)),
-    SLOT(onCustomContextMenuRequested(const QPoint&)));
+          SIGNAL(customContextMenuRequested(const QPoint&)),
+          SLOT(onCustomContextMenuRequested(const QPoint&)));
 }
 
 // -----------------------------------------------------------------------------
@@ -54,7 +54,7 @@ QTreeWidget(parent)
 // -----------------------------------------------------------------------------
 void FilterLibraryTreeWidget::addActionList(QList<QAction*> actionList)
 {
-  for (int i=0; i<actionList.size(); i++)
+  for (int i = 0; i < actionList.size(); i++)
   {
     m_Menu.addAction(actionList[i]);
   }
@@ -64,7 +64,7 @@ void FilterLibraryTreeWidget::addActionList(QList<QAction*> actionList)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FilterLibraryTreeWidget::setNodeActionList(QList<QAction *> list)
+void FilterLibraryTreeWidget::setNodeActionList(QList<QAction*> list)
 {
   m_NodeActions = list;
 }
@@ -72,7 +72,7 @@ void FilterLibraryTreeWidget::setNodeActionList(QList<QAction *> list)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FilterLibraryTreeWidget::setLeafActionList(QList<QAction *> list)
+void FilterLibraryTreeWidget::setLeafActionList(QList<QAction*> list)
 {
   m_LeafActions = list;
 }
@@ -110,16 +110,16 @@ void FilterLibraryTreeWidget::showContextMenu(QTreeWidgetItem* item, const QPoin
 //      addActionList(m_DefaultActions);
 //    break;
 
-  case Leaf_Item_Type:
-    if ( !m_LeafActions.isEmpty() )
-      addActionList(m_LeafActions);
-    break;
+    case Leaf_Item_Type:
+      if ( !m_LeafActions.isEmpty() )
+      { addActionList(m_LeafActions); }
+      break;
 
 
-  case Node_Item_Type:
-    if ( !m_NodeActions.isEmpty() )
-      addActionList(m_NodeActions);
-    break;
+    case Node_Item_Type:
+      if ( !m_NodeActions.isEmpty() )
+      { addActionList(m_NodeActions); }
+      break;
 
   }
 

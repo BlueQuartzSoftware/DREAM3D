@@ -42,18 +42,18 @@ class FilterParameter;
 
 class FilterParameterWidgetsDialogs
 {
-public:
+  public:
 
-  ~FilterParameterWidgetsDialogs();
+    ~FilterParameterWidgetsDialogs();
 
-  static void ShowCouldNotSetFilterParameter(AbstractFilter* filter, FilterParameter* filterParameter);
-  static void ShowCouldNotSetConditionalFilterParameter(AbstractFilter* filter, FilterParameter* filterParameter);
-  static void ShowFilterPropertyCastError(AbstractFilter* filter, FilterParameter* filterParameter, const QString& filtType, const QString& widgetType);
+    static void ShowCouldNotSetFilterParameter(AbstractFilter* filter, FilterParameter* filterParameter);
+    static void ShowCouldNotSetConditionalFilterParameter(AbstractFilter* filter, FilterParameter* filterParameter);
+    static void ShowFilterPropertyCastError(AbstractFilter* filter, FilterParameter* filterParameter, const QString& filtType, const QString& widgetType);
 
-protected:
-  FilterParameterWidgetsDialogs();
+  protected:
+    FilterParameterWidgetsDialogs();
 
-private:
+  private:
 
 
 

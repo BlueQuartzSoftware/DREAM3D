@@ -142,10 +142,10 @@ class DREAM3DLib_EXPORT FilterPipeline : public QObject
   signals:
     void pipelineGeneratedMessage(const PipelineMessage& message);
 
-     /**
-     * @brief This method is called from the run() method just before exiting and
-     * signals the end of the pipeline execution
-     */
+    /**
+    * @brief This method is called from the run() method just before exiting and
+    * signals the end of the pipeline execution
+    */
     void pipelineFinished();
 
   private:

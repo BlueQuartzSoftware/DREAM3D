@@ -70,7 +70,7 @@ class CompareFunctor;
  */
 class ScalarSegmentFeatures : public SegmentFeatures
 {
-  Q_OBJECT
+    Q_OBJECT
   public:
     DREAM3D_SHARED_POINTERS(ScalarSegmentFeatures)
     DREAM3D_STATIC_NEW_MACRO(ScalarSegmentFeatures)

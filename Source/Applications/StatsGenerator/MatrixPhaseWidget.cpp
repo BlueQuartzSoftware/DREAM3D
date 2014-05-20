@@ -75,34 +75,34 @@
 
 
 #define CHECK_ERROR_ON_WRITE(var, msg)\
-    if (err < 0) {\
-      QMessageBox::critical(this, tr("StatsGenerator"),\
-      tr("There was an error writing the " msg " to the HDF5 file"),\
-      QMessageBox::Ok,\
-      QMessageBox::Ok);\
-      return err;\
-      }
+  if (err < 0) {\
+    QMessageBox::critical(this, tr("StatsGenerator"),\
+                          tr("There was an error writing the " msg " to the HDF5 file"),\
+                          QMessageBox::Ok,\
+                          QMessageBox::Ok);\
+    return err;\
+  }
 
 
 #define CHECK_STATS_READ_ERROR(err, group, dataset)\
-if (err < 0) {\
-  qDebug() << "MatrixPhaseWidget::on_actionOpen_triggered Error: Could not read '" << group << "' data set '" << dataset << "'" << "\n";\
-  qDebug() << "  File: " << __FILE__ << "\n";\
-  qDebug() << "  Line: " << __LINE__ << "\n";\
-  return err;\
-}
+  if (err < 0) {\
+    qDebug() << "MatrixPhaseWidget::on_actionOpen_triggered Error: Could not read '" << group << "' data set '" << dataset << "'" << "\n";\
+    qDebug() << "  File: " << __FILE__ << "\n";\
+    qDebug() << "  Line: " << __LINE__ << "\n";\
+    return err;\
+  }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-MatrixPhaseWidget::MatrixPhaseWidget(QWidget *parent) :
-SGWidget(parent),
-m_PhaseType(DREAM3D::PhaseType::PrimaryPhase),
-m_CrystalStructure(Ebsd::CrystalStructure::Cubic_High),
-m_PhaseIndex(0),
-m_PhaseFraction(1.0),
-m_TotalPhaseFraction(1.0),
-m_grid(NULL)
+MatrixPhaseWidget::MatrixPhaseWidget(QWidget* parent) :
+  SGWidget(parent),
+  m_PhaseType(DREAM3D::PhaseType::PrimaryPhase),
+  m_CrystalStructure(Ebsd::CrystalStructure::Cubic_High),
+  m_PhaseIndex(0),
+  m_PhaseFraction(1.0),
+  m_TotalPhaseFraction(1.0),
+  m_grid(NULL)
 {
   setupUi(this);
   setupGui();
@@ -151,8 +151,8 @@ int MatrixPhaseWidget::gatherStatsData(AttributeMatrix::Pointer attrMat)
   if (m_PhaseIndex < 1)
   {
     QMessageBox::critical(this, tr("StatsGenerator"),
-                                  tr("The Phase Index is Less than 1. This is not allowed."),
-                                  QMessageBox::Default);
+                          tr("The Phase Index is Less than 1. This is not allowed."),
+                          QMessageBox::Default);
     return -1;
   }
   int retErr = 0;

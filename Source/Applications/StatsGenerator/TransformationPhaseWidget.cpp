@@ -79,39 +79,39 @@
 
 
 #define CHECK_ERROR_ON_WRITE(var, msg)\
-    if (err < 0) {\
-      QMessageBox::critical(this, tr("StatsGenerator"),\
-      tr("There was an error writing the " msg " to the HDF5 file"),\
-      QMessageBox::Ok,\
-      QMessageBox::Ok);\
-      return err;\
-      }
+  if (err < 0) {\
+    QMessageBox::critical(this, tr("StatsGenerator"),\
+                          tr("There was an error writing the " msg " to the HDF5 file"),\
+                          QMessageBox::Ok,\
+                          QMessageBox::Ok);\
+    return err;\
+  }
 
 
 #define CHECK_STATS_READ_ERROR(err, group, dataset)\
-if (err < 0) {\
-  qDebug() << "TransformationPhaseWidget::on_actionOpen_triggered Error: Could not read '" << group << "' data set '" << dataset << "'" << "\n";\
-  qDebug() << "  File: " << __FILE__ << "\n";\
-  qDebug() << "  Line: " << __LINE__ << "\n";\
-  return err;\
-}
+  if (err < 0) {\
+    qDebug() << "TransformationPhaseWidget::on_actionOpen_triggered Error: Could not read '" << group << "' data set '" << dataset << "'" << "\n";\
+    qDebug() << "  File: " << __FILE__ << "\n";\
+    qDebug() << "  Line: " << __LINE__ << "\n";\
+    return err;\
+  }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-TransformationPhaseWidget::TransformationPhaseWidget(QWidget *parent) :
-SGWidget(parent),
-m_PhaseType(DREAM3D::PhaseType::PrimaryPhase),
-m_PhaseFraction(1.0),
-m_TotalPhaseFraction(1.0),
-m_ParentPhase(0),
-m_DataHasBeenGenerated(false),
-m_PhaseIndex(0),
-m_CrystalStructure(Ebsd::CrystalStructure::Cubic_High),
-m_SizeDistributionCurve(NULL),
-m_CutOffMin(NULL),
-m_CutOffMax(NULL),
-m_grid(NULL)
+TransformationPhaseWidget::TransformationPhaseWidget(QWidget* parent) :
+  SGWidget(parent),
+  m_PhaseType(DREAM3D::PhaseType::PrimaryPhase),
+  m_PhaseFraction(1.0),
+  m_TotalPhaseFraction(1.0),
+  m_ParentPhase(0),
+  m_DataHasBeenGenerated(false),
+  m_PhaseIndex(0),
+  m_CrystalStructure(Ebsd::CrystalStructure::Cubic_High),
+  m_SizeDistributionCurve(NULL),
+  m_CutOffMin(NULL),
+  m_CutOffMax(NULL),
+  m_grid(NULL)
 {
   setupUi(this);
   setupGui();
@@ -191,69 +191,69 @@ void TransformationPhaseWidget::setupGui()
 
   StatsGenPlotWidget* w = m_Omega3Plot;
 
-   w->setPlotTitle(QString("Size Vs. Omega 3"));
-   w->setXAxisName(QString("Omega 3"));
-   w->setYAxisName(QString("Frequency"));
-   w->setDistributionType(DREAM3D::DistributionType::Beta);
-   w->setStatisticsType(DREAM3D::StatisticsType::Feature_SizeVOmega3);
-   w->blockDistributionTypeChanges(true);
-   w->setRowOperationEnabled(false);
-   w->setMu(mu);
-   w->setSigma(sigma);
-   w->setMinCutOff(minCutOff);
-   w->setMaxCutOff(maxCutOff);
-   w->setBinStep(binStepSize);
-   connect(m_Omega3Plot, SIGNAL(userEditedData()),
-           this, SLOT(dataWasEdited()));
+  w->setPlotTitle(QString("Size Vs. Omega 3"));
+  w->setXAxisName(QString("Omega 3"));
+  w->setYAxisName(QString("Frequency"));
+  w->setDistributionType(DREAM3D::DistributionType::Beta);
+  w->setStatisticsType(DREAM3D::StatisticsType::Feature_SizeVOmega3);
+  w->blockDistributionTypeChanges(true);
+  w->setRowOperationEnabled(false);
+  w->setMu(mu);
+  w->setSigma(sigma);
+  w->setMinCutOff(minCutOff);
+  w->setMaxCutOff(maxCutOff);
+  w->setBinStep(binStepSize);
+  connect(m_Omega3Plot, SIGNAL(userEditedData()),
+          this, SLOT(dataWasEdited()));
 
 
-   w = m_BOverAPlot;
-   w->setPlotTitle(QString("B/A Shape Distribution"));
-   w->setXAxisName(QString("B/A"));
-   w->setYAxisName(QString("Frequency"));
-   w->setDistributionType(DREAM3D::DistributionType::Beta);
-   w->setStatisticsType(DREAM3D::StatisticsType::Feature_SizeVBoverA);
-   w->blockDistributionTypeChanges(true);
-   w->setRowOperationEnabled(false);
-   w->setMu(mu);
-   w->setSigma(sigma);
-   w->setMinCutOff(minCutOff);
-   w->setMaxCutOff(maxCutOff);
-   w->setBinStep(binStepSize);
-   connect(m_BOverAPlot, SIGNAL(userEditedData()),
-           this, SLOT(dataWasEdited()));
+  w = m_BOverAPlot;
+  w->setPlotTitle(QString("B/A Shape Distribution"));
+  w->setXAxisName(QString("B/A"));
+  w->setYAxisName(QString("Frequency"));
+  w->setDistributionType(DREAM3D::DistributionType::Beta);
+  w->setStatisticsType(DREAM3D::StatisticsType::Feature_SizeVBoverA);
+  w->blockDistributionTypeChanges(true);
+  w->setRowOperationEnabled(false);
+  w->setMu(mu);
+  w->setSigma(sigma);
+  w->setMinCutOff(minCutOff);
+  w->setMaxCutOff(maxCutOff);
+  w->setBinStep(binStepSize);
+  connect(m_BOverAPlot, SIGNAL(userEditedData()),
+          this, SLOT(dataWasEdited()));
 
-   w = m_COverAPlot;
-   w->setPlotTitle(QString("C/A Shape Distribution"));
-   w->setXAxisName(QString("C/A"));
-   w->setYAxisName(QString("Frequency"));
-   w->setDistributionType(DREAM3D::DistributionType::Beta);
-   w->setStatisticsType(DREAM3D::StatisticsType::Feature_SizeVCoverA);
-   w->blockDistributionTypeChanges(true);
-   w->setRowOperationEnabled(false);
-   w->setMu(mu);
-   w->setSigma(sigma);
-   w->setMinCutOff(minCutOff);
-   w->setMaxCutOff(maxCutOff);
-   w->setBinStep(binStepSize);
-   connect(m_COverAPlot, SIGNAL(userEditedData()),
-           this, SLOT(dataWasEdited()));
+  w = m_COverAPlot;
+  w->setPlotTitle(QString("C/A Shape Distribution"));
+  w->setXAxisName(QString("C/A"));
+  w->setYAxisName(QString("Frequency"));
+  w->setDistributionType(DREAM3D::DistributionType::Beta);
+  w->setStatisticsType(DREAM3D::StatisticsType::Feature_SizeVCoverA);
+  w->blockDistributionTypeChanges(true);
+  w->setRowOperationEnabled(false);
+  w->setMu(mu);
+  w->setSigma(sigma);
+  w->setMinCutOff(minCutOff);
+  w->setMaxCutOff(maxCutOff);
+  w->setBinStep(binStepSize);
+  connect(m_COverAPlot, SIGNAL(userEditedData()),
+          this, SLOT(dataWasEdited()));
 
-   w = m_NeighborPlot;
-   w->setPlotTitle(QString("Neighbors Distributions"));
-   w->setXAxisName(QString("Number of Features (within 1 diameter)"));
-   w->setYAxisName(QString("Frequency"));
-   w->setDistributionType(DREAM3D::DistributionType::LogNormal);
-   w->setStatisticsType(DREAM3D::StatisticsType::Feature_SizeVNeighbors);
-   w->blockDistributionTypeChanges(true);
-   w->setRowOperationEnabled(false);
-   w->setMu(mu);
-   w->setSigma(sigma);
-   w->setMinCutOff(minCutOff);
-   w->setMaxCutOff(maxCutOff);
-   w->setBinStep(binStepSize);
-   connect(m_NeighborPlot, SIGNAL(userEditedData()),
-           this, SLOT(dataWasEdited()));
+  w = m_NeighborPlot;
+  w->setPlotTitle(QString("Neighbors Distributions"));
+  w->setXAxisName(QString("Number of Features (within 1 diameter)"));
+  w->setYAxisName(QString("Frequency"));
+  w->setDistributionType(DREAM3D::DistributionType::LogNormal);
+  w->setStatisticsType(DREAM3D::StatisticsType::Feature_SizeVNeighbors);
+  w->blockDistributionTypeChanges(true);
+  w->setRowOperationEnabled(false);
+  w->setMu(mu);
+  w->setSigma(sigma);
+  w->setMinCutOff(minCutOff);
+  w->setMaxCutOff(maxCutOff);
+  w->setBinStep(binStepSize);
+  connect(m_NeighborPlot, SIGNAL(userEditedData()),
+          this, SLOT(dataWasEdited()));
 
 
   m_SizeDistributionPlot->setCanvasBackground(QColor(Qt::white));
@@ -346,7 +346,7 @@ QString TransformationPhaseWidget::getComboString()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int TransformationPhaseWidget::gatherSizeDistributionFromGui(float &mu, float &sigma, float &minCutOff, float &maxCutOff, float &stepSize)
+int TransformationPhaseWidget::gatherSizeDistributionFromGui(float& mu, float& sigma, float& minCutOff, float& maxCutOff, float& stepSize)
 {
   bool ok = false;
   mu = m_Mu_SizeDistribution->text().toFloat(&ok);
@@ -366,10 +366,10 @@ int TransformationPhaseWidget::gatherSizeDistributionFromGui(float &mu, float &s
   }
 
   maxCutOff = m_MaxSigmaCutOff->text().toFloat(&ok);
-   if (ok == false)
-   {
-     return 0;
-   }
+  if (ok == false)
+  {
+    return 0;
+  }
 
   stepSize = m_BinStepSize->text().toFloat(&ok);
   if (ok == false)
@@ -405,10 +405,10 @@ void TransformationPhaseWidget::dataWasEdited()
 // -----------------------------------------------------------------------------
 void TransformationPhaseWidget::setWidgetListEnabled(bool b)
 {
-  foreach (QWidget* w, m_WidgetList)
-    {
-      w->setEnabled(b);
-    }
+  foreach (QWidget * w, m_WidgetList)
+  {
+    w->setEnabled(b);
+  }
 }
 
 
@@ -437,7 +437,7 @@ void TransformationPhaseWidget::on_m_GenerateDefaultData_clicked()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void TransformationPhaseWidget::on_m_Mu_SizeDistribution_textChanged(const QString &text)
+void TransformationPhaseWidget::on_m_Mu_SizeDistribution_textChanged(const QString& text)
 {
   updateSizeDistributionPlot();
   m_Mu_SizeDistribution->setFocus();
@@ -446,7 +446,7 @@ void TransformationPhaseWidget::on_m_Mu_SizeDistribution_textChanged(const QStri
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void TransformationPhaseWidget::on_m_Sigma_SizeDistribution_textChanged(const QString &text)
+void TransformationPhaseWidget::on_m_Sigma_SizeDistribution_textChanged(const QString& text)
 {
   updateSizeDistributionPlot();
   m_Sigma_SizeDistribution->setFocus();
@@ -456,7 +456,7 @@ void TransformationPhaseWidget::on_m_Sigma_SizeDistribution_textChanged(const QS
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void TransformationPhaseWidget::on_m_MinSigmaCutOff_textChanged(const QString &text)
+void TransformationPhaseWidget::on_m_MinSigmaCutOff_textChanged(const QString& text)
 {
   updateSizeDistributionPlot();
   m_MinSigmaCutOff->setFocus();
@@ -466,7 +466,7 @@ void TransformationPhaseWidget::on_m_MinSigmaCutOff_textChanged(const QString &t
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void TransformationPhaseWidget::on_m_MaxSigmaCutOff_textChanged(const QString &text)
+void TransformationPhaseWidget::on_m_MaxSigmaCutOff_textChanged(const QString& text)
 {
   updateSizeDistributionPlot();
   m_MaxSigmaCutOff->setFocus();
@@ -518,14 +518,14 @@ int TransformationPhaseWidget::calculateNumberOfBins(float mu, float sigma, floa
 //
 // -----------------------------------------------------------------------------
 int TransformationPhaseWidget::computeBinsAndCutOffs( float mu, float sigma,
-                                     float minCutOff, float maxCutOff,
-                                     float binStepSize,
-                                     QwtArray<float> &binsizes,
-                                     QwtArray<float> &xCo,
-                                     QwtArray<float> &yCo,
-                                     float &xMax, float &yMax,
-                                     QwtArray<float> &x,
-                                     QwtArray<float> &y)
+                                                      float minCutOff, float maxCutOff,
+                                                      float binStepSize,
+                                                      QwtArray<float>& binsizes,
+                                                      QwtArray<float>& xCo,
+                                                      QwtArray<float>& yCo,
+                                                      float& xMax, float& yMax,
+                                                      QwtArray<float>& x,
+                                                      QwtArray<float>& y)
 {
   int err = 0;
   int size = 250;
@@ -697,15 +697,15 @@ void TransformationPhaseWidget::plotSizeDistribution()
 
 
 #define SGWIGET_WRITE_ERROR_CHECK(var)\
-    if (err < 0)  {\
-      QString msg ("Error Writing Data ");\
-      msg.append((var));\
-      msg.append(" to the HDF5 file");\
-      QMessageBox::critical(this, tr("StatsGenerator"),\
-                                    msg,\
-                                    QMessageBox::Default);\
-      retErr = -1;\
-    }
+  if (err < 0)  {\
+    QString msg ("Error Writing Data ");\
+    msg.append((var));\
+    msg.append(" to the HDF5 file");\
+    QMessageBox::critical(this, tr("StatsGenerator"),\
+                          msg,\
+                          QMessageBox::Default);\
+    retErr = -1;\
+  }
 
 // -----------------------------------------------------------------------------
 //
@@ -715,8 +715,8 @@ int TransformationPhaseWidget::gatherStatsData(AttributeMatrix::Pointer attrMat)
   if (m_PhaseIndex < 1)
   {
     QMessageBox::critical(this, tr("StatsGenerator"),
-                                  tr("The Phase Index is Less than 1. This is not allowed."),
-                                  QMessageBox::Default);
+                          tr("The Phase Index is Less than 1. This is not allowed."),
+                          QMessageBox::Default);
     return -1;
   }
   int retErr = 0;
@@ -725,7 +725,7 @@ int TransformationPhaseWidget::gatherStatsData(AttributeMatrix::Pointer attrMat)
   float sigma = 1.0f;
   float minCutOff = 1.0f;
   float maxCutOff = 1.0f;
- // float stepSize = 1.0f;
+// float stepSize = 1.0f;
   float binStep = 1.0f;
   gatherSizeDistributionFromGui(mu, sigma, minCutOff, maxCutOff, binStep);
   float calcPhaseFraction = m_PhaseFraction / m_TotalPhaseFraction;
@@ -854,7 +854,7 @@ void TransformationPhaseWidget::extractStatsData(AttributeMatrix::Pointer attrMa
   m_COverAPlot->setCrystalStructure(m_CrystalStructure);
   m_NeighborPlot->setCrystalStructure(m_CrystalStructure);
   m_ODFWidget->setCrystalStructure(m_CrystalStructure);
- // m_AxisODFWidget->setCrystalStructure(m_CrystalStructure);
+// m_AxisODFWidget->setCrystalStructure(m_CrystalStructure);
 
 
   /* SEt the BinNumbers data set */
@@ -883,8 +883,8 @@ void TransformationPhaseWidget::extractStatsData(AttributeMatrix::Pointer attrMa
   m_Mu_SizeDistribution->blockSignals(false);
   m_Sigma_SizeDistribution->blockSignals(false);
 
-  minCutOff = (mu - log(minFeatureSize))/sigma;
-  maxCutOff = (log(maxFeatureSize) - mu)/sigma;
+  minCutOff = (mu - log(minFeatureSize)) / sigma;
+  maxCutOff = (log(maxFeatureSize) - mu) / sigma;
 
   m_MinSigmaCutOff->blockSignals(true);
   m_MinSigmaCutOff->setText(QString::number(minCutOff));

@@ -373,7 +373,7 @@ void AngReader::readData(QFile& in, QByteArray& buf)
   {
     this->parseDataLine(buf, i);
 
-    if (fabs(m_Y[i]-oldY)>1e-6)
+    if (fabs(m_Y[i] - oldY) > 1e-6)
     {
       ++yChange;
       oldY =  m_Y[i];
@@ -384,10 +384,10 @@ void AngReader::readData(QFile& in, QByteArray& buf)
     {
       col++;
     }
-    if (yChange == 0) ++nxOdd;
-    if (yChange == 1) ++nxEven;
+    if (yChange == 0) { ++nxOdd; }
+    if (yChange == 1) { ++nxEven; }
 
-  //  ::memset(buf, 0, bufSize); // Clear the buffer
+    //  ::memset(buf, 0, bufSize); // Clear the buffer
     buf = in.readLine();
     ++counter;
     if (in.atEnd() == true)

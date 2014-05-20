@@ -373,6 +373,92 @@ bool fixFile( AbstractFilter::Pointer filter, const QString& hFile, const QStrin
   return didReplace;
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void fixFilterParameter(QStringListIterator &sourceLines, QStringList &outLines, const QString& searchString, const QString& line)
+{
+
+  int offset = line.indexOf(searchString);
+
+  // Get the substring
+  QString substring = line.mid(offset);
+
+  // Split by commas. Hope no commas are within double quotes
+  QStringList tokens = substring.split(",");
+
+  // Get the 2nd argument
+  QString second = tokens.at(1);
+  second = second.replace("\"", "");
+  second = second.trimmed();
+
+  QString third = " \"\"";
+  if(second.isEmpty() == false) {
+     third = " get" + second + "()";
+  }
+  tokens[3] = third;
+
+  QString final = line.left(offset);
+  final = final + tokens.at(0);
+  for(qint32 i = 1; i < tokens.size(); i++)
+  {
+    final = final + "," + tokens.at(i);
+  }
+
+  outLines.push_back(final);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+bool fixFilterParameters( AbstractFilter::Pointer filter, const QString& hFile, const QString& cppFile)
+{
+  QString contents;
+  {
+    // Read the Source File
+//    QFileInfo fi(cppFile);
+//    if (fi.baseName().compare("AdjustVolumeOrigin") != 0)
+//    {
+//      return false;
+//    }
+
+    QFile source(cppFile);
+    source.open(QFile::ReadOnly);
+    contents = source.readAll();
+    source.close();
+  }
+
+
+  QStringList names;
+  bool didReplace = false;
+
+  QString searchString = "(FilterParameter::New(";
+  QStringList outLines;
+  QStringList list = contents.split(QRegExp("\\n"));
+  QStringListIterator sourceLines(list);
+
+  int index = 0;
+  while (sourceLines.hasNext())
+  {
+    QString line = sourceLines.next();
+    if(line.contains(searchString) )
+    {
+      fixFilterParameter(sourceLines, outLines, searchString, line);
+      didReplace = true;
+    }
+    else
+    {
+      outLines.push_back(line);
+    }
+  }
+
+
+  writeOutput(didReplace, outLines, cppFile);
+  index++;
+
+  return didReplace;
+}
+
 
 // -----------------------------------------------------------------------------
 //
@@ -426,7 +512,8 @@ void GenerateFilterParametersCode()
     QString cpp = findPath(filter->getGroupName(), filter->getNameOfClass(), ".cpp");
     QString h = findPath(filter->getGroupName(), filter->getNameOfClass(), ".h");
 
-    fixFile(filter, h, cpp);
+    //fixFile(filter, h, cpp);
+    fixFilterParameters(filter, h, cpp);
   }
 
 }

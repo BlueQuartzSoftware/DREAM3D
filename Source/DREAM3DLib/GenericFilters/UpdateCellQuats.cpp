@@ -68,10 +68,10 @@ UpdateCellQuats::~UpdateCellQuats()
 void UpdateCellQuats::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "QString", true));
-  parameters.push_back(FilterParameter::New("Quats5", "Quats5ArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
-  parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "QString", true));
-  parameters.push_back(FilterParameter::New("Quats", "QuatsArrayName", FilterParameterWidgetType::StringWidget, "QString", true, ""));
+  parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
+  parameters.push_back(FilterParameter::New("Quats5", "Quats5ArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getQuats5ArrayPath(), true, ""));
+  parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
+  parameters.push_back(FilterParameter::New("Quats", "QuatsArrayName", FilterParameterWidgetType::StringWidget, getQuatsArrayName(), true, ""));
   setFilterParameters(parameters);
 }
 
@@ -107,13 +107,15 @@ void UpdateCellQuats::dataCheck()
   QVector<size_t> dims(1, 5);
   m_Quats5Ptr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getQuats5ArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_Quats5Ptr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
-  { m_Quats5 = m_Quats5Ptr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-  oldQuats = DataArray<float>::CreateArray(m_Quats5Ptr.lock()->getNumberOfTuples(), m_Quats5Ptr.lock()->getComponentDimensions(), m_QuatsPtr.lock()->getName());
-  float* quats5 = oldQuats->getPointer(0);
-  size_t totalElements = m_Quats5Ptr.lock()->getNumberOfTuples()*m_Quats5Ptr.lock()->getNumberOfComponents();
-  for(int iter=0;iter<totalElements;iter++)
   {
-    quats5[iter] = m_Quats5[iter];
+    m_Quats5 = m_Quats5Ptr.lock()->getPointer(0); /* Now assign the raw pointer to data from the DataArray<T> object */
+    oldQuats = DataArray<float>::CreateArray(m_Quats5Ptr.lock()->getNumberOfTuples(), m_Quats5Ptr.lock()->getComponentDimensions(), m_QuatsPtr.lock()->getName());
+    float* quats5 = oldQuats->getPointer(0);
+    size_t totalElements = m_Quats5Ptr.lock()->getNumberOfTuples() * m_Quats5Ptr.lock()->getNumberOfComponents();
+    for(int iter = 0; iter < totalElements; iter++)
+    {
+      quats5[iter] = m_Quats5[iter];
+    }
   }
   dims[0] = 4;
   tempPath.update(getQuats5ArrayPath().getDataContainerName(), getQuats5ArrayPath().getAttributeMatrixName(), getQuatsArrayName() );

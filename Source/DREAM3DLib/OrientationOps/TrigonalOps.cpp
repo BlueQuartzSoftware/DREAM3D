@@ -327,6 +327,15 @@ void TrigonalOps::determineEulerAngles(int choose, float& synea1, float& synea2,
   OrientationMath::RodtoEuler(r1, r2, r3, synea1, synea2, synea3);
 }
 
+void TrigonalOps::randomizeEulerAngles(float& synea1, float& synea2, float& synea3)
+{
+  QuatF q;
+  QuatF qc;
+  OrientationMath::EulertoQuat(synea1, synea2, synea3, q);
+  int symOp = k_NumSymQuats * rand();
+  QuaternionMathF::Multiply(q, TrigQuatSym[symOp], qc);
+  OrientationMath::QuattoEuler(qc, synea1, synea2, synea3);
+}
 
 void TrigonalOps::determineRodriguesVector( int choose, float& r1, float& r2, float& r3)
 {

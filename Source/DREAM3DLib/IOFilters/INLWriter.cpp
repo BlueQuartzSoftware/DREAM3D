@@ -92,12 +92,12 @@ INLWriter::~INLWriter()
 void INLWriter::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(FilterParameter::New("Output File", "OutputFile", FilterParameterWidgetType::OutputFileWidget,"QString", false, "", "*.txt", "INL Format"));
-  parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "QString", true));
-  parameters.push_back(FilterParameter::New("FeatureIds", "FeatureIdsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
-  parameters.push_back(FilterParameter::New("CellPhases", "CellPhasesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
-  parameters.push_back(FilterParameter::New("CrystalStructures", "CrystalStructuresArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
-  parameters.push_back(FilterParameter::New("CellEulerAngles", "CellEulerAnglesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
+  parameters.push_back(FilterParameter::New("Output File", "OutputFile", FilterParameterWidgetType::OutputFileWidget, getOutputFile(), false, "", "*.txt", "INL Format"));
+  parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
+  parameters.push_back(FilterParameter::New("FeatureIds", "FeatureIdsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeatureIdsArrayPath(), true, ""));
+  parameters.push_back(FilterParameter::New("CellPhases", "CellPhasesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getCellPhasesArrayPath(), true, ""));
+  parameters.push_back(FilterParameter::New("CrystalStructures", "CrystalStructuresArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getCrystalStructuresArrayPath(), true, ""));
+  parameters.push_back(FilterParameter::New("CellEulerAngles", "CellEulerAnglesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getCellEulerAnglesArrayPath(), true, ""));
   setFilterParameters(parameters);
 }
 
@@ -161,14 +161,18 @@ void INLWriter::dataCheck()
   if( NULL != m_CellEulerAnglesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_CellEulerAngles = m_CellEulerAnglesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
-  IDataArray::Pointer materialNamePtr = getDataContainerArray()->getAttributeMatrix(getCrystalStructuresArrayPath())->getAttributeArray(DREAM3D::EnsembleData::MaterialName);
-  StringDataArray* materialNames = StringDataArray::SafePointerDownCast(materialNamePtr.get());
-  if (NULL == materialNames)
+  AttributeMatrix::Pointer attrMat = getDataContainerArray()->getAttributeMatrix(getCrystalStructuresArrayPath());
+  if(NULL != attrMat.get())
   {
+    IDataArray::Pointer materialNamePtr = attrMat->getAttributeArray(DREAM3D::EnsembleData::MaterialName);
+    StringDataArray* materialNames = StringDataArray::SafePointerDownCast(materialNamePtr.get());
+    if (NULL == materialNames)
+    {
 
-    QString ss = QObject::tr("%1 requires the %2 Ensemble array to be present in the Data Container.").arg(ClassName()).arg(DREAM3D::EnsembleData::MaterialName);
-    notifyErrorMessage(getHumanLabel(), ss, -1111);
-    setErrorCondition(-1111);
+      QString ss = QObject::tr("%1 requires the %2 Ensemble array to be present in the Data Container.").arg(ClassName()).arg(DREAM3D::EnsembleData::MaterialName);
+      notifyErrorMessage(getHumanLabel(), ss, -1111);
+      setErrorCondition(-1111);
+    }
   }
 }
 
@@ -254,7 +258,7 @@ int INLWriter::writeFile()
   fprintf(f, "# Z_DIM: %llu\r\n", static_cast<unsigned long long int>(dims[2]));
   fprintf(f, "#\r\n");
 
-// IDataArray::Pointer pDataPtr = m->getCellEnsembleData(DREAM3D::EnsembleData::PhaseTypes);
+  // IDataArray::Pointer pDataPtr = m->getCellEnsembleData(DREAM3D::EnsembleData::PhaseTypes);
   IDataArray::Pointer materialNamePtr = getDataContainerArray()->getAttributeMatrix(getCrystalStructuresArrayPath())->getAttributeArray(DREAM3D::EnsembleData::MaterialName);
   StringDataArray* materialNames = StringDataArray::SafePointerDownCast(materialNamePtr.get());
   if (NULL == materialNames)

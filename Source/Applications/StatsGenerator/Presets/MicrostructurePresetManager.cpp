@@ -13,8 +13,8 @@
  * list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
  *
- * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force, 
- * BlueQuartz Software nor the names of its contributors may be used to endorse 
+ * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
+ * BlueQuartz Software nor the names of its contributors may be used to endorse
  * or promote products derived from this software without specific prior written
  * permission.
  *
@@ -71,9 +71,9 @@ MicrostructurePresetManager::Pointer MicrostructurePresetManager::instance()
 void MicrostructurePresetManager::registerKnownFactories()
 {
 #if 0
-    //Register to be able to import Tiff images
-    AbstractMicrostructurePreset::Pointer h5TiffMicrostructurePresetFactory ( new H5TiffMicrostructurePresetFactory() );
-    MicrostructurePresetManager::registerFactory(h5TiffMicrostructurePresetFactory);
+  //Register to be able to import Tiff images
+  AbstractMicrostructurePreset::Pointer h5TiffMicrostructurePresetFactory ( new H5TiffMicrostructurePresetFactory() );
+  MicrostructurePresetManager::registerFactory(h5TiffMicrostructurePresetFactory);
 #endif
 
 
@@ -95,7 +95,7 @@ void MicrostructurePresetManager::registerFactory(AbstractMicrostructurePresetFa
 // -----------------------------------------------------------------------------
 //  Static Method
 // -----------------------------------------------------------------------------
-AbstractMicrostructurePreset::Pointer MicrostructurePresetManager::createNewPreset(const QString &classname)
+AbstractMicrostructurePreset::Pointer MicrostructurePresetManager::createNewPreset(const QString& classname)
 {
   MicrostructurePresetManager::Pointer idManager = MicrostructurePresetManager::instance();
   return idManager->createPreset( classname );
@@ -105,7 +105,7 @@ AbstractMicrostructurePreset::Pointer MicrostructurePresetManager::createNewPres
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractMicrostructurePreset::Pointer MicrostructurePresetManager::createPreset(const QString &classname)
+AbstractMicrostructurePreset::Pointer MicrostructurePresetManager::createPreset(const QString& classname)
 {
   //std::cout << "MicrostructurePresetManager::newMicrostructurePreset -> Trying to create MicrostructurePreset for '" << classname << "'" << std::endl;
   AbstractMicrostructurePreset::Pointer MicrostructurePreset;
@@ -131,7 +131,7 @@ void MicrostructurePresetManager::addFactory(AbstractMicrostructurePresetFactory
 // -----------------------------------------------------------------------------
 // public Method
 // -----------------------------------------------------------------------------
-AbstractMicrostructurePresetFactory::Pointer MicrostructurePresetManager::getFactory(const QString &classname)
+AbstractMicrostructurePresetFactory::Pointer MicrostructurePresetManager::getFactory(const QString& classname)
 {
   for (AbstractMicrostructurePresetFactory::Collection::iterator iter = _factories.begin(); iter != _factories.end(); ++iter )
   {

@@ -91,7 +91,7 @@ class ConvertEulerAngles : public AbstractFilter
      */
     virtual void execute();
 
-signals:
+  signals:
     void updateFilterParameters(AbstractFilter* filter);
     void parametersChanged();
     void preflightAboutToExecute();

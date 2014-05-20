@@ -67,7 +67,7 @@ DataContainer::~DataContainer()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DataContainer::ReadDataContainerStructure(hid_t dcArrayGroupId, DataContainerArrayProxy &proxy, QString h5InternalPath)
+void DataContainer::ReadDataContainerStructure(hid_t dcArrayGroupId, DataContainerArrayProxy& proxy, QString h5InternalPath)
 {
   QList<QString> dataContainers;
   QH5Utilities::getGroupObjects(dcArrayGroupId, H5Utilities::H5Support_GROUP, dataContainers);
@@ -272,7 +272,7 @@ int DataContainer::readAttributeMatricesFromHDF5(bool preflight, hid_t dcGid, co
   QString amName;
   for(QMap<QString, AttributeMatrixProxy>::iterator iter = attrMatsToRead.begin(); iter != attrMatsToRead.end(); ++iter)
   {
-    if(iter.value().flag == Qt::Unchecked) continue;
+    if(iter.value().flag == Qt::Unchecked) { continue; }
     amName = iter.key();
     amType = DREAM3D::AttributeMatrixType::Unknown;
     err = QH5Lite::readScalarAttribute(dcGid, amName, DREAM3D::StringConstants::AttributeMatrixType, amType);
@@ -329,7 +329,7 @@ int DataContainer::writeMeshToHDF5(hid_t dcGid, bool writeXdmf)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int DataContainer::writeXdmf(QTextStream &out, QString hdfFileName)
+int DataContainer::writeXdmf(QTextStream& out, QString hdfFileName)
 {
   BOOST_ASSERT(false);
   return -1;

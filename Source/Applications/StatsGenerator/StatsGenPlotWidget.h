@@ -63,12 +63,12 @@ namespace UIA
 class StatsGenPlotWidget : public QWidget, private Ui::StatsGenPlotWidget
 {
 
-  Q_OBJECT
+    Q_OBJECT
 
   public:
 
 
-    StatsGenPlotWidget(QWidget *parent = 0);
+    StatsGenPlotWidget(QWidget* parent = 0);
     virtual ~StatsGenPlotWidget();
 
     void setPlotTitle(QString title);
@@ -76,7 +76,7 @@ class StatsGenPlotWidget : public QWidget, private Ui::StatsGenPlotWidget
     VectorOfFloatArray getStatisticsData();
 
     int extractStatsData(int index,
-                         QVector<float>  &binNumbers,
+                         QVector<float>&  binNumbers,
                          VectorOfFloatArray arrays);
 
     void setStatisticsType(unsigned int statsType);
@@ -91,9 +91,9 @@ class StatsGenPlotWidget : public QWidget, private Ui::StatsGenPlotWidget
 
     void setupGui();
 
-    void createBetaCurve(int tableRow, float &xMax, float &yMax);
-    void createLogNormalCurve(int tableRow, float &xMax, float &yMax);
-    void createPowerCurve(int tableRow, float &xMax, float &yMax);
+    void createBetaCurve(int tableRow, float& xMax, float& yMax);
+    void createLogNormalCurve(int tableRow, float& xMax, float& yMax);
+    void createPowerCurve(int tableRow, float& xMax, float& yMax);
     SGAbstractTableModel* tableModel();
 
 //    void setBins(QVector<float> &binValues);

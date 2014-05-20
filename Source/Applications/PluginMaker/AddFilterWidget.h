@@ -42,7 +42,7 @@
 
 class AddFilterWidget : public QDialog, public Ui::Dialog
 {
-  Q_OBJECT
+    Q_OBJECT
 
   public:
     AddFilterWidget(QWidget* parent = 0);
@@ -53,7 +53,7 @@ class AddFilterWidget : public QDialog, public Ui::Dialog
   protected slots:
     void on_addfilterOKButton_clicked();
     void on_addfilterCancelButton_clicked();
-    void on_filterName_textChanged(const QString & text);
+    void on_filterName_textChanged(const QString& text);
 
   private:
     bool BtnClicked;

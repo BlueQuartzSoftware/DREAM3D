@@ -81,7 +81,7 @@ AlignSections::~AlignSections()
 void AlignSections::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(FilterParameter::New("Alignment File", "AlignmentShiftFileName", FilterParameterWidgetType::OutputFileWidget,"QString", false));
+  parameters.push_back(FilterParameter::New("Alignment File", "AlignmentShiftFileName", FilterParameterWidgetType::OutputFileWidget, "QString", false));
   FilterParameter::Pointer param = parameters.back();
   param->setConditional(true);
   param->setConditionalProperty("WriteAlignmentShifts");

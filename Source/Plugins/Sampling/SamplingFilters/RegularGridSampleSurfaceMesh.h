@@ -59,7 +59,7 @@
  */
 class RegularGridSampleSurfaceMesh : public SampleSurfaceMesh
 {
-  Q_OBJECT
+    Q_OBJECT
   public:
     DREAM3D_SHARED_POINTERS(RegularGridSampleSurfaceMesh)
     DREAM3D_STATIC_NEW_MACRO(RegularGridSampleSurfaceMesh)

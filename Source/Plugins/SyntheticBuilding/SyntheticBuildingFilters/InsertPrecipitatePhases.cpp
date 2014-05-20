@@ -130,20 +130,20 @@ InsertPrecipitatePhases::~InsertPrecipitatePhases()
 void InsertPrecipitatePhases::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(FilterParameter::New("Periodic Boundary", "PeriodicBoundaries", FilterParameterWidgetType::BooleanWidget,"bool", false));
-  parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "QString", true));
-  parameters.push_back(FilterParameter::New("Cell Feature Attribute Matrix Name", "OutputCellFeatureAttributeMatrixName", FilterParameterWidgetType::AttributeMatrixSelectionWidget,"DataArrayPath", true));
-  parameters.push_back(FilterParameter::New("Statistics Array", "InputStatsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget,"DataArrayPath", true));
-  parameters.push_back(FilterParameter::New("Phase Types Array", "InputPhaseTypesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget,"DataArrayPath", true));
-  parameters.push_back(FilterParameter::New("Shape Types Array", "InputShapeTypesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget,"DataArrayPath", true));
-  parameters.push_back(FilterParameter::New("FeatureIds", "FeatureIdsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
-  parameters.push_back(FilterParameter::New("CellPhases", "CellPhasesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
-  parameters.push_back(FilterParameter::New("SurfaceVoxels", "SurfaceVoxelsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, "DataArrayPath", true, ""));
-  parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "QString", true));
-  parameters.push_back(FilterParameter::New("FeaturePhases", "FeaturePhasesArrayName", FilterParameterWidgetType::StringWidget, "QString", true, ""));
-  parameters.push_back(FilterParameter::New("NumFeatures", "NumFeaturesArrayName", FilterParameterWidgetType::StringWidget, "QString", true, ""));
+  parameters.push_back(FilterParameter::New("Periodic Boundary", "PeriodicBoundaries", FilterParameterWidgetType::BooleanWidget, getPeriodicBoundaries(), false));
+  parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
+  parameters.push_back(FilterParameter::New("Cell Feature Attribute Matrix Name", "OutputCellFeatureAttributeMatrixName", FilterParameterWidgetType::AttributeMatrixSelectionWidget, getOutputCellFeatureAttributeMatrixName(), true));
+  parameters.push_back(FilterParameter::New("Statistics Array", "InputStatsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getInputStatsArrayPath(), true));
+  parameters.push_back(FilterParameter::New("Phase Types Array", "InputPhaseTypesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getInputPhaseTypesArrayPath(), true));
+  parameters.push_back(FilterParameter::New("Shape Types Array", "InputShapeTypesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getInputShapeTypesArrayPath(), true));
+  parameters.push_back(FilterParameter::New("FeatureIds", "FeatureIdsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeatureIdsArrayPath(), true, ""));
+  parameters.push_back(FilterParameter::New("CellPhases", "CellPhasesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getCellPhasesArrayPath(), true, ""));
+  parameters.push_back(FilterParameter::New("SurfaceVoxels", "SurfaceVoxelsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getSurfaceVoxelsArrayPath(), true, ""));
+  parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
+  parameters.push_back(FilterParameter::New("FeaturePhases", "FeaturePhasesArrayName", FilterParameterWidgetType::StringWidget, getFeaturePhasesArrayName(), true, ""));
+  parameters.push_back(FilterParameter::New("NumFeatures", "NumFeaturesArrayName", FilterParameterWidgetType::StringWidget, getNumFeaturesArrayName(), true, ""));
 
-  parameters.push_back(FilterParameter::New("Goal Attribute CSV File", "CsvOutputFile", FilterParameterWidgetType::OutputFileWidget,"QString", false, "", "*.csv", "Comma Separated Data"));
+  parameters.push_back(FilterParameter::New("Goal Attribute CSV File", "CsvOutputFile", FilterParameterWidgetType::OutputFileWidget, getCsvOutputFile(), false, "", "*.csv", "Comma Separated Data"));
   FilterParameter::Pointer param = parameters.back();
   param->setConditional(true);
   param->setConditionalProperty("WriteGoalAttributes");
@@ -318,7 +318,7 @@ void InsertPrecipitatePhases::preflight()
   }
 
   AttributeMatrix::Pointer attrMat = getDataContainerArray()->getAttributeMatrix(getOutputCellFeatureAttributeMatrixName());
-  if(attrMat == NULL) return;
+  if(attrMat == NULL) { return; }
 
   attrMat->removeAttributeArray(m_EquivalentDiametersArrayName);
   attrMat->removeAttributeArray(m_Omega3sArrayName);
@@ -505,7 +505,7 @@ void  InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer featur
         QString ss = QObject::tr("Packing Precipitates - Generating Feature #%1").arg(currentnumfeatures);
         notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
 
-        tDims[0] = currentnumfeatures+1;
+        tDims[0] = currentnumfeatures + 1;
         m->getAttributeMatrix(m_OutputCellFeatureAttributeMatrixName.getAttributeMatrixName())->resizeAttributeArrays(tDims);
         updateFeatureInstancePointers();
         transfer_attributes(currentnumfeatures, &precip);
@@ -806,7 +806,7 @@ void InsertPrecipitatePhases::generate_precipitate(int phase, int seed, Precip* 
 {
   DREAM3D_RANDOMNG_NEW_SEEDED(seed)
 
-    StatsDataArray& statsDataArray = *(m_StatsDataArray.lock());
+  StatsDataArray& statsDataArray = *(m_StatsDataArray.lock());
 
   float r1 = 1;
   float a2 = 0, a3 = 0;
@@ -1924,7 +1924,7 @@ void InsertPrecipitatePhases::write_goal_attributes()
   int64_t numFeatures = m_FeaturePhasesPtr.lock()->getNumberOfTuples();
 
   QTextStream dStream(&outFile);
-  
+
   char space = ',';
   // Write the total number of features
   dStream << static_cast<qint32>(numFeatures - firstPrecipitateFeature);
