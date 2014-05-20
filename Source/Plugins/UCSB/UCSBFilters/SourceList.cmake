@@ -23,6 +23,7 @@ set(_PublicFilters
   CropSurfaceMesh
   TranslateSurfaceMesh
   SegmentBoundaries
+  DecimateSurfaceMesh
 )
 
 
