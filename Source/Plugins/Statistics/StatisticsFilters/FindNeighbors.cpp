@@ -92,7 +92,7 @@ void FindNeighbors::setupFilterParameters()
   param->setConditionalProperty("StoreSurfaceCells");
   param->setConditionalLabel("Store Surface Cells Array");
   parameters.push_back(FilterParameter::New("Surface Features Array Name", "SurfaceFeaturesArrayName", FilterParameterWidgetType::StringWidget, getSurfaceFeaturesArrayName(), true));
-  FilterParameter::Pointer param = parameters.back();
+  param = parameters.back();
   param->setConditional(true);
   param->setConditionalProperty("StoreSurfaceFeatures");
   param->setConditionalLabel("Store Surface Features Array");
