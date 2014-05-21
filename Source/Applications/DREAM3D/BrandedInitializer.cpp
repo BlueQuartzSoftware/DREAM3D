@@ -176,6 +176,8 @@ void BrandedInitializer::loadPlugins()
     m_PluginDirs << thePath;
     aPluginDir.cdUp();
     aPluginDir.cdUp();
+    // We need this because Apple (in their infinite wisdom) changed how the current working directory is set in OS X 10.9 and above. Thanks Apple.
+    chdir(aPluginDir.absolutePath().toLatin1().constData());
   }
   // aPluginDir.cd("Plugins");
   thePath = aPluginDir.absolutePath() + "/Plugins";

@@ -93,11 +93,13 @@ set(EbsdLib_SRCS
     ${EbsdLib_SOURCE_DIR}/H5EbsdVolumeInfo.cpp
     ${EbsdLib_SOURCE_DIR}/AbstractEbsdFields.cpp
     ${EbsdLib_SOURCE_DIR}/EbsdReader.cpp
+    ${EbsdLib_SOURCE_DIR}/EbsdTransform.cpp
     ${EbsdLib_SOURCE_DIR}/H5EbsdVolumeReader.cpp
     )
 set(EbsdLib_HDRS
     ${EbsdLib_SOURCE_DIR}/AbstractEbsdFields.h
     ${EbsdLib_SOURCE_DIR}/EbsdReader.h
+    ${EbsdLib_SOURCE_DIR}/EbsdTransform.h
     ${EbsdLib_SOURCE_DIR}/EbsdConstants.h
     ${EbsdLib_SOURCE_DIR}/EbsdHeaderEntry.h
     ${EbsdLib_SOURCE_DIR}/EbsdImporter.h

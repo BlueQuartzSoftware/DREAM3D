@@ -113,7 +113,7 @@ class MinSize : public AbstractFilter
     MinSize();
 
     int32_t* m_Neighbors;
-    size_t numFeatures;
+    size_t m_NumFeatures;
 
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, FeatureIds)
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, FeaturePhases)

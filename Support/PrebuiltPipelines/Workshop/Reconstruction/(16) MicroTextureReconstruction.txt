@@ -1,70 +1,88 @@
 [PipelineBuilder]
-Number_Filters=9
 Name=(16) MicroTextureReconstruction
+Number_Filters=7
+Version=5.0.6545
 
 [0]
 Filter_Name=ReadH5Ebsd
+Filter_Human_Label=Read H5Ebsd File
+DataContainerName=VolumeDataContainer
+CellAttributeMatrixName=CellData
+CellEnsembleAttributeMatrixName=CellEnsembleData
 InputFile=Data/Microtexture/MicrotexturedTi.h5ebsd
+RefFrameZDir=2
 ZStartIndex=0
 ZEndIndex=0
-UseTransformations=true
-ArraySelections_VoxelCell\size=6
-ArraySelections_VoxelCell\1\VoxelCell=Confidence Index
-ArraySelections_VoxelCell\2\VoxelCell=EulerAngles
-ArraySelections_VoxelCell\3\VoxelCell=Fit
-ArraySelections_VoxelCell\4\VoxelCell=Image Quality
-ArraySelections_VoxelCell\5\VoxelCell=Phases
-ArraySelections_VoxelCell\6\VoxelCell=SEM Signal
-ArraySelections_VoxelField\size=0
-ArraySelections_VoxelEnsemble\size=3
-ArraySelections_VoxelEnsemble\1\VoxelEnsemble=CrystalStructures
-ArraySelections_VoxelEnsemble\2\VoxelEnsemble=LatticeConstants
-ArraySelections_VoxelEnsemble\3\VoxelEnsemble=MaterialName
-ArraySelections_SurfaceMeshPoint\size=0
-ArraySelections_SurfaceMeshFace\size=0
-ArraySelections_SurfaceMeshEdge\size=0
-ArraySelections_SolidMeshPoint\size=0
-ArraySelections_SolidMeshFace\size=0
-ArraySelections_SolidMeshEnsemble\size=0
+UseTransformations=1
+ArraySelections_SelectedArrayNames\size=6
+ArraySelections_SelectedArrayNames\1\SelectedArrayNames=EulerAngles
+ArraySelections_SelectedArrayNames\2\SelectedArrayNames=Phases
+ArraySelections_SelectedArrayNames\3\SelectedArrayNames=SEM Signal
+ArraySelections_SelectedArrayNames\4\SelectedArrayNames=Confidence Index
+ArraySelections_SelectedArrayNames\5\SelectedArrayNames=Fit
+ArraySelections_SelectedArrayNames\6\SelectedArrayNames=Image Quality
 
 [1]
-Filter_Name=SingleThresholdCells
-SelectedCellArrayName=Confidence Index
-ComparisonOperator=1
-ComparisonValue=0
-OutputArrayName=GoodVoxels
+Filter_Name=MultiThresholdObjects
+Filter_Human_Label=Threshold Objects
+DestinationArrayName=GoodVoxels
+SelectedThresholds\size=1
+SelectedThresholds\1\DataContainerName=VolumeDataContainer
+SelectedThresholds\1\AttributeMatrixName=CellData
+SelectedThresholds\1\AttributeArrayName=Confidence Index
+SelectedThresholds\1\CompOperator=1
+SelectedThresholds\1\CompValue=0
 
 [2]
 Filter_Name=FindCellQuats
+Filter_Human_Label=Find Cell Quaternions
+QuatsArrayName=Quats
+CrystalStructuresArrayPath=VolumeDataContainer|CellEnsembleData|CrystalStructures
+CellPhasesArrayPath=VolumeDataContainer|CellData|Phases
+CellEulerAnglesArrayPath=VolumeDataContainer|CellData|EulerAngles
 
 [3]
-Filter_Name=EBSDSegmentGrains
+Filter_Name=EBSDSegmentFeatures
+Filter_Human_Label=Segment Features (Misorientation)
+CellFeatureAttributeMatrixName=CellFeatureData
+ActiveArrayName=Active
+FeatureIdsArrayName=GrainIds(Miso)
+QuatsArrayPath=VolumeDataContainer|CellData|Quats
+CrystalStructuresArrayPath=VolumeDataContainer|CellEnsembleData|CrystalStructures
+CellPhasesArrayPath=VolumeDataContainer|CellData|Phases
+GoodVoxelsArrayPath=VolumeDataContainer|CellData|GoodVoxels
+UseGoodVoxels=1
 MisorientationTolerance=5
 
 [4]
-Filter_Name=RenameCellArray
-SelectedCellArrayName=GrainIds
-NewCellArrayName=GraindIds(Miso)
+Filter_Name=CAxisSegmentFeatures
+Filter_Human_Label=Segment Features (C-Axis Misorientation)
+CellFeatureAttributeMatrixName=CellFeatureData_caxis
+ActiveArrayName=Active
+FeatureIdsArrayName=GrainIDs(C-Axis)
+QuatsArrayPath=VolumeDataContainer|CellData|Quats
+CrystalStructuresArrayPath=VolumeDataContainer|CellEnsembleData|CrystalStructures
+CellPhasesArrayPath=VolumeDataContainer|CellData|Phases
+GoodVoxelsArrayPath=VolumeDataContainer|CellData|GoodVoxels
+UseGoodVoxels=1
+MisorientationTolerance=5
 
 [5]
-Filter_Name=CAxisSegmentGrains
-MisorientationTolerance=15
-
-[6]
-Filter_Name=RenameCellArray
-SelectedCellArrayName=GrainIds
-NewCellArrayName=GrainIds(C-Axis)
-
-[7]
 Filter_Name=GenerateIPFColors
+Filter_Human_Label=Generate IPF Colors
+UseGoodVoxels=0
+GoodVoxelsArrayPath=VolumeDataContainer|CellData|GoodVoxels
+CrystalStructuresArrayPath=VolumeDataContainer|CellEnsembleData|CrystalStructures
+CellEulerAnglesArrayPath=VolumeDataContainer|CellData|EulerAngles
+CellPhasesArrayPath=VolumeDataContainer|CellData|Phases
+CellIPFColorsArrayName=IPFColor
 ReferenceDir\size=3
 ReferenceDir\1\x=0
 ReferenceDir\2\y=0
 ReferenceDir\3\z=1
 
-[8]
+[6]
 Filter_Name=DataContainerWriter
+Filter_Human_Label=Write DREAM3D Data File
 OutputFile=Data/Output/MicrotexturedTi.dream3d
-WriteVoxelData=true
-WriteSurfaceMeshData=false
-WriteXdmfFile=true
+WriteXdmfFile=1

@@ -55,6 +55,8 @@
 
 #include "ui_EbsdToH5EbsdWidget.h"
 
+#include "EbsdLib/EbsdTransform.h"
+
 
 class EbsdToH5Ebsd;
 
@@ -159,8 +161,9 @@ class EbsdToH5EbsdWidget : public QWidget, private Ui::EbsdToH5EbsdWidget
     void getGuiParametersFromFilter();
 
     /**
-     * @brief m_IdentifyRefFrame
+     * @brief IdentifyRefFrame
      */
+
     void identifyRefFrame();
 
 
