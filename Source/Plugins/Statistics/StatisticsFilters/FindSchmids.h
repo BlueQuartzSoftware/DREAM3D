@@ -95,18 +95,18 @@ class FindSchmids : public AbstractFilter
     DREAM3D_FILTER_PARAMETER(QString, LambdasArrayName)
     Q_PROPERTY(QString LambdasArrayName READ getLambdasArrayName WRITE setLambdasArrayName)
 
+    DREAM3D_FILTER_PARAMETER(FloatVec3_t, LoadingDir)
+    Q_PROPERTY(FloatVec3_t LoadingDir READ getLoadingDir WRITE setLoadingDir)
+
+    DREAM3D_FILTER_PARAMETER(bool, StoreAngleComponents)
+    Q_PROPERTY(bool StoreAngleComponents READ getStoreAngleComponents WRITE setStoreAngleComponents)
+
+
     virtual const QString getCompiledLibraryName() { return Statistics::StatisticsBaseName; }
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::CrystallographicFilters; }
     virtual const QString getHumanLabel() { return "Find Schmid Factors"; }
-
-    DREAM3D_FILTER_PARAMETER(FloatVec3_t, LoadingDir)
-    Q_PROPERTY(FloatVec3_t LoadingDir READ getLoadingDir WRITE setLoadingDir)
-    DREAM3D_FILTER_PARAMETER(bool, StoreAngleComponents)
-    Q_PROPERTY(bool StoreAngleComponents READ getStoreAngleComponents WRITE setStoreAngleComponents)
-
-
 
     /**
     * @brief This method will instantiate all the end user settable options/parameters
