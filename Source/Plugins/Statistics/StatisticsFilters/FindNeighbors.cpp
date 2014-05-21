@@ -48,6 +48,8 @@
 // -----------------------------------------------------------------------------
 FindNeighbors::FindNeighbors() :
   AbstractFilter(),
+  m_StoreSurfaceCells(false),
+  m_StoreSurfaceFeatures(false),
   m_CellFeatureAttributeMatrixPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, ""),
   m_SharedSurfaceAreaListArrayName(DREAM3D::FeatureData::SharedSurfaceAreaList),
   m_NeighborListArrayName(DREAM3D::FeatureData::NeighborList),
@@ -81,11 +83,19 @@ void FindNeighbors::setupFilterParameters()
   parameters.push_back(FilterParameter::New("Feature Ids Array Path", "FeatureIdsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeatureIdsArrayPath(), true));
   parameters.push_back(FilterParameter::New("Cell Feature Attribute Matrix", "CellFeatureAttributeMatrixPath", FilterParameterWidgetType::AttributeMatrixSelectionWidget, getCellFeatureAttributeMatrixPath(), true));
   parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
-  parameters.push_back(FilterParameter::New("Surface Voxels Array Name", "SurfaceVoxelsArrayName", FilterParameterWidgetType::StringWidget, getSurfaceVoxelsArrayName(), true));
-  parameters.push_back(FilterParameter::New("Surface Features Array Name", "SurfaceFeaturesArrayName", FilterParameterWidgetType::StringWidget, getSurfaceFeaturesArrayName(), true));
   parameters.push_back(FilterParameter::New("Number Of Neighbors Array Name", "NumNeighborsArrayName", FilterParameterWidgetType::StringWidget, getNumNeighborsArrayName(), true));
   parameters.push_back(FilterParameter::New("Neighbor List Array Name", "NeighborListArrayName", FilterParameterWidgetType::StringWidget, getNeighborListArrayName(), true));
   parameters.push_back(FilterParameter::New("Neighbor Surface Area List Array Name", "SharedSurfaceAreaListArrayName", FilterParameterWidgetType::StringWidget, getSharedSurfaceAreaListArrayName(), true));
+  parameters.push_back(FilterParameter::New("Surface Voxels Array Name", "SurfaceVoxelsArrayName", FilterParameterWidgetType::StringWidget, getSurfaceVoxelsArrayName(), true));
+  FilterParameter::Pointer param = parameters.back();
+  param->setConditional(true);
+  param->setConditionalProperty("StoreSurfaceCells");
+  param->setConditionalLabel("Store Surface Cells Array");
+  parameters.push_back(FilterParameter::New("Surface Features Array Name", "SurfaceFeaturesArrayName", FilterParameterWidgetType::StringWidget, getSurfaceFeaturesArrayName(), true));
+  FilterParameter::Pointer param = parameters.back();
+  param->setConditional(true);
+  param->setConditionalProperty("StoreSurfaceFeatures");
+  param->setConditionalLabel("Store Surface Features Array");
   setFilterParameters(parameters);
 }
 
@@ -100,6 +110,8 @@ void FindNeighbors::readFilterParameters(AbstractFilterParametersReader* reader,
   setFeatureIdsArrayPath(reader->readDataArrayPath("FeatureIdsArrayPath", getFeatureIdsArrayPath() ) );
   setSurfaceVoxelsArrayName(reader->readString("SurfaceVoxelsArrayName", getSurfaceVoxelsArrayName() ) );
   setSurfaceFeaturesArrayName(reader->readString("SurfaceFeaturesArrayName", getSurfaceFeaturesArrayName() ) );
+  setStoreSurfaceCells(reader->readValue("StoreSurfaceCells", getStoreSurfaceCells() ) );
+  setStoreSurfaceFeatures(reader->readValue("StoreSurfaceFeatures", getStoreSurfaceFeatures() ) );
   setNumNeighborsArrayName(reader->readString("NumNeighborsArrayName", getNumNeighborsArrayName() ) );
   setNeighborListArrayName(reader->readString("NeighborListArrayName", getNeighborListArrayName() ) );
   setSharedSurfaceAreaListArrayName(reader->readString("SharedSurfaceAreaListArrayName", getSharedSurfaceAreaListArrayName() ) );
@@ -116,6 +128,8 @@ int FindNeighbors::writeFilterParameters(AbstractFilterParametersWriter* writer,
   writer->writeValue("FeatureIdsArrayPath", getFeatureIdsArrayPath() );
   writer->writeValue("SurfaceVoxelsArrayName", getSurfaceVoxelsArrayName() );
   writer->writeValue("SurfaceFeaturesArrayName", getSurfaceFeaturesArrayName() );
+  writer->writeValue("StoreSurfaceCells", getStoreSurfaceCells() );
+  writer->writeValue("StoreSurfaceFeatures", getStoreSurfaceFeatures() );
   writer->writeValue("NumNeighborsArrayName", getNumNeighborsArrayName() );
   writer->writeValue("NeighborListArrayName", getNeighborListArrayName() );
   writer->writeValue("SharedSurfaceAreaListArrayName", getSharedSurfaceAreaListArrayName() );
@@ -140,9 +154,12 @@ void FindNeighbors::dataCheck()
   if( NULL != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   tempPath.update(m_FeatureIdsArrayPath.getDataContainerName(), m_FeatureIdsArrayPath.getAttributeMatrixName(), getSurfaceVoxelsArrayName() );
-  m_SurfaceVoxelsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int8_t>, AbstractFilter, int8_t>(this, tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_SurfaceVoxelsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
-  { m_SurfaceVoxels = m_SurfaceVoxelsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  if(m_StoreSurfaceCells == true)
+  {
+    m_SurfaceVoxelsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int8_t>, AbstractFilter, int8_t>(this, tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+    if( NULL != m_SurfaceVoxelsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+    { m_SurfaceVoxels = m_SurfaceVoxelsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  }
 
   AttributeMatrix::Pointer cellFeatureAttrMat = getDataContainerArray()->getPrereqAttributeMatrixFromPath<VolumeDataContainer, AbstractFilter>(this, getCellFeatureAttributeMatrixPath(), -304);
   if(getErrorCondition() < 0) { return; }
@@ -152,9 +169,12 @@ void FindNeighbors::dataCheck()
   if( NULL != m_NumNeighborsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_NumNeighbors = m_NumNeighborsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   tempPath.update(getCellFeatureAttributeMatrixPath().getDataContainerName(), getCellFeatureAttributeMatrixPath().getAttributeMatrixName(), getSurfaceFeaturesArrayName() );
-  m_SurfaceFeaturesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<bool>, AbstractFilter, bool>(this, tempPath, false, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_SurfaceFeaturesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
-  { m_SurfaceFeatures = m_SurfaceFeaturesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  if(m_StoreSurfaceFeatures == true)
+  {
+    m_SurfaceFeaturesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<bool>, AbstractFilter, bool>(this, tempPath, false, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+    if( NULL != m_SurfaceFeaturesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+    { m_SurfaceFeatures = m_SurfaceFeaturesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  }
 
   // Feature Data
   // Do this whole block FIRST otherwise the side effect is that a call to m->getNumCellFeatureTuples will = 0
@@ -239,7 +259,7 @@ void FindNeighbors::execute()
     m_NumNeighbors[i] = 0;
     neighborlist[i].resize(nListSize);
     neighborsurfacearealist[i].fill(-1.0, nListSize);
-    m_SurfaceFeatures[i] = false;
+    if(m_StoreSurfaceFeatures == true) m_SurfaceFeatures[i] = false;
   }
 
   for (int64_t j = 0; j < totalPoints; j++)
@@ -253,13 +273,16 @@ void FindNeighbors::execute()
       column = static_cast<float>( j % m->getXPoints() );
       row = static_cast<float>( (j / m->getXPoints()) % m->getYPoints() );
       plane = static_cast<float>( j / (m->getXPoints() * m->getYPoints()) );
-      if((column == 0 || column == (m->getXPoints() - 1) || row == 0 || row == (m->getYPoints() - 1) || plane == 0 || plane == (m->getZPoints() - 1)) && m->getZPoints() != 1)
+      if(m_StoreSurfaceFeatures == true)
       {
-        m_SurfaceFeatures[feature] = true;
-      }
-      if((column == 0 || column == (m->getXPoints() - 1) || row == 0 || row == (m->getYPoints() - 1)) && m->getZPoints() == 1)
-      {
-        m_SurfaceFeatures[feature] = true;
+        if((column == 0 || column == (m->getXPoints() - 1) || row == 0 || row == (m->getYPoints() - 1) || plane == 0 || plane == (m->getZPoints() - 1)) && m->getZPoints() != 1)
+        {
+          m_SurfaceFeatures[feature] = true;
+        }
+        if((column == 0 || column == (m->getXPoints() - 1) || row == 0 || row == (m->getYPoints() - 1)) && m->getZPoints() == 1)
+        {
+          m_SurfaceFeatures[feature] = true;
+        }
       }
       for (int k = 0; k < 6; k++)
       {
@@ -281,7 +304,7 @@ void FindNeighbors::execute()
         }
       }
     }
-    m_SurfaceVoxels[j] = onsurf;
+    if(m_StoreSurfaceCells == true) m_SurfaceVoxels[j] = onsurf;
   }
 
   // We do this to create new set of NeighborList objects

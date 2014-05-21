@@ -47,7 +47,7 @@ FindSurfaceVoxelFractions::FindSurfaceVoxelFractions() :
   m_CellFeatureAttributeMatrixName(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, ""),
   m_FeatureIdsArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::FeatureIds),
   m_SurfaceVoxelsArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::SurfaceVoxels),
-  m_SurfaceVoxelFractionsArrayName(DREAM3D::FeatureData::SurfaceVoxelFractions),
+  m_SurfaceVoxelFractionsArrayName(DREAM3D::FeatureData::SurfaceCellFractions),
   m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
   m_FeatureIds(NULL),
   m_SurfaceVoxelsArrayName(DREAM3D::CellData::SurfaceVoxels),
@@ -70,11 +70,11 @@ void FindSurfaceVoxelFractions::setupFilterParameters()
 {
   FilterParameterVector parameters;
   parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
-  parameters.push_back(FilterParameter::New("FeatureIds", "FeatureIdsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeatureIdsArrayPath(), true, ""));
-  parameters.push_back(FilterParameter::New("SurfaceVoxels", "SurfaceVoxelsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getSurfaceVoxelsArrayPath(), true, ""));
+  parameters.push_back(FilterParameter::New("Feature Ids", "FeatureIdsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeatureIdsArrayPath(), true, ""));
+  parameters.push_back(FilterParameter::New("Surface Cells", "SurfaceVoxelsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getSurfaceVoxelsArrayPath(), true, ""));
   parameters.push_back(FilterParameter::New("Cell Feature Attribute Matrix Name", "CellFeatureAttributeMatrixName", FilterParameterWidgetType::AttributeMatrixSelectionWidget, getCellFeatureAttributeMatrixName(), true, ""));
   parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
-  parameters.push_back(FilterParameter::New("SurfaceVoxelFractions", "SurfaceVoxelFractionsArrayName", FilterParameterWidgetType::StringWidget, getSurfaceVoxelFractionsArrayName(), true, ""));
+  parameters.push_back(FilterParameter::New("Surface Cell Fractions", "SurfaceVoxelFractionsArrayName", FilterParameterWidgetType::StringWidget, getSurfaceVoxelFractionsArrayName(), true, ""));
   setFilterParameters(parameters);
 }
 

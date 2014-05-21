@@ -45,6 +45,7 @@
 // -----------------------------------------------------------------------------
 FindMisorientations::FindMisorientations()  :
   AbstractFilter(),
+  m_FindAvgMisors(false),
   m_NeighborListArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, DREAM3D::FeatureData::NeighborList),
   m_MisorientationListArrayName(DREAM3D::FeatureData::MisorientationList),
   m_AvgQuatsArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, DREAM3D::FeatureData::AvgQuats),
@@ -77,23 +78,17 @@ FindMisorientations::~FindMisorientations()
 void FindMisorientations::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Find Average Misorientations");
-    parameter->setPropertyName("FindAvgMisors");
-    parameter->setWidgetType(FilterParameterWidgetType::BooleanWidget);
-   // parameter->setValueType("bool");
-    parameter->setUnits("");
-    parameters.push_back(parameter);
-  }
-
+  parameters.push_back(FilterParameter::New("AvgMisorientations", "AvgMisorientationsArrayName", FilterParameterWidgetType::StringWidget, getAvgMisorientationsArrayName(), false, ""));
+  FilterParameter::Pointer param = parameters.back();
+  param->setConditional(true);
+  param->setConditionalProperty("FindAvgMisors");
+  param->setConditionalLabel("Find Average Misorientation Per Feature");
   parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
   parameters.push_back(FilterParameter::New("Neighbor List Array Name", "NeighborListArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getNeighborListArrayPath(), true, ""));
   parameters.push_back(FilterParameter::New("AvgQuats", "AvgQuatsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getAvgQuatsArrayPath(), true, ""));
   parameters.push_back(FilterParameter::New("FeaturePhases", "FeaturePhasesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeaturePhasesArrayPath(), true, ""));
   parameters.push_back(FilterParameter::New("CrystalStructures", "CrystalStructuresArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getCrystalStructuresArrayPath(), true, ""));
   parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
-  parameters.push_back(FilterParameter::New("AvgMisorientations", "AvgMisorientationsArrayName", FilterParameterWidgetType::StringWidget, getAvgMisorientationsArrayName(), true, ""));
   parameters.push_back(FilterParameter::New("Misorientation List Array Name", "MisorientationListArrayName", FilterParameterWidgetType::StringWidget, getMisorientationListArrayName(), true, ""));
   setFilterParameters(parameters);
 }

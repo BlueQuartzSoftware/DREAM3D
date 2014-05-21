@@ -87,6 +87,12 @@ class FindNeighbors : public AbstractFilter
     DREAM3D_FILTER_PARAMETER(QString, SurfaceFeaturesArrayName)
     Q_PROPERTY(QString SurfaceFeaturesArrayName READ getSurfaceFeaturesArrayName WRITE setSurfaceFeaturesArrayName)
 
+    DREAM3D_FILTER_PARAMETER(bool, StoreSurfaceCells)
+    Q_PROPERTY(bool StoreSurfaceCells READ getStoreSurfaceCells WRITE setStoreSurfaceCells)
+
+    DREAM3D_FILTER_PARAMETER(bool, StoreSurfaceFeatures)
+    Q_PROPERTY(bool StoreSurfaceFeatures READ getStoreSurfaceFeatures WRITE setStoreSurfaceFeatures)
+
     virtual const QString getCompiledLibraryName() { return Statistics::StatisticsBaseName; }
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }

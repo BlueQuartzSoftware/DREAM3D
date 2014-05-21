@@ -80,7 +80,7 @@ class FindSurfaceVoxelFractions : public AbstractFilter
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::MorphologicalFilters; }
-    virtual const QString getHumanLabel() { return "Find Feature Surface Voxel Fractions"; }
+    virtual const QString getHumanLabel() { return "Find Feature Surface Cell Fractions"; }
 
     /**
     * @brief This method will instantiate all the end user settable options/parameters

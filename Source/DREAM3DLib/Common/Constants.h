@@ -253,7 +253,7 @@ namespace DREAM3D
     const DREAM3D_STRING SharedSurfaceAreaList("SharedSurfaceAreaList");
     const DREAM3D_STRING SlipSystems("SlipSystems");
     const DREAM3D_STRING SurfaceFeatures("SurfaceFeatures");
-    const DREAM3D_STRING SurfaceVoxelFractions("SurfaceVoxelFractions");
+    const DREAM3D_STRING SurfaceCellFractions("SurfaceCellFractions");
     const DREAM3D_STRING Volumes("Volumes");
     const DREAM3D_STRING AvgMisorientations("AvgMisorientations");
     const DREAM3D_STRING mPrimeList("mPrimeList");
