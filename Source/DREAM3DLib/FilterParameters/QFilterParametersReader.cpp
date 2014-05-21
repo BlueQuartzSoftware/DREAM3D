@@ -678,7 +678,7 @@ IntVec3_t QFilterParametersReader::readIntVec3(const QString name, IntVec3_t def
   v3.z = 0;
 
   int count = m_Prefs->beginReadArray(name);
-  if (count == 0) { return defaultValue;}
+  if (count == 0) { m_Prefs->endArray(); return defaultValue;}
   m_Prefs->setArrayIndex(0);
   v3.x = m_Prefs->value("x", v3.x).toInt(&ok);
   if(!ok) { v3.x = defaultValue.x; }
@@ -708,7 +708,7 @@ FloatVec3_t QFilterParametersReader::readFloatVec3(const QString name, FloatVec3
   v3.y = 0.0f;
   v3.z = 0.0f;
   int count = m_Prefs->beginReadArray(name);
-  if (count == 0) { return defaultValue;}
+  if (count == 0) { m_Prefs->endArray(); return defaultValue;}
   m_Prefs->setArrayIndex(0);
   v3.x = m_Prefs->value("x", v3.x).toFloat(&ok);
   if(!ok) { v3.x = defaultValue.x; }

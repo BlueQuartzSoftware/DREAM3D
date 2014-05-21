@@ -585,15 +585,11 @@ class NeighborList : public IDataArray
         {
           return -605;
         }
-        err = QH5Lite::writeScalarAttribute(parentId, getName(), DREAM3D::HDF5::NumComponents, 1);
-        if(err < 0)
-        {
-          return -606;
-        }
+
         err = QH5Lite::writeScalarAttribute(parentId, getName(), DREAM3D::HDF5::DataArrayVersion, getClassVersion());
         if(err < 0)
         {
-          return err;
+          return -604;
         }
         err = QH5Lite::writeStringAttribute(parentId, getName(), DREAM3D::HDF5::ObjectType, getNameOfClass());
         if(err < 0)
@@ -601,12 +597,29 @@ class NeighborList : public IDataArray
           return -607;
         }
 
+
+        err = QH5Lite::writeScalarAttribute(parentId, getName(), DREAM3D::HDF5::NumComponents, 1);
+        if(err < 0)
+        {
+          return -606;
+        }
+
+
         // Write the tuple dimensions as an attribute
         hsize_t size = tDims.size();
         err = QH5Lite::writePointerAttribute(parentId, getName(), DREAM3D::HDF5::TupleDimensions, 1, &size, tDims.data());
         if (err < 0)
         {
-          return err;
+          return -609;
+        }
+
+        QVector<size_t> cDims = getComponentDimensions();
+        // write the component dimensions as  an attribute
+        size = cDims.size();
+        err = QH5Lite::writePointerAttribute(parentId, getName(), DREAM3D::HDF5::ComponentDimensions, 1, &size, cDims.data());
+        if (err < 0)
+        {
+          return -610;
         }
 
         err = QH5Lite::writeStringAttribute(parentId, getName(), "Linked NumNeighbors Dataset", m_NumNeighborsArrayName);

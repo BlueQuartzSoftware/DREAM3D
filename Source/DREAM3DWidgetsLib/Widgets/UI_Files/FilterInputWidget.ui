@@ -7,23 +7,14 @@
     <x>0</x>
     <y>0</y>
     <width>578</width>
-    <height>441</height>
+    <height>568</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>[*]Filter Input Parameters</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout_2">
-   <property name="leftMargin">
-    <number>0</number>
-   </property>
-   <property name="topMargin">
-    <number>0</number>
-   </property>
-   <property name="rightMargin">
-    <number>0</number>
-   </property>
-   <property name="bottomMargin">
+   <property name="margin">
     <number>0</number>
    </property>
    <item>
@@ -58,6 +49,147 @@ font-weight: bold;s
       <property name="bottomMargin">
        <number>2</number>
       </property>
+      <item row="1" column="0">
+       <widget class="QScrollArea" name="scrollArea">
+        <property name="frameShape">
+         <enum>QFrame::NoFrame</enum>
+        </property>
+        <property name="widgetResizable">
+         <bool>true</bool>
+        </property>
+        <widget class="QWidget" name="scrollAreaWidgetContents">
+         <property name="geometry">
+          <rect>
+           <x>0</x>
+           <y>0</y>
+           <width>572</width>
+           <height>504</height>
+          </rect>
+         </property>
+         <layout class="QVBoxLayout" name="scrollAreaVLayout">
+          <property name="margin">
+           <number>4</number>
+          </property>
+          <item>
+           <widget class="QFrame" name="basicInputsFrame">
+            <property name="styleSheet">
+             <string notr="true">QFrame#basicInputsFrame
+{
+/*	background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 rgba(185, 185, 185, 255), stop:0.5 rgba(226, 226, 226, 255), stop:1 rgba(150, 150, 150, 255)); */
+	background-color: rgb(215, 215, 215);
+	border: 1px solid #000000;
+	border-radius: 10px;
+	padding: 5 5 5 5px;
+}</string>
+            </property>
+            <property name="frameShape">
+             <enum>QFrame::NoFrame</enum>
+            </property>
+            <property name="frameShadow">
+             <enum>QFrame::Plain</enum>
+            </property>
+            <layout class="QVBoxLayout" name="verticalLayout">
+             <property name="margin">
+              <number>0</number>
+             </property>
+             <item>
+              <widget class="QLabel" name="basicInputsLabel">
+               <property name="styleSheet">
+                <string notr="true">QLabel#basicInputsLabel
+{
+	font: 75 14pt &quot;Lucida Grande&quot;;
+	font-weight: bold;
+}</string>
+               </property>
+               <property name="text">
+                <string>Basic Inputs</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <layout class="QGridLayout" name="basicInputsGrid"/>
+             </item>
+            </layout>
+           </widget>
+          </item>
+          <item>
+           <widget class="QFrame" name="advInputsFrame">
+            <property name="styleSheet">
+             <string notr="true">QFrame#advInputsFrame
+{
+/*	background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 rgba(185, 185, 185, 255), stop:0.5 rgba(226, 226, 226, 255), stop:1 rgba(150, 150, 150, 255)); */
+	background-color: rgb(200, 200, 212);
+	border: 1px solid #000000;
+	border-radius: 10px;
+	padding: 5 5 5 5px;
+}</string>
+            </property>
+            <property name="frameShape">
+             <enum>QFrame::NoFrame</enum>
+            </property>
+            <property name="frameShadow">
+             <enum>QFrame::Plain</enum>
+            </property>
+            <layout class="QVBoxLayout" name="verticalLayout_3">
+             <item>
+              <widget class="QLabel" name="advInputsLabel">
+               <property name="styleSheet">
+                <string notr="true">QLabel#advInputsLabel
+{
+	font: 75 14pt &quot;Lucida Grande&quot;;
+	font-weight: bold;
+}</string>
+               </property>
+               <property name="text">
+                <string>Advanced Inputs</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <layout class="QGridLayout" name="advInputsGrid"/>
+             </item>
+            </layout>
+           </widget>
+          </item>
+          <item>
+           <spacer name="verticalSpacer">
+            <property name="orientation">
+             <enum>Qt::Vertical</enum>
+            </property>
+            <property name="sizeHint" stdset="0">
+             <size>
+              <width>20</width>
+              <height>40</height>
+             </size>
+            </property>
+           </spacer>
+          </item>
+         </layout>
+        </widget>
+       </widget>
+      </item>
+      <item row="2" column="0">
+       <widget class="QLabel" name="brandingLabel">
+        <property name="font">
+         <font>
+          <family>Arial</family>
+          <pointsize>10</pointsize>
+          <weight>75</weight>
+          <italic>true</italic>
+          <bold>true</bold>
+         </font>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QLabel{
+	font: 75 italic 10pt &quot;Arial&quot;;
+font-weight: bold;
+}</string>
+        </property>
+        <property name="text">
+         <string>Branding Information</string>
+        </property>
+       </widget>
+      </item>
       <item row="0" column="0">
        <layout class="QHBoxLayout" name="horizontalLayout">
         <property name="topMargin">
@@ -89,114 +221,6 @@ font-weight: bold;s
          </widget>
         </item>
        </layout>
-      </item>
-      <item row="1" column="0">
-       <widget class="QTabWidget" name="filterInputTabWidget">
-        <property name="currentIndex">
-         <number>0</number>
-        </property>
-        <widget class="QWidget" name="basicInputs">
-         <attribute name="title">
-          <string>Inputs</string>
-         </attribute>
-         <layout class="QGridLayout" name="gridLayout_2">
-          <property name="leftMargin">
-           <number>0</number>
-          </property>
-          <property name="topMargin">
-           <number>0</number>
-          </property>
-          <property name="rightMargin">
-           <number>0</number>
-          </property>
-          <property name="bottomMargin">
-           <number>0</number>
-          </property>
-          <item row="0" column="0">
-           <widget class="QScrollArea" name="scrollArea">
-            <property name="frameShape">
-             <enum>QFrame::NoFrame</enum>
-            </property>
-            <property name="widgetResizable">
-             <bool>true</bool>
-            </property>
-            <widget class="QWidget" name="basicInputsScrollWidget">
-             <property name="geometry">
-              <rect>
-               <x>0</x>
-               <y>0</y>
-               <width>566</width>
-               <height>342</height>
-              </rect>
-             </property>
-             <layout class="QVBoxLayout" name="verticalLayout"/>
-            </widget>
-           </widget>
-          </item>
-         </layout>
-        </widget>
-        <widget class="QWidget" name="advancedInputs">
-         <attribute name="title">
-          <string>Advanced Inputs</string>
-         </attribute>
-         <layout class="QGridLayout" name="widgetLayout">
-          <property name="leftMargin">
-           <number>0</number>
-          </property>
-          <property name="topMargin">
-           <number>0</number>
-          </property>
-          <property name="rightMargin">
-           <number>0</number>
-          </property>
-          <property name="bottomMargin">
-           <number>0</number>
-          </property>
-          <item row="0" column="0">
-           <widget class="QScrollArea" name="advScrollArea">
-            <property name="frameShape">
-             <enum>QFrame::NoFrame</enum>
-            </property>
-            <property name="widgetResizable">
-             <bool>true</bool>
-            </property>
-            <widget class="QWidget" name="advInputsScrollWidget">
-             <property name="geometry">
-              <rect>
-               <x>0</x>
-               <y>0</y>
-               <width>566</width>
-               <height>342</height>
-              </rect>
-             </property>
-            </widget>
-           </widget>
-          </item>
-         </layout>
-        </widget>
-       </widget>
-      </item>
-      <item row="2" column="0">
-       <widget class="QLabel" name="brandingLabel">
-        <property name="font">
-         <font>
-          <family>Arial</family>
-          <pointsize>10</pointsize>
-          <weight>75</weight>
-          <italic>true</italic>
-          <bold>true</bold>
-         </font>
-        </property>
-        <property name="styleSheet">
-         <string notr="true">QLabel{
-	font: 75 italic 10pt &quot;Arial&quot;;
-font-weight: bold;
-}</string>
-        </property>
-        <property name="text">
-         <string>Branding Information</string>
-        </property>
-       </widget>
       </item>
      </layout>
     </widget>
