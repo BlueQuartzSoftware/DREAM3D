@@ -40,7 +40,7 @@
 
 
 #include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/DataArrays/NeighborList.hpp"
+
 #include "DREAM3DLib/DataArrays/IDataArray.h"
 
 // -----------------------------------------------------------------------------
