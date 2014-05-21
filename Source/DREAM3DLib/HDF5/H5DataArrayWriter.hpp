@@ -128,20 +128,27 @@ class H5DataArrayWriter
       err = QH5Lite::writeScalarAttribute(gid, dataArray->getName(), DREAM3D::HDF5::DataArrayVersion, dataArray->getClassVersion());
       if(err < 0)
       {
-        return err;
+        return -604;
       }
       err = QH5Lite::writeStringAttribute(gid, dataArray->getName(), DREAM3D::HDF5::ObjectType, dataArray->getFullNameOfClass());
       if(err < 0)
       {
-        return err;
+        return -607;
       }
+
+        err = QH5Lite::writeScalarAttribute(gid, dataArray->getName(), DREAM3D::HDF5::NumComponents, 1);
+        if(err < 0)
+        {
+          return -606;
+        }
+
 
       // Write the tuple dimensions as an attribute
       hsize_t size = tDims.size();
       err = QH5Lite::writePointerAttribute(gid, dataArray->getName(), DREAM3D::HDF5::TupleDimensions, 1, &size, tDims.data());
       if (err < 0)
       {
-        return err;
+        return -609;
       }
 
       // write the component dimensions as  an attribute
@@ -149,7 +156,7 @@ class H5DataArrayWriter
       err = QH5Lite::writePointerAttribute(gid, dataArray->getName(), DREAM3D::HDF5::ComponentDimensions, 1, &size, cDims.data());
       if (err < 0)
       {
-        return err;
+        return -610;
       }
 
       QString str = QString("x=%1").arg(tDims[0]);
@@ -158,7 +165,7 @@ class H5DataArrayWriter
       err = QH5Lite::writeStringAttribute(gid, dataArray->getName(), DREAM3D::HDF5::AxisDimensions, str);
       if (err < 0)
       {
-        return err;
+        return -611;
       }
       return err;
     }
