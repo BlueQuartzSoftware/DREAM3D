@@ -92,6 +92,8 @@ class FindEuclideanDistMap : public AbstractFilter
     Q_PROPERTY(bool doTripleLines READ getdoTripleLines WRITE setdoTripleLines)
     DREAM3D_FILTER_PARAMETER(bool, doQuadPoints)
     Q_PROPERTY(bool doQuadPoints READ getdoQuadPoints WRITE setdoQuadPoints)
+    DREAM3D_FILTER_PARAMETER(bool, saveNearestNeighbors)
+    Q_PROPERTY(bool saveNearestNeighbors READ getsaveNearestNeighbors WRITE setsaveNearestNeighbors)
     DREAM3D_FILTER_PARAMETER(bool, CalcOnlyManhattanDist)
     Q_PROPERTY(bool CalcOnlyManhattanDist READ getCalcOnlyManhattanDist WRITE setCalcOnlyManhattanDist)
 

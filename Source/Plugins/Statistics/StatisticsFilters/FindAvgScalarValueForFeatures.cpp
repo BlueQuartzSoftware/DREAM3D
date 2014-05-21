@@ -128,8 +128,19 @@ void FindAvgScalarValueForFeatures::dataCheck()
     notifyErrorMessage(getHumanLabel(), "An array from the Volume DataContainer must be selected.", getErrorCondition());
     return;
   }
+  if(m_CellFeatureAttributeMatrixName.isEmpty() == true)
+  {
+    setErrorCondition(-11001);
+    notifyErrorMessage(getHumanLabel(), "An Attribute Matrix from the Volume DataContainer must be selected.", getErrorCondition());
+    return;
+  }
+  if(m_NewFeatureArrayArrayName.isEmpty() == true)
+  {
+    setErrorCondition(-11001);
+    notifyErrorMessage(getHumanLabel(), "A name for the new array must be entered.", getErrorCondition());
+    return;
+  }
 
-  QString m_NewFeatureArrayArrayName = QString("Average") + m_SelectedCellArrayPath.getDataArrayName();
   dims[0] = 1;
   tempPath.update(getCellFeatureAttributeMatrixName().getDataContainerName(), getCellFeatureAttributeMatrixName().getAttributeMatrixName(), getNewFeatureArrayArrayName() );
   m_NewFeatureArrayPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0.0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */

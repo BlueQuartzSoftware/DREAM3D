@@ -255,6 +255,7 @@ FindEuclideanDistMap::FindEuclideanDistMap() :
   m_doBoundaries(false),
   m_doTripleLines(false),
   m_doQuadPoints(false),
+  m_saveNearestNeighbors(false),
   m_CalcOnlyManhattanDist(false),
   m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
   m_FeatureIds(NULL),
@@ -306,6 +307,10 @@ void FindEuclideanDistMap::setupFilterParameters()
   parameters.push_back(FilterParameter::New("FeatureIds", "FeatureIdsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeatureIdsArrayPath(), true, ""));
   parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
   parameters.push_back(FilterParameter::New("NearestNeighbors", "NearestNeighborsArrayName", FilterParameterWidgetType::StringWidget, getNearestNeighborsArrayName(), true, ""));
+  param = parameters.back();
+  param->setConditional(true);
+  param->setConditionalProperty("saveNearestNeighbors");
+  param->setConditionalLabel("Store the Nearest Boundary Cells");
   setFilterParameters(parameters);
 }
 
@@ -320,10 +325,11 @@ void FindEuclideanDistMap::readFilterParameters(AbstractFilterParametersReader* 
   setTJEuclideanDistancesArrayName(reader->readString("TJEuclideanDistancesArrayName", getTJEuclideanDistancesArrayName() ) );
   setGBEuclideanDistancesArrayName(reader->readString("GBEuclideanDistancesArrayName", getGBEuclideanDistancesArrayName() ) );
   setFeatureIdsArrayPath(reader->readDataArrayPath("FeatureIdsArrayPath", getFeatureIdsArrayPath() ) );
-  setdoBoundaries( reader->readValue("doBoundaries", false) );
-  setdoTripleLines( reader->readValue("doTripleLines", false) );
-  setdoQuadPoints( reader->readValue("doQuadPoints", false) );
-  setCalcOnlyManhattanDist( reader->readValue("CalcOnlyManhattanDist", false) );
+  setdoBoundaries( reader->readValue("doBoundaries", getdoBoundaries()) );
+  setdoTripleLines( reader->readValue("doTripleLines", getdoTripleLines()) );
+  setdoQuadPoints( reader->readValue("doQuadPoints", getdoQuadPoints()) );
+  setsaveNearestNeighbors( reader->readValue("saveNearestNeighbors", getsaveNearestNeighbors()) );
+  setCalcOnlyManhattanDist( reader->readValue("CalcOnlyManhattanDist", getCalcOnlyManhattanDist()) );
   reader->closeFilterGroup();
 }
 
@@ -341,6 +347,7 @@ int FindEuclideanDistMap::writeFilterParameters(AbstractFilterParametersWriter* 
   writer->writeValue("doBoundaries", getdoBoundaries() );
   writer->writeValue("doTripleLines", getdoTripleLines() );
   writer->writeValue("doQuadPoints", getdoQuadPoints() );
+  writer->writeValue("saveNearestNeighbors", getsaveNearestNeighbors() );
   writer->writeValue("CalcOnlyManhattanDist", getCalcOnlyManhattanDist() );
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
@@ -395,6 +402,13 @@ void FindEuclideanDistMap::preflight()
   emit preflightAboutToExecute();
   emit updateFilterParameters(this);
   dataCheck();
+  if(getErrorCondition() < 0) { return; }
+  if(m_saveNearestNeighbors == false)
+  {
+    VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getFeatureIdsArrayPath().getDataContainerName());
+    AttributeMatrix::Pointer attrMat = m->getAttributeMatrix(getFeatureIdsArrayPath().getAttributeMatrixName());
+    attrMat->removeAttributeArray(getNearestNeighborsArrayName());
+  }
   emit preflightExecuted();
 }
 
@@ -408,6 +422,14 @@ void FindEuclideanDistMap::execute()
   if(getErrorCondition() < 0) { return; }
 
   find_euclideandistmap();
+
+  if(m_saveNearestNeighbors == false)
+  {
+    VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getFeatureIdsArrayPath().getDataContainerName());
+    AttributeMatrix::Pointer attrMat = m->getAttributeMatrix(getFeatureIdsArrayPath().getAttributeMatrixName());
+    attrMat->removeAttributeArray(getNearestNeighborsArrayName());
+  }
+
   notifyStatusMessage(getHumanLabel(), "Completed");
 }
 
@@ -423,7 +445,6 @@ void FindEuclideanDistMap::find_euclideandistmap()
 
   for (int i = 0; i < totalPoints * 3; i++)
   {
-    m_NearestNeighbors[i] = -1;
     if(i < totalPoints)
     {
       if(m_doBoundaries == true) { m_GBEuclideanDistances[i] = -1; }
