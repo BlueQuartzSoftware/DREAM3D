@@ -195,6 +195,7 @@ void PipelineFilterWidget::initialize(AbstractFilter::Pointer filter)
 
     }
 
+#if 0
     {
       QSpacerItem* verticalSpacer = new QSpacerItem(20, 40, QSizePolicy::Minimum, QSizePolicy::Expanding);
       basicverticalLayout->addItem(verticalSpacer);
@@ -204,7 +205,7 @@ void PipelineFilterWidget::initialize(AbstractFilter::Pointer filter)
       QSpacerItem* verticalSpacer = new QSpacerItem(20, 40, QSizePolicy::Minimum, QSizePolicy::Expanding);
       advverticalLayout->addItem(verticalSpacer);
     }
-
+#endif
   }
 
 }

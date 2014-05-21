@@ -80,11 +80,27 @@ void FilterInputWidget::setupGui()
 // -----------------------------------------------------------------------------
 void FilterInputWidget::clearInputWidgets()
 {
-  QWidget* widget = scrollArea->takeWidget();
-  scrollArea->setWidget(new QFrame);
-
-  widget = advScrollArea->takeWidget();
-  advScrollArea->setWidget(new QFrame);
+  // Remove any existing input widgets
+  QLayoutItem* item = basicInputsGrid->itemAt(0);
+  if(item) {
+    QWidget* w = item->widget();
+    if(w)
+    {
+      w->setVisible(false);
+      //   w->setParent(NULL);
+      basicInputsGrid->removeWidget(w);
+    }
+  }
+  item = advInputsGrid->itemAt(0);
+  if(item) {
+    QWidget* w = item->widget();
+    if(w)
+    {
+      w->setVisible(false);
+      //    w->setParent(NULL);
+      advInputsGrid->removeWidget(w);
+    }
+  }
 
   filterHumanLabel->setText("No Filter Selected");
   brandingLabel->clear();
@@ -97,9 +113,12 @@ void FilterInputWidget::removeWidgetInputs(PipelineFilterWidget* w)
 {
   // Check to see if the filter that just got removed from the pipeline is the one we are displaying
   // the inputs for.
-  if (scrollArea->widget() == w->getScrollWidgetContents() )
+  //  if (scrollArea->widget() == w->getScrollWidgetContents() )
   {
+    w->getScrollWidgetContents()->setParent(w);
+    w->getAdvancedScrollWidgetContents()->setParent(w);
     clearInputWidgets();
+
   }
 }
 
@@ -109,67 +128,17 @@ void FilterInputWidget::removeWidgetInputs(PipelineFilterWidget* w)
 // -----------------------------------------------------------------------------
 void FilterInputWidget::displayFilterParameters(PipelineFilterWidget* w)
 {
+  clearInputWidgets();
 
-  QWidget* widget = scrollArea->takeWidget();
-  scrollArea->setWidget(w->getScrollWidgetContents() );
+  w->getScrollWidgetContents()->setVisible(true);
+  basicInputsGrid->addWidget(w->getScrollWidgetContents());
+  w->getAdvancedScrollWidgetContents()->setVisible(true);
+  advInputsGrid->addWidget(w->getAdvancedScrollWidgetContents());
 
-  QWidget* advWidget = advScrollArea->takeWidget();
-  advScrollArea->setWidget(w->getAdvancedScrollWidgetContents() );
-
-//  filterInputTabWidget->setCurrentIndex(0);
-#if 0
-  // Remove all existing QWidgets from this Widget
-  QObjectList objs = basicInputsScrollWidget->children();
-  for(int i = 0; i < objs.size(); i++)
-  {
-    objs[i]->setParent(NULL);
-  }
-
-
-  // Remove the Layout itself
-  QLayoutItem* wItem = basicInputsScrollWidget->layout()->takeAt(0);
-  while (wItem != NULL)
-  {
-    //delete wItem;
-    wItem = basicInputsScrollWidget->layout()->takeAt(0);
-  }
-
-  delete verticalLayout;
-  delete basicInputsScrollWidget;
-  basicInputsScrollWidget = new QWidget();
-  basicInputsScrollWidget->setObjectName(QString::fromUtf8("basicInputsScrollWidget"));
-  basicInputsScrollWidget->setGeometry(QRect(0, 0, 250, 267));
-  verticalLayout = new QVBoxLayout(basicInputsScrollWidget);
-  verticalLayout->setObjectName(QString::fromUtf8("verticalLayout"));
-  scrollArea->setWidget(basicInputsScrollWidget);
-#endif
 
   // Add a label at the top of the Inputs Tabs to show what filter we are working on
   filterHumanLabel->setText(w->getHumanLabel());
   AbstractFilter::Pointer filter = w->getFilter();
   brandingLabel->setText(filter->getBrandingString() );
-#if 0
-  QSizePolicy sizePolicy2(QSizePolicy::Expanding, QSizePolicy::Maximum);
-  sizePolicy2.setHorizontalStretch(0);
-  sizePolicy2.setVerticalStretch(0);
-  setSizePolicy(sizePolicy2);
 
-
-  FilterWidgetManager::Pointer fwm = FilterWidgetManager::Instance();
-  QVector<QWidget*>& filterParameterWidgets = w->getFilterParameterWidgets();
-  for (int i = 0; i < filterParameterWidgets.size(); i++ )
-  {
-    QWidget* fpw = filterParameterWidgets[i];
-    qDebug() << "    Pointer: " << fpw << "\n";
-    // Make sure we do not have a NULL widget
-    if (NULL == filterParameterWidgets.at(i)) { continue; }
-    // Set the parent for the widget
-    filterParameterWidgets[i]->setParent(basicInputsScrollWidget);
-    // Add the FilterWidget to the layout
-    verticalLayout->addWidget(fpw);
-  }
-  QSpacerItem* verticalSpacer = new QSpacerItem(20, 40, QSizePolicy::Minimum, QSizePolicy::Expanding);
-
-  verticalLayout->addItem(verticalSpacer);
-#endif
 }
