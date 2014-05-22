@@ -370,6 +370,38 @@ void ComparisonSelectionTableModel::setTableData(QVector<QString> featureNames,
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void ComparisonSelectionTableModel::setTableData(ComparisonInputs& comps)
+{
+  qint32 count = comps.size();
+  qint32 row = 0;
+  // Remove all the current rows in the table model
+  removeRows(0, rowCount());
+  // Check to make sure we have data to insert.
+  if (count == 0) { return; }
+  // Now mass insert the data to the table then emit that the data has changed
+  beginInsertRows(QModelIndex(), row, row + count - 1);
+
+  m_FeatureNames.resize(count);
+  m_FeatureValues.resize(count);
+  m_FeatureOperators.resize(count);
+  for(int i = 0; i < comps.size(); ++i)
+  {
+    m_FeatureNames[i] = comps[i].attributeArrayName;
+    m_FeatureValues[i] = comps[i].compValue;
+    if (comps[i].compOperator == DREAM3D::Comparison::Operator_LessThan) { m_FeatureOperators[i] = (DREAM3D::Comparison::Strings::LessThan); }
+    if (comps[i].compOperator == DREAM3D::Comparison::Operator_GreaterThan) { m_FeatureOperators[i] = (DREAM3D::Comparison::Strings::GreaterThan); }
+    if (comps[i].compOperator == DREAM3D::Comparison::Operator_Equal) { m_FeatureOperators[i] = (DREAM3D::Comparison::Strings::Equal); }
+  }
+  m_RowCount = count;
+  endInsertRows();
+  QModelIndex topLeft = createIndex(0, 0);
+  QModelIndex botRight = createIndex(count - 1, ColumnCount);
+  emit dataChanged(topLeft, botRight);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void ComparisonSelectionTableModel::getTableData( QVector<QString>& featureNames, QVector<float>& featureValues,  QVector<int>& featureOperators)
 {
   featureNames = m_FeatureNames;

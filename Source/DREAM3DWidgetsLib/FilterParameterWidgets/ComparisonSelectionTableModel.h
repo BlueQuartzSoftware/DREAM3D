@@ -42,6 +42,9 @@
 #include <QtCore/QVariant>
 #include <QtCore/QStringList>
 
+#include "DREAM3DLib/Common/ComparisonInputs.h"
+
+
 class QAbstractItemDelegate;
 
 /*
@@ -153,7 +156,9 @@ class ComparisonSelectionTableModel : public QAbstractTableModel
 
     QStringList getPossibleFeatures();
 
-    virtual void setTableData(QVector<QString> featureNames, QVector<float> featureValues,  QVector<int> featureOperators) ;
+    virtual void setTableData(QVector<QString> featureNames, QVector<float> featureValues,  QVector<int> featureOperators);
+
+    virtual void setTableData(ComparisonInputs &comps);
 
     void getTableData( QVector<QString>& featureNames, QVector<float>& featureValues,  QVector<int>& featureOperators);
 

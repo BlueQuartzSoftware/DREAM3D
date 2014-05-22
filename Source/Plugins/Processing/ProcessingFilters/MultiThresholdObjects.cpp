@@ -72,13 +72,12 @@ void MultiThresholdObjects::setupFilterParameters()
     parameter->setHumanLabel("Select Arrays to Threshold");
     parameter->setPropertyName("SelectedThresholds");
     parameter->setWidgetType(FilterParameterWidgetType::ComparisonSelectionWidget);
-    ////parameter->setValueType("ComparisonInputs");
     parameter->setShowOperators(true);
     parameters.push_back(parameter);
   }
 
   parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
-  parameters.push_back(FilterParameter::New("Output", "DestinationArrayName", FilterParameterWidgetType::StringWidget, getDestinationArrayName(), true, ""));
+  parameters.push_back(FilterParameter::New("Output Array Name", "DestinationArrayName", FilterParameterWidgetType::StringWidget, getDestinationArrayName(), true, ""));
   setFilterParameters(parameters);
 }
 

@@ -125,7 +125,7 @@ void DataArraySelectionWidget::setupGui()
   //  attributeMatrixList->addItem(m_DefaultPath.getAttributeMatrixName() );
   //  attributeArrayList->addItem(m_DefaultPath.getDataArrayName() );
 
-  // Block Signals from teh ComboBoxes while we clear them
+  // Block Signals from the ComboBoxes while we clear them
   dataContainerList->blockSignals(true);
   attributeMatrixList->blockSignals(true);
   attributeArrayList->blockSignals(true);
@@ -164,10 +164,7 @@ void DataArraySelectionWidget::setupGui()
   }
   blockSignals(false);
 
-
-
   populateComboBoxes();
-
 
   // Lastly, hook up the filter's signals and slots to our own signals and slots
   // Catch when the filter is about to execute the preflight
@@ -333,10 +330,6 @@ void DataArraySelectionWidget::populateComboBoxes()
 // -----------------------------------------------------------------------------
 QString DataArraySelectionWidget::checkStringValues(QString curDcName, QString filtDcName)
 {
-//  if(curDcName.isEmpty() == true && filtDcName.isEmpty() == true)
-//  {
-//    qDebug() << "curDcName EMPTY && filtDcName EMPTY";
-//  }
   if(curDcName.isEmpty() == true && filtDcName.isEmpty() == false)
   {return filtDcName;}
   else if(curDcName.isEmpty() == false && filtDcName.isEmpty() == true)
@@ -345,34 +338,75 @@ QString DataArraySelectionWidget::checkStringValues(QString curDcName, QString f
   { return curDcName;}
 
   return filtDcName;
-
 }
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DataArraySelectionWidget::selectDefaultPath()
+void DataArraySelectionWidget::populateAttributeMatrixList()
+{
+  QString dcName = dataContainerList->currentText();
+
+  // Clear the AttributeMatrix List
+  attributeMatrixList->blockSignals(true);
+  attributeMatrixList->clear();
+
+  // Loop over the data containers until we find the proper data container
+  QList<DataContainerProxy> containers = m_DcaProxy.list;
+  QListIterator<DataContainerProxy> containerIter(containers);
+  while(containerIter.hasNext())
+  {
+    DataContainerProxy dc = containerIter.next();
+
+    if(dc.name.compare(dcName) == 0 )
+    {
+      // We found the proper Data Container, now populate the AttributeMatrix List
+      QMap<QString, AttributeMatrixProxy> attrMats = dc.attributeMatricies;
+      QMapIterator<QString, AttributeMatrixProxy> attrMatsIter(attrMats);
+      while(attrMatsIter.hasNext() )
+      {
+        attrMatsIter.next();
+        QString amName = attrMatsIter.key();
+        attributeMatrixList->addItem(amName);
+      }
+    }
+  }
+
+  attributeMatrixList->blockSignals(false);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DataArraySelectionWidget::on_dataContainerList_currentIndexChanged(int index)
 {
 
-  // set the default DataContainer
-  if(dataContainerList->count() > 0)
-  {
-    dataContainerList->setCurrentIndex(0);
-  }
+  //  std::cout << "void DataArraySelectionWidget::on_dataContainerList_currentIndexChanged(int index)" << std::endl;
+  populateAttributeMatrixList();
 
   // Select the first AttributeMatrix in the list
   if(attributeMatrixList->count() > 0)
   {
-    attributeMatrixList->setCurrentIndex(0);
+    on_attributeMatrixList_currentIndexChanged(0);
   }
 
-  // Set the default AttributeArray
-  m_Filter->blockSignals(true);
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DataArraySelectionWidget::on_attributeMatrixList_currentIndexChanged(int index)
+{
+  // std::cout << "void DataArraySelectionWidget::on_attributeMatrixList_currentIndexChanged(int index)" << std::endl;
+  populateAttributeArrayList();
+
   if(attributeArrayList->count() > 0)
   {
     attributeArrayList->setCurrentIndex(0);
   }
-  m_Filter->blockSignals(false);
 }
+
 
 // -----------------------------------------------------------------------------
 //
@@ -417,72 +451,6 @@ void DataArraySelectionWidget::setSelectedPath(QString dcName, QString attrMatNa
     }
   }
   attributeArrayList->blockSignals(false);
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void DataArraySelectionWidget::on_dataContainerList_currentIndexChanged(int index)
-{
-
-  //  std::cout << "void DataArraySelectionWidget::on_dataContainerList_currentIndexChanged(int index)" << std::endl;
-  populateAttributeMatrixList();
-
-  // Select the first AttributeMatrix in the list
-  if(attributeMatrixList->count() > 0)
-  {
-    on_attributeMatrixList_currentIndexChanged(0);
-  }
-
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void DataArraySelectionWidget::populateAttributeMatrixList()
-{
-  QString dcName = dataContainerList->currentText();
-
-  // Clear the AttributeMatrix List
-  attributeMatrixList->blockSignals(true);
-  attributeMatrixList->clear();
-
-  // Loop over the data containers until we find the proper data container
-  QList<DataContainerProxy> containers = m_DcaProxy.list;
-  QListIterator<DataContainerProxy> containerIter(containers);
-  while(containerIter.hasNext())
-  {
-    DataContainerProxy dc = containerIter.next();
-
-    if(dc.name.compare(dcName) == 0 )
-    {
-      // We found the proper Data Container, now populate the AttributeMatrix List
-      QMap<QString, AttributeMatrixProxy> attrMats = dc.attributeMatricies;
-      QMapIterator<QString, AttributeMatrixProxy> attrMatsIter(attrMats);
-      while(attrMatsIter.hasNext() )
-      {
-        attrMatsIter.next();
-        QString amName = attrMatsIter.key();
-        attributeMatrixList->addItem(amName);
-      }
-    }
-  }
-
-  attributeMatrixList->blockSignals(false);
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void DataArraySelectionWidget::on_attributeMatrixList_currentIndexChanged(int index)
-{
-  // std::cout << "void DataArraySelectionWidget::on_attributeMatrixList_currentIndexChanged(int index)" << std::endl;
-  populateAttributeArrayList();
-
-  if(attributeArrayList->count() > 0)
-  {
-    attributeArrayList->setCurrentIndex(0);
-  }
 }
 
 // -----------------------------------------------------------------------------
@@ -628,3 +596,32 @@ void DataArraySelectionWidget::filterNeedsInputParameters(AbstractFilter* filter
   }
 
 }
+
+#if 0
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DataArraySelectionWidget::selectDefaultPath()
+{
+
+  // set the default DataContainer
+  if(dataContainerList->count() > 0)
+  {
+    dataContainerList->setCurrentIndex(0);
+  }
+
+  // Select the first AttributeMatrix in the list
+  if(attributeMatrixList->count() > 0)
+  {
+    attributeMatrixList->setCurrentIndex(0);
+  }
+
+  // Set the default AttributeArray
+  m_Filter->blockSignals(true);
+  if(attributeArrayList->count() > 0)
+  {
+    attributeArrayList->setCurrentIndex(0);
+  }
+  m_Filter->blockSignals(false);
+}
+#endif
