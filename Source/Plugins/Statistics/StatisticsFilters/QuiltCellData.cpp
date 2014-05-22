@@ -74,10 +74,9 @@ QuiltCellData::~QuiltCellData()
 void QuiltCellData::setupFilterParameters()
 {
   FilterParameterVector parameters;
+  parameters.push_back(FilterParameter::New("Cell Array To Quilt", "SelectedCellArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getSelectedCellArrayPath(), false));
   parameters.push_back(FilterParameter::New("Quilt Step", "QuiltStep", FilterParameterWidgetType::IntVec3Widget, getQuiltStep(), false, "Voxels"));
   parameters.push_back(FilterParameter::New("Patch Size", "PatchSize", FilterParameterWidgetType::IntVec3Widget, getPatchSize(), false, "Voxels"));
-  parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
-  parameters.push_back(FilterParameter::New("Cell Array To Quilt", "SelectedCellArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getSelectedCellArrayPath(), false));
   parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
   parameters.push_back(FilterParameter::New("Output DataContainer Name", "OutputDataContainerName", FilterParameterWidgetType::StringWidget, getOutputDataContainerName(), true));
   parameters.push_back(FilterParameter::New("Output AttributeMatrix Name", "OutputAttributeMatrixName", FilterParameterWidgetType::StringWidget, getOutputAttributeMatrixName(), true));

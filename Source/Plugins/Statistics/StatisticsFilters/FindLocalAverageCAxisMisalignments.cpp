@@ -99,25 +99,16 @@ FindLocalAverageCAxisMisalignments::~FindLocalAverageCAxisMisalignments()
 void FindLocalAverageCAxisMisalignments::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Calculate Unbiased Local C-Axis Misalignments");
-    parameter->setPropertyName("CalcUnbiasedAvg");
-    parameter->setWidgetType(FilterParameterWidgetType::BooleanWidget);
-  //  parameter->setValueType("bool");
-    parameter->setUnits("");
-    parameters.push_back(parameter);
-  }
-  {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Calculate Local C-Axis Misalignments");
-    parameter->setPropertyName("CalcBiasedAvg");
-    parameter->setWidgetType(FilterParameterWidgetType::BooleanWidget);
-   // option->setValueType("bool");
-    parameter->setUnits("");
-    parameters.push_back(parameter);
-  }
-
+  parameters.push_back(FilterParameter::New("UnbiasedLocalCAxisMisalignments", "UnbiasedLocalCAxisMisalignmentsArrayName", FilterParameterWidgetType::StringWidget, getUnbiasedLocalCAxisMisalignmentsArrayName(), false, ""));
+  FilterParameter::Pointer param = parameters.back();
+  param->setConditional(true);
+  param->setConditionalProperty("m_CalcUnbiasedAvg");
+  param->setConditionalLabel("Calculate Unbiased Local C-Axis Misalignments");
+  parameters.push_back(FilterParameter::New("LocalCAxisMisalignments", "LocalCAxisMisalignmentsArrayName", FilterParameterWidgetType::StringWidget, getLocalCAxisMisalignmentsArrayName(), false, ""));
+  param = parameters.back();
+  param->setConditional(true);
+  param->setConditionalProperty("m_CalciasedAvg");
+  param->setConditionalLabel("Calculate Local C-Axis Misalignments");
   parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
   parameters.push_back(FilterParameter::New("Neighbor List Array Name", "NeighborListArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getNeighborListArrayPath(), true, ""));
   parameters.push_back(FilterParameter::New("CAxis Misalignment List Array Name", "CAxisMisalignmentListArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getCAxisMisalignmentListArrayPath(), true, ""));
@@ -128,8 +119,6 @@ void FindLocalAverageCAxisMisalignments::setupFilterParameters()
   parameters.push_back(FilterParameter::New("CrystalStructures", "CrystalStructuresArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getCrystalStructuresArrayPath(), true, ""));
   parameters.push_back(FilterParameter::New("New Cell Feature Attribute Matrix Name", "NewCellFeatureAttributeMatrixName", FilterParameterWidgetType::AttributeMatrixSelectionWidget, getNewCellFeatureAttributeMatrixName(), true, ""));
   parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
-  parameters.push_back(FilterParameter::New("UnbiasedLocalCAxisMisalignments", "UnbiasedLocalCAxisMisalignmentsArrayName", FilterParameterWidgetType::StringWidget, getUnbiasedLocalCAxisMisalignmentsArrayName(), true, ""));
-  parameters.push_back(FilterParameter::New("LocalCAxisMisalignments", "LocalCAxisMisalignmentsArrayName", FilterParameterWidgetType::StringWidget, getLocalCAxisMisalignmentsArrayName(), true, ""));
   parameters.push_back(FilterParameter::New("NumFeaturesPerParent", "NumFeaturesPerParentArrayName", FilterParameterWidgetType::StringWidget, getNumFeaturesPerParentArrayName(), true, ""));
   setFilterParameters(parameters);
 }

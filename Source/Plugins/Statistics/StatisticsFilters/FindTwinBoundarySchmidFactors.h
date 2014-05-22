@@ -70,8 +70,12 @@ class FindTwinBoundarySchmidFactors : public AbstractFilter
 
     virtual ~FindTwinBoundarySchmidFactors();
 
+    DREAM3D_FILTER_PARAMETER(bool, WriteFile)
+    Q_PROPERTY(bool WriteFile READ getWriteFile WRITE setWriteFile)
+
     DREAM3D_FILTER_PARAMETER(QString, TwinBoundarySchmidFactorsFile)
     Q_PROPERTY(QString TwinBoundarySchmidFactorsFile READ getTwinBoundarySchmidFactorsFile WRITE setTwinBoundarySchmidFactorsFile)
+
     DREAM3D_FILTER_PARAMETER(FloatVec3_t, LoadingDir)
     Q_PROPERTY(FloatVec3_t LoadingDir READ getLoadingDir WRITE setLoadingDir)
 
