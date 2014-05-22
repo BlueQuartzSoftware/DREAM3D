@@ -73,10 +73,16 @@ void AddBadData::setupFilterParameters()
 {
   FilterParameterVector parameters;
 
-  parameters.push_back(FilterParameter::New("Add Random Noise", "PoissonNoise", FilterParameterWidgetType::BooleanWidget, getPoissonNoise(), false));
   parameters.push_back(FilterParameter::New("Volume Fraction of Random Noise", "PoissonVolFraction", FilterParameterWidgetType::DoubleWidget, getPoissonVolFraction(), false));
-  parameters.push_back(FilterParameter::New("Add Boundary Noise", "BoundaryNoise", FilterParameterWidgetType::BooleanWidget, getBoundaryNoise(), false));
+  FilterParameter::Pointer param = parameters.back();
+  param->setConditional(true);
+  param->setConditionalProperty("PoissonNoise");
+  param->setConditionalLabel("Add Random Noise");
   parameters.push_back(FilterParameter::New("Volume Fraction of Boundary Noise", "BoundaryVolFraction", FilterParameterWidgetType::DoubleWidget, getBoundaryVolFraction(), false));
+  param = parameters.back();
+  param->setConditional(true);
+  param->setConditionalProperty("BoundaryNoise");
+  param->setConditionalLabel("Add Boundary Noise");
   parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
   parameters.push_back(FilterParameter::New("GBEuclideanDistances", "GBEuclideanDistancesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getGBEuclideanDistancesArrayPath(), true, ""));
   setFilterParameters(parameters);

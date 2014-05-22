@@ -215,6 +215,7 @@ class CalculateTwinBoundarySchmidFactorsImpl
 FindTwinBoundarySchmidFactors::FindTwinBoundarySchmidFactors()  :
   AbstractFilter(),
   m_TwinBoundarySchmidFactorsFile(""),
+  m_WriteFile(false),
   m_AvgQuatsArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, DREAM3D::FeatureData::AvgQuats),
   m_FeaturePhasesArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, DREAM3D::FeatureData::Phases),
   m_CrystalStructuresArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellEnsembleAttributeMatrixName, DREAM3D::EnsembleData::CrystalStructures),
@@ -256,6 +257,10 @@ void FindTwinBoundarySchmidFactors::setupFilterParameters()
 {
   FilterParameterVector parameters;
   parameters.push_back(FilterParameter::New("Twin Boundary Info File", "TwinBoundarySchmidFactorsFile", FilterParameterWidgetType::OutputFileWidget, getTwinBoundarySchmidFactorsFile(), false));
+  FilterParameter::Pointer param = parameters.back();
+  param->setConditional(true);
+  param->setConditionalProperty("WriteFile");
+  param->setConditionalLabel("Write Twin Boundary Info File");
   parameters.push_back(FilterParameter::New("Loading Direction", "LoadingDir", FilterParameterWidgetType::FloatVec3Widget, getLoadingDir(), false));
   parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
   parameters.push_back(FilterParameter::New("AvgQuats", "AvgQuatsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getAvgQuatsArrayPath(), true, ""));
@@ -272,6 +277,7 @@ void FindTwinBoundarySchmidFactors::setupFilterParameters()
 void FindTwinBoundarySchmidFactors::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
+  setWriteFile(reader->readValue("WriteFile", getWriteFile()));
   setSurfaceMeshTwinBoundarySchmidFactorsArrayName(reader->readString("SurfaceMeshTwinBoundarySchmidFactorsArrayName", getSurfaceMeshTwinBoundarySchmidFactorsArrayName() ) );
   setSurfaceMeshTwinBoundaryArrayPath(reader->readDataArrayPath("SurfaceMeshTwinBoundaryArrayPath", getSurfaceMeshTwinBoundaryArrayPath() ) );
   setSurfaceMeshFaceNormalsArrayPath(reader->readDataArrayPath("SurfaceMeshFaceNormalsArrayPath", getSurfaceMeshFaceNormalsArrayPath() ) );
@@ -290,6 +296,7 @@ void FindTwinBoundarySchmidFactors::readFilterParameters(AbstractFilterParameter
 int FindTwinBoundarySchmidFactors::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
+  writer->writeValue("WriteFile", getWriteFile() );
   writer->writeValue("SurfaceMeshTwinBoundarySchmidFactorsArrayName", getSurfaceMeshTwinBoundarySchmidFactorsArrayName() );
   writer->writeValue("SurfaceMeshTwinBoundaryArrayPath", getSurfaceMeshTwinBoundaryArrayPath() );
   writer->writeValue("SurfaceMeshFaceNormalsArrayPath", getSurfaceMeshFaceNormalsArrayPath() );
@@ -399,15 +406,18 @@ void FindTwinBoundarySchmidFactors::execute()
   }
 
 
-  std::ofstream outFile;
-  outFile.open(m_TwinBoundarySchmidFactorsFile.toLatin1().data(), std::ios_base::binary);
-
-  outFile << "Feature1	Feature2	IsTwin	Plane	Schmid1	Schmid2	Schmid3" << "\n";
-  for (size_t i = 0; i < numTriangles; i++)
+  if(m_WriteFile == true)
   {
-    outFile << m_SurfaceMeshFaceLabels[2 * i] << "  " << m_SurfaceMeshFaceLabels[2 * i + 1] << "  " << m_SurfaceMeshTwinBoundary[i] << "  " << m_SurfaceMeshTwinBoundarySchmidFactors[3 * i] << "  " << m_SurfaceMeshTwinBoundarySchmidFactors[3 * i + 1] << "  " << m_SurfaceMeshTwinBoundarySchmidFactors[3 * i + 2] << "\n";
+    std::ofstream outFile;
+    outFile.open(m_TwinBoundarySchmidFactorsFile.toLatin1().data(), std::ios_base::binary);
+
+    outFile << "Feature1	Feature2	IsTwin	Plane	Schmid1	Schmid2	Schmid3" << "\n";
+    for (size_t i = 0; i < numTriangles; i++)
+    {
+      outFile << m_SurfaceMeshFaceLabels[2 * i] << "  " << m_SurfaceMeshFaceLabels[2 * i + 1] << "  " << m_SurfaceMeshTwinBoundary[i] << "  " << m_SurfaceMeshTwinBoundarySchmidFactors[3 * i] << "  " << m_SurfaceMeshTwinBoundarySchmidFactors[3 * i + 1] << "  " << m_SurfaceMeshTwinBoundarySchmidFactors[3 * i + 2] << "\n";
+    }
+    outFile.close();
   }
-  outFile.close();
 
   notifyStatusMessage(getHumanLabel(), "FindTwinBoundarySchmidFactors Completed");
 }
