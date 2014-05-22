@@ -24,6 +24,7 @@ set(_PublicFilters
   TranslateSurfaceMesh
   SegmentBoundaries
   DecimateSurfaceMesh
+  FindFieldAverage
 )
 
 
