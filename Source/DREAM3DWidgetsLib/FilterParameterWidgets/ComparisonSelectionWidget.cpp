@@ -94,7 +94,10 @@ ComparisonInputs ComparisonSelectionWidget::getComparisonInputs()
 void ComparisonSelectionWidget::setupGui()
 {
 
-
+  if (m_Filter == NULL)
+  {
+    return;
+  }
   if (m_FilterParameter == NULL)
   {
     return;
@@ -113,20 +116,6 @@ void ComparisonSelectionWidget::setupGui()
   QAbstractItemDelegate* aid = m_ComparisonSelectionTableModel->getItemDelegate();
   m_ComparisonSelectionTableView->setItemDelegate(aid);
 
-
-//  dataContainerList->blockSignals(true);
-//  attributeMatrixList->blockSignals(true);
-
-  dataContainerList->clear();
-  attributeMatrixList->clear();
-
-  // Now let the gui send signals like normal
-//  dataContainerList->blockSignals(false);
-//  attributeMatrixList->blockSignals(false);
-
-  //Block the signals as we do not
-  populateComboBoxes();
-
   // Now connect all the signals and slots
   connect(m_ComparisonSelectionTableModel, SIGNAL(dataChanged(const QModelIndex&, const QModelIndex)),
           this, SLOT(tableDataWasChanged(const QModelIndex&, const QModelIndex&)));
@@ -142,6 +131,11 @@ void ComparisonSelectionWidget::setupGui()
   // Catch when the filter wants its values updated
   connect(m_Filter, SIGNAL(updateFilterParameters(AbstractFilter*)),
           this, SLOT(filterNeedsInputParameters(AbstractFilter*)));
+
+  // Set the data into the TableModel
+  ComparisonInputs comps = m_Filter->property(PROPERTY_NAME_AS_CHAR).value<ComparisonInputs>();
+  m_ComparisonSelectionTableModel->setTableData(comps);
+
 
 #if 0
   // is the filter parameter tied to a boolean property of the Filter Instance, if it is then we need to make the check box visible
@@ -197,7 +191,7 @@ void ComparisonSelectionWidget::on_conditionalCB_stateChanged(int state)
 // -----------------------------------------------------------------------------
 void ComparisonSelectionWidget::populateComboBoxes()
 {
-  //  std::cout << "void SingleArraySelectionWidget::populateComboBoxesWithSelection()" << std::endl;
+  std::cout << "ComparisonSelectionWidget::populateComboBoxes()" << std::endl;
 
 
   // Now get the DataContainerArray from the Filter instance
@@ -275,8 +269,12 @@ void ComparisonSelectionWidget::populateComboBoxes()
 
   if(!attributeMatrixList->signalsBlocked()) { didBlock = true; }
   attributeMatrixList->blockSignals(true);
+
   int amIndex = attributeMatrixList->findText(amName);
-  if(amIndex < 0 && amName.isEmpty() == false) { attributeMatrixList->addItem(amName); } // The name of the attributeMatrix was not found so just set the first one
+  if(amIndex < 0 && amName.isEmpty() == false)
+  {
+    attributeMatrixList->addItem(amName);
+  } // The name of the attributeMatrix was not found so just set the first one
   else
   {
     if(amIndex < 0) { amIndex = 0; }
@@ -290,23 +288,9 @@ void ComparisonSelectionWidget::populateComboBoxes()
     QAbstractItemDelegate* aid = m_ComparisonSelectionTableModel->getItemDelegate();
     m_ComparisonSelectionTableView->setItemDelegate(aid);
 
-    // Now we need to actually get the selections from the filter instance
-    // which we have from above
 
-    int count = comps.size();
-    // Create our inputs to directly set the table model
-    QVector<QString> featureNames(count);
-    QVector<float> featureValues(count);
-    QVector<int> featureOperators(count);
-    for (int i = 0; i < count; i++)
-    {
-      comp = comps[i];
-      featureNames[i] = comp.attributeArrayName;
-      featureValues[i] = comp.compValue;
-      featureOperators[i] = comp.compOperator;
-    }
     // Now set the table data directly.
-    m_ComparisonSelectionTableModel->setTableData(featureNames, featureValues, featureOperators);
+    m_ComparisonSelectionTableModel->setTableData(comps);
   }
   if(didBlock) { attributeMatrixList->blockSignals(false); didBlock = false; }
 
@@ -319,6 +303,7 @@ void ComparisonSelectionWidget::populateComboBoxes()
 // -----------------------------------------------------------------------------
 void ComparisonSelectionWidget::populateAttributeMatrixList()
 {
+  std::cout << "ComparisonSelectionWidget::populateAttributeMatrixList()" << std::endl;
   QString dcName = dataContainerList->currentText();
 
   // Clear the AttributeMatrix List
@@ -355,7 +340,7 @@ void ComparisonSelectionWidget::populateAttributeMatrixList()
 // -----------------------------------------------------------------------------
 QStringList ComparisonSelectionWidget::generateAttributeArrayList()
 {
-
+  std::cout << "ComparisonSelectionWidget::generateAttributeArrayList()" << std::endl;
   QStringList attributeArrayList;
   // Get the selected Data Container Name from the DataContainerList Widget
   QString currentDCName = dataContainerList->currentText();
@@ -420,6 +405,7 @@ QString ComparisonSelectionWidget::checkStringValues(QString curDcName, QString 
 // -----------------------------------------------------------------------------
 void ComparisonSelectionWidget::tableDataWasChanged(const QModelIndex& topLeft, const QModelIndex& bottomRight)
 {
+  std::cout << "ComparisonSelectionWidget::tableDataWasChanged(const QModelIndex& topLeft, const QModelIndex& bottomRight)" << std::endl;
   m_DidCausePreflight = true;
   emit parametersChanged();
   m_DidCausePreflight = false;
@@ -429,6 +415,7 @@ void ComparisonSelectionWidget::tableDataWasChanged(const QModelIndex& topLeft, 
 // -----------------------------------------------------------------------------
 void ComparisonSelectionWidget::on_addComparison_clicked()
 {
+  std::cout << "ComparisonSelectionWidget::on_addComparison_clicked()" << std::endl;
   if (!m_ComparisonSelectionTableModel->insertRow(m_ComparisonSelectionTableModel->rowCount())) { return; }
 
   QModelIndex index = m_ComparisonSelectionTableModel->index(m_ComparisonSelectionTableModel->rowCount() - 1, 0);
@@ -447,8 +434,9 @@ void ComparisonSelectionWidget::on_addComparison_clicked()
 // -----------------------------------------------------------------------------
 void ComparisonSelectionWidget::on_removeComparison_clicked()
 {
-  //qDebug() << "on_removeComparisonSelection_clicked" << "\n";
+  std::cout << "ComparisonSelectionWidget::on_removeComparison_clicked()" << std::endl;
   QItemSelectionModel* selectionModel = m_ComparisonSelectionTableView->selectionModel();
+
   if (!selectionModel->hasSelection()) { return; }
   QModelIndex index = selectionModel->currentIndex();
   if (!index.isValid()) { return; }
@@ -468,8 +456,7 @@ void ComparisonSelectionWidget::on_removeComparison_clicked()
 // -----------------------------------------------------------------------------
 void ComparisonSelectionWidget::on_dataContainerList_currentIndexChanged(int index)
 {
-
-  //  std::cout << "void SingleArraySelectionWidget::on_dataContainerList_currentIndexChanged(int index)" << std::endl;
+  std::cout << "ComparisonSelectionWidget::on_dataContainerList_currentIndexChanged(int index)" << std::endl;
   populateAttributeMatrixList();
 
   // Select the first AttributeMatrix in the list
@@ -486,6 +473,7 @@ void ComparisonSelectionWidget::on_dataContainerList_currentIndexChanged(int ind
 // -----------------------------------------------------------------------------
 void ComparisonSelectionWidget::on_attributeMatrixList_currentIndexChanged(int index)
 {
+  std::cout << "ComparisonSelectionWidget::on_attributeMatrixList_currentIndexChanged(int index)" << std::endl;
   QStringList possibleArrays = generateAttributeArrayList();
   m_ComparisonSelectionTableModel->setPossibleFeatures(possibleArrays);
   // Set the ItemDelegate for the table.
@@ -498,6 +486,7 @@ void ComparisonSelectionWidget::on_attributeMatrixList_currentIndexChanged(int i
 // -----------------------------------------------------------------------------
 void ComparisonSelectionWidget::setComparisons(QVector<ComparisonInput_t> comparisons)
 {
+  std::cout << "ComparisonSelectionWidget::setComparisons(QVector<ComparisonInput_t> comparisons)" << std::endl;
   qint32 count = comparisons.size();
 
   QVector<QString> arrayNames(count);
@@ -519,7 +508,9 @@ void ComparisonSelectionWidget::setComparisons(QVector<ComparisonInput_t> compar
 // -----------------------------------------------------------------------------
 void ComparisonSelectionWidget::filterNeedsInputParameters(AbstractFilter* filter)
 {
-  // qDebug() << "DataContainerArrayProxyWidget::filterNeedsInputParameters(AbstractFilter* filter)";
+  qDebug() << "DataContainerArrayProxyWidget::filterNeedsInputParameters(AbstractFilter* filter)";
+
+ // if(true) { return; }
 
   QVariant var;
   ComparisonInputs comps = getComparisonInputs();
@@ -531,17 +522,6 @@ void ComparisonSelectionWidget::filterNeedsInputParameters(AbstractFilter* filte
   {
     FilterParameterWidgetsDialogs::ShowCouldNotSetFilterParameter(m_Filter, m_FilterParameter);
   }
-
-//  if(m_FilterParameter->isConditional() )
-//  {
-//    var.setValue(conditionalCB->isChecked());
-//    ok = filter->setProperty(m_FilterParameter->getConditionalProperty().toLatin1().constData(), var);
-//    if(false == ok)
-//    {
-//      FilterParameterWidgetsDialogs::ShowCouldNotSetConditionalFilterParameter(m_Filter, m_FilterParameter);
-//    }
-//  }
-
 }
 
 
@@ -551,6 +531,7 @@ void ComparisonSelectionWidget::filterNeedsInputParameters(AbstractFilter* filte
 // -----------------------------------------------------------------------------
 void ComparisonSelectionWidget::beforePreflight()
 {
+  std::cout << "ComparisonSelectionWidget::beforePreflight()" << std::endl;
   if (NULL == m_Filter) { return; }
   if(m_DidCausePreflight == true)
   {
