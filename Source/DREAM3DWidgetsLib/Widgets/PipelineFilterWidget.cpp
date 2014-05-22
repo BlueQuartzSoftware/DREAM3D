@@ -252,6 +252,17 @@ QString PipelineFilterWidget::getHumanLabel()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+QString PipelineFilterWidget::getFilterClassName()
+{
+  if (NULL != m_Filter.get())
+  { return m_Filter->getNameOfClass(); }
+
+  return "";
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 QString PipelineFilterWidget::getFilterGroup()
 {
   if (NULL != m_Filter.get())

@@ -83,8 +83,9 @@ class DREAM3DWidgetsLib_EXPORT PipelineFilterWidget : public QFrame, private Ui:
     virtual bool isSelected();
 
     virtual QString getHumanLabel();
-    virtual QString  getFilterGroup();
-    virtual QString  getFilterSubGroup();
+    virtual QString getFilterGroup();
+    virtual QString getFilterSubGroup();
+    virtual QString getFilterClassName();
 
     static QString getOpenDialogLastDirectory() { return m_OpenDialogLastDirectory; }
     static void setOpenDialogLastDirectory(QString val) { m_OpenDialogLastDirectory = val; }
