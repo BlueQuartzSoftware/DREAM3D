@@ -1,7 +1,7 @@
 [PipelineBuilder]
 Name=(15) 12 Percent Full Reconstruction
-Number_Filters=13
-Version=5.0.6545
+Number_Filters=14
+Version=5.0.6552
 
 [0]
 Filter_Name=ReadH5Ebsd
@@ -11,8 +11,8 @@ CellAttributeMatrixName=CellData
 CellEnsembleAttributeMatrixName=CellEnsembleData
 InputFile=Data/12PercentTension/12PercentTension.h5ebsd
 RefFrameZDir=2
-ZStartIndex=101
-ZEndIndex=300
+ZStartIndex=10101
+ZEndIndex=10300
 UseTransformations=1
 ArraySelections_SelectedArrayNames\size=6
 ArraySelections_SelectedArrayNames\1\SelectedArrayNames=EulerAngles
@@ -25,7 +25,7 @@ ArraySelections_SelectedArrayNames\6\SelectedArrayNames=Image Quality
 [1]
 Filter_Name=MultiThresholdObjects
 Filter_Human_Label=Threshold Objects
-DestinationArrayName=ThresholdArray
+DestinationArrayName=GoodVoxels
 SelectedThresholds\size=2
 SelectedThresholds\1\DataContainerName=VolumeDataContainer
 SelectedThresholds\1\AttributeMatrixName=CellData
@@ -52,7 +52,7 @@ Filter_Human_Label=Align Sections (Misorientation)
 AlignmentShiftFileName=
 WriteAlignmentShifts=0
 CrystalStructuresArrayPath=VolumeDataContainer|CellEnsembleData|CrystalStructures
-GoodVoxelsArrayPath=VolumeDataContainer|CellData|ThresholdArray
+GoodVoxelsArrayPath=VolumeDataContainer|CellData|GoodVoxels
 UseGoodVoxels=1
 CellPhasesArrayPath=VolumeDataContainer|CellData|Phases
 QuatsArrayPath=VolumeDataContainer|CellData|Quats
@@ -61,14 +61,14 @@ MisorientationTolerance=5
 [4]
 Filter_Name=IdentifySample
 Filter_Human_Label=Identify Sample
-GoodVoxelsArrayPath=VolumeDataContainer|CellData|ThresholdArray
+GoodVoxelsArrayPath=VolumeDataContainer|CellData|GoodVoxels
 
 [5]
 Filter_Name=AlignSectionsFeatureCentroid
 Filter_Human_Label=Align Sections (Feature Centroid)
 AlignmentShiftFileName=
 WriteAlignmentShifts=0
-GoodVoxelsArrayPath=VolumeDataContainer|CellData|ThresholdArray
+GoodVoxelsArrayPath=VolumeDataContainer|CellData|GoodVoxels
 UseReferenceSlice=1
 ReferenceSlice=0
 
@@ -78,7 +78,7 @@ Filter_Human_Label=Neighbor Orientation Comparison (Bad Data)
 QuatsArrayPath=VolumeDataContainer|CellData|Quats
 CrystalStructuresArrayPath=VolumeDataContainer|CellEnsembleData|CrystalStructures
 CellPhasesArrayPath=VolumeDataContainer|CellData|Phases
-GoodVoxelsArrayPath=VolumeDataContainer|CellData|ThresholdArray
+GoodVoxelsArrayPath=VolumeDataContainer|CellData|GoodVoxels
 MisorientationTolerance=5
 NumberofNeighbors=4
 
@@ -102,30 +102,38 @@ FeatureIdsArrayName=FeatureIds
 QuatsArrayPath=VolumeDataContainer|CellData|Quats
 CrystalStructuresArrayPath=VolumeDataContainer|CellEnsembleData|CrystalStructures
 CellPhasesArrayPath=VolumeDataContainer|CellData|Phases
-GoodVoxelsArrayPath=VolumeDataContainer|CellData|ThresholdArray
+GoodVoxelsArrayPath=VolumeDataContainer|CellData|GoodVoxels
 UseGoodVoxels=1
 MisorientationTolerance=5
 
 [9]
+Filter_Name=FindFeaturePhases
+Filter_Human_Label=Find Feature Phases
+CellFeatureAttributeMatrixName=VolumeDataContainer|CellFeatureData|
+FeaturePhasesArrayName=Phases
+CellPhasesArrayPath=VolumeDataContainer|CellData|Phases
+FeatureIdsArrayPath=VolumeDataContainer|CellData|FeatureIds
+
+[10]
 Filter_Name=MinSize
 Filter_Human_Label=Minimum Size Filter
-FeaturePhasesArrayPath=VolumeDataContainer|CellData|Phases
+FeaturePhasesArrayPath=VolumeDataContainer|CellFeatureData|Phases
 FeatureIdsArrayPath=VolumeDataContainer|CellData|FeatureIds
 MinAllowedFeatureSize=16
 ApplyToSinglePhase=0
 PhaseNumber=0
 
-[10]
+[11]
 Filter_Name=FillBadData
 Filter_Human_Label=Fill Bad Data
 FeatureIdsArrayPath=VolumeDataContainer|CellData|FeatureIds
 MinAllowedDefectSize=1000
 
-[11]
+[12]
 Filter_Name=GenerateIPFColors
 Filter_Human_Label=Generate IPF Colors
 UseGoodVoxels=0
-GoodVoxelsArrayPath=VolumeDataContainer|CellData|
+GoodVoxelsArrayPath=VolumeDataContainer|CellData|GoodVoxels
 CrystalStructuresArrayPath=VolumeDataContainer|CellEnsembleData|CrystalStructures
 CellEulerAnglesArrayPath=VolumeDataContainer|CellData|EulerAngles
 CellPhasesArrayPath=VolumeDataContainer|CellData|Phases
@@ -135,7 +143,7 @@ ReferenceDir\1\x=0
 ReferenceDir\2\y=0
 ReferenceDir\3\z=1
 
-[12]
+[13]
 Filter_Name=DataContainerWriter
 Filter_Human_Label=Write DREAM3D Data File
 OutputFile=Data/Output/12PercentTension.dream3d
