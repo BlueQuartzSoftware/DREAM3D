@@ -50,7 +50,7 @@
 #include "DREAM3DLib/OrientationOps/HexagonalOps.h"
 #include "DREAM3DLib/OrientationOps/OrthoRhombicOps.h"
 #include "DREAM3DLib/DataContainers/VolumeDataContainer.h"
-#include "DREAM3DLib/DataArrays/NeighborList.hpp"
+
 
 #include "Statistics/StatisticsConstants.h"
 /**
