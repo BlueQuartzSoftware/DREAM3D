@@ -102,6 +102,30 @@ class DREAM3DLib_EXPORT SurfaceMeshDataContainer : public Observable
     DOES_DATASET_EXIST_DECL(EnsembleData)
 
     /**
+    * @brief Renames a Vertex data array from the Data Container
+    * @param name The name of the array
+    */
+    virtual bool renameVertexData(const std::string &oldname, const std::string &newname);
+
+    /**
+    * @brief Renames a Edge data array from the Data Container
+    * @param name The name of the array
+    */
+    virtual bool renameEdgeData(const std::string &oldname, const std::string &newname);
+
+    /**
+    * @brief Renames a Face data array from the Data Container
+    * @param name The name of the array
+    */
+    virtual bool renameFaceData(const std::string &oldname, const std::string &newname);
+
+    /**
+    * @brief Renames a field data array from the Data Container
+    * @param name The name of the array
+    */
+    virtual bool renameFieldData(const std::string &oldname, const std::string &newname);
+
+    /**
      * @brief buildMeshVertLinks Creates the list of Faces for each vertex that the vertex is a part of
      */
     void buildMeshVertLinks();

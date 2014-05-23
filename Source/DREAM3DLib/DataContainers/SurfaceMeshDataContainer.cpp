@@ -79,6 +79,78 @@ DOES_DATASET_EXIST_DEFN(SurfaceMeshDataContainer, EnsembleData)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+bool SurfaceMeshDataContainer::renameVertexData(const std::string &oldname, const std::string &newname)
+{
+  std::map<std::string, IDataArray::Pointer>::iterator it;
+  it =  m_VertexData.find(oldname);
+  if ( it == m_VertexData.end() )
+  {
+    return false;
+  }
+  IDataArray::Pointer p = (*it).second;
+  p->SetName(newname);
+  removeVertexData(oldname);
+  addVertexData(newname, p);
+  return true;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+bool SurfaceMeshDataContainer::renameEdgeData(const std::string &oldname, const std::string &newname)
+{
+  std::map<std::string, IDataArray::Pointer>::iterator it;
+  it =  m_EdgeData.find(oldname);
+  if ( it == m_EdgeData.end() )
+  {
+    return false;
+  }
+  IDataArray::Pointer p = (*it).second;
+  p->SetName(newname);
+  removeEdgeData(oldname);
+  addEdgeData(newname, p);
+  return true;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+bool SurfaceMeshDataContainer::renameFaceData(const std::string &oldname, const std::string &newname)
+{
+  std::map<std::string, IDataArray::Pointer>::iterator it;
+  it =  m_FaceData.find(oldname);
+  if ( it == m_FaceData.end() )
+  {
+    return false;
+  }
+  IDataArray::Pointer p = (*it).second;
+  p->SetName(newname);
+  removeFaceData(oldname);
+  addFaceData(newname, p);
+  return true;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+bool SurfaceMeshDataContainer::renameFieldData(const std::string &oldname, const std::string &newname)
+{
+  std::map<std::string, IDataArray::Pointer>::iterator it;
+  it =  m_FieldData.find(oldname);
+  if ( it == m_FieldData.end() )
+  {
+    return false;
+  }
+  IDataArray::Pointer p = (*it).second;
+  p->SetName(newname);
+  removeFieldData(oldname);
+  addFieldData(newname, p);
+  return true;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void SurfaceMeshDataContainer::buildMeshVertLinks()
 {
   m_MeshVertLinks = MeshVertLinks::New();
