@@ -188,7 +188,7 @@ void QGenerateEnsembleStatisticsWidget::writeOptions(QSettings &prefs)
       if(NULL != cb)
       {
         prefs.setArrayIndex(r);
-        prefs.setValue("PhastType", cb->currentIndex());
+        prefs.setValue("PhaseType", cb->currentIndex());
       }
     }
     prefs.endArray();

@@ -24,6 +24,11 @@ For historical compatibility in versions prior to 4.2 the internal representatio
 
 ## Version 4.2 Bugs Fixed & Features Added ##
 
+### Version 4.2.4920 ###
++ Fixed Issue no. 149: VTK Grain Ids Reader does not Work correctly for ASCII Data
++ Fixed Issue no. 150: DREAM3D file writing errors out when a NeighborList is generated
++ Fixed Issue no. 151: Avizo uniform rectilinear file writer does not write correct resolution
++ Updated ReadMe with web address of the official DREAM3D IMMI Paper.
 
 ### Version 4.2.4912 ###
 + Fixed Issue no. 147: Adding a favorite may result in the favorite being written to the wrong directory
