@@ -25,6 +25,7 @@ set(_PublicFilters
   SegmentBoundaries
   DecimateSurfaceMesh
   FindFieldAverage
+  RenameSurfaceMeshFieldArray
   RenameFaceArray
 )
 

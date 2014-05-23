@@ -34,16 +34,16 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include "RenameFaceArray.h"
+#include "RenameSurfaceMeshFieldArray.h"
 
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-RenameFaceArray::RenameFaceArray() :
+RenameSurfaceMeshFieldArray::RenameSurfaceMeshFieldArray() :
   AbstractFilter(),
-  m_SelectedFaceArrayName(""),
-  m_NewFaceArrayName("")
+  m_SelectedFieldArrayName(""),
+  m_NewFieldArrayName("")
 {
   setupFilterParameters();
 }
@@ -51,29 +51,29 @@ RenameFaceArray::RenameFaceArray() :
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-RenameFaceArray::~RenameFaceArray()
+RenameSurfaceMeshFieldArray::~RenameSurfaceMeshFieldArray()
 {
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RenameFaceArray::setupFilterParameters()
+void RenameSurfaceMeshFieldArray::setupFilterParameters()
 {
   std::vector<FilterParameter::Pointer> parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
-    option->setHumanLabel("Current Face Array Name");
-    option->setPropertyName("SelectedFaceArrayName");
-    option->setWidgetType(FilterParameter::SurfaceMeshFaceArrayNameSelectionWidget);
+    option->setHumanLabel("Current Field Array Name");
+    option->setPropertyName("SelectedFieldArrayName");
+    option->setWidgetType(FilterParameter::SurfaceMeshFieldArrayNameSelectionWidget);
     option->setValueType("string");
     option->setUnits("");
     parameters.push_back(option);
   }
   {
     FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("New Cell Array Name");
-    parameter->setPropertyName("NewFaceArrayName");
+    parameter->setHumanLabel("New Field Array Name");
+    parameter->setPropertyName("NewFieldArrayName");
     parameter->setWidgetType(FilterParameter::StringWidget);
     parameter->setValueType("string");
     parameters.push_back(parameter);
@@ -85,25 +85,22 @@ void RenameFaceArray::setupFilterParameters()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RenameFaceArray::readFilterParameters(AbstractFilterParametersReader* reader, int index)
+void RenameSurfaceMeshFieldArray::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-  /* Code to read the values goes between these statements */
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
-  setSelectedFaceArrayName( reader->readValue( "SelectedFaceArrayName", getSelectedFaceArrayName() ) );
-  setNewFaceArrayName( reader->readValue( "NewFaceArrayName", getNewFaceArrayName() ) );
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
+  setSelectedFieldArrayName( reader->readValue( "SelectedFieldArrayName", getSelectedFieldArrayName() ) );
+  setNewFieldArrayName( reader->readValue( "NewFieldArrayName", getNewFieldArrayName() ) );
   reader->closeFilterGroup();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int RenameFaceArray::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
+int RenameSurfaceMeshFieldArray::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  writer->writeValue("SelectedFaceArrayName", getSelectedFaceArrayName() );
-  writer->writeValue("NewFaceArrayName", getNewFaceArrayName() );
+  writer->writeValue("SelectedFieldArrayName", getSelectedFieldArrayName() );
+  writer->writeValue("NewFieldArrayName", getNewFieldArrayName() );
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
@@ -111,27 +108,27 @@ int RenameFaceArray::writeFilterParameters(AbstractFilterParametersWriter* write
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RenameFaceArray::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
+void RenameSurfaceMeshFieldArray::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   SurfaceMeshDataContainer* sm = getSurfaceMeshDataContainer();
   if(NULL == sm)
   {
     setErrorCondition(-999);
-    addErrorMessage(getHumanLabel(), "The Surface Mesh DataContainer Object was NULL", -999);
+    addErrorMessage(getHumanLabel(), "The SurfaceMeshDataContainer Object was NULL", -999);
     return;
   }
+
   setErrorCondition(0);
   std::stringstream ss;
 
-  if(m_SelectedFaceArrayName.empty() == true)
+  if(m_SelectedFieldArrayName.empty() == true)
   {
     setErrorCondition(-11000);
-    ss << "An array from the Surface Mesh Data Container must be selected.";
-    addErrorMessage(getHumanLabel(),ss.str(),getErrorCondition());
+     addErrorMessage(getHumanLabel(), "An array from the Surface Mesh Data Container must be selected.", getErrorCondition());
   }
   else
   {
-    bool check = sm->renameFaceData(m_SelectedFaceArrayName, m_NewFaceArrayName);
+    bool check = sm->renameFieldData(m_SelectedFieldArrayName, m_NewFieldArrayName);
     if(check == false)
     {
       ss << "Array to be renamed could not be found in DataContainer";
@@ -144,10 +141,8 @@ void RenameFaceArray::dataCheck(bool preflight, size_t voxels, size_t fields, si
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RenameFaceArray::preflight()
+void RenameSurfaceMeshFieldArray::preflight()
 {
-  /* Place code here that sanity checks input arrays and input values. Look at some
-  * of the other DREAM3DLib/Filters/.cpp files for sample codes */
   dataCheck(true, 1, 1, 1);
 }
 
@@ -155,26 +150,21 @@ void RenameFaceArray::preflight()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RenameFaceArray::execute()
+void RenameSurfaceMeshFieldArray::execute()
 {
   SurfaceMeshDataContainer* sm = getSurfaceMeshDataContainer();
   if(NULL == sm)
   {
     setErrorCondition(-999);
-    notifyErrorMessage("The DataContainer Object was NULL", -999);
+    notifyErrorMessage("The SurfaceMeshDataContainer Object was NULL", -999);
     return;
   }
   setErrorCondition(0);
   std::stringstream ss;
 
-  bool check = sm->renameFaceData(m_SelectedFaceArrayName, m_NewFaceArrayName);
+  bool check = sm->renameFieldData(m_SelectedFieldArrayName, m_NewFieldArrayName);
 
-  if(check == false)
-  {
-  ss << "Array to be renamed could not be found in DataContainer";
-  setErrorCondition(-11000);
-  notifyErrorMessage(ss.str(), getErrorCondition());
-  }
+  if(check == false) ss << "Array to be renamed could not be found in DataContainer";
 
   notifyStatusMessage("Complete");
 }
