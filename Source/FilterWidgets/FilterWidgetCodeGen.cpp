@@ -313,7 +313,7 @@ void createHeaderFile(const std::string &group, const std::string &filterName, A
     }
 
     if (opt->getWidgetType() >= FilterParameter::VoxelCellArrayNameSelectionWidget
-        && opt->getWidgetType() <= FilterParameter::SurfaceMeshEdgeArrayNameSelectionWidget )
+        && opt->getWidgetType() <= FilterParameter::SurfaceMeshEnsembleArrayNameSelectionWidget )
     { implementArrayNameComboBoxUpdated = true; }
   }
 
@@ -370,7 +370,7 @@ void createHeaderFile(const std::string &group, const std::string &filterName, A
 
     MD5 md5;
     md5.update(tempContents, tempFileSize);
-	free(tempContents);
+  free(tempContents);
     md5.finalize();
     std::string tempHexDigest = md5.hexdigest();
 
@@ -1212,7 +1212,7 @@ else
 
     MD5 md5;
     md5.update(tempContents, tempFileSize);
-	free(tempContents);
+  free(tempContents);
     md5.finalize();
     std::string tempHexDigest = md5.hexdigest();
 

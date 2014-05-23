@@ -65,7 +65,7 @@ void RenameFaceArray::setupFilterParameters()
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Current Face Array Name");
     option->setPropertyName("SelectedFaceArrayName");
-    option->setWidgetType(FilterParameter::SurfaceMeshFaceArrayNameSelectionWidget);
+    option->setWidgetType(FilterParameter::SurfaceMeshFieldArrayNameSelectionWidget);
     option->setValueType("string");
     option->setUnits("");
     parameters.push_back(option);
