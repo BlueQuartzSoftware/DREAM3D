@@ -24,6 +24,13 @@ For historical compatibility in versions prior to 4.2 the internal representatio
 
 ## Version 4.2 Bugs Fixed & Features Added ##
 
+### Version 4.2.xxx ###
+
++ Adding in functionality to randomize euler angles in synthetic builder. Randomize means in any FZ not actually random texture
++ Fixing some documentation issues reported by a user. (D. Boyce)
++ Fixing crashing bugs with data sets that are read in from binary files, use the Scalar Segment Grains and then try to 'Generate Ensembly Statistics'
++ Fixing typo in the GenerateEnsembleStatistics Widget that was causing the erronsous reading of parameters from a pipeline file
+
 ### Version 4.2.4920 ###
 + Fixed Issue no. 149: VTK Grain Ids Reader does not Work correctly for ASCII Data
 + Fixed Issue no. 150: DREAM3D file writing errors out when a NeighborList is generated
