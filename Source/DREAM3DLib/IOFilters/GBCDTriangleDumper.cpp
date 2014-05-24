@@ -178,11 +178,13 @@ void GBCDTriangleDumper::dataCheckVoxel()
 // -----------------------------------------------------------------------------
 void GBCDTriangleDumper::preflight()
 {
+  setInPreflight(true);
   emit preflightAboutToExecute();
   emit updateFilterParameters(this);
   dataCheckSurfaceMesh();
   dataCheckVoxel();
   emit preflightExecuted();
+  setInPreflight(false);
 }
 
 // -----------------------------------------------------------------------------

@@ -68,11 +68,15 @@ class NeighborList : public IDataArray
 {
   public:
     DREAM3D_SHARED_POINTERS(NeighborList<T> )
-    DREAM3D_STATIC_NEW_MACRO(NeighborList<T> )
     DREAM3D_TYPE_MACRO_SUPER(NeighborList<T>, IDataArray)
     DREAM3D_CLASS_VERSION(2)
 
     DREAM3D_INSTANCE_STRING_PROPERTY(NumNeighborsArrayName)
+
+    static Pointer New()
+    {
+      return CreateArray(0, "NeighborList", false);
+    }
 
     /**
      * @brief Static constructor
@@ -80,77 +84,105 @@ class NeighborList : public IDataArray
      * @param name The name of the array
      * @return Boost::Shared_Ptr wrapping an instance of DataArrayTemplate<T>
      */
-    static Pointer CreateArray(size_t numElements, const QString& name)
+    static Pointer CreateArray(size_t numElements, const QString& name, bool allocate=true)
     {
       if (name.isEmpty() == true)
       {
         return NullPointer();
       }
-      Pointer ptr = NeighborList<T>::New();
-      ptr->setName(name);
-      ptr->resize(numElements);
+      Pointer ptr = Pointer(new NeighborList<T>(numElements, name));
+      if (allocate) ptr->resize(numElements);
       return ptr;
     }
 
-    static Pointer CreateArray(size_t numTuples, int rank, size_t* dims, const QString& name)
+    /**
+     * @brief CreateArray
+     * @param numTuples
+     * @param rank
+     * @param dims
+     * @param name
+     * @param allocate
+     * @return
+     */
+    static Pointer CreateArray(size_t numTuples, int rank, size_t* dims, const QString& name, bool allocate=true)
     {
       if (name.isEmpty() == true)
       {
         return NullPointer();
       }
-      Pointer ptr = NeighborList<T>::New();
-      ptr->setName(name);
+
       size_t numElements = numTuples;
       for(int iter = 0; iter < rank; iter++)
       {
         numElements *= dims[iter];
       }
-      ptr->resize(numElements);
+      Pointer ptr = Pointer(new NeighborList<T>(numElements, name));
+      if (allocate) ptr->resize(numElements);
       return ptr;
     }
 
-    static Pointer CreateArray(size_t numTuples, std::vector<size_t> cDims, const QString& name)
+    /**
+     * @brief CreateArray
+     * @param numTuples
+     * @param cDims
+     * @param name
+     * @param allocate
+     * @return
+     */
+    static Pointer CreateArray(size_t numTuples, std::vector<size_t> cDims, const QString& name, bool allocate=true)
     {
       if (name.isEmpty() == true)
       {
         return NullPointer();
       }
-      Pointer ptr = NeighborList<T>::New();
-      ptr->setName(name);
       size_t numElements = numTuples;
       for(int iter = 0; iter < cDims.size(); iter++)
       {
         numElements *= cDims[iter];
       }
-      ptr->resize(numElements);
+      Pointer ptr = Pointer(new NeighborList<T>(numElements, name));
+      if (allocate) ptr->resize(numElements);
       return ptr;
     }
 
-    static Pointer CreateArray(size_t numTuples, QVector<size_t> cDims, const QString& name)
+    /**
+     * @brief CreateArray
+     * @param numTuples
+     * @param cDims
+     * @param name
+     * @param allocate
+     * @return
+     */
+    static Pointer CreateArray(size_t numTuples, QVector<size_t> cDims, const QString& name, bool allocate=true)
     {
       if (name.isEmpty() == true)
       {
         return NullPointer();
       }
-      Pointer ptr = NeighborList<T>::New();
-      ptr->setName(name);
       size_t numElements = numTuples;
       for(int iter = 0; iter < cDims.size(); iter++)
       {
         numElements *= cDims[iter];
       }
-      ptr->resize(numElements);
+      Pointer ptr = Pointer(new NeighborList<T>(numElements, name));
+      if (allocate) ptr->resize(numElements);
       return ptr;
     }
 
-    static Pointer CreateArray(QVector<size_t> tDims, QVector<size_t> cDims, const QString& name)
+    /**
+     * @brief CreateArray
+     * @param tDims
+     * @param cDims
+     * @param name
+     * @param allocate
+     * @return
+     */
+    static Pointer CreateArray(QVector<size_t> tDims, QVector<size_t> cDims, const QString& name, bool allocate=true)
     {
       if (name.isEmpty() == true)
       {
         return NullPointer();
       }
-      Pointer ptr = NeighborList<T>::New();
-      ptr->setName(name);
       size_t numElements = tDims[0];
       for(int iter = 1; iter < tDims.size(); iter++)
       {
@@ -160,7 +192,8 @@ class NeighborList : public IDataArray
       {
         numElements *= cDims[iter];
       }
-      ptr->resize(numElements);
+      Pointer ptr = Pointer(new NeighborList<T>(numElements, name));
+      if (allocate) ptr->resize(numElements);
       return ptr;
     }
 
@@ -172,9 +205,9 @@ class NeighborList : public IDataArray
      * @param name
      * @return
      */
-    virtual IDataArray::Pointer createNewArray(size_t numElements, int rank, size_t* dims, const QString& name)
+    virtual IDataArray::Pointer createNewArray(size_t numElements, int rank, size_t* dims, const QString& name, bool allocate=true)
     {
-      return NeighborList<T>::New();
+      return NeighborList<T>::CreateArray(numElements, rank, dims, name, allocate);
     }
 
     /**
@@ -184,9 +217,9 @@ class NeighborList : public IDataArray
      * @param name
      * @return
      */
-    virtual IDataArray::Pointer createNewArray(size_t numElements, std::vector<size_t> dims, const QString& name)
+    virtual IDataArray::Pointer createNewArray(size_t numElements, std::vector<size_t> dims, const QString& name, bool allocate=true)
     {
-      return NeighborList<T>::New();
+      return NeighborList<T>::CreateArray(numElements, dims, name, allocate);
     }
 
     /**
@@ -196,16 +229,19 @@ class NeighborList : public IDataArray
      * @param name
      * @return
      */
-    virtual IDataArray::Pointer createNewArray(size_t numElements, QVector<size_t> dims, const QString& name)
+    virtual IDataArray::Pointer createNewArray(size_t numElements, QVector<size_t> dims, const QString& name, bool allocate=true)
     {
-      return NeighborList<T>::New();
+      return NeighborList<T>::CreateArray(numElements, dims, name, allocate);
     }
 
 
     typedef std::vector<T> VectorType;
     typedef boost::shared_ptr<VectorType> SharedVectorType;
 
-    virtual ~NeighborList() {}
+    virtual ~NeighborList()
+    {
+      std::cout << "~NeighborList<T> size()=" << _data.size() << std::endl;
+    }
 
     /**
      * @brief isAllocated
@@ -342,6 +378,7 @@ class NeighborList : public IDataArray
         }
       }
       _data = replacement;
+      m_NumTuples = _data.size();
       return err;
     }
 
@@ -367,7 +404,14 @@ class NeighborList : public IDataArray
       BOOST_ASSERT(false);
     }
 
-    size_t getNumberOfTuples() {   return _data.size(); }
+    /**
+     * @brief Returns the number of elements in the internal array.
+     */
+    virtual size_t getNumberOfTuples()
+    {
+      return m_NumTuples;
+    }
+
 
     /**
      * @brief getSize Returns the total number of data items that are being stored. This is the sum of all the sizes
@@ -435,10 +479,8 @@ class NeighborList : public IDataArray
      */
     IDataArray::Pointer deepCopy()
     {
-      typename NeighborList<T>::Pointer daCopyPtr = NeighborList<T>::New();
-      daCopyPtr->resize(getNumberOfTuples());
+      typename NeighborList<T>::Pointer daCopyPtr = NeighborList<T>::CreateArray(getNumberOfTuples(), "Copy of NeighborList", true);
 
-      //NeighborList<T>* daCopy = NeighborList<T>::SafeObjectDownCast<IDataArray*, NeighborList<T>*>(daCopyPtr.get());
       for(size_t i = 0; i < getNumberOfTuples(); i++)
       {
         typename NeighborList<T>::SharedVectorType sharedNeiLst(new std::vector<T>);
@@ -456,8 +498,10 @@ class NeighborList : public IDataArray
      */
     int32_t resizeTotalElements(size_t size)
     {
+      std::cout << "~NeighborList::resizeTotalElements("<< size << ")" << std::endl;
       size_t old = _data.size();
       _data.resize(size);
+      m_NumTuples = size;
       // Initialize with zero length Vectors
       for (size_t i = old; i < _data.size(); ++i)
       {
@@ -735,6 +779,7 @@ class NeighborList : public IDataArray
         }
       }
       _data[grainId]->push_back(value);
+      m_NumTuples = _data.size();
     }
 
     /**
@@ -874,12 +919,20 @@ class NeighborList : public IDataArray
 
 
   protected:
+
+    //    NeighborList() :
+    //      m_NumNeighborsArrayName(DREAM3D::FeatureData::NumNeighbors),
+    //      m_Name("NeighborList"),
+    //      m_NumTuples(0)
+    //    {    }
+
     /**
      * @brief NeighborList
      */
-    NeighborList() :
+    NeighborList(size_t numTuples, const QString name) :
       m_NumNeighborsArrayName(DREAM3D::FeatureData::NumNeighbors),
-      m_Name("NeighborList")
+      m_Name(name),
+      m_NumTuples(numTuples)
     {    }
 
   private:
@@ -888,6 +941,7 @@ class NeighborList : public IDataArray
     QVector<SharedVectorType> _data;
 
     T m_InitValue;
+    size_t m_NumTuples;
 
     NeighborList(const NeighborList&); // Copy Constructor Not Implemented
     void operator=(const NeighborList&); // Operator '=' Not Implemented

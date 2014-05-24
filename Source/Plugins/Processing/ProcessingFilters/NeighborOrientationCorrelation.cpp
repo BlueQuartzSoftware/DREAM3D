@@ -158,10 +158,12 @@ void NeighborOrientationCorrelation::dataCheck()
 // -----------------------------------------------------------------------------
 void NeighborOrientationCorrelation::preflight()
 {
+  setInPreflight(true);
   emit preflightAboutToExecute();
   emit updateFilterParameters(this);
   dataCheck();
   emit preflightExecuted();
+  setInPreflight(false);
 }
 
 // -----------------------------------------------------------------------------

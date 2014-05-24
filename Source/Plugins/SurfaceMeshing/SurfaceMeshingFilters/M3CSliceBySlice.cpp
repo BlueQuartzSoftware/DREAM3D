@@ -421,10 +421,11 @@ void M3CSliceBySlice::dataCheck()
 // -----------------------------------------------------------------------------
 void M3CSliceBySlice::preflight()
 {
+  setInPreflight(true);
   emit preflightAboutToExecute();
   emit updateFilterParameters(this);
   dataCheck();
-  emit preflightExecuted();
+    emit preflightExecuted();
 
   QString nodesFile = QDir::tempPath() + Detail::NodesFile;
   SMTempFile::Pointer nodesTempFile = SMTempFile::New();
@@ -451,6 +452,7 @@ void M3CSliceBySlice::preflight()
   {
     setErrorCondition(binaryReader->getErrorCondition());
   }
+  setInPreflight(false);
 }
 
 

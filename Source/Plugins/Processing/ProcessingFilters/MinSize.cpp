@@ -142,15 +142,17 @@ void MinSize::dataCheck()
 // -----------------------------------------------------------------------------
 void MinSize::preflight()
 {
+  setInPreflight(true);
   emit preflightAboutToExecute();
   emit updateFilterParameters(this);
   dataCheck();
-  emit preflightExecuted();
+    emit preflightExecuted();
   if(getErrorCondition() < 0) { return; }
 
   AttributeMatrix::Pointer cellFeatureAttrMat = getDataContainerArray()->getAttributeMatrix(m_FeaturePhasesArrayPath);
   QVector<bool> activeObjects(cellFeatureAttrMat->getNumTuples(), true);
   cellFeatureAttrMat->removeInactiveObjects(activeObjects, m_FeatureIdsPtr.lock());
+  setInPreflight(false);
 }
 
 // -----------------------------------------------------------------------------

@@ -231,10 +231,12 @@ void EbsdToH5Ebsd::dataCheck()
 // -----------------------------------------------------------------------------
 void EbsdToH5Ebsd::preflight()
 {
+  setInPreflight(true);
   emit preflightAboutToExecute();
   emit updateFilterParameters(this);
   dataCheck();
   emit preflightExecuted();
+  setInPreflight(false);
 }
 
 // -----------------------------------------------------------------------------

@@ -199,7 +199,7 @@ class DREAM3DLib_EXPORT AttributeMatrix : public Observable
         }
         return attributeArray;
       }
-      createAndAddAttributeArray<ArrayType, T>(attributeArrayName, initValue, dims);
+      createAndAddAttributeArray<ArrayType, Filter, T>(filter, attributeArrayName, initValue, dims);
       IDataArray::Pointer iDataArray = getAttributeArray(attributeArrayName);
       if(NULL == iDataArray && filter)
       {
@@ -222,13 +222,19 @@ class DREAM3DLib_EXPORT AttributeMatrix : public Observable
     * @param name The name that the array will be known by
     * @param dims The size the data on each tuple
     */
-    template<class ArrayType, typename T>
-    void createAndAddAttributeArray(const QString& name, T initValue, QVector<size_t> compDims)
+    template<class ArrayType, class Filter, typename T>
+    void createAndAddAttributeArray(Filter* filter, const QString& name, T initValue, QVector<size_t> compDims)
     {
-      typename ArrayType::Pointer attributeArray = ArrayType::CreateArray(getNumTuples(), compDims, name);
+      bool allocateData = false;
+      if(NULL == filter) { allocateData = true; }
+      else { allocateData = !filter->getInPreflight(); }
+      typename ArrayType::Pointer attributeArray = ArrayType::CreateArray(getNumTuples(), compDims, name, allocateData);
       if(attributeArray != NULL)
       {
-        attributeArray->initializeWithValue(initValue);
+        if(allocateData)
+        {
+          attributeArray->initializeWithValue(initValue);
+        }
         attributeArray->setInitValue(initValue);
         addAttributeArray(name, attributeArray);
       }
@@ -245,8 +251,10 @@ class DREAM3DLib_EXPORT AttributeMatrix : public Observable
     bool dataArrayCompatibility(const QString& arrayName, int numComp, AbstractFilter* filter)
     {
       // First try checking by name
-      IDataArray::Pointer iDataArray = getAttributeArray(arrayName);
-      if (iDataArray.get() == 0)
+     // IDataArray::Pointer iDataArray = ;
+      typename ArrayType::Pointer attributeArray = boost::dynamic_pointer_cast< ArrayType >(getAttributeArray(arrayName));
+
+      if (attributeArray.get() == 0)
       {
         if (NULL != filter)
         {
@@ -257,37 +265,37 @@ class DREAM3DLib_EXPORT AttributeMatrix : public Observable
         return false;
       }
       // Make sure the sizes are equal to what is being asked for
-      if (getNumTuples() != iDataArray->getNumberOfTuples())
+      if (getNumTuples() != attributeArray->getNumberOfTuples())
       {
         if (NULL != filter)
         {
-          QString ss = QObject::tr("Filter '%1' requires array with name '%2' to have Number of Components = %3. The currently available array "
-                                   " has %4").arg(filter->getHumanLabel()).arg(arrayName).arg((getNumTuples() * numComp)).arg(iDataArray->getSize());
+          QString ss = QObject::tr("Filter '%1' requires array with name '%2' to have Number of Tuples = %3. The currently available array "
+                                   " has %4").arg(filter->getHumanLabel()).arg(arrayName).arg((getNumTuples())).arg(attributeArray->getNumberOfTuples());
           filter->setErrorCondition(-501);
           filter->notifyErrorMessage(filter->getHumanLabel(), ss, filter->getErrorCondition());
         }
         return false;
       }
       // Make sure the number of components match
-      if (numComp != iDataArray->getNumberOfComponents())
+      if (numComp != attributeArray->getNumberOfComponents())
       {
         if (NULL != filter)
         {
           QString ss = QObject::tr("Filter '%1' requires an array where the number of components is %2 but the currently available array"
-                                   " that was supplied has %3.").arg(filter->getHumanLabel()).arg(numComp).arg(iDataArray->getNumberOfComponents());
+                                   " that was supplied has %3.").arg(filter->getHumanLabel()).arg(numComp).arg(attributeArray->getNumberOfComponents());
           filter->setErrorCondition(-502);
           filter->notifyErrorMessage(filter->getHumanLabel(), ss, filter->getErrorCondition());
         }
         return false;
       }
       // Make sure we can downcast to the proper type
-      ArrayType* array = ArrayType::SafePointerDownCast(iDataArray.get());
+      ArrayType* array = ArrayType::SafePointerDownCast(attributeArray.get());
       if (NULL == array)
       {
         typename ArrayType::Pointer dat = ArrayType::CreateArray(1, "JUNK-INTERNAL-USE-ONLY");
         QString ss = QObject::tr(" - The filter requested an array named '%1' with type '%2' from the %3.\n"
                                  "An Array with name '%4' is stored in the %5 but is of type %6\n")
-                     .arg(arrayName).arg(dat->getTypeAsString()).arg(getNameOfClass()).arg(arrayName).arg(getNameOfClass()).arg(iDataArray->getTypeAsString());
+                     .arg(arrayName).arg(dat->getTypeAsString()).arg(getNameOfClass()).arg(arrayName).arg(getNameOfClass()).arg(attributeArray->getTypeAsString());
         if (NULL != filter)
         {
           filter->setErrorCondition(-502);

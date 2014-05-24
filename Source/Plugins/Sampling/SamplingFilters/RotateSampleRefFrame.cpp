@@ -242,11 +242,13 @@ void RotateSampleRefFrame::dataCheck()
 // -----------------------------------------------------------------------------
 void RotateSampleRefFrame::preflight()
 {
+  setInPreflight(true);
   setErrorCondition(0);
   emit preflightAboutToExecute();
   emit updateFilterParameters(this);
   dataCheck();
-  emit preflightExecuted();
+    emit preflightExecuted();
+ 
   if(getErrorCondition() < 0) { return; }
 
   VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getCellAttributeMatrixPath().getDataContainerName(), false);
@@ -343,6 +345,7 @@ void RotateSampleRefFrame::preflight()
 
   m->setResolution(params.xResNew, params.yResNew, params.zResNew);
   m->setDimensions(params.xpNew, params.ypNew, params.zpNew);
+  setInPreflight(false);
 }
 
 // -----------------------------------------------------------------------------

@@ -339,10 +339,12 @@ void ConvertData::dataCheck(bool preflight)
 // -----------------------------------------------------------------------------
 void ConvertData::preflight()
 {
+  setInPreflight(true);
   emit preflightAboutToExecute();
   emit updateFilterParameters(this);
   dataCheck(true);
   emit preflightExecuted();
+  setInPreflight(false);
 }
 
 

@@ -281,10 +281,12 @@ void ImportImagesAsVector::dataCheck()
 // -----------------------------------------------------------------------------
 void ImportImagesAsVector::preflight()
 {
+  setInPreflight(true);
   emit preflightAboutToExecute();
   emit updateFilterParameters(this);
   dataCheck();
   emit preflightExecuted();
+  setInPreflight(false);
 }
 
 // -----------------------------------------------------------------------------

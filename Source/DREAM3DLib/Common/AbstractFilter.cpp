@@ -36,7 +36,8 @@
 AbstractFilter::AbstractFilter() :
   Observable(),
   m_ErrorCondition(0),
-  m_Cancel(false)
+  m_Cancel(false),
+  m_InPreflight(false)
 {
   m_DataContainerArray = DataContainerArray::New();
   setupFilterParameters();
@@ -81,6 +82,7 @@ void AbstractFilter::execute()
 // -----------------------------------------------------------------------------
 void AbstractFilter::preflight()
 {
+  setInPreflight(true);
   setErrorCondition(-999);
   notifyErrorMessage(getNameOfClass(), "AbstractFilter does not implement a preflight method. Please use a subclass instead.", -999);
 }

@@ -318,7 +318,7 @@ IDataArray::Pointer H5DataArrayReader::readIDataArray(hid_t gid, const QString& 
     if (classType.compare("DataArray<bool>") == 0)
     {
       if (preflightOnly == false) { ptr = Detail::readH5Dataset<bool>(gid, name, tDims, cDims); }
-      else { ptr = DataArray<bool>::CreateArray(1, cDims, name); }
+      else { ptr = DataArray<bool>::CreateArray(tDims, cDims, name, false); }
       CloseH5T(typeId, err, retErr);
       return ptr; // <== Note early return here.
     }
@@ -339,42 +339,42 @@ IDataArray::Pointer H5DataArrayReader::readIDataArray(hid_t gid, const QString& 
         if(H5Tequal(typeId, H5T_STD_U8BE) || H5Tequal(typeId, H5T_STD_U8LE))
         {
           if (preflightOnly == false) { ptr = Detail::readH5Dataset<uint8_t>(gid, name, tDims, cDims); }
-          else { ptr = DataArray<uint8_t>::CreateArray(1, cDims, name); }
+          else { ptr = DataArray<uint8_t>::CreateArray(tDims, cDims, name, false); }
         }
         else if(H5Tequal(typeId, H5T_STD_U16BE) || H5Tequal(typeId, H5T_STD_U16LE))
         {
           if (preflightOnly == false) { ptr = Detail::readH5Dataset<uint16_t>(gid, name, tDims, cDims); }
-          else { ptr = DataArray<uint16_t>::CreateArray(1, cDims, name); }
+          else { ptr = DataArray<uint16_t>::CreateArray(tDims, cDims, name, false); }
         }
         else if(H5Tequal(typeId, H5T_STD_U32BE) || H5Tequal(typeId, H5T_STD_U32LE))
         {
           if (preflightOnly == false) { ptr = Detail::readH5Dataset<uint32_t>(gid, name, tDims, cDims); }
-          else { ptr = DataArray<uint32_t>::CreateArray(1, cDims, name); }
+          else { ptr = DataArray<uint32_t>::CreateArray(tDims, cDims, name, false); }
         }
         else if(H5Tequal(typeId, H5T_STD_U64BE) || H5Tequal(typeId, H5T_STD_U64LE))
         {
           if (preflightOnly == false) { ptr = Detail::readH5Dataset<uint64_t>(gid, name, tDims, cDims); }
-          else { ptr = DataArray<uint64_t>::CreateArray(1, cDims, name); }
+          else { ptr = DataArray<uint64_t>::CreateArray(tDims, cDims, name, false); }
         }
         else if(H5Tequal(typeId, H5T_STD_I8BE) || H5Tequal(typeId, H5T_STD_I8LE))
         {
           if (preflightOnly == false) { ptr = Detail::readH5Dataset<int8_t>(gid, name, tDims, cDims); }
-          else { ptr = DataArray<int8_t>::CreateArray(1, cDims, name); }
+          else { ptr = DataArray<int8_t>::CreateArray(tDims, cDims, name, false); }
         }
         else if(H5Tequal(typeId, H5T_STD_I16BE) || H5Tequal(typeId, H5T_STD_I16LE))
         {
           if (preflightOnly == false) { ptr = Detail::readH5Dataset<int16_t>(gid, name, tDims, cDims); }
-          else { ptr = DataArray<int16_t>::CreateArray(1, cDims, name); }
+          else { ptr = DataArray<int16_t>::CreateArray(tDims, cDims, name, false); }
         }
         else if(H5Tequal(typeId, H5T_STD_I32BE) || H5Tequal(typeId, H5T_STD_I32LE))
         {
           if (preflightOnly == false) { ptr = Detail::readH5Dataset<int32_t>(gid, name, tDims, cDims); }
-          else { ptr = DataArray<int32_t>::CreateArray(1, cDims, name); }
+          else { ptr = DataArray<int32_t>::CreateArray(tDims, cDims, name, false); }
         }
         else if(H5Tequal(typeId, H5T_STD_I64BE) || H5Tequal(typeId, H5T_STD_I64LE))
         {
           if (preflightOnly == false) { ptr = Detail::readH5Dataset<int64_t>(gid, name, tDims, cDims); }
-          else { ptr = DataArray<int64_t>::CreateArray(1, cDims, name); }
+          else { ptr = DataArray<int64_t>::CreateArray(tDims, cDims, name, false); }
         }
         else
         {
@@ -387,12 +387,12 @@ IDataArray::Pointer H5DataArrayReader::readIDataArray(hid_t gid, const QString& 
         if(attr_size == 4)
         {
           if (preflightOnly == false) { ptr = Detail::readH5Dataset<float>(gid, name, tDims, cDims); }
-          else { ptr = DataArray<float>::CreateArray(1, cDims, name); }
+          else { ptr = DataArray<float>::CreateArray(tDims, cDims, name, false); }
         }
         else if(attr_size == 8)
         {
           if (preflightOnly == false) { ptr = Detail::readH5Dataset<double>(gid, name, tDims, cDims); }
-          else { ptr = DataArray<double>::CreateArray(1, cDims, name); }
+          else { ptr = DataArray<double>::CreateArray(tDims, cDims, name, false); }
         }
         else
         {
@@ -453,7 +453,7 @@ IDataArray::Pointer H5DataArrayReader::readNeighborListData(hid_t gid, const QSt
         //qDebug() << "User Meta Data Type is Integer" ;
         if(H5Tequal(typeId, H5T_STD_U8BE) || H5Tequal(typeId, H5T_STD_U8LE))
         {
-          NeighborList<uint8_t>::Pointer ptr = NeighborList<uint8_t>::New();
+          NeighborList<uint8_t>::Pointer ptr = NeighborList<uint8_t>::CreateArray(0, name, false);
           ptr->setName(name);
           if(false == preflightOnly)
           {
@@ -463,7 +463,7 @@ IDataArray::Pointer H5DataArrayReader::readNeighborListData(hid_t gid, const QSt
         }
         else if(H5Tequal(typeId, H5T_STD_U16BE) || H5Tequal(typeId, H5T_STD_U16LE))
         {
-          NeighborList<uint16_t>::Pointer ptr = NeighborList<uint16_t>::New();
+          NeighborList<uint16_t>::Pointer ptr = NeighborList<uint16_t>::CreateArray(0, name, false);
           ptr->setName(name);
           if(false == preflightOnly)
           {
@@ -473,7 +473,7 @@ IDataArray::Pointer H5DataArrayReader::readNeighborListData(hid_t gid, const QSt
         }
         else if(H5Tequal(typeId, H5T_STD_U32BE) || H5Tequal(typeId, H5T_STD_U32LE))
         {
-          NeighborList<uint32_t>::Pointer ptr = NeighborList<uint32_t>::New();
+          NeighborList<uint32_t>::Pointer ptr = NeighborList<uint32_t>::CreateArray(0, name, false);
           ptr->setName(name);
           if(false == preflightOnly)
           {
@@ -483,7 +483,7 @@ IDataArray::Pointer H5DataArrayReader::readNeighborListData(hid_t gid, const QSt
         }
         else if(H5Tequal(typeId, H5T_STD_U64BE) || H5Tequal(typeId, H5T_STD_U64LE))
         {
-          NeighborList<uint64_t>::Pointer ptr = NeighborList<uint64_t>::New();
+          NeighborList<uint64_t>::Pointer ptr = NeighborList<uint64_t>::CreateArray(0, name, false);
           ptr->setName(name);
           if(false == preflightOnly)
           {
@@ -493,7 +493,7 @@ IDataArray::Pointer H5DataArrayReader::readNeighborListData(hid_t gid, const QSt
         }
         else if(H5Tequal(typeId, H5T_STD_I8BE) || H5Tequal(typeId, H5T_STD_I8LE))
         {
-          NeighborList<int8_t>::Pointer ptr = NeighborList<int8_t>::New();
+          NeighborList<int8_t>::Pointer ptr = NeighborList<int8_t>::CreateArray(0, name, false);
           ptr->setName(name);
           if(false == preflightOnly)
           {
@@ -503,7 +503,7 @@ IDataArray::Pointer H5DataArrayReader::readNeighborListData(hid_t gid, const QSt
         }
         else if(H5Tequal(typeId, H5T_STD_I16BE) || H5Tequal(typeId, H5T_STD_I16LE))
         {
-          NeighborList<int16_t>::Pointer ptr = NeighborList<int16_t>::New();
+          NeighborList<int16_t>::Pointer ptr = NeighborList<int16_t>::CreateArray(0, name, false);
           ptr->setName(name);
           if(false == preflightOnly)
           {
@@ -513,7 +513,7 @@ IDataArray::Pointer H5DataArrayReader::readNeighborListData(hid_t gid, const QSt
         }
         else if(H5Tequal(typeId, H5T_STD_I32BE) || H5Tequal(typeId, H5T_STD_I32LE))
         {
-          NeighborList<int32_t>::Pointer ptr = NeighborList<int32_t>::New();
+          NeighborList<int32_t>::Pointer ptr = NeighborList<int32_t>::CreateArray(0, name, false);
           ptr->setName(name);
           if(false == preflightOnly)
           {
@@ -523,7 +523,7 @@ IDataArray::Pointer H5DataArrayReader::readNeighborListData(hid_t gid, const QSt
         }
         else if(H5Tequal(typeId, H5T_STD_I64BE) || H5Tequal(typeId, H5T_STD_I64LE))
         {
-          NeighborList<int64_t>::Pointer ptr = NeighborList<int64_t>::New();
+          NeighborList<int64_t>::Pointer ptr = NeighborList<int64_t>::CreateArray(0, name, false);
           ptr->setName(name);
           if(false == preflightOnly)
           {
@@ -540,7 +540,7 @@ IDataArray::Pointer H5DataArrayReader::readNeighborListData(hid_t gid, const QSt
       case H5T_FLOAT:
         if(attr_size == 4)
         {
-          NeighborList<float>::Pointer ptr = NeighborList<float>::New();
+          NeighborList<float>::Pointer ptr = NeighborList<float>::CreateArray(0, name, false);
           ptr->setName(name);
           if(false == preflightOnly)
           {
@@ -550,7 +550,7 @@ IDataArray::Pointer H5DataArrayReader::readNeighborListData(hid_t gid, const QSt
         }
         else if(attr_size == 8)
         {
-          NeighborList<double>::Pointer ptr = NeighborList<double>::New();
+          NeighborList<double>::Pointer ptr = NeighborList<double>::CreateArray(0, name, false);
           ptr->setName(name);
           if(false == preflightOnly)
           {

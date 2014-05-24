@@ -188,10 +188,12 @@ void ScaleVolume::dataCheck()
 // -----------------------------------------------------------------------------
 void ScaleVolume::preflight()
 {
+  setInPreflight(true);
   emit preflightAboutToExecute();
   emit updateFilterParameters(this);
   dataCheck();
   emit preflightExecuted();
+  setInPreflight(false);
 }
 
 // -----------------------------------------------------------------------------

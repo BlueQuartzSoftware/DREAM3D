@@ -183,10 +183,12 @@ void IdentifyDislocationSegments::dataCheck()
 // -----------------------------------------------------------------------------
 void IdentifyDislocationSegments::preflight()
 {
+  setInPreflight(true);
   emit preflightAboutToExecute();
   emit updateFilterParameters(this);
   dataCheck();
   emit preflightExecuted();
+  setInPreflight(false);
 }
 
 // -----------------------------------------------------------------------------

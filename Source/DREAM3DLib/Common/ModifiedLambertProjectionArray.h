@@ -78,17 +78,17 @@ class DREAM3DLib_EXPORT ModifiedLambertProjectionArray : public IDataArray
     DREAM3D_INSTANCE_PROPERTY(int, Phase)
     DREAM3D_INSTANCE_PROPERTY(QVector<ModifiedLambertProjection::Pointer>, ModifiedLambertProjectionArray)
 
-    virtual IDataArray::Pointer createNewArray(size_t numElements, int rank, size_t* dims, const QString& name)
+    virtual IDataArray::Pointer createNewArray(size_t numElements, int rank, size_t* dims, const QString& name, bool allocate=true)
     {
       return ModifiedLambertProjectionArray::New();
     }
 
-    virtual IDataArray::Pointer createNewArray(size_t numElements, std::vector<size_t> dims, const QString& name)
+    virtual IDataArray::Pointer createNewArray(size_t numElements, std::vector<size_t> dims, const QString& name, bool allocate=true)
     {
       return ModifiedLambertProjectionArray::New();
     }
 
-    virtual IDataArray::Pointer createNewArray(size_t numElements, QVector<size_t> dims, const QString& name)
+    virtual IDataArray::Pointer createNewArray(size_t numElements, QVector<size_t> dims, const QString& name, bool allocate=true)
     {
       return ModifiedLambertProjectionArray::New();
     }

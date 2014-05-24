@@ -305,11 +305,12 @@ void InsertPrecipitatePhases::dataCheck()
 // -----------------------------------------------------------------------------
 void InsertPrecipitatePhases::preflight()
 {
+  setInPreflight(true);
   emit preflightAboutToExecute();
   emit updateFilterParameters(this);
   dataCheck();
-  emit preflightExecuted();
-
+    emit preflightExecuted();
+ 
   if (m_WriteGoalAttributes == true && getCsvOutputFile().isEmpty() == true)
   {
     QString ss = QObject::tr("%1 needs the Csv Output File Set and it was not.").arg(ClassName());
@@ -327,6 +328,7 @@ void InsertPrecipitatePhases::preflight()
   attrMat->removeAttributeArray(m_VolumesArrayName);
   attrMat->removeAttributeArray(m_CentroidsArrayName);
   attrMat->removeAttributeArray(m_NumCellsArrayName);
+  setInPreflight(false);
 }
 
 // -----------------------------------------------------------------------------

@@ -142,12 +142,13 @@ void RegularGridSampleSurfaceMesh::dataCheck()
 // -----------------------------------------------------------------------------
 void RegularGridSampleSurfaceMesh::preflight()
 {
+  setInPreflight(true);
   emit preflightAboutToExecute();
   emit updateFilterParameters(this);
   dataCheck();
-  emit preflightExecuted();
-
+    emit preflightExecuted();
   SampleSurfaceMesh::preflight();
+  setInPreflight(false);
 }
 
 // -----------------------------------------------------------------------------

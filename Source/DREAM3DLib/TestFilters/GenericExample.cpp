@@ -226,11 +226,13 @@ void GenericExample::dataCheck2()
 // -----------------------------------------------------------------------------
 void GenericExample::preflight()
 {
+  setInPreflight(true);
   emit preflightAboutToExecute();
   emit updateFilterParameters(this);
   dataCheck();
   dataCheck2();
   emit preflightExecuted();
+  setInPreflight(false);
 }
 
 // -----------------------------------------------------------------------------

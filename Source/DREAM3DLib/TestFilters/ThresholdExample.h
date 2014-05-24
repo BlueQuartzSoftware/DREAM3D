@@ -70,17 +70,7 @@ class DREAM3DLib_EXPORT ThresholdExample : public AbstractFilter
     /* Each Filter can ONLY have ONE of each of these types of widgets */
     DREAM3D_FILTER_PARAMETER(ComparisonInputs, CellComparisonInputs)
     Q_PROPERTY(ComparisonInputs CellComparisonInputs READ getCellComparisonInputs WRITE setCellComparisonInputs)
-    DREAM3D_FILTER_PARAMETER(ComparisonInputs, FeatureComparisonInputs)
-    Q_PROPERTY(ComparisonInputs FeatureComparisonInputs READ getFeatureComparisonInputs WRITE setFeatureComparisonInputs)
-    DREAM3D_FILTER_PARAMETER(ComparisonInputs, EnsembleComparisonInputs)
-    Q_PROPERTY(ComparisonInputs EnsembleComparisonInputs READ getEnsembleComparisonInputs WRITE setEnsembleComparisonInputs)
 
-    DREAM3D_FILTER_PARAMETER(ComparisonInputs, PointComparisonInputs)
-    Q_PROPERTY(ComparisonInputs PointComparisonInputs READ getPointComparisonInputs WRITE setPointComparisonInputs)
-    DREAM3D_FILTER_PARAMETER(ComparisonInputs, FaceComparisonInputs)
-    Q_PROPERTY(ComparisonInputs FaceComparisonInputs READ getFaceComparisonInputs WRITE setFaceComparisonInputs)
-    DREAM3D_FILTER_PARAMETER(ComparisonInputs, EdgeComparisonInputs)
-    Q_PROPERTY(ComparisonInputs EdgeComparisonInputs READ getEdgeComparisonInputs WRITE setEdgeComparisonInputs)
 
 
     /**

@@ -134,6 +134,8 @@ class DREAM3DLib_EXPORT AbstractFilter : public Observable
 
     DREAM3D_INSTANCE_PROPERTY(int, ErrorCondition)
 
+    DREAM3D_INSTANCE_PROPERTY(bool, InPreflight)
+
     // ------------------------------
     // These functions allow interogating the position the filter is in the pipeline and the previous and next filters
     // ------------------------------

@@ -69,9 +69,9 @@ class DREAM3DLib_EXPORT IDataArray
     virtual void setName(const QString& name) = 0;
     virtual QString getName() = 0;
 
-    virtual Pointer createNewArray(size_t numElements, int rank, size_t* dims, const QString& name) = 0;
-    virtual Pointer createNewArray(size_t numElements, std::vector<size_t> dims, const QString& name) = 0;
-    virtual Pointer createNewArray(size_t numElements, QVector<size_t> dims, const QString& name) = 0;
+    virtual Pointer createNewArray(size_t numElements, int rank, size_t* dims, const QString& name, bool allocate=true) = 0;
+    virtual Pointer createNewArray(size_t numElements, std::vector<size_t> dims, const QString& name, bool allocate=true) = 0;
+    virtual Pointer createNewArray(size_t numElements, QVector<size_t> dims, const QString& name, bool allocate=true) = 0;
 
     virtual int getClassVersion() = 0;
 

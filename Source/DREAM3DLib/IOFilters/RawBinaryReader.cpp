@@ -352,52 +352,52 @@ void RawBinaryReader::dataCheck(bool preflight)
     QVector<size_t> dims(1, m_NumberOfComponents);
     if (m_ScalarType == Detail::Int8)
     {
-      attrMat->createAndAddAttributeArray<DataArray<int8_t>, int8_t>(m_OutputArrayName, 0, dims);
+      attrMat->createAndAddAttributeArray<DataArray<int8_t>, AbstractFilter, int8_t>(this, m_OutputArrayName, 0, dims);
       allocatedBytes = sizeof(int8_t) * m_NumberOfComponents * m_Dimensions.x * m_Dimensions.y * m_Dimensions.z;
     }
     else if (m_ScalarType == Detail::UInt8)
     {
-      attrMat->createAndAddAttributeArray<DataArray<uint8_t>, uint8_t>(m_OutputArrayName, 0, dims);
+      attrMat->createAndAddAttributeArray<DataArray<uint8_t>, AbstractFilter, uint8_t>(this, m_OutputArrayName, 0, dims);
       allocatedBytes = sizeof(uint8_t) * m_NumberOfComponents * m_Dimensions.x * m_Dimensions.y * m_Dimensions.z;
     }
     else if (m_ScalarType == Detail::Int16)
     {
-      attrMat->createAndAddAttributeArray<DataArray<int16_t>, int16_t>(m_OutputArrayName, 0, dims);
+      attrMat->createAndAddAttributeArray<DataArray<int16_t>, AbstractFilter, int16_t>(this, m_OutputArrayName, 0, dims);
       allocatedBytes = sizeof(int16_t) * m_NumberOfComponents * m_Dimensions.x * m_Dimensions.y * m_Dimensions.z;
     }
     else if (m_ScalarType == Detail::UInt16)
     {
-      attrMat->createAndAddAttributeArray<DataArray<uint16_t>, uint16_t>(m_OutputArrayName, 0, dims);
+      attrMat->createAndAddAttributeArray<DataArray<uint16_t>, AbstractFilter, uint16_t>(this, m_OutputArrayName, 0, dims);
       allocatedBytes = sizeof(uint16_t) * m_NumberOfComponents * m_Dimensions.x * m_Dimensions.y * m_Dimensions.z;
     }
     else if (m_ScalarType == Detail::Int32)
     {
-      attrMat->createAndAddAttributeArray<DataArray<int32_t>, int32_t>(m_OutputArrayName, 0, dims);
+      attrMat->createAndAddAttributeArray<DataArray<int32_t>, AbstractFilter, int32_t>(this, m_OutputArrayName, 0, dims);
       allocatedBytes = sizeof(int32_t) * m_NumberOfComponents * m_Dimensions.x * m_Dimensions.y * m_Dimensions.z;
     }
     else if (m_ScalarType == Detail::UInt32)
     {
-      attrMat->createAndAddAttributeArray<DataArray<uint32_t>, uint32_t>(m_OutputArrayName, 0, dims);
+      attrMat->createAndAddAttributeArray<DataArray<uint32_t>, AbstractFilter, uint32_t>(this, m_OutputArrayName, 0, dims);
       allocatedBytes = sizeof(uint32_t) * m_NumberOfComponents * m_Dimensions.x * m_Dimensions.y * m_Dimensions.z;
     }
     else if (m_ScalarType == Detail::Int64)
     {
-      attrMat->createAndAddAttributeArray<DataArray<int64_t>, int64_t>(m_OutputArrayName, 0, dims);
+      attrMat->createAndAddAttributeArray<DataArray<int64_t>, AbstractFilter, int64_t>(this, m_OutputArrayName, 0, dims);
       allocatedBytes = sizeof(int64_t) * m_NumberOfComponents * m_Dimensions.x * m_Dimensions.y * m_Dimensions.z;
     }
     else if (m_ScalarType == Detail::UInt64)
     {
-      attrMat->createAndAddAttributeArray<DataArray<uint64_t>, uint64_t>(m_OutputArrayName, 0, dims);
+      attrMat->createAndAddAttributeArray<DataArray<uint64_t>, AbstractFilter, uint64_t>(this, m_OutputArrayName, 0, dims);
       allocatedBytes = sizeof(uint64_t) * m_NumberOfComponents * m_Dimensions.x * m_Dimensions.y * m_Dimensions.z;
     }
     else if (m_ScalarType == Detail::Float)
     {
-      attrMat->createAndAddAttributeArray<DataArray<float>, float>(m_OutputArrayName, 0, dims);
+      attrMat->createAndAddAttributeArray<DataArray<float>, AbstractFilter, float>(this, m_OutputArrayName, 0, dims);
       allocatedBytes = sizeof(float) * m_NumberOfComponents * m_Dimensions.x * m_Dimensions.y * m_Dimensions.z;
     }
     else if (m_ScalarType == Detail::Double)
     {
-      attrMat->createAndAddAttributeArray<DataArray<double>, double>(m_OutputArrayName, 0, dims);
+      attrMat->createAndAddAttributeArray<DataArray<double>, AbstractFilter, double>(this, m_OutputArrayName, 0, dims);
       allocatedBytes = sizeof(double) * m_NumberOfComponents * m_Dimensions.x * m_Dimensions.y * m_Dimensions.z;
     }
 
@@ -432,10 +432,12 @@ void RawBinaryReader::dataCheck(bool preflight)
 // -----------------------------------------------------------------------------
 void RawBinaryReader::preflight()
 {
+  setInPreflight(true);
   emit preflightAboutToExecute();
   emit updateFilterParameters(this);
   dataCheck(true);
   emit preflightExecuted();
+  setInPreflight(false);
 }
 
 // -----------------------------------------------------------------------------

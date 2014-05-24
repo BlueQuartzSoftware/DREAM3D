@@ -484,10 +484,11 @@ void PackPrimaryPhases::dataCheck()
 // -----------------------------------------------------------------------------
 void PackPrimaryPhases::preflight()
 {
+  setInPreflight(true);
   emit preflightAboutToExecute();
   emit updateFilterParameters(this);
   dataCheck();
-  emit preflightExecuted();
+    emit preflightExecuted();
 
   DataContainer::Pointer dc = getDataContainerArray()->getDataContainer(getOutputCellAttributeMatrixName());
   if(dc == NULL) { return; }
@@ -501,6 +502,7 @@ void PackPrimaryPhases::preflight()
   attrMat->removeAttributeArray(m_VolumesArrayName);
   attrMat->removeAttributeArray(m_CentroidsArrayName);
   attrMat->removeAttributeArray(m_NeighborhoodsArrayName);
+  setInPreflight(false);
 }
 
 // -----------------------------------------------------------------------------

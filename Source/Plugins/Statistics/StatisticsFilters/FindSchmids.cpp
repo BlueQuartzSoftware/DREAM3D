@@ -169,7 +169,7 @@ void FindSchmids::dataCheck()
   { m_SlipSystems = m_SlipSystemsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   typedef DataArray<unsigned int> XTalStructArrayType;
   m_CrystalStructuresPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<unsigned int>, AbstractFilter>(this, getCrystalStructuresArrayPath(), dims)
-                           ; /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+      ; /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_CrystalStructuresPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_CrystalStructures = m_CrystalStructuresPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   dims[0] = 3;
@@ -202,10 +202,12 @@ void FindSchmids::dataCheck()
 // -----------------------------------------------------------------------------
 void FindSchmids::preflight()
 {
+  setInPreflight(true);
   emit preflightAboutToExecute();
   emit updateFilterParameters(this);
   dataCheck();
   emit preflightExecuted();
+  setInPreflight(false);
 }
 
 // -----------------------------------------------------------------------------
@@ -241,21 +243,25 @@ void FindSchmids::execute()
 
     MatrixMath::Multiply3x3with3x1(g, sampleLoading, crystalLoading);
 
-    m_OrientationOps[m_CrystalStructures[m_FeaturePhases[i]]]->getSchmidFactorAndSS(crystalLoading, schmid, angleComps, ss);
-
-    m_Schmids[i] = schmid;
-    if(m_StoreAngleComponents == true)
+    size_t xtal = m_CrystalStructures[m_FeaturePhases[i]];
+    if(xtal < Ebsd::CrystalStructure::LaueGroupEnd)
     {
-      m_Phis[i] = angleComps[0];
-      m_Lambdas[i] = angleComps[1];
+      m_OrientationOps[xtal]->getSchmidFactorAndSS(crystalLoading, schmid, angleComps, ss);
+
+      m_Schmids[i] = schmid;
+      if(m_StoreAngleComponents == true)
+      {
+        m_Phis[i] = angleComps[0];
+        m_Lambdas[i] = angleComps[1];
+      }
+      m_Poles[3 * i] = int32_t(crystalLoading[0] * 100);
+      m_Poles[3 * i + 1] = int32_t(crystalLoading[1] * 100);
+      m_Poles[3 * i + 2] = int32_t(crystalLoading[2] * 100);
+      m_SlipSystems[i] = ss;
     }
-    m_Poles[3 * i] = int32_t(crystalLoading[0] * 100);
-    m_Poles[3 * i + 1] = int32_t(crystalLoading[1] * 100);
-    m_Poles[3 * i + 2] = int32_t(crystalLoading[2] * 100);
-    m_SlipSystems[i] = ss;
   }
 
-  notifyStatusMessage(getHumanLabel(), "FindSchmids Completed");
+  notifyStatusMessage(getHumanLabel(), "Completed");
 }
 
 // -----------------------------------------------------------------------------
