@@ -36,7 +36,10 @@
 
 #include "FilterInputWidget.h"
 
+#include <QtCore/QMetaProperty>
 #include <QtCore/QFileInfo>
+#include <QtCore/QPropertyAnimation>
+#include <QtCore/QSequentialAnimationGroup>
 #include <QtGui/QLabel>
 #include <QtGui/QVBoxLayout>
 #include <QtGui/QFormLayout>
@@ -130,11 +133,12 @@ void FilterInputWidget::displayFilterParameters(PipelineFilterWidget* w)
 {
   clearInputWidgets();
 
-  w->getScrollWidgetContents()->setVisible(true);
+
   basicInputsGrid->addWidget(w->getScrollWidgetContents());
-  w->getAdvancedScrollWidgetContents()->setVisible(true);
   advInputsGrid->addWidget(w->getAdvancedScrollWidgetContents());
 
+  w->getScrollWidgetContents()->setVisible(true);
+  w->getAdvancedScrollWidgetContents()->setVisible(true);
 
   // Add a label at the top of the Inputs Tabs to show what filter we are working on
   filterHumanLabel->setText(w->getHumanLabel());
@@ -143,5 +147,61 @@ void FilterInputWidget::displayFilterParameters(PipelineFilterWidget* w)
   #endif
   AbstractFilter::Pointer filter = w->getFilter();
   brandingLabel->setText(filter->getBrandingString() );
+
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void FilterInputWidget::fadeInWidget(QWidget* widget)
+{
+  if (faderWidget)
+  {
+    faderWidget->close();
+  }
+  faderWidget = new FaderWidget(widget);
+  faderWidget->start();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void FilterInputWidget::fadeOutWidget(QWidget* widget)
+{
+
+  if (faderWidget)
+  {
+    faderWidget->close();
+  }
+  faderWidget = new FaderWidget(widget);
+  faderWidget->setFadeOut();
+  connect(faderWidget, SIGNAL(animationComplete() ),
+          this, SLOT(hideButton()));
+  faderWidget->start();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void FilterInputWidget::hideButton()
+{
+  advInputsFrame->setVisible(false);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void FilterInputWidget::on_advInputsBtn_clicked()
+{
+  if(advInputsFrame->isVisible() == false)
+  {
+    advInputsFrame->setVisible(true);
+    fadeInWidget(advInputsFrame);
+  }
+  else
+  {
+    fadeOutWidget(advInputsFrame);
+  }
 
 }

@@ -36,12 +36,16 @@
 #ifndef _FilterInputWidget_H_
 #define _FilterInputWidget_H_
 
-
+#include <QtCore/QObject>
+#include <QtCore/QPointer>
 #include <QtGui/QWidget>
+
+#include "QtSupport/FaderWidget.h"
 
 #include "DREAM3DLib/Common/AbstractFilter.h"
 
 #include "DREAM3DWidgetsLib/DREAM3DWidgetsLib.h"
+
 
 #include "ui_FilterInputWidget.h"
 
@@ -52,8 +56,8 @@ class PipelineFilterWidget;
  */
 class DREAM3DWidgetsLib_EXPORT FilterInputWidget : public QWidget, private Ui::FilterInputWidget
 {
-
     Q_OBJECT
+
   public:
     FilterInputWidget(QWidget* parent = NULL);
     virtual ~FilterInputWidget();
@@ -67,12 +71,16 @@ class DREAM3DWidgetsLib_EXPORT FilterInputWidget : public QWidget, private Ui::F
     void displayFilterParameters(PipelineFilterWidget* w);
     void removeWidgetInputs(PipelineFilterWidget* w);
 
+    void on_advInputsBtn_clicked();
+    void hideButton();
 
-  signals:
-
-  protected:
+  private slots:
+    void fadeInWidget(QWidget* widget);
+    void fadeOutWidget(QWidget* widget);
 
   private:
+    QPointer<FaderWidget> faderWidget;
+
 
 
     FilterInputWidget(const FilterInputWidget&); // Copy Constructor Not Implemented

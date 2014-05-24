@@ -191,8 +191,7 @@ void ComparisonSelectionWidget::on_conditionalCB_stateChanged(int state)
 // -----------------------------------------------------------------------------
 void ComparisonSelectionWidget::populateComboBoxes()
 {
-  std::cout << "ComparisonSelectionWidget::populateComboBoxes()" << std::endl;
-
+//  std::cout << "ComparisonSelectionWidget::populateComboBoxes()" << std::endl;
 
   // Now get the DataContainerArray from the Filter instance
   // We are going to use this to get all the current DataContainers
@@ -303,7 +302,7 @@ void ComparisonSelectionWidget::populateComboBoxes()
 // -----------------------------------------------------------------------------
 void ComparisonSelectionWidget::populateAttributeMatrixList()
 {
-  std::cout << "ComparisonSelectionWidget::populateAttributeMatrixList()" << std::endl;
+//  std::cout << "ComparisonSelectionWidget::populateAttributeMatrixList()" << std::endl;
   QString dcName = dataContainerList->currentText();
 
   // Clear the AttributeMatrix List
@@ -340,7 +339,7 @@ void ComparisonSelectionWidget::populateAttributeMatrixList()
 // -----------------------------------------------------------------------------
 QStringList ComparisonSelectionWidget::generateAttributeArrayList()
 {
-  std::cout << "ComparisonSelectionWidget::generateAttributeArrayList()" << std::endl;
+//  std::cout << "ComparisonSelectionWidget::generateAttributeArrayList()" << std::endl;
   QStringList attributeArrayList;
   // Get the selected Data Container Name from the DataContainerList Widget
   QString currentDCName = dataContainerList->currentText();
@@ -415,7 +414,7 @@ void ComparisonSelectionWidget::tableDataWasChanged(const QModelIndex& topLeft, 
 // -----------------------------------------------------------------------------
 void ComparisonSelectionWidget::on_addComparison_clicked()
 {
-  std::cout << "ComparisonSelectionWidget::on_addComparison_clicked()" << std::endl;
+//  std::cout << "ComparisonSelectionWidget::on_addComparison_clicked()" << std::endl;
   if (!m_ComparisonSelectionTableModel->insertRow(m_ComparisonSelectionTableModel->rowCount())) { return; }
 
   QModelIndex index = m_ComparisonSelectionTableModel->index(m_ComparisonSelectionTableModel->rowCount() - 1, 0);
@@ -434,7 +433,7 @@ void ComparisonSelectionWidget::on_addComparison_clicked()
 // -----------------------------------------------------------------------------
 void ComparisonSelectionWidget::on_removeComparison_clicked()
 {
-  std::cout << "ComparisonSelectionWidget::on_removeComparison_clicked()" << std::endl;
+//  std::cout << "ComparisonSelectionWidget::on_removeComparison_clicked()" << std::endl;
   QItemSelectionModel* selectionModel = m_ComparisonSelectionTableView->selectionModel();
 
   if (!selectionModel->hasSelection()) { return; }
@@ -456,7 +455,7 @@ void ComparisonSelectionWidget::on_removeComparison_clicked()
 // -----------------------------------------------------------------------------
 void ComparisonSelectionWidget::on_dataContainerList_currentIndexChanged(int index)
 {
-  std::cout << "ComparisonSelectionWidget::on_dataContainerList_currentIndexChanged(int index)" << std::endl;
+//  std::cout << "ComparisonSelectionWidget::on_dataContainerList_currentIndexChanged(int index)" << std::endl;
   populateAttributeMatrixList();
 
   // Select the first AttributeMatrix in the list
@@ -473,7 +472,7 @@ void ComparisonSelectionWidget::on_dataContainerList_currentIndexChanged(int ind
 // -----------------------------------------------------------------------------
 void ComparisonSelectionWidget::on_attributeMatrixList_currentIndexChanged(int index)
 {
-  std::cout << "ComparisonSelectionWidget::on_attributeMatrixList_currentIndexChanged(int index)" << std::endl;
+//  std::cout << "ComparisonSelectionWidget::on_attributeMatrixList_currentIndexChanged(int index)" << std::endl;
   QStringList possibleArrays = generateAttributeArrayList();
   m_ComparisonSelectionTableModel->setPossibleFeatures(possibleArrays);
   // Set the ItemDelegate for the table.
@@ -486,7 +485,7 @@ void ComparisonSelectionWidget::on_attributeMatrixList_currentIndexChanged(int i
 // -----------------------------------------------------------------------------
 void ComparisonSelectionWidget::setComparisons(QVector<ComparisonInput_t> comparisons)
 {
-  std::cout << "ComparisonSelectionWidget::setComparisons(QVector<ComparisonInput_t> comparisons)" << std::endl;
+ // std::cout << "ComparisonSelectionWidget::setComparisons(QVector<ComparisonInput_t> comparisons)" << std::endl;
   qint32 count = comparisons.size();
 
   QVector<QString> arrayNames(count);
@@ -508,7 +507,7 @@ void ComparisonSelectionWidget::setComparisons(QVector<ComparisonInput_t> compar
 // -----------------------------------------------------------------------------
 void ComparisonSelectionWidget::filterNeedsInputParameters(AbstractFilter* filter)
 {
-  qDebug() << "DataContainerArrayProxyWidget::filterNeedsInputParameters(AbstractFilter* filter)";
+ // qDebug() << "DataContainerArrayProxyWidget::filterNeedsInputParameters(AbstractFilter* filter)";
 
  // if(true) { return; }
 
@@ -531,7 +530,7 @@ void ComparisonSelectionWidget::filterNeedsInputParameters(AbstractFilter* filte
 // -----------------------------------------------------------------------------
 void ComparisonSelectionWidget::beforePreflight()
 {
-  std::cout << "ComparisonSelectionWidget::beforePreflight()" << std::endl;
+ // std::cout << "ComparisonSelectionWidget::beforePreflight()" << std::endl;
   if (NULL == m_Filter) { return; }
   if(m_DidCausePreflight == true)
   {
