@@ -207,7 +207,6 @@ void DataContainerSelectionWidget::populateComboBoxes()
     if(dataContainerList->findText(dc.name) == -1 )
     {
       dataContainerList->addItem(dc.name);
-      qDebug() << "[1] Adding " << dc.name;
     }
   }
 
@@ -229,7 +228,6 @@ void DataContainerSelectionWidget::populateComboBoxes()
     if(boo == false)
     {
       dataContainerList->removeItem(i);
-      qDebug() << "[2] Removing " << str0;
     }
   }
 

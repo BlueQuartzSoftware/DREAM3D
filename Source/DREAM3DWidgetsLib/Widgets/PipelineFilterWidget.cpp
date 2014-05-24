@@ -227,7 +227,11 @@ void PipelineFilterWidget::displayFilterParameterWidgetError(const QString& msg)
 // -----------------------------------------------------------------------------
 PipelineFilterWidget::~PipelineFilterWidget()
 {
-  // std::cout << "~PipelineFilterWidget() " << m_Filter->getNameOfClass().toStdString() << std::endl;
+//   std::cout << "~PipelineFilterWidget() " << this  << "  " << m_Filter->getNameOfClass().toStdString()
+//   << "  " << m_Filter.use_count() << std::endl;
+  m_Filter->setPreviousFilter(AbstractFilter::NullPointer());
+  m_Filter->setNextFilter(AbstractFilter::NullPointer());
+  m_Filter = AbstractFilter::NullPointer();
 }
 
 // -----------------------------------------------------------------------------

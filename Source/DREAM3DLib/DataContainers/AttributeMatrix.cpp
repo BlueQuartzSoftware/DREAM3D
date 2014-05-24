@@ -74,7 +74,7 @@ AttributeMatrix::AttributeMatrix(QVector<size_t> tDims, const QString& name, uns
 // -----------------------------------------------------------------------------
 AttributeMatrix::~AttributeMatrix()
 {
-  std::cout << "~AttributeMatrix" << std::endl;
+ // std::cout << "~AttributeMatrix" << std::endl;
 }
 
 // -----------------------------------------------------------------------------
