@@ -194,6 +194,7 @@ void DataArraySelectionWidget::on_conditionalCB_stateChanged(int state)
   dataContainerList->setVisible(boolProp);
   attributeMatrixList->setVisible(boolProp);
   attributeArrayList->setVisible(boolProp);
+
   label->setVisible(boolProp);
   linkLeft->setVisible(boolProp);
   linkRight->setVisible(boolProp);

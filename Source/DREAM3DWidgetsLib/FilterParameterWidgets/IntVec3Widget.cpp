@@ -139,6 +139,16 @@ void IntVec3Widget::on_conditionalCB_stateChanged(int state)
   xData->setEnabled(boolProp);
   yData->setEnabled(boolProp);
   zData->setEnabled(boolProp);
+  xData->setVisible(boolProp);
+  yData->setVisible(boolProp);
+  zData->setVisible(boolProp);
+
+  IntVec3WidgetLabel->setVisible(boolProp);
+  linkLeft->setVisible(boolProp);
+  linkRight->setVisible(boolProp);
+
+  m_DidCausePreflight = true;
+
   m_DidCausePreflight = true;
   emit parametersChanged();
   m_DidCausePreflight = false;
