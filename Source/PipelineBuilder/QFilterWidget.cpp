@@ -738,11 +738,11 @@ void QFilterWidget::setupGui()
     }
     else if (wType == FilterParameter::SurfaceMeshVertexArrayNameSelectionWidget)
     {
-      setupEnsembleArrayNameChoiceWidget(frmLayout, optIndex, option, label);
+      setupCellArrayNameChoiceWidget(frmLayout, optIndex, option, label);
     }
     else if (wType == FilterParameter::SurfaceMeshFieldArrayNameSelectionWidget)
     {
-      setupEnsembleArrayNameChoiceWidget(frmLayout, optIndex, option, label);
+      setupFieldArrayNameChoiceWidget(frmLayout, optIndex, option, label);
     }
     else if (wType == FilterParameter::SurfaceMeshEnsembleArrayNameSelectionWidget)
     {
