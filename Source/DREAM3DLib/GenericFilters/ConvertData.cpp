@@ -271,6 +271,7 @@ void ConvertData::dataCheck(bool preflight)
     ss = QObject::tr("The Output Array Name is blank (empty) and a value must be filled in for the pipeline to complete.");
     setErrorCondition(-398);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    return;
   }
 
   int numberOfComponents = 0;

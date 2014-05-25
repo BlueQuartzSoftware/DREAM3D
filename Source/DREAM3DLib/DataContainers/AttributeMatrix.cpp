@@ -161,7 +161,7 @@ int AttributeMatrix::addAttributeArray(const QString& name, IDataArray::Pointer 
     qDebug() << "Array Name:" << data->getName() << "\n";
     data->setName(name);
   }
-  //Q_ASSERT(getNumTuples() == data->getNumberOfTuples());
+  Q_ASSERT(getNumTuples() == data->getNumberOfTuples());
 
   m_AttributeArrays[name] = data;
   return 0;

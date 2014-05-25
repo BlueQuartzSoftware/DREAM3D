@@ -41,9 +41,6 @@
 #include <fstream>
 
 
-
-
-
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/IDataArrayFilter.h"
@@ -1176,7 +1173,7 @@ class DataArray : public IDataArray
      */
     virtual int32_t resizeTotalElements(size_t size)
     {
-      std::cout << "DataArray::resizeTotalElements(" << size << ")" << std::endl;
+     // std::cout << "DataArray::resizeTotalElements(" << size << ")" << std::endl;
       if (size == 0)
       {
         clear();

@@ -229,7 +229,7 @@ class DREAM3DLib_EXPORT AttributeMatrix : public Observable
       if(NULL == filter) { allocateData = true; }
       else { allocateData = !filter->getInPreflight(); }
       typename ArrayType::Pointer attributeArray = ArrayType::CreateArray(getNumTuples(), compDims, name, allocateData);
-      if(attributeArray != NULL)
+      if(attributeArray.get() != NULL)
       {
         if(allocateData)
         {
