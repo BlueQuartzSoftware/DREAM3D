@@ -20,7 +20,8 @@
  */
 class @ClassName@ : public AbstractFilter
 {
-      Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
+  Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
+
   public:
     DREAM3D_SHARED_POINTERS(@ClassName@)
     DREAM3D_STATIC_NEW_MACRO(@ClassName@)
@@ -48,17 +49,17 @@ class @ClassName@ : public AbstractFilter
     virtual const QString getCompiledLibraryName();
 
     /**
+    * @brief This returns a string that is displayed in the GUI. It should be readable
+    * and understandable by humans.
+    */
+    virtual const QString getHumanLabel();
+
+    /**
     * @brief This returns the group that the filter belonds to. You can select
     * a different group if you want. The string returned here will be displayed
     * in the GUI for the filter
     */
     virtual const QString getGroupName();
-
-    /**
-    * @brief This returns a string that is displayed in the GUI. It should be readable
-    * and understandable by humans.
-    */
-    virtual const QString getHumanLabel();
 
     /**
     * @brief This returns a string that is displayed in the GUI and helps to sort the filters into
@@ -133,16 +134,15 @@ class @ClassName@ : public AbstractFilter
     @ClassName@();
 
     /**
-    * @brief Checks for the appropriate parameter values and availability of
-    * arrays in the data container
-    * @param preflight
-    * @param voxels The number of voxels
-    * @param features The number of features
-    * @param ensembles The number of ensembles
+    * @brief Checks for the appropriate parameter values and availability of arrays in the data container
     */
     void dataCheck();
 
   private:
+    /* Your private class instance variables go here. You can use several preprocessor macros to help
+     * make sure you have all the variables defined correctly. Those are "DEFINE_REQUIRED_DATAARRAY_VARIABLE()"
+     * and  DEFINE_CREATED_DATAARRAY_VARIABLE() which are defined in DREAM3DGetSetMacros.h
+     */
 
     @ClassName@(const @ClassName@&); // Copy Constructor Not Implemented
     void operator=(const @ClassName@&); // Operator '=' Not Implemented
