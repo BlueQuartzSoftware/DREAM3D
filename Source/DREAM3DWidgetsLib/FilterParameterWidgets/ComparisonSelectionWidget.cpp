@@ -404,7 +404,6 @@ QString ComparisonSelectionWidget::checkStringValues(QString curDcName, QString 
 // -----------------------------------------------------------------------------
 void ComparisonSelectionWidget::tableDataWasChanged(const QModelIndex& topLeft, const QModelIndex& bottomRight)
 {
-  std::cout << "ComparisonSelectionWidget::tableDataWasChanged(const QModelIndex& topLeft, const QModelIndex& bottomRight)" << std::endl;
   m_DidCausePreflight = true;
   emit parametersChanged();
   m_DidCausePreflight = false;

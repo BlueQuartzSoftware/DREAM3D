@@ -167,7 +167,8 @@ RawBinaryReader::RawBinaryReader() :
   m_OverRideOriginResolution(true),
   m_SkipHeaderBytes(0),
   m_OutputArrayName(""),
-  m_InputFile("")
+  m_InputFile(""),
+  m_AddToExistingAttributeMatrix(false)
 {
   m_Dimensions.x = 0;
   m_Dimensions.y = 0;
@@ -204,7 +205,6 @@ void RawBinaryReader::setupFilterParameters()
     parameter->setHumanLabel("Scalar Type");
     parameter->setPropertyName("ScalarType");
     parameter->setWidgetType(FilterParameterWidgetType::ChoiceWidget);
-    ////parameter->setValueType("unsigned int");
     QVector<QString> choices;
     choices.push_back("signed   int 8  bit");
     choices.push_back("unsigned int 8  bit");
@@ -226,7 +226,6 @@ void RawBinaryReader::setupFilterParameters()
     parameter->setHumanLabel("Endian");
     parameter->setPropertyName("Endian");
     parameter->setWidgetType(FilterParameterWidgetType::ChoiceWidget);
-    ////parameter->setValueType("unsigned int");
     QVector<QString> choices;
     choices.push_back("Little");
     choices.push_back("Big");
@@ -240,8 +239,9 @@ void RawBinaryReader::setupFilterParameters()
   parameters.push_back(FilterParameter::New("Skip Header Bytes", "SkipHeaderBytes", FilterParameterWidgetType::IntWidget, getSkipHeaderBytes(), false));
   parameters.push_back(FilterParameter::New("Output Array Name", "OutputArrayName", FilterParameterWidgetType::StringWidget, getOutputArrayName(), false));
   parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
-  parameters.push_back(FilterParameter::New("Data Container Name", "DataContainerName", FilterParameterWidgetType::StringWidget, getDataContainerName(), false));
-  parameters.push_back(FilterParameter::New("Cell Attribute Matrix Name", "CellAttributeMatrixName", FilterParameterWidgetType::StringWidget, getCellAttributeMatrixName(), false));
+  parameters.push_back(FilterParameter::New("Add to Existing DataContainer & AttributeMatrix", "AddToExistingAttributeMatrix", FilterParameterWidgetType::BooleanWidget, getDataContainerName(), true));
+  parameters.push_back(FilterParameter::New("Data Container Name", "DataContainerName", FilterParameterWidgetType::StringWidget, getDataContainerName(), true));
+  parameters.push_back(FilterParameter::New("Cell Attribute Matrix Name", "CellAttributeMatrixName", FilterParameterWidgetType::StringWidget, getCellAttributeMatrixName(), true));
   setFilterParameters(parameters);
 }
 
@@ -264,6 +264,7 @@ void RawBinaryReader::readFilterParameters(AbstractFilterParametersReader* reade
   setOverRideOriginResolution( reader->readValue("OverRideOriginResolution", getOverRideOriginResolution()) );
   setSkipHeaderBytes( reader->readValue("SkipHeaderBytes", getSkipHeaderBytes()) );
   setOutputArrayName( reader->readString( "OutputArrayName", getOutputArrayName() ) );
+  setAddToExistingAttributeMatrix(reader->readValue("AddToExistingAttributeMatrix", getAddToExistingAttributeMatrix() ) );
   reader->closeFilterGroup();
 }
 
@@ -286,6 +287,7 @@ int RawBinaryReader::writeFilterParameters(AbstractFilterParametersWriter* write
   writer->writeValue("OverRideOriginResolution", getOverRideOriginResolution() );
   writer->writeValue("SkipHeaderBytes", getSkipHeaderBytes() );
   writer->writeValue("OutputArrayName", getOutputArrayName() );
+  writer->writeValue("AddToExistingAttributeMatrix", getAddToExistingAttributeMatrix() );
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
@@ -339,11 +341,26 @@ void RawBinaryReader::dataCheck(bool preflight)
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 
-  VolumeDataContainer* m = getDataContainerArray()->createNonPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName());
-  if(getErrorCondition() < 0) { return; }
-  QVector<size_t> tDims(3, 0);
-  AttributeMatrix::Pointer attrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::Cell);
-  if(getErrorCondition() < 0) { return; }
+VolumeDataContainer* m = NULL;
+AttributeMatrix::Pointer attrMat;
+
+  if (getAddToExistingAttributeMatrix() )
+  {
+     m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName());
+     if(getErrorCondition() < 0) { return; }
+
+     attrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), -10000);
+     if(getErrorCondition() < 0) { return; }
+  }
+  else
+  {
+    m = getDataContainerArray()->createNonPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName());
+    if(getErrorCondition() < 0) { return; }
+
+    QVector<size_t> tDims(3, 0);
+    attrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::Cell);
+    if(getErrorCondition() < 0) { return; }
+  }
 
   if (true == preflight)
   {
