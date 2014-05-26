@@ -68,7 +68,7 @@ class StringDataArray : public IDataArray
       {
         return NullPointer();
       }
-      StringDataArray* d = new StringDataArray(numTuples, true);
+      StringDataArray* d = new StringDataArray(numTuples, name, allocate);
       d->setName(name);
       Pointer ptr(d);
       return ptr;
@@ -176,7 +176,7 @@ class StringDataArray : public IDataArray
     */
     virtual size_t getNumberOfTuples ()
     {
-      return m_Array.size();
+      return m_NumTuples;
     }
 
 
@@ -277,6 +277,7 @@ class StringDataArray : public IDataArray
           newArray.push_back(m_Array[i]);
         }
       }
+      m_NumTuples = m_Array.size();
       return err;
     }
 
@@ -330,6 +331,7 @@ class StringDataArray : public IDataArray
     virtual int32_t resizeTotalElements(size_t size)
     {
       m_Array.resize(size);
+      m_NumTuples = size;
       return 1;
     }
 
@@ -341,6 +343,7 @@ class StringDataArray : public IDataArray
     virtual int32_t resize(size_t numTuples)
     {
       m_Array.resize(numTuples);
+      m_NumTuples = numTuples;
       return 1;
     }
 
@@ -477,25 +480,21 @@ class StringDataArray : public IDataArray
     * @param numElements The number of elements in the internal array.
     * @param takeOwnership Will the class clean up the memory. Default=true
     */
-    StringDataArray(size_t numElements, bool ownsData = true) :
-      _ownsData(ownsData)
+    StringDataArray(size_t numTuples, const QString name, bool allocate = true) :
+      m_Name(name),
+      m_NumTuples(numTuples),
+      _ownsData(true)
     {
-      m_Array.resize(numElements);
-      //  MUD_FLAP_0 = MUD_FLAP_1 = MUD_FLAP_2 = MUD_FLAP_3 = MUD_FLAP_4 = MUD_FLAP_5 = 0xABABABABABABABABul;
+      if (allocate == true) {
+        m_Array.resize(numTuples);
+      }
     }
 
   private:
-    //  unsigned long long int MUD_FLAP_0;
     QVector<QString> m_Array;
-    //  unsigned long long int MUD_FLAP_1;
-    //size_t Size;
-    //  unsigned long long int MUD_FLAP_4;
-    bool _ownsData;
-    //  unsigned long long int MUD_FLAP_2;
-    //  size_t MaxId;
-//   unsigned long long int MUD_FLAP_3;
     QString m_Name;
-    //  unsigned long long int MUD_FLAP_5;
+    size_t m_NumTuples;
+    bool _ownsData;
 
     StringDataArray(const StringDataArray&); //Not Implemented
     void operator=(const StringDataArray&); //Not Implemented

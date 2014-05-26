@@ -138,7 +138,7 @@ IDataArray::Pointer H5DataArrayReader::readStringDataArray(hid_t gid, const QStr
       return ptr;
     }
 
-    // Read the component dimensions as  an attribute
+    // Read the component dimensions as an attribute
     QVector<size_t> cDims;
     err = QH5Lite::readVectorAttribute(gid, name, DREAM3D::HDF5::ComponentDimensions, cDims);
     if (err < 0)
@@ -168,35 +168,35 @@ IDataArray::Pointer H5DataArrayReader::readStringDataArray(hid_t gid, const QStr
     }
 
     if(H5Tequal(typeId, H5T_STD_U8BE) || H5Tequal(typeId, H5T_STD_U8LE)
-        || H5Tequal(typeId, H5T_STD_I8BE) || H5Tequal(typeId, H5T_STD_I8LE) )
+       || H5Tequal(typeId, H5T_STD_I8BE) || H5Tequal(typeId, H5T_STD_I8LE) )
     {
-      if (preflightOnly == false)
+
+      ptr = StringDataArray::CreateArray(0, name);
+      StringDataArray* strArray = StringDataArray::SafePointerDownCast(ptr.get());
+
+      Int8ArrayType::Pointer bufPtr = Int8ArrayType::CreateArray(tDims, cDims, "INTERNAL_TEMP_STRING_MATRIX");
+      // Read the string matrix
+      err = QH5Lite::readPointerDataset(gid, name, bufPtr->getPointer(0) );
+
+      // the number of tuples is the number of strings
+      size_t size = bufPtr->getNumberOfTuples();
+      if (preflightOnly == true)
       {
-        ptr = StringDataArray::CreateArray(0, name);
-        StringDataArray* strArray = StringDataArray::SafePointerDownCast(ptr.get());
-
-        Int8ArrayType::Pointer bufPtr = Int8ArrayType::CreateArray(tDims, cDims, "INTERNAL_TEMP_STRING_MATRIX");
-        // Read the string matrix
-        err = QH5Lite::readPointerDataset(gid, name, bufPtr->getPointer(0) );
-
-        // the number of tuples is the number of strings
-        size_t size = bufPtr->getNumberOfTuples();
+        ptr = StringDataArray::CreateArray(size, name, false);
+      }
+      else
+      {
         for(size_t tuple = 0; tuple < size; tuple++)
         {
-
           const char* buf = reinterpret_cast<char*>(bufPtr->getTuplePointer(tuple));
           QString value(buf);
           strArray->resize(tuple + 1);
           strArray->setValue(tuple, value);
         }
       }
-      else // We are preflighting only so just create a StringDataArray of lenght 1
-      {
-        ptr = StringDataArray::CreateArray(1, name);
-      }
     }
-
   }
+
   CloseH5T(typeId, err, retErr);
   return ptr;
 }
