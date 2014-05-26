@@ -127,12 +127,9 @@ void PipelineFilterWidget::initialize(AbstractFilter::Pointer filter)
   m_DeleteRect.setY(PADDING + BORDER);
   m_DeleteRect.setWidth(IMAGE_WIDTH);
   m_DeleteRect.setHeight(IMAGE_HEIGHT);
-  //  m_timer = new QTimer(this);
-  //  connect(m_timer, SIGNAL(timeout()), this, SLOT(changeStyle()));
 
   // Set the AbstractFilter for this class
   m_Filter = filter;
-
 
   // If the filter is valid then instantiate all the FilterParameterWidgets
   if (NULL != m_Filter.get())
@@ -147,8 +144,6 @@ void PipelineFilterWidget::initialize(AbstractFilter::Pointer filter)
     basicname = QString::fromUtf8("verticalLayout") + m_Filter->getNameOfClass();
     basicverticalLayout->setObjectName(basicname);
 
-
-
     m_AdvancedInputScrollWidget = new QWidget(this);
     QString advname = QString::fromUtf8("advancedInputsScrollWidget_") + m_Filter->getNameOfClass();
     m_AdvancedInputScrollWidget->setObjectName(advname);
@@ -157,7 +152,8 @@ void PipelineFilterWidget::initialize(AbstractFilter::Pointer filter)
     advname = QString::fromUtf8("verticalLayout") + m_Filter->getNameOfClass();
     advverticalLayout->setObjectName(advname);
 
-
+    m_BasicParameterCount = 0;
+    m_AdvParameterCount = 0;
 
     // Set the Name of the filter into the FilterWidget
     filterName->setText(m_Filter->getHumanLabel() );
@@ -178,16 +174,17 @@ void PipelineFilterWidget::initialize(AbstractFilter::Pointer filter)
 
       if(option->getAdvanced() == true)
       {
-        w->setParent(m_AdvancedInputScrollWidget);
+        w->setParent(m_AdvancedInputScrollWidget); // Set the parent for the widget
         advverticalLayout->addWidget(w);
+        m_AdvParameterCount++;
       }
       else
       {
-        // Set the parent for the widget
         w->setParent(m_BasicInputsScrollWidget);
-        // Add the FilterWidget to the layout
-        basicverticalLayout->addWidget(w);
+        basicverticalLayout->addWidget(w); // Add the FilterWidget to the layout
+        m_BasicParameterCount++;
       }
+
       connect(w, SIGNAL(parametersChanged() ),
               parent(), SLOT(preflightPipeline() ) );
       connect(w, SIGNAL(errorSettingFilterParameter(const QString&)),
@@ -195,17 +192,6 @@ void PipelineFilterWidget::initialize(AbstractFilter::Pointer filter)
 
     }
 
-#if 0
-    {
-      QSpacerItem* verticalSpacer = new QSpacerItem(20, 40, QSizePolicy::Minimum, QSizePolicy::Expanding);
-      basicverticalLayout->addItem(verticalSpacer);
-    }
-
-    {
-      QSpacerItem* verticalSpacer = new QSpacerItem(20, 40, QSizePolicy::Minimum, QSizePolicy::Expanding);
-      advverticalLayout->addItem(verticalSpacer);
-    }
-#endif
   }
 
 }

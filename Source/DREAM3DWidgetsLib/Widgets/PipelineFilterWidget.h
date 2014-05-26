@@ -105,6 +105,8 @@ class DREAM3DWidgetsLib_EXPORT PipelineFilterWidget : public QFrame, private Ui:
     void setContextMenuActions(QList<QAction*> list);
 
     DREAM3D_INSTANCE_PROPERTY(QString, BorderColorStyle)
+    DREAM3D_INSTANCE_PROPERTY(int, BasicParameterCount)
+    DREAM3D_INSTANCE_PROPERTY(int, AdvParameterCount)
 
   public slots:
 

@@ -80,7 +80,7 @@ class DREAM3DWidgetsLib_EXPORT FilterInputWidget : public QWidget, private Ui::F
 
   private:
     QPointer<FaderWidget> faderWidget;
-
+    bool m_AdvFadedOut;
 
 
     FilterInputWidget(const FilterInputWidget&); // Copy Constructor Not Implemented
