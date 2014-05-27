@@ -58,18 +58,21 @@ class StructArray : public IDataArray
      * @param name The name of the array
      * @return Boost::Shared_Ptr wrapping an instance of StructArrayTemplate<T>
      */
-    static Pointer CreateArray(size_t numElements, const QString& name)
+    static Pointer CreateArray(size_t numElements, const QString& name, bool allocate=true)
     {
       if (name.isEmpty() == true)
       {
         return NullPointer();
       }
       StructArray<T>* d = new StructArray<T> (numElements, true);
-      if (d->Allocate() < 0)
+      if(allocate)
       {
-        // Could not allocate enough memory, reset the pointer to null and return
-        delete d;
-        return StructArray<T>::NullPointer();
+        if (d->Allocate() < 0)
+        {
+          // Could not allocate enough memory, reset the pointer to null and return
+          delete d;
+          return StructArray<T>::NullPointer();
+        }
       }
       d->setName(name);
       Pointer ptr(d);
@@ -83,21 +86,21 @@ class StructArray : public IDataArray
      * @param name The name of the array
      * @return Boost::Shared_Ptr wrapping an instance of DataArrayTemplate<T>
      */
-    virtual IDataArray::Pointer createNewArray(size_t numElements, int rank, size_t* dims, const QString& name)
+    virtual IDataArray::Pointer createNewArray(size_t numElements, int rank, size_t* dims, const QString& name, bool allocate=true)
     {
-      IDataArray::Pointer p = StructArray<T>::CreateArray(numElements, name);
+      IDataArray::Pointer p = StructArray<T>::CreateArray(numElements, name, allocate);
       return p;
     }
 
-    virtual IDataArray::Pointer createNewArray(size_t numElements, std::vector<size_t> dims, const QString& name)
+    virtual IDataArray::Pointer createNewArray(size_t numElements, std::vector<size_t> dims, const QString& name, bool allocate=true)
     {
-      IDataArray::Pointer p = StructArray<T>::CreateArray(numElements, name);
+      IDataArray::Pointer p = StructArray<T>::CreateArray(numElements, name, allocate);
       return p;
     }
 
-    virtual IDataArray::Pointer createNewArray(size_t numElements, QVector<size_t> dims, const QString& name)
+    virtual IDataArray::Pointer createNewArray(size_t numElements, QVector<size_t> dims, const QString& name, bool allocate=true)
     {
-      IDataArray::Pointer p = StructArray<T>::CreateArray(numElements, name);
+      IDataArray::Pointer p = StructArray<T>::CreateArray(numElements, name, allocate);
       return p;
     }
 

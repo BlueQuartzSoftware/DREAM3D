@@ -91,7 +91,6 @@ class DREAM3DLib_EXPORT AbstractFilter : public Observable
     virtual const QString getHumanLabel() { return "YOUR CLASS SHOULD IMPLEMENT THIS";}
     virtual const QString getBrandingString() { return "DREAM3D Core Filter"; }
     virtual const QString getCompiledLibraryName() { return "DREAM3DLib"; }
-    virtual Pointer newFilterInstance(bool copyFilterParameters);
 
     /**
      * @brief setupFilterParameters
@@ -121,6 +120,13 @@ class DREAM3DLib_EXPORT AbstractFilter : public Observable
      */
     virtual void preflight();
 
+    /**
+     * @brief newFilterInstance
+     * @param copyFilterParameters
+     * @return
+     */
+    virtual Pointer newFilterInstance(bool copyFilterParameters);
+
     // ------------------------------
     // Standard methods for this class the are commonly used by subclasses.
     // ------------------------------
@@ -133,6 +139,8 @@ class DREAM3DLib_EXPORT AbstractFilter : public Observable
     DREAM3D_INSTANCE_PROPERTY(QString, MessagePrefix)
 
     DREAM3D_INSTANCE_PROPERTY(int, ErrorCondition)
+
+    DREAM3D_INSTANCE_PROPERTY(bool, InPreflight)
 
     // ------------------------------
     // These functions allow interogating the position the filter is in the pipeline and the previous and next filters

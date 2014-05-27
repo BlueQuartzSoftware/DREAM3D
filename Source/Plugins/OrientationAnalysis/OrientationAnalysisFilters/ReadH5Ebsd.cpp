@@ -407,11 +407,11 @@ void ReadH5Ebsd::dataCheck()
     if(m_SelectedArrayNames.find(names[i]) == m_SelectedArrayNames.end() ) { continue; }
     if (reader->getPointerType(names[i]) == Ebsd::Int32)
     {
-      cellAttrMat->createAndAddAttributeArray<DataArray<int32_t>, int32_t>(names[i], 0, cDims);
+      cellAttrMat->createAndAddAttributeArray<DataArray<int32_t>, AbstractFilter, int32_t>(this, names[i], 0, cDims);
     }
     else if (reader->getPointerType(names[i]) == Ebsd::Float)
     {
-      cellAttrMat->createAndAddAttributeArray<DataArray<float>, float>(names[i], 0, cDims);
+      cellAttrMat->createAndAddAttributeArray<DataArray<float>, AbstractFilter, float>(this, names[i], 0, cDims);
     }
   }
 
@@ -460,6 +460,7 @@ void ReadH5Ebsd::dataCheck()
 // -----------------------------------------------------------------------------
 void ReadH5Ebsd::preflight()
 {
+  setInPreflight(true);
   // Read the file to get the data arrays, size, meta data
   readVolumeInfo(); // This is specific to "readers" in general (I think), or at least those readers that need to show
   // a structure to the user to allow them to select only specific parts of the file to read
@@ -470,6 +471,7 @@ void ReadH5Ebsd::preflight()
   emit updateFilterParameters(this);
   dataCheck();
   emit preflightExecuted();
+  setInPreflight(false);
 }
 
 // -----------------------------------------------------------------------------

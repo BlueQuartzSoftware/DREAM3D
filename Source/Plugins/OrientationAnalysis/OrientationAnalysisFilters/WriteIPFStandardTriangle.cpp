@@ -182,12 +182,14 @@ void WriteIPFStandardTriangle::dataCheck()
 // -----------------------------------------------------------------------------
 void WriteIPFStandardTriangle::preflight()
 {
+  setInPreflight(true);
   /* Place code here that sanity checks input arrays and input values. Look at some
   * of the other DREAM3DLib/Filters/.cpp files for sample codes */
   emit preflightAboutToExecute();
   emit updateFilterParameters(this);
   dataCheck();
   emit preflightExecuted();
+  setInPreflight(false);
 }
 
 // -----------------------------------------------------------------------------

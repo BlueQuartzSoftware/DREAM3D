@@ -191,7 +191,7 @@ class DREAM3DWidgetsLib_EXPORT PipelineViewWidget : public QFrame
      * @param filter
      * @param index
      */
-    void addFilterWidget(PipelineFilterWidget* w, AbstractFilter::Pointer filter, int index = -1);
+    void addFilterWidget(PipelineFilterWidget* w, int index = -1);
 
     /**
      * @brief removeFilterWidget

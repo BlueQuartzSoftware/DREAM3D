@@ -74,15 +74,17 @@ class DREAM3DLib_EXPORT DataContainerWriter : public AbstractFilter
     Q_PROPERTY(bool WriteXdmfFile READ getWriteXdmfFile WRITE setWriteXdmfFile)
 
 
-    virtual void preflight();
-
     virtual const QString getCompiledLibraryName() { return IO::IOBaseName; }
-    virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::OutputFilters; }
     virtual const QString getHumanLabel() { return "Write DREAM3D Data File"; }
 
+    /**
+    * @brief This method will instantiate all the end user settable options/parameters
+    * for this filter
+    */
     virtual void setupFilterParameters();
+
     /**
     * @brief This method will write the options to a file
     * @param writer The writer that is used to write the options to a file
@@ -100,11 +102,41 @@ class DREAM3DLib_EXPORT DataContainerWriter : public AbstractFilter
     */
     virtual void execute();
 
+    /**
+    * @brief This function runs some sanity checks on the DataContainer and inputs
+    * in an attempt to ensure the filter can process the inputs.
+    */
+    virtual void preflight();
+
+    /**
+     * @brief newFilterInstance Returns a new instance of the filter optionally copying the filter parameters from the
+     * current filter to the new instance.
+     * @param copyFilterParameters
+     * @return
+     */
+    virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
 
   signals:
+    /**
+     * @brief updateFilterParameters This is emitted when the filter requests all the latest Filter Parameters need to be
+     * pushed from a user facing control such as the FilterParameter Widget
+     * @param filter The filter to push the values into
+     */
     void updateFilterParameters(AbstractFilter* filter);
+
+    /**
+     * @brief parametersChanged This signal can be emitted when any of the filter parameters are changed internally.
+     */
     void parametersChanged();
+
+    /**
+     * @brief preflightAboutToExecute Emitted just before the dataCheck() is called. This can change if needed.
+     */
     void preflightAboutToExecute();
+
+    /**
+     * @brief preflightExecuted Emitted just after the dataCheck() is called. Typically. This can change if needed.
+     */
     void preflightExecuted();
 
   protected:

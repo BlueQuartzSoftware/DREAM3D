@@ -259,6 +259,12 @@ void PipelineViewWidget::clearWidgets()
     if (NULL != w)
     {
       m_FilterWidgetLayout->removeWidget(w);
+      PipelineFilterWidget* fw = qobject_cast<PipelineFilterWidget*>(w);
+      if(fw)
+      {
+        fw->getFilter()->setPreviousFilter(AbstractFilter::NullPointer());
+        fw->getFilter()->setNextFilter(AbstractFilter::NullPointer());
+      }
       w->deleteLater();
     }
   }
@@ -308,7 +314,7 @@ FilterPipeline::Pointer PipelineViewWidget::copyFilterPipeline()
 
 
   // Create a Pipeline Object and fill it with the filters from this View
-// Create a Pipeline Object and fill it with the filters from this View
+  // Create a Pipeline Object and fill it with the filters from this View
   FilterPipeline::Pointer pipeline = FilterPipeline::New();
 
   qint32 count = filterCount();
@@ -399,7 +405,7 @@ void PipelineViewWidget::loadPipelineFile(const QString& filePath, QSettings::Fo
     // Create a PipelineFilterWidget using the current AbstractFilter instance to initialize it
     PipelineFilterWidget* w = new PipelineFilterWidget(filters.at(i), NULL, this);
     index = filterCount() - 1; // We want to add the filter as the next filter but BEFORE the vertical spacer
-    addFilterWidget(w, filters.at(i), index);
+    addFilterWidget(w, index);
   }
 
   // Now preflight the pipeline for this filter.
@@ -432,7 +438,7 @@ void PipelineViewWidget::addFilter(const QString& filterClassName, int index)
   PipelineFilterWidget* w = new PipelineFilterWidget(filter, NULL, this);
 
   // Add the filter widget to this view widget
-  addFilterWidget(w, filter, index);
+  addFilterWidget(w, index);
 
   // Clear the pipeline Issues table first so we can collect all the error messages
   emit pipelineIssuesCleared();
@@ -444,8 +450,9 @@ void PipelineViewWidget::addFilter(const QString& filterClassName, int index)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PipelineViewWidget::addFilterWidget(PipelineFilterWidget* w, AbstractFilter::Pointer filter, int index)
+void PipelineViewWidget::addFilterWidget(PipelineFilterWidget* w, int index)
 {
+//  std::cout << "PipelineViewWidget::addFilterWidget     w*=" << w << std::endl;
   bool addSpacer = false;
   if (filterCount() <= 0)
   {
@@ -564,6 +571,8 @@ void PipelineViewWidget::removeFilterWidget(PipelineFilterWidget* whoSent)
     }
     if (w)
     {
+      whoSent->getFilter()->setPreviousFilter(AbstractFilter::NullPointer());
+      whoSent->getFilter()->setNextFilter(AbstractFilter::NullPointer());
       w->deleteLater();
     }
   }

@@ -13,6 +13,7 @@
 // -----------------------------------------------------------------------------
 @ClassName@::@ClassName@() :
   AbstractFilter()
+/* DO NOT FORGET TO INITIALIZE ALL YOUR DREAM3D Filter Parameters HERE */
 {
   setupFilterParameters();
 }
@@ -30,17 +31,20 @@
 void @ClassName@::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  /* Place all your option initialization code here */
-  /* For String input use this code */
-  /* {
-    FilterParameter::Pointer parameter = FilterParameter::New();
-    parameter->setHumanLabel("Eulers Array");
-    parameter->setPropertyName("CellEulerAnglesArrayName");
-    parameter->setWidgetType(FilterParameterWidgetType::SingleArraySelectionWidget);
-    parameter->setValueType("QString");
-    parameter->setUnits("");
-    parameters.push_back(parameter);
-  }
+  /* There are several types of FilterParameter classes to choose from and several
+  * options for each class type. The programmer can put the entire invocation into
+  * a single line if they want. For example:
+  *
+  *   parameters.push_back(FilterParameter::New("Reference Direction", "ReferenceDir", FilterParameterWidgetType::FloatVec3Widget, getReferenceDir(), false));
+  * or the programmer can create a FilterParameter like usual C++ codes:
+  * {
+  *  FilterParameter::Pointer parameter = FilterParameter::New();
+  *  parameter->setHumanLabel("Eulers Array");
+  *  parameter->setPropertyName("CellEulerAnglesArrayName");
+  *  parameter->setWidgetType(FilterParameterWidgetType::SingleArraySelectionWidget);
+  *  parameter->setUnits("");
+  *  parameters.push_back(parameter);
+  * }
   */
   setFilterParameters(parameters);
 }
@@ -88,6 +92,27 @@ void @ClassName@::dataCheck()
     notifyErrorMessage(getHumanLabel(), ss, -1);
     return;
   }
+  * We can also check for the availability of REQUIRED ARRAYS:
+  * QVector<size_t> dims(1, 1);
+  * // Assigns the shared_ptr<> to an instance variable that is a weak_ptr<>
+  * m_CellPhasesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getCellPhasesArrayPath(), dims);
+  *  // Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object
+  * if( NULL != m_CellPhasesPtr.lock().get() )
+  * {
+  *   // Now assign the raw pointer to data from the DataArray<T> object
+  *   m_CellPhases = m_CellPhasesPtr.lock()->getPointer(0);
+  * }
+  *
+  * We can also CREATE a new array to dump new data into
+  *   tempPath.update(m_CellEulerAnglesArrayPath.getDataContainerName(), m_CellEulerAnglesArrayPath.getAttributeMatrixName(), getCellIPFColorsArrayName() );
+  * // Assigns the shared_ptr<> to an instance variable that is a weak_ptr<>
+  * m_CellIPFColorsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<uint8_t>, AbstractFilter, uint8_t>(this, tempPath, 0, dims);
+  * // Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object
+  * if( NULL != m_CellIPFColorsPtr.lock().get() )
+  * {
+  * // Now assign the raw pointer to data from the DataArray<T> object
+  * m_CellIPFColors = m_CellIPFColorsPtr.lock()->getPointer(0);
+  * }
   */
 }
 
@@ -96,12 +121,13 @@ void @ClassName@::dataCheck()
 // -----------------------------------------------------------------------------
 void @ClassName@::preflight()
 {
-  /* Place code here that sanity checks input arrays and input values. Look at some
-  * of the other DREAM3DLib/Filters/.cpp files for sample codes */
-  emit preflightAboutToExecute();
-  emit updateFilterParameters(this);
-  dataCheck();
-  emit preflightExecuted();
+  // These are the REQUIRED lines of CODE to make sure the filter behaves correctly
+  setInPreflight(true); // Set the fact that we are preflighting.
+  emit preflightAboutToExecute(); // Emit this signal so that other widgets can do one file update
+  emit updateFilterParameters(this); // Emit this signal to have the widgets push their values down to the filter
+  dataCheck(); // Run our DataCheck to make sure everthing is setup correctly
+  emit preflightExecuted(); // We are done preflighting this filter
+  setInPreflight(false); // Inform the system this filter is NOT in preflight mode anymore.
 }
 
 // -----------------------------------------------------------------------------
@@ -161,7 +187,7 @@ void @ClassName@::execute()
   }
 
   /* Let the GUI know we are done with this filter */
-  notifyStatusMessage(getHumanLabel(), "Import Complete");
+  notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
 // -----------------------------------------------------------------------------
@@ -180,14 +206,14 @@ AbstractFilter::Pointer @ClassName@::newFilterInstance(bool copyFilterParameters
      * into the new instance
      */
     copyFilterParameterInstanceVariables(filter.get());
-    /* If your filter is using a lot of custom Filter Parameter widgets @see ReadH5Ebsd then you
+    /* If your filter is using a lot of custom FilterParameterWidgets @see ReadH5Ebsd then you
      * may need to copy each filter parameter explicitly plus any other instance variables that
      * are needed into the new instance. Here is some example code from ReadH5Ebsd
      */
-  //    DREAM3D_COPY_INSTANCEVAR(OutputFile)
-  //    DREAM3D_COPY_INSTANCEVAR(ZStartIndex)
-  //    DREAM3D_COPY_INSTANCEVAR(ZEndIndex)
-  //    DREAM3D_COPY_INSTANCEVAR(ZResolution)
+    //    DREAM3D_COPY_INSTANCEVAR(OutputFile)
+    //    DREAM3D_COPY_INSTANCEVAR(ZStartIndex)
+    //    DREAM3D_COPY_INSTANCEVAR(ZEndIndex)
+    //    DREAM3D_COPY_INSTANCEVAR(ZResolution)
   }
   return filter;
 }

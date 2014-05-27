@@ -163,10 +163,12 @@ void NodesTrianglesToStl::dataCheck(bool preflight)
 // -----------------------------------------------------------------------------
 void NodesTrianglesToStl::preflight()
 {
+  setInPreflight(true);
   emit preflightAboutToExecute();
   emit updateFilterParameters(this);
   dataCheck(true);
   emit preflightExecuted();
+  setInPreflight(false);
 }
 
 

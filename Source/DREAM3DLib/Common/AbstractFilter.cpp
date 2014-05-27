@@ -36,6 +36,7 @@
 AbstractFilter::AbstractFilter() :
   Observable(),
   m_ErrorCondition(0),
+  m_InPreflight(false),
   m_Cancel(false)
 {
   m_DataContainerArray = DataContainerArray::New();
@@ -49,7 +50,16 @@ AbstractFilter::AbstractFilter() :
 // -----------------------------------------------------------------------------
 AbstractFilter::~AbstractFilter()
 {
+//  if(NULL != m_PreviousFilter.get())
+//  std::cout << "~PipelineFilterWidget() m_PreviousFilter " << this  << "  " << m_PreviousFilter->getNameOfClass().toStdString()
+//            << "  " << m_PreviousFilter.use_count() << std::endl;
+//  m_PreviousFilter = AbstractFilter::NullPointer();
 
+//  if(NULL != m_NextFilter.get())
+//  std::cout << "~PipelineFilterWidget() m_NextFilter " << this  << "  " << m_NextFilter->getNameOfClass().toStdString()
+//            << "  " << m_NextFilter.use_count() << std::endl;
+//  m_NextFilter = AbstractFilter::NullPointer();
+//  std::cout << "~AbstractFilter" << std::endl;
 }
 
 // -----------------------------------------------------------------------------
@@ -81,6 +91,7 @@ void AbstractFilter::execute()
 // -----------------------------------------------------------------------------
 void AbstractFilter::preflight()
 {
+  setInPreflight(true);
   setErrorCondition(-999);
   notifyErrorMessage(getNameOfClass(), "AbstractFilter does not implement a preflight method. Please use a subclass instead.", -999);
 }
@@ -205,9 +216,9 @@ void AbstractFilter::copyFilterParameterInstanceVariables(AbstractFilter* filter
         QString ss = QString("%1::newFilterInstance()\nError occurred transferring the Filter Parameter '%2' in Filter '%3' to the filter instance. "
                              " The filter parameter has a conditional property '%4'. The transfer of this property from the old filter to the new filter failed."
                              " Please report this issue to the developers of this filter.").arg(filter->getNameOfClass())
-                     .arg(parameter->getPropertyName())
-                     .arg(filter->getHumanLabel())
-                     .arg(parameter->getConditionalProperty());
+            .arg(parameter->getPropertyName())
+            .arg(filter->getHumanLabel())
+            .arg(parameter->getConditionalProperty());
         Q_ASSERT_X(ok, __FILE__, ss.toLatin1().constData());
       }
     }

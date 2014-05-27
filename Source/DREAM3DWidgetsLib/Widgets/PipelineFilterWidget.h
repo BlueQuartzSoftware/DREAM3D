@@ -83,8 +83,9 @@ class DREAM3DWidgetsLib_EXPORT PipelineFilterWidget : public QFrame, private Ui:
     virtual bool isSelected();
 
     virtual QString getHumanLabel();
-    virtual QString  getFilterGroup();
-    virtual QString  getFilterSubGroup();
+    virtual QString getFilterGroup();
+    virtual QString getFilterSubGroup();
+    virtual QString getFilterClassName();
 
     static QString getOpenDialogLastDirectory() { return m_OpenDialogLastDirectory; }
     static void setOpenDialogLastDirectory(QString val) { m_OpenDialogLastDirectory = val; }
@@ -104,6 +105,8 @@ class DREAM3DWidgetsLib_EXPORT PipelineFilterWidget : public QFrame, private Ui:
     void setContextMenuActions(QList<QAction*> list);
 
     DREAM3D_INSTANCE_PROPERTY(QString, BorderColorStyle)
+    DREAM3D_INSTANCE_PROPERTY(int, BasicParameterCount)
+    DREAM3D_INSTANCE_PROPERTY(int, AdvParameterCount)
 
   public slots:
 
@@ -155,10 +158,6 @@ class DREAM3DWidgetsLib_EXPORT PipelineFilterWidget : public QFrame, private Ui:
   private:
     QRect                     m_DeleteRect;
     QPoint                    dragStartPosition;
-    //  QTimer*                   m_timer;
-//    unsigned char             m_CurrentBorderColorFactor;
-//    unsigned char             m_BorderIncrement;
-//    QString                   m_BorderColorStyle;
     bool                      m_IsSelected;
     bool                      m_HasPreflightErrors;
     bool                      m_HasPreflightWarnings;

@@ -119,11 +119,23 @@ set(${PLUGIN_NAME}_MISC_HDRS
 )
 cmp_IDE_SOURCE_PROPERTIES( "${PLUGIN_NAME}/" "${${PLUGIN_NAME}_HDRS};${${PLUGIN_NAME}_MISC_HDRS}" "${${PLUGIN_NAME}_SRCS}" "0")
 
+
+# -----------------------------------------------------------------------------
+# Collect all of our Generated header and source files so that they show up in the various projects
+set(${PLUGIN_NAME}_GEN_HDRS
+   ${AllFiltersHeaderFile}
+   ${RegisterKnownFiltersFile}
+   ${AllFilterParameterWidgetsHeaderFile}
+   ${RegisterKnownFilterParameterWidgetsFile}
+)
+
+
 # --------------------------------------------------------------------
 #
 # --------------------------------------------------------------------
-#QT4_WRAP_CPP( ${PLUGIN_NAME}_MODULE_MOC_SRCS ${${PLUGIN_NAME}_HDRS} )
 set_source_files_properties( ${${PLUGIN_NAME}_MODULE_MOC_SRCS} PROPERTIES HEADER_FILE_ONLY TRUE)
+set_source_files_properties( ${RegisterKnownFiltersFile} PROPERTIES HEADER_FILE_ONLY TRUE)
+set_source_files_properties( ${RegisterKnownFilterParameterWidgetsFile} PROPERTIES HEADER_FILE_ONLY TRUE)
 # --------------------------------------------------------------------
 # Group all the generated source files in IDE's that support it. Makes it clear
 # to the user of the IDE what is generated and what is not.
@@ -153,7 +165,7 @@ set(${PLUGIN_NAME}_MODULE_SRCS
 #  ${${PLUGIN_NAME}_Widgets_UIS}
 #  ${${PLUGIN_NAME}_Widgets_Generated_MOC_SRCS}
 #  ${${PLUGIN_NAME}_Widgets_Generated_UI_HDRS}
-
+  ${${PLUGIN_NAME}_GEN_HDRS}
 )
 
 # --------------------------------------------------------------------

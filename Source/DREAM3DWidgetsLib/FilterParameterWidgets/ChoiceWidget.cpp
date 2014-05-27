@@ -137,6 +137,7 @@ void ChoiceWidget::on_conditionalCB_stateChanged(int state)
   label->setVisible(boolProp);
   linkLeft->setVisible(boolProp);
   linkRight->setVisible(boolProp);
+
   m_DidCausePreflight = true;
   emit parametersChanged();
   m_DidCausePreflight = false;

@@ -72,13 +72,12 @@ void MultiThresholdObjects::setupFilterParameters()
     parameter->setHumanLabel("Select Arrays to Threshold");
     parameter->setPropertyName("SelectedThresholds");
     parameter->setWidgetType(FilterParameterWidgetType::ComparisonSelectionWidget);
-    ////parameter->setValueType("ComparisonInputs");
     parameter->setShowOperators(true);
     parameters.push_back(parameter);
   }
 
   parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
-  parameters.push_back(FilterParameter::New("Output", "DestinationArrayName", FilterParameterWidgetType::StringWidget, getDestinationArrayName(), true, ""));
+  parameters.push_back(FilterParameter::New("Output Array Name", "DestinationArrayName", FilterParameterWidgetType::StringWidget, getDestinationArrayName(), true, ""));
   setFilterParameters(parameters);
 }
 
@@ -120,7 +119,7 @@ void MultiThresholdObjects::dataCheck()
   }
   else
   {
-    DataContainerArray::Pointer dca = getDataContainerArray();
+
     int count = m_SelectedThresholds.size();
     QSet<QString> dcSet;
     QSet<QString> amSet;
@@ -149,13 +148,20 @@ void MultiThresholdObjects::dataCheck()
     }
 
     // Now that we passed all those tests, create our output array
+    DataContainerArray::Pointer dca = getDataContainerArray();
+    if(NULL == dca.get() )
+    {
+      setErrorCondition(-12001);
+      notifyErrorMessage(getHumanLabel(), "The DataContainerArray was NULL.", getErrorCondition());
+    }
+    else
     {
       ComparisonInput_t comp = m_SelectedThresholds[0];
       // At this point we are going to just grab the DataContainer Name and AttributeMatrix Name
       // from the first entry and use that to create a new AttributeArray
       QVector<size_t> dims(1, 1);
       tempPath.update(comp.dataContainerName, comp.attributeMatrixName, getDestinationArrayName() );
-      m_DestinationPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<bool>, AbstractFilter, bool>(this, tempPath, true, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+      m_DestinationPtr = dca->createNonPrereqArrayFromPath<DataArray<bool>, AbstractFilter, bool>(this, tempPath, true, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
       if( NULL != m_DestinationPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
       { m_Destination = m_DestinationPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
@@ -171,10 +177,12 @@ void MultiThresholdObjects::dataCheck()
 // -----------------------------------------------------------------------------
 void MultiThresholdObjects::preflight()
 {
+  setInPreflight(true);
   emit preflightAboutToExecute();
   emit updateFilterParameters(this);
   dataCheck();
   emit preflightExecuted();
+  setInPreflight(false);
 }
 
 // -----------------------------------------------------------------------------

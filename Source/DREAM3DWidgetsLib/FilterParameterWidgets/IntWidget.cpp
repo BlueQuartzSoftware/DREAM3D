@@ -127,6 +127,12 @@ void IntWidget::on_conditionalCB_stateChanged(int state)
 {
   bool boolProp = conditionalCB->isChecked();
   value->setEnabled(boolProp);
+  value->setVisible(boolProp);
+
+  label->setVisible(boolProp);
+  linkLeft->setVisible(boolProp);
+  linkRight->setVisible(boolProp);
+
   m_DidCausePreflight = true;
   emit parametersChanged();
   m_DidCausePreflight = false;

@@ -74,7 +74,7 @@ AttributeMatrix::AttributeMatrix(QVector<size_t> tDims, const QString& name, uns
 // -----------------------------------------------------------------------------
 AttributeMatrix::~AttributeMatrix()
 {
-
+  // std::cout << "~AttributeMatrix" << std::endl;
 }
 
 // -----------------------------------------------------------------------------
@@ -160,6 +160,11 @@ int AttributeMatrix::addAttributeArray(const QString& name, IDataArray::Pointer 
     qDebug() << "Key name: " << name << "\n";
     qDebug() << "Array Name:" << data->getName() << "\n";
     data->setName(name);
+  }
+  if(getNumTuples() != data->getNumberOfTuples())
+  {
+    qDebug() << "getNumTuples(): " << getNumTuples() << "  data->getNumberOfTuples(): " << data->getNumberOfTuples();
+    qDebug() << "AttributeMatrix::Name: " << getName() << "  dataArray::name:  " << data->getName();
   }
   Q_ASSERT(getNumTuples() == data->getNumberOfTuples());
 
@@ -252,9 +257,9 @@ bool AttributeMatrix::removeInactiveObjects(QVector<bool> activeObjects, Int32Ar
   bool acceptableMatrix = false;
   //Only valid for feature or ensemble type matrices
   if(m_Type == DREAM3D::AttributeMatrixType::VertexFeature || m_Type == DREAM3D::AttributeMatrixType::VertexEnsemble ||
-      m_Type == DREAM3D::AttributeMatrixType::EdgeFeature || m_Type == DREAM3D::AttributeMatrixType::EdgeEnsemble ||
-      m_Type == DREAM3D::AttributeMatrixType::FaceFeature || m_Type == DREAM3D::AttributeMatrixType::FaceEnsemble ||
-      m_Type == DREAM3D::AttributeMatrixType::CellFeature || m_Type == DREAM3D::AttributeMatrixType::CellEnsemble) { acceptableMatrix = true; }
+     m_Type == DREAM3D::AttributeMatrixType::EdgeFeature || m_Type == DREAM3D::AttributeMatrixType::EdgeEnsemble ||
+     m_Type == DREAM3D::AttributeMatrixType::FaceFeature || m_Type == DREAM3D::AttributeMatrixType::FaceEnsemble ||
+     m_Type == DREAM3D::AttributeMatrixType::CellFeature || m_Type == DREAM3D::AttributeMatrixType::CellEnsemble) { acceptableMatrix = true; }
   size_t totalTuples = getNumTuples();
   if(activeObjects.size() == totalTuples && acceptableMatrix == true)
   {
@@ -451,7 +456,7 @@ int AttributeMatrix::addAttributeArrayFromHDF5Path(hid_t gid, QString name, bool
 int AttributeMatrix::readAttributeArraysFromHDF5(hid_t amGid, bool preflight, AttributeMatrixProxy& attrMatProxy)
 {
   int err = 0;
-
+#warning CHECK THIS CODE
   QMap<QString, DataArrayProxy> dasToRead = attrMatProxy.dataArrays;
   QString classType;
   for (QMap<QString, DataArrayProxy>::iterator iter = dasToRead.begin(); iter != dasToRead.end(); ++iter)
@@ -465,12 +470,10 @@ int AttributeMatrix::readAttributeArraysFromHDF5(hid_t amGid, bool preflight, At
     if(classType.startsWith("DataArray") == true)
     {
       dPtr = H5DataArrayReader::readIDataArray(amGid, iter->name, preflight);
-      if(preflight == true) { dPtr->resize(getNumTuples()); }
     }
     else if(classType.compare("StringDataArray") == 0)
     {
       dPtr = H5DataArrayReader::readStringDataArray(amGid, iter->name, preflight);
-      if(preflight == true) { dPtr->resize(getNumTuples()); }
     }
     else if(classType.compare("vector") == 0)
     {
@@ -479,7 +482,6 @@ int AttributeMatrix::readAttributeArraysFromHDF5(hid_t amGid, bool preflight, At
     else if(classType.compare("NeighborList<T>") == 0)
     {
       dPtr = H5DataArrayReader::readNeighborListData(amGid, iter->name, preflight);
-      if(preflight == true) { dPtr->resize(getNumTuples()); }
     }
     else if ( (iter->name).compare(DREAM3D::EnsembleData::Statistics) == 0)
     {
@@ -487,7 +489,6 @@ int AttributeMatrix::readAttributeArraysFromHDF5(hid_t amGid, bool preflight, At
       statsData->setName(DREAM3D::EnsembleData::Statistics);
       statsData->readH5Data(amGid);
       dPtr = statsData;
-      if(preflight == true) { dPtr->resize(getNumTuples()); }
     }
 
     if (NULL != dPtr.get())

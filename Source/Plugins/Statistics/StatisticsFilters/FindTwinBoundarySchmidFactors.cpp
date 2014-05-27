@@ -362,11 +362,13 @@ void FindTwinBoundarySchmidFactors::dataCheckSurfaceMesh()
 // -----------------------------------------------------------------------------
 void FindTwinBoundarySchmidFactors::preflight()
 {
+  setInPreflight(true);
   emit preflightAboutToExecute();
   emit updateFilterParameters(this);
   dataCheckVoxel();
   dataCheckSurfaceMesh();
   emit preflightExecuted();
+  setInPreflight(false);
 }
 // -----------------------------------------------------------------------------
 //

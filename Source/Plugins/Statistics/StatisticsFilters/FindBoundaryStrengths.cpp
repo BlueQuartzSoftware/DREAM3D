@@ -215,11 +215,13 @@ void FindBoundaryStrengths::dataCheckVoxel()
 // -----------------------------------------------------------------------------
 void FindBoundaryStrengths::preflight()
 {
+  setInPreflight(true);
   emit preflightAboutToExecute();
   emit updateFilterParameters(this);
   dataCheckVoxel();
   dataCheckSurfaceMesh();
   emit preflightExecuted();
+  setInPreflight(false);
 }
 
 // -----------------------------------------------------------------------------

@@ -167,7 +167,8 @@ RawBinaryReader::RawBinaryReader() :
   m_OverRideOriginResolution(true),
   m_SkipHeaderBytes(0),
   m_OutputArrayName(""),
-  m_InputFile("")
+  m_InputFile(""),
+  m_AddToExistingAttributeMatrix(false)
 {
   m_Dimensions.x = 0;
   m_Dimensions.y = 0;
@@ -204,7 +205,6 @@ void RawBinaryReader::setupFilterParameters()
     parameter->setHumanLabel("Scalar Type");
     parameter->setPropertyName("ScalarType");
     parameter->setWidgetType(FilterParameterWidgetType::ChoiceWidget);
-    ////parameter->setValueType("unsigned int");
     QVector<QString> choices;
     choices.push_back("signed   int 8  bit");
     choices.push_back("unsigned int 8  bit");
@@ -226,7 +226,6 @@ void RawBinaryReader::setupFilterParameters()
     parameter->setHumanLabel("Endian");
     parameter->setPropertyName("Endian");
     parameter->setWidgetType(FilterParameterWidgetType::ChoiceWidget);
-    ////parameter->setValueType("unsigned int");
     QVector<QString> choices;
     choices.push_back("Little");
     choices.push_back("Big");
@@ -240,8 +239,9 @@ void RawBinaryReader::setupFilterParameters()
   parameters.push_back(FilterParameter::New("Skip Header Bytes", "SkipHeaderBytes", FilterParameterWidgetType::IntWidget, getSkipHeaderBytes(), false));
   parameters.push_back(FilterParameter::New("Output Array Name", "OutputArrayName", FilterParameterWidgetType::StringWidget, getOutputArrayName(), false));
   parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
-  parameters.push_back(FilterParameter::New("Data Container Name", "DataContainerName", FilterParameterWidgetType::StringWidget, getDataContainerName(), false));
-  parameters.push_back(FilterParameter::New("Cell Attribute Matrix Name", "CellAttributeMatrixName", FilterParameterWidgetType::StringWidget, getCellAttributeMatrixName(), false));
+  parameters.push_back(FilterParameter::New("Add to Existing DataContainer & AttributeMatrix", "AddToExistingAttributeMatrix", FilterParameterWidgetType::BooleanWidget, getDataContainerName(), true));
+  parameters.push_back(FilterParameter::New("Data Container Name", "DataContainerName", FilterParameterWidgetType::StringWidget, getDataContainerName(), true));
+  parameters.push_back(FilterParameter::New("Cell Attribute Matrix Name", "CellAttributeMatrixName", FilterParameterWidgetType::StringWidget, getCellAttributeMatrixName(), true));
   setFilterParameters(parameters);
 }
 
@@ -264,6 +264,7 @@ void RawBinaryReader::readFilterParameters(AbstractFilterParametersReader* reade
   setOverRideOriginResolution( reader->readValue("OverRideOriginResolution", getOverRideOriginResolution()) );
   setSkipHeaderBytes( reader->readValue("SkipHeaderBytes", getSkipHeaderBytes()) );
   setOutputArrayName( reader->readString( "OutputArrayName", getOutputArrayName() ) );
+  setAddToExistingAttributeMatrix(reader->readValue("AddToExistingAttributeMatrix", getAddToExistingAttributeMatrix() ) );
   reader->closeFilterGroup();
 }
 
@@ -286,6 +287,7 @@ int RawBinaryReader::writeFilterParameters(AbstractFilterParametersWriter* write
   writer->writeValue("OverRideOriginResolution", getOverRideOriginResolution() );
   writer->writeValue("SkipHeaderBytes", getSkipHeaderBytes() );
   writer->writeValue("OutputArrayName", getOutputArrayName() );
+  writer->writeValue("AddToExistingAttributeMatrix", getAddToExistingAttributeMatrix() );
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
@@ -339,11 +341,26 @@ void RawBinaryReader::dataCheck(bool preflight)
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 
-  VolumeDataContainer* m = getDataContainerArray()->createNonPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName());
-  if(getErrorCondition() < 0) { return; }
-  QVector<size_t> tDims(3, 0);
-  AttributeMatrix::Pointer attrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::Cell);
-  if(getErrorCondition() < 0) { return; }
+VolumeDataContainer* m = NULL;
+AttributeMatrix::Pointer attrMat;
+
+  if (getAddToExistingAttributeMatrix() )
+  {
+     m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName());
+     if(getErrorCondition() < 0) { return; }
+
+     attrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), -10000);
+     if(getErrorCondition() < 0) { return; }
+  }
+  else
+  {
+    m = getDataContainerArray()->createNonPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName());
+    if(getErrorCondition() < 0) { return; }
+
+    QVector<size_t> tDims(3, 0);
+    attrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::Cell);
+    if(getErrorCondition() < 0) { return; }
+  }
 
   if (true == preflight)
   {
@@ -352,52 +369,52 @@ void RawBinaryReader::dataCheck(bool preflight)
     QVector<size_t> dims(1, m_NumberOfComponents);
     if (m_ScalarType == Detail::Int8)
     {
-      attrMat->createAndAddAttributeArray<DataArray<int8_t>, int8_t>(m_OutputArrayName, 0, dims);
+      attrMat->createAndAddAttributeArray<DataArray<int8_t>, AbstractFilter, int8_t>(this, m_OutputArrayName, 0, dims);
       allocatedBytes = sizeof(int8_t) * m_NumberOfComponents * m_Dimensions.x * m_Dimensions.y * m_Dimensions.z;
     }
     else if (m_ScalarType == Detail::UInt8)
     {
-      attrMat->createAndAddAttributeArray<DataArray<uint8_t>, uint8_t>(m_OutputArrayName, 0, dims);
+      attrMat->createAndAddAttributeArray<DataArray<uint8_t>, AbstractFilter, uint8_t>(this, m_OutputArrayName, 0, dims);
       allocatedBytes = sizeof(uint8_t) * m_NumberOfComponents * m_Dimensions.x * m_Dimensions.y * m_Dimensions.z;
     }
     else if (m_ScalarType == Detail::Int16)
     {
-      attrMat->createAndAddAttributeArray<DataArray<int16_t>, int16_t>(m_OutputArrayName, 0, dims);
+      attrMat->createAndAddAttributeArray<DataArray<int16_t>, AbstractFilter, int16_t>(this, m_OutputArrayName, 0, dims);
       allocatedBytes = sizeof(int16_t) * m_NumberOfComponents * m_Dimensions.x * m_Dimensions.y * m_Dimensions.z;
     }
     else if (m_ScalarType == Detail::UInt16)
     {
-      attrMat->createAndAddAttributeArray<DataArray<uint16_t>, uint16_t>(m_OutputArrayName, 0, dims);
+      attrMat->createAndAddAttributeArray<DataArray<uint16_t>, AbstractFilter, uint16_t>(this, m_OutputArrayName, 0, dims);
       allocatedBytes = sizeof(uint16_t) * m_NumberOfComponents * m_Dimensions.x * m_Dimensions.y * m_Dimensions.z;
     }
     else if (m_ScalarType == Detail::Int32)
     {
-      attrMat->createAndAddAttributeArray<DataArray<int32_t>, int32_t>(m_OutputArrayName, 0, dims);
+      attrMat->createAndAddAttributeArray<DataArray<int32_t>, AbstractFilter, int32_t>(this, m_OutputArrayName, 0, dims);
       allocatedBytes = sizeof(int32_t) * m_NumberOfComponents * m_Dimensions.x * m_Dimensions.y * m_Dimensions.z;
     }
     else if (m_ScalarType == Detail::UInt32)
     {
-      attrMat->createAndAddAttributeArray<DataArray<uint32_t>, uint32_t>(m_OutputArrayName, 0, dims);
+      attrMat->createAndAddAttributeArray<DataArray<uint32_t>, AbstractFilter, uint32_t>(this, m_OutputArrayName, 0, dims);
       allocatedBytes = sizeof(uint32_t) * m_NumberOfComponents * m_Dimensions.x * m_Dimensions.y * m_Dimensions.z;
     }
     else if (m_ScalarType == Detail::Int64)
     {
-      attrMat->createAndAddAttributeArray<DataArray<int64_t>, int64_t>(m_OutputArrayName, 0, dims);
+      attrMat->createAndAddAttributeArray<DataArray<int64_t>, AbstractFilter, int64_t>(this, m_OutputArrayName, 0, dims);
       allocatedBytes = sizeof(int64_t) * m_NumberOfComponents * m_Dimensions.x * m_Dimensions.y * m_Dimensions.z;
     }
     else if (m_ScalarType == Detail::UInt64)
     {
-      attrMat->createAndAddAttributeArray<DataArray<uint64_t>, uint64_t>(m_OutputArrayName, 0, dims);
+      attrMat->createAndAddAttributeArray<DataArray<uint64_t>, AbstractFilter, uint64_t>(this, m_OutputArrayName, 0, dims);
       allocatedBytes = sizeof(uint64_t) * m_NumberOfComponents * m_Dimensions.x * m_Dimensions.y * m_Dimensions.z;
     }
     else if (m_ScalarType == Detail::Float)
     {
-      attrMat->createAndAddAttributeArray<DataArray<float>, float>(m_OutputArrayName, 0, dims);
+      attrMat->createAndAddAttributeArray<DataArray<float>, AbstractFilter, float>(this, m_OutputArrayName, 0, dims);
       allocatedBytes = sizeof(float) * m_NumberOfComponents * m_Dimensions.x * m_Dimensions.y * m_Dimensions.z;
     }
     else if (m_ScalarType == Detail::Double)
     {
-      attrMat->createAndAddAttributeArray<DataArray<double>, double>(m_OutputArrayName, 0, dims);
+      attrMat->createAndAddAttributeArray<DataArray<double>, AbstractFilter, double>(this, m_OutputArrayName, 0, dims);
       allocatedBytes = sizeof(double) * m_NumberOfComponents * m_Dimensions.x * m_Dimensions.y * m_Dimensions.z;
     }
 
@@ -432,10 +449,12 @@ void RawBinaryReader::dataCheck(bool preflight)
 // -----------------------------------------------------------------------------
 void RawBinaryReader::preflight()
 {
+  setInPreflight(true);
   emit preflightAboutToExecute();
   emit updateFilterParameters(this);
   dataCheck(true);
   emit preflightExecuted();
+  setInPreflight(false);
 }
 
 // -----------------------------------------------------------------------------

@@ -115,9 +115,19 @@ class DREAM3DWidgetsLib_EXPORT DataArraySelectionWidget : public QWidget, privat
     void populateAttributeMatrixList();
     void populateAttributeArrayList();
 
+    /**
+     * @brief generateDCAProxy
+     * @return
+     */
     DataContainerArrayProxy generateDCAProxy();
+
+    /**
+     * @brief setSelectedPath
+     * @param dcName
+     * @param attrMatName
+     * @param attrArrName
+     */
     void setSelectedPath(QString dcName, QString attrMatName, QString attrArrName);
-    void selectDefaultPath();
 
   signals:
     void errorSettingFilterParameter(const QString& msg);

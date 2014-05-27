@@ -105,6 +105,9 @@ class DREAM3DLib_EXPORT RawBinaryReader : public AbstractFilter
     Q_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile)
 
 
+    DREAM3D_FILTER_PARAMETER(bool, AddToExistingAttributeMatrix)
+    Q_PROPERTY(bool AddToExistingAttributeMatrix READ getAddToExistingAttributeMatrix WRITE setAddToExistingAttributeMatrix)
+
 
     /**
     * @brief This returns the group that the filter belonds to. You can select

@@ -112,6 +112,7 @@ void ArraySelectionExample::dataCheck()
 // -----------------------------------------------------------------------------
 void ArraySelectionExample::preflight()
 {
+  setInPreflight(true);
   // Read up the structure from the file
   m_DataContainerArrayProxy = DataContainerArrayProxy(getDataContainerArray().get());
   // Annouce we are about to preflight
@@ -119,6 +120,7 @@ void ArraySelectionExample::preflight()
   emit updateFilterParameters(this);
   dataCheck();
   emit preflightExecuted();
+  setInPreflight(false);
 }
 
 // -----------------------------------------------------------------------------

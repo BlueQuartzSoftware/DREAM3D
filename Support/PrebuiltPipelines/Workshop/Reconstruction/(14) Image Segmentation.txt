@@ -1,7 +1,7 @@
 [PipelineBuilder]
 Name=(14) Image Segmentation
 Number_Filters=6
-Version=5.0.6545
+Version=5.0.6552
 
 [0]
 Filter_Name=ImportImageStack
@@ -51,7 +51,7 @@ ScalarTolerance=10
 [3]
 Filter_Name=FindSizes
 Filter_Human_Label=Find Feature Sizes
-CellFeatureAttributeMatrixName=VolumeDataContainer|CellData|
+CellFeatureAttributeMatrixName=VolumeDataContainer|CellFeatureData|
 NumCellsArrayName=NumCells
 EquivalentDiametersArrayName=EquivalentDiameters
 VolumesArrayName=Volumes
@@ -61,7 +61,7 @@ FeatureIdsArrayPath=VolumeDataContainer|CellData|FeatureIds
 Filter_Name=CopyFeatureArrayToCellArray
 Filter_Human_Label=Create Cell Array From Feature Array
 FeatureIdsArrayPath=VolumeDataContainer|CellData|FeatureIds
-SelectedFeatureArrayPath=VolumeDataContainer|CellData|EquivalentDiameters
+SelectedFeatureArrayPath=VolumeDataContainer|CellFeatureData|EquivalentDiameters
 
 [5]
 Filter_Name=DataContainerWriter

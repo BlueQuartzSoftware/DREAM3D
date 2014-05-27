@@ -7,14 +7,23 @@
     <x>0</x>
     <y>0</y>
     <width>578</width>
-    <height>568</height>
+    <height>287</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>[*]Filter Input Parameters</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout_2">
-   <property name="margin">
+   <property name="leftMargin">
+    <number>0</number>
+   </property>
+   <property name="topMargin">
+    <number>0</number>
+   </property>
+   <property name="rightMargin">
+    <number>0</number>
+   </property>
+   <property name="bottomMargin">
     <number>0</number>
    </property>
    <item>
@@ -63,11 +72,23 @@ font-weight: bold;s
            <x>0</x>
            <y>0</y>
            <width>572</width>
-           <height>504</height>
+           <height>223</height>
           </rect>
          </property>
          <layout class="QVBoxLayout" name="scrollAreaVLayout">
-          <property name="margin">
+          <property name="spacing">
+           <number>6</number>
+          </property>
+          <property name="leftMargin">
+           <number>4</number>
+          </property>
+          <property name="topMargin">
+           <number>4</number>
+          </property>
+          <property name="rightMargin">
+           <number>4</number>
+          </property>
+          <property name="bottomMargin">
            <number>4</number>
           </property>
           <item>
@@ -89,8 +110,17 @@ font-weight: bold;s
              <enum>QFrame::Plain</enum>
             </property>
             <layout class="QVBoxLayout" name="verticalLayout">
-             <property name="margin">
-              <number>0</number>
+             <property name="leftMargin">
+              <number>4</number>
+             </property>
+             <property name="topMargin">
+              <number>4</number>
+             </property>
+             <property name="rightMargin">
+              <number>4</number>
+             </property>
+             <property name="bottomMargin">
+              <number>4</number>
              </property>
              <item>
               <widget class="QLabel" name="basicInputsLabel">
@@ -113,6 +143,84 @@ font-weight: bold;s
            </widget>
           </item>
           <item>
+           <layout class="QHBoxLayout" name="advHeaderLayout">
+            <property name="topMargin">
+             <number>0</number>
+            </property>
+            <item>
+             <widget class="QPushButton" name="advInputsBtn">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="minimumSize">
+               <size>
+                <width>24</width>
+                <height>24</height>
+               </size>
+              </property>
+              <property name="maximumSize">
+               <size>
+                <width>24</width>
+                <height>24</height>
+               </size>
+              </property>
+              <property name="toolTip">
+               <string>Show or Hide the advanced inputs</string>
+              </property>
+              <property name="text">
+               <string/>
+              </property>
+              <property name="icon">
+               <iconset resource="../../../../Resources/icons/images/Icons.qrc">
+                <normaloff>:/gear.png</normaloff>:/gear.png</iconset>
+              </property>
+              <property name="iconSize">
+               <size>
+                <width>24</width>
+                <height>24</height>
+               </size>
+              </property>
+              <property name="checkable">
+               <bool>false</bool>
+              </property>
+              <property name="flat">
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="advInputsLabel">
+              <property name="styleSheet">
+               <string notr="true">QLabel#advInputsLabel
+{
+	font: 75 14pt &quot;Lucida Grande&quot;;
+	font-weight: bold;
+}</string>
+              </property>
+              <property name="text">
+               <string>Advanced Inputs</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <spacer name="horizontalSpacer">
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>40</width>
+                <height>20</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+           </layout>
+          </item>
+          <item>
            <widget class="QFrame" name="advInputsFrame">
             <property name="styleSheet">
              <string notr="true">QFrame#advInputsFrame
@@ -131,20 +239,18 @@ font-weight: bold;s
              <enum>QFrame::Plain</enum>
             </property>
             <layout class="QVBoxLayout" name="verticalLayout_3">
-             <item>
-              <widget class="QLabel" name="advInputsLabel">
-               <property name="styleSheet">
-                <string notr="true">QLabel#advInputsLabel
-{
-	font: 75 14pt &quot;Lucida Grande&quot;;
-	font-weight: bold;
-}</string>
-               </property>
-               <property name="text">
-                <string>Advanced Inputs</string>
-               </property>
-              </widget>
-             </item>
+             <property name="leftMargin">
+              <number>4</number>
+             </property>
+             <property name="topMargin">
+              <number>4</number>
+             </property>
+             <property name="rightMargin">
+              <number>4</number>
+             </property>
+             <property name="bottomMargin">
+              <number>4</number>
+             </property>
              <item>
               <layout class="QGridLayout" name="advInputsGrid"/>
              </item>
@@ -218,6 +324,9 @@ font-weight: bold;
           <property name="alignment">
            <set>Qt::AlignCenter</set>
           </property>
+          <property name="wordWrap">
+           <bool>true</bool>
+          </property>
          </widget>
         </item>
        </layout>
@@ -227,6 +336,8 @@ font-weight: bold;
    </item>
   </layout>
  </widget>
- <resources/>
+ <resources>
+  <include location="../../../../Resources/icons/images/Icons.qrc"/>
+ </resources>
  <connections/>
 </ui>

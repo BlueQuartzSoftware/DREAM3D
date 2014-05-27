@@ -136,10 +136,12 @@ void FeatureDataCSVWriter::dataCheck()
 // -----------------------------------------------------------------------------
 void FeatureDataCSVWriter::preflight()
 {
+  setInPreflight(true);
   emit preflightAboutToExecute();
   emit updateFilterParameters(this);
   dataCheck();
   emit preflightExecuted();
+  setInPreflight(false);
 }
 
 // -----------------------------------------------------------------------------
@@ -186,7 +188,7 @@ void FeatureDataCSVWriter::execute()
   std::vector<IDataArray::Pointer> data;
 
   //For checking if an array is a neighborlist
-  NeighborList<int>::Pointer neighborlistPtr = NeighborList<int>::New();
+  NeighborList<int>::Pointer neighborlistPtr = NeighborList<int>::CreateArray(0, "Junk NeighborList", false);
 
   // Print the FeatureIds Header before the rest of the headers
   outFile << DREAM3D::FeatureData::FeatureID;

@@ -143,6 +143,7 @@ void DataContainerReader::dataCheck()
 // -----------------------------------------------------------------------------
 void DataContainerReader::preflight()
 {
+  setInPreflight(true);
   //DataContainerArrayProxy currentProxy = m_DataContainerArrayProxy;
   // Get the current structure of the file. We want ALL of the structure. so set it into a Proxy
   DataContainerArrayProxy proxy = readDataContainerArrayStructure();
@@ -173,7 +174,7 @@ void DataContainerReader::preflight()
 
   // The GUI needs to send down the selections that were made by the user and we need to update
   // DataContainerArray->DataContainer object so the rest of the pipeline has the proper information
-  emit preflightExecuted(); // Done executing
+    emit preflightExecuted(); // Done executing
 
   // Get the latest DataContainer Array from the filter
   DataContainerArray::Pointer dca = getDataContainerArray();

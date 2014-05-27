@@ -233,6 +233,8 @@ void GenerateIPFColors::dataCheck()
   m_CrystalStructuresPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<unsigned int>, AbstractFilter>(this, getCrystalStructuresArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_CrystalStructuresPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_CrystalStructures = m_CrystalStructuresPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+
+
   dims[0] = 3;
   tempPath.update(m_CellEulerAnglesArrayPath.getDataContainerName(), m_CellEulerAnglesArrayPath.getAttributeMatrixName(), getCellIPFColorsArrayName() );
   m_CellIPFColorsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<uint8_t>, AbstractFilter, uint8_t>(this, tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
@@ -259,10 +261,12 @@ void GenerateIPFColors::dataCheck()
 // -----------------------------------------------------------------------------
 void GenerateIPFColors::preflight()
 {
+  setInPreflight(true);
   emit preflightAboutToExecute();
   emit updateFilterParameters(this);
   dataCheck();
   emit preflightExecuted();
+  setInPreflight(false);
 }
 
 // -----------------------------------------------------------------------------
@@ -315,45 +319,7 @@ AbstractFilter::Pointer GenerateIPFColors::newFilterInstance(bool copyFilterPara
   GenerateIPFColors::Pointer filter = GenerateIPFColors::New();
   if(true == copyFilterParameters)
   {
-    filter->setFilterParameters(getFilterParameters() );
-
-    //Loop over each Filter Parameter that is registered to the filter either through this class or a parent class
-    // and copy the value from the current instance of the object into the "new" instance that was just created
-    QVector<FilterParameter::Pointer> options = getFilterParameters(); // Get the current set of filter parameters
-    for (QVector<FilterParameter::Pointer>::iterator iter = options.begin(); iter != options.end(); ++iter )
-    {
-      FilterParameter* parameter = (*iter).get();
-      if (parameter->getWidgetType().compare(FilterParameterWidgetType::SeparatorWidget) == 0 )
-      {
-        continue; // Skip this type of filter parameter as it has nothing to do with anything in the filter.
-      }
-      // Get the property from the current instance of the filter
-      QVariant var = property(parameter->getPropertyName().toLatin1().constData());
-      bool ok = filter->setProperty(parameter->getPropertyName().toLatin1().constData(), var);
-      if(false == ok)
-      {
-        QString ss = QString("Error occurred transferring the Filter Parameter '%1' in Filter '%2' to the filter instance. The pipeline may run but the underlying filter will NOT be using the values from the GUI."
-                             " Please report this issue to the developers of this filter.").arg(parameter->getPropertyName()).arg(filter->getHumanLabel());
-        Q_ASSERT_X(ok, __FILE__, ss.toLatin1().constData());
-      }
-
-      if(parameter->isConditional() == true)
-      {
-        QVariant cond = property(parameter->getConditionalProperty().toLatin1().constData() );
-        ok = filter->setProperty(parameter->getConditionalProperty().toLatin1().constData(), cond);
-
-        if(false == ok)
-        {
-          QString ss = QString("%1::newFilterInstance()\nError occurred transferring the Filter Parameter '%2' in Filter '%3' to the filter instance. "
-                               " The filter parameter has a conditional property '%4'. The transfer of this property from the old filter to the new filter failed."
-                               " Please report this issue to the developers of this filter.").arg(filter->getNameOfClass())
-                       .arg(parameter->getPropertyName())
-                       .arg(filter->getHumanLabel())
-                       .arg(parameter->getConditionalProperty());
-          Q_ASSERT_X(ok, __FILE__, ss.toLatin1().constData());
-        }
-      }
-    }
+    copyFilterParameterInstanceVariables(filter.get());
   }
   return filter;
 }

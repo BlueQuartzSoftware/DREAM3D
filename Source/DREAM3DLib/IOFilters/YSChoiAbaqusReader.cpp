@@ -309,10 +309,12 @@ void YSChoiAbaqusReader::dataCheck()
 
 void YSChoiAbaqusReader::preflight()
 {
+  setInPreflight(true);
   emit preflightAboutToExecute();
   emit updateFilterParameters(this);
   dataCheck();
   emit preflightExecuted();
+  setInPreflight(false);
 }
 void YSChoiAbaqusReader::execute()
 {

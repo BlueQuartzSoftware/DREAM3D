@@ -99,6 +99,7 @@ void EmptyFilter::dataCheck(bool preflight)
 // -----------------------------------------------------------------------------
 void EmptyFilter::preflight()
 {
+  setInPreflight(true);
   dataCheck(true);
 }
 

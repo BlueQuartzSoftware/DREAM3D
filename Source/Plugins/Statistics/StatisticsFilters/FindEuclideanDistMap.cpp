@@ -399,6 +399,7 @@ void FindEuclideanDistMap::dataCheck()
 // -----------------------------------------------------------------------------
 void FindEuclideanDistMap::preflight()
 {
+  setInPreflight(true);
   emit preflightAboutToExecute();
   emit updateFilterParameters(this);
   dataCheck();
@@ -410,6 +411,7 @@ void FindEuclideanDistMap::preflight()
     attrMat->removeAttributeArray(getNearestNeighborsArrayName());
   }
   emit preflightExecuted();
+  setInPreflight(false);
 }
 
 // -----------------------------------------------------------------------------

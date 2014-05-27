@@ -211,10 +211,12 @@ void VisualizeGBCDPoleFigure::dataCheckSurfaceMesh()
 // -----------------------------------------------------------------------------
 void VisualizeGBCDPoleFigure::preflight()
 {
+  setInPreflight(true);
   emit preflightAboutToExecute();
   emit updateFilterParameters(this);
   dataCheckSurfaceMesh();
   emit preflightExecuted();
+  setInPreflight(false);
 }
 
 // -----------------------------------------------------------------------------

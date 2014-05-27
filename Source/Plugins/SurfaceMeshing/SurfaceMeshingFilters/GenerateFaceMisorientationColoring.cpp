@@ -293,11 +293,13 @@ void GenerateFaceMisorientationColoring::dataCheckVoxel()
 // -----------------------------------------------------------------------------
 void GenerateFaceMisorientationColoring::preflight()
 {
+  setInPreflight(true);
   emit preflightAboutToExecute();
   emit updateFilterParameters(this);
   dataCheckSurfaceMesh();
   dataCheckVoxel();
   emit preflightExecuted();
+  setInPreflight(false);
 }
 
 // -----------------------------------------------------------------------------

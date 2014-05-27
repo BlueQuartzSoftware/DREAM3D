@@ -63,16 +63,17 @@ ThresholdExample::~ThresholdExample()
 void ThresholdExample::setupFilterParameters()
 {
   QVector<FilterParameter::Pointer> parameters;
-#if 0
+
   /* To Compare Arrays like a threshold filter */
   {
     ComparisonFilterParameter::Pointer parameter = ComparisonFilterParameter::New();
     parameter->setHumanLabel("Voxel Cell Arrays to Threshold");
     parameter->setPropertyName("CellComparisonInputs");
-    parameter->setWidgetType(FilterParameterWidgetType::CellArrayComparisonSelectionWidget);
-    //parameter->setValueType("QVector<ComparisonInput_t>");
+    parameter->setWidgetType(FilterParameterWidgetType::ComparisonSelectionWidget);
+    parameter->setShowOperators(true);
     parameters.push_back(parameter);
   }
+  #if 0
   /* To Compare Arrays like a threshold filter */
   {
     ComparisonFilterParameter::Pointer parameter = ComparisonFilterParameter::New();
@@ -127,14 +128,8 @@ void ThresholdExample::setupFilterParameters()
 // -----------------------------------------------------------------------------
 void ThresholdExample::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
-
   reader->openFilterGroup(this, index);
   setCellComparisonInputs(reader->readComparisonInputs("CellComparisonInputs", getCellComparisonInputs()));
-  setFeatureComparisonInputs(reader->readComparisonInputs("FeatureComparisonInputs", getFeatureComparisonInputs()));
-  setEnsembleComparisonInputs(reader->readComparisonInputs("EnsembleComparisonInputs", getEnsembleComparisonInputs()));
-  setPointComparisonInputs(reader->readComparisonInputs("PointComparisonInputs", getPointComparisonInputs()));
-  setFaceComparisonInputs(reader->readComparisonInputs("FaceComparisonInputs", getFaceComparisonInputs()));
-  setEdgeComparisonInputs(reader->readComparisonInputs("EdgeComparisonInputs", getEdgeComparisonInputs()));
   reader->closeFilterGroup();
 }
 
@@ -146,24 +141,7 @@ int ThresholdExample::writeFilterParameters(AbstractFilterParametersWriter* writ
   writer->openFilterGroup(this, index);
   /* Place code that will write the inputs values into a file. reference the
    AbstractFilterParametersWriter class for the proper API to use. */
-
-  /* --- CellArrayComparisonSelectionWidget --- */
   writer->writeValue( "CellComparisonInputs", getCellComparisonInputs() );
-
-  /* --- FeatureArrayComparisonSelectionWidget --- */
-  writer->writeValue( "FeatureComparisonInputs", getFeatureComparisonInputs() );
-
-  /* --- EnsembleArrayComparisonSelectionWidget --- */
-  writer->writeValue("EnsembleComparisonInputs", getEnsembleComparisonInputs() );
-
-  /* --- PointArrayComparisonSelectionWidget --- */
-  writer->writeValue("PointComparisonInputs", getPointComparisonInputs() );
-
-  /* --- FaceArrayComparisonSelectionWidget --- */
-  writer->writeValue("FaceComparisonInputs", getFaceComparisonInputs() );
-
-  /* --- EdgeArrayComparisonSelectionWidget --- */
-  writer->writeValue("EdgeComparisonInputs", getEdgeComparisonInputs() );
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
@@ -198,10 +176,12 @@ void ThresholdExample::dataCheck()
 // -----------------------------------------------------------------------------
 void ThresholdExample::preflight()
 {
+  setInPreflight(true);
   emit preflightAboutToExecute();
   emit updateFilterParameters(this);
   dataCheck();
   emit preflightExecuted();
+  setInPreflight(false);
 }
 
 // -----------------------------------------------------------------------------

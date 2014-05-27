@@ -36,7 +36,10 @@
 
 #include "FilterInputWidget.h"
 
+#include <QtCore/QMetaProperty>
 #include <QtCore/QFileInfo>
+#include <QtCore/QPropertyAnimation>
+#include <QtCore/QSequentialAnimationGroup>
 #include <QtGui/QLabel>
 #include <QtGui/QVBoxLayout>
 #include <QtGui/QFormLayout>
@@ -52,7 +55,8 @@
 //
 // -----------------------------------------------------------------------------
 FilterInputWidget::FilterInputWidget(QWidget* parent) :
-  QWidget(parent)
+  QWidget(parent),
+  m_AdvFadedOut(false)
 {
   setupUi(this);
   setupGui();
@@ -111,15 +115,10 @@ void FilterInputWidget::clearInputWidgets()
 // -----------------------------------------------------------------------------
 void FilterInputWidget::removeWidgetInputs(PipelineFilterWidget* w)
 {
-  // Check to see if the filter that just got removed from the pipeline is the one we are displaying
-  // the inputs for.
-  //  if (scrollArea->widget() == w->getScrollWidgetContents() )
-  {
-    w->getScrollWidgetContents()->setParent(w);
-    w->getAdvancedScrollWidgetContents()->setParent(w);
-    clearInputWidgets();
 
-  }
+  w->getScrollWidgetContents()->setParent(w);
+  w->getAdvancedScrollWidgetContents()->setParent(w);
+  clearInputWidgets();
 }
 
 
@@ -129,16 +128,94 @@ void FilterInputWidget::removeWidgetInputs(PipelineFilterWidget* w)
 void FilterInputWidget::displayFilterParameters(PipelineFilterWidget* w)
 {
   clearInputWidgets();
-
-  w->getScrollWidgetContents()->setVisible(true);
   basicInputsGrid->addWidget(w->getScrollWidgetContents());
-  w->getAdvancedScrollWidgetContents()->setVisible(true);
   advInputsGrid->addWidget(w->getAdvancedScrollWidgetContents());
 
+  basicInputsFrame->setVisible((bool)(w->getBasicParameterCount()));
+
+  bool showAdv = false;
+  // Cases
+
+  // First check to see if we even have advanced parameters and show/hide the buttons accordingly
+  showAdv = static_cast<bool>(w->getAdvParameterCount());
+  advInputsBtn->setVisible(showAdv);
+  advInputsLabel->setVisible(showAdv);
+  // If we do NOT have any advanced Parameters then hide the AdvFrame
+  if(showAdv == false) {
+    advInputsFrame->setVisible(showAdv);
+  }
+  else // Show or Hide the AdvFrame based on the last interaction the user did
+  {
+    advInputsFrame->setVisible(!m_AdvFadedOut);
+  }
+
+  w->getScrollWidgetContents()->setVisible(true);
+  w->getAdvancedScrollWidgetContents()->setVisible(true);
 
   // Add a label at the top of the Inputs Tabs to show what filter we are working on
   filterHumanLabel->setText(w->getHumanLabel());
+#if 1
+  filterHumanLabel->setText(w->getHumanLabel() + "\n  [" + w->getFilterClassName() + "]" );
+#endif
   AbstractFilter::Pointer filter = w->getFilter();
   brandingLabel->setText(filter->getBrandingString() );
+
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void FilterInputWidget::fadeInWidget(QWidget* widget)
+{
+  if (faderWidget)
+  {
+    faderWidget->close();
+  }
+  faderWidget = new FaderWidget(widget);
+  faderWidget->start();
+  m_AdvFadedOut = false;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void FilterInputWidget::fadeOutWidget(QWidget* widget)
+{
+
+  if (faderWidget)
+  {
+    faderWidget->close();
+  }
+  faderWidget = new FaderWidget(widget);
+  faderWidget->setFadeOut();
+  connect(faderWidget, SIGNAL(animationComplete() ),
+          this, SLOT(hideButton()));
+  faderWidget->start();
+  m_AdvFadedOut = true;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void FilterInputWidget::hideButton()
+{
+  advInputsFrame->setVisible(false);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void FilterInputWidget::on_advInputsBtn_clicked()
+{
+  if(advInputsFrame->isVisible() == false)
+  {
+    advInputsFrame->setVisible(true);
+    fadeInWidget(advInputsFrame);
+  }
+  else
+  {
+    fadeOutWidget(advInputsFrame);
+  }
 
 }
