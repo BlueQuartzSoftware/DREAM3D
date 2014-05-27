@@ -1043,7 +1043,7 @@ class DataArray : public IDataArray
       int err = 0;
 
       resize(0);
-      IDataArray::Pointer p = H5DataArrayReader::readIDataArray(parentId, getName());
+      IDataArray::Pointer p = H5DataArrayReader::ReadIDataArray(parentId, getName());
       if (p.get() == NULL)
       {
         return -1;

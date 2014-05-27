@@ -163,8 +163,9 @@ int AttributeMatrix::addAttributeArray(const QString& name, IDataArray::Pointer 
   }
   if(getNumTuples() != data->getNumberOfTuples())
   {
+    qDebug() << "AttributeMatrix::Name: " << getName() << "  dataArray::name:  " << data->getName() << " Type: " << data->getTypeAsString();
     qDebug() << "getNumTuples(): " << getNumTuples() << "  data->getNumberOfTuples(): " << data->getNumberOfTuples();
-    qDebug() << "AttributeMatrix::Name: " << getName() << "  dataArray::name:  " << data->getName();
+
   }
   Q_ASSERT(getNumTuples() == data->getNumberOfTuples());
 
@@ -416,12 +417,12 @@ int AttributeMatrix::addAttributeArrayFromHDF5Path(hid_t gid, QString name, bool
 
   if(classType.startsWith("DataArray") == true)
   {
-    dPtr = H5DataArrayReader::readIDataArray(gid, name, preflight);
+    dPtr = H5DataArrayReader::ReadIDataArray(gid, name, preflight);
     if(preflight == true) { dPtr->resize(getNumTuples()); }
   }
   else if(classType.compare("StringDataArray") == 0)
   {
-    dPtr = H5DataArrayReader::readStringDataArray(gid, name, preflight);
+    dPtr = H5DataArrayReader::ReadStringDataArray(gid, name, preflight);
     if(preflight == true) { dPtr->resize(getNumTuples()); }
   }
   else if(classType.compare("vector") == 0)
@@ -430,7 +431,7 @@ int AttributeMatrix::addAttributeArrayFromHDF5Path(hid_t gid, QString name, bool
   }
   else if(classType.compare("NeighborList<T>") == 0)
   {
-    dPtr = H5DataArrayReader::readNeighborListData(gid, name, preflight);
+    dPtr = H5DataArrayReader::ReadNeighborListData(gid, name, preflight);
     if(preflight == true) { dPtr->resize(getNumTuples()); }
   }
   else if ( name.compare(DREAM3D::EnsembleData::Statistics) == 0)
@@ -469,11 +470,11 @@ int AttributeMatrix::readAttributeArraysFromHDF5(hid_t amGid, bool preflight, At
 
     if(classType.startsWith("DataArray") == true)
     {
-      dPtr = H5DataArrayReader::readIDataArray(amGid, iter->name, preflight);
+      dPtr = H5DataArrayReader::ReadIDataArray(amGid, iter->name, preflight);
     }
     else if(classType.compare("StringDataArray") == 0)
     {
-      dPtr = H5DataArrayReader::readStringDataArray(amGid, iter->name, preflight);
+      dPtr = H5DataArrayReader::ReadStringDataArray(amGid, iter->name, preflight);
     }
     else if(classType.compare("vector") == 0)
     {
@@ -481,7 +482,7 @@ int AttributeMatrix::readAttributeArraysFromHDF5(hid_t amGid, bool preflight, At
     }
     else if(classType.compare("NeighborList<T>") == 0)
     {
-      dPtr = H5DataArrayReader::readNeighborListData(amGid, iter->name, preflight);
+      dPtr = H5DataArrayReader::ReadNeighborListData(amGid, iter->name, preflight);
     }
     else if ( (iter->name).compare(DREAM3D::EnsembleData::Statistics) == 0)
     {

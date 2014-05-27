@@ -440,7 +440,7 @@ class StringDataArray : public IDataArray
     {
       int err = 0;
       this->resize(0);
-      IDataArray::Pointer p = H5DataArrayReader::readStringDataArray(parentId, getName());
+      IDataArray::Pointer p = H5DataArrayReader::ReadStringDataArray(parentId, getName());
       if (p.get() == NULL)
       {
         return -1;

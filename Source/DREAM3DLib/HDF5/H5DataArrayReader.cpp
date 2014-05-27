@@ -93,7 +93,46 @@ namespace Detail
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-IDataArray::Pointer H5DataArrayReader::readStringDataArray(hid_t gid, const QString& name, bool preflightOnly)
+int H5DataArrayReader::ReadRequiredAttributes(hid_t gid, const QString &name, QString &classType, int &version, QVector<size_t> &tDims, QVector<size_t> &cDims)
+{
+  int err = 0;
+  int retErr = 0;
+  err = QH5Lite::readStringAttribute(gid, name, DREAM3D::HDF5::ObjectType, classType);
+  if (err < 0)
+  {
+    retErr = err;
+  }
+
+  err = QH5Lite::readScalarAttribute(gid, name, DREAM3D::HDF5::DataArrayVersion, version);
+  if(err < 0)
+  {
+    retErr = err;
+    version = 1;
+  }
+
+  // Read the tuple dimensions as an attribute
+  err = QH5Lite::readVectorAttribute(gid, name, DREAM3D::HDF5::TupleDimensions, tDims);
+  if (err < 0)
+  {
+    retErr = err;
+    qDebug() << "Missing TupleDimensions for Array with Name: " << name;
+  }
+
+  // Read the component dimensions as  an attribute
+  err = QH5Lite::readVectorAttribute(gid, name, DREAM3D::HDF5::ComponentDimensions, cDims);
+  if (err < 0)
+  {
+    retErr = err;
+    qDebug() << "Missing ComponentDimensions for Array with Name: " << name;
+  }
+
+  return retErr;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+IDataArray::Pointer H5DataArrayReader::ReadStringDataArray(hid_t gid, const QString& name, bool preflightOnly)
 {
   herr_t err = -1;
   herr_t retErr = 1;
@@ -118,33 +157,16 @@ IDataArray::Pointer H5DataArrayReader::readStringDataArray(hid_t gid, const QStr
   else
   {
     QString classType;
-    err = QH5Lite::readStringAttribute(gid, name, DREAM3D::HDF5::ObjectType, classType);
-    if (err < 0)
-    {
-      return ptr;
-    }
     int version = 0;
-    err = QH5Lite::readScalarAttribute(gid, name, DREAM3D::HDF5::DataArrayVersion, version);
+    QVector<size_t> tDims;
+    QVector<size_t> cDims;
+
+    err = ReadRequiredAttributes(gid, name, classType, version, tDims, cDims);
     if(err < 0)
     {
-      version = 1;
-    }
-
-    // Read the tuple dimensions as an attribute
-    QVector<size_t> tDims;
-    err = QH5Lite::readVectorAttribute(gid, name, DREAM3D::HDF5::TupleDimensions, tDims);
-    if (err < 0)
-    {
       return ptr;
     }
 
-    // Read the component dimensions as an attribute
-    QVector<size_t> cDims;
-    err = QH5Lite::readVectorAttribute(gid, name, DREAM3D::HDF5::ComponentDimensions, cDims);
-    if (err < 0)
-    {
-      return ptr;
-    }
 
     //Sanity Check the combination of the Tuple and Component Dims. They should match in aggregate what we got from the getDatasetInfo above.
     qint32 offset = 0;
@@ -205,7 +227,7 @@ IDataArray::Pointer H5DataArrayReader::readStringDataArray(hid_t gid, const QStr
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-IDataArray::Pointer H5DataArrayReader::readIDataArray(hid_t gid, const QString& name, bool preflightOnly)
+IDataArray::Pointer H5DataArrayReader::ReadIDataArray(hid_t gid, const QString& name, bool preflightOnly)
 {
 
   herr_t err = -1;
@@ -232,36 +254,16 @@ IDataArray::Pointer H5DataArrayReader::readIDataArray(hid_t gid, const QString& 
   else
   {
     QString classType;
-    err = QH5Lite::readStringAttribute(gid, name, DREAM3D::HDF5::ObjectType, classType);
-    if (err < 0)
-    {
-      return ptr;
-    }
     int version = 0;
-    err = QH5Lite::readScalarAttribute(gid, name, DREAM3D::HDF5::DataArrayVersion, version);
+    QVector<size_t> tDims;
+    QVector<size_t> cDims;
+
+
+    err = ReadRequiredAttributes(gid, name, classType, version, tDims, cDims);
     if(err < 0)
     {
-      version = 1;
-    }
-
-    // Read the tuple dimensions as an attribute
-    QVector<size_t> tDims;
-    err = QH5Lite::readVectorAttribute(gid, name, DREAM3D::HDF5::TupleDimensions, tDims);
-    if (err < 0)
-    {
-      qDebug() << "Missing TupleDimensions for Array with Name: " << name;
       return ptr;
     }
-
-    // Read the component dimensions as  an attribute
-    QVector<size_t> cDims;
-    err = QH5Lite::readVectorAttribute(gid, name, DREAM3D::HDF5::ComponentDimensions, cDims);
-    if (err < 0)
-    {
-      qDebug() << "Missing ComponentDimensions for Array with Name: " << name;
-      return ptr;
-    }
-
 
 #if 1
     /*** !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -416,7 +418,7 @@ IDataArray::Pointer H5DataArrayReader::readIDataArray(hid_t gid, const QString& 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-IDataArray::Pointer H5DataArrayReader::readNeighborListData(hid_t gid, const QString& name, bool preflightOnly)
+IDataArray::Pointer H5DataArrayReader::ReadNeighborListData(hid_t gid, const QString& name, bool preflightOnly)
 {
 
   herr_t err = -1;
@@ -434,101 +436,73 @@ IDataArray::Pointer H5DataArrayReader::readNeighborListData(hid_t gid, const QSt
   {
     qDebug() << "Error in getAttributeInfo method in readUserMetaData." ;
   }
-
   else
   {
+    QString classType;
+    int version = 0;
+    QVector<size_t> tDims;
+    QVector<size_t> cDims;
+
+    err = ReadRequiredAttributes(gid, name, classType, version, tDims, cDims);
+    if(err < 0)
+    {
+      return iDataArray;
+    }
+
+
     switch(attr_type)
     {
       case H5T_STRING:
         res.clear(); //Clear the string out first
         err = QH5Lite::readStringDataset(gid, name, res);
-        //        if(err >= 0)
-        //        {
-        //          IDataArray::Pointer attr = MXAAsciiStringData::Create(res);
-        //          attr->setName(name);
-        //          attributes[*iter] = attr;
-        //        }
         break;
       case H5T_INTEGER:
-        //qDebug() << "User Meta Data Type is Integer" ;
         if(H5Tequal(typeId, H5T_STD_U8BE) || H5Tequal(typeId, H5T_STD_U8LE))
         {
-          NeighborList<uint8_t>::Pointer ptr = NeighborList<uint8_t>::CreateArray(0, name, false);
-          ptr->setName(name);
-          if(false == preflightOnly)
-          {
-            ptr->readH5Data(gid);
-          }
+          NeighborList<uint8_t>::Pointer ptr = NeighborList<uint8_t>::CreateArray(tDims, cDims, name, false);
+          if(false == preflightOnly) { ptr->readH5Data(gid); }
           iDataArray = ptr;
         }
         else if(H5Tequal(typeId, H5T_STD_U16BE) || H5Tequal(typeId, H5T_STD_U16LE))
         {
-          NeighborList<uint16_t>::Pointer ptr = NeighborList<uint16_t>::CreateArray(0, name, false);
-          ptr->setName(name);
-          if(false == preflightOnly)
-          {
-            ptr->readH5Data(gid);
-          }
+          NeighborList<uint16_t>::Pointer ptr = NeighborList<uint16_t>::CreateArray(tDims, cDims, name, false);
+          if(false == preflightOnly) { ptr->readH5Data(gid); }
           iDataArray = ptr;
         }
         else if(H5Tequal(typeId, H5T_STD_U32BE) || H5Tequal(typeId, H5T_STD_U32LE))
         {
-          NeighborList<uint32_t>::Pointer ptr = NeighborList<uint32_t>::CreateArray(0, name, false);
-          ptr->setName(name);
-          if(false == preflightOnly)
-          {
-            ptr->readH5Data(gid);
-          }
+          NeighborList<uint32_t>::Pointer ptr = NeighborList<uint32_t>::CreateArray(tDims, cDims, name, false);
+          if(false == preflightOnly) { ptr->readH5Data(gid); }
           iDataArray = ptr;
         }
         else if(H5Tequal(typeId, H5T_STD_U64BE) || H5Tequal(typeId, H5T_STD_U64LE))
         {
-          NeighborList<uint64_t>::Pointer ptr = NeighborList<uint64_t>::CreateArray(0, name, false);
-          ptr->setName(name);
-          if(false == preflightOnly)
-          {
-            ptr->readH5Data(gid);
-          }
+          NeighborList<uint64_t>::Pointer ptr = NeighborList<uint64_t>::CreateArray(tDims, cDims, name, false);
+          if(false == preflightOnly) { ptr->readH5Data(gid); }
           iDataArray = ptr;
         }
         else if(H5Tequal(typeId, H5T_STD_I8BE) || H5Tequal(typeId, H5T_STD_I8LE))
         {
-          NeighborList<int8_t>::Pointer ptr = NeighborList<int8_t>::CreateArray(0, name, false);
-          ptr->setName(name);
-          if(false == preflightOnly)
-          {
-            ptr->readH5Data(gid);
-          }
+          NeighborList<int8_t>::Pointer ptr = NeighborList<int8_t>::CreateArray(tDims, cDims, name, false);
+          if(false == preflightOnly) { ptr->readH5Data(gid); }
           iDataArray = ptr;
         }
         else if(H5Tequal(typeId, H5T_STD_I16BE) || H5Tequal(typeId, H5T_STD_I16LE))
         {
-          NeighborList<int16_t>::Pointer ptr = NeighborList<int16_t>::CreateArray(0, name, false);
-          ptr->setName(name);
-          if(false == preflightOnly)
-          {
-            ptr->readH5Data(gid);
-          }
+          NeighborList<int16_t>::Pointer ptr = NeighborList<int16_t>::CreateArray(tDims, cDims, name, false);
+          if(false == preflightOnly) { ptr->readH5Data(gid); }
           iDataArray = ptr;
         }
         else if(H5Tequal(typeId, H5T_STD_I32BE) || H5Tequal(typeId, H5T_STD_I32LE))
         {
-          NeighborList<int32_t>::Pointer ptr = NeighborList<int32_t>::CreateArray(0, name, false);
-          ptr->setName(name);
-          if(false == preflightOnly)
-          {
-            ptr->readH5Data(gid);
-          }
+          NeighborList<int32_t>::Pointer ptr = NeighborList<int32_t>::CreateArray(tDims, cDims, name, false);
+          if(false == preflightOnly) { ptr->readH5Data(gid); }
           iDataArray = ptr;
         }
         else if(H5Tequal(typeId, H5T_STD_I64BE) || H5Tequal(typeId, H5T_STD_I64LE))
         {
-          NeighborList<int64_t>::Pointer ptr = NeighborList<int64_t>::CreateArray(0, name, false);
-          ptr->setName(name);
-          if(false == preflightOnly)
-          {
-            ptr->readH5Data(gid);
-          }
+          NeighborList<int64_t>::Pointer ptr = NeighborList<int64_t>::CreateArray(tDims, cDims, name, false);
+          if(false == preflightOnly) { ptr->readH5Data(gid); }
           iDataArray = ptr;
         }
         else
@@ -540,22 +514,14 @@ IDataArray::Pointer H5DataArrayReader::readNeighborListData(hid_t gid, const QSt
       case H5T_FLOAT:
         if(attr_size == 4)
         {
-          NeighborList<float>::Pointer ptr = NeighborList<float>::CreateArray(0, name, false);
-          ptr->setName(name);
-          if(false == preflightOnly)
-          {
-            ptr->readH5Data(gid);
-          }
+          NeighborList<float>::Pointer ptr = NeighborList<float>::CreateArray(tDims, cDims, name, false);
+          if(false == preflightOnly) { ptr->readH5Data(gid); }
           iDataArray = ptr;
         }
         else if(attr_size == 8)
         {
-          NeighborList<double>::Pointer ptr = NeighborList<double>::CreateArray(0, name, false);
-          ptr->setName(name);
-          if(false == preflightOnly)
-          {
-            ptr->readH5Data(gid);
-          }
+          NeighborList<double>::Pointer ptr = NeighborList<double>::CreateArray(tDims, cDims, name, false);
+          if(false == preflightOnly) { ptr->readH5Data(gid); }
           iDataArray = ptr;
         }
         else

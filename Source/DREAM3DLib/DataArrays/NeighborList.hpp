@@ -79,19 +79,21 @@ class NeighborList : public IDataArray
     }
 
     /**
-     * @brief Static constructor
-     * @param numElements The number of elements in the internal array.
-     * @param name The name of the array
-     * @return Boost::Shared_Ptr wrapping an instance of DataArrayTemplate<T>
+     * @brief CreateArray
+     * @param numTuples
+     * @param name
+     * @param allocate
+     * @return
      */
-    static Pointer CreateArray(size_t numElements, const QString& name, bool allocate=true)
+    static Pointer CreateArray(size_t numTuples, const QString& name, bool allocate=true)
     {
+      std::cout << "NeighborList::CreateArray  name= " << name.toStdString() << "   numTuples= " << numTuples << std::endl;
       if (name.isEmpty() == true)
       {
         return NullPointer();
       }
-      Pointer ptr = Pointer(new NeighborList<T>(numElements, name));
-      if (allocate) ptr->resize(numElements);
+      Pointer ptr = Pointer(new NeighborList<T>(numTuples, name));
+      if (allocate) ptr->resize(numTuples);
       return ptr;
     }
 
@@ -106,6 +108,7 @@ class NeighborList : public IDataArray
      */
     static Pointer CreateArray(size_t numTuples, int rank, size_t* dims, const QString& name, bool allocate=true)
     {
+      std::cout << "NeighborList::CreateArray  name= " << name.toStdString() << "   numTuples= " << numTuples << std::endl;
       if (name.isEmpty() == true)
       {
         return NullPointer();
@@ -756,8 +759,7 @@ class NeighborList : public IDataArray
           m_Array[dIdx] = SharedVectorType(new VectorType(0));
         }
       }
-
-
+      m_NumTuples = m_Array.size(); // Sync up the numTuples property with the size of the internal array
       return err;
     }
 

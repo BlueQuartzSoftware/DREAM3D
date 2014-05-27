@@ -53,12 +53,14 @@ class DREAM3DLib_EXPORT H5DataArrayReader
 
 
     /**
-     *
-     * @param gid
-     * @param name
+     * @brief readRequiredAttributes
+     * @param classType
+     * @param version
+     * @param tDims
+     * @param cDims
      * @return
      */
-    static IDataArray::Pointer readIDataArray(hid_t gid, const QString& name, bool preflightOnly = false);
+    static int ReadRequiredAttributes(hid_t gid, const QString &name, QString &classType, int &version, QVector<size_t> &tDims, QVector<size_t> &cDims);
 
     /**
      *
@@ -66,7 +68,15 @@ class DREAM3DLib_EXPORT H5DataArrayReader
      * @param name
      * @return
      */
-    static IDataArray::Pointer readNeighborListData(hid_t gid, const QString& name, bool preflightOnly = false);
+    static IDataArray::Pointer ReadIDataArray(hid_t gid, const QString& name, bool preflightOnly = false);
+
+    /**
+     *
+     * @param gid
+     * @param name
+     * @return
+     */
+    static IDataArray::Pointer ReadNeighborListData(hid_t gid, const QString& name, bool preflightOnly = false);
 
     /**
      * @brief readStringDataArray
@@ -75,7 +85,7 @@ class DREAM3DLib_EXPORT H5DataArrayReader
      * @param preflightOnly
      * @return
      */
-    static IDataArray::Pointer readStringDataArray(hid_t gid, const QString& name, bool preflightOnly = false);
+    static IDataArray::Pointer ReadStringDataArray(hid_t gid, const QString& name, bool preflightOnly = false);
 
 
   protected:
