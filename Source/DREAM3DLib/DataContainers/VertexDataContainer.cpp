@@ -206,7 +206,7 @@ int VertexDataContainer::readMeshDataFromHDF5(hid_t dcGid, bool preflight)
 {
   int err = 0;
 
-  readVertices(dcGid, preflight);
+  err = readVertices(dcGid, preflight);
 
   return 1;
 }

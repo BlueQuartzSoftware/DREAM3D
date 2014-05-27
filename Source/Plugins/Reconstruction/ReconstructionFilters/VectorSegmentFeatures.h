@@ -85,6 +85,7 @@ class VectorSegmentFeatures : public SegmentFeatures
 
     DREAM3D_FILTER_PARAMETER(float, AngleTolerance)
     Q_PROPERTY(float AngleTolerance READ getAngleTolerance WRITE setAngleTolerance)
+
     DREAM3D_INSTANCE_PROPERTY(bool, RandomizeFeatureIds)
 
     DREAM3D_FILTER_PARAMETER(bool, UseGoodVoxels)

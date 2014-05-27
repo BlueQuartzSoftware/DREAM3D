@@ -2353,7 +2353,7 @@ int PackPrimaryPhases::estimate_numfeatures(int xpoints, int ypoints, int zpoint
   // This is for convenience
   DataContainerArray::Pointer dca = getDataContainerArray();
 
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getOutputCellAttributeMatrixName().getDataContainerName());
+  //VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getOutputCellAttributeMatrixName().getDataContainerName());
   QVector<size_t> dims(1, 1);
   m_PhaseTypesPtr = dca->getPrereqArrayFromPath<DataArray<unsigned int>, AbstractFilter>(this, getInputPhaseTypesArrayPath(), dims);
   DataArray<uint32_t>* phaseType = m_PhaseTypesPtr.lock().get();

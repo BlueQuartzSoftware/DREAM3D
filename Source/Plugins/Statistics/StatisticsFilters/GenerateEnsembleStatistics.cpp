@@ -308,6 +308,7 @@ void GenerateEnsembleStatistics::dataCheck()
   if (m_PhaseTypeArray.size() <= 1)
   {
     notifyErrorMessage(getHumanLabel(), "The Phase Type Array must contain at least one member.  Add a Phase Type on the GUI.", -1000);
+    return;
   }
   else
   {

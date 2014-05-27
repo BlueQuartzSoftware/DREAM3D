@@ -257,10 +257,10 @@ void VisualizeGBCDPoleFigure::execute()
     return;
   }
 
-  VertexArray::Pointer nodesPtr = sm->getVertices();
+  //VertexArray::Pointer nodesPtr = sm->getVertices();
 
-  FaceArray::Pointer trianglesPtr = sm->getFaces();
-  size_t totalFaces = trianglesPtr->getNumberOfTuples();
+  //FaceArray::Pointer trianglesPtr = sm->getFaces();
+  //size_t totalFaces = trianglesPtr->getNumberOfTuples();
 
   FloatArrayType::Pointer gbcdDeltasArray = FloatArrayType::CreateArray(5, "GBCDDeltas");
   gbcdDeltasArray->initializeWithZeros();

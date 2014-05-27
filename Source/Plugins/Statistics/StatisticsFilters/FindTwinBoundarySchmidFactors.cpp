@@ -214,8 +214,8 @@ class CalculateTwinBoundarySchmidFactorsImpl
 // -----------------------------------------------------------------------------
 FindTwinBoundarySchmidFactors::FindTwinBoundarySchmidFactors()  :
   AbstractFilter(),
-  m_TwinBoundarySchmidFactorsFile(""),
   m_WriteFile(false),
+  m_TwinBoundarySchmidFactorsFile(""),
   m_AvgQuatsArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, DREAM3D::FeatureData::AvgQuats),
   m_FeaturePhasesArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, DREAM3D::FeatureData::Phases),
   m_CrystalStructuresArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellEnsembleAttributeMatrixName, DREAM3D::EnsembleData::CrystalStructures),

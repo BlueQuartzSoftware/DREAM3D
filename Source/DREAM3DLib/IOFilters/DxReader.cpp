@@ -353,7 +353,7 @@ int DxReader::readFile()
   finished_data = false;
   size_t index = 0;
 
-  int64_t totalPoints = m->getTotalPoints();
+  //int64_t totalPoints = m->getTotalPoints();
 
   // Reseize the Cell Attribute Matrix based on the number of points about to be read.
   QVector<size_t> tDims(3, 0);

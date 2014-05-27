@@ -187,7 +187,7 @@ void GenerateVectorColors::execute()
 
   size_t index = 0;
 
-  DREAM3D::Rgb argb = 0x00000000;
+  //DREAM3D::Rgb argb = 0x00000000;
 
   // Write the IPF Coloring Cell Data
   for (int64_t i = 0; i < totalPoints; i++)

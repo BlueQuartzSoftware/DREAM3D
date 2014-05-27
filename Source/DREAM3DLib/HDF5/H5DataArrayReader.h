@@ -1,5 +1,6 @@
 /* ============================================================================
- * Copyright (c) 2011, Michael A. Jackson (BlueQuartz Software)
+ * Copyright (c) 2014 Michael A. Jackson (BlueQuartz Software)
+ * Copyright (c) 2014 Dr. Michael A. Groeber (US Air Force Research Laboratories)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -12,9 +13,10 @@
  * list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
  *
- * Neither the name of Michael A. Jackson nor the names of its contributors may
- * be used to endorse or promote products derived from this software without
- * specific prior written permission.
+ * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
+ * BlueQuartz Software nor the names of its contributors may be used to endorse
+ * or promote products derived from this software without specific prior written
+ * permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -26,6 +28,10 @@
  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ *  This code was written under United States Air Force Contract number
+ *                           FA8650-10-D-5210
+ *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 #ifndef H5DATAARRAYREADER_HPP_
@@ -43,7 +49,7 @@
  * @class H5DataArrayReader H5DataArrayReader.h DREAM3DLib/HDF5/H5DataArrayReader.h
  * @brief This class handles reading DataArray<T> objects from an HDF5 file
  * @author Michael A. Jackson for BlueQuartz Software
- * @date Feb 22, 2012
+ * @date May 27, 2014
  * @version 1.0
  */
 class DREAM3DLib_EXPORT H5DataArrayReader
@@ -53,39 +59,41 @@ class DREAM3DLib_EXPORT H5DataArrayReader
 
 
     /**
-     * @brief readRequiredAttributes
-     * @param classType
-     * @param version
-     * @param tDims
-     * @param cDims
+     * @brief readRequiredAttributes Reads the required attributes from an HDF5 Data set
+     * @param objType The type (subclass) of IDataArray that is stored in the HDF5 file
+     * @param version The version of the DataArray class
+     * @param tDims The Tuple Dimensions of the data array
+     * @param cDims The Component Dimensions of the data array
      * @return
      */
-    static int ReadRequiredAttributes(hid_t gid, const QString &name, QString &classType, int &version, QVector<size_t> &tDims, QVector<size_t> &cDims);
+    static int ReadRequiredAttributes(hid_t gid, const QString &name, QString &objType, int &version, QVector<size_t> &tDims, QVector<size_t> &cDims);
 
     /**
-     *
-     * @param gid
-     * @param name
+     * @brief ReadIDataArray Reads an IDataArray subclass from the HDF5 file
+     * @param gid The HDF5 Group to read the data array from
+     * @param name The name of the data set
+     * @param metaDataOnly Read just the meta data about the DataArray or actually read all the data
      * @return
      */
-    static IDataArray::Pointer ReadIDataArray(hid_t gid, const QString& name, bool preflightOnly = false);
+    static IDataArray::Pointer ReadIDataArray(hid_t gid, const QString& name, bool metaDataOnly = false);
 
     /**
-     *
-     * @param gid
-     * @param name
+     * @brief ReadNeighborListData
+     * @param gid The HDF5 Group to read the data array from
+     * @param name The name of the data set
+     * @param metaDataOnly Read just the meta data about the DataArray or actually read all the data
      * @return
      */
-    static IDataArray::Pointer ReadNeighborListData(hid_t gid, const QString& name, bool preflightOnly = false);
+    static IDataArray::Pointer ReadNeighborListData(hid_t gid, const QString& name, bool metaDataOnly = false);
 
     /**
      * @brief readStringDataArray
-     * @param gid
-     * @param name
-     * @param preflightOnly
+     * @param gid The HDF5 Group to read the data array from
+     * @param name The name of the data set
+     * @param metaDataOnly Read just the meta data about the DataArray or actually read all the data
      * @return
      */
-    static IDataArray::Pointer ReadStringDataArray(hid_t gid, const QString& name, bool preflightOnly = false);
+    static IDataArray::Pointer ReadStringDataArray(hid_t gid, const QString& name, bool metaDataOnly = false);
 
 
   protected:

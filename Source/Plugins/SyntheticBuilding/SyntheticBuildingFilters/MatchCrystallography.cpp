@@ -551,7 +551,8 @@ void MatchCrystallography::matchCrystallography(int ensem)
   float r1 = 0, r2 = 0, r3 = 0;
   float g1ea1 = 0, g1ea2 = 0, g1ea3 = 0, g2ea1 = 0, g2ea2 = 0, g2ea3 = 0;
   int g1odfbin = 0, g2odfbin = 0;
-  float totaldensity = 0, deltaerror = 0;
+  //float totaldensity = 0;
+  float deltaerror = 0;
   float currentodferror = 0, currentmdferror = 0;
   size_t selectedfeature1 = 0, selectedfeature2 = 0;
   iterations = 0;
