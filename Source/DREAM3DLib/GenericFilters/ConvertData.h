@@ -89,7 +89,7 @@ class DREAM3DLib_EXPORT ConvertData : public AbstractFilter
     * @brief This returns a string that is displayed in the GUI. It should be readable
     * and understandable by humans.
     */
-    virtual const QString getHumanLabel() { return "Voxel Cell Convert Data"; }
+    virtual const QString getHumanLabel() { return "Convert Cell Data"; }
 
     /**
     * @brief This method will instantiate all the end user settable options/parameters

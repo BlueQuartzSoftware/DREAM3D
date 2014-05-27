@@ -261,7 +261,7 @@ void ConvertData::dataCheck(bool preflight)
   QString ss;
   if(m_SelectedCellArrayPath.isEmpty() == true)
   {
-    ss = QObject::tr("The Input Voxel Cell Array Name is blank (empty) and a value must be filled in for the pipeline to complete.");
+    ss = QObject::tr("The Input Cell Array Name is blank (empty) and a value must be filled in for the pipeline to complete.");
     setErrorCondition(-397);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
