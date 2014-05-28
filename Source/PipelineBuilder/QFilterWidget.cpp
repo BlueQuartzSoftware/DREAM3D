@@ -1689,6 +1689,9 @@ void QFilterWidget::preflightAboutToExecute(VoxelDataContainer::Pointer vdc, Sur
       case FilterParameter::SurfaceMeshFaceArrayNameSelectionWidget:
         updateArrayNameComboBox(smdc->getFaceArrayNameList(), propertyName);
         break;
+      case FilterParameter::SurfaceMeshFieldArrayNameSelectionWidget:
+        updateArrayNameComboBox(smdc->getFieldArrayNameList(), propertyName);
+        break;
       case FilterParameter::SurfaceMeshEdgeArrayNameSelectionWidget:
         updateArrayNameComboBox(smdc->getEdgeArrayNameList(), propertyName);
         break;

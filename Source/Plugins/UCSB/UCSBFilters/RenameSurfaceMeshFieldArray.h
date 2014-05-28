@@ -72,7 +72,7 @@ class DREAM3DLib_EXPORT RenameSurfaceMeshFieldArray : public AbstractFilter
     * in the GUI for the filter
     */
     virtual const std::string getGroupName() { return "UCSB"; }
-	virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::MemoryManagementFilters; }
+    virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::MemoryManagementFilters; }
 
     /**
     * @brief This returns a string that is displayed in the GUI. It should be readable

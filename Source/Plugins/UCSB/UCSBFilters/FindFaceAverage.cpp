@@ -117,6 +117,11 @@ void FindFaceAverage::dataCheckSurfaceMesh(bool preflight, size_t voxels, size_t
         setErrorCondition(-11000);
         addErrorMessage(getHumanLabel(), "An array from the Face Data Container must be selected.", getErrorCondition());
       }
+      else
+      {
+
+        //CREATE_NON_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshFaceIPFColors, ss, uint8_t, UInt8ArrayType, 0, fields, 6)
+      }
     }
   }
 }
