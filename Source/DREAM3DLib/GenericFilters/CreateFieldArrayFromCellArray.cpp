@@ -79,6 +79,67 @@ void CreateFieldArrayFromCellArray::dataCheck(bool preflight, size_t voxels, siz
     setErrorCondition(-11000);
     addErrorMessage(getHumanLabel(), "An array from the Voxel Data Container must be selected.", getErrorCondition());
   }
+  else if(preflight)
+  {
+  IDataArray::Pointer inputData = m->getCellData(m_SelectedCellArrayName);
+  if (NULL == inputData.get())
+  {
+    ss.str("");
+    ss << "Selected array '" << m_SelectedCellArrayName << "' does not exist in the Surface Mesh Data Container. Was it spelled correctly?";
+    setErrorCondition(-11001);
+    notifyErrorMessage(ss.str(), getErrorCondition());
+    return;
+  }
+
+  int numberOfComponents = inputData->GetNumberOfComponents();
+  std::string dType = inputData->getTypeAsString();
+  IDataArray::Pointer p = IDataArray::NullPointer();
+  if (dType.compare("int8_t") == 0)
+  {
+    p = Int8ArrayType::CreateArray(1, numberOfComponents, m_SelectedCellArrayName);
+  }
+  else if (dType.compare("uint8_t") == 0)
+  {
+    p = UInt8ArrayType::CreateArray(1, numberOfComponents, m_SelectedCellArrayName);
+  }
+  else if (dType.compare("int16_t") == 0)
+  {
+    p = Int16ArrayType::CreateArray(1, numberOfComponents, m_SelectedCellArrayName);
+  }
+  else if (dType.compare("uint16_t") == 0)
+  {
+    p = UInt16ArrayType::CreateArray(1, numberOfComponents, m_SelectedCellArrayName);
+  }
+  else if (dType.compare("int32_t") == 0)
+  {
+    p = Int32ArrayType::CreateArray(1, numberOfComponents, m_SelectedCellArrayName);
+  }
+  else if (dType.compare("uint32_t") == 0)
+  {
+    p = UInt32ArrayType::CreateArray(1, numberOfComponents, m_SelectedCellArrayName);
+  }
+  else if (dType.compare("int64_t") == 0)
+  {
+    p = Int64ArrayType::CreateArray(1, numberOfComponents, m_SelectedCellArrayName);
+  }
+  else if (dType.compare("uint64_t") == 0)
+  {
+    p = UInt64ArrayType::CreateArray(1, numberOfComponents, m_SelectedCellArrayName);
+  }
+  else if (dType.compare("float") == 0)
+  {
+    p = FloatArrayType::CreateArray(1, numberOfComponents, m_SelectedCellArrayName);
+  }
+  else if (dType.compare("double") == 0)
+  {
+    p = DoubleArrayType::CreateArray(1, numberOfComponents, m_SelectedCellArrayName);
+  }
+  else if (dType.compare("bool") == 0)
+  {
+    p = BoolArrayType::CreateArray(1, numberOfComponents, m_SelectedCellArrayName);
+  }
+  m->addFieldData(p->GetName(), p);
+}
 
 }
 
