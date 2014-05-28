@@ -581,39 +581,43 @@ void DecimateSurfaceMesh::execute()
 
   //fill new triangles
   notifyStatusMessage("Mapping old->new triangles");
+  std::list<std::string> faceArrayNames = sm->getFaceArrayNameList();
   index=0;
   for(std::set<int>::iterator it=goodTriangles.begin(); it!=goodTriangles.end(); ++it) {
     newTriangles[index]=triangles[*it];
     for(int i=0; i<3; i++) {
       newTriangles[index].verts[i]=nodeMap.find(newTriangles[index].verts[i])->second;
     }
+
+    //copy triangle value
+    for (std::list<std::string>::iterator iter = faceArrayNames.begin(); iter != faceArrayNames.end(); ++iter)
+    {
+      std::string name = *iter;
+      IDataArray::Pointer p = sm->getFaceData(*iter);
+      p->CopyTuple(*it, index);
+    }
     index++;
   }
+  //shorten face arrays
+  for (std::list<std::string>::iterator iter = faceArrayNames.begin(); iter != faceArrayNames.end(); ++iter)
+  {
+    std::string name = *iter;
+    IDataArray::Pointer p = sm->getFaceData(*iter);
+    err = p->Resize(goodTriangles.size());
+  }
 
-  //remove other arrays
+  //remove node and edge arrays
   std::list<std::string> vertexArrayNames = sm->getPointArrayNameList();
   for (std::list<std::string>::iterator iter = vertexArrayNames.begin(); iter != vertexArrayNames.end(); ++iter)
   {
     std::string name = *iter;
     sm->removeVertexData(name);
   }
-  std::list<std::string> faceArrayNames = sm->getFaceArrayNameList();
-  for (std::list<std::string>::iterator iter = faceArrayNames.begin(); iter != faceArrayNames.end(); ++iter)
-  {
-    std::string name = *iter;
-    sm->removeFaceData(name);
-  }
   std::list<std::string> edgeArrayNames = sm->getEdgeArrayNameList();
   for (std::list<std::string>::iterator iter = edgeArrayNames.begin(); iter != edgeArrayNames.end(); ++iter)
   {
     std::string name = *iter;
     sm->removeEdgeData(name);
-  }
-  std::list<std::string> fieldArrayNames = sm->getFieldArrayNameList();
-  for (std::list<std::string>::iterator iter = fieldArrayNames.begin(); iter != fieldArrayNames.end(); ++iter)
-  {
-    std::string name = *iter;
-    sm->removeFieldData(name);
   }
 
   //update faces + vertexes

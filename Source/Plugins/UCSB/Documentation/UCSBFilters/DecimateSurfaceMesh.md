@@ -6,7 +6,7 @@ UCSB (UCSB)
 
 
 ## Description ##
-Decimates suface mesh with vertex contraction. Pairs to contract are selected using Quadric Error Metrics. Vertecies will be contracted until the specified percentage of triangles remain.
+Decimates suface mesh with vertex contraction. Pairs to contract are selected using Quadric Error Metrics. Vertecies will be contracted until the specified percentage of triangles remain. Node and edge arrays will be erased. Face arrays will be kept with remaining traingles retaining their original value.
 
 
 ## Parameters ##
