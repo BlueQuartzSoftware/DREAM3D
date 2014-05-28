@@ -28,6 +28,7 @@ set(_PublicFilters
   FindFaceAverage
   RenameSurfaceMeshFieldArray
   RenameFaceArray
+  CopyFieldArrayToFaceArray
 )
 
 
