@@ -29,6 +29,7 @@ set(_PublicFilters
   RenameSurfaceMeshFieldArray
   RenameFaceArray
   CopyFieldArrayToFaceArray
+  FindSurfaceMeshNodeType
 )
 
 
