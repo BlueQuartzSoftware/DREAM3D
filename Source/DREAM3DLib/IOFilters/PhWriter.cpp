@@ -185,7 +185,7 @@ int PhWriter::writeFile()
     return -1;
   }
 
-  int64_t totalPoints = m_FeatureIdsPtr.lock()->getNumberOfTuples();
+  //int64_t totalPoints = m_FeatureIdsPtr.lock()->getNumberOfTuples();
   // Find the unique number of features
   QMap<int, bool> used;
   for (int i = 0; i < totalpoints; ++i)

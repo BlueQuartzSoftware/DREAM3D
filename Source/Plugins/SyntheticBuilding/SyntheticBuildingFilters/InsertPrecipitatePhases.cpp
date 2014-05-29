@@ -310,7 +310,7 @@ void InsertPrecipitatePhases::preflight()
   emit updateFilterParameters(this);
   dataCheck();
     emit preflightExecuted();
- 
+
   if (m_WriteGoalAttributes == true && getCsvOutputFile().isEmpty() == true)
   {
     QString ss = QObject::tr("%1 needs the Csv Output File Set and it was not.").arg(ClassName());
@@ -930,10 +930,12 @@ void InsertPrecipitatePhases::move_precipitate(size_t gnum, float xc, float yc, 
   }
 }
 
-
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void InsertPrecipitatePhases::determine_clustering(size_t gnum, int add)
 {
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(m_FeatureIdsArrayPath.getDataContainerName());
+  //VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(m_FeatureIdsArrayPath.getDataContainerName());
 
   float x, y, z;
   float xn, yn, zn;
@@ -1065,7 +1067,7 @@ void InsertPrecipitatePhases::compare_3Ddistributions(QVector<QVector<QVector<fl
 // -----------------------------------------------------------------------------
 float InsertPrecipitatePhases::check_sizedisterror(Precip* precip)
 {
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(m_FeatureIdsArrayPath.getDataContainerName());
+  //VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(m_FeatureIdsArrayPath.getDataContainerName());
 
   StatsDataArray& statsDataArray = *(m_StatsDataArray.lock());
 

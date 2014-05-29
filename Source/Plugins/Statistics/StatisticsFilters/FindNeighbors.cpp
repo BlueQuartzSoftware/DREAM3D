@@ -48,8 +48,6 @@
 // -----------------------------------------------------------------------------
 FindNeighbors::FindNeighbors() :
   AbstractFilter(),
-  m_StoreSurfaceCells(false),
-  m_StoreSurfaceFeatures(false),
   m_CellFeatureAttributeMatrixPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, ""),
   m_SharedSurfaceAreaListArrayName(DREAM3D::FeatureData::SharedSurfaceAreaList),
   m_NeighborListArrayName(DREAM3D::FeatureData::NeighborList),
@@ -57,6 +55,8 @@ FindNeighbors::FindNeighbors() :
   m_SurfaceVoxelsArrayName(DREAM3D::CellData::SurfaceVoxels),
   m_NumNeighborsArrayName(DREAM3D::FeatureData::NumNeighbors),
   m_SurfaceFeaturesArrayName(DREAM3D::FeatureData::SurfaceFeatures),
+  m_StoreSurfaceCells(false),
+  m_StoreSurfaceFeatures(false),
   m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
   m_FeatureIds(NULL),
   m_SurfaceVoxels(NULL),

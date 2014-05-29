@@ -164,7 +164,7 @@ void FillBadData::execute()
   QVector<int > neighs;
   QVector<int > remove;
   size_t count = 1;
-  size_t point = 0;
+  //size_t point = 0;
   int good = 1;
   int neighbor;
   int index = 0;

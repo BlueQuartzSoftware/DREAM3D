@@ -363,7 +363,7 @@ void GenerateFaceIPFColoring::execute()
   if(getErrorCondition() < 0) { return; }
 
 
-  SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(m_SurfaceMeshFaceLabelsArrayPath.getDataContainerName());
+  //SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(m_SurfaceMeshFaceLabelsArrayPath.getDataContainerName());
   notifyStatusMessage(getHumanLabel(), "Starting");
 
   // Run the data check to allocate the memory for the centroid array

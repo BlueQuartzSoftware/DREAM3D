@@ -77,6 +77,7 @@ class ScalarSegmentFeatures : public SegmentFeatures
     DREAM3D_TYPE_MACRO_SUPER(ScalarSegmentFeatures, AbstractFilter)
 
     virtual ~ScalarSegmentFeatures();
+
     DREAM3D_FILTER_PARAMETER(QString, CellFeatureAttributeMatrixName)
     Q_PROPERTY(QString CellFeatureAttributeMatrixName READ getCellFeatureAttributeMatrixName WRITE setCellFeatureAttributeMatrixName)
 
@@ -85,6 +86,7 @@ class ScalarSegmentFeatures : public SegmentFeatures
 
     DREAM3D_FILTER_PARAMETER(float, ScalarTolerance)
     Q_PROPERTY(float ScalarTolerance READ getScalarTolerance WRITE setScalarTolerance)
+
     DREAM3D_INSTANCE_PROPERTY(bool, RandomizeFeatureIds)
 
     DREAM3D_FILTER_PARAMETER(bool, UseGoodVoxels)

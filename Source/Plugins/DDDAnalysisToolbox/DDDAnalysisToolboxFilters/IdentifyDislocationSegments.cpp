@@ -205,8 +205,8 @@ void IdentifyDislocationSegments::execute()
   AttributeMatrix::Pointer edgeFeatureAttrMat = edc->getAttributeMatrix(getEdgeFeatureAttributeMatrixName());
 
   VertexArray::Pointer nodesPtr = edc->getVertices();
-  size_t numNodes = nodesPtr->getNumberOfTuples();
-  VertexArray::Vert_t* nodes = nodesPtr->getPointer(0);
+  //size_t numNodes = nodesPtr->getNumberOfTuples();
+  //VertexArray::Vert_t* nodes = nodesPtr->getPointer(0);
 
   EdgeArray::Pointer edgesPtr = edc->getEdges();
   size_t numEdges = edgesPtr->getNumberOfTuples();

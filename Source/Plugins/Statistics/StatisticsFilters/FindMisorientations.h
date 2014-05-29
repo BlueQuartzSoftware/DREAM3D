@@ -89,14 +89,15 @@ class FindMisorientations : public AbstractFilter
     DREAM3D_FILTER_PARAMETER(QString, AvgMisorientationsArrayName)
     Q_PROPERTY(QString AvgMisorientationsArrayName READ getAvgMisorientationsArrayName WRITE setAvgMisorientationsArrayName)
 
+    DREAM3D_FILTER_PARAMETER(bool, FindAvgMisors)
+    Q_PROPERTY(bool FindAvgMisors READ getFindAvgMisors WRITE setFindAvgMisors)
+
     virtual const QString getCompiledLibraryName() { return Statistics::StatisticsBaseName; }
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::CrystallographicFilters; }
     virtual const QString getHumanLabel() { return "Find Feature Neighbor Misorientations"; }
 
-    DREAM3D_FILTER_PARAMETER(bool, FindAvgMisors)
-    Q_PROPERTY(bool FindAvgMisors READ getFindAvgMisors WRITE setFindAvgMisors)
 
     virtual void setupFilterParameters();
 

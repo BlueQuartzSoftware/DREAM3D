@@ -45,13 +45,13 @@
 // -----------------------------------------------------------------------------
 FindMisorientations::FindMisorientations()  :
   AbstractFilter(),
-  m_FindAvgMisors(false),
   m_NeighborListArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, DREAM3D::FeatureData::NeighborList),
   m_MisorientationListArrayName(DREAM3D::FeatureData::MisorientationList),
   m_AvgQuatsArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, DREAM3D::FeatureData::AvgQuats),
   m_FeaturePhasesArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, DREAM3D::FeatureData::Phases),
   m_CrystalStructuresArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellEnsembleAttributeMatrixName, DREAM3D::EnsembleData::CrystalStructures),
   m_AvgMisorientationsArrayName(DREAM3D::FeatureData::AvgMisorientations),
+  m_FindAvgMisors(false),
   m_AvgQuatsArrayName(DREAM3D::FeatureData::AvgQuats),
   m_AvgQuats(NULL),
   m_FeaturePhasesArrayName(DREAM3D::FeatureData::Phases),

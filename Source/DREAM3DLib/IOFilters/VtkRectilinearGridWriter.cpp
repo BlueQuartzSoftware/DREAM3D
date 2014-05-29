@@ -221,7 +221,6 @@ int VtkRectilinearGridWriter::write(const QString& file)
   int64_t totalPoints = r->getXPoints() * r->getYPoints() * r->getZPoints();
   fprintf(f, "CELL_DATA %d\n", (int)totalPoints);
 
-  int index = 0;
   QString ss = QObject::tr("Writing Feature Ids");
   notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
   if (m_WriteBinaryFile == true)

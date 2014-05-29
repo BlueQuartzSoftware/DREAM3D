@@ -75,6 +75,7 @@ class FindFeatureHistogram : public AbstractFilter
 
     DREAM3D_FILTER_PARAMETER(int, NumBins)
     Q_PROPERTY(int NumBins READ getNumBins WRITE setNumBins)
+
     DREAM3D_FILTER_PARAMETER(bool, RemoveBiasedFeatures)
     Q_PROPERTY(bool RemoveBiasedFeatures READ getRemoveBiasedFeatures WRITE setRemoveBiasedFeatures)
 
