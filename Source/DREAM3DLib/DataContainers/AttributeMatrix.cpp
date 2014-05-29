@@ -457,10 +457,6 @@ int AttributeMatrix::addAttributeArrayFromHDF5Path(hid_t gid, QString name, bool
 int AttributeMatrix::readAttributeArraysFromHDF5(hid_t amGid, bool preflight, AttributeMatrixProxy& attrMatProxy)
 {
   int err = 0;
-<<<<<<< HEAD
-//#warning CHECK THIS CODE
-=======
->>>>>>> 900923d8afd8f0a735b6d86064db13246dd58162
   QMap<QString, DataArrayProxy> dasToRead = attrMatProxy.dataArrays;
   QString classType;
   for (QMap<QString, DataArrayProxy>::iterator iter = dasToRead.begin(); iter != dasToRead.end(); ++iter)
