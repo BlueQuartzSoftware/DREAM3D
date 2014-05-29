@@ -154,11 +154,9 @@ void FilterInputWidget::displayFilterParameters(PipelineFilterWidget* w)
 
   // Add a label at the top of the Inputs Tabs to show what filter we are working on
   filterHumanLabel->setText(w->getHumanLabel());
-#if 1
-  filterHumanLabel->setText(w->getHumanLabel() + "\n  [" + w->getFilterClassName() + "]" );
-#endif
+
   AbstractFilter::Pointer filter = w->getFilter();
-  brandingLabel->setText(filter->getBrandingString() );
+  brandingLabel->setText(filter->getBrandingString()  + "  [" + w->getFilterClassName() + "]" );
 
 }
 
