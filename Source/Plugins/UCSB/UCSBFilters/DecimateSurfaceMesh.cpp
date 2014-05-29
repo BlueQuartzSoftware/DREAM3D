@@ -626,6 +626,9 @@ void DecimateSurfaceMesh::execute()
   sm->setFaces(newTrianglesPtr);
   sm->setVertices(newNodesPtr);
 
+  //remove old connectivity
+  sm->removeMeshVertLinks();
+
   notifyStatusMessage("Completed");
 }
 
