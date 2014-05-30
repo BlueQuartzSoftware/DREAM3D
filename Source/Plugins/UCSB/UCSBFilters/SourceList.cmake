@@ -30,6 +30,7 @@ set(_PublicFilters
   RenameFaceArray
   CopyFieldArrayToFaceArray
   FindSurfaceMeshNodeType
+  UnifyTriangleWinding
 )
 
 
