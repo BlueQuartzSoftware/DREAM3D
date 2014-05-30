@@ -116,16 +116,16 @@ void ScaleVolume::setupFilterParameters()
 {
   FilterParameterVector parameters;
   parameters.push_back(FilterParameter::New("Scaling Factor", "ScaleFactor", FilterParameterWidgetType::FloatVec3Widget, getScaleFactor(), false));
-  parameters.push_back(FilterParameter::New("Data Container To Apply To", "DataContainerName", FilterParameterWidgetType::DataContainerSelectionWidget, getDataContainerName(), false));
-  FilterParameter::Pointer param = parameters.back();
-  param->setConditional(true);
-  param->setConditionalProperty("ApplyToVoxelVolume");
-  param->setConditionalLabel("Apply to Voxel Volume");
-  parameters.push_back(FilterParameter::New("Surface Data Container To Apply To", "SurfaceDataContainerName", FilterParameterWidgetType::DataContainerSelectionWidget, getSurfaceDataContainerName(), false));
-  param = parameters.back();
-  param->setConditional(true);
-  param->setConditionalProperty("ApplyToSurfaceMesh");
-  param->setConditionalLabel("Apply to Surface Mesh");
+  QStringList linkedProps("DataContainerName");
+  parameters.push_back(FilterParameter::NewConditional("Apply to Voxel Volume", "ApplyToVoxelVolume", FilterParameterWidgetType::LinkedBooleanWidget, getApplyToVoxelVolume(), true, linkedProps));
+  parameters.push_back(FilterParameter::New("Data Container To Apply To", "DataContainerName", FilterParameterWidgetType::DataContainerSelectionWidget, getDataContainerName(), true));
+
+
+  linkedProps.clear();
+  linkedProps << "SurfaceDataContainerName";
+  parameters.push_back(FilterParameter::NewConditional("Apply to Surface Mesh", "ApplyToSurfaceMesh", FilterParameterWidgetType::LinkedBooleanWidget, getApplyToSurfaceMesh(), true, linkedProps));
+  parameters.push_back(FilterParameter::New("Surface Data Container To Apply To", "SurfaceDataContainerName", FilterParameterWidgetType::DataContainerSelectionWidget, getSurfaceDataContainerName(), true));
+
   setFilterParameters(parameters);
 }
 

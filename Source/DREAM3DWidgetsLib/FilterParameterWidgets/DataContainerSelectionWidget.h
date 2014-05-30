@@ -38,9 +38,12 @@
 
 
 
-
 #include <QtCore/QObject>
+#include <QtCore/QPointer>
 #include <QtGui/QWidget>
+
+
+#include "QtSupport/FaderWidget.h"
 
 
 #include "DREAM3DLib/Common/AbstractFilter.h"
@@ -99,14 +102,12 @@ class DREAM3DWidgetsLib_EXPORT DataContainerSelectionWidget : public QWidget, pr
     void filterNeedsInputParameters(AbstractFilter* filter);
 
     void on_dataContainerList_currentIndexChanged(int index);
-    void on_conditionalCB_stateChanged(int state);
+    void setLinkedConditionalState(int state);
+    void fadeWidget(QWidget* widget, bool in);
 
   protected:
     void populateComboBoxes();
 
-//    DataContainerArrayProxy generateDCAProxy();
-//    void setSelectedPath(QString dcName, QString attrMatName, QString attrArrName);
-//    void selectDefaultPath();
 
   signals:
     void errorSettingFilterParameter(const QString& msg);
@@ -116,6 +117,7 @@ class DREAM3DWidgetsLib_EXPORT DataContainerSelectionWidget : public QWidget, pr
     AbstractFilter*   m_Filter;
     FilterParameter*  m_FilterParameter;
     bool m_DidCausePreflight;
+    QPointer<FaderWidget> faderWidget;
 
     DataContainerArrayProxy m_DcaProxy;
 

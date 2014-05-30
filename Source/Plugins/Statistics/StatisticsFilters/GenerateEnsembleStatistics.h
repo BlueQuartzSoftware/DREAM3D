@@ -123,6 +123,52 @@ class GenerateEnsembleStatistics : public AbstractFilter
     DREAM3D_FILTER_PARAMETER(QString, StatisticsArrayName)
     Q_PROPERTY(QString StatisticsArrayName READ getStatisticsArrayName WRITE setStatisticsArrayName)
 
+/* ---------- */
+    DREAM3D_FILTER_PARAMETER(bool, CalculateMorphologicalStats)
+    Q_PROPERTY(bool CalculateMorphologicalStats READ getCalculateMorphologicalStats WRITE setCalculateMorphologicalStats)
+
+    DREAM3D_INSTANCE_PROPERTY(bool, ComputeSizeDistribution)
+  //  Q_PROPERTY(bool ComputeSizeDistribution READ getComputeSizeDistribution WRITE setComputeSizeDistribution)
+
+    DREAM3D_FILTER_PARAMETER(int, SizeDistributionFitType)
+    Q_PROPERTY(int SizeDistributionFitType READ getSizeDistributionFitType WRITE setSizeDistributionFitType)
+
+    DREAM3D_FILTER_PARAMETER(bool, ComputeAspectRatioDistribution)
+ //   Q_PROPERTY(bool ComputeAspectRatioDistribution READ getComputeAspectRatioDistribution WRITE setComputeAspectRatioDistribution)
+
+    DREAM3D_FILTER_PARAMETER(int, AspectRatioDistributionFitType)
+    Q_PROPERTY(int AspectRatioDistributionFitType READ getAspectRatioDistributionFitType WRITE setAspectRatioDistributionFitType)
+
+    DREAM3D_FILTER_PARAMETER(bool, ComputeOmega3Distribution)
+//    Q_PROPERTY(bool ComputeOmega3Distribution READ getComputeOmega3Distribution WRITE setComputeOmega3Distribution)
+
+    DREAM3D_FILTER_PARAMETER(int, Omega3DistributionFitType)
+   Q_PROPERTY(int Omega3DistributionFitType READ getOmega3DistributionFitType WRITE setOmega3DistributionFitType)
+
+    DREAM3D_FILTER_PARAMETER(bool, ComputeNeighborhoodDistribution)
+//    Q_PROPERTY(bool ComputeNeighborhoodDistribution READ getComputeNeighborhoodDistribution WRITE setComputeNeighborhoodDistribution)
+
+    DREAM3D_FILTER_PARAMETER(int, NeighborhoodDistributionFitType)
+    Q_PROPERTY(int NeighborhoodDistributionFitType READ getNeighborhoodDistributionFitType WRITE setNeighborhoodDistributionFitType)
+
+    DREAM3D_FILTER_PARAMETER(bool, CalculateCrystallographicStats)
+    Q_PROPERTY(bool CalculateCrystallographicStats READ getCalculateCrystallographicStats WRITE setCalculateCrystallographicStats)
+
+    DREAM3D_FILTER_PARAMETER(bool, CalculateODF)
+  //  Q_PROPERTY(bool CalculateODF READ getCalculateODF WRITE setCalculateODF)
+
+    DREAM3D_FILTER_PARAMETER(bool, CalculateMDF)
+  //  Q_PROPERTY(bool CalculateMDF READ getCalculateMDF WRITE setCalculateMDF)
+
+    DREAM3D_FILTER_PARAMETER(bool, CalculateAxisODF)
+ //   Q_PROPERTY(bool CalculateAxisODF READ getCalculateAxisODF WRITE setCalculateAxisODF)
+
+    DREAM3D_FILTER_PARAMETER(float, SizeCorrelationResolution)
+    Q_PROPERTY(float SizeCorrelationResolution READ getSizeCorrelationResolution WRITE setSizeCorrelationResolution)
+
+
+    DREAM3D_INSTANCE_PROPERTY(QVector<unsigned int>, PhaseTypeArray)
+
     virtual const QString getCompiledLibraryName() { return Statistics::StatisticsBaseName; }
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
@@ -135,19 +181,6 @@ class GenerateEnsembleStatistics : public AbstractFilter
     */
     virtual void setupFilterParameters();
 
-    DREAM3D_INSTANCE_PROPERTY(float, SizeCorrelationResolution)
-    DREAM3D_INSTANCE_PROPERTY(bool, SizeDistribution)
-    DREAM3D_INSTANCE_PROPERTY(int, SizeDistributionFitType)
-    DREAM3D_INSTANCE_PROPERTY(bool, AspectRatioDistribution)
-    DREAM3D_INSTANCE_PROPERTY(int, AspectRatioDistributionFitType)
-    DREAM3D_INSTANCE_PROPERTY(bool, Omega3Distribution)
-    DREAM3D_INSTANCE_PROPERTY(int, Omega3DistributionFitType)
-    DREAM3D_INSTANCE_PROPERTY(bool, NeighborhoodDistribution)
-    DREAM3D_INSTANCE_PROPERTY(int, NeighborhoodDistributionFitType)
-    DREAM3D_INSTANCE_PROPERTY(bool, CalculateODF)
-    DREAM3D_INSTANCE_PROPERTY(bool, CalculateMDF)
-    DREAM3D_INSTANCE_PROPERTY(bool, CalculateAxisODF)
-    DREAM3D_INSTANCE_PROPERTY(QVector<unsigned int>, PhaseTypeArray)
 
     /**
     * @brief This method will write the options to a file

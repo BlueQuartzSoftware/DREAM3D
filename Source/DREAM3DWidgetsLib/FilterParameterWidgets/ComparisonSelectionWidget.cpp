@@ -36,6 +36,7 @@
 
 #include "ComparisonSelectionWidget.h"
 
+#include "DREAM3DWidgetsLib/DREAM3DWidgetsLibConstants.h"
 
 #include "FilterParameterWidgetsDialogs.h"
 
@@ -555,3 +556,42 @@ void ComparisonSelectionWidget::afterPreflight()
   // qDebug() << m_Filter->getNameOfClass() << " DataContainerArrayProxyWidget::afterPreflight()";
 }
 
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ComparisonSelectionWidget::setLinkedConditionalState(int state)
+{
+  bool boolProp = (state == Qt::Checked);
+  fadeWidget(this, boolProp);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ComparisonSelectionWidget::fadeWidget(QWidget* widget, bool in)
+{
+
+  if (faderWidget)
+  {
+    faderWidget->close();
+  }
+  faderWidget = new FaderWidget(widget);
+  if(in)
+  {
+    setVisible(true);
+    faderWidget->setFadeIn();
+    connect(faderWidget, SIGNAL(animationComplete() ),
+          this, SLOT(show()));
+  }
+  else
+  {
+    faderWidget->setFadeOut();
+    connect(faderWidget, SIGNAL(animationComplete() ),
+          this, SLOT(hide()));
+  }
+  QColor color = DREAM3D::Defaults::BasicColor;
+  if(m_FilterParameter->getAdvanced()) { color = DREAM3D::Defaults::AdvancedColor; }
+  faderWidget->setStartColor(color);
+  faderWidget->start();
+}

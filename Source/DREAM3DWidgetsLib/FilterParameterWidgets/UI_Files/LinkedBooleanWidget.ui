@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>DataContainerSelectionWidget</class>
- <widget class="QWidget" name="DataContainerSelectionWidget">
+ <class>LinkedBooleanWidget</class>
+ <widget class="QWidget" name="LinkedBooleanWidget">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>551</width>
-    <height>33</height>
+    <width>566</width>
+    <height>42</height>
    </rect>
   </property>
   <layout class="QHBoxLayout" name="horizontalLayout">
@@ -22,7 +22,11 @@
     </widget>
    </item>
    <item>
-    <widget class="QComboBox" name="dataContainerList"/>
+    <widget class="QCheckBox" name="value">
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
    </item>
    <item>
     <spacer name="horizontalSpacer">

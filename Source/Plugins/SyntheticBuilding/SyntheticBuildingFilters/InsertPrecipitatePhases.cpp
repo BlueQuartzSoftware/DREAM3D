@@ -142,12 +142,10 @@ void InsertPrecipitatePhases::setupFilterParameters()
   parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
   parameters.push_back(FilterParameter::New("FeaturePhases", "FeaturePhasesArrayName", FilterParameterWidgetType::StringWidget, getFeaturePhasesArrayName(), true, ""));
   parameters.push_back(FilterParameter::New("NumFeatures", "NumFeaturesArrayName", FilterParameterWidgetType::StringWidget, getNumFeaturesArrayName(), true, ""));
-
+  QStringList linkedProps("CsvOutputFile");
+  parameters.push_back(FilterParameter::NewConditional("Write Goal Attributes", "WriteGoalAttributes", FilterParameterWidgetType::LinkedBooleanWidget, getWriteGoalAttributes(), true, linkedProps));
   parameters.push_back(FilterParameter::New("Goal Attribute CSV File", "CsvOutputFile", FilterParameterWidgetType::OutputFileWidget, getCsvOutputFile(), false, "", "*.csv", "Comma Separated Data"));
-  FilterParameter::Pointer param = parameters.back();
-  param->setConditional(true);
-  param->setConditionalProperty("WriteGoalAttributes");
-  param->setConditionalLabel("Write Goal Attributes");
+
   setFilterParameters(parameters);
 }
 // -----------------------------------------------------------------------------

@@ -29,7 +29,7 @@ FaderWidget::FaderWidget(QWidget* parent)
   : QWidget(parent)
 {
   if (parent)
-  { startColor = Qt::white; } //parent->palette().window().color();
+  { startColor = Qt::white; /* parent->palette().window().color();*/ }
   else
   { startColor = Qt::white; }
 
@@ -57,6 +57,16 @@ void FaderWidget::setFadeOut()
   currentAlpha = 254;
 }
 
+void FaderWidget::setStartColor(QColor color)
+{
+  startColor = color;
+}
+
+QColor FaderWidget::getStartColor()
+{
+  return startColor;
+}
+
 void FaderWidget::start()
 {
   currentAlpha = 255;
@@ -74,7 +84,7 @@ void FaderWidget::paintEvent(QPaintEvent* /* event */)
   if(fadeIn) { currentAlpha -= 255 * timer->interval() / duration;}
   else { currentAlpha += 255 * timer->interval() / duration; }
 
-// qDebug() << currentAlpha;
+  // qDebug() << currentAlpha;
 
   if (currentAlpha <= 0 || currentAlpha >= 255)
   {

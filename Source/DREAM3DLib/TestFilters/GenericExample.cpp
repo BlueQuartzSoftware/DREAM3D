@@ -86,9 +86,7 @@ void GenericExample::setupFilterParameters()
   /* Place all your option initialization code here */
   /* For String input use this code */
   parameters.push_back(FilterParameter::New("STL Output Prefix", "StlFilePrefix", FilterParameterWidgetType::StringWidget, getStlFilePrefix(), false));
-  parameters[0]->setConditional(true);
-  parameters[0]->setConditionalLabel("Show Prefix");
-  parameters[0]->setConditionalProperty("ShowPrefix");
+
   /*  For an Integer use this code*/
   parameters.push_back(FilterParameter::New("Max Iterations", "MaxIterations", FilterParameterWidgetType::IntWidget, getMaxIterations(), false));
   /*  For a Floating point value use this code*/

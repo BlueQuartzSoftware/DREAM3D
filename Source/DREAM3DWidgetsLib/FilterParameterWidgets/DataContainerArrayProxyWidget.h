@@ -37,10 +37,12 @@
 #define _DataContainerArrayProxyWidget_H_
 
 
-
-
 #include <QtCore/QObject>
+#include <QtCore/QPointer>
 #include <QtGui/QWidget>
+
+#include "QtSupport/FaderWidget.h"
+
 
 
 #include "DREAM3DLib/Common/AbstractFilter.h"
@@ -82,7 +84,8 @@ class DREAM3DWidgetsLib_EXPORT DataContainerArrayProxyWidget : public QWidget, p
     void afterPreflight();
     void filterNeedsInputParameters(AbstractFilter* filter);
     void itemActivated(const QModelIndex& index);
-    // void on_conditionalCB_stateChanged(int state);
+    void setLinkedConditionalState(int state);
+    void fadeWidget(QWidget* widget, bool in);
 
   signals:
     void errorSettingFilterParameter(const QString& msg);
@@ -99,6 +102,7 @@ class DREAM3DWidgetsLib_EXPORT DataContainerArrayProxyWidget : public QWidget, p
     DataContainerArrayProxyFilterParameter*  m_FilterParameter;
     DataContainerArrayProxy m_DcaProxy;
     bool m_DidCausePreflight;
+    QPointer<FaderWidget> faderWidget;
 
 
     DataContainerArrayProxyWidget(const DataContainerArrayProxyWidget&); // Copy Constructor Not Implemented

@@ -6,70 +6,62 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>653</width>
-    <height>61</height>
+    <width>612</width>
+    <height>33</height>
    </rect>
   </property>
-  <layout class="QGridLayout" name="widgetLayout">
+  <layout class="QHBoxLayout" name="horizontalLayout_2">
    <property name="margin">
     <number>2</number>
    </property>
-   <item row="1" column="1" colspan="4">
-    <layout class="QHBoxLayout" name="horizontalLayout">
-     <property name="sizeConstraint">
-      <enum>QLayout::SetDefaultConstraint</enum>
+   <item>
+    <widget class="QLabel" name="label">
+     <property name="text">
+      <string>Property</string>
      </property>
-     <property name="leftMargin">
-      <number>0</number>
+    </widget>
+   </item>
+   <item>
+    <widget class="QLineEdit" name="value">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
      </property>
-     <item>
-      <widget class="QLabel" name="label">
-       <property name="text">
-        <string>Property</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QLineEdit" name="value">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="styleSheet">
-        <string notr="true"/>
-       </property>
-       <property name="text">
-        <string/>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="applyChangesBtn">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="minimumSize">
-        <size>
-         <width>84</width>
-         <height>0</height>
-        </size>
-       </property>
-       <property name="maximumSize">
-        <size>
-         <width>234234</width>
-         <height>24</height>
-        </size>
-       </property>
-       <property name="toolTip">
-        <string>Click to apply the changes and run a preflight check</string>
-       </property>
-       <property name="styleSheet">
-        <string notr="true"> QPushButton {
+     <property name="styleSheet">
+      <string notr="true"/>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QPushButton" name="applyChangesBtn">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="minimumSize">
+      <size>
+       <width>84</width>
+       <height>0</height>
+      </size>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>234234</width>
+       <height>24</height>
+      </size>
+     </property>
+     <property name="toolTip">
+      <string>Click to apply the changes and run a preflight check</string>
+     </property>
+     <property name="styleSheet">
+      <string notr="true"> QPushButton {
      border: 2px solid #8f8f91;
      border-radius: 6px;
      background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
@@ -89,67 +81,17 @@
  QPushButton:default {
      border-color: navy; /* make the default button prominent */
  }</string>
-       </property>
-       <property name="text">
-        <string>Apply</string>
-       </property>
-       <property name="autoDefault">
-        <bool>false</bool>
-       </property>
-       <property name="default">
-        <bool>false</bool>
-       </property>
-       <property name="flat">
-        <bool>false</bool>
-       </property>
-      </widget>
-     </item>
-    </layout>
-   </item>
-   <item row="0" column="1" colspan="4">
-    <widget class="QCheckBox" name="conditionalCB">
-     <property name="text">
-      <string>CheckBox</string>
-     </property>
-    </widget>
-   </item>
-   <item row="0" column="0" rowspan="2">
-    <widget class="QLabel" name="linkLeft">
-     <property name="maximumSize">
-      <size>
-       <width>20</width>
-       <height>16777215</height>
-      </size>
      </property>
      <property name="text">
-      <string/>
+      <string>Apply</string>
      </property>
-     <property name="pixmap">
-      <pixmap resource="../../../../Resources/icons/images/Icons.qrc">:/Link_Left.png</pixmap>
-     </property>
-     <property name="scaledContents">
+     <property name="autoDefault">
       <bool>false</bool>
      </property>
-     <property name="alignment">
-      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+     <property name="default">
+      <bool>false</bool>
      </property>
-    </widget>
-   </item>
-   <item row="0" column="5" rowspan="2">
-    <widget class="QLabel" name="linkRight">
-     <property name="maximumSize">
-      <size>
-       <width>20</width>
-       <height>16777215</height>
-      </size>
-     </property>
-     <property name="text">
-      <string/>
-     </property>
-     <property name="pixmap">
-      <pixmap resource="../../../../Resources/icons/images/Icons.qrc">:/Link_Right.png</pixmap>
-     </property>
-     <property name="scaledContents">
+     <property name="flat">
       <bool>false</bool>
      </property>
     </widget>

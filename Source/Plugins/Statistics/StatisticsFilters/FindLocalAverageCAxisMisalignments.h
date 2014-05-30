@@ -73,6 +73,7 @@ class FindLocalAverageCAxisMisalignments : public AbstractFilter
 
     DREAM3D_FILTER_PARAMETER(bool, CalcUnbiasedAvg)
     Q_PROPERTY(bool CalcUnbiasedAvg READ getCalcUnbiasedAvg WRITE setCalcUnbiasedAvg)
+
     DREAM3D_FILTER_PARAMETER(bool, CalcBiasedAvg)
     Q_PROPERTY(bool CalcBiasedAvg READ getCalcBiasedAvg WRITE setCalcBiasedAvg)
 

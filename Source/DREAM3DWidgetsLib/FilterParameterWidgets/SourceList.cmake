@@ -26,6 +26,7 @@ set(DREAM3D_PARAMETER_WIDGETS
       PreflightUpdatedValueWidget
       DataArrayCreationWidget
       SeparatorWidget
+      LinkedBooleanWidget
 #      CellArrayComparisonSelectionWidget
 #      FeatureArrayComparisonSelectionWidget
 #      EnsembleArrayComparisonSelectionWidget

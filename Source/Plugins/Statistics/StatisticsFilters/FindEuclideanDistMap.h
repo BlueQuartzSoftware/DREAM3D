@@ -86,14 +86,14 @@ class FindEuclideanDistMap : public AbstractFilter
     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::MorphologicalFilters; }
     virtual const QString getHumanLabel() { return "Find Euclidean Distance Map"; }
 
-    DREAM3D_FILTER_PARAMETER(bool, doBoundaries)
-    Q_PROPERTY(bool doBoundaries READ getdoBoundaries WRITE setdoBoundaries)
-    DREAM3D_FILTER_PARAMETER(bool, doTripleLines)
-    Q_PROPERTY(bool doTripleLines READ getdoTripleLines WRITE setdoTripleLines)
-    DREAM3D_FILTER_PARAMETER(bool, doQuadPoints)
-    Q_PROPERTY(bool doQuadPoints READ getdoQuadPoints WRITE setdoQuadPoints)
-    DREAM3D_FILTER_PARAMETER(bool, saveNearestNeighbors)
-    Q_PROPERTY(bool saveNearestNeighbors READ getsaveNearestNeighbors WRITE setsaveNearestNeighbors)
+    DREAM3D_FILTER_PARAMETER(bool, DoBoundaries)
+    Q_PROPERTY(bool DoBoundaries READ getDoBoundaries WRITE setDoBoundaries)
+    DREAM3D_FILTER_PARAMETER(bool, DoTripleLines)
+    Q_PROPERTY(bool DoTripleLines READ getDoTripleLines WRITE setDoTripleLines)
+    DREAM3D_FILTER_PARAMETER(bool, DoQuadPoints)
+    Q_PROPERTY(bool DoQuadPoints READ getDoQuadPoints WRITE setDoQuadPoints)
+    DREAM3D_FILTER_PARAMETER(bool, SaveNearestNeighbors)
+    Q_PROPERTY(bool SaveNearestNeighbors READ getSaveNearestNeighbors WRITE setSaveNearestNeighbors)
     DREAM3D_FILTER_PARAMETER(bool, CalcOnlyManhattanDist)
     Q_PROPERTY(bool CalcOnlyManhattanDist READ getCalcOnlyManhattanDist WRITE setCalcOnlyManhattanDist)
 

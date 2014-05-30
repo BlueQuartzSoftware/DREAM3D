@@ -6,37 +6,88 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>513</width>
-    <height>57</height>
+    <width>666</width>
+    <height>61</height>
    </rect>
   </property>
-  <layout class="QGridLayout" name="widgetLayout">
-   <property name="leftMargin">
+  <layout class="QHBoxLayout" name="horizontalLayout">
+   <property name="margin">
     <number>2</number>
    </property>
-   <property name="topMargin">
-    <number>2</number>
-   </property>
-   <property name="rightMargin">
-    <number>2</number>
-   </property>
-   <property name="bottomMargin">
-    <number>2</number>
-   </property>
-   <item row="1" column="7" rowspan="2">
-    <widget class="QLabel" name="linkRight">
-     <property name="text">
-      <string/>
+   <item>
+    <widget class="QLabel" name="label">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
      </property>
-     <property name="pixmap">
-      <pixmap resource="../../../../Resources/icons/images/Icons.qrc">:/Link_Right.png</pixmap>
+     <property name="text">
+      <string>Property</string>
      </property>
     </widget>
    </item>
-   <item row="1" column="8" rowspan="2">
+   <item>
+    <widget class="QComboBox" name="dataContainerList">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="toolTip">
+      <string>This is the DataContainer selection</string>
+     </property>
+     <item>
+      <property name="text">
+       <string>VolumeDataContainer</string>
+      </property>
+     </item>
+    </widget>
+   </item>
+   <item>
+    <widget class="QComboBox" name="attributeMatrixList">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="toolTip">
+      <string>This is the AttributeMatrix selection</string>
+     </property>
+     <item>
+      <property name="text">
+       <string>CellFeatureData</string>
+      </property>
+     </item>
+    </widget>
+   </item>
+   <item>
+    <widget class="QComboBox" name="attributeArrayList">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="toolTip">
+      <string>This is the Data Array selection</string>
+     </property>
+     <item>
+      <property name="text">
+       <string>Dictionary Euler Angles</string>
+      </property>
+     </item>
+    </widget>
+   </item>
+   <item>
     <spacer name="horizontalSpacer">
      <property name="orientation">
       <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="sizeType">
+      <enum>QSizePolicy::Preferred</enum>
      </property>
      <property name="sizeHint" stdset="0">
       <size>
@@ -45,79 +96,6 @@
       </size>
      </property>
     </spacer>
-   </item>
-   <item row="1" column="0" rowspan="2">
-    <widget class="QLabel" name="linkLeft">
-     <property name="text">
-      <string/>
-     </property>
-     <property name="pixmap">
-      <pixmap resource="../../../../Resources/icons/images/Icons.qrc">:/Link_Left.png</pixmap>
-     </property>
-     <property name="alignment">
-      <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-     </property>
-    </widget>
-   </item>
-   <item row="2" column="2">
-    <layout class="QHBoxLayout" name="horizontalLayout">
-     <property name="leftMargin">
-      <number>0</number>
-     </property>
-     <item>
-      <widget class="QLabel" name="label">
-       <property name="text">
-        <string>Property</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QComboBox" name="dataContainerList">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="toolTip">
-        <string>This is the DataContainer selection</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QComboBox" name="attributeMatrixList">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="toolTip">
-        <string>This is the AttributeMatrix selection</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QComboBox" name="attributeArrayList">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <property name="toolTip">
-        <string>This is the Data Array selection</string>
-       </property>
-      </widget>
-     </item>
-    </layout>
-   </item>
-   <item row="1" column="2">
-    <widget class="QCheckBox" name="conditionalCB">
-     <property name="text">
-      <string>CheckBox</string>
-     </property>
-    </widget>
    </item>
   </layout>
  </widget>

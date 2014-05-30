@@ -43,6 +43,7 @@
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/FilterParameters/FilterParameter.h"
 #include "DREAM3DLib/DataContainers/DataArrayPath.h"
+#include "DREAM3DWidgetsLib/DREAM3DWidgetsLibConstants.h"
 
 #include "FilterParameterWidgetsDialogs.h"
 
@@ -138,32 +139,6 @@ void DataArraySelectionWidget::setupGui()
   attributeMatrixList->blockSignals(false);
   attributeArrayList->blockSignals(false);
 
-
-  // Now figure out if the Filter Parameter is conditional or not. If it is NOT conditional then we remove some of the GUI
-  // widgets
-  blockSignals(true);
-  // is the filter parameter tied to a boolean property of the Filter Instance, if it is then we need to make the check box visible
-  if(m_FilterParameter->isConditional() == true)
-  {
-    bool boolProp = m_Filter->property(m_FilterParameter->getConditionalProperty().toLatin1().constData() ).toBool();
-    conditionalCB->setChecked(boolProp);
-    conditionalCB->setText(m_FilterParameter->getConditionalLabel());
-    dataContainerList->setEnabled(boolProp);
-    attributeMatrixList->setEnabled(boolProp);
-    attributeArrayList->setEnabled(boolProp);
-    on_conditionalCB_stateChanged(conditionalCB->checkState());
-  }
-  else
-  {
-    widgetLayout->removeWidget(conditionalCB);
-    conditionalCB->deleteLater();
-    widgetLayout->removeWidget(linkLeft);
-    linkLeft->deleteLater();
-    widgetLayout->removeWidget(linkRight);
-    linkRight->deleteLater();
-  }
-  blockSignals(false);
-
   populateComboBoxes();
 
   // Lastly, hook up the filter's signals and slots to our own signals and slots
@@ -178,30 +153,6 @@ void DataArraySelectionWidget::setupGui()
   // Catch when the filter wants its values updated
   connect(m_Filter, SIGNAL(updateFilterParameters(AbstractFilter*)),
           this, SLOT(filterNeedsInputParameters(AbstractFilter*)));
-
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void DataArraySelectionWidget::on_conditionalCB_stateChanged(int state)
-{
-  bool boolProp = conditionalCB->isChecked();
-  dataContainerList->setEnabled(boolProp);
-  attributeMatrixList->setEnabled(boolProp);
-  attributeArrayList->setEnabled(boolProp);
-
-  dataContainerList->setVisible(boolProp);
-  attributeMatrixList->setVisible(boolProp);
-  attributeArrayList->setVisible(boolProp);
-
-  label->setVisible(boolProp);
-  linkLeft->setVisible(boolProp);
-  linkRight->setVisible(boolProp);
-
-  m_DidCausePreflight = true;
-  emit parametersChanged();
-  m_DidCausePreflight = false;
 
 }
 
@@ -586,43 +537,44 @@ void DataArraySelectionWidget::filterNeedsInputParameters(AbstractFilter* filter
     FilterParameterWidgetsDialogs::ShowCouldNotSetFilterParameter(m_Filter, m_FilterParameter);
   }
 
-  if(m_FilterParameter->isConditional() )
-  {
-    var.setValue(conditionalCB->isChecked());
-    ok = filter->setProperty(m_FilterParameter->getConditionalProperty().toLatin1().constData(), var);
-    if(false == ok)
-    {
-      FilterParameterWidgetsDialogs::ShowCouldNotSetConditionalFilterParameter(m_Filter, m_FilterParameter);
-    }
-  }
-
 }
 
-#if 0
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DataArraySelectionWidget::selectDefaultPath()
+void DataArraySelectionWidget::setLinkedConditionalState(int state)
+{
+  bool boolProp = (state == Qt::Checked);
+  fadeWidget(this, boolProp);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DataArraySelectionWidget::fadeWidget(QWidget* widget, bool in)
 {
 
-  // set the default DataContainer
-  if(dataContainerList->count() > 0)
+  if (faderWidget)
   {
-    dataContainerList->setCurrentIndex(0);
+    faderWidget->close();
   }
-
-  // Select the first AttributeMatrix in the list
-  if(attributeMatrixList->count() > 0)
+  faderWidget = new FaderWidget(widget);
+  if(in)
   {
-    attributeMatrixList->setCurrentIndex(0);
+    setVisible(true);
+    faderWidget->setFadeIn();
+    connect(faderWidget, SIGNAL(animationComplete() ),
+          this, SLOT(show()));
   }
-
-  // Set the default AttributeArray
-  m_Filter->blockSignals(true);
-  if(attributeArrayList->count() > 0)
+  else
   {
-    attributeArrayList->setCurrentIndex(0);
+    faderWidget->setFadeOut();
+    connect(faderWidget, SIGNAL(animationComplete() ),
+          this, SLOT(hide()));
   }
-  m_Filter->blockSignals(false);
+  QColor color = DREAM3D::Defaults::BasicColor;
+  if(m_FilterParameter->getAdvanced()) { color = DREAM3D::Defaults::AdvancedColor; }
+  faderWidget->setStartColor(color);
+  faderWidget->start();
 }
-#endif

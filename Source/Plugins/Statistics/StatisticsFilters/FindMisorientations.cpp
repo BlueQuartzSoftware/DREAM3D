@@ -78,11 +78,10 @@ FindMisorientations::~FindMisorientations()
 void FindMisorientations::setupFilterParameters()
 {
   FilterParameterVector parameters;
+  QStringList linkedProps("AvgMisorientationsArrayName");
+  parameters.push_back(FilterParameter::NewConditional("Find Average Misorientation Per Feature", "FindAvgMisors", FilterParameterWidgetType::LinkedBooleanWidget, getFindAvgMisors(), true, linkedProps));
   parameters.push_back(FilterParameter::New("AvgMisorientations", "AvgMisorientationsArrayName", FilterParameterWidgetType::StringWidget, getAvgMisorientationsArrayName(), false, ""));
-  FilterParameter::Pointer param = parameters.back();
-  param->setConditional(true);
-  param->setConditionalProperty("FindAvgMisors");
-  param->setConditionalLabel("Find Average Misorientation Per Feature");
+
   parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
   parameters.push_back(FilterParameter::New("Neighbor List Array Name", "NeighborListArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getNeighborListArrayPath(), true, ""));
   parameters.push_back(FilterParameter::New("AvgQuats", "AvgQuatsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getAvgQuatsArrayPath(), true, ""));

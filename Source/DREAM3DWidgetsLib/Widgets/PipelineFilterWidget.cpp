@@ -56,14 +56,13 @@
 #include "DREAM3DLib/Common/FilterFactory.hpp"
 
 
-
 #include "DREAM3DWidgetsLib/FilterWidgetManager.h"
-
+#include "DREAM3DWidgetsLib/FilterParameterWidgets/LinkedBooleanWidget.h"
 
 // -----------------------------------------------------------------------------
 // Include the "moc" file that was generated for this file
 // -----------------------------------------------------------------------------
-#include "DREAM3DWidgetsLib/moc_PipelineFilterWidget.cpp"
+//#include "DREAM3DWidgetsLib/moc_PipelineFilterWidget.cpp"
 
 #define PADDING 5
 #define BORDER 2
@@ -87,8 +86,10 @@ PipelineFilterWidget::PipelineFilterWidget(QWidget* parent) :
   m_IsSelected(false),
   m_HasPreflightErrors(false),
   m_HasPreflightWarnings(false),
-  m_BasicInputsScrollWidget(NULL),
-  m_AdvancedInputScrollWidget(NULL),
+  m_BasicVerticalLayout(NULL),
+  m_AdvVerticalLayout(NULL),
+  m_BasicInputsWidget(NULL),
+  m_AdvancedInputWidget(NULL),
   m_Observer(NULL)
 {
   initialize(AbstractFilter::NullPointer() );
@@ -104,8 +105,8 @@ PipelineFilterWidget::PipelineFilterWidget(AbstractFilter::Pointer filter, IObse
   m_IsSelected(false),
   m_HasPreflightErrors(false),
   m_HasPreflightWarnings(false),
-  m_BasicInputsScrollWidget(NULL),
-  m_AdvancedInputScrollWidget(NULL),
+  m_BasicInputsWidget(NULL),
+  m_AdvancedInputWidget(NULL),
   m_Observer(observer)
 {
   initialize(filter);
@@ -131,26 +132,35 @@ void PipelineFilterWidget::initialize(AbstractFilter::Pointer filter)
   // Set the AbstractFilter for this class
   m_Filter = filter;
 
+  // Layout the widgets in the parent widget
+  layoutWidgets();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void PipelineFilterWidget::layoutWidgets()
+{
   // If the filter is valid then instantiate all the FilterParameterWidgets
   if (NULL != m_Filter.get())
   {
     // Create the Widget that will be placed into the Basic Inputs Scroll Area
 
-    m_BasicInputsScrollWidget = new QWidget(this);
+    m_BasicInputsWidget = new QWidget(this);
     QString basicname = QString::fromUtf8("basicInputsScrollWidget_") + m_Filter->getNameOfClass();
-    m_BasicInputsScrollWidget->setObjectName(basicname);
-    m_BasicInputsScrollWidget->setGeometry(QRect(0, 0, 250, 267));
-    QVBoxLayout* basicverticalLayout = new QVBoxLayout(m_BasicInputsScrollWidget);
+    m_BasicInputsWidget->setObjectName(basicname);
+    m_BasicInputsWidget->setGeometry(QRect(0, 0, 250, 267));
+    m_BasicVerticalLayout = new QVBoxLayout(m_BasicInputsWidget);
     basicname = QString::fromUtf8("verticalLayout") + m_Filter->getNameOfClass();
-    basicverticalLayout->setObjectName(basicname);
+    m_BasicVerticalLayout->setObjectName(basicname);
 
-    m_AdvancedInputScrollWidget = new QWidget(this);
+    m_AdvancedInputWidget = new QWidget(this);
     QString advname = QString::fromUtf8("advancedInputsScrollWidget_") + m_Filter->getNameOfClass();
-    m_AdvancedInputScrollWidget->setObjectName(advname);
-    m_AdvancedInputScrollWidget->setGeometry(QRect(0, 0, 250, 267));
-    QVBoxLayout* advverticalLayout = new QVBoxLayout(m_AdvancedInputScrollWidget);
+    m_AdvancedInputWidget->setObjectName(advname);
+    m_AdvancedInputWidget->setGeometry(QRect(0, 0, 250, 267));
+    m_AdvVerticalLayout = new QVBoxLayout(m_AdvancedInputWidget);
     advname = QString::fromUtf8("verticalLayout") + m_Filter->getNameOfClass();
-    advverticalLayout->setObjectName(advname);
+    m_AdvVerticalLayout->setObjectName(advname);
 
     m_BasicParameterCount = 0;
     m_AdvParameterCount = 0;
@@ -158,33 +168,36 @@ void PipelineFilterWidget::initialize(AbstractFilter::Pointer filter)
     // Set the Name of the filter into the FilterWidget
     filterName->setText(m_Filter->getHumanLabel() );
 
-    // Create all the FilterParameterWidget objects that can be displayed where ever the developer needs
+    // Get the FilterWidgetManagere instance so we can instantiate new FilterParameterWidgets
     FilterWidgetManager::Pointer fwm = FilterWidgetManager::Instance();
-
-    QVector<FilterParameter::Pointer> options = m_Filter->getFilterParameters();
-    for (QVector<FilterParameter::Pointer>::iterator iter = options.begin(); iter != options.end(); ++iter )
+    // Get a list of all the filterParameters from the filter.
+    QVector<FilterParameter::Pointer> filterParameters = m_Filter->getFilterParameters();
+    // Create all the FilterParameterWidget objects that can be displayed where ever the developer needs
+    for (QVector<FilterParameter::Pointer>::iterator iter = filterParameters.begin(); iter != filterParameters.end(); ++iter )
     {
-
       FilterParameter* option = (*iter).get();
 
       QWidget* w = fwm->createWidget(option, m_Filter.get());
+      m_PropertyToWidget.insert(option->getPropertyName(), w); // Update our Map of Filter Parameter Properties to the Widget
 
       if (NULL == w) { continue; }
       m_FilterParameterWidgets.push_back(w);
 
+      // Determine which layout to add the widget into
       if(option->getAdvanced() == true)
       {
-        w->setParent(m_AdvancedInputScrollWidget); // Set the parent for the widget
-        advverticalLayout->addWidget(w);
+        w->setParent(m_AdvancedInputWidget);// Set the parent for the widget
+        m_AdvVerticalLayout->addWidget(w);
         m_AdvParameterCount++;
       }
       else
       {
-        w->setParent(m_BasicInputsScrollWidget);
-        basicverticalLayout->addWidget(w); // Add the FilterWidget to the layout
+        w->setParent(m_BasicInputsWidget);
+        m_BasicVerticalLayout->addWidget(w);// Add the FilterWidget to the layout
         m_BasicParameterCount++;
       }
 
+      // Connect up some signals and slots
       connect(w, SIGNAL(parametersChanged() ),
               parent(), SLOT(preflightPipeline() ) );
       connect(w, SIGNAL(errorSettingFilterParameter(const QString&)),
@@ -192,8 +205,59 @@ void PipelineFilterWidget::initialize(AbstractFilter::Pointer filter)
 
     }
 
-  }
+#if 0
+    QSpacerItem* verticalSpacer = new QSpacerItem(20, 40, QSizePolicy::Minimum, QSizePolicy::Expanding);
+    m_BasicVerticalLayout->addItem(verticalSpacer);
 
+    verticalSpacer = new QSpacerItem(20, 40, QSizePolicy::Minimum, QSizePolicy::Expanding);
+    m_AdvVerticalLayout->addItem(verticalSpacer);
+#endif
+
+
+    // Figure out if we have any "Linked Boolean Widgets" to hook up to other
+    for (QVector<FilterParameter::Pointer>::iterator iter = filterParameters.begin(); iter != filterParameters.end(); ++iter )
+    {
+      FilterParameter* option = (*iter).get();
+      if(option->getWidgetType().compare(FilterParameterWidgetType::LinkedBooleanWidget) == 0 )
+      {
+        //  qDebug() << option->getHumanLabel() << " is conditional";
+        QStringList linkedProps = option->getConditionalProperties();
+
+        QStringListIterator iter = QStringListIterator(linkedProps);
+        QWidget* checkboxSource = m_PropertyToWidget[option->getPropertyName()];
+        LinkedBooleanWidget* lbw = qobject_cast<LinkedBooleanWidget*>(checkboxSource);
+        while(iter.hasNext())
+        {
+          QString propName = iter.next();
+          QWidget* w = m_PropertyToWidget[propName];
+          if(w)
+          {
+            connect(checkboxSource, SIGNAL(conditionalPropertyChanged(int)),
+                    w, SLOT(setLinkedConditionalState(int) ) );
+            if(lbw && lbw->getLinkedState() != Qt::Checked)
+            {
+              w->hide();
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void PipelineFilterWidget::adjustLayout(QWidget *w, int state)
+{
+  if (state == Qt::Checked)
+  {
+    w->show();
+  }
+  else
+  {
+    w->hide();
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -213,8 +277,6 @@ void PipelineFilterWidget::displayFilterParameterWidgetError(const QString& msg)
 // -----------------------------------------------------------------------------
 PipelineFilterWidget::~PipelineFilterWidget()
 {
-//   std::cout << "~PipelineFilterWidget() " << this  << "  " << m_Filter->getNameOfClass().toStdString()
-//   << "  " << m_Filter.use_count() << std::endl;
   m_Filter->setPreviousFilter(AbstractFilter::NullPointer());
   m_Filter->setNextFilter(AbstractFilter::NullPointer());
   m_Filter = AbstractFilter::NullPointer();
@@ -284,17 +346,17 @@ QVector<QWidget*>& PipelineFilterWidget::getFilterParameterWidgets()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QWidget* PipelineFilterWidget::getScrollWidgetContents()
+QWidget* PipelineFilterWidget::getBasicInputsWidget()
 {
-  return m_BasicInputsScrollWidget;
+  return m_BasicInputsWidget;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QWidget* PipelineFilterWidget::getAdvancedScrollWidgetContents()
+QWidget* PipelineFilterWidget::getAdvancedInputsWidget()
 {
-  return m_AdvancedInputScrollWidget;
+  return m_AdvancedInputWidget;
 }
 
 // -----------------------------------------------------------------------------

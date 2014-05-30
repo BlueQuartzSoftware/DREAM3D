@@ -99,16 +99,15 @@ FindLocalAverageCAxisMisalignments::~FindLocalAverageCAxisMisalignments()
 void FindLocalAverageCAxisMisalignments::setupFilterParameters()
 {
   FilterParameterVector parameters;
+  QStringList linkedProps("UnbiasedLocalCAxisMisalignmentsArrayName");
+  parameters.push_back(FilterParameter::NewConditional("Calculate Unbiased Local C-Axis Misalignments", "CalcUnbiasedAvg", FilterParameterWidgetType::LinkedBooleanWidget, getCalcUnbiasedAvg(), true, linkedProps));
   parameters.push_back(FilterParameter::New("UnbiasedLocalCAxisMisalignments", "UnbiasedLocalCAxisMisalignmentsArrayName", FilterParameterWidgetType::StringWidget, getUnbiasedLocalCAxisMisalignmentsArrayName(), false, ""));
-  FilterParameter::Pointer param = parameters.back();
-  param->setConditional(true);
-  param->setConditionalProperty("m_CalcUnbiasedAvg");
-  param->setConditionalLabel("Calculate Unbiased Local C-Axis Misalignments");
+
+  linkedProps.clear();
+  linkedProps << "LocalCAxisMisalignmentsArrayName";
+  parameters.push_back(FilterParameter::NewConditional("Calculate Local C-Axis Misalignments", "CalcBiasedAvg", FilterParameterWidgetType::LinkedBooleanWidget, getCalcBiasedAvg(), true, linkedProps));
   parameters.push_back(FilterParameter::New("LocalCAxisMisalignments", "LocalCAxisMisalignmentsArrayName", FilterParameterWidgetType::StringWidget, getLocalCAxisMisalignmentsArrayName(), false, ""));
-  param = parameters.back();
-  param->setConditional(true);
-  param->setConditionalProperty("m_CalciasedAvg");
-  param->setConditionalLabel("Calculate Local C-Axis Misalignments");
+
   parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
   parameters.push_back(FilterParameter::New("Neighbor List Array Name", "NeighborListArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getNeighborListArrayPath(), true, ""));
   parameters.push_back(FilterParameter::New("CAxis Misalignment List Array Name", "CAxisMisalignmentListArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getCAxisMisalignmentListArrayPath(), true, ""));

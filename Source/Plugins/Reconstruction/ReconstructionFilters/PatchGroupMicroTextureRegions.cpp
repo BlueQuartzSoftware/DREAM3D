@@ -405,7 +405,7 @@ int PatchGroupMicroTextureRegions::getSeed(int newFid)
 {
   setErrorCondition(0);
   size_t numfeatures = m_FeaturePhasesPtr.lock()->getNumberOfTuples();
-  int stop = 0;
+  //int stop = 0;
   avgCaxes[0] = 0.0f;
   avgCaxes[1] = 0.0f;
   avgCaxes[2] = 0.0f;
@@ -514,7 +514,7 @@ size_t PatchGroupMicroTextureRegions::determinePatchFeatureCentroids()
 #else
   typedef int64_t DimType;
 #endif
-  int64_t totalPoints = m->getTotalPoints();
+  //int64_t totalPoints = m->getTotalPoints();
   size_t zPatch, yPatch, xPatch;
 
   // round down to ensure you don't go out of bounds when quilting the landscape
@@ -542,7 +542,7 @@ size_t PatchGroupMicroTextureRegions::determinePatchFeatureCentroids()
   // patch-grouped.  The volume fraction will, somewhat
   // incorrectly, be the feature cell summation over the total
   // patch cells.
-  size_t totalFeatures = m_FeaturePhasesPtr.lock()->getNumberOfTuples();
+  //size_t totalFeatures = m_FeaturePhasesPtr.lock()->getNumberOfTuples();
 
   // determine patch centroids
   QVector<float> patchCenters(totalPatches * 5, 0.0f);
@@ -693,7 +693,7 @@ void PatchGroupMicroTextureRegions::determinePatchFeatureVolumes(size_t totalPat
 
   int xPoints = static_cast<int>(m->getXPoints());
   int yPoints = static_cast<int>(m->getYPoints());
-  int zPoints = static_cast<int>(m->getZPoints());
+  //int zPoints = static_cast<int>(m->getZPoints());
 
   float xRes = m->getXRes();
   float yRes = m->getYRes();
@@ -711,7 +711,7 @@ void PatchGroupMicroTextureRegions::determinePatchFeatureVolumes(size_t totalPat
     int fnum = m_FeatureIds[int(l * 0.3333333f)];
     patchFeatureList[pnum].push_back(fnum);
     // debugging line
-    int stop = 0;
+    //int stop = 0;
   }
 
   /*
@@ -878,43 +878,7 @@ AbstractFilter::Pointer PatchGroupMicroTextureRegions::newFilterInstance(bool co
   if(true == copyFilterParameters)
   {
     filter->setFilterParameters(getFilterParameters() );
-
-    //Loop over each Filter Parameter that is registered to the filter either through this class or a parent class
-    // and copy the value from the current instance of the object into the "new" instance that was just created
-    QVector<FilterParameter::Pointer> options = getFilterParameters(); // Get the current set of filter parameters
-    for (QVector<FilterParameter::Pointer>::iterator iter = options.begin(); iter != options.end(); ++iter )
-    {
-      FilterParameter* parameter = (*iter).get();
-      if (parameter->getWidgetType().compare(FilterParameterWidgetType::SeparatorWidget) == 0 )
-      {
-        continue; // Skip this type of filter parameter as it has nothing to do with anything in the filter.
-      }
-      // Get the property from the current instance of the filter
-      QVariant var = property(parameter->getPropertyName().toLatin1().constData());
-      bool ok = filter->setProperty(parameter->getPropertyName().toLatin1().constData(), var);
-      if(false == ok)
-      {
-        QString ss = QString("Error occurred transferring the Filter Parameter '%1' in Filter '%2' to the filter instance. The pipeline may run but the underlying filter will NOT be using the values from the GUI."
-                             " Please report this issue to the developers of this filter.").arg(parameter->getPropertyName()).arg(filter->getHumanLabel());
-        Q_ASSERT_X(ok, __FILE__, ss.toLatin1().constData());
-      }
-
-      if(parameter->isConditional() == true)
-      {
-        QVariant cond = property(parameter->getConditionalProperty().toLatin1().constData() );
-        ok = filter->setProperty(parameter->getConditionalProperty().toLatin1().constData(), cond);
-        if(false == ok)
-        {
-          QString ss = QString("%1::newFilterInstance()\nError occurred transferring the Filter Parameter '%2' in Filter '%3' to the filter instance. "
-                               " The filter parameter has a conditional property '%4'. The transfer of this property from the old filter to the new filter failed."
-                               " Please report this issue to the developers of this filter.").arg(filter->getNameOfClass())
-                       .arg(parameter->getPropertyName())
-                       .arg(filter->getHumanLabel())
-                       .arg(parameter->getConditionalProperty());
-          Q_ASSERT_X(ok, __FILE__, ss.toLatin1().constData());
-        }
-      }
-    }
+    copyFilterParameterInstanceVariables(filter.get());
   }
   return filter;
 }

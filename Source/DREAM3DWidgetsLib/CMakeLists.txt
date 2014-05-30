@@ -82,6 +82,7 @@ set(DREAM3DWidgetsLib_HDRS
   ${DREAM3DWidgetsLib_SOURCE_DIR}/IFilterWidgetFactory.h
   ${DREAM3DWidgetsLib_SOURCE_DIR}/PipelineFilterWidgetFactory.hpp
   ${DREAM3DWidgetsLib_SOURCE_DIR}/DREAM3DWidgetsLibDLLExport.h
+  ${DREAM3DWidgetsLib_SOURCE_DIR}/DREAM3DWidgetsLibConstants.h
 )
 
 set(DREAM3DWidgetsLib_MOC_HDRS

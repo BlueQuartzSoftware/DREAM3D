@@ -37,6 +37,7 @@
 
 #include <QtCore/QMetaProperty>
 
+#include "DREAM3DWidgetsLib/DREAM3DWidgetsLibConstants.h"
 
 #include "FilterParameterWidgetsDialogs.h"
 
@@ -108,54 +109,7 @@ void FloatVec3Widget::setupGui()
     zData->setText(QString::number(data.z) );
   }
 
-
-  // is the filter parameter tied to a boolean property of the Filter Instance, if it is then we need to make the check box visible
-  if(m_FilterParameter->isConditional() == true)
-  {
-    bool boolProp = m_Filter->property(m_FilterParameter->getConditionalProperty().toLatin1().constData() ).toBool();
-    conditionalCB->setChecked(boolProp);
-    conditionalCB->setText(m_FilterParameter->getConditionalLabel());
-    xData->setEnabled(boolProp);
-    yData->setEnabled(boolProp);
-    zData->setEnabled(boolProp);
-    on_conditionalCB_stateChanged(conditionalCB->checkState());
-  }
-  else
-  {
-    widgetLayout->removeWidget(conditionalCB);
-    conditionalCB->deleteLater();
-    widgetLayout->removeWidget(linkLeft);
-    linkLeft->deleteLater();
-    widgetLayout->removeWidget(linkRight);
-    linkRight->deleteLater();
-  }
-
-
 }
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void FloatVec3Widget::on_conditionalCB_stateChanged(int state)
-{
-  bool boolProp = conditionalCB->isChecked();
-  xData->setEnabled(boolProp);
-  xData->setVisible(boolProp);
-  yData->setEnabled(boolProp);
-  yData->setVisible(boolProp);
-  zData->setEnabled(boolProp);
-  zData->setVisible(boolProp);
-
-  label->setVisible(boolProp);
-  linkLeft->setVisible(boolProp);
-  linkRight->setVisible(boolProp);
-
-  m_DidCausePreflight = true;
-  emit parametersChanged();
-  m_DidCausePreflight = false;
-}
-
-
 
 // -----------------------------------------------------------------------------
 //
@@ -184,16 +138,6 @@ void FloatVec3Widget::filterNeedsInputParameters(AbstractFilter* filter)
     FilterParameterWidgetsDialogs::ShowCouldNotSetFilterParameter(m_Filter, m_FilterParameter);
   }
 
-  if(m_FilterParameter->isConditional() )
-  {
-    QVariant var(conditionalCB->isChecked());
-    ok = filter->setProperty(m_FilterParameter->getConditionalProperty().toLatin1().constData(), var);
-    if(false == ok)
-    {
-      FilterParameterWidgetsDialogs::ShowCouldNotSetConditionalFilterParameter(m_Filter, m_FilterParameter);
-    }
-  }
-
 }
 
 // -----------------------------------------------------------------------------
@@ -210,4 +154,43 @@ void FloatVec3Widget::beforePreflight()
 void FloatVec3Widget::afterPreflight()
 {
 
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void FloatVec3Widget::setLinkedConditionalState(int state)
+{
+  bool boolProp = (state == Qt::Checked);
+  fadeWidget(this, boolProp);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void FloatVec3Widget::fadeWidget(QWidget* widget, bool in)
+{
+
+  if (faderWidget)
+  {
+    faderWidget->close();
+  }
+  faderWidget = new FaderWidget(widget);
+  if(in)
+  {
+    setVisible(true);
+    faderWidget->setFadeIn();
+    connect(faderWidget, SIGNAL(animationComplete() ),
+          this, SLOT(show()));
+  }
+  else
+  {
+    faderWidget->setFadeOut();
+    connect(faderWidget, SIGNAL(animationComplete() ),
+          this, SLOT(hide()));
+  }
+  QColor color = DREAM3D::Defaults::BasicColor;
+  if(m_FilterParameter->getAdvanced()) { color = DREAM3D::Defaults::AdvancedColor; }
+  faderWidget->setStartColor(color);
+  faderWidget->start();
 }

@@ -78,11 +78,10 @@ void MinSize::setupFilterParameters()
 {
   FilterParameterVector parameters;
   parameters.push_back(FilterParameter::New("Minimum Allowed Feature Size", "MinAllowedFeatureSize", FilterParameterWidgetType::IntWidget, getMinAllowedFeatureSize(), false, "Pixels"));
+  QStringList linkedProps("PhaseNumber");
+  parameters.push_back(FilterParameter::NewConditional("Apply to Single Phase Only", "ApplyToSinglePhase", FilterParameterWidgetType::LinkedBooleanWidget, getApplyToSinglePhase(), true, linkedProps));
   parameters.push_back(FilterParameter::New("Phase Number to Run Min Size Filter on", "PhaseNumber", FilterParameterWidgetType::IntWidget, getPhaseNumber(), false));
-  FilterParameter::Pointer param = parameters.back();
-  param->setConditional(true);
-  param->setConditionalProperty("ApplyToSinglePhase");
-  param->setConditionalLabel("Apply to Single Phase Only");
+
   parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
   parameters.push_back(FilterParameter::New("FeatureIds", "FeatureIdsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeatureIdsArrayPath(), true, ""));
   parameters.push_back(FilterParameter::New("FeaturePhases", "FeaturePhasesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeaturePhasesArrayPath(), true, ""));
