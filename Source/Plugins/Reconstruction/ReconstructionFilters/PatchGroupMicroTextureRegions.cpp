@@ -405,7 +405,7 @@ int PatchGroupMicroTextureRegions::getSeed(int newFid)
 {
   setErrorCondition(0);
   size_t numfeatures = m_FeaturePhasesPtr.lock()->getNumberOfTuples();
-  int stop = 0;
+  //int stop = 0;
   avgCaxes[0] = 0.0f;
   avgCaxes[1] = 0.0f;
   avgCaxes[2] = 0.0f;
@@ -514,7 +514,7 @@ size_t PatchGroupMicroTextureRegions::determinePatchFeatureCentroids()
 #else
   typedef int64_t DimType;
 #endif
-  int64_t totalPoints = m->getTotalPoints();
+  //int64_t totalPoints = m->getTotalPoints();
   size_t zPatch, yPatch, xPatch;
 
   // round down to ensure you don't go out of bounds when quilting the landscape
@@ -542,7 +542,7 @@ size_t PatchGroupMicroTextureRegions::determinePatchFeatureCentroids()
   // patch-grouped.  The volume fraction will, somewhat
   // incorrectly, be the feature cell summation over the total
   // patch cells.
-  size_t totalFeatures = m_FeaturePhasesPtr.lock()->getNumberOfTuples();
+  //size_t totalFeatures = m_FeaturePhasesPtr.lock()->getNumberOfTuples();
 
   // determine patch centroids
   QVector<float> patchCenters(totalPatches * 5, 0.0f);
@@ -693,7 +693,7 @@ void PatchGroupMicroTextureRegions::determinePatchFeatureVolumes(size_t totalPat
 
   int xPoints = static_cast<int>(m->getXPoints());
   int yPoints = static_cast<int>(m->getYPoints());
-  int zPoints = static_cast<int>(m->getZPoints());
+  //int zPoints = static_cast<int>(m->getZPoints());
 
   float xRes = m->getXRes();
   float yRes = m->getYRes();
@@ -711,7 +711,7 @@ void PatchGroupMicroTextureRegions::determinePatchFeatureVolumes(size_t totalPat
     int fnum = m_FeatureIds[int(l * 0.3333333f)];
     patchFeatureList[pnum].push_back(fnum);
     // debugging line
-    int stop = 0;
+    //int stop = 0;
   }
 
   /*

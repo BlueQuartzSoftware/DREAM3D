@@ -110,14 +110,14 @@ void GroupMicroTextureRegions::setupFilterParameters()
   FilterParameterVector parameters;
 
   //These are parameters that the super class needs
+  QStringList linkedProps("NonContiguousNeighborListArrayPath");
+  parameters.push_back(FilterParameter::NewConditional("Use Non-Contiguous Neighbors", "UseNonContiguousNeighbors", FilterParameterWidgetType::LinkedBooleanWidget, getUseNonContiguousNeighbors(), true, linkedProps));
   parameters.push_back(FilterParameter::New("NonContiguous NeighborList Array", "NonContiguousNeighborListArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getNonContiguousNeighborListArrayPath(), false, ""));
-  FilterParameter::Pointer param = parameters.back();
-  param->setConditional(true);
-  param->setConditionalProperty("UseNonContiguousNeighbors");
-  param->setConditionalLabel("Use Non-Contiguous Neighbors");
+
   parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "QString", true));
   parameters.push_back(FilterParameter::New("Contiguous NeighborList Array", "ContiguousNeighborListArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getContiguousNeighborListArrayPath(), true, ""));
 
+  // These are specific to this class
   parameters.push_front(FilterParameter::New("Group C-Axes With Running Average", "UseRunningAverage", FilterParameterWidgetType::BooleanWidget, getUseRunningAverage(), false));
   parameters.push_front(FilterParameter::New("C-Axis Alignment Tolerance", "CAxisTolerance", FilterParameterWidgetType::DoubleWidget, getCAxisTolerance(), false, "Degrees"));
   parameters.push_back(FilterParameter::New("FeatureIds", "FeatureIdsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeatureIdsArrayPath(), true, ""));
