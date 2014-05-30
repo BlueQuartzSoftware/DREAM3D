@@ -95,11 +95,10 @@ void FitCorrelatedFeatureData::setupFilterParameters()
     parameters.push_back(parameter);
   }
   parameters.push_back(FilterParameter::New("Number Of Bins For Correlated Array", "NumberOfCorrelatedBins", FilterParameterWidgetType::IntWidget, getNumberOfCorrelatedBins(), false));
+  QStringList linkedProps("BiasedFeaturesArrayPath");
+  parameters.push_back(FilterParameter::NewConditional("Remove Biased Features", "RemoveBiasedFeatures", FilterParameterWidgetType::LinkedBooleanWidget, getRemoveBiasedFeatures(), true, linkedProps));
   parameters.push_back(FilterParameter::New("BiasedFeatures", "BiasedFeaturesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getBiasedFeaturesArrayPath(), false, ""));
-  FilterParameter::Pointer param = parameters.back();
-  param->setConditional(true);
-  param->setConditionalProperty("RemoveBiasedFeatures");
-  param->setConditionalLabel("Remove Biased Features");
+
   parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
   parameters.push_back(FilterParameter::New("FeaturePhases", "FeaturePhasesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeaturePhasesArrayPath(), true, ""));
   parameters.push_back(FilterParameter::New("Cell Ensemble Attribute Matrix Name", "CellEnsembleAttributeMatrixName", FilterParameterWidgetType::AttributeMatrixSelectionWidget, getCellEnsembleAttributeMatrixName(), true, ""));
@@ -171,7 +170,7 @@ void FitCorrelatedFeatureData::dataCheck()
 
   int numComp = 0;
   QString distType("UNKNOWN");
-// Determining number of components and name given distribution type
+  // Determining number of components and name given distribution type
   if (m_DistributionType == DREAM3D::DistributionType::Beta) { distType = "Beta", numComp = DREAM3D::DistributionType::BetaColumnCount; }
   else if (m_DistributionType == DREAM3D::DistributionType::LogNormal) { distType = "LogNormal", numComp = DREAM3D::DistributionType::LogNormalColumnCount; }
   else if (m_DistributionType == DREAM3D::DistributionType::Power) { distType = "PowerLaw", numComp = DREAM3D::DistributionType::PowerLawColumnCount; }
@@ -230,7 +229,7 @@ void fitData(IDataArray::Pointer inputData, float* ensembleArray, int32_t* eIds,
   QString distType;
   int numComp = 1;
 
-// Determining number of components and name given distribution type
+  // Determining number of components and name given distribution type
   if (dType == DREAM3D::DistributionType::Beta) { distType = "Beta", numComp = DREAM3D::DistributionType::BetaColumnCount; }
   else if (dType == DREAM3D::DistributionType::LogNormal) { distType = "LogNormal", numComp = DREAM3D::DistributionType::LogNormalColumnCount; }
   else if (dType == DREAM3D::DistributionType::Power) { distType = "PowerLaw", numComp = DREAM3D::DistributionType::PowerLawColumnCount; }

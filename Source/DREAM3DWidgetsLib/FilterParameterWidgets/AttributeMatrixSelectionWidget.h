@@ -37,11 +37,11 @@
 #define _AttributeMatrixSelectionWidget_H_
 
 
-
-
 #include <QtCore/QObject>
+#include <QtCore/QPointer>
 #include <QtGui/QWidget>
 
+#include "QtSupport/FaderWidget.h"
 
 #include "DREAM3DLib/Common/AbstractFilter.h"
 
@@ -92,8 +92,8 @@ class DREAM3DWidgetsLib_EXPORT AttributeMatrixSelectionWidget : public QWidget, 
     void on_dataContainerList_currentIndexChanged(int index);
 
     void on_attributeMatrixList_currentIndexChanged(int index);
-    void on_conditionalCB_stateChanged(int state);
-
+    void setLinkedConditionalState(int state);
+    void fadeWidget(QWidget* widget, bool in);
 
   protected:
     void populateComboBoxes();
@@ -111,6 +111,7 @@ class DREAM3DWidgetsLib_EXPORT AttributeMatrixSelectionWidget : public QWidget, 
     AbstractFilter*   m_Filter;
     FilterParameter*  m_FilterParameter;
     bool m_DidCausePreflight;
+    QPointer<FaderWidget> faderWidget;
 
     DataContainerArrayProxy m_DcaProxy;
 

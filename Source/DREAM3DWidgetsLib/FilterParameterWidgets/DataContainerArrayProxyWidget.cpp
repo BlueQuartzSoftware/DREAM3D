@@ -38,6 +38,7 @@
 #include <QtCore/QMetaProperty>
 #include <QtGui/QStandardItemModel>
 #include <QtGui/QItemSelectionModel>
+#include "DREAM3DWidgetsLib/DREAM3DWidgetsLibConstants.h"
 
 #include "FilterParameterWidgetsDialogs.h"
 
@@ -112,53 +113,8 @@ void DataContainerArrayProxyWidget::setupGui()
     //m_DcaProxy.print("DataContainerArrayProxyWidget::setupGui()");
   }
 
-#if 0
-  // is the filter parameter tied to a boolean property of the Filter Instance, if it is then we need to make the check box visible
-  if(m_FilterParameter->isConditional() == true)
-  {
-    bool boolProp = m_Filter->property(m_FilterParameter->getConditionalProperty().toLatin1().constData() ).toBool();
-    conditionalCB->setChecked(boolProp);
-    conditionalCB->setText(m_FilterParameter->getConditionalLabel());
-    dataContainerList->setEnabled(boolProp);
-    attributeMatrixList->setEnabled(boolProp);
-    attributeArrayList->setEnabled(boolProp);
-    on_conditionalCB_stateChanged(conditionalCB->checkState());
-  }
-  else
-  {
-    widgetLayout->removeWidget(conditionalCB);
-    conditionalCB->deleteLater();
-    widgetLayout->removeWidget(linkLeft);
-    linkLeft->deleteLater();
-    widgetLayout->removeWidget(linkRight);
-    linkRight->deleteLater();
-  }
-#endif
-
 }
 
-#if 0
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void DataContainerArrayProxyWidget::on_conditionalCB_stateChanged(int state)
-{
-  bool boolProp = conditionalCB->isChecked();
-  dataContainerList->setEnabled(boolProp);
-  dataContainerList->setVisible(boolProp);
-  attributeMatrixList->setEnabled(boolProp);
-  attributeMatrixList->setVisible(boolProp);
-  dataArrayName->setEnabled(boolProp);
-  dataArrayName->setVisible(boolProp);
-
-  label->setVisible(boolProp);
-  linkLeft->setVisible(boolProp);
-  linkRight->setVisible(boolProp);
-  m_DidCausePreflight = true;
-  emit parametersChanged();
-  m_DidCausePreflight = false;
-}
-#endif
 
 // -----------------------------------------------------------------------------
 //
@@ -625,4 +581,43 @@ void DataContainerArrayProxyWidget::beforePreflight()
 void DataContainerArrayProxyWidget::afterPreflight()
 {
   // qDebug() << m_Filter->getNameOfClass() << " DataContainerArrayProxyWidget::afterPreflight()";
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DataContainerArrayProxyWidget::setLinkedConditionalState(int state)
+{
+  bool boolProp = (state == Qt::Checked);
+  fadeWidget(this, boolProp);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DataContainerArrayProxyWidget::fadeWidget(QWidget* widget, bool in)
+{
+
+  if (faderWidget)
+  {
+    faderWidget->close();
+  }
+  faderWidget = new FaderWidget(widget);
+  if(in)
+  {
+    setVisible(true);
+    faderWidget->setFadeIn();
+    connect(faderWidget, SIGNAL(animationComplete() ),
+          this, SLOT(show()));
+  }
+  else
+  {
+    faderWidget->setFadeOut();
+    connect(faderWidget, SIGNAL(animationComplete() ),
+          this, SLOT(hide()));
+  }
+  QColor color = DREAM3D::Defaults::BasicColor;
+  if(m_FilterParameter->getAdvanced()) { color = DREAM3D::Defaults::AdvancedColor; }
+  faderWidget->setStartColor(color);
+  faderWidget->start();
 }

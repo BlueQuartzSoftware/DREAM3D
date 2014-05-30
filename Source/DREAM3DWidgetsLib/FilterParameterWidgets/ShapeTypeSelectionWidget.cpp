@@ -44,6 +44,7 @@
 #include "DREAM3DLib/Common/ShapeType.h"
 #include "DREAM3DLib/DataContainers/DataArrayPath.h"
 #include "DREAM3DLib/Utilities/QMetaObjectUtilities.h"
+#include "DREAM3DWidgetsLib/DREAM3DWidgetsLibConstants.h"
 
 #include "FilterParameterWidgetsDialogs.h"
 
@@ -258,5 +259,43 @@ void ShapeTypeSelectionWidget::filterNeedsInputParameters(AbstractFilter* filter
     FilterParameterWidgetsDialogs::ShowCouldNotSetFilterParameter(m_Filter, m_FilterParameter);
   }
 
+}
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ShapeTypeSelectionWidget::setLinkedConditionalState(int state)
+{
+  bool boolProp = (state == Qt::Checked);
+  fadeWidget(this, boolProp);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ShapeTypeSelectionWidget::fadeWidget(QWidget* widget, bool in)
+{
+
+  if (faderWidget)
+  {
+    faderWidget->close();
+  }
+  faderWidget = new FaderWidget(widget);
+  if(in)
+  {
+    setVisible(true);
+    faderWidget->setFadeIn();
+    connect(faderWidget, SIGNAL(animationComplete() ),
+          this, SLOT(show()));
+  }
+  else
+  {
+    faderWidget->setFadeOut();
+    connect(faderWidget, SIGNAL(animationComplete() ),
+          this, SLOT(hide()));
+  }
+  QColor color = DREAM3D::Defaults::BasicColor;
+  if(m_FilterParameter->getAdvanced()) { color = DREAM3D::Defaults::AdvancedColor; }
+  faderWidget->setStartColor(color);
+  faderWidget->start();
 }

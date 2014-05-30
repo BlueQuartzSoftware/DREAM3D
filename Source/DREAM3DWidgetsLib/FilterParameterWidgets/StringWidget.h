@@ -84,10 +84,14 @@ class DREAM3DWidgetsLib_EXPORT StringWidget : public QWidget, private Ui::String
 
     void widgetChanged(const QString& msg);
     void on_value_returnPressed();
-    void on_conditionalCB_stateChanged(int state);
     void on_applyChangesBtn_clicked();
 
     void hideButton();
+
+    void setLinkedConditionalState(int state);
+    void fadeWidget(QWidget* widget, bool in);
+
+
 
   signals:
     void errorSettingFilterParameter(const QString& msg);

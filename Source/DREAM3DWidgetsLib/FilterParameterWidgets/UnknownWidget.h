@@ -37,10 +37,11 @@
 #define _UnknownWidget_H_
 
 
-
-
 #include <QtCore/QObject>
+#include <QtCore/QPointer>
 #include <QtGui/QWidget>
+
+#include "QtSupport/FaderWidget.h"
 
 
 #include "DREAM3DLib/Common/AbstractFilter.h"
@@ -80,6 +81,8 @@ class DREAM3DWidgetsLib_EXPORT UnknownWidget : public QWidget, private Ui::Unkno
     void beforePreflight();
     void afterPreflight();
     void filterNeedsInputParameters(AbstractFilter* filter);
+    void setLinkedConditionalState(int state);
+    void fadeWidget(QWidget* widget, bool in);
 
   signals:
     void errorSettingFilterParameter(const QString& msg);
@@ -88,6 +91,7 @@ class DREAM3DWidgetsLib_EXPORT UnknownWidget : public QWidget, private Ui::Unkno
   private:
     AbstractFilter*   m_Filter;
     FilterParameter*  m_FilterParameter;
+    QPointer<FaderWidget> faderWidget;
 
     UnknownWidget(const UnknownWidget&); // Copy Constructor Not Implemented
     void operator=(const UnknownWidget&); // Operator '=' Not Implemented

@@ -67,18 +67,20 @@ GenerateEnsembleStatistics::GenerateEnsembleStatistics()  :
   m_AvgQuatsArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, DREAM3D::FeatureData::AvgQuats),
   m_PhaseTypesArrayName(DREAM3D::EnsembleData::PhaseTypes),
   m_StatisticsArrayName(DREAM3D::EnsembleData::Statistics),
-  m_SizeCorrelationResolution(1),
-  m_SizeDistribution(false),
+  m_CalculateMorphologicalStats(true),
+  m_ComputeSizeDistribution(false),
   m_SizeDistributionFitType(DREAM3D::DistributionType::LogNormal),
-  m_AspectRatioDistribution(false),
+  m_ComputeAspectRatioDistribution(false),
   m_AspectRatioDistributionFitType(DREAM3D::DistributionType::Beta),
-  m_Omega3Distribution(false),
+  m_ComputeOmega3Distribution(false),
   m_Omega3DistributionFitType(DREAM3D::DistributionType::Beta),
-  m_NeighborhoodDistribution(false),
+  m_ComputeNeighborhoodDistribution(false),
   m_NeighborhoodDistributionFitType(DREAM3D::DistributionType::LogNormal),
+  m_CalculateCrystallographicStats(false),
   m_CalculateODF(false),
   m_CalculateMDF(false),
   m_CalculateAxisODF(false),
+  m_SizeCorrelationResolution(1),
   m_AvgQuatsArrayName(DREAM3D::FeatureData::AvgQuats),
   m_AvgQuats(NULL),
   m_FeatureEulerAnglesArrayName(DREAM3D::FeatureData::EulerAngles),
@@ -124,32 +126,86 @@ GenerateEnsembleStatistics::~GenerateEnsembleStatistics()
 // -----------------------------------------------------------------------------
 void GenerateEnsembleStatistics::setupFilterParameters()
 {
+
+  QVector<QString> choices;
+  choices.push_back("Beta");
+  choices.push_back("Log-Normal");
+  choices.push_back("Power");
+
   FilterParameterVector parameters;
-  parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
-  parameters.push_back(FilterParameter::New("Neighbor List Array Name", "NeighborListArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getNeighborListArrayPath(), true, ""));
-  parameters.push_back(FilterParameter::New("Shared Surface Area List Array Name", "SharedSurfaceAreaListArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getSharedSurfaceAreaListArrayPath(), true, ""));
-  parameters.push_back(FilterParameter::New("FeaturePhases", "FeaturePhasesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeaturePhasesArrayPath(), true, ""));
-  parameters.push_back(FilterParameter::New("BiasedFeatures", "BiasedFeaturesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getBiasedFeaturesArrayPath(), true, ""));
-  parameters.push_back(FilterParameter::New("EquivalentDiameters", "EquivalentDiametersArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getEquivalentDiametersArrayPath(), true, ""));
-  parameters.push_back(FilterParameter::New("Neighborhoods", "NeighborhoodsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getNeighborhoodsArrayPath(), true, ""));
-  parameters.push_back(FilterParameter::New("AspectRatios", "AspectRatiosArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getAspectRatiosArrayPath(), true, ""));
-  parameters.push_back(FilterParameter::New("Omega3s", "Omega3sArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getOmega3sArrayPath(), true, ""));
-  parameters.push_back(FilterParameter::New("AxisEulerAngles", "AxisEulerAnglesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getAxisEulerAnglesArrayPath(), true, ""));
-  parameters.push_back(FilterParameter::New("CrystalStructures", "CrystalStructuresArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getCrystalStructuresArrayPath(), true, ""));
-  parameters.push_back(FilterParameter::New("SurfaceFeatures", "SurfaceFeaturesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getSurfaceFeaturesArrayPath(), true, ""));
-  parameters.push_back(FilterParameter::New("Volumes", "VolumesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getVolumesArrayPath(), true, ""));
-  parameters.push_back(FilterParameter::New("FeatureEulerAngles", "FeatureEulerAnglesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeatureEulerAnglesArrayPath(), true, ""));
-  parameters.push_back(FilterParameter::New("AvgQuats", "AvgQuatsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getAvgQuatsArrayPath(), true, ""));
-  parameters.push_back(FilterParameter::New("Cell Ensemble Attribute Matrix Name", "CellEnsembleAttributeMatrixName", FilterParameterWidgetType::AttributeMatrixSelectionWidget, getCellEnsembleAttributeMatrixName(), true, ""));
-  parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
-  parameters.push_back(FilterParameter::New("PhaseTypes", "PhaseTypesArrayName", FilterParameterWidgetType::StringWidget, getPhaseTypesArrayName(), true, ""));
-  parameters.push_back(FilterParameter::New("Statistics", "StatisticsArrayName", FilterParameterWidgetType::StringWidget, getStatisticsArrayName(), true, ""));
+
+
+  parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "", false));
+  parameters.push_back(FilterParameter::New("Size Correlation Resolution", "SizeCorrelationResolution", FilterParameterWidgetType::DoubleWidget, getSizeCorrelationResolution(), false));
+
+  parameters.push_back(FilterParameter::New("Phase Types Array", "PhaseTypesArrayName", FilterParameterWidgetType::StringWidget, getPhaseTypesArrayName(), false, ""));
+
+  QStringList linkedProps;
+  linkedProps << "SizeDistributionFitType" << "BiasedFeaturesArrayPath" << "EquivalentDiametersArrayPath";
+  linkedProps << "AspectRatioDistributionFitType" << "AspectRatiosArrayPath";
+  linkedProps << "Omega3DistributionFitType" << "Omega3sArrayPath";
+  linkedProps << "NeighborhoodDistributionFitType" << "NeighborhoodsArrayPath";
+  parameters.push_back(FilterParameter::NewConditional("Calculate Morphological Stats", "CalculateMorphologicalStats", FilterParameterWidgetType::LinkedBooleanWidget, getCalculateMorphologicalStats(), false, linkedProps));
+
+
+  parameters.push_back(ChoiceFilterParameter::New("Size Distribution Fit Type", "SizeDistributionFitType", getSizeDistributionFitType(), choices, false));
+  parameters.push_back(FilterParameter::New("Biased Features", "BiasedFeaturesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getBiasedFeaturesArrayPath(), false, ""));
+  parameters.push_back(FilterParameter::New("Equivalent Diameters", "EquivalentDiametersArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getEquivalentDiametersArrayPath(), false, ""));
+
+
+  parameters.push_back(ChoiceFilterParameter::New("Aspect Ratio Distribution Fit Type", "AspectRatioDistributionFitType", getAspectRatioDistributionFitType(), choices, false));
+  parameters.push_back(FilterParameter::New("Aspect Ratios", "AspectRatiosArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getAspectRatiosArrayPath(), false, ""));
+
+
+  parameters.push_back(ChoiceFilterParameter::New("Omega 3 Distribution Fit Type", "Omega3DistributionFitType", getOmega3DistributionFitType(), choices, false));
+  parameters.push_back(FilterParameter::New("Omega 3s", "Omega3sArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getOmega3sArrayPath(), false, ""));
+
+
+  parameters.push_back(ChoiceFilterParameter::New("Neighborhood Distribution Fit Type", "NeighborhoodDistributionFitType", getNeighborhoodDistributionFitType(), choices, false));
+  parameters.push_back(FilterParameter::New("Neighborhoods", "NeighborhoodsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getNeighborhoodsArrayPath(), false, ""));
+
+
+  linkedProps.clear();
+  linkedProps << "CrystalStructuresArrayPath" << "SurfaceFeaturesArrayPath";
+  linkedProps << "CalculateODF" << "VolumesArrayPath" << "FeatureEulerAnglesArrayPath";
+  linkedProps << "CalculateMDF" << "SharedSurfaceAreaListArrayPath" << "AvgQuatsArrayPath" << "NeighborListArrayPath";
+  linkedProps << "CalculateAxisODF" << "AxisEulerAnglesArrayPath";
+  parameters.push_back(FilterParameter::NewConditional("Calculate Crystallographic Stats", "CalculateCrystallographicStats", FilterParameterWidgetType::LinkedBooleanWidget, getCalculateCrystallographicStats(), false, linkedProps));
+
+  parameters.push_back(FilterParameter::New("Crystal Structures", "CrystalStructuresArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getCrystalStructuresArrayPath(), false, ""));
+  parameters.push_back(FilterParameter::New("Surface Features", "SurfaceFeaturesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getSurfaceFeaturesArrayPath(), false, ""));
+
+  parameters.push_back(FilterParameter::New("ODF Input Data", "", FilterParameterWidgetType::SeparatorWidget, "", false));
+  //parameters.push_back(FilterParameter::New("Calculate ODF", "CalculateODF", FilterParameterWidgetType::BooleanWidget, getCalculateODF(), false));
+  parameters.push_back(FilterParameter::New("Volumes", "VolumesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getVolumesArrayPath(), false, ""));
+  parameters.push_back(FilterParameter::New("Feature Euler Angles", "FeatureEulerAnglesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeatureEulerAnglesArrayPath(), false, ""));
+
+  parameters.push_back(FilterParameter::New("MDF Input Data", "", FilterParameterWidgetType::SeparatorWidget, "", false));
+  //parameters.push_back(FilterParameter::New("Calculate MDF", "CalculateMDF", FilterParameterWidgetType::BooleanWidget, getCalculateMDF(), false));
+  parameters.push_back(FilterParameter::New("Shared Surface Area List Array Name", "SharedSurfaceAreaListArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getSharedSurfaceAreaListArrayPath(), false, ""));
+  parameters.push_back(FilterParameter::New("Avgerage Quats", "AvgQuatsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getAvgQuatsArrayPath(), false, ""));
+  parameters.push_back(FilterParameter::New("Neighbor List Array Name", "NeighborListArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getNeighborListArrayPath(), false, ""));
+
+
+  parameters.push_back(FilterParameter::New("Axis ODF Input Data", "", FilterParameterWidgetType::SeparatorWidget, "", false));
+  //parameters.push_back(FilterParameter::New("Calculate Axis ODF", "CalculateAxisODF", FilterParameterWidgetType::BooleanWidget, getCalculateAxisODF(), false));
+  parameters.push_back(FilterParameter::New("Axis Euler Angles", "AxisEulerAnglesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getAxisEulerAnglesArrayPath(), false, ""));
+
+
+  parameters.push_back(FilterParameter::New("Feature Phases", "FeaturePhasesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeaturePhasesArrayPath(), false, ""));
+  parameters.push_back(FilterParameter::New("Cell Ensemble Attribute Matrix Name", "CellEnsembleAttributeMatrixName", FilterParameterWidgetType::AttributeMatrixSelectionWidget, getCellEnsembleAttributeMatrixName(), false, ""));
+
+
+  parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "", false));
+
+  parameters.push_back(FilterParameter::New("Created Statistics Array Name", "StatisticsArrayName", FilterParameterWidgetType::StringWidget, getStatisticsArrayName(), false, ""));
   setFilterParameters(parameters);
 }
 // -----------------------------------------------------------------------------
 void GenerateEnsembleStatistics::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
+  setCalculateMorphologicalStats(reader->readValue("CalculateMorphologicalStats", getCalculateMorphologicalStats()));
   setCellEnsembleAttributeMatrixName(reader->readDataArrayPath("CellEnsembleAttributeMatrixName", getCellEnsembleAttributeMatrixName()));
   setPhaseTypesArrayName(reader->readString("PhaseTypesArrayName", getPhaseTypesArrayName() ) );
   setStatisticsArrayName(reader->readString("StatisticsArrayName", getStatisticsArrayName() ) );
@@ -165,14 +221,15 @@ void GenerateEnsembleStatistics::readFilterParameters(AbstractFilterParametersRe
   setEquivalentDiametersArrayPath(reader->readDataArrayPath("EquivalentDiametersArrayPath", getEquivalentDiametersArrayPath() ) );
   setBiasedFeaturesArrayPath(reader->readDataArrayPath("BiasedFeaturesArrayPath", getBiasedFeaturesArrayPath() ) );
   setFeaturePhasesArrayPath(reader->readDataArrayPath("FeaturePhasesArrayPath", getFeaturePhasesArrayPath() ) );
-  setSizeDistribution( reader->readValue("SizeDistribution", getSizeDistribution() ) );
+  setComputeSizeDistribution( reader->readValue("ComputeSizeDistribution", getComputeSizeDistribution() ) );
   setSizeDistributionFitType( reader->readValue("SizeDistributionFitType", getSizeDistributionFitType() ) );
-  setAspectRatioDistribution( reader->readValue("AspectRatioDistribution", getAspectRatioDistribution() ) );
+  setComputeAspectRatioDistribution( reader->readValue("ComputeAspectRatioDistribution", getComputeAspectRatioDistribution() ) );
   setAspectRatioDistributionFitType( reader->readValue("AspectRatioDistributionFitType", getAspectRatioDistributionFitType() ) );
-  setOmega3Distribution( reader->readValue("Omega3Distribution", getOmega3Distribution() ) );
+  setComputeOmega3Distribution( reader->readValue("ComputeOmega3Distribution", getComputeOmega3Distribution() ) );
   setOmega3DistributionFitType( reader->readValue("Omega3DistributionFitType", getOmega3DistributionFitType() ) );
-  setNeighborhoodDistribution( reader->readValue("NeighborhoodDistribution", getNeighborhoodDistribution() ) );
+  setComputeNeighborhoodDistribution( reader->readValue("ComputeNeighborhoodDistribution", getComputeNeighborhoodDistribution() ) );
   setNeighborhoodDistributionFitType( reader->readValue("NeighborhoodDistributionFitType", getNeighborhoodDistributionFitType() ) );
+  setCalculateCrystallographicStats( reader->readValue("CalculateCrystallographicStats", getCalculateCrystallographicStats() ) );
   setCalculateODF( reader->readValue("CalculateODF", getCalculateODF() ) );
   setCalculateMDF( reader->readValue("CalculateMDF", getCalculateMDF() ) );
   setCalculateAxisODF( reader->readValue("CalculateAxisODF", getCalculateAxisODF() ) );
@@ -187,6 +244,7 @@ void GenerateEnsembleStatistics::readFilterParameters(AbstractFilterParametersRe
 int GenerateEnsembleStatistics::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
+  writer->writeValue("CalculateMorphologicalStats", getCalculateMorphologicalStats() );
   writer->writeValue("CellEnsembleAttributeMatrixName", getCellEnsembleAttributeMatrixName());
   writer->writeValue("PhaseTypesArrayName", getPhaseTypesArrayName() );
   writer->writeValue("StatisticsArrayName", getStatisticsArrayName() );
@@ -202,14 +260,15 @@ int GenerateEnsembleStatistics::writeFilterParameters(AbstractFilterParametersWr
   writer->writeValue("EquivalentDiametersArrayPath", getEquivalentDiametersArrayPath() );
   writer->writeValue("BiasedFeaturesArrayPath", getBiasedFeaturesArrayPath() );
   writer->writeValue("FeaturePhasesArrayPath", getFeaturePhasesArrayPath() );
-  writer->writeValue("SizeDistribution", getSizeDistribution() );
+  writer->writeValue("ComputeSizeDistribution", getComputeSizeDistribution() );
   writer->writeValue("SizeDistributionFitType", getSizeDistributionFitType() );
-  writer->writeValue("AspectRatioDistribution", getAspectRatioDistribution() );
+  writer->writeValue("ComputeAspectRatioDistribution", getComputeAspectRatioDistribution() );
   writer->writeValue("AspectRatioDistributionFitType", getAspectRatioDistributionFitType() );
-  writer->writeValue("Omega3Distribution", getOmega3Distribution() );
+  writer->writeValue("ComputeOmega3Distribution", getComputeOmega3Distribution() );
   writer->writeValue("Omega3DistributionFitType", getOmega3DistributionFitType() );
-  writer->writeValue("NeighborhoodDistribution", getNeighborhoodDistribution() );
+  writer->writeValue("ComputeNeighborhoodDistribution", getComputeNeighborhoodDistribution() );
   writer->writeValue("NeighborhoodDistributionFitType", getNeighborhoodDistributionFitType() );
+  writer->writeValue("CalculateCrystallographicStats", getCalculateCrystallographicStats() );
   writer->writeValue("CalculateODF", getCalculateODF() );
   writer->writeValue("CalculateMDF", getCalculateMDF() );
   writer->writeValue("CalculateAxisODF", getCalculateAxisODF() );
@@ -228,12 +287,23 @@ void GenerateEnsembleStatistics::dataCheck()
   setErrorCondition(0);
 
   QVector<size_t> dims(1, 1);
+
+  setComputeSizeDistribution(getCalculateMorphologicalStats());
+  setComputeAspectRatioDistribution(getCalculateMorphologicalStats());
+  setComputeOmega3Distribution(getCalculateMorphologicalStats());
+  setComputeNeighborhoodDistribution(getCalculateMorphologicalStats());
+
+  setCalculateODF(getCalculateCrystallographicStats());
+  setCalculateMDF(getCalculateCrystallographicStats());
+  setCalculateAxisODF(getCalculateCrystallographicStats());
+
+
   m_FeaturePhasesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeaturePhasesArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_FeaturePhasesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_FeaturePhases = m_FeaturePhasesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
-  if(m_SizeDistribution == true || m_Omega3Distribution == true
-      || m_AspectRatioDistribution == true || m_NeighborhoodDistribution == true || m_CalculateAxisODF == true)
+  if(m_ComputeSizeDistribution == true || m_ComputeOmega3Distribution == true
+     || m_ComputeAspectRatioDistribution == true || m_ComputeNeighborhoodDistribution == true || m_CalculateAxisODF == true)
   {
     m_BiasedFeaturesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<bool>, AbstractFilter>(this, getBiasedFeaturesArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
     if( NULL != m_BiasedFeaturesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
@@ -242,26 +312,28 @@ void GenerateEnsembleStatistics::dataCheck()
     if( NULL != m_EquivalentDiametersPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
     { m_EquivalentDiameters = m_EquivalentDiametersPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   }
-  if(m_NeighborhoodDistribution == true)
+  if(m_ComputeNeighborhoodDistribution == true)
   {
     m_NeighborhoodsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getNeighborhoodsArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
     if( NULL != m_NeighborhoodsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
     { m_Neighborhoods = m_NeighborhoodsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   }
-  if(m_AspectRatioDistribution == true)
+  if(m_ComputeAspectRatioDistribution == true)
   {
     dims[0] = 2;
     m_AspectRatiosPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getAspectRatiosArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
     if( NULL != m_AspectRatiosPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
     { m_AspectRatios = m_AspectRatiosPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   }
-  if(m_Omega3Distribution == true)
+  if(m_ComputeOmega3Distribution == true)
   {
     dims[0] = 1;
     m_Omega3sPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getOmega3sArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
     if( NULL != m_Omega3sPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
     { m_Omega3s = m_Omega3sPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   }
+
+
   if(m_CalculateAxisODF == true)
   {
     dims[0] = 3;
@@ -275,7 +347,7 @@ void GenerateEnsembleStatistics::dataCheck()
     dims[0] = 1;
     typedef DataArray<unsigned int> XTalStructArrayType;
     m_CrystalStructuresPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<unsigned int>, AbstractFilter>(this, getCrystalStructuresArrayPath(), dims)
-                             ; /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+        ; /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
     if( NULL != m_CrystalStructuresPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
     { m_CrystalStructures = m_CrystalStructuresPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
     m_SurfaceFeaturesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<bool>, AbstractFilter>(this, getSurfaceFeaturesArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
@@ -394,19 +466,19 @@ void GenerateEnsembleStatistics::execute()
     }
   }
 
-  if(m_SizeDistribution == true)
+  if(m_ComputeSizeDistribution == true)
   {
     gatherSizeStats();
   }
-  if(m_AspectRatioDistribution == true)
+  if(m_ComputeAspectRatioDistribution == true)
   {
     gatherAspectRatioStats();
   }
-  if(m_Omega3Distribution == true)
+  if(m_ComputeOmega3Distribution == true)
   {
     gatherOmega3Stats();
   }
-  if(m_NeighborhoodDistribution == true)
+  if(m_ComputeNeighborhoodDistribution == true)
   {
     gatherNeighborhoodStats();
   }

@@ -37,10 +37,12 @@
 #define _BooleanWidget_H_
 
 
-
-
 #include <QtCore/QObject>
+#include <QtCore/QPointer>
 #include <QtGui/QWidget>
+
+
+#include "QtSupport/FaderWidget.h"
 
 
 #include "DREAM3DLib/Common/AbstractFilter.h"
@@ -81,7 +83,8 @@ class DREAM3DWidgetsLib_EXPORT BooleanWidget : public QWidget, private Ui::Boole
     void filterNeedsInputParameters(AbstractFilter* filter); // When the filter is ready for us to update its input parameter(s) that we are responsible for
     void beforePreflight(); // Called just before the "dataCheck()" is called
     void afterPreflight(); // Called just after the dataCheck() is called.
-    void on_conditionalCB_stateChanged(int state);
+    void setLinkedConditionalState(int state);
+    void fadeWidget(QWidget* widget, bool in);
 
   signals:
     void errorSettingFilterParameter(const QString& msg);
@@ -91,6 +94,7 @@ class DREAM3DWidgetsLib_EXPORT BooleanWidget : public QWidget, private Ui::Boole
     AbstractFilter*   m_Filter;
     FilterParameter*  m_FilterParameter;
     bool m_DidCausePreflight;
+    QPointer<FaderWidget> faderWidget;
 
     BooleanWidget(const BooleanWidget&); // Copy Constructor Not Implemented
     void operator=(const BooleanWidget&); // Operator '=' Not Implemented

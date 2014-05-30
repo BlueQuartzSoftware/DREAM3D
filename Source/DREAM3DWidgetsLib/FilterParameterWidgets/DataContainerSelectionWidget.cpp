@@ -40,6 +40,7 @@
 #include <QtGui/QListWidgetItem>
 
 #include "DREAM3DLib/DataContainers/DataArrayPath.h"
+#include "DREAM3DWidgetsLib/DREAM3DWidgetsLibConstants.h"
 
 #include "FilterParameterWidgetsDialogs.h"
 
@@ -134,47 +135,7 @@ void DataContainerSelectionWidget::setupGui()
 
   populateComboBoxes();
 
-  // is the filter parameter tied to a boolean property of the Filter Instance, if it is then we need to make the check box visible
-  if(m_FilterParameter->isConditional() == true)
-  {
-    bool boolProp = m_Filter->property(m_FilterParameter->getConditionalProperty().toLatin1().constData() ).toBool();
-    conditionalCB->setChecked(boolProp);
-    conditionalCB->setText(m_FilterParameter->getConditionalLabel());
-    dataContainerList->setEnabled(boolProp);
-    on_conditionalCB_stateChanged(conditionalCB->checkState());
-  }
-  else
-  {
-    widgetLayout->removeWidget(conditionalCB);
-    conditionalCB->deleteLater();
-    widgetLayout->removeWidget(linkLeft);
-    linkLeft->deleteLater();
-    widgetLayout->removeWidget(linkRight);
-    linkRight->deleteLater();
-  }
-
-
 }
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void DataContainerSelectionWidget::on_conditionalCB_stateChanged(int state)
-{
-  bool boolProp = conditionalCB->isChecked();
-  dataContainerList->setEnabled(boolProp);
-  dataContainerList->setVisible(boolProp);
-
-  label->setVisible(boolProp);
-  linkLeft->setVisible(boolProp);
-  linkRight->setVisible(boolProp);
-
-  m_DidCausePreflight = true;
-  emit parametersChanged();
-  m_DidCausePreflight = false;
-}
-
-
 
 // -----------------------------------------------------------------------------
 //
@@ -296,39 +257,6 @@ QString DataContainerSelectionWidget::checkStringValues(QString curDcName, QStri
 
 }
 
-#if 0
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void DataContainerSelectionWidget::selectDefaultPath()
-{
-
-  // set the default DataContainer
-  if(dataContainerList->count() > 0)
-  {
-    dataContainerList->setCurrentIndex(0);
-  }
-  m_Filter->blockSignals(false);
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void DataContainerSelectionWidget::setSelectedPath(QString dcName, QString attrMatName, QString attrArrName)
-{
-  //dataContainerList->blockSignals(true);
-  // Set the correct DataContainer
-  int count = dataContainerList->count();
-  for(int i = 0; i < count; i++)
-  {
-    if (dataContainerList->itemText(i).compare(dcName) == 0 )
-    {
-      dataContainerList->setCurrentIndex(i); // This will fire the currentItemChanged(...) signal
-      break;
-    }
-  }
-}
-#endif
 
 // -----------------------------------------------------------------------------
 //
@@ -383,14 +311,43 @@ void DataContainerSelectionWidget::filterNeedsInputParameters(AbstractFilter* fi
     FilterParameterWidgetsDialogs::ShowCouldNotSetFilterParameter(m_Filter, m_FilterParameter);
   }
 
-  if(m_FilterParameter->isConditional() )
-  {
-    var.setValue(conditionalCB->isChecked());
-    ok = filter->setProperty(m_FilterParameter->getConditionalProperty().toLatin1().constData(), var);
-    if(false == ok)
-    {
-      FilterParameterWidgetsDialogs::ShowCouldNotSetConditionalFilterParameter(m_Filter, m_FilterParameter);
-    }
-  }
+}
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DataContainerSelectionWidget::setLinkedConditionalState(int state)
+{
+  bool boolProp = (state == Qt::Checked);
+  fadeWidget(this, boolProp);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DataContainerSelectionWidget::fadeWidget(QWidget* widget, bool in)
+{
+
+  if (faderWidget)
+  {
+    faderWidget->close();
+  }
+  faderWidget = new FaderWidget(widget);
+  if(in)
+  {
+    setVisible(true);
+    faderWidget->setFadeIn();
+    connect(faderWidget, SIGNAL(animationComplete() ),
+          this, SLOT(show()));
+  }
+  else
+  {
+    faderWidget->setFadeOut();
+    connect(faderWidget, SIGNAL(animationComplete() ),
+          this, SLOT(hide()));
+  }
+  QColor color = DREAM3D::Defaults::BasicColor;
+  if(m_FilterParameter->getAdvanced()) { color = DREAM3D::Defaults::AdvancedColor; }
+  faderWidget->setStartColor(color);
+  faderWidget->start();
 }

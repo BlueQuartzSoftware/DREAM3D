@@ -85,11 +85,10 @@ void FindFeatureHistogram::setupFilterParameters()
     parameter->setWidgetType(FilterParameterWidgetType::IntWidget);
     parameters.push_back(parameter);
   }
+  QStringList linkedProps("BiasedFeaturesArrayPath");
+  parameters.push_back(FilterParameter::NewConditional("Remove Biased Features", "RemoveBiasedFeatures", FilterParameterWidgetType::LinkedBooleanWidget, getRemoveBiasedFeatures(), true, linkedProps));
   parameters.push_back(FilterParameter::New("BiasedFeatures", "BiasedFeaturesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getBiasedFeaturesArrayPath(), false, ""));
-  FilterParameter::Pointer param = parameters.back();
-  param->setConditional(true);
-  param->setConditionalProperty("RemoveBiasedFeatures");
-  param->setConditionalLabel("Remove Biased Features");
+
   parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
   parameters.push_back(FilterParameter::New("FeaturePhases", "FeaturePhasesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeaturePhasesArrayPath(), true, ""));
   parameters.push_back(FilterParameter::New("Cell Ensemble Attribute Matrix Name", "CellEnsembleAttributeMatrixName", FilterParameterWidgetType::AttributeMatrixSelectionWidget, getCellEnsembleAttributeMatrixName(), true, ""));

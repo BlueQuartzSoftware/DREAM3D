@@ -79,6 +79,7 @@ namespace FilterParameterWidgetType
   const QString ShapeTypeSelectionWidget("ShapeTypeSelectionWidget");
   const QString DataArrayCreationWidget("DataArrayCreationWidget");
   const QString SeparatorWidget("SeparatorWidget");
+  const QString LinkedBooleanWidget("LinkedBooleanWidget");
 
   const QString PreflightUpdatedValueWidget("PreflightUpdatedValueWidget");
 #if 0
@@ -182,6 +183,7 @@ class DREAM3DLib_EXPORT FilterParameter
                        const QString& units = QString(""),
                        const QString& fileExtension = QString(""),
                        const QString& fileType = QString(""));
+
     /**
      * @brief Creates a new Filter Parameter that has conditional logic associated with it through an additional boolean
      * Q_PROPERTY in the filter's header file. On the GUI this manifests itself as a checkbox that enables or disables the
@@ -201,9 +203,7 @@ class DREAM3DLib_EXPORT FilterParameter
     static Pointer NewConditional(const QString& humanLabel, const QString& propertyName,
                                   const QString& widgetType, const QVariant& defaultValue,
                                   bool advanced,
-                                  bool isConditional,
-                                  const QString& conditionalProperty,
-                                  const QString& conditionalLabel);
+                                  QStringList linkedProperties);
 
     virtual ~FilterParameter();
 
@@ -217,9 +217,10 @@ class DREAM3DLib_EXPORT FilterParameter
     DREAM3D_INSTANCE_STRING_PROPERTY(FileType)
     DREAM3D_INSTANCE_PROPERTY(bool, ReadOnly)
 
-    DREAM3D_BOOL_PROPERTY(Conditional)
-    DREAM3D_INSTANCE_STRING_PROPERTY(ConditionalProperty)
-    DREAM3D_INSTANCE_STRING_PROPERTY(ConditionalLabel)
+ //   DREAM3D_BOOL_PROPERTY(Conditional)
+    DREAM3D_INSTANCE_PROPERTY(QStringList, ConditionalProperties)
+//    DREAM3D_INSTANCE_STRING_PROPERTY(ConditionalProperty)
+//    DREAM3D_INSTANCE_STRING_PROPERTY(ConditionalLabel)
 
   protected:
     FilterParameter();
@@ -269,7 +270,7 @@ class DREAM3DLib_EXPORT ChoiceFilterParameter : public FilterParameter
     DREAM3D_TYPE_MACRO_SUPER(ChoiceFilterParameter, FilterParameter)
 
     static Pointer New(const QString& humanLabel, const QString& propertyName,
-                       const QString& widgetType, const QVariant& defaultValue,
+                       const QVariant& defaultValue,
                        QVector<QString> choices,
                        bool editable,
                        bool advanced = false );

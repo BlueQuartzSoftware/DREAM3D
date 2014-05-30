@@ -38,9 +38,11 @@
 
 
 
-
 #include <QtCore/QObject>
+#include <QtCore/QPointer>
 #include <QtGui/QWidget>
+
+#include "QtSupport/FaderWidget.h"
 
 
 #include "DREAM3DLib/Common/AbstractFilter.h"
@@ -79,6 +81,8 @@ class DREAM3DWidgetsLib_EXPORT PreflightUpdatedValueWidget : public QWidget, pri
     void beforePreflight();
     void afterPreflight();
     void filterNeedsInputParameters(AbstractFilter* filter);
+    void setLinkedConditionalState(int state);
+    void fadeWidget(QWidget* widget, bool in);
 
   signals:
     void errorSettingFilterParameter(const QString& msg);
@@ -87,6 +91,7 @@ class DREAM3DWidgetsLib_EXPORT PreflightUpdatedValueWidget : public QWidget, pri
   private:
     AbstractFilter*   m_Filter;
     FilterParameter*  m_FilterParameter;
+    QPointer<FaderWidget> faderWidget;
 
     PreflightUpdatedValueWidget(const PreflightUpdatedValueWidget&); // Copy Constructor Not Implemented
     void operator=(const PreflightUpdatedValueWidget&); // Operator '=' Not Implemented

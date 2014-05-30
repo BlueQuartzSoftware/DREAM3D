@@ -38,6 +38,7 @@
 #include <QtCore/QMetaProperty>
 
 #include "DREAM3DLib/FilterParameters/FilterParameter.h"
+#include "DREAM3DWidgetsLib/DREAM3DWidgetsLibConstants.h"
 
 
 #include "FilterParameterWidgetsDialogs.h"
@@ -120,55 +121,7 @@ void AxisAngleWidget::setupGui()
     angle->setText(QString::number(data.angle) );
   }
 
-  // is the filter parameter tied to a boolean property of the Filter Instance, if it is then we need to make the check box visible
-  if(m_FilterParameter->isConditional() == true)
-  {
-    bool boolProp = m_Filter->property(m_FilterParameter->getConditionalProperty().toLatin1().constData() ).toBool();
-    conditionalCB->setChecked(boolProp);
-    conditionalCB->setText(m_FilterParameter->getConditionalLabel());
-    axis_i->setEnabled(boolProp);
-    axis_j->setEnabled(boolProp);
-    axis_k->setEnabled(boolProp);
-    angle->setEnabled(boolProp);
-    on_conditionalCB_stateChanged(conditionalCB->checkState());
-  }
-  else
-  {
-    widgetLayout->removeWidget(conditionalCB);
-    conditionalCB->deleteLater();
-    widgetLayout->removeWidget(linkLeft);
-    linkLeft->deleteLater();
-    widgetLayout->removeWidget(linkRight);
-    linkRight->deleteLater();
-  }
-
-
 }
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void AxisAngleWidget::on_conditionalCB_stateChanged(int state)
-{
-  bool boolProp = conditionalCB->isChecked();
-  axis_i->setEnabled(boolProp);
-  axis_j->setEnabled(boolProp);
-  axis_k->setEnabled(boolProp);
-  angle->setEnabled(boolProp);
-  axis_i->setVisible(boolProp);
-  axis_j->setVisible(boolProp);
-  axis_k->setVisible(boolProp);
-  angle->setVisible(boolProp);
-
-
-  label->setVisible(boolProp);
-  linkLeft->setVisible(boolProp);
-  linkRight->setVisible(boolProp);
-  m_DidCausePreflight = true;
-  emit parametersChanged();
-  m_DidCausePreflight = false;
-}
-
 
 // -----------------------------------------------------------------------------
 //
@@ -198,16 +151,6 @@ void AxisAngleWidget::filterNeedsInputParameters(AbstractFilter* filter)
     FilterParameterWidgetsDialogs::ShowCouldNotSetFilterParameter(m_Filter, m_FilterParameter);
   }
 
-  if(m_FilterParameter->isConditional() )
-  {
-    QVariant var(conditionalCB->isChecked());
-    ok = filter->setProperty(m_FilterParameter->getConditionalProperty().toLatin1().constData(), var);
-    if(false == ok)
-    {
-      FilterParameterWidgetsDialogs::ShowCouldNotSetConditionalFilterParameter(m_Filter, m_FilterParameter);
-    }
-  }
-
 }
 
 
@@ -225,4 +168,43 @@ void AxisAngleWidget::beforePreflight()
 void AxisAngleWidget::afterPreflight()
 {
 
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void AxisAngleWidget::setLinkedConditionalState(int state)
+{
+  bool boolProp = (state == Qt::Checked);
+  fadeWidget(this, boolProp);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void AxisAngleWidget::fadeWidget(QWidget* widget, bool in)
+{
+
+  if (faderWidget)
+  {
+    faderWidget->close();
+  }
+  faderWidget = new FaderWidget(widget);
+  if(in)
+  {
+    setVisible(true);
+    faderWidget->setFadeIn();
+    connect(faderWidget, SIGNAL(animationComplete() ),
+          this, SLOT(show()));
+  }
+  else
+  {
+    faderWidget->setFadeOut();
+    connect(faderWidget, SIGNAL(animationComplete() ),
+          this, SLOT(hide()));
+  }
+  QColor color = DREAM3D::Defaults::BasicColor;
+  if(m_FilterParameter->getAdvanced()) { color = DREAM3D::Defaults::AdvancedColor; }
+  faderWidget->setStartColor(color);
+  faderWidget->start();
 }

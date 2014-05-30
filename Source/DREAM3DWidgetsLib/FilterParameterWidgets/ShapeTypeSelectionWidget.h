@@ -36,11 +36,12 @@
 #ifndef _ShapeTypeSelectionWidget_H_
 #define _ShapeTypeSelectionWidget_H_
 
-
-
-
 #include <QtCore/QObject>
+#include <QtCore/QPointer>
 #include <QtGui/QWidget>
+
+
+#include "QtSupport/FaderWidget.h"
 
 
 #include "DREAM3DLib/Common/AbstractFilter.h"
@@ -86,7 +87,8 @@ class DREAM3DWidgetsLib_EXPORT ShapeTypeSelectionWidget : public QWidget, privat
     void filterNeedsInputParameters(AbstractFilter* filter);
 
     void on_combobox_changed(int index);
-
+    void setLinkedConditionalState(int state);
+    void fadeWidget(QWidget* widget, bool in);
 
   protected:
     void updateComboBoxes();
@@ -102,6 +104,7 @@ class DREAM3DWidgetsLib_EXPORT ShapeTypeSelectionWidget : public QWidget, privat
 
     QList<QLabel*>              m_ShapeTypeLabels;
     QList<QComboBox*>           m_ShapeTypeCombos;
+    QPointer<FaderWidget> faderWidget;
 
 
     ShapeTypeSelectionWidget(const ShapeTypeSelectionWidget&); // Copy Constructor Not Implemented

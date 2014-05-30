@@ -86,16 +86,14 @@ void FindNeighbors::setupFilterParameters()
   parameters.push_back(FilterParameter::New("Number Of Neighbors Array Name", "NumNeighborsArrayName", FilterParameterWidgetType::StringWidget, getNumNeighborsArrayName(), true));
   parameters.push_back(FilterParameter::New("Neighbor List Array Name", "NeighborListArrayName", FilterParameterWidgetType::StringWidget, getNeighborListArrayName(), true));
   parameters.push_back(FilterParameter::New("Neighbor Surface Area List Array Name", "SharedSurfaceAreaListArrayName", FilterParameterWidgetType::StringWidget, getSharedSurfaceAreaListArrayName(), true));
+  QStringList linkedProps("SurfaceVoxelsArrayName");
+  parameters.push_back(FilterParameter::NewConditional("Store Surface Cells Array", "StoreSurfaceCells", FilterParameterWidgetType::LinkedBooleanWidget, getStoreSurfaceCells(), true, linkedProps));
   parameters.push_back(FilterParameter::New("Surface Voxels Array Name", "SurfaceVoxelsArrayName", FilterParameterWidgetType::StringWidget, getSurfaceVoxelsArrayName(), true));
-  FilterParameter::Pointer param = parameters.back();
-  param->setConditional(true);
-  param->setConditionalProperty("StoreSurfaceCells");
-  param->setConditionalLabel("Store Surface Cells Array");
+  linkedProps.clear();
+  linkedProps << "SurfaceFeaturesArrayName";
+  parameters.push_back(FilterParameter::NewConditional("Store Surface Features Array", "StoreSurfaceFeatures", FilterParameterWidgetType::LinkedBooleanWidget, getStoreSurfaceFeatures(), true, linkedProps));
   parameters.push_back(FilterParameter::New("Surface Features Array Name", "SurfaceFeaturesArrayName", FilterParameterWidgetType::StringWidget, getSurfaceFeaturesArrayName(), true));
-  param = parameters.back();
-  param->setConditional(true);
-  param->setConditionalProperty("StoreSurfaceFeatures");
-  param->setConditionalLabel("Store Surface Features Array");
+
   setFilterParameters(parameters);
 }
 

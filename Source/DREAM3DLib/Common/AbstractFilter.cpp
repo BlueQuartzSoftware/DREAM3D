@@ -206,7 +206,7 @@ void AbstractFilter::copyFilterParameterInstanceVariables(AbstractFilter* filter
                            " Please report this issue to the developers of this filter.").arg(parameter->getPropertyName()).arg(filter->getHumanLabel());
       Q_ASSERT_X(ok, __FILE__, ss.toLatin1().constData());
     }
-
+#if 0
     if(parameter->isConditional() == true)
     {
       QVariant cond = property(parameter->getConditionalProperty().toLatin1().constData() );
@@ -222,5 +222,6 @@ void AbstractFilter::copyFilterParameterInstanceVariables(AbstractFilter* filter
         Q_ASSERT_X(ok, __FILE__, ss.toLatin1().constData());
       }
     }
+    #endif
   }
 }

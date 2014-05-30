@@ -37,11 +37,12 @@
 #define _ComparisonSelectionWidget_H_
 
 
-#include <QtCore/QString>
-#include <QtCore/QSettings>
+#include <QtCore/QObject>
+#include <QtCore/QPointer>
 #include <QtGui/QWidget>
 
 
+#include "QtSupport/FaderWidget.h"
 
 
 #include "DREAM3DLib/Common/AbstractFilter.h"
@@ -92,7 +93,8 @@ class ComparisonSelectionWidget : public QWidget, private Ui::ComparisonSelectio
     void beforePreflight();
     void afterPreflight();
     void filterNeedsInputParameters(AbstractFilter* filter);
-//   void on_conditionalCB_stateChanged(int state);
+    void setLinkedConditionalState(int state);
+    void fadeWidget(QWidget* widget, bool in);
 
   signals:
     void errorSettingFilterParameter(const QString& msg);
@@ -132,6 +134,8 @@ class ComparisonSelectionWidget : public QWidget, private Ui::ComparisonSelectio
     FilterParameter*  m_FilterParameter;
     DataContainerArrayProxy m_DcaProxy;
     bool m_DidCausePreflight;
+    QPointer<FaderWidget> faderWidget;
+
     ComparisonSelectionTableModel*    m_ComparisonSelectionTableModel;
 
     ComparisonSelectionWidget(const ComparisonSelectionWidget&); // Copy Constructor Not Implemented

@@ -43,6 +43,9 @@ class FaderWidget : public QWidget
     void setFadeIn();
     void setFadeOut();
 
+    void setStartColor(QColor color);
+    QColor getStartColor();
+
     int fadeDuration() const { return duration; }
     void setFadeDuration(int milliseconds) { duration = milliseconds; }
 

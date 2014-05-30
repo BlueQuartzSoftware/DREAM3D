@@ -75,11 +75,9 @@ void GenerateVectorColors::setupFilterParameters()
   parameters.push_back(FilterParameter::New("Vector Array Name", "VectorsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getVectorsArrayPath(), false));
   parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
   parameters.push_back(FilterParameter::New("Optional Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
+  QStringList linkedProps("GoodVoxelsArrayPath");
+  parameters.push_back(FilterParameter::NewConditional("Apply to Good Voxels Only (Bad Voxels Will Be Black)", "UseGoodVoxels", FilterParameterWidgetType::LinkedBooleanWidget, getUseGoodVoxels(), true, linkedProps));
   parameters.push_back(FilterParameter::New("GoodVoxels", "GoodVoxelsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getGoodVoxelsArrayPath(), true, ""));
-  FilterParameter::Pointer param = parameters.back();
-  param->setConditional(true);
-  param->setConditionalProperty("UseGoodVoxels");
-  param->setConditionalLabel("Apply to Good Voxels Only (Bad Voxels Will Be Black)");
   parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
   parameters.push_back(FilterParameter::New("CellVectorColors", "CellVectorColorsArrayName", FilterParameterWidgetType::StringWidget, getCellVectorColorsArrayName(), true, ""));
   setFilterParameters(parameters);

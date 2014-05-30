@@ -256,11 +256,10 @@ FindTwinBoundarySchmidFactors::~FindTwinBoundarySchmidFactors()
 void FindTwinBoundarySchmidFactors::setupFilterParameters()
 {
   FilterParameterVector parameters;
+  QStringList linkedProps("TwinBoundarySchmidFactorsFile");
+  parameters.push_back(FilterParameter::NewConditional("Write Twin Boundary Info File", "WriteFile", FilterParameterWidgetType::LinkedBooleanWidget, getWriteFile(), true, linkedProps));
   parameters.push_back(FilterParameter::New("Twin Boundary Info File", "TwinBoundarySchmidFactorsFile", FilterParameterWidgetType::OutputFileWidget, getTwinBoundarySchmidFactorsFile(), false));
-  FilterParameter::Pointer param = parameters.back();
-  param->setConditional(true);
-  param->setConditionalProperty("WriteFile");
-  param->setConditionalLabel("Write Twin Boundary Info File");
+
   parameters.push_back(FilterParameter::New("Loading Direction", "LoadingDir", FilterParameterWidgetType::FloatVec3Widget, getLoadingDir(), false));
   parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
   parameters.push_back(FilterParameter::New("AvgQuats", "AvgQuatsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getAvgQuatsArrayPath(), true, ""));

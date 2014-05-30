@@ -94,8 +94,8 @@ class DREAM3DWidgetsLib_EXPORT PipelineFilterWidget : public QFrame, private Ui:
 
     QVector<QWidget*>& getFilterParameterWidgets();
 
-    QWidget* getScrollWidgetContents();
-    QWidget* getAdvancedScrollWidgetContents();
+    QWidget* getBasicInputsWidget();
+    QWidget* getAdvancedInputsWidget();
 
 
     /**
@@ -136,6 +136,7 @@ class DREAM3DWidgetsLib_EXPORT PipelineFilterWidget : public QFrame, private Ui:
 
     void displayFilterParameterWidgetError(const QString& msg);
 
+    void adjustLayout(QWidget* w, int state);
 
   protected slots:
     void on_deleteBtn_clicked();
@@ -154,6 +155,7 @@ class DREAM3DWidgetsLib_EXPORT PipelineFilterWidget : public QFrame, private Ui:
 
     void showContextMenu(const QPoint& globalPos);
 
+    void layoutWidgets();
 
   private:
     QRect                     m_DeleteRect;
@@ -164,12 +166,14 @@ class DREAM3DWidgetsLib_EXPORT PipelineFilterWidget : public QFrame, private Ui:
     static QString            m_OpenDialogLastDirectory;
     AbstractFilter::Pointer   m_Filter;
     QVector<QWidget*>         m_FilterParameterWidgets;
-    QWidget*                  m_BasicInputsScrollWidget;
-    QWidget*                  m_AdvancedInputScrollWidget;
+    QVBoxLayout*              m_BasicVerticalLayout;
+    QVBoxLayout*              m_AdvVerticalLayout;
+    QWidget*                  m_BasicInputsWidget;
+    QWidget*                  m_AdvancedInputWidget;
     IObserver*                m_Observer;
     QMenu                     m_Menu;
     QList<QAction*>           m_MenuActions;
-
+    QMap<QString, QWidget*>   m_PropertyToWidget;
     /**
      * @brief initialize Calls all the necessary initialization code for the widget
      * @param filter

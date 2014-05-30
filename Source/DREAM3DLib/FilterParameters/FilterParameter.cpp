@@ -46,10 +46,7 @@ FilterParameter::FilterParameter() :
   m_Units(""),
   m_FileExtension(""),
   m_FileType(""),
-  m_ReadOnly(false),
-  m_Conditional(false),
-  m_ConditionalProperty(""),
-  m_ConditionalLabel("")
+  m_ReadOnly(false)
 {}
 
 // -----------------------------------------------------------------------------
@@ -202,9 +199,7 @@ FilterParameter::Pointer FilterParameter::New(const QString& humanLabel, const Q
 FilterParameter::Pointer FilterParameter::NewConditional(const QString& humanLabel, const QString& propertyName,
                                                          const QString& widgetType, const QVariant& defaultValue,
                                                          bool advanced,
-                                                         bool isConditional,
-                                                         const QString& conditionalProperty,
-                                                         const QString& conditionalLabel)
+                                                         QStringList linkedProperties)
 {
   FilterParameter::Pointer ptr = FilterParameter::New();
   ptr->setHumanLabel(humanLabel);
@@ -212,9 +207,7 @@ FilterParameter::Pointer FilterParameter::NewConditional(const QString& humanLab
   ptr->setWidgetType(widgetType);
   ptr->setDefaultValue(defaultValue);
   ptr->setAdvanced(advanced);
-  ptr->setConditional(isConditional);
-  ptr->setConditionalProperty(conditionalProperty);
-  ptr->setConditionalLabel(conditionalLabel);
+  ptr->setConditionalProperties(linkedProperties);
   ptr->setUnits("");
   ptr->setFileExtension("");
   ptr->setFileType("");
@@ -250,8 +243,7 @@ ChoiceFilterParameter::~ChoiceFilterParameter()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ChoiceFilterParameter::Pointer ChoiceFilterParameter::New(const QString& humanLabel, const QString& propertyName,
-                                                          const QString& widgetType, const QVariant &defaultValue,
+ChoiceFilterParameter::Pointer ChoiceFilterParameter::New(const QString& humanLabel, const QString& propertyName, const QVariant &defaultValue,
                                                           QVector<QString> choices,
                                                           bool editable,
                                                           bool advanced)
@@ -260,7 +252,7 @@ ChoiceFilterParameter::Pointer ChoiceFilterParameter::New(const QString& humanLa
   ChoiceFilterParameter::Pointer ptr = ChoiceFilterParameter::New();
   ptr->setHumanLabel(humanLabel);
   ptr->setPropertyName(propertyName);
-  ptr->setWidgetType(widgetType);
+  ptr->setWidgetType(FilterParameterWidgetType::ChoiceWidget);
   ptr->setDefaultValue(defaultValue);
   ptr->setAdvanced(advanced);
   ptr->setUnits("");

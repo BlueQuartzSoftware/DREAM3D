@@ -45,11 +45,12 @@
 #include <QtGui/QFormLayout>
 #include <QtGui/QLineEdit>
 
-#include "DREAM3DWidgetsLib/FilterWidgetManager.h"
 
+#include "DREAM3DWidgetsLib/DREAM3DWidgetsLibConstants.h"
+#include "DREAM3DWidgetsLib/FilterWidgetManager.h"
 #include "DREAM3DWidgetsLib/Widgets/PipelineFilterWidget.h"
 
-#include "DREAM3DWidgetsLib/moc_FilterInputWidget.cpp"
+//#include "DREAM3DWidgetsLib/moc_FilterInputWidget.cpp"
 
 // -----------------------------------------------------------------------------
 //
@@ -91,7 +92,6 @@ void FilterInputWidget::clearInputWidgets()
     if(w)
     {
       w->setVisible(false);
-      //   w->setParent(NULL);
       basicInputsGrid->removeWidget(w);
     }
   }
@@ -101,7 +101,6 @@ void FilterInputWidget::clearInputWidgets()
     if(w)
     {
       w->setVisible(false);
-      //    w->setParent(NULL);
       advInputsGrid->removeWidget(w);
     }
   }
@@ -116,8 +115,8 @@ void FilterInputWidget::clearInputWidgets()
 void FilterInputWidget::removeWidgetInputs(PipelineFilterWidget* w)
 {
 
-  w->getScrollWidgetContents()->setParent(w);
-  w->getAdvancedScrollWidgetContents()->setParent(w);
+  w->getBasicInputsWidget()->setParent(w);
+  w->getAdvancedInputsWidget()->setParent(w);
   clearInputWidgets();
 }
 
@@ -128,8 +127,8 @@ void FilterInputWidget::removeWidgetInputs(PipelineFilterWidget* w)
 void FilterInputWidget::displayFilterParameters(PipelineFilterWidget* w)
 {
   clearInputWidgets();
-  basicInputsGrid->addWidget(w->getScrollWidgetContents());
-  advInputsGrid->addWidget(w->getAdvancedScrollWidgetContents());
+  basicInputsGrid->addWidget(w->getBasicInputsWidget());
+  advInputsGrid->addWidget(w->getAdvancedInputsWidget());
 
   basicInputsFrame->setVisible((bool)(w->getBasicParameterCount()));
 
@@ -149,8 +148,8 @@ void FilterInputWidget::displayFilterParameters(PipelineFilterWidget* w)
     advInputsFrame->setVisible(!m_AdvFadedOut);
   }
 
-  w->getScrollWidgetContents()->setVisible(true);
-  w->getAdvancedScrollWidgetContents()->setVisible(true);
+  w->getBasicInputsWidget()->setVisible(true);
+  w->getAdvancedInputsWidget()->setVisible(true);
 
   // Add a label at the top of the Inputs Tabs to show what filter we are working on
   filterHumanLabel->setText(w->getHumanLabel());
@@ -171,6 +170,7 @@ void FilterInputWidget::fadeInWidget(QWidget* widget)
     faderWidget->close();
   }
   faderWidget = new FaderWidget(widget);
+  faderWidget->setStartColor(DREAM3D::Defaults::AdvancedColor);
   faderWidget->start();
   m_AdvFadedOut = false;
 }
@@ -187,6 +187,7 @@ void FilterInputWidget::fadeOutWidget(QWidget* widget)
   }
   faderWidget = new FaderWidget(widget);
   faderWidget->setFadeOut();
+  faderWidget->setStartColor(DREAM3D::Defaults::AdvancedColor);
   connect(faderWidget, SIGNAL(animationComplete() ),
           this, SLOT(hideButton()));
   faderWidget->start();

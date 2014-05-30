@@ -86,7 +86,7 @@ class TSpecificCompareFunctor : public CompareFunctor
     {
       m_Data = reinterpret_cast<T*>(data);
     }
-    virtual ~TSpecificCompareFunctor() {};
+    virtual ~TSpecificCompareFunctor() {}
 
     virtual bool operator()(size_t referencepoint, size_t neighborpoint, size_t gnum)
     {
@@ -164,11 +164,10 @@ void ScalarSegmentFeatures::setupFilterParameters()
   parameters.push_back(FilterParameter::New("Scalar Array Name", "ScalarArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getScalarArrayPath(), false));
   parameters.push_back(FilterParameter::New("Scalar Tolerance", "ScalarTolerance", FilterParameterWidgetType::DoubleWidget, getScalarTolerance(), false));
   parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
+  QStringList linkedProps("GoodVoxelsArrayPath");
+  parameters.push_back(FilterParameter::NewConditional("Use Good Voxels Array", "UseGoodVoxels", FilterParameterWidgetType::LinkedBooleanWidget, getUseGoodVoxels(), true, linkedProps));
   parameters.push_back(FilterParameter::New("GoodVoxels", "GoodVoxelsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getGoodVoxelsArrayPath(), true, ""));
-  FilterParameter::Pointer param = parameters.back();
-  param->setConditional(true);
-  param->setConditionalProperty("UseGoodVoxels");
-  param->setConditionalLabel("Use GoodVoxels Array");
+
   parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
   parameters.push_back(FilterParameter::New("FeatureIds", "FeatureIdsArrayName", FilterParameterWidgetType::StringWidget, getFeatureIdsArrayName(), true, ""));
   parameters.push_back(FilterParameter::New("Cell Feature Attribute Matrix Name", "CellFeatureAttributeMatrixName", FilterParameterWidgetType::StringWidget, getCellFeatureAttributeMatrixName(), true, ""));
@@ -505,44 +504,7 @@ AbstractFilter::Pointer ScalarSegmentFeatures::newFilterInstance(bool copyFilter
   ScalarSegmentFeatures::Pointer filter = ScalarSegmentFeatures::New();
   if(true == copyFilterParameters)
   {
-    filter->setFilterParameters(getFilterParameters() );
-
-    //Loop over each Filter Parameter that is registered to the filter either through this class or a parent class
-    // and copy the value from the current instance of the object into the "new" instance that was just created
-    QVector<FilterParameter::Pointer> options = getFilterParameters(); // Get the current set of filter parameters
-    for (QVector<FilterParameter::Pointer>::iterator iter = options.begin(); iter != options.end(); ++iter )
-    {
-      FilterParameter* parameter = (*iter).get();
-      if (parameter->getWidgetType().compare(FilterParameterWidgetType::SeparatorWidget) == 0 )
-      {
-        continue; // Skip this type of filter parameter as it has nothing to do with anything in the filter.
-      }
-      // Get the property from the current instance of the filter
-      QVariant var = property(parameter->getPropertyName().toLatin1().constData());
-      bool ok = filter->setProperty(parameter->getPropertyName().toLatin1().constData(), var);
-      if(false == ok)
-      {
-        QString ss = QString("Error occurred transferring the Filter Parameter '%1' in Filter '%2' to the filter instance. The pipeline may run but the underlying filter will NOT be using the values from the GUI."
-                             " Please report this issue to the developers of this filter.").arg(parameter->getPropertyName()).arg(filter->getHumanLabel());
-        Q_ASSERT_X(ok, __FILE__, ss.toLatin1().constData());
-      }
-
-      if(parameter->isConditional() == true)
-      {
-        QVariant cond = property(parameter->getConditionalProperty().toLatin1().constData() );
-        ok = filter->setProperty(parameter->getConditionalProperty().toLatin1().constData(), cond);
-        if(false == ok)
-        {
-          QString ss = QString("%1::newFilterInstance()\nError occurred transferring the Filter Parameter '%2' in Filter '%3' to the filter instance. "
-                               " The filter parameter has a conditional property '%4'. The transfer of this property from the old filter to the new filter failed."
-                               " Please report this issue to the developers of this filter.").arg(filter->getNameOfClass())
-                       .arg(parameter->getPropertyName())
-                       .arg(filter->getHumanLabel())
-                       .arg(parameter->getConditionalProperty());
-          Q_ASSERT_X(ok, __FILE__, ss.toLatin1().constData());
-        }
-      }
-    }
+    copyFilterParameterInstanceVariables(filter.get());
   }
   return filter;
 }

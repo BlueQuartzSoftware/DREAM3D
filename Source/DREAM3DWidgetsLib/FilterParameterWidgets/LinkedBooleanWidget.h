@@ -33,22 +33,21 @@
  *                           FA8650-10-D-5210
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef _DoubleWidget_H_
-#define _DoubleWidget_H_
+#ifndef _LinkedBooleanWidget_H_
+#define _LinkedBooleanWidget_H_
+
+
+
 
 #include <QtCore/QObject>
-#include <QtCore/QPointer>
 #include <QtGui/QWidget>
-
-
-#include "QtSupport/FaderWidget.h"
 
 
 #include "DREAM3DLib/Common/AbstractFilter.h"
 
 #include "DREAM3DWidgetsLib/DREAM3DWidgetsLib.h"
 
-#include "DREAM3DWidgetsLib/ui_DoubleWidget.h"
+#include "DREAM3DWidgetsLib/ui_LinkedBooleanWidget.h"
 
 
 /**
@@ -56,7 +55,7 @@
 * @author
 * @version
 */
-class DREAM3DWidgetsLib_EXPORT DoubleWidget : public QWidget, private Ui::DoubleWidget
+class DREAM3DWidgetsLib_EXPORT LinkedBooleanWidget : public QWidget, private Ui::LinkedBooleanWidget
 {
     Q_OBJECT
 
@@ -67,39 +66,44 @@ class DREAM3DWidgetsLib_EXPORT DoubleWidget : public QWidget, private Ui::Double
     * @param filter The instance of the filter that this parameter is a part of
     * @param parent The parent QWidget for this Widget
     */
-    DoubleWidget(FilterParameter* parameter, AbstractFilter* filter = NULL, QWidget* parent = NULL);
+    LinkedBooleanWidget(FilterParameter* parameter, AbstractFilter* filter = NULL, QWidget* parent = NULL);
 
-    virtual ~DoubleWidget();
+    virtual ~LinkedBooleanWidget();
 
     /**
     * @brief This method does additional GUI widget connections
     */
     void setupGui();
 
+    /**
+     * @brief updateLinkedWidgets
+     */
+    void updateLinkedWidgets();
+
+    int getLinkedState();
+
+
   public slots:
-    void widgetChanged(const QString& msg);// when something in the widget changes
+    void widgetChanged(int state);
     void filterNeedsInputParameters(AbstractFilter* filter); // When the filter is ready for us to update its input parameter(s) that we are responsible for
     void beforePreflight(); // Called just before the "dataCheck()" is called
     void afterPreflight(); // Called just after the dataCheck() is called.
-    void setLinkedConditionalState(int state);
-    void fadeWidget(QWidget* widget, bool in);
 
   signals:
     void errorSettingFilterParameter(const QString& msg);
     void parametersChanged();
+    void conditionalPropertyChanged(int state);
 
   private:
     AbstractFilter*   m_Filter;
     FilterParameter*  m_FilterParameter;
     bool m_DidCausePreflight;
-    QPointer<FaderWidget> faderWidget;
 
-
-    DoubleWidget(const DoubleWidget&); // Copy Constructor Not Implemented
-    void operator=(const DoubleWidget&); // Operator '=' Not Implemented
+    LinkedBooleanWidget(const LinkedBooleanWidget&); // Copy Constructor Not Implemented
+    void operator=(const LinkedBooleanWidget&); // Operator '=' Not Implemented
 
 };
 
-#endif /* _DoubleWidget_H_ */
+#endif /* _LinkedBooleanWidget_H_ */
 
 

@@ -37,10 +37,11 @@
 #define _FloatVec3Widget_H_
 
 
-
-
 #include <QtCore/QObject>
+#include <QtCore/QPointer>
 #include <QtGui/QWidget>
+
+#include "QtSupport/FaderWidget.h"
 
 
 #include "DREAM3DLib/Common/AbstractFilter.h"
@@ -80,7 +81,8 @@ class DREAM3DWidgetsLib_EXPORT FloatVec3Widget : public QWidget, private Ui::Flo
     void filterNeedsInputParameters(AbstractFilter* filter); // When the filter is ready for us to update its input parameter(s) that we are responsible for
     void beforePreflight(); // Called just before the "dataCheck()" is called
     void afterPreflight(); // Called just after the dataCheck() is called.
-    void on_conditionalCB_stateChanged(int state);
+    void setLinkedConditionalState(int state);
+    void fadeWidget(QWidget* widget, bool in);
 
   signals:
     void errorSettingFilterParameter(const QString& msg);
@@ -90,6 +92,7 @@ class DREAM3DWidgetsLib_EXPORT FloatVec3Widget : public QWidget, private Ui::Flo
     AbstractFilter*   m_Filter;
     FilterParameter*  m_FilterParameter;
     bool m_DidCausePreflight;
+    QPointer<FaderWidget> faderWidget;
 
     FloatVec3Widget(const FloatVec3Widget&); // Copy Constructor Not Implemented
     void operator=(const FloatVec3Widget&); // Operator '=' Not Implemented

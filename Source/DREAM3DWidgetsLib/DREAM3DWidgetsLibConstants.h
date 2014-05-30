@@ -1,6 +1,6 @@
 /* ============================================================================
- * Copyright (c) 2012 Michael A. Jackson (BlueQuartz Software)
- * Copyright (c) 2012 Dr. Michael A. Groeber (US Air Force Research Laboratories)
+ * Copyright (c) 2014 Michael A. Jackson (BlueQuartz Software)
+ * Copyright (c) 2014 Dr. Michael A. Groeber (US Air Force Research Laboratories)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -33,70 +33,21 @@
  *                           FA8650-10-D-5210
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef _SeparatorWidget_H_
-#define _SeparatorWidget_H_
+#ifndef _DREAM3DWidgetsLibConstants_H_
+#define _DREAM3DWidgetsLibConstants_H_
+
+#include <QtGui/QColor>
 
 
-#include <QtCore/QObject>
-#include <QtCore/QPointer>
-#include <QtGui/QWidget>
-
-#include "QtSupport/FaderWidget.h"
-
-
-#include "DREAM3DLib/Common/AbstractFilter.h"
-
-#include "DREAM3DWidgetsLib/DREAM3DWidgetsLib.h"
-
-#include "DREAM3DWidgetsLib/ui_SeparatorWidget.h"
-
-
-/**
-* @brief
-* @author
-* @version
-*/
-class DREAM3DWidgetsLib_EXPORT SeparatorWidget : public QWidget, private Ui::SeparatorWidget
+namespace DREAM3D
 {
-    Q_OBJECT
 
-  public:
-    /**
-    * @brief Constructor
-    * @param parameter The FilterParameter object that this widget represents
-    * @param filter The instance of the filter that this parameter is a part of
-    * @param parent The parent QWidget for this Widget
-    */
-    SeparatorWidget(FilterParameter* parameter, AbstractFilter* filter = NULL, QWidget* parent = NULL);
+namespace Defaults
+{
+  static const QColor BasicColor(215, 215, 215);
+  static const QColor AdvancedColor(200, 200, 212);
+}
 
-    virtual ~SeparatorWidget();
+}
 
-    /**
-    * @brief This method does additional GUI widget connections
-    */
-    void setupGui();
-
-  public slots:
-    void beforePreflight();
-    void afterPreflight();
-    void filterNeedsInputParameters(AbstractFilter* filter);
-    void setLinkedConditionalState(int state);
-    void fadeWidget(QWidget* widget, bool in);
-
-  signals:
-    void errorSettingFilterParameter(const QString& msg);
-    void parametersChanged();
-
-  private:
-    AbstractFilter*   m_Filter;
-    FilterParameter*  m_FilterParameter;
-    QPointer<FaderWidget> faderWidget;
-
-    SeparatorWidget(const SeparatorWidget&); // Copy Constructor Not Implemented
-    void operator=(const SeparatorWidget&); // Operator '=' Not Implemented
-
-};
-
-#endif /* _SeparatorWidget_H_ */
-
-
+#endif /* _DREAM3DWidgetsLibConstants_H_ */

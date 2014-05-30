@@ -83,11 +83,10 @@ FindFeatureNeighborCAxisMisalignments::~FindFeatureNeighborCAxisMisalignments()
 void FindFeatureNeighborCAxisMisalignments::setupFilterParameters()
 {
   FilterParameterVector parameters;
+  QStringList linkedProps("AvgCAxisMisalignmentsArrayName");
+  parameters.push_back(FilterParameter::NewConditional("Find Average Misalignment Per Feature", "FindAvgMisals", FilterParameterWidgetType::LinkedBooleanWidget, getFindAvgMisals(), true, linkedProps));
   parameters.push_back(FilterParameter::New("AvgCAxisMisalignments", "AvgCAxisMisalignmentsArrayName", FilterParameterWidgetType::StringWidget, getAvgCAxisMisalignmentsArrayName(), false, ""));
-  FilterParameter::Pointer param = parameters.back();
-  param->setConditional(true);
-  param->setConditionalProperty("FindAvgMisals");
-  param->setConditionalLabel("Find Average Misalignment Per Feature");
+
   parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
   parameters.push_back(FilterParameter::New("Neighbor List Array Name", "NeighborListArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getNeighborListArrayPath(), true, ""));
   parameters.push_back(FilterParameter::New("AvgQuats", "AvgQuatsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getAvgQuatsArrayPath(), true, ""));
