@@ -34,8 +34,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef AddBadData_H_
-#define AddBadData_H_
+#ifndef _AddBadData_H_
+#define _AddBadData_H_
 
 #include <QtCore/QObject>
 #include <QtCore/QString>

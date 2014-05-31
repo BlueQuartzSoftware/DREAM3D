@@ -34,8 +34,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef AlignSectionsMutualInformation_H_
-#define AlignSectionsMutualInformation_H_
+#ifndef _AlignSectionsMutualInformation_H_
+#define _AlignSectionsMutualInformation_H_
 
 #include <vector>
 #include <QtCore/QString>

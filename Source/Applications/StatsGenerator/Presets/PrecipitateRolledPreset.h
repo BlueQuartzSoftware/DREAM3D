@@ -33,8 +33,8 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef PrecipitateRolledPreset_H_
-#define PrecipitateRolledPreset_H_
+#ifndef _PrecipitateRolledPreset_H_
+#define _PrecipitateRolledPreset_H_
 
 //-- C++ includes
 #include <string>

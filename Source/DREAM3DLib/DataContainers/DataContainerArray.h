@@ -28,8 +28,8 @@
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef DATACONTAINERARRAY_H_
-#define DATACONTAINERARRAY_H_
+#ifndef _DATACONTAINERARRAY_H_
+#define _DATACONTAINERARRAY_H_
 
 #include <QtCore/QObject>
 #include <QtCore/QString>

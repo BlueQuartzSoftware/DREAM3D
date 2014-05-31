@@ -34,8 +34,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef R3DApplicationAboutBoxDialog_H_
-#define R3DApplicationAboutBoxDialog_H_
+#ifndef _R3DApplicationAboutBoxDialog_H_
+#define _R3DApplicationAboutBoxDialog_H_
 
 #include <QtGui/QDialog>
 

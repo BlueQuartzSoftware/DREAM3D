@@ -33,8 +33,8 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef R3DFILECOMPLETER_H_
-#define R3DFILECOMPLETER_H_
+#ifndef _R3DFILECOMPLETER_H_
+#define _R3DFILECOMPLETER_H_
 
 #include <QtCore/QObject>
 #include <QtGui/QCompleter>

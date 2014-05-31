@@ -34,8 +34,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef FINDSCHMIDS_H_
-#define FINDSCHMIDS_H_
+#ifndef _FINDSCHMIDS_H_
+#define _FINDSCHMIDS_H_
 
 #include <vector>
 #include <QtCore/QString>

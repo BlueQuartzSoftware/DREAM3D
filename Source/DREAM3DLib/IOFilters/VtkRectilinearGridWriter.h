@@ -34,8 +34,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef VTKRECTILINEARGRIDWRITER_H_
-#define VTKRECTILINEARGRIDWRITER_H_
+#ifndef _VTKRECTILINEARGRIDWRITER_H_
+#define _VTKRECTILINEARGRIDWRITER_H_
 
 #include <QtCore/QString>
 

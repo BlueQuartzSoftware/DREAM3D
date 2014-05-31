@@ -34,8 +34,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef ErodeDilateBadData_H_
-#define ErodeDilateBadData_H_
+#ifndef _ErodeDilateBadData_H_
+#define _ErodeDilateBadData_H_
 
 #include <vector>
 #include <QtCore/QString>

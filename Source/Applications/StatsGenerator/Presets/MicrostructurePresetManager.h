@@ -34,8 +34,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef MICROSTRUCTUREPRESETMANAGER_H_
-#define MICROSTRUCTUREPRESETMANAGER_H_
+#ifndef _MICROSTRUCTUREPRESETMANAGER_H_
+#define _MICROSTRUCTUREPRESETMANAGER_H_
 
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 

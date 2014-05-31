@@ -33,8 +33,8 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef FindCellQuats_H_
-#define FindCellQuats_H_
+#ifndef _FindCellQuats_H_
+#define _FindCellQuats_H_
 
 #include <vector>
 #include <QtCore/QString>

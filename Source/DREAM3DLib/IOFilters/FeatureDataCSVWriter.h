@@ -34,8 +34,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef FeatureDataCSVWriter_H_
-#define FeatureDataCSVWriter_H_
+#ifndef _FeatureDataCSVWriter_H_
+#define _FeatureDataCSVWriter_H_
 
 #include <vector>
 #include <QtCore/QString>

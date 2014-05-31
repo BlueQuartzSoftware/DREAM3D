@@ -33,8 +33,8 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef Hex2SqrConverter_H_
-#define Hex2SqrConverter_H_
+#ifndef _Hex2SqrConverter_H_
+#define _Hex2SqrConverter_H_
 
 
 

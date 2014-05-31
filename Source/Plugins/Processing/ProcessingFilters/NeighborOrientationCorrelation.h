@@ -34,8 +34,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef NeighborOrientationCorrelation_H_
-#define NeighborOrientationCorrelation_H_
+#ifndef _NeighborOrientationCorrelation_H_
+#define _NeighborOrientationCorrelation_H_
 
 #include <vector>
 #include <QtCore/QString>

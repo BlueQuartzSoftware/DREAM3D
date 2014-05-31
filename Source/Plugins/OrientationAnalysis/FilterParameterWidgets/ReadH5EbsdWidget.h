@@ -28,8 +28,8 @@
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef QReadH5Ebsd_H_
-#define QReadH5Ebsd_H_
+#ifndef _QReadH5Ebsd_H_
+#define _QReadH5Ebsd_H_
 
 #include <QtCore/QObject>
 #include <QtCore/QUrl>

@@ -34,8 +34,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef NEIGHBORLIST_H_
-#define NEIGHBORLIST_H_
+#ifndef _NEIGHBORLIST_H_
+#define _NEIGHBORLIST_H_
 
 #include <QtCore/QString>
 #include <QtCore/QMap>

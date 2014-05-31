@@ -34,8 +34,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef FINDSIZES_H_
-#define FINDSIZES_H_
+#ifndef _FINDSIZES_H_
+#define _FINDSIZES_H_
 
 #include <vector>
 #include <QtCore/QString>

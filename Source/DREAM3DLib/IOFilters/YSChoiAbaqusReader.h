@@ -28,8 +28,8 @@
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef YSCHOIABAQUSREADER_H_
-#define YSCHOIABAQUSREADER_H_
+#ifndef _YSCHOIABAQUSREADER_H_
+#define _YSCHOIABAQUSREADER_H_
 
 #include <string.h> // needed for the ::memcpy function below
 #include <QtCore/QString>

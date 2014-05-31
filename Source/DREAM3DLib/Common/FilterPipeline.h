@@ -28,8 +28,8 @@
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef FILTERPIPELINE_H_
-#define FILTERPIPELINE_H_
+#ifndef _FILTERPIPELINE_H_
+#define _FILTERPIPELINE_H_
 
 #include <QtCore/QObject>
 #include <QtCore/QString>

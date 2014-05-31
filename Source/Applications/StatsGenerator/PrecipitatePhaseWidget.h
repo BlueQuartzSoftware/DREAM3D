@@ -5,8 +5,8 @@
  *      Author: mjackson
  */
 
-#ifndef PrecipitatePhaseWidget_H_
-#define PrecipitatePhaseWidget_H_
+#ifndef _PrecipitatePhaseWidget_H_
+#define _PrecipitatePhaseWidget_H_
 
 #include "SGWidget.h"
 #include "ui_PrecipitatePhaseWidget.h"

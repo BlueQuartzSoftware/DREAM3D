@@ -34,8 +34,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef SampleSurfaceMesh_H_
-#define SampleSurfaceMesh_H_
+#ifndef _SampleSurfaceMesh_H_
+#define _SampleSurfaceMesh_H_
 
 #include <QtCore/QString>
 

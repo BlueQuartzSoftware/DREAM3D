@@ -34,8 +34,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef IFILTERWIDGETFACTOR_H_
-#define IFILTERWIDGETFACTOR_H_
+#ifndef _IFILTERWIDGETFACTOR_H_
+#define _IFILTERWIDGETFACTOR_H_
 
 
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"

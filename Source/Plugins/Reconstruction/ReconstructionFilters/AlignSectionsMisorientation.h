@@ -34,8 +34,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef AlignSectionsMisorientation_H_
-#define AlignSectionsMisorientation_H_
+#ifndef _AlignSectionsMisorientation_H_
+#define _AlignSectionsMisorientation_H_
 
 #include <vector>
 #include <QtCore/QString>

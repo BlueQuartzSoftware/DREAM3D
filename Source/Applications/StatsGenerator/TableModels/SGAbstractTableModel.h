@@ -33,8 +33,8 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef SGABSTRACTTABLEMODEL_H_
-#define SGABSTRACTTABLEMODEL_H_
+#ifndef _SGABSTRACTTABLEMODEL_H_
+#define _SGABSTRACTTABLEMODEL_H_
 
 #include <QtCore/QAbstractTableModel>
 #include <QtCore/QVector>

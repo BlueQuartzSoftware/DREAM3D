@@ -33,8 +33,8 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef FindSurfaceCells_H_
-#define FindSurfaceCells_H_
+#ifndef _FindSurfaceCells_H_
+#define _FindSurfaceCells_H_
 
 #include <vector>
 #include <QtCore/QString>

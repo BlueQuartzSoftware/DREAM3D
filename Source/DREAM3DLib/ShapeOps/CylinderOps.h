@@ -33,8 +33,8 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef CYLINDEROPS_H_
-#define CYLINDEROPS_H_
+#ifndef _CYLINDEROPS_H_
+#define _CYLINDEROPS_H_
 
 
 #include "ShapeOps.h"

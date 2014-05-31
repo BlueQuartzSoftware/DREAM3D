@@ -34,8 +34,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef BadDataNeighborOrientationCheck_H_
-#define BadDataNeighborOrientationCheck_H_
+#ifndef _BadDataNeighborOrientationCheck_H_
+#define _BadDataNeighborOrientationCheck_H_
 
 #include <vector>
 #include <QtCore/QString>

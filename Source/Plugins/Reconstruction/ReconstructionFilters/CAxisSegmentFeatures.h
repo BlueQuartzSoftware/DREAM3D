@@ -34,8 +34,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef CAxisSegmentFeatures_H_
-#define CAxisSegmentFeatures_H_
+#ifndef _CAxisSegmentFeatures_H_
+#define _CAxisSegmentFeatures_H_
 
 #include <QtCore/QString>
 

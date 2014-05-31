@@ -34,8 +34,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef FindTwinBoundarySchmidFactors_H_
-#define FindTwinBoundarySchmidFactors_H_
+#ifndef _FindTwinBoundarySchmidFactors_H_
+#define _FindTwinBoundarySchmidFactors_H_
 
 #include <vector>
 #include <QtCore/QString>

@@ -33,8 +33,8 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef SUPERELLIPSOIDOPS_H_
-#define SUPERELLIPSOIDOPS_H_
+#ifndef _SUPERELLIPSOIDOPS_H_
+#define _SUPERELLIPSOIDOPS_H_
 
 #include "ShapeOps.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"

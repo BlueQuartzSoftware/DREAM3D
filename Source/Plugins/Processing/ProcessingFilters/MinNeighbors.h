@@ -34,8 +34,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef MinNeighbors_H_
-#define MinNeighbors_H_
+#ifndef _MinNeighbors_H_
+#define _MinNeighbors_H_
 
 #include <vector>
 #include <QtCore/QString>

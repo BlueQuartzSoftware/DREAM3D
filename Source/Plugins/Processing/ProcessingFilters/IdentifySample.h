@@ -34,8 +34,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef IdentifySample_H_
-#define IdentifySample_H_
+#ifndef _IdentifySample_H_
+#define _IdentifySample_H_
 
 #include <vector>
 #include <QtCore/QString>

@@ -34,8 +34,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef QUALITYMETRICTABLEMODEL_H_
-#define QUALITYMETRICTABLEMODEL_H_
+#ifndef _QUALITYMETRICTABLEMODEL_H_
+#define _QUALITYMETRICTABLEMODEL_H_
 
 #include <QtCore/QAbstractTableModel>
 #include <QtCore/QVector>

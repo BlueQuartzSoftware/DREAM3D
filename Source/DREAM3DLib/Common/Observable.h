@@ -28,8 +28,8 @@
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef OBSERVABLE_H_
-#define OBSERVABLE_H_
+#ifndef _OBSERVABLE_H_
+#define _OBSERVABLE_H_
 
 #include <QtCore/QString>
 #include <QtCore/QVector>

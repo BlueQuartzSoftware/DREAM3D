@@ -34,8 +34,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef EBSDREFERENCEFRAMEWIDGET_H_
-#define EBSDREFERENCEFRAMEWIDGET_H_
+#ifndef _EBSDREFERENCEFRAMEWIDGET_H_
+#define _EBSDREFERENCEFRAMEWIDGET_H_
 
 #include <QtCore/QString>
 #include <QtCore/QStringList>

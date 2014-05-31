@@ -33,8 +33,8 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef QuickSurfaceMesh_H_
-#define QuickSurfaceMesh_H_
+#ifndef _QuickSurfaceMesh_H_
+#define _QuickSurfaceMesh_H_
 
 #include <vector>
 #include <QtCore/QString>

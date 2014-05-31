@@ -5,8 +5,8 @@
  *      Author: mjackson
  */
 
-#ifndef BoundaryPhaseWidget_H_
-#define BoundaryPhaseWidget_H_
+#ifndef _BoundaryPhaseWidget_H_
+#define _BoundaryPhaseWidget_H_
 
 #include "SGWidget.h"
 #include "ui_BoundaryPhaseWidget.h"

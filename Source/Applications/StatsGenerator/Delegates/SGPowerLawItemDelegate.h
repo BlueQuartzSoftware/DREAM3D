@@ -33,8 +33,8 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef SGPOWERLAWITEMDELEGATE_H_
-#define SGPOWERLAWITEMDELEGATE_H_
+#ifndef _SGPOWERLAWITEMDELEGATE_H_
+#define _SGPOWERLAWITEMDELEGATE_H_
 
 #include <iostream>
 

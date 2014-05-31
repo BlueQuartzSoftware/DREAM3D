@@ -34,8 +34,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef AddOrientationNoise_H_
-#define AddOrientationNoise_H_
+#ifndef _AddOrientationNoise_H_
+#define _AddOrientationNoise_H_
 
 #include <QtCore/QString>
 #include <vector>

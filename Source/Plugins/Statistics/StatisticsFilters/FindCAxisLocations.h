@@ -34,8 +34,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef FindCAxisLocations_H_
-#define FindCAxisLocations_H_
+#ifndef _FindCAxisLocations_H_
+#define _FindCAxisLocations_H_
 
 #include <vector>
 #include <QtCore/QString>

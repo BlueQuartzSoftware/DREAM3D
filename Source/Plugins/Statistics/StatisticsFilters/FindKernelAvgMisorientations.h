@@ -34,8 +34,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef FindKernelAvgMisorientations_H_
-#define FindKernelAvgMisorientations_H_
+#ifndef _FindKernelAvgMisorientations_H_
+#define _FindKernelAvgMisorientations_H_
 
 #include <vector>
 #include <QtCore/QString>

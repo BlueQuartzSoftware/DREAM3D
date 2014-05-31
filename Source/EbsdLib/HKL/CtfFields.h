@@ -34,8 +34,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef CTFFIELDS_H_
-#define CTFFIELDS_H_
+#ifndef _CTFFIELDS_H_
+#define _CTFFIELDS_H_
 
 #include <QtCore/QString>
 #include <QtCore/QVector>

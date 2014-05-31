@@ -33,8 +33,8 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef SGLOGNORMALITEMDELEGATE_H_
-#define SGLOGNORMALITEMDELEGATE_H_
+#ifndef _SGLOGNORMALITEMDELEGATE_H_
+#define _SGLOGNORMALITEMDELEGATE_H_
 
 #include <iostream>
 

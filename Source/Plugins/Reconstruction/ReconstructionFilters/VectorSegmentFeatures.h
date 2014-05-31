@@ -34,8 +34,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef VectorSegmentFeatures_H_
-#define VectorSegmentFeatures_H_
+#ifndef _VectorSegmentFeatures_H_
+#define _VectorSegmentFeatures_H_
 
 #include <QtCore/QString>
 

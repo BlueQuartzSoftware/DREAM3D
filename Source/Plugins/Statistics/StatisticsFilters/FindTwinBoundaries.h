@@ -34,8 +34,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef FindTwinBoundaries_H_
-#define FindTwinBoundaries_H_
+#ifndef _FindTwinBoundaries_H_
+#define _FindTwinBoundaries_H_
 
 #include <vector>
 #include <QtCore/QString>

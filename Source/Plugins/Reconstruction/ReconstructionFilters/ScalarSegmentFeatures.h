@@ -34,8 +34,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef ScalarSegmentFeatures_H_
-#define ScalarSegmentFeatures_H_
+#ifndef _ScalarSegmentFeatures_H_
+#define _ScalarSegmentFeatures_H_
 
 #include <QtCore/QString>
 

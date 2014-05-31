@@ -35,8 +35,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef FindFeatureHistogram_H_
-#define FindFeatureHistogram_H_
+#ifndef _FindFeatureHistogram_H_
+#define _FindFeatureHistogram_H_
 
 #include <QtCore/QString>
 #include <set>

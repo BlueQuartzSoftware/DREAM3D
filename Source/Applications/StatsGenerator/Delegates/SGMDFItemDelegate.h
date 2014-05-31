@@ -33,8 +33,8 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef SGMDFITEMDELEGATE_H_
-#define SGMDFITEMDELEGATE_H_
+#ifndef _SGMDFITEMDELEGATE_H_
+#define _SGMDFITEMDELEGATE_H_
 
 #include <iostream>
 

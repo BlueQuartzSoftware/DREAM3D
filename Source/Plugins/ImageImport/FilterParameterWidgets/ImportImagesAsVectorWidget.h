@@ -34,8 +34,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef ImportImagesAsVectorWIDGET_H_
-#define ImportImagesAsVectorWIDGET_H_
+#ifndef _ImportImagesAsVectorWIDGET_H_
+#define _ImportImagesAsVectorWIDGET_H_
 
 
 #include <QtCore/QString>

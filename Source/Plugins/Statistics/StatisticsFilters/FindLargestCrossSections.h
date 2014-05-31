@@ -34,8 +34,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef FindLargestCrossSections_H_
-#define FindLargestCrossSections_H_
+#ifndef _FindLargestCrossSections_H_
+#define _FindLargestCrossSections_H_
 
 #include <vector>
 #include <QtCore/QString>

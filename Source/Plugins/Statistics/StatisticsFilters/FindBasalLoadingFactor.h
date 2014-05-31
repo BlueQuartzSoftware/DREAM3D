@@ -35,8 +35,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef FINDBASALLOADINGFACTOR_H_
-#define FINDBASALLOADINGFACTOR_H_
+#ifndef _FINDBASALLOADINGFACTOR_H_
+#define _FINDBASALLOADINGFACTOR_H_
 
 #include <vector>
 #include <string>

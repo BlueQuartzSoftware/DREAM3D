@@ -34,8 +34,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef H5DATAARRAYREADER_HPP_
-#define H5DATAARRAYREADER_HPP_
+#ifndef _H5DATAARRAYREADER_HPP_
+#define _H5DATAARRAYREADER_HPP_
 
 #include <hdf5.h>
 

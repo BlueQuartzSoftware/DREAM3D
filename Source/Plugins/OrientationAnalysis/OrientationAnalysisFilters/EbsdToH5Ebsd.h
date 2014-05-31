@@ -33,8 +33,8 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef EbsdToH5Ebsd_H_
-#define EbsdToH5Ebsd_H_
+#ifndef _EbsdToH5Ebsd_H_
+#define _EbsdToH5Ebsd_H_
 
 #include <QtCore/QVector>
 #include <QtCore/QString>

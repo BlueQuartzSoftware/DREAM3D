@@ -33,8 +33,8 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef UpdateCellQuats_H_
-#define UpdateCellQuats_H_
+#ifndef _UpdateCellQuats_H_
+#define _UpdateCellQuats_H_
 
 #include <vector>
 #include <QtCore/QString>

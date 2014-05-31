@@ -34,8 +34,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef ALIGNSECTIONS_H_
-#define ALIGNSECTIONS_H_
+#ifndef _ALIGNSECTIONS_H_
+#define _ALIGNSECTIONS_H_
 
 #include <vector>
 #include <QtCore/QString>

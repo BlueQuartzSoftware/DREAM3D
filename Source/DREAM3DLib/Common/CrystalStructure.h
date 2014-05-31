@@ -33,8 +33,8 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef CRYSTALSTRUCTURE_H_
-#define CRYSTALSTRUCTURE_H_
+#ifndef _CRYSTALSTRUCTURE_H_
+#define _CRYSTALSTRUCTURE_H_
 
 
 #error

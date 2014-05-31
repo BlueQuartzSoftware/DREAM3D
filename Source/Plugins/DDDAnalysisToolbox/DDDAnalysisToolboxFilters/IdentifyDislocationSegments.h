@@ -35,8 +35,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef IdentifyDislocationSegments_H_
-#define IdentifyDislocationSegments_H_
+#ifndef _IdentifyDislocationSegments_H_
+#define _IdentifyDislocationSegments_H_
 
 #include <QtCore/QString>
 #include <set>

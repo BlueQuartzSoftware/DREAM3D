@@ -35,8 +35,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef GroupFeatures_H_
-#define GroupFeatures_H_
+#ifndef _GroupFeatures_H_
+#define _GroupFeatures_H_
 
 #include <vector>
 #include <QtCore/QString>

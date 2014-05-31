@@ -34,8 +34,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef QCHECKBOXDIALOG_H_
-#define QCHECKBOXDIALOG_H_
+#ifndef _QCHECKBOXDIALOG_H_
+#define _QCHECKBOXDIALOG_H_
 
 #include <QtCore/QMap>
 #include <QtCore/QString>

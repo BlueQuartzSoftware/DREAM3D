@@ -34,8 +34,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef SEGMENTGRAINS_H_
-#define SEGMENTGRAINS_H_
+#ifndef _SEGMENTGRAINS_H_
+#define _SEGMENTGRAINS_H_
 
 #include <vector>
 #include <QtCore/QString>

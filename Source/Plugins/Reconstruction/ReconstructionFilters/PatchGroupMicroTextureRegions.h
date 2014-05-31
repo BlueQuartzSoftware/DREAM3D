@@ -35,8 +35,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef PatchGroupMicroTextureRegions_H_
-#define PatchGroupMicroTextureRegions_H_
+#ifndef _PatchGroupMicroTextureRegions_H_
+#define _PatchGroupMicroTextureRegions_H_
 
 #include <vector>
 #include <QtCore/QString>

@@ -35,8 +35,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef FindAvgScalarValueForFeatures_H_
-#define FindAvgScalarValueForFeatures_H_
+#ifndef _FindAvgScalarValueForFeatures_H_
+#define _FindAvgScalarValueForFeatures_H_
 
 #include <QtCore/QString>
 #include <set>

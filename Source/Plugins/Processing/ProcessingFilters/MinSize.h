@@ -34,8 +34,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef MinSize_H_
-#define MinSize_H_
+#ifndef _MinSize_H_
+#define _MinSize_H_
 
 #include <vector>
 #include <QtCore/QString>

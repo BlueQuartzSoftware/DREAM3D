@@ -33,8 +33,8 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef TEXTFilterParametersWRITER_H_
-#define TEXTFilterParametersWRITER_H_
+#ifndef _TEXTFilterParametersWRITER_H_
+#define _TEXTFilterParametersWRITER_H_
 
 #include <QtCore/QString>
 

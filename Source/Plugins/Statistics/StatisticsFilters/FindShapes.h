@@ -34,8 +34,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef FINDSHAPES_H_
-#define FINDSHAPES_H_
+#ifndef _FINDSHAPES_H_
+#define _FINDSHAPES_H_
 
 #include <vector>
 #include <QtCore/QString>

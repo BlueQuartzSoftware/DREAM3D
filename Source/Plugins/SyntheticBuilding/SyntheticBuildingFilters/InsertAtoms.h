@@ -34,8 +34,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef InsertAtoms_H_
-#define InsertAtoms_H_
+#ifndef _InsertAtoms_H_
+#define _InsertAtoms_H_
 
 #include <QtCore/QString>
 

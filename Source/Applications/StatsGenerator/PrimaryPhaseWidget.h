@@ -5,8 +5,8 @@
  *      Author: mjackson
  */
 
-#ifndef PRIMARYPHASEWIDGET_H_
-#define PRIMARYPHASEWIDGET_H_
+#ifndef _PRIMARYPHASEWIDGET_H_
+#define _PRIMARYPHASEWIDGET_H_
 
 #include "SGWidget.h"
 #include "ui_PrimaryPhaseWidget.h"

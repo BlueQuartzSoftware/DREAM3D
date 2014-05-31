@@ -33,8 +33,8 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef HDF5MACROS_H_
-#define HDF5MACROS_H_
+#ifndef _HDF5MACROS_H_
+#define _HDF5MACROS_H_
 
 
 #define OPEN_HDF5_FILE(fileId, filename)\

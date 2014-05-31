@@ -33,8 +33,8 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef ABSTRACTEBSDFIELDS_H_
-#define ABSTRACTEBSDFIELDS_H_
+#ifndef _ABSTRACTEBSDFIELDS_H_
+#define _ABSTRACTEBSDFIELDS_H_
 
 
 #include <QtCore/QString>

@@ -34,8 +34,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef FillBadData_H_
-#define FillBadData_H_
+#ifndef _FillBadData_H_
+#define _FillBadData_H_
 
 #include <vector>
 #include <QtCore/QString>

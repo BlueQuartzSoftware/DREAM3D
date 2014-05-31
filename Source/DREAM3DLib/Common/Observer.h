@@ -28,8 +28,8 @@
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef OBSERVER_H_
-#define OBSERVER_H_
+#ifndef _OBSERVER_H_
+#define _OBSERVER_H_
 
 
 #include <QtCore/QObject>

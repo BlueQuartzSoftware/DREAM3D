@@ -34,8 +34,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef SURFACEDATACONTAINER_H_
-#define SURFACEDATACONTAINER_H_
+#ifndef _SURFACEDATACONTAINER_H_
+#define _SURFACEDATACONTAINER_H_
 
 #if defined (_MSC_VER)
 #define WIN32_LEAN_AND_MEAN   // Exclude rarely-used stuff from Windows headers

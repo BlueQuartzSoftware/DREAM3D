@@ -33,8 +33,8 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef SGBETAITEMDELEGATE_H_
-#define SGBETAITEMDELEGATE_H_
+#ifndef _SGBETAITEMDELEGATE_H_
+#define _SGBETAITEMDELEGATE_H_
 
 #include <iostream>
 

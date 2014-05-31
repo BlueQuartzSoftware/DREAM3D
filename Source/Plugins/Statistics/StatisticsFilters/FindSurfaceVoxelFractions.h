@@ -34,8 +34,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef FindSurfaceVoxelFractions_H_
-#define FindSurfaceVoxelFractions_H_
+#ifndef _FindSurfaceVoxelFractions_H_
+#define _FindSurfaceVoxelFractions_H_
 
 #include <vector>
 #include <QtCore/QString>

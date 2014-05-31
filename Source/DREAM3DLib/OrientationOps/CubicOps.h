@@ -34,8 +34,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef CUBICOPS_H_
-#define CUBICOPS_H_
+#ifndef _CUBICOPS_H_
+#define _CUBICOPS_H_
 
 
 #include "DREAM3DLib/DREAM3DLib.h"

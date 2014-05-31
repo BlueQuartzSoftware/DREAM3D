@@ -34,8 +34,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef ANGFIELDS_H_
-#define ANGFIELDS_H_
+#ifndef _ANGFIELDS_H_
+#define _ANGFIELDS_H_
 
 #include <QtCore/QString>
 #include <QtCore/QVector>

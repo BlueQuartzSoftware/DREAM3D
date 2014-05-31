@@ -34,8 +34,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef FILEREADER_H_
-#define FILEREADER_H_
+#ifndef _FILEREADER_H_
+#define _FILEREADER_H_
 
 #include <vector>
 #include <QtCore/QString>

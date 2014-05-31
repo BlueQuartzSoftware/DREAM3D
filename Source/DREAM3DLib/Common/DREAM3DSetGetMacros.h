@@ -34,8 +34,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef DREAM3DSETGETMACROS_H_
-#define DREAM3DSETGETMACROS_H_
+#ifndef _DREAM3DSETGETMACROS_H_
+#define _DREAM3DSETGETMACROS_H_
 
 #include <string.h>
 

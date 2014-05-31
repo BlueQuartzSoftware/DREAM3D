@@ -35,8 +35,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef ReadH5Ebsd_H_
-#define ReadH5Ebsd_H_
+#ifndef _ReadH5Ebsd_H_
+#define _ReadH5Ebsd_H_
 
 #include <vector>
 #include <QtCore/QString>
