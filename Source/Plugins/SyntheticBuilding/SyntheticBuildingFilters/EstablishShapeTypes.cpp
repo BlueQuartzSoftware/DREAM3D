@@ -184,10 +184,10 @@ int EstablishShapeTypes::getPhaseCount()
   AttributeMatrix::Pointer inputAttrMat = dca->getAttributeMatrix(getInputPhaseTypesArrayPath());
   if (NULL == inputAttrMat.get() ) { return 0; }
   QVector<size_t> tupleDims = inputAttrMat->getTupleDimensions();
-  size_t phaseCount = 0;
+  size_t phaseCount = 1;
   for(qint32 i = 0; i < tupleDims.size(); i++)
   {
-    phaseCount = phaseCount + tupleDims[i];
+    phaseCount = phaseCount * tupleDims[i];
   }
   return phaseCount;
 }

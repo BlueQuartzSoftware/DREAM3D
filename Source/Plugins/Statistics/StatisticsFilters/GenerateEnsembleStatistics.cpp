@@ -50,7 +50,8 @@
 // -----------------------------------------------------------------------------
 GenerateEnsembleStatistics::GenerateEnsembleStatistics()  :
   AbstractFilter(),
-  m_CellEnsembleAttributeMatrixName(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellEnsembleAttributeMatrixName, ""),
+  m_CellEnsembleAttributeMatrixPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellEnsembleAttributeMatrixName, ""),
+  m_PhaseTypesArrayName(DREAM3D::EnsembleData::PhaseTypes),
   m_NeighborListArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, DREAM3D::FeatureData::NeighborList),
   m_SharedSurfaceAreaListArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, DREAM3D::FeatureData::SharedSurfaceAreaList),
   m_FeaturePhasesArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, DREAM3D::FeatureData::Phases),
@@ -65,7 +66,6 @@ GenerateEnsembleStatistics::GenerateEnsembleStatistics()  :
   m_VolumesArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, DREAM3D::FeatureData::Volumes),
   m_FeatureEulerAnglesArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, DREAM3D::FeatureData::EulerAngles),
   m_AvgQuatsArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, DREAM3D::FeatureData::AvgQuats),
-  m_PhaseTypesArrayName(DREAM3D::EnsembleData::PhaseTypes),
   m_StatisticsArrayName(DREAM3D::EnsembleData::Statistics),
   m_CalculateMorphologicalStats(true),
   m_ComputeSizeDistribution(false),
@@ -134,71 +134,70 @@ void GenerateEnsembleStatistics::setupFilterParameters()
 
   FilterParameterVector parameters;
 
-
   parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "", false));
+  // The AttributeMatrix that the PhaseTypes are going into
+  parameters.push_back(FilterParameter::New("Cell Ensemble Attribute Matrix Name", "CellEnsembleAttributeMatrixPath", FilterParameterWidgetType::AttributeMatrixSelectionWidget, getCellEnsembleAttributeMatrixPath(), false, ""));
+  // The user types in an array name for the Phase Types
+  parameters.push_back(FilterParameter::New("Phase Types Array", "PhaseTypesArrayName", FilterParameterWidgetType::StringWidget, getPhaseTypesArrayName(), false, ""));
+  // The user selects the appropriate phase types from the combo box menus that are presented to them. One for each tuple in the AttributeMatrix
+  PhaseTypesFilterParameter::Pointer sType_parameter = PhaseTypesFilterParameter::New(
+                                                         "Phase Types", "PhaseTypeData", FilterParameterWidgetType::PhaseTypeSelectionWidget,
+                                                         "UInt32Vector_t", "PhaseCount", "InputPhaseTypesArrayPath", false);
+  parameters.push_back(sType_parameter);
   parameters.push_back(FilterParameter::New("Size Correlation Resolution", "SizeCorrelationResolution", FilterParameterWidgetType::DoubleWidget, getSizeCorrelationResolution(), false));
 
-  parameters.push_back(FilterParameter::New("Phase Types Array", "PhaseTypesArrayName", FilterParameterWidgetType::StringWidget, getPhaseTypesArrayName(), false, ""));
+  parameters.push_back(FilterParameter::New("Feature Phases", "FeaturePhasesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeaturePhasesArrayPath(), false, ""));
 
   QStringList linkedProps;
   linkedProps << "SizeDistributionFitType" << "BiasedFeaturesArrayPath" << "EquivalentDiametersArrayPath";
   linkedProps << "AspectRatioDistributionFitType" << "AspectRatiosArrayPath";
   linkedProps << "Omega3DistributionFitType" << "Omega3sArrayPath";
   linkedProps << "NeighborhoodDistributionFitType" << "NeighborhoodsArrayPath";
+  linkedProps << "CalculateAxisODF" << "AxisEulerAnglesArrayPath" << "SEPARATOR-2";
   parameters.push_back(FilterParameter::NewConditional("Calculate Morphological Stats", "CalculateMorphologicalStats", FilterParameterWidgetType::LinkedBooleanWidget, getCalculateMorphologicalStats(), false, linkedProps));
 
 
-  parameters.push_back(ChoiceFilterParameter::New("Size Distribution Fit Type", "SizeDistributionFitType", getSizeDistributionFitType(), choices, false));
-  parameters.push_back(FilterParameter::New("Biased Features", "BiasedFeaturesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getBiasedFeaturesArrayPath(), false, ""));
-  parameters.push_back(FilterParameter::New("Equivalent Diameters", "EquivalentDiametersArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getEquivalentDiametersArrayPath(), false, ""));
+  parameters.push_back(ChoiceFilterParameter::New("Size Distribution Fit Type", "SizeDistributionFitType", getSizeDistributionFitType(), choices, false, true));
+  parameters.push_back(FilterParameter::New("Biased Features", "BiasedFeaturesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getBiasedFeaturesArrayPath(), true, ""));
+  parameters.push_back(FilterParameter::New("Equivalent Diameters", "EquivalentDiametersArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getEquivalentDiametersArrayPath(), true, ""));
 
+  parameters.push_back(ChoiceFilterParameter::New("Aspect Ratio Distribution Fit Type", "AspectRatioDistributionFitType", getAspectRatioDistributionFitType(), choices, false, true));
+  parameters.push_back(FilterParameter::New("Aspect Ratios", "AspectRatiosArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getAspectRatiosArrayPath(), true, ""));
 
-  parameters.push_back(ChoiceFilterParameter::New("Aspect Ratio Distribution Fit Type", "AspectRatioDistributionFitType", getAspectRatioDistributionFitType(), choices, false));
-  parameters.push_back(FilterParameter::New("Aspect Ratios", "AspectRatiosArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getAspectRatiosArrayPath(), false, ""));
+  parameters.push_back(ChoiceFilterParameter::New("Omega 3 Distribution Fit Type", "Omega3DistributionFitType", getOmega3DistributionFitType(), choices, false, true));
+  parameters.push_back(FilterParameter::New("Omega 3s", "Omega3sArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getOmega3sArrayPath(), true, ""));
 
+  parameters.push_back(ChoiceFilterParameter::New("Neighborhood Distribution Fit Type", "NeighborhoodDistributionFitType", getNeighborhoodDistributionFitType(), choices, false, true));
+  parameters.push_back(FilterParameter::New("Neighborhoods", "NeighborhoodsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getNeighborhoodsArrayPath(), true, ""));
 
-  parameters.push_back(ChoiceFilterParameter::New("Omega 3 Distribution Fit Type", "Omega3DistributionFitType", getOmega3DistributionFitType(), choices, false));
-  parameters.push_back(FilterParameter::New("Omega 3s", "Omega3sArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getOmega3sArrayPath(), false, ""));
-
-
-  parameters.push_back(ChoiceFilterParameter::New("Neighborhood Distribution Fit Type", "NeighborhoodDistributionFitType", getNeighborhoodDistributionFitType(), choices, false));
-  parameters.push_back(FilterParameter::New("Neighborhoods", "NeighborhoodsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getNeighborhoodsArrayPath(), false, ""));
-
+  parameters.push_back(FilterParameter::New("Axis ODF Input Data", "SEPARATOR-2", FilterParameterWidgetType::SeparatorWidget, "", true));
+  parameters.push_back(FilterParameter::New("Axis Euler Angles", "AxisEulerAnglesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getAxisEulerAnglesArrayPath(), true, ""));
 
   linkedProps.clear();
   linkedProps << "CrystalStructuresArrayPath" << "SurfaceFeaturesArrayPath";
   linkedProps << "CalculateODF" << "VolumesArrayPath" << "FeatureEulerAnglesArrayPath";
   linkedProps << "CalculateMDF" << "SharedSurfaceAreaListArrayPath" << "AvgQuatsArrayPath" << "NeighborListArrayPath";
-  linkedProps << "CalculateAxisODF" << "AxisEulerAnglesArrayPath";
+  linkedProps << "SEPARATOR-0" << "SEPARATOR-1";
   parameters.push_back(FilterParameter::NewConditional("Calculate Crystallographic Stats", "CalculateCrystallographicStats", FilterParameterWidgetType::LinkedBooleanWidget, getCalculateCrystallographicStats(), false, linkedProps));
 
-  parameters.push_back(FilterParameter::New("Crystal Structures", "CrystalStructuresArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getCrystalStructuresArrayPath(), false, ""));
-  parameters.push_back(FilterParameter::New("Surface Features", "SurfaceFeaturesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getSurfaceFeaturesArrayPath(), false, ""));
+  parameters.push_back(FilterParameter::New("Crystal Structures", "CrystalStructuresArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getCrystalStructuresArrayPath(), true, ""));
+  parameters.push_back(FilterParameter::New("Surface Features", "SurfaceFeaturesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getSurfaceFeaturesArrayPath(), true, ""));
 
-  parameters.push_back(FilterParameter::New("ODF Input Data", "", FilterParameterWidgetType::SeparatorWidget, "", false));
-  //parameters.push_back(FilterParameter::New("Calculate ODF", "CalculateODF", FilterParameterWidgetType::BooleanWidget, getCalculateODF(), false));
-  parameters.push_back(FilterParameter::New("Volumes", "VolumesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getVolumesArrayPath(), false, ""));
-  parameters.push_back(FilterParameter::New("Feature Euler Angles", "FeatureEulerAnglesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeatureEulerAnglesArrayPath(), false, ""));
+  parameters.push_back(FilterParameter::New("ODF Input Data", "SEPARATOR-0", FilterParameterWidgetType::SeparatorWidget, "", true));
+  parameters.push_back(FilterParameter::New("Volumes", "VolumesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getVolumesArrayPath(), true, ""));
+  parameters.push_back(FilterParameter::New("Feature Euler Angles", "FeatureEulerAnglesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeatureEulerAnglesArrayPath(), true, ""));
 
-  parameters.push_back(FilterParameter::New("MDF Input Data", "", FilterParameterWidgetType::SeparatorWidget, "", false));
-  //parameters.push_back(FilterParameter::New("Calculate MDF", "CalculateMDF", FilterParameterWidgetType::BooleanWidget, getCalculateMDF(), false));
-  parameters.push_back(FilterParameter::New("Shared Surface Area List Array Name", "SharedSurfaceAreaListArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getSharedSurfaceAreaListArrayPath(), false, ""));
-  parameters.push_back(FilterParameter::New("Avgerage Quats", "AvgQuatsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getAvgQuatsArrayPath(), false, ""));
-  parameters.push_back(FilterParameter::New("Neighbor List Array Name", "NeighborListArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getNeighborListArrayPath(), false, ""));
-
-
-  parameters.push_back(FilterParameter::New("Axis ODF Input Data", "", FilterParameterWidgetType::SeparatorWidget, "", false));
-  //parameters.push_back(FilterParameter::New("Calculate Axis ODF", "CalculateAxisODF", FilterParameterWidgetType::BooleanWidget, getCalculateAxisODF(), false));
-  parameters.push_back(FilterParameter::New("Axis Euler Angles", "AxisEulerAnglesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getAxisEulerAnglesArrayPath(), false, ""));
-
-
-  parameters.push_back(FilterParameter::New("Feature Phases", "FeaturePhasesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeaturePhasesArrayPath(), false, ""));
-  parameters.push_back(FilterParameter::New("Cell Ensemble Attribute Matrix Name", "CellEnsembleAttributeMatrixName", FilterParameterWidgetType::AttributeMatrixSelectionWidget, getCellEnsembleAttributeMatrixName(), false, ""));
+  parameters.push_back(FilterParameter::New("MDF Input Data", "SEPARATOR-1", FilterParameterWidgetType::SeparatorWidget, "", true));
+  parameters.push_back(FilterParameter::New("Shared Surface Area List Array Name", "SharedSurfaceAreaListArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getSharedSurfaceAreaListArrayPath(), true, ""));
+  parameters.push_back(FilterParameter::New("Avgerage Quats", "AvgQuatsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getAvgQuatsArrayPath(), true, ""));
+  parameters.push_back(FilterParameter::New("Neighbor List Array Name", "NeighborListArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getNeighborListArrayPath(), true, ""));
 
 
   parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "", false));
 
   parameters.push_back(FilterParameter::New("Created Statistics Array Name", "StatisticsArrayName", FilterParameterWidgetType::StringWidget, getStatisticsArrayName(), false, ""));
+
+
   setFilterParameters(parameters);
 }
 // -----------------------------------------------------------------------------
@@ -206,7 +205,7 @@ void GenerateEnsembleStatistics::readFilterParameters(AbstractFilterParametersRe
 {
   reader->openFilterGroup(this, index);
   setCalculateMorphologicalStats(reader->readValue("CalculateMorphologicalStats", getCalculateMorphologicalStats()));
-  setCellEnsembleAttributeMatrixName(reader->readDataArrayPath("CellEnsembleAttributeMatrixName", getCellEnsembleAttributeMatrixName()));
+  setCellEnsembleAttributeMatrixPath(reader->readDataArrayPath("CellEnsembleAttributeMatrixPath", getCellEnsembleAttributeMatrixPath()));
   setPhaseTypesArrayName(reader->readString("PhaseTypesArrayName", getPhaseTypesArrayName() ) );
   setStatisticsArrayName(reader->readString("StatisticsArrayName", getStatisticsArrayName() ) );
   setAvgQuatsArrayPath(reader->readDataArrayPath("AvgQuatsArrayPath", getAvgQuatsArrayPath() ) );
@@ -234,7 +233,13 @@ void GenerateEnsembleStatistics::readFilterParameters(AbstractFilterParametersRe
   setCalculateMDF( reader->readValue("CalculateMDF", getCalculateMDF() ) );
   setCalculateAxisODF( reader->readValue("CalculateAxisODF", getCalculateAxisODF() ) );
   setSizeCorrelationResolution( reader->readValue("SizeCorrelationResolution", getSizeCorrelationResolution() ) );
-  setPhaseTypeArray( reader->readArray("PhaseTypeArray", getPhaseTypeArray() ) );
+
+  QVector<uint32_t> data = getPhaseTypeData().d;
+  data = reader->readArray("PhaseTypeArray", data);
+  UInt32Vector_t vec;
+  vec.d = data;
+  setPhaseTypeData(vec);
+
   reader->closeFilterGroup();
 }
 
@@ -245,7 +250,7 @@ int GenerateEnsembleStatistics::writeFilterParameters(AbstractFilterParametersWr
 {
   writer->openFilterGroup(this, index);
   writer->writeValue("CalculateMorphologicalStats", getCalculateMorphologicalStats() );
-  writer->writeValue("CellEnsembleAttributeMatrixName", getCellEnsembleAttributeMatrixName());
+  writer->writeValue("CellEnsembleAttributeMatrixPath", getCellEnsembleAttributeMatrixPath());
   writer->writeValue("PhaseTypesArrayName", getPhaseTypesArrayName() );
   writer->writeValue("StatisticsArrayName", getStatisticsArrayName() );
   writer->writeValue("AvgQuatsArrayPath", getAvgQuatsArrayPath() );
@@ -273,7 +278,7 @@ int GenerateEnsembleStatistics::writeFilterParameters(AbstractFilterParametersWr
   writer->writeValue("CalculateMDF", getCalculateMDF() );
   writer->writeValue("CalculateAxisODF", getCalculateAxisODF() );
   writer->writeValue("SizeCorrelationResolution", getSizeCorrelationResolution() );
-  writer->writeValue("PhaseTypeArray", getPhaseTypeArray() );
+  writer->writeValue("PhaseTypeArray", getPhaseTypeData().d );
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
@@ -377,7 +382,7 @@ void GenerateEnsembleStatistics::dataCheck()
     m_NeighborList = getDataContainerArray()->getPrereqArrayFromPath<NeighborList<int>, AbstractFilter>(this, getNeighborListArrayPath(), dims);
   }
 
-  if (m_PhaseTypeArray.size() <= 1)
+  if (m_PhaseTypeData.d.size() == 0)
   {
     notifyErrorMessage(getHumanLabel(), "The Phase Type Array must contain at least one member.  Add a Phase Type on the GUI.", -1000);
     return;
@@ -386,16 +391,16 @@ void GenerateEnsembleStatistics::dataCheck()
   {
     dims[0] = 1;
     typedef DataArray<unsigned int> PhaseTypeArrayType;
-    tempPath.update(getCellEnsembleAttributeMatrixName().getDataContainerName(), getCellEnsembleAttributeMatrixName().getAttributeMatrixName(), getPhaseTypesArrayName() );
+    tempPath.update(getCellEnsembleAttributeMatrixPath().getDataContainerName(), getCellEnsembleAttributeMatrixPath().getAttributeMatrixName(), getPhaseTypesArrayName() );
     m_PhaseTypesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<uint32_t>, AbstractFilter, uint32_t>(this, tempPath, DREAM3D::PhaseType::UnknownPhaseType, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
     if( NULL != m_PhaseTypesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
     { m_PhaseTypes = m_PhaseTypesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   }
 
   //now create and add the stats array itself
-  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getCellEnsembleAttributeMatrixName().getDataContainerName());
+  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getCellEnsembleAttributeMatrixPath().getDataContainerName());
   if(getErrorCondition() < 0 || m == NULL) { return; }
-  AttributeMatrix::Pointer attrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellEnsembleAttributeMatrixName().getAttributeMatrixName(), -301);
+  AttributeMatrix::Pointer attrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellEnsembleAttributeMatrixPath().getAttributeMatrixName(), -301);
   if(getErrorCondition() < 0 || attrMat == NULL) { return; }
 
   m_StatsDataArray = StatsDataArray::CreateArray(m_PhaseTypesPtr.lock()->getNumberOfTuples(), getStatisticsArrayName());
@@ -444,17 +449,17 @@ void GenerateEnsembleStatistics::execute()
   int totalEnsembles = m_PhaseTypesPtr.lock()->getNumberOfTuples();
 
   // Check to see if the user has over ridden the phase types for this filter
-  if (m_PhaseTypeArray.size() > 0)
+  if (m_PhaseTypeData.d.size() > 0)
   {
     typedef DataArray<unsigned int> PhaseTypeArrayType;
 
-    if(static_cast<int>(m_PhaseTypeArray.size()) < totalEnsembles)
+    if(static_cast<int>(m_PhaseTypeData.d.size()) < totalEnsembles)
     {
       setErrorCondition(-999);
       notifyErrorMessage(getHumanLabel(), "The number of PhaseTypes entered is less than the number of Ensembles", -999);
       return;
     }
-    if(static_cast<int>(m_PhaseTypeArray.size()) > totalEnsembles)
+    if(static_cast<int>(m_PhaseTypeData.d.size()) > totalEnsembles)
     {
 
       QString ss = QObject::tr("The number of PhaseTypes entered is more than the number of Ensembles, only the first %1 will be used").arg(totalEnsembles - 1);
@@ -462,7 +467,7 @@ void GenerateEnsembleStatistics::execute()
     }
     for(int r = 0; r < totalEnsembles; ++r)
     {
-      m_PhaseTypes[r] = m_PhaseTypeArray[r];
+      m_PhaseTypes[r] = m_PhaseTypeData.d[r];
     }
   }
 
@@ -1074,6 +1079,26 @@ void GenerateEnsembleStatistics::gatherAxisODFStats()
     }
   }
 }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int GenerateEnsembleStatistics::getPhaseCount()
+{
+  DataContainerArray::Pointer dca = getDataContainerArray();
+
+  AttributeMatrix::Pointer inputAttrMat = dca->getAttributeMatrix(getCellEnsembleAttributeMatrixPath());
+  if (NULL == inputAttrMat.get() ) { return 0; }
+  QVector<size_t> tupleDims = inputAttrMat->getTupleDimensions();
+  size_t phaseCount = 1;
+  for(qint32 i = 0; i < tupleDims.size(); i++)
+  {
+    phaseCount = phaseCount * tupleDims[i];
+  }
+  return phaseCount;
+}
+
 
 // -----------------------------------------------------------------------------
 //

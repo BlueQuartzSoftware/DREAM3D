@@ -214,7 +214,7 @@ void PipelineFilterWidget::layoutWidgets()
 #endif
 
 
-    // Figure out if we have any "Linked Boolean Widgets" to hook up to other
+    // Figure out if we have any "Linked Boolean Widgets" to hook up to other widgets
     for (QVector<FilterParameter::Pointer>::iterator iter = filterParameters.begin(); iter != filterParameters.end(); ++iter )
     {
       FilterParameter* option = (*iter).get();

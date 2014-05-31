@@ -174,7 +174,6 @@ FilterParameter::Pointer FilterParameter::New(const QString& humanLabel, const Q
                                               const QString& fileExtension,
                                               const QString& fileType)
 {
-
   FilterParameter::Pointer ptr = FilterParameter::New();
   ptr->setHumanLabel(humanLabel);
   ptr->setPropertyName(propertyName);
@@ -186,6 +185,29 @@ FilterParameter::Pointer FilterParameter::New(const QString& humanLabel, const Q
   ptr->setUnits(units);
   ptr->setFileExtension(fileExtension);
   ptr->setFileType(fileType);
+  if(ptr->getWidgetType().compare(FilterParameterWidgetType::SeparatorWidget) == 0)
+  {
+    ptr->setReadOnly(true);
+  }
+  return ptr;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+FilterParameter::Pointer FilterParameter::New(const QString& humanLabel, const QString& propertyName,
+                       const QString& widgetType, const UInt32Vector_t& defaultValue,
+                       bool advanced)
+{
+  FilterParameter::Pointer ptr = FilterParameter::New();
+  ptr->setHumanLabel(humanLabel);
+  ptr->setPropertyName(propertyName);
+  ptr->setWidgetType(widgetType);
+  QVariant v;
+  v.setValue(defaultValue);
+  ptr->setDefaultValue(v);
+  ptr->setAdvanced(advanced);
+
   if(ptr->getWidgetType().compare(FilterParameterWidgetType::SeparatorWidget) == 0)
   {
     ptr->setReadOnly(true);
@@ -344,6 +366,48 @@ ShapeTypesFilterParameter::Pointer ShapeTypesFilterParameter::New(const QString&
   ptr->setFileExtension("");
   ptr->setFileType("");
   //ptr->setCastableValueType("");
+
+  ptr->setPhaseTypeCountProperty(phaseTypeCountProperty);
+  ptr->setPhaseTypeArrayPathProperty(phaseTypeArrayPathProperty);
+  if(ptr->getWidgetType().compare(FilterParameterWidgetType::SeparatorWidget) == 0)
+  {
+    ptr->setReadOnly(true);
+  }
+  return ptr;
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+PhaseTypesFilterParameter::PhaseTypesFilterParameter()
+{
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+PhaseTypesFilterParameter::~PhaseTypesFilterParameter()
+{}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+PhaseTypesFilterParameter::Pointer PhaseTypesFilterParameter::New(const QString& humanLabel, const QString& propertyName,
+    const QString& widgetType, const QVariant &defaultValue,
+    const QString& phaseTypeCountProperty,
+    const QString& phaseTypeArrayPathProperty,
+    bool advanced)
+{
+  PhaseTypesFilterParameter::Pointer ptr = PhaseTypesFilterParameter::New();
+  ptr->setHumanLabel(humanLabel);
+  ptr->setPropertyName(propertyName);
+  ptr->setWidgetType(widgetType);
+  ptr->setDefaultValue(defaultValue);
+  ptr->setAdvanced(advanced);
+  ptr->setUnits("");
+  ptr->setFileExtension("");
+  ptr->setFileType("");
 
   ptr->setPhaseTypeCountProperty(phaseTypeCountProperty);
   ptr->setPhaseTypeArrayPathProperty(phaseTypeArrayPathProperty);

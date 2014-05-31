@@ -33,8 +33,8 @@
  *                           FA8650-10-D-5210
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef _ShapeTypeSelectionWidget_H_
-#define _ShapeTypeSelectionWidget_H_
+#ifndef _PhaseTypeSelectionWidget_H_
+#define _PhaseTypeSelectionWidget_H_
 
 #include <QtCore/QObject>
 #include <QtCore/QPointer>
@@ -48,7 +48,7 @@
 
 #include "DREAM3DWidgetsLib/DREAM3DWidgetsLib.h"
 
-#include "DREAM3DWidgetsLib/ui_ShapeTypeSelectionWidget.h"
+#include "DREAM3DWidgetsLib/ui_PhaseTypeSelectionWidget.h"
 
 class QComboBox;
 class QLabel;
@@ -58,7 +58,7 @@ class QLabel;
 * @author
 * @version
 */
-class DREAM3DWidgetsLib_EXPORT ShapeTypeSelectionWidget : public QWidget, private Ui::ShapeTypeSelectionWidget
+class DREAM3DWidgetsLib_EXPORT PhaseTypeSelectionWidget : public QWidget, private Ui::PhaseTypeSelectionWidget
 {
     Q_OBJECT
 
@@ -69,11 +69,11 @@ class DREAM3DWidgetsLib_EXPORT ShapeTypeSelectionWidget : public QWidget, privat
     * @param filter The instance of the filter that this parameter is a part of
     * @param parent The parent QWidget for this Widget
     */
-    ShapeTypeSelectionWidget(FilterParameter* parameter, AbstractFilter* filter = NULL, QWidget* parent = NULL);
+    PhaseTypeSelectionWidget(FilterParameter* parameter, AbstractFilter* filter = NULL, QWidget* parent = NULL);
 
-    ShapeTypeSelectionWidget(QWidget* parent = NULL);
+    PhaseTypeSelectionWidget(QWidget* parent = NULL);
 
-    virtual ~ShapeTypeSelectionWidget();
+    virtual ~PhaseTypeSelectionWidget();
 
     /**
     * @brief This method does additional GUI widget connections
@@ -102,16 +102,16 @@ class DREAM3DWidgetsLib_EXPORT ShapeTypeSelectionWidget : public QWidget, privat
     FilterParameter*  m_FilterParameter;
     bool              m_DidCausePreflight;
 
-    QList<QLabel*>              m_ShapeTypeLabels;
-    QList<QComboBox*>           m_ShapeTypeCombos;
+    QList<QLabel*>              m_PhaseTypeLabels;
+    QList<QComboBox*>           m_PhaseTypeCombos;
     QPointer<FaderWidget>       faderWidget;
 
 
-    ShapeTypeSelectionWidget(const ShapeTypeSelectionWidget&); // Copy Constructor Not Implemented
-    void operator=(const ShapeTypeSelectionWidget&); // Operator '=' Not Implemented
+    PhaseTypeSelectionWidget(const PhaseTypeSelectionWidget&); // Copy Constructor Not Implemented
+    void operator=(const PhaseTypeSelectionWidget&); // Operator '=' Not Implemented
 
 };
 
-#endif /* _ShapeTypeSelectionWidget_H_ */
+#endif /* _PhaseTypeSelectionWidget_H_ */
 
 
