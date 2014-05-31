@@ -167,7 +167,7 @@ class DataArray : public IDataArray
      * @param name The name of the array
      * @return Boost::Shared_Ptr wrapping an instance of DataArrayTemplate<T>
      */
-    static Pointer CreateArray(size_t numElements, const QString& name, bool allocate=true)
+    static Pointer CreateArray(size_t numElements, const QString& name, bool allocate = true)
     {
       if (name.isEmpty() == true)
       {
@@ -196,7 +196,7 @@ class DataArray : public IDataArray
      * @param name The name of the array
      * @return Boost::Shared_Ptr wrapping an instance of DataArrayTemplate<T>
      */
-    static Pointer CreateArray(size_t numTuples, int rank, size_t* dims, const QString& name, bool allocate=true)
+    static Pointer CreateArray(size_t numTuples, int rank, size_t* dims, const QString& name, bool allocate = true)
     {
       if (name.isEmpty() == true)
       {
@@ -228,7 +228,7 @@ class DataArray : public IDataArray
      * @param name The name of the array
      * @return Boost::Shared_Ptr wrapping an instance of DataArrayTemplate<T>
      */
-    static Pointer CreateArray(size_t numTuples, std::vector<size_t> cDims, const QString& name, bool allocate=true)
+    static Pointer CreateArray(size_t numTuples, std::vector<size_t> cDims, const QString& name, bool allocate = true)
     {
       if (name.isEmpty() == true)
       {
@@ -255,7 +255,7 @@ class DataArray : public IDataArray
      * @param name The name of the array
      * @return Boost::Shared_Ptr wrapping an instance of DataArrayTemplate<T>
      */
-    static Pointer CreateArray(size_t numTuples, QVector<size_t> cDims, const QString& name, bool allocate=true)
+    static Pointer CreateArray(size_t numTuples, QVector<size_t> cDims, const QString& name, bool allocate = true)
     {
       if (name.isEmpty() == true)
       {
@@ -283,7 +283,7 @@ class DataArray : public IDataArray
     * @param name The name of the array
     * @return Boost::Shared_Ptr wrapping an instance of DataArrayTemplate<T>
     */
-    static Pointer CreateArray(QVector<size_t> tDims, QVector<size_t> cDims, const QString& name, bool allocate=true)
+    static Pointer CreateArray(QVector<size_t> tDims, QVector<size_t> cDims, const QString& name, bool allocate = true)
     {
       if (name.isEmpty() == true)
       {
@@ -315,7 +315,7 @@ class DataArray : public IDataArray
      * @param name The name of the array
      * @return Boost::Shared_Ptr wrapping an instance of DataArrayTemplate<T>
      */
-    static Pointer FromQVector(QVector<T>& vec, const QString& name, bool allocate=true)
+    static Pointer FromQVector(QVector<T>& vec, const QString& name, bool allocate = true)
     {
 
       Pointer p = CreateArray(vec.size(), name, allocate);
@@ -333,7 +333,7 @@ class DataArray : public IDataArray
      * @param name The name of the array
      * @return Boost::Shared_Ptr wrapping an instance of DataArrayTemplate<T>
      */
-    static Pointer FromStdVector(std::vector<T>& vec, const QString& name, bool allocate=true)
+    static Pointer FromStdVector(std::vector<T>& vec, const QString& name, bool allocate = true)
     {
       QVector<size_t> cDims(1, 1);
       Pointer p = CreateArray(vec.size(), cDims, name, allocate);
@@ -351,7 +351,7 @@ class DataArray : public IDataArray
      * @param name
      * @return
      */
-    static Pointer FromPointer(T* data, size_t size, const QString& name, bool allocate=true)
+    static Pointer FromPointer(T* data, size_t size, const QString& name, bool allocate = true)
     {
       Pointer p = CreateArray(size, name, allocate);
       if (NULL != p.get())
@@ -369,7 +369,7 @@ class DataArray : public IDataArray
      * @param name
      * @return
      */
-    virtual IDataArray::Pointer createNewArray(size_t numTuples, int rank, size_t* dims, const QString& name, bool allocate=true)
+    virtual IDataArray::Pointer createNewArray(size_t numTuples, int rank, size_t* dims, const QString& name, bool allocate = true)
     {
       IDataArray::Pointer p = DataArray<T>::CreateArray(numTuples, rank, dims, name, allocate);
       return p;
@@ -382,7 +382,7 @@ class DataArray : public IDataArray
      * @param name
      * @return
      */
-    virtual IDataArray::Pointer createNewArray(size_t numTuples, std::vector<size_t> dims, const QString& name, bool allocate=true)
+    virtual IDataArray::Pointer createNewArray(size_t numTuples, std::vector<size_t> dims, const QString& name, bool allocate = true)
     {
       IDataArray::Pointer p = DataArray<T>::CreateArray(numTuples, dims, name, allocate);
       return p;
@@ -395,7 +395,7 @@ class DataArray : public IDataArray
      * @param name
      * @return
      */
-    virtual IDataArray::Pointer createNewArray(size_t numTuples, QVector<size_t> dims, const QString& name, bool allocate=true)
+    virtual IDataArray::Pointer createNewArray(size_t numTuples, QVector<size_t> dims, const QString& name, bool allocate = true)
     {
       IDataArray::Pointer p = DataArray<T>::CreateArray(numTuples, dims, name, allocate);
       return p;
@@ -1173,7 +1173,7 @@ class DataArray : public IDataArray
      */
     virtual int32_t resizeTotalElements(size_t size)
     {
-     // std::cout << "DataArray::resizeTotalElements(" << size << ")" << std::endl;
+      // std::cout << "DataArray::resizeTotalElements(" << size << ")" << std::endl;
       if (size == 0)
       {
         clear();

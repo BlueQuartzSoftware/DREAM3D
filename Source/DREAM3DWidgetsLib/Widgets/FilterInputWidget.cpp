@@ -87,7 +87,8 @@ void FilterInputWidget::clearInputWidgets()
 {
   // Remove any existing input widgets
   QLayoutItem* item = basicInputsGrid->itemAt(0);
-  if(item) {
+  if(item)
+  {
     QWidget* w = item->widget();
     if(w)
     {
@@ -96,7 +97,8 @@ void FilterInputWidget::clearInputWidgets()
     }
   }
   item = advInputsGrid->itemAt(0);
-  if(item) {
+  if(item)
+  {
     QWidget* w = item->widget();
     if(w)
     {
@@ -140,7 +142,8 @@ void FilterInputWidget::displayFilterParameters(PipelineFilterWidget* w)
   advInputsBtn->setVisible(showAdv);
   advInputsLabel->setVisible(showAdv);
   // If we do NOT have any advanced Parameters then hide the AdvFrame
-  if(showAdv == false) {
+  if(showAdv == false)
+  {
     advInputsFrame->setVisible(showAdv);
   }
   else // Show or Hide the AdvFrame based on the last interaction the user did

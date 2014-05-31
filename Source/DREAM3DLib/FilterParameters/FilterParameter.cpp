@@ -196,8 +196,8 @@ FilterParameter::Pointer FilterParameter::New(const QString& humanLabel, const Q
 //
 // -----------------------------------------------------------------------------
 FilterParameter::Pointer FilterParameter::New(const QString& humanLabel, const QString& propertyName,
-                       const QString& widgetType, const UInt32Vector_t& defaultValue,
-                       bool advanced)
+                                              const QString& widgetType, const UInt32Vector_t& defaultValue,
+                                              bool advanced)
 {
   FilterParameter::Pointer ptr = FilterParameter::New();
   ptr->setHumanLabel(humanLabel);
@@ -265,7 +265,7 @@ ChoiceFilterParameter::~ChoiceFilterParameter()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ChoiceFilterParameter::Pointer ChoiceFilterParameter::New(const QString& humanLabel, const QString& propertyName, const QVariant &defaultValue,
+ChoiceFilterParameter::Pointer ChoiceFilterParameter::New(const QString& humanLabel, const QString& propertyName, const QVariant& defaultValue,
                                                           QVector<QString> choices,
                                                           bool editable,
                                                           bool advanced)
@@ -308,7 +308,7 @@ ComparisonFilterParameter::~ComparisonFilterParameter()
 //
 // -----------------------------------------------------------------------------
 ComparisonFilterParameter::Pointer ComparisonFilterParameter::New(const QString& humanLabel, const QString& propertyName,
-    const QString& widgetType, const QVariant &defaultValue,
+    const QString& widgetType, const QVariant& defaultValue,
     QVector<QString> choices,
     bool showOperators,
     bool advanced)
@@ -351,7 +351,7 @@ ShapeTypesFilterParameter::~ShapeTypesFilterParameter()
 //
 // -----------------------------------------------------------------------------
 ShapeTypesFilterParameter::Pointer ShapeTypesFilterParameter::New(const QString& humanLabel, const QString& propertyName,
-    const QString& widgetType, const QVariant &defaultValue,
+    const QString& widgetType, const QVariant& defaultValue,
     const QString& phaseTypeCountProperty,
     const QString& phaseTypeArrayPathProperty,
     bool advanced)
@@ -394,7 +394,7 @@ PhaseTypesFilterParameter::~PhaseTypesFilterParameter()
 //
 // -----------------------------------------------------------------------------
 PhaseTypesFilterParameter::Pointer PhaseTypesFilterParameter::New(const QString& humanLabel, const QString& propertyName,
-    const QString& widgetType, const QVariant &defaultValue,
+    const QString& widgetType, const QVariant& defaultValue,
     const QString& phaseTypeCountProperty,
     const QString& phaseTypeArrayPathProperty,
     bool advanced)
@@ -435,7 +435,7 @@ PreflightUpdatedValue::~PreflightUpdatedValue()
 //
 // -----------------------------------------------------------------------------
 PreflightUpdatedValue::Pointer PreflightUpdatedValue::New(const QString& humanLabel, const QString& propertyName,
-                                                          const QString& widgetType, const QVariant &defaultValue,
+                                                          const QString& widgetType, const QVariant& defaultValue,
                                                           bool advanced)
 {
   PreflightUpdatedValue::Pointer ptr = PreflightUpdatedValue::New();
@@ -475,7 +475,7 @@ DataContainerArrayProxyFilterParameter::~DataContainerArrayProxyFilterParameter(
 //
 // -----------------------------------------------------------------------------
 DataContainerArrayProxyFilterParameter::Pointer DataContainerArrayProxyFilterParameter::New(const QString& humanLabel, const QString& propertyName,
-    const QString& widgetType, const QVariant &defaultValue,
+    const QString& widgetType, const QVariant& defaultValue,
     DataContainerArrayProxy proxy, Qt::CheckState defValue,
     bool advanced)
 {

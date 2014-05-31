@@ -248,7 +248,7 @@ void PipelineFilterWidget::layoutWidgets()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PipelineFilterWidget::adjustLayout(QWidget *w, int state)
+void PipelineFilterWidget::adjustLayout(QWidget* w, int state)
 {
   if (state == Qt::Checked)
   {

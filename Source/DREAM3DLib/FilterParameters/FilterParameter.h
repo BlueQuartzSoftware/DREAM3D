@@ -223,7 +223,7 @@ class DREAM3DLib_EXPORT FilterParameter
     DREAM3D_INSTANCE_STRING_PROPERTY(FileType)
     DREAM3D_INSTANCE_PROPERTY(bool, ReadOnly)
 
- //   DREAM3D_BOOL_PROPERTY(Conditional)
+//   DREAM3D_BOOL_PROPERTY(Conditional)
     DREAM3D_INSTANCE_PROPERTY(QStringList, ConditionalProperties)
 //    DREAM3D_INSTANCE_STRING_PROPERTY(ConditionalProperty)
 //    DREAM3D_INSTANCE_STRING_PROPERTY(ConditionalLabel)

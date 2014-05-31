@@ -93,7 +93,7 @@ namespace Detail
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int H5DataArrayReader::ReadRequiredAttributes(hid_t gid, const QString &name, QString &objType, int &version, QVector<size_t> &tDims, QVector<size_t> &cDims)
+int H5DataArrayReader::ReadRequiredAttributes(hid_t gid, const QString& name, QString& objType, int& version, QVector<size_t>& tDims, QVector<size_t>& cDims)
 {
   int err = 0;
   int retErr = 0;
@@ -190,7 +190,7 @@ IDataArray::Pointer H5DataArrayReader::ReadStringDataArray(hid_t gid, const QStr
     }
 
     if(H5Tequal(typeId, H5T_STD_U8BE) || H5Tequal(typeId, H5T_STD_U8LE)
-       || H5Tequal(typeId, H5T_STD_I8BE) || H5Tequal(typeId, H5T_STD_I8LE) )
+        || H5Tequal(typeId, H5T_STD_I8BE) || H5Tequal(typeId, H5T_STD_I8LE) )
     {
 
       ptr = StringDataArray::CreateArray(0, name);

@@ -341,16 +341,16 @@ void RawBinaryReader::dataCheck(bool preflight)
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 
-VolumeDataContainer* m = NULL;
-AttributeMatrix::Pointer attrMat;
+  VolumeDataContainer* m = NULL;
+  AttributeMatrix::Pointer attrMat;
 
   if (getAddToExistingAttributeMatrix() )
   {
-     m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName());
-     if(getErrorCondition() < 0) { return; }
+    m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName());
+    if(getErrorCondition() < 0) { return; }
 
-     attrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), -10000);
-     if(getErrorCondition() < 0) { return; }
+    attrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), -10000);
+    if(getErrorCondition() < 0) { return; }
   }
   else
   {

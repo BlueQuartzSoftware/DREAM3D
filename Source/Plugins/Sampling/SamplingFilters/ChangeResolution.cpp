@@ -165,7 +165,7 @@ void ChangeResolution::preflight()
   emit preflightAboutToExecute();
   emit updateFilterParameters(this);
   dataCheck();
-    emit preflightExecuted();
+  emit preflightExecuted();
 
   if(getErrorCondition() < 0) { return; }
 

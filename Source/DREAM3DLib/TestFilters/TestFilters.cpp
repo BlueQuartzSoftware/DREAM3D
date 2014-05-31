@@ -40,7 +40,7 @@ void Filt0::setupFilterParameters()
     parameter->setHumanLabel("Integer");
     parameter->setPropertyName("Filt0_Integer");
     parameter->setWidgetType(FilterParameterWidgetType::IntWidget);
-  //  //parameter->setValueType("int");
+    //  //parameter->setValueType("int");
     parameters.push_back(parameter);
   }
   /*  For a Floating point value use this code*/

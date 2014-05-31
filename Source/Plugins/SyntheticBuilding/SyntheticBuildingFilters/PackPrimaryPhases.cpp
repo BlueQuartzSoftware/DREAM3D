@@ -486,7 +486,7 @@ void PackPrimaryPhases::preflight()
   emit preflightAboutToExecute();
   emit updateFilterParameters(this);
   dataCheck();
-    emit preflightExecuted();
+  emit preflightExecuted();
 
   DataContainer::Pointer dc = getDataContainerArray()->getDataContainer(getOutputCellAttributeMatrixName());
   if(dc == NULL) { return; }

@@ -186,7 +186,7 @@ void RotateSampleRefFrame::setupFilterParameters()
     parameter->setHumanLabel("Rotation Axis");
     parameter->setPropertyName("RotationAxis");
     parameter->setWidgetType(FilterParameterWidgetType::FloatVec3Widget);
- //   //parameter->setValueType("FloatVec3_t");
+//   //parameter->setValueType("FloatVec3_t");
     parameter->setUnits("ijk");
     parameters.push_back(parameter);
   }
@@ -195,8 +195,8 @@ void RotateSampleRefFrame::setupFilterParameters()
     parameter->setHumanLabel("Rotation Angle");
     parameter->setPropertyName("RotationAngle");
     parameter->setWidgetType(FilterParameterWidgetType::DoubleWidget);
- //   //parameter->setValueType("float");
- //   parameter->setCastableValueType("double");
+//   //parameter->setValueType("float");
+//   parameter->setCastableValueType("double");
     parameter->setUnits("Degrees");
     parameters.push_back(parameter);
   }
@@ -247,8 +247,8 @@ void RotateSampleRefFrame::preflight()
   emit preflightAboutToExecute();
   emit updateFilterParameters(this);
   dataCheck();
-    emit preflightExecuted();
- 
+  emit preflightExecuted();
+
   if(getErrorCondition() < 0) { return; }
 
   VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getCellAttributeMatrixPath().getDataContainerName(), false);

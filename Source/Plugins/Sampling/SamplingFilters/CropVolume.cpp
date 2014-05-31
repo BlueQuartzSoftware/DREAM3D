@@ -185,7 +185,7 @@ void CropVolume::preflight()
   emit preflightAboutToExecute();
   emit updateFilterParameters(this);
   dataCheck();
-    emit preflightExecuted();
+  emit preflightExecuted();
 
   if(getErrorCondition() < 0) { return; }
 
@@ -261,7 +261,7 @@ void CropVolume::preflight()
     QVector<bool> activeObjects(cellFeatureAttrMat->getNumTuples(), true);
     cellFeatureAttrMat->removeInactiveObjects(activeObjects, m_FeatureIdsPtr.lock());
   }
-  setInPreflight(false);  
+  setInPreflight(false);
 }
 
 // -----------------------------------------------------------------------------

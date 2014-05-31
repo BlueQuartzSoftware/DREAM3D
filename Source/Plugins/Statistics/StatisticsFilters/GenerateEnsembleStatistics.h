@@ -130,7 +130,7 @@ class GenerateEnsembleStatistics : public AbstractFilter
     DREAM3D_FILTER_PARAMETER(QString, StatisticsArrayName)
     Q_PROPERTY(QString StatisticsArrayName READ getStatisticsArrayName WRITE setStatisticsArrayName)
 
-/* ---------- */
+    /* ---------- */
     DREAM3D_FILTER_PARAMETER(bool, CalculateMorphologicalStats)
     Q_PROPERTY(bool CalculateMorphologicalStats READ getCalculateMorphologicalStats WRITE setCalculateMorphologicalStats)
 
@@ -141,7 +141,7 @@ class GenerateEnsembleStatistics : public AbstractFilter
     Q_PROPERTY(int SizeDistributionFitType READ getSizeDistributionFitType WRITE setSizeDistributionFitType)
 
     DREAM3D_FILTER_PARAMETER(bool, ComputeAspectRatioDistribution)
- // Q_PROPERTY(bool ComputeAspectRatioDistribution READ getComputeAspectRatioDistribution WRITE setComputeAspectRatioDistribution)
+// Q_PROPERTY(bool ComputeAspectRatioDistribution READ getComputeAspectRatioDistribution WRITE setComputeAspectRatioDistribution)
 
     DREAM3D_FILTER_PARAMETER(int, AspectRatioDistributionFitType)
     Q_PROPERTY(int AspectRatioDistributionFitType READ getAspectRatioDistributionFitType WRITE setAspectRatioDistributionFitType)

@@ -259,7 +259,7 @@ void FindNeighbors::execute()
     m_NumNeighbors[i] = 0;
     neighborlist[i].resize(nListSize);
     neighborsurfacearealist[i].fill(-1.0, nListSize);
-    if(m_StoreSurfaceFeatures == true) m_SurfaceFeatures[i] = false;
+    if(m_StoreSurfaceFeatures == true) { m_SurfaceFeatures[i] = false; }
   }
 
   for (int64_t j = 0; j < totalPoints; j++)
@@ -304,7 +304,7 @@ void FindNeighbors::execute()
         }
       }
     }
-    if(m_StoreSurfaceCells == true) m_SurfaceVoxels[j] = onsurf;
+    if(m_StoreSurfaceCells == true) { m_SurfaceVoxels[j] = onsurf; }
   }
 
   // We do this to create new set of NeighborList objects

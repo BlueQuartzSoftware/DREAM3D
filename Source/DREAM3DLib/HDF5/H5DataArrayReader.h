@@ -66,7 +66,7 @@ class DREAM3DLib_EXPORT H5DataArrayReader
      * @param cDims The Component Dimensions of the data array
      * @return
      */
-    static int ReadRequiredAttributes(hid_t gid, const QString &name, QString &objType, int &version, QVector<size_t> &tDims, QVector<size_t> &cDims);
+    static int ReadRequiredAttributes(hid_t gid, const QString& name, QString& objType, int& version, QVector<size_t>& tDims, QVector<size_t>& cDims);
 
     /**
      * @brief ReadIDataArray Reads an IDataArray subclass from the HDF5 file
