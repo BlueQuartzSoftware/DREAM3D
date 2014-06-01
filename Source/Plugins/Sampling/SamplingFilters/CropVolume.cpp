@@ -87,8 +87,12 @@ void CropVolume::setupFilterParameters()
   parameters.push_back(FilterParameter::New("X Max (Voxels)", "XMax", FilterParameterWidgetType::IntWidget, getXMax(), false, "Column"));
   parameters.push_back(FilterParameter::New("Y Max (Voxels)", "YMax", FilterParameterWidgetType::IntWidget, getYMax(), false, "Row"));
   parameters.push_back(FilterParameter::New("Z Max (Voxels)", "ZMax", FilterParameterWidgetType::IntWidget, getZMax(), false, "Plane"));
-  parameters.push_back(FilterParameter::New("Renumber Features", "RenumberFeatures", FilterParameterWidgetType::BooleanWidget, getRenumberFeatures(), false));
-  parameters.push_back(FilterParameter::New("Save As New Data Container", "SaveAsNewDataContainer", FilterParameterWidgetType::BooleanWidget, getSaveAsNewDataContainer(), false));
+  QStringList linkedProps;
+  linkedProps << "CellFeatureAttributeMatrixPath" << "FeatureIdsArrayPath";
+  parameters.push_back(FilterParameter::NewConditional("Renumber Features", "RenumberFeatures", FilterParameterWidgetType::LinkedBooleanWidget, getRenumberFeatures(), false, linkedProps));
+  linkedProps.clear();
+  linkedProps << "NewDataContainerName";
+  parameters.push_back(FilterParameter::NewConditional("Save As New Data Container", "SaveAsNewDataContainer", FilterParameterWidgetType::LinkedBooleanWidget, getSaveAsNewDataContainer(), false, linkedProps));
   parameters.push_back(FilterParameter::New("Update Origin", "UpdateOrigin", FilterParameterWidgetType::BooleanWidget, getUpdateOrigin(), false));
   parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
   parameters.push_back(FilterParameter::New("Cell Feature Attribute Matrix", "CellFeatureAttributeMatrixPath", FilterParameterWidgetType::AttributeMatrixSelectionWidget, getCellFeatureAttributeMatrixPath(), true));
