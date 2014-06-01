@@ -34,8 +34,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef CubicLowOPS_H_
-#define CubicLowOPS_H_
+#ifndef _CubicLowOPS_H_
+#define _CubicLowOPS_H_
 
 
 #include "DREAM3DLib/DREAM3DLib.h"

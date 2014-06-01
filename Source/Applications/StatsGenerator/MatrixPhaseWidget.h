@@ -5,8 +5,8 @@
  *      Author: mjackson
  */
 
-#ifndef MatrixPhaseWidget_H_
-#define MatrixPhaseWidget_H_
+#ifndef _MatrixPhaseWidget_H_
+#define _MatrixPhaseWidget_H_
 
 #include "SGWidget.h"
 #include "ui_MatrixPhaseWidget.h"

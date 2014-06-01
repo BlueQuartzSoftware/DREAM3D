@@ -35,8 +35,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef CREATEFIELDARRAYFROMCELLARRAY_H_
-#define CREATEFIELDARRAYFROMCELLARRAY_H_
+#ifndef _CREATEFIELDARRAYFROMCELLARRAY_H_
+#define _CREATEFIELDARRAYFROMCELLARRAY_H_
 
 #include <string>
 #include <set>

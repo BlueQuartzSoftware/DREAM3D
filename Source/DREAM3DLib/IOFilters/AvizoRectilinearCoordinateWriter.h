@@ -34,8 +34,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef AvizoRectilinearCoordinateWriter_H_
-#define AvizoRectilinearCoordinateWriter_H_
+#ifndef _AvizoRectilinearCoordinateWriter_H_
+#define _AvizoRectilinearCoordinateWriter_H_
 
 #include <QtCore/QString>
 #include <QtCore/QDataStream>

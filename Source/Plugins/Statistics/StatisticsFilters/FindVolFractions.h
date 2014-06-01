@@ -33,8 +33,8 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef FindVolFractions_H_
-#define FindVolFractions_H_
+#ifndef _FindVolFractions_H_
+#define _FindVolFractions_H_
 
 #include <vector>
 #include <QtCore/QString>

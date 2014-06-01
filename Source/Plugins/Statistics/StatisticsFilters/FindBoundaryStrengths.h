@@ -34,8 +34,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef FindBoundaryStrengths_H_
-#define FindBoundaryStrengths_H_
+#ifndef _FindBoundaryStrengths_H_
+#define _FindBoundaryStrengths_H_
 
 #include <assert.h>
 #include <stdio.h>

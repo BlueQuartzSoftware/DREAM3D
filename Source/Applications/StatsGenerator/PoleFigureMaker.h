@@ -33,8 +33,8 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef COLORPOLEFIGURE_H_
-#define COLORPOLEFIGURE_H_
+#ifndef _COLORPOLEFIGURE_H_
+#define _COLORPOLEFIGURE_H_
 
 #include <QtCore/QObject>
 #include <QtCore/QVector>

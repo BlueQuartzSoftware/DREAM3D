@@ -34,8 +34,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef ELLIPSOIDOPS_H_
-#define ELLIPSOIDOPS_H_
+#ifndef _ELLIPSOIDOPS_H_
+#define _ELLIPSOIDOPS_H_
 
 #include "ShapeOps.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"

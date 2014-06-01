@@ -34,8 +34,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef MATCHCRYSTALLOGRAPHY_H_
-#define MATCHCRYSTALLOGRAPHY_H_
+#ifndef _MATCHCRYSTALLOGRAPHY_H_
+#define _MATCHCRYSTALLOGRAPHY_H_
 
 #include <QtCore/QString>
 #include <numeric>

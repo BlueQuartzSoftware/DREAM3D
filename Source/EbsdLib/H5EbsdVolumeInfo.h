@@ -34,8 +34,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef H5EBSDVOLUMEREADER_H_
-#define H5EBSDVOLUMEREADER_H_
+#ifndef _H5EbsdVolumeInfo_H_
+#define _H5EbsdVolumeInfo_H_
 
 #include <QtCore/QString>
 #include <QtCore/QVector>

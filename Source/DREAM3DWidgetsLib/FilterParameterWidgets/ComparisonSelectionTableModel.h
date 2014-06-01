@@ -34,8 +34,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef QUALITYMETRICTABLEMODEL_H_
-#define QUALITYMETRICTABLEMODEL_H_
+#ifndef _QUALITYMETRICTABLEMODEL_H_
+#define _QUALITYMETRICTABLEMODEL_H_
 
 #include <QtCore/QAbstractTableModel>
 #include <QtCore/QVector>
@@ -158,7 +158,7 @@ class ComparisonSelectionTableModel : public QAbstractTableModel
 
     virtual void setTableData(QVector<QString> featureNames, QVector<float> featureValues,  QVector<int> featureOperators);
 
-    virtual void setTableData(ComparisonInputs &comps);
+    virtual void setTableData(ComparisonInputs& comps);
 
     void getTableData( QVector<QString>& featureNames, QVector<float>& featureValues,  QVector<int>& featureOperators);
 

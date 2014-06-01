@@ -34,8 +34,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef CUBOCTOHEDRONOPS_H_
-#define CUBOCTOHEDRONOPS_H_
+#ifndef _CUBOCTOHEDRONOPS_H_
+#define _CUBOCTOHEDRONOPS_H_
 
 #include "ShapeOps.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"

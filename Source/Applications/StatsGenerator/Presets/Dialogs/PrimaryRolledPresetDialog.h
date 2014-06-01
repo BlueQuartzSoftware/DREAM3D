@@ -33,8 +33,8 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef PrimaryRolledPresetDialog_H_
-#define PrimaryRolledPresetDialog_H_
+#ifndef _PrimaryRolledPresetDialog_H_
+#define _PrimaryRolledPresetDialog_H_
 
 #include <QtGui/QDialog>
 

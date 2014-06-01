@@ -28,8 +28,8 @@
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef QRECENTFILELIST_H_
-#define QRECENTFILELIST_H_
+#ifndef _QRECENTFILELIST_H_
+#define _QRECENTFILELIST_H_
 
 #include <QtCore/QObject>
 #include <QtCore/QStringList>

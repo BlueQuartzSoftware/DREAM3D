@@ -44,6 +44,7 @@
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/DataContainers/DataContainerArrayProxy.h"
 #include "DREAM3DLib/DataContainers/DataArrayPath.h"
+#include "DREAM3DLib/Utilities/QMetaObjectUtilities.h"
 
 typedef struct { int x; int y; int z; } IntVec3_t;
 typedef struct { float x; float y; float z; } FloatVec3_t;
@@ -80,6 +81,7 @@ namespace FilterParameterWidgetType
   const QString DataArrayCreationWidget("DataArrayCreationWidget");
   const QString SeparatorWidget("SeparatorWidget");
   const QString LinkedBooleanWidget("LinkedBooleanWidget");
+  const QString PhaseTypeSelectionWidget("PhaseTypeSelectionWidget");
 
   const QString PreflightUpdatedValueWidget("PreflightUpdatedValueWidget");
 #if 0
@@ -184,6 +186,10 @@ class DREAM3DLib_EXPORT FilterParameter
                        const QString& fileExtension = QString(""),
                        const QString& fileType = QString(""));
 
+    static Pointer New(const QString& humanLabel, const QString& propertyName,
+                       const QString& widgetType, const UInt32Vector_t& defaultValue,
+                       bool advanced = false);
+
     /**
      * @brief Creates a new Filter Parameter that has conditional logic associated with it through an additional boolean
      * Q_PROPERTY in the filter's header file. On the GUI this manifests itself as a checkbox that enables or disables the
@@ -217,7 +223,7 @@ class DREAM3DLib_EXPORT FilterParameter
     DREAM3D_INSTANCE_STRING_PROPERTY(FileType)
     DREAM3D_INSTANCE_PROPERTY(bool, ReadOnly)
 
- //   DREAM3D_BOOL_PROPERTY(Conditional)
+//   DREAM3D_BOOL_PROPERTY(Conditional)
     DREAM3D_INSTANCE_PROPERTY(QStringList, ConditionalProperties)
 //    DREAM3D_INSTANCE_STRING_PROPERTY(ConditionalProperty)
 //    DREAM3D_INSTANCE_STRING_PROPERTY(ConditionalLabel)
@@ -318,6 +324,7 @@ class DREAM3DLib_EXPORT ComparisonFilterParameter : public FilterParameter
     void operator=(const ComparisonFilterParameter&); // Operator '=' Not Implemented
 };
 
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -346,6 +353,38 @@ class DREAM3DLib_EXPORT ShapeTypesFilterParameter : public FilterParameter
     ShapeTypesFilterParameter(const ShapeTypesFilterParameter&); // Copy Constructor Not Implemented
     void operator=(const ShapeTypesFilterParameter&); // Operator '=' Not Implemented
 };
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+class DREAM3DLib_EXPORT PhaseTypesFilterParameter : public FilterParameter
+{
+  public:
+    DREAM3D_SHARED_POINTERS(PhaseTypesFilterParameter)
+    DREAM3D_STATIC_NEW_MACRO(PhaseTypesFilterParameter)
+    DREAM3D_TYPE_MACRO_SUPER(PhaseTypesFilterParameter, FilterParameter)
+
+    static Pointer New(const QString& humanLabel, const QString& propertyName,
+                       const QString& widgetType, const QVariant& defaultValue,
+                       const QString& phaseTypeCountProperty,
+                       const QString& phaseTypeArrayPathProperty,
+                       bool advanced = false );
+
+    virtual ~PhaseTypesFilterParameter();
+
+    DREAM3D_INSTANCE_PROPERTY(QString, PhaseTypeCountProperty)
+    DREAM3D_INSTANCE_PROPERTY(QString, PhaseTypeArrayPathProperty)
+
+  protected:
+    PhaseTypesFilterParameter();
+
+  private:
+    PhaseTypesFilterParameter(const PhaseTypesFilterParameter&); // Copy Constructor Not Implemented
+    void operator=(const PhaseTypesFilterParameter&); // Operator '=' Not Implemented
+};
+
+
 
 
 

@@ -485,7 +485,7 @@ void ComparisonSelectionWidget::on_attributeMatrixList_currentIndexChanged(int i
 // -----------------------------------------------------------------------------
 void ComparisonSelectionWidget::setComparisons(QVector<ComparisonInput_t> comparisons)
 {
- // std::cout << "ComparisonSelectionWidget::setComparisons(QVector<ComparisonInput_t> comparisons)" << std::endl;
+// std::cout << "ComparisonSelectionWidget::setComparisons(QVector<ComparisonInput_t> comparisons)" << std::endl;
   qint32 count = comparisons.size();
 
   QVector<QString> arrayNames(count);
@@ -507,9 +507,9 @@ void ComparisonSelectionWidget::setComparisons(QVector<ComparisonInput_t> compar
 // -----------------------------------------------------------------------------
 void ComparisonSelectionWidget::filterNeedsInputParameters(AbstractFilter* filter)
 {
- // qDebug() << "DataContainerArrayProxyWidget::filterNeedsInputParameters(AbstractFilter* filter)";
+// qDebug() << "DataContainerArrayProxyWidget::filterNeedsInputParameters(AbstractFilter* filter)";
 
- // if(true) { return; }
+// if(true) { return; }
 
   QVariant var;
   ComparisonInputs comps = getComparisonInputs();
@@ -530,7 +530,7 @@ void ComparisonSelectionWidget::filterNeedsInputParameters(AbstractFilter* filte
 // -----------------------------------------------------------------------------
 void ComparisonSelectionWidget::beforePreflight()
 {
- // std::cout << "ComparisonSelectionWidget::beforePreflight()" << std::endl;
+// std::cout << "ComparisonSelectionWidget::beforePreflight()" << std::endl;
   if (NULL == m_Filter) { return; }
   if(m_DidCausePreflight == true)
   {
@@ -582,13 +582,13 @@ void ComparisonSelectionWidget::fadeWidget(QWidget* widget, bool in)
     setVisible(true);
     faderWidget->setFadeIn();
     connect(faderWidget, SIGNAL(animationComplete() ),
-          this, SLOT(show()));
+            this, SLOT(show()));
   }
   else
   {
     faderWidget->setFadeOut();
     connect(faderWidget, SIGNAL(animationComplete() ),
-          this, SLOT(hide()));
+            this, SLOT(hide()));
   }
   QColor color = DREAM3D::Defaults::BasicColor;
   if(m_FilterParameter->getAdvanced()) { color = DREAM3D::Defaults::AdvancedColor; }

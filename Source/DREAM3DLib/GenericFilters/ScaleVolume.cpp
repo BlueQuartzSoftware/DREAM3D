@@ -166,7 +166,7 @@ void ScaleVolume::dataCheck()
   setErrorCondition(0);
   if (m_ApplyToVoxelVolume == true)
   {
-    VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName());
+    getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName());
     if(getErrorCondition() < 0) { return; }
   }
 

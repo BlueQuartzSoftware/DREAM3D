@@ -34,8 +34,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef FindRelativeMotionBetweenSlices_H_
-#define FindRelativeMotionBetweenSlices_H_
+#ifndef _FindRelativeMotionBetweenSlices_H_
+#define _FindRelativeMotionBetweenSlices_H_
 
 #include <vector>
 #include <QtCore/QString>

@@ -73,7 +73,7 @@ void ThresholdExample::setupFilterParameters()
     parameter->setShowOperators(true);
     parameters.push_back(parameter);
   }
-  #if 0
+#if 0
   /* To Compare Arrays like a threshold filter */
   {
     ComparisonFilterParameter::Pointer parameter = ComparisonFilterParameter::New();

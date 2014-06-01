@@ -33,8 +33,8 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef ABSTRACTMICROSTRUCTUREPRESETFACTORY_H_
-#define ABSTRACTMICROSTRUCTUREPRESETFACTORY_H_
+#ifndef _ABSTRACTMICROSTRUCTUREPRESETFACTORY_H_
+#define _ABSTRACTMICROSTRUCTUREPRESETFACTORY_H_
 
 #include <string>
 #include <vector>

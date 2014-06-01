@@ -33,8 +33,8 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef TransformationPhaseWidget_H_
-#define TransformationPhaseWidget_H_
+#ifndef _TransformationPhaseWidget_H_
+#define _TransformationPhaseWidget_H_
 
 #include "SGWidget.h"
 #include "ui_TransformationPhaseWidget.h"

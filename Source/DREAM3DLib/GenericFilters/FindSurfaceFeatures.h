@@ -34,8 +34,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef FINDSURFACEGRAINS_H_
-#define FINDSURFACEGRAINS_H_
+#ifndef _FINDSURFACEGRAINS_H_
+#define _FINDSURFACEGRAINS_H_
 
 #include <vector>
 #include <QtCore/QString>

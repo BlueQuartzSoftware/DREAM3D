@@ -5,8 +5,8 @@
  *      Author: mjackson
  */
 
-#ifndef PMFILTERGENERATOR_H_
-#define PMFILTERGENERATOR_H_
+#ifndef _PMFILTERGENERATOR_H_
+#define _PMFILTERGENERATOR_H_
 
 #include "PMFileGenerator.h"
 

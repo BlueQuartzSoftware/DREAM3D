@@ -34,8 +34,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef AlignSectionsFeature_H_
-#define AlignSectionsFeature_H_
+#ifndef _AlignSectionsFeature_H_
+#define _AlignSectionsFeature_H_
 
 #include <vector>
 #include <QtCore/QString>

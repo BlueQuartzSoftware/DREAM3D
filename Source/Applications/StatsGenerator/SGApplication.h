@@ -34,8 +34,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef SGAPPLICATION_H_
-#define SGAPPLICATION_H_
+#ifndef _SGAPPLICATION_H_
+#define _SGAPPLICATION_H_
 
 
 //-- Qt Headers

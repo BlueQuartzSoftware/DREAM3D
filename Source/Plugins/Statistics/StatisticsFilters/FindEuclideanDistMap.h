@@ -34,8 +34,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef FINDEUCLIDEANDISTMAP_H_
-#define FINDEUCLIDEANDISTMAP_H_
+#ifndef _FINDEUCLIDEANDISTMAP_H_
+#define _FINDEUCLIDEANDISTMAP_H_
 
 #include <vector>
 #include <QtCore/QString>

@@ -33,8 +33,8 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef VTKWRITER_H_
-#define VTKWRITER_H_
+#ifndef _VTKWRITER_H_
+#define _VTKWRITER_H_
 
 #include <QtCore/QtEndian>
 

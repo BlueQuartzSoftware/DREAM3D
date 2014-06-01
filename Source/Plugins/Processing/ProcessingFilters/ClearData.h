@@ -34,8 +34,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef ClearData_H_
-#define ClearData_H_
+#ifndef _ClearData_H_
+#define _ClearData_H_
 
 #include <QtCore/QString>
 

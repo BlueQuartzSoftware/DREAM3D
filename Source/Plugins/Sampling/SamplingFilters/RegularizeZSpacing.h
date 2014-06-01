@@ -34,8 +34,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef RegularizeZSpacing_H_
-#define RegularizeZSpacing_H_
+#ifndef _RegularizeZSpacing_H_
+#define _RegularizeZSpacing_H_
 
 #include <QtCore/QString>
 

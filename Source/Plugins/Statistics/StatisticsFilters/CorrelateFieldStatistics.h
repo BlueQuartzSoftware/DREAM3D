@@ -1,5 +1,5 @@
-#ifndef CORRELATEFIELDSTATISTICS_H_
-#define CORRELATEFIELDSTATISTICS_H_
+#ifndef _CORRELATEFIELDSTATISTICS_H_
+#define _CORRELATEFIELDSTATISTICS_H_
 
 
 #include "Statistics/StatisticsConstants.h"

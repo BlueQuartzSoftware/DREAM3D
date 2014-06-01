@@ -34,8 +34,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef ORTHORHOMBICOPS_H_
-#define ORTHORHOMBICOPS_H_
+#ifndef _ORTHORHOMBICOPS_H_
+#define _ORTHORHOMBICOPS_H_
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"

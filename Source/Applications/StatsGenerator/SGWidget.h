@@ -33,8 +33,8 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef SGWIDGET_H_
-#define SGWIDGET_H_
+#ifndef _SGWIDGET_H_
+#define _SGWIDGET_H_
 
 #include <QtGui/QWidget>
 

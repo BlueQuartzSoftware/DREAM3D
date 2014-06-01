@@ -42,11 +42,11 @@
 namespace DREAM3D
 {
 
-namespace Defaults
-{
-  static const QColor BasicColor(215, 215, 215);
-  static const QColor AdvancedColor(200, 200, 212);
-}
+  namespace Defaults
+  {
+    static const QColor BasicColor(215, 215, 215);
+    static const QColor AdvancedColor(200, 200, 212);
+  }
 
 }
 

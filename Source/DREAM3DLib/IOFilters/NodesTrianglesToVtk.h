@@ -34,8 +34,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef CMUSmoothingToVtk_H_
-#define CMUSmoothingToVtk_H_
+#ifndef _CMUSmoothingToVtk_H_
+#define _CMUSmoothingToVtk_H_
 
 #include <QtCore/QString>
 

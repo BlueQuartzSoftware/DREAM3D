@@ -33,8 +33,8 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef FeatureFaceCurvatureFilter_H_
-#define FeatureFaceCurvatureFilter_H_
+#ifndef _FeatureFaceCurvatureFilter_H_
+#define _FeatureFaceCurvatureFilter_H_
 
 #include <QtCore/QString>
 

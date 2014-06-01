@@ -181,13 +181,13 @@ void IntVec3Widget::fadeWidget(QWidget* widget, bool in)
     setVisible(true);
     faderWidget->setFadeIn();
     connect(faderWidget, SIGNAL(animationComplete() ),
-          this, SLOT(show()));
+            this, SLOT(show()));
   }
   else
   {
     faderWidget->setFadeOut();
     connect(faderWidget, SIGNAL(animationComplete() ),
-          this, SLOT(hide()));
+            this, SLOT(hide()));
   }
   QColor color = DREAM3D::Defaults::BasicColor;
   if(m_FilterParameter->getAdvanced()) { color = DREAM3D::Defaults::AdvancedColor; }

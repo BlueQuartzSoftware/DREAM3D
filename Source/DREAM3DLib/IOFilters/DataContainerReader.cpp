@@ -174,7 +174,7 @@ void DataContainerReader::preflight()
 
   // The GUI needs to send down the selections that were made by the user and we need to update
   // DataContainerArray->DataContainer object so the rest of the pipeline has the proper information
-    emit preflightExecuted(); // Done executing
+  emit preflightExecuted(); // Done executing
 
   // Get the latest DataContainer Array from the filter
   DataContainerArray::Pointer dca = getDataContainerArray();

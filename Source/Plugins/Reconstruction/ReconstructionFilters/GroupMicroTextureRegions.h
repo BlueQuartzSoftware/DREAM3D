@@ -35,8 +35,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef GroupMicroTextureRegions_H_
-#define GroupMicroTextureRegions_H_
+#ifndef _GroupMicroTextureRegions_H_
+#define _GroupMicroTextureRegions_H_
 
 #include <vector>
 #include <QtCore/QString>

@@ -34,8 +34,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef EBSDMACROS_H_
-#define EBSDMACROS_H_
+#ifndef _EBSDMACROS_H_
+#define _EBSDMACROS_H_
 
 /* Define our buffer size for reading data */
 #define kBufferSize 1024

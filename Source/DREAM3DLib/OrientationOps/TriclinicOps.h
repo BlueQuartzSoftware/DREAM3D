@@ -34,8 +34,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef TriclinicOPS_H_
-#define TriclinicOPS_H_
+#ifndef _TriclinicOPS_H_
+#define _TriclinicOPS_H_
 
 
 #include "DREAM3DLib/DREAM3DLib.h"

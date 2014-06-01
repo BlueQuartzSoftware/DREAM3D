@@ -34,8 +34,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef EbsdImportWIDGET_H_
-#define EbsdImportWIDGET_H_
+#ifndef _EbsdImportWIDGET_H_
+#define _EbsdImportWIDGET_H_
 
 
 #include <QtCore/QString>

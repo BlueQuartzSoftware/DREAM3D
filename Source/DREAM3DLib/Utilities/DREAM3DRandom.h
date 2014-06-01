@@ -33,8 +33,8 @@
  * instance of this class.
  */
 
-#ifndef DREAM3DRANDOM_H_
-#define DREAM3DRANDOM_H_
+#ifndef _DREAM3DRANDOM_H_
+#define _DREAM3DRANDOM_H_
 
 #include <QtCore/QDateTime>
 

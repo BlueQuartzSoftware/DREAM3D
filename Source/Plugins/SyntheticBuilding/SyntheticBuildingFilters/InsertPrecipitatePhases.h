@@ -35,8 +35,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef InsertPrecipitatePhases_H_
-#define InsertPrecipitatePhases_H_
+#ifndef _InsertPrecipitatePhases_H_
+#define _InsertPrecipitatePhases_H_
 
 #include <QtCore/QString>
 #include <vector>

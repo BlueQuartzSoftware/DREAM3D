@@ -307,7 +307,7 @@ void InsertPrecipitatePhases::preflight()
   emit preflightAboutToExecute();
   emit updateFilterParameters(this);
   dataCheck();
-    emit preflightExecuted();
+  emit preflightExecuted();
 
   if (m_WriteGoalAttributes == true && getCsvOutputFile().isEmpty() == true)
   {

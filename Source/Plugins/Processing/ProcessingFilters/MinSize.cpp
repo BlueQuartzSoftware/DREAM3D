@@ -146,7 +146,7 @@ void MinSize::preflight()
   emit preflightAboutToExecute();
   emit updateFilterParameters(this);
   dataCheck();
-    emit preflightExecuted();
+  emit preflightExecuted();
   if(getErrorCondition() < 0) { return; }
 
   AttributeMatrix::Pointer cellFeatureAttrMat = getDataContainerArray()->getAttributeMatrix(m_FeaturePhasesArrayPath);

@@ -35,8 +35,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef FINDFIELDNEIGHBORCAXISMISALIGNMENTS_H_
-#define FINDFIELDNEIGHBORCAXISMISALIGNMENTS_H_
+#ifndef _FINDFIELDNEIGHBORCAXISMISALIGNMENTS_H_
+#define _FINDFIELDNEIGHBORCAXISMISALIGNMENTS_H_
 
 #include <vector>
 #include <string>

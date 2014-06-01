@@ -34,8 +34,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef FindOrientationFieldCurl_H_
-#define FindOrientationFieldCurl_H_
+#ifndef _FindOrientationFieldCurl_H_
+#define _FindOrientationFieldCurl_H_
 
 #include <vector>
 #include <QtCore/QString>

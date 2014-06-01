@@ -34,8 +34,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef FINDNEIGHBORS_H_
-#define FINDNEIGHBORS_H_
+#ifndef _FINDNEIGHBORS_H_
+#define _FINDNEIGHBORS_H_
 
 #include <vector>
 #include <QtCore/QString>

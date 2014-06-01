@@ -69,7 +69,7 @@ class DREAM3DLib_EXPORT StatsDataArray : public IDataArray
      * @param name The name of the array
      * @return Boost::Shared_Ptr wrapping an instance of DataArrayTemplate<T>
      */
-    static Pointer CreateArray(size_t numElements, const QString& name, bool allocate=true)
+    static Pointer CreateArray(size_t numElements, const QString& name, bool allocate = true)
     {
       if (name.isEmpty() == true)
       {
@@ -77,11 +77,11 @@ class DREAM3DLib_EXPORT StatsDataArray : public IDataArray
       }
       StatsDataArray::Pointer ptr = StatsDataArray::New();
       std::vector<unsigned int> phase_types(numElements, DREAM3D::PhaseType::UnknownPhaseType);
-      if(allocate) ptr->fillArrayWithNewStatsData(numElements, &(phase_types.front()) );
+      if(allocate) { ptr->fillArrayWithNewStatsData(numElements, &(phase_types.front()) ); }
       return ptr;
     }
 
-    static Pointer CreateArray(size_t numTuples, int rank, size_t* dims, const QString& name, bool allocate=true)
+    static Pointer CreateArray(size_t numTuples, int rank, size_t* dims, const QString& name, bool allocate = true)
     {
       if (name.isEmpty() == true)
       {
@@ -89,11 +89,11 @@ class DREAM3DLib_EXPORT StatsDataArray : public IDataArray
       }
       StatsDataArray::Pointer ptr = StatsDataArray::New();
       std::vector<unsigned int> phase_types(numTuples, DREAM3D::PhaseType::UnknownPhaseType);
-      if(allocate) ptr->fillArrayWithNewStatsData(numTuples, &(phase_types.front()) );
+      if(allocate) { ptr->fillArrayWithNewStatsData(numTuples, &(phase_types.front()) ); }
       return ptr;
     }
 
-    static Pointer CreateArray(size_t numTuples, std::vector<size_t> cDims, const QString& name, bool allocate=true)
+    static Pointer CreateArray(size_t numTuples, std::vector<size_t> cDims, const QString& name, bool allocate = true)
     {
       if (name.isEmpty() == true)
       {
@@ -101,11 +101,11 @@ class DREAM3DLib_EXPORT StatsDataArray : public IDataArray
       }
       StatsDataArray::Pointer ptr = StatsDataArray::New();
       std::vector<unsigned int> phase_types(numTuples, DREAM3D::PhaseType::UnknownPhaseType);
-      if(allocate) ptr->fillArrayWithNewStatsData(numTuples, &(phase_types.front()) );
+      if(allocate) { ptr->fillArrayWithNewStatsData(numTuples, &(phase_types.front()) ); }
       return ptr;
     }
 
-    static Pointer CreateArray(size_t numTuples, QVector<size_t> cDims, const QString& name, bool allocate=true)
+    static Pointer CreateArray(size_t numTuples, QVector<size_t> cDims, const QString& name, bool allocate = true)
     {
       if (name.isEmpty() == true)
       {
@@ -113,11 +113,11 @@ class DREAM3DLib_EXPORT StatsDataArray : public IDataArray
       }
       StatsDataArray::Pointer ptr = StatsDataArray::New();
       std::vector<unsigned int> phase_types(numTuples, DREAM3D::PhaseType::UnknownPhaseType);
-      if(allocate) ptr->fillArrayWithNewStatsData(numTuples, &(phase_types.front()) );
+      if(allocate) { ptr->fillArrayWithNewStatsData(numTuples, &(phase_types.front()) ); }
       return ptr;
     }
 
-    static Pointer CreateArray(QVector<size_t> tDims, QVector<size_t> cDims, const QString& name, bool allocate=true)
+    static Pointer CreateArray(QVector<size_t> tDims, QVector<size_t> cDims, const QString& name, bool allocate = true)
     {
       if (name.isEmpty() == true)
       {
@@ -131,7 +131,7 @@ class DREAM3DLib_EXPORT StatsDataArray : public IDataArray
       }
       StatsDataArray::Pointer ptr = StatsDataArray::New();
       std::vector<unsigned int> phase_types(numTuples, DREAM3D::PhaseType::UnknownPhaseType);
-      if(allocate) ptr->fillArrayWithNewStatsData(numTuples, &(phase_types.front()) );
+      if(allocate) { ptr->fillArrayWithNewStatsData(numTuples, &(phase_types.front()) ); }
       return ptr;
     }
 
@@ -155,17 +155,17 @@ class DREAM3DLib_EXPORT StatsDataArray : public IDataArray
 
     DREAM3D_INSTANCE_PROPERTY(QVector<StatsData::Pointer>, StatsDataArray)
 
-    virtual IDataArray::Pointer createNewArray(size_t numElements, int rank, size_t* dims, const QString& name, bool allocate=true)
+    virtual IDataArray::Pointer createNewArray(size_t numElements, int rank, size_t* dims, const QString& name, bool allocate = true)
     {
       return StatsDataArray::New();
     }
 
-    virtual IDataArray::Pointer createNewArray(size_t numElements, std::vector<size_t> dims, const QString& name, bool allocate=true)
+    virtual IDataArray::Pointer createNewArray(size_t numElements, std::vector<size_t> dims, const QString& name, bool allocate = true)
     {
       return StatsDataArray::New();
     }
 
-    virtual IDataArray::Pointer createNewArray(size_t numElements, QVector<size_t> dims, const QString& name, bool allocate=true)
+    virtual IDataArray::Pointer createNewArray(size_t numElements, QVector<size_t> dims, const QString& name, bool allocate = true)
     {
       return StatsDataArray::New();
     }

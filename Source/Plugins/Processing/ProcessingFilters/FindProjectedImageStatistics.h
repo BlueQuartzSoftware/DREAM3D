@@ -34,8 +34,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef FindProjectedImageStatistics_H_
-#define FindProjectedImageStatistics_H_
+#ifndef _FindProjectedImageStatistics_H_
+#define _FindProjectedImageStatistics_H_
 
 #include <vector>
 #include <QtCore/QString>

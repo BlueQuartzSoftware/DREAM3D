@@ -34,8 +34,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef ErodeDilateMask_H_
-#define ErodeDilateMask_H_
+#ifndef _ErodeDilateMask_H_
+#define _ErodeDilateMask_H_
 
 #include <vector>
 #include <QtCore/QString>

@@ -251,7 +251,7 @@ class DREAM3DLib_EXPORT AttributeMatrix : public Observable
     bool dataArrayCompatibility(const QString& arrayName, int numComp, AbstractFilter* filter)
     {
       // First try checking by name
-     // IDataArray::Pointer iDataArray = ;
+      // IDataArray::Pointer iDataArray = ;
       typename ArrayType::Pointer attributeArray = boost::dynamic_pointer_cast< ArrayType >(getAttributeArray(arrayName));
 
       if (attributeArray.get() == 0)

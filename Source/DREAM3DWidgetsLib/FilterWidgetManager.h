@@ -33,8 +33,8 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef PipelineFilterWidgetMANAGER_H_
-#define PipelineFilterWidgetMANAGER_H_
+#ifndef _PipelineFilterWidgetMANAGER_H_
+#define _PipelineFilterWidgetMANAGER_H_
 
 
 #include <QtCore/QString>

@@ -425,7 +425,7 @@ void M3CSliceBySlice::preflight()
   emit preflightAboutToExecute();
   emit updateFilterParameters(this);
   dataCheck();
-    emit preflightExecuted();
+  emit preflightExecuted();
 
   QString nodesFile = QDir::tempPath() + Detail::NodesFile;
   SMTempFile::Pointer nodesTempFile = SMTempFile::New();

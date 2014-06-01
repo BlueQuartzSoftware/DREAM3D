@@ -34,8 +34,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef GenerateEnsembleStatistics_H_
-#define GenerateEnsembleStatistics_H_
+#ifndef _GenerateEnsembleStatistics_H_
+#define _GenerateEnsembleStatistics_H_
 
 #include <vector>
 #include <QtCore/QString>
@@ -54,6 +54,7 @@
 #include "DREAM3DLib/DataContainers/VolumeDataContainer.h"
 #include "DREAM3DLib/DataArrays/NeighborList.hpp"
 #include "DREAM3DLib/DistributionAnalysisOps/DistributionAnalysisOps.h"
+#include "DREAM3DLib/Utilities/QMetaObjectUtilities.h"
 
 #include "Statistics/StatisticsConstants.h"
 /**
@@ -72,8 +73,17 @@ class GenerateEnsembleStatistics : public AbstractFilter
     DREAM3D_TYPE_MACRO_SUPER(GenerateEnsembleStatistics, AbstractFilter)
 
     virtual ~GenerateEnsembleStatistics();
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, CellEnsembleAttributeMatrixName)
-    Q_PROPERTY(DataArrayPath CellEnsembleAttributeMatrixName READ getCellEnsembleAttributeMatrixName WRITE setCellEnsembleAttributeMatrixName)
+    DREAM3D_FILTER_PARAMETER(DataArrayPath, CellEnsembleAttributeMatrixPath)
+    Q_PROPERTY(DataArrayPath CellEnsembleAttributeMatrixPath READ getCellEnsembleAttributeMatrixPath WRITE setCellEnsembleAttributeMatrixPath)
+
+    DREAM3D_FILTER_PARAMETER(QString, PhaseTypesArrayName)
+    Q_PROPERTY(QString PhaseTypesArrayName READ getPhaseTypesArrayName WRITE setPhaseTypesArrayName)
+
+    DREAM3D_INSTANCE_PROPERTY(UInt32Vector_t, PhaseTypeData)
+    Q_PROPERTY(UInt32Vector_t PhaseTypeData READ getPhaseTypeData WRITE setPhaseTypeData)
+
+    int getPhaseCount();
+    Q_PROPERTY(int PhaseCount READ getPhaseCount)
 
     DREAM3D_FILTER_PARAMETER(DataArrayPath, NeighborListArrayPath)
     Q_PROPERTY(DataArrayPath NeighborListArrayPath READ getNeighborListArrayPath WRITE setNeighborListArrayPath)
@@ -117,36 +127,33 @@ class GenerateEnsembleStatistics : public AbstractFilter
     DREAM3D_FILTER_PARAMETER(DataArrayPath, AvgQuatsArrayPath)
     Q_PROPERTY(DataArrayPath AvgQuatsArrayPath READ getAvgQuatsArrayPath WRITE setAvgQuatsArrayPath)
 
-    DREAM3D_FILTER_PARAMETER(QString, PhaseTypesArrayName)
-    Q_PROPERTY(QString PhaseTypesArrayName READ getPhaseTypesArrayName WRITE setPhaseTypesArrayName)
-
     DREAM3D_FILTER_PARAMETER(QString, StatisticsArrayName)
     Q_PROPERTY(QString StatisticsArrayName READ getStatisticsArrayName WRITE setStatisticsArrayName)
 
-/* ---------- */
+    /* ---------- */
     DREAM3D_FILTER_PARAMETER(bool, CalculateMorphologicalStats)
     Q_PROPERTY(bool CalculateMorphologicalStats READ getCalculateMorphologicalStats WRITE setCalculateMorphologicalStats)
 
     DREAM3D_INSTANCE_PROPERTY(bool, ComputeSizeDistribution)
-  //  Q_PROPERTY(bool ComputeSizeDistribution READ getComputeSizeDistribution WRITE setComputeSizeDistribution)
+//  Q_PROPERTY(bool ComputeSizeDistribution READ getComputeSizeDistribution WRITE setComputeSizeDistribution)
 
     DREAM3D_FILTER_PARAMETER(int, SizeDistributionFitType)
     Q_PROPERTY(int SizeDistributionFitType READ getSizeDistributionFitType WRITE setSizeDistributionFitType)
 
     DREAM3D_FILTER_PARAMETER(bool, ComputeAspectRatioDistribution)
- //   Q_PROPERTY(bool ComputeAspectRatioDistribution READ getComputeAspectRatioDistribution WRITE setComputeAspectRatioDistribution)
+// Q_PROPERTY(bool ComputeAspectRatioDistribution READ getComputeAspectRatioDistribution WRITE setComputeAspectRatioDistribution)
 
     DREAM3D_FILTER_PARAMETER(int, AspectRatioDistributionFitType)
     Q_PROPERTY(int AspectRatioDistributionFitType READ getAspectRatioDistributionFitType WRITE setAspectRatioDistributionFitType)
 
     DREAM3D_FILTER_PARAMETER(bool, ComputeOmega3Distribution)
-//    Q_PROPERTY(bool ComputeOmega3Distribution READ getComputeOmega3Distribution WRITE setComputeOmega3Distribution)
+//  Q_PROPERTY(bool ComputeOmega3Distribution READ getComputeOmega3Distribution WRITE setComputeOmega3Distribution)
 
     DREAM3D_FILTER_PARAMETER(int, Omega3DistributionFitType)
-   Q_PROPERTY(int Omega3DistributionFitType READ getOmega3DistributionFitType WRITE setOmega3DistributionFitType)
+    Q_PROPERTY(int Omega3DistributionFitType READ getOmega3DistributionFitType WRITE setOmega3DistributionFitType)
 
     DREAM3D_FILTER_PARAMETER(bool, ComputeNeighborhoodDistribution)
-//    Q_PROPERTY(bool ComputeNeighborhoodDistribution READ getComputeNeighborhoodDistribution WRITE setComputeNeighborhoodDistribution)
+//  Q_PROPERTY(bool ComputeNeighborhoodDistribution READ getComputeNeighborhoodDistribution WRITE setComputeNeighborhoodDistribution)
 
     DREAM3D_FILTER_PARAMETER(int, NeighborhoodDistributionFitType)
     Q_PROPERTY(int NeighborhoodDistributionFitType READ getNeighborhoodDistributionFitType WRITE setNeighborhoodDistributionFitType)
@@ -155,19 +162,18 @@ class GenerateEnsembleStatistics : public AbstractFilter
     Q_PROPERTY(bool CalculateCrystallographicStats READ getCalculateCrystallographicStats WRITE setCalculateCrystallographicStats)
 
     DREAM3D_FILTER_PARAMETER(bool, CalculateODF)
-  //  Q_PROPERTY(bool CalculateODF READ getCalculateODF WRITE setCalculateODF)
+//  Q_PROPERTY(bool CalculateODF READ getCalculateODF WRITE setCalculateODF)
 
     DREAM3D_FILTER_PARAMETER(bool, CalculateMDF)
-  //  Q_PROPERTY(bool CalculateMDF READ getCalculateMDF WRITE setCalculateMDF)
+//  Q_PROPERTY(bool CalculateMDF READ getCalculateMDF WRITE setCalculateMDF)
 
     DREAM3D_FILTER_PARAMETER(bool, CalculateAxisODF)
- //   Q_PROPERTY(bool CalculateAxisODF READ getCalculateAxisODF WRITE setCalculateAxisODF)
+//  Q_PROPERTY(bool CalculateAxisODF READ getCalculateAxisODF WRITE setCalculateAxisODF)
 
     DREAM3D_FILTER_PARAMETER(float, SizeCorrelationResolution)
     Q_PROPERTY(float SizeCorrelationResolution READ getSizeCorrelationResolution WRITE setSizeCorrelationResolution)
 
 
-    DREAM3D_INSTANCE_PROPERTY(QVector<unsigned int>, PhaseTypeArray)
 
     virtual const QString getCompiledLibraryName() { return Statistics::StatisticsBaseName; }
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);

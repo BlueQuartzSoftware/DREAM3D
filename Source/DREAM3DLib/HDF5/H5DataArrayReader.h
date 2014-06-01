@@ -34,8 +34,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef H5DATAARRAYREADER_HPP_
-#define H5DATAARRAYREADER_HPP_
+#ifndef _H5DATAARRAYREADER_HPP_
+#define _H5DATAARRAYREADER_HPP_
 
 #include <hdf5.h>
 
@@ -66,7 +66,7 @@ class DREAM3DLib_EXPORT H5DataArrayReader
      * @param cDims The Component Dimensions of the data array
      * @return
      */
-    static int ReadRequiredAttributes(hid_t gid, const QString &name, QString &objType, int &version, QVector<size_t> &tDims, QVector<size_t> &cDims);
+    static int ReadRequiredAttributes(hid_t gid, const QString& name, QString& objType, int& version, QVector<size_t>& tDims, QVector<size_t>& cDims);
 
     /**
      * @brief ReadIDataArray Reads an IDataArray subclass from the HDF5 file

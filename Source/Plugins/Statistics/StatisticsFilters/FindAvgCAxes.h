@@ -34,8 +34,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef FINDAvgCAxes_H_
-#define FINDAvgCAxes_H_
+#ifndef _FINDAvgCAxes_H_
+#define _FINDAvgCAxes_H_
 
 #include <vector>
 #include <QtCore/QString>

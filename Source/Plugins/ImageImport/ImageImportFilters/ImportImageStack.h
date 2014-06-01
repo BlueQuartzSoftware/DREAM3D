@@ -33,8 +33,8 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef ImportImageStack_H_
-#define ImportImageStack_H_
+#ifndef _ImportImageStack_H_
+#define _ImportImageStack_H_
 
 #include <QtCore/QString>
 

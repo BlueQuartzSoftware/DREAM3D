@@ -33,8 +33,8 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef ImportImagesAsVector_H_
-#define ImportImagesAsVector_H_
+#ifndef _ImportImagesAsVector_H_
+#define _ImportImagesAsVector_H_
 
 #include <QtCore/QString>
 

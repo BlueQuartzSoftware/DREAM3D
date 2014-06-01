@@ -62,7 +62,7 @@ class StringDataArray : public IDataArray
     DREAM3D_TYPE_MACRO_SUPER(StringDataArray, IDataArray)
     DREAM3D_CLASS_VERSION(2)
 
-    static Pointer CreateArray(size_t numTuples, const QString& name, bool allocate=true)
+    static Pointer CreateArray(size_t numTuples, const QString& name, bool allocate = true)
     {
       if (name.isEmpty() == true)
       {
@@ -81,19 +81,19 @@ class StringDataArray : public IDataArray
      * @param name
      * @return
      */
-    virtual IDataArray::Pointer createNewArray(size_t numElements, int rank, size_t* dims, const QString& name, bool allocate=true)
+    virtual IDataArray::Pointer createNewArray(size_t numElements, int rank, size_t* dims, const QString& name, bool allocate = true)
     {
       IDataArray::Pointer p = StringDataArray::CreateArray(numElements, name, allocate);
       return p;
     }
 
-    virtual IDataArray::Pointer createNewArray(size_t numElements, std::vector<size_t> dims, const QString& name, bool allocate=true)
+    virtual IDataArray::Pointer createNewArray(size_t numElements, std::vector<size_t> dims, const QString& name, bool allocate = true)
     {
       IDataArray::Pointer p = StringDataArray::CreateArray(numElements, name, allocate);
       return p;
     }
 
-    virtual IDataArray::Pointer createNewArray(size_t numElements, QVector<size_t> dims, const QString& name, bool allocate=true)
+    virtual IDataArray::Pointer createNewArray(size_t numElements, QVector<size_t> dims, const QString& name, bool allocate = true)
     {
       IDataArray::Pointer p = StringDataArray::CreateArray(numElements, name, allocate);
       return p;
@@ -485,7 +485,8 @@ class StringDataArray : public IDataArray
       m_NumTuples(numTuples),
       _ownsData(true)
     {
-      if (allocate == true) {
+      if (allocate == true)
+      {
         m_Array.resize(numTuples);
       }
     }

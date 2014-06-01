@@ -34,8 +34,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef EstablishMatrixPhase_H_
-#define EstablishMatrixPhase_H_
+#ifndef _EstablishMatrixPhase_H_
+#define _EstablishMatrixPhase_H_
 
 #include <QtCore/QString>
 #include <vector>

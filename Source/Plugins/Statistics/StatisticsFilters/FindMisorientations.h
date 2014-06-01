@@ -35,8 +35,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef FindMisorientations_H_
-#define FindMisorientations_H_
+#ifndef _FindMisorientations_H_
+#define _FindMisorientations_H_
 
 #include <vector>
 #include <QtCore/QString>

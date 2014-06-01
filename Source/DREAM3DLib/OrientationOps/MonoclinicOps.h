@@ -34,8 +34,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef MonoclinicOPS_H_
-#define MonoclinicOPS_H_
+#ifndef _MonoclinicOPS_H_
+#define _MonoclinicOPS_H_
 
 
 #include "DREAM3DLib/DREAM3DLib.h"

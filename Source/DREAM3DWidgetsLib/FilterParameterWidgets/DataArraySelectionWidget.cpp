@@ -250,7 +250,7 @@ void DataArraySelectionWidget::populateComboBoxes()
   attributeArrayList->blockSignals(true);
   int daIndex = attributeArrayList->findText(daName);
 
-    // The DataArray Name was empty, lets instantiate the filter and get the default value and try that
+  // The DataArray Name was empty, lets instantiate the filter and get the default value and try that
   if(daIndex < 0)
   {
     QVariant var = m_FilterParameter->getDefaultValue();
@@ -260,7 +260,7 @@ void DataArraySelectionWidget::populateComboBoxes()
     //DataArrayPath path = ptr->property(PROPERTY_NAME_AS_CHAR).value<DataArrayPath>();
     daName = path.getDataArrayName(); // Pick up the DataArray Name from a Default instantiation of the filter
     daIndex = attributeArrayList->findText(daName);
-   // qDebug() << "Trying default value for DataArrayPath.dataArrayName: " << daName;
+    // qDebug() << "Trying default value for DataArrayPath.dataArrayName: " << daName;
   }
 
 
@@ -565,13 +565,13 @@ void DataArraySelectionWidget::fadeWidget(QWidget* widget, bool in)
     setVisible(true);
     faderWidget->setFadeIn();
     connect(faderWidget, SIGNAL(animationComplete() ),
-          this, SLOT(show()));
+            this, SLOT(show()));
   }
   else
   {
     faderWidget->setFadeOut();
     connect(faderWidget, SIGNAL(animationComplete() ),
-          this, SLOT(hide()));
+            this, SLOT(hide()));
   }
   QColor color = DREAM3D::Defaults::BasicColor;
   if(m_FilterParameter->getAdvanced()) { color = DREAM3D::Defaults::AdvancedColor; }

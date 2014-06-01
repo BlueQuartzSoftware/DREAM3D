@@ -34,8 +34,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef UncertainRegularGridSampleSurfaceMesh_H_
-#define UncertainRegularGridSampleSurfaceMesh_H_
+#ifndef _UncertainRegularGridSampleSurfaceMesh_H_
+#define _UncertainRegularGridSampleSurfaceMesh_H_
 
 #include <QtCore/QString>
 

@@ -34,8 +34,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef DREAM3DPluginInterface_H_
-#define DREAM3DPluginInterface_H_
+#ifndef _DREAM3DPluginInterface_H_
+#define _DREAM3DPluginInterface_H_
 
 
 #include <QtCore/QSettings>

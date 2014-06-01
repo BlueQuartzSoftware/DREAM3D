@@ -5,8 +5,8 @@
  *      Author: mjackson
  */
 
-#ifndef QFILTERLISTWIDGET_H_
-#define QFILTERLISTWIDGET_H_
+#ifndef _QFILTERLISTWIDGET_H_
+#define _QFILTERLISTWIDGET_H_
 
 #include <QtCore/QPoint>
 #include <QtGui/QListWidget>

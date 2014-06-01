@@ -34,8 +34,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef PrimaryEquiaxedPresetFACTORY_H_
-#define PrimaryEquiaxedPresetFACTORY_H_
+#ifndef _PrimaryEquiaxedPresetFACTORY_H_
+#define _PrimaryEquiaxedPresetFACTORY_H_
 
 
 //-- C++ includes

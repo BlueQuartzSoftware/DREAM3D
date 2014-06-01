@@ -34,8 +34,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef PipelineFilterWidgetFACTORY_H_
-#define PipelineFilterWidgetFACTORY_H_
+#ifndef _PipelineFilterWidgetFACTORY_H_
+#define _PipelineFilterWidgetFACTORY_H_
 
 
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"

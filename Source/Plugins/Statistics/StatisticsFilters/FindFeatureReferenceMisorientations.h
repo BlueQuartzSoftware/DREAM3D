@@ -34,8 +34,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef FindFeatureReferenceMisorientations_H_
-#define FindFeatureReferenceMisorientations_H_
+#ifndef _FindFeatureReferenceMisorientations_H_
+#define _FindFeatureReferenceMisorientations_H_
 
 #include <vector>
 #include <QtCore/QString>

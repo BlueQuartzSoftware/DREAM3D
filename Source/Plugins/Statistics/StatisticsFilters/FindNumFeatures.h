@@ -33,8 +33,8 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef FindNumFeatures_H_
-#define FindNumFeatures_H_
+#ifndef _FindNumFeatures_H_
+#define _FindNumFeatures_H_
 
 #include <vector>
 #include <QtCore/QString>

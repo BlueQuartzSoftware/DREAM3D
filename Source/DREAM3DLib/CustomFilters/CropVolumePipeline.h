@@ -34,8 +34,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef CROP_VOLUME_PIPELINE_H_
-#define CROP_VOLUME_PIPELINE_H_
+#ifndef _CROP_VOLUME_PIPELINE_H_
+#define _CROP_VOLUME_PIPELINE_H_
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"

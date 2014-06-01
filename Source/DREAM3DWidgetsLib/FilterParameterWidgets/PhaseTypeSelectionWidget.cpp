@@ -33,7 +33,7 @@
  *                           FA8650-10-D-5210
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#include "ShapeTypeSelectionWidget.h"
+#include "PhaseTypeSelectionWidget.h"
 
 #include <QtCore/QMetaProperty>
 #include <QtCore/QList>
@@ -41,7 +41,7 @@
 #include <QtGui/QComboBox>
 #include <QtGui/QLabel>
 
-#include "DREAM3DLib/Common/ShapeType.h"
+#include "DREAM3DLib/Common/PhaseType.h"
 #include "DREAM3DLib/DataContainers/DataArrayPath.h"
 #include "DREAM3DLib/Utilities/QMetaObjectUtilities.h"
 #include "DREAM3DWidgetsLib/DREAM3DWidgetsLibConstants.h"
@@ -52,7 +52,7 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ShapeTypeSelectionWidget::ShapeTypeSelectionWidget(FilterParameter* parameter, AbstractFilter* filter, QWidget* parent) :
+PhaseTypeSelectionWidget::PhaseTypeSelectionWidget(FilterParameter* parameter, AbstractFilter* filter, QWidget* parent) :
   QWidget(parent),
   m_Filter(filter),
   m_FilterParameter(parameter),
@@ -65,7 +65,7 @@ ShapeTypeSelectionWidget::ShapeTypeSelectionWidget(FilterParameter* parameter, A
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ShapeTypeSelectionWidget::ShapeTypeSelectionWidget(QWidget* parent) :
+PhaseTypeSelectionWidget::PhaseTypeSelectionWidget(QWidget* parent) :
   QWidget(parent),
   m_Filter(NULL),
   m_FilterParameter(NULL),
@@ -78,14 +78,14 @@ ShapeTypeSelectionWidget::ShapeTypeSelectionWidget(QWidget* parent) :
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ShapeTypeSelectionWidget::~ShapeTypeSelectionWidget()
+PhaseTypeSelectionWidget::~PhaseTypeSelectionWidget()
 {}
 
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ShapeTypeSelectionWidget::setupGui()
+void PhaseTypeSelectionWidget::setupGui()
 {
   if(m_Filter == NULL)
   {
@@ -124,23 +124,23 @@ void ShapeTypeSelectionWidget::setupGui()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ShapeTypeSelectionWidget::updateComboBoxes()
+void PhaseTypeSelectionWidget::updateComboBoxes()
 {
   bool ok = false;
   // setup the list of choices for the widget
-  ShapeTypesFilterParameter* shapeType = dynamic_cast<ShapeTypesFilterParameter*>(m_FilterParameter);
+  PhaseTypesFilterParameter* shapeType = dynamic_cast<PhaseTypesFilterParameter*>(m_FilterParameter);
   QString countProp = shapeType->getPhaseTypeCountProperty();
   int size = m_Filter->property(countProp.toLatin1().constData()).toInt(&ok);
 
   UInt32Vector_t vectorWrapper = m_Filter->property(PROPERTY_NAME_AS_CHAR).value<UInt32Vector_t>();
   QVector<quint32> dataFromFilter = vectorWrapper.d;
 
-  // Get our list of predefined Shape Type Strings
-  QVector<QString> shapeTypeStrings;
-  ShapeType::getShapeTypeStrings(shapeTypeStrings);
+  // Get our list of predefined Phase Type Strings
+  QVector<QString> phaseTypestrings;
+  PhaseType::getPhaseTypeStrings(phaseTypestrings);
   // Get our list of predefined enumeration values
   QVector<unsigned int> shapeTypeEnums;
-  ShapeType::getShapeTypeEnums(shapeTypeEnums);
+  PhaseType::getPhaseTypeEnums(shapeTypeEnums);
 
   // Remove all the items from the GUI and from the internal tracking Lists
   QLayoutItem* child;
@@ -148,46 +148,46 @@ void ShapeTypeSelectionWidget::updateComboBoxes()
   {
     delete child;
   }
-  m_ShapeTypeLabels.clear();
-  m_ShapeTypeCombos.clear();
+  m_PhaseTypeLabels.clear();
+  m_PhaseTypeCombos.clear();
 
   // Create a whole new QWidget to hold everything
-  m_ShapeTypeScrollContents = new QWidget();
-  m_ShapeTypeScrollContents->setObjectName(QString::fromUtf8("m_ShapeTypeScrollContents"));
-  formLayout_2 = new QFormLayout(m_ShapeTypeScrollContents);
+  m_PhaseTypeScrollContents = new QWidget();
+  m_PhaseTypeScrollContents->setObjectName(QString::fromUtf8("m_PhaseTypeScrollContents"));
+  formLayout_2 = new QFormLayout(m_PhaseTypeScrollContents);
   formLayout_2->setContentsMargins(4, 4, 4, 4);
   formLayout_2->setObjectName(QString::fromUtf8("formLayout_2"));
   formLayout_2->setFieldGrowthPolicy(QFormLayout::FieldsStayAtSizeHint);
   formLayout_2->setHorizontalSpacing(6);
   formLayout_2->setVerticalSpacing(6);
-  m_ShapeTypeScrollArea->setWidget(m_ShapeTypeScrollContents);
+  m_PhaseTypeScrollArea->setWidget(m_PhaseTypeScrollContents);
 
   // We skip the first Ensemble as it is always a dummy
-  for (int i = 0; i < size - 1; i++)
+  for (int i = 0; i < size; i++)
   {
-    QLabel* shapeTypeLabel = new QLabel(m_ShapeTypeScrollContents);
+    QLabel* shapeTypeLabel = new QLabel(m_PhaseTypeScrollContents);
     QString str("Phase ");
-    str.append(QString::number(i + 1, 10));
+    str.append(QString::number(i, 10));
     str.append(":");
     shapeTypeLabel->setText(str);
     shapeTypeLabel->setObjectName(str);
-    m_ShapeTypeLabels << shapeTypeLabel;
+    m_PhaseTypeLabels << shapeTypeLabel;
 
     formLayout_2->setWidget(i, QFormLayout::LabelRole, shapeTypeLabel);
 
-    QComboBox* cb = new QComboBox(m_ShapeTypeScrollContents);
+    QComboBox* cb = new QComboBox(m_PhaseTypeScrollContents);
     str.append(" ComboBox");
     cb->setObjectName(str);
-    for (size_t s = 0; s < shapeTypeStrings.size(); ++s)
+    for (size_t s = 0; s < phaseTypestrings.size(); ++s)
     {
-      cb->addItem((shapeTypeStrings[s]), shapeTypeEnums[s]);
+      cb->addItem((phaseTypestrings[s]), shapeTypeEnums[s]);
       cb->setItemData(static_cast<int>(s), shapeTypeEnums[s], Qt::UserRole);
     }
-    m_ShapeTypeCombos << cb;
+    m_PhaseTypeCombos << cb;
     formLayout_2->setWidget(i, QFormLayout::FieldRole, cb);
-    if (i + 1 < dataFromFilter.size())
+    if (i < dataFromFilter.size())
     {
-      cb->setCurrentIndex(dataFromFilter[i + 1]);
+      cb->setCurrentIndex(dataFromFilter[i]);
     }
     connect(cb, SIGNAL(currentIndexChanged(int)),
             this, SLOT(on_combobox_changed(int)) );
@@ -200,7 +200,7 @@ void ShapeTypeSelectionWidget::updateComboBoxes()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ShapeTypeSelectionWidget::on_combobox_changed(int index)
+void PhaseTypeSelectionWidget::on_combobox_changed(int index)
 {
   m_DidCausePreflight = true;
   emit parametersChanged();
@@ -210,12 +210,12 @@ void ShapeTypeSelectionWidget::on_combobox_changed(int index)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ShapeTypeSelectionWidget::beforePreflight()
+void PhaseTypeSelectionWidget::beforePreflight()
 {
   if (NULL == m_Filter) { return; }
   if(m_DidCausePreflight == true)
   {
-    std::cout << "***  ShapeTypeSelectionWidget already caused a preflight, just returning" << std::endl;
+    //  std::cout << "***  PhaseTypeSelectionWidget already caused a preflight, just returning" << std::endl;
     return;
   }
 
@@ -226,7 +226,7 @@ void ShapeTypeSelectionWidget::beforePreflight()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ShapeTypeSelectionWidget::afterPreflight()
+void PhaseTypeSelectionWidget::afterPreflight()
 {
   // std::cout << "After Preflight" << std::endl;
 }
@@ -234,20 +234,20 @@ void ShapeTypeSelectionWidget::afterPreflight()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ShapeTypeSelectionWidget::filterNeedsInputParameters(AbstractFilter* filter)
+void PhaseTypeSelectionWidget::filterNeedsInputParameters(AbstractFilter* filter)
 {
-  int count = m_ShapeTypeCombos.count();
-  QVector<uint32_t> shapeTypes(count + 1, DREAM3D::ShapeType::UnknownShapeType);
+  int count = m_PhaseTypeCombos.count();
+  QVector<uint32_t> phaseTypes(count, DREAM3D::PhaseType::UnknownPhaseType);
   bool ok = false;
   for (int i = 0; i < count; ++i)
   {
-    QComboBox* cb = m_ShapeTypeCombos.at(i);
+    QComboBox* cb = m_PhaseTypeCombos.at(i);
     unsigned int sType = static_cast<unsigned int>(cb->itemData(cb->currentIndex(), Qt::UserRole).toUInt(&ok));
-    shapeTypes[i + 1] = sType;
+    phaseTypes[i] = sType;
   }
 
   UInt32Vector_t data;
-  data.d = shapeTypes;
+  data.d = phaseTypes;
 
   QVariant var;
   var.setValue(data);
@@ -264,7 +264,7 @@ void ShapeTypeSelectionWidget::filterNeedsInputParameters(AbstractFilter* filter
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ShapeTypeSelectionWidget::setLinkedConditionalState(int state)
+void PhaseTypeSelectionWidget::setLinkedConditionalState(int state)
 {
   bool boolProp = (state == Qt::Checked);
   fadeWidget(this, boolProp);
@@ -273,7 +273,7 @@ void ShapeTypeSelectionWidget::setLinkedConditionalState(int state)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ShapeTypeSelectionWidget::fadeWidget(QWidget* widget, bool in)
+void PhaseTypeSelectionWidget::fadeWidget(QWidget* widget, bool in)
 {
 
   if (faderWidget)

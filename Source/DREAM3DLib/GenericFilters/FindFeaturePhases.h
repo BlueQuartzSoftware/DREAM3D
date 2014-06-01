@@ -33,8 +33,8 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef FindFeaturePhases_H_
-#define FindFeaturePhases_H_
+#ifndef _FindFeaturePhases_H_
+#define _FindFeaturePhases_H_
 
 #include <vector>
 #include <QtCore/QString>

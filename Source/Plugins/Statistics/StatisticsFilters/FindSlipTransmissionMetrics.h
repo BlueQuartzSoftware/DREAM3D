@@ -35,8 +35,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef FindSlipTransmissionMetrics_H_
-#define FindSlipTransmissionMetrics_H_
+#ifndef _FindSlipTransmissionMetrics_H_
+#define _FindSlipTransmissionMetrics_H_
 
 #include <assert.h>
 #include <stdio.h>

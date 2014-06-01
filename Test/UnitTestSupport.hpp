@@ -27,8 +27,8 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef UNITTESTSUPPORT_HPP_
-#define UNITTESTSUPPORT_HPP_
+#ifndef _UNITTESTSUPPORT_HPP_
+#define _UNITTESTSUPPORT_HPP_
 
 
 //-- C++ Includes

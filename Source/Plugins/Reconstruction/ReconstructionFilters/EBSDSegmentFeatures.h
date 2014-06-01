@@ -34,8 +34,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef EBSDSegmentFeatures_H_
-#define EBSDSegmentFeatures_H_
+#ifndef _EBSDSegmentFeatures_H_
+#define _EBSDSegmentFeatures_H_
 
 #include <QtCore/QString>
 

@@ -34,8 +34,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef FINDBOUNDINGBOXGRAINS_H_
-#define FINDBOUNDINGBOXGRAINS_H_
+#ifndef _FINDBOUNDINGBOXGRAINS_H_
+#define _FINDBOUNDINGBOXGRAINS_H_
 
 #include <vector>
 #include <QtCore/QString>

@@ -34,8 +34,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef MICROSTRUCTUREPRESET_H_
-#define MICROSTRUCTUREPRESET_H_
+#ifndef _MICROSTRUCTUREPRESET_H_
+#define _MICROSTRUCTUREPRESET_H_
 
 #include "QtCore/QVector"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"

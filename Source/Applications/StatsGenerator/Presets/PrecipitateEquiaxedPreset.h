@@ -34,8 +34,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef PrecipitateEquiaxedPresetFACTORY_H_
-#define PrecipitateEquiaxedPresetFACTORY_H_
+#ifndef _PrecipitateEquiaxedPresetFACTORY_H_
+#define _PrecipitateEquiaxedPresetFACTORY_H_
 
 
 //-- C++ includes

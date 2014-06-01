@@ -34,8 +34,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef JumbleOrientations_H_
-#define JumbleOrientations_H_
+#ifndef _JumbleOrientations_H_
+#define _JumbleOrientations_H_
 
 #include <QtCore/QString>
 #include <numeric>

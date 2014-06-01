@@ -33,8 +33,8 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef FindFeatureCentroids_H_
-#define FindFeatureCentroids_H_
+#ifndef _FindFeatureCentroids_H_
+#define _FindFeatureCentroids_H_
 
 #include <vector>
 #include <QtCore/QString>

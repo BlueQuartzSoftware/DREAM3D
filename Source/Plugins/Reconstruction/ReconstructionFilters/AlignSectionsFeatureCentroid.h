@@ -34,8 +34,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef AlignSectionsFeatureCentroid_H_
-#define AlignSectionsFeatureCentroid_H_
+#ifndef _AlignSectionsFeatureCentroid_H_
+#define _AlignSectionsFeatureCentroid_H_
 
 #include <vector>
 #include <QtCore/QString>

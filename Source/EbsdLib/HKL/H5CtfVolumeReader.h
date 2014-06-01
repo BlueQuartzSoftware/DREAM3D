@@ -33,8 +33,8 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef H5CTFVOLUMEREADER_H_
-#define H5CTFVOLUMEREADER_H_
+#ifndef _H5CTFVOLUMEREADER_H_
+#define _H5CTFVOLUMEREADER_H_
 
 #include <QtCore/QString>
 #include <QtCore/QVector>

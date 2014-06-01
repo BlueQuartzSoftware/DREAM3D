@@ -34,8 +34,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef NEIGHBORLIST_H_
-#define NEIGHBORLIST_H_
+#ifndef _NEIGHBORLIST_H_
+#define _NEIGHBORLIST_H_
 
 #include <QtCore/QString>
 #include <QtCore/QMap>
@@ -85,7 +85,7 @@ class NeighborList : public IDataArray
      * @param allocate
      * @return
      */
-    static Pointer CreateArray(size_t numTuples, const QString& name, bool allocate=true)
+    static Pointer CreateArray(size_t numTuples, const QString& name, bool allocate = true)
     {
       std::cout << "NeighborList::CreateArray  name= " << name.toStdString() << "   numTuples= " << numTuples << std::endl;
       if (name.isEmpty() == true)
@@ -93,7 +93,7 @@ class NeighborList : public IDataArray
         return NullPointer();
       }
       Pointer ptr = Pointer(new NeighborList<T>(numTuples, name));
-      if (allocate) ptr->resize(numTuples);
+      if (allocate) { ptr->resize(numTuples); }
       return ptr;
     }
 
@@ -106,7 +106,7 @@ class NeighborList : public IDataArray
      * @param allocate
      * @return
      */
-    static Pointer CreateArray(size_t numTuples, int rank, size_t* dims, const QString& name, bool allocate=true)
+    static Pointer CreateArray(size_t numTuples, int rank, size_t* dims, const QString& name, bool allocate = true)
     {
       std::cout << "NeighborList::CreateArray  name= " << name.toStdString() << "   numTuples= " << numTuples << std::endl;
       if (name.isEmpty() == true)
@@ -120,7 +120,7 @@ class NeighborList : public IDataArray
         numElements *= dims[iter];
       }
       Pointer ptr = Pointer(new NeighborList<T>(numElements, name));
-      if (allocate) ptr->resize(numElements);
+      if (allocate) { ptr->resize(numElements); }
       return ptr;
     }
 
@@ -132,7 +132,7 @@ class NeighborList : public IDataArray
      * @param allocate
      * @return
      */
-    static Pointer CreateArray(size_t numTuples, std::vector<size_t> cDims, const QString& name, bool allocate=true)
+    static Pointer CreateArray(size_t numTuples, std::vector<size_t> cDims, const QString& name, bool allocate = true)
     {
       if (name.isEmpty() == true)
       {
@@ -144,7 +144,7 @@ class NeighborList : public IDataArray
         numElements *= cDims[iter];
       }
       Pointer ptr = Pointer(new NeighborList<T>(numElements, name));
-      if (allocate) ptr->resize(numElements);
+      if (allocate) { ptr->resize(numElements); }
       return ptr;
     }
 
@@ -156,7 +156,7 @@ class NeighborList : public IDataArray
      * @param allocate
      * @return
      */
-    static Pointer CreateArray(size_t numTuples, QVector<size_t> cDims, const QString& name, bool allocate=true)
+    static Pointer CreateArray(size_t numTuples, QVector<size_t> cDims, const QString& name, bool allocate = true)
     {
       if (name.isEmpty() == true)
       {
@@ -168,7 +168,7 @@ class NeighborList : public IDataArray
         numElements *= cDims[iter];
       }
       Pointer ptr = Pointer(new NeighborList<T>(numElements, name));
-      if (allocate) ptr->resize(numElements);
+      if (allocate) { ptr->resize(numElements); }
       return ptr;
     }
 
@@ -180,7 +180,7 @@ class NeighborList : public IDataArray
      * @param allocate
      * @return
      */
-    static Pointer CreateArray(QVector<size_t> tDims, QVector<size_t> cDims, const QString& name, bool allocate=true)
+    static Pointer CreateArray(QVector<size_t> tDims, QVector<size_t> cDims, const QString& name, bool allocate = true)
     {
       if (name.isEmpty() == true)
       {
@@ -196,7 +196,7 @@ class NeighborList : public IDataArray
         numElements *= cDims[iter];
       }
       Pointer ptr = Pointer(new NeighborList<T>(numElements, name));
-      if (allocate) ptr->resize(numElements);
+      if (allocate) { ptr->resize(numElements); }
       return ptr;
     }
 
@@ -208,7 +208,7 @@ class NeighborList : public IDataArray
      * @param name
      * @return
      */
-    virtual IDataArray::Pointer createNewArray(size_t numElements, int rank, size_t* dims, const QString& name, bool allocate=true)
+    virtual IDataArray::Pointer createNewArray(size_t numElements, int rank, size_t* dims, const QString& name, bool allocate = true)
     {
       return NeighborList<T>::CreateArray(numElements, rank, dims, name, allocate);
     }
@@ -220,7 +220,7 @@ class NeighborList : public IDataArray
      * @param name
      * @return
      */
-    virtual IDataArray::Pointer createNewArray(size_t numElements, std::vector<size_t> dims, const QString& name, bool allocate=true)
+    virtual IDataArray::Pointer createNewArray(size_t numElements, std::vector<size_t> dims, const QString& name, bool allocate = true)
     {
       return NeighborList<T>::CreateArray(numElements, dims, name, allocate);
     }
@@ -232,7 +232,7 @@ class NeighborList : public IDataArray
      * @param name
      * @return
      */
-    virtual IDataArray::Pointer createNewArray(size_t numElements, QVector<size_t> dims, const QString& name, bool allocate=true)
+    virtual IDataArray::Pointer createNewArray(size_t numElements, QVector<size_t> dims, const QString& name, bool allocate = true)
     {
       return NeighborList<T>::CreateArray(numElements, dims, name, allocate);
     }
@@ -501,7 +501,7 @@ class NeighborList : public IDataArray
      */
     int32_t resizeTotalElements(size_t size)
     {
-      std::cout << "~NeighborList::resizeTotalElements("<< size << ")" << std::endl;
+      std::cout << "~NeighborList::resizeTotalElements(" << size << ")" << std::endl;
       size_t old = m_Array.size();
       m_Array.resize(size);
       m_NumTuples = size;

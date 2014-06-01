@@ -34,8 +34,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef NeighborCICorrelation_H_
-#define NeighborCICorrelation_H_
+#ifndef _NeighborCICorrelation_H_
+#define _NeighborCICorrelation_H_
 
 #include <vector>
 #include <QtCore/QString>

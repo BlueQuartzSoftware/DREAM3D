@@ -34,8 +34,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef RegularGridSampleSurfaceMesh_H_
-#define RegularGridSampleSurfaceMesh_H_
+#ifndef _RegularGridSampleSurfaceMesh_H_
+#define _RegularGridSampleSurfaceMesh_H_
 
 #include <QtCore/QString>
 
