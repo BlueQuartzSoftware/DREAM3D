@@ -86,7 +86,7 @@ class DREAM3DLib_EXPORT LinkFeatureMapToCellArray : public AbstractFilter
     * @brief This returns a string that is displayed in the GUI. It should be readable
     * and understandable by humans.
     */
-    virtual const QString getHumanLabel() { return "Link Feature Map To Cell Array"; }
+    virtual const QString getHumanLabel() { return "Link Feature Attribute Matrix To Cell Attribute Array"; }
 
     /**
     * @brief This method will instantiate all the end user settable options/parameters

@@ -84,8 +84,7 @@ void FindFeatureNeighborCAxisMisalignments::setupFilterParameters()
 {
   FilterParameterVector parameters;
   QStringList linkedProps("AvgCAxisMisalignmentsArrayName");
-  parameters.push_back(FilterParameter::NewConditional("Find Average Misalignment Per Feature", "FindAvgMisals", FilterParameterWidgetType::LinkedBooleanWidget, getFindAvgMisals(), true, linkedProps));
-  parameters.push_back(FilterParameter::New("AvgCAxisMisalignments", "AvgCAxisMisalignmentsArrayName", FilterParameterWidgetType::StringWidget, getAvgCAxisMisalignmentsArrayName(), false, ""));
+  parameters.push_back(FilterParameter::NewConditional("Find Average Misalignment Per Feature", "FindAvgMisals", FilterParameterWidgetType::LinkedBooleanWidget, getFindAvgMisals(), false, linkedProps));
 
   parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
   parameters.push_back(FilterParameter::New("Neighbor List Array Name", "NeighborListArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getNeighborListArrayPath(), true, ""));
@@ -94,6 +93,7 @@ void FindFeatureNeighborCAxisMisalignments::setupFilterParameters()
   parameters.push_back(FilterParameter::New("CrystalStructures", "CrystalStructuresArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getCrystalStructuresArrayPath(), true, ""));
   parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
   parameters.push_back(FilterParameter::New("CAxis Misalignment List Array Name", "CAxisMisalignmentListArrayName", FilterParameterWidgetType::StringWidget, getCAxisMisalignmentListArrayName(), true, ""));
+  parameters.push_back(FilterParameter::New("AvgCAxisMisalignments", "AvgCAxisMisalignmentsArrayName", FilterParameterWidgetType::StringWidget, getAvgCAxisMisalignmentsArrayName(), true, ""));
   setFilterParameters(parameters);
 }
 

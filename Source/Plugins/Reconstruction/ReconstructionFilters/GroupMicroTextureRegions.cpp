@@ -111,11 +111,11 @@ void GroupMicroTextureRegions::setupFilterParameters()
 
   //These are parameters that the super class needs
   QStringList linkedProps("NonContiguousNeighborListArrayPath");
-  parameters.push_back(FilterParameter::NewConditional("Use Non-Contiguous Neighbors", "UseNonContiguousNeighbors", FilterParameterWidgetType::LinkedBooleanWidget, getUseNonContiguousNeighbors(), true, linkedProps));
-  parameters.push_back(FilterParameter::New("NonContiguous NeighborList Array", "NonContiguousNeighborListArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getNonContiguousNeighborListArrayPath(), false, ""));
+  parameters.push_back(FilterParameter::NewConditional("Use Non-Contiguous Neighbors", "UseNonContiguousNeighbors", FilterParameterWidgetType::LinkedBooleanWidget, getUseNonContiguousNeighbors(), false, linkedProps));
 
   parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "QString", true));
   parameters.push_back(FilterParameter::New("Contiguous NeighborList Array", "ContiguousNeighborListArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getContiguousNeighborListArrayPath(), true, ""));
+  parameters.push_back(FilterParameter::New("NonContiguous NeighborList Array", "NonContiguousNeighborListArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getNonContiguousNeighborListArrayPath(), true, ""));
 
   // These are specific to this class
   parameters.push_front(FilterParameter::New("Group C-Axes With Running Average", "UseRunningAverage", FilterParameterWidgetType::BooleanWidget, getUseRunningAverage(), false));

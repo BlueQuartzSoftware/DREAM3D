@@ -63,7 +63,8 @@ class LocalDislocationDensityCalculator : public AbstractFilter
     DREAM3D_TYPE_MACRO_SUPER(LocalDislocationDensityCalculator, AbstractFilter)
 
     virtual ~LocalDislocationDensityCalculator();
-    DREAM3D_INSTANCE_STRING_PROPERTY(EdgeDataContainerName)
+    DREAM3D_FILTER_PARAMETER(QString, EdgeDataContainerName)
+    Q_PROPERTY(QString EdgeDataContainerName READ getEdgeDataContainerName WRITE setEdgeDataContainerName)
 
     DREAM3D_FILTER_PARAMETER(FloatVec3_t, CellSize)
     Q_PROPERTY(FloatVec3_t CellSize READ getCellSize WRITE setCellSize)

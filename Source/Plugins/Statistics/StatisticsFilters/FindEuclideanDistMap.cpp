@@ -281,27 +281,24 @@ void FindEuclideanDistMap::setupFilterParameters()
 {
   FilterParameterVector parameters;
   QStringList linkedProps("GBEuclideanDistancesArrayName");
-  parameters.push_back(FilterParameter::NewConditional("Calculate Distance to Boundaries", "DoBoundaries", FilterParameterWidgetType::LinkedBooleanWidget, getDoBoundaries(), true, linkedProps));
-  parameters.push_back(FilterParameter::New("GBEuclideanDistances", "GBEuclideanDistancesArrayName", FilterParameterWidgetType::StringWidget, getGBEuclideanDistancesArrayName(), false, ""));
-
+  parameters.push_back(FilterParameter::NewConditional("Calculate Distance to Boundaries", "DoBoundaries", FilterParameterWidgetType::LinkedBooleanWidget, getDoBoundaries(), false, linkedProps));
   linkedProps.clear();
   linkedProps << "TJEuclideanDistancesArrayName";
-  parameters.push_back(FilterParameter::NewConditional("Calculate Distance to Triple Lines", "DoTripleLines", FilterParameterWidgetType::LinkedBooleanWidget, getDoTripleLines(), true, linkedProps));
-  parameters.push_back(FilterParameter::New("TJEuclideanDistances", "TJEuclideanDistancesArrayName", FilterParameterWidgetType::StringWidget, getTJEuclideanDistancesArrayName(), false, ""));
-
+  parameters.push_back(FilterParameter::NewConditional("Calculate Distance to Triple Lines", "DoTripleLines", FilterParameterWidgetType::LinkedBooleanWidget, getDoTripleLines(), false, linkedProps));
   linkedProps.clear();
   linkedProps << "QPEuclideanDistancesArrayName";
-  parameters.push_back(FilterParameter::NewConditional("Calculate Distance to Quadruple Points", "DoQuadPoints", FilterParameterWidgetType::LinkedBooleanWidget, getDoQuadPoints(), true, linkedProps));
-  parameters.push_back(FilterParameter::New("QPEuclideanDistances", "QPEuclideanDistancesArrayName", FilterParameterWidgetType::StringWidget, getQPEuclideanDistancesArrayName(), false, ""));
+  parameters.push_back(FilterParameter::NewConditional("Calculate Distance to Quadruple Points", "DoQuadPoints", FilterParameterWidgetType::LinkedBooleanWidget, getDoQuadPoints(), false, linkedProps));
+  linkedProps.clear();
+  linkedProps << "NearestNeighborsArrayName";
+  parameters.push_back(FilterParameter::NewConditional("Store the Nearest Boundary Cells", "SaveNearestNeighbors", FilterParameterWidgetType::LinkedBooleanWidget, getSaveNearestNeighbors(), false, linkedProps));
 
-  parameters.push_back(FilterParameter::New("Calculate Manhattan Distance Only", "CalcOnlyManhattanDist", FilterParameterWidgetType::BooleanWidget, getCalcOnlyManhattanDist(), true, ""));
+  parameters.push_back(FilterParameter::New("Calculate Manhattan Distance Only", "CalcOnlyManhattanDist", FilterParameterWidgetType::BooleanWidget, getCalcOnlyManhattanDist(), false, ""));
   parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
   parameters.push_back(FilterParameter::New("FeatureIds", "FeatureIdsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeatureIdsArrayPath(), true, ""));
   parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
-
-  linkedProps.clear();
-  linkedProps << "NearestNeighborsArrayName";
-  parameters.push_back(FilterParameter::NewConditional("Store the Nearest Boundary Cells", "SaveNearestNeighbors", FilterParameterWidgetType::LinkedBooleanWidget, getSaveNearestNeighbors(), true, linkedProps));
+  parameters.push_back(FilterParameter::New("GBEuclideanDistances", "GBEuclideanDistancesArrayName", FilterParameterWidgetType::StringWidget, getGBEuclideanDistancesArrayName(), true, ""));
+  parameters.push_back(FilterParameter::New("TJEuclideanDistances", "TJEuclideanDistancesArrayName", FilterParameterWidgetType::StringWidget, getTJEuclideanDistancesArrayName(), true, ""));
+  parameters.push_back(FilterParameter::New("QPEuclideanDistances", "QPEuclideanDistancesArrayName", FilterParameterWidgetType::StringWidget, getQPEuclideanDistancesArrayName(), true, ""));
   parameters.push_back(FilterParameter::New("NearestNeighbors", "NearestNeighborsArrayName", FilterParameterWidgetType::StringWidget, getNearestNeighborsArrayName(), true, ""));
 
   setFilterParameters(parameters);
