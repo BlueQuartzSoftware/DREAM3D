@@ -304,7 +304,7 @@ void AlignSectionsMisorientation::find_shifts(QVector<int>& xshifts, QVector<int
           count = 0;
           xIdx = k + oldxshift + halfDim0;
           yIdx = j + oldyshift + halfDim1;
-          idx = (dims[1] * yIdx) + xIdx;
+          idx = (dims[0] * yIdx) + xIdx;
           if(misorients[idx] == 0 && abs(k + oldxshift) < halfDim0
               && (j + oldyshift) < halfDim1)
           {
