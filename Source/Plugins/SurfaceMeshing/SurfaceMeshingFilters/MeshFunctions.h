@@ -40,7 +40,7 @@
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Math/DREAM3DMath.h"
 #include "DREAM3DLib/DataContainers/MeshStructs.h"
-#include "DREAM3DLib/DataArrays/StructArray.hpp"
+
 #include "SurfaceMeshing/SurfaceMeshingFilters/MeshLinearAlgebra.h"
 
 /**

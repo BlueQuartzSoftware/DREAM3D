@@ -39,12 +39,13 @@
 #include <QtCore/QVector>
 #include <QtCore/QString>
 
-//#include "H5Support/QH5Utilities.h"
-//#include "H5Support/QH5Lite.h"
-
 #include "DREAM3DLib/DREAM3DLib.h"
+#include "DREAM3DLib/DataArrays/IDataArray.h"
 #include "DREAM3DLib/DataArrays/DataArray.hpp"
 #include "DREAM3DLib/DataArrays/NeighborList.hpp"
+#include "DREAM3DLib/DataArrays/ManagedArrayOfArrays.hpp"
+#include "DREAM3DLib/DataArrays/StringDataArray.hpp"
+
 
 #include "UnitTestSupport.hpp"
 
@@ -604,7 +605,7 @@ int __ValidateArray(typename DataArray<T>::Pointer array, size_t numTuples, int 
       array->setComponent(t, j, static_cast<T>(t+j) );
       T val = array->getComponent(t, j);
       DREAM3D_REQUIRE_EQUAL(val, t+j)
-      val = array->getValue(index);
+          val = array->getValue(index);
       DREAM3D_REQUIRE_EQUAL(val, t+j)
     }
   }
@@ -643,7 +644,7 @@ int __ValidateArray(typename DataArray<T>::Pointer array, size_t numTuples, int 
   DREAM3D_REQUIRED(ptr, ==, NULL);
 
 
-    // Test resizing the array to a any larger size
+  // Test resizing the array to a any larger size
   array->resize(numTuples);
   array->initializeWithZeros(); // Init the grown array to all Zeros
   nt = array->getNumberOfTuples();
@@ -732,6 +733,63 @@ void TestArrayCreation()
   __TestArrayCreation<double>();
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+template<typename T>
+void _TestDeepCopyDataArray()
+{
+  size_t numTuples = 10;
+  QVector<size_t> cDims(1, 5);
+  QString name("Source Array");
+
+  // First lets try it without allocating any memory
+  typename DataArray<T>::Pointer src = DataArray<T>::CreateArray(numTuples, cDims, name, false);
+
+  typename DataArray<T>::Pointer copy = boost::dynamic_pointer_cast<DataArray<T> >(src->deepCopy());
+
+  DREAM3D_REQUIRED(copy->getNumberOfTuples(), ==, src->getNumberOfTuples() );
+  DREAM3D_REQUIRED(copy->isAllocated(), ==, src->isAllocated() );
+
+  // Create the array again, this time allocating the data and putting in some known data
+  src = DataArray<T>::CreateArray(numTuples, cDims, name, true);
+  for(int i = 0; i < numTuples; i++)
+  {
+    for(int j = 0; j < cDims.size(); j++)
+    {
+      src->setComponent(i, j, static_cast<T>(i+j) );
+    }
+  }
+  copy = boost::dynamic_pointer_cast<DataArray<T> >(src->deepCopy());
+  for(int i = 0; i < numTuples; i++)
+  {
+    for(int j = 0; j < cDims.size(); j++)
+    {
+      src->setComponent(i, j, static_cast<T>(i+j) );
+      T cpy = copy->getComponent(i, j);
+      T val = src->getComponent(i, j);
+      DREAM3D_REQUIRE_EQUAL(cpy, val)
+    }
+  }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void TestDeepCopyArray()
+{
+  _TestDeepCopyDataArray<uint8_t>();
+  _TestDeepCopyDataArray<int8_t>();
+  _TestDeepCopyDataArray<uint16_t>();
+  _TestDeepCopyDataArray<int16_t>();
+  _TestDeepCopyDataArray<uint32_t>();
+  _TestDeepCopyDataArray<int32_t>();
+  _TestDeepCopyDataArray<uint64_t>();
+  _TestDeepCopyDataArray<int64_t>();
+  _TestDeepCopyDataArray<float>();
+  _TestDeepCopyDataArray<double>();
+
+}
 
 // -----------------------------------------------------------------------------
 //  Use unit test framework
@@ -751,6 +809,7 @@ int main(int argc, char** argv)
       DREAM3D_REGISTER_TEST( TestDataArray() )
       DREAM3D_REGISTER_TEST( TestEraseElements() )
       DREAM3D_REGISTER_TEST( TestcopyTuples() )
+      DREAM3D_REGISTER_TEST( TestDeepCopyArray() )
       DREAM3D_REGISTER_TEST( TestNeighborList() )
 
     #if REMOVE_TEST_FILES
