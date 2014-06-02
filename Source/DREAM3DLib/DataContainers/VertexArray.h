@@ -43,7 +43,9 @@
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+#include "DREAM3DLib/DataArrays/StructArray.hpp"
 #include "DREAM3DLib/DataContainers/MeshStructs.h"
+
 /**
  * @brief The MeshLinks class contains arrays of Faces for each Node in the mesh. This allows quick query to the node
  * to determine what Cells the node is a part of.
@@ -62,7 +64,6 @@ class DREAM3DLib_EXPORT VertexArray
       double pos[3];
     } VertD_t;
 
-    typedef StructArray<Vert_t> VertexContainerType;
 
     DREAM3D_SHARED_POINTERS(VertexArray)
     DREAM3D_STATIC_NEW_MACRO(VertexArray)

@@ -56,7 +56,7 @@
 #include "DREAM3DLib/Common/Observable.h"
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/DataArrays/DataArray.hpp"
-#include "DREAM3DLib/DataArrays/StructArray.hpp"
+
 #include "DREAM3DLib/DataContainers/DynamicListArray.hpp"
 #include "DREAM3DLib/DataContainers/EdgeDataContainer.h"
 #include "DREAM3DLib/DataContainers/FaceArray.hpp"

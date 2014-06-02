@@ -41,7 +41,7 @@
 #include <set>
 
 #include "DREAM3DLib/DataArrays/DataArray.hpp"
-#include "DREAM3DLib/DataArrays/StructArray.hpp"
+
 #include "DREAM3DLib/DataContainers/VertexArray.h"
 #include "DREAM3DLib/DataContainers/FaceArray.hpp"
 #include "SurfaceMeshing/SurfaceMeshingFilters/util/Vector3.h"

@@ -56,7 +56,6 @@
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/DataArrays/DataArray.hpp"
 #include "DREAM3DLib/Common/Observable.h"
-#include "DREAM3DLib/DataArrays/StructArray.hpp"
 
 #include "DREAM3DLib/DataContainers/VertexDataContainer.h"
 
