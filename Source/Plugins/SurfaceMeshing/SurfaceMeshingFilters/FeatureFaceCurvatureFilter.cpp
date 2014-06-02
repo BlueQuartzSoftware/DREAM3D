@@ -101,10 +101,19 @@ void FeatureFaceCurvatureFilter::setupFilterParameters()
 {
   QVector<FilterParameter::Pointer> parameters;
   parameters.push_back(FilterParameter::New("Neighborhood Ring Count", "NRing", FilterParameterWidgetType::IntWidget, getNRing(), false));
-  parameters.push_back(FilterParameter::New("Compute Principal Direction Vectors", "ComputePrincipalDirectionVectors", FilterParameterWidgetType::BooleanWidget, getComputePrincipalDirectionVectors(), false));
-  parameters.push_back(FilterParameter::New("Compute Gaussian Curvature", "ComputeGaussianCurvature", FilterParameterWidgetType::BooleanWidget, getComputeGaussianCurvature(), false));
-  parameters.push_back(FilterParameter::New("Compute Mean Curvature", "ComputeMeanCurvature", FilterParameterWidgetType::BooleanWidget, getComputeMeanCurvature(), false));
-  parameters.push_back(FilterParameter::New("Use Face Normals for Curve Fitting", "UseNormalsForCurveFitting", FilterParameterWidgetType::BooleanWidget, getUseNormalsForCurveFitting(), false));
+  QStringList linkedProps;
+  linkedProps << "SurfaceMeshPrincipalCurvature1sArrayName" << "SurfaceMeshPrincipalCurvature2sArrayName";
+  linkedProps << "SurfaceMeshPrincipalDirection1sArrayName" << "SurfaceMeshPrincipalDirection2sArrayName";
+  parameters.push_back(FilterParameter::NewConditional("Compute Principal Direction Vectors", "ComputePrincipalDirectionVectors", FilterParameterWidgetType::LinkedBooleanWidget, getComputePrincipalDirectionVectors(), false, linkedProps));
+  linkedProps.clear();
+  linkedProps << "SurfaceMeshGaussianCurvaturesArrayName";
+  parameters.push_back(FilterParameter::NewConditional("Compute Gaussian Curvature", "ComputeGaussianCurvature", FilterParameterWidgetType::LinkedBooleanWidget, getComputeGaussianCurvature(), false, linkedProps));
+  linkedProps.clear();
+  linkedProps << "SurfaceMeshMeanCurvaturesArrayName";
+  parameters.push_back(FilterParameter::NewConditional("Compute Mean Curvature", "ComputeMeanCurvature", FilterParameterWidgetType::LinkedBooleanWidget, getComputeMeanCurvature(), false, linkedProps));
+  linkedProps.clear();
+  linkedProps << "SurfaceMeshFaceNormalsArrayPath";
+  parameters.push_back(FilterParameter::NewConditional("Use Face Normals for Curve Fitting", "UseNormalsForCurveFitting", FilterParameterWidgetType::LinkedBooleanWidget, getUseNormalsForCurveFitting(), false, linkedProps));
   parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
   parameters.push_back(FilterParameter::New("SurfaceMeshFaceLabels", "SurfaceMeshFaceLabelsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getSurfaceMeshFaceLabelsArrayPath(), true, ""));
   parameters.push_back(FilterParameter::New("SurfaceMeshFeatureFaceIds", "SurfaceMeshFeatureFaceIdsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getSurfaceMeshFeatureFaceIdsArrayPath(), true, ""));

@@ -92,7 +92,9 @@ void FindSchmids::setupFilterParameters()
   FilterParameterVector parameters;
   parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
   parameters.push_back(FilterParameter::New("Loading Direction", "LoadingDir", FilterParameterWidgetType::FloatVec3Widget, getLoadingDir(), false));
-  parameters.push_back(FilterParameter::New("Store Angle Components of Schmid Factor", "StoreAngleComponents", FilterParameterWidgetType::BooleanWidget, getStoreAngleComponents(), false));
+  QStringList linkedProps;
+  linkedProps << "PhisArrayName" << "LambdasArrayName";
+  parameters.push_back(FilterParameter::NewConditional("Store Angle Components of Schmid Factor", "StoreAngleComponents", FilterParameterWidgetType::LinkedBooleanWidget, getStoreAngleComponents(), false, linkedProps));
   parameters.push_back(FilterParameter::New("FeaturePhases", "FeaturePhasesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeaturePhasesArrayPath(), true, ""));
   parameters.push_back(FilterParameter::New("CrystalStructures", "CrystalStructuresArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getCrystalStructuresArrayPath(), true, ""));
   parameters.push_back(FilterParameter::New("AvgQuats", "AvgQuatsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getAvgQuatsArrayPath(), true, ""));

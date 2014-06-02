@@ -489,11 +489,14 @@ class ManagedArrayOfArrays : public IDataArray
     {
       // This is NOT the way to do this. You are not COPYING the actual data.
       assert(false);
-      IDataArray::Pointer daCopy = createNewArray(getNumberOfTuples(), getComponentDimensions(), getName());
-      Data_t* src = getPointer(0);
-      void* dest = daCopy->getVoidPointer(0);
-      size_t totalBytes = (getNumberOfTuples() * getNumberOfComponents() * sizeof(T));
-      ::memcpy(dest, src, totalBytes);
+      IDataArray::Pointer daCopy = createNewArray(getNumberOfTuples(), getComponentDimensions(), getName(), m_IsAllocated);
+      if(m_IsAllocated == true)
+      {
+        Data_t* src = getPointer(0);
+        void* dest = daCopy->getVoidPointer(0);
+        size_t totalBytes = (getNumberOfTuples() * getNumberOfComponents() * sizeof(T));
+        ::memcpy(dest, src, totalBytes);
+      }
       return daCopy;
     }
 

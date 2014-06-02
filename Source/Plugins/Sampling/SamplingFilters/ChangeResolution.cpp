@@ -80,8 +80,12 @@ void ChangeResolution::setupFilterParameters()
   FilterParameterVector parameters;
   parameters.push_back(FilterParameter::New("Cell Attribute Matrix", "CellAttributeMatrixPath", FilterParameterWidgetType::AttributeMatrixSelectionWidget, getCellAttributeMatrixPath(), false));
   parameters.push_back(FilterParameter::New("Resolution", "Resolution", FilterParameterWidgetType::FloatVec3Widget, getResolution(), false, "Microns"));
-  parameters.push_back(FilterParameter::New("Renumber Features", "RenumberFeatures", FilterParameterWidgetType::BooleanWidget, getRenumberFeatures(), false));
-  parameters.push_back(FilterParameter::New("Save As New Data Container", "SaveAsNewDataContainer", FilterParameterWidgetType::BooleanWidget, getSaveAsNewDataContainer(), false));
+  QStringList linkedProps;
+  linkedProps << "CellFeatureAttributeMatrixPath" << "FeatureIdsArrayPath";
+  parameters.push_back(FilterParameter::NewConditional("Renumber Features", "RenumberFeatures", FilterParameterWidgetType::LinkedBooleanWidget, getRenumberFeatures(), false, linkedProps));
+  linkedProps.clear();
+  linkedProps << "NewDataContainerName";
+  parameters.push_back(FilterParameter::NewConditional("Save As New Data Container", "SaveAsNewDataContainer", FilterParameterWidgetType::LinkedBooleanWidget, getSaveAsNewDataContainer(), false, linkedProps));
   parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
   parameters.push_back(FilterParameter::New("Cell Feature Attribute Matrix", "CellFeatureAttributeMatrixPath", FilterParameterWidgetType::AttributeMatrixSelectionWidget, getCellFeatureAttributeMatrixPath(), true));
   parameters.push_back(FilterParameter::New("FeatureIds", "FeatureIdsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeatureIdsArrayPath(), true, ""));
