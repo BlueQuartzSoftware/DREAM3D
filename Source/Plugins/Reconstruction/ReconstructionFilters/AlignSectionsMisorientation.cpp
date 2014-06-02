@@ -260,15 +260,20 @@ void AlignSectionsMisorientation::find_shifts(QVector<int>& xshifts, QVector<int
 
   unsigned int phase1, phase2;
   int progInt = 0;
-#if __APPLE__
-#warning Convert this to a flat 2D array
-#endif
-  QVector<QVector<float> >  misorients;
-  misorients.resize(dims[0]);
-  for (DimType a = 0; a < dims[0]; a++)
-  {
-    misorients[a].fill(0.0, dims[1]);
-  }
+
+  // Allocate a 2D Array which will be reused from slice to slice
+  FloatArrayType::Pointer misorientsPtr = FloatArrayType::CreateArray(dims[0]*dims[1], "Misorients");
+  misorientsPtr->initializeWithValue(0.0);
+  float* misorients = misorientsPtr->getPointer(0); // Get the raw pointer to use in our calculations for speed.
+
+  size_t idx = 0; // This will be used to compute the index into the flat array
+  size_t xIdx = 0;
+  size_t yIdx = 0;
+
+  const size_t halfDim0 = dims[0] * 0.5;
+  const size_t halfDim1 = dims[1] * 0.5;
+  //const size_t halfDim2 = dims[2] * 0.5;
+  // Loop over the Z Direction
   for (DimType iter = 1; iter < dims[2]; iter++)
   {
     progInt = ((float)iter / dims[2]) * 100.0f;
@@ -284,13 +289,9 @@ void AlignSectionsMisorientation::find_shifts(QVector<int>& xshifts, QVector<int
     oldyshift = -1;
     newxshift = 0;
     newyshift = 0;
-    for (DimType a = 0; a < dims[0]; a++)
-    {
-      for (DimType b = 0; b < dims[1]; b++)
-      {
-        misorients[a][b] = 0;
-      }
-    }
+
+    misorientsPtr->initializeWithValue(0.0); // Initialize everything to Zeros
+
     while (newxshift != oldxshift || newyshift != oldyshift)
     {
       oldxshift = newxshift;
@@ -301,8 +302,11 @@ void AlignSectionsMisorientation::find_shifts(QVector<int>& xshifts, QVector<int
         {
           disorientation = 0;
           count = 0;
-          if(misorients[k + oldxshift + size_t(dims[0] / 2)][j + oldyshift + (size_t)(dims[1] / 2)] == 0 && abs(k + oldxshift) < (dims[0] / 2)
-              && (j + oldyshift) < (dims[1] / 2))
+          xIdx = k + oldxshift + halfDim0;
+          yIdx = j + oldyshift + halfDim1;
+          idx = (dims[1] * yIdx) + xIdx;
+          if(misorients[idx] == 0 && abs(k + oldxshift) < halfDim0
+              && (j + oldyshift) < halfDim1)
           {
             for (DimType l = 0; l < dims[1]; l = l + 4)
             {
@@ -342,7 +346,10 @@ void AlignSectionsMisorientation::find_shifts(QVector<int>& xshifts, QVector<int
               }
             }
             disorientation = disorientation / count;
-            misorients[k + oldxshift + int(dims[0] / 2)][j + oldyshift + int(dims[1] / 2)] = disorientation;
+            xIdx = k + oldxshift + int(halfDim0);
+            yIdx = j + oldyshift + int(halfDim1);
+            idx = (dims[0] * yIdx) + xIdx;
+            misorients[idx] = disorientation;
             if(disorientation < mindisorientation || (disorientation == mindisorientation && ((abs(k + oldxshift) < abs(newxshift)) || (abs(j + oldyshift) < abs(newyshift)))))
             {
               newxshift = k + oldxshift;
