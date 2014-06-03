@@ -1,0 +1,15 @@
+/* This file is auto generated from a template file in the Plugin's Source Directory*/
+
+#ifndef _@PLUGIN_NAME@_CONFIG_H_
+#define _@PLUGIN_NAME@_CONFIG_H_
+
+
+/* Bitdepth for ${PLUGIN_NAME} filters (8, 16, or 32) */
+#define @PLUGIN_NAME@_BitDepth ${${PLUGIN_NAME}_BitDepth}
+
+
+
+
+
+
+#endif /*  _@PLUGIN_NAME@_CONFIG_H_ */

@@ -1,0 +1,13 @@
+project(ImageProcessingTest)
+
+
+
+ADD_EXECUTABLE(ITKUtilitiesTest ITKUtilitiesTest.cpp)
+TARGET_LINK_LIBRARIES(ITKUtilitiesTest ${QT_QTCORE_LIBRARY}
+										DREAM3DLib
+										${QT_QTGUI_LIBRARY}
+										QtSupport
+										DREAM3DWidgetsLib
+										${ITK_LIBRARIES}
+)
+
