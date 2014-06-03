@@ -52,6 +52,9 @@
 FillBadData::FillBadData() :
   AbstractFilter(),
   m_MinAllowedDefectSize(1),
+  m_StoreAsNewPhase(false),
+  m_CellPhasesArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::Phases),
+  m_CellPhasesArrayName(DREAM3D::CellData::Phases),
   m_FeatureIdsArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::FeatureIds),
   m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
   m_FeatureIds(NULL)
@@ -73,9 +76,13 @@ void FillBadData::setupFilterParameters()
 {
   FilterParameterVector parameters;
   parameters.push_back(FilterParameter::New("Minimum Allowed Defect Size", "MinAllowedDefectSize", FilterParameterWidgetType::IntWidget, getMinAllowedDefectSize(), false, "Pixels"));
+  QStringList linkedProps;
+  linkedProps << "CellPhasesArrayPath";
+  parameters.push_back(FilterParameter::NewConditional("Store Defects As New Phase", "StoreAsNewPhase", FilterParameterWidgetType::LinkedBooleanWidget, getStoreAsNewPhase(), false, linkedProps));
 
   parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
   parameters.push_back(FilterParameter::New("FeatureIds", "FeatureIdsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeatureIdsArrayPath(), true, ""));
+  parameters.push_back(FilterParameter::New("CellPhases", "CellPhasesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getCellPhasesArrayPath(), true, ""));
   setFilterParameters(parameters);
 }
 // -----------------------------------------------------------------------------
@@ -83,7 +90,9 @@ void FillBadData::readFilterParameters(AbstractFilterParametersReader* reader, i
 {
   reader->openFilterGroup(this, index);
   setFeatureIdsArrayPath(reader->readDataArrayPath("FeatureIdsArrayPath", getFeatureIdsArrayPath() ) );
+  setCellPhasesArrayPath(reader->readDataArrayPath("CellPhasesArrayPath", getCellPhasesArrayPath() ) );
   setMinAllowedDefectSize( reader->readValue("MinAllowedDefectSize", getMinAllowedDefectSize()) );
+  setStoreAsNewPhase( reader->readValue("StoreAsNewPhase", getStoreAsNewPhase()) );
   reader->closeFilterGroup();
 }
 
@@ -94,7 +103,9 @@ int FillBadData::writeFilterParameters(AbstractFilterParametersWriter* writer, i
 {
   writer->openFilterGroup(this, index);
   writer->writeValue("FeatureIdsArrayPath", getFeatureIdsArrayPath() );
+  writer->writeValue("CellPhasesArrayPath", getCellPhasesArrayPath() );
   writer->writeValue("MinAllowedDefectSize", getMinAllowedDefectSize() );
+  writer->writeValue("StoreAsNewPhase", getStoreAsNewPhase() );
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
@@ -110,6 +121,13 @@ void FillBadData::dataCheck()
   m_FeatureIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeatureIdsArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+
+  if(m_StoreAsNewPhase == true)
+  {
+    m_CellPhasesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getCellPhasesArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+    if( NULL != m_CellPhasesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+    { m_CellPhases = m_CellPhasesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  }
 }
 
 
@@ -173,10 +191,18 @@ void FillBadData::execute()
   int neighpoint;
   int featurename, feature;
   size_t numfeatures = 0;
+  size_t maxPhase = 0;
   for(int64_t i = 0; i < totalPoints; i++)
   {
     featurename = m_FeatureIds[i];
     if(featurename > numfeatures) { numfeatures = featurename; }
+  }
+  if(m_StoreAsNewPhase == true)
+  {
+    for(int64_t i = 0; i < totalPoints; i++)
+    {
+      if(m_CellPhases[i] > maxPhase) { maxPhase = m_CellPhases[i]; }
+    }
   }
   if (numfeatures == 0)
   {
@@ -235,6 +261,7 @@ void FillBadData::execute()
         for (size_t k = 0; k < currentvlist.size(); k++)
         {
           m_FeatureIds[currentvlist[k]] = 0;
+          m_CellPhases[currentvlist[k]] = maxPhase+1;
         }
       }
       if((int)currentvlist.size() < m_MinAllowedDefectSize)

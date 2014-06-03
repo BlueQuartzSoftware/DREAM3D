@@ -69,6 +69,9 @@ class IdentifySample : public AbstractFilter
 
     virtual ~IdentifySample();
 
+    DREAM3D_FILTER_PARAMETER(bool, FillHoles)
+    Q_PROPERTY(bool FillHoles READ getFillHoles WRITE setFillHoles)
+
     DREAM3D_FILTER_PARAMETER(DataArrayPath, GoodVoxelsArrayPath)
     Q_PROPERTY(DataArrayPath GoodVoxelsArrayPath READ getGoodVoxelsArrayPath WRITE setGoodVoxelsArrayPath)
 
@@ -76,7 +79,7 @@ class IdentifySample : public AbstractFilter
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::ProcessingFilters; }
     virtual const QString getSubGroupName()  { return DREAM3D::FilterSubGroups::CleanupFilters; }
-    virtual const QString getHumanLabel() { return "Identify Sample"; }
+    virtual const QString getHumanLabel() { return "Isolate Largest Feature (Identify Sample)"; }
 
     /**
     * @brief This method will instantiate all the end user settable options/parameters

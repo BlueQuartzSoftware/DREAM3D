@@ -53,6 +53,7 @@
 IdentifySample::IdentifySample() :
   AbstractFilter(),
   m_GoodVoxelsArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::GoodVoxels),
+  m_FillHoles(false),
   m_GoodVoxelsArrayName(DREAM3D::CellData::GoodVoxels),
   m_GoodVoxels(NULL)
 {
@@ -71,8 +72,9 @@ IdentifySample::~IdentifySample()
 void IdentifySample::setupFilterParameters()
 {
   FilterParameterVector parameters;
+  parameters.push_back(FilterParameter::New("Fill Holes in Largest Feature", "FillHoles", FilterParameterWidgetType::BooleanWidget, getFillHoles(), false));
   parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
-  /*[]*/parameters.push_back(FilterParameter::New("GoodVoxels", "GoodVoxelsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getGoodVoxelsArrayPath(), true, ""));
+  parameters.push_back(FilterParameter::New("GoodVoxels", "GoodVoxelsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getGoodVoxelsArrayPath(), true, ""));
   setFilterParameters(parameters);
 }
 
@@ -80,6 +82,7 @@ void IdentifySample::setupFilterParameters()
 void IdentifySample::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
+  setFillHoles(reader->readValue("FillHoles", getFillHoles() ) );
   setGoodVoxelsArrayPath(reader->readDataArrayPath("GoodVoxelsArrayPath", getGoodVoxelsArrayPath() ) );
   reader->closeFilterGroup();
 }
@@ -90,6 +93,7 @@ void IdentifySample::readFilterParameters(AbstractFilterParametersReader* reader
 int IdentifySample::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
+  writer->writeValue("FillHoles", getFillHoles() );
   writer->writeValue("GoodVoxelsArrayPath", getGoodVoxelsArrayPath() );
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
@@ -163,7 +167,6 @@ void IdentifySample::execute()
   QVector<int> currentvlist;
   QVector<bool> checked(totalPoints, false);
   QVector<bool> Sample(totalPoints, false);
-  QVector<bool> notSample(totalPoints, false);
   int biggestBlock = 0;
   size_t count;
   int good;
@@ -171,60 +174,8 @@ void IdentifySample::execute()
   DimType column, row, plane;
   int index;
 
-  for (int i = 0; i < totalPoints; i++)
-  {
-    if(checked[i] == false && m_GoodVoxels[i] == false)
-    {
-      currentvlist.push_back(i);
-      count = 0;
-      while (count < currentvlist.size())
-      {
-        index = currentvlist[count];
-        column = index % xp;
-        row = (index / xp) % yp;
-        plane = index / (xp * yp);
-        for (int j = 0; j < 6; j++)
-        {
-          good = 1;
-          neighbor = static_cast<int>( index + neighpoints[j] );
-          if(j == 0 && plane == 0) { good = 0; }
-          if(j == 5 && plane == (zp - 1)) { good = 0; }
-          if(j == 1 && row == 0) { good = 0; }
-          if(j == 4 && row == (yp - 1)) { good = 0; }
-          if(j == 2 && column == 0) { good = 0; }
-          if(j == 3 && column == (xp - 1)) { good = 0; }
-          if(good == 1 && checked[neighbor] == false && m_GoodVoxels[neighbor] == false)
-          {
-            currentvlist.push_back(neighbor);
-            checked[neighbor] = true;
-          }
-        }
-        count++;
-      }
-      if(static_cast<int>(currentvlist.size()) >= biggestBlock)
-      {
-        biggestBlock = currentvlist.size();
-        for(int j = 0; j < totalPoints; j++)
-        {
-          notSample[j] = false;
-        }
-        for(size_t j = 0; j < currentvlist.size(); j++)
-        {
-          notSample[currentvlist[j]] = true;
-        }
-      }
-      currentvlist.clear();
-    }
-  }
-  for (int i = 0; i < totalPoints; i++)
-  {
-    if (notSample[i] == false && m_GoodVoxels[i] == false) { m_GoodVoxels[i] = true; }
-    else if (notSample[i] == true && m_GoodVoxels[i] == true) { m_GoodVoxels[i] = false; }
-  }
-  notSample.clear();
-  checked.fill(false, totalPoints);
-
-  biggestBlock = 0;
+  // In this loop over the data we are finding the biggest contiguous set of GoodVoxels and calling that the 'sample'  All GoodVoxels that do not touch the 'sample'
+  // are flipped to be called 'bad' voxels or 'not sample'
   for (int i = 0; i < totalPoints; i++)
   {
     if(checked[i] == false && m_GoodVoxels[i] == true)
@@ -258,11 +209,8 @@ void IdentifySample::execute()
       if(static_cast<int>(currentvlist.size()) >= biggestBlock)
       {
         biggestBlock = currentvlist.size();
-        for(int j = 0; j < totalPoints; j++)
-        {
-          Sample[j] = false;
-        }
-        for(size_t j = 0; j < currentvlist.size(); j++)
+        Sample.fill(false, totalPoints);
+        for(size_t j = 0; j < biggestBlock; j++)
         {
           Sample[currentvlist[j]] = true;
         }
@@ -273,7 +221,58 @@ void IdentifySample::execute()
   for (int i = 0; i < totalPoints; i++)
   {
     if (Sample[i] == false && m_GoodVoxels[i] == true) { m_GoodVoxels[i] = false; }
-    else if (Sample[i] == true && m_GoodVoxels[i] == false) { m_GoodVoxels[i] = true; }
+  }
+  Sample.clear();
+  checked.fill(false, totalPoints);
+
+
+  // In this loop we are going to 'close' all of the 'holes' inside of the region already identified as the 'sample' if the user chose to do so.
+  // This is done by flipping all 'bad' voxel features that do not touch the outside of the sample (i.e. they are fully contained inside of the 'sample'.
+  if(m_FillHoles == true)
+  {
+    bool touchesBoundary = false;
+    for (int i = 0; i < totalPoints; i++)
+    {
+      if(checked[i] == false && Sample[i] == false)
+      {
+        currentvlist.push_back(i);
+        count = 0;
+        touchesBoundary = false;
+        while (count < currentvlist.size())
+        {
+          index = currentvlist[count];
+          column = index % xp;
+          row = (index / xp) % yp;
+          plane = index / (xp * yp);
+          if(column == 0 || column == (xp-1) || row == 0 || row == (yp-1) || plane == 0 || plane == (zp-1)) touchesBoundary = true;
+          for (int j = 0; j < 6; j++)
+          {
+            good = 1;
+            neighbor = static_cast<int>( index + neighpoints[j] );
+            if(j == 0 && plane == 0) { good = 0; }
+            if(j == 5 && plane == (zp - 1)) { good = 0; }
+            if(j == 1 && row == 0) { good = 0; }
+            if(j == 4 && row == (yp - 1)) { good = 0; }
+            if(j == 2 && column == 0) { good = 0; }
+            if(j == 3 && column == (xp - 1)) { good = 0; }
+            if(good == 1 && checked[neighbor] == false && Sample[neighbor] == false)
+            {
+              currentvlist.push_back(neighbor);
+              checked[neighbor] = true;
+            }
+          }
+          count++;
+        }
+        if(touchesBoundary == false)
+        {
+          for(size_t j = 0; j < currentvlist.size(); j++)
+          {
+            Sample[currentvlist[j]] = true;
+          }
+        }
+        currentvlist.clear();
+      }
+    }
   }
   Sample.clear();
   checked.clear();
