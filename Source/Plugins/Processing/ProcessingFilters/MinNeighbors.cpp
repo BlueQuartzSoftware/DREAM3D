@@ -51,10 +51,15 @@
 MinNeighbors::MinNeighbors() :
   AbstractFilter(),
   m_MinNumNeighbors(1),
+  m_ApplyToSinglePhase(false),
+  m_PhaseNumber(0),
   m_FeatureIdsArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::FeatureIds),
+  m_FeaturePhasesArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, DREAM3D::FeatureData::Phases),
   m_NumNeighborsArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, DREAM3D::FeatureData::NumNeighbors),
   m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
   m_FeatureIds(NULL),
+  m_FeaturePhasesArrayName(DREAM3D::FeatureData::Phases),
+  m_FeaturePhases(NULL),
   m_NumNeighborsArrayName(DREAM3D::FeatureData::NumNeighbors),
   m_NumNeighbors(NULL)
 {
@@ -75,9 +80,14 @@ void MinNeighbors::setupFilterParameters()
 {
   FilterParameterVector parameters;
   parameters.push_back(FilterParameter::New("Minimum Number Neighbors", "MinNumNeighbors", FilterParameterWidgetType::IntWidget, getMinNumNeighbors(), false));
+  QStringList linkedProps;
+  linkedProps << "PhaseNumber" << "FeaturePhasesArrayPath";
+  parameters.push_back(FilterParameter::NewConditional("Apply to Single Phase Only", "ApplyToSinglePhase", FilterParameterWidgetType::LinkedBooleanWidget, getApplyToSinglePhase(), false, linkedProps));
+  parameters.push_back(FilterParameter::New("Phase Number to Run Min Size Filter on", "PhaseNumber", FilterParameterWidgetType::IntWidget, getPhaseNumber(), false));
 
   parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
   parameters.push_back(FilterParameter::New("FeatureIds", "FeatureIdsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeatureIdsArrayPath(), true, ""));
+  parameters.push_back(FilterParameter::New("FeaturePhases", "FeaturePhasesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeaturePhasesArrayPath(), true, ""));
   parameters.push_back(FilterParameter::New("NumNeighbors", "NumNeighborsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getNumNeighborsArrayPath(), true, ""));
   setFilterParameters(parameters);
 }
@@ -85,8 +95,11 @@ void MinNeighbors::setupFilterParameters()
 void MinNeighbors::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
+  setFeaturePhasesArrayPath(reader->readDataArrayPath("FeaturePhasesArrayPath", getFeaturePhasesArrayPath() ) );
   setNumNeighborsArrayPath(reader->readDataArrayPath("NumNeighborsArrayPath", getNumNeighborsArrayPath() ) );
   setFeatureIdsArrayPath(reader->readDataArrayPath("FeatureIdsArrayPath", getFeatureIdsArrayPath() ) );
+  setApplyToSinglePhase( reader->readValue("ApplyToSinglePhase", getApplyToSinglePhase() ) );
+  setPhaseNumber( reader->readValue("PhaseNumber", getPhaseNumber() ) );
   setMinNumNeighbors( reader->readValue("MinNumNeighbors", getMinNumNeighbors()) );
   reader->closeFilterGroup();
 }
@@ -98,7 +111,10 @@ int MinNeighbors::writeFilterParameters(AbstractFilterParametersWriter* writer, 
 {
   writer->openFilterGroup(this, index);
   writer->writeValue("NumNeighborsArrayPath", getNumNeighborsArrayPath() );
+  writer->writeValue("FeaturePhasesArrayPath", getFeaturePhasesArrayPath() );
   writer->writeValue("FeatureIdsArrayPath", getFeatureIdsArrayPath() );
+  writer->writeValue("ApplyToSinglePhase", getApplyToSinglePhase() );
+  writer->writeValue("PhaseNumber", getPhaseNumber() );
   writer->writeValue("MinNumNeighbors", getMinNumNeighbors() );
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
@@ -118,6 +134,12 @@ void MinNeighbors::dataCheck()
   m_NumNeighborsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getNumNeighborsArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_NumNeighborsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_NumNeighbors = m_NumNeighborsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  if(m_ApplyToSinglePhase == true)
+  {
+    m_FeaturePhasesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeaturePhasesArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+    if( NULL != m_FeaturePhasesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+    { m_FeaturePhases = m_FeaturePhasesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -307,7 +329,16 @@ QVector<bool> MinNeighbors::merge_containedfeatures()
 
   for (size_t i = 0; i < totalFeatures; i++)
   {
-    if(m_NumNeighbors[i] >= m_MinNumNeighbors) { good = true; }
+    if(m_ApplyToSinglePhase == false)
+    {
+      if(m_NumNeighbors[i] >= m_MinNumNeighbors) { good = true; }
+      else activeObjects[i] = false;
+    }
+    else
+    {
+      if(m_NumNeighbors[i] >= m_MinNumNeighbors || m_FeaturePhases[i] != m_PhaseNumber) { good = true; }
+      else activeObjects[i] = false;
+    }
   }
   if(good == false)
   {
@@ -318,9 +349,8 @@ QVector<bool> MinNeighbors::merge_containedfeatures()
   for (size_t i = 0; i < totalPoints; i++)
   {
     int featurename = m_FeatureIds[i];
-    if(m_NumNeighbors[featurename] < m_MinNumNeighbors && featurename > 0)
+    if(activeObjects[featurename] == false)
     {
-      activeObjects[featurename] = false;
       m_FeatureIds[i] = -1;
     }
   }

@@ -81,6 +81,9 @@ class MinSize : public AbstractFilter
     DREAM3D_FILTER_PARAMETER(DataArrayPath, FeaturePhasesArrayPath)
     Q_PROPERTY(DataArrayPath FeaturePhasesArrayPath READ getFeaturePhasesArrayPath WRITE setFeaturePhasesArrayPath)
 
+    DREAM3D_FILTER_PARAMETER(DataArrayPath, NumCellsArrayPath)
+    Q_PROPERTY(DataArrayPath NumCellsArrayPath READ getNumCellsArrayPath WRITE setNumCellsArrayPath)
+
     virtual const QString getCompiledLibraryName() { return Processing::ProcessingBaseName; }
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::ProcessingFilters; }
@@ -113,10 +116,10 @@ class MinSize : public AbstractFilter
     MinSize();
 
     int32_t* m_Neighbors;
-    size_t m_NumFeatures;
 
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, FeatureIds)
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, FeaturePhases)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, NumCells)
 
     std::vector<std::vector<int> > voxellists;
     std::vector<int> nuclei;

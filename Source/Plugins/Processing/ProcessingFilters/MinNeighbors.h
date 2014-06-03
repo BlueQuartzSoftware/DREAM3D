@@ -71,9 +71,16 @@ class MinNeighbors : public AbstractFilter
 
     DREAM3D_FILTER_PARAMETER(int, MinNumNeighbors)
     Q_PROPERTY(int MinNumNeighbors READ getMinNumNeighbors WRITE setMinNumNeighbors)
+    DREAM3D_FILTER_PARAMETER(bool, ApplyToSinglePhase)
+    Q_PROPERTY(bool ApplyToSinglePhase READ getApplyToSinglePhase WRITE setApplyToSinglePhase)
+    DREAM3D_FILTER_PARAMETER(int, PhaseNumber)
+    Q_PROPERTY(int PhaseNumber READ getPhaseNumber WRITE setPhaseNumber)
 
     DREAM3D_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
     Q_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
+
+    DREAM3D_FILTER_PARAMETER(DataArrayPath, FeaturePhasesArrayPath)
+    Q_PROPERTY(DataArrayPath FeaturePhasesArrayPath READ getFeaturePhasesArrayPath WRITE setFeaturePhasesArrayPath)
 
     DREAM3D_FILTER_PARAMETER(DataArrayPath, NumNeighborsArrayPath)
     Q_PROPERTY(DataArrayPath NumNeighborsArrayPath READ getNumNeighborsArrayPath WRITE setNumNeighborsArrayPath)
@@ -113,6 +120,7 @@ class MinNeighbors : public AbstractFilter
     int32_t* m_Neighbors;
 
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, FeatureIds)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, FeaturePhases)
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, NumNeighbors)
 
     void dataCheck();

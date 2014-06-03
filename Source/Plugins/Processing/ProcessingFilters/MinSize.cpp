@@ -56,10 +56,13 @@ MinSize::MinSize() :
   m_PhaseNumber(0),
   m_FeatureIdsArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::FeatureIds),
   m_FeaturePhasesArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, DREAM3D::FeatureData::Phases),
+  m_NumCellsArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, DREAM3D::FeatureData::NumCells),
   m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
   m_FeatureIds(NULL),
   m_FeaturePhasesArrayName(DREAM3D::FeatureData::Phases),
-  m_FeaturePhases(NULL)
+  m_FeaturePhases(NULL),
+  m_NumCellsArrayName(DREAM3D::FeatureData::NumCells),
+  m_NumCells(NULL)
 {
   setupFilterParameters();
 }
@@ -86,6 +89,7 @@ void MinSize::setupFilterParameters()
   parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
   parameters.push_back(FilterParameter::New("FeatureIds", "FeatureIdsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeatureIdsArrayPath(), true, ""));
   parameters.push_back(FilterParameter::New("FeaturePhases", "FeaturePhasesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeaturePhasesArrayPath(), true, ""));
+  parameters.push_back(FilterParameter::New("NumCells", "NumCellsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getNumCellsArrayPath(), true, ""));
   setFilterParameters(parameters);
 }
 
@@ -96,6 +100,7 @@ void MinSize::readFilterParameters(AbstractFilterParametersReader* reader, int i
 {
   reader->openFilterGroup(this, index);
   setFeaturePhasesArrayPath(reader->readDataArrayPath("FeaturePhasesArrayPath", getFeaturePhasesArrayPath() ) );
+  setNumCellsArrayPath(reader->readDataArrayPath("NumCellsArrayPath", getNumCellsArrayPath() ) );
   setFeatureIdsArrayPath(reader->readDataArrayPath("FeatureIdsArrayPath", getFeatureIdsArrayPath() ) );
   setMinAllowedFeatureSize( reader->readValue("MinAllowedFeatureSize", getMinAllowedFeatureSize()) );
   setApplyToSinglePhase( reader->readValue("ApplyToSinglePhase", getApplyToSinglePhase() ) );
@@ -109,6 +114,7 @@ void MinSize::readFilterParameters(AbstractFilterParametersReader* reader, int i
 int MinSize::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
+  writer->writeValue("NumCellsArrayPath", getNumCellsArrayPath() );
   writer->writeValue("FeaturePhasesArrayPath", getFeaturePhasesArrayPath() );
   writer->writeValue("FeatureIdsArrayPath", getFeatureIdsArrayPath() );
   writer->writeValue("MinAllowedFeatureSize", getMinAllowedFeatureSize() );
@@ -129,6 +135,9 @@ void MinSize::dataCheck()
   m_FeatureIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeatureIdsArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  m_NumCellsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getNumCellsArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if( NULL != m_NumCellsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  { m_NumCells = m_NumCellsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   if(m_ApplyToSinglePhase == true)
   {
     m_FeaturePhasesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeaturePhasesArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
@@ -149,7 +158,7 @@ void MinSize::preflight()
   emit preflightExecuted();
   if(getErrorCondition() < 0) { return; }
 
-  AttributeMatrix::Pointer cellFeatureAttrMat = getDataContainerArray()->getAttributeMatrix(m_FeaturePhasesArrayPath);
+  AttributeMatrix::Pointer cellFeatureAttrMat = getDataContainerArray()->getAttributeMatrix(m_NumCellsArrayPath);
   QVector<bool> activeObjects(cellFeatureAttrMat->getNumTuples(), true);
   cellFeatureAttrMat->removeInactiveObjects(activeObjects, m_FeatureIdsPtr.lock());
   setInPreflight(false);
@@ -165,18 +174,12 @@ void MinSize::execute()
   dataCheck();
   if(getErrorCondition() < 0) { return; }
 
-  m_NumFeatures = 0;
   int64_t totalPoints = m_FeatureIdsPtr.lock()->getNumberOfTuples();
-  for (int64_t iter = 0; iter < totalPoints; iter++)
-  {
-    if(m_FeatureIds[iter] > m_NumFeatures) { m_NumFeatures = m_FeatureIds[iter]; }
-  }
-  m_NumFeatures += 1;
 
   QVector<bool> activeObjects = remove_smallfeatures();
   assign_badpoints();
 
-  AttributeMatrix::Pointer cellFeatureAttrMat = getDataContainerArray()->getAttributeMatrix(m_FeaturePhasesArrayPath);
+  AttributeMatrix::Pointer cellFeatureAttrMat = getDataContainerArray()->getAttributeMatrix(m_NumCellsArrayPath);
   cellFeatureAttrMat->removeInactiveObjects(activeObjects, m_FeatureIdsPtr.lock());
 
   // If there is an error set this to something negative and also set a message
@@ -234,7 +237,7 @@ void MinSize::assign_badpoints()
   int kstride, jstride;
   int featurename, feature;
   int neighbor;
-  QVector<int > n(m_NumFeatures + 1, 0);
+  QVector<int > n(m_NumCellsPtr.lock()->getNumberOfTuples(), 0);
   while (counter != 0)
   {
     counter = 0;
@@ -332,23 +335,20 @@ QVector<bool> MinSize::remove_smallfeatures()
   bool good = false;
   int gnum;
 
-  QVector<int> voxcounts(m_NumFeatures, 0);
-  QVector<bool> activeObjects(m_NumFeatures, true);
+  size_t totalFeatures = m_NumCellsPtr.lock()->getNumberOfTuples();
+  QVector<bool> activeObjects(totalFeatures, true);
 
-  for (int64_t i = 0; i < totalPoints; i++)
-  {
-    gnum = m_FeatureIds[i];
-    if(gnum >= 0) { voxcounts[gnum]++; }
-  }
-  for (size_t i = 1; i <  static_cast<size_t>(m_NumFeatures); i++)
+  for (size_t i = 1; i <  totalFeatures; i++)
   {
     if(m_ApplyToSinglePhase == false)
     {
-      if(voxcounts[i] >= m_MinAllowedFeatureSize ) { good = true; }
+      if(m_NumCells[i] >= m_MinAllowedFeatureSize ) { good = true; }
+      else activeObjects[i] = false;
     }
     else
     {
-      if(voxcounts[i] >= getMinAllowedFeatureSize() || m_FeaturePhases[i] != m_PhaseNumber) { good = true; }
+      if(m_NumCells[i] >= getMinAllowedFeatureSize() || m_FeaturePhases[i] != m_PhaseNumber) { good = true; }
+      else activeObjects[i] = false;
     }
   }
   if(good == false)
@@ -360,10 +360,9 @@ QVector<bool> MinSize::remove_smallfeatures()
   for (int64_t i = 0; i < totalPoints; i++)
   {
     gnum = m_FeatureIds[i];
-    if(voxcounts[gnum] < m_MinAllowedFeatureSize && gnum > 0)
+    if(activeObjects[gnum] == false)
     {
       m_FeatureIds[i] = -1;
-      activeObjects[gnum] = false;
     }
   }
   return activeObjects;
