@@ -35,10 +35,6 @@ class SobelEdge : public AbstractFilter
     DREAM3D_FILTER_PARAMETER(QString, NewCellArrayName)
     Q_PROPERTY(QString NewCellArrayName READ getNewCellArrayName WRITE setNewCellArrayName)
 
-    //filter parameters
-    QString m_RawImageDataArrayName;
-    QString m_ProcessedImageDataArrayName;
-
     DREAM3D_FILTER_PARAMETER(bool, SaveAsNewArray)
     Q_PROPERTY(bool SaveAsNewArray READ getSaveAsNewArray WRITE setSaveAsNewArray)
     DREAM3D_FILTER_PARAMETER(bool, Slice)

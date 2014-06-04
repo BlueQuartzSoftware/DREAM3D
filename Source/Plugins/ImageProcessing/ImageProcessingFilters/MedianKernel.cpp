@@ -6,15 +6,25 @@
 
 #include <QtCore/QString>
 
-#include "ImageProcessing/ImageProcessingConstants.h"
+#include "ITKUtilities.h"
+#include "itkMedianImageFilter.h"
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 MedianKernel::MedianKernel() :
-  AbstractFilter()
-/* DO NOT FORGET TO INITIALIZE ALL YOUR DREAM3D Filter Parameters HERE */
+  AbstractFilter(),
+  m_SelectedCellArrayPath("", "", ""),
+  m_SaveAsNewArray(true),
+  m_Slice(false),
+  m_SelectedCellArrayArrayName(""),
+  m_SelectedCellArray(NULL),
+  m_NewCellArrayName(""),
+  m_NewCellArray(NULL)
 {
+  m_KernelSize.x = 1;
+  m_KernelSize.y = 1;
+  m_KernelSize.z = 1;
   setupFilterParameters();
 }
 
@@ -31,21 +41,14 @@ MedianKernel::~MedianKernel()
 void MedianKernel::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  /* There are several types of FilterParameter classes to choose from and several
-  * options for each class type. The programmer can put the entire invocation into
-  * a single line if they want. For example:
-  *
-  *   parameters.push_back(FilterParameter::New("Reference Direction", "ReferenceDir", FilterParameterWidgetType::FloatVec3Widget, getReferenceDir(), false));
-  * or the programmer can create a FilterParameter like usual C++ codes:
-  * {
-  *  FilterParameter::Pointer parameter = FilterParameter::New();
-  *  parameter->setHumanLabel("Eulers Array");
-  *  parameter->setPropertyName("CellEulerAnglesArrayName");
-  *  parameter->setWidgetType(FilterParameterWidgetType::SingleArraySelectionWidget);
-  *  parameter->setUnits("");
-  *  parameters.push_back(parameter);
-  * }
-  */
+  parameters.push_back(FilterParameter::New("Array to Process", "SelectedCellArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getSelectedCellArrayPath(), false, ""));
+  parameters.push_back(FilterParameter::New("Kernel Size", "KernelSize", FilterParameterWidgetType::IntVec3Widget, getKernelSize(), false, ""));
+  QStringList linkedProps;
+  linkedProps << "NewCellArrayName";
+  parameters.push_back(FilterParameter::NewConditional("Save As New Array", "SaveAsNewArray", FilterParameterWidgetType::LinkedBooleanWidget, getSaveAsNewArray(), false, linkedProps));
+
+  parameters.push_back(FilterParameter::New("Created Array Name", "NewCellArrayName", FilterParameterWidgetType::StringWidget, getNewCellArrayName(), false, ""));
+  parameters.push_back(FilterParameter::New("Slice at a Time", "Slice", FilterParameterWidgetType::BooleanWidget, getSlice(), false));
   setFilterParameters(parameters);
 }
 
@@ -55,10 +58,11 @@ void MedianKernel::setupFilterParameters()
 void MedianKernel::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-  /*
-   Place code in here that will read the parameters from a file
-   setOutputFile( reader->readValue("OutputFile", getOutputFile() ) );
-   */
+  setSelectedCellArrayPath( reader->readDataArrayPath( "SelectedCellArrayPath", getSelectedCellArrayPath() ) );
+  setNewCellArrayName( reader->readString( "NewCellArrayName", getNewCellArrayName() ) );
+  setSaveAsNewArray( reader->readValue( "SaveAsNewArray", getSaveAsNewArray() ) );
+  setSlice( reader->readValue( "Slice", getSlice() ) );  reader->closeFilterGroup();
+  setKernelSize( reader->readIntVec3( "KernelSize", getKernelSize() ) );
   reader->closeFilterGroup();
 }
 
@@ -68,8 +72,11 @@ void MedianKernel::readFilterParameters(AbstractFilterParametersReader* reader, 
 int MedianKernel::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  /* Place code that will write the inputs values into a file. reference the AbstractFilterParametersWriter class for the proper API to use. */
-  /*  writer->writeValue("OutputFile", getOutputFile() ); */
+  writer->writeValue("SelectedCellArrayPath", getSelectedCellArrayPath() );
+  writer->writeValue("NewCellArrayName", getNewCellArrayName() );
+  writer->writeValue("SaveAsNewArray", getSaveAsNewArray() );
+  writer->writeValue("Slice", getSlice() );
+  writer->writeValue("KernelSize", getKernelSize() );
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
@@ -80,40 +87,18 @@ int MedianKernel::writeFilterParameters(AbstractFilterParametersWriter* writer, 
 void MedianKernel::dataCheck()
 {
   setErrorCondition(0);
+  DataArrayPath tempPath;
 
-  /* Example code for preflighting looking for a valid string for the output file
-   * but not necessarily the fact that the file exists: Example code to make sure
-   * we have something in a string before proceeding.*/
-  /*
-  if (m_OutputFile.empty() == true)
-  {
-    QString ss = QObject::tr("Output file name was not set").arg(getHumanLabel());
-    setErrorCondition(-1);
-    notifyErrorMessage(getHumanLabel(), ss, -1);
-    return;
-  }
-  * We can also check for the availability of REQUIRED ARRAYS:
-  * QVector<size_t> dims(1, 1);
-  * // Assigns the shared_ptr<> to an instance variable that is a weak_ptr<>
-  * m_CellPhasesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getCellPhasesArrayPath(), dims);
-  *  // Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object
-  * if( NULL != m_CellPhasesPtr.lock().get() )
-  * {
-  *   // Now assign the raw pointer to data from the DataArray<T> object
-  *   m_CellPhases = m_CellPhasesPtr.lock()->getPointer(0);
-  * }
-  *
-  * We can also CREATE a new array to dump new data into
-  *   tempPath.update(m_CellEulerAnglesArrayPath.getDataContainerName(), m_CellEulerAnglesArrayPath.getAttributeMatrixName(), getCellIPFColorsArrayName() );
-  * // Assigns the shared_ptr<> to an instance variable that is a weak_ptr<>
-  * m_CellIPFColorsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<uint8_t>, AbstractFilter, uint8_t>(this, tempPath, 0, dims);
-  * // Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object
-  * if( NULL != m_CellIPFColorsPtr.lock().get() )
-  * {
-  * // Now assign the raw pointer to data from the DataArray<T> object
-  * m_CellIPFColors = m_CellIPFColorsPtr.lock()->getPointer(0);
-  * }
-  */
+  QVector<size_t> dims(1, 1);
+  m_SelectedCellArrayPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<ImageProcessing::DefaultPixelType>, AbstractFilter>(this, getSelectedCellArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if( NULL != m_SelectedCellArrayPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  { m_SelectedCellArray = m_SelectedCellArrayPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+
+  if(m_SaveAsNewArray == false) m_NewCellArrayName = "thisIsATempName";
+  tempPath.update(getSelectedCellArrayPath().getDataContainerName(), getSelectedCellArrayPath().getAttributeMatrixName(), getNewCellArrayName() );
+  m_NewCellArrayPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<ImageProcessing::DefaultPixelType>, AbstractFilter, ImageProcessing::DefaultPixelType>(this, tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if( NULL != m_NewCellArrayPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  { m_NewCellArray = m_NewCellArrayPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
 
 // -----------------------------------------------------------------------------
@@ -133,57 +118,42 @@ void MedianKernel::preflight()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString MedianKernel::getCompiledLibraryName()
-{
-  return ImageProcessing::ImageProcessingBaseName;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-const QString MedianKernel::getGroupName()
-{
-  return "ImageProcessing";
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-const QString MedianKernel::getHumanLabel()
-{
-  return "MedianKernel";
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-const QString MedianKernel::getSubGroupName()
-{
-  return "Misc";
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void MedianKernel::execute()
 {
-  int err = 0;
-  // typically run your dataCheck function to make sure you can get that far and all your variables are initialized
+   int err = 0;
   dataCheck();
-  // Check to make sure you made it through the data check. Errors would have been reported already so if something
-  // happens to fail in the dataCheck() then we simply return
   if(getErrorCondition() < 0) { return; }
-  setErrorCondition(0);
 
   /* Place all your code to execute your filter here. */
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getSelectedCellArrayPath().getDataContainerName());
+  QString attrMatName = getSelectedCellArrayPath().getAttributeMatrixName();
 
-  /* If some error occurs this code snippet can report the error up the call chain*/
-  if (err < 0)
+  ImageProcessing::DefaultImageType::Pointer inputImage=ITKUtilities::Dream3DtoITK(m, attrMatName, m_SelectedCellArray);
+
+  //create edge filter
+  typedef itk::MedianImageFilter < ImageProcessing::DefaultImageType,  ImageProcessing::DefaultImageType > MedianFilterType;
+  MedianFilterType::Pointer medianFilter = MedianFilterType::New();
+  medianFilter->SetInput(inputImage);
+
+  //set kernel size
+  MedianFilterType::InputSizeType radius;
+  radius[0]=m_KernelSize.x;
+  radius[1]=m_KernelSize.y;
+  radius[2]=m_KernelSize.z;
+  medianFilter->SetRadius(radius);
+
+  //have filter write to dream3d array instead of creating its own buffer
+  ITKUtilities::SetITKOutput(medianFilter->GetOutput(), m_NewCellArray, m_NewCellArrayPtr.lock()->getNumberOfTuples());
+
+  //execute filter
+  medianFilter->Update();
+
+  //array name changing/cleanup
+  if(m_SaveAsNewArray == false)
   {
-    QString ss = QObject::tr("Some error message");
-    setErrorCondition(-99999999);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-    return;
+    AttributeMatrix::Pointer attrMat = m->getAttributeMatrix(m_SelectedCellArrayPath.getAttributeMatrixName());
+    attrMat->removeAttributeArray(m_SelectedCellArrayPath.getDataArrayName());
+    bool check = attrMat->renameAttributeArray(m_NewCellArrayName, m_SelectedCellArrayPath.getDataArrayName());
   }
 
   /* Let the GUI know we are done with this filter */
@@ -195,25 +165,10 @@ void MedianKernel::execute()
 // -----------------------------------------------------------------------------
 AbstractFilter::Pointer MedianKernel::newFilterInstance(bool copyFilterParameters)
 {
-  /*
-  * write code to optionally copy the filter parameters from the current filter into the new instance
-  */
   MedianKernel::Pointer filter = MedianKernel::New();
   if(true == copyFilterParameters)
   {
-    /* If the filter uses all the standard Filter Parameter Widgets you can probabaly get
-     * away with using this method to copy the filter parameters from the current instance
-     * into the new instance
-     */
     copyFilterParameterInstanceVariables(filter.get());
-    /* If your filter is using a lot of custom FilterParameterWidgets @see ReadH5Ebsd then you
-     * may need to copy each filter parameter explicitly plus any other instance variables that
-     * are needed into the new instance. Here is some example code from ReadH5Ebsd
-     */
-    //    DREAM3D_COPY_INSTANCEVAR(OutputFile)
-    //    DREAM3D_COPY_INSTANCEVAR(ZStartIndex)
-    //    DREAM3D_COPY_INSTANCEVAR(ZEndIndex)
-    //    DREAM3D_COPY_INSTANCEVAR(ZResolution)
   }
   return filter;
 }

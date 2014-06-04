@@ -9,6 +9,7 @@
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
+#include "Plugins/ImageProcessing/ImageProcessingConstants.h"
 
 
 /**
@@ -29,43 +30,43 @@ class MedianKernel : public AbstractFilter
 
     virtual ~MedianKernel();
 
-    /* Place your input parameters here using the DREAM3D macros to declare the Filter Parameters
-     * or other instance variables
-     */
-    //DREAM3D_FILTER_PARAMETER(QString, ImagePrefix)
-    /* If you declare a filter parameter above then you MUST create a Q_PROPERTY for that FilterParameter */
-    //Q_PROPERTY(QString ImagePrefix READ getImagePrefix WRITE setImagePrefix)
+    DREAM3D_FILTER_PARAMETER(DataArrayPath, SelectedCellArrayPath)
+    Q_PROPERTY(DataArrayPath SelectedCellArrayPath READ getSelectedCellArrayPath WRITE setSelectedCellArrayPath)
 
-    /* Here is another example of declaring an integer FilterParameter */
-    // DREAM3D_FILTER_PARAMETER(int, ImageSize)
-    // Q_PROPERTY(int ImageSize READ getImageSize WRITE setImageSize)
+    DREAM3D_FILTER_PARAMETER(QString, NewCellArrayName)
+    Q_PROPERTY(QString NewCellArrayName READ getNewCellArrayName WRITE setNewCellArrayName)
 
-
+    DREAM3D_FILTER_PARAMETER(bool, SaveAsNewArray)
+    Q_PROPERTY(bool SaveAsNewArray READ getSaveAsNewArray WRITE setSaveAsNewArray)
+    DREAM3D_FILTER_PARAMETER(bool, Slice)
+    Q_PROPERTY(bool Slice READ getSlice WRITE setSlice)
+    DREAM3D_FILTER_PARAMETER(IntVec3_t, KernelSize)
+    Q_PROPERTY(IntVec3_t KernelSize READ getKernelSize WRITE setKernelSize)
 
     /**
      * @brief getCompiledLibraryName Returns the name of the Library that this filter is a part of
      * @return
      */
-    virtual const QString getCompiledLibraryName();
+     virtual const QString getCompiledLibraryName() {return ImageProcessing::ImageProcessingBaseName;}
 
     /**
     * @brief This returns a string that is displayed in the GUI. It should be readable
     * and understandable by humans.
     */
-    virtual const QString getHumanLabel();
+    virtual const QString getHumanLabel() {return "Median (Kernel)";}
 
     /**
     * @brief This returns the group that the filter belonds to. You can select
     * a different group if you want. The string returned here will be displayed
     * in the GUI for the filter
     */
-    virtual const QString getGroupName();
+    virtual const QString getGroupName() {return "ImageProcessing";}
 
     /**
     * @brief This returns a string that is displayed in the GUI and helps to sort the filters into
     * a subgroup. It should be readable and understandable by humans.
     */
-    virtual const QString getSubGroupName();
+    virtual const QString getSubGroupName() {return "Misc";}
 
     /**
     * @brief This method will instantiate all the end user settable options/parameters
@@ -139,10 +140,9 @@ class MedianKernel : public AbstractFilter
     void dataCheck();
 
   private:
-    /* Your private class instance variables go here. You can use several preprocessor macros to help
-     * make sure you have all the variables defined correctly. Those are "DEFINE_REQUIRED_DATAARRAY_VARIABLE()"
-     * and  DEFINE_CREATED_DATAARRAY_VARIABLE() which are defined in DREAM3DGetSetMacros.h
-     */
+
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(ImageProcessing::DefaultPixelType, SelectedCellArray)
+    DEFINE_CREATED_DATAARRAY_VARIABLE(ImageProcessing::DefaultPixelType, NewCellArray)
 
     MedianKernel(const MedianKernel&); // Copy Constructor Not Implemented
     void operator=(const MedianKernel&); // Operator '=' Not Implemented

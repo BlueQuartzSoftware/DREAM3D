@@ -6,19 +6,15 @@
 
 #include <QtCore/QString>
 
-
 #include "ITKUtilities.h"
 #include "itkSobelEdgeDetectionImageFilter.h"
 #include "itkRescaleIntensityImageFilter.h"
-#include "ImageProcessing/ImageProcessingConstants.h"
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 SobelEdge::SobelEdge() :
   AbstractFilter(),
-  m_RawImageDataArrayName("RawImageData"),
-  m_ProcessedImageDataArrayName("ProcessedData"),
   m_SelectedCellArrayPath("", "", ""),
   m_SaveAsNewArray(true),
   m_Slice(false),
@@ -62,7 +58,8 @@ void SobelEdge::readFilterParameters(AbstractFilterParametersReader* reader, int
   setSelectedCellArrayPath( reader->readDataArrayPath( "SelectedCellArrayPath", getSelectedCellArrayPath() ) );
   setNewCellArrayName( reader->readString( "NewCellArrayName", getNewCellArrayName() ) );
   setSaveAsNewArray( reader->readValue( "SaveAsNewArray", getSaveAsNewArray() ) );
-  setSlice( reader->readValue( "Slice", getSlice() ) );  reader->closeFilterGroup();
+  setSlice( reader->readValue( "Slice", getSlice() ) );
+  reader->closeFilterGroup();
 }
 
 // -----------------------------------------------------------------------------
@@ -88,7 +85,6 @@ void SobelEdge::dataCheck()
   DataArrayPath tempPath;
 
   QVector<size_t> dims(1, 1);
-  m_RawImageDataArrayName=m_SelectedCellArrayPath.getDataArrayName();
   m_SelectedCellArrayPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<ImageProcessing::DefaultPixelType>, AbstractFilter>(this, getSelectedCellArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_SelectedCellArrayPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_SelectedCellArray = m_SelectedCellArrayPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */

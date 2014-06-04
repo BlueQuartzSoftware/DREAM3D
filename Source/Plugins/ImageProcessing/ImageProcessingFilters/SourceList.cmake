@@ -15,6 +15,7 @@ START_FILTER_GROUP(${ImageProcessing_BINARY_DIR} "${_filterGroupName}" "ImagePro
 set(_PublicFilters
   AlignSectionsPhaseCorrelation
   DiscreteGaussianBlur
+  GaussianBlur
   HoughCircles
   ImageCalculator
   ImageMath
