@@ -10,7 +10,6 @@
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 
-#include "Plugins/ImageProcessing/ImageProcessingConstants.h"
 #include "DREAM3DLib/DataContainers/VolumeDataContainer.h"
 #include "DREAM3DLib/DataContainers/AttributeMatrix.h"
 #include "DREAM3DLib/DataArrays/IDataArray.h"

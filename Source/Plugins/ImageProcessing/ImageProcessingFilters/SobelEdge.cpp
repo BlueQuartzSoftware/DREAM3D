@@ -6,15 +6,27 @@
 
 #include <QtCore/QString>
 
+
+#include "ITKUtilities.h"
+#include "itkSobelEdgeDetectionImageFilter.h"
+#include "itkRescaleIntensityImageFilter.h"
 #include "ImageProcessing/ImageProcessingConstants.h"
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 SobelEdge::SobelEdge() :
-  AbstractFilter()
-/* DO NOT FORGET TO INITIALIZE ALL YOUR DREAM3D Filter Parameters HERE */
-{
+  AbstractFilter(),
+  m_RawImageDataArrayName("RawImageData"),
+  m_ProcessedImageDataArrayName("ProcessedData"),
+  m_SelectedCellArrayPath("", "", ""),
+  m_SaveAsNewArray(true),
+  m_Slice(false),
+  m_SelectedCellArrayArrayName(""),
+  m_SelectedCellArray(NULL),
+  m_NewCellArrayName(""),
+  m_NewCellArray(NULL)
+  {
   setupFilterParameters();
 }
 
@@ -31,21 +43,13 @@ SobelEdge::~SobelEdge()
 void SobelEdge::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  /* There are several types of FilterParameter classes to choose from and several
-  * options for each class type. The programmer can put the entire invocation into
-  * a single line if they want. For example:
-  *
-  *   parameters.push_back(FilterParameter::New("Reference Direction", "ReferenceDir", FilterParameterWidgetType::FloatVec3Widget, getReferenceDir(), false));
-  * or the programmer can create a FilterParameter like usual C++ codes:
-  * {
-  *  FilterParameter::Pointer parameter = FilterParameter::New();
-  *  parameter->setHumanLabel("Eulers Array");
-  *  parameter->setPropertyName("CellEulerAnglesArrayName");
-  *  parameter->setWidgetType(FilterParameterWidgetType::SingleArraySelectionWidget);
-  *  parameter->setUnits("");
-  *  parameters.push_back(parameter);
-  * }
-  */
+  parameters.push_back(FilterParameter::New("Array to Process", "SelectedCellArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getSelectedCellArrayPath(), false, ""));
+  QStringList linkedProps;
+  linkedProps << "NewCellArrayName";
+  parameters.push_back(FilterParameter::NewConditional("Save As New Array", "SaveAsNewArray", FilterParameterWidgetType::LinkedBooleanWidget, getSaveAsNewArray(), false, linkedProps));
+
+  parameters.push_back(FilterParameter::New("Created Array Name", "NewCellArrayName", FilterParameterWidgetType::StringWidget, getNewCellArrayName(), false, ""));
+  parameters.push_back(FilterParameter::New("Slice at a Time", "Slice", FilterParameterWidgetType::BooleanWidget, getSlice(), false));
   setFilterParameters(parameters);
 }
 
@@ -55,11 +59,10 @@ void SobelEdge::setupFilterParameters()
 void SobelEdge::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-  /*
-   Place code in here that will read the parameters from a file
-   setOutputFile( reader->readValue("OutputFile", getOutputFile() ) );
-   */
-  reader->closeFilterGroup();
+  setSelectedCellArrayPath( reader->readDataArrayPath( "SelectedCellArrayPath", getSelectedCellArrayPath() ) );
+  setNewCellArrayName( reader->readString( "NewCellArrayName", getNewCellArrayName() ) );
+  setSaveAsNewArray( reader->readValue( "SaveAsNewArray", getSaveAsNewArray() ) );
+  setSlice( reader->readValue( "Slice", getSlice() ) );  reader->closeFilterGroup();
 }
 
 // -----------------------------------------------------------------------------
@@ -68,8 +71,10 @@ void SobelEdge::readFilterParameters(AbstractFilterParametersReader* reader, int
 int SobelEdge::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  /* Place code that will write the inputs values into a file. reference the AbstractFilterParametersWriter class for the proper API to use. */
-  /*  writer->writeValue("OutputFile", getOutputFile() ); */
+  writer->writeValue("SelectedCellArrayPath", getSelectedCellArrayPath() );
+  writer->writeValue("NewCellArrayName", getNewCellArrayName() );
+  writer->writeValue("SaveAsNewArray", getSaveAsNewArray() );
+  writer->writeValue("Slice", getSlice() );
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
@@ -80,40 +85,19 @@ int SobelEdge::writeFilterParameters(AbstractFilterParametersWriter* writer, int
 void SobelEdge::dataCheck()
 {
   setErrorCondition(0);
+  DataArrayPath tempPath;
 
-  /* Example code for preflighting looking for a valid string for the output file
-   * but not necessarily the fact that the file exists: Example code to make sure
-   * we have something in a string before proceeding.*/
-  /*
-  if (m_OutputFile.empty() == true)
-  {
-    QString ss = QObject::tr("Output file name was not set").arg(getHumanLabel());
-    setErrorCondition(-1);
-    notifyErrorMessage(getHumanLabel(), ss, -1);
-    return;
-  }
-  * We can also check for the availability of REQUIRED ARRAYS:
-  * QVector<size_t> dims(1, 1);
-  * // Assigns the shared_ptr<> to an instance variable that is a weak_ptr<>
-  * m_CellPhasesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getCellPhasesArrayPath(), dims);
-  *  // Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object
-  * if( NULL != m_CellPhasesPtr.lock().get() )
-  * {
-  *   // Now assign the raw pointer to data from the DataArray<T> object
-  *   m_CellPhases = m_CellPhasesPtr.lock()->getPointer(0);
-  * }
-  *
-  * We can also CREATE a new array to dump new data into
-  *   tempPath.update(m_CellEulerAnglesArrayPath.getDataContainerName(), m_CellEulerAnglesArrayPath.getAttributeMatrixName(), getCellIPFColorsArrayName() );
-  * // Assigns the shared_ptr<> to an instance variable that is a weak_ptr<>
-  * m_CellIPFColorsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<uint8_t>, AbstractFilter, uint8_t>(this, tempPath, 0, dims);
-  * // Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object
-  * if( NULL != m_CellIPFColorsPtr.lock().get() )
-  * {
-  * // Now assign the raw pointer to data from the DataArray<T> object
-  * m_CellIPFColors = m_CellIPFColorsPtr.lock()->getPointer(0);
-  * }
-  */
+  QVector<size_t> dims(1, 1);
+  m_RawImageDataArrayName=m_SelectedCellArrayPath.getDataArrayName();
+  m_SelectedCellArrayPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<ImageProcessing::DefaultPixelType>, AbstractFilter>(this, getSelectedCellArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if( NULL != m_SelectedCellArrayPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  { m_SelectedCellArray = m_SelectedCellArrayPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+
+  if(m_SaveAsNewArray == false) m_NewCellArrayName = "thisIsATempName";
+  tempPath.update(getSelectedCellArrayPath().getDataContainerName(), getSelectedCellArrayPath().getAttributeMatrixName(), getNewCellArrayName() );
+  m_NewCellArrayPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<ImageProcessing::DefaultPixelType>, AbstractFilter, ImageProcessing::DefaultPixelType>(this, tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if( NULL != m_NewCellArrayPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  { m_NewCellArray = m_NewCellArrayPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
 
 // -----------------------------------------------------------------------------
@@ -133,57 +117,94 @@ void SobelEdge::preflight()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString SobelEdge::getCompiledLibraryName()
-{
-  return ImageProcessing::ImageProcessingBaseName;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-const QString SobelEdge::getGroupName()
-{
-  return "ImageProcessing";
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-const QString SobelEdge::getHumanLabel()
-{
-  return "SobelEdge";
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-const QString SobelEdge::getSubGroupName()
-{
-  return "Misc";
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void SobelEdge::execute()
 {
   int err = 0;
-  // typically run your dataCheck function to make sure you can get that far and all your variables are initialized
   dataCheck();
-  // Check to make sure you made it through the data check. Errors would have been reported already so if something
-  // happens to fail in the dataCheck() then we simply return
   if(getErrorCondition() < 0) { return; }
-  setErrorCondition(0);
 
-  /* Place all your code to execute your filter here. */
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getSelectedCellArrayPath().getDataContainerName());
+  QString attrMatName = getSelectedCellArrayPath().getAttributeMatrixName();
 
-  /* If some error occurs this code snippet can report the error up the call chain*/
-  if (err < 0)
+  //wrap m_RawImageData as itk::image
+  ImageProcessing::DefaultImageType::Pointer inputImage = ITKUtilities::Dream3DtoITK(m, attrMatName, m_SelectedCellArray);
+
+  if(m_Slice)
   {
-    QString ss = QObject::tr("Some error message");
-    setErrorCondition(-99999999);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-    return;
+    //wrap output array
+    ImageProcessing::DefaultImageType::Pointer outputImage=ITKUtilities::Dream3DtoITK(m, attrMatName, m_NewCellArray);
+
+    //get dimensions
+    size_t udims[3] = {0,0,0};
+    m->getDimensions(udims);
+  #if (CMP_SIZEOF_SIZE_T == 4)
+    typedef int32_t DimType;
+  #else
+    typedef int64_t DimType;
+  #endif
+    DimType dims[3] = {
+      static_cast<DimType>(udims[0]),
+      static_cast<DimType>(udims[1]),
+      static_cast<DimType>(udims[2]),
+    };
+
+    //create edge filter
+    typedef itk::SobelEdgeDetectionImageFilter < ImageProcessing::DefaultSliceType,  ImageProcessing::FloatSliceType > SobelFilterType;
+    SobelFilterType::Pointer sobelFilter = SobelFilterType::New();
+
+    //convert result back to uint8
+    typedef itk::RescaleIntensityImageFilter<ImageProcessing::FloatSliceType, ImageProcessing::DefaultSliceType> RescaleImageType;
+    RescaleImageType::Pointer rescaleFilter = RescaleImageType::New();
+    rescaleFilter->SetOutputMinimum(0);
+    rescaleFilter->SetOutputMaximum(255);
+
+    //loop over slices applying filters
+    for(int i=0; i<dims[2]; ++i)
+    {
+      QString ss = QObject::tr("Finding Edges On Slice: %1").arg(i+1);
+      notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
+
+      //get slice
+      ImageProcessing::DefaultSliceType::Pointer inputSlice = ITKUtilities::ExtractSlice<ImageProcessing::DefaultPixelType>(inputImage, ImageProcessing::ZSlice, i);
+
+      //run filters
+      sobelFilter->SetInput(inputSlice);
+      rescaleFilter->SetInput(sobelFilter->GetOutput());
+      sobelFilter->Update();
+      rescaleFilter->Update();
+
+      //copy into volume
+      ITKUtilities::SetSlice<ImageProcessing::DefaultPixelType>(outputImage, rescaleFilter->GetOutput(), ImageProcessing::ZSlice, i);
+    }
+  }
+  else
+  {
+    //create edge filter
+    typedef itk::SobelEdgeDetectionImageFilter < ImageProcessing::DefaultImageType,  ImageProcessing::FloatImageType > SobelFilterType;
+    SobelFilterType::Pointer sobelFilter = SobelFilterType::New();
+    sobelFilter->SetInput(inputImage);
+
+    //convert result back to uint8
+    typedef itk::RescaleIntensityImageFilter<ImageProcessing::FloatImageType, ImageProcessing::DefaultImageType> RescaleImageType;
+    RescaleImageType::Pointer rescaleFilter = RescaleImageType::New();
+    rescaleFilter->SetInput(sobelFilter->GetOutput());
+    rescaleFilter->SetOutputMinimum(0);
+    rescaleFilter->SetOutputMaximum(255);
+
+    //have filter write to dream3d array instead of creating its own buffer
+    ITKUtilities::SetITKOutput(rescaleFilter->GetOutput(), m_NewCellArray, m_NewCellArrayPtr.lock()->getNumberOfTuples());
+
+    //execute filters
+    sobelFilter->Update();
+    rescaleFilter->Update();
+  }
+
+  //array name changing/cleanup
+  if(m_SaveAsNewArray == false)
+  {
+    AttributeMatrix::Pointer attrMat = m->getAttributeMatrix(m_SelectedCellArrayPath.getAttributeMatrixName());
+    attrMat->removeAttributeArray(m_SelectedCellArrayPath.getDataArrayName());
+    bool check = attrMat->renameAttributeArray(m_NewCellArrayName, m_SelectedCellArrayPath.getDataArrayName());
   }
 
   /* Let the GUI know we are done with this filter */
@@ -195,25 +216,10 @@ void SobelEdge::execute()
 // -----------------------------------------------------------------------------
 AbstractFilter::Pointer SobelEdge::newFilterInstance(bool copyFilterParameters)
 {
-  /*
-  * write code to optionally copy the filter parameters from the current filter into the new instance
-  */
   SobelEdge::Pointer filter = SobelEdge::New();
   if(true == copyFilterParameters)
   {
-    /* If the filter uses all the standard Filter Parameter Widgets you can probabaly get
-     * away with using this method to copy the filter parameters from the current instance
-     * into the new instance
-     */
     copyFilterParameterInstanceVariables(filter.get());
-    /* If your filter is using a lot of custom FilterParameterWidgets @see ReadH5Ebsd then you
-     * may need to copy each filter parameter explicitly plus any other instance variables that
-     * are needed into the new instance. Here is some example code from ReadH5Ebsd
-     */
-    //    DREAM3D_COPY_INSTANCEVAR(OutputFile)
-    //    DREAM3D_COPY_INSTANCEVAR(ZStartIndex)
-    //    DREAM3D_COPY_INSTANCEVAR(ZEndIndex)
-    //    DREAM3D_COPY_INSTANCEVAR(ZResolution)
   }
   return filter;
 }
