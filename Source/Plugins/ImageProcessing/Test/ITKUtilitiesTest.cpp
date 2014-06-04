@@ -22,7 +22,7 @@ void TestDream3DtoITKImportFilter()
   QString attrMatName("CellData");
   ImageProcessing::DefaultPixelType* data = NULL;
 
-  ImageProcessing::ImportUInt8FilterType::Pointer importFilter = ITKUtilities::Dream3DtoITKImportFilter<ImageProcessing::DefaultPixelType>(m.get(), attrMatName, data);
+  ImageProcessing::ImportUInt8FilterType::Pointer importFilter = ITKUtilities<ImageProcessing::DefaultPixelType>::Dream3DtoITKImportFilter(m.get(), attrMatName, data);
 
 }
 
@@ -38,7 +38,7 @@ void TestDream3DtoITK()
 
   ImageProcessing::DefaultPixelType* data = NULL;
 
-  imagePtr = ITKUtilities::Dream3DtoITK(m.get(), attrMatName, data);
+  imagePtr = ITKUtilities<ImageProcessing::DefaultPixelType>::Dream3DtoITK(m.get(), attrMatName, data);
 }
 
 // -----------------------------------------------------------------------------
@@ -48,9 +48,10 @@ void TestSetITKOutput()
 {
 
   ImageProcessing::DefaultImageType::Pointer imagePtr;
-  ImageProcessing::DefaultPixelType* output = NULL;
-  unsigned int totalPoints = 0;
-  ITKUtilities::SetITKOutput(imagePtr, output, totalPoints);
+ // ImageProcessing::DefaultPixelType* output = NULL;
+ // unsigned int totalPoints = 0;
+  ImageProcessing::DefaultArrayType::Pointer array;
+  ITKUtilities<ImageProcessing::DefaultPixelType>::SetITKOutput(imagePtr, array);
 
 }
 
@@ -63,7 +64,7 @@ void TestCopyITKtoDream3D()
 
   ImageProcessing::DefaultImageType::Pointer imagePtr;
   ImageProcessing::DefaultPixelType* data = NULL;
-  ITKUtilities::CopyITKtoDream3D(imagePtr, data);
+  ITKUtilities<ImageProcessing::DefaultPixelType>::CopyITKtoDream3D(imagePtr, data);
 
 }
 
@@ -72,12 +73,12 @@ void TestCopyITKtoDream3D()
 // -----------------------------------------------------------------------------
 void TestDream3DRGBtoITK()
 {
-  ITKUtilities::RGBImageType::Pointer rgbPtr;
+  ITKUtilities<ImageProcessing::DefaultPixelType>::RGBImageType::Pointer rgbPtr;
 
   VolumeDataContainer::Pointer m = VolumeDataContainer::New();
   QString attrMatName("CellData");
   ImageProcessing::DefaultPixelType* data = NULL;
-  rgbPtr = ITKUtilities::Dream3DRGBtoITK<ImageProcessing::DefaultPixelType>(m.get(), attrMatName, data);
+  rgbPtr = ITKUtilities<ImageProcessing::DefaultPixelType>::Dream3DRGBtoITK(m.get(), attrMatName, data);
 }
 
 // -----------------------------------------------------------------------------
@@ -87,7 +88,7 @@ void TestCopyRGBITKtoDream3D()
 {
   ImageProcessing::RGBImageType::Pointer imagePtr;
   ImageProcessing::DefaultPixelType* data = NULL;
-  ITKUtilities::CopyRGBITKtoDream3D<ImageProcessing::DefaultPixelType>(imagePtr, data);
+  ITKUtilities<ImageProcessing::DefaultPixelType>::CopyRGBITKtoDream3D(imagePtr, data);
 }
 
 // -----------------------------------------------------------------------------
@@ -98,7 +99,7 @@ void TestExtractSlice()
   //itk::Image<ImageProcessing::DefaultPixelType,ImageProcessing::SliceDimension>::Pointer slicePtr;
   ImageProcessing::DefaultSliceType::Pointer slicePtr;
   ImageProcessing::DefaultImageType::Pointer image;
-  slicePtr = ITKUtilities::ExtractSlice<ImageProcessing::DefaultPixelType>(image, 0, 0);
+  slicePtr = ITKUtilities<ImageProcessing::DefaultPixelType>::ExtractSlice(image, 0, 0);
 }
 
 // -----------------------------------------------------------------------------
@@ -111,7 +112,7 @@ void TestSetSlice()
   // Now declare our Image and Slice variables
   ImageProcessing::DefaultImageType::Pointer imagePtr;
   ImageProcessing::DefaultSliceType::Pointer slicePtr;
-  ITKUtilities::SetSlice<PixelType>(imagePtr, slicePtr, 0, 0);
+  ITKUtilities<ImageProcessing::DefaultPixelType>::SetSlice(imagePtr, slicePtr, 0, 0);
 }
 
 

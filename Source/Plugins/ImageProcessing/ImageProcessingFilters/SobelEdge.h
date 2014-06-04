@@ -37,6 +37,7 @@ class SobelEdge : public AbstractFilter
 
     DREAM3D_FILTER_PARAMETER(bool, SaveAsNewArray)
     Q_PROPERTY(bool SaveAsNewArray READ getSaveAsNewArray WRITE setSaveAsNewArray)
+
     DREAM3D_FILTER_PARAMETER(bool, Slice)
     Q_PROPERTY(bool Slice READ getSlice WRITE setSlice)
 
@@ -137,7 +138,9 @@ class SobelEdge : public AbstractFilter
     void dataCheck();
 
   private:
-
+    //filter parameters
+    QString m_RawImageDataArrayName;
+    QString m_ProcessedImageDataArrayName;
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(ImageProcessing::DefaultPixelType, SelectedCellArray)
     DEFINE_CREATED_DATAARRAY_VARIABLE(ImageProcessing::DefaultPixelType, NewCellArray)
 

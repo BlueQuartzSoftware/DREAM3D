@@ -10,19 +10,26 @@
 #include "itkSobelEdgeDetectionImageFilter.h"
 #include "itkRescaleIntensityImageFilter.h"
 
+
+//// Setup some typedef 's for the ITKUtilities class to shorten up our code
+typedef ITKUtilities<ImageProcessing::DefaultPixelType>    ITKUtilitiesType;
+
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 SobelEdge::SobelEdge() :
   AbstractFilter(),
   m_SelectedCellArrayPath("", "", ""),
+  m_NewCellArrayName(""),
   m_SaveAsNewArray(true),
   m_Slice(false),
+  m_RawImageDataArrayName("RawImageData"),
+  m_ProcessedImageDataArrayName("ProcessedData"),
   m_SelectedCellArrayArrayName(""),
   m_SelectedCellArray(NULL),
-  m_NewCellArrayName(""),
   m_NewCellArray(NULL)
-  {
+{
   setupFilterParameters();
 }
 
@@ -115,7 +122,6 @@ void SobelEdge::preflight()
 // -----------------------------------------------------------------------------
 void SobelEdge::execute()
 {
-  int err = 0;
   dataCheck();
   if(getErrorCondition() < 0) { return; }
 
@@ -123,21 +129,21 @@ void SobelEdge::execute()
   QString attrMatName = getSelectedCellArrayPath().getAttributeMatrixName();
 
   //wrap m_RawImageData as itk::image
-  ImageProcessing::DefaultImageType::Pointer inputImage = ITKUtilities::Dream3DtoITK(m, attrMatName, m_SelectedCellArray);
+  ImageProcessing::DefaultImageType::Pointer inputImage = ITKUtilitiesType::Dream3DtoITK(m, attrMatName, m_SelectedCellArray);
 
   if(m_Slice)
   {
     //wrap output array
-    ImageProcessing::DefaultImageType::Pointer outputImage=ITKUtilities::Dream3DtoITK(m, attrMatName, m_NewCellArray);
+    ImageProcessing::DefaultImageType::Pointer outputImage = ITKUtilitiesType::Dream3DtoITK(m, attrMatName, m_NewCellArray);
 
     //get dimensions
     size_t udims[3] = {0,0,0};
     m->getDimensions(udims);
-  #if (CMP_SIZEOF_SIZE_T == 4)
+#if (CMP_SIZEOF_SIZE_T == 4)
     typedef int32_t DimType;
-  #else
+#else
     typedef int64_t DimType;
-  #endif
+#endif
     DimType dims[3] = {
       static_cast<DimType>(udims[0]),
       static_cast<DimType>(udims[1]),
@@ -145,7 +151,7 @@ void SobelEdge::execute()
     };
 
     //create edge filter
-    typedef itk::SobelEdgeDetectionImageFilter < ImageProcessing::DefaultSliceType,  ImageProcessing::FloatSliceType > SobelFilterType;
+    typedef itk::SobelEdgeDetectionImageFilter<ImageProcessing::DefaultSliceType, ImageProcessing::FloatSliceType> SobelFilterType;
     SobelFilterType::Pointer sobelFilter = SobelFilterType::New();
 
     //convert result back to uint8
@@ -161,7 +167,7 @@ void SobelEdge::execute()
       notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
 
       //get slice
-      ImageProcessing::DefaultSliceType::Pointer inputSlice = ITKUtilities::ExtractSlice<ImageProcessing::DefaultPixelType>(inputImage, ImageProcessing::ZSlice, i);
+      ImageProcessing::DefaultSliceType::Pointer inputSlice = ITKUtilitiesType::ExtractSlice(inputImage, ImageProcessing::ZSlice, i);
 
       //run filters
       sobelFilter->SetInput(inputSlice);
@@ -170,13 +176,13 @@ void SobelEdge::execute()
       rescaleFilter->Update();
 
       //copy into volume
-      ITKUtilities::SetSlice<ImageProcessing::DefaultPixelType>(outputImage, rescaleFilter->GetOutput(), ImageProcessing::ZSlice, i);
+      ITKUtilitiesType::SetSlice(outputImage, rescaleFilter->GetOutput(), ImageProcessing::ZSlice, i);
     }
   }
   else
   {
     //create edge filter
-    typedef itk::SobelEdgeDetectionImageFilter < ImageProcessing::DefaultImageType,  ImageProcessing::FloatImageType > SobelFilterType;
+    typedef itk::SobelEdgeDetectionImageFilter<ImageProcessing::DefaultImageType, ImageProcessing::FloatImageType> SobelFilterType;
     SobelFilterType::Pointer sobelFilter = SobelFilterType::New();
     sobelFilter->SetInput(inputImage);
 
@@ -188,7 +194,7 @@ void SobelEdge::execute()
     rescaleFilter->SetOutputMaximum(255);
 
     //have filter write to dream3d array instead of creating its own buffer
-    ITKUtilities::SetITKOutput(rescaleFilter->GetOutput(), m_NewCellArray, m_NewCellArrayPtr.lock()->getNumberOfTuples());
+    ITKUtilitiesType::SetITKOutput(rescaleFilter->GetOutput(), m_NewCellArrayPtr.lock());
 
     //execute filters
     sobelFilter->Update();
