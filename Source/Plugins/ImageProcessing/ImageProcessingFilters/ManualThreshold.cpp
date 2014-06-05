@@ -2,14 +2,14 @@
  * Your License or Copyright Information can go here
  */
 
-#include "KMeans.h"
+#include "ManualThreshold.h"
 
 #include "DREAM3DLib/Common/Constants.h"
 
 #include "ITKUtilities.h"
 
-#include "itkScalarImageKmeansImageFilter.h"
-#include "itkMinimumMaximumImageCalculator.h"
+//thresholding filter
+#include "itkBinaryThresholdImageFilter.h"
 
 //// Setup some typedef 's for the ITKUtilities class to shorten up our code
 typedef ITKUtilities<ImageProcessing::DefaultPixelType>    ITKUtilitiesType;
@@ -17,13 +17,12 @@ typedef ITKUtilities<ImageProcessing::DefaultPixelType>    ITKUtilitiesType;
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-KMeans::KMeans() :
+ManualThreshold::ManualThreshold() :
   AbstractFilter(),
   m_SelectedCellArrayPath("", "", ""),
   m_NewCellArrayName(""),
   m_SaveAsNewArray(true),
-  m_Slice(false),
-  m_Classes(2),
+  m_ManualParameter(128),
   m_SelectedCellArrayArrayName(""),
   m_SelectedCellArray(NULL),
   m_NewCellArray(NULL)
@@ -34,14 +33,14 @@ KMeans::KMeans() :
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-KMeans::~KMeans()
+ManualThreshold::~ManualThreshold()
 {
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void KMeans::setupFilterParameters()
+void ManualThreshold::setupFilterParameters()
 {
   FilterParameterVector parameters;
   parameters.push_back(FilterParameter::New("Array to Process", "SelectedCellArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getSelectedCellArrayPath(), false, ""));
@@ -49,36 +48,33 @@ void KMeans::setupFilterParameters()
   linkedProps << "NewCellArrayName";
   parameters.push_back(FilterParameter::NewConditional("Save As New Array", "SaveAsNewArray", FilterParameterWidgetType::LinkedBooleanWidget, getSaveAsNewArray(), false, linkedProps));
   parameters.push_back(FilterParameter::New("Created Array Name", "NewCellArrayName", FilterParameterWidgetType::StringWidget, getNewCellArrayName(), false, ""));
-  parameters.push_back(FilterParameter::New("Number of Classes", "Classes", FilterParameterWidgetType::IntWidget, getClasses(), false, ""));
-  parameters.push_back(FilterParameter::New("Slice at a Time", "Slice", FilterParameterWidgetType::BooleanWidget, getSlice(), false));
+  parameters.push_back(FilterParameter::New("Manual Parameter", "ManualParameter", FilterParameterWidgetType::IntWidget, getManualParameter(), false, ""));
   setFilterParameters(parameters);
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void KMeans::readFilterParameters(AbstractFilterParametersReader* reader, int index)
+void ManualThreshold::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
   setSelectedCellArrayPath( reader->readDataArrayPath( "SelectedCellArrayPath", getSelectedCellArrayPath() ) );
   setNewCellArrayName( reader->readString( "NewCellArrayName", getNewCellArrayName() ) );
   setSaveAsNewArray( reader->readValue( "SaveAsNewArray", getSaveAsNewArray() ) );
-  setSlice( reader->readValue( "Slice", getSlice() ) );
-  setClasses( reader->readValue( "Classes", getClasses() ) );
+  setManualParameter( reader->readValue( "ManualParameter", getManualParameter() ) );
   reader->closeFilterGroup();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int KMeans::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
+int ManualThreshold::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
   writer->writeValue("SelectedCellArrayPath", getSelectedCellArrayPath() );
   writer->writeValue("NewCellArrayName", getNewCellArrayName() );
   writer->writeValue("SaveAsNewArray", getSaveAsNewArray() );
-  writer->writeValue("Slice", getSlice() );
-  writer->writeValue("Classes", getClasses() );
+  writer->writeValue("ManualParameter", getManualParameter() );
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
@@ -86,7 +82,7 @@ int KMeans::writeFilterParameters(AbstractFilterParametersWriter* writer, int in
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void KMeans::dataCheck()
+void ManualThreshold::dataCheck()
 {
   setErrorCondition(0);
   DataArrayPath tempPath;
@@ -101,20 +97,12 @@ void KMeans::dataCheck()
   m_NewCellArrayPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<ImageProcessing::DefaultPixelType>, AbstractFilter, ImageProcessing::DefaultPixelType>(this, tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_NewCellArrayPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_NewCellArray = m_NewCellArrayPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-
-  if(m_Classes<2)
-  {
-    QString ss = QObject::tr("Must threshold into at least 2 classes");
-    setErrorCondition(-1000);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-    return;
-  }
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void KMeans::preflight()
+void ManualThreshold::preflight()
 {
   // These are the REQUIRED lines of CODE to make sure the filter behaves correctly
   setInPreflight(true); // Set the fact that we are preflighting.
@@ -128,7 +116,7 @@ void KMeans::preflight()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void KMeans::execute()
+void ManualThreshold::execute()
 {
   int err = 0;
   dataCheck();
@@ -137,7 +125,6 @@ void KMeans::execute()
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getSelectedCellArrayPath().getDataContainerName());
   QString attrMatName = getSelectedCellArrayPath().getAttributeMatrixName();
 
-  /* Place all your code to execute your filter here. */
   //get dims
   size_t udims[3] = {0,0,0};
   m->getDimensions(udims);
@@ -155,71 +142,18 @@ void KMeans::execute()
   //wrap input as itk image
   ImageProcessing::DefaultImageType::Pointer inputImage=ITKUtilitiesType::Dream3DtoITK(m, attrMatName, m_SelectedCellArray);
 
-  if(m_Slice)
-  {
-    //define filters
-    typedef itk::MinimumMaximumImageCalculator< ImageProcessing::DefaultSliceType > CalculatorType;
-    typedef itk::ScalarImageKmeansImageFilter< ImageProcessing::DefaultSliceType, ImageProcessing::DefaultSliceType > KMeansType;
+  //define threshold filters
+  typedef itk::BinaryThresholdImageFilter <ImageProcessing::DefaultImageType, ImageProcessing::DefaultImageType> BinaryThresholdImageFilterType;
 
-    //wrap output buffer as image
-    ImageProcessing::DefaultImageType::Pointer outputImage=ITKUtilitiesType::Dream3DtoITK(m, attrMatName, m_NewCellArray);
-
-    //loop over slices
-    for(int i=0; i<dims[2]; i++)
-    {
-      //get slice
-      ImageProcessing::DefaultSliceType::Pointer slice = ITKUtilitiesType::ExtractSlice(inputImage, ImageProcessing::ZSlice, i);
-
-      //find max/min
-      CalculatorType::Pointer minMaxFilter = CalculatorType::New ();
-      minMaxFilter->SetImage(slice);
-      minMaxFilter->Compute();
-      ImageProcessing::DefaultPixelType range = minMaxFilter->GetMaximum()-minMaxFilter->GetMinimum();
-
-      //set up kmeans filter
-      KMeansType::Pointer kMeans = KMeansType::New();
-      kMeans->SetInput(slice);
-      ImageProcessing::DefaultPixelType meanIncrement = range / m_Classes;
-      ImageProcessing::DefaultPixelType mean = range / (2*m_Classes);
-      for(int j=0; j<m_Classes; j++)
-      {
-        kMeans->AddClassWithInitialMean(mean);
-        mean=mean+meanIncrement;
-      }
-
-      //execute
-      kMeans->Update();
-
-      //copy back into volume
-      ITKUtilitiesType::SetSlice(outputImage, kMeans->GetOutput(), ImageProcessing::ZSlice, i);
-    }
-  }
-  else
-  {
-    //find min+max of image
-    typedef itk::MinimumMaximumImageCalculator< ImageProcessing::DefaultImageType > CalculatorType;
-    CalculatorType::Pointer minMaxFilter = CalculatorType::New ();
-    minMaxFilter->SetImage(inputImage);
-    minMaxFilter->Compute();
-    ImageProcessing::DefaultPixelType range = minMaxFilter->GetMaximum()-minMaxFilter->GetMinimum();
-
-    //set up kmeans filter
-    typedef itk::ScalarImageKmeansImageFilter< ImageProcessing::DefaultImageType, ImageProcessing::DefaultImageType > KMeansType;
-    KMeansType::Pointer kMeans = KMeansType::New();
-    kMeans->SetInput(inputImage);
-
-    //start with evenly spaced class means
-    ImageProcessing::DefaultPixelType meanIncrement = range / m_Classes;
-    ImageProcessing::DefaultPixelType mean = range / (2*m_Classes);
-    for(int i=0; i<m_Classes; i++)
-    {
-      kMeans->AddClassWithInitialMean(mean);
-      mean=mean+meanIncrement;
-    }
-
-    ITKUtilitiesType::SetITKOutput(kMeans->GetOutput(), m_NewCellArrayPtr.lock());
-    kMeans->Update();
-  }
+  //threshold
+  BinaryThresholdImageFilterType::Pointer thresholdFilter = BinaryThresholdImageFilterType::New();
+  thresholdFilter->SetInput(inputImage);
+  thresholdFilter->SetLowerThreshold(m_ManualParameter);
+  thresholdFilter->SetUpperThreshold(255);
+  thresholdFilter->SetInsideValue(255);
+  thresholdFilter->SetOutsideValue(0);
+  thresholdFilter->GetOutput()->GetPixelContainer()->SetImportPointer(m_NewCellArray, m_NewCellArrayPtr.lock()->getNumberOfTuples(), false);
+  thresholdFilter->Update();
 
   //array name changing/cleanup
   if(m_SaveAsNewArray == false)
@@ -229,8 +163,6 @@ void KMeans::execute()
     bool check = attrMat->renameAttributeArray(m_NewCellArrayName, m_SelectedCellArrayPath.getDataArrayName());
   }
 
-
-
   /* Let the GUI know we are done with this filter */
   notifyStatusMessage(getHumanLabel(), "Complete");
 }
@@ -238,27 +170,12 @@ void KMeans::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer KMeans::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer ManualThreshold::newFilterInstance(bool copyFilterParameters)
 {
-  /*
-  * write code to optionally copy the filter parameters from the current filter into the new instance
-  */
-  KMeans::Pointer filter = KMeans::New();
+  ManualThreshold::Pointer filter = ManualThreshold::New();
   if(true == copyFilterParameters)
   {
-    /* If the filter uses all the standard Filter Parameter Widgets you can probabaly get
-     * away with using this method to copy the filter parameters from the current instance
-     * into the new instance
-     */
     copyFilterParameterInstanceVariables(filter.get());
-    /* If your filter is using a lot of custom FilterParameterWidgets @see ReadH5Ebsd then you
-     * may need to copy each filter parameter explicitly plus any other instance variables that
-     * are needed into the new instance. Here is some example code from ReadH5Ebsd
-     */
-    //    DREAM3D_COPY_INSTANCEVAR(OutputFile)
-    //    DREAM3D_COPY_INSTANCEVAR(ZStartIndex)
-    //    DREAM3D_COPY_INSTANCEVAR(ZEndIndex)
-    //    DREAM3D_COPY_INSTANCEVAR(ZResolution)
   }
   return filter;
 }

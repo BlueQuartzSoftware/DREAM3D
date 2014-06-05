@@ -2,8 +2,8 @@
  * Your License or Copyright Information can go here
  */
 
-#ifndef _KMeans_H_
-#define _KMeans_H_
+#ifndef _AutoThreshold_H_
+#define _AutoThreshold_H_
 
 #include <vector>
 #include <QtCore/QString>
@@ -15,23 +15,24 @@
 
 #include "Plugins/ImageProcessing/ImageProcessingConstants.h"
 
+
 /**
- * @class KMeans KMeans.h ImageProcessing/ImageProcessingFilters/KMeans.h
+ * @class AutoThreshold AutoThreshold.h ImageProcessing/ImageProcessingFilters/AutoThreshold.h
  * @brief
  * @author
  * @date
  * @version 1.0
  */
-class KMeans : public AbstractFilter
+class AutoThreshold : public AbstractFilter
 {
   Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
 
   public:
-    DREAM3D_SHARED_POINTERS(KMeans)
-    DREAM3D_STATIC_NEW_MACRO(KMeans)
-    DREAM3D_TYPE_MACRO_SUPER(KMeans, AbstractFilter)
+    DREAM3D_SHARED_POINTERS(AutoThreshold)
+    DREAM3D_STATIC_NEW_MACRO(AutoThreshold)
+    DREAM3D_TYPE_MACRO_SUPER(AutoThreshold, AbstractFilter)
 
-    virtual ~KMeans();
+    virtual ~AutoThreshold();
 
     DREAM3D_FILTER_PARAMETER(DataArrayPath, SelectedCellArrayPath)
     Q_PROPERTY(DataArrayPath SelectedCellArrayPath READ getSelectedCellArrayPath WRITE setSelectedCellArrayPath)
@@ -43,10 +44,10 @@ class KMeans : public AbstractFilter
     Q_PROPERTY(bool SaveAsNewArray READ getSaveAsNewArray WRITE setSaveAsNewArray)
     DREAM3D_FILTER_PARAMETER(bool, Slice)
     Q_PROPERTY(bool Slice READ getSlice WRITE setSlice)
-    DREAM3D_FILTER_PARAMETER(int, Classes)
-    Q_PROPERTY(int Classes READ getClasses WRITE setClasses)
-
-
+    DREAM3D_FILTER_PARAMETER(unsigned int, Method)
+    Q_PROPERTY(unsigned int Method READ getMethod WRITE setMethod)
+    DREAM3D_FILTER_PARAMETER(int, ManualParameter)
+    Q_PROPERTY(int ManualParameter READ getManualParameter WRITE setManualParameter)
 
     /**
      * @brief getCompiledLibraryName Returns the name of the Library that this filter is a part of
@@ -58,7 +59,7 @@ class KMeans : public AbstractFilter
     * @brief This returns a string that is displayed in the GUI. It should be readable
     * and understandable by humans.
     */
-    virtual const QString getHumanLabel() {return "K Means Filter";}
+    virtual const QString getHumanLabel() {return "Threshold Image (Auto)";}
 
     /**
     * @brief This returns the group that the filter belonds to. You can select
@@ -137,7 +138,7 @@ class KMeans : public AbstractFilter
     void preflightExecuted();
 
   protected:
-    KMeans();
+    AutoThreshold();
 
     /**
     * @brief Checks for the appropriate parameter values and availability of arrays in the data container
@@ -149,8 +150,8 @@ class KMeans : public AbstractFilter
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(ImageProcessing::DefaultPixelType, SelectedCellArray)
     DEFINE_CREATED_DATAARRAY_VARIABLE(ImageProcessing::DefaultPixelType, NewCellArray)
 
-    KMeans(const KMeans&); // Copy Constructor Not Implemented
-    void operator=(const KMeans&); // Operator '=' Not Implemented
+    AutoThreshold(const AutoThreshold&); // Copy Constructor Not Implemented
+    void operator=(const AutoThreshold&); // Operator '=' Not Implemented
 };
 
-#endif /* _KMeans_H_ */
+#endif /* _AutoThreshold_H_ */

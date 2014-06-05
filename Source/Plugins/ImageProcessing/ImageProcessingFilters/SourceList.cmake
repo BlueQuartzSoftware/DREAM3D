@@ -14,6 +14,7 @@ START_FILTER_GROUP(${ImageProcessing_BINARY_DIR} "${_filterGroupName}" "ImagePro
 # List your public filters here
 set(_PublicFilters
   AlignSectionsPhaseCorrelation
+  AutoThreshold
   DiscreteGaussianBlur
   GaussianBlur
   HoughCircles
@@ -21,11 +22,11 @@ set(_PublicFilters
   ImageMath
   ImageRegistration
   KMeans
+  ManualThreshold
   MeanKernel
   MedianKernel
   MultiOtsuThreshold
   SobelEdge
-  Threshold
   Watershed
   WriteImage
 )
