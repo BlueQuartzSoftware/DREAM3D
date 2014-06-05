@@ -17,33 +17,34 @@ include( ${QT_USE_FILE} )
 # --------------------------------------------------------------------
 # find ITK libararies
 find_package(ITK COMPONENTS
-	#Group Core
-	ITKCommon
+  #Group Core
+  ITKCommon
 
-	#Group IO  ---No HDF5 Modules---
-	#ITKIOImageBase
+  #Group IO  ---No HDF5 Modules---
+  #ITKIOImageBase
 
-	#Group Filtering
-	#ITKDistanceMap
-	#ITKThresholding
-	#ITKImageGradient
-	#ITKImageFilterBase
-	#ITKSmoothing
-	#ITKDenoising
-	#ITKConvolution
-	#ITKStatistics
-	#ITKImageFeature
+  #Group Filtering
+  #ITKDistanceMap
+  #ITKThresholding
+  #ITKImageGradient
+  #ITKImageFilterBase
+  #ITKSmoothing
+  #ITKDenoising
+  #ITKConvolution
+  #ITKStatistics
+  #ITKImageFeature
 
-	#Group Registration
-	ITKRegistrationCommon
+  #Group Registration
+  ITKRegistrationCommon
 
-	#Group Segmentation
-	#ITKVoronoi
-	#ITKLevelSets
-	ITKWatersheds
-	#ITKConnectedComponents
+  #Group Segmentation
+  #ITKVoronoi
+  #ITKLevelSets
+  ITKWatersheds
+  ITKClassifiers
+  #ITKConnectedComponents
 
-	REQUIRED
+  REQUIRED
 )
 
 include(${ITK_USE_FILE})
@@ -92,8 +93,8 @@ else()
 endif()
 
 CONFIGURE_FILE(${${PLUGIN_NAME}_SOURCE_DIR}/${PLUGIN_NAME}Config.h.in
-				${${PLUGIN_NAME}_BINARY_DIR}/${PLUGIN_NAME}Config.h
-				)
+        ${${PLUGIN_NAME}_BINARY_DIR}/${PLUGIN_NAME}Config.h
+        )
 
 
 
