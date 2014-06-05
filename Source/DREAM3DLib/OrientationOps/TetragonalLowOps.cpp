@@ -70,6 +70,9 @@ namespace Detail
     static const int symSize2 = 2;
   }
 }
+
+static const int TetraNumSym = 4;
+
 static const QuatF TetraQuatSym[4] = {QuaternionMathF::NewXYZW(0.000000000f, 0.000000000f, 0.000000000f, 1.000000000f),
                                       QuaternionMathF::NewXYZW(0.000000000f, 0.000000000f, 1.000000000f, 0.000000000f),
                                       QuaternionMathF::NewXYZW(0.000000000f, 0.000000000f, DREAM3D::Constants::k_1OverRoot2, -DREAM3D::Constants::k_1OverRoot2),
@@ -191,6 +194,21 @@ float TetragonalLowOps::getMisoQuat(QuatF& q1, QuatF& q2, float& n1, float& n2, 
 void TetragonalLowOps::getQuatSymOp(int i, QuatF& q)
 {
   QuaternionMathF::Copy(TetraQuatSym[i], q);
+}
+
+int TetragonalLowOps::getNumSymOp()
+{
+  return TetraNumSym;
+}
+
+std::vector<QuatF> TetragonalLowOps::getQuatSymOpsVector()
+{
+  std::vector<QuatF> quatSymOpsVector (TetraNumSym);
+  for(int i=0; i<TetraNumSym; i++)
+  {
+    getQuatSymOp(i, quatSymOpsVector[i]);
+  }
+  return quatSymOpsVector;
 }
 
 void TetragonalLowOps::getRodSymOp(int i, float* r)

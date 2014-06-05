@@ -70,6 +70,8 @@ namespace Detail
   }
 }
 
+static const int MonoclinicNumSym = 2;
+
 static const QuatF MonoclinicQuatSym[2] =
 {
   QuaternionMathF::NewXYZW(0.000000000f, 0.000000000f, 0.000000000f, 1.000000000f),
@@ -187,6 +189,21 @@ void MonoclinicOps::getODFFZRod(float& r1, float& r2, float& r3)
 void MonoclinicOps::getQuatSymOp(int i, QuatF& q)
 {
   QuaternionMathF::Copy(MonoclinicQuatSym[i], q);
+}
+
+int MonoclinicOps::getNumSymOp()
+{
+  return MonoclinicNumSym;
+}
+
+std::vector<QuatF> MonoclinicOps::getQuatSymOpsVector()
+{
+  std::vector<QuatF> quatSymOpsVector (MonoclinicNumSym);
+  for(int i=0; i<MonoclinicNumSym; i++)
+  {
+    getQuatSymOp(i, quatSymOpsVector[i]);
+  }
+  return quatSymOpsVector;
 }
 
 void MonoclinicOps::getRodSymOp(int i, float* r)

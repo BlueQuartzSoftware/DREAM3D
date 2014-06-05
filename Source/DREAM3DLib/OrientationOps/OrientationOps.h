@@ -120,6 +120,14 @@ class DREAM3DLib_EXPORT OrientationOps
      * @param q [output] The quaternion to store the value into
      */
     virtual void getQuatSymOp(int i, QuatF& q) = 0;
+    /**
+     * @brief getNumSymOp returns the number of symmetry operations
+     */
+    virtual int getNumSymOp() = 0;
+    /**
+     * @brief getQuatSymOpsVector returns a vector of symmetry operations
+     */
+    virtual std::vector<QuatF> getQuatSymOpsVector() = 0;
     virtual void getRodSymOp(int i, float* r) = 0;
     virtual void getMatSymOp(int i, float g[3][3]) = 0;
     virtual void getODFFZRod(float& r1, float& r2, float& r3) = 0;

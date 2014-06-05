@@ -72,6 +72,7 @@ namespace Detail
   }
 }
 
+static const int HexNumSym = 6;
 
 static const QuatF HexQuatSym[6] = {QuaternionMathF::NewXYZW(0.000000000f, 0.000000000f, 0.000000000f, 1.000000000f),
                                     QuaternionMathF::NewXYZW(0.000000000f, 0.000000000f, 0.500000000f, 0.866025400f),
@@ -208,6 +209,21 @@ void HexagonalLowOps::getQuatSymOp(int i, QuatF& q)
 {
   QuaternionMathF::Copy(HexQuatSym[i], q);
 
+}
+
+int HexagonalLowOps::getNumSymOp()
+{
+  return HexNumSym;
+}
+
+std::vector<QuatF> HexagonalLowOps::getQuatSymOpsVector()
+{
+  std::vector<QuatF> quatSymOpsVector (HexNumSym);
+  for(int i=0; i<HexNumSym; i++)
+  {
+    getQuatSymOp(i, quatSymOpsVector[i]);
+  }
+  return quatSymOpsVector;
 }
 
 void HexagonalLowOps::getRodSymOp(int i, float* r)

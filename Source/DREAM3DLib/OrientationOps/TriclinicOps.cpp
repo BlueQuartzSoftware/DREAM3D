@@ -71,6 +71,8 @@ namespace Detail
   }
 }
 
+static const int TriclinicNumSym = 1;
+
 static const QuatF TriclinicQuatSym[1] =
 {
   QuaternionMathF::NewXYZW(0.000000000f, 0.000000000f, 0.000000000f, 1.000000000f)
@@ -180,6 +182,21 @@ void TriclinicOps::getODFFZRod(float& r1, float& r2, float& r3)
 void TriclinicOps::getQuatSymOp(int i, QuatF& q)
 {
   QuaternionMathF::Copy(TriclinicQuatSym[i], q);
+}
+
+int TriclinicOps::getNumSymOp()
+{
+  return TriclinicNumSym;
+}
+
+std::vector<QuatF> TriclinicOps::getQuatSymOpsVector()
+{
+  std::vector<QuatF> quatSymOpsVector (TriclinicNumSym);
+  for(int i=0; i<TriclinicNumSym; i++)
+  {
+    getQuatSymOp(i, quatSymOpsVector[i]);
+  }
+  return quatSymOpsVector;
 }
 
 void TriclinicOps::getRodSymOp(int i, float* r)

@@ -70,6 +70,9 @@ namespace Detail
     static const int symSize2 = 2;
   }
 }
+
+static const int TrigNumSym = 3;
+
 static const QuatF TrigQuatSym[3] = {QuaternionMathF::NewXYZW(0.000000000f, 0.000000000f, 0.000000000f, 1.000000000f),
                                      QuaternionMathF::NewXYZW(0.000000000f, 0.000000000f, 0.866025400f, 0.500000000f),
                                      QuaternionMathF::NewXYZW(0.000000000f, 0.000000000f, 0.866025400f, -0.50000000f)
@@ -186,6 +189,21 @@ void TrigonalLowOps::getQuatSymOp(int i, QuatF& q)
 {
   QuaternionMathF::Copy(TrigQuatSym[i], q);
 
+}
+
+int TrigonalLowOps::getNumSymOp()
+{
+  return TrigNumSym;
+}
+
+std::vector<QuatF> TrigonalLowOps::getQuatSymOpsVector()
+{
+  std::vector<QuatF> quatSymOpsVector (TrigNumSym);
+  for(int i=0; i<TrigNumSym; i++)
+  {
+    getQuatSymOp(i, quatSymOpsVector[i]);
+  }
+  return quatSymOpsVector;
 }
 
 void TrigonalLowOps::getRodSymOp(int i, float* r)

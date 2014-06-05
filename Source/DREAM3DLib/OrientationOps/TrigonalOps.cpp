@@ -71,6 +71,8 @@ namespace Detail
   }
 }
 
+static const int TrigNumSym = 6;
+
 static const QuatF TrigQuatSym[6] = {QuaternionMathF::NewXYZW(0.000000000f, 0.000000000f, 0.000000000f, 1.000000000f),
                                      QuaternionMathF::NewXYZW(0.000000000f, 0.000000000f, 0.866025400f, 0.500000000f),
                                      QuaternionMathF::NewXYZW(0.000000000f, 0.000000000f, 0.866025400f, -0.50000000f),
@@ -207,6 +209,21 @@ void TrigonalOps::getQuatSymOp(int i, QuatF& q)
 {
   QuaternionMathF::Copy(TrigQuatSym[i], q);
 
+}
+
+int TrigonalOps::getNumSymOp()
+{
+  return TrigNumSym;
+}
+
+std::vector<QuatF> TrigonalOps::getQuatSymOpsVector()
+{
+  std::vector<QuatF> quatSymOpsVector (TrigNumSym);
+  for(int i=0; i<TrigNumSym; i++)
+  {
+    getQuatSymOp(i, quatSymOpsVector[i]);
+  }
+  return quatSymOpsVector;
 }
 
 void TrigonalOps::getRodSymOp(int i, float* r)

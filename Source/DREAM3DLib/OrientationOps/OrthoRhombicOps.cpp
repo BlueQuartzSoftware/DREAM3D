@@ -73,6 +73,8 @@ namespace Detail
   }
 }
 
+static const int OrthoNumSym = 4;
+
 static const QuatF OrthoQuatSym[4] = { QuaternionMathF::NewXYZW(0.000000000f, 0.000000000f, 0.000000000f, 1.000000000f),
                                        QuaternionMathF::NewXYZW(1.000000000f, 0.000000000f, 0.000000000f, 0.000000000f),
                                        QuaternionMathF::NewXYZW(0.000000000f, 1.000000000f, 0.000000000f, 0.000000000f),
@@ -195,6 +197,21 @@ void OrthoRhombicOps::getQuatSymOp(int i, QuatF& q)
 {
   QuaternionMathF::Copy(OrthoQuatSym[i], q);
 
+}
+
+int OrthoRhombicOps::getNumSymOp()
+{
+  return OrthoNumSym;
+}
+
+std::vector<QuatF> OrthoRhombicOps::getQuatSymOpsVector()
+{
+  std::vector<QuatF> quatSymOpsVector (OrthoNumSym);
+  for(int i=0; i<OrthoNumSym; i++)
+  {
+    getQuatSymOp(i, quatSymOpsVector[i]);
+  }
+  return quatSymOpsVector;
 }
 
 void OrthoRhombicOps::getRodSymOp(int i, float* r)

@@ -73,6 +73,8 @@ namespace Detail
   }
 }
 
+static const int HexNumSym = 4;
+
 static const QuatF HexQuatSym[12] = {QuaternionMathF::NewXYZW(0.000000000f, 0.000000000f, 0.000000000f, 1.000000000f),
                                      QuaternionMathF::NewXYZW(0.000000000f, 0.000000000f, 0.500000000f, 0.866025400f),
                                      QuaternionMathF::NewXYZW(0.000000000f, 0.000000000f, 0.866025400f, 0.500000000f),
@@ -253,6 +255,21 @@ void HexagonalOps::getQuatSymOp(int i, QuatF& q)
   //  q.y = HexQuatSym[i][1];
   //  q.z = HexQuatSym[i][2];
   //  q.w = HexQuatSym[i][3];
+}
+
+int HexagonalOps::getNumSymOp()
+{
+  return HexNumSym;
+}
+
+std::vector<QuatF> HexagonalOps::getQuatSymOpsVector()
+{
+  std::vector<QuatF> quatSymOpsVector (HexNumSym);
+  for(int i=0; i<HexNumSym; i++)
+  {
+    getQuatSymOp(i, quatSymOpsVector[i]);
+  }
+  return quatSymOpsVector;
 }
 
 void HexagonalOps::getRodSymOp(int i, float* r)

@@ -76,6 +76,8 @@ class DREAM3DLib_EXPORT CubicOps : public OrientationOps
 
     virtual float getMisoQuat(QuatF& q1, QuatF& q2, float& n1, float& n2, float& n3);
     virtual void getQuatSymOp(int i, QuatF& q);
+    virtual int getNumSymOp();
+    virtual std::vector<QuatF> getQuatSymOpsVector();
     virtual void getRodSymOp(int i, float* r);
     virtual void getMatSymOp(int i, float g[3][3]);
     virtual void getODFFZRod(float& r1, float& r2, float& r3);

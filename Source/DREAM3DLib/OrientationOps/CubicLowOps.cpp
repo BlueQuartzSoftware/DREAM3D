@@ -70,6 +70,8 @@ namespace Detail
   }
 }
 
+static const int CubicLowNumSym = 12;
+
 static const QuatF CubicLowQuatSym[12] =
 {
   QuaternionMathF::NewXYZW(0.000000000f, 0.000000000f, 0.000000000f, 1.000000000f),
@@ -283,6 +285,21 @@ void CubicLowOps::getODFFZRod(float& r1, float& r2, float& r3)
 void CubicLowOps::getQuatSymOp(int i, QuatF& q)
 {
   QuaternionMathF::Copy(CubicLowQuatSym[i], q);
+}
+
+int CubicLowOps::getNumSymOp()
+{
+  return CubicLowNumSym;
+}
+
+std::vector<QuatF> CubicLowOps::getQuatSymOpsVector()
+{
+  std::vector<QuatF> quatSymOpsVector (CubicLowNumSym);
+  for(int i=0; i<CubicLowNumSym; i++)
+  {
+    getQuatSymOp(i, quatSymOpsVector[i]);
+  }
+  return quatSymOpsVector;
 }
 
 void CubicLowOps::getRodSymOp(int i, float* r)

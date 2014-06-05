@@ -82,6 +82,8 @@ namespace Detail
   }
 }
 
+static const int TetraNumSym = 8;
+
 static const QuatF TetraQuatSym[8] = {QuaternionMathF::NewXYZW(0.000000000f, 0.000000000f, 0.000000000f, 1.000000000f),
                                       QuaternionMathF::NewXYZW(1.000000000f, 0.000000000f, 0.000000000f, 0.000000000f),
                                       QuaternionMathF::NewXYZW(0.000000000f, 1.000000000f, 0.000000000f, 0.000000000f),
@@ -220,6 +222,21 @@ void TetragonalOps::getQuatSymOp(int i, QuatF& q)
   //  q.y = TetraQuatSym[i][1];
   //  q.z = TetraQuatSym[i][2];
   //  q.w = TetraQuatSym[i][3];
+}
+
+int TetragonalOps::getNumSymOp()
+{
+  return TetraNumSym;
+}
+
+std::vector<QuatF> TetragonalOps::getQuatSymOpsVector()
+{
+  std::vector<QuatF> quatSymOpsVector (TetraNumSym);
+  for(int i=0; i<TetraNumSym; i++)
+  {
+    getQuatSymOp(i, quatSymOpsVector[i]);
+  }
+  return quatSymOpsVector;
 }
 
 void TetragonalOps::getRodSymOp(int i, float* r)
