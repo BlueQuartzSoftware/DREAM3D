@@ -2,33 +2,37 @@
  * Your License or Copyright Information can go here
  */
 
-#ifndef _Threshold_H_
-#define _Threshold_H_
+#ifndef _ManualThreshold_H_
+#define _ManualThreshold_H_
 
+#include <vector>
+#include <QtCore/QString>
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
+#include "DREAM3DLib/DataArrays/IDataArray.h"
+
 #include "Plugins/ImageProcessing/ImageProcessingConstants.h"
 
 
 /**
- * @class Threshold Threshold.h ImageProcessing/ImageProcessingFilters/Threshold.h
+ * @class ManualThreshold ManualThreshold.h ImageProcessing/ImageProcessingFilters/ManualThreshold.h
  * @brief
  * @author
  * @date
  * @version 1.0
  */
-class Threshold : public AbstractFilter
+class ManualThreshold : public AbstractFilter
 {
   Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
 
   public:
-    DREAM3D_SHARED_POINTERS(Threshold)
-    DREAM3D_STATIC_NEW_MACRO(Threshold)
-    DREAM3D_TYPE_MACRO_SUPER(Threshold, AbstractFilter)
+    DREAM3D_SHARED_POINTERS(ManualThreshold)
+    DREAM3D_STATIC_NEW_MACRO(ManualThreshold)
+    DREAM3D_TYPE_MACRO_SUPER(ManualThreshold, AbstractFilter)
 
-    virtual ~Threshold();
+    virtual ~ManualThreshold();
 
     DREAM3D_FILTER_PARAMETER(DataArrayPath, SelectedCellArrayPath)
     Q_PROPERTY(DataArrayPath SelectedCellArrayPath READ getSelectedCellArrayPath WRITE setSelectedCellArrayPath)
@@ -38,10 +42,6 @@ class Threshold : public AbstractFilter
 
     DREAM3D_FILTER_PARAMETER(bool, SaveAsNewArray)
     Q_PROPERTY(bool SaveAsNewArray READ getSaveAsNewArray WRITE setSaveAsNewArray)
-    DREAM3D_FILTER_PARAMETER(bool, Slice)
-    Q_PROPERTY(bool Slice READ getSlice WRITE setSlice)
-    DREAM3D_FILTER_PARAMETER(unsigned int, Method)
-    Q_PROPERTY(unsigned int Method READ getMethod WRITE setMethod)
     DREAM3D_FILTER_PARAMETER(int, ManualParameter)
     Q_PROPERTY(int ManualParameter READ getManualParameter WRITE setManualParameter)
 
@@ -55,7 +55,7 @@ class Threshold : public AbstractFilter
     * @brief This returns a string that is displayed in the GUI. It should be readable
     * and understandable by humans.
     */
-    virtual const QString getHumanLabel() {return "Threshold Image";}
+    virtual const QString getHumanLabel() {return "Threshold Image (Manual - Single Level)";}
 
     /**
     * @brief This returns the group that the filter belonds to. You can select
@@ -134,7 +134,7 @@ class Threshold : public AbstractFilter
     void preflightExecuted();
 
   protected:
-    Threshold();
+    ManualThreshold();
 
     /**
     * @brief Checks for the appropriate parameter values and availability of arrays in the data container
@@ -146,8 +146,8 @@ class Threshold : public AbstractFilter
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(ImageProcessing::DefaultPixelType, SelectedCellArray)
     DEFINE_CREATED_DATAARRAY_VARIABLE(ImageProcessing::DefaultPixelType, NewCellArray)
 
-    Threshold(const Threshold&); // Copy Constructor Not Implemented
-    void operator=(const Threshold&); // Operator '=' Not Implemented
+    ManualThreshold(const ManualThreshold&); // Copy Constructor Not Implemented
+    void operator=(const ManualThreshold&); // Operator '=' Not Implemented
 };
 
-#endif /* _Threshold_H_ */
+#endif /* _ManualThreshold_H_ */
