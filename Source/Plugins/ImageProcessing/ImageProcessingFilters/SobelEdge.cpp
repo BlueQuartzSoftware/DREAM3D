@@ -10,10 +10,8 @@
 #include "itkSobelEdgeDetectionImageFilter.h"
 #include "itkRescaleIntensityImageFilter.h"
 
-
 //// Setup some typedef 's for the ITKUtilities class to shorten up our code
 typedef ITKUtilities<ImageProcessing::DefaultPixelType>    ITKUtilitiesType;
-
 
 // -----------------------------------------------------------------------------
 //
@@ -24,8 +22,6 @@ SobelEdge::SobelEdge() :
   m_NewCellArrayName(""),
   m_SaveAsNewArray(true),
   m_Slice(false),
-  m_RawImageDataArrayName("RawImageData"),
-  m_ProcessedImageDataArrayName("ProcessedData"),
   m_SelectedCellArrayArrayName(""),
   m_SelectedCellArray(NULL),
   m_NewCellArray(NULL)

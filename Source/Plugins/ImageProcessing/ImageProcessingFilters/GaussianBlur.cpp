@@ -9,6 +9,9 @@
 #include "ITKUtilities.h"
 #include "itkGaussianBlurImageFunction.h"
 
+//// Setup some typedef 's for the ITKUtilities class to shorten up our code
+typedef ITKUtilities<ImageProcessing::DefaultPixelType>    ITKUtilitiesType;
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -118,7 +121,7 @@ void GaussianBlur::execute()
   QString attrMatName = getSelectedCellArrayPath().getAttributeMatrixName();
 
   //get filter to convert m_RawImageData to itk::image
-  ImageProcessing::ImportUInt8FilterType::Pointer importFilter=ITKUtilities::Dream3DtoITKImportFilter(m, attrMatName, m_SelectedCellArray);
+  ImageProcessing::ImportUInt8FilterType::Pointer importFilter=ITKUtilitiesType::Dream3DtoITKImportFilter(m, attrMatName, m_SelectedCellArray);
 
   //get image from filter
   const ImageProcessing::UInt8ImageType* inputImage = inputImage=importFilter->GetOutput();

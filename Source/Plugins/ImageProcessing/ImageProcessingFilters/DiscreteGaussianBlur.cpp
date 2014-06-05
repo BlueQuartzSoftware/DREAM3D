@@ -9,6 +9,9 @@
 #include "ITKUtilities.h"
 #include "itkDiscreteGaussianImageFilter.h"
 
+//// Setup some typedef 's for the ITKUtilities class to shorten up our code
+typedef ITKUtilities<ImageProcessing::DefaultPixelType>    ITKUtilitiesType;
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -123,7 +126,7 @@ void DiscreteGaussianBlur::execute()
   QString attrMatName = getSelectedCellArrayPath().getAttributeMatrixName();
 
   //wrap m_RawImageData as itk::image
-  ImageProcessing::DefaultImageType::Pointer inputImage=ITKUtilities::Dream3DtoITK(m, attrMatName, m_SelectedCellArray);
+  ImageProcessing::DefaultImageType::Pointer inputImage=ITKUtilitiesType::Dream3DtoITK(m, attrMatName, m_SelectedCellArray);
 
   //create guassian blur filter
   typedef itk::DiscreteGaussianImageFilter< ImageProcessing::DefaultImageType,  ImageProcessing::DefaultImageType > GaussianFilterType;
@@ -132,7 +135,7 @@ void DiscreteGaussianBlur::execute()
   gaussianFilter->SetVariance(m_Stdev*m_Stdev);
 
   //have filter write to dream3d array instead of creating its own buffer
-  ITKUtilities::SetITKOutput(gaussianFilter->GetOutput(), m_NewCellArray, m_NewCellArrayPtr.lock()->getNumberOfTuples());
+  ITKUtilitiesType::SetITKOutput(gaussianFilter->GetOutput(), m_NewCellArrayPtr.lock());
 
   //execute filter
   gaussianFilter->Update();

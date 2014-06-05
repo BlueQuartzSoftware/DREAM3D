@@ -6,14 +6,26 @@
 
 #include <QtCore/QString>
 
-#include "ImageProcessing/ImageProcessingConstants.h"
+#include "ITKUtilities.h"
+#include "itkHoughTransform2DCirclesImageFilter.h"
+
+//// Setup some typedef 's for the ITKUtilities class to shorten up our code
+typedef ITKUtilities<ImageProcessing::DefaultPixelType>    ITKUtilitiesType;
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 HoughCircles::HoughCircles() :
-  AbstractFilter()
-/* DO NOT FORGET TO INITIALIZE ALL YOUR DREAM3D Filter Parameters HERE */
+  AbstractFilter(),
+  m_SelectedCellArrayPath("", "", ""),
+  m_NewCellArrayName(""),
+  m_SaveAsNewArray(true),
+  m_MinRadius(0),
+  m_MaxRadius(0),
+  m_NumberCircles(0),
+  m_SelectedCellArrayArrayName(""),
+  m_SelectedCellArray(NULL),
+  m_NewCellArray(NULL)
 {
   setupFilterParameters();
 }
@@ -31,22 +43,17 @@ HoughCircles::~HoughCircles()
 void HoughCircles::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  /* There are several types of FilterParameter classes to choose from and several
-  * options for each class type. The programmer can put the entire invocation into
-  * a single line if they want. For example:
-  *
-  *   parameters.push_back(FilterParameter::New("Reference Direction", "ReferenceDir", FilterParameterWidgetType::FloatVec3Widget, getReferenceDir(), false));
-  * or the programmer can create a FilterParameter like usual C++ codes:
-  * {
-  *  FilterParameter::Pointer parameter = FilterParameter::New();
-  *  parameter->setHumanLabel("Eulers Array");
-  *  parameter->setPropertyName("CellEulerAnglesArrayName");
-  *  parameter->setWidgetType(FilterParameterWidgetType::SingleArraySelectionWidget);
-  *  parameter->setUnits("");
-  *  parameters.push_back(parameter);
-  * }
-  */
+  parameters.push_back(FilterParameter::New("Array to Process", "SelectedCellArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getSelectedCellArrayPath(), false, ""));
+  QStringList linkedProps;
+  linkedProps << "NewCellArrayName";
+  parameters.push_back(FilterParameter::NewConditional("Save As New Array", "SaveAsNewArray", FilterParameterWidgetType::LinkedBooleanWidget, getSaveAsNewArray(), false, linkedProps));
+
+  parameters.push_back(FilterParameter::New("Created Array Name", "NewCellArrayName", FilterParameterWidgetType::StringWidget, getNewCellArrayName(), false, ""));
+  parameters.push_back(FilterParameter::New("Minimum Radius", "MinRadius", FilterParameterWidgetType::DoubleWidget, getMinRadius(), false));
+  parameters.push_back(FilterParameter::New("Maximum Radius", "MaxRadius", FilterParameterWidgetType::DoubleWidget, getMinRadius(), false));
+  parameters.push_back(FilterParameter::New("Number of Circles", "NumberCircles", FilterParameterWidgetType::IntWidget, getNumberCircles(), false));
   setFilterParameters(parameters);
+
 }
 
 // -----------------------------------------------------------------------------
@@ -55,10 +62,12 @@ void HoughCircles::setupFilterParameters()
 void HoughCircles::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-  /*
-   Place code in here that will read the parameters from a file
-   setOutputFile( reader->readValue("OutputFile", getOutputFile() ) );
-   */
+  setSelectedCellArrayPath( reader->readDataArrayPath( "SelectedCellArrayPath", getSelectedCellArrayPath() ) );
+  setNewCellArrayName( reader->readString( "NewCellArrayName", getNewCellArrayName() ) );
+  setSaveAsNewArray( reader->readValue( "SaveAsNewArray", getSaveAsNewArray() ) );
+  setMinRadius( reader->readValue( "MinRadius", getMinRadius() ) );
+  setMaxRadius( reader->readValue( "MaxRadius", getMaxRadius() ) );
+  setNumberCircles( reader->readValue( "NumberCircles", getNumberCircles() ) );
   reader->closeFilterGroup();
 }
 
@@ -68,8 +77,12 @@ void HoughCircles::readFilterParameters(AbstractFilterParametersReader* reader, 
 int HoughCircles::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  /* Place code that will write the inputs values into a file. reference the AbstractFilterParametersWriter class for the proper API to use. */
-  /*  writer->writeValue("OutputFile", getOutputFile() ); */
+  writer->writeValue("SelectedCellArrayPath", getSelectedCellArrayPath() );
+  writer->writeValue("NewCellArrayName", getNewCellArrayName() );
+  writer->writeValue("SaveAsNewArray", getSaveAsNewArray() );
+  writer->writeValue("MinRadius", getMinRadius() );
+  writer->writeValue("MaxRadius", getMaxRadius() );
+  writer->writeValue("NumberCircles", getNumberCircles() );
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
@@ -80,40 +93,18 @@ int HoughCircles::writeFilterParameters(AbstractFilterParametersWriter* writer, 
 void HoughCircles::dataCheck()
 {
   setErrorCondition(0);
+  DataArrayPath tempPath;
 
-  /* Example code for preflighting looking for a valid string for the output file
-   * but not necessarily the fact that the file exists: Example code to make sure
-   * we have something in a string before proceeding.*/
-  /*
-  if (m_OutputFile.empty() == true)
-  {
-    QString ss = QObject::tr("Output file name was not set").arg(getHumanLabel());
-    setErrorCondition(-1);
-    notifyErrorMessage(getHumanLabel(), ss, -1);
-    return;
-  }
-  * We can also check for the availability of REQUIRED ARRAYS:
-  * QVector<size_t> dims(1, 1);
-  * // Assigns the shared_ptr<> to an instance variable that is a weak_ptr<>
-  * m_CellPhasesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getCellPhasesArrayPath(), dims);
-  *  // Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object
-  * if( NULL != m_CellPhasesPtr.lock().get() )
-  * {
-  *   // Now assign the raw pointer to data from the DataArray<T> object
-  *   m_CellPhases = m_CellPhasesPtr.lock()->getPointer(0);
-  * }
-  *
-  * We can also CREATE a new array to dump new data into
-  *   tempPath.update(m_CellEulerAnglesArrayPath.getDataContainerName(), m_CellEulerAnglesArrayPath.getAttributeMatrixName(), getCellIPFColorsArrayName() );
-  * // Assigns the shared_ptr<> to an instance variable that is a weak_ptr<>
-  * m_CellIPFColorsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<uint8_t>, AbstractFilter, uint8_t>(this, tempPath, 0, dims);
-  * // Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object
-  * if( NULL != m_CellIPFColorsPtr.lock().get() )
-  * {
-  * // Now assign the raw pointer to data from the DataArray<T> object
-  * m_CellIPFColors = m_CellIPFColorsPtr.lock()->getPointer(0);
-  * }
-  */
+  QVector<size_t> dims(1, 1);
+  m_SelectedCellArrayPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<ImageProcessing::DefaultPixelType>, AbstractFilter>(this, getSelectedCellArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if( NULL != m_SelectedCellArrayPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  { m_SelectedCellArray = m_SelectedCellArrayPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+
+  if(m_SaveAsNewArray == false) m_NewCellArrayName = "thisIsATempName";
+  tempPath.update(getSelectedCellArrayPath().getDataContainerName(), getSelectedCellArrayPath().getAttributeMatrixName(), getNewCellArrayName() );
+  m_NewCellArrayPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<ImageProcessing::DefaultPixelType>, AbstractFilter, ImageProcessing::DefaultPixelType>(this, tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if( NULL != m_NewCellArrayPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  { m_NewCellArray = m_NewCellArrayPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
 
 // -----------------------------------------------------------------------------
@@ -133,58 +124,115 @@ void HoughCircles::preflight()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString HoughCircles::getCompiledLibraryName()
-{
-  return ImageProcessing::ImageProcessingBaseName;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-const QString HoughCircles::getGroupName()
-{
-  return "ImageProcessing";
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-const QString HoughCircles::getHumanLabel()
-{
-  return "HoughCircles";
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-const QString HoughCircles::getSubGroupName()
-{
-  return "Misc";
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void HoughCircles::execute()
 {
   int err = 0;
-  // typically run your dataCheck function to make sure you can get that far and all your variables are initialized
   dataCheck();
-  // Check to make sure you made it through the data check. Errors would have been reported already so if something
-  // happens to fail in the dataCheck() then we simply return
   if(getErrorCondition() < 0) { return; }
-  setErrorCondition(0);
+
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getSelectedCellArrayPath().getDataContainerName());
+  QString attrMatName = getSelectedCellArrayPath().getAttributeMatrixName();
 
   /* Place all your code to execute your filter here. */
+  //get dimensions
+  size_t udims[3] = {0,0,0};
+  m->getDimensions(udims);
+#if (CMP_SIZEOF_SIZE_T == 4)
+  typedef int32_t DimType;
+#else
+  typedef int64_t DimType;
+#endif
+  DimType dims[3] = {
+    static_cast<DimType>(udims[0]),
+    static_cast<DimType>(udims[1]),
+    static_cast<DimType>(udims[2]),
+  };
 
-  /* If some error occurs this code snippet can report the error up the call chain*/
-  if (err < 0)
+  size_t totalPoints = m_SelectedCellArrayPtr.lock()->getNumberOfTuples();
+  for(int i=0; i<totalPoints; ++i)
   {
-    QString ss = QObject::tr("Some error message");
-    setErrorCondition(-99999999);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-    return;
+    m_NewCellArray[i]=m_SelectedCellArray[i];
   }
+
+  //wrap raw and processed image data as itk::images
+  ImageProcessing::DefaultImageType::Pointer inputImage=ITKUtilitiesType::Dream3DtoITK(m, attrMatName, m_SelectedCellArray);
+  ImageProcessing::DefaultImageType::Pointer outputImage=ITKUtilitiesType::Dream3DtoITK(m, attrMatName, m_NewCellArray);
+
+  ImageProcessing::DefaultSliceType::IndexType localIndex;
+  typedef itk::HoughTransform2DCirclesImageFilter<ImageProcessing::DefaultPixelType, ImageProcessing::FloatPixelType> HoughTransformFilterType;
+  HoughTransformFilterType::Pointer houghFilter = HoughTransformFilterType::New();
+  houghFilter->SetNumberOfCircles( m_NumberCircles );
+  houghFilter->SetMinimumRadius( m_MinRadius );
+  houghFilter->SetMaximumRadius( m_MaxRadius );
+  /*optional parameters, these are the default values
+  houghFilter->SetSweepAngle( 0 );
+  houghFilter->SetSigmaGradient( 1 );
+  houghFilter->SetVariance( 5 );
+  houghFilter->SetDiscRadiusRatio( 10 );
+  */
+
+  //loop over slices
+  for(int i=0; i<dims[2]; ++i)
+  {
+    //extract slice and transform
+    QString ss = QObject::tr("Hough Transforming Slice: %1").arg(i+1);
+    notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
+    ImageProcessing::DefaultSliceType::Pointer inputSlice = ITKUtilitiesType::ExtractSlice(inputImage, ImageProcessing::ZSlice, i);
+    houghFilter->SetInput( inputSlice );
+    houghFilter->Update();
+    ImageProcessing::FloatSliceType::Pointer localAccumulator = houghFilter->GetOutput();
+
+    //find circles
+    ss = QObject::tr("Finding Circles on Slice: %1").arg(i+1);
+    notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
+    HoughTransformFilterType::CirclesListType circles = houghFilter->GetCircles( m_NumberCircles );
+
+    //create blank slice of same dimensions
+    ImageProcessing::DefaultSliceType::Pointer outputSlice = ImageProcessing::DefaultSliceType::New();
+    ImageProcessing::DefaultSliceType::RegionType region;
+    region.SetSize(inputSlice->GetLargestPossibleRegion().GetSize());
+    region.SetIndex(inputSlice->GetLargestPossibleRegion().GetIndex());
+    outputSlice->SetRegions( region );
+    outputSlice->SetOrigin(inputSlice->GetOrigin());
+    outputSlice->SetSpacing(inputSlice->GetSpacing());
+    outputSlice->Allocate();
+    outputSlice->FillBuffer(0);
+
+    //loop over circles drawing on slice
+    HoughTransformFilterType::CirclesListType::const_iterator itCircles = circles.begin();
+    while( itCircles != circles.end() )
+    {
+      //std::cout << "Center: ";
+      //std::cout << (*itCircles)->GetObjectToParentTransform()->GetOffset() << std::endl;
+      //std::cout << "Radius: " << (*itCircles)->GetRadius()[0] << std::endl;
+
+      for(double angle = 0;angle <= 2*vnl_math::pi; angle += vnl_math::pi/60.0 )
+      {
+        localIndex[0] = (long int)((*itCircles)->GetObjectToParentTransform()->GetOffset()[0]
+        + (*itCircles)->GetRadius()[0]*vcl_cos(angle));
+        localIndex[1] = (long int)((*itCircles)->GetObjectToParentTransform()->GetOffset()[1]
+        + (*itCircles)->GetRadius()[0]*vcl_sin(angle));
+        ImageProcessing::DefaultSliceType::RegionType outputRegion = outputSlice->GetLargestPossibleRegion();
+        if( outputRegion.IsInside( localIndex ) )
+        {
+          outputSlice->SetPixel( localIndex, 255 );
+        }
+      }
+      itCircles++;
+    }
+
+    //copy slice into output
+    ITKUtilitiesType::SetSlice(outputImage, outputSlice, ImageProcessing::ZSlice, i);
+  }
+
+  //array name changing/cleanup
+  if(m_SaveAsNewArray == false)
+  {
+    AttributeMatrix::Pointer attrMat = m->getAttributeMatrix(m_SelectedCellArrayPath.getAttributeMatrixName());
+    attrMat->removeAttributeArray(m_SelectedCellArrayPath.getDataArrayName());
+    bool check = attrMat->renameAttributeArray(m_NewCellArrayName, m_SelectedCellArrayPath.getDataArrayName());
+  }
+
 
   /* Let the GUI know we are done with this filter */
   notifyStatusMessage(getHumanLabel(), "Complete");
@@ -195,25 +243,10 @@ void HoughCircles::execute()
 // -----------------------------------------------------------------------------
 AbstractFilter::Pointer HoughCircles::newFilterInstance(bool copyFilterParameters)
 {
-  /*
-  * write code to optionally copy the filter parameters from the current filter into the new instance
-  */
   HoughCircles::Pointer filter = HoughCircles::New();
   if(true == copyFilterParameters)
   {
-    /* If the filter uses all the standard Filter Parameter Widgets you can probabaly get
-     * away with using this method to copy the filter parameters from the current instance
-     * into the new instance
-     */
     copyFilterParameterInstanceVariables(filter.get());
-    /* If your filter is using a lot of custom FilterParameterWidgets @see ReadH5Ebsd then you
-     * may need to copy each filter parameter explicitly plus any other instance variables that
-     * are needed into the new instance. Here is some example code from ReadH5Ebsd
-     */
-    //    DREAM3D_COPY_INSTANCEVAR(OutputFile)
-    //    DREAM3D_COPY_INSTANCEVAR(ZStartIndex)
-    //    DREAM3D_COPY_INSTANCEVAR(ZEndIndex)
-    //    DREAM3D_COPY_INSTANCEVAR(ZResolution)
   }
   return filter;
 }

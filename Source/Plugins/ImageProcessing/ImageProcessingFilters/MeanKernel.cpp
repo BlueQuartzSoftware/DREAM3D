@@ -9,6 +9,9 @@
 #include "ITKUtilities.h"
 #include "itkMeanImageFilter.h"
 
+//// Setup some typedef 's for the ITKUtilities class to shorten up our code
+typedef ITKUtilities<ImageProcessing::DefaultPixelType>    ITKUtilitiesType;
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -128,7 +131,7 @@ void MeanKernel::execute()
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getSelectedCellArrayPath().getDataContainerName());
   QString attrMatName = getSelectedCellArrayPath().getAttributeMatrixName();
 
-  ImageProcessing::DefaultImageType::Pointer inputImage=ITKUtilities::Dream3DtoITK(m, attrMatName, m_SelectedCellArray);
+  ImageProcessing::DefaultImageType::Pointer inputImage=ITKUtilitiesType::Dream3DtoITK(m, attrMatName, m_SelectedCellArray);
 
   //create edge filter
   typedef itk::MeanImageFilter < ImageProcessing::DefaultImageType,  ImageProcessing::DefaultImageType > MeanFilterType;
@@ -143,7 +146,7 @@ void MeanKernel::execute()
   medianFilter->SetRadius(radius);
 
   //have filter write to dream3d array instead of creating its own buffer
-  ITKUtilities::SetITKOutput(medianFilter->GetOutput(), m_NewCellArray, m_NewCellArrayPtr.lock()->getNumberOfTuples());
+  ITKUtilitiesType::SetITKOutput(medianFilter->GetOutput(), m_NewCellArrayPtr.lock());
 
   //execute filter
   medianFilter->Update();

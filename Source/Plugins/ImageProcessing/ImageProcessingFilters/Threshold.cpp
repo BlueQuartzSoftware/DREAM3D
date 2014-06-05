@@ -6,14 +6,50 @@
 
 #include <QtCore/QString>
 
-#include "ImageProcessing/ImageProcessingConstants.h"
+#include "ITKUtilities.h"
+
+//histogram calculation
+#include "itkImageToHistogramFilter.h"
+
+//histogram based selectors
+#include "itkHistogramThresholdCalculator.h"
+#include "itkHuangThresholdCalculator.h"
+#include "itkIntermodesThresholdCalculator.h"
+#include "itkIsoDataThresholdCalculator.h"
+#include "itkKittlerIllingworthThresholdCalculator.h"
+#include "itkLiThresholdCalculator.h"
+#include "itkMaximumEntropyThresholdCalculator.h"
+#include "itkMomentsThresholdCalculator.h"
+#include "itkOtsuThresholdCalculator.h"
+#include "itkRenyiEntropyThresholdCalculator.h"
+#include "itkShanbhagThresholdCalculator.h"
+#include "itkTriangleThresholdCalculator.h"
+#include "itkYenThresholdCalculator.h"
+
+//robust automatic selection
+//#include "itkGradientMagnitudeImageFilter.h"
+//#include "itkRobustAutomaticThresholdCalculator.h"
+
+//thresholding filter
+#include "itkBinaryThresholdImageFilter.h"
+
+//// Setup some typedef 's for the ITKUtilities class to shorten up our code
+typedef ITKUtilities<ImageProcessing::DefaultPixelType>    ITKUtilitiesType;
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 Threshold::Threshold() :
-  AbstractFilter()
-/* DO NOT FORGET TO INITIALIZE ALL YOUR DREAM3D Filter Parameters HERE */
+  AbstractFilter(),
+  m_SelectedCellArrayPath("", "", ""),
+  m_NewCellArrayName(""),
+  m_SaveAsNewArray(true),
+  m_Slice(false),
+  m_Method(7),
+  m_ManualParameter(128),
+  m_SelectedCellArrayArrayName(""),
+  m_SelectedCellArray(NULL),
+  m_NewCellArray(NULL)
 {
   setupFilterParameters();
 }
@@ -31,21 +67,36 @@ Threshold::~Threshold()
 void Threshold::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  /* There are several types of FilterParameter classes to choose from and several
-  * options for each class type. The programmer can put the entire invocation into
-  * a single line if they want. For example:
-  *
-  *   parameters.push_back(FilterParameter::New("Reference Direction", "ReferenceDir", FilterParameterWidgetType::FloatVec3Widget, getReferenceDir(), false));
-  * or the programmer can create a FilterParameter like usual C++ codes:
-  * {
-  *  FilterParameter::Pointer parameter = FilterParameter::New();
-  *  parameter->setHumanLabel("Eulers Array");
-  *  parameter->setPropertyName("CellEulerAnglesArrayName");
-  *  parameter->setWidgetType(FilterParameterWidgetType::SingleArraySelectionWidget);
-  *  parameter->setUnits("");
-  *  parameters.push_back(parameter);
-  * }
-  */
+  parameters.push_back(FilterParameter::New("Array to Process", "SelectedCellArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getSelectedCellArrayPath(), false, ""));
+  QStringList linkedProps;
+  linkedProps << "NewCellArrayName";
+  parameters.push_back(FilterParameter::NewConditional("Save As New Array", "SaveAsNewArray", FilterParameterWidgetType::LinkedBooleanWidget, getSaveAsNewArray(), false, linkedProps));
+  parameters.push_back(FilterParameter::New("Created Array Name", "NewCellArrayName", FilterParameterWidgetType::StringWidget, getNewCellArrayName(), false, ""));
+  {
+    ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New();
+    parameter->setHumanLabel("Threshold Method");
+    parameter->setPropertyName("Method");
+    parameter->setWidgetType(FilterParameterWidgetType::ChoiceWidget);
+    QVector<QString> choices;
+    choices.push_back("Huang");
+    choices.push_back("Intermodes");
+    choices.push_back("IsoData");
+    choices.push_back("Kittler Illingworth");
+    choices.push_back("Li");
+    choices.push_back("Maximum Entropy");
+    choices.push_back("Moments");
+    choices.push_back("Otsu");
+    choices.push_back("Renyi Entropy");
+    choices.push_back("Shanbhag");
+    choices.push_back("Triangle");
+    choices.push_back("Yen");
+    choices.push_back("Manual Selection");
+    //choices.push_back("Robust Automatic");
+    parameter->setChoices(choices);
+    parameters.push_back(parameter);
+  }
+  parameters.push_back(FilterParameter::New("Manual Parameter", "ManualParameter", FilterParameterWidgetType::ChoiceWidget, getManualParameter(), false));
+  parameters.push_back(FilterParameter::New("Slice at a Time", "Slice", FilterParameterWidgetType::BooleanWidget, getSlice(), false));
   setFilterParameters(parameters);
 }
 
@@ -55,10 +106,12 @@ void Threshold::setupFilterParameters()
 void Threshold::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-  /*
-   Place code in here that will read the parameters from a file
-   setOutputFile( reader->readValue("OutputFile", getOutputFile() ) );
-   */
+  setSelectedCellArrayPath( reader->readDataArrayPath( "SelectedCellArrayPath", getSelectedCellArrayPath() ) );
+  setNewCellArrayName( reader->readString( "NewCellArrayName", getNewCellArrayName() ) );
+  setSaveAsNewArray( reader->readValue( "SaveAsNewArray", getSaveAsNewArray() ) );
+  setSlice( reader->readValue( "Slice", getSlice() ) );
+  setMethod( reader->readValue( "Method", getMethod() ) );
+  setManualParameter( reader->readValue( "ManualParameter", getManualParameter() ) );
   reader->closeFilterGroup();
 }
 
@@ -68,8 +121,12 @@ void Threshold::readFilterParameters(AbstractFilterParametersReader* reader, int
 int Threshold::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  /* Place code that will write the inputs values into a file. reference the AbstractFilterParametersWriter class for the proper API to use. */
-  /*  writer->writeValue("OutputFile", getOutputFile() ); */
+  writer->writeValue("SelectedCellArrayPath", getSelectedCellArrayPath() );
+  writer->writeValue("NewCellArrayName", getNewCellArrayName() );
+  writer->writeValue("SaveAsNewArray", getSaveAsNewArray() );
+  writer->writeValue("Slice", getSlice() );
+  writer->writeValue("Method", getMethod() );
+  writer->writeValue("ManualParameter", getManualParameter() );
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
@@ -80,40 +137,18 @@ int Threshold::writeFilterParameters(AbstractFilterParametersWriter* writer, int
 void Threshold::dataCheck()
 {
   setErrorCondition(0);
+  DataArrayPath tempPath;
 
-  /* Example code for preflighting looking for a valid string for the output file
-   * but not necessarily the fact that the file exists: Example code to make sure
-   * we have something in a string before proceeding.*/
-  /*
-  if (m_OutputFile.empty() == true)
-  {
-    QString ss = QObject::tr("Output file name was not set").arg(getHumanLabel());
-    setErrorCondition(-1);
-    notifyErrorMessage(getHumanLabel(), ss, -1);
-    return;
-  }
-  * We can also check for the availability of REQUIRED ARRAYS:
-  * QVector<size_t> dims(1, 1);
-  * // Assigns the shared_ptr<> to an instance variable that is a weak_ptr<>
-  * m_CellPhasesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getCellPhasesArrayPath(), dims);
-  *  // Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object
-  * if( NULL != m_CellPhasesPtr.lock().get() )
-  * {
-  *   // Now assign the raw pointer to data from the DataArray<T> object
-  *   m_CellPhases = m_CellPhasesPtr.lock()->getPointer(0);
-  * }
-  *
-  * We can also CREATE a new array to dump new data into
-  *   tempPath.update(m_CellEulerAnglesArrayPath.getDataContainerName(), m_CellEulerAnglesArrayPath.getAttributeMatrixName(), getCellIPFColorsArrayName() );
-  * // Assigns the shared_ptr<> to an instance variable that is a weak_ptr<>
-  * m_CellIPFColorsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<uint8_t>, AbstractFilter, uint8_t>(this, tempPath, 0, dims);
-  * // Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object
-  * if( NULL != m_CellIPFColorsPtr.lock().get() )
-  * {
-  * // Now assign the raw pointer to data from the DataArray<T> object
-  * m_CellIPFColors = m_CellIPFColorsPtr.lock()->getPointer(0);
-  * }
-  */
+  QVector<size_t> dims(1, 1);
+  m_SelectedCellArrayPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<ImageProcessing::DefaultPixelType>, AbstractFilter>(this, getSelectedCellArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if( NULL != m_SelectedCellArrayPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  { m_SelectedCellArray = m_SelectedCellArrayPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+
+  if(m_SaveAsNewArray == false) m_NewCellArrayName = "thisIsATempName";
+  tempPath.update(getSelectedCellArrayPath().getDataContainerName(), getSelectedCellArrayPath().getAttributeMatrixName(), getNewCellArrayName() );
+  m_NewCellArrayPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<ImageProcessing::DefaultPixelType>, AbstractFilter, ImageProcessing::DefaultPixelType>(this, tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if( NULL != m_NewCellArrayPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  { m_NewCellArray = m_NewCellArrayPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
 
 // -----------------------------------------------------------------------------
@@ -133,57 +168,313 @@ void Threshold::preflight()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString Threshold::getCompiledLibraryName()
-{
-  return ImageProcessing::ImageProcessingBaseName;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-const QString Threshold::getGroupName()
-{
-  return "ImageProcessing";
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-const QString Threshold::getHumanLabel()
-{
-  return "Threshold";
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-const QString Threshold::getSubGroupName()
-{
-  return "Misc";
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void Threshold::execute()
 {
   int err = 0;
-  // typically run your dataCheck function to make sure you can get that far and all your variables are initialized
   dataCheck();
-  // Check to make sure you made it through the data check. Errors would have been reported already so if something
-  // happens to fail in the dataCheck() then we simply return
   if(getErrorCondition() < 0) { return; }
-  setErrorCondition(0);
 
-  /* Place all your code to execute your filter here. */
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getSelectedCellArrayPath().getDataContainerName());
+  QString attrMatName = getSelectedCellArrayPath().getAttributeMatrixName();
 
-  /* If some error occurs this code snippet can report the error up the call chain*/
-  if (err < 0)
+  //get dims
+  size_t udims[3] = {0,0,0};
+  m->getDimensions(udims);
+#if (CMP_SIZEOF_SIZE_T == 4)
+  typedef int32_t DimType;
+#else
+  typedef int64_t DimType;
+#endif
+  DimType dims[3] = {
+    static_cast<DimType>(udims[0]),
+    static_cast<DimType>(udims[1]),
+    static_cast<DimType>(udims[2]),
+  };
+
+  //wrap input as itk image
+  ImageProcessing::DefaultImageType::Pointer inputImage=ITKUtilitiesType::Dream3DtoITK(m, attrMatName, m_SelectedCellArray);
+
+  //define threshold filters
+  typedef itk::BinaryThresholdImageFilter <ImageProcessing::DefaultImageType, ImageProcessing::DefaultImageType> BinaryThresholdImageFilterType;
+  typedef itk::BinaryThresholdImageFilter <ImageProcessing::DefaultSliceType, ImageProcessing::DefaultSliceType> BinaryThresholdImageFilterType2D;
+
+  if(m_Method>=0 && m_Method<=11)
   {
-    QString ss = QObject::tr("Some error message");
-    setErrorCondition(-99999999);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-    return;
+     //define hitogram generator (will make the same kind of histogram for 2 and 3d images
+    typedef itk::Statistics::ImageToHistogramFilter<ImageProcessing::DefaultImageType> HistogramGenerator;
+
+    //find threshold value w/ histogram
+    itk::HistogramThresholdCalculator< HistogramGenerator::HistogramType, uint8_t >::Pointer calculator;
+
+    typedef itk::HuangThresholdCalculator< HistogramGenerator::HistogramType, uint8_t > HuangCalculatorType;
+    typedef itk::IntermodesThresholdCalculator< HistogramGenerator::HistogramType, uint8_t > IntermodesCalculatorType;
+    typedef itk::IsoDataThresholdCalculator< HistogramGenerator::HistogramType, uint8_t > IsoDataCalculatorType;
+    typedef itk::KittlerIllingworthThresholdCalculator< HistogramGenerator::HistogramType, uint8_t > KittlerIllingowrthCalculatorType;
+    typedef itk::LiThresholdCalculator< HistogramGenerator::HistogramType, uint8_t > LiCalculatorType;
+    typedef itk::MaximumEntropyThresholdCalculator< HistogramGenerator::HistogramType, uint8_t > MaximumEntropyCalculatorType;
+    typedef itk::MomentsThresholdCalculator< HistogramGenerator::HistogramType, uint8_t > MomentsCalculatorType;
+    typedef itk::OtsuThresholdCalculator< HistogramGenerator::HistogramType, uint8_t > OtsuCalculatorType;
+    typedef itk::RenyiEntropyThresholdCalculator< HistogramGenerator::HistogramType, uint8_t > RenyiEntropyCalculatorType;
+    typedef itk::ShanbhagThresholdCalculator< HistogramGenerator::HistogramType, uint8_t > ShanbhagCalculatorType;
+    typedef itk::TriangleThresholdCalculator< HistogramGenerator::HistogramType, uint8_t > TriangleCalculatorType;
+    typedef itk::YenThresholdCalculator< HistogramGenerator::HistogramType, uint8_t > YenCalculatorType;
+
+    switch(m_Method)
+    {
+      case 0:
+        {
+          calculator = HuangCalculatorType::New();
+        }
+        break;
+
+      case 1:
+        {
+          calculator = IntermodesCalculatorType::New();
+        }
+        break;
+
+      case 2:
+        {
+          calculator = IsoDataCalculatorType::New();
+        }
+        break;
+
+      case 3:
+        {
+          calculator = KittlerIllingowrthCalculatorType::New();
+        }
+        break;
+
+      case 4:
+        {
+          calculator = LiCalculatorType::New();
+        }
+        break;
+
+      case 5:
+        {
+          calculator = MaximumEntropyCalculatorType::New();
+        }
+        break;
+
+      case 6:
+        {
+          calculator = MomentsCalculatorType::New();
+        }
+        break;
+
+      case 7:
+        {
+          calculator = OtsuCalculatorType::New();
+        }
+        break;
+
+      case 8:
+        {
+          calculator = RenyiEntropyCalculatorType::New();
+        }
+        break;
+
+      case 9:
+        {
+          calculator = ShanbhagCalculatorType::New();
+        }
+        break;
+
+      case 10:
+        {
+          calculator = TriangleCalculatorType::New();
+        }
+        break;
+
+      case 11:
+        {
+          calculator = YenCalculatorType::New();
+        }
+        break;
+    }
+
+    if(m_Slice)
+    {
+      //define 2d histogram generator
+      typedef itk::Statistics::ImageToHistogramFilter<ImageProcessing::DefaultSliceType> HistogramGenerator2D;
+      HistogramGenerator2D::Pointer histogramFilter2D = HistogramGenerator2D::New();
+
+      //specify number of bins / bounds
+      typedef HistogramGenerator2D::HistogramSizeType SizeType;
+      SizeType size( 1 );
+      size[0] = 255;
+      histogramFilter2D->SetHistogramSize( size );
+      histogramFilter2D->SetMarginalScale( 10.0 );
+      HistogramGenerator2D::HistogramMeasurementVectorType lowerBound( 1 );
+      HistogramGenerator2D::HistogramMeasurementVectorType upperBound( 1 );
+      lowerBound[0] = 0;
+      upperBound[0] = 256;
+      histogramFilter2D->SetHistogramBinMinimum( lowerBound );
+      histogramFilter2D->SetHistogramBinMaximum( upperBound );
+
+      //wrap output buffer as image
+      ImageProcessing::DefaultImageType::Pointer outputImage=ITKUtilitiesType::Dream3DtoITK(m, attrMatName, m_NewCellArray);
+
+      //loop over slices
+      for(int i=0; i<dims[2]; i++)
+      {
+        //get slice
+        ImageProcessing::DefaultSliceType::Pointer slice = ITKUtilitiesType::ExtractSlice(inputImage, ImageProcessing::ZSlice, i);
+
+        //find histogram
+        histogramFilter2D->SetInput( slice );
+        histogramFilter2D->Update();
+        const HistogramGenerator::HistogramType * histogram = histogramFilter2D->GetOutput();
+
+        //calculate threshold level
+        calculator->SetInput(histogram);
+        calculator->Update();
+        const uint8_t thresholdValue = calculator->GetThreshold();
+
+        //threshold
+        BinaryThresholdImageFilterType2D::Pointer thresholdFilter = BinaryThresholdImageFilterType2D::New();
+        thresholdFilter->SetInput(slice);
+        thresholdFilter->SetLowerThreshold(thresholdValue);
+        thresholdFilter->SetUpperThreshold(255);
+        thresholdFilter->SetInsideValue(255);
+        thresholdFilter->SetOutsideValue(0);
+        thresholdFilter->Update();
+
+        //copy back into volume
+        ITKUtilitiesType::SetSlice(outputImage, thresholdFilter->GetOutput(), ImageProcessing::ZSlice, i);
+      }
+    }
+    else
+    {
+      //specify number of bins / bounds
+      HistogramGenerator::Pointer histogramFilter = HistogramGenerator::New();
+      typedef HistogramGenerator::HistogramSizeType SizeType;
+      SizeType size( 1 );
+      size[0] = 255;
+      histogramFilter->SetHistogramSize( size );
+      histogramFilter->SetMarginalScale( 10.0 );
+      HistogramGenerator::HistogramMeasurementVectorType lowerBound( 1 );
+      HistogramGenerator::HistogramMeasurementVectorType upperBound( 1 );
+      lowerBound[0] = 0;
+      upperBound[0] = 256;
+      histogramFilter->SetHistogramBinMinimum( lowerBound );
+      histogramFilter->SetHistogramBinMaximum( upperBound );
+
+      //find histogram
+      histogramFilter->SetInput( inputImage );
+      histogramFilter->Update();
+      const HistogramGenerator::HistogramType * histogram = histogramFilter->GetOutput();
+
+      //calculate threshold level
+      calculator->SetInput(histogram);
+      calculator->Update();
+      const uint8_t thresholdValue = calculator->GetThreshold();
+
+      //threshold
+      BinaryThresholdImageFilterType::Pointer thresholdFilter = BinaryThresholdImageFilterType::New();
+      thresholdFilter->SetInput(inputImage);
+      thresholdFilter->SetLowerThreshold(thresholdValue);
+      thresholdFilter->SetUpperThreshold(255);
+      thresholdFilter->SetInsideValue(255);
+      thresholdFilter->SetOutsideValue(0);
+      thresholdFilter->GetOutput()->GetPixelContainer()->SetImportPointer(m_NewCellArray, m_NewCellArrayPtr.lock()->getNumberOfTuples(), false);
+      thresholdFilter->Update();
+    }
+  }
+  else if(m_Method==12)//manual
+  {
+    //threshold
+    BinaryThresholdImageFilterType::Pointer thresholdFilter = BinaryThresholdImageFilterType::New();
+    thresholdFilter->SetInput(inputImage);
+    thresholdFilter->SetLowerThreshold(m_ManualParameter);
+    thresholdFilter->SetUpperThreshold(255);
+    thresholdFilter->SetInsideValue(255);
+    thresholdFilter->SetOutsideValue(0);
+    thresholdFilter->GetOutput()->GetPixelContainer()->SetImportPointer(m_NewCellArray, m_NewCellArrayPtr.lock()->getNumberOfTuples(), false);
+    thresholdFilter->Update();
+  }
+  /*
+  else if(m_Method==13)//robust automatic
+  {
+    typedef itk::GradientMagnitudeImageFilter<ImageProcessing::DefaultImageType, ImageProcessing::DefaultImageType>  GradientMagnitudeType;
+    typedef itk::GradientMagnitudeImageFilter<ImageProcessing::DefaultSliceType, ImageProcessing::DefaultSliceType>  GradientMagnitudeType2D;
+
+    typedef itk::itkRobustAutomaticThresholdCalculator<ImageProcessing::DefaultImageType,ImageProcessing::DefaultImageType> SelectionType;
+    typedef itk::itkRobustAutomaticThresholdCalculator<ImageProcessing::DefaultSliceType,ImageProcessing::DefaultSliceType> SelectionType2D;
+
+    if(m_slice)
+    {
+      //wrap output buffer as image
+      ImageProcessing::DefaultImageType::Pointer outputImage=ITKUtilitiesType::Dream3DtoITK(m, attrMatName, m_NewCellArray);
+
+      //loop over slices
+      for(int i=0; i<dims[2]; i++)
+      {
+        //get slice
+        ImageProcessing::DefaultSliceType::Pointer slice = ITKUtilitiesType::ExtractSlice(inputImage, ImageProcessing::ZSlice, i);
+
+        //find gradient
+        GradientMagnitudeType2D::Pointer gradientFilter = GradientMagnitudeType2D::New();
+        gradientFilter->setInput(slice);
+        gradientFilter->Update();
+
+        //calculate thershold
+        SelectionType2D::Pointer calculatorFilter = SelectionType2D::New();
+        calculatorFilter->SetInput(slice);
+        calculatorFilter->SetGradientImage(gradientFilter->GetOutput());
+        calculatorFilter->SetPow(m_ManualParameter);
+        calculatorFilter->Update();
+        const uint8_t thresholdValue = calculatorFilter->GetOutput();
+
+        //threshold
+        BinaryThresholdImageFilterType::Pointer thresholdFilter = BinaryThresholdImageFilterType::New();
+        thresholdFilter->SetInput(inputImage);
+        thresholdFilter->SetLowerThreshold(thresholdValue);
+        thresholdFilter->SetUpperThreshold(255);
+        thresholdFilter->SetInsideValue(255);
+        thresholdFilter->SetOutsideValue(0);
+        thresholdFilter->Update();
+
+        //copy back into volume
+        ITKUtilitiesType::SetSlice(outputImage, thresholdFilter->GetOutput(), ImageProcessing::ZSlice, i);
+      }
+    }
+    else
+    {
+      //find gradient
+      GradientMagnitudeType::Pointer gradientFilter = GradientMagnitudeType::New();
+      gradientFilter->setInput(inputImage);
+      gradientFilter->Update();
+
+      //calculate threshold
+      SelectionType::Pointer calculatorFilter = SelectionType::New();
+      calculatorFilter->SetInput(inputImage);
+      calculatorFilter->SetGradientImage(gradientFilter->GetOutput());
+      calculatorFilter->SetPow(m_ManualParameter);
+      calculatorFilter->Update();
+      const uint8_t thresholdValue = calculatorFilter->GetOutput();
+
+      //threshold
+      BinaryThresholdImageFilterType::Pointer thresholdFilter = BinaryThresholdImageFilterType::New();
+      thresholdFilter->SetInput(inputImage);
+      thresholdFilter->SetLowerThreshold(thresholdValue);
+      thresholdFilter->SetUpperThreshold(255);
+      thresholdFilter->SetInsideValue(255);
+      thresholdFilter->SetOutsideValue(0);
+      thresholdFilter->GetOutput()->GetPixelContainer()->SetImportPointer(m_NewCellArray, m_NewCellArrayPtr.lock()->getNumberOfTuples(), false);
+      thresholdFilter->Update();
+    }
+  }
+  */
+
+
+  //array name changing/cleanup
+  if(m_SaveAsNewArray == false)
+  {
+    AttributeMatrix::Pointer attrMat = m->getAttributeMatrix(m_SelectedCellArrayPath.getAttributeMatrixName());
+    attrMat->removeAttributeArray(m_SelectedCellArrayPath.getDataArrayName());
+    bool check = attrMat->renameAttributeArray(m_NewCellArrayName, m_SelectedCellArrayPath.getDataArrayName());
   }
 
   /* Let the GUI know we are done with this filter */
@@ -195,25 +486,10 @@ void Threshold::execute()
 // -----------------------------------------------------------------------------
 AbstractFilter::Pointer Threshold::newFilterInstance(bool copyFilterParameters)
 {
-  /*
-  * write code to optionally copy the filter parameters from the current filter into the new instance
-  */
   Threshold::Pointer filter = Threshold::New();
   if(true == copyFilterParameters)
   {
-    /* If the filter uses all the standard Filter Parameter Widgets you can probabaly get
-     * away with using this method to copy the filter parameters from the current instance
-     * into the new instance
-     */
     copyFilterParameterInstanceVariables(filter.get());
-    /* If your filter is using a lot of custom FilterParameterWidgets @see ReadH5Ebsd then you
-     * may need to copy each filter parameter explicitly plus any other instance variables that
-     * are needed into the new instance. Here is some example code from ReadH5Ebsd
-     */
-    //    DREAM3D_COPY_INSTANCEVAR(OutputFile)
-    //    DREAM3D_COPY_INSTANCEVAR(ZStartIndex)
-    //    DREAM3D_COPY_INSTANCEVAR(ZEndIndex)
-    //    DREAM3D_COPY_INSTANCEVAR(ZResolution)
   }
   return filter;
 }

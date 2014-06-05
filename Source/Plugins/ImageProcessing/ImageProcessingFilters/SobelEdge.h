@@ -51,7 +51,7 @@ class SobelEdge : public AbstractFilter
     * @brief This returns a string that is displayed in the GUI. It should be readable
     * and understandable by humans.
     */
-    virtual const QString getHumanLabel() {return "SobelEdge";}
+    virtual const QString getHumanLabel() {return "Sobel Edge Detector";}
 
     /**
     * @brief This returns the group that the filter belonds to. You can select
@@ -138,9 +138,7 @@ class SobelEdge : public AbstractFilter
     void dataCheck();
 
   private:
-    //filter parameters
-    QString m_RawImageDataArrayName;
-    QString m_ProcessedImageDataArrayName;
+
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(ImageProcessing::DefaultPixelType, SelectedCellArray)
     DEFINE_CREATED_DATAARRAY_VARIABLE(ImageProcessing::DefaultPixelType, NewCellArray)
 

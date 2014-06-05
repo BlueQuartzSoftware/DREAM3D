@@ -32,7 +32,7 @@
  * @version 1.0
  */
 template<typename PixelType>
-class DREAM3DLib_EXPORT ITKUtilities
+class ITKUtilities
 {
   public:
     DREAM3D_SHARED_POINTERS(ITKUtilities<PixelType>)
