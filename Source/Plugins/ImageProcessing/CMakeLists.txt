@@ -24,6 +24,8 @@ find_package(ITK COMPONENTS
   #ITKIOImageBase
 
   #Group Filtering
+  ITKImageCompare
+  ITKImageIntensity
   #ITKDistanceMap
   #ITKThresholding
   #ITKImageGradient

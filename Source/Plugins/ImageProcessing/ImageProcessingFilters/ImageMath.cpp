@@ -4,16 +4,103 @@
 
 #include "ImageMath.h"
 
-#include <QtCore/QString>
+#include "ITKUtilities.h"
+#include "itkAddImageFilter.h"
+#include "itkSubtractImageFilter.h"
+#include "itkMultiplyImageFilter.h"
+#include "itkDivideImageFilter.h"
+#include "itkMinimumImageFilter.h"
+#include "itkMaximumImageFilter.h"
+#include "itkLogImageFilter.h"
+#include "itkExpImageFilter.h"
+#include "itkSquareImageFilter.h"
+#include "itkSqrtImageFilter.h"
+#include "itkInvertIntensityImageFilter.h"
+#include "itkUnaryFunctorImageFilter.h"
+#include "itkBinaryFunctorImageFilter.h"
 
-#include "ImageProcessing/ImageProcessingConstants.h"
+#include <limits>
+
+namespace Functor
+{
+  //gamma functor (doesn't seem to be implemented in itk)
+  template< class TPixel > class Gamma
+  {
+  public:
+    Gamma() {};
+    ~Gamma() {};
+    bool operator!=( const Gamma & ) const
+    {
+      return false;
+    }
+    bool operator==( const Gamma & other ) const
+    {
+      return !(*this != other);
+    }
+
+    inline TPixel operator()(const TPixel & A, const TPixel & B) const
+    {
+      const double dA = static_cast< double >( A )/std::numeric_limits<TPixel>::max();
+      return static_cast< TPixel >( double(pow(dA, double(B)))*std::numeric_limits<TPixel>::max() );
+    }
+  };
+
+  //custom functor to bring value within limits and round (without this functor itk add filter on an 8bit image 255+10->9)
+  template< class TInput, class TOutput> class LimitsRound
+  {
+  public:
+    LimitsRound() {};
+    ~LimitsRound() {};
+    bool operator!=( const LimitsRound & ) const
+    {
+      return false;
+    }
+    bool operator==( const LimitsRound & other ) const
+    {
+      return !(*this != other);
+    }
+
+    inline TOutput operator()(const TInput & A) const
+    {
+      const double dA = static_cast< double >( A );
+
+      if(dA>std::numeric_limits<TOutput>::max())
+      {
+        return std::numeric_limits<TOutput>::max();
+      }
+      else if(dA<std::numeric_limits<TOutput>::min())
+      {
+        return std::numeric_limits<TOutput>::min();
+      }
+
+      //round if needed
+      if(std::numeric_limits<TOutput>::is_integer && !std::numeric_limits<TInput>::is_integer)
+      {
+        if (dA >= floor(dA)+0.5) return static_cast< TOutput >(ceil(dA));
+        else return static_cast< TOutput >(floor(dA));
+      }
+
+      return static_cast< TOutput >( dA );
+    }
+  };
+}
+
+//// Setup some typedef 's for the ITKUtilities class to shorten up our code
+typedef ITKUtilities<ImageProcessing::DefaultPixelType>    ITKUtilitiesType;
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 ImageMath::ImageMath() :
-  AbstractFilter()
-/* DO NOT FORGET TO INITIALIZE ALL YOUR DREAM3D Filter Parameters HERE */
+  AbstractFilter(),
+  m_SelectedCellArrayPath("", "", ""),
+  m_NewCellArrayName(""),
+  m_SaveAsNewArray(true),
+  m_Operator(0),
+  m_Value(1),
+  m_SelectedCellArrayArrayName(""),
+  m_SelectedCellArray(NULL),
+  m_NewCellArray(NULL)
 {
   setupFilterParameters();
 }
@@ -31,21 +118,33 @@ ImageMath::~ImageMath()
 void ImageMath::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  /* There are several types of FilterParameter classes to choose from and several
-  * options for each class type. The programmer can put the entire invocation into
-  * a single line if they want. For example:
-  *
-  *   parameters.push_back(FilterParameter::New("Reference Direction", "ReferenceDir", FilterParameterWidgetType::FloatVec3Widget, getReferenceDir(), false));
-  * or the programmer can create a FilterParameter like usual C++ codes:
-  * {
-  *  FilterParameter::Pointer parameter = FilterParameter::New();
-  *  parameter->setHumanLabel("Eulers Array");
-  *  parameter->setPropertyName("CellEulerAnglesArrayName");
-  *  parameter->setWidgetType(FilterParameterWidgetType::SingleArraySelectionWidget);
-  *  parameter->setUnits("");
-  *  parameters.push_back(parameter);
-  * }
-  */
+  parameters.push_back(FilterParameter::New("Array to Operate On", "SelectedCellArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getSelectedCellArrayPath(), false, ""));
+  {
+    ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New();
+    parameter->setHumanLabel("Operator");
+    parameter->setPropertyName("Operator");
+    parameter->setWidgetType(FilterParameterWidgetType::ChoiceWidget);
+    QVector<QString> choices;
+    choices.push_back("Add");
+    choices.push_back("Subtract");
+    choices.push_back("Multiply");
+    choices.push_back("Divide");
+    choices.push_back("Min");
+    choices.push_back("Max");
+    choices.push_back("Gamma");
+    choices.push_back("Log");
+    choices.push_back("Exp");
+    choices.push_back("Square");
+    choices.push_back("Square Root");
+    choices.push_back("Invert");
+    parameter->setChoices(choices);
+    parameters.push_back(parameter);
+  }
+  parameters.push_back(FilterParameter::New("Value", "Value", FilterParameterWidgetType::DoubleWidget, getValue(), false, ""));
+  QStringList linkedProps;
+  linkedProps << "NewCellArrayName";
+  parameters.push_back(FilterParameter::NewConditional("Save As New Array", "SaveAsNewArray", FilterParameterWidgetType::LinkedBooleanWidget, getSaveAsNewArray(), false, linkedProps));
+  parameters.push_back(FilterParameter::New("Created Array Name", "NewCellArrayName", FilterParameterWidgetType::StringWidget, getNewCellArrayName(), false, ""));
   setFilterParameters(parameters);
 }
 
@@ -55,11 +154,13 @@ void ImageMath::setupFilterParameters()
 void ImageMath::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-  /*
-   Place code in here that will read the parameters from a file
-   setOutputFile( reader->readValue("OutputFile", getOutputFile() ) );
-   */
+  setSelectedCellArrayPath( reader->readDataArrayPath( "SelectedCellArrayPath", getSelectedCellArrayPath() ) );
+  setOperator( reader->readValue( "Operator", getOperator() ) );
+  setValue( reader->readValue( "Value", getValue() ) );
+  setSaveAsNewArray( reader->readValue( "SaveAsNewArray", getSaveAsNewArray() ) );
+  setNewCellArrayName( reader->readString( "NewCellArrayName", getNewCellArrayName() ) );
   reader->closeFilterGroup();
+
 }
 
 // -----------------------------------------------------------------------------
@@ -68,10 +169,13 @@ void ImageMath::readFilterParameters(AbstractFilterParametersReader* reader, int
 int ImageMath::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  /* Place code that will write the inputs values into a file. reference the AbstractFilterParametersWriter class for the proper API to use. */
-  /*  writer->writeValue("OutputFile", getOutputFile() ); */
+  writer->writeValue("SelectedCellArrayPath", getSelectedCellArrayPath() );
+  writer->writeValue("Operator", getOperator() );
+  writer->writeValue("Value", getValue() );
+  writer->writeValue("SaveAsNewArray", getSaveAsNewArray() );
+  writer->writeValue("NewCellArrayName", getNewCellArrayName() );
   writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
+  return ++index;
 }
 
 // -----------------------------------------------------------------------------
@@ -80,40 +184,18 @@ int ImageMath::writeFilterParameters(AbstractFilterParametersWriter* writer, int
 void ImageMath::dataCheck()
 {
   setErrorCondition(0);
+  DataArrayPath tempPath;
 
-  /* Example code for preflighting looking for a valid string for the output file
-   * but not necessarily the fact that the file exists: Example code to make sure
-   * we have something in a string before proceeding.*/
-  /*
-  if (m_OutputFile.empty() == true)
-  {
-    QString ss = QObject::tr("Output file name was not set").arg(getHumanLabel());
-    setErrorCondition(-1);
-    notifyErrorMessage(getHumanLabel(), ss, -1);
-    return;
-  }
-  * We can also check for the availability of REQUIRED ARRAYS:
-  * QVector<size_t> dims(1, 1);
-  * // Assigns the shared_ptr<> to an instance variable that is a weak_ptr<>
-  * m_CellPhasesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getCellPhasesArrayPath(), dims);
-  *  // Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object
-  * if( NULL != m_CellPhasesPtr.lock().get() )
-  * {
-  *   // Now assign the raw pointer to data from the DataArray<T> object
-  *   m_CellPhases = m_CellPhasesPtr.lock()->getPointer(0);
-  * }
-  *
-  * We can also CREATE a new array to dump new data into
-  *   tempPath.update(m_CellEulerAnglesArrayPath.getDataContainerName(), m_CellEulerAnglesArrayPath.getAttributeMatrixName(), getCellIPFColorsArrayName() );
-  * // Assigns the shared_ptr<> to an instance variable that is a weak_ptr<>
-  * m_CellIPFColorsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<uint8_t>, AbstractFilter, uint8_t>(this, tempPath, 0, dims);
-  * // Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object
-  * if( NULL != m_CellIPFColorsPtr.lock().get() )
-  * {
-  * // Now assign the raw pointer to data from the DataArray<T> object
-  * m_CellIPFColors = m_CellIPFColorsPtr.lock()->getPointer(0);
-  * }
-  */
+  QVector<size_t> dims(1, 1);
+  m_SelectedCellArrayPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<ImageProcessing::DefaultPixelType>, AbstractFilter>(this, getSelectedCellArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if( NULL != m_SelectedCellArrayPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  { m_SelectedCellArray = m_SelectedCellArrayPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+
+  if(m_SaveAsNewArray == false) m_NewCellArrayName = "thisIsATempName";
+  tempPath.update(getSelectedCellArrayPath().getDataContainerName(), getSelectedCellArrayPath().getAttributeMatrixName(), getNewCellArrayName() );
+  m_NewCellArrayPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<ImageProcessing::DefaultPixelType>, AbstractFilter, ImageProcessing::DefaultPixelType>(this, tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if( NULL != m_NewCellArrayPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  { m_NewCellArray = m_NewCellArrayPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
 
 // -----------------------------------------------------------------------------
@@ -133,57 +215,172 @@ void ImageMath::preflight()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ImageMath::getCompiledLibraryName()
-{
-  return ImageProcessing::ImageProcessingBaseName;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-const QString ImageMath::getGroupName()
-{
-  return "ImageProcessing";
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-const QString ImageMath::getHumanLabel()
-{
-  return "ImageMath";
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-const QString ImageMath::getSubGroupName()
-{
-  return "Misc";
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void ImageMath::execute()
 {
   int err = 0;
-  // typically run your dataCheck function to make sure you can get that far and all your variables are initialized
   dataCheck();
-  // Check to make sure you made it through the data check. Errors would have been reported already so if something
-  // happens to fail in the dataCheck() then we simply return
   if(getErrorCondition() < 0) { return; }
-  setErrorCondition(0);
 
-  /* Place all your code to execute your filter here. */
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getSelectedCellArrayPath().getDataContainerName());
+  QString attrMatName = getSelectedCellArrayPath().getAttributeMatrixName();
 
-  /* If some error occurs this code snippet can report the error up the call chain*/
-  if (err < 0)
+  //wrap m_RawImageData as itk::image
+  ImageProcessing::DefaultImageType::Pointer inputImage=ITKUtilitiesType::Dream3DtoITK(m, attrMatName, m_SelectedCellArray);
+
+  //define filter types
+  typedef itk::AddImageFilter<ImageProcessing::DefaultImageType, ImageProcessing::FloatImageType, ImageProcessing::FloatImageType> AddType;
+  typedef itk::SubtractImageFilter<ImageProcessing::DefaultImageType, ImageProcessing::FloatImageType, ImageProcessing::FloatImageType> SubtractType;
+  typedef itk::MultiplyImageFilter<ImageProcessing::DefaultImageType, ImageProcessing::FloatImageType, ImageProcessing::FloatImageType> MultiplyType;
+  typedef itk::DivideImageFilter<ImageProcessing::DefaultImageType, ImageProcessing::FloatImageType, ImageProcessing::FloatImageType> DivideType;
+  typedef itk::MinimumImageFilter<ImageProcessing::DefaultImageType, ImageProcessing::FloatImageType, ImageProcessing::FloatImageType> MinType;
+  typedef itk::MaximumImageFilter<ImageProcessing::DefaultImageType, ImageProcessing::FloatImageType, ImageProcessing::FloatImageType> MaxType;
+  typedef itk::BinaryFunctorImageFilter< ImageProcessing::DefaultImageType, ImageProcessing::FloatImageType, ImageProcessing::FloatImageType, Functor::Gamma<ImageProcessing::FloatPixelType> > GammaType;
+  typedef itk::LogImageFilter<ImageProcessing::DefaultImageType, ImageProcessing::FloatImageType> LogType;
+  typedef itk::ExpImageFilter<ImageProcessing::DefaultImageType, ImageProcessing::FloatImageType> ExpType;
+  typedef itk::SquareImageFilter<ImageProcessing::DefaultImageType, ImageProcessing::FloatImageType> SquareType;
+  typedef itk::SqrtImageFilter<ImageProcessing::DefaultImageType, ImageProcessing::FloatImageType> SqrtType;
+  typedef itk::InvertIntensityImageFilter<ImageProcessing::DefaultImageType, ImageProcessing::DefaultImageType> InvertType;
+
+  //set up filter to cap image range + round
+  typedef itk::UnaryFunctorImageFilter< ImageProcessing::FloatImageType, ImageProcessing::DefaultImageType, Functor::LimitsRound<ImageProcessing::FloatPixelType, ImageProcessing::DefaultPixelType> > LimitsRoundType;
+  LimitsRoundType::Pointer limitsRound = LimitsRoundType::New();
+
+  //apply selected operation
+  switch(m_Operator)
   {
-    QString ss = QObject::tr("Some error message");
-    setErrorCondition(-99999999);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-    return;
+    case 0://add
+      {
+        AddType::Pointer add = AddType::New();
+        add->SetInput1(inputImage);
+        add->SetConstant2(m_Value);
+        limitsRound->SetInput(add->GetOutput());
+        ITKUtilitiesType::SetITKOutput(limitsRound->GetOutput(), m_NewCellArrayPtr.lock());
+        limitsRound->Update();
+      }
+      break;
+
+    case 1://subtract
+      {
+        SubtractType::Pointer subtract = SubtractType::New();
+        subtract->SetInput1(inputImage);
+        subtract->SetConstant2(m_Value);
+        limitsRound->SetInput(subtract->GetOutput());
+        ITKUtilitiesType::SetITKOutput(limitsRound->GetOutput(), m_NewCellArrayPtr.lock());
+        limitsRound->Update();
+      }
+      break;
+
+    case 2://multiply
+      {
+        MultiplyType::Pointer multiply = MultiplyType::New();
+        multiply->SetInput1(inputImage);
+        multiply->SetConstant2(m_Value);
+        limitsRound->SetInput(multiply->GetOutput());
+        ITKUtilitiesType::SetITKOutput(limitsRound->GetOutput(), m_NewCellArrayPtr.lock());
+        limitsRound->Update();
+      }
+      break;
+
+    case 3://divide
+      {
+        DivideType::Pointer divide = DivideType::New();
+        divide->SetInput1(inputImage);
+        divide->SetConstant2(m_Value);
+        limitsRound->SetInput(divide->GetOutput());
+        ITKUtilitiesType::SetITKOutput(limitsRound->GetOutput(), m_NewCellArrayPtr.lock());
+        limitsRound->Update();
+      }
+      break;
+
+    case 4://min
+      {
+        MinType::Pointer minimum = MinType::New();
+        minimum->SetInput1(inputImage);
+        minimum->SetConstant2(m_Value);
+        limitsRound->SetInput(minimum->GetOutput());
+        ITKUtilitiesType::SetITKOutput(limitsRound->GetOutput(), m_NewCellArrayPtr.lock());
+        limitsRound->Update();
+      }
+      break;
+
+    case 5://max
+      {
+        MaxType::Pointer maximum = MaxType::New();
+        maximum->SetInput1(inputImage);
+        maximum->SetConstant2(m_Value);
+        limitsRound->SetInput(maximum->GetOutput());
+        ITKUtilitiesType::SetITKOutput(limitsRound->GetOutput(), m_NewCellArrayPtr.lock());
+        limitsRound->Update();
+      }
+      break;
+
+    case 6://gamma
+      {
+        GammaType::Pointer gamma = GammaType::New();
+        gamma->SetInput1(inputImage);
+        gamma->SetConstant2(m_Value);
+        limitsRound->SetInput(gamma->GetOutput());
+        ITKUtilitiesType::SetITKOutput(limitsRound->GetOutput(), m_NewCellArrayPtr.lock());
+        limitsRound->Update();
+      }
+      break;
+
+    case 7://log
+      {
+        LogType::Pointer logfilter = LogType::New();
+        logfilter->SetInput(inputImage);
+        limitsRound->SetInput(logfilter->GetOutput());
+        ITKUtilitiesType::SetITKOutput(limitsRound->GetOutput(), m_NewCellArrayPtr.lock());
+        limitsRound->Update();
+      }
+      break;
+
+    case 8://exp
+      {
+        ExpType::Pointer expfilter = ExpType::New();
+        expfilter->SetInput(inputImage);
+        limitsRound->SetInput(expfilter->GetOutput());
+        ITKUtilitiesType::SetITKOutput(limitsRound->GetOutput(), m_NewCellArrayPtr.lock());
+        limitsRound->Update();
+      }
+      break;
+
+    case 9://square
+      {
+        SquareType::Pointer square = SquareType::New();
+        square->SetInput(inputImage);
+        limitsRound->SetInput(square->GetOutput());
+        ITKUtilitiesType::SetITKOutput(limitsRound->GetOutput(), m_NewCellArrayPtr.lock());
+        limitsRound->Update();
+      }
+      break;
+
+    case 10://squareroot
+      {
+        SqrtType::Pointer sqrtfilter = SqrtType::New();
+        sqrtfilter->SetInput(inputImage);
+        limitsRound->SetInput(sqrtfilter->GetOutput());
+        ITKUtilitiesType::SetITKOutput(limitsRound->GetOutput(), m_NewCellArrayPtr.lock());
+        limitsRound->Update();
+      }
+      break;
+
+    case 11://invert
+      {
+        InvertType::Pointer invert = InvertType::New();
+        invert->SetInput(inputImage);
+        ITKUtilitiesType::SetITKOutput(invert->GetOutput(), m_NewCellArrayPtr.lock());
+        invert->Update();
+      }
+      break;
+  }
+
+  //array name changing/cleanup
+  if(m_SaveAsNewArray == false)
+  {
+    AttributeMatrix::Pointer attrMat = m->getAttributeMatrix(m_SelectedCellArrayPath.getAttributeMatrixName());
+    attrMat->removeAttributeArray(m_SelectedCellArrayPath.getDataArrayName());
+    bool check = attrMat->renameAttributeArray(m_NewCellArrayName, m_SelectedCellArrayPath.getDataArrayName());
   }
 
   /* Let the GUI know we are done with this filter */
@@ -195,25 +392,10 @@ void ImageMath::execute()
 // -----------------------------------------------------------------------------
 AbstractFilter::Pointer ImageMath::newFilterInstance(bool copyFilterParameters)
 {
-  /*
-  * write code to optionally copy the filter parameters from the current filter into the new instance
-  */
   ImageMath::Pointer filter = ImageMath::New();
   if(true == copyFilterParameters)
   {
-    /* If the filter uses all the standard Filter Parameter Widgets you can probabaly get
-     * away with using this method to copy the filter parameters from the current instance
-     * into the new instance
-     */
     copyFilterParameterInstanceVariables(filter.get());
-    /* If your filter is using a lot of custom FilterParameterWidgets @see ReadH5Ebsd then you
-     * may need to copy each filter parameter explicitly plus any other instance variables that
-     * are needed into the new instance. Here is some example code from ReadH5Ebsd
-     */
-    //    DREAM3D_COPY_INSTANCEVAR(OutputFile)
-    //    DREAM3D_COPY_INSTANCEVAR(ZStartIndex)
-    //    DREAM3D_COPY_INSTANCEVAR(ZEndIndex)
-    //    DREAM3D_COPY_INSTANCEVAR(ZResolution)
   }
   return filter;
 }

@@ -10,7 +10,6 @@
 // ITK Includes first
 #include "itkExtractImageFilter.h"
 
-
 // DREAM3D Includes next
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
@@ -20,9 +19,6 @@
 
 // Our Plugin Includes next
 #include "ImageProcessing/ImageProcessingConstants.h"
-
-
-
 
 /*
  * @class ITKUtilities ITKUtilities.h DREAM3DLib/Plugins/ImageProcessing/ImageProcessingFilters/ITKUtilities.h

@@ -53,7 +53,6 @@ void HoughCircles::setupFilterParameters()
   parameters.push_back(FilterParameter::New("Maximum Radius", "MaxRadius", FilterParameterWidgetType::DoubleWidget, getMinRadius(), false));
   parameters.push_back(FilterParameter::New("Number of Circles", "NumberCircles", FilterParameterWidgetType::IntWidget, getNumberCircles(), false));
   setFilterParameters(parameters);
-
 }
 
 // -----------------------------------------------------------------------------

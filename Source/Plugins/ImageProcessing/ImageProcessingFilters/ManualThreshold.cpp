@@ -48,7 +48,7 @@ void ManualThreshold::setupFilterParameters()
   linkedProps << "NewCellArrayName";
   parameters.push_back(FilterParameter::NewConditional("Save As New Array", "SaveAsNewArray", FilterParameterWidgetType::LinkedBooleanWidget, getSaveAsNewArray(), false, linkedProps));
   parameters.push_back(FilterParameter::New("Created Array Name", "NewCellArrayName", FilterParameterWidgetType::StringWidget, getNewCellArrayName(), false, ""));
-  parameters.push_back(FilterParameter::New("Manual Parameter", "ManualParameter", FilterParameterWidgetType::IntWidget, getManualParameter(), false, ""));
+  parameters.push_back(FilterParameter::New("Threshold Value", "ManualParameter", FilterParameterWidgetType::IntWidget, getManualParameter(), false, ""));
   setFilterParameters(parameters);
 }
 
