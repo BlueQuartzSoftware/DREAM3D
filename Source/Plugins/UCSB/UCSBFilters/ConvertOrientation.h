@@ -31,6 +31,12 @@ class DREAM3DLib_EXPORT ConvertOrientation : public AbstractFilter
     DREAM3D_INSTANCE_PROPERTY(unsigned int, NewType)
     DREAM3D_INSTANCE_PROPERTY(bool, FieldArray)
 
+    DREAM3D_INSTANCE_STRING_PROPERTY(EulerAnglesArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(QuatsArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(RodriguesVectorsArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(AxisAnglesArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(AvgQuatsArrayName)
+
     virtual const std::string getGroupName() { return "UCSB"; }
     virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::MiscFilters; }
     virtual const std::string getHumanLabel() { return "Convert Orientation"; }
@@ -60,6 +66,11 @@ class DREAM3DLib_EXPORT ConvertOrientation : public AbstractFilter
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
   private:
+    float* m_EulerAngles;
+    float* m_Quats;
+    float* m_RodriguesVectors;
+    float* m_AxisAngles;
+    float* m_AvgQuats;
 
     ConvertOrientation(const ConvertOrientation&); // Copy Constructor Not Implemented
     void operator=(const ConvertOrientation&); // Operator '=' Not Implemented
