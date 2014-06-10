@@ -48,7 +48,7 @@
 
 #include "Sampling/SamplingConstants.h"
 /**
- * @class ChangeResolution ChangeResolution.h DREAM3DLib/SyntheticBuilderFilters/ChangeResolution.h
+ * @class ChangeResolution ChangeResolution.h DREAM3DLib/SamplingFilters/ChangeResolution.h
  * @brief
  * @author
  * @date Nov 19, 2011
