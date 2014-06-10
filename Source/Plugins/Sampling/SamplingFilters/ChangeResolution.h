@@ -51,7 +51,7 @@
  * @class ChangeResolution ChangeResolution.h DREAM3DLib/SamplingFilters/ChangeResolution.h
  * @brief
  * @author
- * @date Nov 19, 2011
+ * @date Jun 10, 2014
  * @version 1.0
  */
 class ChangeResolution : public AbstractFilter
