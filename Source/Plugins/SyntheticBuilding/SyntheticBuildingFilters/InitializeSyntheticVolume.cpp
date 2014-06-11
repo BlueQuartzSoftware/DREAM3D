@@ -165,6 +165,14 @@ void InitializeSyntheticVolume::dataCheck()
   AttributeMatrix::Pointer cellAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::Cell);
   if(getErrorCondition() < 0) { return; }
 
+  QVector<size_t> compDims(1, 1); // This states that we are looking for an array with a single component
+  UInt32ArrayType::Pointer phaseType = getDataContainerArray()->getPrereqArrayFromPath<UInt32ArrayType, AbstractFilter>(NULL, getInputPhaseTypesArrayPath(), compDims);
+  if(getErrorCondition() < 0) { return; }
+
+  QVector<size_t> statsDims(1, 1);
+  StatsDataArray::Pointer statsPtr = getDataContainerArray()->getPrereqArrayFromPath<StatsDataArray, AbstractFilter>(this, getInputStatsArrayPath(), statsDims);
+  if(getErrorCondition() < 0) { return; }
+
   m_EstimatedPrimaryFeatures = estimateNumFeatures(m_Dimensions, m_Resolution);
 }
 
@@ -227,13 +235,20 @@ int InitializeSyntheticVolume::estimateNumFeatures(IntVec3_t dims, FloatVec3_t r
   if(phaseType.get() == NULL)
   {
     QString ss = QObject::tr("PhaseTypes Array Not Found when estimating the number of grains");
-    notifyErrorMessage(getHumanLabel(), ss, -80000);
+    setErrorCondition(-80000);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return 0;
+  }
+  if( !phaseType->isAllocated())
+  {
+    QString ss = QObject::tr("PhaseTypes Array Internal Array has not been allocated. The estimation of the number of features can not proceed.");
+    setErrorCondition(-80002);
+    notifyWarningMessage(getHumanLabel(), ss, getErrorCondition());
+    return -1;
   }
 
   QVector<size_t> statsDims(1, 1);
   StatsDataArray::Pointer statsPtr = dca->getPrereqArrayFromPath<StatsDataArray, AbstractFilter>(this, getInputStatsArrayPath(), statsDims);
-  //  m_StatsDataArray = StatsDataArray::SafeObjectDownCast<IDataArray*, StatsDataArray*>(m->getAttributeMatrix(getCellEnsembleAttributeMatrixName())->getAttributeArray(DREAM3D::EnsembleData::Statistics).get());
   if(statsPtr.get() == NULL)
   {
     QString ss = QObject::tr("Stats Array Not Found when estimating the number of grains");
@@ -249,6 +264,7 @@ int InitializeSyntheticVolume::estimateNumFeatures(IntVec3_t dims, FloatVec3_t r
   double totalprimaryfractions = 0.0;
   //StatsData::Pointer statsData = StatsData::NullPointer();
   // find which phases are primary phases
+
   for (size_t i = 1; i < phaseType->getNumberOfTuples(); ++i)
   {
     if(phaseType->getValue(i) == DREAM3D::PhaseType::PrimaryPhase)
@@ -259,6 +275,7 @@ int InitializeSyntheticVolume::estimateNumFeatures(IntVec3_t dims, FloatVec3_t r
       totalprimaryfractions = totalprimaryfractions + pp->getPhaseFraction();
     }
   }
+
   // scale the primary phase fractions to total to 1
   for (size_t i = 0; i < primaryphasefractions.size(); i++)
   {
@@ -266,8 +283,8 @@ int InitializeSyntheticVolume::estimateNumFeatures(IntVec3_t dims, FloatVec3_t r
   }
 
   DREAM3D_RANDOMNG_NEW()
-  // generate the Features
-  int gid = 1;
+      // generate the Features
+      int gid = 1;
 
   float currentvol = 0.0;
   float vol;

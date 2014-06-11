@@ -143,7 +143,7 @@ void DataContainerReader::dataCheck()
 // -----------------------------------------------------------------------------
 void DataContainerReader::preflight()
 {
-  setInPreflight(true);
+  setInPreflight(false);
   //DataContainerArrayProxy currentProxy = m_DataContainerArrayProxy;
   // Get the current structure of the file. We want ALL of the structure. so set it into a Proxy
   DataContainerArrayProxy proxy = readDataContainerArrayStructure();
