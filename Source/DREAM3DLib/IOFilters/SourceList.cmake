@@ -43,6 +43,7 @@ set(_PublicFilters
   SurfaceMeshToNonconformalVtk
   SurfaceMeshToStl
   SurfaceMeshToVtk
+  V4DataContainerReader
   VASPReader
   VisualizeGBCDGMT
   VisualizeGBCDPoleFigure
