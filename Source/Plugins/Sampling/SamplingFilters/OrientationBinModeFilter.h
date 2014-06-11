@@ -1,6 +1,7 @@
 /* ============================================================================
- * Copyright (c) 2011 Michael A. Jackson (BlueQuartz Software)
- * Copyright (c) 2011 Dr. Michael A. Groeber (US Air Force Research Laboratories)
+ * Copyright (c) 2014 Michael A. Jackson (BlueQuartz Software)
+ * Copyright (c) 2014 Dr. Michael A. Groeber (US Air Force Research Laboratories)
+ * Copyright (c) 2014 Dr. Joseph C. Tucker (UES, Inc.)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -13,10 +14,10 @@
  * list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
  *
- * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
- * BlueQuartz Software nor the names of its contributors may be used to endorse
- * or promote products derived from this software without specific prior written
- * permission.
+ * Neither the name of Joseph C. Tucker, Michael A. Groeber, Michael A. Jackson,
+ * UES, Inc., the US Air Force, BlueQuartz Software nor the names of its contributors
+ * may be used to endorse or promote products derived from this software without
+ * specific prior written permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -30,12 +31,12 @@
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  *  This code was written under United States Air Force Contract number
- *                           FA8650-07-D-5800
+ *                   FA8650-07-D-5800 and FA8650-10-D-5226
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _CHANGERESOLUTION_H_
-#define _CHANGERESOLUTION_H_
+#ifndef _ORIENTATIONBINMODEFILTER_H_
+#define _ORIENTATIONBINMODEFILTER_H_
 
 #include <QtCore/QString>
 
@@ -48,21 +49,21 @@
 
 #include "Sampling/SamplingConstants.h"
 /**
- * @class ChangeResolution ChangeResolution.h DREAM3DLib/SamplingFilters/ChangeResolution.h
+ * @class OrientationBinModeFilter OrientationBinModeFilter.h DREAM3DLib/SamplingFilters/OrientationBinModeFilter.h
  * @brief
  * @author
  * @date Jun 10, 2014
  * @version 1.0
  */
-class ChangeResolution : public AbstractFilter
+class OrientationBinModeFilter : public AbstractFilter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
-    DREAM3D_SHARED_POINTERS(ChangeResolution)
-    DREAM3D_STATIC_NEW_MACRO(ChangeResolution)
-    DREAM3D_TYPE_MACRO_SUPER(ChangeResolution, AbstractFilter)
+    DREAM3D_SHARED_POINTERS(OrientationBinModeFilter)
+    DREAM3D_STATIC_NEW_MACRO(OrientationBinModeFilter)
+    DREAM3D_TYPE_MACRO_SUPER(OrientationBinModeFilter, AbstractFilter)
 
-    virtual ~ChangeResolution();
+    virtual ~OrientationBinModeFilter();
     DREAM3D_FILTER_PARAMETER(QString, NewDataContainerName)
     Q_PROPERTY(QString NewDataContainerName READ getNewDataContainerName WRITE setNewDataContainerName)
     DREAM3D_FILTER_PARAMETER(DataArrayPath, CellAttributeMatrixPath)
@@ -112,7 +113,7 @@ class ChangeResolution : public AbstractFilter
     void preflightExecuted();
 
   protected:
-    ChangeResolution();
+    OrientationBinModeFilter();
 
 
   private:
@@ -121,11 +122,11 @@ class ChangeResolution : public AbstractFilter
     void dataCheck();
     void updateCellInstancePointers();
 
-    ChangeResolution(const ChangeResolution&); // Copy Constructor Not Implemented
-    void operator=(const ChangeResolution&); // Operator '=' Not Implemented
+    OrientationBinModeFilter(const OrientationBinModeFilter&); // Copy Constructor Not Implemented
+    void operator=(const OrientationBinModeFilter&); // Operator '=' Not Implemented
 };
 
-#endif /* CHANGERESOLUTION_H_ */
+#endif /* ORIENTATIONBINMODEFILTER_H_ */
 
 
 

@@ -132,40 +132,40 @@ if [ ! -e "$SDK_SOURCE/CMP" ];
 fi
 
 
-#https://www.threadingbuildingblocks.org/sites/default/files/software_releases/mac/tbb42_20140122oss_osx_0.tgz
+#https://www.threadingbuildingblocks.org/sites/default/files/software_releases/mac/tbb42_20140601oss_osx_0.tgz
 # First check to see if we have already downloaded the archive file
 cd $SDK_INSTALL
-if [ ! -e "$SDK_INSTALL/tbb42_20140122oss_osx_0.tgz" ];
+if [ ! -e "$SDK_INSTALL/tbb42_20140601oss_osx_0.tgz" ];
 then
 echo "-------------------------------------------"
-echo " Downloading TBB Version 20140122 "
+echo " Downloading TBB Version tbb42_20140601 "
 echo "-------------------------------------------"
-$DOWNLOAD_PROG  "https://www.threadingbuildingblocks.org/sites/default/files/software_releases/mac/tbb42_20140122oss_osx_0.tgz" -o tbb42_20140122oss_osx_0.tgz
+$DOWNLOAD_PROG  "https://www.threadingbuildingblocks.org/sites/default/files/software_releases/mac/tbb42_20140601oss_osx.tgz" -o tbb42_20140601oss_osx.tgz
 fi
 
 # Next decompress the archive
-if [ ! -e "$SDK_INSTALL/tbb42_20140122oss" ];
+if [ ! -e "$SDK_INSTALL/tbb42_20140601oss" ];
 then
-  tar -xvzf tbb42_20140122oss_osx_0.tgz
+  tar -xvzf tbb42_20140601oss_osx.tgz
 fi
 
 # If we are on OS X we need to update the "install_name" of each of the TBB libraries so CMake can properly include them into the app bundle.
 if [[ "$HOST_SYSTEM" = "Darwin" ]];
   then
-  tbbInstallDir="$SDK_INSTALL/tbb42_20140122oss"
+  tbbInstallDir="$SDK_INSTALL/tbb42_20140601oss"
   cd "$tbbInstallDir/lib"
   tbbLibs="libtbb.dylib libtbbmalloc.dylib libtbb_debug.dylib libtbbmalloc_debug.dylib libtbb_preview_debug.dylib libtbb_preview.dylib"
   for l in $tbbLibs;
   do
-    echo "Updating install_name for $l"
+    echo "Updating install_name for $tbbInstallDir/lib/$l"
     install_name_tool -id $tbbInstallDir/lib/$l $l
   done
 
 fi
 
+exit;
 
-
-echo "set(TBB_INSTALL_DIR  "\${DREAM3D_SDK_ROOT}/tbb42_20140122oss" CACHE PATH \"\")" >>  "$SDK_INSTALL/DREAM3D_SDK.cmake"
+echo "set(TBB_INSTALL_DIR  "\${DREAM3D_SDK_ROOT}/tbb42_20140601oss" CACHE PATH \"\")" >>  "$SDK_INSTALL/DREAM3D_SDK.cmake"
 echo "set(DREAM3D_USE_MULTITHREADED_ALGOS ON CACHE BOOL \"\")"  >>  "$SDK_INSTALL/DREAM3D_SDK.cmake"
 echo "set(TBB_ARCH_TYPE \"intel64\" CACHE STRING \"\")"  >>  "$SDK_INSTALL/DREAM3D_SDK.cmake"
 

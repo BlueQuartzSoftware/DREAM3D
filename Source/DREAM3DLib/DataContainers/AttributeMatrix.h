@@ -271,7 +271,7 @@ class DREAM3DLib_EXPORT AttributeMatrix : public Observable
         {
           QString ss = QObject::tr("Filter '%1' requires array with name '%2' to have Number of Tuples = %3. The currently available array "
                                    " has %4").arg(filter->getHumanLabel()).arg(arrayName).arg((getNumTuples())).arg(attributeArray->getNumberOfTuples());
-          filter->setErrorCondition(-501);
+          filter->setErrorCondition(-502);
           filter->notifyErrorMessage(filter->getHumanLabel(), ss, filter->getErrorCondition());
         }
         return false;
@@ -283,7 +283,7 @@ class DREAM3DLib_EXPORT AttributeMatrix : public Observable
         {
           QString ss = QObject::tr("Filter '%1' requires an array where the number of components is %2 but the currently available array"
                                    " that was supplied has %3.").arg(filter->getHumanLabel()).arg(numComp).arg(attributeArray->getNumberOfComponents());
-          filter->setErrorCondition(-502);
+          filter->setErrorCondition(-503);
           filter->notifyErrorMessage(filter->getHumanLabel(), ss, filter->getErrorCondition());
         }
         return false;
@@ -298,7 +298,7 @@ class DREAM3DLib_EXPORT AttributeMatrix : public Observable
                      .arg(arrayName).arg(dat->getTypeAsString()).arg(getNameOfClass()).arg(arrayName).arg(getNameOfClass()).arg(attributeArray->getTypeAsString());
         if (NULL != filter)
         {
-          filter->setErrorCondition(-502);
+          filter->setErrorCondition(-504);
           filter->notifyErrorMessage(filter->getHumanLabel(), ss, filter->getErrorCondition());
         }
         return false;

@@ -12,7 +12,7 @@
 #  QWT_LIBRARY_RELEASE - Release Version of qwt library
 
 
-set(QWT_CMAKE_DEBUG 0)
+set(QWT_CMAKE_DEBUG 1)
 if(QWT_CMAKE_DEBUG)
     MESSAGE (STATUS "Finding Qwt library and headers..." )
 endif()
@@ -28,10 +28,12 @@ SET(QWT_INCLUDE_SEARCH_DIRS
   ${QWT_INSTALL}/include/qwt5
   ${QWT_INSTALL}/include
   /usr/include/qwt5
+  ${QWT_INSTALL}/lib/qwt.framework/Headers
 )
 
 set(QWT_LIB_SEARCH_DIRS
   ${QWT_INSTALL}/lib
+  ${QWT_INSTALL}/lib/qwt.framework/
   )
 
 set(QWT_BIN_SEARCH_DIRS
@@ -56,13 +58,13 @@ FIND_LIBRARY(QWT_LIBRARY_DEBUG
   NAMES ${QWT_SEARCH_DEBUG_NAMES}
   PATHS ${QWT_LIB_SEARCH_DIRS}
   NO_DEFAULT_PATH
-  )
+)
   
 FIND_LIBRARY(QWT_LIBRARY_RELEASE 
   NAMES ${QWT_SEARCH_RELEASE_NAMES}
   PATHS ${QWT_LIB_SEARCH_DIRS} 
   NO_DEFAULT_PATH
-  )
+)
 
 if( QWT_CMAKE_DEBUG )
 message(STATUS "QWT_INCLUDE_SEARCH_DIRS: ${QWT_INCLUDE_SEARCH_DIRS}")
