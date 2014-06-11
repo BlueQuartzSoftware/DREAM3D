@@ -186,6 +186,9 @@ void ChangeResolution::preflight()
   int m_XP = int(sizex / m_Resolution.x);
   int m_YP = int(sizey / m_Resolution.y);
   int m_ZP = int(sizez / m_Resolution.z);
+  if(m_XP == 0) m_XP = 1;
+  if(m_YP == 0) m_YP = 1;
+  if(m_ZP == 0) m_ZP = 1;
 
   m->setDimensions(m_XP, m_YP, m_ZP);
   m->setResolution(m_Resolution.x, m_Resolution.y, m_Resolution.z);
@@ -239,6 +242,9 @@ void ChangeResolution::execute()
   int m_XP = int(sizex / m_Resolution.x);
   int m_YP = int(sizey / m_Resolution.y);
   int m_ZP = int(sizez / m_Resolution.z);
+  if(m_XP == 0) m_XP = 1;
+  if(m_YP == 0) m_YP = 1;
+  if(m_ZP == 0) m_ZP = 1;
   int64_t totalPoints = m_XP * m_YP * m_ZP;
 
   float x, y, z;
