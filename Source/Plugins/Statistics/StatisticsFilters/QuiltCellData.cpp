@@ -188,7 +188,14 @@ void QuiltCellData::dataCheck()
   VolumeDataContainer* m2 = getDataContainerArray()->createNonPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getOutputDataContainerName());
   if(getErrorCondition() < 0) { return; }
 
-  m2->setDimensions(int(dcDims[0] / m_QuiltStep.x), int(dcDims[1] / m_QuiltStep.y), int(dcDims[2] / m_QuiltStep.z));
+  int newDimX = int(dcDims[0] / m_QuiltStep.x);
+  int newDimY = int(dcDims[1] / m_QuiltStep.y);
+  int newDimZ = int(dcDims[2] / m_QuiltStep.z);
+  if(dcDims[0] == 1) newDimX = 1;
+  if(dcDims[1] == 1) newDimY = 1;
+  if(dcDims[2] == 1) newDimZ = 1;
+
+  m2->setDimensions(newDimX, newDimY, newDimZ);
   m2->setResolution(res);
   m2->setOrigin(0.0f, 0.0f, 0.0f);
 
@@ -275,12 +282,12 @@ void QuiltCellData::execute()
   if(getErrorCondition() < 0) { return; }
 
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(m_SelectedCellArrayPath.getDataContainerName());
+  VolumeDataContainer* m2 = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getOutputDataContainerName());
 
   size_t dcDims[3];
   m->getDimensions(dcDims[0], dcDims[1], dcDims[2]);
-  int newXP = int(dcDims[0] / m_QuiltStep.x);
-  int newYP = int(dcDims[1] / m_QuiltStep.y);
-  int newZP = int(dcDims[2] / m_QuiltStep.z);
+  size_t dc2Dims[3];
+  m2->getDimensions(dc2Dims[0], dc2Dims[1], dc2Dims[2]);
 
   IDataArray::Pointer inputData = m->getAttributeMatrix(m_SelectedCellArrayPath.getAttributeMatrixName())->getAttributeArray(m_SelectedCellArrayPath.getDataArrayName());
   if (NULL == inputData.get())
@@ -295,13 +302,13 @@ void QuiltCellData::execute()
 
   int zStride, yStride;
   int xc, yc, zc;
-  for(int k = 0; k < newZP; k++)
+  for(int k = 0; k < dc2Dims[2]; k++)
   {
-    zStride = (k * newXP * newYP);
-    for(int j = 0; j < newYP; j++)
+    zStride = (k * dc2Dims[0] * dc2Dims[1]);
+    for(int j = 0; j < dc2Dims[1]; j++)
     {
-      yStride = (j * newXP);
-      for(int i = 0; i < newXP; i++)
+      yStride = (j * dc2Dims[0]);
+      for(int i = 0; i < dc2Dims[0]; i++)
       {
         xc = i * m_QuiltStep.x + m_QuiltStep.x / 2;
         yc = j * m_QuiltStep.y + m_QuiltStep.y / 2;
