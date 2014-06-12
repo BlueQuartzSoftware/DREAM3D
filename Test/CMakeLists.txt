@@ -186,6 +186,12 @@ set(PREBUILT_PIPELINE_NAMES
   "Reconstruction/(15) 12 Percent Full Reconstruction"
   "Reconstruction/(16) MicroTextureReconstruction"
   "Reconstruction/(17) Small IN100 Full Reconstruction"
+  "Statistics/(01) SmallIN100 Morphological Statistics.txt"
+  "Statistics/(02) SmallIN100 Export Statistics.txt"
+  "Statistics/(03) SmallIN100 Transfer Field Data.txt"
+  "Statistics/(04) SmallIN100 Field Threshold.txt"
+  "Statistics/(05) SmallIN100 Crystallographic Statistics.txt"
+  "Statistics/(06) 12 Percent Tension Crystallographic Statistics.txt"
 )
 
 configure_file(${DREAM3DTest_SOURCE_DIR}/PipelineRunnerTest.cpp.in
