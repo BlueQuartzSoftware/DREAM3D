@@ -11,6 +11,8 @@
 
 project(DREAM3DTest)
 
+include_directories(${DREAM3DTest_SOURCE_DIR})
+
 # --------------------------------------------------------------------------
 macro(ConvertPathToHeaderCompatible INPUT)
     if(WIN32)
@@ -159,5 +161,44 @@ add_test(BigHDF5DatasetTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/BigHDF5DatasetTest
 
 endif()
 
+#----------------------------------------------------------------------------
+# Here we are trying to get something together that will run all the PrebuiltPipelines
+# pipelines as a sanity check
+# Reconstruction Pipelines First
+set(PREBUILT_PIPELINES_DIR "PrebuiltPipelines/Workshop")
+set(DREAM3D_PIPELINE_LIST_FILE ${DREAM3DTest_BINARY_DIR}/TestPipelineList.txt)
+
+set(PREBUILT_PIPELINE_NAMES
+  "Reconstruction/(01) SmallIN100 Import"
+  "Reconstruction/(02) SmallIN100 Initial Visualization"
+  "Reconstruction/(03) SmallIN100 Threshold"
+  "Reconstruction/(04) SmallIN100 Alignment"
+  "Reconstruction/(05) SmallIN100 Alignment 2"
+  "Reconstruction/(06) SmallIN100 CleanUp"
+  "Reconstruction/(07) SmallIN100 Segmentation"
+  "Reconstruction/(08) SmallIN100 Merge Twins"
+  "Reconstruction/(09) SmallIN100 Minimum Size"
+  "Reconstruction/(10) SmallIN100 Minimum Neighbors"
+  "Reconstruction/(11) SmallIN100 Fill Bad Data"
+  "Reconstruction/(12) SmallIN100 Close Bad Data"
+  "Reconstruction/(13) Image Initial Visualization"
+  "Reconstruction/(14) Image Segmentation"
+  "Reconstruction/(15) 12 Percent Full Reconstruction"
+  "Reconstruction/(16) MicroTextureReconstruction"
+  "Reconstruction/(17) Small IN100 Full Reconstruction"
+)
+
+configure_file(${DREAM3DTest_SOURCE_DIR}/PipelineRunnerTest.cpp.in
+                  ${DREAM3DTest_BINARY_DIR}/PipelineRunnerTest.cpp)
+
+add_executable(PipelineRunnerTest ${DREAM3DTest_BINARY_DIR}/PipelineRunnerTest.cpp)
+target_link_libraries(PipelineRunnerTest ${QT_QTCORE_LIBRARY} EbsdLib DREAM3DLib)
+
+FILE(WRITE ${DREAM3D_PIPELINE_LIST_FILE} )
+
+foreach(f ${PREBUILT_PIPELINE_NAMES} )
+  set(DREAM3D_PIPELINE_FILE "${DREAM3D_SUPPORT_DIR}/${PREBUILT_PIPELINES_DIR}/${f}.txt")
+  FILE(APPEND ${DREAM3D_PIPELINE_LIST_FILE} "${DREAM3D_PIPELINE_FILE}\n")  
+endforeach()
 
 
