@@ -225,12 +225,12 @@ int main (int argc, char  *argv[])
     try {
       QFileInfo fi(pipelineFile);
       
-      DREAM3D::unittest::CurrentMethod = fi.fileName();
+      DREAM3D::unittest::CurrentMethod = fi.fileName().toStdString();
       DREAM3D::unittest::numTests++;
 
       ExecutePipeline(pipelineFile);
       
-      TestPassed(fi.fileName());
+      TestPassed(fi.fileName().toStdString());
       DREAM3D::unittest::CurrentMethod = "";
     } 
     catch (TestException& e)
