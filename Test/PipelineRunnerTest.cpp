@@ -38,6 +38,12 @@
 #include <stdlib.h>
 #include <assert.h>
 
+#ifdef _MSC_VER
+ #include <direct.h>
+#else
+ #include <unistd.h>
+#endif
+
 // C++ Includes
 #include <iostream>
 
@@ -73,21 +79,9 @@
 
 #include "UnitTestSupport.hpp"
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-QString getDream3dDataDir()
-{
-  return QString("@DREAM3D_DATA_DIR@");
-}
+#include "PipelineRunnerTest.h"
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-QString getPipelineListFile()
-{
-  return QString("@DREAM3D_PIPELINE_LIST_FILE@");
-}
+
 
 // -----------------------------------------------------------------------------
 //
@@ -191,7 +185,12 @@ int main (int argc, char  *argv[])
 
   // We need to change our working directory into the "DREAM3D_Data" directory because all the pipelines use relative paths
   QDir dataDir = QDir(getDream3dDataDir());
+#ifdef _MSC_VER
+  _chdir(dataDir.absolutePath().toLatin1().constData());
+#else
   chdir(dataDir.absolutePath().toLatin1().constData());
+#endif
+
 
   // Register all the filters including trying to load those from Plugins
   FilterManager::Pointer fm = FilterManager::Instance();
@@ -217,22 +216,22 @@ int main (int argc, char  *argv[])
   QStringList list = contents.split(QRegExp("\\n"));
   QStringListIterator sourceLines(list);
 
-  // Iterate over all the entries in the file and process each pipeline. Note that the order of the 
+  // Iterate over all the entries in the file and process each pipeline. Note that the order of the
   // pipelines will probably matter
   while (sourceLines.hasNext())
   {
     QString pipelineFile = sourceLines.next();
     try {
       QFileInfo fi(pipelineFile);
-      
+
       DREAM3D::unittest::CurrentMethod = fi.fileName().toStdString();
       DREAM3D::unittest::numTests++;
 
       ExecutePipeline(pipelineFile);
-      
+
       TestPassed(fi.fileName().toStdString());
       DREAM3D::unittest::CurrentMethod = "";
-    } 
+    }
     catch (TestException& e)
     {
       TestFailed(DREAM3D::unittest::CurrentMethod);
