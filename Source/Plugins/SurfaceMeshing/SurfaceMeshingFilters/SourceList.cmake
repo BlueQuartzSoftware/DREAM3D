@@ -15,6 +15,7 @@ set(_PublicFilters
   GenerateSurfaceMeshConnectivity
   GenerateFaceIPFColoring
   GenerateFaceMisorientationColoring
+  GenerateFaceSchuhMisorientationColoring
   LaplacianSmoothing
   M3CSliceBySlice
   MovingFiniteElementSmoothing
