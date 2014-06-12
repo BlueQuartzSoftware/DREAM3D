@@ -38,6 +38,12 @@
 #include <stdlib.h>
 #include <assert.h>
 
+#ifdef _MSC_VER
+ #include <direct.h>
+#else
+ #include <unistd.h>
+#endif
+
 // C++ Includes
 #include <iostream>
 
@@ -191,7 +197,12 @@ int main (int argc, char  *argv[])
 
   // We need to change our working directory into the "DREAM3D_Data" directory because all the pipelines use relative paths
   QDir dataDir = QDir(getDream3dDataDir());
-  chdir(dataDir.absolutePath().toLatin1().constData());
+#ifdef _MSC_VER
+  _chdir(dataDir.absolutePath().toLatin1().constData());
+#else
+  chdir_(dataDir.absolutePath().toLatin1().constData());
+#endif
+
 
   // Register all the filters including trying to load those from Plugins
   FilterManager::Pointer fm = FilterManager::Instance();
