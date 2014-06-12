@@ -32,6 +32,7 @@ set(_PublicFilters
   FindSurfaceMeshNodeType
   UnifyTriangleWinding
   ConvertOrientation
+  FindKernelAvgMisorientationsIgnoreGrains
 )
 
 
