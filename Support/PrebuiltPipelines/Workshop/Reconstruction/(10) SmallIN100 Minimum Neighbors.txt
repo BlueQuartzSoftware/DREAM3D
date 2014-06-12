@@ -1,5 +1,5 @@
 [PipelineBuilder]
-Name=Name=(10) SmallIN100 Minimum Neighbors
+Name=(10) SmallIN100 Minimum Neighbors
 Number_Filters=4
 Version=5.0.6650
 
