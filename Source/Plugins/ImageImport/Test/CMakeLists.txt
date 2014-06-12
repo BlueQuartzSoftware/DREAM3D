@@ -35,23 +35,31 @@ endmacro()
 #----------------------------------------------------------------------------
 # Here we are trying to get something together that will run all the PrebuiltPipelines
 # pipelines as a sanity check
-# Reconstruction Pipelines First
 set(PREBUILT_PIPELINES_DIR "PrebuiltPipelines/Workshop")
 set(TEST_PIPELINE_LIST_FILE ${ImageImportTest_BINARY_DIR}/PipelineRunnerTest.txt)
 set(TEST_DATA_DIR ${DREAM3D_DATA_DIR})
-
+# List your pipelines here
 set(PREBUILT_PIPELINE_NAMES
-  "Reconstruction/(01) SmallIN100 Import"
+
 )
 
-configure_file(${DREAM3DTest_SOURCE_DIR}/PipelineRunnerTest.h.in
+# Configure a header file that is used by the cpp file to figure out where the generated pipeline list file
+# is at and where any data files are located
+configure_file(${DREAM3DProj_SOURCE_DIR}/Test/PipelineRunnerTest.h.in
                ${ImageImportTest_BINARY_DIR}/PipelineRunnerTest.h)
+# Set up a list of the sources
+set(ImageImportTestPipelineRunnerTest_SRCS
+  ${DREAM3DProj_SOURCE_DIR}/Test/PipelineRunnerTest.cpp 
+  ${ImageImportTest_BINARY_DIR}/PipelineRunnerTest.h
+)
 
-add_executable(ImageImportTestPipelineRunnerTest ${DREAM3DTest_SOURCE_DIR}/PipelineRunnerTest.cpp ${ImageImportTest_BINARY_DIR}/PipelineRunnerTest.h)
+# Create an executable
+add_executable(ImageImportTestPipelineRunnerTest ${ImageImportTestPipelineRunnerTest_SRCS})
 target_link_libraries(ImageImportTestPipelineRunnerTest ${QT_QTCORE_LIBRARY} EbsdLib DREAM3DLib)
+set_target_properties(ImageImportTestPipelineRunnerTest PROPERTIES FOLDER ImageImport)
 
+# Write out the Pipeline List file
 FILE(WRITE ${TEST_PIPELINE_LIST_FILE} )
-
 foreach(f ${PREBUILT_PIPELINE_NAMES} )
   set(DREAM3D_PIPELINE_FILE "${DREAM3D_SUPPORT_DIR}/${PREBUILT_PIPELINES_DIR}/${f}.txt")
   FILE(APPEND ${TEST_PIPELINE_LIST_FILE} "${DREAM3D_PIPELINE_FILE}\n")

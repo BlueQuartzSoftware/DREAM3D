@@ -14,7 +14,12 @@ endif()
 
 project(DREAM3DProj)
 cmake_minimum_required(VERSION 2.8.9)
-#cmake_policy(VERSION 2.8.12.1)
+cmake_policy(VERSION 2.8.12.1)
+# CMake 3.0 introduces VERSION variables for each Project. We do our own version numbering so we need to have
+# cmake ignore that policy
+cmake_policy(SET CMP0048 OLD)
+# CMake 3.0 introduces some OS X RPath policies
+cmake_policy(SET CMP0042 OLD)
 
 include(CMakeParseArguments)
 
