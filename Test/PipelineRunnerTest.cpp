@@ -81,7 +81,7 @@
 
 #include "PipelineRunnerTest.h"
 
- 
+
 
 // -----------------------------------------------------------------------------
 //
@@ -188,7 +188,7 @@ int main (int argc, char  *argv[])
 #ifdef _MSC_VER
   _chdir(dataDir.absolutePath().toLatin1().constData());
 #else
-  chdir_(dataDir.absolutePath().toLatin1().constData());
+  chdir(dataDir.absolutePath().toLatin1().constData());
 #endif
 
 
