@@ -221,6 +221,7 @@ int main (int argc, char  *argv[])
   while (sourceLines.hasNext())
   {
     QString pipelineFile = sourceLines.next();
+    if(pipelineFile.isEmpty()) { continue; }
     try {
       QFileInfo fi(pipelineFile);
 

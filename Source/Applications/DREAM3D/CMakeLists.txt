@@ -180,7 +180,7 @@ install(DIRECTORY ${DREAM3D_SUPPORT_DIR}/PrebuiltPipelines
 #-------------------------------------------------------------------------------
 # Copy the Data Folder to the build directory
 add_custom_target(DataFolderCopy ALL
-            COMMAND ${CMAKE_COMMAND} -E copy_directory ${DREAM3D_SUPPORT_DIR}/Data/
+            COMMAND ${CMAKE_COMMAND} -E copy_directory ${DREAM3D_DATA_DIR}/Data/
             ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/Data/
             COMMENT "Copying Data Folder into Binary Directory")
 set_target_properties(DataFolderCopy PROPERTIES FOLDER ZZ_COPY_FILES)

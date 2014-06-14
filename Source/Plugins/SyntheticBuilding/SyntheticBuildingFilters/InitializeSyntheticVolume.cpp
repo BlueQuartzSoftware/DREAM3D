@@ -102,7 +102,7 @@ void InitializeSyntheticVolume::setupFilterParameters()
   parameters.push_back(FilterParameter::New("Dimensions", "Dimensions", FilterParameterWidgetType::IntVec3Widget, getDimensions(), false, "Voxels"));
   parameters.push_back(FilterParameter::New("Resolution", "Resolution", FilterParameterWidgetType::FloatVec3Widget, getResolution(), false, "Microns"));
   parameters.push_back(FilterParameter::New("Origin", "Origin", FilterParameterWidgetType::FloatVec3Widget, getOrigin(), false, "Microns"));
-  parameters.push_back(FilterParameter::New("Estimated Primary Features", "EstimatedPrimaryFeatures", FilterParameterWidgetType::PreflightUpdatedValueWidget, getEstimatedPrimaryFeatures(), false, ""));
+//  parameters.push_back(FilterParameter::New("Estimated Primary Features", "EstimatedPrimaryFeatures", FilterParameterWidgetType::PreflightUpdatedValueWidget, getEstimatedPrimaryFeatures(), false, ""));
   parameters.back()->setReadOnly(true);
   setFilterParameters(parameters);
 }
@@ -173,7 +173,7 @@ void InitializeSyntheticVolume::dataCheck()
   StatsDataArray::Pointer statsPtr = getDataContainerArray()->getPrereqArrayFromPath<StatsDataArray, AbstractFilter>(this, getInputStatsArrayPath(), statsDims);
   if(getErrorCondition() < 0) { return; }
 
-  m_EstimatedPrimaryFeatures = estimateNumFeatures(m_Dimensions, m_Resolution);
+  // m_EstimatedPrimaryFeatures = estimateNumFeatures(m_Dimensions, m_Resolution);
 }
 
 // -----------------------------------------------------------------------------
@@ -242,7 +242,7 @@ int InitializeSyntheticVolume::estimateNumFeatures(IntVec3_t dims, FloatVec3_t r
   if( !phaseType->isAllocated())
   {
     QString ss = QObject::tr("PhaseTypes Array Internal Array has not been allocated. The estimation of the number of features can not proceed.");
-    setErrorCondition(-80002);
+    setErrorCondition(0);
     notifyWarningMessage(getHumanLabel(), ss, getErrorCondition());
     return -1;
   }
