@@ -361,6 +361,30 @@ class DataArray : public IDataArray
       return p;
     }
 
+
+    /**
+     * @brief WrapPointer
+     * @param data
+     * @param numTuples
+     * @param cDims
+     * @param name
+     * @param ownsData
+     * @return
+     */
+    static Pointer WrapPointer(T* data, size_t numTuples, QVector<size_t> cDims, const QString& name, bool ownsData)
+    {
+      // Allocate on the heap
+      DataArray* d = new DataArray(numTuples, cDims, name, false);
+      // Wrap that heap pointer with a shared_pointer from boost to make it reference counted
+      Pointer p(d);
+
+      p->m_Array = data; // Now set the internal array to the raw pointer
+      p->m_OwnsData = ownsData; // Set who owns the data, i.e., who is going to "free" the memory
+      if (NULL != data) { p->m_IsAllocated = true; }
+
+      return p;
+    }
+
     /**
      * @brief createNewArray
      * @param numTuples

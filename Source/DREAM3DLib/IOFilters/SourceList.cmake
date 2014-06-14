@@ -39,6 +39,7 @@ set(_PublicFilters
   PhWriter
   RawBinaryReader
   SPParksWriter
+  SPParksTextReader
   SurfaceMeshToNodesTrianglesEdges
   SurfaceMeshToNonconformalVtk
   SurfaceMeshToStl
