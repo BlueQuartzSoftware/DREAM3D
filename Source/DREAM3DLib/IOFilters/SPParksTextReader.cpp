@@ -232,7 +232,7 @@ const QString SPParksTextReader::getGroupName()
 // -----------------------------------------------------------------------------
 const QString SPParksTextReader::getHumanLabel()
 {
-  return "SPParks Text Reader";
+  return "Read SPParks Text Files";
 }
 
 // -----------------------------------------------------------------------------
