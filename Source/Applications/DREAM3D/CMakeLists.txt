@@ -190,7 +190,11 @@ set_target_properties(DataFolderCopy PROPERTIES FOLDER ZZ_COPY_FILES)
 add_dependencies(DREAM3D DataFolderCopy)
 
 #- This installs all the Data files during a "make install" or "make package"
-install(FILES ${DREAM3D_DATA_DIR}/Data/CubicSingleEquiaxed.dream3d
+install(FILES ${DREAM3D_DATA_DIR}/Data/Composite.dream3d
+              ${DREAM3D_DATA_DIR}/Data/CubicSingleEquiaxed.dream3d
+              ${DREAM3D_DATA_DIR}/Data/CubicSingleRolled.dream3d
+              ${DREAM3D_DATA_DIR}/Data/HexagonalSingleEquiaxed.dream3d
+              ${DREAM3D_DATA_DIR}/Data/TwoPhaseCubicHexParticlesEquiaxed.dream3d
         DESTINATION ./Data/
         COMPONENT Applications )
 
