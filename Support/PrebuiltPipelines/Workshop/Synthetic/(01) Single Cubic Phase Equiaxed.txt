@@ -1,7 +1,7 @@
 [PipelineBuilder]
 Name=(01) Single Cubic Phase Equiaxed
-Number_Filters=9
-Version=5.0.6669
+Number_Filters=8
+Version=5.0.6679
 
 [0]
 Filter_Name=DataContainerReader
@@ -54,9 +54,11 @@ Filter_Name=PackPrimaryPhases
 Filter_Human_Label=Pack Primary Phases
 OutputCellAttributeMatrixName=SyntheticVolume|CellData|
 OutputCellFeatureAttributeMatrixName=CellFeatureData
+OutputCellEnsembleAttributeMatrixName=CellEnsembleData
 FeatureIdsArrayName=FeatureIds
 CellPhasesArrayName=Phases
 FeaturePhasesArrayName=Phases
+NumFeaturesArrayName=NumFeatures
 PeriodicBoundaries=0
 WriteGoalAttributes=0
 CsvOutputFile=
@@ -78,13 +80,6 @@ NeighborListArrayName=NeighborList
 SharedSurfaceAreaListArrayName=SharedSurfaceAreaList
 
 [5]
-Filter_Name=FindNumFeatures
-Filter_Human_Label=Find Number of Features
-NumFeaturesArrayName=NumFeatures
-FeaturePhasesArrayPath=SyntheticVolume|CellFeatureData|Phases
-CellEnsembleAttributeMatrixPath=StatsGenerator|CellEnsembleData|
-
-[6]
 Filter_Name=MatchCrystallography
 Filter_Human_Label=Match Crystallography
 MaxIterations=100000
@@ -96,13 +91,13 @@ FeatureIdsArrayPath=SyntheticVolume|CellData|FeatureIds
 SurfaceFeaturesArrayPath=SyntheticVolume|CellFeatureData|SurfaceFeatures
 NeighborListArrayPath=SyntheticVolume|CellFeatureData|NeighborList
 SharedSurfaceAreaListArrayPath=SyntheticVolume|CellFeatureData|SharedSurfaceAreaList
-NumFeaturesArrayPath=StatsGenerator|CellEnsembleData|NumFeatures
+NumFeaturesArrayPath=SyntheticVolume|CellEnsembleData|NumFeatures
 CellEulerAnglesArrayName=EulerAngles
 VolumesArrayName=Volumes
 FeatureEulerAnglesArrayName=EulerAngles
 AvgQuatsArrayName=AvgQuats
 
-[7]
+[6]
 Filter_Name=GenerateIPFColors
 Filter_Human_Label=Generate IPF Colors
 UseGoodVoxels=0
@@ -116,7 +111,7 @@ ReferenceDir\1\x=0
 ReferenceDir\2\y=0
 ReferenceDir\3\z=1
 
-[8]
+[7]
 Filter_Name=DataContainerWriter
 Filter_Human_Label=Write DREAM3D Data File
 OutputFile=Data/Output/CubicSingleEquiaxedOut.dream3d
