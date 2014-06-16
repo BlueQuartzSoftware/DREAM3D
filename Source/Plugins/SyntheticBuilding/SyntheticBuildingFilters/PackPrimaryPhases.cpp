@@ -2041,7 +2041,7 @@ void PackPrimaryPhases::assign_voxels()
 
   totalFeatures = cellFeatureAttrMat->getNumTuples();
   //counting the number of features for each phase
-  for(int64_t i = 0; i < totalFeatures; i++)
+  for(int64_t i = 1; i < totalFeatures; i++)
   {
     int phase = m_FeaturePhases[i];
     if(phase >= 0) m_NumFeatures[phase]++;
