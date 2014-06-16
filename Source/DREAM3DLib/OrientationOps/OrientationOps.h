@@ -135,6 +135,7 @@ class DREAM3DLib_EXPORT OrientationOps
     virtual bool inUnitTriangle(float eta, float chi) = 0;
     virtual void determineEulerAngles(int choose, float& synea1, float& synea2, float& synea3) = 0;
     virtual void randomizeEulerAngles(float& synea1, float& synea2, float& synea3) = 0;
+    virtual size_t getRandomSymmetryOperatorIndex(int numSymOps);
     virtual void determineRodriguesVector(int choose, float& r1, float& r2, float& r3) = 0;
     virtual int getOdfBin(float r1, float r2, float r3) = 0;
     virtual void getSchmidFactorAndSS(float load[3], float& schmidfactor, float angleComps[2], int& slipsys) = 0;
