@@ -1,30 +1,36 @@
 [PipelineBuilder]
 Name=(01) Single Cubic Phase Equiaxed
 Number_Filters=9
-Version=5.0.6397
+Version=5.0.6669
 
 [0]
 Filter_Name=DataContainerReader
 Filter_Human_Label=Read DREAM3D Data File
 InputFile=Data/CubicSingleEquiaxed.dream3d
 OverwriteExistingDataContainers=0
-DataContainerArrayProxy_DataContainerNames\size=1
-DataContainerArrayProxy_DataContainerNames\1\Name=StatsGenerator
-DataContainerArrayProxy_StatsGenerator\size=3
-DataContainerArrayProxy_StatsGenerator\1\ArrayName=CellEnsembleData/CrystalStructures
-DataContainerArrayProxy_StatsGenerator\2\ArrayName=CellEnsembleData/PhaseTypes
-DataContainerArrayProxy_StatsGenerator\3\ArrayName=CellEnsembleData/Statistics
+DataContainerArrayProxy\size=3
+DataContainerArrayProxy\1\Path=StatsGenerator|CellEnsembleData|CrystalStructures
+DataContainerArrayProxy\1\DCFlag=2
+DataContainerArrayProxy\1\ATTRFlag=2
+DataContainerArrayProxy\1\DAFlag=2
+DataContainerArrayProxy\2\Path=StatsGenerator|CellEnsembleData|PhaseTypes
+DataContainerArrayProxy\2\DCFlag=2
+DataContainerArrayProxy\2\ATTRFlag=2
+DataContainerArrayProxy\2\DAFlag=2
+DataContainerArrayProxy\3\Path=StatsGenerator|CellEnsembleData|Statistics
+DataContainerArrayProxy\3\DCFlag=2
+DataContainerArrayProxy\3\ATTRFlag=2
+DataContainerArrayProxy\3\DAFlag=2
 
 [1]
 Filter_Name=InitializeSyntheticVolume
 Filter_Human_Label=Initialize Synthetic Volume
 DataContainerName=SyntheticVolume
 CellAttributeMatrixName=CellData
-CellEnsembleAttributeMatrixName=CellEnsembleData
 Dimensions\size=3
-Dimensions\1\x=128
-Dimensions\2\y=128
-Dimensions\3\z=128
+Dimensions\1\x=32
+Dimensions\2\y=32
+Dimensions\3\z=32
 Resolution\size=3
 Resolution\1\x=0.5
 Resolution\2\y=0.5
@@ -40,48 +46,71 @@ InputPhaseTypesArrayPath=StatsGenerator|CellEnsembleData|PhaseTypes
 Filter_Name=EstablishShapeTypes
 Filter_Human_Label=Establish Shape Types
 InputPhaseTypesArrayPath=StatsGenerator|CellEnsembleData|PhaseTypes
-ShapeTypesAttributeMatrix=SyntheticVolume|CellEnsembleData|
 ShapeTypesArrayName=ShapeTypes
 ShapeTypeData=999 0
 
 [3]
 Filter_Name=PackPrimaryPhases
 Filter_Human_Label=Pack Primary Phases
-OutputDataContainerName=SyntheticVolume
+OutputCellAttributeMatrixName=SyntheticVolume|CellData|
+OutputCellFeatureAttributeMatrixName=CellFeatureData
+FeatureIdsArrayName=FeatureIds
+CellPhasesArrayName=Phases
+FeaturePhasesArrayName=Phases
 PeriodicBoundaries=0
 WriteGoalAttributes=0
 CsvOutputFile=
 InputStatsArrayPath=StatsGenerator|CellEnsembleData|Statistics
 InputPhaseTypesArrayPath=StatsGenerator|CellEnsembleData|PhaseTypes
-InputShapeTypesArrayPath=SyntheticVolume|CellEnsembleData|ShapeTypes
+InputShapeTypesArrayPath=StatsGenerator|CellEnsembleData|CrystalStructures
 
 [4]
 Filter_Name=FindNeighbors
 Filter_Human_Label=Find Feature Neighbors
 CellFeatureAttributeMatrixPath=SyntheticVolume|CellFeatureData|
-CellAttributeMatrixPath=SyntheticVolume|CellData|
+FeatureIdsArrayPath=SyntheticVolume|CellData|FeatureIds
+SurfaceVoxelsArrayName=SurfaceVoxels
+SurfaceFeaturesArrayName=SurfaceFeatures
+StoreSurfaceCells=1
+StoreSurfaceFeatures=1
+NumNeighborsArrayName=NumNeighbors
+NeighborListArrayName=NeighborList
+SharedSurfaceAreaListArrayName=SharedSurfaceAreaList
 
 [5]
 Filter_Name=FindNumFeatures
 Filter_Human_Label=Find Number of Features
+NumFeaturesArrayName=NumFeatures
+FeaturePhasesArrayPath=SyntheticVolume|CellFeatureData|Phases
+CellEnsembleAttributeMatrixPath=StatsGenerator|CellEnsembleData|
 
 [6]
 Filter_Name=MatchCrystallography
 Filter_Human_Label=Match Crystallography
-OutputDataContainerName=SyntheticVolume
 MaxIterations=100000
 InputStatsArrayPath=StatsGenerator|CellEnsembleData|Statistics
 CrystalStructuresArrayPath=StatsGenerator|CellEnsembleData|CrystalStructures
 PhaseTypesArrayPath=StatsGenerator|CellEnsembleData|PhaseTypes
-FeatureIdsPath=SyntheticVolume|CellData|FeatureIds
-FeaturePhasesPath=SyntheticVolume|CellData|Phases
-FeatureSurfaceFeaturesPath=SyntheticVolume|CellFeatureData|SurfaceFeatures
-OutputCellAttributeMatrix=SyntheticVolume|CellData|
+FeaturePhasesArrayPath=SyntheticVolume|CellFeatureData|Phases
+FeatureIdsArrayPath=SyntheticVolume|CellData|FeatureIds
+SurfaceFeaturesArrayPath=SyntheticVolume|CellFeatureData|SurfaceFeatures
+NeighborListArrayPath=SyntheticVolume|CellFeatureData|NeighborList
+SharedSurfaceAreaListArrayPath=SyntheticVolume|CellFeatureData|SharedSurfaceAreaList
+NumFeaturesArrayPath=StatsGenerator|CellEnsembleData|NumFeatures
 CellEulerAnglesArrayName=EulerAngles
+VolumesArrayName=Volumes
+FeatureEulerAnglesArrayName=EulerAngles
+AvgQuatsArrayName=AvgQuats
 
 [7]
 Filter_Name=GenerateIPFColors
 Filter_Human_Label=Generate IPF Colors
+UseGoodVoxels=0
+GoodVoxelsArrayPath=StatsGenerator|CellEnsembleData|
+CrystalStructuresArrayPath=StatsGenerator|CellEnsembleData|CrystalStructures
+CellEulerAnglesArrayPath=SyntheticVolume|CellFeatureData|EulerAngles
+CellPhasesArrayPath=SyntheticVolume|CellData|Phases
+CellIPFColorsArrayName=IPFColor
 ReferenceDir\size=3
 ReferenceDir\1\x=0
 ReferenceDir\2\y=0
