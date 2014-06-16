@@ -65,12 +65,13 @@ InsertPrecipitatePhases::InsertPrecipitatePhases() :
   m_PeriodicBoundaries(false),
   m_WriteGoalAttributes(false),
   m_OutputCellFeatureAttributeMatrixName(DREAM3D::Defaults::SyntheticVolumeDataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, ""),
-  m_InputStatsArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellEnsembleAttributeMatrixName, DREAM3D::EnsembleData::Statistics),
-  m_InputPhaseTypesArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellEnsembleAttributeMatrixName, DREAM3D::EnsembleData::PhaseTypes),
-  m_InputShapeTypesArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellEnsembleAttributeMatrixName, DREAM3D::EnsembleData::ShapeTypes),
-  m_FeatureIdsArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::FeatureIds),
-  m_CellPhasesArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::Phases),
-  m_SurfaceVoxelsArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::SurfaceVoxels),
+  m_InputStatsArrayPath(DREAM3D::Defaults::StatsGenerator, DREAM3D::Defaults::CellEnsembleAttributeMatrixName, DREAM3D::EnsembleData::Statistics),
+  m_InputPhaseTypesArrayPath(DREAM3D::Defaults::StatsGenerator, DREAM3D::Defaults::CellEnsembleAttributeMatrixName, DREAM3D::EnsembleData::PhaseTypes),
+  m_InputShapeTypesArrayPath(DREAM3D::Defaults::StatsGenerator, DREAM3D::Defaults::CellEnsembleAttributeMatrixName, DREAM3D::EnsembleData::ShapeTypes),
+  m_FeatureIdsArrayPath(DREAM3D::Defaults::SyntheticVolumeDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::FeatureIds),
+  m_CellPhasesArrayPath(DREAM3D::Defaults::SyntheticVolumeDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::Phases),
+  m_SurfaceVoxelsArrayPath(DREAM3D::Defaults::SyntheticVolumeDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::SurfaceVoxels),
+  m_NumFeaturesArrayPath(DREAM3D::Defaults::SyntheticVolumeDataContainerName, DREAM3D::Defaults::CellEnsembleAttributeMatrixName, DREAM3D::EnsembleData::NumFeatures),
   m_FeaturePhasesArrayName(DREAM3D::FeatureData::Phases),
   m_NumCellsArrayName(DREAM3D::FeatureData::NumCells),
   m_EquivalentDiametersArrayName(DREAM3D::FeatureData::EquivalentDiameters),
@@ -141,7 +142,7 @@ void InsertPrecipitatePhases::setupFilterParameters()
   parameters.push_back(FilterParameter::New("SurfaceVoxels", "SurfaceVoxelsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getSurfaceVoxelsArrayPath(), true, ""));
   parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
   parameters.push_back(FilterParameter::New("FeaturePhases", "FeaturePhasesArrayName", FilterParameterWidgetType::StringWidget, getFeaturePhasesArrayName(), true, ""));
-  parameters.push_back(FilterParameter::New("NumFeatures", "NumFeaturesArrayName", FilterParameterWidgetType::StringWidget, getNumFeaturesArrayName(), true, ""));
+  parameters.push_back(FilterParameter::New("NumFeatures", "NumFeaturesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getNumFeaturesArrayPath(), true, ""));
   QStringList linkedProps("CsvOutputFile");
   parameters.push_back(FilterParameter::NewConditional("Write Goal Attributes", "WriteGoalAttributes", FilterParameterWidgetType::LinkedBooleanWidget, getWriteGoalAttributes(), true, linkedProps));
   parameters.push_back(FilterParameter::New("Goal Attribute CSV File", "CsvOutputFile", FilterParameterWidgetType::OutputFileWidget, getCsvOutputFile(), false, "", "*.csv", "Comma Separated Data"));
@@ -153,7 +154,7 @@ void InsertPrecipitatePhases::readFilterParameters(AbstractFilterParametersReade
 {
   reader->openFilterGroup(this, index);
   setOutputCellFeatureAttributeMatrixName( reader->readDataArrayPath("OutputCellFeatureAttributeMatrixName", getOutputCellFeatureAttributeMatrixName() ) );
-  setNumFeaturesArrayName(reader->readString("NumFeaturesArrayName", getNumFeaturesArrayName() ) );
+  setNumFeaturesArrayPath(reader->readDataArrayPath("NumFeaturesArrayPath", getNumFeaturesArrayPath() ) );
   setFeaturePhasesArrayName(reader->readString("FeaturePhasesArrayName", getFeaturePhasesArrayName() ) );
   setInputStatsArrayPath(reader->readDataArrayPath("InputStatsArrayPath", getInputStatsArrayPath() ) );
   setInputPhaseTypesArrayPath(reader->readDataArrayPath("InputPhaseTypesArrayPath", getInputPhaseTypesArrayPath() ) );
@@ -174,7 +175,7 @@ int InsertPrecipitatePhases::writeFilterParameters(AbstractFilterParametersWrite
 {
   writer->openFilterGroup(this, index);
   writer->writeValue("OutputCellFeatureAttributeMatrixName", getOutputCellFeatureAttributeMatrixName() );
-  writer->writeValue("NumFeaturesArrayName", getNumFeaturesArrayName() );
+  writer->writeValue("NumFeaturesArrayPath", getNumFeaturesArrayPath() );
   writer->writeValue("FeaturePhasesArrayName", getFeaturePhasesArrayName() );
   writer->writeValue("InputStatsArrayPath", getInputStatsArrayPath() );
   writer->writeValue("InputPhaseTypesArrayPath", getInputPhaseTypesArrayPath() );
@@ -292,8 +293,7 @@ void InsertPrecipitatePhases::dataCheck()
 
   //Ensemble Data
   dims[0] = 1;
-  tempPath.update(m_InputPhaseTypesArrayPath.getDataContainerName(), m_InputPhaseTypesArrayPath.getAttributeMatrixName(), getNumFeaturesArrayName() );
-  m_NumFeaturesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(this,  tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_NumFeaturesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(this,  getNumFeaturesArrayPath(), 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_NumFeaturesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_NumFeatures = m_NumFeaturesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
@@ -513,6 +513,7 @@ void  InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer featur
         curphasevol[j] = curphasevol[j] + m_Volumes[currentnumfeatures];
         //FIXME: Initialize the Feature with some sort of default data
         iter = 0;
+        m_NumFeatures[phase]++;
         currentnumfeatures++;
       }
     }

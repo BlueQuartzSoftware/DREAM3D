@@ -139,8 +139,8 @@ class InsertPrecipitatePhases : public AbstractFilter
     DREAM3D_FILTER_PARAMETER(QString, AxisLengthsArrayName)
     Q_PROPERTY(QString AxisLengthsArrayName READ getAxisLengthsArrayName WRITE setAxisLengthsArrayName)
 
-    DREAM3D_FILTER_PARAMETER(QString, NumFeaturesArrayName)
-    Q_PROPERTY(QString NumFeaturesArrayName READ getNumFeaturesArrayName WRITE setNumFeaturesArrayName)
+    DREAM3D_FILTER_PARAMETER(DataArrayPath, NumFeaturesArrayPath)
+    Q_PROPERTY(DataArrayPath NumFeaturesArrayPath READ getNumFeaturesArrayPath WRITE setNumFeaturesArrayPath)
 
     virtual const QString getCompiledLibraryName() { return SyntheticBuilding::SyntheticBuildingBaseName; }
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
@@ -242,7 +242,7 @@ class InsertPrecipitatePhases : public AbstractFilter
 
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(uint32_t, PhaseTypes)
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(uint32_t, ShapeTypes)
-    DEFINE_CREATED_DATAARRAY_VARIABLE(int32_t, NumFeatures)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, NumFeatures)
     StatsDataArray::WeakPointer m_StatsDataArray;
 
     OrthoRhombicOps::Pointer m_OrthoOps;
