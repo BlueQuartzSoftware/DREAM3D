@@ -18,6 +18,7 @@ set(_PublicFilters
   ReadOrientationData
   WritePoleFigure
   WriteIPFStandardTriangle
+  ConvertHexGridToSquareGrid
 )
 
 

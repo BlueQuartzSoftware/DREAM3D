@@ -34,65 +34,35 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include "EbsdToH5EbsdWidget.h"
+#include "ConvertHexGridToSquareGridWidget.h"
 
 //-- Qt Includes
-#include <QtCore/QFileInfo>
-#include <QtCore/QFile>
 #include <QtCore/QDir>
-#include <QtCore/QString>
-#include <QtCore/QUrl>
-#include <QtCore/QThread>
-#include <QtCore/QFileInfoList>
 #include <QtGui/QFileDialog>
-#include <QtGui/QCloseEvent>
-#include <QtGui/QMessageBox>
-#include <QtGui/QListWidget>
-#include <QtGui/QListWidgetItem>
-#include <QtGui/QButtonGroup>
 
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Utilities/FilePathGenerator.h"
 
-#include "QtSupport/QCheckboxDialog.h"
 #include "QtSupport/QFileCompleter.h"
-#include "QtSupport/DREAM3DQtMacros.h"
-#include "QtSupport/DREAM3DHelpUrlGenerator.h"
 
 
-#include "OrientationAnalysis/OrientationAnalysisFilters/EbsdToH5Ebsd.h"
-
-#include "OrientationAnalysis/Widgets/QEbsdReferenceFrameDialog.h"
+#include "OrientationAnalysis/OrientationAnalysisFilters/ConvertHexGridToSquareGrid.h"
 
 
 // Initialize private static member variable
-QString EbsdToH5EbsdWidget::m_OpenDialogLastDirectory = "";
+QString ConvertHexGridToSquareGridWidget::m_OpenDialogLastDirectory = "";
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-EbsdToH5EbsdWidget::EbsdToH5EbsdWidget(FilterParameter* parameter, AbstractFilter* filter, QWidget* parent) :
+ConvertHexGridToSquareGridWidget::ConvertHexGridToSquareGridWidget(FilterParameter* parameter, AbstractFilter* filter, QWidget* parent) :
   QWidget(parent),
   m_FilterParameter(parameter),
   m_StackingGroup(NULL),
-  m_TSLchecked(false),
-  m_HKLchecked(false),
-  m_HEDMchecked(false),
-  m_NoTranschecked(true),
   m_DidCausePreflight(false)
 {
-  m_SampleTransformation.angle = 0.0f;
-  m_SampleTransformation.h = 0.0f;
-  m_SampleTransformation.k = 0.0f;
-  m_SampleTransformation.l = 1.0f;
-
-  m_EulerTransformation.angle = 0.0f;
-  m_EulerTransformation.h = 0.0f;
-  m_EulerTransformation.k = 0.0f;
-  m_EulerTransformation.l = 1.0f;
-
-  m_Filter = qobject_cast<EbsdToH5Ebsd*>(filter);
-  Q_ASSERT_X(NULL != m_Filter, "EbsdToH5EbsdWidget can ONLY be used with EbsdToH5Ebsd filter", __FILE__);
+  m_Filter = qobject_cast<ConvertHexGridToSquareGrid*>(filter);
+  Q_ASSERT_X(NULL != m_Filter, "ConvertHexGridToSquareGridWidget can ONLY be used with ConvertHexGridToSquareGridWidget filter", __FILE__);
 
   if ( getOpenDialogLastDirectory().isEmpty() )
   {
@@ -100,13 +70,13 @@ EbsdToH5EbsdWidget::EbsdToH5EbsdWidget(FilterParameter* parameter, AbstractFilte
   }
   setupUi(this);
   setupGui();
-  checkIOFiles();
+//  checkIOFiles();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-EbsdToH5EbsdWidget::~EbsdToH5EbsdWidget()
+ConvertHexGridToSquareGridWidget::~ConvertHexGridToSquareGridWidget()
 {
 
 }
@@ -114,7 +84,7 @@ EbsdToH5EbsdWidget::~EbsdToH5EbsdWidget()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void EbsdToH5EbsdWidget::setWidgetListEnabled(bool b)
+void ConvertHexGridToSquareGridWidget::setWidgetListEnabled(bool b)
 {
   foreach (QWidget * w, m_WidgetList)
   {
@@ -125,7 +95,7 @@ void EbsdToH5EbsdWidget::setWidgetListEnabled(bool b)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void EbsdToH5EbsdWidget::setupGui()
+void ConvertHexGridToSquareGridWidget::setupGui()
 {
 
 
@@ -145,28 +115,34 @@ void EbsdToH5EbsdWidget::setupGui()
   m_InputDir->setCompleter(com);
   QObject::connect( com, SIGNAL(activated(const QString&)),
                     this, SLOT(on_m_InputDir_textChanged(const QString&)));
+  m_OutputDir->setCompleter(com);
+  QObject::connect( com, SIGNAL(activated(const QString&)),
+                    this, SLOT(on_m_OutputDir_textChanged(const QString&)));
 
-  QFileCompleter* com1 = new QFileCompleter(this, false);
-  m_OutputFile->setCompleter(com1);
-  QObject::connect( com1, SIGNAL(activated(const QString&)),
-                    this, SLOT(on_m_OutputFile_textChanged(const QString&)));
+  {
+    QDoubleValidator* validator = new QDoubleValidator(m_xSpacing);
+    validator->setDecimals(4);
+    m_xSpacing->setValidator(validator);
+  }
+  {
+    QDoubleValidator* validator = new QDoubleValidator(m_ySpacing);
+    validator->setDecimals(4);
+    m_ySpacing->setValidator(validator);
+  }
 
-  m_WidgetList << m_InputDir << m_InputDirBtn << m_OutputFile << m_OutputFileBtn;
+  m_WidgetList << m_InputDir << m_InputDirBtn;
   m_WidgetList << m_FileExt << m_ErrorMessage << m_TotalDigits;
-  m_WidgetList << m_FilePrefix << m_TotalSlices << m_ZStartIndex << m_ZEndIndex << m_zSpacing;
+  m_WidgetList << m_FilePrefix << m_TotalSlices << m_ZStartIndex << m_ZEndIndex;
+  m_WidgetList << m_xSpacing << m_ySpacing;
+
   m_ErrorMessage->setVisible(false);
 
-  m_StackingGroup = new QButtonGroup(this);
-  m_StackingGroup->addButton(m_StackLowToHigh);
-  m_StackingGroup->addButton(m_StackHighToLow);
+  // Manually hook up these signals/slots
+  connect(m_xSpacing, SIGNAL(textChanged(const QString&)),
+          this, SLOT(resolutionChanged(const QString&)));
+  connect(m_ySpacing, SIGNAL(textChanged(const QString&)),
+          this, SLOT(resolutionChanged(const QString&)));
 
-  m_OriginGroup = new QButtonGroup;
-  m_OriginGroup->addButton(m_RefFrameOptionsBtn);
-
-  connect(m_StackLowToHigh, SIGNAL(toggled(bool)),
-          this, SLOT(stackingOrderChanged(bool)));
-
-  m_RefFrameOptionsBtn->setEnabled(false);
 
   getGuiParametersFromFilter();
 }
@@ -174,8 +150,9 @@ void EbsdToH5EbsdWidget::setupGui()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void EbsdToH5EbsdWidget::getGuiParametersFromFilter()
+void ConvertHexGridToSquareGridWidget::getGuiParametersFromFilter()
 {
+
   m_InputDir->setText(m_Filter->getInputPath());
 
   QObjectList obs = children();
@@ -184,60 +161,46 @@ void EbsdToH5EbsdWidget::getGuiParametersFromFilter()
     ob->blockSignals(true);
   }
 
-  m_OutputFile->setText( m_Filter->getOutputFile() );
   m_ZStartIndex->setValue( m_Filter->getZStartIndex() );
   m_ZEndIndex->setValue( m_Filter->getZEndIndex() );
-  m_zSpacing->setText( QString::number(m_Filter->getZResolution()) );
-  setRefFrameZDir( m_Filter->getRefFrameZDir() );
+
+  m_xSpacing->setText(QString::number(m_Filter->getXResolution()) );
+  m_ySpacing->setText(QString::number(m_Filter->getYResolution()) );
 
   m_FilePrefix->setText(m_Filter->getFilePrefix());
   m_FileSuffix->setText(m_Filter->getFileSuffix());
-  m_FileExt->setText(m_Filter->getFileExtension());
+  QString ext = m_Filter->getFileExtension();
+  if(ext.isEmpty()) // Default to placing tif as the file extension instead of nothing.
+  {
+    ext = "ang";
+  }
+  m_FileExt->setText(ext);
   m_TotalDigits->setValue(m_Filter->getPaddingDigits());
-
-  m_SampleTransformation = m_Filter->getSampleTransformation();
-  m_EulerTransformation = m_Filter->getEulerTransformation();
+  m_OutputDir->setText(m_Filter->getOutputPath());
+  m_OutputPrefix->setText(m_Filter->getOutputPrefix());
 
   foreach(QObject * ob, obs)
   {
     ob->blockSignals(false);
   }
 
-  m_generateExampleEbsdInputFile();
+  generateExampleInputFile();
 
 }
-
-
-#if 0
-
-QEbsdReferenceFrameDialog d("", this);
-d.setEbsdFileName("");
-d.setTSLDefault(m_TSLchecked);
-d.setHKLDefault(m_HKLchecked);
-d.setHEDMDefault(m_HEDMchecked);
-d.setNoTrans(m_NoTranschecked);
-d.getSampleTranformation(m_SampleTransformation.angle, m_SampleTransformationAxis[0], m_SampleTransformationAxis[1], m_SampleTransformationAxis[2]);
-d.getEulerTranformation(m_EulerTransformationAngle, m_EulerTransformationAxis[0], m_EulerTransformationAxis[1], m_EulerTransformationAxis[2]);
-
-#endif
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void EbsdToH5EbsdWidget::on_m_OutputFile_textChanged(const QString& text)
+void ConvertHexGridToSquareGridWidget::resolutionChanged(const QString& string)
 {
-  //if (verifyPathExists(text, m_OutputFile) == true )
-  {
-    QFileInfo fi(text);
-    setOpenDialogLastDirectory( fi.path() );
-  }
   emit parametersChanged();
 }
 
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-bool EbsdToH5EbsdWidget::verifyPathExists(QString outFilePath, QLineEdit* lineEdit)
+bool ConvertHexGridToSquareGridWidget::verifyPathExists(QString outFilePath, QLineEdit* lineEdit)
 {
   //  std::cout << "outFilePath: " << outFilePath << std::endl;
   QFileInfo fileinfo(outFilePath);
@@ -255,33 +218,18 @@ bool EbsdToH5EbsdWidget::verifyPathExists(QString outFilePath, QLineEdit* lineEd
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void EbsdToH5EbsdWidget::checkIOFiles()
+void ConvertHexGridToSquareGridWidget::checkIOFiles()
 {
   if (true == this->verifyPathExists(m_InputDir->text(), this->m_InputDir))
   {
-    m_findEbsdMaxSliceAndPrefix();
+    findMaxSliceAndPrefix();
   }
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void EbsdToH5EbsdWidget::on_m_OutputFileBtn_clicked()
-{
-  QString file = QFileDialog::getSaveFileName(this, tr("Save HDF5 EBSD File"),
-                                              getOpenDialogLastDirectory(),
-                                              tr("HDF5 EBSD Files (*.h5ebsd)") );
-  if ( true == file.isEmpty() ) { return;  }
-  QFileInfo fi (file);
-  QString ext = fi.suffix();
-  m_OutputFile->setText(fi.absoluteFilePath());
-  setOpenDialogLastDirectory( fi.path() );
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void EbsdToH5EbsdWidget::on_m_InputDirBtn_clicked()
+void ConvertHexGridToSquareGridWidget::on_m_InputDirBtn_clicked()
 {
   // std::cout << "on_angDirBtn_clicked" << std::endl;
   QString outputFile = this->getOpenDialogLastDirectory() + QDir::separator();
@@ -300,140 +248,145 @@ void EbsdToH5EbsdWidget::on_m_InputDirBtn_clicked()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void EbsdToH5EbsdWidget::on_m_InputDir_textChanged(const QString& text)
+void ConvertHexGridToSquareGridWidget::on_m_InputDir_textChanged(const QString& text)
 {
   if (verifyPathExists(m_InputDir->text(), m_InputDir) )
   {
-    m_RefFrameOptionsBtn->setEnabled(true);
-    m_findEbsdMaxSliceAndPrefix();
+
+    findMaxSliceAndPrefix();
     QDir dir(m_InputDir->text());
     QString dirname = dir.dirName();
     dir.cdUp();
 
-    QString outPath = dir.absolutePath() + QDir::separator() + dirname + "_Output" + QDir::separator() + dirname + ".h5ebsd";
-    outPath = QDir::toNativeSeparators(outPath);
-    m_OutputFile->setText(outPath);
-    verifyPathExists(m_OutputFile->text(), m_OutputFile);
-    m_generateExampleEbsdInputFile();
+    generateExampleInputFile();
     m_InputDir->blockSignals(true);
     m_InputDir->setText(QDir::toNativeSeparators(m_InputDir->text()));
     m_InputDir->blockSignals(false);
-    referenceFrameCheck->setStyleSheet(QString("background-color: rgb(255, 232, 61);"));
-    referenceFrameCheck->setText("Have you set the Reference Frame?");
   }
   else
   {
     m_FileListView->clear();
   }
-  emit parametersChanged();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-uint32_t EbsdToH5EbsdWidget::getRefFrameZDir()
+void ConvertHexGridToSquareGridWidget::on_m_OutputDirBtn_clicked()
 {
-  if (m_StackLowToHigh->isChecked()) { return Ebsd::RefFrameZDir::LowtoHigh; }
-  if (m_StackHighToLow->isChecked()) { return Ebsd::RefFrameZDir::HightoLow; }
-  return Ebsd::RefFrameZDir::UnknownRefFrameZDirection;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void EbsdToH5EbsdWidget::setRefFrameZDir(uint32_t ref)
-{
-  if (ref == Ebsd::RefFrameZDir::LowtoHigh)
+  QString currentPath = m_Filter->getOutputPath();
+  if(currentPath.isEmpty() == true)
   {
-    m_StackLowToHigh->setChecked(true);
+    currentPath = m_OpenDialogLastDirectory;
   }
-  if (ref == Ebsd::RefFrameZDir::HightoLow)
+  QString Ftype = m_FilterParameter->getFileType();
+  QString ext = m_FilterParameter->getFileExtension();
+  QString s = Ftype + QString(" Files (") + ext + QString(");;All Files(*.*)");
+  QString defaultName = currentPath + QDir::separator() + "Untitled";
+  QString file = QFileDialog::getExistingDirectory(this,
+                                                   tr("Select Output Folder"),
+                                                   defaultName,
+                                                   QFileDialog::ShowDirsOnly);
+
+  if(true == file.isEmpty())
   {
-    m_StackHighToLow->setChecked(true);
+    return;
   }
-}
+  //  bool ok = false;
+  file = QDir::toNativeSeparators(file);
+  // Store the last used directory into the private instance variable
+  QFileInfo fi(file);
+  m_OpenDialogLastDirectory = fi.path();
 
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void EbsdToH5EbsdWidget::on_m_zSpacing_textChanged(const QString& string)
-{
-  emit parametersChanged();
-}
-
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void EbsdToH5EbsdWidget::stackingOrderChanged(bool checked)
-{
-  emit parametersChanged();
+  on_m_OutputDir_textChanged(file);
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void EbsdToH5EbsdWidget::on_m_ZEndIndex_valueChanged(int value)
+void ConvertHexGridToSquareGridWidget::on_m_OutputDir_textChanged(const QString& text)
 {
-  m_generateExampleEbsdInputFile();
+  //if (verifyPathExists(text, m_OutputFile) == true )
+  {
+    QFileInfo fi(text);
+    setOpenDialogLastDirectory( fi.path() );
+  }
   emit parametersChanged();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void EbsdToH5EbsdWidget::on_m_ZStartIndex_valueChanged(int value)
+void ConvertHexGridToSquareGridWidget::on_m_OutputPrefix_textChanged(const QString& text)
 {
-  m_generateExampleEbsdInputFile();
   emit parametersChanged();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void EbsdToH5EbsdWidget::on_m_TotalDigits_valueChanged(int value)
+void ConvertHexGridToSquareGridWidget::on_m_ZEndIndex_valueChanged(int value)
 {
-  m_generateExampleEbsdInputFile();
+  generateExampleInputFile();
   emit parametersChanged();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void EbsdToH5EbsdWidget::on_m_FileExt_textChanged(const QString& string)
+void ConvertHexGridToSquareGridWidget::on_m_ZStartIndex_valueChanged(int value)
 {
-  m_generateExampleEbsdInputFile();
+  generateExampleInputFile();
   emit parametersChanged();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void EbsdToH5EbsdWidget::on_m_FileSuffix_textChanged(const QString& string)
+void ConvertHexGridToSquareGridWidget::on_m_TotalDigits_valueChanged(int value)
 {
-  m_generateExampleEbsdInputFile();
+  generateExampleInputFile();
   emit parametersChanged();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void EbsdToH5EbsdWidget::on_m_FilePrefix_textChanged(const QString& string)
+void ConvertHexGridToSquareGridWidget::on_m_FileExt_textChanged(const QString& string)
 {
-  m_generateExampleEbsdInputFile();
+  generateExampleInputFile();
   emit parametersChanged();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void EbsdToH5EbsdWidget::m_generateExampleEbsdInputFile()
+void ConvertHexGridToSquareGridWidget::on_m_FileSuffix_textChanged(const QString& string)
+{
+  generateExampleInputFile();
+  emit parametersChanged();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ConvertHexGridToSquareGridWidget::on_m_FilePrefix_textChanged(const QString& string)
+{
+  generateExampleInputFile();
+  emit parametersChanged();
+}
+
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ConvertHexGridToSquareGridWidget::generateExampleInputFile()
 {
 
   QString filename = QString("%1%2%3.%4").arg(m_FilePrefix->text())
-                     .arg(m_ZStartIndex->text(), m_TotalDigits->value(), '0')
-                     .arg(m_FileSuffix->text()).arg(m_FileExt->text());
+      .arg(m_ZStartIndex->text(), m_TotalDigits->value(), '0')
+      .arg(m_FileSuffix->text()).arg(m_FileExt->text());
   m_GeneratedFileNameExample->setText(filename);
 
   int start = m_ZStartIndex->value();
@@ -441,12 +394,12 @@ void EbsdToH5EbsdWidget::m_generateExampleEbsdInputFile()
   bool hasMissingFiles = false;
 
   // Now generate all the file names the user is asking for and populate the table
-  QVector<QString> fileList = FilePathGenerator::GenerateFileList(start, end, hasMissingFiles, m_StackLowToHigh->isChecked(),
-                              m_InputDir->text(),
-                              m_FilePrefix->text(),
-                              m_FileSuffix->text(),
-                              m_FileExt->text(),
-                              m_TotalDigits->value());
+  QVector<QString> fileList = FilePathGenerator::GenerateFileList(start, end, hasMissingFiles, true,
+                                                                  m_InputDir->text(),
+                                                                  m_FilePrefix->text(),
+                                                                  m_FileSuffix->text(),
+                                                                  m_FileExt->text(),
+                                                                  m_TotalDigits->value());
   m_FileListView->clear();
   QIcon greenDot = QIcon(QString(":/green-dot.png"));
   QIcon redDot = QIcon(QString(":/red-dot.png"));
@@ -478,126 +431,14 @@ void EbsdToH5EbsdWidget::m_generateExampleEbsdInputFile()
   }
 }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void EbsdToH5EbsdWidget::on_m_RefFrameOptionsBtn_clicked()
-{
-  //  QString filename = QString("%1%2%3.%4").arg(m_FilePrefix->text())
-  //      .arg(m_ZStartIndex->text(), m_TotalDigits->value(), '0')
-  //      .arg(m_FileSuffix->text()).arg(m_FileExt->text());
-  //m_GeneratedFileNameExample->setText(filename);
-
-
-  referenceFrameCheck->setStyleSheet(QString(""));
-  referenceFrameCheck->setText("");
-
-  int start = m_ZStartIndex->value();
-  int end = m_ZEndIndex->value();
-  bool hasMissingFiles = false;
-
-  // Now generate all the file names the user is asking for and populate the table
-  QVector<QString> fileList = FilePathGenerator::GenerateFileList(start, end, hasMissingFiles, m_StackLowToHigh->isChecked(),
-                              m_InputDir->text(),
-                              m_FilePrefix->text(),
-                              m_FileSuffix->text(),
-                              m_FileExt->text(),
-                              m_TotalDigits->value());
-  if (fileList.size() == 0)
-  {
-    return;
-  }
-  QString ebsdFileName = (fileList[0]);
-
-  identifyRefFrame();
-
-  QEbsdReferenceFrameDialog d(ebsdFileName, this);
-  d.setEbsdFileName(ebsdFileName);
-  d.setTSLDefault(m_TSLchecked);
-  d.setHKLDefault(m_HKLchecked);
-  d.setHEDMDefault(m_HEDMchecked);
-  d.setNoTrans(m_NoTranschecked);
-  int ret = d.exec();
-  if (ret == QDialog::Accepted)
-  {
-    m_TSLchecked = d.getTSLchecked();
-    m_HKLchecked = d.getHKLchecked();
-    m_HEDMchecked = d.getHEDMchecked();
-    m_NoTranschecked = d.getNoTranschecked();
-    d.getSampleTranformation(m_SampleTransformation);
-    d.getEulerTranformation(m_EulerTransformation);
-    emit parametersChanged(); // emit to let the system know to preflight
-  }
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void EbsdToH5EbsdWidget::identifyRefFrame()
-{
-  m_TSLchecked = false;
-  m_HKLchecked = false;
-  m_NoTranschecked = false;
-  m_HEDMchecked = false;
-
-  // TSL/EDAX
-  if (      m_SampleTransformation.angle == 180.0f
-            && m_SampleTransformation.h == 0.0f
-            && m_SampleTransformation.k == 1.0f
-            && m_SampleTransformation.l == 0.0f
-
-            && m_EulerTransformation.angle == 90.0f
-            && m_EulerTransformation.h == 0.0f
-            && m_EulerTransformation.k == 0.0f
-            && m_EulerTransformation.l == 1.0f
-     )
-
-  {
-    m_TSLchecked = true;
-    m_NoTranschecked = false;
-  }
-  else if (       m_SampleTransformation.angle == 180.0f      // HKL
-                  && m_SampleTransformation.h == 0.0f
-                  && m_SampleTransformation.k == 1.0f
-                  && m_SampleTransformation.l == 0.0f
-
-                  && m_EulerTransformation.angle == 0.0f
-                  && m_EulerTransformation.h == 0.0f
-                  && m_EulerTransformation.k == 0.0f
-                  && m_EulerTransformation.l == 1.0f
-          )
-
-  {
-    m_HKLchecked = true;
-    m_NoTranschecked = false;
-  }
-  else if (       m_SampleTransformation.angle == 0.0f     // HEDM
-                  && m_SampleTransformation.h == 0.0f
-                  && m_SampleTransformation.k == 0.0f
-                  && m_SampleTransformation.l == 1.0f
-
-                  && m_EulerTransformation.angle == 0.0f
-                  && m_EulerTransformation.h == 0.0f
-                  && m_EulerTransformation.k == 0.0f
-                  && m_EulerTransformation.l == 1.0f
-          )
-
-  {
-    m_HEDMchecked = true;
-    m_NoTranschecked = false;
-  }
-
-
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void EbsdToH5EbsdWidget::m_findEbsdMaxSliceAndPrefix()
+void ConvertHexGridToSquareGridWidget::findMaxSliceAndPrefix()
 {
   if (m_InputDir->text().length() == 0) { return; }
   QDir dir(m_InputDir->text());
+#if 0
   m_FileExt->setText("");
   {
     QString ext = ".ang";
@@ -623,7 +464,7 @@ void EbsdToH5EbsdWidget::m_findEbsdMaxSliceAndPrefix()
     }
   }
   // Add in more file formats to look for here
-
+#endif
 
   // Final check to make sure we have a valid file extension
   if (m_FileExt->text().isEmpty() == true)
@@ -692,7 +533,7 @@ void EbsdToH5EbsdWidget::m_findEbsdMaxSliceAndPrefix()
     }
   }
   this->m_TotalSlices->setText(QString::number(totalOimFilesFound));
-  this->m_FilePrefix->setText(fPrefix);
+ // this->m_FilePrefix->setText(fPrefix);
   this->m_ZStartIndex->setValue(minSlice);
   this->m_ZEndIndex->setValue(maxSlice);
 }
@@ -701,7 +542,7 @@ void EbsdToH5EbsdWidget::m_findEbsdMaxSliceAndPrefix()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void EbsdToH5EbsdWidget::widgetChanged(const QString& text)
+void ConvertHexGridToSquareGridWidget::widgetChanged(const QString& text)
 {
   emit parametersChanged();
 }
@@ -709,40 +550,37 @@ void EbsdToH5EbsdWidget::widgetChanged(const QString& text)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void EbsdToH5EbsdWidget::filterNeedsInputParameters(AbstractFilter* filter)
+void ConvertHexGridToSquareGridWidget::filterNeedsInputParameters(AbstractFilter* filter)
 {
   if (NULL == filter)
   {
-    QString ss = QObject::tr("Error Setting EbsdToH5Ebsd Gui values to Filter instance. Filter instance was NULL.").arg(m_FilterParameter->getPropertyName());
+    QString ss = QObject::tr("Error Setting ConvertHexGridToSquareGrid Gui values to Filter instance. Filter instance was NULL.").arg(m_FilterParameter->getPropertyName());
     emit errorSettingFilterParameter(ss);
   }
 
-  EbsdToH5Ebsd* ebsdConverter = qobject_cast<EbsdToH5Ebsd*>(filter);
-  Q_ASSERT_X(NULL != ebsdConverter, "EbsdToH5EbsdWidget can ONLY be used with EbsdToH5Ebsd filter", __FILE__);
-
+  ConvertHexGridToSquareGrid* f = qobject_cast<ConvertHexGridToSquareGrid*>(filter);
+  Q_ASSERT_X(NULL != m_Filter, "ConvertHexGridToSquareGridWidget can ONLY be used with ConvertHexGridToSquareGrid filter", __FILE__);
 
   bool ok = false;
-  ebsdConverter->setOutputFile(m_OutputFile->text() );
-  ebsdConverter->setZStartIndex(m_ZStartIndex->text().toLongLong(&ok));
-  ebsdConverter->setZEndIndex(m_ZEndIndex->text().toLongLong(&ok));
-  ebsdConverter->setZResolution(m_zSpacing->text().toDouble(&ok));
-  ebsdConverter->setRefFrameZDir( getRefFrameZDir() );
+  f->setInputPath(m_InputDir->text());
+  f->setOutputPath(m_OutputDir->text());
+  f->setOutputPrefix(m_OutputPrefix->text());
+  f->setXResolution(m_xSpacing->text().toDouble(&ok));
+  f->setYResolution(m_ySpacing->text().toDouble(&ok));
 
-  ebsdConverter->setInputPath(m_InputDir->text());
-  ebsdConverter->setFilePrefix(m_FilePrefix->text());
-  ebsdConverter->setFileSuffix(m_FileSuffix->text());
-  ebsdConverter->setFileExtension(m_FileExt->text());
-  ebsdConverter->setPaddingDigits(m_TotalDigits->value());
+  f->setFilePrefix(m_FilePrefix->text());
+  f->setFileSuffix(m_FileSuffix->text());
+  f->setFileExtension(m_FileExt->text());
+  f->setZStartIndex(m_ZStartIndex->text().toLongLong(&ok));
+  f->setZEndIndex(m_ZEndIndex->text().toLongLong(&ok));
+  f->setPaddingDigits(m_TotalDigits->value());
 
-  ebsdConverter->setSampleTransformation(m_SampleTransformation);
-  ebsdConverter->setEulerTransformation(m_EulerTransformation);
 }
-
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void EbsdToH5EbsdWidget::beforePreflight()
+void ConvertHexGridToSquareGridWidget::beforePreflight()
 {
   if (m_DidCausePreflight == false)
   {
@@ -753,7 +591,7 @@ void EbsdToH5EbsdWidget::beforePreflight()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void EbsdToH5EbsdWidget::afterPreflight()
+void ConvertHexGridToSquareGridWidget::afterPreflight()
 {
 
 }

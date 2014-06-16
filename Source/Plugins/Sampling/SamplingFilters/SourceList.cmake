@@ -17,7 +17,6 @@ set(_PublicFilters
   RegularizeZSpacing
   RotateSampleRefFrame
   CropVolume
-  Hex2SqrConverter
 )
 
 #--------------

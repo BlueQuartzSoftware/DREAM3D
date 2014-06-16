@@ -68,6 +68,7 @@ class ImportImageStack : public AbstractFilter
 
     DREAM3D_FILTER_PARAMETER(int64_t, ZStartIndex)
     DREAM3D_FILTER_PARAMETER(int64_t, ZEndIndex)
+
     DREAM3D_FILTER_PARAMETER(FloatVec3_t, Resolution)
     DREAM3D_FILTER_PARAMETER(FloatVec3_t, Origin)
 
@@ -81,16 +82,17 @@ class ImportImageStack : public AbstractFilter
     DREAM3D_FILTER_PARAMETER(int, ImageStack)
     Q_PROPERTY(int ImageStack READ getImageStack WRITE setImageStack)
 
+    DREAM3D_FILTER_PARAMETER(QString, ImageDataArrayName)
+    Q_PROPERTY(QString ImageDataArrayName READ getImageDataArrayName WRITE setImageDataArrayName)
+
+
+    virtual const QString getCompiledLibraryName() { return ImageImport::ImageImportBaseName; }
+    virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     /**
     * @brief This returns the group that the filter belonds to. You can select
     * a different group if you want. The string returned here will be displayed
     * in the GUI for the filter
     */
-    DREAM3D_FILTER_PARAMETER(QString, ImageDataArrayName)
-    Q_PROPERTY(QString ImageDataArrayName READ getImageDataArrayName WRITE setImageDataArrayName)
-
-    virtual const QString getCompiledLibraryName() { return ImageImport::ImageImportBaseName; }
-    virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
 
     /**
@@ -154,7 +156,6 @@ class ImportImageStack : public AbstractFilter
     */
     void dataCheck();
 
-    void generateFileList();
 
   private:
     DEFINE_CREATED_DATAARRAY_VARIABLE(uint8_t, ImageData)
