@@ -404,40 +404,23 @@ void PipelineFilterWidget::changeStyle()
   //  int m_CurrentBorderColorFactor = 0;
   //  int m_BorderIncrement = 16;
 
-  if (m_HasPreflightErrors == true)
-  {
-    //    m_CurrentBorderColorFactor += m_BorderIncrement;
-    //    if (m_CurrentBorderColorFactor > 127)
-    //    {
-    //      m_BorderIncrement = -16;
-    //    }
-    //    if (m_CurrentBorderColorFactor < 1)
-    //    {
-    //      m_BorderIncrement = 16;
-    //    }
-
-    style.append("border: 2px solid rgb(255, 0, 0);");
-    //    style.append(QString::number(255 - m_CurrentBorderColorFactor, 10));
-    //    style.append(", ");
-    //    style.append(QString::number(m_CurrentBorderColorFactor, 10));
-    //    style.append(", ");
-    //    style.append(QString::number(m_CurrentBorderColorFactor, 10));
-    //    style.append(");");
-  }
-  else if(m_HasPreflightWarnings)
-  {
-    style.append("border: 2px solid rgb(172, 168, 0);");
-  }
-  else if(m_IsSelected == true )
+//  if (m_HasPreflightErrors == true)
+//  {
+//    style.append("border: 2px solid rgb(255, 0, 0);");
+//  }
+//  else if(m_HasPreflightWarnings)
+//  {
+//    style.append("border: 2px solid rgb(172, 168, 0);");
+//  }
+//  else
+ if(m_IsSelected == true )
   {
     style.append("border: 2px solid purple;");
-    //   m_CurrentBorderColorFactor = 0;
   }
   else
   {
     style.append("border: 1px solid #515151;");
     style.append("margin: 1px;");
-    //   m_CurrentBorderColorFactor = 0;
   }
   setBorderColorStyle(style);
   updateWidgetStyle();
@@ -452,7 +435,14 @@ void PipelineFilterWidget::updateWidgetStyle()
 
   style.append("PipelineFilterWidget {\n");
 
+  if (m_HasPreflightErrors == true)
+  {
+    style.append("background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 rgba(255, 185, 185, 255), stop:0.5 rgba(255, 215, 215, 255), stop:1 rgba(255, 150, 150, 255));\n");
+  }
+  else
+  {
   style.append("background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 rgba(185, 185, 185, 255), stop:0.5 rgba(226, 226, 226, 255), stop:1 rgba(150, 150, 150, 255));\n");
+  }
 
   style.append("background-position: top ;\n background-repeat: repeat-x;");
 
