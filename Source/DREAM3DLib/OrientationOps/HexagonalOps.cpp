@@ -389,7 +389,8 @@ void HexagonalOps::randomizeEulerAngles(float& synea1, float& synea2, float& syn
   QuatF q;
   QuatF qc;
   OrientationMath::EulertoQuat(synea1, synea2, synea3, q);
-  int symOp = k_NumSymQuats * rand();
+  //int symOp = k_NumSymQuats * rand();
+  int symOp = rand() % k_NumSymQuats;
   QuaternionMathF::Multiply(q, HexQuatSym[symOp], qc);
   OrientationMath::QuattoEuler(qc, synea1, synea2, synea3);
 }
