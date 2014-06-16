@@ -1,0 +1,26 @@
+#ifndef _PipelineRunnerTest_H_
+#define _PipelineRunnerTest_H_
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString getDream3dDataDir()
+{
+  return QString("@TEST_DATA_DIR@");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString getPipelineListFile()
+{
+  return QString("@TEST_PIPELINE_LIST_FILE@");
+}
+
+
+
+
+#endif /* _PipelineRunnerTest_H_ */
+
+

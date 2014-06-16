@@ -79,21 +79,9 @@
 
 #include "UnitTestSupport.hpp"
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-QString getDream3dDataDir()
-{
-  return QString("@DREAM3D_DATA_DIR@");
-}
+#include "PipelineRunnerTest.h"
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-QString getPipelineListFile()
-{
-  return QString("@DREAM3D_PIPELINE_LIST_FILE@");
-}
+
 
 // -----------------------------------------------------------------------------
 //
@@ -200,7 +188,7 @@ int main (int argc, char  *argv[])
 #ifdef _MSC_VER
   _chdir(dataDir.absolutePath().toLatin1().constData());
 #else
-  chdir_(dataDir.absolutePath().toLatin1().constData());
+  chdir(dataDir.absolutePath().toLatin1().constData());
 #endif
 
 
@@ -228,22 +216,23 @@ int main (int argc, char  *argv[])
   QStringList list = contents.split(QRegExp("\\n"));
   QStringListIterator sourceLines(list);
 
-  // Iterate over all the entries in the file and process each pipeline. Note that the order of the 
+  // Iterate over all the entries in the file and process each pipeline. Note that the order of the
   // pipelines will probably matter
   while (sourceLines.hasNext())
   {
     QString pipelineFile = sourceLines.next();
+    if(pipelineFile.isEmpty()) { continue; }
     try {
       QFileInfo fi(pipelineFile);
-      
+
       DREAM3D::unittest::CurrentMethod = fi.fileName().toStdString();
       DREAM3D::unittest::numTests++;
 
       ExecutePipeline(pipelineFile);
-      
+
       TestPassed(fi.fileName().toStdString());
       DREAM3D::unittest::CurrentMethod = "";
-    } 
+    }
     catch (TestException& e)
     {
       TestFailed(DREAM3D::unittest::CurrentMethod);

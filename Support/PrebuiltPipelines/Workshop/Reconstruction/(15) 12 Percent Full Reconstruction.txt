@@ -1,7 +1,7 @@
 [PipelineBuilder]
 Name=(15) 12 Percent Full Reconstruction
-Number_Filters=14
-Version=5.0.6552
+Number_Filters=15
+Version=5.0.6662
 
 [0]
 Filter_Name=ReadH5Ebsd
@@ -60,7 +60,8 @@ MisorientationTolerance=5
 
 [4]
 Filter_Name=IdentifySample
-Filter_Human_Label=Identify Sample
+Filter_Human_Label=Isolate Largest Feature (Identify Sample)
+FillHoles=0
 GoodVoxelsArrayPath=VolumeDataContainer|CellData|GoodVoxels
 
 [5]
@@ -80,7 +81,7 @@ CrystalStructuresArrayPath=VolumeDataContainer|CellEnsembleData|CrystalStructure
 CellPhasesArrayPath=VolumeDataContainer|CellData|Phases
 GoodVoxelsArrayPath=VolumeDataContainer|CellData|GoodVoxels
 MisorientationTolerance=5
-NumberofNeighbors=4
+NumberofNeighbors=6
 
 [7]
 Filter_Name=NeighborOrientationCorrelation
@@ -115,21 +116,33 @@ CellPhasesArrayPath=VolumeDataContainer|CellData|Phases
 FeatureIdsArrayPath=VolumeDataContainer|CellData|FeatureIds
 
 [10]
+Filter_Name=FindSizes
+Filter_Human_Label=Find Feature Sizes
+CellFeatureAttributeMatrixName=VolumeDataContainer|CellFeatureData|
+NumCellsArrayName=NumCells
+EquivalentDiametersArrayName=EquivalentDiameters
+VolumesArrayName=Volumes
+FeatureIdsArrayPath=VolumeDataContainer|CellData|FeatureIds
+
+[11]
 Filter_Name=MinSize
 Filter_Human_Label=Minimum Size Filter
+NumCellsArrayPath=VolumeDataContainer|CellFeatureData|NumCells
 FeaturePhasesArrayPath=VolumeDataContainer|CellFeatureData|Phases
 FeatureIdsArrayPath=VolumeDataContainer|CellData|FeatureIds
 MinAllowedFeatureSize=16
 ApplyToSinglePhase=0
 PhaseNumber=0
 
-[11]
+[12]
 Filter_Name=FillBadData
 Filter_Human_Label=Fill Bad Data
 FeatureIdsArrayPath=VolumeDataContainer|CellData|FeatureIds
-MinAllowedDefectSize=1000
+CellPhasesArrayPath=VolumeDataContainer|CellData|Phases
+MinAllowedDefectSize=100
+StoreAsNewPhase=1
 
-[12]
+[13]
 Filter_Name=GenerateIPFColors
 Filter_Human_Label=Generate IPF Colors
 UseGoodVoxels=0
@@ -143,7 +156,7 @@ ReferenceDir\1\x=0
 ReferenceDir\2\y=0
 ReferenceDir\3\z=1
 
-[13]
+[14]
 Filter_Name=DataContainerWriter
 Filter_Human_Label=Write DREAM3D Data File
 OutputFile=Data/Output/12PercentTension.dream3d

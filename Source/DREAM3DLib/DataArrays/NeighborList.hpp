@@ -501,7 +501,7 @@ class NeighborList : public IDataArray
      */
     int32_t resizeTotalElements(size_t size)
     {
-      std::cout << "~NeighborList::resizeTotalElements(" << size << ")" << std::endl;
+      //std::cout << "NeighborList::resizeTotalElements(" << size << ")" << std::endl;
       size_t old = m_Array.size();
       m_Array.resize(size);
       m_NumTuples = size;

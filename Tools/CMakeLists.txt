@@ -84,49 +84,6 @@ endfunction()
 #    LINK_LIBRARIES DREAM3DLib ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY} QtSupport
 #)
 
-
-# Create a Command line tool for the AngReaderTest
-COMPILE_TOOL(
-    TARGET AngReaderDump
-    SOURCES ${DREAM3DTools_SOURCE_DIR}/AngReaderDump.cpp
-    DEBUG_EXTENSION ${EXE_DEBUG_EXTENSION}
-    VERSION_MAJOR ${DREAM3D_VER_MAJOR}
-    VERSION_MINOR ${DREAM3D_VER_MINOR}
-    VERSION_PATCH ${DREAM3D_VER_PATCH}
-    BINARY_DIR    ${${PROJECT_NAME}_BINARY_DIR}
-    COMPONENT     Applications
-    INSTALL_DEST  "${install_dir}"
-    LINK_LIBRARIES EbsdLib
-)
-
-# Create a Command line tool for the CtfReaderTest
-COMPILE_TOOL(
-    TARGET CtfReaderDump
-    SOURCES ${DREAM3DTools_SOURCE_DIR}/CtfReaderDump.cpp
-    DEBUG_EXTENSION ${EXE_DEBUG_EXTENSION}
-    VERSION_MAJOR ${DREAM3D_VER_MAJOR}
-    VERSION_MINOR ${DREAM3D_VER_MINOR}
-    VERSION_PATCH ${DREAM3D_VER_PATCH}
-    BINARY_DIR    ${${PROJECT_NAME}_BINARY_DIR}
-    COMPONENT     Applications
-    INSTALL_DEST  "${install_dir}"
-    LINK_LIBRARIES EbsdLib
-)
-
-# Create a Command line tool for the CtfReaderTest
-COMPILE_TOOL(
-    TARGET PhFileFixer
-    SOURCES ${DREAM3DTools_SOURCE_DIR}/PhFileFixer.cpp
-    DEBUG_EXTENSION ${EXE_DEBUG_EXTENSION}
-    VERSION_MAJOR ${DREAM3D_VER_MAJOR}
-    VERSION_MINOR ${DREAM3D_VER_MINOR}
-    VERSION_PATCH ${DREAM3D_VER_PATCH}
-    BINARY_DIR    ${${PROJECT_NAME}_BINARY_DIR}
-    COMPONENT     Applications
-    INSTALL_DEST  "${install_dir}"
-
-)
-
 # Create a Command line tool for the PhToHDF5
 COMPILE_TOOL(
     TARGET PhToHDF5
@@ -170,7 +127,19 @@ COMPILE_TOOL(
     LINK_LIBRARIES DREAM3DLib
 )
 
-
+# Create a Command line tool for the MATLAB_CodeGen
+COMPILE_TOOL(
+    TARGET MATLAB_CodeGen
+    SOURCES ${DREAM3DTools_SOURCE_DIR}/MATLAB_CodeGen.cpp
+    DEBUG_EXTENSION ${EXE_DEBUG_EXTENSION}
+    VERSION_MAJOR ${DREAM3D_VER_MAJOR}
+    VERSION_MINOR ${DREAM3D_VER_MINOR}
+    VERSION_PATCH ${DREAM3D_VER_PATCH}
+    BINARY_DIR    ${${PROJECT_NAME}_BINARY_DIR}
+    COMPONENT     Applications
+    INSTALL_DEST  "${install_dir}"
+    LINK_LIBRARIES DREAM3DLib
+)
 
 COMPILE_TOOL(
     TARGET ModifiedLambertTest

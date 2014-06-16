@@ -69,9 +69,6 @@ macro(ADD_DREAM3D_TEST_2 testname LIBRARIES SOURCES)
   add_test(${testname} ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${testname})
 endmacro()
 
-#QT4_WRAP_CPP( _moc_filter_source  GenerateFeatureIds.h)
-
-
 
 ADD_DREAM3D_TEST(H5LiteTest "H5Support")
 ADD_DREAM3D_TEST(H5UtilitiesTest "H5Support")
@@ -166,45 +163,56 @@ endif()
 # pipelines as a sanity check
 # Reconstruction Pipelines First
 set(PREBUILT_PIPELINES_DIR "PrebuiltPipelines/Workshop")
-set(DREAM3D_PIPELINE_LIST_FILE ${DREAM3DTest_BINARY_DIR}/TestPipelineList.txt)
+set(TEST_PIPELINE_LIST_FILE ${DREAM3DTest_BINARY_DIR}/PipelineRunnerTest.txt)
+set(TEST_DATA_DIR ${DREAM3D_DATA_DIR})
 
 set(PREBUILT_PIPELINE_NAMES
-  "Reconstruction/(01) SmallIN100 Import"
-  "Reconstruction/(02) SmallIN100 Initial Visualization"
-  "Reconstruction/(03) SmallIN100 Threshold"
-  "Reconstruction/(04) SmallIN100 Alignment"
-  "Reconstruction/(05) SmallIN100 Alignment 2"
-  "Reconstruction/(06) SmallIN100 CleanUp"
-  "Reconstruction/(07) SmallIN100 Segmentation"
-  "Reconstruction/(08) SmallIN100 Merge Twins"
-  "Reconstruction/(09) SmallIN100 Minimum Size"
-  "Reconstruction/(10) SmallIN100 Minimum Neighbors"
-  "Reconstruction/(11) SmallIN100 Fill Bad Data"
-  "Reconstruction/(12) SmallIN100 Close Bad Data"
-  "Reconstruction/(13) Image Initial Visualization"
-  "Reconstruction/(14) Image Segmentation"
-  "Reconstruction/(15) 12 Percent Full Reconstruction"
-  "Reconstruction/(16) MicroTextureReconstruction"
-  "Reconstruction/(17) Small IN100 Full Reconstruction"
-  "Statistics/(01) SmallIN100 Morphological Statistics.txt"
-  "Statistics/(02) SmallIN100 Export Statistics.txt"
-  "Statistics/(03) SmallIN100 Transfer Field Data.txt"
-  "Statistics/(04) SmallIN100 Field Threshold.txt"
-  "Statistics/(05) SmallIN100 Crystallographic Statistics.txt"
-  "Statistics/(06) 12 Percent Tension Crystallographic Statistics.txt"
+#  "Reconstruction/(01) SmallIN100 Import"
+#  "Reconstruction/(02) SmallIN100 Initial Visualization"
+#  "Reconstruction/(03) SmallIN100 Threshold"
+#  "Reconstruction/(04) SmallIN100 Alignment"
+#  "Reconstruction/(05) SmallIN100 Alignment 2"
+#  "Reconstruction/(06) SmallIN100 CleanUp"
+#  "Reconstruction/(07) SmallIN100 Segmentation"
+#  "Reconstruction/(08) SmallIN100 Merge Twins"
+#  "Reconstruction/(09) SmallIN100 Minimum Size"
+#  "Reconstruction/(10) SmallIN100 Minimum Neighbors"
+#  "Reconstruction/(11) SmallIN100 Fill Bad Data"
+#  "Reconstruction/(12) SmallIN100 Close Bad Data"
+#  "Reconstruction/(13) Image Initial Visualization"
+#  "Reconstruction/(14) Image Segmentation"
+#  "Reconstruction/(15) 12 Percent Full Reconstruction"
+#  "Reconstruction/(16) MicroTextureReconstruction"
+#  "Reconstruction/(17) Small IN100 Full Reconstruction"
+  "Statistics/(01) SmallIN100 Morphological Statistics"
+  "Statistics/(02) SmallIN100 Export Statistics"
+  "Statistics/(03) SmallIN100 Transfer Field Data"
+  "Statistics/(04) SmallIN100 Field Threshold"
+  "Statistics/(05) SmallIN100 Crystallographic Statistics"
+  "Statistics/(06) 12 Percent Tension Crystallographic Statistics"
+#  "SurfaceMeshing/(01) SmallIN100 Quick Mesh"
+#  "SurfaceMeshing/(02) SmallIN100 Marching Cubes"
+#  "SurfaceMeshing/(03) SmallIN100 Smooth Mesh"
+#  "SurfaceMeshing/(04) SmallIN100 Mesh Statistics"
+#  "SurfaceMeshing/(05) SmallIN100 GBCD"
+#  "Synthetic/(01) Single Cubic Phase Equiaxed"
+#  "Synthetic/(02) Single Hexagonal Phase Equiaxed"
+#  "Synthetic/(03) Single Cubic Phase Rolled"
+#  "Synthetic/(04) Two Phase Cubic Hexagonal Particles Equiaxed"
+#  "Synthetic/(05) Composite"
 )
 
-configure_file(${DREAM3DTest_SOURCE_DIR}/PipelineRunnerTest.cpp.in
-                  ${DREAM3DTest_BINARY_DIR}/PipelineRunnerTest.cpp)
+configure_file(${DREAM3DTest_SOURCE_DIR}/PipelineRunnerTest.h.in
+               ${DREAM3DTest_BINARY_DIR}/PipelineRunnerTest.h)
 
-add_executable(PipelineRunnerTest ${DREAM3DTest_BINARY_DIR}/PipelineRunnerTest.cpp)
+add_executable(PipelineRunnerTest ${DREAM3DTest_SOURCE_DIR}/PipelineRunnerTest.cpp ${DREAM3DTest_BINARY_DIR}/PipelineRunnerTest.h)
 target_link_libraries(PipelineRunnerTest ${QT_QTCORE_LIBRARY} EbsdLib DREAM3DLib)
 
-FILE(WRITE ${DREAM3D_PIPELINE_LIST_FILE} )
+FILE(WRITE ${TEST_PIPELINE_LIST_FILE} )
 
 foreach(f ${PREBUILT_PIPELINE_NAMES} )
   set(DREAM3D_PIPELINE_FILE "${DREAM3D_SUPPORT_DIR}/${PREBUILT_PIPELINES_DIR}/${f}.txt")
-  FILE(APPEND ${DREAM3D_PIPELINE_LIST_FILE} "${DREAM3D_PIPELINE_FILE}\n")  
+  FILE(APPEND ${TEST_PIPELINE_LIST_FILE} "${DREAM3D_PIPELINE_FILE}\n")
 endforeach()
 
 

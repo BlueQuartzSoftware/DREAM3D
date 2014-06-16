@@ -1,7 +1,7 @@
 [PipelineBuilder]
 Name=(17) Small IN100 Full Reconstruction
-Number_Filters=24
-Version=5.0.6545
+Number_Filters=25
+Version=5.0.6662
 
 [0]
 Filter_Name=ReadH5Ebsd
@@ -14,13 +14,15 @@ RefFrameZDir=1
 ZStartIndex=1
 ZEndIndex=117
 UseTransformations=1
-ArraySelections_SelectedArrayNames\size=6
-ArraySelections_SelectedArrayNames\1\SelectedArrayNames=EulerAngles
-ArraySelections_SelectedArrayNames\2\SelectedArrayNames=Phases
-ArraySelections_SelectedArrayNames\3\SelectedArrayNames=SEM Signal
-ArraySelections_SelectedArrayNames\4\SelectedArrayNames=Confidence Index
-ArraySelections_SelectedArrayNames\5\SelectedArrayNames=Fit
-ArraySelections_SelectedArrayNames\6\SelectedArrayNames=Image Quality
+ArraySelections_SelectedArrayNames\size=8
+ArraySelections_SelectedArrayNames\1\SelectedArrayNames=X Position
+ArraySelections_SelectedArrayNames\2\SelectedArrayNames=EulerAngles
+ArraySelections_SelectedArrayNames\3\SelectedArrayNames=Y Position
+ArraySelections_SelectedArrayNames\4\SelectedArrayNames=Phases
+ArraySelections_SelectedArrayNames\5\SelectedArrayNames=SEM Signal
+ArraySelections_SelectedArrayNames\6\SelectedArrayNames=Confidence Index
+ArraySelections_SelectedArrayNames\7\SelectedArrayNames=Fit
+ArraySelections_SelectedArrayNames\8\SelectedArrayNames=Image Quality
 
 [1]
 Filter_Name=MultiThresholdObjects
@@ -60,7 +62,8 @@ MisorientationTolerance=5
 
 [4]
 Filter_Name=IdentifySample
-Filter_Human_Label=Identify Sample
+Filter_Human_Label=Isolate Largest Feature (Identify Sample)
+FillHoles=0
 GoodVoxelsArrayPath=VolumeDataContainer|CellData|ThresholdArray
 
 [5]
@@ -132,6 +135,8 @@ CellFeatureAttributeMatrixPath=VolumeDataContainer|CellFeatureData|
 FeatureIdsArrayPath=VolumeDataContainer|CellData|FeatureIds
 SurfaceVoxelsArrayName=SurfaceVoxels
 SurfaceFeaturesArrayName=SurfaceFeatures
+StoreSurfaceCells=0
+StoreSurfaceFeatures=0
 NumNeighborsArrayName=NumNeighbors
 NeighborListArrayName=NeighborList
 SharedSurfaceAreaListArrayName=SharedSurfaceAreaList
@@ -154,39 +159,56 @@ AxisTolerance=3
 AngleTolerance=2
 
 [13]
+Filter_Name=FindSizes
+Filter_Human_Label=Find Feature Sizes
+CellFeatureAttributeMatrixName=VolumeDataContainer|CellFeatureData|
+NumCellsArrayName=NumCells
+EquivalentDiametersArrayName=EquivalentDiameters
+VolumesArrayName=Volumes
+FeatureIdsArrayPath=VolumeDataContainer|CellData|FeatureIds
+
+[14]
 Filter_Name=MinSize
 Filter_Human_Label=Minimum Size Filter
+NumCellsArrayPath=VolumeDataContainer|CellFeatureData|NumCells
 FeaturePhasesArrayPath=VolumeDataContainer|CellFeatureData|Phases
 FeatureIdsArrayPath=VolumeDataContainer|CellData|FeatureIds
 MinAllowedFeatureSize=16
 ApplyToSinglePhase=0
 PhaseNumber=0
 
-[14]
+[15]
 Filter_Name=FindNeighbors
 Filter_Human_Label=Find Feature Neighbors
 CellFeatureAttributeMatrixPath=VolumeDataContainer|CellFeatureData|
 FeatureIdsArrayPath=VolumeDataContainer|CellData|FeatureIds
 SurfaceVoxelsArrayName=SurfaceVoxels
 SurfaceFeaturesArrayName=SurfaceFeatures
+StoreSurfaceCells=0
+StoreSurfaceFeatures=0
 NumNeighborsArrayName=NumNeighbors
 NeighborListArrayName=NeighborList
 SharedSurfaceAreaListArrayName=SharedSurfaceAreaList
 
-[15]
+[16]
 Filter_Name=MinNeighbors
 Filter_Human_Label=Minimum Number of Neighbors Filter
 NumNeighborsArrayPath=VolumeDataContainer|CellFeatureData|NumNeighbors
+FeaturePhasesArrayPath=VolumeDataContainer|CellFeatureData|Phases
 FeatureIdsArrayPath=VolumeDataContainer|CellData|FeatureIds
+ApplyToSinglePhase=0
+PhaseNumber=0
 MinNumNeighbors=2
 
-[16]
+[17]
 Filter_Name=FillBadData
 Filter_Human_Label=Fill Bad Data
 FeatureIdsArrayPath=VolumeDataContainer|CellData|FeatureIds
+CellPhasesArrayPath=VolumeDataContainer|CellData|Phases
 MinAllowedDefectSize=1000
+StoreAsNewPhase=1
 
-[17]
+[18]
 Filter_Name=ErodeDilateBadData
 Filter_Human_Label=Erode/Dilate Bad Data
 FeatureIdsArrayPath=VolumeDataContainer|CellData|FeatureIds
@@ -196,7 +218,7 @@ X%20Direction=1
 Y%20Direction=1
 Z%20Direction=1
 
-[18]
+[19]
 Filter_Name=ErodeDilateBadData
 Filter_Human_Label=Erode/Dilate Bad Data
 FeatureIdsArrayPath=VolumeDataContainer|CellData|FeatureIds
@@ -206,7 +228,7 @@ X%20Direction=1
 Y%20Direction=1
 Z%20Direction=1
 
-[19]
+[20]
 Filter_Name=GenerateIPFColors
 Filter_Human_Label=Generate IPF Colors
 UseGoodVoxels=0
@@ -220,13 +242,13 @@ ReferenceDir\1\x=0
 ReferenceDir\2\y=0
 ReferenceDir\3\z=1
 
-[20]
+[21]
 Filter_Name=RenameAttributeArray
 Filter_Human_Label=Rename Attribute Array
 SelectedArrayPath=VolumeDataContainer|CellData|IPFColor
 NewArrayName=IPFColor_Z
 
-[21]
+[22]
 Filter_Name=GenerateMisorientationColors
 Filter_Human_Label=Generate Misorientation Colors
 UseGoodVoxels=0
@@ -241,13 +263,13 @@ ReferenceAxis\2\y=0
 ReferenceAxis\3\z=1
 ReferenceAngle=0
 
-[22]
+[23]
 Filter_Name=RenameAttributeArray
 Filter_Human_Label=Rename Attribute Array
 SelectedArrayPath=VolumeDataContainer|CellData|MisorientationColor
 NewArrayName=SchuhColor
 
-[23]
+[24]
 Filter_Name=DataContainerWriter
 Filter_Human_Label=Write DREAM3D Data File
 OutputFile=Data/Output/SmallIN100Cleaned.dream3d

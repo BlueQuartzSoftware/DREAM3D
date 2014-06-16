@@ -1,14 +1,14 @@
 [PipelineBuilder]
 Name=(06) 12 Percent Tension Crystallographic Statistics
 Number_Filters=10
-Version=5.0.6552
+Version=5.0.6664
 
 [0]
 Filter_Name=DataContainerReader
 Filter_Human_Label=Read DREAM3D Data File
 InputFile=Data/Output/12PercentTension.dream3d
 OverwriteExistingDataContainers=0
-DataContainerArrayProxy\size=14
+DataContainerArrayProxy\size=18
 DataContainerArrayProxy\1\Path=VolumeDataContainer|CellData|Confidence Index
 DataContainerArrayProxy\1\DCFlag=2
 DataContainerArrayProxy\1\ATTRFlag=2
@@ -65,6 +65,22 @@ DataContainerArrayProxy\14\Path=VolumeDataContainer|CellFeatureData|Active
 DataContainerArrayProxy\14\DCFlag=2
 DataContainerArrayProxy\14\ATTRFlag=2
 DataContainerArrayProxy\14\DAFlag=2
+DataContainerArrayProxy\15\Path=VolumeDataContainer|CellFeatureData|EquivalentDiameters
+DataContainerArrayProxy\15\DCFlag=2
+DataContainerArrayProxy\15\ATTRFlag=2
+DataContainerArrayProxy\15\DAFlag=2
+DataContainerArrayProxy\16\Path=VolumeDataContainer|CellFeatureData|NumCells
+DataContainerArrayProxy\16\DCFlag=2
+DataContainerArrayProxy\16\ATTRFlag=2
+DataContainerArrayProxy\16\DAFlag=2
+DataContainerArrayProxy\17\Path=VolumeDataContainer|CellFeatureData|Phases
+DataContainerArrayProxy\17\DCFlag=2
+DataContainerArrayProxy\17\ATTRFlag=2
+DataContainerArrayProxy\17\DAFlag=2
+DataContainerArrayProxy\18\Path=VolumeDataContainer|CellFeatureData|Volumes
+DataContainerArrayProxy\18\DCFlag=2
+DataContainerArrayProxy\18\ATTRFlag=2
+DataContainerArrayProxy\18\DAFlag=2
 
 [1]
 Filter_Name=FindFeaturePhases
@@ -81,6 +97,8 @@ CellFeatureAttributeMatrixPath=VolumeDataContainer|CellFeatureData|
 FeatureIdsArrayPath=VolumeDataContainer|CellData|FeatureIds
 SurfaceVoxelsArrayName=SurfaceVoxels
 SurfaceFeaturesArrayName=SurfaceFeatures
+StoreSurfaceCells=0
+StoreSurfaceFeatures=0
 NumNeighborsArrayName=NumNeighbors
 NeighborListArrayName=NeighborList
 SharedSurfaceAreaListArrayName=SharedSurfaceAreaList
@@ -133,10 +151,10 @@ QPEuclideanDistancesArrayName=QPEuclideanDistances
 TJEuclideanDistancesArrayName=TJEuclideanDistances
 GBEuclideanDistancesArrayName=GBEuclideanDistances
 FeatureIdsArrayPath=VolumeDataContainer|CellData|FeatureIds
-doBoundaries=1
-doTripleLines=0
-doQuadPoints=0
-saveNearestNeighbors=0
+DoBoundaries=1
+DoTripleLines=0
+DoQuadPoints=0
+SaveNearestNeighbors=0
 CalcOnlyManhattanDist=0
 
 [7]
