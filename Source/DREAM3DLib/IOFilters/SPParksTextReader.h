@@ -39,8 +39,8 @@
 #include <QtCore/QString>
 #include <QtCore/QFile>
 
+#include "EbsdLib/EbsdLib.h"
 #include "EbsdLib/HKL/DataParser.hpp"
-
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
