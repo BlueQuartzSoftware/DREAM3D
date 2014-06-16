@@ -622,11 +622,9 @@ void CubicOps::randomizeEulerAngles(float& synea1, float& synea2, float& synea3)
 {
   QuatF q;
   QuatF qc;
-  QuatF qtemp;
   OrientationMath::EulertoQuat(synea1, synea2, synea3, q);
   //int symOp = k_NumSymQuats * rand();
   int symOp = rand() % k_NumSymQuats;
-  qtemp = CubicQuatSym[symOp];
   QuaternionMathF::Multiply(q, CubicQuatSym[symOp], qc);
   OrientationMath::QuattoEuler(qc, synea1, synea2, synea3);
 }
