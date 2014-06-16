@@ -261,7 +261,7 @@ void FillBadData::execute()
         for (size_t k = 0; k < currentvlist.size(); k++)
         {
           m_FeatureIds[currentvlist[k]] = 0;
-          m_CellPhases[currentvlist[k]] = maxPhase+1;
+          if(m_StoreAsNewPhase == true) m_CellPhases[currentvlist[k]] = maxPhase+1;
         }
       }
       if((int)currentvlist.size() < m_MinAllowedDefectSize)

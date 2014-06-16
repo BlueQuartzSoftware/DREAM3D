@@ -53,14 +53,17 @@ EstablishMatrixPhase::EstablishMatrixPhase() :
   AbstractFilter(),
   m_OutputCellAttributeMatrixName(DREAM3D::Defaults::SyntheticVolumeDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, ""),
   m_OutputCellFeatureAttributeMatrixName(DREAM3D::Defaults::CellFeatureAttributeMatrixName),
+  m_OutputCellEnsembleAttributeMatrixName(DREAM3D::Defaults::CellEnsembleAttributeMatrixName),
   m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
   m_CellPhasesArrayName(DREAM3D::CellData::Phases),
   m_FeaturePhasesArrayName(DREAM3D::FeatureData::Phases),
+  m_NumFeaturesArrayName(DREAM3D::EnsembleData::NumFeatures),
   m_InputStatsArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellEnsembleAttributeMatrixName, DREAM3D::EnsembleData::Statistics),
   m_InputPhaseTypesArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellEnsembleAttributeMatrixName, DREAM3D::EnsembleData::PhaseTypes),
   m_FeatureIds(NULL),
   m_CellPhases(NULL),
   m_FeaturePhases(NULL),
+  m_NumFeatures(NULL),
   m_PhaseTypesArrayName(DREAM3D::EnsembleData::PhaseTypes),
   m_PhaseTypes(NULL)
 {
@@ -86,9 +89,11 @@ void EstablishMatrixPhase::setupFilterParameters()
   parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
   parameters.push_back(FilterParameter::New("Cell Attribute Matrix Name", "OutputCellAttributeMatrixName", FilterParameterWidgetType::AttributeMatrixSelectionWidget, getOutputCellAttributeMatrixName(), true));
   parameters.push_back(FilterParameter::New("Cell Feature Attribute Matrix Name", "OutputCellFeatureAttributeMatrixName", FilterParameterWidgetType::StringWidget, getOutputCellFeatureAttributeMatrixName(), true));
+  parameters.push_back(FilterParameter::New("Cell Ensemble Attribute Matrix Name", "OutputCellEnsembleAttributeMatrixName", FilterParameterWidgetType::StringWidget, getOutputCellEnsembleAttributeMatrixName(), true));
   parameters.push_back(FilterParameter::New("Feature Ids Array Name", "FeatureIdsArrayName", FilterParameterWidgetType::StringWidget, getFeatureIdsArrayName(), true));
   parameters.push_back(FilterParameter::New("Cell Phases Array Name", "CellPhasesArrayName", FilterParameterWidgetType::StringWidget, getCellPhasesArrayName(), true));
   parameters.push_back(FilterParameter::New("Feature Phases Array Name", "FeaturePhasesArrayName", FilterParameterWidgetType::StringWidget, getFeaturePhasesArrayName(), true));
+  parameters.push_back(FilterParameter::New("Number of Features Array Name", "NumFeaturesArrayName", FilterParameterWidgetType::StringWidget, getNumFeaturesArrayName(), true));
   setFilterParameters(parameters);
 }
 
@@ -100,9 +105,11 @@ void EstablishMatrixPhase::readFilterParameters(AbstractFilterParametersReader* 
   reader->openFilterGroup(this, index);
   setOutputCellAttributeMatrixName( reader->readDataArrayPath("OutputCellAttributeMatrixName", getOutputCellAttributeMatrixName() ) );
   setOutputCellFeatureAttributeMatrixName( reader->readString("OutputCellFeatureAttributeMatrixName", getOutputCellFeatureAttributeMatrixName() ) );
+  setOutputCellEnsembleAttributeMatrixName( reader->readString("OutputCellEnsembleAttributeMatrixName", getOutputCellEnsembleAttributeMatrixName() ) );
   setFeatureIdsArrayName( reader->readString("FeatureIdsArrayName", getFeatureIdsArrayName() ) );
   setCellPhasesArrayName( reader->readString("CellPhasesArrayName", getCellPhasesArrayName() ) );
   setFeaturePhasesArrayName( reader->readString("FeaturePhasesArrayName", getFeaturePhasesArrayName() ) );
+  setNumFeaturesArrayName( reader->readString("NumFeaturesArrayName", getNumFeaturesArrayName() ) );
   setInputStatsArrayPath(reader->readDataArrayPath("InputStatsArrayPath", getInputStatsArrayPath() ) );
   setInputPhaseTypesArrayPath(reader->readDataArrayPath("InputPhaseTypesArrayPath", getInputPhaseTypesArrayPath() ) );
   reader->closeFilterGroup();
@@ -116,9 +123,11 @@ int EstablishMatrixPhase::writeFilterParameters(AbstractFilterParametersWriter* 
   writer->openFilterGroup(this, index);
   writer->writeValue("OutputCellAttributeMatrixName", getOutputCellAttributeMatrixName() );
   writer->writeValue("OutputCellFeatureAttributeMatrixName", getOutputCellFeatureAttributeMatrixName() );
+  writer->writeValue("OutputCellEnsembleAttributeMatrixName", getOutputCellEnsembleAttributeMatrixName() );
   writer->writeValue("FeatureIdsArrayName", getFeatureIdsArrayName() );
   writer->writeValue("CellPhasesArrayName", getCellPhasesArrayName() );
   writer->writeValue("FeaturePhasesArrayName", getFeaturePhasesArrayName() );
+  writer->writeValue("NumFeaturesArrayName", getNumFeaturesArrayName() );
   writer->writeValue("InputStatsArrayPath", getInputStatsArrayPath() );
   writer->writeValue("InputPhaseTypesArrayPath", getInputPhaseTypesArrayPath() );
   writer->closeFilterGroup();
@@ -177,12 +186,20 @@ void EstablishMatrixPhase::dataCheck()
   QVector<size_t> tDims(1, 0);
   AttributeMatrix::Pointer cellFeatureAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getOutputCellFeatureAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::CellFeature);
   if(getErrorCondition() < 0) { return; }
+  tDims[0] = m_PhaseTypesPtr.lock()->getNumberOfTuples();
+  AttributeMatrix::Pointer cellEnsembleAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getOutputCellEnsembleAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::CellEnsemble);
+  if(getErrorCondition() < 0) { return; }
 
   //Feature Data
   tempPath.update(getOutputCellAttributeMatrixName().getDataContainerName(), getOutputCellFeatureAttributeMatrixName(), getFeaturePhasesArrayName() );
   m_FeaturePhasesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(this,  tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_FeaturePhasesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_FeaturePhases = m_FeaturePhasesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  //Ensemble Data
+  tempPath.update(getOutputCellAttributeMatrixName().getDataContainerName(), getOutputCellEnsembleAttributeMatrixName(), getNumFeaturesArrayName() );
+  m_NumFeaturesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(this,  tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if( NULL != m_NumFeaturesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  { m_NumFeatures = m_NumFeaturesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
 
 // -----------------------------------------------------------------------------
@@ -293,6 +310,7 @@ void  EstablishMatrixPhase::establish_matrix()
         tDims[0] = (firstMatrixFeature + j) + 1;
         m->getAttributeMatrix(m_OutputCellFeatureAttributeMatrixName)->resizeAttributeArrays(tDims);
         updateFeatureInstancePointers();
+        m_NumFeatures[j] = 1;
       }
       m_FeatureIds[i] = (firstMatrixFeature + j);
       m_CellPhases[i] = matrixphases[j];

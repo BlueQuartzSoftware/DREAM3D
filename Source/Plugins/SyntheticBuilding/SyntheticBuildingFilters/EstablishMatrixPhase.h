@@ -72,6 +72,9 @@ class EstablishMatrixPhase : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(OutputCellFeatureAttributeMatrixName)
     Q_PROPERTY(QString OutputCellFeatureAttributeMatrixName READ getOutputCellFeatureAttributeMatrixName WRITE setOutputCellFeatureAttributeMatrixName)
 
+    DREAM3D_INSTANCE_STRING_PROPERTY(OutputCellEnsembleAttributeMatrixName)
+    Q_PROPERTY(QString OutputCellEnsembleAttributeMatrixName READ getOutputCellEnsembleAttributeMatrixName WRITE setOutputCellEnsembleAttributeMatrixName)
+
     DREAM3D_FILTER_PARAMETER(QString, FeatureIdsArrayName)
     Q_PROPERTY(QString FeatureIdsArrayName READ getFeatureIdsArrayName WRITE setFeatureIdsArrayName)
 
@@ -80,6 +83,9 @@ class EstablishMatrixPhase : public AbstractFilter
 
     DREAM3D_FILTER_PARAMETER(QString, FeaturePhasesArrayName)
     Q_PROPERTY(QString FeaturePhasesArrayName READ getFeaturePhasesArrayName WRITE setFeaturePhasesArrayName)
+
+    DREAM3D_FILTER_PARAMETER(QString, NumFeaturesArrayName)
+    Q_PROPERTY(QString NumFeaturesArrayName READ getNumFeaturesArrayName WRITE setNumFeaturesArrayName)
 
     DREAM3D_FILTER_PARAMETER(DataArrayPath, InputStatsArrayPath)
     Q_PROPERTY(DataArrayPath InputStatsArrayPath READ getInputStatsArrayPath WRITE setInputStatsArrayPath)
@@ -137,6 +143,7 @@ class EstablishMatrixPhase : public AbstractFilter
     DEFINE_CREATED_DATAARRAY_VARIABLE(int32_t, FeatureIds)
     DEFINE_CREATED_DATAARRAY_VARIABLE(int32_t, CellPhases)
     DEFINE_CREATED_DATAARRAY_VARIABLE(int32_t, FeaturePhases)
+    DEFINE_CREATED_DATAARRAY_VARIABLE(int32_t, NumFeatures)
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(uint32_t, PhaseTypes)
     StatsDataArray::WeakPointer m_StatsDataArray;
 

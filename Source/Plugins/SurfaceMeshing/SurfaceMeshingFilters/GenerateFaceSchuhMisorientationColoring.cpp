@@ -61,7 +61,7 @@
 #include "DREAM3DLib/Utilities/ColorTable.h"
 
 
-class CalculateFaceMisorientationColorsImpl
+class CalculateFaceSchuhMisorientationColorsImpl
 {
     int32_t* m_Labels;
     int32_t* m_Phases;
@@ -71,7 +71,7 @@ class CalculateFaceMisorientationColorsImpl
     QVector<OrientationOps::Pointer> m_OrientationOps;
 
   public:
-    CalculateFaceMisorientationColorsImpl(int32_t* labels, int32_t* phases, float* quats, uint8_t* colors, unsigned int* crystalStructures) :
+    CalculateFaceSchuhMisorientationColorsImpl(int32_t* labels, int32_t* phases, float* quats, uint8_t* colors, unsigned int* crystalStructures) :
       m_Labels(labels),
       m_Phases(phases),
       m_Quats(quats),
@@ -80,7 +80,7 @@ class CalculateFaceMisorientationColorsImpl
     {
       m_OrientationOps = OrientationOps::getOrientationOpsVector();
     }
-    virtual ~CalculateFaceMisorientationColorsImpl(){}
+    virtual ~CalculateFaceSchuhMisorientationColorsImpl(){}
 
     /**
      * @brief generate Generates the colors for the triangles
@@ -318,12 +318,12 @@ void GenerateFaceSchuhMisorientationColoring::execute()
   if (doParallel == true)
   {
     tbb::parallel_for(tbb::blocked_range<size_t>(0, numTriangles),
-                      CalculateFaceMisorientationColorsImpl(m_SurfaceMeshFaceLabels, m_FeaturePhases, m_AvgQuats, m_SurfaceMeshFaceSchuhMisorientationColors, m_CrystalStructures), tbb::auto_partitioner());
+                      CalculateFaceSchuhMisorientationColorsImpl(m_SurfaceMeshFaceLabels, m_FeaturePhases, m_AvgQuats, m_SurfaceMeshFaceSchuhMisorientationColors, m_CrystalStructures), tbb::auto_partitioner());
   }
   else
 #endif
   {
-    CalculateFaceMisorientationColorsImpl serial(m_SurfaceMeshFaceLabels, m_FeaturePhases, m_AvgQuats, m_SurfaceMeshFaceSchuhMisorientationColors, m_CrystalStructures);
+    CalculateFaceSchuhMisorientationColorsImpl serial(m_SurfaceMeshFaceLabels, m_FeaturePhases, m_AvgQuats, m_SurfaceMeshFaceSchuhMisorientationColors, m_CrystalStructures);
     serial.generate(0, numTriangles);
   }
 

@@ -234,9 +234,11 @@ PackPrimaryPhases::PackPrimaryPhases() :
   AbstractFilter(),
   m_OutputCellAttributeMatrixName(DREAM3D::Defaults::SyntheticVolumeDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, ""),
   m_OutputCellFeatureAttributeMatrixName(DREAM3D::Defaults::CellFeatureAttributeMatrixName),
+  m_OutputCellEnsembleAttributeMatrixName(DREAM3D::Defaults::CellEnsembleAttributeMatrixName),
   m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
   m_CellPhasesArrayName(DREAM3D::CellData::Phases),
   m_FeaturePhasesArrayName(DREAM3D::FeatureData::Phases),
+  m_NumFeaturesArrayName(DREAM3D::EnsembleData::NumFeatures),
   m_NeighborhoodsArrayName(DREAM3D::FeatureData::Neighborhoods),
   m_CentroidsArrayName(DREAM3D::FeatureData::Centroids),
   m_VolumesArrayName(DREAM3D::FeatureData::Volumes),
@@ -255,6 +257,7 @@ PackPrimaryPhases::PackPrimaryPhases() :
   m_FeatureIds(NULL),
   m_CellPhases(NULL),
   m_FeaturePhases(NULL),
+  m_NumFeatures(NULL),
   m_Neighborhoods(NULL),
   m_Centroids(NULL),
   m_Volumes(NULL),
@@ -308,9 +311,11 @@ void PackPrimaryPhases::setupFilterParameters()
   parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
   parameters.push_back(FilterParameter::New("Cell Attribute Matrix Name", "OutputCellAttributeMatrixName", FilterParameterWidgetType::AttributeMatrixSelectionWidget, getOutputCellAttributeMatrixName(), true));
   parameters.push_back(FilterParameter::New("Cell Feature Attribute Matrix Name", "OutputCellFeatureAttributeMatrixName", FilterParameterWidgetType::StringWidget, getOutputCellFeatureAttributeMatrixName(), true));
+  parameters.push_back(FilterParameter::New("Cell Ensemble Attribute Matrix Name", "OutputCellEnsembleAttributeMatrixName", FilterParameterWidgetType::StringWidget, getOutputCellEnsembleAttributeMatrixName(), true));
   parameters.push_back(FilterParameter::New("Feature Ids Array Name", "FeatureIdsArrayName", FilterParameterWidgetType::StringWidget, getFeatureIdsArrayName(), true));
   parameters.push_back(FilterParameter::New("Cell Phases Array Name", "CellPhasesArrayName", FilterParameterWidgetType::StringWidget, getCellPhasesArrayName(), true));
   parameters.push_back(FilterParameter::New("Feature Phases Array Name", "FeaturePhasesArrayName", FilterParameterWidgetType::StringWidget, getFeaturePhasesArrayName(), true));
+  parameters.push_back(FilterParameter::New("Number of Features Array Name", "NumFeaturesArrayName", FilterParameterWidgetType::StringWidget, getNumFeaturesArrayName(), true));
   QStringList linkedProps("CsvOutputFile");
   parameters.push_back(FilterParameter::NewConditional("Write Goal Attributes", "WriteGoalAttributes", FilterParameterWidgetType::LinkedBooleanWidget, getWriteGoalAttributes(), true, linkedProps));
   parameters.push_back(FilterParameter::New("Goal Attribute CSV File", "CsvOutputFile", FilterParameterWidgetType::OutputFileWidget, getCsvOutputFile(), false, "", "*.csv", "Comma Separated Data"));
@@ -326,9 +331,11 @@ void PackPrimaryPhases::readFilterParameters(AbstractFilterParametersReader* rea
   reader->openFilterGroup(this, index);
   setOutputCellAttributeMatrixName( reader->readDataArrayPath("OutputCellAttributeMatrixName", getOutputCellAttributeMatrixName() ) );
   setOutputCellFeatureAttributeMatrixName( reader->readString("OutputCellFeatureAttributeMatrixName", getOutputCellFeatureAttributeMatrixName() ) );
+  setOutputCellEnsembleAttributeMatrixName( reader->readString("OutputCellEnsembleAttributeMatrixName", getOutputCellEnsembleAttributeMatrixName() ) );
   setFeatureIdsArrayName( reader->readString("FeatureIdsArrayName", getFeatureIdsArrayName() ) );
   setCellPhasesArrayName( reader->readString("CellPhasesArrayName", getCellPhasesArrayName() ) );
   setFeaturePhasesArrayName( reader->readString("FeaturePhasesArrayName", getFeaturePhasesArrayName() ) );
+  setNumFeaturesArrayName( reader->readString("NumFeaturesArrayName", getNumFeaturesArrayName() ) );
   setPeriodicBoundaries( reader->readValue("PeriodicBoundaries", false) );
   setWriteGoalAttributes( reader->readValue("WriteGoalAttributes", false) );
   setCsvOutputFile( reader->readString( "CsvOutputFile", getCsvOutputFile() ) );
@@ -346,9 +353,11 @@ int PackPrimaryPhases::writeFilterParameters(AbstractFilterParametersWriter* wri
   writer->openFilterGroup(this, index);
   writer->writeValue("OutputCellAttributeMatrixName", getOutputCellAttributeMatrixName() );
   writer->writeValue("OutputCellFeatureAttributeMatrixName", getOutputCellFeatureAttributeMatrixName() );
+  writer->writeValue("OutputCellEnsembleAttributeMatrixName", getOutputCellEnsembleAttributeMatrixName() );
   writer->writeValue("FeatureIdsArrayName", getFeatureIdsArrayName() );
   writer->writeValue("CellPhasesArrayName", getCellPhasesArrayName() );
   writer->writeValue("FeaturePhasesArrayName", getFeaturePhasesArrayName() );
+  writer->writeValue("NumFeaturesArrayName", getNumFeaturesArrayName() );
   writer->writeValue("PeriodicBoundaries", getPeriodicBoundaries() );
   writer->writeValue("WriteGoalAttributes", getWriteGoalAttributes() );
   writer->writeValue("CsvOutputFile", getCsvOutputFile() );
@@ -432,6 +441,9 @@ void PackPrimaryPhases::dataCheck()
   QVector<size_t> tDims(1, 0);
   AttributeMatrix::Pointer cellFeatureAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getOutputCellFeatureAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::CellFeature);
   if(getErrorCondition() < 0) { return; }
+  tDims[0] = m_PhaseTypesPtr.lock()->getNumberOfTuples();
+  AttributeMatrix::Pointer cellEnsembleAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getOutputCellEnsembleAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::CellEnsemble);
+  if(getErrorCondition() < 0) { return; }
 
   //Feature Data
   tempPath.update(getOutputCellAttributeMatrixName().getDataContainerName(), getOutputCellFeatureAttributeMatrixName(), getFeaturePhasesArrayName() );
@@ -467,6 +479,12 @@ void PackPrimaryPhases::dataCheck()
   m_AxisLengthsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this,  tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_AxisLengthsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_AxisLengths = m_AxisLengthsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  //Ensemble Data
+  dims[0] = 1;
+  tempPath.update(getOutputCellAttributeMatrixName().getDataContainerName(), getOutputCellEnsembleAttributeMatrixName(), getNumFeaturesArrayName() );
+  m_NumFeaturesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(this,  tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if( NULL != m_NumFeaturesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  { m_NumFeatures = m_NumFeaturesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   // Validate the output file and the boolean to write the file
   if (m_WriteGoalAttributes == true && getCsvOutputFile().isEmpty() == true)
@@ -2022,6 +2040,13 @@ void PackPrimaryPhases::assign_voxels()
   cellFeatureAttrMat->removeInactiveObjects(activeObjects, m_FeatureIdsPtr.lock());
 
   totalFeatures = cellFeatureAttrMat->getNumTuples();
+  //counting the number of features for each phase
+  for(int64_t i = 0; i < totalFeatures; i++)
+  {
+    int phase = m_FeaturePhases[i];
+    if(phase >= 0) m_NumFeatures[phase]++;
+  }
+
   //need to update pointers after resize, but do not need to run full data check because pointers are still valid
   updateFeatureInstancePointers();
   if (getCancel() == true)
@@ -2041,7 +2066,6 @@ void PackPrimaryPhases::assign_voxels()
     }
   }
 }
-
 
 void PackPrimaryPhases::assign_gaps_only()
 {

@@ -85,6 +85,9 @@ class PackPrimaryPhases : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(OutputCellFeatureAttributeMatrixName)
     Q_PROPERTY(QString OutputCellFeatureAttributeMatrixName READ getOutputCellFeatureAttributeMatrixName WRITE setOutputCellFeatureAttributeMatrixName)
 
+    DREAM3D_INSTANCE_STRING_PROPERTY(OutputCellEnsembleAttributeMatrixName)
+    Q_PROPERTY(QString OutputCellEnsembleAttributeMatrixName READ getOutputCellEnsembleAttributeMatrixName WRITE setOutputCellEnsembleAttributeMatrixName)
+
     DREAM3D_FILTER_PARAMETER(QString, FeatureIdsArrayName)
     Q_PROPERTY(QString FeatureIdsArrayName READ getFeatureIdsArrayName WRITE setFeatureIdsArrayName)
 
@@ -93,6 +96,9 @@ class PackPrimaryPhases : public AbstractFilter
 
     DREAM3D_FILTER_PARAMETER(QString, FeaturePhasesArrayName)
     Q_PROPERTY(QString FeaturePhasesArrayName READ getFeaturePhasesArrayName WRITE setFeaturePhasesArrayName)
+
+    DREAM3D_FILTER_PARAMETER(QString, NumFeaturesArrayName)
+    Q_PROPERTY(QString NumFeaturesArrayName READ getNumFeaturesArrayName WRITE setNumFeaturesArrayName)
 
     DREAM3D_FILTER_PARAMETER(QString, NeighborhoodsArrayName)
     Q_PROPERTY(QString NeighborhoodsArrayName READ getNeighborhoodsArrayName WRITE setNeighborhoodsArrayName)
@@ -214,6 +220,7 @@ class PackPrimaryPhases : public AbstractFilter
 
     // Feature Data - make sure these are all initialized to NULL in the constructor
     DEFINE_CREATED_DATAARRAY_VARIABLE(int32_t, FeaturePhases)
+    DEFINE_CREATED_DATAARRAY_VARIABLE(int32_t, NumFeatures)
     DEFINE_CREATED_DATAARRAY_VARIABLE(int32_t, Neighborhoods)
     DEFINE_CREATED_DATAARRAY_VARIABLE(float, Centroids)
     DEFINE_CREATED_DATAARRAY_VARIABLE(float, Volumes)

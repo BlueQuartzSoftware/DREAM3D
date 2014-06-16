@@ -93,7 +93,7 @@ class GenerateFaceSchuhMisorientationColoring : public SurfaceMeshFilter
     * @brief This returns a string that is displayed in the GUI. It should be readable
     * and understandable by humans.
     */
-    virtual const QString getHumanLabel() { return "Generate Face Misorientation Colors"; }
+    virtual const QString getHumanLabel() { return "Generate Face Schuh Misorientation Colors"; }
 
     /**
     * @brief This method will instantiate all the end user settable options/parameters
