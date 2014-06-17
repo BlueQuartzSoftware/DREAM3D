@@ -94,9 +94,6 @@ class InsertPrecipitatePhases : public AbstractFilter
     DREAM3D_FILTER_PARAMETER(bool, WriteGoalAttributes)
     Q_PROPERTY(bool WriteGoalAttributes READ getWriteGoalAttributes WRITE setWriteGoalAttributes)
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, OutputCellFeatureAttributeMatrixName)
-    Q_PROPERTY(DataArrayPath OutputCellFeatureAttributeMatrixName READ getOutputCellFeatureAttributeMatrixName WRITE setOutputCellFeatureAttributeMatrixName)
-
     DREAM3D_FILTER_PARAMETER(DataArrayPath, InputStatsArrayPath)
     Q_PROPERTY(DataArrayPath InputStatsArrayPath READ getInputStatsArrayPath WRITE setInputStatsArrayPath)
 
@@ -115,8 +112,8 @@ class InsertPrecipitatePhases : public AbstractFilter
     DREAM3D_FILTER_PARAMETER(DataArrayPath, SurfaceVoxelsArrayPath)
     Q_PROPERTY(DataArrayPath SurfaceVoxelsArrayPath READ getSurfaceVoxelsArrayPath WRITE setSurfaceVoxelsArrayPath)
 
-    DREAM3D_FILTER_PARAMETER(QString, FeaturePhasesArrayName)
-    Q_PROPERTY(QString FeaturePhasesArrayName READ getFeaturePhasesArrayName WRITE setFeaturePhasesArrayName)
+    DREAM3D_FILTER_PARAMETER(DataArrayPath, FeaturePhasesArrayPath)
+    Q_PROPERTY(DataArrayPath FeaturePhasesArrayPath READ getFeaturePhasesArrayPath WRITE setFeaturePhasesArrayPath)
 
     DREAM3D_FILTER_PARAMETER(QString, NumCellsArrayName)
     Q_PROPERTY(QString NumCellsArrayName READ getNumCellsArrayName WRITE setNumCellsArrayName)
@@ -236,7 +233,7 @@ class InsertPrecipitatePhases : public AbstractFilter
     DEFINE_CREATED_DATAARRAY_VARIABLE(float, Volumes)
     DEFINE_CREATED_DATAARRAY_VARIABLE(float, Omega3s)
     DEFINE_CREATED_DATAARRAY_VARIABLE(float, EquivalentDiameters)
-    DEFINE_CREATED_DATAARRAY_VARIABLE(int32_t, FeaturePhases)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, FeaturePhases)
     DEFINE_CREATED_DATAARRAY_VARIABLE(int32_t, NumCells)
     NeighborList<float>::WeakPointer m_ClusteringList;
 
