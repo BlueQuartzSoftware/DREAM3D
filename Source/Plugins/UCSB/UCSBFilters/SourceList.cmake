@@ -33,6 +33,7 @@ set(_PublicFilters
   UnifyTriangleWinding
   ConvertOrientation
   FindKernelAvgMisorientationsIgnoreGrains
+  FFTElasticReader
 )
 
 
