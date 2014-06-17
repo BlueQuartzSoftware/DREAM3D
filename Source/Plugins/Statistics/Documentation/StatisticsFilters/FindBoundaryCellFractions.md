@@ -1,17 +1,13 @@
-Find Feature Centroids {#findfeaturecentroids}
-=======
+Find Feature Boundary Cell Fractions {#findboundarycellfractions}
+======
 
 ## Group (Subgroup) ##
-Generic Filters (Misc)
+Statistics Filters (Morphological)
 
 ## Description ##
-This filter calculates the _centroid_ of each **Feature** by determining the average x, y, and z position of all the **Cells** belonging to the **Feature**.
-Note that **Features** that intersect the outer surfaces of the sample will still have _centroids_ calculated, but they will be _centroids_ of the truncated part of the **Feature** that lies inside the sample.
-
+This filter calculates the fraction of **Cells** of each **Features** that are on the "surface" of that **Feature**.  The filter simply iterates through all **Cells** asking for the **Feature** that owns them and if it is a "surface" **Cell**.  Each **Feature** counts the total number of **Cells** it owns and the number of those **Cells** that are "surface" **Cells**.  The fraction is then stored for each **Feature**.
 
 ## Parameters ##
-
-None
 
 ## Required DataContainers ##
 Voxel
@@ -21,12 +17,13 @@ Voxel
 | Type | Default Name | Description | Comment | Filters Known to Create Data |
 |------|--------------|-------------|---------|-----|
 | Cell | GrainIds | Ids (ints) that specify to which **Feature** each **Cell** belongs. | Values should be present from segmentation of experimental data or synthetic generation and cannot be determined by this filter. Not having these values will result in the filter to fail/not execute. | Segment Features (Misorientation, C-Axis Misorientation, Scalar) (Reconstruction), Read Dx File (IO), Read Ph File (IO), Pack Primary Phases (SyntheticBuilding), Insert Precipitate Phases (SyntheticBuilding), Establish Matrix Phase (SyntheticBuilding) |
+| Cell | SurfaceVoxels | Value (int) equal to the number of neighboring **Cells** of a given **Cell** that belong to a different **Feature** than itself. Values will range from *0* to *6* |  | Find Surface Cells (Generic) |
 
 ## Created Arrays ##
 
 | Type | Default Name | Description | Comment |
 |------|--------------|-------------|---------|
-| Feature | Centroids | X, Y, Z coordinates (floats) of **Feature** center of mass |  |
+| Feature | SurfaceVoxelFractions | Fraction (float) of a **Cells** belonging to the **Feature** that are "surface" **Cells. |  |
 
 ## Authors ##
 

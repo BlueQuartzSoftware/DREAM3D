@@ -1,17 +1,19 @@
-Find Feature Centroids {#findfeaturecentroids}
-=======
-
+Find Boundary Cells {#findboundarycells}
+=============
 ## Group (Subgroup) ##
-Generic Filters (Misc)
+Generic Filters (Spatial)
 
 ## Description ##
-This filter calculates the _centroid_ of each **Feature** by determining the average x, y, and z position of all the **Cells** belonging to the **Feature**.
-Note that **Features** that intersect the outer surfaces of the sample will still have _centroids_ calculated, but they will be _centroids_ of the truncated part of the **Feature** that lies inside the sample.
+This Filter determines, for each **Cell**, the number of neighboring **Cells** that are owned by a different **Feature**.  The algorithm for determining this is as follows: 
 
+1. Identify the **Feature** to which a **Cell** belongs
+2. Identify the **Features** to which each of the current **Cell**'s six (6) face-face neighboring **Cells** (front, back, left, right, up, down) belong
+3. Determine the number of those neighboring **Cells** belonging to a different **Feature** than the current **Cell**. 
+4. Repeat 1-3 for all **Cells**
 
 ## Parameters ##
-
 None
+
 
 ## Required DataContainers ##
 Voxel
@@ -26,7 +28,7 @@ Voxel
 
 | Type | Default Name | Description | Comment |
 |------|--------------|-------------|---------|
-| Feature | Centroids | X, Y, Z coordinates (floats) of **Feature** center of mass |  |
+| Cell | SurfaceVoxels | Value (int) equal to the number of neighboring **Cells** of a given **Cell** that belong to a different **Feature** than itself. Values will range from *0* to *6* |  |
 
 ## Authors ##
 
