@@ -2044,7 +2044,6 @@ void PackPrimaryPhases::assign_voxels()
   //counting the number of features for each phase
   for(int64_t i = 1; i < totalFeatures; i++)
   {
-    //Q_ASSERT(m_FeaturePhases == m_FeaturePhasesPtr.lock()->getPointer(0));
     int phase = m_FeaturePhases[i];
     if(phase >= 0) m_NumFeatures[phase]++;
   }
