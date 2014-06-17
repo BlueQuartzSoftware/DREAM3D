@@ -2038,11 +2038,13 @@ void PackPrimaryPhases::assign_voxels()
 
   AttributeMatrix::Pointer cellFeatureAttrMat = m->getAttributeMatrix(getOutputCellFeatureAttributeMatrixName());
   cellFeatureAttrMat->removeInactiveObjects(activeObjects, m_FeatureIdsPtr.lock());
-
+  //need to update pointers after removing inactive objects
+  updateFeatureInstancePointers();
   totalFeatures = cellFeatureAttrMat->getNumTuples();
   //counting the number of features for each phase
   for(int64_t i = 1; i < totalFeatures; i++)
   {
+    //Q_ASSERT(m_FeaturePhases == m_FeaturePhasesPtr.lock()->getPointer(0));
     int phase = m_FeaturePhases[i];
     if(phase >= 0) m_NumFeatures[phase]++;
   }
