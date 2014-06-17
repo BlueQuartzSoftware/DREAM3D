@@ -109,8 +109,8 @@ class InsertPrecipitatePhases : public AbstractFilter
     DREAM3D_FILTER_PARAMETER(DataArrayPath, CellPhasesArrayPath)
     Q_PROPERTY(DataArrayPath CellPhasesArrayPath READ getCellPhasesArrayPath WRITE setCellPhasesArrayPath)
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, SurfaceVoxelsArrayPath)
-    Q_PROPERTY(DataArrayPath SurfaceVoxelsArrayPath READ getSurfaceVoxelsArrayPath WRITE setSurfaceVoxelsArrayPath)
+    DREAM3D_FILTER_PARAMETER(DataArrayPath, BoundaryCellsArrayPath)
+    Q_PROPERTY(DataArrayPath BoundaryCellsArrayPath READ getBoundaryCellsArrayPath WRITE setBoundaryCellsArrayPath)
 
     DREAM3D_FILTER_PARAMETER(DataArrayPath, FeaturePhasesArrayPath)
     Q_PROPERTY(DataArrayPath FeaturePhasesArrayPath READ getFeaturePhasesArrayPath WRITE setFeaturePhasesArrayPath)
@@ -225,7 +225,7 @@ class InsertPrecipitatePhases : public AbstractFilter
 
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, FeatureIds)
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, CellPhases)
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int8_t, SurfaceVoxels)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int8_t, BoundaryCells)
 
     DEFINE_CREATED_DATAARRAY_VARIABLE(float, AxisEulerAngles)
     DEFINE_CREATED_DATAARRAY_VARIABLE(float, Centroids)

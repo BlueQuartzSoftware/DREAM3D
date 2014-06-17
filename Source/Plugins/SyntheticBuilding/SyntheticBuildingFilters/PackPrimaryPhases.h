@@ -216,7 +216,7 @@ class PackPrimaryPhases : public AbstractFilter
     // Cell Data - make sure these are all initialized to NULL in the constructor
     DEFINE_CREATED_DATAARRAY_VARIABLE(int32_t, FeatureIds)
     DEFINE_CREATED_DATAARRAY_VARIABLE(int32_t, CellPhases)
-    int8_t*  m_SurfaceVoxels;
+    int8_t*  m_BoundaryCells;
 
     // Feature Data - make sure these are all initialized to NULL in the constructor
     DEFINE_CREATED_DATAARRAY_VARIABLE(int32_t, FeaturePhases)

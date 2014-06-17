@@ -26,7 +26,7 @@ set(_PublicFilters
   FindCellQuats
   FindFeatureCentroids
   FindFeaturePhases
-  FindSurfaceCells
+  FindBoundaryCells
   FindSurfaceFeatures
   GenerateEulerColors
   GenerateIPFColors

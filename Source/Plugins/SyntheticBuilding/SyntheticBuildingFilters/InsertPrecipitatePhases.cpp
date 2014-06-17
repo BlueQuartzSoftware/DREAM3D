@@ -69,7 +69,7 @@ InsertPrecipitatePhases::InsertPrecipitatePhases() :
   m_InputShapeTypesArrayPath(DREAM3D::Defaults::StatsGenerator, DREAM3D::Defaults::CellEnsembleAttributeMatrixName, DREAM3D::EnsembleData::ShapeTypes),
   m_FeatureIdsArrayPath(DREAM3D::Defaults::SyntheticVolumeDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::FeatureIds),
   m_CellPhasesArrayPath(DREAM3D::Defaults::SyntheticVolumeDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::Phases),
-  m_SurfaceVoxelsArrayPath(DREAM3D::Defaults::SyntheticVolumeDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::SurfaceVoxels),
+  m_BoundaryCellsArrayPath(DREAM3D::Defaults::SyntheticVolumeDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::BoundaryCells),
   m_FeaturePhasesArrayPath(DREAM3D::Defaults::SyntheticVolumeDataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, DREAM3D::FeatureData::Phases),
   m_NumFeaturesArrayPath(DREAM3D::Defaults::SyntheticVolumeDataContainerName, DREAM3D::Defaults::CellEnsembleAttributeMatrixName, DREAM3D::EnsembleData::NumFeatures),
   m_FeaturePhasesArrayName(DREAM3D::FeatureData::Phases),
@@ -85,8 +85,8 @@ InsertPrecipitatePhases::InsertPrecipitatePhases() :
   m_FeatureIds(NULL),
   m_CellPhasesArrayName(DREAM3D::CellData::Phases),
   m_CellPhases(NULL),
-  m_SurfaceVoxelsArrayName(DREAM3D::CellData::SurfaceVoxels),
-  m_SurfaceVoxels(NULL),
+  m_BoundaryCellsArrayName(DREAM3D::CellData::BoundaryCells),
+  m_BoundaryCells(NULL),
   m_AxisEulerAngles(NULL),
   m_Centroids(NULL),
   m_AxisLengths(NULL),
@@ -138,7 +138,7 @@ void InsertPrecipitatePhases::setupFilterParameters()
   parameters.push_back(FilterParameter::New("Shape Types Array", "InputShapeTypesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getInputShapeTypesArrayPath(), true));
   parameters.push_back(FilterParameter::New("FeatureIds", "FeatureIdsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeatureIdsArrayPath(), true, ""));
   parameters.push_back(FilterParameter::New("Cell Phases", "CellPhasesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getCellPhasesArrayPath(), true, ""));
-  parameters.push_back(FilterParameter::New("SurfaceVoxels", "SurfaceVoxelsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getSurfaceVoxelsArrayPath(), true, ""));
+  parameters.push_back(FilterParameter::New("BoundaryCells", "BoundaryCellsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getBoundaryCellsArrayPath(), true, ""));
   parameters.push_back(FilterParameter::New("FeaturePhases", "FeaturePhasesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeaturePhasesArrayPath(), true, ""));
   parameters.push_back(FilterParameter::New("NumFeatures", "NumFeaturesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getNumFeaturesArrayPath(), true, ""));
   parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
@@ -157,7 +157,7 @@ void InsertPrecipitatePhases::readFilterParameters(AbstractFilterParametersReade
   setInputStatsArrayPath(reader->readDataArrayPath("InputStatsArrayPath", getInputStatsArrayPath() ) );
   setInputPhaseTypesArrayPath(reader->readDataArrayPath("InputPhaseTypesArrayPath", getInputPhaseTypesArrayPath() ) );
   setInputShapeTypesArrayPath(reader->readDataArrayPath("InputShapeTypesArrayPath", getInputShapeTypesArrayPath() ) );
-  setSurfaceVoxelsArrayPath(reader->readDataArrayPath("SurfaceVoxelsArrayPath", getSurfaceVoxelsArrayPath() ) );
+  setBoundaryCellsArrayPath(reader->readDataArrayPath("BoundaryCellsArrayPath", getBoundaryCellsArrayPath() ) );
   setCellPhasesArrayPath(reader->readDataArrayPath("CellPhasesArrayPath", getCellPhasesArrayPath() ) );
   setFeatureIdsArrayPath(reader->readDataArrayPath("FeatureIdsArrayPath", getFeatureIdsArrayPath() ) );
   setPeriodicBoundaries( reader->readValue("PeriodicBoundaries", false) );
@@ -177,7 +177,7 @@ int InsertPrecipitatePhases::writeFilterParameters(AbstractFilterParametersWrite
   writer->writeValue("InputStatsArrayPath", getInputStatsArrayPath() );
   writer->writeValue("InputPhaseTypesArrayPath", getInputPhaseTypesArrayPath() );
   writer->writeValue("InputShapeTypesArrayPath", getInputShapeTypesArrayPath() );
-  writer->writeValue("SurfaceVoxelsArrayPath", getSurfaceVoxelsArrayPath() );
+  writer->writeValue("BoundaryCellsArrayPath", getBoundaryCellsArrayPath() );
   writer->writeValue("CellPhasesArrayPath", getCellPhasesArrayPath() );
   writer->writeValue("FeatureIdsArrayPath", getFeatureIdsArrayPath() );
   writer->writeValue("PeriodicBoundaries", getPeriodicBoundaries() );
@@ -249,9 +249,9 @@ void InsertPrecipitatePhases::dataCheck()
   m_CellPhasesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getCellPhasesArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_CellPhasesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_CellPhases = m_CellPhasesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-  m_SurfaceVoxelsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int8_t>, AbstractFilter>(this, getSurfaceVoxelsArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_SurfaceVoxelsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
-  { m_SurfaceVoxels = m_SurfaceVoxelsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  m_BoundaryCellsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int8_t>, AbstractFilter>(this, getBoundaryCellsArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if( NULL != m_BoundaryCellsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  { m_BoundaryCells = m_BoundaryCellsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   // Feature Data
   m_FeaturePhasesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(this, getFeaturePhasesArrayPath(), 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
@@ -587,7 +587,7 @@ void  InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer featur
     {
       // figure out if we want this to be a boundary centroid voxel or not for the proposed precipitate
       random2 = int(rg.genrand_res53() * double(totalPoints - 1));
-      while (m_SurfaceVoxels[random2] == 0 || m_FeatureIds[random2] >= firstPrecipitateFeature)
+      while (m_BoundaryCells[random2] == 0 || m_FeatureIds[random2] >= firstPrecipitateFeature)
       {
         random2++;
         if(random2 >= totalPoints) { random2 = static_cast<int>(random2 - totalPoints); }
@@ -596,7 +596,7 @@ void  InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer featur
     else if(random > precipboundaryfraction)
     {
       random2 = static_cast<int>(rg.genrand_res53() * (totalPoints - 1));
-      while (m_SurfaceVoxels[random2] != 0 || m_FeatureIds[random2] >= firstPrecipitateFeature)
+      while (m_BoundaryCells[random2] != 0 || m_FeatureIds[random2] >= firstPrecipitateFeature)
       {
         random2++;
         if(random2 >= totalPoints) { random2 = static_cast<int>(random2 - totalPoints); }
@@ -618,7 +618,7 @@ void  InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer featur
     //      if(random <= precipboundaryfraction)
     //      {
     //        random2 = int(rg.genrand_res53() * double(totalPoints - 1));
-    //        while (m_SurfaceVoxels[random2] == 0 || m_FeatureIds[random2] >= firstPrecipitateFeature)
+    //        while (m_BoundaryCells[random2] == 0 || m_FeatureIds[random2] >= firstPrecipitateFeature)
     //        {
     //          random2++;
     //          if(random2 >= totalPoints) { random2 = static_cast<int>(random2 - totalPoints); }
@@ -627,7 +627,7 @@ void  InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer featur
     //      else if(random > precipboundaryfraction)
     //      {
     //        random2 = static_cast<int>(rg.genrand_res53() * (totalPoints - 1));
-    //        while (m_SurfaceVoxels[random2] != 0 || m_FeatureIds[random2] >= firstPrecipitateFeature)
+    //        while (m_BoundaryCells[random2] != 0 || m_FeatureIds[random2] >= firstPrecipitateFeature)
     //        {
     //          random2++;
     //          if(random2 >= totalPoints) { random2 = static_cast<int>(random2 - totalPoints); }
@@ -709,7 +709,7 @@ void  InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer featur
       if(random <= precipboundaryfraction)
       {
         random2 = int(rg.genrand_res53() * double(totalPoints - 1));
-        while (m_SurfaceVoxels[random2] == 0 || m_FeatureIds[random2] >= firstPrecipitateFeature)
+        while (m_BoundaryCells[random2] == 0 || m_FeatureIds[random2] >= firstPrecipitateFeature)
         {
           random2++;
           if(random2 >= totalPoints) { random2 = static_cast<int>(random2 - totalPoints); }
@@ -718,7 +718,7 @@ void  InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer featur
       else if(random > precipboundaryfraction)
       {
         random2 = static_cast<int>(rg.genrand_res53() * (totalPoints - 1));
-        while (m_SurfaceVoxels[random2] != 0 || m_FeatureIds[random2] >= firstPrecipitateFeature)
+        while (m_BoundaryCells[random2] != 0 || m_FeatureIds[random2] >= firstPrecipitateFeature)
         {
           random2++;
           if(random2 >= totalPoints) { random2 = static_cast<int>(random2 - totalPoints); }
@@ -1539,12 +1539,13 @@ void InsertPrecipitatePhases::assign_gaps()
   float* ellipfuncs = ellipfuncsPtr->getPointer(0);
   ellipfuncsPtr->initializeWithValue(-1);
 
+  int64_t numFeatures = m_FeaturePhasesPtr.lock()->getNumberOfTuples();
   int64_t numEnsembles = m_PhaseTypesPtr.lock()->getNumberOfTuples();
   while (unassignedcount != 0)
   {
     unassignedcount = 0;
     timestep = timestep + 50;
-    for (int64_t i = firstPrecipitateFeature; i < numEnsembles; i++)
+    for (int64_t i = firstPrecipitateFeature; i < numFeatures; i++)
     {
       float volcur = m_Volumes[i];
       float bovera = m_AxisLengths[3 * i + 1];

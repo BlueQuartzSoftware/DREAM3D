@@ -322,12 +322,12 @@ void TestDataContainerWriter()
   }
   attrMatrix->addAttributeArray(DREAM3D::CellData::FeatureIds, featureIds);
 
-  BoolArrayType::Pointer boolArray = BoolArrayType::CreateArray(size, DREAM3D::CellData::SurfaceVoxels);
+  BoolArrayType::Pointer boolArray = BoolArrayType::CreateArray(size, DREAM3D::CellData::BoundaryCells);
   for (int i = 0; i < size; ++i)
   {
     boolArray->setValue(i, i + DataContainerIOTest::Offset);
   }
-  attrMatrix->addAttributeArray(DREAM3D::CellData::SurfaceVoxels, boolArray);
+  attrMatrix->addAttributeArray(DREAM3D::CellData::BoundaryCells, boolArray);
 
   QVector<size_t> dims(1, 3);
   FloatArrayType::Pointer avgEuler = FloatArrayType::CreateArray(size, dims, DREAM3D::FeatureData::AxisEulerAngles);

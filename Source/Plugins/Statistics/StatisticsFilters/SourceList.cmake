@@ -36,7 +36,7 @@ set(_PublicFilters
   FindShapes
   FindSizes
   FindSlipTransmissionMetrics
-  FindSurfaceVoxelFractions
+  FindBoundaryCellFractions
   FindTwinBoundaries
   FindTwinBoundarySchmidFactors
   FindVolFractions

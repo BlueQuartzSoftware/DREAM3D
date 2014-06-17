@@ -78,8 +78,8 @@ class FindNeighbors : public AbstractFilter
     DREAM3D_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
     Q_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
 
-    DREAM3D_FILTER_PARAMETER(QString, SurfaceVoxelsArrayName)
-    Q_PROPERTY(QString SurfaceVoxelsArrayName READ getSurfaceVoxelsArrayName WRITE setSurfaceVoxelsArrayName)
+    DREAM3D_FILTER_PARAMETER(QString, BoundaryCellsArrayName)
+    Q_PROPERTY(QString BoundaryCellsArrayName READ getBoundaryCellsArrayName WRITE setBoundaryCellsArrayName)
 
     DREAM3D_FILTER_PARAMETER(QString, NumNeighborsArrayName)
     Q_PROPERTY(QString NumNeighborsArrayName READ getNumNeighborsArrayName WRITE setNumNeighborsArrayName)
@@ -87,8 +87,8 @@ class FindNeighbors : public AbstractFilter
     DREAM3D_FILTER_PARAMETER(QString, SurfaceFeaturesArrayName)
     Q_PROPERTY(QString SurfaceFeaturesArrayName READ getSurfaceFeaturesArrayName WRITE setSurfaceFeaturesArrayName)
 
-    DREAM3D_FILTER_PARAMETER(bool, StoreSurfaceCells)
-    Q_PROPERTY(bool StoreSurfaceCells READ getStoreSurfaceCells WRITE setStoreSurfaceCells)
+    DREAM3D_FILTER_PARAMETER(bool, StoreBoundaryCells)
+    Q_PROPERTY(bool StoreBoundaryCells READ getStoreBoundaryCells WRITE setStoreBoundaryCells)
 
     DREAM3D_FILTER_PARAMETER(bool, StoreSurfaceFeatures)
     Q_PROPERTY(bool StoreSurfaceFeatures READ getStoreSurfaceFeatures WRITE setStoreSurfaceFeatures)
@@ -134,7 +134,7 @@ class FindNeighbors : public AbstractFilter
 
   private:
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, FeatureIds)
-    DEFINE_CREATED_DATAARRAY_VARIABLE(int8_t, SurfaceVoxels)
+    DEFINE_CREATED_DATAARRAY_VARIABLE(int8_t, BoundaryCells)
     DEFINE_CREATED_DATAARRAY_VARIABLE(bool, SurfaceFeatures)
     DEFINE_CREATED_DATAARRAY_VARIABLE(int32_t, NumNeighbors)
     NeighborList<int>::WeakPointer m_NeighborList;
