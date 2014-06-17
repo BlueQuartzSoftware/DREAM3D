@@ -184,7 +184,7 @@ class Texture
         ea1 = 2.0 * DREAM3D::Constants::k_Pi * random1;
         ea2 = acos(2.0 * (random2 - 0.5));
         ea3 = 2.0 * DREAM3D::Constants::k_Pi * random3;
-        OrientationMath::EulertoRod( ea1, ea2, ea3, r1, r2, r3);
+        OrientationMath::EulertoRod(ea1, ea2, ea3, r1, r2, r3);
         ops.getODFFZRod(r1, r2, r3);
         bin = ops.getOdfBin(r1, r2, r3);
         odf[bin]++;
@@ -233,7 +233,7 @@ class Texture
       HexagonalOps ops;
       for (size_t i = 0; i < numEntries; i++)
       {
-        OrientationMath::EulertoRod(r1, r2, r3, e1s[i], e2s[i], e3s[i]);
+        OrientationMath::EulertoRod(e1s[i], e2s[i], e3s[i], r1, r2, r3);
         ops.getODFFZRod(r1, r2, r3);
         bin = ops.getOdfBin(r1, r2, r3);
         TextureBins[i] = static_cast<int>(bin);
@@ -311,7 +311,7 @@ class Texture
         ea1 = 2.0 * DREAM3D::Constants::k_Pi * random1;
         ea2 = acos(2.0 * (random2 - 0.5));
         ea3 = 2.0 * DREAM3D::Constants::k_Pi * random3;
-        OrientationMath::EulertoRod( ea1, ea2, ea3, r1, r2, r3);
+        OrientationMath::EulertoRod(ea1, ea2, ea3, r1, r2, r3);
         ops.getODFFZRod(r1, r2, r3);
         bin = ops.getOdfBin(r1, r2, r3);
         odf[bin]++;
@@ -359,7 +359,7 @@ class Texture
       OrthoRhombicOps ops;
       for (size_t i = 0; i < numEntries; i++)
       {
-        OrientationMath::EulertoRod(r1, r2, r3, e1s[i], e2s[i], e3s[i]);
+        OrientationMath::EulertoRod(e1s[i], e2s[i], e3s[i], r1, r2, r3);
         ops.getODFFZRod(r1, r2, r3);
         bin = ops.getOdfBin(r1, r2, r3);
         TextureBins[i] = static_cast<int>(bin);
