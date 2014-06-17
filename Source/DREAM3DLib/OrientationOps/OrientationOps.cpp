@@ -31,6 +31,13 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #include "OrientationOps.h"
 
+
+#include <boost/random/mersenne_twister.hpp>
+#include <boost/random/uniform_int.hpp>
+#include <boost/random/variate_generator.hpp>
+
+#include <QtCore/QDateTime>
+
 #include "DREAM3DLib/Utilities/DREAM3DRandom.h"
 #include "DREAM3DLib/Math/OrientationMath.h"
 
@@ -307,4 +314,23 @@ QVector<OrientationOps::Pointer> OrientationOps::getOrientationOpsVector()
   m_OrientationOps.push_back(OrthoRhombicOps::New()); // Axis OrthorhombicOps
 
   return m_OrientationOps;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+size_t OrientationOps::getRandomSymmetryOperatorIndex(int numSymOps)
+{
+  const int rangeMin = 0;
+  const int rangeMax = numSymOps;
+  typedef boost::uniform_int<int> NumberDistribution;
+  typedef boost::mt19937 RandomNumberGenerator;
+  typedef boost::variate_generator<RandomNumberGenerator&, NumberDistribution> Generator;
+
+  NumberDistribution distribution(rangeMin, rangeMax);
+  RandomNumberGenerator generator;
+  Generator numberGenerator(generator, distribution);
+  generator.seed(static_cast<boost::uint32_t>( QDateTime::currentMSecsSinceEpoch() )); // seed with the current time
+  size_t symOp = numberGenerator(); // Random remaining position.
+  return symOp;
 }

@@ -33,8 +33,8 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef _Hex2SqrConverter_H_
-#define _Hex2SqrConverter_H_
+#ifndef _ConvertHexGridToSquareGrid_H_
+#define _ConvertHexGridToSquareGrid_H_
 
 
 
@@ -57,7 +57,7 @@
 
 #include "Sampling/SamplingConstants.h"
 /**
- * @class Hex2SqrConverter Hex2SqrConverter.h Hex2SqrConverter/Hex2SqrConverter.h
+ * @class ConvertHexGridToSquareGrid ConvertHexGridToSquareGrid.h ConvertHexGridToSquareGrid/ConvertHexGridToSquareGrid.h
  * @brief This class is used to convert Hex grid TSL .ang files into Square grid
  * .ang files
  * @author Michael A. Jackson for BlueQuartz Software
@@ -66,27 +66,33 @@
  * @version 1.2
  *
  */
-class Hex2SqrConverter : public AbstractFilter
+class ConvertHexGridToSquareGrid : public AbstractFilter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
-    DREAM3D_SHARED_POINTERS(Hex2SqrConverter)
-    DREAM3D_STATIC_NEW_MACRO(Hex2SqrConverter)
-    DREAM3D_TYPE_MACRO_SUPER(Hex2SqrConverter, AbstractFilter)
+    DREAM3D_SHARED_POINTERS(ConvertHexGridToSquareGrid)
+    DREAM3D_STATIC_NEW_MACRO(ConvertHexGridToSquareGrid)
+    DREAM3D_TYPE_MACRO_SUPER(ConvertHexGridToSquareGrid, AbstractFilter)
 
-    virtual ~Hex2SqrConverter();
+    virtual ~ConvertHexGridToSquareGrid();
 
     DREAM3D_INSTANCE_PROPERTY(int64_t, ZStartIndex)
     DREAM3D_INSTANCE_PROPERTY(int64_t, ZEndIndex)
+
     DREAM3D_INSTANCE_PROPERTY(float, XResolution)
     DREAM3D_INSTANCE_PROPERTY(float, YResolution)
-    DREAM3D_INSTANCE_PROPERTY(int, NumCols)
-    DREAM3D_INSTANCE_PROPERTY(int, NumRows)
-    DREAM3D_INSTANCE_PROPERTY(QVector<QString>, EbsdFileList)
 
-    DREAM3D_INSTANCE_PROPERTY(bool, HeaderIsComplete)
+    DREAM3D_FILTER_PARAMETER(QString, InputPath)
+    DREAM3D_FILTER_PARAMETER(QString, OutputPath)
+    DREAM3D_FILTER_PARAMETER(QString, OutputPrefix)
 
-    virtual void preflight();
+    DREAM3D_FILTER_PARAMETER(QString, FilePrefix)
+    DREAM3D_FILTER_PARAMETER(QString, FileSuffix)
+    DREAM3D_FILTER_PARAMETER(QString, FileExtension)
+    DREAM3D_FILTER_PARAMETER(int, PaddingDigits)
+
+    DREAM3D_FILTER_PARAMETER(int, HexGridStack)
+    Q_PROPERTY(int HexGridStack READ getHexGridStack WRITE setHexGridStack)
 
     virtual const QString getCompiledLibraryName() { return Sampling::SamplingBaseName; }
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
@@ -112,16 +118,31 @@ class Hex2SqrConverter : public AbstractFilter
     */
     virtual void execute();
 
-  signals:
-    void updateFilterParameters(AbstractFilter* filter);
+
+    /**
+    * @brief This function runs some sanity checks on the DataContainer and inputs
+    * in an attempt to ensure the filter can process the inputs.
+    */
+    virtual void preflight();
+
+    DREAM3D_INSTANCE_PROPERTY(int, NumCols)
+    DREAM3D_INSTANCE_PROPERTY(int, NumRows)
+    DREAM3D_INSTANCE_PROPERTY(bool, HeaderIsComplete)
+
+    signals:
+
+      void updateFilterParameters(AbstractFilter* filter);
     void parametersChanged();
     void preflightAboutToExecute();
     void preflightExecuted();
 
   protected:
-    Hex2SqrConverter();
+    ConvertHexGridToSquareGrid();
 
     void dataCheck();
+
+    void generateFileList();
+
 
   private:
     /** @brief Modifies a single line of the header section of the TSL .ang file if necessary
@@ -132,11 +153,11 @@ class Hex2SqrConverter : public AbstractFilter
     QString int_to_string(int value);
     QString float_to_string(float value);
 
-    Hex2SqrConverter(const Hex2SqrConverter&); // Copy Constructor Not Implemented
-    void operator=(const Hex2SqrConverter&); // Operator '=' Not Implemented
+    ConvertHexGridToSquareGrid(const ConvertHexGridToSquareGrid&); // Copy Constructor Not Implemented
+    void operator=(const ConvertHexGridToSquareGrid&); // Operator '=' Not Implemented
 };
 
-#endif /* Hex2SqrConverter_H_ */
+#endif /* ConvertHexGridToSquareGrid_H_ */
 
 
 

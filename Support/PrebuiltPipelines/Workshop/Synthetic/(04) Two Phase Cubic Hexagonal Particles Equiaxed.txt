@@ -1,50 +1,96 @@
 [PipelineBuilder]
-Number_Filters=9
+Number_Filters=10
 Name=(04) Two Phase Cubic Hexagonal Particles Equiaxed
+Version=5.0.6679
 
 [0]
-Filter_Name=InitializeSyntheticVolume
+Filter_Name=DataContainerReader
+Filter_Human_Label=Read DREAM3D Data File
 InputFile=Data/TwoPhaseCubicHexParticlesEquiaxed.dream3d
-XResolution=1
-YResolution=1
-ZResolution=1
-XPoints=128
-YPoints=128
-ZPoints=128
+OverwriteExistingDataContainers=0
+DataContainerArrayProxy\size=3
+DataContainerArrayProxy\1\Path=StatsGenerator|CellEnsembleData|CrystalStructures
+DataContainerArrayProxy\1\DCFlag=2
+DataContainerArrayProxy\1\ATTRFlag=2
+DataContainerArrayProxy\1\DAFlag=2
+DataContainerArrayProxy\2\Path=StatsGenerator|CellEnsembleData|PhaseTypes
+DataContainerArrayProxy\2\DCFlag=2
+DataContainerArrayProxy\2\ATTRFlag=2
+DataContainerArrayProxy\2\DAFlag=2
+DataContainerArrayProxy\3\Path=StatsGenerator|CellEnsembleData|Statistics
+DataContainerArrayProxy\3\DCFlag=2
+DataContainerArrayProxy\3\ATTRFlag=2
+DataContainerArrayProxy\3\DAFlag=2
 
 [1]
-Filter_Name=PackPrimaryPhases
-PeriodicBoundaries=false
-WriteGoalAttributes=false
-CsvOutputFile=
+Filter_Name=InitializeSyntheticVolume
+Filter_Human_Label=Initialize Synthetic Volume
+DataContainerName=SyntheticVolumeDataContainer
+CellAttributeMatrixName=CellData
+Dimensions\size=3
+Dimensions\1\x=128
+Dimensions\2\y=128
+Dimensions\3\z=128
+Resolution\size=3
+Resolution\1\x=1.0
+Resolution\2\y=1.0
+Resolution\3\z=1.0
+Origin\size=3
+Origin\1\x=0
+Origin\2\y=0
+Origin\3\z=0
+InputStatsArrayPath=StatsGenerator|CellEnsembleData|Statistics
+InputPhaseTypesArrayPath=StatsGenerator|CellEnsembleData|PhaseTypes
 
 [2]
-Filter_Name=FindNeighbors
+Filter_Name=EstablishShapeTypes
+Filter_Human_Label=Establish Shape Types
+InputPhaseTypesArrayPath=StatsGenerator|CellEnsembleData|PhaseTypes
+ShapeTypesArrayName=ShapeTypes
+ShapeTypeData=999 0
 
 [3]
+Filter_Name=PackPrimaryPhases
+Filter_Human_Label=Pack Primary Phases
+OutputCellAttributeMatrixName=SyntheticVolume|CellData|
+OutputCellFeatureAttributeMatrixName=CellFeatureData
+OutputCellEnsembleAttributeMatrixName=CellEnsembleData
+FeatureIdsArrayName=FeatureIds
+CellPhasesArrayName=Phases
+FeaturePhasesArrayName=Phases
+NumFeaturesArrayName=NumFeatures
+PeriodicBoundaries=0
+WriteGoalAttributes=0
+CsvOutputFile=
+InputStatsArrayPath=StatsGenerator|CellEnsembleData|Statistics
+InputPhaseTypesArrayPath=StatsGenerator|CellEnsembleData|PhaseTypes
+InputShapeTypesArrayPath=StatsGenerator|CellEnsembleData|CrystalStructures
+
+
+[4]
 Filter_Name=InsertPrecipitatePhases
 PeriodicBoundaries=false
 WriteGoalAttributes=false
 CsvOutputFile=
 
-[4]
+[5]
 Filter_Name=FindNeighbors
 
-[5]
+[6]
 Filter_Name=FindNumFields
 
-[6]
+[7]
 Filter_Name=MatchCrystallography
 MaxIterations=100000
 
-[7]
+[8]
 Filter_Name=GenerateIPFColors
 ReferenceDir\size=3
 ReferenceDir\1\x=0
 ReferenceDir\2\y=0
 ReferenceDir\3\z=1
 
-[8]
+[9]
 Filter_Name=DataContainerWriter
 OutputFile=Data/Output/TwoPhaseCubicHexParticlesEquiaxedOut.dream3d
 WriteVoxelData=true

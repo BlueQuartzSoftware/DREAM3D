@@ -620,11 +620,11 @@ void CubicOps::determineEulerAngles(int choose, float& synea1, float& synea2, fl
 
 void CubicOps::randomizeEulerAngles(float& synea1, float& synea2, float& synea3)
 {
+  size_t symOp = getRandomSymmetryOperatorIndex(k_NumSymQuats);
+
   QuatF q;
   QuatF qc;
   OrientationMath::EulertoQuat(synea1, synea2, synea3, q);
-  //int symOp = k_NumSymQuats * rand();
-  int symOp = rand() % k_NumSymQuats;
   QuaternionMathF::Multiply(q, CubicQuatSym[symOp], qc);
   OrientationMath::QuattoEuler(qc, synea1, synea2, synea3);
 }
