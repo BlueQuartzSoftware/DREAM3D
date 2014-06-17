@@ -27,6 +27,7 @@ set(_PublicFilters
   ImageMath
   MultiOtsuThreshold
   KMeans
+  RGBToGray
 )
 
 #---------

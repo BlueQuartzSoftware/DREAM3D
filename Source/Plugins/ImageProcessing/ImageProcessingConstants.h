@@ -44,6 +44,7 @@ namespace ImageProcessing
   #endif
 
   //multicomponent pixels
+  typedef itk::RGBPixel <DefaultPixelType> RGBDefaultPixelType; //ipf color etc
   typedef itk::RGBPixel <uint8_t> RGBUInt8PixelType; //ipf color etc
   //typedef itk::RGBAPixel <float> RGBAFloatPixelType; //may be able to handle quats with this?
 
@@ -69,6 +70,7 @@ namespace ImageProcessing
   typedef itk::Image< FloatPixelType, ImageDimension > FloatImageType;
   typedef itk::Image< DoublePixelType, ImageDimension > DoubleImageType;
 
+  typedef itk::Image< ImageProcessing::RGBDefaultPixelType, ImageProcessing::ImageDimension > RGBDefaultImageType;
   typedef itk::Image< ImageProcessing::RGBUInt8PixelType, ImageProcessing::ImageDimension > RGBUInt8ImageType;
   //typedef itk::Image< RGBAFloatPixelType, ImageDimension > RGBAFloatImageType;
 
