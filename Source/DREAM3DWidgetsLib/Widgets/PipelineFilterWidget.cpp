@@ -404,15 +404,16 @@ void PipelineFilterWidget::changeStyle()
   //  int m_CurrentBorderColorFactor = 0;
   //  int m_BorderIncrement = 16;
 
-//  if (m_HasPreflightErrors == true)
-//  {
-//    style.append("border: 2px solid rgb(255, 0, 0);");
-//  }
-//  else if(m_HasPreflightWarnings)
-//  {
-//    style.append("border: 2px solid rgb(172, 168, 0);");
-//  }
-//  else
+/*  if (m_HasPreflightErrors == true)
+  {
+    style.append("border: 2px solid rgb(255, 0, 0);");
+  }
+  else*/
+   if(m_HasPreflightWarnings)
+  {
+    style.append("border: 2px solid rgb(172, 168, 0);");
+  }
+  else
  if(m_IsSelected == true )
   {
     style.append("border: 3px solid purple;");
@@ -437,16 +438,16 @@ void PipelineFilterWidget::updateWidgetStyle()
   style.append("PipelineFilterWidget {\n");
 
    style.append("background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 rgba(185, 185, 185, 255), stop:0.5 rgba(226, 226, 226, 255), stop:1 rgba(150, 150, 150, 255));\n");
-   errorBtn->setVisible(m_HasPreflightErrors);
+   //errorBtn->setVisible(m_HasPreflightErrors);
 
 
   if (m_HasPreflightErrors == true)
   {
-   // style.append("background-color: rgb(225, 100, 100);\ncolor: rgb(255, 255, 255);");
+    style.append("background-color: rgb(225, 100, 100);\ncolor: rgb(255, 255, 255);");
   }
   else
   {
-   //style.append("background-color: rgb(147, 184, 149);");
+   style.append("background-color: rgb(147, 184, 149);");
   }
 
   style.append("background-position: top ;\n background-repeat: repeat-x;");
@@ -467,10 +468,10 @@ void PipelineFilterWidget::updateWidgetStyle()
   style.append("font: 85 italic 9pt \"Arial\";");
 #endif
   style.append("font-weight: bold; ");
-//  if (m_HasPreflightErrors == true)
-//  {
-//    style.append("color: rgb(255, 255, 255);");
-//  }
+  if (m_HasPreflightErrors == true)
+  {
+    style.append("color: rgb(255, 255, 255);");
+  }
   style.append("}\n");
 
   setStyleSheet(style);
