@@ -39,6 +39,7 @@ border-radius: 10px;
 padding: 0 0 0 0px;
 font: 100 italic 12pt &quot;Arial&quot;;
 font-weight: bold;
+color: rgb(255, 255, 255);
 }
 
 </string>
@@ -122,6 +123,43 @@ font-weight: bold;
      </property>
      <property name="text">
       <string>Filter Name</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QPushButton" name="errorBtn">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>20</width>
+       <height>20</height>
+      </size>
+     </property>
+     <property name="styleSheet">
+      <string notr="true"> QPushButton:flat {
+     border: none; /* no border for a flat push button */
+ }</string>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="icon">
+      <iconset resource="../../../../Resources/icons/images/Icons.qrc">
+       <normaloff>:/delete2.png</normaloff>:/delete2.png</iconset>
+     </property>
+     <property name="iconSize">
+      <size>
+       <width>20</width>
+       <height>20</height>
+      </size>
+     </property>
+     <property name="flat">
+      <bool>true</bool>
      </property>
     </widget>
    </item>

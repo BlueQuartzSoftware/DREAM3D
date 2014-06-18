@@ -572,15 +572,11 @@ void FavoritesDockWidget::actionUpdateFavorite_triggered()
 {
   // Lets get the name of the favorite
   QTreeWidgetItem* item = filterLibraryTree->currentItem();
-  // QTreeWidgetItem* parent = filterLibraryTree->currentItem()->parent();
 
   QString name = item->text(0);
   QString filePath = item->data(0, Qt::UserRole).toString();
-  //  QFileInfo filePathInfo = QFileInfo(filePath);
-  //  QString name = filePathInfo.baseName();
 
   emit pipelineNeedsToBeSaved(filePath, name);
-
 }
 
 // -----------------------------------------------------------------------------
