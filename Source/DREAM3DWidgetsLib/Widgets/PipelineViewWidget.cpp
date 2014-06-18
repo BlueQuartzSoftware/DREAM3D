@@ -287,9 +287,9 @@ FilterPipeline::Pointer PipelineViewWidget::getFilterPipeline()
     PipelineFilterWidget* fw = filterWidgetAt(i);
     if (fw)
     {
-      fw->setHasPreflightErrors(false);
+      //fw->setHasPreflightErrors(false);
       AbstractFilter::Pointer filter = fw->getFilter();
-      filter->setErrorCondition(0); // Reset the error condition as we are going to preflight
+      //filter->setErrorCondition(0); // Reset the error condition as we are going to preflight
       pipeline->pushBack(filter);
     }
 
