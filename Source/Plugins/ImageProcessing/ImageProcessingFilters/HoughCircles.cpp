@@ -125,7 +125,7 @@ void HoughCircles::preflight()
 // -----------------------------------------------------------------------------
 void HoughCircles::execute()
 {
-  int err = 0;
+  //int err = 0;
   dataCheck();
   if(getErrorCondition() < 0) { return; }
 
@@ -229,7 +229,7 @@ void HoughCircles::execute()
   {
     AttributeMatrix::Pointer attrMat = m->getAttributeMatrix(m_SelectedCellArrayPath.getAttributeMatrixName());
     attrMat->removeAttributeArray(m_SelectedCellArrayPath.getDataArrayName());
-    bool check = attrMat->renameAttributeArray(m_NewCellArrayName, m_SelectedCellArrayPath.getDataArrayName());
+    attrMat->renameAttributeArray(m_NewCellArrayName, m_SelectedCellArrayPath.getDataArrayName());
   }
 
 

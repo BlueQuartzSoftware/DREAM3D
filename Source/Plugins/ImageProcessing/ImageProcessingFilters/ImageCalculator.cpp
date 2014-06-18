@@ -215,7 +215,7 @@ void ImageCalculator::preflight()
 // -----------------------------------------------------------------------------
 void ImageCalculator::execute()
 {
-  int err = 0;
+  //int err = 0;
   dataCheck();
   if(getErrorCondition() < 0) { return; }
 

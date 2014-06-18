@@ -202,7 +202,7 @@ void SobelEdge::execute()
   {
     AttributeMatrix::Pointer attrMat = m->getAttributeMatrix(m_SelectedCellArrayPath.getAttributeMatrixName());
     attrMat->removeAttributeArray(m_SelectedCellArrayPath.getDataArrayName());
-    bool check = attrMat->renameAttributeArray(m_NewCellArrayName, m_SelectedCellArrayPath.getDataArrayName());
+    attrMat->renameAttributeArray(m_NewCellArrayName, m_SelectedCellArrayPath.getDataArrayName());
   }
 
   /* Let the GUI know we are done with this filter */

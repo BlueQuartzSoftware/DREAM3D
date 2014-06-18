@@ -57,15 +57,15 @@
 namespace Detail
 {
 
-  const static float m_OnePointThree = 1.33333333333f;
+  //const static float m_OnePointThree = 1.33333333333f;
 
   const float sin_wmin_neg_1_over_2 = static_cast<float>( sinf(DREAM3D::Constants::k_ACosNeg1 / 2.0f) );
   const float sin_wmin_pos_1_over_2 = static_cast<float>( sinf(DREAM3D::Constants::k_ACos1 / 2.0f) );
   const float sin_of_acos_neg_1 = sinf(DREAM3D::Constants::k_ACosNeg1);
   const float sin_of_acos_pos_1 = sinf(DREAM3D::Constants::k_ACos1);
 
-  const float recip_sin_of_acos_neg_1 = 1.0f / sin_of_acos_neg_1;
-  const float recip_sin_of_acos_pos_1 = 1.0f / sin_of_acos_pos_1;
+//  const float recip_sin_of_acos_neg_1 = 1.0f / sin_of_acos_neg_1;
+//  const float recip_sin_of_acos_pos_1 = 1.0f / sin_of_acos_pos_1;
 
   const static float SinOfHalf = sinf(0.5f);
   const static float CosOfHalf = cosf(0.5f);
