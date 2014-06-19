@@ -8,6 +8,8 @@
 #-- This code was partly written under US Air Force Contract FA8650-07-D-5800
 #--
 #--////////////////////////////////////////////////////////////////////////////
+
+#test - megna
 if(NOT ${DREAM3D_SDK} STREQUAL "")
   include("${DREAM3D_SDK}/DREAM3D_SDK.cmake")
 endif()
