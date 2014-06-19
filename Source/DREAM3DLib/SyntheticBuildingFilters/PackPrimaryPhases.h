@@ -107,6 +107,7 @@ class DREAM3DLib_EXPORT PackPrimaryPhases : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(CsvOutputFile)
     DREAM3D_INSTANCE_PROPERTY(bool, PeriodicBoundaries)
     DREAM3D_INSTANCE_PROPERTY(bool, WriteGoalAttributes)
+    DREAM3D_INSTANCE_PROPERTY(bool, WriteVtkFile)
 
 
     virtual void setupFilterParameters();

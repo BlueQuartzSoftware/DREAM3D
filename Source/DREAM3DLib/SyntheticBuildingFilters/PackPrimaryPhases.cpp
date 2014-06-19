@@ -249,6 +249,7 @@ PackPrimaryPhases::PackPrimaryPhases() :
   m_CsvOutputFile(""),
   m_PeriodicBoundaries(false),
   m_WriteGoalAttributes(false),
+  m_WriteVtkFile(false),
   m_GrainIds(NULL),
   m_CellPhases(NULL),
   m_SurfaceVoxels(NULL),
@@ -1028,7 +1029,7 @@ void PackPrimaryPhases::execute()
 
   notifyStatusMessage("Packing Grains - Grain Adjustment Complete");
 
-  if(m_VtkOutputFile.empty() == false)
+  if(m_VtkOutputFile.empty() == false && getWriteVtkFile() == true)
   {
     err = writeVtkFile(grainOwnersPtr->GetPointer(0), exclusionZonesPtr->GetPointer(0));
     if(err < 0)
