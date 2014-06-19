@@ -287,69 +287,11 @@ FilterPipeline::Pointer PipelineViewWidget::getFilterPipeline()
     PipelineFilterWidget* fw = filterWidgetAt(i);
     if (fw)
     {
-      //fw->setHasPreflightErrors(false);
       AbstractFilter::Pointer filter = fw->getFilter();
-      //filter->setErrorCondition(0); // Reset the error condition as we are going to preflight
       pipeline->pushBack(filter);
     }
 
   }
-  pipeline->addMessageReceiver(m_PipelineMessageObserver);
-  return pipeline;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-FilterPipeline::Pointer PipelineViewWidget::copyFilterPipeline()
-{
-  /// Worlds worst kludge for getting a copy of the Filter Pipeline. We write the pipeline to a temp file and thne read
-  /// the pipeline back into a new FilterPipeline Object. There were a few reasons for this choice of algorithm. I tried
-  /// to dynamically read the Q_PROPERTY for each Filter Parameter but with custom widgets there is NOT a 1-to-1 relationship
-  /// between the filter parameters and the Q_PROPERTY so that does not work. I thought about implementing a
-  /// "newFilterInstanceWithFilterParameters()" function in every filter but thought that if the developer does NOT keep
-  /// this updated there could be issues. Using the Writer/Reader the programmer can _still_ mess this up if they do not
-  /// update their Parameter read and write functions which is probably just as bad as the second option from above.
-  ///
-
-
-  // Create a Pipeline Object and fill it with the filters from this View
-  // Create a Pipeline Object and fill it with the filters from this View
-  FilterPipeline::Pointer pipeline = FilterPipeline::New();
-
-  qint32 count = filterCount();
-  for(qint32 i = 0; i < count; ++i)
-  {
-    PipelineFilterWidget* fw = filterWidgetAt(i);
-    if (fw)
-    {
-      fw->setHasPreflightErrors(false);
-      AbstractFilter::Pointer filter = fw->getFilter()->newFilterInstance(true);
-      filter->setErrorCondition(0); // Reset the error condition as we are going to preflight
-      pipeline->pushBack(filter);
-    }
-
-  }
-
-#if 0
-  // now write it out to a normal Pipeline File
-  QString tempPath;
-  QTemporaryFile file;
-  if (file.open())
-  {
-    tempPath = file.fileName();// returns the unique file name
-  }
-  file.close(); // Close up the file
-  int err = QFilterParametersWriter::WritePipelineToFile(pipeline, tempPath, "Current Pipeline", QSettings::IniFormat, dynamic_cast<IObserver*>(m_PipelineMessageObserver));
-  if (err < 0)
-  {
-    return FilterPipeline::NullPointer();
-  }
-
-  // Now Read it back into a new Pipeline Object
-  pipeline = QFilterParametersReader::ReadPipelineFromFile(tempPath,  QSettings::IniFormat, dynamic_cast<IObserver*>(m_PipelineMessageObserver) );
-#endif
-
   pipeline->addMessageReceiver(m_PipelineMessageObserver);
   return pipeline;
 }
@@ -452,7 +394,6 @@ void PipelineViewWidget::addFilter(const QString& filterClassName, int index)
 // -----------------------------------------------------------------------------
 void PipelineViewWidget::addFilterWidget(PipelineFilterWidget* w, int index)
 {
-//  std::cout << "PipelineViewWidget::addFilterWidget     w*=" << w << std::endl;
   bool addSpacer = false;
   if (filterCount() <= 0)
   {
@@ -528,6 +469,18 @@ void PipelineViewWidget::preflightPipeline()
   emit pipelineIssuesCleared();
   // Create a Pipeline Object and fill it with the filters from this View
   FilterPipeline::Pointer pipeline = getFilterPipeline();
+
+  FilterPipeline::FilterContainerType filters = pipeline->getFilterContainer();
+  for(int i = 0; i < filters.size(); i++)
+  {
+    PipelineFilterWidget* fw = filterWidgetAt(i);
+    if (fw)
+    {
+      fw->setHasPreflightErrors(false);
+    }
+    filters.at(i)->setErrorCondition(0);
+  }
+
 
   QProgressDialog progress("Preflight Pipeline", "", 0, 1, this);
   progress.setWindowModality(Qt::WindowModal);

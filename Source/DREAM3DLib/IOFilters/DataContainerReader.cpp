@@ -121,8 +121,6 @@ int DataContainerReader::writeFilterParameters(AbstractFilterParametersWriter* w
 void DataContainerReader::dataCheck()
 {
   QString ss;
-
-
   QFileInfo fi(getInputFile());
   if (getInputFile().isEmpty() == true)
   {
@@ -143,12 +141,9 @@ void DataContainerReader::dataCheck()
 // -----------------------------------------------------------------------------
 void DataContainerReader::preflight()
 {
-  setInPreflight(false);
-  //DataContainerArrayProxy currentProxy = m_DataContainerArrayProxy;
+  setInPreflight(true);
   // Get the current structure of the file. We want ALL of the structure. so set it into a Proxy
   DataContainerArrayProxy proxy = readDataContainerArrayStructure();
-  //qDebug() << "====> DataContainerReader::preflight() Reading file " << getInputFile();
-  //proxy.print("DataContainerReader::preflight");
 
   // to the read here because this will populate the DataContainerArray with our DataContainer
   dataCheck();
@@ -163,14 +158,6 @@ void DataContainerReader::preflight()
 
   // The Gui sends down any changes to the Proxy (which for preflight we don't care about)
   emit updateFilterParameters(this);
-
-  //  // Now that we have the user selections from the GUI, do the read AGAIN so that our DataContainerArray
-  //  // is properly updated.
-  //  dataCheck();
-  //  if(getErrorCondition() >= 0)
-  //  {
-  //    readData(true, m_DataContainerArrayProxy);
-  //  }
 
   // The GUI needs to send down the selections that were made by the user and we need to update
   // DataContainerArray->DataContainer object so the rest of the pipeline has the proper information
