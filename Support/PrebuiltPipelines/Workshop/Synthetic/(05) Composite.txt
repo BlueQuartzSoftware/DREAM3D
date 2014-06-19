@@ -1,23 +1,23 @@
 [PipelineBuilder]
-Number_Filters=6
 Name=(05) Composite
-Version=5.0.6679
+Number_Filters=7
+Version=5.0.6710
 
 [0]
 Filter_Name=DataContainerReader
 Filter_Human_Label=Read DREAM3D Data File
-InputFile=Data/Composite.dream3d
+InputFile=/Users/megnashah/Desktop/StatsFiles/Composite.dream3d
 OverwriteExistingDataContainers=0
 DataContainerArrayProxy\size=3
-DataContainerArrayProxy\1\Path=StatsGenerator|CellEnsembleData|CrystalStructures
+DataContainerArrayProxy\1\Path=StatsGeneratorDataContainer|CellEnsembleData|CrystalStructures
 DataContainerArrayProxy\1\DCFlag=2
 DataContainerArrayProxy\1\ATTRFlag=2
 DataContainerArrayProxy\1\DAFlag=2
-DataContainerArrayProxy\2\Path=StatsGenerator|CellEnsembleData|PhaseTypes
+DataContainerArrayProxy\2\Path=StatsGeneratorDataContainer|CellEnsembleData|PhaseTypes
 DataContainerArrayProxy\2\DCFlag=2
 DataContainerArrayProxy\2\ATTRFlag=2
 DataContainerArrayProxy\2\DAFlag=2
-DataContainerArrayProxy\3\Path=StatsGenerator|CellEnsembleData|Statistics
+DataContainerArrayProxy\3\Path=StatsGeneratorDataContainer|CellEnsembleData|Statistics
 DataContainerArrayProxy\3\DCFlag=2
 DataContainerArrayProxy\3\ATTRFlag=2
 DataContainerArrayProxy\3\DAFlag=2
@@ -28,35 +28,68 @@ Filter_Human_Label=Initialize Synthetic Volume
 DataContainerName=SyntheticVolumeDataContainer
 CellAttributeMatrixName=CellData
 Dimensions\size=3
-Dimensions\1\x=128
-Dimensions\2\y=128
-Dimensions\3\z=128
+Dimensions\1\x=32
+Dimensions\2\y=32
+Dimensions\3\z=32
 Resolution\size=3
-Resolution\1\x=1.0
-Resolution\2\y=1.0
-Resolution\3\z=1.0
+Resolution\1\x=0.5
+Resolution\2\y=0.5
+Resolution\3\z=0.5
 Origin\size=3
 Origin\1\x=0
 Origin\2\y=0
 Origin\3\z=0
-InputStatsArrayPath=StatsGenerator|CellEnsembleData|Statistics
-InputPhaseTypesArrayPath=StatsGenerator|CellEnsembleData|PhaseTypes
+InputStatsArrayPath=StatsGeneratorDataContainer|CellEnsembleData|Statistics
+InputPhaseTypesArrayPath=StatsGeneratorDataContainer|CellEnsembleData|PhaseTypes
 
 [2]
-Filter_Name=EstablishMatrixPhase
+Filter_Name=EstablishShapeTypes
+Filter_Human_Label=Establish Shape Types
+InputPhaseTypesArrayPath=StatsGeneratorDataContainer|CellEnsembleData|PhaseTypes
+ShapeTypesArrayName=ShapeTypes
+ShapeTypeData=999 0 0
 
 [3]
-Filter_Name=FindNeighbors
+Filter_Name=EstablishMatrixPhase
+Filter_Human_Label=Establish Matrix Phase
+OutputCellAttributeMatrixName=SyntheticVolumeDataContainer|CellData|
+OutputCellFeatureAttributeMatrixName=CellFeatureData
+OutputCellEnsembleAttributeMatrixName=CellEnsembleData
+FeatureIdsArrayName=FeatureIds
+CellPhasesArrayName=Phases
+FeaturePhasesArrayName=Phases
+NumFeaturesArrayName=NumFeatures
+InputStatsArrayPath=StatsGeneratorDataContainer|CellEnsembleData|Statistics
+InputPhaseTypesArrayPath=StatsGeneratorDataContainer|CellEnsembleData|PhaseTypes
 
 [4]
-Filter_Name=InsertPrecipitatePhases
-PeriodicBoundaries=false
-WriteGoalAttributes=false
-CsvOutputFile=
+Filter_Name=FindNeighbors
+Filter_Human_Label=Find Feature Neighbors
+CellFeatureAttributeMatrixPath=SyntheticVolumeDataContainer|CellFeatureData|
+FeatureIdsArrayPath=SyntheticVolumeDataContainer|CellData|FeatureIds
+BoundaryCellsArrayName=BoundaryCells
+SurfaceFeaturesArrayName=SurfaceFeatures
+StoreBoundaryCells=1
+StoreSurfaceFeatures=1
+NumNeighborsArrayName=NumNeighbors
+NeighborListArrayName=NeighborList
+SharedSurfaceAreaListArrayName=SharedSurfaceAreaList
 
 [5]
+Filter_Name=InsertPrecipitatePhases
+Filter_Human_Label=Insert Precipitate Phases
+NumFeaturesArrayPath=SyntheticVolumeDataContainer|CellEnsembleData|NumFeatures
+FeaturePhasesArrayPath=SyntheticVolumeDataContainer|CellFeatureData|Phases
+InputStatsArrayPath=StatsGeneratorDataContainer|CellEnsembleData|Statistics
+InputPhaseTypesArrayPath=StatsGeneratorDataContainer|CellEnsembleData|PhaseTypes
+InputShapeTypesArrayPath=StatsGeneratorDataContainer|CellEnsembleData|ShapeTypes
+BoundaryCellsArrayPath=SyntheticVolumeDataContainer|CellData|BoundaryCells
+CellPhasesArrayPath=SyntheticVolumeDataContainer|CellData|Phases
+FeatureIdsArrayPath=SyntheticVolumeDataContainer|CellData|FeatureIds
+PeriodicBoundaries=0
+
+[6]
 Filter_Name=DataContainerWriter
+Filter_Human_Label=Write DREAM3D Data File
 OutputFile=Data/Output/CompositeOut.dream3d
-WriteVoxelData=true
-WriteSurfaceMeshData=false
-WriteXdmfFile=true
+WriteXdmfFile=1
