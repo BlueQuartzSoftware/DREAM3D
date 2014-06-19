@@ -190,7 +190,7 @@ void ShapeTypeSelectionWidget::updateComboBoxes()
       cb->setCurrentIndex(dataFromFilter[i + 1]);
     }
     connect(cb, SIGNAL(currentIndexChanged(int)),
-            this, SLOT(on_combobox_changed(int)) );
+            this, SLOT(comboboxChanged(int)) );
 
   }
 
@@ -200,7 +200,7 @@ void ShapeTypeSelectionWidget::updateComboBoxes()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ShapeTypeSelectionWidget::on_combobox_changed(int index)
+void ShapeTypeSelectionWidget::comboboxChanged(int index)
 {
   m_DidCausePreflight = true;
   emit parametersChanged();

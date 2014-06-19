@@ -190,7 +190,7 @@ void PhaseTypeSelectionWidget::updateComboBoxes()
       cb->setCurrentIndex(dataFromFilter[i]);
     }
     connect(cb, SIGNAL(currentIndexChanged(int)),
-            this, SLOT(on_combobox_changed(int)) );
+            this, SLOT(comboboxChanged(int)) );
 
   }
 
@@ -200,7 +200,7 @@ void PhaseTypeSelectionWidget::updateComboBoxes()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PhaseTypeSelectionWidget::on_combobox_changed(int index)
+void PhaseTypeSelectionWidget::comboboxChanged(int index)
 {
   m_DidCausePreflight = true;
   emit parametersChanged();

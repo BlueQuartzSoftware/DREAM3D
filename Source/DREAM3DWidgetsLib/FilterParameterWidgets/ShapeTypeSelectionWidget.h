@@ -86,7 +86,7 @@ class DREAM3DWidgetsLib_EXPORT ShapeTypeSelectionWidget : public QWidget, privat
     void afterPreflight();
     void filterNeedsInputParameters(AbstractFilter* filter);
 
-    void on_combobox_changed(int index);
+    void comboboxChanged(int index);
     void setLinkedConditionalState(int state);
     void fadeWidget(QWidget* widget, bool in);
 
