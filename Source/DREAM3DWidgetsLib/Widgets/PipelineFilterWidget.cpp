@@ -404,26 +404,26 @@ void PipelineFilterWidget::changeStyle()
   //  int m_CurrentBorderColorFactor = 0;
   //  int m_BorderIncrement = 16;
 
-/*  if (m_HasPreflightErrors == true)
+  /*  if (m_HasPreflightErrors == true)
   {
     style.append("border: 2px solid rgb(255, 0, 0);");
   }
   else*/
-   if(m_HasPreflightWarnings)
+  if(m_HasPreflightWarnings)
   {
     style.append("border: 2px solid rgb(172, 168, 0);");
   }
   else
- if(m_IsSelected == true )
-  {
-    style.append("border: 3px solid purple;");
-  //  style.append("background-color: palette(highlight);");
-  }
-  else
-  {
-    style.append("border: 1px solid #515151;");
-    style.append("margin: 1px;");
-  }
+    if(m_IsSelected == true )
+    {
+      style.append("border: 3px solid purple;");
+      //  style.append("background-color: palette(highlight);");
+    }
+    else
+    {
+      style.append("border: 1px solid #515151;");
+      style.append("margin: 1px;");
+    }
   setBorderColorStyle(style);
   updateWidgetStyle();
 }
@@ -437,9 +437,6 @@ void PipelineFilterWidget::updateWidgetStyle()
 
   style.append("PipelineFilterWidget {\n");
 
-   style.append("background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 rgba(185, 185, 185, 255), stop:0.5 rgba(226, 226, 226, 255), stop:1 rgba(150, 150, 150, 255));\n");
-   //errorBtn->setVisible(m_HasPreflightErrors);
-
 
   if (m_HasPreflightErrors == true)
   {
@@ -447,7 +444,8 @@ void PipelineFilterWidget::updateWidgetStyle()
   }
   else
   {
-   style.append("background-color: rgb(147, 184, 149);");
+    style.append("background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 rgba(185, 185, 185, 255), stop:0.5 rgba(226, 226, 226, 255), stop:1 rgba(150, 150, 150, 255));\n");
+    //   style.append("background-color: rgb(147, 184, 149);");
   }
 
   style.append("background-position: top ;\n background-repeat: repeat-x;");
