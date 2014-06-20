@@ -1,7 +1,7 @@
 [PipelineBuilder]
-Number_Filters=10
 Name=(04) Two Phase Cubic Hexagonal Particles Equiaxed
-Version=5.0.6679
+Number_Filters=10
+Version=5.0.6717
 
 [0]
 Filter_Name=DataContainerReader
@@ -9,15 +9,15 @@ Filter_Human_Label=Read DREAM3D Data File
 InputFile=Data/TwoPhaseCubicHexParticlesEquiaxed.dream3d
 OverwriteExistingDataContainers=0
 DataContainerArrayProxy\size=3
-DataContainerArrayProxy\1\Path=StatsGenerator|CellEnsembleData|CrystalStructures
+DataContainerArrayProxy\1\Path=StatsGeneratorDataContainer|CellEnsembleData|CrystalStructures
 DataContainerArrayProxy\1\DCFlag=2
 DataContainerArrayProxy\1\ATTRFlag=2
 DataContainerArrayProxy\1\DAFlag=2
-DataContainerArrayProxy\2\Path=StatsGenerator|CellEnsembleData|PhaseTypes
+DataContainerArrayProxy\2\Path=StatsGeneratorDataContainer|CellEnsembleData|PhaseTypes
 DataContainerArrayProxy\2\DCFlag=2
 DataContainerArrayProxy\2\ATTRFlag=2
 DataContainerArrayProxy\2\DAFlag=2
-DataContainerArrayProxy\3\Path=StatsGenerator|CellEnsembleData|Statistics
+DataContainerArrayProxy\3\Path=StatsGeneratorDataContainer|CellEnsembleData|Statistics
 DataContainerArrayProxy\3\DCFlag=2
 DataContainerArrayProxy\3\ATTRFlag=2
 DataContainerArrayProxy\3\DAFlag=2
@@ -32,27 +32,27 @@ Dimensions\1\x=128
 Dimensions\2\y=128
 Dimensions\3\z=128
 Resolution\size=3
-Resolution\1\x=1.0
-Resolution\2\y=1.0
-Resolution\3\z=1.0
+Resolution\1\x=1
+Resolution\2\y=1
+Resolution\3\z=1
 Origin\size=3
 Origin\1\x=0
 Origin\2\y=0
 Origin\3\z=0
-InputStatsArrayPath=StatsGenerator|CellEnsembleData|Statistics
-InputPhaseTypesArrayPath=StatsGenerator|CellEnsembleData|PhaseTypes
+InputStatsArrayPath=StatsGeneratorDataContainer|CellEnsembleData|Statistics
+InputPhaseTypesArrayPath=StatsGeneratorDataContainer|CellEnsembleData|Statistics
 
 [2]
 Filter_Name=EstablishShapeTypes
 Filter_Human_Label=Establish Shape Types
-InputPhaseTypesArrayPath=StatsGenerator|CellEnsembleData|PhaseTypes
+InputPhaseTypesArrayPath=StatsGeneratorDataContainer|CellEnsembleData|PhaseTypes
 ShapeTypesArrayName=ShapeTypes
-ShapeTypeData=999 0
+ShapeTypeData=999 0 0
 
 [3]
 Filter_Name=PackPrimaryPhases
 Filter_Human_Label=Pack Primary Phases
-OutputCellAttributeMatrixName=SyntheticVolume|CellData|
+OutputCellAttributeMatrixName=SyntheticVolumeDataContainer|CellData|
 OutputCellFeatureAttributeMatrixName=CellFeatureData
 OutputCellEnsembleAttributeMatrixName=CellEnsembleData
 FeatureIdsArrayName=FeatureIds
@@ -62,29 +62,69 @@ NumFeaturesArrayName=NumFeatures
 PeriodicBoundaries=0
 WriteGoalAttributes=0
 CsvOutputFile=
-InputStatsArrayPath=StatsGenerator|CellEnsembleData|Statistics
-InputPhaseTypesArrayPath=StatsGenerator|CellEnsembleData|PhaseTypes
-InputShapeTypesArrayPath=StatsGenerator|CellEnsembleData|CrystalStructures
-
+InputStatsArrayPath=StatsGeneratorDataContainer|CellEnsembleData|Statistics
+InputPhaseTypesArrayPath=StatsGeneratorDataContainer|CellEnsembleData|PhaseTypes
+InputShapeTypesArrayPath=StatsGeneratorDataContainer|CellEnsembleData|ShapeTypes
 
 [4]
-Filter_Name=InsertPrecipitatePhases
-PeriodicBoundaries=false
-WriteGoalAttributes=false
-CsvOutputFile=
+Filter_Name=FindBoundaryCells
+Filter_Human_Label=Find Boundary Cells
+BoundaryCellsArrayName=BoundaryCells
+FeatureIdsArrayPath=SyntheticVolumeDataContainer|CellData|FeatureIds
 
 [5]
-Filter_Name=FindNeighbors
+Filter_Name=InsertPrecipitatePhases
+Filter_Human_Label=Insert Precipitate Phases
+NumFeaturesArrayPath=SyntheticVolumeDataContainer|CellEnsembleData|NumFeatures
+FeaturePhasesArrayPath=SyntheticVolumeDataContainer|CellFeatureData|Phases
+InputStatsArrayPath=StatsGeneratorDataContainer|CellEnsembleData|Statistics
+InputPhaseTypesArrayPath=StatsGeneratorDataContainer|CellEnsembleData|PhaseTypes
+InputShapeTypesArrayPath=StatsGeneratorDataContainer|CellEnsembleData|ShapeTypes
+BoundaryCellsArrayPath=SyntheticVolumeDataContainer|CellData|BoundaryCells
+CellPhasesArrayPath=SyntheticVolumeDataContainer|CellData|Phases
+FeatureIdsArrayPath=SyntheticVolumeDataContainer|CellData|FeatureIds
+PeriodicBoundaries=0
 
 [6]
-Filter_Name=FindNumFields
+Filter_Name=FindNeighbors
+Filter_Human_Label=Find Feature Neighbors
+CellFeatureAttributeMatrixPath=SyntheticVolumeDataContainer|CellFeatureData|
+FeatureIdsArrayPath=SyntheticVolumeDataContainer|CellData|FeatureIds
+BoundaryCellsArrayName=BoundaryCells
+SurfaceFeaturesArrayName=SurfaceFeatures
+StoreBoundaryCells=0
+StoreSurfaceFeatures=1
+NumNeighborsArrayName=NumNeighbors
+NeighborListArrayName=NeighborList
+SharedSurfaceAreaListArrayName=SharedSurfaceAreaList
 
 [7]
 Filter_Name=MatchCrystallography
+Filter_Human_Label=Match Crystallography
 MaxIterations=100000
+InputStatsArrayPath=StatsGeneratorDataContainer|CellEnsembleData|Statistics
+CrystalStructuresArrayPath=StatsGeneratorDataContainer|CellEnsembleData|CrystalStructures
+PhaseTypesArrayPath=StatsGeneratorDataContainer|CellEnsembleData|PhaseTypes
+FeaturePhasesArrayPath=SyntheticVolumeDataContainer|CellFeatureData|Phases
+FeatureIdsArrayPath=SyntheticVolumeDataContainer|CellData|FeatureIds
+SurfaceFeaturesArrayPath=SyntheticVolumeDataContainer|CellFeatureData|SurfaceFeatures
+NeighborListArrayPath=SyntheticVolumeDataContainer|CellFeatureData|NeighborList
+SharedSurfaceAreaListArrayPath=SyntheticVolumeDataContainer|CellFeatureData|SharedSurfaceAreaList
+NumFeaturesArrayPath=SyntheticVolumeDataContainer|CellEnsembleData|NumFeatures
+CellEulerAnglesArrayName=EulerAngles
+VolumesArrayName=Volumes
+FeatureEulerAnglesArrayName=EulerAngles
+AvgQuatsArrayName=AvgQuats
 
 [8]
 Filter_Name=GenerateIPFColors
+Filter_Human_Label=Generate IPF Colors
+UseGoodVoxels=0
+GoodVoxelsArrayPath=SyntheticVolumeDataContainer|CellData|
+CrystalStructuresArrayPath=StatsGeneratorDataContainer|CellEnsembleData|CrystalStructures
+CellEulerAnglesArrayPath=SyntheticVolumeDataContainer|CellData|EulerAngles
+CellPhasesArrayPath=SyntheticVolumeDataContainer|CellData|Phases
+CellIPFColorsArrayName=IPFColor
 ReferenceDir\size=3
 ReferenceDir\1\x=0
 ReferenceDir\2\y=0
@@ -92,7 +132,6 @@ ReferenceDir\3\z=1
 
 [9]
 Filter_Name=DataContainerWriter
+Filter_Human_Label=Write DREAM3D Data File
 OutputFile=Data/Output/TwoPhaseCubicHexParticlesEquiaxedOut.dream3d
-WriteVoxelData=true
-WriteSurfaceMeshData=false
-WriteXdmfFile=true
+WriteXdmfFile=1

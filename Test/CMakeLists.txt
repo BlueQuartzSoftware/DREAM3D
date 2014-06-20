@@ -195,11 +195,11 @@ set(PREBUILT_PIPELINE_NAMES
 #  "SurfaceMeshing/(03) SmallIN100 Smooth Mesh"
 #  "SurfaceMeshing/(04) SmallIN100 Mesh Statistics"
 #  "SurfaceMeshing/(05) SmallIN100 GBCD"
-#  "Synthetic/(01) Single Cubic Phase Equiaxed"
-#  "Synthetic/(02) Single Hexagonal Phase Equiaxed"
-#  "Synthetic/(03) Single Cubic Phase Rolled"
+  "Synthetic/(01) Single Cubic Phase Equiaxed"
+  "Synthetic/(02) Single Hexagonal Phase Equiaxed"
+  "Synthetic/(03) Single Cubic Phase Rolled"
 #  "Synthetic/(04) Two Phase Cubic Hexagonal Particles Equiaxed"
-#  "Synthetic/(05) Composite"
+  "Synthetic/(05) Composite"
 )
 
 configure_file(${DREAM3DTest_SOURCE_DIR}/PipelineRunnerTest.h.in
