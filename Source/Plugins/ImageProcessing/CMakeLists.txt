@@ -57,50 +57,57 @@ ELSE(ITK_DIR)
 	set(ITK_PREFIX "${CMAKE_BINARY_DIR}/itk")
 	set(ITK_BINARY_DIR "${ITK_PREFIX}/build")
 	set(ITK_SOURCE_DIR "${ITK_PREFIX}/src")
-	
+
 	# Now look for the DREAM3D_SDK variable that is set on newer versions of DREAM3D. If we
 	# find that variable is set to something then we are going to use that directory to 
 	# look for the .Zip file containing the source for ITK and then build it.
 	if( NOT ${DREAM3D_SDK} STREQUAL "" )
-		set(ITK_URL "${DREAM3D_SDK}/InsightToolkit-4.5.1.zip")
+		set(ITK_URL "http://dream3d.bluequartz.net/binaries/InsightToolkit-4.5.1.zip")
 		set(ITK_PREFIX ${DREAM3D_SDK}/ITK)
 		set(ITK_BINARY_DIR "${DREAM3D_SDK}/ITKBuild")
 		set(ITK_SOURCE_DIR "${DREAM3D_SDK}/InsightToolkit-4.5.1")
 	endif()
 
-  # We need this for the next command
-  include(ExternalProject)
-  # ITK has not been built yet, so (possibly) download and build it as an external project
-  ExternalProject_Add( itk
-    PREFIX ${ITK_PREFIX}
-    SOURCE_DIR "${ITK_SOURCE_DIR}"
-    BINARY_DIR "${ITK_BINARY_DIR}"
-    #--Download step--------------
- #   GIT_REPOSITORY "git://itk.org/ITK.git"
- #   GIT_TAG "421d314ff85ad542ad5c0f3d3c115fa7427b1c64"
-    URL ${ITK_URL}
-    #--Configure step-------------
-    CMAKE_ARGS
-      -DCMAKE_RUNTIME_OUTPUT_DIRECTORY:STRING=${CMAKE_RUNTIME_OUTPUT_DIRECTORY}
-      -DBUILD_SHARED_LIBS:BOOL=${BUILD_SHARED_LIBS}
-      -DBUILD_TESTING:BOOL=OFF
-      -DBUILD_EXAMPLES:BOOL=OFF
-      -DITK_LEGACY_REMOVE:BOOL=ON
-      -DKWSYS_USE_MD5:BOOL=ON
-      -DITK_USE_REVIEW:BOOL=OFF
-      -DITK_BUILD_DEFAULT_MODULES=OFF
-      -DITKGroup_Core=ON
-      -DITKGroup_Filtering=ON
-      -DITKGroup_Registration=ON
-      -DITKGroup_Segmentation=ON
-    #--Build step-----------------
-    #--Install step-----------------
-    	INSTALL_COMMAND ""
-    	DEPENDS ${ITK_DEPENDENCIES}
-    )
+	# We need this for the next command
+	include(ExternalProject)
+	# ITK has not been built yet, so (possibly) download and build it as an external project
+	ExternalProject_Add( itk
+		PREFIX ${ITK_PREFIX}
+		SOURCE_DIR "${ITK_SOURCE_DIR}"
+		BINARY_DIR "${ITK_BINARY_DIR}"
+		#--Download step--------------
+		#   GIT_REPOSITORY "git://itk.org/ITK.git"
+		#   GIT_TAG "421d314ff85ad542ad5c0f3d3c115fa7427b1c64"
+		URL ${ITK_URL}
+		URL_MD5 a0989ac0c87f9979b05f7a2f50243506
+
+		#--Configure step-------------
+		CMAKE_ARGS
+		  -DCMAKE_RUNTIME_OUTPUT_DIRECTORY:STRING=${CMAKE_RUNTIME_OUTPUT_DIRECTORY}
+		  -DBUILD_SHARED_LIBS:BOOL=${BUILD_SHARED_LIBS}
+		  -DBUILD_TESTING:BOOL=OFF
+		  -DBUILD_EXAMPLES:BOOL=OFF
+		  -DITK_LEGACY_REMOVE:BOOL=ON
+		  -DKWSYS_USE_MD5:BOOL=ON
+		  -DITK_USE_REVIEW:BOOL=OFF
+		  -DITK_BUILD_DEFAULT_MODULES=OFF
+		  -DITKGroup_Core=ON
+		  -DITKGroup_Filtering=ON
+		  -DITKGroup_Registration=ON
+		  -DITKGroup_Segmentation=ON
+		  -DCMAKE_INSTALL_PREFIX=${DREAM3D_SDK}/ITK-4.5.1
+		#--Build step-----------------
+		  UPDATE_COMMAND ""
+		#--Install step-----------------
+		  INSTALL_COMMAND ""
+		  DEPENDS ${ITK_DEPENDENCIES}
+	)
+
+
 	
 ENDIF(ITK_DIR)
 
+if (1)
 find_package(ITK COMPONENTS
 	#Group Core
 	ITKCommon
@@ -132,6 +139,8 @@ find_package(ITK COMPONENTS
 )
 
 include(${ITK_USE_FILE})
+
+endif()
 
 # --------------------------------------------------------------------
 # What image bit depth should be used
