@@ -6,7 +6,9 @@ UCSB (UCSB)
 
 
 ## Description ##
-For each slice computes alignment for the slice above and below. If both shifts for x or y are in the same direction they are averaged and applied
+Computes alignment as with align by misorientation. After all shifts have been found a line is fit and any 'shear' removed (~first order 'background subtraction' on alignment)
+
+![Left: unaligned, Top Right: Align by Misorientation, Bottom Right: Remove Jitter](alignmiso_vs_removejitter.png)
 
 ## Parameters ##
 | Name             | Type |

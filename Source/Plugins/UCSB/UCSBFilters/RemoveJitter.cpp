@@ -129,9 +129,9 @@ void RemoveJitter::setupFilterParameters()
 void RemoveJitter::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-  setMisorientationTolerance( reader->readValue( "MisorientationTolerance", getMisorientationTolerance() ) );
-  setAlignmentShiftFileName( reader->readValue( "AlignmentShiftFileName", getAlignmentShiftFileName() ) );
-  setWriteAlignmentShifts( reader->readValue( "WriteAlignmentShifts", getWriteAlignmentShifts() ) );
+  /* Code to read the values goes between these statements */
+/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }
 
@@ -223,6 +223,7 @@ void RemoveJitter::execute()
 // -----------------------------------------------------------------------------
 void RemoveJitter::find_shifts(std::vector<int> &xshifts, std::vector<int> &yshifts)
 {
+  ///find shifts as normal
   VoxelDataContainer* m = getVoxelDataContainer();
   //int64_t totalPoints = m->totalPoints();
 
@@ -250,13 +251,6 @@ void RemoveJitter::find_shifts(std::vector<int> &xshifts, std::vector<int> &yshi
   int newyshift = 0;
   int oldxshift = 0;
   int oldyshift = 0;
-
-  //variables for alignment with next slice
-  int newxshiftabove = 0;
-  int newyshiftabove = 0;
-  int oldxshiftabove = 0;
-  int oldyshiftabove = 0;
-
   float count = 0;
   int slice = 0;
   //  int xspot, yspot;
@@ -300,7 +294,6 @@ void RemoveJitter::find_shifts(std::vector<int> &xshifts, std::vector<int> &yshi
         misorients[a][b] = 0;
       }
     }
-    //align to previos slice
     while (newxshift != oldxshift || newyshift != oldyshift)
     {
       oldxshift = newxshift;
@@ -368,120 +361,60 @@ void RemoveJitter::find_shifts(std::vector<int> &xshifts, std::vector<int> &yshi
         }
       }
     }
+    xshifts[iter] = xshifts[iter-1] + newxshift;
+    yshifts[iter] = yshifts[iter-1] + newyshift;
+  }
 
-    //align next slices
-    mindisorientation = 100000000;
-    oldxshiftabove = -1;
-    oldyshiftabove = -1;
-    newxshiftabove = 0;
-    newyshiftabove = 0;
+  /**fit x and y shifts to lines
+   *
+   * y = mx + b
+   *
+   * m = (n*sum(x_i * y_i) - sum(x_i) * sum(y_i)) / (n*sum(x_i^2)-sum(x_i)^2
+   *
+   * b = (sum(y_i)-m*sum(x_i))/n
+   *
+   */
 
-    for (DimType a = 0; a < dims[0]; a++)
-    {
-      for (DimType b = 0; b < dims[1]; b++)
-      {
-        misorients[a][b] = 0;
-      }
-    }
-    if(slice>0)
-    {
-      while (newxshiftabove != oldxshiftabove || newyshiftabove != oldyshiftabove)
-      {
-        oldxshiftabove = newxshiftabove;
-        oldyshiftabove = newyshiftabove;
-        for (int j = -3; j < 4; j++)
-        {
-          for (int k = -3; k < 4; k++)
-          {
-            disorientation = 0;
-            count = 0;
-            if(misorients[k + oldxshiftabove + size_t(dims[0] / 2)][j + oldyshiftabove + (size_t)(dims[1] / 2)] == 0 && abs(k + oldxshiftabove) < (dims[0] / 2)
-               && (j + oldyshiftabove) < (dims[1] / 2))
-            {
-              for (DimType l = 0; l < dims[1]; l = l + 4)
-              {
-                for (DimType n = 0; n < dims[0]; n = n + 4)
-                {
-                  if((l + j + oldyshiftabove) >= 0 && (l + j + oldyshiftabove) < dims[1] && (n + k + oldxshiftabove) >= 0 && (n + k + oldxshiftabove) < dims[0])
-                  {
-                    count++;
-                    refposition = static_cast<int>( ((slice - 1) * dims[0] * dims[1]) + (l * dims[0]) + n );
-                    curposition = static_cast<int>( (slice * dims[0] * dims[1]) + ((l + j + oldyshiftabove) * dims[0]) + (n + k + oldxshiftabove) );
-                    if(m_GoodVoxels[refposition] == true && m_GoodVoxels[curposition] == true)
-                    {
-                      w = 10000.0;
-                      if(m_CellPhases[refposition] > 0 && m_CellPhases[curposition] > 0)
-                      {
-                        QuaternionMathF::Copy(quats[refposition], q1);
-  //                      q1[1] = m_Quats[refposition * 5 + 1];
-  //                      q1[2] = m_Quats[refposition * 5 + 2];
-  //                      q1[3] = m_Quats[refposition * 5 + 3];
-  //                      q1[4] = m_Quats[refposition * 5 + 4];
-                        phase1 = m_CrystalStructures[m_CellPhases[refposition]];
-                        QuaternionMathF::Copy(quats[curposition], q2);
-  //                      q2[1] = m_Quats[curposition * 5 + 1];
-  //                      q2[2] = m_Quats[curposition * 5 + 2];
-  //                      q2[3] = m_Quats[curposition * 5 + 3];
-  //                      q2[4] = m_Quats[curposition * 5 + 4];
-                        phase2 = m_CrystalStructures[m_CellPhases[curposition]];
-                        if(phase1 == phase2 && phase1 < m_OrientationOps.size())
-                        {
-                          w = m_OrientationOps[phase1]->getMisoQuat(q1, q2, n1, n2, n3);
-                        }
-                      }
-                      if(w > m_MisorientationTolerance) disorientation++;
-                    }
-                    if(m_GoodVoxels[refposition] == true && m_GoodVoxels[curposition] == false) disorientation++;
-                    if(m_GoodVoxels[refposition] == false && m_GoodVoxels[curposition] == true) disorientation++;
-                  }
-                  else
-                  {
+  //same for both
+  double sumX = 0;//sum(x_i)
+  double sumX_2 = 0;//sum(x_i^2)
 
-                  }
-                }
-              }
-              disorientation = disorientation/count;
-              misorients[k + oldxshiftabove + int(dims[0] / 2)][j + oldyshiftabove + int(dims[1] / 2)] = disorientation;
-              if(disorientation < mindisorientation || (disorientation == mindisorientation && ((abs(k+oldxshiftabove) < abs(newxshiftabove)) || (abs(j+oldyshiftabove) < abs(newyshiftabove)))))
-              {
-                newxshiftabove = k + oldxshiftabove;
-                newyshiftabove = j + oldyshiftabove;
-                mindisorientation = disorientation;
-              }
-            }
-          }
-        }
-      }
-    }
-    double shift=0;
-    if( (abs(newxshift)==newxshift && abs(newxshiftabove)==newxshiftabove) || (abs(newxshift)==-newxshift && abs(newxshiftabove)==-newxshiftabove) )
-      shift=((newxshift+newxshiftabove)/2.0f);
-    if(shift>0)
-    {
-      xshifts[iter] = xshifts[iter-1]+floor(shift);
-    }
-    else
-    {
-      xshifts[iter] = xshifts[iter-1]+ceil(shift);
-    }
+  //x shift line
+  double x_sumY = 0;//sum(y_i)
+  double x_sumXY = 0;//sum(x_i * y_i)
 
-    shift=0;
-    if( (abs(newxshift)==newxshift && abs(newxshiftabove)==newxshiftabove) || (abs(newxshift)==-newxshift && abs(newxshiftabove)==-newxshiftabove) )
-      shift=((newyshift+newyshiftabove)/2.0f);
-    if(shift>0)
-    {
-      yshifts[iter] = yshifts[iter-1]+floor(shift);
-    }
-    else
-    {
-      yshifts[iter] = yshifts[iter-1]+ceil(shift);
-    }
-    //xshifts[iter] = xshifts[iter-1] + static_cast<int>(trunc((newxshift+newxshiftabove)/2.0f));
-    //yshifts[iter] = yshifts[iter-1] + static_cast<int>(trunc((newyshift+newyshiftabove)/2.0f));
+  //y shift line
+  double y_sumY = 0;//sum(y_i)
+  double y_sumXY = 0;//sum(x_i * y_i)
+
+  for (DimType iter = 0; iter < dims[2]; iter++)
+  {
+    slice = static_cast<int>( (dims[2] - 1) - iter );
+    sumX = sumX + iter;
+    sumX_2 = sumX_2 + iter*iter;
+    x_sumY = x_sumY + xshifts[iter];
+    x_sumXY = x_sumXY + iter*xshifts[iter];
+    y_sumY = y_sumY + yshifts[iter];
+    y_sumXY = y_sumXY + iter*yshifts[iter];
+  }
+
+  double mx, my, bx, by;
+  mx = (dims[2]*x_sumXY - x_sumXY)/(dims[2]*sumX_2-sumX);
+  my = (dims[2]*y_sumXY - y_sumXY)/(dims[2]*sumX_2-sumX);
+  bx = (x_sumY-mx*sumX)/dims[2];
+  by = (y_sumY-my*sumX)/dims[2];
+
+  ///adjust shifts so that fit line has 0 slope (~ends of the sample are fixed)
+  for (DimType iter = 1; iter < dims[2]; iter++)
+  {
+    slice = static_cast<int>( (dims[2] - 1) - iter );
+    xshifts[iter] = xshifts[iter] - iter*mx;
+    yshifts[iter] = yshifts[iter] - iter*my;
     if (getWriteAlignmentShifts() == true) {
-      outFile << slice << "	" << slice+1 << "	" << newxshift << "	" << newyshift << "	" << xshifts[iter] << "	" << yshifts[iter] << std::endl;
+      outFile << slice << "	" << slice+1 << "	" << xshifts[iter] << "	" << yshifts[iter] << std::endl;
     }
   }
+
   if (getWriteAlignmentShifts() == true) {
     outFile.close();
   }
