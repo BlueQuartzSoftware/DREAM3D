@@ -20,11 +20,6 @@ typedef ITKUtilities<ImageProcessing::DefaultPixelType>    ITKUtilitiesType;
 // -----------------------------------------------------------------------------
 Watershed::Watershed() :
 m_SelectedCellArrayPath("", "", ""),
-m_SelectedCellArrayArrayName(""),
-m_SelectedCellArray(NULL),
-m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
-m_FeatureIds(NULL),
-m_Threshold(0.005f),
 m_Level(0.5f)
 {
   setupFilterParameters();

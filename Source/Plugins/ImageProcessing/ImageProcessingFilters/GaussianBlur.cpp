@@ -17,13 +17,8 @@ typedef ITKUtilities<ImageProcessing::DefaultPixelType>    ITKUtilitiesType;
 // -----------------------------------------------------------------------------
 GaussianBlur::GaussianBlur() :
   AbstractFilter(),
-  m_SelectedCellArrayPath("", "", ""),
-  m_SaveAsNewArray(true),
-  m_SelectedCellArrayArrayName(""),
-  m_SelectedCellArray(NULL),
-  m_NewCellArrayName(""),
   m_NewCellArray(NULL)
-  {
+{
   setupFilterParameters();
 }
 

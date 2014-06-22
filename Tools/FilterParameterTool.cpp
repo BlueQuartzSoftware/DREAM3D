@@ -140,10 +140,10 @@ float positionInHeader(const QString hFile, const QString var, bool isPointer)
   {
     // Read the Source File
     QFileInfo fi(hFile);
-    //    if (fi.baseName().compare("EBSDSegmentFeatures") != 0)
-    //    {
-    //      return false;
-    //    }
+        if (fi.baseName().compare("FillBadData") != 0)
+        {
+          return false;
+        }
 
     QFile source(hFile);
     source.open(QFile::ReadOnly);
@@ -327,11 +327,12 @@ bool fixFile( AbstractFilter::Pointer filter, const QString& hFile, const QStrin
   {
     // Read the Source File
 //    QFileInfo fi(cppFile);
-//    if (fi.baseName().compare("ErodeDilateCoordinationNumber") != 0)
+//    if (fi.baseName().compare("Watershed") != 0)
 //    {
 //      return false;
 //    }
 
+    qDebug() << "Fixing " << fi.absoluteFilePath();
     QFile source(cppFile);
     source.open(QFile::ReadOnly);
     contents = source.readAll();
@@ -417,7 +418,7 @@ bool fixFilterParameters( AbstractFilter::Pointer filter, const QString& hFile, 
   {
     // Read the Source File
 //    QFileInfo fi(cppFile);
-//    if (fi.baseName().compare("AdjustVolumeOrigin") != 0)
+//    if (fi.baseName().compare("FillBadData") != 0)
 //    {
 //      return false;
 //    }
@@ -477,7 +478,7 @@ QString findPath(const QString& groupName, const QString& filtName, const QStrin
 
   prefix = prefix + "Plugins/";
   QStringList libs;
-  libs << "DDDAnalysisToolbox" << "ImageImport" << "OrientationAnalysis" << "Processing" <<  "Reconstruction" << "Sampling" << "Statistics"  << "SurfaceMeshing" << "SyntheticBuilding";
+  libs << "UCSB" << "ImageProcessing" << "DDDAnalysisToolbox" << "ImageImport" << "OrientationAnalysis" << "Processing" <<  "Reconstruction" << "Sampling" << "Statistics"  << "SurfaceMeshing" << "SyntheticBuilding";
 
   for (int i = 0; i < libs.size(); ++i)
   {
@@ -510,10 +511,11 @@ void GenerateFilterParametersCode()
     AbstractFilter::Pointer filter = factory->create();
 
     QString cpp = findPath(filter->getGroupName(), filter->getNameOfClass(), ".cpp");
+    //qDebug() << "CPP File: " << cpp;
     QString h = findPath(filter->getGroupName(), filter->getNameOfClass(), ".h");
 
-    //fixFile(filter, h, cpp);
-    fixFilterParameters(filter, h, cpp);
+    fixFile(filter, h, cpp);
+    //fixFilterParameters(filter, h, cpp);
   }
 
 }
