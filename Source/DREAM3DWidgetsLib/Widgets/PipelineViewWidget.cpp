@@ -349,9 +349,22 @@ void PipelineViewWidget::loadPipelineFile(const QString& filePath, QSettings::Fo
   {
     progress.setValue(i);
 
+    QVector<FilterParameter::Pointer> options = filters.at(i)->getFilterParameters(); // Get the current set of filter parameters
+    for (QVector<FilterParameter::Pointer>::iterator iter = options.begin(); iter != options.end(); ++iter )
+    {
+      FilterParameter* parameter = (*iter).get();
+      if(parameter->getWidgetType().compare(FilterParameterWidgetType::InputFileWidget) == 0)
+      {
+        QVariant var = property(parameter->getPropertyName().toLatin1().constData());
+        qDebug() << "Input File widget: " << parameter->getPropertyName() << "  " << parameter->getHumanLabel();
+      }
+
+    }
+
     // Create a PipelineFilterWidget using the current AbstractFilter instance to initialize it
     PipelineFilterWidget* w = new PipelineFilterWidget(filters.at(i), NULL, this);
     index = filterCount() - 1; // We want to add the filter as the next filter but BEFORE the vertical spacer
+
     addFilterWidget(w, index);
   }
   progress.setValue(fCount);

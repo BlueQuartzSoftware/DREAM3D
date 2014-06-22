@@ -331,8 +331,6 @@ bool fixFile( AbstractFilter::Pointer filter, const QString& hFile, const QStrin
 //    {
 //      return false;
 //    }
-
-    qDebug() << "Fixing " << fi.absoluteFilePath();
     QFile source(cppFile);
     source.open(QFile::ReadOnly);
     contents = source.readAll();

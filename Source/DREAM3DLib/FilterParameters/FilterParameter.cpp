@@ -44,8 +44,6 @@ FilterParameter::FilterParameter() :
   m_WidgetType(""),
   m_Advanced(false),
   m_Units(""),
-  m_FileExtension(""),
-  m_FileType(""),
   m_ReadOnly(false)
 {}
 
@@ -55,9 +53,7 @@ FilterParameter::FilterParameter() :
 FilterParameter::Pointer FilterParameter::New(const QString& humanLabel, const QString& propertyName,
                                               const QString& widgetType, const QVariant& defaultValue,
                                               bool advanced,
-                                              const QString& units,
-                                              const QString& fileExtension,
-                                              const QString& fileType)
+                                              const QString& units)
 {
 
   FilterParameter::Pointer ptr = FilterParameter::New();
@@ -67,8 +63,6 @@ FilterParameter::Pointer FilterParameter::New(const QString& humanLabel, const Q
   ptr->setDefaultValue(defaultValue);
   ptr->setAdvanced(advanced);
   ptr->setUnits(units);
-  ptr->setFileExtension(fileExtension);
-  ptr->setFileType(fileType);
   if(ptr->getWidgetType().compare(FilterParameterWidgetType::SeparatorWidget) == 0)
   {
     ptr->setReadOnly(true);
@@ -83,9 +77,7 @@ FilterParameter::Pointer FilterParameter::New(const QString& humanLabel, const Q
 FilterParameter::Pointer FilterParameter::New(const QString& humanLabel, const QString& propertyName,
                                               const QString& widgetType, const FloatVec3_t& defaultValue,
                                               bool advanced,
-                                              const QString& units,
-                                              const QString& fileExtension,
-                                              const QString& fileType)
+                                              const QString& units)
 {
 
   FilterParameter::Pointer ptr = FilterParameter::New();
@@ -97,8 +89,6 @@ FilterParameter::Pointer FilterParameter::New(const QString& humanLabel, const Q
   ptr->setDefaultValue(v);
   ptr->setAdvanced(advanced);
   ptr->setUnits(units);
-  ptr->setFileExtension(fileExtension);
-  ptr->setFileType(fileType);
   if(ptr->getWidgetType().compare(FilterParameterWidgetType::SeparatorWidget) == 0)
   {
     ptr->setReadOnly(true);
@@ -112,9 +102,7 @@ FilterParameter::Pointer FilterParameter::New(const QString& humanLabel, const Q
 FilterParameter::Pointer FilterParameter::New(const QString& humanLabel, const QString& propertyName,
                                               const QString& widgetType, const IntVec3_t& defaultValue,
                                               bool advanced,
-                                              const QString& units,
-                                              const QString& fileExtension,
-                                              const QString& fileType)
+                                              const QString& units)
 {
 
   FilterParameter::Pointer ptr = FilterParameter::New();
@@ -126,8 +114,6 @@ FilterParameter::Pointer FilterParameter::New(const QString& humanLabel, const Q
   ptr->setDefaultValue(v);
   ptr->setAdvanced(advanced);
   ptr->setUnits(units);
-  ptr->setFileExtension(fileExtension);
-  ptr->setFileType(fileType);
   if(ptr->getWidgetType().compare(FilterParameterWidgetType::SeparatorWidget) == 0)
   {
     ptr->setReadOnly(true);
@@ -141,9 +127,7 @@ FilterParameter::Pointer FilterParameter::New(const QString& humanLabel, const Q
 FilterParameter::Pointer FilterParameter::New(const QString& humanLabel, const QString& propertyName,
                                               const QString& widgetType, const DataArrayPath& defaultValue,
                                               bool advanced,
-                                              const QString& units,
-                                              const QString& fileExtension,
-                                              const QString& fileType)
+                                              const QString& units)
 {
 
   FilterParameter::Pointer ptr = FilterParameter::New();
@@ -155,8 +139,6 @@ FilterParameter::Pointer FilterParameter::New(const QString& humanLabel, const Q
   ptr->setDefaultValue(v);
   ptr->setAdvanced(advanced);
   ptr->setUnits(units);
-  ptr->setFileExtension(fileExtension);
-  ptr->setFileType(fileType);
   if(ptr->getWidgetType().compare(FilterParameterWidgetType::SeparatorWidget) == 0)
   {
     ptr->setReadOnly(true);
@@ -170,9 +152,7 @@ FilterParameter::Pointer FilterParameter::New(const QString& humanLabel, const Q
 FilterParameter::Pointer FilterParameter::New(const QString& humanLabel, const QString& propertyName,
                                               const QString& widgetType, const AxisAngleInput_t& defaultValue,
                                               bool advanced,
-                                              const QString& units,
-                                              const QString& fileExtension,
-                                              const QString& fileType)
+                                              const QString& units)
 {
   FilterParameter::Pointer ptr = FilterParameter::New();
   ptr->setHumanLabel(humanLabel);
@@ -183,8 +163,6 @@ FilterParameter::Pointer FilterParameter::New(const QString& humanLabel, const Q
   ptr->setDefaultValue(v);
   ptr->setAdvanced(advanced);
   ptr->setUnits(units);
-  ptr->setFileExtension(fileExtension);
-  ptr->setFileType(fileType);
   if(ptr->getWidgetType().compare(FilterParameterWidgetType::SeparatorWidget) == 0)
   {
     ptr->setReadOnly(true);
@@ -231,8 +209,6 @@ FilterParameter::Pointer FilterParameter::NewConditional(const QString& humanLab
   ptr->setAdvanced(advanced);
   ptr->setConditionalProperties(linkedProperties);
   ptr->setUnits("");
-  ptr->setFileExtension("");
-  ptr->setFileType("");
   if(ptr->getWidgetType().compare(FilterParameterWidgetType::SeparatorWidget) == 0)
   {
     ptr->setReadOnly(true);
@@ -246,6 +222,49 @@ FilterParameter::Pointer FilterParameter::NewConditional(const QString& humanLab
 // -----------------------------------------------------------------------------
 FilterParameter::~FilterParameter()
 {}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+FileSystemFilterParameter::FileSystemFilterParameter() :
+  FilterParameter(),
+  m_FileExtension(""),
+  m_FileType("")
+{}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+FileSystemFilterParameter::~FileSystemFilterParameter()
+{}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+FileSystemFilterParameter::Pointer FileSystemFilterParameter::New(const QString& humanLabel, const QString& propertyName,
+                                              const QString& widgetType, const QVariant& defaultValue,
+                                              bool advanced,
+                                              const QString& units,
+                                              const QString& fileExtension,
+                                              const QString& fileType)
+{
+  FileSystemFilterParameter::Pointer ptr = FileSystemFilterParameter::New();
+  ptr->setHumanLabel(humanLabel);
+  ptr->setPropertyName(propertyName);
+  ptr->setWidgetType(widgetType);
+  ptr->setDefaultValue(defaultValue);
+  ptr->setAdvanced(advanced);
+  ptr->setUnits(units);
+  ptr->setFileExtension(fileExtension);
+  ptr->setFileType(fileType);
+  if(ptr->getWidgetType().compare(FilterParameterWidgetType::SeparatorWidget) == 0)
+  {
+    ptr->setReadOnly(true);
+  }
+  return ptr;
+}
+
+
 
 
 // -----------------------------------------------------------------------------
@@ -278,8 +297,6 @@ ChoiceFilterParameter::Pointer ChoiceFilterParameter::New(const QString& humanLa
   ptr->setDefaultValue(defaultValue);
   ptr->setAdvanced(advanced);
   ptr->setUnits("");
-  ptr->setFileExtension("");
-  ptr->setFileType("");
   ptr->setChoices(choices);
   ptr->setEditable(editable);
 
@@ -321,8 +338,6 @@ ComparisonFilterParameter::Pointer ComparisonFilterParameter::New(const QString&
   ptr->setDefaultValue(defaultValue);
   ptr->setAdvanced(advanced);
   ptr->setUnits("");
-  ptr->setFileExtension("");
-  ptr->setFileType("");
   ptr->setChoices(choices);
   ptr->setShowOperators(showOperators);
   if(ptr->getWidgetType().compare(FilterParameterWidgetType::SeparatorWidget) == 0)
@@ -363,9 +378,6 @@ ShapeTypesFilterParameter::Pointer ShapeTypesFilterParameter::New(const QString&
   ptr->setDefaultValue(defaultValue);
   ptr->setAdvanced(advanced);
   ptr->setUnits("");
-  ptr->setFileExtension("");
-  ptr->setFileType("");
-  //ptr->setCastableValueType("");
 
   ptr->setPhaseTypeCountProperty(phaseTypeCountProperty);
   ptr->setPhaseTypeArrayPathProperty(phaseTypeArrayPathProperty);
@@ -406,8 +418,6 @@ PhaseTypesFilterParameter::Pointer PhaseTypesFilterParameter::New(const QString&
   ptr->setDefaultValue(defaultValue);
   ptr->setAdvanced(advanced);
   ptr->setUnits("");
-  ptr->setFileExtension("");
-  ptr->setFileType("");
 
   ptr->setPhaseTypeCountProperty(phaseTypeCountProperty);
   ptr->setPhaseTypeArrayPathProperty(phaseTypeArrayPathProperty);
@@ -445,8 +455,6 @@ PreflightUpdatedValue::Pointer PreflightUpdatedValue::New(const QString& humanLa
   ptr->setDefaultValue(defaultValue);
   ptr->setAdvanced(advanced);
   ptr->setUnits("");
-  ptr->setFileExtension("");
-  ptr->setFileType("");
   if(ptr->getWidgetType().compare(FilterParameterWidgetType::SeparatorWidget) == 0)
   {
     ptr->setReadOnly(true);
@@ -486,8 +494,6 @@ DataContainerArrayProxyFilterParameter::Pointer DataContainerArrayProxyFilterPar
   ptr->setDefaultValue(defaultValue);
   ptr->setAdvanced(advanced);
   ptr->setUnits("");
-  ptr->setFileExtension("");
-  ptr->setFileType("");
   ptr->setDefaultFlagValue(defValue);
   ptr->setDataContainerArrayProxy(proxy);
 

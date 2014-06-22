@@ -84,39 +84,6 @@ namespace FilterParameterWidgetType
   const QString PhaseTypeSelectionWidget("PhaseTypeSelectionWidget");
 
   const QString PreflightUpdatedValueWidget("PreflightUpdatedValueWidget");
-#if 0
-  /* **** DO NOT PUT ANY OTHER WIDGETS BETWEEN THIS ***** */
-  const QString SingleArraySelectionWidget("SingleArraySelectionWidget"); // ComboBox where the Cell Array names are used to populate
-  const QString VolumeEdgeArrayNameSelectionWidget("VolumeEdgeArrayNameSelectionWidget"); //ComboBox where the Feature Array names are used to populate
-  const QString VolumeFaceArrayNameSelectionWidget("VolumeFaceArrayNameSelectionWidget"); //ComboBox where the Ensemble Array names are used to populate
-  const QString VolumeCellArrayNameSelectionWidget("VolumeCellArrayNameSelectionWidget"); // ComboBox where the Cell Array names are used to populate
-  const QString VolumeFeatureArrayNameSelectionWidget("VolumeFeatureArrayNameSelectionWidget"); //ComboBox where the Feature Array names are used to populate
-  const QString VolumeEnsembleArrayNameSelectionWidget("VolumeEnsembleArrayNameSelectionWidget"); //ComboBox where the Ensemble Array names are used to populate
-  const QString SurfaceVertexArrayNameSelectionWidget("SurfaceVertexArrayNameSelectionWidget");
-  const QString SurfaceFaceArrayNameSelectionWidget("SurfaceFaceArrayNameSelectionWidget");
-  const QString SurfaceEdgeArrayNameSelectionWidget("SurfaceEdgeArrayNameSelectionWidget");
-  const QString SurfaceFeatureArrayNameSelectionWidget("SurfaceFeatureArrayNameSelectionWidget");
-  const QString SurfaceEnsembleArrayNameSelectionWidget("SurfaceEnsembleArrayNameSelectionWidget");
-  const QString EdgeVertexArrayNameSelectionWidget("EdgeVertexArrayNameSelectionWidget");
-  const QString EdgeEdgeArrayNameSelectionWidget("EdgeEdgeArrayNameSelectionWidget");
-  const QString EdgeFeatureArrayNameSelectionWidget("EdgeFeatureArrayNameSelectionWidget");
-  const QString EdgeEnsembleArrayNameSelectionWidget("EdgeEnsembleArrayNameSelectionWidget");
-  const QString VertexVertexArrayNameSelectionWidget("VertexVertexArrayNameSelectionWidget");
-  const QString VertexFeatureArrayNameSelectionWidget("VertexFeatureArrayNameSelectionWidget");
-  const QString VertexEnsembleArrayNameSelectionWidget("VertexEnsembleArrayNameSelectionWidget");
-  /* ****  AND THIS LINE ******** */
-#endif
-  /* This widget presents a blank table and the user clicks an "Add" button to add arrays and Opertors
-  const QString CellArrayComparisonSelectionWidget("CellArrayComparisonSelectionWidget");
-  const QString FeatureArrayComparisonSelectionWidget("FeatureArrayComparisonSelectionWidget");
-  const QString EnsembleArrayComparisonSelectionWidget("EnsembleArrayComparisonSelectionWidget");
-  const QString VertexArrayComparisonSelectionWidget("VertexArrayComparisonSelectionWidget");
-  const QString FaceArrayComparisonSelectionWidget("FaceArrayComparisonSelectionWidget");
-  const QString EdgeArrayComparisonSelectionWidget("EdgeArrayComparisonSelectionWidget");
-  const QString CustomWidget("CustomWidget");
-  */
-
-
 
 }
 
@@ -153,38 +120,28 @@ class DREAM3DLib_EXPORT FilterParameter
     static Pointer New(const QString& humanLabel, const QString& propertyName,
                        const QString& widgetType, const QVariant& defaultValue,
                        bool advanced = false,
-                       const QString& units = QString(""),
-                       const QString& fileExtension = QString(""),
-                       const QString& fileType = QString(""));
+                       const QString& units = QString(""));
 
 
     static Pointer New(const QString& humanLabel, const QString& propertyName,
                        const QString& widgetType, const FloatVec3_t& defaultValue,
                        bool advanced = false,
-                       const QString& units = QString(""),
-                       const QString& fileExtension = QString(""),
-                       const QString& fileType = QString(""));
+                       const QString& units = QString(""));
 
     static Pointer New(const QString& humanLabel, const QString& propertyName,
                        const QString& widgetType, const IntVec3_t& defaultValue,
                        bool advanced = false,
-                       const QString& units = QString(""),
-                       const QString& fileExtension = QString(""),
-                       const QString& fileType = QString(""));
+                       const QString& units = QString(""));
 
     static Pointer New(const QString& humanLabel, const QString& propertyName,
                        const QString& widgetType, const DataArrayPath& defaultValue,
                        bool advanced = false,
-                       const QString& units = QString(""),
-                       const QString& fileExtension = QString(""),
-                       const QString& fileType = QString(""));
+                       const QString& units = QString(""));
 
     static Pointer New(const QString& humanLabel, const QString& propertyName,
                        const QString& widgetType, const AxisAngleInput_t& defaultValue,
                        bool advanced = false,
-                       const QString& units = QString(""),
-                       const QString& fileExtension = QString(""),
-                       const QString& fileType = QString(""));
+                       const QString& units = QString(""));
 
     static Pointer New(const QString& humanLabel, const QString& propertyName,
                        const QString& widgetType, const UInt32Vector_t& defaultValue,
@@ -219,14 +176,9 @@ class DREAM3DLib_EXPORT FilterParameter
     DREAM3D_VIRTUAL_INSTANCE_PROPERTY(QVariant, DefaultValue)
     DREAM3D_INSTANCE_PROPERTY(bool, Advanced)
     DREAM3D_INSTANCE_STRING_PROPERTY(Units)
-    DREAM3D_INSTANCE_STRING_PROPERTY(FileExtension)
-    DREAM3D_INSTANCE_STRING_PROPERTY(FileType)
     DREAM3D_INSTANCE_PROPERTY(bool, ReadOnly)
 
-//   DREAM3D_BOOL_PROPERTY(Conditional)
     DREAM3D_INSTANCE_PROPERTY(QStringList, ConditionalProperties)
-//    DREAM3D_INSTANCE_STRING_PROPERTY(ConditionalProperty)
-//    DREAM3D_INSTANCE_STRING_PROPERTY(ConditionalLabel)
 
   protected:
     FilterParameter();
@@ -263,6 +215,37 @@ class DREAM3DLib_EXPORT ConstrainedFilterParameter : public FilterParameter
     ConstrainedFilterParameter(const ConstrainedFilterParameter&); // Copy Constructor Not Implemented
     void operator=(const ConstrainedFilterParameter&); // Operator '=' Not Implemented
 };
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+class DREAM3DLib_EXPORT FileSystemFilterParameter : public FilterParameter
+{
+  public:
+    DREAM3D_SHARED_POINTERS(FileSystemFilterParameter)
+    DREAM3D_STATIC_NEW_MACRO(FileSystemFilterParameter)
+    DREAM3D_TYPE_MACRO_SUPER(FileSystemFilterParameter, FilterParameter)
+
+    static Pointer New(const QString& humanLabel, const QString& propertyName,
+                       const QString& widgetType, const QVariant& defaultValue,
+                       bool advanced = false,
+                       const QString& units = QString(""),
+                       const QString& fileExtension = QString(""),
+                       const QString& fileType = QString(""));
+
+    virtual ~FileSystemFilterParameter();
+
+    DREAM3D_INSTANCE_STRING_PROPERTY(FileExtension)
+    DREAM3D_INSTANCE_STRING_PROPERTY(FileType)
+
+  protected:
+    FileSystemFilterParameter();
+
+  private:
+    FileSystemFilterParameter(const FileSystemFilterParameter&); // Copy Constructor Not Implemented
+    void operator=(const FileSystemFilterParameter&); // Operator '=' Not Implemented
+};
+
 
 
 // -----------------------------------------------------------------------------
