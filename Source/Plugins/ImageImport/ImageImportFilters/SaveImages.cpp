@@ -87,7 +87,7 @@ void SaveImages::setupFilterParameters()
   /* For String input use this code */
   parameters.push_back(FilterParameter::New("Image File Prefix", "ImagePrefix", FilterParameterWidgetType::StringWidget, getImagePrefix(), false));
   /*   For an output path use this code*/
-  parameters.push_back(FilterParameter::New("Output Path", "OutputPath", FilterParameterWidgetType::OutputPathWidget, getOutputPath(), false));
+  parameters.push_back(FileSystemFilterParameter::New("Output Path", "OutputPath", FilterParameterWidgetType::OutputPathWidget, getOutputPath(), false));
   setFilterParameters(parameters);
 }
 

@@ -62,11 +62,12 @@ QString ReadH5EbsdWidget::m_OpenDialogLastDirectory = "";
 // -----------------------------------------------------------------------------
 ReadH5EbsdWidget::ReadH5EbsdWidget(FilterParameter* parameter, AbstractFilter* filter, QWidget* parent) :
   QWidget(parent),
-  m_FilterParameter(parameter),
   m_Version4Warning(false),
   m_DidCausePreflight(false),
   m_NewFileLoaded(false)
 {
+  m_FilterParameter = dynamic_cast<FileSystemFilterParameter*>(parameter);
+
   m_SampleTransformation.angle = 0.0f;
   m_SampleTransformation.h = 0.0f;
   m_SampleTransformation.k = 0.0f;

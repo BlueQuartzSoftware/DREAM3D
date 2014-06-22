@@ -79,7 +79,7 @@ SPParksTextReader::~SPParksTextReader()
 void SPParksTextReader::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(FilterParameter::New("Input File", "InputFile", FilterParameterWidgetType::InputFileWidget, getInputFile(), false, "", "*.dump", "SPParks Dump File"));
+  parameters.push_back(FileSystemFilterParameter::New("Input File", "InputFile", FilterParameterWidgetType::InputFileWidget, getInputFile(), false, "", "*.dump", "SPParks Dump File"));
   parameters.push_back(FilterParameter::New("Origin", "Origin", FilterParameterWidgetType::FloatVec3Widget, getOrigin(), false, "XYZ"));
   parameters.push_back(FilterParameter::New("Resolution", "Resolution", FilterParameterWidgetType::FloatVec3Widget, getResolution(), false, "XYZ"));
   parameters.push_back(FilterParameter::New("One Based Arrays", "OneBasedArrays", FilterParameterWidgetType::BooleanWidget, getOneBasedArrays(), false));

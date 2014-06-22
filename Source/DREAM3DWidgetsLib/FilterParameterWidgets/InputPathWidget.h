@@ -53,6 +53,8 @@
 
 #include "DREAM3DWidgetsLib/ui_InputPathWidget.h"
 
+class FileSystemFilterParameter;
+
 
 /**
 * @brief
@@ -102,7 +104,7 @@ class DREAM3DWidgetsLib_EXPORT InputPathWidget : public QWidget, private Ui::Inp
 
   private:
     AbstractFilter*   m_Filter;
-    FilterParameter*  m_FilterParameter;
+    FileSystemFilterParameter*  m_FilterParameter;
     static QString    m_OpenDialogLastDirectory;
     bool m_DidCausePreflight;
     QPointer<FaderWidget> faderWidget;

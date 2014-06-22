@@ -57,12 +57,13 @@ QString ConvertHexGridToSquareGridWidget::m_OpenDialogLastDirectory = "";
 // -----------------------------------------------------------------------------
 ConvertHexGridToSquareGridWidget::ConvertHexGridToSquareGridWidget(FilterParameter* parameter, AbstractFilter* filter, QWidget* parent) :
   QWidget(parent),
-  m_FilterParameter(parameter),
   m_StackingGroup(NULL),
   m_DidCausePreflight(false)
 {
   m_Filter = qobject_cast<ConvertHexGridToSquareGrid*>(filter);
   Q_ASSERT_X(NULL != m_Filter, "ConvertHexGridToSquareGridWidget can ONLY be used with ConvertHexGridToSquareGridWidget filter", __FILE__);
+
+  m_FilterParameter = dynamic_cast<FileSystemFilterParameter*>(parameter);
 
   if ( getOpenDialogLastDirectory().isEmpty() )
   {

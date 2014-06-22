@@ -52,9 +52,10 @@ QString OutputPathWidget::m_OpenDialogLastDirectory = "";
 // -----------------------------------------------------------------------------
 OutputPathWidget::OutputPathWidget(FilterParameter* parameter, AbstractFilter* filter, QWidget* parent) :
   QWidget(parent),
-  m_Filter(filter),
-  m_FilterParameter(parameter)
+  m_Filter(filter)
 {
+  m_FilterParameter = dynamic_cast<FileSystemFilterParameter*>(parameter);
+
   setupUi(this);
   setupGui();
 }

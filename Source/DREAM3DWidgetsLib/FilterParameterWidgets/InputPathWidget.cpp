@@ -54,9 +54,10 @@ QString InputPathWidget::m_OpenDialogLastDirectory = "";
 // -----------------------------------------------------------------------------
 InputPathWidget::InputPathWidget(FilterParameter* parameter, AbstractFilter* filter, QWidget* parent) :
   QWidget(parent),
-  m_Filter(filter),
-  m_FilterParameter(parameter)
+  m_Filter(filter)
 {
+  m_FilterParameter = dynamic_cast<FileSystemFilterParameter*>(parameter);
+
   setupUi(this);
   setupGui();
 }
@@ -119,7 +120,8 @@ bool InputPathWidget::verifyPathExists(QString filePath, QLineEdit* lineEdit)
   QFileInfo fileinfo(filePath);
   if (false == fileinfo.exists())
   {
-    lineEdit->setStyleSheet("border: 1px solid red;");
+    //lineEdit->setStyleSheet("border: 1px solid red;");
+    lineEdit->setStyleSheet("color: rgb(255, 0, 0);");
   }
   else
   {

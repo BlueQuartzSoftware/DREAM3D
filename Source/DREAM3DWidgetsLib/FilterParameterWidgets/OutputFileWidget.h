@@ -54,7 +54,7 @@
 #include "DREAM3DWidgetsLib/ui_OutputFileWidget.h"
 
 class QLineEdit;
-
+class FileSystemFilterParameter;
 
 /**
 * @brief
@@ -108,7 +108,7 @@ class DREAM3DWidgetsLib_EXPORT OutputFileWidget : public QWidget, private Ui::Ou
 
   private:
     AbstractFilter*   m_Filter;
-    FilterParameter*  m_FilterParameter;
+    FileSystemFilterParameter*  m_FilterParameter;
     static QString    m_OpenDialogLastDirectory;
     bool m_DidCausePreflight;
     QPointer<FaderWidget> faderWidget;

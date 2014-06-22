@@ -103,7 +103,7 @@ void VisualizeGBCDPoleFigure::setupFilterParameters()
   }
   parameters.push_back(FilterParameter::New("Misorientation Axis Angles", "MisorientationRotation", FilterParameterWidgetType::AxisAngleWidget, getMisorientationRotation(), false));
 
-  parameters.push_back(FilterParameter::New("Regular Grid Pole Figure", "OutputFile", FilterParameterWidgetType::OutputFileWidget, getOutputFile(), false, "", "*.vtk", "VTK File"));
+  parameters.push_back(FileSystemFilterParameter::New("Regular Grid Pole Figure", "OutputFile", FilterParameterWidgetType::OutputFileWidget, getOutputFile(), false, "", "*.vtk", "VTK File"));
   parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
   parameters.push_back(FilterParameter::New("GBCD", "GBCDArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getGBCDArrayPath(), true, ""));
   setFilterParameters(parameters);

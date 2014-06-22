@@ -46,6 +46,7 @@
 #include <QtGui/QVBoxLayout>
 #include <QtGui/QMouseEvent>
 #include <QtGui/QPainter>
+#include <QtGui/QFileDialog>
 
 
 
@@ -176,6 +177,53 @@ void PipelineFilterWidget::layoutWidgets()
     for (QVector<FilterParameter::Pointer>::iterator iter = filterParameters.begin(); iter != filterParameters.end(); ++iter )
     {
       FilterParameter* option = (*iter).get();
+
+      FileSystemFilterParameter* fsParam = dynamic_cast<FileSystemFilterParameter*>(option);
+      if(fsParam)
+      {
+        QString currentPath = m_Filter->property(fsParam->getPropertyName().toLatin1().constData()).toString();
+        QFileInfo fi(currentPath);
+
+        if (currentPath.isEmpty() == false && fi.exists() == false)
+        {
+          QString Ftype = fsParam->getFileType();
+          QString ext = fsParam->getFileExtension();
+          QString s = Ftype + QString(" Files (") + ext + QString(");;All Files(*.*)");
+          QString defaultName = m_OpenDialogLastDirectory + QDir::separator() + "Untitled";
+
+          if (fsParam->getWidgetType().compare(FilterParameterWidgetType::InputFileWidget) == 0 )
+          {
+            QString title = QObject::tr("Select a replacement input file for parameter '%1' in filter '%2'").arg(fsParam->getHumanLabel()).arg(m_Filter->getHumanLabel());
+
+            QString file = QFileDialog::getOpenFileName(this, title, defaultName, s);
+            if(true == file.isEmpty())
+            {
+              file = currentPath;
+            }
+            file = QDir::toNativeSeparators(file);
+            // Store the last used directory into the private instance variable
+            QFileInfo fi(file);
+            m_OpenDialogLastDirectory = fi.path();
+            m_Filter->setProperty(fsParam->getPropertyName().toLatin1().constData(), file);
+          }
+
+          else if (fsParam->getWidgetType().compare(FilterParameterWidgetType::InputPathWidget) == 0 )
+          {
+            QString title = QObject::tr("Select a replacement input folder for parameter '%1' in filter '%2'").arg(fsParam->getHumanLabel()).arg(m_Filter->getHumanLabel());
+
+            QString file = QFileDialog::getExistingDirectory(this, title, defaultName, QFileDialog::ShowDirsOnly);
+            file = QDir::toNativeSeparators(file);
+            if(true == file.isEmpty())
+            {
+              file = currentPath;
+            }
+            // Store the last used directory into the private instance variable
+            QFileInfo fi(file);
+            m_OpenDialogLastDirectory = fi.path();
+            m_Filter->setProperty(fsParam->getPropertyName().toLatin1().constData(), file);
+          }
+        }
+      }
 
       QWidget* w = fwm->createWidget(option, m_Filter.get());
       m_PropertyToWidget.insert(option->getPropertyName(), w); // Update our Map of Filter Parameter Properties to the Widget
@@ -440,7 +488,7 @@ void PipelineFilterWidget::updateWidgetStyle()
 
   if (m_HasPreflightErrors == true)
   {
-    style.append("background-color: rgb(225, 100, 100);\ncolor: rgb(255, 255, 255);");
+    style.append("background-color: rgb(180, 60, 60);\ncolor: rgb(255, 255, 255);");
   }
   else
   {
