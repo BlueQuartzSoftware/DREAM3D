@@ -18,11 +18,11 @@ typedef ITKUtilities<ImageProcessing::DefaultPixelType>    ITKUtilitiesType;
 MeanKernel::MeanKernel() :
   AbstractFilter(),
   m_SelectedCellArrayPath("", "", ""),
+  m_NewCellArrayName(""),
   m_SaveAsNewArray(true),
   m_Slice(false),
   m_SelectedCellArrayArrayName(""),
   m_SelectedCellArray(NULL),
-  m_NewCellArrayName(""),
   m_NewCellArray(NULL)
 {
   m_KernelSize.x = 1;

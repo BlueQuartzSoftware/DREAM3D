@@ -60,7 +60,7 @@
 InsertPrecipitatePhases::InsertPrecipitatePhases() :
   AbstractFilter(),
   m_ClusteringListArrayName(DREAM3D::FeatureData::ClusteringList),
-  m_ErrorOutputFile("/Users/joetuck/Desktop/Microtexture/StatsGen/error.txt"),
+  m_ErrorOutputFile(""),
   m_CsvOutputFile(""),
   m_PeriodicBoundaries(false),
   m_WriteGoalAttributes(false),
@@ -71,8 +71,6 @@ InsertPrecipitatePhases::InsertPrecipitatePhases() :
   m_CellPhasesArrayPath(DREAM3D::Defaults::SyntheticVolumeDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::Phases),
   m_BoundaryCellsArrayPath(DREAM3D::Defaults::SyntheticVolumeDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::BoundaryCells),
   m_FeaturePhasesArrayPath(DREAM3D::Defaults::SyntheticVolumeDataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, DREAM3D::FeatureData::Phases),
-  m_NumFeaturesArrayPath(DREAM3D::Defaults::SyntheticVolumeDataContainerName, DREAM3D::Defaults::CellEnsembleAttributeMatrixName, DREAM3D::EnsembleData::NumFeatures),
-  m_FeaturePhasesArrayName(DREAM3D::FeatureData::Phases),
   m_NumCellsArrayName(DREAM3D::FeatureData::NumCells),
   m_EquivalentDiametersArrayName(DREAM3D::FeatureData::EquivalentDiameters),
   m_VolumesArrayName(DREAM3D::FeatureData::Volumes),
@@ -80,7 +78,7 @@ InsertPrecipitatePhases::InsertPrecipitatePhases() :
   m_CentroidsArrayName(DREAM3D::FeatureData::Centroids),
   m_AxisEulerAnglesArrayName(DREAM3D::FeatureData::AxisEulerAngles),
   m_AxisLengthsArrayName(DREAM3D::FeatureData::AxisLengths),
-  m_NumFeaturesArrayName(DREAM3D::EnsembleData::NumFeatures),
+  m_NumFeaturesArrayPath(DREAM3D::Defaults::SyntheticVolumeDataContainerName, DREAM3D::Defaults::CellEnsembleAttributeMatrixName, DREAM3D::EnsembleData::NumFeatures),
   m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
   m_FeatureIds(NULL),
   m_CellPhasesArrayName(DREAM3D::CellData::Phases),
@@ -93,12 +91,14 @@ InsertPrecipitatePhases::InsertPrecipitatePhases() :
   m_Volumes(NULL),
   m_Omega3s(NULL),
   m_EquivalentDiameters(NULL),
+  m_FeaturePhasesArrayName(DREAM3D::FeatureData::Phases),
   m_FeaturePhases(NULL),
   m_NumCells(NULL),
   m_PhaseTypesArrayName(DREAM3D::EnsembleData::PhaseTypes),
   m_PhaseTypes(NULL),
   m_ShapeTypesArrayName(DREAM3D::EnsembleData::ShapeTypes),
   m_ShapeTypes(NULL),
+  m_NumFeaturesArrayName(DREAM3D::EnsembleData::NumFeatures),
   m_NumFeatures(NULL)
 {
   m_EllipsoidOps = EllipsoidOps::New();

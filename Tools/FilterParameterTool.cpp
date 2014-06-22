@@ -140,10 +140,10 @@ float positionInHeader(const QString hFile, const QString var, bool isPointer)
   {
     // Read the Source File
     QFileInfo fi(hFile);
-        if (fi.baseName().compare("FillBadData") != 0)
-        {
-          return false;
-        }
+//        if (fi.baseName().compare("FillBadData") != 0)
+//        {
+//          return false;
+//        }
 
     QFile source(hFile);
     source.open(QFile::ReadOnly);
@@ -294,7 +294,7 @@ void fixInitializerList(QStringListIterator &sourceLines, QStringList &outLines,
     }
     float index = positionInHeader(hFile, var, isPointer);
     orderedInitList[index] = line;
-    //    qDebug() << "index: " << index << "   line:" << line;
+    qDebug() << "index: " << index << "   var:" << var;
   }
 
   //qDebug() << "--------------------------------";
@@ -326,8 +326,8 @@ bool fixFile( AbstractFilter::Pointer filter, const QString& hFile, const QStrin
   QString contents;
   {
     // Read the Source File
-//    QFileInfo fi(cppFile);
-//    if (fi.baseName().compare("Watershed") != 0)
+    QFileInfo fi(cppFile);
+//    if (fi.baseName().compare("IdentifySample") != 0)
 //    {
 //      return false;
 //    }
