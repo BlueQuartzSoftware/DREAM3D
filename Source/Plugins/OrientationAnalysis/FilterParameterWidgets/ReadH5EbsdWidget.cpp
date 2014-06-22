@@ -133,6 +133,8 @@ void ReadH5EbsdWidget::setupGui()
                     this, SLOT(on_m_InputFile_textChanged(const QString&)));
 
 
+  validateInputFile();
+
   // Setup the GUI widgets from what ever is in the Filter instance
   m_InputFile->setText( m_Filter->getInputFile() );
   m_ZStartIndex->setValue( m_Filter->getZStartIndex() );
@@ -142,6 +144,36 @@ void ReadH5EbsdWidget::setupGui()
   updateFileInfoWidgets();
   QSet<QString> selectedArrays = m_Filter->getSelectedArrayNames();
   updateModelFromFilter(selectedArrays, true);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ReadH5EbsdWidget::validateInputFile()
+{
+  QString currentPath = m_Filter->property(m_FilterParameter->getPropertyName().toLatin1().constData()).toString();
+  QFileInfo fi(currentPath);
+  if (currentPath.isEmpty() == false && fi.exists() == false)
+  {
+    QString Ftype = m_FilterParameter->getFileType();
+    QString ext = m_FilterParameter->getFileExtension();
+    QString s = Ftype + QString(" Files (") + ext + QString(");;All Files(*.*)");
+    QString defaultName = m_OpenDialogLastDirectory + QDir::separator() + "Untitled";
+
+
+    QString title = QObject::tr("Select a replacement input file for parameter '%1' in filter '%2'").arg(m_FilterParameter->getHumanLabel()).arg(m_Filter->getHumanLabel());
+
+    QString file = QFileDialog::getOpenFileName(this, title, defaultName, s);
+    if(true == file.isEmpty())
+    {
+      file = currentPath;
+    }
+    file = QDir::toNativeSeparators(file);
+    // Store the last used directory into the private instance variable
+    QFileInfo fi(file);
+    m_OpenDialogLastDirectory = fi.path();
+    m_Filter->setProperty(m_FilterParameter->getPropertyName().toLatin1().constData(), file);
+  }
 }
 
 // -----------------------------------------------------------------------------

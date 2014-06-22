@@ -918,7 +918,7 @@ void PackPrimaryPhases::execute()
     }
   }
 
-  notifyStatusMessage(getHumanLabel(), "Determining Neighbors");
+  notifyStatusMessage(getMessagePrefix(), getHumanLabel(), "Determining Neighbors");
   progFeature = 0;
   progFeatureInc = totalFeatures * .01;
   uint64_t millis = QDateTime::currentMSecsSinceEpoch();

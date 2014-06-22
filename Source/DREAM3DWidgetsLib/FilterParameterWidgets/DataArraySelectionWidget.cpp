@@ -205,13 +205,9 @@ void DataArraySelectionWidget::populateComboBoxes()
   DataArrayPath selectedPath = m_Filter->property(PROPERTY_NAME_AS_CHAR).value<DataArrayPath>();
 
   // Split the path up to make sure we have a valid path separated by the "|" character
-
   QString filtDcName = selectedPath.getDataContainerName();
   QString filtAmName = selectedPath.getAttributeMatrixName();
   QString filtDaName = selectedPath.getDataArrayName();
-
-  //qDebug() << "Current Filter Value: " << filtDcName << "::" << filtAmName << "::" << filtDaName;
-  //qDebug() << "Default Value: " << m_FilterParameter->getDefaultValue().value<DataArrayPath>().serialize("::");
 
   QString dcName;
   QString amName;

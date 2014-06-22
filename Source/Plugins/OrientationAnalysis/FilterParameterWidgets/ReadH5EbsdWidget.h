@@ -99,6 +99,11 @@ class ReadH5EbsdWidget : public QWidget, private Ui::ReadH5EbsdWidget
     void setInputFile(const QString& v);
 
     /**
+     * @brief validateInputFile
+     */
+    void validateInputFile();
+
+    /**
      * @brief setWidgetListEnabled
      */
     void setWidgetListEnabled(bool v);

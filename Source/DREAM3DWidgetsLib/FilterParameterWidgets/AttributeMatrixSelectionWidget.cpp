@@ -160,16 +160,30 @@ void AttributeMatrixSelectionWidget::populateComboBoxes()
   QString filtDcName = selectedPath.getDataContainerName();
   QString filtAmName = selectedPath.getAttributeMatrixName();
 
-  // Now to figure out which one of these to use. If this is the first time through then what we picked up from the
-  // gui will be empty strings because nothing is there. If there is something in the filter then we should use that.
-  // If there is something in both of them and they are NOT equal then we have a problem. Use the flag m_DidCausePreflight
-  // to determine if the change from the GUI should over ride the filter or vice versa. there is a potential that in future
-  // versions that something else is driving DREAM3D and pushing the changes to the filter and we need to reflect those
-  // changes in the GUI, like a testing script?
+  QString dcName;
+  QString amName;
 
-  QString dcName = checkStringValues(curDcName, filtDcName);
-  QString amName = checkStringValues(curAmName, filtAmName);
+  // If EVERYTHING is empty, then try the default value
+  if(filtDcName.isEmpty() && filtAmName.isEmpty()
+     && curDcName.isEmpty() && curAmName.isEmpty() )
+  {
+    DataArrayPath daPath = m_FilterParameter->getDefaultValue().value<DataArrayPath>();
+    dcName = daPath.getDataContainerName();
+    amName = daPath.getAttributeMatrixName();
+  }
+  else
+  {
 
+    // Now to figure out which one of these to use. If this is the first time through then what we picked up from the
+    // gui will be empty strings because nothing is there. If there is something in the filter then we should use that.
+    // If there is something in both of them and they are NOT equal then we have a problem. Use the flag m_DidCausePreflight
+    // to determine if the change from the GUI should over ride the filter or vice versa. there is a potential that in future
+    // versions that something else is driving DREAM3D and pushing the changes to the filter and we need to reflect those
+    // changes in the GUI, like a testing script?
+
+    dcName = checkStringValues(curDcName, filtDcName);
+    amName = checkStringValues(curAmName, filtAmName);
+  }
   bool didBlock = false;
 
   if (!dataContainerList->signalsBlocked()) { didBlock = true; }
