@@ -87,6 +87,7 @@ DataArraySelectionWidget::~DataArraySelectionWidget()
 // -----------------------------------------------------------------------------
 void DataArraySelectionWidget::initializeWidget(FilterParameter* parameter, AbstractFilter* filter)
 {
+  //qDebug() << m_Filter->getHumanLabel() << "  " << m_FilterParameter->getHumanLabel() << " DataArraySelectionWidget::initializeWidget";
   m_Filter = filter;
   m_FilterParameter = parameter;
   setupGui();
@@ -161,10 +162,20 @@ void DataArraySelectionWidget::setupGui()
 // -----------------------------------------------------------------------------
 void DataArraySelectionWidget::populateComboBoxes()
 {
+  //qDebug() << "-----------------------------------------------";
+  //qDebug() << m_Filter->getHumanLabel() << "  " << m_FilterParameter->getHumanLabel() << " DataArraySelectionWidget::populateComboBoxes()";
   // Now get the DataContainerArray from the Filter instance
   // We are going to use this to get all the current DataContainers
   DataContainerArray::Pointer dca = m_Filter->getDataContainerArray();
   if(NULL == dca.get()) { return; }
+
+
+  //qDebug() << m_Filter->getHumanLabel() << "  " << m_FilterParameter->getHumanLabel();
+  // Grab what is currently selected
+  QString curDcName = dataContainerList->currentText();
+  QString curAmName = attributeMatrixList->currentText();
+  QString curDaName = attributeArrayList->currentText();
+  //qDebug() << "Current ComboBox Value: " << curDcName << "::" << curAmName << "::" << curDaName;
 
   // Check to see if we have any DataContainers to actually populate drop downs with.
   if(dca->getDataContainerArray().size() == 0)
@@ -190,11 +201,6 @@ void DataArraySelectionWidget::populateComboBoxes()
     }
   }
 
-  // Grab what is currently selected
-  QString curDcName = dataContainerList->currentText();
-  QString curAmName = attributeMatrixList->currentText();
-  QString curDaName = attributeArrayList->currentText();
-
   // Get what is in the filter
   DataArrayPath selectedPath = m_Filter->property(PROPERTY_NAME_AS_CHAR).value<DataArrayPath>();
 
@@ -204,16 +210,35 @@ void DataArraySelectionWidget::populateComboBoxes()
   QString filtAmName = selectedPath.getAttributeMatrixName();
   QString filtDaName = selectedPath.getDataArrayName();
 
-  // Now to figure out which one of these to use. If this is the first time through then what we picked up from the
-  // gui will be empty strings because nothing is there. If there is something in the filter then we should use that.
-  // If there is something in both of them and they are NOT equal then we have a problem. Use the flag m_DidCausePreflight
-  // to determine if the change from the GUI should over ride the filter or vice versa. there is a potential that in future
-  // versions that something else is driving DREAM3D and pushing the changes to the filter and we need to reflect those
-  // changes in the GUI, like a testing script?
+  //qDebug() << "Current Filter Value: " << filtDcName << "::" << filtAmName << "::" << filtDaName;
+  //qDebug() << "Default Value: " << m_FilterParameter->getDefaultValue().value<DataArrayPath>().serialize("::");
 
-  QString dcName = checkStringValues(curDcName, filtDcName);
-  QString amName = checkStringValues(curAmName, filtAmName);
-  QString daName = checkStringValues(curDaName, filtDaName);
+  QString dcName;
+  QString amName;
+  QString daName;
+
+  // If EVERYTHING is empty, then try the default value
+  if(filtDcName.isEmpty() && filtAmName.isEmpty() && filtDaName.isEmpty()
+     && curDcName.isEmpty() && curAmName.isEmpty() && curDaName.isEmpty() )
+  {
+    DataArrayPath daPath = m_FilterParameter->getDefaultValue().value<DataArrayPath>();
+    dcName = daPath.getDataContainerName();
+    amName = daPath.getAttributeMatrixName();
+    daName = daPath.getDataArrayName();
+  }
+  else
+  {
+    // Now to figure out which one of these to use. If this is the first time through then what we picked up from the
+    // gui will be empty strings because nothing is there. If there is something in the filter then we should use that.
+    // If there is something in both of them and they are NOT equal then we have a problem. Use the flag m_DidCausePreflight
+    // to determine if the change from the GUI should over ride the filter or vice versa. there is a potential that in future
+    // versions that something else is driving DREAM3D and pushing the changes to the filter and we need to reflect those
+    // changes in the GUI, like a testing script?
+
+    dcName = checkStringValues(curDcName, filtDcName);
+    amName = checkStringValues(curAmName, filtAmName);
+    daName = checkStringValues(curDaName, filtDaName);
+  }
 
   bool didBlock = false;
 
@@ -260,7 +285,7 @@ void DataArraySelectionWidget::populateComboBoxes()
     //DataArrayPath path = ptr->property(PROPERTY_NAME_AS_CHAR).value<DataArrayPath>();
     daName = path.getDataArrayName(); // Pick up the DataArray Name from a Default instantiation of the filter
     daIndex = attributeArrayList->findText(daName);
-    // qDebug() << "Trying default value for DataArrayPath.dataArrayName: " << daName;
+    // //qDebug() << "Trying default value for DataArrayPath.dataArrayName: " << daName;
   }
 
 
@@ -282,6 +307,7 @@ void DataArraySelectionWidget::populateComboBoxes()
 // -----------------------------------------------------------------------------
 QString DataArraySelectionWidget::checkStringValues(QString curDcName, QString filtDcName)
 {
+  ////qDebug() << "    checkStringValues(...)" << curDcName << "  " << filtDcName;
   if(curDcName.isEmpty() == true && filtDcName.isEmpty() == false)
   {return filtDcName;}
   else if(curDcName.isEmpty() == false && filtDcName.isEmpty() == true)
@@ -297,6 +323,8 @@ QString DataArraySelectionWidget::checkStringValues(QString curDcName, QString f
 // -----------------------------------------------------------------------------
 void DataArraySelectionWidget::populateAttributeMatrixList()
 {
+  //qDebug() << m_Filter->getHumanLabel() << "  " << m_FilterParameter->getHumanLabel() << " DataArraySelectionWidget::populateAttributeMatrixList()";
+
   QString dcName = dataContainerList->currentText();
 
   // Clear the AttributeMatrix List
@@ -333,7 +361,7 @@ void DataArraySelectionWidget::populateAttributeMatrixList()
 void DataArraySelectionWidget::on_dataContainerList_currentIndexChanged(int index)
 {
 
-  //  std::cout << "void DataArraySelectionWidget::on_dataContainerList_currentIndexChanged(int index)" << std::endl;
+  //qDebug() << m_Filter->getHumanLabel() << "  " << m_FilterParameter->getHumanLabel() << " DataArraySelectionWidget::on_dataContainerList_currentIndexChanged(int index)";
   populateAttributeMatrixList();
 
   // Select the first AttributeMatrix in the list
@@ -350,7 +378,7 @@ void DataArraySelectionWidget::on_dataContainerList_currentIndexChanged(int inde
 // -----------------------------------------------------------------------------
 void DataArraySelectionWidget::on_attributeMatrixList_currentIndexChanged(int index)
 {
-  // std::cout << "void DataArraySelectionWidget::on_attributeMatrixList_currentIndexChanged(int index)" << std::endl;
+  //qDebug() << m_Filter->getHumanLabel() << "  " << m_FilterParameter->getHumanLabel() << " DataArraySelectionWidget::on_attributeMatrixList_currentIndexChanged(int index)";
   populateAttributeArrayList();
 
   if(attributeArrayList->count() > 0)
@@ -462,7 +490,7 @@ void DataArraySelectionWidget::populateAttributeArrayList()
 // -----------------------------------------------------------------------------
 void DataArraySelectionWidget::on_attributeArrayList_currentIndexChanged(int index)
 {
-  //qDebug() << "void DataArraySelectionWidget::on_attributeArrayList_currentIndexChanged(int index)";
+  //qDebug() << m_Filter->getHumanLabel() << "  " << m_FilterParameter->getHumanLabel() << " DataArraySelectionWidget::on_attributeArrayList_currentIndexChanged(int index)";
   m_DidCausePreflight = true;
   emit parametersChanged();
   m_DidCausePreflight = false;
