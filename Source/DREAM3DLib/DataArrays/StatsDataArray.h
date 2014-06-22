@@ -256,6 +256,13 @@ class DREAM3DLib_EXPORT StatsDataArray : public IDataArray
     void setName(const QString& name);
     QString getName();
 
+
+    /**
+     * @brief getFullNameOfClass
+     * @return
+     */
+    QString getFullNameOfClass();
+
     /**
      * @brief Makes this class responsible for freeing the memory.
      */

@@ -47,6 +47,7 @@
 #include <QtGui/QMessageBox>
 #include <QtGui/QFileDialog>
 #include <QtGui/QDesktopServices>
+#include <QtGui/QProgressDialog>
 
 
 #include "H5Support/H5Utilities.h"
@@ -315,7 +316,7 @@ void StatsGeneratorUI::on_editPhase_clicked()
 
   if(dialog.getPhaseType() == DREAM3D::PhaseType::PrimaryPhase)
   {
-//    PrimaryPhaseWidget* ppw = qobject_cast<PrimaryPhaseWidget*>(sgwidget);
+    //    PrimaryPhaseWidget* ppw = qobject_cast<PrimaryPhaseWidget*>(sgwidget);
   }
   else if(dialog.getPhaseType() == DREAM3D::PhaseType::PrecipitatePhase)
   {
@@ -329,11 +330,11 @@ void StatsGeneratorUI::on_editPhase_clicked()
   }
   else if(dialog.getPhaseType() == DREAM3D::PhaseType::MatrixPhase)
   {
-//    MatrixPhaseWidget* mpw = qobject_cast<MatrixPhaseWidget*>(sgwidget);
+    //    MatrixPhaseWidget* mpw = qobject_cast<MatrixPhaseWidget*>(sgwidget);
   }
   else if(dialog.getPhaseType() == DREAM3D::PhaseType::BoundaryPhase)
   {
-//    BoundaryPhaseWidget* bpw = qobject_cast<BoundaryPhaseWidget*>(sgwidget);
+    //    BoundaryPhaseWidget* bpw = qobject_cast<BoundaryPhaseWidget*>(sgwidget);
   }
   int r = dialog.exec();
   if(r == QDialog::Accepted)
@@ -629,6 +630,7 @@ void StatsGeneratorUI::on_actionSave_triggered()
     QString h5file = QFileDialog::getSaveFileName(this, tr("Save DREAM3D File"),
                                                   m_FilePath,
                                                   tr("DREAM3D Files (*.dream3d)") );
+
     if ( true == h5file.isEmpty() ) { return;  }
     m_FilePath = h5file;
     QFileInfo fi (m_FilePath);
@@ -761,7 +763,11 @@ void StatsGeneratorUI::on_actionOpen_triggered()
   SGApplication* app = qobject_cast<SGApplication*>(SGApplication::instance());
   // Create a new Window
   StatsGeneratorUI* window = app->createNewStatsGenerator();
-  window->openFile(h5file);
+  int err = window->openFile(h5file);
+  if (err < 0)
+  {
+    delete window;
+  }
 
   // Offset the window a bit from the current window
   QRect geometry = this->geometry();
@@ -779,18 +785,22 @@ void StatsGeneratorUI::on_actionOpen_triggered()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void StatsGeneratorUI::openFile(QString h5file)
+int StatsGeneratorUI::openFile(QString h5file)
 {
   // Make sure the file path is not empty and does exist on the system
   if (true == h5file.isEmpty())
   {
-    return;
+    QString ss = QObject::tr("Input file was empty").arg(h5file);
+    QMessageBox::critical(this, QString("File Open Error"), ss , QMessageBox::Ok);
+    return -1;
   }
 
   QFileInfo fi(h5file);
   if (fi.exists() == false)
   {
-    return;
+    QString ss = QObject::tr("Input file does not exist").arg(fi.absoluteFilePath());
+    QMessageBox::critical(this, QString("File Open Error"), ss , QMessageBox::Ok);
+    return -2;
   }
 
   // Tell the RecentFileList to update itself then broadcast those changes.
@@ -801,8 +811,6 @@ void StatsGeneratorUI::openFile(QString h5file)
   m_OpenDialogLastDirectory = fi.path();
   m_FilePath = h5file;
   m_FileSelected = true;
-
-// QString path;
 
   // Delete any existing phases from the GUI
   phaseTabs->clear();
@@ -819,16 +827,40 @@ void StatsGeneratorUI::openFile(QString h5file)
   {
     QString ss = QObject::tr(": Error opening input file '%1'").arg(h5file);
     QMessageBox::critical(this, QString("File Open Error"), ss , QMessageBox::Ok);
-    return;
+    return -3;
   }
   // This will make sure if we return early from this method that the HDF5 File is properly closed.
   HDF5ScopedFileSentinel scopedFileSentinel(&fileId, true);
   hid_t dcaGid = H5Gopen(fileId, DREAM3D::StringConstants::DataContainerGroupName.toLatin1().constData(), 0);
   scopedFileSentinel.addGroupId(&dcaGid);
+
   hid_t dcGid = H5Gopen(dcaGid, DREAM3D::Defaults::StatsGenerator.toLatin1().constData(), 0);
+  if(dcGid < 0)
+  {
+    QString title= QObject::tr("Error Opening Data Container");
+    QString msg = QObject::tr("Error opening default Data Container with name '%1'").arg(DREAM3D::Defaults::StatsGenerator);
+    QMessageBox::critical(this, title, msg, QMessageBox::Ok, QMessageBox::Ok);
+    return -4;
+  }
   scopedFileSentinel.addGroupId(&dcGid);
   hid_t amGid = H5Gopen(dcGid, DREAM3D::Defaults::CellEnsembleAttributeMatrixName.toLatin1().constData(), 0);
   scopedFileSentinel.addGroupId(&amGid);
+
+
+  // We need to read one of the arrays to get the number of phases so that we can resize our attributeMatrix
+  UInt32ArrayType::Pointer phases = UInt32ArrayType::CreateArray(1, DREAM3D::EnsembleData::PhaseTypes);
+  int err = phases->readH5Data(amGid);
+  if (err < 0)
+  {
+
+    QString title= QObject::tr("Error Opening DataArray");
+    QString msg = QObject::tr("Error opening 'PhaseTypes' data array at location '%1/%2/%3/%4'").arg(DREAM3D::StringConstants::DataContainerGroupName)
+        .arg(DREAM3D::Defaults::StatsGenerator).arg(DREAM3D::Defaults::CellEnsembleAttributeMatrixName).arg(DREAM3D::EnsembleData::PhaseTypes);
+    QMessageBox::critical(this, title, msg, QMessageBox::Ok, QMessageBox::Ok);
+    return -4;
+  }
+  tDims[0] = phases->getNumberOfTuples();
+  cellEnsembleAttrMat->resizeAttributeArrays(tDims);
 
   cellEnsembleAttrMat->addAttributeArrayFromHDF5Path(amGid, "Statistics", false);
   cellEnsembleAttrMat->addAttributeArrayFromHDF5Path(amGid, "CrystalStructures", false);
@@ -837,6 +869,10 @@ void StatsGeneratorUI::openFile(QString h5file)
   // Get the number of Phases
   size_t ensembles = cellEnsembleAttrMat->getNumTuples();
 
+  QProgressDialog progress("Opening Stats File....", "Cancel", 0, ensembles, this);
+  progress.setWindowModality(Qt::WindowModal);
+
+
   IDataArray::Pointer iDataArray = cellEnsembleAttrMat->getAttributeArray(DREAM3D::EnsembleData::PhaseTypes);
   unsigned int* phaseTypes = boost::dynamic_pointer_cast< UInt32ArrayType >(iDataArray)->getPointer(0);
 
@@ -844,32 +880,43 @@ void StatsGeneratorUI::openFile(QString h5file)
   // all of the StatsGenPhase Objects
   for (size_t phase = 1; phase < ensembles; ++phase)
   {
+    progress.setValue(phase);
+
+    if (progress.wasCanceled()) {
+      return -5;
+    }
+
     if(phaseTypes[phase] == DREAM3D::PhaseType::BoundaryPhase)
     {
+      progress.setLabelText("Opening Boundaray Phase...");
       BoundaryPhaseWidget* w = new BoundaryPhaseWidget(this);
       phaseTabs->addTab(w, w->getTabTitle());
       w->extractStatsData(cellEnsembleAttrMat, static_cast<int>(phase));
     }
     else if(phaseTypes[phase] == DREAM3D::PhaseType::MatrixPhase)
     {
+      progress.setLabelText("Opening Matrix Phase...");
       MatrixPhaseWidget* w = new MatrixPhaseWidget(this);
       phaseTabs->addTab(w, w->getTabTitle());
       w->extractStatsData(cellEnsembleAttrMat, static_cast<int>(phase));
     }
     if(phaseTypes[phase] == DREAM3D::PhaseType::PrecipitatePhase)
     {
+      progress.setLabelText("Opening Precipitate Phase...");
       PrecipitatePhaseWidget* w = new PrecipitatePhaseWidget(this);
       phaseTabs->addTab(w, w->getTabTitle());
       w->extractStatsData(cellEnsembleAttrMat, static_cast<int>(phase));
     }
     if(phaseTypes[phase] == DREAM3D::PhaseType::PrimaryPhase)
     {
+      progress.setLabelText("Opening Primary Phase...");
       PrimaryPhaseWidget* w = new PrimaryPhaseWidget(this);
       phaseTabs->addTab(w, w->getTabTitle());
       w->extractStatsData(cellEnsembleAttrMat, static_cast<int>(phase));
     }
     if(phaseTypes[phase] == DREAM3D::PhaseType::TransformationPhase)
     {
+      progress.setLabelText("Opening Transformation Phase...");
       TransformationPhaseWidget* w = new TransformationPhaseWidget(this);
       phaseTabs->addTab(w, w->getTabTitle());
       w->extractStatsData(cellEnsembleAttrMat, static_cast<int>(phase));
@@ -879,16 +926,17 @@ void StatsGeneratorUI::openFile(QString h5file)
 
     }
   }
+  progress.setValue(ensembles);
 
   // Now delete the first Phase from the Combo which was left over from something else
   phaseTabs->setCurrentIndex(0);
-  //on_deletePhase_clicked();
 
   // Set the window title correctly
   setWindowModified(false);
   QString windowTitle = QString("");
   windowTitle = windowTitle +  m_FilePath + QString(" - StatsGenerator");
   setWindowTitle(windowTitle);
+  return 0;
 }
 
 // -----------------------------------------------------------------------------

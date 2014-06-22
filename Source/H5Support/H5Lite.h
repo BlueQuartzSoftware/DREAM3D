@@ -962,17 +962,18 @@ namespace H5Support_NAMESPACE
           return -1;
         }
         /* Get the type of object */
-        if (H5Oget_info_by_name(loc_id, objName.c_str(),  &statbuf, H5P_DEFAULT) < 0)
+        err = H5Oget_info_by_name(loc_id, objName.c_str(),  &statbuf, H5P_DEFAULT);
+        if (err < 0)
         {
           std::cout << "Error getting object info at loc_id (" << loc_id << ") with object name (" << objName << ")" << std::endl;
-          return -1;
+          return err;
         }
         /* Open the object */
         obj_id = H5Lite::openId( loc_id, objName, statbuf.type );
         if ( obj_id < 0)
         {
           std::cout << "Error opening Object for Attribute operations." << std::endl;
-          return -1;
+          return obj_id;
         }
 
         /* Create the data space for the attribute. */

@@ -41,6 +41,7 @@
 
 
 #include "H5Support/QH5Utilities.h"
+#include "H5Support/HDF5ScopedFileSentinel.h"
 
 // -----------------------------------------------------------------------------
 //
@@ -71,6 +72,14 @@ void StatsDataArray::setName(const QString& name)
 QString StatsDataArray::getName()
 {
   return m_Name;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString StatsDataArray::getFullNameOfClass()
+{
+  return QString("Statistics");
 }
 
 // -----------------------------------------------------------------------------
@@ -282,6 +291,8 @@ int StatsDataArray::writeH5Data(hid_t parentId, QVector<size_t> tDims)
   {
     return -1;
   }
+  HDF5ScopedGroupSentinel scopedFileSentinel(&gid, false); // This makes sure our H5Group is closed up as we exit this function
+
   // We start numbering our phases at 1. Anything in slot 0 is considered "Dummy" or invalid
   for(size_t i = 1; i < m_StatsDataArray.size(); ++i)
   {
@@ -289,13 +300,16 @@ int StatsDataArray::writeH5Data(hid_t parentId, QVector<size_t> tDims)
     {
       QString indexString = QString::number(i);
       hid_t tupleId = QH5Utilities::createGroup(gid, indexString);
-      err |= QH5Lite::writeStringAttribute(gid, indexString, DREAM3D::StringConstants::StatsType, m_StatsDataArray[i]->getStatsType() );
-      err |= QH5Lite::writeScalarAttribute(gid, indexString, DREAM3D::StringConstants::PhaseType, m_StatsDataArray[i]->getPhaseType() );
-      err |= m_StatsDataArray[i]->writeHDF5Data(tupleId);
-      err |= QH5Utilities::closeHDF5Object(tupleId);
+      err = QH5Lite::writeStringAttribute(gid, indexString, DREAM3D::StringConstants::StatsType, m_StatsDataArray[i]->getStatsType() );
+      err = QH5Lite::writeScalarAttribute(gid, indexString, DREAM3D::StringConstants::PhaseType, m_StatsDataArray[i]->getPhaseType() );
+      err = m_StatsDataArray[i]->writeHDF5Data(tupleId);
+      err = QH5Utilities::closeHDF5Object(tupleId);
     }
   }
-  err |= QH5Utilities::closeHDF5Object(gid);
+
+  QVector<size_t> cDims(1, 1);
+  err = H5DataArrayWriter::writeDataArrayAttributes<StatsDataArray>(parentId, this, tDims, cDims);
+
   return err;
 }
 // -----------------------------------------------------------------------------

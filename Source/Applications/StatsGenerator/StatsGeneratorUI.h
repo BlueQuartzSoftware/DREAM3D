@@ -76,7 +76,12 @@ class StatsGeneratorUI : public QMainWindow, private Ui::StatsGeneratorUI
     void setFilePath(QString filePath);
     QString getFilePath();
 
-    void openFile(QString h5file);
+    /**
+     * @brief openFile
+     * @param h5file
+     * @return
+     */
+    int openFile(QString h5file);
 
     SGWidget* createNewSGWidget();
 

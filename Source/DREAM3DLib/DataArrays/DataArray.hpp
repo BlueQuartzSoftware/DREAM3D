@@ -1075,12 +1075,19 @@ class DataArray : public IDataArray
       {
         return -1;
       }
-      m_NumComponents = p->getNumberOfComponents();
-      m_Size = p->getSize();
-      m_MaxId = (m_Size == 0) ? 0 : m_Size - 1;
       m_Array = reinterpret_cast<T*>(p->getVoidPointer(0));
-      p->releaseOwnership();
+      m_Size = p->getSize();
+      m_OwnsData = true;
+      m_MaxId = (m_Size == 0) ? 0 : m_Size - 1;
+      m_IsAllocated = true;
+      m_Name = p->getName();
+      m_NumTuples = p->getNumberOfTuples();
+      m_CompDims = p->getComponentDimensions();
+      m_NumComponents = p->getNumberOfComponents();
 
+      // Tell the intermediate DataArray to release ownership of the data as we are going to be responsible
+      // for deleting the memory
+      p->releaseOwnership();
       return err;
     }
 
