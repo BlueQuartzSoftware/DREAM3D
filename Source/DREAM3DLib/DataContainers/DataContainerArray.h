@@ -303,7 +303,8 @@ class DREAM3DLib_EXPORT DataContainerArray : public QObject
     typename ArrayType::Pointer createNonPrereqArrayFromPath(Filter* filter,
                                                              const DataArrayPath& path,
                                                              T initValue,
-                                                             QVector<size_t> dims)
+                                                             QVector<size_t> dims,
+                                                             const QString property = "")
     {
       typename ArrayType::Pointer dataArray = ArrayType::NullPointer();
       QString ss;
@@ -312,7 +313,7 @@ class DREAM3DLib_EXPORT DataContainerArray : public QObject
         if(filter)
         {
           filter->setErrorCondition(-80010);
-          ss = QObject::tr("The DataArrayPath is invalid because one of the elements was empty.\n  DataContainer: %1\n  AttributeMatrix: %2\n  DataArray: %3").arg(path.getDataContainerName()).arg(path.getAttributeMatrixName()).arg(path.getDataArrayName());
+          ss = QObject::tr("Property '%1': The DataArrayPath is invalid because one of the elements was empty.\n  DataContainer: %2\n  AttributeMatrix: %3\n  DataArray: %4").arg(property).arg(path.getDataContainerName()).arg(path.getAttributeMatrixName()).arg(path.getDataArrayName());
           filter->notifyErrorMessage(filter->getHumanLabel(), ss, filter->getErrorCondition());
         }
         return dataArray;
