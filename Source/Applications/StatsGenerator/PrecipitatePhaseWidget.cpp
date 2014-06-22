@@ -48,6 +48,7 @@
 #include <QtCore/QThreadPool>
 #include <QtCore/QtConcurrentRun>
 #include <QtGui/QMessageBox>
+#include <QtGui/QProgressDialog>
 
 
 //-- Qwt Includes
@@ -424,9 +425,18 @@ void PrecipitatePhaseWidget::updatePlots()
 {
   if (m_DataHasBeenGenerated == true)
   {
+    QProgressDialog progress("Generating Data ....", "Cancel", 0, 4, this);
+    progress.setWindowModality(Qt::WindowModal);
+    progress.setValue(1);
+
     plotSizeDistribution();
+    progress.setValue(2);
+
     m_ODFWidget->updatePlots();
+    progress.setValue(3);
+
     m_AxisODFWidget->updatePlots();
+    progress.setValue(4);
   }
 }
 
