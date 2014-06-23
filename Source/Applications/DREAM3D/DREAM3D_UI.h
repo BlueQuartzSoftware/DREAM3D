@@ -116,15 +116,15 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
     void on_actionExit_triggered();
 
     //Pipeline Menu
-    void on_actionUpdatePipeline_triggered();
-    void on_actionSaveAsNewPipeline_triggered();
-    void on_actionAppendToExistingPipeline_triggered();
+//    void on_actionUpdatePipeline_triggered();
+//    void on_actionSaveAsNewPipeline_triggered();
+//    void on_actionAppendToExistingPipeline_triggered();
     void on_actionClearPipeline_triggered();
 
     // Filter Menu
-    void on_actionCopyCurrentFilter_triggered();
-    void on_actionPasteCopiedFilter_triggered();
-    void on_actionRemoveCurrentFilter_triggered();
+//    void on_actionCopyCurrentFilter_triggered();
+//    void on_actionPasteCopiedFilter_triggered();
+//    void on_actionRemoveCurrentFilter_triggered();
 
     //View Menu
     // These all need to take a bool b  argument

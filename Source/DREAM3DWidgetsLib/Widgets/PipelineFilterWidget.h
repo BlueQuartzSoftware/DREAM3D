@@ -138,6 +138,12 @@ class DREAM3DWidgetsLib_EXPORT PipelineFilterWidget : public QFrame, private Ui:
 
     void adjustLayout(QWidget* w, int state);
 
+    /**
+     * @brief onCustomContextMenuRequested
+     * @param pos
+     */
+    void showCustomContextMenu(const QPoint& pos);
+
   protected slots:
     void on_deleteBtn_clicked();
     void on_helpBtn_clicked();
@@ -174,6 +180,8 @@ class DREAM3DWidgetsLib_EXPORT PipelineFilterWidget : public QFrame, private Ui:
     QMenu                     m_Menu;
     QList<QAction*>           m_MenuActions;
     QMap<QString, QWidget*>   m_PropertyToWidget;
+
+
     /**
      * @brief initialize Calls all the necessary initialization code for the widget
      * @param filter

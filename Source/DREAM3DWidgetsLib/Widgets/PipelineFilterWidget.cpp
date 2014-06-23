@@ -93,7 +93,7 @@ PipelineFilterWidget::PipelineFilterWidget(QWidget* parent) :
   m_AdvancedInputWidget(NULL),
   m_Observer(NULL)
 {
-  initialize(AbstractFilter::NullPointer() );
+  initialize(AbstractFilter::NullPointer());
 }
 
 // -----------------------------------------------------------------------------
@@ -118,6 +118,14 @@ PipelineFilterWidget::PipelineFilterWidget(AbstractFilter::Pointer filter, IObse
 // -----------------------------------------------------------------------------
 void PipelineFilterWidget::initialize(AbstractFilter::Pointer filter)
 {
+
+  setContextMenuPolicy(Qt::CustomContextMenu);
+
+  connect(this, SIGNAL(customContextMenuRequested(const QPoint&)),
+          this, SLOT(showCustomContextMenu(const QPoint&)));
+
+  setAttribute(Qt::WA_NoMousePropagation);
+
   setupUi(this);
 
   if ( m_OpenDialogLastDirectory.isEmpty() )
@@ -135,6 +143,19 @@ void PipelineFilterWidget::initialize(AbstractFilter::Pointer filter)
 
   // Layout the widgets in the parent widget
   layoutWidgets();
+
+#if 0
+  QAction* action = new QAction(NULL);
+  action->setObjectName(QString::fromUtf8("actionSomeAction"));
+  action->setText(QApplication::translate("DREAM3D_UI", "Some Action", 0, QApplication::UnicodeUTF8));
+  m_MenuActions << action;
+  //m_Menu->addAction(action);
+  //QKeySequence actionClearKeySeq(Qt::CTRL + Qt::Key_Delete);
+  //action->setShortcut(actionClearKeySeq);
+//  connect(action, SIGNAL(triggered()),
+//          this, SLOT( on_actionClearPipeline_triggered() ) );
+#endif
+
 }
 
 // -----------------------------------------------------------------------------
@@ -536,21 +557,23 @@ AbstractFilter::Pointer PipelineFilterWidget::getFilter()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void  PipelineFilterWidget::mousePressEvent ( QMouseEvent* event )
+void PipelineFilterWidget::mousePressEvent ( QMouseEvent* event )
 {
-  if(event->button() != Qt::LeftButton)
-  {
-    event->ignore();
-    return;
-  }
-  // Only if we are inside the delete checkbox/image then pass up to the superclass
-  if(m_DeleteRect.contains(event->pos()))
+  if(event->button() == Qt::RightButton)
   {
     QFrame::mousePressEvent(event);
   }
-  else
+  else if(event->button() == Qt::LeftButton)
   {
-    dragStartPosition = event->pos();
+    // Only if we are inside the delete checkbox/image then pass up to the superclass
+    if(m_DeleteRect.contains(event->pos()))
+    {
+      QFrame::mousePressEvent(event);
+    }
+    else
+    {
+      dragStartPosition = event->pos();
+    }
   }
 }
 
@@ -572,7 +595,7 @@ void PipelineFilterWidget::mouseReleaseEvent(QMouseEvent* event)
   else
   {
     setIsSelected(true);
-    event->setAccepted(true);
+    event->accept();
   }
 }
 
@@ -647,3 +670,33 @@ void PipelineFilterWidget::on_deleteBtn_clicked()
 }
 
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void PipelineFilterWidget::setContextMenuActions(QList<QAction*> list)
+{
+  m_MenuActions = list;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void PipelineFilterWidget::showCustomContextMenu(const QPoint& pos)
+{
+  // Note: We must map the point to global from the viewport to
+  // account for the header.
+  showContextMenu(mapToGlobal(pos) );
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void PipelineFilterWidget::showContextMenu(const QPoint& globalPos)
+{
+  m_Menu.clear();
+  for (int i = 0; i < m_MenuActions.size(); i++)
+  {
+    m_Menu.addAction(m_MenuActions[i]);
+  }
+  m_Menu.exec(globalPos);
+}

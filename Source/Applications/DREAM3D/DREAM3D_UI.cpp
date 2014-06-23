@@ -1172,6 +1172,7 @@ void DREAM3D_UI::versionCheckReply(UpdateCheckData* dataObj)
   }
 }
 
+#if 0
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -1199,16 +1200,6 @@ void DREAM3D_UI::on_actionAppendToExistingPipeline_triggered()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DREAM3D_UI::on_actionClearPipeline_triggered()
-{
-  filterInputWidget->clearInputWidgets();
-  pipelineViewWidget->clearWidgets();
-  pipelineTitle->setText("Untitled Pipeline");
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void DREAM3D_UI::on_actionCopyCurrentFilter_triggered()
 {
 
@@ -1228,6 +1219,17 @@ void DREAM3D_UI::on_actionPasteCopiedFilter_triggered()
 void DREAM3D_UI::on_actionRemoveCurrentFilter_triggered()
 {
 
+}
+#endif
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DREAM3D_UI::on_actionClearPipeline_triggered()
+{
+  filterInputWidget->clearInputWidgets();
+  pipelineViewWidget->clearWidgets();
+  pipelineTitle->setText("Untitled Pipeline");
 }
 
 // -----------------------------------------------------------------------------

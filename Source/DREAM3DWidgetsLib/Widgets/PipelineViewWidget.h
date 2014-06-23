@@ -217,13 +217,6 @@ class DREAM3DWidgetsLib_EXPORT PipelineViewWidget : public QFrame
     void preflightPipeline();
 
     /**
-     * @brief onCustomContextMenuRequested
-     * @param pos
-     */
-    void on_customContextMenuRequested(const QPoint& pos);
-
-
-    /**
      * @brief doAutoScroll This does the actual scrolling of the Widget
      */
     void doAutoScroll();
@@ -243,6 +236,12 @@ class DREAM3DWidgetsLib_EXPORT PipelineViewWidget : public QFrame
      * @param name The name that will be used for display purposes
      */
     void savePipeline(const QString& filePath, const QString& name, QSettings::Format = QSettings::IniFormat);
+
+    /**
+     * @brief onCustomContextMenuRequested
+     * @param pos
+     */
+    void on_customContextMenuRequested(const QPoint& pos);
 
   signals:
     void addPlaceHolderFilter(QPoint p);
