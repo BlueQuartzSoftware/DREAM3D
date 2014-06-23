@@ -28,8 +28,8 @@
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _VTKRECTILINEARGRIDREADER_H_
-#define _VTKRECTILINEARGRIDREADER_H_
+#ifndef _VtkFeatureIdReader_H_
+#define _VtkFeatureIdReader_H_
 
 #include <string.h> // needed for the ::memcpy function below
 

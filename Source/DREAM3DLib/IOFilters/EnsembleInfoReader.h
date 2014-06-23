@@ -35,8 +35,8 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _EnsembleInfoReader_h_
-#define _EnsembleInfoReader_h_
+#ifndef _EnsembleInfoReader_H_
+#define _EnsembleInfoReader_H_
 
 #include <QtCore/QString>
 #include <vector>

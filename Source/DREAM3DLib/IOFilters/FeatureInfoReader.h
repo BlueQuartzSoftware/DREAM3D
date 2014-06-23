@@ -35,8 +35,8 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _FeatureInfoReader_h_
-#define _FeatureInfoReader_h_
+#ifndef _FeatureInfoReader_H_
+#define _FeatureInfoReader_H_
 
 #include <QtCore/QString>
 #include <vector>

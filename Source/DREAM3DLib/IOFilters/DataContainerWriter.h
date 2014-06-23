@@ -34,8 +34,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _DATACONTAINERWRITER_H_
-#define _DATACONTAINERWRITER_H_
+#ifndef _DataContainerWriter_H_
+#define _DataContainerWriter_H_
 
 #include <QtCore/QString>
 #include <QtCore/QtDebug>

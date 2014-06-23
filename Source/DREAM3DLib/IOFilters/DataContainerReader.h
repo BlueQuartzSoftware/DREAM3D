@@ -34,8 +34,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _DATACONTAINER_READER_H_
-#define _DATACONTAINER_READER_H_
+#ifndef _DataContainerReader_H_
+#define _DataContainerReader_H_
 
 #include <QtCore/QString>
 

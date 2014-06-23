@@ -34,8 +34,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _CHANGERESOLUTION_H_
-#define _CHANGERESOLUTION_H_
+#ifndef _ChangeResolution_H_
+#define _ChangeResolution_H_
 
 #include <QtCore/QString>
 

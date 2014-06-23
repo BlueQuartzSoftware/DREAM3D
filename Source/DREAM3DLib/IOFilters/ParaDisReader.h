@@ -34,8 +34,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _ParaDisREADER_H_
-#define _ParaDisREADER_H_
+#ifndef _ParaDisReader_H_
+#define _ParaDisReader_H_
 
 #include <QtCore/QString>
 #include <vector>

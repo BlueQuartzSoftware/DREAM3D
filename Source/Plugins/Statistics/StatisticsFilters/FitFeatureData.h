@@ -35,8 +35,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _FITFIELDDATA_H_
-#define _FITFIELDDATA_H_
+#ifndef _FitFeatureData_H_
+#define _FitFeatureData_H_
 
 #include <QtCore/QString>
 #include <set>

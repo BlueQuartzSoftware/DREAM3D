@@ -34,8 +34,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _ErodeDilateCoordination_Number_H_
-#define _ErodeDilateCoordination_Number_H_
+#ifndef _ErodeDilateCoordinationNumber_H_
+#define _ErodeDilateCoordinationNumber_H_
 
 #include <vector>
 #include <QtCore/QString>

@@ -34,8 +34,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _MERGETWINS_H_
-#define _MERGETWINS_H_
+#ifndef _MergeTwins_H_
+#define _MergeTwins_H_
 
 #include <vector>
 #include <QtCore/QString>

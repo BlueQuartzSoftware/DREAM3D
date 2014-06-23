@@ -34,8 +34,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _PACKPRIMARYPHASES_H_
-#define _PACKPRIMARYPHASES_H_
+#ifndef _PackPrimaryPhases_H_
+#define _PackPrimaryPhases_H_
 
 #include <vector>
 #include <QtCore/QString>

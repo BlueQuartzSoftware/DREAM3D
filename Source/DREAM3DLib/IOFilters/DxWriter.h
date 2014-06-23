@@ -34,8 +34,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _DXGRAINIDWRITER_H_
-#define _DXGRAINIDWRITER_H_
+#ifndef _DxWriter_H_
+#define _DxWriter_H_
 
 
 

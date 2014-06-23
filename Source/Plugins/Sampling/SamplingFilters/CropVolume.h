@@ -34,8 +34,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _CROPVOLUME_H_
-#define _CROPVOLUME_H_
+#ifndef _CropVolume_H_
+#define _CropVolume_H_
 
 #include <QtCore/QString>
 

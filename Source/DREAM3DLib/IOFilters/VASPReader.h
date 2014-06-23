@@ -34,8 +34,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _VASPREADER_H_
-#define _VASPREADER_H_
+#ifndef _VASPReader_H_
+#define _VASPReader_H_
 
 #include <QtCore/QString>
 #include <vector>

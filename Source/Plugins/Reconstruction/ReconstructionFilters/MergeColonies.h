@@ -35,8 +35,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _MERGECOLONIES_H_
-#define _MERGECOLONIES_H_
+#ifndef _MergeColonies_H_
+#define _MergeColonies_H_
 
 #include <vector>
 #include <QtCore/QString>

@@ -34,8 +34,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _INLWRITER_H_
-#define _INLWRITER_H_
+#ifndef _INLWriter_H_
+#define _INLWriter_H_
 
 
 

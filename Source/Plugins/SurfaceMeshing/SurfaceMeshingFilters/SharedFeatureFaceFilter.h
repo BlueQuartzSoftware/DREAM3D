@@ -33,8 +33,8 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef _FeatureFaceFilter_H_
-#define _FeatureFaceFilter_H_
+#ifndef _SharedFeatureFaceFilter_H_
+#define _SharedFeatureFaceFilter_H_
 
 #include <QtCore/QString>
 

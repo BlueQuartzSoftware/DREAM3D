@@ -34,8 +34,8 @@
  *                   FA8650-07-D-5800 and FA8650-10-D-5226
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef _FINDNEIGHBORHOODS_H_
-#define _FINDNEIGHBORHOODS_H_
+#ifndef _FindNeighborhoods_H_
+#define _FindNeighborhoods_H_
 
 #include <vector>
 #include <QtCore/QString>

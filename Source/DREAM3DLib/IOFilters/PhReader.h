@@ -35,8 +35,8 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _PHReader_h_
-#define _PHReader_h_
+#ifndef _PhReader_H_
+#define _PhReader_H_
 
 
 #include <stdio.h>

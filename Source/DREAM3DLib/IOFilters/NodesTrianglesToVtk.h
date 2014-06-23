@@ -34,8 +34,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _CMUSmoothingToVtk_H_
-#define _CMUSmoothingToVtk_H_
+#ifndef _NodesTrianglesToVtk_H_
+#define _NodesTrianglesToVtk_H_
 
 #include <QtCore/QString>
 

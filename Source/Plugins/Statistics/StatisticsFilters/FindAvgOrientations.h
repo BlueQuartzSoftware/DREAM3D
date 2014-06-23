@@ -34,8 +34,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _FINDAVGORIENTATIONS_H_
-#define _FINDAVGORIENTATIONS_H_
+#ifndef _FindAvgOrientations_H_
+#define _FindAvgOrientations_H_
 
 #include <vector>
 #include <QtCore/QString>

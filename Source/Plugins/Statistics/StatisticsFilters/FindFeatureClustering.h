@@ -35,8 +35,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _FINDFIELDCLUSTERING_H_
-#define _FINDFIELDCLUSTERING_H_
+#ifndef _FindFeatureClustering_H_
+#define _FindFeatureClustering_H_
 
 #include <vector>
 #include <string>

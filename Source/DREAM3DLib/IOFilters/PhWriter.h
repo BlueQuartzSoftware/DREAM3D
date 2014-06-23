@@ -34,8 +34,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _PHWRITER_HPP_
-#define _PHWRITER_HPP_
+#ifndef _PhWriter_H_
+#define _PhWriter_H_
 
 
 #include "DREAM3DLib/DREAM3DLib.h"

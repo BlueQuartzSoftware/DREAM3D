@@ -34,8 +34,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _FINDAvgCAxes_H_
-#define _FINDAvgCAxes_H_
+#ifndef _FindAvgCAxes_H_
+#define _FindAvgCAxes_H_
 
 #include <vector>
 #include <QtCore/QString>

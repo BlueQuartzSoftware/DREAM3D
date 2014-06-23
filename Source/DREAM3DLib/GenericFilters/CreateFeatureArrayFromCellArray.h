@@ -35,8 +35,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _CREATEFIELDARRAYFROMCELLARRAY_H_
-#define _CREATEFIELDARRAYFROMCELLARRAY_H_
+#ifndef _CreateFeatureArrayFromCellArray_H_
+#define _CreateFeatureArrayFromCellArray_H_
 
 #include <string>
 #include <set>

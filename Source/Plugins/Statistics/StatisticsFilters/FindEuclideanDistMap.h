@@ -34,8 +34,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _FINDEUCLIDEANDISTMAP_H_
-#define _FINDEUCLIDEANDISTMAP_H_
+#ifndef _FindEuclideanDistMap_H_
+#define _FindEuclideanDistMap_H_
 
 #include <vector>
 #include <QtCore/QString>
