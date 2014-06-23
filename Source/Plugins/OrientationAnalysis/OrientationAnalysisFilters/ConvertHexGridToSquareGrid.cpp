@@ -70,7 +70,7 @@ ConvertHexGridToSquareGrid::ConvertHexGridToSquareGrid() :
   m_FileSuffix(),
   m_FileExtension("ang"),
   m_PaddingDigits(1),
-  m_HexGridStack(0), // this is just a dummy variable
+  m_HexGridStack(0), // this is just a dummy variable,
   m_NumCols(0),
   m_NumRows(0),
   m_HeaderIsComplete(false)

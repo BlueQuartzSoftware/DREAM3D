@@ -18,9 +18,9 @@ typedef ITKUtilities<ImageProcessing::DefaultPixelType>    ITKUtilitiesType;
 WriteImage::WriteImage() :
   AbstractFilter(),
   m_SelectedCellArrayPath("", "", ""),
+  m_OutputFileName(""),
   m_SelectedCellArrayArrayName(""),
-  m_SelectedCellArray(NULL),
-  m_OutputFileName("")
+  m_SelectedCellArray(NULL)
 {
   setupFilterParameters();
 }

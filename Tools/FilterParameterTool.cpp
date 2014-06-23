@@ -327,7 +327,7 @@ bool fixFile( AbstractFilter::Pointer filter, const QString& hFile, const QStrin
   {
     // Read the Source File
     QFileInfo fi(cppFile);
-//    if (fi.baseName().compare("IdentifySample") != 0)
+//    if (fi.baseName().compare("WriteImage") != 0)
 //    {
 //      return false;
 //    }
