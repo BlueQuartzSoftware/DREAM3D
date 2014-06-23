@@ -124,4 +124,14 @@ namespace ImageProcessing
   }
 }
 
+namespace DREAM3D
+{
+  namespace CellData
+  {
+    const DREAM3D_STRING RedImageData("RedImageData");
+    const DREAM3D_STRING GreenImageData("GreenImageData");
+    const DREAM3D_STRING BlueImageData("BlueImageData");
+  }
+}
+
 #endif /* _ImageProcessingConstants_H_ */
