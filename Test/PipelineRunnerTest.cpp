@@ -39,9 +39,9 @@
 #include <assert.h>
 
 #ifdef _MSC_VER
- #include <direct.h>
+#include <direct.h>
 #else
- #include <unistd.h>
+#include <unistd.h>
 #endif
 
 // C++ Includes
@@ -126,7 +126,7 @@ void ExecutePipeline(const QString &pipelineFile)
 
   // Sanity Check the filepath to make sure it exists, Report an error and bail if it does not
   QFileInfo fi(pipelineFile);
-  std::cout << "<--------------Prebuilt Pipeline File: " << fi.fileName().toStdString() << " --------------------------->" << std::endl;
+  std::cout << "<--------------Test Pipeline File: " << fi.absoluteFilePath().toStdString() << " --------------------------->" << std::endl;
   if(fi.exists() == false)
   {
     std::cout << "The input file '" << pipelineFile.toStdString() << "' does not exist" << std::endl;
@@ -150,9 +150,8 @@ void ExecutePipeline(const QString &pipelineFile)
   err = pipeline->preflightPipeline();
   if (err < 0) {
     std::cout << "Errors preflighting the pipeline. Exiting Now." << std::endl;
-    err = EXIT_FAILURE;
   }
-    DREAM3D_REQUIRE_EQUAL(err, EXIT_SUCCESS)
+  DREAM3D_REQUIRE_EQUAL(err, EXIT_SUCCESS)
 
   // Now actually execute the pipeline
   pipeline->execute();
@@ -162,7 +161,7 @@ void ExecutePipeline(const QString &pipelineFile)
     std::cout << "Error Condition of Pipeline: " << err << std::endl;
     err = EXIT_FAILURE;
   }
-    DREAM3D_REQUIRE_EQUAL(err, EXIT_SUCCESS)
+  DREAM3D_REQUIRE_EQUAL(err, EXIT_SUCCESS)
 
 }
 

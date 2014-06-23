@@ -88,7 +88,7 @@ void ChangeResolution::setupFilterParameters()
   parameters.push_back(FilterParameter::NewConditional("Save As New Data Container", "SaveAsNewDataContainer", FilterParameterWidgetType::LinkedBooleanWidget, getSaveAsNewDataContainer(), false, linkedProps));
   parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
   parameters.push_back(FilterParameter::New("Cell Feature Attribute Matrix", "CellFeatureAttributeMatrixPath", FilterParameterWidgetType::AttributeMatrixSelectionWidget, getCellFeatureAttributeMatrixPath(), true));
-  parameters.push_back(FilterParameter::New("FeatureIds", "FeatureIdsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeatureIdsArrayPath(), true, ""));
+  parameters.push_back(FilterParameter::New("Feature Ids", "FeatureIdsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeatureIdsArrayPath(), true, ""));
   parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
   parameters.push_back(FilterParameter::New("New Data Container Name", "NewDataContainerName", FilterParameterWidgetType::StringWidget, getNewDataContainerName(), true));
   setFilterParameters(parameters);
@@ -121,7 +121,7 @@ int ChangeResolution::writeFilterParameters(AbstractFilterParametersWriter* writ
   writer->writeValue("FeatureIdsArrayPath", getFeatureIdsArrayPath() );
   writer->writeValue("Resolution", getResolution() );
   writer->writeValue("RenumberFeatures", getRenumberFeatures() );
-  writer->writeValue("SaveAsNewDataContiner", getSaveAsNewDataContainer() );
+  DREAM3D_FILTER_WRITE_PARAMETER(SaveAsNewDataContainer)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
@@ -169,13 +169,17 @@ void ChangeResolution::preflight()
   emit preflightAboutToExecute();
   emit updateFilterParameters(this);
   dataCheck();
-  emit preflightExecuted();
+
 
   if(getErrorCondition() < 0) { return; }
 
   VolumeDataContainer* m;
-  if(m_SaveAsNewDataContainer == false) { m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getCellAttributeMatrixPath().getDataContainerName()); }
-  else { m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getNewDataContainerName()); }
+  if(m_SaveAsNewDataContainer == false)
+  {
+    m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getCellAttributeMatrixPath().getDataContainerName());
+  } else {
+    m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getNewDataContainerName());
+  }
 
   size_t dims[3];
   m->getDimensions(dims);
@@ -205,6 +209,7 @@ void ChangeResolution::preflight()
     QVector<bool> activeObjects(cellFeatureAttrMat->getNumTuples(), true);
     cellFeatureAttrMat->removeInactiveObjects(activeObjects, m_FeatureIdsPtr.lock());
   }
+  emit preflightExecuted();
   setInPreflight(false);
 }
 
@@ -220,13 +225,13 @@ void ChangeResolution::execute()
 
   DREAM3D_RANDOMNG_NEW()
 
-  VolumeDataContainer* m;
+      VolumeDataContainer* m;
   if(m_SaveAsNewDataContainer == false) { m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getCellAttributeMatrixPath().getDataContainerName()); }
   else { m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getNewDataContainerName()); }
 
   if(m->getXRes() == m_Resolution.x
-      && m->getYRes() == m_Resolution.y
-      && m->getZRes() == m_Resolution.z)
+     && m->getYRes() == m_Resolution.y
+     && m->getZRes() == m_Resolution.z)
   {
     return;
   }

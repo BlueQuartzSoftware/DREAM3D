@@ -1,5 +1,6 @@
 /* ============================================================================
- * Copyright (c) 2013 William Lenthe (University of California Santa Barbara)
+ * Copyright (c) 2012 Michael A. Jackson (BlueQuartz Software)
+ * Copyright (c) 2012 Dr. Michael A. Groeber (US Air Force Research Laboratories)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -28,9 +29,12 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
+ *  This code was written under United States Air Force Contract number
+ *                           FA8650-07-D-5800
+ *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef _GenerateMisorientationColors_H_
-#define _GenerateMisorientationColors_H_
+#ifndef _GenerateIPFColors_H_
+#define _GenerateIPFColors_H_
 
 #include <QtCore/QString>
 
@@ -42,50 +46,43 @@
 
 
 /**
- * @class GenerateMisorientationColors GenerateMisorientationColors.h DREAM3DLib/GenericFilters/GenerateMisorientationColors.h
- * @brief This filter generates colors for each voxel based on the C. Schuh and S. Patala method
- * @author William Lenthe (University of California Santa Barbara)
- * @date Aug 30, 2013
+ * @class GenerateIPFColors GenerateIPFColors.h DREAM3DLib/GenericFilters/GenerateIPFColors.h
+ * @brief This filter generates colors for each voxel based on the "Standard" IPF Triangle.
+ * @author Michael A. Jackson for BlueQuartz Software
+ * @date Feb 6, 2013
  * @version 1.0
  */
-class DREAM3DLib_EXPORT GenerateMisorientationColors : public AbstractFilter
+class GenerateIPFColors : public AbstractFilter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
-    DREAM3D_SHARED_POINTERS(GenerateMisorientationColors)
-    DREAM3D_STATIC_NEW_MACRO(GenerateMisorientationColors)
-    DREAM3D_TYPE_MACRO_SUPER(GenerateMisorientationColors, AbstractFilter)
+    DREAM3D_SHARED_POINTERS(GenerateIPFColors)
+    DREAM3D_STATIC_NEW_MACRO(GenerateIPFColors)
+    DREAM3D_TYPE_MACRO_SUPER(GenerateIPFColors, AbstractFilter)
 
-    virtual ~GenerateMisorientationColors();
+    virtual ~GenerateIPFColors();
 
     /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
-    DREAM3D_FILTER_PARAMETER(FloatVec3_t, ReferenceAxis)
-    Q_PROPERTY(FloatVec3_t ReferenceAxis READ getReferenceAxis WRITE setReferenceAxis)
-    DREAM3D_FILTER_PARAMETER(float, ReferenceAngle)
-    Q_PROPERTY(float ReferenceAngle READ getReferenceAngle WRITE setReferenceAngle)
+    DREAM3D_FILTER_PARAMETER(FloatVec3_t, ReferenceDir)
+    Q_PROPERTY(FloatVec3_t ReferenceDir READ getReferenceDir WRITE setReferenceDir)
 
-    /**
-    * @brief This returns the group that the filter belonds to. You can select
-    * a different group if you want. The string returned here will be displayed
-    * in the GUI for the filter
-    */
     DREAM3D_FILTER_PARAMETER(DataArrayPath, CellPhasesArrayPath)
     Q_PROPERTY(DataArrayPath CellPhasesArrayPath READ getCellPhasesArrayPath WRITE setCellPhasesArrayPath)
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, QuatsArrayPath)
-    Q_PROPERTY(DataArrayPath QuatsArrayPath READ getQuatsArrayPath WRITE setQuatsArrayPath)
+    DREAM3D_FILTER_PARAMETER(DataArrayPath, CellEulerAnglesArrayPath)
+    Q_PROPERTY(DataArrayPath CellEulerAnglesArrayPath READ getCellEulerAnglesArrayPath WRITE setCellEulerAnglesArrayPath)
 
     DREAM3D_FILTER_PARAMETER(DataArrayPath, CrystalStructuresArrayPath)
     Q_PROPERTY(DataArrayPath CrystalStructuresArrayPath READ getCrystalStructuresArrayPath WRITE setCrystalStructuresArrayPath)
 
+    DREAM3D_FILTER_PARAMETER(bool, UseGoodVoxels)
+    Q_PROPERTY(bool UseGoodVoxels READ getUseGoodVoxels WRITE setUseGoodVoxels)
+
     DREAM3D_FILTER_PARAMETER(DataArrayPath, GoodVoxelsArrayPath)
     Q_PROPERTY(DataArrayPath GoodVoxelsArrayPath READ getGoodVoxelsArrayPath WRITE setGoodVoxelsArrayPath)
 
-    DREAM3D_FILTER_PARAMETER(QString, MisorientationColorArrayName)
-    Q_PROPERTY(QString MisorientationColorArrayName READ getMisorientationColorArrayName WRITE setMisorientationColorArrayName)
-
-    DREAM3D_FILTER_PARAMETER(bool, UseGoodVoxels)
-    Q_PROPERTY(bool UseGoodVoxels READ getUseGoodVoxels WRITE setUseGoodVoxels)
+    DREAM3D_FILTER_PARAMETER(QString, CellIPFColorsArrayName)
+    Q_PROPERTY(QString CellIPFColorsArrayName READ getCellIPFColorsArrayName WRITE setCellIPFColorsArrayName)
 
     virtual const QString getCompiledLibraryName();
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
@@ -134,7 +131,7 @@ class DREAM3DLib_EXPORT GenerateMisorientationColors : public AbstractFilter
     void preflightExecuted();
 
   protected:
-    GenerateMisorientationColors();
+    GenerateIPFColors();
 
     /**
     * @brief Checks for the appropriate parameter values and availability of
@@ -148,15 +145,18 @@ class DREAM3DLib_EXPORT GenerateMisorientationColors : public AbstractFilter
 
   private:
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, CellPhases)
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, Quats)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, CellEulerAngles)
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(unsigned int, CrystalStructures)
-    DEFINE_CREATED_DATAARRAY_VARIABLE(uint8_t, MisorientationColor)
+    DEFINE_CREATED_DATAARRAY_VARIABLE(uint8_t, CellIPFColors)
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(bool, GoodVoxels)
 
-    GenerateMisorientationColors(const GenerateMisorientationColors&); // Copy Constructor Not Implemented
-    void operator=(const GenerateMisorientationColors&); // Operator '=' Not Implemented
+    GenerateIPFColors(const GenerateIPFColors&); // Copy Constructor Not Implemented
+    void operator=(const GenerateIPFColors&); // Operator '=' Not Implemented
 };
 
-#endif /* _GenerateMisorientationColors_H_ */
+#endif /* _GenerateIPFColors_H_ */
+
+
+
 
 

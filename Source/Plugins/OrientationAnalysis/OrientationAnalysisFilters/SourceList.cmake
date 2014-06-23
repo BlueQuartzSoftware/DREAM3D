@@ -13,12 +13,16 @@ START_FILTER_GROUP(${OrientationAnalysis_BINARY_DIR} "${_filterGroupName}" "Orie
 #---------
 # List your public filters here
 set(_PublicFilters
+  ConvertHexGridToSquareGrid
   EbsdToH5Ebsd
+  GenerateEulerColors
+  GenerateIPFColors
+  GenerateMisorientationColors
+  GenerateRodriguesColors
   ReadH5Ebsd
   ReadOrientationData
   WritePoleFigure
   WriteIPFStandardTriangle
-  ConvertHexGridToSquareGrid
 )
 
 

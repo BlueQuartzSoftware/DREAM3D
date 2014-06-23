@@ -456,6 +456,16 @@
     m_##var = f;\
   }
 
+
+/**
+*
+* */
+#define DREAM3D_FILTER_WRITE_PARAMETER(property)\
+writer->writeValue(#property, get##property() );
+
+
+
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -493,7 +503,7 @@
     updatePipelineProgress(0);\
     pipelineFinished();\
     return;}\
-   
+
 
 #define CHECK_FOR_ERROR(FuncClass, Message, err)\
   if(err < 0) {\

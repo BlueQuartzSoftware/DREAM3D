@@ -593,7 +593,7 @@ void GenerateFilterParametersCode()
 
     //fixFile(filter, h, cpp);
     //SplitFilterHeaderCodes(filter, h, cpp);
-    FixIncludeGuard(filter, h, cpp);
+//    FixIncludeGuard(filter, h, cpp);
   }
 
 }

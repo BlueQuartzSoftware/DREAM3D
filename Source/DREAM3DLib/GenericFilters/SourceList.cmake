@@ -28,10 +28,6 @@ set(_PublicFilters
   FindFeaturePhases
   FindBoundaryCells
   FindSurfaceFeatures
-  GenerateEulerColors
-  GenerateIPFColors
-  GenerateMisorientationColors
-  GenerateRodriguesColors
   GenerateVectorColors
   LinkFeatureMapToCellArray
   RemoveArrays

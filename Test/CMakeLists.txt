@@ -184,22 +184,22 @@ set(PREBUILT_PIPELINE_NAMES
 #  "Reconstruction/(15) 12 Percent Full Reconstruction"
 #  "Reconstruction/(16) MicroTextureReconstruction"
 #  "Reconstruction/(17) Small IN100 Full Reconstruction"
-  "Statistics/(01) SmallIN100 Morphological Statistics"
-  "Statistics/(02) SmallIN100 Export Statistics"
-  "Statistics/(03) SmallIN100 Transfer Field Data"
-  "Statistics/(04) SmallIN100 Field Threshold"
-  "Statistics/(05) SmallIN100 Crystallographic Statistics"
-  "Statistics/(06) 12 Percent Tension Crystallographic Statistics"
+#  "Statistics/(01) SmallIN100 Morphological Statistics"
+#  "Statistics/(02) SmallIN100 Export Statistics"
+#  "Statistics/(03) SmallIN100 Transfer Field Data"
+#  "Statistics/(04) SmallIN100 Field Threshold"
+#  "Statistics/(05) SmallIN100 Crystallographic Statistics"
+#  "Statistics/(06) 12 Percent Tension Crystallographic Statistics"
 #  "SurfaceMeshing/(01) SmallIN100 Quick Mesh"
 #  "SurfaceMeshing/(02) SmallIN100 Marching Cubes"
 #  "SurfaceMeshing/(03) SmallIN100 Smooth Mesh"
 #  "SurfaceMeshing/(04) SmallIN100 Mesh Statistics"
 #  "SurfaceMeshing/(05) SmallIN100 GBCD"
-  "Synthetic/(01) Single Cubic Phase Equiaxed"
-  "Synthetic/(02) Single Hexagonal Phase Equiaxed"
-  "Synthetic/(03) Single Cubic Phase Rolled"
+#  "Synthetic/(01) Single Cubic Phase Equiaxed"
+#  "Synthetic/(02) Single Hexagonal Phase Equiaxed"
+#  "Synthetic/(03) Single Cubic Phase Rolled"
 #  "Synthetic/(04) Two Phase Cubic Hexagonal Particles Equiaxed"
-  "Synthetic/(05) Composite"
+#  "Synthetic/(05) Composite"
 )
 
 configure_file(${DREAM3DTest_SOURCE_DIR}/PipelineRunnerTest.h.in
@@ -215,4 +215,15 @@ foreach(f ${PREBUILT_PIPELINE_NAMES} )
   FILE(APPEND ${TEST_PIPELINE_LIST_FILE} "${DREAM3D_PIPELINE_FILE}\n")
 endforeach()
 
+set(PREBUILT_PIPELINES_DIR "TestPipelines")
+set(TEST_PIPELINE_LIST_FILE ${DREAM3DTest_BINARY_DIR}/PipelineRunnerTest.txt)
+set(TEST_DATA_DIR ${DREAM3D_DATA_DIR})
+set(PREBUILT_PIPELINE_NAMES
+  Test1
+)
+
+foreach(f ${PREBUILT_PIPELINE_NAMES} )
+  set(DREAM3D_PIPELINE_FILE "${DREAM3D_SUPPORT_DIR}/${PREBUILT_PIPELINES_DIR}/${f}.txt")
+  FILE(APPEND ${TEST_PIPELINE_LIST_FILE} "${DREAM3D_PIPELINE_FILE}\n")
+endforeach()
 
