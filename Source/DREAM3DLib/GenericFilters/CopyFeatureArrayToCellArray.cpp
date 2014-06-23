@@ -86,8 +86,8 @@ void CopyFeatureArrayToCellArray::readFilterParameters(AbstractFilterParametersR
 int CopyFeatureArrayToCellArray::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  writer->writeValue("FeatureIdsArrayPath", getFeatureIdsArrayPath() );
-  writer->writeValue("SelectedFeatureArrayPath", getSelectedFeatureArrayPath() );
+  DREAM3D_FILTER_WRITE_PARAMETER(FeatureIdsArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(SelectedFeatureArrayPath)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }

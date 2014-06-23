@@ -103,10 +103,10 @@ void SurfaceMeshToStl::readFilterParameters(AbstractFilterParametersReader* read
 int SurfaceMeshToStl::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  writer->writeValue("SurfaceMeshFacePhasesArrayPath", getSurfaceMeshFacePhasesArrayPath() );
-  writer->writeValue("SurfaceMeshFaceLabelsArrayPath", getSurfaceMeshFaceLabelsArrayPath() );
-  writer->writeValue("OutputStlDirectory", getOutputStlDirectory() );
-  writer->writeValue("OutputStlPrefix", getOutputStlPrefix() );
+  DREAM3D_FILTER_WRITE_PARAMETER(SurfaceMeshFacePhasesArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(SurfaceMeshFaceLabelsArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(OutputStlDirectory)
+  DREAM3D_FILTER_WRITE_PARAMETER(OutputStlPrefix)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }

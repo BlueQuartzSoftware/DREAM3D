@@ -125,15 +125,15 @@ void FindBoundaryStrengths::readFilterParameters(AbstractFilterParametersReader*
 int FindBoundaryStrengths::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  writer->writeValue("SurfaceMeshmPrimesArrayName", getSurfaceMeshmPrimesArrayName() );
-  writer->writeValue("SurfaceMeshF7sArrayName", getSurfaceMeshF7sArrayName() );
-  writer->writeValue("SurfaceMeshF1sptsArrayName", getSurfaceMeshF1sptsArrayName() );
-  writer->writeValue("SurfaceMeshF1sArrayName", getSurfaceMeshF1sArrayName() );
-  writer->writeValue("CrystalStructuresArrayPath", getCrystalStructuresArrayPath() );
-  writer->writeValue("FeaturePhasesArrayPath", getFeaturePhasesArrayPath() );
-  writer->writeValue("AvgQuatsArrayPath", getAvgQuatsArrayPath() );
-  writer->writeValue("SurfaceMeshFaceLabelsArrayPath", getSurfaceMeshFaceLabelsArrayPath() );
-  writer->writeValue("Loading", getLoading() );
+  DREAM3D_FILTER_WRITE_PARAMETER(SurfaceMeshmPrimesArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(SurfaceMeshF7sArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(SurfaceMeshF1sptsArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(SurfaceMeshF1sArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(CrystalStructuresArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(FeaturePhasesArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(AvgQuatsArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(SurfaceMeshFaceLabelsArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(Loading)
   return ++index; // we want to return the next index that was just written to
 }
 

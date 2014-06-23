@@ -150,20 +150,20 @@ void MatchCrystallography::readFilterParameters(AbstractFilterParametersReader* 
 int MatchCrystallography::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  writer->writeValue("MaxIterations", getMaxIterations() );
-  writer->writeValue("InputStatsArrayPath", getInputStatsArrayPath() );
-  writer->writeValue("CrystalStructuresArrayPath", getCrystalStructuresArrayPath() );
-  writer->writeValue("PhaseTypesArrayPath", getPhaseTypesArrayPath() );
-  writer->writeValue("FeaturePhasesArrayPath", getFeaturePhasesArrayPath() );
-  writer->writeValue("FeatureIdsArrayPath", getFeatureIdsArrayPath() );
-  writer->writeValue("SurfaceFeaturesArrayPath", getSurfaceFeaturesArrayPath() );
-  writer->writeValue("NeighborListArrayPath", getNeighborListArrayPath() );
-  writer->writeValue("SharedSurfaceAreaListArrayPath", getSharedSurfaceAreaListArrayPath() );
-  writer->writeValue("NumFeaturesArrayPath", getNumFeaturesArrayPath() );
-  writer->writeValue("CellEulerAnglesArrayName", getCellEulerAnglesArrayName() );
-  writer->writeValue("VolumesArrayName", getVolumesArrayName() );
-  writer->writeValue("FeatureEulerAnglesArrayName", getFeatureEulerAnglesArrayName() );
-  writer->writeValue("AvgQuatsArrayName", getAvgQuatsArrayName() );
+  DREAM3D_FILTER_WRITE_PARAMETER(MaxIterations)
+  DREAM3D_FILTER_WRITE_PARAMETER(InputStatsArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(CrystalStructuresArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(PhaseTypesArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(FeaturePhasesArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(FeatureIdsArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(SurfaceFeaturesArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(NeighborListArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(SharedSurfaceAreaListArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(NumFeaturesArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(CellEulerAnglesArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(VolumesArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(FeatureEulerAnglesArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(AvgQuatsArrayName)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }

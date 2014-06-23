@@ -371,15 +371,15 @@ void FindGBCD::readFilterParameters(AbstractFilterParametersReader* reader, int 
 int FindGBCD::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  writer->writeValue("FaceEnsembleAttributeMatrixName", getFaceEnsembleAttributeMatrixName() );
-  writer->writeValue("GBCDArrayName", getGBCDArrayName() );
-  writer->writeValue("CrystalStructuresArrayPath", getCrystalStructuresArrayPath() );
-  writer->writeValue("FeaturePhasesArrayPath", getFeaturePhasesArrayPath() );
-  writer->writeValue("FeatureEulerAnglesArrayPath", getFeatureEulerAnglesArrayPath() );
-  writer->writeValue("SurfaceMeshFaceAreasArrayPath", getSurfaceMeshFaceAreasArrayPath() );
-  writer->writeValue("SurfaceMeshFaceNormalsArrayPath", getSurfaceMeshFaceNormalsArrayPath() );
-  writer->writeValue("SurfaceMeshFaceLabelsArrayPath", getSurfaceMeshFaceLabelsArrayPath() );
-  writer->writeValue("GBCDRes", getGBCDRes() );
+  DREAM3D_FILTER_WRITE_PARAMETER(FaceEnsembleAttributeMatrixName)
+  DREAM3D_FILTER_WRITE_PARAMETER(GBCDArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(CrystalStructuresArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(FeaturePhasesArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(FeatureEulerAnglesArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(SurfaceMeshFaceAreasArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(SurfaceMeshFaceNormalsArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(SurfaceMeshFaceLabelsArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(GBCDRes)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }

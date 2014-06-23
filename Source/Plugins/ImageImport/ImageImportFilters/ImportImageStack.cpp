@@ -133,19 +133,19 @@ void ImportImageStack::readFilterParameters(AbstractFilterParametersReader* read
 int ImportImageStack::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  writer->writeValue("DataContainerName", getDataContainerName() );
-  writer->writeValue("CellAttributeMatrixName", getCellAttributeMatrixName() );
-  writer->writeValue("ImageDataArrayName", getImageDataArrayName() );
-  writer->writeValue("ZStartIndex", getZStartIndex() );
-  writer->writeValue("ZEndIndex", getZEndIndex() );
-  writer->writeValue("PaddingDigits", getPaddingDigits() );
-  writer->writeValue("RefFrameZDir", getRefFrameZDir());
-  writer->writeValue("InputPath", getInputPath() );
-  writer->writeValue("FilePrefix", getFilePrefix() );
-  writer->writeValue("FileSuffix", getFileSuffix() );
-  writer->writeValue("FileExtension", getFileExtension() );
-  writer->writeValue("Origin", getOrigin() );
-  writer->writeValue("Resolution", getResolution() );
+  DREAM3D_FILTER_WRITE_PARAMETER(DataContainerName)
+  DREAM3D_FILTER_WRITE_PARAMETER(CellAttributeMatrixName)
+  DREAM3D_FILTER_WRITE_PARAMETER(ImageDataArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(ZStartIndex)
+  DREAM3D_FILTER_WRITE_PARAMETER(ZEndIndex)
+  DREAM3D_FILTER_WRITE_PARAMETER(PaddingDigits)
+  DREAM3D_FILTER_WRITE_PARAMETER(RefFrameZDir)
+  DREAM3D_FILTER_WRITE_PARAMETER(InputPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(FilePrefix)
+  DREAM3D_FILTER_WRITE_PARAMETER(FileSuffix)
+  DREAM3D_FILTER_WRITE_PARAMETER(FileExtension)
+  DREAM3D_FILTER_WRITE_PARAMETER(Origin)
+  DREAM3D_FILTER_WRITE_PARAMETER(Resolution)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }

@@ -199,13 +199,13 @@ void FindProjectedImageStatistics::readFilterParameters(AbstractFilterParameters
 int FindProjectedImageStatistics::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  writer->writeValue("ProjectedImageVarArrayName", getProjectedImageVarArrayName() );
-  writer->writeValue("ProjectedImageStdArrayName", getProjectedImageStdArrayName() );
-  writer->writeValue("ProjectedImageAvgArrayName", getProjectedImageAvgArrayName() );
-  writer->writeValue("ProjectedImageMaxArrayName", getProjectedImageMaxArrayName() );
-  writer->writeValue("ProjectedImageMinArrayName", getProjectedImageMinArrayName() );
-  writer->writeValue("SelectedArrayPath", getSelectedArrayPath() );
-  writer->writeValue("Plane", getPlane());
+  DREAM3D_FILTER_WRITE_PARAMETER(ProjectedImageVarArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(ProjectedImageStdArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(ProjectedImageAvgArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(ProjectedImageMaxArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(ProjectedImageMinArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(SelectedArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(Plane)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }

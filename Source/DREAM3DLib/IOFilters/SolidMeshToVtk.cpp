@@ -104,8 +104,8 @@ void SolidMeshToVtk::readFilterParameters(AbstractFilterParametersReader* reader
 int SolidMeshToVtk::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  writer->writeValue("OutputVtkFile", getOutputVtkFile() );
-  writer->writeValue("WriteBinaryFile", getWriteBinaryFile() );
+  DREAM3D_FILTER_WRITE_PARAMETER(OutputVtkFile)
+  DREAM3D_FILTER_WRITE_PARAMETER(WriteBinaryFile)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }

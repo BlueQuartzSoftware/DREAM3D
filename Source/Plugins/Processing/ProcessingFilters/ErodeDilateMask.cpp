@@ -104,9 +104,9 @@ void ErodeDilateMask::readFilterParameters(AbstractFilterParametersReader* reade
   setMaskArrayPath(reader->readDataArrayPath("MaskArrayPath", getMaskArrayPath() ) );
   setDirection( reader->readValue("Direction", getDirection()) );
   setNumIterations( reader->readValue("NumIterations", getNumIterations()) );
-  setXDirOn(reader->readValue("X Direction", getXDirOn()) );
-  setYDirOn(reader->readValue("Y Direction", getYDirOn()) );
-  setZDirOn(reader->readValue("Z Direction", getZDirOn()) );
+  setXDirOn(reader->readValue("XDirOn", getXDirOn()) );
+  setYDirOn(reader->readValue("YDirOn", getYDirOn()) );
+  setZDirOn(reader->readValue("ZDirOn", getZDirOn()) );
   reader->closeFilterGroup();
 }
 
@@ -116,12 +116,12 @@ void ErodeDilateMask::readFilterParameters(AbstractFilterParametersReader* reade
 int ErodeDilateMask::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  writer->writeValue("MaskArrayPath", getMaskArrayPath() );
-  writer->writeValue("Direction", getDirection() );
-  writer->writeValue("NumIterations", getNumIterations() );
-  writer->writeValue("X Direction", getXDirOn() );
-  writer->writeValue("Y Direction", getYDirOn() );
-  writer->writeValue("Z Direction", getZDirOn() );
+  DREAM3D_FILTER_WRITE_PARAMETER(MaskArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(Direction)
+  DREAM3D_FILTER_WRITE_PARAMETER(NumIterations)
+  DREAM3D_FILTER_WRITE_PARAMETER(XDirOn)
+  DREAM3D_FILTER_WRITE_PARAMETER(YDirOn)
+  DREAM3D_FILTER_WRITE_PARAMETER(ZDirOn)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }

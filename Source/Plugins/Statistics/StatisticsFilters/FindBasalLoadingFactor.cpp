@@ -61,9 +61,9 @@ FindBasalLoadingFactor::FindBasalLoadingFactor() :
   m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
   m_CrystalStructures(NULL)
 {
-  m_LoadingDir.x = 1.0f;
-  m_LoadingDir.y = 1.0f;
-  m_LoadingDir.z = 1.0f;
+  m_LoadingDirection.x = 1.0f;
+  m_LoadingDirection.y = 1.0f;
+  m_LoadingDirection.z = 1.0f;
   m_OrientationOps = OrientationOps::getOrientationOpsVector();
 
   setupFilterParameters();
@@ -82,14 +82,14 @@ FindBasalLoadingFactor::~FindBasalLoadingFactor()
 void FindBasalLoadingFactor::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(FilterParameter::New("Loading Direction", "LoadingDir", FilterParameterWidgetType::FloatVec3Widget, getLoadingDir(), false));
+  parameters.push_back(FilterParameter::New("Loading Direction", "LoadingDirection", FilterParameterWidgetType::FloatVec3Widget, getLoadingDirection(), false));
   parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
   parameters.push_back(FilterParameter::New("AvgQuats", "AvgQuatsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getAvgQuatsArrayPath(), true, ""));
-  parameters.push_back(FilterParameter::New("FeaturePhases", "FeaturePhasesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeaturePhasesArrayPath(), true, ""));
+  parameters.push_back(FilterParameter::New("Feature Phases", "FeaturePhasesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeaturePhasesArrayPath(), true, ""));
   parameters.push_back(FilterParameter::New("Crystal Structures", "CrystalStructuresArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getCrystalStructuresArrayPath(), true, ""));
   parameters.push_back(FilterParameter::New("Cell Feature Attribute Matrix Name", "CellFeatureAttributeMatrixName", FilterParameterWidgetType::AttributeMatrixSelectionWidget, getCellFeatureAttributeMatrixName(), true, ""));
   parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
-  parameters.push_back(FilterParameter::New("BasalLoadingFactor", "BasalLoadingFactorArrayName", FilterParameterWidgetType::StringWidget, getBasalLoadingFactorArrayName(), true, ""));
+  parameters.push_back(FilterParameter::New("Basal Loading Factor", "BasalLoadingFactorArrayName", FilterParameterWidgetType::StringWidget, getBasalLoadingFactorArrayName(), true, ""));
   setFilterParameters(parameters);
 }
 // -----------------------------------------------------------------------------
@@ -101,7 +101,7 @@ void FindBasalLoadingFactor::readFilterParameters(AbstractFilterParametersReader
   setCrystalStructuresArrayPath(reader->readDataArrayPath("CrystalStructuresArrayPath", getCrystalStructuresArrayPath() ) );
   setFeaturePhasesArrayPath(reader->readDataArrayPath("FeaturePhasesArrayPath", getFeaturePhasesArrayPath() ) );
   setAvgQuatsArrayPath(reader->readDataArrayPath("AvgQuatsArrayPath", getAvgQuatsArrayPath() ) );
-  setLoadingDir( reader->readFloatVec3("LoadingDir", getLoadingDir() ) );
+  setLoadingDirection( reader->readFloatVec3("LoadingDirection", getLoadingDirection() ) );
   reader->closeFilterGroup();
 }
 
@@ -111,12 +111,12 @@ void FindBasalLoadingFactor::readFilterParameters(AbstractFilterParametersReader
 int FindBasalLoadingFactor::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  writer->writeValue("CellFeatureAttributeMatrixName", getCellFeatureAttributeMatrixName());
-  writer->writeValue("BasalLoadingFactorArrayName", getBasalLoadingFactorArrayName() );
-  writer->writeValue("CrystalStructuresArrayPath", getCrystalStructuresArrayPath() );
-  writer->writeValue("FeaturePhasesArrayPath", getFeaturePhasesArrayPath() );
-  writer->writeValue("AvgQuatsArrayPath", getAvgQuatsArrayPath() );
-  writer->writeValue("LoadingDirection", getLoadingDir() );
+  DREAM3D_FILTER_WRITE_PARAMETER(CellFeatureAttributeMatrixName)
+  DREAM3D_FILTER_WRITE_PARAMETER(BasalLoadingFactorArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(CrystalStructuresArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(FeaturePhasesArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(AvgQuatsArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(LoadingDirection)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
@@ -188,9 +188,9 @@ void FindBasalLoadingFactor::execute()
   float caxis[3] = {0, 0, 1};
   float c1[3];
 
-  sampleLoading[0] = m_LoadingDir.x;
-  sampleLoading[1] = m_LoadingDir.y;
-  sampleLoading[2] = m_LoadingDir.z;
+  sampleLoading[0] = m_LoadingDirection.x;
+  sampleLoading[1] = m_LoadingDirection.y;
+  sampleLoading[2] = m_LoadingDirection.z;
   MatrixMath::Normalize3x1(sampleLoading);
 
   for (size_t i = 1; i < totalFeatures; i++)

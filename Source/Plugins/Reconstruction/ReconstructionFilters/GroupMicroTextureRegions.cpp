@@ -161,17 +161,17 @@ int GroupMicroTextureRegions::writeFilterParameters(AbstractFilterParametersWrit
 {
   GroupFeatures::writeFilterParameters(writer, index);
   writer->openFilterGroup(this, index);
-  writer->writeValue("ActiveArrayName", getActiveArrayName() );
-  writer->writeValue("NewCellFeatureAttributeMatrixName", getNewCellFeatureAttributeMatrixName() );
-  writer->writeValue("FeatureParentIdsArrayName", getFeatureParentIdsArrayName() );
-  writer->writeValue("CellParentIdsArrayName", getCellParentIdsArrayName() );
-  writer->writeValue("CrystalStructuresArrayPath", getCrystalStructuresArrayPath() );
-  writer->writeValue("AvgQuatsArrayPath", getAvgQuatsArrayPath() );
-  writer->writeValue("VolumesArrayPath", getVolumesArrayPath() );
-  writer->writeValue("FeaturePhasesArrayPath", getFeaturePhasesArrayPath() );
-  writer->writeValue("FeatureIdsArrayPath", getFeatureIdsArrayPath() );
-  writer->writeValue("CAxisTolerance", getCAxisTolerance() );
-  writer->writeValue("UseRunningAverage", getUseRunningAverage() );
+  DREAM3D_FILTER_WRITE_PARAMETER(ActiveArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(NewCellFeatureAttributeMatrixName)
+  DREAM3D_FILTER_WRITE_PARAMETER(FeatureParentIdsArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(CellParentIdsArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(CrystalStructuresArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(AvgQuatsArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(VolumesArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(FeaturePhasesArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(FeatureIdsArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(CAxisTolerance)
+  DREAM3D_FILTER_WRITE_PARAMETER(UseRunningAverage)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }

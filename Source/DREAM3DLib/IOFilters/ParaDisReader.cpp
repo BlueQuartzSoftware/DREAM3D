@@ -112,15 +112,15 @@ void ParaDisReader::readFilterParameters(AbstractFilterParametersReader* reader,
 int ParaDisReader::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  writer->writeValue("EdgeDataContainerName", getEdgeDataContainerName() );
-  writer->writeValue("VertexAttributeMatrixName", getVertexAttributeMatrixName() );
-  writer->writeValue("EdgeAttributeMatrixName", getEdgeAttributeMatrixName() );
-  writer->writeValue("SlipPlaneNormalsArrayName", getSlipPlaneNormalsArrayName() );
-  writer->writeValue("BurgersVectorsArrayName", getBurgersVectorsArrayName() );
-  writer->writeValue("NodeConstraintsArrayName", getNodeConstraintsArrayName() );
-  writer->writeValue("NumberOfArmsArrayName", getNumberOfArmsArrayName() );
-  writer->writeValue("InputFile", getInputFile() );
-  writer->writeValue("BurgersVector", getBurgersVector() );
+  DREAM3D_FILTER_WRITE_PARAMETER(EdgeDataContainerName)
+  DREAM3D_FILTER_WRITE_PARAMETER(VertexAttributeMatrixName)
+  DREAM3D_FILTER_WRITE_PARAMETER(EdgeAttributeMatrixName)
+  DREAM3D_FILTER_WRITE_PARAMETER(SlipPlaneNormalsArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(BurgersVectorsArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(NodeConstraintsArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(NumberOfArmsArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(InputFile)
+  DREAM3D_FILTER_WRITE_PARAMETER(BurgersVector)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }

@@ -230,19 +230,19 @@ int MergeColonies::writeFilterParameters(AbstractFilterParametersWriter* writer,
 {
   GroupFeatures::writeFilterParameters(writer, index);
   writer->openFilterGroup(this, index);
-  writer->writeValue("ActiveArrayName", getActiveArrayName() );
-  writer->writeValue("NewCellFeatureAttributeMatrixName", getNewCellFeatureAttributeMatrixName() );
-  writer->writeValue("FeatureParentIdsArrayName", getFeatureParentIdsArrayName() );
-  writer->writeValue("GlobAlphaArrayName", getGlobAlphaArrayName() );
-  writer->writeValue("CellParentIdsArrayName", getCellParentIdsArrayName() );
-  writer->writeValue("CrystalStructuresArrayPath", getCrystalStructuresArrayPath() );
-  writer->writeValue("AvgQuatsArrayPath", getAvgQuatsArrayPath() );
-  writer->writeValue("FeaturePhasesArrayPath", getFeaturePhasesArrayPath() );
-  writer->writeValue("CellPhasesArrayPath", getCellPhasesArrayPath() );
-  writer->writeValue("FeatureIdsArrayPath", getFeatureIdsArrayPath() );
-  writer->writeValue("AxisTolerance", getAxisTolerance() );
-  writer->writeValue("AngleTolerance", getAngleTolerance() );
-  writer->writeValue("IdentifyGlobAlpha", getIdentifyGlobAlpha() );
+  DREAM3D_FILTER_WRITE_PARAMETER(ActiveArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(NewCellFeatureAttributeMatrixName)
+  DREAM3D_FILTER_WRITE_PARAMETER(FeatureParentIdsArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(GlobAlphaArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(CellParentIdsArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(CrystalStructuresArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(AvgQuatsArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(FeaturePhasesArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(CellPhasesArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(FeatureIdsArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(AxisTolerance)
+  DREAM3D_FILTER_WRITE_PARAMETER(AngleTolerance)
+  DREAM3D_FILTER_WRITE_PARAMETER(IdentifyGlobAlpha)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }

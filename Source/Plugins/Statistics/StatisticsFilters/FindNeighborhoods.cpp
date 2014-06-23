@@ -105,12 +105,12 @@ void FindNeighborhoods::readFilterParameters(AbstractFilterParametersReader* rea
 int FindNeighborhoods::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  writer->writeValue("NeighborhoodsArrayName", getNeighborhoodsArrayName() );
-  writer->writeValue("NeighborhoodListArrayName", getNeighborhoodListArrayName() );
-  writer->writeValue("CentroidsArrayPath", getCentroidsArrayPath() );
-  writer->writeValue("FeaturePhasesArrayPath", getFeaturePhasesArrayPath() );
-  writer->writeValue("EquivalentDiametersArrayPath", getEquivalentDiametersArrayPath() );
-  writer->writeValue("MultiplesOfAverage", getMultiplesOfAverage() );
+  DREAM3D_FILTER_WRITE_PARAMETER(NeighborhoodsArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(NeighborhoodListArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(CentroidsArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(FeaturePhasesArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(EquivalentDiametersArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(MultiplesOfAverage)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }

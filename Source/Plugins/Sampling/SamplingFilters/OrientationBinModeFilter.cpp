@@ -116,13 +116,13 @@ void OrientationBinModeFilter::readFilterParameters(AbstractFilterParametersRead
 int OrientationBinModeFilter::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  writer->writeValue("NewDataContainerName", getNewDataContainerName() );
-  writer->writeValue("CellAttributeMatrixPath", getCellAttributeMatrixPath() );
-  writer->writeValue("CellFeatureAttributeMatrixPath", getCellFeatureAttributeMatrixPath() );
-  writer->writeValue("FeatureIdsArrayPath", getFeatureIdsArrayPath() );
-  writer->writeValue("Resolution", getResolution() );
-  writer->writeValue("RenumberFeatures", getRenumberFeatures() );
-  writer->writeValue("SaveAsNewDataContiner", getSaveAsNewDataContainer() );
+  DREAM3D_FILTER_WRITE_PARAMETER(NewDataContainerName)
+  DREAM3D_FILTER_WRITE_PARAMETER(CellAttributeMatrixPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(CellFeatureAttributeMatrixPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(FeatureIdsArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(Resolution)
+  DREAM3D_FILTER_WRITE_PARAMETER(RenumberFeatures)
+  DREAM3D_FILTER_WRITE_PARAMETER(SaveAsNewDataContiner)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }

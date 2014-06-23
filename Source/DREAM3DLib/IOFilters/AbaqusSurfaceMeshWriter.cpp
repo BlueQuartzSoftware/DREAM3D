@@ -96,8 +96,8 @@ void AbaqusSurfaceMeshWriter::readFilterParameters(AbstractFilterParametersReade
 int AbaqusSurfaceMeshWriter::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  writer->writeValue("SurfaceMeshFaceLabelsArrayPath", getSurfaceMeshFaceLabelsArrayPath() );
-  writer->writeValue("OutputFile", getOutputFile() );
+  DREAM3D_FILTER_WRITE_PARAMETER(SurfaceMeshFaceLabelsArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(OutputFile)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }

@@ -97,10 +97,10 @@ void FindFeaturePhases::readFilterParameters(AbstractFilterParametersReader* rea
 int FindFeaturePhases::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  writer->writeValue("CellFeatureAttributeMatrixName", getCellFeatureAttributeMatrixName());
-  writer->writeValue("FeaturePhasesArrayName", getFeaturePhasesArrayName() );
-  writer->writeValue("CellPhasesArrayPath", getCellPhasesArrayPath() );
-  writer->writeValue("FeatureIdsArrayPath", getFeatureIdsArrayPath() );
+  DREAM3D_FILTER_WRITE_PARAMETER(CellFeatureAttributeMatrixName)
+  DREAM3D_FILTER_WRITE_PARAMETER(FeaturePhasesArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(CellPhasesArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(FeatureIdsArrayPath)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }

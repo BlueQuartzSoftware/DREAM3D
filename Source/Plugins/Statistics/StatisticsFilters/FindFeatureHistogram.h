@@ -73,8 +73,8 @@ class FindFeatureHistogram : public AbstractFilter
     DREAM3D_FILTER_PARAMETER(DataArrayPath, SelectedFeatureArrayPath)
     Q_PROPERTY(DataArrayPath SelectedFeatureArrayPath READ getSelectedFeatureArrayPath WRITE setSelectedFeatureArrayPath)
 
-    DREAM3D_FILTER_PARAMETER(int, NumBins)
-    Q_PROPERTY(int NumBins READ getNumBins WRITE setNumBins)
+    DREAM3D_FILTER_PARAMETER(int, NumberOfBins)
+    Q_PROPERTY(int NumberOfBins READ getNumberOfBins WRITE setNumberOfBins)
 
     DREAM3D_FILTER_PARAMETER(bool, RemoveBiasedFeatures)
     Q_PROPERTY(bool RemoveBiasedFeatures READ getRemoveBiasedFeatures WRITE setRemoveBiasedFeatures)

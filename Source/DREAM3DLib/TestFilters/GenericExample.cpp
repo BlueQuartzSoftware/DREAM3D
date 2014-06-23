@@ -171,21 +171,21 @@ int GenericExample::writeFilterParameters(AbstractFilterParametersWriter* writer
 {
   writer->openFilterGroup(this, index);
 
-  writer->writeValue("FeatureIdsArrayPath", getFeatureIdsArrayPath() );
+  DREAM3D_FILTER_WRITE_PARAMETER(FeatureIdsArrayPath)
   /* Place code that will write the inputs values into a file. reference the
    AbstractFilterParametersWriter class for the proper API to use. */
-  writer->writeValue("StlFilePrefix", getStlFilePrefix());
-  writer->writeValue("MaxIterations", getMaxIterations());
-  writer->writeValue("MisorientationTolerance", getMisorientationTolerance());
-  writer->writeValue("InputFile", getInputFile());
-  writer->writeValue("InputPath", getInputPath());
-  writer->writeValue("OutputFile", getOutputFile());
-  writer->writeValue("OutputPath", getOutputPath());
-  writer->writeValue("WriteAlignmentShifts", getWriteAlignmentShifts());
-  writer->writeValue("ConversionType", getConversionType());
-  writer->writeValue("Dimensions", getDimensions());
-  writer->writeValue("Origin", getOrigin());
-  writer->writeValue("CrystalSymmetryRotations", getCrystalSymmetryRotations());
+  DREAM3D_FILTER_WRITE_PARAMETER(StlFilePrefix)
+  DREAM3D_FILTER_WRITE_PARAMETER(MaxIterations)
+  DREAM3D_FILTER_WRITE_PARAMETER(MisorientationTolerance)
+  DREAM3D_FILTER_WRITE_PARAMETER(InputFile)
+  DREAM3D_FILTER_WRITE_PARAMETER(InputPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(OutputFile)
+  DREAM3D_FILTER_WRITE_PARAMETER(OutputPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(WriteAlignmentShifts)
+  DREAM3D_FILTER_WRITE_PARAMETER(ConversionType)
+  DREAM3D_FILTER_WRITE_PARAMETER(Dimensions)
+  DREAM3D_FILTER_WRITE_PARAMETER(Origin)
+  DREAM3D_FILTER_WRITE_PARAMETER(CrystalSymmetryRotations)
 
 
 

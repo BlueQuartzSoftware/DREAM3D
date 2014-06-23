@@ -113,9 +113,9 @@ int AlignSectionsFeatureCentroid::writeFilterParameters(AbstractFilterParameters
 {
   AlignSections::writeFilterParameters(writer, index);
   writer->openFilterGroup(this, index);
-  writer->writeValue("GoodVoxelsArrayPath", getGoodVoxelsArrayPath() );
-  writer->writeValue("UseReferenceSlice", getUseReferenceSlice() );
-  writer->writeValue("ReferenceSlice", getReferenceSlice() );
+  DREAM3D_FILTER_WRITE_PARAMETER(GoodVoxelsArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(UseReferenceSlice)
+  DREAM3D_FILTER_WRITE_PARAMETER(ReferenceSlice)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }

@@ -90,9 +90,9 @@ void LinkFeatureMapToCellArray::readFilterParameters(AbstractFilterParametersRea
 int LinkFeatureMapToCellArray::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  writer->writeValue("ActiveArrayName", getActiveArrayName());
-  writer->writeValue("CellFeatureAttributeMatrixName", getCellFeatureAttributeMatrixName());
-  writer->writeValue("SelectedCellArrayPath", getSelectedCellArrayPath() );
+  DREAM3D_FILTER_WRITE_PARAMETER(ActiveArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(CellFeatureAttributeMatrixName)
+  DREAM3D_FILTER_WRITE_PARAMETER(SelectedCellArrayPath)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }

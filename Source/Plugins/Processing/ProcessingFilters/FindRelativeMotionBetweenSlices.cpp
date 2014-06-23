@@ -180,14 +180,14 @@ void FindRelativeMotionBetweenSlices::readFilterParameters(AbstractFilterParamet
 int FindRelativeMotionBetweenSlices::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  writer->writeValue("MotionDirectionArrayName", getMotionDirectionArrayName() );
-  writer->writeValue("SelectedArrayPath", getSelectedArrayPath() );
-  writer->writeValue("Plane", getPlane());
-  writer->writeValue("PSize1", getPSize1());
-  writer->writeValue("PSize2", getPSize2());
-  writer->writeValue("SSize1", getSSize1());
-  writer->writeValue("SSize2", getSSize2());
-  writer->writeValue("SliceStep", getSliceStep());
+  DREAM3D_FILTER_WRITE_PARAMETER(MotionDirectionArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(SelectedArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(Plane)
+  DREAM3D_FILTER_WRITE_PARAMETER(PSize1)
+  DREAM3D_FILTER_WRITE_PARAMETER(PSize2)
+  DREAM3D_FILTER_WRITE_PARAMETER(SSize1)
+  DREAM3D_FILTER_WRITE_PARAMETER(SSize2)
+  DREAM3D_FILTER_WRITE_PARAMETER(SliceStep)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }

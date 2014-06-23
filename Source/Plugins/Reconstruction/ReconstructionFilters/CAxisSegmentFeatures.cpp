@@ -146,15 +146,15 @@ void CAxisSegmentFeatures::readFilterParameters(AbstractFilterParametersReader* 
 int CAxisSegmentFeatures::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  writer->writeValue("CellFeatureAttributeMatrixName", getCellFeatureAttributeMatrixName() );
-  writer->writeValue("ActiveArrayName", getActiveArrayName() );
-  writer->writeValue("FeatureIdsArrayName", getFeatureIdsArrayName() );
-  writer->writeValue("QuatsArrayPath", getQuatsArrayPath() );
-  writer->writeValue("CrystalStructuresArrayPath", getCrystalStructuresArrayPath() );
-  writer->writeValue("CellPhasesArrayPath", getCellPhasesArrayPath() );
-  writer->writeValue("GoodVoxelsArrayPath", getGoodVoxelsArrayPath() );
-  writer->writeValue("UseGoodVoxels", getUseGoodVoxels() );
-  writer->writeValue("MisorientationTolerance", getMisorientationTolerance() );
+  DREAM3D_FILTER_WRITE_PARAMETER(CellFeatureAttributeMatrixName)
+  DREAM3D_FILTER_WRITE_PARAMETER(ActiveArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(FeatureIdsArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(QuatsArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(CrystalStructuresArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(CellPhasesArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(GoodVoxelsArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(UseGoodVoxels)
+  DREAM3D_FILTER_WRITE_PARAMETER(MisorientationTolerance)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }

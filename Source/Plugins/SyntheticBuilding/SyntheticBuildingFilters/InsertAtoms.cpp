@@ -285,13 +285,13 @@ void InsertAtoms::readFilterParameters(AbstractFilterParametersReader* reader, i
 int InsertAtoms::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  writer->writeValue("VertexDataContainerName", getVertexDataContainerName() );
-  writer->writeValue("VertexAttributeMatrixName", getVertexAttributeMatrixName() );
-  writer->writeValue("AtomFeatureLabelsArrayName", getAtomFeatureLabelsArrayName() );
-  writer->writeValue("AvgQuatsArrayPath", getAvgQuatsArrayPath() );
-  writer->writeValue("SurfaceMeshFaceLabelsArrayPath", getSurfaceMeshFaceLabelsArrayPath() );
-  writer->writeValue("LatticeConstants", getLatticeConstants() );
-  writer->writeValue("Basis", getBasis() );
+  DREAM3D_FILTER_WRITE_PARAMETER(VertexDataContainerName)
+  DREAM3D_FILTER_WRITE_PARAMETER(VertexAttributeMatrixName)
+  DREAM3D_FILTER_WRITE_PARAMETER(AtomFeatureLabelsArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(AvgQuatsArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(SurfaceMeshFaceLabelsArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(LatticeConstants)
+  DREAM3D_FILTER_WRITE_PARAMETER(Basis)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }

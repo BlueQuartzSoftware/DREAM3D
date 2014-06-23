@@ -102,11 +102,11 @@ void AddBadData::readFilterParameters(AbstractFilterParametersReader* reader, in
 int AddBadData::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  writer->writeValue("GBEuclideanDistancesArrayPath", getGBEuclideanDistancesArrayPath() );
-  writer->writeValue("PoissonNoise", getPoissonNoise() );
-  writer->writeValue("PoissonVolFraction", getPoissonVolFraction() );
-  writer->writeValue("BoundaryNoise", getBoundaryNoise() );
-  writer->writeValue("BoundaryVolFraction", getBoundaryVolFraction() );
+  DREAM3D_FILTER_WRITE_PARAMETER(GBEuclideanDistancesArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(PoissonNoise)
+  DREAM3D_FILTER_WRITE_PARAMETER(PoissonVolFraction)
+  DREAM3D_FILTER_WRITE_PARAMETER(BoundaryNoise)
+  DREAM3D_FILTER_WRITE_PARAMETER(BoundaryVolFraction)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }

@@ -114,12 +114,12 @@ void MinSize::readFilterParameters(AbstractFilterParametersReader* reader, int i
 int MinSize::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  writer->writeValue("NumCellsArrayPath", getNumCellsArrayPath() );
-  writer->writeValue("FeaturePhasesArrayPath", getFeaturePhasesArrayPath() );
-  writer->writeValue("FeatureIdsArrayPath", getFeatureIdsArrayPath() );
-  writer->writeValue("MinAllowedFeatureSize", getMinAllowedFeatureSize() );
-  writer->writeValue("ApplyToSinglePhase", getApplyToSinglePhase() );
-  writer->writeValue("PhaseNumber", getPhaseNumber() );
+  DREAM3D_FILTER_WRITE_PARAMETER(NumCellsArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(FeaturePhasesArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(FeatureIdsArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(MinAllowedFeatureSize)
+  DREAM3D_FILTER_WRITE_PARAMETER(ApplyToSinglePhase)
+  DREAM3D_FILTER_WRITE_PARAMETER(PhaseNumber)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }

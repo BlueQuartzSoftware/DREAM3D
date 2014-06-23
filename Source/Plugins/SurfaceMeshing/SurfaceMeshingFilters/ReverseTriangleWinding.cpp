@@ -138,7 +138,7 @@ void ReverseTriangleWinding::readFilterParameters(AbstractFilterParametersReader
 int ReverseTriangleWinding::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  writer->writeValue("SurfaceDataContainerName", getSurfaceDataContainerName() );
+  DREAM3D_FILTER_WRITE_PARAMETER(SurfaceDataContainerName)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }

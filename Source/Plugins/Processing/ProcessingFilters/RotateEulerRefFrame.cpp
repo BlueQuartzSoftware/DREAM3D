@@ -168,9 +168,9 @@ void RotateEulerRefFrame::readFilterParameters(AbstractFilterParametersReader* r
 int RotateEulerRefFrame::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  writer->writeValue("CellEulerAnglesArrayPath", getCellEulerAnglesArrayPath() );
-  writer->writeValue("RotationAxis", getRotationAxis() );
-  writer->writeValue("RotationAngle", getRotationAngle() );
+  DREAM3D_FILTER_WRITE_PARAMETER(CellEulerAnglesArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(RotationAxis)
+  DREAM3D_FILTER_WRITE_PARAMETER(RotationAngle)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }

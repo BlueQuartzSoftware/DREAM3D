@@ -124,16 +124,16 @@ void FeatureInfoReader::readFilterParameters(AbstractFilterParametersReader* rea
 int FeatureInfoReader::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  writer->writeValue("CellAttributeMatrixName", getCellAttributeMatrixName() );
-  writer->writeValue("CellFeatureAttributeMatrixName", getCellFeatureAttributeMatrixName() );
-  writer->writeValue("FeatureEulerAnglesArrayName", getFeatureEulerAnglesArrayName() );
-  writer->writeValue("FeaturePhasesArrayName", getFeaturePhasesArrayName() );
-  writer->writeValue("CellEulerAnglesArrayName", getCellEulerAnglesArrayName() );
-  writer->writeValue("CellPhasesArrayName", getCellPhasesArrayName() );
-  writer->writeValue("FeatureIdsArrayPath", getFeatureIdsArrayPath() );
-  writer->writeValue("InputFile", getInputFile() );
-  writer->writeValue("CreateCellLevelArrays", getCreateCellLevelArrays() );
-  writer->writeValue("RenumberFeatures", getRenumberFeatures() );
+  DREAM3D_FILTER_WRITE_PARAMETER(CellAttributeMatrixName)
+  DREAM3D_FILTER_WRITE_PARAMETER(CellFeatureAttributeMatrixName)
+  DREAM3D_FILTER_WRITE_PARAMETER(FeatureEulerAnglesArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(FeaturePhasesArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(CellEulerAnglesArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(CellPhasesArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(FeatureIdsArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(InputFile)
+  DREAM3D_FILTER_WRITE_PARAMETER(CreateCellLevelArrays)
+  DREAM3D_FILTER_WRITE_PARAMETER(RenumberFeatures)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }

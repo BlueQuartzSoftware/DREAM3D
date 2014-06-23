@@ -107,8 +107,8 @@ void AlignSections::readFilterParameters(AbstractFilterParametersReader* reader,
 int AlignSections::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  writer->writeValue("AlignmentShiftFileName", getAlignmentShiftFileName());
-  writer->writeValue("WriteAlignmentShifts", getWriteAlignmentShifts());
+  DREAM3D_FILTER_WRITE_PARAMETER(AlignmentShiftFileName)
+  DREAM3D_FILTER_WRITE_PARAMETER(WriteAlignmentShifts)
   writer->closeFilterGroup();
 
   return ++index; // we want to return the next index that was just written to

@@ -220,15 +220,15 @@ void LaplacianSmoothing::readFilterParameters(AbstractFilterParametersReader* re
 int LaplacianSmoothing::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  writer->writeValue("IterationSteps", getIterationSteps());
-  writer->writeValue("Lambda", getLambda() );
-  writer->writeValue("TripleLineLambda", getTripleLineLambda());
-  writer->writeValue("QuadPointLambda", getQuadPointLambda());
-  writer->writeValue("SurfacePointLambda", getSurfacePointLambda());
-  writer->writeValue("SurfaceTripleLineLambda", getSurfaceTripleLineLambda());
-  writer->writeValue("SurfaceQuadPointLambda", getSurfaceQuadPointLambda());
-  writer->writeValue("SurfaceMeshNodeTypeArrayPath", getSurfaceMeshNodeTypeArrayPath() );
-  writer->writeValue("SurfaceMeshFaceLabelsArrayPath", getSurfaceMeshFaceLabelsArrayPath() );
+  DREAM3D_FILTER_WRITE_PARAMETER(IterationSteps)
+  DREAM3D_FILTER_WRITE_PARAMETER(Lambda)
+  DREAM3D_FILTER_WRITE_PARAMETER(TripleLineLambda)
+  DREAM3D_FILTER_WRITE_PARAMETER(QuadPointLambda)
+  DREAM3D_FILTER_WRITE_PARAMETER(SurfacePointLambda)
+  DREAM3D_FILTER_WRITE_PARAMETER(SurfaceTripleLineLambda)
+  DREAM3D_FILTER_WRITE_PARAMETER(SurfaceQuadPointLambda)
+  DREAM3D_FILTER_WRITE_PARAMETER(SurfaceMeshNodeTypeArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(SurfaceMeshFaceLabelsArrayPath)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }

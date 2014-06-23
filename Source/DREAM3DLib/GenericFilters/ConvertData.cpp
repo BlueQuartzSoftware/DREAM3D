@@ -239,9 +239,9 @@ int ConvertData::writeFilterParameters(AbstractFilterParametersWriter* writer, i
   writer->openFilterGroup(this, index);
   /* Place code that will write the inputs values into a file. reference the
    AbstractFilterParametersWriter class for the proper API to use. */
-  writer->writeValue("ScalarType", getScalarType() );
-  writer->writeValue("OutputArrayName", getOutputArrayName() );
-  writer->writeValue("SelectedCellArrayPath", getSelectedCellArrayPath() );
+  DREAM3D_FILTER_WRITE_PARAMETER(ScalarType)
+  DREAM3D_FILTER_WRITE_PARAMETER(OutputArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(SelectedCellArrayPath)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }

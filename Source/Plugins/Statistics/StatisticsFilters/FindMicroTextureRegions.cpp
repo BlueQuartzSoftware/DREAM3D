@@ -95,10 +95,10 @@ void FindMicroTextureRegions::readFilterParameters(AbstractFilterParametersReade
 int FindMicroTextureRegions::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  writer->writeValue("CellFeatureAttributeMatrixName", getCellFeatureAttributeMatrixName());
-  writer->writeValue("MicroTextureRegionFractionOccupiedArrayName", getMicroTextureRegionFractionOccupiedArrayName() );
-  writer->writeValue("MicroTextureRegionNumCellsArrayName", getMicroTextureRegionNumCellsArrayName() );
-  writer->writeValue("FeatureIdsArrayPath", getFeatureIdsArrayPath() );
+  DREAM3D_FILTER_WRITE_PARAMETER(CellFeatureAttributeMatrixName)
+  DREAM3D_FILTER_WRITE_PARAMETER(MicroTextureRegionFractionOccupiedArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(MicroTextureRegionNumCellsArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(FeatureIdsArrayPath)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }

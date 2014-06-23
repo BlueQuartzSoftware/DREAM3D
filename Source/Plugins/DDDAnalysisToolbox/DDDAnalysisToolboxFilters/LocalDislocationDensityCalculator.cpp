@@ -109,11 +109,11 @@ void LocalDislocationDensityCalculator::readFilterParameters(AbstractFilterParam
 int LocalDislocationDensityCalculator::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  writer->writeValue("EdgeDataContainerName", getEdgeDataContainerName() );
-  writer->writeValue("OutputDataContainerName", getOutputDataContainerName() );
-  writer->writeValue("OutputAttributeMatrixName", getOutputAttributeMatrixName() );
-  writer->writeValue("OutputArrayName", getOutputArrayName() );
-  writer->writeValue("CellSize", getCellSize() );
+  DREAM3D_FILTER_WRITE_PARAMETER(EdgeDataContainerName)
+  DREAM3D_FILTER_WRITE_PARAMETER(OutputDataContainerName)
+  DREAM3D_FILTER_WRITE_PARAMETER(OutputAttributeMatrixName)
+  DREAM3D_FILTER_WRITE_PARAMETER(OutputArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(CellSize)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }

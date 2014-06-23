@@ -91,9 +91,9 @@ void CreateFeatureArrayFromCellArray::readFilterParameters(AbstractFilterParamet
 int CreateFeatureArrayFromCellArray::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  writer->writeValue("CellFeatureAttributeMatrixName", getCellFeatureAttributeMatrixName());
-  writer->writeValue("FeatureIdsArrayPath", getFeatureIdsArrayPath() );
-  writer->writeValue("SelectedCellArrayPath", getSelectedCellArrayPath() );
+  DREAM3D_FILTER_WRITE_PARAMETER(CellFeatureAttributeMatrixName)
+  DREAM3D_FILTER_WRITE_PARAMETER(FeatureIdsArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(SelectedCellArrayPath)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }

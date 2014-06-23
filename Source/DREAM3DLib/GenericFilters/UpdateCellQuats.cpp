@@ -90,8 +90,8 @@ void UpdateCellQuats::readFilterParameters(AbstractFilterParametersReader* reade
 int UpdateCellQuats::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  writer->writeValue("QuatsArrayName", getQuatsArrayName() );
-  writer->writeValue("Quats5ArrayPath", getQuats5ArrayPath() );
+  DREAM3D_FILTER_WRITE_PARAMETER(QuatsArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(Quats5ArrayPath)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }

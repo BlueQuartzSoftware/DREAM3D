@@ -83,8 +83,8 @@ void RenameDataContainer::readFilterParameters(AbstractFilterParametersReader* r
 int RenameDataContainer::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  writer->writeValue("SelectedDataContainerName", getSelectedDataContainerName() );
-  writer->writeValue("NewDataContainerName", getNewDataContainerName() );
+  DREAM3D_FILTER_WRITE_PARAMETER(SelectedDataContainerName)
+  DREAM3D_FILTER_WRITE_PARAMETER(NewDataContainerName)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }

@@ -124,17 +124,17 @@ void ConvertHexGridToSquareGrid::readFilterParameters(AbstractFilterParametersRe
 int ConvertHexGridToSquareGrid::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  writer->writeValue("ZStartIndex", getZStartIndex() );
-  writer->writeValue("ZEndIndex", getZEndIndex() );
-  writer->writeValue("PaddingDigits", getPaddingDigits() );
-  writer->writeValue("InputPath", getInputPath() );
-  writer->writeValue("OutputPath", getOutputPath() );
-  writer->writeValue("OutputPrefix", getOutputPrefix() );
-  writer->writeValue("FilePrefix", getFilePrefix() );
-  writer->writeValue("FileSuffix", getFileSuffix() );
-  writer->writeValue("FileExtension", getFileExtension() );
-  writer->writeValue("XResolution", getXResolution() );
-  writer->writeValue("YResolution", getYResolution() );
+  DREAM3D_FILTER_WRITE_PARAMETER(ZStartIndex)
+  DREAM3D_FILTER_WRITE_PARAMETER(ZEndIndex)
+  DREAM3D_FILTER_WRITE_PARAMETER(PaddingDigits)
+  DREAM3D_FILTER_WRITE_PARAMETER(InputPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(OutputPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(OutputPrefix)
+  DREAM3D_FILTER_WRITE_PARAMETER(FilePrefix)
+  DREAM3D_FILTER_WRITE_PARAMETER(FileSuffix)
+  DREAM3D_FILTER_WRITE_PARAMETER(FileExtension)
+  DREAM3D_FILTER_WRITE_PARAMETER(XResolution)
+  DREAM3D_FILTER_WRITE_PARAMETER(YResolution)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }

@@ -126,13 +126,13 @@ void InitializeSyntheticVolume::readFilterParameters(AbstractFilterParametersRea
 int InitializeSyntheticVolume::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  writer->writeValue("DataContainerName", getDataContainerName() );
-  writer->writeValue("CellAttributeMatrixName", getCellAttributeMatrixName() );
-  writer->writeValue("Dimensions", getDimensions() );
-  writer->writeValue("Resolution", getResolution() );
-  writer->writeValue("Origin", getOrigin() );
-  writer->writeValue("InputStatsArrayPath", getInputStatsArrayPath() );
-  writer->writeValue("InputPhaseTypesArrayPath", getInputPhaseTypesArrayPath() );
+  DREAM3D_FILTER_WRITE_PARAMETER(DataContainerName)
+  DREAM3D_FILTER_WRITE_PARAMETER(CellAttributeMatrixName)
+  DREAM3D_FILTER_WRITE_PARAMETER(Dimensions)
+  DREAM3D_FILTER_WRITE_PARAMETER(Resolution)
+  DREAM3D_FILTER_WRITE_PARAMETER(Origin)
+  DREAM3D_FILTER_WRITE_PARAMETER(InputStatsArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(InputPhaseTypesArrayPath)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }

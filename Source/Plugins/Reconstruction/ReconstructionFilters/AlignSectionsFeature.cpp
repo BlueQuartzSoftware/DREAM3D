@@ -106,7 +106,7 @@ int AlignSectionsFeature::writeFilterParameters(AbstractFilterParametersWriter* 
 {
   AlignSections::writeFilterParameters(writer, index);
   writer->openFilterGroup(this, index);
-  writer->writeValue("GoodVoxelsArrayPath", getGoodVoxelsArrayPath() );
+  DREAM3D_FILTER_WRITE_PARAMETER(GoodVoxelsArrayPath)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }

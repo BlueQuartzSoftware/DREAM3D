@@ -180,15 +180,15 @@ void WritePoleFigure::readFilterParameters(AbstractFilterParametersReader* reade
 int WritePoleFigure::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  writer->writeValue("GoodVoxelsArrayPath", getGoodVoxelsArrayPath() );
-  writer->writeValue("CrystalStructuresArrayPath", getCrystalStructuresArrayPath() );
-  writer->writeValue("CellPhasesArrayPath", getCellPhasesArrayPath() );
-  writer->writeValue("CellEulerAnglesArrayPath", getCellEulerAnglesArrayPath() );
-  writer->writeValue("ImagePrefix", getImagePrefix() );
-  writer->writeValue("OutputPath", getOutputPath() );
-  writer->writeValue("ImageFormat", getImageFormat() );
-  writer->writeValue("ImageSize", getImageSize() );
-  writer->writeValue("LambertSize", getLambertSize() );
+  DREAM3D_FILTER_WRITE_PARAMETER(GoodVoxelsArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(CrystalStructuresArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(CellPhasesArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(CellEulerAnglesArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(ImagePrefix)
+  DREAM3D_FILTER_WRITE_PARAMETER(OutputPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(ImageFormat)
+  DREAM3D_FILTER_WRITE_PARAMETER(ImageSize)
+  DREAM3D_FILTER_WRITE_PARAMETER(LambertSize)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }

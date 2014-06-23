@@ -103,10 +103,10 @@ void FindCellQuats::readFilterParameters(AbstractFilterParametersReader* reader,
 int FindCellQuats::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  writer->writeValue("QuatsArrayName", getQuatsArrayName() );
-  writer->writeValue("CrystalStructuresArrayPath", getCrystalStructuresArrayPath() );
-  writer->writeValue("CellPhasesArrayPath", getCellPhasesArrayPath() );
-  writer->writeValue("CellEulerAnglesArrayPath", getCellEulerAnglesArrayPath() );
+  DREAM3D_FILTER_WRITE_PARAMETER(QuatsArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(CrystalStructuresArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(CellPhasesArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(CellEulerAnglesArrayPath)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }

@@ -90,8 +90,8 @@ class FindBasalLoadingFactor : public AbstractFilter
     virtual const QString getSubGroupName();
     virtual const QString getHumanLabel();
 
-    DREAM3D_FILTER_PARAMETER(FloatVec3_t, LoadingDir)
-    Q_PROPERTY(FloatVec3_t LoadingDir READ getLoadingDir WRITE setLoadingDir)
+    DREAM3D_FILTER_PARAMETER(FloatVec3_t, LoadingDirection)
+    Q_PROPERTY(FloatVec3_t LoadingDirection READ getLoadingDirection WRITE setLoadingDirection)
 
 
     virtual void setupFilterParameters();

@@ -70,10 +70,10 @@ void DiscreteGaussianBlur::readFilterParameters(AbstractFilterParametersReader* 
 int DiscreteGaussianBlur::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  writer->writeValue("SelectedCellArrayPath", getSelectedCellArrayPath() );
-  writer->writeValue("NewCellArrayName", getNewCellArrayName() );
-  writer->writeValue("SaveAsNewArray", getSaveAsNewArray() );
-  writer->writeValue("Stdev", getStdev() );
+  DREAM3D_FILTER_WRITE_PARAMETER(SelectedCellArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(NewCellArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(SaveAsNewArray)
+  DREAM3D_FILTER_WRITE_PARAMETER(Stdev)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }

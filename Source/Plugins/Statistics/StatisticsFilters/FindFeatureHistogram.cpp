@@ -50,7 +50,7 @@ FindFeatureHistogram::FindFeatureHistogram() :
   AbstractFilter(),
   m_CellEnsembleAttributeMatrixName(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellEnsembleAttributeMatrixName, ""),
   m_SelectedFeatureArrayPath("", "", ""),
-  m_NumBins(1),
+  m_NumberOfBins(1),
   m_RemoveBiasedFeatures(false),
   m_FeaturePhasesArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, DREAM3D::FeatureData::Phases),
   m_BiasedFeaturesArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, DREAM3D::FeatureData::BiasedFeatures),
@@ -81,7 +81,7 @@ void FindFeatureHistogram::setupFilterParameters()
   {
     ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New();
     parameter->setHumanLabel("Number of Bins");
-    parameter->setPropertyName("NumBins");
+    parameter->setPropertyName("NumberOfBins");
     parameter->setWidgetType(FilterParameterWidgetType::IntWidget);
     parameters.push_back(parameter);
   }
@@ -108,7 +108,7 @@ void FindFeatureHistogram::readFilterParameters(AbstractFilterParametersReader* 
   setBiasedFeaturesArrayPath(reader->readDataArrayPath("BiasedFeaturesArrayPath", getBiasedFeaturesArrayPath() ) );
   setFeaturePhasesArrayPath(reader->readDataArrayPath("FeaturePhasesArrayPath", getFeaturePhasesArrayPath() ) );
   setSelectedFeatureArrayPath( reader->readDataArrayPath( "SelectedFeatureArrayPath", getSelectedFeatureArrayPath() ) );
-  setNumBins( reader->readValue( "NumberOfBins", getNumBins() ) );
+  setNumberOfBins( reader->readValue( "NumberOfBins", getNumberOfBins() ) );
   setRemoveBiasedFeatures( reader->readValue( "RemoveBiasedFeatures", getRemoveBiasedFeatures() ) );
   reader->closeFilterGroup();
 }
@@ -119,13 +119,13 @@ void FindFeatureHistogram::readFilterParameters(AbstractFilterParametersReader* 
 int FindFeatureHistogram::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  writer->writeValue("CellEnsembleAttributeMatrixName", getCellEnsembleAttributeMatrixName());
-  writer->writeValue("NewEnsembleArrayArrayName", getNewEnsembleArrayArrayName() );
-  writer->writeValue("BiasedFeaturesArrayPath", getBiasedFeaturesArrayPath() );
-  writer->writeValue("FeaturePhasesArrayPath", getFeaturePhasesArrayPath() );
-  writer->writeValue("SelectedFeatureArrayPath", getSelectedFeatureArrayPath() );
-  writer->writeValue("NumberOfBins", getNumBins() );
-  writer->writeValue("RemovedBiasedFeatures", getRemoveBiasedFeatures() );
+  DREAM3D_FILTER_WRITE_PARAMETER(CellEnsembleAttributeMatrixName)
+  DREAM3D_FILTER_WRITE_PARAMETER(NewEnsembleArrayArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(BiasedFeaturesArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(FeaturePhasesArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(SelectedFeatureArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(NumberOfBins)
+  DREAM3D_FILTER_WRITE_PARAMETER(RemoveBiasedFeatures)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
@@ -149,7 +149,7 @@ void FindFeatureHistogram::dataCheck()
     notifyErrorMessage(getHumanLabel(), "An array from the Volume DataContainer must be selected.", getErrorCondition());
   }
 
-  int numComp = m_NumBins;
+  int numComp = m_NumberOfBins;
   m_NewEnsembleArrayArrayName = m_SelectedFeatureArrayPath.getDataArrayName() + QString("Histogram");
   dims[0] = numComp;
   tempPath.update(getCellEnsembleAttributeMatrixName().getDataContainerName(), getCellEnsembleAttributeMatrixName().getAttributeMatrixName(), getNewEnsembleArrayArrayName() );
@@ -183,7 +183,7 @@ void FindFeatureHistogram::preflight()
 //
 // -----------------------------------------------------------------------------
 template<typename T>
-void findHistogram(IDataArray::Pointer inputData, int32_t* ensembleArray, int32_t* eIds, int NumBins, bool removeBiasedFeatures, bool* biasedFeatures)
+void findHistogram(IDataArray::Pointer inputData, int32_t* ensembleArray, int32_t* eIds, int NumberOfBins, bool removeBiasedFeatures, bool* biasedFeatures)
 {
   DataArray<T>* featureArray = DataArray<T>::SafePointerDownCast(inputData.get());
   if (NULL == featureArray)
@@ -205,7 +205,7 @@ void findHistogram(IDataArray::Pointer inputData, int32_t* ensembleArray, int32_
     if(value > max) { max = value; }
     if(value < min) { min = value; }
   }
-  float stepsize = (max - min) / NumBins;
+  float stepsize = (max - min) / NumberOfBins;
 
   for (size_t i = 1; i < numfeatures; i++)
   {
@@ -213,8 +213,8 @@ void findHistogram(IDataArray::Pointer inputData, int32_t* ensembleArray, int32_
     {
       ensemble = eIds[i];
       bin = (fPtr[i] - min) / stepsize;
-      if(bin >= NumBins) { bin = NumBins - 1; }
-      ensembleArray[(NumBins * ensemble) + bin]++;
+      if(bin >= NumberOfBins) { bin = NumberOfBins - 1; }
+      ensembleArray[(NumberOfBins * ensemble) + bin]++;
     }
   }
 }
@@ -245,47 +245,47 @@ void FindFeatureHistogram::execute()
   IDataArray::Pointer p = IDataArray::NullPointer();
   if (dType.compare("int8_t") == 0)
   {
-    findHistogram<int8_t>(inputData, m_NewEnsembleArray, m_FeaturePhases, m_NumBins, m_RemoveBiasedFeatures, m_BiasedFeatures);
+    findHistogram<int8_t>(inputData, m_NewEnsembleArray, m_FeaturePhases, m_NumberOfBins, m_RemoveBiasedFeatures, m_BiasedFeatures);
   }
   else if (dType.compare("uint8_t") == 0)
   {
-    findHistogram<uint8_t>(inputData, m_NewEnsembleArray, m_FeaturePhases, m_NumBins, m_RemoveBiasedFeatures, m_BiasedFeatures);
+    findHistogram<uint8_t>(inputData, m_NewEnsembleArray, m_FeaturePhases, m_NumberOfBins, m_RemoveBiasedFeatures, m_BiasedFeatures);
   }
   else if (dType.compare("int16_t") == 0)
   {
-    findHistogram<int16_t>(inputData, m_NewEnsembleArray, m_FeaturePhases, m_NumBins, m_RemoveBiasedFeatures, m_BiasedFeatures);
+    findHistogram<int16_t>(inputData, m_NewEnsembleArray, m_FeaturePhases, m_NumberOfBins, m_RemoveBiasedFeatures, m_BiasedFeatures);
   }
   else if (dType.compare("uint16_t") == 0)
   {
-    findHistogram<uint16_t>(inputData, m_NewEnsembleArray, m_FeaturePhases, m_NumBins, m_RemoveBiasedFeatures, m_BiasedFeatures);
+    findHistogram<uint16_t>(inputData, m_NewEnsembleArray, m_FeaturePhases, m_NumberOfBins, m_RemoveBiasedFeatures, m_BiasedFeatures);
   }
   else if (dType.compare("int32_t") == 0)
   {
-    findHistogram<int32_t>(inputData, m_NewEnsembleArray, m_FeaturePhases, m_NumBins, m_RemoveBiasedFeatures, m_BiasedFeatures);
+    findHistogram<int32_t>(inputData, m_NewEnsembleArray, m_FeaturePhases, m_NumberOfBins, m_RemoveBiasedFeatures, m_BiasedFeatures);
   }
   else if (dType.compare("uint32_t") == 0)
   {
-    findHistogram<uint32_t>(inputData, m_NewEnsembleArray, m_FeaturePhases, m_NumBins, m_RemoveBiasedFeatures, m_BiasedFeatures);
+    findHistogram<uint32_t>(inputData, m_NewEnsembleArray, m_FeaturePhases, m_NumberOfBins, m_RemoveBiasedFeatures, m_BiasedFeatures);
   }
   else if (dType.compare("int64_t") == 0)
   {
-    findHistogram<int64_t>(inputData, m_NewEnsembleArray, m_FeaturePhases, m_NumBins, m_RemoveBiasedFeatures, m_BiasedFeatures);
+    findHistogram<int64_t>(inputData, m_NewEnsembleArray, m_FeaturePhases, m_NumberOfBins, m_RemoveBiasedFeatures, m_BiasedFeatures);
   }
   else if (dType.compare("uint64_t") == 0)
   {
-    findHistogram<uint64_t>(inputData, m_NewEnsembleArray, m_FeaturePhases, m_NumBins, m_RemoveBiasedFeatures, m_BiasedFeatures);
+    findHistogram<uint64_t>(inputData, m_NewEnsembleArray, m_FeaturePhases, m_NumberOfBins, m_RemoveBiasedFeatures, m_BiasedFeatures);
   }
   else if (dType.compare("float") == 0)
   {
-    findHistogram<float>(inputData, m_NewEnsembleArray, m_FeaturePhases, m_NumBins, m_RemoveBiasedFeatures, m_BiasedFeatures);
+    findHistogram<float>(inputData, m_NewEnsembleArray, m_FeaturePhases, m_NumberOfBins, m_RemoveBiasedFeatures, m_BiasedFeatures);
   }
   else if (dType.compare("double") == 0)
   {
-    findHistogram<double>(inputData, m_NewEnsembleArray, m_FeaturePhases, m_NumBins, m_RemoveBiasedFeatures, m_BiasedFeatures);
+    findHistogram<double>(inputData, m_NewEnsembleArray, m_FeaturePhases, m_NumberOfBins, m_RemoveBiasedFeatures, m_BiasedFeatures);
   }
   else if (dType.compare("bool") == 0)
   {
-    findHistogram<bool>(inputData, m_NewEnsembleArray, m_FeaturePhases, m_NumBins, m_RemoveBiasedFeatures, m_BiasedFeatures);
+    findHistogram<bool>(inputData, m_NewEnsembleArray, m_FeaturePhases, m_NumberOfBins, m_RemoveBiasedFeatures, m_BiasedFeatures);
   }
 
   notifyStatusMessage(getHumanLabel(), "Complete");

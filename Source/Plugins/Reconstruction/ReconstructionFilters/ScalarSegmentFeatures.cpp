@@ -197,13 +197,13 @@ void ScalarSegmentFeatures::readFilterParameters(AbstractFilterParametersReader*
 int ScalarSegmentFeatures::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  writer->writeValue("CellFeatureAttributeMatrixName", getCellFeatureAttributeMatrixName() );
-  writer->writeValue("ActiveArrayName", getActiveArrayName() );
-  writer->writeValue("FeatureIdsArrayName", getFeatureIdsArrayName() );
-  writer->writeValue("GoodVoxelsArrayPath", getGoodVoxelsArrayPath() );
-  writer->writeValue("UseGoodVoxels", getUseGoodVoxels() );
-  writer->writeValue("ScalarArrayPath", getScalarArrayPath() );
-  writer->writeValue("ScalarTolerance", getScalarTolerance() );
+  DREAM3D_FILTER_WRITE_PARAMETER(CellFeatureAttributeMatrixName)
+  DREAM3D_FILTER_WRITE_PARAMETER(ActiveArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(FeatureIdsArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(GoodVoxelsArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(UseGoodVoxels)
+  DREAM3D_FILTER_WRITE_PARAMETER(ScalarArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(ScalarTolerance)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }

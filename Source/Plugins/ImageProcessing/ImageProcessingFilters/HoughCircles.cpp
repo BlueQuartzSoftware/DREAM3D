@@ -76,12 +76,12 @@ void HoughCircles::readFilterParameters(AbstractFilterParametersReader* reader, 
 int HoughCircles::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  writer->writeValue("SelectedCellArrayPath", getSelectedCellArrayPath() );
-  writer->writeValue("NewCellArrayName", getNewCellArrayName() );
-  writer->writeValue("SaveAsNewArray", getSaveAsNewArray() );
-  writer->writeValue("MinRadius", getMinRadius() );
-  writer->writeValue("MaxRadius", getMaxRadius() );
-  writer->writeValue("NumberCircles", getNumberCircles() );
+  DREAM3D_FILTER_WRITE_PARAMETER(SelectedCellArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(NewCellArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(SaveAsNewArray)
+  DREAM3D_FILTER_WRITE_PARAMETER(MinRadius)
+  DREAM3D_FILTER_WRITE_PARAMETER(MaxRadius)
+  DREAM3D_FILTER_WRITE_PARAMETER(NumberCircles)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }

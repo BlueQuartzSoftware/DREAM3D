@@ -245,15 +245,15 @@ void FindTwinBoundaries::readFilterParameters(AbstractFilterParametersReader* re
 int FindTwinBoundaries::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  writer->writeValue("SurfaceMeshTwinBoundaryIncoherenceArrayName", getSurfaceMeshTwinBoundaryIncoherenceArrayName() );
-  writer->writeValue("SurfaceMeshTwinBoundaryArrayName", getSurfaceMeshTwinBoundaryArrayName() );
-  writer->writeValue("SurfaceMeshFaceNormalsArrayPath", getSurfaceMeshFaceNormalsArrayPath() );
-  writer->writeValue("SurfaceMeshFaceLabelsArrayPath", getSurfaceMeshFaceLabelsArrayPath() );
-  writer->writeValue("CrystalStructuresArrayPath", getCrystalStructuresArrayPath() );
-  writer->writeValue("FeaturePhasesArrayPath", getFeaturePhasesArrayPath() );
-  writer->writeValue("AvgQuatsArrayPath", getAvgQuatsArrayPath() );
-  writer->writeValue("AxisTolerance", getAxisTolerance() );
-  writer->writeValue("AngleTolerance", getAngleTolerance() );
+  DREAM3D_FILTER_WRITE_PARAMETER(SurfaceMeshTwinBoundaryIncoherenceArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(SurfaceMeshTwinBoundaryArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(SurfaceMeshFaceNormalsArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(SurfaceMeshFaceLabelsArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(CrystalStructuresArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(FeaturePhasesArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(AvgQuatsArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(AxisTolerance)
+  DREAM3D_FILTER_WRITE_PARAMETER(AngleTolerance)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }

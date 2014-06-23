@@ -125,12 +125,12 @@ void GenerateRodriguesColors::readFilterParameters(AbstractFilterParametersReade
 int GenerateRodriguesColors::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  writer->writeValue("UseGoodVoxels", getUseGoodVoxels() );
-  writer->writeValue("CellRodriguesColorsArrayName", getCellRodriguesColorsArrayName() );
-  writer->writeValue("GoodVoxelsArrayPath", getGoodVoxelsArrayPath() );
-  writer->writeValue("CellEulerAnglesArrayPath", getCellEulerAnglesArrayPath() );
-  writer->writeValue("CrystalStructuresArrayPath", getCrystalStructuresArrayPath() );
-  writer->writeValue("CellPhasesArrayPath", getCellPhasesArrayPath() );
+  DREAM3D_FILTER_WRITE_PARAMETER(UseGoodVoxels)
+  DREAM3D_FILTER_WRITE_PARAMETER(CellRodriguesColorsArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(GoodVoxelsArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(CellEulerAnglesArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(CrystalStructuresArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(CellPhasesArrayPath)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }

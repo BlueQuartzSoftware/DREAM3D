@@ -128,10 +128,10 @@ void VisualizeGBCDPoleFigure::readFilterParameters(AbstractFilterParametersReade
 int VisualizeGBCDPoleFigure::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  writer->writeValue("GBCDArrayPath", getGBCDArrayPath() );
-  writer->writeValue("OutputFile", getOutputFile() );
-  writer->writeValue("MisorientationRotation", getMisorientationRotation() );
-  writer->writeValue("CrystalStructure", getCrystalStructure() );
+  DREAM3D_FILTER_WRITE_PARAMETER(GBCDArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(OutputFile)
+  DREAM3D_FILTER_WRITE_PARAMETER(MisorientationRotation)
+  DREAM3D_FILTER_WRITE_PARAMETER(CrystalStructure)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }

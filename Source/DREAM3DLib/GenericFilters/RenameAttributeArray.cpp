@@ -84,8 +84,8 @@ void RenameAttributeArray::readFilterParameters(AbstractFilterParametersReader* 
 int RenameAttributeArray::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  writer->writeValue("SelectedArrayPath", getSelectedArrayPath() );
-  writer->writeValue("NewArrayName", getNewArrayName() );
+  DREAM3D_FILTER_WRITE_PARAMETER(SelectedArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(NewArrayName)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }

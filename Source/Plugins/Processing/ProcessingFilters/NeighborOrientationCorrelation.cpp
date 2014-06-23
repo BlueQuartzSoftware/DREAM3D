@@ -117,13 +117,13 @@ void NeighborOrientationCorrelation::readFilterParameters(AbstractFilterParamete
 int NeighborOrientationCorrelation::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  writer->writeValue("QuatsArrayPath", getQuatsArrayPath() );
-  writer->writeValue("CrystalStructuresArrayPath", getCrystalStructuresArrayPath() );
-  writer->writeValue("CellPhasesArrayPath", getCellPhasesArrayPath() );
-  writer->writeValue("ConfidenceIndexArrayPath", getConfidenceIndexArrayPath() );
-  writer->writeValue("MisorientationTolerance", getMisorientationTolerance() );
-  writer->writeValue("MinConfidence", getMinConfidence() );
-  writer->writeValue("Level", getLevel() );
+  DREAM3D_FILTER_WRITE_PARAMETER(QuatsArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(CrystalStructuresArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(CellPhasesArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(ConfidenceIndexArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(MisorientationTolerance)
+  DREAM3D_FILTER_WRITE_PARAMETER(MinConfidence)
+  DREAM3D_FILTER_WRITE_PARAMETER(Level)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }

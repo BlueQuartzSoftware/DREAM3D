@@ -131,15 +131,15 @@ void FitCorrelatedFeatureData::readFilterParameters(AbstractFilterParametersRead
 int FitCorrelatedFeatureData::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  writer->writeValue("CellEnsembleAttributeMatrixName", getCellEnsembleAttributeMatrixName());
-  writer->writeValue("NewEnsembleArrayArrayName", getNewEnsembleArrayArrayName() );
-  writer->writeValue("BiasedFeaturesArrayPath", getBiasedFeaturesArrayPath() );
-  writer->writeValue("FeaturePhasesArrayPath", getFeaturePhasesArrayPath() );
-  writer->writeValue("SelectedFeatureArrayPath", getSelectedFeatureArrayPath() );
-  writer->writeValue("CorrelatedFeatureArrayPath", getSelectedFeatureArrayPath() );
-  writer->writeValue("DistributionType", getDistributionType() );
-  writer->writeValue("RemovedBiasedFeatures", getRemoveBiasedFeatures() );
-  writer->writeValue("NumberOfCorrelatedBins", getNumberOfCorrelatedBins() );
+  DREAM3D_FILTER_WRITE_PARAMETER(CellEnsembleAttributeMatrixName)
+  DREAM3D_FILTER_WRITE_PARAMETER(NewEnsembleArrayArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(BiasedFeaturesArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(FeaturePhasesArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(SelectedFeatureArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(CorrelatedFeatureArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(DistributionType)
+  DREAM3D_FILTER_WRITE_PARAMETER(RemoveBiasedFeatures)
+  DREAM3D_FILTER_WRITE_PARAMETER(NumberOfCorrelatedBins)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }

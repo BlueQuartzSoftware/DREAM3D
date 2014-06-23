@@ -107,12 +107,12 @@ void DxReader::readFilterParameters(AbstractFilterParametersReader* reader, int 
 int DxReader::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  writer->writeValue("VolumeDataContainerName", getVolumeDataContainerName() );
-  writer->writeValue("CellAttributeMatrixName", getCellAttributeMatrixName() );
-  writer->writeValue("FeatureIdsArrayName", getFeatureIdsArrayName() );
-  writer->writeValue("InputFile", getInputFile() );
-  writer->writeValue("Origin", getOrigin() );
-  writer->writeValue("Resolution", getResolution() );
+  DREAM3D_FILTER_WRITE_PARAMETER(VolumeDataContainerName)
+  DREAM3D_FILTER_WRITE_PARAMETER(CellAttributeMatrixName)
+  DREAM3D_FILTER_WRITE_PARAMETER(FeatureIdsArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(InputFile)
+  DREAM3D_FILTER_WRITE_PARAMETER(Origin)
+  DREAM3D_FILTER_WRITE_PARAMETER(Resolution)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }

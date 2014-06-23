@@ -173,23 +173,23 @@ int PatchGroupMicroTextureRegions::writeFilterParameters(AbstractFilterParameter
 {
   GroupFeatures::writeFilterParameters(writer, index);
   writer->openFilterGroup(this, index);
-  writer->writeValue("ActiveArrayName", getActiveArrayName() );
-  writer->writeValue("NewCellFeatureAttributeMatrixName", getNewCellFeatureAttributeMatrixName() );
-  writer->writeValue("NeighborhoodsArrayName", getNeighborhoodsArrayName() );
-  writer->writeValue("NeighborhoodListArrayName", getNeighborhoodListArrayName() );
-  writer->writeValue("NumCellsArrayName", getNumCellsArrayName() );
-  writer->writeValue("FeatureParentIdsArrayName", getFeatureParentIdsArrayName() );
-  writer->writeValue("CellParentIdsArrayName", getCellParentIdsArrayName() );
-  writer->writeValue("CrystalStructuresArrayPath", getCrystalStructuresArrayPath() );
-  writer->writeValue("AvgQuatsArrayPath", getAvgQuatsArrayPath() );
-  writer->writeValue("CentroidsArrayPath", getCentroidsArrayPath() );
-  writer->writeValue("VolumesArrayPath", getVolumesArrayPath() );
-  writer->writeValue("FeaturePhasesArrayPath", getFeaturePhasesArrayPath() );
-  writer->writeValue("FeatureIdsArrayPath", getFeatureIdsArrayPath() );
-  writer->writeValue("CAxisTolerance", getCAxisTolerance() );
-  writer->writeValue("UseRunningAverage", getUseRunningAverage() );
-  writer->writeValue("MinMTRSize", getMinMTRSize() );
-  writer->writeValue("PatchVolumeFractionForMTRGrowth", getPatchVolumeFractionForMTRGrowth() );
+  DREAM3D_FILTER_WRITE_PARAMETER(ActiveArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(NewCellFeatureAttributeMatrixName)
+  DREAM3D_FILTER_WRITE_PARAMETER(NeighborhoodsArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(NeighborhoodListArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(NumCellsArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(FeatureParentIdsArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(CellParentIdsArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(CrystalStructuresArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(AvgQuatsArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(CentroidsArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(VolumesArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(FeaturePhasesArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(FeatureIdsArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(CAxisTolerance)
+  DREAM3D_FILTER_WRITE_PARAMETER(UseRunningAverage)
+  DREAM3D_FILTER_WRITE_PARAMETER(MinMTRSize)
+  DREAM3D_FILTER_WRITE_PARAMETER(PatchVolumeFractionForMTRGrowth)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }

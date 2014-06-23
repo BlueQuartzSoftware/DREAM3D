@@ -105,8 +105,8 @@ void EstablishShapeTypes::readFilterParameters(AbstractFilterParametersReader* r
 int EstablishShapeTypes::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  writer->writeValue("InputPhaseTypesArrayPath", getInputPhaseTypesArrayPath() );
-  writer->writeValue("ShapeTypesArrayName", getShapeTypesArrayName() );
+  DREAM3D_FILTER_WRITE_PARAMETER(InputPhaseTypesArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(ShapeTypesArrayName)
   writer->writeValue("ShapeTypeData", getShapeTypeData().d );
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to

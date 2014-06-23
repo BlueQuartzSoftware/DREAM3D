@@ -166,10 +166,10 @@ void ImageCalculator::readFilterParameters(AbstractFilterParametersReader* reade
 int ImageCalculator::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  writer->writeValue("SelectedCellArrayPath1", getSelectedCellArrayPath1() );
-  writer->writeValue("Operator", getOperator() );
-  writer->writeValue("SelectedCellArrayPath2", getSelectedCellArrayPath2() );
-  writer->writeValue("NewCellArrayName", getNewCellArrayName() );
+  DREAM3D_FILTER_WRITE_PARAMETER(SelectedCellArrayPath1)
+  DREAM3D_FILTER_WRITE_PARAMETER(Operator)
+  DREAM3D_FILTER_WRITE_PARAMETER(SelectedCellArrayPath2)
+  DREAM3D_FILTER_WRITE_PARAMETER(NewCellArrayName)
   writer->closeFilterGroup();
   return ++index;
 }

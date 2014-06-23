@@ -112,12 +112,12 @@ void FindKernelAvgMisorientations::readFilterParameters(AbstractFilterParameters
 int FindKernelAvgMisorientations::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  writer->writeValue("KernelAverageMisorientationsArrayName", getKernelAverageMisorientationsArrayName() );
-  writer->writeValue("QuatsArrayPath", getQuatsArrayPath() );
-  writer->writeValue("CrystalStructuresArrayPath", getCrystalStructuresArrayPath() );
-  writer->writeValue("CellPhasesArrayPath", getCellPhasesArrayPath() );
-  writer->writeValue("FeatureIdsArrayPath", getFeatureIdsArrayPath() );
-  writer->writeValue("KernelSize", getKernelSize() );
+  DREAM3D_FILTER_WRITE_PARAMETER(KernelAverageMisorientationsArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(QuatsArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(CrystalStructuresArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(CellPhasesArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(FeatureIdsArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(KernelSize)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }

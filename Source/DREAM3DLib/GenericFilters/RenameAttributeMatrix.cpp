@@ -83,8 +83,8 @@ void RenameAttributeMatrix::readFilterParameters(AbstractFilterParametersReader*
 int RenameAttributeMatrix::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  writer->writeValue("SelectedAttributeMatrixPath", getSelectedAttributeMatrixPath() );
-  writer->writeValue("NewAttributeMatrix", getNewAttributeMatrix() );
+  DREAM3D_FILTER_WRITE_PARAMETER(SelectedAttributeMatrixPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(NewAttributeMatrix)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }

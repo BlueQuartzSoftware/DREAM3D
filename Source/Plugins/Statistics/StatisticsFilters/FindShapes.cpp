@@ -120,14 +120,14 @@ void FindShapes::readFilterParameters(AbstractFilterParametersReader* reader, in
 int FindShapes::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  writer->writeValue("CellFeatureAttributeMatrixName", getCellFeatureAttributeMatrixName());
-  writer->writeValue("AspectRatiosArrayName", getAspectRatiosArrayName() );
-  writer->writeValue("AxisEulerAnglesArrayName", getAxisEulerAnglesArrayName() );
-  writer->writeValue("AxisLengthsArrayName", getAxisLengthsArrayName() );
-  writer->writeValue("VolumesArrayName", getVolumesArrayName() );
-  writer->writeValue("Omega3sArrayName", getOmega3sArrayName() );
-  writer->writeValue("CentroidsArrayPath", getCentroidsArrayPath() );
-  writer->writeValue("FeatureIdsArrayPath", getFeatureIdsArrayPath() );
+  DREAM3D_FILTER_WRITE_PARAMETER(CellFeatureAttributeMatrixName)
+  DREAM3D_FILTER_WRITE_PARAMETER(AspectRatiosArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(AxisEulerAnglesArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(AxisLengthsArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(VolumesArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(Omega3sArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(CentroidsArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(FeatureIdsArrayPath)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }

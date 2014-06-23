@@ -138,8 +138,8 @@ void ConvertEulerAngles::readFilterParameters(AbstractFilterParametersReader* re
 int ConvertEulerAngles::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  writer->writeValue("CellEulerAnglesArrayPath", getCellEulerAnglesArrayPath() );
-  writer->writeValue("ConversionType", getConversionType() );
+  DREAM3D_FILTER_WRITE_PARAMETER(CellEulerAnglesArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(ConversionType)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }

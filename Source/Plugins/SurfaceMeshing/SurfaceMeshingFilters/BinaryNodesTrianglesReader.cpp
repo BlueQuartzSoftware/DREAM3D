@@ -114,8 +114,8 @@ int BinaryNodesTrianglesReader::writeFilterParameters(AbstractFilterParametersWr
   writer->openFilterGroup(this, index);
   /* Place code that will write the inputs values into a file. reference the
    AbstractFilterParametersWriter class for the proper API to use. */
-  writer->writeValue("BinaryNodesFile", getBinaryNodesFile() );
-  writer->writeValue("BinaryTrianglesFile", getBinaryTrianglesFile() );
+  DREAM3D_FILTER_WRITE_PARAMETER(BinaryNodesFile)
+  DREAM3D_FILTER_WRITE_PARAMETER(BinaryTrianglesFile)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }

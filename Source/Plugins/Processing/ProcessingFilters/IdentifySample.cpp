@@ -93,8 +93,8 @@ void IdentifySample::readFilterParameters(AbstractFilterParametersReader* reader
 int IdentifySample::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  writer->writeValue("FillHoles", getFillHoles() );
-  writer->writeValue("GoodVoxelsArrayPath", getGoodVoxelsArrayPath() );
+  DREAM3D_FILTER_WRITE_PARAMETER(FillHoles)
+  DREAM3D_FILTER_WRITE_PARAMETER(GoodVoxelsArrayPath)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }

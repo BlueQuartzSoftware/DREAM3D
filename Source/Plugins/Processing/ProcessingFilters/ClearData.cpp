@@ -101,13 +101,13 @@ void ClearData::readFilterParameters(AbstractFilterParametersReader* reader, int
 int ClearData::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  writer->writeValue("CellAttributeMatrixName", getCellAttributeMatrixName() );
-  writer->writeValue("XMin", getXMin() );
-  writer->writeValue("YMin", getYMin() );
-  writer->writeValue("ZMin", getZMin() );
-  writer->writeValue("XMax", getXMax() );
-  writer->writeValue("YMax", getYMax() );
-  writer->writeValue("ZMax", getZMax() );
+  DREAM3D_FILTER_WRITE_PARAMETER(CellAttributeMatrixName)
+  DREAM3D_FILTER_WRITE_PARAMETER(XMin)
+  DREAM3D_FILTER_WRITE_PARAMETER(YMin)
+  DREAM3D_FILTER_WRITE_PARAMETER(ZMin)
+  DREAM3D_FILTER_WRITE_PARAMETER(XMax)
+  DREAM3D_FILTER_WRITE_PARAMETER(YMax)
+  DREAM3D_FILTER_WRITE_PARAMETER(ZMax)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }

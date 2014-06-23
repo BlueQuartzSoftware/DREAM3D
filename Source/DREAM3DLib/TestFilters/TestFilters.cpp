@@ -80,8 +80,8 @@ int Filt0::writeFilterParameters(AbstractFilterParametersWriter* writer, int ind
   writer->openFilterGroup(this, index);
   /* Place code that will write the inputs values into a file. reference the
    AbstractFilterParametersWriter class for the proper API to use. */
-  writer->writeValue("Filt0_Float", getFilt0_Float() );
-  writer->writeValue("Filt0_Integer", getFilt0_Integer() );
+  DREAM3D_FILTER_WRITE_PARAMETER(Filt0_Float)
+  DREAM3D_FILTER_WRITE_PARAMETER(Filt0_Integer)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
@@ -201,8 +201,8 @@ int Filt1::writeFilterParameters(AbstractFilterParametersWriter* writer, int ind
   writer->openFilterGroup(this, index);
   /* Place code that will write the inputs values into a file. reference the
    AbstractFilterParametersWriter class for the proper API to use. */
-  writer->writeValue("Filt1_Float", getFilt1_Float() );
-  writer->writeValue("Filt1_Integer", getFilt1_Integer() );
+  DREAM3D_FILTER_WRITE_PARAMETER(Filt1_Float)
+  DREAM3D_FILTER_WRITE_PARAMETER(Filt1_Integer)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }

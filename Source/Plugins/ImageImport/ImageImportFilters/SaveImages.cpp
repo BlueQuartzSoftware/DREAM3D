@@ -110,10 +110,10 @@ void SaveImages::readFilterParameters(AbstractFilterParametersReader* reader, in
 int SaveImages::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  writer->writeValue("ImagePrefix", getImagePrefix() );
-  writer->writeValue("OutputPath", getOutputPath() );
-  writer->writeValue("ColorsArrayPath", getColorsArrayPath() );
-  writer->writeValue("ImageFormat", getImageFormat() );
+  DREAM3D_FILTER_WRITE_PARAMETER(ImagePrefix)
+  DREAM3D_FILTER_WRITE_PARAMETER(OutputPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(ColorsArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(ImageFormat)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }

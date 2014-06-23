@@ -114,13 +114,13 @@ void FindMisorientations::readFilterParameters(AbstractFilterParametersReader* r
 int FindMisorientations::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  writer->writeValue("AvgMisorientationsArrayName", getAvgMisorientationsArrayName() );
-  writer->writeValue("MisorientationListArrayName", getMisorientationListArrayName() );
-  writer->writeValue("CrystalStructuresArrayPath", getCrystalStructuresArrayPath() );
-  writer->writeValue("FeaturePhasesArrayPath", getFeaturePhasesArrayPath() );
-  writer->writeValue("AvgQuatsArrayPath", getAvgQuatsArrayPath() );
-  writer->writeValue("NeighborListArrayPath", getNeighborListArrayPath() );
-  writer->writeValue("FindAvgMisors", getFindAvgMisors() );
+  DREAM3D_FILTER_WRITE_PARAMETER(AvgMisorientationsArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(MisorientationListArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(CrystalStructuresArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(FeaturePhasesArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(AvgQuatsArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(NeighborListArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(FindAvgMisors)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }

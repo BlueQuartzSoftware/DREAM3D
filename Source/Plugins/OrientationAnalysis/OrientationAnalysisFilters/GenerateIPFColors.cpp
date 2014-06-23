@@ -200,13 +200,13 @@ void GenerateIPFColors::readFilterParameters(AbstractFilterParametersReader* rea
 int GenerateIPFColors::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  writer->writeValue("UseGoodVoxels", getUseGoodVoxels() );
-  writer->writeValue("GoodVoxelsArrayPath", getGoodVoxelsArrayPath() );
-  writer->writeValue("CrystalStructuresArrayPath", getCrystalStructuresArrayPath() );
-  writer->writeValue("CellEulerAnglesArrayPath", getCellEulerAnglesArrayPath() );
-  writer->writeValue("CellPhasesArrayPath", getCellPhasesArrayPath() );
-  writer->writeValue("CellIPFColorsArrayName", getCellIPFColorsArrayName() );
-  writer->writeValue("ReferenceDir", getReferenceDir() );
+  DREAM3D_FILTER_WRITE_PARAMETER(UseGoodVoxels)
+  DREAM3D_FILTER_WRITE_PARAMETER(GoodVoxelsArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(CrystalStructuresArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(CellEulerAnglesArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(CellPhasesArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(CellIPFColorsArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(ReferenceDir)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }

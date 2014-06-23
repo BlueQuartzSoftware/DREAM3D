@@ -122,15 +122,15 @@ void FindNeighbors::readFilterParameters(AbstractFilterParametersReader* reader,
 int FindNeighbors::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  writer->writeValue("CellFeatureAttributeMatrixPath", getCellFeatureAttributeMatrixPath() );
-  writer->writeValue("FeatureIdsArrayPath", getFeatureIdsArrayPath() );
-  writer->writeValue("BoundaryCellsArrayName", getBoundaryCellsArrayName() );
-  writer->writeValue("SurfaceFeaturesArrayName", getSurfaceFeaturesArrayName() );
-  writer->writeValue("StoreBoundaryCells", getStoreBoundaryCells() );
-  writer->writeValue("StoreSurfaceFeatures", getStoreSurfaceFeatures() );
-  writer->writeValue("NumNeighborsArrayName", getNumNeighborsArrayName() );
-  writer->writeValue("NeighborListArrayName", getNeighborListArrayName() );
-  writer->writeValue("SharedSurfaceAreaListArrayName", getSharedSurfaceAreaListArrayName() );
+  DREAM3D_FILTER_WRITE_PARAMETER(CellFeatureAttributeMatrixPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(FeatureIdsArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(BoundaryCellsArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(SurfaceFeaturesArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(StoreBoundaryCells)
+  DREAM3D_FILTER_WRITE_PARAMETER(StoreSurfaceFeatures)
+  DREAM3D_FILTER_WRITE_PARAMETER(NumNeighborsArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(NeighborListArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(SharedSurfaceAreaListArrayName)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }

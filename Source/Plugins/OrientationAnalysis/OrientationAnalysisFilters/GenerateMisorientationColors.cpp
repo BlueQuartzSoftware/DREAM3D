@@ -217,14 +217,14 @@ void GenerateMisorientationColors::readFilterParameters(AbstractFilterParameters
 int GenerateMisorientationColors::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  writer->writeValue("UseGoodVoxels", getUseGoodVoxels() );
-  writer->writeValue("MisorientationColorArrayName", getMisorientationColorArrayName() );
-  writer->writeValue("GoodVoxelsArrayPath", getGoodVoxelsArrayPath() );
-  writer->writeValue("CrystalStructuresArrayPath", getCrystalStructuresArrayPath() );
-  writer->writeValue("QuatsArrayPath", getQuatsArrayPath() );
-  writer->writeValue("CellPhasesArrayPath", getCellPhasesArrayPath() );
-  writer->writeValue("ReferenceAxis", getReferenceAxis() );
-  writer->writeValue("ReferenceAngle", getReferenceAngle() );
+  DREAM3D_FILTER_WRITE_PARAMETER(UseGoodVoxels)
+  DREAM3D_FILTER_WRITE_PARAMETER(MisorientationColorArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(GoodVoxelsArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(CrystalStructuresArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(QuatsArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(CellPhasesArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(ReferenceAxis)
+  DREAM3D_FILTER_WRITE_PARAMETER(ReferenceAngle)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }

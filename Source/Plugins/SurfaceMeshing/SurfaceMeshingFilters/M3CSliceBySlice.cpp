@@ -391,13 +391,13 @@ void M3CSliceBySlice::readFilterParameters(AbstractFilterParametersReader* reade
 int M3CSliceBySlice::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  writer->writeValue("SurfaceDataContainerName", getSurfaceDataContainerName() );
-  writer->writeValue("VertexAttributeMatrixName", getVertexAttributeMatrixName() );
-  writer->writeValue("FaceAttributeMatrixName", getFaceAttributeMatrixName() );
-  writer->writeValue("SurfaceMeshNodeTypesArrayName", getSurfaceMeshNodeTypesArrayName() );
-  writer->writeValue("FaceLabelsArrayName", getFaceLabelsArrayName() );
-  writer->writeValue("FeatureIdsArrayPath", getFeatureIdsArrayPath() );
-  writer->writeValue("DeleteTempFiles", getDeleteTempFiles() );
+  DREAM3D_FILTER_WRITE_PARAMETER(SurfaceDataContainerName)
+  DREAM3D_FILTER_WRITE_PARAMETER(VertexAttributeMatrixName)
+  DREAM3D_FILTER_WRITE_PARAMETER(FaceAttributeMatrixName)
+  DREAM3D_FILTER_WRITE_PARAMETER(SurfaceMeshNodeTypesArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(FaceLabelsArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(FeatureIdsArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(DeleteTempFiles)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }

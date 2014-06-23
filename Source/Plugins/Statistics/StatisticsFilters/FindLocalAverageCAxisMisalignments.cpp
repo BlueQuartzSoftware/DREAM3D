@@ -149,19 +149,19 @@ void FindLocalAverageCAxisMisalignments::readFilterParameters(AbstractFilterPara
 int FindLocalAverageCAxisMisalignments::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  writer->writeValue("NewCellFeatureAttributeMatrixName", getNewCellFeatureAttributeMatrixName());
-  writer->writeValue("NeighborListArrayPath", getNeighborListArrayPath() );
-  writer->writeValue("CAxisMisalignmentListArrayPath", getCAxisMisalignmentListArrayPath() );
-  writer->writeValue("NumFeaturesPerParentArrayName", getNumFeaturesPerParentArrayName() );
-  writer->writeValue("LocalCAxisMisalignmentsArrayName", getLocalCAxisMisalignmentsArrayName() );
-  writer->writeValue("UnbiasedLocalCAxisMisalignmentsArrayName", getUnbiasedLocalCAxisMisalignmentsArrayName() );
-  writer->writeValue("CrystalStructuresArrayPath", getCrystalStructuresArrayPath() );
-  writer->writeValue("FeatureParentIdsArrayPath", getFeatureParentIdsArrayPath() );
-  writer->writeValue("AvgCAxisMisalignmentsArrayPath", getAvgCAxisMisalignmentsArrayPath() );
-  writer->writeValue("CellParentIdsArrayPath", getCellParentIdsArrayPath() );
-  writer->writeValue("FeatureIdsArrayPath", getFeatureIdsArrayPath() );
-  writer->writeValue("CalcUnbiasedAvg", getCalcUnbiasedAvg() );
-  writer->writeValue("CalcBiasedAvg", getCalcBiasedAvg() );
+  DREAM3D_FILTER_WRITE_PARAMETER(NewCellFeatureAttributeMatrixName)
+  DREAM3D_FILTER_WRITE_PARAMETER(NeighborListArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(CAxisMisalignmentListArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(NumFeaturesPerParentArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(LocalCAxisMisalignmentsArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(UnbiasedLocalCAxisMisalignmentsArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(CrystalStructuresArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(FeatureParentIdsArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(AvgCAxisMisalignmentsArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(CellParentIdsArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(FeatureIdsArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(CalcUnbiasedAvg)
+  DREAM3D_FILTER_WRITE_PARAMETER(CalcBiasedAvg)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }

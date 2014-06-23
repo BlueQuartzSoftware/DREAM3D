@@ -95,8 +95,8 @@ class FindSchmids : public AbstractFilter
     DREAM3D_FILTER_PARAMETER(QString, LambdasArrayName)
     Q_PROPERTY(QString LambdasArrayName READ getLambdasArrayName WRITE setLambdasArrayName)
 
-    DREAM3D_FILTER_PARAMETER(FloatVec3_t, LoadingDir)
-    Q_PROPERTY(FloatVec3_t LoadingDir READ getLoadingDir WRITE setLoadingDir)
+    DREAM3D_FILTER_PARAMETER(FloatVec3_t, LoadingDirection)
+    Q_PROPERTY(FloatVec3_t LoadingDirection READ getLoadingDirection WRITE setLoadingDirection)
 
     DREAM3D_FILTER_PARAMETER(bool, StoreAngleComponents)
     Q_PROPERTY(bool StoreAngleComponents READ getStoreAngleComponents WRITE setStoreAngleComponents)

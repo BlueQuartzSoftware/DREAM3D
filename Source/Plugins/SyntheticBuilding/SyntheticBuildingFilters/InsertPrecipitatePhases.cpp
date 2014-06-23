@@ -172,15 +172,15 @@ void InsertPrecipitatePhases::readFilterParameters(AbstractFilterParametersReade
 int InsertPrecipitatePhases::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  writer->writeValue("NumFeaturesArrayPath", getNumFeaturesArrayPath() );
-  writer->writeValue("FeaturePhasesArrayPath", getFeaturePhasesArrayPath() );
-  writer->writeValue("InputStatsArrayPath", getInputStatsArrayPath() );
-  writer->writeValue("InputPhaseTypesArrayPath", getInputPhaseTypesArrayPath() );
-  writer->writeValue("InputShapeTypesArrayPath", getInputShapeTypesArrayPath() );
-  writer->writeValue("BoundaryCellsArrayPath", getBoundaryCellsArrayPath() );
-  writer->writeValue("CellPhasesArrayPath", getCellPhasesArrayPath() );
-  writer->writeValue("FeatureIdsArrayPath", getFeatureIdsArrayPath() );
-  writer->writeValue("PeriodicBoundaries", getPeriodicBoundaries() );
+  DREAM3D_FILTER_WRITE_PARAMETER(NumFeaturesArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(FeaturePhasesArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(InputStatsArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(InputPhaseTypesArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(InputShapeTypesArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(BoundaryCellsArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(CellPhasesArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(FeatureIdsArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(PeriodicBoundaries)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }

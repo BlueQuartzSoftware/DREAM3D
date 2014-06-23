@@ -110,11 +110,11 @@ void IdentifyDislocationSegments::readFilterParameters(AbstractFilterParametersR
 int IdentifyDislocationSegments::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  writer->writeValue("EdgeFeatureAttributeMatrixName", getEdgeFeatureAttributeMatrixName() );
-  writer->writeValue("ActiveArrayName", getActiveArrayName() );
-  writer->writeValue("DislocationIdsArrayName", getDislocationIdsArrayName() );
-  writer->writeValue("SlipPlaneNormalsArrayPath", getSlipPlaneNormalsArrayPath() );
-  writer->writeValue("BurgersVectorsArrayPath", getBurgersVectorsArrayPath() );
+  DREAM3D_FILTER_WRITE_PARAMETER(EdgeFeatureAttributeMatrixName)
+  DREAM3D_FILTER_WRITE_PARAMETER(ActiveArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(DislocationIdsArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(SlipPlaneNormalsArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(BurgersVectorsArrayPath)
 
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to

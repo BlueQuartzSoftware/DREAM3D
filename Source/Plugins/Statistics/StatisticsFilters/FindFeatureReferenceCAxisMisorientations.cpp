@@ -117,13 +117,13 @@ void FindFeatureReferenceCAxisMisorientations::readFilterParameters(AbstractFilt
 int FindFeatureReferenceCAxisMisorientations::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  writer->writeValue("FeatureReferenceCAxisMisorientationsArrayName", getFeatureReferenceCAxisMisorientationsArrayName() );
-  writer->writeValue("FeatureStdevCAxisMisorientationsArrayName", getFeatureStdevCAxisMisorientationsArrayName() );
-  writer->writeValue("FeatureAvgCAxisMisorientationsArrayName", getFeatureAvgCAxisMisorientationsArrayName() );
-  writer->writeValue("QuatsArrayPath", getQuatsArrayPath() );
-  writer->writeValue("AvgCAxesArrayPath", getAvgCAxesArrayPath() );
-  writer->writeValue("CellPhasesArrayPath", getCellPhasesArrayPath() );
-  writer->writeValue("FeatureIdsArrayPath", getFeatureIdsArrayPath() );
+  DREAM3D_FILTER_WRITE_PARAMETER(FeatureReferenceCAxisMisorientationsArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(FeatureStdevCAxisMisorientationsArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(FeatureAvgCAxisMisorientationsArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(QuatsArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(AvgCAxesArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(CellPhasesArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(FeatureIdsArrayPath)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }

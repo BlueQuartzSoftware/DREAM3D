@@ -93,9 +93,9 @@ void FindVolFractions::readFilterParameters(AbstractFilterParametersReader* read
 int FindVolFractions::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  writer->writeValue("CellEnsembleAttributeMatrixName", getCellEnsembleAttributeMatrixName());
-  writer->writeValue("VolFractionsArrayName", getVolFractionsArrayName() );
-  writer->writeValue("CellPhasesArrayPath", getCellPhasesArrayPath() );
+  DREAM3D_FILTER_WRITE_PARAMETER(CellEnsembleAttributeMatrixName)
+  DREAM3D_FILTER_WRITE_PARAMETER(VolFractionsArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(CellPhasesArrayPath)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }

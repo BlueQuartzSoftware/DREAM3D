@@ -91,9 +91,9 @@ void FindBoundingBoxFeatures::readFilterParameters(AbstractFilterParametersReade
 int FindBoundingBoxFeatures::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  writer->writeValue("BiasedFeaturesArrayName", getBiasedFeaturesArrayName() );
-  writer->writeValue("SurfaceFeaturesArrayPath", getSurfaceFeaturesArrayPath() );
-  writer->writeValue("CentroidsArrayPath", getCentroidsArrayPath() );
+  DREAM3D_FILTER_WRITE_PARAMETER(BiasedFeaturesArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(SurfaceFeaturesArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(CentroidsArrayPath)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }

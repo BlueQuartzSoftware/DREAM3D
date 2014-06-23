@@ -96,10 +96,10 @@ void FindBoundaryCellFractions::readFilterParameters(AbstractFilterParametersRea
 int FindBoundaryCellFractions::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  writer->writeValue("CellFeatureAttributeMatrixName", getCellFeatureAttributeMatrixName());
-  writer->writeValue("BoundaryCellFractionsArrayName", getBoundaryCellFractionsArrayName() );
-  writer->writeValue("BoundaryCellsArrayPath", getBoundaryCellsArrayPath() );
-  writer->writeValue("FeatureIdsArrayPath", getFeatureIdsArrayPath() );
+  DREAM3D_FILTER_WRITE_PARAMETER(CellFeatureAttributeMatrixName)
+  DREAM3D_FILTER_WRITE_PARAMETER(BoundaryCellFractionsArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(BoundaryCellsArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(FeatureIdsArrayPath)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }

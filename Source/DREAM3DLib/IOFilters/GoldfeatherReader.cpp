@@ -124,7 +124,7 @@ void GoldfeatherReader::readFilterParameters(AbstractFilterParametersReader* rea
   setSurfaceMeshPrincipalCurvature2sArrayName(reader->readString("SurfaceMeshPrincipalCurvature2sArrayName", getSurfaceMeshPrincipalCurvature2sArrayName() ) );
   setSurfaceMeshPrincipalDirection1sArrayName(reader->readString("SurfaceMeshPrincipalDirection1sArrayName", getSurfaceMeshPrincipalDirection1sArrayName() ) );
   setSurfaceMeshPrincipalDirection2sArrayName(reader->readString("SurfaceMeshPrincipalDirection2sArrayName", getSurfaceMeshPrincipalDirection2sArrayName() ) );
-  setSurfaceMeshNodeNormalsArrayName(reader->readString("SurfaceMeshNodeNormalArrayNames", getSurfaceMeshNodeNormalsArrayName() ) );
+  setSurfaceMeshNodeNormalsArrayName(reader->readString("SurfaceMeshNodeNormalsArrayName", getSurfaceMeshNodeNormalsArrayName() ) );
   setSurfaceMeshFaceNormalsArrayName(reader->readString("SurfaceMeshFaceNormalsArrayName", getSurfaceMeshFaceNormalsArrayName() ) );
   setSurfaceMeshFaceLabelsArrayName(reader->readString("SurfaceMeshFaceLabelsArrayName", getSurfaceMeshFaceLabelsArrayName() ) );
   reader->closeFilterGroup();
@@ -136,17 +136,17 @@ void GoldfeatherReader::readFilterParameters(AbstractFilterParametersReader* rea
 int GoldfeatherReader::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  writer->writeValue("SurfaceDataContainerName", getSurfaceDataContainerName() );
-  writer->writeValue("VertexAttributeMatrixName", getVertexAttributeMatrixName() );
-  writer->writeValue("FaceAttributeMatrixName", getFaceAttributeMatrixName() );
-  writer->writeValue("SurfaceMeshPrincipalCurvature1sArrayName", getSurfaceMeshPrincipalCurvature1sArrayName() );
-  writer->writeValue("SurfaceMeshPrincipalCurvature2sArrayName", getSurfaceMeshPrincipalCurvature2sArrayName() );
-  writer->writeValue("SurfaceMeshPrincipalDirection1sArrayName", getSurfaceMeshPrincipalDirection1sArrayName() );
-  writer->writeValue("SurfaceMeshPrincipalDirection2sArrayName", getSurfaceMeshPrincipalDirection2sArrayName() );
-  writer->writeValue("SurfaceMeshNodeNormalArrayNames", getSurfaceMeshNodeNormalsArrayName() );
-  writer->writeValue("SurfaceMeshFaceNormalsArrayName", getSurfaceMeshFaceNormalsArrayName() );
-  writer->writeValue("SurfaceMeshFaceLabelsArrayName", getSurfaceMeshFaceLabelsArrayName() );
-  writer->writeValue("InputFile", getInputFile() );
+  DREAM3D_FILTER_WRITE_PARAMETER(SurfaceDataContainerName)
+  DREAM3D_FILTER_WRITE_PARAMETER(VertexAttributeMatrixName)
+  DREAM3D_FILTER_WRITE_PARAMETER(FaceAttributeMatrixName)
+  DREAM3D_FILTER_WRITE_PARAMETER(SurfaceMeshPrincipalCurvature1sArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(SurfaceMeshPrincipalCurvature2sArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(SurfaceMeshPrincipalDirection1sArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(SurfaceMeshPrincipalDirection2sArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(SurfaceMeshNodeNormalsArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(SurfaceMeshFaceNormalsArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(SurfaceMeshFaceLabelsArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(InputFile)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }

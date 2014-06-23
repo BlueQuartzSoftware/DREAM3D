@@ -105,8 +105,8 @@ int DataContainerReader::writeFilterParameters(AbstractFilterParametersWriter* w
   index = writeExistingPipelineToFile(writer, index);
 
   writer->openFilterGroup(this, index);
-  writer->writeValue("InputFile", getInputFile() );
-  writer->writeValue("OverwriteExistingDataContainers", getOverwriteExistingDataContainers() );
+  DREAM3D_FILTER_WRITE_PARAMETER(InputFile)
+  DREAM3D_FILTER_WRITE_PARAMETER(OverwriteExistingDataContainers)
   DataContainerArrayProxy dcaProxy = getDataContainerArrayProxy(); // This line makes a COPY of the DataContainerArrayProxy that is stored in the current instance
   writer->writeValue("DataContainerArrayProxy", dcaProxy );
 

@@ -105,11 +105,11 @@ void EnsembleInfoReader::readFilterParameters(AbstractFilterParametersReader* re
 int EnsembleInfoReader::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  writer->writeValue("DataContainerName", getDataContainerName() );
-  writer->writeValue("CellEnsembleAttributeMatrixName", getCellEnsembleAttributeMatrixName() );
-  writer->writeValue("PhaseTypesArrayName", getPhaseTypesArrayName() );
-  writer->writeValue("CrystalStructuresArrayName", getCrystalStructuresArrayName() );
-  writer->writeValue("InputFile", getInputFile() );
+  DREAM3D_FILTER_WRITE_PARAMETER(DataContainerName)
+  DREAM3D_FILTER_WRITE_PARAMETER(CellEnsembleAttributeMatrixName)
+  DREAM3D_FILTER_WRITE_PARAMETER(PhaseTypesArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(CrystalStructuresArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(InputFile)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }

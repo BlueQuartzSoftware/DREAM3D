@@ -96,10 +96,10 @@ void GenerateSurfaceMeshConnectivity::readFilterParameters(AbstractFilterParamet
 int GenerateSurfaceMeshConnectivity::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  writer->writeValue("SurfaceDataContainerName", getSurfaceDataContainerName() );
-  writer->writeValue("GenerateVertexTriangleLists", getGenerateVertexTriangleLists() );
-  writer->writeValue("GenerateTriangleNeighbors", getGenerateTriangleNeighbors() );
-  writer->writeValue("GenerateEdgeIdList", getGenerateEdgeIdList() );
+  DREAM3D_FILTER_WRITE_PARAMETER(SurfaceDataContainerName)
+  DREAM3D_FILTER_WRITE_PARAMETER(GenerateVertexTriangleLists)
+  DREAM3D_FILTER_WRITE_PARAMETER(GenerateTriangleNeighbors)
+  DREAM3D_FILTER_WRITE_PARAMETER(GenerateEdgeIdList)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }

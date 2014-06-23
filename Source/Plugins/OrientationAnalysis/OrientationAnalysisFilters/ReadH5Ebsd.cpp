@@ -152,14 +152,14 @@ void ReadH5Ebsd::readFilterParameters(AbstractFilterParametersReader* reader, in
 int ReadH5Ebsd::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  writer->writeValue("DataContainerName", getDataContainerName() );
-  writer->writeValue("CellAttributeMatrixName", getCellAttributeMatrixName() );
-  writer->writeValue("CellEnsembleAttributeMatrixName", getCellEnsembleAttributeMatrixName() );
-  writer->writeValue("InputFile", getInputFile() );
-  writer->writeValue("RefFrameZDir", getRefFrameZDir());
-  writer->writeValue("ZStartIndex", getZStartIndex() );
-  writer->writeValue("ZEndIndex", getZEndIndex() );
-  writer->writeValue("UseTransformations", getUseTransformations() );
+  DREAM3D_FILTER_WRITE_PARAMETER(DataContainerName)
+  DREAM3D_FILTER_WRITE_PARAMETER(CellAttributeMatrixName)
+  DREAM3D_FILTER_WRITE_PARAMETER(CellEnsembleAttributeMatrixName)
+  DREAM3D_FILTER_WRITE_PARAMETER(InputFile)
+  DREAM3D_FILTER_WRITE_PARAMETER(RefFrameZDir)
+  DREAM3D_FILTER_WRITE_PARAMETER(ZStartIndex)
+  DREAM3D_FILTER_WRITE_PARAMETER(ZEndIndex)
+  DREAM3D_FILTER_WRITE_PARAMETER(UseTransformations)
   writer->writeArraySelections("SelectedArrayNames", getSelectedArrayNames() );
 
   writer->closeFilterGroup();

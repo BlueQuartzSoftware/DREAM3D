@@ -98,9 +98,9 @@ void VtkFeatureIdReader::readFilterParameters(AbstractFilterParametersReader* re
 int VtkFeatureIdReader::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  writer->writeValue("DataContainerName", getDataContainerName() );
-  writer->writeValue("CellAttributeMatrixName", getCellAttributeMatrixName() );
-  writer->writeValue("FeatureIdsArrayName", getFeatureIdsArrayName() );
+  DREAM3D_FILTER_WRITE_PARAMETER(DataContainerName)
+  DREAM3D_FILTER_WRITE_PARAMETER(CellAttributeMatrixName)
+  DREAM3D_FILTER_WRITE_PARAMETER(FeatureIdsArrayName)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }

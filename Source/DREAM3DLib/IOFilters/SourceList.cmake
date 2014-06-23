@@ -19,11 +19,16 @@ START_FILTER_GROUP(${FilterWidgetsLib_BINARY_DIR} "${_filterGroupName}"  "IO Fil
 # List your public filters here
 
 set(_PublicFilters
+# these to CoreFilters
+  DataContainerReader
+  DataContainerWriter
+  RawBinaryReader
+
+  # These to the the IOPlugin
   AbaqusSurfaceMeshWriter
   AvizoRectilinearCoordinateWriter
   AvizoUniformCoordinateWriter
-  DataContainerReader
-  DataContainerWriter
+
   DxReader
   DxWriter
   EnsembleInfoReader
@@ -37,7 +42,7 @@ set(_PublicFilters
   ParaDisReader
   PhReader
   PhWriter
-  RawBinaryReader
+
   SPParksWriter
   SPParksTextReader
   SurfaceMeshToNodesTrianglesEdges

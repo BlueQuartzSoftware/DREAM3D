@@ -102,7 +102,7 @@ int AlignSectionsList::writeFilterParameters(AbstractFilterParametersWriter* wri
 {
   AlignSections::writeFilterParameters(writer, index);
   writer->openFilterGroup(this, index);
-  writer->writeValue("InputFile", getInputFile() );
+  DREAM3D_FILTER_WRITE_PARAMETER(InputFile)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }

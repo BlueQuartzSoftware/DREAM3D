@@ -18,10 +18,21 @@ START_FILTER_GROUP(${FilterWidgetsLib_BINARY_DIR} "${_filterGroupName}" "Generic
 # List your public filters here
 
 set(_PublicFilters
+# Turn these into Core
   AdjustVolumeOrigin
   ConvertData
   CopyFeatureArrayToCellArray
   CreateFeatureArrayFromCellArray
+  LinkFeatureMapToCellArray
+  RemoveArrays
+  RenameAttributeMatrix
+  RenameAttributeArray
+  RenameDataContainer
+  ScaleVolume
+  # Just get rid of this
+  UpdateCellQuats
+
+  # Turn these into "GenericPlugin"
   FindBoundingBoxFeatures
   FindCellQuats
   FindFeatureCentroids
@@ -29,13 +40,6 @@ set(_PublicFilters
   FindBoundaryCells
   FindSurfaceFeatures
   GenerateVectorColors
-  LinkFeatureMapToCellArray
-  RemoveArrays
-  RenameAttributeMatrix
-  RenameAttributeArray
-  RenameDataContainer
-  ScaleVolume
-  UpdateCellQuats
 )
 
 

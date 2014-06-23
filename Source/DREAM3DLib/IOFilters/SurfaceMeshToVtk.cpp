@@ -102,11 +102,11 @@ void SurfaceMeshToVtk::readFilterParameters(AbstractFilterParametersReader* read
 int SurfaceMeshToVtk::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  writer->writeValue("SurfaceMeshNodeTypeArrayPath", getSurfaceMeshNodeTypeArrayPath() );
-  writer->writeValue("SurfaceMeshFaceLabelsArrayPath", getSurfaceMeshFaceLabelsArrayPath() );
-  writer->writeValue("OutputVtkFile", getOutputVtkFile() );
-  writer->writeValue("WriteBinaryFile", getWriteBinaryFile() );
-  writer->writeValue("WriteConformalMesh", getWriteConformalMesh() );
+  DREAM3D_FILTER_WRITE_PARAMETER(SurfaceMeshNodeTypeArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(SurfaceMeshFaceLabelsArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(OutputVtkFile)
+  DREAM3D_FILTER_WRITE_PARAMETER(WriteBinaryFile)
+  DREAM3D_FILTER_WRITE_PARAMETER(WriteConformalMesh)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }

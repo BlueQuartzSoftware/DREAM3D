@@ -94,9 +94,9 @@ void SharedFeatureFaceFilter::readFilterParameters(AbstractFilterParametersReade
 int SharedFeatureFaceFilter::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  writer->writeValue("FaceFeatureAttributeMatrixName", getFaceFeatureAttributeMatrixName() );
-  writer->writeValue("SurfaceMeshFeatureFaceIdsArrayName", getSurfaceMeshFeatureFaceIdsArrayName() );
-  writer->writeValue("SurfaceMeshFaceLabelsArrayPath", getSurfaceMeshFaceLabelsArrayPath() );
+  DREAM3D_FILTER_WRITE_PARAMETER(FaceFeatureAttributeMatrixName)
+  DREAM3D_FILTER_WRITE_PARAMETER(SurfaceMeshFeatureFaceIdsArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(SurfaceMeshFaceLabelsArrayPath)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }

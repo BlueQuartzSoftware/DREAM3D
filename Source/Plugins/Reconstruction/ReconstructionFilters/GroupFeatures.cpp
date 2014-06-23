@@ -106,9 +106,9 @@ void GroupFeatures::readFilterParameters(AbstractFilterParametersReader* reader,
 int GroupFeatures::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  writer->writeValue("UseNonContiguousNeighbors", getUseNonContiguousNeighbors() );
-  writer->writeValue("ContiguousNeighborListArrayPath", getContiguousNeighborListArrayPath());
-  writer->writeValue("NonContiguousNeighborListArrayPath", getNonContiguousNeighborListArrayPath());
+  DREAM3D_FILTER_WRITE_PARAMETER(UseNonContiguousNeighbors)
+  DREAM3D_FILTER_WRITE_PARAMETER(ContiguousNeighborListArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(NonContiguousNeighborListArrayPath)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }

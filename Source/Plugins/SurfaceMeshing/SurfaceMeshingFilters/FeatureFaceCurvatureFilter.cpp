@@ -163,23 +163,23 @@ void FeatureFaceCurvatureFilter::readFilterParameters(AbstractFilterParametersRe
 int FeatureFaceCurvatureFilter::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  writer->writeValue("EdgeAttributeMatrixName", getEdgeAttributeMatrixName() );
-  writer->writeValue("SurfaceMeshPrincipalCurvature1sArrayName", getSurfaceMeshPrincipalCurvature1sArrayName() );
-  writer->writeValue("SurfaceMeshPrincipalCurvature2sArrayName", getSurfaceMeshPrincipalCurvature2sArrayName() );
-  writer->writeValue("SurfaceMeshPrincipalDirection1sArrayName", getSurfaceMeshPrincipalDirection1sArrayName() );
-  writer->writeValue("SurfaceMeshPrincipalDirection2sArrayName", getSurfaceMeshPrincipalDirection2sArrayName() );
-  writer->writeValue("SurfaceMeshGaussianCurvaturesArrayName", getSurfaceMeshGaussianCurvaturesArrayName() );
-  writer->writeValue("SurfaceMeshMeanCurvaturesArrayName", getSurfaceMeshMeanCurvaturesArrayName() );
-  writer->writeValue("SurfaceMeshUniqueEdgesArrayName", getSurfaceMeshUniqueEdgesArrayName() );
-  writer->writeValue("SurfaceMeshTriangleCentroidsArrayPath", getSurfaceMeshTriangleCentroidsArrayPath() );
-  writer->writeValue("SurfaceMeshFaceNormalsArrayPath", getSurfaceMeshFaceNormalsArrayPath() );
-  writer->writeValue("SurfaceMeshFaceLabelsArrayPath", getSurfaceMeshFaceLabelsArrayPath() );
-  writer->writeValue("SurfaceMeshFeatureFaceIdsArrayPath", getSurfaceMeshFeatureFaceIdsArrayPath() );
-  writer->writeValue("NRing", getNRing() );
-  writer->writeValue("ComputePrincipalDirectionVectors", getComputePrincipalDirectionVectors());
-  writer->writeValue("ComputeGaussianCurvature", getComputeGaussianCurvature() );
-  writer->writeValue("ComputeMeanCurvature", getComputeMeanCurvature() );
-  writer->writeValue("UseNormalsForCurveFitting", getUseNormalsForCurveFitting() );
+  DREAM3D_FILTER_WRITE_PARAMETER(EdgeAttributeMatrixName)
+  DREAM3D_FILTER_WRITE_PARAMETER(SurfaceMeshPrincipalCurvature1sArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(SurfaceMeshPrincipalCurvature2sArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(SurfaceMeshPrincipalDirection1sArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(SurfaceMeshPrincipalDirection2sArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(SurfaceMeshGaussianCurvaturesArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(SurfaceMeshMeanCurvaturesArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(SurfaceMeshUniqueEdgesArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(SurfaceMeshTriangleCentroidsArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(SurfaceMeshFaceNormalsArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(SurfaceMeshFaceLabelsArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(SurfaceMeshFeatureFaceIdsArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(NRing)
+  DREAM3D_FILTER_WRITE_PARAMETER(ComputePrincipalDirectionVectors)
+  DREAM3D_FILTER_WRITE_PARAMETER(ComputeGaussianCurvature)
+  DREAM3D_FILTER_WRITE_PARAMETER(ComputeMeanCurvature)
+  DREAM3D_FILTER_WRITE_PARAMETER(UseNormalsForCurveFitting)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }

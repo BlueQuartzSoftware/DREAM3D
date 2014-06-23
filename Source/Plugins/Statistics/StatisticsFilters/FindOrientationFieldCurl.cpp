@@ -171,11 +171,11 @@ void FindOrientationFieldCurl::readFilterParameters(AbstractFilterParametersRead
 int FindOrientationFieldCurl::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  writer->writeValue("DislocationTensorsArrayName", getDislocationTensorsArrayName() );
-  writer->writeValue("QuatsArrayPath", getQuatsArrayPath() );
-  writer->writeValue("CrystalStructuresArrayPath", getCrystalStructuresArrayPath() );
-  writer->writeValue("CellPhasesArrayPath", getCellPhasesArrayPath() );
-  writer->writeValue("CurlSize", getCurlSize() );
+  DREAM3D_FILTER_WRITE_PARAMETER(DislocationTensorsArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(QuatsArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(CrystalStructuresArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(CellPhasesArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(CurlSize)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }

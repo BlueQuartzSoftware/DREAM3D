@@ -110,12 +110,12 @@ void MinNeighbors::readFilterParameters(AbstractFilterParametersReader* reader, 
 int MinNeighbors::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  writer->writeValue("NumNeighborsArrayPath", getNumNeighborsArrayPath() );
-  writer->writeValue("FeaturePhasesArrayPath", getFeaturePhasesArrayPath() );
-  writer->writeValue("FeatureIdsArrayPath", getFeatureIdsArrayPath() );
-  writer->writeValue("ApplyToSinglePhase", getApplyToSinglePhase() );
-  writer->writeValue("PhaseNumber", getPhaseNumber() );
-  writer->writeValue("MinNumNeighbors", getMinNumNeighbors() );
+  DREAM3D_FILTER_WRITE_PARAMETER(NumNeighborsArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(FeaturePhasesArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(FeatureIdsArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(ApplyToSinglePhase)
+  DREAM3D_FILTER_WRITE_PARAMETER(PhaseNumber)
+  DREAM3D_FILTER_WRITE_PARAMETER(MinNumNeighbors)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }

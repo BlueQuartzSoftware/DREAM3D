@@ -274,20 +274,20 @@ void RawBinaryReader::readFilterParameters(AbstractFilterParametersReader* reade
 int RawBinaryReader::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  writer->writeValue("DataContainerName", getDataContainerName() );
-  writer->writeValue("CellAttributeMatrixName", getCellAttributeMatrixName() );
-  writer->writeValue("ScalarType", getScalarType() );
-  writer->writeValue("Dimensionality", getDimensionality() );
-  writer->writeValue("NumberOfComponents", getNumberOfComponents() );
-  writer->writeValue("Endian", getEndian() );
-  writer->writeValue("Dimensions", getDimensions() );
-  writer->writeValue("Origin", getOrigin() );
-  writer->writeValue("Resolution", getResolution() );
-  writer->writeValue("InputFile", getInputFile() );
-  writer->writeValue("OverRideOriginResolution", getOverRideOriginResolution() );
-  writer->writeValue("SkipHeaderBytes", getSkipHeaderBytes() );
-  writer->writeValue("OutputArrayName", getOutputArrayName() );
-  writer->writeValue("AddToExistingAttributeMatrix", getAddToExistingAttributeMatrix() );
+  DREAM3D_FILTER_WRITE_PARAMETER(DataContainerName)
+  DREAM3D_FILTER_WRITE_PARAMETER(CellAttributeMatrixName)
+  DREAM3D_FILTER_WRITE_PARAMETER(ScalarType)
+  DREAM3D_FILTER_WRITE_PARAMETER(Dimensionality)
+  DREAM3D_FILTER_WRITE_PARAMETER(NumberOfComponents)
+  DREAM3D_FILTER_WRITE_PARAMETER(Endian)
+  DREAM3D_FILTER_WRITE_PARAMETER(Dimensions)
+  DREAM3D_FILTER_WRITE_PARAMETER(Origin)
+  DREAM3D_FILTER_WRITE_PARAMETER(Resolution)
+  DREAM3D_FILTER_WRITE_PARAMETER(InputFile)
+  DREAM3D_FILTER_WRITE_PARAMETER(OverRideOriginResolution)
+  DREAM3D_FILTER_WRITE_PARAMETER(SkipHeaderBytes)
+  DREAM3D_FILTER_WRITE_PARAMETER(OutputArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(AddToExistingAttributeMatrix)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }

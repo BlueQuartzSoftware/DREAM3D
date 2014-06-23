@@ -150,9 +150,9 @@ void FlattenImage::readFilterParameters(AbstractFilterParametersReader* reader, 
 int FlattenImage::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  writer->writeValue("FlatImageDataArrayName", getFlatImageDataArrayName() );
-  writer->writeValue("ImageDataArrayPath", getImageDataArrayPath() );
-  writer->writeValue("FlattenMethod", getFlattenMethod() );
+  DREAM3D_FILTER_WRITE_PARAMETER(FlatImageDataArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(ImageDataArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(FlattenMethod)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }

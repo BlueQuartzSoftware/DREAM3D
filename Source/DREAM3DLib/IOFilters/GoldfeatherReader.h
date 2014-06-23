@@ -57,9 +57,9 @@ class DREAM3DLib_EXPORT GoldfeatherReader : public AbstractFilter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
-    DREAM3D_SHARED_POINTERS(GoldfeatherReader);
-    DREAM3D_STATIC_NEW_MACRO(GoldfeatherReader);
-    DREAM3D_TYPE_MACRO_SUPER(GoldfeatherReader, AbstractFilter);
+    DREAM3D_SHARED_POINTERS(GoldfeatherReader)
+    DREAM3D_STATIC_NEW_MACRO(GoldfeatherReader)
+    DREAM3D_TYPE_MACRO_SUPER(GoldfeatherReader, AbstractFilter)
 
     virtual ~GoldfeatherReader();
     DREAM3D_FILTER_PARAMETER(QString, SurfaceDataContainerName)

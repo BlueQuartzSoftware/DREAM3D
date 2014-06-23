@@ -97,9 +97,9 @@ void RegularizeZSpacing::readFilterParameters(AbstractFilterParametersReader* re
 int RegularizeZSpacing::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  writer->writeValue("CellAttributeMatrixPath", getCellAttributeMatrixPath() );
-  writer->writeValue("InputFile", getInputFile() );
-  writer->writeValue("NewZRes", getNewZRes() );
+  DREAM3D_FILTER_WRITE_PARAMETER(CellAttributeMatrixPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(InputFile)
+  DREAM3D_FILTER_WRITE_PARAMETER(NewZRes)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }

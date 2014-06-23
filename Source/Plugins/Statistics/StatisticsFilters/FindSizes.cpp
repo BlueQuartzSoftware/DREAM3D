@@ -99,11 +99,11 @@ void FindSizes::readFilterParameters(AbstractFilterParametersReader* reader, int
 int FindSizes::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  writer->writeValue("CellFeatureAttributeMatrixName", getCellFeatureAttributeMatrixName());
-  writer->writeValue("NumCellsArrayName", getNumCellsArrayName() );
-  writer->writeValue("EquivalentDiametersArrayName", getEquivalentDiametersArrayName() );
-  writer->writeValue("VolumesArrayName", getVolumesArrayName() );
-  writer->writeValue("FeatureIdsArrayPath", getFeatureIdsArrayPath() );
+  DREAM3D_FILTER_WRITE_PARAMETER(CellFeatureAttributeMatrixName)
+  DREAM3D_FILTER_WRITE_PARAMETER(NumCellsArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(EquivalentDiametersArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(VolumesArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(FeatureIdsArrayPath)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }

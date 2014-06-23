@@ -138,18 +138,18 @@ void EbsdToH5Ebsd::readFilterParameters(AbstractFilterParametersReader* reader, 
 int EbsdToH5Ebsd::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  writer->writeValue("OutputFile", getOutputFile());
-  writer->writeValue("ZStartIndex", getZStartIndex());
-  writer->writeValue("ZEndIndex", getZEndIndex());
-  writer->writeValue("ZResolution", getZResolution());
-  writer->writeValue("RefFrameZDir", getRefFrameZDir());
-  writer->writeValue("InputPath", getInputPath());
-  writer->writeValue("FilePrefix", getFilePrefix());
-  writer->writeValue("FileSuffix", getFileSuffix());
-  writer->writeValue("FileExtension", getFileExtension());
-  writer->writeValue("PaddingDigits", getPaddingDigits());
-  writer->writeValue("SampleTransformation", getSampleTransformation());
-  writer->writeValue("EulerTransformation", getEulerTransformation());
+  DREAM3D_FILTER_WRITE_PARAMETER(OutputFile)
+  DREAM3D_FILTER_WRITE_PARAMETER(ZStartIndex)
+  DREAM3D_FILTER_WRITE_PARAMETER(ZEndIndex)
+  DREAM3D_FILTER_WRITE_PARAMETER(ZResolution)
+  DREAM3D_FILTER_WRITE_PARAMETER(RefFrameZDir)
+  DREAM3D_FILTER_WRITE_PARAMETER(InputPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(FilePrefix)
+  DREAM3D_FILTER_WRITE_PARAMETER(FileSuffix)
+  DREAM3D_FILTER_WRITE_PARAMETER(FileExtension)
+  DREAM3D_FILTER_WRITE_PARAMETER(PaddingDigits)
+  DREAM3D_FILTER_WRITE_PARAMETER(SampleTransformation)
+  DREAM3D_FILTER_WRITE_PARAMETER(EulerTransformation)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }

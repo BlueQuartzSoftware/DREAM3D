@@ -110,14 +110,14 @@ void FindSlipTransmissionMetrics::readFilterParameters(AbstractFilterParametersR
 int FindSlipTransmissionMetrics::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  writer->writeValue("NeighborListArrayPath", getNeighborListArrayPath() );
-  writer->writeValue("CrystalStructuresArrayPath", getCrystalStructuresArrayPath() );
-  writer->writeValue("FeaturePhasesArrayPath", getFeaturePhasesArrayPath() );
-  writer->writeValue("AvgQuatsArrayPath", getAvgQuatsArrayPath() );
-  writer->writeValue("F1ListArrayName", getF1ListArrayName() );
-  writer->writeValue("F1sptListArrayName", getF1sptListArrayName() );
-  writer->writeValue("F7ListArrayName", getF7ListArrayName() );
-  writer->writeValue("mPrimeListArrayName", getmPrimeListArrayName() );
+  DREAM3D_FILTER_WRITE_PARAMETER(NeighborListArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(CrystalStructuresArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(FeaturePhasesArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(AvgQuatsArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(F1ListArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(F1sptListArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(F7ListArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(mPrimeListArrayName)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }

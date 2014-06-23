@@ -106,11 +106,11 @@ void MakeVolumeDataContainer::readFilterParameters(AbstractFilterParametersReade
 int MakeVolumeDataContainer::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  /*[]*/writer->writeValue("LatticeConstantsArrayName", getLatticeConstantsArrayName() );
-  /*[]*/writer->writeValue("CrystalStructuresArrayName", getCrystalStructuresArrayName() );
-  /*[]*/writer->writeValue("CellPhasesArrayName", getCellPhasesArrayName() );
-  /*[]*/writer->writeValue("CellEulerAnglesArrayName", getCellEulerAnglesArrayName() );
-  /*[]*/writer->writeValue("FeatureIdsArrayName", getFeatureIdsArrayName() );
+  /*[]*/DREAM3D_FILTER_WRITE_PARAMETER(LatticeConstantsArrayName)
+  /*[]*/DREAM3D_FILTER_WRITE_PARAMETER(CrystalStructuresArrayName)
+  /*[]*/DREAM3D_FILTER_WRITE_PARAMETER(CellPhasesArrayName)
+  /*[]*/DREAM3D_FILTER_WRITE_PARAMETER(CellEulerAnglesArrayName)
+  /*[]*/DREAM3D_FILTER_WRITE_PARAMETER(FeatureIdsArrayName)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }

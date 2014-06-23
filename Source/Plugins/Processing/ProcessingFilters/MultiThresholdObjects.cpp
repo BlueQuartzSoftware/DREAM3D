@@ -98,8 +98,8 @@ void MultiThresholdObjects::readFilterParameters(AbstractFilterParametersReader*
 int MultiThresholdObjects::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  writer->writeValue("DestinationArrayName", getDestinationArrayName() );
-  writer->writeValue("SelectedThresholds", getSelectedThresholds());
+  DREAM3D_FILTER_WRITE_PARAMETER(DestinationArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(SelectedThresholds)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }

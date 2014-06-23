@@ -98,9 +98,9 @@ void ErodeDilateCoordinationNumber::readFilterParameters(AbstractFilterParameter
 int ErodeDilateCoordinationNumber::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  writer->writeValue("FeatureIdsArrayPath", getFeatureIdsArrayPath() );
-  writer->writeValue("CoordinationNumber", getCoordinationNumber() );
-  writer->writeValue("Loop", getLoop() );
+  DREAM3D_FILTER_WRITE_PARAMETER(FeatureIdsArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(CoordinationNumber)
+  DREAM3D_FILTER_WRITE_PARAMETER(Loop)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }

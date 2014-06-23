@@ -128,18 +128,18 @@ void ImportImagesAsVector::readFilterParameters(AbstractFilterParametersReader* 
 int ImportImagesAsVector::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  writer->writeValue("DataContainerName", getDataContainerName() );
-  writer->writeValue("CellAttributeMatrixName", getCellAttributeMatrixName() );
-  writer->writeValue("VectorDataArrayName", getVectorDataArrayName() );
-  writer->writeValue("StartIndex", getStartIndex() );
-  writer->writeValue("EndIndex", getEndIndex() );
-  writer->writeValue("PaddingDigits", getPaddingDigits() );
-  writer->writeValue("InputPath", getInputPath() );
-  writer->writeValue("FilePrefix", getFilePrefix() );
-  writer->writeValue("FileSuffix", getFileSuffix() );
-  writer->writeValue("FileExtension", getFileExtension() );
-  writer->writeValue("Origin", getOrigin() );
-  writer->writeValue("Resolution", getResolution() );
+  DREAM3D_FILTER_WRITE_PARAMETER(DataContainerName)
+  DREAM3D_FILTER_WRITE_PARAMETER(CellAttributeMatrixName)
+  DREAM3D_FILTER_WRITE_PARAMETER(VectorDataArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(StartIndex)
+  DREAM3D_FILTER_WRITE_PARAMETER(EndIndex)
+  DREAM3D_FILTER_WRITE_PARAMETER(PaddingDigits)
+  DREAM3D_FILTER_WRITE_PARAMETER(InputPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(FilePrefix)
+  DREAM3D_FILTER_WRITE_PARAMETER(FileSuffix)
+  DREAM3D_FILTER_WRITE_PARAMETER(FileExtension)
+  DREAM3D_FILTER_WRITE_PARAMETER(Origin)
+  DREAM3D_FILTER_WRITE_PARAMETER(Resolution)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }

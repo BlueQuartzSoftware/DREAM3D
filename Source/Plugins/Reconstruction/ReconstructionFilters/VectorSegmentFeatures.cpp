@@ -121,13 +121,13 @@ void VectorSegmentFeatures::readFilterParameters(AbstractFilterParametersReader*
 int VectorSegmentFeatures::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  writer->writeValue("CellFeatureAttributeMatrixName", getCellFeatureAttributeMatrixName() );
-  writer->writeValue("ActiveArrayName", getActiveArrayName() );
-  writer->writeValue("FeatureIdsArrayName", getFeatureIdsArrayName() );
-  writer->writeValue("GoodVoxelsArrayPath", getGoodVoxelsArrayPath() );
-  writer->writeValue("UseGoodVoxels", getUseGoodVoxels() );
-  writer->writeValue("SelectedVectorArrayPath", getSelectedVectorArrayPath() );
-  writer->writeValue("AngleTolerance", getAngleTolerance() );
+  DREAM3D_FILTER_WRITE_PARAMETER(CellFeatureAttributeMatrixName)
+  DREAM3D_FILTER_WRITE_PARAMETER(ActiveArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(FeatureIdsArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(GoodVoxelsArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(UseGoodVoxels)
+  DREAM3D_FILTER_WRITE_PARAMETER(SelectedVectorArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(AngleTolerance)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }

@@ -99,10 +99,10 @@ void NodesTrianglesToStl::readFilterParameters(AbstractFilterParametersReader* r
 int NodesTrianglesToStl::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  writer->writeValue("NodesFile", getNodesFile() );
-  writer->writeValue("TrianglesFile", getTrianglesFile() );
-  writer->writeValue("OutputStlDirectory", getOutputStlDirectory() );
-  writer->writeValue("OutputStlPrefix", getOutputStlPrefix() );
+  DREAM3D_FILTER_WRITE_PARAMETER(NodesFile)
+  DREAM3D_FILTER_WRITE_PARAMETER(TrianglesFile)
+  DREAM3D_FILTER_WRITE_PARAMETER(OutputStlDirectory)
+  DREAM3D_FILTER_WRITE_PARAMETER(OutputStlPrefix)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }

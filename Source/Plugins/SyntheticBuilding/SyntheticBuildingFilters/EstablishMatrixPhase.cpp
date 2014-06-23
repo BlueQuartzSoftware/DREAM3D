@@ -121,15 +121,15 @@ void EstablishMatrixPhase::readFilterParameters(AbstractFilterParametersReader* 
 int EstablishMatrixPhase::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  writer->writeValue("OutputCellAttributeMatrixName", getOutputCellAttributeMatrixName() );
-  writer->writeValue("OutputCellFeatureAttributeMatrixName", getOutputCellFeatureAttributeMatrixName() );
-  writer->writeValue("OutputCellEnsembleAttributeMatrixName", getOutputCellEnsembleAttributeMatrixName() );
-  writer->writeValue("FeatureIdsArrayName", getFeatureIdsArrayName() );
-  writer->writeValue("CellPhasesArrayName", getCellPhasesArrayName() );
-  writer->writeValue("FeaturePhasesArrayName", getFeaturePhasesArrayName() );
-  writer->writeValue("NumFeaturesArrayName", getNumFeaturesArrayName() );
-  writer->writeValue("InputStatsArrayPath", getInputStatsArrayPath() );
-  writer->writeValue("InputPhaseTypesArrayPath", getInputPhaseTypesArrayPath() );
+  DREAM3D_FILTER_WRITE_PARAMETER(OutputCellAttributeMatrixName)
+  DREAM3D_FILTER_WRITE_PARAMETER(OutputCellFeatureAttributeMatrixName)
+  DREAM3D_FILTER_WRITE_PARAMETER(OutputCellEnsembleAttributeMatrixName)
+  DREAM3D_FILTER_WRITE_PARAMETER(FeatureIdsArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(CellPhasesArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(FeaturePhasesArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(NumFeaturesArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(InputStatsArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(InputPhaseTypesArrayPath)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }

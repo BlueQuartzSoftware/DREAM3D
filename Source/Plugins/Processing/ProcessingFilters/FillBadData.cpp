@@ -103,10 +103,10 @@ void FillBadData::readFilterParameters(AbstractFilterParametersReader* reader, i
 int FillBadData::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  writer->writeValue("FeatureIdsArrayPath", getFeatureIdsArrayPath() );
-  writer->writeValue("CellPhasesArrayPath", getCellPhasesArrayPath() );
-  writer->writeValue("MinAllowedDefectSize", getMinAllowedDefectSize() );
-  writer->writeValue("StoreAsNewPhase", getStoreAsNewPhase() );
+  DREAM3D_FILTER_WRITE_PARAMETER(FeatureIdsArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(CellPhasesArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(MinAllowedDefectSize)
+  DREAM3D_FILTER_WRITE_PARAMETER(StoreAsNewPhase)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }

@@ -94,9 +94,9 @@ void FindNumFeatures::readFilterParameters(AbstractFilterParametersReader* reade
 int FindNumFeatures::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  writer->writeValue("NumFeaturesArrayName", getNumFeaturesArrayName() );
-  writer->writeValue("FeaturePhasesArrayPath", getFeaturePhasesArrayPath() );
-  writer->writeValue("CellEnsembleAttributeMatrixPath", getCellEnsembleAttributeMatrixPath() );
+  DREAM3D_FILTER_WRITE_PARAMETER(NumFeaturesArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(FeaturePhasesArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(CellEnsembleAttributeMatrixPath)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }

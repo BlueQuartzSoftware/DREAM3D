@@ -69,9 +69,9 @@ FindSchmids::FindSchmids() :
   m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
   m_CrystalStructures(NULL)
 {
-  m_LoadingDir.x = 1.0f;
-  m_LoadingDir.y = 1.0f;
-  m_LoadingDir.z = 1.0f;
+  m_LoadingDirection.x = 1.0f;
+  m_LoadingDirection.y = 1.0f;
+  m_LoadingDirection.z = 1.0f;
   m_OrientationOps = OrientationOps::getOrientationOpsVector();
 
   setupFilterParameters();
@@ -91,7 +91,7 @@ void FindSchmids::setupFilterParameters()
 {
   FilterParameterVector parameters;
   parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
-  parameters.push_back(FilterParameter::New("Loading Direction", "LoadingDir", FilterParameterWidgetType::FloatVec3Widget, getLoadingDir(), false));
+  parameters.push_back(FilterParameter::New("Loading Direction", "LoadingDirection", FilterParameterWidgetType::FloatVec3Widget, getLoadingDirection(), false));
   QStringList linkedProps;
   linkedProps << "PhisArrayName" << "LambdasArrayName";
   parameters.push_back(FilterParameter::NewConditional("Store Angle Components of Schmid Factor", "StoreAngleComponents", FilterParameterWidgetType::LinkedBooleanWidget, getStoreAngleComponents(), false, linkedProps));
@@ -123,7 +123,7 @@ void FindSchmids::readFilterParameters(AbstractFilterParametersReader* reader, i
   setAvgQuatsArrayPath(reader->readDataArrayPath("AvgQuatsArrayPath", getAvgQuatsArrayPath() ) );
   setCrystalStructuresArrayPath(reader->readDataArrayPath("CrystalStructuresArrayPath", getCrystalStructuresArrayPath() ) );
   setFeaturePhasesArrayPath(reader->readDataArrayPath("FeaturePhasesArrayPath", getFeaturePhasesArrayPath() ) );
-  setLoadingDir( reader->readFloatVec3("LoadingDir", getLoadingDir() ) );
+  setLoadingDirection( reader->readFloatVec3("LoadingDirection", getLoadingDirection() ) );
   setStoreAngleComponents( reader->readValue("StoreAngleComponents", getStoreAngleComponents()) );
   reader->closeFilterGroup();
 }
@@ -134,17 +134,17 @@ void FindSchmids::readFilterParameters(AbstractFilterParametersReader* reader, i
 int FindSchmids::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  writer->writeValue("CellFeatureAttributeMatrixName", getCellFeatureAttributeMatrixName());
-  writer->writeValue("LambdasArrayName", getLambdasArrayName() );
-  writer->writeValue("PhisArrayName", getPhisArrayName() );
-  writer->writeValue("PolesArrayName", getPolesArrayName() );
-  writer->writeValue("SlipSystemsArrayName", getSlipSystemsArrayName() );
-  writer->writeValue("SchmidsArrayName", getSchmidsArrayName() );
-  writer->writeValue("AvgQuatsArrayPath", getAvgQuatsArrayPath() );
-  writer->writeValue("CrystalStructuresArrayPath", getCrystalStructuresArrayPath() );
-  writer->writeValue("FeaturePhasesArrayPath", getFeaturePhasesArrayPath() );
-  writer->writeValue("LoadingDirection", getLoadingDir() );
-  writer->writeValue("StoreAngleComponents", getStoreAngleComponents() );
+  DREAM3D_FILTER_WRITE_PARAMETER(CellFeatureAttributeMatrixName)
+  DREAM3D_FILTER_WRITE_PARAMETER(LambdasArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(PhisArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(PolesArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(SlipSystemsArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(SchmidsArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(AvgQuatsArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(CrystalStructuresArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(FeaturePhasesArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(LoadingDirection)
+  DREAM3D_FILTER_WRITE_PARAMETER(StoreAngleComponents)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
@@ -233,9 +233,9 @@ void FindSchmids::execute()
   float angleComps[2];
   float schmid = 0;
 
-  sampleLoading[0] = m_LoadingDir.x;
-  sampleLoading[1] = m_LoadingDir.y;
-  sampleLoading[2] = m_LoadingDir.z;
+  sampleLoading[0] = m_LoadingDirection.x;
+  sampleLoading[1] = m_LoadingDirection.y;
+  sampleLoading[2] = m_LoadingDirection.z;
   MatrixMath::Normalize3x1(sampleLoading);
 
   for (size_t i = 1; i < totalFeatures; i++)

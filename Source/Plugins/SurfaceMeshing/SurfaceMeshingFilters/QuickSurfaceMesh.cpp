@@ -123,15 +123,15 @@ void QuickSurfaceMesh::readFilterParameters(AbstractFilterParametersReader* read
 int QuickSurfaceMesh::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  writer->writeValue("SurfaceDataContainerName", getSurfaceDataContainerName() );
-  writer->writeValue("VertexAttributeMatrixName", getVertexAttributeMatrixName() );
-  writer->writeValue("FaceAttributeMatrixName", getFaceAttributeMatrixName() );
-  writer->writeValue("FacePhasesArrayName", getFacePhasesArrayName() );
-  writer->writeValue("NodeTypesArrayName", getNodeTypesArrayName() );
-  writer->writeValue("FaceLabelsArrayName", getFaceLabelsArrayName() );
-  writer->writeValue("CellPhasesArrayPath", getCellPhasesArrayPath() );
-  writer->writeValue("FeatureIdsArrayPath", getFeatureIdsArrayPath() );
-  writer->writeValue("TransferPhaseId", getTransferPhaseId() );
+  DREAM3D_FILTER_WRITE_PARAMETER(SurfaceDataContainerName)
+  DREAM3D_FILTER_WRITE_PARAMETER(VertexAttributeMatrixName)
+  DREAM3D_FILTER_WRITE_PARAMETER(FaceAttributeMatrixName)
+  DREAM3D_FILTER_WRITE_PARAMETER(FacePhasesArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(NodeTypesArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(FaceLabelsArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(CellPhasesArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(FeatureIdsArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(TransferPhaseId)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }

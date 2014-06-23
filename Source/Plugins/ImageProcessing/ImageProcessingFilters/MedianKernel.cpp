@@ -75,11 +75,11 @@ void MedianKernel::readFilterParameters(AbstractFilterParametersReader* reader, 
 int MedianKernel::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  writer->writeValue("SelectedCellArrayPath", getSelectedCellArrayPath() );
-  writer->writeValue("NewCellArrayName", getNewCellArrayName() );
-  writer->writeValue("SaveAsNewArray", getSaveAsNewArray() );
-  writer->writeValue("Slice", getSlice() );
-  writer->writeValue("KernelSize", getKernelSize() );
+  DREAM3D_FILTER_WRITE_PARAMETER(SelectedCellArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(NewCellArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(SaveAsNewArray)
+  DREAM3D_FILTER_WRITE_PARAMETER(Slice)
+  DREAM3D_FILTER_WRITE_PARAMETER(KernelSize)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }

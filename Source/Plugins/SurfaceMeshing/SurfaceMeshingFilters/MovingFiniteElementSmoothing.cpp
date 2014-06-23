@@ -186,12 +186,12 @@ void MovingFiniteElementSmoothing::readFilterParameters(AbstractFilterParameters
 int MovingFiniteElementSmoothing::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  writer->writeValue("SurfaceMeshNodeTypeArrayPath", getSurfaceMeshNodeTypeArrayPath() );
-  writer->writeValue("IterationSteps", getIterationSteps());
-  writer->writeValue("ConstrainNodes", getNodeConstraints());
-  writer->writeValue("ConstrainSurfaceNodes", getConstrainSurfaceNodes());
-  writer->writeValue("ConstrainQuadPoints", getConstrainQuadPoints());
-  writer->writeValue("SmoothTripleLines", getSmoothTripleLines());
+  DREAM3D_FILTER_WRITE_PARAMETER(SurfaceMeshNodeTypeArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(IterationSteps)
+  DREAM3D_FILTER_WRITE_PARAMETER(NodeConstraints)
+  DREAM3D_FILTER_WRITE_PARAMETER(ConstrainSurfaceNodes)
+  DREAM3D_FILTER_WRITE_PARAMETER(ConstrainQuadPoints)
+  DREAM3D_FILTER_WRITE_PARAMETER(SmoothTripleLines)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }

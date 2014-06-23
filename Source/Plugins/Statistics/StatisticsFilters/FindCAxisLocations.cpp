@@ -90,8 +90,8 @@ void FindCAxisLocations::readFilterParameters(AbstractFilterParametersReader* re
 int FindCAxisLocations::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  writer->writeValue("CAxisLocationsArrayName", getCAxisLocationsArrayName() );
-  writer->writeValue("QuatsArrayPath", getQuatsArrayPath() );
+  DREAM3D_FILTER_WRITE_PARAMETER(CAxisLocationsArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(QuatsArrayPath)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }

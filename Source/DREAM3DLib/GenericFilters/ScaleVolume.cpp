@@ -149,11 +149,11 @@ void ScaleVolume::readFilterParameters(AbstractFilterParametersReader* reader, i
 int ScaleVolume::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  writer->writeValue("ScaleFactor", getScaleFactor() );
-  writer->writeValue("ApplyToVoxelVolume", getApplyToVoxelVolume() );
-  writer->writeValue("ApplyToSurfaceMesh", getApplyToSurfaceMesh() );
-  writer->writeValue("DataContainerName", getDataContainerName());
-  writer->writeValue("SurfaceDataContainerName", getSurfaceDataContainerName());
+  DREAM3D_FILTER_WRITE_PARAMETER(ScaleFactor)
+  DREAM3D_FILTER_WRITE_PARAMETER(ApplyToVoxelVolume)
+  DREAM3D_FILTER_WRITE_PARAMETER(ApplyToSurfaceMesh)
+  DREAM3D_FILTER_WRITE_PARAMETER(DataContainerName)
+  DREAM3D_FILTER_WRITE_PARAMETER(SurfaceDataContainerName)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }

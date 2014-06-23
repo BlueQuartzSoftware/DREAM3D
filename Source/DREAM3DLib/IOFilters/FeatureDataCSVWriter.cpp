@@ -97,9 +97,9 @@ void FeatureDataCSVWriter::readFilterParameters(AbstractFilterParametersReader* 
 int FeatureDataCSVWriter::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  writer->writeValue("CellFeatureAttributeMatrixPath", getCellFeatureAttributeMatrixPath() );
-  writer->writeValue("FeatureDataFile", getFeatureDataFile() );
-  writer->writeValue("WriteNeighborData", getWriteNeighborListData() );
+  DREAM3D_FILTER_WRITE_PARAMETER(CellFeatureAttributeMatrixPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(FeatureDataFile)
+  DREAM3D_FILTER_WRITE_PARAMETER(WriteNeighborListData)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }

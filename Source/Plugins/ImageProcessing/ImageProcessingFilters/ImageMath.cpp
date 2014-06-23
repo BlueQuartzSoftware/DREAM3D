@@ -169,11 +169,11 @@ void ImageMath::readFilterParameters(AbstractFilterParametersReader* reader, int
 int ImageMath::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  writer->writeValue("SelectedCellArrayPath", getSelectedCellArrayPath() );
-  writer->writeValue("Operator", getOperator() );
-  writer->writeValue("Value", getValue() );
-  writer->writeValue("SaveAsNewArray", getSaveAsNewArray() );
-  writer->writeValue("NewCellArrayName", getNewCellArrayName() );
+  DREAM3D_FILTER_WRITE_PARAMETER(SelectedCellArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(Operator)
+  DREAM3D_FILTER_WRITE_PARAMETER(Value)
+  DREAM3D_FILTER_WRITE_PARAMETER(SaveAsNewArray)
+  DREAM3D_FILTER_WRITE_PARAMETER(NewCellArrayName)
   writer->closeFilterGroup();
   return ++index;
 }

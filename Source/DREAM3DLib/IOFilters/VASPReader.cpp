@@ -98,11 +98,11 @@ void VASPReader::readFilterParameters(AbstractFilterParametersReader* reader, in
 int VASPReader::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  writer->writeValue("VertexDataContainerName", getVertexDataContainerName() );
+  DREAM3D_FILTER_WRITE_PARAMETER(VertexDataContainerName)
   writer->writeValue("VertexAttributeMatrixName", getVertexAttributeMatrixName() ) ;
-  writer->writeValue("AtomTypesArrayName", getAtomTypesArrayName() );
-  writer->writeValue("AtomVelocitiesArrayName", getAtomVelocitiesArrayName() );
-  writer->writeValue("InputFile", getInputFile() );
+  DREAM3D_FILTER_WRITE_PARAMETER(AtomTypesArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(AtomVelocitiesArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(InputFile)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }

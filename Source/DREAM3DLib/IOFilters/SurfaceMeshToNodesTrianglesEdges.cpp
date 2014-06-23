@@ -112,11 +112,11 @@ void SurfaceMeshToNodesTrianglesEdges::readFilterParameters(AbstractFilterParame
 int SurfaceMeshToNodesTrianglesEdges::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  writer->writeValue("SurfaceMeshNodeTypeArrayPath", getSurfaceMeshNodeTypeArrayPath() );
-  writer->writeValue("SurfaceMeshFaceLabelsArrayPath", getSurfaceMeshFaceLabelsArrayPath() );
-  writer->writeValue("OutputNodesFile", getOutputNodesFile() );
-  writer->writeValue("OutputEdgesFile", getOutputEdgesFile() );
-  writer->writeValue("OutputTrianglesFile", getOutputTrianglesFile() );
+  DREAM3D_FILTER_WRITE_PARAMETER(SurfaceMeshNodeTypeArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(SurfaceMeshFaceLabelsArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(OutputNodesFile)
+  DREAM3D_FILTER_WRITE_PARAMETER(OutputEdgesFile)
+  DREAM3D_FILTER_WRITE_PARAMETER(OutputTrianglesFile)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }

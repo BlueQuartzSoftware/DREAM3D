@@ -136,19 +136,19 @@ void YSChoiAbaqusReader::readFilterParameters(AbstractFilterParametersReader* re
 int YSChoiAbaqusReader::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  writer->writeValue("DataContainerName", getDataContainerName() );
-  writer->writeValue("CellAttributeMatrixName", getCellAttributeMatrixName() );
-  writer->writeValue("CellFeatureAttributeMatrixName", getCellFeatureAttributeMatrixName() );
-  writer->writeValue("CellEnsembleAttributeMatrixName", getCellEnsembleAttributeMatrixName() );
-  writer->writeValue("CrystalStructuresArrayName", getCrystalStructuresArrayName() );
-  writer->writeValue("FeatureIdsArrayName", getFeatureIdsArrayName() );
-  writer->writeValue("SurfaceFeaturesArrayName", getSurfaceFeaturesArrayName() );
-  writer->writeValue("CellPhasesArrayName", getCellPhasesArrayName() );
-  writer->writeValue("AvgQuatsArrayName", getAvgQuatsArrayName() );
-  writer->writeValue("QuatsArrayName", getQuatsArrayName() );
-  writer->writeValue("CellEulerAnglesArrayName", getCellEulerAnglesArrayName() );
-  writer->writeValue("InputFile", getInputFile() );
-  writer->writeValue("InputFeatureInfoFile", getInputFeatureInfoFile() );
+  DREAM3D_FILTER_WRITE_PARAMETER(DataContainerName)
+  DREAM3D_FILTER_WRITE_PARAMETER(CellAttributeMatrixName)
+  DREAM3D_FILTER_WRITE_PARAMETER(CellFeatureAttributeMatrixName)
+  DREAM3D_FILTER_WRITE_PARAMETER(CellEnsembleAttributeMatrixName)
+  DREAM3D_FILTER_WRITE_PARAMETER(CrystalStructuresArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(FeatureIdsArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(SurfaceFeaturesArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(CellPhasesArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(AvgQuatsArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(QuatsArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(CellEulerAnglesArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(InputFile)
+  DREAM3D_FILTER_WRITE_PARAMETER(InputFeatureInfoFile)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }

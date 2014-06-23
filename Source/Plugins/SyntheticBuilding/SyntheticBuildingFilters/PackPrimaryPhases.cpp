@@ -351,19 +351,19 @@ void PackPrimaryPhases::readFilterParameters(AbstractFilterParametersReader* rea
 int PackPrimaryPhases::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  writer->writeValue("OutputCellAttributeMatrixName", getOutputCellAttributeMatrixName() );
-  writer->writeValue("OutputCellFeatureAttributeMatrixName", getOutputCellFeatureAttributeMatrixName() );
-  writer->writeValue("OutputCellEnsembleAttributeMatrixName", getOutputCellEnsembleAttributeMatrixName() );
-  writer->writeValue("FeatureIdsArrayName", getFeatureIdsArrayName() );
-  writer->writeValue("CellPhasesArrayName", getCellPhasesArrayName() );
-  writer->writeValue("FeaturePhasesArrayName", getFeaturePhasesArrayName() );
-  writer->writeValue("NumFeaturesArrayName", getNumFeaturesArrayName() );
-  writer->writeValue("PeriodicBoundaries", getPeriodicBoundaries() );
-  writer->writeValue("WriteGoalAttributes", getWriteGoalAttributes() );
-  writer->writeValue("CsvOutputFile", getCsvOutputFile() );
-  writer->writeValue("InputStatsArrayPath", getInputStatsArrayPath() );
-  writer->writeValue("InputPhaseTypesArrayPath", getInputPhaseTypesArrayPath() );
-  writer->writeValue("InputShapeTypesArrayPath", getInputShapeTypesArrayPath() );
+  DREAM3D_FILTER_WRITE_PARAMETER(OutputCellAttributeMatrixName)
+  DREAM3D_FILTER_WRITE_PARAMETER(OutputCellFeatureAttributeMatrixName)
+  DREAM3D_FILTER_WRITE_PARAMETER(OutputCellEnsembleAttributeMatrixName)
+  DREAM3D_FILTER_WRITE_PARAMETER(FeatureIdsArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(CellPhasesArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(FeaturePhasesArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(NumFeaturesArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(PeriodicBoundaries)
+  DREAM3D_FILTER_WRITE_PARAMETER(WriteGoalAttributes)
+  DREAM3D_FILTER_WRITE_PARAMETER(CsvOutputFile)
+  DREAM3D_FILTER_WRITE_PARAMETER(InputStatsArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(InputPhaseTypesArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(InputShapeTypesArrayPath)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }

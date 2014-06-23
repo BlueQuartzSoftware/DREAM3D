@@ -154,11 +154,11 @@ void AdjustVolumeOrigin::readFilterParameters(AbstractFilterParametersReader* re
 int AdjustVolumeOrigin::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  writer->writeValue("Origin", getOrigin() );
-  writer->writeValue("ApplyToVoxelVolume", getApplyToVoxelVolume() );
-  writer->writeValue("ApplyToSurfaceMesh", getApplyToSurfaceMesh() );
-  writer->writeValue("DataContainerName", getDataContainerName());
-  writer->writeValue("SurfaceDataContainerName", getSurfaceDataContainerName());
+  DREAM3D_FILTER_WRITE_PARAMETER(Origin)
+  DREAM3D_FILTER_WRITE_PARAMETER(ApplyToVoxelVolume)
+  DREAM3D_FILTER_WRITE_PARAMETER(ApplyToSurfaceMesh)
+  DREAM3D_FILTER_WRITE_PARAMETER(DataContainerName)
+  DREAM3D_FILTER_WRITE_PARAMETER(SurfaceDataContainerName)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }

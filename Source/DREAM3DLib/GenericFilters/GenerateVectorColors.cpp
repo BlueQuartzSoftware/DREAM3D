@@ -102,10 +102,10 @@ void GenerateVectorColors::readFilterParameters(AbstractFilterParametersReader* 
 int GenerateVectorColors::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  writer->writeValue("UseGoodVoxels", getUseGoodVoxels() );
-  writer->writeValue("CellVectorColorsArrayName", getCellVectorColorsArrayName() );
-  writer->writeValue("GoodVoxelsArrayPath", getGoodVoxelsArrayPath() );
-  writer->writeValue("VectorsArrayPath", getVectorsArrayPath() );
+  DREAM3D_FILTER_WRITE_PARAMETER(UseGoodVoxels)
+  DREAM3D_FILTER_WRITE_PARAMETER(CellVectorColorsArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(GoodVoxelsArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(VectorsArrayPath)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }

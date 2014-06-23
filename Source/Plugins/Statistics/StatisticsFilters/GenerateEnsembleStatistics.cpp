@@ -249,35 +249,35 @@ void GenerateEnsembleStatistics::readFilterParameters(AbstractFilterParametersRe
 int GenerateEnsembleStatistics::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  writer->writeValue("CalculateMorphologicalStats", getCalculateMorphologicalStats() );
-  writer->writeValue("CellEnsembleAttributeMatrixPath", getCellEnsembleAttributeMatrixPath());
-  writer->writeValue("PhaseTypesArrayName", getPhaseTypesArrayName() );
-  writer->writeValue("StatisticsArrayName", getStatisticsArrayName() );
-  writer->writeValue("AvgQuatsArrayPath", getAvgQuatsArrayPath() );
-  writer->writeValue("FeatureEulerAnglesArrayPath", getFeatureEulerAnglesArrayPath() );
-  writer->writeValue("VolumesArrayPath", getVolumesArrayPath() );
-  writer->writeValue("SurfaceFeaturesArrayPath", getSurfaceFeaturesArrayPath() );
-  writer->writeValue("CrystalStructuresArrayPath", getCrystalStructuresArrayPath() );
-  writer->writeValue("AxisEulerAnglesArrayPath", getAxisEulerAnglesArrayPath() );
-  writer->writeValue("Omega3sArrayPath", getOmega3sArrayPath() );
-  writer->writeValue("AspectRatiosArrayPath", getAspectRatiosArrayPath() );
-  writer->writeValue("NeighborhoodsArrayPath", getNeighborhoodsArrayPath() );
-  writer->writeValue("EquivalentDiametersArrayPath", getEquivalentDiametersArrayPath() );
-  writer->writeValue("BiasedFeaturesArrayPath", getBiasedFeaturesArrayPath() );
-  writer->writeValue("FeaturePhasesArrayPath", getFeaturePhasesArrayPath() );
-  writer->writeValue("ComputeSizeDistribution", getComputeSizeDistribution() );
-  writer->writeValue("SizeDistributionFitType", getSizeDistributionFitType() );
-  writer->writeValue("ComputeAspectRatioDistribution", getComputeAspectRatioDistribution() );
-  writer->writeValue("AspectRatioDistributionFitType", getAspectRatioDistributionFitType() );
-  writer->writeValue("ComputeOmega3Distribution", getComputeOmega3Distribution() );
-  writer->writeValue("Omega3DistributionFitType", getOmega3DistributionFitType() );
-  writer->writeValue("ComputeNeighborhoodDistribution", getComputeNeighborhoodDistribution() );
-  writer->writeValue("NeighborhoodDistributionFitType", getNeighborhoodDistributionFitType() );
-  writer->writeValue("CalculateCrystallographicStats", getCalculateCrystallographicStats() );
-  writer->writeValue("CalculateODF", getCalculateODF() );
-  writer->writeValue("CalculateMDF", getCalculateMDF() );
-  writer->writeValue("CalculateAxisODF", getCalculateAxisODF() );
-  writer->writeValue("SizeCorrelationResolution", getSizeCorrelationResolution() );
+  DREAM3D_FILTER_WRITE_PARAMETER(CalculateMorphologicalStats)
+  DREAM3D_FILTER_WRITE_PARAMETER(CellEnsembleAttributeMatrixPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(PhaseTypesArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(StatisticsArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(AvgQuatsArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(FeatureEulerAnglesArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(VolumesArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(SurfaceFeaturesArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(CrystalStructuresArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(AxisEulerAnglesArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(Omega3sArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(AspectRatiosArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(NeighborhoodsArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(EquivalentDiametersArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(BiasedFeaturesArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(FeaturePhasesArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(ComputeSizeDistribution)
+  DREAM3D_FILTER_WRITE_PARAMETER(SizeDistributionFitType)
+  DREAM3D_FILTER_WRITE_PARAMETER(ComputeAspectRatioDistribution)
+  DREAM3D_FILTER_WRITE_PARAMETER(AspectRatioDistributionFitType)
+  DREAM3D_FILTER_WRITE_PARAMETER(ComputeOmega3Distribution)
+  DREAM3D_FILTER_WRITE_PARAMETER(Omega3DistributionFitType)
+  DREAM3D_FILTER_WRITE_PARAMETER(ComputeNeighborhoodDistribution)
+  DREAM3D_FILTER_WRITE_PARAMETER(NeighborhoodDistributionFitType)
+  DREAM3D_FILTER_WRITE_PARAMETER(CalculateCrystallographicStats)
+  DREAM3D_FILTER_WRITE_PARAMETER(CalculateODF)
+  DREAM3D_FILTER_WRITE_PARAMETER(CalculateMDF)
+  DREAM3D_FILTER_WRITE_PARAMETER(CalculateAxisODF)
+  DREAM3D_FILTER_WRITE_PARAMETER(SizeCorrelationResolution)
   writer->writeValue("PhaseTypeArray", getPhaseTypeData().d );
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to

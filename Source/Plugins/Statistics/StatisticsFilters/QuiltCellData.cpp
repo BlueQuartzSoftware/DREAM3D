@@ -105,12 +105,12 @@ void QuiltCellData::readFilterParameters(AbstractFilterParametersReader* reader,
 int QuiltCellData::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  writer->writeValue("SelectedCellArrayPath", getSelectedCellArrayPath() );
-  writer->writeValue("OutputDataContainerName", getOutputDataContainerName() );
-  writer->writeValue("OutputAttributeMatrixName", getOutputAttributeMatrixName() );
-  writer->writeValue("OutputArrayName", getOutputArrayName() );
-  writer->writeValue("QuiltStep", getQuiltStep() );
-  writer->writeValue("PatchSize", getPatchSize() );
+  DREAM3D_FILTER_WRITE_PARAMETER(SelectedCellArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(OutputDataContainerName)
+  DREAM3D_FILTER_WRITE_PARAMETER(OutputAttributeMatrixName)
+  DREAM3D_FILTER_WRITE_PARAMETER(OutputArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(QuiltStep)
+  DREAM3D_FILTER_WRITE_PARAMETER(PatchSize)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }

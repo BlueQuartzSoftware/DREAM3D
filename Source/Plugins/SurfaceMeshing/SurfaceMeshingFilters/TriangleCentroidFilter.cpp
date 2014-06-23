@@ -136,8 +136,8 @@ void TriangleCentroidFilter::readFilterParameters(AbstractFilterParametersReader
 int TriangleCentroidFilter::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  writer->writeValue("FaceAttributeMatrixName", getFaceAttributeMatrixName() );
-  writer->writeValue("SurfaceMeshTriangleCentroidsArrayName", getSurfaceMeshTriangleCentroidsArrayName() );
+  DREAM3D_FILTER_WRITE_PARAMETER(FaceAttributeMatrixName)
+  DREAM3D_FILTER_WRITE_PARAMETER(SurfaceMeshTriangleCentroidsArrayName)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }

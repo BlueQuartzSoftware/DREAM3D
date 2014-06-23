@@ -98,10 +98,10 @@ void FindFeatureClustering::readFilterParameters(AbstractFilterParametersReader*
 int FindFeatureClustering::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  writer->writeValue("ClusteringListArrayName", getClusteringListArrayName() );
-  writer->writeValue("CentroidsArrayPath", getCentroidsArrayPath() );
-  writer->writeValue("FeaturePhasesArrayPath", getFeaturePhasesArrayPath() );
-  writer->writeValue("EquivalentDiametersArrayPath", getEquivalentDiametersArrayPath() );
+  DREAM3D_FILTER_WRITE_PARAMETER(ClusteringListArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(CentroidsArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(FeaturePhasesArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(EquivalentDiametersArrayPath)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }

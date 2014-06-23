@@ -135,15 +135,15 @@ void FindFeatureReferenceMisorientations::readFilterParameters(AbstractFilterPar
 int FindFeatureReferenceMisorientations::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  writer->writeValue("FeatureReferenceMisorientationsArrayName", getFeatureReferenceMisorientationsArrayName() );
-  writer->writeValue("FeatureAvgMisorientationsArrayName", getFeatureAvgMisorientationsArrayName() );
-  writer->writeValue("GBEuclideanDistancesArrayPath", getGBEuclideanDistancesArrayPath() );
-  writer->writeValue("AvgQuatsArrayPath", getAvgQuatsArrayPath() );
-  writer->writeValue("QuatsArrayPath", getQuatsArrayPath() );
-  writer->writeValue("CrystalStructuresArrayPath", getCrystalStructuresArrayPath() );
-  writer->writeValue("CellPhasesArrayPath", getCellPhasesArrayPath() );
-  writer->writeValue("FeatureIdsArrayPath", getFeatureIdsArrayPath() );
-  writer->writeValue("ReferenceOrientation", getReferenceOrientation() );
+  DREAM3D_FILTER_WRITE_PARAMETER(FeatureReferenceMisorientationsArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(FeatureAvgMisorientationsArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(GBEuclideanDistancesArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(AvgQuatsArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(QuatsArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(CrystalStructuresArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(CellPhasesArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(FeatureIdsArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(ReferenceOrientation)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }

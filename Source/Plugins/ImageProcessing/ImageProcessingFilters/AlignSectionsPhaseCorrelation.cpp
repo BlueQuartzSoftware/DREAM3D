@@ -69,7 +69,7 @@ int AlignSectionsPhaseCorrelation::writeFilterParameters(AbstractFilterParameter
 {
   writer->openFilterGroup(this, index);
   /* Place code that will write the inputs values into a file. reference the AbstractFilterParametersWriter class for the proper API to use. */
-  /*  writer->writeValue("OutputFile", getOutputFile() ); */
+  /*  DREAM3D_FILTER_WRITE_PARAMETER(OutputFile) */
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }

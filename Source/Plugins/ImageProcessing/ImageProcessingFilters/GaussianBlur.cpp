@@ -67,9 +67,9 @@ void GaussianBlur::readFilterParameters(AbstractFilterParametersReader* reader, 
 int GaussianBlur::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  writer->writeValue("SelectedCellArrayPath", getSelectedCellArrayPath() );
-  writer->writeValue("NewCellArrayName", getNewCellArrayName() );
-  writer->writeValue("SaveAsNewArray", getSaveAsNewArray() );
+  DREAM3D_FILTER_WRITE_PARAMETER(SelectedCellArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(NewCellArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(SaveAsNewArray)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
