@@ -127,6 +127,11 @@ class ImportImagesAsVectorWidget : public QWidget, private Ui::ImportImagesAsVec
     virtual void checkIOFiles();
 
     /**
+     * @brief validateInputFile
+     */
+    void validateInputFile();
+
+    /**
      * @brief verifyPathExists
      * @param outFilePath
      * @param lineEdit

@@ -88,7 +88,7 @@ InitializeSyntheticVolumeWidget::InitializeSyntheticVolumeWidget(FilterParameter
 {
 
   m_Filter = qobject_cast<InitializeSyntheticVolume*>(filter);
-  Q_ASSERT_X(NULL != m_Filter, "ReadH5EbsdWidget can ONLY be used with ReadH5Ebsd filter", __FILE__);
+  Q_ASSERT_X(NULL != m_Filter, "InitializeSyntheticVolumeWidget can ONLY be used with InitializeSyntheticVolume filter", __FILE__);
 
   if ( getOpenDialogLastDirectory().isEmpty() )
   {

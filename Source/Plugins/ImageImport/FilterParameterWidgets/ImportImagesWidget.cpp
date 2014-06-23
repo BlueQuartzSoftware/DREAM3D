@@ -177,6 +177,7 @@ void ImportImagesWidget::setupGui()
   connect(zOrigin, SIGNAL(textChanged(const QString&)),
           this, SLOT(originChanged(const QString&)));
 
+  validateInputFile();
   getGuiParametersFromFilter();
 }
 
@@ -208,6 +209,37 @@ void ImportImagesWidget::getGuiParametersFromFilter()
   setRefFrameZDir( m_Filter->getRefFrameZDir() );
   blockSignals(false);
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ImportImagesWidget::validateInputFile()
+{
+  QString currentPath = m_Filter->getInputPath();
+  QFileInfo fi(currentPath);
+  if (currentPath.isEmpty() == false && fi.exists() == false)
+  {
+//    QString Ftype = m_FilterParameter->getFileType();
+//    QString ext = m_FilterParameter->getFileExtension();
+//    QString s = Ftype + QString(" Files (") + ext + QString(");;All Files(*.*)");
+    QString defaultName = m_OpenDialogLastDirectory;
+
+
+    QString title = QObject::tr("Select a replacement input file in filter '%2'").arg(m_Filter->getHumanLabel());
+
+    QString file = QFileDialog::getExistingDirectory(this, title, defaultName, QFileDialog::ShowDirsOnly);
+    if(true == file.isEmpty())
+    {
+      file = currentPath;
+    }
+    file = QDir::toNativeSeparators(file);
+    // Store the last used directory into the private instance variable
+    QFileInfo fi(file);
+    m_OpenDialogLastDirectory = fi.path();
+    m_Filter->setInputPath(file);
+  }
+}
+
 
 // -----------------------------------------------------------------------------
 //

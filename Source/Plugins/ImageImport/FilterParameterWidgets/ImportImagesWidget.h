@@ -34,8 +34,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _EbsdImportWIDGET_H_
-#define _EbsdImportWIDGET_H_
+#ifndef _ImportImagesWidget_H_
+#define _ImportImagesWidget_H_
 
 
 #include <QtCore/QString>
@@ -127,6 +127,11 @@ class ImportImagesWidget : public QWidget, private Ui::ImportImagesWidget
      * @brief checkIOFiles
      */
     virtual void checkIOFiles();
+
+    /**
+     * @brief validateInputFile
+     */
+    void validateInputFile();
 
     /**
      * @brief verifyPathExists

@@ -97,8 +97,6 @@ class InitializeSyntheticVolumeWidget : public QWidget, private Ui::InitializeSy
     static void setOpenDialogLastDirectory(QString val) { m_OpenDialogLastDirectory = val; }
     static QString getOpenDialogLastDirectory() { return m_OpenDialogLastDirectory; }
 
-
-
     /**
      * @brief setInputFile
      * @param v
