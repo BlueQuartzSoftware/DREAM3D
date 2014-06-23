@@ -295,3 +295,31 @@ AbstractFilter::Pointer FindFeatureNeighborCAxisMisalignments::newFilterInstance
   }
   return filter;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString FindFeatureNeighborCAxisMisalignments::getCompiledLibraryName()
+{ return Statistics::StatisticsBaseName; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString FindFeatureNeighborCAxisMisalignments::getGroupName()
+{ return DREAM3D::FilterGroups::StatisticsFilters; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString FindFeatureNeighborCAxisMisalignments::getSubGroupName()
+{ return DREAM3D::FilterSubGroups::CrystallographicFilters; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString FindFeatureNeighborCAxisMisalignments::getHumanLabel()
+{ return "Find Feature Neighbor C-Axis Misalignments"; }
+

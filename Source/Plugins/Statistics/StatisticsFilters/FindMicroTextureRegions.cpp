@@ -265,3 +265,31 @@ AbstractFilter::Pointer FindMicroTextureRegions::newFilterInstance(bool copyFilt
   }
   return filter;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString FindMicroTextureRegions::getCompiledLibraryName()
+{ return Statistics::StatisticsBaseName; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString FindMicroTextureRegions::getGroupName()
+{ return DREAM3D::FilterGroups::StatisticsFilters; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString FindMicroTextureRegions::getSubGroupName()
+{ return DREAM3D::FilterSubGroups::MorphologicalFilters; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString FindMicroTextureRegions::getHumanLabel()
+{ return "Find MicroTexture Regions"; }
+

@@ -436,3 +436,31 @@ AbstractFilter::Pointer FindTwinBoundarySchmidFactors::newFilterInstance(bool co
   }
   return filter;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString FindTwinBoundarySchmidFactors::getCompiledLibraryName()
+{ return Statistics::StatisticsBaseName; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString FindTwinBoundarySchmidFactors::getGroupName()
+{ return DREAM3D::FilterGroups::StatisticsFilters; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString FindTwinBoundarySchmidFactors::getSubGroupName()
+{ return DREAM3D::FilterSubGroups::CrystallographicFilters; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString FindTwinBoundarySchmidFactors::getHumanLabel()
+{ return "Find Twin Boundary Schmid Factors"; }
+

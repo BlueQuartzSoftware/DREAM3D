@@ -88,11 +88,11 @@ class QuickSurfaceMesh : public AbstractFilter
     DREAM3D_FILTER_PARAMETER(QString, FacePhasesArrayName)
     Q_PROPERTY(QString FacePhasesArrayName READ getFacePhasesArrayName WRITE setFacePhasesArrayName)
 
-    virtual const QString getCompiledLibraryName() { return SurfaceMeshing::SurfaceMeshingBaseName; }
+    virtual const QString getCompiledLibraryName();
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
-    virtual const QString getGroupName() { return DREAM3D::FilterGroups::SurfaceMeshingFilters; }
-    virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::GenerationFilters; }
-    virtual const QString getHumanLabel() { return "Quick Surface Mesh"; }
+    virtual const QString getGroupName();
+    virtual const QString getSubGroupName();
+    virtual const QString getHumanLabel();
 
     virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
 

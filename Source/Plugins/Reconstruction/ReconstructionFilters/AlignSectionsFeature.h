@@ -72,11 +72,11 @@ class AlignSectionsFeature : public AlignSections
     DREAM3D_FILTER_PARAMETER(DataArrayPath, GoodVoxelsArrayPath)
     Q_PROPERTY(DataArrayPath GoodVoxelsArrayPath READ getGoodVoxelsArrayPath WRITE setGoodVoxelsArrayPath)
 
-    virtual const QString getCompiledLibraryName() { return Reconstruction::ReconstructionBaseName; }
+    virtual const QString getCompiledLibraryName();
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
-    virtual const QString getGroupName() { return DREAM3D::FilterGroups::ReconstructionFilters; }
-    virtual const QString getSubGroupName() {return DREAM3D::FilterSubGroups::AlignmentFilters;}
-    virtual const QString getHumanLabel() { return "Align Sections (Feature)"; }
+    virtual const QString getGroupName();
+    virtual const QString getSubGroupName();
+    virtual const QString getHumanLabel();
     virtual const QString getBrandingString() { return "DREAM3D Reconstruction Plugin"; }
 
     /**

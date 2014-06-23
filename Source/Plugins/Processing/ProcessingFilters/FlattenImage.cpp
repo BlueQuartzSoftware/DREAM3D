@@ -272,3 +272,17 @@ AbstractFilter::Pointer FlattenImage::newFilterInstance(bool copyFilterParameter
   }
   return filter;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString FlattenImage::getCompiledLibraryName()
+{ return Processing::ProcessingBaseName; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString FlattenImage::getHumanLabel()
+{ return "Flatten Image"; }
+

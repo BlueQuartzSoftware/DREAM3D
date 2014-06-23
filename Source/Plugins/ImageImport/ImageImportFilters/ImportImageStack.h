@@ -86,26 +86,26 @@ class ImportImageStack : public AbstractFilter
     Q_PROPERTY(QString ImageDataArrayName READ getImageDataArrayName WRITE setImageDataArrayName)
 
 
-    virtual const QString getCompiledLibraryName() { return ImageImport::ImageImportBaseName; }
+    virtual const QString getCompiledLibraryName();
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     /**
     * @brief This returns the group that the filter belonds to. You can select
     * a different group if you want. The string returned here will be displayed
     * in the GUI for the filter
     */
-    virtual const QString getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
+    virtual const QString getGroupName();
 
     /**
      * @brief getSubGroupName This returns the subgroup within the main group for this filter.
      * @return
      */
-    virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::InputFilters; }
+    virtual const QString getSubGroupName();
 
     /**
     * @brief This returns a string that is displayed in the GUI. It should be readable
     * and understandable by humans.
     */
-    virtual const QString getHumanLabel() { return "Import Images (3D Stack)"; }
+    virtual const QString getHumanLabel();
 
 
     /**

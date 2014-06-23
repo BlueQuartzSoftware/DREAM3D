@@ -556,3 +556,31 @@ AbstractFilter::Pointer FindEuclideanDistMap::newFilterInstance(bool copyFilterP
   }
   return filter;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString FindEuclideanDistMap::getCompiledLibraryName()
+{ return Statistics::StatisticsBaseName; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString FindEuclideanDistMap::getGroupName()
+{ return DREAM3D::FilterGroups::StatisticsFilters; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString FindEuclideanDistMap::getSubGroupName()
+{ return DREAM3D::FilterSubGroups::MorphologicalFilters; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString FindEuclideanDistMap::getHumanLabel()
+{ return "Find Euclidean Distance Map"; }
+

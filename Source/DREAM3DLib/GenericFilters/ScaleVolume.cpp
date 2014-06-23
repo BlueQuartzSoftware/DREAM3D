@@ -293,3 +293,31 @@ AbstractFilter::Pointer ScaleVolume::newFilterInstance(bool copyFilterParameters
   }
   return filter;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString ScaleVolume::getCompiledLibraryName()
+{ return Generic::GenericBaseName; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString ScaleVolume::getGroupName()
+{ return DREAM3D::FilterGroups::GenericFilters; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString ScaleVolume::getSubGroupName()
+{ return DREAM3D::FilterSubGroups::SpatialFilters; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString ScaleVolume::getHumanLabel()
+{ return "Change Scaling of Volume"; }
+

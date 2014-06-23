@@ -692,3 +692,31 @@ AbstractFilter::Pointer LaplacianSmoothing::newFilterInstance(bool copyFilterPar
   }
   return filter;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString LaplacianSmoothing::getCompiledLibraryName()
+{ return SurfaceMeshing::SurfaceMeshingBaseName; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString LaplacianSmoothing::getGroupName()
+{ return DREAM3D::FilterGroups::SurfaceMeshingFilters; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString LaplacianSmoothing::getSubGroupName()
+{ return DREAM3D::FilterSubGroups::SmoothingFilters; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString LaplacianSmoothing::getHumanLabel()
+{ return "Laplacian Smoothing"; }
+

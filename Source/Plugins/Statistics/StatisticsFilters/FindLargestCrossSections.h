@@ -76,11 +76,11 @@ class FindLargestCrossSections : public AbstractFilter
     DREAM3D_FILTER_PARAMETER(QString, LargestCrossSectionsArrayName)
     Q_PROPERTY(QString LargestCrossSectionsArrayName READ getLargestCrossSectionsArrayName WRITE setLargestCrossSectionsArrayName)
 
-    virtual const QString getCompiledLibraryName() { return Statistics::StatisticsBaseName; }
+    virtual const QString getCompiledLibraryName();
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
-    virtual const QString getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
-    virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::MorphologicalFilters; }
-    virtual const QString getHumanLabel() { return "Find Feature Largest Cross-Section Areas"; }
+    virtual const QString getGroupName();
+    virtual const QString getSubGroupName();
+    virtual const QString getHumanLabel();
 
     /**
     * @brief This method will instantiate all the end user settable options/parameters

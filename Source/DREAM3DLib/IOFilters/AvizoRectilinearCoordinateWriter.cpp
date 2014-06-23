@@ -314,3 +314,31 @@ AbstractFilter::Pointer AvizoRectilinearCoordinateWriter::newFilterInstance(bool
   }
   return filter;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString AvizoRectilinearCoordinateWriter::getCompiledLibraryName()
+{ return IO::IOBaseName; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString AvizoRectilinearCoordinateWriter::getGroupName()
+{ return DREAM3D::FilterGroups::IOFilters; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString AvizoRectilinearCoordinateWriter::getSubGroupName()
+{ return DREAM3D::FilterSubGroups::OutputFilters; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString AvizoRectilinearCoordinateWriter::getHumanLabel()
+{ return "Avizo Rectilinear Coordinate Writer"; }
+

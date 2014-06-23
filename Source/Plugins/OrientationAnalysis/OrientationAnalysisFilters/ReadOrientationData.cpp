@@ -693,3 +693,31 @@ AbstractFilter::Pointer ReadOrientationData::newFilterInstance(bool copyFilterPa
   }
   return filter;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString ReadOrientationData::getCompiledLibraryName()
+{ return OrientationAnalysis::OrientationAnalysisBaseName; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString ReadOrientationData::getGroupName()
+{ return DREAM3D::FilterGroups::IOFilters; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString ReadOrientationData::getSubGroupName()
+{ return DREAM3D::FilterSubGroups::InputFilters; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString ReadOrientationData::getHumanLabel()
+{ return "Read Orientation Data"; }
+

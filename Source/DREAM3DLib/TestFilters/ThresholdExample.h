@@ -78,21 +78,21 @@ class DREAM3DLib_EXPORT ThresholdExample : public AbstractFilter
     * a different group if you want. The string returned here will be displayed
     * in the GUI for the filter
     */
-    virtual const QString getCompiledLibraryName() { return Test::TestBaseName; }
+    virtual const QString getCompiledLibraryName();
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
-    virtual const QString getGroupName() { return DREAM3D::FilterGroups::TestFilters; }
+    virtual const QString getGroupName();
 
     /**
     * @brief This returns a string that is displayed in the GUI. It should be readable
     * and understandable by humans.
     */
-    virtual const QString getHumanLabel() { return "Threshold Example"; }
+    virtual const QString getHumanLabel();
 
     /**
     * @brief This returns a string that is displayed in the GUI and helps to sort the filters into
     * a subgroup. It should be readable and understandable by humans.
     */
-    virtual const QString getSubGroupName() { return "Misc"; }
+    virtual const QString getSubGroupName();
 
     /**
     * @brief This method will instantiate all the end user settable options/parameters

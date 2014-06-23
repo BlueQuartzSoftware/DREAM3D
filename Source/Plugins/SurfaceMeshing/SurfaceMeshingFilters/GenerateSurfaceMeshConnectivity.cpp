@@ -191,3 +191,31 @@ AbstractFilter::Pointer GenerateSurfaceMeshConnectivity::newFilterInstance(bool 
   }
   return filter;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString GenerateSurfaceMeshConnectivity::getCompiledLibraryName()
+{ return SurfaceMeshing::SurfaceMeshingBaseName; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString GenerateSurfaceMeshConnectivity::getGroupName()
+{ return DREAM3D::FilterGroups::SurfaceMeshingFilters; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString GenerateSurfaceMeshConnectivity::getSubGroupName()
+{ return DREAM3D::FilterSubGroups::ConnectivityArrangementFilters; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString GenerateSurfaceMeshConnectivity::getHumanLabel()
+{ return "Generate Surface Mesh Connectivity"; }
+

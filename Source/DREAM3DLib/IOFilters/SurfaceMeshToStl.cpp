@@ -382,3 +382,31 @@ AbstractFilter::Pointer SurfaceMeshToStl::newFilterInstance(bool copyFilterParam
   }
   return filter;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString SurfaceMeshToStl::getCompiledLibraryName()
+{ return IO::IOBaseName; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString SurfaceMeshToStl::getGroupName()
+{ return DREAM3D::FilterGroups::IOFilters; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString SurfaceMeshToStl::getSubGroupName()
+{ return DREAM3D::FilterSubGroups::OutputFilters; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString SurfaceMeshToStl::getHumanLabel()
+{ return "Write Stl Files from SurfaceMesh"; }
+

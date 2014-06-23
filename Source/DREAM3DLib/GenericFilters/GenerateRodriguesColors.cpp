@@ -265,3 +265,31 @@ AbstractFilter::Pointer GenerateRodriguesColors::newFilterInstance(bool copyFilt
   }
   return filter;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString GenerateRodriguesColors::getCompiledLibraryName()
+{ return Generic::GenericBaseName; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString GenerateRodriguesColors::getGroupName()
+{ return DREAM3D::FilterGroups::GenericFilters; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString GenerateRodriguesColors::getSubGroupName()
+{ return DREAM3D::FilterSubGroups::CrystallographyFilters; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString GenerateRodriguesColors::getHumanLabel()
+{ return "Generate Rodrigues Colors"; }
+

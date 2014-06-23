@@ -331,3 +331,31 @@ AbstractFilter::Pointer EstablishMatrixPhase::newFilterInstance(bool copyFilterP
   }
   return filter;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString EstablishMatrixPhase::getCompiledLibraryName()
+{ return SyntheticBuilding::SyntheticBuildingBaseName; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString EstablishMatrixPhase::getGroupName()
+{ return DREAM3D::FilterGroups::SyntheticBuildingFilters; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString EstablishMatrixPhase::getSubGroupName()
+{ return DREAM3D::FilterSubGroups::PackingFilters; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString EstablishMatrixPhase::getHumanLabel()
+{ return "Establish Matrix Phase"; }
+

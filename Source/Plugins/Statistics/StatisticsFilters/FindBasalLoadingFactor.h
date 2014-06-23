@@ -84,11 +84,11 @@ class FindBasalLoadingFactor : public AbstractFilter
     DREAM3D_FILTER_PARAMETER(QString, BasalLoadingFactorArrayName)
     Q_PROPERTY(QString BasalLoadingFactorArrayName READ getBasalLoadingFactorArrayName WRITE setBasalLoadingFactorArrayName)
 
-    virtual const QString getCompiledLibraryName() { return Statistics::StatisticsBaseName; }
+    virtual const QString getCompiledLibraryName();
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
-    virtual const QString getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
-    virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::CrystallographicFilters; }
-    virtual const QString getHumanLabel() { return "Find Basal Loading Factors"; }
+    virtual const QString getGroupName();
+    virtual const QString getSubGroupName();
+    virtual const QString getHumanLabel();
 
     DREAM3D_FILTER_PARAMETER(FloatVec3_t, LoadingDir)
     Q_PROPERTY(FloatVec3_t LoadingDir READ getLoadingDir WRITE setLoadingDir)

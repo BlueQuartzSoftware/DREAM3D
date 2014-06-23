@@ -226,3 +226,24 @@ AbstractFilter::Pointer RegularGridSampleSurfaceMesh::newFilterInstance(bool cop
   }
   return filter;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString RegularGridSampleSurfaceMesh::getCompiledLibraryName()
+{ return Sampling::SamplingBaseName; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString RegularGridSampleSurfaceMesh::getGroupName()
+{ return DREAM3D::FilterGroups::SamplingFilters; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString RegularGridSampleSurfaceMesh::getHumanLabel()
+{ return "Sample Surface Mesh on Regular Grid"; }
+

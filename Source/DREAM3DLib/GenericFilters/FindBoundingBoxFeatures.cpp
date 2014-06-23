@@ -306,3 +306,31 @@ AbstractFilter::Pointer FindBoundingBoxFeatures::newFilterInstance(bool copyFilt
   }
   return filter;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString FindBoundingBoxFeatures::getCompiledLibraryName()
+{ return Generic::GenericBaseName; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString FindBoundingBoxFeatures::getGroupName()
+{ return DREAM3D::FilterGroups::GenericFilters; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString FindBoundingBoxFeatures::getSubGroupName()
+{ return DREAM3D::FilterSubGroups::SpatialFilters; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString FindBoundingBoxFeatures::getHumanLabel()
+{ return "Find Biased Features (Bounding Box)"; }
+

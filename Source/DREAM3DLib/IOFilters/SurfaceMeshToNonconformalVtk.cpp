@@ -884,3 +884,31 @@ AbstractFilter::Pointer SurfaceMeshToNonconformalVtk::newFilterInstance(bool cop
   }
   return filter;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString SurfaceMeshToNonconformalVtk::getCompiledLibraryName()
+{ return IO::IOBaseName; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString SurfaceMeshToNonconformalVtk::getGroupName()
+{ return DREAM3D::FilterGroups::IOFilters; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString SurfaceMeshToNonconformalVtk::getSubGroupName()
+{ return DREAM3D::FilterSubGroups::OutputFilters; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString SurfaceMeshToNonconformalVtk::getHumanLabel()
+{ return "Write Vtk PolyData (NonConformal) from SurfaceMesh"; }
+

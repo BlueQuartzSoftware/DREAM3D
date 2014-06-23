@@ -371,3 +371,24 @@ AbstractFilter::Pointer FillBadData::newFilterInstance(bool copyFilterParameters
   }
   return filter;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString FillBadData::getCompiledLibraryName()
+{ return Processing::ProcessingBaseName; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString FillBadData::getGroupName()
+{ return DREAM3D::FilterGroups::ProcessingFilters; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString FillBadData::getHumanLabel()
+{ return "Fill Bad Data"; }
+

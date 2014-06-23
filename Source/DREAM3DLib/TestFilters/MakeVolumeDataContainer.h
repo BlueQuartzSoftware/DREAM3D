@@ -88,15 +88,15 @@ class DREAM3DLib_EXPORT MakeVolumeDataContainer : public AbstractFilter
     DREAM3D_FILTER_PARAMETER(QString, LatticeConstantsArrayName)
     Q_PROPERTY(QString LatticeConstantsArrayName READ getLatticeConstantsArrayName WRITE setLatticeConstantsArrayName)
 
-    virtual const QString getCompiledLibraryName() { return Test::TestBaseName; }
+    virtual const QString getCompiledLibraryName();
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
-    virtual const QString getGroupName() { return DREAM3D::FilterGroups::TestFilters; }
+    virtual const QString getGroupName();
 
     /**
     * @brief This returns a string that is displayed in the GUI. It should be readable
     * and understandable by humans.
     */
-    virtual const QString getHumanLabel() { return "Make Volume DataContainer"; }
+    virtual const QString getHumanLabel();
 
     /**
     * @brief This method will instantiate all the end user settable options/parameters
@@ -108,7 +108,7 @@ class DREAM3DLib_EXPORT MakeVolumeDataContainer : public AbstractFilter
     * @brief This returns a string that is displayed in the GUI and helps to sort the filters into
     * a subgroup. It should be readable and understandable by humans.
     */
-    virtual const QString getSubGroupName() { return "Create Stuff"; }
+    virtual const QString getSubGroupName();
 
 
 

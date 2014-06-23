@@ -303,3 +303,31 @@ AbstractFilter::Pointer FindFeatureHistogram::newFilterInstance(bool copyFilterP
   }
   return filter;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString FindFeatureHistogram::getCompiledLibraryName()
+{ return Statistics::StatisticsBaseName; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString FindFeatureHistogram::getGroupName()
+{ return DREAM3D::FilterGroups::StatisticsFilters; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString FindFeatureHistogram::getSubGroupName()
+{ return DREAM3D::FilterSubGroups::EnsembleStatsFilters; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString FindFeatureHistogram::getHumanLabel()
+{ return "Find Feature Histogram"; }
+

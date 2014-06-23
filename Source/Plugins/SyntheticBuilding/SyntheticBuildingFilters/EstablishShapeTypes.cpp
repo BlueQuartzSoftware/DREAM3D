@@ -205,3 +205,31 @@ AbstractFilter::Pointer EstablishShapeTypes::newFilterInstance(bool copyFilterPa
   }
   return filter;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString EstablishShapeTypes::getCompiledLibraryName()
+{ return SyntheticBuilding::SyntheticBuildingBaseName; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString EstablishShapeTypes::getGroupName()
+{return DREAM3D::FilterGroups::SyntheticBuildingFilters;}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString EstablishShapeTypes::getSubGroupName()
+{ return DREAM3D::FilterSubGroups::GenerationFilters; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString EstablishShapeTypes::getHumanLabel()
+{return "Establish Shape Types";}
+

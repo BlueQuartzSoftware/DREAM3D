@@ -86,11 +86,11 @@ class UncertainRegularGridSampleSurfaceMesh : public SampleSurfaceMesh
     DREAM3D_FILTER_PARAMETER(QString, FeatureIdsArrayName)
     Q_PROPERTY(QString FeatureIdsArrayName READ getFeatureIdsArrayName WRITE setFeatureIdsArrayName)
 
-    virtual const QString getCompiledLibraryName() { return Sampling::SamplingBaseName; }
+    virtual const QString getCompiledLibraryName();
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
-    virtual const QString getGroupName() { return DREAM3D::FilterGroups::SamplingFilters; }
+    virtual const QString getGroupName();
     virtual const QString getSubGroupName()  { return DREAM3D::FilterSubGroups::ResolutionFilters; }
-    virtual const QString getHumanLabel() { return "Sample Surface Mesh on Uncertain Regular Grid"; }
+    virtual const QString getHumanLabel();
 
     virtual void setupFilterParameters();
     /**

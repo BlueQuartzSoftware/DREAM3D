@@ -216,3 +216,31 @@ AbstractFilter::Pointer ThresholdExample::newFilterInstance(bool copyFilterParam
   }
   return filter;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString ThresholdExample::getCompiledLibraryName()
+{ return Test::TestBaseName; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString ThresholdExample::getGroupName()
+{ return DREAM3D::FilterGroups::TestFilters; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString ThresholdExample::getSubGroupName()
+{ return "Misc"; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString ThresholdExample::getHumanLabel()
+{ return "Threshold Example"; }
+

@@ -70,11 +70,11 @@ class FlattenImage : public AbstractFilter
     DREAM3D_FILTER_PARAMETER(QString, FlatImageDataArrayName)
     Q_PROPERTY(QString FlatImageDataArrayName READ getFlatImageDataArrayName WRITE setFlatImageDataArrayName)
 
-    virtual const QString getCompiledLibraryName() { return Processing::ProcessingBaseName; }
+    virtual const QString getCompiledLibraryName();
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName()  { return DREAM3D::FilterGroups::ProcessingFilters; }
     virtual const QString getSubGroupName()  { return DREAM3D::FilterSubGroups::ImageFilters; }
-    virtual const QString getHumanLabel() { return "Flatten Image"; }
+    virtual const QString getHumanLabel();
 
     virtual void setupFilterParameters();
     /**

@@ -398,3 +398,31 @@ AbstractFilter::Pointer VectorSegmentFeatures::newFilterInstance(bool copyFilter
   }
   return filter;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString VectorSegmentFeatures::getCompiledLibraryName()
+{ return Reconstruction::ReconstructionBaseName; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString VectorSegmentFeatures::getGroupName()
+{ return DREAM3D::FilterGroups::ReconstructionFilters; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString VectorSegmentFeatures::getSubGroupName()
+{return DREAM3D::FilterSubGroups::SegmentationFilters;}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString VectorSegmentFeatures::getHumanLabel()
+{ return "Segment Features (Vector)"; }
+

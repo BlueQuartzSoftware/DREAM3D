@@ -84,11 +84,11 @@ class FindRelativeMotionBetweenSlices : public AbstractFilter
     DREAM3D_FILTER_PARAMETER(QString, MotionDirectionArrayName)
     Q_PROPERTY(QString MotionDirectionArrayName READ getMotionDirectionArrayName WRITE setMotionDirectionArrayName)
 
-    virtual const QString getCompiledLibraryName() { return Processing::ProcessingBaseName; }
+    virtual const QString getCompiledLibraryName();
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
-    virtual const QString getGroupName() { return DREAM3D::FilterGroups::ProcessingFilters; }
-    virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::ImageFilters; }
-    virtual const QString getHumanLabel() { return "Find Relative Motion Between Slices"; }
+    virtual const QString getGroupName();
+    virtual const QString getSubGroupName();
+    virtual const QString getHumanLabel();
 
     /**
     * @brief This method will instantiate all the end user settable options/parameters

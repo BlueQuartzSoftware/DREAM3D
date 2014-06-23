@@ -195,3 +195,31 @@ AbstractFilter::Pointer RenameAttributeArray::newFilterInstance(bool copyFilterP
   }
   return filter;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString RenameAttributeArray::getCompiledLibraryName()
+{ return Generic::GenericBaseName; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString RenameAttributeArray::getGroupName()
+{ return DREAM3D::FilterGroups::GenericFilters; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString RenameAttributeArray::getSubGroupName()
+{ return DREAM3D::FilterSubGroups::MemoryManagementFilters; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString RenameAttributeArray::getHumanLabel()
+{ return "Rename Attribute Array"; }
+

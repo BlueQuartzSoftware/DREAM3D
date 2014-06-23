@@ -107,11 +107,11 @@ class FindLocalAverageCAxisMisalignments : public AbstractFilter
     DREAM3D_FILTER_PARAMETER(QString, NumFeaturesPerParentArrayName)
     Q_PROPERTY(QString NumFeaturesPerParentArrayName READ getNumFeaturesPerParentArrayName WRITE setNumFeaturesPerParentArrayName)
 
-    virtual const QString getCompiledLibraryName() { return Statistics::StatisticsBaseName; }
+    virtual const QString getCompiledLibraryName();
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
-    virtual const QString getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
-    virtual const QString getSubGroupName() {return DREAM3D::FilterSubGroups::CrystallographicFilters;}
-    virtual const QString getHumanLabel() { return "Find Local Average C-Axis Misalignments"; }
+    virtual const QString getGroupName();
+    virtual const QString getSubGroupName();
+    virtual const QString getHumanLabel();
 
     /**
      * @brief setupFilterParameters

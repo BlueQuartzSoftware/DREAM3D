@@ -88,20 +88,20 @@ class ImportImagesAsVector : public AbstractFilter
     DREAM3D_FILTER_PARAMETER(QString, VectorDataArrayName)
     Q_PROPERTY(QString VectorDataArrayName READ getVectorDataArrayName WRITE setVectorDataArrayName)
 
-    virtual const QString getCompiledLibraryName() { return ImageImport::ImageImportBaseName; }
+    virtual const QString getCompiledLibraryName();
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
-    virtual const QString getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
+    virtual const QString getGroupName();
     /**
      * @brief getSubGroupName This returns the subgroup within the main group for this filter.
      * @return
      */
-    virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::InputFilters; }
+    virtual const QString getSubGroupName();
 
     /**
     * @brief This returns a string that is displayed in the GUI. It should be readable
     * and understandable by humans.
     */
-    virtual const QString getHumanLabel() { return "Import Images (As Vector)"; }
+    virtual const QString getHumanLabel();
 
 
     /**

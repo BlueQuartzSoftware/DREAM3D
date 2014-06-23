@@ -498,3 +498,24 @@ AbstractFilter::Pointer ConvertHexGridToSquareGrid::newFilterInstance(bool copyF
   }
   return filter;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString ConvertHexGridToSquareGrid::getCompiledLibraryName()
+{ return Sampling::SamplingBaseName; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString ConvertHexGridToSquareGrid::getGroupName()
+{ return DREAM3D::FilterGroups::SamplingFilters; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString ConvertHexGridToSquareGrid::getHumanLabel()
+{ return "Convert Hexagonal Grid Data to Square Grid Data (TSL - .ang)"; }
+

@@ -539,3 +539,31 @@ AbstractFilter::Pointer WritePoleFigure::newFilterInstance(bool copyFilterParame
   }
   return filter;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString WritePoleFigure::getCompiledLibraryName()
+{ return OrientationAnalysis::OrientationAnalysisBaseName; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString WritePoleFigure::getGroupName()
+{ return DREAM3D::FilterGroups::IOFilters; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString WritePoleFigure::getSubGroupName()
+{ return "Output"; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString WritePoleFigure::getHumanLabel()
+{ return "Write Pole Figure Image"; }
+

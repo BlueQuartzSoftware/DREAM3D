@@ -419,3 +419,31 @@ AbstractFilter::Pointer EBSDSegmentFeatures::newFilterInstance(bool copyFilterPa
   }
   return filter;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString EBSDSegmentFeatures::getCompiledLibraryName()
+{ return Reconstruction::ReconstructionBaseName; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString EBSDSegmentFeatures::getGroupName()
+{ return DREAM3D::FilterGroups::ReconstructionFilters; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString EBSDSegmentFeatures::getSubGroupName()
+{return DREAM3D::FilterSubGroups::SegmentationFilters;}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString EBSDSegmentFeatures::getHumanLabel()
+{ return "Segment Features (Misorientation)"; }
+

@@ -293,3 +293,24 @@ AbstractFilter::Pointer IdentifySample::newFilterInstance(bool copyFilterParamet
   }
   return filter;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString IdentifySample::getCompiledLibraryName()
+{ return Processing::ProcessingBaseName; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString IdentifySample::getGroupName()
+{ return DREAM3D::FilterGroups::ProcessingFilters; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString IdentifySample::getHumanLabel()
+{ return "Isolate Largest Feature (Identify Sample)"; }
+

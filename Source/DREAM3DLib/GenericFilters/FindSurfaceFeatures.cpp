@@ -259,3 +259,31 @@ AbstractFilter::Pointer FindSurfaceFeatures::newFilterInstance(bool copyFilterPa
   }
   return filter;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString FindSurfaceFeatures::getCompiledLibraryName()
+{ return Generic::GenericBaseName; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString FindSurfaceFeatures::getGroupName()
+{ return DREAM3D::FilterGroups::GenericFilters; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString FindSurfaceFeatures::getSubGroupName()
+{ return DREAM3D::FilterSubGroups::SpatialFilters; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString FindSurfaceFeatures::getHumanLabel()
+{ return "Find Surface Features"; }
+

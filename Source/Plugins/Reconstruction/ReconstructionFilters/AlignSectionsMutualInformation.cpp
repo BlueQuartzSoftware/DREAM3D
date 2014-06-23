@@ -572,3 +572,31 @@ AbstractFilter::Pointer AlignSectionsMutualInformation::newFilterInstance(bool c
   }
   return filter;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString AlignSectionsMutualInformation::getCompiledLibraryName()
+{ return Reconstruction::ReconstructionBaseName; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString AlignSectionsMutualInformation::getGroupName()
+{ return DREAM3D::FilterGroups::ReconstructionFilters; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString AlignSectionsMutualInformation::getSubGroupName()
+{return DREAM3D::FilterSubGroups::AlignmentFilters;}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString AlignSectionsMutualInformation::getHumanLabel()
+{ return "Align Sections (Mutual Information)"; }
+

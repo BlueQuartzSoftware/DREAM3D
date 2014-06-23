@@ -431,3 +431,31 @@ AbstractFilter::Pointer FeatureFaceCurvatureFilter::newFilterInstance(bool copyF
   }
   return filter;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString FeatureFaceCurvatureFilter::getCompiledLibraryName()
+{ return SurfaceMeshing::SurfaceMeshingBaseName; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString FeatureFaceCurvatureFilter::getGroupName()
+{ return DREAM3D::FilterGroups::SurfaceMeshingFilters; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString FeatureFaceCurvatureFilter::getSubGroupName()
+{ return DREAM3D::FilterSubGroups::CurvatureFilters; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString FeatureFaceCurvatureFilter::getHumanLabel()
+{ return "Feature Face Curvature Filter"; }
+

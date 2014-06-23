@@ -140,10 +140,10 @@ float positionInHeader(const QString hFile, const QString var, bool isPointer)
   {
     // Read the Source File
     QFileInfo fi(hFile);
-//        if (fi.baseName().compare("FillBadData") != 0)
-//        {
-//          return false;
-//        }
+    //        if (fi.baseName().compare("FillBadData") != 0)
+    //        {
+    //          return false;
+    //        }
 
     QFile source(hFile);
     source.open(QFile::ReadOnly);
@@ -327,10 +327,10 @@ bool fixFile( AbstractFilter::Pointer filter, const QString& hFile, const QStrin
   {
     // Read the Source File
     QFileInfo fi(cppFile);
-//    if (fi.baseName().compare("WriteImage") != 0)
-//    {
-//      return false;
-//    }
+    //    if (fi.baseName().compare("WriteImage") != 0)
+    //    {
+    //      return false;
+    //    }
     QFile source(cppFile);
     source.open(QFile::ReadOnly);
     contents = source.readAll();
@@ -393,7 +393,7 @@ void fixFilterParameter(QStringListIterator &sourceLines, QStringList &outLines,
 
   QString third = " \"\"";
   if(second.isEmpty() == false) {
-     third = " get" + second + "()";
+    third = " get" + second + "()";
   }
   tokens[3] = third;
 
@@ -410,18 +410,18 @@ void fixFilterParameter(QStringListIterator &sourceLines, QStringList &outLines,
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-bool fixFilterParameters( AbstractFilter::Pointer filter, const QString& hFile, const QString& cppFile)
+bool SplitFilterHeaderCodes( AbstractFilter::Pointer filter, const QString& hFile, const QString& cppFile)
 {
   QString contents;
   {
     // Read the Source File
-//    QFileInfo fi(cppFile);
-//    if (fi.baseName().compare("FillBadData") != 0)
+    QFileInfo fi(cppFile);
+//    if (fi.baseName().compare("GenerateVectorColors") != 0)
 //    {
 //      return false;
 //    }
 
-    QFile source(cppFile);
+    QFile source(hFile);
     source.open(QFile::ReadOnly);
     contents = source.readAll();
     source.close();
@@ -431,10 +431,12 @@ bool fixFilterParameters( AbstractFilter::Pointer filter, const QString& hFile, 
   QStringList names;
   bool didReplace = false;
 
-  QString searchString = "(FilterParameter::New(";
+  QString searchString = "virtual const QString getHumanLabel() {";
+  QString replaceString = "    virtual const QString getHumanLabel();";
   QStringList outLines;
   QStringList list = contents.split(QRegExp("\\n"));
   QStringListIterator sourceLines(list);
+  QString body;
 
   int index = 0;
   while (sourceLines.hasNext())
@@ -442,7 +444,9 @@ bool fixFilterParameters( AbstractFilter::Pointer filter, const QString& hFile, 
     QString line = sourceLines.next();
     if(line.contains(searchString) )
     {
-      fixFilterParameter(sourceLines, outLines, searchString, line);
+      outLines.push_back(replaceString);
+      QStringList chomp = line.split("{");
+      body = "{" + chomp.at(1);
       didReplace = true;
     }
     else
@@ -451,12 +455,87 @@ bool fixFilterParameters( AbstractFilter::Pointer filter, const QString& hFile, 
     }
   }
 
-
-  writeOutput(didReplace, outLines, cppFile);
+  writeOutput(didReplace, outLines, hFile);
   index++;
+
+  // Now update the .cpp file
+  {
+    QFile source(cppFile);
+    source.open(QFile::ReadOnly);
+    contents = source.readAll();
+    source.close();
+  }
+
+  QFileInfo fi(cppFile);
+  QString cName = fi.baseName();
+
+  QTextStream out(&contents);
+  out << "\n";
+  out << "// -----------------------------------------------------------------------------\n";
+  out << "//\n";
+  out << "// -----------------------------------------------------------------------------\n";
+  out << "const QString " << cName << "::getHumanLabel()\n";
+  out << body << "\n\n";
+
+  list = contents.split(QRegExp("\\n"));
+  writeOutput(didReplace, list, cppFile);
 
   return didReplace;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+bool FixIncludeGuard( AbstractFilter::Pointer filter, const QString& hFile, const QString& cppFile)
+{
+  QString contents;
+  QFileInfo fi(hFile);
+  {
+    // Read the Source File
+//    if (fi.baseName().compare("GenerateVectorColors") != 0)
+//    {
+//      return false;
+//    }
+
+    QFile source(hFile);
+    source.open(QFile::ReadOnly);
+    contents = source.readAll();
+    source.close();
+  }
+
+
+  QStringList names;
+  bool didReplace = false;
+
+  QString searchString = "#ifndef";
+  QString replaceString = "#ifndef _" + fi.baseName() + "_H_";
+  QStringList outLines;
+  QStringList list = contents.split(QRegExp("\\n"));
+  QStringListIterator sourceLines(list);
+  QString body;
+
+  int index = 0;
+  while (sourceLines.hasNext())
+  {
+    QString line = sourceLines.next();
+    if(line.contains(searchString) )
+    {
+      outLines.push_back(replaceString);
+      outLines.push_back("#define _" + fi.baseName() + "_H_");
+      line = sourceLines.next(); // Eat the next line
+      didReplace = true;
+    }
+    else
+    {
+      outLines.push_back(line);
+    }
+  }
+
+  writeOutput(didReplace, outLines, hFile);
+  index++;
+  return didReplace;
+}
+
 
 
 // -----------------------------------------------------------------------------
@@ -512,8 +591,9 @@ void GenerateFilterParametersCode()
     //qDebug() << "CPP File: " << cpp;
     QString h = findPath(filter->getGroupName(), filter->getNameOfClass(), ".h");
 
-    fixFile(filter, h, cpp);
-    //fixFilterParameters(filter, h, cpp);
+    //fixFile(filter, h, cpp);
+    //SplitFilterHeaderCodes(filter, h, cpp);
+    FixIncludeGuard(filter, h, cpp);
   }
 
 }
@@ -524,7 +604,7 @@ void GenerateFilterParametersCode()
 // -----------------------------------------------------------------------------
 int main(int argc, char *argv[])
 {
-  Q_ASSERT(false); // We don't want anyone to run this program.
+  Q_ASSERT(true); // We don't want anyone to run this program.
   // Instantiate the QCoreApplication that we need to get the current path and load plugins.
   QCoreApplication app(argc, argv);
   QCoreApplication::setOrganizationName("BlueQuartz Software");

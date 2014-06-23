@@ -236,3 +236,24 @@ AbstractFilter::Pointer UncertainRegularGridSampleSurfaceMesh::newFilterInstance
   }
   return filter;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString UncertainRegularGridSampleSurfaceMesh::getCompiledLibraryName()
+{ return Sampling::SamplingBaseName; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString UncertainRegularGridSampleSurfaceMesh::getGroupName()
+{ return DREAM3D::FilterGroups::SamplingFilters; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString UncertainRegularGridSampleSurfaceMesh::getHumanLabel()
+{ return "Sample Surface Mesh on Uncertain Regular Grid"; }
+

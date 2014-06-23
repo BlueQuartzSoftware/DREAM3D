@@ -204,3 +204,31 @@ AbstractFilter::Pointer FindBoundaryCells::newFilterInstance(bool copyFilterPara
   }
   return filter;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString FindBoundaryCells::getCompiledLibraryName()
+{ return Generic::GenericBaseName; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString FindBoundaryCells::getGroupName()
+{ return DREAM3D::FilterGroups::GenericFilters; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString FindBoundaryCells::getSubGroupName()
+{ return DREAM3D::FilterSubGroups::SpatialFilters; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString FindBoundaryCells::getHumanLabel()
+{ return "Find Boundary Cells"; }
+

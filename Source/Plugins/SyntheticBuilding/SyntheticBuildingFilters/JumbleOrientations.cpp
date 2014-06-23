@@ -248,3 +248,31 @@ AbstractFilter::Pointer JumbleOrientations::newFilterInstance(bool copyFilterPar
   }
   return filter;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString JumbleOrientations::getCompiledLibraryName()
+{ return SyntheticBuilding::SyntheticBuildingBaseName; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString JumbleOrientations::getGroupName()
+{return DREAM3D::FilterGroups::SyntheticBuildingFilters;}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString JumbleOrientations::getSubGroupName()
+{ return DREAM3D::FilterSubGroups::CrystallographyFilters; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString JumbleOrientations::getHumanLabel()
+{return "Jumble Orientations";}
+

@@ -93,11 +93,11 @@ class FindFeatureReferenceMisorientations : public AbstractFilter
     DREAM3D_FILTER_PARAMETER(QString, FeatureReferenceMisorientationsArrayName)
     Q_PROPERTY(QString FeatureReferenceMisorientationsArrayName READ getFeatureReferenceMisorientationsArrayName WRITE setFeatureReferenceMisorientationsArrayName)
 
-    virtual const QString getCompiledLibraryName() { return Statistics::StatisticsBaseName; }
+    virtual const QString getCompiledLibraryName();
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
-    virtual const QString getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
-    virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::CrystallographicFilters; }
-    virtual const QString getHumanLabel() { return "Find Feature Reference Misorientations"; }
+    virtual const QString getGroupName();
+    virtual const QString getSubGroupName();
+    virtual const QString getHumanLabel();
 
     DREAM3D_FILTER_PARAMETER(unsigned int, ReferenceOrientation)
     Q_PROPERTY(unsigned int ReferenceOrientation READ getReferenceOrientation WRITE setReferenceOrientation)

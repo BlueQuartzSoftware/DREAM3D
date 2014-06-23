@@ -369,3 +369,24 @@ AbstractFilter::Pointer MinNeighbors::newFilterInstance(bool copyFilterParameter
   }
   return filter;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString MinNeighbors::getCompiledLibraryName()
+{ return Processing::ProcessingBaseName; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString MinNeighbors::getGroupName()
+{ return DREAM3D::FilterGroups::ProcessingFilters; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString MinNeighbors::getHumanLabel()
+{ return "Minimum Number of Neighbors Filter"; }
+

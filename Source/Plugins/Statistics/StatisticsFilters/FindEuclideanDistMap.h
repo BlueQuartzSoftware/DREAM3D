@@ -80,11 +80,11 @@ class FindEuclideanDistMap : public AbstractFilter
     DREAM3D_FILTER_PARAMETER(QString, NearestNeighborsArrayName)
     Q_PROPERTY(QString NearestNeighborsArrayName READ getNearestNeighborsArrayName WRITE setNearestNeighborsArrayName)
 
-    virtual const QString getCompiledLibraryName() { return Statistics::StatisticsBaseName; }
+    virtual const QString getCompiledLibraryName();
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
-    virtual const QString getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
-    virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::MorphologicalFilters; }
-    virtual const QString getHumanLabel() { return "Find Euclidean Distance Map"; }
+    virtual const QString getGroupName();
+    virtual const QString getSubGroupName();
+    virtual const QString getHumanLabel();
 
     DREAM3D_FILTER_PARAMETER(bool, DoBoundaries)
     Q_PROPERTY(bool DoBoundaries READ getDoBoundaries WRITE setDoBoundaries)

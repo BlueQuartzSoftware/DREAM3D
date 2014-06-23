@@ -280,3 +280,31 @@ AbstractFilter::Pointer FindAvgScalarValueForFeatures::newFilterInstance(bool co
   }
   return filter;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString FindAvgScalarValueForFeatures::getCompiledLibraryName()
+{ return Statistics::StatisticsBaseName; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString FindAvgScalarValueForFeatures::getGroupName()
+{ return DREAM3D::FilterGroups::StatisticsFilters; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString FindAvgScalarValueForFeatures::getSubGroupName()
+{ return DREAM3D::FilterSubGroups::EnsembleStatsFilters; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString FindAvgScalarValueForFeatures::getHumanLabel()
+{ return "Find Average Value of Scalars For Feature"; }
+

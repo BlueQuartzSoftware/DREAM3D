@@ -304,3 +304,31 @@ AbstractFilter::Pointer FindLocalAverageCAxisMisalignments::newFilterInstance(bo
   }
   return filter;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString FindLocalAverageCAxisMisalignments::getCompiledLibraryName()
+{ return Statistics::StatisticsBaseName; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString FindLocalAverageCAxisMisalignments::getGroupName()
+{ return DREAM3D::FilterGroups::StatisticsFilters; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString FindLocalAverageCAxisMisalignments::getSubGroupName()
+{return DREAM3D::FilterSubGroups::CrystallographicFilters;}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString FindLocalAverageCAxisMisalignments::getHumanLabel()
+{ return "Find Local Average C-Axis Misalignments"; }
+

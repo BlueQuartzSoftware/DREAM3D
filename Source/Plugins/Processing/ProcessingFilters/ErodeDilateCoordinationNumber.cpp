@@ -309,3 +309,24 @@ AbstractFilter::Pointer ErodeDilateCoordinationNumber::newFilterInstance(bool co
   }
   return filter;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString ErodeDilateCoordinationNumber::getCompiledLibraryName()
+{ return Processing::ProcessingBaseName; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString ErodeDilateCoordinationNumber::getGroupName()
+{ return DREAM3D::FilterGroups::ProcessingFilters; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString ErodeDilateCoordinationNumber::getHumanLabel()
+{ return "Smooth Bad Data (Coordination Number)"; }
+

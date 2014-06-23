@@ -317,3 +317,31 @@ AbstractFilter::Pointer FindFeatureReferenceCAxisMisorientations::newFilterInsta
   }
   return filter;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString FindFeatureReferenceCAxisMisorientations::getCompiledLibraryName()
+{ return Statistics::StatisticsBaseName; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString FindFeatureReferenceCAxisMisorientations::getGroupName()
+{ return DREAM3D::FilterGroups::StatisticsFilters; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString FindFeatureReferenceCAxisMisorientations::getSubGroupName()
+{ return DREAM3D::FilterSubGroups::CrystallographicFilters; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString FindFeatureReferenceCAxisMisorientations::getHumanLabel()
+{ return "Find Feature Reference C-Axis Misorientations"; }
+
