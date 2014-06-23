@@ -88,7 +88,7 @@ void ErodeDilateCoordinationNumber::readFilterParameters(AbstractFilterParameter
   reader->openFilterGroup(this, index);
   setFeatureIdsArrayPath(reader->readDataArrayPath("FeatureIdsArrayPath", getFeatureIdsArrayPath() ) );
   setCoordinationNumber( reader->readValue("CoordinationNumber", getCoordinationNumber()) );
-  setLoop( reader->readValue("Loop", false) );
+  setLoop( reader->readValue("Loop", getLoop()) );
   reader->closeFilterGroup();
 }
 

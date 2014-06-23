@@ -104,7 +104,7 @@ void FindMisorientations::readFilterParameters(AbstractFilterParametersReader* r
   setFeaturePhasesArrayPath(reader->readDataArrayPath("FeaturePhasesArrayPath", getFeaturePhasesArrayPath() ) );
   setAvgQuatsArrayPath(reader->readDataArrayPath("AvgQuatsArrayPath", getAvgQuatsArrayPath() ) );
   setNeighborListArrayPath(reader->readDataArrayPath("NeighborListArrayPath", getNeighborListArrayPath() ) );
-  setFindAvgMisors( reader->readValue("UseFindAvgMisors", getFindAvgMisors()) );
+  setFindAvgMisors( reader->readValue("FindAvgMisors", getFindAvgMisors()) );
   reader->closeFilterGroup();
 }
 

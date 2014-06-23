@@ -84,9 +84,9 @@ void GenerateSurfaceMeshConnectivity::readFilterParameters(AbstractFilterParamet
 {
   reader->openFilterGroup(this, index);
   setSurfaceDataContainerName(reader->readString("SurfaceDataContainerName", getSurfaceDataContainerName() ) );
-  setGenerateVertexTriangleLists( reader->readValue("GenerateVertexTriangleLists", false) );
-  setGenerateTriangleNeighbors( reader->readValue("GenerateTriangleNeighbors", false) );
-  setGenerateEdgeIdList( reader->readValue("GenerateEdgeIdList", false) );
+  setGenerateVertexTriangleLists( reader->readValue("GenerateVertexTriangleLists", getGenerateVertexTriangleLists()) );
+  setGenerateTriangleNeighbors( reader->readValue("GenerateTriangleNeighbors", getGenerateTriangleNeighbors()) );
+  setGenerateEdgeIdList( reader->readValue("GenerateEdgeIdList", getGenerateEdgeIdList()) );
   reader->closeFilterGroup();
 }
 

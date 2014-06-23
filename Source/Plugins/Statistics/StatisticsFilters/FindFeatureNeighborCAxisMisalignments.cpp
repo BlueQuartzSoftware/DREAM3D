@@ -109,7 +109,7 @@ void FindFeatureNeighborCAxisMisalignments::readFilterParameters(AbstractFilterP
   setCrystalStructuresArrayPath(reader->readDataArrayPath("CrystalStructuresArrayPath", getCrystalStructuresArrayPath() ) );
   setFeaturePhasesArrayPath(reader->readDataArrayPath("FeaturePhasesArrayPath", getFeaturePhasesArrayPath() ) );
   setAvgQuatsArrayPath(reader->readDataArrayPath("AvgQuatsArrayPath", getAvgQuatsArrayPath() ) );
-  setFindAvgMisals( reader->readValue("UseFindAvgMisals", getFindAvgMisals()) );
+  setFindAvgMisals( reader->readValue("FindAvgMisals", getFindAvgMisals()) );
   reader->closeFilterGroup();
 }
 

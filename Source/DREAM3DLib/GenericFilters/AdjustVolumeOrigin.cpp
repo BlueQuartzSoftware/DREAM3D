@@ -140,8 +140,8 @@ void AdjustVolumeOrigin::setupFilterParameters()
 void AdjustVolumeOrigin::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-  setApplyToVoxelVolume( reader->readValue("ApplyToVoxelVolume", false) );
-  setApplyToSurfaceMesh( reader->readValue("ApplyToSurfaceMesh", false) );
+  setApplyToVoxelVolume( reader->readValue("ApplyToVoxelVolume", getApplyToVoxelVolume()) );
+  setApplyToSurfaceMesh( reader->readValue("ApplyToSurfaceMesh", getApplyToSurfaceMesh()) );
   setOrigin( reader->readFloatVec3("Origin", getOrigin() ) );
   setDataContainerName(reader->readString("DataContainerName", getDataContainerName()));
   setSurfaceDataContainerName(reader->readString("SurfaceDataContainerName", getSurfaceDataContainerName()));

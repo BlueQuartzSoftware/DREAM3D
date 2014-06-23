@@ -104,8 +104,8 @@ void ChangeResolution::readFilterParameters(AbstractFilterParametersReader* read
   setCellFeatureAttributeMatrixPath( reader->readDataArrayPath("CellFeatureAttributeMatrixPath", getCellFeatureAttributeMatrixPath() ) );
   setFeatureIdsArrayPath(reader->readDataArrayPath("FeatureIdsArrayPath", getFeatureIdsArrayPath() ) );
   setResolution( reader->readFloatVec3("Resolution", getResolution() ) );
-  setRenumberFeatures( reader->readValue("RenumberFeatures", false) );
-  setSaveAsNewDataContainer( reader->readValue("SaveAsNewDataContainer", false) );
+  setRenumberFeatures( reader->readValue("RenumberFeatures", getRenumberFeatures()) );
+  setSaveAsNewDataContainer( reader->readValue("SaveAsNewDataContainer", getSaveAsNewDataContainer()) );
   reader->closeFilterGroup();
 }
 

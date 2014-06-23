@@ -150,10 +150,10 @@ void FeatureFaceCurvatureFilter::readFilterParameters(AbstractFilterParametersRe
   setSurfaceMeshFaceLabelsArrayPath(reader->readDataArrayPath("SurfaceMeshFaceLabelsArrayPath", getSurfaceMeshFaceLabelsArrayPath() ) );
   setSurfaceMeshFeatureFaceIdsArrayPath(reader->readDataArrayPath("SurfaceMeshFeatureFaceIdsArrayPath", getSurfaceMeshFeatureFaceIdsArrayPath() ) );
   setNRing( reader->readValue("NRing", getNRing()) );
-  setComputePrincipalDirectionVectors( reader->readValue("ComputePrincipalDirectionVectors", false) );
-  setComputeGaussianCurvature( reader->readValue("ComputeGaussianCurvature", false) );
-  setComputeMeanCurvature( reader->readValue("ComputeMeanCurvature", false) );
-  setUseNormalsForCurveFitting( reader->readValue("UseNormalsForCurveFitting", false) );
+  setComputePrincipalDirectionVectors( reader->readValue("ComputePrincipalDirectionVectors", getComputePrincipalDirectionVectors()) );
+  setComputeGaussianCurvature( reader->readValue("ComputeGaussianCurvature", getComputeGaussianCurvature()) );
+  setComputeMeanCurvature( reader->readValue("ComputeMeanCurvature", getComputeMeanCurvature()) );
+  setUseNormalsForCurveFitting( reader->readValue("UseNormalsForCurveFitting", getUseNormalsForCurveFitting()) );
   reader->closeFilterGroup();
 }
 

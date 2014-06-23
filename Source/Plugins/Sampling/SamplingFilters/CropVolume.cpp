@@ -115,9 +115,9 @@ void CropVolume::readFilterParameters(AbstractFilterParametersReader* reader, in
   setXMax( reader->readValue("XMax", getXMax()) );
   setYMax( reader->readValue("YMax", getYMax()) );
   setZMax( reader->readValue("ZMax", getZMax()) );
-  setRenumberFeatures( reader->readValue("RenumberFeatures", false) );
-  setSaveAsNewDataContainer( reader->readValue("SaveAsNewDataContainer", false) );
-  setUpdateOrigin( reader->readValue("UpdateOrigin", false) );
+  setRenumberFeatures( reader->readValue("RenumberFeatures", getRenumberFeatures()) );
+  setSaveAsNewDataContainer( reader->readValue("SaveAsNewDataContainer", getSaveAsNewDataContainer()) );
+  setUpdateOrigin( reader->readValue("UpdateOrigin", getUpdateOrigin()) );
   reader->closeFilterGroup();
 }
 

@@ -101,7 +101,7 @@ void AlignSectionsFeatureCentroid::readFilterParameters(AbstractFilterParameters
   AlignSections::readFilterParameters(reader, index);
   reader->openFilterGroup(this, index);
   setGoodVoxelsArrayPath(reader->readDataArrayPath("GoodVoxelsArrayPath", getGoodVoxelsArrayPath() ) );
-  setUseReferenceSlice( reader->readValue("UseReferenceSlice", false) );
+  setUseReferenceSlice( reader->readValue("UseReferenceSlice", getUseReferenceSlice()) );
   setReferenceSlice( reader->readValue("ReferenceSlice", getReferenceSlice()) );
   reader->closeFilterGroup();
 }

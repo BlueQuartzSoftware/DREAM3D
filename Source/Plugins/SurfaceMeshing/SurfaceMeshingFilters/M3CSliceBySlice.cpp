@@ -381,7 +381,7 @@ void M3CSliceBySlice::readFilterParameters(AbstractFilterParametersReader* reade
   setSurfaceMeshNodeTypesArrayName(reader->readString("SurfaceMeshNodeTypesArrayName", getSurfaceMeshNodeTypesArrayName() ) );
   setFaceLabelsArrayName(reader->readString("FaceLabelsArrayName", getFaceLabelsArrayName() ) );
   setFeatureIdsArrayPath(reader->readDataArrayPath("FeatureIdsArrayPath", getFeatureIdsArrayPath() ) );
-  setDeleteTempFiles( reader->readValue("DeleteTempFiles", false) );
+  setDeleteTempFiles( reader->readValue("DeleteTempFiles", getDeleteTempFiles()) );
   reader->closeFilterGroup();
 }
 

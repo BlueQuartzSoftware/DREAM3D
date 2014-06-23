@@ -542,10 +542,10 @@ bool ValidateParameterReader( AbstractFilter::Pointer filter, const QString& hFi
   {
     // Read the Source File
     QFileInfo fi(cppFile);
-    if (fi.baseName().compare("MatchCrystallography") != 0)
-    {
-      return false;
-    }
+//    if (fi.baseName().compare("MatchCrystallography") != 0)
+//    {
+//      return false;
+//    }
 
     QFile source(cppFile);
     source.open(QFile::ReadOnly);
@@ -593,14 +593,18 @@ bool ValidateParameterReader( AbstractFilter::Pointer filter, const QString& hFi
             QString quotedProp = "\"" + prop + "\"";
             QString getProp = "get" + prop;
 
+            QString front("<<<<<<");
             if(line.contains(setProp) == false) {
               ok = false;
+              front = front + "0 ";
             }
             if(line.contains(quotedProp) == false) {
               ok = false;
+              front = front + "1 ";
             }
             if(line.contains(getProp) == false) {
               ok = false;
+              front = front + "2 ";
             }
             if(ok)
             {
@@ -608,7 +612,7 @@ bool ValidateParameterReader( AbstractFilter::Pointer filter, const QString& hFi
             }
             else
             {
-              outLines.push_back("<<<<<<<" + origLine);
+              outLines.push_back(front + origLine);
             }
 
           }
@@ -691,8 +695,8 @@ void GenerateFilterParametersCode()
 
     //fixFile(filter, h, cpp);
     //SplitFilterHeaderCodes(filter, h, cpp);
-    //    FixIncludeGuard(filter, h, cpp);
-    ValidateParameterReader(filter, h, cpp);
+    //FixIncludeGuard(filter, h, cpp);
+    //ValidateParameterReader(filter, h, cpp);
   }
 
 }

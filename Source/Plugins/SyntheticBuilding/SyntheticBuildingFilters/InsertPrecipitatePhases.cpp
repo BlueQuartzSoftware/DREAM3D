@@ -160,8 +160,8 @@ void InsertPrecipitatePhases::readFilterParameters(AbstractFilterParametersReade
   setBoundaryCellsArrayPath(reader->readDataArrayPath("BoundaryCellsArrayPath", getBoundaryCellsArrayPath() ) );
   setCellPhasesArrayPath(reader->readDataArrayPath("CellPhasesArrayPath", getCellPhasesArrayPath() ) );
   setFeatureIdsArrayPath(reader->readDataArrayPath("FeatureIdsArrayPath", getFeatureIdsArrayPath() ) );
-  setPeriodicBoundaries( reader->readValue("PeriodicBoundaries", false) );
-  setWriteGoalAttributes( reader->readValue("WriteGoalAttributes", false) );
+  setPeriodicBoundaries( reader->readValue("PeriodicBoundaries", getPeriodicBoundaries()) );
+  setWriteGoalAttributes( reader->readValue("WriteGoalAttributes", getWriteGoalAttributes()) );
   setCsvOutputFile( reader->readString( "CsvOutputFile", getCsvOutputFile() ) );
   reader->closeFilterGroup();
 }
