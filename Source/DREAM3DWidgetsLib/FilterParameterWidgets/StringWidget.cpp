@@ -161,7 +161,7 @@ void StringWidget::hideButton()
 // -----------------------------------------------------------------------------
 void StringWidget::widgetChanged(const QString& text)
 {
-  value->setStyleSheet(QString::fromLatin1("color: rgb(0, 0, 255);"));
+  value->setStyleSheet(QString::fromLatin1("color: rgb(255, 0, 0);"));
   value->setToolTip("Press the 'Return' key to apply your changes");
   if(applyChangesBtn->isVisible() == false)
   {
