@@ -479,7 +479,7 @@ void  InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer featur
   }
 
   Precip precip;
-  QVector<float> curphasevol;
+  std::vector<float> curphasevol;
   curphasevol.resize(precipitatephases.size());
   float change = 0.0f;
   float factor = 1.0;
@@ -665,7 +665,7 @@ void  InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer featur
 
 
   // begin swaping/moving/adding/removing features to try to improve packing
-  int totalAdjustments = static_cast<int>(100 * ((numfeatures - firstPrecipitateFeature) - 1));
+  int totalAdjustments = static_cast<int>(10 * ((numfeatures - firstPrecipitateFeature) - 1));
   for (int iteration = 0; iteration < totalAdjustments; ++iteration)
   {
 
@@ -943,7 +943,7 @@ void InsertPrecipitatePhases::determine_clustering(size_t gnum, int add)
   while (phase != precipitatephases[iter]) { iter++; }
 
   StatsDataArray& statsDataArray = *(m_StatsDataArray.lock());
-  typedef QVector<QVector<float> > VectOfVectFloat_t;
+  typedef std::vector<std::vector<float> > VectOfVectFloat_t;
 
   PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsDataArray[phase].get());
   //  VectOfVectFloat_t& curSimClusteringDist = simclusteringdist[iter];
@@ -1007,7 +1007,7 @@ float InsertPrecipitatePhases::check_clusteringerror(int gadd, int gremove)
   clusteringerror = bhattdist;
   return clusteringerror;
 }
-void InsertPrecipitatePhases::compare_1Ddistributions(QVector<float> array1, QVector<float> array2, float& bhattdist)
+void InsertPrecipitatePhases::compare_1Ddistributions(std::vector<float> array1, std::vector<float> array2, float& bhattdist)
 {
   bhattdist = 0;
   for (size_t i = 0; i < array1.size(); i++)
@@ -1015,7 +1015,7 @@ void InsertPrecipitatePhases::compare_1Ddistributions(QVector<float> array1, QVe
     bhattdist = bhattdist + sqrt((array1[i] * array2[i]));
   }
 }
-void InsertPrecipitatePhases::compare_2Ddistributions(QVector<QVector<float> > array1, QVector<QVector<float> > array2, float& bhattdist)
+void InsertPrecipitatePhases::compare_2Ddistributions(std::vector<std::vector<float> > array1, std::vector<std::vector<float> > array2, float& bhattdist)
 {
   bhattdist = 0;
   for (size_t i = 0; i < array1.size(); i++)
@@ -1027,11 +1027,11 @@ void InsertPrecipitatePhases::compare_2Ddistributions(QVector<QVector<float> > a
   }
 }
 
-void InsertPrecipitatePhases::compare_3Ddistributions(QVector<QVector<QVector<float> > > array1, QVector<QVector<QVector<float> > > array2, float& bhattdist)
+void InsertPrecipitatePhases::compare_3Ddistributions(std::vector<std::vector<std::vector<float> > > array1, std::vector<std::vector<std::vector<float> > > array2, float& bhattdist)
 {
   bhattdist = 0;
-  QVector<QVector<float> > counts1(array1.size());
-  QVector<QVector<float> > counts2(array2.size());
+  std::vector<std::vector<float> > counts1(array1.size());
+  std::vector<std::vector<float> > counts2(array2.size());
   for (size_t i = 0; i < array1.size(); i++)
   {
     counts1[i].resize(array1[i].size());
@@ -1078,9 +1078,9 @@ float InsertPrecipitatePhases::check_sizedisterror(Precip* precip)
     phase = precipitatephases[iter];
     PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsDataArray[phase].get());
     count = 0;
-    QVector<float>& curFeatureSizeDist = featuresizedist[iter];
-    QVector<float>::size_type curFeatureSizeDistSize = curFeatureSizeDist.size();
-    QVector<float>& curSimFeatureSizeDist = simfeaturesizedist[iter];
+    std::vector<float>& curFeatureSizeDist = featuresizedist[iter];
+    std::vector<float>::size_type curFeatureSizeDistSize = curFeatureSizeDist.size();
+    std::vector<float>& curSimFeatureSizeDist = simfeaturesizedist[iter];
     // Initialize all Values to Zero
     for (size_t i = 0; i < curFeatureSizeDistSize; i++)
     {
@@ -1144,9 +1144,9 @@ float InsertPrecipitatePhases::check_fillingerror(int gadd, int gremove, Int32Ar
   if(gadd > 0)
   {
     size_t size = columnlist[gadd].size();
-    QVector<int>& cl_gadd = columnlist[gadd];
-    QVector<int>& rl_gadd = rowlist[gadd];
-    QVector<int>& pl_gadd = planelist[gadd];
+    std::vector<int>& cl_gadd = columnlist[gadd];
+    std::vector<int>& rl_gadd = rowlist[gadd];
+    std::vector<int>& pl_gadd = planelist[gadd];
     float packquality = 0;
     for (size_t i = 0; i < size; i++)
     {
@@ -1185,9 +1185,9 @@ float InsertPrecipitatePhases::check_fillingerror(int gadd, int gremove, Int32Ar
   if(gremove > 0)
   {
     size_t size = columnlist[gremove].size();
-    QVector<int>& cl_gremove = columnlist[gremove];
-    QVector<int>& rl_gremove = rowlist[gremove];
-    QVector<int>& pl_gremove = planelist[gremove];
+    std::vector<int>& cl_gremove = columnlist[gremove];
+    std::vector<int>& rl_gremove = rowlist[gremove];
+    std::vector<int>& pl_gremove = planelist[gremove];
     for (size_t i = 0; i < size; i++)
     {
       col = cl_gremove[i];
@@ -1709,10 +1709,10 @@ void InsertPrecipitatePhases::cleanup_features()
   neighpoints[3] = 1;
   neighpoints[4] = xp;
   neighpoints[5] = (xp * yp);
-  QVector<QVector<int> > vlists;
+  std::vector<std::vector<int> > vlists;
   vlists.resize(numFeatures);
-  QVector<int> currentvlist;
-  QVector<bool> checked(totpoints, false);
+  std::vector<int> currentvlist;
+  std::vector<bool> checked(totpoints, false);
   QVector<bool> activeObjects(numFeatures, true);
   size_t count;
   int touchessurface = 0;
@@ -1931,7 +1931,7 @@ void InsertPrecipitatePhases::write_goal_attributes()
   // Get all the names of the arrays from the Data Container
   QList<QString> headers = m->getAttributeMatrix(getFeaturePhasesArrayPath().getAttributeMatrixName())->getAttributeArrayNameList();
 
-  QVector<IDataArray::Pointer> data;
+  std::vector<IDataArray::Pointer> data;
 
   //For checking if an array is a neighborlist
   NeighborList<float>::Pointer neighborlistPtr = NeighborList<float>::New();

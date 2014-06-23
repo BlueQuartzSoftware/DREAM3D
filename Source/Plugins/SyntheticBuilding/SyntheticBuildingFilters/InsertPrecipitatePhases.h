@@ -199,13 +199,13 @@ class InsertPrecipitatePhases : public AbstractFilter
     float find_ycoord(long long int index);
     float find_zcoord(long long int index);
 
-    void compare_1Ddistributions(QVector<float>, QVector<float>, float& sqrerror);
-    void compare_2Ddistributions(QVector<QVector<float> >, QVector<QVector<float> >, float& sqrerror);
+    void compare_1Ddistributions(std::vector<float>, std::vector<float>, float& sqrerror);
+    void compare_2Ddistributions(std::vector<std::vector<float> >, std::vector<std::vector<float> >, float& sqrerror);
 
-    void compare_3Ddistributions(QVector<QVector<QVector<float> > >, QVector<QVector<QVector<float> > >, float& sqrerror);
+    void compare_3Ddistributions(std::vector<std::vector<std::vector<float> > >, std::vector<std::vector<std::vector<float> > >, float& sqrerror);
 
-    QVector<int> precipitatephases;
-    QVector<float> precipitatephasefractions;
+    std::vector<int> precipitatephases;
+    std::vector<float> precipitatephasefractions;
 
   private:
 
@@ -244,9 +244,9 @@ class InsertPrecipitatePhases : public AbstractFilter
 
     OrthoRhombicOps::Pointer m_OrthoOps;
 
-    QVector<QVector<int> > columnlist;
-    QVector<QVector<int> > rowlist;
-    QVector<QVector<int> > planelist;
+    std::vector<std::vector<int> > columnlist;
+    std::vector<std::vector<int> > rowlist;
+    std::vector<std::vector<int> > planelist;
 
     float m_HalfPackingRes[3];
     float m_OneOverHalfPackingRes[3];
@@ -255,17 +255,17 @@ class InsertPrecipitatePhases : public AbstractFilter
     int m_PackingPoints[3];
     int m_TotalPackingPoints;
 
-    QVector<QVector<float> > featuresizedist;
-    QVector<QVector<float> > simfeaturesizedist;
-    QVector<QVector<QVector<float> > > clusteringdist;
-    QVector<QVector<QVector<float> > > simclusteringdist;
+    std::vector<std::vector<float> > featuresizedist;
+    std::vector<std::vector<float> > simfeaturesizedist;
+    std::vector<std::vector<std::vector<float> > > clusteringdist;
+    std::vector<std::vector<std::vector<float> > > simclusteringdist;
 
-    QVector<float> featuresizediststep;
-    QVector<float> clusteringdiststep;
+    std::vector<float> featuresizediststep;
+    std::vector<float> clusteringdiststep;
 
-    QVector<int> newnames;
-    QVector<int> packqualities;
-    QVector<int> gsizes;
+    std::vector<int> newnames;
+    std::vector<int> packqualities;
+    std::vector<int> gsizes;
 
     float fillingerror, oldfillingerror;
     float currentclusteringerror, oldclusteringerror;
