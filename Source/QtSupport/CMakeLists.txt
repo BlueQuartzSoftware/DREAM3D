@@ -31,6 +31,7 @@ set(QtSupport_SRCS
     ${QtSupport_SOURCE_DIR}/PoleFigureImageUtilities.cpp
     ${QtSupport_SOURCE_DIR}/DREAM3DGraphicsView.cpp
     ${QtSupport_SOURCE_DIR}/FaderWidget.cpp
+    ${QtSupport_SOURCE_DIR}/SearchLineEdit.cpp
 )
 
 set(QtSupport_HDRS
@@ -47,6 +48,7 @@ set(QtSupport_HDRS
     ${QtSupport_SOURCE_DIR}/PoleFigureImageUtilities.h
     ${QtSupport_SOURCE_DIR}/DREAM3DGraphicsView.h
     ${QtSupport_SOURCE_DIR}/FaderWidget.h
+    ${QtSupport_SOURCE_DIR}/SearchLineEdit.h
 )
 cmp_IDE_SOURCE_PROPERTIES("QtSupport" "${QtSupport_HDRS}" "${QtSupport_SRCS}" "0")
 

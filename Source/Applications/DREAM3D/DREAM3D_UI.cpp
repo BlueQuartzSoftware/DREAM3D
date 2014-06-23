@@ -449,9 +449,6 @@ void DREAM3D_UI::setupGui()
   pipelineViewWidget->setInputParametersWidget(filterInputWidget);
   pipelineViewWidget->setScrollArea(pipelineViewScrollArea);
 
-  // Tell the Filter Library that we have more Filters (potentially)
-  filterLibraryDockWidget->refreshFilterGroups();
-
   // Make the connections between the gui elements
   filterLibraryDockWidget->connectFilterList(filterListDockWidget);
   favoritesDockWidget->connectFilterList(filterListDockWidget);
@@ -477,6 +474,10 @@ void DREAM3D_UI::setupGui()
 
   connect(favoritesDockWidget, SIGNAL(pipelineNeedsToBeSaved(const QString&, const QString&)),
           pipelineViewWidget, SLOT(savePipeline(const QString&, const QString&)) );
+
+  // This will set the initial list of filters in the filterListDockWidget
+  // Tell the Filter Library that we have more Filters (potentially)
+  filterLibraryDockWidget->refreshFilterGroups();
 
   // Set the IssuesDockWidget as a PipelineMessageObserver Object.
   pipelineViewWidget->setPipelineMessageObserver(issuesDockWidget);

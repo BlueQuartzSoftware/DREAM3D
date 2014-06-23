@@ -122,6 +122,7 @@ void FilterLibraryDockWidget::refreshFilterGroups()
     }
   }
   library->setExpanded(true);
+  on_filterLibraryTree_currentItemChanged(library, NULL);
 }
 
 // -----------------------------------------------------------------------------
@@ -194,9 +195,7 @@ void FilterLibraryDockWidget::on_filterLibraryTree_itemDoubleClicked( QTreeWidge
 // -----------------------------------------------------------------------------
 void FilterLibraryDockWidget::updateFilterGroupList(FilterManager::Collection& factories)
 {
-
   QStringList filterNames;
-
   for (FilterManager::Collection::iterator factory = factories.begin(); factory != factories.end(); ++factory)
   {
     filterNames << factory.key();

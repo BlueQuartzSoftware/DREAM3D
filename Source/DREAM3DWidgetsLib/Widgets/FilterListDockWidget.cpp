@@ -37,6 +37,7 @@
 
 #include <QtCore/QFileInfo>
 #include <QtGui/QTreeWidgetItem>
+#include <QtGui/QPainter>
 
 #include "DREAM3DLib/Common/FilterManager.h"
 #include "DREAM3DLib/Common/IFilterFactory.hpp"
@@ -73,50 +74,63 @@ FilterListDockWidget::~FilterListDockWidget()
 void FilterListDockWidget::setupGui()
 {
 
+  filterSearch->setAttribute(Qt::WA_MacShowFocusRect, false);
+
+  QMenu* lineEditMenu = new QMenu(filterSearch);
+  filterSearch->setButtonMenu(SearchLineEdit::Left, lineEditMenu);
+  filterSearch->setButtonVisible(SearchLineEdit::Left, true);
+  //filterSearch->setAutoHideButton(SearchLineEdit::Left, true);
+  filterSearch->setPlaceholderText("Search for filter");
+  connect(filterSearch, SIGNAL(textChanged(QString)), this, SLOT(searchFieldsChanged()));
+
   {
-    m_ActionSearchFilterHumanName = new QAction(&m_Menu);
+    m_ActionSearchFilterHumanName = new QAction(filterSearch);
     m_ActionSearchFilterHumanName->setObjectName(QString::fromUtf8("actionFilterHumanLabel"));
     m_ActionSearchFilterHumanName->setText(QApplication::translate("DREAM3D_UI", "Filter Human Name", 0, QApplication::UnicodeUTF8));
     m_ActionSearchFilterHumanName->setCheckable(true);
     m_ActionSearchFilterHumanName->setChecked(m_SearchFilterHumanName);
-    m_Menu.addAction(m_ActionSearchFilterHumanName);
+    filterSearch->addAction(m_ActionSearchFilterHumanName);
     connect(m_ActionSearchFilterHumanName, SIGNAL(triggered()),
             this, SLOT( searchFieldsChanged() ) );
+    lineEditMenu->addAction(m_ActionSearchFilterHumanName);
   }
   {
-    m_ActionSearchFilterClassName = new QAction(&m_Menu);
+    m_ActionSearchFilterClassName = new QAction(filterSearch);
     m_ActionSearchFilterClassName->setObjectName(QString::fromUtf8("actionFilterClassName"));
     m_ActionSearchFilterClassName->setText(QApplication::translate("DREAM3D_UI", "Filter Class Name", 0, QApplication::UnicodeUTF8));
     m_ActionSearchFilterClassName->setCheckable(true);
     m_ActionSearchFilterClassName->setChecked(m_SearchFilterClassName);
-    m_Menu.addAction(m_ActionSearchFilterClassName);
+    filterSearch->addAction(m_ActionSearchFilterClassName);
     connect(m_ActionSearchFilterClassName, SIGNAL(triggered()),
             this, SLOT( searchFieldsChanged() ) );
+    lineEditMenu->addAction(m_ActionSearchFilterClassName);
   }
 
   {
-    m_ActionSearchParameterName = new QAction(&m_Menu);
+    m_ActionSearchParameterName = new QAction(filterSearch);
     m_ActionSearchParameterName->setObjectName(QString::fromUtf8("actionFilterParameterName"));
     m_ActionSearchParameterName->setText(QApplication::translate("DREAM3D_UI", "Parameter Name", 0, QApplication::UnicodeUTF8));
     m_ActionSearchParameterName->setCheckable(true);
     m_ActionSearchParameterName->setChecked(m_SearchParameterHumanName);
-    m_Menu.addAction(m_ActionSearchParameterName);
+    filterSearch->addAction(m_ActionSearchParameterName);
     connect(m_ActionSearchParameterName, SIGNAL(triggered()),
             this, SLOT( searchFieldsChanged() ) );
+    lineEditMenu->addAction(m_ActionSearchParameterName);
   }
   {
-    m_ActionSearchParameterPropertyName = new QAction(&m_Menu);
+    m_ActionSearchParameterPropertyName = new QAction(filterSearch);
     m_ActionSearchParameterPropertyName->setObjectName(QString::fromUtf8("actionFilterParameterPropertyName"));
     m_ActionSearchParameterPropertyName->setText(QApplication::translate("DREAM3D_UI", "Parameter Property Name", 0, QApplication::UnicodeUTF8));
     m_ActionSearchParameterPropertyName->setCheckable(true);
     m_ActionSearchParameterPropertyName->setChecked(m_SearchParameterPropertyName);
-    m_Menu.addAction(m_ActionSearchParameterPropertyName);
+    filterSearch->addAction(m_ActionSearchParameterPropertyName);
     connect(m_ActionSearchParameterPropertyName, SIGNAL(triggered()),
             this, SLOT( searchFieldsChanged() ) );
+    lineEditMenu->addAction(m_ActionSearchParameterPropertyName);
   }
 
-  searchFieldsBtn->setText("");
-  searchFieldsBtn->setMenu(&m_Menu);
+
+  updateSearchIcons();
 }
 
 // -----------------------------------------------------------------------------
@@ -128,6 +142,8 @@ void FilterListDockWidget::updateFilterList(const QStringList& list, bool sortIt
 
   FilterManager::Pointer fm = FilterManager::Instance();
 
+  QString countText = QObject::tr("Filter Count: %1").arg(list.size());
+  filterCountLabel->setText(countText);
 
   for (int i = 0; i < list.size(); i++)
   {
@@ -167,8 +183,10 @@ void FilterListDockWidget::updateFilterList(const QStringList& list, bool sortIt
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FilterListDockWidget::on_filterSearch_textChanged (const QString& text)
+void FilterListDockWidget::searchFilters()
 {
+  // Get the text from the search box
+  QString text = filterSearch->text();
 
   int listWidgetSize = filterList->count();
   if(text.isEmpty() )
@@ -177,14 +195,14 @@ void FilterListDockWidget::on_filterSearch_textChanged (const QString& text)
     {
       filterList->item(k1)->setHidden(false);
     }
+    QString countText = QObject::tr("Filter Count: %1").arg(listWidgetSize);
+    filterCountLabel->setText(countText);
     return;
   }
 
   // The user is typing something in the search box so lets search the filter class name and human label
-
   FilterManager::Pointer fm = FilterManager::Instance();
-  FilterManager::Collection factories = fm->getFactories(); // Get all the Factories
-  //qDebug() << "Search Text: " << text;
+  int filterCount = 0;
   bool match = false;
   for (int k1 = 0; k1 < listWidgetSize; k1++)
   {
@@ -227,7 +245,12 @@ void FilterListDockWidget::on_filterSearch_textChanged (const QString& text)
       }
     }
     filterList->item(k1)->setHidden(!match);
+    if(match) { filterCount++; }
   }
+
+  QString countText = QObject::tr("Filter Count: %1").arg(filterCount);
+  filterCountLabel->setText(countText);
+
 }
 
 // -----------------------------------------------------------------------------
@@ -235,9 +258,35 @@ void FilterListDockWidget::on_filterSearch_textChanged (const QString& text)
 // -----------------------------------------------------------------------------
 void FilterListDockWidget::searchFieldsChanged()
 {
+  updateSearchIcons();
+  searchFilters();
+}
 
-  on_filterSearch_textChanged(filterSearch->text());
-
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void FilterListDockWidget::updateSearchIcons()
+{
+  m_SearchFilterHumanName = m_ActionSearchFilterHumanName->isChecked();
+  m_SearchFilterClassName = m_ActionSearchFilterClassName->isChecked();
+  m_SearchParameterHumanName = m_ActionSearchParameterName->isChecked();
+  m_SearchParameterPropertyName = m_ActionSearchParameterPropertyName->isChecked();
+  if (!m_SearchFilterHumanName && !m_SearchFilterClassName && !m_SearchParameterHumanName && !m_SearchParameterPropertyName) {
+    QPixmap pixmap(17, 17);
+    pixmap.fill(Qt::transparent);
+    QPainter painter(&pixmap);
+    const QPixmap mag = QPixmap(QLatin1String(":/view.png"));
+    painter.drawPixmap(0, (pixmap.height() - mag.height()) / 2, mag);
+    filterSearch->setButtonPixmap(SearchLineEdit::Left, pixmap);
+  } else {
+    QPixmap pixmap(17, 17);
+    pixmap.fill(Qt::transparent);
+    QPainter painter(&pixmap);
+    const QPixmap mag = QPixmap(QLatin1String(":/view_add.png"));
+    painter.drawPixmap(0, (pixmap.height() - mag.height()) / 2, mag);
+    //filterSearch->setButtonPixmap(SearchLineEdit::Left, IFindFilter::pixmapForFindFlags(effectiveFlags));
+    filterSearch->setButtonPixmap(SearchLineEdit::Left, pixmap);
+  }
 }
 
 // -----------------------------------------------------------------------------

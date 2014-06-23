@@ -208,12 +208,27 @@ void StringWidget::setLinkedConditionalState(int state)
   fadeWidget(this, boolProp);
 }
 
+#define FADE_TIME 160
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 void StringWidget::fadeWidget(QWidget* widget, bool in)
 {
 
+
+#if 0
+  if (in) {
+    QPropertyAnimation *animation = new QPropertyAnimation(widget, "iconOpacity");
+    animation->setDuration(FADE_TIME);
+    animation->setEndValue(1.0);
+    animation->start(QAbstractAnimation::DeleteWhenStopped);
+  } else {
+    QPropertyAnimation *animation = new QPropertyAnimation(this, "iconOpacity");
+    animation->setDuration(FADE_TIME);
+    animation->setEndValue(0.0);
+    animation->start(QAbstractAnimation::DeleteWhenStopped);
+  }
+#else
   if (faderWidget)
   {
     faderWidget->close();
@@ -236,4 +251,6 @@ void StringWidget::fadeWidget(QWidget* widget, bool in)
   if(m_FilterParameter->getAdvanced()) { color = DREAM3D::Defaults::AdvancedColor; }
   faderWidget->setStartColor(color);
   faderWidget->start();
+
+  #endif
 }

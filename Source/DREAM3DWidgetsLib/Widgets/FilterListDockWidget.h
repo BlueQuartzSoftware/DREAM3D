@@ -57,28 +57,46 @@ class DREAM3DWidgetsLib_EXPORT FilterListDockWidget : public QDockWidget, privat
 
   public slots:
 
+    /**
+     * @brief on_filterList_itemDoubleClicked
+     * @param item
+     */
     void on_filterList_itemDoubleClicked( QListWidgetItem* item );
 
-    void on_filterSearch_textChanged (const QString& text);
-
+    /**
+     * @brief updateFilterList
+     * @param list
+     * @param sortItems
+     */
     void updateFilterList(const QStringList& list, bool sortItems);
 
+    /**
+     * @brief searchFieldsChanged
+     */
     void searchFieldsChanged();
 
   signals:
 
+    /**
+     * @brief filterItemDoubleClicked
+     * @param filterName
+     */
     void filterItemDoubleClicked(const QString& filterName);
 
 
   protected:
     void setupGui();
 
+    void searchFilters();
+    void updateSearchIcons();
+
   private:
-    QMenu m_Menu;
+
     bool m_SearchFilterClassName;
     bool m_SearchFilterHumanName;
     bool m_SearchParameterPropertyName;
     bool m_SearchParameterHumanName;
+
     QAction* m_ActionSearchFilterClassName;
     QAction* m_ActionSearchFilterHumanName;
     QAction* m_ActionSearchParameterName;
