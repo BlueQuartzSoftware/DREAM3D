@@ -131,6 +131,11 @@ class EbsdToH5EbsdWidget : public QWidget, private Ui::EbsdToH5EbsdWidget
     virtual void checkIOFiles();
 
     /**
+     * @brief validateInputFile
+     */
+    void validateInputFile();
+
+    /**
      * @brief verifyPathExists
      * @param outFilePath
      * @param lineEdit

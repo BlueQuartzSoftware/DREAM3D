@@ -168,6 +168,7 @@ void EbsdToH5EbsdWidget::setupGui()
 
   m_RefFrameOptionsBtn->setEnabled(false);
 
+  validateInputFile();
   getGuiParametersFromFilter();
 }
 
@@ -176,6 +177,7 @@ void EbsdToH5EbsdWidget::setupGui()
 // -----------------------------------------------------------------------------
 void EbsdToH5EbsdWidget::getGuiParametersFromFilter()
 {
+
   m_InputDir->setText(m_Filter->getInputPath());
 
   QObjectList obs = children();
@@ -205,6 +207,37 @@ void EbsdToH5EbsdWidget::getGuiParametersFromFilter()
 
   m_generateExampleEbsdInputFile();
 
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void EbsdToH5EbsdWidget::validateInputFile()
+{
+  QString currentPath = m_Filter->getInputPath();
+  QFileInfo fi(currentPath);
+  if (currentPath.isEmpty() == false && fi.exists() == false)
+  {
+//    QString Ftype = m_FilterParameter->getFileType();
+//    QString ext = m_FilterParameter->getFileExtension();
+//    QString s = Ftype + QString(" Files (") + ext + QString(");;All Files(*.*)");
+    QString defaultName = m_OpenDialogLastDirectory;
+
+
+    QString title = QObject::tr("Select a replacement input file in filter '%2'").arg(m_Filter->getHumanLabel());
+
+    QString file = QFileDialog::getExistingDirectory(this, title, defaultName, QFileDialog::ShowDirsOnly);
+    if(true == file.isEmpty())
+    {
+      file = currentPath;
+    }
+    file = QDir::toNativeSeparators(file);
+    // Store the last used directory into the private instance variable
+    QFileInfo fi(file);
+    m_OpenDialogLastDirectory = fi.path();
+    m_Filter->setInputPath(file);
+  }
 }
 
 

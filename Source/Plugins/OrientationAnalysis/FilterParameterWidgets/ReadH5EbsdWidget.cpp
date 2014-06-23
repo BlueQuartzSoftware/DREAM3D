@@ -151,7 +151,7 @@ void ReadH5EbsdWidget::setupGui()
 // -----------------------------------------------------------------------------
 void ReadH5EbsdWidget::validateInputFile()
 {
-  QString currentPath = m_Filter->property(m_FilterParameter->getPropertyName().toLatin1().constData()).toString();
+  QString currentPath = m_Filter->getInputFile();
   QFileInfo fi(currentPath);
   if (currentPath.isEmpty() == false && fi.exists() == false)
   {
@@ -161,7 +161,7 @@ void ReadH5EbsdWidget::validateInputFile()
     QString defaultName = m_OpenDialogLastDirectory + QDir::separator() + "Untitled";
 
 
-    QString title = QObject::tr("Select a replacement input file for parameter '%1' in filter '%2'").arg(m_FilterParameter->getHumanLabel()).arg(m_Filter->getHumanLabel());
+    QString title = QObject::tr("Select a replacement input file in filter '%2'").arg(m_Filter->getHumanLabel());
 
     QString file = QFileDialog::getOpenFileName(this, title, defaultName, s);
     if(true == file.isEmpty())
@@ -172,7 +172,7 @@ void ReadH5EbsdWidget::validateInputFile()
     // Store the last used directory into the private instance variable
     QFileInfo fi(file);
     m_OpenDialogLastDirectory = fi.path();
-    m_Filter->setProperty(m_FilterParameter->getPropertyName().toLatin1().constData(), file);
+    m_Filter->setInputFile(file);
   }
 }
 

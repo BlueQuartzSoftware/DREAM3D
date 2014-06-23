@@ -130,6 +130,11 @@ class ConvertHexGridToSquareGridWidget : public QWidget, private Ui::ConvertHexG
     virtual void checkIOFiles();
 
     /**
+     * @brief validateInputFile
+     */
+    void validateInputFile();
+
+    /**
      * @brief verifyPathExists
      * @param outFilePath
      * @param lineEdit
