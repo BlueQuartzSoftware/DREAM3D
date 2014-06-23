@@ -260,7 +260,7 @@ void FindTwinBoundarySchmidFactors::setupFilterParameters()
   parameters.push_back(FilterParameter::New("Loading Direction", "LoadingDir", FilterParameterWidgetType::FloatVec3Widget, getLoadingDir(), false));
   QStringList linkedProps("TwinBoundarySchmidFactorsFile");
   parameters.push_back(FilterParameter::NewConditional("Write Twin Boundary Info File", "WriteFile", FilterParameterWidgetType::LinkedBooleanWidget, getWriteFile(), false, linkedProps));
-  parameters.push_back(FilterParameter::New("Twin Boundary Info File", "TwinBoundarySchmidFactorsFile", FilterParameterWidgetType::OutputFileWidget, getTwinBoundarySchmidFactorsFile(), false));
+  parameters.push_back(FileSystemFilterParameter::New("Twin Boundary Info File", "TwinBoundarySchmidFactorsFile", FilterParameterWidgetType::OutputFileWidget, getTwinBoundarySchmidFactorsFile(), false));
 
   parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
   parameters.push_back(FilterParameter::New("AvgQuats", "AvgQuatsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getAvgQuatsArrayPath(), true, ""));

@@ -75,7 +75,7 @@ SurfaceMeshToNonconformalVtk::~SurfaceMeshToNonconformalVtk()
 void SurfaceMeshToNonconformalVtk::setupFilterParameters()
 {
   QVector<FilterParameter::Pointer> parameters;
-  parameters.push_back(FilterParameter::New("Output Vtk File", "OutputVtkFile", FilterParameterWidgetType::OutputFileWidget, getOutputVtkFile(), false));
+  parameters.push_back(FileSystemFilterParameter::New("Output Vtk File", "OutputVtkFile", FilterParameterWidgetType::OutputFileWidget, getOutputVtkFile(), false));
   parameters.push_back(FilterParameter::New("Write Binary Vtk File", "WriteBinaryFile", FilterParameterWidgetType::BooleanWidget, getWriteBinaryFile(), false));
   parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
   parameters.push_back(FilterParameter::New("SurfaceMeshFaceLabels", "SurfaceMeshFaceLabelsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getSurfaceMeshFaceLabelsArrayPath(), true, ""));

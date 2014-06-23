@@ -97,7 +97,7 @@ void GenericExample::setupFilterParameters()
   parameters.push_back(FileSystemFilterParameter::New("Input Path", "InputPath", FilterParameterWidgetType::InputPathWidget, getInputPath(), false, "", ""));
 
   /*   For an output file use this code*/
-  parameters.push_back(FilterParameter::New("Output File", "OutputFile", FilterParameterWidgetType::OutputFileWidget, getOutputFile(), false));
+  parameters.push_back(FileSystemFilterParameter::New("Output File", "OutputFile", FilterParameterWidgetType::OutputFileWidget, getOutputFile(), false));
   /*   For an output path use this code*/
   parameters.push_back(FileSystemFilterParameter::New("Output Path", "OutputPath", FilterParameterWidgetType::OutputPathWidget, getOutputPath(), false));
   /*   For a simple true/false boolean use this code*/

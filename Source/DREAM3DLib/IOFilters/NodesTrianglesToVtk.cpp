@@ -72,7 +72,7 @@ void NodesTrianglesToVtk::setupFilterParameters()
   FilterParameterVector parameters;
   parameters.push_back(FilterParameter::New("Nodes File", "NodesFile", FilterParameterWidgetType::InputFileWidget, getNodesFile(), false));
   parameters.push_back(FilterParameter::New("Triangles File", "TrianglesFile", FilterParameterWidgetType::InputFileWidget, getTrianglesFile(), false));
-  parameters.push_back(FilterParameter::New("Output Vtk File", "OutputVtkFile", FilterParameterWidgetType::OutputFileWidget, getOutputVtkFile(), false));
+  parameters.push_back(FileSystemFilterParameter::New("Output Vtk File", "OutputVtkFile", FilterParameterWidgetType::OutputFileWidget, getOutputVtkFile(), false));
   parameters.push_back(FilterParameter::New("Write Binary Vtk File", "WriteBinaryFile", FilterParameterWidgetType::BooleanWidget, getWriteBinaryFile(), false));
   parameters.push_back(FilterParameter::New("Write Conformal Mesh", "WriteConformalMesh", FilterParameterWidgetType::BooleanWidget, getWriteConformalMesh(), false));
 

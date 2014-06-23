@@ -74,8 +74,8 @@ SurfaceMeshToNodesTrianglesEdges::~SurfaceMeshToNodesTrianglesEdges()
 void SurfaceMeshToNodesTrianglesEdges::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(FilterParameter::New("Output Nodes File", "OutputNodesFile", FilterParameterWidgetType::OutputFileWidget, getOutputNodesFile(), false));
-  parameters.push_back(FilterParameter::New("Output Triangles File", "OutputTrianglesFile", FilterParameterWidgetType::OutputFileWidget, getOutputTrianglesFile(), false));
+  parameters.push_back(FileSystemFilterParameter::New("Output Nodes File", "OutputNodesFile", FilterParameterWidgetType::OutputFileWidget, getOutputNodesFile(), false));
+  parameters.push_back(FileSystemFilterParameter::New("Output Triangles File", "OutputTrianglesFile", FilterParameterWidgetType::OutputFileWidget, getOutputTrianglesFile(), false));
 #if WRITE_EDGES_FILE
   {
     FilterParameter::Pointer parameter = FilterParameter::New();

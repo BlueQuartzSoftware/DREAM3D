@@ -85,7 +85,7 @@ void AlignSections::setupFilterParameters()
   QStringList linkedProps("AlignmentShiftFileName");
   parameters.push_back(FilterParameter::NewConditional("Write Alignment Shift File", "WriteAlignmentShifts", FilterParameterWidgetType::LinkedBooleanWidget, getWriteAlignmentShifts(), false, linkedProps));
 
-  parameters.push_back(FilterParameter::New("Alignment File", "AlignmentShiftFileName", FilterParameterWidgetType::OutputFileWidget, "QString", false));
+  parameters.push_back(FileSystemFilterParameter::New("Alignment File", "AlignmentShiftFileName", FilterParameterWidgetType::OutputFileWidget, "QString", false));
 
   setFilterParameters(parameters);
 }
