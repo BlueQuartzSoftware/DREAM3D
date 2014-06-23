@@ -55,7 +55,7 @@ With other coloring methods such as IPF bad voxels which result from non-indexed
 
 ## Required DataContainers ##
 
-Voxel
+Voxel DataContainer
 
 ## Required Arrays ##
 

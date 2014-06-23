@@ -49,7 +49,7 @@ This Filter writes to a data file in a format used by [SPPARKS Kinetic Monte Car
 
 ## Required DataContainers ##
 
-Voxel
+Voxel DataContainer
 
 ## Required Arrays ##
 

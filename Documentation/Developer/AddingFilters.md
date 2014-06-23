@@ -37,4 +37,4 @@ category
 
 
 ## Adding a Filter that reads data or Sets the Volume Dimensions
-If you create a filter that reads in a volume of data or does something to initialize the voxel data container with a set of dimensions based from the user or from the file being read then during the dataCheck() method the programmer needs to remember to also set those dimensions into the VoxelDataContainer. This may have to be done by reading the header of the file.
+If you create a filter that reads in a volume of data or does something to initialize the voxel data container with a set of dimensions based from the user or from the file being read then during the dataCheck() method the programmer needs to remember to also set those dimensions into the Volume DataContainer. This may have to be done by reading the header of the file.

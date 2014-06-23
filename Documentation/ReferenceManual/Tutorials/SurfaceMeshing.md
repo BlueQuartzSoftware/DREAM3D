@@ -30,7 +30,7 @@ To support the creation and manipulation of a surface mesh DREAM3D introduced a 
     const std::string SurfaceMeshNodes("SurfaceMeshNodes");
     const std::string SurfaceMeshTriangles("SurfaceMeshTriangles");
 
-In order to stay consistent with the VoxelDataContainer and its terminology, DREAM3D refers to _Vertex Attributes_ as **Cell** data and _Triangle Attributes_ as **Feature** data. There are also convenience methods that are named ``setPointData(...)``, ``setFaceData(...)`` and ``setEdgeData(...)`` that map loosely to the **Cell**, **Feature** and **Ensemble** syntax of the ``VoxelDataContainer``
+In order to stay consistent with the Volume DataContainer and its terminology, DREAM3D refers to _Vertex Attributes_ as **Cell** data and _Triangle Attributes_ as **Feature** data. There are also convenience methods that are named ``setPointData(...)``, ``setFaceData(...)`` and ``setEdgeData(...)`` that map loosely to the **Cell**, **Feature** and **Ensemble** syntax of the ``Volume DataContainer``
 
 In the filter documentation the following terminology will be used:
 

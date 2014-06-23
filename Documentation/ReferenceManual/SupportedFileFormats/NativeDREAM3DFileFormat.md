@@ -6,14 +6,14 @@ DREAM3D uses the [HDF5](http://www.hdfgroup.org) as its native file format which
 
 Each array is stored as an individual data set in HDF5 under one of several different types of _DataContainer_ storage groups:
 
-+ Voxel DataContainer
++ Volume DataContainer
 + SurfaceMesh DataContainer
 + SolidMesh DataContainer
 
 
 Depending on the type of data created the actual data array that a user may be interested in may be stored in various subgroups in the HDF5 file. For example, with a Voxel Data Container there are six (6) types of Data: Vertex, Edge, Face, Cell, Feature and Ensemble. Arrays created for each type are stored in subgroups. For example, with Voxel based data the following HDF5 group organization is used:
 
-+ VoxelDataContainer ( _Group_ )
++ Volume DataContainer ( _Group_ )
     + DIMENSIONS ( _Dataset_ )
     + ORIGIN ( _Dataset_ )
     + SPACING ( _Dataset_ )

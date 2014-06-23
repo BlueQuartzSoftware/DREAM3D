@@ -10,7 +10,7 @@ IO Filters
 This filter is designed to read data stored in files on the users system that are stored in their
 binary form versus ascii form. The data file should **NOT** have any type of header before the data in the file. The user should know exactly how the data is stored in the file and properly define this in the user interface. Not correctly identifying the type of data can cause serious issues because on a low level this filter is simply reading the data into a preallocated array and interpreted as the user defines. This filter can be used as a sort of bridge to read in binary data from sources like IDL and MatLab. 
 
-The data is assumed to be on a rectilinear grid and will be stored in the Voxel DataContainer. In a rectilinear grid the spacing on each axis is constant but each axis can have a different value. The spacing is also sometimes referred to as the _Resolution_ of the axis..
+The data is assumed to be on a rectilinear grid and will be stored in the Volume DataContainer. In a rectilinear grid the spacing on each axis is constant but each axis can have a different value. The spacing is also sometimes referred to as the _Resolution_ of the axis..
 
 This filter will error out and block the pipeline from running if the total number of bytes that would need to be read from the file is larger than the actual file itself. The pipeline will not run at this point.
 
@@ -102,7 +102,7 @@ See above
 
 ## Required DataContainers ##
 
-Voxel
+Voxel DataContainer
 
 ## Required Arrays ##
 

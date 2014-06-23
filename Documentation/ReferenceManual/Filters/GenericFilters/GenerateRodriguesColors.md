@@ -19,7 +19,7 @@ This filter will generate Rodrigues colors for each voxel.
 
 ## Required DataContainers ##
 
-Voxel
+Voxel DataContainer
 
 ## Required Arrays ##
 
