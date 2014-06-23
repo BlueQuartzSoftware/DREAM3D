@@ -28,6 +28,7 @@ set(_PublicFilters
   MultiOtsuThreshold
   KMeans
   RGBToGray
+  ReadImage
   MergeChannels
 )
 
