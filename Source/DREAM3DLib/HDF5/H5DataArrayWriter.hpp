@@ -256,7 +256,7 @@ class H5DataArrayWriter
       {
         return err;
       }
-      #endif
+#endif
 
       return err;
     }

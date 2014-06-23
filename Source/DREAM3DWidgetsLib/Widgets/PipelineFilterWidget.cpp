@@ -482,17 +482,16 @@ void PipelineFilterWidget::changeStyle()
   {
     style.append("border: 2px solid rgb(172, 168, 0);");
   }
+  else if(m_IsSelected == true )
+  {
+    style.append("border: 3px solid purple;");
+    //  style.append("background-color: palette(highlight);");
+  }
   else
-    if(m_IsSelected == true )
-    {
-      style.append("border: 3px solid purple;");
-      //  style.append("background-color: palette(highlight);");
-    }
-    else
-    {
-      style.append("border: 1px solid #515151;");
-      style.append("margin: 1px;");
-    }
+  {
+    style.append("border: 1px solid #515151;");
+    style.append("margin: 1px;");
+  }
   setBorderColorStyle(style);
   updateWidgetStyle();
 }

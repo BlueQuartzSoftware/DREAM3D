@@ -92,7 +92,7 @@ void ManualThreshold::dataCheck()
   if( NULL != m_SelectedCellArrayPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_SelectedCellArray = m_SelectedCellArrayPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
-  if(m_SaveAsNewArray == false) m_NewCellArrayName = "thisIsATempName";
+  if(m_SaveAsNewArray == false) { m_NewCellArrayName = "thisIsATempName"; }
   tempPath.update(getSelectedCellArrayPath().getDataContainerName(), getSelectedCellArrayPath().getAttributeMatrixName(), getNewCellArrayName() );
   m_NewCellArrayPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<ImageProcessing::DefaultPixelType>, AbstractFilter, ImageProcessing::DefaultPixelType>(this, tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_NewCellArrayPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
@@ -126,7 +126,7 @@ void ManualThreshold::execute()
   QString attrMatName = getSelectedCellArrayPath().getAttributeMatrixName();
 
   //get dims
-  size_t udims[3] = {0,0,0};
+  size_t udims[3] = {0, 0, 0};
   m->getDimensions(udims);
 #if (CMP_SIZEOF_SIZE_T == 4)
   typedef int32_t DimType;
@@ -140,7 +140,7 @@ void ManualThreshold::execute()
 //  };
 
   //wrap input as itk image
-  ImageProcessing::DefaultImageType::Pointer inputImage=ITKUtilitiesType::Dream3DtoITK(m, attrMatName, m_SelectedCellArray);
+  ImageProcessing::DefaultImageType::Pointer inputImage = ITKUtilitiesType::Dream3DtoITK(m, attrMatName, m_SelectedCellArray);
 
   //define threshold filters
   typedef itk::BinaryThresholdImageFilter <ImageProcessing::DefaultImageType, ImageProcessing::DefaultImageType> BinaryThresholdImageFilterType;

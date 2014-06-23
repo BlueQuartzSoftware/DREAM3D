@@ -26,62 +26,62 @@ namespace Functor
   //gamma functor (doesn't seem to be implemented in itk)
   template< class TPixel > class Gamma
   {
-  public:
-    Gamma() {};
-    ~Gamma() {};
-    bool operator!=( const Gamma & ) const
-    {
-      return false;
-    }
-    bool operator==( const Gamma & other ) const
-    {
-      return !(*this != other);
-    }
+    public:
+      Gamma() {};
+      ~Gamma() {};
+      bool operator!=( const Gamma& ) const
+      {
+        return false;
+      }
+      bool operator==( const Gamma& other ) const
+      {
+        return !(*this != other);
+      }
 
-    inline TPixel operator()(const TPixel & A, const TPixel & B) const
-    {
-      const double dA = static_cast< double >( A )/std::numeric_limits<TPixel>::max();
-      return static_cast< TPixel >( double(pow(dA, double(B)))*std::numeric_limits<TPixel>::max() );
-    }
+      inline TPixel operator()(const TPixel& A, const TPixel& B) const
+      {
+        const double dA = static_cast< double >( A ) / std::numeric_limits<TPixel>::max();
+        return static_cast< TPixel >( double(pow(dA, double(B))) * std::numeric_limits<TPixel>::max() );
+      }
   };
 
   //custom functor to bring value within limits and round (without this functor itk add filter on an 8bit image 255+10->9)
   template< class TInput, class TOutput> class LimitsRound
   {
-  public:
-    LimitsRound() {};
-    ~LimitsRound() {};
-    bool operator!=( const LimitsRound & ) const
-    {
-      return false;
-    }
-    bool operator==( const LimitsRound & other ) const
-    {
-      return !(*this != other);
-    }
-
-    inline TOutput operator()(const TInput & A) const
-    {
-      const double dA = static_cast< double >( A );
-
-      if(dA>std::numeric_limits<TOutput>::max())
+    public:
+      LimitsRound() {};
+      ~LimitsRound() {};
+      bool operator!=( const LimitsRound& ) const
       {
-        return std::numeric_limits<TOutput>::max();
+        return false;
       }
-      else if(dA<std::numeric_limits<TOutput>::min())
+      bool operator==( const LimitsRound& other ) const
       {
-        return std::numeric_limits<TOutput>::min();
+        return !(*this != other);
       }
 
-      //round if needed
-      if(std::numeric_limits<TOutput>::is_integer && !std::numeric_limits<TInput>::is_integer)
+      inline TOutput operator()(const TInput& A) const
       {
-        if (dA >= floor(dA)+0.5) return static_cast< TOutput >(ceil(dA));
-        else return static_cast< TOutput >(floor(dA));
-      }
+        const double dA = static_cast< double >( A );
 
-      return static_cast< TOutput >( dA );
-    }
+        if(dA > std::numeric_limits<TOutput>::max())
+        {
+          return std::numeric_limits<TOutput>::max();
+        }
+        else if(dA < std::numeric_limits<TOutput>::min())
+        {
+          return std::numeric_limits<TOutput>::min();
+        }
+
+        //round if needed
+        if(std::numeric_limits<TOutput>::is_integer && !std::numeric_limits<TInput>::is_integer)
+        {
+          if (dA >= floor(dA) + 0.5) { return static_cast< TOutput >(ceil(dA)); }
+          else { return static_cast< TOutput >(floor(dA)); }
+        }
+
+        return static_cast< TOutput >( dA );
+      }
   };
 }
 
@@ -191,7 +191,7 @@ void ImageMath::dataCheck()
   if( NULL != m_SelectedCellArrayPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_SelectedCellArray = m_SelectedCellArrayPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
-  if(m_SaveAsNewArray == false) m_NewCellArrayName = "thisIsATempName";
+  if(m_SaveAsNewArray == false) { m_NewCellArrayName = "thisIsATempName"; }
   tempPath.update(getSelectedCellArrayPath().getDataContainerName(), getSelectedCellArrayPath().getAttributeMatrixName(), getNewCellArrayName() );
   m_NewCellArrayPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<ImageProcessing::DefaultPixelType>, AbstractFilter, ImageProcessing::DefaultPixelType>(this, tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_NewCellArrayPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
@@ -225,7 +225,7 @@ void ImageMath::execute()
   QString attrMatName = getSelectedCellArrayPath().getAttributeMatrixName();
 
   //wrap m_RawImageData as itk::image
-  ImageProcessing::DefaultImageType::Pointer inputImage=ITKUtilitiesType::Dream3DtoITK(m, attrMatName, m_SelectedCellArray);
+  ImageProcessing::DefaultImageType::Pointer inputImage = ITKUtilitiesType::Dream3DtoITK(m, attrMatName, m_SelectedCellArray);
 
   //define filter types
   typedef itk::AddImageFilter<ImageProcessing::DefaultImageType, ImageProcessing::FloatImageType, ImageProcessing::FloatImageType> AddType;
@@ -249,130 +249,130 @@ void ImageMath::execute()
   switch(m_Operator)
   {
     case 0://add
-      {
-        AddType::Pointer add = AddType::New();
-        add->SetInput1(inputImage);
-        add->SetConstant2(m_Value);
-        limitsRound->SetInput(add->GetOutput());
-        ITKUtilitiesType::SetITKOutput(limitsRound->GetOutput(), m_NewCellArrayPtr.lock());
-        limitsRound->Update();
-      }
-      break;
+    {
+      AddType::Pointer add = AddType::New();
+      add->SetInput1(inputImage);
+      add->SetConstant2(m_Value);
+      limitsRound->SetInput(add->GetOutput());
+      ITKUtilitiesType::SetITKOutput(limitsRound->GetOutput(), m_NewCellArrayPtr.lock());
+      limitsRound->Update();
+    }
+    break;
 
     case 1://subtract
-      {
-        SubtractType::Pointer subtract = SubtractType::New();
-        subtract->SetInput1(inputImage);
-        subtract->SetConstant2(m_Value);
-        limitsRound->SetInput(subtract->GetOutput());
-        ITKUtilitiesType::SetITKOutput(limitsRound->GetOutput(), m_NewCellArrayPtr.lock());
-        limitsRound->Update();
-      }
-      break;
+    {
+      SubtractType::Pointer subtract = SubtractType::New();
+      subtract->SetInput1(inputImage);
+      subtract->SetConstant2(m_Value);
+      limitsRound->SetInput(subtract->GetOutput());
+      ITKUtilitiesType::SetITKOutput(limitsRound->GetOutput(), m_NewCellArrayPtr.lock());
+      limitsRound->Update();
+    }
+    break;
 
     case 2://multiply
-      {
-        MultiplyType::Pointer multiply = MultiplyType::New();
-        multiply->SetInput1(inputImage);
-        multiply->SetConstant2(m_Value);
-        limitsRound->SetInput(multiply->GetOutput());
-        ITKUtilitiesType::SetITKOutput(limitsRound->GetOutput(), m_NewCellArrayPtr.lock());
-        limitsRound->Update();
-      }
-      break;
+    {
+      MultiplyType::Pointer multiply = MultiplyType::New();
+      multiply->SetInput1(inputImage);
+      multiply->SetConstant2(m_Value);
+      limitsRound->SetInput(multiply->GetOutput());
+      ITKUtilitiesType::SetITKOutput(limitsRound->GetOutput(), m_NewCellArrayPtr.lock());
+      limitsRound->Update();
+    }
+    break;
 
     case 3://divide
-      {
-        DivideType::Pointer divide = DivideType::New();
-        divide->SetInput1(inputImage);
-        divide->SetConstant2(m_Value);
-        limitsRound->SetInput(divide->GetOutput());
-        ITKUtilitiesType::SetITKOutput(limitsRound->GetOutput(), m_NewCellArrayPtr.lock());
-        limitsRound->Update();
-      }
-      break;
+    {
+      DivideType::Pointer divide = DivideType::New();
+      divide->SetInput1(inputImage);
+      divide->SetConstant2(m_Value);
+      limitsRound->SetInput(divide->GetOutput());
+      ITKUtilitiesType::SetITKOutput(limitsRound->GetOutput(), m_NewCellArrayPtr.lock());
+      limitsRound->Update();
+    }
+    break;
 
     case 4://min
-      {
-        MinType::Pointer minimum = MinType::New();
-        minimum->SetInput1(inputImage);
-        minimum->SetConstant2(m_Value);
-        limitsRound->SetInput(minimum->GetOutput());
-        ITKUtilitiesType::SetITKOutput(limitsRound->GetOutput(), m_NewCellArrayPtr.lock());
-        limitsRound->Update();
-      }
-      break;
+    {
+      MinType::Pointer minimum = MinType::New();
+      minimum->SetInput1(inputImage);
+      minimum->SetConstant2(m_Value);
+      limitsRound->SetInput(minimum->GetOutput());
+      ITKUtilitiesType::SetITKOutput(limitsRound->GetOutput(), m_NewCellArrayPtr.lock());
+      limitsRound->Update();
+    }
+    break;
 
     case 5://max
-      {
-        MaxType::Pointer maximum = MaxType::New();
-        maximum->SetInput1(inputImage);
-        maximum->SetConstant2(m_Value);
-        limitsRound->SetInput(maximum->GetOutput());
-        ITKUtilitiesType::SetITKOutput(limitsRound->GetOutput(), m_NewCellArrayPtr.lock());
-        limitsRound->Update();
-      }
-      break;
+    {
+      MaxType::Pointer maximum = MaxType::New();
+      maximum->SetInput1(inputImage);
+      maximum->SetConstant2(m_Value);
+      limitsRound->SetInput(maximum->GetOutput());
+      ITKUtilitiesType::SetITKOutput(limitsRound->GetOutput(), m_NewCellArrayPtr.lock());
+      limitsRound->Update();
+    }
+    break;
 
     case 6://gamma
-      {
-        GammaType::Pointer gamma = GammaType::New();
-        gamma->SetInput1(inputImage);
-        gamma->SetConstant2(m_Value);
-        limitsRound->SetInput(gamma->GetOutput());
-        ITKUtilitiesType::SetITKOutput(limitsRound->GetOutput(), m_NewCellArrayPtr.lock());
-        limitsRound->Update();
-      }
-      break;
+    {
+      GammaType::Pointer gamma = GammaType::New();
+      gamma->SetInput1(inputImage);
+      gamma->SetConstant2(m_Value);
+      limitsRound->SetInput(gamma->GetOutput());
+      ITKUtilitiesType::SetITKOutput(limitsRound->GetOutput(), m_NewCellArrayPtr.lock());
+      limitsRound->Update();
+    }
+    break;
 
     case 7://log
-      {
-        LogType::Pointer logfilter = LogType::New();
-        logfilter->SetInput(inputImage);
-        limitsRound->SetInput(logfilter->GetOutput());
-        ITKUtilitiesType::SetITKOutput(limitsRound->GetOutput(), m_NewCellArrayPtr.lock());
-        limitsRound->Update();
-      }
-      break;
+    {
+      LogType::Pointer logfilter = LogType::New();
+      logfilter->SetInput(inputImage);
+      limitsRound->SetInput(logfilter->GetOutput());
+      ITKUtilitiesType::SetITKOutput(limitsRound->GetOutput(), m_NewCellArrayPtr.lock());
+      limitsRound->Update();
+    }
+    break;
 
     case 8://exp
-      {
-        ExpType::Pointer expfilter = ExpType::New();
-        expfilter->SetInput(inputImage);
-        limitsRound->SetInput(expfilter->GetOutput());
-        ITKUtilitiesType::SetITKOutput(limitsRound->GetOutput(), m_NewCellArrayPtr.lock());
-        limitsRound->Update();
-      }
-      break;
+    {
+      ExpType::Pointer expfilter = ExpType::New();
+      expfilter->SetInput(inputImage);
+      limitsRound->SetInput(expfilter->GetOutput());
+      ITKUtilitiesType::SetITKOutput(limitsRound->GetOutput(), m_NewCellArrayPtr.lock());
+      limitsRound->Update();
+    }
+    break;
 
     case 9://square
-      {
-        SquareType::Pointer square = SquareType::New();
-        square->SetInput(inputImage);
-        limitsRound->SetInput(square->GetOutput());
-        ITKUtilitiesType::SetITKOutput(limitsRound->GetOutput(), m_NewCellArrayPtr.lock());
-        limitsRound->Update();
-      }
-      break;
+    {
+      SquareType::Pointer square = SquareType::New();
+      square->SetInput(inputImage);
+      limitsRound->SetInput(square->GetOutput());
+      ITKUtilitiesType::SetITKOutput(limitsRound->GetOutput(), m_NewCellArrayPtr.lock());
+      limitsRound->Update();
+    }
+    break;
 
     case 10://squareroot
-      {
-        SqrtType::Pointer sqrtfilter = SqrtType::New();
-        sqrtfilter->SetInput(inputImage);
-        limitsRound->SetInput(sqrtfilter->GetOutput());
-        ITKUtilitiesType::SetITKOutput(limitsRound->GetOutput(), m_NewCellArrayPtr.lock());
-        limitsRound->Update();
-      }
-      break;
+    {
+      SqrtType::Pointer sqrtfilter = SqrtType::New();
+      sqrtfilter->SetInput(inputImage);
+      limitsRound->SetInput(sqrtfilter->GetOutput());
+      ITKUtilitiesType::SetITKOutput(limitsRound->GetOutput(), m_NewCellArrayPtr.lock());
+      limitsRound->Update();
+    }
+    break;
 
     case 11://invert
-      {
-        InvertType::Pointer invert = InvertType::New();
-        invert->SetInput(inputImage);
-        ITKUtilitiesType::SetITKOutput(invert->GetOutput(), m_NewCellArrayPtr.lock());
-        invert->Update();
-      }
-      break;
+    {
+      InvertType::Pointer invert = InvertType::New();
+      invert->SetInput(inputImage);
+      ITKUtilitiesType::SetITKOutput(invert->GetOutput(), m_NewCellArrayPtr.lock());
+      invert->Update();
+    }
+    break;
   }
 
   //array name changing/cleanup

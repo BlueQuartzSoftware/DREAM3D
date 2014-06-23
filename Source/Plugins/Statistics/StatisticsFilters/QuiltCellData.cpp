@@ -191,9 +191,9 @@ void QuiltCellData::dataCheck()
   int newDimX = int(dcDims[0] / m_QuiltStep.x);
   int newDimY = int(dcDims[1] / m_QuiltStep.y);
   int newDimZ = int(dcDims[2] / m_QuiltStep.z);
-  if(dcDims[0] == 1) newDimX = 1;
-  if(dcDims[1] == 1) newDimY = 1;
-  if(dcDims[2] == 1) newDimZ = 1;
+  if(dcDims[0] == 1) { newDimX = 1; }
+  if(dcDims[1] == 1) { newDimY = 1; }
+  if(dcDims[2] == 1) { newDimZ = 1; }
 
   m2->setDimensions(newDimX, newDimY, newDimZ);
   m2->setResolution(res);

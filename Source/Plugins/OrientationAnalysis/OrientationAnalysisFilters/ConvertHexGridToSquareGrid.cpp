@@ -166,9 +166,9 @@ void ConvertHexGridToSquareGrid::dataCheck()
 
   // Now generate all the file names the user is asking for and populate the table
   QVector<QString> fileList = FilePathGenerator::GenerateFileList(m_ZStartIndex, m_ZEndIndex,
-                                                                  hasMissingFiles, true, m_InputPath,
-                                                                  m_FilePrefix, m_FileSuffix, m_FileExtension,
-                                                                  m_PaddingDigits);
+                              hasMissingFiles, true, m_InputPath,
+                              m_FilePrefix, m_FileSuffix, m_FileExtension,
+                              m_PaddingDigits);
   if (fileList.size() == 0)
   {
     QString ss = QObject::tr("No files have been selected for import. Have you set the input directory?");
@@ -206,9 +206,9 @@ void ConvertHexGridToSquareGrid::execute()
   bool stackLowToHigh = true;
   // Now generate all the file names the user is asking for and populate the table
   QVector<QString> fileList = FilePathGenerator::GenerateFileList(m_ZStartIndex, m_ZEndIndex,
-                                                                  hasMissingFiles, stackLowToHigh, m_InputPath,
-                                                                  m_FilePrefix, m_FileSuffix, m_FileExtension,
-                                                                  m_PaddingDigits);
+                              hasMissingFiles, stackLowToHigh, m_InputPath,
+                              m_FilePrefix, m_FileSuffix, m_FileExtension,
+                              m_PaddingDigits);
 
 
   QVector<int> indices;
@@ -484,17 +484,17 @@ AbstractFilter::Pointer ConvertHexGridToSquareGrid::newFilterInstance(bool copyF
     // We are going to hand copy all of the parameters because the other way of copying the parameters are going to
     // miss some of them because we are not enumerating all of them.
     DREAM3D_COPY_INSTANCEVAR(ZStartIndex)
-        DREAM3D_COPY_INSTANCEVAR(ZEndIndex)
-        DREAM3D_COPY_INSTANCEVAR(XResolution)
-        DREAM3D_COPY_INSTANCEVAR(YResolution)
-        DREAM3D_COPY_INSTANCEVAR(InputPath)
-        DREAM3D_COPY_INSTANCEVAR(OutputPath)
-        DREAM3D_COPY_INSTANCEVAR(OutputPrefix)
-        DREAM3D_COPY_INSTANCEVAR(FilePrefix)
-        DREAM3D_COPY_INSTANCEVAR(FileSuffix)
-        DREAM3D_COPY_INSTANCEVAR(FileExtension)
-        DREAM3D_COPY_INSTANCEVAR(PaddingDigits)
-        DREAM3D_COPY_INSTANCEVAR(HexGridStack)
+    DREAM3D_COPY_INSTANCEVAR(ZEndIndex)
+    DREAM3D_COPY_INSTANCEVAR(XResolution)
+    DREAM3D_COPY_INSTANCEVAR(YResolution)
+    DREAM3D_COPY_INSTANCEVAR(InputPath)
+    DREAM3D_COPY_INSTANCEVAR(OutputPath)
+    DREAM3D_COPY_INSTANCEVAR(OutputPrefix)
+    DREAM3D_COPY_INSTANCEVAR(FilePrefix)
+    DREAM3D_COPY_INSTANCEVAR(FileSuffix)
+    DREAM3D_COPY_INSTANCEVAR(FileExtension)
+    DREAM3D_COPY_INSTANCEVAR(PaddingDigits)
+    DREAM3D_COPY_INSTANCEVAR(HexGridStack)
   }
   return filter;
 }

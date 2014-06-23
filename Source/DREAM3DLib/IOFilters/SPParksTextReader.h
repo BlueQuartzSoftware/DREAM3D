@@ -209,7 +209,7 @@ class SPParksTextReader : public FileReader
 
 
   private:
-  //  DEFINE_CREATED_DATAARRAY_VARIABLE(int32_t, FeatureIds)
+    //  DEFINE_CREATED_DATAARRAY_VARIABLE(int32_t, FeatureIds)
     size_t m_Dims[3];
     QFile m_InStream;
     QMap<QString, DataParser::Pointer> m_NamePointerMap;

@@ -332,12 +332,12 @@ QVector<bool> MinNeighbors::merge_containedfeatures()
     if(m_ApplyToSinglePhase == false)
     {
       if(m_NumNeighbors[i] >= m_MinNumNeighbors) { good = true; }
-      else activeObjects[i] = false;
+      else { activeObjects[i] = false; }
     }
     else
     {
       if(m_NumNeighbors[i] >= m_MinNumNeighbors || m_FeaturePhases[i] != m_PhaseNumber) { good = true; }
-      else activeObjects[i] = false;
+      else { activeObjects[i] = false; }
     }
   }
   if(good == false)

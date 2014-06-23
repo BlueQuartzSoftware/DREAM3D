@@ -113,7 +113,7 @@ void WriteImage::execute()
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getSelectedCellArrayPath().getDataContainerName());
   QString attrMatName = getSelectedCellArrayPath().getAttributeMatrixName();
 
-  ImageProcessing::DefaultImageType::Pointer inputImage=ITKUtilitiesType::Dream3DtoITK(m, attrMatName, m_SelectedCellArray);
+  ImageProcessing::DefaultImageType::Pointer inputImage = ITKUtilitiesType::Dream3DtoITK(m, attrMatName, m_SelectedCellArray);
 
   //create writer filter
   typedef itk::ImageFileWriter<ImageProcessing::DefaultImageType> WriterType;

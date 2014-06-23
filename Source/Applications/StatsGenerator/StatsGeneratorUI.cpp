@@ -837,7 +837,7 @@ int StatsGeneratorUI::openFile(QString h5file)
   hid_t dcGid = H5Gopen(dcaGid, DREAM3D::Defaults::StatsGenerator.toLatin1().constData(), 0);
   if(dcGid < 0)
   {
-    QString title= QObject::tr("Error Opening Data Container");
+    QString title = QObject::tr("Error Opening Data Container");
     QString msg = QObject::tr("Error opening default Data Container with name '%1'").arg(DREAM3D::Defaults::StatsGenerator);
     QMessageBox::critical(this, title, msg, QMessageBox::Ok, QMessageBox::Ok);
     return -4;
@@ -853,9 +853,9 @@ int StatsGeneratorUI::openFile(QString h5file)
   if (err < 0)
   {
 
-    QString title= QObject::tr("Error Opening DataArray");
+    QString title = QObject::tr("Error Opening DataArray");
     QString msg = QObject::tr("Error opening 'PhaseTypes' data array at location '%1/%2/%3/%4'").arg(DREAM3D::StringConstants::DataContainerGroupName)
-        .arg(DREAM3D::Defaults::StatsGenerator).arg(DREAM3D::Defaults::CellEnsembleAttributeMatrixName).arg(DREAM3D::EnsembleData::PhaseTypes);
+                  .arg(DREAM3D::Defaults::StatsGenerator).arg(DREAM3D::Defaults::CellEnsembleAttributeMatrixName).arg(DREAM3D::EnsembleData::PhaseTypes);
     QMessageBox::critical(this, title, msg, QMessageBox::Ok, QMessageBox::Ok);
     return -4;
   }
@@ -882,7 +882,8 @@ int StatsGeneratorUI::openFile(QString h5file)
   {
     progress.setValue(phase);
 
-    if (progress.wasCanceled()) {
+    if (progress.wasCanceled())
+    {
       return -5;
     }
 

@@ -125,7 +125,7 @@ void RegularizeZSpacing::dataCheck(bool preflight)
     inFile >> zval;
   }
   size_t zP = static_cast<size_t>(zval / getNewZRes());
-  if(zP == 0) zP = 1;
+  if(zP == 0) { zP = 1; }
 
   if(preflight == true)
   {
@@ -188,7 +188,7 @@ void RegularizeZSpacing::execute()
   size_t m_XP = dims[0];
   size_t m_YP = dims[1];
   size_t m_ZP = static_cast<size_t>(sizez / m_NewZRes);
-  if(m_ZP == 0) m_ZP = 1;
+  if(m_ZP == 0) { m_ZP = 1; }
   int64_t totalPoints = m_XP * m_YP * m_ZP;
 
   int index, oldindex;

@@ -96,7 +96,7 @@ void MultiOtsuThreshold::dataCheck()
   if( NULL != m_SelectedCellArrayPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_SelectedCellArray = m_SelectedCellArrayPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
-  if(m_SaveAsNewArray == false) m_NewCellArrayName = "thisIsATempName";
+  if(m_SaveAsNewArray == false) { m_NewCellArrayName = "thisIsATempName"; }
   tempPath.update(getSelectedCellArrayPath().getDataContainerName(), getSelectedCellArrayPath().getAttributeMatrixName(), getNewCellArrayName() );
   m_NewCellArrayPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<ImageProcessing::DefaultPixelType>, AbstractFilter, ImageProcessing::DefaultPixelType>(this, tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_NewCellArrayPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
@@ -130,21 +130,22 @@ void MultiOtsuThreshold::execute()
   QString attrMatName = getSelectedCellArrayPath().getAttributeMatrixName();
 
   //get dims
-  size_t udims[3] = {0,0,0};
+  size_t udims[3] = {0, 0, 0};
   m->getDimensions(udims);
 #if (CMP_SIZEOF_SIZE_T == 4)
   typedef int32_t DimType;
 #else
   typedef int64_t DimType;
 #endif
-  DimType dims[3] = {
+  DimType dims[3] =
+  {
     static_cast<DimType>(udims[0]),
     static_cast<DimType>(udims[1]),
     static_cast<DimType>(udims[2]),
   };
 
   //wrap input as itk image
-  ImageProcessing::DefaultImageType::Pointer inputImage=ITKUtilitiesType::Dream3DtoITK(m, attrMatName, m_SelectedCellArray);
+  ImageProcessing::DefaultImageType::Pointer inputImage = ITKUtilitiesType::Dream3DtoITK(m, attrMatName, m_SelectedCellArray);
 
   if(m_Slice)
   {
@@ -153,10 +154,10 @@ void MultiOtsuThreshold::execute()
     ThresholdType::Pointer otsuThresholder = ThresholdType::New();
 
     //wrap output buffer as image
-    ImageProcessing::DefaultImageType::Pointer outputImage=ITKUtilitiesType::Dream3DtoITK(m, attrMatName, m_NewCellArray);
+    ImageProcessing::DefaultImageType::Pointer outputImage = ITKUtilitiesType::Dream3DtoITK(m, attrMatName, m_NewCellArray);
 
     //loop over slices
-    for(int i=0; i<dims[2]; i++)
+    for(int i = 0; i < dims[2]; i++)
     {
       //get slice
       ImageProcessing::DefaultSliceType::Pointer slice = ITKUtilitiesType::ExtractSlice(inputImage, ImageProcessing::ZSlice, i);

@@ -99,7 +99,7 @@ void HoughCircles::dataCheck()
   if( NULL != m_SelectedCellArrayPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_SelectedCellArray = m_SelectedCellArrayPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
-  if(m_SaveAsNewArray == false) m_NewCellArrayName = "thisIsATempName";
+  if(m_SaveAsNewArray == false) { m_NewCellArrayName = "thisIsATempName"; }
   tempPath.update(getSelectedCellArrayPath().getDataContainerName(), getSelectedCellArrayPath().getAttributeMatrixName(), getNewCellArrayName() );
   m_NewCellArrayPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<ImageProcessing::DefaultPixelType>, AbstractFilter, ImageProcessing::DefaultPixelType>(this, tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_NewCellArrayPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
@@ -134,28 +134,29 @@ void HoughCircles::execute()
 
   /* Place all your code to execute your filter here. */
   //get dimensions
-  size_t udims[3] = {0,0,0};
+  size_t udims[3] = {0, 0, 0};
   m->getDimensions(udims);
 #if (CMP_SIZEOF_SIZE_T == 4)
   typedef int32_t DimType;
 #else
   typedef int64_t DimType;
 #endif
-  DimType dims[3] = {
+  DimType dims[3] =
+  {
     static_cast<DimType>(udims[0]),
     static_cast<DimType>(udims[1]),
     static_cast<DimType>(udims[2]),
   };
 
   size_t totalPoints = m_SelectedCellArrayPtr.lock()->getNumberOfTuples();
-  for(int i=0; i<totalPoints; ++i)
+  for(int i = 0; i < totalPoints; ++i)
   {
-    m_NewCellArray[i]=m_SelectedCellArray[i];
+    m_NewCellArray[i] = m_SelectedCellArray[i];
   }
 
   //wrap raw and processed image data as itk::images
-  ImageProcessing::DefaultImageType::Pointer inputImage=ITKUtilitiesType::Dream3DtoITK(m, attrMatName, m_SelectedCellArray);
-  ImageProcessing::DefaultImageType::Pointer outputImage=ITKUtilitiesType::Dream3DtoITK(m, attrMatName, m_NewCellArray);
+  ImageProcessing::DefaultImageType::Pointer inputImage = ITKUtilitiesType::Dream3DtoITK(m, attrMatName, m_SelectedCellArray);
+  ImageProcessing::DefaultImageType::Pointer outputImage = ITKUtilitiesType::Dream3DtoITK(m, attrMatName, m_NewCellArray);
 
   ImageProcessing::DefaultSliceType::IndexType localIndex;
   typedef itk::HoughTransform2DCirclesImageFilter<ImageProcessing::DefaultPixelType, ImageProcessing::FloatPixelType> HoughTransformFilterType;
@@ -171,10 +172,10 @@ void HoughCircles::execute()
   */
 
   //loop over slices
-  for(int i=0; i<dims[2]; ++i)
+  for(int i = 0; i < dims[2]; ++i)
   {
     //extract slice and transform
-    QString ss = QObject::tr("Hough Transforming Slice: %1").arg(i+1);
+    QString ss = QObject::tr("Hough Transforming Slice: %1").arg(i + 1);
     notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
     ImageProcessing::DefaultSliceType::Pointer inputSlice = ITKUtilitiesType::ExtractSlice(inputImage, ImageProcessing::ZSlice, i);
     houghFilter->SetInput( inputSlice );
@@ -182,7 +183,7 @@ void HoughCircles::execute()
     ImageProcessing::FloatSliceType::Pointer localAccumulator = houghFilter->GetOutput();
 
     //find circles
-    ss = QObject::tr("Finding Circles on Slice: %1").arg(i+1);
+    ss = QObject::tr("Finding Circles on Slice: %1").arg(i + 1);
     notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
     HoughTransformFilterType::CirclesListType circles = houghFilter->GetCircles( m_NumberCircles );
 
@@ -205,12 +206,12 @@ void HoughCircles::execute()
       //std::cout << (*itCircles)->GetObjectToParentTransform()->GetOffset() << std::endl;
       //std::cout << "Radius: " << (*itCircles)->GetRadius()[0] << std::endl;
 
-      for(double angle = 0;angle <= 2*vnl_math::pi; angle += vnl_math::pi/60.0 )
+      for(double angle = 0; angle <= 2 * vnl_math::pi; angle += vnl_math::pi / 60.0 )
       {
         localIndex[0] = (long int)((*itCircles)->GetObjectToParentTransform()->GetOffset()[0]
-        + (*itCircles)->GetRadius()[0]*vcl_cos(angle));
+                                   + (*itCircles)->GetRadius()[0] * vcl_cos(angle));
         localIndex[1] = (long int)((*itCircles)->GetObjectToParentTransform()->GetOffset()[1]
-        + (*itCircles)->GetRadius()[0]*vcl_sin(angle));
+                                   + (*itCircles)->GetRadius()[0] * vcl_sin(angle));
         ImageProcessing::DefaultSliceType::RegionType outputRegion = outputSlice->GetLargestPossibleRegion();
         if( outputRegion.IsInside( localIndex ) )
         {

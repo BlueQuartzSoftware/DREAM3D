@@ -242,11 +242,11 @@ FileSystemFilterParameter::~FileSystemFilterParameter()
 //
 // -----------------------------------------------------------------------------
 FileSystemFilterParameter::Pointer FileSystemFilterParameter::New(const QString& humanLabel, const QString& propertyName,
-                                              const QString& widgetType, const QVariant& defaultValue,
-                                              bool advanced,
-                                              const QString& units,
-                                              const QString& fileExtension,
-                                              const QString& fileType)
+    const QString& widgetType, const QVariant& defaultValue,
+    bool advanced,
+    const QString& units,
+    const QString& fileExtension,
+    const QString& fileType)
 {
   FileSystemFilterParameter::Pointer ptr = FileSystemFilterParameter::New();
   ptr->setHumanLabel(humanLabel);

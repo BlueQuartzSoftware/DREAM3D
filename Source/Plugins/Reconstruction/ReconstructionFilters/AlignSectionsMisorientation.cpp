@@ -262,7 +262,7 @@ void AlignSectionsMisorientation::find_shifts(QVector<int>& xshifts, QVector<int
   int progInt = 0;
 
   // Allocate a 2D Array which will be reused from slice to slice
-  FloatArrayType::Pointer misorientsPtr = FloatArrayType::CreateArray(dims[0]*dims[1], "Misorients");
+  FloatArrayType::Pointer misorientsPtr = FloatArrayType::CreateArray(dims[0] * dims[1], "Misorients");
   misorientsPtr->initializeWithValue(0.0);
   float* misorients = misorientsPtr->getPointer(0); // Get the raw pointer to use in our calculations for speed.
 

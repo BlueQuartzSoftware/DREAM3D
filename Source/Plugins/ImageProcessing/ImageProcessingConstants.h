@@ -53,12 +53,13 @@
 /**
 * @brief This namespace is used to define some Constants for the plugin itself.
 */
-namespace ImageProcessing {
+namespace ImageProcessing
+{
   const QString ImageProcessingPluginFile("ImageProcessingPlugin");
   const QString ImageProcessingPluginDisplayName("ImageProcessingPlugin");
   const QString ImageProcessingBaseName("ImageProcessingPlugin");
 
-    //define pixels for dream3d variable types
+  //define pixels for dream3d variable types
   typedef int8_t Int8PixelType;
   typedef uint8_t UInt8PixelType;
   typedef int16_t Int16PixelType;
@@ -71,19 +72,19 @@ namespace ImageProcessing {
   typedef double DoublePixelType;
 
   //define default pixel type
-  #if ImageProcessing_BitDepth == 8
+#if ImageProcessing_BitDepth == 8
   typedef UInt8PixelType                     DefaultPixelType;
   typedef DataArray<DefaultPixelType>        DefaultArrayType;
-  #elif ImageProcessing_BitDepth == 16
+#elif ImageProcessing_BitDepth == 16
   typedef UInt16PixelType DefaultPixelType;
   typedef UInt16ArrayType DefaultArrayType;
-  #elif ImageProcessing_BitDepth == 32
+#elif ImageProcessing_BitDepth == 32
   typedef FloatPixelType DefaultPixelType;
   typedef FloatArrayType DefaultArrayType;
-  #else
+#else
   typedef UInt8PixelType DefaultPixelType;
   typedef UInt8ArrayType DefaultArrayType;
-  #endif
+#endif
 
   //multicomponent pixels
   typedef itk::RGBPixel <uint8_t> RGBUInt8PixelType; //ipf color etc
@@ -168,7 +169,7 @@ namespace ImageProcessing {
 namespace FilterParameterWidgetType
 {
 
-/*  const QString SomeCustomWidget("SomeCustomWidget"); */
+  /*  const QString SomeCustomWidget("SomeCustomWidget"); */
 
 }
 #endif

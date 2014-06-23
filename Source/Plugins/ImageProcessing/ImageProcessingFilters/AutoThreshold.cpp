@@ -140,7 +140,7 @@ void AutoThreshold::dataCheck()
   if( NULL != m_SelectedCellArrayPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_SelectedCellArray = m_SelectedCellArrayPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
-  if(m_SaveAsNewArray == false) m_NewCellArrayName = "thisIsATempName";
+  if(m_SaveAsNewArray == false) { m_NewCellArrayName = "thisIsATempName"; }
   tempPath.update(getSelectedCellArrayPath().getDataContainerName(), getSelectedCellArrayPath().getAttributeMatrixName(), getNewCellArrayName() );
   m_NewCellArrayPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<ImageProcessing::DefaultPixelType>, AbstractFilter, ImageProcessing::DefaultPixelType>(this, tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_NewCellArrayPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
@@ -174,27 +174,28 @@ void AutoThreshold::execute()
   QString attrMatName = getSelectedCellArrayPath().getAttributeMatrixName();
 
   //get dims
-  size_t udims[3] = {0,0,0};
+  size_t udims[3] = {0, 0, 0};
   m->getDimensions(udims);
 #if (CMP_SIZEOF_SIZE_T == 4)
   typedef int32_t DimType;
 #else
   typedef int64_t DimType;
 #endif
-  DimType dims[3] = {
+  DimType dims[3] =
+  {
     static_cast<DimType>(udims[0]),
     static_cast<DimType>(udims[1]),
     static_cast<DimType>(udims[2]),
   };
 
   //wrap input as itk image
-  ImageProcessing::DefaultImageType::Pointer inputImage=ITKUtilitiesType::Dream3DtoITK(m, attrMatName, m_SelectedCellArray);
+  ImageProcessing::DefaultImageType::Pointer inputImage = ITKUtilitiesType::Dream3DtoITK(m, attrMatName, m_SelectedCellArray);
 
   //define threshold filters
   typedef itk::BinaryThresholdImageFilter <ImageProcessing::DefaultImageType, ImageProcessing::DefaultImageType> BinaryThresholdImageFilterType;
   typedef itk::BinaryThresholdImageFilter <ImageProcessing::DefaultSliceType, ImageProcessing::DefaultSliceType> BinaryThresholdImageFilterType2D;
 
-    //define hitogram generator (will make the same kind of histogram for 2 and 3d images
+  //define hitogram generator (will make the same kind of histogram for 2 and 3d images
   typedef itk::Statistics::ImageToHistogramFilter<ImageProcessing::DefaultImageType> HistogramGenerator;
 
   //find threshold value w/ histogram
@@ -216,76 +217,76 @@ void AutoThreshold::execute()
   switch(m_Method)
   {
     case 0:
-      {
-        calculator = HuangCalculatorType::New();
-      }
-      break;
+    {
+      calculator = HuangCalculatorType::New();
+    }
+    break;
 
     case 1:
-      {
-        calculator = IntermodesCalculatorType::New();
-      }
-      break;
+    {
+      calculator = IntermodesCalculatorType::New();
+    }
+    break;
 
     case 2:
-      {
-        calculator = IsoDataCalculatorType::New();
-      }
-      break;
+    {
+      calculator = IsoDataCalculatorType::New();
+    }
+    break;
 
     case 3:
-      {
-        calculator = KittlerIllingowrthCalculatorType::New();
-      }
-      break;
+    {
+      calculator = KittlerIllingowrthCalculatorType::New();
+    }
+    break;
 
     case 4:
-      {
-        calculator = LiCalculatorType::New();
-      }
-      break;
+    {
+      calculator = LiCalculatorType::New();
+    }
+    break;
 
     case 5:
-      {
-        calculator = MaximumEntropyCalculatorType::New();
-      }
-      break;
+    {
+      calculator = MaximumEntropyCalculatorType::New();
+    }
+    break;
 
     case 6:
-      {
-        calculator = MomentsCalculatorType::New();
-      }
-      break;
+    {
+      calculator = MomentsCalculatorType::New();
+    }
+    break;
 
     case 7:
-      {
-        calculator = OtsuCalculatorType::New();
-      }
-      break;
+    {
+      calculator = OtsuCalculatorType::New();
+    }
+    break;
 
     case 8:
-      {
-        calculator = RenyiEntropyCalculatorType::New();
-      }
-      break;
+    {
+      calculator = RenyiEntropyCalculatorType::New();
+    }
+    break;
 
     case 9:
-      {
-        calculator = ShanbhagCalculatorType::New();
-      }
-      break;
+    {
+      calculator = ShanbhagCalculatorType::New();
+    }
+    break;
 
     case 10:
-      {
-        calculator = TriangleCalculatorType::New();
-      }
-      break;
+    {
+      calculator = TriangleCalculatorType::New();
+    }
+    break;
 
     case 11:
-      {
-        calculator = YenCalculatorType::New();
-      }
-      break;
+    {
+      calculator = YenCalculatorType::New();
+    }
+    break;
   }
 
   if(m_Slice)
@@ -308,10 +309,10 @@ void AutoThreshold::execute()
     histogramFilter2D->SetHistogramBinMaximum( upperBound );
 
     //wrap output buffer as image
-    ImageProcessing::DefaultImageType::Pointer outputImage=ITKUtilitiesType::Dream3DtoITK(m, attrMatName, m_NewCellArray);
+    ImageProcessing::DefaultImageType::Pointer outputImage = ITKUtilitiesType::Dream3DtoITK(m, attrMatName, m_NewCellArray);
 
     //loop over slices
-    for(int i=0; i<dims[2]; i++)
+    for(int i = 0; i < dims[2]; i++)
     {
       //get slice
       ImageProcessing::DefaultSliceType::Pointer slice = ITKUtilitiesType::ExtractSlice(inputImage, ImageProcessing::ZSlice, i);
@@ -319,7 +320,7 @@ void AutoThreshold::execute()
       //find histogram
       histogramFilter2D->SetInput( slice );
       histogramFilter2D->Update();
-      const HistogramGenerator::HistogramType * histogram = histogramFilter2D->GetOutput();
+      const HistogramGenerator::HistogramType* histogram = histogramFilter2D->GetOutput();
 
       //calculate threshold level
       calculator->SetInput(histogram);
@@ -358,7 +359,7 @@ void AutoThreshold::execute()
     //find histogram
     histogramFilter->SetInput( inputImage );
     histogramFilter->Update();
-    const HistogramGenerator::HistogramType * histogram = histogramFilter->GetOutput();
+    const HistogramGenerator::HistogramType* histogram = histogramFilter->GetOutput();
 
     //calculate threshold level
     calculator->SetInput(histogram);

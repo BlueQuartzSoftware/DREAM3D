@@ -165,7 +165,7 @@ void AttributeMatrixSelectionWidget::populateComboBoxes()
 
   // If EVERYTHING is empty, then try the default value
   if(filtDcName.isEmpty() && filtAmName.isEmpty()
-     && curDcName.isEmpty() && curAmName.isEmpty() )
+      && curDcName.isEmpty() && curAmName.isEmpty() )
   {
     DataArrayPath daPath = m_FilterParameter->getDefaultValue().value<DataArrayPath>();
     dcName = daPath.getDataContainerName();

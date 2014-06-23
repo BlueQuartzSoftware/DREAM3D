@@ -343,12 +343,12 @@ QVector<bool> MinSize::remove_smallfeatures()
     if(m_ApplyToSinglePhase == false)
     {
       if(m_NumCells[i] >= m_MinAllowedFeatureSize ) { good = true; }
-      else activeObjects[i] = false;
+      else { activeObjects[i] = false; }
     }
     else
     {
       if(m_NumCells[i] >= getMinAllowedFeatureSize() || m_FeaturePhases[i] != m_PhaseNumber) { good = true; }
-      else activeObjects[i] = false;
+      else { activeObjects[i] = false; }
     }
   }
   if(good == false)

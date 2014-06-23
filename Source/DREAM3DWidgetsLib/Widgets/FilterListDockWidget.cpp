@@ -271,14 +271,17 @@ void FilterListDockWidget::updateSearchIcons()
   m_SearchFilterClassName = m_ActionSearchFilterClassName->isChecked();
   m_SearchParameterHumanName = m_ActionSearchParameterName->isChecked();
   m_SearchParameterPropertyName = m_ActionSearchParameterPropertyName->isChecked();
-  if (!m_SearchFilterHumanName && !m_SearchFilterClassName && !m_SearchParameterHumanName && !m_SearchParameterPropertyName) {
+  if (!m_SearchFilterHumanName && !m_SearchFilterClassName && !m_SearchParameterHumanName && !m_SearchParameterPropertyName)
+  {
     QPixmap pixmap(17, 17);
     pixmap.fill(Qt::transparent);
     QPainter painter(&pixmap);
     const QPixmap mag = QPixmap(QLatin1String(":/view.png"));
     painter.drawPixmap(0, (pixmap.height() - mag.height()) / 2, mag);
     filterSearch->setButtonPixmap(SearchLineEdit::Left, pixmap);
-  } else {
+  }
+  else
+  {
     QPixmap pixmap(17, 17);
     pixmap.fill(Qt::transparent);
     QPainter painter(&pixmap);

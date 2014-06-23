@@ -64,7 +64,8 @@ void MeanKernel::readFilterParameters(AbstractFilterParametersReader* reader, in
   setSelectedCellArrayPath( reader->readDataArrayPath( "SelectedCellArrayPath", getSelectedCellArrayPath() ) );
   setNewCellArrayName( reader->readString( "NewCellArrayName", getNewCellArrayName() ) );
   setSaveAsNewArray( reader->readValue( "SaveAsNewArray", getSaveAsNewArray() ) );
-  setSlice( reader->readValue( "Slice", getSlice() ) );  reader->closeFilterGroup();
+  setSlice( reader->readValue( "Slice", getSlice() ) );
+  reader->closeFilterGroup();
   setKernelSize( reader->readIntVec3( "KernelSize", getKernelSize() ) );
   reader->closeFilterGroup();
 }
@@ -97,7 +98,7 @@ void MeanKernel::dataCheck()
   if( NULL != m_SelectedCellArrayPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_SelectedCellArray = m_SelectedCellArrayPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
-  if(m_SaveAsNewArray == false) m_NewCellArrayName = "thisIsATempName";
+  if(m_SaveAsNewArray == false) { m_NewCellArrayName = "thisIsATempName"; }
   tempPath.update(getSelectedCellArrayPath().getDataContainerName(), getSelectedCellArrayPath().getAttributeMatrixName(), getNewCellArrayName() );
   m_NewCellArrayPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<ImageProcessing::DefaultPixelType>, AbstractFilter, ImageProcessing::DefaultPixelType>(this, tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_NewCellArrayPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
@@ -131,7 +132,7 @@ void MeanKernel::execute()
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getSelectedCellArrayPath().getDataContainerName());
   QString attrMatName = getSelectedCellArrayPath().getAttributeMatrixName();
 
-  ImageProcessing::DefaultImageType::Pointer inputImage=ITKUtilitiesType::Dream3DtoITK(m, attrMatName, m_SelectedCellArray);
+  ImageProcessing::DefaultImageType::Pointer inputImage = ITKUtilitiesType::Dream3DtoITK(m, attrMatName, m_SelectedCellArray);
 
   //create edge filter
   typedef itk::MeanImageFilter < ImageProcessing::DefaultImageType,  ImageProcessing::DefaultImageType > MeanFilterType;
@@ -140,9 +141,9 @@ void MeanKernel::execute()
 
   //set kernel size
   MeanFilterType::InputSizeType radius;
-  radius[0]=m_KernelSize.x;
-  radius[1]=m_KernelSize.y;
-  radius[2]=m_KernelSize.z;
+  radius[0] = m_KernelSize.x;
+  radius[1] = m_KernelSize.y;
+  radius[2] = m_KernelSize.z;
   medianFilter->SetRadius(radius);
 
   //have filter write to dream3d array instead of creating its own buffer

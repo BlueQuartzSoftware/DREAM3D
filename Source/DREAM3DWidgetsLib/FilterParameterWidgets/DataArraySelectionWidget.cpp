@@ -215,7 +215,7 @@ void DataArraySelectionWidget::populateComboBoxes()
 
   // If EVERYTHING is empty, then try the default value
   if(filtDcName.isEmpty() && filtAmName.isEmpty() && filtDaName.isEmpty()
-     && curDcName.isEmpty() && curAmName.isEmpty() && curDaName.isEmpty() )
+      && curDcName.isEmpty() && curAmName.isEmpty() && curDaName.isEmpty() )
   {
     DataArrayPath daPath = m_FilterParameter->getDefaultValue().value<DataArrayPath>();
     dcName = daPath.getDataContainerName();

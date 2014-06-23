@@ -80,7 +80,7 @@ class CalculateFaceSchuhMisorientationColorsImpl
     {
       m_OrientationOps = OrientationOps::getOrientationOpsVector();
     }
-    virtual ~CalculateFaceSchuhMisorientationColorsImpl(){}
+    virtual ~CalculateFaceSchuhMisorientationColorsImpl() {}
 
     /**
      * @brief generate Generates the colors for the triangles
@@ -99,16 +99,16 @@ class CalculateFaceSchuhMisorientationColorsImpl
 
       for (size_t i = start; i < end; i++)
       {
-        grain1 = m_Labels[2*i];
-        grain2 = m_Labels[2*i+1];
-        if(grain1 > 0) phase1 = m_Phases[grain1];
-        else phase1 = 0;
-        if(grain2 > 0) phase2 = m_Phases[grain2];
-        else phase2 = 0;
+        grain1 = m_Labels[2 * i];
+        grain2 = m_Labels[2 * i + 1];
+        if(grain1 > 0) { phase1 = m_Phases[grain1]; }
+        else { phase1 = 0; }
+        if(grain2 > 0) { phase2 = m_Phases[grain2]; }
+        else { phase2 = 0; }
 
-        m_Colors[3*i+0] = 0;
-        m_Colors[3*i+1] = 0;
-        m_Colors[3*i+2] = 0;
+        m_Colors[3 * i + 0] = 0;
+        m_Colors[3 * i + 1] = 0;
+        m_Colors[3 * i + 2] = 0;
 
         if(phase1 > 0)
         {
@@ -119,9 +119,9 @@ class CalculateFaceSchuhMisorientationColorsImpl
               QuaternionMathF::Copy(quats[grain1], q1);
               QuaternionMathF::Copy(quats[grain2], q2);
               argb = ops[m_CrystalStructures[phase1]]->generateMisorientationColor(q1, q2);
-              m_Colors[3*i] = RgbColor::dRed(argb);
-              m_Colors[3*i + 1] = RgbColor::dGreen(argb);
-              m_Colors[3*i + 2] = RgbColor::dBlue(argb);
+              m_Colors[3 * i] = RgbColor::dRed(argb);
+              m_Colors[3 * i + 1] = RgbColor::dGreen(argb);
+              m_Colors[3 * i + 2] = RgbColor::dBlue(argb);
             }
           }
         }
@@ -133,7 +133,7 @@ class CalculateFaceSchuhMisorientationColorsImpl
      * @brief operator () This is called from the TBB stye of code
      * @param r The range to compute the values
      */
-    void operator()(const tbb::blocked_range<size_t> &r) const
+    void operator()(const tbb::blocked_range<size_t>& r) const
     {
       generate(r.begin(), r.end());
     }

@@ -21,7 +21,7 @@
  */
 class HoughCircles : public AbstractFilter
 {
-  Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
+    Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
 
   public:
     DREAM3D_SHARED_POINTERS(HoughCircles)
@@ -91,9 +91,9 @@ class HoughCircles : public AbstractFilter
     */
     virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
 
-   /**
-    * @brief Reimplemented from @see AbstractFilter class
-    */
+    /**
+     * @brief Reimplemented from @see AbstractFilter class
+     */
     virtual void execute();
 
     /**

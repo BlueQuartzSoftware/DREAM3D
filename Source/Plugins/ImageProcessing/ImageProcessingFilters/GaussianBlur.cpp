@@ -87,7 +87,7 @@ void GaussianBlur::dataCheck()
   if( NULL != m_SelectedCellArrayPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_SelectedCellArray = m_SelectedCellArrayPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
-  if(m_SaveAsNewArray == false) m_NewCellArrayName = "thisIsATempName";
+  if(m_SaveAsNewArray == false) { m_NewCellArrayName = "thisIsATempName"; }
   tempPath.update(getSelectedCellArrayPath().getDataContainerName(), getSelectedCellArrayPath().getAttributeMatrixName(), getNewCellArrayName() );
   m_NewCellArrayPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<ImageProcessing::DefaultPixelType>, AbstractFilter, ImageProcessing::DefaultPixelType>(this, tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_NewCellArrayPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
@@ -121,10 +121,10 @@ void GaussianBlur::execute()
   QString attrMatName = getSelectedCellArrayPath().getAttributeMatrixName();
 
   //get filter to convert m_RawImageData to itk::image
-  ImageProcessing::ImportUInt8FilterType::Pointer importFilter=ITKUtilitiesType::Dream3DtoITKImportFilter(m, attrMatName, m_SelectedCellArray);
+  ImageProcessing::ImportUInt8FilterType::Pointer importFilter = ITKUtilitiesType::Dream3DtoITKImportFilter(m, attrMatName, m_SelectedCellArray);
 
   //get image from filter
-  const ImageProcessing::UInt8ImageType* inputImage = inputImage=importFilter->GetOutput();
+  const ImageProcessing::UInt8ImageType* inputImage = inputImage = importFilter->GetOutput();
   ImageProcessing::UInt8ImageType::RegionType filterRegion = inputImage->GetBufferedRegion();
   ImageProcessing::UInt8ConstIteratorType it(inputImage, filterRegion);
 
@@ -143,10 +143,10 @@ void GaussianBlur::execute()
   //loop over image running filter
   notifyStatusMessage(getHumanLabel(), "Blurring");
   it.GoToBegin();
-  int index=0;
-   while( !it.IsAtEnd() )
+  int index = 0;
+  while( !it.IsAtEnd() )
   {
-    m_NewCellArray[index]=(gaussianFunction->EvaluateAtIndex(it.GetIndex() ));
+    m_NewCellArray[index] = (gaussianFunction->EvaluateAtIndex(it.GetIndex() ));
     ++it;
     ++index;
   }

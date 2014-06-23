@@ -244,7 +244,7 @@ void IdentifySample::execute()
           column = index % xp;
           row = (index / xp) % yp;
           plane = index / (xp * yp);
-          if(column == 0 || column == (xp-1) || row == 0 || row == (yp-1) || plane == 0 || plane == (zp-1)) touchesBoundary = true;
+          if(column == 0 || column == (xp - 1) || row == 0 || row == (yp - 1) || plane == 0 || plane == (zp - 1)) { touchesBoundary = true; }
           for (int j = 0; j < 6; j++)
           {
             good = 1;

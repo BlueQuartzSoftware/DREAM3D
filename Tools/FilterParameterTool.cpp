@@ -311,10 +311,7 @@ void fixInitializerList(QStringListIterator &sourceLines, QStringList &outLines,
     outLines.push_back(line);
     qDebug() << "index: " << i.key() << "   line:" << line;
   }
-
-
   outLines.push_back("{");
-
 }
 
 
@@ -416,10 +413,10 @@ bool SplitFilterHeaderCodes( AbstractFilter::Pointer filter, const QString& hFil
   {
     // Read the Source File
     QFileInfo fi(cppFile);
-//    if (fi.baseName().compare("GenerateVectorColors") != 0)
-//    {
-//      return false;
-//    }
+    //    if (fi.baseName().compare("GenerateVectorColors") != 0)
+    //    {
+    //      return false;
+    //    }
 
     QFile source(hFile);
     source.open(QFile::ReadOnly);
@@ -492,10 +489,10 @@ bool FixIncludeGuard( AbstractFilter::Pointer filter, const QString& hFile, cons
   QFileInfo fi(hFile);
   {
     // Read the Source File
-//    if (fi.baseName().compare("GenerateVectorColors") != 0)
-//    {
-//      return false;
-//    }
+    //    if (fi.baseName().compare("GenerateVectorColors") != 0)
+    //    {
+    //      return false;
+    //    }
 
     QFile source(hFile);
     source.open(QFile::ReadOnly);
@@ -536,7 +533,108 @@ bool FixIncludeGuard( AbstractFilter::Pointer filter, const QString& hFile, cons
   return didReplace;
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+bool ValidateParameterReader( AbstractFilter::Pointer filter, const QString& hFile, const QString& cppFile)
+{
+  QString contents;
+  {
+    // Read the Source File
+    QFileInfo fi(cppFile);
+    if (fi.baseName().compare("MatchCrystallography") != 0)
+    {
+      return false;
+    }
 
+    QFile source(cppFile);
+    source.open(QFile::ReadOnly);
+    contents = source.readAll();
+    source.close();
+  }
+
+  qDebug() << cppFile;
+
+  QStringList names;
+  bool didReplace = false;
+
+  QString searchString = "readFilterParameters(AbstractFilterParametersReader* reader, int index)";
+  QString endString = "reader->closeFilterGroup()";
+  QStringList outLines;
+  QStringList list = contents.split(QRegExp("\\n"));
+  QStringListIterator sourceLines(list);
+  QString body;
+
+  int index = 0;
+  while (sourceLines.hasNext())
+  {
+    QString line = sourceLines.next();
+    if(line.contains(searchString) )
+    {
+      outLines.push_back(line);
+      line = sourceLines.next();
+      outLines.push_back(line); // Eat the line with the "{" on it
+      while(true)
+      {
+        bool ok = true;
+        line = sourceLines.next();
+        if(line.contains(endString) ) { outLines.push_back(line); break; }
+        else
+        {
+
+          QString origLine = line;
+          line = line.trimmed();
+          if(line.startsWith("set") )
+          {
+            int idx = line.indexOf('(');
+            int sIdx = line.indexOf("set") + 3;
+            QString prop = line.mid(sIdx, idx - sIdx);
+            QString setProp = "set" + prop;
+            QString quotedProp = "\"" + prop + "\"";
+            QString getProp = "get" + prop;
+
+            if(line.contains(setProp) == false) {
+              ok = false;
+            }
+            if(line.contains(quotedProp) == false) {
+              ok = false;
+            }
+            if(line.contains(getProp) == false) {
+              ok = false;
+            }
+            if(ok)
+            {
+              outLines.push_back(origLine);
+            }
+            else
+            {
+              outLines.push_back("<<<<<<<" + origLine);
+            }
+
+          }
+          else
+          {
+            outLines.push_back(origLine);
+          }
+        }
+
+      }
+
+
+
+
+    }
+    else
+    {
+      outLines.push_back(line);
+    }
+  }
+
+  didReplace = true;
+  writeOutput(didReplace, outLines, cppFile);
+  index++;
+  return didReplace;
+}
 
 // -----------------------------------------------------------------------------
 //
@@ -593,7 +691,8 @@ void GenerateFilterParametersCode()
 
     //fixFile(filter, h, cpp);
     //SplitFilterHeaderCodes(filter, h, cpp);
-//    FixIncludeGuard(filter, h, cpp);
+    //    FixIncludeGuard(filter, h, cpp);
+    ValidateParameterReader(filter, h, cpp);
   }
 
 }

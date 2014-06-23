@@ -96,13 +96,13 @@ void KMeans::dataCheck()
   if( NULL != m_SelectedCellArrayPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_SelectedCellArray = m_SelectedCellArrayPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
-  if(m_SaveAsNewArray == false) m_NewCellArrayName = "thisIsATempName";
+  if(m_SaveAsNewArray == false) { m_NewCellArrayName = "thisIsATempName"; }
   tempPath.update(getSelectedCellArrayPath().getDataContainerName(), getSelectedCellArrayPath().getAttributeMatrixName(), getNewCellArrayName() );
   m_NewCellArrayPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<ImageProcessing::DefaultPixelType>, AbstractFilter, ImageProcessing::DefaultPixelType>(this, tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_NewCellArrayPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_NewCellArray = m_NewCellArrayPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
-  if(m_Classes<2)
+  if(m_Classes < 2)
   {
     QString ss = QObject::tr("Must threshold into at least 2 classes");
     setErrorCondition(-1000);
@@ -139,21 +139,22 @@ void KMeans::execute()
 
   /* Place all your code to execute your filter here. */
   //get dims
-  size_t udims[3] = {0,0,0};
+  size_t udims[3] = {0, 0, 0};
   m->getDimensions(udims);
 #if (CMP_SIZEOF_SIZE_T == 4)
   typedef int32_t DimType;
 #else
   typedef int64_t DimType;
 #endif
-  DimType dims[3] = {
+  DimType dims[3] =
+  {
     static_cast<DimType>(udims[0]),
     static_cast<DimType>(udims[1]),
     static_cast<DimType>(udims[2]),
   };
 
   //wrap input as itk image
-  ImageProcessing::DefaultImageType::Pointer inputImage=ITKUtilitiesType::Dream3DtoITK(m, attrMatName, m_SelectedCellArray);
+  ImageProcessing::DefaultImageType::Pointer inputImage = ITKUtilitiesType::Dream3DtoITK(m, attrMatName, m_SelectedCellArray);
 
   if(m_Slice)
   {
@@ -162,10 +163,10 @@ void KMeans::execute()
     typedef itk::ScalarImageKmeansImageFilter< ImageProcessing::DefaultSliceType, ImageProcessing::DefaultSliceType > KMeansType;
 
     //wrap output buffer as image
-    ImageProcessing::DefaultImageType::Pointer outputImage=ITKUtilitiesType::Dream3DtoITK(m, attrMatName, m_NewCellArray);
+    ImageProcessing::DefaultImageType::Pointer outputImage = ITKUtilitiesType::Dream3DtoITK(m, attrMatName, m_NewCellArray);
 
     //loop over slices
-    for(int i=0; i<dims[2]; i++)
+    for(int i = 0; i < dims[2]; i++)
     {
       //get slice
       ImageProcessing::DefaultSliceType::Pointer slice = ITKUtilitiesType::ExtractSlice(inputImage, ImageProcessing::ZSlice, i);
@@ -174,17 +175,17 @@ void KMeans::execute()
       CalculatorType::Pointer minMaxFilter = CalculatorType::New ();
       minMaxFilter->SetImage(slice);
       minMaxFilter->Compute();
-      ImageProcessing::DefaultPixelType range = minMaxFilter->GetMaximum()-minMaxFilter->GetMinimum();
+      ImageProcessing::DefaultPixelType range = minMaxFilter->GetMaximum() - minMaxFilter->GetMinimum();
 
       //set up kmeans filter
       KMeansType::Pointer kMeans = KMeansType::New();
       kMeans->SetInput(slice);
       ImageProcessing::DefaultPixelType meanIncrement = range / m_Classes;
-      ImageProcessing::DefaultPixelType mean = range / (2*m_Classes);
-      for(int j=0; j<m_Classes; j++)
+      ImageProcessing::DefaultPixelType mean = range / (2 * m_Classes);
+      for(int j = 0; j < m_Classes; j++)
       {
         kMeans->AddClassWithInitialMean(mean);
-        mean=mean+meanIncrement;
+        mean = mean + meanIncrement;
       }
 
       //execute
@@ -201,7 +202,7 @@ void KMeans::execute()
     CalculatorType::Pointer minMaxFilter = CalculatorType::New ();
     minMaxFilter->SetImage(inputImage);
     minMaxFilter->Compute();
-    ImageProcessing::DefaultPixelType range = minMaxFilter->GetMaximum()-minMaxFilter->GetMinimum();
+    ImageProcessing::DefaultPixelType range = minMaxFilter->GetMaximum() - minMaxFilter->GetMinimum();
 
     //set up kmeans filter
     typedef itk::ScalarImageKmeansImageFilter< ImageProcessing::DefaultImageType, ImageProcessing::DefaultImageType > KMeansType;
@@ -210,11 +211,11 @@ void KMeans::execute()
 
     //start with evenly spaced class means
     ImageProcessing::DefaultPixelType meanIncrement = range / m_Classes;
-    ImageProcessing::DefaultPixelType mean = range / (2*m_Classes);
-    for(int i=0; i<m_Classes; i++)
+    ImageProcessing::DefaultPixelType mean = range / (2 * m_Classes);
+    for(int i = 0; i < m_Classes; i++)
     {
       kMeans->AddClassWithInitialMean(mean);
-      mean=mean+meanIncrement;
+      mean = mean + meanIncrement;
     }
 
     ITKUtilitiesType::SetITKOutput(kMeans->GetOutput(), m_NewCellArrayPtr.lock());

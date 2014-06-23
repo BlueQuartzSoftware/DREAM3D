@@ -86,20 +86,20 @@
 
 #define CHECK_ERROR_ON_WRITE(var, msg)\
   if (err < 0) {\
-  QMessageBox::critical(this, tr("StatsGenerator"),\
-  tr("There was an error writing the " msg " to the HDF5 file"),\
-  QMessageBox::Ok,\
-  QMessageBox::Ok);\
-  return err;\
+    QMessageBox::critical(this, tr("StatsGenerator"),\
+                          tr("There was an error writing the " msg " to the HDF5 file"),\
+                          QMessageBox::Ok,\
+                          QMessageBox::Ok);\
+    return err;\
   }
 
 
 #define CHECK_STATS_READ_ERROR(err, group, dataset)\
   if (err < 0) {\
-  qDebug() << "PrimaryPhaseWidget::on_actionOpen_triggered Error: Could not read '" << group << "' data set '" << dataset << "'" << "\n";\
-  qDebug() << "  File: " << __FILE__ << "\n";\
-  qDebug() << "  Line: " << __LINE__ << "\n";\
-  return err;\
+    qDebug() << "PrimaryPhaseWidget::on_actionOpen_triggered Error: Could not read '" << group << "' data set '" << dataset << "'" << "\n";\
+    qDebug() << "  File: " << __FILE__ << "\n";\
+    qDebug() << "  Line: " << __LINE__ << "\n";\
+    return err;\
   }
 
 // -----------------------------------------------------------------------------
@@ -719,13 +719,13 @@ void PrimaryPhaseWidget::plotSizeDistribution()
 
 #define SGWIGET_WRITE_ERROR_CHECK(var)\
   if (err < 0)  {\
-  QString msg ("Error Writing Data ");\
-  msg.append((var));\
-  msg.append(" to the HDF5 file");\
-  QMessageBox::critical(this, tr("StatsGenerator"),\
-  msg,\
-  QMessageBox::Default);\
-  retErr = -1;\
+    QString msg ("Error Writing Data ");\
+    msg.append((var));\
+    msg.append(" to the HDF5 file");\
+    QMessageBox::critical(this, tr("StatsGenerator"),\
+                          msg,\
+                          QMessageBox::Default);\
+    retErr = -1;\
   }
 
 // -----------------------------------------------------------------------------

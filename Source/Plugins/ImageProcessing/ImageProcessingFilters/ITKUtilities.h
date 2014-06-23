@@ -146,10 +146,10 @@ class ITKUtilities
 
       ItkImageRegionConstIteratorType it(image, filterRegion);
       it.GoToBegin();
-      int index=0;
+      int index = 0;
       while(!it.IsAtEnd())
       {
-        buffer[index]=it.Get();
+        buffer[index] = it.Get();
         ++it;
         ++index;
       }
@@ -181,14 +181,14 @@ class ITKUtilities
 
       //copy dataset dimensions
       typename RGBImageType::SizeType size;
-      size[0]=dims[0];
-      size[1]=dims[1];
-      size[2]=dims[2];
+      size[0] = dims[0];
+      size[1] = dims[1];
+      size[2] = dims[2];
 
       //create image region
       typename RGBImageType::IndexType start;
       start.Fill(0);
-      typename RGBImageType::RegionType region(start,size);
+      typename RGBImageType::RegionType region(start, size);
 
       //create and allocate image
       typename RGBImageType::Pointer image = RGBImageType::New();
@@ -198,13 +198,13 @@ class ITKUtilities
       //iterate over image copying data
       IteratorType it(image, region);
       it.GoToBegin();
-      int index=-1;
+      int index = -1;
       while(!it.IsAtEnd())
       {
         RGBPixelType pixel;
-        pixel[0]=static_cast<unsigned char>(data[++index]);
-        pixel[1]=static_cast<unsigned char>(data[++index]);
-        pixel[2]=static_cast<unsigned char>(data[++index]);
+        pixel[0] = static_cast<unsigned char>(data[++index]);
+        pixel[1] = static_cast<unsigned char>(data[++index]);
+        pixel[2] = static_cast<unsigned char>(data[++index]);
         it.Set(pixel);
         ++it;
       }
@@ -223,13 +223,13 @@ class ITKUtilities
 
       ItkRGBImageRegionConstIteratorType it(image, filterRegion);
       it.GoToBegin();
-      int index=-1;
+      int index = -1;
       while(!it.IsAtEnd())
       {
         typename itk::RGBPixel<PixelType> pixel = it.Get();
-        buffer[++index]=pixel.GetRed();
-        buffer[++index]=pixel.GetGreen();
-        buffer[++index]=pixel.GetBlue();
+        buffer[++index] = pixel.GetRed();
+        buffer[++index] = pixel.GetGreen();
+        buffer[++index] = pixel.GetBlue();
         ++it;
       }
     }
@@ -248,9 +248,9 @@ class ITKUtilities
       typename ItkImageType::RegionType inputRegion = image->GetLargestPossibleRegion();
       typename ItkImageType::SizeType size = inputRegion.GetSize();
       //if(ImageProcessing::XSlice==sliceType) size[0]=0;
-      size[sliceType]=0;
+      size[sliceType] = 0;
       typename ItkImageType::IndexType start = inputRegion.GetIndex();
-      start[sliceType]=sliceNum;
+      start[sliceType] = sliceNum;
       typename ItkImageType::RegionType extractedRegion;
       extractedRegion.SetSize(size);
       extractedRegion.SetIndex(start);
@@ -273,11 +273,11 @@ class ITKUtilities
       //get region to replace
       typename ItkImageType::RegionType volumeRegion = image->GetLargestPossibleRegion();
       typename ItkImageType::SizeType size = volumeRegion.GetSize();
-      size[sliceType]=1;
+      size[sliceType] = 1;
       volumeRegion.SetSize(size);
       typename ItkImageType::IndexType start = volumeRegion.GetIndex();
       start.Fill(0);
-      start[sliceType]=sliceNum;
+      start[sliceType] = sliceNum;
       volumeRegion.SetIndex(start);
 
       //get iterator for slice and image

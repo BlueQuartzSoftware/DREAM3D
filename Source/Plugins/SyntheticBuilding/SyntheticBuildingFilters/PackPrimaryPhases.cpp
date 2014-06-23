@@ -2045,7 +2045,7 @@ void PackPrimaryPhases::assign_voxels()
   for(int64_t i = 1; i < totalFeatures; i++)
   {
     int phase = m_FeaturePhases[i];
-    if(phase >= 0) m_NumFeatures[phase]++;
+    if(phase >= 0) { m_NumFeatures[phase]++; }
   }
 
   //need to update pointers after resize, but do not need to run full data check because pointers are still valid

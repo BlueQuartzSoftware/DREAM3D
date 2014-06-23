@@ -418,8 +418,8 @@ void ConvertHexGridToSquareGridWidget::generateExampleInputFile()
 {
 
   QString filename = QString("%1%2%3.%4").arg(m_FilePrefix->text())
-      .arg(m_ZStartIndex->text(), m_TotalDigits->value(), '0')
-      .arg(m_FileSuffix->text()).arg(m_FileExt->text());
+                     .arg(m_ZStartIndex->text(), m_TotalDigits->value(), '0')
+                     .arg(m_FileSuffix->text()).arg(m_FileExt->text());
   m_GeneratedFileNameExample->setText(filename);
 
   int start = m_ZStartIndex->value();
@@ -428,11 +428,11 @@ void ConvertHexGridToSquareGridWidget::generateExampleInputFile()
 
   // Now generate all the file names the user is asking for and populate the table
   QVector<QString> fileList = FilePathGenerator::GenerateFileList(start, end, hasMissingFiles, true,
-                                                                  m_InputDir->text(),
-                                                                  m_FilePrefix->text(),
-                                                                  m_FileSuffix->text(),
-                                                                  m_FileExt->text(),
-                                                                  m_TotalDigits->value());
+                              m_InputDir->text(),
+                              m_FilePrefix->text(),
+                              m_FileSuffix->text(),
+                              m_FileExt->text(),
+                              m_TotalDigits->value());
   m_FileListView->clear();
   QIcon greenDot = QIcon(QString(":/green-dot.png"));
   QIcon redDot = QIcon(QString(":/red-dot.png"));
@@ -566,7 +566,7 @@ void ConvertHexGridToSquareGridWidget::findMaxSliceAndPrefix()
     }
   }
   this->m_TotalSlices->setText(QString::number(totalOimFilesFound));
- // this->m_FilePrefix->setText(fPrefix);
+// this->m_FilePrefix->setText(fPrefix);
   this->m_ZStartIndex->setValue(minSlice);
   this->m_ZEndIndex->setValue(maxSlice);
 }

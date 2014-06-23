@@ -19,13 +19,13 @@ typedef ITKUtilities<ImageProcessing::DefaultPixelType>    ITKUtilitiesType;
 //
 // -----------------------------------------------------------------------------
 Watershed::Watershed() :
-m_SelectedCellArrayPath("", "", ""),
-m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
-m_Threshold(0.005f),
-m_Level(0.5f),
-m_SelectedCellArrayArrayName(""),
-m_SelectedCellArray(NULL),
-m_FeatureIds(NULL)
+  m_SelectedCellArrayPath("", "", ""),
+  m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
+  m_Threshold(0.005f),
+  m_Level(0.5f),
+  m_SelectedCellArrayArrayName(""),
+  m_SelectedCellArray(NULL),
+  m_FeatureIds(NULL)
 {
   setupFilterParameters();
 }
@@ -123,7 +123,7 @@ void Watershed::execute()
   QString attrMatName = getSelectedCellArrayPath().getAttributeMatrixName();
 
   //wrap m_RawImageData as itk::image
-  ImageProcessing::DefaultImageType::Pointer inputImage=ITKUtilitiesType::Dream3DtoITK(m, attrMatName, m_SelectedCellArray);
+  ImageProcessing::DefaultImageType::Pointer inputImage = ITKUtilitiesType::Dream3DtoITK(m, attrMatName, m_SelectedCellArray);
 
   //create gradient magnitude filter
   notifyStatusMessage(getHumanLabel(), "Calculating Gradient Magnitude");
@@ -150,10 +150,10 @@ void Watershed::execute()
   typedef itk::ImageRegionConstIterator<itk::Image<unsigned long, ImageProcessing::ImageDimension> > WatershedIteratorType;
   WatershedIteratorType it(output, filterRegion);
   it.GoToBegin();
-  int index=0;
+  int index = 0;
   while(!it.IsAtEnd())
   {
-    m_FeatureIds[index]=it.Get();
+    m_FeatureIds[index] = it.Get();
     ++it;
     ++index;
   }

@@ -236,7 +236,7 @@ void DataContainerArray::duplicateDataContainer(const QString& name, const QStri
     }
   }
 
-  if(f == NULL) return;
+  if(f == NULL) { return; }
 
   DataContainer::Pointer new_f = f->deepCopy();
   new_f->setName(newName);

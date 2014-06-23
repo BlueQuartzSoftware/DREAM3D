@@ -9,7 +9,8 @@
 /**
 * @brief This namespace is used to define some Constants for the plugin itself.
 */
-namespace Version4Compatibility {
+namespace Version4Compatibility
+{
   const QString Version4CompatibilityPluginFile("Version4CompatibilityPlugin");
   const QString Version4CompatibilityPluginDisplayName("Version4CompatibilityPlugin");
   const QString Version4CompatibilityBaseName("Version4CompatibilityPlugin");
@@ -22,7 +23,7 @@ namespace Version4Compatibility {
 namespace FilterParameterWidgetType
 {
 
-/*  const QString SomeCustomWidget("SomeCustomWidget"); */
+  /*  const QString SomeCustomWidget("SomeCustomWidget"); */
 
 }
 #endif

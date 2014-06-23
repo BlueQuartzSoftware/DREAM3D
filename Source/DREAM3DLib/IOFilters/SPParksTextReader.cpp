@@ -276,23 +276,23 @@ void SPParksTextReader::execute()
 int SPParksTextReader::readHeader()
 {
   /*
-ITEM: TIMESTEP
-210    21000.6
-ITEM: NUMBER OF ATOMS
-106480
-ITEM: BOX BOUNDS
-0.5 44.5
-0.5 44.5
-0.5 55.5
-ITEM: ATOMS id type x y z
-*/
+  ITEM: TIMESTEP
+  210    21000.6
+  ITEM: NUMBER OF ATOMS
+  106480
+  ITEM: BOX BOUNDS
+  0.5 44.5
+  0.5 44.5
+  0.5 55.5
+  ITEM: ATOMS id type x y z
+  */
 
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getVolumeDataContainerName());
 
   int oneBase = 0;
   if(getOneBasedArrays())
   {
-  oneBase = 1;
+    oneBase = 1;
   }
 
   bool ok = false; // Use this to verify that the comversions from string to numbers actually works.
@@ -374,14 +374,14 @@ int  SPParksTextReader::readFile()
     pType = getPointerType(name);
 
     // We don't need to parse the X, Y & Z or id values into arrays.
-    if (name.compare("x") == 0) { xCol = i-2; continue;}
-    if (name.compare("y") == 0) { yCol = i-2; continue;}
-    if (name.compare("z") == 0) { zCol = i-2; continue;}
-    if (name.compare("id") == 0) { zCol = i-2; continue;}
+    if (name.compare("x") == 0) { xCol = i - 2; continue;}
+    if (name.compare("y") == 0) { yCol = i - 2; continue;}
+    if (name.compare("z") == 0) { zCol = i - 2; continue;}
+    if (name.compare("id") == 0) { zCol = i - 2; continue;}
 
     if(Ebsd::Int32 == pType)
     {
-      Int32Parser::Pointer dparser = Int32Parser::New(NULL, totalPoints, name, i-2);
+      Int32Parser::Pointer dparser = Int32Parser::New(NULL, totalPoints, name, i - 2);
       if( (didAllocate = dparser->allocateArray(totalPoints)) == true)
       {
         ::memset(dparser->getVoidPointer(), 0xAB, sizeof(int32_t) * totalPoints);
@@ -390,7 +390,7 @@ int  SPParksTextReader::readFile()
     }
     else if(Ebsd::Float == pType)
     {
-      FloatParser::Pointer dparser = FloatParser::New(NULL, totalPoints, name, i-2);
+      FloatParser::Pointer dparser = FloatParser::New(NULL, totalPoints, name, i - 2);
       if( (didAllocate = dparser->allocateArray(totalPoints)) == true)
       {
         ::memset(dparser->getVoidPointer(), 0xAB, sizeof(float) * totalPoints);
@@ -427,7 +427,8 @@ int  SPParksTextReader::readFile()
     buf = buf.trimmed(); // Remove leading and trailing whitespace
 
     if(m_InStream.atEnd() == true && buf.isEmpty() == true) // We have to have read to the end of the file AND the buffer is empty
-    {                                               // otherwise we read EXACTLY the last line and we still need to parse the line.
+    {
+      // otherwise we read EXACTLY the last line and we still need to parse the line.
       break;
     }
 
@@ -489,7 +490,7 @@ void SPParksTextReader::parseDataLine(QByteArray& line, QVector<size_t> dims, in
 
   // Calculate the offset into the actual array based on the x, y & z values from the data line we just read
   size_t offset = (dims[1] * dims[0] * zIdx) + (dims[0] * yIdx) + xIdx;
- // BOOST_ASSERT(tokens.size() == m_NamePointerMap.size());
+// BOOST_ASSERT(tokens.size() == m_NamePointerMap.size());
 
   QMapIterator<QString, DataParser::Pointer> iter(m_NamePointerMap);
   while (iter.hasNext())
@@ -500,9 +501,9 @@ void SPParksTextReader::parseDataLine(QByteArray& line, QVector<size_t> dims, in
     // if the SPParks users actually wanted to read in the matching XYZ lattice site for the data then actually
     // parsing and storing the data _may_ be of interest to them
     if(dparser->getColumnName().compare("x") == 0
-       || dparser->getColumnName().compare("y") == 0
-       || dparser->getColumnName().compare("z") == 0
-       || dparser->getColumnName().compare("id") == 0)
+        || dparser->getColumnName().compare("y") == 0
+        || dparser->getColumnName().compare("z") == 0
+        || dparser->getColumnName().compare("id") == 0)
     {
       continue;
     }

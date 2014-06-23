@@ -217,13 +217,16 @@ void StringWidget::fadeWidget(QWidget* widget, bool in)
 
 
 #if 0
-  if (in) {
-    QPropertyAnimation *animation = new QPropertyAnimation(widget, "iconOpacity");
+  if (in)
+  {
+    QPropertyAnimation* animation = new QPropertyAnimation(widget, "iconOpacity");
     animation->setDuration(FADE_TIME);
     animation->setEndValue(1.0);
     animation->start(QAbstractAnimation::DeleteWhenStopped);
-  } else {
-    QPropertyAnimation *animation = new QPropertyAnimation(this, "iconOpacity");
+  }
+  else
+  {
+    QPropertyAnimation* animation = new QPropertyAnimation(this, "iconOpacity");
     animation->setDuration(FADE_TIME);
     animation->setEndValue(0.0);
     animation->start(QAbstractAnimation::DeleteWhenStopped);
@@ -252,5 +255,5 @@ void StringWidget::fadeWidget(QWidget* widget, bool in)
   faderWidget->setStartColor(color);
   faderWidget->start();
 
-  #endif
+#endif
 }

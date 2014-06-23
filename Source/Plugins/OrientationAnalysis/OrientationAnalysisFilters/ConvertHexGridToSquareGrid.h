@@ -129,9 +129,9 @@ class ConvertHexGridToSquareGrid : public AbstractFilter
     DREAM3D_INSTANCE_PROPERTY(int, NumRows)
     DREAM3D_INSTANCE_PROPERTY(bool, HeaderIsComplete)
 
-    signals:
+  signals:
 
-      void updateFilterParameters(AbstractFilter* filter);
+    void updateFilterParameters(AbstractFilter* filter);
     void parametersChanged();
     void preflightAboutToExecute();
     void preflightExecuted();
