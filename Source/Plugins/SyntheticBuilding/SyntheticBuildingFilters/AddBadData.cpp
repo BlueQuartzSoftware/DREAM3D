@@ -214,3 +214,31 @@ AbstractFilter::Pointer AddBadData::newFilterInstance(bool copyFilterParameters)
   }
   return filter;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString AddBadData::getCompiledLibraryName()
+{ return SyntheticBuilding::SyntheticBuildingBaseName; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString AddBadData::getGroupName()
+{ return DREAM3D::FilterGroups::SyntheticBuildingFilters; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString AddBadData::getSubGroupName()
+{ return DREAM3D::FilterSubGroups::MiscFilters; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString AddBadData::getHumanLabel()
+{ return "Add Bad Data"; }
+

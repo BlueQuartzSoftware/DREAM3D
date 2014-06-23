@@ -340,3 +340,31 @@ AbstractFilter::Pointer InitializeSyntheticVolume::newFilterInstance(bool copyFi
   }
   return filter;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString InitializeSyntheticVolume::getCompiledLibraryName()
+{ return SyntheticBuilding::SyntheticBuildingBaseName; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString InitializeSyntheticVolume::getGroupName()
+{return DREAM3D::FilterGroups::SyntheticBuildingFilters;}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString InitializeSyntheticVolume::getSubGroupName()
+{ return DREAM3D::FilterSubGroups::PackingFilters; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString InitializeSyntheticVolume::getHumanLabel()
+{return "Initialize Synthetic Volume";}
+

@@ -271,3 +271,31 @@ AbstractFilter::Pointer GenericExample::newFilterInstance(bool copyFilterParamet
   }
   return filter;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString GenericExample::getCompiledLibraryName()
+{ return Test::TestBaseName; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString GenericExample::getGroupName()
+{ return DREAM3D::FilterGroups::TestFilters; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString GenericExample::getSubGroupName()
+{ return "Misc"; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString GenericExample::getHumanLabel()
+{ return "Generic Example"; }
+

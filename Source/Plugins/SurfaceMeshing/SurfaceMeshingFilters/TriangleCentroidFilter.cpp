@@ -240,3 +240,31 @@ AbstractFilter::Pointer TriangleCentroidFilter::newFilterInstance(bool copyFilte
   }
   return filter;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString TriangleCentroidFilter::getCompiledLibraryName()
+{ return SurfaceMeshing::SurfaceMeshingBaseName; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString TriangleCentroidFilter::getGroupName()
+{ return DREAM3D::FilterGroups::SurfaceMeshingFilters; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString TriangleCentroidFilter::getSubGroupName()
+{ return DREAM3D::FilterSubGroups::MiscFilters; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString TriangleCentroidFilter::getHumanLabel()
+{ return "Generate Triangle Centroids"; }
+

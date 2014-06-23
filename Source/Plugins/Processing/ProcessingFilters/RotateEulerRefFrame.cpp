@@ -249,3 +249,17 @@ AbstractFilter::Pointer RotateEulerRefFrame::newFilterInstance(bool copyFilterPa
   }
   return filter;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString RotateEulerRefFrame::getCompiledLibraryName()
+{ return Processing::ProcessingBaseName; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString RotateEulerRefFrame::getHumanLabel()
+{ return "Rotate Euler Reference Frame"; }
+

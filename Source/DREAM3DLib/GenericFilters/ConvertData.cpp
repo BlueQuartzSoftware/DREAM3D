@@ -396,3 +396,31 @@ AbstractFilter::Pointer ConvertData::newFilterInstance(bool copyFilterParameters
   }
   return filter;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString ConvertData::getCompiledLibraryName()
+{ return Generic::GenericBaseName; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString ConvertData::getGroupName()
+{ return DREAM3D::FilterGroups::GenericFilters; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString ConvertData::getSubGroupName()
+{ return DREAM3D::FilterSubGroups::MiscFilters; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString ConvertData::getHumanLabel()
+{ return "Convert Cell Data"; }
+

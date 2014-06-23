@@ -605,3 +605,31 @@ AbstractFilter::Pointer FindRelativeMotionBetweenSlices::newFilterInstance(bool 
   }
   return filter;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString FindRelativeMotionBetweenSlices::getCompiledLibraryName()
+{ return Processing::ProcessingBaseName; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString FindRelativeMotionBetweenSlices::getGroupName()
+{ return DREAM3D::FilterGroups::ProcessingFilters; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString FindRelativeMotionBetweenSlices::getSubGroupName()
+{ return DREAM3D::FilterSubGroups::ImageFilters; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString FindRelativeMotionBetweenSlices::getHumanLabel()
+{ return "Find Relative Motion Between Slices"; }
+

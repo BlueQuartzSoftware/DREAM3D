@@ -34,8 +34,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _FINDBOUNDINGBOXGRAINS_H_
-#define _FINDBOUNDINGBOXGRAINS_H_
+#ifndef _FindBoundingBoxFeatures_H_
+#define _FindBoundingBoxFeatures_H_
 
 #include <vector>
 #include <QtCore/QString>
@@ -73,11 +73,11 @@ class DREAM3DLib_EXPORT FindBoundingBoxFeatures : public AbstractFilter
     DREAM3D_FILTER_PARAMETER(QString, BiasedFeaturesArrayName)
     Q_PROPERTY(QString BiasedFeaturesArrayName READ getBiasedFeaturesArrayName WRITE setBiasedFeaturesArrayName)
 
-    virtual const QString getCompiledLibraryName() { return Generic::GenericBaseName; }
+    virtual const QString getCompiledLibraryName();
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
-    virtual const QString getGroupName() { return DREAM3D::FilterGroups::GenericFilters; }
-    virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::SpatialFilters; }
-    virtual const QString getHumanLabel() { return "Find Biased Features (Bounding Box)"; }
+    virtual const QString getGroupName();
+    virtual const QString getSubGroupName();
+    virtual const QString getHumanLabel();
 
     /**
     * @brief This method will instantiate all the end user settable options/parameters

@@ -508,3 +508,31 @@ AbstractFilter::Pointer ParaDisReader::newFilterInstance(bool copyFilterParamete
   }
   return filter;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString ParaDisReader::getCompiledLibraryName()
+{ return IO::IOBaseName; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString ParaDisReader::getGroupName()
+{ return DREAM3D::FilterGroups::IOFilters; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString ParaDisReader::getSubGroupName()
+{ return DREAM3D::FilterSubGroups::InputFilters; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString ParaDisReader::getHumanLabel()
+{ return "Read ParaDis File"; }
+

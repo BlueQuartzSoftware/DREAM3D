@@ -165,3 +165,31 @@ AbstractFilter::Pointer DiscreteGaussianBlur::newFilterInstance(bool copyFilterP
   return filter;
 }
 
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString DiscreteGaussianBlur::getCompiledLibraryName()
+{return ImageProcessing::ImageProcessingBaseName;}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString DiscreteGaussianBlur::getGroupName()
+{return "ImageProcessing";}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString DiscreteGaussianBlur::getSubGroupName()
+{return "Misc";}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString DiscreteGaussianBlur::getHumanLabel()
+{return "Discrete Gaussian Blur";}
+

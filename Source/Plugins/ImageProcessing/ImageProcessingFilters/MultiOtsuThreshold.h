@@ -48,26 +48,26 @@ class MultiOtsuThreshold : public AbstractFilter
      * @brief getCompiledLibraryName Returns the name of the Library that this filter is a part of
      * @return
      */
-     virtual const QString getCompiledLibraryName() {return ImageProcessing::ImageProcessingBaseName;}
+    virtual const QString getCompiledLibraryName();
 
     /**
     * @brief This returns a string that is displayed in the GUI. It should be readable
     * and understandable by humans.
     */
-    virtual const QString getHumanLabel() {return "Multi Level Otsu Threshold";}
+    virtual const QString getHumanLabel();
 
     /**
     * @brief This returns the group that the filter belonds to. You can select
     * a different group if you want. The string returned here will be displayed
     * in the GUI for the filter
     */
-    virtual const QString getGroupName() {return "ImageProcessing";}
+    virtual const QString getGroupName();
 
     /**
     * @brief This returns a string that is displayed in the GUI and helps to sort the filters into
     * a subgroup. It should be readable and understandable by humans.
     */
-    virtual const QString getSubGroupName() {return "Misc";}
+    virtual const QString getSubGroupName();
 
     /**
     * @brief This method will instantiate all the end user settable options/parameters

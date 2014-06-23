@@ -249,3 +249,31 @@ AbstractFilter::Pointer FindSizes::newFilterInstance(bool copyFilterParameters)
   }
   return filter;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString FindSizes::getCompiledLibraryName()
+{ return Statistics::StatisticsBaseName; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString FindSizes::getGroupName()
+{ return DREAM3D::FilterGroups::StatisticsFilters; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString FindSizes::getSubGroupName()
+{ return DREAM3D::FilterSubGroups::MorphologicalFilters; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString FindSizes::getHumanLabel()
+{ return "Find Feature Sizes"; }
+

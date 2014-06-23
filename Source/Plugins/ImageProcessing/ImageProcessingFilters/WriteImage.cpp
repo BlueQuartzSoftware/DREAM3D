@@ -18,9 +18,9 @@ typedef ITKUtilities<ImageProcessing::DefaultPixelType>    ITKUtilitiesType;
 WriteImage::WriteImage() :
   AbstractFilter(),
   m_SelectedCellArrayPath("", "", ""),
+  m_OutputFileName(""),
   m_SelectedCellArrayArrayName(""),
-  m_SelectedCellArray(NULL),
-  m_OutputFileName("")
+  m_SelectedCellArray(NULL)
 {
   setupFilterParameters();
 }
@@ -138,4 +138,32 @@ AbstractFilter::Pointer WriteImage::newFilterInstance(bool copyFilterParameters)
   }
   return filter;
 }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString WriteImage::getCompiledLibraryName()
+{return ImageProcessing::ImageProcessingBaseName;}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString WriteImage::getGroupName()
+{return "ImageProcessing";}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString WriteImage::getSubGroupName()
+{return "Misc";}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString WriteImage::getHumanLabel()
+{return "Write Image from Array";}
 

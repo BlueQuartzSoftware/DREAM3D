@@ -94,11 +94,11 @@ class ConvertHexGridToSquareGrid : public AbstractFilter
     DREAM3D_FILTER_PARAMETER(int, HexGridStack)
     Q_PROPERTY(int HexGridStack READ getHexGridStack WRITE setHexGridStack)
 
-    virtual const QString getCompiledLibraryName() { return Sampling::SamplingBaseName; }
+    virtual const QString getCompiledLibraryName();
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
-    virtual const QString getGroupName() { return DREAM3D::FilterGroups::SamplingFilters; }
+    virtual const QString getGroupName();
     virtual const QString getSubGroupName()  { return DREAM3D::FilterSubGroups::ResolutionFilters; }
-    virtual const QString getHumanLabel() { return "Convert Hexagonal Grid Data to Square Grid Data (TSL - .ang)"; }
+    virtual const QString getHumanLabel();
 
     virtual void setupFilterParameters();
     /**

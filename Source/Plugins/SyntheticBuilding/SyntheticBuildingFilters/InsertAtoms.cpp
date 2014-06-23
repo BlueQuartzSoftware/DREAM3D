@@ -551,3 +551,24 @@ AbstractFilter::Pointer InsertAtoms::newFilterInstance(bool copyFilterParameters
   }
   return filter;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString InsertAtoms::getCompiledLibraryName()
+{ return SyntheticBuilding::SyntheticBuildingBaseName; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString InsertAtoms::getGroupName()
+{ return DREAM3D::FilterGroups::SyntheticBuildingFilters; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString InsertAtoms::getHumanLabel()
+{ return "Insert Atoms"; }
+

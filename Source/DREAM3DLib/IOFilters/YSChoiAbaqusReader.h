@@ -28,8 +28,8 @@
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _YSCHOIABAQUSREADER_H_
-#define _YSCHOIABAQUSREADER_H_
+#ifndef _YSChoiAbaqusReader_H_
+#define _YSChoiAbaqusReader_H_
 
 #include <string.h> // needed for the ::memcpy function below
 #include <QtCore/QString>
@@ -88,11 +88,11 @@ class DREAM3DLib_EXPORT YSChoiAbaqusReader : public FileReader
     DREAM3D_FILTER_PARAMETER(QString, CrystalStructuresArrayName)
     Q_PROPERTY(QString CrystalStructuresArrayName READ getCrystalStructuresArrayName WRITE setCrystalStructuresArrayName)
 
-    virtual const QString getCompiledLibraryName() { return IO::IOBaseName; }
+    virtual const QString getCompiledLibraryName();
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
-    virtual const QString getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
-    virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::InputFilters; }
-    virtual const QString getHumanLabel() { return "Read YS Choi Abaqus Vtk Output File"; }
+    virtual const QString getGroupName();
+    virtual const QString getSubGroupName();
+    virtual const QString getHumanLabel();
 
     virtual void setupFilterParameters();
     virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);

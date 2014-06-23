@@ -342,3 +342,24 @@ AbstractFilter::Pointer NeighborOrientationCorrelation::newFilterInstance(bool c
   }
   return filter;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString NeighborOrientationCorrelation::getCompiledLibraryName()
+{ return Processing::ProcessingBaseName; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString NeighborOrientationCorrelation::getGroupName()
+{ return DREAM3D::FilterGroups::ProcessingFilters; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString NeighborOrientationCorrelation::getHumanLabel()
+{ return "Neighbor Orientation Correlation"; }
+

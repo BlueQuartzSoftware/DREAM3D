@@ -201,3 +201,31 @@ AbstractFilter::Pointer AlignSectionsList::newFilterInstance(bool copyFilterPara
   }
   return filter;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString AlignSectionsList::getCompiledLibraryName()
+{ return Reconstruction::ReconstructionBaseName; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString AlignSectionsList::getGroupName()
+{ return DREAM3D::FilterGroups::ReconstructionFilters; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString AlignSectionsList::getSubGroupName()
+{return DREAM3D::FilterSubGroups::AlignmentFilters;}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString AlignSectionsList::getHumanLabel()
+{ return "Align Sections (List)"; }
+

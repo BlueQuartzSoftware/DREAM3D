@@ -337,3 +337,31 @@ AbstractFilter::Pointer FindFeatureReferenceMisorientations::newFilterInstance(b
   }
   return filter;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString FindFeatureReferenceMisorientations::getCompiledLibraryName()
+{ return Statistics::StatisticsBaseName; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString FindFeatureReferenceMisorientations::getGroupName()
+{ return DREAM3D::FilterGroups::StatisticsFilters; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString FindFeatureReferenceMisorientations::getSubGroupName()
+{ return DREAM3D::FilterSubGroups::CrystallographicFilters; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString FindFeatureReferenceMisorientations::getHumanLabel()
+{ return "Find Feature Reference Misorientations"; }
+

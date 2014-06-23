@@ -268,3 +268,24 @@ AbstractFilter::Pointer RegularizeZSpacing::newFilterInstance(bool copyFilterPar
   }
   return filter;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString RegularizeZSpacing::getCompiledLibraryName()
+{ return Sampling::SamplingBaseName; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString RegularizeZSpacing::getGroupName()
+{ return DREAM3D::FilterGroups::SamplingFilters; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString RegularizeZSpacing::getHumanLabel()
+{ return "Regularize Z Spacing"; }
+

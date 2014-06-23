@@ -17,7 +17,7 @@ This filter copies all the associated **Cells** to the **Feature** that they bel
 
 ## Required DataContainers ##
 
-Voxel
+Voxel DataContainer
 
 ## Required Arrays ##
 

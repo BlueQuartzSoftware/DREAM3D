@@ -385,3 +385,31 @@ AbstractFilter::Pointer AlignSectionsMisorientation::newFilterInstance(bool copy
   }
   return filter;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString AlignSectionsMisorientation::getCompiledLibraryName()
+{ return Reconstruction::ReconstructionBaseName; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString AlignSectionsMisorientation::getGroupName()
+{ return DREAM3D::FilterGroups::ReconstructionFilters; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString AlignSectionsMisorientation::getSubGroupName()
+{return DREAM3D::FilterSubGroups::AlignmentFilters;}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString AlignSectionsMisorientation::getHumanLabel()
+{ return "Align Sections (Misorientation)"; }
+

@@ -34,8 +34,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _FINDSIZES_H_
-#define _FINDSIZES_H_
+#ifndef _FindSizes_H_
+#define _FindSizes_H_
 
 #include <vector>
 #include <QtCore/QString>
@@ -79,11 +79,11 @@ class FindSizes : public AbstractFilter
     DREAM3D_FILTER_PARAMETER(QString, NumCellsArrayName)
     Q_PROPERTY(QString NumCellsArrayName READ getNumCellsArrayName WRITE setNumCellsArrayName)
 
-    virtual const QString getCompiledLibraryName() { return Statistics::StatisticsBaseName; }
+    virtual const QString getCompiledLibraryName();
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
-    virtual const QString getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
-    virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::MorphologicalFilters; }
-    virtual const QString getHumanLabel() { return "Find Feature Sizes"; }
+    virtual const QString getGroupName();
+    virtual const QString getSubGroupName();
+    virtual const QString getHumanLabel();
 
     /**
     * @brief This method will instantiate all the end user settable options/parameters

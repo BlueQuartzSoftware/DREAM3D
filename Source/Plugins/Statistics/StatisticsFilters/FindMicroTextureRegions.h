@@ -35,8 +35,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _FINDMICROTEXTUREREGIONS_H_
-#define _FINDMICROTEXTUREREGIONS_H_
+#ifndef _FindMicroTextureRegions_H_
+#define _FindMicroTextureRegions_H_
 
 #include <vector>
 #include <QtCore/QString>
@@ -77,11 +77,11 @@ class FindMicroTextureRegions : public AbstractFilter
     DREAM3D_FILTER_PARAMETER(QString, MicroTextureRegionFractionOccupiedArrayName)
     Q_PROPERTY(QString MicroTextureRegionFractionOccupiedArrayName READ getMicroTextureRegionFractionOccupiedArrayName WRITE setMicroTextureRegionFractionOccupiedArrayName)
 
-    virtual const QString getCompiledLibraryName() { return Statistics::StatisticsBaseName; }
+    virtual const QString getCompiledLibraryName();
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
-    virtual const QString getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
-    virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::MorphologicalFilters; }
-    virtual const QString getHumanLabel() { return "Find MicroTexture Regions"; }
+    virtual const QString getGroupName();
+    virtual const QString getSubGroupName();
+    virtual const QString getHumanLabel();
 
     /**
     * @brief This method will instantiate all the end user settable options/parameters

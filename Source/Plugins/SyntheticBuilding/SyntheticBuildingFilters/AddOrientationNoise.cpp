@@ -198,3 +198,31 @@ AbstractFilter::Pointer AddOrientationNoise::newFilterInstance(bool copyFilterPa
   }
   return filter;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString AddOrientationNoise::getCompiledLibraryName()
+{ return SyntheticBuilding::SyntheticBuildingBaseName; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString AddOrientationNoise::getGroupName()
+{ return DREAM3D::FilterGroups::SyntheticBuildingFilters; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString AddOrientationNoise::getSubGroupName()
+{ return DREAM3D::FilterSubGroups::CrystallographyFilters; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString AddOrientationNoise::getHumanLabel()
+{ return "Add Orientation Noise"; }
+

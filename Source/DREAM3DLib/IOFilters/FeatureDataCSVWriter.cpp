@@ -298,3 +298,31 @@ AbstractFilter::Pointer FeatureDataCSVWriter::newFilterInstance(bool copyFilterP
   }
   return filter;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString FeatureDataCSVWriter::getCompiledLibraryName()
+{ return IO::IOBaseName; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString FeatureDataCSVWriter::getGroupName()
+{ return DREAM3D::FilterGroups::IOFilters; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString FeatureDataCSVWriter::getSubGroupName()
+{ return DREAM3D::FilterSubGroups::OutputFilters; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString FeatureDataCSVWriter::getHumanLabel()
+{ return "Write Feature Data as CSV File"; }
+

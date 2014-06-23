@@ -746,3 +746,31 @@ AbstractFilter::Pointer VerifyTriangleWinding::newFilterInstance(bool copyFilter
   }
   return filter;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString VerifyTriangleWinding::getCompiledLibraryName()
+{ return SurfaceMeshing::SurfaceMeshingBaseName; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString VerifyTriangleWinding::getGroupName()
+{ return DREAM3D::FilterGroups::SurfaceMeshingFilters; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString VerifyTriangleWinding::getSubGroupName()
+{ return DREAM3D::FilterSubGroups::ConnectivityArrangementFilters; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString VerifyTriangleWinding::getHumanLabel()
+{ return "Verify Triangle Winding"; }
+

@@ -238,3 +238,31 @@ AbstractFilter::Pointer GenerateEulerColors::newFilterInstance(bool copyFilterPa
   }
   return filter;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString GenerateEulerColors::getCompiledLibraryName()
+{ return Generic::GenericBaseName; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString GenerateEulerColors::getGroupName()
+{ return DREAM3D::FilterGroups::GenericFilters; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString GenerateEulerColors::getSubGroupName()
+{ return DREAM3D::FilterSubGroups::MiscFilters; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString GenerateEulerColors::getHumanLabel()
+{ return "Generate Euler Colors"; }
+

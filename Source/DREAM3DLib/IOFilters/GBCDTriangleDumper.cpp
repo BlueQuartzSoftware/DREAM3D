@@ -271,3 +271,31 @@ AbstractFilter::Pointer GBCDTriangleDumper::newFilterInstance(bool copyFilterPar
   }
   return filter;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString GBCDTriangleDumper::getCompiledLibraryName()
+{ return IO::IOBaseName; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString GBCDTriangleDumper::getGroupName()
+{ return DREAM3D::FilterGroups::IOFilters; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString GBCDTriangleDumper::getSubGroupName()
+{ return DREAM3D::FilterSubGroups::MiscFilters; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString GBCDTriangleDumper::getHumanLabel()
+{ return "Write GBCD Triangles File"; }
+

@@ -223,3 +223,31 @@ AbstractFilter::Pointer MultiOtsuThreshold::newFilterInstance(bool copyFilterPar
   return filter;
 }
 
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString MultiOtsuThreshold::getCompiledLibraryName()
+{return ImageProcessing::ImageProcessingBaseName;}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString MultiOtsuThreshold::getGroupName()
+{return "ImageProcessing";}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString MultiOtsuThreshold::getSubGroupName()
+{return "Misc";}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString MultiOtsuThreshold::getHumanLabel()
+{return "Multi Level Otsu Threshold";}
+

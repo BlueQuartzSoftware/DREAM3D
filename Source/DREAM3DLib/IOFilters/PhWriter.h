@@ -34,8 +34,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _PHWRITER_HPP_
-#define _PHWRITER_HPP_
+#ifndef _PhWriter_H_
+#define _PhWriter_H_
 
 
 #include "DREAM3DLib/DREAM3DLib.h"
@@ -66,21 +66,21 @@ class DREAM3DLib_EXPORT PhWriter : public FileWriter
     DREAM3D_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
     Q_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
 
-    virtual const QString getCompiledLibraryName() { return IO::IOBaseName; }
+    virtual const QString getCompiledLibraryName();
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
-    virtual const QString getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
+    virtual const QString getGroupName();
 
     /**
     * @brief getSubGroupName Returns the Subgroup Name for this filter
     * @return
     */
-    virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::OutputFilters; }
+    virtual const QString getSubGroupName();
 
     /**
     * @brief This returns a string that is displayed in the GUI. It should be readable
     * and understandable by humans.
     */
-    virtual const QString getHumanLabel() { return "Write Ph File (Feature Ids)"; }
+    virtual const QString getHumanLabel();
 
     /**
      * @brief This method will instantiate all the end user settable options/parameters

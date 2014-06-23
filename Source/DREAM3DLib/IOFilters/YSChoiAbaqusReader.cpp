@@ -506,3 +506,31 @@ AbstractFilter::Pointer YSChoiAbaqusReader::newFilterInstance(bool copyFilterPar
   }
   return filter;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString YSChoiAbaqusReader::getCompiledLibraryName()
+{ return IO::IOBaseName; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString YSChoiAbaqusReader::getGroupName()
+{ return DREAM3D::FilterGroups::IOFilters; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString YSChoiAbaqusReader::getSubGroupName()
+{ return DREAM3D::FilterSubGroups::InputFilters; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString YSChoiAbaqusReader::getHumanLabel()
+{ return "Read YS Choi Abaqus Vtk Output File"; }
+

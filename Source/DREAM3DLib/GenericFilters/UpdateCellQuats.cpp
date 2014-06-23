@@ -176,3 +176,31 @@ AbstractFilter::Pointer UpdateCellQuats::newFilterInstance(bool copyFilterParame
   }
   return filter;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString UpdateCellQuats::getCompiledLibraryName()
+{ return Generic::GenericBaseName; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString UpdateCellQuats::getGroupName()
+{ return DREAM3D::FilterGroups::GenericFilters; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString UpdateCellQuats::getSubGroupName()
+{ return DREAM3D::FilterSubGroups::CrystallographyFilters; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString UpdateCellQuats::getHumanLabel()
+{ return "Update Cell Quaternions"; }
+

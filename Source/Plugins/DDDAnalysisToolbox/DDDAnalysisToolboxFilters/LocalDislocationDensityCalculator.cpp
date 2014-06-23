@@ -342,3 +342,31 @@ AbstractFilter::Pointer LocalDislocationDensityCalculator::newFilterInstance(boo
   }
   return filter;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString LocalDislocationDensityCalculator::getCompiledLibraryName()
+{ return DDDAnalysisToolbox::DDDAnalysisToolboxBaseName; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString LocalDislocationDensityCalculator::getGroupName()
+{ return DREAM3D::FilterGroups::DDDAnalysisFilters; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString LocalDislocationDensityCalculator::getSubGroupName()
+{ return DREAM3D::FilterSubGroups::StatisticsFilters; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString LocalDislocationDensityCalculator::getHumanLabel()
+{ return "Calculate Local Dislocation Densities"; }
+

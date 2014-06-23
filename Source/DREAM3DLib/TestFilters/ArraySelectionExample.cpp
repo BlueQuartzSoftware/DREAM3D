@@ -154,3 +154,31 @@ AbstractFilter::Pointer ArraySelectionExample::newFilterInstance(bool copyFilter
   }
   return filter;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString ArraySelectionExample::getCompiledLibraryName()
+{ return Test::TestBaseName; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString ArraySelectionExample::getGroupName()
+{ return DREAM3D::FilterGroups::TestFilters; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString ArraySelectionExample::getSubGroupName()
+{ return "Misc"; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString ArraySelectionExample::getHumanLabel()
+{ return "DataContainerArrayProxy Example"; }
+

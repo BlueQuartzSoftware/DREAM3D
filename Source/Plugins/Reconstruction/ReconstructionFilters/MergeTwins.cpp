@@ -415,3 +415,31 @@ AbstractFilter::Pointer MergeTwins::newFilterInstance(bool copyFilterParameters)
   }
   return filter;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString MergeTwins::getCompiledLibraryName()
+{ return Reconstruction::ReconstructionBaseName; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString MergeTwins::getGroupName()
+{ return DREAM3D::FilterGroups::ReconstructionFilters; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString MergeTwins::getSubGroupName()
+{return DREAM3D::FilterSubGroups::GroupingFilters;}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString MergeTwins::getHumanLabel()
+{ return "Merge Twins"; }
+

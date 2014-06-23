@@ -23,7 +23,7 @@ Below is an example of what an Xdmf file might contain.
     <!DOCTYPE Xdmf SYSTEM "Xdmf.dtd"[]>
     <Xdmf xmlns:xi="http://www.w3.org/2003/XInclude" Version="2.2">
      <Domain>
-      <Grid Name="Voxel DataContainer" GridType="Uniform">
+      <Grid Name="Volume DataContainer" GridType="Uniform">
         <Topology TopologyType="3DCoRectMesh" Dimensions="183 885 1025 "></Topology>
         <Geometry Type="ORIGIN_DXDYDZ">
           <!-- Origin -->
@@ -33,7 +33,7 @@ Below is an example of what an Xdmf file might contain.
         </Geometry>
         <Attribute Name="ImageData" AttributeType="Scalar" Center="Cell">
           <DataItem Format="HDF" Dimensions="182 884 1024 " NumberType="UChar" Precision="1" >
-            out.dream3d:/VoxelDataContainer/CELL_DATA/ImageData
+            out.dream3d:/Volume DataContainer/CELL_DATA/ImageData
           </DataItem>
         </Attribute>
       </Grid>    

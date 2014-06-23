@@ -81,11 +81,11 @@ class ClearData : public AbstractFilter
     DREAM3D_FILTER_PARAMETER(int, ZMax)
     Q_PROPERTY(int ZMax READ getZMax WRITE setZMax)
 
-    virtual const QString getCompiledLibraryName() { return Processing::ProcessingBaseName; }
+    virtual const QString getCompiledLibraryName();
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
-    virtual const QString getGroupName() { return DREAM3D::FilterGroups::ProcessingFilters; }
+    virtual const QString getGroupName();
     virtual const QString getSubGroupName()  { return DREAM3D::FilterSubGroups::CleanupFilters; }
-    virtual const QString getHumanLabel() { return "Clear Data"; }
+    virtual const QString getHumanLabel();
 
     virtual void setupFilterParameters();
     /**

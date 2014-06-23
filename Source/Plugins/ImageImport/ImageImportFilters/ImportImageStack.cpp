@@ -381,3 +381,31 @@ AbstractFilter::Pointer ImportImageStack::newFilterInstance(bool copyFilterParam
   }
   return filter;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString ImportImageStack::getCompiledLibraryName()
+{ return ImageImport::ImageImportBaseName; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString ImportImageStack::getGroupName()
+{ return DREAM3D::FilterGroups::IOFilters; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString ImportImageStack::getSubGroupName()
+{ return DREAM3D::FilterSubGroups::InputFilters; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString ImportImageStack::getHumanLabel()
+{ return "Import Images (3D Stack)"; }
+

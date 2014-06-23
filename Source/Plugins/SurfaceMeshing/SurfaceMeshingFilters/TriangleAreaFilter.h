@@ -73,16 +73,16 @@ class TriangleAreaFilter : public SurfaceMeshFilter
     DREAM3D_FILTER_PARAMETER(QString, SurfaceMeshTriangleAreasArrayName)
     Q_PROPERTY(QString SurfaceMeshTriangleAreasArrayName READ getSurfaceMeshTriangleAreasArrayName WRITE setSurfaceMeshTriangleAreasArrayName)
 
-    virtual const QString getCompiledLibraryName() { return SurfaceMeshing::SurfaceMeshingBaseName; }
+    virtual const QString getCompiledLibraryName();
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
-    virtual const QString getGroupName() { return DREAM3D::FilterGroups::SurfaceMeshingFilters; }
-    virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::MiscFilters; }
+    virtual const QString getGroupName();
+    virtual const QString getSubGroupName();
 
     /**
     * @brief This returns a string that is displayed in the GUI. It should be readable
     * and understandable by humans.
     */
-    virtual const QString getHumanLabel() { return "Generate Triangle Areas"; }
+    virtual const QString getHumanLabel();
 
     /**
     * @brief This method will instantiate all the end user settable options/parameters

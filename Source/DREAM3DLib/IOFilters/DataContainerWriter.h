@@ -34,8 +34,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _DATACONTAINERWRITER_H_
-#define _DATACONTAINERWRITER_H_
+#ifndef _DataContainerWriter_H_
+#define _DataContainerWriter_H_
 
 #include <QtCore/QString>
 #include <QtCore/QtDebug>
@@ -74,10 +74,10 @@ class DREAM3DLib_EXPORT DataContainerWriter : public AbstractFilter
     Q_PROPERTY(bool WriteXdmfFile READ getWriteXdmfFile WRITE setWriteXdmfFile)
 
 
-    virtual const QString getCompiledLibraryName() { return IO::IOBaseName; }
-    virtual const QString getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
-    virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::OutputFilters; }
-    virtual const QString getHumanLabel() { return "Write DREAM3D Data File"; }
+    virtual const QString getCompiledLibraryName();
+    virtual const QString getGroupName();
+    virtual const QString getSubGroupName();
+    virtual const QString getHumanLabel();
 
     /**
     * @brief This method will instantiate all the end user settable options/parameters

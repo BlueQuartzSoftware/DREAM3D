@@ -546,3 +546,31 @@ AbstractFilter::Pointer FindProjectedImageStatistics::newFilterInstance(bool cop
   }
   return filter;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString FindProjectedImageStatistics::getCompiledLibraryName()
+{ return Processing::ProcessingBaseName; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString FindProjectedImageStatistics::getGroupName()
+{ return DREAM3D::FilterGroups::ProcessingFilters; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString FindProjectedImageStatistics::getSubGroupName()
+{ return DREAM3D::FilterSubGroups::ImageFilters; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString FindProjectedImageStatistics::getHumanLabel()
+{ return "Find Projected Image Statistics"; }
+

@@ -401,3 +401,31 @@ AbstractFilter::Pointer AutoThreshold::newFilterInstance(bool copyFilterParamete
   return filter;
 }
 
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString AutoThreshold::getCompiledLibraryName()
+{return ImageProcessing::ImageProcessingBaseName;}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString AutoThreshold::getGroupName()
+{return "ImageProcessing";}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString AutoThreshold::getSubGroupName()
+{return "Misc";}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString AutoThreshold::getHumanLabel()
+{return "Threshold Image (Auto)";}
+

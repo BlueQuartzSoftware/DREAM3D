@@ -34,8 +34,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _MERGETWINS_H_
-#define _MERGETWINS_H_
+#ifndef _MergeTwins_H_
+#define _MergeTwins_H_
 
 #include <vector>
 #include <QtCore/QString>
@@ -98,11 +98,11 @@ class MergeTwins : public GroupFeatures
     DREAM3D_FILTER_PARAMETER(QString, ActiveArrayName)
     Q_PROPERTY(QString ActiveArrayName READ getActiveArrayName WRITE setActiveArrayName)
 
-    virtual const QString getCompiledLibraryName() { return Reconstruction::ReconstructionBaseName; }
+    virtual const QString getCompiledLibraryName();
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
-    virtual const QString getGroupName() { return DREAM3D::FilterGroups::ReconstructionFilters; }
-    virtual const QString getSubGroupName() {return DREAM3D::FilterSubGroups::GroupingFilters;}
-    virtual const QString getHumanLabel() { return "Merge Twins"; }
+    virtual const QString getGroupName();
+    virtual const QString getSubGroupName();
+    virtual const QString getHumanLabel();
     virtual const QString getBrandingString() { return "DREAM3D Reconstruction Plugin"; }
 
     virtual void setupFilterParameters();

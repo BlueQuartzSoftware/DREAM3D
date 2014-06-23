@@ -245,3 +245,31 @@ AbstractFilter::Pointer TriangleAreaFilter::newFilterInstance(bool copyFilterPar
   }
   return filter;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString TriangleAreaFilter::getCompiledLibraryName()
+{ return SurfaceMeshing::SurfaceMeshingBaseName; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString TriangleAreaFilter::getGroupName()
+{ return DREAM3D::FilterGroups::SurfaceMeshingFilters; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString TriangleAreaFilter::getSubGroupName()
+{ return DREAM3D::FilterSubGroups::MiscFilters; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString TriangleAreaFilter::getHumanLabel()
+{ return "Generate Triangle Areas"; }
+

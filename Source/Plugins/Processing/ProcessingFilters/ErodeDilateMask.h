@@ -83,11 +83,11 @@ class ErodeDilateMask : public AbstractFilter
     DREAM3D_FILTER_PARAMETER(DataArrayPath, MaskArrayPath)
     Q_PROPERTY(DataArrayPath MaskArrayPath READ getMaskArrayPath WRITE setMaskArrayPath)
 
-    virtual const QString getCompiledLibraryName() { return Processing::ProcessingBaseName; }
+    virtual const QString getCompiledLibraryName();
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
-    virtual const QString getGroupName() { return DREAM3D::FilterGroups::ProcessingFilters; }
+    virtual const QString getGroupName();
     virtual const QString getSubGroupName()  { return DREAM3D::FilterSubGroups::CleanupFilters; }
-    virtual const QString getHumanLabel() { return "Erode/Dilate Mask"; }
+    virtual const QString getHumanLabel();
 
     virtual void setupFilterParameters();
     /**

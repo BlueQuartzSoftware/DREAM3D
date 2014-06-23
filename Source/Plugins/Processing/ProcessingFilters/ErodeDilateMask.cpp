@@ -260,3 +260,24 @@ AbstractFilter::Pointer ErodeDilateMask::newFilterInstance(bool copyFilterParame
   return filter;
 }
 
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString ErodeDilateMask::getCompiledLibraryName()
+{ return Processing::ProcessingBaseName; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString ErodeDilateMask::getGroupName()
+{ return DREAM3D::FilterGroups::ProcessingFilters; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString ErodeDilateMask::getHumanLabel()
+{ return "Erode/Dilate Mask"; }
+

@@ -35,8 +35,8 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _FeatureInfoReader_h_
-#define _FeatureInfoReader_h_
+#ifndef _FeatureInfoReader_H_
+#define _FeatureInfoReader_H_
 
 #include <QtCore/QString>
 #include <vector>
@@ -91,11 +91,11 @@ class DREAM3DLib_EXPORT FeatureInfoReader : public FileReader
     DREAM3D_FILTER_PARAMETER(QString, FeatureEulerAnglesArrayName)
     Q_PROPERTY(QString FeatureEulerAnglesArrayName READ getFeatureEulerAnglesArrayName WRITE setFeatureEulerAnglesArrayName)
 
-    virtual const QString getCompiledLibraryName() { return IO::IOBaseName; }
+    virtual const QString getCompiledLibraryName();
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
-    virtual const QString getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
-    virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::InputFilters; }
-    virtual const QString getHumanLabel() { return "Read Feature Info File"; }
+    virtual const QString getGroupName();
+    virtual const QString getSubGroupName();
+    virtual const QString getHumanLabel();
 
     virtual void setupFilterParameters();
     /**

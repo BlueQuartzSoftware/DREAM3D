@@ -168,3 +168,31 @@ AbstractFilter::Pointer FindNumFeatures::newFilterInstance(bool copyFilterParame
   }
   return filter;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString FindNumFeatures::getCompiledLibraryName()
+{ return Statistics::StatisticsBaseName; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString FindNumFeatures::getGroupName()
+{ return DREAM3D::FilterGroups::StatisticsFilters; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString FindNumFeatures::getSubGroupName()
+{ return DREAM3D::FilterSubGroups::MorphologicalFilters; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString FindNumFeatures::getHumanLabel()
+{ return "Find Number of Features"; }
+

@@ -34,8 +34,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _DXREADER_H_
-#define _DXREADER_H_
+#ifndef _DxReader_H_
+#define _DxReader_H_
 
 #include <QtCore/QString>
 #include <vector>
@@ -78,11 +78,11 @@ class DREAM3DLib_EXPORT DxReader : public FileReader
     DREAM3D_FILTER_PARAMETER(QString, FeatureIdsArrayName)
     Q_PROPERTY(QString FeatureIdsArrayName READ getFeatureIdsArrayName WRITE setFeatureIdsArrayName)
 
-    virtual const QString getCompiledLibraryName() { return IO::IOBaseName; }
+    virtual const QString getCompiledLibraryName();
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
-    virtual const QString getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
-    virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::InputFilters; }
-    virtual const QString getHumanLabel() { return "Read Dx File (Feature Ids)"; }
+    virtual const QString getGroupName();
+    virtual const QString getSubGroupName();
+    virtual const QString getHumanLabel();
 
     virtual void setupFilterParameters();
     /**

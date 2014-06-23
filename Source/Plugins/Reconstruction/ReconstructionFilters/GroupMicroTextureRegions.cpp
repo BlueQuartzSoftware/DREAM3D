@@ -510,3 +510,31 @@ AbstractFilter::Pointer GroupMicroTextureRegions::newFilterInstance(bool copyFil
   }
   return filter;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString GroupMicroTextureRegions::getCompiledLibraryName()
+{ return Reconstruction::ReconstructionBaseName; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString GroupMicroTextureRegions::getGroupName()
+{ return DREAM3D::FilterGroups::ReconstructionFilters; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString GroupMicroTextureRegions::getSubGroupName()
+{return DREAM3D::FilterSubGroups::GroupingFilters;}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString GroupMicroTextureRegions::getHumanLabel()
+{ return "Identify MicroTexture (C-Axis Misalignment)"; }
+

@@ -113,11 +113,11 @@ class ReadH5Ebsd : public AbstractFilter
     DREAM3D_INSTANCE_PROPERTY(AxisAngleInput_t, EulerTransformation)
     //-------------------------------------------------------
 
-    virtual const QString getCompiledLibraryName() { return OrientationAnalysis::OrientationAnalysisBaseName; }
+    virtual const QString getCompiledLibraryName();
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
-    virtual const QString getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
-    virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::InputFilters; }
-    virtual const QString getHumanLabel() { return "Read H5Ebsd File"; }
+    virtual const QString getGroupName();
+    virtual const QString getSubGroupName();
+    virtual const QString getHumanLabel();
 
     virtual void setupFilterParameters();
 

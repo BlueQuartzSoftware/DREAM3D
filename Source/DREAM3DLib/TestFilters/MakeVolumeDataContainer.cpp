@@ -237,3 +237,31 @@ AbstractFilter::Pointer MakeVolumeDataContainer::newFilterInstance(bool copyFilt
   }
   return filter;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString MakeVolumeDataContainer::getCompiledLibraryName()
+{ return Test::TestBaseName; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString MakeVolumeDataContainer::getGroupName()
+{ return DREAM3D::FilterGroups::TestFilters; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString MakeVolumeDataContainer::getSubGroupName()
+{ return "Create Stuff"; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString MakeVolumeDataContainer::getHumanLabel()
+{ return "Make Volume DataContainer"; }
+

@@ -311,3 +311,24 @@ AbstractFilter::Pointer BadDataNeighborOrientationCheck::newFilterInstance(bool 
   }
   return filter;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString BadDataNeighborOrientationCheck::getCompiledLibraryName()
+{ return Processing::ProcessingBaseName; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString BadDataNeighborOrientationCheck::getGroupName()
+{ return DREAM3D::FilterGroups::ProcessingFilters; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString BadDataNeighborOrientationCheck::getHumanLabel()
+{ return "Neighbor Orientation Comparison (Bad Data)"; }
+

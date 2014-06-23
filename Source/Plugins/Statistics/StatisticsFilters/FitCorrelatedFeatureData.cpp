@@ -456,3 +456,31 @@ AbstractFilter::Pointer FitCorrelatedFeatureData::newFilterInstance(bool copyFil
   }
   return filter;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString FitCorrelatedFeatureData::getCompiledLibraryName()
+{ return Statistics::StatisticsBaseName; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString FitCorrelatedFeatureData::getGroupName()
+{ return DREAM3D::FilterGroups::StatisticsFilters; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString FitCorrelatedFeatureData::getSubGroupName()
+{ return DREAM3D::FilterSubGroups::EnsembleStatsFilters; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString FitCorrelatedFeatureData::getHumanLabel()
+{ return "Fit Correlated Distributions To Feature Data"; }
+

@@ -359,3 +359,31 @@ AbstractFilter::Pointer WriteIPFStandardTriangle::newFilterInstance(bool copyFil
   }
   return filter;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString WriteIPFStandardTriangle::getCompiledLibraryName()
+{ return OrientationAnalysis::OrientationAnalysisBaseName; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString WriteIPFStandardTriangle::getGroupName()
+{ return DREAM3D::FilterGroups::IOFilters; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString WriteIPFStandardTriangle::getSubGroupName()
+{ return "Output"; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString WriteIPFStandardTriangle::getHumanLabel()
+{ return "Write IPF Triangle Legend"; }
+

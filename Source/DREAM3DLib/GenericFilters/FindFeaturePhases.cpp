@@ -178,3 +178,31 @@ AbstractFilter::Pointer FindFeaturePhases::newFilterInstance(bool copyFilterPara
   }
   return filter;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString FindFeaturePhases::getCompiledLibraryName()
+{ return Generic::GenericBaseName; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString FindFeaturePhases::getGroupName()
+{ return DREAM3D::FilterGroups::GenericFilters; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString FindFeaturePhases::getSubGroupName()
+{ return DREAM3D::FilterSubGroups::MiscFilters; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString FindFeaturePhases::getHumanLabel()
+{ return "Find Feature Phases"; }
+

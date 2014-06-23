@@ -529,3 +529,17 @@ AbstractFilter::Pointer RotateSampleRefFrame::newFilterInstance(bool copyFilterP
   }
   return filter;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString RotateSampleRefFrame::getCompiledLibraryName()
+{ return Sampling::SamplingBaseName; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString RotateSampleRefFrame::getHumanLabel()
+{ return "Rotate Sample Reference Frame"; }
+

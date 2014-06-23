@@ -146,3 +146,31 @@ AbstractFilter::Pointer RemoveArrays::newFilterInstance(bool copyFilterParameter
   }
   return filter;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString RemoveArrays::getCompiledLibraryName()
+{ return Generic::GenericBaseName; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString RemoveArrays::getGroupName()
+{ return DREAM3D::FilterGroups::GenericFilters; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString RemoveArrays::getSubGroupName()
+{ return DREAM3D::FilterSubGroups::MemoryManagementFilters; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString RemoveArrays::getHumanLabel()
+{ return "Delete Arrays"; }
+

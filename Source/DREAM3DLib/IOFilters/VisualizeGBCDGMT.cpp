@@ -516,3 +516,31 @@ AbstractFilter::Pointer VisualizeGBCDGMT::newFilterInstance(bool copyFilterParam
   }
   return filter;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString VisualizeGBCDGMT::getCompiledLibraryName()
+{ return IO::IOBaseName; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString VisualizeGBCDGMT::getGroupName()
+{ return DREAM3D::FilterGroups::IOFilters; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString VisualizeGBCDGMT::getSubGroupName()
+{ return DREAM3D::FilterSubGroups::OutputFilters; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString VisualizeGBCDGMT::getHumanLabel()
+{ return "Write GMT Pole Figure Data"; }
+

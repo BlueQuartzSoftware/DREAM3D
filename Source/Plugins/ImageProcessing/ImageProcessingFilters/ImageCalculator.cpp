@@ -396,3 +396,31 @@ AbstractFilter::Pointer ImageCalculator::newFilterInstance(bool copyFilterParame
   return filter;
 }
 
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString ImageCalculator::getCompiledLibraryName()
+{return ImageProcessing::ImageProcessingBaseName;}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString ImageCalculator::getGroupName()
+{return "ImageProcessing";}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString ImageCalculator::getSubGroupName()
+{return "Misc";}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString ImageCalculator::getHumanLabel()
+{return "Image Calculator";}
+

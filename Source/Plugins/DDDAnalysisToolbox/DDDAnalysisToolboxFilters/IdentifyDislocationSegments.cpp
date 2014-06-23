@@ -341,3 +341,31 @@ AbstractFilter::Pointer IdentifyDislocationSegments::newFilterInstance(bool copy
   }
   return filter;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString IdentifyDislocationSegments::getCompiledLibraryName()
+{ return DDDAnalysisToolbox::DDDAnalysisToolboxBaseName; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString IdentifyDislocationSegments::getGroupName()
+{ return DREAM3D::FilterGroups::DDDAnalysisFilters; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString IdentifyDislocationSegments::getSubGroupName()
+{ return DREAM3D::FilterSubGroups::FeatureIdentificationFilters; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString IdentifyDislocationSegments::getHumanLabel()
+{ return "Identify Dislocation Segments"; }
+

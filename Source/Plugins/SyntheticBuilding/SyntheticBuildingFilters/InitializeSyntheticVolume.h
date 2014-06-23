@@ -85,11 +85,11 @@ class InitializeSyntheticVolume : public AbstractFilter
     int getEstimatedPrimaryFeatures();
     Q_PROPERTY(QVariant EstimatedPrimaryFeatures READ getEstimatedPrimaryFeatures)
 
-    virtual const QString getCompiledLibraryName() { return SyntheticBuilding::SyntheticBuildingBaseName; }
+    virtual const QString getCompiledLibraryName();
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
-    virtual const QString getGroupName() {return DREAM3D::FilterGroups::SyntheticBuildingFilters;}
-    virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::PackingFilters; }
-    virtual const QString getHumanLabel() {return "Initialize Synthetic Volume";}
+    virtual const QString getGroupName();
+    virtual const QString getSubGroupName();
+    virtual const QString getHumanLabel();
     virtual const QString getBrandingString() { return SyntheticBuilding::SyntheticBuildingPluginDisplayName + " Filter"; }
 
 

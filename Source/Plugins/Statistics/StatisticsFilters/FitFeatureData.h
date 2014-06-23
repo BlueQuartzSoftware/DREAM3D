@@ -35,8 +35,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _FITFIELDDATA_H_
-#define _FITFIELDDATA_H_
+#ifndef _FitFeatureData_H_
+#define _FitFeatureData_H_
 
 #include <QtCore/QString>
 #include <set>
@@ -93,16 +93,16 @@ class FitFeatureData : public AbstractFilter
     DREAM3D_FILTER_PARAMETER(QString, NewEnsembleArrayArrayName)
     Q_PROPERTY(QString NewEnsembleArrayArrayName READ getNewEnsembleArrayArrayName WRITE setNewEnsembleArrayArrayName)
 
-    virtual const QString getCompiledLibraryName() { return Statistics::StatisticsBaseName; }
+    virtual const QString getCompiledLibraryName();
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
-    virtual const QString getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
-    virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::EnsembleStatsFilters; }
+    virtual const QString getGroupName();
+    virtual const QString getSubGroupName();
 
     /**
     * @brief This returns a string that is displayed in the GUI. It should be readable
     * and understandable by humans.
     */
-    virtual const QString getHumanLabel() { return "Fit Distribution To Feature Data"; }
+    virtual const QString getHumanLabel();
 
     /**
     * @brief This method will instantiate all the end user settable options/parameters

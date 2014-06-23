@@ -257,3 +257,31 @@ AbstractFilter::Pointer TriangleNormalFilter::newFilterInstance(bool copyFilterP
   }
   return filter;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString TriangleNormalFilter::getCompiledLibraryName()
+{ return SurfaceMeshing::SurfaceMeshingBaseName; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString TriangleNormalFilter::getGroupName()
+{ return DREAM3D::FilterGroups::SurfaceMeshingFilters; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString TriangleNormalFilter::getSubGroupName()
+{ return DREAM3D::FilterSubGroups::MiscFilters; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString TriangleNormalFilter::getHumanLabel()
+{ return "Generate Triangle Normals Filter"; }
+

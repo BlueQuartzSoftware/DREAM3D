@@ -34,7 +34,7 @@ This filter will generate Inverse Pole Figure colors for Cubic, Hexagonal or Tri
 
 ## Required DataContainers ##
 
-Voxel
+Voxel DataContainer
 
 ## Required Arrays ##
 

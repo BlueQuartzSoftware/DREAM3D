@@ -384,3 +384,31 @@ AbstractFilter::Pointer INLWriter::newFilterInstance(bool copyFilterParameters)
   }
   return filter;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString INLWriter::getCompiledLibraryName()
+{ return IO::IOBaseName; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString INLWriter::getGroupName()
+{ return DREAM3D::FilterGroups::IOFilters; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString INLWriter::getSubGroupName()
+{ return DREAM3D::FilterSubGroups::OutputFilters; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString INLWriter::getHumanLabel()
+{ return "Write INL File"; }
+

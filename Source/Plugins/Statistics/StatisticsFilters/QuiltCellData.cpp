@@ -377,3 +377,31 @@ AbstractFilter::Pointer QuiltCellData::newFilterInstance(bool copyFilterParamete
   }
   return filter;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString QuiltCellData::getCompiledLibraryName()
+{ return Statistics::StatisticsBaseName; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString QuiltCellData::getGroupName()
+{ return DREAM3D::FilterGroups::StatisticsFilters; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString QuiltCellData::getSubGroupName()
+{ return DREAM3D::FilterSubGroups::EnsembleStatsFilters; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString QuiltCellData::getHumanLabel()
+{ return "Quilt Cell Data"; }
+

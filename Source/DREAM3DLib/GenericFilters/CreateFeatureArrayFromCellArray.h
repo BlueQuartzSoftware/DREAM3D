@@ -35,8 +35,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _CREATEFIELDARRAYFROMCELLARRAY_H_
-#define _CREATEFIELDARRAYFROMCELLARRAY_H_
+#ifndef _CreateFeatureArrayFromCellArray_H_
+#define _CreateFeatureArrayFromCellArray_H_
 
 #include <string>
 #include <set>
@@ -78,16 +78,16 @@ class DREAM3DLib_EXPORT CreateFeatureArrayFromCellArray : public AbstractFilter
     DREAM3D_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
     Q_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
 
-    virtual const QString getCompiledLibraryName() { return Generic::GenericBaseName; }
+    virtual const QString getCompiledLibraryName();
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
-    virtual const QString getGroupName() { return DREAM3D::FilterGroups::GenericFilters; }
-    virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::MemoryManagementFilters; }
+    virtual const QString getGroupName();
+    virtual const QString getSubGroupName();
 
     /**
     * @brief This returns a string that is displayed in the GUI. It should be readable
     * and understandable by humans.
     */
-    virtual const QString getHumanLabel() { return "Create Feature Array From Cell Array"; }
+    virtual const QString getHumanLabel();
 
     /**
     * @brief This method will instantiate all the end user settable options/parameters

@@ -272,3 +272,31 @@ AbstractFilter::Pointer SaveImages::newFilterInstance(bool copyFilterParameters)
   }
   return filter;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString SaveImages::getCompiledLibraryName()
+{ return ImageImport::ImageImportBaseName; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString SaveImages::getGroupName()
+{ return DREAM3D::FilterGroups::IOFilters; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString SaveImages::getSubGroupName()
+{ return DREAM3D::FilterSubGroups::OutputFilters; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString SaveImages::getHumanLabel()
+{ return "Write XY Slice Images"; }
+

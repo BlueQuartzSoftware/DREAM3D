@@ -127,6 +127,7 @@ class TSpecificCompareFunctor : public CompareFunctor
 // -----------------------------------------------------------------------------
 ScalarSegmentFeatures::ScalarSegmentFeatures() :
   SegmentFeatures(),
+  m_Compare(NULL),
   m_CellFeatureAttributeMatrixName(DREAM3D::Defaults::CellFeatureAttributeMatrixName),
   m_ScalarArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, ""),
   m_ScalarTolerance(5.0f),
@@ -138,8 +139,7 @@ ScalarSegmentFeatures::ScalarSegmentFeatures() :
   m_FeatureIds(NULL),
   m_GoodVoxelsArrayName(DREAM3D::CellData::GoodVoxels),
   m_GoodVoxels(NULL),
-  m_Active(NULL),
-  m_Compare(NULL)
+  m_Active(NULL)
 {
   setupFilterParameters();
 }
@@ -508,3 +508,31 @@ AbstractFilter::Pointer ScalarSegmentFeatures::newFilterInstance(bool copyFilter
   }
   return filter;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString ScalarSegmentFeatures::getCompiledLibraryName()
+{ return Reconstruction::ReconstructionBaseName; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString ScalarSegmentFeatures::getGroupName()
+{ return DREAM3D::FilterGroups::ReconstructionFilters; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString ScalarSegmentFeatures::getSubGroupName()
+{return DREAM3D::FilterSubGroups::SegmentationFilters;}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString ScalarSegmentFeatures::getHumanLabel()
+{ return "Segment Features (Scalar)"; }
+

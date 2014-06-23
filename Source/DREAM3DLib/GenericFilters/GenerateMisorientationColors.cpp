@@ -368,3 +368,31 @@ AbstractFilter::Pointer GenerateMisorientationColors::newFilterInstance(bool cop
   }
   return filter;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString GenerateMisorientationColors::getCompiledLibraryName()
+{ return Generic::GenericBaseName; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString GenerateMisorientationColors::getGroupName()
+{ return DREAM3D::FilterGroups::GenericFilters; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString GenerateMisorientationColors::getSubGroupName()
+{ return DREAM3D::FilterSubGroups::CrystallographyFilters; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString GenerateMisorientationColors::getHumanLabel()
+{ return "Generate Misorientation Colors"; }
+

@@ -39,7 +39,7 @@ The array that is being converted must be available during runtime of the filter
 
 ## Required Data Containers ##
 
-Voxel DataContainer
+Volume DataContainer
 
 
 ## Created Arrays ##

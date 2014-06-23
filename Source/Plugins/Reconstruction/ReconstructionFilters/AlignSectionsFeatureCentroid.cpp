@@ -273,3 +273,31 @@ AbstractFilter::Pointer AlignSectionsFeatureCentroid::newFilterInstance(bool cop
   }
   return filter;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString AlignSectionsFeatureCentroid::getCompiledLibraryName()
+{ return Reconstruction::ReconstructionBaseName; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString AlignSectionsFeatureCentroid::getGroupName()
+{ return DREAM3D::FilterGroups::ReconstructionFilters; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString AlignSectionsFeatureCentroid::getSubGroupName()
+{return DREAM3D::FilterSubGroups::AlignmentFilters;}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString AlignSectionsFeatureCentroid::getHumanLabel()
+{ return "Align Sections (Feature Centroid)"; }
+

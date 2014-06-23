@@ -71,11 +71,11 @@ class AddBadData : public AbstractFilter
     DREAM3D_FILTER_PARAMETER(DataArrayPath, GBEuclideanDistancesArrayPath)
     Q_PROPERTY(DataArrayPath GBEuclideanDistancesArrayPath READ getGBEuclideanDistancesArrayPath WRITE setGBEuclideanDistancesArrayPath)
 
-    virtual const QString getCompiledLibraryName() { return SyntheticBuilding::SyntheticBuildingBaseName; }
+    virtual const QString getCompiledLibraryName();
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
-    virtual const QString getGroupName() { return DREAM3D::FilterGroups::SyntheticBuildingFilters; }
-    virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::MiscFilters; }
-    virtual const QString getHumanLabel() { return "Add Bad Data"; }
+    virtual const QString getGroupName();
+    virtual const QString getSubGroupName();
+    virtual const QString getHumanLabel();
     virtual const QString getBrandingString() { return SyntheticBuilding::SyntheticBuildingPluginDisplayName + " Filter"; }
 
     DREAM3D_FILTER_PARAMETER(bool, PoissonNoise)

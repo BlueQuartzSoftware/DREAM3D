@@ -550,3 +550,31 @@ AbstractFilter::Pointer VisualizeGBCDPoleFigure::newFilterInstance(bool copyFilt
   }
   return filter;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString VisualizeGBCDPoleFigure::getCompiledLibraryName()
+{ return IO::IOBaseName; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString VisualizeGBCDPoleFigure::getGroupName()
+{ return DREAM3D::FilterGroups::IOFilters; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString VisualizeGBCDPoleFigure::getSubGroupName()
+{ return DREAM3D::FilterSubGroups::OutputFilters; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString VisualizeGBCDPoleFigure::getHumanLabel()
+{ return "Write VTK Pole Figure (GBCD Data)"; }
+

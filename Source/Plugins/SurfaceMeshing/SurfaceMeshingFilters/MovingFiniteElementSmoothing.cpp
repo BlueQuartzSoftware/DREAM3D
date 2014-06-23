@@ -1016,3 +1016,31 @@ AbstractFilter::Pointer MovingFiniteElementSmoothing::newFilterInstance(bool cop
   }
   return filter;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString MovingFiniteElementSmoothing::getCompiledLibraryName()
+{ return SurfaceMeshing::SurfaceMeshingBaseName; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString MovingFiniteElementSmoothing::getGroupName()
+{ return DREAM3D::FilterGroups::SurfaceMeshingFilters; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString MovingFiniteElementSmoothing::getSubGroupName()
+{ return DREAM3D::FilterSubGroups::SmoothingFilters; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString MovingFiniteElementSmoothing::getHumanLabel()
+{ return "Moving Finite Element Smoothing"; }
+

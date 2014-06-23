@@ -292,3 +292,31 @@ AbstractFilter::Pointer AlignSectionsFeature::newFilterInstance(bool copyFilterP
   }
   return filter;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString AlignSectionsFeature::getCompiledLibraryName()
+{ return Reconstruction::ReconstructionBaseName; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString AlignSectionsFeature::getGroupName()
+{ return DREAM3D::FilterGroups::ReconstructionFilters; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString AlignSectionsFeature::getSubGroupName()
+{return DREAM3D::FilterSubGroups::AlignmentFilters;}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString AlignSectionsFeature::getHumanLabel()
+{ return "Align Sections (Feature)"; }
+

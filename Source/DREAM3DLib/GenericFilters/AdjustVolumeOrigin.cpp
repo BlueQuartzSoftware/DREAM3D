@@ -291,3 +291,31 @@ AbstractFilter::Pointer AdjustVolumeOrigin::newFilterInstance(bool copyFilterPar
   }
   return filter;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString AdjustVolumeOrigin::getCompiledLibraryName()
+{ return Generic::GenericBaseName; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString AdjustVolumeOrigin::getGroupName()
+{ return DREAM3D::FilterGroups::GenericFilters; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString AdjustVolumeOrigin::getSubGroupName()
+{ return DREAM3D::FilterSubGroups::SpatialFilters; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString AdjustVolumeOrigin::getHumanLabel()
+{ return "Change Origin of Volume"; }
+

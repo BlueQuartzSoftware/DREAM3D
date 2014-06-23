@@ -234,3 +234,31 @@ AbstractFilter::Pointer ReverseTriangleWinding::newFilterInstance(bool copyFilte
   }
   return filter;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString ReverseTriangleWinding::getCompiledLibraryName()
+{ return SurfaceMeshing::SurfaceMeshingBaseName; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString ReverseTriangleWinding::getGroupName()
+{ return DREAM3D::FilterGroups::SurfaceMeshingFilters; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString ReverseTriangleWinding::getSubGroupName()
+{ return DREAM3D::FilterSubGroups::ConnectivityArrangementFilters; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString ReverseTriangleWinding::getHumanLabel()
+{ return "Reverse Triangle Winding Filter"; }
+

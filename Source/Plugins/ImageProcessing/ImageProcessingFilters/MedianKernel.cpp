@@ -18,11 +18,11 @@ typedef ITKUtilities<ImageProcessing::DefaultPixelType>    ITKUtilitiesType;
 MedianKernel::MedianKernel() :
   AbstractFilter(),
   m_SelectedCellArrayPath("", "", ""),
+  m_NewCellArrayName(""),
   m_SaveAsNewArray(true),
   m_Slice(false),
   m_SelectedCellArrayArrayName(""),
   m_SelectedCellArray(NULL),
-  m_NewCellArrayName(""),
   m_NewCellArray(NULL)
 {
   m_KernelSize.x = 1;
@@ -175,4 +175,32 @@ AbstractFilter::Pointer MedianKernel::newFilterInstance(bool copyFilterParameter
   }
   return filter;
 }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString MedianKernel::getCompiledLibraryName()
+{return ImageProcessing::ImageProcessingBaseName;}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString MedianKernel::getGroupName()
+{return "ImageProcessing";}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString MedianKernel::getSubGroupName()
+{return "Misc";}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString MedianKernel::getHumanLabel()
+{return "Median (Kernel)";}
 

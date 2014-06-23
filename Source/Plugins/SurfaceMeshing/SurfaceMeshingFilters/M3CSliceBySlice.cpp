@@ -3074,3 +3074,31 @@ AbstractFilter::Pointer M3CSliceBySlice::newFilterInstance(bool copyFilterParame
   }
   return filter;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString M3CSliceBySlice::getCompiledLibraryName()
+{ return SurfaceMeshing::SurfaceMeshingBaseName; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString M3CSliceBySlice::getGroupName()
+{ return DREAM3D::FilterGroups::SurfaceMeshingFilters; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString M3CSliceBySlice::getSubGroupName()
+{ return DREAM3D::FilterSubGroups::GenerationFilters; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString M3CSliceBySlice::getHumanLabel()
+{ return "M3C Surface Meshing (Slice at a time)"; }
+

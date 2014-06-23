@@ -1039,3 +1039,31 @@ AbstractFilter::Pointer QuickSurfaceMesh::newFilterInstance(bool copyFilterParam
   }
   return filter;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString QuickSurfaceMesh::getCompiledLibraryName()
+{ return SurfaceMeshing::SurfaceMeshingBaseName; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString QuickSurfaceMesh::getGroupName()
+{ return DREAM3D::FilterGroups::SurfaceMeshingFilters; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString QuickSurfaceMesh::getSubGroupName()
+{ return DREAM3D::FilterSubGroups::GenerationFilters; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString QuickSurfaceMesh::getHumanLabel()
+{ return "Quick Surface Mesh"; }
+

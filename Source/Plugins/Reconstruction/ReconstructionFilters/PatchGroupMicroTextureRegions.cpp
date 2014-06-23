@@ -882,3 +882,31 @@ AbstractFilter::Pointer PatchGroupMicroTextureRegions::newFilterInstance(bool co
   }
   return filter;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString PatchGroupMicroTextureRegions::getCompiledLibraryName()
+{ return Reconstruction::ReconstructionBaseName; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString PatchGroupMicroTextureRegions::getGroupName()
+{ return DREAM3D::FilterGroups::ReconstructionFilters; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString PatchGroupMicroTextureRegions::getSubGroupName()
+{return DREAM3D::FilterSubGroups::GroupingFilters;}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString PatchGroupMicroTextureRegions::getHumanLabel()
+{ return "Patch Identify MicroTexture (C-Axis Misalignment)"; }
+

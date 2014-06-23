@@ -269,3 +269,24 @@ AbstractFilter::Pointer MultiThresholdObjects::newFilterInstance(bool copyFilter
   }
   return filter;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString MultiThresholdObjects::getCompiledLibraryName()
+{ return Processing::ProcessingBaseName; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString MultiThresholdObjects::getGroupName()
+{ return DREAM3D::FilterGroups::ProcessingFilters; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString MultiThresholdObjects::getHumanLabel()
+{ return "Threshold Objects"; }
+

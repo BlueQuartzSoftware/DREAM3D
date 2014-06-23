@@ -349,3 +349,24 @@ AbstractFilter::Pointer ChangeResolution::newFilterInstance(bool copyFilterParam
   }
   return filter;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString ChangeResolution::getCompiledLibraryName()
+{ return Sampling::SamplingBaseName; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString ChangeResolution::getGroupName()
+{ return DREAM3D::FilterGroups::SamplingFilters; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString ChangeResolution::getHumanLabel()
+{ return "Change Resolution"; }
+

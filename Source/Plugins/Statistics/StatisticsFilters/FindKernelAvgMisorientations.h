@@ -81,11 +81,11 @@ class FindKernelAvgMisorientations : public AbstractFilter
     DREAM3D_FILTER_PARAMETER(QString, KernelAverageMisorientationsArrayName)
     Q_PROPERTY(QString KernelAverageMisorientationsArrayName READ getKernelAverageMisorientationsArrayName WRITE setKernelAverageMisorientationsArrayName)
 
-    virtual const QString getCompiledLibraryName() { return Statistics::StatisticsBaseName; }
+    virtual const QString getCompiledLibraryName();
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
-    virtual const QString getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
-    virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::CrystallographicFilters; }
-    virtual const QString getHumanLabel() { return "Find Kernel Average Misorientations"; }
+    virtual const QString getGroupName();
+    virtual const QString getSubGroupName();
+    virtual const QString getHumanLabel();
 
     DREAM3D_FILTER_PARAMETER(IntVec3_t, KernelSize)
     Q_PROPERTY(IntVec3_t KernelSize READ getKernelSize WRITE setKernelSize)

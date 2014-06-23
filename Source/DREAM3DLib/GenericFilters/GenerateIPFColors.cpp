@@ -323,3 +323,31 @@ AbstractFilter::Pointer GenerateIPFColors::newFilterInstance(bool copyFilterPara
   }
   return filter;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString GenerateIPFColors::getCompiledLibraryName()
+{ return Generic::GenericBaseName; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString GenerateIPFColors::getGroupName()
+{ return DREAM3D::FilterGroups::GenericFilters; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString GenerateIPFColors::getSubGroupName()
+{ return DREAM3D::FilterSubGroups::CrystallographyFilters; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString GenerateIPFColors::getHumanLabel()
+{ return "Generate IPF Colors"; }
+

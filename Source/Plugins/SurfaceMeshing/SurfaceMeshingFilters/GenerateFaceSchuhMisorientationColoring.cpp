@@ -342,3 +342,31 @@ AbstractFilter::Pointer GenerateFaceSchuhMisorientationColoring::newFilterInstan
   }
   return filter;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString GenerateFaceSchuhMisorientationColoring::getCompiledLibraryName()
+{ return SurfaceMeshing::SurfaceMeshingBaseName; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString GenerateFaceSchuhMisorientationColoring::getGroupName()
+{ return DREAM3D::FilterGroups::SurfaceMeshingFilters; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString GenerateFaceSchuhMisorientationColoring::getSubGroupName()
+{ return DREAM3D::FilterSubGroups::MiscFilters; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString GenerateFaceSchuhMisorientationColoring::getHumanLabel()
+{ return "Generate Face Schuh Misorientation Colors"; }
+

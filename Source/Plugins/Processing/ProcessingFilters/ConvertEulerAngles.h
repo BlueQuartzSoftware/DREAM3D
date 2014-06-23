@@ -33,8 +33,8 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef _CONVERTEULERANGLES_H_
-#define _CONVERTEULERANGLES_H_
+#ifndef _ConvertEulerAngles_H_
+#define _ConvertEulerAngles_H_
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
@@ -67,11 +67,11 @@ class ConvertEulerAngles : public AbstractFilter
     DREAM3D_FILTER_PARAMETER(DataArrayPath, CellEulerAnglesArrayPath)
     Q_PROPERTY(DataArrayPath CellEulerAnglesArrayPath READ getCellEulerAnglesArrayPath WRITE setCellEulerAnglesArrayPath)
 
-    virtual const QString getCompiledLibraryName() { return Processing::ProcessingBaseName; }
+    virtual const QString getCompiledLibraryName();
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName()  { return DREAM3D::FilterGroups::ProcessingFilters; }
     virtual const QString getSubGroupName()  { return DREAM3D::FilterSubGroups::ConversionFilters; }
-    virtual const QString getHumanLabel() { return "Convert Euler Angles"; }
+    virtual const QString getHumanLabel();
 
     virtual void setupFilterParameters();
     /**

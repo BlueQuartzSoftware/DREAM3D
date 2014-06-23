@@ -242,3 +242,24 @@ AbstractFilter::Pointer NeighborCICorrelation::newFilterInstance(bool copyFilter
   }
   return filter;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString NeighborCICorrelation::getCompiledLibraryName()
+{ return Processing::ProcessingBaseName; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString NeighborCICorrelation::getGroupName()
+{ return DREAM3D::FilterGroups::ProcessingFilters; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString NeighborCICorrelation::getHumanLabel()
+{ return "Neighbor CI Correlation"; }
+

@@ -601,3 +601,31 @@ AbstractFilter::Pointer EbsdToH5Ebsd::newFilterInstance(bool copyFilterParameter
   }
   return filter;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString EbsdToH5Ebsd::getCompiledLibraryName()
+{ return OrientationAnalysis::OrientationAnalysisBaseName; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString EbsdToH5Ebsd::getGroupName()
+{ return DREAM3D::FilterGroups::IOFilters; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString EbsdToH5Ebsd::getSubGroupName()
+{ return DREAM3D::FilterSubGroups::InputFilters; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString EbsdToH5Ebsd::getHumanLabel()
+{ return "Import Orientation File(s) to H5Ebsd"; }
+

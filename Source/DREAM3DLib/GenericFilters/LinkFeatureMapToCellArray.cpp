@@ -198,3 +198,31 @@ AbstractFilter::Pointer LinkFeatureMapToCellArray::newFilterInstance(bool copyFi
   }
   return filter;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString LinkFeatureMapToCellArray::getCompiledLibraryName()
+{ return Generic::GenericBaseName; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString LinkFeatureMapToCellArray::getGroupName()
+{ return DREAM3D::FilterGroups::GenericFilters; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString LinkFeatureMapToCellArray::getSubGroupName()
+{ return DREAM3D::FilterSubGroups::MemoryManagementFilters; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString LinkFeatureMapToCellArray::getHumanLabel()
+{ return "Link Feature Attribute Matrix To Cell Attribute Array"; }
+

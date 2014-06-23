@@ -648,3 +648,31 @@ AbstractFilter::Pointer MergeColonies::newFilterInstance(bool copyFilterParamete
   }
   return filter;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString MergeColonies::getCompiledLibraryName()
+{ return Reconstruction::ReconstructionBaseName; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString MergeColonies::getGroupName()
+{ return DREAM3D::FilterGroups::ReconstructionFilters; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString MergeColonies::getSubGroupName()
+{return DREAM3D::FilterSubGroups::GroupingFilters;}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString MergeColonies::getHumanLabel()
+{ return "Reconstruct Prior Beta Features"; }
+

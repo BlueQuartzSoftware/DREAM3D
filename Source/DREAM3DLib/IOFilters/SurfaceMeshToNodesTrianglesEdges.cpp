@@ -358,3 +358,31 @@ AbstractFilter::Pointer SurfaceMeshToNodesTrianglesEdges::newFilterInstance(bool
   }
   return filter;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString SurfaceMeshToNodesTrianglesEdges::getCompiledLibraryName()
+{ return IO::IOBaseName; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString SurfaceMeshToNodesTrianglesEdges::getGroupName()
+{ return DREAM3D::FilterGroups::IOFilters; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString SurfaceMeshToNodesTrianglesEdges::getSubGroupName()
+{ return DREAM3D::FilterSubGroups::OutputFilters; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString SurfaceMeshToNodesTrianglesEdges::getHumanLabel()
+{ return "Write Nodes/Triangles from Surface Mesh"; }
+

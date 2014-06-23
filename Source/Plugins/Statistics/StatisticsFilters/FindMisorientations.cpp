@@ -266,3 +266,31 @@ AbstractFilter::Pointer FindMisorientations::newFilterInstance(bool copyFilterPa
   }
   return filter;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString FindMisorientations::getCompiledLibraryName()
+{ return Statistics::StatisticsBaseName; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString FindMisorientations::getGroupName()
+{ return DREAM3D::FilterGroups::StatisticsFilters; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString FindMisorientations::getSubGroupName()
+{ return DREAM3D::FilterSubGroups::CrystallographicFilters; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString FindMisorientations::getHumanLabel()
+{ return "Find Feature Neighbor Misorientations"; }
+

@@ -2012,3 +2012,31 @@ AbstractFilter::Pointer InsertPrecipitatePhases::newFilterInstance(bool copyFilt
   }
   return filter;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString InsertPrecipitatePhases::getCompiledLibraryName()
+{ return SyntheticBuilding::SyntheticBuildingBaseName; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString InsertPrecipitatePhases::getGroupName()
+{ return DREAM3D::FilterGroups::SyntheticBuildingFilters; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString InsertPrecipitatePhases::getSubGroupName()
+{ return DREAM3D::FilterSubGroups::PackingFilters; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString InsertPrecipitatePhases::getHumanLabel()
+{ return "Insert Precipitate Phases"; }
+

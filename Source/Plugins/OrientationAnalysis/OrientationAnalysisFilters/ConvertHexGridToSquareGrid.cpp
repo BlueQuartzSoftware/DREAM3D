@@ -70,7 +70,7 @@ ConvertHexGridToSquareGrid::ConvertHexGridToSquareGrid() :
   m_FileSuffix(),
   m_FileExtension("ang"),
   m_PaddingDigits(1),
-  m_HexGridStack(0), // this is just a dummy variable
+  m_HexGridStack(0), // this is just a dummy variable,
   m_NumCols(0),
   m_NumRows(0),
   m_HeaderIsComplete(false)
@@ -498,3 +498,24 @@ AbstractFilter::Pointer ConvertHexGridToSquareGrid::newFilterInstance(bool copyF
   }
   return filter;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString ConvertHexGridToSquareGrid::getCompiledLibraryName()
+{ return Sampling::SamplingBaseName; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString ConvertHexGridToSquareGrid::getGroupName()
+{ return DREAM3D::FilterGroups::SamplingFilters; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString ConvertHexGridToSquareGrid::getHumanLabel()
+{ return "Convert Hexagonal Grid Data to Square Grid Data (TSL - .ang)"; }
+

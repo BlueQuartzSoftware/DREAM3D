@@ -254,3 +254,31 @@ AbstractFilter::Pointer FindLargestCrossSections::newFilterInstance(bool copyFil
   }
   return filter;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString FindLargestCrossSections::getCompiledLibraryName()
+{ return Statistics::StatisticsBaseName; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString FindLargestCrossSections::getGroupName()
+{ return DREAM3D::FilterGroups::StatisticsFilters; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString FindLargestCrossSections::getSubGroupName()
+{ return DREAM3D::FilterSubGroups::MorphologicalFilters; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString FindLargestCrossSections::getHumanLabel()
+{ return "Find Feature Largest Cross-Section Areas"; }
+

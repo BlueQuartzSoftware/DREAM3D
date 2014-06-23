@@ -276,3 +276,31 @@ AbstractFilter::Pointer FindSlipTransmissionMetrics::newFilterInstance(bool copy
   }
   return filter;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString FindSlipTransmissionMetrics::getCompiledLibraryName()
+{ return Statistics::StatisticsBaseName; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString FindSlipTransmissionMetrics::getGroupName()
+{ return DREAM3D::FilterGroups::StatisticsFilters; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString FindSlipTransmissionMetrics::getSubGroupName()
+{ return DREAM3D::FilterSubGroups::CrystallographicFilters; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString FindSlipTransmissionMetrics::getHumanLabel()
+{ return "Find Neighbor Slip Transmission Metrics"; }
+

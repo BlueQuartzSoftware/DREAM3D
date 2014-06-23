@@ -51,13 +51,13 @@
 // -----------------------------------------------------------------------------
 FillBadData::FillBadData() :
   AbstractFilter(),
-  m_MinAllowedDefectSize(1),
   m_StoreAsNewPhase(false),
-  m_CellPhasesArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::Phases),
-  m_CellPhasesArrayName(DREAM3D::CellData::Phases),
+  m_MinAllowedDefectSize(1),
   m_FeatureIdsArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::FeatureIds),
+  m_CellPhasesArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::Phases),
   m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
   m_FeatureIds(NULL),
+  m_CellPhasesArrayName(DREAM3D::CellData::Phases),
   m_CellPhases(NULL)
 {
   setupFilterParameters();
@@ -371,3 +371,24 @@ AbstractFilter::Pointer FillBadData::newFilterInstance(bool copyFilterParameters
   }
   return filter;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString FillBadData::getCompiledLibraryName()
+{ return Processing::ProcessingBaseName; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString FillBadData::getGroupName()
+{ return DREAM3D::FilterGroups::ProcessingFilters; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString FillBadData::getHumanLabel()
+{ return "Fill Bad Data"; }
+

@@ -369,3 +369,31 @@ AbstractFilter::Pointer FindTwinBoundaries::newFilterInstance(bool copyFilterPar
   }
   return filter;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString FindTwinBoundaries::getCompiledLibraryName()
+{ return Statistics::StatisticsBaseName; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString FindTwinBoundaries::getGroupName()
+{ return DREAM3D::FilterGroups::StatisticsFilters; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString FindTwinBoundaries::getSubGroupName()
+{ return DREAM3D::FilterSubGroups::CrystallographicFilters; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString FindTwinBoundaries::getHumanLabel()
+{ return "Find Twin Boundaries"; }
+

@@ -339,3 +339,31 @@ AbstractFilter::Pointer FitFeatureData::newFilterInstance(bool copyFilterParamet
   }
   return filter;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString FitFeatureData::getCompiledLibraryName()
+{ return Statistics::StatisticsBaseName; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString FitFeatureData::getGroupName()
+{ return DREAM3D::FilterGroups::StatisticsFilters; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString FitFeatureData::getSubGroupName()
+{ return DREAM3D::FilterSubGroups::EnsembleStatsFilters; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString FitFeatureData::getHumanLabel()
+{ return "Fit Distribution To Feature Data"; }
+

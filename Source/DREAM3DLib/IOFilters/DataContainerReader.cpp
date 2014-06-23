@@ -411,3 +411,31 @@ AbstractFilter::Pointer DataContainerReader::newFilterInstance(bool copyFilterPa
   }
   return filter;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString DataContainerReader::getCompiledLibraryName()
+{ return IO::IOBaseName; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString DataContainerReader::getGroupName()
+{ return DREAM3D::FilterGroups::IOFilters; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString DataContainerReader::getSubGroupName()
+{ return DREAM3D::FilterSubGroups::InputFilters; }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString DataContainerReader::getHumanLabel()
+{ return "Read DREAM3D Data File"; }
+
