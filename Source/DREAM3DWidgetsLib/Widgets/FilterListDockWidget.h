@@ -37,6 +37,7 @@
 #define _FilterListDockWidget_H_
 
 #include <QtGui/QWidget>
+#include <QtGui/QMenu>
 
 #include "DREAM3DWidgetsLib/DREAM3DWidgetsLib.h"
 
@@ -62,6 +63,8 @@ class DREAM3DWidgetsLib_EXPORT FilterListDockWidget : public QDockWidget, privat
 
     void updateFilterList(const QStringList& list, bool sortItems);
 
+    void searchFieldsChanged();
+
   signals:
 
     void filterItemDoubleClicked(const QString& filterName);
@@ -71,7 +74,15 @@ class DREAM3DWidgetsLib_EXPORT FilterListDockWidget : public QDockWidget, privat
     void setupGui();
 
   private:
-
+    QMenu m_Menu;
+    bool m_SearchFilterClassName;
+    bool m_SearchFilterHumanName;
+    bool m_SearchParameterPropertyName;
+    bool m_SearchParameterHumanName;
+    QAction* m_ActionSearchFilterClassName;
+    QAction* m_ActionSearchFilterHumanName;
+    QAction* m_ActionSearchParameterName;
+    QAction* m_ActionSearchParameterPropertyName;
 
     FilterListDockWidget(const FilterListDockWidget&); // Copy Constructor Not Implemented
     void operator=(const FilterListDockWidget&); // Operator '=' Not Implemented

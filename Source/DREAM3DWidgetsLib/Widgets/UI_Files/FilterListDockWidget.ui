@@ -13,7 +13,7 @@
   <property name="minimumSize">
    <size>
     <width>250</width>
-    <height>104</height>
+    <height>127</height>
    </size>
   </property>
   <property name="styleSheet">
@@ -51,35 +51,105 @@ padding-left: 5px;
      <number>0</number>
     </property>
     <item>
-     <widget class="QLineEdit" name="filterSearch">
-      <property name="styleSheet">
-       <string notr="true">QLineEdit {
+     <layout class="QHBoxLayout" name="horizontalLayout">
+      <property name="spacing">
+       <number>0</number>
+      </property>
+      <item>
+       <widget class="QPushButton" name="searchFieldsBtn">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>0</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>26</width>
+          <height>26</height>
+         </size>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QPushButton
+{
+	background-color: rgb(255, 255, 255);
+    border-top-left-radius: 10px;
+    border-top-right-radius: 0px;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 0px;
+    border: 1px groove gray; 
+	border-right: 0px;
+    padding: 2px 4px;
+}</string>
+        </property>
+        <property name="text">
+         <string/>
+        </property>
+        <property name="icon">
+         <iconset resource="../../../../Resources/icons/images/Icons.qrc">
+          <normaloff>:/preferences.png</normaloff>:/preferences.png</iconset>
+        </property>
+        <property name="flat">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLineEdit" name="filterSearch">
+        <property name="maximumSize">
+         <size>
+          <width>16777215</width>
+          <height>26</height>
+         </size>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QLineEdit {
     color: rgb(127, 0, 63);
     selection-color: white;   
-    border: 2px groove gray;
-    border-radius: 10px;
+    border: 1px groove gray; 
+	border-left: 0px;
+    border-top-left-radius: 0px;
+    border-top-right-radius: 10px;
+    border-bottom-left-radius: 0px;
+    border-bottom-right-radius: 10px;
     padding: 2px 4px;
 }
 QLineEdit:focus {
     color: rgb(127, 0, 63);
     selection-color: white;   
-    border: 2px groove gray;
-    border-radius: 10px;
+    border: 1px groove gray; 
+	border-left: 0px;
+    border-top-left-radius: 0px;
+    border-top-right-radius: 10px;
+    border-bottom-left-radius: 0px;
+    border-bottom-right-radius: 10px;
     padding: 2px 4px;
 }
 
 QLineEdit:edit-focus {
     color: rgb(127, 0, 63);
     selection-color: white;   
-    border: 2px groove gray;
-    border-radius: 10px;
+    border: 1px groove gray; 
+	border-left: 0px;
+    border-top-left-radius: 0px;
+    border-top-right-radius: 10px;
+    border-bottom-left-radius: 0px;
+    border-bottom-right-radius: 10px;
     padding: 2px 4px;
 }</string>
-      </property>
-      <property name="text">
-       <string>Search</string>
-      </property>
-     </widget>
+        </property>
+        <property name="text">
+         <string>Search</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
     </item>
     <item>
      <widget class="FilterListWidget" name="filterList" native="true">
@@ -101,6 +171,8 @@ QLineEdit:edit-focus {
    <header location="global">FilterListWidget.h</header>
   </customwidget>
  </customwidgets>
- <resources/>
+ <resources>
+  <include location="../../../../Resources/icons/images/Icons.qrc"/>
+ </resources>
  <connections/>
 </ui>

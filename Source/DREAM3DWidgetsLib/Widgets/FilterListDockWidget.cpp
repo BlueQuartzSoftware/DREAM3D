@@ -49,7 +49,11 @@
 //
 // -----------------------------------------------------------------------------
 FilterListDockWidget::FilterListDockWidget(QWidget* parent) :
-  QDockWidget(parent)
+  QDockWidget(parent),
+  m_SearchFilterClassName(false),
+  m_SearchFilterHumanName(true),
+  m_SearchParameterPropertyName(false),
+  m_SearchParameterHumanName(true)
 {
   setupUi(this);
 
@@ -69,6 +73,50 @@ FilterListDockWidget::~FilterListDockWidget()
 void FilterListDockWidget::setupGui()
 {
 
+  {
+    m_ActionSearchFilterHumanName = new QAction(&m_Menu);
+    m_ActionSearchFilterHumanName->setObjectName(QString::fromUtf8("actionFilterHumanLabel"));
+    m_ActionSearchFilterHumanName->setText(QApplication::translate("DREAM3D_UI", "Filter Human Name", 0, QApplication::UnicodeUTF8));
+    m_ActionSearchFilterHumanName->setCheckable(true);
+    m_ActionSearchFilterHumanName->setChecked(m_SearchFilterHumanName);
+    m_Menu.addAction(m_ActionSearchFilterHumanName);
+    connect(m_ActionSearchFilterHumanName, SIGNAL(triggered()),
+            this, SLOT( searchFieldsChanged() ) );
+  }
+  {
+    m_ActionSearchFilterClassName = new QAction(&m_Menu);
+    m_ActionSearchFilterClassName->setObjectName(QString::fromUtf8("actionFilterClassName"));
+    m_ActionSearchFilterClassName->setText(QApplication::translate("DREAM3D_UI", "Filter Class Name", 0, QApplication::UnicodeUTF8));
+    m_ActionSearchFilterClassName->setCheckable(true);
+    m_ActionSearchFilterClassName->setChecked(m_SearchFilterClassName);
+    m_Menu.addAction(m_ActionSearchFilterClassName);
+    connect(m_ActionSearchFilterClassName, SIGNAL(triggered()),
+            this, SLOT( searchFieldsChanged() ) );
+  }
+
+  {
+    m_ActionSearchParameterName = new QAction(&m_Menu);
+    m_ActionSearchParameterName->setObjectName(QString::fromUtf8("actionFilterParameterName"));
+    m_ActionSearchParameterName->setText(QApplication::translate("DREAM3D_UI", "Parameter Name", 0, QApplication::UnicodeUTF8));
+    m_ActionSearchParameterName->setCheckable(true);
+    m_ActionSearchParameterName->setChecked(m_SearchParameterHumanName);
+    m_Menu.addAction(m_ActionSearchParameterName);
+    connect(m_ActionSearchParameterName, SIGNAL(triggered()),
+            this, SLOT( searchFieldsChanged() ) );
+  }
+  {
+    m_ActionSearchParameterPropertyName = new QAction(&m_Menu);
+    m_ActionSearchParameterPropertyName->setObjectName(QString::fromUtf8("actionFilterParameterPropertyName"));
+    m_ActionSearchParameterPropertyName->setText(QApplication::translate("DREAM3D_UI", "Parameter Property Name", 0, QApplication::UnicodeUTF8));
+    m_ActionSearchParameterPropertyName->setCheckable(true);
+    m_ActionSearchParameterPropertyName->setChecked(m_SearchParameterPropertyName);
+    m_Menu.addAction(m_ActionSearchParameterPropertyName);
+    connect(m_ActionSearchParameterPropertyName, SIGNAL(triggered()),
+            this, SLOT( searchFieldsChanged() ) );
+  }
+
+  searchFieldsBtn->setText("");
+  searchFieldsBtn->setMenu(&m_Menu);
 }
 
 // -----------------------------------------------------------------------------
@@ -122,94 +170,75 @@ void FilterListDockWidget::updateFilterList(const QStringList& list, bool sortIt
 void FilterListDockWidget::on_filterSearch_textChanged (const QString& text)
 {
 
-
-  FilterManager::Pointer fm = FilterManager::Instance();
-  FilterManager::Collection factories = fm->getFactories(); // Get all the Factories
-
-#if 0
-  QTreeWidgetItem* item = filterLibraryTree->currentItem();
-  if (item->parent() == NULL && item->text(0).compare(DREAM3D::Settings::Library) == 0)
-  {
-    factories = fm->getFactories();
-  }
-  else if (item->parent() != NULL && item->parent()->text(0).compare(DREAM3D::Settings::Library) == 0)
-  {
-    factories = fm->getFactories(item->text(0));
-  }
-  else if (item->parent()->parent() != NULL && item->parent()->parent()->text(0).compare(DREAM3D::Settings::Library) == 0)
-  {
-    factories = fm->getFactories(item->parent()->text(0), item->text(0));
-  }
-
-  // Nothing was in the search Feature so just reset to what was listed before
-  if (text.isEmpty() == true)
-  {
-    updateFilterGroupList(factories);
-    return;
-  }
-
-
-  // The user is typing something in the search box so lets search the filter class name and human label
-  filterList->clear();
-  for (FilterManager::Collection::iterator factory = factories.begin(); factory != factories.end(); ++factory)
-  {
-    IFilterFactory::Pointer wigFactory = factory.value();
-    if (NULL == wigFactory.get() )
-    {
-      continue;
-    }
-    QString humanName = (wigFactory->getFilterHumanLabel());
-    bool match = false;
-    if (humanName.contains(text, Qt::CaseInsensitive) == true)
-    {
-      match = true;
-    }
-    QString filterName = (factory.key());
-    if (filterName.contains(text, Qt::CaseInsensitive) == true)
-    {
-      match = true;
-    }
-    // Nothing matched the string
-    if (false == match) { continue; }
-
-    QString iconName(":/");
-    iconName.append( (wigFactory->getFilterGroup()));
-    iconName.append("_Icon.png");
-
-    // Validate the icon is in the resource system
-    QFileInfo iconInfo(iconName);
-    if (iconInfo.exists() == false)
-    {
-      iconName = ":/Plugin_Icon.png"; // Switch to our generic icon for Plugins that do not provide their own
-    }
-
-    QIcon icon(iconName);
-    // Create the QListWidgetItem and add it to the filterList
-    QListWidgetItem* filterItem = new QListWidgetItem(icon, humanName, filterList);
-    // Set an "internal" QString that is the name of the filter. We need this value
-    // when the item is clicked in order to retreive the Filter Widget from the
-    // filter widget manager.
-    filterItem->setData( Qt::UserRole, filterName);
-  }
-#endif
-
   int listWidgetSize = filterList->count();
-
-  for (int k1 = 0; k1 < listWidgetSize; k1++)
+  if(text.isEmpty() )
   {
-    if (filterList->item(k1)->text().contains(text))
+    for (int k1 = 0; k1 < listWidgetSize; k1++)
     {
       filterList->item(k1)->setHidden(false);
     }
-    else
-    {
-      filterList->item(k1)->setHidden(true);
-    }
+    return;
   }
 
+  // The user is typing something in the search box so lets search the filter class name and human label
 
+  FilterManager::Pointer fm = FilterManager::Instance();
+  FilterManager::Collection factories = fm->getFactories(); // Get all the Factories
+  //qDebug() << "Search Text: " << text;
+  bool match = false;
+  for (int k1 = 0; k1 < listWidgetSize; k1++)
+  {
+    match = false;
+    QString filterHumanLabel = filterList->item(k1)->text();
+
+    if (m_ActionSearchFilterHumanName->isChecked() && filterHumanLabel.contains(text, Qt::CaseInsensitive) == true)
+    {
+      //  qDebug() << "   " << filterHumanLabel;
+      match = true;
+    }
+
+    QString filterClassName = filterList->item(k1)->data(Qt::UserRole).toString();
+    if (m_ActionSearchFilterClassName->isChecked() && filterClassName.contains(text, Qt::CaseInsensitive) == true)
+    {
+      //   qDebug() << "   " << filterClassName;
+      match = true;
+    }
+
+    IFilterFactory::Pointer factory = fm->getFactoryForFilter(filterClassName);
+    if(NULL != factory.get() )
+    {
+      AbstractFilter::Pointer filter = factory->create();
+      // Get a list of all the filterParameters from the filter.
+      QVector<FilterParameter::Pointer> filterParameters = filter->getFilterParameters();
+      // Create all the FilterParameterWidget objects that can be displayed where ever the developer needs
+      for (QVector<FilterParameter::Pointer>::iterator iter = filterParameters.begin(); iter != filterParameters.end(); ++iter )
+      {
+        FilterParameter* option = (*iter).get();
+        if (m_ActionSearchParameterName->isChecked() && option->getHumanLabel().contains(text, Qt::CaseInsensitive) == true)
+        {
+          //  qDebug() << "       " << option->getHumanLabel();
+          match = true;
+        }
+        if (m_ActionSearchParameterPropertyName->isChecked() && option->getPropertyName().contains(text, Qt::CaseInsensitive) == true)
+        {
+          //   qDebug() << "       " << option->getPropertyName();
+          match = true;
+        }
+      }
+    }
+    filterList->item(k1)->setHidden(!match);
+  }
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void FilterListDockWidget::searchFieldsChanged()
+{
+
+  on_filterSearch_textChanged(filterSearch->text());
+
+}
 
 // -----------------------------------------------------------------------------
 //
