@@ -55,11 +55,6 @@ namespace UnitTest
     static const size_t Offset = 200;
   }
 
-  namespace PhIOTest
-  {
-    const QString TestFile("@TEST_TEMP_DIR@/PhIOTest.ph");
-  }
-
   namespace VtkGrainIdIOTest
   {
     const QString TestFile("@TEST_TEMP_DIR@/VtkGrainIdIOTest.vtk");

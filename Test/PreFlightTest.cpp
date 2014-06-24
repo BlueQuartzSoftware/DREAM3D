@@ -54,7 +54,7 @@
 #include "DREAM3DLib/Utilities/QMetaObjectUtilities.h"
 #include "DREAM3DLib/DREAM3DFilters.h"
 
-#include "UnitTestSupport.hpp"
+#include "DREAM3DLib/Utilities/UnitTestSupport.hpp"
 #include "TestFileLocations.h"
 
 #include "PreflightVerify.h"

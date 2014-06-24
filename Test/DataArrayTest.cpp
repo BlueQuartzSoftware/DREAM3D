@@ -47,7 +47,7 @@
 #include "DREAM3DLib/DataArrays/StringDataArray.hpp"
 
 
-#include "UnitTestSupport.hpp"
+#include "DREAM3DLib/Utilities/UnitTestSupport.hpp"
 
 #include "TestFileLocations.h"
 

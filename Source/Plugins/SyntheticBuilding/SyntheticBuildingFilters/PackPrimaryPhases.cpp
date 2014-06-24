@@ -59,9 +59,7 @@
 #include "DREAM3DLib/ShapeOps/CylinderOps.h"
 #include "DREAM3DLib/ShapeOps/EllipsoidOps.h"
 #include "DREAM3DLib/ShapeOps/SuperEllipsoidOps.h"
-
-#include "DREAM3DLib/IOFilters/FeatureDataCSVWriter.h"
-#include "DREAM3DLib/IOFilters/DataContainerWriter.h"
+#include "DREAM3DLib/CoreFilters/DataContainerWriter.h"
 #include "DREAM3DLib/Utilities/TimeUtilities.h"
 #include "DREAM3DLib/Utilities/DREAM3DRandom.h"
 

@@ -58,8 +58,8 @@
 #include "DREAM3DLib/DataContainers/VolumeDataContainer.h"
 #include "DREAM3DLib/DataArrays/StatsDataArray.h"
 #include "DREAM3DLib/Common/FilterPipeline.h"
-#include "DREAM3DLib/IOFilters/DataContainerWriter.h"
-#include "DREAM3DLib/IOFilters/DataContainerReader.h"
+#include "DREAM3DLib/CoreFilters/DataContainerWriter.h"
+#include "DREAM3DLib/CoreFilters/DataContainerReader.h"
 
 #include "QtSupport/ApplicationAboutBoxDialog.h"
 #include "QtSupport/QRecentFileList.h"

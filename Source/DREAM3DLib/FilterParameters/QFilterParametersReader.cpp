@@ -42,7 +42,7 @@
 
 #include "DREAM3DLib/Common/FilterManager.h"
 #include "DREAM3DLib/Common/FilterFactory.hpp"
-#include "DREAM3DLib/GenericFilters/EmptyFilter.h"
+#include "DREAM3DLib/CoreFilters/EmptyFilter.h"
 
 
 // -----------------------------------------------------------------------------

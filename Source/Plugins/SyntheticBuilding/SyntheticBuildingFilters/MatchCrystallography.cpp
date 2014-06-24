@@ -565,9 +565,13 @@ void MatchCrystallography::matchCrystallography(int ensem)
     //      notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
     currentodferror = 0;
     currentmdferror = 0;
+    float* actualOdfPtr = actualodf->getPointer(0);
+    float* simOdfPtr = simodf->getPointer(0);
+    float delta = 0.0f;
     for (int i = 0; i < numbins; i++)
     {
-      currentodferror = currentodferror + ((actualodf->getValue(i) - simodf->getValue(i)) * (actualodf->getValue(i) - simodf->getValue(i)));
+      delta = actualOdfPtr[i] - simOdfPtr[i];
+      currentodferror = currentodferror + (delta * delta);
     }
     for (int i = 0; i < (numbins); i++)
     {

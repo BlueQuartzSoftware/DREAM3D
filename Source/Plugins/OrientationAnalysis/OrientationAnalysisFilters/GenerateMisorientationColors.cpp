@@ -47,6 +47,7 @@
 #include "DREAM3DLib/Utilities/ColorTable.h"
 #include "DREAM3DLib/OrientationOps/OrientationOps.h"
 
+#include "Generic/GenericConstants.h"
 
 
 class GenerateMisorientationColorsImpl

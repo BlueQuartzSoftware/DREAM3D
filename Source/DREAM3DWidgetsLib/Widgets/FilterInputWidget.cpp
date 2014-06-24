@@ -158,7 +158,7 @@ void FilterInputWidget::displayFilterParameters(PipelineFilterWidget* w)
   filterHumanLabel->setText(w->getHumanLabel());
 
   AbstractFilter::Pointer filter = w->getFilter();
-  brandingLabel->setText(filter->getBrandingString()  + "  [" + w->getFilterGroup() + "/" + w->getFilterClassName() + "]" );
+  brandingLabel->setText(filter->getBrandingString()  + "  [" + w->getCompiledLibraryName() + "/" + w->getFilterGroup() + "/" + w->getFilterClassName() + "]" );
 
 }
 

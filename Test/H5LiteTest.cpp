@@ -19,7 +19,7 @@
 #include "H5Support/QH5Lite.h"
 #include "H5Support/H5Utilities.h"
 
-#include "UnitTestSupport.hpp"
+#include "DREAM3DLib/Utilities/UnitTestSupport.hpp"
 
 #include "TestFileLocations.h"
 

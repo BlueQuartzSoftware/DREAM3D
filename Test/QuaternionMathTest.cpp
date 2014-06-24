@@ -41,7 +41,7 @@
 #include "DREAM3DLib/OrientationOps/OrientationOps.h"
 #include "DREAM3DLib/OrientationOps/CubicOps.h"
 
-#include "UnitTestSupport.hpp"
+#include "DREAM3DLib/Utilities/UnitTestSupport.hpp"
 #include "TestFileLocations.h"
 
 

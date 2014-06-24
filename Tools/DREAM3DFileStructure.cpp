@@ -16,7 +16,7 @@
 #include "DREAM3DLib/DataContainers/DataArrayProxy.h"
 #include "DREAM3DLib/DataContainers/AttributeMatrixProxy.h"
 #include "DREAM3DLib/DataContainers/DataContainerProxy.h"
-#include "DREAM3DLib/IOFilters/DataContainerReader.h"
+#include "DREAM3DLib/CoreFilters/DataContainerReader.h"
 #include "DREAM3DLib/FilterParameters/QFilterParametersWriter.h"
 #include "DREAM3DLib/FilterParameters/H5FilterParametersWriter.h"
 #include "DREAM3DLib/FilterParameters/QFilterParametersReader.h"

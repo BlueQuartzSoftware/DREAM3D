@@ -384,6 +384,17 @@ QString PipelineFilterWidget::getFilterClassName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+QString PipelineFilterWidget::getCompiledLibraryName()
+{
+  if (NULL != m_Filter.get())
+  { return m_Filter->getCompiledLibraryName(); }
+
+  return "";
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 QString PipelineFilterWidget::getFilterGroup()
 {
   if (NULL != m_Filter.get())

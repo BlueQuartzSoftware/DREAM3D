@@ -51,7 +51,7 @@ standard C++ library."
 #include "H5Support/QH5Utilities.h"
 
 
-#include "UnitTestSupport.hpp"
+#include "DREAM3DLib/Utilities/UnitTestSupport.hpp"
 #include "TestFileLocations.h"
 
 

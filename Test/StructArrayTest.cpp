@@ -43,7 +43,7 @@
 #include "DREAM3DLib/FilterParameters/FilterParameter.h"
 
 
-#include "UnitTestSupport.hpp"
+#include "DREAM3DLib/Utilities/UnitTestSupport.hpp"
 
 #include "TestFileLocations.h"
 

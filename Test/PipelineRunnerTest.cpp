@@ -77,7 +77,7 @@
 #include "DREAM3DLib/FilterParameters/QFilterParametersWriter.h"
 #include "DREAM3DLib/Utilities/QMetaObjectUtilities.h"
 
-#include "UnitTestSupport.hpp"
+#include "DREAM3DLib/Utilities/UnitTestSupport.hpp"
 
 #include "PipelineRunnerTest.h"
 

@@ -59,7 +59,7 @@
 #include "DREAM3DLib/StatsData/StatsData.h"
 #include "DREAM3DLib/StatsData/PrimaryStatsData.h"
 #include "DREAM3DLib/Utilities/DREAM3DRandom.h"
-#include "DREAM3DLib/IOFilters/DataContainerReader.h"
+#include "DREAM3DLib/CoreFilters/DataContainerReader.h"
 
 
 #include "QtSupport/QFileCompleter.h"

@@ -43,7 +43,6 @@
 #include "DREAM3DLib/OrientationOps/CubicOps.h"
 #include "DREAM3DLib/OrientationOps/HexagonalOps.h"
 #include "DREAM3DLib/OrientationOps/OrthoRhombicOps.h"
-#include "DREAM3DLib/IOFilters/VtkRectilinearGridWriter.h"
 #include "DREAM3DLib/Common/ModifiedLambertProjection.h"
 
 
