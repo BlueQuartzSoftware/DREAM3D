@@ -1,7 +1,7 @@
 [PipelineBuilder]
 Name=(05) Composite
 Number_Filters=7
-Version=5.0.6749
+Version=5.0.6753
 
 [0]
 Filter_Name=DataContainerReader
