@@ -9,7 +9,7 @@
 #--
 #--////////////////////////////////////////////////////////////////////////////
 
-#test - megna
+
 if(NOT ${DREAM3D_SDK} STREQUAL "")
   include("${DREAM3D_SDK}/DREAM3D_SDK.cmake")
 endif()
