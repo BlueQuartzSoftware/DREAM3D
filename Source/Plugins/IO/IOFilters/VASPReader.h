@@ -54,7 +54,7 @@
  * @date Sep 28, 2011
  * @version $Revision$
  */
-class DREAM3DLib_EXPORT VASPReader : public FileReader
+class  VASPReader : public FileReader
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:

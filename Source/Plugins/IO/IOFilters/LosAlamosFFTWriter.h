@@ -53,7 +53,7 @@
  * @date Nov 13, 2012
  * @version 1.0
  */
-class DREAM3DLib_EXPORT LosAlamosFFTWriter : public FileWriter
+class  LosAlamosFFTWriter : public FileWriter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:

@@ -48,7 +48,7 @@
  * @author
  * @version
  */
-class DREAM3DLib_EXPORT VtkFeatureIdReader : public FileReader
+class  VtkFeatureIdReader : public FileReader
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:

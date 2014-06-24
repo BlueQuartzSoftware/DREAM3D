@@ -53,7 +53,7 @@
  * @date Jun 7, 2011
  * @version 1.0
  */
-class DREAM3DLib_EXPORT PhWriter : public FileWriter
+class  PhWriter : public FileWriter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:

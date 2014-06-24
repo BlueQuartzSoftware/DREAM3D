@@ -50,7 +50,7 @@
 /*
  *
  */
-class DREAM3DLib_EXPORT FindFeatureCentroids : public AbstractFilter
+class  FindFeatureCentroids : public AbstractFilter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:

@@ -43,7 +43,7 @@
 #include "DREAM3DLib/Common/Constants.h"
 
 
-class DREAM3DLib_EXPORT YSChoiAbaqusReader : public FileReader
+class  YSChoiAbaqusReader : public FileReader
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:

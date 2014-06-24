@@ -53,7 +53,7 @@
  * @date Nov 13, 2012
  * @version 1.0
  */
-class DREAM3DLib_EXPORT INLWriter : public FileWriter
+class  INLWriter : public FileWriter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:

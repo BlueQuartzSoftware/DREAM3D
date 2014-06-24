@@ -50,7 +50,7 @@
 /*
  *
  */
-class DREAM3DLib_EXPORT FindBoundaryCells : public AbstractFilter
+class  FindBoundaryCells : public AbstractFilter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:

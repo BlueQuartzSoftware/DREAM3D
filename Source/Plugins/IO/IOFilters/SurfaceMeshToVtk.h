@@ -52,7 +52,7 @@
  * @date
  * @version 1.0
  */
-class DREAM3DLib_EXPORT SurfaceMeshToVtk : public AbstractFilter
+class  SurfaceMeshToVtk : public AbstractFilter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:

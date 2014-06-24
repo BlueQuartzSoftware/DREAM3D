@@ -52,7 +52,7 @@
  * @date March 16, 2013
  * @version 1.0
  */
-class DREAM3DLib_EXPORT SPParksWriter : public FileWriter
+class  SPParksWriter : public FileWriter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:

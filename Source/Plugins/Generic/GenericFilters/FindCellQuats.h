@@ -51,7 +51,7 @@
 /*
  *
  */
-class DREAM3DLib_EXPORT FindCellQuats : public AbstractFilter
+class  FindCellQuats : public AbstractFilter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:

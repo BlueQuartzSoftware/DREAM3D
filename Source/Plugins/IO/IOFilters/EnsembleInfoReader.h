@@ -54,7 +54,7 @@
  * @date Sep 28, 2011
  * @version $Revision$
  */
-class DREAM3DLib_EXPORT EnsembleInfoReader : public FileReader
+class  EnsembleInfoReader : public FileReader
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:

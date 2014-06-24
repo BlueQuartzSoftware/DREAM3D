@@ -54,7 +54,7 @@
  * @date Jul 17, 2012
  * @version 1.0
  */
-class DREAM3DLib_EXPORT NodesTrianglesToStl : public AbstractFilter
+class  NodesTrianglesToStl : public AbstractFilter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:

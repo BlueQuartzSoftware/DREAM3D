@@ -54,7 +54,7 @@
  * @date
  * @version 1.0
  */
-class DREAM3DLib_EXPORT NodesTrianglesToVtk : public AbstractFilter
+class  NodesTrianglesToVtk : public AbstractFilter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:

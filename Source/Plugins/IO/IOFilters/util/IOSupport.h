@@ -51,7 +51,7 @@
 /**
  * @brief The IOSupport class
  */
-class DREAM3DLib_EXPORT IOSupport : public Observable
+class  IOSupport : public Observable
 {
 
   public:

@@ -56,7 +56,7 @@
  * @date Sep 28, 2011
  * @version $Revision$
  */
-class DREAM3DLib_EXPORT PhReader : public FileReader
+class  PhReader : public FileReader
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:

@@ -52,7 +52,7 @@
  * @date Feb 6, 2013
  * @version 1.0
  */
-class DREAM3DLib_EXPORT GenerateRodriguesColors : public AbstractFilter
+class GenerateRodriguesColors : public AbstractFilter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
