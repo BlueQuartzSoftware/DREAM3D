@@ -18,7 +18,9 @@ set(AStyle_HDRS
 )
 
 add_executable(astyle ${AStyle_SRCS} ${AStyle_HDRS} )
+SET_TARGET_PROPERTIES(astyle PROPERTIES FOLDER Tools)
 
 ADD_CUSTOM_TARGET(FormatCode
                   COMMAND ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/astyle --options=${DREAM3D_SUPPORT_DIR}/Scripts/AStyleOptions.txt ${PROJECT_CODE_DIR}/*.cpp ${PROJECT_CODE_DIR}/*.h ${PROJECT_CODE_DIR}/*.hpp
                   )
+SET_TARGET_PROPERTIES(FormatCode PROPERTIES FOLDER Tools)
