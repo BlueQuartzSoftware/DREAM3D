@@ -56,7 +56,7 @@ set(ImageImportTestPipelineRunnerTest_SRCS
 # Create an executable
 add_executable(ImageImportTestPipelineRunnerTest ${ImageImportTestPipelineRunnerTest_SRCS})
 target_link_libraries(ImageImportTestPipelineRunnerTest ${QT_QTCORE_LIBRARY} EbsdLib DREAM3DLib)
-set_target_properties(ImageImportTestPipelineRunnerTest PROPERTIES FOLDER ImageImport)
+SET_TARGET_PROPERTIES(ImageImportTestPipelineRunnerTest PROPERTIES FOLDER ${PLUGIN_NAME}Plugin/Test)
 
 # Write out the Pipeline List file
 FILE(WRITE ${TEST_PIPELINE_LIST_FILE} )

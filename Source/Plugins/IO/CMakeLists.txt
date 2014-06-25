@@ -185,7 +185,7 @@ target_link_libraries(${PLUGIN_NAME}
                     QtSupport
                     DREAM3DWidgetsLib
                     )
-SET_TARGET_PROPERTIES(${PLUGIN_NAME} PROPERTIES FOLDER ${PLUGIN_NAME}Targets)
+SET_TARGET_PROPERTIES(${PLUGIN_NAME} PROPERTIES FOLDER ${PLUGIN_NAME}Plugin)
 
 # --------------------------------------------------------------------
 # Set some additional properties of the plugin like its output name
