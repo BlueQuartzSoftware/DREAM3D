@@ -72,20 +72,12 @@ endmacro()
 
 ADD_DREAM3D_TEST(H5LiteTest "H5Support")
 ADD_DREAM3D_TEST(H5UtilitiesTest "H5Support")
-
-
 ADD_DREAM3D_TEST(QuaternionMathTest  "DREAM3DLib")
 ADD_DREAM3D_TEST(OrientationMathTest  "DREAM3DLib")
 ADD_DREAM3D_TEST(StructArrayTest  "DREAM3DLib")
-ADD_DREAM3D_TEST_2(DxIOTest  "DREAM3DLib" GenerateFeatureIds.h)
-
-
 ADD_DREAM3D_TEST(FilterPipelineTest  "DREAM3DLib")
-
 ADD_DREAM3D_TEST(DataArrayTest  "DREAM3DLib")
 ADD_DREAM3D_TEST(ErrorMessageTest  "DREAM3DLib")
-#ADD_DREAM3D_TEST(GenericFilterTest  "DREAM3DLib")
-
 
 set_source_files_properties(moc_PreflightVerify.cpp PROPERTIES HEADER_FILE_ONLY TRUE)
 ADD_DREAM3D_TEST_2(PreFlightTest  "DREAM3DLib" "PreflightVerify.h;PreflightVerify.cpp")
@@ -96,7 +88,7 @@ if(0)
 ADD_DREAM3D_TEST(NewDataContainerStructureTest  "DREAM3DLib")
 ADD_DREAM3D_TEST(RawBinaryReaderTest  "DREAM3DLib")
 ADD_DREAM3D_TEST(StatsGenTest  "DREAM3DLib")
-ADD_DREAM3D_TEST(PhIOTest  "DREAM3DLib")
+
 ADD_DREAM3D_TEST(QFilterParameterIOTest  "DREAM3DLib")
 ADD_DREAM3D_TEST(AngleFileLoaderTest  "DREAM3DLib")
 ADD_DREAM3D_TEST(ManagedPointerArrayTest  "DREAM3DLib")

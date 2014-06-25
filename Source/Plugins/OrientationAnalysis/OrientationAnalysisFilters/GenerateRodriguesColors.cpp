@@ -53,6 +53,9 @@
 #include "DREAM3DLib/OrientationOps/TriclinicOps.h"
 #include "DREAM3DLib/Utilities/ColorTable.h"
 
+#include "Generic/GenericConstants.h"
+
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

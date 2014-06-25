@@ -53,8 +53,8 @@
 #include "DREAM3DLib/DataArrays/StringDataArray.hpp"
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/IOFilters/DataContainerReader.h"
-#include "DREAM3DLib/IOFilters/DataContainerWriter.h"
+#include "DREAM3DLib/CoreFilters/DataContainerReader.h"
+#include "DREAM3DLib/CoreFilters/DataContainerWriter.h"
 #include "DREAM3DLib/FilterParameters/QFilterParametersWriter.h"
 #include "DREAM3DLib/FilterParameters/H5FilterParametersWriter.h"
 #include "DREAM3DLib/FilterParameters/QFilterParametersReader.h"
@@ -62,7 +62,7 @@
 #include "DREAM3DLib/Utilities/QMetaObjectUtilities.h"
 
 
-#include "UnitTestSupport.hpp"
+#include "DREAM3DLib/Utilities/UnitTestSupport.hpp"
 
 #include "TestFileLocations.h"
 

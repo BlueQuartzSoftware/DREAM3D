@@ -40,7 +40,7 @@
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/PipelineMessage.h"
 
-#include "UnitTestSupport.hpp"
+#include "DREAM3DLib/Utilities/UnitTestSupport.hpp"
 #include "TestFileLocations.h"
 
 // -----------------------------------------------------------------------------

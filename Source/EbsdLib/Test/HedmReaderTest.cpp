@@ -40,7 +40,7 @@
 #include "EbsdLib/HEDM/MicReader.h"
 
 
-#include "UnitTestSupport.hpp"
+#include "DREAM3DLib/Utilities/UnitTestSupport.hpp"
 #include "EbsdTestFileLocation.h"
 
 // -----------------------------------------------------------------------------

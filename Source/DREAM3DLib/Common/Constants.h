@@ -113,6 +113,7 @@ namespace DREAM3D
     const DREAM3D_STRING SurfaceMeshingFilters("SurfaceMeshing");
     const DREAM3D_STRING SolidMeshingFilters("SolidMeshing");
     const DREAM3D_STRING TestFilters("Test");
+    const DREAM3D_STRING CoreFilters("Core");
   }
 
   namespace FilterSubGroups
@@ -676,7 +677,20 @@ namespace DREAM3D
 
 }
 
+namespace Core
+{
+  const QString CoreBaseName("Core");
+}
 
+namespace Test
+{
+  const QString TestPluginFile("TestPlugin");
+  const QString TestPluginDisplayName("TestPlugin");
+  const QString TestBaseName("TestPlugin");
+}
+
+
+#if 0
 namespace Generic
 {
   const QString GenericPluginFile("GenericPlugin");
@@ -690,13 +704,7 @@ namespace IO
   const QString IOPluginDisplayName("IOPlugin");
   const QString IOBaseName("IOPlugin");
 }
-
-namespace Test
-{
-  const QString TestPluginFile("TestPlugin");
-  const QString TestPluginDisplayName("TestPlugin");
-  const QString TestBaseName("TestPlugin");
-}
+#endif
 
 #endif /* _DREAM3D_CONSTANTS_H_ */
 

@@ -77,7 +77,7 @@
 #include "DREAM3DLib/FilterParameters/QFilterParametersWriter.h"
 #include "DREAM3DLib/Utilities/QMetaObjectUtilities.h"
 
-#include "UnitTestSupport.hpp"
+#include "DREAM3DLib/Utilities/UnitTestSupport.hpp"
 
 #include "PipelineRunnerTest.h"
 
@@ -220,6 +220,7 @@ int main (int argc, char  *argv[])
   while (sourceLines.hasNext())
   {
     QString pipelineFile = sourceLines.next();
+	pipelineFile = pipelineFile.trimmed();
     if(pipelineFile.isEmpty()) { continue; }
     try {
       QFileInfo fi(pipelineFile);

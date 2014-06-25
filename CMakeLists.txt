@@ -371,15 +371,17 @@ endfunction()
 #-----------------
 # These are the core plugins that need to be built
 set(DREAM3D_PLUGIN_LIST
-     DDDAnalysisToolbox
-     ImageImport
-     OrientationAnalysis
-     Processing
-     Reconstruction
-     Sampling
-     Statistics
-     SurfaceMeshing
-     SyntheticBuilding
+  Generic
+  IO
+  DDDAnalysisToolbox
+  ImageImport
+  OrientationAnalysis
+  Processing
+  Reconstruction
+  Sampling
+  Statistics
+  SurfaceMeshing
+  SyntheticBuilding
 )
 
 #-------------------------------------------------------------------------------

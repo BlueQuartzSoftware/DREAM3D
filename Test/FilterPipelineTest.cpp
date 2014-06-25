@@ -53,7 +53,7 @@
 #include "DREAM3DLib/TestFilters/ThresholdExample.h"
 #include "DREAM3DLib/TestFilters/TestFilters.h"
 
-#include "UnitTestSupport.hpp"
+#include "DREAM3DLib/Utilities/UnitTestSupport.hpp"
 #include "TestFileLocations.h"
 
 // -----------------------------------------------------------------------------

@@ -71,7 +71,6 @@
 #include "DREAM3DLib/OrientationOps/TetragonalLowOps.h"
 #include "DREAM3DLib/OrientationOps/TriclinicOps.h"
 #include "DREAM3DLib/OrientationOps/MonoclinicOps.h"
-#include "DREAM3DLib/IOFilters/VtkRectilinearGridWriter.h"
 #include "DREAM3DLib/Utilities/ColorTable.h"
 #include "DREAM3DLib/Utilities/PoleFigureUtilities.h"
 
@@ -425,54 +424,6 @@ void WritePoleFigure::execute()
   /* Let the GUI know we are done with this filter */
   notifyStatusMessage(getHumanLabel(), "Complete");
 }
-
-
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-QString WritePoleFigure::generateVtkPath( QString label)
-{
-  QString path = m_OutputPath + "/" + m_ImagePrefix + label;
-
-  path.append(".vtk");
-
-  path = QDir::toNativeSeparators(path);
-  QFileInfo fi(path);
-  QDir parent(fi.absolutePath());
-  if (parent.exists() == false)
-  {
-    parent.mkpath(fi.absolutePath());
-  }
-
-  return path;
-}
-
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void WritePoleFigure::writeVtkFile(const QString filename, DoubleArrayType* poleFigurePtr, int dimension)
-{
-
-  notifyStatusMessage(getHumanLabel(), "Writing VTK File");
-
-  size_t dims[3] = {dimension, dimension, 1};
-  float res[3] = {  2.0 / (float)(dimension),
-                    2.0 / (float)(dimension),
-                    ( 2.0 / (float)(dimension) + 2.0 / (float)(dimension) ) / 2.0
-                 };
-
-  int err = VtkRectilinearGridWriter::WriteDataArrayToFile(filename, poleFigurePtr, dims, res, "double", true);
-  if (err < 0)
-  {
-    setErrorCondition(-99003);
-    notifyErrorMessage(getHumanLabel(), "Error writing the VTK file for the Pole Figure", getErrorCondition());
-  }
-}
-
-
-
 
 // -----------------------------------------------------------------------------
 //

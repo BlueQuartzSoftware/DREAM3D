@@ -42,7 +42,7 @@
 #include "H5Support/HDF5ScopedFileSentinel.h"
 
 #include "DREAM3DLib/Math/DREAM3DMath.h"
-#include "DREAM3DLib/IOFilters/DataContainerReader.h"
+#include "DREAM3DLib/CoreFilters/DataContainerReader.h"
 #include "DREAM3DLib/DataArrays/StatsDataArray.h"
 #include "DREAM3DLib/Utilities/DREAM3DRandom.h"
 #include "SyntheticBuilding/SyntheticBuildingConstants.h"
