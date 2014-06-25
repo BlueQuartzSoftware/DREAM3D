@@ -262,9 +262,9 @@ void AlignSectionsMisorientation::find_shifts(QVector<int>& xshifts, QVector<int
   int progInt = 0;
 
   // Allocate a 2D Array which will be reused from slice to slice
-  FloatArrayType::Pointer misorientsPtr = FloatArrayType::CreateArray(dims[0] * dims[1], "Misorients");
-  misorientsPtr->initializeWithValue(0.0);
-  float* misorients = misorientsPtr->getPointer(0); // Get the raw pointer to use in our calculations for speed.
+  BoolArrayType::Pointer misorientsPtr = BoolArrayType::CreateArray(dims[0] * dims[1], "Misorients");
+  misorientsPtr->initializeWithValue(false);
+  bool* misorients = misorientsPtr->getPointer(0); // Get the raw pointer to use in our calculations for speed.
 
   size_t idx = 0; // This will be used to compute the index into the flat array
   size_t xIdx = 0;
@@ -290,7 +290,7 @@ void AlignSectionsMisorientation::find_shifts(QVector<int>& xshifts, QVector<int
     newxshift = 0;
     newyshift = 0;
 
-    misorientsPtr->initializeWithValue(0.0); // Initialize everything to Zeros
+    misorientsPtr->initializeWithValue(false); // Initialize everything to Zeros
 
     while (newxshift != oldxshift || newyshift != oldyshift)
     {
@@ -305,8 +305,8 @@ void AlignSectionsMisorientation::find_shifts(QVector<int>& xshifts, QVector<int
           xIdx = k + oldxshift + halfDim0;
           yIdx = j + oldyshift + halfDim1;
           idx = (dims[0] * yIdx) + xIdx;
-          if(misorients[idx] == 0 && abs(k + oldxshift) < halfDim0
-              && (j + oldyshift) < halfDim1)
+          if(misorients[idx] == false && abs(k + oldxshift) < halfDim0
+              && abs(j + oldyshift) < halfDim1)
           {
             for (DimType l = 0; l < dims[1]; l = l + 4)
             {
@@ -349,7 +349,7 @@ void AlignSectionsMisorientation::find_shifts(QVector<int>& xshifts, QVector<int
             xIdx = k + oldxshift + int(halfDim0);
             yIdx = j + oldyshift + int(halfDim1);
             idx = (dims[0] * yIdx) + xIdx;
-            misorients[idx] = disorientation;
+            misorients[idx] = true;
             if(disorientation < mindisorientation || (disorientation == mindisorientation && ((abs(k + oldxshift) < abs(newxshift)) || (abs(j + oldyshift) < abs(newyshift)))))
             {
               newxshift = k + oldxshift;
