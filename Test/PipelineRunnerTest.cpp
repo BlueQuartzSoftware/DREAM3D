@@ -220,6 +220,7 @@ int main (int argc, char  *argv[])
   while (sourceLines.hasNext())
   {
     QString pipelineFile = sourceLines.next();
+	pipelineFile = pipelineFile.trimmed();
     if(pipelineFile.isEmpty()) { continue; }
     try {
       QFileInfo fi(pipelineFile);

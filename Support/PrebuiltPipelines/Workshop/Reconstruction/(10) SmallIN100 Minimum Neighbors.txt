@@ -6,7 +6,7 @@ Version=5.0.6650
 [0]
 Filter_Name=DataContainerReader
 Filter_Human_Label=Read DREAM3D Data File
-InputFile=/Users/Shared/Toolkits/DREAM3D_Data/Data/Output/SmallIN100Cleaned.dream3d
+InputFile=Data/Output/SmallIN100Cleaned.dream3d
 OverwriteExistingDataContainers=0
 DataContainerArrayProxy\size=24
 DataContainerArrayProxy\1\Path=VolumeDataContainer|CellData|Confidence Index
