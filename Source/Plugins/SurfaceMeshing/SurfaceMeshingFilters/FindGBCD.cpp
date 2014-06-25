@@ -105,7 +105,7 @@ class CalculateGBCDImpl
     {
 
       // We want to work with the raw pointers for speed so get those pointers.
-      float* m_GBCDdeltas = m_GbcdLimitsArray->getPointer(0);
+      float* m_GBCDdeltas = m_GbcdDeltasArray->getPointer(0);
       float* m_GBCDlimits = m_GbcdLimitsArray->getPointer(0);
       int* m_GBCDsizes = m_GbcdSizesArray->getPointer(0);
       int32_t* m_Bins = m_GbcdBinsArray->getPointer(0);
