@@ -40,7 +40,7 @@ Origin\1\x=0
 Origin\2\y=0
 Origin\3\z=0
 InputStatsArrayPath=StatsGeneratorDataContainer|CellEnsembleData|Statistics
-InputPhaseTypesArrayPath=StatsGeneratorDataContainer|CellEnsembleData|Statistics
+InputPhaseTypesArrayPath=StatsGeneratorDataContainer|CellEnsembleData|PhaseTypes
 
 [2]
 Filter_Name=EstablishShapeTypes
