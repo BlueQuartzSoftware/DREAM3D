@@ -52,10 +52,6 @@
 #include "DREAM3DLib/OrientationOps/OrientationOps.h"
 
 
-//const static float m_piOver2 = static_cast<float>(M_PI/2.0);
-//const static float m_pi = static_cast<float>(M_PI);
-//const static float m_pi2 = static_cast<float>(2.0*M_PI);
-
 /**
  * @brief The CalculateAreasImpl class
  */
@@ -67,36 +63,56 @@ class CalculateGBCDImpl
     double* m_Normals;
     int32_t* m_Phases;
     float* m_Eulers;
-    int32_t* m_Bins;
-    bool* m_HemiCheck;
-    float* m_GBCDdeltas;
-    int* m_GBCDsizes;
-    float* m_GBCDlimits;
+
+    FloatArrayType::Pointer m_GbcdDeltasArray;
+    FloatArrayType::Pointer m_GbcdLimitsArray;
+    Int32ArrayType::Pointer m_GbcdSizesArray;
+    Int32ArrayType::Pointer m_GbcdBinsArray;
+    BoolArrayType::Pointer  m_GbcdHemiCheckArray;
+
     unsigned int* m_CrystalStructures;
     QVector<OrientationOps::Pointer> m_OrientationOps;
 
   public:
-    CalculateGBCDImpl(size_t i, size_t numMisoReps, int32_t* Labels, double* Normals, float* Eulers, int32_t* Phases, unsigned int* CrystalStructures,
-                      int32_t* Bins, bool* HemiCheck, float* GBCDdeltas, int* GBCDsizes, float* GBCDlimits) :
+    CalculateGBCDImpl(size_t i, size_t numMisoReps, int32_t* Labels, double* Normals, float* Eulers,
+                      int32_t* Phases, unsigned int* CrystalStructures,
+                      Int32ArrayType::Pointer Bins, BoolArrayType::Pointer HemiCheck,
+                      FloatArrayType::Pointer GBCDdeltas, Int32ArrayType::Pointer  GBCDsizes,
+                      FloatArrayType::Pointer GBCDlimits) :
       startOffset(i),
       numEntriesPerTri(numMisoReps),
       m_Labels(Labels),
       m_Normals(Normals),
       m_Phases(Phases),
       m_Eulers(Eulers),
-      m_Bins(Bins),
-      m_HemiCheck(HemiCheck),
-      m_GBCDdeltas(GBCDdeltas),
-      m_GBCDsizes(GBCDsizes),
-      m_GBCDlimits(GBCDlimits),
+      m_GbcdDeltasArray(GBCDdeltas),
+      m_GbcdLimitsArray(GBCDlimits),
+      m_GbcdSizesArray(GBCDsizes),
+      m_GbcdBinsArray(Bins),
+      m_GbcdHemiCheckArray(HemiCheck),
       m_CrystalStructures(CrystalStructures)
     {
       m_OrientationOps = OrientationOps::getOrientationOpsVector();
     }
     virtual ~CalculateGBCDImpl() {}
 
+    /**
+     * @brief generate
+     * @param start
+     * @param end
+     */
     void generate(size_t start, size_t end) const
     {
+
+      // We want to work with the raw pointers for speed so get those pointers.
+      float* m_GBCDdeltas = m_GbcdLimitsArray->getPointer(0);
+      float* m_GBCDlimits = m_GbcdLimitsArray->getPointer(0);
+      int* m_GBCDsizes = m_GbcdSizesArray->getPointer(0);
+      int32_t* m_Bins = m_GbcdBinsArray->getPointer(0);
+      bool* m_HemiCheck = m_GbcdHemiCheckArray->getPointer(0);
+
+
+
       int j;//, j4;
       int k;//, k4;
       int m;
@@ -315,7 +331,13 @@ FindGBCD::FindGBCD() :
   m_FeaturePhases(NULL),
   m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
   m_CrystalStructures(NULL),
-  m_GBCD(NULL)
+  m_GBCD(NULL),
+  m_GbcdDeltas(NULL),
+  m_GbcdSizes(NULL),
+  m_GbcdLimits(NULL),
+  m_GbcdBins(NULL),
+  m_HemiCheck(NULL)
+
 {
   setupFilterParameters();
 }
@@ -372,15 +394,15 @@ int FindGBCD::writeFilterParameters(AbstractFilterParametersWriter* writer, int 
 {
   writer->openFilterGroup(this, index);
   DREAM3D_FILTER_WRITE_PARAMETER(FaceEnsembleAttributeMatrixName)
-  DREAM3D_FILTER_WRITE_PARAMETER(GBCDArrayName)
-  DREAM3D_FILTER_WRITE_PARAMETER(CrystalStructuresArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(FeaturePhasesArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(FeatureEulerAnglesArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(SurfaceMeshFaceAreasArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(SurfaceMeshFaceNormalsArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(SurfaceMeshFaceLabelsArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(GBCDRes)
-  writer->closeFilterGroup();
+      DREAM3D_FILTER_WRITE_PARAMETER(GBCDArrayName)
+      DREAM3D_FILTER_WRITE_PARAMETER(CrystalStructuresArrayPath)
+      DREAM3D_FILTER_WRITE_PARAMETER(FeaturePhasesArrayPath)
+      DREAM3D_FILTER_WRITE_PARAMETER(FeatureEulerAnglesArrayPath)
+      DREAM3D_FILTER_WRITE_PARAMETER(SurfaceMeshFaceAreasArrayPath)
+      DREAM3D_FILTER_WRITE_PARAMETER(SurfaceMeshFaceNormalsArrayPath)
+      DREAM3D_FILTER_WRITE_PARAMETER(SurfaceMeshFaceLabelsArrayPath)
+      DREAM3D_FILTER_WRITE_PARAMETER(GBCDRes)
+      writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
 
@@ -429,11 +451,11 @@ void FindGBCD::dataCheckSurfaceMesh()
     //call the sizeGBCD function to get the GBCD ranges, dimensions, etc.  Note that the input parameters do not affect the size and can be dummy values here;
     sizeGBCD(0, 0);
     dims.resize(6);
-    dims[0] = m_GBCDsizes[0];
-    dims[1] = m_GBCDsizes[1];
-    dims[2] = m_GBCDsizes[2];
-    dims[3] = m_GBCDsizes[3];
-    dims[4] = m_GBCDsizes[4];
+    dims[0] = m_GbcdSizes[0];
+    dims[1] = m_GbcdSizes[1];
+    dims[2] = m_GbcdSizes[2];
+    dims[3] = m_GbcdSizes[3];
+    dims[4] = m_GbcdSizes[4];
     dims[5] = 2;
 
     tempPath.update(m_SurfaceMeshFaceLabelsArrayPath.getDataContainerName(), getFaceEnsembleAttributeMatrixName(), getGBCDArrayName() );
@@ -494,7 +516,8 @@ void FindGBCD::execute()
   dataCheckSurfaceMesh();
   if(getErrorCondition() < 0) { return; }
 
-  notifyStatusMessage(getHumanLabel(), "Starting");
+  QString ss = QObject::tr("Starting GBCD Calculation");
+  notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
 
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
   tbb::task_scheduler_init init;
@@ -514,14 +537,13 @@ void FindGBCD::execute()
   uint64_t startMillis = millis;
   uint64_t estimatedTime = 0;
   float timeDiff = 0.0f;
-  millis =  QDateTime::currentMSecsSinceEpoch();
-  startMillis = millis;
+  startMillis =  QDateTime::currentMSecsSinceEpoch();
   int lastIteration = 0;
   int numIterationsPerTime = 0;
   int hemisphere = 0;
 
   double totalFaceArea = 0.0;
-  QString ss = QObject::tr("Calculating GBCD: 0/%1 Completed").arg(totalFaces);
+  ss = QObject::tr("Calculating GBCD: 0/%1 Completed").arg(totalFaces);
   for(size_t i = 0; i < totalFaces; i = i + faceChunkSize)
   {
     if(getCancel() == true) { return; }
@@ -529,18 +551,18 @@ void FindGBCD::execute()
     {
       faceChunkSize = totalFaces - i;
     }
-    gbcdBinsArray->initializeWithValue(-1);
+    m_GbcdBinsArray->initializeWithValue(-1);
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
     if (doParallel == true)
     {
       tbb::parallel_for(tbb::blocked_range<size_t>(i, i + faceChunkSize),
-                        CalculateGBCDImpl(i, numMisoReps, m_SurfaceMeshFaceLabels, m_SurfaceMeshFaceNormals, m_FeatureEulerAngles, m_FeaturePhases, m_CrystalStructures, m_Bins, m_HemiCheck, m_GBCDdeltas, m_GBCDsizes, m_GBCDlimits), tbb::auto_partitioner());
+                        CalculateGBCDImpl(i, numMisoReps, m_SurfaceMeshFaceLabels, m_SurfaceMeshFaceNormals, m_FeatureEulerAngles, m_FeaturePhases, m_CrystalStructures, m_GbcdBinsArray, m_GbcdHemiCheckArray, m_GbcdDeltasArray, m_GbcdSizesArray, m_GbcdLimitsArray), tbb::auto_partitioner());
 
     }
     else
 #endif
     {
-      CalculateGBCDImpl serial(i, numMisoReps, m_SurfaceMeshFaceLabels, m_SurfaceMeshFaceNormals, m_FeatureEulerAngles, m_FeaturePhases, m_CrystalStructures, m_Bins, m_HemiCheck, m_GBCDdeltas, m_GBCDsizes, m_GBCDlimits);
+      CalculateGBCDImpl serial(i, numMisoReps, m_SurfaceMeshFaceLabels, m_SurfaceMeshFaceNormals, m_FeatureEulerAngles, m_FeaturePhases, m_CrystalStructures, m_GbcdBinsArray, m_GbcdHemiCheckArray, m_GbcdDeltasArray, m_GbcdSizesArray, m_GbcdLimitsArray);
       serial.generate(i, i + faceChunkSize);
     }
 
@@ -561,11 +583,11 @@ void FindGBCD::execute()
     {
       for(int k = 0; k < numMisoReps; k++)
       {
-        if(m_Bins[(j * numMisoReps) + (k)] >= 0)
+        if(m_GbcdBins[(j * numMisoReps) + (k)] >= 0)
         {
           hemisphere = 0;
           if(m_HemiCheck[(j * numMisoReps) + k] == false) { hemisphere = 1; }
-          m_GBCD[2 * m_Bins[(j * numMisoReps) + (k)] + hemisphere] += (m_SurfaceMeshFaceAreas[i + j]);
+          m_GBCD[2 * m_GbcdBins[(j * numMisoReps) + (k)] + hemisphere] += (m_SurfaceMeshFaceAreas[i + j]);
           totalFaceArea += (m_SurfaceMeshFaceAreas[i + j]);
         }
       }
@@ -575,7 +597,7 @@ void FindGBCD::execute()
   ss = QObject::tr("Starting GBCD Normalization");
   notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
 
-  int totalBins = m_GBCDsizes[0] * m_GBCDsizes[1] * m_GBCDsizes[2] * m_GBCDsizes[3] * m_GBCDsizes[4] * 2;
+  int totalBins = m_GbcdSizes[0] * m_GbcdSizes[1] * m_GbcdSizes[2] * m_GbcdSizes[3] * m_GbcdSizes[4] * 2;
   double MRDfactor = double(totalBins) / totalFaceArea;
   for(int i = 0; i < totalBins; i++)
   {
@@ -592,22 +614,23 @@ void FindGBCD::execute()
 // -----------------------------------------------------------------------------
 void FindGBCD::sizeGBCD(int faceChunkSize, int numMisoReps)
 {
-  gbcdDeltasArray = FloatArrayType::CreateArray(5, "GBCDDeltas");
-  gbcdDeltasArray->initializeWithZeros();
-  gbcdLimitsArray = FloatArrayType::CreateArray(10, "GBCDLimits");
-  gbcdLimitsArray->initializeWithZeros();
-  gbcdSizesArray = Int32ArrayType::CreateArray(5, "GBCDSizes");
-  gbcdSizesArray->initializeWithZeros();
+  m_GbcdDeltasArray = FloatArrayType::CreateArray(5, "GBCDDeltas");
+  m_GbcdDeltasArray->initializeWithZeros();
+  m_GbcdLimitsArray = FloatArrayType::CreateArray(10, "GBCDLimits");
+  m_GbcdLimitsArray->initializeWithZeros();
+  m_GbcdSizesArray = Int32ArrayType::CreateArray(5, "GBCDSizes");
+  m_GbcdSizesArray->initializeWithZeros();
   QVector<size_t> dims(1, numMisoReps);
-  gbcdBinsArray = Int32ArrayType::CreateArray(faceChunkSize, dims, "GBCDBins");
-  gbcdBinsArray->initializeWithZeros();
-  gbcdHemiCheckArray = BoolArrayType::CreateArray(faceChunkSize, dims, "GBCDHemiCheck");
-  gbcdHemiCheckArray->initializeWithValue(false);
-  m_GBCDdeltas = gbcdDeltasArray->getPointer(0);
-  m_GBCDsizes = gbcdSizesArray->getPointer(0);
-  m_GBCDlimits = gbcdLimitsArray->getPointer(0);
-  m_Bins = gbcdBinsArray->getPointer(0);
-  m_HemiCheck = gbcdHemiCheckArray->getPointer(0);
+  m_GbcdBinsArray = Int32ArrayType::CreateArray(faceChunkSize, dims, "GBCDBins");
+  m_GbcdBinsArray->initializeWithZeros();
+  m_GbcdHemiCheckArray = BoolArrayType::CreateArray(faceChunkSize, dims, "GBCDHemiCheck");
+  m_GbcdHemiCheckArray->initializeWithValue(false);
+
+  m_GbcdDeltas = m_GbcdDeltasArray->getPointer(0);
+  m_GbcdSizes = m_GbcdSizesArray->getPointer(0);
+  m_GbcdLimits = m_GbcdLimitsArray->getPointer(0);
+  m_GbcdBins = m_GbcdBinsArray->getPointer(0);
+  m_HemiCheck = m_GbcdHemiCheckArray->getPointer(0);
 
   //Original Ranges from Dave R.
   //m_GBCDlimits[0] = 0.0;
@@ -622,41 +645,41 @@ void FindGBCD::sizeGBCD(int faceChunkSize, int numMisoReps)
   //m_GBCDlimits[9] = cosf(0.0);
 
   //Greg's Ranges
-  m_GBCDlimits[0] = 0.0;
-  m_GBCDlimits[1] = 0.0;
-  m_GBCDlimits[2] = 0.0;
-  m_GBCDlimits[3] = 0.0;
-  m_GBCDlimits[4] = 0.0;
-  m_GBCDlimits[5] = DREAM3D::Constants::k_PiOver2;
-  m_GBCDlimits[6] = 1.0;
-  m_GBCDlimits[7] = DREAM3D::Constants::k_PiOver2;
-  m_GBCDlimits[8] = 1.0;
-  m_GBCDlimits[9] = DREAM3D::Constants::k_2Pi;
+  m_GbcdLimits[0] = 0.0;
+  m_GbcdLimits[1] = 0.0;
+  m_GbcdLimits[2] = 0.0;
+  m_GbcdLimits[3] = 0.0;
+  m_GbcdLimits[4] = 0.0;
+  m_GbcdLimits[5] = DREAM3D::Constants::k_PiOver2;
+  m_GbcdLimits[6] = 1.0;
+  m_GbcdLimits[7] = DREAM3D::Constants::k_PiOver2;
+  m_GbcdLimits[8] = 1.0;
+  m_GbcdLimits[9] = DREAM3D::Constants::k_2Pi;
 
   float binsize = m_GBCDRes * DREAM3D::Constants::k_PiOver180;
   float binsize2 = binsize * (2.0 / DREAM3D::Constants::k_Pi);
-  m_GBCDdeltas[0] = binsize;
-  m_GBCDdeltas[1] = binsize2;
-  m_GBCDdeltas[2] = binsize;
-  m_GBCDdeltas[3] = binsize2;
-  m_GBCDdeltas[4] = binsize;
+  m_GbcdDeltas[0] = binsize;
+  m_GbcdDeltas[1] = binsize2;
+  m_GbcdDeltas[2] = binsize;
+  m_GbcdDeltas[3] = binsize2;
+  m_GbcdDeltas[4] = binsize;
 
-  m_GBCDsizes[0] = int(0.5 + (m_GBCDlimits[5] - m_GBCDlimits[0]) / m_GBCDdeltas[0]);
-  m_GBCDsizes[1] = int(0.5 + (m_GBCDlimits[6] - m_GBCDlimits[1]) / m_GBCDdeltas[1]);
-  m_GBCDsizes[2] = int(0.5 + (m_GBCDlimits[7] - m_GBCDlimits[2]) / m_GBCDdeltas[2]);
-  m_GBCDsizes[3] = int(0.5 + (m_GBCDlimits[8] - m_GBCDlimits[3]) / m_GBCDdeltas[3]);
-  m_GBCDsizes[4] = int(0.5 + (m_GBCDlimits[9] - m_GBCDlimits[4]) / m_GBCDdeltas[4]);
+  m_GbcdSizes[0] = int(0.5 + (m_GbcdLimits[5] - m_GbcdLimits[0]) / m_GbcdDeltas[0]);
+  m_GbcdSizes[1] = int(0.5 + (m_GbcdLimits[6] - m_GbcdLimits[1]) / m_GbcdDeltas[1]);
+  m_GbcdSizes[2] = int(0.5 + (m_GbcdLimits[7] - m_GbcdLimits[2]) / m_GbcdDeltas[2]);
+  m_GbcdSizes[3] = int(0.5 + (m_GbcdLimits[8] - m_GbcdLimits[3]) / m_GbcdDeltas[3]);
+  m_GbcdSizes[4] = int(0.5 + (m_GbcdLimits[9] - m_GbcdLimits[4]) / m_GbcdDeltas[4]);
 
   //reset the 3rd and 4th dimensions using the square grid approach
-  float totalNormalBins = m_GBCDsizes[3] * m_GBCDsizes[4];
-  m_GBCDsizes[3] = int(sqrt(totalNormalBins) + 0.5);
-  m_GBCDsizes[4] = int(sqrt(totalNormalBins) + 0.5);
-  m_GBCDlimits[3] = -sqrt(DREAM3D::Constants::k_PiOver2);
-  m_GBCDlimits[4] = -sqrt(DREAM3D::Constants::k_PiOver2);
-  m_GBCDlimits[8] = sqrt(DREAM3D::Constants::k_PiOver2);
-  m_GBCDlimits[9] = sqrt(DREAM3D::Constants::k_PiOver2);
-  m_GBCDdeltas[3] = (m_GBCDlimits[8] - m_GBCDlimits[3]) / float(m_GBCDsizes[3]);
-  m_GBCDdeltas[4] = (m_GBCDlimits[9] - m_GBCDlimits[4]) / float(m_GBCDsizes[4]);
+  float totalNormalBins = m_GbcdSizes[3] * m_GbcdSizes[4];
+  m_GbcdSizes[3] = int(sqrt(totalNormalBins) + 0.5);
+  m_GbcdSizes[4] = int(sqrt(totalNormalBins) + 0.5);
+  m_GbcdLimits[3] = -sqrt(DREAM3D::Constants::k_PiOver2);
+  m_GbcdLimits[4] = -sqrt(DREAM3D::Constants::k_PiOver2);
+  m_GbcdLimits[8] = sqrt(DREAM3D::Constants::k_PiOver2);
+  m_GbcdLimits[9] = sqrt(DREAM3D::Constants::k_PiOver2);
+  m_GbcdDeltas[3] = (m_GbcdLimits[8] - m_GbcdLimits[3]) / float(m_GbcdSizes[3]);
+  m_GbcdDeltas[4] = (m_GbcdLimits[9] - m_GbcdLimits[4]) / float(m_GbcdSizes[4]);
 }
 // -----------------------------------------------------------------------------
 //

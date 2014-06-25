@@ -176,15 +176,16 @@ class FindGBCD : public SurfaceMeshFilter
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(unsigned int, CrystalStructures)
     DEFINE_CREATED_DATAARRAY_VARIABLE(double, GBCD)
 
-    FloatArrayType::Pointer gbcdDeltasArray;
-    FloatArrayType::Pointer gbcdLimitsArray;
-    Int32ArrayType::Pointer gbcdSizesArray;
-    Int32ArrayType::Pointer gbcdBinsArray;
-    BoolArrayType::Pointer gbcdHemiCheckArray;
-    float* m_GBCDdeltas;
-    int32_t* m_GBCDsizes;
-    float* m_GBCDlimits;
-    int32_t* m_Bins;
+    FloatArrayType::Pointer m_GbcdDeltasArray;
+    Int32ArrayType::Pointer m_GbcdSizesArray;
+    FloatArrayType::Pointer m_GbcdLimitsArray;
+    Int32ArrayType::Pointer m_GbcdBinsArray;
+    BoolArrayType::Pointer m_GbcdHemiCheckArray;
+
+    float* m_GbcdDeltas;
+    int32_t* m_GbcdSizes;
+    float* m_GbcdLimits;
+    int32_t* m_GbcdBins;
     bool* m_HemiCheck;
 
     FindGBCD(const FindGBCD&); // Copy Constructor Not Implemented
