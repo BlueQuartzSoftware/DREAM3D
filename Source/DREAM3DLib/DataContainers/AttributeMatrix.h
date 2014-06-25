@@ -82,10 +82,26 @@ class DREAM3DLib_EXPORT AttributeMatrix : public Observable
 
     virtual ~AttributeMatrix();
 
-
     /**
      * @brief New Creates an AttributeMatrix with the give name
-     * @param name The name of the AttributeMatrix
+     * @param tupleDims The dimensions of the Attribute matrix given in the order fastest moving to slowest moving (XYZ)
+     * @param name The name of the AttributeMatrix. Each AttributeMatrix should have a unique name.
+     * @param attrType The type of AttributeMatrix, one of
+     * @li const unsigned int Vertex = 0; //!<
+     * @li const unsigned int Edge = 1; //!<
+     * @li const unsigned int Face = 2; //!<
+     * @li const unsigned int Cell = 3; //!<
+     * @li const unsigned int VertexFeature = 4; //!<
+     * @li const unsigned int EdgeFeature = 5; //!<
+     * @li const unsigned int FaceFeature = 6; //!<
+     * @li const unsigned int CellFeature = 7; //!<
+     * @li const unsigned int VertexEnsemble = 8; //!<
+     * @li const unsigned int EdgeEnsemble = 9; //!<
+     * @li const unsigned int FaceEnsemble = 10; //!<
+     * @li const unsigned int CellEnsemble = 11; //!<
+     * @li const unsigned int Unknown = 999; //!<
+     *
+     * @see DREAM3DLib/Common/Constants.h file.
      * @return
      */
     static Pointer New(QVector<size_t> tupleDims, const QString& name, unsigned int attrType)

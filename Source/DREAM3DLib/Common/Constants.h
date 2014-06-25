@@ -454,6 +454,10 @@ namespace DREAM3D
     const DREAM3D_STRING Quadrilateral("Quadrilateral");
     const DREAM3D_STRING Tetrahedron("Tetrahedron");
     const DREAM3D_STRING Triangle("Triangle");
+    const DREAM3D_STRING Face("Face");
+    const DREAM3D_STRING Edge("Edge");
+    const DREAM3D_STRING Vertex("Vertex");
+    const DREAM3D_STRING Node("Node");
   }
 
   namespace PhaseType
@@ -585,6 +589,15 @@ namespace DREAM3D
   {
     const unsigned int PolyData = 0;
     const unsigned int RectilinearGrid = 1;
+  }
+
+  namespace XdmfCenterType
+  {
+    const DREAM3D_STRING Node("Node");
+    const DREAM3D_STRING Edge("Edge");
+    const DREAM3D_STRING Face("Face");
+    const DREAM3D_STRING Cell("Cell");
+    const DREAM3D_STRING Grid("Grid");
   }
 
   namespace ShapeType

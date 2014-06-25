@@ -120,17 +120,17 @@ int VolumeDataContainer::writeMetaInfo(hid_t dcGid, QString& hdfPath, int64_t vo
   err = H5Lite::writePointerDataset(dcGid, H5_DIMENSIONS, rank, dims, volDims);
   if (err < 0)
   {
-//    std::cout << "Error Writing H5_DIMENSIONS array for " << hdfPath << std::endl;
+    //    std::cout << "Error Writing H5_DIMENSIONS array for " << hdfPath << std::endl;
   }
   err = H5Lite::writePointerDataset(dcGid, H5_ORIGIN, rank, dims, origin);
   if (err < 0)
   {
-//    std::cout << "Error Writing H5_ORIGIN array for " << hdfPath << std::endl;
+    //    std::cout << "Error Writing H5_ORIGIN array for " << hdfPath << std::endl;
   }
   err = H5Lite::writePointerDataset(dcGid, H5_SPACING, rank, dims, spacing);
   if (err < 0)
   {
-//    std::cout << "Error Writing H5_SPACING array for " << hdfPath << std::endl;
+    //    std::cout << "Error Writing H5_SPACING array for " << hdfPath << std::endl;
   }
 
   err |= H5Gclose(dcGid);
@@ -155,8 +155,8 @@ int VolumeDataContainer::writeCellsToHDF5(hid_t dcGid)
     err = QH5Lite::writePointerDataset(dcGid, DREAM3D::StringConstants::CellsName, rank, dims, data);
     if (err < 0)
     {
-//      setErrorCondition(err);
-//      notifyErrorMessage(getHumanLabel(), "Error Writing Cell List to DREAM3D file", getErrorCondition());
+      //      setErrorCondition(err);
+      //      notifyErrorMessage(getHumanLabel(), "Error Writing Cell List to DREAM3D file", getErrorCondition());
     }
 
     //next write cell neighbors if they exist
@@ -301,20 +301,29 @@ int VolumeDataContainer::writeXdmf(QTextStream& out, QString hdfFileName)
   // Get all of our AttributeMatrices
   AttributeMatrixMap_t amMap = getAttributeMatrices();
   // Loop over each AttributeMatrix and write the meta data to the Xdmf file
+  QString xdmfCenter = "ATTRIBUTE_MATRIX_TYPE_UNKNOWN";
   for(QMap<QString, AttributeMatrix::Pointer>::iterator iter = amMap.begin(); iter != amMap.end(); ++iter)
   {
     AttributeMatrix::Pointer attrMat = iter.value();
     uint32_t amType = attrMat->getType();
-    if(amType == DREAM3D::AttributeMatrixType::Cell)
+    switch(amType)
     {
-      QString xdmfText = attrMat->generateXdmfText("Cell", getName(), hdfFileName, gridType);
-      out << xdmfText;
+    //FIXME: There are more AttributeMatrix Types that should be implemented
+      case DREAM3D::AttributeMatrixType::Vertex:
+        xdmfCenter = DREAM3D::XdmfCenterType::Node; break;
+      case DREAM3D::AttributeMatrixType::Edge:
+        xdmfCenter = DREAM3D::XdmfCenterType::Edge; break;
+      case DREAM3D::AttributeMatrixType::Face:
+        xdmfCenter = DREAM3D::XdmfCenterType::Face; break;
+      case DREAM3D::AttributeMatrixType::Cell:
+        xdmfCenter = DREAM3D::XdmfCenterType::Cell; break;
+      case DREAM3D::AttributeMatrixType::CellEnsemble:
+        xdmfCenter = DREAM3D::XdmfCenterType::Grid; break;
+      default:
+        break;
     }
-    if(amType == DREAM3D::AttributeMatrixType::Vertex)
-    {
-      QString xdmfText = attrMat->generateXdmfText("Node", getName(), hdfFileName, gridType);
-      out << xdmfText;
-    }
+    QString xdmfText = attrMat->generateXdmfText(xdmfCenter, getName(), hdfFileName, gridType);
+    out << xdmfText;
   }
 
   // Write the Grid Footer to the Xdmf file
@@ -448,8 +457,8 @@ int VolumeDataContainer::readCells(hid_t dcGid, bool preflight)
       err = QH5Lite::readPointerDataset(dcGid, DREAM3D::StringConstants::CellsName, data);
       if (err < 0)
       {
-//        setErrorCondition(err);
-//        notifyErrorMessage(getHumanLabel(), "Error Reading Cell List from DREAM3D file", getErrorCondition());
+        //        setErrorCondition(err);
+        //        notifyErrorMessage(getHumanLabel(), "Error Reading Cell List from DREAM3D file", getErrorCondition());
         return err;
       }
       setCells(cellsPtr);
@@ -463,8 +472,8 @@ int VolumeDataContainer::readCells(hid_t dcGid, bool preflight)
         err = QH5Lite::readVectorDataset(dcGid, DREAM3D::StringConstants::CellNeighbors, buffer);
         if(err < 0)
         {
-//          setErrorCondition(err);
-//          notifyErrorMessage(getHumanLabel(), "Error Reading Cell List from DREAM3D file", getErrorCondition());
+          //          setErrorCondition(err);
+          //          notifyErrorMessage(getHumanLabel(), "Error Reading Cell List from DREAM3D file", getErrorCondition());
           return err;
         }
         Int32DynamicListArray::Pointer cellNeighbors = Int32DynamicListArray::New();
@@ -480,8 +489,8 @@ int VolumeDataContainer::readCells(hid_t dcGid, bool preflight)
         err = QH5Lite::readVectorDataset(dcGid, DREAM3D::StringConstants::CellsContainingVert, buffer);
         if(err < 0)
         {
-//          setErrorCondition(err);
-//          notifyErrorMessage(getHumanLabel(), "Error Reading Cell List from DREAM3D file", getErrorCondition());
+          //          setErrorCondition(err);
+          //          notifyErrorMessage(getHumanLabel(), "Error Reading Cell List from DREAM3D file", getErrorCondition());
           return err;
         }
         Int32DynamicListArray::Pointer cellsContainingVert = Int32DynamicListArray::New();
@@ -514,27 +523,27 @@ int VolumeDataContainer::gatherMetaData(hid_t dcGid, int64_t volDims[3], float s
   int err = QH5Lite::readPointerDataset(dcGid, H5_DIMENSIONS, volDims);
   if(err < 0)
   {
-//    PipelineMessage em (getHumanLabel(), "DataContainerReader Error Reading the Dimensions", err);
-//    emit filterGeneratedMessage(em);
-//    setErrorCondition(-151);
+    //    PipelineMessage em (getHumanLabel(), "DataContainerReader Error Reading the Dimensions", err);
+    //    emit filterGeneratedMessage(em);
+    //    setErrorCondition(-151);
     return -1;
   }
 
   err = QH5Lite::readPointerDataset(dcGid, H5_SPACING, spacing);
   if(err < 0)
   {
-//    PipelineMessage em (getHumanLabel(), "DataContainerReader Error Reading the Spacing (Resolution)", err);
-//    emit filterGeneratedMessage(em);
-//    setErrorCondition(-152);
+    //    PipelineMessage em (getHumanLabel(), "DataContainerReader Error Reading the Spacing (Resolution)", err);
+    //    emit filterGeneratedMessage(em);
+    //    setErrorCondition(-152);
     return -1;
   }
 
   err = QH5Lite::readPointerDataset(dcGid, H5_ORIGIN, origin);
   if(err < 0)
   {
-//    PipelineMessage em (getHumanLabel(), "DataContainerReader Error Reading the Origin", err);
-//    emit filterGeneratedMessage(em);
-//    setErrorCondition(-153);
+    //    PipelineMessage em (getHumanLabel(), "DataContainerReader Error Reading the Origin", err);
+    //    emit filterGeneratedMessage(em);
+    //    setErrorCondition(-153);
     return -1;
   }
 
