@@ -157,9 +157,9 @@ int VertexDataContainer::writeXdmf(QTextStream& out, QString hdfFileName)
       case DREAM3D::AttributeMatrixType::Vertex:
         xdmfCenter = DREAM3D::XdmfCenterType::Node; break;
       case DREAM3D::AttributeMatrixType::Edge:
-        xdmfCenter = DREAM3D::XdmfCenterType::Edge; break;
+        xdmfCenter = DREAM3D::XdmfCenterType::Cell; break;
       case DREAM3D::AttributeMatrixType::Face:
-        xdmfCenter = DREAM3D::XdmfCenterType::Face; break;
+        xdmfCenter = DREAM3D::XdmfCenterType::Cell; break;
       case DREAM3D::AttributeMatrixType::Cell:
         xdmfCenter = DREAM3D::XdmfCenterType::Cell; break;
       case DREAM3D::AttributeMatrixType::CellEnsemble:
