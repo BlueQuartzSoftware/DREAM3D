@@ -47,6 +47,7 @@
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+#include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/DataContainers/VertexArray.h"
 #include "DREAM3DLib/DataContainers/DynamicListArray.hpp"
 
@@ -78,6 +79,7 @@ class CellArray
 
     DREAM3D_INSTANCE_PROPERTY(Int32DynamicListArray::Pointer, CellsContainingVert)
     DREAM3D_INSTANCE_PROPERTY(Int32DynamicListArray::Pointer, CellNeighbors)
+    DREAM3D_INSTANCE_PROPERTY(QString, CellType)
 
     // -----------------------------------------------------------------------------
     //
@@ -93,15 +95,17 @@ class CellArray
     // -----------------------------------------------------------------------------
     //
     // -----------------------------------------------------------------------------
-    static Pointer CreateArray(size_t numElements, const QString& name, VertexArray* verts)
+    static Pointer CreateArray(size_t numElements, const QString& name, VertexArray* verts, QString cellType)
     {
       if (name.isEmpty() == true)
       {
         return NullPointer();
       }
+      BOOST_ASSERT(cellType == DREAM3D::CellType::Quadrilateral || cellType == DREAM3D::CellType::Tetrahedron || cellType == DREAM3D::CellType::Triangle);
       CellArray* d = new CellArray();
       d->resizeArray(numElements);
       d->m_Verts = verts;
+      d->m_CellType = cellType;
       Pointer ptr(d);
       return ptr;
     }
@@ -325,6 +329,7 @@ class CellArray
 
   protected:
     CellArray() :
+      m_CellType(""),
       m_Verts(NULL)
     {
       m_Array = CellContainerType::CreateArray(0, "CellArray_Internal_Use_Only");

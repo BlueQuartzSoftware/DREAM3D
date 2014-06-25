@@ -310,6 +310,11 @@ int VolumeDataContainer::writeXdmf(QTextStream& out, QString hdfFileName)
       QString xdmfText = attrMat->generateXdmfText("Cell", getName(), hdfFileName, gridType);
       out << xdmfText;
     }
+    if(amType == DREAM3D::AttributeMatrixType::Vertex)
+    {
+      QString xdmfText = attrMat->generateXdmfText("Node", getName(), hdfFileName, gridType);
+      out << xdmfText;
+    }
   }
 
   // Write the Grid Footer to the Xdmf file
@@ -329,13 +334,13 @@ void VolumeDataContainer::writeXdmfPolyMeshStructureHeader(QTextStream& out, QSt
     return;
   }
   VertexArray::Pointer verts = getVertices();
-  if(NULL == verts.get())
+  if (NULL == verts.get())
   {
     return;
   }
 
   out << "  <Grid Name=\"" << getName() << "\">" << "\n";
-  out << "    <Topology TopologyType=\"Quadrilateral\" NumberOfElements=\"" << cells->getNumberOfTuples() << "\">" << "\n";
+  out << "    <Topology TopologyType=\"" << cells->getCellType() << "\" NumberOfElements=\"" << cells->getNumberOfTuples() << "\">" << "\n";
   out << "      <DataItem Format=\"HDF\" NumberType=\"Int\" Dimensions=\"" << cells->getNumberOfTuples() << " 4\">" << "\n";
   out << "        " << hdfFileName << ":/DataContainers/" << getName() << "/Cells" << "\n";
   out << "      </DataItem>" << "\n";
@@ -401,7 +406,7 @@ int VolumeDataContainer::readCells(hid_t dcGid, bool preflight)
     err = QH5Lite::getDatasetInfo(dcGid, DREAM3D::StringConstants::CellsName, dims, type_class, type_size);
     if (err >= 0)
     {
-      CellArray::Pointer triangles = CellArray::CreateArray(1, DREAM3D::CellData::SurfaceMeshCells, NULL);
+      CellArray::Pointer triangles = CellArray::CreateArray(1, DREAM3D::CellData::SurfaceMeshCells, NULL, DREAM3D::CellType::Triangle);
       setCells(triangles);
       err = QH5Lite::getDatasetInfo(dcGid, DREAM3D::StringConstants::CellNeighbors, dims, type_class, type_size);
       if(err >= 0)
@@ -436,7 +441,7 @@ int VolumeDataContainer::readCells(hid_t dcGid, bool preflight)
     if (err >= 0)
     {
       // Allocate the Cell_t structures
-      CellArray::Pointer cellsPtr = CellArray::CreateArray(dims[0], DREAM3D::CellData::SurfaceMeshCells, getVertices().get());
+      CellArray::Pointer cellsPtr = CellArray::CreateArray(dims[0], DREAM3D::CellData::SurfaceMeshCells, getVertices().get(), DREAM3D::CellType::Triangle);
       // We need this to properly use QH5Lite because the data is stored as int32_t in 5 columns
       int32_t* data = reinterpret_cast<int32_t*>(cellsPtr->getPointer(0));
       // Read the data from the file

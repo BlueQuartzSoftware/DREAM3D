@@ -449,6 +449,13 @@ namespace DREAM3D
     const DREAM3D_STRING Weight("Weight");
   }
 
+  namespace CellType
+  {
+    const DREAM3D_STRING Quadrilateral("Quadrilateral");
+    const DREAM3D_STRING Tetrahedron("Tetrahedron");
+    const DREAM3D_STRING Triangle("Triangle");
+  }
+
   namespace PhaseType
   {
     const unsigned int PrimaryPhase = 0;              //!<
