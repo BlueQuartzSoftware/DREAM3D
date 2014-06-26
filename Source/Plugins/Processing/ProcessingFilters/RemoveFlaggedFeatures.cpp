@@ -210,7 +210,7 @@ void RemoveFlaggedFeatures::assign_badpoints()
   int kstride, jstride;
   int featurename, feature;
   int neighbor;
-  QVector<int > n(m_NumCellsPtr.lock()->getNumberOfTuples(), 0);
+  QVector<int > n(m_FlaggedFeaturesPtr.lock()->getNumberOfTuples(), 0);
   while (counter != 0)
   {
     counter = 0;
