@@ -327,7 +327,7 @@ QVector<bool> MinNeighbors::merge_containedfeatures()
 
   QVector<bool> activeObjects(totalFeatures, true);
 
-  for (size_t i = 0; i < totalFeatures; i++)
+  for (size_t i = 1; i < totalFeatures; i++)
   {
     if(m_ApplyToSinglePhase == false)
     {
