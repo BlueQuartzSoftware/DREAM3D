@@ -215,15 +215,17 @@ DataContainer::Pointer SurfaceDataContainer::deepCopy()
 int SurfaceDataContainer::writeXdmf(QTextStream& out, QString hdfFileName)
 {
   herr_t err = 0;
+  uint8_t gridType = DREAM3D::XdmfGridType::PolyData;
 
   // Write the Mesh Structure to the XDMF file
   writeXdmfMeshStructureHeader(out, hdfFileName);
   // Get all of our AttributeMatrices
   AttributeMatrixMap_t amMap = getAttributeMatrices();
   // Loop over each AttributeMatrix and write the meta data to the Xdmf file
-  QString xdmfCenter = "ATTRIBUTE_MATRIX_TYPE_UNKNOWN";
+  QString xdmfCenter = "";
   for(QMap<QString, AttributeMatrix::Pointer>::iterator iter = amMap.begin(); iter != amMap.end(); ++iter)
   {
+    xdmfCenter = "";
     AttributeMatrix::Pointer attrMat = iter.value();
     uint32_t amType = attrMat->getType();
     switch(amType)
@@ -235,15 +237,14 @@ int SurfaceDataContainer::writeXdmf(QTextStream& out, QString hdfFileName)
         xdmfCenter = DREAM3D::XdmfCenterType::Cell; break;
       case DREAM3D::AttributeMatrixType::Face:
         xdmfCenter = DREAM3D::XdmfCenterType::Cell; break;
-      case DREAM3D::AttributeMatrixType::Cell:
-        xdmfCenter = DREAM3D::XdmfCenterType::Cell; break;
-      case DREAM3D::AttributeMatrixType::CellEnsemble:
-        xdmfCenter = DREAM3D::XdmfCenterType::Grid; break;
       default:
         break;
     }
-    QString xdmfText = attrMat->generateXdmfText(xdmfCenter, getName(), hdfFileName);
-    out << xdmfText;
+    if(xdmfCenter.isEmpty() == false)
+    {
+      QString xdmfText = attrMat->generateXdmfText(xdmfCenter, getName(), hdfFileName, gridType);
+      out << xdmfText;
+    }
   }
 
   // Write the Grid Footer to the Xdmf file
