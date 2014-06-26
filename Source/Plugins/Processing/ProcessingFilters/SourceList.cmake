@@ -26,6 +26,7 @@ set(_PublicFilters
   BadDataNeighborOrientationCheck
   ConvertEulerAngles
   RotateEulerRefFrame
+  RemoveFlaggedFeatures
   IdentifySample
   MultiThresholdObjects
 )
