@@ -233,7 +233,7 @@ void VisualizeGBCDGMT::execute()
 
   SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getGBCDArrayPath().getDataContainerName());
 
-  notifyStatusMessage(getHumanLabel(), "Starting");
+  notifyStatusMessage(getMessagePrefix(), getHumanLabel(), "Starting");
 
   // Make sure any directory path is also available as the user may have just typed
   // in a path without actually creating the full path

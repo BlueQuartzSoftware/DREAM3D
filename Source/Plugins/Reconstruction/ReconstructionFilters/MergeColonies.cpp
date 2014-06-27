@@ -345,7 +345,7 @@ void MergeColonies::execute()
   axisTolerance = m_AxisTolerance * DREAM3D::Constants::k_Pi / 180.0f;
 
   // Tell the user we are starting the filter
-  notifyStatusMessage(getHumanLabel(), "Starting");
+  notifyStatusMessage(getMessagePrefix(), getHumanLabel(), "Starting");
   GroupFeatures::execute();
 
   size_t totalFeatures = m_ActivePtr.lock()->getNumberOfTuples();

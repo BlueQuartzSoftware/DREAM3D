@@ -275,7 +275,7 @@ void GroupMicroTextureRegions::execute()
   avgCaxes[2] = 0.0f;
 
   // Tell the user we are starting the filter
-  notifyStatusMessage(getHumanLabel(), "Starting");
+  notifyStatusMessage(getMessagePrefix(), getHumanLabel(), "Starting");
   GroupFeatures::execute();
 
   size_t totalFeatures = m_ActivePtr.lock()->getNumberOfTuples();
