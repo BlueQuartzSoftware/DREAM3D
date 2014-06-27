@@ -206,7 +206,7 @@ Filter_Human_Label=Fill Bad Data
 FeatureIdsArrayPath=VolumeDataContainer|CellData|FeatureIds
 CellPhasesArrayPath=VolumeDataContainer|CellData|Phases
 MinAllowedDefectSize=1000
-StoreAsNewPhase=1
+StoreAsNewPhase=0
 
 [18]
 Filter_Name=ErodeDilateBadData

@@ -156,7 +156,7 @@ void RemoveFlaggedFeatures::execute()
   cellFeatureAttrMat->removeInactiveObjects(activeObjects, m_FeatureIdsPtr.lock());
 
   // If there is an error set this to something negative and also set a message
-  notifyStatusMessage(getHumanLabel(), "Minimum Size Filter Complete");
+  notifyStatusMessage(getHumanLabel(), "Remove Flagged Features Filter Complete");
 }
 
 // -----------------------------------------------------------------------------
@@ -364,5 +364,5 @@ const QString RemoveFlaggedFeatures::getGroupName()
 //
 // -----------------------------------------------------------------------------
 const QString RemoveFlaggedFeatures::getHumanLabel()
-{ return "Minimum Size Filter"; }
+{ return "Remove Flagged Features"; }
 

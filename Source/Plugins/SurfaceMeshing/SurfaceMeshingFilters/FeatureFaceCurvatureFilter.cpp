@@ -42,8 +42,6 @@
 #include <tbb/task.h>
 #endif
 
-#include "SurfaceMeshing/SurfaceMeshingFilters/TriangleCentroidFilter.h"
-#include "SurfaceMeshing/SurfaceMeshingFilters/TriangleNormalFilter.h"
 
 #include "CalculateTriangleGroupCurvatures.h"
 
