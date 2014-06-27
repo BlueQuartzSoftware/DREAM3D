@@ -89,6 +89,7 @@ void VisualizeGBCDGMT::setupFilterParameters()
     option->setWidgetType(FilterParameterWidgetType::ChoiceWidget);
     //option->setValueType("unsigned int");
     QVector<QString> choices;
+    // The choices here are IN ORDER of the enumerations from the EBSDLib. DO NOT CHANGE THE ORDER.
     choices.push_back("Hexagonal-High 6/mmm");
     choices.push_back("Cubic-High m-3m");
     //choices.push_back("Hexagonal-Low 6/m");
@@ -171,6 +172,15 @@ void VisualizeGBCDGMT::dataCheckSurfaceMesh()
   if (fi.suffix().compare("") == 0)
   {
     setOutputFile(getOutputFile().append(".dat"));
+  }
+
+  // Make sure the file name ends with _1 so the GMT scripts work correctly
+  QString fName = fi.baseName();
+  if(fName.endsWith("_1") == false)
+  {
+    fName = fName + "_1";
+    QString absPath = fi.absolutePath() + "/" + fName + ".dat";
+    setOutputFile(absPath);
   }
 
   // We MUST have Nodes

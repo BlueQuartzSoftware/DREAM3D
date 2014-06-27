@@ -297,8 +297,8 @@ class DREAM3DLib_EXPORT AttributeMatrix : public Observable
       {
         if (NULL != filter)
         {
-          QString ss = QObject::tr("Filter '%1' requires an array where the number of components is %2 but the currently available array"
-                                   " that was supplied has %3.").arg(filter->getHumanLabel()).arg(numComp).arg(attributeArray->getNumberOfComponents());
+          QString ss = QObject::tr("Filter '%1' is trying to use array '%2' where the number of components is %3 but the filter requires that array "
+                                   " to have %4.").arg(filter->getHumanLabel()).arg(attributeArray->getName()).arg(attributeArray->getNumberOfComponents()).arg(numComp);
           filter->setErrorCondition(-503);
           filter->notifyErrorMessage(filter->getHumanLabel(), ss, filter->getErrorCondition());
         }

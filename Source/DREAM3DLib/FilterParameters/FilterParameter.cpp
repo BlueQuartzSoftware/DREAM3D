@@ -264,7 +264,47 @@ FileSystemFilterParameter::Pointer FileSystemFilterParameter::New(const QString&
   return ptr;
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+VolumeInfoFilterParameter::VolumeInfoFilterParameter() :
+  FilterParameter(),
+  m_DimensionsProperty(""),
+  m_ResolutionProperty("")
+{}
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+VolumeInfoFilterParameter::~VolumeInfoFilterParameter()
+{}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+VolumeInfoFilterParameter::Pointer VolumeInfoFilterParameter::New(const QString& humanLabel, const QString& dimsProperty,
+    const QString& widgetType, const IntVec3_t &defaultValue,
+    bool advanced,
+    const QString& units,
+    const QString& resProperty)
+{
+  VolumeInfoFilterParameter::Pointer ptr = VolumeInfoFilterParameter::New();
+  ptr->setHumanLabel(humanLabel);
+  ptr->setPropertyName(dimsProperty);
+  ptr->setWidgetType(widgetType);
+  QVariant v;
+  v.setValue(defaultValue);
+  ptr->setDefaultValue(v);
+  ptr->setAdvanced(advanced);
+  ptr->setUnits(units);
+  ptr->setDimensionsProperty(dimsProperty);
+  ptr->setResolutionProperty(resProperty);
+  if(ptr->getWidgetType().compare(FilterParameterWidgetType::SeparatorWidget) == 0)
+  {
+    ptr->setReadOnly(true);
+  }
+  return ptr;
+}
 
 
 // -----------------------------------------------------------------------------

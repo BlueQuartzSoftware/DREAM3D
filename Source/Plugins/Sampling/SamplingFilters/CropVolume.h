@@ -70,6 +70,12 @@ class CropVolume : public AbstractFilter
     DREAM3D_FILTER_PARAMETER(DataArrayPath, CellFeatureAttributeMatrixPath)
     Q_PROPERTY(DataArrayPath CellFeatureAttributeMatrixPath READ getCellFeatureAttributeMatrixPath WRITE setCellFeatureAttributeMatrixPath)
 
+    IntVec3_t getCurrentVolumeDataContainerDimensions();
+    Q_PROPERTY(IntVec3_t CurrentVolumeDataContainerDimensions READ getCurrentVolumeDataContainerDimensions)
+    FloatVec3_t getCurrentVolumeDataContainerResolutions();
+    Q_PROPERTY(FloatVec3_t CurrentVolumeDataContainerResolutions READ getCurrentVolumeDataContainerResolutions)
+
+
     DREAM3D_FILTER_PARAMETER(int, XMin)
     Q_PROPERTY(int XMin READ getXMin WRITE setXMin)
     DREAM3D_FILTER_PARAMETER(int, YMin)
@@ -132,7 +138,6 @@ class CropVolume : public AbstractFilter
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, FeatureIds)
 
     void dataCheck();
-    void updateCellInstancePointers();
 
     CropVolume(const CropVolume&); // Copy Constructor Not Implemented
     void operator=(const CropVolume&); // Operator '=' Not Implemented

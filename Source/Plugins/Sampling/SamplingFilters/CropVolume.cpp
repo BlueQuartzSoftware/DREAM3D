@@ -81,6 +81,8 @@ void CropVolume::setupFilterParameters()
 {
   FilterParameterVector parameters;
   parameters.push_back(FilterParameter::New("Cell Attribute Matrix", "CellAttributeMatrixPath", FilterParameterWidgetType::AttributeMatrixSelectionWidget, getCellAttributeMatrixPath(), false));
+
+  parameters.push_back(VolumeInfoFilterParameter::New("Volume DataContainer Info", "CurrentVolumeDataContainerDimensions", FilterParameterWidgetType::VolumeDataContainerInfoWidget, getCurrentVolumeDataContainerDimensions(), false, "", "CurrentVolumeDataContainerResolutions"));
   parameters.push_back(FilterParameter::New("X Min (Voxels)", "XMin", FilterParameterWidgetType::IntWidget, getXMin(), false, "Column"));
   parameters.push_back(FilterParameter::New("Y Min (Voxels)", "YMin", FilterParameterWidgetType::IntWidget, getYMin(), false, "Row"));
   parameters.push_back(FilterParameter::New("Z Min (Voxels)", "ZMin", FilterParameterWidgetType::IntWidget, getZMin(), false, "Plane"));
@@ -128,31 +130,20 @@ int CropVolume::writeFilterParameters(AbstractFilterParametersWriter* writer, in
 {
   writer->openFilterGroup(this, index);
   DREAM3D_FILTER_WRITE_PARAMETER(NewDataContainerName)
-  DREAM3D_FILTER_WRITE_PARAMETER(CellAttributeMatrixPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(CellFeatureAttributeMatrixPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(FeatureIdsArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(XMin)
-  DREAM3D_FILTER_WRITE_PARAMETER(YMin)
-  DREAM3D_FILTER_WRITE_PARAMETER(ZMin)
-  DREAM3D_FILTER_WRITE_PARAMETER(XMax)
-  DREAM3D_FILTER_WRITE_PARAMETER(YMax)
-  DREAM3D_FILTER_WRITE_PARAMETER(ZMax)
-  DREAM3D_FILTER_WRITE_PARAMETER(RenumberFeatures)
-  DREAM3D_FILTER_WRITE_PARAMETER(SaveAsNewDataContainer)
-  DREAM3D_FILTER_WRITE_PARAMETER(UpdateOrigin)
-  writer->closeFilterGroup();
+      DREAM3D_FILTER_WRITE_PARAMETER(CellAttributeMatrixPath)
+      DREAM3D_FILTER_WRITE_PARAMETER(CellFeatureAttributeMatrixPath)
+      DREAM3D_FILTER_WRITE_PARAMETER(FeatureIdsArrayPath)
+      DREAM3D_FILTER_WRITE_PARAMETER(XMin)
+      DREAM3D_FILTER_WRITE_PARAMETER(YMin)
+      DREAM3D_FILTER_WRITE_PARAMETER(ZMin)
+      DREAM3D_FILTER_WRITE_PARAMETER(XMax)
+      DREAM3D_FILTER_WRITE_PARAMETER(YMax)
+      DREAM3D_FILTER_WRITE_PARAMETER(ZMax)
+      DREAM3D_FILTER_WRITE_PARAMETER(RenumberFeatures)
+      DREAM3D_FILTER_WRITE_PARAMETER(SaveAsNewDataContainer)
+      DREAM3D_FILTER_WRITE_PARAMETER(UpdateOrigin)
+      writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void CropVolume::updateCellInstancePointers()
-{
-  setErrorCondition(0);
-
-  if( NULL != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
-  { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
 
 // -----------------------------------------------------------------------------
@@ -160,24 +151,130 @@ void CropVolume::updateCellInstancePointers()
 // -----------------------------------------------------------------------------
 void CropVolume::dataCheck()
 {
-  setErrorCondition(0);
+  if(getErrorCondition() < 0) { return; }
 
-  VolumeDataContainer* m;
-  if(m_SaveAsNewDataContainer == false) { m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getCellAttributeMatrixPath().getDataContainerName()); }
-  else
+  VolumeDataContainer* m = NULL;
+  if(m_SaveAsNewDataContainer == false) { m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getCellAttributeMatrixPath().getDataContainerName()); }
+  else { m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getNewDataContainerName()); }
+
+  if(NULL == m)
   {
-    getDataContainerArray()->duplicateDataContainer(getCellAttributeMatrixPath().getDataContainerName(), getNewDataContainerName());
-    m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getNewDataContainerName());
+    QString ss = QObject::tr("The DataContainer was NULL").arg(getXMax()).arg(getXMin());
+    setErrorCondition(-5549);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    return;
   }
-  if(getErrorCondition() < 0 || NULL == m) { return; }
+  if (getXMax() < getXMin())
+  {
+    QString ss = QObject::tr("X Max (%1) less than X Min (%2)").arg(getXMax()).arg(getXMin());
+    notifyErrorMessage(getHumanLabel(), ss, -5550);
+    setErrorCondition(-5550);
+  }
+  if (getYMax() < getYMin())
+  {
+    QString ss = QObject::tr("Y Max (%1) less than Y Min (%2)").arg(getYMax()).arg(getYMin());
+    notifyErrorMessage(getHumanLabel(), ss, -5551);
+    setErrorCondition(-5551);
+  }
+  if (getZMax() < getZMin())
+  {
+    QString ss = QObject::tr("Z Max (%1) less than Z Min (%2)").arg(getZMax()).arg(getZMin());
+    notifyErrorMessage(getHumanLabel(), ss, -5552);
+    setErrorCondition(-5552);
+  }
+  if (getXMin() < 0)
+  {
+    QString ss = QObject::tr("X Min (%1) less than 0").arg(getXMin());
+    notifyErrorMessage(getHumanLabel(), ss, -5553);
+    setErrorCondition(-5553);
+  }
+  if (getYMin() < 0)
+  {
+    QString ss = QObject::tr("Y Min (%1) less than 0").arg(getYMin());
+    notifyErrorMessage(getHumanLabel(), ss, -5554);
+    setErrorCondition(-5554);
+  }
+  if (getZMin() < 0)
+  {
+    QString ss = QObject::tr("Z Min (%1) less than 0").arg(getZMin());
+    notifyErrorMessage(getHumanLabel(), ss, -5555);
+    setErrorCondition(-5555);
+  }
+  if (getXMax() > (static_cast<int64_t>(m->getXPoints()) - 1))
+  {
+    QString ss = QObject::tr("The X Max you entered of %1 is greater than your Max X Point of %2").arg(getXMax()).arg(static_cast<int64_t>(m->getXPoints()) - 1);
+    notifyErrorMessage(getHumanLabel(), ss, -5556);
+    setErrorCondition(-5556);
+  }
+  if (getYMax() > (static_cast<int64_t>(m->getYPoints()) - 1))
+  {
+    QString ss = QObject::tr("The Y Max you entered of %1 is greater than your Max Y Point of %2").arg(getYMax()).arg(static_cast<int64_t>(m->getYPoints()) - 1);
+    notifyErrorMessage(getHumanLabel(), ss, -5557);
+    setErrorCondition(-5557);
+  }
+  if (getZMax() > (static_cast<int64_t>(m->getZPoints()) - 1))
+  {
+    QString ss = QObject::tr("The Z Max you entered of %1) greater than your Max Z Point of %2").arg(getZMax()).arg(static_cast<int64_t>(m->getZPoints()) - 1);
+    notifyErrorMessage(getHumanLabel(), ss, -5558);
+    setErrorCondition(-5558);
+  }
 
-  if (m_RenumberFeatures == true)
+  // If any of the sanity checks fail above then we should NOT attempt to go any further.
+  if (getErrorCondition() < 0)
+  {
+    return;
+  }
+
+
+  QVector<size_t> tDims(3, 0);
+  if (getXMax() - getXMin() < 0) { setXMax(getXMin() + 1); }
+  if (getYMax() - getYMin() < 0) { setYMax(getYMin() + 1); }
+  if (getZMax() - getZMin() < 0) { setZMax(getZMin() + 1); }
+  tDims[0] = (getXMax() - getXMin()) + 1;
+  tDims[1] = (getYMax() - getYMin()) + 1;
+  tDims[2] = (getZMax() - getZMin()) + 1;
+
+
+  size_t numElements = tDims[0] * tDims[1] * tDims[2];
+
+  QString cellAttrName = getCellAttributeMatrixPath().getAttributeMatrixName();
+  // Remove the current AttributeMatrix
+  AttributeMatrix::Pointer cellAttrMat_Previous = m->removeAttributeMatrix(cellAttrName);
+
+  // Now create a new one in its place with the new dimensions.
+  AttributeMatrix::Pointer cellAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, cellAttrName, tDims, DREAM3D::AttributeMatrixType::Cell);
+  if(getErrorCondition() < 0) { return; }
+
+  QList<QString> voxelArrayNames = cellAttrMat_Previous->getAttributeArrayNameList();
+
+  for (QList<QString>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
+  {
+    QString name = *iter;
+    IDataArray::Pointer p = cellAttrMat_Previous->getAttributeArray(*iter);
+    if(NULL != p.get() )
+    {
+      IDataArray::Pointer newArray = p->createNewArray(numElements, p->getComponentDimensions(), p->getName(), false);
+      cellAttrMat->addAttributeArray(newArray->getName(), newArray);
+    }
+  }
+
+
+
+  if(m_RenumberFeatures == true)
   {
     QVector<size_t> dims(1, 1);
     m_FeatureIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeatureIdsArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
     if( NULL != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
     { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+
+    AttributeMatrix::Pointer cellFeatureAttrMat = m->getAttributeMatrix(getCellFeatureAttributeMatrixPath().getAttributeMatrixName());
+    QVector<bool> activeObjects(cellFeatureAttrMat->getNumTuples(), true);
+    cellFeatureAttrMat->removeInactiveObjects(activeObjects, m_FeatureIdsPtr.lock());
   }
+
+    //  m->getAttributeMatrix(getCellAttributeMatrixPath().getAttributeMatrixName())->setTupleDimensions(tDims);
+  // Set the dimensions of the Volume DataContainer
+  m->setDimensions(tDims[0], tDims[1], tDims[2]);
 }
 
 // -----------------------------------------------------------------------------
@@ -190,81 +287,6 @@ void CropVolume::preflight()
   emit updateFilterParameters(this);
   dataCheck();
   emit preflightExecuted();
-
-  if(getErrorCondition() < 0) { return; }
-
-  VolumeDataContainer* m;
-  if(m_SaveAsNewDataContainer == false) { m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getCellAttributeMatrixPath().getDataContainerName()); }
-  else { m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getNewDataContainerName()); }
-
-  if (getXMax() < getXMin())
-  {
-    QString ss = QObject::tr("X Max (%1) less than X Min (%2)").arg(getXMax()).arg(getXMin());
-    notifyErrorMessage(getHumanLabel(), ss, -5555);
-    setErrorCondition(-5555);
-  }
-  if (getYMax() < getYMin())
-  {
-    QString ss = QObject::tr("Y Max (%1) less than Y Min (%2)").arg(getYMax()).arg(getYMin());
-    notifyErrorMessage(getHumanLabel(), ss, -5555);
-    setErrorCondition(-5555);
-  }
-  if (getZMax() < getZMin())
-  {
-    QString ss = QObject::tr("Z Max (%1) less than Z Min (%2)").arg(getZMax()).arg(getZMin());
-    notifyErrorMessage(getHumanLabel(), ss, -5555);
-    setErrorCondition(-5555);
-  }
-  if (getXMin() < 0)
-  {
-    QString ss = QObject::tr("X Min (%1) less than 0").arg(getXMin());
-    notifyErrorMessage(getHumanLabel(), ss, -5555);
-    setErrorCondition(-5555);
-  }
-  if (getYMin() < 0)
-  {
-    QString ss = QObject::tr("Y Min (%1) less than 0").arg(getYMin());
-    notifyErrorMessage(getHumanLabel(), ss, -5555);
-    setErrorCondition(-5555);
-  }
-  if (getZMin() < 0)
-  {
-    QString ss = QObject::tr("Z Min (%1) less than 0").arg(getZMin());
-    notifyErrorMessage(getHumanLabel(), ss, -5555);
-    setErrorCondition(-5555);
-  }
-  if (getXMax() > (static_cast<int64_t>(m->getXPoints()) - 1))
-  {
-    QString ss = QObject::tr("The X Max you entered of %1 is greater than your Max X Point of %2").arg(getXMax()).arg(static_cast<int64_t>(m->getXPoints()) - 1);
-    notifyErrorMessage(getHumanLabel(), ss, -5555);
-    setErrorCondition(-5555);
-  }
-  if (getYMax() > (static_cast<int64_t>(m->getYPoints()) - 1))
-  {
-    QString ss = QObject::tr("The Y Max you entered of %1 is greater than your Max Y Point of %2").arg(getYMax()).arg(static_cast<int64_t>(m->getYPoints()) - 1);
-    notifyErrorMessage(getHumanLabel(), ss, -5555);
-    setErrorCondition(-5556);
-  }
-  if (getZMax() > (static_cast<int64_t>(m->getZPoints()) - 1))
-  {
-    QString ss = QObject::tr("The Z Max you entered of %1) greater than your Max Z Point of %2").arg(getZMax()).arg(static_cast<int64_t>(m->getZPoints()) - 1);
-    notifyErrorMessage(getHumanLabel(), ss, -5555);
-    setErrorCondition(-5557);
-  }
-
-  QVector<size_t> tDims(3, 0);
-  tDims[0] = (getXMax() - getXMin()) + 1;
-  tDims[1] = (getYMax() - getYMin()) + 1;
-  tDims[2] = (getZMax() - getZMin()) + 1;
-  m->getAttributeMatrix(getCellAttributeMatrixPath().getAttributeMatrixName())->setTupleDimensions(tDims);
-  m->setDimensions(tDims[0], tDims[1], tDims[2]);
-
-  if(m_RenumberFeatures == true)
-  {
-    AttributeMatrix::Pointer cellFeatureAttrMat = m->getAttributeMatrix(getCellFeatureAttributeMatrixPath().getAttributeMatrixName());
-    QVector<bool> activeObjects(cellFeatureAttrMat->getNumTuples(), true);
-    cellFeatureAttrMat->removeInactiveObjects(activeObjects, m_FeatureIdsPtr.lock());
-  }
   setInPreflight(false);
 }
 
@@ -275,10 +297,14 @@ void CropVolume::execute()
 {
   int err = 0;
   setErrorCondition(err);
-  dataCheck();
-  if(getErrorCondition() < 0) { return; }
 
-  VolumeDataContainer* m;
+  // Because this filter resizes the attribute matrix we are NOT going to call the dataCheck() function. This is an exception to the
+  // normal operating procedure of calling the dataCheck() function. Make sure you understand the code below and why we are doing this
+  // before copying ANY of this code or filter.
+  //dataCheck();
+  //if(getErrorCondition() < 0) { return; }
+
+  VolumeDataContainer* m = NULL;
   if(m_SaveAsNewDataContainer == false) { m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getCellAttributeMatrixPath().getDataContainerName()); }
   else { m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getNewDataContainerName()); }
 
@@ -368,7 +394,7 @@ void CropVolume::execute()
   tDims[0] = m_XP;
   tDims[1] = m_YP;
   tDims[2] = m_ZP;
-  cellAttrMat->setTupleDimensions(tDims);
+  cellAttrMat->setTupleDimensions(tDims); // THIS WILL CAUSE A RESIZE of all the underlying data arrays.
 
   // Feature Ids MUST already be renumbered.
   if (m_RenumberFeatures == true)
@@ -379,12 +405,20 @@ void CropVolume::execute()
     QVector<bool> activeObjects(totalFeatures, false);
     if (0 == totalFeatures)
     {
+      setErrorCondition(-600);
       notifyErrorMessage(getHumanLabel(), "The number of features is Zero and should be greater than Zero", -600);
       notifyStatusMessage(getHumanLabel(), "Completed");
       return;
     }
 
-    updateCellInstancePointers();
+    QVector<size_t> cDims(1, 1);
+    m_FeatureIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeatureIdsArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+    if( NULL != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+    { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+    if(getErrorCondition() < 0)
+    {
+      return;
+    }
 
     // Find the unique set of feature ids
     for (int64_t i = 0; i < totalPoints; ++i)
@@ -412,6 +446,49 @@ void CropVolume::execute()
   notifyStatusMessage(getHumanLabel(), "Completed");
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+IntVec3_t CropVolume::getCurrentVolumeDataContainerDimensions()
+{
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getCellAttributeMatrixPath().getDataContainerName());
+  IntVec3_t data;
+  if (NULL != m)
+  {
+    data.x = m->getXPoints();
+    data.y = m->getYPoints();
+    data.z = m->getZPoints();
+  }
+  else
+  {
+    data.x = 0;
+    data.y = 0;
+    data.z = 0;
+  }
+  return data;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+FloatVec3_t CropVolume::getCurrentVolumeDataContainerResolutions()
+{
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getCellAttributeMatrixPath().getDataContainerName());
+  FloatVec3_t data;
+  if (NULL != m)
+  {
+    data.x = m->getXRes();
+    data.y = m->getYRes();
+    data.z = m->getZRes();
+  }
+  else
+  {
+    data.x = 0;
+    data.y = 0;
+    data.z = 0;
+  }
+  return data;
+}
 
 // -----------------------------------------------------------------------------
 //
