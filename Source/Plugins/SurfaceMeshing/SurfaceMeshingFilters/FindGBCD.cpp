@@ -143,7 +143,7 @@ class CalculateGBCDImpl
         normal[0] = m_Normals[3 * i];
         normal[1] = m_Normals[3 * i + 1];
         normal[2] = m_Normals[3 * i + 2];
-        if(m_Phases[feature1] == m_Phases[feature2])
+        if(m_Phases[feature1] == m_Phases[feature2] && m_Phases[feature1] > 0)
         {
           TRIcounterShift = (TRIcounter * numEntriesPerTri);
           unsigned int cryst = m_CrystalStructures[m_Phases[feature1]];
