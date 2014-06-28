@@ -191,7 +191,7 @@ void ReverseTriangleWinding::execute()
   if(getErrorCondition() < 0) { return; }
 
   SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
-  notifyStatusMessage(getHumanLabel(), "Starting");
+  notifyStatusMessage(getMessagePrefix(), getHumanLabel(), "Starting");
 
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
   bool doParallel = true;

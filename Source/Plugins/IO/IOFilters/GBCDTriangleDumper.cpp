@@ -204,7 +204,7 @@ void GBCDTriangleDumper::execute()
   SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceMeshFaceLabelsArrayPath().getDataContainerName());
 
   setErrorCondition(0);
-  notifyStatusMessage(getHumanLabel(), "Starting");
+  notifyStatusMessage(getMessagePrefix(), getHumanLabel(), "Starting");
 
   FaceArray::Pointer trianglesPtr = sm->getFaces();
   size_t totalFaces = trianglesPtr->getNumberOfTuples();

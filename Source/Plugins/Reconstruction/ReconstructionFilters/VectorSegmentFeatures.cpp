@@ -213,7 +213,7 @@ void VectorSegmentFeatures::execute()
   int64_t totalPoints = m_FeatureIdsPtr.lock()->getNumberOfTuples();
 
   // Tell the user we are starting the filter
-  notifyStatusMessage(getHumanLabel(), "Starting");
+  notifyStatusMessage(getMessagePrefix(), getHumanLabel(), "Starting");
 
   //Convert user defined tolerance to radians.
   angleTolerance = m_AngleTolerance * DREAM3D::Constants::k_Pi / 180.0f;

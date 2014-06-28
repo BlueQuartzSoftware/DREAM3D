@@ -364,7 +364,7 @@ void GenerateFaceIPFColoring::execute()
 
 
   //SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(m_SurfaceMeshFaceLabelsArrayPath.getDataContainerName());
-  notifyStatusMessage(getHumanLabel(), "Starting");
+  notifyStatusMessage(getMessagePrefix(), getHumanLabel(), "Starting");
 
   // Run the data check to allocate the memory for the centroid array
   int64_t numTriangles = m_SurfaceMeshFaceLabelsPtr.lock()->getNumberOfTuples();

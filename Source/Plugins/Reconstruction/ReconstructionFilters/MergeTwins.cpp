@@ -247,7 +247,7 @@ void MergeTwins::execute()
   axisTolerance = m_AxisTolerance * DREAM3D::Constants::k_Pi / 180.0f;
 
   // Tell the user we are starting the filter
-  notifyStatusMessage(getHumanLabel(), "Starting");
+  notifyStatusMessage(getMessagePrefix(), getHumanLabel(), "Starting");
   m_FeatureParentIds[0] = 0; // set feature 0 to be parent 0
   GroupFeatures::execute();
 

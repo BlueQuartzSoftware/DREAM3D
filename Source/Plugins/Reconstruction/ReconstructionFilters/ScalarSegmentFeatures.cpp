@@ -298,7 +298,7 @@ void ScalarSegmentFeatures::execute()
   }
 
   // Tell the user we are starting the filter
-  notifyStatusMessage(getHumanLabel(), "Starting");
+  notifyStatusMessage(getMessagePrefix(), getHumanLabel(), "Starting");
 
   for(int64_t i = 0; i < totalPoints; i++)
   {
