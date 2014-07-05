@@ -11,11 +11,13 @@ The EBSD Data from multiple vendors is stored in a data file using the HDF5 file
 
 ### HDF5 Root Level Layout Specification ###
 
-| H5Ebsd Specification |   |  |
-|----------------------|---|--|
-| **Root Level Attributes** | _Name_ | _Type_  |  
-| / |  FileVersion  Current Value="5" |  H5T\_NATIVE\_INT32 |  
-| **Root Level Data sets** | **HDF5 Type** | **Value** |
+| Root Level Attributes | Type | Name/Comments/Default Value  |
+|----------|---------------|-----------|
+| FileVersion |  H5T\_NATIVE\_INT32   | Current Value="5"  |
+
+
+| Root Level Data sets | HDF5 Type | Name/Comments/Default Value |
+|----------|---------------|-----------|
 | Index | H5T\_NATIVE\_INT32 | List of all Slice index values |
 | EulerTransformationAngle | H5T\_NATIVE\_FLOAT | Degrees |
 | EulerTransformationAxis | H5T\_NATIVE\_FLOAT |  3x1 Array (Example 0,0,1)|
