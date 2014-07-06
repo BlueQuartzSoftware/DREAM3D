@@ -41,12 +41,12 @@
 #include <QtCore/QFileInfo>
 #include <QtCore/QDir>
 #include <QtGui/QApplication>
-#include <QtGui/QSplashScreen>
+
 #include <QtGui/QBitmap>
 #include <QtGui/QMessageBox>
 
 
-
+#include "DSplashScreen.h"
 
 #include "DREAM3DLib/Common/FilterManager.h"
 #include "DREAM3DLib/DREAM3DVersion.h"
@@ -101,7 +101,7 @@ bool BrandedInitializer::initialize(int argc, char* argv[])
 
   // Create and show the splash screen as the main window is being created.
   QPixmap pixmap(":/branded_splash.png");
-  this->Splash = new QSplashScreen(pixmap);
+  this->Splash = new DSplashScreen(pixmap);
   this->Splash->setMask(pixmap.createMaskFromColor(QColor(Qt::transparent)));
   this->Splash->show();
 
@@ -133,12 +133,14 @@ bool BrandedInitializer::initialize(int argc, char* argv[])
   // give GUI components time to update before the mainwindow is shown
   QApplication::instance()->processEvents();
   this->MainWindow->show();
-
-  QApplication::instance()->processEvents();
   if (show_splash)
   {
+    delay(1);
     this->Splash->finish(this->MainWindow);
   }
+  QApplication::instance()->processEvents();
+
+
   return true;
 }
 
@@ -233,6 +235,8 @@ void BrandedInitializer::loadPlugins()
   // file system and add each to the toolbar and menu
   foreach(QString path, pluginFilePaths)
   {
+
+    QApplication::instance()->processEvents();
     qDebug() << "Plugin Being Loaded:";
     qDebug() << "    File Extension: .plugin";
     qDebug() << "    Path: " << path;

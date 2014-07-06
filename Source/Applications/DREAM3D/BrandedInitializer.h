@@ -44,7 +44,7 @@
 
 
 
-class QSplashScreen;
+class DSplashScreen;
 class DREAM3D_UI;
 
 
@@ -61,7 +61,7 @@ class BrandedInitializer : public QObject
 
   private:
     bool show_splash;
-    QSplashScreen* Splash;
+    DSplashScreen* Splash;
     DREAM3D_UI*    MainWindow;
     QVector<DREAM3DPluginInterface::Pointer> m_LoadedPlugins;
 
