@@ -52,6 +52,8 @@
 #include "DREAM3DLib/DREAM3DVersion.h"
 #include "DREAM3DLib/Utilities/QMetaObjectUtilities.h"
 
+#include "DREAM3DWidgetsLib/FilterWidgetManager.h"
+
 #include "QtSupport/QRecentFileList.h"
 
 #include "DREAM3D_UI.h"
@@ -150,8 +152,6 @@ bool BrandedInitializer::initialize(int argc, char* argv[])
 // -----------------------------------------------------------------------------
 void BrandedInitializer::loadPlugins()
 {
-  FilterManager::Pointer fm = FilterManager::Instance();
-
   qDebug() << "DREAM3D_UI::loadPlugins" << "\n";
 
   //  foreach (QObject *plugin, QPluginLoader::staticInstances())
@@ -231,6 +231,9 @@ void BrandedInitializer::loadPlugins()
     }
   }
 
+  FilterManager::Pointer fm = FilterManager::Instance();
+  FilterWidgetManager::Pointer fwm = FilterWidgetManager::Instance();
+
   // Now that we have a sorted list of plugins, go ahead and load them all from the
   // file system and add each to the toolbar and menu
   foreach(QString path, pluginFilePaths)
@@ -254,7 +257,7 @@ void BrandedInitializer::loadPlugins()
         this->Splash->showMessage(msg);
         DREAM3DPluginInterface::Pointer ipPluginPtr(ipPlugin);
         m_LoadedPlugins.push_back(ipPluginPtr);
-        ipPlugin->registerFilterWidgets();
+        ipPlugin->registerFilterWidgets(fwm.get());
         ipPlugin->registerFilters(fm.get());
       }
     }

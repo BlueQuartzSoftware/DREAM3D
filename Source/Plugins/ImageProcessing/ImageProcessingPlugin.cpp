@@ -62,5 +62,5 @@ void ImageProcessingPlugin::readSettings(QSettings& prefs)
 
 #include "ImageProcessingFilters/RegisterKnownFilters.cpp"
 
-#include "FilterParameterWidgets/RegisterKnownFilterParameterWidgets.cpp"
+#include "ImageProcessing/FilterParameterWidgets/RegisterKnownFilterParameterWidgets.cpp"
 

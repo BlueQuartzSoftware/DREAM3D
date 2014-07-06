@@ -64,7 +64,7 @@ class ImageImportPlugin : public QObject, public DREAM3DPluginInterface
     /**
      * @brief Register all the filters with the FilterWidgetFactory
      */
-    virtual void registerFilterWidgets();
+    virtual void registerFilterWidgets(FilterWidgetManager* fwm);
 
     /**
      * @brief registerFilters

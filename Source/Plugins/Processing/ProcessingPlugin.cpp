@@ -90,6 +90,6 @@ void ProcessingPlugin::readSettings(QSettings& prefs)
 
 }
 
-//#include "SurfaceMeshingFilters/RegisterKnownFilterWidgets.cpp"
 #include "ProcessingFilters/RegisterKnownFilters.cpp"
+#include "Processing/FilterParameterWidgets/RegisterKnownFilterParameterWidgets.cpp"
 

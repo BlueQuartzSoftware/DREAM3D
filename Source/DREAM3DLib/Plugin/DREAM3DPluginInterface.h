@@ -82,6 +82,7 @@
   }
 
 class FilterManager;
+class FilterWidgetManager;
 
 /**
  * @class DREAM3DPluginInterface DREAM3DPluginInterface.h IPHelper/plugins/DREAM3DPluginInterface.h
@@ -154,7 +155,7 @@ class DREAM3DPluginInterface
     /**
      * @brief Register all the filters with the FilterWidgetFactory
      */
-    virtual void registerFilterWidgets() {}
+	virtual void registerFilterWidgets(FilterWidgetManager* fwm) = 0;
 
     /**
      * @brief registerFilters Registers all the filters for this plugin

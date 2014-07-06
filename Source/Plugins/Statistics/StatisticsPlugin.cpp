@@ -90,6 +90,6 @@ void StatisticsPlugin::readSettings(QSettings& prefs)
 
 }
 
-//#include "SurfaceMeshingFilters/RegisterKnownFilterWidgets.cpp"
-#include "StatisticsFilters/RegisterKnownFilters.cpp"
 
+#include "StatisticsFilters/RegisterKnownFilters.cpp"
+#include "Statistics/FilterParameterWidgets/RegisterKnownFilterParameterWidgets.cpp"

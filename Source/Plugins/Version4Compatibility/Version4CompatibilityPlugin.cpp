@@ -62,5 +62,5 @@ void Version4CompatibilityPlugin::readSettings(QSettings& prefs)
 
 #include "Version4CompatibilityFilters/RegisterKnownFilters.cpp"
 
-#include "FilterParameterWidgets/RegisterKnownFilterParameterWidgets.cpp"
+#include "Version4Compatibility/FilterParameterWidgets/RegisterKnownFilterParameterWidgets.cpp"
 
