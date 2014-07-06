@@ -87,7 +87,8 @@ void UnknownWidget::setupGui()
     }
     else
     {
-      label->setText(m_FilterParameter->getHumanLabel() );
+	  QString str = QObject::tr("%1: Unknown Filter ParameterWidgetType: %2.").arg(m_FilterParameter->getHumanLabel()).arg(m_FilterParameter->getWidgetType());
+      label->setText( str );
     }
 
   }

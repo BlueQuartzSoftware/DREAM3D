@@ -22,8 +22,8 @@ file(APPEND ${RegisterKnownFilterParameterWidgetsFile} "/* This file will be dir
 file(APPEND ${RegisterKnownFilterParameterWidgetsFile} "#include \"DREAM3DWidgetsLib/FilterWidgetManager.h\"\n")
 file(APPEND ${RegisterKnownFilterParameterWidgetsFile} "#include \"DREAM3DWidgetsLib/PipelineFilterWidgetFactory.hpp\"\n")
 file(APPEND ${RegisterKnownFilterParameterWidgetsFile} "#include \"${PLUGIN_NAME}/FilterParameterWidgets/FilterParameterWidgets.h\"\n\n")
-file(APPEND ${RegisterKnownFilterParameterWidgetsFile} "\nvoid ${PLUGIN_NAME}Plugin::registerFilterWidgets()\n{\n")
-file(APPEND ${RegisterKnownFilterParameterWidgetsFile} "  FilterWidgetManager::Pointer idManager = FilterWidgetManager::Instance();\n")
+file(APPEND ${RegisterKnownFilterParameterWidgetsFile} "\nvoid ${PLUGIN_NAME}Plugin::registerFilterWidgets(FilterWidgetManager* idManager)\n{\n")
+# file(APPEND ${RegisterKnownFilterParameterWidgetsFile} "  FilterWidgetManager::Pointer idManager = FilterWidgetManager::Instance();\n")
 
 
 # --------------------------------------------------------------------

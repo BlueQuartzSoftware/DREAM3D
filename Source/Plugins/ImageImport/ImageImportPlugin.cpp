@@ -93,5 +93,5 @@ void ImageImportPlugin::readSettings(QSettings& prefs)
 
 #include "ImageImportFilters/RegisterKnownFilters.cpp"
 
-#include "FilterParameterWidgets/RegisterKnownFilterParameterWidgets.cpp"
+#include "ImageImport/FilterParameterWidgets/RegisterKnownFilterParameterWidgets.cpp"
 

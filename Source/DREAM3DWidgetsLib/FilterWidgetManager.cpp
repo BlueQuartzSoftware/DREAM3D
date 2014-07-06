@@ -64,10 +64,11 @@ FilterWidgetManager::Pointer FilterWidgetManager::Instance()
 
   if (singleton.get() == NULL)
   {
-    //   qDebug() << "FilterWidgetManager::Instance singleton was NULL" << "\n";
+    qDebug() << "FilterWidgetManager::Instance singleton was NULL" << "\n";
     singleton.reset (new FilterWidgetManager() );
-    // qDebug() << "singleton.get(): " << singleton.get() << "\n";
+    
   }
+  qDebug() << "singleton.get(): " << singleton.get() << "\n";
   return singleton;
 }
 
@@ -123,7 +124,8 @@ QWidget* FilterWidgetManager::createWidget(FilterParameter* parameter, AbstractF
   }
 
   factory = m_Factories.value(FilterParameterWidgetType::UnknownWidget);
-  return factory->createWidget(parameter, filter, NULL);
+  QWidget* w = factory->createWidget(parameter, filter, NULL);
+  return w;
 }
 
 

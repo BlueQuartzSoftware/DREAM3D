@@ -157,8 +157,7 @@ add_custom_target(PrebuiltPipelinesCopy ALL
             COMMENT "Copying Prebuilt Pipelines into Binary Directory")
 set_target_properties(PrebuiltPipelinesCopy PROPERTIES FOLDER ZZ_COPY_FILES)
 
-# Make Sure this target is built so that the DREAM3D Application has access to
-# the HTML help files
+# Make Sure this target as part of the DREAM3D Build
 add_dependencies(DREAM3D PrebuiltPipelinesCopy)
 
 #- This installs all the help files. Note that we assume a flat directory structure

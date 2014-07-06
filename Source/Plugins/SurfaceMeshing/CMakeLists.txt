@@ -56,7 +56,8 @@ set(Project_SRCS "")
 
 # Add in our Filter classes
 include(${${PLUGIN_NAME}_SOURCE_DIR}/${PLUGIN_NAME}Filters/SourceList.cmake)
-
+# Add in our Plugin Specific FilterParameterWidgets
+include(${${PLUGIN_NAME}_SOURCE_DIR}/FilterParameterWidgets/SourceList.cmake)
 
 set(${PLUGIN_NAME}_Project_SRCS ${Project_SRCS})
 
@@ -86,9 +87,13 @@ include_directories( ${HDF5_INCLUDE_DIR} )
 include_directories( ${PROJECT_CODE_DIR} )
 include_directories( ${QtSupport_BINARY_DIR} )
 include_directories( ${QtSupport_SOURCE_DIR} )
+get_filename_component(PLUGINS_SOURCE_DIR  ${${PLUGIN_NAME}_SOURCE_DIR} DIRECTORY)
+get_filename_component(PLUGINS_BINARY_DIR  ${${PLUGIN_NAME}_BINARY_DIR} DIRECTORY)
+
 include_directories( ${${PLUGIN_NAME}_BINARY_DIR} )
-include_directories( ${${PLUGIN_NAME}_SOURCE_DIR}/.. )
 include_directories( ${${PLUGIN_NAME}_SOURCE_DIR})
+include_directories( ${PLUGINS_SOURCE_DIR} )
+include_directories( ${PLUGINS_BINARY_DIR} )
 
 # ******************************************************************************
 # Create our custom executable that will generate most of our QFilterWidget
@@ -196,6 +201,7 @@ target_link_libraries(${PLUGIN_NAME}
                     DREAM3DLib
                     ${QT_QTGUI_LIBRARY}
                     QtSupport
+                    DREAM3DWidgetsLib
                     )
 SET_TARGET_PROPERTIES(${PLUGIN_NAME} PROPERTIES FOLDER ${PLUGIN_NAME}Plugin)
 
