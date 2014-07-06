@@ -61,7 +61,8 @@ class DREAM3DWidgetsLib_EXPORT FilterLibraryTreeWidget : public QTreeWidget
     enum ItemType
     {
       Node_Item_Type = 1,
-      Leaf_Item_Type = 2
+      Leaf_Item_Type = 2,
+      Unknown_Item_Type = 3
     };
 
     /**
