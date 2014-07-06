@@ -49,7 +49,7 @@
 
 class DSplashScreenPrivate;
 
-class Q_GUI_EXPORT DSplashScreen : public QWidget
+class DSplashScreen : public QWidget
 {
     Q_OBJECT
 public:
