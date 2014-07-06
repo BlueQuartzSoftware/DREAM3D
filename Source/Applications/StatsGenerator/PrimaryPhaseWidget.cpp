@@ -432,15 +432,20 @@ void PrimaryPhaseWidget::updatePlots()
   {
     QProgressDialog progress("Generating Data ....", "Cancel", 0, 4, this);
     progress.setWindowModality(Qt::WindowModal);
+    progress.setMinimumDuration(2000);
+
     progress.setValue(1);
-
+    progress.setLabelText("[1/3] Calculating Size Distributions ...");
     plotSizeDistribution();
+
     progress.setValue(2);
-
+    progress.setLabelText("[2/3] Calculating ODF Data ...");
     m_ODFWidget->updatePlots();
-    progress.setValue(3);
 
+    progress.setValue(3);
+    progress.setLabelText("[3/3] Calculating Axis ODF Data ...");
     m_AxisODFWidget->updatePlots();
+
     progress.setValue(4);
   }
 
