@@ -34,14 +34,6 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY
   "Single Directory for all static libraries."
   )
 
-# Set the GUI type for different platforms
-SET(GUI_TYPE )
-
-# Set some Win32 Specific Settings
-if(WIN32)
- SET(GUI_TYPE WIN32)
-ENDif(WIN32)
-
 add_definitions(-DDREAM3D_USE_QT)
 
 include_directories(${HDF5_INCLUDE_DIR}
