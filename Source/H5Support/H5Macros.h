@@ -49,7 +49,7 @@
 
 #define CloseH5D(did, err, retError)\
   err = H5Dclose(did);\
-  if (err < 0) { std::cout << "File: " << __FILE__ << "(" << __LINE__ << "): "<< "Error Closing Dataset." << std::endl; retError = err;}
+  if (err < 0) { std::cout << "File: " << __FILE__ << "(" << __LINE__ << "): "<< "Error Closing Dataset: " << dsetName << " did=" << did << " retError=" << retError << std::endl; retError = err;}
 
 #define CloseH5S(sid, err, retError)\
   err = H5Sclose(sid); \

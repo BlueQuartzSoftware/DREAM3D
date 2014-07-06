@@ -314,7 +314,7 @@ void PatchGroupMicroTextureRegions::execute()
   avgCaxes[2] = 0.0f;
 
   // Tell the user we are starting the filter
-  notifyStatusMessage(getHumanLabel(), "Starting");
+  notifyStatusMessage(getMessagePrefix(), getHumanLabel(), "Starting");
   size_t numPatches = determinePatchFeatureCentroids();
   determinePatchFeatureVolumes(numPatches);
   // Making some calls to GroupFeatures

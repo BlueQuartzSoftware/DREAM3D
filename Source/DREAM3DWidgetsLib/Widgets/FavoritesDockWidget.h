@@ -111,8 +111,33 @@ class DREAM3DWidgetsLib_EXPORT FavoritesDockWidget : public QDockWidget, private
 
     void addPipelinesRecursively(QDir currentDir, QTreeWidgetItem* currentDirItem, QString iconFileName,
                                  bool allowEditing, QStringList filters, FilterLibraryTreeWidget::ItemType itemType);
+    /**
+     * @brief FavoritesDockWidget::addFavoriteTreeItem
+     * @param selection
+     * @param favoriteTitle
+     * @param icon
+     * @param itemType
+     * @param favoritePath
+     * @param allowEditing
+     */
+    void addFavoriteTreeItem(QTreeWidgetItem* selection,
+                              QString &favoriteTitle,
+                              QIcon icon,
+                              FilterLibraryTreeWidget::ItemType itemType,
+                              QString favoritePath,
+                              bool allowEditing);
 
+    /**
+     * @brief addFavorite
+     * @param folder Is the new favorite to be a folder or an actual pipeline file
+     */
+    void addFavorite(bool folder);
 
+    /**
+     * @brief displayNewFavoriteDialog
+     * @return
+     */
+    QString displayNewFavoriteDialog();
 
   protected slots:
     //// Slots to catch signals from the QTreeWidget

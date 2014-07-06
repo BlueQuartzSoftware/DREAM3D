@@ -1,4 +1,4 @@
-Compiling DREAM.3D {#compilingdream3d}
+Compiling DREAM3D {#compilingdream3d}
 ========
 
 ## Preliminaries ##
@@ -29,19 +29,19 @@ Due to incompatibilities of HDF5 and these environments we can not support compi
 |  Package   | Minimum Version | Download Location |  
 |  ------	| ------	| ------	|  
 | Git | 1.7.x | [http://www.git-scm.com](http://www.git-scm.com) |  
-| CMake | 2.8.12 | [http://www.cmake.org/cmake/resources/software.html](http://www.cmake.org/cmake/resources/software.html) |
+| CMake | 3.0.0 | [http://www.cmake.org/cmake/resources/software.html](http://www.cmake.org/cmake/resources/software.html) |
 | Doxygen | 1.8.7 | [http://www.stack.nl/~dimitri/doxygen/download.html](http://www.stack.nl/~dimitri/doxygen/download.html) |  
 | HDF5 | 1.8.13 | [http://www.hdfgroup.org/HDF5/release/obtain5.html](http://www.hdfgroup.org/HDF5/release/obtain5.html) |  
 | Boost | 1.56.0 | [http://www.boost.org](http://www.boost.org) |  
 | Eigen | 3.1.2 | [Eigen Home Page](http://eigen.tuxfamily.org/index.php?title=Main_Page) |  
 | Intel Threading Building Blocks | tbb42_20140122oss | [http://threadingbuildingblocks.org/download](http://threadingbuildingblocks.org/download) |  
-| Qt | 4.8.5 (Qt 5.x will NOT work) | [http://www.qt-project.org](http://www.qt-project.org) |  
+| Qt | 4.8.6 (Qt 5.x will NOT work) | [http://www.qt-project.org](http://www.qt-project.org) |  
 | Qwt | 5.2.2 | git clone git://scm.bluequartz.net/support-libraries/qwt.git qwt |  
 
 
 ## DREAM3D SDK Availability ##
 
-The DREAM3D developers keep a downloadable _DREAM3D\_SDK_ for Visual Studio 2010 and 2012 that contains 64 bit builds of **ALL** the dependent libraries, CMake and Doxygen as a single installer. Please send an email to _dream3d@bluequartz.net_ to request this installer.
+The DREAM3D developers keep a downloadable _DREAM3D\_SDK_ for Visual Studio 2010, 2012 and 2013 that contains 64 bit builds of **ALL** the dependent libraries, CMake and Doxygen as a single installer. Please send an email to _dream3d@bluequartz.net_ to request this installer.
 
 
 ## Setting Up the Environment ##
@@ -81,7 +81,8 @@ With this environment setup proceed to download and install Git, CMake and Doxyg
 ### Threading Building Blocks ###
 
 + Download TBB from [http://threadingbuildingblocks.org/download](http://threadingbuildingblocks.org/download)
-+ Install into the **_DREAM3D\_SDK** location
++ Install into the **_DREAM3D\_SDK** location.
++ There is a script in the DREAM3D/Support/Scripts to build TBB on OS X due to rpath issues and the prebuilt binaries for OS X.
 
 
 ### Qt ###
@@ -109,31 +110,42 @@ Use Git to clone the Qwt source code repository:
 
  And use CMake to configure Qwt for your development environment. After CMake has generated the project files, open the IDE or type "make install" on the command line to build and install Qwt
 
-## Building DREAM.3D ##
+## Building DREAM3D ##
 
-After you have acquired the source code for DREAM.3D you can use CMake to configure it for your development environment and then build it. Several CMake variables will need to be filled out correctly in order for CMake to properly find all the libraries that you just built or installed onto your computer. For example a .bat file used on windows to initialize the development environment and the DREAM3D variables is something like the following:
+After you have acquired the source code for DREAM3D you can use CMake to configure it for your development environment and then build it. If you have used the DREAM3D SDK Install a file will have been installed into the top level of the DREAM3D_SDK folder that has all the necessary paths for CMake to use. This file may look something like the folllowing:
 
-	@rem Windows Batch file
-	@set BOOST_ROOT=C:\Developer\%ARCH_TYPE%\MXABoost-1.44
-	@set HDF5_INSTALL=C:\Developer\%ARCH_TYPE%\hdf5-1.8.10
-	@set QTDIR=C:\Developer\%ARCH_TYPE%\Qt-4.8.4	
-	@set CMAKE_INSTALL=C:\Developer\%ARCH_TYPE%\cmake-2.8.10.1
-	@set QWT_INSTALL=C:\Developer\%ARCH_TYPE%\qwt-5.2.2
-	@set TBB_INSTALL_DIR=C:\Developer\tbb41_20121003oss
-	@set EIGEN_INSTALL=C:\Developer\%ARCH_TYPE%\Eigen-3.1.2
-	@SET PATH=%PATH%;%CMAKE_INSTALL%\bin;%QTDIR%\bin;%HDF5_INSTALL%\bin
+	set(BUILD_SHARED_LIBS ON CACHE BOOL "")
+	set(DREAM3D_SDK_ROOT "/Users/Shared/Toolkits")
+	set(DREAM3D_DATA_DIR ${DREAM3D_SDK_ROOT}/DREAM3D_Data CACHE PATH "")
+	set(QT_QMAKE_EXECUTABLE "${DREAM3D_SDK_ROOT}/Qt-4.8.6/bin/qmake" CACHE FILEPATH "")
+	set(EIGEN_INSTALL "${DREAM3D_SDK_ROOT}/Eigen-3.1.2" CACHE PATH "")
+	set(QWT_INSTALL "${DREAM3D_SDK_ROOT}/Qwt-5.2.2" CACHE PATH "")
+	set(HDF5_INSTALL "${DREAM3D_SDK_ROOT}/hdf5-1.8.13" CACHE PATH "")
+	set(BOOST_ROOT "${DREAM3D_SDK_ROOT}/boost-1.55.0" CACHE PATH "")
+	set(TBB_INSTALL_DIR  "${DREAM3D_SDK_ROOT}/tbb42_20140601oss" CACHE PATH "")
+	set(DREAM3D_USE_MULTITHREADED_ALGOS ON CACHE BOOL "")
+	set(TBB_ARCH_TYPE "intel64" CACHE STRING "")
+	set(ITK_DIR "${DREAM3D_SDK_ROOT}/ITKBuild" CACHE PATH "")
+
+**Note: The paths may be different on your system**
+
+When running CMake (either from the command line or from teh GUI) be sure to set the CMake variable "DREAM3D_SDK="/Users/Shared/Toolkits" (Or the correct path for your system). This should be all that is needed for a successful cmake configure run.
+
+#### CMake configuration from the command line ####
+	cmake -DDREAM3D_SDK=/Users/Shared/Toolkits -DCMAKE_BUILD_TYPE=Debug -DBUILD_SHARED_LIBS=ON "-DDREAM3D_EXTRA_PLUGINS=ImageProcessing" ../
+
 
 Once you have configured DREAM3D for building using CMake then simply open the generated solution file (DREAM3DProj.sln), Xcode project (DREAM3DProj.xcodeproject) or use _make_ to compile DREAM3D.
 
-## Building a Release of DREAM.3D
+## Building a Release of DREAM3D
 
- These instructions are for those wanting to create an official distribution of DREAM.3D for the main web site. Here is the list of things to do in the order they need to be performed:
+ These instructions are for those wanting to create an official distribution of DREAM3D for the main web site. Here is the list of things to do in the order they need to be performed:
 
 - Open the Top level CMakeLists.txt file and adjust the _CMP_VERSION_MAJOR_ to the desired version for this release. Refer to the documentation for determining the version number and how/what to set it to.
 - Save the CMakeLists.txt file
 - Perform one last "git commit ...." to commit this version number.
 - Run CMake to generate new sources with the latest version number.
-- Compile DREAM.3D one last time.
+- Compile DREAM3D one last time.
 - Create the downloadable package by either running the **PACKAGE** project in Visual Studio or running _make package_ on Makefile based systems.
 - Upload the binaries to the website
 - Update the main web page with the new version and download links.

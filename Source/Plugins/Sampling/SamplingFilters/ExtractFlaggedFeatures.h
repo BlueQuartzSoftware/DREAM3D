@@ -34,10 +34,12 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _CropVolume_H_
-#define _CropVolume_H_
+#ifndef _ExtractFlaggedFeatures_H_
+#define _ExtractFlaggedFeatures_H_
 
+#include <vector>
 #include <QtCore/QString>
+
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
@@ -45,64 +47,37 @@
 
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/DataContainers/VolumeDataContainer.h"
-
+#include "DREAM3DLib/OrientationOps/OrientationOps.h"
+//
 #include "Sampling/SamplingConstants.h"
+
 /**
- * @class CropVolume CropVolume.h DREAM3DLib/SyntheticBuilderFilters/CropVolume.h
- * @brief
+ * @class ExtractFlaggedFeatures ExtractFlaggedFeatures.h Sampling/SamplingFilters/ExtractFlaggedFeatures.h
+ * @brief This filter ensures each Feature or Region has a minimum number of voxels.
  * @author
  * @date Nov 19, 2011
  * @version 1.0
  */
-class CropVolume : public AbstractFilter
+class ExtractFlaggedFeatures : public AbstractFilter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
-    DREAM3D_SHARED_POINTERS(CropVolume)
-    DREAM3D_STATIC_NEW_MACRO(CropVolume)
-    DREAM3D_TYPE_MACRO_SUPER(CropVolume, AbstractFilter)
+    DREAM3D_SHARED_POINTERS(ExtractFlaggedFeatures)
+    DREAM3D_STATIC_NEW_MACRO(ExtractFlaggedFeatures)
+    DREAM3D_TYPE_MACRO_SUPER(ExtractFlaggedFeatures, AbstractFilter)
 
-    virtual ~CropVolume();
-    DREAM3D_FILTER_PARAMETER(QString, NewDataContainerName)
-    Q_PROPERTY(QString NewDataContainerName READ getNewDataContainerName WRITE setNewDataContainerName)
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, CellAttributeMatrixPath)
-    Q_PROPERTY(DataArrayPath CellAttributeMatrixPath READ getCellAttributeMatrixPath WRITE setCellAttributeMatrixPath)
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, CellFeatureAttributeMatrixPath)
-    Q_PROPERTY(DataArrayPath CellFeatureAttributeMatrixPath READ getCellFeatureAttributeMatrixPath WRITE setCellFeatureAttributeMatrixPath)
-
-    IntVec3_t getCurrentVolumeDataContainerDimensions();
-    Q_PROPERTY(IntVec3_t CurrentVolumeDataContainerDimensions READ getCurrentVolumeDataContainerDimensions)
-    FloatVec3_t getCurrentVolumeDataContainerResolutions();
-    Q_PROPERTY(FloatVec3_t CurrentVolumeDataContainerResolutions READ getCurrentVolumeDataContainerResolutions)
-
-
-    DREAM3D_FILTER_PARAMETER(int, XMin)
-    Q_PROPERTY(int XMin READ getXMin WRITE setXMin)
-    DREAM3D_FILTER_PARAMETER(int, YMin)
-    Q_PROPERTY(int YMin READ getYMin WRITE setYMin)
-    DREAM3D_FILTER_PARAMETER(int, ZMin)
-    Q_PROPERTY(int ZMin READ getZMin WRITE setZMin)
-
-    DREAM3D_FILTER_PARAMETER(int, XMax)
-    Q_PROPERTY(int XMax READ getXMax WRITE setXMax)
-    DREAM3D_FILTER_PARAMETER(int, YMax)
-    Q_PROPERTY(int YMax READ getYMax WRITE setYMax)
-    DREAM3D_FILTER_PARAMETER(int, ZMax)
-    Q_PROPERTY(int ZMax READ getZMax WRITE setZMax)
-    DREAM3D_FILTER_PARAMETER(bool, RenumberFeatures)
-    Q_PROPERTY(bool RenumberFeatures READ getRenumberFeatures WRITE setRenumberFeatures)
-    DREAM3D_FILTER_PARAMETER(bool, SaveAsNewDataContainer)
-    Q_PROPERTY(bool SaveAsNewDataContainer READ getSaveAsNewDataContainer WRITE setSaveAsNewDataContainer)
-    DREAM3D_FILTER_PARAMETER(bool, UpdateOrigin)
-    Q_PROPERTY(bool UpdateOrigin READ getUpdateOrigin WRITE setUpdateOrigin)
+    virtual ~ExtractFlaggedFeatures();
 
     DREAM3D_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
     Q_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
 
+    DREAM3D_FILTER_PARAMETER(DataArrayPath, FlaggedFeaturesArrayPath)
+    Q_PROPERTY(DataArrayPath FlaggedFeaturesArrayPath READ getFlaggedFeaturesArrayPath WRITE setFlaggedFeaturesArrayPath)
+
     virtual const QString getCompiledLibraryName();
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName();
-    virtual const QString getSubGroupName()  { return DREAM3D::FilterSubGroups::CropCutFilters; }
+    virtual const QString getSubGroupName()  { return DREAM3D::FilterSubGroups::CleanupFilters; }
     virtual const QString getHumanLabel();
 
     virtual void setupFilterParameters();
@@ -118,9 +93,6 @@ class CropVolume : public AbstractFilter
     */
     virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
 
-    /**
-       * @brief Reimplemented from @see AbstractFilter class
-       */
     virtual void execute();
     virtual void preflight();
 
@@ -131,24 +103,24 @@ class CropVolume : public AbstractFilter
     void preflightExecuted();
 
   protected:
-    CropVolume();
+    ExtractFlaggedFeatures();
 
+    Int32ArrayType::Pointer boundsPtr;
+    int32_t* m_FeatureBounds;
+
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, FeatureIds)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(bool, FlaggedFeatures)
+
+    virtual void find_feature_bounds();
 
   private:
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, FeatureIds)
-
     void dataCheck();
 
-    CropVolume(const CropVolume&); // Copy Constructor Not Implemented
-    void operator=(const CropVolume&); // Operator '=' Not Implemented
+    ExtractFlaggedFeatures(const ExtractFlaggedFeatures&); // Copy Constructor Not Implemented
+    void operator=(const ExtractFlaggedFeatures&); // Operator '=' Not Implemented
 };
 
-#endif /* CROPVOLUME_H_ */
-
-
-
-
-
+#endif /* ExtractFlaggedFeatures_H_ */
 
 
 

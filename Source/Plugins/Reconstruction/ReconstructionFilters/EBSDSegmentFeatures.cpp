@@ -242,7 +242,7 @@ void EBSDSegmentFeatures::execute()
   m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->resizeAttributeArrays(tDims);
 
   // Tell the user we are starting the filter
-  notifyStatusMessage(getHumanLabel(), "Starting");
+  notifyStatusMessage(getMessagePrefix(), getHumanLabel(), "Starting");
 
   //Convert user defined tolerance to radians.
   misoTolerance = m_MisorientationTolerance * DREAM3D::Constants::k_Pi / 180.0f;

@@ -235,7 +235,7 @@ void ScaleVolume::updateSurfaceMesh()
   QString ss;
   setErrorCondition(err);
 
-  notifyStatusMessage(getHumanLabel(), "Starting");
+  notifyStatusMessage(getMessagePrefix(), getHumanLabel(), "Starting");
 
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
   tbb::task_scheduler_init init;

@@ -213,7 +213,9 @@ void FavoritesDockWidget::on_filterLibraryTree_itemClicked( QTreeWidgetItem* ite
 {
   QString favoritePath = item->data(0, Qt::UserRole).toString();
   QStringList filterList = generateFilterListFromPipelineFile(favoritePath);
-  emit filterListGenerated(filterList, false);
+  if(filterList.size() > 0) {
+    emit filterListGenerated(filterList, false);
+  }
 }
 
 
@@ -423,69 +425,7 @@ void FavoritesDockWidget::on_filterLibraryTree_itemDoubleClicked( QTreeWidgetIte
 // -----------------------------------------------------------------------------
 void FavoritesDockWidget::actionAddFavoriteFolder_triggered()
 {
-  QString favoriteTitle;
-  AddFavoriteWidget* addfavoriteDialog = new AddFavoriteWidget("Name of Folder", this);
-  bool done = false;
-  bool cancel = false;
-  while (done == false)
-  {
-    addfavoriteDialog->exec(); // Show the dialog
-    if(addfavoriteDialog->getBtnClicked()) // the user clicked the OK button, now check what they typed
-    {
-      favoriteTitle = addfavoriteDialog->getFavoriteName();
-      if ( favoriteTitle.contains(QRegExp("[^a-zA-Z_-\\d ]")) )
-      {
-        QString displayText = "The name of the Favorite that was chosen has illegal characters.\n\nNames can only have:\n\tLetters\n\tNumbers\n\tUnderscores\n\tDashes";
-        displayText = displayText + "\n\nNo special charaters allowed due to file system restrictions";
-        // Display error message
-        int reply = QMessageBox::critical(this, tr("Rename Favorite"), tr(displayText.toLatin1().data()),
-                                          QMessageBox::Ok | QMessageBox::Cancel, QMessageBox::Ok);
-        if(reply == QMessageBox::Cancel)
-        {
-          done = true;
-          cancel = true;
-        }
-      }
-      else { done = true; }
-    }
-    else
-    {
-      done = true; // The user clicked the cancel button
-    }
-  }
-  if (true == cancel) { return; } // The user cancelled the whole thing, just return
-
-  QTreeWidgetItem* currentDirItem = filterLibraryTree->currentItem();
-  QString path = currentDirItem->data(0, Qt::UserRole).toString();
-  QFileInfo fi(path);
-  // If the user selected a file instead of a folder then get the path of the file, not including the filename
-  if(fi.isFile() == true)
-  {
-    currentDirItem = currentDirItem->parent(); // We need to step up one level to get the parent item which should be a folder
-  }
-
-  QString folderPath = path + QDir::separator() + favoriteTitle + QDir::separator();
-
-  QDir dir(path);
-
-  bool created = dir.mkpath(favoriteTitle);
-  if (false == created)
-  {
-    QMessageBox::StandardButton reply;
-    reply = QMessageBox::critical(this, QObject::tr("Folder Creation Error"),
-                                  QObject::tr("Error creating folder '%1'.").arg(path + "/" + favoriteTitle),
-                                  QMessageBox::Ok);
-  }
-
-  filterLibraryTree->blockSignals(true);
-  QTreeWidgetItem* nextDirItem = new QTreeWidgetItem(currentDirItem, FilterLibraryTreeWidget::Node_Item_Type);
-  nextDirItem->setText(0, favoriteTitle);
-  nextDirItem->setData(0, Qt::UserRole, QVariant(folderPath) );
-  nextDirItem->setIcon(0, QIcon(":/folder_blue.png"));
-  filterLibraryTree->blockSignals(false);
-  //Nothing to add as this was a brand new folder
-  //FIXME: We should figure out how to plae the folder alphabetically, or reload the favorites maybe?
-
+  addFavorite(true);
 }
 
 
@@ -495,9 +435,88 @@ void FavoritesDockWidget::actionAddFavoriteFolder_triggered()
 // -----------------------------------------------------------------------------
 void FavoritesDockWidget::actionAddFavorite_triggered()
 {
+  addFavorite(false);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void FavoritesDockWidget::addFavorite(bool folder)
+{
+  QString favoriteTitle = displayNewFavoriteDialog();
+
+  if(favoriteTitle.isEmpty() == true) { return; }
+
+  QTreeWidgetItem* selection = filterLibraryTree->currentItem();
+
+  // Sanity check to make sure we actually have selected a folder to add a favorite into the tree. If the user has
+  // selected an actual favorite item, get it's parent which MUST be a folder
+  if(NULL != selection && selection->type() == FilterLibraryTreeWidget::Leaf_Item_Type)
+  {
+    selection = selection->parent();
+    // We can _still_ get a null item (for some odd reason) so check that next
+  }
+
+  // Make sure we have a valid selection otherwise select the root item
+  if (NULL == selection)
+  {
+    selection = filterLibraryTree->invisibleRootItem();
+  }
+
+  bool allowEditing = true;
+  if(false == folder) {
+    allowEditing = false;
+  }
+
+  QString newPrefPath;
+  QIcon icon;
+  FilterLibraryTreeWidget::ItemType itemType = FilterLibraryTreeWidget::Unknown_Item_Type;
+  if(folder)
+  {
+    itemType =FilterLibraryTreeWidget::Node_Item_Type;
+    icon = QIcon(":/folder_blue.png");
+    QString parentPath = selection->data(0, Qt::UserRole).toString();
+    newPrefPath = parentPath + QDir::separator() + favoriteTitle + QDir::separator(); // Generate the proper path to the favorite
+    QDir dir(parentPath); // Get the QDir for the parent path
+    bool created = dir.mkpath(favoriteTitle); // Try to actually create the folder
+    if (false == created)
+    {
+      QMessageBox::StandardButton reply;
+      reply = QMessageBox::critical(this, QObject::tr("Folder Creation Error"),
+                                    QObject::tr("Error creating folder '%1'.").arg(parentPath + "/" + favoriteTitle),
+                                    QMessageBox::Ok);
+      return; // Bail out now instead of adding it to the tree
+    }
+
+  }
+  else
+  {
+    itemType =FilterLibraryTreeWidget::Leaf_Item_Type;
+    icon = QIcon(":/text.png");
+    QString path = selection->data(0, Qt::UserRole).toString(); // Get the selected item's path
+    newPrefPath = path + QDir::separator() + favoriteTitle + ".ini"; // Generate the proper path to the favorite
+  }
+
+  addFavoriteTreeItem(selection, favoriteTitle, icon, itemType, newPrefPath, allowEditing);
+
+  if(false == folder)
+  {
+    // Signal out to the PipelineViewWidget to save the current pipeline to the path & filename
+    emit pipelineNeedsToBeSaved(newPrefPath, favoriteTitle);
+  }
+}
+
+
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString FavoritesDockWidget::displayNewFavoriteDialog()
+{
   QString favoriteTitle;
-  AddFavoriteWidget* addfavoriteDialog = new AddFavoriteWidget("Name of Favorite", this);
-  addfavoriteDialog->setModal(true);
+  AddFavoriteWidget* addfavoriteDialog = new AddFavoriteWidget("Name of Favorite", NULL);
+  //addfavoriteDialog->setModal(false);
   bool done = false;
   bool cancel = false;
   while (done == false)
@@ -517,6 +536,7 @@ void FavoritesDockWidget::actionAddFavorite_triggered()
         {
           done = true;
           cancel = true;
+          favoriteTitle = "";
         }
       }
       else { done = true; }
@@ -524,46 +544,38 @@ void FavoritesDockWidget::actionAddFavorite_triggered()
     else
     {
       done = true; // The user clicked the cancel button
+      favoriteTitle = "";
     }
   }
-  if (true == cancel) { return; } // The user cancelled the whole thing, just return
+
+  return favoriteTitle;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void FavoritesDockWidget::addFavoriteTreeItem(QTreeWidgetItem* selection,
+                                              QString &favoriteTitle,
+                                              QIcon icon,
+                                              FilterLibraryTreeWidget::ItemType itemType,
+                                              QString favoritePath,
+                                              bool allowEditing)
+{
 
   filterLibraryTree->blockSignals(true);
-  QTreeWidgetItem* selection = filterLibraryTree->currentItem();
-
-  // Sanity check to make sure we actually have selected a folder to add a favorite into the tree. If the user has
-  // selected an actual favorite item, get it's parent which MUST be a folder
-  if(NULL != selection && selection->type() == FilterLibraryTreeWidget::Leaf_Item_Type)
-  {
-    selection = selection->parent();
-    // We can _still_ get a null item (for some odd reason) so check that next
-  }
-
-  // Make sure we have a valid selection otherwise select the root item
-  if (NULL == selection)
-  {
-    selection = filterLibraryTree->invisibleRootItem();
-  }
-
-  bool allowEditing = true;
-
-  QString path = selection->data(0, Qt::UserRole).toString();
-  QString newPrefPath = path + QDir::separator() + favoriteTitle + ".ini";
-
   // Add a new Item to the Tree
-  QTreeWidgetItem* itemWidget = new QTreeWidgetItem(selection, FilterLibraryTreeWidget::Leaf_Item_Type);
+  QTreeWidgetItem* itemWidget = new QTreeWidgetItem(selection, itemType);
   itemWidget->setText(0, favoriteTitle);
-  itemWidget->setIcon(0, QIcon(":/text.png"));
-  itemWidget->setData(0, Qt::UserRole, QVariant(newPrefPath));
+  itemWidget->setIcon(0, icon);
+  itemWidget->setData(0, Qt::UserRole, QVariant(favoritePath));
   if(allowEditing == true)
   {
     itemWidget->setFlags(itemWidget->flags() | Qt::ItemIsEditable);
   }
   filterLibraryTree->sortItems(0, Qt::AscendingOrder);
   filterLibraryTree->blockSignals(false);
-  // Signal out to the PipelineViewWidget to save the current pipeline to the path & filename
-  emit pipelineNeedsToBeSaved(newPrefPath, favoriteTitle);
 }
+
 
 // -----------------------------------------------------------------------------
 //

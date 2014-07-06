@@ -12,6 +12,7 @@ START_FILTER_GROUP(${Sampling_BINARY_DIR} "${_filterGroupName}" "SamplingFilters
 
 set(_PublicFilters
   ChangeResolution
+  ExtractFlaggedFeatures
   RegularGridSampleSurfaceMesh
   UncertainRegularGridSampleSurfaceMesh
   RegularizeZSpacing

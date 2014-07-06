@@ -254,9 +254,6 @@ border: 2px solid;
      <string>Pipeline</string>
     </property>
     <addaction name="separator"/>
-    <addaction name="actionCopyCurrentFilter"/>
-    <addaction name="actionPasteCopiedFilter"/>
-    <addaction name="actionRemoveCurrentFilter"/>
     <addaction name="separator"/>
    </widget>
    <widget class="QMenu" name="menuHelp">

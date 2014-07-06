@@ -34,14 +34,6 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY
   "Single Directory for all static libraries."
   )
 
-# Set the GUI type for different platforms
-SET(GUI_TYPE )
-
-# Set some Win32 Specific Settings
-if(WIN32)
- SET(GUI_TYPE WIN32)
-ENDif(WIN32)
-
 add_definitions(-DDREAM3D_USE_QT)
 
 include_directories(${HDF5_INCLUDE_DIR}
@@ -66,7 +58,7 @@ set(DREAM3D_SRCS
   ${DREAM3D_SOURCE_DIR}/main.cpp
   ${DREAM3D_SOURCE_DIR}/BrandedInitializer.cpp
   ${DREAM3D_SOURCE_DIR}/DREAM3D_UI.cpp
-
+  ${DREAM3D_SOURCE_DIR}/DSplashScreen.cpp
   )
 
 #------------------------------------------------------------------
@@ -80,6 +72,7 @@ set(DREAM3D_HDRS
 SET(DREAM3D_MOC_HDRS
   ${DREAM3D_SOURCE_DIR}/BrandedInitializer.h
   ${DREAM3D_SOURCE_DIR}/DREAM3D_UI.h
+  ${DREAM3D_SOURCE_DIR}/DSplashScreen.h
 )
 cmp_IDE_SOURCE_PROPERTIES( "DREAM3D" "${DREAM3D_HDRS};${DREAM3D_MOC_HDRS}" "${DREAM3D_SRCS}" ${PROJECT_INSTALL_HEADERS})
 

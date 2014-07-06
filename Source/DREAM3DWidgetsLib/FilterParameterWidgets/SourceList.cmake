@@ -28,6 +28,7 @@ set(DREAM3D_PARAMETER_WIDGETS
       SeparatorWidget
       LinkedBooleanWidget
       PhaseTypeSelectionWidget
+      VolumeDataContainerInfoWidget
 #      CellArrayComparisonSelectionWidget
 #      FeatureArrayComparisonSelectionWidget
 #      EnsembleArrayComparisonSelectionWidget
