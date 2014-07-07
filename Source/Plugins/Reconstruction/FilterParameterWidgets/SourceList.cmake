@@ -28,16 +28,16 @@ file(APPEND ${RegisterKnownFilterParameterWidgetsFile} "\nvoid ${PLUGIN_NAME}Plu
 # --------------------------------------------------------------------
 # Loop through all the FilterParameterWidgets that this plugin is going to compile and make available.
 foreach(FPW ${${PLUGIN_NAME}_PARAMETER_WIDGETS})
-  set(${PLUGIN_NAME}_ParameterWidgets_HDRS 
-  	${${PLUGIN_NAME}_ParameterWidgets_HDRS}
+  set(${PLUGIN_NAME}_ParameterWidgets_HDRS
+    ${${PLUGIN_NAME}_ParameterWidgets_HDRS}
     ${${PLUGIN_NAME}_SOURCE_DIR}/FilterParameterWidgets/${FPW}.h
     )
-  set(${PLUGIN_NAME}_ParameterWidgets_SRCS 
-  	${${PLUGIN_NAME}_ParameterWidgets_SRCS}
+  set(${PLUGIN_NAME}_ParameterWidgets_SRCS
+    ${${PLUGIN_NAME}_ParameterWidgets_SRCS}
     ${${PLUGIN_NAME}_SOURCE_DIR}/FilterParameterWidgets/${FPW}.cpp
     )
-  set(${PLUGIN_NAME}_ParameterWidgets_UIS 
-  	${${PLUGIN_NAME}_ParameterWidgets_UIS}
+  set(${PLUGIN_NAME}_ParameterWidgets_UIS
+    ${${PLUGIN_NAME}_ParameterWidgets_UIS}
     ${${PLUGIN_NAME}_SOURCE_DIR}/FilterParameterWidgets/UI_Files/${FPW}.ui
     )
 
@@ -67,16 +67,9 @@ cmp_IDE_SOURCE_PROPERTIES( "${PLUGIN_NAME}/FilterParameterWidgets" "${${PLUGIN_N
 
 cmp_IDE_GENERATED_PROPERTIES("${PLUGIN_NAME}/FilterParameterWidgets/UI_Files" "${${PLUGIN_NAME}_ParameterWidgets_UIS}" "")
 
-# --------------------------------------------------------------------
-# and finally this will run moc:
-#QT4_WRAP_CPP( ${PLUGIN_NAME}_ParameterWidgets_Generated_MOC_SRCS ${${PLUGIN_NAME}_ParameterWidgets_HDRS} )
-
 # These generated moc files will be #include in the FilterWidget source file that
 # are generated so we need to tell the build system to NOT compile these files
 set_source_files_properties( ${${PLUGIN_NAME}_ParameterWidgets_Generated_MOC_SRCS} PROPERTIES HEADER_FILE_ONLY TRUE)
-
-# -- Run MOC and UIC on the necessary files
-# QT4_ADD_RESOURCES( ${PLUGIN_NAME}_Generated_RC_SRCS "${DREAM3DProj_SOURCE_DIR}/Documentation/Filters/Generated_FilterDocs.qrc"  )
 
 # --------------------------------------------------------------------
 # Continue on with our Qt4 section
