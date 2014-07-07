@@ -184,12 +184,11 @@ font-weight: bold;
              </property>
              <item>
               <widget class="QLabel" name="basicInputsLabel">
-               <property name="styleSheet">
-                <string notr="true">QLabel#basicInputsLabel
-{
-	font: 75 14pt &quot;Lucida Grande&quot;;
-	font-weight: bold;
-}</string>
+               <property name="font">
+                <font>
+                 <weight>75</weight>
+                 <bold>true</bold>
+                </font>
                </property>
                <property name="text">
                 <string>Basic Inputs</string>
@@ -253,12 +252,11 @@ font-weight: bold;
             </item>
             <item>
              <widget class="QLabel" name="advInputsLabel">
-              <property name="styleSheet">
-               <string notr="true">QLabel#advInputsLabel
-{
-	font: 75 14pt &quot;Lucida Grande&quot;;
-	font-weight: bold;
-}</string>
+              <property name="font">
+               <font>
+                <weight>75</weight>
+                <bold>true</bold>
+               </font>
               </property>
               <property name="text">
                <string>Advanced Inputs</string>

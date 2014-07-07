@@ -108,13 +108,10 @@ QLineEdit:edit-focus {
     </item>
     <item>
      <widget class="QLabel" name="filterCountLabel">
-      <property name="styleSheet">
-       <string notr="true">QLabel
-{
-font: 75 12pt;
-font-weight: bold;
-}
-</string>
+      <property name="font">
+       <font>
+        <italic>true</italic>
+       </font>
       </property>
       <property name="text">
        <string>Filter Count:</string>
