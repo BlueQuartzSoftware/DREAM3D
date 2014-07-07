@@ -1880,7 +1880,7 @@ UInt8ArrayType::Pointer CubicOps::generateMisorientationTriangleLegend(float ang
 
   ///create image, fill with empty pixels, setup painter
   int width = 1000;
-  double scale = width / tan(M_PI / 8);
+  //double scale = width / tan(M_PI / 8);
   /*
    int height = ceil(0.349159 * scale);
   QPainter painter;
@@ -2116,12 +2116,12 @@ UInt8ArrayType::Pointer CubicOps::generateMisorientationTriangleLegend(float ang
             }
             else
             {
-              //edge or insdie
+              //edge or inside
               uint8_t red = r1 * gamma1 + r2 * gamma2 + r3 * gamma3;
               uint8_t green = g1 * gamma1 + g2 * gamma2 + g3 * gamma3;
               uint8_t blue = b1 * gamma1 + b2 * gamma2 + b3 * gamma3;
               uint8_t alpha = 255;
-              //unsigned int pix = (alpha << 24) | (red << 16) | (green << 8) | blue;
+              unsigned int pix = (alpha << 24) | (red << 16) | (green << 8) | blue;
               //image.setPixel(i, j, pix);
             }
           }

@@ -353,9 +353,6 @@ int DataContainerReader::readExistingPipelineFromFile(hid_t fileId)
     QString ss = QString::number(i, 10);
 
     err = QH5Lite::readStringAttribute(pipelineGroupId, ss, "ClassName", classNameStr);
-#if (__APPLE__)
-#warning DOES THIS FILTER MANAGER GET THE CORRECT SINGLETON?
-#endif
     // Instantiate a new filter using the FilterFactory based on the value of the className attribute
     FilterManager::Pointer fm = FilterManager::Instance();
     IFilterFactory::Pointer ff = fm->getFactoryForFilter(classNameStr);

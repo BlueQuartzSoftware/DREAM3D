@@ -233,7 +233,7 @@ void VisualizeGBCDPoleFigure::execute()
   dataCheckSurfaceMesh();
   if(getErrorCondition() < 0) { return; }
 
-  SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(m_GBCDArrayPath.getDataContainerName());
+  //SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(m_GBCDArrayPath.getDataContainerName());
 
   notifyStatusMessage(getMessagePrefix(), getHumanLabel(), "Starting");
 

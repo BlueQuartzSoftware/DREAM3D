@@ -538,7 +538,7 @@ void PipelineFilterWidget::updateWidgetStyle()
   style.append("QLabel\n {\n");
 
 #if defined(Q_WS_WIN)
-  style.append("font: 75 italic 10pt \"Arial\";");
+  style.append("font: 75 10pt \"Arial\";");
 #elif defined(Q_WS_MAC)
   style.append("font: 100 italic 12pt \"Arial\";");
 #else

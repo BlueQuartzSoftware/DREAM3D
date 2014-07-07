@@ -295,7 +295,7 @@ int SurfaceDataContainer::readMeshDataFromHDF5(hid_t dcGid, bool preflight)
   readEdges(dcGid, preflight);
   readFaces(dcGid, preflight);
 
-  return 1;
+  return err;
 }
 
 // -----------------------------------------------------------------------------

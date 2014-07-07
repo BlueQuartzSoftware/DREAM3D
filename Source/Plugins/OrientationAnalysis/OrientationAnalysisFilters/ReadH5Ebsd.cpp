@@ -86,13 +86,13 @@ ReadH5Ebsd::ReadH5Ebsd() :
   m_UseTransformations(true),
   m_RefFrameZDir(Ebsd::RefFrameZDir::UnknownRefFrameZDirection),
   m_Manufacturer(Ebsd::UnknownManufacturer),
-  m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
-  m_LatticeConstantsArrayName(DREAM3D::EnsembleData::LatticeConstants),
   m_CellPhasesArrayName(DREAM3D::CellData::Phases),
   m_CellPhases(NULL),
   m_CellEulerAnglesArrayName(DREAM3D::CellData::EulerAngles),
   m_CellEulerAngles(NULL),
+  m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
   m_CrystalStructures(NULL),
+  m_LatticeConstantsArrayName(DREAM3D::EnsembleData::LatticeConstants),
   m_LatticeConstants(NULL)
 {
   m_SampleTransformation.angle = 0.0f;

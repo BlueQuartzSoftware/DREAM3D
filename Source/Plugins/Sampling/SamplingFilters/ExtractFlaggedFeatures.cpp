@@ -182,7 +182,7 @@ void ExtractFlaggedFeatures::find_feature_bounds()
 {
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(m_FeatureIdsArrayPath.getDataContainerName());
 
-  int64_t totalPoints = m_FeatureIdsPtr.lock()->getNumberOfTuples();
+  //int64_t totalPoints = m_FeatureIdsPtr.lock()->getNumberOfTuples();
   int64_t totalFeatures = m_FlaggedFeaturesPtr.lock()->getNumberOfTuples();
   size_t udims[3] = {0, 0, 0};
   m->getDimensions(udims);
