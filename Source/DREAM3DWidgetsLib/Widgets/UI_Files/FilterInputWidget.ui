@@ -14,7 +14,16 @@
    <string>[*]Filter Input Parameters</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout_2">
-   <property name="margin">
+   <property name="leftMargin">
+    <number>0</number>
+   </property>
+   <property name="topMargin">
+    <number>0</number>
+   </property>
+   <property name="rightMargin">
+    <number>0</number>
+   </property>
+   <property name="bottomMargin">
     <number>0</number>
    </property>
    <item>
@@ -22,7 +31,7 @@
      <property name="styleSheet">
       <string notr="true">QFrame::contents
 {
-	background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 rgba(185, 185, 185, 255), stop:0.5 rgba(226, 226, 226, 255), stop:1 rgba(150, 150, 150, 255));
+  background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 rgba(185, 185, 185, 255), stop:0.5 rgba(226, 226, 226, 255), stop:1 rgba(150, 150, 150, 255));
 border: 1px solid #515151;
 border-radius: 10px;
 padding: 0 0 0 0px;
@@ -56,14 +65,7 @@ font-weight: bold;s
         </property>
         <item>
          <widget class="QLabel" name="filterHumanLabel">
-          <property name="font">
-           <font>
-            <pointsize>14</pointsize>
-            <weight>75</weight>
-            <italic>true</italic>
-            <bold>true</bold>
-           </font>
-          </property>
+
           <property name="frameShape">
            <enum>QFrame::NoFrame</enum>
           </property>
@@ -82,21 +84,7 @@ font-weight: bold;s
       </item>
       <item row="3" column="0">
        <widget class="QLabel" name="brandingLabel">
-        <property name="font">
-         <font>
-          <family>Arial</family>
-          <pointsize>10</pointsize>
-          <weight>75</weight>
-          <italic>true</italic>
-          <bold>true</bold>
-         </font>
-        </property>
-        <property name="styleSheet">
-         <string notr="true">QLabel{
-	font: 75 italic 10pt &quot;Arial&quot;;
-font-weight: bold;
-}</string>
-        </property>
+
         <property name="text">
          <string>Branding Information</string>
         </property>
@@ -116,14 +104,20 @@ font-weight: bold;
            <x>0</x>
            <y>0</y>
            <width>572</width>
-           <height>217</height>
+           <height>211</height>
           </rect>
          </property>
          <layout class="QVBoxLayout" name="scrollAreaVLayout">
-          <property name="spacing">
-           <number>6</number>
+          <property name="leftMargin">
+           <number>4</number>
           </property>
-          <property name="margin">
+          <property name="topMargin">
+           <number>4</number>
+          </property>
+          <property name="rightMargin">
+           <number>4</number>
+          </property>
+          <property name="bottomMargin">
            <number>4</number>
           </property>
           <item>
@@ -132,10 +126,10 @@ font-weight: bold;
              <string notr="true">QFrame#basicInputsFrame
 {
 /*	background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 rgba(185, 185, 185, 255), stop:0.5 rgba(226, 226, 226, 255), stop:1 rgba(150, 150, 150, 255)); */
-	background-color: rgb(215, 215, 215);
-	border: 1px solid #000000;
-	border-radius: 10px;
-	padding: 5 5 5 5px;
+  background-color: rgb(215, 215, 215);
+  border: 1px solid #000000;
+  border-radius: 10px;
+  padding: 5 5 5 5px;
 }</string>
             </property>
             <property name="frameShape">
@@ -145,18 +139,20 @@ font-weight: bold;
              <enum>QFrame::Plain</enum>
             </property>
             <layout class="QVBoxLayout" name="verticalLayout">
-             <property name="margin">
+             <property name="leftMargin">
+              <number>4</number>
+             </property>
+             <property name="topMargin">
+              <number>4</number>
+             </property>
+             <property name="rightMargin">
+              <number>4</number>
+             </property>
+             <property name="bottomMargin">
               <number>4</number>
              </property>
              <item>
               <widget class="QLabel" name="basicInputsLabel">
-               <property name="font">
-                <font>
-                 <pointsize>10</pointsize>
-                 <weight>75</weight>
-                 <bold>true</bold>
-                </font>
-               </property>
                <property name="text">
                 <string>Basic Inputs</string>
                </property>
@@ -219,13 +215,6 @@ font-weight: bold;
             </item>
             <item>
              <widget class="QLabel" name="advInputsLabel">
-              <property name="font">
-               <font>
-                <pointsize>10</pointsize>
-                <weight>75</weight>
-                <bold>true</bold>
-               </font>
-              </property>
               <property name="text">
                <string>Advanced Inputs</string>
               </property>
@@ -252,10 +241,10 @@ font-weight: bold;
              <string notr="true">QFrame#advInputsFrame
 {
 /*	background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 rgba(185, 185, 185, 255), stop:0.5 rgba(226, 226, 226, 255), stop:1 rgba(150, 150, 150, 255)); */
-	background-color: rgb(200, 200, 212);
-	border: 1px solid #000000;
-	border-radius: 10px;
-	padding: 5 5 5 5px;
+  background-color: rgb(200, 200, 212);
+  border: 1px solid #000000;
+  border-radius: 10px;
+  padding: 5 5 5 5px;
 }</string>
             </property>
             <property name="frameShape">
@@ -265,7 +254,16 @@ font-weight: bold;
              <enum>QFrame::Plain</enum>
             </property>
             <layout class="QVBoxLayout" name="verticalLayout_3">
-             <property name="margin">
+             <property name="leftMargin">
+              <number>4</number>
+             </property>
+             <property name="topMargin">
+              <number>4</number>
+             </property>
+             <property name="rightMargin">
+              <number>4</number>
+             </property>
+             <property name="bottomMargin">
               <number>4</number>
              </property>
              <item>

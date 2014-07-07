@@ -78,6 +78,45 @@ FilterInputWidget::~FilterInputWidget()
 // -----------------------------------------------------------------------------
 void FilterInputWidget::setupGui()
 {
+  QFont font;
+  font.setBold(true);
+  font.setItalic(true);
+  font.setWeight(75);
+  font.setStyleStrategy(QFont::PreferAntialias);
+
+  QFont font1;
+  font1.setBold(true);
+  font1.setItalic(true);
+  font1.setWeight(75);
+  font1.setStyleStrategy(QFont::PreferAntialias);
+  font1.setFamily(QString::fromUtf8("Arial"));
+
+  QFont font2;
+  font2.setBold(true);
+  font2.setWeight(75);
+  font2.setStyleStrategy(QFont::PreferAntialias);
+
+#if defined (Q_OS_MAC)
+
+  font.setPointSize(16);
+
+  font1.setPointSize(11);
+
+  font2.setPointSize(14);
+
+#elif defined (Q_OS_WIN)
+  font.setPointSize(14);
+
+  font1.setPointSize(10);
+
+  font2.setPointSize(10);
+#endif
+
+  filterHumanLabel->setFont(font);
+  brandingLabel->setFont(font1);
+  basicInputsLabel->setFont(font2);
+  advInputsLabel->setFont(font2);
+
 }
 
 // -----------------------------------------------------------------------------
