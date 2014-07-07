@@ -1547,7 +1547,7 @@ void InsertPrecipitatePhases::assign_gaps()
   ellipfuncsPtr->initializeWithValue(-1);
 
   int64_t numFeatures = m_FeaturePhasesPtr.lock()->getNumberOfTuples();
-  int64_t numEnsembles = m_PhaseTypesPtr.lock()->getNumberOfTuples();
+  //int64_t numEnsembles = m_PhaseTypesPtr.lock()->getNumberOfTuples();
   while (unassignedcount != 0)
   {
     unassignedcount = 0;

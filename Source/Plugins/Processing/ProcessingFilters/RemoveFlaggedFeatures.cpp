@@ -148,7 +148,7 @@ void RemoveFlaggedFeatures::execute()
   dataCheck();
   if(getErrorCondition() < 0) { return; }
 
-  int64_t totalPoints = m_FeatureIdsPtr.lock()->getNumberOfTuples();
+  //int64_t totalPoints = m_FeatureIdsPtr.lock()->getNumberOfTuples();
 
   QVector<bool> activeObjects = remove_flaggedfeatures();
   assign_badpoints();

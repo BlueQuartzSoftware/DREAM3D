@@ -141,6 +141,9 @@ class ScalarSegmentFeatures : public SegmentFeatures
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(bool, GoodVoxels)
     DEFINE_CREATED_DATAARRAY_VARIABLE(bool, Active)
 
+    CompareFunctor* m_Compare;
+    bool missingGoodVoxels;
+
     ///Boost Random Number generator stuff. We use the boost::shared_ptr to ensure the pointers are cleaned up when the
     ///filter is deleted
     boost::shared_ptr<NumberDistribution> m_Distribution;
@@ -161,12 +164,9 @@ class ScalarSegmentFeatures : public SegmentFeatures
      */
     void initializeVoxelSeedGenerator(const size_t rangeMin, const size_t rangeMax);
 
-    CompareFunctor* m_Compare;
 
     void dataCheck();
     void updateFeatureInstancePointers();
-
-    bool missingGoodVoxels;
 
     ScalarSegmentFeatures(const ScalarSegmentFeatures&); // Copy Constructor Not Implemented
     void operator=(const ScalarSegmentFeatures&); // Operator '=' Not Implemented

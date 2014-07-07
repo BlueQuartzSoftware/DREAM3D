@@ -127,7 +127,6 @@ class TSpecificCompareFunctor : public CompareFunctor
 // -----------------------------------------------------------------------------
 ScalarSegmentFeatures::ScalarSegmentFeatures() :
   SegmentFeatures(),
-  m_Compare(NULL),
   m_CellFeatureAttributeMatrixName(DREAM3D::Defaults::CellFeatureAttributeMatrixName),
   m_ScalarArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, ""),
   m_ScalarTolerance(5.0f),
@@ -139,7 +138,9 @@ ScalarSegmentFeatures::ScalarSegmentFeatures() :
   m_FeatureIds(NULL),
   m_GoodVoxelsArrayName(DREAM3D::CellData::GoodVoxels),
   m_GoodVoxels(NULL),
-  m_Active(NULL)
+  m_Active(NULL),
+  m_Compare(NULL),
+  missingGoodVoxels(true)
 {
   setupFilterParameters();
 }

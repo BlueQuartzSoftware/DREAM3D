@@ -106,7 +106,7 @@ static const float TetraMatSym[4][3][3] =
 };
 
 
-const static float m_OnePointThree = 1.33333333333f;
+//const static float m_OnePointThree = 1.33333333333f;
 
 
 using namespace Detail;

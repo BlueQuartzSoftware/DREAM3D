@@ -324,10 +324,10 @@ bool fixFile( AbstractFilter::Pointer filter, const QString& hFile, const QStrin
   {
     // Read the Source File
     QFileInfo fi(cppFile);
-    //    if (fi.baseName().compare("WriteImage") != 0)
-    //    {
-    //      return false;
-    //    }
+//    if (fi.baseName().compare("BinaryNodesTrianglesReader") != 0)
+//    {
+//      return false;
+//    }
     QFile source(cppFile);
     source.open(QFile::ReadOnly);
     contents = source.readAll();
@@ -657,7 +657,7 @@ QString findPath(const QString& groupName, const QString& filtName, const QStrin
 
   prefix = prefix + "Plugins/";
   QStringList libs;
-  libs << "UCSB" << "ImageProcessing" << "DDDAnalysisToolbox" << "ImageImport" << "OrientationAnalysis" << "Processing" <<  "Reconstruction" << "Sampling" << "Statistics"  << "SurfaceMeshing" << "SyntheticBuilding";
+  libs << "ProcessModeling" << "UCSB" << "ImageProcessing" << "DDDAnalysisToolbox" << "ImageImport" << "OrientationAnalysis" << "Processing" <<  "Reconstruction" << "Sampling" << "Statistics"  << "SurfaceMeshing" << "SyntheticBuilding";
 
   for (int i = 0; i < libs.size(); ++i)
   {
@@ -670,6 +670,21 @@ QString findPath(const QString& groupName, const QString& filtName, const QStrin
       return path;
     }
   }
+
+
+  prefix = "/Users/mjackson/Workspace/";
+   for (int i = 0; i < libs.size(); ++i)
+  {
+    QString path = prefix + libs.at(i) + "/" + libs.at(i) + "Filters/" + filtName + ext;
+    //  std::cout << "****" << path.toStdString() << std::endl;
+
+    QFileInfo fi(path);
+    if(fi.exists() == true)
+    {
+      return path;
+    }
+  }
+
   return "NOT FOUND";
 }
 
@@ -693,7 +708,7 @@ void GenerateFilterParametersCode()
     //qDebug() << "CPP File: " << cpp;
     QString h = findPath(filter->getGroupName(), filter->getNameOfClass(), ".h");
 
-    //fixFile(filter, h, cpp);
+    fixFile(filter, h, cpp);
     //SplitFilterHeaderCodes(filter, h, cpp);
     //FixIncludeGuard(filter, h, cpp);
     //ValidateParameterReader(filter, h, cpp);
@@ -707,7 +722,7 @@ void GenerateFilterParametersCode()
 // -----------------------------------------------------------------------------
 int main(int argc, char *argv[])
 {
-  Q_ASSERT(true); // We don't want anyone to run this program.
+  Q_ASSERT(false); // We don't want anyone to run this program.
   // Instantiate the QCoreApplication that we need to get the current path and load plugins.
   QCoreApplication app(argc, argv);
   QCoreApplication::setOrganizationName("BlueQuartz Software");
