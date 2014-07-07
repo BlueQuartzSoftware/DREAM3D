@@ -75,7 +75,7 @@ void ColorTable::GetColorTable(int numColors, QVector<float>& colors)
 
   float val = 0.0f, r = 0.0f, g = 0.0f, b = 0.0f;
   float step = 1.0 / float(numColors);
-  float nodeStep = 1.0 / float(numColorNodes - 1);
+  float nodeStep = 1.0f / float(numColorNodes - 1);
   for (int i = 0; i < (numColors); i++)
   {
     val = float(i) * step;

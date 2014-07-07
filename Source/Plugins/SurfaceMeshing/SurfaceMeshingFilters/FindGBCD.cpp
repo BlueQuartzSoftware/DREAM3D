@@ -527,7 +527,7 @@ void FindGBCD::execute()
   size_t totalFaces = m_SurfaceMeshFaceLabelsPtr.lock()->getNumberOfTuples();
 
   size_t faceChunkSize = 50000;
-  size_t numMisoReps = 576*4;
+  size_t numMisoReps = 576*2;
   if(totalFaces < faceChunkSize) { faceChunkSize = totalFaces; }
   //call the sizeGBCD function with proper chunkSize and numMisoReps to get Bins array set up properly
   sizeGBCD(faceChunkSize, numMisoReps);

@@ -684,68 +684,68 @@ void DREAM3D_UI::setupPipelineContextMenu()
 // -----------------------------------------------------------------------------
 void DREAM3D_UI::setupViewMenu()
 {
-  m_FilterListBtn = new QToolButton(this);
-  makeStatusBarButton("Filters", filterListDockWidget, m_FilterListBtn, 0);
+//  m_FilterListBtn = new QToolButton(this);
+//  makeStatusBarButton("Filters", filterListDockWidget, m_FilterListBtn, 0);
   menuView->removeAction(actionShow_Filter_List);
   delete actionShow_Filter_List;
   actionShow_Filter_List = filterListDockWidget->toggleViewAction();
-  actionShow_Filter_List->setText("Show Filter List");
+  actionShow_Filter_List->setText("Filter List");
 
   menuView->addAction(actionShow_Filter_List);
   connect(actionShow_Filter_List, SIGNAL(triggered(bool)),
           this, SLOT(on_actionShow_Filter_List_triggered(bool)) );
-  connect(m_FilterListBtn, SIGNAL(toggled(bool)),
-          this, SLOT(on_actionShow_Filter_List_triggered(bool)) );
+//  connect(m_FilterListBtn, SIGNAL(toggled(bool)),
+//          this, SLOT(on_actionShow_Filter_List_triggered(bool)) );
 
 
-  m_FilterLibraryBtn = new QToolButton(this);
-  makeStatusBarButton("Filter Library", filterLibraryDockWidget, m_FilterLibraryBtn, 1);
+//  m_FilterLibraryBtn = new QToolButton(this);
+//  makeStatusBarButton("Filter Library", filterLibraryDockWidget, m_FilterLibraryBtn, 1);
   menuView->removeAction(actionShow_Filter_Library);
   delete actionShow_Filter_Library;
   actionShow_Filter_Library = filterLibraryDockWidget->toggleViewAction();
-  actionShow_Filter_Library->setText("Show Filter Library");
+  actionShow_Filter_Library->setText("Filter Library");
   menuView->addAction(actionShow_Filter_Library);
   connect(actionShow_Filter_Library, SIGNAL(triggered(bool)),
           this, SLOT(on_actionShow_Filter_Library_triggered(bool)) );
-  connect(m_FilterLibraryBtn, SIGNAL(toggled(bool)),
-          this, SLOT(on_actionShow_Filter_Library_triggered(bool)) );
+//  connect(m_FilterLibraryBtn, SIGNAL(toggled(bool)),
+//          this, SLOT(on_actionShow_Filter_Library_triggered(bool)) );
 
-  m_FavoritesBtn = new QToolButton(this);
-  makeStatusBarButton("Favorites", favoritesDockWidget, m_FavoritesBtn, 2);
+//  m_FavoritesBtn = new QToolButton(this);
+//  makeStatusBarButton("Favorites", favoritesDockWidget, m_FavoritesBtn, 2);
   menuView->removeAction(actionShow_Favorites);
   delete actionShow_Favorites;
   actionShow_Favorites = favoritesDockWidget->toggleViewAction();
-  actionShow_Favorites->setText("Show Favorites");
+  actionShow_Favorites->setText("Favorite Pipelines");
   menuView->addAction(actionShow_Favorites);
   connect(actionShow_Favorites, SIGNAL(triggered(bool)),
           this, SLOT(on_actionShow_Favorites_triggered(bool)) );
-  connect(m_FavoritesBtn, SIGNAL(toggled(bool)),
-          this, SLOT(on_actionShow_Favorites_triggered(bool)) );
+//  connect(m_FavoritesBtn, SIGNAL(toggled(bool)),
+//          this, SLOT(on_actionShow_Favorites_triggered(bool)) );
 
-  m_PrebuiltBtn = new QToolButton(this);
-  makeStatusBarButton("Prebuilt", prebuiltPipelinesDockWidget, m_PrebuiltBtn, 3);
+//  m_PrebuiltBtn = new QToolButton(this);
+//  makeStatusBarButton("Prebuilt", prebuiltPipelinesDockWidget, m_PrebuiltBtn, 3);
   menuView->removeAction(actionShow_Prebuilt_Pipelines);
   delete actionShow_Prebuilt_Pipelines;
   actionShow_Prebuilt_Pipelines = prebuiltPipelinesDockWidget->toggleViewAction();
-  actionShow_Prebuilt_Pipelines->setText("Show Prebuilts");
+  actionShow_Prebuilt_Pipelines->setText("Prebuilt Pipelines");
   menuView->addAction(actionShow_Prebuilt_Pipelines);
   connect(actionShow_Prebuilt_Pipelines, SIGNAL(triggered(bool)),
           this, SLOT(on_actionShow_Prebuilt_Pipelines_triggered(bool)) );
-  connect(m_PrebuiltBtn, SIGNAL(toggled(bool)),
-          this, SLOT(on_actionShow_Prebuilt_Pipelines_triggered(bool)) );
+//  connect(m_PrebuiltBtn, SIGNAL(toggled(bool)),
+//          this, SLOT(on_actionShow_Prebuilt_Pipelines_triggered(bool)) );
 
 
-  m_IssuesBtn = new QToolButton(this);
-  makeStatusBarButton("Issues", issuesDockWidget, m_IssuesBtn, 4);
+//  m_IssuesBtn = new QToolButton(this);
+//  makeStatusBarButton("Issues", issuesDockWidget, m_IssuesBtn, 4);
   menuView->removeAction(actionShow_Issues);
   delete actionShow_Issues;
   actionShow_Issues = issuesDockWidget->toggleViewAction();
-  actionShow_Issues->setText("Show Issues");
+  actionShow_Issues->setText("Show Warnings/Errors");
   menuView->addAction(actionShow_Issues);
   connect(actionShow_Issues, SIGNAL(triggered(bool)),
           this, SLOT(on_actionShow_Issues_triggered(bool)) );
-  connect(m_IssuesBtn, SIGNAL(toggled(bool)),
-          this, SLOT(on_actionShow_Issues_triggered(bool)) );
+//  connect(m_IssuesBtn, SIGNAL(toggled(bool)),
+//          this, SLOT(on_actionShow_Issues_triggered(bool)) );
 
 }
 
@@ -756,7 +756,6 @@ void DREAM3D_UI::makeStatusBarButton(QString text, QDockWidget* dockWidget, QToo
 {
   btn->setText(text);
   btn->setCheckable(true);
-
   btn->setChecked(!dockWidget->isHidden());
   statusBar()->insertPermanentWidget(index, btn, 0);
 }
@@ -1286,7 +1285,7 @@ void DREAM3D_UI::updateAndSyncDockWidget(QAction* action, QDockWidget* dock, QTo
   btn->blockSignals(true);
 
   action->setChecked(b);
-  btn->setChecked(b);
+  btn->toggle();
   dock->setVisible(b);
 #if 0
   if(b == false)

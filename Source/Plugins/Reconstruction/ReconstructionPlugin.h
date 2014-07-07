@@ -66,7 +66,7 @@ class ReconstructionPlugin : public QObject, public DREAM3DPluginInterface
     /**
      * @brief Register all the filters with the FilterWidgetFactory
      */
-    //  virtual void registerFilterWidgets();
+      virtual void registerFilterWidgets(FilterWidgetManager* fwm);
 
     /**
     * @brief This registers the filters that this plugin implements with the Filter Manager that is passed in

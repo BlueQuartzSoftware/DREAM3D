@@ -90,6 +90,6 @@ void ReconstructionPlugin::readSettings(QSettings& prefs)
 
 }
 
-//#include "ReconstructionFilters/RegisterKnownFilterWidgets.cpp"
 #include "ReconstructionFilters/RegisterKnownFilters.cpp"
+#include "Reconstruction/FilterParameterWidgets/RegisterKnownFilterParameterWidgets.cpp"
 

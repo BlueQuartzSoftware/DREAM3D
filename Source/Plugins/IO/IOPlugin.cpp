@@ -93,5 +93,5 @@ void IOPlugin::readSettings(QSettings& prefs)
 
 #include "IOFilters/RegisterKnownFilters.cpp"
 
-#include "FilterParameterWidgets/RegisterKnownFilterParameterWidgets.cpp"
+#include "IO/FilterParameterWidgets/RegisterKnownFilterParameterWidgets.cpp"
 

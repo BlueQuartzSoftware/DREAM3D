@@ -62,5 +62,5 @@ void DDDAnalysisToolboxPlugin::readSettings(QSettings& prefs)
 
 #include "DDDAnalysisToolboxFilters/RegisterKnownFilters.cpp"
 
-#include "FilterParameterWidgets/RegisterKnownFilterParameterWidgets.cpp"
+#include "DDDAnalysisToolbox/FilterParameterWidgets/RegisterKnownFilterParameterWidgets.cpp"
 

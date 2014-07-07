@@ -92,5 +92,5 @@ void GenericPlugin::readSettings(QSettings& prefs)
 
 #include "GenericFilters/RegisterKnownFilters.cpp"
 
-#include "FilterParameterWidgets/RegisterKnownFilterParameterWidgets.cpp"
+#include "Generic/FilterParameterWidgets/RegisterKnownFilterParameterWidgets.cpp"
 
