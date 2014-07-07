@@ -481,6 +481,12 @@ void RawBinaryReader::execute()
   }
   m->setDimensions(m_Dimensions.x, m_Dimensions.y, m_Dimensions.z);
 
+  if(getAddToExistingAttributeMatrix() == false)
+  {
+    QVector<size_t> tDims(1, voxels);
+    m->getAttributeMatrix(getCellAttributeMatrixName())->resizeAttributeArrays(tDims);
+  }
+
   array = IDataArray::NullPointer();
   if (m_ScalarType == Detail::Int8)
   {
