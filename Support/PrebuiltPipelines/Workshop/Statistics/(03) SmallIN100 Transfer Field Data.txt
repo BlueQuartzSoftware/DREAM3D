@@ -170,7 +170,7 @@ DataContainerArrayProxy\39\DAFlag=2
 Filter_Name=CopyFeatureArrayToCellArray
 Filter_Human_Label=Create Cell Array From Feature Array
 FeatureIdsArrayPath=VolumeDataContainer|CellData|FeatureIds
-SelectedFeatureArrayPath=VolumeDataContainer|CellData|Confidence Index
+SelectedFeatureArrayPath=VolumeDataContainer|CellFeatureData|EquivalentDiameters
 
 [2]
 Filter_Name=DataContainerWriter
