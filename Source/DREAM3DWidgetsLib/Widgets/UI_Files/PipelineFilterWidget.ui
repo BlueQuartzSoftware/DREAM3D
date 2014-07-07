@@ -115,10 +115,10 @@ color: rgb(255, 255, 255);
      <property name="font">
       <font>
        <family>Arial</family>
-       <pointsize>12</pointsize>
        <weight>50</weight>
        <italic>false</italic>
        <bold>false</bold>
+       <stylestrategy>PreferAntialias</stylestrategy>
       </font>
      </property>
      <property name="styleSheet">
