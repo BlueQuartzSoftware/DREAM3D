@@ -41,7 +41,9 @@
 #include "EbsdLib/EbsdLib.h"
 #include "EbsdLib/EbsdSetGetMacros.h"
 
+#if EbsdLib_HDF5_SUPPORT
 #include "H5Support/QH5Lite.h"
+#endif
 
 /**
  * @brief Creates a static "New" method that creates an instance of thisClass
@@ -85,8 +87,10 @@ class EbsdLib_EXPORT EbsdHeaderEntry
      * @brief Returns the key of the header entry
      */
     virtual QString getKey() = 0;
-
+    
+#if EbsdLib_HDF5_SUPPORT
     virtual QString getHDFType() = 0;
+#endif
 
     /**
      * @brief Parses the value for a given header key

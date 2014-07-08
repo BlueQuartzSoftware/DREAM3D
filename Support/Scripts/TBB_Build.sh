@@ -56,6 +56,9 @@ then
   tar -xvzf ${TBB_VERS}oss_src.tgz
 fi
 
+# To build on OS X 10.6.8 some minor changes for the latest TBB 20140601 need to be made to the
+# build/macosx.inc file to change from clang to gcc since the 10.6.8 clang does not work
+# correctly for that combination.
 
 cd $SDK_INSTALL/${TBB_VERS}oss
 

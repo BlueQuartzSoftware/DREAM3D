@@ -841,7 +841,7 @@ class DataArray : public IDataArray
       if (m_Size > 0) { BOOST_ASSERT(i * m_NumComponents < m_Size);}
 #endif
       T c = static_cast<T>(p);
-      for (int j = 0; j < m_NumComponents; ++j)
+      for (size_t j = 0; j < m_NumComponents; ++j)
       {
         m_Array[i * m_NumComponents + j] = c;
       }
@@ -879,7 +879,7 @@ class DataArray : public IDataArray
      */
     virtual void printTuple(QTextStream& out, size_t i, char delimiter = ',')
     {
-      for(int j = 0; j < m_NumComponents; ++j)
+      for(size_t j = 0; j < m_NumComponents; ++j)
       {
         if (j != 0) { out << delimiter; }
         out << m_Array[i * m_NumComponents + j];

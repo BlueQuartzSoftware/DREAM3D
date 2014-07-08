@@ -156,7 +156,7 @@ class FaceArray
     // -----------------------------------------------------------------------------
     void generateUniqueEdgeIds()
     {
-      int32_t numCells = m_Array->getNumberOfTuples();
+      size_t numCells = m_Array->getNumberOfTuples();
       Face_t* faces = m_Array->getPointer(0);
 
       struct  { int32_t v0; int32_t v1; } edge;
@@ -210,8 +210,8 @@ class FaceArray
     void findFacesContainingVert()
     {
 
-      int32_t numPts = m_Verts->getNumberOfTuples();
-      int32_t numCells = m_Array->getNumberOfTuples();
+      size_t numPts = m_Verts->getNumberOfTuples();
+      size_t numCells = m_Array->getNumberOfTuples();
 
       m_FacesContainingVert = Int32DynamicListArray::New();
 

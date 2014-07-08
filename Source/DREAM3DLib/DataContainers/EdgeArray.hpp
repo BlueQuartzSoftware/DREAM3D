@@ -147,8 +147,8 @@ class EdgeArray
     void findEdgesContainingVert()
     {
 
-      int32_t numPts = m_Verts->getNumberOfTuples();
-      int32_t numCells = m_Array->getNumberOfTuples();
+      size_t numPts = m_Verts->getNumberOfTuples();
+      size_t numCells = m_Array->getNumberOfTuples();
 
       m_EdgesContainingVert = Int32DynamicListArray::New();
 

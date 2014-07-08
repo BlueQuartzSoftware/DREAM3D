@@ -101,7 +101,7 @@ int VertexDataContainer::writeVerticesToHDF5(hid_t dcGid, bool writeXdmf)
       QVector<size_t> cDims(1, 3);
       DataArray<int32_t>::Pointer vertsPtr = DataArray<int32_t>::CreateArray(verticesPtr->getNumberOfTuples(), cDims, DREAM3D::StringConstants::VertsName);
       int32_t* verts = vertsPtr->getPointer(0);
-      for(int i = 0; i < vertsPtr->getNumberOfTuples(); i++)
+      for(size_t i = 0; i < vertsPtr->getNumberOfTuples(); i++)
       {
         verts[3 * i] = 1;
         verts[3 * i + 1] = 1;

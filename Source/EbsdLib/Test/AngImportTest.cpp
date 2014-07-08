@@ -40,8 +40,13 @@
 #include <QtCore/QFile>
 #include <QtCore/QtDebug>
 
+#include "EbsdLib/EbsdLib.h"
+
+
+#if EbsdLib_HDF5_SUPPORT
 #include "H5Support/H5Lite.h"
 #include "H5Support/H5Utilities.h"
+#endif
 
 #include "EbsdLib/TSL/AngReader.h"
 #include "EbsdLib/TSL/H5AngImporter.h"

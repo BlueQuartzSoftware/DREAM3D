@@ -104,7 +104,7 @@ void* StatsDataArray::getVoidPointer(size_t i)
 #ifndef NDEBUG
   if(m_StatsDataArray.size() > 0)
   {
-    BOOST_ASSERT(i < m_StatsDataArray.size());
+    BOOST_ASSERT(i < static_cast<size_t>(m_StatsDataArray.size()));
   }
 #endif
   if(i >= this->getNumberOfTuples())
@@ -168,7 +168,7 @@ int StatsDataArray::eraseTuples(QVector<size_t>& idxs)
     return 0;
   }
 
-  if (idxs.size() >= getNumberOfTuples() )
+  if ( static_cast<size_t>(idxs.size()) >= getNumberOfTuples() )
   {
     resize(0);
     return 0;
@@ -178,14 +178,15 @@ int StatsDataArray::eraseTuples(QVector<size_t>& idxs)
   // off the end of the array and return an error code.
   for(QVector<size_t>::size_type i = 0; i < idxs.size(); ++i)
   {
-    if (idxs[i] >= m_StatsDataArray.size()) { return -100; }
+    if (idxs[i] >= static_cast<size_t>(m_StatsDataArray.size())) { return -100; }
   }
 
 
   QVector<StatsData::Pointer> replacement(m_StatsDataArray.size() - idxs.size());
   size_t idxsIndex = 0;
   size_t rIdx = 0;
-  for(size_t dIdx = 0; dIdx < m_StatsDataArray.size(); ++dIdx)
+  size_t size = static_cast<size_t>(m_StatsDataArray.size());
+  for(size_t dIdx = 0; dIdx < size; ++dIdx)
   {
     if (dIdx != idxs[idxsIndex])
     {
@@ -195,7 +196,7 @@ int StatsDataArray::eraseTuples(QVector<size_t>& idxs)
     else
     {
       ++idxsIndex;
-      if (idxsIndex == idxs.size() ) { idxsIndex--;}
+      if (idxsIndex == static_cast<size_t>(idxs.size())) { idxsIndex--;}
     }
   }
   m_StatsDataArray = replacement;
@@ -225,7 +226,7 @@ void StatsDataArray::initializeTuple(size_t i, double p)
 void StatsDataArray::initializeWithZeros()
 {
 
-  for(size_t i = 0; i < m_StatsDataArray.size(); ++i)
+  for(qint32 i = 0; i < m_StatsDataArray.size(); ++i)
   {
     m_StatsDataArray[i]->initialize();
   }
@@ -294,7 +295,7 @@ int StatsDataArray::writeH5Data(hid_t parentId, QVector<size_t> tDims)
   HDF5ScopedGroupSentinel scopedFileSentinel(&gid, false); // This makes sure our H5Group is closed up as we exit this function
 
   // We start numbering our phases at 1. Anything in slot 0 is considered "Dummy" or invalid
-  for(size_t i = 1; i < m_StatsDataArray.size(); ++i)
+  for(qint32 i = 1; i < m_StatsDataArray.size(); ++i)
   {
     if (m_StatsDataArray[i].get() != NULL)
     {
