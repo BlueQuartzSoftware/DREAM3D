@@ -342,8 +342,9 @@ function(BuildToolBundle)
                           PROPERTIES FOLDER ${QAB_SOLUTION_FOLDER})
 
   endif()
-
-#-- Create an Install Rule for the main app bundle target
+ 
+  if( NOT ${QAB_INSTALL_DEST} STREQUAL "")
+	#-- Create an Install Rule for the main app bundle target
     INSTALL(TARGETS ${QAB_TARGET}
         COMPONENT ${QAB_COMPONENT}
         RUNTIME DESTINATION ${QAB_INSTALL_DEST}
@@ -372,6 +373,7 @@ function(BuildToolBundle)
 
         install(SCRIPT "${OSX_MAKE_STANDALONE_BUNDLE_CMAKE_SCRIPT}" COMPONENT ${QAB_COMPONENT})
     endif(APPLE)
+  endif()
 endfunction()
 
 # --------------------------------------------------------------------

@@ -51,6 +51,8 @@ function(COMPILE_TOOL)
 endfunction()
 
 
+
+
 # Create a Command line tool for the PipelineRunner
 COMPILE_TOOL(
     TARGET PipelineRunner
@@ -76,7 +78,6 @@ COMPILE_TOOL(
     VERSION_PATCH ${DREAM3D_VER_PATCH}
     BINARY_DIR    ${${PROJECT_NAME}_BINARY_DIR}
     COMPONENT     Applications
-    INSTALL_DEST  "${install_dir}"
     LINK_LIBRARIES DREAM3DLib
 )
 
@@ -90,7 +91,6 @@ COMPILE_TOOL(
     VERSION_PATCH ${DREAM3D_VER_PATCH}
     BINARY_DIR    ${${PROJECT_NAME}_BINARY_DIR}
     COMPONENT     Applications
-    INSTALL_DEST  "${install_dir}"
     LINK_LIBRARIES DREAM3DLib
 )
 
@@ -122,7 +122,6 @@ COMPILE_TOOL(
     VERSION_PATCH ${DREAM3D_VER_PATCH}
     BINARY_DIR    ${${PROJECT_NAME}_BINARY_DIR}
     COMPONENT     Applications
-    INSTALL_DEST  "${install_dir}"
     LINK_LIBRARIES ${QT_QTGUI_LIBRARY}
 )
 
@@ -143,7 +142,6 @@ COMPILE_TOOL(
     VERSION_PATCH ${DREAM3D_VER_PATCH}
     BINARY_DIR    ${${PROJECT_NAME}_BINARY_DIR}
     COMPONENT     Applications
-    INSTALL_DEST  "${install_dir}"
     LINK_LIBRARIES ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY}
 )
 endif()
@@ -172,7 +170,6 @@ if(COMPILE_EBSD_TO_TIFF)
         VERSION_PATCH ${DREAM3D_VER_PATCH}
         BINARY_DIR    ${${PROJECT_NAME}_BINARY_DIR}
         COMPONENT     Applications
-        INSTALL_DEST  "${install_dir}"
         LINK_LIBRARIES  ${TIFF_LIBRARY} EbsdLib  DREAM3DLib
     )
 
@@ -187,7 +184,6 @@ if(COMPILE_EBSD_TO_TIFF)
         VERSION_PATCH ${DREAM3D_VER_PATCH}
         BINARY_DIR    ${${PROJECT_NAME}_BINARY_DIR}
         COMPONENT     Applications
-        INSTALL_DEST  "${install_dir}"
         LINK_LIBRARIES  ${TIFF_LIBRARY}
     )
 
@@ -201,7 +197,6 @@ if(COMPILE_EBSD_TO_TIFF)
        VERSION_PATCH ${DREAM3D_VER_PATCH}
        BINARY_DIR    ${${PROJECT_NAME}_BINARY_DIR}
        COMPONENT     Applications
-       INSTALL_DEST  "${install_dir}"
        LINK_LIBRARIES ${TIFF_LIBRARY}
    )
 endif()
