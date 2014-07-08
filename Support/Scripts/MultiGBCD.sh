@@ -6,9 +6,7 @@ gmt
 DREAM3D_EXE=/Users/mjackson/Workspace/DREAM3D_Rewrite/zRel/Bin/PipelineRunner
 GEN_GMT=/Users/mjackson/Workspace/DREAM3D_Rewrite/Support/Scripts/GMT/Draw_stereograms-gmt-v5.1.sh
 
-pipelineFile=/Users/mjackson/Desktop/MultiGBCD.txt
-inputDir=/Volumes/Untitled/IN100_EXTRACTED
-
+pipelineFile=/Users/mjackson/Workspace/DREAM3D_Rewrite/Support/Scripts/MultiGBCD.txt
 
 cd /Users/mjackson/Workspace/DREAM3D_Rewrite/zRel/Bin/
 dirs="0 1 2 3 4 5 10 15 20 25 50 75 100 150"
