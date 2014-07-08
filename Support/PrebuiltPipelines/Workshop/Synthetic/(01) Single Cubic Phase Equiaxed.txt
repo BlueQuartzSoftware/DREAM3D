@@ -64,7 +64,7 @@ WriteGoalAttributes=0
 CsvOutputFile=
 InputStatsArrayPath=StatsGeneratorDataContainer|CellEnsembleData|Statistics
 InputPhaseTypesArrayPath=StatsGeneratorDataContainer|CellEnsembleData|PhaseTypes
-InputShapeTypesArrayPath=StatsGeneratorDataContainer|CellEnsembleData|CrystalStructures
+InputShapeTypesArrayPath=StatsGeneratorDataContainer|CellEnsembleData|ShapeTypes
 
 [4]
 Filter_Name=FindNeighbors
@@ -103,7 +103,7 @@ Filter_Human_Label=Generate IPF Colors
 UseGoodVoxels=0
 GoodVoxelsArrayPath=StatsGeneratorDataContainer|CellEnsembleData|
 CrystalStructuresArrayPath=StatsGeneratorDataContainer|CellEnsembleData|CrystalStructures
-CellEulerAnglesArrayPath=SyntheticVolume|CellFeatureData|EulerAngles
+CellEulerAnglesArrayPath=SyntheticVolume|CellData|EulerAngles
 CellPhasesArrayPath=SyntheticVolume|CellData|Phases
 CellIPFColorsArrayName=IPFColor
 ReferenceDir\size=3
