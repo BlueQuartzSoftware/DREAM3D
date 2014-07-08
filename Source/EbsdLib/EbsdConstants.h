@@ -104,14 +104,6 @@ namespace Ebsd
     static const unsigned int HightoLow = 1;
     static const unsigned int UnknownRefFrameZDirection = 2;
   }
-#if 0
-  enum RefFrameZDir
-  {
-    LowtoHigh = 0,
-    HightoLow = 1,
-    UnknownRefFrameZDirection
-  };
-#endif
 
   enum EbsdToSampleCoordinateMapping
   {
@@ -130,7 +122,7 @@ namespace Ebsd
     class Utils
     {
       public:
-        static QString getStringForEnum(int v)
+        static QString getStringForEnum(unsigned int v)
         {
           if (Ebsd::RefFrameZDir::LowtoHigh == v) { return Ebsd::StackingOrder::LowToHigh; }
           if (Ebsd::RefFrameZDir::HightoLow == v) { return Ebsd::StackingOrder::HighToLow; }

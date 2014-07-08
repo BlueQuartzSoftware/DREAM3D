@@ -678,7 +678,7 @@ namespace H5Support_NAMESPACE
               numElements *= *(iter);
             }
             //qDebug() << "    Vector Attribute has " << numElements << " elements.";
-            if (numElements > std::numeric_limits<qint32>::max() )
+            if (numElements > static_cast<hsize_t>(std::numeric_limits<qint32>::max() ) )
             {
               qDebug() << "Number of Elements in Array is larger than QVector can handle. Suggest using a std::vector<> instead";
               err = -1000;
