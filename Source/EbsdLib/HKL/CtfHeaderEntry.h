@@ -39,8 +39,9 @@
 
 
 #include <string.h>
-
+#if EbsdLib_HDF5_SUPPORT
 #include "H5Support/QH5Lite.h"
+#endif
 
 #include <QtCore/QString>
 #include <QtCore/QTextStream>
@@ -70,8 +71,10 @@ class EbsdLib_EXPORT CtfHeaderEntry : public EbsdHeaderEntry
     virtual ~CtfHeaderEntry() {}
 
     QString getKey() { return m_key; }
+    
+#if EbsdLib_HDF5_SUPPORT
     QString getHDFType() { T value = static_cast<T>(0); return QH5Lite::HDFTypeForPrimitiveAsStr(value); }
-
+#endif
     void parseValue(QByteArray& value)
     {
       // Simple Naieve filter to remove European style decimals that use a comma

@@ -66,7 +66,10 @@ class EbsdLib_EXPORT MicHeaderEntry : public EbsdHeaderEntry
     virtual ~MicHeaderEntry() {}
 
     QString getKey() { return m_key; }
+
+#if EbsdLib_HDF5_SUPPORT
     QString getHDFType() { T value = static_cast<T>(0); return QH5Lite::HDFTypeForPrimitiveAsStr(value); }
+#endif
 
     void parseValue(QByteArray& value)
     {
