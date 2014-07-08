@@ -72,7 +72,7 @@ VtkFeatureIdReader::~VtkFeatureIdReader()
 void VtkFeatureIdReader::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(FilterParameter::New("Input Vtk File", "InputFile", FilterParameterWidgetType::InputFileWidget, getInputFile(), false));
+  parameters.push_back(FileSystemFilterParameter::New("Input Vtk File", "InputFile", FilterParameterWidgetType::InputFileWidget, getInputFile(), false));
   parameters.push_back(FilterParameter::New("Scalar Name", "FeatureIdScalarName", FilterParameterWidgetType::StringWidget, getFeatureIdScalarName(), false));
   parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
   parameters.push_back(FilterParameter::New("Data Container", "DataContainerName", FilterParameterWidgetType::StringWidget, getDataContainerName(), true, ""));

@@ -80,7 +80,7 @@ void AlignSectionsList::setupFilterParameters()
 {
   //getting the current parameters that were set by the parent and adding to it before resetting it
   FilterParameterVector parameters;
-  parameters.push_front(FilterParameter::New("Input File", "InputFile", FilterParameterWidgetType::InputFileWidget, getInputFile(), false));
+  parameters.push_front(FileSystemFilterParameter::New("Input File", "InputFile", FilterParameterWidgetType::InputFileWidget, getInputFile(), false));
   setFilterParameters(parameters);
 }
 

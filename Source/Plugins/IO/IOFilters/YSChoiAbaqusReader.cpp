@@ -95,8 +95,8 @@ YSChoiAbaqusReader::~YSChoiAbaqusReader()
 void YSChoiAbaqusReader::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(FilterParameter::New("Input File", "InputFile", FilterParameterWidgetType::InputFileWidget, getInputFile(), false));
-  parameters.push_back(FilterParameter::New("Input Feature Orientation File", "InputFeatureInfoFile", FilterParameterWidgetType::InputFileWidget, getInputFeatureInfoFile(), false));
+  parameters.push_back(FileSystemFilterParameter::New("Input File", "InputFile", FilterParameterWidgetType::InputFileWidget, getInputFile(), false));
+  parameters.push_back(FileSystemFilterParameter::New("Input Feature Orientation File", "InputFeatureInfoFile", FilterParameterWidgetType::InputFileWidget, getInputFeatureInfoFile(), false));
   parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
   parameters.push_back(FilterParameter::New("Data Container Name", "CellEulerAnglesArrayName", FilterParameterWidgetType::StringWidget, getCellEulerAnglesArrayName(), true, ""));
   parameters.push_back(FilterParameter::New("Cell Attribute Matrix Name", "CellAttributeMatrixName", FilterParameterWidgetType::StringWidget, getCellAttributeMatrixName(), true, ""));
