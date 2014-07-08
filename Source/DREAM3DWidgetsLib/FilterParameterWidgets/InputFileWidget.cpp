@@ -56,6 +56,7 @@ InputFileWidget::InputFileWidget(FilterParameter* parameter, AbstractFilter* fil
   m_Filter(filter)
 {
   m_FilterParameter = dynamic_cast<FileSystemFilterParameter*>(parameter);
+  Q_ASSERT_X(NULL != m_FilterParameter, "InputFileWidget", "Failed to dynamic_cast from FilterParameter to FileSystemFilterParameter");
   setupUi(this);
   setupGui();
   if ( m_OpenDialogLastDirectory.isEmpty() )

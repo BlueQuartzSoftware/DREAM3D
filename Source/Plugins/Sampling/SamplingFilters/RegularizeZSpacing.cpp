@@ -74,7 +74,7 @@ void RegularizeZSpacing::setupFilterParameters()
 {
   FilterParameterVector parameters;
   parameters.push_back(FilterParameter::New("Cell Attribute Matrix", "CellAttributeMatrixPath", FilterParameterWidgetType::AttributeMatrixSelectionWidget, getCellAttributeMatrixPath(), false));
-  parameters.push_back(FilterParameter::New("Current Z Positions File", "InputFile", FilterParameterWidgetType::InputFileWidget, getInputFile(), false));
+  parameters.push_back(FileSystemFilterParameter::New("Current Z Positions File", "InputFile", FilterParameterWidgetType::InputFileWidget, getInputFile(), false));
   parameters.push_back(FilterParameter::New("New Z Res", "NewZRes", FilterParameterWidgetType::DoubleWidget, getNewZRes(), false, "Microns"));
   setFilterParameters(parameters);
 }
