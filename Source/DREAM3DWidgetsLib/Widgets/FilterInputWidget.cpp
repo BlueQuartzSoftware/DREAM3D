@@ -80,7 +80,7 @@ void FilterInputWidget::setupGui()
 {
   QFont font;
   font.setBold(true);
-  font.setItalic(true);
+  font.setItalic(false);
   font.setWeight(75);
   font.setStyleStrategy(QFont::PreferAntialias);
 
@@ -97,14 +97,14 @@ void FilterInputWidget::setupGui()
   font2.setStyleStrategy(QFont::PreferAntialias);
 
 #if defined (Q_OS_MAC)
-	font.setPointSize(16);
-	font1.setPointSize(11);
-	font2.setPointSize(14);
+    font.setPointSize(16);
+    font1.setPointSize(11);
+    font2.setPointSize(14);
 
 #elif defined (Q_OS_WIN)
-	font.setPointSize(14);
-	font1.setPointSize(8);
-	font2.setPointSize(10);
+    font.setPointSize(12);
+    font1.setPointSize(8);
+    font2.setPointSize(10);
 #endif
 
   filterHumanLabel->setFont(font);

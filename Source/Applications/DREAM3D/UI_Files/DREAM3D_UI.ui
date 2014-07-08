@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>953</width>
-    <height>805</height>
+    <width>1060</width>
+    <height>674</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -134,8 +134,8 @@ color: white;
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>541</width>
-             <height>698</height>
+             <width>620</width>
+             <height>553</height>
             </rect>
            </property>
            <property name="sizePolicy">
@@ -218,8 +218,8 @@ border: 2px solid;
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>953</width>
-     <height>22</height>
+     <width>1060</width>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
@@ -276,7 +276,7 @@ border: 2px solid;
     <string>[*]Favorite Pipelines</string>
    </property>
    <attribute name="dockWidgetArea">
-    <number>1</number>
+    <number>8</number>
    </attribute>
   </widget>
   <widget class="IssuesDockWidget" name="issuesDockWidget">
@@ -284,7 +284,7 @@ border: 2px solid;
     <string>[*]Pipeline Issues</string>
    </property>
    <attribute name="dockWidgetArea">
-    <number>1</number>
+    <number>8</number>
    </attribute>
   </widget>
   <widget class="PrebuiltPipelinesDockWidget" name="prebuiltPipelinesDockWidget">
@@ -292,7 +292,7 @@ border: 2px solid;
     <string>[*]Prebuilt Pipelines</string>
    </property>
    <attribute name="dockWidgetArea">
-    <number>1</number>
+    <number>8</number>
    </attribute>
   </widget>
   <widget class="FilterLibraryDockWidget" name="filterLibraryDockWidget">
