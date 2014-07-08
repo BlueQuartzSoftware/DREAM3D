@@ -1,0 +1,276 @@
+[PipelineBuilder]
+Name=(15) Small IN100 Full Reconstruction
+Number_Filters=25
+Version=5.0.6662
+
+[0]
+Filter_Name=ReadH5Ebsd
+Filter_Human_Label=Read H5Ebsd File
+DataContainerName=VolumeDataContainer
+CellAttributeMatrixName=CellData
+CellEnsembleAttributeMatrixName=CellEnsembleData
+InputFile=Data/Output/SmallIN100.h5ebsd
+RefFrameZDir=1
+ZStartIndex=1
+ZEndIndex=117
+UseTransformations=1
+ArraySelections_SelectedArrayNames\size=8
+ArraySelections_SelectedArrayNames\1\SelectedArrayNames=X Position
+ArraySelections_SelectedArrayNames\2\SelectedArrayNames=EulerAngles
+ArraySelections_SelectedArrayNames\3\SelectedArrayNames=Y Position
+ArraySelections_SelectedArrayNames\4\SelectedArrayNames=Phases
+ArraySelections_SelectedArrayNames\5\SelectedArrayNames=SEM Signal
+ArraySelections_SelectedArrayNames\6\SelectedArrayNames=Confidence Index
+ArraySelections_SelectedArrayNames\7\SelectedArrayNames=Fit
+ArraySelections_SelectedArrayNames\8\SelectedArrayNames=Image Quality
+
+[1]
+Filter_Name=MultiThresholdObjects
+Filter_Human_Label=Threshold Objects
+DestinationArrayName=ThresholdArray
+SelectedThresholds\size=2
+SelectedThresholds\1\DataContainerName=VolumeDataContainer
+SelectedThresholds\1\AttributeMatrixName=CellData
+SelectedThresholds\1\AttributeArrayName=Confidence Index
+SelectedThresholds\1\CompOperator=1
+SelectedThresholds\1\CompValue=0.100000001490116
+SelectedThresholds\2\DataContainerName=VolumeDataContainer
+SelectedThresholds\2\AttributeMatrixName=CellData
+SelectedThresholds\2\AttributeArrayName=Image Quality
+SelectedThresholds\2\CompOperator=1
+SelectedThresholds\2\CompValue=120
+
+[2]
+Filter_Name=FindCellQuats
+Filter_Human_Label=Find Cell Quaternions
+QuatsArrayName=Quats
+CrystalStructuresArrayPath=VolumeDataContainer|CellEnsembleData|CrystalStructures
+CellPhasesArrayPath=VolumeDataContainer|CellData|Phases
+CellEulerAnglesArrayPath=VolumeDataContainer|CellData|EulerAngles
+
+[3]
+Filter_Name=AlignSectionsMisorientation
+Filter_Human_Label=Align Sections (Misorientation)
+AlignmentShiftFileName=
+WriteAlignmentShifts=0
+CrystalStructuresArrayPath=VolumeDataContainer|CellEnsembleData|CrystalStructures
+GoodVoxelsArrayPath=VolumeDataContainer|CellData|ThresholdArray
+UseGoodVoxels=1
+CellPhasesArrayPath=VolumeDataContainer|CellData|Phases
+QuatsArrayPath=VolumeDataContainer|CellData|Quats
+MisorientationTolerance=5
+
+[4]
+Filter_Name=IdentifySample
+Filter_Human_Label=Isolate Largest Feature (Identify Sample)
+FillHoles=0
+GoodVoxelsArrayPath=VolumeDataContainer|CellData|ThresholdArray
+
+[5]
+Filter_Name=AlignSectionsFeatureCentroid
+Filter_Human_Label=Align Sections (Feature Centroid)
+AlignmentShiftFileName=Data/Output/Small_IN100_AlignmentData.txt
+WriteAlignmentShifts=1
+GoodVoxelsArrayPath=VolumeDataContainer|CellData|ThresholdArray
+UseReferenceSlice=1
+ReferenceSlice=0
+
+[6]
+Filter_Name=BadDataNeighborOrientationCheck
+Filter_Human_Label=Neighbor Orientation Comparison (Bad Data)
+QuatsArrayPath=VolumeDataContainer|CellData|Quats
+CrystalStructuresArrayPath=VolumeDataContainer|CellEnsembleData|CrystalStructures
+CellPhasesArrayPath=VolumeDataContainer|CellData|Phases
+GoodVoxelsArrayPath=VolumeDataContainer|CellData|ThresholdArray
+MisorientationTolerance=5
+NumberofNeighbors=4
+
+[7]
+Filter_Name=NeighborOrientationCorrelation
+Filter_Human_Label=Neighbor Orientation Correlation
+QuatsArrayPath=VolumeDataContainer|CellData|Quats
+CrystalStructuresArrayPath=VolumeDataContainer|CellEnsembleData|CrystalStructures
+CellPhasesArrayPath=VolumeDataContainer|CellData|Phases
+ConfidenceIndexArrayPath=VolumeDataContainer|CellData|Confidence Index
+MisorientationTolerance=5
+MinConfidence=0.2
+Level=2
+
+[8]
+Filter_Name=EBSDSegmentFeatures
+Filter_Human_Label=Segment Features (Misorientation)
+CellFeatureAttributeMatrixName=CellFeatureData
+ActiveArrayName=Active
+FeatureIdsArrayName=FeatureIds
+QuatsArrayPath=VolumeDataContainer|CellData|Quats
+CrystalStructuresArrayPath=VolumeDataContainer|CellEnsembleData|CrystalStructures
+CellPhasesArrayPath=VolumeDataContainer|CellData|Phases
+GoodVoxelsArrayPath=VolumeDataContainer|CellData|ThresholdArray
+UseGoodVoxels=1
+MisorientationTolerance=5
+
+[9]
+Filter_Name=FindFeaturePhases
+Filter_Human_Label=Find Feature Phases
+CellFeatureAttributeMatrixName=VolumeDataContainer|CellFeatureData|
+FeaturePhasesArrayName=Phases
+CellPhasesArrayPath=VolumeDataContainer|CellData|Phases
+FeatureIdsArrayPath=VolumeDataContainer|CellData|FeatureIds
+
+[10]
+Filter_Name=FindAvgOrientations
+Filter_Human_Label=Find Feature Average Orientations
+CellFeatureAttributeMatrixName=VolumeDataContainer|CellFeatureData|
+FeatureEulerAnglesArrayName=EulerAngles
+AvgQuatsArrayName=AvgQuats
+CrystalStructuresArrayPath=VolumeDataContainer|CellEnsembleData|CrystalStructures
+QuatsArrayPath=VolumeDataContainer|CellData|Quats
+CellPhasesArrayPath=VolumeDataContainer|CellData|Phases
+FeatureIdsArrayPath=VolumeDataContainer|CellData|FeatureIds
+
+[11]
+Filter_Name=FindNeighbors
+Filter_Human_Label=Find Feature Neighbors
+CellFeatureAttributeMatrixPath=VolumeDataContainer|CellFeatureData|
+FeatureIdsArrayPath=VolumeDataContainer|CellData|FeatureIds
+SurfaceVoxelsArrayName=SurfaceVoxels
+SurfaceFeaturesArrayName=SurfaceFeatures
+StoreSurfaceCells=0
+StoreSurfaceFeatures=0
+NumNeighborsArrayName=NumNeighbors
+NeighborListArrayName=NeighborList
+SharedSurfaceAreaListArrayName=SharedSurfaceAreaList
+
+[12]
+Filter_Name=MergeTwins
+Filter_Human_Label=Merge Twins
+UseNonContiguousNeighbors=0
+ContiguousNeighborListArrayPath=VolumeDataContainer|CellFeatureData|NeighborList
+NonContiguousNeighborListArrayPath=VolumeDataContainer|CellFeatureData|
+ActiveArrayName=Active
+NewCellFeatureAttributeMatrixName=NewCellFeatureData
+FeatureParentIdsArrayName=ParentIds
+CellParentIdsArrayName=ParentIds
+CrystalStructuresArrayPath=VolumeDataContainer|CellEnsembleData|CrystalStructures
+AvgQuatsArrayPath=VolumeDataContainer|CellFeatureData|AvgQuats
+FeaturePhasesArrayPath=VolumeDataContainer|CellFeatureData|Phases
+FeatureIdsArrayPath=VolumeDataContainer|CellData|FeatureIds
+AxisTolerance=3
+AngleTolerance=2
+
+[13]
+Filter_Name=FindSizes
+Filter_Human_Label=Find Feature Sizes
+CellFeatureAttributeMatrixName=VolumeDataContainer|CellFeatureData|
+NumCellsArrayName=NumCells
+EquivalentDiametersArrayName=EquivalentDiameters
+VolumesArrayName=Volumes
+FeatureIdsArrayPath=VolumeDataContainer|CellData|FeatureIds
+
+[14]
+Filter_Name=MinSize
+Filter_Human_Label=Minimum Size Filter
+NumCellsArrayPath=VolumeDataContainer|CellFeatureData|NumCells
+FeaturePhasesArrayPath=VolumeDataContainer|CellFeatureData|Phases
+FeatureIdsArrayPath=VolumeDataContainer|CellData|FeatureIds
+MinAllowedFeatureSize=16
+ApplyToSinglePhase=0
+PhaseNumber=0
+
+[15]
+Filter_Name=FindNeighbors
+Filter_Human_Label=Find Feature Neighbors
+CellFeatureAttributeMatrixPath=VolumeDataContainer|CellFeatureData|
+FeatureIdsArrayPath=VolumeDataContainer|CellData|FeatureIds
+SurfaceVoxelsArrayName=SurfaceVoxels
+SurfaceFeaturesArrayName=SurfaceFeatures
+StoreSurfaceCells=0
+StoreSurfaceFeatures=0
+NumNeighborsArrayName=NumNeighbors
+NeighborListArrayName=NeighborList
+SharedSurfaceAreaListArrayName=SharedSurfaceAreaList
+
+[16]
+Filter_Name=MinNeighbors
+Filter_Human_Label=Minimum Number of Neighbors Filter
+NumNeighborsArrayPath=VolumeDataContainer|CellFeatureData|NumNeighbors
+FeaturePhasesArrayPath=VolumeDataContainer|CellFeatureData|Phases
+FeatureIdsArrayPath=VolumeDataContainer|CellData|FeatureIds
+ApplyToSinglePhase=0
+PhaseNumber=0
+MinNumNeighbors=2
+
+[17]
+Filter_Name=FillBadData
+Filter_Human_Label=Fill Bad Data
+FeatureIdsArrayPath=VolumeDataContainer|CellData|FeatureIds
+CellPhasesArrayPath=VolumeDataContainer|CellData|Phases
+MinAllowedDefectSize=1000
+StoreAsNewPhase=0
+
+[18]
+Filter_Name=ErodeDilateBadData
+Filter_Human_Label=Erode/Dilate Bad Data
+FeatureIdsArrayPath=VolumeDataContainer|CellData|FeatureIds
+Direction=1
+NumIterations=2
+X%20Direction=1
+Y%20Direction=1
+Z%20Direction=1
+
+[19]
+Filter_Name=ErodeDilateBadData
+Filter_Human_Label=Erode/Dilate Bad Data
+FeatureIdsArrayPath=VolumeDataContainer|CellData|FeatureIds
+Direction=0
+NumIterations=2
+X%20Direction=1
+Y%20Direction=1
+Z%20Direction=1
+
+[20]
+Filter_Name=GenerateIPFColors
+Filter_Human_Label=Generate IPF Colors
+UseGoodVoxels=0
+GoodVoxelsArrayPath=VolumeDataContainer|CellData|
+CrystalStructuresArrayPath=VolumeDataContainer|CellEnsembleData|CrystalStructures
+CellEulerAnglesArrayPath=VolumeDataContainer|CellData|EulerAngles
+CellPhasesArrayPath=VolumeDataContainer|CellData|Phases
+CellIPFColorsArrayName=IPFColor
+ReferenceDir\size=3
+ReferenceDir\1\x=0
+ReferenceDir\2\y=0
+ReferenceDir\3\z=1
+
+[21]
+Filter_Name=RenameAttributeArray
+Filter_Human_Label=Rename Attribute Array
+SelectedArrayPath=VolumeDataContainer|CellData|IPFColor
+NewArrayName=IPFColor_Z
+
+[22]
+Filter_Name=GenerateMisorientationColors
+Filter_Human_Label=Generate Misorientation Colors
+UseGoodVoxels=0
+MisorientationColorArrayName=MisorientationColor
+GoodVoxelsArrayPath=VolumeDataContainer|CellData|
+CrystalStructuresArrayPath=VolumeDataContainer|CellEnsembleData|CrystalStructures
+QuatsArrayPath=VolumeDataContainer|CellData|Quats
+CellPhasesArrayPath=VolumeDataContainer|CellData|Phases
+ReferenceAxis\size=3
+ReferenceAxis\1\x=0
+ReferenceAxis\2\y=0
+ReferenceAxis\3\z=1
+ReferenceAngle=0
+
+[23]
+Filter_Name=RenameAttributeArray
+Filter_Human_Label=Rename Attribute Array
+SelectedArrayPath=VolumeDataContainer|CellData|MisorientationColor
+NewArrayName=SchuhColor
+
+[24]
+Filter_Name=DataContainerWriter
+Filter_Human_Label=Write DREAM3D Data File
+OutputFile=Data/Output/SmallIN100Cleaned.dream3d
+WriteXdmfFile=1
