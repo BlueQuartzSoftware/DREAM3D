@@ -227,8 +227,13 @@ class ReadH5Ebsd : public AbstractFilter
 
 
       attrMatrix->addAttributeArray(DREAM3D::EnsembleData::CrystalStructures, crystalStructures);
+      m_CrystalStructuresPtr = crystalStructures;
+      m_CrystalStructures = crystalStructures->getPointer(0);
       attrMatrix->addAttributeArray(DREAM3D::EnsembleData::LatticeConstants, latticeConstants);
+      m_LatticeConstantsPtr = latticeConstants;
+      m_LatticeConstants = latticeConstants->getPointer(0);
       attrMatrix->addAttributeArray(DREAM3D::EnsembleData::MaterialName, materialNames);
+      m_MaterialNamesPtr = materialNames;
       return 0;
     }
 
