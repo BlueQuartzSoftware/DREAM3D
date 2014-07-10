@@ -149,8 +149,9 @@ class CalculateGBCDImpl
         normal[1] = m_Normals[3 * i + 1];
         normal[2] = m_Normals[3 * i + 2];
 
-        Q_ASSERT_X(feature1 < m_PhasesArray->getNumberOfTuples(), "feature1 too large", "feature1 value was outside the limits of the Phases Array");
-        Q_ASSERT_X(feature2 < m_PhasesArray->getNumberOfTuples(), "feature2 too large", "feature2 value was outside the limits of the Phases Array");
+      //  Q_ASSERT_X(feature1 < m_PhasesArray->getNumberOfTuples(), "feature1 too large", "feature1 value was outside the limits of the Phases Array");
+      //  Q_ASSERT_X(feature2 < m_PhasesArray->getNumberOfTuples(), "feature2 too large", "feature2 value was outside the limits of the Phases Array");
+        if (feature1 < 0 || feature2 < 0) { continue; }
 
         if(m_Phases[feature1] == m_Phases[feature2] && m_Phases[feature1] > 0)
         {
