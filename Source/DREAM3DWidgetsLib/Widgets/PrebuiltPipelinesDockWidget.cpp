@@ -127,7 +127,7 @@ QDir PrebuiltPipelinesDockWidget::findPipelinesDirectory()
 #else
   // We are on Linux - I think
   QFileInfo fi(pipelinesDir.absolutePath() + QDir::separator() + dirName);
-// qDebug() << fi.absolutePath();
+  // qDebug() << fi.absolutePath();
   // Look for the "PrebuiltPipelines" directory in the current app directory
   if (fi.exists() == false)
   {
@@ -278,6 +278,12 @@ void PrebuiltPipelinesDockWidget::on_filterLibraryTree_itemDoubleClicked( QTreeW
 void PrebuiltPipelinesDockWidget::actionAppendPipeline_triggered()
 {
   QTreeWidgetItem* item = filterLibraryTree->currentItem();
+  if (NULL == item)
+  {
+    QMessageBox::critical ( this, QString::fromAscii("PAppend to Pipeline Error"),
+                            QString::fromAscii("Please select either a 'Favorite' or 'Prebuilt' pipeline to append to the current pipeline") );
+    return;
+  }
 
   QString pipelinePath = item->data(0, Qt::UserRole).toString();
   if (pipelinePath.isEmpty() == false)
