@@ -550,10 +550,10 @@ void DREAM3D_UI::setupPipelineContextMenu()
   favoriteItemActions << actionRenameFavorite;
 
 
-  QAction* actionAppendFavorite = new QAction(menuPipeline);
+  QAction* actionAppendFavorite = new QAction(NULL);
   actionAppendFavorite->setObjectName(QString::fromUtf8("actionAppendFavorite"));
   actionAppendFavorite->setText(QApplication::translate("DREAM3D_UI", "Append Favorite to Pipeline", 0, QApplication::UnicodeUTF8));
-  menuPipeline->addAction(actionAppendFavorite);
+ // menuPipeline->addAction(actionAppendFavorite);
   //QKeySequence actionAppendFavKeySeq(Qt::CTRL + Qt::Key_A);
   //actionAppendFavorite->setShortcut(actionAppendFavKeySeq);
   connect(actionAppendFavorite, SIGNAL(triggered()),
@@ -612,13 +612,14 @@ void DREAM3D_UI::setupPipelineContextMenu()
 
 
   /* ******************************* Prebuilt Pipelines Context Menus ***********************************************/
-  QAction* actionAppendPrebuilt = new QAction(menuPipeline);
+  QAction* actionAppendPrebuilt = new QAction(NULL);
   actionAppendPrebuilt->setObjectName(QString::fromUtf8("actionAppendPrebuilt"));
   actionAppendPrebuilt->setText(QApplication::translate("DREAM3D_UI", "Append Prebuilt to Pipeline", 0, QApplication::UnicodeUTF8));
-  menuPipeline->addAction(actionAppendPrebuilt);
+  //menuPipeline->addAction(actionAppendPrebuilt);
   connect(actionAppendPrebuilt, SIGNAL(triggered()),
           prebuiltPipelinesDockWidget, SLOT( actionAppendPipeline_triggered() ) );
   prebuiltItemActions << actionAppendPrebuilt;
+
   {
     QAction* separator = new QAction(this);
     separator->setSeparator(true);
