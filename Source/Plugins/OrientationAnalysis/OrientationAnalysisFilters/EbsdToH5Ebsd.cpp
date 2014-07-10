@@ -177,10 +177,10 @@ void EbsdToH5Ebsd::dataCheck()
   }
 
   bool hasMissingFiles = false;
-  bool stackLowToHigh = false;
+  const bool stackLowToHigh = true;
 
-  if( Ebsd::RefFrameZDir::LowtoHigh == m_RefFrameZDir) { stackLowToHigh = true; }
-  else if (Ebsd::RefFrameZDir::HightoLow == m_RefFrameZDir) { stackLowToHigh = false; }
+//  if( Ebsd::RefFrameZDir::LowtoHigh == m_RefFrameZDir) { stackLowToHigh = true; }
+//  else if (Ebsd::RefFrameZDir::HightoLow == m_RefFrameZDir) { stackLowToHigh = false; }
 
   // Now generate all the file names the user is asking for and populate the table
   QVector<QString> fileList = FilePathGenerator::GenerateFileList(m_ZStartIndex, m_ZEndIndex,
@@ -361,10 +361,11 @@ void EbsdToH5Ebsd::execute()
 //      .arg(m_FileSuffix).arg(m_FileExtension);
 
   bool hasMissingFiles = false;
-  bool stackLowToHigh = false;
 
-  if( Ebsd::RefFrameZDir::LowtoHigh == m_RefFrameZDir) { stackLowToHigh = true; }
-  else if (Ebsd::RefFrameZDir::HightoLow == m_RefFrameZDir) { stackLowToHigh = false; }
+  const bool stackLowToHigh = true;
+
+//  if( Ebsd::RefFrameZDir::LowtoHigh == m_RefFrameZDir) { stackLowToHigh = true; }
+//  else if (Ebsd::RefFrameZDir::HightoLow == m_RefFrameZDir) { stackLowToHigh = false; }
 
 
   // Now generate all the file names the user is asking for and populate the table
