@@ -66,7 +66,7 @@ class GenerateMisorientationColorsImpl
     GenerateMisorientationColorsImpl(FloatVec3Widget_t referenceAxis, float refAngle, QuatF* quats, int32_t* phases, unsigned int* crystalStructures,
                                      bool* goodVoxels, uint8_t* notSupported, uint8_t* colors) :
       m_ReferenceAxis(referenceAxis),
-      m_ReferenceAngle(refAngle),
+      m_ReferenceAngle(refAngle*M_PI/180.0f),
       m_Quats(quats),
       m_CellPhases(phases),
       m_CrystalStructures(crystalStructures),
@@ -289,10 +289,6 @@ void GenerateMisorientationColors::execute()
   {
     return;
   }
-
-  //convert rotation angle to degrees
-  m_ReferenceAngle=m_ReferenceAngle*M_PI/180.0f;
-
 
   bool* goodVoxels = NULL;
 

@@ -68,7 +68,7 @@ class RotateEulerRefFrameImpl
   public:
     RotateEulerRefFrameImpl(float* data, float rotAngle, FloatVec3Widget_t rotAxis) :
       m_CellEulerAngles(data),
-      angle(rotAngle),
+      angle(rotAngle*m_pi/180.0f),// Convert the Rotation Angle from Degrees to Radians
       axis(rotAxis)
     {}
     virtual ~RotateEulerRefFrameImpl(){}
@@ -238,8 +238,6 @@ void RotateEulerRefFrame::execute()
     return;
   }
 
-  // Convert the Rotation Angle from Degrees to Radians
-  m_RotationAngle = m_RotationAngle*m_pi/180.0;
 
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
   tbb::task_scheduler_init init;
