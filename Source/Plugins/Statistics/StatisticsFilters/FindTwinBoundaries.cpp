@@ -150,6 +150,7 @@ class CalculateTwinBoundaryImpl
                   n[2] = n3;
                   m_TwinBoundary[i] = true;
                   incoherence = 180.0 * acos(GeometryMath::CosThetaBetweenVectors(n, s_xstl_norm)) / DREAM3D::Constants::k_Pi;
+                  if(incoherence > 90.0) incoherence = 180.0 - incoherence;
                   if(incoherence < m_TwinBoundaryIncoherence[i]) { m_TwinBoundaryIncoherence[i] = incoherence; }
                 }
               }
