@@ -768,3 +768,12 @@ DREAM3D::Rgb TrigonalLowOps::generateMisorientationColor(const QuatF& q, const Q
   return rgb;
 }
 
+QuatF TrigonalLowOps::misorientationColorToDisorientation(const DREAM3D::Rgb& rgb)
+{
+  QuatF quat = {0, 0, 0, 0};
+
+  BOOST_ASSERT(false);
+
+  return quat;
+}
+

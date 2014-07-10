@@ -780,3 +780,12 @@ DREAM3D::Rgb TrigonalOps::generateMisorientationColor(const QuatF& q, const Quat
   return rgb;
 }
 
+QuatF TrigonalOps::misorientationColorToDisorientation(const DREAM3D::Rgb& rgb)
+{
+  QuatF quat = {0, 0, 0, 0};
+
+  BOOST_ASSERT(false);
+
+  return quat;
+}
+

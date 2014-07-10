@@ -116,3 +116,81 @@ DREAM3D::Rgb ColorUtilities::convertHSVtoRgb(float h, float s, float v)
 
   return RgbColor::dRgb(r * 255, g * 255, b * 255, 0);
 }
+
+template<typename T>
+void _TripletSort(T a, T b, T c, T& x, T& y, T& z)
+{
+  if ( a > b && a > c)
+  {
+    z = a;
+    if (b > c) { y = b; x = c; }
+    else { y = c; x = b; }
+  }
+  else if ( b > a && b > c)
+  {
+    z = b;
+    if (a > c) { y = a; x = c; }
+    else { y = c; x = a; }
+  }
+  else if ( a > b )
+  {
+    y = a;
+    x = b;
+    z = c;
+  }
+  else if (a >= c && b >= c)
+  {
+    x = c;
+    y = a;
+    z = b;
+  }
+  else
+  { x = a; y = b; z = c;}
+}
+
+void ColorUtilities::convertRGBtoHSV(DREAM3D::Rgb rgb, float& h, float& s, float& v)
+{
+  double r, g, b, minVal, maxVal, dVal;
+  r=RgbColor::dRed(rgb);
+  g=RgbColor::dGreen(rgb);
+  b=RgbColor::dBlue(rgb);
+  r=r/255;
+  g=g/255;
+  b=b/255;
+  _TripletSort(r, g, b, minVal, dVal, maxVal);
+  v=maxVal;
+  dVal=maxVal-minVal;
+	if( maxVal>0 )
+  {
+    s=dVal/maxVal;
+  }
+	else//black
+  {
+		s = 0;
+	}
+
+	if(0==dVal)//r=g=b (s=0)
+  {
+    h=0;//maybe should be -1
+    return;
+  }
+
+	if(r==maxVal)//yellow<->magenta
+  {
+    h=(g-b)/dVal;
+  }
+	else if(g==maxVal)//cyan<->yellow
+	{
+	  h=2+(b-r)/dVal;
+	}
+	else//magenta<->cyan
+  {
+    h=4+(r-g)/dVal;
+  }
+
+  h=h/6;
+	if(h<0)
+  {
+    h=h+1;
+  }
+}

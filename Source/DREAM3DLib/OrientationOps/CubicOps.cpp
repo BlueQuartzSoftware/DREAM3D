@@ -1675,7 +1675,6 @@ UInt8ArrayType::Pointer CubicOps::generateIPFTriangleLegend(int imageDim)
   return image;
 }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -1686,6 +1685,8 @@ DREAM3D::Rgb CubicOps::generateMisorientationColor(const QuatF& q, const QuatF& 
   float y, y1, y2, y3, y4, y5, y6, y7;
   float z, z1, z2, z3, z4, z5, z6, z7;
   float k, h, s, v;
+
+
 
   QuatF q1, q2;
   QuaternionMathF::Copy(q, q1);
@@ -1760,6 +1761,93 @@ DREAM3D::Rgb CubicOps::generateMisorientationColor(const QuatF& q, const QuatF& 
 
   //now standard 0-255 rgb, needs rotation
   return RgbColor::dRgb(255 - RgbColor::dGreen(rgb), RgbColor::dBlue(rgb), RgbColor::dRed(rgb), 0);
+}
+
+QuatF CubicOps::misorientationColorToDisorientation(const DREAM3D::Rgb& rgb)
+{
+  QuatF q;
+  float n1, n2, n3, w;
+  float x, x1, x2, x3, x4, x5, x6, x7;
+  float y, y1, y2, y3, y4, y5, y6, y7;
+  float z, z1, z2, z3, z4, z5, z6, z7;
+  float k, h, s, v;
+
+  //unrotate (eq c10.1)
+  DREAM3D::Rgb rotatedRGB = RgbColor::dRgb(RgbColor::dBlue(rgb), 255-RgbColor::dRed(rgb), RgbColor::dGreen(rgb), 0);
+
+  //convert to hsv
+  ColorUtilities::convertRGBtoHSV(rotatedRGB, h, s, v);
+
+  //convert to cartesian and scale
+  s=s*v;
+  x7 = (s * cos(h*M_2PI));
+  y7 = (s * sin(h*M_2PI));
+  z7 = v;
+
+  //rotate -pi/6 @ 001 + scale
+  x6 = (x7 * DREAM3D::Constants::k_Sqrt3 + y7) * (DREAM3D::Constants::k_Tan_OneEigthPi / 2.0f);
+  y6 = (-x7 + y7 * DREAM3D::Constants::k_Sqrt3) * (DREAM3D::Constants::k_Tan_OneEigthPi / 2.0f);
+  z6 = z7 *  (DREAM3D::Constants::k_Tan_OneEigthPi / DREAM3D::Constants::k_Cos_OneEigthPi);
+
+  //eq c10.2 (undo eq c9.7)
+  k = atan2(-x6, y6);
+  if(k<0)k=k+M_2PI;///this isn't in the paper but is needed to map the full circle back to the correct semicircle
+  x5 = -sqrt(x6 * x6 + y6 * y6) * sin(k/2.0f);
+  y5 = sqrt(x6 * x6 + y6 * y6) * cos(k/2.0f);
+  z5 = z6;
+
+  //eq c10.3 (undo eq c9.6)
+  k = atan2(-x5, y5);
+  k = sin(k) + fabs(cos(k));
+  x4 = x5 / k;
+  y4 = y5 / k;
+  z4 = z5;
+
+  //eq c10.4 (undo eq c9.5)
+  x3 = x4;
+  y3 = y4 * (DREAM3D::Constants::k_Tan_OneEigthPi / DREAM3D::Constants::k_Cos_OneEigthPi);
+  z3 = z4 + (x4 / DREAM3D::Constants::k_Cos_OneEigthPi);
+
+  //eq c10.5 (undo eq c9.4)
+  k = z3 / (z3 + y3 * DREAM3D::Constants::k_Tan_OneEigthPi);
+  x2 = x3;
+  y2 = y3 * k;
+  z2 = z3 * k;
+
+  //eq c10.6 (undo eq c9.3)
+  x1 = x2 + DREAM3D::Constants::k_Tan_OneEigthPi;
+  y1 = y2 * DREAM3D::Constants::k_Cos_ThreeEightPi + z2 * DREAM3D::Constants::k_Sin_ThreeEightPi;
+  z1 = -y2 * DREAM3D::Constants::k_Sin_ThreeEightPi + z2 * DREAM3D::Constants::k_Cos_ThreeEightPi;
+
+  //eq c10.7 (undo eq c9.2)
+  if(x1 >= DREAM3D::Constants::k_1Over3 && atan2(z1, y1)>= (1-2.0f*x1)/x1)
+  {
+    x = x1;
+    k = y1 * (1 - x1) / (x1 * (y1 + z1));
+    y = y1 * k;
+    z = z1 * k;
+  }
+  else
+  {
+    x = x1;
+    y = y1;
+    z = z1;
+  }
+
+  //eq c10.8 (undo eq c9.1)
+  k = sqrt(x * x + y * y + z * z);
+  n1 = x / k;
+  n2 = y / k;
+  n3 = z / k;
+  w = atan(k);
+
+  //convert from axis-angle to quat
+  q.x = n1 * sin(w);
+  q.y = n2 * sin(w);
+  q.z = n3 * sin(w);
+  q.w = cos(w);
+
+  return q;
 }
 
 // -----------------------------------------------------------------------------

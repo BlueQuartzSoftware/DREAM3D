@@ -45,6 +45,7 @@ class DREAM3DLib_EXPORT ColorUtilities
     ~ColorUtilities();
 
     static DREAM3D::Rgb convertHSVtoRgb(float h, float s, float v);
+    static void convertRGBtoHSV(DREAM3D::Rgb rgb, float& h, float& s, float& v);
 
   protected:
     ColorUtilities();

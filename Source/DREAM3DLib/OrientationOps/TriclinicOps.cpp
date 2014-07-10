@@ -721,3 +721,11 @@ DREAM3D::Rgb TriclinicOps::generateMisorientationColor(const QuatF& q, const Qua
   return rgb;
 }
 
+QuatF TriclinicOps::misorientationColorToDisorientation(const DREAM3D::Rgb& rgb)
+{
+  QuatF quat = {0, 0, 0, 0};
+
+  BOOST_ASSERT(false);
+
+  return quat;
+}

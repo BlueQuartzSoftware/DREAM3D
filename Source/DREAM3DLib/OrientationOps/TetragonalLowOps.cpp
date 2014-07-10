@@ -747,3 +747,11 @@ DREAM3D::Rgb TetragonalLowOps::generateMisorientationColor(const QuatF& q, const
   return rgb;
 }
 
+QuatF TetragonalLowOps::misorientationColorToDisorientation(const DREAM3D::Rgb& rgb)
+{
+  QuatF quat = {0, 0, 0, 0};
+
+  BOOST_ASSERT(false);
+
+  return quat;
+}

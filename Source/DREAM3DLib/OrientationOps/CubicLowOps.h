@@ -140,6 +140,13 @@ class DREAM3DLib_EXPORT CubicLowOps : public OrientationOps
     virtual DREAM3D::Rgb generateMisorientationColor(const QuatF& q, const QuatF& refFrame);
 
     /**
+     * @brief misorientationColorToDisorientation Generates a disorientation from a color based on the method developed by C. Schuh and S. Patala.
+     * @param the ARGB Quadruplet DREAM3D::Rgb (generated with generateMisorientationColor)
+     * @return Returns a Quaternion representing the disorientation
+     */
+    virtual QuatF misorientationColorToDisorientation(const DREAM3D::Rgb& rgb);
+
+    /**
      * @brief generatePoleFigure This method will generate a number of pole figures for this crystal symmetry and the Euler
      * angles that are passed in.
      * @param eulers The Euler Angles to generate the pole figure from.

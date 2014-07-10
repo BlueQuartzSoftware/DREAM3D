@@ -1610,3 +1610,12 @@ DREAM3D::Rgb HexagonalOps::generateMisorientationColor(const QuatF& q, const Qua
   //now standard 0-255 rgb, needs inversion
   return RgbColor::dRgb(255 - RgbColor::dRed(rgb), 255 - RgbColor::dGreen(rgb), 255 - RgbColor::dBlue(rgb), 0);
 }
+
+QuatF HexagonalOps::misorientationColorToDisorientation(const DREAM3D::Rgb& rgb)
+{
+  QuatF quat = {0, 0, 0, 0};
+
+  BOOST_ASSERT(false);
+
+  return quat;
+}
