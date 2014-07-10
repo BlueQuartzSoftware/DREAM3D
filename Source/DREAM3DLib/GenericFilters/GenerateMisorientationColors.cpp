@@ -197,6 +197,7 @@ void GenerateMisorientationColors::setupFilterParameters()
     option->setWidgetType(FilterParameter::DoubleWidget);
     option->setValueType("float");
     option->setCastableValueType("double");
+    option->setUnits("Degrees");
     parameters.push_back(option);
   }
   setFilterParameters(parameters);
@@ -288,6 +289,9 @@ void GenerateMisorientationColors::execute()
   {
     return;
   }
+
+  //convert rotation angle to degrees
+  m_ReferenceAngle=m_ReferenceAngle*M_PI/180.0f;
 
 
   bool* goodVoxels = NULL;
