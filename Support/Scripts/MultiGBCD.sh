@@ -1,7 +1,8 @@
 #!/bin/bash
 
 export PATH=/Applications/UniversalBinary/GMT/GMT-5.1.0.app/Contents/Resources/bin:${PATH}
-gmt
+
+use_gmt5
 
 DREAM3D_EXE=/Users/mjackson/Workspace/DREAM3D_Rewrite/zRel/Bin/PipelineRunner
 GEN_GMT=/Users/mjackson/Workspace/DREAM3D_Rewrite/Support/Scripts/GMT/Draw_stereograms-gmt-v5.1.sh
@@ -23,7 +24,7 @@ do
 	$DREAM3D_EXE -p /tmp/$pname
 
 
-	$GEN_GMT 1 Data/Output/SmallIN100GBCD/$d/SmallIn100GMT_${d}_ 5d rainbow 0 125 10 stereo CUBIC
+	$GEN_GMT 1 Data/Output/SmallIN100GBCD/$d/SmallIn100GMT_${d}_ 5d rainbow 0 1800 200 stereo CUBIC
 	mv Data/Output/SmallIN100GBCD/$d/SmallIn100GMT_${d}_.png Data/Output/SmallIN100GBCD/SmallIn100GMT_${d}_.png 
 
 done
