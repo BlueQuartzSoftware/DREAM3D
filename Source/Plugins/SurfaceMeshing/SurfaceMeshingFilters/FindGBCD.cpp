@@ -59,10 +59,10 @@ class CalculateGBCDImpl
 {
     size_t startOffset;
     size_t numEntriesPerTri;
-    int32_t* m_Labels;
-    double* m_Normals;
-    int32_t* m_Phases;
-    float* m_Eulers;
+    Int32ArrayType::Pointer m_LabelsArray;
+    DoubleArrayType::Pointer m_NormalsArray;
+    Int32ArrayType::Pointer m_PhasesArray;
+    FloatArrayType::Pointer m_EulersArray;
 
     FloatArrayType::Pointer m_GbcdDeltasArray;
     FloatArrayType::Pointer m_GbcdLimitsArray;
@@ -70,27 +70,27 @@ class CalculateGBCDImpl
     Int32ArrayType::Pointer m_GbcdBinsArray;
     BoolArrayType::Pointer  m_GbcdHemiCheckArray;
 
-    unsigned int* m_CrystalStructures;
+    UInt32ArrayType::Pointer m_CrystalStructuresArray;
     QVector<OrientationOps::Pointer> m_OrientationOps;
 
   public:
-    CalculateGBCDImpl(size_t i, size_t numMisoReps, int32_t* Labels, double* Normals, float* Eulers,
-                      int32_t* Phases, unsigned int* CrystalStructures,
+    CalculateGBCDImpl(size_t i, size_t numMisoReps, Int32ArrayType::Pointer Labels, DoubleArrayType::Pointer Normals, FloatArrayType::Pointer Eulers,
+                      Int32ArrayType::Pointer Phases, UInt32ArrayType::Pointer CrystalStructures,
                       Int32ArrayType::Pointer Bins, BoolArrayType::Pointer HemiCheck,
                       FloatArrayType::Pointer GBCDdeltas, Int32ArrayType::Pointer  GBCDsizes,
                       FloatArrayType::Pointer GBCDlimits) :
       startOffset(i),
       numEntriesPerTri(numMisoReps),
-      m_Labels(Labels),
-      m_Normals(Normals),
-      m_Phases(Phases),
-      m_Eulers(Eulers),
+      m_LabelsArray(Labels),
+      m_NormalsArray(Normals),
+      m_PhasesArray(Phases),
+      m_EulersArray(Eulers),
       m_GbcdDeltasArray(GBCDdeltas),
       m_GbcdLimitsArray(GBCDlimits),
       m_GbcdSizesArray(GBCDsizes),
       m_GbcdBinsArray(Bins),
       m_GbcdHemiCheckArray(HemiCheck),
-      m_CrystalStructures(CrystalStructures)
+      m_CrystalStructuresArray(CrystalStructures)
     {
       m_OrientationOps = OrientationOps::getOrientationOpsVector();
     }
@@ -111,6 +111,11 @@ class CalculateGBCDImpl
       int32_t* m_Bins = m_GbcdBinsArray->getPointer(0);
       bool* m_HemiCheck = m_GbcdHemiCheckArray->getPointer(0);
 
+      int32_t* m_Labels = m_LabelsArray->getPointer(0);
+      double* m_Normals = m_NormalsArray->getPointer(0);
+      int32_t* m_Phases = m_PhasesArray->getPointer(0);
+      float* m_Eulers = m_EulersArray->getPointer(0);
+      uint32_t* m_CrystalStructures = m_CrystalStructuresArray->getPointer(0);
 
 
       int j;//, j4;
@@ -143,6 +148,10 @@ class CalculateGBCDImpl
         normal[0] = m_Normals[3 * i];
         normal[1] = m_Normals[3 * i + 1];
         normal[2] = m_Normals[3 * i + 2];
+
+        Q_ASSERT_X(feature1 < m_PhasesArray->getNumberOfTuples(), "feature1 too large", "feature1 value was outside the limits of the Phases Array");
+        Q_ASSERT_X(feature2 < m_PhasesArray->getNumberOfTuples(), "feature2 too large", "feature2 value was outside the limits of the Phases Array");
+
         if(m_Phases[feature1] == m_Phases[feature2] && m_Phases[feature1] > 0)
         {
           TRIcounterShift = (TRIcounter * numEntriesPerTri);
@@ -556,13 +565,13 @@ void FindGBCD::execute()
     if (doParallel == true)
     {
       tbb::parallel_for(tbb::blocked_range<size_t>(i, i + faceChunkSize),
-                        CalculateGBCDImpl(i, numMisoReps, m_SurfaceMeshFaceLabels, m_SurfaceMeshFaceNormals, m_FeatureEulerAngles, m_FeaturePhases, m_CrystalStructures, m_GbcdBinsArray, m_GbcdHemiCheckArray, m_GbcdDeltasArray, m_GbcdSizesArray, m_GbcdLimitsArray), tbb::auto_partitioner());
+                        CalculateGBCDImpl(i, numMisoReps, m_SurfaceMeshFaceLabelsPtr.lock(), m_SurfaceMeshFaceNormalsPtr.lock(), m_FeatureEulerAnglesPtr.lock(), m_FeaturePhasesPtr.lock(), m_CrystalStructuresPtr.lock(), m_GbcdBinsArray, m_GbcdHemiCheckArray, m_GbcdDeltasArray, m_GbcdSizesArray, m_GbcdLimitsArray), tbb::auto_partitioner());
 
     }
     else
 #endif
     {
-      CalculateGBCDImpl serial(i, numMisoReps, m_SurfaceMeshFaceLabels, m_SurfaceMeshFaceNormals, m_FeatureEulerAngles, m_FeaturePhases, m_CrystalStructures, m_GbcdBinsArray, m_GbcdHemiCheckArray, m_GbcdDeltasArray, m_GbcdSizesArray, m_GbcdLimitsArray);
+      CalculateGBCDImpl serial(i, numMisoReps, m_SurfaceMeshFaceLabelsPtr.lock(), m_SurfaceMeshFaceNormalsPtr.lock(), m_FeatureEulerAnglesPtr.lock(), m_FeaturePhasesPtr.lock(), m_CrystalStructuresPtr.lock(), m_GbcdBinsArray, m_GbcdHemiCheckArray, m_GbcdDeltasArray, m_GbcdSizesArray, m_GbcdLimitsArray);
       serial.generate(i, i + faceChunkSize);
     }
 
