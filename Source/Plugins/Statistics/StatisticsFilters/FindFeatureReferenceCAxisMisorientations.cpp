@@ -211,10 +211,8 @@ void FindFeatureReferenceCAxisMisorientations::execute()
   // We have more points than can be allocated on a 32 bit machine. Assert Now.
   if(totalPoints > maxUInt32)
   {
-    setErrorCondition(-666);
-    ss.str("");
-    ss << "The volume is too large for a 32 bit machine. Try reducing the input volume size. Total Voxels: " << totalPoints;
-    notifyErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
+    QString ss = QObject::tr("The volume is too large for a 32 bit machine. Try reducing the input volume size. Total Voxels: %1").arg(totalPoints);
+    notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
     return;
   }
 #else
