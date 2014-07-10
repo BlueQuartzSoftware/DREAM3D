@@ -1,6 +1,6 @@
 [PipelineBuilder]
 Name=(15) Small IN100 Full Reconstruction
-Number_Filters=25
+Number_Filters=23
 Version=5.0.6662
 
 [0]
@@ -242,13 +242,8 @@ ReferenceDir\1\x=0
 ReferenceDir\2\y=0
 ReferenceDir\3\z=1
 
-[21]
-Filter_Name=RenameAttributeArray
-Filter_Human_Label=Rename Attribute Array
-SelectedArrayPath=VolumeDataContainer|CellData|IPFColor
-NewArrayName=IPFColor_Z
 
-[22]
+[21]
 Filter_Name=GenerateMisorientationColors
 Filter_Human_Label=Generate Misorientation Colors
 UseGoodVoxels=0
@@ -263,13 +258,8 @@ ReferenceAxis\2\y=0
 ReferenceAxis\3\z=1
 ReferenceAngle=0
 
-[23]
-Filter_Name=RenameAttributeArray
-Filter_Human_Label=Rename Attribute Array
-SelectedArrayPath=VolumeDataContainer|CellData|MisorientationColor
-NewArrayName=SchuhColor
 
-[24]
+[22]
 Filter_Name=DataContainerWriter
 Filter_Human_Label=Write DREAM3D Data File
 OutputFile=Data/Output/SmallIN100Cleaned.dream3d
