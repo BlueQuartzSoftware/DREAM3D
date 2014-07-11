@@ -50,6 +50,8 @@
 #include <QtGui/QPainter>
 #include <QtGui/QFont>
 #include <QtGui/QMenu>
+#include <QtGui/QMessageBox>
+
 
 #include "DREAM3DLib/DataContainers/VolumeDataContainer.h"
 #include "DREAM3DLib/Common/FilterManager.h"
@@ -271,8 +273,16 @@ void QEbsdReferenceFrameDialog::loadEbsdData()
   int err = reader->getErrorCondition();
   if (err < 0)
   {
+            QMessageBox msgBox;
+        msgBox.setText("Error Reading ANG File");
+        QString iText("There was an error reading the ang file\n");
+        msgBox.setInformativeText(iText);
+        msgBox.setStandardButtons(QMessageBox::Ok);
+        msgBox.setDefaultButton(QMessageBox::Ok);
+        msgBox.exec();
     m_BaseImage = QImage();
     m_DisplayedImage = QImage();
+    return;
   }
 
 

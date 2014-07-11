@@ -249,6 +249,11 @@ void ConvertHexGridToSquareGrid::execute()
       QString msg = "Converting File: " + ebsdFName;
       notifyStatusMessage(getHumanLabel(), msg.toLatin1().data());
     }
+    if (getCancel() == true)
+    {
+      break;
+    }
+
     // Write the Manufacturer of the OIM file here
     // This list will grow to be the number of EBSD file formats we support
     QFileInfo fi(ebsdFName);
@@ -340,7 +345,7 @@ void ConvertHexGridToSquareGrid::execute()
         {
           QString buf = in.readLine();
           QString line = modifyAngHeaderLine(buf);
-          if(m_HeaderIsComplete == false) { dStream << line ; }
+          if(m_HeaderIsComplete == false) { dStream << line << "\n" ; }
         }
         for(int j = 0; j < m_NumRows; j++)
         {
@@ -440,29 +445,30 @@ QString ConvertHexGridToSquareGrid::modifyAngHeaderLine(QString& buf)
     line = buf;
     return line;
   }
-  if (word.compare(Ebsd::Ang::Grid) == 0)
+  if (buf.contains(Ebsd::Ang::HexGrid) )
   {
-    line = "# " + word + ": SqrGrid";
+    line = buf.replace(Ebsd::Ang::HexGrid, Ebsd::Ang::SquareGrid);
+    //line = "# " + word + ": SqrGrid";
   }
-  else if (word.compare(Ebsd::Ang::XStep) == 0)
+  else if (buf.contains(Ebsd::Ang::XStep))
   {
-    line = "# " + word + ": " + QString::number( (double)m_XResolution);
+    line = "# " + Ebsd::Ang::XStep + ": " + QString::number( (double)m_XResolution);
   }
-  else if (word.compare(Ebsd::Ang::YStep) == 0)
+  else if (buf.contains(Ebsd::Ang::YStep))
   {
-    line = "# " + word + ": " + QString::number((double)m_YResolution);
+    line = "# " + Ebsd::Ang::YStep + ": " + QString::number((double)m_YResolution);
   }
-  else if (word.compare(Ebsd::Ang::NColsOdd) == 0)
+  else if (buf.contains(Ebsd::Ang::NColsOdd))
   {
-    line = "# " + word + ": " + QString::number(m_NumCols);
+    line = "# " + Ebsd::Ang::NColsOdd + ": " + QString::number(m_NumCols);
   }
-  else if (word.compare(Ebsd::Ang::NColsEven) == 0)
+  else if (buf.contains(Ebsd::Ang::NColsEven))
   {
-    line = "# " + word + ": " + QString::number(m_NumCols);
+    line = "# " + Ebsd::Ang::NColsEven + ": " + QString::number(m_NumCols);
   }
-  else if (word.compare(Ebsd::Ang::NRows) == 0)
+  else if (buf.contains(Ebsd::Ang::NRows))
   {
-    line = "# " + word + ": " + QString::number(m_NumRows);
+    line = "# " + Ebsd::Ang::NRows + ": " + QString::number(m_NumRows);
   }
   else
   {
