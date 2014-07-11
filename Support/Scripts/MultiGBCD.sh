@@ -23,7 +23,6 @@ do
 
 	$DREAM3D_EXE -p /tmp/$pname
 
-
 	$GEN_GMT 1 Data/Output/SmallIN100GBCD/$d/SmallIn100GMT_${d}_ 5d rainbow 0 1800 200 stereo CUBIC
 	mv Data/Output/SmallIN100GBCD/$d/SmallIn100GMT_${d}_.png Data/Output/SmallIN100GBCD/SmallIn100GMT_${d}_.png 
 

@@ -576,10 +576,11 @@ void FindGBCD::execute()
       serial.generate(i, i + faceChunkSize);
     }
 
-    QString ss = QObject::tr("Calculating GBCD: Triangles %1/%2 Completed").arg(i).arg(totalFaces);
+
     currentMillis = QDateTime::currentMSecsSinceEpoch();
     if (currentMillis - millis > 1000)
     {
+      QString ss = QObject::tr("Calculating GBCD: Triangles %1/%2 Completed").arg(i).arg(totalFaces);
       timeDiff = ((float)i / (float)(currentMillis - startMillis));
       estimatedTime = (float)(totalFaces - i) / timeDiff;
       ss = ss + QObject::tr(" || Est. Time Remain: %1").arg(DREAM3D::convertMillisToHrsMinSecs(estimatedTime));
