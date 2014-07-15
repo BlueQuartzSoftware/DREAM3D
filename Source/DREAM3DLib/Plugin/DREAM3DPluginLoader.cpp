@@ -74,7 +74,8 @@ void DREAM3DPluginLoader::LoadPluginFilters(FilterManager* filterManager)
   m_PluginDirs << qApp->applicationDirPath();
 
   QDir aPluginDir = QDir(qApp->applicationDirPath());
-  // qDebug() << "aPluginDir: " << aPluginDir.absolutePath() << "\n";
+  qDebug() << "Loading DREAM3D Plugins....";
+  //qDebug() << "aPluginDir: " << aPluginDir.absolutePath() << "\n";
   QString thePath;
 
 #if defined(Q_OS_WIN)
@@ -84,16 +85,31 @@ void DREAM3DPluginLoader::LoadPluginFilters(FilterManager* filterManager)
     m_PluginDirs << thePath;
   }
 #elif defined(Q_OS_MAC)
+  // Look to see if we are inside an .app package or inside the 'tools' directory
   if (aPluginDir.dirName() == "MacOS")
   {
     aPluginDir.cdUp();
     thePath = aPluginDir.absolutePath() + "/Plugins";
+    qDebug() << "  Adding Path " << thePath;
     m_PluginDirs << thePath;
     aPluginDir.cdUp();
     aPluginDir.cdUp();
+    // We need this because Apple (in their infinite wisdom) changed how the current working directory is set in OS X 10.9 and above. Thanks Apple.
+    chdir(aPluginDir.absolutePath().toLatin1().constData());
   }
+  if (aPluginDir.dirName() == "tools")
+  {
+    aPluginDir.cdUp();
+    // thePath = aPluginDir.absolutePath() + "/Plugins";
+    // qDebug() << "  Adding Path " << thePath;
+    // m_PluginDirs << thePath;
+    // We need this because Apple (in their infinite wisdom) changed how the current working directory is set in OS X 10.9 and above. Thanks Apple.
+    chdir(aPluginDir.absolutePath().toLatin1().constData());
+  }
+
   // aPluginDir.cd("Plugins");
   thePath = aPluginDir.absolutePath() + "/Plugins";
+  qDebug() << "  Adding Path " << thePath;
   m_PluginDirs << thePath;
 
   // This is here for Xcode compatibility
@@ -117,7 +133,7 @@ void DREAM3DPluginLoader::LoadPluginFilters(FilterManager* filterManager)
 
   foreach (QString pluginDirString, m_PluginDirs)
   {
-    //qDebug() << "Plugin Directory being Searched: " << pluginDirString() << "\n";
+    qDebug() << "Plugin Directory being Searched: " << pluginDirString << "\n";
     aPluginDir = QDir(pluginDirString);
     foreach (QString fileName, aPluginDir.entryList(QDir::Files))
     {
@@ -142,9 +158,9 @@ void DREAM3DPluginLoader::LoadPluginFilters(FilterManager* filterManager)
   // file system and add each to the toolbar and menu
   foreach(QString path, pluginFilePaths)
   {
-    qDebug() << "Plugin Loading: " << path;
-//    qDebug() << "    File Extension: .plugin";
-//    qDebug() << "    Path: " << path;
+    qDebug() << "Plugin Being Loaded:";
+    qDebug() << "    File Extension: .plugin";
+    qDebug() << "    Path: " << path;
     QPluginLoader loader(path);
     QFileInfo fi(path);
     QString fileName = fi.fileName();
@@ -152,7 +168,6 @@ void DREAM3DPluginLoader::LoadPluginFilters(FilterManager* filterManager)
     qDebug() << "    Pointer: " << plugin << "\n";
     if (plugin && m_PluginFileNames.contains(fileName, Qt::CaseSensitive) == false)
     {
-      //populateMenus(plugin);
       DREAM3DPluginInterface* ipPlugin = qobject_cast<DREAM3DPluginInterface* > (plugin);
       if (ipPlugin)
       {

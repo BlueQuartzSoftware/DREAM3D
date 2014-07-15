@@ -15,7 +15,10 @@ function printStatus()
 
 
 InstallPrefix="${1}"
+printStatus "InstallPrefix = ${InstallPrefix}"
 ProjectBinaryDir=@PROJECT_INSTALL_DIR@
+printStatus "ProjectBinaryDir = ${ProjectBinaryDir}"
+
 # ProjectBinaryDir="${InstallPrefix}/@osx_app_name@.app"
 OSX_App_Name="@osx_app_name@"
 OSX_App="@CMAKE_RUNTIME_OUTPUT_DIRECTORY@/@osx_app_name@.app"
@@ -24,6 +27,10 @@ logFile=/tmp/ThinAndShareLibraries.log
 
 echo "Starting Fix up of application @osx_app_name@.app to share the frameworks and thin to a single arch" 
 
+
+# -----------------------------------------------------------------------------
+# Frameworks
+# -----------------------------------------------------------------------------
 # Create the shared frameworks directory
 mkdir -p ${InstallPrefix}/Frameworks
 cd ${InstallPrefix}/${ProjectBinaryDir}/Contents/Frameworks
@@ -59,10 +66,48 @@ do
   
 done
 
-# remove the actual frameworks direction and create a symlink to the external Frameworks directory
+# -----------------------------------------------------------------------------
+# Plugins
+# -----------------------------------------------------------------------------
+mkdir -p ${InstallPrefix}/Plugins
+cd ${InstallPrefix}/${ProjectBinaryDir}/Contents/Plugins
+plugins=`find . -type f -name "*.plugin"`
+for p in ${plugins}
+do
+  # Move the plugin out into the top level plugin directory (over writing anything that is outp there)
+  # Get the directory (for embedded Qt Plugins like ImageFormats)
+  dir=`dirname ${p}`
+  # Create that directory structure up in the top level
+  mkdir -p ${InstallPrefix}/Plugins/${dir}
+  # Move the plugin file out into the top level
+  mv ${p} ${InstallPrefix}/Plugins/${dir}/
+done
+
+# Now move all the Qt style plugins which have a file extension of .dylib
+plugins=`find . -type f -name "*.dylib"`
+for p in ${plugins}
+do
+  # Move the plugin out into the top level plugin directory (over writing anything that is outp there)
+  # Get the directory (for embedded Qt Plugins like ImageFormats)
+  dir=`dirname ${p}`
+  # Create that directory structure up in the top level
+  mkdir -p ${InstallPrefix}/Plugins/${dir}
+  # Move the plugin file out into the top level
+  mv ${p} ${InstallPrefix}/Plugins/${dir}/
+done
+
+# All the plugins should be out of the directory, move up one directory and create a symlink
+cd ../
+rm -rf Plugins
+ln -s ../../Plugins Plugins
+
+# remove the actual frameworks directory and create a symlink to the external Frameworks directory
 cd "${InstallPrefix}"
 
 
+# -----------------------------------------------------------------------------
+# Dylibs
+# -----------------------------------------------------------------------------
 # Now create the 'lib' shared directory
 mkdir -p ${InstallPrefix}/lib
 if [ -d  ${InstallPrefix}/${ProjectBinaryDir}/Contents/lib ]; then

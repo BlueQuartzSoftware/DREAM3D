@@ -50,6 +50,7 @@ function(COMPILE_TOOL)
 
 endfunction()
 
+if(0)
 # Create a Command line tool for the PhToHDF5
 COMPILE_TOOL(
     TARGET PhToHDF5
@@ -63,4 +64,4 @@ COMPILE_TOOL(
     INSTALL_DEST  "${install_dir}"
     LINK_LIBRARIES DREAM3DLib
 )
-
+endif()

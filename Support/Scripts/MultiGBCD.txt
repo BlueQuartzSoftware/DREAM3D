@@ -215,7 +215,7 @@ TransferPhaseId=0
 [3]
 Filter_Name=LaplacianSmoothing
 Filter_Human_Label=Laplacian Smoothing
-IterationSteps=SLICE_NUMBER
+IterationSteps=SMOOTHING_ITERATIONS
 Lambda=0.25
 TripleLineLambda=0.2
 QuadPointLambda=0.15000001
