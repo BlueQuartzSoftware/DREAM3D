@@ -4,13 +4,19 @@
 
 #include "ManualThresholdTemplate.h"
 
-#include "DREAM3DLib/Common/Constants.h"
-
-#include "ITKUtilities.h"
 #include <string>
 
 //thresholding filter
 #include "itkBinaryThresholdImageFilter.h"
+
+#include "DREAM3DLib/Common/Constants.h"
+#include "DREAM3DLib/DataArrays/DataArray.hpp"
+
+// ImageProcessing Plugin
+#include "ITKUtilities.h"
+
+
+
 
 
 // -----------------------------------------------------------------------------
@@ -119,11 +125,18 @@ void ManualThresholdTemplate::preflight()
 //
 // -----------------------------------------------------------------------------
 template<typename PixelType>
-void filter(VolumeDataContainer* m, QString attrMatName, void* rawData, void* processedData, int numVoxels, int manParameter)
+IDataArray::Pointer filter(IDataArray::Pointer iDataArray, const QString outName, int manParameter)
 {
+  typedef DataArray<PixelType> DataArrayType;
+  typename DataArrayType::Pointer inputDataPtr = boost::dynamic_pointer_cast<DataArrayType>(iDataArray);
+
+  typename DataArrayType::Pointer outputDataPtr = DataArrayType::CreateArray(inputDataPtr->getNumberOfTuples(), inputDataPtr->getComponentDimensions(), outName, true);
+
+  size_t numVoxels = inputDataPtr->getNumberOfTuples();
+
   //convert arrays to correct type
-  PixelType* typed_rawdata = static_cast<PixelType*>(rawData);
-  PixelType* typed_processeddata = static_cast<PixelType*>(processedData);
+  PixelType* inputData = static_cast<PixelType*>(inputDataPtr->getPointer(0));
+  PixelType* outputData = static_cast<PixelType*>(outputDataPtr->getPointer(0));
   /*
   typedef ITKUtilities<PixelType> ITKUtilitiesType;
 
@@ -144,24 +157,34 @@ void filter(VolumeDataContainer* m, QString attrMatName, void* rawData, void* pr
   thresholdFilter->GetOutput()->GetPixelContainer()->SetImportPointer(typed_processeddata, numVoxels, false);
   thresholdFilter->Update();
   */
-  for(int i=0; i<numVoxels; i++)
+  for(size_t i=0; i<numVoxels; i++)
   {
-    if(typed_rawdata[i]>=manParameter)
+    if(inputData[i]>=manParameter)
     {
-      typed_processeddata[i]=255;
+      outputData[i]=255;
     }
     else
     {
-      typed_processeddata[i]=0;
+      outputData[i]=0;
     }
   }
+
+  return outputDataPtr;
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void ManualThresholdTemplate::execute()
 {
-
+  QString ss;
   dataCheck();
-  if(getErrorCondition() < 0) { return; }
+  if(getErrorCondition() < 0) {
+    setErrorCondition(-10000);
+    ss = QObject::tr("DataCheck did not pass during execute");
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    return;
+  }
 
   //get volume container
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getSelectedCellArrayArrayPath().getDataContainerName());
@@ -171,11 +194,28 @@ void ManualThresholdTemplate::execute()
   QString type = m->getAttributeMatrix(attrMatName)->getAttributeArray(getSelectedCellArrayArrayPath().getDataArrayName())->getTypeAsString();;
 
   //get number of points
-  int64_t totalPoints;
-  TEMPLATE_GET_NUM_TUPLES(SelectedCellArray, totalPoints, type)
+  IDataArray::Pointer iDataArray = m->getAttributeMatrix(attrMatName)->getAttributeArray(getSelectedCellArrayArrayPath().getDataArrayName());
+  // int64_t totalPoints = iDataArray->getNumberOfTuples();
+
+  IDataArray::Pointer outputData = IDataArray::NullPointer();
 
   //execute type dependant portion
-  TEMPLATE_EXECUTE_FUNCTION(filter, type, m, attrMatName, m_SelectedCellArray, m_NewCellArray, totalPoints, m_ManualParameter)
+  // TEMPLATE_EXECUTE_FUNCTION(filter, type, m, attrMatName, m_SelectedCellArray, m_NewCellArray, totalPoints, m_ManualParameter)
+  if(NULL != boost::dynamic_pointer_cast<Int8ArrayType>(iDataArray).get() )
+  {
+    outputData = filter<int8_t>(iDataArray, getNewCellArrayName(), getManualParameter() );
+  }
+  else if(NULL != boost::dynamic_pointer_cast<UInt8ArrayType>(iDataArray).get() )
+  {
+    outputData = filter<uint8_t>(iDataArray, getNewCellArrayName(), getManualParameter() );
+  }
+  else
+  {
+    setErrorCondition(-10001);
+    ss = QObject::tr("A Supported Input DataArray type was not used for an input array.");
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    return;
+  }
 
   //array name changing/cleanup
   if(m_SaveAsNewArray == false)

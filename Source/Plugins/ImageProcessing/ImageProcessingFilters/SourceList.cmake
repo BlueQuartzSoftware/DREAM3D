@@ -58,7 +58,9 @@ foreach(f ${_PrivateFilters} )
 endforeach()
 
 ADD_DREAM3D_SUPPORT_HEADER(${ImageProcessing_SOURCE_DIR} ${_filterGroupName} ITKUtilities.h)
-
+ADD_DREAM3D_SUPPORT_HEADER(${ImageProcessing_SOURCE_DIR} ${_filterGroupName} TemplateUtilities.h)
+ADD_DREAM3D_SUPPORT_HEADER(${ImageProcessing_SOURCE_DIR} ${_filterGroupName} ManualThresholdTemplate.h)
+ADD_DREAM3D_SUPPORT_SOURCE(${ImageProcessing_SOURCE_DIR} ${_filterGroupName} ManualThresholdTemplate.cpp)
 
 #---------------------
 # This macro must come last after we are done adding all the filters and support files.

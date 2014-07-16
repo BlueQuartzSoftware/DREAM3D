@@ -5,7 +5,7 @@
 #ifndef _ManualThresholdTemplate_H_
 #define _ManualThresholdTemplate_H_
 
-#include <vector>
+//#include <vector>
 #include <QtCore/QString>
 
 #include "DREAM3DLib/DREAM3DLib.h"
@@ -44,6 +44,7 @@ class ManualThresholdTemplate : public AbstractFilter
 
     DREAM3D_FILTER_PARAMETER(bool, SaveAsNewArray)
     Q_PROPERTY(bool SaveAsNewArray READ getSaveAsNewArray WRITE setSaveAsNewArray)
+
     DREAM3D_FILTER_PARAMETER(int, ManualParameter)
     Q_PROPERTY(int ManualParameter READ getManualParameter WRITE setManualParameter)
 
