@@ -227,17 +227,22 @@ void ManualThresholdTemplate::execute()
   else
   {
     setErrorCondition(-10001);
-    ss = QObject::tr("A Supported Input DataArray type was not used for an input array.");
+    ss = QObject::tr("A Supported DataArray type was not used for an input array.");
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;
   }
 
   //array name changing/cleanup
-  if(m_SaveAsNewArray == false)
+  AttributeMatrix::Pointer attrMat = m->getAttributeMatrix(m_SelectedCellArrayArrayPath.getAttributeMatrixName());
+  if(m_SaveAsNewArray == true)
   {
-    AttributeMatrix::Pointer attrMat = m->getAttributeMatrix(m_SelectedCellArrayArrayPath.getAttributeMatrixName());
+    attrMat->addAttributeArray(getNewCellArrayName(), outputData);
+  }
+  else
+  {
     attrMat->removeAttributeArray(m_SelectedCellArrayArrayPath.getDataArrayName());
-    attrMat->renameAttributeArray(m_NewCellArrayName, m_SelectedCellArrayArrayPath.getDataArrayName());
+    outputData->setName(m_SelectedCellArrayArrayPath.getDataArrayName());
+    attrMat->addAttributeArray(outputData->getName(), outputData);
   }
 
   /* Let the GUI know we are done with this filter */
