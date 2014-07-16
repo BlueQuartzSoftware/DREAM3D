@@ -77,10 +77,10 @@ int ManualThresholdTemplate::writeFilterParameters(AbstractFilterParametersWrite
 {
   writer->openFilterGroup(this, index);
   DREAM3D_FILTER_WRITE_PARAMETER(SelectedCellArrayArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(NewCellArrayName)
-  DREAM3D_FILTER_WRITE_PARAMETER(SaveAsNewArray)
-  DREAM3D_FILTER_WRITE_PARAMETER(ManualParameter)
-  writer->closeFilterGroup();
+      DREAM3D_FILTER_WRITE_PARAMETER(NewCellArrayName)
+      DREAM3D_FILTER_WRITE_PARAMETER(SaveAsNewArray)
+      DREAM3D_FILTER_WRITE_PARAMETER(ManualParameter)
+      writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
 
@@ -96,8 +96,8 @@ void ManualThresholdTemplate::dataCheck()
   QVector<size_t> dims(1, 1);
   TEMPLATE_GET_PREREQ_ARRAY(SelectedCellArray, getSelectedCellArrayArrayPath(), dims)
 
-  //configured created name / location
-  if(m_SaveAsNewArray == false) { m_NewCellArrayName = "thisIsATempName"; }
+      //configured created name / location
+      if(m_SaveAsNewArray == false) { m_NewCellArrayName = "thisIsATempName"; }
   tempPath.update(getSelectedCellArrayArrayPath().getDataContainerName(), getSelectedCellArrayArrayPath().getAttributeMatrixName(), getNewCellArrayName() );
 
   //get type
@@ -175,6 +175,21 @@ IDataArray::Pointer filter(IDataArray::Pointer iDataArray, const QString outName
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+template<typename T>
+class IsSubclassOf
+{
+  public:
+    IsSubclassOf() {}
+    virtual ~IsSubclassOf() {}
+    bool operator()(IDataArray::Pointer p)
+    {
+      return (boost::dynamic_pointer_cast<T>(p).get() != NULL);
+    }
+};
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void ManualThresholdTemplate::execute()
 {
   QString ss;
@@ -201,11 +216,11 @@ void ManualThresholdTemplate::execute()
 
   //execute type dependant portion
   // TEMPLATE_EXECUTE_FUNCTION(filter, type, m, attrMatName, m_SelectedCellArray, m_NewCellArray, totalPoints, m_ManualParameter)
-  if(NULL != boost::dynamic_pointer_cast<Int8ArrayType>(iDataArray).get() )
+  if(IsSubclassOf<Int8ArrayType>()(iDataArray) )
   {
     outputData = filter<int8_t>(iDataArray, getNewCellArrayName(), getManualParameter() );
   }
-  else if(NULL != boost::dynamic_pointer_cast<UInt8ArrayType>(iDataArray).get() )
+  else if(IsSubclassOf<UInt8ArrayType>()(iDataArray) )
   {
     outputData = filter<uint8_t>(iDataArray, getNewCellArrayName(), getManualParameter() );
   }
