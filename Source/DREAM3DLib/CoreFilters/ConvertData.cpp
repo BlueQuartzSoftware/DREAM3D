@@ -143,6 +143,10 @@ namespace Detail
     {
       FloatArrayType::Pointer p = FloatArrayType::CreateArray(voxels, dims, name);
       m->getAttributeMatrix(attributeMatrixName)->addAttributeArray(p->getName(), p);
+      for(size_t v = 0; v < size; ++v)
+      {
+        p->setValue(v, ptr->getValue(v) );
+      }
     }
     else if (scalarType == Detail::Double)
     {
