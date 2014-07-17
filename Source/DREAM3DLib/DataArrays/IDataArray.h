@@ -205,6 +205,25 @@ class DREAM3DLib_EXPORT IDataArray
 
 };
 
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+template<typename T>
+class CheckDataArrayType
+{
+  public:
+    CheckDataArrayType() {}
+    virtual ~CheckDataArrayType() {}
+    bool operator()(IDataArray::Pointer p)
+    {
+      return (boost::dynamic_pointer_cast<T>(p).get() != NULL);
+    }
+};
+
+
+
 #endif //_IDATAARRAY_HPP_
 
 

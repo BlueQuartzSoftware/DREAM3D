@@ -178,21 +178,6 @@ void filter(IDataArray::Pointer inputIDataArray, IDataArray::Pointer outputIData
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template<typename T>
-class IsSubclassOf
-{
-  public:
-    IsSubclassOf() {}
-    virtual ~IsSubclassOf() {}
-    bool operator()(IDataArray::Pointer p)
-    {
-      return (boost::dynamic_pointer_cast<T>(p).get() != NULL);
-    }
-};
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void ManualThresholdTemplate::execute()
 {
   QString ss;
@@ -215,43 +200,43 @@ void ManualThresholdTemplate::execute()
   //execute type dependant portion
   //TEMPLATE_EXECUTE_FUNCTION(filter, inputData->getTypeAsString(), inputData, outputData, getManualParameter(), m, attrMatName);
   // this is probably slightly more robust than the macro (which uses string comparisons to pick the type)
-  if(IsSubclassOf<Int8ArrayType>()(inputData))
+  if(CheckDataArrayType<Int8ArrayType>()(inputData))
   {
     filter<int8_t>(inputData, outputData, getManualParameter(), m, attrMatName);
   }
-  else if(IsSubclassOf<UInt8ArrayType>()(inputData) )
+  else if(CheckDataArrayType<UInt8ArrayType>()(inputData) )
   {
     filter<uint8_t>(inputData, outputData, getManualParameter(), m, attrMatName);
   }
-  else if(IsSubclassOf<Int16ArrayType>()(inputData) )
+  else if(CheckDataArrayType<Int16ArrayType>()(inputData) )
   {
     filter<int16_t>(inputData, outputData, getManualParameter(), m, attrMatName);
   }
-  else if(IsSubclassOf<UInt16ArrayType>()(inputData) )
+  else if(CheckDataArrayType<UInt16ArrayType>()(inputData) )
   {
     filter<uint16_t>(inputData, outputData, getManualParameter(), m, attrMatName);
   }
-  else if(IsSubclassOf<Int32ArrayType>()(inputData) )
+  else if(CheckDataArrayType<Int32ArrayType>()(inputData) )
   {
     filter<int32_t>(inputData, outputData, getManualParameter(), m, attrMatName);
   }
-  else if(IsSubclassOf<UInt32ArrayType>()(inputData) )
+  else if(CheckDataArrayType<UInt32ArrayType>()(inputData) )
   {
     filter<uint32_t>(inputData, outputData, getManualParameter(), m, attrMatName);
   }
-  else if(IsSubclassOf<Int64ArrayType>()(inputData) )
+  else if(CheckDataArrayType<Int64ArrayType>()(inputData) )
   {
     filter<int64_t>(inputData, outputData, getManualParameter(), m, attrMatName);
   }
-  else if(IsSubclassOf<UInt64ArrayType>()(inputData) )
+  else if(CheckDataArrayType<UInt64ArrayType>()(inputData) )
   {
     filter<uint64_t>(inputData, outputData, getManualParameter(), m, attrMatName);
   }
-  else if(IsSubclassOf<FloatArrayType>()(inputData) )
+  else if(CheckDataArrayType<FloatArrayType>()(inputData) )
   {
     filter<float>(inputData, outputData, getManualParameter(), m, attrMatName);
   }
-  else if(IsSubclassOf<DoubleArrayType>()(inputData) )
+  else if(CheckDataArrayType<DoubleArrayType>()(inputData) )
   {
     filter<double>(inputData, outputData, getManualParameter(), m, attrMatName);
   }
