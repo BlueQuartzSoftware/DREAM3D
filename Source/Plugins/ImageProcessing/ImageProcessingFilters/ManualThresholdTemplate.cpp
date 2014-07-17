@@ -13,6 +13,66 @@
 #include "ITKUtilities.h"
 
 
+/**
+ * @brief This is a private implementation for the filter that handles the actual algorithm implementation details
+ * for us like figuring out if we can use this private implementation with the data array that is assigned.
+ */
+template<typename PixelType>
+class ManualThresholdTemplatePrivate
+{
+  public:
+    typedef DataArray<PixelType> DataArrayType;
+
+    ManualThresholdTemplatePrivate(){}
+    virtual ~ManualThresholdTemplatePrivate(){}
+
+    // -----------------------------------------------------------------------------
+    // Determine if this is the proper type of an array to downcast from the IDataArray
+    // -----------------------------------------------------------------------------
+    bool operator()(IDataArray::Pointer p)
+    {
+      return (boost::dynamic_pointer_cast<DataArrayType>(p).get() != NULL);
+    }
+
+    // -----------------------------------------------------------------------------
+    // This is the actual templated algorithm
+    // -----------------------------------------------------------------------------
+    void static Execute(ManualThresholdTemplate* filter, IDataArray::Pointer inputIDataArray, IDataArray::Pointer outputIDataArray, PixelType manParameter, VolumeDataContainer* m, QString attrMatName)
+    {
+      typename DataArrayType::Pointer inputDataPtr = boost::dynamic_pointer_cast<DataArrayType>(inputIDataArray);
+      typename DataArrayType::Pointer outputDataPtr = boost::dynamic_pointer_cast<DataArrayType>(outputIDataArray);
+
+      //convert arrays to correct type
+      PixelType* inputData = static_cast<PixelType*>(inputDataPtr->getPointer(0));
+      PixelType* outputData = static_cast<PixelType*>(outputDataPtr->getPointer(0));
+
+      size_t numVoxels = inputDataPtr->getNumberOfTuples();
+
+      typedef ITKUtilities<PixelType> ITKUtilitiesType;
+
+      //wrap input as itk image
+      typedef itk::Image<PixelType, ImageProcessing::ImageDimension> ImageType;
+      typename ImageType::Pointer inputImage = ITKUtilitiesType::Dream3DtoITK(m, attrMatName, inputData);
+
+      //define threshold filters
+      typedef itk::BinaryThresholdImageFilter <ImageType, ImageType> BinaryThresholdImageFilterType;
+
+      //threshold
+      typename BinaryThresholdImageFilterType::Pointer thresholdFilter = BinaryThresholdImageFilterType::New();
+      thresholdFilter->SetInput(inputImage);
+      thresholdFilter->SetLowerThreshold(manParameter);
+      thresholdFilter->SetUpperThreshold(255);
+      thresholdFilter->SetInsideValue(255);
+      thresholdFilter->SetOutsideValue(0);
+      thresholdFilter->GetOutput()->GetPixelContainer()->SetImportPointer(outputData, numVoxels, false);
+      thresholdFilter->Update();
+    }
+    private:
+    ManualThresholdTemplatePrivate(const ManualThresholdTemplatePrivate&); // Copy Constructor Not Implemented
+    void operator=(const ManualThresholdTemplatePrivate&); // Operator '=' Not Implemented
+};
+
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -71,10 +131,10 @@ int ManualThresholdTemplate::writeFilterParameters(AbstractFilterParametersWrite
 {
   writer->openFilterGroup(this, index);
   DREAM3D_FILTER_WRITE_PARAMETER(SelectedCellArrayArrayPath)
-      DREAM3D_FILTER_WRITE_PARAMETER(NewCellArrayName)
-      DREAM3D_FILTER_WRITE_PARAMETER(SaveAsNewArray)
-      DREAM3D_FILTER_WRITE_PARAMETER(ManualParameter)
-      writer->closeFilterGroup();
+  DREAM3D_FILTER_WRITE_PARAMETER(NewCellArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(SaveAsNewArray)
+  DREAM3D_FILTER_WRITE_PARAMETER(ManualParameter)
+  writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
 
@@ -90,7 +150,7 @@ void ManualThresholdTemplate::dataCheck()
   QVector<size_t> dims(1, 1);
   TEMPLATE_GET_PREREQ_ARRAY(SelectedCellArray, getSelectedCellArrayArrayPath(), dims)
 
-  //configured created name / location
+      //configured created name / location
   if(m_SaveAsNewArray == false) { m_NewCellArrayName = "thisIsATempName"; }
   tempPath.update(getSelectedCellArrayArrayPath().getDataContainerName(), getSelectedCellArrayArrayPath().getAttributeMatrixName(), getNewCellArrayName() );
 
@@ -197,48 +257,49 @@ void ManualThresholdTemplate::execute()
   IDataArray::Pointer inputData = m_SelectedCellArrayPtr.lock();
   IDataArray::Pointer outputData = m_NewCellArrayPtr.lock();
 
-  //execute type dependant portion
-  //TEMPLATE_EXECUTE_FUNCTION(filter, inputData->getTypeAsString(), inputData, outputData, getManualParameter(), m, attrMatName);
-  // this is probably slightly more robust than the macro (which uses string comparisons to pick the type)
-  if(CheckDataArrayType<Int8ArrayType>()(inputData))
+  //execute type dependant portion using a Private Implementation that takes care of figuring out if
+  // we can work on the correct type and actually handling the algorithm execution. We pass in "this" so
+  // that the private implementation can get access to the current object to pass up status notifications,
+  // progress or handle "cancel" if needed.
+  if(ManualThresholdTemplatePrivate<int8_t>()(inputData))
   {
-    filter<int8_t>(inputData, outputData, getManualParameter(), m, attrMatName);
+    ManualThresholdTemplatePrivate<int8_t>::Execute(this, inputData, outputData, getManualParameter(), m, attrMatName);
   }
-  else if(CheckDataArrayType<UInt8ArrayType>()(inputData) )
+  else if(ManualThresholdTemplatePrivate<uint8_t>()(inputData) )
   {
-    filter<uint8_t>(inputData, outputData, getManualParameter(), m, attrMatName);
+    ManualThresholdTemplatePrivate<uint8_t>::Execute(this, inputData, outputData, getManualParameter(), m, attrMatName);
   }
-  else if(CheckDataArrayType<Int16ArrayType>()(inputData) )
+  else if(ManualThresholdTemplatePrivate<int16_t>()(inputData) )
   {
-    filter<int16_t>(inputData, outputData, getManualParameter(), m, attrMatName);
+    ManualThresholdTemplatePrivate<int16_t>::Execute(this, inputData, outputData, getManualParameter(), m, attrMatName);
   }
-  else if(CheckDataArrayType<UInt16ArrayType>()(inputData) )
+  else if(ManualThresholdTemplatePrivate<uint16_t>()(inputData) )
   {
-    filter<uint16_t>(inputData, outputData, getManualParameter(), m, attrMatName);
+    ManualThresholdTemplatePrivate<uint16_t>::Execute(this, inputData, outputData, getManualParameter(), m, attrMatName);
   }
-  else if(CheckDataArrayType<Int32ArrayType>()(inputData) )
+  else if(ManualThresholdTemplatePrivate<int32_t>()(inputData) )
   {
-    filter<int32_t>(inputData, outputData, getManualParameter(), m, attrMatName);
+    ManualThresholdTemplatePrivate<int32_t>::Execute(this, inputData, outputData, getManualParameter(), m, attrMatName);
   }
-  else if(CheckDataArrayType<UInt32ArrayType>()(inputData) )
+  else if(ManualThresholdTemplatePrivate<uint32_t>()(inputData) )
   {
-    filter<uint32_t>(inputData, outputData, getManualParameter(), m, attrMatName);
+    ManualThresholdTemplatePrivate<uint32_t>::Execute(this, inputData, outputData, getManualParameter(), m, attrMatName);
   }
-  else if(CheckDataArrayType<Int64ArrayType>()(inputData) )
+  else if(ManualThresholdTemplatePrivate<int64_t>()(inputData) )
   {
-    filter<int64_t>(inputData, outputData, getManualParameter(), m, attrMatName);
+    ManualThresholdTemplatePrivate<int64_t>::Execute(this, inputData, outputData, getManualParameter(), m, attrMatName);
   }
-  else if(CheckDataArrayType<UInt64ArrayType>()(inputData) )
+  else if(ManualThresholdTemplatePrivate<uint64_t>()(inputData) )
   {
-    filter<uint64_t>(inputData, outputData, getManualParameter(), m, attrMatName);
+    ManualThresholdTemplatePrivate<uint64_t>::Execute(this, inputData, outputData, getManualParameter(), m, attrMatName);
   }
-  else if(CheckDataArrayType<FloatArrayType>()(inputData) )
+  else if(ManualThresholdTemplatePrivate<float>()(inputData) )
   {
-    filter<float>(inputData, outputData, getManualParameter(), m, attrMatName);
+    ManualThresholdTemplatePrivate<float>::Execute(this, inputData, outputData, getManualParameter(), m, attrMatName);
   }
-  else if(CheckDataArrayType<DoubleArrayType>()(inputData) )
+  else if(ManualThresholdTemplatePrivate<double>()(inputData) )
   {
-    filter<double>(inputData, outputData, getManualParameter(), m, attrMatName);
+    ManualThresholdTemplatePrivate<double>::Execute(this, inputData, outputData, getManualParameter(), m, attrMatName);
   }
   else
   {

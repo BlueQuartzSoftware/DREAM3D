@@ -103,7 +103,7 @@ void InitializeSyntheticVolume::setupFilterParameters()
   parameters.push_back(FilterParameter::New("Resolution", "Resolution", FilterParameterWidgetType::FloatVec3Widget, getResolution(), false, "Microns"));
   parameters.push_back(FilterParameter::New("Origin", "Origin", FilterParameterWidgetType::FloatVec3Widget, getOrigin(), false, "Microns"));
 //  parameters.push_back(FilterParameter::New("Estimated Primary Features", "EstimatedPrimaryFeatures", FilterParameterWidgetType::PreflightUpdatedValueWidget, getEstimatedPrimaryFeatures(), false, ""));
-  parameters.back()->setReadOnly(true);
+//  parameters.back()->setReadOnly(true);
   setFilterParameters(parameters);
 }
 // -----------------------------------------------------------------------------
