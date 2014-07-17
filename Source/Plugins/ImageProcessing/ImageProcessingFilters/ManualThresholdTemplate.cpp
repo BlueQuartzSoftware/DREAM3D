@@ -135,13 +135,13 @@ void filter(IDataArray::Pointer inputIDataArray, IDataArray::Pointer outputIData
 
   //wrap input as itk image
   typedef itk::Image<PixelType, ImageProcessing::ImageDimension> ImageType;
-  ImageType::Pointer inputImage = ITKUtilitiesType::Dream3DtoITK(m, attrMatName, inputData);
+  typename ImageType::Pointer inputImage = ITKUtilitiesType::Dream3DtoITK(m, attrMatName, inputData);
 
   //define threshold filters
   typedef itk::BinaryThresholdImageFilter <ImageType, ImageType> BinaryThresholdImageFilterType;
 
   //threshold
-  BinaryThresholdImageFilterType::Pointer thresholdFilter = BinaryThresholdImageFilterType::New();
+  typename BinaryThresholdImageFilterType::Pointer thresholdFilter = BinaryThresholdImageFilterType::New();
   thresholdFilter->SetInput(inputImage);
   thresholdFilter->SetLowerThreshold(manParameter);
   thresholdFilter->SetUpperThreshold(255);
@@ -213,47 +213,47 @@ void ManualThresholdTemplate::execute()
   IDataArray::Pointer outputData = m_NewCellArrayPtr.lock();
 
   //execute type dependant portion
-  TEMPLATE_EXECUTE_FUNCTION(filter, inputData->getTypeAsString(), inputData, outputData, getManualParameter(), m, attrMatName);
-/** this is probably slightly more robust than the macro (which uses string comparisons to pick the type)
+  //TEMPLATE_EXECUTE_FUNCTION(filter, inputData->getTypeAsString(), inputData, outputData, getManualParameter(), m, attrMatName);
+  // this is probably slightly more robust than the macro (which uses string comparisons to pick the type)
   if(IsSubclassOf<Int8ArrayType>()(inputData))
   {
-    filter<int8_t>(inputData, outputData, getManualParameter());
+    filter<int8_t>(inputData, outputData, getManualParameter(), m, attrMatName);
   }
   else if(IsSubclassOf<UInt8ArrayType>()(inputData) )
   {
-    filter<uint8_t>(inputData, outputData, getManualParameter());
+    filter<uint8_t>(inputData, outputData, getManualParameter(), m, attrMatName);
   }
   else if(IsSubclassOf<Int16ArrayType>()(inputData) )
   {
-    filter<int16_t>(inputData, outputData, getManualParameter());
+    filter<int16_t>(inputData, outputData, getManualParameter(), m, attrMatName);
   }
   else if(IsSubclassOf<UInt16ArrayType>()(inputData) )
   {
-    filter<uint16_t>(inputData, outputData, getManualParameter());
+    filter<uint16_t>(inputData, outputData, getManualParameter(), m, attrMatName);
   }
   else if(IsSubclassOf<Int32ArrayType>()(inputData) )
   {
-    filter<int32_t>(inputData, outputData, getManualParameter());
+    filter<int32_t>(inputData, outputData, getManualParameter(), m, attrMatName);
   }
   else if(IsSubclassOf<UInt32ArrayType>()(inputData) )
   {
-    filter<uint32_t>(inputData, outputData, getManualParameter());
+    filter<uint32_t>(inputData, outputData, getManualParameter(), m, attrMatName);
   }
   else if(IsSubclassOf<Int64ArrayType>()(inputData) )
   {
-    filter<int64_t>(inputData, outputData, getManualParameter());
+    filter<int64_t>(inputData, outputData, getManualParameter(), m, attrMatName);
   }
   else if(IsSubclassOf<UInt64ArrayType>()(inputData) )
   {
-    filter<uint64_t>(inputData, outputData, getManualParameter());
+    filter<uint64_t>(inputData, outputData, getManualParameter(), m, attrMatName);
   }
   else if(IsSubclassOf<FloatArrayType>()(inputData) )
   {
-    filter<float>(inputData, outputData, getManualParameter());
+    filter<float>(inputData, outputData, getManualParameter(), m, attrMatName);
   }
   else if(IsSubclassOf<DoubleArrayType>()(inputData) )
   {
-    filter<double>(inputData, outputData, getManualParameter());
+    filter<double>(inputData, outputData, getManualParameter(), m, attrMatName);
   }
   else
   {
@@ -262,7 +262,6 @@ void ManualThresholdTemplate::execute()
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;
   }
-*/
 
   //array name changing/cleanup
   AttributeMatrix::Pointer attrMat = m->getAttributeMatrix(m_SelectedCellArrayArrayPath.getAttributeMatrixName());
