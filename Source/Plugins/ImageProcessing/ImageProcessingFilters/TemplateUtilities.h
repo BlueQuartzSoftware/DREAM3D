@@ -152,28 +152,28 @@ class TemplateUtilities
 //used in preflight to check if array: exists, is compatible type, and has correct # componenets per voxel
 #define TEMPLATE_GET_PREREQ_ARRAY(arrayName, arrayPath, dims)\
   {\
-    VolumeDataContainer* volDataCntr = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, m_##arrayName##ArrayPath.getDataContainerName(), false);\
+    VolumeDataContainer* volDataCntr = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, arrayPath.getDataContainerName(), false);\
     if(getErrorCondition() < 0 || NULL == volDataCntr) {\
-      QString TEMPLATE_GET_PREREQ_ARRAY_message = QObject::tr("The Data Container '%1' does not exist").arg(m_##arrayName##ArrayPath.getDataContainerName());\
+      QString TEMPLATE_GET_PREREQ_ARRAY_message = QObject::tr("The Data Container '%1' does not exist").arg(arrayPath.getDataContainerName());\
       setErrorCondition(TemplateConstants::Errors::MissingDataContainer);\
       notifyErrorMessage(getHumanLabel(), TEMPLATE_GET_PREREQ_ARRAY_message, getErrorCondition());\
       return;\
     }\
-    AttributeMatrix::Pointer TEMPLATE_GET_PREREQ_ARRAY_cellAttrMat = volDataCntr->getPrereqAttributeMatrix<AbstractFilter>(this, m_##arrayName##ArrayPath.getAttributeMatrixName(), TemplateConstants::Errors::MissingAttributeMatrix);\
+    AttributeMatrix::Pointer TEMPLATE_GET_PREREQ_ARRAY_cellAttrMat = volDataCntr->getPrereqAttributeMatrix<AbstractFilter>(this, arrayPath.getAttributeMatrixName(), TemplateConstants::Errors::MissingAttributeMatrix);\
     if(getErrorCondition() < 0 || NULL == TEMPLATE_GET_PREREQ_ARRAY_cellAttrMat.get()) {\
-      QString TEMPLATE_GET_PREREQ_ARRAY_message = QObject::tr("The Attribute Matrix '%1' does not exist").arg(m_##arrayName##ArrayPath.getAttributeMatrixName());\
+      QString TEMPLATE_GET_PREREQ_ARRAY_message = QObject::tr("The Attribute Matrix '%1' does not exist").arg(arrayPath.getAttributeMatrixName());\
       setErrorCondition(TemplateConstants::Errors::MissingAttributeMatrix);\
       notifyErrorMessage(getHumanLabel(), TEMPLATE_GET_PREREQ_ARRAY_message, getErrorCondition());\
       return;\
     }\
-    IDataArray::Pointer TEMPLATE_GET_PREREQ_ARRAY_p = TEMPLATE_GET_PREREQ_ARRAY_cellAttrMat->getAttributeArray(m_##arrayName##ArrayPath.getDataArrayName());\
+    IDataArray::Pointer TEMPLATE_GET_PREREQ_ARRAY_p = TEMPLATE_GET_PREREQ_ARRAY_cellAttrMat->getAttributeArray(arrayPath.getDataArrayName());\
     if (NULL == TEMPLATE_GET_PREREQ_ARRAY_p.get()) {\
-      QString TEMPLATE_GET_PREREQ_ARRAY_message = QObject::tr("The input array '%1' was not found in the AttributeMatrix '%2'.").arg(m_##arrayName##ArrayName).arg(m_##arrayName##ArrayPath.getAttributeMatrixName());\
+      QString TEMPLATE_GET_PREREQ_ARRAY_message = QObject::tr("The input array '%1' was not found in the AttributeMatrix '%2'.").arg(m_##arrayName##ArrayName).arg(arrayPath.getAttributeMatrixName());\
       setErrorCondition(TemplateConstants::Errors::MissingArray);\
       notifyErrorMessage(getHumanLabel(), TEMPLATE_GET_PREREQ_ARRAY_message, getErrorCondition());\
       return;\
     }\
-    m_##arrayName##Ptr = volDataCntr->getAttributeMatrix(m_##arrayName##ArrayPath.getAttributeMatrixName())->getAttributeArray(getSelectedCellArrayArrayPath().getDataArrayName());\
+    m_##arrayName##Ptr = volDataCntr->getAttributeMatrix(arrayPath.getAttributeMatrixName())->getAttributeArray(arrayPath.getDataArrayName());\
     if(TemplateConstants::IsSubclassOf<Int8ArrayType>()(m_##arrayName##Ptr.lock())) {\
       m_##arrayName##Ptr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int8_t>, AbstractFilter>(this, arrayPath, dims);\
     }\
