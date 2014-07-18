@@ -11,9 +11,9 @@
 #include "DREAM3DLib/DataArrays/DataArray.hpp"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 
-namespace TemplateUtilities
+namespace TemplateConstants
 {
-  namespace DataContainerTypes
+  namespace TypeNames
   {
     const QString Bool("bool");
     const QString Float("float");
@@ -26,8 +26,25 @@ namespace TemplateUtilities
     const QString UInt32("uint32_t");
     const QString Int64("int64_t");
     const QString UInt64("uint64_t");
-    const QString SupportedTypeList(TemplateUtilities::DataContainerTypes::Int8+", "+TemplateUtilities::DataContainerTypes::UInt8+", "+TemplateUtilities::DataContainerTypes::Int16+", "+TemplateUtilities::DataContainerTypes::UInt16+", "+TemplateUtilities::DataContainerTypes::Int32+", "+TemplateUtilities::DataContainerTypes::UInt32+", "+TemplateUtilities::DataContainerTypes::Int64+", "+TemplateUtilities::DataContainerTypes::UInt64+", "+TemplateUtilities::DataContainerTypes::Float+", "+TemplateUtilities::DataContainerTypes::Double);
+    const QString UnknownType("UnknownType");
+    const QString SupportedTypeList(TypeNames::Int8+", "+TypeNames::UInt8+", "+TypeNames::Int16+", "+TypeNames::UInt16+", "+TypeNames::Int32+", "+TypeNames::UInt32+", "+TypeNames::Int64+", "+TypeNames::UInt64+", "+TypeNames::Float+", "+TypeNames::Double);
   }
+
+  enum Types
+  {
+    UnknownType = 0,
+    Bool,
+    Int8,
+    UInt8,
+    Int16,
+    UInt16,
+    Int32,
+    UInt32,
+    Int64,
+    UInt64,
+    Float,
+    Double
+  };
 
   namespace Errors
   {
@@ -50,46 +67,74 @@ namespace TemplateUtilities
   };
 }
 
-//used in filter::execute method to run the correct version of a templated function
-#define TEMPLATE_EXECUTE_FUNCTION(function, type, ...)\
-  {\
-    if(0==type.compare(TemplateUtilities::DataContainerTypes::Int8)) {\
-      function##<int8_t>(__VA_ARGS__);\
-    }\
-    else if(0==type.compare(TemplateUtilities::DataContainerTypes::UInt8)) {\
-      function##<uint8_t>(__VA_ARGS__);\
-    }\
-    else if(0==type.compare(TemplateUtilities::DataContainerTypes::Int16)) {\
-      function##<int16_t>(__VA_ARGS__);\
-    }\
-    else if(0==type.compare(TemplateUtilities::DataContainerTypes::UInt16)) {\
-      function##<uint16_t>(__VA_ARGS__);\
-    }\
-    else if(0==type.compare(TemplateUtilities::DataContainerTypes::Int32)) {\
-      function##<int32_t>(__VA_ARGS__);\
-    }\
-    else if(0==type.compare(TemplateUtilities::DataContainerTypes::UInt32)) {\
-      function##<uint32_t>(__VA_ARGS__);\
-    }\
-    else if(0==type.compare(TemplateUtilities::DataContainerTypes::Int64)) {\
-      function##<int64_t>(__VA_ARGS__);\
-    }\
-    else if(0==type.compare(TemplateUtilities::DataContainerTypes::UInt64)) {\
-      function##<uint64_t>(__VA_ARGS__);\
-    }\
-    else if(0==type.compare(TemplateUtilities::DataContainerTypes::Float)) {\
-      function##<float>(__VA_ARGS__);\
-    }\
-    else if(0==type.compare(TemplateUtilities::DataContainerTypes::Double)) {\
-      function##<double>(__VA_ARGS__);\
-    }\
-    else {\
-      setErrorCondition(TemplateUtilities::Errors::UnsupportedType);\
-      QString errMessage = QObject::tr("The unsupported type '%1' could not be used. The following types are supported: %2").arg(type).arg(TemplateUtilities::DataContainerTypes::SupportedTypeList);\
-      notifyErrorMessage(getHumanLabel(), errMessage, getErrorCondition());\
-      return;\
-    }\
-  }
+class TemplateUtilities
+{
+  public:
+    TemplateUtilities(){}
+    virtual ~TemplateUtilities();
+
+    QString static getTypeNameFromType(int type)
+    {
+      if(TemplateConstants::Types::Bool==type) {
+        return TemplateConstants::TypeNames::Bool;
+      } else if(TemplateConstants::Types::Int8==type) {
+        return TemplateConstants::TypeNames::Int8;
+      } else if(TemplateConstants::Types::UInt8==type) {
+        return TemplateConstants::TypeNames::UInt8;
+      } else if(TemplateConstants::Types::Int16==type) {
+        return TemplateConstants::TypeNames::Int16;
+      } else if(TemplateConstants::Types::UInt16==type) {
+        return TemplateConstants::TypeNames::UInt16;
+      } else if(TemplateConstants::Types::Int32==type) {
+        return TemplateConstants::TypeNames::Int32;
+      } else if(TemplateConstants::Types::UInt32==type) {
+        return TemplateConstants::TypeNames::UInt32;
+      } else if(TemplateConstants::Types::Int64==type) {
+        return TemplateConstants::TypeNames::Int64;
+      } else if(TemplateConstants::Types::UInt64==type) {
+        return TemplateConstants::TypeNames::UInt64;
+      } else if(TemplateConstants::Types::Float==type) {
+        return TemplateConstants::TypeNames::Float;
+      } else if(TemplateConstants::Types::Double==type) {
+        return TemplateConstants::TypeNames::Double;
+      } else {
+        return TemplateConstants::TypeNames::UnknownType;
+      }
+    }
+
+    int static getTypeFromTypeName(QString type)
+    {
+      if(0==type.compare(TemplateConstants::TypeNames::Bool)) {
+        return TemplateConstants::Types::Bool;
+      } else if(0==type.compare(TemplateConstants::TypeNames::Int8)) {
+        return TemplateConstants::Types::Int8;
+      } else if(0==type.compare(TemplateConstants::TypeNames::UInt8)) {
+        return TemplateConstants::Types::UInt8;
+      } else if(0==type.compare(TemplateConstants::TypeNames::Int16)) {
+        return TemplateConstants::Types::Int16;
+      } else if(0==type.compare(TemplateConstants::TypeNames::UInt16)) {
+        return TemplateConstants::Types::UInt16;
+      } else if(0==type.compare(TemplateConstants::TypeNames::Int32)) {
+        return TemplateConstants::Types::Int32;
+      } else if(0==type.compare(TemplateConstants::TypeNames::UInt32)) {
+        return TemplateConstants::Types::UInt32;
+      } else if(0==type.compare(TemplateConstants::TypeNames::Int64)) {
+        return TemplateConstants::Types::Int64;
+      } else if(0==type.compare(TemplateConstants::TypeNames::UInt64)) {
+        return TemplateConstants::Types::UInt64;
+      } else if(0==type.compare(TemplateConstants::TypeNames::Float)) {
+        return TemplateConstants::Types::Float;
+      } else if(0==type.compare(TemplateConstants::TypeNames::Double)) {
+        return TemplateConstants::Types::Double;
+      } else {
+        return TemplateConstants::Types::UnknownType;
+      }
+    }
+
+  private:
+    TemplateUtilities(const TemplateUtilities&); // Copy Constructor Not Implemented
+    void operator=(const TemplateUtilities&); // Operator '=' Not Implemented
+};
 
 //used in place of 'DEFINE_REQUIRED_DATAARRAY_VARIABLE' in filter header
 #define TEMPLATE_DEFINE_REQUIRED_DATAARRAY_VARIABLE(varName)\
@@ -109,60 +154,60 @@ namespace TemplateUtilities
   {\
     VolumeDataContainer* volDataCntr = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, m_##arrayName##ArrayPath.getDataContainerName(), false);\
     if(getErrorCondition() < 0 || NULL == volDataCntr) {\
-      QString volDataCntressage = QObject::tr("The Data Container '%1' does not exist").arg(m_##arrayName##ArrayPath.getDataContainerName());\
-      setErrorCondition(TemplateUtilities::Errors::MissingDataContainer);\
-      notifyErrorMessage(getHumanLabel(), volDataCntressage, getErrorCondition());\
+      QString TEMPLATE_GET_PREREQ_ARRAY_message = QObject::tr("The Data Container '%1' does not exist").arg(m_##arrayName##ArrayPath.getDataContainerName());\
+      setErrorCondition(TemplateConstants::Errors::MissingDataContainer);\
+      notifyErrorMessage(getHumanLabel(), TEMPLATE_GET_PREREQ_ARRAY_message, getErrorCondition());\
       return;\
     }\
-    AttributeMatrix::Pointer TEMPLATE_GET_PREREQ_ARRAY_cellAttrMat = volDataCntr->getPrereqAttributeMatrix<AbstractFilter>(this, m_##arrayName##ArrayPath.getAttributeMatrixName(), TemplateUtilities::Errors::MissingAttributeMatrix);\
+    AttributeMatrix::Pointer TEMPLATE_GET_PREREQ_ARRAY_cellAttrMat = volDataCntr->getPrereqAttributeMatrix<AbstractFilter>(this, m_##arrayName##ArrayPath.getAttributeMatrixName(), TemplateConstants::Errors::MissingAttributeMatrix);\
     if(getErrorCondition() < 0 || NULL == TEMPLATE_GET_PREREQ_ARRAY_cellAttrMat.get()) {\
-      QString volDataCntressage = QObject::tr("The Attribute Matrix '%1' does not exist").arg(m_##arrayName##ArrayPath.getAttributeMatrixName());\
-      setErrorCondition(TemplateUtilities::Errors::MissingAttributeMatrix);\
-      notifyErrorMessage(getHumanLabel(), volDataCntressage, getErrorCondition());\
+      QString TEMPLATE_GET_PREREQ_ARRAY_message = QObject::tr("The Attribute Matrix '%1' does not exist").arg(m_##arrayName##ArrayPath.getAttributeMatrixName());\
+      setErrorCondition(TemplateConstants::Errors::MissingAttributeMatrix);\
+      notifyErrorMessage(getHumanLabel(), TEMPLATE_GET_PREREQ_ARRAY_message, getErrorCondition());\
       return;\
     }\
     IDataArray::Pointer TEMPLATE_GET_PREREQ_ARRAY_p = TEMPLATE_GET_PREREQ_ARRAY_cellAttrMat->getAttributeArray(m_##arrayName##ArrayPath.getDataArrayName());\
     if (NULL == TEMPLATE_GET_PREREQ_ARRAY_p.get()) {\
-      QString volDataCntressage = QObject::tr("The input array '%1' was not found in the AttributeMatrix '%2'.").arg(m_##arrayName##ArrayName).arg(m_##arrayName##ArrayPath.getAttributeMatrixName());\
-      setErrorCondition(TemplateUtilities::Errors::MissingArray);\
-      notifyErrorMessage(getHumanLabel(), volDataCntressage, getErrorCondition());\
+      QString TEMPLATE_GET_PREREQ_ARRAY_message = QObject::tr("The input array '%1' was not found in the AttributeMatrix '%2'.").arg(m_##arrayName##ArrayName).arg(m_##arrayName##ArrayPath.getAttributeMatrixName());\
+      setErrorCondition(TemplateConstants::Errors::MissingArray);\
+      notifyErrorMessage(getHumanLabel(), TEMPLATE_GET_PREREQ_ARRAY_message, getErrorCondition());\
       return;\
     }\
     m_##arrayName##Ptr = volDataCntr->getAttributeMatrix(m_##arrayName##ArrayPath.getAttributeMatrixName())->getAttributeArray(getSelectedCellArrayArrayPath().getDataArrayName());\
-    if(TemplateUtilities::IsSubclassOf<Int8ArrayType>()(m_##arrayName##Ptr.lock())) {\
+    if(TemplateConstants::IsSubclassOf<Int8ArrayType>()(m_##arrayName##Ptr.lock())) {\
       m_##arrayName##Ptr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int8_t>, AbstractFilter>(this, arrayPath, dims);\
     }\
-    else if(TemplateUtilities::IsSubclassOf<UInt8ArrayType>()(m_##arrayName##Ptr.lock())) {\
+    else if(TemplateConstants::IsSubclassOf<UInt8ArrayType>()(m_##arrayName##Ptr.lock())) {\
       m_##arrayName##Ptr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<uint8_t>, AbstractFilter>(this, arrayPath, dims);\
     }\
-    else if(TemplateUtilities::IsSubclassOf<Int16ArrayType>()(m_##arrayName##Ptr.lock())) {\
+    else if(TemplateConstants::IsSubclassOf<Int16ArrayType>()(m_##arrayName##Ptr.lock())) {\
       m_##arrayName##Ptr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int16_t>, AbstractFilter>(this, arrayPath, dims);\
     }\
-    else if(TemplateUtilities::IsSubclassOf<UInt16ArrayType>()(m_##arrayName##Ptr.lock())) {\
+    else if(TemplateConstants::IsSubclassOf<UInt16ArrayType>()(m_##arrayName##Ptr.lock())) {\
       m_##arrayName##Ptr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<uint16_t>, AbstractFilter>(this, arrayPath, dims);\
     }\
-    else if(TemplateUtilities::IsSubclassOf<Int32ArrayType>()(m_##arrayName##Ptr.lock())) {\
+    else if(TemplateConstants::IsSubclassOf<Int32ArrayType>()(m_##arrayName##Ptr.lock())) {\
       m_##arrayName##Ptr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, arrayPath, dims);\
     }\
-    else if(TemplateUtilities::IsSubclassOf<UInt32ArrayType>()(m_##arrayName##Ptr.lock())) {\
+    else if(TemplateConstants::IsSubclassOf<UInt32ArrayType>()(m_##arrayName##Ptr.lock())) {\
       m_##arrayName##Ptr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<uint32_t>, AbstractFilter>(this, arrayPath, dims);\
     }\
-    else if(TemplateUtilities::IsSubclassOf<Int64ArrayType>()(m_##arrayName##Ptr.lock())) {\
+    else if(TemplateConstants::IsSubclassOf<Int64ArrayType>()(m_##arrayName##Ptr.lock())) {\
       m_##arrayName##Ptr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int64_t>, AbstractFilter>(this, arrayPath, dims);\
     }\
-    else if(TemplateUtilities::IsSubclassOf<UInt64ArrayType>()(m_##arrayName##Ptr.lock())) {\
+    else if(TemplateConstants::IsSubclassOf<UInt64ArrayType>()(m_##arrayName##Ptr.lock())) {\
       m_##arrayName##Ptr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<uint64_t>, AbstractFilter>(this, arrayPath, dims);\
     }\
-    else if(TemplateUtilities::IsSubclassOf<FloatArrayType>()(m_##arrayName##Ptr.lock())) {\
+    else if(TemplateConstants::IsSubclassOf<FloatArrayType>()(m_##arrayName##Ptr.lock())) {\
       m_##arrayName##Ptr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, arrayPath, dims);\
     }\
-    else if(TemplateUtilities::IsSubclassOf<DoubleArrayType>()(m_##arrayName##Ptr.lock())) {\
+    else if(TemplateConstants::IsSubclassOf<DoubleArrayType>()(m_##arrayName##Ptr.lock())) {\
       m_##arrayName##Ptr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<double>, AbstractFilter>(this, arrayPath, dims);\
     }\
     else{\
-      QString volDataCntressage = QObject::tr("The input array %1 is of unsupported type '%2'. The following types are supported: %3").arg(arrayPath.getDataArrayName()).arg(m_##arrayName##Ptr.lock()->getTypeAsString()).arg(TemplateUtilities::DataContainerTypes::SupportedTypeList);\
-      setErrorCondition(TemplateUtilities::Errors::UnsupportedType);\
-      notifyErrorMessage(getHumanLabel(), volDataCntressage, getErrorCondition());\
+      QString TEMPLATE_GET_PREREQ_ARRAY_message = QObject::tr("The input array %1 is of unsupported type '%2'. The following types are supported: %3").arg(arrayPath.getDataArrayName()).arg(m_##arrayName##Ptr.lock()->getTypeAsString()).arg(TemplateConstants::TypeNames::SupportedTypeList);\
+      setErrorCondition(TemplateConstants::Errors::UnsupportedType);\
+      notifyErrorMessage(getHumanLabel(), TEMPLATE_GET_PREREQ_ARRAY_message, getErrorCondition());\
       return;\
     }\
     if( NULL != m_##arrayName##Ptr.lock().get() ) {\
@@ -173,44 +218,44 @@ namespace TemplateUtilities
 //used during preflight to create an array: at the specified path, of the specified type, and of the specified # components per voxel
 #define TEMPLATE_CREATE_NONPREREQ_ARRAY(arrayName, arrayPath, dims, type)\
   {\
-    if( 0==type.compare(TemplateUtilities::DataContainerTypes::Float) ) {\
+    if( TemplateConstants::Types::Float==type ) {\
       m_##arrayName##Ptr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, arrayPath, 0, dims);\
     }\
-    else if( 0==type.compare(TemplateUtilities::DataContainerTypes::Double) ){\
+    else if( TemplateConstants::Types::Double==type ) {\
       m_##arrayName##Ptr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<double>, AbstractFilter, double>(this, arrayPath, 0, dims);\
     }\
-    else if( 0==type.compare(TemplateUtilities::DataContainerTypes::Int8) ) {\
+    else if( TemplateConstants::Types::Int8==type ) {\
       m_##arrayName##Ptr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int8_t>, AbstractFilter, int8_t>(this, arrayPath, 0, dims);\
     }\
-    else if( 0==type.compare(TemplateUtilities::DataContainerTypes::UInt8) ) {\
+    else if( TemplateConstants::Types::UInt8==type ) {\
       m_##arrayName##Ptr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<uint8_t>, AbstractFilter, uint8_t>(this, arrayPath, 0, dims);\
     }\
-    else if( 0==type.compare(TemplateUtilities::DataContainerTypes::Int16) ) {\
+    else if( TemplateConstants::Types::Int16==type ) {\
       m_##arrayName##Ptr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int16_t>, AbstractFilter, int16_t>(this, arrayPath, 0, dims);\
     }\
-    else if( 0==type.compare(TemplateUtilities::DataContainerTypes::UInt16) ) {\
+    else if( TemplateConstants::Types::UInt16==type ) {\
       m_##arrayName##Ptr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<uint16_t>, AbstractFilter, uint16_t>(this, arrayPath, 0, dims);\
     }\
-    else if( 0==type.compare(TemplateUtilities::DataContainerTypes::Int32) ) {\
+    else if( TemplateConstants::Types::Int32==type ) {\
       m_##arrayName##Ptr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(this, arrayPath, 0, dims);\
     }\
-    else if( 0==type.compare(TemplateUtilities::DataContainerTypes::UInt32) ) {\
+    else if( TemplateConstants::Types::UInt32==type ) {\
       m_##arrayName##Ptr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<uint32_t>, AbstractFilter, uint32_t>(this, arrayPath, 0, dims);\
     }\
-    else if( 0==type.compare(TemplateUtilities::DataContainerTypes::Int64) ) {\
+    else if( TemplateConstants::Types::Int64==type ) {\
       m_##arrayName##Ptr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int64_t>, AbstractFilter, int64_t>(this, arrayPath, 0, dims);\
     }\
-    else if( 0==type.compare(TemplateUtilities::DataContainerTypes::UInt64) ) {\
+    else if( TemplateConstants::Types::UInt64==type ) {\
       m_##arrayName##Ptr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<uint64_t>, AbstractFilter, uint64_t>(this, arrayPath, 0, dims);\
     }\
     else {\
-      QString errMessage = QObject::tr("The created array '%1' is of unsupported type '%2'. The following types are supported: %3").arg(arrayPath.getDataArrayName()).arg(type).arg(TemplateUtilities::DataContainerTypes::SupportedTypeList);\
-      setErrorCondition(TemplateUtilities::Errors::UnsupportedType);\
-      notifyErrorMessage(getHumanLabel(), errMessage, getErrorCondition());\
+      QString TEMPLATE_CREATE_NONPREREQ_ARRAY_message = QObject::tr("The created array '%1' is of unsupported type '%2'. The following types are supported: %3").arg(arrayPath.getDataArrayName()).arg(type).arg(TemplateConstants::TypeNames::SupportedTypeList);\
+      setErrorCondition(TemplateConstants::Errors::UnsupportedType);\
+      notifyErrorMessage(getHumanLabel(), TEMPLATE_CREATE_NONPREREQ_ARRAY_message, getErrorCondition());\
     }\
     if( NULL != m_##arrayName##Ptr.lock().get() ) { \
         m_##arrayName = m_##arrayName##Ptr.lock()->getVoidPointer(0);\
     }\
   }
 
-#endif /* _TemplateMacros_H_ */
+#endif /* _TemplateUtilities_H_ */
