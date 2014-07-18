@@ -29,6 +29,7 @@ set(_PublicFilters
   SobelEdge
   Watershed
   WriteImage
+  ReadImage
 )
 
 

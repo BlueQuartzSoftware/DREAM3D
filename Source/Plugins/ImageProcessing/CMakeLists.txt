@@ -21,7 +21,11 @@ find_package(ITK COMPONENTS
   ITKCommon
 
   #Group IO  ---No HDF5 Modules---
-  #ITKIOImageBase
+  ITKIOImageBase
+  ITKIOBMP
+  ITKIOJPEG
+  ITKIOPNG
+  ITKIOTIFF
 
   #Group Filtering
   ITKImageCompare
