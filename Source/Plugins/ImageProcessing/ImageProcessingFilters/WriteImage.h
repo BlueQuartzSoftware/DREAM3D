@@ -12,6 +12,7 @@
 #include "DREAM3DLib/DataArrays/IDataArray.h"
 #include "Plugins/ImageProcessing/ImageProcessingConstants.h"
 
+#include "TemplateUtilities.h"
 
 /**
  * @class WriteImage WriteImage.h ImageProcessing/ImageProcessingFilters/WriteImage.h
@@ -135,7 +136,7 @@ class WriteImage : public AbstractFilter
 
   private:
 
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(ImageProcessing::DefaultPixelType, SelectedCellArray)
+    TEMPLATE_DEFINE_REQUIRED_DATAARRAY_VARIABLE(SelectedCellArray)
 
     WriteImage(const WriteImage&); // Copy Constructor Not Implemented
     void operator=(const WriteImage&); // Operator '=' Not Implemented
