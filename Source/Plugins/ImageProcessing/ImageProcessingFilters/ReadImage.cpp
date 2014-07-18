@@ -325,7 +325,7 @@ void ReadImage::dataCheck()
     componentDims[0]=4;
     notifyWarningMessage(getHumanLabel(), "Warning: reading of rgba images is currenlty experimental (unstable behavoir may occur)", 0);
   }/**
-  else if(itk::ImageIOBase::IOPixelType::VECTOR==pixelType)
+  else if(itk::ImageIOBase::IOPixelType::FIXEDARRAY==pixelType)
   {
     componentDims[0]=imageIO->GetNumberOfComponents();
     notifyWarningMessage(getHumanLabel(), "Warning: reading of vector images is currenlty experimental (unstable behavoir may occur)", 0);

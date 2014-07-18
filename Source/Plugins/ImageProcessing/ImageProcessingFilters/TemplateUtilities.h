@@ -167,11 +167,14 @@ class TemplateUtilities
       return;\
     }\
     IDataArray::Pointer TEMPLATE_GET_PREREQ_ARRAY_p = TEMPLATE_GET_PREREQ_ARRAY_cellAttrMat->getAttributeArray(arrayPath.getDataArrayName());\
-    if (NULL == TEMPLATE_GET_PREREQ_ARRAY_p.get()) {\
+    if(NULL == TEMPLATE_GET_PREREQ_ARRAY_p.get()) {\
       QString TEMPLATE_GET_PREREQ_ARRAY_message = QObject::tr("The input array '%1' was not found in the AttributeMatrix '%2'.").arg(m_##arrayName##ArrayName).arg(arrayPath.getAttributeMatrixName());\
       setErrorCondition(TemplateConstants::Errors::MissingArray);\
       notifyErrorMessage(getHumanLabel(), TEMPLATE_GET_PREREQ_ARRAY_message, getErrorCondition());\
       return;\
+    }\
+    if(dims.isEmpty()) {\
+      dims.swap(TEMPLATE_GET_PREREQ_ARRAY_p->getComponentDimensions());\
     }\
     m_##arrayName##Ptr = volDataCntr->getAttributeMatrix(arrayPath.getAttributeMatrixName())->getAttributeArray(arrayPath.getDataArrayName());\
     if(TemplateConstants::IsSubclassOf<Int8ArrayType>()(m_##arrayName##Ptr.lock())) {\
