@@ -475,9 +475,20 @@
   DataArray<type>::WeakPointer m_##name##Ptr;\
   type* m_##name;
 
+#define DEFINE_REQUIRED_VARIABLE(type, name)\
+  DREAM3D_INSTANCE_STRING_PROPERTY(name##ArrayName);\
+  private:\
+  type::WeakPointer m_##name##Ptr;\
+  type* m_##name;
+
 #define DEFINE_CREATED_DATAARRAY_VARIABLE(type, name)\
   private:\
   DataArray<type>::WeakPointer m_##name##Ptr;\
+  type* m_##name;
+
+#define DEFINE_CREATED_VARIABLE(type, name)\
+  private:\
+  type::WeakPointer m_##name##Ptr;\
   type* m_##name;
 
 
@@ -503,7 +514,7 @@
     updatePipelineProgress(0);\
     pipelineFinished();\
     return;}\
-   
+
 
 #define CHECK_FOR_ERROR(FuncClass, Message, err)\
   if(err < 0) {\

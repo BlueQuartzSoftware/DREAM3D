@@ -75,27 +75,27 @@ class TemplateUtilities
 
     QString static getTypeNameFromType(int type)
     {
-      if(TemplateConstants::Types::Bool==type) {
+      if(TemplateConstants::Bool==type) {
         return TemplateConstants::TypeNames::Bool;
-      } else if(TemplateConstants::Types::Int8==type) {
+      } else if(TemplateConstants::Int8==type) {
         return TemplateConstants::TypeNames::Int8;
-      } else if(TemplateConstants::Types::UInt8==type) {
+      } else if(TemplateConstants::UInt8==type) {
         return TemplateConstants::TypeNames::UInt8;
-      } else if(TemplateConstants::Types::Int16==type) {
+      } else if(TemplateConstants::Int16==type) {
         return TemplateConstants::TypeNames::Int16;
-      } else if(TemplateConstants::Types::UInt16==type) {
+      } else if(TemplateConstants::UInt16==type) {
         return TemplateConstants::TypeNames::UInt16;
-      } else if(TemplateConstants::Types::Int32==type) {
+      } else if(TemplateConstants::Int32==type) {
         return TemplateConstants::TypeNames::Int32;
-      } else if(TemplateConstants::Types::UInt32==type) {
+      } else if(TemplateConstants::UInt32==type) {
         return TemplateConstants::TypeNames::UInt32;
-      } else if(TemplateConstants::Types::Int64==type) {
+      } else if(TemplateConstants::Int64==type) {
         return TemplateConstants::TypeNames::Int64;
-      } else if(TemplateConstants::Types::UInt64==type) {
+      } else if(TemplateConstants::UInt64==type) {
         return TemplateConstants::TypeNames::UInt64;
-      } else if(TemplateConstants::Types::Float==type) {
+      } else if(TemplateConstants::Float==type) {
         return TemplateConstants::TypeNames::Float;
-      } else if(TemplateConstants::Types::Double==type) {
+      } else if(TemplateConstants::Double==type) {
         return TemplateConstants::TypeNames::Double;
       } else {
         return TemplateConstants::TypeNames::UnknownType;
@@ -105,29 +105,29 @@ class TemplateUtilities
     int static getTypeFromTypeName(QString type)
     {
       if(0==type.compare(TemplateConstants::TypeNames::Bool)) {
-        return TemplateConstants::Types::Bool;
+        return TemplateConstants::Bool;
       } else if(0==type.compare(TemplateConstants::TypeNames::Int8)) {
-        return TemplateConstants::Types::Int8;
+        return TemplateConstants::Int8;
       } else if(0==type.compare(TemplateConstants::TypeNames::UInt8)) {
-        return TemplateConstants::Types::UInt8;
+        return TemplateConstants::UInt8;
       } else if(0==type.compare(TemplateConstants::TypeNames::Int16)) {
-        return TemplateConstants::Types::Int16;
+        return TemplateConstants::Int16;
       } else if(0==type.compare(TemplateConstants::TypeNames::UInt16)) {
-        return TemplateConstants::Types::UInt16;
+        return TemplateConstants::UInt16;
       } else if(0==type.compare(TemplateConstants::TypeNames::Int32)) {
-        return TemplateConstants::Types::Int32;
+        return TemplateConstants::Int32;
       } else if(0==type.compare(TemplateConstants::TypeNames::UInt32)) {
-        return TemplateConstants::Types::UInt32;
+        return TemplateConstants::UInt32;
       } else if(0==type.compare(TemplateConstants::TypeNames::Int64)) {
-        return TemplateConstants::Types::Int64;
+        return TemplateConstants::Int64;
       } else if(0==type.compare(TemplateConstants::TypeNames::UInt64)) {
-        return TemplateConstants::Types::UInt64;
+        return TemplateConstants::UInt64;
       } else if(0==type.compare(TemplateConstants::TypeNames::Float)) {
-        return TemplateConstants::Types::Float;
+        return TemplateConstants::Float;
       } else if(0==type.compare(TemplateConstants::TypeNames::Double)) {
-        return TemplateConstants::Types::Double;
+        return TemplateConstants::Double;
       } else {
-        return TemplateConstants::Types::UnknownType;
+        return TemplateConstants::UnknownType;
       }
     }
 
@@ -218,34 +218,34 @@ class TemplateUtilities
 //used during preflight to create an array: at the specified path, of the specified type, and of the specified # components per voxel
 #define TEMPLATE_CREATE_NONPREREQ_ARRAY(arrayName, arrayPath, dims, type)\
   {\
-    if( TemplateConstants::Types::Float==type ) {\
+    if( TemplateConstants::Float==type ) {\
       m_##arrayName##Ptr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, arrayPath, 0, dims);\
     }\
-    else if( TemplateConstants::Types::Double==type ) {\
+    else if( TemplateConstants::Double==type ) {\
       m_##arrayName##Ptr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<double>, AbstractFilter, double>(this, arrayPath, 0, dims);\
     }\
-    else if( TemplateConstants::Types::Int8==type ) {\
+    else if( TemplateConstants::Int8==type ) {\
       m_##arrayName##Ptr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int8_t>, AbstractFilter, int8_t>(this, arrayPath, 0, dims);\
     }\
-    else if( TemplateConstants::Types::UInt8==type ) {\
+    else if( TemplateConstants::UInt8==type ) {\
       m_##arrayName##Ptr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<uint8_t>, AbstractFilter, uint8_t>(this, arrayPath, 0, dims);\
     }\
-    else if( TemplateConstants::Types::Int16==type ) {\
+    else if( TemplateConstants::Int16==type ) {\
       m_##arrayName##Ptr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int16_t>, AbstractFilter, int16_t>(this, arrayPath, 0, dims);\
     }\
-    else if( TemplateConstants::Types::UInt16==type ) {\
+    else if( TemplateConstants::UInt16==type ) {\
       m_##arrayName##Ptr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<uint16_t>, AbstractFilter, uint16_t>(this, arrayPath, 0, dims);\
     }\
-    else if( TemplateConstants::Types::Int32==type ) {\
+    else if( TemplateConstants::Int32==type ) {\
       m_##arrayName##Ptr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(this, arrayPath, 0, dims);\
     }\
-    else if( TemplateConstants::Types::UInt32==type ) {\
+    else if( TemplateConstants::UInt32==type ) {\
       m_##arrayName##Ptr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<uint32_t>, AbstractFilter, uint32_t>(this, arrayPath, 0, dims);\
     }\
-    else if( TemplateConstants::Types::Int64==type ) {\
+    else if( TemplateConstants::Int64==type ) {\
       m_##arrayName##Ptr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int64_t>, AbstractFilter, int64_t>(this, arrayPath, 0, dims);\
     }\
-    else if( TemplateConstants::Types::UInt64==type ) {\
+    else if( TemplateConstants::UInt64==type ) {\
       m_##arrayName##Ptr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<uint64_t>, AbstractFilter, uint64_t>(this, arrayPath, 0, dims);\
     }\
     else {\

@@ -58,7 +58,7 @@ class ReadImagePrivate
       //read based on pixel type
       switch(pixelType)
       {
-        case itk::ImageIOBase::IOPixelType::SCALAR:
+        case itk::ImageIOBase::SCALAR:
           {
             typedef itk::Image<PixelType, ImageProcessing::ImageDimension> ImageType;
             typedef itk::ImageFileReader<ImageType> ReaderType;
@@ -68,7 +68,7 @@ class ReadImagePrivate
             reader->Update();
           }break;
 
-        case itk::ImageIOBase::IOPixelType::RGB:
+        case itk::ImageIOBase::RGB:
           {
             typedef itk::Image<itk::RGBPixel<PixelType>, ImageProcessing::ImageDimension> ImageType;
             typedef itk::ImageFileReader<ImageType> ReaderType;
@@ -78,7 +78,7 @@ class ReadImagePrivate
             reader->Update();
           }break;
 
-        case itk::ImageIOBase::IOPixelType::RGBA:
+        case itk::ImageIOBase::RGBA:
           {
             typedef itk::Image<itk::RGBAPixel<PixelType>, ImageProcessing::ImageDimension> ImageType;
             typedef itk::ImageFileReader<ImageType> ReaderType;
@@ -88,7 +88,7 @@ class ReadImagePrivate
             reader->Update();
           }break;
         /**
-        case itk::ImageIOBase::IOPixelType::VECTOR:
+        case itk::ImageIOBase::VECTOR:
           {
             typedef itk::VectorImage<PixelType>, ImageProcessing::ImageDimension> ImageType;
             typedef itk::ImageFileReader<ImageType> ReaderType;
@@ -98,6 +98,22 @@ class ReadImagePrivate
             reader->Update();
           }break;
           */
+      case itk::ImageIOBase::UNKNOWNPIXELTYPE:
+      case itk::ImageIOBase::OFFSET:
+      case itk::ImageIOBase::VECTOR:
+      case itk::ImageIOBase::POINT:
+      case itk::ImageIOBase::COVARIANTVECTOR:
+      case itk::ImageIOBase::SYMMETRICSECONDRANKTENSOR:
+      case itk::ImageIOBase::DIFFUSIONTENSOR3D:
+      case itk::ImageIOBase::COMPLEX:
+      case itk::ImageIOBase::FIXEDARRAY:
+      case itk::ImageIOBase::MATRIX:
+      break;
+      default:
+          filter->setErrorCondition(-2);
+          QString message = QObject::tr("Unable to read image '%1'").arg(filter->getInputFileName());
+          filter->notifyErrorMessage(filter->getHumanLabel(), message, filter->getErrorCondition());
+          outputIDataArray->resize(0);
       }
     }
     private:
@@ -311,16 +327,16 @@ void ReadImage::dataCheck()
   //check pixel type (scalar, vector, etc) for support
   QVector<size_t> componentDims(1, 0);
   itk::ImageIOBase::IOPixelType pixelType = imageIO->GetPixelType();
-  if(itk::ImageIOBase::IOPixelType::SCALAR==pixelType)
+  if(itk::ImageIOBase::SCALAR==pixelType)
   {
     componentDims[0]=1;
   }
-  else if(itk::ImageIOBase::IOPixelType::RGB==pixelType)
+  else if(itk::ImageIOBase::RGB==pixelType)
   {
     componentDims[0]=3;
     notifyWarningMessage(getHumanLabel(), "Warning: reading of rgb images is currenlty experimental (unstable behavoir may occur)", 0);
   }
-  else if(itk::ImageIOBase::IOPixelType::RGBA==pixelType)
+  else if(itk::ImageIOBase::RGBA==pixelType)
   {
     componentDims[0]=4;
     notifyWarningMessage(getHumanLabel(), "Warning: reading of rgba images is currenlty experimental (unstable behavoir may occur)", 0);
@@ -342,35 +358,35 @@ void ReadImage::dataCheck()
   //get component type
   int type;
   itk::ImageIOBase::IOComponentType componentType = imageIO->GetComponentType();
-  if(itk::ImageIOBase::IOComponentType::CHAR==componentType){
-    type = TemplateConstants::Types::Int8;
+  if(itk::ImageIOBase::CHAR==componentType){
+    type = TemplateConstants::Int8;
   }
-  else if(itk::ImageIOBase::IOComponentType::UCHAR==componentType){
-    type = TemplateConstants::Types::UInt8;
+  else if(itk::ImageIOBase::UCHAR==componentType){
+    type = TemplateConstants::UInt8;
   }
-  else if(itk::ImageIOBase::IOComponentType::SHORT==componentType){
-    type = TemplateConstants::Types::Int16;
+  else if(itk::ImageIOBase::SHORT==componentType){
+    type = TemplateConstants::Int16;
   }
-  else if(itk::ImageIOBase::IOComponentType::USHORT==componentType){
-    type = TemplateConstants::Types::UInt16;
+  else if(itk::ImageIOBase::USHORT==componentType){
+    type = TemplateConstants::UInt16;
   }
-  else if(itk::ImageIOBase::IOComponentType::INT==componentType){
-    type = TemplateConstants::Types::Int32;
+  else if(itk::ImageIOBase::INT==componentType){
+    type = TemplateConstants::Int32;
   }
-  else if(itk::ImageIOBase::IOComponentType::UINT==componentType){
-    type = TemplateConstants::Types::UInt32;
+  else if(itk::ImageIOBase::UINT==componentType){
+    type = TemplateConstants::UInt32;
   }
-  else if(itk::ImageIOBase::IOComponentType::LONG==componentType){
-    type = TemplateConstants::Types::Int64;
+  else if(itk::ImageIOBase::LONG==componentType){
+    type = TemplateConstants::Int64;
   }
-  else if(itk::ImageIOBase::IOComponentType::ULONG==componentType){
-    type = TemplateConstants::Types::UInt64;
+  else if(itk::ImageIOBase::ULONG==componentType){
+    type = TemplateConstants::UInt64;
   }
-  else if(itk::ImageIOBase::IOComponentType::FLOAT==componentType){
-    type = TemplateConstants::Types::Float;
+  else if(itk::ImageIOBase::FLOAT==componentType){
+    type = TemplateConstants::Float;
   }
-  else if(itk::ImageIOBase::IOComponentType::DOUBLE==componentType){
-    type = TemplateConstants::Types::Double;
+  else if(itk::ImageIOBase::DOUBLE==componentType){
+    type = TemplateConstants::Double;
   }
   else
   {

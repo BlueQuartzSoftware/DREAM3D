@@ -289,6 +289,75 @@ class DREAM3DLib_EXPORT DataContainerArray : public QObject
       return dataArray;
     }
 
+     /**
+     * @brief getPrereqArrayFromPath
+     * @param filter
+     * @param path
+     * @param dims
+     * @return
+     */
+    template<class ArrayType, class Filter>
+    typename ArrayType::Pointer getExistingPrereqArrayFromPath(Filter* filter, const DataArrayPath& path)
+    {
+
+      QString ss;
+      typename ArrayType::Pointer dataArray = ArrayType::NullPointer();
+
+      if(path.isEmpty() == true)
+      {
+        if(filter)
+        {
+          filter->setErrorCondition(-90000);
+          ss = QObject::tr("DataContainerArray::getPrereqArrayFromPath Error at line %1. The DataArrayPath object was empty").arg(__LINE__);
+          filter->notifyErrorMessage(filter->getHumanLabel(), ss, filter->getErrorCondition());
+        }
+        return dataArray;
+      }
+
+      if(path.isValid() == false)
+      {
+        if(filter)
+        {
+          filter->setErrorCondition(-90001);
+          ss = QObject::tr("DataContainerArray::getPrereqArrayFromPath Error at line %1. The DataArrayPath object was not valid meaning one of the strings in the object is empty. The path is %2").arg(__LINE__).arg(path.serialize());
+          filter->notifyErrorMessage(filter->getHumanLabel(), ss, filter->getErrorCondition());
+        }
+        return dataArray;
+      }
+
+      QString dcName = path.getDataContainerName();
+      QString amName = path.getAttributeMatrixName();
+      QString daName = path.getDataArrayName();
+
+
+      DataContainer::Pointer dc = getDataContainer(dcName);
+      if(NULL == dc.get())
+      {
+        if(filter)
+        {
+          filter->setErrorCondition(-90002);
+          ss = QObject::tr("The DataContainer '%1' was not found in the DataContainerArray").arg(dcName);
+          filter->notifyErrorMessage(filter->getHumanLabel(), ss, filter->getErrorCondition());
+        }
+        return dataArray;
+      }
+
+      AttributeMatrix::Pointer attrMat = dc->getAttributeMatrix(amName);
+      if(NULL == attrMat.get())
+      {
+        if(filter)
+        {
+          filter->setErrorCondition(-90003);
+          ss = QObject::tr("The AttributeMatrix '%1' was not found in the DataContainer '%2'").arg(amName).arg(dcName);
+          filter->notifyErrorMessage(filter->getHumanLabel(), ss, filter->getErrorCondition());
+        }
+        return dataArray;
+      }
+
+      dataArray = attrMat->getExistingPrereqArray<ArrayType, Filter>(filter, daName, -90002); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+      return dataArray;
+    }
+
     /**
      * @brief createNonPrereqArray This method will create a new DataArray in the AttributeMatrix. The condition for this
      * method to work properly is the name of the attribute array is not empty
