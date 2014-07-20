@@ -553,7 +553,7 @@ void DREAM3D_UI::setupPipelineContextMenu()
   QAction* actionAppendFavorite = new QAction(NULL);
   actionAppendFavorite->setObjectName(QString::fromUtf8("actionAppendFavorite"));
   actionAppendFavorite->setText(QApplication::translate("DREAM3D_UI", "Append Favorite to Pipeline", 0, QApplication::UnicodeUTF8));
- // menuPipeline->addAction(actionAppendFavorite);
+// menuPipeline->addAction(actionAppendFavorite);
   //QKeySequence actionAppendFavKeySeq(Qt::CTRL + Qt::Key_A);
   //actionAppendFavorite->setShortcut(actionAppendFavKeySeq);
   connect(actionAppendFavorite, SIGNAL(triggered()),

@@ -197,8 +197,8 @@ class DREAM3DLib_EXPORT AttributeMatrix : public Observable
      */
     template<class ArrayType, class Filter>
     typename ArrayType::Pointer getExistingPrereqArray(Filter* filter,
-                                               QString attributeArrayName,
-                                               int err)
+                                                       QString attributeArrayName,
+                                                       int err)
     {
       QString ss;
       typename ArrayType::Pointer attributeArray = ArrayType::NullPointer();

@@ -121,11 +121,11 @@ class DREAM3DWidgetsLib_EXPORT FavoritesDockWidget : public QDockWidget, private
      * @param allowEditing
      */
     void addFavoriteTreeItem(QTreeWidgetItem* selection,
-                              QString &favoriteTitle,
-                              QIcon icon,
-                              FilterLibraryTreeWidget::ItemType itemType,
-                              QString favoritePath,
-                              bool allowEditing);
+                             QString& favoriteTitle,
+                             QIcon icon,
+                             FilterLibraryTreeWidget::ItemType itemType,
+                             QString favoritePath,
+                             bool allowEditing);
 
     /**
      * @brief addFavorite

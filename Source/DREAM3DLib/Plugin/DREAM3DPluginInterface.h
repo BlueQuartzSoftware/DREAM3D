@@ -155,7 +155,7 @@ class DREAM3DPluginInterface
     /**
      * @brief Register all the filters with the FilterWidgetFactory
      */
-	virtual void registerFilterWidgets(FilterWidgetManager* fwm) = 0;
+    virtual void registerFilterWidgets(FilterWidgetManager* fwm) = 0;
 
     /**
      * @brief registerFilters Registers all the filters for this plugin

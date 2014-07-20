@@ -149,8 +149,8 @@ class CalculateGBCDImpl
         normal[1] = m_Normals[3 * i + 1];
         normal[2] = m_Normals[3 * i + 2];
 
-      //  Q_ASSERT_X(feature1 < m_PhasesArray->getNumberOfTuples(), "feature1 too large", "feature1 value was outside the limits of the Phases Array");
-      //  Q_ASSERT_X(feature2 < m_PhasesArray->getNumberOfTuples(), "feature2 too large", "feature2 value was outside the limits of the Phases Array");
+        //  Q_ASSERT_X(feature1 < m_PhasesArray->getNumberOfTuples(), "feature1 too large", "feature1 value was outside the limits of the Phases Array");
+        //  Q_ASSERT_X(feature2 < m_PhasesArray->getNumberOfTuples(), "feature2 too large", "feature2 value was outside the limits of the Phases Array");
         if (feature1 < 0 || feature2 < 0) { continue; }
 
         if(m_Phases[feature1] == m_Phases[feature2] && m_Phases[feature1] > 0)
@@ -404,15 +404,15 @@ int FindGBCD::writeFilterParameters(AbstractFilterParametersWriter* writer, int 
 {
   writer->openFilterGroup(this, index);
   DREAM3D_FILTER_WRITE_PARAMETER(FaceEnsembleAttributeMatrixName)
-      DREAM3D_FILTER_WRITE_PARAMETER(GBCDArrayName)
-      DREAM3D_FILTER_WRITE_PARAMETER(CrystalStructuresArrayPath)
-      DREAM3D_FILTER_WRITE_PARAMETER(FeaturePhasesArrayPath)
-      DREAM3D_FILTER_WRITE_PARAMETER(FeatureEulerAnglesArrayPath)
-      DREAM3D_FILTER_WRITE_PARAMETER(SurfaceMeshFaceAreasArrayPath)
-      DREAM3D_FILTER_WRITE_PARAMETER(SurfaceMeshFaceNormalsArrayPath)
-      DREAM3D_FILTER_WRITE_PARAMETER(SurfaceMeshFaceLabelsArrayPath)
-      DREAM3D_FILTER_WRITE_PARAMETER(GBCDRes)
-      writer->closeFilterGroup();
+  DREAM3D_FILTER_WRITE_PARAMETER(GBCDArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(CrystalStructuresArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(FeaturePhasesArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(FeatureEulerAnglesArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(SurfaceMeshFaceAreasArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(SurfaceMeshFaceNormalsArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(SurfaceMeshFaceLabelsArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(GBCDRes)
+  writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
 
@@ -537,7 +537,7 @@ void FindGBCD::execute()
   size_t totalFaces = m_SurfaceMeshFaceLabelsPtr.lock()->getNumberOfTuples();
 
   size_t faceChunkSize = 50000;
-  size_t numMisoReps = 576*4;
+  size_t numMisoReps = 576 * 4;
   if(totalFaces < faceChunkSize) { faceChunkSize = totalFaces; }
   //call the sizeGBCD function with proper chunkSize and numMisoReps to get Bins array set up properly
   sizeGBCD(faceChunkSize, numMisoReps);

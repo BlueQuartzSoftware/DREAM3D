@@ -53,7 +53,7 @@
 ExtractFlaggedFeatures::ExtractFlaggedFeatures() :
   AbstractFilter(),
   m_FeatureIdsArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::FeatureIds),
-  m_FlaggedFeaturesArrayPath("", "" ,""),
+  m_FlaggedFeaturesArrayPath("", "" , ""),
   m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
   m_FeatureIds(NULL),
   m_FlaggedFeaturesArrayName(""),
@@ -158,12 +158,12 @@ void ExtractFlaggedFeatures::execute()
       cropVol->setDataContainerArray(getDataContainerArray());
       cropVol->setNewDataContainerName(newDCName);
       cropVol->setCellAttributeMatrixPath(m_FeatureIdsArrayPath);
-      cropVol->setXMin(m_FeatureBounds[6*i]);
-      cropVol->setXMax(m_FeatureBounds[6*i+1]);
-      cropVol->setYMin(m_FeatureBounds[6*i+2]);
-      cropVol->setYMax(m_FeatureBounds[6*i+3]);
-      cropVol->setZMin(m_FeatureBounds[6*i+4]);
-      cropVol->setZMax(m_FeatureBounds[6*i+5]);
+      cropVol->setXMin(m_FeatureBounds[6 * i]);
+      cropVol->setXMax(m_FeatureBounds[6 * i + 1]);
+      cropVol->setYMin(m_FeatureBounds[6 * i + 2]);
+      cropVol->setYMax(m_FeatureBounds[6 * i + 3]);
+      cropVol->setZMin(m_FeatureBounds[6 * i + 4]);
+      cropVol->setZMax(m_FeatureBounds[6 * i + 5]);
       cropVol->setRenumberFeatures(false);
       cropVol->setSaveAsNewDataContainer(true);
       cropVol->setUpdateOrigin(true);
@@ -216,13 +216,13 @@ void ExtractFlaggedFeatures::find_feature_bounds()
       {
         count = kstride + jstride + i;
         feature = m_FeatureIds[count];
-        featureShift = 6*feature;
-        if(m_FeatureBounds[featureShift] == -1 || m_FeatureBounds[featureShift] > i)  m_FeatureBounds[featureShift] = i;
-        if(m_FeatureBounds[featureShift+1] == -1 || m_FeatureBounds[featureShift+1] < i)  m_FeatureBounds[featureShift+1] = i;
-        if(m_FeatureBounds[featureShift+2] == -1 || m_FeatureBounds[featureShift+2] > j)  m_FeatureBounds[featureShift+2] = j;
-        if(m_FeatureBounds[featureShift+3] == -1 || m_FeatureBounds[featureShift+3] < j)  m_FeatureBounds[featureShift+3] = j;
-        if(m_FeatureBounds[featureShift+4] == -1 || m_FeatureBounds[featureShift+4] > k)  m_FeatureBounds[featureShift+4] = k;
-        if(m_FeatureBounds[featureShift+5] == -1 || m_FeatureBounds[featureShift+5] < k)  m_FeatureBounds[featureShift+5] = k;
+        featureShift = 6 * feature;
+        if(m_FeatureBounds[featureShift] == -1 || m_FeatureBounds[featureShift] > i)  { m_FeatureBounds[featureShift] = i; }
+        if(m_FeatureBounds[featureShift + 1] == -1 || m_FeatureBounds[featureShift + 1] < i)  { m_FeatureBounds[featureShift + 1] = i; }
+        if(m_FeatureBounds[featureShift + 2] == -1 || m_FeatureBounds[featureShift + 2] > j)  { m_FeatureBounds[featureShift + 2] = j; }
+        if(m_FeatureBounds[featureShift + 3] == -1 || m_FeatureBounds[featureShift + 3] < j)  { m_FeatureBounds[featureShift + 3] = j; }
+        if(m_FeatureBounds[featureShift + 4] == -1 || m_FeatureBounds[featureShift + 4] > k)  { m_FeatureBounds[featureShift + 4] = k; }
+        if(m_FeatureBounds[featureShift + 5] == -1 || m_FeatureBounds[featureShift + 5] < k)  { m_FeatureBounds[featureShift + 5] = k; }
       }
     }
   }

@@ -27,8 +27,8 @@ class ReadImagePrivate
   public:
     typedef DataArray<PixelType> DataArrayType;
 
-    ReadImagePrivate(){}
-    virtual ~ReadImagePrivate(){}
+    ReadImagePrivate() {}
+    virtual ~ReadImagePrivate() {}
 
     // -----------------------------------------------------------------------------
     // Determine if this is the proper type of an array to downcast from the IDataArray
@@ -59,34 +59,37 @@ class ReadImagePrivate
       switch(pixelType)
       {
         case itk::ImageIOBase::SCALAR:
-          {
-            typedef itk::Image<PixelType, ImageProcessing::ImageDimension> ImageType;
-            typedef itk::ImageFileReader<ImageType> ReaderType;
-            typename ReaderType::Pointer reader = ReaderType::New();
-            reader->SetFileName(inputFile.toLocal8Bit().constData());
-            reader->GetOutput()->GetPixelContainer()->SetImportPointer(outputData, numVoxels, false);
-            reader->Update();
-          }break;
+        {
+          typedef itk::Image<PixelType, ImageProcessing::ImageDimension> ImageType;
+          typedef itk::ImageFileReader<ImageType> ReaderType;
+          typename ReaderType::Pointer reader = ReaderType::New();
+          reader->SetFileName(inputFile.toLocal8Bit().constData());
+          reader->GetOutput()->GetPixelContainer()->SetImportPointer(outputData, numVoxels, false);
+          reader->Update();
+        }
+        break;
 
         case itk::ImageIOBase::RGB:
-          {
-            typedef itk::Image<itk::RGBPixel<PixelType>, ImageProcessing::ImageDimension> ImageType;
-            typedef itk::ImageFileReader<ImageType> ReaderType;
-            typename ReaderType::Pointer reader = ReaderType::New();
-            reader->SetFileName(inputFile.toLocal8Bit().constData());
-            reader->GetOutput()->GetPixelContainer()->SetImportPointer(reinterpret_cast<itk::RGBPixel<PixelType>*>(outputData), numVoxels, false);
-            reader->Update();
-          }break;
+        {
+          typedef itk::Image<itk::RGBPixel<PixelType>, ImageProcessing::ImageDimension> ImageType;
+          typedef itk::ImageFileReader<ImageType> ReaderType;
+          typename ReaderType::Pointer reader = ReaderType::New();
+          reader->SetFileName(inputFile.toLocal8Bit().constData());
+          reader->GetOutput()->GetPixelContainer()->SetImportPointer(reinterpret_cast<itk::RGBPixel<PixelType>*>(outputData), numVoxels, false);
+          reader->Update();
+        }
+        break;
 
         case itk::ImageIOBase::RGBA:
-          {
-            typedef itk::Image<itk::RGBAPixel<PixelType>, ImageProcessing::ImageDimension> ImageType;
-            typedef itk::ImageFileReader<ImageType> ReaderType;
-            typename ReaderType::Pointer reader = ReaderType::New();
-            reader->SetFileName(inputFile.toLocal8Bit().constData());
-            reader->GetOutput()->GetPixelContainer()->SetImportPointer(reinterpret_cast<itk::RGBAPixel<PixelType>*>(outputData), numVoxels, false);
-            reader->Update();
-          }break;
+        {
+          typedef itk::Image<itk::RGBAPixel<PixelType>, ImageProcessing::ImageDimension> ImageType;
+          typedef itk::ImageFileReader<ImageType> ReaderType;
+          typename ReaderType::Pointer reader = ReaderType::New();
+          reader->SetFileName(inputFile.toLocal8Bit().constData());
+          reader->GetOutput()->GetPixelContainer()->SetImportPointer(reinterpret_cast<itk::RGBAPixel<PixelType>*>(outputData), numVoxels, false);
+          reader->Update();
+        }
+        break;
         /**
         case itk::ImageIOBase::VECTOR:
           {
@@ -98,25 +101,25 @@ class ReadImagePrivate
             reader->Update();
           }break;
           */
-      case itk::ImageIOBase::UNKNOWNPIXELTYPE:
-      case itk::ImageIOBase::OFFSET:
-      case itk::ImageIOBase::VECTOR:
-      case itk::ImageIOBase::POINT:
-      case itk::ImageIOBase::COVARIANTVECTOR:
-      case itk::ImageIOBase::SYMMETRICSECONDRANKTENSOR:
-      case itk::ImageIOBase::DIFFUSIONTENSOR3D:
-      case itk::ImageIOBase::COMPLEX:
-      case itk::ImageIOBase::FIXEDARRAY:
-      case itk::ImageIOBase::MATRIX:
-      break;
-      default:
+        case itk::ImageIOBase::UNKNOWNPIXELTYPE:
+        case itk::ImageIOBase::OFFSET:
+        case itk::ImageIOBase::VECTOR:
+        case itk::ImageIOBase::POINT:
+        case itk::ImageIOBase::COVARIANTVECTOR:
+        case itk::ImageIOBase::SYMMETRICSECONDRANKTENSOR:
+        case itk::ImageIOBase::DIFFUSIONTENSOR3D:
+        case itk::ImageIOBase::COMPLEX:
+        case itk::ImageIOBase::FIXEDARRAY:
+        case itk::ImageIOBase::MATRIX:
+          break;
+        default:
           filter->setErrorCondition(-2);
           QString message = QObject::tr("Unable to read image '%1'").arg(filter->getInputFileName());
           filter->notifyErrorMessage(filter->getHumanLabel(), message, filter->getErrorCondition());
           outputIDataArray->resize(0);
       }
     }
-    private:
+  private:
     ReadImagePrivate(const ReadImagePrivate&); // Copy Constructor Not Implemented
     void operator=(const ReadImagePrivate&); // Operator '=' Not Implemented
 };
@@ -200,7 +203,7 @@ void ReadImage::dataCheck()
 
   //read image metadata
   itk::ImageIOBase::Pointer imageIO = itk::ImageIOFactory::CreateImageIO(getInputFileName().toLocal8Bit().constData(), itk::ImageIOFactory::ReadMode);
-  if(NULL==imageIO)
+  if(NULL == imageIO)
   {
     setErrorCondition(-2);
     QString message = QObject::tr("Unable to read image '%1'").arg(getInputFileName());
@@ -215,9 +218,9 @@ void ReadImage::dataCheck()
   int xdim = imageIO->GetDimensions(0);
   int ydim = imageIO->GetDimensions(1);
   int zdim = 1;
-  if(3!=numDimensions)
+  if(3 != numDimensions)
   {
-    if(2==numDimensions)
+    if(2 == numDimensions)
     {
       //allow 2 dimensional images (as 3d image withs size 1 in the z direction)
     }
@@ -242,7 +245,7 @@ void ReadImage::dataCheck()
 
   m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
   if(getErrorCondition() < 0) { return; }
-  bool createAttributeMatrix=false;
+  bool createAttributeMatrix = false;
 
   if( NULL == m) //datacontainer doesn't exist->create
   {
@@ -250,16 +253,17 @@ void ReadImage::dataCheck()
     m->setDimensions(xdim, ydim, zdim);
     double zRes = 1;
     double zOrigin = 0;
-    if(3==numDimensions)
+    if(3 == numDimensions)
     {
-      zRes=imageIO->GetSpacing(2);
-      zOrigin=imageIO->GetOrigin(2);
+      zRes = imageIO->GetSpacing(2);
+      zOrigin = imageIO->GetOrigin(2);
     }
     m->setResolution(imageIO->GetSpacing(0), imageIO->GetSpacing(0), zRes);
     m->setOrigin(imageIO->GetOrigin(0), imageIO->GetOrigin(1), zOrigin);
-    createAttributeMatrix=true;
+    createAttributeMatrix = true;
     if(getErrorCondition() < 0) { return; }
-  } else //datacontainer exists, check if attribute matrix exists
+  }
+  else   //datacontainer exists, check if attribute matrix exists
   {
     if(m->doesAttributeMatrixExist(getCellAttributeMatrixName()))//attribute matrix exists, check compatibility
     {
@@ -269,25 +273,25 @@ void ReadImage::dataCheck()
 
       //check dimension compatibility
       QVector<size_t> tDims = cellAttrMat->getTupleDimensions();
-      if(tDims[0]!=xdim)
+      if(tDims[0] != xdim)
       {
-        QString message = QObject::tr("The x size of '%1' (%2) does not match the x size of '%3' (%4)").arg(getInputFileName()).arg(xdim).arg(getDataContainerName()+"/"+getCellAttributeMatrixName()).arg(tDims[0]);
+        QString message = QObject::tr("The x size of '%1' (%2) does not match the x size of '%3' (%4)").arg(getInputFileName()).arg(xdim).arg(getDataContainerName() + "/" + getCellAttributeMatrixName()).arg(tDims[0]);
         setErrorCondition(-3);
         notifyErrorMessage(getHumanLabel(), message, getErrorCondition());
         return;
       }
-      if(tDims[1]!=ydim)
+      if(tDims[1] != ydim)
       {
-        QString message = QObject::tr("The y size of '%1' (%2) does not match the x size of '%3' (%4)").arg(getInputFileName()).arg(ydim).arg(getDataContainerName()+"/"+getCellAttributeMatrixName()).arg(tDims[1]);
+        QString message = QObject::tr("The y size of '%1' (%2) does not match the x size of '%3' (%4)").arg(getInputFileName()).arg(ydim).arg(getDataContainerName() + "/" + getCellAttributeMatrixName()).arg(tDims[1]);
         setErrorCondition(-4);
         notifyErrorMessage(getHumanLabel(), message, getErrorCondition());
         return;
       }
-      if(3==numDimensions)
+      if(3 == numDimensions)
       {
-        if(tDims[2]!=zdim)
+        if(tDims[2] != zdim)
         {
-          QString message = QObject::tr("The z size of '%1' (%2) does not match the x size of '%3' (%4)").arg(getInputFileName()).arg(zdim).arg(getDataContainerName()+"/"+getCellAttributeMatrixName()).arg(tDims[2]);
+          QString message = QObject::tr("The z size of '%1' (%2) does not match the x size of '%3' (%4)").arg(getInputFileName()).arg(zdim).arg(getDataContainerName() + "/" + getCellAttributeMatrixName()).arg(tDims[2]);
           setErrorCondition(-5);
           notifyErrorMessage(getHumanLabel(), message, getErrorCondition());
           return;
@@ -295,9 +299,9 @@ void ReadImage::dataCheck()
       }
       else
       {
-        if(tDims[2]!=1)
+        if(tDims[2] != 1)
         {
-          QString message = QObject::tr("The z size of '%1' (%2) does not match the x size of '%3' (1)").arg(getInputFileName()).arg(zdim).arg(getDataContainerName()+"/"+getCellAttributeMatrixName());
+          QString message = QObject::tr("The z size of '%1' (%2) does not match the x size of '%3' (1)").arg(getInputFileName()).arg(zdim).arg(getDataContainerName() + "/" + getCellAttributeMatrixName());
           setErrorCondition(-5);
           notifyErrorMessage(getHumanLabel(), message, getErrorCondition());
           return;
@@ -306,15 +310,15 @@ void ReadImage::dataCheck()
     }
     else//attribute matrix doesn't exist, create
     {
-      createAttributeMatrix=true;
+      createAttributeMatrix = true;
     }
   }
 
   //image/attribute matrix dimensions
   QVector<size_t> tDims(3, 0);
-  tDims[0]=xdim;
-  tDims[1]=ydim;
-  tDims[2]=zdim;
+  tDims[0] = xdim;
+  tDims[1] = ydim;
+  tDims[2] = zdim;
 
   //create attribute matrix if needed
   if(createAttributeMatrix)
@@ -327,18 +331,18 @@ void ReadImage::dataCheck()
   //check pixel type (scalar, vector, etc) for support
   QVector<size_t> componentDims(1, 0);
   itk::ImageIOBase::IOPixelType pixelType = imageIO->GetPixelType();
-  if(itk::ImageIOBase::SCALAR==pixelType)
+  if(itk::ImageIOBase::SCALAR == pixelType)
   {
-    componentDims[0]=1;
+    componentDims[0] = 1;
   }
-  else if(itk::ImageIOBase::RGB==pixelType)
+  else if(itk::ImageIOBase::RGB == pixelType)
   {
-    componentDims[0]=3;
+    componentDims[0] = 3;
     notifyWarningMessage(getHumanLabel(), "Warning: reading of rgb images is currenlty experimental (unstable behavoir may occur)", 0);
   }
-  else if(itk::ImageIOBase::RGBA==pixelType)
+  else if(itk::ImageIOBase::RGBA == pixelType)
   {
-    componentDims[0]=4;
+    componentDims[0] = 4;
     notifyWarningMessage(getHumanLabel(), "Warning: reading of rgba images is currenlty experimental (unstable behavoir may occur)", 0);
   }/**
   else if(itk::ImageIOBase::IOPixelType::FIXEDARRAY==pixelType)
@@ -358,34 +362,44 @@ void ReadImage::dataCheck()
   //get component type
   int type;
   itk::ImageIOBase::IOComponentType componentType = imageIO->GetComponentType();
-  if(itk::ImageIOBase::CHAR==componentType){
+  if(itk::ImageIOBase::CHAR == componentType)
+  {
     type = TemplateConstants::Int8;
   }
-  else if(itk::ImageIOBase::UCHAR==componentType){
+  else if(itk::ImageIOBase::UCHAR == componentType)
+  {
     type = TemplateConstants::UInt8;
   }
-  else if(itk::ImageIOBase::SHORT==componentType){
+  else if(itk::ImageIOBase::SHORT == componentType)
+  {
     type = TemplateConstants::Int16;
   }
-  else if(itk::ImageIOBase::USHORT==componentType){
+  else if(itk::ImageIOBase::USHORT == componentType)
+  {
     type = TemplateConstants::UInt16;
   }
-  else if(itk::ImageIOBase::INT==componentType){
+  else if(itk::ImageIOBase::INT == componentType)
+  {
     type = TemplateConstants::Int32;
   }
-  else if(itk::ImageIOBase::UINT==componentType){
+  else if(itk::ImageIOBase::UINT == componentType)
+  {
     type = TemplateConstants::UInt32;
   }
-  else if(itk::ImageIOBase::LONG==componentType){
+  else if(itk::ImageIOBase::LONG == componentType)
+  {
     type = TemplateConstants::Int64;
   }
-  else if(itk::ImageIOBase::ULONG==componentType){
+  else if(itk::ImageIOBase::ULONG == componentType)
+  {
     type = TemplateConstants::UInt64;
   }
-  else if(itk::ImageIOBase::FLOAT==componentType){
+  else if(itk::ImageIOBase::FLOAT == componentType)
+  {
     type = TemplateConstants::Float;
   }
-  else if(itk::ImageIOBase::DOUBLE==componentType){
+  else if(itk::ImageIOBase::DOUBLE == componentType)
+  {
     type = TemplateConstants::Double;
   }
   else
@@ -424,7 +438,8 @@ void ReadImage::execute()
 {
   QString ss;
   dataCheck();
-  if(getErrorCondition() < 0) {
+  if(getErrorCondition() < 0)
+  {
     setErrorCondition(-10000);
     ss = QObject::tr("DataCheck did not pass during execute");
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());

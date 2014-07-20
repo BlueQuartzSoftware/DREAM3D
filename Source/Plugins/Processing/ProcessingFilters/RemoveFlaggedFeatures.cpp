@@ -53,7 +53,7 @@
 RemoveFlaggedFeatures::RemoveFlaggedFeatures() :
   AbstractFilter(),
   m_FeatureIdsArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::FeatureIds),
-  m_FlaggedFeaturesArrayPath("", "" ,""),
+  m_FlaggedFeaturesArrayPath("", "" , ""),
   m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
   m_FeatureIds(NULL),
   m_FlaggedFeaturesArrayName(""),

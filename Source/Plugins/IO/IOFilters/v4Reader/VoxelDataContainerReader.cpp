@@ -155,7 +155,7 @@ void VoxelDataContainerReader::execute()
   {
     setErrorCondition(-1);
     std::stringstream ss;
-    ss <<" DataContainer was NULL";
+    ss << " DataContainer was NULL";
     addErrorMessage(getHumanLabel(), ss.str(), -1);
     return;
   }
@@ -175,19 +175,19 @@ void VoxelDataContainerReader::execute()
   m->setResolution(spacing);
   m->setOrigin(origin);
 
-  if(m_VertexArraysToRead.size() == 0 && m_ReadAllArrays != true) m_ReadVertexData = false;
-  if(m_EdgeArraysToRead.size() == 0 && m_ReadAllArrays != true) m_ReadEdgeData = false;
-  if(m_FaceArraysToRead.size() == 0 && m_ReadAllArrays != true) m_ReadFaceData = false;
-  if(m_CellArraysToRead.size() == 0 && m_ReadAllArrays != true) m_ReadCellData = false;
-  if(m_FieldArraysToRead.size() == 0 && m_ReadAllArrays != true) m_ReadFieldData = false;
-  if(m_EnsembleArraysToRead.size() == 0 && m_ReadAllArrays != true) m_ReadEnsembleData = false;
+  if(m_VertexArraysToRead.size() == 0 && m_ReadAllArrays != true) { m_ReadVertexData = false; }
+  if(m_EdgeArraysToRead.size() == 0 && m_ReadAllArrays != true) { m_ReadEdgeData = false; }
+  if(m_FaceArraysToRead.size() == 0 && m_ReadAllArrays != true) { m_ReadFaceData = false; }
+  if(m_CellArraysToRead.size() == 0 && m_ReadAllArrays != true) { m_ReadCellData = false; }
+  if(m_FieldArraysToRead.size() == 0 && m_ReadAllArrays != true) { m_ReadFieldData = false; }
+  if(m_EnsembleArraysToRead.size() == 0 && m_ReadAllArrays != true) { m_ReadEnsembleData = false; }
 
-  if(m_ReadVertexData == true) m->clearVertexData();
-  if(m_ReadEdgeData == true) m->clearEdgeData();
-  if(m_ReadFaceData == true) m->clearFaceData();
-  if(m_ReadCellData == true) m->clearCellData();
-  if(m_ReadFieldData == true) m->clearFieldData();
-  if(m_ReadEnsembleData == true) m->clearEnsembleData();
+  if(m_ReadVertexData == true) { m->clearVertexData(); }
+  if(m_ReadEdgeData == true) { m->clearEdgeData(); }
+  if(m_ReadFaceData == true) { m->clearFaceData(); }
+  if(m_ReadCellData == true) { m->clearCellData(); }
+  if(m_ReadFieldData == true) { m->clearFieldData(); }
+  if(m_ReadEnsembleData == true) { m->clearEnsembleData(); }
 
   // We are actually wanting to read the file so set preflight to false
   err = gatherData(false);
@@ -213,7 +213,7 @@ int VoxelDataContainerReader::getSizeResolutionOrigin(hid_t fileId, int64_t volD
   {
     err = H5Utilities::closeFile(fileId);
     ss.str("");
-    ss <<": Error opening group '" << DREAM3D::HDF5::VoxelDataContainerName << "'";
+    ss << ": Error opening group '" << DREAM3D::HDF5::VoxelDataContainerName << "'";
     setErrorCondition(-150);
     addErrorMessage(getHumanLabel(), ss.str(), -150);
     return -1;
@@ -392,9 +392,9 @@ int VoxelDataContainerReader::gatherData(bool preflight)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int VoxelDataContainerReader::readGroupsData(hid_t dcGid, const std::string &groupName, bool preflight,
-                                                std::vector<std::string> &namesRead,
-                                                std::set<std::string> &namesToRead)
+int VoxelDataContainerReader::readGroupsData(hid_t dcGid, const std::string& groupName, bool preflight,
+                                             std::vector<std::string>& namesRead,
+                                             std::set<std::string>& namesToRead)
 {
   std::stringstream ss;
   int err = 0;

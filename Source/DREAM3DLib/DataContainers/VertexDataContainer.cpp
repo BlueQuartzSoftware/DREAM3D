@@ -155,9 +155,10 @@ int VertexDataContainer::writeXdmf(QTextStream& out, QString hdfFileName)
     uint32_t amType = attrMat->getType();
     switch(amType)
     {
-    //FIXME: There are more AttributeMatrix Types that should be implemented
+        //FIXME: There are more AttributeMatrix Types that should be implemented
       case DREAM3D::AttributeMatrixType::Vertex:
-        xdmfCenter = DREAM3D::XdmfCenterType::Node; break;
+        xdmfCenter = DREAM3D::XdmfCenterType::Node;
+        break;
       default:
         break;
     }

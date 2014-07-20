@@ -87,7 +87,7 @@ class EbsdLib_EXPORT EbsdHeaderEntry
      * @brief Returns the key of the header entry
      */
     virtual QString getKey() = 0;
-    
+
 #if EbsdLib_HDF5_SUPPORT
     virtual QString getHDFType() = 0;
 #endif

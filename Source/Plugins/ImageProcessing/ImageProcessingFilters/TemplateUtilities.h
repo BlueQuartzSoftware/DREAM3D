@@ -27,7 +27,7 @@ namespace TemplateConstants
     const QString Int64("int64_t");
     const QString UInt64("uint64_t");
     const QString UnknownType("UnknownType");
-    const QString SupportedTypeList(TypeNames::Int8+", "+TypeNames::UInt8+", "+TypeNames::Int16+", "+TypeNames::UInt16+", "+TypeNames::Int32+", "+TypeNames::UInt32+", "+TypeNames::Int64+", "+TypeNames::UInt64+", "+TypeNames::Float+", "+TypeNames::Double);
+    const QString SupportedTypeList(TypeNames::Int8 + ", " + TypeNames::UInt8 + ", " + TypeNames::Int16 + ", " + TypeNames::UInt16 + ", " + TypeNames::Int32 + ", " + TypeNames::UInt32 + ", " + TypeNames::Int64 + ", " + TypeNames::UInt64 + ", " + TypeNames::Float + ", " + TypeNames::Double);
   }
 
   enum Types
@@ -70,63 +70,109 @@ namespace TemplateConstants
 class TemplateUtilities
 {
   public:
-    TemplateUtilities(){}
+    TemplateUtilities() {}
     virtual ~TemplateUtilities();
 
     QString static getTypeNameFromType(int type)
     {
-      if(TemplateConstants::Bool==type) {
+      if(TemplateConstants::Bool == type)
+      {
         return TemplateConstants::TypeNames::Bool;
-      } else if(TemplateConstants::Int8==type) {
+      }
+      else if(TemplateConstants::Int8 == type)
+      {
         return TemplateConstants::TypeNames::Int8;
-      } else if(TemplateConstants::UInt8==type) {
+      }
+      else if(TemplateConstants::UInt8 == type)
+      {
         return TemplateConstants::TypeNames::UInt8;
-      } else if(TemplateConstants::Int16==type) {
+      }
+      else if(TemplateConstants::Int16 == type)
+      {
         return TemplateConstants::TypeNames::Int16;
-      } else if(TemplateConstants::UInt16==type) {
+      }
+      else if(TemplateConstants::UInt16 == type)
+      {
         return TemplateConstants::TypeNames::UInt16;
-      } else if(TemplateConstants::Int32==type) {
+      }
+      else if(TemplateConstants::Int32 == type)
+      {
         return TemplateConstants::TypeNames::Int32;
-      } else if(TemplateConstants::UInt32==type) {
+      }
+      else if(TemplateConstants::UInt32 == type)
+      {
         return TemplateConstants::TypeNames::UInt32;
-      } else if(TemplateConstants::Int64==type) {
+      }
+      else if(TemplateConstants::Int64 == type)
+      {
         return TemplateConstants::TypeNames::Int64;
-      } else if(TemplateConstants::UInt64==type) {
+      }
+      else if(TemplateConstants::UInt64 == type)
+      {
         return TemplateConstants::TypeNames::UInt64;
-      } else if(TemplateConstants::Float==type) {
+      }
+      else if(TemplateConstants::Float == type)
+      {
         return TemplateConstants::TypeNames::Float;
-      } else if(TemplateConstants::Double==type) {
+      }
+      else if(TemplateConstants::Double == type)
+      {
         return TemplateConstants::TypeNames::Double;
-      } else {
+      }
+      else
+      {
         return TemplateConstants::TypeNames::UnknownType;
       }
     }
 
     int static getTypeFromTypeName(QString type)
     {
-      if(0==type.compare(TemplateConstants::TypeNames::Bool)) {
+      if(0 == type.compare(TemplateConstants::TypeNames::Bool))
+      {
         return TemplateConstants::Bool;
-      } else if(0==type.compare(TemplateConstants::TypeNames::Int8)) {
+      }
+      else if(0 == type.compare(TemplateConstants::TypeNames::Int8))
+      {
         return TemplateConstants::Int8;
-      } else if(0==type.compare(TemplateConstants::TypeNames::UInt8)) {
+      }
+      else if(0 == type.compare(TemplateConstants::TypeNames::UInt8))
+      {
         return TemplateConstants::UInt8;
-      } else if(0==type.compare(TemplateConstants::TypeNames::Int16)) {
+      }
+      else if(0 == type.compare(TemplateConstants::TypeNames::Int16))
+      {
         return TemplateConstants::Int16;
-      } else if(0==type.compare(TemplateConstants::TypeNames::UInt16)) {
+      }
+      else if(0 == type.compare(TemplateConstants::TypeNames::UInt16))
+      {
         return TemplateConstants::UInt16;
-      } else if(0==type.compare(TemplateConstants::TypeNames::Int32)) {
+      }
+      else if(0 == type.compare(TemplateConstants::TypeNames::Int32))
+      {
         return TemplateConstants::Int32;
-      } else if(0==type.compare(TemplateConstants::TypeNames::UInt32)) {
+      }
+      else if(0 == type.compare(TemplateConstants::TypeNames::UInt32))
+      {
         return TemplateConstants::UInt32;
-      } else if(0==type.compare(TemplateConstants::TypeNames::Int64)) {
+      }
+      else if(0 == type.compare(TemplateConstants::TypeNames::Int64))
+      {
         return TemplateConstants::Int64;
-      } else if(0==type.compare(TemplateConstants::TypeNames::UInt64)) {
+      }
+      else if(0 == type.compare(TemplateConstants::TypeNames::UInt64))
+      {
         return TemplateConstants::UInt64;
-      } else if(0==type.compare(TemplateConstants::TypeNames::Float)) {
+      }
+      else if(0 == type.compare(TemplateConstants::TypeNames::Float))
+      {
         return TemplateConstants::Float;
-      } else if(0==type.compare(TemplateConstants::TypeNames::Double)) {
+      }
+      else if(0 == type.compare(TemplateConstants::TypeNames::Double))
+      {
         return TemplateConstants::Double;
-      } else {
+      }
+      else
+      {
         return TemplateConstants::UnknownType;
       }
     }
@@ -138,16 +184,16 @@ class TemplateUtilities
 
 //used in place of 'DEFINE_REQUIRED_DATAARRAY_VARIABLE' in filter header
 #define TEMPLATE_DEFINE_REQUIRED_DATAARRAY_VARIABLE(varName)\
-    DREAM3D_INSTANCE_STRING_PROPERTY(varName##ArrayName);\
-    private:\
-    IDataArray::WeakPointer m_##varName##Ptr;\
-    void* m_##varName;
+  DREAM3D_INSTANCE_STRING_PROPERTY(varName##ArrayName);\
+  private:\
+  IDataArray::WeakPointer m_##varName##Ptr;\
+  void* m_##varName;
 
 //used in place of 'DEFINE_CREATED_DATAARRAY_VARIABLE' in filter header
 #define TEMPLATE_DEFINE_CREATED_DATAARRAY_VARIABLE(varName)\
-    private:\
-    IDataArray::WeakPointer m_##varName##Ptr;\
-    void* m_##varName;
+  private:\
+  IDataArray::WeakPointer m_##varName##Ptr;\
+  void* m_##varName;
 
 //used in preflight to check if array: exists, is compatible type, and has correct # componenets per voxel
 #define TEMPLATE_GET_PREREQ_ARRAY(arrayName, arrayPath, dims)\
@@ -258,7 +304,7 @@ class TemplateUtilities
       notifyErrorMessage(getHumanLabel(), TEMPLATE_CREATE_NONPREREQ_ARRAY_message, getErrorCondition());\
     }\
     if( NULL != m_##arrayName##Ptr.lock().get() ) { \
-        m_##arrayName = m_##arrayName##Ptr.lock()->getVoidPointer(0);\
+      m_##arrayName = m_##arrayName##Ptr.lock()->getVoidPointer(0);\
     }\
   }
 

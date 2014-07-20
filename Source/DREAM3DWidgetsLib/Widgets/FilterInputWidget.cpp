@@ -97,14 +97,14 @@ void FilterInputWidget::setupGui()
   font2.setStyleStrategy(QFont::PreferAntialias);
 
 #if defined (Q_OS_MAC)
-    font.setPointSize(16);
-    font1.setPointSize(11);
-    font2.setPointSize(14);
+  font.setPointSize(16);
+  font1.setPointSize(11);
+  font2.setPointSize(14);
 
 #elif defined (Q_OS_WIN)
-    font.setPointSize(12);
-    font1.setPointSize(8);
-    font2.setPointSize(10);
+  font.setPointSize(12);
+  font1.setPointSize(8);
+  font2.setPointSize(10);
 #endif
 
   filterHumanLabel->setFont(font);

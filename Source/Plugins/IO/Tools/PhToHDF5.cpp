@@ -70,7 +70,7 @@ class EulerSet
     float e0;
     float e1;
     float e2;
-  virtual ~EulerSet() {};
+    virtual ~EulerSet() {};
     EulerSet() : e0(0.0f), e1(0.0f), e2(0.0f) {}
 };
 
@@ -85,7 +85,7 @@ class EulerSet
  * @param ny Y Dimension
  * @param nz Z Dimension
  */
-int  ReadPHFile(QString FileName, QVector<int> &data, int &nx, int &ny, int &nz)
+int  ReadPHFile(QString FileName, QVector<int>& data, int& nx, int& ny, int& nz)
 {
   DataContainerArray::Pointer dca = DataContainerArray::New();
   VolumeDataContainer::Pointer m = VolumeDataContainer::New();
@@ -125,23 +125,23 @@ int  ReadPHFile(QString FileName, QVector<int> &data, int &nx, int &ny, int &nz)
 int openHDF5File(const QString m_FileName, bool appendData)
 {
   // Try to open a file to append data into
-    if (APPEND_DATA_TRUE == appendData)
-    {
-      m_FileId = QH5Utilities::openFile(m_FileName, false);
-    }
-    // No file was found or we are writing new data only to a clean file
-    if (APPEND_DATA_FALSE == appendData || m_FileId < 0)
-    {
-      m_FileId = QH5Utilities::createFile (m_FileName);
-    }
+  if (APPEND_DATA_TRUE == appendData)
+  {
+    m_FileId = QH5Utilities::openFile(m_FileName, false);
+  }
+  // No file was found or we are writing new data only to a clean file
+  if (APPEND_DATA_FALSE == appendData || m_FileId < 0)
+  {
+    m_FileId = QH5Utilities::createFile (m_FileName);
+  }
 
-    //Something went wrong either opening or creating the file. Error messages have
-    // Alread been written at this point so just return.
-    if (m_FileId < 0)
-    {
-       qDebug() << "The hdf5 file could not be opened or created.\n The Given filename was:\n\t[" << m_FileName<< "]";
-    }
-    return m_FileId;
+  //Something went wrong either opening or creating the file. Error messages have
+  // Alread been written at this point so just return.
+  if (m_FileId < 0)
+  {
+    qDebug() << "The hdf5 file could not be opened or created.\n The Given filename was:\n\t[" << m_FileName << "]";
+  }
+  return m_FileId;
 
 }
 
@@ -158,9 +158,9 @@ int closeHDF5File()
  *
  */
 template<typename T>
-int writeScalarData(const QString &hdfPath,
-                    const QVector<T> &scalar_data,
-                    const QString &name,
+int writeScalarData(const QString& hdfPath,
+                    const QVector<T>& scalar_data,
+                    const QString& name,
                     int numComp, int32_t rank, hsize_t* dims)
 {
   hid_t gid = H5Gopen(m_FileId, hdfPath.toLatin1().data(), H5P_DEFAULT );
@@ -210,7 +210,7 @@ int writeScalarData(const QString &hdfPath,
  * @param nz
  * @return
  */
-int writePhDataToHDF5File(const QString &h5File, QVector<int> &data, int &nx, int &ny, int &nz)
+int writePhDataToHDF5File(const QString& h5File, QVector<int>& data, int& nx, int& ny, int& nz)
 {
   int err = 0;
   err = openHDF5File(h5File, true);
@@ -235,7 +235,7 @@ int writePhDataToHDF5File(const QString &h5File, QVector<int> &data, int &nx, in
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int writeEulerDataToHDF5File(const QString &h5File, QVector<float> &data, int numComp, int32_t rank, hsize_t* dims)
+int writeEulerDataToHDF5File(const QString& h5File, QVector<float>& data, int numComp, int32_t rank, hsize_t* dims)
 {
   int err = 0;
   err = openHDF5File(h5File, true);
@@ -256,7 +256,7 @@ int writeEulerDataToHDF5File(const QString &h5File, QVector<float> &data, int nu
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int ReadEulerFile(const QString &filename, QMap<int, EulerSet> &gidToEulerMap)
+int ReadEulerFile(const QString& filename, QMap<int, EulerSet>& gidToEulerMap)
 {
   int err = -1;
   FILE* f = fopen(filename.toLatin1().data(), "rb");
@@ -283,11 +283,11 @@ int ReadEulerFile(const QString &filename, QMap<int, EulerSet> &gidToEulerMap)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int main(int argc, char **argv)
+int main(int argc, char** argv)
 {
   qDebug() << "Starting Ph to HDF5 Merging...";
 
- // Instantiate the QCoreApplication that we need to get the current path and load plugins.
+// Instantiate the QCoreApplication that we need to get the current path and load plugins.
   QCoreApplication app(argc, argv);
   QCoreApplication::setOrganizationName("BlueQuartz Software");
   QCoreApplication::setOrganizationDomain("bluequartz.net");
@@ -343,7 +343,7 @@ int main(int argc, char **argv)
     int err = ReadPHFile(phFile, voxels, nx, ny, nz);
     if (err < 0)
     {
-     return EXIT_FAILURE;
+      return EXIT_FAILURE;
     }
     qDebug() << "Ph File has dimensions: " << nx << " x " << ny << " x " << nz;
 
@@ -352,8 +352,8 @@ int main(int argc, char **argv)
     err = writePhDataToHDF5File(h5File, voxels, nz, ny, nz);
     if (err < 0)
     {
-     qDebug() << "There was an error writing the feature id data. Check other errors for possible clues.";
-     return EXIT_FAILURE;
+      qDebug() << "There was an error writing the feature id data. Check other errors for possible clues.";
+      return EXIT_FAILURE;
     }
     qDebug() << "+ Done Writing the Feature ID Data.";
 
@@ -369,7 +369,7 @@ int main(int argc, char **argv)
         return EXIT_FAILURE;
       }
 
-    // Over Write the Euler Angles if the Euler File was supplied
+      // Over Write the Euler Angles if the Euler File was supplied
 
       qDebug() << "Now Over Writing the Euler Angles data in the HDF5 file.....";
       int totalPoints = nx * ny * nz;
@@ -389,14 +389,14 @@ int main(int argc, char **argv)
       err = writeEulerDataToHDF5File(h5File, dataf, numComp, rank, dims);
       if (err < 0)
       {
-       qDebug() << "There was an error writing the Euler Angle data. Check other errors for possible clues.";
-       return EXIT_FAILURE;
+        qDebug() << "There was an error writing the Euler Angle data. Check other errors for possible clues.";
+        return EXIT_FAILURE;
       }
       qDebug() << "+ Done Writing the Euler Angle Data.";
     }
 
   }
-  catch (TCLAP::ArgException &e) // catch any exceptions
+  catch (TCLAP::ArgException& e) // catch any exceptions
   {
     std::cerr << " error: " << e.error() << " for arg " << e.argId();
     return EXIT_FAILURE;

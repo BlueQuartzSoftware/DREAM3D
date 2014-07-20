@@ -289,13 +289,13 @@ class DREAM3DLib_EXPORT DataContainerArray : public QObject
       return dataArray;
     }
 
-     /**
-     * @brief getPrereqArrayFromPath
-     * @param filter
-     * @param path
-     * @param dims
-     * @return
-     */
+    /**
+    * @brief getPrereqArrayFromPath
+    * @param filter
+    * @param path
+    * @param dims
+    * @return
+    */
     template<class ArrayType, class Filter>
     typename ArrayType::Pointer getExistingPrereqArrayFromPath(Filter* filter, const DataArrayPath& path)
     {

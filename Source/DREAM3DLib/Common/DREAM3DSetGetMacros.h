@@ -514,7 +514,7 @@
     updatePipelineProgress(0);\
     pipelineFinished();\
     return;}\
-
+   
 
 #define CHECK_FOR_ERROR(FuncClass, Message, err)\
   if(err < 0) {\

@@ -341,14 +341,14 @@ void PipelineViewWidget::loadPipelineFile(const QString& filePath, QSettings::Fo
   int fCount = filters.size();
   int index = -1;
 
- // QProgressDialog progress("Opening Pipeline File....", "Cancel", 0, fCount, this);
- // progress.setWindowModality(Qt::WindowModal);
- // progress.setMinimumDuration(2000);
+// QProgressDialog progress("Opening Pipeline File....", "Cancel", 0, fCount, this);
+// progress.setWindowModality(Qt::WindowModal);
+// progress.setMinimumDuration(2000);
   PipelineFilterWidget* firstWidget = NULL;
   // Start looping on each filter
   for (int i = 0; i < fCount; i++)
   {
- //   progress.setValue(i);
+//   progress.setValue(i);
     // Create a PipelineFilterWidget using the current AbstractFilter instance to initialize it
     PipelineFilterWidget* w = new PipelineFilterWidget(filters.at(i), NULL, this);
     index = filterCount() - 1; // We want to add the filter as the next filter but BEFORE the vertical spacer
@@ -356,7 +356,7 @@ void PipelineViewWidget::loadPipelineFile(const QString& filePath, QSettings::Fo
     if(i == 0) { firstWidget = w; }
   }
   if (firstWidget) { firstWidget->setIsSelected(true); }
- // progress.setValue(fCount);
+// progress.setValue(fCount);
 
 
   // Now preflight the pipeline for this filter.
