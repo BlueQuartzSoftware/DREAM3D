@@ -60,7 +60,7 @@ class WriteImagePrivate
 
         //create writer and execute
         typename WriterType::Pointer writer = WriterType::New();
-        writer->SetFileName( outputFile.toLocal8Bit().constData() );
+        writer->SetFileName( outputFile.toLatin1().constData() );
         writer->SetInput( inputImage );
         writer->Update();
       } else if(3==numComp)//rgb image
@@ -72,7 +72,7 @@ class WriteImagePrivate
 
         //create writer and execute
         typename WriterType::Pointer writer = WriterType::New();
-        writer->SetFileName( outputFile.toLocal8Bit().constData() );
+        writer->SetFileName( outputFile.toLatin1().constData() );
         writer->SetInput( inputImage );
         writer->Update();
       } else if(4==numComp)//rgba image
@@ -84,7 +84,7 @@ class WriteImagePrivate
 
         //create writer and execute
         typename WriterType::Pointer writer = WriterType::New();
-        writer->SetFileName( outputFile.toLocal8Bit().constData() );
+        writer->SetFileName( outputFile.toLatin1().constData() );
         writer->SetInput( inputImage );
         writer->Update();
       } /** else//vector image
@@ -96,7 +96,7 @@ class WriteImagePrivate
 
         //create writer and execute
         typename WriterType::Pointer writer = WriterType::New();
-        writer->SetFileName( outputFile.toLocal8Bit().constData() );
+        writer->SetFileName( outputFile.toLatin1().constData() );
         writer->SetInput( inputImage );
         writer->Update();
       }*/
