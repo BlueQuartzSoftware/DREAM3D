@@ -54,9 +54,9 @@ class WriteImagePrivate
       if(1==numComp)//scalar image
       {
         //define types and wrap input image
-        typedef ITKUtilitiesType::ScalarImageType ImageType;
+        typedef typename ITKUtilitiesType::ScalarImageType ImageType;
         typedef itk::ImageFileWriter<ImageType> WriterType;
-        ImageType::Pointer inputImage = ITKUtilitiesType::Dream3DtoITK(m, attrMatName, inputData);
+        typename ImageType::Pointer inputImage = ITKUtilitiesType::Dream3DtoITK(m, attrMatName, inputData);
 
         //create writer and execute
         typename WriterType::Pointer writer = WriterType::New();
@@ -66,9 +66,9 @@ class WriteImagePrivate
       } else if(3==numComp)//rgb image
       {
         //define types and wrap input image
-        typedef ITKUtilitiesType::RGBImageType ImageType;
-        typedef itk::ImageFileWriter<ImageType> WriterType;
-        ImageType::Pointer inputImage = ITKUtilitiesType::Dream3DtoITKTemplate<ImageType>(m, attrMatName, inputData);
+        typedef typename ITKUtilitiesType::RGBImageType ImageType;
+        typedef typename itk::ImageFileWriter<ImageType> WriterType;
+        typename ImageType::Pointer inputImage = ITKUtilitiesType::template Dream3DtoITKTemplate<ImageType>(m, attrMatName, inputData);
 
         //create writer and execute
         typename WriterType::Pointer writer = WriterType::New();
@@ -78,9 +78,9 @@ class WriteImagePrivate
       } else if(4==numComp)//rgba image
       {
         //define types and wrap input image
-        typedef ITKUtilitiesType::RGBAImageType ImageType;
-        typedef itk::ImageFileWriter<ImageType> WriterType;
-        ImageType::Pointer inputImage = ITKUtilitiesType::Dream3DtoITKTemplate<ImageType>(m, attrMatName, inputData);
+        typedef typename ITKUtilitiesType::RGBAImageType ImageType;
+        typedef typename itk::ImageFileWriter<ImageType> WriterType;
+        typename ImageType::Pointer inputImage = ITKUtilitiesType::template Dream3DtoITKTemplate<ImageType>(m, attrMatName, inputData);
 
         //create writer and execute
         typename WriterType::Pointer writer = WriterType::New();

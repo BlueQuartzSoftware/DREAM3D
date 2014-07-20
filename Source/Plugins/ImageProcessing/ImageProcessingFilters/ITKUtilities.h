@@ -118,7 +118,7 @@ class ITKUtilities
     template <typename TImage>
     static typename TImage::Pointer Dream3DtoITKTemplate(VolumeDataContainer* m, QString attrMatName, ComponentType* data)
     {
-      return Dream3DtoITKImportFilter<TImage::PixelType>(m, attrMatName, data)->GetOutput();
+      return Dream3DtoITKImportFilter<typename TImage::PixelType>(m, attrMatName, data)->GetOutput();
     }
 
     /**

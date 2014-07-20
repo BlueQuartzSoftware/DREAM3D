@@ -154,27 +154,28 @@ class TemplateUtilities
   {\
     VolumeDataContainer* volDataCntr = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, arrayPath.getDataContainerName(), false);\
     if(getErrorCondition() < 0 || NULL == volDataCntr) {\
-      QString TEMPLATE_GET_PREREQ_ARRAY_message = QObject::tr("The Data Container '%1' does not exist").arg(arrayPath.getDataContainerName());\
+      QString ss = QObject::tr("The Data Container '%1' does not exist").arg(arrayPath.getDataContainerName());\
       setErrorCondition(TemplateConstants::Errors::MissingDataContainer);\
-      notifyErrorMessage(getHumanLabel(), TEMPLATE_GET_PREREQ_ARRAY_message, getErrorCondition());\
+      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());\
       return;\
     }\
     AttributeMatrix::Pointer TEMPLATE_GET_PREREQ_ARRAY_cellAttrMat = volDataCntr->getPrereqAttributeMatrix<AbstractFilter>(this, arrayPath.getAttributeMatrixName(), TemplateConstants::Errors::MissingAttributeMatrix);\
     if(getErrorCondition() < 0 || NULL == TEMPLATE_GET_PREREQ_ARRAY_cellAttrMat.get()) {\
-      QString TEMPLATE_GET_PREREQ_ARRAY_message = QObject::tr("The Attribute Matrix '%1' does not exist").arg(arrayPath.getAttributeMatrixName());\
+      QString ss = QObject::tr("The Attribute Matrix '%1' does not exist").arg(arrayPath.getAttributeMatrixName());\
       setErrorCondition(TemplateConstants::Errors::MissingAttributeMatrix);\
-      notifyErrorMessage(getHumanLabel(), TEMPLATE_GET_PREREQ_ARRAY_message, getErrorCondition());\
+      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());\
       return;\
     }\
-    IDataArray::Pointer TEMPLATE_GET_PREREQ_ARRAY_p = TEMPLATE_GET_PREREQ_ARRAY_cellAttrMat->getAttributeArray(arrayPath.getDataArrayName());\
-    if(NULL == TEMPLATE_GET_PREREQ_ARRAY_p.get()) {\
-      QString TEMPLATE_GET_PREREQ_ARRAY_message = QObject::tr("The input array '%1' was not found in the AttributeMatrix '%2'.").arg(m_##arrayName##ArrayName).arg(arrayPath.getAttributeMatrixName());\
+    IDataArray::Pointer templ_ptr = TEMPLATE_GET_PREREQ_ARRAY_cellAttrMat->getAttributeArray(arrayPath.getDataArrayName());\
+    if(NULL == templ_ptr.get()) {\
+      QString ss = QObject::tr("The input array '%1' was not found in the AttributeMatrix '%2'.").arg(m_##arrayName##ArrayName).arg(arrayPath.getAttributeMatrixName());\
       setErrorCondition(TemplateConstants::Errors::MissingArray);\
-      notifyErrorMessage(getHumanLabel(), TEMPLATE_GET_PREREQ_ARRAY_message, getErrorCondition());\
+      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());\
       return;\
     }\
     if(dims.isEmpty()) {\
-      dims.swap(TEMPLATE_GET_PREREQ_ARRAY_p->getComponentDimensions());\
+      QVector<size_t> templ_comp_dims = templ_ptr->getComponentDimensions();\
+      dims.swap(templ_comp_dims);\
     }\
     m_##arrayName##Ptr = volDataCntr->getAttributeMatrix(arrayPath.getAttributeMatrixName())->getAttributeArray(arrayPath.getDataArrayName());\
     if(TemplateConstants::IsSubclassOf<Int8ArrayType>()(m_##arrayName##Ptr.lock())) {\
@@ -208,9 +209,9 @@ class TemplateUtilities
       m_##arrayName##Ptr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<double>, AbstractFilter>(this, arrayPath, dims);\
     }\
     else{\
-      QString TEMPLATE_GET_PREREQ_ARRAY_message = QObject::tr("The input array %1 is of unsupported type '%2'. The following types are supported: %3").arg(arrayPath.getDataArrayName()).arg(m_##arrayName##Ptr.lock()->getTypeAsString()).arg(TemplateConstants::TypeNames::SupportedTypeList);\
+      QString ss = QObject::tr("The input array %1 is of unsupported type '%2'. The following types are supported: %3").arg(arrayPath.getDataArrayName()).arg(m_##arrayName##Ptr.lock()->getTypeAsString()).arg(TemplateConstants::TypeNames::SupportedTypeList);\
       setErrorCondition(TemplateConstants::Errors::UnsupportedType);\
-      notifyErrorMessage(getHumanLabel(), TEMPLATE_GET_PREREQ_ARRAY_message, getErrorCondition());\
+      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());\
       return;\
     }\
     if( NULL != m_##arrayName##Ptr.lock().get() ) {\
