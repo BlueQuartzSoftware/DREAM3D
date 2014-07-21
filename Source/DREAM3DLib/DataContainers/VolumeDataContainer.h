@@ -113,6 +113,23 @@ class DREAM3DLib_EXPORT VolumeDataContainer : public SurfaceDataContainer
     // -----------------------------------------------------------------------------
     DREAM3D_INSTANCE_VEC3_PROPERTY(float, Origin)
 
+#if 0
+    void setVertices(VertexArray::Pointer value)
+    {
+      Q_ASSERT_X(false, "VolumeDataContainer::setVertices", "setVertices not allowed")
+    }
+
+    void setEdges(EdgeArray::Pointer value)
+    {
+      Q_ASSERT_X(false, "VolumeDataContainer::setEdges", "setEdges not allowed")
+    }
+
+    void setFaces(FaceArray::Pointer value)
+    {
+      Q_ASSERT_X(false, "VolumeDataContainer::setFaces", "setFaces not allowed")
+    }
+#endif
+
     virtual unsigned int getDCType() {return DREAM3D::DataContainerType::VolumeDataContainer;}
 
     virtual DataContainer::Pointer deepCopy();

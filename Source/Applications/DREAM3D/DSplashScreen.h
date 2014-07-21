@@ -52,30 +52,30 @@ class DSplashScreenPrivate;
 class DSplashScreen : public QWidget
 {
     Q_OBJECT
-public:
-    explicit DSplashScreen(const QPixmap &pixmap = QPixmap(), Qt::WindowFlags f = 0);
-    DSplashScreen(QWidget *parent, const QPixmap &pixmap = QPixmap(), Qt::WindowFlags f = 0);
+  public:
+    explicit DSplashScreen(const QPixmap& pixmap = QPixmap(), Qt::WindowFlags f = 0);
+    DSplashScreen(QWidget* parent, const QPixmap& pixmap = QPixmap(), Qt::WindowFlags f = 0);
     virtual ~DSplashScreen();
 
-    void setPixmap(const QPixmap &pixmap);
+    void setPixmap(const QPixmap& pixmap);
     const QPixmap pixmap() const;
-    void finish(QWidget *w);
+    void finish(QWidget* w);
     void repaint();
 
-public Q_SLOTS:
-    void showMessage(const QString &message, int alignment = Qt::AlignLeft,
-                  const QColor &color = Qt::black);
+  public Q_SLOTS:
+    void showMessage(const QString& message, int alignment = Qt::AlignLeft,
+                     const QColor& color = Qt::black);
     void clearMessage();
 
-Q_SIGNALS:
-    void messageChanged(const QString &message);
+  Q_SIGNALS:
+    void messageChanged(const QString& message);
 
-protected:
-    bool event(QEvent *e);
-    virtual void drawContents(QPainter *painter);
-    void mousePressEvent(QMouseEvent *);
+  protected:
+    bool event(QEvent* e);
+    virtual void drawContents(QPainter* painter);
+    void mousePressEvent(QMouseEvent*);
 
-private:
+  private:
     Q_DISABLE_COPY(DSplashScreen)
     Q_DECLARE_PRIVATE(DSplashScreen)
     DSplashScreenPrivate* d_ptr;

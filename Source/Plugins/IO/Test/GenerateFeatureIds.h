@@ -16,13 +16,13 @@
 // -----------------------------------------------------------------------------
 class GenerateFeatureIds : public AbstractFilter
 {
-  Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
+    Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
     DREAM3D_SHARED_POINTERS(GenerateFeatureIds)
     DREAM3D_STATIC_NEW_MACRO(GenerateFeatureIds)
     DREAM3D_TYPE_MACRO_SUPER(GenerateFeatureIds, AbstractFilter)
 
-    virtual ~GenerateFeatureIds(){}
+    virtual ~GenerateFeatureIds() {}
     DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
     //------ Created Cell Data
     DREAM3D_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
@@ -65,7 +65,8 @@ class GenerateFeatureIds : public AbstractFilter
       dataCheck();
     }
 
-    void readFilterParameters(AbstractFilterParametersReader* reader, int index) {
+    void readFilterParameters(AbstractFilterParametersReader* reader, int index)
+    {
       reader->openFilterGroup(this, index);
       reader->closeFilterGroup();
     }
@@ -97,7 +98,7 @@ class GenerateFeatureIds : public AbstractFilter
       setErrorCondition(0);
       VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getDataContainerName());
       if(getErrorCondition() < 0) { return; }
-       AttributeMatrix::Pointer cellAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), -301);
+      AttributeMatrix::Pointer cellAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), -301);
       if(getErrorCondition() < 0) { return; }
 
       QVector<size_t> dims(1, 1);
@@ -122,7 +123,7 @@ class GenerateFeatureIds : public AbstractFilter
  */
 class CreateVolumeDataContainer : public AbstractFilter
 {
-  Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
+    Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
     DREAM3D_SHARED_POINTERS(CreateVolumeDataContainer)
     DREAM3D_STATIC_NEW_MACRO(CreateVolumeDataContainer)
@@ -160,7 +161,8 @@ class CreateVolumeDataContainer : public AbstractFilter
       dataCheck();
     }
 
-    void readFilterParameters(AbstractFilterParametersReader* reader, int index) {
+    void readFilterParameters(AbstractFilterParametersReader* reader, int index)
+    {
       reader->openFilterGroup(this, index);
       reader->closeFilterGroup();
     }

@@ -310,7 +310,7 @@ void VolumeDataContainerInfoWidget::beforePreflight()
   if (m_FilterParameter != NULL)
   {
     IntVec3_t data = m_Filter->property(PROPERTY_NAME_AS_CHAR).value<IntVec3_t>();
-    QString str = QString("0-%1 x 0-%2 x 0-%3").arg(data.x-1).arg(data.y-1).arg(data.z-1);
+    QString str = QString("0-%1 x 0-%2 x 0-%3").arg(data.x - 1).arg(data.y - 1).arg(data.z - 1);
     voxelExtentsLabel->setText(str);
   }
 

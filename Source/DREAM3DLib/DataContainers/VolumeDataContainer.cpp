@@ -309,15 +309,19 @@ int VolumeDataContainer::writeXdmf(QTextStream& out, QString hdfFileName)
     uint32_t amType = attrMat->getType();
     switch(amType)
     {
-    //FIXME: There are more AttributeMatrix Types that should be implemented
+        //FIXME: There are more AttributeMatrix Types that should be implemented
       case DREAM3D::AttributeMatrixType::Vertex:
-        xdmfCenter = DREAM3D::XdmfCenterType::Node; break;
+        xdmfCenter = DREAM3D::XdmfCenterType::Node;
+        break;
       case DREAM3D::AttributeMatrixType::Edge:
-        xdmfCenter = DREAM3D::XdmfCenterType::Cell; break;
+        xdmfCenter = DREAM3D::XdmfCenterType::Cell;
+        break;
       case DREAM3D::AttributeMatrixType::Face:
-        xdmfCenter = DREAM3D::XdmfCenterType::Cell; break;
+        xdmfCenter = DREAM3D::XdmfCenterType::Cell;
+        break;
       case DREAM3D::AttributeMatrixType::Cell:
-        xdmfCenter = DREAM3D::XdmfCenterType::Cell; break;
+        xdmfCenter = DREAM3D::XdmfCenterType::Cell;
+        break;
       default:
         break;
     }

@@ -79,7 +79,6 @@ void DataContainerReader::setupFilterParameters()
     parameter->setHumanLabel("Selected Arrays");
     parameter->setPropertyName("DataContainerArrayProxy");
     parameter->setWidgetType(FilterParameterWidgetType::DataContainerArrayProxyWidget);
-    ////parameter->setValueType("DataContainerArrayProxy");
     parameters.push_back(parameter);
   }
   setFilterParameters(parameters);

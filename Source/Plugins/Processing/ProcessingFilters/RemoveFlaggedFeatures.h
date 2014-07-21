@@ -75,9 +75,9 @@ class RemoveFlaggedFeatures : public AbstractFilter
     DREAM3D_FILTER_PARAMETER(DataArrayPath, FlaggedFeaturesArrayPath)
     Q_PROPERTY(DataArrayPath FlaggedFeaturesArrayPath READ getFlaggedFeaturesArrayPath WRITE setFlaggedFeaturesArrayPath)
 
-	virtual const QString getCompiledLibraryName();
+    virtual const QString getCompiledLibraryName();
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
-	virtual const QString getGroupName();
+    virtual const QString getGroupName();
     virtual const QString getSubGroupName()  { return DREAM3D::FilterSubGroups::CleanupFilters; }
     virtual const QString getHumanLabel();
 

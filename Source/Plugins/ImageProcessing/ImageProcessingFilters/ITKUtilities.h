@@ -9,6 +9,8 @@
 
 // ITK Includes first
 #include "itkExtractImageFilter.h"
+#include "itkRGBPixel.h"
+#include "itkRGBAPixel.h"
 
 // DREAM3D Includes next
 #include "DREAM3DLib/DREAM3DLib.h"
@@ -27,31 +29,24 @@
  * @date Feb 26, 2014
  * @version 1.0
  */
-template<typename PixelType>
+template<typename ComponentType>
 class ITKUtilities
 {
   public:
-    DREAM3D_SHARED_POINTERS(ITKUtilities<PixelType>)
-    DREAM3D_TYPE_MACRO(ITKUtilities<PixelType>)
+    DREAM3D_SHARED_POINTERS(ITKUtilities<ComponentType>)
+    DREAM3D_TYPE_MACRO(ITKUtilities<ComponentType>)
 
     virtual ~ITKUtilities();
 
     //define image and iterator types
 
-    typedef typename itk::Image<PixelType, ImageProcessing::ImageDimension>                       ItkImageType;  // 3D Image
-    typedef typename itk::ImageRegionConstIterator<ItkImageType>                                  ItkImageRegionConstIteratorType;
-    typedef typename itk::Image<PixelType, ImageProcessing::SliceDimension>                       ItkSliceImageType;  //2D Image
-    typedef typename itk::ImageRegionConstIterator<ItkSliceImageType>                             SliceConstIteratorType;
-    typedef typename itk::ImageRegionIterator<ItkImageType>                                       VolumeIteratorType;
+    typedef typename itk::Image<ComponentType, ImageProcessing::ImageDimension>                       ScalarImageType;  // 3D Scalar Image
+    typedef typename itk::Image<itk::RGBPixel<ComponentType>, ImageProcessing::ImageDimension>        RGBImageType;  // 3D RGB Image
+    typedef typename itk::Image<itk::RGBAPixel<ComponentType>, ImageProcessing::ImageDimension>       RGBAImageType;  // 3D RGBA Image
 
-    typedef typename itk::ImportImageFilter<PixelType, ImageProcessing::ImageDimension>          ImportImageFilterType;
-
-
-    typedef itk::RGBPixel<PixelType>                                  RGBPixelType;
-    typedef itk::Image<RGBPixelType, ImageProcessing::ImageDimension> RGBImageType;
-    typedef itk::ImageRegionIterator<RGBImageType>                    IteratorType;
-    typedef typename itk::ImageRegionConstIterator<RGBImageType>      ItkRGBImageRegionConstIteratorType;
-    typedef typename itk::ExtractImageFilter<ItkImageType, ItkSliceImageType>      SliceExtractFilter;
+    typedef typename itk::Image<ComponentType, ImageProcessing::SliceDimension>                       ScalarSliceImageType;  // 2D Scalar Image
+    typedef typename itk::Image<itk::RGBPixel<ComponentType>, ImageProcessing::SliceDimension>        RGBSliceImageType;  // 2D RGB Image
+    typedef typename itk::Image<itk::RGBAPixel<ComponentType>, ImageProcessing::SliceDimension>       RGBASliceImageType;  // 2D RGBA Image
 
     /**
      * @brief Dream3DtoITKImportFilter Grayscale conversion / copying & conversion from dream3d arrays to importfilter
@@ -60,19 +55,17 @@ class ITKUtilities
      * @param data
      * @return
      */
-    static typename ImportImageFilterType::Pointer Dream3DtoITKImportFilter(VolumeDataContainer* m, QString attrMatName, PixelType* data)
+    template<typename TPixel>
+    static typename itk::ImportImageFilter<TPixel, ImageProcessing::ImageDimension>::Pointer Dream3DtoITKImportFilter(VolumeDataContainer* m, QString attrMatName, ComponentType* data)
     {
       AttributeMatrix::Pointer attrMat = m->getAttributeMatrix(attrMatName);
 
       //get size+dimensions of dataset
-      //  size_t udims[3] = { 0, 0, 0 };
       QVector<size_t> udims = attrMat->getTupleDimensions();
-
-      //  DimType dims[3] = { static_cast<DimType>(udims[0]), static_cast<DimType>(udims[1]), static_cast<DimType>(udims[2]), };
       size_t totalPoints = attrMat->getNumTuples();
 
       //create and setup import filter
-
+      typedef itk::ImportImageFilter<TPixel, ImageProcessing::ImageDimension> ImportImageFilterType;
       typename ImportImageFilterType::Pointer importFilter = ImportImageFilterType::New();
 
       typename ImportImageFilterType::SizeType  size;
@@ -105,7 +98,7 @@ class ITKUtilities
       importFilter->SetSpacing( spacing );
 
       const bool importImageFilterWillOwnTheBuffer = false;
-      importFilter->SetImportPointer( data, totalPoints, importImageFilterWillOwnTheBuffer );
+      importFilter->SetImportPointer( reinterpret_cast<TPixel*>(data), totalPoints, importImageFilterWillOwnTheBuffer );
       importFilter->Update();
       return importFilter;
     }
@@ -117,9 +110,15 @@ class ITKUtilities
      * @param data
      * @return
      */
-    static typename ItkImageType::Pointer Dream3DtoITK(VolumeDataContainer* m, QString attrMatName, PixelType* data)
+    static typename ScalarImageType::Pointer Dream3DtoITK(VolumeDataContainer* m, QString attrMatName, ComponentType* data)
     {
-      return Dream3DtoITKImportFilter(m, attrMatName, data)->GetOutput();
+      return Dream3DtoITKImportFilter<ComponentType>(m, attrMatName, data)->GetOutput();
+    }
+
+    template <typename TImage>
+    static typename TImage::Pointer Dream3DtoITKTemplate(VolumeDataContainer* m, QString attrMatName, ComponentType* data)
+    {
+      return Dream3DtoITKImportFilter<typename TImage::PixelType>(m, attrMatName, data)->GetOutput();
     }
 
     /**
@@ -128,23 +127,21 @@ class ITKUtilities
      * @param output
      * @param totalPoints
      */
-    static void SetITKOutput(typename ItkImageType::Pointer image, typename DataArray<PixelType>::Pointer array) // * output, const unsigned int totalPoints)
+    static void SetITKOutput(typename ScalarImageType::Pointer image, typename DataArray<ComponentType>::Pointer array) // * output, const unsigned int totalPoints)
     {
       const bool filterWillDeleteTheInputBuffer = false;
       image->GetPixelContainer()->SetImportPointer(array->getPointer(0), array->getNumberOfTuples(), filterWillDeleteTheInputBuffer);
     }
-
 
     /**
      * @brief CopyITKtoDream3D copy itk image to dream3d array
      * @param image
      * @param buffer
      */
-    static void CopyITKtoDream3D(typename ItkImageType::Pointer image, PixelType* buffer)
+    static void CopyITKtoDream3D(typename ScalarImageType::Pointer image, ComponentType* buffer)
     {
-      typename ItkImageType::RegionType filterRegion = image->GetBufferedRegion();
-
-      ItkImageRegionConstIteratorType it(image, filterRegion);
+      typename ScalarImageType::RegionType filterRegion = image->GetBufferedRegion();
+      itk::ImageRegionConstIterator<ScalarImageType> it(image, filterRegion);
       it.GoToBegin();
       int index = 0;
       while(!it.IsAtEnd())
@@ -165,75 +162,77 @@ class ITKUtilities
      * @param data
      * @return
      */
-    static typename RGBImageType::Pointer Dream3DRGBtoITK(VolumeDataContainer* m, QString attrMatName, PixelType* data)
+    /*
+    static typename RGBImageType::Pointer Dream3DRGBtoITK(VolumeDataContainer* m, QString attrMatName, ComponentType* data)
     {
-      //get size+dimensions of dataset
-      size_t udims[3] =
-      { 0, 0, 0 };
-      m->getDimensions(udims);
-#if (CMP_SIZEOF_SIZE_T == 4)
-      typedef int32_t DimType;
-#else
-      typedef int64_t DimType;
-#endif
-      DimType dims[3] = { static_cast<DimType>(udims[0]), static_cast<DimType>(udims[1]), static_cast<DimType>(udims[2]), };
-      //int64_t totalPoints = m->getTotalPoints();
+     //get size+dimensions of dataset
+     size_t udims[3] =
+     { 0, 0, 0 };
+     m->getDimensions(udims);
+    #if (CMP_SIZEOF_SIZE_T == 4)
+     typedef int32_t DimType;
+    #else
+     typedef int64_t DimType;
+    #endif
+     DimType dims[3] = { static_cast<DimType>(udims[0]), static_cast<DimType>(udims[1]), static_cast<DimType>(udims[2]), };
+     //int64_t totalPoints = m->getTotalPoints();
 
-      //copy dataset dimensions
-      typename RGBImageType::SizeType size;
-      size[0] = dims[0];
-      size[1] = dims[1];
-      size[2] = dims[2];
+     //copy dataset dimensions
+     typename RGBImageType::SizeType size;
+     size[0] = dims[0];
+     size[1] = dims[1];
+     size[2] = dims[2];
 
-      //create image region
-      typename RGBImageType::IndexType start;
-      start.Fill(0);
-      typename RGBImageType::RegionType region(start, size);
+     //create image region
+     typename RGBImageType::IndexType start;
+     start.Fill(0);
+     typename RGBImageType::RegionType region(start, size);
 
-      //create and allocate image
-      typename RGBImageType::Pointer image = RGBImageType::New();
-      image->SetRegions(region);
-      image->Allocate();
+     //create and allocate image
+     typename RGBImageType::Pointer image = RGBImageType::New();
+     image->SetRegions(region);
+     image->Allocate();
 
-      //iterate over image copying data
-      IteratorType it(image, region);
-      it.GoToBegin();
-      int index = -1;
-      while(!it.IsAtEnd())
-      {
-        RGBPixelType pixel;
-        pixel[0] = static_cast<unsigned char>(data[++index]);
-        pixel[1] = static_cast<unsigned char>(data[++index]);
-        pixel[2] = static_cast<unsigned char>(data[++index]);
-        it.Set(pixel);
-        ++it;
-      }
-      return image;
+     //iterate over image copying data
+     IteratorType it(image, region);
+     it.GoToBegin();
+     int index = -1;
+     while(!it.IsAtEnd())
+     {
+       itk::RGBPixel<ComponentType> pixel;
+       pixel[0] = static_cast<unsigned char>(data[++index]);
+       pixel[1] = static_cast<unsigned char>(data[++index]);
+       pixel[2] = static_cast<unsigned char>(data[++index]);
+       it.Set(pixel);
+       ++it;
+     }
+     return image;
     }
-
+    */
 
     /**
      * @brief CopyRGBITKtoDream3D copy itk image to dream3d array
      * @param image
      * @param buffer
      */
-    static void CopyRGBITKtoDream3D(typename RGBImageType::Pointer image, PixelType* buffer)
+    /*
+    static void CopyRGBITKtoDream3D(typename RGBImageType::Pointer image, ComponentType* buffer)
     {
-      typename RGBImageType::RegionType filterRegion = image->GetBufferedRegion();
+     typename RGBImageType::RegionType filterRegion = image->GetBufferedRegion();
 
-      ItkRGBImageRegionConstIteratorType it(image, filterRegion);
-      it.GoToBegin();
-      int index = -1;
-      while(!it.IsAtEnd())
-      {
-        typename itk::RGBPixel<PixelType> pixel = it.Get();
-        buffer[++index] = pixel.GetRed();
-        buffer[++index] = pixel.GetGreen();
-        buffer[++index] = pixel.GetBlue();
-        ++it;
-      }
+     typedef typename itk::ImageRegionConstIterator<RGBImageType> it(image, filterRegion);
+     it.GoToBegin();
+     int index = -1;
+     while(!it.IsAtEnd())
+     {
+       typename itk::RGBPixel<ComponentType> pixel = it.Get();
+       buffer[++index] = pixel.GetRed();
+       buffer[++index] = pixel.GetGreen();
+       buffer[++index] = pixel.GetBlue();
+       ++it;
+     }
     }
-
+    */
 
     /**
      * @brief ExtractSlice extract a slice
@@ -242,16 +241,17 @@ class ITKUtilities
      * @param sliceNum
      * @return
      */
-    static typename ItkSliceImageType::Pointer ExtractSlice(typename ItkImageType::Pointer image, int sliceType, int sliceNum)
+    static typename ScalarSliceImageType::Pointer ExtractSlice(typename ScalarImageType::Pointer image, int sliceType, int sliceNum)
     {
+      typedef typename itk::ExtractImageFilter<ScalarImageType, ScalarSliceImageType> SliceExtractFilter;
       typename SliceExtractFilter::Pointer extractSlice = SliceExtractFilter::New();
-      typename ItkImageType::RegionType inputRegion = image->GetLargestPossibleRegion();
-      typename ItkImageType::SizeType size = inputRegion.GetSize();
+      typename ScalarImageType::RegionType inputRegion = image->GetLargestPossibleRegion();
+      typename ScalarImageType::SizeType size = inputRegion.GetSize();
       //if(ImageProcessing::XSlice==sliceType) size[0]=0;
       size[sliceType] = 0;
-      typename ItkImageType::IndexType start = inputRegion.GetIndex();
+      typename ScalarImageType::IndexType start = inputRegion.GetIndex();
       start[sliceType] = sliceNum;
-      typename ItkImageType::RegionType extractedRegion;
+      typename ScalarImageType::RegionType extractedRegion;
       extractedRegion.SetSize(size);
       extractedRegion.SetIndex(start);
       extractSlice->SetInput(image);
@@ -268,22 +268,22 @@ class ITKUtilities
      * @param sliceType
      * @param sliceNum
      */
-    static void SetSlice(typename ItkImageType::Pointer image, typename ItkSliceImageType::Pointer slice, int sliceType, int sliceNum)
+    static void SetSlice(typename ScalarImageType::Pointer image, typename ScalarSliceImageType::Pointer slice, int sliceType, int sliceNum)
     {
       //get region to replace
-      typename ItkImageType::RegionType volumeRegion = image->GetLargestPossibleRegion();
-      typename ItkImageType::SizeType size = volumeRegion.GetSize();
+      typename ScalarImageType::RegionType volumeRegion = image->GetLargestPossibleRegion();
+      typename ScalarImageType::SizeType size = volumeRegion.GetSize();
       size[sliceType] = 1;
       volumeRegion.SetSize(size);
-      typename ItkImageType::IndexType start = volumeRegion.GetIndex();
+      typename ScalarImageType::IndexType start = volumeRegion.GetIndex();
       start.Fill(0);
       start[sliceType] = sliceNum;
       volumeRegion.SetIndex(start);
 
       //get iterator for slice and image
 
-      SliceConstIteratorType sliceIt(slice, slice->GetLargestPossibleRegion());
-      VolumeIteratorType volIt(image, volumeRegion);
+      itk::ImageRegionConstIterator<ScalarSliceImageType> sliceIt(slice, slice->GetLargestPossibleRegion());
+      itk::ImageRegionIterator<ScalarImageType> volIt(image, volumeRegion);
 
       //copy slice into volume
       volIt.GoToBegin();
@@ -297,10 +297,10 @@ class ITKUtilities
     }
 
     /*
-    static typename itk::Image<typename PixelType,ImageProcessing::ImageDimension>::Pointer ConvertDataArray(int* dims, float* resolution, float* origin, typename DataArray<T>::Pointer inData)
+    static typename itk::Image<typename ComponentType,ImageProcessing::ImageDimension>::Pointer ConvertDataArray(int* dims, float* resolution, float* origin, typename DataArray<T>::Pointer inData)
     {
       //create import filter
-      typedef typename itk::ImportImageFilter<typename PixelType, ImageProcessing::ImageDimension> ImportFilterType;
+      typedef typename itk::ImportImageFilter<typename ComponentType, ImageProcessing::ImageDimension> ImportFilterType;
       typename ImportFilterType::Pointer importFilter = ImportFilterType::New();
       typename ImportFilterType::IndexType start;
       start.Fill( 0 );

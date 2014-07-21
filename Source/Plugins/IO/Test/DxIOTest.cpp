@@ -60,10 +60,10 @@
 //
 // -----------------------------------------------------------------------------
 
-  QString getTestFile()
-  {
-    return UnitTest::TestTempDir + "/DxIOTest.dx";
-  }
+QString getTestFile()
+{
+  return UnitTest::TestTempDir + "/DxIOTest.dx";
+}
 
 // -----------------------------------------------------------------------------
 //
@@ -140,7 +140,7 @@ int TestDxReader()
   reader->setInputFile(getTestFile());
 
   QObject::connect(reader.get(), SIGNAL(filterGeneratedMessage(const PipelineMessage&)),
-            &obs, SLOT(processPipelineMessage(const PipelineMessage&)) );
+                   &obs, SLOT(processPipelineMessage(const PipelineMessage&)) );
 
   // Put the Filter into the pipeline
   //pipeline->pushBack(reader);
@@ -183,11 +183,11 @@ int TestDxReader()
   DREAM3D_REQUIRE(NULL != attrMat)
 
   bool exists = attrMat->doesAttributeArrayExist(reader->getFeatureIdsArrayName() );
-  DREAM3D_REQUIRED(exists, ==, true)
+  DREAM3D_REQUIRED(exists, == , true)
 
   // Now get the actual DataArray from the Attribute Matrix
   Int32ArrayType::Pointer featureIds = attrMat->getArray<Int32ArrayType>(reader->getFeatureIdsArrayName());
-  DREAM3D_REQUIRED(NULL, !=, featureIds.get());
+  DREAM3D_REQUIRED(NULL, != , featureIds.get());
 
   // Get the Raw Pointer
   int32_t* data = featureIds->getPointer(0);
@@ -196,7 +196,7 @@ int TestDxReader()
 
   // Make sure all the sizes match up
   size_t nTuples = featureIds->getNumberOfTuples();
-  DREAM3D_REQUIRED(nTuples, ==, size);
+  DREAM3D_REQUIRED(nTuples, == , size);
 
   for (int i = 0; i < size; ++i)
   {

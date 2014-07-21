@@ -283,7 +283,7 @@ VolumeInfoFilterParameter::~VolumeInfoFilterParameter()
 //
 // -----------------------------------------------------------------------------
 VolumeInfoFilterParameter::Pointer VolumeInfoFilterParameter::New(const QString& humanLabel, const QString& dimsProperty,
-    const QString& widgetType, const IntVec3_t &defaultValue,
+    const QString& widgetType, const IntVec3_t& defaultValue,
     bool advanced,
     const QString& units,
     const QString& resProperty)

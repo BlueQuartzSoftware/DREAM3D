@@ -22,7 +22,7 @@ void TestDream3DtoITKImportFilter()
   QString attrMatName("CellData");
   ImageProcessing::DefaultPixelType* data = NULL;
 
-  ImageProcessing::ImportUInt8FilterType::Pointer importFilter = ITKUtilities<ImageProcessing::DefaultPixelType>::Dream3DtoITKImportFilter(m.get(), attrMatName, data);
+  ImageProcessing::ImportUInt8FilterType::Pointer importFilter = ITKUtilities<ImageProcessing::DefaultPixelType>::Dream3DtoITKImportFilter<ImageProcessing::DefaultPixelType>(m.get(), attrMatName, data);
 
 }
 
@@ -38,7 +38,7 @@ void TestDream3DtoITK()
 
   ImageProcessing::DefaultPixelType* data = NULL;
 
-  imagePtr = ITKUtilities<ImageProcessing::DefaultPixelType>::Dream3DtoITK(m.get(), attrMatName, data);
+  imagePtr = (ImageProcessing::DefaultImageType::Pointer)ITKUtilities<ImageProcessing::DefaultPixelType>::Dream3DtoITK(m.get(), attrMatName, data);
 }
 
 // -----------------------------------------------------------------------------
@@ -67,7 +67,7 @@ void TestCopyITKtoDream3D()
   ITKUtilities<ImageProcessing::DefaultPixelType>::CopyITKtoDream3D(imagePtr, data);
 
 }
-
+/*
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -90,7 +90,7 @@ void TestCopyRGBITKtoDream3D()
   ImageProcessing::DefaultPixelType* data = NULL;
   ITKUtilities<ImageProcessing::DefaultPixelType>::CopyRGBITKtoDream3D(imagePtr, data);
 }
-
+*/
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

@@ -2,45 +2,51 @@
  * Your License or Copyright Information can go here
  */
 
-#ifndef _RawBinaryWriter_H_
-#define _RawBinaryWriter_H_
+#ifndef _ReadImage_H_
+#define _ReadImage_H_
 
+//#include <vector>
+#include <QtCore/QString>
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
+#include "DREAM3DLib/DataArrays/IDataArray.h"
+
+#include "Plugins/ImageProcessing/ImageProcessingConstants.h"
+
+#include "TemplateUtilities.h"
 
 
 /**
- * @class RawBinaryWriter RawBinaryWriter.h IO/IOFilters/RawBinaryWriter.h
+ * @class ReadImage ReadImage.h ImageProcessing/ImageProcessingFilters/ReadImage.h
  * @brief
  * @author
  * @date
  * @version 1.0
  */
-class RawBinaryWriter : public AbstractFilter
+class ReadImage : public AbstractFilter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
 
   public:
-    DREAM3D_SHARED_POINTERS(RawBinaryWriter)
-    DREAM3D_STATIC_NEW_MACRO(RawBinaryWriter)
-    DREAM3D_TYPE_MACRO_SUPER(RawBinaryWriter, AbstractFilter)
+    DREAM3D_SHARED_POINTERS(ReadImage)
+    DREAM3D_STATIC_NEW_MACRO(ReadImage)
+    DREAM3D_TYPE_MACRO_SUPER(ReadImage, AbstractFilter)
 
-    virtual ~RawBinaryWriter();
+    virtual ~ReadImage();
 
-    /* Place your input parameters here using the DREAM3D macros to declare the Filter Parameters
-     * or other instance variables
-     */
-    //DREAM3D_FILTER_PARAMETER(QString, ImagePrefix)
-    /* If you declare a filter parameter above then you MUST create a Q_PROPERTY for that FilterParameter */
-    //Q_PROPERTY(QString ImagePrefix READ getImagePrefix WRITE setImagePrefix)
+    DREAM3D_FILTER_PARAMETER(QString, InputFileName)
+    Q_PROPERTY(QString InputFileName READ getInputFileName WRITE setInputFileName)
 
-    /* Here is another example of declaring an integer FilterParameter */
-    // DREAM3D_FILTER_PARAMETER(int, ImageSize)
-    // Q_PROPERTY(int ImageSize READ getImageSize WRITE setImageSize)
+    DREAM3D_FILTER_PARAMETER(QString, DataContainerName)
+    Q_PROPERTY(QString DataContainerName READ getDataContainerName WRITE setDataContainerName)
 
+    DREAM3D_FILTER_PARAMETER(QString, CellAttributeMatrixName)
+    Q_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
 
+    DREAM3D_FILTER_PARAMETER(QString, ImageDataArrayName)
+    Q_PROPERTY(QString ImageDataArrayName READ getImageDataArrayName WRITE setImageDataArrayName)
 
     /**
      * @brief getCompiledLibraryName Returns the name of the Library that this filter is a part of
@@ -107,6 +113,8 @@ class RawBinaryWriter : public AbstractFilter
      */
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
 
+//virtual void ReadImage::template_execute();
+
   signals:
     /**
      * @brief updateFilterParameters This is emitted when the filter requests all the latest Filter Parameters need to be
@@ -131,7 +139,7 @@ class RawBinaryWriter : public AbstractFilter
     void preflightExecuted();
 
   protected:
-    RawBinaryWriter();
+    ReadImage();
 
     /**
     * @brief Checks for the appropriate parameter values and availability of arrays in the data container
@@ -139,13 +147,11 @@ class RawBinaryWriter : public AbstractFilter
     void dataCheck();
 
   private:
-    /* Your private class instance variables go here. You can use several preprocessor macros to help
-     * make sure you have all the variables defined correctly. Those are "DEFINE_REQUIRED_DATAARRAY_VARIABLE()"
-     * and  DEFINE_CREATED_DATAARRAY_VARIABLE() which are defined in DREAM3DGetSetMacros.h
-     */
+    TEMPLATE_DEFINE_CREATED_DATAARRAY_VARIABLE(ImageData)
 
-    RawBinaryWriter(const RawBinaryWriter&); // Copy Constructor Not Implemented
-    void operator=(const RawBinaryWriter&); // Operator '=' Not Implemented
+
+    ReadImage(const ReadImage&); // Copy Constructor Not Implemented
+    void operator=(const ReadImage&); // Operator '=' Not Implemented
 };
 
-#endif /* _RawBinaryWriter_H_ */
+#endif /* _ReadImage_H_ */

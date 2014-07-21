@@ -64,10 +64,10 @@ FilterWidgetManager::Pointer FilterWidgetManager::Instance()
 
   if (singleton.get() == NULL)
   {
-  //  qDebug() << "FilterWidgetManager::Instance singleton was NULL" << "\n";
+    //  qDebug() << "FilterWidgetManager::Instance singleton was NULL" << "\n";
     singleton.reset (new FilterWidgetManager() );
   }
- // qDebug() << "singleton.get(): " << singleton.get() << "\n";
+// qDebug() << "singleton.get(): " << singleton.get() << "\n";
   return singleton;
 }
 

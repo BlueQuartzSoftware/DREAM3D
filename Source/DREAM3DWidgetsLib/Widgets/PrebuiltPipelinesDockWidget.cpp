@@ -224,7 +224,8 @@ void PrebuiltPipelinesDockWidget::on_filterLibraryTree_itemClicked( QTreeWidgetI
 {
   QString favoritePath = item->data(0, Qt::UserRole).toString();
   QStringList filterList = generateFilterListFromPipelineFile(favoritePath);
-  if(filterList.size() > 0) {
+  if(filterList.size() > 0)
+  {
     emit filterListGenerated(filterList, false);
   }
 }

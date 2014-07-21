@@ -41,7 +41,8 @@
 /**
 * @brief This namespace is used to define some Constants for the plugin itself.
 */
-namespace Generic {
+namespace Generic
+{
   const QString GenericPluginFile("GenericPlugin");
   const QString GenericPluginDisplayName("GenericPlugin");
   const QString GenericBaseName("GenericPlugin");
@@ -54,7 +55,7 @@ namespace Generic {
 namespace FilterParameterWidgetType
 {
 
-/*  const QString SomeCustomWidget("SomeCustomWidget"); */
+  /*  const QString SomeCustomWidget("SomeCustomWidget"); */
 
 }
 #endif
