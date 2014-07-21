@@ -205,14 +205,14 @@ class TemplateUtilities
       notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());\
       return;\
     }\
-    AttributeMatrix::Pointer TEMPLATE_GET_PREREQ_ARRAY_cellAttrMat = volDataCntr->getPrereqAttributeMatrix<AbstractFilter>(this, arrayPath.getAttributeMatrixName(), TemplateConstants::Errors::MissingAttributeMatrix);\
-    if(getErrorCondition() < 0 || NULL == TEMPLATE_GET_PREREQ_ARRAY_cellAttrMat.get()) {\
+    AttributeMatrix::Pointer cell_attr_matrix = volDataCntr->getPrereqAttributeMatrix<AbstractFilter>(this, arrayPath.getAttributeMatrixName(), TemplateConstants::Errors::MissingAttributeMatrix);\
+    if(getErrorCondition() < 0 || NULL == cell_attr_matrix.get()) {\
       QString ss = QObject::tr("The Attribute Matrix '%1' does not exist").arg(arrayPath.getAttributeMatrixName());\
       setErrorCondition(TemplateConstants::Errors::MissingAttributeMatrix);\
       notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());\
       return;\
     }\
-    IDataArray::Pointer templ_ptr = TEMPLATE_GET_PREREQ_ARRAY_cellAttrMat->getAttributeArray(arrayPath.getDataArrayName());\
+    IDataArray::Pointer templ_ptr = cell_attr_matrix->getAttributeArray(arrayPath.getDataArrayName());\
     if(NULL == templ_ptr.get()) {\
       QString ss = QObject::tr("The input array '%1' was not found in the AttributeMatrix '%2'.").arg(m_##arrayName##ArrayName).arg(arrayPath.getAttributeMatrixName());\
       setErrorCondition(TemplateConstants::Errors::MissingArray);\
@@ -223,35 +223,35 @@ class TemplateUtilities
       QVector<size_t> templ_comp_dims = templ_ptr->getComponentDimensions();\
       dims.swap(templ_comp_dims);\
     }\
-    m_##arrayName##Ptr = volDataCntr->getAttributeMatrix(arrayPath.getAttributeMatrixName())->getAttributeArray(arrayPath.getDataArrayName());\
-    if(TemplateConstants::IsSubclassOf<Int8ArrayType>()(m_##arrayName##Ptr.lock())) {\
+    IDataArray::Pointer i_data_array = cell_attr_matrix->getAttributeArray(arrayPath.getDataArrayName());\
+    if(TemplateConstants::IsSubclassOf<Int8ArrayType>()(i_data_array) ) {\
       m_##arrayName##Ptr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int8_t>, AbstractFilter>(this, arrayPath, dims);\
     }\
-    else if(TemplateConstants::IsSubclassOf<UInt8ArrayType>()(m_##arrayName##Ptr.lock())) {\
+    else if(TemplateConstants::IsSubclassOf<UInt8ArrayType>()(i_data_array) ) {\
       m_##arrayName##Ptr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<uint8_t>, AbstractFilter>(this, arrayPath, dims);\
     }\
-    else if(TemplateConstants::IsSubclassOf<Int16ArrayType>()(m_##arrayName##Ptr.lock())) {\
+    else if(TemplateConstants::IsSubclassOf<Int16ArrayType>()(i_data_array) ) {\
       m_##arrayName##Ptr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int16_t>, AbstractFilter>(this, arrayPath, dims);\
     }\
-    else if(TemplateConstants::IsSubclassOf<UInt16ArrayType>()(m_##arrayName##Ptr.lock())) {\
+    else if(TemplateConstants::IsSubclassOf<UInt16ArrayType>()(i_data_array) ) {\
       m_##arrayName##Ptr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<uint16_t>, AbstractFilter>(this, arrayPath, dims);\
     }\
-    else if(TemplateConstants::IsSubclassOf<Int32ArrayType>()(m_##arrayName##Ptr.lock())) {\
+    else if(TemplateConstants::IsSubclassOf<Int32ArrayType>()(i_data_array) ) {\
       m_##arrayName##Ptr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, arrayPath, dims);\
     }\
-    else if(TemplateConstants::IsSubclassOf<UInt32ArrayType>()(m_##arrayName##Ptr.lock())) {\
+    else if(TemplateConstants::IsSubclassOf<UInt32ArrayType>()(i_data_array) ) {\
       m_##arrayName##Ptr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<uint32_t>, AbstractFilter>(this, arrayPath, dims);\
     }\
-    else if(TemplateConstants::IsSubclassOf<Int64ArrayType>()(m_##arrayName##Ptr.lock())) {\
+    else if(TemplateConstants::IsSubclassOf<Int64ArrayType>()(i_data_array) ) {\
       m_##arrayName##Ptr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int64_t>, AbstractFilter>(this, arrayPath, dims);\
     }\
-    else if(TemplateConstants::IsSubclassOf<UInt64ArrayType>()(m_##arrayName##Ptr.lock())) {\
+    else if(TemplateConstants::IsSubclassOf<UInt64ArrayType>()(i_data_array) ) {\
       m_##arrayName##Ptr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<uint64_t>, AbstractFilter>(this, arrayPath, dims);\
     }\
-    else if(TemplateConstants::IsSubclassOf<FloatArrayType>()(m_##arrayName##Ptr.lock())) {\
+    else if(TemplateConstants::IsSubclassOf<FloatArrayType>()(i_data_array) ) {\
       m_##arrayName##Ptr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, arrayPath, dims);\
     }\
-    else if(TemplateConstants::IsSubclassOf<DoubleArrayType>()(m_##arrayName##Ptr.lock())) {\
+    else if(TemplateConstants::IsSubclassOf<DoubleArrayType>()(i_data_array) ) {\
       m_##arrayName##Ptr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<double>, AbstractFilter>(this, arrayPath, dims);\
     }\
     else{\
