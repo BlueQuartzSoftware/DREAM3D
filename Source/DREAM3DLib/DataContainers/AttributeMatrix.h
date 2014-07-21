@@ -187,12 +187,10 @@ class DREAM3DLib_EXPORT AttributeMatrix : public Observable
     }
 
     /**
-     * @brief getPrereqArray
+     * @brief getExistingPrereqArray
      * @param filter
-     * @param attributeMatrixName
      * @param attributeArrayName
      * @param err
-     * @param size
      * @return
      */
     template<class ArrayType, class Filter>

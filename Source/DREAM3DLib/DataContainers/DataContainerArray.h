@@ -290,10 +290,9 @@ class DREAM3DLib_EXPORT DataContainerArray : public QObject
     }
 
     /**
-    * @brief getPrereqArrayFromPath
+    * @brief getExistingPrereqArrayFromPath
     * @param filter
     * @param path
-    * @param dims
     * @return
     */
     template<class ArrayType, class Filter>
