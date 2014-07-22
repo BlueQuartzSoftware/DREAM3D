@@ -202,6 +202,44 @@ int INLWriter::writeHeader()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+uint32_t mapCrystalSymmetryToTslSymmetry(uint32_t symmetry)
+{
+   switch(symmetry)
+  {
+
+    case Ebsd::CrystalStructure::Cubic_High:
+      return Ebsd::Ang::PhaseSymmetry::Cubic;
+    case Ebsd::CrystalStructure::Cubic_Low:
+      return Ebsd::Ang::PhaseSymmetry::Tetrahedral;
+    case  Ebsd::CrystalStructure::Tetragonal_High:
+      return Ebsd::Ang::PhaseSymmetry::DiTetragonal;
+    case Ebsd::CrystalStructure::Tetragonal_Low:
+      return Ebsd::Ang::PhaseSymmetry::Tetragonal;
+    case Ebsd::CrystalStructure::OrthoRhombic:
+      return Ebsd::Ang::PhaseSymmetry::Orthorhombic;
+    case Ebsd::CrystalStructure::Monoclinic:
+      return Ebsd::Ang::PhaseSymmetry::Monoclinic_c;
+      return Ebsd::Ang::PhaseSymmetry::Monoclinic_b;
+      return Ebsd::Ang::PhaseSymmetry::Monoclinic_a;
+    case Ebsd::CrystalStructure::Triclinic:
+      return Ebsd::Ang::PhaseSymmetry::Triclinic;
+    case Ebsd::CrystalStructure::Hexagonal_High:
+      return Ebsd::Ang::PhaseSymmetry::DiHexagonal;
+    case Ebsd::CrystalStructure::Hexagonal_Low:
+      return Ebsd::Ang::PhaseSymmetry::Hexagonal;
+    case Ebsd::CrystalStructure::Trigonal_High:
+      return Ebsd::Ang::PhaseSymmetry::DiTrigonal;
+    case Ebsd::CrystalStructure::Trigonal_Low:
+      return Ebsd::Ang::PhaseSymmetry::Trigonal;
+    default:
+      return Ebsd::CrystalStructure::UnknownCrystalStructure;
+
+  }
+   return Ebsd::CrystalStructure::UnknownCrystalStructure;
+}
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 int INLWriter::writeFile()
 {
   dataCheck();
@@ -282,18 +320,9 @@ int INLWriter::writeFile()
     fprintf(f, "# Phase_%d: %s\r\n", i, matName.toLatin1().data());
     symmetry = m_CrystalStructures[i];
     fprintf(f, "# Phase_%u: %s\r\n", i, materialNames->getValue(i).toLatin1().data());
-    if(symmetry == Ebsd::CrystalStructure::Cubic_High)
-    {
-      symmetry = Ebsd::Ang::PhaseSymmetry::Cubic;
-    }
-    else if(symmetry == Ebsd::CrystalStructure::Hexagonal_High)
-    {
-      symmetry = Ebsd::Ang::PhaseSymmetry::DiHexagonal;
-    }
-    else
-    {
-      symmetry = Ebsd::Ang::PhaseSymmetry::UnknownSymmetry;
-    }
+
+    symmetry = mapCrystalSymmetryToTslSymmetry(symmetry);
+
     fprintf(f, "# Symmetry_%d: %u\r\n", i, symmetry);
     fprintf(f, "#\r\n");
   }
