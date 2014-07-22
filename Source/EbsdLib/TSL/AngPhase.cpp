@@ -45,7 +45,9 @@
 //
 // -----------------------------------------------------------------------------
 AngPhase::AngPhase() :
-  m_PhaseIndex(-1)
+  m_PhaseIndex(-1),
+  m_Symmetry(0),
+  m_NumberFamilies(0)
 {
 }
 

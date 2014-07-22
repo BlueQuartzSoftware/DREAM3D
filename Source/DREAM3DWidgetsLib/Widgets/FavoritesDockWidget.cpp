@@ -213,7 +213,8 @@ void FavoritesDockWidget::on_filterLibraryTree_itemClicked( QTreeWidgetItem* ite
 {
   QString favoritePath = item->data(0, Qt::UserRole).toString();
   QStringList filterList = generateFilterListFromPipelineFile(favoritePath);
-  if(filterList.size() > 0) {
+  if(filterList.size() > 0)
+  {
     emit filterListGenerated(filterList, false);
   }
 }
@@ -464,7 +465,8 @@ void FavoritesDockWidget::addFavorite(bool folder)
   }
 
   bool allowEditing = true;
-  if(false == folder) {
+  if(false == folder)
+  {
     allowEditing = false;
   }
 
@@ -473,7 +475,7 @@ void FavoritesDockWidget::addFavorite(bool folder)
   FilterLibraryTreeWidget::ItemType itemType = FilterLibraryTreeWidget::Unknown_Item_Type;
   if(folder)
   {
-    itemType =FilterLibraryTreeWidget::Node_Item_Type;
+    itemType = FilterLibraryTreeWidget::Node_Item_Type;
     icon = QIcon(":/folder_blue.png");
     QString parentPath = selection->data(0, Qt::UserRole).toString();
     newPrefPath = parentPath + QDir::separator() + favoriteTitle + QDir::separator(); // Generate the proper path to the favorite
@@ -491,7 +493,7 @@ void FavoritesDockWidget::addFavorite(bool folder)
   }
   else
   {
-    itemType =FilterLibraryTreeWidget::Leaf_Item_Type;
+    itemType = FilterLibraryTreeWidget::Leaf_Item_Type;
     icon = QIcon(":/text.png");
     QString path = selection->data(0, Qt::UserRole).toString(); // Get the selected item's path
     newPrefPath = path + QDir::separator() + favoriteTitle + ".ini"; // Generate the proper path to the favorite
@@ -555,7 +557,7 @@ QString FavoritesDockWidget::displayNewFavoriteDialog()
 //
 // -----------------------------------------------------------------------------
 void FavoritesDockWidget::addFavoriteTreeItem(QTreeWidgetItem* selection,
-                                              QString &favoriteTitle,
+                                              QString& favoriteTitle,
                                               QIcon icon,
                                               FilterLibraryTreeWidget::ItemType itemType,
                                               QString favoritePath,

@@ -151,13 +151,23 @@ class EbsdToH5EbsdWidget : public QWidget, private Ui::EbsdToH5EbsdWidget
     /**
      * @brief Method to attempt the extraction of the .ang max slice value and prefix
      */
-    void m_findEbsdMaxSliceAndPrefix();
+    void findEbsdMaxSliceAndPrefix();
 
     /**
      * @brief m_generateExampleEbsdInputFile
      */
-    void m_generateExampleEbsdInputFile();
+    void generateExampleEbsdInputFile();
+
+    /**
+     * @brief getRefFrameZDir
+     * @return
+     */
     uint32_t getRefFrameZDir();
+
+    /**
+     * @brief setRefFrameZDir
+     * @param ref
+     */
     void setRefFrameZDir(uint32_t ref);
 
     /**
@@ -168,10 +178,7 @@ class EbsdToH5EbsdWidget : public QWidget, private Ui::EbsdToH5EbsdWidget
     /**
      * @brief IdentifyRefFrame
      */
-
     void identifyRefFrame();
-
-
 
 
   private:

@@ -72,7 +72,7 @@ class TestException : public std::exception
     * @param file
     * @param lineNumber
     */
-    TestException(const std::string &what, const std::string &filename, int lineNumber) :
+    TestException(const std::string& what, const std::string& filename, int lineNumber) :
       m_Message(what), m_FileName(filename), m_LineNumber(lineNumber)
     {
       updateWhat();
@@ -81,7 +81,7 @@ class TestException : public std::exception
     /**
     * @brief Copy Constructor
     */
-    TestException(const TestException &te)
+    TestException(const TestException& te)
     {
       m_Message = (&te)->getMessage();
       m_FileName = te.getFileName();
@@ -89,7 +89,8 @@ class TestException : public std::exception
       updateWhat();
     }
 
-    virtual ~TestException() throw() {
+    virtual ~TestException() throw()
+    {
     }
 
     /**
@@ -100,7 +101,7 @@ class TestException : public std::exception
       return m_What;
     }
 
-    void setMessage(const std::string &m)
+    void setMessage(const std::string& m)
     {
       m_Message = m;
       updateWhat();
@@ -111,7 +112,7 @@ class TestException : public std::exception
     }
     std::string getMessage() const { return m_Message; }
 
-    void setFileName(const std::string &fn)
+    void setFileName(const std::string& fn)
     {
       m_FileName = fn;
       updateWhat();
@@ -134,7 +135,8 @@ class TestException : public std::exception
     int getLineNumber() const { return m_LineNumber; }
 
   protected:
-    TestException() {
+    TestException()
+    {
       updateWhat();
     }
 
@@ -163,7 +165,7 @@ class TestException : public std::exception
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void TestPassed(const std::string &test)
+void TestPassed(const std::string& test)
 {
   ::memset(DREAM3D::unittest::TestMessage, ' ', NUM_COLS); // Splat Spaces across the entire message
   DREAM3D::unittest::TestMessage[NUM_COLS] = 0;  // Make sure it is null terminated
@@ -186,7 +188,7 @@ void TestPassed(const std::string &test)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void TestFailed(const std::string &test)
+void TestFailed(const std::string& test)
 {
   ::memset(DREAM3D::unittest::TestMessage, ' ', NUM_COLS); // Splat Spaces across the entire message
   DREAM3D::unittest::TestMessage[NUM_COLS] = 0;  // Make sure it is null terminated
@@ -215,34 +217,34 @@ void TestFailed(const std::string &test)
 #ifdef INFINITYCHECK
 inline bool IsInfinite(float A)
 {
-    const int kInfAsInt = 0x7F800000;
+  const int kInfAsInt = 0x7F800000;
 
-    // An infinity has an exponent of 255 (shift left 23 positions) and
-    // a zero mantissa. There are two infinities - positive and negative.
-    if ((*(int*)&A & 0x7FFFFFFF) == kInfAsInt)
-        return true;
-    return false;
+  // An infinity has an exponent of 255 (shift left 23 positions) and
+  // a zero mantissa. There are two infinities - positive and negative.
+  if ((*(int*)&A & 0x7FFFFFFF) == kInfAsInt)
+  { return true; }
+  return false;
 }
 #endif
 
 #ifdef NANCHECK
 inline bool IsNan(float A)
 {
-    // A NAN has an exponent of 255 (shifted left 23 positions) and
-    // a non-zero mantissa.
-    int exp = *(int*)&A & 0x7F800000;
-    int mantissa = *(int*)&A & 0x007FFFFF;
-    if (exp == 0x7F800000 && mantissa != 0)
-        return true;
-    return false;
+  // A NAN has an exponent of 255 (shifted left 23 positions) and
+  // a non-zero mantissa.
+  int exp = *(int*)&A & 0x7F800000;
+  int mantissa = *(int*)&A & 0x007FFFFF;
+  if (exp == 0x7F800000 && mantissa != 0)
+  { return true; }
+  return false;
 }
 #endif
 
 #ifdef SIGNCHECK
 inline int Sign(float A)
 {
-    // The sign bit of a number is the high bit.
-    return (*(int*)&A) & 0x80000000;
+  // The sign bit of a number is the high bit.
+  return (*(int*)&A) & 0x80000000;
 }
 #endif
 
@@ -310,81 +312,81 @@ bool AlmostEqualUlpsFinal(float A, float B, int maxUlps)
 // Developer Used Macros
 // -----------------------------------------------------------------------------
 #define DREAM3D_REQUIRE( P ) \
-{ \
-  bool b = (P);\
-  if ( (b) == (false) ) \
-{\
-  std::string s ("Your test required the following\n            '");\
-  s = s.append(#P).append("'\n             but this condition was not met.");\
-  DREAM3D_TEST_THROW_EXCEPTION( s )\
-  }\
+  { \
+    bool b = (P);\
+    if ( (b) == (false) ) \
+    {\
+      std::string s ("Your test required the following\n            '");\
+      s = s.append(#P).append("'\n             but this condition was not met.");\
+      DREAM3D_TEST_THROW_EXCEPTION( s )\
+    }\
   }
 
 #define DREAM3D_REQUIRED(L, Q, R)\
-{ \
-  QString buf;\
-  QTextStream ss(&buf);\
-  bool b = (L Q R);\
-  if ( (b) == (false) ) \
-{\
-  ss <<"Your test required the following\n            '";\
-  ss << #L << " " << #Q << " " << #R << "' but this condition was not met.\n";\
-  ss << "            " << #L << " = " << L << "\n";\
-  ss << "            " << #R << " = " << R << "\n";\
-  DREAM3D_TEST_THROW_EXCEPTION( buf.toStdString() )\
-  }\
+  { \
+    QString buf;\
+    QTextStream ss(&buf);\
+    bool b = (L Q R);\
+    if ( (b) == (false) ) \
+    {\
+      ss <<"Your test required the following\n            '";\
+      ss << #L << " " << #Q << " " << #R << "' but this condition was not met.\n";\
+      ss << "            " << #L << " = " << L << "\n";\
+      ss << "            " << #R << " = " << R << "\n";\
+      DREAM3D_TEST_THROW_EXCEPTION( buf.toStdString() )\
+    }\
   }
 
 #define DREAM3D_REQUIRE_NE( L, R )\
   if ( (L) == (R) ) {  \
-  QString buf;\
-  QTextStream ss(&buf);\
-  ss << "Your test required the following\n            '";\
-  ss << #L << " != " << #R << "'\n             but this condition was not met.\n";\
-  ss << "             " << L << "==" << R;\
-  DREAM3D_TEST_THROW_EXCEPTION( buf.toStdString() ) }
+    QString buf;\
+    QTextStream ss(&buf);\
+    ss << "Your test required the following\n            '";\
+    ss << #L << " != " << #R << "'\n             but this condition was not met.\n";\
+    ss << "             " << L << "==" << R;\
+    DREAM3D_TEST_THROW_EXCEPTION( buf.toStdString() ) }
 
 
 
 #define DREAM3D_REQUIRE_EQUAL( L, R) \
   if ( (L) != (R) ) {  \
-  QString buf;\
-  QTextStream ss(&buf);\
-  ss << "Your test required the following\n            '";\
-  ss << #L << " == " << #R << "'\n             but this condition was not met.\n";\
-  ss << "             " << L << "==" << R;\
-  DREAM3D_TEST_THROW_EXCEPTION( buf.toStdString() ) }
+    QString buf;\
+    QTextStream ss(&buf);\
+    ss << "Your test required the following\n            '";\
+    ss << #L << " == " << #R << "'\n             but this condition was not met.\n";\
+    ss << "             " << L << "==" << R;\
+    DREAM3D_TEST_THROW_EXCEPTION( buf.toStdString() ) }
 
 
 #define DREAM3D_COMPARE_FLOATS(L, R, Ulps)\
   if (false == AlmostEqualUlpsFinal((L), (R), Ulps) ) {  \
-  QString buf;\
-  QTextStream ss(&buf);\
-  ss << "Your test required the following\n            '";\
-  ss << "AlmostEqualUlpsFinal(" << #L << ", " << #R << ", " << #Ulps << "'\n             but this condition was not met with MaxUlps=" << Ulps << "\n";\
-  ss << "             " << L << "==" << R;\
-  DREAM3D_TEST_THROW_EXCEPTION( buf.toStdString() ) }
+    QString buf;\
+    QTextStream ss(&buf);\
+    ss << "Your test required the following\n            '";\
+    ss << "AlmostEqualUlpsFinal(" << #L << ", " << #R << ", " << #Ulps << "'\n             but this condition was not met with MaxUlps=" << Ulps << "\n";\
+    ss << "             " << L << "==" << R;\
+    DREAM3D_TEST_THROW_EXCEPTION( buf.toStdString() ) }
 
 
 #define DREAM3D_TEST_POINTER(L, Q, R)\
-{ \
-  QString buf;\
-  QTextStream ss(&buf);\
-  bool b = (L Q R);\
-  if ( (b) == (false) ) \
-{\
-  ss <<"Your test required the following\n            '";\
-  ss << #L << " " << #Q << " " << #R << "' but this condition was not met.\n";\
-  ss << "            " << #L << " = ";\
-  if(NULL != L) { ss << L; }\
-  else { ss << "Left side was NULL"; }\
-  ss << "\n";\
-  ss << "            " << #R << " = ";\
-  if(NULL != R) { ss << R;}\
-  else { ss << "Right Side was NULL";}\
-  ss << "\n";\
-  DREAM3D_TEST_THROW_EXCEPTION( buf.toStdString() )\
-  }\
+  { \
+    QString buf;\
+    QTextStream ss(&buf);\
+    bool b = (L Q R);\
+    if ( (b) == (false) ) \
+    {\
+      ss <<"Your test required the following\n            '";\
+      ss << #L << " " << #Q << " " << #R << "' but this condition was not met.\n";\
+      ss << "            " << #L << " = ";\
+      if(NULL != L) { ss << L; }\
+      else { ss << "Left side was NULL"; }\
+      ss << "\n";\
+      ss << "            " << #R << " = ";\
+      if(NULL != R) { ss << R;}\
+      else { ss << "Right Side was NULL";}\
+      ss << "\n";\
+      DREAM3D_TEST_THROW_EXCEPTION( buf.toStdString() )\
+    }\
   }
 
 
@@ -393,7 +395,7 @@ bool AlmostEqualUlpsFinal(float A, float B, int maxUlps)
 // -----------------------------------------------------------------------------
 #define DREAM3D_TEST_THROW_EXCEPTION( P)\
   throw TestException( P, __FILE__, __LINE__);\
-
+   
 
 #define DREAM3D_ASSERT( P )\
   assert( (P) );
@@ -413,14 +415,14 @@ bool AlmostEqualUlpsFinal(float A, float B, int maxUlps)
 
 #define DREAM3D_REGISTER_TEST( test )\
   try {\
-  DREAM3D_ENTER_TEST(test);\
-  test;\
-  DREAM3D_LEAVE_TEST(test)\
+    DREAM3D_ENTER_TEST(test);\
+    test;\
+    DREAM3D_LEAVE_TEST(test)\
   } catch (TestException& e)\
-{\
-  TestFailed(DREAM3D::unittest::CurrentMethod);\
-  std::cout << e.what() << std::endl;\
-  err = EXIT_FAILURE;\
+  {\
+    TestFailed(DREAM3D::unittest::CurrentMethod);\
+    std::cout << e.what() << std::endl;\
+    err = EXIT_FAILURE;\
   }
 
 #define PRINT_TEST_SUMMARY()\
@@ -429,10 +431,10 @@ bool AlmostEqualUlpsFinal(float A, float B, int maxUlps)
   std::cout << "  Tests Failed: " << DREAM3D::unittest::numTestFailed << std::endl;\
   std::cout << "  Total Tests:  " << DREAM3D::unittest::numTests << std::endl;\
   if (DREAM3D::unittest::numTestFailed > 0)\
-{\
-  err = EXIT_FAILURE;\
+  {\
+    err = EXIT_FAILURE;\
   }\
-
+   
 
 
 

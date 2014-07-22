@@ -141,9 +141,9 @@ class DREAM3DLib_EXPORT VoxelDataContainerReader : public AbstractFilter
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
     int gatherData(bool preflight);
-    int readGroupsData(hid_t dcGid, const QString &groupName, bool preflight,
-                       std::vector<QString> &namesRead,
-                       std::set<QString> &namesToRead);
+    int readGroupsData(hid_t dcGid, const QString& groupName, bool preflight,
+                       std::vector<QString>& namesRead,
+                       std::set<QString>& namesToRead);
     int gatherMetaData(hid_t dcId, int64_t volDims[3], float spacing[3], float origin[3]);
 
   private:

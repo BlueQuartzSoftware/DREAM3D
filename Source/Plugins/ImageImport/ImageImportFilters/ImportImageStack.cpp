@@ -326,7 +326,7 @@ void ImportImageStack::execute()
       }
       QVector<size_t> compDims(1, pixelBytes);
 
-      data = UInt8ArrayType::CreateArray(fileList.size() * height * width, compDims, m_ImageDataArrayName);
+      data = UInt8ArrayType::CreateArray(size_t(fileList.size()) * height * width, compDims, m_ImageDataArrayName);
 
     }
 

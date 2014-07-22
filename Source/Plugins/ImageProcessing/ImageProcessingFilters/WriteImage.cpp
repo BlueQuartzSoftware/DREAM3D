@@ -22,8 +22,8 @@ class WriteImagePrivate
   public:
     typedef DataArray<PixelType> DataArrayType;
 
-    WriteImagePrivate(){}
-    virtual ~WriteImagePrivate(){}
+    WriteImagePrivate() {}
+    virtual ~WriteImagePrivate() {}
 
     // -----------------------------------------------------------------------------
     // Determine if this is the proper type of an array to downcast from the IDataArray
@@ -51,40 +51,42 @@ class WriteImagePrivate
       QVector<size_t> dims = inputDataPtr->getComponentDimensions();
       int numComp = dims[0];
 
-      if(1==numComp)//scalar image
+      if(1 == numComp) //scalar image
       {
         //define types and wrap input image
-        typedef ITKUtilitiesType::ScalarImageType ImageType;
+        typedef typename ITKUtilitiesType::ScalarImageType ImageType;
         typedef itk::ImageFileWriter<ImageType> WriterType;
-        ImageType::Pointer inputImage = ITKUtilitiesType::Dream3DtoITK(m, attrMatName, inputData);
+        typename ImageType::Pointer inputImage = ITKUtilitiesType::Dream3DtoITK(m, attrMatName, inputData);
 
         //create writer and execute
         typename WriterType::Pointer writer = WriterType::New();
-        writer->SetFileName( outputFile.toLocal8Bit().constData() );
+        writer->SetFileName( outputFile.toLatin1().constData() );
         writer->SetInput( inputImage );
         writer->Update();
-      } else if(3==numComp)//rgb image
+      }
+      else if(3 == numComp)//rgb image
       {
         //define types and wrap input image
-        typedef ITKUtilitiesType::RGBImageType ImageType;
-        typedef itk::ImageFileWriter<ImageType> WriterType;
-        ImageType::Pointer inputImage = ITKUtilitiesType::Dream3DtoITKTemplate<ImageType>(m, attrMatName, inputData);
+        typedef typename ITKUtilitiesType::RGBImageType ImageType;
+        typedef typename itk::ImageFileWriter<ImageType> WriterType;
+        typename ImageType::Pointer inputImage = ITKUtilitiesType::template Dream3DtoITKTemplate<ImageType>(m, attrMatName, inputData);
 
         //create writer and execute
         typename WriterType::Pointer writer = WriterType::New();
-        writer->SetFileName( outputFile.toLocal8Bit().constData() );
+        writer->SetFileName( outputFile.toLatin1().constData() );
         writer->SetInput( inputImage );
         writer->Update();
-      } else if(4==numComp)//rgba image
+      }
+      else if(4 == numComp)//rgba image
       {
         //define types and wrap input image
-        typedef ITKUtilitiesType::RGBAImageType ImageType;
-        typedef itk::ImageFileWriter<ImageType> WriterType;
-        ImageType::Pointer inputImage = ITKUtilitiesType::Dream3DtoITKTemplate<ImageType>(m, attrMatName, inputData);
+        typedef typename ITKUtilitiesType::RGBAImageType ImageType;
+        typedef typename itk::ImageFileWriter<ImageType> WriterType;
+        typename ImageType::Pointer inputImage = ITKUtilitiesType::template Dream3DtoITKTemplate<ImageType>(m, attrMatName, inputData);
 
         //create writer and execute
         typename WriterType::Pointer writer = WriterType::New();
-        writer->SetFileName( outputFile.toLocal8Bit().constData() );
+        writer->SetFileName( outputFile.toLatin1().constData() );
         writer->SetInput( inputImage );
         writer->Update();
       } /** else//vector image
@@ -96,12 +98,12 @@ class WriteImagePrivate
 
         //create writer and execute
         typename WriterType::Pointer writer = WriterType::New();
-        writer->SetFileName( outputFile.toLocal8Bit().constData() );
+        writer->SetFileName( outputFile.toLatin1().constData() );
         writer->SetInput( inputImage );
         writer->Update();
       }*/
     }
-    private:
+  private:
     WriteImagePrivate(const WriteImagePrivate&); // Copy Constructor Not Implemented
     void operator=(const WriteImagePrivate&); // Operator '=' Not Implemented
 };
@@ -173,24 +175,28 @@ void WriteImage::dataCheck()
   TEMPLATE_GET_PREREQ_ARRAY(SelectedCellArray, getSelectedCellArrayPath(), dims)
 
   //make sure dims of selected array are appropriate
-  if(1==dims.size())
+  if(1 == dims.size())
   {
-    if(1==dims[0])//scalar
+    if(1 == dims[0]) //scalar
     {
 
-    } else if (3==dims[0])//rgb
+    }
+    else if (3 == dims[0])//rgb
     {
       notifyWarningMessage(getHumanLabel(), "Warning: writing of rgb images is currenlty experimental (unstable behavoir may occur)", 0);
-    } else if (4==dims[0])//rgba
+    }
+    else if (4 == dims[0])//rgba
     {
       notifyWarningMessage(getHumanLabel(), "Warning: writing of rgba images is currenlty experimental (unstable behavoir may occur)", 0);
-    } else//vector
+    }
+    else  //vector
     {
       //notifyWarningMessage(getHumanLabel(), "Warning: writing of vector images is currenlty experimental (unstable behavoir may occur)", 0);
       setErrorCondition(-102);
       notifyErrorMessage(getHumanLabel(), "Error: writing of vector images is currently not supported", getErrorCondition());
     }
-  } else
+  }
+  else
   {
     QString message = QObject::tr("The selected array '%1' has unsupported dimensionality (%2)").arg(m_SelectedCellArrayArrayName).arg(dims.size());
     setErrorCondition(-101);

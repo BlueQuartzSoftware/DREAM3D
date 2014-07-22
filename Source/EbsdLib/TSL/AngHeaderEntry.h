@@ -73,7 +73,7 @@ class EbsdLib_EXPORT AngHeaderEntry : public EbsdHeaderEntry
       return QString::fromStdString(H5Lite::HDFTypeForPrimitiveAsStr(value));
     }
 #endif
-    
+
     void parseValue(QByteArray& value)
     {
       if (value[0] == ':') { value = value.mid(1); } // move past the ":" character

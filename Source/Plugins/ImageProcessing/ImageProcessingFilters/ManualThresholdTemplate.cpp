@@ -23,8 +23,8 @@ class ManualThresholdTemplatePrivate
   public:
     typedef DataArray<PixelType> DataArrayType;
 
-    ManualThresholdTemplatePrivate(){}
-    virtual ~ManualThresholdTemplatePrivate(){}
+    ManualThresholdTemplatePrivate() {}
+    virtual ~ManualThresholdTemplatePrivate() {}
 
     // -----------------------------------------------------------------------------
     // Determine if this is the proper type of an array to downcast from the IDataArray
@@ -67,7 +67,7 @@ class ManualThresholdTemplatePrivate
       thresholdFilter->GetOutput()->GetPixelContainer()->SetImportPointer(outputData, numVoxels, false);
       thresholdFilter->Update();
     }
-    private:
+  private:
     ManualThresholdTemplatePrivate(const ManualThresholdTemplatePrivate&); // Copy Constructor Not Implemented
     void operator=(const ManualThresholdTemplatePrivate&); // Operator '=' Not Implemented
 };
@@ -150,7 +150,7 @@ void ManualThresholdTemplate::dataCheck()
   QVector<size_t> dims(1, 1);
   TEMPLATE_GET_PREREQ_ARRAY(SelectedCellArray, getSelectedCellArrayArrayPath(), dims)
 
-      //configured created name / location
+  //configured created name / location
   if(m_SaveAsNewArray == false) { m_NewCellArrayName = "thisIsATempName"; }
   tempPath.update(getSelectedCellArrayArrayPath().getDataContainerName(), getSelectedCellArrayArrayPath().getAttributeMatrixName(), getNewCellArrayName() );
 
@@ -243,7 +243,8 @@ void ManualThresholdTemplate::execute()
 {
   QString ss;
   dataCheck();
-  if(getErrorCondition() < 0) {
+  if(getErrorCondition() < 0)
+  {
     setErrorCondition(-10000);
     ss = QObject::tr("DataCheck did not pass during execute");
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());

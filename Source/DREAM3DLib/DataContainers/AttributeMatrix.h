@@ -187,6 +187,50 @@ class DREAM3DLib_EXPORT AttributeMatrix : public Observable
     }
 
     /**
+     * @brief getExistingPrereqArray
+     * @param filter
+     * @param attributeArrayName
+     * @param err
+     * @return
+     */
+    template<class ArrayType, class Filter>
+    typename ArrayType::Pointer getExistingPrereqArray(Filter* filter,
+                                                       QString attributeArrayName,
+                                                       int err)
+    {
+      QString ss;
+      typename ArrayType::Pointer attributeArray = ArrayType::NullPointer();
+      //Make sure the name is not empty for the AttributeArrayName. This would be detected below
+      // in the call to get either one BUT the reason for the failure would not be evident so we make these explicit checks
+      // here and send back nice error messages to ther user/programmer.
+      if (attributeArrayName.isEmpty() == true)
+      {
+        if(filter)
+        {
+          filter->setErrorCondition(err * 1010);
+          ss = QObject::tr("AttributeMatrix:'%1' The name of a requested Attribute Array was empty. Please provide a name for this array").arg(getName());
+          filter->notifyErrorMessage(filter->getHumanLabel(), ss, filter->getErrorCondition());
+        }
+      }
+      // Now ask for the actual AttributeArray from the AttributeMatrix
+      if (doesAttributeArrayExist(attributeArrayName) == false)
+      {
+        if(filter)
+        {
+          filter->setErrorCondition(err * 1020);
+          ss = QObject::tr("The AttributeMatrix named '%1' does NOT have a DataArray with name '%2'. This filter requires this DataArray in order to execute.").arg(getName()).arg(attributeArrayName);
+          filter->notifyErrorMessage(filter->getHumanLabel(), ss, filter->getErrorCondition());
+        }
+        return attributeArray;
+      }
+      else
+      {
+        return getAttributeArray(attributeArrayName);
+      }
+      return attributeArray;
+    }
+
+    /**
      * @brief createNonPrereqArray This method will create a new DataArray in the AttributeMatrix. The condition for this
      * method to work properly is the name of the attribute array is not empty
      * @param filter The instance of the filter the filter that is requesting the new array

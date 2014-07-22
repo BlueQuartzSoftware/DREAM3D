@@ -54,7 +54,7 @@
 class DSplashScreenPrivate
 {
 
-public:
+  public:
     QPixmap pixmap;
     QString currStatus;
     QColor currColor;
@@ -117,11 +117,11 @@ public:
     There should be no need to set the widget flags, \a f, except
     perhaps Qt::WindowStaysOnTopHint.
 */
-DSplashScreen::DSplashScreen(const QPixmap &pixmap, Qt::WindowFlags f)
-    : QWidget(0, Qt::SplashScreen | Qt::FramelessWindowHint | f)
+DSplashScreen::DSplashScreen(const QPixmap& pixmap, Qt::WindowFlags f)
+  : QWidget(0, Qt::SplashScreen | Qt::FramelessWindowHint | f)
 {
-    d_ptr = new DSplashScreenPrivate;
-    setPixmap(pixmap);  // Does an implicit repaint
+  d_ptr = new DSplashScreenPrivate;
+  setPixmap(pixmap);  // Does an implicit repaint
 }
 
 /*!
@@ -132,12 +132,12 @@ DSplashScreen::DSplashScreen(const QPixmap &pixmap, Qt::WindowFlags f)
     prefer to have the splash screen on a different screen than your primary
     one. In that case pass the proper desktop() as the \a parent.
 */
-DSplashScreen::DSplashScreen(QWidget *parent, const QPixmap &pixmap, Qt::WindowFlags f)
-    : QWidget(parent, Qt::SplashScreen | f)
+DSplashScreen::DSplashScreen(QWidget* parent, const QPixmap& pixmap, Qt::WindowFlags f)
+  : QWidget(parent, Qt::SplashScreen | f)
 {
-    d_ptr = new DSplashScreenPrivate;
-    d_func()->pixmap = pixmap;
-    setPixmap(d_func()->pixmap);  // Does an implicit repaint
+  d_ptr = new DSplashScreenPrivate;
+  d_func()->pixmap = pixmap;
+  setPixmap(d_func()->pixmap);  // Does an implicit repaint
 }
 
 /*!
@@ -151,9 +151,9 @@ DSplashScreen::~DSplashScreen()
 /*!
     \reimp
 */
-void DSplashScreen::mousePressEvent(QMouseEvent *)
+void DSplashScreen::mousePressEvent(QMouseEvent*)
 {
-    hide();
+  hide();
 }
 
 /*!
@@ -164,8 +164,8 @@ void DSplashScreen::mousePressEvent(QMouseEvent *)
 */
 void DSplashScreen::repaint()
 {
-    QWidget::repaint();
-    QApplication::flush();
+  QWidget::repaint();
+  QApplication::flush();
 }
 
 /*!
@@ -193,15 +193,15 @@ void DSplashScreen::repaint()
 
     \sa Qt::Alignment, clearMessage()
 */
-void DSplashScreen::showMessage(const QString &message, int alignment,
-                                const QColor &color)
+void DSplashScreen::showMessage(const QString& message, int alignment,
+                                const QColor& color)
 {
-    Q_D(DSplashScreen);
-    d->currStatus = message;
-    d->currAlign = alignment;
-    d->currColor = color;
-    emit messageChanged(d->currStatus);
-    repaint();
+  Q_D(DSplashScreen);
+  d->currStatus = message;
+  d->currAlign = alignment;
+  d->currColor = color;
+  emit messageChanged(d->currStatus);
+  repaint();
 }
 
 /*!
@@ -211,42 +211,43 @@ void DSplashScreen::showMessage(const QString &message, int alignment,
  */
 void DSplashScreen::clearMessage()
 {
-    d_func()->currStatus.clear();
-    emit messageChanged(d_func()->currStatus);
-    repaint();
+  d_func()->currStatus.clear();
+  emit messageChanged(d_func()->currStatus);
+  repaint();
 }
 
 /*!
     Makes the splash screen wait until the widget \a mainWin is displayed
     before calling close() on itself.
 */
-void DSplashScreen::finish(QWidget *mainWin)
+void DSplashScreen::finish(QWidget* mainWin)
 {
-    if (mainWin) {
+  if (mainWin)
+  {
 #if defined(Q_WS_X11)
-        extern void qt_x11_wait_for_window_manager(QWidget *mainWin, bool);
-        qt_x11_wait_for_window_manager(mainWin, false);
+    extern void qt_x11_wait_for_window_manager(QWidget * mainWin, bool);
+    qt_x11_wait_for_window_manager(mainWin, false);
 #endif
-    }
-    close();
+  }
+  close();
 }
 
 /*!
     Sets the pixmap that will be used as the splash screen's image to
     \a pixmap.
 */
-void DSplashScreen::setPixmap(const QPixmap &pixmap)
+void DSplashScreen::setPixmap(const QPixmap& pixmap)
 {
-    Q_D(DSplashScreen);
+  Q_D(DSplashScreen);
 
-    d->pixmap = pixmap;
-    setAttribute(Qt::WA_TranslucentBackground, pixmap.hasAlpha());
+  d->pixmap = pixmap;
+  setAttribute(Qt::WA_TranslucentBackground, pixmap.hasAlpha());
 
-    QRect r(QPoint(), d->pixmap.size());
-    resize(r.size());
-    move(QApplication::desktop()->screenGeometry().center() - r.center());
-    if (isVisible())
-        repaint();
+  QRect r(QPoint(), d->pixmap.size());
+  resize(r.size());
+  move(QApplication::desktop()->screenGeometry().center() - r.center());
+  if (isVisible())
+  { repaint(); }
 }
 
 /*!
@@ -255,7 +256,7 @@ void DSplashScreen::setPixmap(const QPixmap &pixmap)
 */
 const QPixmap DSplashScreen::pixmap() const
 {
-    return d_func()->pixmap;
+  return d_func()->pixmap;
 }
 
 /*!
@@ -271,31 +272,34 @@ inline DSplashScreenPrivate::DSplashScreenPrivate() : currAlign(Qt::AlignLeft)
     Reimplement this function if you want to do your own drawing on
     the splash screen.
 */
-void DSplashScreen::drawContents(QPainter *painter)
+void DSplashScreen::drawContents(QPainter* painter)
 {
-    Q_D(DSplashScreen);
-    painter->setPen(d->currColor);
-    QRect r = rect().adjusted(50, 165, -50, -165);
-    if (Qt::mightBeRichText(d->currStatus)) {
-        QTextDocument doc;
+  Q_D(DSplashScreen);
+  painter->setPen(d->currColor);
+  QRect r = rect().adjusted(50, 165, -50, -165);
+  if (Qt::mightBeRichText(d->currStatus))
+  {
+    QTextDocument doc;
 #ifdef QT_NO_TEXTHTMLPARSER
-        doc.setPlainText(d->currStatus);
+    doc.setPlainText(d->currStatus);
 #else
-        doc.setHtml(d->currStatus);
+    doc.setHtml(d->currStatus);
 #endif
-        doc.setTextWidth(r.width());
-        QTextCursor cursor(&doc);
-        cursor.select(QTextCursor::Document);
-        QTextBlockFormat fmt;
-        fmt.setAlignment(Qt::Alignment(d->currAlign));
-        cursor.mergeBlockFormat(fmt);
-        painter->save();
-        painter->translate(r.topLeft());
-        doc.drawContents(painter);
-        painter->restore();
-    } else {
-        painter->drawText(r, d->currAlign, d->currStatus);
-    }
+    doc.setTextWidth(r.width());
+    QTextCursor cursor(&doc);
+    cursor.select(QTextCursor::Document);
+    QTextBlockFormat fmt;
+    fmt.setAlignment(Qt::Alignment(d->currAlign));
+    cursor.mergeBlockFormat(fmt);
+    painter->save();
+    painter->translate(r.topLeft());
+    doc.drawContents(painter);
+    painter->restore();
+  }
+  else
+  {
+    painter->drawText(r, d->currAlign, d->currStatus);
+  }
 }
 
 /*!
@@ -314,16 +318,17 @@ void DSplashScreen::drawContents(QPainter *painter)
 */
 
 /*! \reimp */
-bool DSplashScreen::event(QEvent *e)
+bool DSplashScreen::event(QEvent* e)
 {
-    if (e->type() == QEvent::Paint) {
-        Q_D(DSplashScreen);
-        QPainter painter(this);
-        if (!d->pixmap.isNull())
-            painter.drawPixmap(QPoint(), d->pixmap);
-        drawContents(&painter);
-    }
-    return QWidget::event(e);
+  if (e->type() == QEvent::Paint)
+  {
+    Q_D(DSplashScreen);
+    QPainter painter(this);
+    if (!d->pixmap.isNull())
+    { painter.drawPixmap(QPoint(), d->pixmap); }
+    drawContents(&painter);
+  }
+  return QWidget::event(e);
 }
 
 

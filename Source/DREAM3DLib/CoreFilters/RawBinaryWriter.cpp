@@ -135,7 +135,7 @@ void RawBinaryWriter::preflight()
 // -----------------------------------------------------------------------------
 const QString RawBinaryWriter::getCompiledLibraryName()
 {
-  return Core::CoreBaseName; 
+  return Core::CoreBaseName;
 }
 
 // -----------------------------------------------------------------------------
