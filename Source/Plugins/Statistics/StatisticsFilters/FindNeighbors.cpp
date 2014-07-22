@@ -38,6 +38,8 @@
 
 #include <sstream>
 
+#include <QtCore/QDateTime>
+
 
 #include "DREAM3DLib/Common/Constants.h"
 
@@ -123,15 +125,15 @@ int FindNeighbors::writeFilterParameters(AbstractFilterParametersWriter* writer,
 {
   writer->openFilterGroup(this, index);
   DREAM3D_FILTER_WRITE_PARAMETER(CellFeatureAttributeMatrixPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(FeatureIdsArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(BoundaryCellsArrayName)
-  DREAM3D_FILTER_WRITE_PARAMETER(SurfaceFeaturesArrayName)
-  DREAM3D_FILTER_WRITE_PARAMETER(StoreBoundaryCells)
-  DREAM3D_FILTER_WRITE_PARAMETER(StoreSurfaceFeatures)
-  DREAM3D_FILTER_WRITE_PARAMETER(NumNeighborsArrayName)
-  DREAM3D_FILTER_WRITE_PARAMETER(NeighborListArrayName)
-  DREAM3D_FILTER_WRITE_PARAMETER(SharedSurfaceAreaListArrayName)
-  writer->closeFilterGroup();
+      DREAM3D_FILTER_WRITE_PARAMETER(FeatureIdsArrayPath)
+      DREAM3D_FILTER_WRITE_PARAMETER(BoundaryCellsArrayName)
+      DREAM3D_FILTER_WRITE_PARAMETER(SurfaceFeaturesArrayName)
+      DREAM3D_FILTER_WRITE_PARAMETER(StoreBoundaryCells)
+      DREAM3D_FILTER_WRITE_PARAMETER(StoreSurfaceFeatures)
+      DREAM3D_FILTER_WRITE_PARAMETER(NumNeighborsArrayName)
+      DREAM3D_FILTER_WRITE_PARAMETER(NeighborListArrayName)
+      DREAM3D_FILTER_WRITE_PARAMETER(SharedSurfaceAreaListArrayName)
+      writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
 
@@ -252,20 +254,43 @@ void FindNeighbors::execute()
   int nListSize = 100;
   neighborlist.resize(totalFeatures);
   neighborsurfacearealist.resize(totalFeatures);
+
+  uint64_t millis = QDateTime::currentMSecsSinceEpoch();
+  uint64_t currentMillis = millis;
+  //  uint64_t startMillis = millis;
+  //  uint64_t estimatedTime = 0;
+  //  float timeDiff = 0.0f;
+
   for (int i = 1; i < totalFeatures; i++)
   {
-    QString ss = QObject::tr("Finding Neighbors - Initializing Neighbor Lists - %1 Percent Complete").arg((static_cast<float>(i) / totalFeatures) * 100);
-    //   notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
+    currentMillis = QDateTime::currentMSecsSinceEpoch();
+    if (currentMillis - millis > 1000)
+    {
+      QString ss = QObject::tr("Finding Neighbors - Initializing Neighbor Lists - %1 Percent Complete").arg((static_cast<float>(i) / totalFeatures) * 100);
+      notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
+      millis = QDateTime::currentMSecsSinceEpoch();
+    }
+
+    if(getCancel() == true) { break; }
+
     m_NumNeighbors[i] = 0;
     neighborlist[i].resize(nListSize);
     neighborsurfacearealist[i].fill(-1.0, nListSize);
     if(m_StoreSurfaceFeatures == true) { m_SurfaceFeatures[i] = false; }
+
   }
 
   for (int64_t j = 0; j < totalPoints; j++)
   {
-    QString ss = QObject::tr("Finding Neighbors - Determining Neighbor Lists - %1 Percent Complete").arg((static_cast<float>(j) / totalPoints) * 100);
-    //   notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
+    currentMillis = QDateTime::currentMSecsSinceEpoch();
+    if (currentMillis - millis > 1000)
+    {
+      QString ss = QObject::tr("Finding Neighbors - Determining Neighbor Lists - %1 Percent Complete").arg((static_cast<float>(j) / totalPoints) * 100);
+      notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
+      millis = QDateTime::currentMSecsSinceEpoch();
+    }
+    if(getCancel() == true) { break; }
+
     onsurf = 0;
     feature = m_FeatureIds[j];
     if(feature > 0)
@@ -310,8 +335,15 @@ void FindNeighbors::execute()
   // We do this to create new set of NeighborList objects
   for (size_t i = 1; i < totalFeatures; i++)
   {
-    QString ss = QObject::tr("Finding Neighbors - Calculating Surface Areas - %1 Percent Complete").arg(((float)i / totalFeatures) * 100);
-    //  notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
+    currentMillis = QDateTime::currentMSecsSinceEpoch();
+    if (currentMillis - millis > 1000)
+    {
+      QString ss = QObject::tr("Finding Neighbors - Calculating Surface Areas - %1 Percent Complete").arg(((float)i / totalFeatures) * 100);
+      notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
+      millis = QDateTime::currentMSecsSinceEpoch();
+    }
+    if(getCancel() == true) { break; }
+
 
     QMap<int, int> neighToCount;
     int numneighs = static_cast<int>( neighborlist[i].size() );
@@ -352,7 +384,7 @@ void FindNeighbors::execute()
     m_SharedSurfaceAreaList.lock()->setList(static_cast<int>(i), sharedSAL);
   }
 
-  notifyStatusMessage(getHumanLabel(), "Finding Neighbors Complete");
+  notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
 
