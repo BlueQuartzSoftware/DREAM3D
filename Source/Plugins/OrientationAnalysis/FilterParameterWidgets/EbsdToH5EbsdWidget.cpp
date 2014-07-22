@@ -100,7 +100,7 @@ EbsdToH5EbsdWidget::EbsdToH5EbsdWidget(FilterParameter* parameter, AbstractFilte
   }
   setupUi(this);
   setupGui();
-  checkIOFiles();
+ // checkIOFiles();
 }
 
 // -----------------------------------------------------------------------------
@@ -205,7 +205,7 @@ void EbsdToH5EbsdWidget::getGuiParametersFromFilter()
     ob->blockSignals(false);
   }
 
-  m_generateExampleEbsdInputFile();
+  generateExampleEbsdInputFile();
 
 }
 
@@ -292,7 +292,7 @@ void EbsdToH5EbsdWidget::checkIOFiles()
 {
   if (true == this->verifyPathExists(m_InputDir->text(), this->m_InputDir))
   {
-    m_findEbsdMaxSliceAndPrefix();
+    findEbsdMaxSliceAndPrefix();
   }
 }
 
@@ -338,7 +338,7 @@ void EbsdToH5EbsdWidget::on_m_InputDir_textChanged(const QString& text)
   if (verifyPathExists(m_InputDir->text(), m_InputDir) )
   {
     m_RefFrameOptionsBtn->setEnabled(true);
-    m_findEbsdMaxSliceAndPrefix();
+    findEbsdMaxSliceAndPrefix();
     QDir dir(m_InputDir->text());
     QString dirname = dir.dirName();
     dir.cdUp();
@@ -347,7 +347,7 @@ void EbsdToH5EbsdWidget::on_m_InputDir_textChanged(const QString& text)
     outPath = QDir::toNativeSeparators(outPath);
     m_OutputFile->setText(outPath);
     verifyPathExists(m_OutputFile->text(), m_OutputFile);
-    m_generateExampleEbsdInputFile();
+    generateExampleEbsdInputFile();
     m_InputDir->blockSignals(true);
     m_InputDir->setText(QDir::toNativeSeparators(m_InputDir->text()));
     m_InputDir->blockSignals(false);
@@ -409,7 +409,7 @@ void EbsdToH5EbsdWidget::stackingOrderChanged(bool checked)
 // -----------------------------------------------------------------------------
 void EbsdToH5EbsdWidget::on_m_ZEndIndex_valueChanged(int value)
 {
-  m_generateExampleEbsdInputFile();
+  generateExampleEbsdInputFile();
   emit parametersChanged();
 }
 
@@ -418,7 +418,7 @@ void EbsdToH5EbsdWidget::on_m_ZEndIndex_valueChanged(int value)
 // -----------------------------------------------------------------------------
 void EbsdToH5EbsdWidget::on_m_ZStartIndex_valueChanged(int value)
 {
-  m_generateExampleEbsdInputFile();
+  generateExampleEbsdInputFile();
   emit parametersChanged();
 }
 
@@ -427,7 +427,7 @@ void EbsdToH5EbsdWidget::on_m_ZStartIndex_valueChanged(int value)
 // -----------------------------------------------------------------------------
 void EbsdToH5EbsdWidget::on_m_TotalDigits_valueChanged(int value)
 {
-  m_generateExampleEbsdInputFile();
+  generateExampleEbsdInputFile();
   emit parametersChanged();
 }
 
@@ -436,7 +436,7 @@ void EbsdToH5EbsdWidget::on_m_TotalDigits_valueChanged(int value)
 // -----------------------------------------------------------------------------
 void EbsdToH5EbsdWidget::on_m_FileExt_textChanged(const QString& string)
 {
-  m_generateExampleEbsdInputFile();
+  generateExampleEbsdInputFile();
   emit parametersChanged();
 }
 
@@ -445,7 +445,7 @@ void EbsdToH5EbsdWidget::on_m_FileExt_textChanged(const QString& string)
 // -----------------------------------------------------------------------------
 void EbsdToH5EbsdWidget::on_m_FileSuffix_textChanged(const QString& string)
 {
-  m_generateExampleEbsdInputFile();
+  generateExampleEbsdInputFile();
   emit parametersChanged();
 }
 
@@ -454,14 +454,14 @@ void EbsdToH5EbsdWidget::on_m_FileSuffix_textChanged(const QString& string)
 // -----------------------------------------------------------------------------
 void EbsdToH5EbsdWidget::on_m_FilePrefix_textChanged(const QString& string)
 {
-  m_generateExampleEbsdInputFile();
+  generateExampleEbsdInputFile();
   emit parametersChanged();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void EbsdToH5EbsdWidget::m_generateExampleEbsdInputFile()
+void EbsdToH5EbsdWidget::generateExampleEbsdInputFile()
 {
 
   QString filename = QString("%1%2%3.%4").arg(m_FilePrefix->text())
@@ -627,7 +627,7 @@ void EbsdToH5EbsdWidget::identifyRefFrame()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void EbsdToH5EbsdWidget::m_findEbsdMaxSliceAndPrefix()
+void EbsdToH5EbsdWidget::findEbsdMaxSliceAndPrefix()
 {
   if (m_InputDir->text().length() == 0) { return; }
   QDir dir(m_InputDir->text());

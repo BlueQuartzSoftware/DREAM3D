@@ -69,7 +69,7 @@ ImportImagesAsVectorWidget::ImportImagesAsVectorWidget(FilterParameter* paramete
   }
   setupUi(this);
   setupGui();
-  checkIOFiles();
+ // checkIOFiles();
 }
 
 // -----------------------------------------------------------------------------
