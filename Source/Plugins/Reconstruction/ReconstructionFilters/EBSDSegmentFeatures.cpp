@@ -142,15 +142,15 @@ int EBSDSegmentFeatures::writeFilterParameters(AbstractFilterParametersWriter* w
 {
   writer->openFilterGroup(this, index);
   DREAM3D_FILTER_WRITE_PARAMETER(CellFeatureAttributeMatrixName)
-  DREAM3D_FILTER_WRITE_PARAMETER(ActiveArrayName)
-  DREAM3D_FILTER_WRITE_PARAMETER(FeatureIdsArrayName)
-  DREAM3D_FILTER_WRITE_PARAMETER(QuatsArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(CrystalStructuresArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(CellPhasesArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(GoodVoxelsArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(UseGoodVoxels)
-  DREAM3D_FILTER_WRITE_PARAMETER(MisorientationTolerance)
-  writer->closeFilterGroup();
+      DREAM3D_FILTER_WRITE_PARAMETER(ActiveArrayName)
+      DREAM3D_FILTER_WRITE_PARAMETER(FeatureIdsArrayName)
+      DREAM3D_FILTER_WRITE_PARAMETER(QuatsArrayPath)
+      DREAM3D_FILTER_WRITE_PARAMETER(CrystalStructuresArrayPath)
+      DREAM3D_FILTER_WRITE_PARAMETER(CellPhasesArrayPath)
+      DREAM3D_FILTER_WRITE_PARAMETER(GoodVoxelsArrayPath)
+      DREAM3D_FILTER_WRITE_PARAMETER(UseGoodVoxels)
+      DREAM3D_FILTER_WRITE_PARAMETER(MisorientationTolerance)
+      writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
 
@@ -288,7 +288,7 @@ void EBSDSegmentFeatures::randomizeFeatureIds(int64_t totalPoints, size_t totalF
   const size_t rangeMax = totalFeatures - 1;
   initializeVoxelSeedGenerator(rangeMin, rangeMax);
 
-// Get a reference variable to the Generator object
+  // Get a reference variable to the Generator object
   Generator& numberGenerator = *m_NumberGenerator;
 
   DataArray<int32_t>::Pointer rndNumbers = DataArray<int32_t>::CreateArray(totalFeatures, "New GrainIds");
@@ -362,22 +362,31 @@ int64_t EBSDSegmentFeatures::getSeed(size_t gnum)
 bool EBSDSegmentFeatures::determineGrouping(int64_t referencepoint, int64_t neighborpoint, size_t gnum)
 {
   bool group = false;
-  float w = 10000.0;
-  QuatF q1;
-  QuatF q2;
-  QuatF* quats = reinterpret_cast<QuatF*>(m_Quats);
-  float n1, n2, n3;
-  unsigned int phase1, phase2;
+
+  // Get the phases for each voxel
+  unsigned int phase1 = m_CrystalStructures[m_CellPhases[referencepoint]];
+  unsigned int phase2 = m_CrystalStructures[m_CellPhases[neighborpoint]];
+  // If either of the phases is 999 then we bail out now.
+  if (phase1 >= m_OrientationOps.size() || phase2 >= m_OrientationOps.size())
+  {
+    return group;
+  }
 
   if(m_FeatureIds[neighborpoint] == 0 && (m_UseGoodVoxels == false || m_GoodVoxels[neighborpoint] == true))
   {
-    phase1 = m_CrystalStructures[m_CellPhases[referencepoint]];
-    QuaternionMathF::Copy(quats[referencepoint], q1);
+    float w = 10000.0;
+    QuatF q1;
+    QuatF q2;
+    QuatF* quats = reinterpret_cast<QuatF*>(m_Quats);
+    float n1, n2, n3;
 
-    phase2 = m_CrystalStructures[m_CellPhases[neighborpoint]];
+    QuaternionMathF::Copy(quats[referencepoint], q1);
     QuaternionMathF::Copy(quats[neighborpoint], q2);
 
-    if (m_CellPhases[referencepoint] == m_CellPhases[neighborpoint]) { w = m_OrientationOps[phase1]->getMisoQuat( q1, q2, n1, n2, n3); }
+    if (m_CellPhases[referencepoint] == m_CellPhases[neighborpoint])
+    {
+      w = m_OrientationOps[phase1]->getMisoQuat( q1, q2, n1, n2, n3);
+    }
     if (w < misoTolerance)
     {
       group = true;
@@ -394,12 +403,12 @@ bool EBSDSegmentFeatures::determineGrouping(int64_t referencepoint, int64_t neig
 void EBSDSegmentFeatures::initializeVoxelSeedGenerator(const size_t rangeMin, const size_t rangeMax)
 {
 
-// The way we are using the boost random number generators is that we are asking for a NumberDistribution (see the typedef)
-// to guarantee the numbers are betwee a specific range and will only be generated once. We also keep a tally of the
-// total number of numbers generated as a way to make sure the while loops eventually terminate. This setup should
-// make sure that every voxel can be a seed point.
-//  const size_t rangeMin = 0;
-//  const size_t rangeMax = totalPoints - 1;
+  // The way we are using the boost random number generators is that we are asking for a NumberDistribution (see the typedef)
+  // to guarantee the numbers are betwee a specific range and will only be generated once. We also keep a tally of the
+  // total number of numbers generated as a way to make sure the while loops eventually terminate. This setup should
+  // make sure that every voxel can be a seed point.
+  //  const size_t rangeMin = 0;
+  //  const size_t rangeMax = totalPoints - 1;
   m_Distribution = boost::shared_ptr<NumberDistribution>(new NumberDistribution(rangeMin, rangeMax));
   m_RandomNumberGenerator = boost::shared_ptr<RandomNumberGenerator>(new RandomNumberGenerator);
   m_NumberGenerator = boost::shared_ptr<Generator>(new Generator(*m_RandomNumberGenerator, *m_Distribution));
