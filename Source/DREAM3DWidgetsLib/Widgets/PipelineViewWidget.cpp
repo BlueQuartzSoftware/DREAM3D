@@ -369,6 +369,7 @@ void PipelineViewWidget::loadPipelineFile(const QString& filePath, QSettings::Fo
 // -----------------------------------------------------------------------------
 void PipelineViewWidget::addFilter(const QString& filterClassName, int index)
 {
+  if (this->isEnabled() == false) { return; }
   FilterManager::Pointer wm = FilterManager::Instance();
   if(NULL == wm.get() ) { return; }
   IFilterFactory::Pointer wf = wm->getFactoryForFilter(filterClassName);
