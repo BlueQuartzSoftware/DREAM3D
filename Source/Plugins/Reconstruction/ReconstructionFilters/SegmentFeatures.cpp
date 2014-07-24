@@ -142,8 +142,8 @@ void SegmentFeatures::execute()
   bool good = 0;
   DimType col, row, plane;
   int64_t size = 0;
-  int64_t initialVoxelsListSize = 10000;
-  QVector<int64_t> voxelslist(initialVoxelsListSize, -1);
+  int64_t initialVoxelsListSize = 100000;
+  std::vector<int64_t> voxelslist(initialVoxelsListSize, -1);
   DimType neighpoints[6];
   neighpoints[0] = -(dims[0] * dims[1]);
   neighpoints[1] = -dims[0];
@@ -196,7 +196,7 @@ void SegmentFeatures::execute()
         }
       }
       voxelslist.clear();
-      voxelslist.fill(-1, initialVoxelsListSize);
+      voxelslist.resize(initialVoxelsListSize, -1);
       gnum++;
 
       QString ss = QObject::tr("Total Features: %1").arg(gnum);
