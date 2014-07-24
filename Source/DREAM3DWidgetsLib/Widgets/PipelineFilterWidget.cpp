@@ -152,8 +152,8 @@ void PipelineFilterWidget::initialize(AbstractFilter::Pointer filter)
   //m_Menu->addAction(action);
   //QKeySequence actionClearKeySeq(Qt::CTRL + Qt::Key_Delete);
   //action->setShortcut(actionClearKeySeq);
-//  connect(action, SIGNAL(triggered()),
-//          this, SLOT( on_actionClearPipeline_triggered() ) );
+  //  connect(action, SIGNAL(triggered()),
+  //          this, SLOT( on_actionClearPipeline_triggered() ) );
 #endif
 
 }
@@ -163,150 +163,161 @@ void PipelineFilterWidget::initialize(AbstractFilter::Pointer filter)
 // -----------------------------------------------------------------------------
 void PipelineFilterWidget::layoutWidgets()
 {
-  // If the filter is valid then instantiate all the FilterParameterWidgets
-  if (NULL != m_Filter.get())
+  // Make sure the m_Filter is Non NULL
+  if (NULL == m_Filter.get())
   {
-    // Create the Widget that will be placed into the Basic Inputs Scroll Area
+    return;
+  }
 
-    m_BasicInputsWidget = new QWidget(this);
-    QString basicname = QString::fromUtf8("basicInputsScrollWidget_") + m_Filter->getNameOfClass();
-    m_BasicInputsWidget->setObjectName(basicname);
-    m_BasicInputsWidget->setGeometry(QRect(0, 0, 250, 267));
-    m_BasicVerticalLayout = new QVBoxLayout(m_BasicInputsWidget);
-    basicname = QString::fromUtf8("verticalLayout") + m_Filter->getNameOfClass();
-    m_BasicVerticalLayout->setObjectName(basicname);
+  // If the filter is valid then instantiate all the FilterParameterWidgets
+  // Create the Widget that will be placed into the Basic Inputs Scroll Area
+  m_BasicInputsWidget = new QWidget(this);
+  QString basicname = QString::fromUtf8("basicInputsScrollWidget_") + m_Filter->getNameOfClass();
+  m_BasicInputsWidget->setObjectName(basicname);
+  m_BasicInputsWidget->setGeometry(QRect(0, 0, 250, 267));
+  m_BasicVerticalLayout = new QVBoxLayout(m_BasicInputsWidget);
+  basicname = QString::fromUtf8("verticalLayout") + m_Filter->getNameOfClass();
+  m_BasicVerticalLayout->setObjectName(basicname);
 
-    m_AdvancedInputWidget = new QWidget(this);
-    QString advname = QString::fromUtf8("advancedInputsScrollWidget_") + m_Filter->getNameOfClass();
-    m_AdvancedInputWidget->setObjectName(advname);
-    m_AdvancedInputWidget->setGeometry(QRect(0, 0, 250, 267));
-    m_AdvVerticalLayout = new QVBoxLayout(m_AdvancedInputWidget);
-    advname = QString::fromUtf8("verticalLayout") + m_Filter->getNameOfClass();
-    m_AdvVerticalLayout->setObjectName(advname);
+  m_AdvancedInputWidget = new QWidget(this);
+  QString advname = QString::fromUtf8("advancedInputsScrollWidget_") + m_Filter->getNameOfClass();
+  m_AdvancedInputWidget->setObjectName(advname);
+  m_AdvancedInputWidget->setGeometry(QRect(0, 0, 250, 267));
+  m_AdvVerticalLayout = new QVBoxLayout(m_AdvancedInputWidget);
+  advname = QString::fromUtf8("verticalLayout") + m_Filter->getNameOfClass();
+  m_AdvVerticalLayout->setObjectName(advname);
 
-    m_BasicParameterCount = 0;
-    m_AdvParameterCount = 0;
+  m_BasicParameterCount = 0;
+  m_AdvParameterCount = 0;
 
-    // Set the Name of the filter into the FilterWidget
-    filterName->setText(m_Filter->getHumanLabel() );
+  // Set the Name of the filter into the FilterWidget
+  filterName->setText(m_Filter->getHumanLabel() );
 
-    // Get the FilterWidgetManagere instance so we can instantiate new FilterParameterWidgets
-    FilterWidgetManager::Pointer fwm = FilterWidgetManager::Instance();
-    // Get a list of all the filterParameters from the filter.
-    QVector<FilterParameter::Pointer> filterParameters = m_Filter->getFilterParameters();
-    // Create all the FilterParameterWidget objects that can be displayed where ever the developer needs
-    for (QVector<FilterParameter::Pointer>::iterator iter = filterParameters.begin(); iter != filterParameters.end(); ++iter )
+  // Get the FilterWidgetManagere instance so we can instantiate new FilterParameterWidgets
+  FilterWidgetManager::Pointer fwm = FilterWidgetManager::Instance();
+  // Get a list of all the filterParameters from the filter.
+  QVector<FilterParameter::Pointer> filterParameters = m_Filter->getFilterParameters();
+  // Create all the FilterParameterWidget objects that can be displayed where ever the developer needs
+  for (QVector<FilterParameter::Pointer>::iterator iter = filterParameters.begin(); iter != filterParameters.end(); ++iter )
+  {
+    FilterParameter* option = (*iter).get();
+
+    validateFileSystemFilterParameter(option);
+
+    QWidget* w = fwm->createWidget(option, m_Filter.get());
+    m_PropertyToWidget.insert(option->getPropertyName(), w); // Update our Map of Filter Parameter Properties to the Widget
+
+    if (NULL == w) { continue; }
+    m_FilterParameterWidgets.push_back(w);
+
+    // Determine which layout to add the widget into
+    if(option->getAdvanced() == true)
     {
-      FilterParameter* option = (*iter).get();
-
-      FileSystemFilterParameter* fsParam = dynamic_cast<FileSystemFilterParameter*>(option);
-      if(fsParam)
-      {
-        QString currentPath = m_Filter->property(fsParam->getPropertyName().toLatin1().constData()).toString();
-        QFileInfo fi(currentPath);
-
-        if (currentPath.isEmpty() == false && fi.exists() == false)
-        {
-          QString Ftype = fsParam->getFileType();
-          QString ext = fsParam->getFileExtension();
-          QString s = Ftype + QString(" Files (") + ext + QString(");;All Files(*.*)");
-          QString defaultName = m_OpenDialogLastDirectory + QDir::separator() + "Untitled";
-
-          if (fsParam->getWidgetType().compare(FilterParameterWidgetType::InputFileWidget) == 0 )
-          {
-            QString title = QObject::tr("Select a replacement input file for parameter '%1' in filter '%2'").arg(fsParam->getHumanLabel()).arg(m_Filter->getHumanLabel());
-
-            QString file = QFileDialog::getOpenFileName(this, title, defaultName, s);
-            if(true == file.isEmpty())
-            {
-              file = currentPath;
-            }
-            file = QDir::toNativeSeparators(file);
-            // Store the last used directory into the private instance variable
-            QFileInfo fi(file);
-            m_OpenDialogLastDirectory = fi.path();
-            m_Filter->setProperty(fsParam->getPropertyName().toLatin1().constData(), file);
-          }
-
-          else if (fsParam->getWidgetType().compare(FilterParameterWidgetType::InputPathWidget) == 0 )
-          {
-            QString title = QObject::tr("Select a replacement input folder for parameter '%1' in filter '%2'").arg(fsParam->getHumanLabel()).arg(m_Filter->getHumanLabel());
-
-            QString file = QFileDialog::getExistingDirectory(this, title, defaultName, QFileDialog::ShowDirsOnly);
-            file = QDir::toNativeSeparators(file);
-            if(true == file.isEmpty())
-            {
-              file = currentPath;
-            }
-            // Store the last used directory into the private instance variable
-            QFileInfo fi(file);
-            m_OpenDialogLastDirectory = fi.path();
-            m_Filter->setProperty(fsParam->getPropertyName().toLatin1().constData(), file);
-          }
-        }
-      }
-
-      QWidget* w = fwm->createWidget(option, m_Filter.get());
-      m_PropertyToWidget.insert(option->getPropertyName(), w); // Update our Map of Filter Parameter Properties to the Widget
-
-      if (NULL == w) { continue; }
-      m_FilterParameterWidgets.push_back(w);
-
-      // Determine which layout to add the widget into
-      if(option->getAdvanced() == true)
-      {
-        w->setParent(m_AdvancedInputWidget);// Set the parent for the widget
-        m_AdvVerticalLayout->addWidget(w);
-        m_AdvParameterCount++;
-      }
-      else
-      {
-        w->setParent(m_BasicInputsWidget);
-        m_BasicVerticalLayout->addWidget(w);// Add the FilterWidget to the layout
-        m_BasicParameterCount++;
-      }
-
-      // Connect up some signals and slots
-      connect(w, SIGNAL(parametersChanged() ),
-              parent(), SLOT(preflightPipeline() ) );
-      connect(w, SIGNAL(errorSettingFilterParameter(const QString&)),
-              this, SLOT(displayFilterParameterWidgetError(const QString&)));
-
+      w->setParent(m_AdvancedInputWidget);// Set the parent for the widget
+      m_AdvVerticalLayout->addWidget(w);
+      m_AdvParameterCount++;
+    }
+    else
+    {
+      w->setParent(m_BasicInputsWidget);
+      m_BasicVerticalLayout->addWidget(w);// Add the FilterWidget to the layout
+      m_BasicParameterCount++;
     }
 
-#if 0
-    QSpacerItem* verticalSpacer = new QSpacerItem(20, 40, QSizePolicy::Minimum, QSizePolicy::Expanding);
-    m_BasicVerticalLayout->addItem(verticalSpacer);
+    // Connect up some signals and slots
+    connect(w, SIGNAL(parametersChanged() ),
+            parent(), SLOT(preflightPipeline() ) );
+    connect(w, SIGNAL(errorSettingFilterParameter(const QString&)),
+            this, SLOT(displayFilterParameterWidgetError(const QString&)));
 
-    verticalSpacer = new QSpacerItem(20, 40, QSizePolicy::Minimum, QSizePolicy::Expanding);
-    m_AdvVerticalLayout->addItem(verticalSpacer);
-#endif
+  }
 
+  // Now link any boolean widgets to any conditional Widgets that they might control.
+  linkConditionalWidgets(filterParameters);
 
-    // Figure out if we have any "Linked Boolean Widgets" to hook up to other widgets
-    for (QVector<FilterParameter::Pointer>::iterator iter = filterParameters.begin(); iter != filterParameters.end(); ++iter )
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void PipelineFilterWidget::validateFileSystemFilterParameter(FilterParameter* option)
+{
+  FileSystemFilterParameter* fsParam = dynamic_cast<FileSystemFilterParameter*>(option);
+  if(fsParam)
+  {
+    QString currentPath = m_Filter->property(fsParam->getPropertyName().toLatin1().constData()).toString();
+    QFileInfo fi(currentPath);
+
+    if (currentPath.isEmpty() == false && fi.exists() == false)
     {
-      FilterParameter* option = (*iter).get();
-      if(option->getWidgetType().compare(FilterParameterWidgetType::LinkedBooleanWidget) == 0 )
-      {
-        //  qDebug() << option->getHumanLabel() << " is conditional";
-        QStringList linkedProps = option->getConditionalProperties();
+      QString Ftype = fsParam->getFileType();
+      QString ext = fsParam->getFileExtension();
+      QString s = Ftype + QString(" Files (") + ext + QString(");;All Files(*.*)");
+      QString defaultName = m_OpenDialogLastDirectory + QDir::separator() + "Untitled";
 
-        QStringListIterator iter = QStringListIterator(linkedProps);
-        QWidget* checkboxSource = m_PropertyToWidget[option->getPropertyName()];
-        LinkedBooleanWidget* lbw = qobject_cast<LinkedBooleanWidget*>(checkboxSource);
-        while(iter.hasNext())
+      if (fsParam->getWidgetType().compare(FilterParameterWidgetType::InputFileWidget) == 0 )
+      {
+        QString title = QObject::tr("Select a replacement input file for parameter '%1' in filter '%2'").arg(fsParam->getHumanLabel()).arg(m_Filter->getHumanLabel());
+
+        QString file = QFileDialog::getOpenFileName(this, title, defaultName, s);
+        if(true == file.isEmpty())
         {
-          QString propName = iter.next();
-          QWidget* w = m_PropertyToWidget[propName];
-          if(w)
+          file = currentPath;
+        }
+        file = QDir::toNativeSeparators(file);
+        // Store the last used directory into the private instance variable
+        QFileInfo fi(file);
+        m_OpenDialogLastDirectory = fi.path();
+        m_Filter->setProperty(fsParam->getPropertyName().toLatin1().constData(), file);
+      }
+
+      else if (fsParam->getWidgetType().compare(FilterParameterWidgetType::InputPathWidget) == 0 )
+      {
+        QString title = QObject::tr("Select a replacement input folder for parameter '%1' in filter '%2'").arg(fsParam->getHumanLabel()).arg(m_Filter->getHumanLabel());
+
+        QString file = QFileDialog::getExistingDirectory(this, title, defaultName, QFileDialog::ShowDirsOnly);
+        file = QDir::toNativeSeparators(file);
+        if(true == file.isEmpty())
+        {
+          file = currentPath;
+        }
+        // Store the last used directory into the private instance variable
+        QFileInfo fi(file);
+        m_OpenDialogLastDirectory = fi.path();
+        m_Filter->setProperty(fsParam->getPropertyName().toLatin1().constData(), file);
+      }
+    }
+  }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void PipelineFilterWidget::linkConditionalWidgets(QVector<FilterParameter::Pointer> filterParameters)
+{
+  // Figure out if we have any "Linked Boolean Widgets" to hook up to other widgets
+  for (QVector<FilterParameter::Pointer>::iterator iter = filterParameters.begin(); iter != filterParameters.end(); ++iter )
+  {
+    FilterParameter* option = (*iter).get();
+    if(option->getWidgetType().compare(FilterParameterWidgetType::LinkedBooleanWidget) == 0 )
+    {
+      //  qDebug() << option->getHumanLabel() << " is conditional";
+      QStringList linkedProps = option->getConditionalProperties();
+
+      QStringListIterator iter = QStringListIterator(linkedProps);
+      QWidget* checkboxSource = m_PropertyToWidget[option->getPropertyName()];
+      LinkedBooleanWidget* lbw = qobject_cast<LinkedBooleanWidget*>(checkboxSource);
+      while(iter.hasNext())
+      {
+        QString propName = iter.next();
+        QWidget* w = m_PropertyToWidget[propName];
+        if(w)
+        {
+          connect(checkboxSource, SIGNAL(conditionalPropertyChanged(int)),
+                  w, SLOT(setLinkedConditionalState(int) ) );
+          if(lbw && lbw->getLinkedState() != Qt::Checked)
           {
-            connect(checkboxSource, SIGNAL(conditionalPropertyChanged(int)),
-                    w, SLOT(setLinkedConditionalState(int) ) );
-            if(lbw && lbw->getLinkedState() != Qt::Checked)
-            {
-              w->hide();
-            }
+            w->hide();
           }
         }
       }

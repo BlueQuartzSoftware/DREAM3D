@@ -233,7 +233,7 @@ void IdentifySample::execute()
     bool touchesBoundary = false;
     for (int i = 0; i < totalPoints; i++)
     {
-      if(checked[i] == false && Sample[i] == false)
+      if(checked[i] == false && m_GoodVoxels[i] == false)
       {
         currentvlist.push_back(i);
         count = 0;
@@ -255,7 +255,7 @@ void IdentifySample::execute()
             if(j == 4 && row == (yp - 1)) { good = 0; }
             if(j == 2 && column == 0) { good = 0; }
             if(j == 3 && column == (xp - 1)) { good = 0; }
-            if(good == 1 && checked[neighbor] == false && Sample[neighbor] == false)
+            if(good == 1 && checked[neighbor] == false && m_GoodVoxels[neighbor] == false)
             {
               currentvlist.push_back(neighbor);
               checked[neighbor] = true;
@@ -267,14 +267,13 @@ void IdentifySample::execute()
         {
           for(size_t j = 0; j < currentvlist.size(); j++)
           {
-            Sample[currentvlist[j]] = true;
+            m_GoodVoxels[currentvlist[j]] = true;
           }
         }
         currentvlist.clear();
       }
     }
   }
-  Sample.clear();
   checked.clear();
 
   // If there is an error set this to something negative and also set a message

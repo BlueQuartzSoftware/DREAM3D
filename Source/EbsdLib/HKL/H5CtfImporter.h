@@ -44,7 +44,8 @@
 #include "EbsdLib/EbsdLib.h"
 #include "EbsdLib/EbsdSetGetMacros.h"
 #include "EbsdLib/EbsdImporter.h"
-#include "CtfReader.h"
+#include "EbsdLib/HKL/CtfReader.h"
+#include "EbsdLib/HKL/CtfPhase.h"
 
 /**
  * @class H5CtfImporter H5CtfImporter.h EbsdLib/HKL/H5CtfImporter.h

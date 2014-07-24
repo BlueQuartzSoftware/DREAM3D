@@ -18,11 +18,11 @@ project(DREAM3DProj)
 cmake_minimum_required(VERSION 2.8.9)
 
 if(${CMAKE_MAJOR_VERSION} STREQUAL "3")
-	# CMake 3.0 introduces VERSION variables for each Project. We do our own version numbering so we need to have
-	# cmake ignore that policy
-	cmake_policy(SET CMP0048 OLD)
-	# CMake 3.0 introduces some OS X RPath policies
-	cmake_policy(SET CMP0042 OLD)
+  # CMake 3.0 introduces VERSION variables for each Project. We do our own version numbering so we need to have
+  # cmake ignore that policy
+  cmake_policy(SET CMP0048 OLD)
+  # CMake 3.0 introduces some OS X RPath policies
+  cmake_policy(SET CMP0042 OLD)
 endif()
 
 
@@ -99,7 +99,7 @@ set(DREAM3D_REMOVE_TEST_FILES "1")
 # calculate how many commits since the last "tag" was applied to the repository.
 # this basically gives us an always incrementing number for the patch level
 # and we can set the Major and Minor versions as we see fit.
-set(CMP_VERSION_MAJOR "5.0")
+set(CMP_VERSION_MAJOR "5.1")
 
 # --------------------------------------------------------------------
 # Over ride CMake's built in module directory by prepending cmp's module

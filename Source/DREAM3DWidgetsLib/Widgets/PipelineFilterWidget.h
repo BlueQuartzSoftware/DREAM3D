@@ -109,17 +109,15 @@ class DREAM3DWidgetsLib_EXPORT PipelineFilterWidget : public QFrame, private Ui:
     DREAM3D_INSTANCE_PROPERTY(int, BasicParameterCount)
     DREAM3D_INSTANCE_PROPERTY(int, AdvParameterCount)
 
-  public slots:
+    public slots:
 
 
-    virtual void setIsSelected(bool b);
+      virtual void setIsSelected(bool b);
 
 
     /**
-      * @brief Sets the style of the Widget to indicate a selected or non-selected
-      * state
-      * @param selected Is the widget selected or not.
-      */
+     * @brief changeStyle
+     */
     void changeStyle();
 
     /**
@@ -133,10 +131,23 @@ class DREAM3DWidgetsLib_EXPORT PipelineFilterWidget : public QFrame, private Ui:
       */
     void setHasPreflightErrors(bool hasErrors);
 
+    /**
+     * @brief setHasPreflightWarnings
+     * @param hasWarnings
+     */
     void setHasPreflightWarnings(bool hasWarnings);
 
+    /**
+     * @brief displayFilterParameterWidgetError
+     * @param msg
+     */
     void displayFilterParameterWidgetError(const QString& msg);
 
+    /**
+     * @brief adjustLayout
+     * @param w
+     * @param state
+     */
     void adjustLayout(QWidget* w, int state);
 
     /**
@@ -146,23 +157,82 @@ class DREAM3DWidgetsLib_EXPORT PipelineFilterWidget : public QFrame, private Ui:
     void showCustomContextMenu(const QPoint& pos);
 
   protected slots:
+    /**
+     * @brief on_deleteBtn_clicked
+     */
     void on_deleteBtn_clicked();
+
+    /**
+     * @brief on_helpBtn_clicked
+     */
     void on_helpBtn_clicked();
 
   signals:
+
+    /**
+     * @brief widgetSelected
+     * @param w
+     */
     void widgetSelected(PipelineFilterWidget* w);
+
+    /**
+     * @brief filterWidgetRemoved
+     * @param widget
+     */
     void filterWidgetRemoved(PipelineFilterWidget* widget);
+
+    /**
+     * @brief dragStarted
+     * @param widget
+     */
     void dragStarted(PipelineFilterWidget* widget);
+
+    /**
+     * @brief parametersChanged
+     */
     void parametersChanged();
 
   protected:
+    /**
+     * @brief mousePressEvent
+     * @param event
+     */
     virtual void mousePressEvent( QMouseEvent* event );
+
+    /**
+     * @brief mouseReleaseEvent
+     * @param event
+     */
     virtual void mouseReleaseEvent( QMouseEvent* event );
+
+    /**
+     * @brief mouseMoveEvent
+     * @param event
+     */
     virtual void mouseMoveEvent( QMouseEvent* event );
 
+    /**
+     * @brief showContextMenu
+     * @param globalPos
+     */
     void showContextMenu(const QPoint& globalPos);
 
+    /**
+     * @brief layoutWidgets
+     */
     void layoutWidgets();
+
+    /**
+     * @brief validateFileSystemFilterParameter
+     * @param option
+     */
+    void validateFileSystemFilterParameter(FilterParameter* option);
+
+    /**
+     * @brief linkConditionalWidgets
+     * @param filterParameters
+     */
+    void linkConditionalWidgets(QVector<FilterParameter::Pointer> filterParameters);
 
   private:
     QRect                     m_DeleteRect;

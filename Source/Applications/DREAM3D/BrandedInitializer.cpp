@@ -40,8 +40,8 @@
 #include <QtCore/QCoreApplication>
 #include <QtCore/QFileInfo>
 #include <QtCore/QDir>
-#include <QtGui/QApplication>
 
+#include <QtGui/QApplication>
 #include <QtGui/QBitmap>
 #include <QtGui/QMessageBox>
 
@@ -79,6 +79,12 @@ BrandedInitializer::~BrandedInitializer()
 
   delete this->MainWindow;
   this->MainWindow = NULL;
+
+  for(int i = 0; i < m_PluginLoaders.size(); i++)
+  {
+    m_PluginLoaders.at(i)->unload();
+    delete m_PluginLoaders[i]; // Delete the QPluginLoader object
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -125,19 +131,19 @@ bool BrandedInitializer::initialize(int argc, char* argv[])
   QMetaObjectUtilities::RegisterMetaTypes();
 
   // Load application plugins.
-  loadPlugins();
+  QVector<DREAM3DPluginInterface*> plugins = loadPlugins();
 
   // Create main window.
   this->MainWindow = new DREAM3D_UI();
   this->MainWindow->setWindowTitle("[*] DREAM.3D Version " + DREAM3DLib::Version::Package());
-  this->MainWindow->setLoadedPlugins(m_LoadedPlugins);
+  this->MainWindow->setLoadedPlugins(plugins);
 
   // give GUI components time to update before the mainwindow is shown
   QApplication::instance()->processEvents();
   this->MainWindow->show();
   if (show_splash)
   {
-    delay(1);
+    delay(2);
     this->Splash->finish(this->MainWindow);
   }
   QApplication::instance()->processEvents();
@@ -150,7 +156,7 @@ bool BrandedInitializer::initialize(int argc, char* argv[])
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void BrandedInitializer::loadPlugins()
+QVector<DREAM3DPluginInterface *> BrandedInitializer::loadPlugins()
 {
   qDebug() << "DREAM3D_UI::loadPlugins" << "\n";
 
@@ -234,19 +240,21 @@ void BrandedInitializer::loadPlugins()
   FilterManager::Pointer fm = FilterManager::Instance();
   FilterWidgetManager::Pointer fwm = FilterWidgetManager::Instance();
 
+  QVector<DREAM3DPluginInterface*> loadedPlugins;
+
   // Now that we have a sorted list of plugins, go ahead and load them all from the
   // file system and add each to the toolbar and menu
   foreach(QString path, pluginFilePaths)
   {
 
     QApplication::instance()->processEvents();
-    qDebug() << "Plugin Being Loaded:";
-    qDebug() << "    File Extension: .plugin";
-    qDebug() << "    Path: " << path;
-    QPluginLoader loader(path);
+    qDebug() << "Plugin Being Loaded:" << path;
+    //QPluginLoader loader(path);
+    QPluginLoader* loader = new QPluginLoader(path);
+
     QFileInfo fi(path);
     QString fileName = fi.fileName();
-    QObject* plugin = loader.instance();
+    QObject* plugin = loader->instance();
     qDebug() << "    Pointer: " << plugin << "\n";
     if (plugin )
     {
@@ -255,8 +263,8 @@ void BrandedInitializer::loadPlugins()
       {
         QString msg = QObject::tr("Loading Plugin %1").arg(fileName);
         this->Splash->showMessage(msg);
-        DREAM3DPluginInterface::Pointer ipPluginPtr(ipPlugin);
-        m_LoadedPlugins.push_back(ipPluginPtr);
+        //DREAM3DPluginInterface::Pointer ipPluginPtr(ipPlugin);
+        loadedPlugins.push_back(ipPlugin);
         ipPlugin->registerFilterWidgets(fwm.get());
         ipPlugin->registerFilters(fm.get());
       }
@@ -264,11 +272,12 @@ void BrandedInitializer::loadPlugins()
     else
     {
       QString message("The plugin did not load with the following error\n");
-      message.append(loader.errorString());
-      QMessageBox::critical(MainWindow, "DREAM.3D Plugin Load Error",
+      message.append(loader->errorString());
+      QMessageBox::critical(MainWindow, "DREAM3D Plugin Load Error",
                             message,
                             QMessageBox::Ok | QMessageBox::Default);
     }
   }
 
+  return loadedPlugins;
 }

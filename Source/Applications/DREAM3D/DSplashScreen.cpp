@@ -45,7 +45,7 @@
 #include <QtGui/QApplication>
 #include <QtGui/QDesktopWidget>
 #include <QtGui/QPainter>
-#include <QtGui/QPixMap>
+#include <QtGui/QPixmap>
 #include <QtGui/QTextDocument>
 #include <QtGui/QTextCursor>
 #include <QtCore/QDebug>
@@ -225,8 +225,7 @@ void DSplashScreen::finish(QWidget* mainWin)
   if (mainWin)
   {
 #if defined(Q_WS_X11)
-    extern void qt_x11_wait_for_window_manager(QWidget * mainWin, bool);
-    qt_x11_wait_for_window_manager(mainWin, false);
+  qt_x11_wait_for_window_manager(mainWin);
 #endif
   }
   close();

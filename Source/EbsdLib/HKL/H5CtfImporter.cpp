@@ -40,8 +40,7 @@
 #include "H5Support/QH5Utilities.h"
 
 #include "EbsdLib/EbsdConstants.h"
-#include "EbsdLib/HKL/CtfReader.h"
-#include "EbsdLib/HKL/CtfPhase.h"
+#include "EbsdLib/EbsdLibVersion.h"
 
 #if defined (H5Support_NAMESPACE)
 using namespace H5Support_NAMESPACE;
@@ -204,7 +203,18 @@ int H5CtfImporter::importFile(hid_t fileId, int64_t z, const QString& ctfFile)
     if (attr_type < 0) // The attr_type variable was never set which means the attribute was NOT there
     {
       // The file version does not exist so write it to the file
-      err = QH5Lite::writeScalarAttribute(fileId, "/", Ebsd::H5::FileVersionStr, m_FileVersion);
+      err = QH5Lite::writeScalarAttribute(fileId, QString("/"), Ebsd::H5::FileVersionStr, m_FileVersion);
+    }
+    else
+    {
+      H5Aclose(attr_type);
+    }
+
+    err = QH5Lite::getAttributeInfo(fileId, "/", Ebsd::H5::EbsdLibVersionStr, dims, type_class, type_size, attr_type);
+    if (attr_type < 0) // The attr_type variable was never set which means the attribute was NOT there
+    {
+      // The file version does not exist so write it to the file
+      err = QH5Lite::writeStringAttribute(fileId, QString("/"), Ebsd::H5::EbsdLibVersionStr, EbsdLib::Version::Complete());
     }
     else
     {

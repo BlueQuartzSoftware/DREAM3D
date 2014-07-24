@@ -63,6 +63,7 @@ AlignSections::AlignSections() :
   m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
   m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
   m_WriteAlignmentShifts(false),
+  m_SubtractBackground(false),
   m_AlignmentShiftFileName("")
 {
   setupFilterParameters();
@@ -84,7 +85,8 @@ void AlignSections::setupFilterParameters()
 
   QStringList linkedProps("AlignmentShiftFileName");
   parameters.push_back(FilterParameter::NewConditional("Write Alignment Shift File", "WriteAlignmentShifts", FilterParameterWidgetType::LinkedBooleanWidget, getWriteAlignmentShifts(), false, linkedProps));
-
+  
+  parameters.push_back(FilterParameter::New("Linear Background Subtraction", "SubtractBackground", FilterParameterWidgetType::BooleanWidget, getSubtractBackground(), false));
   parameters.push_back(FileSystemFilterParameter::New("Alignment File", "AlignmentShiftFileName", FilterParameterWidgetType::OutputFileWidget, "QString", false));
 
   setFilterParameters(parameters);
@@ -97,6 +99,7 @@ void AlignSections::readFilterParameters(AbstractFilterParametersReader* reader,
 {
   reader->openFilterGroup(this, index);
   setAlignmentShiftFileName( reader->readString("AlignmentShiftFileName", getAlignmentShiftFileName()));
+  setSubtractBackground( reader->readValue("SubtractBackground", getSubtractBackground()));
   setWriteAlignmentShifts( reader->readValue("WriteAlignmentShifts", getWriteAlignmentShifts()));
   reader->closeFilterGroup();
 }
@@ -108,6 +111,7 @@ int AlignSections::writeFilterParameters(AbstractFilterParametersWriter* writer,
 {
   writer->openFilterGroup(this, index);
   DREAM3D_FILTER_WRITE_PARAMETER(AlignmentShiftFileName)
+  DREAM3D_FILTER_WRITE_PARAMETER(SubtractBackground)
   DREAM3D_FILTER_WRITE_PARAMETER(WriteAlignmentShifts)
   writer->closeFilterGroup();
 
@@ -179,6 +183,56 @@ void AlignSections::execute()
   QVector<int> yshifts(dims[2], 0);
 
   find_shifts(xshifts, yshifts);
+
+  if(getSubtractBackground())
+  {
+    /**fit x and y shifts to lines
+     *
+     * y = mx + b
+     *
+     * m = (n*sum(x_i * y_i) - sum(x_i) * sum(y_i)) / (n*sum(x_i^2)-sum(x_i)^2
+     *
+     * b = (sum(y_i)-m*sum(x_i))/n
+     *
+     */
+
+    //same for both
+    double sumX = 0;//sum(x_i)
+    double sumX_2 = 0;//sum(x_i^2)
+
+    //x shift line
+    double x_sumY = 0;//sum(y_i)
+    double x_sumXY = 0;//sum(x_i * y_i)
+
+    //y shift line
+    double y_sumY = 0;//sum(y_i)
+    double y_sumXY = 0;//sum(x_i * y_i)
+
+    for (DimType iter = 0; iter < dims[2]; iter++)
+    {
+      slice = static_cast<int>( (dims[2] - 1) - iter );
+      sumX = sumX + iter;
+      sumX_2 = sumX_2 + iter*iter;
+      x_sumY = x_sumY + xshifts[iter];
+      x_sumXY = x_sumXY + iter*xshifts[iter];
+      y_sumY = y_sumY + yshifts[iter];
+      y_sumXY = y_sumXY + iter*yshifts[iter];
+    }
+
+    double mx, my, bx, by;
+    mx = (dims[2]*x_sumXY - x_sumXY)/(dims[2]*sumX_2-sumX);
+    my = (dims[2]*y_sumXY - y_sumXY)/(dims[2]*sumX_2-sumX);
+    bx = (x_sumY-mx*sumX)/dims[2];
+    by = (y_sumY-my*sumX)/dims[2];
+
+    ///adjust shifts so that fit line has 0 slope (~ends of the sample are fixed)
+    for (DimType iter = 1; iter < dims[2]; iter++)
+    {
+      slice = static_cast<int>( (dims[2] - 1) - iter );
+      xshifts[iter] = xshifts[iter] - iter*mx;
+      yshifts[iter] = yshifts[iter] - iter*my;
+    }
+  }
 
   QList<QString> voxelArrayNames = m->getAttributeMatrix(getCellAttributeMatrixName())->getAttributeArrayNameList();
   DimType progIncrement = dims[2] / 100;

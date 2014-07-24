@@ -478,6 +478,14 @@ void RotateSampleRefFrame::execute()
   // that the DataContainer is NOT thread safe or re-entrant so that would actually be a BAD idea.
   QString attrMatName = getCellAttributeMatrixPath().getAttributeMatrixName();
   QList<QString> voxelArrayNames = m->getAttributeMatrix(attrMatName)->getAttributeArrayNameList();
+
+  // resize attribute matrix
+  QVector<size_t> tDims(3);
+  tDims[0]=params.xpNew;
+  tDims[1]=params.ypNew;
+  tDims[2]=params.zpNew;
+  m->getAttributeMatrix(attrMatName)->resizeAttributeArrays(tDims);
+  
   for (QList<QString>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
   {
     //QString name = *iter;
@@ -485,7 +493,7 @@ void RotateSampleRefFrame::execute()
     // Make a copy of the 'p' array that has the same name. When placed into
     // the data container this will over write the current array with
     // the same name.
-    IDataArray::Pointer data = p->createNewArray(p->getNumberOfTuples(), p->getComponentDimensions(), p->getName());
+    IDataArray::Pointer data = p->createNewArray(newNumCellTuples, p->getComponentDimensions(), p->getName());
     void* source = NULL;
     void* destination = NULL;
     int64_t newIndicies_I = 0;
