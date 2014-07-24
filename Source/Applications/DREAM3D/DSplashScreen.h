@@ -42,13 +42,22 @@
 #ifndef _DSplashScreen_H_
 #define _DSplashScreen_H_
 
-#include <QtGui/QPixMap.h>
-#include <QtGui/QWidget.h>
+#include <QtCore/QString>
+
+#include <QtGui/QColor>
+#include <QtGui/QWidget>
+#include <QtGui/QPixmap>
+
 
 
 
 class DSplashScreenPrivate;
+class QPainter;
+class QMouseEvent;
 
+/**
+* @brief This class displays a splash screen when a SIMPL based application launches
+*/
 class DSplashScreen : public QWidget
 {
     Q_OBJECT

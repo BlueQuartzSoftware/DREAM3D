@@ -40,8 +40,8 @@
 #include <QtCore/QCoreApplication>
 #include <QtCore/QFileInfo>
 #include <QtCore/QDir>
-#include <QtGui/QApplication>
 
+#include <QtGui/QApplication>
 #include <QtGui/QBitmap>
 #include <QtGui/QMessageBox>
 

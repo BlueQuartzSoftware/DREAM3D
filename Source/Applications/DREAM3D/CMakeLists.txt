@@ -37,6 +37,7 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY
 add_definitions(-DDREAM3D_USE_QT)
 
 include_directories(${HDF5_INCLUDE_DIR}
+                    ${QT_INCLUDE_DIR}/..
                     ${DREAM3D_SOURCE_DIR}
                     ${DREAM3D_BINARY_DIR}
                     ${PROJECT_CODE_DIR}
