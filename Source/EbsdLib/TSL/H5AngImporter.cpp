@@ -33,13 +33,7 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-
-
-
-
 #include "H5AngImporter.h"
-
-#include <QtCore/QString>
 
 #include "H5Support/QH5Lite.h"
 #include "H5Support/QH5Utilities.h"
@@ -215,7 +209,7 @@ int H5AngImporter::importFile(hid_t fileId, int64_t z, const QString& angFile)
     if (attr_type < 0) // The attr_type variable was never set which means the attribute was NOT there
     {
       // The file version does not exist so write it to the file
-      err = QH5Lite::writeScalarAttribute(fileId, "/", Ebsd::H5::FileVersionStr, m_FileVersion);
+      err = QH5Lite::writeScalarAttribute(fileId, QString("/"), Ebsd::H5::FileVersionStr, m_FileVersion);
     }
     else
     {
@@ -226,7 +220,7 @@ int H5AngImporter::importFile(hid_t fileId, int64_t z, const QString& angFile)
     if (attr_type < 0) // The attr_type variable was never set which means the attribute was NOT there
     {
       // The file version does not exist so write it to the file
-      err = QH5Lite::writeStringAttribute(fileId, "/", Ebsd::H5::EbsdLibVersionStr, EbsdLib::Version::Complete());
+      err = QH5Lite::writeStringAttribute(fileId, QString("/"), Ebsd::H5::EbsdLibVersionStr, EbsdLib::Version::Complete());
     }
     else
     {
