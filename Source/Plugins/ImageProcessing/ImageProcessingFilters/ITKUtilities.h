@@ -112,7 +112,11 @@ class ITKUtilities
      */
     static typename ScalarImageType::Pointer Dream3DtoITK(VolumeDataContainer* m, QString attrMatName, ComponentType* data)
     {
-      return Dream3DtoITKImportFilter<ComponentType>(m, attrMatName, data)->GetOutput();
+      typename itk::ImportImageFilter<ComponentType, ImageProcessing::ImageDimension>::Pointer importer = Dream3DtoITKImportFilter<ComponentType>(m, attrMatName, data);
+      const ScalarImageType* constImage =importer->GetOutput();
+      ScalarImageType::Pointer image = ScalarImageType::New();
+      image->Graft(constImage);
+      return image;
     }
 
     template <typename TImage>
