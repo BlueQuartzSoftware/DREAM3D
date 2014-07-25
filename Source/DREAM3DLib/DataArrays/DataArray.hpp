@@ -117,8 +117,8 @@ class DataArray : public IDataArray
       if (typeid(value) == typeid(int8_t)) { xdmfTypeName = "Char"; precision = 1;}
       if (typeid(value) == typeid(uint8_t)) { xdmfTypeName = "UChar"; precision = 1;}
 
-      if (typeid(value) == typeid(int16_t)) { xdmfTypeName = "16 BIT NOT SUPPORTED BY XDMF"; precision = 0;}
-      if (typeid(value) == typeid(uint16_t)) { xdmfTypeName = "16 BIT NOT SUPPORTED BY XDMF"; precision = 0;}
+      if (typeid(value) == typeid(int16_t)) { xdmfTypeName = "Int"; precision = 2;}
+      if (typeid(value) == typeid(uint16_t)) { xdmfTypeName = "UInt"; precision = 2;}
 
       if (typeid(value) == typeid(int32_t)) { xdmfTypeName = "Int"; precision = 4;}
       if (typeid(value) == typeid(uint32_t)) { xdmfTypeName = "UInt"; precision = 4;}
