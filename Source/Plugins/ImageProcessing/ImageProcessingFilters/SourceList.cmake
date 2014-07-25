@@ -30,6 +30,8 @@ set(_PublicFilters
   Watershed
   WriteImage
   ReadImage
+  RGBToGray
+  GrayToRGB
 )
 
 
