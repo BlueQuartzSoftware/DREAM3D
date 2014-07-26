@@ -53,7 +53,7 @@
 class DREAM3DLib_EXPORT FilterManager
 {
   public:
-    DREAM3D_SHARED_POINTERS(FilterManager)
+//    DREAM3D_SHARED_POINTERS(FilterManager)
     DREAM3D_TYPE_MACRO(FilterManager)
 
     virtual ~FilterManager();
@@ -65,7 +65,7 @@ class DREAM3DLib_EXPORT FilterManager
      * @brief Static instance to retrieve the global instance of this class
      * @return
      */
-    static Pointer Instance();
+    static FilterManager* Instance();
 
     /**
      * @brief Registers a QFilterFactory instance for a give name
@@ -149,7 +149,7 @@ class DREAM3DLib_EXPORT FilterManager
   private:
 
     Collection m_Factories;
-
+    static FilterManager* self;
 
     FilterManager(const FilterManager&); // Copy Constructor Not Implemented
     void operator=(const FilterManager&); // Operator '=' Not Implemented

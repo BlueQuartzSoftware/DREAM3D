@@ -370,9 +370,9 @@ void PipelineViewWidget::loadPipelineFile(const QString& filePath, QSettings::Fo
 void PipelineViewWidget::addFilter(const QString& filterClassName, int index)
 {
   if (this->isEnabled() == false) { return; }
-  FilterManager::Pointer wm = FilterManager::Instance();
-  if(NULL == wm.get() ) { return; }
-  IFilterFactory::Pointer wf = wm->getFactoryForFilter(filterClassName);
+  FilterManager* fm = FilterManager::Instance();
+  if(NULL == fm) { return; }
+  IFilterFactory::Pointer wf = fm->getFactoryForFilter(filterClassName);
   if (NULL == wf.get()) { return; }
 
   // Create an instance of the filter. Since we are dealing with the AbstractFilter interface we can not

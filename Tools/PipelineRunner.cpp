@@ -75,7 +75,7 @@
 // -----------------------------------------------------------------------------
 void readPipeline(QFilterParametersReader::Pointer paramsReader, FilterPipeline::Pointer pipeline)
 {
-  FilterManager::Pointer filtManager = FilterManager::Instance();
+  FilterManager* filtManager = FilterManager::Instance();
   QSettings* prefs = paramsReader->getPrefs();
   prefs->beginGroup(DREAM3D::Settings::PipelineBuilderGroup);
   bool ok = false;
@@ -145,8 +145,8 @@ int main (int argc, char  *argv[])
 
 
   // Register all the filters including trying to load those from Plugins
-  FilterManager::Pointer fm = FilterManager::Instance();
-  DREAM3DPluginLoader::LoadPluginFilters(fm.get());
+  FilterManager* fm = FilterManager::Instance();
+  DREAM3DPluginLoader::LoadPluginFilters(fm);
 
   // Send progress messages from PipelineBuilder to this object for display
   QMetaObjectUtilities::RegisterMetaTypes();

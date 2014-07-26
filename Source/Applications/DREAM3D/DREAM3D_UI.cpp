@@ -112,7 +112,7 @@ DREAM3D_UI::DREAM3D_UI(QWidget* parent) :
   // Register all of the Filters we know about - the rest will be loaded through plugins
   //  which all should have been loaded by now.
   m_FilterManager = FilterManager::Instance();
-  m_FilterManager->RegisterKnownFilters(m_FilterManager.get());
+  //m_FilterManager->RegisterKnownFilters(m_FilterManager);
 
   // Register all the known filterWidgets
   m_FilterWidgetManager = FilterWidgetManager::Instance();
@@ -206,6 +206,7 @@ void DREAM3D_UI::closeEvent(QCloseEvent* event)
   else
   {
     writeSettings();
+    on_actionClearPipeline_triggered();
     event->accept();
   }
 }
