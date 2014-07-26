@@ -86,7 +86,7 @@ class RGBToGrayPrivate
       typedef ITKUtilities<PixelType> ITKUtilitiesType;
 
       //convert arrays to correct type
-      
+
       PixelType* inputData = static_cast<PixelType*>(inputDataPtr->getPointer(0));
       PixelType* outputData = static_cast<PixelType*>(outputDataPtr->getPointer(0));
 
@@ -96,11 +96,20 @@ class RGBToGrayPrivate
       double mag = weights.x+weights.y+weights.z;
 
       //wrap input as itk image
-      typename ITKUtilitiesType::RGBImageType::Pointer inputImage = ITKUtilitiesType::Dream3DtoITKTemplate<ITKUtilitiesType::RGBImageType>(m, attrMatName, inputData);
+      typename ITKUtilitiesType::RGBImageType::Pointer inputImage
+                        = ITKUtilitiesType::template Dream3DtoITKTemplate<typename ITKUtilitiesType::RGBImageType>(m, attrMatName, inputData);
+
+
+
+      typedef typename ITKUtilitiesType::RGBImageType::PixelType                            RGBImagePixelType;
+      typedef typename ITKUtilitiesType::ScalarImageType::PixelType                         ScalarImagePixelType;
+      typedef Functor::Luminance<RGBImagePixelType, ScalarImagePixelType> LuminanceFunctorType;
 
       //define filters
-      typedef itk::UnaryFunctorImageFilter< ITKUtilitiesType::RGBImageType, ITKUtilitiesType::ScalarImageType, Functor::Luminance<ITKUtilitiesType::RGBImageType::PixelType, ITKUtilitiesType::ScalarImageType::PixelType> > RGBToGrayType;
-  
+      typedef itk::UnaryFunctorImageFilter<typename ITKUtilitiesType::RGBImageType,
+                                           typename ITKUtilitiesType::ScalarImageType,
+                                                    LuminanceFunctorType> RGBToGrayType;
+
       //convert to gray
       typename RGBToGrayType::Pointer rgbToGray = RGBToGrayType::New();
       rgbToGray->GetFunctor().SetRWeight(weights.x/mag);
