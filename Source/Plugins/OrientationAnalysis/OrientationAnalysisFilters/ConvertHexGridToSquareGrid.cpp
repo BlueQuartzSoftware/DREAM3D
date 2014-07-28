@@ -106,8 +106,6 @@ void ConvertHexGridToSquareGrid::readFilterParameters(AbstractFilterParametersRe
   setZEndIndex( reader->readValue("ZEndIndex", getZEndIndex() ) );
   setXResolution( reader->readValue("XResolution", getXResolution() ) );
   setYResolution( reader->readValue("YResolution", getYResolution() ) );
-  setZStartIndex( reader->readValue("ZStartIndex", getZStartIndex()) );
-  setZEndIndex( reader->readValue("ZEndIndex", getZEndIndex()) );
   setPaddingDigits( reader->readValue("PaddingDigits", getPaddingDigits()) );
   setInputPath( reader->readString("InputPath", getInputPath()) );
   setOutputPath( reader->readString("OutputPath", getOutputPath()) );

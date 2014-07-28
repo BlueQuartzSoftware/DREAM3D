@@ -24,6 +24,7 @@ set(_PublicFilters
   FeatureInfoReader
   GBCDTriangleDumper
   INLWriter
+  LoadAdditiveMonitoringData
   LosAlamosFFTWriter
   NodesTrianglesToStl
   NodesTrianglesToVtk

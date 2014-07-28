@@ -3,10 +3,9 @@ set(${PLUGIN_NAME}_ParameterWidgets_HDRS "")
 set(${PLUGIN_NAME}_ParameterWidgets_SRCS "")
 set(${PLUGIN_NAME}_ParameterWidgets_UIS "")
 
-# --------------------------------------------------------------------
-# List the name of your custom FilterParameter Widgets in this section
+
 set(${PLUGIN_NAME}_PARAMETER_WIDGETS
-  # SomeCustomWidget
+      ProcessMonitoringWidget
 )
 
 # --------------------------------------------------------------------

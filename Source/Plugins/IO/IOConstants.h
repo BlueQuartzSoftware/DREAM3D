@@ -55,7 +55,7 @@ namespace IO
 namespace FilterParameterWidgetType
 {
 
-  /*  const QString SomeCustomWidget("SomeCustomWidget"); */
+  const QString ProcessMonitoringWidget("ProcessMonitoringWidget");
 
 }
 #endif

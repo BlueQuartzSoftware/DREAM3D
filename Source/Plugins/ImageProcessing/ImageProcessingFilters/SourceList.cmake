@@ -15,7 +15,7 @@ START_FILTER_GROUP(${ImageProcessing_BINARY_DIR} "${_filterGroupName}" "ImagePro
 set(_PublicFilters
   AlignSectionsPhaseCorrelation
   AutoThreshold
-  DiscreteGaussianBlur
+  #DiscreteGaussianBlur
   GaussianBlur
   HoughCircles
   ImageCalculator
@@ -23,8 +23,8 @@ set(_PublicFilters
   ImageRegistration
   KMeans
   ManualThreshold
-  MeanKernel
-  MedianKernel
+  #MeanKernel
+  #MedianKernel
   MultiOtsuThreshold
   SobelEdge
   Watershed

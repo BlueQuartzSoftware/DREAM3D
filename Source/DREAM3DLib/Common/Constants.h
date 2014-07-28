@@ -160,6 +160,7 @@ namespace DREAM3D
     const DREAM3D_STRING ConfidenceIndex("Confidence Index");
     const DREAM3D_STRING CAxisLocation("CAxisLocation");
     const DREAM3D_STRING ConfidenceIndexNoSpace("ConfidenceIndex");
+    const DREAM3D_STRING Current("Current");
     const DREAM3D_STRING DislocationTensors("DislocationTensors");
     const DREAM3D_STRING EulerAngles("EulerAngles");
     const DREAM3D_STRING EulerColor("EulerColor");
@@ -195,6 +196,7 @@ namespace DREAM3D
     const DREAM3D_STRING RodriguesColor("RodriguesColor");
     const DREAM3D_STRING SolidMeshNodes("SolidMeshNodes");
     const DREAM3D_STRING SolidMeshTetrahedrons("SolidMeshTetrahedrons");
+    const DREAM3D_STRING Speed("Speed");
     const DREAM3D_STRING SurfaceMeshCells("SurfaceMeshCells");
     const DREAM3D_STRING BoundaryCells("BoundaryCells");
     const DREAM3D_STRING TJEuclideanDistances("TJEuclideanDistances");
