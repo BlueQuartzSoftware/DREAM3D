@@ -700,6 +700,27 @@ class DataArray : public IDataArray
       return 0;
     }
 
+    virtual IDataArray::Pointer reorderCopy(QVector<size_t> newOrderMap)
+    {
+      if(newOrderMap.size()!=getNumberOfTuples())
+      {
+        return NULL;
+      }
+      IDataArray::Pointer daCopy = createNewArray(getNumberOfTuples(), getComponentDimensions(), getName(), m_IsAllocated);
+      daCopy->initializeWithZeros();
+      if(m_IsAllocated == true)
+      {
+        size_t chunkSize = getNumberOfComponents()*sizeof(T);
+        for(int i=0; i<getNumberOfTuples(); i++)
+        {
+          T* src = getPointer(i*getNumberOfComponents());
+          void* dest = daCopy->getVoidPointer(newOrderMap[i]*getNumberOfComponents());
+          ::memcpy(dest, src, chunkSize);
+        }
+      }
+      return daCopy;
+    }
+
     /**
      * @brief Returns the number of bytes that make up the data type.
      * 1 = char

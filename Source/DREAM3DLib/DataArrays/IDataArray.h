@@ -150,6 +150,14 @@ class DREAM3DLib_EXPORT IDataArray
 
 
     /**
+     * @brief Creates a copy with the given reordering.
+     * @param newOrderMap the vector containing the new position for each index
+     * @return pointer to new data array
+     */
+    virtual IDataArray::Pointer reorderCopy(QVector<size_t> newOrderMap) = 0;
+
+
+    /**
      * @brief Splats the same value c across all values in the Tuple
      * @param pos The index of the Tuple
      * @param value pointer to value

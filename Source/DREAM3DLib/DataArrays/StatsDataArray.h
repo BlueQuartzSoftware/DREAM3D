@@ -325,6 +325,8 @@ class DREAM3DLib_EXPORT StatsDataArray : public IDataArray
      */
     virtual int copyTuple(size_t currentPos, size_t newPos);
 
+    virtual IDataArray::Pointer reorderCopy(QVector<size_t> newOrderMap);
+
     /**
      * @brief Splats the same value c across all values in the Tuple
      * @param i The index of the Tuple
