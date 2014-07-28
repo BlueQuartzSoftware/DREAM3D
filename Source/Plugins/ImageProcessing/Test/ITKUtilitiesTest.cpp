@@ -51,7 +51,7 @@ void TestSetITKOutput()
 // ImageProcessing::DefaultPixelType* output = NULL;
 // unsigned int totalPoints = 0;
   ImageProcessing::DefaultArrayType::Pointer array;
-  ITKUtilities<ImageProcessing::DefaultPixelType>::SetITKOutput(imagePtr, array);
+  ITKUtilities<ImageProcessing::DefaultPixelType>::SetITKFilterOutput(imagePtr, array);
 
 }
 

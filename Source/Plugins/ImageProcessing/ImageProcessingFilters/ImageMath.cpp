@@ -1,6 +1,9 @@
 /*
  * Your License or Copyright Information can go here
  */
+#if (_MSC_VER)
+#define _SCL_SECURE_NO_WARNINGS
+#endif
 
 #include "ImageMath.h"
 
@@ -254,7 +257,7 @@ void ImageMath::execute()
       add->SetInput1(inputImage);
       add->SetConstant2(m_Value);
       limitsRound->SetInput(add->GetOutput());
-      ITKUtilitiesType::SetITKOutput(limitsRound->GetOutput(), m_NewCellArrayPtr.lock());
+      ITKUtilitiesType::SetITKFilterOutput(limitsRound->GetOutput(), m_NewCellArrayPtr.lock());
       limitsRound->Update();
     }
     break;
@@ -265,7 +268,7 @@ void ImageMath::execute()
       subtract->SetInput1(inputImage);
       subtract->SetConstant2(m_Value);
       limitsRound->SetInput(subtract->GetOutput());
-      ITKUtilitiesType::SetITKOutput(limitsRound->GetOutput(), m_NewCellArrayPtr.lock());
+      ITKUtilitiesType::SetITKFilterOutput(limitsRound->GetOutput(), m_NewCellArrayPtr.lock());
       limitsRound->Update();
     }
     break;
@@ -276,7 +279,7 @@ void ImageMath::execute()
       multiply->SetInput1(inputImage);
       multiply->SetConstant2(m_Value);
       limitsRound->SetInput(multiply->GetOutput());
-      ITKUtilitiesType::SetITKOutput(limitsRound->GetOutput(), m_NewCellArrayPtr.lock());
+      ITKUtilitiesType::SetITKFilterOutput(limitsRound->GetOutput(), m_NewCellArrayPtr.lock());
       limitsRound->Update();
     }
     break;
@@ -287,7 +290,7 @@ void ImageMath::execute()
       divide->SetInput1(inputImage);
       divide->SetConstant2(m_Value);
       limitsRound->SetInput(divide->GetOutput());
-      ITKUtilitiesType::SetITKOutput(limitsRound->GetOutput(), m_NewCellArrayPtr.lock());
+      ITKUtilitiesType::SetITKFilterOutput(limitsRound->GetOutput(), m_NewCellArrayPtr.lock());
       limitsRound->Update();
     }
     break;
@@ -298,7 +301,7 @@ void ImageMath::execute()
       minimum->SetInput1(inputImage);
       minimum->SetConstant2(m_Value);
       limitsRound->SetInput(minimum->GetOutput());
-      ITKUtilitiesType::SetITKOutput(limitsRound->GetOutput(), m_NewCellArrayPtr.lock());
+      ITKUtilitiesType::SetITKFilterOutput(limitsRound->GetOutput(), m_NewCellArrayPtr.lock());
       limitsRound->Update();
     }
     break;
@@ -309,7 +312,7 @@ void ImageMath::execute()
       maximum->SetInput1(inputImage);
       maximum->SetConstant2(m_Value);
       limitsRound->SetInput(maximum->GetOutput());
-      ITKUtilitiesType::SetITKOutput(limitsRound->GetOutput(), m_NewCellArrayPtr.lock());
+      ITKUtilitiesType::SetITKFilterOutput(limitsRound->GetOutput(), m_NewCellArrayPtr.lock());
       limitsRound->Update();
     }
     break;
@@ -320,7 +323,7 @@ void ImageMath::execute()
       gamma->SetInput1(inputImage);
       gamma->SetConstant2(m_Value);
       limitsRound->SetInput(gamma->GetOutput());
-      ITKUtilitiesType::SetITKOutput(limitsRound->GetOutput(), m_NewCellArrayPtr.lock());
+      ITKUtilitiesType::SetITKFilterOutput(limitsRound->GetOutput(), m_NewCellArrayPtr.lock());
       limitsRound->Update();
     }
     break;
@@ -330,7 +333,7 @@ void ImageMath::execute()
       LogType::Pointer logfilter = LogType::New();
       logfilter->SetInput(inputImage);
       limitsRound->SetInput(logfilter->GetOutput());
-      ITKUtilitiesType::SetITKOutput(limitsRound->GetOutput(), m_NewCellArrayPtr.lock());
+      ITKUtilitiesType::SetITKFilterOutput(limitsRound->GetOutput(), m_NewCellArrayPtr.lock());
       limitsRound->Update();
     }
     break;
@@ -340,7 +343,7 @@ void ImageMath::execute()
       ExpType::Pointer expfilter = ExpType::New();
       expfilter->SetInput(inputImage);
       limitsRound->SetInput(expfilter->GetOutput());
-      ITKUtilitiesType::SetITKOutput(limitsRound->GetOutput(), m_NewCellArrayPtr.lock());
+      ITKUtilitiesType::SetITKFilterOutput(limitsRound->GetOutput(), m_NewCellArrayPtr.lock());
       limitsRound->Update();
     }
     break;
@@ -350,7 +353,7 @@ void ImageMath::execute()
       SquareType::Pointer square = SquareType::New();
       square->SetInput(inputImage);
       limitsRound->SetInput(square->GetOutput());
-      ITKUtilitiesType::SetITKOutput(limitsRound->GetOutput(), m_NewCellArrayPtr.lock());
+      ITKUtilitiesType::SetITKFilterOutput(limitsRound->GetOutput(), m_NewCellArrayPtr.lock());
       limitsRound->Update();
     }
     break;
@@ -360,7 +363,7 @@ void ImageMath::execute()
       SqrtType::Pointer sqrtfilter = SqrtType::New();
       sqrtfilter->SetInput(inputImage);
       limitsRound->SetInput(sqrtfilter->GetOutput());
-      ITKUtilitiesType::SetITKOutput(limitsRound->GetOutput(), m_NewCellArrayPtr.lock());
+      ITKUtilitiesType::SetITKFilterOutput(limitsRound->GetOutput(), m_NewCellArrayPtr.lock());
       limitsRound->Update();
     }
     break;
@@ -369,7 +372,7 @@ void ImageMath::execute()
     {
       InvertType::Pointer invert = InvertType::New();
       invert->SetInput(inputImage);
-      ITKUtilitiesType::SetITKOutput(invert->GetOutput(), m_NewCellArrayPtr.lock());
+      ITKUtilitiesType::SetITKFilterOutput(invert->GetOutput(), m_NewCellArrayPtr.lock());
       invert->Update();
     }
     break;
