@@ -1,6 +1,9 @@
 /*
  * Your License or Copyright Information can go here
  */
+#if (_MSC_VER)
+#define _SCL_SECURE_NO_WARNINGS
+#endif
 
 #include "KMeans.h"
 
@@ -218,7 +221,7 @@ void KMeans::execute()
       mean = mean + meanIncrement;
     }
 
-    ITKUtilitiesType::SetITKOutput(kMeans->GetOutput(), m_NewCellArrayPtr.lock());
+    ITKUtilitiesType::SetITKFilterOutput(kMeans->GetOutput(), m_NewCellArrayPtr.lock());
     kMeans->Update();
   }
 

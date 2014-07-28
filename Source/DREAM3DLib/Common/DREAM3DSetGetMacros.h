@@ -38,9 +38,6 @@
 #define _DREAM3DSETGETMACROS_H_
 
 #include <string.h>
-
-#include <QtCore/QString>
-#include <QtCore/QtDebug>
 #include <sstream>
 #include <stdexcept>
 
@@ -51,6 +48,8 @@
  */
 
 #if defined(QT_CORE_LIB)
+#include <QtCore/QString>
+#include <QtCore/QtDebug>
 //-- Qt includes
 #include <QtCore/QSharedPointer>
 //#define RAW_PTR  data

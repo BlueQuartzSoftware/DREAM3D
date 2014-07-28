@@ -1,6 +1,9 @@
 /*
  * Your License or Copyright Information can go here
  */
+#if (_MSC_VER)
+#define _SCL_SECURE_NO_WARNINGS
+#endif
 
 #include "GrayToRGB.h"
 
@@ -61,14 +64,14 @@ class GrayToRGBPrivate
       typename ImageType::Pointer blueImage = ITKUtilitiesType::Dream3DtoITK(m, attrMatName, blueData);
 
       //define threshold filters
-      typedef itk::ComposeImageFilter<ITKUtilitiesType::ScalarImageType, ITKUtilitiesType::RGBImageType> ComposeRGBType;
+      typedef itk::ComposeImageFilter<typename ITKUtilitiesType::ScalarImageType, typename ITKUtilitiesType::RGBImageType> ComposeRGBType;
 
       //threshold
       typename ComposeRGBType::Pointer composeRGB = ComposeRGBType::New();
       composeRGB->SetInput(0, redImage);
       composeRGB->SetInput(1, greenImage);
       composeRGB->SetInput(2, blueImage);
-      composeRGB->GetOutput()->GetPixelContainer()->SetImportPointer(reinterpret_cast<ITKUtilitiesType::RGBImageType::PixelType*>(outputData), numVoxels, false);
+      composeRGB->GetOutput()->GetPixelContainer()->SetImportPointer(reinterpret_cast<typename ITKUtilitiesType::RGBImageType::PixelType*>(outputData), numVoxels, false);
       composeRGB->Update();
     }
   private:

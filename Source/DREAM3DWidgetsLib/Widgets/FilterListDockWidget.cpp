@@ -140,7 +140,7 @@ void FilterListDockWidget::updateFilterList(const QStringList& list, bool sortIt
 {
   filterList->clear();
 
-  FilterManager::Pointer fm = FilterManager::Instance();
+  FilterManager* fm = FilterManager::Instance();
 
   QString countText = QObject::tr("Filter Count: %1").arg(list.size());
   filterCountLabel->setText(countText);
@@ -201,7 +201,7 @@ void FilterListDockWidget::searchFilters()
   }
 
   // The user is typing something in the search box so lets search the filter class name and human label
-  FilterManager::Pointer fm = FilterManager::Instance();
+  FilterManager* fm = FilterManager::Instance();
   int filterCount = 0;
   bool match = false;
   for (int k1 = 0; k1 < listWidgetSize; k1++)

@@ -37,12 +37,16 @@
 
 #include "DREAM3DLib/Common/FilterFactory.hpp"
 
+FilterManager* FilterManager::self = NULL;
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 FilterManager::FilterManager()
 {
-
+//  qDebug() << "FilterManager()" << this;
+  Q_ASSERT_X(!self, "FilterManager", "there should be only one FilterManager object");
+  FilterManager::self = this;
 }
 
 // -----------------------------------------------------------------------------
@@ -50,22 +54,22 @@ FilterManager::FilterManager()
 // -----------------------------------------------------------------------------
 FilterManager::~FilterManager()
 {
+//  qDebug() << "~FilterManager()" << this;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FilterManager::Pointer FilterManager::Instance()
+FilterManager* FilterManager::Instance()
 {
-  static FilterManager::Pointer singleton;
 
-  if (singleton.get() == NULL)
+  if (self == NULL)
   {
-    //  qDebug() << "FilterManager::Instance singleton was NULL" << "\n";
-    singleton.reset ( new FilterManager() );
-//    singleton->RegisterKnownFilters();
+    //  qDebug() << "FilterManager::Instance self was NULL" << "\n";
+    self = new FilterManager();
+    //    self->RegisterKnownFilters();
   }
-  return singleton;
+  return self;
 }
 
 // -----------------------------------------------------------------------------
@@ -76,7 +80,7 @@ void FilterManager::RegisterFilterFactory(const QString& name, IFilterFactory::P
   if (NULL != factory.get() )
   {
     // Instantiate the Instance Manager for IFilterFactory
-    FilterManager::Pointer idManager = FilterManager::Instance();
+    FilterManager* idManager = FilterManager::Instance();
     idManager->addFilterFactory( name, factory );
   }
 }
@@ -143,7 +147,7 @@ FilterManager::Collection FilterManager::getFactories(const QString& groupName, 
 // -----------------------------------------------------------------------------
 void FilterManager::addFilterFactory(const QString& name, IFilterFactory::Pointer factory)
 {
-// std::cout << this << " - Registering Filter: " << name.toStdString() << std::endl;
+  // std::cout << this << " - Registering Filter: " << name.toStdString() << std::endl;
   m_Factories[name] = factory;
 }
 
@@ -152,9 +156,9 @@ void FilterManager::addFilterFactory(const QString& name, IFilterFactory::Pointe
 // -----------------------------------------------------------------------------
 QSet<QString> FilterManager::getGroupNames()
 {
-// qDebug() << "FilterManager::getGroupNames" << "\n";
+  // qDebug() << "FilterManager::getGroupNames" << "\n";
   // Get all the  Factories and loop over each one we know about and instantiate a new one
-  FilterManager::Pointer fm = FilterManager::Instance();
+  FilterManager* fm = FilterManager::Instance();
   FilterManager::Collection factories = fm->getFactories();
   QSet<QString> groupNames;
   for (FilterManager::Collection::iterator factory = factories.begin(); factory != factories.end(); ++factory)
@@ -171,9 +175,9 @@ QSet<QString> FilterManager::getGroupNames()
 // -----------------------------------------------------------------------------
 QSet<QString> FilterManager::getSubGroupNames(const QString& groupName)
 {
-// qDebug() << "FilterManager::getGroupNames" << "\n";
+  // qDebug() << "FilterManager::getGroupNames" << "\n";
   // Get all the  Factories and loop over each one we know about and instantiate a new one
-  FilterManager::Pointer fm = FilterManager::Instance();
+  FilterManager* fm = FilterManager::Instance();
   FilterManager::Collection factories = fm->getFactories();
   QSet<QString> subGroupNames;
   for (FilterManager::Collection::iterator factory = factories.begin(); factory != factories.end(); ++factory)

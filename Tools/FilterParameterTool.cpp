@@ -694,7 +694,7 @@ QString findPath(const QString& groupName, const QString& filtName, const QStrin
 void GenerateFilterParametersCode()
 {
 
-  FilterManager::Pointer fm = FilterManager::Instance();
+  FilterManager* fm = FilterManager::Instance();
   FilterManager::Collection factories = fm->getFactories();
   QMapIterator<QString, IFilterFactory::Pointer> iter(factories);
   // Loop on each filter
@@ -733,8 +733,8 @@ int main(int argc, char *argv[])
 
 
   // Register all the filters including trying to load those from Plugins
-  FilterManager::Pointer fm = FilterManager::Instance();
-  DREAM3DPluginLoader::LoadPluginFilters(fm.get());
+  FilterManager* fm = FilterManager::Instance();
+  DREAM3DPluginLoader::LoadPluginFilters(fm);
 
 
   // Send progress messages from PipelineBuilder to this object for display

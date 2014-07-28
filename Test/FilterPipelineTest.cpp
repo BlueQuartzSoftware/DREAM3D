@@ -262,10 +262,10 @@ void loadFilterPlugins()
 {
   // Register all of the Filters we know about - the rest will be loaded through plugins
   //  which all should have been loaded by now.
-  FilterManager::Pointer m_FilterManager = FilterManager::Instance();
-  m_FilterManager->RegisterKnownFilters(m_FilterManager.get());
+  FilterManager* m_FilterManager = FilterManager::Instance();
+  m_FilterManager->RegisterKnownFilters(m_FilterManager);
   // Look for plugins
-  loadPlugins(m_FilterManager.get());
+  loadPlugins(m_FilterManager);
 }
 
 

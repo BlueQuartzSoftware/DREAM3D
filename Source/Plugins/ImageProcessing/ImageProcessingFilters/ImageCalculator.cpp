@@ -1,6 +1,9 @@
 /*
  * Your License or Copyright Information can go here
  */
+#if (_MSC_VER)
+#define _SCL_SECURE_NO_WARNINGS
+#endif
 
 #include "ImageCalculator.h"
 
@@ -252,7 +255,7 @@ void ImageCalculator::execute()
       add->SetInput1(inputImage1);
       add->SetInput2(inputImage2);
       limitsRound->SetInput(add->GetOutput());
-      ITKUtilitiesType::SetITKOutput(limitsRound->GetOutput(), m_NewCellArrayPtr.lock());
+      ITKUtilitiesType::SetITKFilterOutput(limitsRound->GetOutput(), m_NewCellArrayPtr.lock());
       limitsRound->Update();
     }
     break;
@@ -263,7 +266,7 @@ void ImageCalculator::execute()
       subtract->SetInput1(inputImage1);
       subtract->SetInput2(inputImage2);
       limitsRound->SetInput(subtract->GetOutput());
-      ITKUtilitiesType::SetITKOutput(limitsRound->GetOutput(), m_NewCellArrayPtr.lock());
+      ITKUtilitiesType::SetITKFilterOutput(limitsRound->GetOutput(), m_NewCellArrayPtr.lock());
       limitsRound->Update();
     }
     break;
@@ -274,7 +277,7 @@ void ImageCalculator::execute()
       multiply->SetInput1(inputImage1);
       multiply->SetInput2(inputImage2);
       limitsRound->SetInput(multiply->GetOutput());
-      ITKUtilitiesType::SetITKOutput(limitsRound->GetOutput(), m_NewCellArrayPtr.lock());
+      ITKUtilitiesType::SetITKFilterOutput(limitsRound->GetOutput(), m_NewCellArrayPtr.lock());
       limitsRound->Update();
     }
     break;
@@ -285,7 +288,7 @@ void ImageCalculator::execute()
       divide->SetInput1(inputImage1);
       divide->SetInput2(inputImage2);
       limitsRound->SetInput(divide->GetOutput());
-      ITKUtilitiesType::SetITKOutput(limitsRound->GetOutput(), m_NewCellArrayPtr.lock());
+      ITKUtilitiesType::SetITKFilterOutput(limitsRound->GetOutput(), m_NewCellArrayPtr.lock());
       limitsRound->Update();
     }
     break;
@@ -295,7 +298,7 @@ void ImageCalculator::execute()
       AndType::Pointer andfilter = AndType::New();
       andfilter->SetInput1(inputImage1);
       andfilter->SetInput2(inputImage2);
-      ITKUtilitiesType::SetITKOutput(andfilter->GetOutput(), m_NewCellArrayPtr.lock());
+      ITKUtilitiesType::SetITKFilterOutput(andfilter->GetOutput(), m_NewCellArrayPtr.lock());
       andfilter->Update();
     }
     break;
@@ -305,7 +308,7 @@ void ImageCalculator::execute()
       OrType::Pointer orfilter = OrType::New();
       orfilter->SetInput1(inputImage1);
       orfilter->SetInput2(inputImage2);
-      ITKUtilitiesType::SetITKOutput(orfilter->GetOutput(), m_NewCellArrayPtr.lock());
+      ITKUtilitiesType::SetITKFilterOutput(orfilter->GetOutput(), m_NewCellArrayPtr.lock());
       orfilter->Update();
     }
     break;
@@ -315,7 +318,7 @@ void ImageCalculator::execute()
       XorType::Pointer xorfilter = XorType::New();
       xorfilter->SetInput1(inputImage1);
       xorfilter->SetInput2(inputImage2);
-      ITKUtilitiesType::SetITKOutput(xorfilter->GetOutput(), m_NewCellArrayPtr.lock());
+      ITKUtilitiesType::SetITKFilterOutput(xorfilter->GetOutput(), m_NewCellArrayPtr.lock());
       xorfilter->Update();
     }
     break;
@@ -325,7 +328,7 @@ void ImageCalculator::execute()
       MinType::Pointer minimum = MinType::New();
       minimum->SetInput1(inputImage1);
       minimum->SetInput2(inputImage2);
-      ITKUtilitiesType::SetITKOutput(minimum->GetOutput(), m_NewCellArrayPtr.lock());
+      ITKUtilitiesType::SetITKFilterOutput(minimum->GetOutput(), m_NewCellArrayPtr.lock());
       minimum->Update();
     }
     break;
@@ -335,7 +338,7 @@ void ImageCalculator::execute()
       MaxType::Pointer maximum = MaxType::New();
       maximum->SetInput1(inputImage1);
       maximum->SetInput2(inputImage2);
-      ITKUtilitiesType::SetITKOutput(maximum->GetOutput(), m_NewCellArrayPtr.lock());
+      ITKUtilitiesType::SetITKFilterOutput(maximum->GetOutput(), m_NewCellArrayPtr.lock());
       maximum->Update();
     }
     break;
@@ -346,7 +349,7 @@ void ImageCalculator::execute()
       mean->SetInput1(inputImage1);
       mean->SetInput2(inputImage2);
       limitsRound->SetInput(mean->GetOutput());
-      ITKUtilitiesType::SetITKOutput(limitsRound->GetOutput(), m_NewCellArrayPtr.lock());
+      ITKUtilitiesType::SetITKFilterOutput(limitsRound->GetOutput(), m_NewCellArrayPtr.lock());
       limitsRound->Update();
     }
     break;
@@ -357,7 +360,7 @@ void ImageCalculator::execute()
       difference->SetInput1(inputImage1);
       difference->SetInput2(inputImage2);
       limitsRound->SetInput(difference->GetOutput());
-      ITKUtilitiesType::SetITKOutput(limitsRound->GetOutput(), m_NewCellArrayPtr.lock());
+      ITKUtilitiesType::SetITKFilterOutput(limitsRound->GetOutput(), m_NewCellArrayPtr.lock());
       limitsRound->Update();
     }
     break;

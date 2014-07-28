@@ -1,6 +1,9 @@
 /*
  * Your License or Copyright Information can go here
  */
+#if (_MSC_VER)
+#define _SCL_SECURE_NO_WARNINGS
+#endif
 
 #include "MultiOtsuThreshold.h"
 
@@ -180,7 +183,7 @@ void MultiOtsuThreshold::execute()
     otsuThresholder->SetNumberOfThresholds(m_Levels);
     otsuThresholder->SetLabelOffset(1);
 
-    ITKUtilitiesType::SetITKOutput(otsuThresholder->GetOutput(), m_NewCellArrayPtr.lock());
+    ITKUtilitiesType::SetITKFilterOutput(otsuThresholder->GetOutput(), m_NewCellArrayPtr.lock());
     otsuThresholder->Update();
   }
 

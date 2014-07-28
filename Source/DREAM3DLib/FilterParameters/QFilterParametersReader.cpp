@@ -82,7 +82,7 @@ FilterPipeline::Pointer QFilterParametersReader::ReadPipelineFromFile(QString fi
   QFileInfo fi(filePath);
   if(fi.exists() == false) { return FilterPipeline::NullPointer(); }
 
-  FilterManager::Pointer filtManager = FilterManager::Instance();
+  FilterManager* filtManager = FilterManager::Instance();
   FilterFactory<EmptyFilter>::Pointer emptyFilterFactory = FilterFactory<EmptyFilter>::New();
   filtManager->addFilterFactory("EmptyFilter", emptyFilterFactory);
 

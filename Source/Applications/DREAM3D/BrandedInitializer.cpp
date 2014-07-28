@@ -82,8 +82,10 @@ BrandedInitializer::~BrandedInitializer()
 
   for(int i = 0; i < m_PluginLoaders.size(); i++)
   {
+    qDebug() << "Unloading Plugin " << m_PluginLoaders.at(i)->fileName();
     m_PluginLoaders.at(i)->unload();
     delete m_PluginLoaders[i]; // Delete the QPluginLoader object
+    m_PluginLoaders[i] = NULL;
   }
 }
 
@@ -158,16 +160,12 @@ bool BrandedInitializer::initialize(int argc, char* argv[])
 // -----------------------------------------------------------------------------
 QVector<DREAM3DPluginInterface *> BrandedInitializer::loadPlugins()
 {
-  qDebug() << "DREAM3D_UI::loadPlugins" << "\n";
-
-  //  foreach (QObject *plugin, QPluginLoader::staticInstances())
-  //    populateMenus(plugin);
   QStringList m_PluginDirs;
-
   m_PluginDirs << qApp->applicationDirPath();
 
   QDir aPluginDir = QDir(qApp->applicationDirPath());
-  qDebug() << "aPluginDir: " << aPluginDir.absolutePath();
+  qDebug() << "Loading DREAM3D Plugins....";
+  //qDebug() << "aPluginDir: " << aPluginDir.absolutePath() << "\n";
   QString thePath;
 
 #if defined(Q_OS_WIN)
@@ -177,18 +175,30 @@ QVector<DREAM3DPluginInterface *> BrandedInitializer::loadPlugins()
     m_PluginDirs << thePath;
   }
 #elif defined(Q_OS_MAC)
+  // Look to see if we are inside an .app package or inside the 'tools' directory
   if (aPluginDir.dirName() == "MacOS")
   {
     aPluginDir.cdUp();
     thePath = aPluginDir.absolutePath() + "/Plugins";
+    qDebug() << "  Adding Path " << thePath;
     m_PluginDirs << thePath;
     aPluginDir.cdUp();
     aPluginDir.cdUp();
     // We need this because Apple (in their infinite wisdom) changed how the current working directory is set in OS X 10.9 and above. Thanks Apple.
     chdir(aPluginDir.absolutePath().toLatin1().constData());
   }
+  if (aPluginDir.dirName() == "tools")
+  {
+    aPluginDir.cdUp();
+    // thePath = aPluginDir.absolutePath() + "/Plugins";
+    // qDebug() << "  Adding Path " << thePath;
+    // m_PluginDirs << thePath;
+    // We need this because Apple (in their infinite wisdom) changed how the current working directory is set in OS X 10.9 and above. Thanks Apple.
+    chdir(aPluginDir.absolutePath().toLatin1().constData());
+  }
   // aPluginDir.cd("Plugins");
   thePath = aPluginDir.absolutePath() + "/Plugins";
+  qDebug() << "  Adding Path " << thePath;
   m_PluginDirs << thePath;
 
   // This is here for Xcode compatibility
@@ -219,7 +229,7 @@ QVector<DREAM3DPluginInterface *> BrandedInitializer::loadPlugins()
 
   foreach (QString pluginDirString, m_PluginDirs)
   {
-    qDebug() << "Plugin Directory being Searched: " << pluginDirString << "\n";
+    qDebug() << "Plugin Directory being Searched: " << pluginDirString;
     aPluginDir = QDir(pluginDirString);
     foreach (QString fileName, aPluginDir.entryList(QDir::Files))
     {
@@ -237,8 +247,13 @@ QVector<DREAM3DPluginInterface *> BrandedInitializer::loadPlugins()
     }
   }
 
-  FilterManager::Pointer fm = FilterManager::Instance();
-  FilterWidgetManager::Pointer fwm = FilterWidgetManager::Instance();
+  FilterManager* fm = FilterManager::Instance();
+  FilterWidgetManager*  fwm = FilterWidgetManager::Instance();
+
+  // THIS IS A VERY IMPORTANT LINE: It will register all the known filters in the dream3d library. This
+  // will NOT however get filters from plugins. We are going to have to figure out how to compile filters
+  // into their own plugin and load the plugins from a command line.
+  fm->RegisterKnownFilters(fm);
 
   QVector<DREAM3DPluginInterface*> loadedPlugins;
 
@@ -246,12 +261,9 @@ QVector<DREAM3DPluginInterface *> BrandedInitializer::loadPlugins()
   // file system and add each to the toolbar and menu
   foreach(QString path, pluginFilePaths)
   {
-
-    QApplication::instance()->processEvents();
     qDebug() << "Plugin Being Loaded:" << path;
-    //QPluginLoader loader(path);
+    QApplication::instance()->processEvents();
     QPluginLoader* loader = new QPluginLoader(path);
-
     QFileInfo fi(path);
     QString fileName = fi.fileName();
     QObject* plugin = loader->instance();
@@ -265,9 +277,10 @@ QVector<DREAM3DPluginInterface *> BrandedInitializer::loadPlugins()
         this->Splash->showMessage(msg);
         //DREAM3DPluginInterface::Pointer ipPluginPtr(ipPlugin);
         loadedPlugins.push_back(ipPlugin);
-        ipPlugin->registerFilterWidgets(fwm.get());
-        ipPlugin->registerFilters(fm.get());
+        ipPlugin->registerFilterWidgets(fwm);
+        ipPlugin->registerFilters(fm);
       }
+      m_PluginLoaders.push_back(loader);
     }
     else
     {
@@ -276,6 +289,7 @@ QVector<DREAM3DPluginInterface *> BrandedInitializer::loadPlugins()
       QMessageBox::critical(MainWindow, "DREAM3D Plugin Load Error",
                             message,
                             QMessageBox::Ok | QMessageBox::Default);
+      delete loader;
     }
   }
 

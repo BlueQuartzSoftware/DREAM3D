@@ -40,12 +40,17 @@
 
 #include "DREAM3DWidgetsLib/FilterWidgetHeaders.h"
 
+FilterWidgetManager* FilterWidgetManager::self = 0;
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 FilterWidgetManager::FilterWidgetManager()
 {
+ // qDebug() << "FilterWidgetManager()" << this;
 
+  Q_ASSERT_X(!self, "FilterWidgetManager", "there should be only one FilterWidgetManager object");
+  FilterWidgetManager::self = this;
 }
 
 // -----------------------------------------------------------------------------
@@ -53,22 +58,21 @@ FilterWidgetManager::FilterWidgetManager()
 // -----------------------------------------------------------------------------
 FilterWidgetManager::~FilterWidgetManager()
 {
+ // qDebug() << "~FilterWidgetManager()" << this;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FilterWidgetManager::Pointer FilterWidgetManager::Instance()
+FilterWidgetManager* FilterWidgetManager::Instance()
 {
-  static FilterWidgetManager::Pointer singleton;
-
-  if (singleton.get() == NULL)
+  if (self == NULL)
   {
-    //  qDebug() << "FilterWidgetManager::Instance singleton was NULL" << "\n";
-    singleton.reset (new FilterWidgetManager() );
+ //   qDebug() << "FilterWidgetManager::Instance self was NULL" << "\n";
+    self = new FilterWidgetManager();
   }
-// qDebug() << "singleton.get(): " << singleton.get() << "\n";
-  return singleton;
+//  qDebug() << "self.get(): " << self << "\n";
+  return self;
 }
 
 // -----------------------------------------------------------------------------
@@ -79,7 +83,7 @@ void FilterWidgetManager::RegisterFilterWidgetFactory(const QString& name, IFilt
   if (NULL != factory.get() )
   {
     // Instantiate the Instance Manager for IFilterWidgetFactory
-    FilterWidgetManager::Pointer idManager = FilterWidgetManager::Instance();
+    FilterWidgetManager* idManager = FilterWidgetManager::Instance();
     idManager->addFilterWidgetFactory( name, factory );
   }
 }
@@ -105,7 +109,7 @@ void FilterWidgetManager::addFilterWidgetFactory(const QString& name, IFilterWid
 // -----------------------------------------------------------------------------
 void FilterWidgetManager::RegisterKnownFilterWidgets()
 {
-  FilterWidgetManager::Pointer idManager = FilterWidgetManager::Instance();
+  FilterWidgetManager* idManager = FilterWidgetManager::Instance();
   // This next file is generated with CMake
 #include "DREAM3DWidgetsLib/FilterWidgetManager_RegisterWidgets.cpp"
 

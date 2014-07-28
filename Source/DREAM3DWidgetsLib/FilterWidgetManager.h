@@ -58,7 +58,7 @@
 class DREAM3DWidgetsLib_EXPORT FilterWidgetManager
 {
   public:
-    DREAM3D_SHARED_POINTERS(FilterWidgetManager)
+    //DREAM3D_SHARED_POINTERS(FilterWidgetManager)
     DREAM3D_TYPE_MACRO(FilterWidgetManager)
 
     virtual ~FilterWidgetManager();
@@ -69,7 +69,7 @@ class DREAM3DWidgetsLib_EXPORT FilterWidgetManager
      * @brief Static instance to retrieve the global instance of this class
      * @return
      */
-    static Pointer Instance();
+    static FilterWidgetManager *Instance();
 
     /**
      * @brief Registers a PipelineFilterWidgetFactory instance for a give name
@@ -104,6 +104,7 @@ class DREAM3DWidgetsLib_EXPORT FilterWidgetManager
 
     Collection m_Factories;
 
+    static FilterWidgetManager* self;
 
     FilterWidgetManager(const FilterWidgetManager&); // Copy Constructor Not Implemented
     void operator=(const FilterWidgetManager&); // Operator '=' Not Implemented

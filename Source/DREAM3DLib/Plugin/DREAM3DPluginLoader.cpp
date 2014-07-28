@@ -106,7 +106,6 @@ void DREAM3DPluginLoader::LoadPluginFilters(FilterManager* filterManager)
     // We need this because Apple (in their infinite wisdom) changed how the current working directory is set in OS X 10.9 and above. Thanks Apple.
     chdir(aPluginDir.absolutePath().toLatin1().constData());
   }
-
   // aPluginDir.cd("Plugins");
   thePath = aPluginDir.absolutePath() + "/Plugins";
   qDebug() << "  Adding Path " << thePath;
@@ -120,6 +119,14 @@ void DREAM3DPluginLoader::LoadPluginFilters(FilterManager* filterManager)
 #endif
 #else
   // We are on Linux - I think
+  // Try the current location of where the application was launched from
+  if (aPluginDir.cd("Plugins"))
+  {
+    thePath = aPluginDir.absolutePath();
+    m_PluginDirs << thePath;
+  }
+  // Now try moving up a directory which is what should happen when running from a
+  // proper distribution of DREAM3D
   aPluginDir.cdUp();
   if (aPluginDir.cd("plugins"))
   {
@@ -128,12 +135,11 @@ void DREAM3DPluginLoader::LoadPluginFilters(FilterManager* filterManager)
   }
 #endif
 
-
   QStringList pluginFilePaths;
 
   foreach (QString pluginDirString, m_PluginDirs)
   {
-    qDebug() << "Plugin Directory being Searched: " << pluginDirString << "\n";
+    qDebug() << "Plugin Directory being Searched: " << pluginDirString;
     aPluginDir = QDir(pluginDirString);
     foreach (QString fileName, aPluginDir.entryList(QDir::Files))
     {
@@ -158,9 +164,7 @@ void DREAM3DPluginLoader::LoadPluginFilters(FilterManager* filterManager)
   // file system and add each to the toolbar and menu
   foreach(QString path, pluginFilePaths)
   {
-    qDebug() << "Plugin Being Loaded:";
-    qDebug() << "    File Extension: .plugin";
-    qDebug() << "    Path: " << path;
+    qDebug() << "Plugin Being Loaded:" << path;
     QPluginLoader loader(path);
     QFileInfo fi(path);
     QString fileName = fi.fileName();
@@ -168,13 +172,12 @@ void DREAM3DPluginLoader::LoadPluginFilters(FilterManager* filterManager)
     qDebug() << "    Pointer: " << plugin << "\n";
     if (plugin && m_PluginFileNames.contains(fileName, Qt::CaseSensitive) == false)
     {
-      DREAM3DPluginInterface* ipPlugin = qobject_cast<DREAM3DPluginInterface* > (plugin);
+      DREAM3DPluginInterface* ipPlugin = qobject_cast<DREAM3DPluginInterface*>(plugin);
       if (ipPlugin)
       {
         m_LoadedPlugins.push_back(ipPlugin);
         ipPlugin->registerFilters(filterManager);
       }
-
       m_PluginFileNames += fileName;
     }
     else

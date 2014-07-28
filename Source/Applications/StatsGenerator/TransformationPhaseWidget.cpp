@@ -240,23 +240,6 @@ void TransformationPhaseWidget::setupGui()
   connect(m_COverAPlot, SIGNAL(userEditedData()),
           this, SLOT(dataWasEdited()));
 
-  w = m_NeighborPlot;
-  w->setPlotTitle(QString("Neighbors Distributions"));
-  w->setXAxisName(QString("Number of Features (within 1 diameter)"));
-  w->setYAxisName(QString("Frequency"));
-  w->setDistributionType(DREAM3D::DistributionType::LogNormal);
-  w->setStatisticsType(DREAM3D::StatisticsType::Feature_SizeVNeighbors);
-  w->blockDistributionTypeChanges(true);
-  w->setRowOperationEnabled(false);
-  w->setMu(mu);
-  w->setSigma(sigma);
-  w->setMinCutOff(minCutOff);
-  w->setMaxCutOff(maxCutOff);
-  w->setBinStep(binStepSize);
-  connect(m_NeighborPlot, SIGNAL(userEditedData()),
-          this, SLOT(dataWasEdited()));
-
-
   m_SizeDistributionPlot->setCanvasBackground(QColor(Qt::white));
   m_SizeDistributionPlot->setTitle("Size Distribution");
 
@@ -293,7 +276,6 @@ void TransformationPhaseWidget::setPhaseIndex(int index)
   m_Omega3Plot->setPhaseIndex(m_PhaseIndex);
   m_BOverAPlot->setPhaseIndex(m_PhaseIndex);
   m_COverAPlot->setPhaseIndex(m_PhaseIndex);
-  m_NeighborPlot->setPhaseIndex(m_PhaseIndex);
   m_ODFWidget->setPhaseIndex(m_PhaseIndex);
   m_AxisODFWidget->setPhaseIndex(m_PhaseIndex);
 }
@@ -315,7 +297,6 @@ void TransformationPhaseWidget::setCrystalStructure(unsigned int xtal)
   m_Omega3Plot->setCrystalStructure(xtal);
   m_BOverAPlot->setCrystalStructure(xtal);
   m_COverAPlot->setCrystalStructure(xtal);
-  m_NeighborPlot->setCrystalStructure(xtal);
   m_ODFWidget->setCrystalStructure(xtal);
   /* Note that we do NOT want to set the crystal structure for the AxisODF widget
    * because we need that crystal structure to be OrthoRhombic in order for those
@@ -705,9 +686,6 @@ void TransformationPhaseWidget::plotSizeDistribution()
   m_COverAPlot->setSizeDistributionValues(mu, sigma, minCutOff, maxCutOff, stepSize);
   m_MicroPreset->initializeCOverATableModel(m_COverAPlot, binsizes);
 
-  m_NeighborPlot->setSizeDistributionValues(mu, sigma, minCutOff, maxCutOff, stepSize);
-  m_MicroPreset->initializeNeighborTableModel(m_NeighborPlot, binsizes);
-
   // Get any presets for the ODF/AxisODF/MDF also
   m_MicroPreset->initializeODFTableModel(m_ODFWidget);
   m_MicroPreset->initializeAxisODFTableModel(m_AxisODFWidget);
@@ -820,12 +798,6 @@ int TransformationPhaseWidget::gatherStatsData(AttributeMatrix::Pointer attrMat)
       transformationStatsData->setFeatureSize_COverA(data);
       transformationStatsData->setCOverA_DistType(m_COverAPlot->getDistributionType());
     }
-    {
-      VectorOfFloatArray data = m_NeighborPlot->getStatisticsData();
-      transformationStatsData->setFeatureSize_Neighbors(data);
-      transformationStatsData->setNeighbors_DistType(m_NeighborPlot->getDistributionType());
-    }
-
     m_ODFWidget->getOrientationData(transformationStatsData, DREAM3D::PhaseType::TransformationPhase);
 
     err = m_AxisODFWidget->getOrientationData(transformationStatsData, DREAM3D::PhaseType::TransformationPhase);
@@ -872,7 +844,6 @@ void TransformationPhaseWidget::extractStatsData(AttributeMatrix::Pointer attrMa
   m_Omega3Plot->setCrystalStructure(m_CrystalStructure);
   m_BOverAPlot->setCrystalStructure(m_CrystalStructure);
   m_COverAPlot->setCrystalStructure(m_CrystalStructure);
-  m_NeighborPlot->setCrystalStructure(m_CrystalStructure);
   m_ODFWidget->setCrystalStructure(m_CrystalStructure);
 // m_AxisODFWidget->setCrystalStructure(m_CrystalStructure);
 
@@ -936,11 +907,6 @@ void TransformationPhaseWidget::extractStatsData(AttributeMatrix::Pointer attrMa
   m_COverAPlot->setDistributionType(transformationStatsData->getCOverA_DistType(), false);
   m_COverAPlot->extractStatsData(index, qbins, transformationStatsData->getFeatureSize_COverA());
   m_COverAPlot->setSizeDistributionValues(mu, sigma, minCutOff, maxCutOff, binStepSize);
-
-  m_NeighborPlot->setDistributionType(transformationStatsData->getNeighbors_DistType(), false);
-  m_NeighborPlot->extractStatsData(index, qbins, transformationStatsData->getFeatureSize_Neighbors());
-  m_NeighborPlot->setSizeDistributionValues(mu, sigma, minCutOff, maxCutOff, binStepSize);
-
 
   // Set the ODF Data
   m_ODFWidget->extractStatsData(index, transformationStatsData, DREAM3D::PhaseType::TransformationPhase);

@@ -1,6 +1,9 @@
 /*
  * Your License or Copyright Information can go here
  */
+#if (_MSC_VER)
+#define _SCL_SECURE_NO_WARNINGS
+#endif
 
 #include "WriteImage.h"
 
@@ -112,7 +115,7 @@ class WriteImagePrivate
       catch( itk::ExceptionObject & err )
       {
         filter->setErrorCondition(-5);
-        QString ss = QObject::tr("Failed to write image: %1").arg(err.GetDescription());
+        QString ss = QObject::tr("Failed to write image. Error Message returned from ITK:\n   %1").arg(err.GetDescription());
         filter->notifyErrorMessage(filter->getHumanLabel(), ss, filter->getErrorCondition());
       }
     }

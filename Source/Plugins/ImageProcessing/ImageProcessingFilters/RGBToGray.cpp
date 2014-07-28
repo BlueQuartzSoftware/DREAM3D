@@ -1,6 +1,9 @@
 /*
  * Your License or Copyright Information can go here
  */
+#if (_MSC_VER)
+#define _SCL_SECURE_NO_WARNINGS
+#endif
 
 #include "RGBToGray.h"
 
@@ -58,11 +61,11 @@ namespace Functor
  * @brief This is a private implementation for the filter that handles the actual algorithm implementation details
  * for us like figuring out if we can use this private implementation with the data array that is assigned.
  */
-template<typename PixelType>
+template<typename T>
 class RGBToGrayPrivate
 {
   public:
-    typedef DataArray<PixelType> DataArrayType;
+    typedef DataArray<T> DataArrayType;
 
     RGBToGrayPrivate() {}
     virtual ~RGBToGrayPrivate() {}
@@ -83,32 +86,52 @@ class RGBToGrayPrivate
       typename DataArrayType::Pointer inputDataPtr = boost::dynamic_pointer_cast<DataArrayType>(inputIDataArray);
       typename DataArrayType::Pointer outputDataPtr = boost::dynamic_pointer_cast<DataArrayType>(outputIDataArray);
 
-      typedef ITKUtilities<PixelType> ITKUtilitiesType;
 
-      //convert arrays to correct type
-      
-      PixelType* inputData = static_cast<PixelType*>(inputDataPtr->getPointer(0));
-      PixelType* outputData = static_cast<PixelType*>(outputDataPtr->getPointer(0));
+
+      // Get the Raw Pointer to the Allocated Memory region (array) for the input and output arrays
+      T* inputData = static_cast<T*>(inputDataPtr->getPointer(0));
+      T* outputData = static_cast<T*>(outputDataPtr->getPointer(0));
 
       size_t numVoxels = inputDataPtr->getNumberOfTuples();
 
       //set weighting
-      double mag = weights.x+weights.y+weights.z;
+      double mag = weights.x + weights.y + weights.z;
+
+      // Define all the typedefs that are needed
+      typedef ITKUtilities<T>                                           ITKUtilitiesType;
+      typedef typename ITKUtilitiesType::RGBImageType                   RGBImageType;
+      typedef typename RGBImageType::Pointer                            RGBImagePointerType;
+      typedef typename RGBImageType::PixelType                          RGBImagePixelType;
+      typedef typename ITKUtilitiesType::ScalarImageType                ScalarImageType;
+      typedef typename ScalarImageType::PixelType                       ScalarImagePixelType;
+      //define Fucntor Typedef
+      typedef Functor::Luminance<RGBImagePixelType, ScalarImagePixelType>                       LuminanceFunctorType;
+      //define filters typedef
+      typedef itk::UnaryFunctorImageFilter<RGBImageType, ScalarImageType, LuminanceFunctorType> RGBToGrayType;
+
 
       //wrap input as itk image
-      typename ITKUtilitiesType::RGBImageType::Pointer inputImage = ITKUtilitiesType::Dream3DtoITKTemplate<ITKUtilitiesType::RGBImageType>(m, attrMatName, inputData);
+      RGBImagePointerType inputImage
+                        = ITKUtilitiesType::template Dream3DtoITKTemplate<RGBImageType>(m, attrMatName, inputData);
 
-      //define filters
-      typedef itk::UnaryFunctorImageFilter< ITKUtilitiesType::RGBImageType, ITKUtilitiesType::ScalarImageType, Functor::Luminance<ITKUtilitiesType::RGBImageType::PixelType, ITKUtilitiesType::ScalarImageType::PixelType> > RGBToGrayType;
-  
       //convert to gray
-      typename RGBToGrayType::Pointer rgbToGray = RGBToGrayType::New();
-      rgbToGray->GetFunctor().SetRWeight(weights.x/mag);
-      rgbToGray->GetFunctor().SetGWeight(weights.y/mag);
-      rgbToGray->GetFunctor().SetBWeight(weights.z/mag);
-      rgbToGray->SetInput(inputImage);
-      rgbToGray->GetOutput()->GetPixelContainer()->SetImportPointer(outputData, numVoxels, false);
-      rgbToGray->Update();
+      typename RGBToGrayType::Pointer itkFilter = RGBToGrayType::New();
+      itkFilter->GetFunctor().SetRWeight(weights.x/mag);
+      itkFilter->GetFunctor().SetGWeight(weights.y/mag);
+      itkFilter->GetFunctor().SetBWeight(weights.z/mag);
+      itkFilter->SetInput(inputImage);
+      itkFilter->GetOutput()->GetPixelContainer()->SetImportPointer(outputData, numVoxels, false);
+      try
+      {
+        itkFilter->Update();
+      }
+      catch( itk::ExceptionObject & err )
+      {
+        filter->setErrorCondition(-5);
+        QString ss = QObject::tr("Failed to convert image. Error Message returned from ITK:\n   %1").arg(err.GetDescription());
+        filter->notifyErrorMessage(filter->getHumanLabel(), ss, filter->getErrorCondition());
+      }
+
     }
   private:
     RGBToGrayPrivate(const RGBToGrayPrivate&); // Copy Constructor Not Implemented

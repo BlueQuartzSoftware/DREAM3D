@@ -292,8 +292,8 @@ class DREAM3D_UI : public QMainWindow, private Ui::DREAM3D_UI
     QSharedPointer<UpdateCheck>   m_UpdateCheck;
 
     QThread*                    m_UpdateCheckThread;
-    FilterManager::Pointer      m_FilterManager;
-    FilterWidgetManager::Pointer m_FilterWidgetManager;
+    FilterManager*      m_FilterManager;
+    FilterWidgetManager*  m_FilterWidgetManager;
 
     FilterPipeline::Pointer      m_PipelineInFlight;
 
