@@ -55,6 +55,8 @@ class ReadImagePrivate
       imageIO->ReadImageInformation();
       itk::ImageIOBase::IOPixelType pixelType = imageIO->GetPixelType();
 
+      itk::ProcessObject::Pointer readerObject;
+
       //read based on pixel type
       switch(pixelType)
       {
@@ -65,7 +67,7 @@ class ReadImagePrivate
           typename ReaderType::Pointer reader = ReaderType::New();
           reader->SetFileName(inputFile.toLocal8Bit().constData());
           reader->GetOutput()->GetPixelContainer()->SetImportPointer(outputData, numVoxels, false);
-          reader->Update();
+          readerObject=reader;
         }
         break;
 
@@ -76,7 +78,7 @@ class ReadImagePrivate
           typename ReaderType::Pointer reader = ReaderType::New();
           reader->SetFileName(inputFile.toLocal8Bit().constData());
           reader->GetOutput()->GetPixelContainer()->SetImportPointer(reinterpret_cast<itk::RGBPixel<PixelType>*>(outputData), numVoxels, false);
-          reader->Update();
+          readerObject=reader;
         }
         break;
 
@@ -87,18 +89,18 @@ class ReadImagePrivate
           typename ReaderType::Pointer reader = ReaderType::New();
           reader->SetFileName(inputFile.toLocal8Bit().constData());
           reader->GetOutput()->GetPixelContainer()->SetImportPointer(reinterpret_cast<itk::RGBAPixel<PixelType>*>(outputData), numVoxels, false);
-          reader->Update();
+          readerObject=reader;
         }
         break;
         /**
-        case itk::ImageIOBase::VECTOR:
+        case itk::ImageIOBase::FIXEDARRAY:
           {
             typedef itk::VectorImage<PixelType>, ImageProcessing::ImageDimension> ImageType;
             typedef itk::ImageFileReader<ImageType> ReaderType;
             typename ReaderType::Pointer reader = ReaderType::New();
             reader->SetFileName(inputFile.toLocal8Bit().constData());
             reader->GetOutput()->GetPixelContainer()->SetImportPointer(outputData, numVoxels, false);
-            reader->Update();
+            readerObject=reader;
           }break;
           */
         case itk::ImageIOBase::UNKNOWNPIXELTYPE:
@@ -117,6 +119,17 @@ class ReadImagePrivate
           QString message = QObject::tr("Unable to read image '%1'").arg(filter->getInputFileName());
           filter->notifyErrorMessage(filter->getHumanLabel(), message, filter->getErrorCondition());
           outputIDataArray->resize(0);
+      }
+
+      try
+      {
+        readerObject->Update();
+      }
+      catch( itk::ExceptionObject & err )
+      {
+        filter->setErrorCondition(-5);
+        QString ss = QObject::tr("Failed to read image '%1': %2").arg(inputFile).arg(err.GetDescription());
+        filter->notifyErrorMessage(filter->getHumanLabel(), ss, filter->getErrorCondition());
       }
     }
   private:

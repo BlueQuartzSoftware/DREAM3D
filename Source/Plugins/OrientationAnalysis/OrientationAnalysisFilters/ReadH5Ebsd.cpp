@@ -602,7 +602,7 @@ void ReadH5Ebsd::execute()
       sampleAxis.y = m_SampleTransformation.k;
       sampleAxis.z = m_SampleTransformation.l;
       QString filtName = "RotateSampleRefFrame";
-      FilterManager::Pointer fm = FilterManager::Instance();
+      FilterManager* fm = FilterManager::Instance();
       IFilterFactory::Pointer rotSampleFactory = fm->getFactoryForFilter(filtName);
       if (NULL != rotSampleFactory.get() )
       {
@@ -653,7 +653,7 @@ void ReadH5Ebsd::execute()
       eulerAxis.z = m_EulerTransformation.l;
 
       QString filtName = "RotateEulerRefFrame";
-      FilterManager::Pointer fm = FilterManager::Instance();
+      FilterManager* fm = FilterManager::Instance();
       IFilterFactory::Pointer rotSampleFactory = fm->getFactoryForFilter(filtName);
       if (NULL != rotSampleFactory.get() )
       {

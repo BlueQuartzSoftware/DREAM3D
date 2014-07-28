@@ -194,7 +194,7 @@ void PipelineFilterWidget::layoutWidgets()
   filterName->setText(m_Filter->getHumanLabel() );
 
   // Get the FilterWidgetManagere instance so we can instantiate new FilterParameterWidgets
-  FilterWidgetManager::Pointer fwm = FilterWidgetManager::Instance();
+  FilterWidgetManager*  fwm = FilterWidgetManager::Instance();
   // Get a list of all the filterParameters from the filter.
   QVector<FilterParameter::Pointer> filterParameters = m_Filter->getFilterParameters();
   // Create all the FilterParameterWidget objects that can be displayed where ever the developer needs

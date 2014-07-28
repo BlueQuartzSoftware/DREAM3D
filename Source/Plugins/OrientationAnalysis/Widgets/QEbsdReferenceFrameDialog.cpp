@@ -290,7 +290,7 @@ void QEbsdReferenceFrameDialog::loadEbsdData()
   if(degToRads->isChecked() == true)
   {
     QString filtName = "ConvertEulerAngles";
-    FilterManager::Pointer fm = FilterManager::Instance();
+    FilterManager* fm = FilterManager::Instance();
     IFilterFactory::Pointer convertEulerFactory = fm->getFactoryForFilter(filtName);
     if (NULL != convertEulerFactory.get() )
     {

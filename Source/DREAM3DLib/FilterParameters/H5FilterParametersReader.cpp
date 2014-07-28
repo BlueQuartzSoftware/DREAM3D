@@ -118,7 +118,7 @@ FilterPipeline::Pointer H5FilterParametersReader::ReadPipelineFromFile(QString f
   reader->setPipelineGroupId(pipelineGroupId);
 
   // Get a FilterManager Instance
-  FilterManager::Pointer filterManager = FilterManager::Instance();
+  FilterManager* filterManager = FilterManager::Instance();
 
   // Create a FilterPipeline Object
   FilterPipeline::Pointer pipeline = FilterPipeline::New();

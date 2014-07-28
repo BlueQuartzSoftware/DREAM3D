@@ -79,7 +79,7 @@ void FilterLibraryDockWidget::connectFilterList(FilterListDockWidget* filterList
 // -----------------------------------------------------------------------------
 void FilterLibraryDockWidget::refreshFilterGroups()
 {
-  FilterManager::Pointer fm = FilterManager::Instance();
+  FilterManager* fm = FilterManager::Instance();
   QSet<QString> grpNames = fm->getGroupNames();
 
   QList<QString> grpNameSorted = grpNames.toList();
@@ -156,7 +156,7 @@ void FilterLibraryDockWidget::on_filterLibraryTree_itemChanged( QTreeWidgetItem*
 void FilterLibraryDockWidget::on_filterLibraryTree_currentItemChanged(QTreeWidgetItem* item, QTreeWidgetItem* previous )
 {
   // Get the PipelineFilterWidget Manager Instance
-  FilterManager::Pointer fm = FilterManager::Instance();
+  FilterManager* fm = FilterManager::Instance();
   FilterManager::Collection factories;
 
   //If the user clicks on Detail::Library, display all

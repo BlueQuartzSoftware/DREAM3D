@@ -51,6 +51,8 @@ class WriteImagePrivate
       QVector<size_t> dims = inputDataPtr->getComponentDimensions();
       int numComp = dims[0];
 
+      itk::ProcessObject::Pointer writerObject;
+
       if(1 == numComp) //scalar image
       {
         //define types and wrap input image
@@ -62,7 +64,7 @@ class WriteImagePrivate
         typename WriterType::Pointer writer = WriterType::New();
         writer->SetFileName( outputFile.toLatin1().constData() );
         writer->SetInput( inputImage );
-        writer->Update();
+        writerObject = writer;
       }
       else if(3 == numComp)//rgb image
       {
@@ -75,7 +77,7 @@ class WriteImagePrivate
         typename WriterType::Pointer writer = WriterType::New();
         writer->SetFileName( outputFile.toLatin1().constData() );
         writer->SetInput( inputImage );
-        writer->Update();
+        writerObject = writer;
       }
       else if(4 == numComp)//rgba image
       {
@@ -88,7 +90,7 @@ class WriteImagePrivate
         typename WriterType::Pointer writer = WriterType::New();
         writer->SetFileName( outputFile.toLatin1().constData() );
         writer->SetInput( inputImage );
-        writer->Update();
+        writerObject = writer;
       } /** else//vector image
       {
         //define types and wrap input image
@@ -100,8 +102,19 @@ class WriteImagePrivate
         typename WriterType::Pointer writer = WriterType::New();
         writer->SetFileName( outputFile.toLatin1().constData() );
         writer->SetInput( inputImage );
-        writer->Update();
+        writerObject = writer;
       }*/
+
+      try
+      {
+        writerObject->Update();
+      }
+      catch( itk::ExceptionObject & err )
+      {
+        filter->setErrorCondition(-5);
+        QString ss = QObject::tr("Failed to write image. Error Message returned from ITK:\n   %1").arg(err.GetDescription());
+        filter->notifyErrorMessage(filter->getHumanLabel(), ss, filter->getErrorCondition());
+      }
     }
   private:
     WriteImagePrivate(const WriteImagePrivate&); // Copy Constructor Not Implemented

@@ -51,6 +51,11 @@ class PipelineFilterWidgetFactory : public IFilterWidgetFactory
     DREAM3D_TYPE_MACRO_SUPER(PipelineFilterWidgetFactory<Widget>, IFilterWidgetFactory)
     DREAM3D_STATIC_NEW_MACRO(PipelineFilterWidgetFactory<Widget>)
 
+    virtual ~PipelineFilterWidgetFactory()
+    {
+      qDebug() << "~PipelineFilterWidgetFactory()" << this;
+    }
+
     /**
      * @brief Creates a new widget for this filter. The Calling method MUST set
      * a parent Widget OR take responsibility for deleting this object.
@@ -66,9 +71,6 @@ class PipelineFilterWidgetFactory : public IFilterWidgetFactory
     PipelineFilterWidgetFactory() {}
 
   private:
-
-
-
     PipelineFilterWidgetFactory(const PipelineFilterWidgetFactory&); // Copy Constructor Not Implemented
     void operator=(const PipelineFilterWidgetFactory&); // Operator '=' Not Implemented
 };

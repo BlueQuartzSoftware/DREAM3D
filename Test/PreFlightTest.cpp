@@ -138,7 +138,7 @@ void GenerateCopyCode()
 {
   qDebug() << "-------------- GenerateCopyCode ------------------------------";
 
-  FilterManager::Pointer fm = FilterManager::Instance();
+  FilterManager* fm = FilterManager::Instance();
   //QByteArray normType = ("updateFilterParameters(AbstractFilter*)");
   FilterManager::Collection factories = fm->getFactories();
   QMapIterator<QString, IFilterFactory::Pointer> iter(factories);
@@ -204,7 +204,7 @@ void verifyFilterParameters()
 {
   qDebug() << "-------------- verifyFilterParameters ------------------------------";
 
-  FilterManager::Pointer fm = FilterManager::Instance();
+  FilterManager* fm = FilterManager::Instance();
   //QByteArray normType = ("updateFilterParameters(AbstractFilter*)");
   FilterManager::Collection factories = fm->getFactories();
   QMapIterator<QString, IFilterFactory::Pointer> iter(factories);
@@ -244,7 +244,7 @@ void verifySignals()
 {
   qDebug() << "-------------- verifySignals ------------------------------";
 
-  FilterManager::Pointer fm = FilterManager::Instance();
+  FilterManager* fm = FilterManager::Instance();
   QByteArray normType = ("updateFilterParameters(AbstractFilter*)");
   FilterManager::Collection factories = fm->getFactories();
   QMapIterator<QString, IFilterFactory::Pointer> iter(factories);
@@ -272,7 +272,7 @@ void verifySignals()
 void verifyPreflightEmitsProperly()
 {
   qDebug() << "-------------- verifyPreflightEmitsProperly ------------------------------";
-  FilterManager::Pointer fm = FilterManager::Instance();
+  FilterManager* fm = FilterManager::Instance();
   FilterManager::Collection factories = fm->getFactories();
   QMapIterator<QString, IFilterFactory::Pointer> iter(factories);
 
@@ -312,7 +312,7 @@ void verifyPreflightEmitsProperly()
 void TestPreflight()
 {
   qDebug() << "-------------- TestPreflight ------------------------------";
-  FilterManager::Pointer fm = FilterManager::Instance();
+  FilterManager* fm = FilterManager::Instance();
 
   FilterManager::Collection factories = fm->getFactories();
   FilterManager::Collection::const_iterator factoryMapIter = factories.constBegin();
@@ -339,7 +339,7 @@ void TestPreflight()
 // -----------------------------------------------------------------------------
 void TestNewInstanceAvailable()
 {
-  FilterManager::Pointer fm = FilterManager::Instance();
+  FilterManager* fm = FilterManager::Instance();
   QByteArray normType = ("updateFilterParameters(AbstractFilter*)");
   FilterManager::Collection factories = fm->getFactories();
   QMapIterator<QString, IFilterFactory::Pointer> iter(factories);
@@ -373,12 +373,12 @@ int main(int argc, char** argv)
 
   // Load all the plugins and
   // Register all the filters including trying to load those from Plugins
-  FilterManager::Pointer fm = FilterManager::Instance();
-  DREAM3DPluginLoader::LoadPluginFilters(fm.get());
+  FilterManager* fm = FilterManager::Instance();
+  DREAM3DPluginLoader::LoadPluginFilters(fm);
   // THIS IS A VERY IMPORTANT LINE: It will register all the known filters in the dream3d library. This
   // will NOT however get filters from plugins. We are going to have to figure out how to compile filters
   // into their own plugin and load the plugins from a command line.
-  fm->RegisterKnownFilters(fm.get());
+  fm->RegisterKnownFilters(fm);
 
   QMetaObjectUtilities::RegisterMetaTypes();
 
