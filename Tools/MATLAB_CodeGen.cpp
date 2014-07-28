@@ -73,8 +73,9 @@ void GenerateCodeForFilter(const QString &outDir, AbstractFilter::Pointer filter
 
   QVector<FilterParameter::Pointer> options = filter->getFilterParameters();
 
-  out << "Filter_Class_Name=" << filterClassName << '\n';
+  out << "function [ Filter_Parts ] = " << filterClassName << '\n';
 
+  int i = 1;
   for (QVector<FilterParameter::Pointer>::iterator iter = options.begin(); iter != options.end(); ++iter )
   {
     FilterParameter* option = (*iter).get();
@@ -84,11 +85,12 @@ void GenerateCodeForFilter(const QString &outDir, AbstractFilter::Pointer filter
         || option->getWidgetType().compare(FilterParameterWidgetType::SeparatorWidget) == 0)
     { continue; }
 
-    // Joe, This is the code you will need to modify to output something that is valid
-    // MATLAB code and in some format that is easily used in MATLAB
-    out << "Property=" << option->getPropertyName() << " Type=" << option->getWidgetType() << '\n';
-
+	out << "Filter_Parts{1}{" << i << "} = '" << option->getPropertyName() << "';\n" 
+	  << "Filter_Parts{2}{" << i << "} = '" << option->getWidgetType() << "';\n";
+	++i;
   }
+
+  out << "end";
 
   f.close();
 }
