@@ -115,6 +115,12 @@ class DREAM3DLib_EXPORT GenericExample : public AbstractFilter
     DREAM3D_FILTER_PARAMETER(DataArrayPath, CreatedDataArray)
     Q_PROPERTY(DataArrayPath CreatedDataArray READ getCreatedDataArray WRITE setCreatedDataArray)
 
+    DREAM3D_FILTER_PARAMETER(bool, Bool1)
+    Q_PROPERTY(bool Bool1 READ getBool1 WRITE setBool1)
+
+    DREAM3D_FILTER_PARAMETER(bool, Bool2)
+    Q_PROPERTY(bool Bool2 READ getBool2 WRITE setBool2)
+
     virtual const QString getCompiledLibraryName();
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName();

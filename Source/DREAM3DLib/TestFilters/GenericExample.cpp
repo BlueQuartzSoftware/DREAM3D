@@ -57,7 +57,9 @@ GenericExample::GenericExample() :
   m_FeatureIdsArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, "Garbly Gook"),
   m_AttributeMatrixPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::NewCellFeatureAttributeMatrixName, ""),
   m_DataContainerName(DREAM3D::Defaults::StatsGenerator),
-  m_CreatedDataArray(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::EulerColor)
+  m_CreatedDataArray(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::EulerColor),
+  m_Bool1(false),
+  m_Bool2(false)
 {
   m_Dimensions.x = 0;
   m_Dimensions.y = 0;
@@ -135,8 +137,19 @@ void GenericExample::setupFilterParameters()
 
   parameters.push_back(FilterParameter::New("Data Container", "DataContainerName", FilterParameterWidgetType::DataContainerSelectionWidget, getDataContainerName(), false, ""));
 
-  parameters.push_back(FilterParameter::New("New Data", "CreatedDataArray", FilterParameterWidgetType::DataArrayCreationWidget, getCreatedDataArray(), false, ""));
+  {
+    QStringList linkedProps;
+    linkedProps << "Bool2";
+    parameters.push_back(FilterParameter::NewConditional("Bool1", "Bool1", FilterParameterWidgetType::LinkedBooleanWidget, getBool1(), false, linkedProps));
+  }
 
+  {
+    QStringList linkedProps;
+    linkedProps << "CreatedDataArray";
+    parameters.push_back(FilterParameter::NewConditional("Bool2", "Bool2", FilterParameterWidgetType::LinkedBooleanWidget, getBool2(), false, linkedProps));
+  }
+
+  parameters.push_back(FilterParameter::New("CreatedDataArray", "CreatedDataArray", FilterParameterWidgetType::DataArrayCreationWidget, getCreatedDataArray(), false, ""));
 
   setFilterParameters(parameters);
 }
@@ -172,24 +185,24 @@ int GenericExample::writeFilterParameters(AbstractFilterParametersWriter* writer
   writer->openFilterGroup(this, index);
 
   DREAM3D_FILTER_WRITE_PARAMETER(FeatureIdsArrayPath)
-  /* Place code that will write the inputs values into a file. reference the
-   AbstractFilterParametersWriter class for the proper API to use. */
-  DREAM3D_FILTER_WRITE_PARAMETER(StlFilePrefix)
-  DREAM3D_FILTER_WRITE_PARAMETER(MaxIterations)
-  DREAM3D_FILTER_WRITE_PARAMETER(MisorientationTolerance)
-  DREAM3D_FILTER_WRITE_PARAMETER(InputFile)
-  DREAM3D_FILTER_WRITE_PARAMETER(InputPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(OutputFile)
-  DREAM3D_FILTER_WRITE_PARAMETER(OutputPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(WriteAlignmentShifts)
-  DREAM3D_FILTER_WRITE_PARAMETER(ConversionType)
-  DREAM3D_FILTER_WRITE_PARAMETER(Dimensions)
-  DREAM3D_FILTER_WRITE_PARAMETER(Origin)
-  DREAM3D_FILTER_WRITE_PARAMETER(CrystalSymmetryRotations)
+      /* Place code that will write the inputs values into a file. reference the
+       AbstractFilterParametersWriter class for the proper API to use. */
+      DREAM3D_FILTER_WRITE_PARAMETER(StlFilePrefix)
+      DREAM3D_FILTER_WRITE_PARAMETER(MaxIterations)
+      DREAM3D_FILTER_WRITE_PARAMETER(MisorientationTolerance)
+      DREAM3D_FILTER_WRITE_PARAMETER(InputFile)
+      DREAM3D_FILTER_WRITE_PARAMETER(InputPath)
+      DREAM3D_FILTER_WRITE_PARAMETER(OutputFile)
+      DREAM3D_FILTER_WRITE_PARAMETER(OutputPath)
+      DREAM3D_FILTER_WRITE_PARAMETER(WriteAlignmentShifts)
+      DREAM3D_FILTER_WRITE_PARAMETER(ConversionType)
+      DREAM3D_FILTER_WRITE_PARAMETER(Dimensions)
+      DREAM3D_FILTER_WRITE_PARAMETER(Origin)
+      DREAM3D_FILTER_WRITE_PARAMETER(CrystalSymmetryRotations)
 
 
 
-  writer->closeFilterGroup();
+      writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
 

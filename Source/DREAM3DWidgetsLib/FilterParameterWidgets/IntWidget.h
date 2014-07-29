@@ -37,20 +37,14 @@
 #define _IntWidget_H_
 
 
-
-
 #include <QtCore/QObject>
 #include <QtCore/QPointer>
 #include <QtGui/QWidget>
 
-
 #include "QtSupport/FaderWidget.h"
 
-
 #include "DREAM3DLib/Common/AbstractFilter.h"
-
 #include "DREAM3DWidgetsLib/DREAM3DWidgetsLib.h"
-
 #include "DREAM3DWidgetsLib/ui_IntWidget.h"
 
 
