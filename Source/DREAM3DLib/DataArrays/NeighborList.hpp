@@ -397,12 +397,16 @@ class NeighborList : public IDataArray
       return 0;
     }
 
-
+    /**
+     * @brief reorderCopy
+     * @param newOrderMap
+     * @return
+     */
     virtual IDataArray::Pointer reorderCopy(QVector<size_t> newOrderMap)
     {
       if(newOrderMap.size()!=getNumberOfTuples())
       {
-        return NULL;
+        return IDataArray::NullPointer();
       }
 
       typename NeighborList<T>::Pointer daCopyPtr = NeighborList<T>::CreateArray(getNumberOfTuples(), "Copy of NeighborList", true);

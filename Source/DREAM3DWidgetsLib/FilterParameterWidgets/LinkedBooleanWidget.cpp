@@ -37,6 +37,7 @@
 
 #include <QtCore/QMetaProperty>
 
+#include "DREAM3DWidgetsLib/DREAM3DWidgetsLibConstants.h"
 
 #include "FilterParameterWidgetsDialogs.h"
 
@@ -167,3 +168,45 @@ void LinkedBooleanWidget::afterPreflight()
 {
 
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void LinkedBooleanWidget::setLinkedConditionalState(int state)
+{
+  bool boolProp = (state == Qt::Checked);
+  fadeWidget(this, boolProp);
+  widgetChanged(value->checkState());
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void LinkedBooleanWidget::fadeWidget(QWidget* widget, bool in)
+{
+
+  if (faderWidget)
+  {
+    faderWidget->close();
+  }
+  faderWidget = new FaderWidget(widget);
+  if(in)
+  {
+    setVisible(true);
+    faderWidget->setFadeIn();
+    connect(faderWidget, SIGNAL(animationComplete() ),
+            this, SLOT(show()));
+  }
+  else
+  {
+    faderWidget->setFadeOut();
+    connect(faderWidget, SIGNAL(animationComplete() ),
+            this, SLOT(hide()));
+  }
+  QColor color = DREAM3D::Defaults::BasicColor;
+  if(m_FilterParameter->getAdvanced()) { color = DREAM3D::Defaults::AdvancedColor; }
+  faderWidget->setStartColor(color);
+  faderWidget->start();
+}
+
+

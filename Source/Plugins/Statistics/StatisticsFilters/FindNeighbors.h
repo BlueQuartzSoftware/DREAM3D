@@ -48,7 +48,7 @@
 #include "DREAM3DLib/DataContainers/VolumeDataContainer.h"
 #include "DREAM3DLib/DataArrays/NeighborList.hpp"
 
-#include "Statistics/StatisticsConstants.h"
+
 /**
  * @class FindNeighbors FindNeighbors.h DREAM3DLib/GenericFilters/FindNeighbors.h
  * @brief

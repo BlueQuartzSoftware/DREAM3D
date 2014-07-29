@@ -404,10 +404,10 @@ class StructArray : public IDataArray
     }
 
     virtual IDataArray::Pointer reorderCopy(QVector<size_t> newOrderMap)
-    {      
+    {
       if(newOrderMap.size()!=getNumberOfTuples())
       {
-        return NULL;
+        return IDataArray::NullPointer();
       }
       IDataArray::Pointer daCopy = createNewArray(getNumberOfTuples(), getComponentDimensions(), getName(), m_IsAllocated);
       daCopy->initializeWithZeros();
