@@ -1,6 +1,9 @@
 /*
  * Your License or Copyright Information can go here
  */
+#if (_MSC_VER)
+#define _SCL_SECURE_NO_WARNINGS
+#endif
 
 #include "MeanKernel.h"
 
@@ -8,6 +11,7 @@
 
 #include "ITKUtilities.h"
 #include "itkMeanImageFilter.h"
+#include "itkRescaleIntensityImageFilter.h"
 
 //// Setup some typedef 's for the ITKUtilities class to shorten up our code
 typedef ITKUtilities<ImageProcessing::DefaultPixelType>    ITKUtilitiesType;
@@ -135,22 +139,31 @@ void MeanKernel::execute()
   ImageProcessing::DefaultImageType::Pointer inputImage = ITKUtilitiesType::Dream3DtoITK(m, attrMatName, m_SelectedCellArray);
 
   //create edge filter
-  typedef itk::MeanImageFilter < ImageProcessing::DefaultImageType,  ImageProcessing::DefaultImageType > MeanFilterType;
-  MeanFilterType::Pointer medianFilter = MeanFilterType::New();
-  medianFilter->SetInput(inputImage);
+  typedef itk::MeanImageFilter<ImageProcessing::DefaultImageType, ImageProcessing::FloatImageType> MeanFilterType;
+  MeanFilterType::Pointer meanFilter = MeanFilterType::New();
+  meanFilter->SetInput(inputImage);
 
   //set kernel size
   MeanFilterType::InputSizeType radius;
   radius[0] = m_KernelSize.x;
   radius[1] = m_KernelSize.y;
   radius[2] = m_KernelSize.z;
-  medianFilter->SetRadius(radius);
+  meanFilter->SetRadius(radius);
+
+  //convert result back to uint8
+  typedef itk::RescaleIntensityImageFilter<ImageProcessing::FloatImageType, ImageProcessing::DefaultImageType> RescaleImageType;
+  RescaleImageType::Pointer rescaleFilter = RescaleImageType::New();
+  rescaleFilter->SetInput(meanFilter->GetOutput());
+  rescaleFilter->SetOutputMinimum(0);
+  rescaleFilter->SetOutputMaximum(255);
+
 
   //have filter write to dream3d array instead of creating its own buffer
-  ITKUtilitiesType::SetITKOutput(medianFilter->GetOutput(), m_NewCellArrayPtr.lock());
+  ITKUtilitiesType::SetITKFilterOutput(rescaleFilter->GetOutput(), m_NewCellArrayPtr.lock());
 
-  //execute filter
-  medianFilter->Update();
+  //execute filters
+  meanFilter->Update();
+  rescaleFilter->Update();
 
   //array name changing/cleanup
   if(m_SaveAsNewArray == false)
@@ -159,6 +172,7 @@ void MeanKernel::execute()
     attrMat->removeAttributeArray(m_SelectedCellArrayPath.getDataArrayName());
     attrMat->renameAttributeArray(m_NewCellArrayName, m_SelectedCellArrayPath.getDataArrayName());
   }
+
 
   /* Let the GUI know we are done with this filter */
   notifyStatusMessage(getHumanLabel(), "Complete");

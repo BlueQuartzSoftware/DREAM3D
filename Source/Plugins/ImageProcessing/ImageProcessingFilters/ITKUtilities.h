@@ -40,6 +40,9 @@ class ITKUtilities
 
     //define image and iterator types
 
+    typedef typename DataArray<ComponentType>                                                         DataArrayType;
+    typedef typename DataArrayType::Pointer                                                           DataArrayPointerType;
+
     typedef typename itk::Image<ComponentType, ImageProcessing::ImageDimension>                       ScalarImageType;  // 3D Scalar Image
     typedef typename itk::Image<itk::RGBPixel<ComponentType>, ImageProcessing::ImageDimension>        RGBImageType;  // 3D RGB Image
     typedef typename itk::Image<itk::RGBAPixel<ComponentType>, ImageProcessing::ImageDimension>       RGBAImageType;  // 3D RGBA Image
@@ -138,12 +141,22 @@ class ITKUtilities
      * @param output
      * @param totalPoints
      */
-    static void SetITKOutput(typename ScalarImageType::Pointer image, typename DataArray<ComponentType>::Pointer array) // * output, const unsigned int totalPoints)
+    static void SetITKFilterOutput(typename ScalarImageType::Pointer image, typename DataArrayPointerType d3dData) // * output, const unsigned int totalPoints)
     {
-      const bool filterWillDeleteTheInputBuffer = false;
-      image->GetPixelContainer()->SetImportPointer(array->getPointer(0), array->getNumberOfTuples(), filterWillDeleteTheInputBuffer);
+      const bool filterDeletesData = false;
+      ComponentType* data = d3dData->getPointer(0);
+      size_t numTuples = d3dData->getNumberOfTuples();
+      image->GetPixelContainer()->SetImportPointer(data, numTuples, filterDeletesData);
     }
 
+    template<typename T>
+    static void SetITKFilterOutput2(typename ScalarImageType::Pointer itkImage, typename DataArray<T>::Pointer d3dData)
+    {
+      const bool filterDeletesData = false;
+      ComponentType* data = d3dData->getPointer(0);
+      size_t numTuples = d3dData->getNumberOfTuples();
+      image->GetPixelContainer()->SetImportPointer(data, numTuples, filterDeletesData);
+    }
     /**
      * @brief CopyITKtoDream3D copy itk image to dream3d array
      * @param image

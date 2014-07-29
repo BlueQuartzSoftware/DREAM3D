@@ -294,6 +294,21 @@ class StringDataArray : public IDataArray
       return 0;
     }
 
+    virtual IDataArray::Pointer reorderCopy(QVector<size_t> newOrderMap)
+    {
+      if(newOrderMap.size()!=getNumberOfTuples())
+      {
+        return NULL;
+      }
+      StringDataArray::Pointer daCopy = StringDataArray::CreateArray(getNumberOfTuples(), getName());
+      daCopy->initializeWithZeros();
+      for(QVector<QString>::size_type i = 0; i < m_Array.size(); ++i)
+      {
+        daCopy->setValue(newOrderMap[i], m_Array[i]);
+      }
+      return daCopy;
+    }
+
     /**
      * @brief Does Nothing
      * @param pos The index of the Tuple

@@ -397,6 +397,26 @@ class NeighborList : public IDataArray
       return 0;
     }
 
+
+    virtual IDataArray::Pointer reorderCopy(QVector<size_t> newOrderMap)
+    {
+      if(newOrderMap.size()!=getNumberOfTuples())
+      {
+        return NULL;
+      }
+
+      typename NeighborList<T>::Pointer daCopyPtr = NeighborList<T>::CreateArray(getNumberOfTuples(), "Copy of NeighborList", true);
+      daCopyPtr->initializeWithZeros();
+      for(size_t i = 0; i < getNumberOfTuples(); i++)
+      {
+        typename NeighborList<T>::SharedVectorType sharedNeiLst(new std::vector<T>);
+        sharedNeiLst = m_Array[i];
+        daCopyPtr->setList(newOrderMap[i], sharedNeiLst);
+      }
+
+      return daCopyPtr;
+    }
+
     /**
      * @brief Splats the same value c across all values in the Tuple
      * @param i The index of the Tuple

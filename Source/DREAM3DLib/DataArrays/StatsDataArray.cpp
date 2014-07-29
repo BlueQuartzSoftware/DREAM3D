@@ -215,6 +215,27 @@ int StatsDataArray::copyTuple(size_t currentPos, size_t newPos)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+IDataArray::Pointer StatsDataArray::reorderCopy(QVector<size_t> newOrderMap)
+{
+  if(newOrderMap.size()!=getNumberOfTuples())
+  {
+    return NULL;
+  }
+  StatsDataArray::Pointer daCopyPtr = StatsDataArray::New();
+  daCopyPtr->resize(getNumberOfTuples());
+  daCopyPtr->initializeWithZeros();
+  StatsDataArray& daCopy = *daCopyPtr;
+  for(size_t i = 0; i < getNumberOfTuples(); i++)
+  {
+    daCopy[newOrderMap[i]] = m_StatsDataArray[i];
+  }
+
+  return daCopyPtr;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void StatsDataArray::initializeTuple(size_t i, double p)
 {
   BOOST_ASSERT(false);

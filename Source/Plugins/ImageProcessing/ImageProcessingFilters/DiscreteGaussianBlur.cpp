@@ -1,6 +1,9 @@
 /*
  * Your License or Copyright Information can go here
  */
+#if (_MSC_VER)
+#define _SCL_SECURE_NO_WARNINGS
+#endif
 
 #include "DiscreteGaussianBlur.h"
 
@@ -8,6 +11,8 @@
 
 #include "ITKUtilities.h"
 #include "itkDiscreteGaussianImageFilter.h"
+#include "itkRescaleIntensityImageFilter.h"
+
 
 //// Setup some typedef 's for the ITKUtilities class to shorten up our code
 typedef ITKUtilities<ImageProcessing::DefaultPixelType>    ITKUtilitiesType;
@@ -128,17 +133,26 @@ void DiscreteGaussianBlur::execute()
   //wrap m_RawImageData as itk::image
   ImageProcessing::DefaultImageType::Pointer inputImage = ITKUtilitiesType::Dream3DtoITK(m, attrMatName, m_SelectedCellArray);
 
-  //create guassian blur filter
-  typedef itk::DiscreteGaussianImageFilter< ImageProcessing::DefaultImageType,  ImageProcessing::DefaultImageType > GaussianFilterType;
+  //create Gaussian blur filter
+  typedef itk::DiscreteGaussianImageFilter< ImageProcessing::DefaultImageType, ImageProcessing::FloatImageType > GaussianFilterType;
   GaussianFilterType::Pointer gaussianFilter = GaussianFilterType::New();
   gaussianFilter->SetInput(inputImage);
   gaussianFilter->SetVariance(m_Stdev * m_Stdev);
 
-  //have filter write to dream3d array instead of creating its own buffer
-  ITKUtilitiesType::SetITKOutput(gaussianFilter->GetOutput(), m_NewCellArrayPtr.lock());
+  //convert result back to uint8
+  typedef itk::RescaleIntensityImageFilter<ImageProcessing::FloatImageType, ImageProcessing::DefaultImageType> RescaleImageType;
+  RescaleImageType::Pointer rescaleFilter = RescaleImageType::New();
+  rescaleFilter->SetInput(gaussianFilter->GetOutput());
+  rescaleFilter->SetOutputMinimum(0);
+  rescaleFilter->SetOutputMaximum(255);
 
-  //execute filter
+
+  //have filter write to dream3d array instead of creating its own buffer
+  ITKUtilitiesType::SetITKFilterOutput(rescaleFilter->GetOutput(), m_NewCellArrayPtr.lock());
+
+  //execute filters
   gaussianFilter->Update();
+  rescaleFilter->Update();
 
   //array name changing/cleanup
   if(m_SaveAsNewArray == false)
@@ -151,6 +165,7 @@ void DiscreteGaussianBlur::execute()
 
     }
   }
+
 
   /* Let the GUI know we are done with this filter */
   notifyStatusMessage(getHumanLabel(), "Complete");

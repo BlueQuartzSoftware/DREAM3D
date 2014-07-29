@@ -232,6 +232,27 @@ int ModifiedLambertProjectionArray::copyTuple(size_t currentPos, size_t newPos)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+IDataArray::Pointer ModifiedLambertProjectionArray::reorderCopy(QVector<size_t> newOrderMap)
+{
+  if(newOrderMap.size()!=getNumberOfTuples())
+  {
+    return NULL;
+  }
+  ModifiedLambertProjectionArray::Pointer daCopyPtr = ModifiedLambertProjectionArray::New();
+  daCopyPtr->resize(getNumberOfTuples());
+  daCopyPtr->initializeWithZeros();
+  ModifiedLambertProjectionArray& daCopy = *daCopyPtr;
+  for(size_t i = 0; i < getNumberOfTuples(); i++)
+  {
+    daCopy[newOrderMap[i]] = m_ModifiedLambertProjectionArray[i];
+  }
+
+  return daCopyPtr;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void ModifiedLambertProjectionArray::initializeTuple(size_t i, double p)
 {
   BOOST_ASSERT(false);

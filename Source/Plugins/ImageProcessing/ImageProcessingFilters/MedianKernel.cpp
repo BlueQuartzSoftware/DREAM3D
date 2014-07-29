@@ -1,6 +1,9 @@
 /*
  * Your License or Copyright Information can go here
  */
+#if (_MSC_VER)
+#define _SCL_SECURE_NO_WARNINGS
+#endif
 
 #include "MedianKernel.h"
 
@@ -147,7 +150,7 @@ void MedianKernel::execute()
   medianFilter->SetRadius(radius);
 
   //have filter write to dream3d array instead of creating its own buffer
-  ITKUtilitiesType::SetITKOutput(medianFilter->GetOutput(), m_NewCellArrayPtr.lock());
+  ITKUtilitiesType::SetITKFilterOutput(medianFilter->GetOutput(), m_NewCellArrayPtr.lock());
 
   //execute filter
   medianFilter->Update();
