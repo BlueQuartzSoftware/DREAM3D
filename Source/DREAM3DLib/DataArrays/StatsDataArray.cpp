@@ -219,7 +219,7 @@ IDataArray::Pointer StatsDataArray::reorderCopy(QVector<size_t> newOrderMap)
 {
   if(newOrderMap.size()!=getNumberOfTuples())
   {
-    return NULL;
+    return IDataArray::Pointer();
   }
   StatsDataArray::Pointer daCopyPtr = StatsDataArray::New();
   daCopyPtr->resize(getNumberOfTuples());

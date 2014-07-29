@@ -294,11 +294,16 @@ class StringDataArray : public IDataArray
       return 0;
     }
 
+    /**
+     * @brief reorderCopy
+     * @param newOrderMap
+     * @return
+     */
     virtual IDataArray::Pointer reorderCopy(QVector<size_t> newOrderMap)
     {
       if(newOrderMap.size()!=getNumberOfTuples())
       {
-        return NULL;
+        return IDataArray::NullPointer();
       }
       StringDataArray::Pointer daCopy = StringDataArray::CreateArray(getNumberOfTuples(), getName());
       daCopy->initializeWithZeros();

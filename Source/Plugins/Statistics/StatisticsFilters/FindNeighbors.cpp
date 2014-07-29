@@ -43,7 +43,8 @@
 
 #include "DREAM3DLib/Common/Constants.h"
 
-#include "DREAM3DLib/DataArrays/IDataArray.h"
+#include "StatisticsConstants.h"
+
 
 // -----------------------------------------------------------------------------
 //

@@ -704,7 +704,7 @@ class DataArray : public IDataArray
     {
       if(newOrderMap.size()!=getNumberOfTuples())
       {
-        return NULL;
+        return IDataArray::NullPointer();
       }
       IDataArray::Pointer daCopy = createNewArray(getNumberOfTuples(), getComponentDimensions(), getName(), m_IsAllocated);
       daCopy->initializeWithZeros();

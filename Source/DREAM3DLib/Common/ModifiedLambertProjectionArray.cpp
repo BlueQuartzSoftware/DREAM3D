@@ -236,7 +236,7 @@ IDataArray::Pointer ModifiedLambertProjectionArray::reorderCopy(QVector<size_t> 
 {
   if(newOrderMap.size()!=getNumberOfTuples())
   {
-    return NULL;
+    return IDataArray::NullPointer();
   }
   ModifiedLambertProjectionArray::Pointer daCopyPtr = ModifiedLambertProjectionArray::New();
   daCopyPtr->resize(getNumberOfTuples());
