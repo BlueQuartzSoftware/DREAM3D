@@ -40,7 +40,6 @@
 
 #include <QtCore/QDateTime>
 
-
 #include "DREAM3DLib/Common/Constants.h"
 
 #include "StatisticsConstants.h"

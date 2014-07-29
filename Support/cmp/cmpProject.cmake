@@ -1,6 +1,6 @@
 
 if(NOT DEFINED CMP_SOURCE_DIR)
-get_filename_component(CMP_SOURCE_DIR ${CMAKE_CURRENT_LIST_FILE} PATH CACHE)
+  get_filename_component(CMP_SOURCE_DIR ${CMAKE_CURRENT_LIST_FILE} PATH CACHE)
 endif()
 set(CMP_CONFIGURED_FILES_SOURCE_DIR ${CMP_SOURCE_DIR}/ConfiguredFiles CACHE INTERNAL "")
 set(CMP_CORE_TESTS_SOURCE_DIR ${CMP_SOURCE_DIR}/CoreTests CACHE INTERNAL "")
@@ -14,9 +14,9 @@ set(CMP_LINUX_TOOLS_SOURCE_DIR ${CMP_SOURCE_DIR}/Linux_Tools CACHE INTERNAL "")
 # directory first
 set(CMAKE_MODULE_PATH ${CMP_MODULES_SOURCE_DIR} ${CMAKE_MODULE_PATH})
 
-INCLUDE (${CMP_SOURCE_DIR}/cmpCMakeMacros.cmake )
+INCLUDE(${CMP_SOURCE_DIR}/cmpCMakeMacros.cmake )
 
-include ( ${CMP_CORE_TESTS_SOURCE_DIR}/cmpConfigureChecks.cmake )
+include( ${CMP_CORE_TESTS_SOURCE_DIR}/cmpConfigureChecks.cmake )
 if(NOT DEFINED CMP_PROJECT_NAMESPACE)
     set(CMP_PROJECT_NAMESPACE "CMP")
 endif()
@@ -75,39 +75,39 @@ get_filename_component(CMP_VERSION_HEADER_GUARD ${CMP_VERSION_HEADER_FILE_NAME} 
 # --------------------------------------------------------------------
 # Generate our header files
 # --------------------------------------------------------------------
-configure_file(${CMP_CONFIGURED_FILES_SOURCE_DIR}/cmpConfiguration.h.in
-               ${CMP_HEADER_DIR}/${CMP_CONFIGURATION_FILE_NAME} )
-configure_file(${CMP_CONFIGURED_FILES_SOURCE_DIR}/cmpPrimitiveTypes.h.in
-               ${CMP_HEADER_DIR}/${CMP_TYPES_FILE_NAME} )
+cmpConfigureFileWithMD5Check(CONFIGURED_TEMPLATE_PATH ${CMP_CONFIGURED_FILES_SOURCE_DIR}/cmpConfiguration.h.in
+                            GENERATED_FILE_PATH ${CMP_HEADER_DIR}/${CMP_CONFIGURATION_FILE_NAME} )
+cmpConfigureFileWithMD5Check(CONFIGURED_TEMPLATE_PATH ${CMP_CONFIGURED_FILES_SOURCE_DIR}/cmpPrimitiveTypes.h.in
+                             GENERATED_FILE_PATH ${CMP_HEADER_DIR}/${CMP_TYPES_FILE_NAME} )
 
 
 # --------------------------------------------------------------------
 # Generate a Header file with Compile Version variables
 # --------------------------------------------------------------------
 if( ${CMP_GENERATE_VERSION_STRING} )
-    cmpVersionStringsFromGit( GENERATED_HEADER_FILE_PATH "${CMP_HEADER_DIR}/${CMP_VERSION_HEADER_FILE_NAME}" 
+    cmpVersionStringsFromGit( GENERATED_HEADER_FILE_PATH "${CMP_HEADER_DIR}/${CMP_VERSION_HEADER_FILE_NAME}"
                               GENERATED_SOURCE_FILE_PATH "${CMP_HEADER_DIR}/${CMP_VERSION_SOURCE_FILE_NAME}"
-                              NAMESPACE "${CMP_PROJECT_NAMESPACE}" 
+                              NAMESPACE "${CMP_PROJECT_NAMESPACE}"
                               cmpProjectName "${CMP_PROJECT_NAME}")
 endif()
 
-cmp_IDE_GENERATED_PROPERTIES( "Generated" 
-"${CMP_HEADER_DIR}/${CMP_CONFIGURATION_FILE_NAME}" 
-"${CMP_HEADER_DIR}/${CMP_TYPES_FILE_NAME}" 
-"${CMP_HEADER_DIR}/${CMP_VERSION_HEADER_FILE_NAME};${CMP_HEADER_DIR}/${CMP_VERSION_SOURCE_FILE_NAME}")
+cmp_IDE_GENERATED_PROPERTIES( "Generated"
+              "${CMP_HEADER_DIR}/${CMP_CONFIGURATION_FILE_NAME}"
+              "${CMP_HEADER_DIR}/${CMP_TYPES_FILE_NAME}"
+              "${CMP_HEADER_DIR}/${CMP_VERSION_HEADER_FILE_NAME};${CMP_HEADER_DIR}/${CMP_VERSION_SOURCE_FILE_NAME}")
 
 # --------------------------------------------------------------------
 # Enable the use of plugins that will get generated as part of the project
 # We are going to write the paths to the plugins into a file and then that
-# file will be used as input to set an actual cmake variable and then 
+# file will be used as input to set an actual cmake variable and then
 # passed to the bundle utilities cmake macro.
 if(CMP_ENABLE_PLUGINS)
 
-file(WRITE ${CMP_PLUGIN_LIST_FILE} "")
-file(WRITE ${CMP_PLUGIN_SEARCHDIR_FILE} "${PROJECT_BINARY_DIR}/Bin/Plugins;")
-file(APPEND ${CMP_PLUGIN_SEARCHDIR_FILE} "${PROJECT_BINARY_DIR}/Bin;")
+  file(WRITE ${CMP_PLUGIN_LIST_FILE} "")
+  file(WRITE ${CMP_PLUGIN_SEARCHDIR_FILE} "${PROJECT_BINARY_DIR}/Bin/Plugins;")
+  file(APPEND ${CMP_PLUGIN_SEARCHDIR_FILE} "${PROJECT_BINARY_DIR}/Bin;")
 
 endif()
 
 
-   
+

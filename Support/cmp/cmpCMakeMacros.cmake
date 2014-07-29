@@ -342,9 +342,9 @@ function(BuildToolBundle)
                           PROPERTIES FOLDER ${QAB_SOLUTION_FOLDER})
 
   endif()
- 
+
   if( NOT ${QAB_INSTALL_DEST} STREQUAL "")
-	#-- Create an Install Rule for the main app bundle target
+  #-- Create an Install Rule for the main app bundle target
     INSTALL(TARGETS ${QAB_TARGET}
         COMPONENT ${QAB_COMPONENT}
         RUNTIME DESTINATION ${QAB_INSTALL_DEST}
@@ -613,7 +613,7 @@ endmacro(FindQt4Plugins pluginlist)
 # --------------------------------------------------------------------
 #-- Copy all the Qt4 dependent DLLs into the current build directory so that
 #-- one can debug an application or library that depends on Qt4 libraries.
-macro (CMP_COPY_QT4_RUNTIME_LIBRARIES QTLIBLIST)
+macro(CMP_COPY_QT4_RUNTIME_LIBRARIES QTLIBLIST)
     #message(STATUS "CMP_COPY_QT4_RUNTIME_LIBRARIES")
     if(MSVC)
 
@@ -712,7 +712,7 @@ endmacro()
 # --------------------------------------------------------------------
 #-- Copy all the dependent DLLs into the current build directory so that the test
 #-- can run.
-MACRO (CMP_COPY_DEPENDENT_LIBRARIES _libraryList)
+MACRO(CMP_COPY_DEPENDENT_LIBRARIES _libraryList)
 #  message(STATUS "#--------------------------------------------")
 #  message(STATUS "CMP_COPY_DEPENDENT_LIBRARIES: ${_libraryList}")
   set(_libraryList ${_libraryList})
@@ -775,7 +775,7 @@ endmacro()
 # dependent DLL libraries (HDF5, Tiff, Expat, DataModel) will be
 # properly installed with your project.
 # --------------------------------------------------------------------
-MACRO (CMP_LIBRARIES_INSTALL_RULES _libraryList destination)
+MACRO(CMP_LIBRARIES_INSTALL_RULES _libraryList destination)
 #  message(STATUS "CMP_LIBRARIES_INSTALL_RULES")
   set(_libraryList ${_libraryList})
   set(TYPES Debug Release)

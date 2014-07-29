@@ -40,7 +40,7 @@ class ITKUtilities
 
     //define image and iterator types
 
-    typedef typename DataArray<ComponentType>                                                         DataArrayType;
+    typedef DataArray<ComponentType>                                                         DataArrayType;
     typedef typename DataArrayType::Pointer                                                           DataArrayPointerType;
 
     typedef typename itk::Image<ComponentType, ImageProcessing::ImageDimension>                       ScalarImageType;  // 3D Scalar Image
@@ -141,7 +141,7 @@ class ITKUtilities
      * @param output
      * @param totalPoints
      */
-    static void SetITKFilterOutput(typename ScalarImageType::Pointer image, typename DataArrayPointerType d3dData) // * output, const unsigned int totalPoints)
+    static void SetITKFilterOutput(typename ScalarImageType::Pointer image, DataArrayPointerType d3dData) // * output, const unsigned int totalPoints)
     {
       const bool filterDeletesData = false;
       ComponentType* data = d3dData->getPointer(0);
@@ -155,7 +155,7 @@ class ITKUtilities
       const bool filterDeletesData = false;
       ComponentType* data = d3dData->getPointer(0);
       size_t numTuples = d3dData->getNumberOfTuples();
-      image->GetPixelContainer()->SetImportPointer(data, numTuples, filterDeletesData);
+      itkImage->GetPixelContainer()->SetImportPointer(data, numTuples, filterDeletesData);
     }
     /**
      * @brief CopyITKtoDream3D copy itk image to dream3d array
@@ -176,87 +176,6 @@ class ITKUtilities
       }
     }
 
-
-
-    /**
-     * @brief Dream3DRGBtoITK Converts DREAM3D DataArray into an RGB Pixel for use in ITK. While the method will work
-     * for any "DataArray" based class the individual values will be converted to 8 bit unsigned chars so if the values
-     * of each component are outside the range of 0 255 then unpredictable results will occur.
-     * @param m
-     * @param data
-     * @return
-     */
-    /*
-    static typename RGBImageType::Pointer Dream3DRGBtoITK(VolumeDataContainer* m, QString attrMatName, ComponentType* data)
-    {
-     //get size+dimensions of dataset
-     size_t udims[3] =
-     { 0, 0, 0 };
-     m->getDimensions(udims);
-    #if (CMP_SIZEOF_SIZE_T == 4)
-     typedef int32_t DimType;
-    #else
-     typedef int64_t DimType;
-    #endif
-     DimType dims[3] = { static_cast<DimType>(udims[0]), static_cast<DimType>(udims[1]), static_cast<DimType>(udims[2]), };
-     //int64_t totalPoints = m->getTotalPoints();
-
-     //copy dataset dimensions
-     typename RGBImageType::SizeType size;
-     size[0] = dims[0];
-     size[1] = dims[1];
-     size[2] = dims[2];
-
-     //create image region
-     typename RGBImageType::IndexType start;
-     start.Fill(0);
-     typename RGBImageType::RegionType region(start, size);
-
-     //create and allocate image
-     typename RGBImageType::Pointer image = RGBImageType::New();
-     image->SetRegions(region);
-     image->Allocate();
-
-     //iterate over image copying data
-     IteratorType it(image, region);
-     it.GoToBegin();
-     int index = -1;
-     while(!it.IsAtEnd())
-     {
-       itk::RGBPixel<ComponentType> pixel;
-       pixel[0] = static_cast<unsigned char>(data[++index]);
-       pixel[1] = static_cast<unsigned char>(data[++index]);
-       pixel[2] = static_cast<unsigned char>(data[++index]);
-       it.Set(pixel);
-       ++it;
-     }
-     return image;
-    }
-    */
-
-    /**
-     * @brief CopyRGBITKtoDream3D copy itk image to dream3d array
-     * @param image
-     * @param buffer
-     */
-    /*
-    static void CopyRGBITKtoDream3D(typename RGBImageType::Pointer image, ComponentType* buffer)
-    {
-     typename RGBImageType::RegionType filterRegion = image->GetBufferedRegion();
-
-     typedef typename itk::ImageRegionConstIterator<RGBImageType> it(image, filterRegion);
-     it.GoToBegin();
-     int index = -1;
-     while(!it.IsAtEnd())
-     {
-       typename itk::RGBPixel<ComponentType> pixel = it.Get();
-       buffer[++index] = pixel.GetRed();
-       buffer[++index] = pixel.GetGreen();
-       buffer[++index] = pixel.GetBlue();
-       ++it;
-     }
-    }
-    */
 
     /**
      * @brief ExtractSlice extract a slice
@@ -319,38 +238,6 @@ class ITKUtilities
         ++sliceIt;
       }
     }
-
-    /*
-    static typename itk::Image<typename ComponentType,ImageProcessing::ImageDimension>::Pointer ConvertDataArray(int* dims, float* resolution, float* origin, typename DataArray<T>::Pointer inData)
-    {
-      //create import filter
-      typedef typename itk::ImportImageFilter<typename ComponentType, ImageProcessing::ImageDimension> ImportFilterType;
-      typename ImportFilterType::Pointer importFilter = ImportFilterType::New();
-      typename ImportFilterType::IndexType start;
-      start.Fill( 0 );
-
-      //get size+dimensions of dataset
-      int totalPoints = dims[0]*dims[1]*dims[2];
-      typename ImportFilterType::SizeType  size;
-      size[0]  = dims[0];  // size along X
-      size[1]  = dims[1];  // size along Y
-      size[2]  = dims[2];  // size along Z
-
-      //configure import filter
-      typename ImportFilterType::RegionType region;
-      region.SetIndex( start );
-      region.SetSize(  size  );
-      importFilter->SetRegion( region );
-
-      importFilter->SetOrigin( origin );
-      importFilter->SetSpacing( resolution );
-
-      const bool importImageFilterWillOwnTheBuffer = false;
-      importFilter->SetImportPointer( inData, totalPoints, importImageFilterWillOwnTheBuffer );
-      importFilter->Update();
-      return importFilter->GetOutput();
-    }
-    */
 
   protected:
     ITKUtilities();
