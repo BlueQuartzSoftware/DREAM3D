@@ -69,7 +69,7 @@ class DREAM3DWidgetsLib_EXPORT FilterWidgetManager
      * @brief Static instance to retrieve the global instance of this class
      * @return
      */
-    static FilterWidgetManager *Instance();
+    static FilterWidgetManager* Instance();
 
     /**
      * @brief Registers a PipelineFilterWidgetFactory instance for a give name

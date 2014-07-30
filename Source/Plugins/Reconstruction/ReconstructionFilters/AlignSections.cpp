@@ -85,7 +85,7 @@ void AlignSections::setupFilterParameters()
 
   QStringList linkedProps("AlignmentShiftFileName");
   parameters.push_back(FilterParameter::NewConditional("Write Alignment Shift File", "WriteAlignmentShifts", FilterParameterWidgetType::LinkedBooleanWidget, getWriteAlignmentShifts(), false, linkedProps));
-  
+
   parameters.push_back(FilterParameter::New("Linear Background Subtraction", "SubtractBackground", FilterParameterWidgetType::BooleanWidget, getSubtractBackground(), false));
   parameters.push_back(FileSystemFilterParameter::New("Alignment File", "AlignmentShiftFileName", FilterParameterWidgetType::OutputFileWidget, "QString", false));
 
@@ -212,25 +212,25 @@ void AlignSections::execute()
     {
       slice = static_cast<int>( (dims[2] - 1) - iter );
       sumX = sumX + iter;
-      sumX_2 = sumX_2 + iter*iter;
+      sumX_2 = sumX_2 + iter * iter;
       x_sumY = x_sumY + xshifts[iter];
-      x_sumXY = x_sumXY + iter*xshifts[iter];
+      x_sumXY = x_sumXY + iter * xshifts[iter];
       y_sumY = y_sumY + yshifts[iter];
-      y_sumXY = y_sumXY + iter*yshifts[iter];
+      y_sumXY = y_sumXY + iter * yshifts[iter];
     }
 
     double mx, my, bx, by;
-    mx = (dims[2]*x_sumXY - x_sumXY)/(dims[2]*sumX_2-sumX);
-    my = (dims[2]*y_sumXY - y_sumXY)/(dims[2]*sumX_2-sumX);
-    bx = (x_sumY-mx*sumX)/dims[2];
-    by = (y_sumY-my*sumX)/dims[2];
+    mx = (dims[2] * x_sumXY - x_sumXY) / (dims[2] * sumX_2 - sumX);
+    my = (dims[2] * y_sumXY - y_sumXY) / (dims[2] * sumX_2 - sumX);
+    bx = (x_sumY - mx * sumX) / dims[2];
+    by = (y_sumY - my * sumX) / dims[2];
 
     ///adjust shifts so that fit line has 0 slope (~ends of the sample are fixed)
     for (DimType iter = 1; iter < dims[2]; iter++)
     {
       slice = static_cast<int>( (dims[2] - 1) - iter );
-      xshifts[iter] = xshifts[iter] - iter*mx;
-      yshifts[iter] = yshifts[iter] - iter*my;
+      xshifts[iter] = xshifts[iter] - iter * mx;
+      yshifts[iter] = yshifts[iter] - iter * my;
     }
   }
 

@@ -71,7 +71,7 @@ ImportImagesWidget::ImportImagesWidget(FilterParameter* parameter, AbstractFilte
   }
   setupUi(this);
   setupGui();
- // checkIOFiles();
+// checkIOFiles();
 }
 
 // -----------------------------------------------------------------------------

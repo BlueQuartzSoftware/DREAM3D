@@ -142,15 +142,15 @@ int EBSDSegmentFeatures::writeFilterParameters(AbstractFilterParametersWriter* w
 {
   writer->openFilterGroup(this, index);
   DREAM3D_FILTER_WRITE_PARAMETER(CellFeatureAttributeMatrixName)
-      DREAM3D_FILTER_WRITE_PARAMETER(ActiveArrayName)
-      DREAM3D_FILTER_WRITE_PARAMETER(FeatureIdsArrayName)
-      DREAM3D_FILTER_WRITE_PARAMETER(QuatsArrayPath)
-      DREAM3D_FILTER_WRITE_PARAMETER(CrystalStructuresArrayPath)
-      DREAM3D_FILTER_WRITE_PARAMETER(CellPhasesArrayPath)
-      DREAM3D_FILTER_WRITE_PARAMETER(GoodVoxelsArrayPath)
-      DREAM3D_FILTER_WRITE_PARAMETER(UseGoodVoxels)
-      DREAM3D_FILTER_WRITE_PARAMETER(MisorientationTolerance)
-      writer->closeFilterGroup();
+  DREAM3D_FILTER_WRITE_PARAMETER(ActiveArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(FeatureIdsArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(QuatsArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(CrystalStructuresArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(CellPhasesArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(GoodVoxelsArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(UseGoodVoxels)
+  DREAM3D_FILTER_WRITE_PARAMETER(MisorientationTolerance)
+  writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
 

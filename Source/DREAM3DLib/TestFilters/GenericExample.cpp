@@ -185,24 +185,24 @@ int GenericExample::writeFilterParameters(AbstractFilterParametersWriter* writer
   writer->openFilterGroup(this, index);
 
   DREAM3D_FILTER_WRITE_PARAMETER(FeatureIdsArrayPath)
-      /* Place code that will write the inputs values into a file. reference the
-       AbstractFilterParametersWriter class for the proper API to use. */
-      DREAM3D_FILTER_WRITE_PARAMETER(StlFilePrefix)
-      DREAM3D_FILTER_WRITE_PARAMETER(MaxIterations)
-      DREAM3D_FILTER_WRITE_PARAMETER(MisorientationTolerance)
-      DREAM3D_FILTER_WRITE_PARAMETER(InputFile)
-      DREAM3D_FILTER_WRITE_PARAMETER(InputPath)
-      DREAM3D_FILTER_WRITE_PARAMETER(OutputFile)
-      DREAM3D_FILTER_WRITE_PARAMETER(OutputPath)
-      DREAM3D_FILTER_WRITE_PARAMETER(WriteAlignmentShifts)
-      DREAM3D_FILTER_WRITE_PARAMETER(ConversionType)
-      DREAM3D_FILTER_WRITE_PARAMETER(Dimensions)
-      DREAM3D_FILTER_WRITE_PARAMETER(Origin)
-      DREAM3D_FILTER_WRITE_PARAMETER(CrystalSymmetryRotations)
+  /* Place code that will write the inputs values into a file. reference the
+   AbstractFilterParametersWriter class for the proper API to use. */
+  DREAM3D_FILTER_WRITE_PARAMETER(StlFilePrefix)
+  DREAM3D_FILTER_WRITE_PARAMETER(MaxIterations)
+  DREAM3D_FILTER_WRITE_PARAMETER(MisorientationTolerance)
+  DREAM3D_FILTER_WRITE_PARAMETER(InputFile)
+  DREAM3D_FILTER_WRITE_PARAMETER(InputPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(OutputFile)
+  DREAM3D_FILTER_WRITE_PARAMETER(OutputPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(WriteAlignmentShifts)
+  DREAM3D_FILTER_WRITE_PARAMETER(ConversionType)
+  DREAM3D_FILTER_WRITE_PARAMETER(Dimensions)
+  DREAM3D_FILTER_WRITE_PARAMETER(Origin)
+  DREAM3D_FILTER_WRITE_PARAMETER(CrystalSymmetryRotations)
 
 
 
-      writer->closeFilterGroup();
+  writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
 

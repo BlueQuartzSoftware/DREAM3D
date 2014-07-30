@@ -702,7 +702,7 @@ class DataArray : public IDataArray
 
     virtual IDataArray::Pointer reorderCopy(QVector<size_t> newOrderMap)
     {
-      if(newOrderMap.size()!=getNumberOfTuples())
+      if(newOrderMap.size() != getNumberOfTuples())
       {
         return IDataArray::NullPointer();
       }
@@ -710,11 +710,11 @@ class DataArray : public IDataArray
       daCopy->initializeWithZeros();
       if(m_IsAllocated == true)
       {
-        size_t chunkSize = getNumberOfComponents()*sizeof(T);
-        for(int i=0; i<getNumberOfTuples(); i++)
+        size_t chunkSize = getNumberOfComponents() * sizeof(T);
+        for(int i = 0; i < getNumberOfTuples(); i++)
         {
-          T* src = getPointer(i*getNumberOfComponents());
-          void* dest = daCopy->getVoidPointer(newOrderMap[i]*getNumberOfComponents());
+          T* src = getPointer(i * getNumberOfComponents());
+          void* dest = daCopy->getVoidPointer(newOrderMap[i] * getNumberOfComponents());
           ::memcpy(dest, src, chunkSize);
         }
       }

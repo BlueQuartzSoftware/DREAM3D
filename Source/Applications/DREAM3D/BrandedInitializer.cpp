@@ -158,7 +158,7 @@ bool BrandedInitializer::initialize(int argc, char* argv[])
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QVector<DREAM3DPluginInterface *> BrandedInitializer::loadPlugins()
+QVector<DREAM3DPluginInterface*> BrandedInitializer::loadPlugins()
 {
   QStringList m_PluginDirs;
   m_PluginDirs << qApp->applicationDirPath();

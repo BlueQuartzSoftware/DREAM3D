@@ -481,11 +481,11 @@ void RotateSampleRefFrame::execute()
 
   // resize attribute matrix
   QVector<size_t> tDims(3);
-  tDims[0]=params.xpNew;
-  tDims[1]=params.ypNew;
-  tDims[2]=params.zpNew;
+  tDims[0] = params.xpNew;
+  tDims[1] = params.ypNew;
+  tDims[2] = params.zpNew;
   m->getAttributeMatrix(attrMatName)->resizeAttributeArrays(tDims);
-  
+
   for (QList<QString>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
   {
     //QString name = *iter;

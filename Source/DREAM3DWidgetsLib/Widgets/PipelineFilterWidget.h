@@ -109,10 +109,10 @@ class DREAM3DWidgetsLib_EXPORT PipelineFilterWidget : public QFrame, private Ui:
     DREAM3D_INSTANCE_PROPERTY(int, BasicParameterCount)
     DREAM3D_INSTANCE_PROPERTY(int, AdvParameterCount)
 
-    public slots:
+  public slots:
 
 
-      virtual void setIsSelected(bool b);
+    virtual void setIsSelected(bool b);
 
 
     /**
