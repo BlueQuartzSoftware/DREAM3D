@@ -1,16 +1,46 @@
-/*
- * Your License or Copyright Information can go here
- */
+/* ============================================================================
+ * Copyright (c) 2014 DREAM3D Consortium
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without modification,
+ * are permitted provided that the following conditions are met:
+ *
+ * Redistributions of source code must retain the above copyright notice, this
+ * list of conditions and the following disclaimer.
+ *
+ * Redistributions in binary form must reproduce the above copyright notice, this
+ * list of conditions and the following disclaimer in the documentation and/or
+ * other materials provided with the distribution.
+ *
+ * Neither the names of any of the DREAM3D Consortium contributors
+ * may be used to endorse or promote products derived from this software without
+ * specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
+ * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ *  This code was partially written under United States Air Force Contract number
+ *                              FA8650-10-D-5210
+ *
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #if (_MSC_VER)
 #define _SCL_SECURE_NO_WARNINGS
 #endif
 
 #include "GrayToRGB.h"
 
-//#include <string>
-
 //thresholding filter
 #include "itkComposeImageFilter.h"
+
+#include "DREAM3DLib/Common/TemplateHelpers.hpp"
 
 // ImageProcessing Plugin
 #include "ItkBridge.h"
@@ -164,17 +194,17 @@ void GrayToRGB::dataCheck()
 
   //check for required arrays
   QVector<size_t> compDims(1, 1);
-  m_RedPtr = TemplateHelper::GetPrereqArrayFromPath<AbstractFilter, VolumeDataContainer>()(this, getRedArrayPath(), compDims);
+  m_RedPtr = TemplateHelpers::GetPrereqArrayFromPath<AbstractFilter, VolumeDataContainer>()(this, getRedArrayPath(), compDims);
   if(NULL != m_RedPtr.lock().get())
   {
     m_Red = m_RedPtr.lock().get();
   }
-  m_GreenPtr = TemplateHelper::GetPrereqArrayFromPath<AbstractFilter, VolumeDataContainer>()(this, getGreenArrayPath(), compDims);
+  m_GreenPtr = TemplateHelpers::GetPrereqArrayFromPath<AbstractFilter, VolumeDataContainer>()(this, getGreenArrayPath(), compDims);
   if(NULL != m_GreenPtr.lock().get())
   {
     m_Green = m_GreenPtr.lock().get();
   }
-  m_BluePtr = TemplateHelper::GetPrereqArrayFromPath<AbstractFilter, VolumeDataContainer>()(this, getBlueArrayPath(), compDims);
+  m_BluePtr = TemplateHelpers::GetPrereqArrayFromPath<AbstractFilter, VolumeDataContainer>()(this, getBlueArrayPath(), compDims);
   if(NULL != m_BluePtr.lock().get())
   {
     m_Blue = m_BluePtr.lock().get();
@@ -190,7 +220,7 @@ void GrayToRGB::dataCheck()
 
   //create new array of same type
   compDims[0]=3;
-  m_NewCellArrayPtr = TemplateHelper::CreateNonPrereqArrayFromArrayType()(this, tempPath, compDims, redArrayptr);
+  m_NewCellArrayPtr = TemplateHelpers::CreateNonPrereqArrayFromArrayType()(this, tempPath, compDims, redArrayptr);
   if( NULL != m_NewCellArrayPtr.lock().get() )
   {
     m_NewCellArray = m_NewCellArrayPtr.lock()->getVoidPointer(0);

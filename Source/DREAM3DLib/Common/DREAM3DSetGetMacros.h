@@ -492,6 +492,22 @@
 
 
 
+  //used in place of 'DEFINE_REQUIRED_DATAARRAY_VARIABLE' in filter header
+#define DEFINE_REQUIRED_IDATAARRAY_VARIABLE(varName)\
+  DREAM3D_INSTANCE_STRING_PROPERTY(varName##ArrayName);\
+  private:\
+  IDataArray::WeakPointer m_##varName##Ptr;\
+  void* m_##varName;
+
+  //used in place of 'DEFINE_CREATED_DATAARRAY_VARIABLE' in filter header
+#define DEFINE_CREATED_IDATAARRAY_VARIABLE(varName)\
+  private:\
+  IDataArray::WeakPointer m_##varName##Ptr;\
+  void* m_##varName;
+
+
+
+
 #define DREAM3D_COPY_INSTANCEVAR(name)\
   filter->set##name(get##name());
 
@@ -513,7 +529,7 @@
     updatePipelineProgress(0);\
     pipelineFinished();\
     return;}\
-   
+
 
 #define CHECK_FOR_ERROR(FuncClass, Message, err)\
   if(err < 0) {\
