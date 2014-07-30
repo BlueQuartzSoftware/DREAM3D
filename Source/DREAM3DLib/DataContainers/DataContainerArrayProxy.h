@@ -46,6 +46,7 @@
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/DataContainers/DataContainerProxy.h"
+#include "DREAM3DLib/DataContainers/DataArrayPath.h"
 
 class DataContainerArray;
 
@@ -89,6 +90,12 @@ class DREAM3DLib_EXPORT DataContainerArrayProxy
      * @return
      */
     QStringList flattenHeirarchy();
+
+    /**
+     * @brief getCheckedDataArrayPaths
+     * @return
+     */
+    QVector<DataArrayPath> getCheckedDataArrayPaths();
 
     /**
      * @brief Print the Heirarchy and attributes of the Proxy
