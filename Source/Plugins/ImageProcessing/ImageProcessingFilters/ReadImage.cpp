@@ -18,7 +18,7 @@
 #include "itkVectorImage.h"
 
 // ImageProcessing Plugin
-#include "ITKUtilities.h"
+#include "ItkBridge.h"
 
 /**
  * @brief This is a private implementation for the filter that handles the actual algorithm implementation details
@@ -376,47 +376,47 @@ void ReadImage::dataCheck()
   }
 
   //get component type
-  int type;
+  IDataArray::Pointer data;
   itk::ImageIOBase::IOComponentType componentType = imageIO->GetComponentType();
   if(itk::ImageIOBase::CHAR == componentType)
   {
-    type = TemplateConstants::Int8;
+    data = Int8ArrayType::CreateArray(0, "Temp", false);
   }
   else if(itk::ImageIOBase::UCHAR == componentType)
   {
-    type = TemplateConstants::UInt8;
+    data = UInt8ArrayType::CreateArray(0, "Temp", false);
   }
   else if(itk::ImageIOBase::SHORT == componentType)
   {
-    type = TemplateConstants::Int16;
+    data = Int16ArrayType::CreateArray(0, "Temp", false);
   }
   else if(itk::ImageIOBase::USHORT == componentType)
   {
-    type = TemplateConstants::UInt16;
+    data = UInt16ArrayType::CreateArray(0, "Temp", false);
   }
   else if(itk::ImageIOBase::INT == componentType)
   {
-    type = TemplateConstants::Int32;
+    data = Int32ArrayType::CreateArray(0, "Temp", false);
   }
   else if(itk::ImageIOBase::UINT == componentType)
   {
-    type = TemplateConstants::UInt32;
+    data = UInt32ArrayType::CreateArray(0, "Temp", false);
   }
   else if(itk::ImageIOBase::LONG == componentType)
   {
-    type = TemplateConstants::Int64;
+    data = Int64ArrayType::CreateArray(0, "Temp", false);
   }
   else if(itk::ImageIOBase::ULONG == componentType)
   {
-    type = TemplateConstants::UInt64;
+    data = UInt64ArrayType::CreateArray(0, "Temp", false);
   }
   else if(itk::ImageIOBase::FLOAT == componentType)
   {
-    type = TemplateConstants::Float;
+    data = FloatArrayType::CreateArray(0, "Temp", false);
   }
   else if(itk::ImageIOBase::DOUBLE == componentType)
   {
-    type = TemplateConstants::Double;
+    data = DoubleArrayType::CreateArray(0, "Temp", false);
   }
   else
   {
@@ -429,8 +429,11 @@ void ReadImage::dataCheck()
 
   if(getErrorCondition() < 0) { return; }
 
-  //create array
-  TEMPLATE_CREATE_NONPREREQ_ARRAY(ImageData, createdPath, componentDims, type);
+  m_ImageDataPtr = TemplateHelper::CreateNonPrereqArrayFromArrayType()(this, createdPath, componentDims, data);
+  if( NULL != m_ImageDataPtr.lock().get() )
+  {
+    m_ImageData = m_ImageDataPtr.lock()->getVoidPointer(0);
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -467,8 +470,8 @@ void ReadImage::execute()
 
   //get input and output data
   IDataArray::Pointer imageData = m_ImageDataPtr.lock();
-  std::string fileNameString = getInputFileName().toLocal8Bit().constData();
-  const char* fileNameCStr = fileNameString.c_str();
+  //std::string fileNameString = getInputFileName().toLocal8Bit().constData();
+  //const char* fileNameCStr = fileNameString.c_str();
 
 
   //execute type dependant portion using a Private Implementation that takes care of figuring out if

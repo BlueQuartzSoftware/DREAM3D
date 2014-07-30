@@ -9,12 +9,10 @@
 
 #include <QtCore/QString>
 
-#include "ITKUtilities.h"
+#include "ItkBridge.h"
 #include "itkSobelEdgeDetectionImageFilter.h"
 #include "itkRescaleIntensityImageFilter.h"
 
-//// Setup some typedef 's for the ITKUtilities class to shorten up our code
-typedef ITKUtilities<ImageProcessing::DefaultPixelType>    ITKUtilitiesType;
 
 // -----------------------------------------------------------------------------
 //
@@ -75,10 +73,10 @@ int SobelEdge::writeFilterParameters(AbstractFilterParametersWriter* writer, int
 {
   writer->openFilterGroup(this, index);
   DREAM3D_FILTER_WRITE_PARAMETER(SelectedCellArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(NewCellArrayName)
-  DREAM3D_FILTER_WRITE_PARAMETER(SaveAsNewArray)
-  DREAM3D_FILTER_WRITE_PARAMETER(Slice)
-  writer->closeFilterGroup();
+      DREAM3D_FILTER_WRITE_PARAMETER(NewCellArrayName)
+      DREAM3D_FILTER_WRITE_PARAMETER(SaveAsNewArray)
+      DREAM3D_FILTER_WRITE_PARAMETER(Slice)
+      writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
 
@@ -128,12 +126,12 @@ void SobelEdge::execute()
   QString attrMatName = getSelectedCellArrayPath().getAttributeMatrixName();
 
   //wrap m_RawImageData as itk::image
-  ImageProcessing::DefaultImageType::Pointer inputImage = ITKUtilitiesType::Dream3DtoITK(m, attrMatName, m_SelectedCellArray);
+  ImageProcessing::DefaultImageType::Pointer inputImage = ITKUtilitiesType::CreateItkWrapperForDataPointer(m, attrMatName, m_SelectedCellArray);
 
   if(m_Slice)
   {
     //wrap output array
-    ImageProcessing::DefaultImageType::Pointer outputImage = ITKUtilitiesType::Dream3DtoITK(m, attrMatName, m_NewCellArray);
+    ImageProcessing::DefaultImageType::Pointer outputImage = ITKUtilitiesType::CreateItkWrapperForDataPointer(m, attrMatName, m_NewCellArray);
 
     //get dimensions
     size_t udims[3] = {0, 0, 0};
@@ -172,8 +170,20 @@ void SobelEdge::execute()
       //run filters
       sobelFilter->SetInput(inputSlice);
       rescaleFilter->SetInput(sobelFilter->GetOutput());
-      sobelFilter->Update();
-      rescaleFilter->Update();
+
+
+      //execute filters
+      try
+      {
+        sobelFilter->Update();
+        rescaleFilter->Update();
+      }
+      catch( itk::ExceptionObject & err )
+      {
+        setErrorCondition(-5);
+        QString ss = QObject::tr("Failed to execute itk::SobelEdgeDetectionImageFilter filter. Error Message returned from ITK:\n   %1").arg(err.GetDescription());
+        notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+      }
 
       //copy into volume
       ITKUtilitiesType::SetSlice(outputImage, rescaleFilter->GetOutput(), ImageProcessing::ZSlice, i);
@@ -197,8 +207,18 @@ void SobelEdge::execute()
     ITKUtilitiesType::SetITKFilterOutput(rescaleFilter->GetOutput(), m_NewCellArrayPtr.lock());
 
     //execute filters
-    sobelFilter->Update();
-    rescaleFilter->Update();
+    try
+    {
+      sobelFilter->Update();
+      rescaleFilter->Update();
+    }
+    catch( itk::ExceptionObject & err )
+    {
+      setErrorCondition(-5);
+      QString ss = QObject::tr("Failed to execute itk::SobelEdgeDetectionImageFilter filter. Error Message returned from ITK:\n   %1").arg(err.GetDescription());
+      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    }
+
   }
 
   //array name changing/cleanup

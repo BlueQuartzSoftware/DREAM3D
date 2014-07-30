@@ -9,13 +9,11 @@
 
 #include "DREAM3DLib/Common/Constants.h"
 
-#include "ITKUtilities.h"
+#include "ItkBridge.h"
 
 //thresholding filter
 #include "itkBinaryThresholdImageFilter.h"
 
-//// Setup some typedef 's for the ITKUtilities class to shorten up our code
-typedef ITKUtilities<ImageProcessing::DefaultPixelType>    ITKUtilitiesType;
 
 // -----------------------------------------------------------------------------
 //
@@ -75,10 +73,10 @@ int ManualThreshold::writeFilterParameters(AbstractFilterParametersWriter* write
 {
   writer->openFilterGroup(this, index);
   DREAM3D_FILTER_WRITE_PARAMETER(SelectedCellArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(NewCellArrayName)
-  DREAM3D_FILTER_WRITE_PARAMETER(SaveAsNewArray)
-  DREAM3D_FILTER_WRITE_PARAMETER(ManualParameter)
-  writer->closeFilterGroup();
+      DREAM3D_FILTER_WRITE_PARAMETER(NewCellArrayName)
+      DREAM3D_FILTER_WRITE_PARAMETER(SaveAsNewArray)
+      DREAM3D_FILTER_WRITE_PARAMETER(ManualParameter)
+      writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
 
@@ -136,14 +134,9 @@ void ManualThreshold::execute()
 #else
   typedef int64_t DimType;
 #endif
-//  DimType dims[3] = {
-//    static_cast<DimType>(udims[0]),
-//    static_cast<DimType>(udims[1]),
-//    static_cast<DimType>(udims[2]),
-//  };
 
   //wrap input as itk image
-  ImageProcessing::DefaultImageType::Pointer inputImage = ITKUtilitiesType::Dream3DtoITK(m, attrMatName, m_SelectedCellArray);
+  ImageProcessing::DefaultImageType::Pointer inputImage = ITKUtilitiesType::CreateItkWrapperForDataPointer(m, attrMatName, m_SelectedCellArray);
 
   //define threshold filters
   typedef itk::BinaryThresholdImageFilter <ImageProcessing::DefaultImageType, ImageProcessing::DefaultImageType> BinaryThresholdImageFilterType;
@@ -156,7 +149,16 @@ void ManualThreshold::execute()
   thresholdFilter->SetInsideValue(255);
   thresholdFilter->SetOutsideValue(0);
   thresholdFilter->GetOutput()->GetPixelContainer()->SetImportPointer(m_NewCellArray, m_NewCellArrayPtr.lock()->getNumberOfTuples(), false);
-  thresholdFilter->Update();
+
+  try {
+    thresholdFilter->Update();
+  }
+  catch( itk::ExceptionObject & err )
+  {
+    setErrorCondition(-5);
+    QString ss = QObject::tr("Failed to execute itk::ManualThreshold filter. Error Message returned from ITK:\n   %1").arg(err.GetDescription());
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+  }
 
   //array name changing/cleanup
   if(m_SaveAsNewArray == false)

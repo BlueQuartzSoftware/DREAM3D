@@ -9,11 +9,8 @@
 
 #include <QtCore/QString>
 
-#include "ITKUtilities.h"
+#include "ItkBridge.h"
 #include "itkMedianImageFilter.h"
-
-//// Setup some typedef 's for the ITKUtilities class to shorten up our code
-typedef ITKUtilities<ImageProcessing::DefaultPixelType>    ITKUtilitiesType;
 
 // -----------------------------------------------------------------------------
 //
@@ -80,11 +77,11 @@ int MedianKernel::writeFilterParameters(AbstractFilterParametersWriter* writer, 
 {
   writer->openFilterGroup(this, index);
   DREAM3D_FILTER_WRITE_PARAMETER(SelectedCellArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(NewCellArrayName)
-  DREAM3D_FILTER_WRITE_PARAMETER(SaveAsNewArray)
-  DREAM3D_FILTER_WRITE_PARAMETER(Slice)
-  DREAM3D_FILTER_WRITE_PARAMETER(KernelSize)
-  writer->closeFilterGroup();
+      DREAM3D_FILTER_WRITE_PARAMETER(NewCellArrayName)
+      DREAM3D_FILTER_WRITE_PARAMETER(SaveAsNewArray)
+      DREAM3D_FILTER_WRITE_PARAMETER(Slice)
+      DREAM3D_FILTER_WRITE_PARAMETER(KernelSize)
+      writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
 
@@ -135,7 +132,7 @@ void MedianKernel::execute()
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getSelectedCellArrayPath().getDataContainerName());
   QString attrMatName = getSelectedCellArrayPath().getAttributeMatrixName();
 
-  ImageProcessing::DefaultImageType::Pointer inputImage = ITKUtilitiesType::Dream3DtoITK(m, attrMatName, m_SelectedCellArray);
+  ImageProcessing::DefaultImageType::Pointer inputImage = ITKUtilitiesType::CreateItkWrapperForDataPointer(m, attrMatName, m_SelectedCellArray);
 
   //create edge filter
   typedef itk::MedianImageFilter < ImageProcessing::DefaultImageType,  ImageProcessing::DefaultImageType > MedianFilterType;
@@ -152,8 +149,17 @@ void MedianKernel::execute()
   //have filter write to dream3d array instead of creating its own buffer
   ITKUtilitiesType::SetITKFilterOutput(medianFilter->GetOutput(), m_NewCellArrayPtr.lock());
 
-  //execute filter
-  medianFilter->Update();
+  //execute filters
+  try
+  {
+    medianFilter->Update();
+  }
+  catch( itk::ExceptionObject & err )
+  {
+    setErrorCondition(-5);
+    QString ss = QObject::tr("Failed to execute itk::MedianImageFilter filter. Error Message returned from ITK:\n   %1").arg(err.GetDescription());
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+  }
 
   //array name changing/cleanup
   if(m_SaveAsNewArray == false)

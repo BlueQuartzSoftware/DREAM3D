@@ -9,7 +9,7 @@
 
 #include <QtCore/QString>
 
-#include "ITKUtilities.h"
+#include "ItkBridge.h"
 #include "itkImageFileWriter.h"
 #include "itkRGBPixel.h"
 #include "itkRGBAPixel.h"
@@ -19,11 +19,11 @@
  * @brief This is a private implementation for the filter that handles the actual algorithm implementation details
  * for us like figuring out if we can use this private implementation with the data array that is assigned.
  */
-template<typename PixelType>
+template<typename TInputType>
 class WriteImagePrivate
 {
   public:
-    typedef DataArray<PixelType> DataArrayType;
+    typedef DataArray<TInputType> DataArrayType;
 
     WriteImagePrivate() {}
     virtual ~WriteImagePrivate() {}
@@ -39,31 +39,31 @@ class WriteImagePrivate
     // -----------------------------------------------------------------------------
     // This is the actual templated algorithm
     // -----------------------------------------------------------------------------
-    void static Execute(WriteImage* filter, VolumeDataContainer* m, QString attrMatName, IDataArray::Pointer intputIDataArray, QString outputFile)
+    void static Execute(WriteImage* filter, VolumeDataContainer* m, QString attrMatName, IDataArray::Pointer inputDataArray, QString outputFile)
     {
-      typename DataArrayType::Pointer inputDataPtr = boost::dynamic_pointer_cast<DataArrayType>(intputIDataArray);
+      typename DataArrayType::Pointer inputDataPtr = boost::dynamic_pointer_cast<DataArrayType>(inputDataArray);
 
-      //convert arrays to correct type
-      PixelType* inputData = static_cast<PixelType*>(inputDataPtr->getPointer(0));
-      size_t numVoxels = inputDataPtr->getNumberOfTuples();
+      // Get a Raw Pointer to the data
+      TInputType* inputData = inputDataPtr->getPointer(0);
+      //size_t numVoxels = inputDataPtr->getNumberOfTuples();
 
       //get utilities
-      typedef ITKUtilities<PixelType> ITKUtilitiesType;
 
-      //get dimensions of image and switch accordingly
-      QVector<size_t> dims = inputDataPtr->getComponentDimensions();
-      int numComp = dims[0];
+
+      //get the total number of components of the data and switch accordingly
+      int numComp = inputDataPtr->getNumberOfComponents();
 
       itk::ProcessObject::Pointer writerObject;
 
       if(1 == numComp) //scalar image
       {
+        typedef ItkBridge<TInputType> ItkBridgeType;
         //define types and wrap input image
-        typedef typename ITKUtilitiesType::ScalarImageType ImageType;
-        typedef itk::ImageFileWriter<ImageType> WriterType;
-        typename ImageType::Pointer inputImage = ITKUtilitiesType::Dream3DtoITK(m, attrMatName, inputData);
+        typedef typename ItkBridgeType::ScalarImageType ImageType;
+        typename ImageType::Pointer inputImage = ItkBridgeType::CreateItkWrapperForDataPointer(m, attrMatName, inputData);
 
         //create writer and execute
+        typedef itk::ImageFileWriter<ImageType> WriterType;
         typename WriterType::Pointer writer = WriterType::New();
         writer->SetFileName( outputFile.toLatin1().constData() );
         writer->SetInput( inputImage );
@@ -72,22 +72,65 @@ class WriteImagePrivate
       else if(3 == numComp)//rgb image
       {
         //define types and wrap input image
-        typedef typename ITKUtilitiesType::RGBImageType ImageType;
-        typedef typename itk::ImageFileWriter<ImageType> WriterType;
-        typename ImageType::Pointer inputImage = ITKUtilitiesType::template Dream3DtoITKTemplate<ImageType>(m, attrMatName, inputData);
+        {
+#if 0
+          typedef ItkBridge2<TInputType, TInputType>                            ItkBridge2Type;
+          typedef typename ItkBridge2Type::RGBImageType                         ImageType;
+          typedef typename itk::ImageFileWriter<ImageType>                      WriterType;
+          typename ImageType::Pointer inputImage;
 
-        //create writer and execute
-        typename WriterType::Pointer writer = WriterType::New();
-        writer->SetFileName( outputFile.toLatin1().constData() );
-        writer->SetInput( inputImage );
-        writerObject = writer;
+          typedef itk::RGBPixel<TInputType>                                     ItkRgbPixelType;
+          typedef ItkBridge2<TInputType, ItkRgbPixelType>                       ItkBridge2Type;
+          typedef typename ItkBridge2Type::ItkImportImageFilterPointerType      ItkImportImageFilterPointerType;
+          ItkImportImageFilterPointerType itkImportFilter = ItkBridge2Type::Dream3DtoITKImportFilter(m, attrMatName, inputData);
+          inputImage = itkImportFilter->GetOutput();
+#endif
+          typedef CreateItkWrapperForDataPointer<TInputType> WrapperType;
+          typedef typename WrapperType::ScalarImageType                             WrapperScalarImageType;
+          typedef typename WrapperType::ScalarImagePointerType                      WrapperScalarImagePointerType;
+
+          WrapperScalarImagePointerType inputImage = CreateItkWrapperForDataPointer<TInputType>()(m, attrMatName, inputData);
+
+          typedef typename itk::ImageFileWriter<WrapperScalarImageType>                      WriterType;
+
+          typename WriterType::Pointer writer = WriterType::New();
+          writer->SetFileName( outputFile.toLatin1().constData() );
+          writer->SetInput( inputImage );
+          writerObject = writer;
+
+
+        }
+#if 0
+        {
+          typedef Dream3DToItkImageConversion<TInputType, TInputType, itk::RGBPixel<TInputType> > Dream3DToItkImageConversionType;
+
+          Dream3DToItkImageConversionType importFunctor;
+          typename Dream3DToItkImageConversionType::ItkImportImageFilterPointerType itkImportFilter = importFunctor(m, attrMatName, inputData);
+          typename Dream3DToItkImageConversionType::ItkImageOutPointerType inputImage = itkImportFilter->GetOutput();
+
+
+          //create writer and execute
+          typename WriterType::Pointer writer = WriterType::New();
+          writer->SetFileName( outputFile.toLatin1().constData() );
+          writer->SetInput( inputImage );
+          writerObject = writer;
+
+
+        }
+
+#endif
+
+
       }
       else if(4 == numComp)//rgba image
       {
+        typedef ItkBridge<TInputType>                            ItkBridgeType;
+
         //define types and wrap input image
-        typedef typename ITKUtilitiesType::RGBAImageType ImageType;
+        typedef typename ItkBridgeType::RGBAImageType ImageType;
         typedef typename itk::ImageFileWriter<ImageType> WriterType;
-        typename ImageType::Pointer inputImage = ITKUtilitiesType::template Dream3DtoITKTemplate<ImageType>(m, attrMatName, inputData);
+        //     typename ImageType::Pointer inputImage = ItkBridgeType::template Dream3DtoITKTemplate<ImageType>(m, attrMatName, inputData);
+        typename ImageType::Pointer inputImage = ItkBridgeType::template Dream3DtoITKImportFilter<typename ImageType::PixelType>(m, attrMatName, inputData)->GetOutput();
 
         //create writer and execute
         typename WriterType::Pointer writer = WriterType::New();
@@ -97,9 +140,9 @@ class WriteImagePrivate
       } /** else//vector image
       {
         //define types and wrap input image
-        typedef itk::Image<itk::FixedArray<PixelType, numComp> >, ImageProcessing::ImageDimension> ImageType;
+        typedef itk::Image<itk::FixedArray<TInputType, numComp> >, ImageProcessing::ImageDimension> ImageType;
         typedef itk::ImageFileWriter<ImageType> WriterType;
-        ImageType::Pointer inputImage = ITKUtilitiesType::Dream3DtoITKTemplate<ImageType>(m, attrMatName, inputData);
+        ImageType::Pointer inputImage = ItkBridgeType::Dream3DtoITKTemplate<ImageType>(m, attrMatName, inputData);
 
         //create writer and execute
         typename WriterType::Pointer writer = WriterType::New();
@@ -187,21 +230,25 @@ void WriteImage::dataCheck()
   setErrorCondition(0);
 
   //pass empty dimensions to allow any size
-  QVector<size_t> dims = QVector<size_t>::QVector();
-  TEMPLATE_GET_PREREQ_ARRAY(SelectedCellArray, getSelectedCellArrayPath(), dims)
+  QVector<size_t> compDims;
+  m_SelectedCellArrayPtr = TemplateHelper::GetPrereqArrayFromPath<AbstractFilter, VolumeDataContainer>()(this, getSelectedCellArrayPath(), compDims);
+  if(NULL != m_SelectedCellArrayPtr.lock().get())
+  {
+    m_SelectedCellArray = m_SelectedCellArrayPtr.lock().get();
+  }
 
   //make sure dims of selected array are appropriate
-  if(1 == dims.size())
+  if(1 == compDims.size())
   {
-    if(1 == dims[0]) //scalar
+    if(1 == compDims[0]) //scalar
     {
 
     }
-    else if (3 == dims[0])//rgb
+    else if (3 == compDims[0])//rgb
     {
       notifyWarningMessage(getHumanLabel(), "Warning: writing of rgb images is currenlty experimental (unstable behavoir may occur)", 0);
     }
-    else if (4 == dims[0])//rgba
+    else if (4 == compDims[0])//rgba
     {
       notifyWarningMessage(getHumanLabel(), "Warning: writing of rgba images is currenlty experimental (unstable behavoir may occur)", 0);
     }
@@ -214,7 +261,7 @@ void WriteImage::dataCheck()
   }
   else
   {
-    QString message = QObject::tr("The selected array '%1' has unsupported dimensionality (%2)").arg(m_SelectedCellArrayArrayName).arg(dims.size());
+    QString message = QObject::tr("The selected array '%1' has unsupported dimensionality (%2)").arg(m_SelectedCellArrayArrayName).arg(compDims.size());
     setErrorCondition(-101);
   }
 

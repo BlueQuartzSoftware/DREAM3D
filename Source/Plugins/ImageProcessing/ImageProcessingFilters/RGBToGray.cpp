@@ -13,49 +13,8 @@
 #include "itkUnaryFunctorImageFilter.h"
 
 // ImageProcessing Plugin
-#include "ITKUtilities.h"
-
-namespace Functor
-{
-  template< class TInput, class TOutput> class Luminance
-  {
-  public:
-    Luminance() {};
-    ~Luminance() {};
-
-    bool operator!=( const Luminance & ) const
-    {
-      return false;
-    }
-    bool operator==( const Luminance & other ) const
-    {
-      return !(*this != other);
-    }
-
-    inline TOutput operator()(const TInput & A) const
-    {
-      return static_cast<TOutput>( A[0]*weight_r+A[1]*weight_g+A[2]*weight_b );
-    }
-
-    void SetRWeight(double r)
-    {
-      weight_r=r;
-    }
-    void SetGWeight(double g)
-    {
-      weight_g=g;
-    }
-    void SetBWeight(double b)
-    {
-      weight_b=b;
-    }
-
-  private:
-    double weight_r;
-    double weight_g;
-    double weight_b;
-  };
-}
+#include "ItkBridge.h"
+#include "ImageProcessing/ImageProcessingHelpers.hpp"
 
 /**
  * @brief This is a private implementation for the filter that handles the actual algorithm implementation details
@@ -98,21 +57,20 @@ class RGBToGrayPrivate
       double mag = weights.x + weights.y + weights.z;
 
       // Define all the typedefs that are needed
-      typedef ITKUtilities<T>                                           ITKUtilitiesType;
-      typedef typename ITKUtilitiesType::RGBImageType                   RGBImageType;
+      typedef ItkBridge<T>                                              ItkBridgeType;
+      typedef typename ItkBridgeType::RGBImageType                   RGBImageType;
       typedef typename RGBImageType::Pointer                            RGBImagePointerType;
       typedef typename RGBImageType::PixelType                          RGBImagePixelType;
-      typedef typename ITKUtilitiesType::ScalarImageType                ScalarImageType;
+      typedef typename ItkBridgeType::ScalarImageType                ScalarImageType;
       typedef typename ScalarImageType::PixelType                       ScalarImagePixelType;
       //define Fucntor Typedef
-      typedef Functor::Luminance<RGBImagePixelType, ScalarImagePixelType>                       LuminanceFunctorType;
+      typedef ImageProcessing::Functor::Luminance<RGBImagePixelType, ScalarImagePixelType>                       LuminanceFunctorType;
       //define filters typedef
       typedef itk::UnaryFunctorImageFilter<RGBImageType, ScalarImageType, LuminanceFunctorType> RGBToGrayType;
 
 
       //wrap input as itk image
-      RGBImagePointerType inputImage
-                        = ITKUtilitiesType::template Dream3DtoITKTemplate<RGBImageType>(m, attrMatName, inputData);
+      RGBImagePointerType inputImage = ItkBridgeType::template Dream3DtoITKImportFilter<RGBImagePixelType>(m, attrMatName, inputData)->GetOutput();
 
       //convert to gray
       typename RGBToGrayType::Pointer itkFilter = RGBToGrayType::New();
@@ -211,12 +169,16 @@ void RGBToGray::dataCheck()
   DataArrayPath tempPath;
 
   //check for required arrays
-  QVector<size_t> dims(1, 3);
-  TEMPLATE_GET_PREREQ_ARRAY(SelectedCellArray, getSelectedCellArrayArrayPath(), dims)
+  QVector<size_t> compDims(1, 3);
+  m_SelectedCellArrayPtr = TemplateHelper::GetPrereqArrayFromPath<AbstractFilter, VolumeDataContainer>()(this, getSelectedCellArrayArrayPath(), compDims);
+  if(NULL != m_SelectedCellArrayPtr.lock().get())
+  {
+    m_SelectedCellArray = m_SelectedCellArrayPtr.lock().get();
+  }
 
   //configured created name / location
   tempPath.update(getSelectedCellArrayArrayPath().getDataContainerName(), getSelectedCellArrayArrayPath().getAttributeMatrixName(), getNewCellArrayName() );
-
+#if 0
   //get type
   QString typeName = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getSelectedCellArrayArrayPath().getDataContainerName())->getAttributeMatrix(getSelectedCellArrayArrayPath().getAttributeMatrixName())->getAttributeArray(getSelectedCellArrayArrayPath().getDataArrayName())->getTypeAsString();;
   int type = TemplateUtilities::getTypeFromTypeName(typeName);
@@ -224,6 +186,16 @@ void RGBToGray::dataCheck()
   //create new array of same type
   dims[0]=1;
   TEMPLATE_CREATE_NONPREREQ_ARRAY(NewCellArray, tempPath, dims, type);
+#endif
+  VolumeDataContainer* dc = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getSelectedCellArrayArrayPath().getDataContainerName() );
+  AttributeMatrix::Pointer am = dc->getPrereqAttributeMatrix<AbstractFilter>(this, getSelectedCellArrayArrayPath().getAttributeMatrixName(), 80000);
+  IDataArray::Pointer data = am->getExistingPrereqArray<IDataArray, AbstractFilter>(this, getSelectedCellArrayArrayPath().getDataArrayName(), 80000);
+
+  m_NewCellArrayPtr = TemplateHelper::CreateNonPrereqArrayFromArrayType()(this, tempPath, compDims, data);
+  if( NULL != m_NewCellArrayPtr.lock().get() )
+  {
+    m_NewCellArray = m_NewCellArrayPtr.lock()->getVoidPointer(0);
+  }
 }
 
 // -----------------------------------------------------------------------------

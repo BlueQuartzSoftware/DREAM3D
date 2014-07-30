@@ -7,15 +7,12 @@
 
 #include "KMeans.h"
 
-#include "DREAM3DLib/Common/Constants.h"
-
-#include "ITKUtilities.h"
-
 #include "itkScalarImageKmeansImageFilter.h"
 #include "itkMinimumMaximumImageCalculator.h"
 
-//// Setup some typedef 's for the ITKUtilities class to shorten up our code
-typedef ITKUtilities<ImageProcessing::DefaultPixelType>    ITKUtilitiesType;
+#include "DREAM3DLib/Common/Constants.h"
+
+#include "ItkBridge.h"
 
 // -----------------------------------------------------------------------------
 //
@@ -78,11 +75,11 @@ int KMeans::writeFilterParameters(AbstractFilterParametersWriter* writer, int in
 {
   writer->openFilterGroup(this, index);
   DREAM3D_FILTER_WRITE_PARAMETER(SelectedCellArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(NewCellArrayName)
-  DREAM3D_FILTER_WRITE_PARAMETER(SaveAsNewArray)
-  DREAM3D_FILTER_WRITE_PARAMETER(Slice)
-  DREAM3D_FILTER_WRITE_PARAMETER(Classes)
-  writer->closeFilterGroup();
+      DREAM3D_FILTER_WRITE_PARAMETER(NewCellArrayName)
+      DREAM3D_FILTER_WRITE_PARAMETER(SaveAsNewArray)
+      DREAM3D_FILTER_WRITE_PARAMETER(Slice)
+      DREAM3D_FILTER_WRITE_PARAMETER(Classes)
+      writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
 
@@ -157,7 +154,7 @@ void KMeans::execute()
   };
 
   //wrap input as itk image
-  ImageProcessing::DefaultImageType::Pointer inputImage = ITKUtilitiesType::Dream3DtoITK(m, attrMatName, m_SelectedCellArray);
+  ImageProcessing::DefaultImageType::Pointer inputImage = ITKUtilitiesType::CreateItkWrapperForDataPointer(m, attrMatName, m_SelectedCellArray);
 
   if(m_Slice)
   {
@@ -166,7 +163,7 @@ void KMeans::execute()
     typedef itk::ScalarImageKmeansImageFilter< ImageProcessing::DefaultSliceType, ImageProcessing::DefaultSliceType > KMeansType;
 
     //wrap output buffer as image
-    ImageProcessing::DefaultImageType::Pointer outputImage = ITKUtilitiesType::Dream3DtoITK(m, attrMatName, m_NewCellArray);
+    ImageProcessing::DefaultImageType::Pointer outputImage = ITKUtilitiesType::CreateItkWrapperForDataPointer(m, attrMatName, m_NewCellArray);
 
     //loop over slices
     for(int i = 0; i < dims[2]; i++)
@@ -191,8 +188,16 @@ void KMeans::execute()
         mean = mean + meanIncrement;
       }
 
-      //execute
-      kMeans->Update();
+      try
+      {
+        kMeans->Update();
+      }
+      catch( itk::ExceptionObject & err )
+      {
+        setErrorCondition(-5);
+        QString ss = QObject::tr("Failed to execute itk::KMeans filter. Error Message returned from ITK:\n   %1").arg(err.GetDescription());
+        notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+      }
 
       //copy back into volume
       ITKUtilitiesType::SetSlice(outputImage, kMeans->GetOutput(), ImageProcessing::ZSlice, i);
@@ -222,8 +227,18 @@ void KMeans::execute()
     }
 
     ITKUtilitiesType::SetITKFilterOutput(kMeans->GetOutput(), m_NewCellArrayPtr.lock());
-    kMeans->Update();
+    try
+    {
+      kMeans->Update();
+    }
+    catch( itk::ExceptionObject & err )
+    {
+      setErrorCondition(-5);
+      QString ss = QObject::tr("Failed to execute itk::KMeans filter. Error Message returned from ITK:\n   %1").arg(err.GetDescription());
+      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    }
   }
+
 
   //array name changing/cleanup
   if(m_SaveAsNewArray == false)

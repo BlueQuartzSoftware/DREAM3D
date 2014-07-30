@@ -29,19 +29,6 @@ class ImageRegistration : public AbstractFilter
 
     virtual ~ImageRegistration();
 
-    /* Place your input parameters here using the DREAM3D macros to declare the Filter Parameters
-     * or other instance variables
-     */
-    //DREAM3D_FILTER_PARAMETER(QString, ImagePrefix)
-    /* If you declare a filter parameter above then you MUST create a Q_PROPERTY for that FilterParameter */
-    //Q_PROPERTY(QString ImagePrefix READ getImagePrefix WRITE setImagePrefix)
-
-    /* Here is another example of declaring an integer FilterParameter */
-    // DREAM3D_FILTER_PARAMETER(int, ImageSize)
-    // Q_PROPERTY(int ImageSize READ getImageSize WRITE setImageSize)
-
-
-
     /**
      * @brief getCompiledLibraryName Returns the name of the Library that this filter is a part of
      * @return

@@ -7,13 +7,12 @@
 
 #include "GaussianBlur.h"
 
-#include <QtCore/QString>
-
-#include "ITKUtilities.h"
 #include "itkGaussianBlurImageFunction.h"
 
-//// Setup some typedef 's for the ITKUtilities class to shorten up our code
-typedef ITKUtilities<ImageProcessing::DefaultPixelType>    ITKUtilitiesType;
+#include <QtCore/QString>
+
+#include "ItkBridge.h"
+
 
 // -----------------------------------------------------------------------------
 //

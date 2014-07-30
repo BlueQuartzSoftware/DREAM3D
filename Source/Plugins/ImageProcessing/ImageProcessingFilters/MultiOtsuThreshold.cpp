@@ -9,12 +9,9 @@
 
 #include <QtCore/QString>
 
-#include "ITKUtilities.h"
+#include "ItkBridge.h"
 
 #include "itkOtsuMultipleThresholdsImageFilter.h"
-
-//// Setup some typedef 's for the ITKUtilities class to shorten up our code
-typedef ITKUtilities<ImageProcessing::DefaultPixelType>    ITKUtilitiesType;
 
 // -----------------------------------------------------------------------------
 //
@@ -78,11 +75,11 @@ int MultiOtsuThreshold::writeFilterParameters(AbstractFilterParametersWriter* wr
 {
   writer->openFilterGroup(this, index);
   DREAM3D_FILTER_WRITE_PARAMETER(SelectedCellArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(NewCellArrayName)
-  DREAM3D_FILTER_WRITE_PARAMETER(SaveAsNewArray)
-  DREAM3D_FILTER_WRITE_PARAMETER(Slice)
-  DREAM3D_FILTER_WRITE_PARAMETER(Levels)
-  writer->closeFilterGroup();
+      DREAM3D_FILTER_WRITE_PARAMETER(NewCellArrayName)
+      DREAM3D_FILTER_WRITE_PARAMETER(SaveAsNewArray)
+      DREAM3D_FILTER_WRITE_PARAMETER(Slice)
+      DREAM3D_FILTER_WRITE_PARAMETER(Levels)
+      writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
 
@@ -148,7 +145,7 @@ void MultiOtsuThreshold::execute()
   };
 
   //wrap input as itk image
-  ImageProcessing::DefaultImageType::Pointer inputImage = ITKUtilitiesType::Dream3DtoITK(m, attrMatName, m_SelectedCellArray);
+  ImageProcessing::DefaultImageType::Pointer inputImage = ITKUtilitiesType::CreateItkWrapperForDataPointer(m, attrMatName, m_SelectedCellArray);
 
   if(m_Slice)
   {
@@ -157,7 +154,7 @@ void MultiOtsuThreshold::execute()
     ThresholdType::Pointer otsuThresholder = ThresholdType::New();
 
     //wrap output buffer as image
-    ImageProcessing::DefaultImageType::Pointer outputImage = ITKUtilitiesType::Dream3DtoITK(m, attrMatName, m_NewCellArray);
+    ImageProcessing::DefaultImageType::Pointer outputImage = ITKUtilitiesType::CreateItkWrapperForDataPointer(m, attrMatName, m_NewCellArray);
 
     //loop over slices
     for(int i = 0; i < dims[2]; i++)
@@ -169,7 +166,17 @@ void MultiOtsuThreshold::execute()
       otsuThresholder->SetInput(slice);
       otsuThresholder->SetNumberOfThresholds(m_Levels);
       otsuThresholder->SetLabelOffset(1);
-      otsuThresholder->Update();
+      //execute filters
+      try
+      {
+        otsuThresholder->Update();
+      }
+      catch( itk::ExceptionObject & err )
+      {
+        setErrorCondition(-5);
+        QString ss = QObject::tr("Failed to execute itk::OtsuMultipleThresholdsImageFilter filter. Error Message returned from ITK:\n   %1").arg(err.GetDescription());
+        notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+      }
 
       //copy back into volume
       ITKUtilitiesType::SetSlice(outputImage, otsuThresholder->GetOutput(), ImageProcessing::ZSlice, i);
@@ -184,7 +191,17 @@ void MultiOtsuThreshold::execute()
     otsuThresholder->SetLabelOffset(1);
 
     ITKUtilitiesType::SetITKFilterOutput(otsuThresholder->GetOutput(), m_NewCellArrayPtr.lock());
-    otsuThresholder->Update();
+    //execute filters
+    try
+    {
+      otsuThresholder->Update();
+    }
+    catch( itk::ExceptionObject & err )
+    {
+      setErrorCondition(-5);
+      QString ss = QObject::tr("Failed to execute itk::OtsuMultipleThresholdsImageFilter filter. Error Message returned from ITK:\n   %1").arg(err.GetDescription());
+      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    }
   }
 
   //array name changing/cleanup

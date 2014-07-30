@@ -7,7 +7,7 @@
 
 #include "ImageCalculator.h"
 
-#include "ITKUtilities.h"
+#include "ItkBridge.h"
 #include "itkAddImageFilter.h"
 #include "itkSubtractImageFilter.h"
 #include "itkMultiplyImageFilter.h"
@@ -21,77 +21,8 @@
 #include "itkAbsoluteValueDifferenceImageFilter.h"
 #include "itkUnaryFunctorImageFilter.h"
 
-#include <limits>
+#include "ImageProcessing/ImageProcessingHelpers.hpp"
 
-namespace Functor
-{
-  //mean functor (doesn't seem to be currently implemented in itk)
-  template< class TPixel> class Mean
-  {
-    public:
-      Mean() {}
-      ~Mean() {}
-      bool operator!=(const Mean&) const
-      {
-        return false;
-      }
-      bool operator==(const Mean& other) const
-      {
-        return !( *this != other );
-      }
-
-      inline TPixel operator()(const TPixel& A, const TPixel& B) const
-      {
-        const double dA = static_cast< double >( A );
-        const double dB = static_cast< double >( B );
-        const double sum = dA + dB;
-
-        return static_cast< TPixel >( sum / 2 );
-      }
-  };
-
-  //custom functor to bring value within limits and round (without this functor itk add filter on an 8bit image 255+10->9)
-  template< class TInput, class TOutput> class LimitsRound
-  {
-    public:
-      LimitsRound() {};
-      ~LimitsRound() {};
-      bool operator!=( const LimitsRound& ) const
-      {
-        return false;
-      }
-      bool operator==( const LimitsRound& other ) const
-      {
-        return !(*this != other);
-      }
-
-      inline TOutput operator()(const TInput& A) const
-      {
-        const double dA = static_cast< double >( A );
-
-        if(dA > std::numeric_limits<TOutput>::max())
-        {
-          return std::numeric_limits<TOutput>::max();
-        }
-        else if(dA < std::numeric_limits<TOutput>::min())
-        {
-          return std::numeric_limits<TOutput>::min();
-        }
-
-        //round if needed
-        if(std::numeric_limits<TOutput>::is_integer && !std::numeric_limits<TInput>::is_integer)
-        {
-          if (dA >= floor(dA) + 0.5) { return static_cast< TOutput >(ceil(dA)); }
-          else { return static_cast< TOutput >(floor(dA)); }
-        }
-
-        return static_cast< TOutput >( dA );
-      }
-  };
-}
-
-//// Setup some typedef 's for the ITKUtilities class to shorten up our code
-typedef ITKUtilities<ImageProcessing::DefaultPixelType>    ITKUtilitiesType;
 
 // -----------------------------------------------------------------------------
 //
@@ -226,8 +157,8 @@ void ImageCalculator::execute()
   QString attrMatName = getSelectedCellArrayPath1().getAttributeMatrixName();
 
   //wrap m_RawImageData as itk::image
-  ImageProcessing::DefaultImageType::Pointer inputImage1 = ITKUtilitiesType::Dream3DtoITK(m, attrMatName, m_SelectedCellArray1);
-  ImageProcessing::DefaultImageType::Pointer inputImage2 = ITKUtilitiesType::Dream3DtoITK(m, attrMatName, m_SelectedCellArray2);
+  ImageProcessing::DefaultImageType::Pointer inputImage1 = ITKUtilitiesType::CreateItkWrapperForDataPointer(m, attrMatName, m_SelectedCellArray1);
+  ImageProcessing::DefaultImageType::Pointer inputImage2 = ITKUtilitiesType::CreateItkWrapperForDataPointer(m, attrMatName, m_SelectedCellArray2);
 
   //define filters
   typedef itk::AddImageFilter<ImageProcessing::DefaultImageType, ImageProcessing::DefaultImageType, ImageProcessing::FloatImageType> AddType;//
@@ -239,11 +170,11 @@ void ImageCalculator::execute()
   typedef itk::XorImageFilter<ImageProcessing::DefaultImageType, ImageProcessing::DefaultImageType, ImageProcessing::DefaultImageType> XorType;
   typedef itk::MinimumImageFilter<ImageProcessing::DefaultImageType, ImageProcessing::DefaultImageType, ImageProcessing::DefaultImageType> MinType;
   typedef itk::MaximumImageFilter<ImageProcessing::DefaultImageType, ImageProcessing::DefaultImageType, ImageProcessing::DefaultImageType> MaxType;
-  typedef itk::BinaryFunctorImageFilter<ImageProcessing::DefaultImageType, ImageProcessing::DefaultImageType, ImageProcessing::FloatImageType, Functor::Mean<ImageProcessing::DefaultPixelType> > MeanType;
+  typedef itk::BinaryFunctorImageFilter<ImageProcessing::DefaultImageType, ImageProcessing::DefaultImageType, ImageProcessing::FloatImageType, ImageProcessing::Functor::Mean<ImageProcessing::DefaultPixelType> > MeanType;
   typedef itk::AbsoluteValueDifferenceImageFilter<ImageProcessing::DefaultImageType, ImageProcessing::DefaultImageType, ImageProcessing::FloatImageType> DifferenceType;
 
   //set up filters to cap image ranges
-  typedef itk::UnaryFunctorImageFilter< ImageProcessing::FloatImageType, ImageProcessing::DefaultImageType, Functor::LimitsRound<ImageProcessing::FloatPixelType, ImageProcessing::DefaultPixelType> > LimitsRoundType;
+  typedef itk::UnaryFunctorImageFilter< ImageProcessing::FloatImageType, ImageProcessing::DefaultImageType, ImageProcessing::Functor::LimitsRound<ImageProcessing::FloatPixelType, ImageProcessing::DefaultPixelType> > LimitsRoundType;
   LimitsRoundType::Pointer limitsRound = LimitsRoundType::New();
 
   //set up and run selected filter

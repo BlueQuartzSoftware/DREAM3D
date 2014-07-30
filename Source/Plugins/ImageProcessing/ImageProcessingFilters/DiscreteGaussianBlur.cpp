@@ -7,15 +7,14 @@
 
 #include "DiscreteGaussianBlur.h"
 
-#include <QtCore/QString>
-
-#include "ITKUtilities.h"
 #include "itkDiscreteGaussianImageFilter.h"
 #include "itkRescaleIntensityImageFilter.h"
 
+#include <QtCore/QString>
 
-//// Setup some typedef 's for the ITKUtilities class to shorten up our code
-typedef ITKUtilities<ImageProcessing::DefaultPixelType>    ITKUtilitiesType;
+#include "ItkBridge.h"
+
+
 
 // -----------------------------------------------------------------------------
 //
@@ -131,7 +130,7 @@ void DiscreteGaussianBlur::execute()
   QString attrMatName = getSelectedCellArrayPath().getAttributeMatrixName();
 
   //wrap m_RawImageData as itk::image
-  ImageProcessing::DefaultImageType::Pointer inputImage = ITKUtilitiesType::Dream3DtoITK(m, attrMatName, m_SelectedCellArray);
+  ImageProcessing::DefaultImageType::Pointer inputImage = ITKUtilitiesType::CreateItkWrapperForDataPointer(m, attrMatName, m_SelectedCellArray);
 
   //create Gaussian blur filter
   typedef itk::DiscreteGaussianImageFilter< ImageProcessing::DefaultImageType, ImageProcessing::FloatImageType > GaussianFilterType;

@@ -9,12 +9,10 @@
 
 #include <QtCore/QString>
 
-#include "ITKUtilities.h"
+#include "ItkBridge.h"
 #include "itkMeanImageFilter.h"
 #include "itkRescaleIntensityImageFilter.h"
 
-//// Setup some typedef 's for the ITKUtilities class to shorten up our code
-typedef ITKUtilities<ImageProcessing::DefaultPixelType>    ITKUtilitiesType;
 
 // -----------------------------------------------------------------------------
 //
@@ -81,11 +79,11 @@ int MeanKernel::writeFilterParameters(AbstractFilterParametersWriter* writer, in
 {
   writer->openFilterGroup(this, index);
   DREAM3D_FILTER_WRITE_PARAMETER(SelectedCellArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(NewCellArrayName)
-  DREAM3D_FILTER_WRITE_PARAMETER(SaveAsNewArray)
-  DREAM3D_FILTER_WRITE_PARAMETER(Slice)
-  DREAM3D_FILTER_WRITE_PARAMETER(KernelSize)
-  writer->closeFilterGroup();
+      DREAM3D_FILTER_WRITE_PARAMETER(NewCellArrayName)
+      DREAM3D_FILTER_WRITE_PARAMETER(SaveAsNewArray)
+      DREAM3D_FILTER_WRITE_PARAMETER(Slice)
+      DREAM3D_FILTER_WRITE_PARAMETER(KernelSize)
+      writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
 
@@ -136,7 +134,7 @@ void MeanKernel::execute()
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getSelectedCellArrayPath().getDataContainerName());
   QString attrMatName = getSelectedCellArrayPath().getAttributeMatrixName();
 
-  ImageProcessing::DefaultImageType::Pointer inputImage = ITKUtilitiesType::Dream3DtoITK(m, attrMatName, m_SelectedCellArray);
+  ImageProcessing::DefaultImageType::Pointer inputImage = ITKUtilitiesType::CreateItkWrapperForDataPointer(m, attrMatName, m_SelectedCellArray);
 
   //create edge filter
   typedef itk::MeanImageFilter<ImageProcessing::DefaultImageType, ImageProcessing::FloatImageType> MeanFilterType;
@@ -162,8 +160,28 @@ void MeanKernel::execute()
   ITKUtilitiesType::SetITKFilterOutput(rescaleFilter->GetOutput(), m_NewCellArrayPtr.lock());
 
   //execute filters
-  meanFilter->Update();
-  rescaleFilter->Update();
+  try
+  {
+    meanFilter->Update();
+  }
+  catch( itk::ExceptionObject & err )
+  {
+    setErrorCondition(-5);
+    QString ss = QObject::tr("Failed to execute itk::MeanImageFilter filter. Error Message returned from ITK:\n   %1").arg(err.GetDescription());
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+  }
+
+
+  try
+  {
+    rescaleFilter->Update();
+  }
+  catch( itk::ExceptionObject & err )
+  {
+    setErrorCondition(-5);
+    QString ss = QObject::tr("Failed to execute itk::RescaleIntensityImageFilter filter. Error Message returned from ITK:\n   %1").arg(err.GetDescription());
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+  }
 
   //array name changing/cleanup
   if(m_SaveAsNewArray == false)

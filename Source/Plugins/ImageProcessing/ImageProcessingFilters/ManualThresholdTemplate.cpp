@@ -10,7 +10,7 @@
 #include "itkBinaryThresholdImageFilter.h"
 
 // ImageProcessing Plugin
-#include "ITKUtilities.h"
+#include "ItkBridge.h"
 
 
 /**
@@ -48,11 +48,11 @@ class ManualThresholdTemplatePrivate
 
       size_t numVoxels = inputDataPtr->getNumberOfTuples();
 
-      typedef ITKUtilities<PixelType> ITKUtilitiesType;
+      typedef ItkBridge<PixelType> ItkBridgeType;
 
       //wrap input as itk image
       typedef itk::Image<PixelType, ImageProcessing::ImageDimension> ImageType;
-      typename ImageType::Pointer inputImage = ITKUtilitiesType::Dream3DtoITK(m, attrMatName, inputData);
+      typename ImageType::Pointer inputImage = ItkBridgeType::CreateItkWrapperForDataPointer(m, attrMatName, inputData);
 
       //define threshold filters
       typedef itk::BinaryThresholdImageFilter <ImageType, ImageType> BinaryThresholdImageFilterType;
@@ -65,7 +65,16 @@ class ManualThresholdTemplatePrivate
       thresholdFilter->SetInsideValue(255);
       thresholdFilter->SetOutsideValue(0);
       thresholdFilter->GetOutput()->GetPixelContainer()->SetImportPointer(outputData, numVoxels, false);
-      thresholdFilter->Update();
+      try
+      {
+        thresholdFilter->Update();
+      }
+      catch( itk::ExceptionObject & err )
+      {
+        filter->setErrorCondition(-5);
+        QString ss = QObject::tr("Failed to execute itk::BinaryThresholdImageFilter filter. Error Message returned from ITK:\n   %1").arg(err.GetDescription());
+        filter->notifyErrorMessage(filter->getHumanLabel(), ss, filter->getErrorCondition());
+      }
     }
   private:
     ManualThresholdTemplatePrivate(const ManualThresholdTemplatePrivate&); // Copy Constructor Not Implemented
@@ -147,19 +156,28 @@ void ManualThresholdTemplate::dataCheck()
   DataArrayPath tempPath;
 
   //check for required arrays
-  QVector<size_t> dims(1, 1);
-  TEMPLATE_GET_PREREQ_ARRAY(SelectedCellArray, getSelectedCellArrayArrayPath(), dims)
+  QVector<size_t> compDims(1, 1);
+
+  m_SelectedCellArrayPtr = TemplateHelper::GetPrereqArrayFromPath<AbstractFilter, VolumeDataContainer>()(this, getSelectedCellArrayArrayPath(), compDims);
+  if(NULL != m_SelectedCellArrayPtr.lock().get())
+  {
+    m_SelectedCellArray = m_SelectedCellArrayPtr.lock().get();
+  }
 
   //configured created name / location
   if(m_SaveAsNewArray == false) { m_NewCellArrayName = "thisIsATempName"; }
   tempPath.update(getSelectedCellArrayArrayPath().getDataContainerName(), getSelectedCellArrayArrayPath().getAttributeMatrixName(), getNewCellArrayName() );
 
-  //get type
-  QString typeName = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getSelectedCellArrayArrayPath().getDataContainerName())->getAttributeMatrix(getSelectedCellArrayArrayPath().getAttributeMatrixName())->getAttributeArray(getSelectedCellArrayArrayPath().getDataArrayName())->getTypeAsString();;
-  int type = TemplateUtilities::getTypeFromTypeName(typeName);
+  // We can safely just get the pointers without checking if they are NULL because that was effectively done above in the GetPrereqArray call
+  VolumeDataContainer* dc = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getSelectedCellArrayArrayPath().getDataContainerName() );
+  AttributeMatrix::Pointer am = dc->getPrereqAttributeMatrix<AbstractFilter>(this, getSelectedCellArrayArrayPath().getAttributeMatrixName(), 80000);
+  IDataArray::Pointer data = am->getExistingPrereqArray<IDataArray, AbstractFilter>(this, getSelectedCellArrayArrayPath().getDataArrayName(), 80000);
 
-  //create new array of same type
-  TEMPLATE_CREATE_NONPREREQ_ARRAY(NewCellArray, tempPath, dims, type);
+  m_NewCellArrayPtr = TemplateHelper::CreateNonPrereqArrayFromArrayType()(this, tempPath, compDims, data);
+  if( NULL != m_NewCellArrayPtr.lock().get() )
+  {
+    m_NewCellArray = m_NewCellArrayPtr.lock()->getVoidPointer(0);
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -192,11 +210,11 @@ void filter(IDataArray::Pointer inputIDataArray, IDataArray::Pointer outputIData
 
   size_t numVoxels = inputDataPtr->getNumberOfTuples();
 
-  typedef ITKUtilities<PixelType> ITKUtilitiesType;
+  typedef ItkBridge<PixelType> ItkBridgeType;
 
   //wrap input as itk image
   typedef itk::Image<PixelType, ImageProcessing::ImageDimension> ImageType;
-  typename ImageType::Pointer inputImage = ITKUtilitiesType::Dream3DtoITK(m, attrMatName, inputData);
+  typename ImageType::Pointer inputImage = ItkBridgeType::CreateItkWrapperForDataPointer(m, attrMatName, inputData);
 
   //define threshold filters
   typedef itk::BinaryThresholdImageFilter <ImageType, ImageType> BinaryThresholdImageFilterType;

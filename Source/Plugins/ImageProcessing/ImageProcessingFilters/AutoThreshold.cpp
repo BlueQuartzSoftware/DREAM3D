@@ -7,10 +7,6 @@
 
 #include "AutoThreshold.h"
 
-#include "DREAM3DLib/Common/Constants.h"
-
-#include "ITKUtilities.h"
-
 //histogram calculation
 #include "itkImageToHistogramFilter.h"
 
@@ -29,15 +25,14 @@
 #include "itkTriangleThresholdCalculator.h"
 #include "itkYenThresholdCalculator.h"
 
-//robust automatic selection
-//#include "itkGradientMagnitudeImageFilter.h"
-//#include "itkRobustAutomaticThresholdCalculator.h"
-
 //thresholding filter
 #include "itkBinaryThresholdImageFilter.h"
 
-//// Setup some typedef 's for the ITKUtilities class to shorten up our code
-typedef ITKUtilities<ImageProcessing::DefaultPixelType>    ITKUtilitiesType;
+#include "DREAM3DLib/Common/Constants.h"
+
+#include "ItkBridge.h"
+
+
 
 // -----------------------------------------------------------------------------
 //
@@ -192,7 +187,7 @@ void AutoThreshold::execute()
   };
 
   //wrap input as itk image
-  ImageProcessing::DefaultImageType::Pointer inputImage = ITKUtilitiesType::Dream3DtoITK(m, attrMatName, m_SelectedCellArray);
+  ImageProcessing::DefaultImageType::Pointer inputImage = ITKUtilitiesType::CreateItkWrapperForDataPointer(m, attrMatName, m_SelectedCellArray);
 
   //define threshold filters
   typedef itk::BinaryThresholdImageFilter <ImageProcessing::DefaultImageType, ImageProcessing::DefaultImageType> BinaryThresholdImageFilterType;
@@ -312,7 +307,7 @@ void AutoThreshold::execute()
     histogramFilter2D->SetHistogramBinMaximum( upperBound );
 
     //wrap output buffer as image
-    ImageProcessing::DefaultImageType::Pointer outputImage = ITKUtilitiesType::Dream3DtoITK(m, attrMatName, m_NewCellArray);
+    ImageProcessing::DefaultImageType::Pointer outputImage = ITKUtilitiesType::CreateItkWrapperForDataPointer(m, attrMatName, m_NewCellArray);
 
     //loop over slices
     for(int i = 0; i < dims[2]; i++)

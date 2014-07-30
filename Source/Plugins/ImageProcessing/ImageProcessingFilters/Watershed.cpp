@@ -11,12 +11,9 @@
 
 #include "DREAM3DLib/Common/Constants.h"
 
-#include "ITKUtilities.h"
+#include "ItkBridge.h"
 #include "itkGradientMagnitudeImageFilter.h"
 #include "itkWatershedImageFilter.h"
-
-//// Setup some typedef 's for the ITKUtilities class to shorten up our code
-typedef ITKUtilities<ImageProcessing::DefaultPixelType>    ITKUtilitiesType;
 
 // -----------------------------------------------------------------------------
 //
@@ -126,7 +123,7 @@ void Watershed::execute()
   QString attrMatName = getSelectedCellArrayPath().getAttributeMatrixName();
 
   //wrap m_RawImageData as itk::image
-  ImageProcessing::DefaultImageType::Pointer inputImage = ITKUtilitiesType::Dream3DtoITK(m, attrMatName, m_SelectedCellArray);
+  ImageProcessing::DefaultImageType::Pointer inputImage = ITKUtilitiesType::CreateItkWrapperForDataPointer(m, attrMatName, m_SelectedCellArray);
 
   //create gradient magnitude filter
   notifyStatusMessage(getHumanLabel(), "Calculating Gradient Magnitude");
@@ -144,7 +141,16 @@ void Watershed::execute()
   watershed->SetInput(gradientMagnitudeImageFilter->GetOutput());
 
   //execute filter
-  watershed->Update();
+  try
+  {
+    watershed->Update();
+  }
+  catch( itk::ExceptionObject & err )
+  {
+    setErrorCondition(-5);
+    QString ss = QObject::tr("Failed to execute itk::GradientMagnitudeImageFilter filter. Error Message returned from ITK:\n   %1").arg(err.GetDescription());
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+  }
 
   //get output and copy to grainids
   typedef itk::Image<unsigned long, ImageProcessing::ImageDimension>   WatershedImageType;

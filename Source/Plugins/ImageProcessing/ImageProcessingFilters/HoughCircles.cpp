@@ -7,13 +7,11 @@
 
 #include "HoughCircles.h"
 
-#include <QtCore/QString>
-
-#include "ITKUtilities.h"
 #include "itkHoughTransform2DCirclesImageFilter.h"
 
-//// Setup some typedef 's for the ITKUtilities class to shorten up our code
-typedef ITKUtilities<ImageProcessing::DefaultPixelType>    ITKUtilitiesType;
+#include <QtCore/QString>
+
+#include "ItkBridge.h"
 
 // -----------------------------------------------------------------------------
 //
@@ -158,8 +156,8 @@ void HoughCircles::execute()
   }
 
   //wrap raw and processed image data as itk::images
-  ImageProcessing::DefaultImageType::Pointer inputImage = ITKUtilitiesType::Dream3DtoITK(m, attrMatName, m_SelectedCellArray);
-  ImageProcessing::DefaultImageType::Pointer outputImage = ITKUtilitiesType::Dream3DtoITK(m, attrMatName, m_NewCellArray);
+  ImageProcessing::DefaultImageType::Pointer inputImage = ITKUtilitiesType::CreateItkWrapperForDataPointer(m, attrMatName, m_SelectedCellArray);
+  ImageProcessing::DefaultImageType::Pointer outputImage = ITKUtilitiesType::CreateItkWrapperForDataPointer(m, attrMatName, m_NewCellArray);
 
   ImageProcessing::DefaultSliceType::IndexType localIndex;
   typedef itk::HoughTransform2DCirclesImageFilter<ImageProcessing::DefaultPixelType, ImageProcessing::FloatPixelType> HoughTransformFilterType;
