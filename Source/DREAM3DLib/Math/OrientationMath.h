@@ -222,16 +222,16 @@ class DREAM3DLib_EXPORT OrientationMath
     /**
     * @brief Converts 4 parameter Miller-Bravais lattice coordinates plane to 3 parameter Miller lattice 
 	* coordinates plane
-    * @param millerBravais Input Vector (UVTW)
-    * @param miller Output Vector (UVW)
+    * @param millerBravais Input Vector (HKL)
+    * @param miller Output Vector (HKIL)
     */
 	static void MillerBravaisToMillerPlane(float millerBravais[4], float miller[3]);
 	
     /**
     * @brief Converts 3 parameter Miller lattice coordinates plane to 4 parameter Miller-Bravais lattice 
 	* coordinates plane
-    * @param miller Input Vector (UVW)
-    * @param millerBravais Output Vector (UVTW)
+    * @param miller Input Vector (HKL)
+    * @param millerBravais Output Vector (HKIL)
     */
 	static void MillerToMillerBravaisPlane(float miller[3], float millerBravais[4]);
     
