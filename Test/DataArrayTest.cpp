@@ -834,7 +834,7 @@ void _TestDeepCopyDataArray()
   src = DataArray<T>::CreateArray(numTuples, cDims, name, true);
   for(int i = 0; i < numTuples; i++)
   {
-    for(int j = 0; j < cDims.size(); j++)
+    for(int j = 0; j < cDims[0]; j++)
     {
       src->setComponent(i, j, static_cast<T>(i+j) );
     }
@@ -842,7 +842,7 @@ void _TestDeepCopyDataArray()
   copy = boost::dynamic_pointer_cast<DataArray<T> >(src->deepCopy());
   for(int i = 0; i < numTuples; i++)
   {
-    for(int j = 0; j < cDims.size(); j++)
+    for(int j = 0; j < cDims[0]; j++)
     {
       src->setComponent(i, j, static_cast<T>(i+j) );
       T cpy = copy->getComponent(i, j);
