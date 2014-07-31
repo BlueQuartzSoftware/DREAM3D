@@ -67,7 +67,7 @@ void GenerateCodeForFilter(const QString &outDir, AbstractFilter::Pointer filter
   // We need to think abit more about how this is setup. There is a potential for 2 plugins to clash with a filter's
   // C++ Class name, which would be interesting to say the least.
 
-  QFile f(outDir + QDir::separator() + filter->getCompiledLibraryName() + "_" + filterClassName + ".m");
+  QFile f(outDir + QDir::separator() + filterClassName + ".m");
   f.open(QFile::WriteOnly);
   QTextStream out(&f);
 
@@ -86,6 +86,7 @@ void GenerateCodeForFilter(const QString &outDir, AbstractFilter::Pointer filter
         || option->getWidgetType().compare(FilterParameterWidgetType::SeparatorWidget) == 0)
     { continue; }
 
+	// creates a working MATLAB m-file function per file per filter
 	out << "Filter_Parts{1}{" << i << "} = '" << option->getPropertyName() << "';\n" 
 	  << "Filter_Parts{2}{" << i << "} = '" << option->getWidgetType() << "';\n";
 	++i;
