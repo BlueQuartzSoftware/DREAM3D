@@ -296,8 +296,9 @@ void WriteImage::dataCheck()
   }
   else
   {
-    QString message = QObject::tr("The selected array '%1' has unsupported dimensionality (%2)").arg(m_SelectedCellArrayArrayName).arg(compDims.size());
+    QString message = QObject::tr("The selected array '%1' has unsupported dimensionality (%2)").arg(m_SelectedCellArrayPath.getDataArrayName()).arg(compDims.size());
     setErrorCondition(-101);
+    notifyErrorMessage(getHumanLabel(), message, getErrorCondition());
   }
 
   if(m_OutputFileName.isEmpty())

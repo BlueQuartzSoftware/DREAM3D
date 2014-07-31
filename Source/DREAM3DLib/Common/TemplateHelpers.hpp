@@ -105,7 +105,7 @@ namespace TemplateHelpers
       GetPrereqArrayFromPath(){}
       virtual ~GetPrereqArrayFromPath(){}
 
-      IDataArray::WeakPointer operator()(FilterClass* f, DataArrayPath arrayPath, QVector<size_t> compDims)
+      IDataArray::WeakPointer operator()(FilterClass* f, DataArrayPath arrayPath, QVector<size_t>& compDims)
       {
         IDataArray::Pointer retPtr = IDataArray::NullPointer();
         DataContainerClass* volDataCntr = f->getDataContainerArray()->template getPrereqDataContainer<DataContainerClass, FilterClass>(f, arrayPath.getDataContainerName(), false);
