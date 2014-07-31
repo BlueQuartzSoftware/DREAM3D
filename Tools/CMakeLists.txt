@@ -22,8 +22,8 @@ endif()
 # --------------------------------------------------------------------------
 macro(ConvertPathToHeaderCompatible INPUT)
     if(WIN32)
-      STRING(REPLACE "\\" "\\\\" ${INPUT} ${${INPUT}} )
-      STRING(REPLACE "/" "\\\\" ${INPUT} ${${INPUT}}  )
+      STRING(REPLACE "\\" "\\\\" ${INPUT} ${INPUT} )
+      STRING(REPLACE "/" "\\\\" ${INPUT} ${INPUT}  )
     endif()
 endmacro()
 
