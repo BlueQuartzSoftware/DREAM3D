@@ -653,7 +653,7 @@ QuatF OrientationMath::ActiveRotation(float angle, float xAxis, float yAxis, flo
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void OrientationMath::MillerBravaisToMillerDirection(float millerBravais[4], float miller[3])
+void OrientationMath::MillerBravaisToMillerDirection(int millerBravais[4], int miller[3])
 {
   miller[0] = millerBravais[0] - millerBravais[2];
   miller[1] = millerBravais[1] - millerBravais[2];
@@ -662,7 +662,7 @@ void OrientationMath::MillerBravaisToMillerDirection(float millerBravais[4], flo
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void OrientationMath::MillerToMillerBravaisDirection(float miller[3], float millerBravais[4])
+void OrientationMath::MillerToMillerBravaisDirection(int miller[3], int millerBravais[4])
 {
   millerBravais[0] = 0.33333f * (2 * miller[0] - miller[1]);
   millerBravais[1] = 0.33333f * (2 * miller[1] - miller[0]);
@@ -672,7 +672,7 @@ void OrientationMath::MillerToMillerBravaisDirection(float miller[3], float mill
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void OrientationMath::MillerBravaisToMillerPlane(float millerBravais[4], float miller[3])
+void OrientationMath::MillerBravaisToMillerPlane(int millerBravais[4], int miller[3])
 {
   miller[0] = millerBravais[0]; 
   miller[1] = millerBravais[1];
@@ -681,7 +681,7 @@ void OrientationMath::MillerBravaisToMillerPlane(float millerBravais[4], float m
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void OrientationMath::MillerToMillerBravaisPlane(float miller[3], float millerBravais[4])
+void OrientationMath::MillerToMillerBravaisPlane(int miller[3], int millerBravais[4])
 {
   millerBravais[0] = miller[0];
   millerBravais[1] = miller[1];

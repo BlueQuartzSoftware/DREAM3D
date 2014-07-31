@@ -209,7 +209,7 @@ class DREAM3DLib_EXPORT OrientationMath
     * @param millerBravais Input Vector (UVTW)
     * @param miller Output Vector (UVW)
     */
-	static void MillerBravaisToMillerDirection(float millerBravais[4], float miller[3]);
+	static void MillerBravaisToMillerDirection(int millerBravais[4], int miller[3]);
 
     /**
     * @brief Converts 3 parameter Miller lattice coordinates direction to 4 parameter Miller-Bravais lattice 
@@ -217,15 +217,15 @@ class DREAM3DLib_EXPORT OrientationMath
     * @param miller Input Vector (UVW)
     * @param millerBravais Output Vector (UVTW)
     */
-	static void MillerToMillerBravaisDirection(float miller[3], float millerBravais[4]);
+	static void MillerToMillerBravaisDirection(int miller[3], int millerBravais[4]);
 	
     /**
     * @brief Converts 4 parameter Miller-Bravais lattice coordinates plane to 3 parameter Miller lattice 
 	* coordinates plane
-    * @param millerBravais Input Vector (HKL)
-    * @param miller Output Vector (HKIL)
+    * @param millerBravais Input Vector (HKIL)
+    * @param miller Output Vector (HKL)
     */
-	static void MillerBravaisToMillerPlane(float millerBravais[4], float miller[3]);
+	static void MillerBravaisToMillerPlane(int millerBravais[4], int miller[3]);
 	
     /**
     * @brief Converts 3 parameter Miller lattice coordinates plane to 4 parameter Miller-Bravais lattice 
@@ -233,7 +233,7 @@ class DREAM3DLib_EXPORT OrientationMath
     * @param miller Input Vector (HKL)
     * @param millerBravais Output Vector (HKIL)
     */
-	static void MillerToMillerBravaisPlane(float miller[3], float millerBravais[4]);
+	static void MillerToMillerBravaisPlane(int miller[3], int millerBravais[4]);
     
   protected:
     OrientationMath();
