@@ -47,12 +47,13 @@
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/DREAM3DVersion.h"
 
-
 #include "DREAM3DLib/Common/FilterManager.h"
 #include "DREAM3DLib/Common/FilterFactory.hpp"
 
 #include "DREAM3DLib/Plugin/DREAM3DPluginInterface.h"
 #include "DREAM3DLib/Plugin/DREAM3DPluginLoader.h"
+
+#include "Tools/ToolConfiguration.h"
 
 // -----------------------------------------------------------------------------
 //
@@ -318,16 +319,16 @@ void fixInitializerList(QStringListIterator &sourceLines, QStringList &outLines,
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-bool fixFile( AbstractFilter::Pointer filter, const QString& hFile, const QString& cppFile)
+bool CorrectInitializerList( AbstractFilter::Pointer filter, const QString& hFile, const QString& cppFile)
 {
   QString contents;
   {
     // Read the Source File
     QFileInfo fi(cppFile);
-//    if (fi.baseName().compare("BinaryNodesTrianglesReader") != 0)
-//    {
-//      return false;
-//    }
+    if (fi.baseName().compare("InsertTransformationPhases") != 0)
+    {
+      return false;
+    }
     QFile source(cppFile);
     source.open(QFile::ReadOnly);
     contents = source.readAll();
@@ -645,9 +646,10 @@ bool ValidateParameterReader( AbstractFilter::Pointer filter, const QString& hFi
 // -----------------------------------------------------------------------------
 QString findPath(const QString& groupName, const QString& filtName, const QString ext)
 {
-  QString prefix("/Users/mjackson/Workspace/DREAM3D_Rewrite/Source/");
+//  std::cout << groupName.toStdString() << "::" << filtName.toStdString() << std::endl;
+  QString prefix = D3DTools::GetDREAM3DProjDir() + ("Source/");
   {
-    QString path = prefix + "DREAM3DLib/" + groupName + "Filters/" + filtName + ext;
+    QString path = D3DTools::GetDREAM3DLibDir() + "/" + groupName + "Filters/" + filtName + ext;
     QFileInfo fi(path);
     if(fi.exists() == true)
     {
@@ -655,14 +657,17 @@ QString findPath(const QString& groupName, const QString& filtName, const QStrin
     }
   }
 
-  prefix = prefix + "Plugins/";
+  prefix = D3DTools::GetDREAM3DPluginDir();
   QStringList libs;
-  libs << "ProcessModeling" << "UCSB" << "ImageProcessing" << "DDDAnalysisToolbox" << "ImageImport" << "OrientationAnalysis" << "Processing" <<  "Reconstruction" << "Sampling" << "Statistics"  << "SurfaceMeshing" << "SyntheticBuilding";
+  libs << "ProcessModeling" << "UCSB" << "ImageProcessing" << "DDDAnalysisToolbox" << "ImageImport" <<
+          "OrientationAnalysis" << "Processing" <<  "Reconstruction" << "Sampling" << "Statistics"  <<
+          "SurfaceMeshing" << "SyntheticBuilding" << "ImageProcessing" << "BrukerIntegration" <<
+          "ProcessModeling" << "TransformationPhase" << "IO";
 
   for (int i = 0; i < libs.size(); ++i)
   {
-    QString path = prefix + libs.at(i) + "/" + libs.at(i) + "Filters/" + filtName + ext;
-    //  std::cout << "****" << path.toStdString() << std::endl;
+    QString path = prefix + "/" + libs.at(i) + "/" + libs.at(i) + "Filters/" + filtName + ext;
+   // std::cout << "    ****" << path.toStdString() << std::endl;
 
     QFileInfo fi(path);
     if(fi.exists() == true)
@@ -672,11 +677,11 @@ QString findPath(const QString& groupName, const QString& filtName, const QStrin
   }
 
 
-  prefix = "/Users/mjackson/Workspace/";
+  prefix = D3DTools::GetDREAM3DProjParentDir();
    for (int i = 0; i < libs.size(); ++i)
   {
-    QString path = prefix + libs.at(i) + "/" + libs.at(i) + "Filters/" + filtName + ext;
-    //  std::cout << "****" << path.toStdString() << std::endl;
+    QString path = prefix + "/" + libs.at(i) + "/" + libs.at(i) + "Filters/" + filtName + ext;
+  //  std::cout << "    ****" << path.toStdString() << std::endl;
 
     QFileInfo fi(path);
     if(fi.exists() == true)
@@ -708,7 +713,7 @@ void GenerateFilterParametersCode()
     //qDebug() << "CPP File: " << cpp;
     QString h = findPath(filter->getGroupName(), filter->getNameOfClass(), ".h");
 
-    fixFile(filter, h, cpp);
+    CorrectInitializerList(filter, h, cpp);
     //SplitFilterHeaderCodes(filter, h, cpp);
     //FixIncludeGuard(filter, h, cpp);
     //ValidateParameterReader(filter, h, cpp);
