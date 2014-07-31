@@ -410,9 +410,9 @@ class StructArray : public IDataArray
         return IDataArray::NullPointer();
       }
       IDataArray::Pointer daCopy = createNewArray(getNumberOfTuples(), getComponentDimensions(), getName(), m_IsAllocated);
-      daCopy->initializeWithZeros();
       if(m_IsAllocated == true)
       {
+        daCopy->initializeWithZeros();
         size_t chunkSize = getNumberOfComponents() * sizeof(T);
         for(int i = 0; i < getNumberOfTuples(); i++)
         {
