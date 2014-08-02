@@ -9,7 +9,7 @@ include (CMakeParseArguments)
 # include(${CMP_OSX_TOOLS_SOURCE_DIR}/ToolUtilities.cmake)
 
 #-------------------------------------------------------------------------------
-MACRO (cmp_IDE_GENERATED_PROPERTIES SOURCE_PATH HEADERS SOURCES)
+macro (cmp_IDE_GENERATED_PROPERTIES SOURCE_PATH HEADERS SOURCES)
     STRING(REPLACE "/" "\\\\" source_group_path ${SOURCE_PATH}  )
     source_group(${source_group_path} FILES ${HEADERS} ${SOURCES})
 
@@ -19,11 +19,11 @@ MACRO (cmp_IDE_GENERATED_PROPERTIES SOURCE_PATH HEADERS SOURCES)
   #             PROPERTY MACOSX_PACKAGE_LOCATION Headers/${NAME}
   #)
 
-ENDMACRO (cmp_IDE_GENERATED_PROPERTIES SOURCE_PATH HEADERS SOURCES)
+ENDmacro (cmp_IDE_GENERATED_PROPERTIES SOURCE_PATH HEADERS SOURCES)
 
 #-------------------------------------------------------------------------------
 
-MACRO (cmp_IDE_SOURCE_PROPERTIES SOURCE_PATH HEADERS SOURCES INSTALL_FILES)
+macro (cmp_IDE_SOURCE_PROPERTIES SOURCE_PATH HEADERS SOURCES INSTALL_FILES)
     if(${INSTALL_FILES} EQUAL "1")
         INSTALL (FILES ${HEADERS}
                  DESTINATION include/${SOURCE_PATH}
@@ -39,7 +39,7 @@ MACRO (cmp_IDE_SOURCE_PROPERTIES SOURCE_PATH HEADERS SOURCES INSTALL_FILES)
   #             PROPERTY MACOSX_PACKAGE_LOCATION Headers/${NAME}
   #)
 
-ENDMACRO (cmp_IDE_SOURCE_PROPERTIES NAME HEADERS SOURCES INSTALL_FILES)
+ENDmacro (cmp_IDE_SOURCE_PROPERTIES NAME HEADERS SOURCES INSTALL_FILES)
 
 #-------------------------------------------------------------------------------
 # This macro will set all the variables necessary to have a "good" OS X Application
@@ -83,7 +83,7 @@ endmacro()
 # correctly copied into the Application Bundle. On other platforms these
 # items are copied into the installation directory.
 # Arguments:
-#  TARGET The name of the Target to use in the Add_Executable() commnad
+#  TARGET The name of the Target to use in the add_executable() commnad
 #  DEBUG_EXTENSION The file name suffix extension that Debug builds will have
 #  ICON_FILE The path to the proper icon file for this platform (icns for OS X, ico for windows)
 #  VERSION_MAJOR The Major version
@@ -130,7 +130,7 @@ function(BuildQtAppBundle)
             )
         ELSE(QT_MAC_USE_COCOA)
             set(qt_menu_nib_sources)
-        ENDif(QT_MAC_USE_COCOA)
+        endif(QT_MAC_USE_COCOA)
 
 #-- Write out a qt.conf file to place in our App bundle
 #        set(qt_conf_file ${${QAB_TARGET}_BINARY_DIR}/qt.conf)
@@ -155,11 +155,11 @@ function(BuildQtAppBundle)
     list(APPEND QAB_SOURCES ${QAB_ICON_FILE})
 
 #-- Add and Link our executable
-    ADD_EXECUTABLE( ${QAB_TARGET} ${GUI_TYPE} ${QAB_SOURCES} )
-    TARGET_LINK_LIBRARIES( ${QAB_TARGET}
+    add_executable( ${QAB_TARGET} ${GUI_TYPE} ${QAB_SOURCES} )
+    target_link_libraries( ${QAB_TARGET}
                         ${QAB_LINK_LIBRARIES} )
 
-#-- Make sure we have a proper bundle icon. This must occur AFTER the ADD_EXECUTABLE command
+#-- Make sure we have a proper bundle icon. This must occur AFTER the add_executable command
     if(APPLE)
         ConfigureMacOSXBundlePlist( ${QAB_TARGET} ${QAB_DEBUG_EXTENSION} ${QAB_ICON_FILE}
                                 "${QAB_VERSION_MAJOR}.${QAB_VERSION_MINOR}.${QAB_VERSION_PATCH}" )
@@ -224,7 +224,7 @@ function(BuildQtAppBundle)
     endif(APPLE)
 
     #-- Create an Install Rule for the main app bundle target
-    INSTALL(TARGETS ${QAB_TARGET}
+    install(TARGETS ${QAB_TARGET}
         COMPONENT ${QAB_COMPONENT}
         RUNTIME DESTINATION ${QAB_INSTALL_DEST}
         LIBRARY DESTINATION ${QAB_INSTALL_DEST}
@@ -243,11 +243,11 @@ function(BuildQtAppBundle)
         set(OPTIMIZE_BUNDLE_SHELL_SCRIPT
             "${QAB_BINARY_DIR}/OSX_Scripts/${QAB_TARGET}_OptimizeBundle.sh")
 
-        CONFIGURE_FILE("${CMP_OSX_TOOLS_SOURCE_DIR}/CompleteBundle.cmake.in"
+        configure_file("${CMP_OSX_TOOLS_SOURCE_DIR}/CompleteBundle.cmake.in"
                 "${OSX_MAKE_STANDALONE_BUNDLE_CMAKE_SCRIPT}" @ONLY IMMEDIATE)
 
         set(PROJECT_INSTALL_DIR ${osx_app_name}.app)
-        CONFIGURE_FILE("${CMP_OSX_TOOLS_SOURCE_DIR}/ThinAndShareLibraries.sh.in"
+        configure_file("${CMP_OSX_TOOLS_SOURCE_DIR}/ThinAndShareLibraries.sh.in"
                 "${OPTIMIZE_BUNDLE_SHELL_SCRIPT}" @ONLY IMMEDIATE)
 
         install(SCRIPT "${OSX_MAKE_STANDALONE_BUNDLE_CMAKE_SCRIPT}" COMPONENT ${QAB_COMPONENT})
@@ -258,7 +258,7 @@ function(BuildQtAppBundle)
         set(linux_app_name ${QAB_TARGET})
         set(LINUX_MAKE_STANDALONE_LAUNCH_SCRIPT
                     "${QAB_BINARY_DIR}/LINUX_Scripts/${QAB_TARGET}.sh")
-        CONFIGURE_FILE("${CMP_LINUX_TOOLS_SOURCE_DIR}/launch_script.sh.in"
+        configure_file("${CMP_LINUX_TOOLS_SOURCE_DIR}/launch_script.sh.in"
                 "${LINUX_MAKE_STANDALONE_LAUNCH_SCRIPT}" @ONLY IMMEDIATE)
         install(PROGRAMS "${LINUX_MAKE_STANDALONE_LAUNCH_SCRIPT}"
                 DESTINATION "bin"
@@ -274,10 +274,10 @@ function(BuildQtAppBundle)
         set(OPTIMIZE_BUNDLE_SHELL_SCRIPT
                 "${QAB_BINARY_DIR}/LINUX_Scripts/${QAB_TARGET}_InstallLibraries.sh")
 
-      CONFIGURE_FILE("${CMP_LINUX_TOOLS_SOURCE_DIR}/CompleteBundle.cmake.in"
+      configure_file("${CMP_LINUX_TOOLS_SOURCE_DIR}/CompleteBundle.cmake.in"
       "${LINUX_INSTALL_LIBS_CMAKE_SCRIPT}" @ONLY IMMEDIATE)
         set(PROJECT_INSTALL_DIR ${linux_app_name}.app)
-        CONFIGURE_FILE("${CMP_LINUX_TOOLS_SOURCE_DIR}/InstallLibraries.sh.in"
+        configure_file("${CMP_LINUX_TOOLS_SOURCE_DIR}/InstallLibraries.sh.in"
                 "${OPTIMIZE_BUNDLE_SHELL_SCRIPT}" @ONLY IMMEDIATE)
 
         install(SCRIPT "${LINUX_INSTALL_LIBS_CMAKE_SCRIPT}" COMPONENT ${QAB_COMPONENT})
@@ -293,7 +293,7 @@ endfunction()
 # correctly copied into the Application Bundle. On other platforms these
 # items are copied into the installation directory.
 # Arguments:
-#  TARGET The name of the Target to use in the Add_Executable() commnad
+#  TARGET The name of the Target to use in the add_executable() commnad
 #  DEBUG_EXTENSION The file name suffix extension that Debug builds will have
 #  VERSION_MAJOR The Major version
 #  VERSION_MINOR The Minor version
@@ -327,8 +327,8 @@ function(BuildToolBundle)
     endif()
 
 #-- Add and Link our executable
-    ADD_EXECUTABLE( ${QAB_TARGET} ${GUI_TYPE} ${QAB_SOURCES} )
-    TARGET_LINK_LIBRARIES( ${QAB_TARGET}
+    add_executable( ${QAB_TARGET} ${GUI_TYPE} ${QAB_SOURCES} )
+    target_link_libraries( ${QAB_TARGET}
                             ${QAB_LINK_LIBRARIES} )
 
 #-- Set the Debug Suffix for the application
@@ -345,7 +345,7 @@ function(BuildToolBundle)
 
   if( NOT ${QAB_INSTALL_DEST} STREQUAL "")
   #-- Create an Install Rule for the main app bundle target
-    INSTALL(TARGETS ${QAB_TARGET}
+    install(TARGETS ${QAB_TARGET}
         COMPONENT ${QAB_COMPONENT}
         RUNTIME DESTINATION ${QAB_INSTALL_DEST}
         LIBRARY DESTINATION ${QAB_INSTALL_DEST}
@@ -365,10 +365,10 @@ function(BuildToolBundle)
             "${QAB_BINARY_DIR}/OSX_Scripts/${QAB_TARGET}_OptimizeTool.sh")
 
         set(PROJECT_INSTALL_DIR "tools")
-        CONFIGURE_FILE("${CMP_OSX_TOOLS_SOURCE_DIR}/CompleteTool.cmake.in"
+        configure_file("${CMP_OSX_TOOLS_SOURCE_DIR}/CompleteTool.cmake.in"
                 "${OSX_MAKE_STANDALONE_BUNDLE_CMAKE_SCRIPT}" @ONLY IMMEDIATE)
 
-        CONFIGURE_FILE("${CMP_OSX_TOOLS_SOURCE_DIR}/CompleteTool.sh.in"
+        configure_file("${CMP_OSX_TOOLS_SOURCE_DIR}/CompleteTool.sh.in"
                 "${OPTIMIZE_BUNDLE_SHELL_SCRIPT}" @ONLY IMMEDIATE)
 
         install(SCRIPT "${OSX_MAKE_STANDALONE_BUNDLE_CMAKE_SCRIPT}" COMPONENT ${QAB_COMPONENT})
@@ -398,7 +398,7 @@ endif()
         RELEASE_OUTPUT_NAME ${EXE_NAME}
     )
     if(${installFiles} EQUAL 1)
-        INSTALL(TARGETS ${EXE_NAME}
+        install(TARGETS ${EXE_NAME}
             COMPONENT ${comp}
             RUNTIME DESTINATION ${dest}
             LIBRARY DESTINATION ${dest}
@@ -450,10 +450,10 @@ macro(LibraryProperties targetName DEBUG_EXTENSION)
                  INSTALL_NAME_DIR "${CMAKE_INSTALL_PREFIX}/lib"
                  BUILD_WITH_INSTALL_RPATH ${CMP_BUILD_WITH_INSTALL_NAME}
               )
-         ENDif(CMP_BUILD_WITH_INSTALL_NAME)
+         endif(CMP_BUILD_WITH_INSTALL_NAME)
      endif(APPLE)
 
-   ENDif( BUILD_SHARED_LIBS)
+   endif( BUILD_SHARED_LIBS)
 
 endmacro(LibraryProperties DEBUG_EXTENSION)
 
@@ -472,7 +472,7 @@ macro(StaticLibraryProperties targetName )
     else(WIN32 AND NOT MINGW)
         SET(LIBRARY_RELEASE_NAME "${targetName}" CACHE INTERNAL "" FORCE)
         SET(LIBRARY_DEBUG_NAME "${targetName}${DEBUG_EXTENSION}" CACHE INTERNAL "" FORCE)
-    ENDif(WIN32 AND NOT MINGW)
+    endif(WIN32 AND NOT MINGW)
 
 
     #-- Set the Debug and Release names for the libraries
@@ -511,7 +511,7 @@ macro(PluginProperties targetName DEBUG_EXTENSION projectVersion binaryDir plugi
     if(NOT APPLE)
         set(BUILD_TYPES "Debug;Release")
         foreach(btype ${BUILD_TYPES})
-            INSTALL(TARGETS ${targetName}
+            install(TARGETS ${targetName}
                     DESTINATION ./Plugins
                     CONFIGURATIONS ${btype}
                     COMPONENT Applications)
@@ -552,8 +552,7 @@ macro (FindQt4Plugins pluginlist pluginfile libdirsearchfile plugintype)
                       PATHS ${QT_PLUGINS_DIR}/${plugintype}
                       DOC "Library Path for ${plugin}"
                       NO_DEFAULT_PATH NO_CMAKE_PATH NO_SYSTEM_ENVIRONMENT_PATH NO_CMAKE_SYSTEM_PATH)
-
-        if(MSVC)
+        if(MSVC OR NINJA)
             #  message(STATUS "QT_PLUGINS_DIR: ${QT_PLUGINS_DIR}")
             #  message(STATUS " QT_IMAGEFORMAT_PLUGIN_${PLUGIN}_${BTYPE}: ${QT_IMAGEFORMAT_PLUGIN_${PLUGIN}_${BTYPE}}")
             get_filename_component(lib_path ${QT_IMAGEFORMAT_PLUGIN_${PLUGIN}_${BTYPE}} PATH)
@@ -569,13 +568,13 @@ macro (FindQt4Plugins pluginlist pluginfile libdirsearchfile plugintype)
                 #  set(${upperlib}_LIBRARY_DLL_${TYPE}  ${${upperlib}_LIBRARY_DLL_${TYPE}}/${lib_name}.dll)
                 #  message(STATUS "${upperlib}_LIBRARY_DLL_${TYPE}: ${${upperlib}_LIBRARY_DLL_${TYPE}}")
                 #  message(STATUS "Generating Install Rule for DLL File for QT_IMAGEFORMAT_PLUGIN_${PLUGIN}_${BTYPE}\n  ${QT_IMAGEFORMAT_PLUGIN_${PLUGIN}_${BTYPE}}")
-                INSTALL(FILES ${QT_IMAGEFORMAT_PLUGIN_${PLUGIN}_${BTYPE}}
+                install(FILES ${QT_IMAGEFORMAT_PLUGIN_${PLUGIN}_${BTYPE}}
                     DESTINATION ./Plugins/${plugintype}
                     CONFIGURATIONS ${BTYPE}
                     COMPONENT Applications)
             endif()
         elseif(UNIX AND NOT APPLE)
-            INSTALL(FILES ${QT_IMAGEFORMAT_PLUGIN_${PLUGIN}_${BTYPE}}
+            install(FILES ${QT_IMAGEFORMAT_PLUGIN_${PLUGIN}_${BTYPE}}
                 DESTINATION ./Plugins/${plugintype}
                 CONFIGURATIONS ${BTYPE}
                 COMPONENT Applications)
@@ -601,7 +600,7 @@ macro (FindQt4Plugins pluginlist pluginfile libdirsearchfile plugintype)
     else()
         # Create the qt.conf file so that the image plugins will be loaded correctly
         FILE(WRITE ${PROJECT_BINARY_DIR}/qt.conf "[Paths]\nPlugins = Plugins")
-        INSTALL(FILES ${PROJECT_BINARY_DIR}/qt.conf
+        install(FILES ${PROJECT_BINARY_DIR}/qt.conf
                 DESTINATION .
                 COMPONENT Applications)
     endif()
@@ -613,56 +612,58 @@ endmacro(FindQt4Plugins pluginlist)
 # --------------------------------------------------------------------
 #-- Copy all the Qt4 dependent DLLs into the current build directory so that
 #-- one can debug an application or library that depends on Qt4 libraries.
+#-- This macro is really intended for Windows Builds because windows libraries
+#-- do not have any type of rpath or install_name encoded in the libraries so
+#-- the least intrusive way to deal with the PATH issues is to just copy all
+#-- the dependend DLL libraries into the build directory. Note that this is
+#-- NOT needed for static libraries.
 macro(CMP_COPY_QT4_RUNTIME_LIBRARIES QTLIBLIST)
-    #message(STATUS "CMP_COPY_QT4_RUNTIME_LIBRARIES")
-    if(MSVC)
-
-        if(DEFINED QT_QMAKE_EXECUTABLE)
-            set(TYPE "d")
-            FOREACH(qtlib ${QTLIBLIST})
-                GET_FILENAME_COMPONENT(QT_DLL_PATH_tmp ${QT_QMAKE_EXECUTABLE} PATH)
-
-                if( ${CMAKE_BUILD_TOOL} STREQUAL "nmake")
-          if(NOT ${CMAKE_BUILD_TYPE} STREQUAL "Debug")
-            set(TYPE "")
-          endif()
-          add_custom_target(ZZ_${qtlib}-Debug-Copy ALL
-                              COMMAND ${CMAKE_COMMAND} -E copy_if_different ${QT_DLL_PATH_tmp}/${qtlib}${TYPE}4.dll
-                              ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/
-                              COMMENT "Copying ${qtlib}${TYPE}4.dll to ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}")
-          set_target_properties(ZZ_${qtlib}-Debug-Copy PROPERTIES FOLDER ZZ_COPY_FILES)
-                else()
-          add_custom_target(ZZ_${qtlib}-Debug-Copy ALL
-                              COMMAND ${CMAKE_COMMAND} -E copy_if_different ${QT_DLL_PATH_tmp}/${qtlib}${TYPE}4.dll
-                              ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/Debug/
-                              COMMENT "Copying ${qtlib}${TYPE}4.dll to ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/Debug/")
-          set_target_properties(ZZ_${qtlib}-Debug-Copy PROPERTIES FOLDER ZZ_COPY_FILES)
-        #   message(STATUS "Generating Copy Rule for Qt Release DLL Library ${QT_DLL_PATH_tmp}/${qtlib}d4.dll")
-          add_custom_target(ZZ_${qtlib}-Release-Copy ALL
-                              COMMAND ${CMAKE_COMMAND} -E copy_if_different ${QT_DLL_PATH_tmp}/${qtlib}4.dll
-                              ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/Release/
-                              COMMENT "Copying ${qtlib}4.dll to ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/Release/")
-          set_target_properties(ZZ_${qtlib}-Release-Copy PROPERTIES FOLDER ZZ_COPY_FILES)
-                endif()
-            ENDFOREACH(qtlib)
-        endif(DEFINED QT_QMAKE_EXECUTABLE)
+    # message(STATUS "CMP_COPY_QT4_RUNTIME_LIBRARIES")
+    set(SUPPORT_LIB_OPTION 1)
+    if(MSVC_IDE)
+      set(SUPPORT_LIB_OPTION 0)
+    elseif(APPLE) # Apple systems do NOT need this so just skip this entirely
+      set(SUPPORT_LIB_OPTION 2)
     endif()
-    if(MINGW)
-        if(DEFINED QT_QMAKE_EXECUTABLE)
-            set(TYPE "")
-            if( ${CMAKE_BUILD_TYPE} STREQUAL "Debug")
-                set(TYPE "d")
-            endif()
-            FOREACH(qtlib ${QTLIBLIST})
-                GET_FILENAME_COMPONENT(QT_DLL_PATH_tmp ${QT_QMAKE_EXECUTABLE} PATH)
-                message(STATUS "Generating Copy Rule for Qt DLL Library ${QT_DLL_PATH_tmp}/${qtlib}d4.dll")
-                add_custom_target(ZZ_${qtlib}-Debug-Copy ALL
+
+    if(NOT DEFINED QT_QMAKE_EXECUTABLE)
+      message(FATAL_ERROR "Qt is REQUIRED to use this Function or macro. Make sure Qt is found on your system.")
+    endif()
+
+    if(SUPPORT_LIB_OPTION EQUAL 0)
+      set(TYPE "d")
+      FOREACH(qtlib ${QTLIBLIST})
+        GET_FILENAME_COMPONENT(QT_DLL_PATH_tmp ${QT_QMAKE_EXECUTABLE} PATH)
+        # message(STATUS "CMAKE_GENERATOR: ${CMAKE_GENERATOR}")
+        # We need to copy both the Debug and Release versions of the libraries into their respective
+        # subfolders for Visual Studio builds
+        add_custom_target(ZZ_${qtlib}-Debug-Copy ALL
                             COMMAND ${CMAKE_COMMAND} -E copy_if_different ${QT_DLL_PATH_tmp}/${qtlib}${TYPE}4.dll
-                            ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/
-                            COMMENT "Copying ${qtlib}${TYPE}4.dll to ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/")
+                            ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/Debug/
+                            COMMENT "Copying ${qtlib}${TYPE}4.dll to ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/Debug/")
         set_target_properties(ZZ_${qtlib}-Debug-Copy PROPERTIES FOLDER ZZ_COPY_FILES)
-            ENDFOREACH(qtlib)
-        endif(DEFINED QT_QMAKE_EXECUTABLE)
+      #   message(STATUS "Generating Copy Rule for Qt Release DLL Library ${QT_DLL_PATH_tmp}/${qtlib}d4.dll")
+        add_custom_target(ZZ_${qtlib}-Release-Copy ALL
+                            COMMAND ${CMAKE_COMMAND} -E copy_if_different ${QT_DLL_PATH_tmp}/${qtlib}4.dll
+                            ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/Release/
+                            COMMENT "Copying ${qtlib}4.dll to ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/Release/")
+        set_target_properties(ZZ_${qtlib}-Release-Copy PROPERTIES FOLDER ZZ_COPY_FILES)
+
+      ENDFOREACH(qtlib)
+    else()
+      set(TYPE "")
+      if( ${CMAKE_BUILD_TYPE} STREQUAL "Debug")
+          set(TYPE "d")
+      endif()
+      FOREACH(qtlib ${QTLIBLIST})
+          GET_FILENAME_COMPONENT(QT_DLL_PATH_tmp ${QT_QMAKE_EXECUTABLE} PATH)
+          message(STATUS "Generating Copy Rule for Qt DLL: ${QT_DLL_PATH_tmp}/${qtlib}d4.dll")
+          add_custom_target(ZZ_${qtlib}-Debug-Copy ALL
+                      COMMAND ${CMAKE_COMMAND} -E copy_if_different ${QT_DLL_PATH_tmp}/${qtlib}${TYPE}4.dll
+                      ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/
+                      COMMENT "Copying ${qtlib}${TYPE}4.dll to ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/")
+          set_target_properties(ZZ_${qtlib}-Debug-Copy PROPERTIES FOLDER ZZ_COPY_FILES)
+      ENDFOREACH(qtlib)
     endif()
 endmacro()
 
@@ -671,61 +672,70 @@ endmacro()
 #
 macro (CMP_QT_LIBRARIES_INSTALL_RULES QTLIBLIST destination)
    # message(STATUS "CMP_QT_LIBRARIES_INSTALL_RULES")
-    if(MSVC)
-        if(DEFINED QT_QMAKE_EXECUTABLE)
-            set(TYPE "d")
-            FOREACH(qtlib ${QTLIBLIST})
+    if(NOT DEFINED QT_QMAKE_EXECUTABLE)
+      message(FATAL_ERROR "Qt is REQUIRED to use this Function or macro. Make sure Qt is found on your system.")
+    endif()
 
-                GET_FILENAME_COMPONENT(QT_DLL_PATH_tmp ${QT_QMAKE_EXECUTABLE} PATH)
-           #     message(STATUS "Generating Install Rule for Qt Debug DLL Library ${QT_DLL_PATH_tmp}/${qtlib}d4.dll")
-                INSTALL(FILES ${QT_DLL_PATH_tmp}/${qtlib}${type}d4.dll
-                    DESTINATION "${destination}"
-                    CONFIGURATIONS Debug
-                    COMPONENT Applications)
-           #     message(STATUS "Generating Install Rule for Qt Release DLL Library ${QT_DLL_PATH_tmp}/${qtlib}4.dll")
-                INSTALL(FILES ${QT_DLL_PATH_tmp}/${qtlib}4.dll
-                    DESTINATION "${destination}"
-                    CONFIGURATIONS Release
-                    COMPONENT Applications)
-            ENDFOREACH(qtlib)
-        endif(DEFINED QT_QMAKE_EXECUTABLE)
+    if(MSVC)
+      set(TYPE "d")
+      FOREACH(qtlib ${QTLIBLIST})
+        # message(STATUS "Generating Install Rules for Qt DLL: ${QT_DLL_PATH_tmp}/${qtlib}d4.dll")
+        GET_FILENAME_COMPONENT(QT_DLL_PATH_tmp ${QT_QMAKE_EXECUTABLE} PATH)
+        install(FILES ${QT_DLL_PATH_tmp}/${qtlib}${type}d4.dll
+            DESTINATION "${destination}"
+            CONFIGURATIONS Debug
+            COMPONENT Applications)
+   #    message(STATUS "Generating Install Rule for Qt Release DLL Library ${QT_DLL_PATH_tmp}/${qtlib}4.dll")
+        install(FILES ${QT_DLL_PATH_tmp}/${qtlib}4.dll
+            DESTINATION "${destination}"
+            CONFIGURATIONS Release
+            COMPONENT Applications)
+      ENDFOREACH(qtlib)
     endif()
 
 #-- This will create install rules for the dylibs on linux hopefully creating
 #-- a stand alone .zip or .tgz file
     if(UNIX AND NOT APPLE)
-        if(DEFINED QT_QMAKE_EXECUTABLE)
-            GET_FILENAME_COMPONENT(QT_LIB_PATH ${QT_QMAKE_EXECUTABLE} PATH)
-            GET_FILENAME_COMPONENT(QT_LIB_PATH ${QT_LIB_PATH} PATH)
-            set(QT_LIB_PATH ${QT_LIB_PATH}/lib)
-            FOREACH(qtlib ${QTLIBLIST})
-               FILE(GLOB libFiles ${QT_LIB_PATH}/lib${qtlib}.so*)
-               INSTALL(FILES ${libFiles}
-                    DESTINATION "lib"
-                    CONFIGURATIONS ${CMAKE_BUILD_TYPE}
-                    COMPONENT Applications)
-            ENDFOREACH(qtlib)
-        endif()
+      GET_FILENAME_COMPONENT(QT_LIB_PATH ${QT_QMAKE_EXECUTABLE} PATH)
+      GET_FILENAME_COMPONENT(QT_LIB_PATH ${QT_LIB_PATH} PATH)
+      set(QT_LIB_PATH ${QT_LIB_PATH}/lib)
+      FOREACH(qtlib ${QTLIBLIST})
+         FILE(GLOB libFiles ${QT_LIB_PATH}/lib${qtlib}.so*)
+         install(FILES ${libFiles}
+              DESTINATION "lib"
+              CONFIGURATIONS ${CMAKE_BUILD_TYPE}
+              COMPONENT Applications)
+      ENDFOREACH(qtlib)
     endif(UNIX AND NOT APPLE)
 endmacro()
 
 # --------------------------------------------------------------------
 #-- Copy all the dependent DLLs into the current build directory so that the test
 #-- can run.
-MACRO(CMP_COPY_DEPENDENT_LIBRARIES _libraryList)
+macro(CMP_COPY_DEPENDENT_LIBRARIES _libraryList)
 #  message(STATUS "#--------------------------------------------")
 #  message(STATUS "CMP_COPY_DEPENDENT_LIBRARIES: ${_libraryList}")
+  set(SUPPORT_LIB_OPTION 1)
+  if(MSVC_IDE)
+    set(SUPPORT_LIB_OPTION 0)
+  elseif(APPLE) # Apple systems do NOT need this so just skip this entirely
+    set(SUPPORT_LIB_OPTION 2)
+  endif()
+
   set(_libraryList ${_libraryList})
   set(TYPES Debug Release)
-  if(${CMAKE_BUILD_TOOL} STREQUAL "nmake")
+  if( ${SUPPORT_LIB_OPTION} EQUAL 1)
     set(TYPES ${CMAKE_BUILD_TYPE})
   endif()
-  if(MSVC)
+
+  if(SUPPORT_LIB_OPTION EQUAL 0 OR SUPPORT_LIB_OPTION EQUAL 1)
     # Make all the necessary intermediate directories for Visual Studio
-    file(MAKE_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/Debug)
-    file(MAKE_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/Release)
-    file(MAKE_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/MinSizeRel)
-    file(MAKE_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/RelWithDebInfo)
+    if(MSVC_IDE)
+      file(MAKE_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/Debug)
+      file(MAKE_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/Release)
+      file(MAKE_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/MinSizeRel)
+      file(MAKE_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/RelWithDebInfo)
+    endif()
     FOREACH(lib ${_libraryList})
 
       STRING(TOUPPER ${lib} upperlib)
@@ -739,13 +749,13 @@ MACRO(CMP_COPY_DEPENDENT_LIBRARIES _libraryList)
           get_filename_component(lib_name ${${upperlib}_LIBRARY_${TYPE}} NAME_WE)
           #message(STATUS "lib_path: ${lib_path}")
           #message(STATUS "lib_name: ${lib_name}")
-      #message(STATUS "${upperlib}_BIN_DIR: ${${upperlib}_BIN_DIR}")
+          #message(STATUS "${upperlib}_BIN_DIR: ${${upperlib}_BIN_DIR}")
 
           find_file(${upperlib}_LIBRARY_DLL_${TYPE}
                         NAMES ${lib_name}.dll
                         PATHS  ${lib_path}/../bin ${lib_path}/.. ${lib_path}/ ${${upperlib}_BIN_DIR}
                         NO_DEFAULT_PATH )
-      #    message(STATUS "${upperlib}_LIBRARY_DLL_${TYPE}: ${${upperlib}_LIBRARY_DLL_${TYPE}}")
+          # message(STATUS "${upperlib}_LIBRARY_DLL_${TYPE}: ${${upperlib}_LIBRARY_DLL_${TYPE}}")
           mark_as_advanced(${upperlib}_LIBRARY_DLL_${TYPE})
           if( ${${upperlib}_LIBRARY_DLL_${TYPE}} STREQUAL  "${upperlib}_LIBRARY_DLL_${TYPE}-NOTFOUND")
             message(FATAL_ERROR "According to how ${upperlib}_LIBRARY_${TYPE} was found the library should"
@@ -755,19 +765,19 @@ MACRO(CMP_COPY_DEPENDENT_LIBRARIES _libraryList)
 
          # SET(${upperlib}_LIBRARY_DLL_${TYPE} "${${upperlib}_LIBRARY_DLL_${TYPE}}/${lib_name}.dll" CACHE FILEPATH "The path to the DLL Portion of the library" FORCE)
          # message(STATUS "${upperlib}_LIBRARY_DLL_${TYPE}: ${${upperlib}_LIBRARY_DLL_${TYPE}}")
-         # message(STATUS "Generating Copy Rule for ${BTYPE} DLL Library ${${upperlib}_LIBRARY_DLL_${TYPE}}")
-          if(${CMAKE_BUILD_TOOL} STREQUAL "nmake")
+          message(STATUS "Generating Copy Rule for DLL: ${${upperlib}_LIBRARY_DLL_${TYPE}}")
+          if(SUPPORT_LIB_OPTION EQUAL 1)
             set(BTYPE ".")
           endif()
-      ADD_CUSTOM_TARGET(ZZ_${upperlib}_DLL_${TYPE}-Copy ALL
-                      COMMAND ${CMAKE_COMMAND} -E copy_if_different ${${upperlib}_LIBRARY_DLL_${TYPE}}
-                      ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${BTYPE}/
-                      COMMENT "  Copy: ${${upperlib}_LIBRARY_DLL_${TYPE}}\n    To: ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${BTYPE}/")
-      set_target_properties(ZZ_${upperlib}_DLL_${TYPE}-Copy PROPERTIES FOLDER ZZ_COPY_FILES)
+          ADD_CUSTOM_TARGET(ZZ_${upperlib}_DLL_${TYPE}-Copy ALL
+                          COMMAND ${CMAKE_COMMAND} -E copy_if_different ${${upperlib}_LIBRARY_DLL_${TYPE}}
+                          ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${BTYPE}/
+                          COMMENT "  Copy: ${${upperlib}_LIBRARY_DLL_${TYPE}}\n    To: ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${BTYPE}/")
+          set_target_properties(ZZ_${upperlib}_DLL_${TYPE}-Copy PROPERTIES FOLDER ZZ_COPY_FILES)
         ENDFOREACH(BTYPE ${TYPES})
-      ENDif(${upperlib}_IS_SHARED)
+      endif(${upperlib}_IS_SHARED)
     ENDFOREACH(lib ${_libraryList})
-  ENDif(MSVC)
+  endif()
 endmacro()
 
 # --------------------------------------------------------------------
@@ -775,12 +785,11 @@ endmacro()
 # dependent DLL libraries (HDF5, Tiff, Expat, DataModel) will be
 # properly installed with your project.
 # --------------------------------------------------------------------
-MACRO(CMP_LIBRARIES_INSTALL_RULES _libraryList destination)
+macro(CMP_LIBRARIES_INSTALL_RULES _libraryList destination)
 #  message(STATUS "CMP_LIBRARIES_INSTALL_RULES")
   set(_libraryList ${_libraryList})
   set(TYPES Debug Release)
   if(MSVC)
-
     FOREACH(lib ${_libraryList})
         STRING(TOUPPER ${lib} upperlib)
 
@@ -803,7 +812,7 @@ MACRO(CMP_LIBRARIES_INSTALL_RULES _libraryList destination)
              # set(${upperlib}_LIBRARY_DLL_${TYPE}  ${${upperlib}_LIBRARY_DLL_${TYPE}}/${lib_name}.dll)
            #   message(STATUS "${upperlib}_LIBRARY_DLL_${TYPE}: ${${upperlib}_LIBRARY_DLL_${TYPE}}")
            #   message(STATUS "Generating Install Rule for DLL Library ${${upperlib}_LIBRARY_DLL_${TYPE}}")
-              INSTALL(FILES ${${upperlib}_LIBRARY_DLL_${TYPE}}
+              install(FILES ${${upperlib}_LIBRARY_DLL_${TYPE}}
                 DESTINATION ${destination}
                 CONFIGURATIONS ${BTYPE}
                 COMPONENT Applications)
@@ -811,7 +820,7 @@ MACRO(CMP_LIBRARIES_INSTALL_RULES _libraryList destination)
 
         ENDFOREACH(BTYPE ${TYPES})
     ENDFOREACH(lib ${_libraryList})
-  ENDif(MSVC)
+  endif(MSVC)
 
 #-- This will create install rules for the dylibs on linux hopefully creating
 #-- a stand alone .zip or .tgz file
@@ -837,14 +846,14 @@ MACRO(CMP_LIBRARIES_INSTALL_RULES _libraryList destination)
           else()
            #   message(STATUS "${upperlib}_LIBRARY_SO_${TYPE}: ${${upperlib}_LIBRARY_SO_${TYPE}}")
            #   message(STATUS "Generating Install Rule for .so Library ${${upperlib}_LIBRARY_SO_${TYPE}}")
-              INSTALL(FILES ${${upperlib}_LIBRARY_SO_${TYPE}}
+              install(FILES ${${upperlib}_LIBRARY_SO_${TYPE}}
                 DESTINATION "lib"
                 CONFIGURATIONS ${BTYPE}
                 COMPONENT Applications)
           endif()
       ENDFOREACH(lib ${_libraryList})
     endif()
-ENDMACRO()
+ENDmacro()
 
 #-------------------------------------------------------------------------------
 # This macro will attempt a try_run command in order to compile and then
