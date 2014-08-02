@@ -300,7 +300,7 @@ int64_t VectorSegmentFeatures::getSeed(size_t gnum)
   setErrorCondition(0);
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
-  int64_t totalPoints = m_FeatureIdsPtr.lock()->getNumberOfTuples();
+  size_t totalPoints = m_FeatureIdsPtr.lock()->getNumberOfTuples();
   int seed = -1;
   Generator& numberGenerator = *m_NumberGenerator;
   while(seed == -1 && m_TotalRandomNumbersGenerated < totalPoints)

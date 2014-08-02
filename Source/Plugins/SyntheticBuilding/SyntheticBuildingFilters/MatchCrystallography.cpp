@@ -348,16 +348,16 @@ void MatchCrystallography::determine_volumes()
 {
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(m_FeatureIdsArrayPath.getDataContainerName());
 
-  int64_t totalPoints = m_FeatureIdsPtr.lock()->getNumberOfTuples();
-  int64_t totalFeatures = m_FeaturePhasesPtr.lock()->getNumberOfTuples();
-  int64_t totalEnsembles = m_CrystalStructuresPtr.lock()->getNumberOfTuples();
+  size_t totalPoints = m_FeatureIdsPtr.lock()->getNumberOfTuples();
+  size_t totalFeatures = m_FeaturePhasesPtr.lock()->getNumberOfTuples();
+  size_t totalEnsembles = m_CrystalStructuresPtr.lock()->getNumberOfTuples();
 
   unbiasedvol.resize(totalEnsembles);
-  for (int64_t i = 1; i < totalFeatures; i++)
+  for (size_t i = 1; i < totalFeatures; i++)
   {
     m_Volumes[i] = 0.0;
   }
-  for (int64_t i = 0; i < totalPoints; i++)
+  for (size_t i = 0; i < totalPoints; i++)
   {
     m_Volumes[m_FeatureIds[i]]++;
   }
@@ -380,8 +380,8 @@ void MatchCrystallography::determine_boundary_areas()
   NeighborList<int>& neighborlist = *(m_NeighborList.lock());
   NeighborList<float>& neighborsurfacearealist = *(m_SharedSurfaceAreaList.lock() );
 
-  int64_t totalFeatures = m_FeaturePhasesPtr.lock()->getNumberOfTuples();
-  int64_t totalEnsembles = m_CrystalStructuresPtr.lock()->getNumberOfTuples();
+  size_t totalFeatures = m_FeaturePhasesPtr.lock()->getNumberOfTuples();
+  size_t totalEnsembles = m_CrystalStructuresPtr.lock()->getNumberOfTuples();
 
   m_TotalSurfaceArea.fill(0.0, totalEnsembles);
 
@@ -534,8 +534,8 @@ void MatchCrystallography::matchCrystallography(int ensem)
 
   NeighborList<int>& neighborlist = *(m_NeighborList.lock());
   NeighborList<float>& neighborsurfacearealist = *(m_SharedSurfaceAreaList.lock() );
-  int64_t totalPoints = m_FeatureIdsPtr.lock()->getNumberOfTuples();
-  int64_t totalFeatures = m_FeaturePhasesPtr.lock()->getNumberOfTuples();
+  size_t totalPoints = m_FeatureIdsPtr.lock()->getNumberOfTuples();
+  size_t totalFeatures = m_FeaturePhasesPtr.lock()->getNumberOfTuples();
 
   DREAM3D_RANDOMNG_NEW()
   int numbins = 0;
@@ -826,7 +826,7 @@ void MatchCrystallography::measure_misorientations(int ensem)
   // us to use the same syntax as the "vector of vectors"
   NeighborList<int>& neighborlist = *(m_NeighborList.lock());
   NeighborList<float>& neighborsurfacearealist = *(m_SharedSurfaceAreaList.lock() );
-  int64_t totalFeatures = m_FeaturePhasesPtr.lock()->getNumberOfTuples();
+  size_t totalFeatures = m_FeaturePhasesPtr.lock()->getNumberOfTuples();
 
   float w;
   float n1 = 0.0f, n2 = 0.0f, n3 = 0.0f;

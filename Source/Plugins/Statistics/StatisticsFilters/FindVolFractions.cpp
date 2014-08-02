@@ -139,7 +139,7 @@ void FindVolFractions::execute()
   dataCheck();
   if(getErrorCondition() < 0) { return; }
 
-  int64_t totalPoints = m_CellPhasesPtr.lock()->getNumberOfTuples();
+  size_t totalPoints = m_CellPhasesPtr.lock()->getNumberOfTuples();
   size_t totalEnsembles = m_VolFractionsPtr.lock()->getNumberOfTuples();
 
   for(size_t i = 1; i < totalEnsembles; i++)

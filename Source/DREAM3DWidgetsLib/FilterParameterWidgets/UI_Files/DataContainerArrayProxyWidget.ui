@@ -36,10 +36,13 @@
    <item>
     <widget class="QColumnView" name="dcaProxyView">
      <property name="autoScroll">
-      <bool>false</bool>
+      <bool>true</bool>
      </property>
      <property name="editTriggers">
       <set>QAbstractItemView::NoEditTriggers</set>
+     </property>
+     <property name="tabKeyNavigation">
+      <bool>true</bool>
      </property>
      <property name="alternatingRowColors">
       <bool>true</bool>

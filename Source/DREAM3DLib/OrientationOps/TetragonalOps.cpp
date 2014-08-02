@@ -55,9 +55,9 @@
 namespace Detail
 {
 
-  static const float TetraDim1InitValue = powf((0.75f * ((M_PI / 2.0f) - sinf((M_PI / 2.0f)))), (1.0f / 3.0f));
-  static const float TetraDim2InitValue = powf((0.75f * ((M_PI / 2.0f) - sinf((M_PI / 2.0f)))), (1.0f / 3.0f));
-  static const float TetraDim3InitValue = powf((0.75f * ((M_PI / 4.0f) - sinf((M_PI / 4.0f)))), (1.0f / 3.0f));
+  static const float TetraDim1InitValue = powf((0.75f * ((DREAM3D::Constants::k_Pi / 2.0f) - sinf((DREAM3D::Constants::k_Pi / 2.0f)))), (1.0f / 3.0f));
+  static const float TetraDim2InitValue = powf((0.75f * ((DREAM3D::Constants::k_Pi / 2.0f) - sinf((DREAM3D::Constants::k_Pi / 2.0f)))), (1.0f / 3.0f));
+  static const float TetraDim3InitValue = powf((0.75f * ((DREAM3D::Constants::k_Pi / 4.0f) - sinf((DREAM3D::Constants::k_Pi / 4.0f)))), (1.0f / 3.0f));
   static const float TetraDim1StepValue = TetraDim1InitValue / 18.0f;
   static const float TetraDim2StepValue = TetraDim2InitValue / 18.0f;
   static const float TetraDim3StepValue = TetraDim3InitValue / 9.0f;
@@ -852,9 +852,9 @@ DREAM3D::Rgb TetragonalOps::generateMisorientationColor(const QuatF& q, const Qu
   z2 = (x1 + y1 + z1) / sqrt(3.0f);
 
   //eq c1.4
-  k = fmodf(atan2f(y2, x2) + 2.0f * M_PI, 2.0f * M_PI);
-  x3 = cos(k) * sqrt((x2 * x2 + y2 * y2) / 2.0f) * sin(M_PI / 6.0f + fmodf(k, 2.0f * M_PI / 3.0f)) / 0.5f;
-  y3 = sin(k) * sqrt((x2 * x2 + y2 * y2) / 2.0f) * sin(M_PI / 6.0f + fmodf(k, 2.0f * M_PI / 3.0f)) / 0.5f;
+  k = fmodf(atan2f(y2, x2) + 2.0f * DREAM3D::Constants::k_Pi, 2.0f * DREAM3D::Constants::k_Pi);
+  x3 = cos(k) * sqrt((x2 * x2 + y2 * y2) / 2.0f) * sin(DREAM3D::Constants::k_Pi / 6.0f + fmodf(k, 2.0f * DREAM3D::Constants::k_Pi / 3.0f)) / 0.5f;
+  y3 = sin(k) * sqrt((x2 * x2 + y2 * y2) / 2.0f) * sin(DREAM3D::Constants::k_Pi / 6.0f + fmodf(k, 2.0f * DREAM3D::Constants::k_Pi / 3.0f)) / 0.5f;
   z3 = z2 - 1.0f;
 
   //eq c1.5

@@ -294,7 +294,7 @@ void FindFeatureReferenceCAxisMisorientations::execute()
     avgmiso[(gNum * avgMisoComps) + 2] += ((m_FeatureReferenceCAxisMisorientations[j] - m_FeatureAvgCAxisMisorientations[gNum]) * (m_FeatureReferenceCAxisMisorientations[j] - m_FeatureAvgCAxisMisorientations[gNum]));
   }
 
-  for (int64_t i = 1; i < totalFeatures; i++)
+  for (size_t i = 1; i < totalFeatures; i++)
   {
     index = i * avgMisoComps;
     m_FeatureStdevCAxisMisorientations[i] = sqrtf((1 / avgmiso[index]) * avgmiso[index + 2]);

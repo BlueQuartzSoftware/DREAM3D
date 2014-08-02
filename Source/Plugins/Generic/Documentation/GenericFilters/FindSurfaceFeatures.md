@@ -1,4 +1,4 @@
-Find Bounding Box Features {#findboundingboxfeatures}
+Find Surface Features {#findsurfacefeatures}
 =============
 
 ## Group (Subgroup) ##

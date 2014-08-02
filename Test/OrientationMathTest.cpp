@@ -81,9 +81,9 @@ float g[3][3] =   { {1.0, 0.0, 0.0},
                     {0.0, 1.0, 0.0},
                     {0.0, 0.0, 1.0}
                   };
-float euler[3] = {0.7, -0.7f, -0.7f};
+float euler[3] = {0.7f, -0.7f, -0.7f};
 float x = 1.0; float y = 1.0; float z = 1.0;
-float angle = 3.14;
+float angle = DREAM3D::Constants::k_Pi;
 float xAxis = 0.5; float yAxis = 0.5; float zAxis = 0.5;
 
 
@@ -134,7 +134,7 @@ QuatF EulertoQuatActive(const float* e)
 void TestQuatMath()
 {
 
-  float euler[3] = {  2.72167, 3.148401, 0.148886 };
+  float euler[3] = {  2.72167f, 3.148401f, 0.148886f };
   printf("Euler Angle & %0.6f, %0.6f, %0.6f\n", euler[0], euler[1], euler[2]);
 
   QuatF q;

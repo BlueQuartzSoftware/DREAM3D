@@ -321,7 +321,7 @@ void IdentifyDislocationSegments::execute()
   }
 
   // Now adjust all the Feature Id values for each Voxel
-  for(int64_t i = 0; i < numEdges; ++i)
+  for(size_t i = 0; i < numEdges; ++i)
   {
     m_DislocationIds[i] = gid[ m_DislocationIds[i] ];
   }

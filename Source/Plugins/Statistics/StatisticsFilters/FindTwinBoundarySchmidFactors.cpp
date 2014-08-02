@@ -386,7 +386,7 @@ void FindTwinBoundarySchmidFactors::execute()
   bool doParallel = true;
 #endif
 
-  int64_t numTriangles = m_SurfaceMeshFaceLabelsPtr.lock()->getNumberOfTuples();
+  size_t numTriangles = m_SurfaceMeshFaceLabelsPtr.lock()->getNumberOfTuples();
 
   float LoadingDir[3];
   LoadingDir[0] = m_LoadingDir.x;

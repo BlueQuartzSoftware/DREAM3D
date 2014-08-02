@@ -53,8 +53,8 @@
 // -----------------------------------------------------------------------------
 NeighborOrientationCorrelation::NeighborOrientationCorrelation() :
   AbstractFilter(),
-  m_MisorientationTolerance(5),
-  m_MinConfidence(0.1),
+  m_MisorientationTolerance(5.0f),
+  m_MinConfidence(0.1f),
   m_Level(6),
   m_ConfidenceIndexArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::ConfidenceIndex),
   m_CellPhasesArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::Phases),

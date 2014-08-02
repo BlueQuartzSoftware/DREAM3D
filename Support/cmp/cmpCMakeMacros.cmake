@@ -657,7 +657,7 @@ macro(CMP_COPY_QT4_RUNTIME_LIBRARIES QTLIBLIST)
       endif()
       FOREACH(qtlib ${QTLIBLIST})
           GET_FILENAME_COMPONENT(QT_DLL_PATH_tmp ${QT_QMAKE_EXECUTABLE} PATH)
-          message(STATUS "Generating Copy Rule for Qt DLL: ${QT_DLL_PATH_tmp}/${qtlib}d4.dll")
+          #message(STATUS "Generating Copy Rule for Qt DLL: ${QT_DLL_PATH_tmp}/${qtlib}d4.dll")
           add_custom_target(ZZ_${qtlib}-Debug-Copy ALL
                       COMMAND ${CMAKE_COMMAND} -E copy_if_different ${QT_DLL_PATH_tmp}/${qtlib}${TYPE}4.dll
                       ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/
@@ -765,7 +765,7 @@ macro(CMP_COPY_DEPENDENT_LIBRARIES _libraryList)
 
          # SET(${upperlib}_LIBRARY_DLL_${TYPE} "${${upperlib}_LIBRARY_DLL_${TYPE}}/${lib_name}.dll" CACHE FILEPATH "The path to the DLL Portion of the library" FORCE)
          # message(STATUS "${upperlib}_LIBRARY_DLL_${TYPE}: ${${upperlib}_LIBRARY_DLL_${TYPE}}")
-          message(STATUS "Generating Copy Rule for DLL: ${${upperlib}_LIBRARY_DLL_${TYPE}}")
+          #message(STATUS "Generating Copy Rule for DLL: ${${upperlib}_LIBRARY_DLL_${TYPE}}")
           if(SUPPORT_LIB_OPTION EQUAL 1)
             set(BTYPE ".")
           endif()

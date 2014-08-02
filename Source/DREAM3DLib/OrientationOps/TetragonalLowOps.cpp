@@ -56,9 +56,9 @@
 namespace Detail
 {
 
-  static const float TetraDim1InitValue = powf((0.75f * ((M_PI) - sinf((M_PI)))), (1.0f / 3.0f));
-  static const float TetraDim2InitValue = powf((0.75f * ((M_PI) - sinf((M_PI)))), (1.0f / 3.0f));
-  static const float TetraDim3InitValue = powf((0.75f * ((M_PI / 4.0f) - sinf((M_PI / 2.0f)))), (1.0f / 3.0f));
+  static const float TetraDim1InitValue = powf((0.75f * ((DREAM3D::Constants::k_Pi) - sinf((DREAM3D::Constants::k_Pi)))), (1.0f / 3.0f));
+  static const float TetraDim2InitValue = powf((0.75f * ((DREAM3D::Constants::k_Pi) - sinf((DREAM3D::Constants::k_Pi)))), (1.0f / 3.0f));
+  static const float TetraDim3InitValue = powf((0.75f * ((DREAM3D::Constants::k_Pi / 4.0f) - sinf((DREAM3D::Constants::k_Pi / 2.0f)))), (1.0f / 3.0f));
   static const float TetraDim1StepValue = TetraDim1InitValue / 36.0f;
   static const float TetraDim2StepValue = TetraDim2InitValue / 36.0f;
   static const float TetraDim3StepValue = TetraDim3InitValue / 9.0f;

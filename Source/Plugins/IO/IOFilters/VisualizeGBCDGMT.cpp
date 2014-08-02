@@ -304,9 +304,9 @@ void VisualizeGBCDGMT::execute()
   gbcdLimits[2] = 0.0;
   gbcdLimits[3] = -sqrt(DREAM3D::Constants::k_Pi / 2.0);
   gbcdLimits[4] = -sqrt(DREAM3D::Constants::k_Pi / 2.0);
-  gbcdLimits[5] = M_PI / 2.0;
+  gbcdLimits[5] = DREAM3D::Constants::k_Pi / 2.0;
   gbcdLimits[6] = 1.0;
-  gbcdLimits[7] = M_PI / 2.0;
+  gbcdLimits[7] = DREAM3D::Constants::k_Pi / 2.0;
   gbcdLimits[8] = sqrt(DREAM3D::Constants::k_Pi / 2.0);
   gbcdLimits[9] = sqrt(DREAM3D::Constants::k_Pi / 2.0);
 
