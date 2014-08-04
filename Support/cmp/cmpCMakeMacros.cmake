@@ -624,6 +624,8 @@ macro(CMP_COPY_QT4_RUNTIME_LIBRARIES QTLIBLIST)
       set(SUPPORT_LIB_OPTION 0)
     elseif(APPLE) # Apple systems do NOT need this so just skip this entirely
       set(SUPPORT_LIB_OPTION 2)
+    elseif(UNIX AND NOT MSVC)
+      set(SUPPORT_LIB_OPTION 3)
     endif()
 
     if(NOT DEFINED QT_QMAKE_EXECUTABLE)
@@ -650,7 +652,7 @@ macro(CMP_COPY_QT4_RUNTIME_LIBRARIES QTLIBLIST)
         set_target_properties(ZZ_${qtlib}-Release-Copy PROPERTIES FOLDER ZZ_COPY_FILES)
 
       ENDFOREACH(qtlib)
-    else()
+    elseif(SUPPORT_LIB_OPTION EQUAL 1)
       set(TYPE "")
       if( ${CMAKE_BUILD_TYPE} STREQUAL "Debug")
           set(TYPE "d")
@@ -720,6 +722,8 @@ macro(CMP_COPY_DEPENDENT_LIBRARIES _libraryList)
     set(SUPPORT_LIB_OPTION 0)
   elseif(APPLE) # Apple systems do NOT need this so just skip this entirely
     set(SUPPORT_LIB_OPTION 2)
+  elseif(UNIX AND NOT MSVC)
+    set(SUPPORT_LIB_OPTION 3)
   endif()
 
   set(_libraryList ${_libraryList})
