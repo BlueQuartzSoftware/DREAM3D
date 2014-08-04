@@ -405,7 +405,7 @@ class StructArray : public IDataArray
 
     virtual IDataArray::Pointer reorderCopy(QVector<size_t> newOrderMap)
     {
-      if(newOrderMap.size() != getNumberOfTuples())
+      if(newOrderMap.size() != static_cast<QVector<size_t>::size_type>(getNumberOfTuples()))
       {
         return IDataArray::NullPointer();
       }
@@ -414,7 +414,7 @@ class StructArray : public IDataArray
       {
         daCopy->initializeWithZeros();
         size_t chunkSize = getNumberOfComponents() * sizeof(T);
-        for(int i = 0; i < getNumberOfTuples(); i++)
+        for(size_t i = 0; i < getNumberOfTuples(); i++)
         {
           T* src = getPointer(i * getNumberOfComponents());
           void* dest = daCopy->getVoidPointer(newOrderMap[i] * getNumberOfComponents());
