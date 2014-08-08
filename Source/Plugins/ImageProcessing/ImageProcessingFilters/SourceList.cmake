@@ -32,6 +32,7 @@ set(_PublicFilters
   ReadImage
   RGBToGray
   GrayToRGB
+  FindMaxima
 )
 
 
