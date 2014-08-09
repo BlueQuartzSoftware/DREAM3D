@@ -6,19 +6,30 @@
 
 #include "DecimateSurfaceMesh.h"
 
-#include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/Math/DREAM3DMath.h"
-#include "DREAM3DLib/Utilities/DREAM3DRandom.h"
-#include "DecimateSurfaceMesh.h"
 
-#include "DREAM3DLib/SurfaceMeshingFilters/MeshVertLinks.hpp"
-#include "DREAM3DLib/SurfaceMeshingFilters/util/TriangleOps.h"
-#include <Eigen/Core>
-#include <Eigen/LU>
+#ifdef __clang__
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wredeclared-class-member"
+#endif
+
 
 #include <boost/bimap.hpp>
 #include <boost/bimap/set_of.hpp>
 #include <boost/bimap/multiset_of.hpp>
+
+#ifdef __clang__
+#pragma clang diagnostic pop
+#endif
+
+
+#include <Eigen/Core>
+#include <Eigen/LU>
+
+#include "DREAM3DLib/Common/Constants.h"
+#include "DREAM3DLib/Math/DREAM3DMath.h"
+#include "DREAM3DLib/Utilities/DREAM3DRandom.h"
+#include "DREAM3DLib/SurfaceMeshingFilters/MeshVertLinks.hpp"
+#include "DREAM3DLib/SurfaceMeshingFilters/util/TriangleOps.h"
 
 // -----------------------------------------------------------------------------
 //
@@ -398,7 +409,7 @@ void DecimateSurfaceMesh::execute()
     }
 
     //get best pair and remove from list
-    auto bestPair = *(validPairs.right.begin());
+    boost::bimaps::relation::structured_pair<boost::bimaps::tags::tagged<const MergeCost, boost::bimaps::relation::member_at::right>, boost::bimaps::tags::tagged<const std::pair<int, int>, boost::bimaps::relation::member_at::left>, mpl_::na, boost::bimaps::relation::mirror_layout> bestPair = *(validPairs.right.begin());
     validPairs.right.erase(validPairs.right.begin());
     int movedNode = bestPair.second.first;
     int removedNode = bestPair.second.second;
