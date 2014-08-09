@@ -24,6 +24,34 @@ For historical compatibility in versions prior to 4.2 the internal representatio
 
 ## Version 4.2 Bugs Fixed & Features Added ##
 
+### Version 4.2.5003 ###
+
++ Fixing issue with writing 16 bit integer data sets to Xdmf.
++ Implemented method to convert RGB colors from generateMisorientationColor back to disorientations
++ Fixing bug where conversion of angle to radians would be applied to value stored in pipeline history
++ Corrected generate misorientation colors from radians to degrees
++ Wrote filter to read an image of the same dimensions as a dataset into an array
++ Wrote filter to compose an rgb array from 3 grayscale arrays
++ fixed remove jitter filter (now actually functional) and updated help file.
+filter now functions identically to align by misorientation but performs a linear background subtraction to prevent shearing
++ fixed issue with writing VTK files was called in PackPrimaryPhases and cause an error in Mavericks
++ Wrote filter to convert RGB to Gray
++ Copied FFTElasticReader from develop branch
++ Modified version of KAM to allow calculation across grain boundaries
++ Cleaning up Convert Orientations
++ Wrote filter to convert between any 2 orientation representations
++ Wrote methods to return number of symmetry operations for a crystal structure or a vector of symmetry operations
++ Wrote filter to adjust face labels and triangle winding so that all triangles on a face point the same direction
++ Wrote filter to generate node type (lost during decimation)
++ Fixed preflight not creating new array on several filters
++ Wrote filter to copy surface mesh field array to faces
++ Fixing bug that will prevent surface mesh field array combo boxes from populating
++ Fixing issue that was causing the combo box of some array selection widgets NOT to populate with the intended data.
++ Wrote filter to calculate surface mesh field average values.
++ Wrote filter to rename surface mesh field array
++ Fixing issue where the generated widget code was not valid for some Filter Parameter types.
+
+
 ### Version 4.2.4993 ###
 
 + fixed issue with writing VTK files from the PackPrimaryPhases which would lead to an error code "0" being returned and the pipeline would prematurely end.
