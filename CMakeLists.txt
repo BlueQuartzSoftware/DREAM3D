@@ -253,10 +253,11 @@ include_directories(${PROJECT_BINARY_DIR})
 # --------------------------------------------------------------------
 if( CMAKE_BUILD_TYPE MATCHES Debug )
   ADD_DEFINITIONS(-DDEBUG)
-  if(NOT MSVC)
-  ADD_DEFINITIONS(-Wall)
-  endif()
 ENDif( CMAKE_BUILD_TYPE MATCHES Debug )
+
+if(NOT MSVC)
+  ADD_DEFINITIONS(-Wall)
+endif()
 
 # On linux we need to set this because some of the libraries are Static
 # and some are shared.
@@ -275,6 +276,7 @@ ENDif(CMAKE_COMPILER_IS_GNUCXX)
 
 if(MSVC)
  add_definitions(-D_CRT_SECURE_NO_WARNINGS)
+ add_definitions(-D_SCL_SECURE_NO_WARNINGS)
  option(DREAM3D_DISABLE_MSVC_WARNINGS "Disable some MSVC Compiler warnings" OFF)
 endif()
 

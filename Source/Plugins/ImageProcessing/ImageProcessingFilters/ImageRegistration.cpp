@@ -1,10 +1,36 @@
-/*
- * Your License or Copyright Information can go here
- */
-#if (_MSC_VER)
-#define _SCL_SECURE_NO_WARNINGS
-#endif
-
+/* ============================================================================
+ * Copyright (c) 2014 DREAM3D Consortium
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without modification,
+ * are permitted provided that the following conditions are met:
+ *
+ * Redistributions of source code must retain the above copyright notice, this
+ * list of conditions and the following disclaimer.
+ *
+ * Redistributions in binary form must reproduce the above copyright notice, this
+ * list of conditions and the following disclaimer in the documentation and/or
+ * other materials provided with the distribution.
+ *
+ * Neither the names of any of the DREAM3D Consortium contributors
+ * may be used to endorse or promote products derived from this software without
+ * specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
+ * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ *  This code was partially written under United States Air Force Contract number
+ *                              FA8650-10-D-5210
+ *
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #include "ImageRegistration.h"
 
 #include <QtCore/QString>
@@ -16,7 +42,6 @@
 // -----------------------------------------------------------------------------
 ImageRegistration::ImageRegistration() :
   AbstractFilter()
-/* DO NOT FORGET TO INITIALIZE ALL YOUR DREAM3D Filter Parameters HERE */
 {
   setupFilterParameters();
 }
@@ -34,21 +59,6 @@ ImageRegistration::~ImageRegistration()
 void ImageRegistration::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  /* There are several types of FilterParameter classes to choose from and several
-  * options for each class type. The programmer can put the entire invocation into
-  * a single line if they want. For example:
-  *
-  *   parameters.push_back(FilterParameter::New("Reference Direction", "ReferenceDir", FilterParameterWidgetType::FloatVec3Widget, getReferenceDir(), false));
-  * or the programmer can create a FilterParameter like usual C++ codes:
-  * {
-  *  FilterParameter::Pointer parameter = FilterParameter::New();
-  *  parameter->setHumanLabel("Eulers Array");
-  *  parameter->setPropertyName("CellEulerAnglesArrayName");
-  *  parameter->setWidgetType(FilterParameterWidgetType::SingleArraySelectionWidget);
-  *  parameter->setUnits("");
-  *  parameters.push_back(parameter);
-  * }
-  */
   setFilterParameters(parameters);
 }
 
@@ -83,40 +93,6 @@ int ImageRegistration::writeFilterParameters(AbstractFilterParametersWriter* wri
 void ImageRegistration::dataCheck()
 {
   setErrorCondition(0);
-
-  /* Example code for preflighting looking for a valid string for the output file
-   * but not necessarily the fact that the file exists: Example code to make sure
-   * we have something in a string before proceeding.*/
-  /*
-  if (m_OutputFile.empty() == true)
-  {
-    QString ss = QObject::tr("Output file name was not set").arg(getHumanLabel());
-    setErrorCondition(-1);
-    notifyErrorMessage(getHumanLabel(), ss, -1);
-    return;
-  }
-  * We can also check for the availability of REQUIRED ARRAYS:
-  * QVector<size_t> dims(1, 1);
-  * // Assigns the shared_ptr<> to an instance variable that is a weak_ptr<>
-  * m_CellPhasesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getCellPhasesArrayPath(), dims);
-  *  // Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object
-  * if( NULL != m_CellPhasesPtr.lock().get() )
-  * {
-  *   // Now assign the raw pointer to data from the DataArray<T> object
-  *   m_CellPhases = m_CellPhasesPtr.lock()->getPointer(0);
-  * }
-  *
-  * We can also CREATE a new array to dump new data into
-  *   tempPath.update(m_CellEulerAnglesArrayPath.getDataContainerName(), m_CellEulerAnglesArrayPath.getAttributeMatrixName(), getCellIPFColorsArrayName() );
-  * // Assigns the shared_ptr<> to an instance variable that is a weak_ptr<>
-  * m_CellIPFColorsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<uint8_t>, AbstractFilter, uint8_t>(this, tempPath, 0, dims);
-  * // Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object
-  * if( NULL != m_CellIPFColorsPtr.lock().get() )
-  * {
-  * // Now assign the raw pointer to data from the DataArray<T> object
-  * m_CellIPFColors = m_CellIPFColorsPtr.lock()->getPointer(0);
-  * }
-  */
 }
 
 // -----------------------------------------------------------------------------

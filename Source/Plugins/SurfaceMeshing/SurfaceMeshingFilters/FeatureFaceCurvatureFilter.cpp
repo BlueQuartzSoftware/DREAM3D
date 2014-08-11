@@ -297,7 +297,7 @@ void FeatureFaceCurvatureFilter::execute()
   FaceArray::Pointer trianglesPtr = sm->getFaces();
 
   // Just to double check we have everything.
-  int64_t numTriangles = trianglesPtr->getNumberOfTuples();
+  size_t numTriangles = trianglesPtr->getNumberOfTuples();
 
   // Make sure the Face Connectivity is created because the FindNRing algorithm needs this and will
   // assert if the data is NOT in the SurfaceMesh Data Container

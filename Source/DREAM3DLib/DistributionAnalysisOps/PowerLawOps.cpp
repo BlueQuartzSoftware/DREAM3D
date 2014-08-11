@@ -64,11 +64,11 @@ int PowerLawOps::calculateParameters(QVector<float>& data, FloatArrayType::Point
   float min = std::numeric_limits<float>::max();
   if(data.size() > 1)
   {
-    for(size_t i = 0; i < data.size(); i++)
+    for(qint32 i = 0; i < data.size(); i++)
     {
       if (data[i] < min) { min = data[i]; }
     }
-    for(size_t i = 0; i < data.size(); i++)
+    for(qint32 i = 0; i < data.size(); i++)
     {
       alpha = alpha + log(data[i] / min);
     }
@@ -92,16 +92,16 @@ int PowerLawOps::calculateCorrelatedParameters(QVector<QVector<float> >& data, V
   int err = 0;
   float alpha = 0;
   float min;
-  for(size_t i = 0; i < data.size(); i++)
+  for(qint32 i = 0; i < data.size(); i++)
   {
     if(data[i].size() > 1)
     {
       min = std::numeric_limits<float>::max();
-      for(size_t j = 0; j < data[i].size(); j++)
+      for(qint32 j = 0; j < data[i].size(); j++)
       {
         if (data[i][j] < min) { min = data[i][j]; }
       }
-      for(size_t j = 0; j < data[i].size(); j++)
+      for(qint32 j = 0; j < data[i].size(); j++)
       {
         alpha = alpha + log(data[i][j] / min);
       }

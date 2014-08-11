@@ -204,7 +204,7 @@ int INLWriter::writeHeader()
 // -----------------------------------------------------------------------------
 uint32_t mapCrystalSymmetryToTslSymmetry(uint32_t symmetry)
 {
-   switch(symmetry)
+  switch(symmetry)
   {
 
     case Ebsd::CrystalStructure::Cubic_High:
@@ -235,7 +235,7 @@ uint32_t mapCrystalSymmetryToTslSymmetry(uint32_t symmetry)
       return Ebsd::CrystalStructure::UnknownCrystalStructure;
 
   }
-   return Ebsd::CrystalStructure::UnknownCrystalStructure;
+  return Ebsd::CrystalStructure::UnknownCrystalStructure;
 }
 // -----------------------------------------------------------------------------
 //

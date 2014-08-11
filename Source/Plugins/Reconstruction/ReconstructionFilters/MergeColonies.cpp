@@ -413,7 +413,7 @@ void MergeColonies::execute()
 
     // Now adjust all the Feature Id values for each Voxel
 
-    for(int64_t i = 0; i < totalPoints; ++i)
+    for(size_t i = 0; i < totalPoints; ++i)
     {
       m_CellParentIds[i] = pid[ m_CellParentIds[i] ];
       m_FeatureParentIds[m_FeatureIds[i]] = m_CellParentIds[i];

@@ -142,15 +142,15 @@ int EBSDSegmentFeatures::writeFilterParameters(AbstractFilterParametersWriter* w
 {
   writer->openFilterGroup(this, index);
   DREAM3D_FILTER_WRITE_PARAMETER(CellFeatureAttributeMatrixName)
-      DREAM3D_FILTER_WRITE_PARAMETER(ActiveArrayName)
-      DREAM3D_FILTER_WRITE_PARAMETER(FeatureIdsArrayName)
-      DREAM3D_FILTER_WRITE_PARAMETER(QuatsArrayPath)
-      DREAM3D_FILTER_WRITE_PARAMETER(CrystalStructuresArrayPath)
-      DREAM3D_FILTER_WRITE_PARAMETER(CellPhasesArrayPath)
-      DREAM3D_FILTER_WRITE_PARAMETER(GoodVoxelsArrayPath)
-      DREAM3D_FILTER_WRITE_PARAMETER(UseGoodVoxels)
-      DREAM3D_FILTER_WRITE_PARAMETER(MisorientationTolerance)
-      writer->closeFilterGroup();
+  DREAM3D_FILTER_WRITE_PARAMETER(ActiveArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(FeatureIdsArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(QuatsArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(CrystalStructuresArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(CellPhasesArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(GoodVoxelsArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(UseGoodVoxels)
+  DREAM3D_FILTER_WRITE_PARAMETER(MisorientationTolerance)
+  writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
 
@@ -330,7 +330,7 @@ int64_t EBSDSegmentFeatures::getSeed(size_t gnum)
   setErrorCondition(0);
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
-  int64_t totalPoints = m_FeatureIdsPtr.lock()->getNumberOfTuples();
+  size_t totalPoints = m_FeatureIdsPtr.lock()->getNumberOfTuples();
   int seed = -1;
   Generator& numberGenerator = *m_NumberGenerator;
   while(seed == -1 && m_TotalRandomNumbersGenerated < totalPoints)
@@ -364,8 +364,8 @@ bool EBSDSegmentFeatures::determineGrouping(int64_t referencepoint, int64_t neig
   bool group = false;
 
   // Get the phases for each voxel
-  unsigned int phase1 = m_CrystalStructures[m_CellPhases[referencepoint]];
-  unsigned int phase2 = m_CrystalStructures[m_CellPhases[neighborpoint]];
+  int32_t phase1 = m_CrystalStructures[m_CellPhases[referencepoint]];
+  int32_t phase2 = m_CrystalStructures[m_CellPhases[neighborpoint]];
   // If either of the phases is 999 then we bail out now.
   if (phase1 >= m_OrientationOps.size() || phase2 >= m_OrientationOps.size())
   {

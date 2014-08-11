@@ -1455,9 +1455,9 @@ DREAM3D::Rgb HexagonalOps::generateMisorientationColor(const QuatF& q, const Qua
   z2 = (x1 + y1 + z1) / DREAM3D::Constants::k_Sqrt3;
 
   //eq c1.4
-  k = fmodf(atan2f(y2, x2) + M_2PI, M_2PI);
-  x3 = cos(k) * sqrt(x2 * x2 + y2 * y2) * sin(M_PI / 6.0f + fmodf(k, M_2PI / 3.0f)) / DREAM3D::Constants::k_HalfSqrt2;
-  y3 = sin(k) * sqrt(x2 * x2 + y2 * y2) * sin(M_PI / 6.0f + fmodf(k, M_2PI / 3.0f)) / DREAM3D::Constants::k_HalfSqrt2;
+  k = fmodf(atan2f(y2, x2) + DREAM3D::Constants::k_2Pi, DREAM3D::Constants::k_2Pi);
+  x3 = cos(k) * sqrt(x2 * x2 + y2 * y2) * sin(DREAM3D::Constants::k_Pi / 6.0f + fmodf(k, DREAM3D::Constants::k_Pi / 3.0f)) / DREAM3D::Constants::k_HalfSqrt2;
+  y3 = sin(k) * sqrt(x2 * x2 + y2 * y2) * sin(DREAM3D::Constants::k_Pi / 6.0f + fmodf(k, DREAM3D::Constants::k_2Pi / 3.0f)) / DREAM3D::Constants::k_HalfSqrt2;
   z3 = z2 - 1.0f;
 
   //eq c1.5

@@ -63,6 +63,23 @@ namespace DREAM3D
   static const uint8_t PartiallyChecked = 1;
   static const uint8_t Checked = 2;
 
+  namespace TypeNames
+  {
+    const QString Bool("bool");
+    const QString Float("float");
+    const QString Double("double");
+    const QString Int8("int8_t");
+    const QString UInt8("uint8_t");
+    const QString Int16("int16_t");
+    const QString UInt16("uint16_t");
+    const QString Int32("int32_t");
+    const QString UInt32("uint32_t");
+    const QString Int64("int64_t");
+    const QString UInt64("uint64_t");
+    const QString UnknownType("UnknownType");
+    const QString SupportedTypeList(TypeNames::Int8 + ", " + TypeNames::UInt8 + ", " + TypeNames::Int16 + ", " + TypeNames::UInt16 + ", " + TypeNames::Int32 + ", " + TypeNames::UInt32 + ", " + TypeNames::Int64 + ", " + TypeNames::UInt64 + ", " + TypeNames::Float + ", " + TypeNames::Double);
+  }
+
 
   namespace Defaults
   {
@@ -640,15 +657,6 @@ namespace DREAM3D
     const DREAM3D_STRING ErrorFile("Error.txt");
     const DREAM3D_STRING VtkFile("Test.vtk");
   }
-
-  //  namespace MicroStats
-  //  {
-  //    const DREAM3D_STRING H5StatisticsFile("Results.h5stats");
-  //    const DREAM3D_STRING FeatureDataFile("FeatureData.csv");//14
-  //    const DREAM3D_STRING DeformationStatsFile("Deformation_Stats.txt");
-  //    const DREAM3D_STRING IPFDeformVTKFile("IPF_DeformationData.vtk");
-  //    const DREAM3D_STRING VoxelDataName("VoxelData");
-  //  }
 
   /*   Surface Meshing Related   */
   namespace SurfaceMesh

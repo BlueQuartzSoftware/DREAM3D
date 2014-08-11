@@ -50,6 +50,9 @@ find_package(ITK COMPONENTS
   ITKClassifiers
   #ITKConnectedComponents
 
+  #Other
+  ITKReview
+
   REQUIRED
 )
 

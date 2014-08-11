@@ -206,13 +206,13 @@ void ExtractFlaggedFeatures::find_feature_bounds()
   size_t kstride, jstride, count;
   int featureShift, feature;
 
-  for (size_t k = 0; k < dims[2]; k++)
+  for (DimType k = 0; k < dims[2]; k++)
   {
     kstride = static_cast<int>( dims[0] * dims[1] * k );
-    for (size_t j = 0; j < dims[1]; j++)
+    for (DimType j = 0; j < dims[1]; j++)
     {
       jstride = static_cast<int>( dims[0] * j );
-      for (size_t i = 0; i < dims[0]; i++)
+      for (DimType i = 0; i < dims[0]; i++)
       {
         count = kstride + jstride + i;
         feature = m_FeatureIds[count];

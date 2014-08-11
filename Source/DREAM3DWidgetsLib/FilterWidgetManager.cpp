@@ -47,7 +47,7 @@ FilterWidgetManager* FilterWidgetManager::self = 0;
 // -----------------------------------------------------------------------------
 FilterWidgetManager::FilterWidgetManager()
 {
- // qDebug() << "FilterWidgetManager()" << this;
+// qDebug() << "FilterWidgetManager()" << this;
 
   Q_ASSERT_X(!self, "FilterWidgetManager", "there should be only one FilterWidgetManager object");
   FilterWidgetManager::self = this;
@@ -58,7 +58,7 @@ FilterWidgetManager::FilterWidgetManager()
 // -----------------------------------------------------------------------------
 FilterWidgetManager::~FilterWidgetManager()
 {
- // qDebug() << "~FilterWidgetManager()" << this;
+// qDebug() << "~FilterWidgetManager()" << this;
 }
 
 // -----------------------------------------------------------------------------
@@ -68,7 +68,7 @@ FilterWidgetManager* FilterWidgetManager::Instance()
 {
   if (self == NULL)
   {
- //   qDebug() << "FilterWidgetManager::Instance self was NULL" << "\n";
+//   qDebug() << "FilterWidgetManager::Instance self was NULL" << "\n";
     self = new FilterWidgetManager();
   }
 //  qDebug() << "self.get(): " << self << "\n";

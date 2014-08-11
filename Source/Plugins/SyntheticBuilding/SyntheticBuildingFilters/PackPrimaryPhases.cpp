@@ -541,10 +541,10 @@ void PackPrimaryPhases::execute()
 
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getOutputCellAttributeMatrixName().getDataContainerName());
 
-  int64_t totalFeatures = m_FeaturePhasesPtr.lock()->getNumberOfTuples();
+  size_t totalFeatures = m_FeaturePhasesPtr.lock()->getNumberOfTuples();
 
   // Get the number of input ensembles from one of the input arrays that are located in the Input Ensemble AttributeMatrix
-  int64_t totalEnsembles = m_PhaseTypesPtr.lock()->getNumberOfTuples();
+  size_t totalEnsembles = m_PhaseTypesPtr.lock()->getNumberOfTuples();
 
   StatsDataArray& statsDataArray = *(m_StatsDataArray.lock().get());
 
@@ -1399,7 +1399,7 @@ void PackPrimaryPhases::determine_neighbors(size_t gnum, int add)
   y = m_Centroids[3 * gnum + 1];
   z = m_Centroids[3 * gnum + 2];
   dia = m_EquivalentDiameters[gnum];
-  int64_t totalFeatures = m->getAttributeMatrix(m_OutputCellFeatureAttributeMatrixName)->getNumTuples();
+  size_t totalFeatures = m->getAttributeMatrix(m_OutputCellFeatureAttributeMatrixName)->getNumTuples();
   int32_t increment = 0;
   if(add > 0) { increment = 1; }
   if(add < 0) { increment = -1; }
@@ -1473,7 +1473,7 @@ float PackPrimaryPhases::check_neighborhooderror(int gadd, int gremove)
     float minFeatureDia = pp->getMinFeatureDiameter();
     float oneOverBinStepSize = 1.0f / pp->getBinStepSize();
 
-    int64_t totalFeatures = m->getAttributeMatrix(m_OutputCellFeatureAttributeMatrixName)->getNumTuples();
+    size_t totalFeatures = m->getAttributeMatrix(m_OutputCellFeatureAttributeMatrixName)->getNumTuples();
     for (size_t i = firstPrimaryFeature; i < totalFeatures; i++)
     {
       nnum = 0;
@@ -2086,8 +2086,8 @@ void PackPrimaryPhases::assign_gaps_only()
   int xPoints = static_cast<int>(m->getXPoints());
   int yPoints = static_cast<int>(m->getYPoints());
   int zPoints = static_cast<int>(m->getZPoints());
-  int64_t totalPoints = m->getAttributeMatrix(m_OutputCellAttributeMatrixName.getAttributeMatrixName())->getNumTuples();
-  int64_t totalFeatures = m->getAttributeMatrix(m_OutputCellFeatureAttributeMatrixName)->getNumTuples();
+  size_t totalPoints = m->getAttributeMatrix(m_OutputCellAttributeMatrixName.getAttributeMatrixName())->getNumTuples();
+  size_t totalFeatures = m->getAttributeMatrix(m_OutputCellFeatureAttributeMatrixName)->getNumTuples();
 
   int neighpoints[6];
   neighpoints[0] = -xPoints * yPoints;
@@ -2200,8 +2200,8 @@ void PackPrimaryPhases::cleanup_features()
 
   StatsDataArray& statsDataArray = *(m_StatsDataArray.lock().get());
 
-  int64_t totalPoints = m->getAttributeMatrix(m_OutputCellAttributeMatrixName.getAttributeMatrixName())->getNumTuples();
-  int64_t totalFeatures = m->getAttributeMatrix(m_OutputCellFeatureAttributeMatrixName)->getNumTuples();
+  size_t totalPoints = m->getAttributeMatrix(m_OutputCellAttributeMatrixName.getAttributeMatrixName())->getNumTuples();
+  size_t totalFeatures = m->getAttributeMatrix(m_OutputCellFeatureAttributeMatrixName)->getNumTuples();
   size_t udims[3] = {0, 0, 0};
   m->getDimensions(udims);
 #if (CMP_SIZEOF_SIZE_T == 4)

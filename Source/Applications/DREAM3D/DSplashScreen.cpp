@@ -225,7 +225,7 @@ void DSplashScreen::finish(QWidget* mainWin)
   if (mainWin)
   {
 #if defined(Q_WS_X11)
-  qt_x11_wait_for_window_manager(mainWin);
+    qt_x11_wait_for_window_manager(mainWin);
 #endif
   }
   close();

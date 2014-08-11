@@ -19,6 +19,29 @@ if(WIN32)
     set(install_dir ".")
 endif()
 
+# --------------------------------------------------------------------------
+macro(ConvertPathToHeaderCompatible INPUT)
+    if(WIN32)
+      STRING(REPLACE "\\" "\\\\" ${INPUT} ${INPUT} )
+      STRING(REPLACE "/" "\\\\" ${INPUT} ${INPUT}  )
+    endif()
+endmacro()
+
+
+set(DREAM3DProj_SOURCE_DIR_NORM ${DREAM3DProj_SOURCE_DIR})
+ConvertPathToHeaderCompatible(${DREAM3DProj_SOURCE_DIR_NORM})
+set(DREAM3DLib_SOURCE_DIR_NORM ${DREAM3DLib_SOURCE_DIR})
+ConvertPathToHeaderCompatible(${DREAM3DLib_SOURCE_DIR_NORM})
+set(DREAM3DLib_PLUGIN_DIR_NORM "${DREAM3DProj_SOURCE_DIR}/Source/Plugins")
+ConvertPathToHeaderCompatible(${DREAM3DLib_PLUGIN_DIR_NORM})
+
+get_filename_component(DREAM3DProj_PARENT_DIR_NORM ${DREAM3DProj_SOURCE_DIR} PATH)
+ConvertPathToHeaderCompatible(${DREAM3DProj_PARENT_DIR_NORM})
+
+
+configure_file( ${DREAM3DTools_SOURCE_DIR}/ToolConfiguration.h.in
+                ${DREAM3DTools_BINARY_DIR}/ToolConfiguration.h)
+
 #-------------------------------------------------------------------------------
 # Function COMPILE_TOOL to help alleviate lots of extra code below for adding
 # simple command line tools that just need one or two source files

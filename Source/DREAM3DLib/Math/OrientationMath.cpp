@@ -1,6 +1,7 @@
 /* ============================================================================
- * Copyright (c) 2010, Michael A. Jackson (BlueQuartz Software)
- * Copyright (c) 2010, Michael A. Groeber (US Air Force Research Laboratory)
+ * Copyright (c) 2011 Michael A. Jackson (BlueQuartz Software)
+ * Copyright (c) 2011 Dr. Michael A. Groeber (US Air Force Research Laboratories)
+ * Copyright (c) 2014 Dr. Joseph C. Tucker (UES, Inc.)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -13,10 +14,10 @@
  * list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
  *
- * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
- * BlueQuartz Software nor the names of its contributors may be used to endorse
- * or promote products derived from this software without specific prior written
- * permission.
+ * Neither the name of Joseph C. Tucker, Michael A. Groeber, Michael A. Jackson,
+ * UES, Inc., the US Air Force, BlueQuartz Software nor the names of its contributors
+ * may be used to endorse or promote products derived from this software without
+ * specific prior written permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -28,6 +29,10 @@
  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ *  This code was written under United States Air Force Contract number
+ *                   FA8650-07-D-5800 and FA8650-10-D-5226
+ *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #include "OrientationMath.h"
 
@@ -643,4 +648,43 @@ QuatF OrientationMath::ActiveRotation(float angle, float xAxis, float yAxis, flo
   QuatF temp = QuaternionMathF::Multiply(q, v);
   QuatF active = QuaternionMathF::Multiply(temp, qStar);
   return active;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void OrientationMath::MillerBravaisToMillerDirection(int millerBravais[4], int miller[3])
+{
+  miller[0] = millerBravais[0] - millerBravais[2];
+  miller[1] = millerBravais[1] - millerBravais[2];
+  miller[2] = millerBravais[3];
+}
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void OrientationMath::MillerToMillerBravaisDirection(int miller[3], int millerBravais[4])
+{
+  millerBravais[0] = 0.33333f * (2 * miller[0] - miller[1]);
+  millerBravais[1] = 0.33333f * (2 * miller[1] - miller[0]);
+  millerBravais[2] = -0.33333f * (miller[0] + miller[1]);
+  millerBravais[3] = miller[2];
+}
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void OrientationMath::MillerBravaisToMillerPlane(int millerBravais[4], int miller[3])
+{
+  miller[0] = millerBravais[0]; 
+  miller[1] = millerBravais[1];
+  miller[2] = millerBravais[3];
+}
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void OrientationMath::MillerToMillerBravaisPlane(int miller[3], int millerBravais[4])
+{
+  millerBravais[0] = miller[0];
+  millerBravais[1] = miller[1];
+  millerBravais[2] = - (miller[0] + miller[1]);
+  millerBravais[3] = miller[2];
 }

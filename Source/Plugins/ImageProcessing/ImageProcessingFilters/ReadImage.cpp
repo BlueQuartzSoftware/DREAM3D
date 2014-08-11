@@ -1,10 +1,36 @@
-/*
- * Your License or Copyright Information can go here
- */
-#if (_MSC_VER)
-#define _SCL_SECURE_NO_WARNINGS
-#endif
-
+/* ============================================================================
+ * Copyright (c) 2014 DREAM3D Consortium
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without modification,
+ * are permitted provided that the following conditions are met:
+ *
+ * Redistributions of source code must retain the above copyright notice, this
+ * list of conditions and the following disclaimer.
+ *
+ * Redistributions in binary form must reproduce the above copyright notice, this
+ * list of conditions and the following disclaimer in the documentation and/or
+ * other materials provided with the distribution.
+ *
+ * Neither the names of any of the DREAM3D Consortium contributors
+ * may be used to endorse or promote products derived from this software without
+ * specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
+ * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ *  This code was partially written under United States Air Force Contract number
+ *                              FA8650-10-D-5210
+ *
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #include "ReadImage.h"
 
 #include <string>
@@ -17,8 +43,10 @@
 #include "itkRGBAPixel.h"
 #include "itkVectorImage.h"
 
+#include "DREAM3DLib/Common/TemplateHelpers.hpp"
+
 // ImageProcessing Plugin
-#include "ITKUtilities.h"
+#include "ItkBridge.h"
 
 /**
  * @brief This is a private implementation for the filter that handles the actual algorithm implementation details
@@ -376,47 +404,47 @@ void ReadImage::dataCheck()
   }
 
   //get component type
-  int type;
+  IDataArray::Pointer data;
   itk::ImageIOBase::IOComponentType componentType = imageIO->GetComponentType();
   if(itk::ImageIOBase::CHAR == componentType)
   {
-    type = TemplateConstants::Int8;
+    data = Int8ArrayType::CreateArray(0, "Temp", false);
   }
   else if(itk::ImageIOBase::UCHAR == componentType)
   {
-    type = TemplateConstants::UInt8;
+    data = UInt8ArrayType::CreateArray(0, "Temp", false);
   }
   else if(itk::ImageIOBase::SHORT == componentType)
   {
-    type = TemplateConstants::Int16;
+    data = Int16ArrayType::CreateArray(0, "Temp", false);
   }
   else if(itk::ImageIOBase::USHORT == componentType)
   {
-    type = TemplateConstants::UInt16;
+    data = UInt16ArrayType::CreateArray(0, "Temp", false);
   }
   else if(itk::ImageIOBase::INT == componentType)
   {
-    type = TemplateConstants::Int32;
+    data = Int32ArrayType::CreateArray(0, "Temp", false);
   }
   else if(itk::ImageIOBase::UINT == componentType)
   {
-    type = TemplateConstants::UInt32;
+    data = UInt32ArrayType::CreateArray(0, "Temp", false);
   }
   else if(itk::ImageIOBase::LONG == componentType)
   {
-    type = TemplateConstants::Int64;
+    data = Int64ArrayType::CreateArray(0, "Temp", false);
   }
   else if(itk::ImageIOBase::ULONG == componentType)
   {
-    type = TemplateConstants::UInt64;
+    data = UInt64ArrayType::CreateArray(0, "Temp", false);
   }
   else if(itk::ImageIOBase::FLOAT == componentType)
   {
-    type = TemplateConstants::Float;
+    data = FloatArrayType::CreateArray(0, "Temp", false);
   }
   else if(itk::ImageIOBase::DOUBLE == componentType)
   {
-    type = TemplateConstants::Double;
+    data = DoubleArrayType::CreateArray(0, "Temp", false);
   }
   else
   {
@@ -429,8 +457,11 @@ void ReadImage::dataCheck()
 
   if(getErrorCondition() < 0) { return; }
 
-  //create array
-  TEMPLATE_CREATE_NONPREREQ_ARRAY(ImageData, createdPath, componentDims, type);
+  m_ImageDataPtr = TemplateHelpers::CreateNonPrereqArrayFromArrayType()(this, createdPath, componentDims, data);
+  if( NULL != m_ImageDataPtr.lock().get() )
+  {
+    m_ImageData = m_ImageDataPtr.lock()->getVoidPointer(0);
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -467,8 +498,8 @@ void ReadImage::execute()
 
   //get input and output data
   IDataArray::Pointer imageData = m_ImageDataPtr.lock();
-  std::string fileNameString = getInputFileName().toLocal8Bit().constData();
-  const char* fileNameCStr = fileNameString.c_str();
+  //std::string fileNameString = getInputFileName().toLocal8Bit().constData();
+  //const char* fileNameCStr = fileNameString.c_str();
 
 
   //execute type dependant portion using a Private Implementation that takes care of figuring out if

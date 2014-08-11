@@ -245,10 +245,10 @@ herr_t QH5Lite::getDatasetInfo( hid_t loc_id,
   // Since this is a wrapper we need to pass a std::vector() then copy the values from that into our 'dims' argument
   std::vector<hsize_t> rDims;
   herr_t err = H5Lite::getDatasetInfo(loc_id, dsetName.toStdString(), rDims, classType, sizeType);
-  dims.resize(rDims.size());
+  dims.resize(static_cast<qint32>(rDims.size()));
   for(std::vector<hsize_t>::size_type i = 0; i < rDims.size(); ++i)
   {
-    dims[i] = rDims[i];
+    dims[static_cast<qint32>(i)] = rDims[i];
   }
   return err;
 }
@@ -270,10 +270,10 @@ herr_t QH5Lite::getAttributeInfo(hid_t loc_id,
   std::vector<hsize_t> rDims = dims.toStdVector();
   herr_t err = H5Lite::getAttributeInfo(loc_id, objName.toStdString(), attrName.toStdString(), rDims,
                                         type_class, type_size, tid);
-  dims.resize(rDims.size());
+  dims.resize(static_cast<qint32>(rDims.size()));
   for(std::vector<hsize_t>::size_type i = 0; i < rDims.size(); ++i)
   {
-    dims[i] = rDims[i];
+    dims[static_cast<qint32>(i)] = rDims[i];
   }
   return err;
 }

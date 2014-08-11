@@ -31,31 +31,31 @@
  *                              FA8650-10-D-5210
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#include "RGBToGray.h"
-
-#include <string>
+#include "FindMaxima.h"
 
 //thresholding filter
-#include "itkUnaryFunctorImageFilter.h"
+#include "itkValuedRegionalMaximaImageFilter.h"
+#include "itkBinaryThresholdImageFilter.h"
+#include <limits>
 
 #include "DREAM3DLib/Common/TemplateHelpers.hpp"
 
 // ImageProcessing Plugin
 #include "ItkBridge.h"
-#include "ImageProcessing/ImageProcessingHelpers.hpp"
+
 
 /**
  * @brief This is a private implementation for the filter that handles the actual algorithm implementation details
  * for us like figuring out if we can use this private implementation with the data array that is assigned.
  */
-template<typename T>
-class RGBToGrayPrivate
+template<typename PixelType>
+class FindMaximaPrivate
 {
   public:
-    typedef DataArray<T> DataArrayType;
+    typedef DataArray<PixelType> DataArrayType;
 
-    RGBToGrayPrivate() {}
-    virtual ~RGBToGrayPrivate() {}
+    FindMaximaPrivate() {}
+    virtual ~FindMaximaPrivate() {}
 
     // -----------------------------------------------------------------------------
     // Determine if this is the proper type of an array to downcast from the IDataArray
@@ -68,48 +68,42 @@ class RGBToGrayPrivate
     // -----------------------------------------------------------------------------
     // This is the actual templated algorithm
     // -----------------------------------------------------------------------------
-    void static Execute(RGBToGray* filter, IDataArray::Pointer inputIDataArray, IDataArray::Pointer outputIDataArray, FloatVec3_t weights, VolumeDataContainer* m, QString attrMatName)
+    void static Execute(FindMaxima* filter, IDataArray::Pointer inputArray, double MinValue, bool* outputData, VolumeDataContainer* m, QString attrMatName)
     {
-      typename DataArrayType::Pointer inputDataPtr = boost::dynamic_pointer_cast<DataArrayType>(inputIDataArray);
-      typename DataArrayType::Pointer outputDataPtr = boost::dynamic_pointer_cast<DataArrayType>(outputIDataArray);
+      typename DataArrayType::Pointer inputArrayPtr = boost::dynamic_pointer_cast<DataArrayType>(inputArray);
 
+      //convert array to correct type
+      PixelType* inputData = static_cast<PixelType*>(inputArrayPtr->getPointer(0));
 
+      size_t numVoxels = inputArrayPtr->getNumberOfTuples();
 
-      // Get the Raw Pointer to the Allocated Memory region (array) for the input and output arrays
-      T* inputData = static_cast<T*>(inputDataPtr->getPointer(0));
-      T* outputData = static_cast<T*>(outputDataPtr->getPointer(0));
-
-      size_t numVoxels = inputDataPtr->getNumberOfTuples();
-
-      //set weighting
-      double mag = weights.x + weights.y + weights.z;
-
-      // Define all the typedefs that are needed
-      typedef ItkBridge<T>                                              ItkBridgeType;
-      typedef typename ItkBridgeType::RGBImageType                   RGBImageType;
-      typedef typename RGBImageType::Pointer                            RGBImagePointerType;
-      typedef typename RGBImageType::PixelType                          RGBImagePixelType;
-      typedef typename ItkBridgeType::ScalarImageType                ScalarImageType;
-      typedef typename ScalarImageType::PixelType                       ScalarImagePixelType;
-      //define Fucntor Typedef
-      typedef ImageProcessing::Functor::Luminance<RGBImagePixelType, ScalarImagePixelType>                       LuminanceFunctorType;
-      //define filters typedef
-      typedef itk::UnaryFunctorImageFilter<RGBImageType, ScalarImageType, LuminanceFunctorType> RGBToGrayType;
-
+      typedef ItkBridge<PixelType> ItkBridgeType;
 
       //wrap input as itk image
-      RGBImagePointerType inputImage = ItkBridgeType::template Dream3DtoITKImportFilter<RGBImagePixelType>(m, attrMatName, inputData)->GetOutput();
+      typedef itk::Image<PixelType, ImageProcessing::ImageDimension> ImageType;
+      typedef itk::Image<bool, ImageProcessing::ImageDimension> BoolImageType;
+      typename ImageType::Pointer inputImage = ItkBridgeType::CreateItkWrapperForDataPointer(m, attrMatName, inputData);
 
-      //convert to gray
-      typename RGBToGrayType::Pointer itkFilter = RGBToGrayType::New();
-      itkFilter->GetFunctor().SetRWeight(weights.x/mag);
-      itkFilter->GetFunctor().SetGWeight(weights.y/mag);
-      itkFilter->GetFunctor().SetBWeight(weights.z/mag);
-      itkFilter->SetInput(inputImage);
-      itkFilter->GetOutput()->GetPixelContainer()->SetImportPointer(outputData, numVoxels, false);
+      //define filters
+      typedef itk::ValuedRegionalMaximaImageFilter<ImageType, ImageType> RegionalMaximaType;
+      typedef itk::BinaryThresholdImageFilter <ImageType, BoolImageType> ThresholdType;
+
+      //find maxima
+      RegionalMaximaType::Pointer maxima = RegionalMaximaType::New();
+      maxima->SetInput(inputImage);
+
+      //threshold
+      ThresholdType::Pointer threshold = ThresholdType::New();
+      threshold->SetInput(maxima->GetOutput());
+      threshold->SetLowerThreshold((PixelType)MinValue);
+      threshold->SetUpperThreshold(std::numeric_limits<PixelType>::max());
+      threshold->SetInsideValue(true);
+      threshold->SetOutsideValue(false);
+      threshold->GetOutput()->GetPixelContainer()->SetImportPointer(outputData, numVoxels, false);
+
       try
       {
-        itkFilter->Update();
+        threshold->Update();
       }
       catch( itk::ExceptionObject & err )
       {
@@ -117,48 +111,42 @@ class RGBToGrayPrivate
         QString ss = QObject::tr("Failed to convert image. Error Message returned from ITK:\n   %1").arg(err.GetDescription());
         filter->notifyErrorMessage(filter->getHumanLabel(), ss, filter->getErrorCondition());
       }
-
     }
   private:
-    RGBToGrayPrivate(const RGBToGrayPrivate&); // Copy Constructor Not Implemented
-    void operator=(const RGBToGrayPrivate&); // Operator '=' Not Implemented
+    FindMaximaPrivate(const FindMaximaPrivate&); // Copy Constructor Not Implemented
+    void operator=(const FindMaximaPrivate&); // Operator '=' Not Implemented
 };
 
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-RGBToGray::RGBToGray() :
+FindMaxima::FindMaxima() :
   AbstractFilter(),
-  m_SelectedCellArrayArrayPath("", "", ""),
-  m_NewCellArrayName(""),
-  m_SelectedCellArrayArrayName(""),
+  m_SelectedCellArrayPath("", "", ""),
+  m_NewCellArrayName("Maxima"),
+  m_MinValue(1.0),
   m_SelectedCellArray(NULL),
   m_NewCellArray(NULL)
 {
-  m_ColorWeights.x = 0.2125f;
-  m_ColorWeights.y = 0.7154f;
-  m_ColorWeights.z = 0.0721f;
   setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-RGBToGray::~RGBToGray()
+FindMaxima::~FindMaxima()
 {
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RGBToGray::setupFilterParameters()
+void FindMaxima::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(FilterParameter::New("Array to Process", "SelectedCellArrayArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getSelectedCellArrayArrayPath(), false, ""));
-  parameters.push_back(FilterParameter::New("Color Weighting", "ColorWeights", FilterParameterWidgetType::FloatVec3Widget, getColorWeights(), false));
-  QStringList linkedProps;
-  linkedProps << "NewCellArrayName";
+  parameters.push_back(FilterParameter::New("Input Array", "SelectedCellArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getSelectedCellArrayPath(), false, ""));
+  parameters.push_back(FilterParameter::New("Minimum Peak Intensity", "MinValue", FilterParameterWidgetType::DoubleWidget, getMinValue(), false, ""));
   parameters.push_back(FilterParameter::New("Created Array Name", "NewCellArrayName", FilterParameterWidgetType::StringWidget, getNewCellArrayName(), false, ""));
   setFilterParameters(parameters);
 }
@@ -166,11 +154,11 @@ void RGBToGray::setupFilterParameters()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RGBToGray::readFilterParameters(AbstractFilterParametersReader* reader, int index)
+void FindMaxima::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-  setSelectedCellArrayArrayPath( reader->readDataArrayPath( "SelectedCellArrayArrayPath", getSelectedCellArrayArrayPath() ) );
-  setColorWeights( reader->readFloatVec3("ColorWeights", getColorWeights() ) );
+  setSelectedCellArrayPath( reader->readDataArrayPath( "SelectedCellArrayPath", getSelectedCellArrayPath() ) );
+  setMinValue( reader->readValue( "MinValue", getMinValue() ) );
   setNewCellArrayName( reader->readString( "NewCellArrayName", getNewCellArrayName() ) );
   reader->closeFilterGroup();
 }
@@ -178,11 +166,11 @@ void RGBToGray::readFilterParameters(AbstractFilterParametersReader* reader, int
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int RGBToGray::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
+int FindMaxima::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  DREAM3D_FILTER_WRITE_PARAMETER(SelectedCellArrayArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(ColorWeights)
+  DREAM3D_FILTER_WRITE_PARAMETER(SelectedCellArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(MinValue)
   DREAM3D_FILTER_WRITE_PARAMETER(NewCellArrayName)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
@@ -191,45 +179,39 @@ int RGBToGray::writeFilterParameters(AbstractFilterParametersWriter* writer, int
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RGBToGray::dataCheck()
+void FindMaxima::dataCheck()
 {
   setErrorCondition(0);
   DataArrayPath tempPath;
 
   //check for required arrays
-  QVector<size_t> compDims(1, 3);
-  m_SelectedCellArrayPtr = TemplateHelpers::GetPrereqArrayFromPath<AbstractFilter, VolumeDataContainer>()(this, getSelectedCellArrayArrayPath(), compDims);
+  QVector<size_t> compDims(1, 1);
+  m_SelectedCellArrayPtr = TemplateHelpers::GetPrereqArrayFromPath<AbstractFilter, VolumeDataContainer>()(this, getSelectedCellArrayPath(), compDims);
   if(NULL != m_SelectedCellArrayPtr.lock().get())
   {
     m_SelectedCellArray = m_SelectedCellArrayPtr.lock().get();
   }
 
   //configured created name / location
-  tempPath.update(getSelectedCellArrayArrayPath().getDataContainerName(), getSelectedCellArrayArrayPath().getAttributeMatrixName(), getNewCellArrayName() );
-#if 0
-  //get type
-  QString typeName = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getSelectedCellArrayArrayPath().getDataContainerName())->getAttributeMatrix(getSelectedCellArrayArrayPath().getAttributeMatrixName())->getAttributeArray(getSelectedCellArrayArrayPath().getDataArrayName())->getTypeAsString();;
-  int type = TemplateUtilities::getTypeFromTypeName(typeName);
+  tempPath.update(getSelectedCellArrayPath().getDataContainerName(), getSelectedCellArrayPath().getAttributeMatrixName(), getNewCellArrayName() );
 
-  //create new array of same type
-  dims[0]=1;
-  TEMPLATE_CREATE_NONPREREQ_ARRAY(NewCellArray, tempPath, dims, type);
-#endif
-  VolumeDataContainer* dc = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getSelectedCellArrayArrayPath().getDataContainerName() );
-  AttributeMatrix::Pointer am = dc->getPrereqAttributeMatrix<AbstractFilter>(this, getSelectedCellArrayArrayPath().getAttributeMatrixName(), 80000);
-  IDataArray::Pointer data = am->getExistingPrereqArray<IDataArray, AbstractFilter>(this, getSelectedCellArrayArrayPath().getDataArrayName(), 80000);
 
-  m_NewCellArrayPtr = TemplateHelpers::CreateNonPrereqArrayFromArrayType()(this, tempPath, compDims, data);
-  if( NULL != m_NewCellArrayPtr.lock().get() )
-  {
-    m_NewCellArray = m_NewCellArrayPtr.lock()->getVoidPointer(0);
-  }
+  VolumeDataContainer* dataContiner = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getSelectedCellArrayPath().getDataContainerName() );
+  AttributeMatrix::Pointer attrMatrix = dataContiner->getPrereqAttributeMatrix<AbstractFilter>(this, getSelectedCellArrayPath().getAttributeMatrixName(), 80000);
+  IDataArray::Pointer redArrayptr = attrMatrix->getExistingPrereqArray<IDataArray, AbstractFilter>(this, getSelectedCellArrayPath().getDataArrayName(), 80000);
+
+  //create new boolean array
+  tempPath.update(getSelectedCellArrayPath().getDataContainerName(), getSelectedCellArrayPath().getAttributeMatrixName(), getNewCellArrayName() );
+  m_NewCellArrayPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<bool>, AbstractFilter, bool>(this, tempPath, 0, compDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if( NULL != m_NewCellArrayPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  { m_NewCellArray = m_NewCellArrayPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RGBToGray::preflight()
+void FindMaxima::preflight()
 {
   // These are the REQUIRED lines of CODE to make sure the filter behaves correctly
   setInPreflight(true); // Set the fact that we are preflighting.
@@ -243,7 +225,7 @@ void RGBToGray::preflight()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RGBToGray::execute()
+void FindMaxima::execute()
 {
   QString ss;
   dataCheck();
@@ -256,56 +238,55 @@ void RGBToGray::execute()
   }
 
   //get volume container
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getSelectedCellArrayArrayPath().getDataContainerName());
-  QString attrMatName = getSelectedCellArrayArrayPath().getAttributeMatrixName();
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getSelectedCellArrayPath().getDataContainerName());
+  QString attrMatName = getSelectedCellArrayPath().getAttributeMatrixName();
 
-  //get input and output data
+  //get input data
   IDataArray::Pointer inputData = m_SelectedCellArrayPtr.lock();
-  IDataArray::Pointer outputData = m_NewCellArrayPtr.lock();
 
   //execute type dependant portion using a Private Implementation that takes care of figuring out if
   // we can work on the correct type and actually handling the algorithm execution. We pass in "this" so
   // that the private implementation can get access to the current object to pass up status notifications,
   // progress or handle "cancel" if needed.
-  if(RGBToGrayPrivate<int8_t>()(inputData))
+  if(FindMaximaPrivate<int8_t>()(inputData))
   {
-    RGBToGrayPrivate<int8_t>::Execute(this, inputData, outputData, getColorWeights(), m, attrMatName);
+    FindMaximaPrivate<int8_t>::Execute(this, inputData, m_MinValue, m_NewCellArray, m, attrMatName);
   }
-  else if(RGBToGrayPrivate<uint8_t>()(inputData) )
+  else if(FindMaximaPrivate<uint8_t>()(inputData) )
   {
-    RGBToGrayPrivate<uint8_t>::Execute(this, inputData, outputData, getColorWeights(), m, attrMatName);
+    FindMaximaPrivate<uint8_t>::Execute(this, inputData, m_MinValue, m_NewCellArray, m, attrMatName);
   }
-  else if(RGBToGrayPrivate<int16_t>()(inputData) )
+  else if(FindMaximaPrivate<int16_t>()(inputData) )
   {
-    RGBToGrayPrivate<int16_t>::Execute(this, inputData, outputData, getColorWeights(), m, attrMatName);
+    FindMaximaPrivate<int16_t>::Execute(this, inputData, m_MinValue, m_NewCellArray, m, attrMatName);
   }
-  else if(RGBToGrayPrivate<uint16_t>()(inputData) )
+  else if(FindMaximaPrivate<uint16_t>()(inputData) )
   {
-    RGBToGrayPrivate<uint16_t>::Execute(this, inputData, outputData, getColorWeights(), m, attrMatName);
+    FindMaximaPrivate<uint16_t>::Execute(this, inputData, m_MinValue, m_NewCellArray, m, attrMatName);
   }
-  else if(RGBToGrayPrivate<int32_t>()(inputData) )
+  else if(FindMaximaPrivate<int32_t>()(inputData) )
   {
-    RGBToGrayPrivate<int32_t>::Execute(this, inputData, outputData, getColorWeights(), m, attrMatName);
+    FindMaximaPrivate<int32_t>::Execute(this, inputData, m_MinValue, m_NewCellArray, m, attrMatName);
   }
-  else if(RGBToGrayPrivate<uint32_t>()(inputData) )
+  else if(FindMaximaPrivate<uint32_t>()(inputData) )
   {
-    RGBToGrayPrivate<uint32_t>::Execute(this, inputData, outputData, getColorWeights(), m, attrMatName);
+    FindMaximaPrivate<uint32_t>::Execute(this, inputData, m_MinValue, m_NewCellArray, m, attrMatName);
   }
-  else if(RGBToGrayPrivate<int64_t>()(inputData) )
+  else if(FindMaximaPrivate<int64_t>()(inputData) )
   {
-    RGBToGrayPrivate<int64_t>::Execute(this, inputData, outputData, getColorWeights(), m, attrMatName);
+    FindMaximaPrivate<int64_t>::Execute(this, inputData, m_MinValue, m_NewCellArray, m, attrMatName);
   }
-  else if(RGBToGrayPrivate<uint64_t>()(inputData) )
+  else if(FindMaximaPrivate<uint64_t>()(inputData) )
   {
-    RGBToGrayPrivate<uint64_t>::Execute(this, inputData, outputData, getColorWeights(), m, attrMatName);
+    FindMaximaPrivate<uint64_t>::Execute(this, inputData, m_MinValue, m_NewCellArray, m, attrMatName);
   }
-  else if(RGBToGrayPrivate<float>()(inputData) )
+  else if(FindMaximaPrivate<float>()(inputData) )
   {
-    RGBToGrayPrivate<float>::Execute(this, inputData, outputData, getColorWeights(), m, attrMatName);
+    FindMaximaPrivate<float>::Execute(this, inputData, m_MinValue, m_NewCellArray, m, attrMatName);
   }
-  else if(RGBToGrayPrivate<double>()(inputData) )
+  else if(FindMaximaPrivate<double>()(inputData) )
   {
-    RGBToGrayPrivate<double>::Execute(this, inputData, outputData, getColorWeights(), m, attrMatName);
+    FindMaximaPrivate<double>::Execute(this, inputData, m_MinValue, m_NewCellArray, m, attrMatName);
   }
   else
   {
@@ -315,10 +296,6 @@ void RGBToGray::execute()
     return;
   }
 
-  //array name changing/cleanup
-  AttributeMatrix::Pointer attrMat = m->getAttributeMatrix(m_SelectedCellArrayArrayPath.getAttributeMatrixName());
-  attrMat->addAttributeArray(getNewCellArrayName(), outputData);
-
   /* Let the GUI know we are done with this filter */
   notifyStatusMessage(getHumanLabel(), "Complete");
 }
@@ -326,9 +303,9 @@ void RGBToGray::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer RGBToGray::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer FindMaxima::newFilterInstance(bool copyFilterParameters)
 {
-  RGBToGray::Pointer filter = RGBToGray::New();
+  FindMaxima::Pointer filter = FindMaxima::New();
   if(true == copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
@@ -340,27 +317,27 @@ AbstractFilter::Pointer RGBToGray::newFilterInstance(bool copyFilterParameters)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString RGBToGray::getCompiledLibraryName()
+const QString FindMaxima::getCompiledLibraryName()
 {return ImageProcessing::ImageProcessingBaseName;}
 
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString RGBToGray::getGroupName()
+const QString FindMaxima::getGroupName()
 {return "ImageProcessing";}
 
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString RGBToGray::getSubGroupName()
+const QString FindMaxima::getSubGroupName()
 {return "Misc";}
 
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString RGBToGray::getHumanLabel()
-{return "Convert RGB to Grayscale";}
+const QString FindMaxima::getHumanLabel()
+{return "Find Maxima";}
 

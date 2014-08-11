@@ -424,14 +424,14 @@ int MicReader::readMicFile()
   }
   totalDataRows = counter;
 
-  QVector<float> EA1(totalDataRows, 0.0);
-  QVector<float> EA2(totalDataRows, 0.0);
-  QVector<float> EA3(totalDataRows, 0.0);
-  QVector<float> confidence(totalDataRows, 0.0);
-  QVector<int> phase(totalDataRows, 0);
-  QVector<int> up(totalDataRows, 0);
-  QVector<float> xVal(totalDataRows, 0.0);
-  QVector<float> yVal(totalDataRows, 0.0);
+  std::vector<float> EA1(totalDataRows, 0.0);
+  std::vector<float> EA2(totalDataRows, 0.0);
+  std::vector<float> EA3(totalDataRows, 0.0);
+  std::vector<float> confidence(totalDataRows, 0.0);
+  std::vector<int> phase(totalDataRows, 0);
+  std::vector<int> up(totalDataRows, 0);
+  std::vector<float> xVal(totalDataRows, 0.0);
+  std::vector<float> yVal(totalDataRows, 0.0);
   float constant = static_cast<float>(1.0f / (2.0 * sqrt(3.0)));
   float x, y;
   for(size_t i = 0; i < totalDataRows; ++i)

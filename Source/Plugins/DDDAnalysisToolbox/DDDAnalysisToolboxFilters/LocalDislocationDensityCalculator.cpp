@@ -322,7 +322,7 @@ void LocalDislocationDensityCalculator::execute()
       {
         m_OutputArray[zStride + yStride + l] /= cellVolume;
         //convert to m/mm^3 from um/um^3
-        m_OutputArray[zStride + yStride + l] *= 1000000000000.0;
+        m_OutputArray[zStride + yStride + l] *= 1.0E12f;
       }
     }
   }

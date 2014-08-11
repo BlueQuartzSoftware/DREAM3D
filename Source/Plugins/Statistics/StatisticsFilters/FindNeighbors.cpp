@@ -40,7 +40,6 @@
 
 #include <QtCore/QDateTime>
 
-
 #include "DREAM3DLib/Common/Constants.h"
 
 #include "StatisticsConstants.h"
@@ -126,15 +125,15 @@ int FindNeighbors::writeFilterParameters(AbstractFilterParametersWriter* writer,
 {
   writer->openFilterGroup(this, index);
   DREAM3D_FILTER_WRITE_PARAMETER(CellFeatureAttributeMatrixPath)
-      DREAM3D_FILTER_WRITE_PARAMETER(FeatureIdsArrayPath)
-      DREAM3D_FILTER_WRITE_PARAMETER(BoundaryCellsArrayName)
-      DREAM3D_FILTER_WRITE_PARAMETER(SurfaceFeaturesArrayName)
-      DREAM3D_FILTER_WRITE_PARAMETER(StoreBoundaryCells)
-      DREAM3D_FILTER_WRITE_PARAMETER(StoreSurfaceFeatures)
-      DREAM3D_FILTER_WRITE_PARAMETER(NumNeighborsArrayName)
-      DREAM3D_FILTER_WRITE_PARAMETER(NeighborListArrayName)
-      DREAM3D_FILTER_WRITE_PARAMETER(SharedSurfaceAreaListArrayName)
-      writer->closeFilterGroup();
+  DREAM3D_FILTER_WRITE_PARAMETER(FeatureIdsArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(BoundaryCellsArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(SurfaceFeaturesArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(StoreBoundaryCells)
+  DREAM3D_FILTER_WRITE_PARAMETER(StoreSurfaceFeatures)
+  DREAM3D_FILTER_WRITE_PARAMETER(NumNeighborsArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(NeighborListArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(SharedSurfaceAreaListArrayName)
+  writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
 

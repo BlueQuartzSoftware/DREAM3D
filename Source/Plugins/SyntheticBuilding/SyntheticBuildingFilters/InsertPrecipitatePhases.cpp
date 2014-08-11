@@ -1708,7 +1708,7 @@ void InsertPrecipitatePhases::cleanup_features()
   DimType yp = dims[1];
   DimType zp = dims[2];
 
-  int64_t numFeatures = m_FeaturePhasesPtr.lock()->getNumberOfTuples();
+  size_t numFeatures = m_FeaturePhasesPtr.lock()->getNumberOfTuples();
 
   neighpoints[0] = -(xp * yp);
   neighpoints[1] = -xp;
@@ -1729,7 +1729,7 @@ void InsertPrecipitatePhases::cleanup_features()
   int index;
   float minsize = 0;
   gsizes.resize(numFeatures);
-  for (int64_t i = 1; i < numFeatures; i++)
+  for (size_t i = 1; i < numFeatures; i++)
   {
     gsizes[i] = 0;
   }

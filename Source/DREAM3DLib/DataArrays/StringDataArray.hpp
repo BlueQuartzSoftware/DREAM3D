@@ -301,7 +301,7 @@ class StringDataArray : public IDataArray
      */
     virtual IDataArray::Pointer reorderCopy(QVector<size_t> newOrderMap)
     {
-      if(newOrderMap.size()!=getNumberOfTuples())
+      if(newOrderMap.size() != getNumberOfTuples())
       {
         return IDataArray::NullPointer();
       }

@@ -46,6 +46,7 @@ set(DREAM3DLib_Common_HDRS
   ${DREAM3DLib_SOURCE_DIR}/Common/Texture.hpp
   ${DREAM3DLib_SOURCE_DIR}/Common/TexturePreset.h
   ${DREAM3DLib_SOURCE_DIR}/Common/ThresholdFilterHelper.h
+  ${DREAM3DLib_SOURCE_DIR}/Common/TemplateHelpers.hpp
 )
 
 

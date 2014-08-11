@@ -218,20 +218,20 @@ void FlattenImage::execute()
 
   int64_t totalPoints = m_ImageDataPtr.lock()->getNumberOfTuples();
 
-  float Rfactor = 1.0;
-  float Gfactor = 1.0;
-  float Bfactor = 1.0;
+  float Rfactor = 1.0f;
+  float Gfactor = 1.0f;
+  float Bfactor = 1.0f;
   if (m_FlattenMethod == DREAM3D::FlattenImageMethod::Average)
   {
-    Rfactor = 1.0 / 3.0;
-    Gfactor = 1.0 / 3.0;
-    Bfactor = 1.0 / 3.0;
+    Rfactor = 1.0f / 3.0f;
+    Gfactor = 1.0f / 3.0f;
+    Bfactor = 1.0f / 3.0f;
   }
   else if (m_FlattenMethod == DREAM3D::FlattenImageMethod::Luminosity)
   {
-    Rfactor = 0.21;
-    Gfactor = 0.72;
-    Bfactor = 0.07;
+    Rfactor = 0.21f;
+    Gfactor = 0.72f;
+    Bfactor = 0.07f;
   }
 
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS

@@ -1,20 +1,44 @@
-/*
- * Your License or Copyright Information can go here
- */
-#if (_MSC_VER)
-#define _SCL_SECURE_NO_WARNINGS
-#endif
-
+/* ============================================================================
+ * Copyright (c) 2014 DREAM3D Consortium
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without modification,
+ * are permitted provided that the following conditions are met:
+ *
+ * Redistributions of source code must retain the above copyright notice, this
+ * list of conditions and the following disclaimer.
+ *
+ * Redistributions in binary form must reproduce the above copyright notice, this
+ * list of conditions and the following disclaimer in the documentation and/or
+ * other materials provided with the distribution.
+ *
+ * Neither the names of any of the DREAM3D Consortium contributors
+ * may be used to endorse or promote products derived from this software without
+ * specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
+ * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ *  This code was partially written under United States Air Force Contract number
+ *                              FA8650-10-D-5210
+ *
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #include "SobelEdge.h"
 
 #include <QtCore/QString>
 
-#include "ITKUtilities.h"
+#include "ItkBridge.h"
 #include "itkSobelEdgeDetectionImageFilter.h"
 #include "itkRescaleIntensityImageFilter.h"
 
-//// Setup some typedef 's for the ITKUtilities class to shorten up our code
-typedef ITKUtilities<ImageProcessing::DefaultPixelType>    ITKUtilitiesType;
 
 // -----------------------------------------------------------------------------
 //
@@ -75,10 +99,10 @@ int SobelEdge::writeFilterParameters(AbstractFilterParametersWriter* writer, int
 {
   writer->openFilterGroup(this, index);
   DREAM3D_FILTER_WRITE_PARAMETER(SelectedCellArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(NewCellArrayName)
-  DREAM3D_FILTER_WRITE_PARAMETER(SaveAsNewArray)
-  DREAM3D_FILTER_WRITE_PARAMETER(Slice)
-  writer->closeFilterGroup();
+      DREAM3D_FILTER_WRITE_PARAMETER(NewCellArrayName)
+      DREAM3D_FILTER_WRITE_PARAMETER(SaveAsNewArray)
+      DREAM3D_FILTER_WRITE_PARAMETER(Slice)
+      writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
 
@@ -128,12 +152,12 @@ void SobelEdge::execute()
   QString attrMatName = getSelectedCellArrayPath().getAttributeMatrixName();
 
   //wrap m_RawImageData as itk::image
-  ImageProcessing::DefaultImageType::Pointer inputImage = ITKUtilitiesType::Dream3DtoITK(m, attrMatName, m_SelectedCellArray);
+  ImageProcessing::DefaultImageType::Pointer inputImage = ITKUtilitiesType::CreateItkWrapperForDataPointer(m, attrMatName, m_SelectedCellArray);
 
   if(m_Slice)
   {
     //wrap output array
-    ImageProcessing::DefaultImageType::Pointer outputImage = ITKUtilitiesType::Dream3DtoITK(m, attrMatName, m_NewCellArray);
+    ImageProcessing::DefaultImageType::Pointer outputImage = ITKUtilitiesType::CreateItkWrapperForDataPointer(m, attrMatName, m_NewCellArray);
 
     //get dimensions
     size_t udims[3] = {0, 0, 0};
@@ -172,8 +196,20 @@ void SobelEdge::execute()
       //run filters
       sobelFilter->SetInput(inputSlice);
       rescaleFilter->SetInput(sobelFilter->GetOutput());
-      sobelFilter->Update();
-      rescaleFilter->Update();
+
+
+      //execute filters
+      try
+      {
+        sobelFilter->Update();
+        rescaleFilter->Update();
+      }
+      catch( itk::ExceptionObject & err )
+      {
+        setErrorCondition(-5);
+        QString ss = QObject::tr("Failed to execute itk::SobelEdgeDetectionImageFilter filter. Error Message returned from ITK:\n   %1").arg(err.GetDescription());
+        notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+      }
 
       //copy into volume
       ITKUtilitiesType::SetSlice(outputImage, rescaleFilter->GetOutput(), ImageProcessing::ZSlice, i);
@@ -197,8 +233,18 @@ void SobelEdge::execute()
     ITKUtilitiesType::SetITKFilterOutput(rescaleFilter->GetOutput(), m_NewCellArrayPtr.lock());
 
     //execute filters
-    sobelFilter->Update();
-    rescaleFilter->Update();
+    try
+    {
+      sobelFilter->Update();
+      rescaleFilter->Update();
+    }
+    catch( itk::ExceptionObject & err )
+    {
+      setErrorCondition(-5);
+      QString ss = QObject::tr("Failed to execute itk::SobelEdgeDetectionImageFilter filter. Error Message returned from ITK:\n   %1").arg(err.GetDescription());
+      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    }
+
   }
 
   //array name changing/cleanup

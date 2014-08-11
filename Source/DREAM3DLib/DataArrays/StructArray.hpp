@@ -405,19 +405,19 @@ class StructArray : public IDataArray
 
     virtual IDataArray::Pointer reorderCopy(QVector<size_t> newOrderMap)
     {
-      if(newOrderMap.size()!=getNumberOfTuples())
+      if(newOrderMap.size() != static_cast<QVector<size_t>::size_type>(getNumberOfTuples()))
       {
         return IDataArray::NullPointer();
       }
       IDataArray::Pointer daCopy = createNewArray(getNumberOfTuples(), getComponentDimensions(), getName(), m_IsAllocated);
-      daCopy->initializeWithZeros();
       if(m_IsAllocated == true)
       {
-        size_t chunkSize = getNumberOfComponents()*sizeof(T);
-        for(int i=0; i<getNumberOfTuples(); i++)
+        daCopy->initializeWithZeros();
+        size_t chunkSize = getNumberOfComponents() * sizeof(T);
+        for(size_t i = 0; i < getNumberOfTuples(); i++)
         {
-          T* src = getPointer(i*getNumberOfComponents());
-          void* dest = daCopy->getVoidPointer(newOrderMap[i]*getNumberOfComponents());
+          T* src = getPointer(i * getNumberOfComponents());
+          void* dest = daCopy->getVoidPointer(newOrderMap[i] * getNumberOfComponents());
           ::memcpy(dest, src, chunkSize);
         }
       }

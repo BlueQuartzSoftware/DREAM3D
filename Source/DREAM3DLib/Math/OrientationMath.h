@@ -1,6 +1,7 @@
 /* ============================================================================
- * Copyright (c) 2010, Michael A. Jackson (BlueQuartz Software)
- * Copyright (c) 2010, Michael A. Groeber (US Air Force Research Laboratory)
+ * Copyright (c) 2011 Michael A. Jackson (BlueQuartz Software)
+ * Copyright (c) 2011 Dr. Michael A. Groeber (US Air Force Research Laboratories)
+ * Copyright (c) 2014 Dr. Joseph C. Tucker (UES, Inc.)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -13,10 +14,10 @@
  * list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
  *
- * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
- * BlueQuartz Software nor the names of its contributors may be used to endorse
- * or promote products derived from this software without specific prior written
- * permission.
+ * Neither the name of Joseph C. Tucker, Michael A. Groeber, Michael A. Jackson,
+ * UES, Inc., the US Air Force, BlueQuartz Software nor the names of its contributors
+ * may be used to endorse or promote products derived from this software without
+ * specific prior written permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -28,6 +29,10 @@
  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ *  This code was written under United States Air Force Contract number
+ *                   FA8650-07-D-5800 and FA8650-10-D-5226
+ *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 #ifndef _OrientationMath_H_
@@ -52,8 +57,9 @@
  * @brief This class performs Crystallographic Misorientation Calculations
  * @author Michael A. Jackson (BlueQuartz Software)
  * @author Michael A. Groeber (US Air Force Research Laboratory)
- * @date Feb 19, 2011
- * @version 1.0
+ * @author Joseph C. Tucker (UES, Inc.)
+ * @date Jul 30, 2014
+ * @version 5.1
  */
 class DREAM3DLib_EXPORT OrientationMath
 {
@@ -197,6 +203,38 @@ class DREAM3DLib_EXPORT OrientationMath
     */
     static QuatF ActiveRotation(float angle, float xAxis, float yAxis, float zAxis, float x, float y, float z);
 
+    /**
+    * @brief Converts 4 parameter Miller-Bravais lattice coordinates direction to 3 parameter Miller lattice 
+	* coordinates direction
+    * @param millerBravais Input Vector (UVTW)
+    * @param miller Output Vector (UVW)
+    */
+	static void MillerBravaisToMillerDirection(int millerBravais[4], int miller[3]);
+
+    /**
+    * @brief Converts 3 parameter Miller lattice coordinates direction to 4 parameter Miller-Bravais lattice 
+	* coordinates direction
+    * @param miller Input Vector (UVW)
+    * @param millerBravais Output Vector (UVTW)
+    */
+	static void MillerToMillerBravaisDirection(int miller[3], int millerBravais[4]);
+	
+    /**
+    * @brief Converts 4 parameter Miller-Bravais lattice coordinates plane to 3 parameter Miller lattice 
+	* coordinates plane
+    * @param millerBravais Input Vector (HKIL)
+    * @param miller Output Vector (HKL)
+    */
+	static void MillerBravaisToMillerPlane(int millerBravais[4], int miller[3]);
+	
+    /**
+    * @brief Converts 3 parameter Miller lattice coordinates plane to 4 parameter Miller-Bravais lattice 
+	* coordinates plane
+    * @param miller Input Vector (HKL)
+    * @param millerBravais Output Vector (HKIL)
+    */
+	static void MillerToMillerBravaisPlane(int miller[3], int millerBravais[4]);
+    
   protected:
     OrientationMath();
 

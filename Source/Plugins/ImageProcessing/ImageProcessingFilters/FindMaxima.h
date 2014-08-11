@@ -31,47 +31,48 @@
  *                              FA8650-10-D-5210
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef _MultiOtsuThreshold_H_
-#define _MultiOtsuThreshold_H_
+#ifndef _FindMaxima_H_
+#define _FindMaxima_H_
 
+//#include <vector>
 #include <QtCore/QString>
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
+#include "DREAM3DLib/DataArrays/IDataArray.h"
 
-#include "ImageProcessing/ImageProcessingConstants.h"
+#include "Plugins/ImageProcessing/ImageProcessingConstants.h"
+
+#include "TemplateUtilities.h"
+
 
 /**
- * @class MultiOtsuThreshold MultiOtsuThreshold.h ImageProcessing/ImageProcessingFilters/MultiOtsuThreshold.h
+ * @class FindMaxima FindMaxima.h ImageProcessing/ImageProcessingFilters/FindMaxima.h
  * @brief
- * @author
- * @date
+ * @author Will Lenthe
+ * @date 8/7/14
  * @version 1.0
  */
-class MultiOtsuThreshold : public AbstractFilter
+class FindMaxima : public AbstractFilter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
 
   public:
-    DREAM3D_SHARED_POINTERS(MultiOtsuThreshold)
-    DREAM3D_STATIC_NEW_MACRO(MultiOtsuThreshold)
-    DREAM3D_TYPE_MACRO_SUPER(MultiOtsuThreshold, AbstractFilter)
+    DREAM3D_SHARED_POINTERS(FindMaxima)
+    DREAM3D_STATIC_NEW_MACRO(FindMaxima)
+    DREAM3D_TYPE_MACRO_SUPER(FindMaxima, AbstractFilter)
 
-    virtual ~MultiOtsuThreshold();
+    virtual ~FindMaxima();
 
     DREAM3D_FILTER_PARAMETER(DataArrayPath, SelectedCellArrayPath)
     Q_PROPERTY(DataArrayPath SelectedCellArrayPath READ getSelectedCellArrayPath WRITE setSelectedCellArrayPath)
 
+    DREAM3D_FILTER_PARAMETER(float, MinValue)
+    Q_PROPERTY(float MinValue READ getMinValue WRITE setMinValue)
+
     DREAM3D_FILTER_PARAMETER(QString, NewCellArrayName)
     Q_PROPERTY(QString NewCellArrayName READ getNewCellArrayName WRITE setNewCellArrayName)
-
-    DREAM3D_FILTER_PARAMETER(bool, SaveAsNewArray)
-    Q_PROPERTY(bool SaveAsNewArray READ getSaveAsNewArray WRITE setSaveAsNewArray)
-    DREAM3D_FILTER_PARAMETER(bool, Slice)
-    Q_PROPERTY(bool Slice READ getSlice WRITE setSlice)
-    DREAM3D_FILTER_PARAMETER(int, Levels)
-    Q_PROPERTY(int Levels READ getLevels WRITE setLevels)
 
     /**
      * @brief getCompiledLibraryName Returns the name of the Library that this filter is a part of
@@ -138,6 +139,8 @@ class MultiOtsuThreshold : public AbstractFilter
      */
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
 
+//virtual void FindMaxima::template_execute();
+
   signals:
     /**
      * @brief updateFilterParameters This is emitted when the filter requests all the latest Filter Parameters need to be
@@ -162,7 +165,7 @@ class MultiOtsuThreshold : public AbstractFilter
     void preflightExecuted();
 
   protected:
-    MultiOtsuThreshold();
+    FindMaxima();
 
     /**
     * @brief Checks for the appropriate parameter values and availability of arrays in the data container
@@ -170,12 +173,11 @@ class MultiOtsuThreshold : public AbstractFilter
     void dataCheck();
 
   private:
+    DEFINE_REQUIRED_IDATAARRAY_VARIABLE(SelectedCellArray)
+    DEFINE_CREATED_DATAARRAY_VARIABLE(bool, NewCellArray)
 
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(ImageProcessing::DefaultPixelType, SelectedCellArray)
-    DEFINE_CREATED_DATAARRAY_VARIABLE(ImageProcessing::DefaultPixelType, NewCellArray)
-
-    MultiOtsuThreshold(const MultiOtsuThreshold&); // Copy Constructor Not Implemented
-    void operator=(const MultiOtsuThreshold&); // Operator '=' Not Implemented
+    FindMaxima(const FindMaxima&); // Copy Constructor Not Implemented
+    void operator=(const FindMaxima&); // Operator '=' Not Implemented
 };
 
-#endif /* _MultiOtsuThreshold_H_ */
+#endif /* _FindMaxima_H_ */

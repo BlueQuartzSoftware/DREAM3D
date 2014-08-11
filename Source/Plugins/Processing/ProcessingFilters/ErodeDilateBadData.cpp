@@ -165,7 +165,7 @@ void ErodeDilateBadData::execute()
   if(getErrorCondition() < 0) { return; }
 
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getFeatureIdsArrayPath().getDataContainerName());
-  int64_t totalPoints = m_FeatureIdsPtr.lock()->getNumberOfTuples();
+  size_t totalPoints = m_FeatureIdsPtr.lock()->getNumberOfTuples();
 
   Int32ArrayType::Pointer neighborsPtr = Int32ArrayType::CreateArray(totalPoints, "Neighbors");
   m_Neighbors = neighborsPtr->getPointer(0);
@@ -195,7 +195,7 @@ void ErodeDilateBadData::execute()
   int most = 0;
   int neighpoint;
   size_t numfeatures = 0;
-  for(int64_t i = 0; i < totalPoints; i++)
+  for(size_t i = 0; i < totalPoints; i++)
   {
     featurename = m_FeatureIds[i];
     if(featurename > numfeatures) { numfeatures = featurename; }

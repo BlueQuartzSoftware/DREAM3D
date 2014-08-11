@@ -1,10 +1,42 @@
-
+/* ============================================================================
+ * Copyright (c) 2014 DREAM3D Consortium
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without modification,
+ * are permitted provided that the following conditions are met:
+ *
+ * Redistributions of source code must retain the above copyright notice, this
+ * list of conditions and the following disclaimer.
+ *
+ * Redistributions in binary form must reproduce the above copyright notice, this
+ * list of conditions and the following disclaimer in the documentation and/or
+ * other materials provided with the distribution.
+ *
+ * Neither the names of any of the DREAM3D Consortium contributors
+ * may be used to endorse or promote products derived from this software without
+ * specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
+ * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ *  This code was partially written under United States Air Force Contract number
+ *                              FA8650-10-D-5210
+ *
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #include "ImageProcessing/ImageProcessingConstants.h"
-#include "ImageProcessingFilters/ITKUtilities.h"
+#include "ImageProcessingFilters/ItkBridge.h"
 
 
 /**
-* These functions are just here to make sure the templated static functions in the ITKUtilities class
+* These functions are just here to make sure the templated static functions in the ItkBridge class
 *  will properly compile. If these are actually executed the program would surely crash
 * due to the use of the NULL pointers every where.
 */
@@ -22,7 +54,7 @@ void TestDream3DtoITKImportFilter()
   QString attrMatName("CellData");
   ImageProcessing::DefaultPixelType* data = NULL;
 
-  ImageProcessing::ImportUInt8FilterType::Pointer importFilter = ITKUtilities<ImageProcessing::DefaultPixelType>::Dream3DtoITKImportFilter<ImageProcessing::DefaultPixelType>(m.get(), attrMatName, data);
+  ImageProcessing::ImportUInt8FilterType::Pointer importFilter = ItkBridge<ImageProcessing::DefaultPixelType>::Dream3DtoITKImportFilter<ImageProcessing::DefaultPixelType>(m.get(), attrMatName, data);
 
 }
 
@@ -30,7 +62,7 @@ void TestDream3DtoITKImportFilter()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void TestDream3DtoITK()
+void TestCreateItkWrapperForDataPointer()
 {
   ImageProcessing::DefaultImageType::Pointer imagePtr;
   VolumeDataContainer::Pointer m = VolumeDataContainer::New();
@@ -38,7 +70,7 @@ void TestDream3DtoITK()
 
   ImageProcessing::DefaultPixelType* data = NULL;
 
-  imagePtr = (ImageProcessing::DefaultImageType::Pointer)ITKUtilities<ImageProcessing::DefaultPixelType>::Dream3DtoITK(m.get(), attrMatName, data);
+  imagePtr = (ImageProcessing::DefaultImageType::Pointer)ItkBridge<ImageProcessing::DefaultPixelType>::CreateItkWrapperForDataPointer(m.get(), attrMatName, data);
 }
 
 // -----------------------------------------------------------------------------
@@ -51,7 +83,7 @@ void TestSetITKOutput()
 // ImageProcessing::DefaultPixelType* output = NULL;
 // unsigned int totalPoints = 0;
   ImageProcessing::DefaultArrayType::Pointer array;
-  ITKUtilities<ImageProcessing::DefaultPixelType>::SetITKFilterOutput(imagePtr, array);
+  ItkBridge<ImageProcessing::DefaultPixelType>::SetITKFilterOutput(imagePtr, array);
 
 }
 
@@ -64,7 +96,7 @@ void TestCopyITKtoDream3D()
 
   ImageProcessing::DefaultImageType::Pointer imagePtr;
   ImageProcessing::DefaultPixelType* data = NULL;
-  ITKUtilities<ImageProcessing::DefaultPixelType>::CopyITKtoDream3D(imagePtr, data);
+  ItkBridge<ImageProcessing::DefaultPixelType>::CopyITKtoDream3D(imagePtr, data);
 
 }
 /*
@@ -73,12 +105,12 @@ void TestCopyITKtoDream3D()
 // -----------------------------------------------------------------------------
 void TestDream3DRGBtoITK()
 {
-  ITKUtilities<ImageProcessing::DefaultPixelType>::RGBImageType::Pointer rgbPtr;
+  ItkBridge<ImageProcessing::DefaultPixelType>::RGBImageType::Pointer rgbPtr;
 
   VolumeDataContainer::Pointer m = VolumeDataContainer::New();
   QString attrMatName("CellData");
   ImageProcessing::DefaultPixelType* data = NULL;
-  rgbPtr = ITKUtilities<ImageProcessing::DefaultPixelType>::Dream3DRGBtoITK(m.get(), attrMatName, data);
+  rgbPtr = ItkBridge<ImageProcessing::DefaultPixelType>::Dream3DRGBtoITK(m.get(), attrMatName, data);
 }
 
 // -----------------------------------------------------------------------------
@@ -88,7 +120,7 @@ void TestCopyRGBITKtoDream3D()
 {
   ImageProcessing::RGBImageType::Pointer imagePtr;
   ImageProcessing::DefaultPixelType* data = NULL;
-  ITKUtilities<ImageProcessing::DefaultPixelType>::CopyRGBITKtoDream3D(imagePtr, data);
+  ItkBridge<ImageProcessing::DefaultPixelType>::CopyRGBITKtoDream3D(imagePtr, data);
 }
 */
 // -----------------------------------------------------------------------------
@@ -99,7 +131,7 @@ void TestExtractSlice()
   //itk::Image<ImageProcessing::DefaultPixelType,ImageProcessing::SliceDimension>::Pointer slicePtr;
   ImageProcessing::DefaultSliceType::Pointer slicePtr;
   ImageProcessing::DefaultImageType::Pointer image;
-  slicePtr = ITKUtilities<ImageProcessing::DefaultPixelType>::ExtractSlice(image, 0, 0);
+  slicePtr = ItkBridge<ImageProcessing::DefaultPixelType>::ExtractSlice(image, 0, 0);
 }
 
 // -----------------------------------------------------------------------------
@@ -112,7 +144,7 @@ void TestSetSlice()
   // Now declare our Image and Slice variables
   ImageProcessing::DefaultImageType::Pointer imagePtr;
   ImageProcessing::DefaultSliceType::Pointer slicePtr;
-  ITKUtilities<ImageProcessing::DefaultPixelType>::SetSlice(imagePtr, slicePtr, 0, 0);
+  ItkBridge<ImageProcessing::DefaultPixelType>::SetSlice(imagePtr, slicePtr, 0, 0);
 }
 
 

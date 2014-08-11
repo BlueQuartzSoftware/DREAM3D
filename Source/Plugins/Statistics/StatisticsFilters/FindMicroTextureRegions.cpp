@@ -161,7 +161,7 @@ void FindMicroTextureRegions::find_microtextureregions()
 {
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(m_FeatureIdsArrayPath.getDataContainerName());
 
-  int64_t totalPoints = m_FeatureIdsPtr.lock()->getNumberOfTuples();
+  size_t totalPoints = m_FeatureIdsPtr.lock()->getNumberOfTuples();
   size_t nummicrotextureregions = m_MicroTextureRegionNumCellsPtr.lock()->getNumberOfTuples();
 
   DataArray<double>::Pointer m_MicroTextureRegionCounts = DataArray<double>::CreateArray(nummicrotextureregions, "MicroTextureRegionCounts");

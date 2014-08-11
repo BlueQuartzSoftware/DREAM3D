@@ -1,19 +1,45 @@
-/*
- * Your License or Copyright Information can go here
- */
-#if (_MSC_VER)
-#define _SCL_SECURE_NO_WARNINGS
-#endif
-
+/* ============================================================================
+ * Copyright (c) 2014 DREAM3D Consortium
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without modification,
+ * are permitted provided that the following conditions are met:
+ *
+ * Redistributions of source code must retain the above copyright notice, this
+ * list of conditions and the following disclaimer.
+ *
+ * Redistributions in binary form must reproduce the above copyright notice, this
+ * list of conditions and the following disclaimer in the documentation and/or
+ * other materials provided with the distribution.
+ *
+ * Neither the names of any of the DREAM3D Consortium contributors
+ * may be used to endorse or promote products derived from this software without
+ * specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
+ * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ *  This code was partially written under United States Air Force Contract number
+ *                              FA8650-10-D-5210
+ *
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #include "GrayToRGB.h"
-
-#include <string>
 
 //thresholding filter
 #include "itkComposeImageFilter.h"
 
+#include "DREAM3DLib/Common/TemplateHelpers.hpp"
+
 // ImageProcessing Plugin
-#include "ITKUtilities.h"
+#include "ItkBridge.h"
 
 
 /**
@@ -55,24 +81,34 @@ class GrayToRGBPrivate
 
       size_t numVoxels = redInputDataPtr->getNumberOfTuples();
 
-      typedef ITKUtilities<PixelType> ITKUtilitiesType;
+      typedef ItkBridge<PixelType> ItkBridgeType;
 
       //wrap inputs as itk images
       typedef itk::Image<PixelType, ImageProcessing::ImageDimension> ImageType;
-      typename ImageType::Pointer redImage = ITKUtilitiesType::Dream3DtoITK(m, attrMatName, redData);
-      typename ImageType::Pointer greenImage = ITKUtilitiesType::Dream3DtoITK(m, attrMatName, greenData);
-      typename ImageType::Pointer blueImage = ITKUtilitiesType::Dream3DtoITK(m, attrMatName, blueData);
+      typename ImageType::Pointer redImage = ItkBridgeType::CreateItkWrapperForDataPointer(m, attrMatName, redData);
+      typename ImageType::Pointer greenImage = ItkBridgeType::CreateItkWrapperForDataPointer(m, attrMatName, greenData);
+      typename ImageType::Pointer blueImage = ItkBridgeType::CreateItkWrapperForDataPointer(m, attrMatName, blueData);
 
       //define threshold filters
-      typedef itk::ComposeImageFilter<typename ITKUtilitiesType::ScalarImageType, typename ITKUtilitiesType::RGBImageType> ComposeRGBType;
+      typedef itk::ComposeImageFilter<typename ItkBridgeType::ScalarImageType, typename ItkBridgeType::RGBImageType> ComposeRGBType;
 
       //threshold
       typename ComposeRGBType::Pointer composeRGB = ComposeRGBType::New();
       composeRGB->SetInput(0, redImage);
       composeRGB->SetInput(1, greenImage);
       composeRGB->SetInput(2, blueImage);
-      composeRGB->GetOutput()->GetPixelContainer()->SetImportPointer(reinterpret_cast<typename ITKUtilitiesType::RGBImageType::PixelType*>(outputData), numVoxels, false);
-      composeRGB->Update();
+      composeRGB->GetOutput()->GetPixelContainer()->SetImportPointer(reinterpret_cast<typename ItkBridgeType::RGBImageType::PixelType*>(outputData), numVoxels, false);
+
+      try
+      {
+        composeRGB->Update();
+      }
+      catch( itk::ExceptionObject & err )
+      {
+        filter->setErrorCondition(-5);
+        QString ss = QObject::tr("Failed to convert image. Error Message returned from ITK:\n   %1").arg(err.GetDescription());
+        filter->notifyErrorMessage(filter->getHumanLabel(), ss, filter->getErrorCondition());
+      }
     }
   private:
     GrayToRGBPrivate(const GrayToRGBPrivate&); // Copy Constructor Not Implemented
@@ -86,8 +122,8 @@ class GrayToRGBPrivate
 GrayToRGB::GrayToRGB() :
   AbstractFilter(),
   m_RedArrayPath("", "", ""),
-  m_BlueArrayPath("", "", ""),
   m_GreenArrayPath("", "", ""),
+  m_BlueArrayPath("", "", ""),
   m_NewCellArrayName(""),
   m_Red(NULL),
   m_Green(NULL),
@@ -137,10 +173,10 @@ int GrayToRGB::writeFilterParameters(AbstractFilterParametersWriter* writer, int
 {
   writer->openFilterGroup(this, index);
   DREAM3D_FILTER_WRITE_PARAMETER(RedArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(GreenArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(BlueArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(NewCellArrayName)
-  writer->closeFilterGroup();
+      DREAM3D_FILTER_WRITE_PARAMETER(GreenArrayPath)
+      DREAM3D_FILTER_WRITE_PARAMETER(BlueArrayPath)
+      DREAM3D_FILTER_WRITE_PARAMETER(NewCellArrayName)
+      writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
 
@@ -153,40 +189,38 @@ void GrayToRGB::dataCheck()
   DataArrayPath tempPath;
 
   //check for required arrays
-  QVector<size_t> dims(1, 1);
-  TEMPLATE_GET_PREREQ_ARRAY(Red, getRedArrayPath(), dims)
-  TEMPLATE_GET_PREREQ_ARRAY(Green, getGreenArrayPath(), dims)
-  TEMPLATE_GET_PREREQ_ARRAY(Blue, getBlueArrayPath(), dims)
+  QVector<size_t> compDims(1, 1);
+  m_RedPtr = TemplateHelpers::GetPrereqArrayFromPath<AbstractFilter, VolumeDataContainer>()(this, getRedArrayPath(), compDims);
+  if(NULL != m_RedPtr.lock().get())
+  {
+    m_Red = m_RedPtr.lock().get();
+  }
+  m_GreenPtr = TemplateHelpers::GetPrereqArrayFromPath<AbstractFilter, VolumeDataContainer>()(this, getGreenArrayPath(), compDims);
+  if(NULL != m_GreenPtr.lock().get())
+  {
+    m_Green = m_GreenPtr.lock().get();
+  }
+  m_BluePtr = TemplateHelpers::GetPrereqArrayFromPath<AbstractFilter, VolumeDataContainer>()(this, getBlueArrayPath(), compDims);
+  if(NULL != m_BluePtr.lock().get())
+  {
+    m_Blue = m_BluePtr.lock().get();
+  }
 
   //configured created name / location
   tempPath.update(getRedArrayPath().getDataContainerName(), getRedArrayPath().getAttributeMatrixName(), getNewCellArrayName() );
 
-  //get types of array
-  QString redTypeName = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getRedArrayPath().getDataContainerName())->getAttributeMatrix(getRedArrayPath().getAttributeMatrixName())->getAttributeArray(getRedArrayPath().getDataArrayName())->getTypeAsString();;
-  QString greenTypeName = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getGreenArrayPath().getDataContainerName())->getAttributeMatrix(getGreenArrayPath().getAttributeMatrixName())->getAttributeArray(getGreenArrayPath().getDataArrayName())->getTypeAsString();;
-  QString blueTypeName = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getBlueArrayPath().getDataContainerName())->getAttributeMatrix(getBlueArrayPath().getAttributeMatrixName())->getAttributeArray(getBlueArrayPath().getDataArrayName())->getTypeAsString();;
-  int redType = TemplateUtilities::getTypeFromTypeName(redTypeName);
-  int greenType = TemplateUtilities::getTypeFromTypeName(greenTypeName);
-  int blueType = TemplateUtilities::getTypeFromTypeName(blueTypeName);
 
-  if(redType!=greenType)
-  {
-    QString message = QObject::tr("The red array '%1' and green array '%2' are of different types (%3 / %4)").arg(getRedArrayPath().getDataArrayName()).arg(getGreenArrayPath().getDataArrayName()).arg(redTypeName).arg(greenTypeName);
-    setErrorCondition(-11000);
-    notifyErrorMessage(getHumanLabel(), message,getErrorCondition());
-    return;
-  }
-  if(redType!=blueType)
-  {
-    QString message = QObject::tr("The red array '%1' and blue array '%2' are of different types (%3 / %4)").arg(getRedArrayPath().getDataArrayName()).arg(getBlueArrayPath().getDataArrayName()).arg(redTypeName).arg(blueTypeName);
-    setErrorCondition(-11000);
-    notifyErrorMessage(getHumanLabel(), message,getErrorCondition());
-    return;
-  }
+  VolumeDataContainer* redDC = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getRedArrayPath().getDataContainerName() );
+  AttributeMatrix::Pointer redAM = redDC->getPrereqAttributeMatrix<AbstractFilter>(this, getRedArrayPath().getAttributeMatrixName(), 80000);
+  IDataArray::Pointer redArrayptr = redAM->getExistingPrereqArray<IDataArray, AbstractFilter>(this, getRedArrayPath().getDataArrayName(), 80000);
 
   //create new array of same type
-  dims[0]=3;
-  TEMPLATE_CREATE_NONPREREQ_ARRAY(NewCellArray, tempPath, dims, redType);
+  compDims[0]=3;
+  m_NewCellArrayPtr = TemplateHelpers::CreateNonPrereqArrayFromArrayType()(this, tempPath, compDims, redArrayptr);
+  if( NULL != m_NewCellArrayPtr.lock().get() )
+  {
+    m_NewCellArray = m_NewCellArrayPtr.lock()->getVoidPointer(0);
+  }
 }
 
 // -----------------------------------------------------------------------------

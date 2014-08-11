@@ -32,6 +32,7 @@ set(_PublicFilters
   ReadImage
   RGBToGray
   GrayToRGB
+  FindMaxima
 )
 
 
@@ -60,7 +61,7 @@ foreach(f ${_PrivateFilters} )
                         ${DREAM3DLib_FILTER_DOC_DIR}/${_filterGroupName}/${f}.md FALSE)
 endforeach()
 
-ADD_DREAM3D_SUPPORT_HEADER(${ImageProcessing_SOURCE_DIR} ${_filterGroupName} ITKUtilities.h)
+ADD_DREAM3D_SUPPORT_HEADER(${ImageProcessing_SOURCE_DIR} ${_filterGroupName} ItkBridge.h)
 ADD_DREAM3D_SUPPORT_HEADER(${ImageProcessing_SOURCE_DIR} ${_filterGroupName} TemplateUtilities.h)
 ADD_DREAM3D_SUPPORT_HEADER(${ImageProcessing_SOURCE_DIR} ${_filterGroupName} ManualThresholdTemplate.h)
 ADD_DREAM3D_SUPPORT_SOURCE(${ImageProcessing_SOURCE_DIR} ${_filterGroupName} ManualThresholdTemplate.cpp)

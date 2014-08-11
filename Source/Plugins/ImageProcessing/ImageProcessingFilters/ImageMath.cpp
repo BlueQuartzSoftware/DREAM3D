@@ -1,13 +1,39 @@
-/*
- * Your License or Copyright Information can go here
- */
-#if (_MSC_VER)
-#define _SCL_SECURE_NO_WARNINGS
-#endif
-
+/* ============================================================================
+ * Copyright (c) 2014 DREAM3D Consortium
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without modification,
+ * are permitted provided that the following conditions are met:
+ *
+ * Redistributions of source code must retain the above copyright notice, this
+ * list of conditions and the following disclaimer.
+ *
+ * Redistributions in binary form must reproduce the above copyright notice, this
+ * list of conditions and the following disclaimer in the documentation and/or
+ * other materials provided with the distribution.
+ *
+ * Neither the names of any of the DREAM3D Consortium contributors
+ * may be used to endorse or promote products derived from this software without
+ * specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
+ * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ *  This code was partially written under United States Air Force Contract number
+ *                              FA8650-10-D-5210
+ *
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #include "ImageMath.h"
 
-#include "ITKUtilities.h"
+#include "ItkBridge.h"
 #include "itkAddImageFilter.h"
 #include "itkSubtractImageFilter.h"
 #include "itkMultiplyImageFilter.h"
@@ -22,74 +48,7 @@
 #include "itkUnaryFunctorImageFilter.h"
 #include "itkBinaryFunctorImageFilter.h"
 
-#include <limits>
-
-namespace Functor
-{
-  //gamma functor (doesn't seem to be implemented in itk)
-  template< class TPixel > class Gamma
-  {
-    public:
-      Gamma() {};
-      ~Gamma() {};
-      bool operator!=( const Gamma& ) const
-      {
-        return false;
-      }
-      bool operator==( const Gamma& other ) const
-      {
-        return !(*this != other);
-      }
-
-      inline TPixel operator()(const TPixel& A, const TPixel& B) const
-      {
-        const double dA = static_cast< double >( A ) / std::numeric_limits<TPixel>::max();
-        return static_cast< TPixel >( double(pow(dA, double(B))) * std::numeric_limits<TPixel>::max() );
-      }
-  };
-
-  //custom functor to bring value within limits and round (without this functor itk add filter on an 8bit image 255+10->9)
-  template< class TInput, class TOutput> class LimitsRound
-  {
-    public:
-      LimitsRound() {};
-      ~LimitsRound() {};
-      bool operator!=( const LimitsRound& ) const
-      {
-        return false;
-      }
-      bool operator==( const LimitsRound& other ) const
-      {
-        return !(*this != other);
-      }
-
-      inline TOutput operator()(const TInput& A) const
-      {
-        const double dA = static_cast< double >( A );
-
-        if(dA > std::numeric_limits<TOutput>::max())
-        {
-          return std::numeric_limits<TOutput>::max();
-        }
-        else if(dA < std::numeric_limits<TOutput>::min())
-        {
-          return std::numeric_limits<TOutput>::min();
-        }
-
-        //round if needed
-        if(std::numeric_limits<TOutput>::is_integer && !std::numeric_limits<TInput>::is_integer)
-        {
-          if (dA >= floor(dA) + 0.5) { return static_cast< TOutput >(ceil(dA)); }
-          else { return static_cast< TOutput >(floor(dA)); }
-        }
-
-        return static_cast< TOutput >( dA );
-      }
-  };
-}
-
-//// Setup some typedef 's for the ITKUtilities class to shorten up our code
-typedef ITKUtilities<ImageProcessing::DefaultPixelType>    ITKUtilitiesType;
+#include "ImageProcessing/ImageProcessingHelpers.hpp"
 
 // -----------------------------------------------------------------------------
 //
@@ -228,7 +187,7 @@ void ImageMath::execute()
   QString attrMatName = getSelectedCellArrayPath().getAttributeMatrixName();
 
   //wrap m_RawImageData as itk::image
-  ImageProcessing::DefaultImageType::Pointer inputImage = ITKUtilitiesType::Dream3DtoITK(m, attrMatName, m_SelectedCellArray);
+  ImageProcessing::DefaultImageType::Pointer inputImage = ITKUtilitiesType::CreateItkWrapperForDataPointer(m, attrMatName, m_SelectedCellArray);
 
   //define filter types
   typedef itk::AddImageFilter<ImageProcessing::DefaultImageType, ImageProcessing::FloatImageType, ImageProcessing::FloatImageType> AddType;
@@ -237,7 +196,7 @@ void ImageMath::execute()
   typedef itk::DivideImageFilter<ImageProcessing::DefaultImageType, ImageProcessing::FloatImageType, ImageProcessing::FloatImageType> DivideType;
   typedef itk::MinimumImageFilter<ImageProcessing::DefaultImageType, ImageProcessing::FloatImageType, ImageProcessing::FloatImageType> MinType;
   typedef itk::MaximumImageFilter<ImageProcessing::DefaultImageType, ImageProcessing::FloatImageType, ImageProcessing::FloatImageType> MaxType;
-  typedef itk::BinaryFunctorImageFilter< ImageProcessing::DefaultImageType, ImageProcessing::FloatImageType, ImageProcessing::FloatImageType, Functor::Gamma<ImageProcessing::FloatPixelType> > GammaType;
+  typedef itk::BinaryFunctorImageFilter< ImageProcessing::DefaultImageType, ImageProcessing::FloatImageType, ImageProcessing::FloatImageType, ImageProcessing::Functor::Gamma<ImageProcessing::FloatPixelType> > GammaType;
   typedef itk::LogImageFilter<ImageProcessing::DefaultImageType, ImageProcessing::FloatImageType> LogType;
   typedef itk::ExpImageFilter<ImageProcessing::DefaultImageType, ImageProcessing::FloatImageType> ExpType;
   typedef itk::SquareImageFilter<ImageProcessing::DefaultImageType, ImageProcessing::FloatImageType> SquareType;
@@ -245,7 +204,7 @@ void ImageMath::execute()
   typedef itk::InvertIntensityImageFilter<ImageProcessing::DefaultImageType, ImageProcessing::DefaultImageType> InvertType;
 
   //set up filter to cap image range + round
-  typedef itk::UnaryFunctorImageFilter< ImageProcessing::FloatImageType, ImageProcessing::DefaultImageType, Functor::LimitsRound<ImageProcessing::FloatPixelType, ImageProcessing::DefaultPixelType> > LimitsRoundType;
+  typedef itk::UnaryFunctorImageFilter< ImageProcessing::FloatImageType, ImageProcessing::DefaultImageType, ImageProcessing::Functor::LimitsRound<ImageProcessing::FloatPixelType, ImageProcessing::DefaultPixelType> > LimitsRoundType;
   LimitsRoundType::Pointer limitsRound = LimitsRoundType::New();
 
   //apply selected operation
