@@ -141,10 +141,10 @@ class InsertAtomsImpl
       if(basis == 0) { atomMult = 1; }
       if(basis == 1) { atomMult = 2; }
       if(basis == 2) { atomMult = 4; }
-      size_t xPoints = atomMult * (size_t(deltaX / latticeConstants.x) + 1);
-      size_t yPoints = atomMult * (size_t(deltaY / latticeConstants.y) + 1);
-      size_t zPoints = atomMult * (size_t(deltaZ / latticeConstants.z) + 1);
-      size_t nPoints = xPoints * yPoints * zPoints;
+      size_t xPoints = (size_t(deltaX / latticeConstants.x) + 1);
+      size_t yPoints = (size_t(deltaY / latticeConstants.y) + 1);
+      size_t zPoints = (size_t(deltaZ / latticeConstants.z) + 1);
+      size_t nPoints = atomMult * xPoints * yPoints * zPoints;
 
       points[iter]->resizeArray(nPoints);
       inFeature[iter]->resize(nPoints);
@@ -376,11 +376,12 @@ void InsertAtoms::execute()
 {
   setErrorCondition(0);
   dataCheck();
-  if(getErrorCondition() < 0) { return; }
+  if(getErrorCondition() < 0) { return; } 
 
-  m_LatticeConstants.x = m_LatticeConstants.x / 10000.0;
-  m_LatticeConstants.y = m_LatticeConstants.y / 10000.0;
-  m_LatticeConstants.z = m_LatticeConstants.z / 10000.0;
+  FloatVec3_t latticeConstants;
+  latticeConstants.x = m_LatticeConstants.x / 10000.0;
+  latticeConstants.y = m_LatticeConstants.y / 10000.0;
+  latticeConstants.z = m_LatticeConstants.z / 10000.0;
 
   SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceMeshFaceLabelsArrayPath().getDataContainerName());
   DREAM3D_RANDOMNG_NEW()
@@ -466,13 +467,13 @@ void InsertAtoms::execute()
   if (doParallel == true)
   {
     tbb::parallel_for(tbb::blocked_range<size_t>(0, numFeatures),
-                      InsertAtomsImpl(faces, faceLists, faceBBs, avgQuats, m_LatticeConstants, m_Basis, points, inFeature), tbb::auto_partitioner());
+                      InsertAtomsImpl(faces, faceLists, faceBBs, avgQuats, latticeConstants, m_Basis, points, inFeature), tbb::auto_partitioner());
 
   }
   else
 #endif
   {
-    InsertAtomsImpl serial(faces, faceLists, faceBBs, avgQuats, m_LatticeConstants, m_Basis, points, inFeature);
+    InsertAtomsImpl serial(faces, faceLists, faceBBs, avgQuats, latticeConstants, m_Basis, points, inFeature);
     serial.checkPoints(0, numFeatures);
   }
 

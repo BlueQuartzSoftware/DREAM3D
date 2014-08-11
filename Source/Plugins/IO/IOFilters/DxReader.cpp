@@ -395,7 +395,8 @@ int DxReader::readFile()
       qint32 size = tokens.size();
       for (int32_t in_spins = 0; in_spins < size; in_spins++)
       {
-        m_FeatureIds[index] = tokens[in_spins].toInt(&ok, 10);
+        int fId = tokens[in_spins].toInt(&ok, 10);
+        m_FeatureIds[index] = fId;
         ++index;
       }
 

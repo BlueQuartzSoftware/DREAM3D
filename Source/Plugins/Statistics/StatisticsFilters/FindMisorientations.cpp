@@ -227,7 +227,7 @@ void FindMisorientations::execute()
       if (phase1 == phase2)
       {
         w = m_OrientationOps[phase1]->getMisoQuat( q1, q2, n1, n2, n3);
-        misorientationlists[i][j] = DREAM3D::Constants::k_180OverPi;
+        misorientationlists[i][j] = w * DREAM3D::Constants::k_180OverPi;
         if (m_FindAvgMisors == true) { m_AvgMisorientations[i] += misorientationlists[i][j]; }
       }
       else
