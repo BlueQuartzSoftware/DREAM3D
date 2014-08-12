@@ -288,7 +288,7 @@ FilterPipeline::Pointer PipelineViewWidget::getFilterPipeline()
     if (fw)
     {
       AbstractFilter::Pointer filter = fw->getFilter();
-      pipeline->pushBack(filter);
+      pipeline->pushBack(filter->newFilterInstance(true));
     }
 
   }
