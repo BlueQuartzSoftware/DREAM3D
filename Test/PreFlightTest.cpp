@@ -223,6 +223,10 @@ void verifyFilterParameters()
           || option->getHumanLabel().compare("Created Information") == 0
           || option->getHumanLabel().compare("Optional Information") == 0)
           { continue; }
+      if(option->getWidgetType().compare(FilterParameterWidgetType::SeparatorWidget) == 0)
+      {
+        continue;
+      }
       QByteArray normType = QString("%1").arg( option->getPropertyName()).toLatin1();
       int index = meta->indexOfProperty(normType);
       if (index < 0)
@@ -389,9 +393,9 @@ int main(int argc, char** argv)
   QMetaObjectUtilities::RegisterMetaTypes();
 
   //// These functions are just to verify that the filters have certain signals and properties available.
-  //verifyPreflightEmitsProperly();
-  //verifySignals();
-  //verifyFilterParameters();
+  verifyPreflightEmitsProperly();
+  verifySignals();
+  verifyFilterParameters();
 
   int err = EXIT_SUCCESS;
   DREAM3D_REGISTER_TEST( TestPreflight() )
