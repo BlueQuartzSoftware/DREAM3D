@@ -34,6 +34,7 @@
 #include "WriteImage.h"
 
 #include <QtCore/QString>
+#include <QtCore/QFileInfo>
 
 #include "itkImageFileWriter.h"
 #include "itkRGBPixel.h"
@@ -103,55 +104,19 @@ class WriteImagePrivate
       else if(3 == numComp)//rgb image
       {
         //define types and wrap input image
-        {
-#if 0
-          typedef ItkBridge2<TInputType, TInputType>                            ItkBridge2Type;
-          typedef typename ItkBridge2Type::RGBImageType                         ImageType;
-          typedef typename itk::ImageFileWriter<ImageType>                      WriterType;
-          typename ImageType::Pointer inputImage;
+        typedef ItkBridge<TInputType>                            ItkBridgeType;
 
-          typedef itk::RGBPixel<TInputType>                                     ItkRgbPixelType;
-          typedef ItkBridge2<TInputType, ItkRgbPixelType>                       ItkBridge2Type;
-          typedef typename ItkBridge2Type::ItkImportImageFilterPointerType      ItkImportImageFilterPointerType;
-          ItkImportImageFilterPointerType itkImportFilter = ItkBridge2Type::Dream3DtoITKImportFilter(m, attrMatName, inputData);
-          inputImage = itkImportFilter->GetOutput();
-#endif
-          typedef CreateItkWrapperForDataPointer<TInputType> WrapperType;
-          typedef typename WrapperType::ScalarImageType                             WrapperScalarImageType;
-          typedef typename WrapperType::ScalarImagePointerType                      WrapperScalarImagePointerType;
+        //define types and wrap input image
+        typedef typename ItkBridgeType::RGBImageType ImageType;
+        typedef typename itk::ImageFileWriter<ImageType> WriterType;
+        //     typename ImageType::Pointer inputImage = ItkBridgeType::template Dream3DtoITKTemplate<ImageType>(m, attrMatName, inputData);
+        typename ImageType::Pointer inputImage = ItkBridgeType::template Dream3DtoITKImportFilter<typename ImageType::PixelType>(m, attrMatName, inputData)->GetOutput();
 
-          WrapperScalarImagePointerType inputImage = CreateItkWrapperForDataPointer<TInputType>()(m, attrMatName, inputData);
-
-          typedef typename itk::ImageFileWriter<WrapperScalarImageType>                      WriterType;
-
-          typename WriterType::Pointer writer = WriterType::New();
-          writer->SetFileName( outputFile.toLatin1().constData() );
-          writer->SetInput( inputImage );
-          writerObject = writer;
-
-
-        }
-#if 0
-        {
-          typedef Dream3DToItkImageConversion<TInputType, TInputType, itk::RGBPixel<TInputType> > Dream3DToItkImageConversionType;
-
-          Dream3DToItkImageConversionType importFunctor;
-          typename Dream3DToItkImageConversionType::ItkImportImageFilterPointerType itkImportFilter = importFunctor(m, attrMatName, inputData);
-          typename Dream3DToItkImageConversionType::ItkImageOutPointerType inputImage = itkImportFilter->GetOutput();
-
-
-          //create writer and execute
-          typename WriterType::Pointer writer = WriterType::New();
-          writer->SetFileName( outputFile.toLatin1().constData() );
-          writer->SetInput( inputImage );
-          writerObject = writer;
-
-
-        }
-
-#endif
-
-
+        //create writer and execute
+        typename WriterType::Pointer writer = WriterType::New();
+        writer->SetFileName( outputFile.toLatin1().constData() );
+        writer->SetInput( inputImage );
+        writerObject = writer;
       }
       else if(4 == numComp)//rgba image
       {
@@ -260,6 +225,24 @@ void WriteImage::dataCheck()
 {
   setErrorCondition(0);
 
+
+  if(m_OutputFileName.isEmpty())
+  {
+    QString ss = QObject::tr("Output file name/path was not given");
+    setErrorCondition(-100);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    return;
+  }
+
+  QFileInfo fi(m_OutputFileName);
+  if(fi.suffix().compare("tif") != 0)
+  {
+    QString ss = QObject::tr("Image Stacks are only supported for TIFF formatted output");
+    setErrorCondition(-101);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    return;
+  }
+
   //pass empty dimensions to allow any size
   QVector<size_t> compDims;
   m_SelectedCellArrayPtr = TemplateHelpers::GetPrereqArrayFromPath<AbstractFilter, VolumeDataContainer>()(this, getSelectedCellArrayPath(), compDims);
@@ -297,13 +280,6 @@ void WriteImage::dataCheck()
     notifyErrorMessage(getHumanLabel(), message, getErrorCondition());
   }
 
-  if(m_OutputFileName.isEmpty())
-  {
-    QString ss = QObject::tr("Need to enter output file name");
-    setErrorCondition(-100);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-    return;
-  }
 }
 
 // -----------------------------------------------------------------------------
@@ -421,12 +397,12 @@ const QString WriteImage::getGroupName()
 //
 // -----------------------------------------------------------------------------
 const QString WriteImage::getSubGroupName()
-{return "Misc";}
+{return "IO";}
 
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 const QString WriteImage::getHumanLabel()
-{return "Write Image from Array";}
+{return "Write Tiff Image Stack";}
 
