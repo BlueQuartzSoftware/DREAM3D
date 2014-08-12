@@ -209,20 +209,6 @@ void FavoritesDockWidget::addPipelinesRecursively(QDir currentDir, QTreeWidgetIt
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FavoritesDockWidget::on_filterLibraryTree_itemClicked( QTreeWidgetItem* item, int column )
-{
-  QString favoritePath = item->data(0, Qt::UserRole).toString();
-  QStringList filterList = generateFilterListFromPipelineFile(favoritePath);
-  if(filterList.size() > 0)
-  {
-    emit filterListGenerated(filterList, false);
-  }
-}
-
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 QStringList FavoritesDockWidget::generateFilterListFromPipelineFile(QString path)
 {
 
@@ -245,6 +231,35 @@ QStringList FavoritesDockWidget::generateFilterListFromPipelineFile(QString path
   return filterNames;
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void FavoritesDockWidget::on_filterLibraryTree_itemClicked( QTreeWidgetItem* item, int column )
+{
+  QString favoritePath = item->data(0, Qt::UserRole).toString();
+  QStringList filterList = generateFilterListFromPipelineFile(favoritePath);
+  if(filterList.size() > 0)
+  {
+    emit filterListGenerated(filterList, false);
+  }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void FavoritesDockWidget::on_filterLibraryTree_itemDoubleClicked( QTreeWidgetItem* item, int column )
+{
+  QString pipelinePath = item->data(0, Qt::UserRole).toString();
+  if (item->type() == FilterLibraryTreeWidget::Node_Item_Type)
+  {
+    return; // The user double clicked a folder, so don't do anything
+  }
+  if (pipelinePath.isEmpty() == false)
+  {
+    emit pipelineFileActivated(pipelinePath, QSettings::IniFormat, false);
+  }
+
+}
 
 // -----------------------------------------------------------------------------
 //
@@ -271,6 +286,15 @@ void FavoritesDockWidget::on_filterLibraryTree_itemChanged(QTreeWidgetItem* item
     newFavoritePrefs.setValue("Name", item->text(0) );
     newFavoritePrefs.endGroup();
   }
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void FavoritesDockWidget::on_filterLibraryTree_currentItemChanged(QTreeWidgetItem* item, QTreeWidgetItem* previous )
+{
+  on_filterLibraryTree_itemClicked(item, 0);
 }
 
 // -----------------------------------------------------------------------------
@@ -393,32 +417,6 @@ QString FavoritesDockWidget::writeNewFavoriteFilePath(QString newFavoriteTitle, 
   filterLibraryTree->blockSignals(false);
 
   return newPath;
-}
-
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void FavoritesDockWidget::on_filterLibraryTree_currentItemChanged(QTreeWidgetItem* item, QTreeWidgetItem* previous )
-{
-  on_filterLibraryTree_itemClicked(item, 0);
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void FavoritesDockWidget::on_filterLibraryTree_itemDoubleClicked( QTreeWidgetItem* item, int column )
-{
-  QString pipelinePath = item->data(0, Qt::UserRole).toString();
-  if (item->type() == FilterLibraryTreeWidget::Node_Item_Type)
-  {
-    return; // The user double clicked a folder, so don't do anything
-  }
-  if (pipelinePath.isEmpty() == false)
-  {
-    emit pipelineFileActivated(pipelinePath, QSettings::IniFormat, false);
-  }
-
 }
 
 // -----------------------------------------------------------------------------

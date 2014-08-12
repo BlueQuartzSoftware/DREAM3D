@@ -233,6 +233,33 @@ void PrebuiltPipelinesDockWidget::on_filterLibraryTree_itemClicked( QTreeWidgetI
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void PrebuiltPipelinesDockWidget::on_filterLibraryTree_itemDoubleClicked( QTreeWidgetItem* item, int column )
+{
+  QString pipelinePath = item->data(0, Qt::UserRole).toString();
+  if (item->type() == FilterLibraryTreeWidget::Node_Item_Type)
+  {
+    return; // The user double clicked a folder, so don't do anything
+  }
+  if (pipelinePath.isEmpty() == false)
+  {
+    emit pipelineFileActivated(pipelinePath, QSettings::IniFormat, false);
+  }
+
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void PrebuiltPipelinesDockWidget::on_filterLibraryTree_currentItemChanged(QTreeWidgetItem* item, QTreeWidgetItem* previous )
+{
+  on_filterLibraryTree_itemClicked(item, 0);
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 QStringList PrebuiltPipelinesDockWidget::generateFilterListFromPipelineFile(QString path)
 {
 
@@ -253,23 +280,6 @@ QStringList PrebuiltPipelinesDockWidget::generateFilterListFromPipelineFile(QStr
     prefs.endGroup();
   }
   return filterNames;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void PrebuiltPipelinesDockWidget::on_filterLibraryTree_itemDoubleClicked( QTreeWidgetItem* item, int column )
-{
-  QString pipelinePath = item->data(0, Qt::UserRole).toString();
-  if (item->type() == FilterLibraryTreeWidget::Node_Item_Type)
-  {
-    return; // The user double clicked a folder, so don't do anything
-  }
-  if (pipelinePath.isEmpty() == false)
-  {
-    emit pipelineFileActivated(pipelinePath, QSettings::IniFormat, false);
-  }
-
 }
 
 

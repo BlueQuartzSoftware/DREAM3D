@@ -106,6 +106,10 @@ class DREAM3DWidgetsLib_EXPORT  PrebuiltPipelinesDockWidget : public QDockWidget
     void on_filterLibraryTree_itemClicked( QTreeWidgetItem* item, int column );
     void on_filterLibraryTree_itemDoubleClicked( QTreeWidgetItem* item, int column );
 
+ //   void on_filterLibraryTree_itemChanged( QTreeWidgetItem* item, int column );
+    void on_filterLibraryTree_currentItemChanged(QTreeWidgetItem* current, QTreeWidgetItem* previous );
+
+
   signals:
 
     /**
