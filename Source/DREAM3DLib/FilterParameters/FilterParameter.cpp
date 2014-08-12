@@ -299,10 +299,7 @@ VolumeInfoFilterParameter::Pointer VolumeInfoFilterParameter::New(const QString&
   ptr->setUnits(units);
   ptr->setDimensionsProperty(dimsProperty);
   ptr->setResolutionProperty(resProperty);
-  if(ptr->getWidgetType().compare(FilterParameterWidgetType::SeparatorWidget) == 0)
-  {
-    ptr->setReadOnly(true);
-  }
+  ptr->setReadOnly(true);
   return ptr;
 }
 

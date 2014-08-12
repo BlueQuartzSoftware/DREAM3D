@@ -393,7 +393,7 @@ void FindEuclideanDistMap::preflight()
   emit preflightAboutToExecute();
   emit updateFilterParameters(this);
   dataCheck();
-  if(getErrorCondition() < 0) { return; }
+  if(getErrorCondition() < 0) {   setInPreflight(false); return; }
   if(m_SaveNearestNeighbors == false)
   {
     VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getFeatureIdsArrayPath().getDataContainerName());

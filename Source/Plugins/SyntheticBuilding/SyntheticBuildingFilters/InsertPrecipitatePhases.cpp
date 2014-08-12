@@ -314,7 +314,7 @@ void InsertPrecipitatePhases::preflight()
   }
 
   AttributeMatrix::Pointer attrMat = getDataContainerArray()->getAttributeMatrix(getFeaturePhasesArrayPath());
-  if(attrMat == NULL) { return; }
+  if(attrMat == NULL) { setInPreflight(false); return; }
 
   attrMat->removeAttributeArray(m_EquivalentDiametersArrayName);
   attrMat->removeAttributeArray(m_Omega3sArrayName);

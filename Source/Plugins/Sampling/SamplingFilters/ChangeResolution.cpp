@@ -171,7 +171,7 @@ void ChangeResolution::preflight()
   dataCheck();
 
 
-  if(getErrorCondition() < 0) { return; }
+  if(getErrorCondition() < 0) { setInPreflight(false); return; }
 
   VolumeDataContainer* m;
   if(m_SaveAsNewDataContainer == false)

@@ -130,7 +130,7 @@ void ExtractFlaggedFeatures::preflight()
   emit updateFilterParameters(this);
   dataCheck();
   emit preflightExecuted();
-  if(getErrorCondition() < 0) { return; }
+  setInPreflight(false);
 }
 
 // -----------------------------------------------------------------------------

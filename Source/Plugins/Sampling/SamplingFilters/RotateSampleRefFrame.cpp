@@ -249,12 +249,12 @@ void RotateSampleRefFrame::preflight()
   dataCheck();
   emit preflightExecuted();
 
-  if(getErrorCondition() < 0) { return; }
+  if(getErrorCondition() < 0) { setInPreflight(false); return; }
 
   VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getCellAttributeMatrixPath().getDataContainerName(), false);
-  if (getErrorCondition() < 0) { return; }
+  if (getErrorCondition() < 0) { setInPreflight(false); return; }
   AttributeMatrix::Pointer cellAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixPath().getAttributeMatrixName(), -301);
-  if (getErrorCondition() < 0) { return; }
+  if (getErrorCondition() < 0) { setInPreflight(false); return; }
 
   float rotAngle = m_RotationAngle * DREAM3D::Constants::k_Pi / 180.0;
 
