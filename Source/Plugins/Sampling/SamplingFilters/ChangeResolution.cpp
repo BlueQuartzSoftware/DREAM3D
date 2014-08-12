@@ -116,13 +116,13 @@ int ChangeResolution::writeFilterParameters(AbstractFilterParametersWriter* writ
 {
   writer->openFilterGroup(this, index);
   DREAM3D_FILTER_WRITE_PARAMETER(NewDataContainerName)
-  DREAM3D_FILTER_WRITE_PARAMETER(CellAttributeMatrixPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(CellFeatureAttributeMatrixPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(FeatureIdsArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(Resolution)
-  DREAM3D_FILTER_WRITE_PARAMETER(RenumberFeatures)
-  DREAM3D_FILTER_WRITE_PARAMETER(SaveAsNewDataContainer)
-  writer->closeFilterGroup();
+      DREAM3D_FILTER_WRITE_PARAMETER(CellAttributeMatrixPath)
+      DREAM3D_FILTER_WRITE_PARAMETER(CellFeatureAttributeMatrixPath)
+      DREAM3D_FILTER_WRITE_PARAMETER(FeatureIdsArrayPath)
+      DREAM3D_FILTER_WRITE_PARAMETER(Resolution)
+      DREAM3D_FILTER_WRITE_PARAMETER(RenumberFeatures)
+      DREAM3D_FILTER_WRITE_PARAMETER(SaveAsNewDataContainer)
+      writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
 
@@ -171,7 +171,11 @@ void ChangeResolution::preflight()
   dataCheck();
 
 
-  if(getErrorCondition() < 0) { setInPreflight(false); return; }
+  if(getErrorCondition() < 0) {
+    emit preflightExecuted();
+    setInPreflight(false);
+    return;
+  }
 
   VolumeDataContainer* m;
   if(m_SaveAsNewDataContainer == false)
@@ -227,13 +231,13 @@ void ChangeResolution::execute()
 
   DREAM3D_RANDOMNG_NEW()
 
-  VolumeDataContainer* m;
+      VolumeDataContainer* m;
   if(m_SaveAsNewDataContainer == false) { m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getCellAttributeMatrixPath().getDataContainerName()); }
   else { m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getNewDataContainerName()); }
 
   if(m->getXRes() == m_Resolution.x
-      && m->getYRes() == m_Resolution.y
-      && m->getZRes() == m_Resolution.z)
+     && m->getYRes() == m_Resolution.y
+     && m->getZRes() == m_Resolution.z)
   {
     return;
   }
