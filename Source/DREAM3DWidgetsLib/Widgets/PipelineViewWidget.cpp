@@ -288,7 +288,31 @@ FilterPipeline::Pointer PipelineViewWidget::getFilterPipeline()
     if (fw)
     {
       AbstractFilter::Pointer filter = fw->getFilter();
+      pipeline->pushBack(filter);
+    }
+
+  }
+  pipeline->addMessageReceiver(m_PipelineMessageObserver);
+  return pipeline;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+FilterPipeline::Pointer PipelineViewWidget::getCopyOfFilterPipeline()
+{
+  // Create a Pipeline Object and fill it with the filters from this View
+  FilterPipeline::Pointer pipeline = FilterPipeline::New();
+
+  qint32 count = filterCount();
+  for(qint32 i = 0; i < count; ++i)
+  {
+    PipelineFilterWidget* fw = filterWidgetAt(i);
+    if (fw)
+    {
+      AbstractFilter::Pointer filter = fw->getFilter();
       pipeline->pushBack(filter->newFilterInstance(true));
+      //pipeline->pushBack(filter);
     }
 
   }
