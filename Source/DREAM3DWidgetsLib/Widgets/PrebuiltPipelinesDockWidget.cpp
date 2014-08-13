@@ -93,15 +93,15 @@ void PrebuiltPipelinesDockWidget::setupGui()
   readPipelines();
 
   QString css(" QToolTip {\
-              border: 2px solid darkkhaki;\
-      padding: 0px;\
-  border-radius: 3px;\
-opacity: 300;\
-}");
+              border: 2px solid #434343;\
+              padding: 2px;\
+              border-radius: 3px;\
+              opacity: 255;\
+              background-color: #FFFFFF;\
+              }");
 filterLibraryTree->setStyleSheet(css);
 
 }
-
 
 // -----------------------------------------------------------------------------
 //
@@ -281,19 +281,43 @@ QString PrebuiltPipelinesDockWidget::generateHtmlFilterListFromPipelineFile(QStr
   prefs.beginGroup(DREAM3D::Settings::PipelineBuilderGroup);
   bool ok = false;
   int filterCount = prefs.value("Number_Filters").toInt(&ok);
+  QString name = prefs.value("Name").toString();
+  QString dVers = prefs.value("DREAM3D_Version").toString();
   prefs.endGroup();
   if (false == ok) {filterCount = 0;}
 
   QString html;
   QTextStream ss(&html);
-  ss << "<p><b>Filter Count: " << filterCount << "</b</p>\n";
+  ss << "<html><head></head>\n";
+  ss << "<body>\n";
 
-  ss << "<table cellpadding=\"2\" border=\"1\">\n<tr><th>Index</th><th>Filter Group</th><th>Filter Name</th></tr>\n";
+  // A table for the summary items
+  ss << "<table cellpadding=\"2\" cellspacing=\"0\" border=\"0\">\n";
+  ss << "<tbody>\n";
+  ss << "	<tr><th align=\"right\">Pipeline Name:</th><td>" << name << "</td></tr>\n";
+  ss << "	<tr><th align=\"right\">Filter Count:</th><td>" << filterCount << "</td></tr>\n";
+  ss << "	<tr><th align=\"right\">DREAM3D Version:</th><td>" << dVers << "</td></tr>\n";
+  ss << "</tbody>\n";
+  ss << "</table>\n";
+  ss << "<p></p>\n";
+
+  // Start the table of the Pipeline
+  ss << "<table cellpadding=\"2\" cellspacing=\"0\" border=\"0\" width=\"300px\">\n";
+  ss << "<tbody>\n";
+  ss << "<tr bgcolor=\"#A2E99C\"><th>Index</th><th>Filter Group</th><th>Filter Name</th></tr>\n";
 
   FilterManager* filtManager = FilterManager::Instance();
+  char rowColor = 0;
+  QString red("#FFAAAA");
+  QString odd("#FFFFFF");
+  QString even("#B0E4FF");
+  QString color = odd;
+  QString unknownFilter("Unknown");
+  bool unknownFilters = false;
 
   for (int i = 0; i < filterCount; ++i)
   {
+    if (rowColor == 0) { rowColor = 1; color = odd; } else { rowColor = 0; color = even; }
     QString gName = QString::number(i);
     prefs.beginGroup(gName);
     QString item = prefs.value("Filter_Name", "").toString();
@@ -306,18 +330,32 @@ QString PrebuiltPipelinesDockWidget::generateHtmlFilterListFromPipelineFile(QStr
       if(NULL != filter.get())
       {
         AbstractFilter::Pointer filter = factory->create();
-        ss << "<tr><td>" << i<< "</td><td>" <<  filter->getGroupName() << "</td><td>" << item <<  "</td></tr>\n";
+        ss << "<tr bgcolor=\"" << color << "\"><td>" << i<< "</td><td>" << filter->getGroupName() << "</td><td>" << item << "</td></tr>\n";
       }
     }
     else
     {
-      ss << "<tr><td>" << i<< "</td><td>UNKNOWN FILTER</td><td>" << item << "</td></tr>\n";
+      color = red;
+      ss << "<tr bgcolor=\"" << color << "\"><td>" << i<< "</td><td>" << unknownFilter << "</td><td>" << item << "</td></tr>\n";
+      unknownFilters = true;
     }
   }
-  ss << "</table>";
+
+
+  if(unknownFilters)
+  {
+    color = red;
+    ss << "<tr bgcolor=\"" << color << "\"><th colspan=\"3\">There are filters in the pipeline that the currently running version of DREAM3D does not know about. This ";
+    ss << "can happen if you are missing plugins that contain the filters or if the pipeline was created in a prior version ";
+    ss << "of DREAM3D in which case those filters may have been renamed. Please consult the DREAM3D documentation for more details ";
+    ss << "or ask the individual who gave you the pipeline file for more details.</th></tr>\n";
+  }
+  ss << "</tbody></table>\n";
+
+  ss << "</body></html>";
+
   return html;
 }
-
 
 // -----------------------------------------------------------------------------
 //
