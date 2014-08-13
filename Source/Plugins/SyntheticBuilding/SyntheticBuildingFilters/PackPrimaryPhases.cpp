@@ -693,7 +693,7 @@ void PackPrimaryPhases::execute()
 
   int gid = 1;
   firstPrimaryFeature = gid;
-  QVector<float> curphasevol;
+  std::vector<float> curphasevol;
   curphasevol.resize(primaryphases.size());
   float factor = 1.0;
   size_t iter = 0;
@@ -1035,6 +1035,8 @@ void PackPrimaryPhases::execute()
         }
         count++;
       }
+
+
       xc = static_cast<float>((column * m_PackingRes[0]) + (m_PackingRes[0] * 0.5));
       yc = static_cast<float>((row * m_PackingRes[1]) + (m_PackingRes[1] * 0.5));
       zc = static_cast<float>((plane * m_PackingRes[2]) + (m_PackingRes[2] * 0.5));
@@ -1443,7 +1445,7 @@ float PackPrimaryPhases::check_neighborhooderror(int gadd, int gremove)
   int index = 0;
 
   int phase;
-  typedef QVector<QVector<float> > VectOfVectFloat_t;
+  typedef std::vector<std::vector<float> > VectOfVectFloat_t;
   for (size_t iter = 0; iter < simneighbordist.size(); ++iter)
   {
     phase = primaryphases[iter];
@@ -1452,7 +1454,7 @@ float PackPrimaryPhases::check_neighborhooderror(int gadd, int gremove)
     size_t curSImNeighborDist_Size = curSimNeighborDist.size();
     float oneOverNeighborDistStep = 1.0f / neighbordiststep[iter];
 
-    QVector<int> count(curSImNeighborDist_Size, 0);
+    std::vector<int> count(curSImNeighborDist_Size, 0);
     for (size_t i = 0; i < curSImNeighborDist_Size; i++)
     {
       curSimNeighborDist[i].resize(40);
@@ -1554,7 +1556,7 @@ float PackPrimaryPhases::check_neighborhooderror(int gadd, int gremove)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PackPrimaryPhases::compare_1Ddistributions(QVector<float> array1, QVector<float> array2, float& bhattdist)
+void PackPrimaryPhases::compare_1Ddistributions(std::vector<float> array1, std::vector<float> array2, float& bhattdist)
 {
   bhattdist = 0;
   for (size_t i = 0; i < array1.size(); i++)
@@ -1566,7 +1568,7 @@ void PackPrimaryPhases::compare_1Ddistributions(QVector<float> array1, QVector<f
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PackPrimaryPhases::compare_2Ddistributions(QVector<QVector<float> > array1, QVector<QVector<float> > array2, float& bhattdist)
+void PackPrimaryPhases::compare_2Ddistributions(std::vector<std::vector<float> > array1, std::vector<std::vector<float> > array2, float& bhattdist)
 {
   bhattdist = 0;
   for (size_t i = 0; i < array1.size(); i++)
@@ -1581,7 +1583,7 @@ void PackPrimaryPhases::compare_2Ddistributions(QVector<QVector<float> > array1,
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PackPrimaryPhases::compare_3Ddistributions(QVector<QVector<QVector<float> > > array1, QVector<QVector<QVector<float> > > array2, float& bhattdist)
+void PackPrimaryPhases::compare_3Ddistributions(std::vector<std::vector<std::vector<float> > > array1, std::vector<std::vector<std::vector<float> > > array2, float& bhattdist)
 {
   bhattdist = 0;
   for (size_t i = 0; i < array1.size(); i++)
@@ -1617,9 +1619,9 @@ float PackPrimaryPhases::check_sizedisterror(Feature* feature)
     phase = primaryphases[iter];
     PrimaryStatsData* pp = PrimaryStatsData::SafePointerDownCast(statsDataArray[phase].get());
     count = 0;
-    QVector<float>& curFeatureSizeDist = featuresizedist[iter];
-    QVector<float>::size_type curFeatureSizeDistSize = curFeatureSizeDist.size();
-    QVector<float>& curSimFeatureSizeDist = simfeaturesizedist[iter];
+    std::vector<float>& curFeatureSizeDist = featuresizedist[iter];
+    std::vector<float>::size_type curFeatureSizeDistSize = curFeatureSizeDist.size();
+    std::vector<float>& curSimFeatureSizeDist = simfeaturesizedist[iter];
     // Initialize all Values to Zero
     for (size_t i = 0; i < curFeatureSizeDistSize; i++)
     {
@@ -1690,10 +1692,10 @@ float PackPrimaryPhases::check_fillingerror(int gadd, int gremove, Int32ArrayTyp
     k2 = -1;
     k3 = 1;
     size_t size = columnlist[gadd].size();
-    QVector<int>& cl = columnlist[gadd];
-    QVector<int>& rl = rowlist[gadd];
-    QVector<int>& pl = planelist[gadd];
-    QVector<float>& efl = ellipfunclist[gadd];
+    std::vector<int>& cl = columnlist[gadd];
+    std::vector<int>& rl = rowlist[gadd];
+    std::vector<int>& pl = planelist[gadd];
+    std::vector<float>& efl = ellipfunclist[gadd];
     float packquality = 0;
     for (size_t i = 0; i < size; i++)
     {
@@ -1739,10 +1741,10 @@ float PackPrimaryPhases::check_fillingerror(int gadd, int gremove, Int32ArrayTyp
     k2 = 3;
     k3 = -1;
     size_t size = columnlist[gremove].size();
-    QVector<int>& cl = columnlist[gremove];
-    QVector<int>& rl = rowlist[gremove];
-    QVector<int>& pl = planelist[gremove];
-    QVector<float>& efl = ellipfunclist[gremove];
+    std::vector<int>& cl = columnlist[gremove];
+    std::vector<int>& rl = rowlist[gremove];
+    std::vector<int>& pl = planelist[gremove];
+    std::vector<float>& efl = ellipfunclist[gremove];
     for (size_t i = 0; i < size; i++)
     {
       col = cl[i];
@@ -2068,6 +2070,9 @@ void PackPrimaryPhases::assign_voxels()
   }
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void PackPrimaryPhases::assign_gaps_only()
 {
   notifyStatusMessage(getHumanLabel(), "Assigning Gaps");
