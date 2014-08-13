@@ -164,7 +164,10 @@ QSet<QString> FilterManager::getGroupNames()
   for (FilterManager::Collection::iterator factory = factories.begin(); factory != factories.end(); ++factory)
   {
     IFilterFactory::Pointer filterFactory = factory.value();
-    groupNames.insert(factory.value()->getFilterGroup());
+    if(NULL != filterFactory)
+    {
+      groupNames.insert(filterFactory->getFilterGroup());
+    }
     //  qDebug() << factory.value()->getFilterGroup() << "\n";
   }
   return groupNames;
