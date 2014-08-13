@@ -76,11 +76,19 @@ class InitializeSyntheticVolume : public AbstractFilter
     Q_PROPERTY(FloatVec3_t Origin READ getOrigin WRITE setOrigin)
 
 //// These are for estimating the number of features that will be generated farther down the line.
+
     DREAM3D_FILTER_PARAMETER(DataArrayPath, InputStatsArrayPath)
     Q_PROPERTY(DataArrayPath InputStatsArrayPath READ getInputStatsArrayPath WRITE setInputStatsArrayPath)
 
     DREAM3D_FILTER_PARAMETER(DataArrayPath, InputPhaseTypesArrayPath)
     Q_PROPERTY(DataArrayPath InputPhaseTypesArrayPath READ getInputPhaseTypesArrayPath WRITE setInputPhaseTypesArrayPath)
+
+
+    DREAM3D_FILTER_PARAMETER(bool, EstimateNumberOfFeatures)
+    Q_PROPERTY(bool EstimateNumberOfFeatures READ getEstimateNumberOfFeatures WRITE setEstimateNumberOfFeatures)
+
+    DREAM3D_FILTER_PARAMETER(QString, InputStatsFile)
+    Q_PROPERTY(QString InputStatsFile READ getInputStatsFile WRITE setInputStatsFile)
 
     int getEstimatedPrimaryFeatures();
     Q_PROPERTY(QVariant EstimatedPrimaryFeatures READ getEstimatedPrimaryFeatures)
