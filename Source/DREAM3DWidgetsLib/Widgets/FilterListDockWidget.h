@@ -96,11 +96,17 @@ class DREAM3DWidgetsLib_EXPORT FilterListDockWidget : public QDockWidget, privat
     bool m_SearchFilterHumanName;
     bool m_SearchParameterPropertyName;
     bool m_SearchParameterHumanName;
+    bool m_SearchSearchGroupName;
+    bool m_SearchSubGroupName;
+    bool m_SearchPluginName;
 
     QAction* m_ActionSearchFilterClassName;
     QAction* m_ActionSearchFilterHumanName;
     QAction* m_ActionSearchParameterName;
     QAction* m_ActionSearchParameterPropertyName;
+    QAction* m_ActionSearchGroupName;
+    QAction* m_ActionSearchSubGroupName;
+    QAction* m_ActionSearchPluginName;
 
     FilterListDockWidget(const FilterListDockWidget&); // Copy Constructor Not Implemented
     void operator=(const FilterListDockWidget&); // Operator '=' Not Implemented

@@ -54,7 +54,10 @@ FilterListDockWidget::FilterListDockWidget(QWidget* parent) :
   m_SearchFilterClassName(false),
   m_SearchFilterHumanName(true),
   m_SearchParameterPropertyName(false),
-  m_SearchParameterHumanName(true)
+  m_SearchParameterHumanName(true),
+  m_SearchSearchGroupName(false),
+  m_SearchSubGroupName(false),
+  m_SearchPluginName(false)
 {
   setupUi(this);
 
@@ -129,7 +132,41 @@ void FilterListDockWidget::setupGui()
     lineEditMenu->addAction(m_ActionSearchParameterPropertyName);
   }
 
+  {
+    m_ActionSearchGroupName = new QAction(filterSearch);
+    m_ActionSearchGroupName->setObjectName(QString::fromUtf8("actionSearchGroupName"));
+    m_ActionSearchGroupName->setText(QApplication::translate("DREAM3D_UI", "Filter Group", 0, QApplication::UnicodeUTF8));
+    m_ActionSearchGroupName->setCheckable(true);
+    m_ActionSearchGroupName->setChecked(m_SearchSearchGroupName);
+    filterSearch->addAction(m_ActionSearchGroupName);
+    connect(m_ActionSearchGroupName, SIGNAL(triggered()),
+            this, SLOT( searchFieldsChanged() ) );
+    lineEditMenu->addAction(m_ActionSearchGroupName);
+  }
 
+  {
+    m_ActionSearchSubGroupName = new QAction(filterSearch);
+    m_ActionSearchSubGroupName->setObjectName(QString::fromUtf8("actionSearchSubGroupName"));
+    m_ActionSearchSubGroupName->setText(QApplication::translate("DREAM3D_UI", "Filter Subgroup", 0, QApplication::UnicodeUTF8));
+    m_ActionSearchSubGroupName->setCheckable(true);
+    m_ActionSearchSubGroupName->setChecked(m_SearchSubGroupName);
+    filterSearch->addAction(m_ActionSearchSubGroupName);
+    connect(m_ActionSearchSubGroupName, SIGNAL(triggered()),
+            this, SLOT( searchFieldsChanged() ) );
+    lineEditMenu->addAction(m_ActionSearchSubGroupName);
+  }
+
+  {
+    m_ActionSearchPluginName = new QAction(filterSearch);
+    m_ActionSearchPluginName->setObjectName(QString::fromUtf8("actionSearchPluginName"));
+    m_ActionSearchPluginName->setText(QApplication::translate("DREAM3D_UI", "Filter Plugin", 0, QApplication::UnicodeUTF8));
+    m_ActionSearchPluginName->setCheckable(true);
+    m_ActionSearchPluginName->setChecked(m_SearchPluginName);
+    filterSearch->addAction(m_ActionSearchPluginName);
+    connect(m_ActionSearchPluginName, SIGNAL(triggered()),
+            this, SLOT( searchFieldsChanged() ) );
+    lineEditMenu->addAction(m_ActionSearchPluginName);
+  }
   updateSearchIcons();
 }
 
@@ -222,10 +259,16 @@ void FilterListDockWidget::searchFilters()
       match = true;
     }
 
+
     IFilterFactory::Pointer factory = fm->getFactoryForFilter(filterClassName);
     if(NULL != factory.get() )
     {
       AbstractFilter::Pointer filter = factory->create();
+
+      QString groupName = filter->getGroupName();
+      QString subGroupName = filter->getSubGroupName();
+      QString compileLibrary = filter->getCompiledLibraryName();
+
       // Get a list of all the filterParameters from the filter.
       QVector<FilterParameter::Pointer> filterParameters = filter->getFilterParameters();
       // Create all the FilterParameterWidget objects that can be displayed where ever the developer needs
@@ -242,6 +285,22 @@ void FilterListDockWidget::searchFilters()
           //   qDebug() << "       " << option->getPropertyName();
           match = true;
         }
+        if (m_ActionSearchGroupName->isChecked() && groupName.contains(text, Qt::CaseInsensitive) == true)
+        {
+          //   qDebug() << "       " << option->getPropertyName();
+          match = true;
+        }
+        if (m_ActionSearchSubGroupName->isChecked() && subGroupName.contains(text, Qt::CaseInsensitive) == true)
+        {
+          //   qDebug() << "       " << option->getPropertyName();
+          match = true;
+        }
+        if (m_ActionSearchPluginName->isChecked() && compileLibrary.contains(text, Qt::CaseInsensitive) == true)
+        {
+          //   qDebug() << "       " << option->getPropertyName();
+          match = true;
+        }
+
       }
     }
     filterList->item(k1)->setHidden(!match);
