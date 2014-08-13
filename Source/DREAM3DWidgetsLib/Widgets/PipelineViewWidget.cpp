@@ -449,12 +449,33 @@ void PipelineViewWidget::addFilterWidget(PipelineFilterWidget* w, int index)
     m_FilterWidgetLayout->setContentsMargins(5, 6, 5, 6);
     m_FilterWidgetLayout->setSpacing(5);
     addSpacer = true;
+
+    if(index < 0)
+    {
+      index = 0;
+    }
+
   }
 
   // The layout will take control of the PipelineFilterWidget 'w' instance
   m_FilterWidgetLayout->insertWidget(index, w);
   // Set the Parent
   w->setParent(this);
+
+
+
+  if(index == -1)
+  {
+    index = filterCount() - 1;
+  }
+
+  QString hl = w->getFilter()->getHumanLabel();
+  hl = QString("[") + QString::number(index + 1) + QString("] ") + hl;
+  w->setFilterTitle(hl);
+  if(index == -1)
+  {
+    std::cout << "break" << std::endl;
+  }
 
   /// Now setup all the connections between the various widgets
 

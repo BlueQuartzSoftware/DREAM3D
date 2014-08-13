@@ -48,6 +48,8 @@
 #include <QtGui/QTreeWidgetItem>
 #include <QtGui/QMenu>
 
+#include "DREAM3DLib/Common/FilterManager.h"
+#include "DREAM3DLib/Common/FilterFactory.hpp"
 
 #include "FilterListDockWidget.h"
 
@@ -89,6 +91,15 @@ void PrebuiltPipelinesDockWidget::setupGui()
   filterLibraryTree->clear();
 
   readPipelines();
+
+  QString css(" QToolTip {\
+              border: 2px solid darkkhaki;\
+      padding: 0px;\
+  border-radius: 3px;\
+opacity: 300;\
+}");
+filterLibraryTree->setStyleSheet(css);
+
 }
 
 
@@ -213,6 +224,8 @@ void PrebuiltPipelinesDockWidget::addPipelinesRecursively(QDir currentDir, QTree
     {
       itemWidget->setFlags(itemWidget->flags() | Qt::ItemIsEditable);
     }
+    QString htmlFormattedString = generateHtmlFilterListFromPipelineFile(itemInfo.absoluteFilePath());
+    itemWidget->setToolTip(0, htmlFormattedString);
   }
 }
 
@@ -222,12 +235,14 @@ void PrebuiltPipelinesDockWidget::addPipelinesRecursively(QDir currentDir, QTree
 // -----------------------------------------------------------------------------
 void PrebuiltPipelinesDockWidget::on_filterLibraryTree_itemClicked( QTreeWidgetItem* item, int column )
 {
+#if 0
   QString favoritePath = item->data(0, Qt::UserRole).toString();
   QStringList filterList = generateFilterListFromPipelineFile(favoritePath);
   if(filterList.size() > 0)
   {
     emit filterListGenerated(filterList, false);
   }
+#endif
 }
 
 // -----------------------------------------------------------------------------
@@ -253,7 +268,54 @@ void PrebuiltPipelinesDockWidget::on_filterLibraryTree_itemDoubleClicked( QTreeW
 // -----------------------------------------------------------------------------
 void PrebuiltPipelinesDockWidget::on_filterLibraryTree_currentItemChanged(QTreeWidgetItem* item, QTreeWidgetItem* previous )
 {
-  on_filterLibraryTree_itemClicked(item, 0);
+//  on_filterLibraryTree_itemClicked(item, 0);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString PrebuiltPipelinesDockWidget::generateHtmlFilterListFromPipelineFile(QString path)
+{
+  QSettings prefs(path, QSettings::IniFormat);
+
+  prefs.beginGroup(DREAM3D::Settings::PipelineBuilderGroup);
+  bool ok = false;
+  int filterCount = prefs.value("Number_Filters").toInt(&ok);
+  prefs.endGroup();
+  if (false == ok) {filterCount = 0;}
+
+  QString html;
+  QTextStream ss(&html);
+  ss << "<p><b>Filter Count: " << filterCount << "</b</p>\n";
+
+  ss << "<table cellpadding=\"2\" border=\"1\">\n<tr><th>Index</th><th>Filter Group</th><th>Filter Name</th></tr>\n";
+
+  FilterManager* filtManager = FilterManager::Instance();
+
+  for (int i = 0; i < filterCount; ++i)
+  {
+    QString gName = QString::number(i);
+    prefs.beginGroup(gName);
+    QString item = prefs.value("Filter_Name", "").toString();
+    prefs.endGroup();
+
+    IFilterFactory::Pointer factory = filtManager->getFactoryForFilter(item);
+    if(factory.get() != NULL)
+    {
+      AbstractFilter::Pointer filter = factory->create();
+      if(NULL != filter.get())
+      {
+        AbstractFilter::Pointer filter = factory->create();
+        ss << "<tr><td>" << i<< "</td><td>" <<  filter->getGroupName() << "</td><td>" << item <<  "</td></tr>\n";
+      }
+    }
+    else
+    {
+      ss << "<tr><td>" << i<< "</td><td>UNKNOWN FILTER</td><td>" << item << "</td></tr>\n";
+    }
+  }
+  ss << "</table>";
+  return html;
 }
 
 

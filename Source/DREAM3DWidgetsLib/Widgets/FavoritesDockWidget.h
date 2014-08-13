@@ -103,6 +103,8 @@ class DREAM3DWidgetsLib_EXPORT FavoritesDockWidget : public QDockWidget, private
     virtual QDir findPipelinesDirectory();
     virtual void readPipelines();
     QStringList generateFilterListFromPipelineFile(QString path);
+    QString generateHtmlFilterListFromPipelineFile(QString path);
+
     void populateFilterList(QStringList filterNames);
     bool checkFavoriteTitle(QString favoritePath, QString newFavoriteTitle, QTreeWidgetItem* item);
     QString writeNewFavoriteFilePath(QString newFavoriteTitle, QString favoritePath, QTreeWidgetItem* item);
