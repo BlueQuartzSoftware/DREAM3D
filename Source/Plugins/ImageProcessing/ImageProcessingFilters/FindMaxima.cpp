@@ -89,11 +89,11 @@ class FindMaximaPrivate
       typedef itk::BinaryThresholdImageFilter <ImageType, BoolImageType> ThresholdType;
 
       //find maxima
-      RegionalMaximaType::Pointer maxima = RegionalMaximaType::New();
+      typename RegionalMaximaType::Pointer maxima = RegionalMaximaType::New();
       maxima->SetInput(inputImage);
 
       //threshold
-      ThresholdType::Pointer threshold = ThresholdType::New();
+      typename ThresholdType::Pointer threshold = ThresholdType::New();
       threshold->SetInput(maxima->GetOutput());
       threshold->SetLowerThreshold((PixelType)MinValue);
       threshold->SetUpperThreshold(std::numeric_limits<PixelType>::max());

@@ -130,7 +130,7 @@ void RemoveFlaggedFeatures::preflight()
   emit updateFilterParameters(this);
   dataCheck();
   emit preflightExecuted();
-  if(getErrorCondition() < 0) { return; }
+  if(getErrorCondition() < 0) { setInPreflight(false); return; }
 
   AttributeMatrix::Pointer cellFeatureAttrMat = getDataContainerArray()->getAttributeMatrix(getFlaggedFeaturesArrayPath());
   QVector<bool> activeObjects(cellFeatureAttrMat->getNumTuples(), true);

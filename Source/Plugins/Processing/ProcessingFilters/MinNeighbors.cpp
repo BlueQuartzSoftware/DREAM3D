@@ -153,7 +153,7 @@ void MinNeighbors::preflight()
   dataCheck();
   emit preflightExecuted();
 
-  if(getErrorCondition() < 0) { return; }
+  if(getErrorCondition() < 0) { setInPreflight(false); return; }
 
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(m_NumNeighborsArrayPath.getDataContainerName());
   AttributeMatrix::Pointer cellFeatureAttrMat = m->getAttributeMatrix(m_NumNeighborsArrayPath.getAttributeMatrixName());

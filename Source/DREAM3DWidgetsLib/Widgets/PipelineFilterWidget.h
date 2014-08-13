@@ -88,6 +88,8 @@ class DREAM3DWidgetsLib_EXPORT PipelineFilterWidget : public QFrame, private Ui:
     virtual QString getFilterClassName();
     virtual QString getCompiledLibraryName();
 
+    virtual void setFilterTitle(const QString title);
+
     static QString getOpenDialogLastDirectory() { return m_OpenDialogLastDirectory; }
     static void setOpenDialogLastDirectory(QString val) { m_OpenDialogLastDirectory = val; }
 

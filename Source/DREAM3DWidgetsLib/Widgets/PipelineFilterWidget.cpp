@@ -406,6 +406,14 @@ QString PipelineFilterWidget::getCompiledLibraryName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void PipelineFilterWidget::setFilterTitle(const QString title)
+{
+  filterName->setText(title);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 QString PipelineFilterWidget::getFilterGroup()
 {
   if (NULL != m_Filter.get())

@@ -505,9 +505,9 @@ void PackPrimaryPhases::preflight()
   emit preflightExecuted();
 
   DataContainer::Pointer dc = getDataContainerArray()->getDataContainer(getOutputCellAttributeMatrixName());
-  if(dc == NULL) { return; }
+  if(dc == NULL) { setInPreflight(false); return; }
   AttributeMatrix::Pointer attrMat = dc->getAttributeMatrix(getOutputCellFeatureAttributeMatrixName());
-  if(attrMat == NULL) { return; }
+  if(attrMat == NULL) { setInPreflight(false); return; }
 
   attrMat->removeAttributeArray(m_EquivalentDiametersArrayName);
   attrMat->removeAttributeArray(m_Omega3sArrayName);
@@ -674,6 +674,7 @@ void PackPrimaryPhases::execute()
 
   if (getCancel() == true)
   {
+    std::cout << "PackPrimaryPhases: " << this << std::endl;
     QString ss = QObject::tr("Filter Cancelled.");
     notifyErrorMessage(getHumanLabel(), ss, -1);
     setErrorCondition(-1);

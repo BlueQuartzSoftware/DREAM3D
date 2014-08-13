@@ -156,7 +156,7 @@ void MinSize::preflight()
   emit updateFilterParameters(this);
   dataCheck();
   emit preflightExecuted();
-  if(getErrorCondition() < 0) { return; }
+  if(getErrorCondition() < 0) { setInPreflight(false); return; }
 
   AttributeMatrix::Pointer cellFeatureAttrMat = getDataContainerArray()->getAttributeMatrix(m_NumCellsArrayPath);
   QVector<bool> activeObjects(cellFeatureAttrMat->getNumTuples(), true);

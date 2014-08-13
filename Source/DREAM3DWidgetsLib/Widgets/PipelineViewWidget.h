@@ -99,7 +99,7 @@ class DREAM3DWidgetsLib_EXPORT PipelineViewWidget : public QFrame
      * a DEEP copy of the filter.
      * @return
      */
-    FilterPipeline::Pointer copyFilterPipeline();
+    FilterPipeline::Pointer getCopyOfFilterPipeline();
 
     /**
      * @brief setScrollArea

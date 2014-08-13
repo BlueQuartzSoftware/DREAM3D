@@ -998,7 +998,7 @@ void DREAM3D_UI::on_startPipelineBtn_clicked()
   issuesDockWidget->clearIssues();
 
   // Ask the PipelineViewWidget to create a FilterPipeline Object
-  m_PipelineInFlight = pipelineViewWidget->getFilterPipeline();
+  m_PipelineInFlight = pipelineViewWidget->getCopyOfFilterPipeline();
 
   // Give the pipeline one last chance to preflight and get all the latest values from the GUI
   int err = m_PipelineInFlight->preflightPipeline();

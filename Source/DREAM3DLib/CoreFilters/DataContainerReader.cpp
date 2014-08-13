@@ -166,7 +166,7 @@ void DataContainerReader::preflight()
   DataContainerArray::Pointer dca = getDataContainerArray();
   // Prune out those child items that are NOT selected in the model
   m_DataContainerArrayProxy.removeSelectionsFromDataContainerArray(dca.get());
-
+  setInPreflight(false);
 }
 
 // -----------------------------------------------------------------------------

@@ -223,6 +223,10 @@ void verifyFilterParameters()
           || option->getHumanLabel().compare("Created Information") == 0
           || option->getHumanLabel().compare("Optional Information") == 0)
           { continue; }
+      if(option->getWidgetType().compare(FilterParameterWidgetType::SeparatorWidget) == 0)
+      {
+        continue;
+      }
       QByteArray normType = QString("%1").arg( option->getPropertyName()).toLatin1();
       int index = meta->indexOfProperty(normType);
       if (index < 0)
@@ -325,9 +329,15 @@ void TestPreflight()
       AbstractFilter::Pointer filter = factory->create();
 
       filter->preflight();
+      if(filter->getInPreflight() )
+      {
+        qDebug() << filter->getGroupName() << "/" << filter->getNameOfClass() << "  Prefilight Error";
+      }
+      //DREAM3D_REQUIRE_EQUAL(filter->getInPreflight(), false);
       err = filter->getErrorCondition();
       // An error condition GREATER than ZERO is an anomoly and should be looked at.
-      if (err >= 0) { qDebug() << "Testing Preflight for " << filter->getGroupName() << "/" << filter->getNameOfClass(); }
+      if (err >= 0) { qDebug() << "Anomalous result for Preflight for " << filter->getGroupName() << "/" << filter->getNameOfClass()
+       << " Error Condition = " << filter->getErrorCondition(); }
     }
     factoryMapIter++;
   }

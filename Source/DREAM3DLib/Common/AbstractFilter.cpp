@@ -50,16 +50,16 @@ AbstractFilter::AbstractFilter() :
 // -----------------------------------------------------------------------------
 AbstractFilter::~AbstractFilter()
 {
-//  if(NULL != m_PreviousFilter.get())
-//  std::cout << "~PipelineFilterWidget() m_PreviousFilter " << this  << "  " << m_PreviousFilter->getNameOfClass().toStdString()
-//            << "  " << m_PreviousFilter.use_count() << std::endl;
-//  m_PreviousFilter = AbstractFilter::NullPointer();
+  //  if(NULL != m_PreviousFilter.get())
+  //  std::cout << "~PipelineFilterWidget() m_PreviousFilter " << this  << "  " << m_PreviousFilter->getNameOfClass().toStdString()
+  //            << "  " << m_PreviousFilter.use_count() << std::endl;
+  //  m_PreviousFilter = AbstractFilter::NullPointer();
 
-//  if(NULL != m_NextFilter.get())
-//  std::cout << "~PipelineFilterWidget() m_NextFilter " << this  << "  " << m_NextFilter->getNameOfClass().toStdString()
-//            << "  " << m_NextFilter.use_count() << std::endl;
-//  m_NextFilter = AbstractFilter::NullPointer();
-//  std::cout << "~AbstractFilter" << std::endl;
+  //  if(NULL != m_NextFilter.get())
+  //  std::cout << "~PipelineFilterWidget() m_NextFilter " << this  << "  " << m_NextFilter->getNameOfClass().toStdString()
+  //            << "  " << m_NextFilter.use_count() << std::endl;
+  //  m_NextFilter = AbstractFilter::NullPointer();
+  //  std::cout << "~AbstractFilter" << std::endl;
 }
 
 // -----------------------------------------------------------------------------
@@ -199,29 +199,15 @@ void AbstractFilter::copyFilterParameterInstanceVariables(AbstractFilter* filter
     }
     // Get the property from the current instance of the filter
     QVariant var = property(parameter->getPropertyName().toLatin1().constData());
-    bool ok = filter->setProperty(parameter->getPropertyName().toLatin1().constData(), var);
-    if(false == ok)
+    if(parameter->getReadOnly() == false)
     {
-      QString ss = QString("Error occurred transferring the Filter Parameter '%1' in Filter '%2' to the filter instance. The pipeline may run but the underlying filter will NOT be using the values from the GUI."
-                           " Please report this issue to the developers of this filter.").arg(parameter->getPropertyName()).arg(filter->getHumanLabel());
-      Q_ASSERT_X(ok, __FILE__, ss.toLatin1().constData());
-    }
-#if 0
-    if(parameter->isConditional() == true)
-    {
-      QVariant cond = property(parameter->getConditionalProperty().toLatin1().constData() );
-      ok = filter->setProperty(parameter->getConditionalProperty().toLatin1().constData(), cond);
+      bool ok = filter->setProperty(parameter->getPropertyName().toLatin1().constData(), var);
       if(false == ok)
       {
-        QString ss = QString("%1::newFilterInstance()\nError occurred transferring the Filter Parameter '%2' in Filter '%3' to the filter instance. "
-                             " The filter parameter has a conditional property '%4'. The transfer of this property from the old filter to the new filter failed."
-                             " Please report this issue to the developers of this filter.").arg(filter->getNameOfClass())
-                     .arg(parameter->getPropertyName())
-                     .arg(filter->getHumanLabel())
-                     .arg(parameter->getConditionalProperty());
+        QString ss = QString("Error occurred transferring the Filter Parameter '%1' in Filter '%2' to the filter instance. The pipeline may run but the underlying filter will NOT be using the values from the GUI."
+                             " Please report this issue to the developers of this filter.").arg(parameter->getPropertyName()).arg(filter->getHumanLabel());
         Q_ASSERT_X(ok, __FILE__, ss.toLatin1().constData());
       }
     }
-#endif
   }
 }

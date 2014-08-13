@@ -159,7 +159,7 @@ void CropVolume::dataCheck()
 
   if(NULL == m)
   {
-    QString ss = QObject::tr("The DataContainer was NULL").arg(getXMax()).arg(getXMin());
+    QString ss = QObject::tr("The DataContainer was NULL");
     setErrorCondition(-5549);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;
