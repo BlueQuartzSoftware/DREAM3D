@@ -61,8 +61,10 @@ InsertPrecipitatePhases::InsertPrecipitatePhases() :
   AbstractFilter(),
   m_ClusteringListArrayName(DREAM3D::FeatureData::ClusteringList),
   m_ErrorOutputFile(""),
+  m_PrecipInputFile(""),
   m_CsvOutputFile(""),
   m_PeriodicBoundaries(false),
+  m_HavePrecips(false),
   m_WriteGoalAttributes(false),
   m_InputStatsArrayPath(DREAM3D::Defaults::StatsGenerator, DREAM3D::Defaults::CellEnsembleAttributeMatrixName, DREAM3D::EnsembleData::Statistics),
   m_InputPhaseTypesArrayPath(DREAM3D::Defaults::StatsGenerator, DREAM3D::Defaults::CellEnsembleAttributeMatrixName, DREAM3D::EnsembleData::PhaseTypes),
@@ -142,7 +144,11 @@ void InsertPrecipitatePhases::setupFilterParameters()
   parameters.push_back(FilterParameter::New("FeaturePhases", "FeaturePhasesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeaturePhasesArrayPath(), true, ""));
   parameters.push_back(FilterParameter::New("NumFeatures", "NumFeaturesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getNumFeaturesArrayPath(), true, ""));
   parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
-  QStringList linkedProps("CsvOutputFile");
+  QStringList linkedProps("PrecipInputFile");
+  parameters.push_back(FilterParameter::NewConditional("Already Have Precipitates", "HavePrecips", FilterParameterWidgetType::LinkedBooleanWidget, getHavePrecips(), false, linkedProps));
+  parameters.push_back(FileSystemFilterParameter::New("Precipitate Input File", "PrecipInputFile", FilterParameterWidgetType::InputFileWidget, getPrecipInputFile(), false, "", "*.txt", "Text File"));
+  linkedProps.clear();
+  linkedProps << "CsvOutputFile";
   parameters.push_back(FilterParameter::NewConditional("Write Goal Attributes", "WriteGoalAttributes", FilterParameterWidgetType::LinkedBooleanWidget, getWriteGoalAttributes(), false, linkedProps));
   parameters.push_back(FileSystemFilterParameter::New("Goal Attribute CSV File", "CsvOutputFile", FilterParameterWidgetType::OutputFileWidget, getCsvOutputFile(), false, "", "*.csv", "Comma Separated Data"));
 
@@ -161,6 +167,8 @@ void InsertPrecipitatePhases::readFilterParameters(AbstractFilterParametersReade
   setCellPhasesArrayPath(reader->readDataArrayPath("CellPhasesArrayPath", getCellPhasesArrayPath() ) );
   setFeatureIdsArrayPath(reader->readDataArrayPath("FeatureIdsArrayPath", getFeatureIdsArrayPath() ) );
   setPeriodicBoundaries( reader->readValue("PeriodicBoundaries", getPeriodicBoundaries()) );
+  setHavePrecips( reader->readValue("HavePrecips", getHavePrecips()) );
+  setPrecipInputFile( reader->readString( "PrecipInputFile", getPrecipInputFile() ) );
   setWriteGoalAttributes( reader->readValue("WriteGoalAttributes", getWriteGoalAttributes()) );
   setCsvOutputFile( reader->readString( "CsvOutputFile", getCsvOutputFile() ) );
   reader->closeFilterGroup();
@@ -181,6 +189,10 @@ int InsertPrecipitatePhases::writeFilterParameters(AbstractFilterParametersWrite
   DREAM3D_FILTER_WRITE_PARAMETER(CellPhasesArrayPath)
   DREAM3D_FILTER_WRITE_PARAMETER(FeatureIdsArrayPath)
   DREAM3D_FILTER_WRITE_PARAMETER(PeriodicBoundaries)
+  DREAM3D_FILTER_WRITE_PARAMETER(HavePrecips)
+  DREAM3D_FILTER_WRITE_PARAMETER(WriteGoalAttributes)
+  DREAM3D_FILTER_WRITE_PARAMETER(PrecipInputFile)
+  DREAM3D_FILTER_WRITE_PARAMETER(CsvOutputFile)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
@@ -313,6 +325,13 @@ void InsertPrecipitatePhases::preflight()
     setErrorCondition(-387);
   }
 
+  if(m_HavePrecips == true && getPrecipInputFile().isEmpty() == true)
+  {
+    QString ss = QObject::tr(": The precipitate file must be set before executing this filter.");
+    notifyErrorMessage(getHumanLabel(), ss, -1);
+    setErrorCondition(-1);
+  }
+
   AttributeMatrix::Pointer attrMat = getDataContainerArray()->getAttributeMatrix(getFeaturePhasesArrayPath());
   if(attrMat == NULL) { setInPreflight(false); return; }
 
@@ -337,11 +356,19 @@ void InsertPrecipitatePhases::execute()
   dataCheck();
   if(getErrorCondition() < 0) { return; }
 
-  notifyStatusMessage(getHumanLabel(), "Packing Precipitates - Generating and Placing Precipitates");
-  // this initializes the arrays to hold the details of the locations of all of the features during packing
-  Int32ArrayType::Pointer featureOwnersPtr = initialize_packinggrid();
+  if(m_HavePrecips == false)
+  {
+    notifyStatusMessage(getHumanLabel(), "Packing Precipitates - Generating and Placing Precipitates");
+    // this initializes the arrays to hold the details of the locations of all of the features during packing
+    Int32ArrayType::Pointer featureOwnersPtr = initialize_packinggrid();
 
-  place_precipitates(featureOwnersPtr);
+    place_precipitates(featureOwnersPtr);
+  }
+
+  if(m_HavePrecips == true)
+  {
+    load_precipitates();
+  }
 
   notifyStatusMessage(getHumanLabel(), "Packing Precipitates - Assigning Voxels");
   assign_voxels();
@@ -368,6 +395,65 @@ void InsertPrecipitatePhases::execute()
 
   // If there is an error set this to something negative and also set a message
   notifyStatusMessage(getHumanLabel(), "InsertPrecipitatePhases Completed");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void  InsertPrecipitatePhases::load_precipitates()
+{
+
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(m_FeatureIdsArrayPath.getDataContainerName());
+  AttributeMatrix::Pointer cellFeatureAttrMat = getDataContainerArray()->getAttributeMatrix(getFeaturePhasesArrayPath());
+
+  std::ifstream inFile;
+  inFile.open(getPrecipInputFile().toLatin1().data(), std::ios_base::binary);
+  if(!inFile)
+  {
+    QString ss = QObject::tr("Failed to open: %1").arg(getPrecipInputFile());
+    setErrorCondition(-1);
+    notifyErrorMessage(getHumanLabel(), ss, -1);
+  }
+  int numPrecips;
+  inFile >> numPrecips;
+  if (0 == numPrecips)
+  {
+    notifyErrorMessage(getHumanLabel(), "The number of precipitates is Zero and should be greater than Zero", -600);
+  }
+
+  firstPrecipitateFeature = cellFeatureAttrMat->getNumTuples();
+
+  QVector<size_t> tDims(1, firstPrecipitateFeature + numPrecips);
+  cellFeatureAttrMat->setTupleDimensions(tDims);
+  updateFeatureInstancePointers();
+
+  int phase;
+  float xC, yC, zC;
+  float axisA, axisB, axisC;
+  float vol, eqDiam;
+  float omega3;
+  float phi1, PHI, phi2;
+  size_t currentFeature = firstPrecipitateFeature;
+  for(int i = 0; i < numPrecips; i++)
+  {
+    inFile >> phase >> xC >> yC >> zC >> axisA >> axisB >> axisC >> omega3 >> phi1 >> PHI >> phi2;
+    vol = (4.0/3.0) * DREAM3D::Constants::k_Pi * axisA * axisB * axisC;
+    eqDiam = 2.0*powf((vol * (3.0/4.0) * (DREAM3D::Constants::k_1OverPi)), (1.0/3.0));
+    m_Centroids[3* currentFeature + 0] = xC;
+    m_Centroids[3* currentFeature + 1] = yC;
+    m_Centroids[3* currentFeature + 2] = zC;
+    m_Volumes[currentFeature] = vol;
+    m_EquivalentDiameters[currentFeature] = eqDiam;
+    m_AxisLengths[3 * currentFeature + 0] = axisA/axisA;
+    m_AxisLengths[3 * currentFeature + 1] = axisB/axisA;
+    m_AxisLengths[3 * currentFeature + 2] = axisC/axisA;
+    m_AxisEulerAngles[3 * currentFeature + 0] = phi1;
+    m_AxisEulerAngles[3 * currentFeature + 1] = PHI;
+    m_AxisEulerAngles[3 * currentFeature + 2] = phi2;
+    m_Omega3s[currentFeature] = omega3;
+    m_FeaturePhases[currentFeature] = phase;
+    currentFeature++;
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -885,6 +971,9 @@ void InsertPrecipitatePhases::generate_precipitate(int phase, int seed, Precip* 
   precip->m_FeaturePhases = phase;
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void InsertPrecipitatePhases::transfer_attributes(int gnum, Precip* precip)
 {
   m_Volumes[gnum] = precip->m_Volumes;
@@ -899,6 +988,9 @@ void InsertPrecipitatePhases::transfer_attributes(int gnum, Precip* precip)
   m_FeaturePhases[gnum] = precip->m_FeaturePhases;
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void InsertPrecipitatePhases::move_precipitate(size_t gnum, float xc, float yc, float zc)
 {
   int occolumn, ocrow, ocplane;
@@ -1014,6 +1106,10 @@ float InsertPrecipitatePhases::check_clusteringerror(int gadd, int gremove)
   clusteringerror = bhattdist;
   return clusteringerror;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void InsertPrecipitatePhases::compare_1Ddistributions(std::vector<float> array1, std::vector<float> array2, float& bhattdist)
 {
   bhattdist = 0;
@@ -1022,6 +1118,10 @@ void InsertPrecipitatePhases::compare_1Ddistributions(std::vector<float> array1,
     bhattdist = bhattdist + sqrt((array1[i] * array2[i]));
   }
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void InsertPrecipitatePhases::compare_2Ddistributions(std::vector<std::vector<float> > array1, std::vector<std::vector<float> > array2, float& bhattdist)
 {
   bhattdist = 0;
@@ -1034,6 +1134,9 @@ void InsertPrecipitatePhases::compare_2Ddistributions(std::vector<std::vector<fl
   }
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void InsertPrecipitatePhases::compare_3Ddistributions(std::vector<std::vector<std::vector<float> > > array1, std::vector<std::vector<std::vector<float> > > array2, float& bhattdist)
 {
   bhattdist = 0;
@@ -1229,6 +1332,9 @@ float InsertPrecipitatePhases::check_fillingerror(int gadd, int gremove, Int32Ar
   return fillingerror;
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void InsertPrecipitatePhases::insert_precipitate(size_t gnum)
 {
   DREAM3D_RANDOMNG_NEW()
@@ -1267,6 +1373,7 @@ void InsertPrecipitatePhases::insert_precipitate(size_t gnum)
   float PHI = m_AxisEulerAngles[3 * gnum + 1];
   float phi2 = m_AxisEulerAngles[3 * gnum + 2];
   float ga[3][3];
+  float gaT[3][3];
   OrientationMath::EulertoMat(phi1, PHI, phi2, ga);
   xc = m_Centroids[3 * gnum];
   yc = m_Centroids[3 * gnum + 1];
@@ -1302,7 +1409,8 @@ void InsertPrecipitatePhases::insert_precipitate(size_t gnum)
         coords[0] = coords[0] - xc;
         coords[1] = coords[1] - yc;
         coords[2] = coords[2] - zc;
-        MatrixMath::Multiply3x3with3x1(ga, coords, coordsRotated);
+        MatrixMath::Transpose3x3(ga, gaT);
+        MatrixMath::Multiply3x3with3x1(gaT, coords, coordsRotated);
         float axis1comp = coordsRotated[0] / radcur1;
         float axis2comp = coordsRotated[1] / radcur2;
         float axis3comp = coordsRotated[2] / radcur3;
@@ -1318,6 +1426,9 @@ void InsertPrecipitatePhases::insert_precipitate(size_t gnum)
   }
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void InsertPrecipitatePhases::assign_voxels()
 {
   notifyStatusMessage(getHumanLabel(), "Assigning Voxels");
@@ -1400,6 +1511,7 @@ void InsertPrecipitatePhases::assign_voxels()
     float PHI = m_AxisEulerAngles[3 * i + 1];
     float phi2 = m_AxisEulerAngles[3 * i + 2];
     float ga[3][3];
+    float gaT[3][3];
     OrientationMath::EulertoMat(phi1, PHI, phi2, ga);
     column = static_cast<size_t>( (xc - (xRes / 2.0f)) / xRes );
     row = static_cast<size_t>( (yc - (yRes / 2.0f)) / yRes );
@@ -1461,7 +1573,8 @@ void InsertPrecipitatePhases::assign_voxels()
           coords[0] = coords[0] - xc;
           coords[1] = coords[1] - yc;
           coords[2] = coords[2] - zc;
-          MatrixMath::Multiply3x3with3x1(ga, coords, coordsRotated);
+          MatrixMath::Transpose3x3(ga, gaT);
+          MatrixMath::Multiply3x3with3x1(gaT, coords, coordsRotated);
           float axis1comp = coordsRotated[0] / radcur1;
           float axis2comp = coordsRotated[1] / radcur2;
           float axis3comp = coordsRotated[2] / radcur3;
@@ -1499,6 +1612,9 @@ void InsertPrecipitatePhases::assign_voxels()
   updateFeatureInstancePointers();
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void InsertPrecipitatePhases::assign_gaps()
 {
   notifyStatusMessage(getHumanLabel(), "Assigning Gaps");
@@ -1680,6 +1796,10 @@ void InsertPrecipitatePhases::assign_gaps()
     if(m_FeatureIds[i] > 0) { m_CellPhases[i] = m_FeaturePhases[m_FeatureIds[i]]; }
   }
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void InsertPrecipitatePhases::cleanup_features()
 {
   notifyStatusMessage(getHumanLabel(), "Cleaning Up Features");
@@ -1876,7 +1996,9 @@ Int32ArrayType::Pointer  InsertPrecipitatePhases::initialize_packinggrid()
   return featureOwnersPtr;
 }
 
-
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 float InsertPrecipitatePhases::find_xcoord(long long int index)
 {
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(m_FeatureIdsArrayPath.getDataContainerName());
@@ -1884,6 +2006,10 @@ float InsertPrecipitatePhases::find_xcoord(long long int index)
   float x = m->getXRes() * float(index % m->getXPoints());
   return x;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 float InsertPrecipitatePhases::find_ycoord(long long int index)
 {
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(m_FeatureIdsArrayPath.getDataContainerName());
@@ -1891,6 +2017,10 @@ float InsertPrecipitatePhases::find_ycoord(long long int index)
   float y = m->getYRes() * float((index / m->getXPoints()) % m->getYPoints());
   return y;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 float InsertPrecipitatePhases::find_zcoord(long long int index)
 {
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(m_FeatureIdsArrayPath.getDataContainerName());
@@ -1898,6 +2028,10 @@ float InsertPrecipitatePhases::find_zcoord(long long int index)
   float z = m->getZRes() * float(index / (m->getXPoints() * m->getYPoints()));
   return z;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void InsertPrecipitatePhases::write_goal_attributes()
 {
   int err = 0;

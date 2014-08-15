@@ -134,12 +134,14 @@ class PackPrimaryPhases : public AbstractFilter
     DREAM3D_FILTER_PARAMETER(DataArrayPath, InputShapeTypesArrayPath)
     Q_PROPERTY(DataArrayPath InputShapeTypesArrayPath READ getInputShapeTypesArrayPath WRITE setInputShapeTypesArrayPath)
 
+    DREAM3D_FILTER_PARAMETER(bool, HaveFeatures)
+    Q_PROPERTY(bool HaveFeatures READ getHaveFeatures WRITE setHaveFeatures)
+    DREAM3D_FILTER_PARAMETER(QString, FeatureInputFile)
+    Q_PROPERTY(QString FeatureInputFile READ getFeatureInputFile WRITE setFeatureInputFile)
     DREAM3D_FILTER_PARAMETER(QString, CsvOutputFile)
     Q_PROPERTY(QString CsvOutputFile READ getCsvOutputFile WRITE setCsvOutputFile)
-
     DREAM3D_FILTER_PARAMETER(bool, PeriodicBoundaries)
     Q_PROPERTY(bool PeriodicBoundaries READ getPeriodicBoundaries WRITE setPeriodicBoundaries)
-
     DREAM3D_FILTER_PARAMETER(bool, WriteGoalAttributes)
     Q_PROPERTY(bool WriteGoalAttributes READ getWriteGoalAttributes WRITE setWriteGoalAttributes)
 
@@ -183,9 +185,12 @@ class PackPrimaryPhases : public AbstractFilter
   protected:
     PackPrimaryPhases();
 
-    void initialize_packinggrid();
+    Int32ArrayType::Pointer initialize_packinggrid();
 
+    void place_features(Int32ArrayType::Pointer featureOwnersPtr);
     void generate_feature(int phase, int Seed, Feature* feature, unsigned int shapeclass);
+    void load_features();
+
 
     void transfer_attributes(int gnum, Feature* feature);
     void insert_feature(size_t featureNum);
@@ -196,7 +201,7 @@ class PackPrimaryPhases : public AbstractFilter
     void determine_neighbors(size_t featureNum, int add);
     float check_neighborhooderror(int gadd, int gremove);
 
-    float check_fillingerror(int gadd, int gremove, Int32ArrayType::Pointer featureOwnersPtr, BoolArrayType::Pointer exclusionZonesPtr);
+    float check_fillingerror(int gadd, int gremove, Int32ArrayType::Pointer featureOwnersPtr, BoolArrayType::Pointer exclusionZonesPtr, std::vector<size_t> &availablePoints);
     void assign_voxels();
     void assign_gaps_only();
     void cleanup_features();

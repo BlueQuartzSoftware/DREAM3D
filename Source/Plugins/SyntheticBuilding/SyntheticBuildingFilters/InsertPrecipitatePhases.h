@@ -89,6 +89,10 @@ class InsertPrecipitatePhases : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(ErrorOutputFile)
     DREAM3D_FILTER_PARAMETER(QString, CsvOutputFile)
     Q_PROPERTY(QString CsvOutputFile READ getCsvOutputFile WRITE setCsvOutputFile)
+    DREAM3D_FILTER_PARAMETER(bool, HavePrecips)
+    Q_PROPERTY(bool HavePrecips READ getHavePrecips WRITE setHavePrecips)
+    DREAM3D_FILTER_PARAMETER(QString, PrecipInputFile)
+    Q_PROPERTY(QString PrecipInputFile READ getPrecipInputFile WRITE setPrecipInputFile)
     DREAM3D_FILTER_PARAMETER(bool, PeriodicBoundaries)
     Q_PROPERTY(bool PeriodicBoundaries READ getPeriodicBoundaries WRITE setPeriodicBoundaries)
     DREAM3D_FILTER_PARAMETER(bool, WriteGoalAttributes)
@@ -179,6 +183,7 @@ class InsertPrecipitatePhases : public AbstractFilter
 
     void place_precipitates(Int32ArrayType::Pointer featureOwnersPtr);
     void generate_precipitate(int phase, int Seed, Precip* precip, unsigned int shapeclass, OrientationOps::Pointer OrthoOps);
+    void load_precipitates();
 
     void transfer_attributes(int gnum, Precip* precip);
     void insert_precipitate(size_t featureNum);
