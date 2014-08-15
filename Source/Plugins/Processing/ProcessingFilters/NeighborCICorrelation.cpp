@@ -178,8 +178,22 @@ void NeighborCICorrelation::execute()
   {
     keepGoing = false;
     count = 0;
+
+    if(getCancel()) { break; }
+
+    DimType progIncrement = totalPoints / 100;
+    DimType prog = 1;
+    int progressInt = 0;
     for (int64_t i = 0; i < totalPoints; i++)
     {
+      if (i > prog)
+      {
+        progressInt = ((float)i / totalPoints) * 100.0;
+        QString ss = QObject::tr("|| Processing Data Current Loop (%1) Progress: %2% Complete").arg(count).arg(progressInt);
+        notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
+        prog = prog + progIncrement;
+      }
+
       if(m_ConfidenceIndex[i] < m_MinConfidence)
       {
         column = i % dims[0];
@@ -210,16 +224,29 @@ void NeighborCICorrelation::execute()
     }
     QString attrMatName = m_ConfidenceIndexArrayPath.getAttributeMatrixName();
     QList<QString> voxelArrayNames = m->getAttributeMatrix(attrMatName)->getAttributeArrayNameList();
-    for (int64_t j = 0; j < totalPoints; j++)
+
+    if(getCancel()) { break; }
+
+    progIncrement = totalPoints / 100;
+    prog = 1;
+    progressInt = 0;
+    for (int64_t i = 0; i < totalPoints; i++)
     {
-      neighbor = bestNeighbor[j];
+      if (i > prog)
+      {
+        progressInt = ((float)i / totalPoints) * 100.0;
+        QString ss = QObject::tr("|| Transferring Cell Data: %1% Complete").arg(progressInt);
+        notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
+        prog = prog + progIncrement;
+      }
+
+      neighbor = bestNeighbor[i];
       if (neighbor != -1)
       {
         for(QList<QString>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
         {
-          QString name = *iter;
           IDataArray::Pointer p = m->getAttributeMatrix(attrMatName)->getAttributeArray(*iter);
-          p->copyTuple(neighbor, j);
+          p->copyTuple(neighbor, i);
         }
       }
     }
@@ -227,7 +254,7 @@ void NeighborCICorrelation::execute()
   }
 
 // If there is an error set this to something negative and also set a message
-  notifyStatusMessage(getHumanLabel(), "Filling Bad Data Complete");
+  notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
 // -----------------------------------------------------------------------------

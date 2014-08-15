@@ -129,14 +129,12 @@ FilterManager::Collection FilterManager::getFactories(const QString& groupName)
 FilterManager::Collection FilterManager::getFactories(const QString& groupName, const QString& subGroupName)
 {
   FilterManager::Collection groupFactories;
-
-
-  for (FilterManager::Collection::iterator factory = m_Factories.begin(); factory != m_Factories.end(); ++factory)
+  for (FilterManager::Collection::iterator factoryIter = m_Factories.begin(); factoryIter != m_Factories.end(); ++factoryIter)
   {
-    IFilterFactory::Pointer filterFactory = factory.value();
-    if ( NULL != filterFactory.get() && factory.value()->getFilterGroup().compare(groupName) == 0 && factory.value()->getFilterSubGroup().compare(subGroupName) == 0)
+    IFilterFactory::Pointer filterFactory = factoryIter.value();
+    if ( NULL != filterFactory.get() && factoryIter.value()->getFilterGroup().compare(groupName) == 0 && factoryIter.value()->getFilterSubGroup().compare(subGroupName) == 0)
     {
-      groupFactories[factory.key()] = factory.value();
+      groupFactories[factoryIter.key()] = factoryIter.value();
     }
   }
   return groupFactories;

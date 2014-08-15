@@ -33,8 +33,8 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef _QFILTERLIBRARYWIDGET_H_
-#define _QFILTERLIBRARYWIDGET_H_
+#ifndef _QFilterLibraryDockWidget_H_
+#define _QFilterLibraryDockWidget_H_
 
 
 #include <QtGui/QDockWidget>
@@ -89,6 +89,7 @@ class DREAM3DWidgetsLib_EXPORT FilterLibraryDockWidget : public QDockWidget, pri
 
   signals:
 
+    void filterItemDoubleClicked(const QString& filterName);
 
 
     void filterListGenerated(const QStringList& filterList, bool sort);

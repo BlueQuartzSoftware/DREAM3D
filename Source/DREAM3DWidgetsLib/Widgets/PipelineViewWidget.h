@@ -243,6 +243,11 @@ class DREAM3DWidgetsLib_EXPORT PipelineViewWidget : public QFrame
      */
     void on_customContextMenuRequested(const QPoint& pos);
 
+    /**
+     * @brief reindexWidgetTitles
+     */
+    void reindexWidgetTitles();
+
   signals:
     void addPlaceHolderFilter(QPoint p);
     void removePlaceHolderFilter();

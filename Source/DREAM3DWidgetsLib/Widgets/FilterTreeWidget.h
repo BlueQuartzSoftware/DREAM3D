@@ -34,24 +34,24 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _FilterListWidget_H_
-#define _FilterListWidget_H_
+#ifndef _FilterTreeWidget_H_
+#define _FilterTreeWidget_H_
 
 #include <QtCore/QPoint>
-#include <QtGui/QListWidget>
+#include <QtGui/QTreeWidget>
 
 
 #include "DREAM3DWidgetsLib/DREAM3DWidgetsLib.h"
 /*
  *
  */
-class DREAM3DWidgetsLib_EXPORT FilterListWidget: public QListWidget
+class DREAM3DWidgetsLib_EXPORT FilterTreeWidget: public QTreeWidget
 {
     Q_OBJECT
 
   public:
-    FilterListWidget(QWidget* parent = 0);
-    virtual ~FilterListWidget();
+    FilterTreeWidget(QWidget* parent = 0);
+    virtual ~FilterTreeWidget();
 
   protected:
     void mousePressEvent(QMouseEvent* event);
@@ -66,5 +66,5 @@ class DREAM3DWidgetsLib_EXPORT FilterListWidget: public QListWidget
     QPoint startPos;
 };
 
-#endif /* _FilterListWidget_H_ */
+#endif /* _FilterTreeWidget_H_ */
 

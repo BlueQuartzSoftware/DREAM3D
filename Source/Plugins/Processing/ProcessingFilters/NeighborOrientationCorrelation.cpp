@@ -118,13 +118,13 @@ int NeighborOrientationCorrelation::writeFilterParameters(AbstractFilterParamete
 {
   writer->openFilterGroup(this, index);
   DREAM3D_FILTER_WRITE_PARAMETER(QuatsArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(CrystalStructuresArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(CellPhasesArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(ConfidenceIndexArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(MisorientationTolerance)
-  DREAM3D_FILTER_WRITE_PARAMETER(MinConfidence)
-  DREAM3D_FILTER_WRITE_PARAMETER(Level)
-  writer->closeFilterGroup();
+      DREAM3D_FILTER_WRITE_PARAMETER(CrystalStructuresArrayPath)
+      DREAM3D_FILTER_WRITE_PARAMETER(CellPhasesArrayPath)
+      DREAM3D_FILTER_WRITE_PARAMETER(ConfidenceIndexArrayPath)
+      DREAM3D_FILTER_WRITE_PARAMETER(MisorientationTolerance)
+      DREAM3D_FILTER_WRITE_PARAMETER(MinConfidence)
+      DREAM3D_FILTER_WRITE_PARAMETER(Level)
+      writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
 
@@ -195,8 +195,6 @@ void NeighborOrientationCorrelation::execute()
     static_cast<DimType>(udims[2]),
   };
 
-  int currentLevel = 6;
-
   size_t count = 1;
   int best;
   int good = 1;
@@ -204,7 +202,6 @@ void NeighborOrientationCorrelation::execute()
   int neighbor;
   int neighbor2;
   DimType column, row, plane;
-
 
   int neighpoints[6];
   neighpoints[0] = static_cast<int>(-dims[0] * dims[1]);
@@ -225,10 +222,25 @@ void NeighborOrientationCorrelation::execute()
   QVector<int> bestNeighbor(totalPoints, -1);
   QuatF* quats = reinterpret_cast<QuatF*>(m_Quats);
 
-  while(currentLevel > m_Level)
+  int startLevel = 6;
+  for(int currentLevel = startLevel; currentLevel > m_Level; currentLevel--)
   {
+    if(getCancel()) { break; }
+
+    DimType progIncrement = totalPoints / 100;
+    DimType prog = 1;
+    int progressInt = 0;
     for (int64_t i = 0; i < totalPoints; i++)
     {
+
+      if (i > prog)
+      {
+        progressInt = ((float)i / totalPoints) * 100.0;
+        QString ss = QObject::tr("|| Level %1 of %2: Processing Data %3%").arg(startLevel-currentLevel).arg(startLevel - m_Level).arg(progressInt);
+        notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
+        prog = prog + progIncrement;
+      }
+
       if(m_ConfidenceIndex[i] < m_MinConfidence)
       {
         count = 0;
@@ -310,24 +322,36 @@ void NeighborOrientationCorrelation::execute()
     }
     QString attrMatName = m_ConfidenceIndexArrayPath.getAttributeMatrixName();
     QList<QString> voxelArrayNames = m->getAttributeMatrix(attrMatName)->getAttributeArrayNameList();
-    for (int64_t j = 0; j < totalPoints; j++)
+
+    if(getCancel()) { break; }
+
+    progIncrement = totalPoints / 100;
+    prog = 1;
+    progressInt = 0;
+    for (int64_t i = 0; i < totalPoints; i++)
     {
-      neighbor = bestNeighbor[j];
+      if (i > prog)
+      {
+        progressInt = ((float)i / totalPoints) * 100.0;
+        QString ss = QObject::tr("|| Level %1 of %2: Copying Data %3%").arg(startLevel-currentLevel).arg(startLevel - m_Level).arg(progressInt);
+        notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
+        prog = prog + progIncrement;
+      }
+      neighbor = bestNeighbor[i];
       if (neighbor != -1)
       {
         for(QList<QString>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
         {
-          QString name = *iter;
           IDataArray::Pointer p = m->getAttributeMatrix(attrMatName)->getAttributeArray(*iter);
-          p->copyTuple(neighbor, j);
+          p->copyTuple(neighbor, i);
         }
       }
     }
     currentLevel = currentLevel - 1;
   }
 
-// If there is an error set this to something negative and also set a message
-  notifyStatusMessage(getHumanLabel(), "Filling Bad Data Complete");
+  // If there is an error set this to something negative and also set a message
+  notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
 // -----------------------------------------------------------------------------

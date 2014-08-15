@@ -207,9 +207,9 @@ class PackPrimaryPhases : public AbstractFilter
     void cleanup_features();
     void write_goal_attributes();
 
-    void compare_1Ddistributions(QVector<float>, QVector<float>, float& sqrerror);
-    void compare_2Ddistributions(QVector<QVector<float> >, QVector<QVector<float> >, float& sqrerror);
-    void compare_3Ddistributions(QVector<QVector<QVector<float> > >, QVector<QVector<QVector<float> > >, float& sqrerror);
+    void compare_1Ddistributions(std::vector<float>, std::vector<float>, float& sqrerror);
+    void compare_2Ddistributions(std::vector<std::vector<float> >, std::vector<std::vector<float> >, float& sqrerror);
+    void compare_3Ddistributions(std::vector<std::vector<std::vector<float> > >, std::vector<std::vector<std::vector<float> > >, float& sqrerror);
 
     int writeVtkFile(int32_t* featureOwners, bool* exclusionZonesPtr);
     int estimate_numfeatures(int xpoints, int ypoints, int zpoints, float xres, float yres, float zres);
@@ -249,10 +249,10 @@ class PackPrimaryPhases : public AbstractFilter
 
     OrthoRhombicOps::Pointer m_OrthoOps;
 
-    QVector<QVector<int> > columnlist;
-    QVector<QVector<int> > rowlist;
-    QVector<QVector<int> > planelist;
-    QVector<QVector<float> > ellipfunclist;
+    std::vector<std::vector<int> > columnlist;
+    std::vector<std::vector<int> > rowlist;
+    std::vector<std::vector<int> > planelist;
+    std::vector<std::vector<float> > ellipfunclist;
 
     unsigned long long int m_Seed;
 
@@ -271,20 +271,20 @@ class PackPrimaryPhases : public AbstractFilter
     int m_PackingPoints[3];
     int m_TotalPackingPoints;
 
-    QVector<QVector<float> > featuresizedist;
-    QVector<QVector<float> > simfeaturesizedist;
-    QVector<QVector<QVector<float> > > neighbordist;
-    QVector<QVector<QVector<float> > > simneighbordist;
+    std::vector<std::vector<float> > featuresizedist;
+    std::vector<std::vector<float> > simfeaturesizedist;
+    std::vector<std::vector<std::vector<float> > > neighbordist;
+    std::vector<std::vector<std::vector<float> > > simneighbordist;
 
-    QVector<float> featuresizediststep;
-    QVector<float> neighbordiststep;
+    std::vector<float> featuresizediststep;
+    std::vector<float> neighbordiststep;
 
-    QVector<int> newnames;
-    QVector<int> packqualities;
-    QVector<int> gsizes;
+    std::vector<int> newnames;
+    std::vector<int> packqualities;
+    std::vector<int> gsizes;
 
-    QVector<int> primaryphases;
-    QVector<float> primaryphasefractions;
+    std::vector<int> primaryphases;
+    std::vector<float> primaryphasefractions;
 
     float fillingerror, oldfillingerror;
     float currentneighborhooderror, oldneighborhooderror;

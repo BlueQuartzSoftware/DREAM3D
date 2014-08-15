@@ -451,12 +451,15 @@ void DREAM3D_UI::setupGui()
   pipelineViewWidget->setScrollArea(pipelineViewScrollArea);
 
   // Make the connections between the gui elements
-  filterLibraryDockWidget->connectFilterList(filterListDockWidget);
-  favoritesDockWidget->connectFilterList(filterListDockWidget);
-  prebuiltPipelinesDockWidget->connectFilterList(filterListDockWidget);
+//  filterLibraryDockWidget->connectFilterList(filterListDockWidget);
+//  favoritesDockWidget->connectFilterList(filterListDockWidget);
+//  prebuiltPipelinesDockWidget->connectFilterList(filterListDockWidget);
 
   // Hook up the signals from the various docks to the PipelineViewWidget that will either add a filter
   // or load an entire pipeline into the view
+  connect(filterLibraryDockWidget, SIGNAL(filterItemDoubleClicked(const QString&)),
+          pipelineViewWidget, SLOT(addFilter(const QString&)) );
+
   connect(filterListDockWidget, SIGNAL(filterItemDoubleClicked(const QString&)),
           pipelineViewWidget, SLOT(addFilter(const QString&)) );
 
@@ -471,7 +474,6 @@ void DREAM3D_UI::setupGui()
 
   connect(favoritesDockWidget, SIGNAL(pipelineFileActivated(QString, QSettings::Format, bool)),
           this, SLOT(pipelineFileLoaded(QString, QSettings::Format, bool)) );
-
 
   connect(favoritesDockWidget, SIGNAL(pipelineNeedsToBeSaved(const QString&, const QString&)),
           pipelineViewWidget, SLOT(savePipeline(const QString&, const QString&)) );

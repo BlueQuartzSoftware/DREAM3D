@@ -62,6 +62,7 @@ InitializeSyntheticVolume::InitializeSyntheticVolume() :
   m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
   m_InputStatsArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellEnsembleAttributeMatrixName, DREAM3D::EnsembleData::Statistics),
   m_InputPhaseTypesArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellEnsembleAttributeMatrixName, DREAM3D::EnsembleData::PhaseTypes),
+  m_EstimateNumberOfFeatures(false),
   m_EstimatedPrimaryFeatures(0)
 {
   m_Dimensions.x = 128;
@@ -102,10 +103,20 @@ void InitializeSyntheticVolume::setupFilterParameters()
   parameters.push_back(FilterParameter::New("Dimensions", "Dimensions", FilterParameterWidgetType::IntVec3Widget, getDimensions(), false, "Voxels"));
   parameters.push_back(FilterParameter::New("Resolution", "Resolution", FilterParameterWidgetType::FloatVec3Widget, getResolution(), false, "Microns"));
   parameters.push_back(FilterParameter::New("Origin", "Origin", FilterParameterWidgetType::FloatVec3Widget, getOrigin(), false, "Microns"));
-//  parameters.push_back(FilterParameter::New("Estimated Primary Features", "EstimatedPrimaryFeatures", FilterParameterWidgetType::PreflightUpdatedValueWidget, getEstimatedPrimaryFeatures(), false, ""));
-//  parameters.back()->setReadOnly(true);
+
+  QStringList linkedProps("EstimatedPrimaryFeatures");
+  linkedProps << "InputStatsFile";
+  parameters.push_back(FilterParameter::New("Optional Information", "", FilterParameterWidgetType::SeparatorWidget, "", false));
+
+  parameters.push_back(FilterParameter::NewConditional("Estimate Number of Features", "EstimateNumberOfFeatures", FilterParameterWidgetType::LinkedBooleanWidget, getEstimateNumberOfFeatures(), false, linkedProps));
+  parameters.push_back(FileSystemFilterParameter::New("Input Stats File", "InputStatsFile", FilterParameterWidgetType::InputFileWidget, getInputStatsFile(), false, "", "*.dream3d"));
+  parameters.push_back(FilterParameter::New("Estimated Primary Features", "EstimatedPrimaryFeatures", FilterParameterWidgetType::PreflightUpdatedValueWidget, getEstimatedPrimaryFeatures(), false, ""));
+  parameters.back()->setReadOnly(true);
   setFilterParameters(parameters);
 }
+
+// -----------------------------------------------------------------------------
+//
 // -----------------------------------------------------------------------------
 void InitializeSyntheticVolume::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
@@ -117,6 +128,9 @@ void InitializeSyntheticVolume::readFilterParameters(AbstractFilterParametersRea
   setOrigin( reader->readFloatVec3("Origin", getOrigin() ) );
   setInputStatsArrayPath(reader->readDataArrayPath("InputStatsArrayPath", getInputStatsArrayPath() ) );
   setInputPhaseTypesArrayPath(reader->readDataArrayPath("InputPhaseTypesArrayPath", getInputPhaseTypesArrayPath() ) );
+  setInputStatsFile(reader->readString("InputStatsFile", getInputStatsFile() ) );
+  setEstimateNumberOfFeatures(reader->readValue("EstimateNumberOfFeatures", getEstimateNumberOfFeatures() ) );
+
   reader->closeFilterGroup();
 }
 
@@ -133,6 +147,8 @@ int InitializeSyntheticVolume::writeFilterParameters(AbstractFilterParametersWri
   DREAM3D_FILTER_WRITE_PARAMETER(Origin)
   DREAM3D_FILTER_WRITE_PARAMETER(InputStatsArrayPath)
   DREAM3D_FILTER_WRITE_PARAMETER(InputPhaseTypesArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(InputStatsFile);
+  DREAM3D_FILTER_WRITE_PARAMETER(EstimateNumberOfFeatures);
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
@@ -173,7 +189,10 @@ void InitializeSyntheticVolume::dataCheck()
   StatsDataArray::Pointer statsPtr = getDataContainerArray()->getPrereqArrayFromPath<StatsDataArray, AbstractFilter>(this, getInputStatsArrayPath(), statsDims);
   if(getErrorCondition() < 0) { return; }
 
-  // m_EstimatedPrimaryFeatures = estimateNumFeatures(m_Dimensions, m_Resolution);
+  if(m_EstimateNumberOfFeatures)
+  {
+    m_EstimatedPrimaryFeatures = estimateNumFeatures(m_Dimensions, m_Resolution);
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -239,13 +258,7 @@ int InitializeSyntheticVolume::estimateNumFeatures(IntVec3_t dims, FloatVec3_t r
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return 0;
   }
-  if( !phaseType->isAllocated())
-  {
-    QString ss = QObject::tr("PhaseTypes Array Internal Array has not been allocated. The estimation of the number of features can not proceed.");
-    setErrorCondition(0);
-    notifyWarningMessage(getHumanLabel(), ss, getErrorCondition());
-    return -1;
-  }
+
 
   QVector<size_t> statsDims(1, 1);
   StatsDataArray::Pointer statsPtr = dca->getPrereqArrayFromPath<StatsDataArray, AbstractFilter>(this, getInputStatsArrayPath(), statsDims);
@@ -254,6 +267,50 @@ int InitializeSyntheticVolume::estimateNumFeatures(IntVec3_t dims, FloatVec3_t r
     QString ss = QObject::tr("Stats Array Not Found when estimating the number of grains");
     notifyErrorMessage(getHumanLabel(), ss, -80001);
     return 0;
+  }
+
+
+  if( !phaseType->isAllocated())
+  {
+    if(getInputStatsFile().isEmpty())
+    {
+      QString ss = QObject::tr("PhaseTypes Array has not been allocated and the Input Stats file is Empty.");
+      setErrorCondition(-1000);
+      notifyWarningMessage(getHumanLabel(), ss, getErrorCondition());
+      return -1;
+    }
+    QFileInfo fi(getInputStatsFile());
+    if(fi.exists() == false)
+    {
+      QString ss = QObject::tr("PhaseTypes Array has not been allocated and the Input Stats file does not exist at '%1'").arg(fi.absoluteFilePath());
+      setErrorCondition(-1001);
+      notifyWarningMessage(getHumanLabel(), ss, getErrorCondition());
+      return -1;
+    }
+
+
+    hid_t fileId = -1;
+    herr_t err = 0;
+    // open the file
+    fileId = H5Utilities::openFile(getInputStatsFile().toLatin1().constData(), true);
+    // This will make sure if we return early from this method that the HDF5 File is properly closed.
+    HDF5ScopedFileSentinel scopedFileSentinel(&fileId, true);
+
+    DataArrayPath dap = getInputPhaseTypesArrayPath();
+    // Generate the path to the AttributeMatrix
+    QString hPath = DREAM3D::StringConstants::DataContainerGroupName + "/" + dap.getDataContainerName() + "/" + dap.getAttributeMatrixName();
+    // Open the AttributeMatrix Group
+    hid_t amGid = H5Gopen(fileId, hPath.toLatin1().data(), H5P_DEFAULT );
+    scopedFileSentinel.addGroupId(&amGid);
+    err = phaseType->readH5Data(amGid);
+
+    if( !phaseType->isAllocated())
+    {
+      QString ss = QObject::tr("PhaseTypes Array was not allocated due to an error reading the data from the stats file %1").arg(fi.absoluteFilePath());
+      setErrorCondition(-1002);
+      notifyWarningMessage(getHumanLabel(), ss, getErrorCondition());
+      return -1;
+    }
   }
 
   // Create a Reference Variable so we can use the [] syntax
