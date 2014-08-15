@@ -35,6 +35,7 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 #include "PackPrimaryPhases.h"
+#include <algorithm>
 
 
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
@@ -838,8 +839,8 @@ void  PackPrimaryPhases::place_features(Int32ArrayType::Pointer featureOwnersPtr
   BoolArrayType::Pointer exclusionZonesPtr = BoolArrayType::CreateArray(featureOwnersPtr->getNumberOfTuples(), dim, "PackPrimaryFeatures::exclusions_zones");
   exclusionZonesPtr->initializeWithValue(false);
   
-  //This is the list that we are going to keep updated with the points that are not in an exclusion zone
-  std::vector<size_t> availablePoints;
+  //This is the set that we are going to keep updated with the points that are not in an exclusion zone
+  boost::unordered_set<size_t> availablePoints;
 
   // Get a pointer to the Feature Owners that was just initialized in the initialize_packinggrid() method
   int32_t* featureOwners = featureOwnersPtr->getPointer(0);
@@ -1162,7 +1163,7 @@ void  PackPrimaryPhases::place_features(Int32ArrayType::Pointer featureOwnersPtr
   //determine initial set of available points
   for(size_t i = 0; i < m_TotalPackingPoints; i++)
   {
-    if(exclusionZones[i] == false) availablePoints.push_back(i);
+    if(exclusionZones[i] == false) availablePoints.insert(i);
   }
 
   millis = QDateTime::currentMSecsSinceEpoch();
@@ -1231,17 +1232,11 @@ void  PackPrimaryPhases::place_features(Int32ArrayType::Pointer featureOwnersPtr
       count = 0;
       if(availablePoints.size() > 0)
       {
+        featureOwnersIdx = *(availablePoints.begin());
         //pick a random slot in the list
-        slot = static_cast<size_t>(rg.genrand_res53() * availablePoints.size());
-        //get the actual point at that slot
-        featureOwnersIdx = availablePoints[slot];
-        while(exclusionZones[featureOwnersIdx] == true)
-        {
-          //availablePoints.erase(availablePoints.begin()+slot);
-          slot++;
-          if(slot == availablePoints.size()) slot = 0;
-          featureOwnersIdx = availablePoints[slot];
-        }
+        availablePoints.erase(featureOwnersIdx);
+        availablePoints.insert(featureOwnersIdx);
+
       }
       else
       {
@@ -1803,7 +1798,7 @@ float PackPrimaryPhases::check_sizedisterror(Feature* feature)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-float PackPrimaryPhases::check_fillingerror(int gadd, int gremove, Int32ArrayType::Pointer featureOwnersPtr, BoolArrayType::Pointer exclusionZonesPtr, std::vector<size_t> &availablePoints)
+float PackPrimaryPhases::check_fillingerror(int gadd, int gremove, Int32ArrayType::Pointer featureOwnersPtr, BoolArrayType::Pointer exclusionZonesPtr, boost::unordered_set<size_t> &availablePoints)
 {
   size_t featureOwnersIdx = 0;
   int32_t* featureOwners = featureOwnersPtr->getPointer(0);
@@ -1844,6 +1839,7 @@ float PackPrimaryPhases::check_fillingerror(int gadd, int gremove, Int32ArrayTyp
         if(efl[i] > 0.1 && exclusionZones[featureOwnersIdx] == false)
         {
           exclusionZones[featureOwnersIdx] = true;
+          availablePoints.erase(featureOwnersIdx);
         }
         fillingerror = fillingerror + (multiplier * (k1 * currentFeatureOwner  + k2));
         featureOwners[featureOwnersIdx] = currentFeatureOwner + k3;
@@ -1859,6 +1855,7 @@ float PackPrimaryPhases::check_fillingerror(int gadd, int gremove, Int32ArrayTyp
           if(efl[i] > 0.1 && exclusionZones[featureOwnersIdx] == false)
           {
             exclusionZones[featureOwnersIdx] = true;
+            availablePoints.erase(featureOwnersIdx);
           }
           fillingerror = fillingerror + (multiplier * (k1 * currentFeatureOwner  + k2));
           featureOwners[featureOwnersIdx] = currentFeatureOwner + k3;
@@ -1898,7 +1895,7 @@ float PackPrimaryPhases::check_fillingerror(int gadd, int gremove, Int32ArrayTyp
         if(efl[i] > 0.1 && featureOwners[featureOwnersIdx] == 1)
         {
           exclusionZones[featureOwnersIdx] = false;
-          availablePoints.push_back(featureOwnersIdx);
+          availablePoints.insert(featureOwnersIdx);
         }
         fillingerror = fillingerror + (multiplier * (k1 * currentFeatureOwner  + k2));
         featureOwners[featureOwnersIdx] = currentFeatureOwner + k3;
@@ -1913,7 +1910,7 @@ float PackPrimaryPhases::check_fillingerror(int gadd, int gremove, Int32ArrayTyp
           if(efl[i] > 0.1 && featureOwners[featureOwnersIdx] == 1)
           {
             exclusionZones[featureOwnersIdx] = false;
-            availablePoints.push_back(featureOwnersIdx);
+            availablePoints.insert(featureOwnersIdx);
           }
           fillingerror = fillingerror + (multiplier * (k1 * currentFeatureOwner  + k2));
           featureOwners[featureOwnersIdx] = currentFeatureOwner + k3;

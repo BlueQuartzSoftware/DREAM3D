@@ -38,6 +38,7 @@
 #define _PackPrimaryPhases_H_
 
 #include <vector>
+#include <boost/unordered_set.hpp>
 #include <QtCore/QString>
 
 #include <boost/shared_array.hpp>
@@ -201,7 +202,7 @@ class PackPrimaryPhases : public AbstractFilter
     void determine_neighbors(size_t featureNum, int add);
     float check_neighborhooderror(int gadd, int gremove);
 
-    float check_fillingerror(int gadd, int gremove, Int32ArrayType::Pointer featureOwnersPtr, BoolArrayType::Pointer exclusionZonesPtr, std::vector<size_t> &availablePoints);
+    float check_fillingerror(int gadd, int gremove, Int32ArrayType::Pointer featureOwnersPtr, BoolArrayType::Pointer exclusionZonesPtr, boost::unordered_set<size_t> &availablePoints);
     void assign_voxels();
     void assign_gaps_only();
     void cleanup_features();
