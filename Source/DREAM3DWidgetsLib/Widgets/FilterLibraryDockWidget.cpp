@@ -143,6 +143,7 @@ void FilterLibraryDockWidget::refreshFilterGroups()
         filterTreeItem->setIcon(0, QIcon(":/scroll.png"));
         filterTreeItem->setData(0, Qt::UserRole, QVariant(FILTER_NODE_TYPE));
         filterTreeItem->setData(0, Qt::UserRole+1, QVariant(filter->getNameOfClass()));
+        filterTreeItem->setToolTip(0, filter->generateHtmlSummary());
       }
     }
   }
@@ -156,6 +157,15 @@ void FilterLibraryDockWidget::refreshFilterGroups()
 void FilterLibraryDockWidget::setupGui()
 {
   refreshFilterGroups();
+      QString css(" QToolTip {\
+              border: 2px solid #434343;\
+              padding: 2px;\
+              border-radius: 3px;\
+              opacity: 255;\
+              background-color: #FFFFFF;\
+              }");
+  filterLibraryTree->setStyleSheet(css);
+
 }
 
 

@@ -83,6 +83,15 @@ void FilterListDockWidget::setupGui()
 
   setupSearchField();
   updateSearchIcons();
+
+    QString css(" QToolTip {\
+              border: 2px solid #434343;\
+              padding: 2px;\
+              border-radius: 3px;\
+              opacity: 255;\
+              background-color: #FFFFFF;\
+              }");
+  filterList->setStyleSheet(css);
 }
 
 // -----------------------------------------------------------------------------
@@ -247,6 +256,8 @@ void FilterListDockWidget::addItemToList(AbstractFilter::Pointer filter)
   // when the item is clicked in order to retreive the Filter Widget from the
   // filter widget manager.
   filterItem->setData( Qt::UserRole, filter->getNameOfClass());
+  // Allow a basic mouse hover tool tip that gives some summary information on the filter.
+  filterItem->setToolTip(filter->generateHtmlSummary());
 
 #if 0
   // This chunk of code would load up the html help file for the filter into the QToolTip
