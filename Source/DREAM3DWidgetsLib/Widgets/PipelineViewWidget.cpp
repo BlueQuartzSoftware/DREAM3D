@@ -597,6 +597,8 @@ void PipelineViewWidget::removeFilterWidget(PipelineFilterWidget* whoSent)
       w->deleteLater();
     }
   }
+
+  reindexWidgetTitles();
   preflightPipeline();
 
   resetLayout();
