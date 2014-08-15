@@ -22,7 +22,7 @@
 color: white;
 }
 
-QDockWidget::title 
+QDockWidget::title
 {
 background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 rgba(93, 93, 125, 255), stop:0.00985222 rgba(166, 166, 198, 255), stop:0.433498 rgba(117, 117, 149, 255), stop:0.448276 rgba(103, 103, 136, 255), stop:0.985222 rgba(102, 102, 134, 255), stop:1 rgba(69, 69, 101, 255));
 text-align: center;
@@ -45,7 +45,7 @@ padding-left: 5px;
      <number>0</number>
     </property>
     <item>
-     <widget class="QTreeWidget" name="filterLibraryTree">
+     <widget class="FilterTreeWidget" name="filterLibraryTree">
       <property name="sizePolicy">
        <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
         <horstretch>0</horstretch>
@@ -65,10 +65,10 @@ padding-left: 5px;
        </size>
       </property>
       <property name="verticalScrollBarPolicy">
-       <enum>Qt::ScrollBarAsNeeded</enum>
+       <enum>Qt::ScrollBarAlwaysOn</enum>
       </property>
       <property name="horizontalScrollBarPolicy">
-       <enum>Qt::ScrollBarAsNeeded</enum>
+       <enum>Qt::ScrollBarAlwaysOn</enum>
       </property>
       <property name="editTriggers">
        <set>QAbstractItemView::DoubleClicked|QAbstractItemView::EditKeyPressed|QAbstractItemView::SelectedClicked</set>
@@ -104,6 +104,13 @@ padding-left: 5px;
    </layout>
   </widget>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>FilterTreeWidget</class>
+   <extends>QTreeWidget</extends>
+   <header location="global">FilterTreeWidget.h</header>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>

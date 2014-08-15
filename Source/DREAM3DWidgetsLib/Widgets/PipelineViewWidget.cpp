@@ -276,6 +276,25 @@ void PipelineViewWidget::clearWidgets()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void PipelineViewWidget::reindexWidgetTitles()
+{
+  qint32 count = filterCount();
+  for(qint32 i = 0; i < count; ++i)
+  {
+    PipelineFilterWidget* fw = filterWidgetAt(i);
+    if (fw)
+    {
+      QString hl = fw->getFilter()->getHumanLabel();
+      hl = QString("[") + QString::number(i + 1) + QString("] ") + hl;
+      fw->setFilterTitle(hl);
+    }
+  }
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 FilterPipeline::Pointer PipelineViewWidget::getFilterPipeline()
 {
   // Create a Pipeline Object and fill it with the filters from this View
@@ -365,14 +384,14 @@ void PipelineViewWidget::loadPipelineFile(const QString& filePath, QSettings::Fo
   int fCount = filters.size();
   int index = -1;
 
-// QProgressDialog progress("Opening Pipeline File....", "Cancel", 0, fCount, this);
-// progress.setWindowModality(Qt::WindowModal);
-// progress.setMinimumDuration(2000);
+  // QProgressDialog progress("Opening Pipeline File....", "Cancel", 0, fCount, this);
+  // progress.setWindowModality(Qt::WindowModal);
+  // progress.setMinimumDuration(2000);
   PipelineFilterWidget* firstWidget = NULL;
   // Start looping on each filter
   for (int i = 0; i < fCount; i++)
   {
-//   progress.setValue(i);
+    //   progress.setValue(i);
     // Create a PipelineFilterWidget using the current AbstractFilter instance to initialize it
     PipelineFilterWidget* w = new PipelineFilterWidget(filters.at(i), NULL, this);
     index = filterCount() - 1; // We want to add the filter as the next filter but BEFORE the vertical spacer
@@ -380,7 +399,7 @@ void PipelineViewWidget::loadPipelineFile(const QString& filePath, QSettings::Fo
     if(i == 0) { firstWidget = w; }
   }
   if (firstWidget) { firstWidget->setIsSelected(true); }
-// progress.setValue(fCount);
+  // progress.setValue(fCount);
 
 
   // Now preflight the pipeline for this filter.
@@ -454,7 +473,6 @@ void PipelineViewWidget::addFilterWidget(PipelineFilterWidget* w, int index)
     {
       index = 0;
     }
-
   }
 
   // The layout will take control of the PipelineFilterWidget 'w' instance
@@ -462,19 +480,9 @@ void PipelineViewWidget::addFilterWidget(PipelineFilterWidget* w, int index)
   // Set the Parent
   w->setParent(this);
 
-
-
   if(index == -1)
   {
     index = filterCount() - 1;
-  }
-
-  QString hl = w->getFilter()->getHumanLabel();
-  hl = QString("[") + QString::number(index + 1) + QString("] ") + hl;
-  w->setFilterTitle(hl);
-  if(index == -1)
-  {
-    std::cout << "break" << std::endl;
   }
 
   /// Now setup all the connections between the various widgets
@@ -510,10 +518,15 @@ void PipelineViewWidget::addFilterWidget(PipelineFilterWidget* w, int index)
     m_FilterWidgetLayout->insertSpacerItem(-1, verticalSpacer);
   }
 
+  // Make sure the widget titles are all correct
+  reindexWidgetTitles();
+
   // Finally, set this new filter widget as selected in order to show the input parameters right away
   w->setIsSelected(true);
   // Emit that the pipeline changed
   emit pipelineChanged();
+
+
 }
 
 // -----------------------------------------------------------------------------
@@ -733,8 +746,11 @@ void PipelineViewWidget::dropEvent(QDropEvent* event)
   }
   else if(m_FilterBeingDragged != NULL && event->dropAction() == Qt::MoveAction)
   {
+    // This path is take if a filter is being dragged around in the pipeline and dropped.
     setSelectedFilterWidget(m_FilterBeingDragged);
     m_FilterBeingDragged = NULL;
+    // Make sure the widget titles are all correct
+    reindexWidgetTitles();
     preflightPipeline();
   }
   else

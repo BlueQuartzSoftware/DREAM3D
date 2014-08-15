@@ -96,11 +96,11 @@ void FavoritesDockWidget::setupGui()
 
   QString css(" QToolTip {\
               border: 2px solid #434343;\
-              padding: 2px;\
-              border-radius: 3px;\
-              opacity: 255;\
-              background-color: #FFFFFF;\
-              }");
+      padding: 2px;\
+  border-radius: 3px;\
+opacity: 255;\
+  background-color: #FFFFFF;\
+}");
 filterLibraryTree->setStyleSheet(css);
 
 }
@@ -233,6 +233,10 @@ QString FavoritesDockWidget::generateHtmlFilterListFromPipelineFile(QString path
   int filterCount = prefs.value("Number_Filters").toInt(&ok);
   QString name = prefs.value("Name").toString();
   QString dVers = prefs.value("DREAM3D_Version").toString();
+  if(dVers.isEmpty() == true)
+  {
+    dVers = prefs.value("Version").toString();
+  }
   prefs.endGroup();
   if (false == ok) {filterCount = 0;}
 

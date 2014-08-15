@@ -39,6 +39,9 @@
 #include <QtGui/QTreeWidgetItem>
 #include <QtGui/QPainter>
 
+#include "QtSupport/DREAM3DHelpUrlGenerator.h"
+
+
 #include "DREAM3DLib/Common/FilterManager.h"
 #include "DREAM3DLib/Common/IFilterFactory.hpp"
 #include "DREAM3DLib/Common/FilterFactory.hpp"
@@ -55,9 +58,9 @@ FilterListDockWidget::FilterListDockWidget(QWidget* parent) :
   m_SearchFilterHumanName(true),
   m_SearchParameterPropertyName(false),
   m_SearchParameterHumanName(true),
-  m_SearchSearchGroupName(false),
-  m_SearchSubGroupName(false),
-  m_SearchPluginName(false)
+  m_SearchSearchGroupName(true),
+  m_SearchSubGroupName(true),
+  m_SearchPluginName(true)
 {
   setupUi(this);
 
@@ -76,7 +79,17 @@ FilterListDockWidget::~FilterListDockWidget()
 // -----------------------------------------------------------------------------
 void FilterListDockWidget::setupGui()
 {
+  updateFilterList(true);
 
+  setupSearchField();
+  updateSearchIcons();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void FilterListDockWidget::setupSearchField()
+{
   filterSearch->setAttribute(Qt::WA_MacShowFocusRect, false);
 
   QMenu* lineEditMenu = new QMenu(filterSearch);
@@ -167,48 +180,40 @@ void FilterListDockWidget::setupGui()
             this, SLOT( searchFieldsChanged() ) );
     lineEditMenu->addAction(m_ActionSearchPluginName);
   }
-  updateSearchIcons();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FilterListDockWidget::updateFilterList(const QStringList& list, bool sortItems)
+void FilterListDockWidget::updateFilterList(bool sortItems)
 {
+  // Clear the list first
   filterList->clear();
 
+  // Get the FilterManager and loop over all the factories
   FilterManager* fm = FilterManager::Instance();
+  m_LoadedFilters = fm->getFactories();
+  QMapIterator<QString, IFilterFactory::Pointer> iter(m_LoadedFilters);
 
-  QString countText = QObject::tr("Filter Count: %1").arg(list.size());
+  QString countText = QObject::tr("Filter Count: %1").arg(m_LoadedFilters.size());
   filterCountLabel->setText(countText);
 
-  for (int i = 0; i < list.size(); i++)
+  while(iter.hasNext())
   {
-    QString filterName = list.at(i);
-    IFilterFactory::Pointer wigFactory = fm->getFactoryForFilter(filterName);
-    if (NULL == wigFactory.get() )
+    iter.next();
+    IFilterFactory::Pointer factory = iter.value();
+    if (NULL == factory.get() )
     {
       continue;
     }
-    QString humanName = (wigFactory->getFilterHumanLabel());
-    QString iconName(":/");
-    iconName.append( (wigFactory->getFilterGroup()));
-    iconName.append("_Icon.png");
 
-    // Validate the icon is in the resource system
-    QFileInfo iconInfo(iconName);
-    if (iconInfo.exists() == false)
+    AbstractFilter::Pointer filter = factory->create();
+    if(NULL == filter.get())
     {
-      iconName = ":/Plugin_Icon.png"; // Switch to our generic icon for Plugins that do not provide their own
+      continue;
     }
 
-    QIcon icon(iconName);
-    // Create the QListWidgetItem and add it to the filterList
-    QListWidgetItem* filterItem = new QListWidgetItem(icon, humanName, filterList);
-    // Set an "internal" QString that is the name of the filter. We need this value
-    // when the item is clicked in order to retreive the Filter Widget from the
-    // filter widget manager.
-    filterItem->setData( Qt::UserRole, filterName);
+    addItemToList(filter);
   }
   if (sortItems)
   {
@@ -220,31 +225,91 @@ void FilterListDockWidget::updateFilterList(const QStringList& list, bool sortIt
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void FilterListDockWidget::addItemToList(AbstractFilter::Pointer filter)
+{
+
+  QString humanName = filter->getHumanLabel();
+  QString iconName(":/");
+  iconName.append( filter->getGroupName() );
+  iconName.append("_Icon.png");
+
+  // Validate the icon is in the resource system
+  QFileInfo iconInfo(iconName);
+  if (iconInfo.exists() == false)
+  {
+    iconName = ":/Plugin_Icon.png"; // Switch to our generic icon for Plugins that do not provide their own
+  }
+
+  QIcon icon(iconName);
+  // Create the QListWidgetItem and add it to the filterList
+  QListWidgetItem* filterItem = new QListWidgetItem(icon, humanName, filterList);
+  // Set an "internal" QString that is the name of the filter. We need this value
+  // when the item is clicked in order to retreive the Filter Widget from the
+  // filter widget manager.
+  filterItem->setData( Qt::UserRole, filter->getNameOfClass());
+
+#if 0
+  // This chunk of code would load up the html help file for the filter into the QToolTip
+  // This is a problem because everytime this function ran it would involve file IO and
+  // that is very bad. And the currently Doxygen generated html files do not look very
+  // good in the QToolTip, and there is no Scrolling in the QToolTip window. We really
+  // need a more custom solution for this
+  QUrl url = DREAM3DHelpUrlGenerator::generateHTMLUrl( filter->getNameOfClass().toLower() );
+  QString filePath = url.toLocalFile();
+  QFileInfo fi(filePath);
+  QFile source(filePath);
+  source.open(QFile::ReadOnly);
+  QString html = source.readAll();
+  source.close();
+  filterItem->setToolTip(html);
+#endif
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void FilterListDockWidget::searchFilters()
 {
+
   // Get the text from the search box
   QString text = filterSearch->text();
 
-  int listWidgetSize = filterList->count();
-  if(text.isEmpty() )
+
+  if( text.isEmpty() )
   {
-    for (int k1 = 0; k1 < listWidgetSize; k1++)
-    {
-      filterList->item(k1)->setHidden(false);
-    }
-    QString countText = QObject::tr("Filter Count: %1").arg(listWidgetSize);
+    // Put back the entire list of Filters
+    updateFilterList(true);
+    // Set the text for the total number of filters
+    QString countText = QObject::tr("Filter Count: %1").arg(m_LoadedFilters.size());
     filterCountLabel->setText(countText);
     return;
   }
 
+  filterList->clear();
+
   // The user is typing something in the search box so lets search the filter class name and human label
-  FilterManager* fm = FilterManager::Instance();
+  // int listWidgetSize = m_LoadedFilters.size();
   int filterCount = 0;
   bool match = false;
-  for (int k1 = 0; k1 < listWidgetSize; k1++)
+  QMapIterator<QString, IFilterFactory::Pointer> iter(m_LoadedFilters);
+
+  while(iter.hasNext())
   {
+    iter.next();
+    IFilterFactory::Pointer factory = iter.value();
+    if (NULL == factory.get() )
+    {
+      continue;
+    }
+
+    AbstractFilter::Pointer filter = factory->create();
+    if(NULL == filter.get())
+    {
+      continue;
+    }
+
     match = false;
-    QString filterHumanLabel = filterList->item(k1)->text();
+    QString filterHumanLabel = filter->getHumanLabel();
 
     if (m_ActionSearchFilterHumanName->isChecked() && filterHumanLabel.contains(text, Qt::CaseInsensitive) == true)
     {
@@ -252,64 +317,65 @@ void FilterListDockWidget::searchFilters()
       match = true;
     }
 
-    QString filterClassName = filterList->item(k1)->data(Qt::UserRole).toString();
+    QString filterClassName = filter->getNameOfClass();
     if (m_ActionSearchFilterClassName->isChecked() && filterClassName.contains(text, Qt::CaseInsensitive) == true)
     {
       //   qDebug() << "   " << filterClassName;
       match = true;
     }
 
-
-    IFilterFactory::Pointer factory = fm->getFactoryForFilter(filterClassName);
-    if(NULL != factory.get() )
+    QString groupName = filter->getGroupName();
+    QString subGroupName = filter->getSubGroupName();
+    QString compileLibrary = filter->getCompiledLibraryName();
+    if (m_ActionSearchGroupName->isChecked() && groupName.contains(text, Qt::CaseInsensitive) == true)
     {
-      AbstractFilter::Pointer filter = factory->create();
-
-      QString groupName = filter->getGroupName();
-      QString subGroupName = filter->getSubGroupName();
-      QString compileLibrary = filter->getCompiledLibraryName();
-
-      // Get a list of all the filterParameters from the filter.
-      QVector<FilterParameter::Pointer> filterParameters = filter->getFilterParameters();
-      // Create all the FilterParameterWidget objects that can be displayed where ever the developer needs
-      for (QVector<FilterParameter::Pointer>::iterator iter = filterParameters.begin(); iter != filterParameters.end(); ++iter )
-      {
-        FilterParameter* option = (*iter).get();
-        if (m_ActionSearchParameterName->isChecked() && option->getHumanLabel().contains(text, Qt::CaseInsensitive) == true)
-        {
-          //  qDebug() << "       " << option->getHumanLabel();
-          match = true;
-        }
-        if (m_ActionSearchParameterPropertyName->isChecked() && option->getPropertyName().contains(text, Qt::CaseInsensitive) == true)
-        {
-          //   qDebug() << "       " << option->getPropertyName();
-          match = true;
-        }
-        if (m_ActionSearchGroupName->isChecked() && groupName.contains(text, Qt::CaseInsensitive) == true)
-        {
-          //   qDebug() << "       " << option->getPropertyName();
-          match = true;
-        }
-        if (m_ActionSearchSubGroupName->isChecked() && subGroupName.contains(text, Qt::CaseInsensitive) == true)
-        {
-          //   qDebug() << "       " << option->getPropertyName();
-          match = true;
-        }
-        if (m_ActionSearchPluginName->isChecked() && compileLibrary.contains(text, Qt::CaseInsensitive) == true)
-        {
-          //   qDebug() << "       " << option->getPropertyName();
-          match = true;
-        }
-
-      }
+      //   qDebug() << "       " << option->getPropertyName();
+      match = true;
     }
-    filterList->item(k1)->setHidden(!match);
-    if(match) { filterCount++; }
+    if (m_ActionSearchSubGroupName->isChecked() && subGroupName.contains(text, Qt::CaseInsensitive) == true)
+    {
+      //   qDebug() << "       " << option->getPropertyName();
+      match = true;
+    }
+    if (m_ActionSearchPluginName->isChecked() && compileLibrary.contains(text, Qt::CaseInsensitive) == true)
+    {
+      //   qDebug() << "       " << option->getPropertyName();
+      match = true;
+    }
+    // Get a list of all the filterParameters from the filter.
+    QVector<FilterParameter::Pointer> filterParameters = filter->getFilterParameters();
+    // Create all the FilterParameterWidget objects that can be displayed where ever the developer needs
+    for (QVector<FilterParameter::Pointer>::iterator iter = filterParameters.begin(); iter != filterParameters.end(); ++iter )
+    {
+      FilterParameter* option = (*iter).get();
+      if (m_ActionSearchParameterName->isChecked() && option->getHumanLabel().contains(text, Qt::CaseInsensitive) == true)
+      {
+        //  qDebug() << "       " << option->getHumanLabel();
+        match = true;
+      }
+      if (m_ActionSearchParameterPropertyName->isChecked() && option->getPropertyName().contains(text, Qt::CaseInsensitive) == true)
+      {
+        //   qDebug() << "       " << option->getPropertyName();
+        match = true;
+      }
+
+    }
+
+    if(match)
+    {
+      filterCount++;
+      addItemToList(filter);
+    }
+  }
+
+  bool sortItems = true;
+  if (sortItems)
+  {
+    filterList->sortItems(Qt::AscendingOrder);
   }
 
   QString countText = QObject::tr("Filter Count: %1").arg(filterCount);
   filterCountLabel->setText(countText);
-
 }
 
 // -----------------------------------------------------------------------------

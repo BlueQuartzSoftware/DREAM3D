@@ -46,6 +46,11 @@
 
 #include "DREAM3DWidgetsLib/moc_FilterLibraryDockWidget.cpp"
 
+#define LIBRARY_NODE_TYPE 0
+#define PLUGIN_NODE_TYPE 1
+#define SUBGROUP_NODE_TYPE 2
+#define FILTER_NODE_TYPE 3
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -92,6 +97,7 @@ void FilterLibraryDockWidget::refreshFilterGroups()
   QTreeWidgetItem* library = new QTreeWidgetItem(filterLibraryTree);
   library->setText(0, DREAM3D::Settings::Library);
   library->setIcon(0, QIcon(":/cubes.png"));
+  library->setData(0, Qt::UserRole, QVariant(LIBRARY_NODE_TYPE) );
 #else
   QTreeWidgetItem* library = filterLibraryTree->invisibleRootItem();
   library->setText(0, DREAM3D::Settings::Library);
@@ -100,8 +106,9 @@ void FilterLibraryDockWidget::refreshFilterGroups()
   for(QList<QString>::iterator iter = grpNameSorted.begin(); iter != grpNameSorted.end(); ++iter)
   {
     //   qDebug() << *iter << "\n";
+    QString groupName = *iter;
     QString iconName(":/");
-    iconName.append( (*iter));
+    iconName.append(groupName);
     iconName.append("_Icon.png");
     // Validate the icon is in the resource system
     QFileInfo iconInfo(iconName);
@@ -109,16 +116,34 @@ void FilterLibraryDockWidget::refreshFilterGroups()
     {
       iconName = ":/Plugin_Icon.png"; // Switch to our generic icon for Plugins that do not provide their own
     }
-
     QIcon icon(iconName);
     QTreeWidgetItem* filterGroup = new QTreeWidgetItem(library);
-    filterGroup->setText(0, (*iter));
+    filterGroup->setText(0, groupName);
     filterGroup->setIcon(0, icon);
-    QSet<QString> subGroupNames = fm->getSubGroupNames(*iter);
+    filterGroup->setData(0, Qt::UserRole, QVariant(PLUGIN_NODE_TYPE));
+    QSet<QString> subGroupNames = fm->getSubGroupNames(groupName);
     for(QSet<QString>::iterator iter2 = subGroupNames.begin(); iter2 != subGroupNames.end(); ++iter2)
     {
       QTreeWidgetItem* filterSubGroup = new QTreeWidgetItem(filterGroup);
-      filterSubGroup->setText(0, (*iter2));
+      QString subGroupName = *iter2;
+      filterSubGroup->setText(0, subGroupName);
+      filterSubGroup->setIcon(0, QIcon(":/folder_blue.png"));
+      filterSubGroup->setData(0, Qt::UserRole, QVariant(SUBGROUP_NODE_TYPE));
+
+      // Now find all the filters that are in this Group/SubGroup
+      FilterManager::Collection filters = fm->getFactories(groupName, subGroupName);
+      FilterManager::CollectionIterator iter(filters);
+      while(iter.hasNext())
+      {
+        iter.next();
+        IFilterFactory::Pointer factory = iter.value();
+        AbstractFilter::Pointer filter = factory->create();
+        QTreeWidgetItem* filterTreeItem = new QTreeWidgetItem(filterSubGroup);
+        filterTreeItem->setText(0, filter->getHumanLabel());
+        filterTreeItem->setIcon(0, QIcon(":/scroll.png"));
+        filterTreeItem->setData(0, Qt::UserRole, QVariant(FILTER_NODE_TYPE));
+        filterTreeItem->setData(0, Qt::UserRole+1, QVariant(filter->getNameOfClass()));
+      }
     }
   }
   library->setExpanded(true);
@@ -187,7 +212,12 @@ void FilterLibraryDockWidget::on_filterLibraryTree_currentItemChanged(QTreeWidge
 // -----------------------------------------------------------------------------
 void FilterLibraryDockWidget::on_filterLibraryTree_itemDoubleClicked( QTreeWidgetItem* item, int column )
 {
-
+  QVariant nodeType = item->data(0, Qt::UserRole);
+  if(nodeType.toInt() == FILTER_NODE_TYPE)
+  {
+    QString filterClassName = item->data(0, Qt::UserRole + 1).toString();
+    emit filterItemDoubleClicked(filterClassName);
+  }
 }
 
 // -----------------------------------------------------------------------------

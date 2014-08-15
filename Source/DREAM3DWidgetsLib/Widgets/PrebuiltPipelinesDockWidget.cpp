@@ -283,6 +283,10 @@ QString PrebuiltPipelinesDockWidget::generateHtmlFilterListFromPipelineFile(QStr
   int filterCount = prefs.value("Number_Filters").toInt(&ok);
   QString name = prefs.value("Name").toString();
   QString dVers = prefs.value("DREAM3D_Version").toString();
+  if(dVers.isEmpty() == true)
+  {
+    dVers = prefs.value("Version").toString();
+  }
   prefs.endGroup();
   if (false == ok) {filterCount = 0;}
 
