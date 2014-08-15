@@ -86,11 +86,13 @@ class DREAM3DLib_EXPORT AbstractFilter : public Observable
     // These should be implemented by the subclass
     // ------------------------------
 
-    virtual const QString getGroupName() { return "YOUR CLASS SHOULD IMPLEMENT THIS";}
-    virtual const QString getSubGroupName() { return "YOUR CLASS SHOULD IMPLEMENT THIS";}
-    virtual const QString getHumanLabel() { return "YOUR CLASS SHOULD IMPLEMENT THIS";}
-    virtual const QString getBrandingString() { return "DREAM3D Core Filter"; }
-    virtual const QString getCompiledLibraryName() { return "DREAM3DLib"; }
+    virtual const QString getGroupName();
+    virtual const QString getSubGroupName();
+    virtual const QString getHumanLabel();
+    virtual const QString getBrandingString();
+    virtual const QString getCompiledLibraryName();
+
+    virtual const QString generateHtmlSummary();
 
     /**
      * @brief setupFilterParameters
