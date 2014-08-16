@@ -262,12 +262,117 @@ void TestMisc()
   Print(std::cout, active);
 }
 
+// Floating-point modulo
+// The result (the remainder) has same sign as the divisor.
+// Similar to matlab's mod(); Not similar to fmod() -   Mod(-3,4)= 1   fmod(-3,4)= -3
+template<typename T>
+class Mod
+{
+  public:
+    Mod(){}
+    virtual ~Mod(){}
+
+    T operator()(T x, T y)
+    {
+      //ASSERT(!std::numeric_limits<T>::is_exact , "Mod: floating-point type expected");
+
+      if (0. == y)
+        return x;
+
+      double m= x - y * floor(x/y);
+
+      // handle boundary cases resulted from floating-point cut off:
+
+      if (y > 0)              // modulo range: [0..y)
+      {
+        if (m>=y)           // Mod(-1e-16             , 360.    ): m= 360.
+          return 0;
+
+        if (m<0 )
+        {
+          if (y+m == y)
+            return 0  ; // just in case...
+          else
+            return y+m; // Mod(106.81415022205296 , _TWO_PI ): m= -1.421e-14
+        }
+      }
+      else                    // modulo range: (y..0]
+      {
+        if (m<=y)           // Mod(1e-16              , -360.   ): m= -360.
+          return 0;
+
+        if (m>0 )
+        {
+          if (y+m == y)
+            return 0  ; // just in case...
+          else
+            return y+m; // Mod(-106.81415022205296, -_TWO_PI): m= 1.421e-14
+        }
+      }
+
+      return m;
+    }
+
+    // wrap [rad] angle to [-PI..PI)
+    inline static T WrapPosNegPI(T fAng)
+    {
+      return Mod()(fAng + DREAM3D::Constants::k_Pi, DREAM3D::Constants::k_2Pi) - DREAM3D::Constants::k_Pi;
+    }
+
+    // wrap [rad] angle to [0..TWO_PI)
+    inline T WrapTwoPI(T fAng)
+    {
+      return Mod()(fAng, DREAM3D::Constants::k_2Pi);
+    }
+
+    // wrap [deg] angle to [-180..180)
+    inline T WrapPosNeg180(T fAng)
+    {
+      return Mod()(fAng + 180.0, 360.0) - 180.0;
+    }
+
+    // wrap [deg] angle to [0..360)
+    inline T Wrap360(T fAng)
+    {
+      return Mod()(fAng ,360.0);
+    }
+
+    private:
+    Mod(const Mod&); // Copy Constructor Not Implemented
+    void operator=(const Mod&); // Operator '=' Not Implemented
+};
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void TestFMod()
+{
+  Mod<float> fmod;
+  float pi = DREAM3D::Constants::k_Pi;
+
+  pi = fmod.WrapTwoPI(pi);
+
+  pi = pi * -1.0;
+  pi = fmod.WrapTwoPI(pi);
+
+  pi = 0.0;
+  pi = fmod.WrapTwoPI(pi);
+
+  pi = -1.0f;
+  pi = fmod.WrapTwoPI(pi);
+
+  pi = 7.0f;
+  pi = fmod.WrapTwoPI(pi);
+
+}
+
 // -----------------------------------------------------------------------------
 //  Use test framework
 // -----------------------------------------------------------------------------
 int main(int argc, char** argv)
 {
   int err = EXIT_SUCCESS;
+  TestFMod();
 
   DREAM3D_REGISTER_TEST( TestQuatMath() )
 

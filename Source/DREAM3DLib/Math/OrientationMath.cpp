@@ -38,7 +38,7 @@
 
 #include <cmath>
 
-
+#include "DREAM3DLib/Math/DREAM3DMath.h"
 #include "DREAM3DLib/Math/MatrixMath.h"
 #include "DREAM3DLib/Math/GeometryMath.h"
 #include "DREAM3DLib/OrientationOps/CubicOps.h"
@@ -48,6 +48,95 @@
 #include "DREAM3DLib/OrientationOps/TetragonalOps.h"
 
 
+#define ASSERT(condition, message) \
+    do { \
+        if (! (condition)) { \
+            std::cerr << "Assertion `" #condition "` failed in " << __FILE__ \
+                      << " line " << __LINE__ << ": " << message << std::endl; \
+            std::exit(EXIT_FAILURE); \
+        } \
+    } while (false)
+
+
+// Floating-point modulo
+// The result (the remainder) has same sign as the divisor.
+// Similar to matlab's mod(); Not similar to fmod() -   Mod(-3,4)= 1   fmod(-3,4)= -3
+template<typename T>
+class Mod
+{
+  public:
+    Mod(){}
+    virtual ~Mod(){}
+
+    T operator()(T x, T y)
+    {
+      ASSERT(!std::numeric_limits<T>::is_exact , "Mod: floating-point type expected");
+
+      if (0. == y)
+        return x;
+
+      double m= x - y * floor(x/y);
+
+      // handle boundary cases resulted from floating-point cut off:
+
+      if (y > 0)              // modulo range: [0..y)
+      {
+        if (m>=y)           // Mod(-1e-16             , 360.    ): m= 360.
+          return 0;
+
+        if (m<0 )
+        {
+          if (y+m == y)
+            return 0  ; // just in case...
+          else
+            return y+m; // Mod(106.81415022205296 , _TWO_PI ): m= -1.421e-14
+        }
+      }
+      else                    // modulo range: (y..0]
+      {
+        if (m<=y)           // Mod(1e-16              , -360.   ): m= -360.
+          return 0;
+
+        if (m>0 )
+        {
+          if (y+m == y)
+            return 0  ; // just in case...
+          else
+            return y+m; // Mod(-106.81415022205296, -_TWO_PI): m= 1.421e-14
+        }
+      }
+
+      return m;
+    }
+
+    // wrap [rad] angle to [-PI..PI)
+    inline static T WrapPosNegPI(T fAng)
+    {
+      return Mod()(fAng + DREAM3D::Constants::k_Pi, DREAM3D::Constants::k_2Pi) - DREAM3D::Constants::k_Pi;
+    }
+
+    // wrap [rad] angle to [0..TWO_PI)
+    inline T WrapTwoPI(T fAng)
+    {
+      return Mod()(fAng, DREAM3D::Constants::k_2Pi);
+    }
+
+    // wrap [deg] angle to [-180..180)
+    inline T WrapPosNeg180(T fAng)
+    {
+      return Mod()(fAng + 180.0, 360.0) - 180.0;
+    }
+
+    // wrap [deg] angle to [0..360)
+    inline T Wrap360(T fAng)
+    {
+      return Mod()(fAng ,360.0);
+    }
+
+    private:
+    Mod(const Mod&); // Copy Constructor Not Implemented
+    void operator=(const Mod&); // Operator '=' Not Implemented
+};
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -67,7 +156,13 @@ OrientationMath::~OrientationMath()
 // -----------------------------------------------------------------------------
 void OrientationMath::AxisAngletoHomochoric(float w, float n1, float n2, float n3, float& r1, float& r2, float& r3)
 {
-  float denom;
+  //assert(w >= 0.0f);
+
+  // Bring omega into proper range.
+  Mod<float> mod;
+  w = mod.WrapTwoPI(w);
+
+  float denom = 0.0f;
 
   denom = (n1 * n1) + (n2 * n2) + (n3 * n3);
   denom = sqrt(denom);
@@ -79,9 +174,20 @@ void OrientationMath::AxisAngletoHomochoric(float w, float n1, float n2, float n
   n1 = n1 / denom;
   n2 = n2 / denom;
   n3 = n3 / denom;
-  r1 = n1 * powf(((0.75f) * (w - sinf(w))), DREAM3D::Constants::k_1Over3);
-  r2 = n2 * powf(((0.75f) * (w - sinf(w))), DREAM3D::Constants::k_1Over3);
-  r3 = n3 * powf(((0.75f) * (w - sinf(w))), DREAM3D::Constants::k_1Over3);
+  if (w >= 0.0f && w < DREAM3D::Constants::k_Pi)
+  {
+    float temp = powf(((0.75f) * (w - sinf(w))), DREAM3D::Constants::k_1Over3);
+    r1 = n1 * temp;
+    r2 = n2 * temp;
+    r3 = n3 * temp;
+  }
+  else
+  {
+    float temp = powf(((0.75f) * (DREAM3D::Constants::k_2Pi - w + sinf(w))), DREAM3D::Constants::k_1Over3);
+    r1 = n1 * temp;
+    r2 = n2 * temp;
+    r3 = n3 * temp;
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -674,7 +780,7 @@ void OrientationMath::MillerToMillerBravaisDirection(int miller[3], int millerBr
 // -----------------------------------------------------------------------------
 void OrientationMath::MillerBravaisToMillerPlane(int millerBravais[4], int miller[3])
 {
-  miller[0] = millerBravais[0]; 
+  miller[0] = millerBravais[0];
   miller[1] = millerBravais[1];
   miller[2] = millerBravais[3];
 }
