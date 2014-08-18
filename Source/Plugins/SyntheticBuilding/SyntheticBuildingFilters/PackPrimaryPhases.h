@@ -38,7 +38,7 @@
 #define _PackPrimaryPhases_H_
 
 #include <vector>
-#include <boost/unordered_set.hpp>
+#include <map>
 #include <QtCore/QString>
 
 #include <boost/shared_array.hpp>
@@ -202,7 +202,7 @@ class PackPrimaryPhases : public AbstractFilter
     void determine_neighbors(size_t featureNum, int add);
     float check_neighborhooderror(int gadd, int gremove);
 
-    float check_fillingerror(int gadd, int gremove, Int32ArrayType::Pointer featureOwnersPtr, BoolArrayType::Pointer exclusionZonesPtr, boost::unordered_set<size_t> &availablePoints);
+    float check_fillingerror(int gadd, int gremove, Int32ArrayType::Pointer featureOwnersPtr, Int32ArrayType::Pointer exclusionOwnersPtr, std::map<size_t,size_t> &availablePoints, std::map<size_t,size_t> &availablePointsInv);
     void assign_voxels();
     void assign_gaps_only();
     void cleanup_features();
@@ -212,7 +212,7 @@ class PackPrimaryPhases : public AbstractFilter
     void compare_2Ddistributions(std::vector<std::vector<float> >, std::vector<std::vector<float> >, float& sqrerror);
     void compare_3Ddistributions(std::vector<std::vector<std::vector<float> > >, std::vector<std::vector<std::vector<float> > >, float& sqrerror);
 
-    int writeVtkFile(int32_t* featureOwners, bool* exclusionZonesPtr);
+    int writeVtkFile(int32_t* featureOwners, int32_t* exclusionZonesPtr);
     int estimate_numfeatures(int xpoints, int ypoints, int zpoints, float xres, float yres, float zres);
 
 
@@ -287,6 +287,7 @@ class PackPrimaryPhases : public AbstractFilter
     std::vector<int> primaryphases;
     std::vector<float> primaryphasefractions;
 
+    size_t availablePointsCount;
     float fillingerror, oldfillingerror;
     float currentneighborhooderror, oldneighborhooderror;
     float currentsizedisterror, oldsizedisterror;
