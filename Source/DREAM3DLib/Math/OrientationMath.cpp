@@ -156,8 +156,6 @@ OrientationMath::~OrientationMath()
 // -----------------------------------------------------------------------------
 void OrientationMath::AxisAngletoHomochoric(float w, float n1, float n2, float n3, float& r1, float& r2, float& r3)
 {
-  //assert(w >= 0.0f);
-
   // Bring omega into proper range.
   Mod<float> mod;
   w = mod.WrapTwoPI(w);
