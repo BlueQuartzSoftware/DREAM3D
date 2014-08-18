@@ -42,7 +42,7 @@ FaderWidget::FaderWidget(QWidget* parent)
   connect(timer, SIGNAL(timeout()), this, SLOT(update()));
 
   setAttribute(Qt::WA_DeleteOnClose);
-  resize(parent->size());
+  if(parent) { resize(parent->size()); }
 }
 
 void FaderWidget::setFadeIn()
