@@ -1361,8 +1361,6 @@ QVector<UInt8ArrayType::Pointer> HexagonalOps::generatePoleFigure(PoleFigureConf
 // -----------------------------------------------------------------------------
 DREAM3D::Rgb HexagonalOps::generateMisorientationColor(const QuatF& q, const QuatF& refFrame)
 {
-  BOOST_ASSERT(false);
-
   float n1, n2, n3, w;
   float xo, xo1, xo2, xo3, x, x1, x2, x3, x4, x5, x6, x7, x8, x9, x10, x11;
   float yo, yo1, yo2, yo3, y, y1, y2, y3, y4, y5, y6, y7, y8, y9, y10, y11;
@@ -1449,14 +1447,14 @@ DREAM3D::Rgb HexagonalOps::generateMisorientationColor(const QuatF& q, const Qua
 
   //eq c1.3
   //3 rotation matricies (in paper) can be multiplied into one (here) for simplicity / speed
-  //g1*g2*g3 = {{sqrt(2/3), 0, 1/sqrt(3)},{-1/sqrt(6), 1/sqrt(2), 1/sqrt(3)},{-1/sqrt(6), 1/sqrt(2), 1/sqrt(3)}}
+  //g1*g2*g3 = {{sqrt(2/3), -1/sqrt(6), -1/sqrt(6)},{0, 1/sqrt(2), -1/sqrt(2)},{1/sqrt(3), 1/sqrt(3), 1/sqrt(3)}}
   x2 = x1 * (DREAM3D::Constants::k_Sqrt2 / DREAM3D::Constants::k_Sqrt3) - (y1 + z1) / (DREAM3D::Constants::k_Sqrt2 * DREAM3D::Constants::k_Sqrt3);
   y2 = (y1 - z1) / DREAM3D::Constants::k_Sqrt2;
   z2 = (x1 + y1 + z1) / DREAM3D::Constants::k_Sqrt3;
 
   //eq c1.4
   k = fmodf(atan2f(y2, x2) + DREAM3D::Constants::k_2Pi, DREAM3D::Constants::k_2Pi);
-  x3 = cos(k) * sqrt(x2 * x2 + y2 * y2) * sin(DREAM3D::Constants::k_Pi / 6.0f + fmodf(k, DREAM3D::Constants::k_Pi / 3.0f)) / DREAM3D::Constants::k_HalfSqrt2;
+  x3 = cos(k) * sqrt(x2 * x2 + y2 * y2) * sin(DREAM3D::Constants::k_Pi / 6.0f + fmodf(k, DREAM3D::Constants::k_2Pi / 3.0f)) / DREAM3D::Constants::k_HalfSqrt2;
   y3 = sin(k) * sqrt(x2 * x2 + y2 * y2) * sin(DREAM3D::Constants::k_Pi / 6.0f + fmodf(k, DREAM3D::Constants::k_2Pi / 3.0f)) / DREAM3D::Constants::k_HalfSqrt2;
   z3 = z2 - 1.0f;
 
