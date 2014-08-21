@@ -13,7 +13,7 @@ This filter will read a single .ang or .ctf file into the VoxelDataContainer all
 If the data has come from a TSL based acquisition system and the settings of the acquisition software were in the default modes then the following reference frame transformations need to be performed:
 
 + Sample Reference Frame: 180 Degrees about the <010> Axis
-+ Crystal Reference Frame: 270 Degrees about the <001> Axis
++ Crystal Reference Frame: 90 Degrees about the <001> Axis
 
 The user also may want to assign unindexed pixels to be ignored and be assigned an RGB Color of Black. In this case the user can insert the [MultiThreshold (Cell Data) Filter](multithresholdcells.html) to define the "Good Voxels" cell data.
 
