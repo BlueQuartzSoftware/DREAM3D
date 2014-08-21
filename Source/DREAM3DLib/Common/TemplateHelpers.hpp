@@ -98,6 +98,59 @@ namespace TemplateHelpers
 
   };
 
+  /**
+   * @brief The CreateArrayFromArrayType functor will create a DataArray of the same type as another DataArray but not attach
+   * it to any data container
+   */
+   class CreateArrayFromArrayType
+   {
+     public:
+       CreateArrayFromArrayType(){}
+       ~CreateArrayFromArrayType(){}
+
+       IDataArray::Pointer operator()(AbstractFilter* f, size_t numTuples, QVector<size_t> compDims, QString arrayName, bool allocate, IDataArray::Pointer sourceArrayType)
+       {
+         IDataArray::Pointer ptr = IDataArray::NullPointer();
+
+         if(CanDynamicCast<FloatArrayType>()(sourceArrayType) ) {
+           ptr = FloatArrayType::CreateArray(numTuples, compDims, arrayName, allocate);
+         }
+         else if(CanDynamicCast<DoubleArrayType>()(sourceArrayType) ) {
+           ptr = DoubleArrayType::CreateArray(numTuples, compDims, arrayName, allocate);
+         }
+         else if(CanDynamicCast<Int8ArrayType>()(sourceArrayType) ) {
+           ptr = Int8ArrayType::CreateArray(numTuples, compDims, arrayName, allocate);
+         }
+         else if(CanDynamicCast<UInt8ArrayType>()(sourceArrayType) ) {
+           ptr = UInt8ArrayType::CreateArray(numTuples, compDims, arrayName, allocate);
+         }
+         else if(CanDynamicCast<Int16ArrayType>()(sourceArrayType) ) {
+           ptr = Int16ArrayType::CreateArray(numTuples, compDims, arrayName, allocate);
+         }
+         else if(CanDynamicCast<UInt16ArrayType>()(sourceArrayType) ) {
+           ptr = UInt16ArrayType::CreateArray(numTuples, compDims, arrayName, allocate);
+         }
+         else if(CanDynamicCast<Int32ArrayType>()(sourceArrayType) ) {
+           ptr = Int32ArrayType::CreateArray(numTuples, compDims, arrayName, allocate);
+         }
+         else if(CanDynamicCast<UInt32ArrayType>()(sourceArrayType) ) {
+           ptr = UInt32ArrayType::CreateArray(numTuples, compDims, arrayName, allocate);
+         }
+         else if(CanDynamicCast<Int64ArrayType>()(sourceArrayType) ) {
+           ptr = Int64ArrayType::CreateArray(numTuples, compDims, arrayName, allocate);
+         }
+         else if(CanDynamicCast<UInt64ArrayType>()(sourceArrayType) ) {
+           ptr = UInt64ArrayType::CreateArray(numTuples, compDims, arrayName, allocate);
+         }
+         else {
+          QString msg = QObject::tr("The created array is of unsupported type.");
+          f->setErrorCondition(Errors::UnsupportedType);
+          f->notifyErrorMessage(f->getHumanLabel(), msg, f->getErrorCondition());
+         }
+         return ptr;
+       }
+   };
+
   template<typename FilterClass, typename DataContainerClass>
   class GetPrereqArrayFromPath
   {
