@@ -202,6 +202,7 @@ void SegmentFeatures::execute()
       QString ss = QObject::tr("Total Features: %1").arg(gnum);
       if(gnum % 100 == 0) { notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss); }
     }
+    if(getCancel()) { break; }
   }
 
   // If there is an error set this to something negative and also set a message

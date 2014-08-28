@@ -108,7 +108,7 @@ void EBSDSegmentFeatures::setupFilterParameters()
   parameters.push_back(FilterParameter::New("Quats", "QuatsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getQuatsArrayPath(), true, ""));
   QStringList linkedProps("GoodVoxelsArrayPath");
   parameters.push_back(FilterParameter::NewConditional("Use GoodVoxels Array", "UseGoodVoxels", FilterParameterWidgetType::LinkedBooleanWidget, getUseGoodVoxels(), false, linkedProps));
-  parameters.push_back(FilterParameter::New("GoodVoxels", "GoodVoxelsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getGoodVoxelsArrayPath(), true, ""));
+  parameters.push_back(FilterParameter::New("GoodVoxels", "GoodVoxelsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getGoodVoxelsArrayPath(), false, ""));
 
   parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
   parameters.push_back(FilterParameter::New("FeatureIds", "FeatureIdsArrayName", FilterParameterWidgetType::StringWidget, getFeatureIdsArrayName(), true, ""));
@@ -267,7 +267,7 @@ void EBSDSegmentFeatures::execute()
   }
 
   // By default we randomize grains
-  if (true == m_RandomizeFeatureIds)
+  if (true == getRandomizeFeatureIds() && getCancel() == false)
   {
     totalPoints = m->getTotalPoints();
     randomizeFeatureIds(totalPoints, totalFeatures);
