@@ -241,9 +241,11 @@ void FindShapes::find_moments()
   float yRes = m->getYRes();
   float zRes = m->getZRes();
 
-  double modXRes = xRes * scaleFactor;
-  double modYRes = yRes * scaleFactor;
-  double modZRes = zRes * scaleFactor;
+  //using a modified resolution to keept he moment calculations "small" and prevent exceeding numerical bounds.
+  //scaleFactor is applied later to rescale the calculated axis lengths
+  float modXRes = xRes * scaleFactor;
+  float modYRes = yRes * scaleFactor;
+  float modZRes = zRes * scaleFactor;
 
   for (size_t i = 0; i < numfeatures; i++)
   {
@@ -333,13 +335,17 @@ void FindShapes::find_moments()
       }
     }
   }
-  float sphere = (2000.0f * DREAM3D::Constants::k_Pi * DREAM3D::Constants::k_Pi) / 9.0f;
+  double sphere = (2000.0f * DREAM3D::Constants::k_Pi * DREAM3D::Constants::k_Pi) / 9.0f;
   //constant for moments because voxels are broken into smaller voxels
-  float konst1 =  (modXRes / 2.0f) * (modYRes / 2.0f) * (modZRes / 2.0f);
+  double konst1 =  (modXRes / 2.0f) * (modYRes / 2.0f) * (modZRes / 2.0f);
   //constant for volumes because voxels are counted as one
-  float konst2 =  (xRes) * (yRes) * (zRes);
+  double konst2 =  (xRes) * (yRes) * (zRes);
+  double konst3 =  (modXRes) * (modYRes) * (modZRes);
+  double o3, vol5, omega3;
   for (size_t i = 1; i < numfeatures; i++)
   {
+    //calculating the modified volume for the omega3 value
+    vol5 = m_Volumes[i] * konst3;
     m_Volumes[i] = m_Volumes[i] * konst2;
     featuremoments[i * 6 + 0] = featuremoments[i * 6 + 0] * konst1;
     featuremoments[i * 6 + 1] = featuremoments[i * 6 + 1] * konst1;
@@ -353,9 +359,9 @@ void FindShapes::find_moments()
     u110 = -featuremoments[i * 6 + 3];
     u011 = -featuremoments[i * 6 + 4];
     u101 = -featuremoments[i * 6 + 5];
-    float o3 = (u200 * u020 * u002) + (2.0f * u110 * u101 * u011) - (u200 * u011 * u011) - (u020 * u101 * u101) - (u002 * u110 * u110);
-    float vol5 = powf(m_Volumes[i], 5);
-    float omega3 = vol5 / o3;
+    o3 = (u200 * u020 * u002) + (2.0f * u110 * u101 * u011) - (u200 * u011 * u011) - (u020 * u101 * u101) - (u002 * u110 * u110);
+    vol5 = powf(vol5, 5);
+    omega3 = vol5 / o3;
     omega3 = omega3 / sphere;
     if (omega3 > 1) { omega3 = 1; }
     if(vol5 == 0) { omega3 = 0; }
