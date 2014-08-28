@@ -63,11 +63,10 @@ CopyFeatureArrayToCellArray::~CopyFeatureArrayToCellArray()
 void CopyFeatureArrayToCellArray::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(FilterParameter::New("Feature Array Name", "SelectedFeatureArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getSelectedFeatureArrayPath(), false));
-  parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "", false));
-  parameters.push_back(FilterParameter::New("FeatureIds", "FeatureIdsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeatureIdsArrayPath(), false, ""));
-  parameters.push_back(FilterParameter::New("Created Array", "", FilterParameterWidgetType::SeparatorWidget, "", false));
-  parameters.push_back(FilterParameter::New("Created Array Name", "CreatedArrayName", FilterParameterWidgetType::StringWidget, getCreatedArrayName(), false, ""));
+  parameters.push_back(FilterParameter::New("Array to Copy to Cell Data", "SelectedFeatureArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getSelectedFeatureArrayPath(), false));
+  parameters.push_back(FilterParameter::New("Cell Feature Ids", "FeatureIdsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeatureIdsArrayPath(), false, ""));
+  parameters.push_back(FilterParameter::New("Created Data", "", FilterParameterWidgetType::SeparatorWidget, "", false));
+  parameters.push_back(FilterParameter::New("Created Cell Array Name", "CreatedArrayName", FilterParameterWidgetType::StringWidget, getCreatedArrayName(), false, ""));
 
   setFilterParameters(parameters);
 }

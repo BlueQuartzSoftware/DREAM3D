@@ -242,6 +242,7 @@ namespace DREAM3D
     const DREAM3D_STRING ElasticStrains("ElasticStrains");
     const DREAM3D_STRING EquivalentDiameters("EquivalentDiameters");
     const DREAM3D_STRING EulerAngles("EulerAngles");
+    const DREAM3D_STRING AvgEulerAngles("AvgEulerAngles");
     const DREAM3D_STRING F1List("F1List");
     const DREAM3D_STRING F1sptList("F1sptList");
     const DREAM3D_STRING F7List("F7List");
