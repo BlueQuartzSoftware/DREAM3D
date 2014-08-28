@@ -104,10 +104,14 @@ class DREAM3DWidgetsLib_EXPORT DataArrayCreationWidget : public QWidget, private
 
     void on_attributeMatrixList_currentIndexChanged(int index);
 
-    void on_dataArrayName_textChanged(const QString& string);
+//    void on_dataArrayName_textChanged(const QString& string);
     void on_dataArrayName_returnPressed();
+    void on_applyChangesBtn_clicked();
+    void widgetChanged(const QString& msg);
+
     void setLinkedConditionalState(int state);
     void fadeWidget(QWidget* widget, bool in);
+    void hideButton();
 
   protected:
     void populateComboBoxes();
@@ -121,6 +125,10 @@ class DREAM3DWidgetsLib_EXPORT DataArrayCreationWidget : public QWidget, private
   signals:
     void errorSettingFilterParameter(const QString& msg);
     void parametersChanged();
+
+  private slots:
+    void fadeInWidget(QWidget* widget);
+
 
   private:
     AbstractFilter*   m_Filter;

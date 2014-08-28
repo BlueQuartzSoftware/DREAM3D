@@ -95,10 +95,29 @@ void DataArrayCreationWidget::initializeWidget(FilterParameter* parameter, Abstr
 // -----------------------------------------------------------------------------
 void DataArrayCreationWidget::setupGui()
 {
-  if(m_Filter == NULL)
+
+
+  blockSignals(true);
+  if (m_FilterParameter != NULL)
   {
-    return;
+    QString units = m_FilterParameter->getUnits();
+    if(units.isEmpty() == false)
+    {
+      label->setText(m_FilterParameter->getHumanLabel() + " (" + units + ")");
+    }
+    else
+    {
+      label->setText(m_FilterParameter->getHumanLabel() );
+    }
+
+    QString str = m_Filter->property(PROPERTY_NAME_AS_CHAR).toString();
+    dataArrayName->setText(str);
   }
+  blockSignals(false);
+
+  applyChangesBtn->setVisible(false);
+
+
   // Catch when the filter is about to execute the preflight
   connect(m_Filter, SIGNAL(preflightAboutToExecute()),
           this, SLOT(beforePreflight()));
@@ -111,19 +130,8 @@ void DataArrayCreationWidget::setupGui()
   connect(m_Filter, SIGNAL(updateFilterParameters(AbstractFilter*)),
           this, SLOT(filterNeedsInputParameters(AbstractFilter*)));
 
-  if (m_FilterParameter == NULL)
-  {
-    return;
-  }
-  QString units = m_FilterParameter->getUnits();
-  if(units.isEmpty() == false)
-  {
-    label->setText(m_FilterParameter->getHumanLabel() + " (" + units + ")");
-  }
-  else
-  {
-    label->setText(m_FilterParameter->getHumanLabel() );
-  }
+  connect(dataArrayName, SIGNAL(textChanged(const QString&)),
+          this, SLOT(widgetChanged(const QString&)));
 
   dataContainerList->blockSignals(true);
   attributeMatrixList->blockSignals(true);
@@ -381,7 +389,75 @@ void DataArrayCreationWidget::on_attributeMatrixList_currentIndexChanged(int ind
   m_DidCausePreflight = false;
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DataArrayCreationWidget::on_dataArrayName_returnPressed()
+{
+  //qDebug() << "DataArrayCreationWidget::on_value_returnPressed() " << this;
+  m_DidCausePreflight = true;
+  on_applyChangesBtn_clicked();
+  m_DidCausePreflight = false;
+}
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DataArrayCreationWidget::fadeInWidget(QWidget* widget)
+{
+  if (faderWidget)
+  {
+    faderWidget->close();
+  }
+  faderWidget = new FaderWidget(widget);
+  faderWidget->start();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DataArrayCreationWidget::on_applyChangesBtn_clicked()
+{
+  dataArrayName->setStyleSheet(QString(""));
+  emit parametersChanged();
+
+  if (faderWidget)
+  {
+    faderWidget->close();
+  }
+  faderWidget = new FaderWidget(applyChangesBtn);
+  faderWidget->setFadeOut();
+  connect(faderWidget, SIGNAL(animationComplete() ),
+          this, SLOT(hideButton()));
+  faderWidget->start();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DataArrayCreationWidget::hideButton()
+{
+  dataArrayName->setToolTip("");
+  applyChangesBtn->setVisible(false);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DataArrayCreationWidget::widgetChanged(const QString& text)
+{
+  dataArrayName->setStyleSheet(QString::fromLatin1("color: rgb(255, 0, 0);"));
+  dataArrayName->setToolTip("Press the 'Return' key to apply your changes");
+  if(applyChangesBtn->isVisible() == false)
+  {
+    applyChangesBtn->setVisible(true);
+    fadeInWidget(applyChangesBtn);
+  }
+}
+
+
+
+#if 0
 // -----------------------------------------------------------------------------
 //blockSignals(false);
 // -----------------------------------------------------------------------------
@@ -393,17 +469,7 @@ void DataArrayCreationWidget::on_dataArrayName_textChanged(const QString& string
   m_DidCausePreflight = false;
 }
 
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void DataArrayCreationWidget::on_dataArrayName_returnPressed()
-{
-  qDebug() << "DataArrayCreationWidget::on_value_returnPressed() " << this;
-  m_DidCausePreflight = true;
-  emit parametersChanged();
-  m_DidCausePreflight = false;
-}
+#endif
 
 
 // -----------------------------------------------------------------------------
@@ -435,30 +501,6 @@ void DataArrayCreationWidget::afterPreflight()
 {
   // std::cout << "After Preflight" << std::endl;
 }
-
-#if 0
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-DataContainerArrayProxy DataArrayCreationWidget::generateDCAProxy()
-{
-  // This will only work for a single selection
-  DataContainerArrayProxy dcaProxy(true);
-  QString dcaName = dataContainerList->currentText();
-  DataContainerProxy dcProxy(dcaName, true);
-
-  QString amName = attributeMatrixList->currentText();
-  AttributeMatrixProxy amProxy(amName, true);
-
-  QString daName = dataArrayName->text();
-  DataArrayProxy daProxy(dcaName + "|" + amName, daName, true);
-  amProxy.dataArrays.insert(daName, daProxy);
-  dcProxy.attributeMatricies.insert(amName, amProxy);
-  dcaProxy.list.push_back(dcProxy);
-
-  return dcaProxy;
-}
-#endif
 
 // -----------------------------------------------------------------------------
 //
