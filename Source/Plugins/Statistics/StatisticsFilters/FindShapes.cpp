@@ -66,6 +66,8 @@ FindShapes::FindShapes()  :
   featuremoments = NULL;
   featureeigenvals = NULL;
 
+  scaleFactor = 1.0;
+
   INIT_DataArray(m_FeatureMoments, double);
   INIT_DataArray(m_FeatureEigenVals, double);
 
@@ -194,6 +196,13 @@ void FindShapes::execute()
   if(getErrorCondition() < 0) { return; }
 
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(m_FeatureIdsArrayPath.getDataContainerName());
+  float xRes = m->getXRes();
+  float yRes = m->getYRes();
+  float zRes = m->getZRes();
+
+  scaleFactor = 1.0/xRes;
+  if(yRes > xRes && yRes > zRes) scaleFactor = 1.0/yRes;
+  if(zRes > xRes && zRes > yRes) scaleFactor = 1.0/zRes;
 
   if(m->getXPoints() > 1 && m->getYPoints() > 1 && m->getZPoints() > 1) { find_moments(); }
   if(m->getXPoints() == 1 || m->getYPoints() == 1 || m->getZPoints() == 1) { find_moments2D(); }
@@ -225,12 +234,16 @@ void FindShapes::find_moments()
   m_FeatureMoments->resize(numfeatures * 6);
   featuremoments = m_FeatureMoments->getPointer(0);
 
-  float xPoints = m->getXPoints();
-  float yPoints = m->getYPoints();
-  float zPoints = m->getZPoints();
+  size_t xPoints = m->getXPoints();
+  size_t yPoints = m->getYPoints();
+  size_t zPoints = m->getZPoints();
   float xRes = m->getXRes();
   float yRes = m->getYRes();
   float zRes = m->getZRes();
+
+  double modXRes = xRes * scaleFactor;
+  double modYRes = yRes * scaleFactor;
+  double modZRes = zRes * scaleFactor;
 
   for (size_t i = 0; i < numfeatures; i++)
   {
@@ -255,40 +268,44 @@ void FindShapes::find_moments()
       yStride = j * xPoints;
       for(size_t k = 0; k < xPoints; k++)
       {
+        if(i == 375)
+        {
+          int stop = 0;
+        }
         int gnum = m_FeatureIds[zStride + yStride + k];
-        x = float(k) * xRes;
-        y = float(j) * yRes;
-        z = float(i) * zRes;
-        x1 = x + (xRes / 4);
-        x2 = x - (xRes / 4);
-        y1 = y + (yRes / 4);
-        y2 = y - (yRes / 4);
-        z1 = z + (zRes / 4);
-        z2 = z - (zRes / 4);
-        xdist1 = (x1 - m_Centroids[gnum * 3 + 0]);
-        ydist1 = (y1 - m_Centroids[gnum * 3 + 1]);
-        zdist1 = (z1 - m_Centroids[gnum * 3 + 2]);
-        xdist2 = (x1 - m_Centroids[gnum * 3 + 0]);
-        ydist2 = (y1 - m_Centroids[gnum * 3 + 1]);
-        zdist2 = (z2 - m_Centroids[gnum * 3 + 2]);
-        xdist3 = (x1 - m_Centroids[gnum * 3 + 0]);
-        ydist3 = (y2 - m_Centroids[gnum * 3 + 1]);
-        zdist3 = (z1 - m_Centroids[gnum * 3 + 2]);
-        xdist4 = (x1 - m_Centroids[gnum * 3 + 0]);
-        ydist4 = (y2 - m_Centroids[gnum * 3 + 1]);
-        zdist4 = (z2 - m_Centroids[gnum * 3 + 2]);
-        xdist5 = (x2 - m_Centroids[gnum * 3 + 0]);
-        ydist5 = (y1 - m_Centroids[gnum * 3 + 1]);
-        zdist5 = (z1 - m_Centroids[gnum * 3 + 2]);
-        xdist6 = (x2 - m_Centroids[gnum * 3 + 0]);
-        ydist6 = (y1 - m_Centroids[gnum * 3 + 1]);
-        zdist6 = (z2 - m_Centroids[gnum * 3 + 2]);
-        xdist7 = (x2 - m_Centroids[gnum * 3 + 0]);
-        ydist7 = (y2 - m_Centroids[gnum * 3 + 1]);
-        zdist7 = (z1 - m_Centroids[gnum * 3 + 2]);
-        xdist8 = (x2 - m_Centroids[gnum * 3 + 0]);
-        ydist8 = (y2 - m_Centroids[gnum * 3 + 1]);
-        zdist8 = (z2 - m_Centroids[gnum * 3 + 2]);
+        x = float(k * modXRes);
+        y = float(j * modYRes);
+        z = float(i * modZRes);
+        x1 = x + (modXRes / 4);
+        x2 = x - (modXRes / 4);
+        y1 = y + (modYRes / 4);
+        y2 = y - (modYRes / 4);
+        z1 = z + (modZRes / 4);
+        z2 = z - (modZRes / 4);
+        xdist1 = (x1 - (m_Centroids[gnum * 3 + 0] * scaleFactor));
+        ydist1 = (y1 - (m_Centroids[gnum * 3 + 1] * scaleFactor));
+        zdist1 = (z1 - (m_Centroids[gnum * 3 + 2] * scaleFactor));
+        xdist2 = (x1 - (m_Centroids[gnum * 3 + 0] * scaleFactor));
+        ydist2 = (y1 - (m_Centroids[gnum * 3 + 1] * scaleFactor));
+        zdist2 = (z2 - (m_Centroids[gnum * 3 + 2] * scaleFactor));
+        xdist3 = (x1 - (m_Centroids[gnum * 3 + 0] * scaleFactor));
+        ydist3 = (y2 - (m_Centroids[gnum * 3 + 1] * scaleFactor));
+        zdist3 = (z1 - (m_Centroids[gnum * 3 + 2] * scaleFactor));
+        xdist4 = (x1 - (m_Centroids[gnum * 3 + 0] * scaleFactor));
+        ydist4 = (y2 - (m_Centroids[gnum * 3 + 1] * scaleFactor));
+        zdist4 = (z2 - (m_Centroids[gnum * 3 + 2] * scaleFactor));
+        xdist5 = (x2 - (m_Centroids[gnum * 3 + 0] * scaleFactor));
+        ydist5 = (y1 - (m_Centroids[gnum * 3 + 1] * scaleFactor));
+        zdist5 = (z1 - (m_Centroids[gnum * 3 + 2] * scaleFactor));
+        xdist6 = (x2 - (m_Centroids[gnum * 3 + 0] * scaleFactor));
+        ydist6 = (y1 - (m_Centroids[gnum * 3 + 1] * scaleFactor));
+        zdist6 = (z2 - (m_Centroids[gnum * 3 + 2] * scaleFactor));
+        xdist7 = (x2 - (m_Centroids[gnum * 3 + 0] * scaleFactor));
+        ydist7 = (y2 - (m_Centroids[gnum * 3 + 1] * scaleFactor));
+        zdist7 = (z1 - (m_Centroids[gnum * 3 + 2] * scaleFactor));
+        xdist8 = (x2 - (m_Centroids[gnum * 3 + 0] * scaleFactor));
+        ydist8 = (y2 - (m_Centroids[gnum * 3 + 1] * scaleFactor));
+        zdist8 = (z2 - (m_Centroids[gnum * 3 + 2] * scaleFactor));
 
         xx = ((ydist1) * (ydist1)) + ((zdist1) * (zdist1)) + ((ydist2) * (ydist2)) + ((zdist2) * (zdist2)) + ((ydist3) * (ydist3)) + ((zdist3) * (zdist3))
              + ((ydist4) * (ydist4)) + ((zdist4) * (zdist4)) + ((ydist5) * (ydist5)) + ((zdist5) * (zdist5)) + ((ydist6) * (ydist6)) + ((zdist6) * (zdist6))
@@ -305,6 +322,7 @@ void FindShapes::find_moments()
              + ((ydist7) * (zdist7)) + ((ydist8) * (zdist8));
         xz = ((xdist1) * (zdist1)) + ((xdist2) * (zdist2)) + ((xdist3) * (zdist3)) + ((xdist4) * (zdist4)) + ((xdist5) * (zdist5)) + ((xdist6) * (zdist6))
              + ((xdist7) * (zdist7)) + ((xdist8) * (zdist8));
+
         featuremoments[gnum * 6 + 0] = featuremoments[gnum * 6 + 0] + xx;
         featuremoments[gnum * 6 + 1] = featuremoments[gnum * 6 + 1] + yy;
         featuremoments[gnum * 6 + 2] = featuremoments[gnum * 6 + 2] + zz;
@@ -317,7 +335,7 @@ void FindShapes::find_moments()
   }
   float sphere = (2000.0f * DREAM3D::Constants::k_Pi * DREAM3D::Constants::k_Pi) / 9.0f;
   //constant for moments because voxels are broken into smaller voxels
-  float konst1 =  (xRes / 2.0f) * (yRes / 2.0f) * (zRes / 2.0f);
+  float konst1 =  (modXRes / 2.0f) * (modYRes / 2.0f) * (modZRes / 2.0f);
   //constant for volumes because voxels are counted as one
   float konst2 =  (xRes) * (yRes) * (zRes);
   for (size_t i = 1; i < numfeatures; i++)
@@ -378,6 +396,9 @@ void FindShapes::find_moments2D()
     yRes = m->getYRes();
   }
 
+  double modXRes = xRes * scaleFactor;
+  double modYRes = yRes * scaleFactor;
+
   for (size_t i = 0; i < 6 * numfeatures; i++)
   {
     featuremoments[i] = 0.0;
@@ -392,12 +413,12 @@ void FindShapes::find_moments2D()
     for(int k = 0; k < xPoints; k++)
     {
       int gnum = m_FeatureIds[yStride + k];
-      x = float(k) * xRes;
-      y = float(j) * yRes;
-      x1 = x + (xRes / 2);
-      x2 = x - (xRes / 2);
-      y1 = y + (yRes / 2);
-      y2 = y - (yRes / 2);
+      x = float(k) * modXRes;
+      y = float(j) * modYRes;
+      x1 = x + (modXRes / 2);
+      x2 = x - (modXRes / 2);
+      y1 = y + (modYRes / 2);
+      y2 = y - (modYRes / 2);
       xdist1 = (x1 - m_Centroids[gnum * 3 + 0]);
       ydist1 = (y1 - m_Centroids[gnum * 3 + 1]);
       xdist2 = (x1 - m_Centroids[gnum * 3 + 0]);
@@ -414,7 +435,7 @@ void FindShapes::find_moments2D()
       featuremoments[gnum * 6 + 2] = featuremoments[gnum * 6 + 2] + xy;
     }
   }
-  float konst1 = (xRes / 2.0f) * (yRes / 2.0f);
+  float konst1 = (modXRes / 2.0f) * (modYRes / 2.0f);
   for (size_t i = 1; i < numfeatures; i++)
   {
     featuremoments[i * 6 + 0] = featuremoments[i * 6 + 0] * konst1;
@@ -428,14 +449,14 @@ void FindShapes::find_moments2D()
 // -----------------------------------------------------------------------------
 void FindShapes::find_axes()
 {
-  float I1, I2, I3;
-  float Ixx, Iyy, Izz, Ixy, Ixz, Iyz;
+  double I1, I2, I3;
+  double Ixx, Iyy, Izz, Ixy, Ixz, Iyz;
   double a, b, c, d, f, g, h;
   double rsquare, r, theta;
-  float A, B, C;
-  float r1, r2, r3;
+  double A, B, C;
+  double r1, r2, r3;
   float bovera, covera;
-  float value;
+  double value;
 
   size_t numfeatures = m_CentroidsPtr.lock()->getNumberOfTuples();
 
@@ -461,8 +482,8 @@ void FindShapes::find_axes()
     d = 0.0;
     d = ((Ixz * Iyy * Ixz) + (Ixy * Izz * Ixy) + (Iyz * Ixx * Iyz) - (Ixx * Iyy * Izz) - (Ixy * Iyz * Ixz) - (Ixy * Iyz * Ixz));
     // f and g are the p and q values when reducing the cubic equation to t^3 + pt + q = 0
-    f = ((3 * c / a) - ((b / a) * (b / a))) / 3.0f;
-    g = ((2 * (b / a) * (b / a) * (b / a)) - (9.0f * b * c / (a * a)) + (27.0f * (d / a))) / 27.0f;
+    f = ((3.0f * c / a) - ((b / a) * (b / a))) / 3.0f;
+    g = ((2.0f * (b / a) * (b / a) * (b / a)) - (9.0f * b * c / (a * a)) + (27.0f * (d / a))) / 27.0f;
     h = (g * g / 4.0f) + (f * f * f / 27.0f);
     rsquare = (g * g / 4) - h;
     r = sqrt(rsquare);
@@ -491,21 +512,21 @@ void FindShapes::find_axes()
     featureeigenvals[3 * i + 1] = r2;
     featureeigenvals[3 * i + 2] = r3;
 
-    I1 = (15 * r1) / (4 * DREAM3D::Constants::k_Pi);
-    I2 = (15 * r2) / (4 * DREAM3D::Constants::k_Pi);
-    I3 = (15 * r3) / (4 * DREAM3D::Constants::k_Pi);
-    A = (I1 + I2 - I3) / 2;
-    B = (I1 + I3 - I2) / 2;
-    C = (I2 + I3 - I1) / 2;
+    I1 = (15.0f * r1) / (4.0f * DREAM3D::Constants::k_Pi);
+    I2 = (15.0f * r2) / (4.0f * DREAM3D::Constants::k_Pi);
+    I3 = (15.0f * r3) / (4.0f * DREAM3D::Constants::k_Pi);
+    A = (I1 + I2 - I3) / 2.0f;
+    B = (I1 + I3 - I2) / 2.0f;
+    C = (I2 + I3 - I1) / 2.0f;
     a = (A * A * A * A) / (B * C);
     a = powf(a, 0.1f);
     b = B / A;
     b = sqrt(b) * a;
     c = A / (a * a * a * b);
 
-    m_AxisLengths[3 * i] = a;
-    m_AxisLengths[3 * i + 1] = b;
-    m_AxisLengths[3 * i + 2] = c;
+    m_AxisLengths[3 * i] = a / scaleFactor;
+    m_AxisLengths[3 * i + 1] = b / scaleFactor;
+    m_AxisLengths[3 * i + 2] = c / scaleFactor;
     bovera = b / a;
     covera = c / a;
     if(A == 0 || B == 0 || C == 0) { bovera = 0, covera = 0; }
@@ -541,8 +562,8 @@ void FindShapes::find_axes2D()
     postterm2 = powf(postterm2, 0.125f);
     r1 = preterm * postterm1;
     r2 = preterm * postterm2;
-    m_AxisLengths[3 * i] = r1;
-    m_AxisLengths[3 * i + 1] = r2;
+    m_AxisLengths[3 * i] = r1 / scaleFactor;
+    m_AxisLengths[3 * i + 1] = r2 / scaleFactor;
     m_AspectRatios[2 * i] = r2 / r1;
     m_AspectRatios[2 * i + 1] = 0;
   }

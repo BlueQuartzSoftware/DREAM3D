@@ -183,6 +183,7 @@ namespace DREAM3D
     const DREAM3D_STRING EulerColor("EulerColor");
     const DREAM3D_STRING FarFeatureQuats("FarFeatureQuats");
     const DREAM3D_STRING FarFeatureZoneIds("FarFeatureZoneIds");
+    const DREAM3D_STRING FitQuality("FitQuality");
     const DREAM3D_STRING FlatImageData("FlatImageData");
     const DREAM3D_STRING GBEuclideanDistances("GBEuclideanDistances");
     const DREAM3D_STRING GlobAlpha("GlobAlpha");

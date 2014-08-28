@@ -351,18 +351,18 @@ bool VectorSegmentFeatures::determineGrouping(int64_t referencepoint, int64_t ne
       group = true;
       m_FeatureIds[neighborpoint] = gnum;
     }
-    else
-    {
-      v2[0] *= -1;
-      v2[1] *= -1;
-      w = GeometryMath::CosThetaBetweenVectors(v1, v2);
-      w = acos(w);
-      if(w < angleTolerance)
-      {
-        group = true;
-        m_FeatureIds[neighborpoint] = gnum;
-      }
-    }
+    //else
+    //{
+    //  v2[0] *= -1;
+    //  v2[1] *= -1;
+    //  w = GeometryMath::CosThetaBetweenVectors(v1, v2);
+    //  w = acos(w);
+    //  if(w < angleTolerance)
+    //  {
+    //    group = true;
+    //    m_FeatureIds[neighborpoint] = gnum;
+    //  }
+    //}
   }
 
   return group;

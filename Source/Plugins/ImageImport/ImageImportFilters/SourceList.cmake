@@ -13,7 +13,7 @@ START_FILTER_GROUP(${ImageImport_BINARY_DIR} "${_filterGroupName}" "Image Import
 
 set(_PublicFilters
   ImportImageStack
-  ImportImagesAsVector
+  ImportVectorImageStack
   SaveImages
 )
 

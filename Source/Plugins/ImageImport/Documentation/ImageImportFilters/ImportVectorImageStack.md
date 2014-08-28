@@ -1,4 +1,4 @@
-Import Image Stack Filter {#importimagesasvector}
+Import Image Stack Filter {#importvectorimagestack}
 ======
 
 ## Group (Subgroup) ##
