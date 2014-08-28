@@ -75,6 +75,9 @@ class  INLWriter : public FileWriter
     DREAM3D_FILTER_PARAMETER(DataArrayPath, CrystalStructuresArrayPath)
     Q_PROPERTY(DataArrayPath CrystalStructuresArrayPath READ getCrystalStructuresArrayPath WRITE setCrystalStructuresArrayPath)
 
+    DREAM3D_FILTER_PARAMETER(DataArrayPath, NumFeaturesArrayPath)
+    Q_PROPERTY(DataArrayPath NumFeaturesArrayPath READ getNumFeaturesArrayPath WRITE setNumFeaturesArrayPath)
+
     DREAM3D_FILTER_PARAMETER(DataArrayPath, CellEulerAnglesArrayPath)
     Q_PROPERTY(DataArrayPath CellEulerAnglesArrayPath READ getCellEulerAnglesArrayPath WRITE setCellEulerAnglesArrayPath)
 
@@ -116,6 +119,7 @@ class  INLWriter : public FileWriter
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, CellPhases)
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, CellEulerAngles)
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(unsigned int, CrystalStructures)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, NumFeatures)
     StringDataArray::Pointer m_MaterialNames;
 
     void dataCheck();
