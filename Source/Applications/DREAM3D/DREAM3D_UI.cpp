@@ -51,6 +51,7 @@
 #include <QtGui/QListWidget>
 #include <QtGui/QDesktopServices>
 #include <QtGui/QToolButton>
+#include <QtGui/QScrollBar>
 
 //-- DREAM3D Includes
 #include "DREAM3DLib/DREAM3DVersion.h"
@@ -449,6 +450,8 @@ void DREAM3D_UI::setupGui()
 
   pipelineViewWidget->setInputParametersWidget(filterInputWidget);
   pipelineViewWidget->setScrollArea(pipelineViewScrollArea);
+
+  pipelineViewScrollArea->verticalScrollBar()->setSingleStep(5);
 
   // Make the connections between the gui elements
 //  filterLibraryDockWidget->connectFilterList(filterListDockWidget);

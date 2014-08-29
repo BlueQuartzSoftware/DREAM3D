@@ -32,7 +32,10 @@
    </font>
   </property>
   <property name="mouseTracking">
-   <bool>true</bool>
+   <bool>false</bool>
+  </property>
+  <property name="focusPolicy">
+   <enum>Qt::ClickFocus</enum>
   </property>
   <property name="contextMenuPolicy">
    <enum>Qt::CustomContextMenu</enum>
