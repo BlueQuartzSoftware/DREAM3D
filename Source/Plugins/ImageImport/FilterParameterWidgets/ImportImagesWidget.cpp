@@ -148,7 +148,7 @@ void ImportImagesWidget::setupGui()
     zOrigin->setValidator(validator);
   }
   m_WidgetList << m_InputDir << m_InputDirBtn;
-  m_WidgetList << m_FileExt << m_ErrorMessage << m_TotalDigits;
+  m_WidgetList << m_FileExt << m_ErrorMessage << m_TotalDigits << m_FileSuffix;
   m_WidgetList << m_FilePrefix << m_TotalSlices << m_ZStartIndex << m_ZEndIndex;
   m_WidgetList << xRes << yRes << zRes;
   m_WidgetList << xOrigin << yOrigin << zOrigin;

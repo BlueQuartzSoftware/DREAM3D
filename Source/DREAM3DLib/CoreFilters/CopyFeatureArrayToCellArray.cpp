@@ -63,9 +63,11 @@ CopyFeatureArrayToCellArray::~CopyFeatureArrayToCellArray()
 void CopyFeatureArrayToCellArray::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(FilterParameter::New("Feature Array Name", "SelectedFeatureArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getSelectedFeatureArrayPath(), false));
-  parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
-  parameters.push_back(FilterParameter::New("FeatureIds", "FeatureIdsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeatureIdsArrayPath(), true, ""));
+  parameters.push_back(FilterParameter::New("Array to Copy to Cell Data", "SelectedFeatureArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getSelectedFeatureArrayPath(), false));
+  parameters.push_back(FilterParameter::New("Cell Feature Ids", "FeatureIdsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeatureIdsArrayPath(), false, ""));
+  parameters.push_back(FilterParameter::New("Created Data", "", FilterParameterWidgetType::SeparatorWidget, "", false));
+  parameters.push_back(FilterParameter::New("Created Cell Array Name", "CreatedArrayName", FilterParameterWidgetType::StringWidget, getCreatedArrayName(), false, ""));
+
   setFilterParameters(parameters);
 }
 
@@ -77,6 +79,7 @@ void CopyFeatureArrayToCellArray::readFilterParameters(AbstractFilterParametersR
   reader->openFilterGroup(this, index);
   setFeatureIdsArrayPath(reader->readDataArrayPath("FeatureIdsArrayPath", getFeatureIdsArrayPath() ) );
   setSelectedFeatureArrayPath( reader->readDataArrayPath( "SelectedFeatureArrayPath", getSelectedFeatureArrayPath() ) );
+  setCreatedArrayName(reader->readString("CreatedArrayName", getCreatedArrayName() ) );
   reader->closeFilterGroup();
 }
 
@@ -87,8 +90,9 @@ int CopyFeatureArrayToCellArray::writeFilterParameters(AbstractFilterParametersW
 {
   writer->openFilterGroup(this, index);
   DREAM3D_FILTER_WRITE_PARAMETER(FeatureIdsArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(SelectedFeatureArrayPath)
-  writer->closeFilterGroup();
+      DREAM3D_FILTER_WRITE_PARAMETER(SelectedFeatureArrayPath)
+      DREAM3D_FILTER_WRITE_PARAMETER(CreatedArrayName)
+      writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
 
@@ -99,28 +103,70 @@ void CopyFeatureArrayToCellArray::dataCheck()
 {
   setErrorCondition(0);
 
-  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, m_SelectedFeatureArrayPath.getDataContainerName(), false);
+  if(getSelectedFeatureArrayPath().isValid() == false)
+  {
+    setErrorCondition(-11000);
+    notifyErrorMessage(getHumanLabel(), "Please select a Feature Attribute Array to copy into a Cell Attribute Matrix.", getErrorCondition());
+    return;
+  }
+
+  if(getCreatedArrayName().isEmpty() == true)
+  {
+    setErrorCondition(-11002);
+    notifyErrorMessage(getHumanLabel(), "The created array name was empty. You must set a name for the new Attribute Array.", getErrorCondition());
+    return;
+  }
+
+  if(getFeatureIdsArrayPath().isValid() == false)
+  {
+    setErrorCondition(-11003);
+    notifyErrorMessage(getHumanLabel(), "Please select the cell level array that is the Feature IDs.", getErrorCondition());
+    return;
+  }
+
+  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getSelectedFeatureArrayPath().getDataContainerName(), false);
   if(getErrorCondition() < 0 || NULL == m) { return; }
+
   AttributeMatrix::Pointer cellAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getFeatureIdsArrayPath().getAttributeMatrixName(), -301);
   if(getErrorCondition() < 0 || NULL == cellAttrMat.get() ) { return; }
-  AttributeMatrix::Pointer cellFeatureAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, m_SelectedFeatureArrayPath.getAttributeMatrixName(), -301);
+
+  AttributeMatrix::Pointer cellFeatureAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getSelectedFeatureArrayPath().getAttributeMatrixName(), -302);
   if(getErrorCondition() < 0) { return; }
 
   QVector<size_t> dims(1, 1);
   m_FeatureIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeatureIdsArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  else
+  {
+    return;
+  }
 
-  if(m_SelectedFeatureArrayPath.isEmpty() == true)
+  IDataArray::Pointer featureArrayPtr = cellFeatureAttrMat->getAttributeArray(getSelectedFeatureArrayPath().getDataArrayName());
+
+  if(featureArrayPtr.get() != NULL)
   {
-    setErrorCondition(-11000);
-    notifyErrorMessage(getHumanLabel(), "An array from the Volume DataContainer must be selected.", getErrorCondition());
+    DataArray<int32_t>::Pointer features = m_FeatureIdsPtr.lock(); // Purely for convenience
+
+
+    if(cellAttrMat->doesAttributeArrayExist(getCreatedArrayName()) == true)
+    {
+      setErrorCondition(-11007);
+      notifyErrorMessage(getHumanLabel(), "The cell level array already exists with the given name. Please set a different name.", getErrorCondition());
+      return;
+    }
+    IDataArray::Pointer createdArray = featureArrayPtr->createNewArray(features->getNumberOfTuples(), featureArrayPtr->getComponentDimensions(), getCreatedArrayName(), false);
+    cellAttrMat->addAttributeArray(createdArray->getName(), createdArray);
+
   }
-  if(cellFeatureAttrMat->doesAttributeArrayExist(m_SelectedFeatureArrayPath.getDataArrayName()) == false)
+  else
   {
+
     setErrorCondition(-11001);
-    notifyErrorMessage(getHumanLabel(), "The array selected does not exist in the DataContainer selected.", getErrorCondition());
+    notifyErrorMessage(getHumanLabel(), "The cell level array does not exist in the DataContainer and AttributeMatrix selected.", getErrorCondition());
+    return;
   }
+
 }
 
 

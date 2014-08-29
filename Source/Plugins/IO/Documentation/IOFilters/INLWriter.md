@@ -1,6 +1,8 @@
 Write INL File {#inlwriter}
 ======
+
 ## Group (Subgroup) ##
+
 IO Filters (Output)
 
 ## Description ##
@@ -16,9 +18,10 @@ This filter writes out a file in column format that is space delimited. Header l
 - Feature Id
 - Phase Id
 - Symmetry
- 
+
 Some information about the phase is included in the header section of the file in addtion
- to values for the Origin, Step Size, Dimensions and number of **Features** in the file.
+ to values for the Origin, Step Size, Dimensions and number of **Features** in the file. In order to gather this information the filter
+ such as "Find Number of Features" needs to be inserted before this filter.
 
 ## Parameters ##
 
@@ -27,7 +30,8 @@ Some information about the phase is included in the header section of the file i
 | Output File | String |
 
 ## Required DataContainers ##
-Voxel
+
+Volume Data Container
 
 ## Required Arrays ##
 
@@ -37,6 +41,7 @@ Voxel
 | Cell | CellEulerAngles | | These are the angles used to determine the colors | Read H5Ebsd File (IO), Match Crystallography (SyntheticBuilding) |
 | Cell | CellPhases | | These are used to determine which ensemble the **Cell** belongs to | Read H5Ebsd File (IO), Pack Primary Phases (SyntheticBuilding), Insert Precipitate Phases (SyntheticBuilding), Establish Matrix Phase (SyntheticBuilding) |
 | Ensemble | CrystalStructures | | These are the symmetries of the ensembles, which dictate orientation operations and which color palatte is used | Read H5Ebsd File (IO), Read Ensemble Info File (IO), Initialize Synthetic Volume (SyntheticBuilding) |
+| Ensemble | Number of Features | The number of features per phase | | Find Num. Features (in the Statistics group) |
 | Ensemble | Material Name |  | | Read H5Ebsd File (IO) |
 
 ## Created Arrays ##
@@ -46,7 +51,7 @@ None
 
 ## Authors ##
 
-**Copyright:** 2012 Michael A. Groeber (AFRL),2012 Michael A. Jackson (BlueQuartz Software)
+**Copyright:** 2014 Michael A. Groeber (AFRL),2014 Michael A. Jackson (BlueQuartz Software)
 
 **Contact Info:** dream3d@bluequartz.net
 

@@ -1812,6 +1812,7 @@ float PackPrimaryPhases::check_fillingerror(int gadd, int gremove, Int32ArrayTyp
   float multiplier = 1.0;
   if(gadd > 0)
   {
+    bool good = true;
     size_t key, val;
     k1 = 2;
     k2 = -1;
@@ -1869,13 +1870,22 @@ float PackPrimaryPhases::check_fillingerror(int gadd, int gremove, Int32ArrayTyp
           {
             if(exclusionOwners[featureOwnersIdx] == 0)
             {
+              good = false;
+              if(availablePoints.size() == availablePointsCount) good = true; 
               key = availablePoints[featureOwnersIdx];
               availablePoints.erase(featureOwnersIdx);
               val = availablePointsInv[availablePointsCount-1];
-              availablePointsInv[key] = val;
               availablePointsInv.erase(availablePointsCount-1);
-              availablePoints[val] = key;
+              if(key < availablePointsCount-1)
+              {
+                availablePointsInv[key] = val;
+                availablePoints[val] = key;
+              }
               availablePointsCount--;
+              if(availablePoints.size() != availablePointsCount && good == true)
+              {
+                int stop = 0;
+              }
             }
             exclusionOwners[featureOwnersIdx]++;
           }

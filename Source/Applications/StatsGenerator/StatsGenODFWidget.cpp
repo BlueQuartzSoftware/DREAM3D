@@ -56,6 +56,13 @@
 #include <QtGui/QFileDialog>
 #include <QtGui/QAbstractItemDelegate>
 
+#include "EbsdLib/TSL/AngConstants.h"
+#include "EbsdLib/TSL/AngReader.h"
+#include "EbsdLib/HKL/CtfConstants.h"
+#include "EbsdLib/HKL/CtfReader.h"
+
+
+
 #include "DREAM3DLib/Common/Texture.hpp"
 #include "DREAM3DLib/Common/StatsGen.hpp"
 #include "DREAM3DLib/Utilities/IO/AngleFileLoader.h"
@@ -532,12 +539,12 @@ void StatsGenODFWidget::poleFigureGenerationComplete()
 // -----------------------------------------------------------------------------
 QImage generateODFPoleFigure(const PoleFigureData& data)
 {
-//  PoleFigureImageUtilities colorPoleFigure;
-//#if COLOR_POLE_FIGURES
-//  return colorPoleFigure.generateColorPoleFigureImage(data);
-//#else
-//  return colorPoleFigure.generatePoleFigureImage(data);
-//#endif
+  //  PoleFigureImageUtilities colorPoleFigure;
+  //#if COLOR_POLE_FIGURES
+  //  return colorPoleFigure.generateColorPoleFigureImage(data);
+  //#else
+  //  return colorPoleFigure.generatePoleFigureImage(data);
+  //#endif
   return QImage();
 }
 
@@ -649,7 +656,7 @@ void StatsGenODFWidget::on_m_CalculateODFBtn_clicked()
   }
   else if ( Ebsd::CrystalStructure::OrthoRhombic == m_CrystalStructure)
   {
-//    // We now need to resize all the arrays here to make sure they are all allocated
+    //    // We now need to resize all the arrays here to make sure they are all allocated
     odf.resize(OrthoRhombicOps::k_OdfSize);
     Texture::CalculateOrthoRhombicODFData(e1s.data(), e2s.data(), e3s.data(),
                                           weights.data(), sigmas.data(), true,
@@ -757,7 +764,7 @@ void StatsGenODFWidget::on_addODFTextureBtn_clicked()
 void StatsGenODFWidget::on_selectAnglesFile_clicked()
 {
   QString proposedFile = m_OpenDialogLastDirectory;
-  QString file = QFileDialog::getOpenFileName(this, tr("Select Angles File"), proposedFile, tr("Text Document (*.txt)"));
+  QString file = QFileDialog::getOpenFileName(this, tr("Select Angles File"), proposedFile, tr("Text Document (*.txt *.ang *.ctf)"));
   angleFilePath->setText(file);
 }
 
@@ -773,6 +780,83 @@ void StatsGenODFWidget::on_loadODFTextureBtn_clicked()
   {
     return;
   }
+
+  QFileInfo fi(angleFilePath->text());
+  if(fi.exists() == false)
+  {
+    return;
+  }
+
+  size_t count = 0;
+  QVector<float> e1s(count);
+  QVector<float> e2s(count);
+  QVector<float> e3s(count);
+  QVector<float> weights(count);
+  QVector<float> sigmas(count);
+
+  if (fi.suffix().compare(Ebsd::Ang::FileExt) == 0)
+  {
+    AngReader loader;
+    loader.setFileName(angleFilePath->text());
+    int err = loader.readFile();
+    if(err < 0)
+    {
+      QMessageBox::critical(this, "Error loading the ANG file", loader.getErrorMessage(), QMessageBox::Ok);
+      return;
+    }
+    float* phi1 = loader.getPhi1Pointer();
+    float* phi = loader.getPhiPointer();
+    float* phi2 = loader.getPhi2Pointer();
+
+    int xDim = loader.getXDimension();
+    int yDim = loader.getYDimension();
+    count = xDim * yDim;
+    e1s.resize(count);
+    e2s.resize(count);
+    e3s.resize(count);
+    weights.resize(count);
+    sigmas.resize(count);
+    for(int i = 0; i < count; ++i)
+    {
+      e1s[i] = phi1[i];
+      e2s[i] = phi[i];
+      e3s[i] = phi2[i];
+      weights[i] = 1.0;
+      sigmas[i] = 0.0;
+    }
+  }
+  else if (fi.suffix().compare(Ebsd::Ctf::FileExt) == 0)
+  {
+    CtfReader loader;
+    loader.setFileName(angleFilePath->text());
+    int err = loader.readFile();
+    if(err < 0)
+    {
+      QMessageBox::critical(this, "Error loading the CTF file", loader.getErrorMessage(), QMessageBox::Ok);
+      return;
+    }
+    float* phi1 = loader.getEuler1Pointer();
+    float* phi = loader.getEuler2Pointer();
+    float* phi2 = loader.getEuler3Pointer();
+
+    int xDim = loader.getXDimension();
+    int yDim = loader.getYDimension();
+    count = xDim * yDim;
+    e1s.resize(count);
+    e2s.resize(count);
+    e3s.resize(count);
+    weights.resize(count);
+    sigmas.resize(count);
+    for(int i = 0; i < count; ++i)
+    {
+      e1s[i] = phi1[i];
+      e2s[i] = phi[i];
+      e3s[i] = phi2[i];
+      weights[i] = 1.0;
+      sigmas[i] = 0.0;
+    }
+  }
+
   else
   {
     AngleFileLoader::Pointer loader = AngleFileLoader::New();
@@ -808,36 +892,38 @@ void StatsGenODFWidget::on_loadODFTextureBtn_clicked()
       QMessageBox::critical(this, "Error Loading Angle data", loader->getErrorMessage(), QMessageBox::Ok);
       return;
     }
-
-    m_ODFTableView->setDisabled(true);
-    m_ODFTableModel->removeRows(0, m_ODFTableModel->rowCount());
-
-
-    size_t count = data->getNumberOfTuples();
-    QVector<float> e1s(count);
-    QVector<float> e2s(count);
-    QVector<float> e3s(count);
-    QVector<float> weights(count);
-    QVector<float> sigmas(count);
+    count = data->getNumberOfTuples();
+    e1s.resize(count);
+    e2s.resize(count);
+    e3s.resize(count);
+    weights.resize(count);
+    sigmas.resize(count);
     for(int i = 0; i < count; ++i)
     {
       e1s[i] = data->getComponent(i, 0);
       e2s[i] = data->getComponent(i, 1);
       e3s[i] = data->getComponent(i, 2);
-      weights[i] = 99.0;
+      weights[i] = 1.0;
       sigmas[i] = 0.0;
     }
 
-    m_ODFTableModel->blockSignals(true);
-    m_ODFTableModel->setColumnData(SGODFTableModel::Euler1, e1s);
-    m_ODFTableModel->setColumnData(SGODFTableModel::Euler2, e2s);
-    m_ODFTableModel->setColumnData(SGODFTableModel::Euler3, e3s);
-    m_ODFTableModel->setColumnData(SGODFTableModel::Weight, weights);
-    m_ODFTableModel->blockSignals(false);
-    m_ODFTableModel->setColumnData(SGODFTableModel::Sigma, sigmas);
-
-    on_m_CalculateODFBtn_clicked();
   }
+  m_ODFTableView->setDisabled(true);
+  m_ODFTableModel->removeRows(0, m_ODFTableModel->rowCount());
+
+#if 1
+
+
+  m_ODFTableModel->blockSignals(true);
+  m_ODFTableModel->setColumnData(SGODFTableModel::Euler1, e1s);
+  m_ODFTableModel->setColumnData(SGODFTableModel::Euler2, e2s);
+  m_ODFTableModel->setColumnData(SGODFTableModel::Euler3, e3s);
+  m_ODFTableModel->setColumnData(SGODFTableModel::Weight, weights);
+  m_ODFTableModel->setColumnData(SGODFTableModel::Sigma, sigmas);
+  m_ODFTableModel->blockSignals(false);
+#endif
+  on_m_CalculateODFBtn_clicked();
+
 }
 
 

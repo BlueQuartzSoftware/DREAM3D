@@ -33,8 +33,8 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef _ImportImagesAsVector_H_
-#define _ImportImagesAsVector_H_
+#ifndef _ImportVectorImageStack_H_
+#define _ImportVectorImageStack_H_
 
 #include <QtCore/QString>
 
@@ -45,21 +45,21 @@
 
 #include "ImageImport/ImageImportConstants.h"
 /**
- * @class ImportImagesAsVector ImportImagesAsVector.h ImageImport/Code/ImageImportFilters/ImportImagesAsVector.h
+ * @class ImportVectorImageStack ImportVectorImageStack.h ImageImport/Code/ImageImportFilters/ImportVectorImageStack.h
  * @brief
  * @author
  * @date
  * @version 1.0
  */
-class ImportImagesAsVector : public AbstractFilter
+class ImportVectorImageStack : public AbstractFilter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
-    DREAM3D_SHARED_POINTERS(ImportImagesAsVector)
-    DREAM3D_STATIC_NEW_MACRO(ImportImagesAsVector)
-    DREAM3D_TYPE_MACRO_SUPER(ImportImagesAsVector, AbstractFilter)
+    DREAM3D_SHARED_POINTERS(ImportVectorImageStack)
+    DREAM3D_STATIC_NEW_MACRO(ImportVectorImageStack)
+    DREAM3D_TYPE_MACRO_SUPER(ImportVectorImageStack, AbstractFilter)
 
-    virtual ~ImportImagesAsVector();
+    virtual ~ImportVectorImageStack();
 
     DREAM3D_FILTER_PARAMETER(QString, DataContainerName)
     Q_PROPERTY(QString DataContainerName READ getDataContainerName WRITE setDataContainerName)
@@ -68,14 +68,18 @@ class ImportImagesAsVector : public AbstractFilter
 
     DREAM3D_FILTER_PARAMETER(int64_t, StartIndex)
     DREAM3D_FILTER_PARAMETER(int64_t, EndIndex)
+    DREAM3D_FILTER_PARAMETER(int64_t, StartComp)
+    DREAM3D_FILTER_PARAMETER(int64_t, EndComp)
     DREAM3D_FILTER_PARAMETER(FloatVec3_t, Resolution)
     DREAM3D_FILTER_PARAMETER(FloatVec3_t, Origin)
 
     DREAM3D_FILTER_PARAMETER(QString, InputPath)
     DREAM3D_FILTER_PARAMETER(QString, FilePrefix)
+    DREAM3D_FILTER_PARAMETER(QString, Separator)
     DREAM3D_FILTER_PARAMETER(QString, FileSuffix)
     DREAM3D_FILTER_PARAMETER(QString, FileExtension)
     DREAM3D_FILTER_PARAMETER(int, PaddingDigits)
+    DREAM3D_FILTER_PARAMETER(uint32_t, RefFrameZDir)
 
     DREAM3D_FILTER_PARAMETER(int, ImageVector)
     Q_PROPERTY(int ImageVector READ getImageVector WRITE setImageVector)
@@ -140,7 +144,7 @@ class ImportImagesAsVector : public AbstractFilter
     void preflightExecuted();
 
   protected:
-    ImportImagesAsVector();
+    ImportVectorImageStack();
 
     /**
     * @brief Checks for the appropriate parameter values and availability of
@@ -157,10 +161,10 @@ class ImportImagesAsVector : public AbstractFilter
   private:
     DEFINE_CREATED_DATAARRAY_VARIABLE(uint8_t, VectorData)
 
-    ImportImagesAsVector(const ImportImagesAsVector&); // Copy Constructor Not Implemented
-    void operator=(const ImportImagesAsVector&); // Operator '=' Not Implemented
+    ImportVectorImageStack(const ImportVectorImageStack&); // Copy Constructor Not Implemented
+    void operator=(const ImportVectorImageStack&); // Operator '=' Not Implemented
 };
 
-#endif /* ImportImagesAsVector_H_ */
+#endif /* ImportVectorImageStack_H_ */
 
 

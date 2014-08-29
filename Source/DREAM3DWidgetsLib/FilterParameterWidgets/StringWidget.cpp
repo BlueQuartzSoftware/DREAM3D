@@ -107,6 +107,16 @@ void StringWidget::setupGui()
 
 }
 
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void StringWidget::on_value_returnPressed()
+{
+  on_applyChangesBtn_clicked();
+}
+
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -118,14 +128,6 @@ void StringWidget::fadeInWidget(QWidget* widget)
   }
   faderWidget = new FaderWidget(widget);
   faderWidget->start();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void StringWidget::on_value_returnPressed()
-{
-  on_applyChangesBtn_clicked();
 }
 
 // -----------------------------------------------------------------------------
@@ -170,18 +172,6 @@ void StringWidget::widgetChanged(const QString& text)
   }
 }
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void StringWidget::filterNeedsInputParameters(AbstractFilter* filter)
-{
-  bool ok = filter->setProperty(PROPERTY_NAME_AS_CHAR, value->text());
-  if(false == ok)
-  {
-    FilterParameterWidgetsDialogs::ShowCouldNotSetFilterParameter(m_Filter, m_FilterParameter);
-  }
-
-}
 
 // -----------------------------------------------------------------------------
 //
@@ -202,36 +192,30 @@ void StringWidget::afterPreflight()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void StringWidget::filterNeedsInputParameters(AbstractFilter* filter)
+{
+  bool ok = filter->setProperty(PROPERTY_NAME_AS_CHAR, value->text());
+  if(false == ok)
+  {
+    FilterParameterWidgetsDialogs::ShowCouldNotSetFilterParameter(m_Filter, m_FilterParameter);
+  }
+
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void StringWidget::setLinkedConditionalState(int state)
 {
   bool boolProp = (state == Qt::Checked);
   fadeWidget(this, boolProp);
 }
 
-#define FADE_TIME 160
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 void StringWidget::fadeWidget(QWidget* widget, bool in)
 {
-
-
-#if 0
-  if (in)
-  {
-    QPropertyAnimation* animation = new QPropertyAnimation(widget, "iconOpacity");
-    animation->setDuration(FADE_TIME);
-    animation->setEndValue(1.0);
-    animation->start(QAbstractAnimation::DeleteWhenStopped);
-  }
-  else
-  {
-    QPropertyAnimation* animation = new QPropertyAnimation(this, "iconOpacity");
-    animation->setDuration(FADE_TIME);
-    animation->setEndValue(0.0);
-    animation->start(QAbstractAnimation::DeleteWhenStopped);
-  }
-#else
   if (faderWidget)
   {
     faderWidget->close();
@@ -254,6 +238,4 @@ void StringWidget::fadeWidget(QWidget* widget, bool in)
   if(m_FilterParameter->getAdvanced()) { color = DREAM3D::Defaults::AdvancedColor; }
   faderWidget->setStartColor(color);
   faderWidget->start();
-
-#endif
 }

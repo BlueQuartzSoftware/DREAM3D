@@ -68,8 +68,6 @@ class FindAvgOrientations : public AbstractFilter
     DREAM3D_TYPE_MACRO_SUPER(FindAvgOrientations, AbstractFilter)
 
     virtual ~FindAvgOrientations();
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, CellFeatureAttributeMatrixName)
-    Q_PROPERTY(DataArrayPath CellFeatureAttributeMatrixName READ getCellFeatureAttributeMatrixName WRITE setCellFeatureAttributeMatrixName)
 
     DREAM3D_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
     Q_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
@@ -83,11 +81,12 @@ class FindAvgOrientations : public AbstractFilter
     DREAM3D_FILTER_PARAMETER(DataArrayPath, CrystalStructuresArrayPath)
     Q_PROPERTY(DataArrayPath CrystalStructuresArrayPath READ getCrystalStructuresArrayPath WRITE setCrystalStructuresArrayPath)
 
-    DREAM3D_FILTER_PARAMETER(QString, AvgQuatsArrayName)
-    Q_PROPERTY(QString AvgQuatsArrayName READ getAvgQuatsArrayName WRITE setAvgQuatsArrayName)
+    DREAM3D_FILTER_PARAMETER(DataArrayPath, AvgQuatsArrayPath)
+    Q_PROPERTY(DataArrayPath AvgQuatsArrayPath READ getAvgQuatsArrayPath WRITE setAvgQuatsArrayPath)
 
-    DREAM3D_FILTER_PARAMETER(QString, FeatureEulerAnglesArrayName)
-    Q_PROPERTY(QString FeatureEulerAnglesArrayName READ getFeatureEulerAnglesArrayName WRITE setFeatureEulerAnglesArrayName)
+    DREAM3D_FILTER_PARAMETER(DataArrayPath, AvgEulerAnglesArrayPath)
+    Q_PROPERTY(DataArrayPath AvgEulerAnglesArrayPath READ getAvgEulerAnglesArrayPath WRITE setAvgEulerAnglesArrayPath)
+
 
     virtual const QString getCompiledLibraryName();
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);

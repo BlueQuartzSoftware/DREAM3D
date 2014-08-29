@@ -96,9 +96,9 @@ int NeighborCICorrelation::writeFilterParameters(AbstractFilterParametersWriter*
 {
   writer->openFilterGroup(this, index);
   DREAM3D_FILTER_WRITE_PARAMETER(ConfidenceIndexArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(MinConfidence)
-  DREAM3D_FILTER_WRITE_PARAMETER(Loop)
-  writer->closeFilterGroup();
+      DREAM3D_FILTER_WRITE_PARAMETER(MinConfidence)
+      DREAM3D_FILTER_WRITE_PARAMETER(Loop)
+      writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
 
@@ -181,19 +181,11 @@ void NeighborCICorrelation::execute()
 
     if(getCancel()) { break; }
 
-    DimType progIncrement = totalPoints / 100;
+    DimType progIncrement = totalPoints / 50;
     DimType prog = 1;
     int progressInt = 0;
     for (int64_t i = 0; i < totalPoints; i++)
     {
-      if (i > prog)
-      {
-        progressInt = ((float)i / totalPoints) * 100.0;
-        QString ss = QObject::tr("|| Processing Data Current Loop (%1) Progress: %2% Complete").arg(count).arg(progressInt);
-        notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
-        prog = prog + progIncrement;
-      }
-
       if(m_ConfidenceIndex[i] < m_MinConfidence)
       {
         column = i % dims[0];
@@ -221,13 +213,21 @@ void NeighborCICorrelation::execute()
           }
         }
       }
+      if (i > prog)
+      {
+        progressInt = ((float)i / totalPoints) * 100.0;
+        QString ss = QObject::tr("|| Processing Data Current Loop (%1) Progress: %2% Complete").arg(count).arg(progressInt);
+        notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
+        prog = prog + progIncrement;
+      }
+
     }
     QString attrMatName = m_ConfidenceIndexArrayPath.getAttributeMatrixName();
     QList<QString> voxelArrayNames = m->getAttributeMatrix(attrMatName)->getAttributeArrayNameList();
 
     if(getCancel()) { break; }
 
-    progIncrement = totalPoints / 100;
+    progIncrement = totalPoints / 50;
     prog = 1;
     progressInt = 0;
     for (int64_t i = 0; i < totalPoints; i++)
@@ -235,7 +235,7 @@ void NeighborCICorrelation::execute()
       if (i > prog)
       {
         progressInt = ((float)i / totalPoints) * 100.0;
-        QString ss = QObject::tr("|| Transferring Cell Data: %1% Complete").arg(progressInt);
+        QString ss = QObject::tr("|| Processing Data Current Loop (%1) || Transferring Cell Data: %2% Complete").arg(count).arg(progressInt);
         notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
         prog = prog + progIncrement;
       }
@@ -253,7 +253,7 @@ void NeighborCICorrelation::execute()
     if(m_Loop == true && count > 0) { keepGoing = true; }
   }
 
-// If there is an error set this to something negative and also set a message
+  // If there is an error set this to something negative and also set a message
   notifyStatusMessage(getHumanLabel(), "Complete");
 }
 

@@ -34,8 +34,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _ImportImagesAsVectorWIDGET_H_
-#define _ImportImagesAsVectorWIDGET_H_
+#ifndef _ImportVectorImageStackWidget_H_
+#define _ImportVectorImageStackWidget_H_
 
 
 #include <QtCore/QString>
@@ -51,13 +51,13 @@
 #include "DREAM3DWidgetsLib/Widgets/PipelineFilterWidget.h"
 
 
-#include "ui_ImportImagesAsVectorWidget.h"
+#include "ui_ImportVectorImageStackWidget.h"
 
 
-class ImportImagesAsVector;
+class ImportVectorImageStack;
 
 /**
- * @class ImportImagesAsVectorWidget ImportImagesAsVectorWidget.h Plugins/EbsdImport/UI/ImportImagesAsVectorWidget.h
+ * @class ImportVectorImageStackWidget ImportVectorImageStackWidget.h Plugins/EbsdImport/UI/ImportVectorImageStackWidget.h
  * @brief This class represents the User Interface for the EBSD file import module
  * of the DREAM3D program. The user interface subclasses QFrame which
  * should make it able to be embedded in most Qt applications. This module controls
@@ -67,7 +67,7 @@ class ImportImagesAsVector;
  * @date Jan 30, 2011
  * @version 1.0
  */
-class ImportImagesAsVectorWidget : public QWidget, private Ui::ImportImagesAsVectorWidget
+class ImportVectorImageStackWidget : public QWidget, private Ui::ImportVectorImageStackWidget
 {
     Q_OBJECT
 
@@ -78,9 +78,9 @@ class ImportImagesAsVectorWidget : public QWidget, private Ui::ImportImagesAsVec
     * @param filter The instance of the filter that this parameter is a part of
     * @param parent The parent QWidget for this Widget
     */
-    ImportImagesAsVectorWidget(FilterParameter* parameter, AbstractFilter* filter = NULL, QWidget* parent = NULL);
+    ImportVectorImageStackWidget(FilterParameter* parameter, AbstractFilter* filter = NULL, QWidget* parent = NULL);
 
-    virtual ~ImportImagesAsVectorWidget();
+    virtual ~ImportVectorImageStackWidget();
 
     /**
      * @brief Initializes some of the GUI elements with selections or other GUI related items
@@ -106,16 +106,19 @@ class ImportImagesAsVectorWidget : public QWidget, private Ui::ImportImagesAsVec
 
 
     void on_m_FilePrefix_textChanged(const QString& string);
+    void on_m_Separator_textChanged(const QString& string);
     void on_m_FileSuffix_textChanged(const QString& string);
     void on_m_FileExt_textChanged(const QString& string);
     void on_m_TotalDigits_valueChanged(int value);
     void on_m_StartIndex_valueChanged(int value);
     void on_m_EndIndex_valueChanged(int value);
+    void on_m_StartComp_valueChanged(int value);
+    void on_m_EndComp_valueChanged(int value);
 
     void resolutionChanged(const QString& string);
     void originChanged(const QString& string);
 
-//   void stackingOrderChanged(bool checked);
+   void stackingOrderChanged(bool checked);
 
   protected:
     static void setOpenDialogLastDirectory(QString val) { m_OpenDialogLastDirectory = val; }
@@ -160,6 +163,13 @@ class ImportImagesAsVectorWidget : public QWidget, private Ui::ImportImagesAsVec
     void getGuiParametersFromFilter();
 
     /**
+     * @brief setRefFrameZDir
+     * @param ref
+     */
+    void setRefFrameZDir(uint32_t ref);
+    uint32_t getRefFrameZDir();
+
+    /**
      * @brief setResolutionValues
      */
     void setResolutionValues();
@@ -173,9 +183,10 @@ class ImportImagesAsVectorWidget : public QWidget, private Ui::ImportImagesAsVec
 
 
   private:
-    ImportImagesAsVector*               m_Filter;
+    ImportVectorImageStack*               m_Filter;
     FilterParameter*            m_FilterParameter;
     QList<QWidget*>             m_WidgetList;
+    QButtonGroup*               m_StackingGroup;
     QButtonGroup*               m_OriginGroup;
     QButtonGroup*               m_zSpacingGroup;
 
@@ -183,8 +194,8 @@ class ImportImagesAsVectorWidget : public QWidget, private Ui::ImportImagesAsVec
     bool m_DidCausePreflight;
 
 
-    ImportImagesAsVectorWidget(const ImportImagesAsVectorWidget&); // Copy Constructor Not Implemented
-    void operator=(const ImportImagesAsVectorWidget&); // Operator '=' Not Implemented
+    ImportVectorImageStackWidget(const ImportVectorImageStackWidget&); // Copy Constructor Not Implemented
+    void operator=(const ImportVectorImageStackWidget&); // Operator '=' Not Implemented
 };
 
-#endif /* ImportImagesAsVectorWIDGET_H_ */
+#endif /* ImportVectorImageStackWidget_H_ */

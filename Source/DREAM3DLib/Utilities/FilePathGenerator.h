@@ -63,6 +63,22 @@ class DREAM3DLib_EXPORT FilePathGenerator
                                              const QString& filePrefix,
                                              const QString& fileSuffix, const QString& fileExtension,
                                              int paddingDigits);
+    /**
+     * @brief generateFileList This method will generate a file list in the correct order of the files that should
+     * be imported into an h5ebsd file
+     * @param start Z Slice Start
+     * @param end S Slice End
+     * @param hasMissingFiles Are any files missing
+     * @param stackLowToHigh Is the Slice order low to high
+     * @param filename Example File Name
+     * @return
+     */
+    static QVector<QString> GenerateVectorFileList(int start, int end, int compStart, int compEnd, bool& hasMissingFiles,
+                                             bool stackLowToHigh, const QString& inputPath,
+                                             const QString& filePrefix, const QString& separator,
+                                             const QString& fileSuffix, const QString& fileExtension,
+                                             int paddingDigits);
+
   protected:
     FilePathGenerator();
 

@@ -641,6 +641,16 @@ void ReadH5Ebsd::execute()
           setErrorCondition(-109872);
           notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
         }
+        DataArrayPath tempPath;
+        tempPath.update(getDataContainerName(), getCellAttributeMatrixName(), "");
+        v.setValue(tempPath);
+        propWasSet = rot_Sample->setProperty("CellAttributeMatrixPath", v);
+        if(false == propWasSet)
+        {
+          QString ss = QObject::tr("ReadH5Ebsd Error Setting Property '%1' into filter '%2' which is a subfilter called by ReadH5Ebsd. The property was not set which could mean the property was not exposed with a Q_PROPERTY macro. Please notify the developers.").arg("CellAttributeMatrixName").arg(filtName);
+          setErrorCondition(-109872);
+          notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+        }
         rot_Sample->execute();
       }
     }
@@ -654,21 +664,21 @@ void ReadH5Ebsd::execute()
 
       QString filtName = "RotateEulerRefFrame";
       FilterManager* fm = FilterManager::Instance();
-      IFilterFactory::Pointer rotSampleFactory = fm->getFactoryForFilter(filtName);
-      if (NULL != rotSampleFactory.get() )
+      IFilterFactory::Pointer rotEulerFactory = fm->getFactoryForFilter(filtName);
+      if (NULL != rotEulerFactory.get() )
       {
         // If we get this far, the Factory is good so creating the filter should not fail unless something has
         // horribly gone wrong in which case the system is going to come down quickly after this.
-        AbstractFilter::Pointer rot_Sample = rotSampleFactory->create();
+        AbstractFilter::Pointer rot_Euler = rotEulerFactory->create();
 
         // Connect up the Error/Warning/Progress object so the filter can report those things
-        connect(rot_Sample.get(), SIGNAL(filterGeneratedMessage(const PipelineMessage&)),
+        connect(rot_Euler.get(), SIGNAL(filterGeneratedMessage(const PipelineMessage&)),
                 this, SLOT(broadcastPipelineMessage(const PipelineMessage&)));
-        rot_Sample->setDataContainerArray(getDataContainerArray()); // AbstractFilter implements this so no problem
+        rot_Euler->setDataContainerArray(getDataContainerArray()); // AbstractFilter implements this so no problem
         // Now set the filter parameters for the filter using QProperty System since we can not directly
         // instantiate the filter since it resides in a plugin. These calls are SLOW. DO NOT EVER do this in a
         // tight loop. Your filter will slow down by 10X.
-        bool propWasSet = rot_Sample->setProperty("RotationAngle", m_EulerTransformation.angle);
+        bool propWasSet = rot_Euler->setProperty("RotationAngle", m_EulerTransformation.angle);
         if(false == propWasSet)
         {
           QString ss = QObject::tr("ReadH5Ebsd Error Setting Property '%1' into filter '%2' which is a subfilter called by ReadH5Ebsd. The property was not set which could mean the property was not exposed with a Q_PROPERTY macro. Please notify the developers.").arg("RotationAngle").arg(filtName);
@@ -677,14 +687,24 @@ void ReadH5Ebsd::execute()
         }
         QVariant v;
         v.setValue(eulerAxis);
-        propWasSet = rot_Sample->setProperty("RotationAxis", v);
+        propWasSet = rot_Euler->setProperty("RotationAxis", v);
         if(false == propWasSet)
         {
           QString ss = QObject::tr("ReadH5Ebsd Error Setting Property '%1' into filter '%2' which is a subfilter called by ReadH5Ebsd. The property was not set which could mean the property was not exposed with a Q_PROPERTY macro. Please notify the developers.").arg("RotationAxis").arg(filtName);
           setErrorCondition(-109873);
           notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
         }
-        rot_Sample->execute();
+        DataArrayPath tempPath;
+        tempPath.update(getDataContainerName(), getCellAttributeMatrixName(), getCellEulerAnglesArrayName() );
+        v.setValue(tempPath);
+        propWasSet = rot_Euler->setProperty("CellEulerAnglesArrayPath", v);
+        if(false == propWasSet)
+        {
+          QString ss = QObject::tr("ReadH5Ebsd Error Setting Property '%1' into filter '%2' which is a subfilter called by ReadH5Ebsd. The property was not set which could mean the property was not exposed with a Q_PROPERTY macro. Please notify the developers.").arg("CellEulerAnglesArrayPath").arg(filtName);
+          setErrorCondition(-109872);
+          notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+        }
+        rot_Euler->execute();
       }
     }
 

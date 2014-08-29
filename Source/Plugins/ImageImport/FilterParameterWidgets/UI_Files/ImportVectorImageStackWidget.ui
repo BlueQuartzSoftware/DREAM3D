@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>ImportImagesAsVectorWidget</class>
- <widget class="QWidget" name="ImportImagesAsVectorWidget">
+ <class>ImportVectorImageStackWidget</class>
+ <widget class="QWidget" name="ImportVectorImageStackWidget">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>670</width>
-    <height>652</height>
+    <width>760</width>
+    <height>956</height>
    </rect>
   </property>
   <property name="title" stdset="0">
@@ -29,181 +29,6 @@
    <property name="spacing">
     <number>4</number>
    </property>
-   <item row="6" column="0">
-    <layout class="QGridLayout" name="gridLayout_20">
-     <item row="1" column="0">
-      <widget class="QLabel" name="label_50">
-       <property name="styleSheet">
-        <string notr="true">QLabel {
-font-weight: bold;
-font-size: 11px;
-}</string>
-       </property>
-       <property name="text">
-        <string>Start Slice:</string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="1">
-      <widget class="QSpinBox" name="m_StartIndex">
-       <property name="minimumSize">
-        <size>
-         <width>75</width>
-         <height>0</height>
-        </size>
-       </property>
-       <property name="toolTip">
-        <string>Which file index to start the import at.</string>
-       </property>
-       <property name="maximum">
-        <number>1000000</number>
-       </property>
-       <property name="value">
-        <number>1</number>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="2">
-      <widget class="QLabel" name="label_51">
-       <property name="styleSheet">
-        <string notr="true">QLabel {
-font-weight: bold;
-font-size: 11px;
-}</string>
-       </property>
-       <property name="text">
-        <string>End Slice:</string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="3">
-      <widget class="QSpinBox" name="m_EndIndex">
-       <property name="minimumSize">
-        <size>
-         <width>75</width>
-         <height>0</height>
-        </size>
-       </property>
-       <property name="toolTip">
-        <string>The file index to stop the import at. (Inclusive)</string>
-       </property>
-       <property name="maximum">
-        <number>1000000</number>
-       </property>
-       <property name="value">
-        <number>99</number>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="4">
-      <widget class="QLabel" name="label_21">
-       <property name="styleSheet">
-        <string notr="true">QLabel {
-font-weight: bold;
-font-size: 11px;
-}</string>
-       </property>
-       <property name="text">
-        <string>Padding Digits:</string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-       </property>
-      </widget>
-     </item>
-     <item row="1" column="5">
-      <widget class="QSpinBox" name="m_TotalDigits">
-       <property name="toolTip">
-        <string>The number of digits to allow for the slice index.</string>
-       </property>
-       <property name="value">
-        <number>4</number>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="0">
-      <widget class="QLabel" name="label_32">
-       <property name="styleSheet">
-        <string notr="true">QLabel {
-font-weight: bold;
-font-size: 11px;
-}</string>
-       </property>
-       <property name="text">
-        <string>File Prefix:</string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="1">
-      <widget class="QLineEdit" name="m_FilePrefix">
-       <property name="toolTip">
-        <string>The front part of the input file name</string>
-       </property>
-       <property name="text">
-        <string>Slice_</string>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="2">
-      <widget class="QLabel" name="label_13">
-       <property name="styleSheet">
-        <string notr="true">QLabel {
-font-weight: bold;
-font-size: 11px;
-}</string>
-       </property>
-       <property name="text">
-        <string>File Suffix:</string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="3">
-      <widget class="QLineEdit" name="m_FileSuffix">
-       <property name="toolTip">
-        <string>The part of the filename that comes AFTER the slice index</string>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="4">
-      <widget class="QLabel" name="label_56">
-       <property name="styleSheet">
-        <string notr="true">QLabel {
-font-weight: bold;
-font-size: 11px;
-}</string>
-       </property>
-       <property name="text">
-        <string>File Extension:</string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-       </property>
-      </widget>
-     </item>
-     <item row="0" column="5">
-      <widget class="QLineEdit" name="m_FileExt">
-       <property name="toolTip">
-        <string>The file extension of the input files</string>
-       </property>
-       <property name="text">
-        <string>tif</string>
-       </property>
-      </widget>
-     </item>
-    </layout>
-   </item>
    <item row="5" column="0">
     <widget class="QLabel" name="label_58">
      <property name="styleSheet">
@@ -327,6 +152,36 @@ font-size: 11px;
         </size>
        </property>
       </spacer>
+     </item>
+     <item row="3" column="0">
+      <widget class="QLabel" name="label_9">
+       <property name="styleSheet">
+        <string notr="true">QLabel {
+font-weight: bold;
+font-size: 11px;
+}</string>
+       </property>
+       <property name="text">
+        <string>Stacking Order</string>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="1">
+      <widget class="QRadioButton" name="m_StackLowToHigh">
+       <property name="text">
+        <string>Low To High</string>
+       </property>
+       <property name="checked">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="2">
+      <widget class="QRadioButton" name="m_StackHighToLow">
+       <property name="text">
+        <string>High To Low</string>
+       </property>
+      </widget>
      </item>
     </layout>
    </item>
@@ -502,6 +357,253 @@ font-size: 11px;
         </size>
        </property>
       </spacer>
+     </item>
+    </layout>
+   </item>
+   <item row="6" column="0">
+    <layout class="QGridLayout" name="gridLayout_20">
+     <item row="1" column="0">
+      <widget class="QLabel" name="label_50">
+       <property name="styleSheet">
+        <string notr="true">QLabel {
+font-weight: bold;
+font-size: 11px;
+}</string>
+       </property>
+       <property name="text">
+        <string>Start Slice:</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="1">
+      <widget class="QSpinBox" name="m_StartIndex">
+       <property name="minimumSize">
+        <size>
+         <width>75</width>
+         <height>0</height>
+        </size>
+       </property>
+       <property name="toolTip">
+        <string>Which file index to start the import at.</string>
+       </property>
+       <property name="maximum">
+        <number>1000000</number>
+       </property>
+       <property name="value">
+        <number>1</number>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="2">
+      <widget class="QLabel" name="label_51">
+       <property name="styleSheet">
+        <string notr="true">QLabel {
+font-weight: bold;
+font-size: 11px;
+}</string>
+       </property>
+       <property name="text">
+        <string>End Slice:</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="3">
+      <widget class="QSpinBox" name="m_EndIndex">
+       <property name="minimumSize">
+        <size>
+         <width>75</width>
+         <height>0</height>
+        </size>
+       </property>
+       <property name="toolTip">
+        <string>The file index to stop the import at. (Inclusive)</string>
+       </property>
+       <property name="maximum">
+        <number>1000000</number>
+       </property>
+       <property name="value">
+        <number>99</number>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="4">
+      <widget class="QLabel" name="label_21">
+       <property name="styleSheet">
+        <string notr="true">QLabel {
+font-weight: bold;
+font-size: 11px;
+}</string>
+       </property>
+       <property name="text">
+        <string>Padding Digits:</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="5">
+      <widget class="QSpinBox" name="m_TotalDigits">
+       <property name="toolTip">
+        <string>The number of digits to allow for the slice index.</string>
+       </property>
+       <property name="value">
+        <number>4</number>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="0">
+      <widget class="QLabel" name="label_32">
+       <property name="styleSheet">
+        <string notr="true">QLabel {
+font-weight: bold;
+font-size: 11px;
+}</string>
+       </property>
+       <property name="text">
+        <string>File Prefix:</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="1">
+      <widget class="QLineEdit" name="m_FilePrefix">
+       <property name="toolTip">
+        <string>The front part of the input file name</string>
+       </property>
+       <property name="text">
+        <string>Slice_</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="2">
+      <widget class="QLabel" name="label_13">
+       <property name="styleSheet">
+        <string notr="true">QLabel {
+font-weight: bold;
+font-size: 11px;
+}</string>
+       </property>
+       <property name="text">
+        <string>File Suffix:</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="3">
+      <widget class="QLineEdit" name="m_FileSuffix">
+       <property name="toolTip">
+        <string>The part of the filename that comes AFTER the slice index</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="4">
+      <widget class="QLabel" name="label_56">
+       <property name="styleSheet">
+        <string notr="true">QLabel {
+font-weight: bold;
+font-size: 11px;
+}</string>
+       </property>
+       <property name="text">
+        <string>File Extension:</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="5">
+      <widget class="QLineEdit" name="m_FileExt">
+       <property name="toolTip">
+        <string>The file extension of the input files</string>
+       </property>
+       <property name="text">
+        <string>tif</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="5">
+      <widget class="QSpinBox" name="m_EndComp">
+       <property name="toolTip">
+        <string>The component index to stop the import at. (Inclusive)</string>
+       </property>
+       <property name="maximum">
+        <number>1000000</number>
+       </property>
+       <property name="value">
+        <number>10</number>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="4">
+      <widget class="QLabel" name="label_8">
+       <property name="styleSheet">
+        <string notr="true">QLabel {
+font-weight: bold;
+font-size: 11px;
+}</string>
+       </property>
+       <property name="text">
+        <string>End Component</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="3">
+      <widget class="QSpinBox" name="m_StartComp">
+       <property name="toolTip">
+        <string>Which component index to start the import at.</string>
+       </property>
+       <property name="maximum">
+        <number>1000000</number>
+       </property>
+       <property name="value">
+        <number>1</number>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="2">
+      <widget class="QLabel" name="label_7">
+       <property name="styleSheet">
+        <string notr="true">QLabel {
+font-weight: bold;
+font-size: 11px;
+}</string>
+       </property>
+       <property name="text">
+        <string>Start Component</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="0">
+      <widget class="QLabel" name="label_10">
+       <property name="styleSheet">
+        <string notr="true">QLabel {
+font-weight: bold;
+font-size: 11px;
+}</string>
+       </property>
+       <property name="text">
+        <string>Separator</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="1">
+      <widget class="QLineEdit" name="m_Separator">
+       <property name="text">
+        <string>_</string>
+       </property>
+      </widget>
      </item>
     </layout>
    </item>

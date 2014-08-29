@@ -70,6 +70,9 @@ class DREAM3DLib_EXPORT CopyFeatureArrayToCellArray : public AbstractFilter
     DREAM3D_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
     Q_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
 
+    DREAM3D_FILTER_PARAMETER(QString, CreatedArrayName)
+    Q_PROPERTY(QString CreatedArrayName READ getCreatedArrayName WRITE setCreatedArrayName)
+
     virtual const QString getCompiledLibraryName();
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName();
