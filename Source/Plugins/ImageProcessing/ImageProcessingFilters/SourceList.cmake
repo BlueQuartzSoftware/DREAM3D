@@ -33,6 +33,7 @@ set(_PublicFilters
   RGBToGray
   GrayToRGB
   FindMaxima
+  BinaryWatershed
 )
 
 
