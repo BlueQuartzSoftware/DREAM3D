@@ -33,15 +33,11 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #include "FindMaxima.h"
 
-//thresholding filter
-#include "itkValuedRegionalMaximaImageFilter.h"
-#include "itkBinaryThresholdImageFilter.h"
-#include <limits>
-
 #include "DREAM3DLib/Common/TemplateHelpers.hpp"
 
 // ImageProcessing Plugin
 #include "ItkBridge.h"
+#include "ImageProcessing/ImageProcessingHelpers.hpp"
 
 
 /**
@@ -68,7 +64,7 @@ class FindMaximaPrivate
     // -----------------------------------------------------------------------------
     // This is the actual templated algorithm
     // -----------------------------------------------------------------------------
-    void static Execute(FindMaxima* filter, IDataArray::Pointer inputArray, double MinValue, bool* outputData, VolumeDataContainer* m, QString attrMatName)
+    void static Execute(FindMaxima* filter, IDataArray::Pointer inputArray, double tolerance, bool* outputData, VolumeDataContainer* m, QString attrMatName)
     {
       typename DataArrayType::Pointer inputArrayPtr = boost::dynamic_pointer_cast<DataArrayType>(inputArray);
 
@@ -79,37 +75,30 @@ class FindMaximaPrivate
 
       typedef ItkBridge<PixelType> ItkBridgeType;
 
-      //wrap input as itk image
+      //wrap input and output as itk image
       typedef itk::Image<PixelType, ImageProcessing::ImageDimension> ImageType;
       typedef itk::Image<bool, ImageProcessing::ImageDimension> BoolImageType;
-      typename ImageType::Pointer inputImage = ItkBridgeType::CreateItkWrapperForDataPointer(m, attrMatName, inputData);
-
-      //define filters
-      typedef itk::ValuedRegionalMaximaImageFilter<ImageType, ImageType> RegionalMaximaType;
-      typedef itk::BinaryThresholdImageFilter <ImageType, BoolImageType> ThresholdType;
-
+      typename ImageType::Pointer inputImage = ItkBridge<PixelType>::CreateItkWrapperForDataPointer(m, attrMatName, inputData);
+      BoolImageType::Pointer outputImage = ItkBridge<bool>::CreateItkWrapperForDataPointer(m, attrMatName, outputData);
+      
       //find maxima
-      typename RegionalMaximaType::Pointer maxima = RegionalMaximaType::New();
-      maxima->SetInput(inputImage);
-
-      //threshold
-      typename ThresholdType::Pointer threshold = ThresholdType::New();
-      threshold->SetInput(maxima->GetOutput());
-      threshold->SetLowerThreshold((PixelType)MinValue);
-      threshold->SetUpperThreshold(std::numeric_limits<PixelType>::max());
-      threshold->SetInsideValue(true);
-      threshold->SetOutsideValue(false);
-      threshold->GetOutput()->GetPixelContainer()->SetImportPointer(outputData, numVoxels, false);
-
+      std::vector<ImageType::IndexType> peakLocations;
       try
       {
-        threshold->Update();
+        peakLocations = ImageProcessing::LocalMaxima<ImageType>::Find(inputImage, tolerance, true);
       }
       catch( itk::ExceptionObject & err )
       {
         filter->setErrorCondition(-5);
         QString ss = QObject::tr("Failed to convert image. Error Message returned from ITK:\n   %1").arg(err.GetDescription());
         filter->notifyErrorMessage(filter->getHumanLabel(), ss, filter->getErrorCondition());
+      }
+      
+      //fill output data with false then set peaks to true
+      outputImage->FillBuffer(false);
+      for(int i=0; i<peakLocations.size(); i++)
+      {
+        outputImage->SetPixel(peakLocations[i], true);
       }
     }
   private:
@@ -125,7 +114,7 @@ FindMaxima::FindMaxima() :
   AbstractFilter(),
   m_SelectedCellArrayPath("", "", ""),
   m_NewCellArrayName("Maxima"),
-  m_MinValue(1.0),
+  m_Tolerance(1.0),
   m_SelectedCellArray(NULL),
   m_NewCellArray(NULL)
 {
@@ -146,7 +135,7 @@ void FindMaxima::setupFilterParameters()
 {
   FilterParameterVector parameters;
   parameters.push_back(FilterParameter::New("Input Array", "SelectedCellArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getSelectedCellArrayPath(), false, ""));
-  parameters.push_back(FilterParameter::New("Minimum Peak Intensity", "MinValue", FilterParameterWidgetType::DoubleWidget, getMinValue(), false, ""));
+  parameters.push_back(FilterParameter::New("Noise Tolerance", "Tolerance", FilterParameterWidgetType::DoubleWidget, getTolerance(), false, ""));
   parameters.push_back(FilterParameter::New("Created Array Name", "NewCellArrayName", FilterParameterWidgetType::StringWidget, getNewCellArrayName(), false, ""));
   setFilterParameters(parameters);
 }
@@ -158,7 +147,7 @@ void FindMaxima::readFilterParameters(AbstractFilterParametersReader* reader, in
 {
   reader->openFilterGroup(this, index);
   setSelectedCellArrayPath( reader->readDataArrayPath( "SelectedCellArrayPath", getSelectedCellArrayPath() ) );
-  setMinValue( reader->readValue( "MinValue", getMinValue() ) );
+  setTolerance( reader->readValue( "Tolerance", getTolerance() ) );
   setNewCellArrayName( reader->readString( "NewCellArrayName", getNewCellArrayName() ) );
   reader->closeFilterGroup();
 }
@@ -170,7 +159,7 @@ int FindMaxima::writeFilterParameters(AbstractFilterParametersWriter* writer, in
 {
   writer->openFilterGroup(this, index);
   DREAM3D_FILTER_WRITE_PARAMETER(SelectedCellArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(MinValue)
+  DREAM3D_FILTER_WRITE_PARAMETER(Tolerance)
   DREAM3D_FILTER_WRITE_PARAMETER(NewCellArrayName)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
@@ -250,43 +239,43 @@ void FindMaxima::execute()
   // progress or handle "cancel" if needed.
   if(FindMaximaPrivate<int8_t>()(inputData))
   {
-    FindMaximaPrivate<int8_t>::Execute(this, inputData, m_MinValue, m_NewCellArray, m, attrMatName);
+    FindMaximaPrivate<int8_t>::Execute(this, inputData, m_Tolerance, m_NewCellArray, m, attrMatName);
   }
   else if(FindMaximaPrivate<uint8_t>()(inputData) )
   {
-    FindMaximaPrivate<uint8_t>::Execute(this, inputData, m_MinValue, m_NewCellArray, m, attrMatName);
+    FindMaximaPrivate<uint8_t>::Execute(this, inputData, m_Tolerance, m_NewCellArray, m, attrMatName);
   }
   else if(FindMaximaPrivate<int16_t>()(inputData) )
   {
-    FindMaximaPrivate<int16_t>::Execute(this, inputData, m_MinValue, m_NewCellArray, m, attrMatName);
+    FindMaximaPrivate<int16_t>::Execute(this, inputData, m_Tolerance, m_NewCellArray, m, attrMatName);
   }
   else if(FindMaximaPrivate<uint16_t>()(inputData) )
   {
-    FindMaximaPrivate<uint16_t>::Execute(this, inputData, m_MinValue, m_NewCellArray, m, attrMatName);
+    FindMaximaPrivate<uint16_t>::Execute(this, inputData, m_Tolerance, m_NewCellArray, m, attrMatName);
   }
   else if(FindMaximaPrivate<int32_t>()(inputData) )
   {
-    FindMaximaPrivate<int32_t>::Execute(this, inputData, m_MinValue, m_NewCellArray, m, attrMatName);
+    FindMaximaPrivate<int32_t>::Execute(this, inputData, m_Tolerance, m_NewCellArray, m, attrMatName);
   }
   else if(FindMaximaPrivate<uint32_t>()(inputData) )
   {
-    FindMaximaPrivate<uint32_t>::Execute(this, inputData, m_MinValue, m_NewCellArray, m, attrMatName);
+    FindMaximaPrivate<uint32_t>::Execute(this, inputData, m_Tolerance, m_NewCellArray, m, attrMatName);
   }
   else if(FindMaximaPrivate<int64_t>()(inputData) )
   {
-    FindMaximaPrivate<int64_t>::Execute(this, inputData, m_MinValue, m_NewCellArray, m, attrMatName);
+    FindMaximaPrivate<int64_t>::Execute(this, inputData, m_Tolerance, m_NewCellArray, m, attrMatName);
   }
   else if(FindMaximaPrivate<uint64_t>()(inputData) )
   {
-    FindMaximaPrivate<uint64_t>::Execute(this, inputData, m_MinValue, m_NewCellArray, m, attrMatName);
+    FindMaximaPrivate<uint64_t>::Execute(this, inputData, m_Tolerance, m_NewCellArray, m, attrMatName);
   }
   else if(FindMaximaPrivate<float>()(inputData) )
   {
-    FindMaximaPrivate<float>::Execute(this, inputData, m_MinValue, m_NewCellArray, m, attrMatName);
+    FindMaximaPrivate<float>::Execute(this, inputData, m_Tolerance, m_NewCellArray, m, attrMatName);
   }
   else if(FindMaximaPrivate<double>()(inputData) )
   {
-    FindMaximaPrivate<double>::Execute(this, inputData, m_MinValue, m_NewCellArray, m, attrMatName);
+    FindMaximaPrivate<double>::Execute(this, inputData, m_Tolerance, m_NewCellArray, m, attrMatName);
   }
   else
   {

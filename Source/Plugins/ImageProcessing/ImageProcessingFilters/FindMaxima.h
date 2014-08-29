@@ -68,8 +68,8 @@ class FindMaxima : public AbstractFilter
     DREAM3D_FILTER_PARAMETER(DataArrayPath, SelectedCellArrayPath)
     Q_PROPERTY(DataArrayPath SelectedCellArrayPath READ getSelectedCellArrayPath WRITE setSelectedCellArrayPath)
 
-    DREAM3D_FILTER_PARAMETER(float, MinValue)
-    Q_PROPERTY(float MinValue READ getMinValue WRITE setMinValue)
+    DREAM3D_FILTER_PARAMETER(float, Tolerance)
+    Q_PROPERTY(float Tolerance READ getTolerance WRITE setTolerance)
 
     DREAM3D_FILTER_PARAMETER(QString, NewCellArrayName)
     Q_PROPERTY(QString NewCellArrayName READ getNewCellArrayName WRITE setNewCellArrayName)
