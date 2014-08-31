@@ -89,8 +89,8 @@ file(REMOVE ${DREAM3DProj_BINARY_DIR}/DREAM3DDocGroupList)
 
 set(DOCUMENTATION_SOURCE_FILES
     "${DOCUMENTATION_SOURCE_FILES}"
-    "${DREAM3DProj_BINARY_DIR}/createdarrayindex.md"
-  ${DREAM3DReferenceManual_BINARY_DIR}/FilterDocumentation.dox
+  #  "${DREAM3DProj_BINARY_DIR}/createdarrayindex.md"
+     ${DREAM3DReferenceManual_BINARY_DIR}/FilterDocumentation.dox
 )
 
 
