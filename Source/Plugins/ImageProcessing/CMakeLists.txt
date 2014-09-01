@@ -36,7 +36,7 @@ find_package(ITK COMPONENTS
   #ITKImageFilterBase
   #ITKSmoothing
   #ITKDenoising
-  #ITKConvolution
+  ITKConvolution
   #ITKStatistics
   #ITKImageFeature
 

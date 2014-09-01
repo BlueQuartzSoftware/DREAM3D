@@ -34,14 +34,139 @@
 #include "AlignSectionsPhaseCorrelation.h"
 
 #include <QtCore/QString>
+#include <fstream>
 
 #include "ImageProcessing/ImageProcessingConstants.h"
+#include "ItkBridge.h"
+
+#include "itkFFTNormalizedCorrelationImageFilter.h"
+#include "itkMinimumMaximumImageCalculator.h"
+
+ /**
+ * @brief This is a private implementation for the filter that handles the actual algorithm implementation details
+ * for us like figuring out if we can use this private implementation with the data array that is assigned.
+ */
+template<typename PixelType>
+class AlignSectionsPhaseCorrelationPrivate
+{
+  public:
+    typedef DataArray<PixelType> DataArrayType;
+
+    AlignSectionsPhaseCorrelationPrivate() {}
+    virtual ~AlignSectionsPhaseCorrelationPrivate() {}
+
+    // -----------------------------------------------------------------------------
+    // Determine if this is the proper type of an array to downcast from the IDataArray
+    // -----------------------------------------------------------------------------
+    bool operator()(IDataArray::Pointer p)
+    {
+      return (boost::dynamic_pointer_cast<DataArrayType>(p).get() != NULL);
+    }
+
+    // -----------------------------------------------------------------------------
+    // This is the actual templated algorithm
+    // -----------------------------------------------------------------------------
+    void static Execute(AlignSectionsPhaseCorrelation* filter, IDataArray::Pointer inputArray, VolumeDataContainer* m, QString attrMatName, QVector<int>& xshifts, QVector<int>& yshifts)
+    {
+      //get volume dimensions
+      size_t udims[3] = {0, 0, 0};
+      m->getDimensions(udims);
+      #if (CMP_SIZEOF_SIZE_T == 4)
+        typedef int32_t DimType;
+      #else
+        typedef int64_t DimType;
+      #endif
+      DimType dims[3] =
+      {
+        static_cast<DimType>(udims[0]),
+        static_cast<DimType>(udims[1]),
+        static_cast<DimType>(udims[2]),
+      };
+      int voxelsPerSlice = dims[0]*dims[1];
+
+      //convert array to correct type
+      typename DataArrayType::Pointer inputArrayPtr = boost::dynamic_pointer_cast<DataArrayType>(inputArray);
+      PixelType* inputData = static_cast<PixelType*>(inputArrayPtr->getPointer(0));
+
+      //define types
+      typedef ItkBridge<PixelType> ItkBridgeType;
+      typedef ItkBridgeType::ScalarImageType ImageType;
+      typedef ItkBridgeType::ScalarSliceImageType SliceType;
+      typedef itk::Image<float, SliceType::ImageDimension> FloatSliceType;
+      typedef itk::FFTNormalizedCorrelationImageFilter<SliceType, FloatSliceType> CorrelationType;
+      typedef itk::MinimumMaximumImageCalculator <FloatSliceType> MinMaxType;
+
+      //wrap input  as itk image
+      size_t numVoxels = inputArrayPtr->getNumberOfTuples();
+      typename ImageType::Pointer inputImage = ItkBridgeType::CreateItkWrapperForDataPointer(m, attrMatName, inputData);
+      
+      //open output file if needed
+      std::ofstream outFile;
+      if (filter->getWriteAlignmentShifts() == true)
+      {
+        outFile.open(filter->getAlignmentShiftFileName().toLatin1().data());
+      }
+
+      //loop over slices computing shifts
+      for (DimType iter = 1; iter < dims[2]; iter++)
+      {
+        //update progress
+        QString ss = QObject::tr("Aligning Sections - Determining Shifts - %1 Percent Complete").arg(((float)iter / dims[2]) * 100);
+        filter->notifyStatusMessage(filter->getMessagePrefix(), filter->getHumanLabel(), ss);
+
+        //extract slices
+        int sliceNum = static_cast<int>( (dims[2] - 1) - iter );
+        SliceType::Pointer fixedImage = ItkBridgeType::ExtractSlice(inputImage, ImageProcessing::ZSlice, sliceNum);
+        SliceType::Pointer movingImage = ItkBridgeType::ExtractSlice(inputImage, ImageProcessing::ZSlice, sliceNum+1);
+
+        //fft correlation
+        CorrelationType::Pointer correlation = CorrelationType::New();
+        correlation->SetFixedImage(fixedImage);
+        correlation->SetMovingImage(movingImage);
+        correlation->SetRequiredNumberOfOverlappingPixels(0.1*voxelsPerSlice);
+
+        //find peak
+        MinMaxType::Pointer minmax = MinMaxType::New();
+        minmax->SetImage(correlation->GetOutput());
+
+        //update pipeline
+        try
+        {
+          minmax->Compute();
+        }
+        catch( itk::ExceptionObject & err )
+        {
+          filter->setErrorCondition(-5);
+          QString ss = QObject::tr("Failed to convert image. Error Message returned from ITK:\n   %1").arg(err.GetDescription());
+          filter->notifyErrorMessage(filter->getHumanLabel(), ss, filter->getErrorCondition());
+        }
+
+        //convert from max location to shift
+        FloatSliceType::IndexType maximumLocation = minmax->GetIndexOfMaximum();
+        int sliceXShift = maximumLocation[0]-dims[0]+1;
+        int sliceYShift = maximumLocation[1]-dims[1]+1;
+
+        //save shift
+        xshifts[iter] = xshifts[iter - 1] + sliceXShift;
+        yshifts[iter] = yshifts[iter - 1] + sliceYShift;
+        if (filter->getWriteAlignmentShifts() == true)
+        {
+          outFile << sliceNum << " " << sliceNum + 1 << " " << sliceXShift << " " << sliceYShift << " " << xshifts[iter] << " " << yshifts[iter] << "\n";
+        }
+      }      
+    }
+  private:
+    AlignSectionsPhaseCorrelationPrivate(const AlignSectionsPhaseCorrelationPrivate&); // Copy Constructor Not Implemented
+    void operator=(const AlignSectionsPhaseCorrelationPrivate&); // Operator '=' Not Implemented
+};
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AlignSectionsPhaseCorrelation::AlignSectionsPhaseCorrelation() :
-  AbstractFilter()
+AlignSectionsPhaseCorrelation::AlignSectionsPhaseCorrelation() :  
+  AlignSections(),
+  m_SelectedCellArrayPath("", "", ""),
+  m_SelectedCellArray(NULL)
 /* DO NOT FORGET TO INITIALIZE ALL YOUR DREAM3D Filter Parameters HERE */
 {
   setupFilterParameters();
@@ -60,6 +185,7 @@ AlignSectionsPhaseCorrelation::~AlignSectionsPhaseCorrelation()
 void AlignSectionsPhaseCorrelation::setupFilterParameters()
 {
   FilterParameterVector parameters;
+  parameters.push_back(FilterParameter::New("Input Array", "SelectedCellArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getSelectedCellArrayPath(), false, ""));
   setFilterParameters(parameters);
 }
 
@@ -69,10 +195,7 @@ void AlignSectionsPhaseCorrelation::setupFilterParameters()
 void AlignSectionsPhaseCorrelation::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-  /*
-   Place code in here that will read the parameters from a file
-   setOutputFile( reader->readValue("OutputFile", getOutputFile() ) );
-   */
+  setSelectedCellArrayPath( reader->readDataArrayPath( "SelectedCellArrayPath", getSelectedCellArrayPath() ) );
   reader->closeFilterGroup();
 }
 
@@ -82,8 +205,7 @@ void AlignSectionsPhaseCorrelation::readFilterParameters(AbstractFilterParameter
 int AlignSectionsPhaseCorrelation::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  /* Place code that will write the inputs values into a file. reference the AbstractFilterParametersWriter class for the proper API to use. */
-  /*  DREAM3D_FILTER_WRITE_PARAMETER(OutputFile) */
+  DREAM3D_FILTER_WRITE_PARAMETER(SelectedCellArrayPath)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
@@ -94,6 +216,15 @@ int AlignSectionsPhaseCorrelation::writeFilterParameters(AbstractFilterParameter
 void AlignSectionsPhaseCorrelation::dataCheck()
 {
   setErrorCondition(0);
+  DataArrayPath tempPath;
+
+  //check for required arrays
+  QVector<size_t> compDims(1, 1);
+  m_SelectedCellArrayPtr = TemplateHelpers::GetPrereqArrayFromPath<AbstractFilter, VolumeDataContainer>()(this, getSelectedCellArrayPath(), compDims);
+  if(NULL != m_SelectedCellArrayPtr.lock().get())
+  {
+    m_SelectedCellArray = m_SelectedCellArrayPtr.lock().get();
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -156,6 +287,7 @@ void AlignSectionsPhaseCorrelation::execute()
   setErrorCondition(0);
 
   /* Place all your code to execute your filter here. */
+  AlignSections::execute();
 
   /* If some error occurs this code snippet can report the error up the call chain*/
   if (err < 0)
@@ -169,6 +301,69 @@ void AlignSectionsPhaseCorrelation::execute()
   /* Let the GUI know we are done with this filter */
   notifyStatusMessage(getHumanLabel(), "Complete");
 }
+
+void AlignSectionsPhaseCorrelation::find_shifts(QVector<int>& xshifts, QVector<int>& yshifts)
+{
+  //get volume container
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getSelectedCellArrayPath().getDataContainerName());
+  QString attrMatName = getSelectedCellArrayPath().getAttributeMatrixName();
+
+  //get input data
+  IDataArray::Pointer inputData = m_SelectedCellArrayPtr.lock();
+
+  //execute type dependant portion using a Private Implementation that takes care of figuring out if
+  // we can work on the correct type and actually handling the algorithm execution. We pass in "this" so
+  // that the private implementation can get access to the current object to pass up status notifications,
+  // progress or handle "cancel" if needed.
+  if(AlignSectionsPhaseCorrelationPrivate<int8_t>()(inputData))
+  {
+    AlignSectionsPhaseCorrelationPrivate<int8_t>::Execute(this, inputData, m, attrMatName, xshifts, yshifts);
+  }
+  else if(AlignSectionsPhaseCorrelationPrivate<uint8_t>()(inputData) )
+  {
+    AlignSectionsPhaseCorrelationPrivate<uint8_t>::Execute(this, inputData, m, attrMatName, xshifts, yshifts);
+  }
+  else if(AlignSectionsPhaseCorrelationPrivate<int16_t>()(inputData) )
+  {
+    AlignSectionsPhaseCorrelationPrivate<int16_t>::Execute(this, inputData, m, attrMatName, xshifts, yshifts);
+  }
+  else if(AlignSectionsPhaseCorrelationPrivate<uint16_t>()(inputData) )
+  {
+    AlignSectionsPhaseCorrelationPrivate<uint16_t>::Execute(this, inputData, m, attrMatName, xshifts, yshifts);
+  }
+  else if(AlignSectionsPhaseCorrelationPrivate<int32_t>()(inputData) )
+  {
+    AlignSectionsPhaseCorrelationPrivate<int32_t>::Execute(this, inputData, m, attrMatName, xshifts, yshifts);
+  }
+  else if(AlignSectionsPhaseCorrelationPrivate<uint32_t>()(inputData) )
+  {
+    AlignSectionsPhaseCorrelationPrivate<uint32_t>::Execute(this, inputData, m, attrMatName, xshifts, yshifts);
+  }
+  else if(AlignSectionsPhaseCorrelationPrivate<int64_t>()(inputData) )
+  {
+    AlignSectionsPhaseCorrelationPrivate<int64_t>::Execute(this, inputData, m, attrMatName, xshifts, yshifts);
+  }
+  else if(AlignSectionsPhaseCorrelationPrivate<uint64_t>()(inputData) )
+  {
+    AlignSectionsPhaseCorrelationPrivate<uint64_t>::Execute(this, inputData, m, attrMatName, xshifts, yshifts);
+  }
+  else if(AlignSectionsPhaseCorrelationPrivate<float>()(inputData) )
+  {
+    AlignSectionsPhaseCorrelationPrivate<float>::Execute(this, inputData, m, attrMatName, xshifts, yshifts);
+  }
+  else if(AlignSectionsPhaseCorrelationPrivate<double>()(inputData) )
+  {
+    AlignSectionsPhaseCorrelationPrivate<double>::Execute(this, inputData, m, attrMatName, xshifts, yshifts);
+  }
+  else
+  {
+    setErrorCondition(-10001);
+    QString ss = QObject::tr("A Supported DataArray type was not used for an input array.");
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    return;
+  }
+}
+
 
 // -----------------------------------------------------------------------------
 //
