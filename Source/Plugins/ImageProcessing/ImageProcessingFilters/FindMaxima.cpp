@@ -80,9 +80,9 @@ class FindMaximaPrivate
       typedef itk::Image<bool, ImageProcessing::ImageDimension> BoolImageType;
       typename ImageType::Pointer inputImage = ItkBridge<PixelType>::CreateItkWrapperForDataPointer(m, attrMatName, inputData);
       BoolImageType::Pointer outputImage = ItkBridge<bool>::CreateItkWrapperForDataPointer(m, attrMatName, outputData);
-      
+
       //find maxima
-      std::vector<ImageType::IndexType> peakLocations;
+      std::vector<typename ImageType::IndexType> peakLocations;
       try
       {
         peakLocations = ImageProcessing::LocalMaxima<ImageType>::Find(inputImage, tolerance, true);
@@ -93,7 +93,7 @@ class FindMaximaPrivate
         QString ss = QObject::tr("Failed to convert image. Error Message returned from ITK:\n   %1").arg(err.GetDescription());
         filter->notifyErrorMessage(filter->getHumanLabel(), ss, filter->getErrorCondition());
       }
-      
+
       //fill output data with false then set peaks to true
       outputImage->FillBuffer(false);
       for(int i=0; i<peakLocations.size(); i++)
