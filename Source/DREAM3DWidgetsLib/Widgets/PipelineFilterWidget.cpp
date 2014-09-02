@@ -56,9 +56,9 @@
 #include "DREAM3DLib/Common/IFilterFactory.hpp"
 #include "DREAM3DLib/Common/FilterFactory.hpp"
 
-
 #include "DREAM3DWidgetsLib/FilterWidgetManager.h"
 #include "DREAM3DWidgetsLib/FilterParameterWidgets/LinkedBooleanWidget.h"
+#include "DREAM3DWidgetsLib/Widgets/PipelineViewWidget.h"
 
 // -----------------------------------------------------------------------------
 // Include the "moc" file that was generated for this file
@@ -123,8 +123,6 @@ void PipelineFilterWidget::initialize(AbstractFilter::Pointer filter)
 
   connect(this, SIGNAL(customContextMenuRequested(const QPoint&)),
           this, SLOT(showCustomContextMenu(const QPoint&)));
-
-  setAttribute(Qt::WA_NoMousePropagation);
 
   setupUi(this);
 
@@ -557,7 +555,7 @@ void PipelineFilterWidget::updateWidgetStyle()
   style.append("QLabel\n {\n");
 
 #if defined(Q_WS_WIN)
-  style.append("font: 75 10pt \"Arial\";");
+  style.append("font: 9pt \"Arial\";");
 #elif defined(Q_WS_MAC)
   style.append("font: 100 italic 12pt \"Arial\";");
 #else

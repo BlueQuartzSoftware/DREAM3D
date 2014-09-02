@@ -11,7 +11,16 @@
    </rect>
   </property>
   <layout class="QGridLayout" name="widgetLayout">
-   <property name="margin">
+   <property name="leftMargin">
+    <number>2</number>
+   </property>
+   <property name="topMargin">
+    <number>2</number>
+   </property>
+   <property name="rightMargin">
+    <number>2</number>
+   </property>
+   <property name="bottomMargin">
     <number>2</number>
    </property>
    <property name="spacing">
@@ -214,7 +223,7 @@
      <property name="styleSheet">
       <string notr="true">QLabel
 {
-font: 75 13pt &quot;Lucida Grande&quot;;
+font: 10pt &quot;Arial&quot;;
 font-weight: bold;
 }</string>
      </property>

@@ -30,9 +30,19 @@
      </property>
      <property name="font">
       <font>
+       <family>Times New Roman</family>
+       <pointsize>10</pointsize>
        <weight>75</weight>
+       <italic>false</italic>
        <bold>true</bold>
       </font>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QLabel#label
+{
+	font: 10pt &quot;Times New Roman&quot;;
+font-weight: bold;
+}</string>
      </property>
      <property name="text">
       <string>label</string>

@@ -31,8 +31,8 @@
  *                              FA8650-10-D-5210
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef _FindMaxima_H_
-#define _FindMaxima_H_
+#ifndef _BinaryWatershed_H_
+#define _BinaryWatershed_H_
 
 //#include <vector>
 #include <QtCore/QString>
@@ -44,32 +44,29 @@
 
 #include "Plugins/ImageProcessing/ImageProcessingConstants.h"
 
-#include "TemplateUtilities.h"
-
-
 /**
- * @class FindMaxima FindMaxima.h ImageProcessing/ImageProcessingFilters/FindMaxima.h
- * @brief
+ * @class BinaryWatershed BinaryWatershed.h ImageProcessing/ImageProcessingFilters/BinaryWatershed.h
+ * @brief splits concave objects in a binary array with a watershed segmentation
  * @author Will Lenthe
- * @date 8/7/14
+ * @date 8/29/14
  * @version 1.0
  */
-class FindMaxima : public AbstractFilter
+class BinaryWatershed : public AbstractFilter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
 
   public:
-    DREAM3D_SHARED_POINTERS(FindMaxima)
-    DREAM3D_STATIC_NEW_MACRO(FindMaxima)
-    DREAM3D_TYPE_MACRO_SUPER(FindMaxima, AbstractFilter)
+    DREAM3D_SHARED_POINTERS(BinaryWatershed)
+    DREAM3D_STATIC_NEW_MACRO(BinaryWatershed)
+    DREAM3D_TYPE_MACRO_SUPER(BinaryWatershed, AbstractFilter)
 
-    virtual ~FindMaxima();
+    virtual ~BinaryWatershed();
 
     DREAM3D_FILTER_PARAMETER(DataArrayPath, SelectedCellArrayPath)
     Q_PROPERTY(DataArrayPath SelectedCellArrayPath READ getSelectedCellArrayPath WRITE setSelectedCellArrayPath)
 
-    DREAM3D_FILTER_PARAMETER(float, Tolerance)
-    Q_PROPERTY(float Tolerance READ getTolerance WRITE setTolerance)
+    DREAM3D_FILTER_PARAMETER(float, PeakTolerance)
+    Q_PROPERTY(float PeakTolerance READ getPeakTolerance WRITE setPeakTolerance)
 
     DREAM3D_FILTER_PARAMETER(QString, NewCellArrayName)
     Q_PROPERTY(QString NewCellArrayName READ getNewCellArrayName WRITE setNewCellArrayName)
@@ -139,7 +136,7 @@ class FindMaxima : public AbstractFilter
      */
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
 
-//virtual void FindMaxima::template_execute();
+//virtual void BinaryWatershed::template_execute();
 
   signals:
     /**
@@ -165,7 +162,7 @@ class FindMaxima : public AbstractFilter
     void preflightExecuted();
 
   protected:
-    FindMaxima();
+    BinaryWatershed();
 
     /**
     * @brief Checks for the appropriate parameter values and availability of arrays in the data container
@@ -173,11 +170,11 @@ class FindMaxima : public AbstractFilter
     void dataCheck();
 
   private:
-    DEFINE_REQUIRED_IDATAARRAY_VARIABLE(SelectedCellArray)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(bool, SelectedCellArray)
     DEFINE_CREATED_DATAARRAY_VARIABLE(bool, NewCellArray)
 
-    FindMaxima(const FindMaxima&); // Copy Constructor Not Implemented
-    void operator=(const FindMaxima&); // Operator '=' Not Implemented
+    BinaryWatershed(const BinaryWatershed&); // Copy Constructor Not Implemented
+    void operator=(const BinaryWatershed&); // Operator '=' Not Implemented
 };
 
-#endif /* _FindMaxima_H_ */
+#endif /* _BinaryWatershed_H_ */

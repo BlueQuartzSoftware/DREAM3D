@@ -13,7 +13,7 @@ START_FILTER_GROUP(${ImageProcessing_BINARY_DIR} "${_filterGroupName}" "ImagePro
 #---------
 # List your public filters here
 set(_PublicFilters
-  AlignSectionsPhaseCorrelation
+  #AlignSectionsPhaseCorrelation
   AutoThreshold
   DiscreteGaussianBlur
   GaussianBlur
@@ -33,6 +33,7 @@ set(_PublicFilters
   RGBToGray
   GrayToRGB
   FindMaxima
+  BinaryWatershed
 )
 
 

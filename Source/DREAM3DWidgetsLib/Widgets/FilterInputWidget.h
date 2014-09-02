@@ -64,6 +64,8 @@ class DREAM3DWidgetsLib_EXPORT FilterInputWidget : public QWidget, private Ui::F
 
     virtual void setupGui();
 
+    bool eventFilter(QObject *o, QEvent *e);
+
   protected:
 
   public slots:
@@ -81,7 +83,7 @@ class DREAM3DWidgetsLib_EXPORT FilterInputWidget : public QWidget, private Ui::F
   private:
     QPointer<FaderWidget> faderWidget;
     bool m_AdvFadedOut;
-
+    QString m_BrandingLabel;
 
     FilterInputWidget(const FilterInputWidget&); // Copy Constructor Not Implemented
     void operator=(const FilterInputWidget&); // Operator '=' Not Implemented

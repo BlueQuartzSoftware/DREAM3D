@@ -71,7 +71,20 @@ FilterInputWidget::~FilterInputWidget()
 {
 }
 
-
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+bool FilterInputWidget::eventFilter(QObject *o, QEvent *e)
+{
+  if ( e->type() == QEvent::Resize && qobject_cast<QLabel*>(o) && brandingLabel == o)
+  {
+    QFontMetrics metrics(brandingLabel->font());
+    QString elidedText = metrics.elidedText(m_BrandingLabel, Qt::ElideMiddle, brandingLabel->width());
+    brandingLabel->setText(elidedText);
+    return true;
+  }
+  return QWidget::eventFilter( o, e );
+}
 
 // -----------------------------------------------------------------------------
 //
@@ -107,10 +120,15 @@ void FilterInputWidget::setupGui()
   font2.setPointSize(10);
 #endif
 
+#if 0
   filterHumanLabel->setFont(font);
   brandingLabel->setFont(font1);
   basicInputsLabel->setFont(font2);
   advInputsLabel->setFont(font2);
+  #endif
+
+  brandingLabel->installEventFilter(this);
+
 
 }
 
@@ -192,7 +210,9 @@ void FilterInputWidget::displayFilterParameters(PipelineFilterWidget* w)
   filterHumanLabel->setText(w->getHumanLabel());
 
   AbstractFilter::Pointer filter = w->getFilter();
-  brandingLabel->setText(filter->getBrandingString()  + "  [" + w->getCompiledLibraryName() + "/" + w->getFilterGroup() + "/" + w->getFilterClassName() + "]" );
+  m_BrandingLabel = filter->getBrandingString()  + "  [" + w->getCompiledLibraryName() + "/" + w->getFilterGroup() + "/" + w->getFilterClassName() + "]";
+
+  brandingLabel->setText(m_BrandingLabel);
 
 }
 

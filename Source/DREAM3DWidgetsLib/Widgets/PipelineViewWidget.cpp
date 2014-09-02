@@ -94,6 +94,7 @@ PipelineViewWidget::PipelineViewWidget(QWidget* parent) :
   m_autoScrollTimer.setParent(this);
 
   setContextMenuPolicy(Qt::CustomContextMenu);
+  setFocusPolicy(Qt::StrongFocus);
 
   connect(this,
           SIGNAL(customContextMenuRequested(const QPoint&)),
@@ -523,11 +524,28 @@ void PipelineViewWidget::addFilterWidget(PipelineFilterWidget* w, int index)
 
   // Finally, set this new filter widget as selected in order to show the input parameters right away
   w->setIsSelected(true);
+  // Get the filter to ignore Scroll Wheel Events
+  w->installEventFilter( this);
+
   // Emit that the pipeline changed
   emit pipelineChanged();
 
 
 }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+bool PipelineViewWidget::eventFilter(QObject* o, QEvent* e)
+{
+  if ( e->type() == QEvent::Wheel && qobject_cast<PipelineFilterWidget*>(o) )
+  {
+    return false;
+  }
+  return QFrame::eventFilter( o, e );
+}
+
 
 // -----------------------------------------------------------------------------
 //

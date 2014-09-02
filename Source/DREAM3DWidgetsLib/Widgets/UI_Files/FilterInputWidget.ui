@@ -65,7 +65,13 @@ font-weight: bold;s
         </property>
         <item>
          <widget class="QLabel" name="filterHumanLabel">
-
+          <property name="styleSheet">
+           <string notr="true">QLabel#filterHumanLabel
+{
+	font: 75 12pt &quot;Arial&quot;;
+	font-weight: bold;
+}</string>
+          </property>
           <property name="frameShape">
            <enum>QFrame::NoFrame</enum>
           </property>
@@ -84,9 +90,11 @@ font-weight: bold;s
       </item>
       <item row="3" column="0">
        <widget class="QLabel" name="brandingLabel">
-
         <property name="text">
          <string>Branding Information</string>
+        </property>
+        <property name="wordWrap">
+         <bool>true</bool>
         </property>
        </widget>
       </item>
@@ -104,7 +112,7 @@ font-weight: bold;s
            <x>0</x>
            <y>0</y>
            <width>572</width>
-           <height>211</height>
+           <height>224</height>
           </rect>
          </property>
          <layout class="QVBoxLayout" name="scrollAreaVLayout">
@@ -138,7 +146,7 @@ font-weight: bold;s
             <property name="frameShadow">
              <enum>QFrame::Plain</enum>
             </property>
-            <layout class="QVBoxLayout" name="verticalLayout">
+            <layout class="QVBoxLayout" name="verticalLayout" stretch="0,0">
              <property name="leftMargin">
               <number>4</number>
              </property>
@@ -153,6 +161,22 @@ font-weight: bold;s
              </property>
              <item>
               <widget class="QLabel" name="basicInputsLabel">
+               <property name="font">
+                <font>
+                 <family>Arial</family>
+                 <pointsize>11</pointsize>
+                 <weight>75</weight>
+                 <italic>false</italic>
+                 <bold>true</bold>
+                </font>
+               </property>
+               <property name="styleSheet">
+                <string notr="true">QLabel#basicInputsLabel
+{
+	font: 11pt &quot;Arial&quot;;
+	font-weight: bold;
+}</string>
+               </property>
                <property name="text">
                 <string>Basic Inputs</string>
                </property>
@@ -215,6 +239,13 @@ font-weight: bold;s
             </item>
             <item>
              <widget class="QLabel" name="advInputsLabel">
+              <property name="styleSheet">
+               <string notr="true">QLabel#advInputsLabel
+{
+	font: 11pt &quot;Arial&quot;;
+	font-weight: bold;
+}</string>
+              </property>
               <property name="text">
                <string>Advanced Inputs</string>
               </property>
