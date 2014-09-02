@@ -187,41 +187,33 @@ class AssignVoxelsGapsImpl
 
             index = static_cast<int>( (plane * dim0_dim_1) + (row_dim) + column );
 
-            if(m_FeatureIds[index] <= 0)
+            inside = -1;
+            coords[0] = float(iter1) * res[0];
+            coords[1] = float(iter2) * res[1];
+            coords[2] = float(iter3) * res[2];
+
+            coords[0] = coords[0] - xc;
+            coords[1] = coords[1] - yc;
+            coords[2] = coords[2] - zc;
+            MatrixMath::Transpose3x3(gaCopy, gaT);
+            MatrixMath::Multiply3x3with3x1(gaT, coords, coordsRotated);
+            float axis1comp = coordsRotated[0] * Invradcur[0];
+            float axis2comp = coordsRotated[1] * Invradcur[1];
+            float axis3comp = coordsRotated[2] * Invradcur[2];
+            inside = m_ShapeOps->inside(axis1comp, axis2comp, axis3comp);
+            //if (inside >= 0 && newowners[index] > 0)
+            if (inside >= 0 && newowners[index] > 0 && inside > ellipfuncs[index])
             {
-              inside = -1;
-              coords[0] = float(iter1) * res[0];
-              coords[1] = float(iter2) * res[1];
-              coords[2] = float(iter3) * res[2];
-
-              //              dist = ((coords[0] - xc) * (coords[0] - xc)) + ((coords[1] - yc) * (coords[1] - yc)) + ((coords[2] - zc) * (coords[2] - zc));
-              //              if (dist < radcur1squared)
-              //              {
-              coords[0] = coords[0] - xc;
-              coords[1] = coords[1] - yc;
-              coords[2] = coords[2] - zc;
-              MatrixMath::Transpose3x3(gaCopy, gaT);
-              MatrixMath::Multiply3x3with3x1(gaT, coords, coordsRotated);
-              float axis1comp = coordsRotated[0] * Invradcur[0];
-              float axis2comp = coordsRotated[1] * Invradcur[1];
-              float axis3comp = coordsRotated[2] * Invradcur[2];
-              inside = m_ShapeOps->inside(axis1comp, axis2comp, axis3comp);
-              if (inside >= 0 && newowners[index] > 0)
-                //if (inside >= 0 && newowners[index] > 0 && inside > ellipfuncs[index])
-              {
-                //                    newowners[index] = curFeature;
-                //                    ellipfuncs[index] = inside;
-                newowners[index] = -2;
-                ellipfuncs[index] = inside;
-              }
-              else if (inside >= 0 && newowners[index] == -1)
-              {
-                newowners[index] = curFeature;
-                ellipfuncs[index] = inside;
-              }
-              //              }
+              newowners[index] = curFeature;
+              ellipfuncs[index] = inside;
+              //newowners[index] = -2;
+              //ellipfuncs[index] = inside;
             }
-
+            else if (inside >= 0 && newowners[index] == -1)
+            {
+              newowners[index] = curFeature;
+              ellipfuncs[index] = inside;
+            }
           }
         }
       }
@@ -1845,10 +1837,10 @@ float PackPrimaryPhases::check_fillingerror(int gadd, int gremove, Int32ArrayTyp
           if(exclusionOwners[featureOwnersIdx] == 0)
           {
             key = availablePoints[featureOwnersIdx];
-            availablePoints.erase(featureOwnersIdx);
+//            availablePoints.erase(featureOwnersIdx);
             val = availablePointsInv[availablePointsCount-1];
             availablePointsInv[key] = val;
-            availablePointsInv.erase(availablePointsCount-1);
+//            availablePointsInv.erase(availablePointsCount-1);
             availablePoints[val] = key;
             availablePointsCount--;
           }
@@ -1873,19 +1865,15 @@ float PackPrimaryPhases::check_fillingerror(int gadd, int gremove, Int32ArrayTyp
               good = false;
               if(availablePoints.size() == availablePointsCount) good = true; 
               key = availablePoints[featureOwnersIdx];
-              availablePoints.erase(featureOwnersIdx);
+//              availablePoints.erase(featureOwnersIdx);
               val = availablePointsInv[availablePointsCount-1];
-              availablePointsInv.erase(availablePointsCount-1);
+//              availablePointsInv.erase(availablePointsCount-1);
               if(key < availablePointsCount-1)
               {
                 availablePointsInv[key] = val;
                 availablePoints[val] = key;
               }
               availablePointsCount--;
-              if(availablePoints.size() != availablePointsCount && good == true)
-              {
-                int stop = 0;
-              }
             }
             exclusionOwners[featureOwnersIdx]++;
           }
@@ -2162,9 +2150,9 @@ void PackPrimaryPhases::assign_voxels()
     float phi2 = m_AxisEulerAngles[3 * i + 2];
     float ga[3][3];
     OrientationMath::EulertoMat(phi1, PHI, phi2, ga);
-    column = static_cast<DimType>( (xc - (xRes * 0.5)) / xRes );
-    row = static_cast<DimType>( (yc - (yRes * 0.5)) / yRes );
-    plane = static_cast<DimType>( (zc - (zRes * 0.5)) / zRes );
+    column = static_cast<DimType>( xc / xRes );
+    row = static_cast<DimType>( yc / yRes );
+    plane = static_cast<DimType>( zc / zRes );
     xmin = int(column - ((radcur1 / xRes) + 1));
     xmax = int(column + ((radcur1 / xRes) + 1));
     ymin = int(row - ((radcur1 / yRes) + 1)); // <======================
@@ -2377,6 +2365,7 @@ void PackPrimaryPhases::assign_gaps_only()
       QString ss = QObject::tr("Assign Gaps|| Cycle#: %1 || Remaining Unassigned Voxel Count: %2").arg(counter).arg(count);
       notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
     }
+    if(counter == 1) count = 0;
   }
 }
 

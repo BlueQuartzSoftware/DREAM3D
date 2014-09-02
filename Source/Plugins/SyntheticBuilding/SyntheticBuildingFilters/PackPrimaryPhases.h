@@ -203,6 +203,7 @@ class PackPrimaryPhases : public AbstractFilter
     float check_neighborhooderror(int gadd, int gremove);
 
     float check_fillingerror(int gadd, int gremove, Int32ArrayType::Pointer featureOwnersPtr, Int32ArrayType::Pointer exclusionOwnersPtr, std::map<size_t,size_t> &availablePoints, std::map<size_t,size_t> &availablePointsInv);
+    void update_availablepoints();
     void assign_voxels();
     void assign_gaps_only();
     void cleanup_features();
@@ -254,6 +255,9 @@ class PackPrimaryPhases : public AbstractFilter
     std::vector<std::vector<int> > rowlist;
     std::vector<std::vector<int> > planelist;
     std::vector<std::vector<float> > ellipfunclist;
+
+    std::vector<size_t> pointsToAdd;
+    std::vector<size_t> pointsToRemove;
 
     unsigned long long int m_Seed;
 
