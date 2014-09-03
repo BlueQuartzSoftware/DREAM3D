@@ -1163,6 +1163,9 @@ void  PackPrimaryPhases::place_features(Int32ArrayType::Pointer featureOwnersPtr
       availablePointsCount++;
     }
   }
+  // and clear the pointsToRemove and pointsToAdd vectors from the initial packing
+  pointsToRemove.clear();
+  pointsToAdd.clear();
 
   millis = QDateTime::currentMSecsSinceEpoch();
   startMillis = millis;
@@ -1255,6 +1258,7 @@ void  PackPrimaryPhases::place_features(Int32ArrayType::Pointer featureOwnersPtr
       if(fillingerror <= oldfillingerror)
       {
         oldneighborhooderror = currentneighborhooderror;
+        update_availablepoints(availablePoints, availablePointsInv);
         acceptedmoves++;
       }
       else if(fillingerror > oldfillingerror)
@@ -1262,6 +1266,8 @@ void  PackPrimaryPhases::place_features(Int32ArrayType::Pointer featureOwnersPtr
         fillingerror = check_fillingerror(-1000, static_cast<int>(randomfeature), featureOwnersPtr, exclusionOwnersPtr, availablePoints, availablePointsInv);
         move_feature(randomfeature, oldxc, oldyc, oldzc);
         fillingerror = check_fillingerror(static_cast<int>(randomfeature), -1000, featureOwnersPtr, exclusionOwnersPtr, availablePoints, availablePointsInv);
+        pointsToRemove.clear();
+        pointsToAdd.clear();
       }
     }
     // NUDGE - this option moves one feature to a spot close to its current centroid
@@ -1307,6 +1313,7 @@ void  PackPrimaryPhases::place_features(Int32ArrayType::Pointer featureOwnersPtr
       if(fillingerror <= oldfillingerror)
       {
         oldneighborhooderror = currentneighborhooderror;
+        update_availablepoints(availablePoints, availablePointsInv);
         acceptedmoves++;
       }
       //      else if(fillingerror > oldfillingerror || currentneighborhooderror < oldneighborhooderror)
@@ -1315,6 +1322,8 @@ void  PackPrimaryPhases::place_features(Int32ArrayType::Pointer featureOwnersPtr
         fillingerror = check_fillingerror(-1000, static_cast<int>(randomfeature), featureOwnersPtr, exclusionOwnersPtr, availablePoints, availablePointsInv);
         move_feature(randomfeature, oldxc, oldyc, oldzc);
         fillingerror = check_fillingerror(static_cast<int>(randomfeature), -1000, featureOwnersPtr, exclusionOwnersPtr, availablePoints, availablePointsInv);
+        pointsToRemove.clear();
+        pointsToAdd.clear();
       }
     }
   }
@@ -1804,7 +1813,6 @@ float PackPrimaryPhases::check_fillingerror(int gadd, int gremove, Int32ArrayTyp
   float multiplier = 1.0;
   if(gadd > 0)
   {
-    bool good = true;
     size_t key, val;
     k1 = 2;
     k2 = -1;
@@ -1836,13 +1844,17 @@ float PackPrimaryPhases::check_fillingerror(int gadd, int gremove, Int32ArrayTyp
         {
           if(exclusionOwners[featureOwnersIdx] == 0)
           {
-            key = availablePoints[featureOwnersIdx];
-//            availablePoints.erase(featureOwnersIdx);
-            val = availablePointsInv[availablePointsCount-1];
-            availablePointsInv[key] = val;
-//            availablePointsInv.erase(availablePointsCount-1);
-            availablePoints[val] = key;
-            availablePointsCount--;
+            pointsToRemove.push_back(featureOwnersIdx);
+//            key = availablePoints[featureOwnersIdx];
+////          availablePoints.erase(featureOwnersIdx);
+//            val = availablePointsInv[availablePointsCount-1];
+////          availablePointsInv.erase(availablePointsCount-1);
+//            if(key < availablePointsCount-1)
+//            {
+//              availablePointsInv[key] = val;
+//              availablePoints[val] = key;
+//            }
+//            availablePointsCount--;
           }
           exclusionOwners[featureOwnersIdx]++;
         }
@@ -1862,18 +1874,17 @@ float PackPrimaryPhases::check_fillingerror(int gadd, int gremove, Int32ArrayTyp
           {
             if(exclusionOwners[featureOwnersIdx] == 0)
             {
-              good = false;
-              if(availablePoints.size() == availablePointsCount) good = true; 
-              key = availablePoints[featureOwnersIdx];
-//              availablePoints.erase(featureOwnersIdx);
-              val = availablePointsInv[availablePointsCount-1];
-//              availablePointsInv.erase(availablePointsCount-1);
-              if(key < availablePointsCount-1)
-              {
-                availablePointsInv[key] = val;
-                availablePoints[val] = key;
-              }
-              availablePointsCount--;
+              pointsToRemove.push_back(featureOwnersIdx);
+//              key = availablePoints[featureOwnersIdx];
+////            availablePoints.erase(featureOwnersIdx);
+//              val = availablePointsInv[availablePointsCount-1];
+////            availablePointsInv.erase(availablePointsCount-1);
+//              if(key < availablePointsCount-1)
+//              {
+//                availablePointsInv[key] = val;
+//                availablePoints[val] = key;
+//              }
+//              availablePointsCount--;
             }
             exclusionOwners[featureOwnersIdx]++;
           }
@@ -1918,9 +1929,10 @@ float PackPrimaryPhases::check_fillingerror(int gadd, int gremove, Int32ArrayTyp
           exclusionOwners[featureOwnersIdx]--;
           if(exclusionOwners[featureOwnersIdx] == 0)
           {
-            availablePoints[featureOwnersIdx] = availablePointsCount;
-            availablePointsInv[availablePointsCount] = featureOwnersIdx;
-            availablePointsCount++;
+            pointsToAdd.push_back(featureOwnersIdx);
+            //availablePoints[featureOwnersIdx] = availablePointsCount;
+            //availablePointsInv[availablePointsCount] = featureOwnersIdx;
+            //availablePointsCount++;
           }
         }
         fillingerror = fillingerror + ((k1 * currentFeatureOwner  + k2));
@@ -1939,9 +1951,10 @@ float PackPrimaryPhases::check_fillingerror(int gadd, int gremove, Int32ArrayTyp
             exclusionOwners[featureOwnersIdx]--;
             if(exclusionOwners[featureOwnersIdx] == 0)
             {
-              availablePoints[featureOwnersIdx] = availablePointsCount;
-              availablePointsInv[availablePointsCount] = featureOwnersIdx;
-              availablePointsCount++;
+              pointsToAdd.push_back(featureOwnersIdx);
+              //availablePoints[featureOwnersIdx] = availablePointsCount;
+              //availablePointsInv[availablePointsCount] = featureOwnersIdx;
+              //availablePointsCount++;
             }
           }
           fillingerror = fillingerror + ((k1 * currentFeatureOwner  + k2));
@@ -1953,6 +1966,40 @@ float PackPrimaryPhases::check_fillingerror(int gadd, int gremove, Int32ArrayTyp
   }
   fillingerror = fillingerror / float(m_TotalPackingPoints);
   return fillingerror;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void PackPrimaryPhases::update_availablepoints(std::map<size_t,size_t> &availablePoints, std::map<size_t,size_t> &availablePointsInv)
+{
+  size_t removeSize = pointsToRemove.size();
+  size_t addSize = pointsToAdd.size();
+  size_t featureOwnersIdx;
+  size_t key, val;
+  for(size_t i = 0; i < removeSize; i++)
+  {
+    featureOwnersIdx = pointsToRemove[i];
+    key = availablePoints[featureOwnersIdx];
+//  availablePoints.erase(featureOwnersIdx);
+    val = availablePointsInv[availablePointsCount-1];
+//  availablePointsInv.erase(availablePointsCount-1);
+    if(key < availablePointsCount-1)
+    {
+      availablePointsInv[key] = val;
+      availablePoints[val] = key;
+    }
+    availablePointsCount--;
+  }
+  for(size_t i = 0; i < addSize; i++)
+  {
+    featureOwnersIdx = pointsToAdd[i];
+    availablePoints[featureOwnersIdx] = availablePointsCount;
+    availablePointsInv[availablePointsCount] = featureOwnersIdx;
+    availablePointsCount++;
+  }
+  pointsToRemove.clear();
+  pointsToAdd.clear();
 }
 
 // -----------------------------------------------------------------------------
@@ -2365,7 +2412,6 @@ void PackPrimaryPhases::assign_gaps_only()
       QString ss = QObject::tr("Assign Gaps|| Cycle#: %1 || Remaining Unassigned Voxel Count: %2").arg(counter).arg(count);
       notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
     }
-    if(counter == 1) count = 0;
   }
 }
 
