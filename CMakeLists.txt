@@ -294,7 +294,8 @@ file(WRITE ${DREAM3DProj_BINARY_DIR}/DREAM3DDocGroupList "")
 # ------- Enable the CTest testing. Use make test to run all tests ---------------
 OPTION(DREAM3D_BUILD_TESTING "Compile the test programs" ON)
 if(DREAM3D_BUILD_TESTING)
-    ENABLE_TESTING()
+    #ENABLE_TESTING()
+    include( CTest )
 endif()
 
 
