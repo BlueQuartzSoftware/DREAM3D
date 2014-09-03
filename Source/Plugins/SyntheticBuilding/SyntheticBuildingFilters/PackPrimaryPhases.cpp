@@ -64,7 +64,8 @@
 #include "DREAM3DLib/Utilities/TimeUtilities.h"
 #include "DREAM3DLib/Utilities/DREAM3DRandom.h"
 
-
+//// Macro to determine if we are going to show the Debugging Output files
+#define PPP_SHOW_DEBUG_OUTPUTS 0
 
 #define NEW_SHARED_ARRAY(var, m_msgType, size)\
   boost::shared_array<m_msgType> var##Array(new m_msgType[size]);\
@@ -100,7 +101,7 @@ class AssignVoxelsGapsImpl
   public:
     AssignVoxelsGapsImpl(DimType* dimensions, float* resolution, int32_t* featureIds, float* radCur,
                          float* xx, ShapeOps* shapeOps, float gA[3][3], float* size, int cur_feature,
-                         Int32ArrayType::Pointer newowners, FloatArrayType::Pointer ellipfuncs) :
+    Int32ArrayType::Pointer newowners, FloatArrayType::Pointer ellipfuncs) :
       m_FeatureIds(featureIds),
       m_ShapeOps(shapeOps),
       curFeature(cur_feature)
@@ -253,13 +254,13 @@ PackPrimaryPhases::PackPrimaryPhases() :
   m_InputStatsArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellEnsembleAttributeMatrixName, DREAM3D::EnsembleData::Statistics),
   m_InputPhaseTypesArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellEnsembleAttributeMatrixName, DREAM3D::EnsembleData::PhaseTypes),
   m_InputShapeTypesArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellEnsembleAttributeMatrixName, DREAM3D::EnsembleData::ShapeTypes),
-  m_CsvOutputFile(""),
+  m_HaveFeatures(false),
   m_FeatureInputFile(""),
+  m_CsvOutputFile(""),
   m_PeriodicBoundaries(false),
   m_WriteGoalAttributes(false),
-  m_HaveFeatures(false),
-  m_ErrorOutputFile("c:/Users/groebema/Desktop/errorFile.txt"),
-  m_VtkOutputFile("c:/Users/groebema/Desktop/test.vtk"),
+  m_ErrorOutputFile(""),
+  m_VtkOutputFile(""),
   m_FeatureIds(NULL),
   m_CellPhases(NULL),
   m_FeaturePhases(NULL),
@@ -330,6 +331,11 @@ void PackPrimaryPhases::setupFilterParameters()
   parameters.push_back(FilterParameter::NewConditional("Write Goal Attributes", "WriteGoalAttributes", FilterParameterWidgetType::LinkedBooleanWidget, getWriteGoalAttributes(), true, linkedProps));
   parameters.push_back(FileSystemFilterParameter::New("Goal Attribute CSV File", "CsvOutputFile", FilterParameterWidgetType::OutputFileWidget, getCsvOutputFile(), false, "", "*.csv", "Comma Separated Data"));
 
+#if PPP_SHOW_DEBUG_OUTPUTS
+  parameters.push_back(FileSystemFilterParameter::New("Debug VTK File", "VtkOutputFile", FilterParameterWidgetType::InputFileWidget, getVtkOutputFile(), true, "", "*.vtk", "VTK File"));
+  parameters.push_back(FileSystemFilterParameter::New("Debug Error File", "ErrorOutputFile", FilterParameterWidgetType::InputFileWidget, getErrorOutputFile(), false, "", "*.txt", "Text File"));
+#endif
+
   setFilterParameters(parameters);
 }
 
@@ -354,6 +360,8 @@ void PackPrimaryPhases::readFilterParameters(AbstractFilterParametersReader* rea
   setInputStatsArrayPath(reader->readDataArrayPath("InputStatsArrayPath", getInputStatsArrayPath() ) );
   setInputPhaseTypesArrayPath(reader->readDataArrayPath("InputPhaseTypesArrayPath", getInputPhaseTypesArrayPath() ) );
   setInputShapeTypesArrayPath(reader->readDataArrayPath("InputShapeTypesArrayPath", getInputShapeTypesArrayPath() ) );
+  setVtkOutputFile( reader->readString( "VtkOutputFile", getVtkOutputFile() ) );
+  setErrorOutputFile( reader->readString( "ErrorOutputFile", getErrorOutputFile() ) );
   reader->closeFilterGroup();
 }
 
@@ -364,21 +372,23 @@ int PackPrimaryPhases::writeFilterParameters(AbstractFilterParametersWriter* wri
 {
   writer->openFilterGroup(this, index);
   DREAM3D_FILTER_WRITE_PARAMETER(OutputCellAttributeMatrixName)
-  DREAM3D_FILTER_WRITE_PARAMETER(OutputCellFeatureAttributeMatrixName)
-  DREAM3D_FILTER_WRITE_PARAMETER(OutputCellEnsembleAttributeMatrixName)
-  DREAM3D_FILTER_WRITE_PARAMETER(FeatureIdsArrayName)
-  DREAM3D_FILTER_WRITE_PARAMETER(CellPhasesArrayName)
-  DREAM3D_FILTER_WRITE_PARAMETER(FeaturePhasesArrayName)
-  DREAM3D_FILTER_WRITE_PARAMETER(NumFeaturesArrayName)
-  DREAM3D_FILTER_WRITE_PARAMETER(PeriodicBoundaries)
-  DREAM3D_FILTER_WRITE_PARAMETER(HaveFeatures)
-  DREAM3D_FILTER_WRITE_PARAMETER(WriteGoalAttributes)
-  DREAM3D_FILTER_WRITE_PARAMETER(FeatureInputFile)
-  DREAM3D_FILTER_WRITE_PARAMETER(CsvOutputFile)
-  DREAM3D_FILTER_WRITE_PARAMETER(InputStatsArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(InputPhaseTypesArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(InputShapeTypesArrayPath)
-  writer->closeFilterGroup();
+      DREAM3D_FILTER_WRITE_PARAMETER(OutputCellFeatureAttributeMatrixName)
+      DREAM3D_FILTER_WRITE_PARAMETER(OutputCellEnsembleAttributeMatrixName)
+      DREAM3D_FILTER_WRITE_PARAMETER(FeatureIdsArrayName)
+      DREAM3D_FILTER_WRITE_PARAMETER(CellPhasesArrayName)
+      DREAM3D_FILTER_WRITE_PARAMETER(FeaturePhasesArrayName)
+      DREAM3D_FILTER_WRITE_PARAMETER(NumFeaturesArrayName)
+      DREAM3D_FILTER_WRITE_PARAMETER(PeriodicBoundaries)
+      DREAM3D_FILTER_WRITE_PARAMETER(HaveFeatures)
+      DREAM3D_FILTER_WRITE_PARAMETER(WriteGoalAttributes)
+      DREAM3D_FILTER_WRITE_PARAMETER(FeatureInputFile)
+      DREAM3D_FILTER_WRITE_PARAMETER(CsvOutputFile)
+      DREAM3D_FILTER_WRITE_PARAMETER(InputStatsArrayPath)
+      DREAM3D_FILTER_WRITE_PARAMETER(InputPhaseTypesArrayPath)
+      DREAM3D_FILTER_WRITE_PARAMETER(InputShapeTypesArrayPath)
+      DREAM3D_FILTER_WRITE_PARAMETER(VtkOutputFile)
+      DREAM3D_FILTER_WRITE_PARAMETER(ErrorOutputFile)
+      writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
 
@@ -549,7 +559,7 @@ void PackPrimaryPhases::execute()
   int err = 0;
   setErrorCondition(err);
   DREAM3D_RANDOMNG_NEW()
-  dataCheck();
+      dataCheck();
   if(getErrorCondition() < 0) { return; }
 
   if(m_HaveFeatures == false)
@@ -726,14 +736,14 @@ void  PackPrimaryPhases::load_features()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void  PackPrimaryPhases::place_features(Int32ArrayType::Pointer featureOwnersPtr)
+void PackPrimaryPhases::place_features(Int32ArrayType::Pointer featureOwnersPtr)
 {
-  bool writeErrorFile = true;
+  bool writeErrorFile = false;
   std::ofstream outFile;
   if(m_ErrorOutputFile.isEmpty() == false)
   {
     outFile.open(m_ErrorOutputFile.toLatin1().data(), std::ios_base::binary);
-    writeErrorFile = true;
+    writeErrorFile = outFile.is_open();
   }
 
   int err = 0;
@@ -810,7 +820,7 @@ void  PackPrimaryPhases::place_features(Int32ArrayType::Pointer featureOwnersPtr
         QString ss = QObject::tr("Tried to cast a statsDataArray[%1].get() to a PrimaryStatsData* "
                                  "pointer but this resulted in a NULL pointer. The value at m_PhaseTypes[%2] = %3 does not match up "
                                  "with the type of pointer stored in the StatsDataArray (PrimaryStatsData)\n")
-                     .arg(i).arg(i).arg(m_PhaseTypes[i]);
+            .arg(i).arg(i).arg(m_PhaseTypes[i]);
         notifyErrorMessage(getHumanLabel(), ss, -666);
         setErrorCondition(-666);
         return;
@@ -829,7 +839,7 @@ void  PackPrimaryPhases::place_features(Int32ArrayType::Pointer featureOwnersPtr
   QVector<size_t> dim(1, 1);
   Int32ArrayType::Pointer exclusionOwnersPtr = Int32ArrayType::CreateArray(featureOwnersPtr->getNumberOfTuples(), dim, "PackPrimaryFeatures::exclusions_owners");
   exclusionOwnersPtr->initializeWithValue(0);
-  
+
   //This is the set that we are going to keep updated with the points that are not in an exclusion zone
   std::map<size_t,size_t> availablePoints;
   std::map<size_t,size_t> availablePointsInv;
@@ -1237,7 +1247,7 @@ void  PackPrimaryPhases::place_features(Int32ArrayType::Pointer featureOwnersPtr
       }
       else
       {
-         featureOwnersIdx = static_cast<size_t>(rg.genrand_res53() * m_TotalPackingPoints);
+        featureOwnersIdx = static_cast<size_t>(rg.genrand_res53() * m_TotalPackingPoints);
       }
 
       //find the column row and plane of that point
@@ -1382,7 +1392,7 @@ void PackPrimaryPhases::generate_feature(int phase, int Seed, Feature* feature, 
 {
   DREAM3D_RANDOMNG_NEW_SEEDED(Seed)
 
-  StatsDataArray& statsDataArray = *(m_StatsDataArray.lock().get());
+      StatsDataArray& statsDataArray = *(m_StatsDataArray.lock().get());
 
   float r1 = 1;
   float a2 = 0, a3 = 0;
@@ -1849,7 +1859,7 @@ float PackPrimaryPhases::check_fillingerror(int gadd, int gremove, Int32ArrayTyp
           exclusionOwners[featureOwnersIdx]++;
         }
         fillingerror = fillingerror + ((k1 * currentFeatureOwner  + k2));
-//        fillingerror = fillingerror + (multiplier * (k1 * currentFeatureOwner  + k2));
+        //        fillingerror = fillingerror + (multiplier * (k1 * currentFeatureOwner  + k2));
         featureOwners[featureOwnersIdx] = currentFeatureOwner + k3;
         packquality = packquality + ((currentFeatureOwner) * (currentFeatureOwner));
       }
@@ -1869,7 +1879,7 @@ float PackPrimaryPhases::check_fillingerror(int gadd, int gremove, Int32ArrayTyp
             exclusionOwners[featureOwnersIdx]++;
           }
           fillingerror = fillingerror + ((k1 * currentFeatureOwner  + k2));
-//        fillingerror = fillingerror + (multiplier * (k1 * currentFeatureOwner  + k2));
+          //        fillingerror = fillingerror + (multiplier * (k1 * currentFeatureOwner  + k2));
           featureOwners[featureOwnersIdx] = currentFeatureOwner + k3;
           packquality = packquality + ((currentFeatureOwner) * (currentFeatureOwner));
         }
@@ -1913,7 +1923,7 @@ float PackPrimaryPhases::check_fillingerror(int gadd, int gremove, Int32ArrayTyp
           }
         }
         fillingerror = fillingerror + ((k1 * currentFeatureOwner  + k2));
-//        fillingerror = fillingerror + (multiplier * (k1 * currentFeatureOwner  + k2));
+        //        fillingerror = fillingerror + (multiplier * (k1 * currentFeatureOwner  + k2));
         featureOwners[featureOwnersIdx] = currentFeatureOwner + k3;
       }
       else
@@ -1932,7 +1942,7 @@ float PackPrimaryPhases::check_fillingerror(int gadd, int gremove, Int32ArrayTyp
             }
           }
           fillingerror = fillingerror + ((k1 * currentFeatureOwner  + k2));
-//          fillingerror = fillingerror + (multiplier * (k1 * currentFeatureOwner  + k2));
+          //          fillingerror = fillingerror + (multiplier * (k1 * currentFeatureOwner  + k2));
           featureOwners[featureOwnersIdx] = currentFeatureOwner + k3;
         }
       }
@@ -1955,9 +1965,9 @@ void PackPrimaryPhases::update_availablepoints(std::map<size_t,size_t> &availabl
   {
     featureOwnersIdx = pointsToRemove[i];
     key = availablePoints[featureOwnersIdx];
-//  availablePoints.erase(featureOwnersIdx);
+    //  availablePoints.erase(featureOwnersIdx);
     val = availablePointsInv[availablePointsCount-1];
-//  availablePointsInv.erase(availablePointsCount-1);
+    //  availablePointsInv.erase(availablePointsCount-1);
     if(key < availablePointsCount-1)
     {
       availablePointsInv[key] = val;
@@ -2608,7 +2618,7 @@ int PackPrimaryPhases::estimate_numfeatures(int xpoints, int ypoints, int zpoint
 
   DREAM3D_RANDOMNG_NEW()
 
-  QVector<int> primaryPhasesLocal;
+      QVector<int> primaryPhasesLocal;
   QVector<double> primaryPhaseFractionsLocal;
   double totalprimaryfractions = 0.0;
   StatsData::Pointer statsData = StatsData::NullPointer();
