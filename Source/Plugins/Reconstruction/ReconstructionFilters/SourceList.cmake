@@ -18,12 +18,13 @@ set(_PublicFilters
   AlignSectionsList
   EBSDSegmentFeatures
   CAxisSegmentFeatures
+  GroupMicroTextureRegions
+  IdentifyMicroTextureRegions
   MergeTwins
   MergeColonies
-  GroupMicroTextureRegions
+  PatchGroupMicroTextureRegions
   ScalarSegmentFeatures
   VectorSegmentFeatures
-  PatchGroupMicroTextureRegions
 )
 
 #--------------

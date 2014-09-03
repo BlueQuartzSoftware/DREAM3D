@@ -1112,7 +1112,7 @@ void  PackPrimaryPhases::place_features(Int32ArrayType::Pointer featureOwnersPtr
     yc = static_cast<float>((row * m_PackingRes[1]) + (m_PackingRes[1] * 0.5));
     zc = static_cast<float>((plane * m_PackingRes[2]) + (m_PackingRes[2] * 0.5));
     move_feature(i, xc, yc, zc);
-    fillingerror = check_fillingerror(i, -1000, featureOwnersPtr, exclusionOwnersPtr, availablePoints, availablePointsInv);
+    fillingerror = check_fillingerror(i, -1000, featureOwnersPtr, exclusionOwnersPtr);
 
     if (getCancel() == true)
     {
@@ -1251,9 +1251,9 @@ void  PackPrimaryPhases::place_features(Int32ArrayType::Pointer featureOwnersPtr
       oldyc = m_Centroids[3 * randomfeature + 1];
       oldzc = m_Centroids[3 * randomfeature + 2];
       oldfillingerror = fillingerror;
-      fillingerror = check_fillingerror(-1000, static_cast<int>(randomfeature), featureOwnersPtr, exclusionOwnersPtr, availablePoints, availablePointsInv);
+      fillingerror = check_fillingerror(-1000, static_cast<int>(randomfeature), featureOwnersPtr, exclusionOwnersPtr);
       move_feature(randomfeature, xc, yc, zc);
-      fillingerror = check_fillingerror(static_cast<int>(randomfeature), -1000, featureOwnersPtr, exclusionOwnersPtr, availablePoints, availablePointsInv);
+      fillingerror = check_fillingerror(static_cast<int>(randomfeature), -1000, featureOwnersPtr, exclusionOwnersPtr);
       currentneighborhooderror = check_neighborhooderror(-1000, randomfeature);
       if(fillingerror <= oldfillingerror)
       {
@@ -1263,9 +1263,9 @@ void  PackPrimaryPhases::place_features(Int32ArrayType::Pointer featureOwnersPtr
       }
       else if(fillingerror > oldfillingerror)
       {
-        fillingerror = check_fillingerror(-1000, static_cast<int>(randomfeature), featureOwnersPtr, exclusionOwnersPtr, availablePoints, availablePointsInv);
+        fillingerror = check_fillingerror(-1000, static_cast<int>(randomfeature), featureOwnersPtr, exclusionOwnersPtr);
         move_feature(randomfeature, oldxc, oldyc, oldzc);
-        fillingerror = check_fillingerror(static_cast<int>(randomfeature), -1000, featureOwnersPtr, exclusionOwnersPtr, availablePoints, availablePointsInv);
+        fillingerror = check_fillingerror(static_cast<int>(randomfeature), -1000, featureOwnersPtr, exclusionOwnersPtr);
         pointsToRemove.clear();
         pointsToAdd.clear();
       }
@@ -1304,9 +1304,9 @@ void  PackPrimaryPhases::place_features(Int32ArrayType::Pointer featureOwnersPtr
       if((oldzc + zshift) < sizez && (oldzc + zshift) > 0) { zc = oldzc + zshift; }
       else { zc = oldzc; }
       oldfillingerror = fillingerror;
-      fillingerror = check_fillingerror(-1000, static_cast<int>(randomfeature), featureOwnersPtr, exclusionOwnersPtr, availablePoints, availablePointsInv);
+      fillingerror = check_fillingerror(-1000, static_cast<int>(randomfeature), featureOwnersPtr, exclusionOwnersPtr);
       move_feature(randomfeature, xc, yc, zc);
-      fillingerror = check_fillingerror(static_cast<int>(randomfeature), -1000, featureOwnersPtr, exclusionOwnersPtr, availablePoints, availablePointsInv);
+      fillingerror = check_fillingerror(static_cast<int>(randomfeature), -1000, featureOwnersPtr, exclusionOwnersPtr);
       currentneighborhooderror = check_neighborhooderror(-1000, randomfeature);
       //      change2 = (currentneighborhooderror * currentneighborhooderror) - (oldneighborhooderror * oldneighborhooderror);
       //      if(fillingerror <= oldfillingerror && currentneighborhooderror >= oldneighborhooderror)
@@ -1319,9 +1319,9 @@ void  PackPrimaryPhases::place_features(Int32ArrayType::Pointer featureOwnersPtr
       //      else if(fillingerror > oldfillingerror || currentneighborhooderror < oldneighborhooderror)
       else if(fillingerror > oldfillingerror)
       {
-        fillingerror = check_fillingerror(-1000, static_cast<int>(randomfeature), featureOwnersPtr, exclusionOwnersPtr, availablePoints, availablePointsInv);
+        fillingerror = check_fillingerror(-1000, static_cast<int>(randomfeature), featureOwnersPtr, exclusionOwnersPtr);
         move_feature(randomfeature, oldxc, oldyc, oldzc);
-        fillingerror = check_fillingerror(static_cast<int>(randomfeature), -1000, featureOwnersPtr, exclusionOwnersPtr, availablePoints, availablePointsInv);
+        fillingerror = check_fillingerror(static_cast<int>(randomfeature), -1000, featureOwnersPtr, exclusionOwnersPtr);
         pointsToRemove.clear();
         pointsToAdd.clear();
       }
@@ -1801,7 +1801,7 @@ float PackPrimaryPhases::check_sizedisterror(Feature* feature)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-float PackPrimaryPhases::check_fillingerror(int gadd, int gremove, Int32ArrayType::Pointer featureOwnersPtr, Int32ArrayType::Pointer exclusionOwnersPtr, std::map<size_t,size_t> &availablePoints, std::map<size_t,size_t> &availablePointsInv)
+float PackPrimaryPhases::check_fillingerror(int gadd, int gremove, Int32ArrayType::Pointer featureOwnersPtr, Int32ArrayType::Pointer exclusionOwnersPtr)
 {
   size_t featureOwnersIdx = 0;
   int32_t* featureOwners = featureOwnersPtr->getPointer(0);
@@ -1845,16 +1845,6 @@ float PackPrimaryPhases::check_fillingerror(int gadd, int gremove, Int32ArrayTyp
           if(exclusionOwners[featureOwnersIdx] == 0)
           {
             pointsToRemove.push_back(featureOwnersIdx);
-//            key = availablePoints[featureOwnersIdx];
-////          availablePoints.erase(featureOwnersIdx);
-//            val = availablePointsInv[availablePointsCount-1];
-////          availablePointsInv.erase(availablePointsCount-1);
-//            if(key < availablePointsCount-1)
-//            {
-//              availablePointsInv[key] = val;
-//              availablePoints[val] = key;
-//            }
-//            availablePointsCount--;
           }
           exclusionOwners[featureOwnersIdx]++;
         }
@@ -1875,16 +1865,6 @@ float PackPrimaryPhases::check_fillingerror(int gadd, int gremove, Int32ArrayTyp
             if(exclusionOwners[featureOwnersIdx] == 0)
             {
               pointsToRemove.push_back(featureOwnersIdx);
-//              key = availablePoints[featureOwnersIdx];
-////            availablePoints.erase(featureOwnersIdx);
-//              val = availablePointsInv[availablePointsCount-1];
-////            availablePointsInv.erase(availablePointsCount-1);
-//              if(key < availablePointsCount-1)
-//              {
-//                availablePointsInv[key] = val;
-//                availablePoints[val] = key;
-//              }
-//              availablePointsCount--;
             }
             exclusionOwners[featureOwnersIdx]++;
           }
@@ -1930,9 +1910,6 @@ float PackPrimaryPhases::check_fillingerror(int gadd, int gremove, Int32ArrayTyp
           if(exclusionOwners[featureOwnersIdx] == 0)
           {
             pointsToAdd.push_back(featureOwnersIdx);
-            //availablePoints[featureOwnersIdx] = availablePointsCount;
-            //availablePointsInv[availablePointsCount] = featureOwnersIdx;
-            //availablePointsCount++;
           }
         }
         fillingerror = fillingerror + ((k1 * currentFeatureOwner  + k2));
@@ -1952,9 +1929,6 @@ float PackPrimaryPhases::check_fillingerror(int gadd, int gremove, Int32ArrayTyp
             if(exclusionOwners[featureOwnersIdx] == 0)
             {
               pointsToAdd.push_back(featureOwnersIdx);
-              //availablePoints[featureOwnersIdx] = availablePointsCount;
-              //availablePointsInv[availablePointsCount] = featureOwnersIdx;
-              //availablePointsCount++;
             }
           }
           fillingerror = fillingerror + ((k1 * currentFeatureOwner  + k2));
