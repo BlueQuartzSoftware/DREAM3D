@@ -55,13 +55,13 @@
 #include "SyntheticBuilding/SyntheticBuildingConstants.h"
 typedef struct
 {
-  float m_Volumes;
-  float m_EquivalentDiameters;
-  float m_AxisLengths[3];
-  float m_AxisEulerAngles[3];
-  float m_Omega3s;
-  int m_FeaturePhases;
-  int m_Neighborhoods;
+    float m_Volumes;
+    float m_EquivalentDiameters;
+    float m_AxisLengths[3];
+    float m_AxisEulerAngles[3];
+    float m_Omega3s;
+    int m_FeaturePhases;
+    int m_Neighborhoods;
 } Feature;
 
 /**
@@ -146,6 +146,12 @@ class PackPrimaryPhases : public AbstractFilter
     DREAM3D_FILTER_PARAMETER(bool, WriteGoalAttributes)
     Q_PROPERTY(bool WriteGoalAttributes READ getWriteGoalAttributes WRITE setWriteGoalAttributes)
 
+    // THESE SHOULD GO AWAY THEY ARE FOR DEBUGGING ONLY
+    DREAM3D_FILTER_PARAMETER(QString, ErrorOutputFile)
+    Q_PROPERTY(QString ErrorOutputFile READ getErrorOutputFile WRITE setErrorOutputFile)
+    DREAM3D_FILTER_PARAMETER(QString, VtkOutputFile)
+    Q_PROPERTY(QString VtkOutputFile READ getVtkOutputFile WRITE setVtkOutputFile)
+
     virtual const QString getCompiledLibraryName();
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName();
@@ -173,9 +179,7 @@ class PackPrimaryPhases : public AbstractFilter
      */
     virtual void execute();
 
-// THESE SHOULD GO AWAY THEY ARE FOR DEBUGGING ONLY
-    DREAM3D_INSTANCE_STRING_PROPERTY(ErrorOutputFile)
-    DREAM3D_INSTANCE_STRING_PROPERTY(VtkOutputFile)
+
 
   signals:
     void updateFilterParameters(AbstractFilter* filter);
