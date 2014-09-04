@@ -23,6 +23,7 @@ set(_PublicFilters
   ReadOrientationData
   WritePoleFigure
   WriteIPFStandardTriangle
+  WriteStatsGenOdfAngleFile
 )
 
 
