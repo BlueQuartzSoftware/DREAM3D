@@ -35,8 +35,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _PatchGroupMicroTextureRegions_H_
-#define _PatchGroupMicroTextureRegions_H_
+#ifndef _IdentifyMicroTextureRegions_H_
+#define _IdentifyMicroTextureRegions_H_
 
 #include <vector>
 #include <QtCore/QString>
@@ -44,79 +44,45 @@
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/DataArrays/IDataArray.h"
-#include "DREAM3DLib/DataArrays/NeighborList.hpp"
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/DataContainers/VolumeDataContainer.h"
-#include "DREAM3DLib/OrientationOps/OrientationOps.h"
 #include "Reconstruction/ReconstructionConstants.h"
 
-#include "Reconstruction/ReconstructionFilters/GroupFeatures.h"
-
 /**
- * @class PatchGroupMicroTextureRegions PatchGroupMicroTextureRegions.h Plugins/Reconstruction/ReconstructionFilters/PatchGroupMicroTextureRegions.h
+ * @class IdentifyMicroTextureRegions IdentifyMicroTextureRegions.h Plugins/Reconstruction/ReconstructionFilters/IdentifyMicroTextureRegions.h
  * @brief
  * @author Michael A Groeber (AFRL) & Joseph C Tucker (UES)
  * @date Mar 25, 2014
  * @version 5.0
  */
-class PatchGroupMicroTextureRegions : public GroupFeatures
+class IdentifyMicroTextureRegions : public AbstractFilter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
-    DREAM3D_SHARED_POINTERS(PatchGroupMicroTextureRegions)
-    DREAM3D_STATIC_NEW_MACRO(PatchGroupMicroTextureRegions)
-    DREAM3D_TYPE_MACRO_SUPER(PatchGroupMicroTextureRegions, AbstractFilter)
+    DREAM3D_SHARED_POINTERS(IdentifyMicroTextureRegions)
+    DREAM3D_STATIC_NEW_MACRO(IdentifyMicroTextureRegions)
+    DREAM3D_TYPE_MACRO_SUPER(IdentifyMicroTextureRegions, AbstractFilter)
 
-
-    virtual ~PatchGroupMicroTextureRegions();
+    virtual ~IdentifyMicroTextureRegions();
     DREAM3D_FILTER_PARAMETER(QString, NewCellFeatureAttributeMatrixName)
     Q_PROPERTY(QString NewCellFeatureAttributeMatrixName READ getNewCellFeatureAttributeMatrixName WRITE setNewCellFeatureAttributeMatrixName)
 
     DREAM3D_FILTER_PARAMETER(float, CAxisTolerance)
     Q_PROPERTY(float CAxisTolerance READ getCAxisTolerance WRITE setCAxisTolerance)
-    DREAM3D_FILTER_PARAMETER(bool, UseRunningAverage)
-    Q_PROPERTY(float UseRunningAverage READ getUseRunningAverage WRITE setUseRunningAverage)
     DREAM3D_FILTER_PARAMETER(float, MinMTRSize)
     Q_PROPERTY(float MinMTRSize READ getMinMTRSize WRITE setMinMTRSize)
-    DREAM3D_FILTER_PARAMETER(float, PatchVolumeFractionForMTRGrowth)
-    Q_PROPERTY(float PatchVolumeFractionForMTRGrowth READ getPatchVolumeFractionForMTRGrowth WRITE setPatchVolumeFractionForMTRGrowth)
+    DREAM3D_FILTER_PARAMETER(float, MinVolFrac)
+    Q_PROPERTY(float MinVolFrac READ getMinVolFrac WRITE setMinVolFrac)
     DREAM3D_INSTANCE_PROPERTY(bool, RandomizeParentIds)
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
-    Q_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
+    DREAM3D_FILTER_PARAMETER(DataArrayPath, CAxisLocationsArrayPath)
+    Q_PROPERTY(DataArrayPath CAxisLocationsArrayPath READ getCAxisLocationsArrayPath WRITE setCAxisLocationsArrayPath)
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, FeaturePhasesArrayPath)
-    Q_PROPERTY(DataArrayPath FeaturePhasesArrayPath READ getFeaturePhasesArrayPath WRITE setFeaturePhasesArrayPath)
-
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, VolumesArrayPath)
-    Q_PROPERTY(DataArrayPath VolumesArrayPath READ getVolumesArrayPath WRITE setVolumesArrayPath)
-
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, CentroidsArrayPath)
-    Q_PROPERTY(DataArrayPath CentroidsArrayPath READ getCentroidsArrayPath WRITE setCentroidsArrayPath)
-
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, AvgQuatsArrayPath)
-    Q_PROPERTY(DataArrayPath AvgQuatsArrayPath READ getAvgQuatsArrayPath WRITE setAvgQuatsArrayPath)
-
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, CrystalStructuresArrayPath)
-    Q_PROPERTY(DataArrayPath CrystalStructuresArrayPath READ getCrystalStructuresArrayPath WRITE setCrystalStructuresArrayPath)
-
-    DREAM3D_FILTER_PARAMETER(QString, CellParentIdsArrayName)
-    Q_PROPERTY(QString CellParentIdsArrayName READ getCellParentIdsArrayName WRITE setCellParentIdsArrayName)
-
-    DREAM3D_FILTER_PARAMETER(QString, FeatureParentIdsArrayName)
-    Q_PROPERTY(QString FeatureParentIdsArrayName READ getFeatureParentIdsArrayName WRITE setFeatureParentIdsArrayName)
-
-    DREAM3D_FILTER_PARAMETER(QString, NumCellsArrayName)
-    Q_PROPERTY(QString NumCellsArrayName READ getNumCellsArrayName WRITE setNumCellsArrayName)
+    DREAM3D_FILTER_PARAMETER(QString, MTRIdsArrayName)
+    Q_PROPERTY(QString MTRIdsArrayName READ getMTRIdsArrayName WRITE setMTRIdsArrayName)
 
     DREAM3D_FILTER_PARAMETER(QString, ActiveArrayName)
     Q_PROPERTY(QString ActiveArrayName READ getActiveArrayName WRITE setActiveArrayName)
-
-    DREAM3D_FILTER_PARAMETER(QString, NeighborhoodsArrayName)
-    Q_PROPERTY(QString NeighborhoodsArrayName READ getNeighborhoodsArrayName WRITE setNeighborhoodsArrayName)
-
-    DREAM3D_FILTER_PARAMETER(QString, NeighborhoodListArrayName)
-    Q_PROPERTY(QString NeighborhoodListArrayName READ getNeighborhoodListArrayName WRITE setNeighborhoodListArrayName)
 
     virtual const QString getCompiledLibraryName();
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
@@ -157,49 +123,29 @@ class PatchGroupMicroTextureRegions : public GroupFeatures
     void preflightExecuted();
 
   protected:
-    PatchGroupMicroTextureRegions();
+    IdentifyMicroTextureRegions();
 
-    virtual int getSeed(int newFid);
-    virtual bool determineGrouping(int referenceFeature, int neighborFeature, int newFid);
-    virtual size_t determinePatchFeatureCentroids();
-    virtual void determinePatchFeatureVolumes(size_t totalPatches);
-    virtual bool growPatch(int currentPatch);
-    virtual bool growGrouping(int referenceFeature, int neighborFeature, int newFid);
+    void getCAxisBins();
 
-    void characterize_micro_texture_regions();
+    std::vector<int> cAxisBins;
+    size_t numThetaBins;
+    size_t numPhiBins;
 
   private:
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, FeatureIds)
-    DEFINE_CREATED_DATAARRAY_VARIABLE(int32_t, CellParentIds)
-    DEFINE_CREATED_DATAARRAY_VARIABLE(int32_t, FeatureParentIds)
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, AvgQuats)
+    DEFINE_CREATED_DATAARRAY_VARIABLE(int32_t, MTRIds)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, CAxisLocations)
     DEFINE_CREATED_DATAARRAY_VARIABLE(bool, Active)
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, FeaturePhases)
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, Volumes)
-    DEFINE_CREATED_DATAARRAY_VARIABLE(int32_t, NumCells)
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, Centroids)
-    DEFINE_CREATED_DATAARRAY_VARIABLE(int32_t, Neighborhoods)
-
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(unsigned int, CrystalStructures)
-
-    NeighborList<int>::WeakPointer m_NeighborhoodList;
 
     float caxisTolerance;
-
-    float avgCaxes[3];
-    QVector<float> patchCentroids;
-    QVector<float> patchFeatureVolumeFractions;
-
-    QVector<OrientationOps::Pointer> m_OrientationOps;
 
     void dataCheck();
     void updateFeatureInstancePointers();
 
-    PatchGroupMicroTextureRegions(const PatchGroupMicroTextureRegions&); // Copy Constructor Not Implemented
-    void operator=(const PatchGroupMicroTextureRegions&); // Operator '=' Not Implemented
+    IdentifyMicroTextureRegions(const IdentifyMicroTextureRegions&); // Copy Constructor Not Implemented
+    void operator=(const IdentifyMicroTextureRegions&); // Operator '=' Not Implemented
 };
 
-#endif /* PatchGroupMicroTextureRegions_H_ */
+#endif /* IdentifyMicroTextureRegions_H_ */
 
 
 

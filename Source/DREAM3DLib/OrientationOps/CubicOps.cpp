@@ -1102,7 +1102,7 @@ namespace Detail
             MatrixMath::Copy3x1(m_xyz011->getPointer(i * 36 + 12), m_xyz011->getPointer(i * 36 + 15));
             MatrixMath::Multiply3x1withConstant(m_xyz011->getPointer(i * 36 + 15), -1);
             direction[0] = -DREAM3D::Constants::k_1OverRoot2;
-            direction[1] = -DREAM3D::Constants::k_1OverRoot2;
+            direction[1] = DREAM3D::Constants::k_1OverRoot2;
             direction[2] = 0.0;
             MatrixMath::Multiply3x3with3x1(gTranpose, direction, m_xyz011->getPointer(i * 36 + 18));
             MatrixMath::Copy3x1(m_xyz011->getPointer(i * 36 + 18), m_xyz011->getPointer(i * 36 + 21));
