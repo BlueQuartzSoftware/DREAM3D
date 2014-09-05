@@ -94,6 +94,7 @@ WritePoleFigure::WritePoleFigure() :
   m_ImageSize(512),
   m_LambertSize(32),
   m_NumColors(32),
+  m_ImageLayout(DREAM3D::Layout::Square),
   m_CellEulerAnglesArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::EulerAngles),
   m_CellPhasesArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::Phases),
   m_CrystalStructuresArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellEnsembleAttributeMatrixName, DREAM3D::EnsembleData::CrystalStructures),
@@ -138,6 +139,8 @@ void WritePoleFigure::setupFilterParameters()
     parameter->setChoices(choices);
     parameters.push_back(parameter);
   }
+
+
   /* For String input use this code */
   parameters.push_back(FilterParameter::New("Image Prefix", "ImagePrefix", FilterParameterWidgetType::StringWidget, getImagePrefix(), false));
   /*   For an output path use this code*/
@@ -151,6 +154,19 @@ void WritePoleFigure::setupFilterParameters()
   parameters.push_back(FilterParameter::New("GoodVoxels", "GoodVoxelsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getGoodVoxelsArrayPath(), true, ""));
   parameters.push_back(FilterParameter::New("Lambert Image Size", "LambertSize", FilterParameterWidgetType::IntWidget, getLambertSize(), true, "Pixels"));
   parameters.push_back(FilterParameter::New("Number of Colors", "NumColors", FilterParameterWidgetType::IntWidget, getNumColors(), true));
+  {
+    ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New();
+    parameter->setHumanLabel("Image Layout");
+    parameter->setPropertyName("ImageLayout");
+    parameter->setWidgetType(FilterParameterWidgetType::ChoiceWidget);
+    QVector<QString> choices;
+    choices.push_back("Horizontal");
+    choices.push_back("Vertical");
+    choices.push_back("Square");
+    //   choices.push_back("jpg");
+    parameter->setChoices(choices);
+    parameters.push_back(parameter);
+  }
 
   setFilterParameters(parameters);
 }
@@ -168,6 +184,7 @@ void WritePoleFigure::readFilterParameters(AbstractFilterParametersReader* reade
   setImagePrefix( reader->readString("ImagePrefix", getImagePrefix()));
   setOutputPath( reader->readString("OutputPath", getOutputPath()));
   setImageFormat( reader->readValue("ImageFormat", getImageFormat()));
+  setImageLayout( reader->readValue("ImageLayout", getImageLayout()));
   setImageSize( reader->readValue("ImageSize", getImageSize()));
   setLambertSize( reader->readValue("LambertSize", getLambertSize()));
   reader->closeFilterGroup();
@@ -180,15 +197,16 @@ int WritePoleFigure::writeFilterParameters(AbstractFilterParametersWriter* write
 {
   writer->openFilterGroup(this, index);
   DREAM3D_FILTER_WRITE_PARAMETER(GoodVoxelsArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(CrystalStructuresArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(CellPhasesArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(CellEulerAnglesArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(ImagePrefix)
-  DREAM3D_FILTER_WRITE_PARAMETER(OutputPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(ImageFormat)
-  DREAM3D_FILTER_WRITE_PARAMETER(ImageSize)
-  DREAM3D_FILTER_WRITE_PARAMETER(LambertSize)
-  writer->closeFilterGroup();
+      DREAM3D_FILTER_WRITE_PARAMETER(CrystalStructuresArrayPath)
+      DREAM3D_FILTER_WRITE_PARAMETER(CellPhasesArrayPath)
+      DREAM3D_FILTER_WRITE_PARAMETER(CellEulerAnglesArrayPath)
+      DREAM3D_FILTER_WRITE_PARAMETER(ImagePrefix)
+      DREAM3D_FILTER_WRITE_PARAMETER(OutputPath)
+      DREAM3D_FILTER_WRITE_PARAMETER(ImageFormat)
+      DREAM3D_FILTER_WRITE_PARAMETER(ImageSize)
+      DREAM3D_FILTER_WRITE_PARAMETER(LambertSize)
+      DREAM3D_FILTER_WRITE_PARAMETER(ImageLayout)
+      writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
 
@@ -336,7 +354,6 @@ void WritePoleFigure::execute()
     FloatArrayType::Pointer subEulers = FloatArrayType::CreateArray(count, 1, &eulerCompDim, "Eulers_Per_Phase");
     subEulers->initializeWithValue(-1);
     float* eu = subEulers->getPointer(0);
-    //  std::cout << count << std::endl;
 
     // Now loop through the eulers again and this time add them to the subEulers Array
     count = 0;
@@ -349,14 +366,13 @@ void WritePoleFigure::execute()
           eu[count * 3] = m_CellEulerAngles[i * 3];
           eu[count * 3 + 1] = m_CellEulerAngles[i * 3 + 1];
           eu[count * 3 + 2] = m_CellEulerAngles[i * 3 + 2];
-
-          //    std::cout << eu[count*3] << " " << eu[count*3+1] << " " << eu[count*3+2] << std::endl;
-
           count++;
         }
       }
     }
     if (subEulers->getNumberOfTuples() == 0) { continue; } // Skip because we have no Pole Figure data
+
+
 
     QVector<UInt8ArrayType::Pointer> figures;
 
@@ -368,6 +384,11 @@ void WritePoleFigure::execute()
 
     QString label("Phase_");
     label.append(QString::number(phase));
+
+    //QString filename = generateImagePath(label);
+    QString ss = QObject::tr("Generating Pole Figures for Phase %1").arg(phase);
+    notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
+
 
     switch(m_CrystalStructures[phase])
     {
@@ -415,9 +436,11 @@ void WritePoleFigure::execute()
 
     if (figures.size() == 3)
     {
-      QImage combinedImage = PoleFigureImageUtilities::Create3ImagePoleFigure(figures[0].get(), figures[1].get(), figures[2].get(), config);
+      QImage combinedImage = PoleFigureImageUtilities::Create3ImagePoleFigure(figures[0].get(), figures[1].get(), figures[2].get(), config, getImageLayout());
       writeImage(m_OutputPath, combinedImage, combinedImage.width(), label);
     }
+
+
   }
 
 
@@ -430,10 +453,9 @@ void WritePoleFigure::execute()
 // -----------------------------------------------------------------------------
 void WritePoleFigure::writeImage(const QString outputPath, QImage image, int dimension, QString label)
 {
-  QString ss = QObject::tr("Writing Image %1").arg(outputPath);
-  notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
-
   QString filename = generateImagePath(label);
+  QString ss = QObject::tr("Writing Image %1").arg(filename);
+  notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
   bool saved = image.save(filename);
   if(!saved)
   {

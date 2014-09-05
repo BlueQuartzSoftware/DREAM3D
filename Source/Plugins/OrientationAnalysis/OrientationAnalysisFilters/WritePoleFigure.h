@@ -77,7 +77,8 @@ class WritePoleFigure : public AbstractFilter
     Q_PROPERTY(int LambertSize READ getLambertSize WRITE setLambertSize)
     DREAM3D_FILTER_PARAMETER(int, NumColors)
     Q_PROPERTY(int NumColors READ getNumColors WRITE setNumColors)
-
+    DREAM3D_FILTER_PARAMETER(int, ImageLayout)
+    Q_PROPERTY(int ImageLayout READ getImageLayout WRITE setImageLayout)
     enum ImageFormatType
     {
       TifImageType = 0,

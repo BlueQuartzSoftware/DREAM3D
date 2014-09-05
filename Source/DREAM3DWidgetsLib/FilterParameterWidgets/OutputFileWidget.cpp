@@ -57,7 +57,7 @@ OutputFileWidget::OutputFileWidget(FilterParameter* parameter, AbstractFilter* f
   m_Filter(filter)
 {
   m_FilterParameter = dynamic_cast<FileSystemFilterParameter*>(parameter);
-
+  m_OpenDialogLastDirectory = QDir::homePath();
   setupUi(this);
   setupGui();
 }
