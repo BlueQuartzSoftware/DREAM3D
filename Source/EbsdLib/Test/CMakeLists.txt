@@ -56,7 +56,7 @@ add_test(CtfReaderTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/CtfReaderTest)
 add_executable(HedmReaderTest HedmReaderTest.cpp ${EbsdLibTest_BINARY_DIR}/EbsdTestFileLocation.h )
 target_link_libraries(HedmReaderTest EbsdLib)
 set_target_properties(HedmReaderTest PROPERTIES FOLDER Test)
-add_test(HedmReaderTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/HedmReaderTest)
+#add_test(HedmReaderTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/HedmReaderTest)
 
 
 

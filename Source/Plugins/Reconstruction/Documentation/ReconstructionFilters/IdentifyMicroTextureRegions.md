@@ -1,4 +1,4 @@
-Identify MicroTexture Regions {#indentifymicrotextureregions}
+Identify MicroTexture Regions {#identifymicrotextureregions}
 ======
 ## Group (Subgroup) ##
 IO Filters (Input)
