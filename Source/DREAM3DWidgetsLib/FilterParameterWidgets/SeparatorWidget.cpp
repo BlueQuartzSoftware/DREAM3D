@@ -63,6 +63,26 @@ SeparatorWidget::~SeparatorWidget()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+QString SeparatorWidget::getLabelStyleSheet()
+{
+  QString styleSheet;
+  QTextStream ss(&styleSheet);
+
+  ss << "QLabel#label {";
+#if defined(Q_OS_WIN)
+  ss << "font: 10 pt \"Times New Roman\";";
+#elif defined(Q_OS_MAC)
+  ss << "font: 13 pt \"Times New Roman\";";
+#else
+  ss << "font: 10 pt \"Times New Roman\"";
+#endif
+  ss << "  font-weight: bold;  }";
+  return styleSheet;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void SeparatorWidget::setupGui()
 {
 
@@ -79,7 +99,7 @@ void SeparatorWidget::setupGui()
           this, SLOT(filterNeedsInputParameters(AbstractFilter*)));
 
 
-
+  label->setStyleSheet(getLabelStyleSheet());
 
   blockSignals(true);
   if (m_FilterParameter != NULL)

@@ -76,6 +76,12 @@ class DREAM3DWidgetsLib_EXPORT SeparatorWidget : public QWidget, private Ui::Sep
     */
     void setupGui();
 
+    /**
+     * @brief Returns the OS Specific Style Sheet for the QLabel
+     * @return
+     */
+    QString getLabelStyleSheet();
+
   public slots:
     void beforePreflight();
     void afterPreflight();
