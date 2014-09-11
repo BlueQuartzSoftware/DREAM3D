@@ -55,20 +55,20 @@ LoadAdditiveMonitoringData::LoadAdditiveMonitoringData() :
   m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
   m_CurrentArrayName(DREAM3D::CellData::Current),
   m_SpeedArrayName(DREAM3D::CellData::Speed),
-  m_Current(NULL),
-  m_Speed(NULL),
   m_ZStartIndex(0),
   m_ZEndIndex(0),
-  m_InputPath(),
-  m_FilePrefix(),
-  m_FileSuffix(),
+  m_InputPath(""),
+  m_FilePrefix(""),
+  m_FileSuffix(""),
   m_FileExtension("txt"),
   m_PaddingDigits(1),
   m_RefFrameZDir(Ebsd::RefFrameZDir::LowtoHigh),
   m_Stack(0), // this is just a dummy variable,
   m_NumCols(0),
   m_NumRows(0),
-  m_HeaderIsComplete(false)
+  m_HeaderIsComplete(false),
+  m_Current(NULL),
+  m_Speed(NULL)
 {
   m_Origin.x = 0.0;
   m_Origin.y = 0.0;
@@ -197,7 +197,6 @@ void LoadAdditiveMonitoringData::dataCheck()
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 
-  setErrorCondition(0);
   VolumeDataContainer* m = getDataContainerArray()->createNonPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getVolumeDataContainerName());
   if(getErrorCondition() < 0) { return; }
   QVector<size_t> tDims (1, 0);
@@ -236,7 +235,7 @@ void LoadAdditiveMonitoringData::preflight()
 void LoadAdditiveMonitoringData::execute()
 {
 
-  herr_t err = 0;
+  //herr_t err = 0;
 
   dataCheck();
   if(getErrorCondition() < 0) { return; }
@@ -335,10 +334,10 @@ void LoadAdditiveMonitoringData::execute()
       count++;
     }
     in.close();
-    
+
     size_t numXpoints = ((maxX-m_Origin.x)/m_Resolution.x) + 1;
     size_t numYpoints = ((maxY-m_Origin.y)/m_Resolution.y) + 1;
-    size_t totalPoints = numXpoints*numYpoints*size_t(fileList.size());
+    //size_t totalPoints = numXpoints*numYpoints*size_t(fileList.size());
 
 
     VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getVolumeDataContainerName());

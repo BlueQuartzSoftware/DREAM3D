@@ -154,16 +154,6 @@ void ImageRegistration::execute()
   if(getErrorCondition() < 0) { return; }
   setErrorCondition(0);
 
-  /* Place all your code to execute your filter here. */
-
-  /* If some error occurs this code snippet can report the error up the call chain*/
-  if (err < 0)
-  {
-    QString ss = QObject::tr("Some error message");
-    setErrorCondition(-99999999);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-    return;
-  }
 
   /* Let the GUI know we are done with this filter */
   notifyStatusMessage(getHumanLabel(), "Complete");

@@ -120,31 +120,37 @@ void ClearData::dataCheck()
   setErrorCondition(0);
 
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(m_CellAttributeMatrixName.getDataContainerName());
-  if(getErrorCondition() < 0 || NULL == m) { return; }
+  if( NULL == m)
+  {
+    QString ss = QObject::tr("VolumeDataContainer was NULL");
+    notifyErrorMessage(getHumanLabel(), ss, -5550);
+    setErrorCondition(-5550);
+    return;
+  }
 
   if (getXMax() < getXMin())
   {
     QString ss = QObject::tr("X Max (%1) less than X Min (%2)").arg(getXMax()).arg(getXMin());
-    notifyErrorMessage(getHumanLabel(), ss, -5555);
-    setErrorCondition(-5555);
+    notifyErrorMessage(getHumanLabel(), ss, -5551);
+    setErrorCondition(-5551);
   }
   if (getYMax() < getYMin())
   {
     QString ss = QObject::tr("Y Max (%1) less than Y Min (%2)").arg(getYMax()).arg(getYMin());
-    notifyErrorMessage(getHumanLabel(), ss, -5555);
-    setErrorCondition(-5555);
+    notifyErrorMessage(getHumanLabel(), ss, -5552);
+    setErrorCondition(-5552);
   }
   if (getZMax() < getZMin())
   {
     QString ss = QObject::tr("Z Max (%1) less than Z Min (%2)").arg(getZMax()).arg(getZMin());
-    notifyErrorMessage(getHumanLabel(), ss, -5555);
-    setErrorCondition(-5555);
+    notifyErrorMessage(getHumanLabel(), ss, -5553);
+    setErrorCondition(-5553);
   }
   if (getXMin() < 0)
   {
     QString ss = QObject::tr("X Min (%1) less than 0").arg(getXMin());
-    notifyErrorMessage(getHumanLabel(), ss, -5555);
-    setErrorCondition(-5555);
+    notifyErrorMessage(getHumanLabel(), ss, -5554);
+    setErrorCondition(-5554);
   }
   if (getYMin() < 0)
   {
@@ -155,26 +161,26 @@ void ClearData::dataCheck()
   if (getZMin() < 0)
   {
     QString ss = QObject::tr("Z Min (%1) less than 0").arg(getZMin());
-    notifyErrorMessage(getHumanLabel(), ss, -5555);
-    setErrorCondition(-5555);
+    notifyErrorMessage(getHumanLabel(), ss, -5556);
+    setErrorCondition(-5556);
   }
   if (getXMax() > (static_cast<int64_t>(m->getXPoints()) - 1))
   {
     QString ss = QObject::tr("The X Max you entered of %1 is greater than your Max X Point of %2").arg(getXMax()).arg(static_cast<int64_t>(m->getXPoints()) - 1);
-    notifyErrorMessage(getHumanLabel(), ss, -5555);
-    setErrorCondition(-5555);
+    notifyErrorMessage(getHumanLabel(), ss, -5557);
+    setErrorCondition(-5557);
   }
   if (getYMax() > (static_cast<int64_t>(m->getYPoints()) - 1))
   {
     QString ss = QObject::tr("The Y Max you entered of %1 is greater than your Max Y Point of %2").arg(getYMax()).arg(static_cast<int64_t>(m->getYPoints()) - 1);
-    notifyErrorMessage(getHumanLabel(), ss, -5555);
-    setErrorCondition(-5556);
+    notifyErrorMessage(getHumanLabel(), ss, -5558);
+    setErrorCondition(-5558);
   }
   if (getZMax() > (static_cast<int64_t>(m->getZPoints()) - 1))
   {
     QString ss = QObject::tr("The Z Max you entered of %1) greater than your Max Z Point of %2").arg(getZMax()).arg(static_cast<int64_t>(m->getZPoints()) - 1);
-    notifyErrorMessage(getHumanLabel(), ss, -5555);
-    setErrorCondition(-5557);
+    notifyErrorMessage(getHumanLabel(), ss, -5559);
+    setErrorCondition(-5559);
   }
 }
 

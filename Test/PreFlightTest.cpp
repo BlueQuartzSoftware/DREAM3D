@@ -268,7 +268,15 @@ void verifySignals()
   }
 }
 
-
+#if 0
+  if ( (L) == (R) ) {  \
+    QString buf;\
+    QTextStream ss(&buf);\
+    ss << "Your test required the following\n            '";\
+    ss << #L << " != " << #R << "'\n             but this condition was not met.\n";\
+    ss << "             " << L << "==" << R;\
+    DREAM3D_TEST_THROW_EXCEPTION( buf.toStdString() ) }
+#endif
 
 // -----------------------------------------------------------------------------
 //
@@ -295,17 +303,27 @@ void verifyPreflightEmitsProperly()
 
     filter->preflight();
 
+    QString buf;
+    QTextStream ss(&buf);
     if(p.m_beforePreflight == false)
     {
-      qDebug() << filter->getNameOfClass() << " Missing emit preflightAboutToExecute()";
+      ss << filter->getNameOfClass() << " Missing emit preflightAboutToExecute()";
     }
     if(p.m_afterPreflight == false)
     {
-      qDebug() << filter->getNameOfClass() << " Missing emit preflightExecuted()";
+      ss << filter->getNameOfClass() << " Missing emit preflightExecuted()";
     }
     if(p.m_filterNeedsInputParameters == false)
     {
-      qDebug() << filter->getNameOfClass() << " Missing emit updateFilterParameters()";
+      ss << filter->getNameOfClass() << " Missing emit updateFilterParameters()";
+    }
+    if (filter->getInPreflight() == true)
+    {
+      ss << filter->getNameOfClass() << " Bool 'InPreflight' was NOT set correctly at end of 'preflight()'";
+    }
+    if(buf.isEmpty() == false)
+    {
+      DREAM3D_TEST_THROW_EXCEPTION( buf.toStdString() )
     }
   }
 }
@@ -329,15 +347,14 @@ void TestPreflight()
       AbstractFilter::Pointer filter = factory->create();
 
       filter->preflight();
-      if(filter->getInPreflight() )
-      {
-        qDebug() << filter->getGroupName() << "/" << filter->getNameOfClass() << "  Prefilight Error";
-      }
+
       //DREAM3D_REQUIRE_EQUAL(filter->getInPreflight(), false);
       err = filter->getErrorCondition();
       // An error condition GREATER than ZERO is an anomoly and should be looked at.
-      if (err >= 0) { qDebug() << "Anomalous result for Preflight for " << filter->getGroupName() << "/" << filter->getNameOfClass()
-       << " Error Condition = " << filter->getErrorCondition(); }
+      if (err >= 0) {
+        qDebug() << "Anomalous result for Preflight for " << filter->getGroupName() << "/" << filter->getNameOfClass()
+       << " Error Condition = " << filter->getErrorCondition();
+      }
     }
     factoryMapIter++;
   }
@@ -393,11 +410,12 @@ int main(int argc, char** argv)
   QMetaObjectUtilities::RegisterMetaTypes();
 
   //// These functions are just to verify that the filters have certain signals and properties available.
-  verifyPreflightEmitsProperly();
+//  verifyPreflightEmitsProperly();
   verifySignals();
   verifyFilterParameters();
 
   int err = EXIT_SUCCESS;
+  DREAM3D_REGISTER_TEST( verifyPreflightEmitsProperly() )
   DREAM3D_REGISTER_TEST( TestPreflight() )
   DREAM3D_REGISTER_TEST( TestNewInstanceAvailable() )
   PRINT_TEST_SUMMARY();

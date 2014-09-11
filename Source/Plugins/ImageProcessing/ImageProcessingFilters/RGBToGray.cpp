@@ -216,8 +216,11 @@ void RGBToGray::dataCheck()
   TEMPLATE_CREATE_NONPREREQ_ARRAY(NewCellArray, tempPath, dims, type);
 #endif
   VolumeDataContainer* dc = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getSelectedCellArrayArrayPath().getDataContainerName() );
+  if(getErrorCondition() < 0) { return; }
   AttributeMatrix::Pointer am = dc->getPrereqAttributeMatrix<AbstractFilter>(this, getSelectedCellArrayArrayPath().getAttributeMatrixName(), 80000);
+  if(getErrorCondition() < 0) { return; }
   IDataArray::Pointer data = am->getExistingPrereqArray<IDataArray, AbstractFilter>(this, getSelectedCellArrayArrayPath().getDataArrayName(), 80000);
+  if(getErrorCondition() < 0) { return; }
 
   m_NewCellArrayPtr = TemplateHelpers::CreateNonPrereqArrayFromArrayType()(this, tempPath, compDims, data);
   if( NULL != m_NewCellArrayPtr.lock().get() )

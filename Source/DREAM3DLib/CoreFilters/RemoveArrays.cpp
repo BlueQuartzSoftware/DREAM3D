@@ -61,15 +61,14 @@ RemoveArrays::~RemoveArrays()
 void RemoveArrays::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  {
-    DataContainerArrayProxyFilterParameter::Pointer parameter = DataContainerArrayProxyFilterParameter::New();
-    parameter->setHumanLabel("Arrays to Delete");
-    parameter->setPropertyName("DataArraysToRemove");
-    parameter->setWidgetType(FilterParameterWidgetType::DataContainerArrayProxyWidget);
-    //  //parameter->setValueType("DataContainerArrayProxy");
-    parameter->setDefaultFlagValue(Qt::Unchecked);
-    parameters.push_back(parameter);
-  }
+
+  DataContainerArrayProxyFilterParameter::Pointer parameter = DataContainerArrayProxyFilterParameter::New();
+  parameter->setHumanLabel("Arrays to Delete");
+  parameter->setPropertyName("DataArraysToRemove");
+  parameter->setWidgetType(FilterParameterWidgetType::DataContainerArrayProxyWidget);
+  parameter->setDefaultFlagValue(Qt::Unchecked);
+  parameters.push_back(parameter);
+
   setFilterParameters(parameters);
 }
 
