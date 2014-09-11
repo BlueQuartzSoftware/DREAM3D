@@ -200,7 +200,7 @@ void ImportVectorImageStack::dataCheck()
     QImage image(fileList[0]);
     int64_t dims[3] = {image.width(), image.height(), ((m_EndIndex-m_StartIndex)+1)};
     int pixelBytes = 0;
-    int test = image.format();
+    //int test = image.format();
     if (image.format() == QImage::Format_Indexed8)
     {
       pixelBytes = 1;
@@ -247,7 +247,7 @@ void ImportVectorImageStack::dataCheck()
     }
     AttributeMatrix::Pointer cellAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::Cell);
     if(getErrorCondition() < 0) { return; }
-    
+
     //set up component dimensions for the vector image array
     QVector<size_t> arraydims(2);
     arraydims[0] = ((m_EndComp-m_StartComp)+1);
@@ -323,11 +323,11 @@ void ImportVectorImageStack::execute()
   QVector<size_t> tDims = cellAttrMat->getTupleDimensions();
   size_t imageWidth = tDims[0];
   size_t imageHeight = tDims[1];
-  size_t numVecImages = tDims[2];
+  //size_t numVecImages = tDims[2];
 
   size_t numComps = m_VectorDataPtr.lock()->getNumberOfComponents();
   QVector<size_t> cDims = m_VectorDataPtr.lock()->getComponentDimensions();
-  size_t vecDim = cDims[0];
+  //size_t vecDim = cDims[0];
   size_t pixDepth = cDims[1];
 
   size_t numCompsPerVecImage = imageHeight * imageWidth * numComps;
@@ -347,7 +347,7 @@ void ImportVectorImageStack::execute()
   else if (Ebsd::RefFrameZDir::HightoLow == m_RefFrameZDir) { stackLowToHigh = false; }
 
   // Now generate all the file names the user is asking for and populate the table
-  QVector<QString> fileList = FilePathGenerator::GenerateVectorFileList(m_StartIndex, m_EndIndex, 
+  QVector<QString> fileList = FilePathGenerator::GenerateVectorFileList(m_StartIndex, m_EndIndex,
                               m_StartComp, m_EndComp, hasMissingFiles, stackLowToHigh, m_InputPath,
                               m_FilePrefix, m_Separator, m_FileSuffix, m_FileExtension,
                               m_PaddingDigits);
@@ -365,7 +365,7 @@ void ImportVectorImageStack::execute()
       setErrorCondition(-14000);
       notifyErrorMessage(getHumanLabel(), "Failed to load Image file", getErrorCondition());
     }
-    
+
     compSpot = (comp - m_StartComp);
     imageSpot = (imageNum - m_StartIndex);
     imageCompShift = numCompsPerVecImage * imageSpot;

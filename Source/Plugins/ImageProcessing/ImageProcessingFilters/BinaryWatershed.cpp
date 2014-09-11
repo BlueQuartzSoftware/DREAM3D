@@ -21,9 +21,9 @@
 BinaryWatershed::BinaryWatershed() :
   AbstractFilter(),
   m_SelectedCellArrayPath("", "", ""),
+  m_PeakTolerance(1.0),
   m_NewCellArrayName("BinaryWatershed"),
   m_SelectedCellArray(NULL),
-  m_PeakTolerance(1.0),
   m_NewCellArray(NULL)
 {
   setupFilterParameters();

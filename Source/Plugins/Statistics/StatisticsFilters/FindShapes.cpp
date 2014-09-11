@@ -270,10 +270,7 @@ void FindShapes::find_moments()
       yStride = j * xPoints;
       for(size_t k = 0; k < xPoints; k++)
       {
-        if(i == 375)
-        {
-          int stop = 0;
-        }
+
         int gnum = m_FeatureIds[zStride + yStride + k];
         x = float(k * modXRes);
         y = float(j * modYRes);
