@@ -17,7 +17,16 @@
    </sizepolicy>
   </property>
   <layout class="QHBoxLayout" name="horizontalLayout">
-   <property name="margin">
+   <property name="leftMargin">
+    <number>2</number>
+   </property>
+   <property name="topMargin">
+    <number>2</number>
+   </property>
+   <property name="rightMargin">
+    <number>2</number>
+   </property>
+   <property name="bottomMargin">
     <number>2</number>
    </property>
    <item>
@@ -28,20 +37,11 @@
        <verstretch>0</verstretch>
       </sizepolicy>
      </property>
-     <property name="font">
-      <font>
-       <family>Times New Roman</family>
-       <pointsize>10</pointsize>
-       <weight>75</weight>
-       <italic>false</italic>
-       <bold>true</bold>
-      </font>
-     </property>
      <property name="styleSheet">
       <string notr="true">QLabel#label
 {
-	font: 10pt &quot;Times New Roman&quot;;
-font-weight: bold;
+  font: 10pt &quot;Times New Roman&quot;;
+  font-weight: bold;
 }</string>
      </property>
      <property name="text">

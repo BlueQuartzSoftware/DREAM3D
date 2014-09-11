@@ -71,6 +71,28 @@ FilterInputWidget::~FilterInputWidget()
 {
 }
 
+#if 0
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString FilterInputWidget::getLabelStyleSheet()
+{
+  QString styleSheet;
+  QTextStream ss(&styleSheet);
+
+  ss << "QLabel#label {";
+#if defined(Q_OS_WIN)
+  ss << "font: 10 pt \"Times New Roman\";";
+#elif defined(Q_OS_MAC)
+  ss << "font: 13 pt \"Times New Roman\";";
+#else
+  ss << "font: 10 pt \"Times New Roman\"";
+#endif
+  ss << "  font-weight: bold;  }";
+  return styleSheet;
+}
+#endif
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -91,41 +113,40 @@ bool FilterInputWidget::eventFilter(QObject *o, QEvent *e)
 // -----------------------------------------------------------------------------
 void FilterInputWidget::setupGui()
 {
-  QFont font;
-  font.setBold(true);
-  font.setItalic(false);
-  font.setWeight(75);
-  font.setStyleStrategy(QFont::PreferAntialias);
+  QFont humanLabelFont;
+  humanLabelFont.setBold(true);
+  humanLabelFont.setItalic(false);
+  humanLabelFont.setWeight(75);
+  humanLabelFont.setStyleStrategy(QFont::PreferAntialias);
 
-  QFont font1;
-  font1.setBold(true);
-  font1.setItalic(true);
-  font1.setWeight(75);
-  font1.setStyleStrategy(QFont::PreferAntialias);
-  font1.setFamily(QString::fromUtf8("Arial"));
+  QFont brandingFont;
+  brandingFont.setBold(true);
+  brandingFont.setItalic(true);
+  brandingFont.setWeight(75);
+  brandingFont.setStyleStrategy(QFont::PreferAntialias);
+  brandingFont.setFamily(QString::fromUtf8("Arial"));
 
-  QFont font2;
-  font2.setBold(true);
-  font2.setWeight(75);
-  font2.setStyleStrategy(QFont::PreferAntialias);
+  QFont categoryFont;
+  categoryFont.setBold(true);
+  categoryFont.setWeight(75);
+  categoryFont.setStyleStrategy(QFont::PreferAntialias);
 
 #if defined (Q_OS_MAC)
-  font.setPointSize(16);
-  font1.setPointSize(11);
-  font2.setPointSize(14);
-
+  humanLabelFont.setPointSize(16);
+  brandingFont.setPointSize(11);
+  categoryFont.setPointSize(14);
 #elif defined (Q_OS_WIN)
-  font.setPointSize(12);
-  font1.setPointSize(8);
-  font2.setPointSize(10);
+  humanLabelFont.setPointSize(12);
+  brandingFont.setPointSize(8);
+  categoryFont.setPointSize(10);
 #endif
 
-#if 0
-  filterHumanLabel->setFont(font);
-  brandingLabel->setFont(font1);
-  basicInputsLabel->setFont(font2);
-  advInputsLabel->setFont(font2);
-  #endif
+
+  filterHumanLabel->setFont(humanLabelFont);
+  brandingLabel->setFont(brandingFont);
+  basicInputsLabel->setFont(categoryFont);
+  advInputsLabel->setFont(categoryFont);
+
 
   brandingLabel->installEventFilter(this);
 

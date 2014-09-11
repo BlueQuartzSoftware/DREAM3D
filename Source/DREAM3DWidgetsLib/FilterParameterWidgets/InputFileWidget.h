@@ -82,7 +82,7 @@ class DREAM3DWidgetsLib_EXPORT InputFileWidget : public QWidget, private Ui::Inp
     /**
     * @brief
     */
-    bool verifyPathExists(QString filePath, QLineEdit* lineEdit);
+    bool verifyPathExists(QString filePath, QLabel *lineEdit);
 
   public slots:
     void beforePreflight();
@@ -99,6 +99,8 @@ class DREAM3DWidgetsLib_EXPORT InputFileWidget : public QWidget, private Ui::Inp
   protected:
     static void setOpenDialogLastDirectory(QString val) { m_OpenDialogLastDirectory = val; }
     static QString getOpenDialogLastDirectory() { return m_OpenDialogLastDirectory; }
+
+    QString getLabelStyleSheet();
 
   signals:
     void errorSettingFilterParameter(const QString& msg);
