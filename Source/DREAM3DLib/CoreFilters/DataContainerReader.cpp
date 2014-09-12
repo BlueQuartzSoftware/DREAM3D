@@ -52,7 +52,8 @@
 DataContainerReader::DataContainerReader() :
   AbstractFilter(),
   m_InputFile(""),
-  m_OverwriteExistingDataContainers(false)
+  m_OverwriteExistingDataContainers(false),
+  m_CachedInputFilePath("")
 {
   m_PipelineFromFile = FilterPipeline::New();
   setupFilterParameters();
@@ -76,8 +77,8 @@ void DataContainerReader::setupFilterParameters()
   parameters.push_back(FilterParameter::New("Overwrite Existing DataContainers", "OverwriteExistingDataContainers", FilterParameterWidgetType::BooleanWidget, getOverwriteExistingDataContainers(), false));
   {
     DataContainerArrayProxyFilterParameter::Pointer parameter = DataContainerArrayProxyFilterParameter::New();
-    parameter->setHumanLabel("Selected Arrays");
-    parameter->setPropertyName("DataContainerArrayProxy");
+    parameter->setHumanLabel("Select Arrays From Input File");
+    parameter->setPropertyName("InputFileDataContainerArrayProxy");
     parameter->setWidgetType(FilterParameterWidgetType::DataContainerArrayProxyWidget);
     parameters.push_back(parameter);
   }
@@ -148,7 +149,7 @@ void DataContainerReader::preflight()
   dataCheck();
   if(getErrorCondition() >= 0)
   {
-    readData(true, proxy); // Read using the local Proxy object which will force the read to create a full structure DataContainer
+    readData(getInPreflight(), proxy); // Read using the local Proxy object which will force the read to create a full structure DataContainer
   }
 
   // Annouce we are about to preflight
@@ -260,12 +261,30 @@ void DataContainerReader::readData(bool preflight, DataContainerArrayProxy& prox
 DataContainerArrayProxy DataContainerReader::readDataContainerArrayStructure()
 {
   DataContainerArrayProxy proxy(false);
+  QFileInfo fi(getInputFile());
   if (getInputFile().isEmpty() == true)
   {
     QString ss = QObject::tr("DREAM3D File Path is empty.");
     setErrorCondition(-70);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return proxy;
+  }
+  else if (fi.exists() == false)
+  {
+    QString ss = QObject::tr("The input file does not exist.");
+    setErrorCondition(-388);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    return proxy;
+  }
+
+  if(m_CachedInputFilePath.compare(getInputFile()) != 0) // Different
+  {
+    m_CachedInputFilePath = getInputFile();
+
+  }
+  else
+  {
+
   }
   herr_t err = 0;
   hid_t fileId = QH5Utilities::openFile(getInputFile(), true);

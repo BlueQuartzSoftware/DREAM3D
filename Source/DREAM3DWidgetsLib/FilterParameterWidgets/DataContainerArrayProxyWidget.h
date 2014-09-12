@@ -72,7 +72,15 @@ class DREAM3DWidgetsLib_EXPORT DataContainerArrayProxyWidget : public QWidget, p
     */
     DataContainerArrayProxyWidget(FilterParameter* parameter, AbstractFilter* filter = NULL, QWidget* parent = NULL);
 
+    /**
+     * @brief DataContainerArrayProxyWidget
+     * @param parent
+     */
+    DataContainerArrayProxyWidget(QWidget* parent = NULL);
+
     virtual ~DataContainerArrayProxyWidget();
+
+    void initialize(FilterParameter* parameter, AbstractFilter* filter = NULL);
 
     /**
     * @brief This method does additional GUI widget connections

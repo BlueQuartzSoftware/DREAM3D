@@ -49,8 +49,7 @@
 #include "DREAM3DWidgetsLib/DREAM3DWidgetsLibConstants.h"
 #include "DREAM3DWidgetsLib/FilterWidgetManager.h"
 #include "DREAM3DWidgetsLib/Widgets/PipelineFilterWidget.h"
-
-//#include "DREAM3DWidgetsLib/moc_FilterInputWidget.cpp"
+#include "DREAM3DWidgetsLib/Widgets/DataContainerArrayWidget.h"
 
 // -----------------------------------------------------------------------------
 //
@@ -147,10 +146,7 @@ void FilterInputWidget::setupGui()
   basicInputsLabel->setFont(categoryFont);
   advInputsLabel->setFont(categoryFont);
 
-
   brandingLabel->installEventFilter(this);
-
-
 }
 
 // -----------------------------------------------------------------------------
@@ -180,6 +176,18 @@ void FilterInputWidget::clearInputWidgets()
     }
   }
 
+  item = currentStructureGrid->itemAt(0);
+  if(item)
+  {
+    QWidget* w = item->widget();
+    if(w)
+    {
+      w->setVisible(false);
+      currentStructureGrid->removeWidget(w);
+    }
+  }
+
+
   filterHumanLabel->setText("No Filter Selected");
   brandingLabel->clear();
 }
@@ -204,6 +212,7 @@ void FilterInputWidget::displayFilterParameters(PipelineFilterWidget* w)
   clearInputWidgets();
   basicInputsGrid->addWidget(w->getBasicInputsWidget());
   advInputsGrid->addWidget(w->getAdvancedInputsWidget());
+  currentStructureGrid->addWidget(w->getCurrentStructureWidget());
 
   basicInputsFrame->setVisible((bool)(w->getBasicParameterCount()));
 
@@ -226,6 +235,7 @@ void FilterInputWidget::displayFilterParameters(PipelineFilterWidget* w)
 
   w->getBasicInputsWidget()->setVisible(true);
   w->getAdvancedInputsWidget()->setVisible(true);
+  w->getCurrentStructureWidget()->setVisible(true);
 
   // Add a label at the top of the Inputs Tabs to show what filter we are working on
   filterHumanLabel->setText(w->getHumanLabel());
@@ -267,7 +277,7 @@ void FilterInputWidget::fadeOutWidget(QWidget* widget)
   faderWidget->setFadeOut();
   faderWidget->setStartColor(DREAM3D::Defaults::AdvancedColor);
   connect(faderWidget, SIGNAL(animationComplete() ),
-          this, SLOT(hideButton()));
+          widget, SLOT(hide()));
   faderWidget->start();
   m_AdvFadedOut = true;
 }
@@ -293,6 +303,23 @@ void FilterInputWidget::on_advInputsBtn_clicked()
   else
   {
     fadeOutWidget(advInputsFrame);
+  }
+
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void FilterInputWidget::on_currentStructureBtn_clicked()
+{
+  if(currentStructureFrame->isVisible() == false)
+  {
+    currentStructureFrame->setVisible(true);
+    fadeInWidget(currentStructureFrame);
+  }
+  else
+  {
+    fadeOutWidget(currentStructureFrame);
   }
 
 }

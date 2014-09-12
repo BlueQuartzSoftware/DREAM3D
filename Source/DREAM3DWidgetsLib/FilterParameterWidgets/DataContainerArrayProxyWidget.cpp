@@ -48,6 +48,7 @@
 DataContainerArrayProxyWidget::DataContainerArrayProxyWidget(FilterParameter* parameter, AbstractFilter* filter, QWidget* parent) :
   QWidget(parent),
   m_Filter(filter),
+  m_FilterParameter(NULL),
   m_DidCausePreflight(false)
 {
 
@@ -60,6 +61,20 @@ DataContainerArrayProxyWidget::DataContainerArrayProxyWidget(FilterParameter* pa
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+DataContainerArrayProxyWidget::DataContainerArrayProxyWidget(QWidget* parent) :
+  QWidget(parent),
+  m_Filter(NULL),
+  m_FilterParameter(NULL),
+  m_DidCausePreflight(false)
+{
+  setupUi(this);
+  setupGui();
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 DataContainerArrayProxyWidget::~DataContainerArrayProxyWidget()
 {}
 
@@ -68,9 +83,6 @@ DataContainerArrayProxyWidget::~DataContainerArrayProxyWidget()
 // -----------------------------------------------------------------------------
 void DataContainerArrayProxyWidget::setupGui()
 {
-
-
-
 
   connect(m_Filter, SIGNAL(preflightAboutToExecute()),
           this, SLOT(beforePreflight()));
@@ -367,47 +379,6 @@ void DataContainerArrayProxyWidget::updateProxyFromModel()
 
   //  m_DcaProxy.print("updateProxy AFTER Updating");
 }
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-//void copyFlagsFromProxyToProxy(DataContainerArrayProxy &proxy, QString dc_name, QString am_name, QString da_name, DataArrayProxy& destProxy)
-//{
-//  QList<DataContainerProxy>& containers = proxy.list;
-//  // QListIterator<DataContainerProxy> containerIter(containers);
-//  for(int i = 0; i < containers.size(); i++)
-//  {
-//    DataContainerProxy& dcProxy = containers[i]; // Make sure to get a Reference to the proxy
-//    if(dc_name.compare(dcProxy.name) != 0 ) { continue; }
-
-//    // We found the proper Data Container, now populate the AttributeMatrix List
-//    QMap<QString, AttributeMatrixProxy>& attrMats = dcProxy.attributeMatricies;
-//    QMutableMapIterator<QString, AttributeMatrixProxy> attrMatsIter(attrMats);
-//    while(attrMatsIter.hasNext() )
-//    {
-//      attrMatsIter.next();
-//      QString amName = attrMatsIter.key();
-//      if(am_name.compare(amName) != 0) { continue; }
-
-//      //   qDebug() << "@@@ " << amName;
-//      // We found the selected AttributeMatrix, so loop over this attribute matrix arrays and populate the list widget
-//      AttributeMatrixProxy& amProxy = attrMatsIter.value(); // Make sure to get a Reference to the proxy
-//      QMap<QString, DataArrayProxy>& dataArrays = amProxy.dataArrays;
-//      QMutableMapIterator<QString, DataArrayProxy> dataArraysIter(dataArrays);
-//      while(dataArraysIter.hasNext() )
-//      {
-//        dataArraysIter.next();
-//        DataArrayProxy& daProxy = dataArraysIter.value(); // Make sure to get a Reference to the proxy
-//        QString daName = dataArraysIter.key();
-//        if(da_name.compare(daName) == 0)
-//        {
-//          destProxy.flag = daProxy.flag;
-//        }
-//      }
-//    }
-//  }
-//}
-
 
 // -----------------------------------------------------------------------------
 //

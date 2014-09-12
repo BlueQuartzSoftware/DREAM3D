@@ -74,6 +74,7 @@ class DREAM3DWidgetsLib_EXPORT FilterInputWidget : public QWidget, private Ui::F
     void removeWidgetInputs(PipelineFilterWidget* w);
 
     void on_advInputsBtn_clicked();
+    void on_currentStructureBtn_clicked();
     void hideButton();
 
   private slots:
