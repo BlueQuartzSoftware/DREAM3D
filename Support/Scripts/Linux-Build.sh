@@ -297,7 +297,7 @@ if [ "$BUILD_QWT" = "1" ];
 then
   
   cd $SDK_SOURCE
-  if [ ! -e "$SDK_SOURCE/hdf5-1.8.13.tar.gz" ];
+  if [ ! -e "$SDK_SOURCE/qwt-6.1.0.tar.bz2" ];
   then
     echo "-------------------------------------------"
     echo " Downloading Qwt 6.1.0"
