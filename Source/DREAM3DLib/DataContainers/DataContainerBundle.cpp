@@ -154,3 +154,11 @@ qint32 DataContainerBundle::count()
 {
   return m_DataContainers.count();
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DataContainerBundle::clear()
+{
+  return m_DataContainers.clear();
+}

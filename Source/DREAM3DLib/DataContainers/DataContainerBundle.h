@@ -74,6 +74,8 @@ class DataContainerBundle : public IDataContainerBundle
 
     virtual qint32 count();
 
+    virtual void clear();
+
   protected:
     DataContainerBundle();
 

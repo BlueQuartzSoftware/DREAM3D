@@ -142,37 +142,37 @@ DataContainer::Pointer DataContainerArray::removeDataContainer(const QString& na
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-bool DataContainerArray::renameDataContainer(const QString& oldname, const QString& newname)
+bool DataContainerArray::renameDataContainer(const QString& oldName, const QString& newName)
 {
-  DataContainer::Pointer f = DataContainer::NullPointer();
+  DataContainer::Pointer dc = DataContainer::NullPointer();
 
   // Make sure we do not already have a DataContainer with the newname
   for(QList<DataContainer::Pointer>::iterator it = m_Array.begin(); it != m_Array.end(); ++it)
   {
-    if((*it)->getName().compare(newname) == 0)
+    if((*it)->getName().compare(newName) == 0)
     {
-      f = *it;
+      dc = *it;
       break;
     }
   }
 
-  if(NULL == f)
+  if(NULL == dc)
   {
     // We did not find any data container that matches the new name so we can rename if we find one that matches
     // the 'oldname' argument
     // Now find the data container we want to rename
     for(QList<DataContainer::Pointer>::iterator it = m_Array.begin(); it != m_Array.end(); ++it)
     {
-      if((*it)->getName().compare(oldname) == 0)
+      if((*it)->getName().compare(oldName) == 0)
       {
         // we have an existing DataContainer that matches our "oldname" that we want to rename so all is good.
-        f = *it;
-        f->setName(newname);
+        dc = *it;
+        dc->setName(newName);
         return true;
       }
     }
   }
-  else if (NULL != f)
+  else if (NULL != dc)
   {
     // We found an existing Data Container with the 'newname' but we do NOT want to over write it so just bail out now
     return false;
@@ -382,6 +382,66 @@ bool DataContainerArray::contains(const QString& name)
   {
     if( (*it)->getName().compare(name) == 0 )
     { return true; }
+  }
+  return false;
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DataContainerArray::setDataContainerBundles(QMap<QString, IDataContainerBundle::Pointer> bundles)
+{
+  m_DataContainerBundles = bundles;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QMap<QString, IDataContainerBundle::Pointer>& DataContainerArray::getDataContainerBundles()
+{
+  return m_DataContainerBundles;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DataContainerArray::addDataContainerBundle(IDataContainerBundle::Pointer dataContainer)
+{
+  m_DataContainerBundles[dataContainer->getName()] = dataContainer;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int DataContainerArray::removeDataContainerBundle(const QString &name)
+{
+  return m_DataContainerBundles.remove(name);
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+bool DataContainerArray::renameDataContainerBundle(const QString &oldName, const QString newName)
+{
+  // Make sure we do not already have a DataContainerBundle with the newname
+  QMap<QString, IDataContainerBundle::Pointer>::iterator iter = m_DataContainerBundles.find(newName);
+
+  // Now rename the DataContainerBundle
+  if (iter == m_DataContainerBundles.end() )
+  {
+    iter = m_DataContainerBundles.find(oldName);
+    if (iter == m_DataContainerBundles.end() )
+    {
+      return false;
+    }
+    else
+    {
+      m_DataContainerBundles.insert(newName, iter.value() );
+      iter.value()->setName(newName);
+      m_DataContainerBundles.remove(oldName);
+    }
   }
   return false;
 }

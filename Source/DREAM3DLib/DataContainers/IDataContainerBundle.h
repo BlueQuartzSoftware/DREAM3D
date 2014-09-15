@@ -74,6 +74,8 @@ class IDataContainerBundle : public QObject
 
     virtual qint32 count() = 0;
 
+    virtual void clear() = 0;
+
 
   protected:
     IDataContainerBundle() {}
