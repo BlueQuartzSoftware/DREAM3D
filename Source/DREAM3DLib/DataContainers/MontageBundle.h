@@ -39,16 +39,16 @@
 #include <QtCore/QObject>
 
 #include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/DataContainers/DataContainerBundle.h"
+#include "DREAM3DLib/DataContainers/GenericDataContainerBundle.h"
 
-class DREAM3DLib_EXPORT MontageBundle : public DataContainerBundle
+class DREAM3DLib_EXPORT MontageBundle : public GenericDataContainerBundle
 {
   Q_OBJECT
 
   public:
     DREAM3D_SHARED_POINTERS (MontageBundle)
     DREAM3D_STATIC_NEW_MACRO (MontageBundle)
-    DREAM3D_TYPE_MACRO_SUPER(MontageBundle, DataContainerBundle)
+    DREAM3D_TYPE_MACRO_SUPER(MontageBundle, GenericDataContainerBundle)
 
     virtual ~MontageBundle();
 

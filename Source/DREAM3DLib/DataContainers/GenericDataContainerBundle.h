@@ -33,56 +33,54 @@
  *                           FA8650-10-D-5210
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef _DataContainerBundle_H_
-#define _DataContainerBundle_H_
+#ifndef _GenericDataContainerBundle_H_
+#define _GenericDataContainerBundle_H_
 
 
 #include <QtCore/QObject>
 #include <QtCore/QVector>
 
-
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/DataContainers/IDataContainerBundle.h"
 
-class DREAM3DLib_EXPORT DataContainerBundle : public IDataContainerBundle
+class DREAM3DLib_EXPORT GenericDataContainerBundle : public IDataContainerBundle
 {
     Q_OBJECT
   public:
-    DREAM3D_SHARED_POINTERS (DataContainerBundle)
-    DREAM3D_STATIC_NEW_MACRO (DataContainerBundle)
-    DREAM3D_TYPE_MACRO_SUPER(DataContainerBundle, IDataContainerBundle)
+    DREAM3D_SHARED_POINTERS (GenericDataContainerBundle)
+    DREAM3D_STATIC_NEW_MACRO (GenericDataContainerBundle)
+    DREAM3D_TYPE_MACRO_SUPER(GenericDataContainerBundle, IDataContainerBundle)
 
-    virtual ~DataContainerBundle();
+    virtual ~GenericDataContainerBundle();
 
     DREAM3D_VIRTUAL_INSTANCE_STRING_PROPERTY(Name)
 
-    virtual QVector<DataContainer::Pointer>& getDataContainers();
-    virtual void setDataContainers(QVector<DataContainer::Pointer> &containers);
+    void setDataContainers(QVector<DataContainer::Pointer> &containers);
 
-    virtual void append(DataContainer::Pointer dc);
-    virtual void prepend(DataContainer::Pointer dc);
+    void append(DataContainer::Pointer dc);
+    void prepend(DataContainer::Pointer dc);
 
-    virtual void remove(DataContainer::Pointer dc);
-    virtual void remove(const QString &name);
-    virtual void remove(qint32 i);
-    virtual void pop_back();
-    virtual void pop_front();
+    void remove(DataContainer::Pointer dc);
+    void remove(const QString &name);
+    void remove(qint32 i);
+    void pop_back();
+    void pop_front();
 
-    virtual DataContainer::Pointer value(qint32 index);
+    DataContainer::Pointer value(qint32 index);
 
-    virtual qint32 count();
+    qint32 count();
 
-    virtual void clear();
+    void clear();
 
   protected:
-    DataContainerBundle();
+    GenericDataContainerBundle();
 
   private:
     QVector<DataContainer::Pointer>  m_DataContainers;
 
-    DataContainerBundle(const DataContainerBundle&); // Copy Constructor Not Implemented
-    void operator=(const DataContainerBundle&); // Operator '=' Not Implemented
+    GenericDataContainerBundle(const GenericDataContainerBundle&); // Copy Constructor Not Implemented
+    void operator=(const GenericDataContainerBundle&); // Operator '=' Not Implemented
 };
 
-#endif /* _DataContainerBundle_H_ */
+#endif /* _GenericDataContainerBundle_H_ */

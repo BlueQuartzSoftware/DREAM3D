@@ -39,24 +39,57 @@
 #include <QtCore/QObject>
 
 #include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/DataContainers/DataContainerBundle.h"
+#include "DREAM3DLib/DataContainers/IDataContainerBundle.h"
 
-class DREAM3DLib_EXPORT TimeSeriesBundle : public DataContainerBundle
+class DREAM3DLib_EXPORT TimeSeriesBundle : public IDataContainerBundle
 {
   Q_OBJECT
 
   public:
     DREAM3D_SHARED_POINTERS (TimeSeriesBundle)
     DREAM3D_STATIC_NEW_MACRO (TimeSeriesBundle)
-    DREAM3D_TYPE_MACRO_SUPER(TimeSeriesBundle, DataContainerBundle)
+    DREAM3D_TYPE_MACRO_SUPER(TimeSeriesBundle, IDataContainerBundle)
 
     virtual ~TimeSeriesBundle();
+
+    DREAM3D_INSTANCE_STRING_PROPERTY(Name)
+
+    void append(DataContainer::Pointer dc);
+    void prepend(DataContainer::Pointer dc);
+
+    void append(DataContainer::Pointer dc, size_t index, size_t timeStep, float realTimeStep);
+    void prepend(DataContainer::Pointer dc, size_t index, size_t timeStep, float realTimeStep);
+
+    void remove(DataContainer::Pointer dc);
+    void remove(const QString &name);
+    void remove(qint32 i);
+
+    void removeIndexedDataContainer(size_t index);
+    void removeTimeStepDataContainer(size_t realTimeStep);
+    void removeRealTimeStepDataContainer(float realTimeStep);
+
+    void pop_back();
+    void pop_front();
+
+    DataContainer::Pointer value(qint32 index);
+    size_t indexValue(qint32 index);
+    size_t timeStepValue(qint32 index);
+    float realTimeStepValue(qint32 index);
+
+    qint32 count();
+
+    void clear();
 
   protected:
     TimeSeriesBundle();
 
 
   private:
+    QVector<DataContainer::Pointer> m_DataContainers;
+    QVector<size_t> m_TimeIndices;
+    QVector<size_t> m_TimeSteps;
+    QVector<float> m_RealTimeSteps;
+
     TimeSeriesBundle(const TimeSeriesBundle&); // Copy Constructor Not Implemented
     void operator=(const TimeSeriesBundle&); // Operator '=' Not Implemented
 };
