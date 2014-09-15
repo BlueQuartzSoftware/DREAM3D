@@ -44,7 +44,7 @@
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/DataContainers/DataContainer.h"
 
-class IDataContainerBundle : public QObject
+class DREAM3DLib_EXPORT IDataContainerBundle : public QObject
 {
     Q_OBJECT
   public:
