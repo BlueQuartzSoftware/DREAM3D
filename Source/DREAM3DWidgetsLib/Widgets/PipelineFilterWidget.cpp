@@ -90,6 +90,7 @@ PipelineFilterWidget::PipelineFilterWidget(QWidget* parent) :
   m_HasPreflightWarnings(false),
   m_BasicVerticalLayout(NULL),
   m_AdvVerticalLayout(NULL),
+  m_CurrStrucVerticalLayout(NULL),
   m_BasicInputsWidget(NULL),
   m_AdvancedInputWidget(NULL),
   m_CurrentStructureWidget(NULL),
@@ -159,7 +160,7 @@ void PipelineFilterWidget::layoutWidgets()
   // If the filter is valid then instantiate all the FilterParameterWidgets
   // Create the Widget that will be placed into the Basic Inputs Scroll Area
   m_BasicInputsWidget = new QWidget(this);
-  QString basicname = QString::fromUtf8("basicInputsScrollWidget_") + m_Filter->getNameOfClass();
+  QString basicname = QString::fromUtf8("basicInputsScrollWidget1_") + m_Filter->getNameOfClass();
   m_BasicInputsWidget->setObjectName(basicname);
   m_BasicInputsWidget->setGeometry(QRect(0, 0, 250, 267));
   m_BasicVerticalLayout = new QVBoxLayout(m_BasicInputsWidget);
@@ -167,7 +168,7 @@ void PipelineFilterWidget::layoutWidgets()
   m_BasicVerticalLayout->setObjectName(basicname);
 
   m_AdvancedInputWidget = new QWidget(this);
-  QString advname = QString::fromUtf8("advancedInputsScrollWidget_") + m_Filter->getNameOfClass();
+  QString advname = QString::fromUtf8("advancedInputsScrollWidget2_") + m_Filter->getNameOfClass();
   m_AdvancedInputWidget->setObjectName(advname);
   m_AdvancedInputWidget->setGeometry(QRect(0, 0, 250, 267));
   m_AdvVerticalLayout = new QVBoxLayout(m_AdvancedInputWidget);
@@ -228,9 +229,9 @@ void PipelineFilterWidget::layoutWidgets()
   QString curStructName = QString::fromUtf8("advancedInputsScrollWidget_CurrStructWidget");
   m_CurrentStructureWidget->setObjectName(curStructName);
   m_CurrentStructureWidget->setGeometry(QRect(0,0,250,267));
-  m_CurrStrucVerticalLayout = new QVBoxLayout(m_CurrentStructureWidget);
-  curStructName = QString::fromUtf8("verticalLayout3");
-  m_CurrStrucVerticalLayout->setObjectName(curStructName);
+//  m_CurrStrucVerticalLayout = new QVBoxLayout(m_CurrentStructureWidget);
+//  curStructName = QString::fromUtf8("verticalLayout3");
+//  m_CurrStrucVerticalLayout->setObjectName(curStructName);
 
 }
 
