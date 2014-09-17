@@ -72,6 +72,7 @@ class DREAM3DLib_EXPORT DataContainerArray : public QObject
     /**
      * @brief
      */
+    virtual void addDataContainer(DataContainer::Pointer f);
     virtual void pushFront(DataContainer::Pointer f);
     virtual void popFront();
     virtual void pushBack(DataContainer::Pointer f);

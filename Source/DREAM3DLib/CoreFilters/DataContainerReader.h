@@ -70,8 +70,8 @@ class DREAM3DLib_EXPORT DataContainerReader : public AbstractFilter
     DREAM3D_FILTER_PARAMETER(bool, OverwriteExistingDataContainers)
     Q_PROPERTY(bool OverwriteExistingDataContainers READ getOverwriteExistingDataContainers WRITE setOverwriteExistingDataContainers)
 
-    DREAM3D_FILTER_PARAMETER(DataContainerArrayProxy, DataContainerArrayProxy)
-    Q_PROPERTY(DataContainerArrayProxy DataContainerArrayProxy READ getDataContainerArrayProxy WRITE setDataContainerArrayProxy)
+  //  DREAM3D_FILTER_PARAMETER(DataContainerArrayProxy, DataContainerArrayProxy)
+  //  Q_PROPERTY(DataContainerArrayProxy DataContainerArrayProxy READ getDataContainerArrayProxy WRITE setDataContainerArrayProxy)
 
     DREAM3D_FILTER_PARAMETER(DataContainerArrayProxy, InputFileDataContainerArrayProxy)
     Q_PROPERTY(DataContainerArrayProxy InputFileDataContainerArrayProxy READ getInputFileDataContainerArrayProxy WRITE setInputFileDataContainerArrayProxy)
@@ -123,9 +123,10 @@ class DREAM3DLib_EXPORT DataContainerReader : public AbstractFilter
     /**
      * @brief Reads the structure of the DataContainer Array from the hdf5 based .dream3d file. For this method to work
      * the member variable for the file path should have been set prior to calling this method.
+     * @param path The file path to the DREAm3D file
      * @return
      */
-    DataContainerArrayProxy readDataContainerArrayStructure();
+    DataContainerArrayProxy readDataContainerArrayStructure(const QString &path);
 
 
   signals:
@@ -148,7 +149,7 @@ class DREAM3DLib_EXPORT DataContainerReader : public AbstractFilter
     */
     void dataCheck();
 
-    void readData(bool preflight, DataContainerArrayProxy& proxy);
+    void readData(bool preflight, DataContainerArrayProxy& proxy, DataContainerArray::Pointer dca);
 
   private:
     QString m_CachedInputFilePath;

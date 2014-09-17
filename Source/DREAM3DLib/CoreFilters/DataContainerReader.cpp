@@ -57,7 +57,7 @@ DataContainerReader::DataContainerReader() :
 {
   m_PipelineFromFile = FilterPipeline::New();
   setupFilterParameters();
-  m_DataContainerArrayProxy.isValid = false;
+
 }
 
 // -----------------------------------------------------------------------------
@@ -73,13 +73,15 @@ DataContainerReader::~DataContainerReader()
 void DataContainerReader::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(FileSystemFilterParameter::New("Input File", "InputFile", FilterParameterWidgetType::InputFileWidget, getInputFile(), false, "", "*.dream3d"));
+  // parameters.push_back(FileSystemFilterParameter::New("Input File", "InputFile", FilterParameterWidgetType::InputFileWidget, getInputFile(), false, "", "*.dream3d"));
   parameters.push_back(FilterParameter::New("Overwrite Existing DataContainers", "OverwriteExistingDataContainers", FilterParameterWidgetType::BooleanWidget, getOverwriteExistingDataContainers(), false));
   {
-    DataContainerArrayProxyFilterParameter::Pointer parameter = DataContainerArrayProxyFilterParameter::New();
+    DataContainerReaderFilterParameter::Pointer parameter = DataContainerReaderFilterParameter::New();
     parameter->setHumanLabel("Select Arrays From Input File");
     parameter->setPropertyName("InputFileDataContainerArrayProxy");
-    parameter->setWidgetType(FilterParameterWidgetType::DataContainerArrayProxyWidget);
+    parameter->setWidgetType(FilterParameterWidgetType::DataContainerReaderWidget);
+    parameter->setDefaultFlagValue(Qt::Checked);
+    parameter->setInputFileProperty("InputFile");
     parameters.push_back(parameter);
   }
   setFilterParameters(parameters);
@@ -93,7 +95,7 @@ void DataContainerReader::readFilterParameters(AbstractFilterParametersReader* r
   reader->openFilterGroup(this, index);
   setInputFile(reader->readString("InputFile", getInputFile() ) );
   setOverwriteExistingDataContainers(reader->readValue("OverwriteExistingDataContainers", getOverwriteExistingDataContainers() ) );
-  setDataContainerArrayProxy(reader->readDataContainerArrayProxy("DataContainerArrayProxy", getDataContainerArrayProxy() ) );
+  setInputFileDataContainerArrayProxy(reader->readDataContainerArrayProxy("InputFileDataContainerArrayProxy", getInputFileDataContainerArrayProxy() ) );
   reader->closeFilterGroup();
 }
 
@@ -107,8 +109,8 @@ int DataContainerReader::writeFilterParameters(AbstractFilterParametersWriter* w
   writer->openFilterGroup(this, index);
   DREAM3D_FILTER_WRITE_PARAMETER(InputFile)
   DREAM3D_FILTER_WRITE_PARAMETER(OverwriteExistingDataContainers)
-  DataContainerArrayProxy dcaProxy = getDataContainerArrayProxy(); // This line makes a COPY of the DataContainerArrayProxy that is stored in the current instance
-  writer->writeValue("DataContainerArrayProxy", dcaProxy );
+  DataContainerArrayProxy dcaProxy = getInputFileDataContainerArrayProxy(); // This line makes a COPY of the DataContainerArrayProxy that is stored in the current instance
+  writer->writeValue("InputFileDataContainerArrayProxy", dcaProxy );
 
 
   writer->closeFilterGroup();
@@ -134,6 +136,49 @@ void DataContainerReader::dataCheck()
     setErrorCondition(-388);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
+
+  DataContainerArray::Pointer dca = getDataContainerArray();
+
+  // Create a new DataContainerArray to read the file data into
+  DataContainerArray::Pointer tempDCA = DataContainerArray::New();
+  // Read either the structure or all the data depending on the preflight status
+  readData(getInPreflight(), m_InputFileDataContainerArrayProxy, tempDCA);
+  qDebug() << " Reading Structure from " << getInputFile();
+  qDebug() << "  Count Data Containers= " << m_InputFileDataContainerArrayProxy.list.count();
+
+  if(getErrorCondition())
+  {
+    // something has gone wrong and errors were logged alread so just return
+    return;
+  }
+  QList<DataContainer::Pointer>& tempContainers = tempDCA->getDataContainerArray();
+  QListIterator<DataContainer::Pointer> iter(tempContainers);
+  while(iter.hasNext())
+  {
+    DataContainer::Pointer container = iter.next();
+
+    if(getOverwriteExistingDataContainers() == true )
+    {
+      if(dca->contains(container->getName()) == true)
+      {
+        dca->removeDataContainer(container->getName());
+      }
+      dca->addDataContainer(container);
+    }
+    else
+    {
+      if(dca->contains(container->getName()) == true)
+      {
+        ss = QObject::tr("The input file has a DataContainer with a name that alread exists in the current DataContainerArray structure. '%1'").arg(container->getName());
+        setErrorCondition(-390);
+        notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+      }
+      else
+      {
+        dca->addDataContainer(container);
+      }
+    }
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -142,15 +187,6 @@ void DataContainerReader::dataCheck()
 void DataContainerReader::preflight()
 {
   setInPreflight(true);
-  // Get the current structure of the file. We want ALL of the structure. so set it into a Proxy
-  DataContainerArrayProxy proxy = readDataContainerArrayStructure();
-
-  // to the read here because this will populate the DataContainerArray with our DataContainer
-  dataCheck();
-  if(getErrorCondition() >= 0)
-  {
-    readData(getInPreflight(), proxy); // Read using the local Proxy object which will force the read to create a full structure DataContainer
-  }
 
   // Annouce we are about to preflight
   // The GUI will pick up the structure
@@ -159,14 +195,14 @@ void DataContainerReader::preflight()
   // The Gui sends down any changes to the Proxy (which for preflight we don't care about)
   emit updateFilterParameters(this);
 
+  // to the read here because this will populate the DataContainerArray with our DataContainer
+  dataCheck();
+
   // The GUI needs to send down the selections that were made by the user and we need to update
   // DataContainerArray->DataContainer object so the rest of the pipeline has the proper information
   emit preflightExecuted(); // Done executing
 
-  // Get the latest DataContainer Array from the filter
-  DataContainerArray::Pointer dca = getDataContainerArray();
-  // Prune out those child items that are NOT selected in the model
-  m_DataContainerArrayProxy.removeSelectionsFromDataContainerArray(dca.get());
+
   setInPreflight(false);
 }
 
@@ -175,18 +211,19 @@ void DataContainerReader::preflight()
 // -----------------------------------------------------------------------------
 void DataContainerReader::execute()
 {
+  /* In this VERY Special circumstance, the data check will actually read the data from the
+   * file and move those DataContainer Objects into the existing DataContainerArray. Error messages
+   * will be passed up the chain if something goes wrong.
+   */
   dataCheck();
-  if(getErrorCondition() >= 0)
-  {
-    readData(false, m_DataContainerArrayProxy); // This time do the read with the users selections for real
-  }
+
   notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DataContainerReader::readData(bool preflight, DataContainerArrayProxy& proxy)
+void DataContainerReader::readData(bool preflight, DataContainerArrayProxy& proxy, DataContainerArray::Pointer dca)
 {
   setErrorCondition(0);
   QString ss;
@@ -241,7 +278,7 @@ void DataContainerReader::readData(bool preflight, DataContainerArrayProxy& prox
 
   scopedFileSentinel.addGroupId(&dcaGid);
 
-  DataContainerArray::Pointer dca = getDataContainerArray();
+  // DataContainerArray::Pointer dca = getDataContainerArray();
   err = dca->readDataContainersFromHDF5(preflight, dcaGid, proxy, this);
 
   if(err < 0)
@@ -258,11 +295,11 @@ void DataContainerReader::readData(bool preflight, DataContainerArrayProxy& prox
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-DataContainerArrayProxy DataContainerReader::readDataContainerArrayStructure()
+DataContainerArrayProxy DataContainerReader::readDataContainerArrayStructure(const QString &path)
 {
   DataContainerArrayProxy proxy(false);
-  QFileInfo fi(getInputFile());
-  if (getInputFile().isEmpty() == true)
+  QFileInfo fi(path);
+  if (path.isEmpty() == true)
   {
     QString ss = QObject::tr("DREAM3D File Path is empty.");
     setErrorCondition(-70);
@@ -277,20 +314,11 @@ DataContainerArrayProxy DataContainerReader::readDataContainerArrayStructure()
     return proxy;
   }
 
-  if(m_CachedInputFilePath.compare(getInputFile()) != 0) // Different
-  {
-    m_CachedInputFilePath = getInputFile();
-
-  }
-  else
-  {
-
-  }
   herr_t err = 0;
-  hid_t fileId = QH5Utilities::openFile(getInputFile(), true);
+  hid_t fileId = QH5Utilities::openFile(path, true);
   if(fileId < 0)
   {
-    QString ss = QObject::tr("Error opening DREAM3D file location at %1").arg(getInputFile());
+    QString ss = QObject::tr("Error opening DREAM3D file location at %1").arg(path);
     setErrorCondition(-71);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return proxy;

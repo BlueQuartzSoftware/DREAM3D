@@ -234,18 +234,9 @@ void InitializeSyntheticVolumeWidget::on_m_InputFile_textChanged(const QString& 
           this, SLOT(displayErrorMessage(const PipelineMessage&)));
 
   // Read the structure from file
-  DataContainerArrayProxy dcaProxy = reader->readDataContainerArrayStructure();
-
-
-
-
-
+  DataContainerArrayProxy dcaProxy = reader->readDataContainerArrayStructure(m_InputFile->text());
 
   DataContainerArray::Pointer dca = DataContainerArray::New();
-
-
-
-
 
   m_DataContainer = VolumeDataContainer::New();
   dca->pushBack(m_DataContainer);
@@ -273,7 +264,7 @@ void InitializeSyntheticVolumeWidget::on_m_InputFile_textChanged(const QString& 
   reader = DataContainerReader::New();
   reader->setDataContainerArray(dca);
   reader->setInputFile(m_InputFile->text());
-  reader->setDataContainerArrayProxy(dcaProxy);
+  reader->setInputFileDataContainerArrayProxy(dcaProxy);
   connect(reader.get(), SIGNAL(filterGeneratedMessage(const PipelineMessage&)),
           this, SLOT(displayErrorMessage(const PipelineMessage&)));
 

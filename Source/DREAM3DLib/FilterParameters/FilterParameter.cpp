@@ -543,3 +543,43 @@ DataContainerArrayProxyFilterParameter::Pointer DataContainerArrayProxyFilterPar
 
 
 
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+DataContainerReaderFilterParameter::DataContainerReaderFilterParameter() :
+  FilterParameter(),
+  m_DefaultFlagValue(Qt::Checked)
+{
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+DataContainerReaderFilterParameter::~DataContainerReaderFilterParameter()
+{}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+DataContainerReaderFilterParameter::Pointer DataContainerReaderFilterParameter::New(const QString& humanLabel, const QString& propertyName,
+    const QString& widgetType, const QVariant& defaultValue,
+    bool advanced)
+{
+  DataContainerReaderFilterParameter::Pointer ptr = DataContainerReaderFilterParameter::New();
+  ptr->setHumanLabel(humanLabel);
+  ptr->setPropertyName(propertyName);
+  ptr->setWidgetType(widgetType);
+  ptr->setDefaultValue(defaultValue);
+  ptr->setAdvanced(advanced);
+  ptr->setUnits("");
+
+  if(ptr->getWidgetType().compare(FilterParameterWidgetType::SeparatorWidget) == 0)
+  {
+    ptr->setReadOnly(true);
+  }
+  return ptr;
+}
+
+
+
