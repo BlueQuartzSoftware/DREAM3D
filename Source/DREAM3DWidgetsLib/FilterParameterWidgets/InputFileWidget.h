@@ -51,7 +51,8 @@
 
 #include "DREAM3DWidgetsLib/ui_InputFileWidget.h"
 
-class QLineEdit;
+class QLabel;
+class QFSDropLabel;
 class FileSystemFilterParameter;
 
 /**
@@ -82,7 +83,7 @@ class DREAM3DWidgetsLib_EXPORT InputFileWidget : public QWidget, private Ui::Inp
     /**
     * @brief
     */
-    bool verifyPathExists(QString filePath, QLabel *lineEdit);
+    bool verifyPathExists(QString filePath, QFSDropLabel *lineEdit);
 
   public slots:
     void beforePreflight();
@@ -90,8 +91,8 @@ class DREAM3DWidgetsLib_EXPORT InputFileWidget : public QWidget, private Ui::Inp
     void filterNeedsInputParameters(AbstractFilter* filter);
 
     void on_value_fileDropped(const QString& text);
-    void on_value_editingFinished();
-    void on_value_textChanged(const QString& text);
+   // void on_value_editingFinished();
+  //  void on_value_textChanged(const QString& text);
     void on_selectBtn_clicked();
     void setLinkedConditionalState(int state);
     void fadeWidget(QWidget* widget, bool in);
@@ -99,8 +100,6 @@ class DREAM3DWidgetsLib_EXPORT InputFileWidget : public QWidget, private Ui::Inp
   protected:
     static void setOpenDialogLastDirectory(QString val) { m_OpenDialogLastDirectory = val; }
     static QString getOpenDialogLastDirectory() { return m_OpenDialogLastDirectory; }
-
-    QString getLabelStyleSheet();
 
   signals:
     void errorSettingFilterParameter(const QString& msg);
