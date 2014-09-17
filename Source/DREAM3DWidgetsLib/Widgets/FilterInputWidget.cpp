@@ -49,8 +49,7 @@
 #include "DREAM3DWidgetsLib/DREAM3DWidgetsLibConstants.h"
 #include "DREAM3DWidgetsLib/FilterWidgetManager.h"
 #include "DREAM3DWidgetsLib/Widgets/PipelineFilterWidget.h"
-
-//#include "DREAM3DWidgetsLib/moc_FilterInputWidget.cpp"
+#include "DREAM3DWidgetsLib/Widgets/DataContainerArrayWidget.h"
 
 // -----------------------------------------------------------------------------
 //
@@ -70,6 +69,28 @@ FilterInputWidget::FilterInputWidget(QWidget* parent) :
 FilterInputWidget::~FilterInputWidget()
 {
 }
+
+#if 0
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString FilterInputWidget::getLabelStyleSheet()
+{
+  QString styleSheet;
+  QTextStream ss(&styleSheet);
+
+  ss << "QLabel#label {";
+#if defined(Q_OS_WIN)
+  ss << "font: 10 pt \"Times New Roman\";";
+#elif defined(Q_OS_MAC)
+  ss << "font: 13 pt \"Times New Roman\";";
+#else
+  ss << "font: 10 pt \"Times New Roman\"";
+#endif
+  ss << "  font-weight: bold;  }";
+  return styleSheet;
+}
+#endif
 
 // -----------------------------------------------------------------------------
 //
@@ -91,45 +112,41 @@ bool FilterInputWidget::eventFilter(QObject *o, QEvent *e)
 // -----------------------------------------------------------------------------
 void FilterInputWidget::setupGui()
 {
-  QFont font;
-  font.setBold(true);
-  font.setItalic(false);
-  font.setWeight(75);
-  font.setStyleStrategy(QFont::PreferAntialias);
+  QFont humanLabelFont;
+  humanLabelFont.setBold(true);
+  humanLabelFont.setItalic(false);
+  humanLabelFont.setWeight(75);
+  humanLabelFont.setStyleStrategy(QFont::PreferAntialias);
 
-  QFont font1;
-  font1.setBold(true);
-  font1.setItalic(true);
-  font1.setWeight(75);
-  font1.setStyleStrategy(QFont::PreferAntialias);
-  font1.setFamily(QString::fromUtf8("Arial"));
+  QFont brandingFont;
+  brandingFont.setBold(true);
+  brandingFont.setItalic(true);
+  brandingFont.setWeight(75);
+  brandingFont.setStyleStrategy(QFont::PreferAntialias);
+  brandingFont.setFamily(QString::fromUtf8("Arial"));
 
-  QFont font2;
-  font2.setBold(true);
-  font2.setWeight(75);
-  font2.setStyleStrategy(QFont::PreferAntialias);
+  QFont categoryFont;
+  categoryFont.setBold(true);
+  categoryFont.setWeight(75);
+  categoryFont.setStyleStrategy(QFont::PreferAntialias);
 
 #if defined (Q_OS_MAC)
-  font.setPointSize(16);
-  font1.setPointSize(11);
-  font2.setPointSize(14);
-
+  humanLabelFont.setPointSize(16);
+  brandingFont.setPointSize(11);
+  categoryFont.setPointSize(14);
 #elif defined (Q_OS_WIN)
-  font.setPointSize(12);
-  font1.setPointSize(8);
-  font2.setPointSize(10);
+  humanLabelFont.setPointSize(12);
+  brandingFont.setPointSize(8);
+  categoryFont.setPointSize(10);
 #endif
 
-#if 0
-  filterHumanLabel->setFont(font);
-  brandingLabel->setFont(font1);
-  basicInputsLabel->setFont(font2);
-  advInputsLabel->setFont(font2);
-  #endif
+
+  filterHumanLabel->setFont(humanLabelFont);
+  brandingLabel->setFont(brandingFont);
+  basicInputsLabel->setFont(categoryFont);
+  advInputsLabel->setFont(categoryFont);
 
   brandingLabel->installEventFilter(this);
-
-
 }
 
 // -----------------------------------------------------------------------------
@@ -159,6 +176,18 @@ void FilterInputWidget::clearInputWidgets()
     }
   }
 
+  item = currentStructureGrid->itemAt(0);
+  if(item)
+  {
+    QWidget* w = item->widget();
+    if(w)
+    {
+      w->setVisible(false);
+      currentStructureGrid->removeWidget(w);
+    }
+  }
+
+
   filterHumanLabel->setText("No Filter Selected");
   brandingLabel->clear();
 }
@@ -183,6 +212,7 @@ void FilterInputWidget::displayFilterParameters(PipelineFilterWidget* w)
   clearInputWidgets();
   basicInputsGrid->addWidget(w->getBasicInputsWidget());
   advInputsGrid->addWidget(w->getAdvancedInputsWidget());
+  currentStructureGrid->addWidget(w->getCurrentStructureWidget());
 
   basicInputsFrame->setVisible((bool)(w->getBasicParameterCount()));
 
@@ -205,6 +235,7 @@ void FilterInputWidget::displayFilterParameters(PipelineFilterWidget* w)
 
   w->getBasicInputsWidget()->setVisible(true);
   w->getAdvancedInputsWidget()->setVisible(true);
+  w->getCurrentStructureWidget()->setVisible(true);
 
   // Add a label at the top of the Inputs Tabs to show what filter we are working on
   filterHumanLabel->setText(w->getHumanLabel());
@@ -246,7 +277,7 @@ void FilterInputWidget::fadeOutWidget(QWidget* widget)
   faderWidget->setFadeOut();
   faderWidget->setStartColor(DREAM3D::Defaults::AdvancedColor);
   connect(faderWidget, SIGNAL(animationComplete() ),
-          this, SLOT(hideButton()));
+          widget, SLOT(hide()));
   faderWidget->start();
   m_AdvFadedOut = true;
 }
@@ -272,6 +303,23 @@ void FilterInputWidget::on_advInputsBtn_clicked()
   else
   {
     fadeOutWidget(advInputsFrame);
+  }
+
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void FilterInputWidget::on_currentStructureBtn_clicked()
+{
+  if(currentStructureFrame->isVisible() == false)
+  {
+    currentStructureFrame->setVisible(true);
+    fadeInWidget(currentStructureFrame);
+  }
+  else
+  {
+    fadeOutWidget(currentStructureFrame);
   }
 
 }

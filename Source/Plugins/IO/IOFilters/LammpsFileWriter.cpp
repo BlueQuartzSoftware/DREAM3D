@@ -141,7 +141,7 @@ void LammpsFileWriter::preflight()
 // -----------------------------------------------------------------------------
 void LammpsFileWriter::execute()
 {
-  int err = 0;
+  //int err = 0;
 
   dataCheck(false);
   if(getErrorCondition() < 0) { return; }

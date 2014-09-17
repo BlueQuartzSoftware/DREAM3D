@@ -1823,7 +1823,7 @@ float PackPrimaryPhases::check_fillingerror(int gadd, int gremove, Int32ArrayTyp
   float multiplier = 1.0;
   if(gadd > 0)
   {
-    size_t key, val;
+    //size_t key, val;
     k1 = 2;
     k2 = -1;
     k3 = 1;

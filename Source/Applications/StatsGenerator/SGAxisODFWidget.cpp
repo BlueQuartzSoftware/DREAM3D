@@ -82,8 +82,7 @@ SGAxisODFWidget::SGAxisODFWidget(QWidget* parent) :
   m_PhaseIndex(-1),
   m_CrystalStructure(Ebsd::CrystalStructure::OrthoRhombic),
   m_ODFTableModel(NULL),
-  m_MDFWidget(NULL),
-  m_PoleFigureFuture(NULL)
+  m_MDFWidget(NULL)
 {
   this->setupUi(this);
   this->setupGui();
@@ -297,17 +296,6 @@ void SGAxisODFWidget::setupGui()
   m_PlotCurves.push_back(new QwtPlotCurve);
   m_PlotCurves.push_back(new QwtPlotCurve);
 
-#if SHOW_POLE_FIGURES
-  m_PoleFigureFuture = new QFutureWatcher<QImage>(this);
-  connect(m_PoleFigureFuture, SIGNAL(resultReadyAt(int)),
-          this, SLOT(showPoleFigure(int)));
-  connect(m_PoleFigureFuture, SIGNAL(finished()),
-          this, SLOT(poleFigureGenerationComplete()));
-#else
-  // Hide the color Pole Figures in this version
-  m_PFScrollArea->hide();
-#endif
-
 }
 
 // -----------------------------------------------------------------------------
@@ -432,55 +420,6 @@ void SGAxisODFWidget::updatePlots()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SGAxisODFWidget::showPoleFigure(int imageIndex)
-{
-  // labels[num]->setPixmap(QPixmap::fromImage(imageScaling->resultAt(num)));
-  switch(imageIndex)
-  {
-    case 0:
-      //  m_PoleFigureFuture->resultAt(imageIndex).save("/tmp/AxisODF_PoleFigure_001.tif");
-      m_001PF->setPixmap(QPixmap::fromImage(m_PoleFigureFuture->resultAt(imageIndex)));
-      break;
-    case 1:
-      //  m_PoleFigureFuture->resultAt(imageIndex).save("/tmp/AxisODF_PoleFigure_011.tif");
-      m_011PF->setPixmap(QPixmap::fromImage(m_PoleFigureFuture->resultAt(imageIndex)));
-      break;
-    case 2:
-      //  m_PoleFigureFuture->resultAt(imageIndex).save("/tmp/AxisODF_PoleFigure_111.tif");
-      m_111PF->setPixmap(QPixmap::fromImage(m_PoleFigureFuture->resultAt(imageIndex)));
-      break;
-    default:
-      break;
-  }
-
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void SGAxisODFWidget::poleFigureGenerationComplete()
-{
-  //  qDebug() << "ODF Pole Figure generation complete" << "\n";
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-QImage generateAxisODFPoleFigure(const PoleFigureData& data)
-{
-  //  PoleFigureImageUtilities colorPoleFigure;
-  //#if COLOR_POLE_FIGURES
-  //  return colorPoleFigure.generateColorPoleFigureImage(data);
-  //#else
-  //  return colorPoleFigure.generatePoleFigureImage(data);
-  //#endif
-  return QImage();
-}
-
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void SGAxisODFWidget::on_m_CalculateODFBtn_clicked()
 {
   int err = 0;
@@ -530,37 +469,15 @@ void SGAxisODFWidget::on_m_CalculateODFBtn_clicked()
   config.numColors = numColors;
 
   QVector<UInt8ArrayType::Pointer> figures = ops.generatePoleFigure(config);
-  {
-    // Now create a QImage that is mirrored vertically and has the Axis overlay applied to it
-    QImage image = PoleFigureImageUtilities::CreateQImageFromRgbaArray(figures[0].get(), imageSize, true);
-    m_001PF->setPixmap(QPixmap::fromImage(image));
-  }
-  {
-    // Now create a QImage that is mirrored vertically and has the Axis overlay applied to it
-    QImage image = PoleFigureImageUtilities::CreateQImageFromRgbaArray(figures[1].get(), imageSize, true);
-    m_011PF->setPixmap(QPixmap::fromImage(image));
-  }
-  {
-    // Now create a QImage that is mirrored vertically and has the Axis overlay applied to it
-    QImage image = PoleFigureImageUtilities::CreateQImageFromRgbaArray(figures[2].get(), imageSize, true);
-    m_111PF->setPixmap(QPixmap::fromImage(image));
-  }
-
   if (err == 1)
   {
     //TODO: Present Error Message
     return;
   }
 
-  // This is multi-threaded on appropriate hardware.
-  //qint32 kRad[2] = {5, 5};
-  //qint32 pfSize[2] = {226, 226};
-  //QVector<PoleFigureData> data;
-  //data.push_back(PoleFigureData(x001, y001, QString("A Axis"), kRad, pfSize));
-  //data.push_back(PoleFigureData(x011, y011, QString("B Axis"), kRad, pfSize));
-  //data.push_back(PoleFigureData(x111, y111, QString("C Axis"), kRad, pfSize));
-  //// This kicks off the threads
-  //m_PoleFigureFuture->setFuture(QtConcurrent::mapped(data, generateAxisODFPoleFigure));
+  QImage image = PoleFigureImageUtilities::Create3ImagePoleFigure(figures[0].get(), figures[1].get(), figures[2].get(), config);
+  m_PoleFigureLabel->setPixmap(QPixmap::fromImage(image));
+
 }
 
 // -----------------------------------------------------------------------------

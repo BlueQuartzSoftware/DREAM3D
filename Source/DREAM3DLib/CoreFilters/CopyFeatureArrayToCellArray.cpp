@@ -124,14 +124,12 @@ void CopyFeatureArrayToCellArray::dataCheck()
     return;
   }
 
-  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getSelectedFeatureArrayPath().getDataContainerName(), false);
-  if(getErrorCondition() < 0 || NULL == m) { return; }
-
-  AttributeMatrix::Pointer cellAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getFeatureIdsArrayPath().getAttributeMatrixName(), -301);
+  AttributeMatrix::Pointer cellAttrMat = getDataContainerArray()->getPrereqAttributeMatrixFromPath<DataContainer, AbstractFilter>(this, getFeatureIdsArrayPath(), -303);
   if(getErrorCondition() < 0 || NULL == cellAttrMat.get() ) { return; }
 
-  AttributeMatrix::Pointer cellFeatureAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getSelectedFeatureArrayPath().getAttributeMatrixName(), -302);
+  AttributeMatrix::Pointer cellFeatureAttrMat = getDataContainerArray()->getPrereqAttributeMatrixFromPath<DataContainer, AbstractFilter>(this, getSelectedFeatureArrayPath(), -302);
   if(getErrorCondition() < 0) { return; }
+
 
   QVector<size_t> dims(1, 1);
   m_FeatureIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeatureIdsArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
@@ -233,12 +231,14 @@ void CopyFeatureArrayToCellArray::execute()
   dataCheck();
   if(getErrorCondition() < 0) { return; }
 
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(m_SelectedFeatureArrayPath.getDataContainerName());
   int64_t totalPoints = m_FeatureIdsPtr.lock()->getNumberOfTuples();
 
   QString ss;
 
-  IDataArray::Pointer inputData = m->getAttributeMatrix(m_SelectedFeatureArrayPath.getAttributeMatrixName())->getAttributeArray(m_SelectedFeatureArrayPath.getDataArrayName());
+
+  IDataArray::Pointer inputData = getDataContainerArray()->getExistingPrereqArrayFromPath<IDataArray, AbstractFilter>(this, getSelectedFeatureArrayPath());
+
+  //IDataArray::Pointer inputData = m->getAttributeMatrix(m_SelectedFeatureArrayPath.getAttributeMatrixName())->getAttributeArray(m_SelectedFeatureArrayPath.getDataArrayName());
 
   if (NULL == inputData.get())
   {
@@ -297,7 +297,12 @@ void CopyFeatureArrayToCellArray::execute()
 
   if (p.get() != NULL)
   {
+<<<<<<< HEAD
     m->getAttributeMatrix(getFeatureIdsArrayPath().getAttributeMatrixName())->addAttributeArray(getCreatedArrayName(), p);
+=======
+    AttributeMatrix::Pointer am = getDataContainerArray()->getAttributeMatrix(getSelectedFeatureArrayPath());
+    am->addAttributeArray(p->getName(), p);
+>>>>>>> 697bd2bced39872baabf2f884407a09409fd4845
   }
   else
   {

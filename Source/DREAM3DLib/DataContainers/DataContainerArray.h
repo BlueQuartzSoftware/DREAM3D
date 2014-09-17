@@ -47,6 +47,7 @@
 #include "DREAM3DLib/DataContainers/VertexDataContainer.h"
 #include "DREAM3DLib/DataContainers/EdgeDataContainer.h"
 #include "DREAM3DLib/DataContainers/DataArrayPath.h"
+#include "DREAM3DLib/DataContainers/IDataContainerBundle.h"
 
 /**
  * @class DataContainerArray DataContainerArray.h DREAM3DLib/Common/DataContainerArray.h
@@ -80,6 +81,7 @@ class DREAM3DLib_EXPORT DataContainerArray : public QObject
     virtual void clear();
     virtual size_t size();
     virtual bool empty();
+
     /**
      * @brief contains Returns if a DataContainer with the give name is in the array
      * @param name The name of the DataContiner to find
@@ -115,7 +117,7 @@ class DREAM3DLib_EXPORT DataContainerArray : public QObject
     virtual void duplicateDataContainer(const QString& name, const QString& newName);
     QList<QString> getDataContainerNames();
     QList<DataContainer::Pointer>& getDataContainerArray();
-    bool renameDataContainer(const QString& oldname, const QString& newname);
+    bool renameDataContainer(const QString& oldName, const QString& newName);
 
 
     virtual void printDataContainerNames(QTextStream& out);
@@ -128,6 +130,41 @@ class DREAM3DLib_EXPORT DataContainerArray : public QObject
                                            hid_t dcaGid,
                                            DataContainerArrayProxy& dcaProxy,
                                            Observable* obs = NULL);
+
+
+    /**
+     * @brief setDataContainerBundles
+     * @param bundles
+     */
+    void setDataContainerBundles(QMap<QString, IDataContainerBundle::Pointer> bundles);
+
+    /**
+     * @brief getDataContainerBundles
+     * @return
+     */
+    QMap<QString, IDataContainerBundle::Pointer>& getDataContainerBundles();
+
+    /**
+     * @brief addDataContainerBundle
+     * @param dataContainer
+     */
+    void addDataContainerBundle(IDataContainerBundle::Pointer dataContainer);
+
+    /**
+     * @brief removeDataContainerBundle
+     * @param name
+     * @return
+     */
+    int removeDataContainerBundle(const QString &name);
+
+    /**
+     * @brief renameDataContainerBundle
+     * @param oldName
+     * @param newName
+     */
+    bool renameDataContainerBundle(const QString &oldName, const QString newName);
+
+
 
     /**
      * @brief getDataContainerAs
@@ -425,6 +462,8 @@ class DREAM3DLib_EXPORT DataContainerArray : public QObject
 
   private:
     QList<DataContainer::Pointer>  m_Array;
+    QMap<QString, IDataContainerBundle::Pointer> m_DataContainerBundles;
+
 
     DataContainerArray(const DataContainerArray&); // Copy Constructor Not Implemented
     void operator=(const DataContainerArray&); // Operator '=' Not Implemented

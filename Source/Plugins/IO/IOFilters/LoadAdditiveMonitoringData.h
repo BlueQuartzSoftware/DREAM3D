@@ -154,8 +154,8 @@ class LoadAdditiveMonitoringData : public AbstractFilter
     DEFINE_CREATED_DATAARRAY_VARIABLE(float, Current)
     DEFINE_CREATED_DATAARRAY_VARIABLE(float, Speed)
 
-    QString int_to_string(int value);
-    QString float_to_string(float value);
+//    QString int_to_string(int value);
+//    QString float_to_string(float value);
 
     LoadAdditiveMonitoringData(const LoadAdditiveMonitoringData&); // Copy Constructor Not Implemented
     void operator=(const LoadAdditiveMonitoringData&); // Operator '=' Not Implemented

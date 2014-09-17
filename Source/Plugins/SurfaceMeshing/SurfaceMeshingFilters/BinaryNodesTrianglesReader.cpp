@@ -55,11 +55,11 @@ BinaryNodesTrianglesReader::BinaryNodesTrianglesReader() :
   m_VertexAttributeMatrixName(DREAM3D::Defaults::VertexAttributeMatrixName),
   m_FaceAttributeMatrixName(DREAM3D::Defaults::FaceAttributeMatrixName),
   m_FaceLabelsArrayName(DREAM3D::FaceData::SurfaceMeshFaceLabels),
-  m_FaceLabels(NULL),
   m_SurfaceMeshNodeTypesArrayName(DREAM3D::VertexData::SurfaceMeshNodeType),
-  m_SurfaceMeshNodeTypes(NULL),
   m_BinaryNodesFile(""),
-  m_BinaryTrianglesFile("")
+  m_BinaryTrianglesFile(""),
+  m_SurfaceMeshNodeTypes(NULL),
+  m_FaceLabels(NULL)
 {
   setupFilterParameters();
 }

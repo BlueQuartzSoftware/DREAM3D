@@ -37,6 +37,10 @@ set(DREAM3DLib_DataContainers_HDRS
   ${DREAM3DLib_SOURCE_DIR}/DataContainers/AttributeMatrixProxy.h
   ${DREAM3DLib_SOURCE_DIR}/DataContainers/DataArrayProxy.h
   ${DREAM3DLib_SOURCE_DIR}/DataContainers/DataArrayPath.h
+  ${DREAM3DLib_SOURCE_DIR}/DataContainers/IDataContainerBundle.h
+  ${DREAM3DLib_SOURCE_DIR}/DataContainers/GenericDataContainerBundle.h
+  ${DREAM3DLib_SOURCE_DIR}/DataContainers/TimeSeriesBundle.h
+  ${DREAM3DLib_SOURCE_DIR}/DataContainers/MontageBundle.h
 )
 
 set(DREAM3DLib_DataContainers_SRCS
@@ -51,14 +55,17 @@ set(DREAM3DLib_DataContainers_SRCS
   ${DREAM3DLib_SOURCE_DIR}/DataContainers/VertexArray.cpp
   ${DREAM3DLib_SOURCE_DIR}/DataContainers/DataContainerArrayProxy.cpp
   ${DREAM3DLib_SOURCE_DIR}/DataContainers/DataArrayPath.cpp
+  ${DREAM3DLib_SOURCE_DIR}/DataContainers/GenericDataContainerBundle.cpp
+  ${DREAM3DLib_SOURCE_DIR}/DataContainers/TimeSeriesBundle.cpp
+  ${DREAM3DLib_SOURCE_DIR}/DataContainers/MontageBundle.cpp
 )
 
 cmp_IDE_SOURCE_PROPERTIES( "DREAM3DLib/DataContainers" "${DREAM3DLib_DataContainers_HDRS}" "${DREAM3DLib_DataContainers_SRCS}" "0")
 cmp_IDE_SOURCE_PROPERTIES( "Generated/DREAM3DLib/DataContainers" "" "${DREAM3DLib_DataContainers_Generated_MOC_SRCS}" "0")
 
 set(DREAM3DLib_DataContainers_HDRS
-	${DREAM3DLib_DataContainers_HDRS}
-	${DREAM3DLib_DataContainers_Moc_HDRS}  # Add the headers that get Moc'ed here so they show up in solutions/IDEs/Project files
+  ${DREAM3DLib_DataContainers_HDRS}
+  ${DREAM3DLib_DataContainers_Moc_HDRS}  # Add the headers that get Moc'ed here so they show up in solutions/IDEs/Project files
 )
 
 if( ${PROJECT_INSTALL_HEADERS} EQUAL 1 )

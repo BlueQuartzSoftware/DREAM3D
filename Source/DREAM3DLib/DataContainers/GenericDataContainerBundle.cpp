@@ -1,6 +1,6 @@
 /* ============================================================================
- * Copyright (c) 2012 Michael A. Jackson (BlueQuartz Software)
- * Copyright (c) 2012 Dr. Michael A. Groeber (US Air Force Research Laboratories)
+ * Copyright (c) 2014 Michael A. Jackson (BlueQuartz Software)
+ * Copyright (c) 2014 Dr. Michael A. Groeber (US Air Force Research Laboratories)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -33,149 +33,123 @@
  *                           FA8650-10-D-5210
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#include "SeparatorWidget.h"
 
-#include <QtCore/QMetaProperty>
-#include "DREAM3DWidgetsLib/DREAM3DWidgetsLibConstants.h"
-
-
-#include "FilterParameterWidgetsDialogs.h"
+#include "GenericDataContainerBundle.h"
 
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-SeparatorWidget::SeparatorWidget(FilterParameter* parameter, AbstractFilter* filter, QWidget* parent) :
-  QWidget(parent),
-  m_Filter(filter),
-  m_FilterParameter(parameter)
+GenericDataContainerBundle::GenericDataContainerBundle()
 {
-  setupUi(this);
-  setupGui();
+
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-SeparatorWidget::~SeparatorWidget()
-{}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-QString SeparatorWidget::getLabelStyleSheet()
+GenericDataContainerBundle::~GenericDataContainerBundle()
 {
-  QString styleSheet;
-  QTextStream ss(&styleSheet);
-
-  ss << "QLabel#label {";
-#if defined(Q_OS_WIN)
-  ss << "font: 10 pt \"Times New Roman\";";
-#elif defined(Q_OS_MAC)
-  ss << "font: 13 pt \"Times New Roman\";";
-#else
-  ss << "font: 10 pt \"Times New Roman\"";
-#endif
-  ss << "  font-weight: bold;  }";
-  return styleSheet;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SeparatorWidget::setupGui()
+void GenericDataContainerBundle::setDataContainers(QVector<DataContainer::Pointer> &containers)
 {
+  m_DataContainers = containers;
+}
 
-  // Catch when the filter is about to execute the preflight
-  connect(m_Filter, SIGNAL(preflightAboutToExecute()),
-          this, SLOT(beforePreflight()));
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void GenericDataContainerBundle::append(DataContainer::Pointer dc)
+{
+  m_DataContainers.append(dc);
+}
 
-  // Catch when the filter is finished running the preflight
-  connect(m_Filter, SIGNAL(preflightExecuted()),
-          this, SLOT(afterPreflight()));
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void GenericDataContainerBundle::prepend(DataContainer::Pointer dc)
+{
+  m_DataContainers.prepend(dc);
+}
 
-  // Catch when the filter wants its values updated
-  connect(m_Filter, SIGNAL(updateFilterParameters(AbstractFilter*)),
-          this, SLOT(filterNeedsInputParameters(AbstractFilter*)));
-
-
-  label->setStyleSheet(getLabelStyleSheet());
-
-  blockSignals(true);
-  if (m_FilterParameter != NULL)
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void GenericDataContainerBundle::remove(DataContainer::Pointer dc)
+{
+  for(qint32 i = 0; i < m_DataContainers.size(); i++)
   {
-    QString units = m_FilterParameter->getUnits();
-    if(units.isEmpty() == false)
+    if(m_DataContainers[i].get() == dc.get())
     {
-      label->setText(m_FilterParameter->getHumanLabel() + " (" + units + ")");
-    }
-    else
-    {
-      label->setText(m_FilterParameter->getHumanLabel() );
+      m_DataContainers.remove(i);
+      return;
     }
   }
-  blockSignals(false);
-}
-
-// ----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void SeparatorWidget::filterNeedsInputParameters(AbstractFilter* filter)
-{
-
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SeparatorWidget::beforePreflight()
+void GenericDataContainerBundle::remove(const QString &name)
 {
-
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void SeparatorWidget::afterPreflight()
-{
-
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void SeparatorWidget::setLinkedConditionalState(int state)
-{
-  bool boolProp = (state == Qt::Checked);
-  fadeWidget(this, boolProp);
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void SeparatorWidget::fadeWidget(QWidget* widget, bool in)
-{
-
-  if (faderWidget)
+  for(qint32 i = 0; i < m_DataContainers.size(); i++)
   {
-    faderWidget->close();
+    if(m_DataContainers[i]->getName().compare(name) == 0)
+    {
+      m_DataContainers.remove(i);
+      return;
+    }
   }
-  faderWidget = new FaderWidget(widget);
-  if(in)
-  {
-    setVisible(true);
-    faderWidget->setFadeIn();
-    connect(faderWidget, SIGNAL(animationComplete() ),
-            this, SLOT(show()));
-  }
-  else
-  {
-    faderWidget->setFadeOut();
-    connect(faderWidget, SIGNAL(animationComplete() ),
-            this, SLOT(hide()));
-  }
-  QColor color = DREAM3D::Defaults::BasicColor;
-  if(m_FilterParameter->getAdvanced()) { color = DREAM3D::Defaults::AdvancedColor; }
-  faderWidget->setStartColor(color);
-  faderWidget->start();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void GenericDataContainerBundle::remove(qint32 i)
+{
+  m_DataContainers.remove(i);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void GenericDataContainerBundle::pop_back()
+{
+  m_DataContainers.pop_back();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void GenericDataContainerBundle::pop_front()
+{
+  m_DataContainers.pop_front();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+DataContainer::Pointer GenericDataContainerBundle::value(qint32 index)
+{
+  return m_DataContainers.value(index);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+qint32 GenericDataContainerBundle::count()
+{
+  return m_DataContainers.count();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void GenericDataContainerBundle::clear()
+{
+  return m_DataContainers.clear();
 }

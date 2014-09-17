@@ -1,6 +1,6 @@
 /* ============================================================================
- * Copyright (c) 2012 Michael A. Jackson (BlueQuartz Software)
- * Copyright (c) 2012 Dr. Michael A. Groeber (US Air Force Research Laboratories)
+ * Copyright (c) 2014 Michael A. Jackson (BlueQuartz Software)
+ * Copyright (c) 2014 Dr. Michael A. Groeber (US Air Force Research Laboratories)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -30,66 +30,23 @@
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  *  This code was written under United States Air Force Contract number
- *                           FA8650-07-D-5800
+ *                           FA8650-10-D-5210
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef _FilterInputWidget_H_
-#define _FilterInputWidget_H_
+ #include "MontageBundle.h"
 
-#include <QtCore/QObject>
-#include <QtCore/QPointer>
-#include <QtGui/QWidget>
-
-#include "QtSupport/FaderWidget.h"
-
-#include "DREAM3DLib/Common/AbstractFilter.h"
-
-#include "DREAM3DWidgetsLib/DREAM3DWidgetsLib.h"
-
-
-#include "ui_FilterInputWidget.h"
-
-class PipelineFilterWidget;
-
-/**
- * @brief The FilterInputWidget class
- */
-class DREAM3DWidgetsLib_EXPORT FilterInputWidget : public QWidget, private Ui::FilterInputWidget
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+MontageBundle::MontageBundle()
 {
-    Q_OBJECT
+  return;
+}
 
-  public:
-    FilterInputWidget(QWidget* parent = NULL);
-    virtual ~FilterInputWidget();
-
-    virtual void setupGui();
-
-    bool eventFilter(QObject *o, QEvent *e);
-
-  protected:
-
-  public slots:
-    void clearInputWidgets();
-    void displayFilterParameters(PipelineFilterWidget* w);
-    void removeWidgetInputs(PipelineFilterWidget* w);
-
-    void on_advInputsBtn_clicked();
-    void on_currentStructureBtn_clicked();
-    void hideButton();
-
-  private slots:
-    void fadeInWidget(QWidget* widget);
-    void fadeOutWidget(QWidget* widget);
-
-  private:
-    QPointer<FaderWidget> faderWidget;
-    bool m_AdvFadedOut;
-    QString m_BrandingLabel;
-
-    FilterInputWidget(const FilterInputWidget&); // Copy Constructor Not Implemented
-    void operator=(const FilterInputWidget&); // Operator '=' Not Implemented
-
-
-};
-
-#endif /* end FilterInputWidget */
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+MontageBundle::~MontageBundle()
+{
+  return;
+}

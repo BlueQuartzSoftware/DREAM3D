@@ -16,6 +16,7 @@ set(DREAM3D_WIDGETS
     IssuesDockWidget
     PipelineFilterWidget
     PrebuiltPipelinesDockWidget
+    DataContainerArrayWidget
 )
 
 foreach(FPW ${DREAM3D_WIDGETS})

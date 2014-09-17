@@ -20,7 +20,7 @@ set(_PublicFilters
   HoughCircles
   ImageCalculator
   ImageMath
-  ImageRegistration
+#  ImageRegistration
   KMeans
   ManualThreshold
   MeanKernel

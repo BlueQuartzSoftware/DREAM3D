@@ -38,6 +38,7 @@
 #include <QtCore/QMetaProperty>
 #include <QtCore/QDir>
 
+#include <QtGui/QLineEdit>
 #include <QtGui/QFileDialog>
 
 #include "QtSupport/QFileCompleter.h"
@@ -76,6 +77,28 @@ InputFileWidget::~InputFileWidget()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+QString InputFileWidget::getLabelStyleSheet()
+{
+  QString styleSheet;
+  QTextStream ss(&styleSheet);
+
+  ss << "QLabel {";
+#if defined(Q_OS_WIN)
+  ss << "font: italic 9 pt \"Times New Roman\";";
+#elif defined(Q_OS_MAC)
+  ss << "font: italic 12 pt \"Times New Roman\";";
+#else
+  ss << "font: italic 10 pt \"Times New Roman\"";
+#endif
+  ss << "}";
+
+  ss << "QLabel {font: 75 11pt \"Times New Roman\";font-weight: bold;}";
+  return styleSheet;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void InputFileWidget::setupGui()
 {
 
@@ -92,10 +115,26 @@ void InputFileWidget::setupGui()
           this, SLOT(filterNeedsInputParameters(AbstractFilter*)));
 
   // Put a file path completer to help out the user to select a valid file
-  QFileCompleter* com = new QFileCompleter(this, false);
-  value->setCompleter(com);
-  QObject::connect( com, SIGNAL(activated(const QString&)),
-                    this, SLOT(on_value_textChanged(const QString&)));
+//  QFileCompleter* com = new QFileCompleter(this, false);
+//  value->setCompleter(com);
+//  QObject::connect( com, SIGNAL(activated(const QString&)),
+//                    this, SLOT(on_value_textChanged(const QString&)));
+
+  QFont inputFileFont;
+  inputFileFont.setBold(true);
+  inputFileFont.setItalic(true);
+  inputFileFont.setWeight(75);
+  inputFileFont.setStyleStrategy(QFont::PreferAntialias);
+ // inputFileFont.setFamily(QString::fromUtf8("Times New Roman"));
+#if defined (Q_OS_MAC)
+  inputFileFont.setPointSize(12);
+#elif defined (Q_OS_WIN)
+  inputFileFont.setPointSize(9);
+#else
+  inputFileFont.setPointSize(10);
+#endif
+
+  value->setFont(inputFileFont);
 
   // See if we can get the default value from the filter instance
   if (m_FilterParameter != NULL)
@@ -103,12 +142,13 @@ void InputFileWidget::setupGui()
     QString units = m_FilterParameter->getUnits();
     if(units.isEmpty() == false)
     {
-      label->setText(m_FilterParameter->getHumanLabel() + " (" + units + ")");
+      selectBtn->setText(m_FilterParameter->getHumanLabel() + " (" + units + ") ...");
     }
     else
     {
-      label->setText(m_FilterParameter->getHumanLabel() );
+      selectBtn->setText(m_FilterParameter->getHumanLabel()  + " ...");
     }
+
 
 
     QString currentPath = m_Filter->property(PROPERTY_NAME_AS_CHAR).toString();
@@ -120,7 +160,7 @@ void InputFileWidget::setupGui()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-bool InputFileWidget::verifyPathExists(QString filePath, QLineEdit* lineEdit)
+bool InputFileWidget::verifyPathExists(QString filePath, QLabel* lineEdit)
 {
   QFileInfo fileinfo(filePath);
   if (false == fileinfo.exists())

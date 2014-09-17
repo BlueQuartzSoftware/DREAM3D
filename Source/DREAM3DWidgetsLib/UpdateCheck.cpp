@@ -94,7 +94,7 @@ void UpdateCheck::checkVersion(QUrl website)
   request.setUrl(website);
   request.setRawHeader("User-Agent", "DREAM3D");
 
-  QNetworkReply* reply = m_Nam->get(request);
+  m_Nam->get(request);
 }
 
 // -----------------------------------------------------------------------------

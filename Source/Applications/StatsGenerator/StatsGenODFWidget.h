@@ -97,8 +97,6 @@ class StatsGenODFWidget : public QWidget, private Ui::SGAxisODFWidget
     int getOrientationData(StatsData* statsData, unsigned int phaseType);
     void extractStatsData(int index, StatsData* statsData, unsigned int phaseType);
 
-    void setPlotTabTitles(QString t1, QString t2, QString t3);
-
     void updatePlots();
 
     SGODFTableModel* tableModel();
@@ -116,9 +114,10 @@ class StatsGenODFWidget : public QWidget, private Ui::SGAxisODFWidget
     void on_loadODFTextureBtn_clicked();
     void on_selectAnglesFile_clicked();
 
-    // Slots for the QFutureWatcher to connect to
-    void showPoleFigure(int imageIndex);
-    void poleFigureGenerationComplete();
+    void on_bulkLoadGroupBox_clicked ( bool checked = false );
+    void on_weightSpreadGroupBox_clicked ( bool checked = false );
+    void on_savePoleFigureImage_clicked();
+
 
   protected:
 
@@ -126,6 +125,7 @@ class StatsGenODFWidget : public QWidget, private Ui::SGAxisODFWidget
     int      m_PhaseIndex;
     unsigned int      m_CrystalStructure;
     SGODFTableModel*        m_ODFTableModel;
+    SGODFTableModel*        m_OdfBulkTableModel;
     StatsGenMDFWidget*      m_MDFWidget;
     QVector<QwtPlotCurve*>  m_PlotCurves;
     QwtPlotMarker*          m_PlotGrid;
@@ -133,9 +133,8 @@ class StatsGenODFWidget : public QWidget, private Ui::SGAxisODFWidget
     QwtPlotCurve*           m_RotCross0;
     QwtPlotCurve*           m_RotCross1;
 
-    QFutureWatcher<QImage>*   m_PoleFigureFuture;
-
     QString m_OpenDialogLastDirectory; // Must be last in the list
+
     StatsGenODFWidget(const StatsGenODFWidget&); // Copy Constructor Not Implemented
     void operator=(const StatsGenODFWidget&); // Operator '=' Not Implemented
 

@@ -71,7 +71,7 @@ class FindMaximaPrivate
       //convert array to correct type
       PixelType* inputData = static_cast<PixelType*>(inputArrayPtr->getPointer(0));
 
-      size_t numVoxels = inputArrayPtr->getNumberOfTuples();
+      //size_t numVoxels = inputArrayPtr->getNumberOfTuples();
 
       typedef ItkBridge<PixelType> ItkBridgeType;
 
@@ -113,8 +113,8 @@ class FindMaximaPrivate
 FindMaxima::FindMaxima() :
   AbstractFilter(),
   m_SelectedCellArrayPath("", "", ""),
-  m_NewCellArrayName("Maxima"),
   m_Tolerance(1.0),
+  m_NewCellArrayName("Maxima"),
   m_SelectedCellArray(NULL),
   m_NewCellArray(NULL)
 {
@@ -186,9 +186,11 @@ void FindMaxima::dataCheck()
 
 
   VolumeDataContainer* dataContiner = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getSelectedCellArrayPath().getDataContainerName() );
+  if(getErrorCondition() < 0) { return; }
   AttributeMatrix::Pointer attrMatrix = dataContiner->getPrereqAttributeMatrix<AbstractFilter>(this, getSelectedCellArrayPath().getAttributeMatrixName(), 80000);
+  if(getErrorCondition() < 0) { return; }
   IDataArray::Pointer redArrayptr = attrMatrix->getExistingPrereqArray<IDataArray, AbstractFilter>(this, getSelectedCellArrayPath().getDataArrayName(), 80000);
-
+  if(getErrorCondition() < 0) { return; }
   //create new boolean array
   tempPath.update(getSelectedCellArrayPath().getDataContainerName(), getSelectedCellArrayPath().getAttributeMatrixName(), getNewCellArrayName() );
   m_NewCellArrayPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<bool>, AbstractFilter, bool>(this, tempPath, 0, compDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */

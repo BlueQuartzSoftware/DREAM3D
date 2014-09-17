@@ -1,6 +1,6 @@
 /* ============================================================================
- * Copyright (c) 2012 Michael A. Jackson (BlueQuartz Software)
- * Copyright (c) 2012 Dr. Michael A. Groeber (US Air Force Research Laboratories)
+ * Copyright (c) 2014 Michael A. Jackson (BlueQuartz Software)
+ * Copyright (c) 2014 Dr. Michael A. Groeber (US Air Force Research Laboratories)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -33,76 +33,66 @@
  *                           FA8650-10-D-5210
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef _SeparatorWidget_H_
-#define _SeparatorWidget_H_
-
+#ifndef _TimeSeriesBundle_H_
+#define _TimeSeriesBundle_H_
 
 #include <QtCore/QObject>
-#include <QtCore/QPointer>
-#include <QtGui/QWidget>
 
-#include "QtSupport/FaderWidget.h"
+#include "DREAM3DLib/DREAM3DLib.h"
+#include "DREAM3DLib/DataContainers/IDataContainerBundle.h"
 
-
-#include "DREAM3DLib/Common/AbstractFilter.h"
-
-#include "DREAM3DWidgetsLib/DREAM3DWidgetsLib.h"
-
-#include "DREAM3DWidgetsLib/ui_SeparatorWidget.h"
-
-
-/**
-* @brief
-* @author
-* @version
-*/
-class DREAM3DWidgetsLib_EXPORT SeparatorWidget : public QWidget, private Ui::SeparatorWidget
+class DREAM3DLib_EXPORT TimeSeriesBundle : public IDataContainerBundle
 {
-    Q_OBJECT
+  Q_OBJECT
 
   public:
-    /**
-    * @brief Constructor
-    * @param parameter The FilterParameter object that this widget represents
-    * @param filter The instance of the filter that this parameter is a part of
-    * @param parent The parent QWidget for this Widget
-    */
-    SeparatorWidget(FilterParameter* parameter, AbstractFilter* filter = NULL, QWidget* parent = NULL);
+    DREAM3D_SHARED_POINTERS (TimeSeriesBundle)
+    DREAM3D_STATIC_NEW_MACRO (TimeSeriesBundle)
+    DREAM3D_TYPE_MACRO_SUPER(TimeSeriesBundle, IDataContainerBundle)
 
-    virtual ~SeparatorWidget();
+    virtual ~TimeSeriesBundle();
 
-    /**
-    * @brief This method does additional GUI widget connections
-    */
-    void setupGui();
+    DREAM3D_INSTANCE_STRING_PROPERTY(Name)
 
-    /**
-     * @brief Returns the OS Specific Style Sheet for the QLabel
-     * @return
-     */
-    QString getLabelStyleSheet();
+    void append(DataContainer::Pointer dc);
+    void prepend(DataContainer::Pointer dc);
 
-  public slots:
-    void beforePreflight();
-    void afterPreflight();
-    void filterNeedsInputParameters(AbstractFilter* filter);
-    void setLinkedConditionalState(int state);
-    void fadeWidget(QWidget* widget, bool in);
+    void append(DataContainer::Pointer dc, size_t index, size_t timeStep, float realTimeStep);
+    void prepend(DataContainer::Pointer dc, size_t index, size_t timeStep, float realTimeStep);
 
-  signals:
-    void errorSettingFilterParameter(const QString& msg);
-    void parametersChanged();
+    void remove(DataContainer::Pointer dc);
+    void remove(const QString &name);
+    void remove(qint32 i);
+
+    void removeIndexedDataContainer(size_t index);
+    void removeTimeStepDataContainer(size_t realTimeStep);
+    void removeRealTimeStepDataContainer(float realTimeStep);
+
+    void pop_back();
+    void pop_front();
+
+    DataContainer::Pointer value(qint32 index);
+    size_t indexValue(qint32 index);
+    size_t timeStepValue(qint32 index);
+    float realTimeStepValue(qint32 index);
+
+    qint32 count();
+
+    void clear();
+
+  protected:
+    TimeSeriesBundle();
+
 
   private:
-    AbstractFilter*   m_Filter;
-    FilterParameter*  m_FilterParameter;
-    QPointer<FaderWidget> faderWidget;
+    QVector<DataContainer::Pointer> m_DataContainers;
+    QVector<size_t> m_TimeIndices;
+    QVector<size_t> m_TimeSteps;
+    QVector<float> m_RealTimeSteps;
 
-    SeparatorWidget(const SeparatorWidget&); // Copy Constructor Not Implemented
-    void operator=(const SeparatorWidget&); // Operator '=' Not Implemented
-
+    TimeSeriesBundle(const TimeSeriesBundle&); // Copy Constructor Not Implemented
+    void operator=(const TimeSeriesBundle&); // Operator '=' Not Implemented
 };
 
-#endif /* _SeparatorWidget_H_ */
 
-
+#endif /* _TimeSeriesBundle_H_ */

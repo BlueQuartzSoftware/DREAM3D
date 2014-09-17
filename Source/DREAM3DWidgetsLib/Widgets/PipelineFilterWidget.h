@@ -82,6 +82,7 @@ class DREAM3DWidgetsLib_EXPORT PipelineFilterWidget : public QFrame, private Ui:
 
     virtual bool isSelected();
 
+    // These are convenience functions that just pass through to the filter instance
     virtual QString getHumanLabel();
     virtual QString getFilterGroup();
     virtual QString getFilterSubGroup();
@@ -99,6 +100,7 @@ class DREAM3DWidgetsLib_EXPORT PipelineFilterWidget : public QFrame, private Ui:
 
     QWidget* getBasicInputsWidget();
     QWidget* getAdvancedInputsWidget();
+    QWidget* getCurrentStructureWidget();
 
 
     /**
@@ -247,8 +249,10 @@ class DREAM3DWidgetsLib_EXPORT PipelineFilterWidget : public QFrame, private Ui:
     QVector<QWidget*>         m_FilterParameterWidgets;
     QVBoxLayout*              m_BasicVerticalLayout;
     QVBoxLayout*              m_AdvVerticalLayout;
+    QVBoxLayout*              m_CurrStrucVerticalLayout;
     QWidget*                  m_BasicInputsWidget;
     QWidget*                  m_AdvancedInputWidget;
+    QWidget*                  m_CurrentStructureWidget;
     IObserver*                m_Observer;
     QMenu                     m_Menu;
     QList<QAction*>           m_MenuActions;

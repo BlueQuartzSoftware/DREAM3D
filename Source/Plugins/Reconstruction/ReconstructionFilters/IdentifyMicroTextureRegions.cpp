@@ -68,13 +68,14 @@ IdentifyMicroTextureRegions::IdentifyMicroTextureRegions() :
   m_CAxisTolerance(1.0f),
   m_MinMTRSize(1.0f),
   m_MinVolFrac(1.0f),
+  m_RandomizeParentIds(false),
   m_CAxisLocationsArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::CAxisLocation),
-  m_CAxisLocationsArrayName(DREAM3D::CellData::CAxisLocation),
   m_MTRIdsArrayName(DREAM3D::CellData::ParentIds),
   m_ActiveArrayName(DREAM3D::FeatureData::Active),
+  m_MTRIds(NULL),
+  m_CAxisLocationsArrayName(DREAM3D::CellData::CAxisLocation),
   m_CAxisLocations(NULL),
-  m_Active(NULL),
-  m_MTRIds(NULL)
+  m_Active(NULL)
 {
   setupFilterParameters();
 }

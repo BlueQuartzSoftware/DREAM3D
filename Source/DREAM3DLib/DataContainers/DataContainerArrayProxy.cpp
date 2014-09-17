@@ -246,7 +246,7 @@ void DataContainerArrayProxy::removeSelectionsFromDataContainerArray(DataContain
     DataContainerProxy dcProxy = containerIter.next();
     dcList.push_back(dcProxy.name);
     DataContainer::Pointer dcItem = dca->getDataContainer(dcProxy.name);
-    assert(dcItem.get()   != NULL);
+    if(dcItem.get() == NULL) { continue; }
     // Check to see if the DataContainer is checked, if it is NOT checked then we remove the entire DataContainer from
     // the DataContainerArray
     if (dcProxy.flag == state)
@@ -261,7 +261,8 @@ void DataContainerArrayProxy::removeSelectionsFromDataContainerArray(DataContain
       attrMatsIter.next();
       QString amName = attrMatsIter.key();
       AttributeMatrix::Pointer amItem = dcItem->getAttributeMatrix(amName);
-      assert(amItem.get() != NULL);
+      //assert(amItem.get() != NULL);
+      if(amItem.get() == NULL) { continue; }
       AttributeMatrixProxy attrProxy = attrMatsIter.value();
       // Check to see if this AttributeMatrix is checked, if not then remove it from the DataContainer and go to the next loop
       if(attrProxy.flag == state)
@@ -277,7 +278,7 @@ void DataContainerArrayProxy::removeSelectionsFromDataContainerArray(DataContain
         dataArraysIter.next();
         QString daName = dataArraysIter.key();
         IDataArray::Pointer daItem = amItem->getAttributeArray(daName);
-        assert(daItem.get() != NULL);
+        if(daItem.get() == NULL) { continue; }
         DataArrayProxy daProxy = dataArraysIter.value();
         // Check to see if the user selected this item
         if(daProxy.flag == state)

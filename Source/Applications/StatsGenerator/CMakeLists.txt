@@ -218,6 +218,7 @@ include_directories(${HDF5_INCLUDE_DIR})
 include_directories(${StatsGenerator_SOURCE_DIR} )
 include_directories(${StatsGenerator_SOURCE_DIR}/.. )
 include_directories(${StatsGenerator_BINARY_DIR} )
+include_directories(${PROJECT_CODE_DIR}/QtSupport)
 include_directories(${DREAM3DProj_BINARY_DIR}/QtSupport)
 
 

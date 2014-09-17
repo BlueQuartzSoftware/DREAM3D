@@ -110,10 +110,6 @@ class SGAxisODFWidget : public QWidget, private Ui::SGAxisODFWidget
     void on_deleteODFTextureBtn_clicked();
     void on_loadODFTextureBtn_clicked();
 
-    // Slots for the QFutureWatcher to connect to
-    void showPoleFigure(int imageIndex);
-    void poleFigureGenerationComplete();
-
   protected:
     DREAM3D_INSTANCE_PROPERTY(bool, Initializing)
 
@@ -127,8 +123,6 @@ class SGAxisODFWidget : public QWidget, private Ui::SGAxisODFWidget
     QwtPlotCurve*           m_CircleGrid;
     QwtPlotCurve*           m_RotCross0;
     QwtPlotCurve*           m_RotCross1;
-
-    QFutureWatcher<QImage>*   m_PoleFigureFuture;
 
     QString m_OpenDialogLastDirectory; // Must be last in the list
     SGAxisODFWidget(const SGAxisODFWidget&); // Copy Constructor Not Implemented

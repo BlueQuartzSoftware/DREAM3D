@@ -211,8 +211,11 @@ void GrayToRGB::dataCheck()
 
 
   VolumeDataContainer* redDC = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getRedArrayPath().getDataContainerName() );
+  if(getErrorCondition() < 0) { return; }
   AttributeMatrix::Pointer redAM = redDC->getPrereqAttributeMatrix<AbstractFilter>(this, getRedArrayPath().getAttributeMatrixName(), 80000);
+  if(getErrorCondition() < 0) { return; }
   IDataArray::Pointer redArrayptr = redAM->getExistingPrereqArray<IDataArray, AbstractFilter>(this, getRedArrayPath().getDataArrayName(), 80000);
+  if(getErrorCondition() < 0) { return; }
 
   //create new array of same type
   compDims[0]=3;

@@ -61,10 +61,10 @@ InsertPrecipitatePhases::InsertPrecipitatePhases() :
   AbstractFilter(),
   m_ClusteringListArrayName(DREAM3D::FeatureData::ClusteringList),
   m_ErrorOutputFile(""),
-  m_PrecipInputFile(""),
   m_CsvOutputFile(""),
-  m_PeriodicBoundaries(false),
   m_HavePrecips(false),
+  m_PrecipInputFile(""),
+  m_PeriodicBoundaries(false),
   m_WriteGoalAttributes(false),
   m_InputStatsArrayPath(DREAM3D::Defaults::StatsGenerator, DREAM3D::Defaults::CellEnsembleAttributeMatrixName, DREAM3D::EnsembleData::Statistics),
   m_InputPhaseTypesArrayPath(DREAM3D::Defaults::StatsGenerator, DREAM3D::Defaults::CellEnsembleAttributeMatrixName, DREAM3D::EnsembleData::PhaseTypes),
@@ -403,7 +403,7 @@ void InsertPrecipitatePhases::execute()
 void  InsertPrecipitatePhases::load_precipitates()
 {
 
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(m_FeatureIdsArrayPath.getDataContainerName());
+  //VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(m_FeatureIdsArrayPath.getDataContainerName());
   AttributeMatrix::Pointer cellFeatureAttrMat = getDataContainerArray()->getAttributeMatrix(getFeaturePhasesArrayPath());
 
   std::ifstream inFile;

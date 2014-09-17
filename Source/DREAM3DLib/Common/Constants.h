@@ -707,6 +707,12 @@ namespace DREAM3D
 
   }
 
+  namespace Layout
+  {
+    const signed int Horizontal = 0;
+    const signed int Vertical = 1;
+    const signed int Square = 2;
+  }
 
 }
 

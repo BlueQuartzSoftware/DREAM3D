@@ -66,10 +66,15 @@ class DREAM3DLib_EXPORT DataContainerReader : public AbstractFilter
 
     DREAM3D_FILTER_PARAMETER(QString, InputFile)
     Q_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile)
+
     DREAM3D_FILTER_PARAMETER(bool, OverwriteExistingDataContainers)
     Q_PROPERTY(bool OverwriteExistingDataContainers READ getOverwriteExistingDataContainers WRITE setOverwriteExistingDataContainers)
+
     DREAM3D_FILTER_PARAMETER(DataContainerArrayProxy, DataContainerArrayProxy)
     Q_PROPERTY(DataContainerArrayProxy DataContainerArrayProxy READ getDataContainerArrayProxy WRITE setDataContainerArrayProxy)
+
+    DREAM3D_FILTER_PARAMETER(DataContainerArrayProxy, InputFileDataContainerArrayProxy)
+    Q_PROPERTY(DataContainerArrayProxy InputFileDataContainerArrayProxy READ getInputFileDataContainerArrayProxy WRITE setInputFileDataContainerArrayProxy)
 
 
     virtual const QString getCompiledLibraryName();
@@ -146,6 +151,8 @@ class DREAM3DLib_EXPORT DataContainerReader : public AbstractFilter
     void readData(bool preflight, DataContainerArrayProxy& proxy);
 
   private:
+    QString m_CachedInputFilePath;
+
     FilterPipeline::Pointer m_PipelineFromFile;
 
     /**

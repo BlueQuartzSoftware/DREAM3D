@@ -133,12 +133,8 @@ class PoleFigureImageUtilities
 
     void generateKernelWeigths(int kernelWidth, int kernelHeight);
 
+    static QImage GenerateScalarBar(int imageWidth, int imageHeight, PoleFigureConfiguration_t& config);
 
-#if 0
-    QImage generateColorPoleFigureImage(const PoleFigureData& config);
-
-    QImage generatePoleFigureImage(const PoleFigureData& config);
-#endif
 
     static QImage PaintPoleFigureOverlay(int imageWidth, int imageHeight, QString label, QImage image);
 
@@ -152,7 +148,7 @@ class PoleFigureImageUtilities
      * @return
      */
     static QImage Create3ImagePoleFigure(UInt8ArrayType* i0, UInt8ArrayType* i1, UInt8ArrayType* i2,
-                                         PoleFigureConfiguration_t& config);
+                                         PoleFigureConfiguration_t& config, int32_t layout = DREAM3D::Layout::Square);
   private:
 
     QVector<qint32> m_KernelWeights;

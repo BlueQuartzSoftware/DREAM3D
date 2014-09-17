@@ -55,6 +55,8 @@
 #include <QtGui/QMessageBox>
 #include <QtGui/QFileDialog>
 #include <QtGui/QAbstractItemDelegate>
+#include <QtGui/QProgressDialog>
+
 
 #include "EbsdLib/TSL/AngConstants.h"
 #include "EbsdLib/TSL/AngReader.h"
@@ -89,9 +91,9 @@ StatsGenODFWidget::StatsGenODFWidget(QWidget* parent) :
   m_PhaseIndex(-1),
   m_CrystalStructure(Ebsd::CrystalStructure::Cubic_High),
   m_ODFTableModel(NULL),
-  m_MDFWidget(NULL),
-  m_PoleFigureFuture(NULL)
+  m_MDFWidget(NULL)
 {
+  m_OpenDialogLastDirectory = QDir::homePath();
   this->setupUi(this);
   this->setupGui();
 }
@@ -106,8 +108,6 @@ StatsGenODFWidget::~StatsGenODFWidget()
   {
     m_ODFTableModel->deleteLater();
   }
-  m_PoleFigureFuture->cancel();
-  m_PoleFigureFuture->waitForFinished();
 }
 
 // -----------------------------------------------------------------------------
@@ -334,16 +334,6 @@ int StatsGenODFWidget::getPhaseIndex()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void StatsGenODFWidget::setPlotTabTitles(QString t1, QString t2, QString t3)
-{
-  //  tabWidget->setTabText(1, t1);
-  //  tabWidget->setTabText(2, t2);
-  //  tabWidget->setTabText(3, t3);
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void StatsGenODFWidget::setupGui()
 {
   // Setup the TableView and Table Models
@@ -351,6 +341,11 @@ void StatsGenODFWidget::setupGui()
   headerView->setResizeMode(QHeaderView::Interactive);
   m_ODFTableView->setHorizontalHeader(headerView);
   headerView->show();
+
+  m_OdfBulkTableModel = new SGODFTableModel;
+  m_OdfBulkTableModel->setCrystalStructure(m_CrystalStructure);
+  m_OdfBulkTableModel->setInitialValues();
+  m_ODFTableView->setModel(m_OdfBulkTableModel);
 
   m_ODFTableModel = new SGODFTableModel;
   m_ODFTableModel->setCrystalStructure(m_CrystalStructure);
@@ -365,18 +360,6 @@ void StatsGenODFWidget::setupGui()
   m_PlotCurves.push_back(new QwtPlotCurve);
   m_PlotCurves.push_back(new QwtPlotCurve);
   m_PlotCurves.push_back(new QwtPlotCurve);
-
-
-#if SHOW_POLE_FIGURES
-  m_PoleFigureFuture = new QFutureWatcher<QImage>(this);
-  connect(m_PoleFigureFuture, SIGNAL(resultReadyAt(int)),
-          this, SLOT(showPoleFigure(int)));
-  connect(m_PoleFigureFuture, SIGNAL(finished()),
-          this, SLOT(poleFigureGenerationComplete()));
-#else
-  // Hide the color Pole Figures in this version
-  m_PFScrollArea->hide();
-#endif
 
 }
 
@@ -499,55 +482,6 @@ void StatsGenODFWidget::updatePlots()
   on_m_CalculateODFBtn_clicked();
 }
 
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void StatsGenODFWidget::showPoleFigure(int imageIndex)
-{
-  // labels[num]->setPixmap(QPixmap::fromImage(imageScaling->resultAt(num)));
-  switch(imageIndex)
-  {
-    case 0:
-      //  m_PoleFigureFuture->resultAt(imageIndex).save("/tmp/ODF_PoleFigure_001.tif");
-      m_001PF->setPixmap(QPixmap::fromImage(m_PoleFigureFuture->resultAt(imageIndex)));
-      break;
-    case 1:
-      //  m_PoleFigureFuture->resultAt(imageIndex).save("/tmp/ODF_PoleFigure_011.tif");
-      m_011PF->setPixmap(QPixmap::fromImage(m_PoleFigureFuture->resultAt(imageIndex)));
-      break;
-    case 2:
-      //  m_PoleFigureFuture->resultAt(imageIndex).save("/tmp/ODF_PoleFigure_111.tif");
-      m_111PF->setPixmap(QPixmap::fromImage(m_PoleFigureFuture->resultAt(imageIndex)));
-      break;
-    default:
-      break;
-  }
-
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void StatsGenODFWidget::poleFigureGenerationComplete()
-{
-  //  std::cout << "ODF Pole Figure generation complete" << std::endl;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-QImage generateODFPoleFigure(const PoleFigureData& data)
-{
-  //  PoleFigureImageUtilities colorPoleFigure;
-  //#if COLOR_POLE_FIGURES
-  //  return colorPoleFigure.generateColorPoleFigureImage(data);
-  //#else
-  //  return colorPoleFigure.generatePoleFigureImage(data);
-  //#endif
-  return QImage();
-}
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -561,13 +495,24 @@ void StatsGenODFWidget::on_m_CalculateODFBtn_clicked()
   QwtArray<float> weights;
   QwtArray<float> sigmas;
   QwtArray<float> odf;
+  SGODFTableModel* tableModel = NULL;
+
+  if(weightSpreadGroupBox->isChecked() )
+  {
+    tableModel = m_ODFTableModel;
+  }
+  else
+  {
+    tableModel = m_OdfBulkTableModel;
+  }
 
 
-  e1s = m_ODFTableModel->getData(SGODFTableModel::Euler1);
-  e2s = m_ODFTableModel->getData(SGODFTableModel::Euler2);
-  e3s = m_ODFTableModel->getData(SGODFTableModel::Euler3);
-  weights = m_ODFTableModel->getData(SGODFTableModel::Weight);
-  sigmas = m_ODFTableModel->getData(SGODFTableModel::Sigma);
+  e1s = tableModel->getData(SGODFTableModel::Euler1);
+  e2s = tableModel->getData(SGODFTableModel::Euler2);
+  e3s = tableModel->getData(SGODFTableModel::Euler3);
+  weights = tableModel->getData(SGODFTableModel::Weight);
+  sigmas = tableModel->getData(SGODFTableModel::Sigma);
+
 
   // Convert from Degrees to Radians
   for(int i = 0; i < e1s.size(); i++)
@@ -584,6 +529,8 @@ void StatsGenODFWidget::on_m_CalculateODFBtn_clicked()
   int npoints = pfSamplePoints->value();
   QVector<size_t> dims(1, 3);
   FloatArrayType::Pointer eulers = FloatArrayType::CreateArray(npoints, dims, "Eulers");
+  PoleFigureConfiguration_t config;
+  QVector<UInt8ArrayType::Pointer> figures;
 
   if ( Ebsd::CrystalStructure::Cubic_High == m_CrystalStructure)
   {
@@ -596,29 +543,12 @@ void StatsGenODFWidget::on_m_CalculateODFBtn_clicked()
     err = StatsGen::GenCubicODFPlotData(odf.data(), eulers->getPointer(0), npoints);
 
     CubicOps ops;
-    PoleFigureConfiguration_t config;
     config.eulers = eulers.get();
     config.imageDim = imageSize;
     config.lambertDim = lamberSize;
     config.numColors = numColors;
 
-    QVector<UInt8ArrayType::Pointer> figures = ops.generatePoleFigure(config);
-    {
-      // Now create a QImage that is mirrored vertically and has the Axis overlay applied to it
-      QImage image = PoleFigureImageUtilities::CreateQImageFromRgbaArray(figures[0].get(), imageSize, true);
-      m_001PF->setPixmap(QPixmap::fromImage(image));
-    }
-    {
-      // Now create a QImage that is mirrored vertically and has the Axis overlay applied to it
-      QImage image = PoleFigureImageUtilities::CreateQImageFromRgbaArray(figures[1].get(), imageSize, true);
-      m_011PF->setPixmap(QPixmap::fromImage(image));
-    }
-    {
-      // Now create a QImage that is mirrored vertically and has the Axis overlay applied to it
-      QImage image = PoleFigureImageUtilities::CreateQImageFromRgbaArray(figures[2].get(), imageSize, true);
-      m_111PF->setPixmap(QPixmap::fromImage(image));
-    }
-
+    figures = ops.generatePoleFigure(config);
   }
   else if ( Ebsd::CrystalStructure::Hexagonal_High == m_CrystalStructure)
   {
@@ -631,28 +561,12 @@ void StatsGenODFWidget::on_m_CalculateODFBtn_clicked()
     err = StatsGen::GenHexODFPlotData(odf.data(), eulers->getPointer(0), npoints);
 
     HexagonalOps ops;
-    PoleFigureConfiguration_t config;
     config.eulers = eulers.get();
     config.imageDim = imageSize;
     config.lambertDim = lamberSize;
     config.numColors = numColors;
 
-    QVector<UInt8ArrayType::Pointer> figures = ops.generatePoleFigure(config);
-    {
-      // Now create a QImage that is mirrored vertically and has the Axis overlay applied to it
-      QImage image = PoleFigureImageUtilities::CreateQImageFromRgbaArray(figures[0].get(), imageSize, true);
-      m_001PF->setPixmap(QPixmap::fromImage(image));
-    }
-    {
-      // Now create a QImage that is mirrored vertically and has the Axis overlay applied to it
-      QImage image = PoleFigureImageUtilities::CreateQImageFromRgbaArray(figures[1].get(), imageSize, true);
-      m_011PF->setPixmap(QPixmap::fromImage(image));
-    }
-    {
-      // Now create a QImage that is mirrored vertically and has the Axis overlay applied to it
-      QImage image = PoleFigureImageUtilities::CreateQImageFromRgbaArray(figures[2].get(), imageSize, true);
-      m_111PF->setPixmap(QPixmap::fromImage(image));
-    }
+    figures = ops.generatePoleFigure(config);
   }
   else if ( Ebsd::CrystalStructure::OrthoRhombic == m_CrystalStructure)
   {
@@ -665,59 +579,22 @@ void StatsGenODFWidget::on_m_CalculateODFBtn_clicked()
     err = StatsGen::GenOrthoRhombicODFPlotData(odf.data(), eulers->getPointer(0), npoints);
 
     OrthoRhombicOps ops;
-    PoleFigureConfiguration_t config;
     config.eulers = eulers.get();
     config.imageDim = imageSize;
     config.lambertDim = lamberSize;
     config.numColors = numColors;
 
-    QVector<UInt8ArrayType::Pointer> figures = ops.generatePoleFigure(config);
-    {
-      // Now create a QImage that is mirrored vertically and has the Axis overlay applied to it
-      QImage image = PoleFigureImageUtilities::CreateQImageFromRgbaArray(figures[0].get(), imageSize, true);
-      m_001PF->setPixmap(QPixmap::fromImage(image));
-    }
-    {
-      // Now create a QImage that is mirrored vertically and has the Axis overlay applied to it
-      QImage image = PoleFigureImageUtilities::CreateQImageFromRgbaArray(figures[0].get(), imageSize, true);
-      m_011PF->setPixmap(QPixmap::fromImage(image));
-    }
-    {
-      // Now create a QImage that is mirrored vertically and has the Axis overlay applied to it
-      QImage image = PoleFigureImageUtilities::CreateQImageFromRgbaArray(figures[0].get(), imageSize, true);
-      m_111PF->setPixmap(QPixmap::fromImage(image));
-    }
+    figures = ops.generatePoleFigure(config);
   }
+
   if (err == 1)
   {
     //TODO: Present Error Message
     return;
   }
 
-  //// This is multi-threaded on appropriate hardware.
-  //qint32 kRad[2] = {4, 4};
-  //qint32 pfSize[2] = {226, 226};
-  //QVector<PoleFigureData> data;
-
-  //switch(this->m_CrystalStructure)
-  //{
-  //  case Ebsd::CrystalStructure::Cubic_High:
-  //    data.push_back(PoleFigureData(x001, y001, QString("<001>"), kRad, pfSize));
-  //    data.push_back(PoleFigureData(x011, y011, QString("<011>"), kRad, pfSize));
-  //    data.push_back(PoleFigureData(x111, y111, QString("<111>"), kRad, pfSize));
-  //    break;
-  //  case Ebsd::CrystalStructure::Hexagonal_High:
-  //    data.push_back(PoleFigureData(x001, y001, QString("<0001>"), kRad, pfSize));
-  //    data.push_back(PoleFigureData(x011, y011, QString("<11-20>"), kRad, pfSize));
-  //    data.push_back(PoleFigureData(x111, y111, QString("<10-10>"), kRad, pfSize));
-  //    break;
-  //  default:
-  //    return;
-  //}
-
-  //// This kicks off the threads that will generate the Pole Figure images
-  //m_PoleFigureFuture->setFuture(QtConcurrent::mapped(data, generateODFPoleFigure));
-
+  QImage image = PoleFigureImageUtilities::Create3ImagePoleFigure(figures[0].get(), figures[1].get(), figures[2].get(), config, imageLayout->currentIndex());
+  m_PoleFigureLabel->setPixmap(QPixmap::fromImage(image));
 
   // Enable the MDF tab
   if (m_MDFWidget != NULL)
@@ -794,8 +671,14 @@ void StatsGenODFWidget::on_loadODFTextureBtn_clicked()
   QVector<float> weights(count);
   QVector<float> sigmas(count);
 
+  QProgressDialog progress("Loading Data ....", "Cancel", 0, 3, this);
+  progress.setWindowModality(Qt::WindowModal);
+  progress.setMinimumDuration(2000);
+
   if (fi.suffix().compare(Ebsd::Ang::FileExt) == 0)
   {
+    progress.setValue(1);
+    progress.setLabelText("[1/3] Reading File ...");
     AngReader loader;
     loader.setFileName(angleFilePath->text());
     int err = loader.readFile();
@@ -827,6 +710,8 @@ void StatsGenODFWidget::on_loadODFTextureBtn_clicked()
   }
   else if (fi.suffix().compare(Ebsd::Ctf::FileExt) == 0)
   {
+    progress.setValue(1);
+    progress.setLabelText("[1/3] Reading File ...");
     CtfReader loader;
     loader.setFileName(angleFilePath->text());
     int err = loader.readFile();
@@ -856,9 +741,10 @@ void StatsGenODFWidget::on_loadODFTextureBtn_clicked()
       sigmas[i] = 0.0;
     }
   }
-
   else
   {
+    progress.setValue(1);
+    progress.setLabelText("[1/3] Reading File ...");
     AngleFileLoader::Pointer loader = AngleFileLoader::New();
     loader->setInputFile(angleFilePath->text());
     loader->setAngleRepresentation(angleRepresentation->currentIndex());
@@ -908,22 +794,23 @@ void StatsGenODFWidget::on_loadODFTextureBtn_clicked()
     }
 
   }
-  m_ODFTableView->setDisabled(true);
-  m_ODFTableModel->removeRows(0, m_ODFTableModel->rowCount());
+
+    progress.setValue(2);
+    progress.setLabelText("[2/3] Rendering Pole Figure ...");
+
+  m_OdfBulkTableModel->removeRows(0, m_OdfBulkTableModel->rowCount());
 
 #if 1
-
-
-  m_ODFTableModel->blockSignals(true);
-  m_ODFTableModel->setColumnData(SGODFTableModel::Euler1, e1s);
-  m_ODFTableModel->setColumnData(SGODFTableModel::Euler2, e2s);
-  m_ODFTableModel->setColumnData(SGODFTableModel::Euler3, e3s);
-  m_ODFTableModel->setColumnData(SGODFTableModel::Weight, weights);
-  m_ODFTableModel->setColumnData(SGODFTableModel::Sigma, sigmas);
-  m_ODFTableModel->blockSignals(false);
+  m_OdfBulkTableModel->blockSignals(true);
+  m_OdfBulkTableModel->setColumnData(SGODFTableModel::Euler1, e1s);
+  m_OdfBulkTableModel->setColumnData(SGODFTableModel::Euler2, e2s);
+  m_OdfBulkTableModel->setColumnData(SGODFTableModel::Euler3, e3s);
+  m_OdfBulkTableModel->setColumnData(SGODFTableModel::Weight, weights);
+  m_OdfBulkTableModel->setColumnData(SGODFTableModel::Sigma, sigmas);
+  m_OdfBulkTableModel->blockSignals(false);
 #endif
   on_m_CalculateODFBtn_clicked();
-
+  progress.setValue(3);
 }
 
 
@@ -958,4 +845,52 @@ SGODFTableModel* StatsGenODFWidget::tableModel()
 StatsGenMDFWidget* StatsGenODFWidget::getMDFWidget()
 {
   return m_MDFWidget;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void StatsGenODFWidget::on_bulkLoadGroupBox_clicked ( bool checked )
+{
+  weightSpreadGroupBox->setChecked(!checked);
+  m_ODFTableView->setModel(m_OdfBulkTableModel);
+  QAbstractItemDelegate* idelegate = m_OdfBulkTableModel->getItemDelegate();
+  m_ODFTableView->setItemDelegate(idelegate);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void StatsGenODFWidget::on_weightSpreadGroupBox_clicked ( bool checked )
+{
+  bulkLoadGroupBox->setChecked(!checked);
+  m_ODFTableView->setModel(m_ODFTableModel);
+  QAbstractItemDelegate* idelegate = m_ODFTableModel->getItemDelegate();
+  m_ODFTableView->setItemDelegate(idelegate);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void StatsGenODFWidget::on_savePoleFigureImage_clicked()
+{
+
+  QString Ftype = "Image Files";
+  QString ext = "*.png";
+  QString s = "Image Files (*.tiff *.png *.bmp);;All Files(*.*)";
+  QString defaultName = m_OpenDialogLastDirectory + QDir::separator() + "Untitled.png";
+  QString file = QFileDialog::getSaveFileName(this, tr("Save File As"), defaultName, s);
+
+  if(true == file.isEmpty())
+  {
+    return;
+  }
+  // bool ok = false;
+  file = QDir::toNativeSeparators(file);
+  // Store the last used directory into the private instance variable
+  QFileInfo fi(file);
+  m_OpenDialogLastDirectory = fi.path();
+
+  QImage image = m_PoleFigureLabel->pixmap()->toImage();
+  image.save(file);
 }
