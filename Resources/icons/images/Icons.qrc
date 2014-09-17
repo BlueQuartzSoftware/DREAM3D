@@ -70,7 +70,6 @@
   <file>red-dot.png</file>
   <file>refresh.png</file>
   <file>reload.png</file>
-  <file>scroll.png</file>
   <file>signpost.png</file>
   <file>text.png</file>
   <file>view.png</file>
@@ -78,6 +77,6 @@
   <file>warning.png</file>
   <file>zoomIn.png</file>
   <file>zoomOut.png</file>
-
+  <file>cube_gray.png</file>
  </qresource>
  </RCC>
