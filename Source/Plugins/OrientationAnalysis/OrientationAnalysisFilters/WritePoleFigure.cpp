@@ -397,7 +397,7 @@ void WritePoleFigure::execute()
         break;
       case Ebsd::CrystalStructure::Tetragonal_Low:
         //  figures = makePoleFigures<TetragonalLowOps>(config);
-        notifyWarningMessage(getHumanLabel(), "Trigonal Low Symmetry is not supported for Pole figures. This phase will be omitted from results", -1010);
+        notifyWarningMessage(getHumanLabel(), "Tetragonal Low Symmetry is not supported for Pole figures. This phase will be omitted from results", -1010);
         break;
       case Ebsd::CrystalStructure::OrthoRhombic:
         figures = makePoleFigures<OrthoRhombicOps>(config);

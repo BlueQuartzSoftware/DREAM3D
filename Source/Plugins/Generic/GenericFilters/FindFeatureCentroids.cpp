@@ -178,6 +178,10 @@ void FindFeatureCentroids::find_centroids()
   float yRes = m->getYRes();
   float zRes = m->getZRes();
 
+  float xSize = float(xPoints)*xRes;
+  float ySize = float(yPoints)*yRes;
+  float zSize = float(zPoints)*zRes;
+
   // Initialize every element to 0.0
   for (size_t i = 0; i < numfeatures * 5; i++)
   {
@@ -208,9 +212,9 @@ void FindFeatureCentroids::find_centroids()
     featurecenters[i * 5 + 1] = featurecenters[i * 5 + 1] / featurecenters[i * 5 + 0];
     featurecenters[i * 5 + 2] = featurecenters[i * 5 + 2] / featurecenters[i * 5 + 0];
     featurecenters[i * 5 + 3] = featurecenters[i * 5 + 3] / featurecenters[i * 5 + 0];
-    m_Centroids[3 * i] = featurecenters[i * 5 + 1];
-    m_Centroids[3 * i + 1] = featurecenters[i * 5 + 2];
-    m_Centroids[3 * i + 2] = featurecenters[i * 5 + 3];
+    m_Centroids[3 * i] = featurecenters[i * 5 + 1] / xSize;
+    m_Centroids[3 * i + 1] = featurecenters[i * 5 + 2] / ySize;
+    m_Centroids[3 * i + 2] = featurecenters[i * 5 + 3] / zSize;
   }
 }
 
