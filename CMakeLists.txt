@@ -398,7 +398,7 @@ set(DREAM3D_PLUGIN_LIST
 
 # --- Look for user defined external Plugins that the user has entered
 # into CMake-GUI or through CCMake by the user.
-set(DREAM3D_EXTRA_PLUGINS "" CACHE LIST "Semicolon delimited list of Extra External Plugins that you want to build into DREAM.3D")
+#set(DREAM3D_EXTRA_PLUGINS "" CACHE LIST "Semicolon delimited list of Extra External Plugins that you want to build into DREAM.3D")
 #message(STATUS "*** Configuring User Defined Plugins ***")
 
 set(DREAM3D_PLUGIN_LIST ${DREAM3D_PLUGIN_LIST} ${DREAM3D_EXTRA_PLUGINS} )
