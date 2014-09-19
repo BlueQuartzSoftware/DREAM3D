@@ -101,7 +101,7 @@ ModifiedLambertProjection::Pointer ModifiedLambertProjection::CreateProjectionFr
   fprintf(f, "DATASET UNSTRUCTURED_GRID\nPOINTS %lu float\n", coords->getNumberOfTuples() );
 #endif
 
-  for(int i = 0; i < npoints; ++i)
+  for(size_t i = 0; i < npoints; ++i)
   {
     sqCoord[0] = 0.0;
     sqCoord[1] = 0.0;
@@ -185,10 +185,10 @@ int ModifiedLambertProjection::readHDF5Data(hid_t groupId)
 // -----------------------------------------------------------------------------
 void ModifiedLambertProjection::addInterpolatedValues(Square square, float* sqCoord, double value)
 {
-  int abin1, bbin1;
-  int abin2, bbin2;
-  int abin3, bbin3;
-  int abin4, bbin4;
+  int abin1 = 0, bbin1 = 0;
+  int abin2 = 0, bbin2 = 0;
+  int abin3 = 0, bbin3 = 0;
+  int abin4 = 0, bbin4 = 0;
   int abinSign, bbinSign;
   float modX = (sqCoord[0] + m_HalfDimensionTimesStepSize ) / m_StepSize;
   float modY = (sqCoord[1] + m_HalfDimensionTimesStepSize ) / m_StepSize;

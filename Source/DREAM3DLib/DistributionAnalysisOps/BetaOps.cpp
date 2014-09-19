@@ -64,12 +64,12 @@ int BetaOps::calculateParameters(QVector<float>& data, FloatArrayType::Pointer o
   float beta = 0;
   if(data.size() > 1)
   {
-    for(size_t i = 0; i < data.size(); i++)
+    for(qint32 i = 0; i < data.size(); i++)
     {
       avg = avg + data[i];
     }
     avg = avg / float(data.size());
-    for(size_t i = 0; i < data.size(); i++)
+    for(qint32 i = 0; i < data.size(); i++)
     {
       stddev = stddev + ((avg - data[i]) * (avg - data[i]));
     }
@@ -96,18 +96,18 @@ int BetaOps::calculateCorrelatedParameters(QVector<QVector<float> >& data, Vecto
   float stddev = 0;
   float alpha = 0;
   float beta = 0;
-  for(size_t i = 0; i < data.size(); i++)
+  for(qint32 i = 0; i < data.size(); i++)
   {
     avg = 0;
     stddev = 0;
     if(data[i].size() > 1)
     {
-      for(size_t j = 0; j < data[i].size(); j++)
+      for(qint32 j = 0; j < data[i].size(); j++)
       {
         avg = avg + data[i][j];
       }
       avg = avg / float(data[i].size());
-      for(size_t j = 0; j < data[i].size(); j++)
+      for(qint32 j = 0; j < data[i].size(); j++)
       {
         stddev = stddev + ((avg - data[i][j]) * (avg - data[i][j]));
       }

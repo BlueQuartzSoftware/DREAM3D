@@ -186,7 +186,7 @@ int ModifiedLambertProjectionArray::eraseTuples(QVector<size_t>& idxs)
     return 0;
   }
 
-  if (idxs.size() >= getNumberOfTuples() )
+  if (static_cast<size_t>(idxs.size()) >= getNumberOfTuples() )
   {
     resize(0);
     return 0;
@@ -196,14 +196,14 @@ int ModifiedLambertProjectionArray::eraseTuples(QVector<size_t>& idxs)
   // off the end of the array and return an error code.
   for(QVector<size_t>::size_type i = 0; i < idxs.size(); ++i)
   {
-    if (idxs[i] >= m_ModifiedLambertProjectionArray.size()) { return -100; }
+    if (idxs[i] >= static_cast<size_t>(m_ModifiedLambertProjectionArray.size())) { return -100; }
   }
 
 
   QVector<ModifiedLambertProjection::Pointer> replacement(m_ModifiedLambertProjectionArray.size() - idxs.size());
-  size_t idxsIndex = 0;
+  qint32 idxsIndex = 0;
   size_t rIdx = 0;
-  for(size_t dIdx = 0; dIdx < m_ModifiedLambertProjectionArray.size(); ++dIdx)
+  for(qint32 dIdx = 0; dIdx < m_ModifiedLambertProjectionArray.size(); ++dIdx)
   {
     if (dIdx != idxs[idxsIndex])
     {
@@ -234,7 +234,7 @@ int ModifiedLambertProjectionArray::copyTuple(size_t currentPos, size_t newPos)
 // -----------------------------------------------------------------------------
 IDataArray::Pointer ModifiedLambertProjectionArray::reorderCopy(QVector<size_t> newOrderMap)
 {
-  if(newOrderMap.size() != getNumberOfTuples())
+  if( static_cast<size_t>(newOrderMap.size()) != getNumberOfTuples())
   {
     return IDataArray::NullPointer();
   }
@@ -264,7 +264,7 @@ void ModifiedLambertProjectionArray::initializeTuple(size_t i, double p)
 void ModifiedLambertProjectionArray::initializeWithZeros()
 {
 
-  for(size_t i = 0; i < m_ModifiedLambertProjectionArray.size(); ++i)
+  for(qint32 i = 0; i < m_ModifiedLambertProjectionArray.size(); ++i)
   {
     m_ModifiedLambertProjectionArray[i]->initializeSquares(1, 1);
   }
@@ -502,7 +502,7 @@ int ModifiedLambertProjectionArray::writeH5Data(hid_t parentId, QVector<size_t> 
 
 
   // We start numbering our phases at 1. Anything in slot 0 is considered "Dummy" or invalid
-  for(size_t i = 1; i < m_ModifiedLambertProjectionArray.size(); ++i)
+  for(qint32 i = 1; i < m_ModifiedLambertProjectionArray.size(); ++i)
   {
     if (m_ModifiedLambertProjectionArray[i].get() != NULL)
     {

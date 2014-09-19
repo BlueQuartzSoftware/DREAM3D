@@ -301,7 +301,7 @@ class StringDataArray : public IDataArray
      */
     virtual IDataArray::Pointer reorderCopy(QVector<size_t> newOrderMap)
     {
-      if(newOrderMap.size() != getNumberOfTuples())
+      if(static_cast<size_t>(newOrderMap.size()) != getNumberOfTuples())
       {
         return IDataArray::NullPointer();
       }
@@ -411,7 +411,7 @@ class StringDataArray : public IDataArray
       size_t max = 0;
       for(int i = 0; i < m_Array.size(); ++i)
       {
-        if (m_Array[i].size() > max) { max = m_Array[i].size(); }
+        if ( static_cast<size_t>(m_Array[i].size()) > max) { max = m_Array[i].size(); }
       }
       max = max + 1; // make sure we are 1 greater than the largest to make sure it is null terminated
 

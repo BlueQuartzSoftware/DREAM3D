@@ -262,13 +262,13 @@ bool AttributeMatrix::removeInactiveObjects(QVector<bool> activeObjects, Int32Ar
       m_Type == DREAM3D::AttributeMatrixType::FaceFeature || m_Type == DREAM3D::AttributeMatrixType::FaceEnsemble ||
       m_Type == DREAM3D::AttributeMatrixType::CellFeature || m_Type == DREAM3D::AttributeMatrixType::CellEnsemble) { acceptableMatrix = true; }
   size_t totalTuples = getNumTuples();
-  if(activeObjects.size() == totalTuples && acceptableMatrix == true)
+  if( static_cast<size_t>(activeObjects.size()) == totalTuples && acceptableMatrix == true)
   {
     size_t goodcount = 1;
     QVector<size_t> NewNames(totalTuples, 0);
     QVector<size_t> RemoveList;
 
-    for(size_t i = 1; i < activeObjects.size(); i++)
+    for(qint32 i = 1; i < activeObjects.size(); i++)
     {
       if(activeObjects[i] == false)
       {
@@ -304,7 +304,7 @@ bool AttributeMatrix::removeInactiveObjects(QVector<bool> activeObjects, Int32Ar
       // Loop over all the points and correct all the feature names
       size_t totalPoints = Ids->getNumberOfTuples();
       int32_t* id = Ids->getPointer(0);
-      for (int i = 0; i < totalPoints; i++)
+      for (size_t i = 0; i < totalPoints; i++)
       {
         if(id[i] >= 0 && id[i] < NewNames.size())
         {
