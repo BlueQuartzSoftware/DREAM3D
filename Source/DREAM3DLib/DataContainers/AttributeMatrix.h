@@ -244,7 +244,7 @@ class DREAM3DLib_EXPORT AttributeMatrix : public Observable
     typename ArrayType::Pointer createNonPrereqArray(Filter* filter,
                                                      const QString& attributeArrayName,
                                                      T initValue,
-                                                     QVector<size_t> dims)
+                                                     QVector<size_t> compDims)
     {
       typename ArrayType::Pointer attributeArray = ArrayType::NullPointer();
 
@@ -259,7 +259,7 @@ class DREAM3DLib_EXPORT AttributeMatrix : public Observable
         }
         return attributeArray;
       }
-      createAndAddAttributeArray<ArrayType, Filter, T>(filter, attributeArrayName, initValue, dims);
+      createAndAddAttributeArray<ArrayType, Filter, T>(filter, attributeArrayName, initValue, compDims);
       IDataArray::Pointer iDataArray = getAttributeArray(attributeArrayName);
       if(NULL == iDataArray && filter)
       {
