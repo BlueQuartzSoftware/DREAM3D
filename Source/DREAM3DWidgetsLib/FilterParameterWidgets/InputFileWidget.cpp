@@ -38,7 +38,7 @@
 #include <QtCore/QMetaProperty>
 #include <QtCore/QDir>
 
-#include <QtGui/QLineEdit>
+#include <QtGui/QLabel>
 #include <QtGui/QFileDialog>
 
 #include "QtSupport/QFileCompleter.h"
@@ -72,28 +72,6 @@ InputFileWidget::InputFileWidget(FilterParameter* parameter, AbstractFilter* fil
 // -----------------------------------------------------------------------------
 InputFileWidget::~InputFileWidget()
 {
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-QString InputFileWidget::getLabelStyleSheet()
-{
-  QString styleSheet;
-  QTextStream ss(&styleSheet);
-
-  ss << "QLabel {";
-#if defined(Q_OS_WIN)
-  ss << "font: italic 9 pt \"Times New Roman\";";
-#elif defined(Q_OS_MAC)
-  ss << "font: italic 12 pt \"Times New Roman\";";
-#else
-  ss << "font: italic 10 pt \"Times New Roman\"";
-#endif
-  ss << "}";
-
-  ss << "QLabel {font: 75 11pt \"Times New Roman\";font-weight: bold;}";
-  return styleSheet;
 }
 
 // -----------------------------------------------------------------------------
@@ -148,9 +126,6 @@ void InputFileWidget::setupGui()
     {
       selectBtn->setText(m_FilterParameter->getHumanLabel()  + " ...");
     }
-
-
-
     QString currentPath = m_Filter->property(PROPERTY_NAME_AS_CHAR).toString();
     value->setText(currentPath);
   }
@@ -160,21 +135,22 @@ void InputFileWidget::setupGui()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-bool InputFileWidget::verifyPathExists(QString filePath, QLabel* lineEdit)
+bool InputFileWidget::verifyPathExists(QString filePath, QFSDropLabel* lineEdit)
 {
   QFileInfo fileinfo(filePath);
   if (false == fileinfo.exists())
   {
     //lineEdit->setStyleSheet("border: 1px solid red;");
-    lineEdit->setStyleSheet("color: rgb(255, 0, 0);");
+    lineEdit->changeStyleSheet(FS_DOESNOTEXIST_STYLE);
   }
   else
   {
-    lineEdit->setStyleSheet("");
+    lineEdit->changeStyleSheet(FS_STANDARD_STYLE);
   }
   return fileinfo.exists();
 }
 
+#if 0
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -196,6 +172,7 @@ void InputFileWidget::on_value_textChanged(const QString& text)
     emit parametersChanged(); // This should force the preflight to run because we are emitting a signal
   }
 }
+#endif
 
 // -----------------------------------------------------------------------------
 //
@@ -231,7 +208,8 @@ void InputFileWidget::on_selectBtn_clicked()
   QFileInfo fi(file);
   m_OpenDialogLastDirectory = fi.path();
   value->setText(file);
-  on_value_editingFinished();
+  filterNeedsInputParameters(m_Filter);
+  emit parametersChanged(); // This should force the preflight to run because we are emitting a signal
 }
 
 // -----------------------------------------------------------------------------

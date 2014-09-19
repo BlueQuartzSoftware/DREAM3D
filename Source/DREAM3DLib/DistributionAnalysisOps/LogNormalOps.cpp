@@ -62,12 +62,12 @@ int LogNormalOps::calculateParameters(QVector<float>& data, FloatArrayType::Poin
   float stddev = 0;
   if(data.size() > 1)
   {
-    for(size_t i = 0; i < data.size(); i++)
+    for(qint32 i = 0; i < data.size(); i++)
     {
       avg = avg + log(data[i]);
     }
     avg = avg / float(data.size());
-    for(size_t i = 0; i < data.size(); i++)
+    for(qint32 i = 0; i < data.size(); i++)
     {
       stddev = stddev + ((avg - log(data[i])) * (avg - log(data[i])));
     }
@@ -96,7 +96,7 @@ int LogNormalOps::calculateCorrelatedParameters(QVector<QVector<float> >& data, 
   int err = 0;
   float avg = 0;
   float stddev = 0;
-  for(size_t i = 0; i < data.size(); i++)
+  for(qint32 i = 0; i < data.size(); i++)
   {
     avg = 0;
     stddev = 0;

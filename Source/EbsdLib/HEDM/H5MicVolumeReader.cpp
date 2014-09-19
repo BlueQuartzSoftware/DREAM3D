@@ -200,17 +200,17 @@ int H5MicVolumeReader::loadData(int64_t xpoints,
   // Initialize all the pointers
   initPointers(xpoints * ypoints * zpoints);
 
-  int readerIndex;
-  int xpointsslice;
-  int ypointsslice;
-  int xpointstemp;
-  int ypointstemp;
-  int xstop;
-  int ystop;
-  int zval;
+  int readerIndex = 0;
+  int xpointsslice = 0;
+  int ypointsslice = 0;
+  int xpointstemp = 0;
+  int ypointstemp = 0;
+  int xstop = 0;
+  int ystop = 0;
+  int zval = 0;
 
-  int xstartspot;
-  int ystartspot;
+  int xstartspot = 0;
+  int ystartspot = 0;
 
   err = readVolumeInfo();
   for (int slice = 0; slice < zpoints; ++slice)

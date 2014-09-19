@@ -216,19 +216,16 @@ int H5CtfVolumeReader::loadData(int64_t xpoints,
 // Initialize all the pointers
   initPointers(xpoints * ypoints * zpoints);
 
-
-  int readerIndex;
-  int64_t xpointsslice;
-  int64_t ypointsslice;
-  int64_t xpointstemp;
-  int64_t ypointstemp;
-//  int xstop;
-//  int ystop;
-  int zval;
+  int readerIndex = 0;
+  int64_t xpointsslice = 0;
+  int64_t ypointsslice = 0;
+  int64_t xpointstemp = 0;
+  int64_t ypointstemp = 0;
+  int zval = 0;
 
 
-  int xstartspot;
-  int ystartspot;
+  int xstartspot = 0;
+  int ystartspot = 0;
 
   err = readVolumeInfo();
 

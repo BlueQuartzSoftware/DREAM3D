@@ -73,6 +73,7 @@ namespace FilterParameterWidgetType
   const QString AxisAngleWidget("AxisAngleWidget");
   const QString UnknownWidget("UnknownWidget");
   const QString DataContainerArrayProxyWidget("DataContainerArrayProxyWidget");
+  const QString DataContainerReaderWidget("DataContainerReaderWidget");
   const QString DataArraySelectionWidget("DataArraySelectionWidget");
   const QString ComparisonSelectionWidget("ComparisonSelectionWidget");
   const QString AttributeMatrixSelectionWidget("AttributeMatrixSelectionWidget");
@@ -454,6 +455,35 @@ class DREAM3DLib_EXPORT DataContainerArrayProxyFilterParameter : public FilterPa
     DataContainerArrayProxyFilterParameter(const DataContainerArrayProxyFilterParameter&); // Copy Constructor Not Implemented
     void operator=(const DataContainerArrayProxyFilterParameter&); // Operator '=' Not Implemented
 };
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+class DREAM3DLib_EXPORT DataContainerReaderFilterParameter : public FilterParameter
+{
+  public:
+    DREAM3D_SHARED_POINTERS(DataContainerReaderFilterParameter)
+    DREAM3D_STATIC_NEW_MACRO(DataContainerReaderFilterParameter)
+    DREAM3D_TYPE_MACRO_SUPER(DataContainerReaderFilterParameter, FilterParameter)
+
+    static Pointer New(const QString& humanLabel, const QString& propertyName,
+                       const QString& widgetType, const QVariant& defaultValue,
+                       bool advanced = false );
+
+    virtual ~DataContainerReaderFilterParameter();
+
+    DREAM3D_INSTANCE_PROPERTY(Qt::CheckState,  DefaultFlagValue)
+    DREAM3D_INSTANCE_PROPERTY(QString, InputFileProperty)
+
+  protected:
+    DataContainerReaderFilterParameter();
+
+  private:
+    DataContainerReaderFilterParameter(const DataContainerReaderFilterParameter&); // Copy Constructor Not Implemented
+    void operator=(const DataContainerReaderFilterParameter&); // Operator '=' Not Implemented
+};
+
+
 
 #endif /* _FilterParameter_H_ */
 

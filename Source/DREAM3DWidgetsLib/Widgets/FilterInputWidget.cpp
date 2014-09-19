@@ -145,7 +145,7 @@ void FilterInputWidget::setupGui()
   brandingLabel->setFont(brandingFont);
   basicInputsLabel->setFont(categoryFont);
   advInputsLabel->setFont(categoryFont);
-
+  currentStructureLabel->setFont(categoryFont);
   brandingLabel->installEventFilter(this);
 }
 

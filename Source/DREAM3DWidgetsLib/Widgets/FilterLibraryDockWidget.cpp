@@ -140,7 +140,7 @@ void FilterLibraryDockWidget::refreshFilterGroups()
         AbstractFilter::Pointer filter = factory->create();
         QTreeWidgetItem* filterTreeItem = new QTreeWidgetItem(filterSubGroup);
         filterTreeItem->setText(0, filter->getHumanLabel());
-        filterTreeItem->setIcon(0, QIcon(":/scroll.png"));
+        filterTreeItem->setIcon(0, QIcon(":/cube_gray.png"));
         filterTreeItem->setData(0, Qt::UserRole, QVariant(FILTER_NODE_TYPE));
         filterTreeItem->setData(0, Qt::UserRole+1, QVariant(filter->getNameOfClass()));
         filterTreeItem->setToolTip(0, filter->generateHtmlSummary());

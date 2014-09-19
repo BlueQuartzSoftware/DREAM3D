@@ -364,7 +364,7 @@ class NeighborList : public IDataArray
       }
 
 
-      QVector<SharedVectorType> replacement(m_Array.size() - idxs.size());
+      std::vector<SharedVectorType> replacement(m_Array.size() - idxs.size());
       size_t idxsIndex = 0;
       size_t rIdx = 0;
       for(size_t dIdx = 0; dIdx < m_Array.size(); ++dIdx)
@@ -530,7 +530,7 @@ class NeighborList : public IDataArray
       m_Array.resize(size);
       m_NumTuples = size;
       // Initialize with zero length Vectors
-      for (size_t i = old; i < m_Array.size(); ++i)
+      for (qint32 i = old; i < m_Array.size(); ++i)
       {
         m_Array[i] = SharedVectorType(new VectorType);
       }
@@ -761,11 +761,11 @@ class NeighborList : public IDataArray
       {
         return err;
       }
-
       // Loop over all the entries and make new Vectors to hold the incoming data
       m_Array.resize(numNeighbors.size());
       size_t currentStart = 0;
-      for(QVector<int32_t>::size_type dIdx = 0; dIdx < numNeighbors.size(); ++dIdx)
+      qint32 count = static_cast<qint32>(numNeighbors.size());
+      for(QVector<int32_t>::size_type dIdx = 0; dIdx < count; ++dIdx)
       {
         size_t nEle = numNeighbors[dIdx];
         if(nEle > 0)
@@ -955,7 +955,7 @@ class NeighborList : public IDataArray
     {    }
 
   private:
-    QVector<SharedVectorType> m_Array;
+    std::vector<SharedVectorType> m_Array;
     QString m_Name;
     size_t m_NumTuples;
     T m_InitValue;

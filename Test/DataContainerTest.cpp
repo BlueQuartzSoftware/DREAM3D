@@ -387,8 +387,8 @@ void TestDataContainerReader()
   DataContainerReader::Pointer reader = DataContainerReader::New();
   reader->setInputFile(DataContainerIOTest::TestFile());
   reader->setDataContainerArray(dca);
-  DataContainerArrayProxy dcaProxy = reader->readDataContainerArrayStructure();
-  reader->setDataContainerArrayProxy(dcaProxy);
+  DataContainerArrayProxy dcaProxy = reader->readDataContainerArrayStructure(DataContainerIOTest::TestFile());
+  reader->setInputFileDataContainerArrayProxy(dcaProxy);
   reader->execute();
   int err = reader->getErrorCondition();
   DREAM3D_REQUIRE(err >= 0)
@@ -444,7 +444,7 @@ void TestDataContainerReader()
   DataContainerReader::Pointer reader2 = DataContainerReader::New();
   reader2->setInputFile(DataContainerIOTest::TestFile());
   reader2->setDataContainerArray(dca2);
-  reader2->setDataContainerArrayProxy(dcaProxy);
+  reader2->setInputFileDataContainerArrayProxy(dcaProxy);
   reader2->execute();
   err = reader2->getErrorCondition();
   DREAM3D_REQUIRE(err >= 0)
@@ -527,9 +527,9 @@ void TestDataContainerArrayProxy()
   reader->setInputFile(DataContainerIOTest::TestFile());
 
   // Read the structure of the Data container from the file marking all elements as readable.
-  DataContainerArrayProxy proxy = reader->readDataContainerArrayStructure();
+  DataContainerArrayProxy proxy = reader->readDataContainerArrayStructure(DataContainerIOTest::TestFile());
 
-  reader->setDataContainerArrayProxy(proxy);
+  reader->setInputFileDataContainerArrayProxy(proxy);
 
   // Now create a QSettings based writer to write the parameters to a .ini file
   QFilterParametersWriter::Pointer qWriter = QFilterParametersWriter::New();
@@ -550,7 +550,7 @@ void TestDataContainerArrayProxy()
   reader->readFilterParameters(qReader.get(), 0);
   qReader->closeFile();
 
-  DataContainerArrayProxy dcaProxyFromIni = reader->getDataContainerArrayProxy();
+  DataContainerArrayProxy dcaProxyFromIni = reader->getInputFileDataContainerArrayProxy();
   //FIXME: This should be validated
 
   // Now write the proxy to an HDF5/DREAM3D file
@@ -571,7 +571,7 @@ void TestDataContainerArrayProxy()
   hReader->setPipelineGroupId(pipelineGroupId);
   reader->readFilterParameters(hReader.get(), 0);
 
-  DataContainerArrayProxy dcaProxy = reader->getDataContainerArrayProxy();
+  DataContainerArrayProxy dcaProxy = reader->getInputFileDataContainerArrayProxy();
 
   int dcaCount = dcaProxy.list.count();
   DREAM3D_REQUIRE_EQUAL(dcaCount, 4);

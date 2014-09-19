@@ -217,7 +217,7 @@ int StatsDataArray::copyTuple(size_t currentPos, size_t newPos)
 // -----------------------------------------------------------------------------
 IDataArray::Pointer StatsDataArray::reorderCopy(QVector<size_t> newOrderMap)
 {
-  if(newOrderMap.size() != getNumberOfTuples())
+  if( static_cast<size_t>(newOrderMap.size()) != getNumberOfTuples())
   {
     return IDataArray::Pointer();
   }

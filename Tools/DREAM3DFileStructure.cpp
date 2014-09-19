@@ -132,12 +132,12 @@ DataContainerArray::Pointer DREAM3DFileStructure::ReadFileStructure(const QStrin
   reader->setInputFile(filePath);
 
   // Read the structure of the Data container from the file marking all elements as readable.
-  DataContainerArrayProxy proxy = reader->readDataContainerArrayStructure();
+  DataContainerArrayProxy proxy = reader->readDataContainerArrayStructure(filePath);
 //  proxy.list[0].read = false;
 //  proxy.list[1].read = false;
 //  proxy.list[2].read = false;
 
-  reader->setDataContainerArrayProxy(proxy);
+  reader->setInputFileDataContainerArrayProxy(proxy);
 
   // Now create a QSettings based writer to write the parameters to a .ini file
   QFilterParametersWriter::Pointer qWriter = QFilterParametersWriter::New();
@@ -158,7 +158,7 @@ DataContainerArray::Pointer DREAM3DFileStructure::ReadFileStructure(const QStrin
   reader->readFilterParameters(qReader.get(), 0);
   qReader->closeFile();
 
-  DataContainerArrayProxy dcaProxyFromIni = reader->getDataContainerArrayProxy();
+  DataContainerArrayProxy dcaProxyFromIni = reader->getInputFileDataContainerArrayProxy();
 
 
   // This would create the actual DataContainerArray instance. The above function does most of the work but will

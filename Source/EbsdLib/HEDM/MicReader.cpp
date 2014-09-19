@@ -374,8 +374,8 @@ int MicReader::readMicFile()
   // Delete any currently existing pointers
   deletePointers();
   // Initialize new pointers
-  int32_t totalDataRows = 0;
-  int32_t totalPossibleDataRows = 0;
+  size_t totalDataRows = 0;
+  size_t totalPossibleDataRows = 0;
 //  size_t featuresRead = 0;
   float origEdgeLength;
   float xMax = 0, yMax = 0;
@@ -489,10 +489,10 @@ int MicReader::readMicFile()
   initPointers(xDim * yDim);
 
 
-  float xA, xB, xC, yA, yB, yC;
-  int point;
+  float xA = 0.0f, xB = 0.0f, xC = 0.0f, yA = 0.0f, yB = 0.0f, yC = 0.0f;
+  int point = 0;
   float root3over2 = sqrtf(3.0f) / 2.0f;
-  int check1, check2, check3;
+  int check1 = 0, check2 = 0, check3 = 0;
   for(size_t i = 0; i < totalDataRows; ++i)
   {
     xA = xVal[i] - xMin;

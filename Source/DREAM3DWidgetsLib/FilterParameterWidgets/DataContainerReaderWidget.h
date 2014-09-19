@@ -33,8 +33,8 @@
  *                           FA8650-10-D-5210
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef _InputFileWidget_H_
-#define _InputFileWidget_H_
+#ifndef _DataContainerReaderWidget_H_
+#define _DataContainerReaderWidget_H_
 
 
 #include <QtCore/QObject>
@@ -49,18 +49,20 @@
 
 #include "DREAM3DWidgetsLib/DREAM3DWidgetsLib.h"
 
-#include "DREAM3DWidgetsLib/ui_InputFileWidget.h"
+#include "DREAM3DWidgetsLib/ui_DataContainerReaderWidget.h"
 
+class QStandardItemModel;
+class DataContainerReader;
 class QLabel;
 class QFSDropLabel;
-class FileSystemFilterParameter;
+
 
 /**
 * @brief
 * @author
 * @version
 */
-class DREAM3DWidgetsLib_EXPORT InputFileWidget : public QWidget, private Ui::InputFileWidget
+class DREAM3DWidgetsLib_EXPORT DataContainerReaderWidget : public QWidget, private Ui::DataContainerReaderWidget
 {
     Q_OBJECT
 
@@ -71,9 +73,17 @@ class DREAM3DWidgetsLib_EXPORT InputFileWidget : public QWidget, private Ui::Inp
     * @param filter The instance of the filter that this parameter is a part of
     * @param parent The parent QWidget for this Widget
     */
-    InputFileWidget(FilterParameter* parameter, AbstractFilter* filter = NULL, QWidget* parent = NULL);
+    DataContainerReaderWidget(FilterParameter* parameter, AbstractFilter* filter = NULL, QWidget* parent = NULL);
 
-    virtual ~InputFileWidget();
+    /**
+     * @brief DataContainerReaderWidget
+     * @param parent
+     */
+    DataContainerReaderWidget(QWidget* parent = NULL);
+
+    virtual ~DataContainerReaderWidget();
+
+    void initialize(FilterParameter* parameter, AbstractFilter* filter = NULL);
 
     /**
     * @brief This method does additional GUI widget connections
@@ -81,41 +91,54 @@ class DREAM3DWidgetsLib_EXPORT InputFileWidget : public QWidget, private Ui::Inp
     void setupGui();
 
     /**
-    * @brief
-    */
+     * @brief verifyPathExists
+     * @param filePath
+     * @param lineEdit
+     * @return
+     */
     bool verifyPathExists(QString filePath, QFSDropLabel *lineEdit);
 
   public slots:
     void beforePreflight();
     void afterPreflight();
     void filterNeedsInputParameters(AbstractFilter* filter);
-
-    void on_value_fileDropped(const QString& text);
-    void on_selectBtn_clicked();
+    void itemActivated(const QModelIndex& index);
     void setLinkedConditionalState(int state);
     void fadeWidget(QWidget* widget, bool in);
 
-  protected:
-    static void setOpenDialogLastDirectory(QString val) { m_OpenDialogLastDirectory = val; }
-    static QString getOpenDialogLastDirectory() { return m_OpenDialogLastDirectory; }
+    void on_filePath_fileDropped(const QString& text);
+    void on_selectBtn_clicked();
 
   signals:
     void errorSettingFilterParameter(const QString& msg);
     void parametersChanged();
 
+  protected:
+    void updateProxyFromModel();
+
+    void updateModelFromProxy(DataContainerArrayProxy& proxy);
+    void updateProxyFromProxy(DataContainerArrayProxy& current, DataContainerArrayProxy& incoming);
+
+    static void setOpenDialogLastDirectory(QString val) { m_OpenDialogLastDirectory = val; }
+    static QString getOpenDialogLastDirectory() { return m_OpenDialogLastDirectory; }
+
+
   private:
-    AbstractFilter*   m_Filter;
-    FileSystemFilterParameter*  m_FilterParameter;
-    static QString    m_OpenDialogLastDirectory;
+    QString m_LastFileRead;
+    DataContainerReader*   m_Filter;
+    DataContainerReaderFilterParameter*  m_FilterParameter;
+    DataContainerArrayProxy m_DcaProxy;
     bool m_DidCausePreflight;
     QPointer<FaderWidget> faderWidget;
+    static QString    m_OpenDialogLastDirectory;
 
 
-    InputFileWidget(const InputFileWidget&); // Copy Constructor Not Implemented
-    void operator=(const InputFileWidget&); // Operator '=' Not Implemented
+
+    DataContainerReaderWidget(const DataContainerReaderWidget&); // Copy Constructor Not Implemented
+    void operator=(const DataContainerReaderWidget&); // Operator '=' Not Implemented
 
 };
 
-#endif /* _InputFileWidget_H_ */
+#endif /* _DataContainerReaderWidget_H_ */
 
 
