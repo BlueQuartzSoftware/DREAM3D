@@ -297,12 +297,8 @@ void CopyFeatureArrayToCellArray::execute()
 
   if (p.get() != NULL)
   {
-<<<<<<< HEAD
-    m->getAttributeMatrix(getFeatureIdsArrayPath().getAttributeMatrixName())->addAttributeArray(getCreatedArrayName(), p);
-=======
     AttributeMatrix::Pointer am = getDataContainerArray()->getAttributeMatrix(getSelectedFeatureArrayPath());
     am->addAttributeArray(p->getName(), p);
->>>>>>> 697bd2bced39872baabf2f884407a09409fd4845
   }
   else
   {
