@@ -102,12 +102,12 @@ int LogNormalOps::calculateCorrelatedParameters(QVector<QVector<float> >& data, 
     stddev = 0;
     if(data[i].size() > 1)
     {
-      for(size_t j = 0; j < data[i].size(); j++)
+      for(qint32 j = 0; j < data[i].size(); j++)
       {
         avg = avg + log(data[i][j]);
       }
       avg = avg / float(data[i].size());
-      for(size_t j = 0; j < data[i].size(); j++)
+      for(qint32 j = 0; j < data[i].size(); j++)
       {
         stddev = stddev + ((avg - log(data[i][j])) * (avg - log(data[i][j])));
       }

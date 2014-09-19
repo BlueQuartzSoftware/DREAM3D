@@ -203,7 +203,8 @@ int ModifiedLambertProjectionArray::eraseTuples(QVector<size_t>& idxs)
   QVector<ModifiedLambertProjection::Pointer> replacement(m_ModifiedLambertProjectionArray.size() - idxs.size());
   qint32 idxsIndex = 0;
   size_t rIdx = 0;
-  for(qint32 dIdx = 0; dIdx < m_ModifiedLambertProjectionArray.size(); ++dIdx)
+  size_t count = static_cast<size_t>(m_ModifiedLambertProjectionArray.size());
+  for(size_t dIdx = 0; dIdx < count; ++dIdx)
   {
     if (dIdx != idxs[idxsIndex])
     {
