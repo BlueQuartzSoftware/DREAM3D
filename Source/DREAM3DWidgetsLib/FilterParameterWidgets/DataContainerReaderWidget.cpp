@@ -548,7 +548,7 @@ void DataContainerReaderWidget::beforePreflight()
 // -----------------------------------------------------------------------------
 void DataContainerReaderWidget::filterNeedsInputParameters(AbstractFilter* filter)
 {
-  qDebug() << "DataContainerReaderWidget::filterNeedsInputParameters()";
+ // qDebug() << "DataContainerReaderWidget::filterNeedsInputParameters()";
   m_Filter->setInputFile(filePath->text());
   updateProxyFromModel(); // Will update m_DcaProxy with the latest selections from the Model
   m_Filter->setInputFileDataContainerArrayProxy(m_DcaProxy);

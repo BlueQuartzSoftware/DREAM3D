@@ -143,8 +143,8 @@ void DataContainerReader::dataCheck()
   DataContainerArray::Pointer tempDCA = DataContainerArray::New();
   // Read either the structure or all the data depending on the preflight status
   readData(getInPreflight(), m_InputFileDataContainerArrayProxy, tempDCA);
-  qDebug() << " Reading Structure from " << getInputFile();
-  qDebug() << "  Count Data Containers= " << m_InputFileDataContainerArrayProxy.list.count();
+//  qDebug() << " Reading Structure from " << getInputFile();
+//  qDebug() << "  Count Data Containers= " << m_InputFileDataContainerArrayProxy.list.count();
 
   if(getErrorCondition())
   {
@@ -446,8 +446,11 @@ AbstractFilter::Pointer DataContainerReader::newFilterInstance(bool copyFilterPa
   if(true == copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
-#if 0
+
+DREAM3D_COPY_INSTANCEVAR(InputFile)
+
     filter->setInputFile(getInputFile());
+#if 0
     filter->setOverwriteExistingDataContainers(getOverwriteExistingDataContainers());
     filter->setDataContainerArrayProxy(getDataContainerArrayProxy());
 #endif
