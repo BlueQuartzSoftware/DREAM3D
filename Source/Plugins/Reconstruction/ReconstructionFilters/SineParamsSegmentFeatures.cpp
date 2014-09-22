@@ -347,7 +347,7 @@ bool SineParamsSegmentFeatures::determineGrouping(int64_t referencepoint, int64_
       avgDiff += fabs(v1-v2);
     }
     avgDiff /= 8.0;
-    if(avgDiff < 15)
+    if(avgDiff < 7)
     {
       group = true;
       m_FeatureIds[neighborpoint] = gnum;
