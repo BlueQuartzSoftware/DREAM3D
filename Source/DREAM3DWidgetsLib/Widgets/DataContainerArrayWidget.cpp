@@ -138,31 +138,48 @@ void DataContainerArrayWidget::removeNonExistantChildren(QStandardItem* parent, 
 void DataContainerArrayWidget::updateModelFromProxy(DataContainerArrayProxy& proxy)
 {
   QStandardItemModel* model = qobject_cast<QStandardItemModel*>(dcaProxyView->model());
+  QModelIndex currIndex = dcaProxyView->currentIndex();
+  QStandardItem* item = model->itemFromIndex(currIndex);
+
+  QVector<QString> path;
+  while(NULL != item)
+  {
+    path.push_front(item->text());
+    item = item->parent();
+  }
+
   if(!model)
   {
     Q_ASSERT_X(model, "Model was not a QStandardItemModel in QColumnView", "");
     return;
   }
-  model->clear();
+ // model->clear();
 
   QStandardItem* rootItem = model->invisibleRootItem();
 
   // Loop over the data containers until we find the proper data container
   QList<DataContainerProxy> containers = proxy.list;
-  //qDebug() << "containers.size() = " << containers.size();
 
   QListIterator<DataContainerProxy> containerIter(containers);
   QStringList dcList;
+  int row0 = 0;
   while(containerIter.hasNext())
   {
+
     DataContainerProxy dcProxy = containerIter.next();
     dcList.push_back(dcProxy.name);
     QStandardItem* dcItem = getColumnItem<DataContainerProxy>(rootItem, dcProxy.name, dcProxy);
+
     assert(dcItem != NULL);
+    if(path.size() > 0 && dcProxy.name.compare(path[0]) == 0)
+    {
+      dcaProxyView->setCurrentIndex(model->indexFromItem(dcItem));
+    }
     //qDebug() << "**  " << dcProxy.name;
     // We found the proper Data Container, now populate the AttributeMatrix List
     QMap<QString, AttributeMatrixProxy>& attrMats = dcProxy.attributeMatricies;
     QMutableMapIterator<QString, AttributeMatrixProxy> attrMatsIter(attrMats);
+    int row1 = 0;
     while(attrMatsIter.hasNext() )
     {
       attrMatsIter.next();
@@ -170,11 +187,15 @@ void DataContainerArrayWidget::updateModelFromProxy(DataContainerArrayProxy& pro
       AttributeMatrixProxy& attrProxy = attrMatsIter.value();
       QStandardItem* amItem = getColumnItem<AttributeMatrixProxy>(dcItem, amName, attrProxy);
       assert(amItem != NULL);
-
+      if(path.size() > 1 && attrProxy.name.compare(path[1]) == 0)
+      {
+        dcaProxyView->setCurrentIndex(model->indexFromItem(amItem));
+      }
       //qDebug() << "@@@ " << amName;
       // We found the selected AttributeMatrix, so loop over this attribute matrix arrays and populate the list widget
       QMap<QString, DataArrayProxy>& dataArrays = attrProxy.dataArrays;
       QMutableMapIterator<QString, DataArrayProxy> dataArraysIter(dataArrays);
+      int row2 = 0;
       while(dataArraysIter.hasNext() )
       {
         dataArraysIter.next();
@@ -183,15 +204,22 @@ void DataContainerArrayWidget::updateModelFromProxy(DataContainerArrayProxy& pro
         //qDebug() << "#### " << daName;
         QStandardItem* daItem = getColumnItem<DataArrayProxy>(amItem, daName, daProxy);
         assert(daItem != NULL);
-
+        if(path.size() > 2 && daProxy.name.compare(path[2]) == 0)
+        {
+          QModelIndex idx = model->indexFromItem(daItem);
+          dcaProxyView->setCurrentIndex(idx);
+        }
+        row2++;
       }
 
       // Now remove those items that are still in the model but NOT the proxy. This can happen if a filter upstream
       // renames something
       removeNonExistantChildren(amItem, dataArrays.keys() );
+      row1++;
     }
     // Now remove any nonexistant AttributeMatrix objects
     removeNonExistantChildren(dcItem, attrMats.keys() );
+    row0++;
   }
   // Remove any Data Containers from the model
   removeNonExistantChildren(rootItem, dcList);
