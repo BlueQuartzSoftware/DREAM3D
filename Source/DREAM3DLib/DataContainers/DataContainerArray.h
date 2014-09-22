@@ -48,6 +48,7 @@
 #include "DREAM3DLib/DataContainers/EdgeDataContainer.h"
 #include "DREAM3DLib/DataContainers/DataArrayPath.h"
 #include "DREAM3DLib/DataContainers/IDataContainerBundle.h"
+#include "DREAM3DLib/DataContainers/DataContainerBundle.h"
 
 /**
  * @class DataContainerArray DataContainerArray.h DREAM3DLib/Common/DataContainerArray.h
@@ -164,6 +165,12 @@ class DREAM3DLib_EXPORT DataContainerArray : public QObject
      * @param newName
      */
     bool renameDataContainerBundle(const QString &oldName, const QString newName);
+
+    /**
+     * @brief removeDataContainerFromBundle
+     * @param name
+     */
+    void removeDataContainerFromBundles(const QString &name);
 
 
 

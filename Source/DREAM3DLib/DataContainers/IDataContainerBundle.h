@@ -57,6 +57,8 @@ class DREAM3DLib_EXPORT IDataContainerBundle : public QObject
     virtual void setName(const QString &value) = 0;
     virtual QString getName() const = 0;
 
+    virtual QVector<QString> getDataContainerNames() = 0;
+
     virtual void append(DataContainer::Pointer dc) = 0;
     virtual void prepend(DataContainer::Pointer dc) = 0;
 
