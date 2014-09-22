@@ -1,33 +1,51 @@
-Identify MicroTexture Regions {#identifymicrotextureregions}
+Identify MicroTexture (C-Axis Misalignment) {#identifymicrotextureregions}
 ======
+
 ## Group (Subgroup) ##
-IO Filters (Input)
+Reconstruction Filters (Grouping)
 
 ## Description ##
+This Filter groups neighboring **Features** that have c-axes aligned within a user defined tolerance.  The algorithm for grouping the **Features** is analogous to the algorithm for segmenting the **Features** - only the average orientation of the **Features** are used instead of the orientations of the individual **Cells** and the criterion for grouping only considers the misalignment of the c-axes.  The user can specify a tolerance for how closely aligned the c-axes must be for neighbor **Features** to be grouped.  A user defined patch size is rastered over the domain.  When a given patch contains a volume fraction of **Features** with a user defined c-axis misalignment above a user defined volume fraction, then that patch is flagged as an microtexture region and the growth algorithm commences.  For the growth algorithm, regions within the average diameter of the **Features** are searched and compared with **Features** for c-axis misalignments within the user defined tolerance.  If the **Feature** c-axis is aligned within the tolerance, it is added to the microtexture region.  This search and growth algorithm continues until none of the surrounding **Features** satisfies the criteria, at which point the next patch is executed along the raster.
+
+NOTE: This filter is intended for use with *Hexagonal* materials.  While the c-axis is actually just referring to the <001> direction and thus will operate on any symmetry, the utility of grouping by <001> alignment is likely only important/useful in materials with anisotropy in that direction (like materials with *Hexagonal* symmetry). 
 
 
 ## Parameters ##
 
 | Name | Type |
 |------|------|
-| Input File | Input File |
+| C-Axis Misalignment Tolerance | Double |
+| Use Running Average | Boolean |
+| Minimum MicroTextured Region Size (Diameter) | Float |
+| Minimum C-Axis Aligned Patch Volume Fraction For MTR Growth | Float |
 
 ## Required DataContainers ##
-
+Volume
 
 ## Required Arrays ##
 
+| Type | Default Name | Description | Comment | Filters Known to Create Data |
+|------|--------------|-------------|---------|-----|
+| Cell | FeatureIds | Ids (ints) that specify to which **Feature** each **Cell** belongs. | Values should be present from segmentation of experimental data or synthetic generation and cannot be determined by this filter. Not having these values will result in the filter to fail/not execute. | Segment Features (Misorientation, C-Axis Misorientation, Scalar) (Reconstruction), Read Dx File (IO), Read Ph File (IO), Pack Primary Phases (SyntheticBuilding), Insert Precipitate Phases (SyntheticBuilding), Establish Matrix Phase (SyntheticBuilding) |
+| Feature | FeaturePhases | Phase Id (int) specifying the phase of the **Feature**| | Find Feature Phases (Generic), Read Feature Info File (IO), Pack Primary Phases (SyntheticBuilding), Insert Precipitate Phases (SyntheticBuilding), Establish Matrix Phase (SyntheticBuilding) |
+| Feature | AvgQuats | Five (5) values (floats) defining the average orientation of the **Feature** in quaternion representation | Filter will calculate average quaternions for **Features** if not already calculated. | Find Feature Average Orientations (Statistics) |
+| Ensemble | CrystalStructures | Enumeration (int) specifying the crystal structure of each Ensemble/phase (Hexagonal=0, Cubic=1, Orthorhombic=2) | Values should be present from experimental data or synthetic generation and cannot be determined by this filter. Not having these values will result in the filter to fail/not execute. | Read H5Ebsd File (IO), Read Ensemble Info File (IO), Initialize Synthetic Volume (SyntheticBuilding) |
 
 ## Created Arrays ##
 
+| Type | Default Name | Description | Comment |
+|------|--------------|-------------|---------|
+| Feature | Active | Boolean value specifying if the **Feature** is still in the sample (1 if the **Feature** is in the sample and 0 if it is not). | At the end of the filter, all **Features** will be "Active" as the "Inactive" **Features** will have been removed.  |  
+| Feature | ParentIds | List of grouped microtexture region **Features**. |  |
+| Cell | ParentIds | List of grouped microtexture region **Cells**.  |  |  
 
 ## Authors ##
 
-**Copyright:** 2014 Michael A. Groeber (AFRL)
+**Copyright:** 2014 Joseph C. Tucker (UES), 2012 Michael A. Groeber (AFRL), 2012 Michael A. Jackson (BlueQuartz Software)
 
 **Contact Info:** dream3d@bluequartz.net
 
-**Version:** 1.0.0
+**Version:** 5.0.0
 
 **License:**  See the License.txt file that came with DREAM3D.
 

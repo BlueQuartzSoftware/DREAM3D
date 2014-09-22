@@ -24,6 +24,7 @@ set(_PublicFilters
   MergeColonies
   PatchGroupMicroTextureRegions
   ScalarSegmentFeatures
+  SineParamsSegmentFeatures
   VectorSegmentFeatures
 )
 

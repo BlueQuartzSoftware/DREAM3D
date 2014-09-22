@@ -213,6 +213,7 @@ namespace DREAM3D
     const DREAM3D_STRING Quats("Quats");
     const DREAM3D_STRING RodriguesColor("RodriguesColor");
     const DREAM3D_STRING SolidMeshNodes("SolidMeshNodes");
+    const DREAM3D_STRING SineParams("SineParams");
     const DREAM3D_STRING SolidMeshTetrahedrons("SolidMeshTetrahedrons");
     const DREAM3D_STRING Speed("Speed");
     const DREAM3D_STRING SurfaceMeshCells("SurfaceMeshCells");

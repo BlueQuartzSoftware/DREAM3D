@@ -161,7 +161,7 @@ void CopyFeatureArrayToCellArray::dataCheck()
   {
 
     setErrorCondition(-11001);
-    notifyErrorMessage(getHumanLabel(), "The cell level array does not exist in the DataContainer and AttributeMatrix selected.", getErrorCondition());
+    notifyErrorMessage(getHumanLabel(), "The feature level array does not exist in the DataContainer and AttributeMatrix selected.", getErrorCondition());
     return;
   }
 
