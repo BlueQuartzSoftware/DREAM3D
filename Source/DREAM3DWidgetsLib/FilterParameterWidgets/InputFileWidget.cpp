@@ -208,7 +208,7 @@ void InputFileWidget::on_selectBtn_clicked()
   QFileInfo fi(file);
   m_OpenDialogLastDirectory = fi.path();
   value->setText(file);
-  filterNeedsInputParameters(m_Filter);
+//  filterNeedsInputParameters(m_Filter);
   emit parametersChanged(); // This should force the preflight to run because we are emitting a signal
 }
 
