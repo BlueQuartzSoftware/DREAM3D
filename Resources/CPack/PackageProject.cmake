@@ -107,6 +107,10 @@ set(DREAM3D_WEBSITE_SCP_USERNAME "mjackson")
 #-- Create a bash script file that will upload the latest version to the web server
 configure_file(${PROJECT_RESOURCES_DIR}/upload.sh.in
             ${PROJECT_BINARY_DIR}/upload.sh)
+if(WIN32)
+    configure_file(${PROJECT_RESOURCES_DIR}/copy_nightly.bat.in
+            ${PROJECT_BINARY_DIR}/copy_nightly.bat)
+endif()
 
 # Create an NSIS based installer for Windows Systems
 if(WIN32 AND NOT UNIX)
