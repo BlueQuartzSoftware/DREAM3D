@@ -297,10 +297,10 @@ void GenerateEnsembleStatistics::dataCheck()
   setComputeAspectRatioDistribution(getCalculateMorphologicalStats());
   setComputeOmega3Distribution(getCalculateMorphologicalStats());
   setComputeNeighborhoodDistribution(getCalculateMorphologicalStats());
+  setCalculateAxisODF(getCalculateMorphologicalStats());
 
   setCalculateODF(getCalculateCrystallographicStats());
   setCalculateMDF(getCalculateCrystallographicStats());
-  setCalculateAxisODF(getCalculateCrystallographicStats());
 
 
   m_FeaturePhasesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeaturePhasesArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
@@ -469,6 +469,7 @@ void GenerateEnsembleStatistics::execute()
     {
       m_PhaseTypes[r] = m_PhaseTypeData.d[r];
     }
+    m_StatsDataArray->fillArrayWithNewStatsData(m_PhaseTypesPtr.lock()->getNumberOfTuples(), m_PhaseTypes);
   }
 
   if(m_ComputeSizeDistribution == true)
@@ -1041,7 +1042,7 @@ void GenerateEnsembleStatistics::gatherAxisODFStats()
   }
   for (size_t i = 1; i < numfeatures; i++)
   {
-    if(m_SurfaceFeatures[i] == false)
+    if(m_BiasedFeatures[i] == false)
     {
       totalaxes[m_FeaturePhases[i]]++;
     }
@@ -1051,7 +1052,7 @@ void GenerateEnsembleStatistics::gatherAxisODFStats()
     float ea1 = m_AxisEulerAngles[3 * i];
     float ea2 = m_AxisEulerAngles[3 * i + 1];
     float ea3 = m_AxisEulerAngles[3 * i + 2];
-    if(m_SurfaceFeatures[i] == 0)
+    if(m_BiasedFeatures[i] == false)
     {
       OrientationMath::EulertoRod( ea1, ea2, ea3, r1, r2, r3);
       m_OrientationOps[Ebsd::CrystalStructure::OrthoRhombic]->getODFFZRod(r1, r2, r3);

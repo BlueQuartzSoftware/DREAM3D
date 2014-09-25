@@ -212,9 +212,9 @@ void FindFeatureCentroids::find_centroids()
     featurecenters[i * 5 + 1] = featurecenters[i * 5 + 1] / featurecenters[i * 5 + 0];
     featurecenters[i * 5 + 2] = featurecenters[i * 5 + 2] / featurecenters[i * 5 + 0];
     featurecenters[i * 5 + 3] = featurecenters[i * 5 + 3] / featurecenters[i * 5 + 0];
-    m_Centroids[3 * i] = featurecenters[i * 5 + 1] / xSize;
-    m_Centroids[3 * i + 1] = featurecenters[i * 5 + 2] / ySize;
-    m_Centroids[3 * i + 2] = featurecenters[i * 5 + 3] / zSize;
+    m_Centroids[3 * i] = featurecenters[i * 5 + 1];
+    m_Centroids[3 * i + 1] = featurecenters[i * 5 + 2];
+    m_Centroids[3 * i + 2] = featurecenters[i * 5 + 3];
   }
 }
 
