@@ -73,6 +73,7 @@ class DREAM3DLib_EXPORT DataContainerWriter : public AbstractFilter
     DREAM3D_FILTER_PARAMETER(bool, WriteXdmfFile)
     Q_PROPERTY(bool WriteXdmfFile READ getWriteXdmfFile WRITE setWriteXdmfFile)
 
+    DREAM3D_INSTANCE_PROPERTY(bool, AppendToExisting)
 
     virtual const QString getCompiledLibraryName();
     virtual const QString getGroupName();
