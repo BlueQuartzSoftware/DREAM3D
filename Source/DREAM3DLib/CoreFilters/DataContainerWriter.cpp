@@ -84,6 +84,7 @@ DataContainerWriter::DataContainerWriter() :
   m_OutputFile(""),
   m_WritePipeline(true),
   m_WriteXdmfFile(true),
+  m_AppendToExisting(false),
   m_FileId(-1)
 {
   setupFilterParameters();
@@ -204,7 +205,7 @@ void DataContainerWriter::execute()
     return;
   }
 
-  err = openFile(false); // Do NOT append to any existing file
+  err = openFile(m_AppendToExisting); // Do NOT append to any existing file
   if (err < 0)
   {
     QString ss = QObject::tr(": The hdf5 file could not be opened or created.\n The Given filename was:\n\t[%1]").arg(m_OutputFile);

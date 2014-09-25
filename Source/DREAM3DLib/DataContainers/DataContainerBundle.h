@@ -33,8 +33,8 @@
  *                           FA8650-10-D-5210
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef _GenericDataContainerBundle_H_
-#define _GenericDataContainerBundle_H_
+#ifndef _DataContainerBundle_H_
+#define _DataContainerBundle_H_
 
 
 #include <QtCore/QObject>
@@ -44,19 +44,26 @@
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/DataContainers/IDataContainerBundle.h"
 
-class DREAM3DLib_EXPORT GenericDataContainerBundle : public IDataContainerBundle
+class DREAM3DLib_EXPORT DataContainerBundle : public IDataContainerBundle
 {
     Q_OBJECT
   public:
-    DREAM3D_SHARED_POINTERS (GenericDataContainerBundle)
-    DREAM3D_STATIC_NEW_MACRO (GenericDataContainerBundle)
-    DREAM3D_TYPE_MACRO_SUPER(GenericDataContainerBundle, IDataContainerBundle)
+    DREAM3D_SHARED_POINTERS (DataContainerBundle)
+    DREAM3D_TYPE_MACRO_SUPER(DataContainerBundle, IDataContainerBundle)
 
-    virtual ~GenericDataContainerBundle();
+    virtual ~DataContainerBundle();
 
-    DREAM3D_VIRTUAL_INSTANCE_STRING_PROPERTY(Name)
+    static Pointer New(const QString &name)
+    {
+      Pointer sharedPtr (new DataContainerBundle);
+      sharedPtr->setName(name);
+      return sharedPtr;
+    }
+
+    DREAM3D_INSTANCE_STRING_PROPERTY(Name)
 
     void setDataContainers(QVector<DataContainer::Pointer> &containers);
+    QVector<QString> getDataContainerNames();
 
     void append(DataContainer::Pointer dc);
     void prepend(DataContainer::Pointer dc);
@@ -74,13 +81,13 @@ class DREAM3DLib_EXPORT GenericDataContainerBundle : public IDataContainerBundle
     void clear();
 
   protected:
-    GenericDataContainerBundle();
+    DataContainerBundle();
 
   private:
     QVector<DataContainer::Pointer>  m_DataContainers;
 
-    GenericDataContainerBundle(const GenericDataContainerBundle&); // Copy Constructor Not Implemented
-    void operator=(const GenericDataContainerBundle&); // Operator '=' Not Implemented
+    DataContainerBundle(const DataContainerBundle&); // Copy Constructor Not Implemented
+    void operator=(const DataContainerBundle&); // Operator '=' Not Implemented
 };
 
-#endif /* _GenericDataContainerBundle_H_ */
+#endif /* _DataContainerBundle_H_ */

@@ -34,13 +34,13 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include "GenericDataContainerBundle.h"
+#include "DataContainerBundle.h"
 
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-GenericDataContainerBundle::GenericDataContainerBundle()
+DataContainerBundle::DataContainerBundle()
 {
 
 }
@@ -48,14 +48,14 @@ GenericDataContainerBundle::GenericDataContainerBundle()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-GenericDataContainerBundle::~GenericDataContainerBundle()
+DataContainerBundle::~DataContainerBundle()
 {
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void GenericDataContainerBundle::setDataContainers(QVector<DataContainer::Pointer> &containers)
+void DataContainerBundle::setDataContainers(QVector<DataContainer::Pointer> &containers)
 {
   m_DataContainers = containers;
 }
@@ -63,7 +63,20 @@ void GenericDataContainerBundle::setDataContainers(QVector<DataContainer::Pointe
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void GenericDataContainerBundle::append(DataContainer::Pointer dc)
+QVector<QString> DataContainerBundle::getDataContainerNames()
+{
+  QVector<QString> dcNames;
+  for (size_t i=0;i<m_DataContainers.size();i++)
+  {
+    dcNames.push_back(m_DataContainers[i]->getName());
+  }
+  return dcNames;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DataContainerBundle::append(DataContainer::Pointer dc)
 {
   m_DataContainers.append(dc);
 }
@@ -71,7 +84,7 @@ void GenericDataContainerBundle::append(DataContainer::Pointer dc)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void GenericDataContainerBundle::prepend(DataContainer::Pointer dc)
+void DataContainerBundle::prepend(DataContainer::Pointer dc)
 {
   m_DataContainers.prepend(dc);
 }
@@ -79,7 +92,7 @@ void GenericDataContainerBundle::prepend(DataContainer::Pointer dc)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void GenericDataContainerBundle::remove(DataContainer::Pointer dc)
+void DataContainerBundle::remove(DataContainer::Pointer dc)
 {
   for(qint32 i = 0; i < m_DataContainers.size(); i++)
   {
@@ -94,7 +107,7 @@ void GenericDataContainerBundle::remove(DataContainer::Pointer dc)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void GenericDataContainerBundle::remove(const QString &name)
+void DataContainerBundle::remove(const QString &name)
 {
   for(qint32 i = 0; i < m_DataContainers.size(); i++)
   {
@@ -109,7 +122,7 @@ void GenericDataContainerBundle::remove(const QString &name)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void GenericDataContainerBundle::remove(qint32 i)
+void DataContainerBundle::remove(qint32 i)
 {
   m_DataContainers.remove(i);
 }
@@ -117,7 +130,7 @@ void GenericDataContainerBundle::remove(qint32 i)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void GenericDataContainerBundle::pop_back()
+void DataContainerBundle::pop_back()
 {
   m_DataContainers.pop_back();
 }
@@ -125,7 +138,7 @@ void GenericDataContainerBundle::pop_back()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void GenericDataContainerBundle::pop_front()
+void DataContainerBundle::pop_front()
 {
   m_DataContainers.pop_front();
 }
@@ -133,7 +146,7 @@ void GenericDataContainerBundle::pop_front()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-DataContainer::Pointer GenericDataContainerBundle::value(qint32 index)
+DataContainer::Pointer DataContainerBundle::value(qint32 index)
 {
   return m_DataContainers.value(index);
 }
@@ -141,7 +154,7 @@ DataContainer::Pointer GenericDataContainerBundle::value(qint32 index)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-qint32 GenericDataContainerBundle::count()
+qint32 DataContainerBundle::count()
 {
   return m_DataContainers.count();
 }
@@ -149,7 +162,7 @@ qint32 GenericDataContainerBundle::count()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void GenericDataContainerBundle::clear()
+void DataContainerBundle::clear()
 {
   return m_DataContainers.clear();
 }

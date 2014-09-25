@@ -38,9 +38,7 @@ set(DREAM3DLib_DataContainers_HDRS
   ${DREAM3DLib_SOURCE_DIR}/DataContainers/DataArrayProxy.h
   ${DREAM3DLib_SOURCE_DIR}/DataContainers/DataArrayPath.h
   ${DREAM3DLib_SOURCE_DIR}/DataContainers/IDataContainerBundle.h
-  ${DREAM3DLib_SOURCE_DIR}/DataContainers/GenericDataContainerBundle.h
-  ${DREAM3DLib_SOURCE_DIR}/DataContainers/TimeSeriesBundle.h
-  ${DREAM3DLib_SOURCE_DIR}/DataContainers/MontageBundle.h
+  ${DREAM3DLib_SOURCE_DIR}/DataContainers/DataContainerBundle.h
 )
 
 set(DREAM3DLib_DataContainers_SRCS
@@ -55,9 +53,7 @@ set(DREAM3DLib_DataContainers_SRCS
   ${DREAM3DLib_SOURCE_DIR}/DataContainers/VertexArray.cpp
   ${DREAM3DLib_SOURCE_DIR}/DataContainers/DataContainerArrayProxy.cpp
   ${DREAM3DLib_SOURCE_DIR}/DataContainers/DataArrayPath.cpp
-  ${DREAM3DLib_SOURCE_DIR}/DataContainers/GenericDataContainerBundle.cpp
-  ${DREAM3DLib_SOURCE_DIR}/DataContainers/TimeSeriesBundle.cpp
-  ${DREAM3DLib_SOURCE_DIR}/DataContainers/MontageBundle.cpp
+  ${DREAM3DLib_SOURCE_DIR}/DataContainers/DataContainerBundle.cpp
 )
 
 cmp_IDE_SOURCE_PROPERTIES( "DREAM3DLib/DataContainers" "${DREAM3DLib_DataContainers_HDRS}" "${DREAM3DLib_DataContainers_SRCS}" "0")
