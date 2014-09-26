@@ -325,7 +325,7 @@ void AlignSectionsMisorientation::find_shifts(QVector<int>& xshifts, QVector<int
                       phase1 = m_CrystalStructures[m_CellPhases[refposition]];
                       QuaternionMathF::Copy(quats[curposition], q2);
                       phase2 = m_CrystalStructures[m_CellPhases[curposition]];
-                      if(phase1 == phase2 && phase1 < m_OrientationOps.size())
+                      if(phase1 == phase2 && phase1 < static_cast<unsigned int>(m_OrientationOps.size()) )
                       {
                         w = m_OrientationOps[phase1]->getMisoQuat(q1, q2, n1, n2, n3);
                       }

@@ -332,9 +332,9 @@ void ImportVectorImageStack::execute()
 
   size_t numCompsPerVecImage = imageHeight * imageWidth * numComps;
 
-  size_t comp = m_StartComp;
+  int64_t comp = m_StartComp;
   size_t compSpot;
-  size_t imageNum = m_StartIndex;
+  int64_t imageNum = m_StartIndex;
   size_t imageSpot;
   size_t imageCompShift;
 

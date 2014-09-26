@@ -141,7 +141,7 @@ void SegmentFeatures::execute()
   int64_t neighbor;
   bool good = 0;
   DimType col, row, plane;
-  int64_t size = 0;
+  size_t size = 0;
   int64_t initialVoxelsListSize = 100000;
   std::vector<int64_t> voxelslist(initialVoxelsListSize, -1);
   DimType neighpoints[6];
@@ -162,7 +162,7 @@ void SegmentFeatures::execute()
       size++;
       while(size > 0)
       {
-        int64_t currentpoint = voxelslist[size - 1];
+        size_t currentpoint = voxelslist[size - 1];
         size -= 1;
         col = currentpoint % dims[0];
         row = (currentpoint / dims[0]) % dims[1];
@@ -190,7 +190,6 @@ void SegmentFeatures::execute()
                 voxelslist.resize(size + initialVoxelsListSize);
                 for(qint32 j = size; j < voxelslist.size(); ++j) { voxelslist[j] = -1; }
               }
-
             }
           }
         }

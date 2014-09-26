@@ -711,11 +711,12 @@ void  PackPrimaryPhases::load_features()
   float omega3;
   float phi1, PHI, phi2;
   size_t currentFeature = firstPrimaryFeature;
+  const float fourThirds = 4.0f / 3.0f;
   for(int i = 0; i < numFeatures; i++)
   {
     inFile >> phase >> xC >> yC >> zC >> axisA >> axisB >> axisC >> omega3 >> phi1 >> PHI >> phi2;
-    vol = (4.0/3.0) * DREAM3D::Constants::k_Pi * axisA * axisB * axisC;
-    eqDiam = 2.0*powf((vol * (3.0/4.0) * (DREAM3D::Constants::k_1OverPi)), (1.0/3.0));
+    vol = fourThirds * DREAM3D::Constants::k_Pi * axisA * axisB * axisC;
+    eqDiam = 2.0f*powf((vol * (0.75f) * (DREAM3D::Constants::k_1OverPi)), (DREAM3D::Constants::k_1Over3));
     m_Centroids[3* currentFeature + 0] = xC;
     m_Centroids[3* currentFeature + 1] = yC;
     m_Centroids[3* currentFeature + 2] = zC;
