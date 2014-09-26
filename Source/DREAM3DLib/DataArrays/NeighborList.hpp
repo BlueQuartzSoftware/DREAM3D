@@ -139,7 +139,7 @@ class NeighborList : public IDataArray
         return NullPointer();
       }
       size_t numElements = numTuples;
-      for(int iter = 0; iter < cDims.size(); iter++)
+      for(size_t iter = 0; iter < cDims.size(); iter++)
       {
         numElements *= cDims[iter];
       }
@@ -360,7 +360,7 @@ class NeighborList : public IDataArray
       size_t arraySize = m_Array.size();
       // Sanity Check the Indices in the vector to make sure we are not trying to remove any indices that are
       // off the end of the array and return an error code.
-      for(QVector<size_t>::size_type i = 0; i < idxsSize; ++i)
+      for(QVector<size_t>::size_type i = 0; i < idxs.size(); ++i)
       {
         if (idxs[i] >= arraySize) { return -100; }
       }
