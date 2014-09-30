@@ -173,28 +173,43 @@ INCLUDE_DIRECTORIES(${Boost_INCLUDE_DIRS})
 LINK_DIRECTORIES(${Boost_LIBRARY_DIRS})
 
 # ---------- Find HDF5 Headers/Libraries -----------------------
+# HDF5 now comes with everything that is needed for CMake to load
+# up the targets (Exported) that it needs. We just need to find where
+# HDF5 is installed.
 message(STATUS "HDF5_INSTALL: ${HDF5_INSTALL}")
 if("${HDF5_INSTALL}" STREQUAL "")
     set(HDF5_INSTALL  $ENV{HDF5_INSTALL})
 endif()
-set(CMAKE_MODULE_PATH ${HDF5_INSTALL}/share/cmake/ ${CMAKE_MODULE_PATH})
 
+if(WIN32)
+    set(HDF5_ROOT_DIR_HINT "${HDF5_INSTALL}/cmake/hdf5")
+    set(CMAKE_MODULE_PATH ${HDF5_INSTALL}/cmake/hdf5 ${CMAKE_MODULE_PATH})
+else()
+    set(HDF5_ROOT_DIR_HINT "${HDF5_INSTALL}/share/cmake")
+    set(CMAKE_MODULE_PATH ${HDF5_INSTALL}/share/cmake ${CMAKE_MODULE_PATH})
+endif()
+message (STATUS "HDF5_ROOT_DIR_HINT: ${HDF5_ROOT_DIR_HINT}")
 
 find_package(HDF5)
 if(HDF5_FOUND)
   file(APPEND ${CMP_PLUGIN_SEARCHDIR_FILE} "${HDF5_LIBRARY_DIRS};")
   include_directories(${HDF5_INCLUDE_DIRS} )
   list(APPEND CMP_LIB_SEARCH_DIRS ${HDF5_BINARY_DIR} ${HDF5_LIBRARY_DIR} )
-  get_filename_component(HDF5_ROOT_DIR "${HDF5_INCLUDE_DIRS}" PATH)
-  set(HDF5_LIB_DIR "${HDF5_ROOT_DIR}/lib")
-  message(STATUS "HDF5_LIB_DIR: ${HDF5_LIB_DIR}")
   
+  if(MSVC_IDE)
+    set(BUILD_TYPES Debug Release)
+  else()
+    set(BUILD_TYPES "${CMAKE_BUILD_TYPE}")
+    if("${BUILD_TYPES}" STREQUAL "")
+        set(BUILD_TYPES "Debug")
+    endif()
+  endif()
   AddHDF5CopyInstallRules(LIBVAR HDF5_LIB
                       LIBNAME hdf5
-                      TYPES Debug Release)
+                      TYPES ${BUILD_TYPES})
   AddHDF5CopyInstallRules(LIBVAR HDF5_CPP_LIB
                       LIBNAME hdf5_cpp
-                      TYPES Debug Release)
+                      TYPES ${BUILD_TYPES})
 
 ELSE(HDF5_FOUND)
     MESSAGE(FATAL_ERROR "Cannot build without HDF5.  Please set HDF5_INSTALL environment variable to point to your HDF5 installation.")
