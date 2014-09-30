@@ -173,16 +173,29 @@ INCLUDE_DIRECTORIES(${Boost_INCLUDE_DIRS})
 LINK_DIRECTORIES(${Boost_LIBRARY_DIRS})
 
 # ---------- Find HDF5 Headers/Libraries -----------------------
+message(STATUS "HDF5_INSTALL: ${HDF5_INSTALL}")
+if("${HDF5_INSTALL}" STREQUAL "")
+    set(HDF5_INSTALL  $ENV{HDF5_INSTALL})
+endif()
+set(CMAKE_MODULE_PATH ${HDF5_INSTALL}/share/cmake/ ${CMAKE_MODULE_PATH})
+
+
 find_package(HDF5)
 if(HDF5_FOUND)
-    file(APPEND ${CMP_PLUGIN_SEARCHDIR_FILE} "${HDF5_LIBRARY_DIRS};")
-    include_directories(${HDF5_INCLUDE_DIRS} )
-    # This copies the DLL (if needed) into the various build directories on MSVC systems
-    CMP_COPY_DEPENDENT_LIBRARIES("hdf5")
-    # Append the locations of the HDF5 libraries to our Library Search Paths
-    list(APPEND CMP_LIB_SEARCH_DIRS ${HDF5_BINARY_DIR} ${HDF5_LIBRARY_DIR} )
-    # Create an install rule to copy the dependent shared library over to the installed location
-    CMP_LIBRARIES_INSTALL_RULES("hdf5" ".")
+  file(APPEND ${CMP_PLUGIN_SEARCHDIR_FILE} "${HDF5_LIBRARY_DIRS};")
+  include_directories(${HDF5_INCLUDE_DIRS} )
+  list(APPEND CMP_LIB_SEARCH_DIRS ${HDF5_BINARY_DIR} ${HDF5_LIBRARY_DIR} )
+  get_filename_component(HDF5_ROOT_DIR "${HDF5_INCLUDE_DIRS}" PATH)
+  set(HDF5_LIB_DIR "${HDF5_ROOT_DIR}/lib")
+  message(STATUS "HDF5_LIB_DIR: ${HDF5_LIB_DIR}")
+  
+  AddHDF5CopyInstallRules(LIBVAR HDF5_LIB
+                      LIBNAME hdf5
+                      TYPES Debug Release)
+  AddHDF5CopyInstallRules(LIBVAR HDF5_CPP_LIB
+                      LIBNAME hdf5_cpp
+                      TYPES Debug Release)
+
 ELSE(HDF5_FOUND)
     MESSAGE(FATAL_ERROR "Cannot build without HDF5.  Please set HDF5_INSTALL environment variable to point to your HDF5 installation.")
 ENDif(HDF5_FOUND)
@@ -398,8 +411,9 @@ set(DREAM3D_PLUGIN_LIST
 
 # --- Look for user defined external Plugins that the user has entered
 # into CMake-GUI or through CCMake by the user.
-#set(DREAM3D_EXTRA_PLUGINS "" CACHE LIST "Semicolon delimited list of Extra External Plugins that you want to build into DREAM.3D")
-#message(STATUS "*** Configuring User Defined Plugins ***")
+if("${DREAM3D_EXTRA_PLUGINS}" STREQUAL "")
+  set(DREAM3D_EXTRA_PLUGINS "" CACHE LIST "Semicolon delimited list of Extra External Plugins that you want to build into DREAM.3D")
+endif()
 
 set(DREAM3D_PLUGIN_LIST ${DREAM3D_PLUGIN_LIST} ${DREAM3D_EXTRA_PLUGINS} )
 

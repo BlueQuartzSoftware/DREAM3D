@@ -1,20 +1,35 @@
 #!/bin/bash
 
+echo "Installing Librarys for @linux_app_name@"
+
 InstallPrefix="${1}"
 
-if [ "x@HDF5_IS_SHARED@" = "x1" ]; then
-  echo "Installing into ${1}" 
-fi
+if [ "x@HDF5_BUILD_SHARED_LIBS@" = "xON" ]; then
+  	echo "@linux_app_name@:  Installing into ${1}" 
 
-if [ "x@HDF5_IS_SHARED@" = "x1" ]; then 
+	cd "@HDF5_INSTALL@/lib"
+	libs=`ls libhdf5@lib_suffix@.s*`
+	for l in ${libs}
+		do
+			name=`basename ${l}`
+			if [ ! -e "${InstallPrefix}/lib/${name}" ]; then
+		    	echo "@linux_app_name@:  Copy ${l} into Deployment Lib Directory"  
+		    	cp --no-dereference ${l} ${InstallPrefix}/lib/.
+			fi
+		done
 
-cd "@HDF5_INSTALL@"/lib
-libs=`ls libhdf5@lib_suffix@.s*`
-for l in ${libs}
-do
-    echo "Copy ${l} into Deployment Lib Directory"  
-     cp -d ${l} ${InstallPrefix}/lib/.
-done
+		if [ "xITK_DIR" != "x" ]; then
+			libs=`ls libhdf5_cpp@lib_suffix@.s*`
+			for l in ${libs}
+			do
+				name=`basename ${l}`
+				if [ ! -e "${InstallPrefix}/lib/${name}" ]; then
+			    	echo "@linux_app_name@:  Copy ${l} into Deployment Lib Directory"  
+			    	cp --no-dereference ${l} ${InstallPrefix}/lib/.
+				fi
+			done
+		fi
+
 fi
 # We are done with the HDF5 portion.
 
@@ -23,22 +38,28 @@ fi
 #Only copy TBB Libraries if needed
 if [ "@DREAM3D_USE_MULTITHREADED_ALGOS@" = "ON" ]; then
 
-cd "@TBB_LIBRARY_DIR@"
+	cd "@TBB_LIBRARY_DIR@"
 # Copy the libtbb libraries
-libs=`ls libtbb@lib_suffix@.s*`
-for l in ${libs}
-do
-    echo "Copy ${l} into Deployment Lib Directory"  
-   cp -d ${l} ${InstallPrefix}/lib/.
-done
+	libs=`ls libtbb@lib_suffix@.s*`
+	for l in ${libs}
+		do
+		name=`basename ${l}`
+		if [ ! -e "${InstallPrefix}/lib/${name}" ]; then
+			echo "@linux_app_name@:  Copy ${l} into Deployment Lib Directory"  
+			cp --no-dereference ${l} ${InstallPrefix}/lib/.
+		fi
+	done
 
-# Copy the libtbbmalloc libraries
-libs=`ls libtbbmalloc@lib_suffix@.s*`
-for l in ${libs}
-do
-    echo "Copy ${l} into Deployment Lib Directory"  
-     cp -d ${l} ${InstallPrefix}/lib/.
-done
+	# Copy the libtbbmalloc libraries
+	libs=`ls libtbbmalloc@lib_suffix@.s*`
+	for l in ${libs}
+		do
+		name=`basename ${l}`
+		if [ ! -e "${InstallPrefix}/lib/${name}" ]; then
+			echo "@linux_app_name@:  Copy ${l} into Deployment Lib Directory"  
+			cp --no-dereference ${l} ${InstallPrefix}/lib/.
+		fi
+	done
 fi
 
 # We are done with the TBB libraries
