@@ -87,7 +87,7 @@ class NeighborList : public IDataArray
      */
     static Pointer CreateArray(size_t numTuples, const QString& name, bool allocate = true)
     {
-      std::cout << "NeighborList::CreateArray  name= " << name.toStdString() << "   numTuples= " << numTuples << std::endl;
+      //std::cout << "NeighborList::CreateArray  name= " << name.toStdString() << "   numTuples= " << numTuples << std::endl;
       if (name.isEmpty() == true)
       {
         return NullPointer();
@@ -108,7 +108,7 @@ class NeighborList : public IDataArray
      */
     static Pointer CreateArray(size_t numTuples, int rank, size_t* dims, const QString& name, bool allocate = true)
     {
-      std::cout << "NeighborList::CreateArray  name= " << name.toStdString() << "   numTuples= " << numTuples << std::endl;
+      //std::cout << "NeighborList::CreateArray  name= " << name.toStdString() << "   numTuples= " << numTuples << std::endl;
       if (name.isEmpty() == true)
       {
         return NullPointer();
