@@ -19,6 +19,7 @@
 # ------------------ START FIND HDF5 LIBS --------------------------------------
 set(HDF5_FOUND "NO")
 set(HDF5_HL_FOUND "NO")
+set(HDF5_CPP_FOUND "NO")
 
 # Only set HDF5_INSTALL to the environment variable if it is blank
 if("${HDF5_INSTALL}" STREQUAL "")

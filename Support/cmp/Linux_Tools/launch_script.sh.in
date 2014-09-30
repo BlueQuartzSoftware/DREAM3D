@@ -32,4 +32,7 @@ bindir=`dirname "$me"`
 libdir=`cd "$bindir/../lib" ; pwd`
 LD_LIBRARY_PATH=$libdir:${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}
 export LD_LIBRARY_PATH
+# Move up a directory and launch from there so that all the prebuilt pipelines work correctly
+# with their relative paths.
+cd "$bindir/.."
 exec "$bindir/@linux_app_name@" ${1+"$@"}
