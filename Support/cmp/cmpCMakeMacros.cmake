@@ -712,15 +712,22 @@ macro (CMP_QT_LIBRARIES_INSTALL_RULES QTLIBLIST destination)
 endmacro()
 
 
+
 function(AddHDF5CopyInstallRules)
   set(options )
   set(oneValueArgs LIBNAME LIBVAR)
   set(multiValueArgs TYPES)
   cmake_parse_arguments(Z "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN} )
   set(INTER_DIR ".")
-  message(STATUS "Z_LIBNAME: ${Z_LIBNAME}")
-  message(STATUS "Z_LIBVAR: ${Z_LIBVAR}")
-  message(STATUS "Z_TYPES: ${Z_TYPES}")
+
+  #message(STATUS "Z_LIBNAME: ${Z_LIBNAME}")
+  #message(STATUS "Z_LIBVAR: ${Z_LIBVAR}")
+  #message(STATUS "Z_TYPES: ${Z_TYPES}")
+
+  set(Z_INSTALL_DIR "lib")
+  if(WIN32)
+    set(Z_INSTALL_DIR ".")
+  endif()
 
   FOREACH(BTYPE ${Z_TYPES} )
     message(STATUS "BTYPE: ${BTYPE}")
@@ -735,7 +742,7 @@ function(AddHDF5CopyInstallRules)
     if(NOT "${LibPath}" STREQUAL "LibPath-NOTFOUND")
       message(STATUS "Creating Install Rule for ${LibPath}")
       install(FILES ${LibPath}
-        DESTINATION "lib"
+        DESTINATION "${Z_INSTALL_DIR}"
         CONFIGURATIONS ${BTYPE}
         COMPONENT Applications)
 
@@ -753,13 +760,18 @@ function(AddHDF5CopyInstallRules)
     message(STATUS "${Z_LIBVAR}_DIR: ${${Z_LIBVAR}_DIR}")
 
     # Now piece together a complete path for the symlink that Linux Needs to have
-    GET_TARGET_PROPERTY(${Z_LIBVAR}_${TYPE} ${Z_LIBNAME} IMPORTED_SONAME_${TYPE})
+    if(WIN32)
+      GET_TARGET_PROPERTY(${Z_LIBVAR}_${TYPE} ${Z_LIBNAME} IMPORTED_IMPLIB_${TYPE})
+    else()
+      GET_TARGET_PROPERTY(${Z_LIBVAR}_${TYPE} ${Z_LIBNAME} IMPORTED_SONAME_${TYPE})
+    endif()
+    
     message(STATUS "${Z_LIBVAR}_${TYPE}: ${${Z_LIBVAR}_${TYPE}}")
-    if(NOT "${${Z_LIBVAR}_${TYPE}}" STREQUAL "${Z_LIBVAR}_${TYPE}-NOTFOUND")
+    if(NOT "${${Z_LIBVAR}_${TYPE}}" STREQUAL "${Z_LIBVAR}_${TYPE}-NOTFOUND" AND NOT WIN32)
       set(SYMLINK_PATH "${${Z_LIBVAR}_DIR}/${${Z_LIBVAR}_${TYPE}}")
       message(STATUS "Creating Install Rule for ${SYMLINK_PATH}")
       install(FILES ${SYMLINK_PATH}
-        DESTINATION "lib"
+        DESTINATION "${Z_INSTALL_DIR}"
         CONFIGURATIONS ${BTYPE}
         COMPONENT Applications)
       
