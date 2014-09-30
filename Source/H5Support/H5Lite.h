@@ -385,6 +385,7 @@ namespace H5Support_NAMESPACE
           return sid;
         }
         // Create the Dataset
+        // This will fail if dsetName contains a "/"!
         did = H5Dcreate (loc_id, dsetName.c_str(), dataType, sid, H5P_DEFAULT, H5P_DEFAULT, H5P_DEFAULT);
         if ( did >= 0 )
         {
