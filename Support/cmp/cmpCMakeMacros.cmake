@@ -711,8 +711,10 @@ macro (CMP_QT_LIBRARIES_INSTALL_RULES QTLIBLIST destination)
     endif(UNIX AND NOT APPLE)
 endmacro()
 
-
-
+# -------------------------------------------------------------
+# This function adds the necessary cmake code to find the HDF5
+# shared libraries and setup custom copy commands and/or install
+# rules for Linux and Windows to use
 function(AddHDF5CopyInstallRules)
   set(options )
   set(oneValueArgs LIBNAME LIBVAR)
@@ -730,7 +732,7 @@ function(AddHDF5CopyInstallRules)
   endif()
 
   FOREACH(BTYPE ${Z_TYPES} )
-    message(STATUS "BTYPE: ${BTYPE}")
+    #message(STATUS "BTYPE: ${BTYPE}")
     STRING(TOUPPER ${BTYPE} TYPE)
     if(MSVC_IDE)
       set(INTER_DIR "${BTYPE}")
@@ -738,9 +740,9 @@ function(AddHDF5CopyInstallRules)
 
     # Get the Actual Library Path and create Install and copy rules
     GET_TARGET_PROPERTY(LibPath ${Z_LIBNAME} IMPORTED_LOCATION_${TYPE})
-    message(STATUS "LibPath: ${LibPath}")
+    #message(STATUS "LibPath: ${LibPath}")
     if(NOT "${LibPath}" STREQUAL "LibPath-NOTFOUND")
-      message(STATUS "Creating Install Rule for ${LibPath}")
+      #message(STATUS "Creating Install Rule for ${LibPath}")
       install(FILES ${LibPath}
         DESTINATION "${Z_INSTALL_DIR}"
         CONFIGURATIONS ${BTYPE}
@@ -757,7 +759,7 @@ function(AddHDF5CopyInstallRules)
 
     # Now get the path that the library is in
     GET_FILENAME_COMPONENT(${Z_LIBVAR}_DIR ${LibPath} PATH)
-    message(STATUS "${Z_LIBVAR}_DIR: ${${Z_LIBVAR}_DIR}")
+   # message(STATUS "${Z_LIBVAR}_DIR: ${${Z_LIBVAR}_DIR}")
 
     # Now piece together a complete path for the symlink that Linux Needs to have
     if(WIN32)
@@ -766,10 +768,10 @@ function(AddHDF5CopyInstallRules)
       GET_TARGET_PROPERTY(${Z_LIBVAR}_${TYPE} ${Z_LIBNAME} IMPORTED_SONAME_${TYPE})
     endif()
     
-    message(STATUS "${Z_LIBVAR}_${TYPE}: ${${Z_LIBVAR}_${TYPE}}")
+    #message(STATUS "${Z_LIBVAR}_${TYPE}: ${${Z_LIBVAR}_${TYPE}}")
     if(NOT "${${Z_LIBVAR}_${TYPE}}" STREQUAL "${Z_LIBVAR}_${TYPE}-NOTFOUND" AND NOT WIN32)
       set(SYMLINK_PATH "${${Z_LIBVAR}_DIR}/${${Z_LIBVAR}_${TYPE}}")
-      message(STATUS "Creating Install Rule for ${SYMLINK_PATH}")
+      #message(STATUS "Creating Install Rule for ${SYMLINK_PATH}")
       install(FILES ${SYMLINK_PATH}
         DESTINATION "${Z_INSTALL_DIR}"
         CONFIGURATIONS ${BTYPE}
