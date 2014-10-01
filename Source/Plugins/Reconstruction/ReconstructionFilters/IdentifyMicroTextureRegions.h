@@ -41,6 +41,15 @@
 #include <vector>
 #include <QtCore/QString>
 
+///Boost Random Number generator stuff
+#include <boost/random/mersenne_twister.hpp>
+#include <boost/random/uniform_int.hpp>
+#include <boost/random/variate_generator.hpp>
+
+typedef boost::uniform_int<int> NumberDistribution;
+typedef boost::mt19937 RandomNumberGenerator;
+typedef boost::variate_generator<RandomNumberGenerator&, NumberDistribution> Generator;
+
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/DataArrays/IDataArray.h"
@@ -73,7 +82,8 @@ class IdentifyMicroTextureRegions : public AbstractFilter
     Q_PROPERTY(float MinMTRSize READ getMinMTRSize WRITE setMinMTRSize)
     DREAM3D_FILTER_PARAMETER(float, MinVolFrac)
     Q_PROPERTY(float MinVolFrac READ getMinVolFrac WRITE setMinVolFrac)
-    DREAM3D_INSTANCE_PROPERTY(bool, RandomizeParentIds)
+
+    DREAM3D_INSTANCE_PROPERTY(bool, RandomizeMTRIds)
 
     DREAM3D_FILTER_PARAMETER(DataArrayPath, CAxisLocationsArrayPath)
     Q_PROPERTY(DataArrayPath CAxisLocationsArrayPath READ getCAxisLocationsArrayPath WRITE setCAxisLocationsArrayPath)
@@ -127,7 +137,8 @@ class IdentifyMicroTextureRegions : public AbstractFilter
 
     void getCAxisBins();
 
-    std::vector<int> cAxisBins;
+    std::vector<int> phiBins;
+    std::vector<int> thetaBins;
     size_t numThetaBins;
     size_t numPhiBins;
 
@@ -137,6 +148,28 @@ class IdentifyMicroTextureRegions : public AbstractFilter
     DEFINE_CREATED_DATAARRAY_VARIABLE(bool, Active)
 
     float caxisTolerance;
+
+    ///Boost Random Number generator stuff. We use the boost::shared_ptr to ensure the pointers are cleaned up when the
+    ///filter is deleted
+    boost::shared_ptr<NumberDistribution> m_Distribution;
+    boost::shared_ptr<RandomNumberGenerator> m_RandomNumberGenerator;
+    boost::shared_ptr<Generator> m_NumberGenerator;
+    size_t                       m_TotalRandomNumbersGenerated;
+
+    /**
+     * @brief randomizeGrainIds
+     * @param totalPoints
+     * @param totalFields
+     */
+    void randomizeFeatureIds(int64_t totalPoints, size_t totalFeatures);
+
+    void findMTRregions();
+
+    /**
+     * @brief initializeVoxelSeedGenerator
+     * @param totalPoints
+     */
+    void initializeVoxelSeedGenerator(const size_t rangeMin, const size_t rangeMax);
 
     void dataCheck();
     void updateFeatureInstancePointers();

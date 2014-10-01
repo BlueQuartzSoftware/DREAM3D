@@ -246,6 +246,7 @@ void CAxisSegmentFeatures::execute()
 
   QVector<size_t> tDims(1, 1);
   m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->resizeAttributeArrays(tDims);
+  updateFeatureInstancePointers();
 
   //Convert user defined tolerance to radians.
   misoTolerance = m_MisorientationTolerance * DREAM3D::Constants::k_Pi / 180.0f;

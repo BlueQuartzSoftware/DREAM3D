@@ -281,6 +281,7 @@ void ScalarSegmentFeatures::execute()
 
   QVector<size_t> tDims(1, 1);
   m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->resizeAttributeArrays(tDims);
+  updateFeatureInstancePointers();
   // This runs a subfilter
   int64_t totalPoints = m_FeatureIdsPtr.lock()->getNumberOfTuples();
 

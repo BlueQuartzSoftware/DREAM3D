@@ -68,7 +68,7 @@ IdentifyMicroTextureRegions::IdentifyMicroTextureRegions() :
   m_CAxisTolerance(1.0f),
   m_MinMTRSize(1.0f),
   m_MinVolFrac(1.0f),
-  m_RandomizeParentIds(false),
+  m_RandomizeMTRIds(false),
   m_CAxisLocationsArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::CAxisLocation),
   m_MTRIdsArrayName(DREAM3D::CellData::ParentIds),
   m_ActiveArrayName(DREAM3D::FeatureData::Active),
@@ -202,6 +202,13 @@ void IdentifyMicroTextureRegions::execute()
   dataCheck();
   if(getErrorCondition() < 0) { return; }
 
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getCAxisLocationsArrayPath().getDataContainerName());
+  int64_t totalPoints = m_MTRIdsPtr.lock()->getNumberOfTuples();
+
+  QVector<size_t> tDims(1, 1);
+  m->getAttributeMatrix(getNewCellFeatureAttributeMatrixName())->resizeAttributeArrays(tDims);
+  updateFeatureInstancePointers();
+
   // Convert user defined tolerance to radians.
   caxisTolerance = m_CAxisTolerance * DREAM3D::Constants::k_Pi / 180.0f;
   numThetaBins = int(360.0/m_CAxisTolerance);
@@ -211,13 +218,8 @@ void IdentifyMicroTextureRegions::execute()
   notifyStatusMessage(getMessagePrefix(), getHumanLabel(), "Starting");
   getCAxisBins();
 
-  QVector<size_t> tDims(1, 1);
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getCAxisLocationsArrayPath().getDataContainerName());
-  m->getAttributeMatrix(getNewCellFeatureAttributeMatrixName())->resizeAttributeArrays(tDims);
-  //need to update pointers after resize, buut do not need to run full data check because pointers are still valid
-  updateFeatureInstancePointers();
+  findMTRregions();
 
-  size_t totalPoints = m_MTRIdsPtr.lock()->getNumberOfTuples();
   size_t totalFeatures = m_ActivePtr.lock()->getNumberOfTuples();
   if (totalFeatures < 2)
   {
@@ -226,53 +228,11 @@ void IdentifyMicroTextureRegions::execute()
 //    return;
   }
 
-  m_RandomizeParentIds = false;
-  if (true == m_RandomizeParentIds)
+  // By default we randomize grains
+  if (true == getRandomizeMTRIds() && getCancel() == false)
   {
-    // Generate all the numbers up front
-    const int rangeMin = 1;
-    const int rangeMax = totalFeatures - 1;
-    typedef boost::uniform_int<int> NumberDistribution;
-    typedef boost::mt19937 RandomNumberGenerator;
-    typedef boost::variate_generator < RandomNumberGenerator&,
-            NumberDistribution > Generator;
-
-    NumberDistribution distribution(rangeMin, rangeMax);
-    RandomNumberGenerator generator;
-    Generator numberGenerator(generator, distribution);
-    generator.seed(static_cast<boost::uint32_t>( QDateTime::currentMSecsSinceEpoch() )); // seed with the current time
-
-    DataArray<int32_t>::Pointer rndNumbers = DataArray<int32_t>::CreateArray(totalFeatures, "New ParentIds");
-    int32_t* pid = rndNumbers->getPointer(0);
-    pid[0] = 0;
-    QSet<int32_t> parentIdSet;
-    parentIdSet.insert(0);
-    for(int i = 1; i < totalFeatures; ++i)
-    {
-      pid[i] = i; //numberGenerator();
-      parentIdSet.insert(pid[i]);
-    }
-
-    int r;
-    size_t temp;
-    //--- Shuffle elements by randomly exchanging each with one other.
-    for (int i = 1; i < totalFeatures; i++)
-    {
-      r = numberGenerator(); // Random remaining position.
-      if (r >= totalFeatures)
-      {
-        continue;
-      }
-      temp = pid[i];
-      pid[i] = pid[r];
-      pid[r] = temp;
-    }
-
-    // Now adjust all the Feature Id values for each Voxel
-    for(size_t i = 0; i < totalPoints; ++i)
-    {
-      m_MTRIds[i] = pid[ m_MTRIds[i] ];
-    }
+    totalPoints = m->getTotalPoints();
+    randomizeFeatureIds(totalPoints, totalFeatures);
   }
 
   // If there is an error set this to something negative and also set a message
@@ -282,25 +242,99 @@ void IdentifyMicroTextureRegions::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void IdentifyMicroTextureRegions::randomizeFeatureIds(int64_t totalPoints, size_t totalFeatures)
+{
+  notifyStatusMessage(getHumanLabel(), "Randomizing Feature Ids");
+  // Generate an even distribution of numbers between the min and max range
+  const size_t rangeMin = 1;
+  const size_t rangeMax = totalFeatures - 1;
+  initializeVoxelSeedGenerator(rangeMin, rangeMax);
+
+  // Get a reference variable to the Generator object
+  Generator& numberGenerator = *m_NumberGenerator;
+
+  DataArray<int32_t>::Pointer rndNumbers = DataArray<int32_t>::CreateArray(totalFeatures, "New GrainIds");
+
+  int32_t* gid = rndNumbers->getPointer(0);
+  gid[0] = 0;
+  for(size_t i = 1; i < totalFeatures; ++i)
+  {
+    gid[i] = i;
+  }
+
+  size_t r;
+  size_t temp;
+  //--- Shuffle elements by randomly exchanging each with one other.
+  for (size_t i = 1; i < totalFeatures; i++)
+  {
+    r = numberGenerator(); // Random remaining position.
+    if (r >= totalFeatures)
+    {
+      continue;
+    }
+    temp = gid[i];
+    gid[i] = gid[r];
+    gid[r] = temp;
+  }
+
+  // Now adjust all the Grain Id values for each Voxel
+  for(int64_t i = 0; i < totalPoints; ++i)
+  {
+    m_MTRIds[i] = gid[ m_MTRIds[i] ];
+  }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void IdentifyMicroTextureRegions::getCAxisBins()
 {
   size_t totalPoints = m_CAxisLocationsPtr.lock()->getNumberOfTuples();
-  cAxisBins.resize(totalPoints, -1);
+  phiBins.resize(totalPoints, -1);
+  thetaBins.resize(totalPoints, -1);
   float theta, phi;
   size_t thetaBin, phiBin, cAxisBin;
+  float oneOverCAxisTolerance = 1.0/m_CAxisTolerance;
   for(size_t i = 0; i< totalPoints; i++)
   {
     theta = DREAM3D::Constants::k_180OverPi * atan2f(m_CAxisLocations[3*i+1], m_CAxisLocations[3*i]);
     if(theta < 0) theta += 360.0;
     phi = DREAM3D::Constants::k_180OverPi * asinf(m_CAxisLocations[3*i+2]);
-    thetaBin = size_t(theta/m_CAxisTolerance);
-    phiBin = size_t(phi/m_CAxisTolerance);
+    thetaBin = size_t(theta*oneOverCAxisTolerance);
+    phiBin = size_t(phi*oneOverCAxisTolerance);
     if(thetaBin >= numThetaBins) thetaBin = numThetaBins-1;
     if(phiBin >= numPhiBins) phiBin = numPhiBins-1;
     cAxisBin = (phiBin*numThetaBins) + thetaBin;
-    cAxisBins[i] = cAxisBin;
+    phiBins[i] = phiBin;
+    thetaBins[i] = thetaBin;
     m_MTRIds[i] = cAxisBin;
   }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void IdentifyMicroTextureRegions::findMTRregions()
+{
+  
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void IdentifyMicroTextureRegions::initializeVoxelSeedGenerator(const size_t rangeMin, const size_t rangeMax)
+{
+  // The way we are using the boost random number generators is that we are asking for a NumberDistribution (see the typedef)
+  // to guarantee the numbers are betwee a specific range and will only be generated once. We also keep a tally of the
+  // total number of numbers generated as a way to make sure the while loops eventually terminate. This setup should
+  // make sure that every voxel can be a seed point.
+  //  const size_t rangeMin = 0;
+  //  const size_t rangeMax = totalPoints - 1;
+  m_Distribution = boost::shared_ptr<NumberDistribution>(new NumberDistribution(rangeMin, rangeMax));
+  m_RandomNumberGenerator = boost::shared_ptr<RandomNumberGenerator>(new RandomNumberGenerator);
+  m_NumberGenerator = boost::shared_ptr<Generator>(new Generator(*m_RandomNumberGenerator, *m_Distribution));
+  m_RandomNumberGenerator->seed(static_cast<size_t>( QDateTime::currentMSecsSinceEpoch() )); // seed with the current time
+  m_TotalRandomNumbersGenerated = 0;
 }
 
 // -----------------------------------------------------------------------------

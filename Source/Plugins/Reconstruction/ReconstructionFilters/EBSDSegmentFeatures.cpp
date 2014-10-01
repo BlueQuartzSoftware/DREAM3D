@@ -240,6 +240,7 @@ void EBSDSegmentFeatures::execute()
 
   QVector<size_t> tDims(1, 1);
   m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->resizeAttributeArrays(tDims);
+  updateFeatureInstancePointers();
 
   // Tell the user we are starting the filter
   notifyStatusMessage(getMessagePrefix(), getHumanLabel(), "Starting");

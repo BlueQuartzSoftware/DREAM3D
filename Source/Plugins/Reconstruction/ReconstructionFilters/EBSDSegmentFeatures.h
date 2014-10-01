@@ -80,6 +80,7 @@ class EBSDSegmentFeatures : public SegmentFeatures
 
     DREAM3D_FILTER_PARAMETER(float, MisorientationTolerance)
     Q_PROPERTY(float MisorientationTolerance READ getMisorientationTolerance WRITE setMisorientationTolerance)
+
     DREAM3D_INSTANCE_PROPERTY(bool, RandomizeFeatureIds)
 
     DREAM3D_FILTER_PARAMETER(bool, UseGoodVoxels)
