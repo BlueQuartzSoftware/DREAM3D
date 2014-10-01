@@ -101,7 +101,7 @@ void __TestReorderCopy()
 
   // fill reorder vector with same index (using this would be the same result as deep copy)
   QVector<size_t> newOrder(numTuples);
-  for(int i=0; i<numTuples; i++)
+  for(size_t i=0; i<numTuples; i++)
   {
     newOrder[i]=i;
   }
@@ -126,17 +126,17 @@ void __TestReorderCopy()
     src->setValue(i, i);
   }
   
-  for(int i = 0; i < numTuples; i++)
+  for(size_t i = 0; i < numTuples; i++)
   {
-    for(int j = 0; j < cDims[0]; j++)
+    for(size_t j = 0; j < cDims[0]; j++)
     {
        src->setComponent(i, j, static_cast<T>(i*cDims[0]+j) );
     }
   }
   copy = boost::dynamic_pointer_cast<DataArray<T> >(src->reorderCopy(newOrder));
-  for(int i = 0; i < numTuples; i++)
+  for(size_t i = 0; i < numTuples; i++)
   {
-    for(int j = 0; j < cDims[0]; j++)
+    for(size_t j = 0; j < cDims[0]; j++)
     {
       T cpy = copy->getComponent(newOrder[i], j);
       T val = src->getComponent(i, j);
@@ -832,17 +832,17 @@ void _TestDeepCopyDataArray()
 
   // Create the array again, this time allocating the data and putting in some known data
   src = DataArray<T>::CreateArray(numTuples, cDims, name, true);
-  for(int i = 0; i < numTuples; i++)
+  for(size_t i = 0; i < numTuples; i++)
   {
-    for(int j = 0; j < cDims[0]; j++)
+    for(size_t j = 0; j < cDims[0]; j++)
     {
       src->setComponent(i, j, static_cast<T>(i+j) );
     }
   }
   copy = boost::dynamic_pointer_cast<DataArray<T> >(src->deepCopy());
-  for(int i = 0; i < numTuples; i++)
+  for(size_t i = 0; i < numTuples; i++)
   {
-    for(int j = 0; j < cDims[0]; j++)
+    for(size_t j = 0; j < cDims[0]; j++)
     {
       src->setComponent(i, j, static_cast<T>(i+j) );
       T cpy = copy->getComponent(i, j);

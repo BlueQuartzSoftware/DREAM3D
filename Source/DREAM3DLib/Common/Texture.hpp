@@ -112,7 +112,7 @@ class Texture
         TextureBins[i] = static_cast<int>(bin);
       }
 
-      for (size_t i = 0; i < CubicOps::k_OdfSize; i++)
+      for (int i = 0; i < CubicOps::k_OdfSize; i++)
       {
         odf[i] = 0;
       }
@@ -164,13 +164,13 @@ class Texture
       if(totaladdweight > totalweight)
       {
         float scale = (totaladdweight / totalweight);
-        for (size_t i = 0; i < CubicOps::k_OdfSize; i++)
+        for (int i = 0; i < CubicOps::k_OdfSize; i++)
         {
           odf[i] = odf[i] / scale;
         }
       }
       float remainingweight = totalweight;
-      for (size_t i = 0; i < CubicOps::k_OdfSize; i++)
+      for (int i = 0; i < CubicOps::k_OdfSize; i++)
       {
         remainingweight = remainingweight - odf[i];
       }
@@ -192,7 +192,7 @@ class Texture
       if(normalize == true)
       {
         // Normalize the odf
-        for (size_t i = 0; i < CubicOps::k_OdfSize; i++)
+        for (int i = 0; i < CubicOps::k_OdfSize; i++)
         {
           odf[i] = odf[i] / totalweight;
         }
@@ -291,13 +291,13 @@ class Texture
       if(totaladdweight > totalweight)
       {
         float scale = (totaladdweight / totalweight);
-        for (size_t i = 0; i < HexagonalOps::k_OdfSize; i++)
+        for (int i = 0; i < HexagonalOps::k_OdfSize; i++)
         {
           odf[i] = odf[i] / scale;
         }
       }
       float remainingweight = totalweight;
-      for (size_t i = 0; i < HexagonalOps::k_OdfSize; i++)
+      for (int i = 0; i < HexagonalOps::k_OdfSize; i++)
       {
         remainingweight = remainingweight - odf[i];
       }
@@ -319,7 +319,7 @@ class Texture
       if(normalize == true)
       {
         // Normalize the odf
-        for (size_t i = 0; i < HexagonalOps::k_OdfSize; i++)
+        for (int i = 0; i < HexagonalOps::k_OdfSize; i++)
         {
           odf[i] = odf[i] / totalweight;
         }
@@ -365,7 +365,7 @@ class Texture
         TextureBins[i] = static_cast<int>(bin);
       }
 
-      for (size_t i = 0; i < OrthoRhombicOps::k_OdfSize; i++)
+      for (int i = 0; i < OrthoRhombicOps::k_OdfSize; i++)
       {
         odf[i] = 0;
       }
@@ -417,13 +417,13 @@ class Texture
       if(totaladdweight > totalweight)
       {
         float scale = (totaladdweight / totalweight);
-        for (size_t i = 0; i < OrthoRhombicOps::k_OdfSize; i++)
+        for (int i = 0; i < OrthoRhombicOps::k_OdfSize; i++)
         {
           odf[i] = odf[i] / scale;
         }
       }
       float remainingweight = totalweight;
-      for (size_t i = 0; i < OrthoRhombicOps::k_OdfSize; i++)
+      for (int i = 0; i < OrthoRhombicOps::k_OdfSize; i++)
       {
         remainingweight = remainingweight - odf[i];
       }
@@ -445,7 +445,7 @@ class Texture
       if (normalize == true)
       {
         // Normalize the odf
-        for (size_t i = 0; i < OrthoRhombicOps::k_OdfSize; i++)
+        for (int i = 0; i < OrthoRhombicOps::k_OdfSize; i++)
         {
           odf[i] = odf[i] / totalweight;
         }

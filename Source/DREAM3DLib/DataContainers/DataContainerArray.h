@@ -147,6 +147,22 @@ class DREAM3DLib_EXPORT DataContainerArray : public QObject
     QMap<QString, IDataContainerBundle::Pointer>& getDataContainerBundles();
 
     /**
+    * @brief getDataContainerBundle
+    * @param name
+    * @return
+    */
+    IDataContainerBundle::Pointer getDataContainerBundle(const QString &name);
+
+    template<typename T>
+    T* getDataContainerBundleAs(const QString& name)
+    {
+      IDataContainerBundle::Pointer dc = getDataContainerBundle(name);
+      if(NULL == dc.get()) { return NULL; }
+      T* m = T::SafePointerDownCast(dc.get());
+      return m;
+    }
+
+    /**
      * @brief addDataContainerBundle
      * @param dataContainer
      */

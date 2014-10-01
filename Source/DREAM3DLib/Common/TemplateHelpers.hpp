@@ -149,6 +149,139 @@ namespace TemplateHelpers
          }
          return ptr;
        }
+
+       IDataArray::Pointer operator()(AbstractFilter* f, QVector<size_t> tupleDims, QVector<size_t> compDims, QString arrayName, bool allocate, IDataArray::Pointer sourceArrayType)
+       {
+         IDataArray::Pointer ptr = IDataArray::NullPointer();
+
+         if(CanDynamicCast<FloatArrayType>()(sourceArrayType) ) {
+           ptr = FloatArrayType::CreateArray(tupleDims, compDims, arrayName, allocate);
+         }
+         else if(CanDynamicCast<DoubleArrayType>()(sourceArrayType) ) {
+           ptr = DoubleArrayType::CreateArray(tupleDims, compDims, arrayName, allocate);
+         }
+         else if(CanDynamicCast<Int8ArrayType>()(sourceArrayType) ) {
+           ptr = Int8ArrayType::CreateArray(tupleDims, compDims, arrayName, allocate);
+         }
+         else if(CanDynamicCast<UInt8ArrayType>()(sourceArrayType) ) {
+           ptr = UInt8ArrayType::CreateArray(tupleDims, compDims, arrayName, allocate);
+         }
+         else if(CanDynamicCast<Int16ArrayType>()(sourceArrayType) ) {
+           ptr = Int16ArrayType::CreateArray(tupleDims, compDims, arrayName, allocate);
+         }
+         else if(CanDynamicCast<UInt16ArrayType>()(sourceArrayType) ) {
+           ptr = UInt16ArrayType::CreateArray(tupleDims, compDims, arrayName, allocate);
+         }
+         else if(CanDynamicCast<Int32ArrayType>()(sourceArrayType) ) {
+           ptr = Int32ArrayType::CreateArray(tupleDims, compDims, arrayName, allocate);
+         }
+         else if(CanDynamicCast<UInt32ArrayType>()(sourceArrayType) ) {
+           ptr = UInt32ArrayType::CreateArray(tupleDims, compDims, arrayName, allocate);
+         }
+         else if(CanDynamicCast<Int64ArrayType>()(sourceArrayType) ) {
+           ptr = Int64ArrayType::CreateArray(tupleDims, compDims, arrayName, allocate);
+         }
+         else if(CanDynamicCast<UInt64ArrayType>()(sourceArrayType) ) {
+           ptr = UInt64ArrayType::CreateArray(tupleDims, compDims, arrayName, allocate);
+         }
+         else {
+          QString msg = QObject::tr("The created array is of unsupported type.");
+          f->setErrorCondition(Errors::UnsupportedType);
+          f->notifyErrorMessage(f->getHumanLabel(), msg, f->getErrorCondition());
+         }
+         return ptr;
+       }
+   };
+
+   class CreateArrayFromType
+   {
+     public:
+       CreateArrayFromType(){}
+       ~CreateArrayFromType(){}
+
+       IDataArray::Pointer operator()(AbstractFilter* f, size_t numTuples, QVector<size_t> compDims, QString arrayName, bool allocate, QString type)
+       {
+         IDataArray::Pointer ptr = IDataArray::NullPointer();
+
+         if(type.compare(DREAM3D::TypeNames::Float) == 0) {
+           ptr = FloatArrayType::CreateArray(numTuples, compDims, arrayName, allocate);
+         }
+         else if(type.compare(DREAM3D::TypeNames::Double) == 0) {
+           ptr = DoubleArrayType::CreateArray(numTuples, compDims, arrayName, allocate);
+         }
+         else if(type.compare(DREAM3D::TypeNames::Int8) == 0) {
+           ptr = Int8ArrayType::CreateArray(numTuples, compDims, arrayName, allocate);
+         }
+         else if(type.compare(DREAM3D::TypeNames::UInt8) == 0) {
+           ptr = UInt8ArrayType::CreateArray(numTuples, compDims, arrayName, allocate);
+         }
+         else if(type.compare(DREAM3D::TypeNames::Int16) == 0) {
+           ptr = Int16ArrayType::CreateArray(numTuples, compDims, arrayName, allocate);
+         }
+         else if(type.compare(DREAM3D::TypeNames::UInt16) == 0) {
+           ptr = UInt16ArrayType::CreateArray(numTuples, compDims, arrayName, allocate);
+         }
+         else if(type.compare(DREAM3D::TypeNames::Int32) == 0) {
+           ptr = Int32ArrayType::CreateArray(numTuples, compDims, arrayName, allocate);
+         }
+         else if(type.compare(DREAM3D::TypeNames::UInt32) == 0) {
+           ptr = UInt32ArrayType::CreateArray(numTuples, compDims, arrayName, allocate);
+         }
+         else if(type.compare(DREAM3D::TypeNames::Int64) == 0) {
+           ptr = Int64ArrayType::CreateArray(numTuples, compDims, arrayName, allocate);
+         }
+         else if(type.compare(DREAM3D::TypeNames::UInt64) == 0) {
+           ptr = UInt64ArrayType::CreateArray(numTuples, compDims, arrayName, allocate);
+         }
+         else {
+           QString msg = QObject::tr("The created array is of unsupported type.");
+           f->setErrorCondition(Errors::UnsupportedType);
+           f->notifyErrorMessage(f->getHumanLabel(), msg, f->getErrorCondition());
+         }
+         return ptr;
+       }
+
+       IDataArray::Pointer operator()(AbstractFilter* f, QVector<size_t> tupleDims, QVector<size_t> compDims, QString arrayName, bool allocate, QString type)
+       {
+         IDataArray::Pointer ptr = IDataArray::NullPointer();
+
+         if(type.compare(DREAM3D::TypeNames::Float) == 0) {
+           ptr = FloatArrayType::CreateArray(tupleDims, compDims, arrayName, allocate);
+         }
+         else if(type.compare(DREAM3D::TypeNames::Double) == 0) {
+           ptr = DoubleArrayType::CreateArray(tupleDims, compDims, arrayName, allocate);
+         }
+         else if(type.compare(DREAM3D::TypeNames::Int8) == 0) {
+           ptr = Int8ArrayType::CreateArray(tupleDims, compDims, arrayName, allocate);
+         }
+         else if(type.compare(DREAM3D::TypeNames::UInt8) == 0) {
+           ptr = UInt8ArrayType::CreateArray(tupleDims, compDims, arrayName, allocate);
+         }
+         else if(type.compare(DREAM3D::TypeNames::Int16) == 0) {
+           ptr = Int16ArrayType::CreateArray(tupleDims, compDims, arrayName, allocate);
+         }
+         else if(type.compare(DREAM3D::TypeNames::UInt16) == 0) {
+           ptr = UInt16ArrayType::CreateArray(tupleDims, compDims, arrayName, allocate);
+         }
+         else if(type.compare(DREAM3D::TypeNames::Int32) == 0) {
+           ptr = Int32ArrayType::CreateArray(tupleDims, compDims, arrayName, allocate);
+         }
+         else if(type.compare(DREAM3D::TypeNames::UInt32) == 0) {
+           ptr = UInt32ArrayType::CreateArray(tupleDims, compDims, arrayName, allocate);
+         }
+         else if(type.compare(DREAM3D::TypeNames::Int64) == 0) {
+           ptr = Int64ArrayType::CreateArray(tupleDims, compDims, arrayName, allocate);
+         }
+         else if(type.compare(DREAM3D::TypeNames::UInt64) == 0) {
+           ptr = UInt64ArrayType::CreateArray(tupleDims, compDims, arrayName, allocate);
+         }
+         else {
+           QString msg = QObject::tr("The created array is of unsupported type.");
+           f->setErrorCondition(Errors::UnsupportedType);
+           f->notifyErrorMessage(f->getHumanLabel(), msg, f->getErrorCondition());
+         }
+         return ptr;
+       }
    };
 
   template<typename FilterClass, typename DataContainerClass>

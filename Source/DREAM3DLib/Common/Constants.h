@@ -114,6 +114,12 @@ namespace DREAM3D
     const DREAM3D_STRING StatsGenerator("StatsGeneratorDataContainer");
 
     const DREAM3D_STRING SomePath("SomeDataContainer|SomeAttributeMatrix|SomeDataArray");
+
+    const DREAM3D_STRING GenericBundleName("GenericBundle");
+    const DREAM3D_STRING TimeSeriesBundleName("TimeSeriesBundle");
+
+    const DREAM3D_STRING GenericBundleAttributeMatrixName("GenericBundleAttributeMatrix");
+    const DREAM3D_STRING TimeSeriesBundleAttributeMatrixName("TimeSeriesBundleAttributeMatrix");
   }
 
   namespace FilterGroups
@@ -604,6 +610,8 @@ namespace DREAM3D
     const unsigned int EdgeEnsemble = 9; //!<
     const unsigned int FaceEnsemble = 10; //!<
     const unsigned int CellEnsemble = 11; //!<
+    const unsigned int GenericBundle = 12; //!<
+    const unsigned int TimeSeriesBundle = 13; //!<
     const unsigned int Unknown = 999; //!<
   }
 

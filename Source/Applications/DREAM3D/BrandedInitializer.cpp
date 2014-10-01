@@ -217,8 +217,10 @@ QVector<DREAM3DPluginInterface*> BrandedInitializer::loadPlugins()
   }
   // Now try moving up a directory which is what should happen when running from a
   // proper distribution of DREAM3D
+  qDebug() << " Linux Plugins:" << aPluginDir.absolutePath();
   aPluginDir.cdUp();
-  if (aPluginDir.cd("plugins"))
+  qDebug() << "cdUp() Linux Plugins:" << aPluginDir.absolutePath();
+  if (aPluginDir.cd("Plugins"))
   {
     thePath = aPluginDir.absolutePath();
     m_PluginDirs << thePath;

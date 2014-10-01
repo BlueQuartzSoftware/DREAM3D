@@ -424,6 +424,24 @@ QMap<QString, IDataContainerBundle::Pointer>& DataContainerArray::getDataContain
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+IDataContainerBundle::Pointer DataContainerArray::getDataContainerBundle(const QString& name)
+{
+  IDataContainerBundle::Pointer f = IDataContainerBundle::NullPointer();
+  for(QMap<QString, IDataContainerBundle::Pointer>::iterator it = m_DataContainerBundles.begin(); it != m_DataContainerBundles.end(); ++it)
+  {
+    if((*it)->getName().compare(name) == 0)
+    {
+      f = *it;
+      break;
+    }
+  }
+
+  return f;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void DataContainerArray::addDataContainerBundle(IDataContainerBundle::Pointer dataContainer)
 {
   m_DataContainerBundles[dataContainer->getName()] = dataContainer;
