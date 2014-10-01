@@ -10,9 +10,11 @@
 #--////////////////////////////////////////////////////////////////////////////
 
 
-if(NOT ${DREAM3D_SDK} STREQUAL "")
+if(NOT "${DREAM3D_SDK}" STREQUAL "")
   include("${DREAM3D_SDK}/DREAM3D_SDK.cmake")
 endif()
+
+message(STATUS "DREAM3D_SDK Location: ${DREAM3D_SDK}")
 
 project(DREAM3DProj)
 cmake_minimum_required(VERSION 2.8.9)
@@ -176,19 +178,32 @@ LINK_DIRECTORIES(${Boost_LIBRARY_DIRS})
 # HDF5 now comes with everything that is needed for CMake to load
 # up the targets (Exported) that it needs. We just need to find where
 # HDF5 is installed.
-message(STATUS "HDF5_INSTALL: ${HDF5_INSTALL}")
+
 if("${HDF5_INSTALL}" STREQUAL "")
     set(HDF5_INSTALL  $ENV{HDF5_INSTALL})
 endif()
 
+if( "${HDF5_INSTALL}" STREQUAL "")
+  message(FATA_ERROR "The HDF5_INSTALL variable was not set. In order to find HDF5 you need to either\
+                      pass in the -DHDF5_INSTALL=.... or set the HDF5_INSTALL environment variable.")  
+endif()
+
+
 if(WIN32)
-    set(HDF5_ROOT_DIR_HINT "${HDF5_INSTALL}/cmake/hdf5")
+    set(ENV{HDF5_ROOT_DIR_HINT} "${HDF5_INSTALL}/cmake/hdf5")
+    set(ENV{HDF5_ROOT} "${HDF5_INSTALL}")
     set(CMAKE_MODULE_PATH ${HDF5_INSTALL}/cmake/hdf5 ${CMAKE_MODULE_PATH})
 else()
-    set(HDF5_ROOT_DIR_HINT "${HDF5_INSTALL}/share/cmake")
+    set(ENV{HDF5_ROOT_DIR_HINT} "${HDF5_INSTALL}/share/cmake")
+    set(ENV{HDF5_ROOT} "${HDF5_INSTALL}")
     set(CMAKE_MODULE_PATH ${HDF5_INSTALL}/share/cmake ${CMAKE_MODULE_PATH})
 endif()
-message (STATUS "HDF5_ROOT_DIR_HINT: ${HDF5_ROOT_DIR_HINT}")
+
+if(0)
+message(STATUS "      HDF5_INSTALL: ${HDF5_INSTALL}")
+message(STATUS "HDF5_ROOT_DIR_HINT: $ENV{HDF5_ROOT_DIR_HINT}")
+message(STATUS "         HDF5_ROOT: $ENV{HDF5_ROOT}")
+endif()
 
 find_package(HDF5)
 if(HDF5_FOUND)
@@ -196,6 +211,8 @@ if(HDF5_FOUND)
   include_directories(${HDF5_INCLUDE_DIRS} )
   list(APPEND CMP_LIB_SEARCH_DIRS ${HDF5_BINARY_DIR} ${HDF5_LIBRARY_DIR} )
   
+  message(STATUS "Found HDF5: ${HDF5_INSTALL}")
+  message(STATUS "HDF5 Version: ${HDF5_VERSION_STRING}")
   if(MSVC_IDE)
     set(BUILD_TYPES Debug Release)
   else()
