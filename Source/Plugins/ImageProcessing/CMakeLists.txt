@@ -59,16 +59,16 @@ find_package(ITK COMPONENTS
 include(${ITK_USE_FILE})
 
 IF(ITK_DIR)
-
+  SET(DREAM3D_ITK_DIR "${ITK_DIR}" CACHE INTERNAL "Path to store itk binaries")
   MESSAGE(STATUS "Using ITK available at: ${ITK_DIR}")
-
-  IF("${ITK_LIBRARY_DIRS}" STREQUAL "")
-    # ITKv4 does not seem to specify ITK_LIBRARY_DIRS any more, so we generate the binary directory from the main ITK directory
-    SET(ITK_LIBRARY_DIRS "${ITK_DIR}/bin")
-  ENDIF()
 
   # Copy libraries to PLUS_EXECUTABLE_OUTPUT_PATH
   IF( ${CMAKE_GENERATOR} MATCHES "Visual Studio" )
+    IF("${ITK_LIBRARY_DIRS}" STREQUAL "")
+      # ITKv4 does not seem to specify ITK_LIBRARY_DIRS any more, so we generate the binary directory from the main ITK directory
+      SET(ITK_LIBRARY_DIRS "${ITK_DIR}/bin")
+    ENDIF()
+
     FILE(COPY
       ${ITK_LIBRARY_DIRS}/Release/
       DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/Release
@@ -80,13 +80,28 @@ IF(ITK_DIR)
       FILES_MATCHING REGEX .*${CMAKE_SHARED_LIBRARY_SUFFIX}
       )
   ELSE()
+    IF("${ITK_LIBRARY_DIRS}" STREQUAL "")
+      # ITKv4 does not seem to specify ITK_LIBRARY_DIRS any more, so we generate the binary directory from the main ITK directory
+      SET(ITK_LIBRARY_DIRS "${ITK_DIR}/lib/")
+    ENDIF()
+    #message(STATUS "CMAKE_SHARED_LIBRARY_SUFFIX: ${CMAKE_SHARED_LIBRARY_SUFFIX}")
+    #message(STATUS "ITK_LIBRARY_DIRS: ${ITK_LIBRARY_DIRS}")
+    FILE(GLOB itkLibs
+        "${ITK_LIBRARY_DIRS}*${CMAKE_SHARED_LIBRARY_SUFFIX}.*")
     FILE(COPY
-      ${ITK_LIBRARY_DIRS}/
-      DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}
-      FILES_MATCHING REGEX .*${CMAKE_SHARED_LIBRARY_SUFFIX}
+        ${ITK_LIBRARY_DIRS}/
+        DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}
+        FILES_MATCHING PATTERN "*${CMAKE_SHARED_LIBRARY_SUFFIX}.*"
+      )
+
+    #message(STATUS "itkLibs: ${itkLibs}")
+    install( FILES ${itkLibs}
+      DESTINATION "lib"
+      COMPONENT Applications
       )
   ENDIF()
-  SET(DREAM3D_ITK_DIR "${ITK_DIR}" CACHE INTERNAL "Path to store itk binaries")
+  
+
 endif()
 
 

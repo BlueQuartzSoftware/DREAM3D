@@ -49,7 +49,7 @@ class DREAM3DLib_EXPORT IDataContainerBundle : public QObject
     Q_OBJECT
   public:
     DREAM3D_SHARED_POINTERS (IDataContainerBundle)
-    //  DREAM3D_STATIC_NEW_MACRO (IDataContainerBundle)
+    //DREAM3D_STATIC_NEW_MACRO (IDataContainerBundle)
     DREAM3D_TYPE_MACRO(IDataContainerBundle)
 
     virtual ~IDataContainerBundle() {}

@@ -112,7 +112,7 @@ if(WIN32)
             ${PROJECT_BINARY_DIR}/copy_nightly.bat)
 endif()
 
-# Create an NSIS based installer for Windows Systems
+# Create an ZIP based installer for Windows Systems
 if(WIN32 AND NOT UNIX)
   # There is a bug in NSIS that does not handle full unix paths properly. Make
   # sure there is at least one set of four (4) backlasshes.
@@ -124,7 +124,8 @@ if(WIN32 AND NOT UNIX)
   SET(CPACK_GENERATOR "ZIP")
   SET(CPACK_BINARY_ZIP "ON")
   SET(CPACK_PACKAGE_INSTALL_REGISTRY_KEY "DREAM3D Software Tools")
-ELSE(WIN32 AND NOT UNIX)
+ELSE()
+    # Create a Tar.gz for OS X and Linux
     SET(CPACK_BINARY_BUNDLE "OFF")
     SET(CPACK_BINARY_CYGWIN "OFF")
     SET(CPACK_BINARY_DEB "OFF")

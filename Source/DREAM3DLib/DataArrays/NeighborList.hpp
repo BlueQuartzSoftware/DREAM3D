@@ -87,7 +87,7 @@ class NeighborList : public IDataArray
      */
     static Pointer CreateArray(size_t numTuples, const QString& name, bool allocate = true)
     {
-      std::cout << "NeighborList::CreateArray  name= " << name.toStdString() << "   numTuples= " << numTuples << std::endl;
+      //std::cout << "NeighborList::CreateArray  name= " << name.toStdString() << "   numTuples= " << numTuples << std::endl;
       if (name.isEmpty() == true)
       {
         return NullPointer();
@@ -108,7 +108,7 @@ class NeighborList : public IDataArray
      */
     static Pointer CreateArray(size_t numTuples, int rank, size_t* dims, const QString& name, bool allocate = true)
     {
-      std::cout << "NeighborList::CreateArray  name= " << name.toStdString() << "   numTuples= " << numTuples << std::endl;
+      //std::cout << "NeighborList::CreateArray  name= " << name.toStdString() << "   numTuples= " << numTuples << std::endl;
       if (name.isEmpty() == true)
       {
         return NullPointer();
@@ -139,7 +139,7 @@ class NeighborList : public IDataArray
         return NullPointer();
       }
       size_t numElements = numTuples;
-      for(int iter = 0; iter < cDims.size(); iter++)
+      for(size_t iter = 0; iter < cDims.size(); iter++)
       {
         numElements *= cDims[iter];
       }
@@ -350,24 +350,26 @@ class NeighborList : public IDataArray
         return 0;
       }
 
-      if (idxs.size() >= getNumberOfTuples() )
+      size_t idxsSize = static_cast<size_t>(idxs.size());
+      if (idxsSize >= getNumberOfTuples() )
       {
         resize(0);
         return 0;
       }
 
+      size_t arraySize = m_Array.size();
       // Sanity Check the Indices in the vector to make sure we are not trying to remove any indices that are
       // off the end of the array and return an error code.
       for(QVector<size_t>::size_type i = 0; i < idxs.size(); ++i)
       {
-        if (idxs[i] >= m_Array.size()) { return -100; }
+        if (idxs[i] >= arraySize) { return -100; }
       }
 
+      std::vector<SharedVectorType> replacement(arraySize - idxsSize);
 
-      std::vector<SharedVectorType> replacement(m_Array.size() - idxs.size());
       size_t idxsIndex = 0;
       size_t rIdx = 0;
-      for(size_t dIdx = 0; dIdx < m_Array.size(); ++dIdx)
+      for(size_t dIdx = 0; dIdx <arraySize; ++dIdx)
       {
         if (dIdx != idxs[idxsIndex])
         {
@@ -377,7 +379,7 @@ class NeighborList : public IDataArray
         else
         {
           ++idxsIndex;
-          if (idxsIndex == idxs.size() ) { idxsIndex--;}
+          if (idxsIndex == idxsSize ) { idxsIndex--;}
         }
       }
       m_Array = replacement;
@@ -404,16 +406,18 @@ class NeighborList : public IDataArray
      */
     virtual IDataArray::Pointer reorderCopy(QVector<size_t> newOrderMap)
     {
-      if(newOrderMap.size() != getNumberOfTuples())
+      size_t newOrderMapSize = static_cast<size_t>(newOrderMap.size());
+      if( newOrderMapSize != getNumberOfTuples())
       {
         return IDataArray::NullPointer();
       }
 
       typename NeighborList<T>::Pointer daCopyPtr = NeighborList<T>::CreateArray(getNumberOfTuples(), "Copy of NeighborList", true);
       daCopyPtr->initializeWithZeros();
-      for(size_t i = 0; i < getNumberOfTuples(); i++)
+      size_t numTuples = getNumberOfTuples();
+      for(size_t i = 0; i < numTuples; i++)
       {
-        typename NeighborList<T>::SharedVectorType sharedNeiLst(new std::vector<T>);
+        typename NeighborList<T>::SharedVectorType sharedNeiLst; //(new std::vector<T>);
         sharedNeiLst = m_Array[i];
         daCopyPtr->setList(newOrderMap[i], sharedNeiLst);
       }
@@ -530,7 +534,7 @@ class NeighborList : public IDataArray
       m_Array.resize(size);
       m_NumTuples = size;
       // Initialize with zero length Vectors
-      for (qint32 i = old; i < m_Array.size(); ++i)
+      for (size_t i = old; i < m_Array.size(); ++i)
       {
         m_Array[i] = SharedVectorType(new VectorType);
       }
