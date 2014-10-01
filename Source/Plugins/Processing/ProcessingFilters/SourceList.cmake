@@ -15,6 +15,7 @@ set(_PublicFilters
   FlattenImage
   MinSize
   ClearData
+  ClearDataMask
   ErodeDilateBadData
   ErodeDilateCoordinationNumber
   ErodeDilateMask
