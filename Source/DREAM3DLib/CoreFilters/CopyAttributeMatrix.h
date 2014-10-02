@@ -34,8 +34,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _RenameAttributeMatrix_H_
-#define _RenameAttributeMatrix_H_
+#ifndef _CopyAttributeMatrix_H_
+#define _CopyAttributeMatrix_H_
 
 #include <QtCore/QString>
 #include <set>
@@ -48,21 +48,21 @@
 
 
 /**
- * @class RenameAttributeMatrix RenameAttributeMatrix.h /FilterCategoryFilters/RenameAttributeMatrix.h
+ * @class CopyAttributeMatrix CopyAttributeMatrix.h /FilterCategoryFilters/CopyAttributeMatrix.h
  * @brief
  * @author
  * @date
  * @version 1.0
  */
-class DREAM3DLib_EXPORT RenameAttributeMatrix : public AbstractFilter
+class DREAM3DLib_EXPORT CopyAttributeMatrix : public AbstractFilter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
-    DREAM3D_SHARED_POINTERS(RenameAttributeMatrix)
-    DREAM3D_STATIC_NEW_MACRO(RenameAttributeMatrix)
-    DREAM3D_TYPE_MACRO_SUPER(RenameAttributeMatrix, AbstractFilter)
+    DREAM3D_SHARED_POINTERS(CopyAttributeMatrix)
+    DREAM3D_STATIC_NEW_MACRO(CopyAttributeMatrix)
+    DREAM3D_TYPE_MACRO_SUPER(CopyAttributeMatrix, AbstractFilter)
 
-    virtual ~RenameAttributeMatrix();
+    virtual ~CopyAttributeMatrix();
 
     DREAM3D_FILTER_PARAMETER(DataArrayPath, SelectedAttributeMatrixPath)
     Q_PROPERTY(DataArrayPath SelectedAttributeMatrixPath READ getSelectedAttributeMatrixPath WRITE setSelectedAttributeMatrixPath)
@@ -122,7 +122,7 @@ class DREAM3DLib_EXPORT RenameAttributeMatrix : public AbstractFilter
     void preflightExecuted();
 
   protected:
-    RenameAttributeMatrix();
+    CopyAttributeMatrix();
 
     /**
     * @brief Checks for the appropriate parameter values and availability of
@@ -136,10 +136,10 @@ class DREAM3DLib_EXPORT RenameAttributeMatrix : public AbstractFilter
 
   private:
 
-    RenameAttributeMatrix(const RenameAttributeMatrix&); // Copy Constructor Not Implemented
-    void operator=(const RenameAttributeMatrix&); // Operator '=' Not Implemented
+    CopyAttributeMatrix(const CopyAttributeMatrix&); // Copy Constructor Not Implemented
+    void operator=(const CopyAttributeMatrix&); // Operator '=' Not Implemented
 };
 
-#endif /* _RenameAttributeMatrix_H_ */
+#endif /* _CopyAttributeMatrix_H_ */
 
 

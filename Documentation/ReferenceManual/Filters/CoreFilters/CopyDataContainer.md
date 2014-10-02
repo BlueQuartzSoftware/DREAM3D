@@ -1,4 +1,4 @@
-Rename Data Container {#renamedatacontainer}
+Copy Data Container{#copydatacontainer}
 =====
 
 ## Group (Subgroup) ##
@@ -6,8 +6,7 @@ Generic (Memory Management)
 
 
 ## Description ##
-This filter renames a user chosen DataContainer to a user defined new name.
-
+This filter copies a user chosen DataContainer to a new DataContainer with a user defined new name.
 
 ## Parameters ##
 | Name             | Type |
@@ -26,7 +25,7 @@ This filter renames a user chosen DataContainer to a user defined new name.
 
 ## Authors ##
 
-**Copyright** 2014 Michael A. Groeber (AFRL), 2014 Michael A. Jackson (BlueQuartz Software)
+**Copyright** 2014 Michael A. Groeber (AFRL), 2014 Michael A. Jackson (BlueQuartz Software), William C. Lenthe (UCSB)
 
 **Contact Info** dream3d@bluequartz.net
 
