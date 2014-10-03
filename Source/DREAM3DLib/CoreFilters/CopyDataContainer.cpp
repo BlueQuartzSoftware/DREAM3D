@@ -61,7 +61,7 @@ CopyDataContainer::~CopyDataContainer()
 void CopyDataContainer::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(FilterParameter::New("DataContainer to Rename", "SelectedDataContainerName", FilterParameterWidgetType::DataContainerSelectionWidget, getSelectedDataContainerName(), false));
+  parameters.push_back(FilterParameter::New("DataContainer to Copy", "SelectedDataContainerName", FilterParameterWidgetType::DataContainerSelectionWidget, getSelectedDataContainerName(), false));
   parameters.push_back(FilterParameter::New("New DataContainer Name", "NewDataContainerName", FilterParameterWidgetType::StringWidget, getNewDataContainerName(), false));
   setFilterParameters(parameters);
 }
@@ -132,7 +132,7 @@ void CopyDataContainer::execute()
 {
   setErrorCondition(0);
 
-  dataCheck(); // calling the dataCheck will rename the array, so nothing is required here
+  dataCheck(); // calling the dataCheck will copy the array, so nothing is required here
   if(getErrorCondition() < 0) { return; }
 
   notifyStatusMessage(getHumanLabel(), "Complete");
