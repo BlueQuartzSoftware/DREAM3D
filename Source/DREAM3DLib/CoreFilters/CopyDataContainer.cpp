@@ -84,8 +84,8 @@ int CopyDataContainer::writeFilterParameters(AbstractFilterParametersWriter* wri
 {
   writer->openFilterGroup(this, index);
   DREAM3D_FILTER_WRITE_PARAMETER(SelectedDataContainerName)
-  DREAM3D_FILTER_WRITE_PARAMETER(NewDataContainerName)
-  writer->closeFilterGroup();
+      DREAM3D_FILTER_WRITE_PARAMETER(NewDataContainerName)
+      writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
 
@@ -96,17 +96,37 @@ void CopyDataContainer::dataCheck()
 {
   setErrorCondition(0);
 
-  if(getNewDataContainerName().isEmpty() == true)
+  if(getSelectedDataContainerName().isEmpty() == true)
   {
     setErrorCondition(-11000);
+    QString ss = QObject::tr("The Selected Data Container name can not be empty. Please set a value.");
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+  }
+
+  if(getNewDataContainerName().isEmpty() == true)
+  {
+    setErrorCondition(-11001);
     QString ss = QObject::tr("The New Data Container name can not be empty. Please set a value.");
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+  }
+
+  //If either one of the strings are empty we can not go on.
+  if(getErrorCondition() < 0)
+  {
+    return;
   }
 
   DataContainerArray::Pointer dca = getDataContainerArray();
   if (NULL == dca.get() ) { return; }
 
   DataContainer::Pointer dc = dca->getDataContainer(getSelectedDataContainerName());
+  if(NULL == dc.get())
+  {
+    setErrorCondition(-11002);
+    QString ss = QObject::tr("The Selected Data Container was not found in the DataContainerArray. Are you sure it exists? The Spelling and Capitalization must also match.");
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    return;
+  }
   DataContainer::Pointer dcNew = dc->deepCopy();
   dcNew->setName(getNewDataContainerName());
   dca->addDataContainer(dcNew);
