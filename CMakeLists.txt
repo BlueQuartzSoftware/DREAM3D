@@ -221,13 +221,14 @@ if(HDF5_FOUND)
         set(BUILD_TYPES "Debug")
     endif()
   endif()
-  AddHDF5CopyInstallRules(LIBVAR HDF5_LIB
-                      LIBNAME hdf5
-                      TYPES ${BUILD_TYPES})
-  AddHDF5CopyInstallRules(LIBVAR HDF5_CPP_LIB
-                      LIBNAME hdf5_cpp
-                      TYPES ${BUILD_TYPES})
-
+  if(NOT APPLE)
+    AddHDF5CopyInstallRules(LIBVAR HDF5_LIB
+                        LIBNAME hdf5
+                        TYPES ${BUILD_TYPES})
+    AddHDF5CopyInstallRules(LIBVAR HDF5_CPP_LIB
+                        LIBNAME hdf5_cpp
+                        TYPES ${BUILD_TYPES})
+  endif()
 ELSE(HDF5_FOUND)
     MESSAGE(FATAL_ERROR "Cannot build without HDF5.  Please set HDF5_INSTALL environment variable to point to your HDF5 installation.")
 ENDif(HDF5_FOUND)
