@@ -62,7 +62,7 @@ namespace Detail
   //
   // -----------------------------------------------------------------------------
   template<typename T>
-  void ConvertData(T* ptr, QVector<size_t> dims, VolumeDataContainer* m, int32_t scalarType, const QString attributeMatrixName, const QString& name)
+  void ConvertData(T* ptr, QVector<size_t> dims, DataContainer::Pointer m, int32_t scalarType, const QString attributeMatrixName, const QString& name)
   {
     int voxels = ptr->getNumberOfTuples();
     size_t size = ptr->getSize();
@@ -257,10 +257,9 @@ void ConvertData::dataCheck(bool preflight)
 {
   setErrorCondition(0);
 
-  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, m_SelectedCellArrayPath.getDataContainerName(), false);
-  if(getErrorCondition() < 0 || NULL == m) { return; }
-  AttributeMatrix::Pointer cellAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, m_SelectedCellArrayPath.getAttributeMatrixName(), -301);
-  if(getErrorCondition() < 0 || NULL == cellAttrMat.get() ) { return; }
+//  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, m_SelectedCellArrayPath.getDataContainerName(), false);
+//  if(getErrorCondition() < 0 || NULL == m) { return; }
+
 
   QString ss;
   if(m_SelectedCellArrayPath.isEmpty() == true)
@@ -281,8 +280,12 @@ void ConvertData::dataCheck(bool preflight)
   int numberOfComponents = 0;
   if (true == preflight)
   {
-    //  IDataArray::Pointer  = IDataArray::NullPointer();
+
+    AttributeMatrix::Pointer cellAttrMat = getDataContainerArray()->getPrereqAttributeMatrixFromPath<DataContainer, AbstractFilter>(this, m_SelectedCellArrayPath, -301);
+    if(getErrorCondition() < 0 || NULL == cellAttrMat.get() ) { return; }
+
     IDataArray::Pointer p = cellAttrMat->getAttributeArray(m_SelectedCellArrayPath.getDataArrayName());
+    //IDataArray::Pointer p = cellAttrMat->getAttributeArray(m_SelectedCellArrayPath.getDataArrayName());
     if (NULL == p.get())
     {
       ss = QObject::tr("The input array '%1' was not found in the AttributeMatrix '%2'.").arg(m_SelectedCellArrayPath.getDataArrayName()).arg(m_SelectedCellArrayPath.getAttributeMatrixName());
@@ -363,7 +366,7 @@ void ConvertData::execute()
   dataCheck(false);
   if(getErrorCondition() < 0) { return; }
 
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(m_SelectedCellArrayPath.getDataContainerName());
+  DataContainer::Pointer m = getDataContainerArray()->getDataContainer(m_SelectedCellArrayPath.getDataContainerName());
 
   IDataArray::Pointer iArray = m->getAttributeMatrix(m_SelectedCellArrayPath.getAttributeMatrixName())->getAttributeArray(m_SelectedCellArrayPath.getDataArrayName());
   bool completed = false;
