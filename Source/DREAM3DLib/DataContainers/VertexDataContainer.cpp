@@ -180,25 +180,33 @@ int VertexDataContainer::writeXdmf(QTextStream& out, QString hdfFileName)
 // -----------------------------------------------------------------------------
 void VertexDataContainer::writeXdmfMeshStructureHeader(QTextStream& out, QString hdfFileName)
 {
+  // Always start the grid
+ out << "  <Grid Name=\"" << getName() << "\">" << "\n";
+
   VertexArray::Pointer verts = getVertices();
   if(NULL == verts.get())
   {
-    return;
+    out << "<!-- ********************* DATA CONTAINER ERROR ****************************************\n";
+    out << "The VertexDataContainer with name '" << getName() << "' did not have any vertices assigned.\n";
+    out << "The Topology and Geometry types will be missing from the Xdmf which will cause issues when\n";
+    out << "trying to load the file\n";
+    out << " ********************************************************************************** ->\n";
   }
+  else
+  {
+    out << "    <Topology TopologyType=\"Polyvertex\" NumberOfElements=\"" << verts->getNumberOfTuples() << "\">" << "\n";
+    out << "      <DataItem Format=\"HDF\" NumberType=\"Int\" Dimensions=\"" << verts->getNumberOfTuples() << " 3\">" << "\n";
+    out << "        " << hdfFileName << ":/DataContainers/" << getName() << "/Verts" << "\n";
+    out << "      </DataItem>" << "\n";
+    out << "    </Topology>" << "\n";
 
-  out << "  <Grid Name=\"" << getName() << "\">" << "\n";
-  out << "    <Topology TopologyType=\"Polyvertex\" NumberOfElements=\"" << verts->getNumberOfTuples() << "\">" << "\n";
-  out << "      <DataItem Format=\"HDF\" NumberType=\"Int\" Dimensions=\"" << verts->getNumberOfTuples() << " 3\">" << "\n";
-  out << "        " << hdfFileName << ":/DataContainers/" << getName() << "/Verts" << "\n";
-  out << "      </DataItem>" << "\n";
-  out << "    </Topology>" << "\n";
-
-  out << "    <Geometry Type=\"XYZ\">" << "\n";
-  out << "      <DataItem Format=\"HDF\"  Dimensions=\"" << verts->getNumberOfTuples() << " 3\" NumberType=\"Float\" Precision=\"4\">" << "\n";
-  out << "        " << hdfFileName << ":/DataContainers/" << getName() << "/Vertices" << "\n";
-  out << "      </DataItem>" << "\n";
-  out << "    </Geometry>" << "\n";
-  out << "" << "\n";
+    out << "    <Geometry Type=\"XYZ\">" << "\n";
+    out << "      <DataItem Format=\"HDF\"  Dimensions=\"" << verts->getNumberOfTuples() << " 3\" NumberType=\"Float\" Precision=\"4\">" << "\n";
+    out << "        " << hdfFileName << ":/DataContainers/" << getName() << "/Vertices" << "\n";
+    out << "      </DataItem>" << "\n";
+    out << "    </Geometry>" << "\n";
+    out << "" << "\n";
+  }
 }
 
 // -----------------------------------------------------------------------------

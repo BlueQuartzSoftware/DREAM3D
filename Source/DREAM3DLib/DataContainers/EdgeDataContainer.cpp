@@ -93,8 +93,8 @@ int EdgeDataContainer::writeEdgesToHDF5(hid_t dcGid)
     err = QH5Lite::writePointerDataset(dcGid, DREAM3D::StringConstants::EdgesName, rank, dims, data);
     if (err < 0)
     {
-//      setErrorCondition(err);
-//      notifyErrorMessage(getHumanLabel(), "Error Writing Edge List to DREAM3D file", getErrorCondition());
+      //      setErrorCondition(err);
+      //      notifyErrorMessage(getHumanLabel(), "Error Writing Edge List to DREAM3D file", getErrorCondition());
     }
 
     //next write edge neighbors if they exist
@@ -228,7 +228,7 @@ int EdgeDataContainer::writeXdmf(QTextStream& out, QString hdfFileName)
     uint32_t amType = attrMat->getType();
     switch(amType)
     {
-        //FIXME: There are more AttributeMatrix Types that should be implemented
+      //FIXME: There are more AttributeMatrix Types that should be implemented
       case DREAM3D::AttributeMatrixType::Vertex:
         xdmfCenter = DREAM3D::XdmfCenterType::Node;
         break;
@@ -256,30 +256,45 @@ int EdgeDataContainer::writeXdmf(QTextStream& out, QString hdfFileName)
 // -----------------------------------------------------------------------------
 void EdgeDataContainer::writeXdmfMeshStructureHeader(QTextStream& out, QString hdfFileName)
 {
+  out << "  <Grid Name=\"" << getName() << "\">" << "\n";
+
   EdgeArray::Pointer edges = getEdges();
   if (NULL == edges.get())
   {
-    return;
+    out << "<!-- ********************* DATA CONTAINER ERROR ****************************************\n";
+    out << "The EdgeDataContainer with name '" << getName() << "' did not have any vertices assigned.\n";
+    out << "The Topology types will be missing from the Xdmf which will cause issues when\n";
+    out << "trying to load the file\n";
+    out << " ********************************************************************************** ->\n";
   }
+  else
+  {
+    out << "    <Topology TopologyType=\"Polyline\" NodesPerElement=\"2\" NumberOfElements=\"" << edges->getNumberOfTuples() << "\">" << "\n";
+    out << "      <DataItem Format=\"HDF\" NumberType=\"Int\" Dimensions=\"" << edges->getNumberOfTuples() << " 2\">" << "\n";
+    out << "        " << hdfFileName << ":/DataContainers/" << getName() << "/Edges" << "\n";
+    out << "      </DataItem>" << "\n";
+    out << "    </Topology>" << "\n";
+  }
+
   VertexArray::Pointer verts = getVertices();
   if(NULL == verts.get())
   {
-    return;
+    out << "<!-- ********************* DATA CONTAINER ERROR ****************************************\n";
+    out << "The EdgeDataContainer with name '" << getName() << "' did not have any vertices assigned.\n";
+    out << "The Geometry types will be missing from the Xdmf which will cause issues when\n";
+    out << "trying to load the file\n";
+    out << " ********************************************************************************** ->\n";
+  }
+  else
+  {
+    out << "    <Geometry Type=\"XYZ\">" << "\n";
+    out << "      <DataItem Format=\"HDF\"  Dimensions=\"" << verts->getNumberOfTuples() << " 3\" NumberType=\"Float\" Precision=\"4\">" << "\n";
+    out << "        " << hdfFileName << ":/DataContainers/" << getName() << "/Vertices" << "\n";
+    out << "      </DataItem>" << "\n";
+    out << "    </Geometry>" << "\n";
+    out << "" << "\n";
   }
 
-  out << "  <Grid Name=\"" << getName() << "\">" << "\n";
-  out << "    <Topology TopologyType=\"Polyline\" NodesPerElement=\"2\" NumberOfElements=\"" << edges->getNumberOfTuples() << "\">" << "\n";
-  out << "      <DataItem Format=\"HDF\" NumberType=\"Int\" Dimensions=\"" << edges->getNumberOfTuples() << " 2\">" << "\n";
-  out << "        " << hdfFileName << ":/DataContainers/" << getName() << "/Edges" << "\n";
-  out << "      </DataItem>" << "\n";
-  out << "    </Topology>" << "\n";
-
-  out << "    <Geometry Type=\"XYZ\">" << "\n";
-  out << "      <DataItem Format=\"HDF\"  Dimensions=\"" << verts->getNumberOfTuples() << " 3\" NumberType=\"Float\" Precision=\"4\">" << "\n";
-  out << "        " << hdfFileName << ":/DataContainers/" << getName() << "/Vertices" << "\n";
-  out << "      </DataItem>" << "\n";
-  out << "    </Geometry>" << "\n";
-  out << "" << "\n";
 }
 
 
@@ -339,8 +354,8 @@ int EdgeDataContainer::readEdges(hid_t dcGid, bool preflight)
       err = QH5Lite::readPointerDataset(dcGid, DREAM3D::StringConstants::EdgesName, data);
       if (err < 0)
       {
-//        setErrorCondition(err);
-//        notifyErrorMessage(getHumanLabel(), "Error Reading Edge List from DREAM3D file", getErrorCondition());
+        //        setErrorCondition(err);
+        //        notifyErrorMessage(getHumanLabel(), "Error Reading Edge List from DREAM3D file", getErrorCondition());
         return err;
       }
       setEdges(edgesPtr);
@@ -354,8 +369,8 @@ int EdgeDataContainer::readEdges(hid_t dcGid, bool preflight)
         err = QH5Lite::readVectorDataset(dcGid, DREAM3D::StringConstants::EdgeNeighbors, buffer);
         if(err < 0)
         {
-//          setErrorCondition(err);
-//          notifyErrorMessage(getHumanLabel(), "Error Reading Edge List from DREAM3D file", getErrorCondition());
+          //          setErrorCondition(err);
+          //          notifyErrorMessage(getHumanLabel(), "Error Reading Edge List from DREAM3D file", getErrorCondition());
           return err;
         }
         Int32DynamicListArray::Pointer edgeNeighbors = Int32DynamicListArray::New();
@@ -371,8 +386,8 @@ int EdgeDataContainer::readEdges(hid_t dcGid, bool preflight)
         err = QH5Lite::readVectorDataset(dcGid, DREAM3D::StringConstants::EdgesContainingVert, buffer);
         if(err < 0)
         {
-//          setErrorCondition(err);
-//          notifyErrorMessage(getHumanLabel(), "Error Reading Edge List from DREAM3D file", getErrorCondition());
+          //          setErrorCondition(err);
+          //          notifyErrorMessage(getHumanLabel(), "Error Reading Edge List from DREAM3D file", getErrorCondition());
           return err;
         }
         Int32DynamicListArray::Pointer edgesContainingVert = Int32DynamicListArray::New();
