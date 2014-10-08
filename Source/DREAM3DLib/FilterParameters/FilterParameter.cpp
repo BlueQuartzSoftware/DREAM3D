@@ -345,6 +345,39 @@ ChoiceFilterParameter::Pointer ChoiceFilterParameter::New(const QString& humanLa
   return ptr;
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+DynamicChoiceFilterParameter::DynamicChoiceFilterParameter() :
+  FilterParameter()
+{}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+DynamicChoiceFilterParameter::~DynamicChoiceFilterParameter()
+{}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+DynamicChoiceFilterParameter::Pointer DynamicChoiceFilterParameter::New(const QString& humanLabel,
+                        const QString& propertyName,
+                       const QVariant& defaultValue,
+                       const QString& listProperty,
+                       bool advanced)
+{
+  DynamicChoiceFilterParameter::Pointer ptr = DynamicChoiceFilterParameter::New();
+  ptr->setHumanLabel(humanLabel);
+  ptr->setPropertyName(propertyName);
+  ptr->setWidgetType(FilterParameterWidgetType::DynamicChoiceWidget);
+  ptr->setDefaultValue(defaultValue);
+  ptr->setAdvanced(advanced);
+  ptr->setUnits("");
+  ptr->setListProperty(listProperty);
+
+  return ptr;
+}
 
 // -----------------------------------------------------------------------------
 //

@@ -84,6 +84,8 @@ namespace FilterParameterWidgetType
   const QString LinkedBooleanWidget("LinkedBooleanWidget");
   const QString PhaseTypeSelectionWidget("PhaseTypeSelectionWidget");
 
+  const QString DynamicChoiceWidget("DynamicChoiceWidget");
+
   const QString PreflightUpdatedValueWidget("PreflightUpdatedValueWidget");
   const QString VolumeDataContainerInfoWidget("VolumeDataContainerInfoWidget");
 }
@@ -307,6 +309,36 @@ class DREAM3DLib_EXPORT ChoiceFilterParameter : public FilterParameter
   private:
     ChoiceFilterParameter(const ChoiceFilterParameter&); // Copy Constructor Not Implemented
     void operator=(const ChoiceFilterParameter&); // Operator '=' Not Implemented
+};
+
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+class DREAM3DLib_EXPORT DynamicChoiceFilterParameter : public FilterParameter
+{
+  public:
+    DREAM3D_SHARED_POINTERS(DynamicChoiceFilterParameter)
+    DREAM3D_STATIC_NEW_MACRO(DynamicChoiceFilterParameter)
+    DREAM3D_TYPE_MACRO_SUPER(DynamicChoiceFilterParameter, FilterParameter)
+
+    static Pointer New(const QString& humanLabel, const QString& propertyName,
+                       const QVariant& defaultValue,
+                       const QString& listProperty,
+                       bool advanced = false );
+
+    virtual ~DynamicChoiceFilterParameter();
+
+
+    DREAM3D_INSTANCE_STRING_PROPERTY(ListProperty)
+
+  protected:
+    DynamicChoiceFilterParameter();
+
+  private:
+    DynamicChoiceFilterParameter(const DynamicChoiceFilterParameter&); // Copy Constructor Not Implemented
+    void operator=(const DynamicChoiceFilterParameter&); // Operator '=' Not Implemented
 };
 
 // -----------------------------------------------------------------------------
