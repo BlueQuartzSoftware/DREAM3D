@@ -193,6 +193,7 @@ FilterParameter::Pointer FilterParameter::New(const QString& humanLabel, const Q
   return ptr;
 }
 
+#if 0
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -207,8 +208,85 @@ FilterParameter::Pointer FilterParameter::NewConditional(const QString& humanLab
   ptr->setWidgetType(widgetType);
   ptr->setDefaultValue(defaultValue);
   ptr->setAdvanced(advanced);
-  ptr->setConditionalProperties(linkedProperties);
   ptr->setUnits("");
+  if(ptr->getWidgetType().compare(FilterParameterWidgetType::SeparatorWidget) == 0)
+  {
+    ptr->setReadOnly(true);
+  }
+  return ptr;
+}
+#endif
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+FilterParameter::~FilterParameter()
+{}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+LinkedBooleanFilterParameter::LinkedBooleanFilterParameter() :
+  FilterParameter()
+{}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+LinkedBooleanFilterParameter::~LinkedBooleanFilterParameter()
+{}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+LinkedBooleanFilterParameter::Pointer LinkedBooleanFilterParameter::New(const QString& humanLabel, const QString& propertyName,
+    const QVariant& defaultValue,
+    QStringList conditionalProperties,
+    bool advanced)
+{
+  LinkedBooleanFilterParameter::Pointer ptr = LinkedBooleanFilterParameter::New();
+  ptr->setHumanLabel(humanLabel);
+  ptr->setPropertyName(propertyName);
+  ptr->setWidgetType(FilterParameterWidgetType::LinkedBooleanWidget);
+  ptr->setDefaultValue(defaultValue);
+  ptr->setAdvanced(advanced);
+  ptr->setConditionalProperties(conditionalProperties);
+  if(ptr->getWidgetType().compare(FilterParameterWidgetType::SeparatorWidget) == 0)
+  {
+    ptr->setReadOnly(true);
+  }
+  return ptr;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+LinkedChoicesFilterParameter::LinkedChoicesFilterParameter() :
+  FilterParameter()
+{}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+LinkedChoicesFilterParameter::~LinkedChoicesFilterParameter()
+{}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+LinkedChoicesFilterParameter::Pointer LinkedChoicesFilterParameter::New(const QString& humanLabel, const QString& propertyName,
+    const QVariant& defaultValue,
+    QStringList conditionalProperties,
+    bool advanced)
+{
+  LinkedChoicesFilterParameter::Pointer ptr = LinkedChoicesFilterParameter::New();
+  ptr->setHumanLabel(humanLabel);
+  ptr->setPropertyName(propertyName);
+  ptr->setWidgetType(FilterParameterWidgetType::LinkedBooleanWidget);
+  ptr->setDefaultValue(defaultValue);
+  ptr->setAdvanced(advanced);
+  ptr->setConditionalProperties(conditionalProperties);
   if(ptr->getWidgetType().compare(FilterParameterWidgetType::SeparatorWidget) == 0)
   {
     ptr->setReadOnly(true);
@@ -217,11 +295,6 @@ FilterParameter::Pointer FilterParameter::NewConditional(const QString& humanLab
 }
 
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-FilterParameter::~FilterParameter()
-{}
 
 // -----------------------------------------------------------------------------
 //

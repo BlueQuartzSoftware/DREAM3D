@@ -150,6 +150,7 @@ class DREAM3DLib_EXPORT FilterParameter
                        const QString& widgetType, const UInt32Vector_t& defaultValue,
                        bool advanced = false);
 
+#if 0
     /**
      * @brief Creates a new Filter Parameter that has conditional logic associated with it through an additional boolean
      * Q_PROPERTY in the filter's header file. On the GUI this manifests itself as a checkbox that enables or disables the
@@ -170,6 +171,7 @@ class DREAM3DLib_EXPORT FilterParameter
                                   const QString& widgetType, const QVariant& defaultValue,
                                   bool advanced,
                                   QStringList linkedProperties);
+#endif
 
     virtual ~FilterParameter();
 
@@ -180,8 +182,9 @@ class DREAM3DLib_EXPORT FilterParameter
     DREAM3D_INSTANCE_PROPERTY(bool, Advanced)
     DREAM3D_INSTANCE_STRING_PROPERTY(Units)
     DREAM3D_INSTANCE_PROPERTY(bool, ReadOnly)
+    DREAM3D_INSTANCE_PROPERTY(int, GroupIndex)
 
-    DREAM3D_INSTANCE_PROPERTY(QStringList, ConditionalProperties)
+
 
   protected:
     FilterParameter();
@@ -193,6 +196,60 @@ class DREAM3DLib_EXPORT FilterParameter
 
 typedef QVector<FilterParameter::Pointer> FilterParameterVector;
 
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+class DREAM3DLib_EXPORT LinkedBooleanFilterParameter : public FilterParameter
+{
+  public:
+    DREAM3D_SHARED_POINTERS(LinkedBooleanFilterParameter)
+    DREAM3D_STATIC_NEW_MACRO(LinkedBooleanFilterParameter)
+    DREAM3D_TYPE_MACRO_SUPER(LinkedBooleanFilterParameter, FilterParameter)
+
+    static Pointer New(const QString& humanLabel, const QString& propertyName,
+                       const QVariant& defaultValue,
+                       QStringList conditionalProperties,
+                       bool advanced = false );
+
+    virtual ~LinkedBooleanFilterParameter();
+
+    DREAM3D_INSTANCE_PROPERTY(QStringList, ConditionalProperties)
+
+  protected:
+    LinkedBooleanFilterParameter();
+
+  private:
+    LinkedBooleanFilterParameter(const LinkedBooleanFilterParameter&); // Copy Constructor Not Implemented
+    void operator=(const LinkedBooleanFilterParameter&); // Operator '=' Not Implemented
+};
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+class DREAM3DLib_EXPORT LinkedChoicesFilterParameter : public FilterParameter
+{
+  public:
+    DREAM3D_SHARED_POINTERS(LinkedChoicesFilterParameter)
+    DREAM3D_STATIC_NEW_MACRO(LinkedChoicesFilterParameter)
+    DREAM3D_TYPE_MACRO_SUPER(LinkedChoicesFilterParameter, FilterParameter)
+
+    static Pointer New(const QString& humanLabel, const QString& propertyName,
+                       const QVariant& defaultValue,
+                       QStringList conditionalProperties,
+                       bool advanced = false );
+
+    virtual ~LinkedChoicesFilterParameter();
+
+    DREAM3D_INSTANCE_PROPERTY(QStringList, ConditionalProperties)
+
+  protected:
+    LinkedChoicesFilterParameter();
+
+  private:
+    LinkedChoicesFilterParameter(const LinkedChoicesFilterParameter&); // Copy Constructor Not Implemented
+    void operator=(const LinkedChoicesFilterParameter&); // Operator '=' Not Implemented
+};
 
 
 // -----------------------------------------------------------------------------

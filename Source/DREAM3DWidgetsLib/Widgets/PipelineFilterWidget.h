@@ -236,7 +236,7 @@ class DREAM3DWidgetsLib_EXPORT PipelineFilterWidget : public QFrame, private Ui:
      * @brief linkConditionalWidgets
      * @param filterParameters
      */
-    void linkConditionalWidgets(QVector<FilterParameter::Pointer> filterParameters);
+    void linkConditionalWidgets(QVector<FilterParameter::Pointer> &filterParameters);
 
   private:
     QRect                     m_DeleteRect;
