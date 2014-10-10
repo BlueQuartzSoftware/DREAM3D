@@ -88,6 +88,9 @@ class DREAM3DLib_EXPORT VertexDataContainer : public DataContainer
       return sharedPtr;
     }
 
+#if 0
+    DREAM3D_INSTANCE_PROPERTY(DataArrayPath, TemporalDataPath)
+#endif
 
     DREAM3D_INSTANCE_PROPERTY(VertexArray::Pointer, Vertices)
 

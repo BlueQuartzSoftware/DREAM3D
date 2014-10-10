@@ -61,6 +61,7 @@ class DREAM3DLib_EXPORT DataContainerBundle : public IDataContainerBundle
     }
 
     DREAM3D_INSTANCE_STRING_PROPERTY(Name)
+    DREAM3D_INSTANCE_STRING_PROPERTY(MetaDataAttributeMatrixName)
 
     void setDataContainers(QVector<DataContainer::Pointer> &containers);
     QVector<QString> getDataContainerNames();
