@@ -43,13 +43,14 @@
 
 #include "QtSupport/FaderWidget.h"
 
-#include "DREAM3DLib/Common/AbstractFilter.h"
 
 #include "DREAM3DWidgetsLib/DREAM3DWidgetsLib.h"
 #include "DREAM3DWidgetsLib/FilterParameterWidgets/FilterParameterWidget.h"
 
 #include "DREAM3DWidgetsLib/ui_ChoiceWidget.h"
 
+class AbstractFilter;
+class FilterParameter;
 
 /**
 * @brief
@@ -88,6 +89,7 @@ class DREAM3DWidgetsLib_EXPORT ChoiceWidget : public FilterParameterWidget, priv
   signals:
     void errorSettingFilterParameter(const QString& msg);
     void parametersChanged();
+    void conditionalPropertyChanged(int);
 
   private:
 

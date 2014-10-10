@@ -80,7 +80,10 @@ class DREAM3DWidgetsLib_EXPORT FilterParameterWidget : public QWidget
   public slots:
 
     void setLinkedConditionalState(int state);
+    void setLinkedComboBoxState(int groupId);
+
     void fadeWidget(QWidget* widget, bool in);
+
 
   protected:
 

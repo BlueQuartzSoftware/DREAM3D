@@ -320,6 +320,30 @@ void PipelineFilterWidget::linkConditionalWidgets(QVector<FilterParameter::Point
         }
       }
     }
+
+    LinkedChoicesFilterParameter::Pointer optionPtr2 = boost::dynamic_pointer_cast<LinkedChoicesFilterParameter>(option);
+    if(NULL != optionPtr2.get() && option->getWidgetType().compare(FilterParameterWidgetType::ChoiceWidget) == 0 )
+    {
+      QStringList linkedProps = optionPtr2->getLinkedProperties();
+
+      QStringListIterator iter = QStringListIterator(linkedProps);
+      QWidget* checkboxSource = m_PropertyToWidget[optionPtr2->getPropertyName()];
+      LinkedBooleanWidget* lbw = qobject_cast<LinkedBooleanWidget*>(checkboxSource);
+      while(iter.hasNext())
+      {
+        QString propName = iter.next();
+        QWidget* w = m_PropertyToWidget[propName];
+        if(w)
+        {
+          connect(checkboxSource, SIGNAL(conditionalPropertyChanged(int)),
+                  w, SLOT(setLinkedComboBoxState(int) ) );
+          if(lbw && lbw->getLinkedState() != Qt::Checked)
+          {
+            w->hide();
+          }
+        }
+      }
+    }
   }
 }
 

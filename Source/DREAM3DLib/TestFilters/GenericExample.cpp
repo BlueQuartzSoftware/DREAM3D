@@ -125,17 +125,10 @@ void GenericExample::setupFilterParameters()
 
   /* Display a group of 3 text boxes to collect 3 integer values */
   parameters.push_back(FilterParameter::New("Dimensions", "Dimensions", FilterParameterWidgetType::IntVec3Widget, getDimensions(), false, "XYZ"));
-  /* Display a group of 3 text boxes to collect 3 float values */
-  parameters.push_back(FilterParameter::New("Origin", "Origin", FilterParameterWidgetType::FloatVec3Widget, getOrigin(), false, "XYZ"));
-
-  /* Display the AxisAngleWidget to collect Axis-Angle pairs from the user */
-  parameters.push_back(FilterParameter::New("Crystal Rotations", "CrystalSymmetryRotations", FilterParameterWidgetType::AxisAngleWidget, getCrystalSymmetryRotations(), false));
 
   parameters.push_back(FilterParameter::New("Feature Ids", "FeatureIdsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeatureIdsArrayPath(), false, ""));
 
   parameters.push_back(FilterParameter::New("Attribute Matrix", "AttributeMatrixPath", FilterParameterWidgetType::AttributeMatrixSelectionWidget, getAttributeMatrixPath(), false, ""));
-
-  parameters.push_back(FilterParameter::New("Data Container", "DataContainerName", FilterParameterWidgetType::DataContainerSelectionWidget, getDataContainerName(), false, ""));
 
   {
     QStringList linkedProps;
@@ -149,7 +142,39 @@ void GenericExample::setupFilterParameters()
     parameters.push_back(LinkedBooleanFilterParameter::New("Bool2", "Bool2", getBool2(), linkedProps, false));
   }
 
-  parameters.push_back(FilterParameter::New("CreatedDataArray", "CreatedDataArray", FilterParameterWidgetType::DataArrayCreationWidget, getCreatedDataArray(), false, ""));
+
+  /*   For presenting a set of choices to the user use this code*/
+  {
+    LinkedChoicesFilterParameter::Pointer parameter = LinkedChoicesFilterParameter::New();
+    parameter->setHumanLabel("Select Algorithm");
+    parameter->setPropertyName("AlgorithmSelection");
+    parameter->setWidgetType(FilterParameterWidgetType::ChoiceWidget);
+    parameter->setDefaultValue(QVariant(0)); // Just set the first index
+
+    QVector<QString> choices;
+    choices.push_back("Choice 0");
+    choices.push_back("Choice 1");
+    choices.push_back("Choice 2");
+    parameter->setChoices(choices);
+    QStringList linkedProps;
+    linkedProps << "CreatedDataArray" << "Origin" << "CrystalSymmetryRotations" << "DataContainerName";
+    parameter->setLinkedProperties(linkedProps);
+    parameter->setEditable(false);
+    parameters.push_back(parameter);
+  }
+
+
+
+  parameters.push_back(FilterParameter::New("Created Data Array", "CreatedDataArray", FilterParameterWidgetType::DataArrayCreationWidget, getCreatedDataArray(), false, "", 0));
+  /* Display a group of 3 text boxes to collect 3 float values */
+  parameters.push_back(FilterParameter::New("Origin", "Origin", FilterParameterWidgetType::FloatVec3Widget, getOrigin(), false, "", 1));
+
+  /* Display the AxisAngleWidget to collect Axis-Angle pairs from the user */
+  parameters.push_back(FilterParameter::New("Crystal Rotations", "CrystalSymmetryRotations", FilterParameterWidgetType::AxisAngleWidget, getCrystalSymmetryRotations(), false, "", 2));
+
+  parameters.push_back(FilterParameter::New("Data Container", "DataContainerName", FilterParameterWidgetType::DataContainerSelectionWidget, getDataContainerName(), false, "", 2));
+
+
 
   setFilterParameters(parameters);
 }

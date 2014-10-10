@@ -47,6 +47,20 @@ void FilterParameterWidget::setLinkedConditionalState(int state)
   fadeWidget(this, boolProp);
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void FilterParameterWidget::setLinkedComboBoxState(int groupId)
+{
+  if(m_FilterParameter)
+  {
+    int groupIndex = m_FilterParameter->getGroupIndex();
+    int state = (groupIndex == groupId) ? Qt::Checked : Qt::Unchecked;
+    {
+      setLinkedConditionalState(state);
+    }
+  }
+}
 
 // -----------------------------------------------------------------------------
 //
