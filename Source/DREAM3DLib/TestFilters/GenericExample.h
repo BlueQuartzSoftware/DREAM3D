@@ -124,7 +124,8 @@ class DREAM3DLib_EXPORT GenericExample : public AbstractFilter
     DREAM3D_FILTER_PARAMETER(int, AlgorithmSelection)
     Q_PROPERTY(int AlgorithmSelection READ getAlgorithmSelection WRITE setAlgorithmSelection)
 
-
+    DREAM3D_FILTER_PARAMETER(int, DistanceMetric)
+    Q_PROPERTY(int DistanceMetric READ getDistanceMetric WRITE setDistanceMetric)
 
 
 

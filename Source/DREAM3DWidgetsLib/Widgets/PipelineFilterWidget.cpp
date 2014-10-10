@@ -58,6 +58,7 @@
 
 #include "DREAM3DWidgetsLib/FilterWidgetManager.h"
 #include "DREAM3DWidgetsLib/FilterParameterWidgets/LinkedBooleanWidget.h"
+#include "DREAM3DWidgetsLib/FilterParameterWidgets/ChoiceWidget.h"
 #include "DREAM3DWidgetsLib/Widgets/PipelineViewWidget.h"
 #include "DREAM3DWidgetsLib/Widgets/DataContainerArrayWidget.h"
 
@@ -229,9 +230,9 @@ void PipelineFilterWidget::layoutWidgets()
   QString curStructName = QString::fromUtf8("advancedInputsScrollWidget_CurrStructWidget");
   m_CurrentStructureWidget->setObjectName(curStructName);
   m_CurrentStructureWidget->setGeometry(QRect(0,0,250,267));
-//  m_CurrStrucVerticalLayout = new QVBoxLayout(m_CurrentStructureWidget);
-//  curStructName = QString::fromUtf8("verticalLayout3");
-//  m_CurrStrucVerticalLayout->setObjectName(curStructName);
+  //  m_CurrStrucVerticalLayout = new QVBoxLayout(m_CurrentStructureWidget);
+  //  curStructName = QString::fromUtf8("verticalLayout3");
+  //  m_CurrStrucVerticalLayout->setObjectName(curStructName);
 
 }
 
@@ -304,7 +305,6 @@ void PipelineFilterWidget::linkConditionalWidgets(QVector<FilterParameter::Point
 
       QStringListIterator iter = QStringListIterator(linkedProps);
       QWidget* checkboxSource = m_PropertyToWidget[optionPtr->getPropertyName()];
-      LinkedBooleanWidget* lbw = qobject_cast<LinkedBooleanWidget*>(checkboxSource);
       while(iter.hasNext())
       {
         QString propName = iter.next();
@@ -313,6 +313,7 @@ void PipelineFilterWidget::linkConditionalWidgets(QVector<FilterParameter::Point
         {
           connect(checkboxSource, SIGNAL(conditionalPropertyChanged(int)),
                   w, SLOT(setLinkedConditionalState(int) ) );
+          LinkedBooleanWidget* lbw = qobject_cast<LinkedBooleanWidget*>(checkboxSource);
           if(lbw && lbw->getLinkedState() != Qt::Checked)
           {
             w->hide();
@@ -321,6 +322,8 @@ void PipelineFilterWidget::linkConditionalWidgets(QVector<FilterParameter::Point
       }
     }
 
+
+    // Figure out if we have any Linked ComboBox Widgets to hook up to other widgets
     LinkedChoicesFilterParameter::Pointer optionPtr2 = boost::dynamic_pointer_cast<LinkedChoicesFilterParameter>(option);
     if(NULL != optionPtr2.get() && option->getWidgetType().compare(FilterParameterWidgetType::ChoiceWidget) == 0 )
     {
@@ -328,18 +331,20 @@ void PipelineFilterWidget::linkConditionalWidgets(QVector<FilterParameter::Point
 
       QStringListIterator iter = QStringListIterator(linkedProps);
       QWidget* checkboxSource = m_PropertyToWidget[optionPtr2->getPropertyName()];
-      LinkedBooleanWidget* lbw = qobject_cast<LinkedBooleanWidget*>(checkboxSource);
       while(iter.hasNext())
       {
         QString propName = iter.next();
         QWidget* w = m_PropertyToWidget[propName];
         if(w)
         {
+          //qDebug() << "Connecting: " << optionPtr2->getPropertyName() << " to " << propName;
           connect(checkboxSource, SIGNAL(conditionalPropertyChanged(int)),
                   w, SLOT(setLinkedComboBoxState(int) ) );
-          if(lbw && lbw->getLinkedState() != Qt::Checked)
+
+          ChoiceWidget* choiceWidget = qobject_cast<ChoiceWidget*>(checkboxSource);
+          if(choiceWidget)
           {
-            w->hide();
+            choiceWidget->widgetChanged(choiceWidget->getCurrentIndex());
           }
         }
       }

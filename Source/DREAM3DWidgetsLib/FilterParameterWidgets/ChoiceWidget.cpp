@@ -102,13 +102,20 @@ void ChoiceWidget::setupGui()
       value->blockSignals(true);
       value->addItems(choices);
       value->blockSignals(false);
-      // Get the Default value from the filter
-      int i = getFilter()->property(PROPERTY_NAME_AS_CHAR).toInt();
-      value->setCurrentIndex(i);
     }
+    // Get the Default value from the filter
+    int i = getFilter()->property(PROPERTY_NAME_AS_CHAR).toInt();
+    value->setCurrentIndex(i);
   }
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int ChoiceWidget::getCurrentIndex()
+{
+  return value->currentIndex();
+}
 
 // -----------------------------------------------------------------------------
 //
@@ -118,6 +125,8 @@ void ChoiceWidget::widgetChanged(int index)
 
   FilterParameter* fp = getFilterParameter();
 
+  // If the parameter type is LinkedChoicesFilterParameter then we need to emit the index that
+  // was selected
   LinkedChoicesFilterParameter* lnkedChoices = dynamic_cast<LinkedChoicesFilterParameter*>(fp);
   if(lnkedChoices)
   {
@@ -125,11 +134,8 @@ void ChoiceWidget::widgetChanged(int index)
   }
 
 
-
+  // We emit no matter what
   emit parametersChanged();
-
-
-
 }
 
 // -----------------------------------------------------------------------------

@@ -77,6 +77,8 @@ class DREAM3DWidgetsLib_EXPORT ChoiceWidget : public FilterParameterWidget, priv
     */
     void setupGui();
 
+    int getCurrentIndex();
+
 
   public slots:
     void widgetChanged(int index);

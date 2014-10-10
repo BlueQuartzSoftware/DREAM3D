@@ -174,8 +174,6 @@ class DREAM3DLib_EXPORT FilterParameter
     DREAM3D_INSTANCE_PROPERTY(bool, ReadOnly)
     DREAM3D_INSTANCE_PROPERTY(int, GroupIndex)
 
-
-
   protected:
     FilterParameter();
 
@@ -200,7 +198,8 @@ class DREAM3DLib_EXPORT LinkedBooleanFilterParameter : public FilterParameter
     static Pointer New(const QString& humanLabel, const QString& propertyName,
                        const QVariant& defaultValue,
                        QStringList conditionalProperties,
-                       bool advanced = false );
+                       bool advanced = false,
+                       int groupIndex = -1 );
 
     virtual ~LinkedBooleanFilterParameter();
 
@@ -228,7 +227,8 @@ class DREAM3DLib_EXPORT ChoiceFilterParameter : public FilterParameter
                        const QVariant& defaultValue,
                        QVector<QString> choices,
                        bool editable,
-                       bool advanced = false );
+                       bool advanced = false,
+                       int groupIndex = -1 );
 
     virtual ~ChoiceFilterParameter();
 
@@ -259,7 +259,8 @@ class DREAM3DLib_EXPORT LinkedChoicesFilterParameter : public ChoiceFilterParame
                        const QVariant& defaultValue,
                        QVector<QString> choices,
                        QStringList linkedProperties,
-                       bool advanced = false );
+                       bool advanced = false,
+                       int groupIndex = -1 );
 
     virtual ~LinkedChoicesFilterParameter();
 
@@ -313,7 +314,8 @@ class DREAM3DLib_EXPORT FileSystemFilterParameter : public FilterParameter
                        bool advanced = false,
                        const QString& units = QString(""),
                        const QString& fileExtension = QString(""),
-                       const QString& fileType = QString(""));
+                       const QString& fileType = QString(""),
+                       int groupIndex = -1);
 
     virtual ~FileSystemFilterParameter();
 
@@ -343,7 +345,8 @@ class DREAM3DLib_EXPORT VolumeInfoFilterParameter : public FilterParameter
                        const QString& widgetType, const IntVec3_t& defaultValue,
                        bool advanced = false,
                        const QString& units = QString(""),
-                       const QString& resProperty = QString(""));
+                       const QString& resProperty = QString(""),
+                       int groupIndex = -1);
 
     virtual ~VolumeInfoFilterParameter();
 
@@ -371,7 +374,8 @@ class DREAM3DLib_EXPORT DynamicChoiceFilterParameter : public FilterParameter
     static Pointer New(const QString& humanLabel, const QString& propertyName,
                        const QVariant& defaultValue,
                        const QString& listProperty,
-                       bool advanced = false );
+                       bool advanced = false,
+                       int groupIndex = -1 );
 
     virtual ~DynamicChoiceFilterParameter();
 
@@ -400,7 +404,8 @@ class DREAM3DLib_EXPORT ComparisonFilterParameter : public FilterParameter
                        const QString& widgetType, const QVariant& defaultValue,
                        QVector<QString> choices,
                        bool showOperators,
-                       bool advanced = false );
+                       bool advanced = false,
+                       int groupIndex = -1 );
 
 
     virtual ~ComparisonFilterParameter();
@@ -431,7 +436,8 @@ class DREAM3DLib_EXPORT ShapeTypesFilterParameter : public FilterParameter
                        const QString& widgetType, const QVariant& defaultValue,
                        const QString& phaseTypeCountProperty,
                        const QString& phaseTypeArrayPathProperty,
-                       bool advanced = false );
+                       bool advanced = false,
+                       int groupIndex = -1 );
 
     virtual ~ShapeTypesFilterParameter();
 
@@ -461,7 +467,8 @@ class DREAM3DLib_EXPORT PhaseTypesFilterParameter : public FilterParameter
                        const QString& widgetType, const QVariant& defaultValue,
                        const QString& phaseTypeCountProperty,
                        const QString& phaseTypeArrayPathProperty,
-                       bool advanced = false );
+                       bool advanced = false,
+                       int groupIndex = -1 );
 
     virtual ~PhaseTypesFilterParameter();
 
@@ -492,7 +499,8 @@ class DREAM3DLib_EXPORT PreflightUpdatedValue : public FilterParameter
 
     static Pointer New(const QString& humanLabel, const QString& propertyName,
                        const QString& widgetType, const QVariant& defaultValue,
-                       bool advanced = false );
+                       bool advanced = false,
+                       int groupIndex = -1 );
 
     virtual ~PreflightUpdatedValue();
 
@@ -518,7 +526,8 @@ class DREAM3DLib_EXPORT DataContainerArrayProxyFilterParameter : public FilterPa
     static Pointer New(const QString& humanLabel, const QString& propertyName,
                        const QString& widgetType, const QVariant& defaultValue,
                        DataContainerArrayProxy proxy, Qt::CheckState defState,
-                       bool advanced = false );
+                       bool advanced = false,
+                       int groupIndex = -1 );
 
     virtual ~DataContainerArrayProxyFilterParameter();
 
@@ -545,7 +554,8 @@ class DREAM3DLib_EXPORT DataContainerReaderFilterParameter : public FilterParame
 
     static Pointer New(const QString& humanLabel, const QString& propertyName,
                        const QString& widgetType, const QVariant& defaultValue,
-                       bool advanced = false );
+                       bool advanced = false,
+                       int groupIndex = -1 );
 
     virtual ~DataContainerReaderFilterParameter();
 
