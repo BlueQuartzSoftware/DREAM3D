@@ -48,6 +48,8 @@
 #include "DREAM3DLib/Common/AbstractFilter.h"
 
 #include "DREAM3DWidgetsLib/DREAM3DWidgetsLib.h"
+#include "DREAM3DWidgetsLib/FilterParameterWidgets/FilterParameterWidget.h"
+
 
 #include "DREAM3DWidgetsLib/ui_DataArrayCreationWidget.h"
 
@@ -57,7 +59,7 @@
 * @author
 * @version
 */
-class DREAM3DWidgetsLib_EXPORT DataArrayCreationWidget : public QWidget, private Ui::DataArrayCreationWidget
+class DREAM3DWidgetsLib_EXPORT DataArrayCreationWidget : public FilterParameterWidget, private Ui::DataArrayCreationWidget
 {
     Q_OBJECT
 
@@ -104,13 +106,10 @@ class DREAM3DWidgetsLib_EXPORT DataArrayCreationWidget : public QWidget, private
 
     void on_attributeMatrixList_currentIndexChanged(int index);
 
-//    void on_dataArrayName_textChanged(const QString& string);
     void on_dataArrayName_returnPressed();
     void on_applyChangesBtn_clicked();
     void widgetChanged(const QString& msg);
 
-    void setLinkedConditionalState(int state);
-    void fadeWidget(QWidget* widget, bool in);
     void hideButton();
 
   protected:
@@ -127,14 +126,11 @@ class DREAM3DWidgetsLib_EXPORT DataArrayCreationWidget : public QWidget, private
     void parametersChanged();
 
   private slots:
-    void fadeInWidget(QWidget* widget);
-
 
   private:
-    AbstractFilter*   m_Filter;
-    FilterParameter*  m_FilterParameter;
+
     bool m_DidCausePreflight;
-    QPointer<FaderWidget> faderWidget;
+
 
     DataContainerArrayProxy m_DcaProxy;
 

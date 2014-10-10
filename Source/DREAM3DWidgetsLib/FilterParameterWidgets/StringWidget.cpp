@@ -48,9 +48,7 @@
 //
 // -----------------------------------------------------------------------------
 StringWidget::StringWidget(FilterParameter* parameter, AbstractFilter* filter, QWidget* parent) :
-  QWidget(parent),
-  m_Filter(filter),
-  m_FilterParameter(parameter)
+  FilterParameterWidget(parameter, filter, parent)
 {
   setupUi(this);
   setupGui();
@@ -70,19 +68,19 @@ void StringWidget::setupGui()
 
 
   blockSignals(true);
-  if (m_FilterParameter != NULL)
+  if (getFilterParameter() != NULL)
   {
-    QString units = m_FilterParameter->getUnits();
+    QString units = getFilterParameter()->getUnits();
     if(units.isEmpty() == false)
     {
-      label->setText(m_FilterParameter->getHumanLabel() + " (" + units + ")");
+      label->setText(getFilterParameter()->getHumanLabel() + " (" + units + ")");
     }
     else
     {
-      label->setText(m_FilterParameter->getHumanLabel() );
+      label->setText(getFilterParameter()->getHumanLabel() );
     }
 
-    QString str = m_Filter->property(PROPERTY_NAME_AS_CHAR).toString();
+    QString str = getFilter()->property(PROPERTY_NAME_AS_CHAR).toString();
     value->setText(str);
   }
   blockSignals(false);
@@ -90,15 +88,15 @@ void StringWidget::setupGui()
   applyChangesBtn->setVisible(false);
 
   // Catch when the filter is about to execute the preflight
-  connect(m_Filter, SIGNAL(preflightAboutToExecute()),
+  connect(getFilter(), SIGNAL(preflightAboutToExecute()),
           this, SLOT(beforePreflight()));
 
   // Catch when the filter is finished running the preflight
-  connect(m_Filter, SIGNAL(preflightExecuted()),
+  connect(getFilter(), SIGNAL(preflightExecuted()),
           this, SLOT(afterPreflight()));
 
   // Catch when the filter wants its values updated
-  connect(m_Filter, SIGNAL(updateFilterParameters(AbstractFilter*)),
+  connect(getFilter(), SIGNAL(updateFilterParameters(AbstractFilter*)),
           this, SLOT(filterNeedsInputParameters(AbstractFilter*)));
 
 
@@ -120,33 +118,21 @@ void StringWidget::on_value_returnPressed()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void StringWidget::fadeInWidget(QWidget* widget)
-{
-  if (faderWidget)
-  {
-    faderWidget->close();
-  }
-  faderWidget = new FaderWidget(widget);
-  faderWidget->start();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void StringWidget::on_applyChangesBtn_clicked()
 {
   value->setStyleSheet(QString(""));
   emit parametersChanged();
 
-  if (faderWidget)
+  if (getFaderWidget())
   {
-    faderWidget->close();
+    getFaderWidget()->close();
   }
-  faderWidget = new FaderWidget(applyChangesBtn);
+  QPointer<FaderWidget> faderWidget = new FaderWidget(applyChangesBtn);
   faderWidget->setFadeOut();
   connect(faderWidget, SIGNAL(animationComplete() ),
           this, SLOT(hideButton()));
   faderWidget->start();
+  setFaderWidget(faderWidget);
 }
 
 // -----------------------------------------------------------------------------
@@ -197,45 +183,8 @@ void StringWidget::filterNeedsInputParameters(AbstractFilter* filter)
   bool ok = filter->setProperty(PROPERTY_NAME_AS_CHAR, value->text());
   if(false == ok)
   {
-    FilterParameterWidgetsDialogs::ShowCouldNotSetFilterParameter(m_Filter, m_FilterParameter);
+    FilterParameterWidgetsDialogs::ShowCouldNotSetFilterParameter(getFilter(), getFilterParameter());
   }
 
 }
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void StringWidget::setLinkedConditionalState(int state)
-{
-  bool boolProp = (state == Qt::Checked);
-  fadeWidget(this, boolProp);
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void StringWidget::fadeWidget(QWidget* widget, bool in)
-{
-  if (faderWidget)
-  {
-    faderWidget->close();
-  }
-  faderWidget = new FaderWidget(widget);
-  if(in)
-  {
-    setVisible(true);
-    faderWidget->setFadeIn();
-    connect(faderWidget, SIGNAL(animationComplete() ),
-            this, SLOT(show()));
-  }
-  else
-  {
-    faderWidget->setFadeOut();
-    connect(faderWidget, SIGNAL(animationComplete() ),
-            this, SLOT(hide()));
-  }
-  QColor color = DREAM3D::Defaults::BasicColor;
-  if(m_FilterParameter->getAdvanced()) { color = DREAM3D::Defaults::AdvancedColor; }
-  faderWidget->setStartColor(color);
-  faderWidget->start();
-}

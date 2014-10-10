@@ -47,6 +47,8 @@
 #include "DREAM3DLib/Common/AbstractFilter.h"
 
 #include "DREAM3DWidgetsLib/DREAM3DWidgetsLib.h"
+#include "DREAM3DWidgetsLib/FilterParameterWidgets/FilterParameterWidget.h"
+
 
 #include "DREAM3DWidgetsLib/ui_SeparatorWidget.h"
 
@@ -56,7 +58,7 @@
 * @author
 * @version
 */
-class DREAM3DWidgetsLib_EXPORT SeparatorWidget : public QWidget, private Ui::SeparatorWidget
+class DREAM3DWidgetsLib_EXPORT SeparatorWidget : public FilterParameterWidget, private Ui::SeparatorWidget
 {
     Q_OBJECT
 
@@ -86,17 +88,15 @@ class DREAM3DWidgetsLib_EXPORT SeparatorWidget : public QWidget, private Ui::Sep
     void beforePreflight();
     void afterPreflight();
     void filterNeedsInputParameters(AbstractFilter* filter);
-    void setLinkedConditionalState(int state);
-    void fadeWidget(QWidget* widget, bool in);
+
 
   signals:
     void errorSettingFilterParameter(const QString& msg);
     void parametersChanged();
 
   private:
-    AbstractFilter*   m_Filter;
-    FilterParameter*  m_FilterParameter;
-    QPointer<FaderWidget> faderWidget;
+
+
 
     SeparatorWidget(const SeparatorWidget&); // Copy Constructor Not Implemented
     void operator=(const SeparatorWidget&); // Operator '=' Not Implemented

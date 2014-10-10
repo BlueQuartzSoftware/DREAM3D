@@ -50,6 +50,8 @@
 
 #include "QtSupport/DREAM3DPluginFrame.h"
 
+#include "DREAM3DWidgetsLib/DREAM3DWidgetsLib.h"
+#include "DREAM3DWidgetsLib/FilterParameterWidgets/FilterParameterWidget.h"
 #include "DREAM3DWidgetsLib/Widgets/PipelineFilterWidget.h"
 
 
@@ -70,7 +72,7 @@ class FileSystemFilterParameter;
  * @date Jan 30, 2011
  * @version 1.0
  */
-class ConvertHexGridToSquareGridWidget : public QWidget, private Ui::ConvertHexGridToSquareGridWidget
+class ConvertHexGridToSquareGridWidget : public FilterParameterWidget, private Ui::ConvertHexGridToSquareGridWidget
 {
     Q_OBJECT
 
@@ -89,6 +91,14 @@ class ConvertHexGridToSquareGridWidget : public QWidget, private Ui::ConvertHexG
      * @brief Initializes some of the GUI elements with selections or other GUI related items
      */
     virtual void setupGui();
+
+
+    void setFilter(AbstractFilter *value);
+    AbstractFilter* getFilter() const;
+
+    void setFilterParameter(FilterParameter *value);
+    FilterParameter* getFilterParameter() const;
+
 
   public slots:
     void widgetChanged(const QString& msg);
@@ -164,7 +174,7 @@ class ConvertHexGridToSquareGridWidget : public QWidget, private Ui::ConvertHexG
 
 
   private:
-    ConvertHexGridToSquareGrid*               m_Filter;
+    ConvertHexGridToSquareGrid*           m_Filter;
     FileSystemFilterParameter*            m_FilterParameter;
     QList<QWidget*>             m_WidgetList;
     QButtonGroup*               m_StackingGroup;

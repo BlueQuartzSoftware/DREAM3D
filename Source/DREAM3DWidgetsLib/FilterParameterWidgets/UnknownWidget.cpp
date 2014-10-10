@@ -47,9 +47,7 @@
 //
 // -----------------------------------------------------------------------------
 UnknownWidget::UnknownWidget(FilterParameter* parameter, AbstractFilter* filter, QWidget* parent) :
-  QWidget(parent),
-  m_Filter(filter),
-  m_FilterParameter(parameter)
+  FilterParameterWidget(parameter, filter, parent)
 {
   setupUi(this);
   setupGui();
@@ -67,27 +65,27 @@ UnknownWidget::~UnknownWidget()
 void UnknownWidget::setupGui()
 {
   // Catch when the filter is about to execute the preflight
-  connect(m_Filter, SIGNAL(preflightAboutToExecute()),
+  connect(getFilter(), SIGNAL(preflightAboutToExecute()),
           this, SLOT(beforePreflight()));
 
   // Catch when the filter is finished running the preflight
-  connect(m_Filter, SIGNAL(preflightExecuted()),
+  connect(getFilter(), SIGNAL(preflightExecuted()),
           this, SLOT(afterPreflight()));
 
   // Catch when the filter wants its values updated
-  connect(m_Filter, SIGNAL(updateFilterParameters(AbstractFilter*)),
+  connect(getFilter(), SIGNAL(updateFilterParameters(AbstractFilter*)),
           this, SLOT(filterNeedsInputParameters(AbstractFilter*)));
 
-  if (m_FilterParameter != NULL)
+  if (getFilterParameter() != NULL)
   {
-    QString units = m_FilterParameter->getUnits();
+    QString units = getFilterParameter()->getUnits();
     if(units.isEmpty() == false)
     {
-      label->setText(m_FilterParameter->getHumanLabel() + " (" + units + ")");
+      label->setText(getFilterParameter()->getHumanLabel() + " (" + units + ")");
     }
     else
     {
-      QString str = QObject::tr("%1: Unknown Filter ParameterWidgetType: %2.").arg(m_FilterParameter->getHumanLabel()).arg(m_FilterParameter->getWidgetType());
+      QString str = QObject::tr("%1: Unknown Filter ParameterWidgetType: %2.").arg(getFilterParameter()->getHumanLabel()).arg(getFilterParameter()->getWidgetType());
       label->setText( str );
     }
 
@@ -126,43 +124,4 @@ void UnknownWidget::afterPreflight()
 void UnknownWidget::beforePreflight()
 {
   // std::cout << "After Preflight" << std::endl;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void UnknownWidget::setLinkedConditionalState(int state)
-{
-  bool boolProp = (state == Qt::Checked);
-  fadeWidget(this, boolProp);
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void UnknownWidget::fadeWidget(QWidget* widget, bool in)
-{
-
-  if (faderWidget)
-  {
-    faderWidget->close();
-  }
-  faderWidget = new FaderWidget(widget);
-  if(in)
-  {
-    setVisible(true);
-    faderWidget->setFadeIn();
-    connect(faderWidget, SIGNAL(animationComplete() ),
-            this, SLOT(show()));
-  }
-  else
-  {
-    faderWidget->setFadeOut();
-    connect(faderWidget, SIGNAL(animationComplete() ),
-            this, SLOT(hide()));
-  }
-  QColor color = DREAM3D::Defaults::BasicColor;
-  if(m_FilterParameter->getAdvanced()) { color = DREAM3D::Defaults::AdvancedColor; }
-  faderWidget->setStartColor(color);
-  faderWidget->start();
 }

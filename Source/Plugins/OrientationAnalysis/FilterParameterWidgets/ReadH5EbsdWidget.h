@@ -39,6 +39,8 @@
 
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 
+#include "DREAM3DWidgetsLib/DREAM3DWidgetsLib.h"
+#include "DREAM3DWidgetsLib/FilterParameterWidgets/FilterParameterWidget.h"
 #include "DREAM3DWidgetsLib/Widgets/PipelineFilterWidget.h"
 
 #include "OrientationAnalysis/ui_ReadH5EbsdWidget.h"
@@ -51,7 +53,7 @@ class FileSystemFilterParameter;
 /**
  * @brief The ReadH5EbsdWidget class
  */
-class ReadH5EbsdWidget : public QWidget, private Ui::ReadH5EbsdWidget
+class ReadH5EbsdWidget : public FilterParameterWidget, private Ui::ReadH5EbsdWidget
 {
     Q_OBJECT
   public:
@@ -69,6 +71,14 @@ class ReadH5EbsdWidget : public QWidget, private Ui::ReadH5EbsdWidget
      * @brief Initializes some of the GUI elements with selections or other GUI related items
      */
     virtual void setupGui();
+
+
+    void setFilter(AbstractFilter *value);
+    AbstractFilter* getFilter() const;
+
+    void setFilterParameter(FilterParameter *value);
+    FilterParameter* getFilterParameter() const;
+
 
   public slots:
     //void widgetChanged(const QString& msg);

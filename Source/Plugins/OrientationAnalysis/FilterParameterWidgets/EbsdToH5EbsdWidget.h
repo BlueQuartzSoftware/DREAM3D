@@ -44,18 +44,21 @@
 #include <QtCore/QVector>
 #include <QtCore/QUrl>
 
+#include "EbsdLib/EbsdTransform.h"
 #include "EbsdLib/EbsdConstants.h"
 
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 
 #include "QtSupport/DREAM3DPluginFrame.h"
 
+#include "DREAM3DWidgetsLib/DREAM3DWidgetsLib.h"
+#include "DREAM3DWidgetsLib/FilterParameterWidgets/FilterParameterWidget.h"
 #include "DREAM3DWidgetsLib/Widgets/PipelineFilterWidget.h"
 
 
 #include "ui_EbsdToH5EbsdWidget.h"
 
-#include "EbsdLib/EbsdTransform.h"
+
 
 
 class EbsdToH5Ebsd;
@@ -71,7 +74,7 @@ class EbsdToH5Ebsd;
  * @date Jan 30, 2011
  * @version 1.0
  */
-class EbsdToH5EbsdWidget : public QWidget, private Ui::EbsdToH5EbsdWidget
+class EbsdToH5EbsdWidget : public FilterParameterWidget, private Ui::EbsdToH5EbsdWidget
 {
     Q_OBJECT
 
@@ -90,6 +93,9 @@ class EbsdToH5EbsdWidget : public QWidget, private Ui::EbsdToH5EbsdWidget
      * @brief Initializes some of the GUI elements with selections or other GUI related items
      */
     virtual void setupGui();
+
+    void setFilter(AbstractFilter *value);
+    AbstractFilter* getFilter() const;
 
   public slots:
     void widgetChanged(const QString& msg);
@@ -183,7 +189,6 @@ class EbsdToH5EbsdWidget : public QWidget, private Ui::EbsdToH5EbsdWidget
 
   private:
     EbsdToH5Ebsd*               m_Filter;
-    FilterParameter*            m_FilterParameter;
     QList<QWidget*>             m_WidgetList;
     QButtonGroup*               m_StackingGroup;
     QButtonGroup*               m_OriginGroup;

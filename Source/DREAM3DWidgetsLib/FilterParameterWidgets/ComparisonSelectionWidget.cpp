@@ -44,10 +44,8 @@
 //
 // -----------------------------------------------------------------------------
 ComparisonSelectionWidget::ComparisonSelectionWidget(FilterParameter* parameter, AbstractFilter* filter, QWidget* parent) :
-  QWidget(parent),
+  FilterParameterWidget(parameter, filter, parent),
   m_ShowOperators(true),
-  m_Filter(filter),
-  m_FilterParameter(parameter),
   m_DidCausePreflight(false),
   m_ComparisonSelectionTableModel(NULL)
 {
@@ -95,11 +93,11 @@ ComparisonInputs ComparisonSelectionWidget::getComparisonInputs()
 void ComparisonSelectionWidget::setupGui()
 {
 
-  if (m_Filter == NULL)
+  if (getFilter() == NULL)
   {
     return;
   }
-  if (m_FilterParameter == NULL)
+  if (getFilterParameter() == NULL)
   {
     return;
   }
@@ -122,29 +120,29 @@ void ComparisonSelectionWidget::setupGui()
           this, SLOT(tableDataWasChanged(const QModelIndex&, const QModelIndex&)));
 
   // Catch when the filter is about to execute the preflight
-  connect(m_Filter, SIGNAL(preflightAboutToExecute()),
+  connect(getFilter(), SIGNAL(preflightAboutToExecute()),
           this, SLOT(beforePreflight()));
 
   // Catch when the filter is finished running the preflight
-  connect(m_Filter, SIGNAL(preflightExecuted()),
+  connect(getFilter(), SIGNAL(preflightExecuted()),
           this, SLOT(afterPreflight()));
 
   // Catch when the filter wants its values updated
-  connect(m_Filter, SIGNAL(updateFilterParameters(AbstractFilter*)),
+  connect(getFilter(), SIGNAL(updateFilterParameters(AbstractFilter*)),
           this, SLOT(filterNeedsInputParameters(AbstractFilter*)));
 
   // Set the data into the TableModel
-  ComparisonInputs comps = m_Filter->property(PROPERTY_NAME_AS_CHAR).value<ComparisonInputs>();
+  ComparisonInputs comps = getFilter()->property(PROPERTY_NAME_AS_CHAR).value<ComparisonInputs>();
   m_ComparisonSelectionTableModel->setTableData(comps);
 
 
 #if 0
   // is the filter parameter tied to a boolean property of the Filter Instance, if it is then we need to make the check box visible
-  if(m_FilterParameter->isConditional() == true)
+  if(getFilterParameter()->isConditional() == true)
   {
-    bool boolProp = m_Filter->property(m_FilterParameter->getConditionalProperty().toLatin1().constData() ).toBool();
+    bool boolProp = getFilter()->property(getFilterParameter()->getConditionalProperty().toLatin1().constData() ).toBool();
     conditionalCB->setChecked(boolProp);
-    conditionalCB->setText(m_FilterParameter->getConditionalLabel());
+    conditionalCB->setText(getFilterParameter()->getConditionalLabel());
     dataContainerList->setEnabled(boolProp);
     attributeMatrixList->setEnabled(boolProp);
     attributeArrayList->setEnabled(boolProp);
@@ -196,7 +194,7 @@ void ComparisonSelectionWidget::populateComboBoxes()
 
   // Now get the DataContainerArray from the Filter instance
   // We are going to use this to get all the current DataContainers
-  DataContainerArray::Pointer dca = m_Filter->getDataContainerArray();
+  DataContainerArray::Pointer dca = getFilter()->getDataContainerArray();
   if(NULL == dca.get()) { return; }
 
   // Check to see if we have any DataContainers to actually populate drop downs with.
@@ -226,7 +224,7 @@ void ComparisonSelectionWidget::populateComboBoxes()
   //  QString curDaName = attributeArrayList->currentText();
 
   // Get what is in the filter
-  ComparisonInputs comps = m_Filter->property(PROPERTY_NAME_AS_CHAR).value<ComparisonInputs>();
+  ComparisonInputs comps = getFilter()->property(PROPERTY_NAME_AS_CHAR).value<ComparisonInputs>();
   // Split the path up to make sure we have a valid path separated by the "|" character
   ComparisonInput_t comp;
   if(comps.size() > 0)
@@ -519,7 +517,7 @@ void ComparisonSelectionWidget::filterNeedsInputParameters(AbstractFilter* filte
   ok = filter->setProperty(PROPERTY_NAME_AS_CHAR, var);
   if(false == ok)
   {
-    FilterParameterWidgetsDialogs::ShowCouldNotSetFilterParameter(m_Filter, m_FilterParameter);
+    FilterParameterWidgetsDialogs::ShowCouldNotSetFilterParameter(getFilter(), getFilterParameter());
   }
 }
 
@@ -531,7 +529,7 @@ void ComparisonSelectionWidget::filterNeedsInputParameters(AbstractFilter* filte
 void ComparisonSelectionWidget::beforePreflight()
 {
 // std::cout << "ComparisonSelectionWidget::beforePreflight()" << std::endl;
-  if (NULL == m_Filter) { return; }
+  if (NULL == getFilter()) { return; }
   if(m_DidCausePreflight == true)
   {
     std::cout << "***  ComparisonSelectionWidget already caused a preflight, just returning" << std::endl;
@@ -553,45 +551,6 @@ void ComparisonSelectionWidget::beforePreflight()
 // -----------------------------------------------------------------------------
 void ComparisonSelectionWidget::afterPreflight()
 {
-  // qDebug() << m_Filter->getNameOfClass() << " DataContainerArrayProxyWidget::afterPreflight()";
+  // qDebug() << getFilter()->getNameOfClass() << " DataContainerArrayProxyWidget::afterPreflight()";
 }
 
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void ComparisonSelectionWidget::setLinkedConditionalState(int state)
-{
-  bool boolProp = (state == Qt::Checked);
-  fadeWidget(this, boolProp);
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void ComparisonSelectionWidget::fadeWidget(QWidget* widget, bool in)
-{
-
-  if (faderWidget)
-  {
-    faderWidget->close();
-  }
-  faderWidget = new FaderWidget(widget);
-  if(in)
-  {
-    setVisible(true);
-    faderWidget->setFadeIn();
-    connect(faderWidget, SIGNAL(animationComplete() ),
-            this, SLOT(show()));
-  }
-  else
-  {
-    faderWidget->setFadeOut();
-    connect(faderWidget, SIGNAL(animationComplete() ),
-            this, SLOT(hide()));
-  }
-  QColor color = DREAM3D::Defaults::BasicColor;
-  if(m_FilterParameter->getAdvanced()) { color = DREAM3D::Defaults::AdvancedColor; }
-  faderWidget->setStartColor(color);
-  faderWidget->start();
-}

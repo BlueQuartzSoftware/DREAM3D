@@ -48,11 +48,8 @@
 //
 // -----------------------------------------------------------------------------
 DynamicChoiceWidget::DynamicChoiceWidget(FilterParameter* parameter, AbstractFilter* filter, QWidget* parent) :
-  QWidget(parent),
-  m_Filter(filter),
-  m_FilterParameter(NULL)
+  FilterParameterWidget(parameter, filter, parent)
 {
-
   m_FilterParameter = dynamic_cast<DynamicChoiceFilterParameter*>(parameter);
   Q_ASSERT_X(NULL != m_FilterParameter, "DynamicChoiceWidget can ONLY be used with Dynamic Choice Filter Parameters", __FILE__);
 
@@ -70,19 +67,35 @@ DynamicChoiceWidget::~DynamicChoiceWidget()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void DynamicChoiceWidget::setFilterParameter(FilterParameter *value)
+{
+  m_FilterParameter = dynamic_cast<DynamicChoiceFilterParameter*>(value);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+FilterParameter* DynamicChoiceWidget::getFilterParameter() const
+{
+  return m_FilterParameter;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void DynamicChoiceWidget::setupGui()
 {
 
   // Catch when the filter is about to execute the preflight
-  connect(m_Filter, SIGNAL(preflightAboutToExecute()),
+  connect(getFilter(), SIGNAL(preflightAboutToExecute()),
           this, SLOT(beforePreflight()));
 
   // Catch when the filter is finished running the preflight
-  connect(m_Filter, SIGNAL(preflightExecuted()),
+  connect(getFilter(), SIGNAL(preflightExecuted()),
           this, SLOT(afterPreflight()));
 
   // Catch when the filter wants its values updated
-  connect(m_Filter, SIGNAL(updateFilterParameters(AbstractFilter*)),
+  connect(getFilter(), SIGNAL(updateFilterParameters(AbstractFilter*)),
           this, SLOT(filterNeedsInputParameters(AbstractFilter*)));
 
   connect(value, SIGNAL(currentIndexChanged(int)),
@@ -113,7 +126,7 @@ void DynamicChoiceWidget::updateComboBox()
 {
   // setup the list of choices for the widget
 
-  if(m_Filter)
+  if(getFilter())
   {
   //  QString currentText = value->currentText();
 
@@ -121,7 +134,7 @@ void DynamicChoiceWidget::updateComboBox()
     QString listProp =  m_FilterParameter->getListProperty();
     //qDebug() << listProp;
 
-    QVariant var = m_Filter->property(listProp.toLatin1().constData());
+    QVariant var = getFilter()->property(listProp.toLatin1().constData());
     if(var.isValid() == false)
     {
       qDebug() << "Error getting Property " << m_FilterParameter->getListProperty() << " from Filter";
@@ -141,7 +154,7 @@ void DynamicChoiceWidget::updateComboBox()
       value->addItems(choices);
     }
     // Get the Default value from the filter
-    QString i = m_Filter->property(PROPERTY_NAME_AS_CHAR).toString();
+    QString i = getFilter()->property(PROPERTY_NAME_AS_CHAR).toString();
     int index = value->findText(i);
     value->setCurrentIndex(index);
     value->blockSignals(false);
@@ -170,7 +183,7 @@ void DynamicChoiceWidget::filterNeedsInputParameters(AbstractFilter* filter)
 
   if(false == ok)
   {
-    FilterParameterWidgetsDialogs::ShowCouldNotSetFilterParameter(m_Filter, m_FilterParameter);
+    FilterParameterWidgetsDialogs::ShowCouldNotSetFilterParameter(getFilter(), m_FilterParameter);
   }
 }
 
@@ -188,43 +201,4 @@ void DynamicChoiceWidget::beforePreflight()
 void DynamicChoiceWidget::afterPreflight()
 {
   updateComboBox();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void DynamicChoiceWidget::setLinkedConditionalState(int state)
-{
-  bool boolProp = (state == Qt::Checked);
-  fadeWidget(this, boolProp);
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void DynamicChoiceWidget::fadeWidget(QWidget* widget, bool in)
-{
-
-  if (faderWidget)
-  {
-    faderWidget->close();
-  }
-  faderWidget = new FaderWidget(widget);
-  if(in)
-  {
-    setVisible(true);
-    faderWidget->setFadeIn();
-    connect(faderWidget, SIGNAL(animationComplete() ),
-            this, SLOT(show()));
-  }
-  else
-  {
-    faderWidget->setFadeOut();
-    connect(faderWidget, SIGNAL(animationComplete() ),
-            this, SLOT(hide()));
-  }
-  QColor color = DREAM3D::Defaults::BasicColor;
-  if(m_FilterParameter->getAdvanced()) { color = DREAM3D::Defaults::AdvancedColor; }
-  faderWidget->setStartColor(color);
-  faderWidget->start();
 }

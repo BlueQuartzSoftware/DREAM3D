@@ -48,6 +48,8 @@
 #include "DREAM3DLib/Common/AbstractFilter.h"
 
 #include "DREAM3DWidgetsLib/DREAM3DWidgetsLib.h"
+#include "DREAM3DWidgetsLib/FilterParameterWidgets/FilterParameterWidget.h"
+
 
 #include "DREAM3DWidgetsLib/ui_StringWidget.h"
 
@@ -57,7 +59,7 @@
 * @author
 * @version
 */
-class DREAM3DWidgetsLib_EXPORT StringWidget : public QWidget, private Ui::StringWidget
+class DREAM3DWidgetsLib_EXPORT StringWidget : public FilterParameterWidget, private Ui::StringWidget
 {
     Q_OBJECT
 
@@ -86,8 +88,7 @@ class DREAM3DWidgetsLib_EXPORT StringWidget : public QWidget, private Ui::String
     void on_value_returnPressed();
     void on_applyChangesBtn_clicked();
 
-    void setLinkedConditionalState(int state);
-    void fadeWidget(QWidget* widget, bool in);
+
     void hideButton();
 
   signals:
@@ -95,13 +96,12 @@ class DREAM3DWidgetsLib_EXPORT StringWidget : public QWidget, private Ui::String
     void parametersChanged();
 
   private slots:
-    void fadeInWidget(QWidget* widget);
-  private:
-    QPointer<FaderWidget> faderWidget;
 
   private:
-    AbstractFilter*   m_Filter;
-    FilterParameter*  m_FilterParameter;
+
+
+  private:
+
     bool m_DidCausePreflight;
 
     StringWidget(const StringWidget&); // Copy Constructor Not Implemented

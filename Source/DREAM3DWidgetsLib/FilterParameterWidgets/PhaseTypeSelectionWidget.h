@@ -47,6 +47,8 @@
 #include "DREAM3DLib/Common/AbstractFilter.h"
 
 #include "DREAM3DWidgetsLib/DREAM3DWidgetsLib.h"
+#include "DREAM3DWidgetsLib/FilterParameterWidgets/FilterParameterWidget.h"
+
 
 #include "DREAM3DWidgetsLib/ui_PhaseTypeSelectionWidget.h"
 
@@ -58,7 +60,7 @@ class QLabel;
 * @author
 * @version
 */
-class DREAM3DWidgetsLib_EXPORT PhaseTypeSelectionWidget : public QWidget, private Ui::PhaseTypeSelectionWidget
+class DREAM3DWidgetsLib_EXPORT PhaseTypeSelectionWidget : public FilterParameterWidget, private Ui::PhaseTypeSelectionWidget
 {
     Q_OBJECT
 
@@ -87,8 +89,7 @@ class DREAM3DWidgetsLib_EXPORT PhaseTypeSelectionWidget : public QWidget, privat
     void filterNeedsInputParameters(AbstractFilter* filter);
 
     void comboboxChanged(int index);
-    void setLinkedConditionalState(int state);
-    void fadeWidget(QWidget* widget, bool in);
+
 
   protected:
     void updateComboBoxes();
@@ -98,13 +99,10 @@ class DREAM3DWidgetsLib_EXPORT PhaseTypeSelectionWidget : public QWidget, privat
     void parametersChanged();
 
   private:
-    AbstractFilter*   m_Filter;
-    FilterParameter*  m_FilterParameter;
     bool              m_DidCausePreflight;
 
     QList<QLabel*>              m_PhaseTypeLabels;
     QList<QComboBox*>           m_PhaseTypeCombos;
-    QPointer<FaderWidget>       faderWidget;
 
 
     PhaseTypeSelectionWidget(const PhaseTypeSelectionWidget&); // Copy Constructor Not Implemented

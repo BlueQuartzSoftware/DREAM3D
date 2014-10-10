@@ -54,9 +54,7 @@
 //
 // -----------------------------------------------------------------------------
 DataArraySelectionWidget::DataArraySelectionWidget(FilterParameter* parameter, AbstractFilter* filter, QWidget* parent) :
-  QWidget(parent),
-  m_Filter(filter),
-  m_FilterParameter(parameter),
+  FilterParameterWidget(parameter, filter, parent),
   m_DidCausePreflight(false)
 {
   setupUi(this);
@@ -67,9 +65,7 @@ DataArraySelectionWidget::DataArraySelectionWidget(FilterParameter* parameter, A
 //
 // -----------------------------------------------------------------------------
 DataArraySelectionWidget::DataArraySelectionWidget(QWidget* parent) :
-  QWidget(parent),
-  m_Filter(NULL),
-  m_FilterParameter(NULL),
+  FilterParameterWidget(NULL, NULL, parent),
   m_DidCausePreflight(false)
 {
   setupUi(this);
@@ -87,9 +83,9 @@ DataArraySelectionWidget::~DataArraySelectionWidget()
 // -----------------------------------------------------------------------------
 void DataArraySelectionWidget::initializeWidget(FilterParameter* parameter, AbstractFilter* filter)
 {
-  //qDebug() << m_Filter->getHumanLabel() << "  " << m_FilterParameter->getHumanLabel() << " DataArraySelectionWidget::initializeWidget";
-  m_Filter = filter;
-  m_FilterParameter = parameter;
+  //qDebug() << getFilter()->getHumanLabel() << "  " << getFilterParameter()->getHumanLabel() << " DataArraySelectionWidget::initializeWidget";
+  setFilter(filter);
+  setFilterParameter(parameter);
   setupGui();
 }
 
@@ -101,28 +97,28 @@ void DataArraySelectionWidget::setupGui()
 {
 
   // Sanity Check the filter and the filter parameter
-  if(m_Filter == NULL)
+  if(getFilter() == NULL)
   {
     return;
   }
-  if (m_FilterParameter == NULL)
+  if (getFilterParameter() == NULL)
   {
     return;
   }
 
   // Generate the text for the QLabel
-  QString units = m_FilterParameter->getUnits();
+  QString units = getFilterParameter()->getUnits();
   if(units.isEmpty() == false)
   {
-    label->setText(m_FilterParameter->getHumanLabel() + " (" + units + ")");
+    label->setText(getFilterParameter()->getHumanLabel() + " (" + units + ")");
   }
   else
   {
-    label->setText(m_FilterParameter->getHumanLabel() );
+    label->setText(getFilterParameter()->getHumanLabel() );
   }
 
   // Get the default path from the Filter instance to cache
-  m_DefaultPath = m_Filter->property(PROPERTY_NAME_AS_CHAR).value<DataArrayPath>();
+  m_DefaultPath = getFilter()->property(PROPERTY_NAME_AS_CHAR).value<DataArrayPath>();
   //  dataContainerList->addItem(m_DefaultPath.getDataContainerName());
   //  attributeMatrixList->addItem(m_DefaultPath.getAttributeMatrixName() );
   //  attributeArrayList->addItem(m_DefaultPath.getDataArrayName() );
@@ -144,15 +140,15 @@ void DataArraySelectionWidget::setupGui()
 
   // Lastly, hook up the filter's signals and slots to our own signals and slots
   // Catch when the filter is about to execute the preflight
-  connect(m_Filter, SIGNAL(preflightAboutToExecute()),
+  connect(getFilter(), SIGNAL(preflightAboutToExecute()),
           this, SLOT(beforePreflight()));
 
   // Catch when the filter is finished running the preflight
-  connect(m_Filter, SIGNAL(preflightExecuted()),
+  connect(getFilter(), SIGNAL(preflightExecuted()),
           this, SLOT(afterPreflight()));
 
   // Catch when the filter wants its values updated
-  connect(m_Filter, SIGNAL(updateFilterParameters(AbstractFilter*)),
+  connect(getFilter(), SIGNAL(updateFilterParameters(AbstractFilter*)),
           this, SLOT(filterNeedsInputParameters(AbstractFilter*)));
 
 }
@@ -163,14 +159,14 @@ void DataArraySelectionWidget::setupGui()
 void DataArraySelectionWidget::populateComboBoxes()
 {
   //qDebug() << "-----------------------------------------------";
-  //qDebug() << m_Filter->getHumanLabel() << "  " << m_FilterParameter->getHumanLabel() << " DataArraySelectionWidget::populateComboBoxes()";
+  //qDebug() << getFilter()->getHumanLabel() << "  " << getFilterParameter()->getHumanLabel() << " DataArraySelectionWidget::populateComboBoxes()";
   // Now get the DataContainerArray from the Filter instance
   // We are going to use this to get all the current DataContainers
-  DataContainerArray::Pointer dca = m_Filter->getDataContainerArray();
+  DataContainerArray::Pointer dca = getFilter()->getDataContainerArray();
   if(NULL == dca.get()) { return; }
 
 
-  //qDebug() << m_Filter->getHumanLabel() << "  " << m_FilterParameter->getHumanLabel();
+  //qDebug() << getFilter()->getHumanLabel() << "  " << getFilterParameter()->getHumanLabel();
   // Grab what is currently selected
   QString curDcName = dataContainerList->currentText();
   QString curAmName = attributeMatrixList->currentText();
@@ -202,7 +198,7 @@ void DataArraySelectionWidget::populateComboBoxes()
   }
 
   // Get what is in the filter
-  DataArrayPath selectedPath = m_Filter->property(PROPERTY_NAME_AS_CHAR).value<DataArrayPath>();
+  DataArrayPath selectedPath = getFilter()->property(PROPERTY_NAME_AS_CHAR).value<DataArrayPath>();
 
   // Split the path up to make sure we have a valid path separated by the "|" character
   QString filtDcName = selectedPath.getDataContainerName();
@@ -217,7 +213,7 @@ void DataArraySelectionWidget::populateComboBoxes()
   if(filtDcName.isEmpty() && filtAmName.isEmpty() && filtDaName.isEmpty()
       && curDcName.isEmpty() && curAmName.isEmpty() && curDaName.isEmpty() )
   {
-    DataArrayPath daPath = m_FilterParameter->getDefaultValue().value<DataArrayPath>();
+    DataArrayPath daPath = getFilterParameter()->getDefaultValue().value<DataArrayPath>();
     dcName = daPath.getDataContainerName();
     amName = daPath.getAttributeMatrixName();
     daName = daPath.getDataArrayName();
@@ -274,10 +270,10 @@ void DataArraySelectionWidget::populateComboBoxes()
   // The DataArray Name was empty, lets instantiate the filter and get the default value and try that
   if(daIndex < 0)
   {
-    QVariant var = m_FilterParameter->getDefaultValue();
+    QVariant var = getFilterParameter()->getDefaultValue();
     DataArrayPath path = var.value<DataArrayPath>();
 
-    //AbstractFilter::Pointer ptr = m_Filter->newFilterInstance(false);
+    //AbstractFilter::Pointer ptr = getFilter()->newFilterInstance(false);
     //DataArrayPath path = ptr->property(PROPERTY_NAME_AS_CHAR).value<DataArrayPath>();
     daName = path.getDataArrayName(); // Pick up the DataArray Name from a Default instantiation of the filter
     daIndex = attributeArrayList->findText(daName);
@@ -319,7 +315,7 @@ QString DataArraySelectionWidget::checkStringValues(QString curDcName, QString f
 // -----------------------------------------------------------------------------
 void DataArraySelectionWidget::populateAttributeMatrixList()
 {
-  //qDebug() << m_Filter->getHumanLabel() << "  " << m_FilterParameter->getHumanLabel() << " DataArraySelectionWidget::populateAttributeMatrixList()";
+  //qDebug() << getFilter()->getHumanLabel() << "  " << getFilterParameter()->getHumanLabel() << " DataArraySelectionWidget::populateAttributeMatrixList()";
 
   QString dcName = dataContainerList->currentText();
 
@@ -357,7 +353,7 @@ void DataArraySelectionWidget::populateAttributeMatrixList()
 void DataArraySelectionWidget::on_dataContainerList_currentIndexChanged(int index)
 {
 
-  //qDebug() << m_Filter->getHumanLabel() << "  " << m_FilterParameter->getHumanLabel() << " DataArraySelectionWidget::on_dataContainerList_currentIndexChanged(int index)";
+  //qDebug() << getFilter()->getHumanLabel() << "  " << getFilterParameter()->getHumanLabel() << " DataArraySelectionWidget::on_dataContainerList_currentIndexChanged(int index)";
   populateAttributeMatrixList();
 
   // Select the first AttributeMatrix in the list
@@ -374,7 +370,7 @@ void DataArraySelectionWidget::on_dataContainerList_currentIndexChanged(int inde
 // -----------------------------------------------------------------------------
 void DataArraySelectionWidget::on_attributeMatrixList_currentIndexChanged(int index)
 {
-  //qDebug() << m_Filter->getHumanLabel() << "  " << m_FilterParameter->getHumanLabel() << " DataArraySelectionWidget::on_attributeMatrixList_currentIndexChanged(int index)";
+  //qDebug() << getFilter()->getHumanLabel() << "  " << getFilterParameter()->getHumanLabel() << " DataArraySelectionWidget::on_attributeMatrixList_currentIndexChanged(int index)";
   populateAttributeArrayList();
 
   if(attributeArrayList->count() > 0)
@@ -486,7 +482,7 @@ void DataArraySelectionWidget::populateAttributeArrayList()
 // -----------------------------------------------------------------------------
 void DataArraySelectionWidget::on_attributeArrayList_currentIndexChanged(int index)
 {
-  //qDebug() << m_Filter->getHumanLabel() << "  " << m_FilterParameter->getHumanLabel() << " DataArraySelectionWidget::on_attributeArrayList_currentIndexChanged(int index)";
+  //qDebug() << getFilter()->getHumanLabel() << "  " << getFilterParameter()->getHumanLabel() << " DataArraySelectionWidget::on_attributeArrayList_currentIndexChanged(int index)";
   m_DidCausePreflight = true;
   emit parametersChanged();
   m_DidCausePreflight = false;
@@ -497,7 +493,7 @@ void DataArraySelectionWidget::on_attributeArrayList_currentIndexChanged(int ind
 // -----------------------------------------------------------------------------
 void DataArraySelectionWidget::beforePreflight()
 {
-  if (NULL == m_Filter) { return; }
+  if (NULL == getFilter()) { return; }
   if(m_DidCausePreflight == true)
   {
     std::cout << "***  DataArraySelectionWidget already caused a preflight, just returning" << std::endl;
@@ -558,47 +554,8 @@ void DataArraySelectionWidget::filterNeedsInputParameters(AbstractFilter* filter
   ok = filter->setProperty(PROPERTY_NAME_AS_CHAR, var);
   if(false == ok)
   {
-    FilterParameterWidgetsDialogs::ShowCouldNotSetFilterParameter(m_Filter, m_FilterParameter);
+    FilterParameterWidgetsDialogs::ShowCouldNotSetFilterParameter(getFilter(), getFilterParameter());
   }
 
 }
 
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void DataArraySelectionWidget::setLinkedConditionalState(int state)
-{
-  bool boolProp = (state == Qt::Checked);
-  fadeWidget(this, boolProp);
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void DataArraySelectionWidget::fadeWidget(QWidget* widget, bool in)
-{
-
-  if (faderWidget)
-  {
-    faderWidget->close();
-  }
-  faderWidget = new FaderWidget(widget);
-  if(in)
-  {
-    setVisible(true);
-    faderWidget->setFadeIn();
-    connect(faderWidget, SIGNAL(animationComplete() ),
-            this, SLOT(show()));
-  }
-  else
-  {
-    faderWidget->setFadeOut();
-    connect(faderWidget, SIGNAL(animationComplete() ),
-            this, SLOT(hide()));
-  }
-  QColor color = DREAM3D::Defaults::BasicColor;
-  if(m_FilterParameter->getAdvanced()) { color = DREAM3D::Defaults::AdvancedColor; }
-  faderWidget->setStartColor(color);
-  faderWidget->start();
-}

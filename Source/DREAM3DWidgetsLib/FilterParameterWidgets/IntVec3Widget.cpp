@@ -44,9 +44,7 @@
 //
 // -----------------------------------------------------------------------------
 IntVec3Widget::IntVec3Widget(FilterParameter* parameter, AbstractFilter* filter, QWidget* parent) :
-  QWidget(parent),
-  m_Filter(filter),
-  m_FilterParameter(parameter)
+  FilterParameterWidget(parameter, filter, parent)
 {
   setupUi(this);
   setupGui();
@@ -64,15 +62,15 @@ IntVec3Widget::~IntVec3Widget()
 void IntVec3Widget::setupGui()
 {
   // Catch when the filter is about to execute the preflight
-  connect(m_Filter, SIGNAL(preflightAboutToExecute()),
+  connect(getFilter(), SIGNAL(preflightAboutToExecute()),
           this, SLOT(beforePreflight()));
 
   // Catch when the filter is finished running the preflight
-  connect(m_Filter, SIGNAL(preflightExecuted()),
+  connect(getFilter(), SIGNAL(preflightExecuted()),
           this, SLOT(afterPreflight()));
 
   // Catch when the filter wants its values updated
-  connect(m_Filter, SIGNAL(updateFilterParameters(AbstractFilter*)),
+  connect(getFilter(), SIGNAL(updateFilterParameters(AbstractFilter*)),
           this, SLOT(filterNeedsInputParameters(AbstractFilter*)));
 
   connect(xData, SIGNAL(textChanged(const QString&)),
@@ -89,19 +87,19 @@ void IntVec3Widget::setupGui()
   QIntValidator* zVal = new QIntValidator(zData);
   zData->setValidator(zVal);
 
-  if (m_FilterParameter != NULL)
+  if (getFilterParameter() != NULL)
   {
-    QString units = m_FilterParameter->getUnits();
+    QString units = getFilterParameter()->getUnits();
     if(units.isEmpty() == false)
     {
-      IntVec3WidgetLabel->setText(m_FilterParameter->getHumanLabel() + " (" + units + ")");
+      IntVec3WidgetLabel->setText(getFilterParameter()->getHumanLabel() + " (" + units + ")");
     }
     else
     {
-      IntVec3WidgetLabel->setText(m_FilterParameter->getHumanLabel() );
+      IntVec3WidgetLabel->setText(getFilterParameter()->getHumanLabel() );
     }
 
-    IntVec3_t data = m_Filter->property(PROPERTY_NAME_AS_CHAR).value<IntVec3_t>();
+    IntVec3_t data = getFilter()->property(PROPERTY_NAME_AS_CHAR).value<IntVec3_t>();
     xData->setText(QString::number(data.x) );
     yData->setText(QString::number(data.y) );
     zData->setText(QString::number(data.z) );
@@ -134,7 +132,7 @@ void IntVec3Widget::filterNeedsInputParameters(AbstractFilter* filter)
   ok = filter->setProperty(PROPERTY_NAME_AS_CHAR, v);
   if(false == ok)
   {
-    FilterParameterWidgetsDialogs::ShowCouldNotSetFilterParameter(m_Filter, m_FilterParameter);
+    FilterParameterWidgetsDialogs::ShowCouldNotSetFilterParameter(getFilter(), getFilterParameter());
   }
 
 }
@@ -154,43 +152,4 @@ void IntVec3Widget::beforePreflight()
 void IntVec3Widget::afterPreflight()
 {
 
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void IntVec3Widget::setLinkedConditionalState(int state)
-{
-  bool boolProp = (state == Qt::Checked);
-  fadeWidget(this, boolProp);
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void IntVec3Widget::fadeWidget(QWidget* widget, bool in)
-{
-
-  if (faderWidget)
-  {
-    faderWidget->close();
-  }
-  faderWidget = new FaderWidget(widget);
-  if(in)
-  {
-    setVisible(true);
-    faderWidget->setFadeIn();
-    connect(faderWidget, SIGNAL(animationComplete() ),
-            this, SLOT(show()));
-  }
-  else
-  {
-    faderWidget->setFadeOut();
-    connect(faderWidget, SIGNAL(animationComplete() ),
-            this, SLOT(hide()));
-  }
-  QColor color = DREAM3D::Defaults::BasicColor;
-  if(m_FilterParameter->getAdvanced()) { color = DREAM3D::Defaults::AdvancedColor; }
-  faderWidget->setStartColor(color);
-  faderWidget->start();
 }

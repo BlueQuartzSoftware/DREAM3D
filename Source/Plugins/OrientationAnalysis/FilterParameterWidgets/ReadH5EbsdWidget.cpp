@@ -61,7 +61,7 @@ QString ReadH5EbsdWidget::m_OpenDialogLastDirectory = "";
 //
 // -----------------------------------------------------------------------------
 ReadH5EbsdWidget::ReadH5EbsdWidget(FilterParameter* parameter, AbstractFilter* filter, QWidget* parent) :
-  QWidget(parent),
+  FilterParameterWidget(parameter, filter, parent),
   m_Version4Warning(false),
   m_DidCausePreflight(false),
   m_NewFileLoaded(false)
@@ -96,6 +96,39 @@ ReadH5EbsdWidget::ReadH5EbsdWidget(FilterParameter* parameter, AbstractFilter* f
 ReadH5EbsdWidget::~ReadH5EbsdWidget()
 {
 
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ReadH5EbsdWidget::setFilter(AbstractFilter *value)
+{
+  m_Filter = dynamic_cast<ReadH5Ebsd*>(value);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AbstractFilter* ReadH5EbsdWidget::getFilter() const
+{
+  return m_Filter;
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ReadH5EbsdWidget::setFilterParameter(FilterParameter *value)
+{
+  m_FilterParameter = dynamic_cast<FileSystemFilterParameter*>(value);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+FilterParameter* ReadH5EbsdWidget::getFilterParameter() const
+{
+  return m_FilterParameter;
 }
 
 // -----------------------------------------------------------------------------

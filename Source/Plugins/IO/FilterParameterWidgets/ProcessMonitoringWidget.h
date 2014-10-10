@@ -50,6 +50,8 @@
 
 #include "QtSupport/DREAM3DPluginFrame.h"
 
+#include "DREAM3DWidgetsLib/DREAM3DWidgetsLib.h"
+#include "DREAM3DWidgetsLib/FilterParameterWidgets/FilterParameterWidget.h"
 #include "DREAM3DWidgetsLib/Widgets/PipelineFilterWidget.h"
 
 
@@ -69,7 +71,7 @@ class LoadAdditiveMonitoringData;
  * @date Jan 30, 2011
  * @version 1.0
  */
-class ProcessMonitoringWidget : public QWidget, private Ui::ProcessMonitoringWidget
+class ProcessMonitoringWidget : public FilterParameterWidget, private Ui::ProcessMonitoringWidget
 {
     Q_OBJECT
 
@@ -88,6 +90,9 @@ class ProcessMonitoringWidget : public QWidget, private Ui::ProcessMonitoringWid
      * @brief Initializes some of the GUI elements with selections or other GUI related items
      */
     virtual void setupGui();
+
+    void setFilter(AbstractFilter *value);
+    AbstractFilter* getFilter() const;
 
   public slots:
     void widgetChanged(const QString& msg);
@@ -183,7 +188,6 @@ class ProcessMonitoringWidget : public QWidget, private Ui::ProcessMonitoringWid
 
   private:
     LoadAdditiveMonitoringData*               m_Filter;
-    FilterParameter*            m_FilterParameter;
     QList<QWidget*>             m_WidgetList;
     QButtonGroup*               m_StackingGroup;
     QButtonGroup*               m_OriginGroup;

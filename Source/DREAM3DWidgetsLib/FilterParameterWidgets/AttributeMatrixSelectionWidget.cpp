@@ -51,9 +51,7 @@
 //
 // -----------------------------------------------------------------------------
 AttributeMatrixSelectionWidget::AttributeMatrixSelectionWidget(FilterParameter* parameter, AbstractFilter* filter, QWidget* parent) :
-  QWidget(parent),
-  m_Filter(filter),
-  m_FilterParameter(parameter),
+  FilterParameterWidget(parameter, filter, parent),
   m_DidCausePreflight(false)
 {
   setupUi(this);
@@ -73,30 +71,30 @@ void AttributeMatrixSelectionWidget::setupGui()
 {
 
   // Catch when the filter is about to execute the preflight
-  connect(m_Filter, SIGNAL(preflightAboutToExecute()),
+  connect(getFilter(), SIGNAL(preflightAboutToExecute()),
           this, SLOT(beforePreflight()));
 
   // Catch when the filter is finished running the preflight
-  connect(m_Filter, SIGNAL(preflightExecuted()),
+  connect(getFilter(), SIGNAL(preflightExecuted()),
           this, SLOT(afterPreflight()));
 
   // Catch when the filter wants its values updated
-  connect(m_Filter, SIGNAL(updateFilterParameters(AbstractFilter*)),
+  connect(getFilter(), SIGNAL(updateFilterParameters(AbstractFilter*)),
           this, SLOT(filterNeedsInputParameters(AbstractFilter*)));
 
-  if (m_FilterParameter == NULL)
+  if (getFilterParameter() == NULL)
   {
     return;
   }
 
-  QString units = m_FilterParameter->getUnits();
+  QString units = getFilterParameter()->getUnits();
   if(units.isEmpty() == false)
   {
-    label->setText(m_FilterParameter->getHumanLabel() + " (" + units + ")");
+    label->setText(getFilterParameter()->getHumanLabel() + " (" + units + ")");
   }
   else
   {
-    label->setText(m_FilterParameter->getHumanLabel() );
+    label->setText(getFilterParameter()->getHumanLabel() );
   }
 
 
@@ -125,7 +123,7 @@ void AttributeMatrixSelectionWidget::populateComboBoxes()
 
   // Now get the DataContainerArray from the Filter instance
   // We are going to use this to get all the current DataContainers
-  DataContainerArray::Pointer dca = m_Filter->getDataContainerArray();
+  DataContainerArray::Pointer dca = getFilter()->getDataContainerArray();
   if(NULL == dca.get()) { return; }
 
   // Check to see if we have any DataContainers to actually populate drop downs with.
@@ -154,7 +152,7 @@ void AttributeMatrixSelectionWidget::populateComboBoxes()
   QString curAmName = attributeMatrixList->currentText();
 
   // Get what is in the filter
-  QVariant qvSelectedPath = m_Filter->property(PROPERTY_NAME_AS_CHAR);
+  QVariant qvSelectedPath = getFilter()->property(PROPERTY_NAME_AS_CHAR);
   DataArrayPath selectedPath = qvSelectedPath.value<DataArrayPath>();
 
   QString filtDcName = selectedPath.getDataContainerName();
@@ -167,7 +165,7 @@ void AttributeMatrixSelectionWidget::populateComboBoxes()
   if(filtDcName.isEmpty() && filtAmName.isEmpty()
       && curDcName.isEmpty() && curAmName.isEmpty() )
   {
-    DataArrayPath daPath = m_FilterParameter->getDefaultValue().value<DataArrayPath>();
+    DataArrayPath daPath = getFilterParameter()->getDefaultValue().value<DataArrayPath>();
     dcName = daPath.getDataContainerName();
     amName = daPath.getAttributeMatrixName();
   }
@@ -243,13 +241,13 @@ void AttributeMatrixSelectionWidget::selectDefaultPath()
   }
 
   // Set the default AttributeArray
-  m_Filter->blockSignals(true);
+  getFilter()->blockSignals(true);
   // Select the first AttributeMatrix in the list
   if(attributeMatrixList->count() > 0)
   {
     attributeMatrixList->setCurrentIndex(0);
   }
-  m_Filter->blockSignals(false);
+  getFilter()->blockSignals(false);
 }
 
 // -----------------------------------------------------------------------------
@@ -350,7 +348,7 @@ void AttributeMatrixSelectionWidget::on_attributeMatrixList_currentIndexChanged(
 // -----------------------------------------------------------------------------
 void AttributeMatrixSelectionWidget::beforePreflight()
 {
-  if (NULL == m_Filter) { return; }
+  if (NULL == getFilter()) { return; }
   if(m_DidCausePreflight == true)
   {
     std::cout << "***  AttributeMatrixSelectionWidget already caused a preflight, just returning" << std::endl;
@@ -389,46 +387,7 @@ void AttributeMatrixSelectionWidget::filterNeedsInputParameters(AbstractFilter* 
   ok = filter->setProperty(PROPERTY_NAME_AS_CHAR, var);
   if(false == ok)
   {
-    FilterParameterWidgetsDialogs::ShowCouldNotSetFilterParameter(m_Filter, m_FilterParameter);
+    FilterParameterWidgetsDialogs::ShowCouldNotSetFilterParameter(getFilter(), getFilterParameter());
   }
 
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void AttributeMatrixSelectionWidget::setLinkedConditionalState(int state)
-{
-  bool boolProp = (state == Qt::Checked);
-  fadeWidget(this, boolProp);
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void AttributeMatrixSelectionWidget::fadeWidget(QWidget* widget, bool in)
-{
-
-  if (faderWidget)
-  {
-    faderWidget->close();
-  }
-  faderWidget = new FaderWidget(widget);
-  if(in)
-  {
-    setVisible(true);
-    faderWidget->setFadeIn();
-    connect(faderWidget, SIGNAL(animationComplete() ),
-            this, SLOT(show()));
-  }
-  else
-  {
-    faderWidget->setFadeOut();
-    connect(faderWidget, SIGNAL(animationComplete() ),
-            this, SLOT(hide()));
-  }
-  QColor color = DREAM3D::Defaults::BasicColor;
-  if(m_FilterParameter->getAdvanced()) { color = DREAM3D::Defaults::AdvancedColor; }
-  faderWidget->setStartColor(color);
-  faderWidget->start();
 }

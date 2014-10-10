@@ -48,6 +48,8 @@
 #include "DREAM3DLib/DataContainers/DataContainerArrayProxy.h"
 
 #include "DREAM3DWidgetsLib/DREAM3DWidgetsLib.h"
+#include "DREAM3DWidgetsLib/FilterParameterWidgets/FilterParameterWidget.h"
+
 
 #include "DREAM3DWidgetsLib/ui_DataArraySelectionWidget.h"
 
@@ -59,7 +61,7 @@ class FilterParameter;
 * @author
 * @version
 */
-class DREAM3DWidgetsLib_EXPORT DataArraySelectionWidget : public QWidget, private Ui::DataArraySelectionWidget
+class DREAM3DWidgetsLib_EXPORT DataArraySelectionWidget : public FilterParameterWidget, private Ui::DataArraySelectionWidget
 {
     Q_OBJECT
 
@@ -108,8 +110,7 @@ class DREAM3DWidgetsLib_EXPORT DataArraySelectionWidget : public QWidget, privat
 
     void on_attributeArrayList_currentIndexChanged(int index);
 
-    void setLinkedConditionalState(int state);
-    void fadeWidget(QWidget* widget, bool in);
+
 
   protected:
     void populateComboBoxes();
@@ -135,10 +136,9 @@ class DREAM3DWidgetsLib_EXPORT DataArraySelectionWidget : public QWidget, privat
     void parametersChanged();
 
   private:
-    AbstractFilter*   m_Filter;
-    FilterParameter*  m_FilterParameter;
+
     bool m_DidCausePreflight;
-    QPointer<FaderWidget> faderWidget;
+
 
     DataContainerArrayProxy m_DcaProxy;
     DataArrayPath  m_DefaultPath;
