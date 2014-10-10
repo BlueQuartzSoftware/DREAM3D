@@ -145,11 +145,11 @@ void InsertPrecipitatePhases::setupFilterParameters()
   parameters.push_back(FilterParameter::New("NumFeatures", "NumFeaturesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getNumFeaturesArrayPath(), true, ""));
   parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
   QStringList linkedProps("PrecipInputFile");
-  parameters.push_back(FilterParameter::NewConditional("Already Have Precipitates", "HavePrecips", FilterParameterWidgetType::LinkedBooleanWidget, getHavePrecips(), false, linkedProps));
+  parameters.push_back(LinkedBooleanFilterParameter::New("Already Have Precipitates", "HavePrecips", getHavePrecips(), linkedProps, false));
   parameters.push_back(FileSystemFilterParameter::New("Precipitate Input File", "PrecipInputFile", FilterParameterWidgetType::InputFileWidget, getPrecipInputFile(), false, "", "*.txt", "Text File"));
   linkedProps.clear();
   linkedProps << "CsvOutputFile";
-  parameters.push_back(FilterParameter::NewConditional("Write Goal Attributes", "WriteGoalAttributes", FilterParameterWidgetType::LinkedBooleanWidget, getWriteGoalAttributes(), false, linkedProps));
+  parameters.push_back(LinkedBooleanFilterParameter::New("Write Goal Attributes", "WriteGoalAttributes", getWriteGoalAttributes(), linkedProps, false));
   parameters.push_back(FileSystemFilterParameter::New("Goal Attribute CSV File", "CsvOutputFile", FilterParameterWidgetType::OutputFileWidget, getCsvOutputFile(), false, "", "*.csv", "Comma Separated Data"));
 
   setFilterParameters(parameters);

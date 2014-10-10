@@ -79,7 +79,7 @@ void FillBadData::setupFilterParameters()
   parameters.push_back(FilterParameter::New("Minimum Allowed Defect Size", "MinAllowedDefectSize", FilterParameterWidgetType::IntWidget, getMinAllowedDefectSize(), false, "Pixels"));
   QStringList linkedProps;
   linkedProps << "CellPhasesArrayPath";
-  parameters.push_back(FilterParameter::NewConditional("Store Defects As New Phase", "StoreAsNewPhase", FilterParameterWidgetType::LinkedBooleanWidget, getStoreAsNewPhase(), false, linkedProps));
+  parameters.push_back(LinkedBooleanFilterParameter::New("Store Defects As New Phase", "StoreAsNewPhase", getStoreAsNewPhase(), linkedProps, false));
 
   parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
   parameters.push_back(FilterParameter::New("FeatureIds", "FeatureIdsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeatureIdsArrayPath(), true, ""));

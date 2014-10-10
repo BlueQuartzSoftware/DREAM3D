@@ -100,10 +100,10 @@ void FindLocalAverageCAxisMisalignments::setupFilterParameters()
 {
   FilterParameterVector parameters;
   QStringList linkedProps("UnbiasedLocalCAxisMisalignmentsArrayName");
-  parameters.push_back(FilterParameter::NewConditional("Calculate Unbiased Local C-Axis Misalignments", "CalcUnbiasedAvg", FilterParameterWidgetType::LinkedBooleanWidget, getCalcUnbiasedAvg(), false, linkedProps));
+  parameters.push_back(LinkedBooleanFilterParameter::New("Calculate Unbiased Local C-Axis Misalignments", "CalcUnbiasedAvg", getCalcUnbiasedAvg(), linkedProps, false));
   linkedProps.clear();
   linkedProps << "LocalCAxisMisalignmentsArrayName";
-  parameters.push_back(FilterParameter::NewConditional("Calculate Local C-Axis Misalignments", "CalcBiasedAvg", FilterParameterWidgetType::LinkedBooleanWidget, getCalcBiasedAvg(), false, linkedProps));
+  parameters.push_back(LinkedBooleanFilterParameter::New("Calculate Local C-Axis Misalignments", "CalcBiasedAvg", getCalcBiasedAvg(), linkedProps, false));
 
   parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
   parameters.push_back(FilterParameter::New("Neighbor List Array Name", "NeighborListArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getNeighborListArrayPath(), true, ""));

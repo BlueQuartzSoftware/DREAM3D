@@ -99,7 +99,7 @@ void GenerateRodriguesColors::setupFilterParameters()
   parameters.push_back(FilterParameter::New("Cell Euler Angles", "CellEulerAnglesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getCellEulerAnglesArrayPath(), true, ""));
   parameters.push_back(FilterParameter::New("Optional Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
   QStringList linkedProps("GoodVoxelsArrayPath");
-  parameters.push_back(FilterParameter::NewConditional("Apply to Good Voxels Only (Bad Voxels Will Be Black)", "UseGoodVoxels", FilterParameterWidgetType::LinkedBooleanWidget, getUseGoodVoxels(), true, linkedProps));
+  parameters.push_back(LinkedBooleanFilterParameter::New("Apply to Good Voxels Only (Bad Voxels Will Be Black)", "UseGoodVoxels", getUseGoodVoxels(), linkedProps, true));
   parameters.push_back(FilterParameter::New("GoodVoxels", "GoodVoxelsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getGoodVoxelsArrayPath(), true, ""));
 
   parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
