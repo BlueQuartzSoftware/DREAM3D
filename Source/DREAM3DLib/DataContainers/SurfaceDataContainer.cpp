@@ -94,8 +94,8 @@ int SurfaceDataContainer::writeFacesToHDF5(hid_t dcGid)
     err = QH5Lite::writePointerDataset(dcGid, DREAM3D::StringConstants::FacesName, rank, dims, data);
     if (err < 0)
     {
-//      setErrorCondition(err);
-//      notifyErrorMessage(getHumanLabel(), "Error Writing Face List to DREAM3D file", getErrorCondition());
+      //      setErrorCondition(err);
+      //      notifyErrorMessage(getHumanLabel(), "Error Writing Face List to DREAM3D file", getErrorCondition());
     }
 
     //next write face neighbors if they exist
@@ -230,7 +230,7 @@ int SurfaceDataContainer::writeXdmf(QTextStream& out, QString hdfFileName)
     uint32_t amType = attrMat->getType();
     switch(amType)
     {
-        //FIXME: There are more AttributeMatrix Types that should be implemented
+      //FIXME: There are more AttributeMatrix Types that should be implemented
       case DREAM3D::AttributeMatrixType::Vertex:
         xdmfCenter = DREAM3D::XdmfCenterType::Node;
         break;
@@ -261,30 +261,46 @@ int SurfaceDataContainer::writeXdmf(QTextStream& out, QString hdfFileName)
 // -----------------------------------------------------------------------------
 void SurfaceDataContainer::writeXdmfMeshStructureHeader(QTextStream& out, QString hdfFileName)
 {
+
+  out << "  <Grid Name=\"" << getName() << "\">" << "\n";
+
   FaceArray::Pointer faces = getFaces();
   if (NULL == faces.get())
   {
-    return;
+    out << "<!-- ********************* DATA CONTAINER ERROR ****************************************\n";
+    out << "The EdgeDataContainer with name '" << getName() << "' did not have any vertices assigned.\n";
+    out << "The Topology types will be missing from the Xdmf which will cause issues when\n";
+    out << "trying to load the file\n";
+    out << " ********************************************************************************** ->\n";
   }
+  else
+  {
+    out << "    <Topology TopologyType=\"Triangle\" NumberOfElements=\"" << faces->getNumberOfTuples() << "\">" << "\n";
+    out << "      <DataItem Format=\"HDF\" NumberType=\"Int\" Dimensions=\"" << faces->getNumberOfTuples() << " 3\">" << "\n";
+    out << "        " << hdfFileName << ":/DataContainers/" << getName() << "/Faces" << "\n";
+    out << "      </DataItem>" << "\n";
+    out << "    </Topology>" << "\n";
+  }
+
   VertexArray::Pointer verts = getVertices();
   if(NULL == verts.get())
   {
-    return;
+    out << "<!-- ********************* DATA CONTAINER ERROR ****************************************\n";
+    out << "The EdgeDataContainer with name '" << getName() << "' did not have any vertices assigned.\n";
+    out << "The Geometry types will be missing from the Xdmf which will cause issues when\n";
+    out << "trying to load the file\n";
+    out << " ********************************************************************************** ->\n";
+  }
+  else
+  {
+    out << "    <Geometry Type=\"XYZ\">" << "\n";
+    out << "      <DataItem Format=\"HDF\"  Dimensions=\"" << verts->getNumberOfTuples() << " 3\" NumberType=\"Float\" Precision=\"4\">" << "\n";
+    out << "        " << hdfFileName << ":/DataContainers/" << getName() << "/Vertices" << "\n";
+    out << "      </DataItem>" << "\n";
+    out << "    </Geometry>" << "\n";
+    out << "" << "\n";
   }
 
-  out << "  <Grid Name=\"" << getName() << "\">" << "\n";
-  out << "    <Topology TopologyType=\"Triangle\" NumberOfElements=\"" << faces->getNumberOfTuples() << "\">" << "\n";
-  out << "      <DataItem Format=\"HDF\" NumberType=\"Int\" Dimensions=\"" << faces->getNumberOfTuples() << " 3\">" << "\n";
-  out << "        " << hdfFileName << ":/DataContainers/" << getName() << "/Faces" << "\n";
-  out << "      </DataItem>" << "\n";
-  out << "    </Topology>" << "\n";
-
-  out << "    <Geometry Type=\"XYZ\">" << "\n";
-  out << "      <DataItem Format=\"HDF\"  Dimensions=\"" << verts->getNumberOfTuples() << " 3\" NumberType=\"Float\" Precision=\"4\">" << "\n";
-  out << "        " << hdfFileName << ":/DataContainers/" << getName() << "/Vertices" << "\n";
-  out << "      </DataItem>" << "\n";
-  out << "    </Geometry>" << "\n";
-  out << "" << "\n";
 }
 
 // -----------------------------------------------------------------------------
@@ -344,8 +360,8 @@ int SurfaceDataContainer::readFaces(hid_t dcGid, bool preflight)
       err = QH5Lite::readPointerDataset(dcGid, DREAM3D::StringConstants::FacesName, data);
       if (err < 0)
       {
-//        setErrorCondition(err);
-//        notifyErrorMessage(getHumanLabel(), "Error Reading Face List from DREAM3D file", getErrorCondition());
+        //        setErrorCondition(err);
+        //        notifyErrorMessage(getHumanLabel(), "Error Reading Face List from DREAM3D file", getErrorCondition());
         return err;
       }
       setFaces(facesPtr);
@@ -359,8 +375,8 @@ int SurfaceDataContainer::readFaces(hid_t dcGid, bool preflight)
         err = QH5Lite::readVectorDataset(dcGid, DREAM3D::StringConstants::FaceNeighbors, buffer);
         if(err < 0)
         {
-//          setErrorCondition(err);
-//          notifyErrorMessage(getHumanLabel(), "Error Reading Face List from DREAM3D file", getErrorCondition());
+          //          setErrorCondition(err);
+          //          notifyErrorMessage(getHumanLabel(), "Error Reading Face List from DREAM3D file", getErrorCondition());
           return err;
         }
         Int32DynamicListArray::Pointer faceNeighbors = Int32DynamicListArray::New();
@@ -376,8 +392,8 @@ int SurfaceDataContainer::readFaces(hid_t dcGid, bool preflight)
         err = QH5Lite::readVectorDataset(dcGid, DREAM3D::StringConstants::FacesContainingVert, buffer);
         if(err < 0)
         {
-//          setErrorCondition(err);
-//          notifyErrorMessage(getHumanLabel(), "Error Reading Face List from DREAM3D file", getErrorCondition());
+          //          setErrorCondition(err);
+          //          notifyErrorMessage(getHumanLabel(), "Error Reading Face List from DREAM3D file", getErrorCondition());
           return err;
         }
         Int32DynamicListArray::Pointer facesContainingVert = Int32DynamicListArray::New();

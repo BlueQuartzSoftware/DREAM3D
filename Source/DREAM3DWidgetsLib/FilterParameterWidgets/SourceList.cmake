@@ -30,6 +30,7 @@ set(DREAM3D_PARAMETER_WIDGETS
       PhaseTypeSelectionWidget
       VolumeDataContainerInfoWidget
       DataContainerReaderWidget
+      DynamicChoiceWidget
 #      CellArrayComparisonSelectionWidget
 #      FeatureArrayComparisonSelectionWidget
 #      EnsembleArrayComparisonSelectionWidget

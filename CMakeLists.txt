@@ -10,9 +10,11 @@
 #--////////////////////////////////////////////////////////////////////////////
 
 
-if(NOT ${DREAM3D_SDK} STREQUAL "")
+if(NOT "${DREAM3D_SDK}" STREQUAL "")
   include("${DREAM3D_SDK}/DREAM3D_SDK.cmake")
 endif()
+
+message(STATUS "DREAM3D_SDK Location: ${DREAM3D_SDK}")
 
 project(DREAM3DProj)
 cmake_minimum_required(VERSION 2.8.9)
@@ -173,16 +175,60 @@ INCLUDE_DIRECTORIES(${Boost_INCLUDE_DIRS})
 LINK_DIRECTORIES(${Boost_LIBRARY_DIRS})
 
 # ---------- Find HDF5 Headers/Libraries -----------------------
+# HDF5 now comes with everything that is needed for CMake to load
+# up the targets (Exported) that it needs. We just need to find where
+# HDF5 is installed.
+
+if("${HDF5_INSTALL}" STREQUAL "")
+    set(HDF5_INSTALL  $ENV{HDF5_INSTALL})
+endif()
+
+if( "${HDF5_INSTALL}" STREQUAL "")
+  message(FATA_ERROR "The HDF5_INSTALL variable was not set. In order to find HDF5 you need to either\
+                      pass in the -DHDF5_INSTALL=.... or set the HDF5_INSTALL environment variable.")  
+endif()
+
+
+if(WIN32)
+    set(ENV{HDF5_ROOT_DIR_HINT} "${HDF5_INSTALL}/cmake/hdf5")
+    set(ENV{HDF5_ROOT} "${HDF5_INSTALL}")
+    set(CMAKE_MODULE_PATH ${HDF5_INSTALL}/cmake/hdf5 ${CMAKE_MODULE_PATH})
+else()
+    set(ENV{HDF5_ROOT_DIR_HINT} "${HDF5_INSTALL}/share/cmake")
+    set(ENV{HDF5_ROOT} "${HDF5_INSTALL}")
+    set(CMAKE_MODULE_PATH ${HDF5_INSTALL}/share/cmake ${CMAKE_MODULE_PATH})
+endif()
+
+if(0)
+message(STATUS "      HDF5_INSTALL: ${HDF5_INSTALL}")
+message(STATUS "HDF5_ROOT_DIR_HINT: $ENV{HDF5_ROOT_DIR_HINT}")
+message(STATUS "         HDF5_ROOT: $ENV{HDF5_ROOT}")
+endif()
+
 find_package(HDF5)
 if(HDF5_FOUND)
-    file(APPEND ${CMP_PLUGIN_SEARCHDIR_FILE} "${HDF5_LIBRARY_DIRS};")
-    include_directories(${HDF5_INCLUDE_DIRS} )
-    # This copies the DLL (if needed) into the various build directories on MSVC systems
-    CMP_COPY_DEPENDENT_LIBRARIES("hdf5")
-    # Append the locations of the HDF5 libraries to our Library Search Paths
-    list(APPEND CMP_LIB_SEARCH_DIRS ${HDF5_BINARY_DIR} ${HDF5_LIBRARY_DIR} )
-    # Create an install rule to copy the dependent shared library over to the installed location
-    CMP_LIBRARIES_INSTALL_RULES("hdf5" ".")
+  file(APPEND ${CMP_PLUGIN_SEARCHDIR_FILE} "${HDF5_LIBRARY_DIRS};")
+  include_directories(${HDF5_INCLUDE_DIRS} )
+  list(APPEND CMP_LIB_SEARCH_DIRS ${HDF5_BINARY_DIR} ${HDF5_LIBRARY_DIR} )
+  
+  message(STATUS "Found HDF5: ${HDF5_INSTALL}")
+  message(STATUS "HDF5 Version: ${HDF5_VERSION_STRING}")
+  if(MSVC_IDE)
+    set(BUILD_TYPES Debug Release)
+  else()
+    set(BUILD_TYPES "${CMAKE_BUILD_TYPE}")
+    if("${BUILD_TYPES}" STREQUAL "")
+        set(BUILD_TYPES "Debug")
+    endif()
+  endif()
+  if(NOT APPLE)
+    AddHDF5CopyInstallRules(LIBVAR HDF5_LIB
+                        LIBNAME hdf5
+                        TYPES ${BUILD_TYPES})
+    AddHDF5CopyInstallRules(LIBVAR HDF5_CPP_LIB
+                        LIBNAME hdf5_cpp
+                        TYPES ${BUILD_TYPES})
+  endif()
 ELSE(HDF5_FOUND)
     MESSAGE(FATAL_ERROR "Cannot build without HDF5.  Please set HDF5_INSTALL environment variable to point to your HDF5 installation.")
 ENDif(HDF5_FOUND)
@@ -398,8 +444,9 @@ set(DREAM3D_PLUGIN_LIST
 
 # --- Look for user defined external Plugins that the user has entered
 # into CMake-GUI or through CCMake by the user.
-#set(DREAM3D_EXTRA_PLUGINS "" CACHE LIST "Semicolon delimited list of Extra External Plugins that you want to build into DREAM.3D")
-#message(STATUS "*** Configuring User Defined Plugins ***")
+if("${DREAM3D_EXTRA_PLUGINS}" STREQUAL "")
+  set(DREAM3D_EXTRA_PLUGINS "" CACHE LIST "Semicolon delimited list of Extra External Plugins that you want to build into DREAM.3D")
+endif()
 
 set(DREAM3D_PLUGIN_LIST ${DREAM3D_PLUGIN_LIST} ${DREAM3D_EXTRA_PLUGINS} )
 

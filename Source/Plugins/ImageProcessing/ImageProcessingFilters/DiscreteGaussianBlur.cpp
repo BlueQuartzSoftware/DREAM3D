@@ -74,7 +74,7 @@ void DiscreteGaussianBlur::setupFilterParameters()
   parameters.push_back(FilterParameter::New("Array to Process", "SelectedCellArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getSelectedCellArrayPath(), false, ""));
   QStringList linkedProps;
   linkedProps << "NewCellArrayName";
-  parameters.push_back(FilterParameter::NewConditional("Save As New Array", "SaveAsNewArray", FilterParameterWidgetType::LinkedBooleanWidget, getSaveAsNewArray(), false, linkedProps));
+  parameters.push_back(LinkedBooleanFilterParameter::New("Save As New Array", "SaveAsNewArray", getSaveAsNewArray(), linkedProps, false));
 
   parameters.push_back(FilterParameter::New("Created Array Name", "NewCellArrayName", FilterParameterWidgetType::StringWidget, getNewCellArrayName(), false, ""));
   parameters.push_back(FilterParameter::New("Standard Deviation", "Stdev", FilterParameterWidgetType::DoubleWidget, getStdev(), false));

@@ -281,16 +281,16 @@ void FindEuclideanDistMap::setupFilterParameters()
 {
   FilterParameterVector parameters;
   QStringList linkedProps("GBEuclideanDistancesArrayName");
-  parameters.push_back(FilterParameter::NewConditional("Calculate Distance to Boundaries", "DoBoundaries", FilterParameterWidgetType::LinkedBooleanWidget, getDoBoundaries(), false, linkedProps));
+  parameters.push_back(LinkedBooleanFilterParameter::New("Calculate Distance to Boundaries", "DoBoundaries", getDoBoundaries(), linkedProps, false));
   linkedProps.clear();
   linkedProps << "TJEuclideanDistancesArrayName";
-  parameters.push_back(FilterParameter::NewConditional("Calculate Distance to Triple Lines", "DoTripleLines", FilterParameterWidgetType::LinkedBooleanWidget, getDoTripleLines(), false, linkedProps));
+  parameters.push_back(LinkedBooleanFilterParameter::New("Calculate Distance to Triple Lines", "DoTripleLines", getDoTripleLines(), linkedProps, false));
   linkedProps.clear();
   linkedProps << "QPEuclideanDistancesArrayName";
-  parameters.push_back(FilterParameter::NewConditional("Calculate Distance to Quadruple Points", "DoQuadPoints", FilterParameterWidgetType::LinkedBooleanWidget, getDoQuadPoints(), false, linkedProps));
+  parameters.push_back(LinkedBooleanFilterParameter::New("Calculate Distance to Quadruple Points", "DoQuadPoints", getDoQuadPoints(), linkedProps, false));
   linkedProps.clear();
   linkedProps << "NearestNeighborsArrayName";
-  parameters.push_back(FilterParameter::NewConditional("Store the Nearest Boundary Cells", "SaveNearestNeighbors", FilterParameterWidgetType::LinkedBooleanWidget, getSaveNearestNeighbors(), false, linkedProps));
+  parameters.push_back(LinkedBooleanFilterParameter::New("Store the Nearest Boundary Cells", "SaveNearestNeighbors", getSaveNearestNeighbors(), linkedProps, false));
 
   parameters.push_back(FilterParameter::New("Calculate Manhattan Distance Only", "CalcOnlyManhattanDist", FilterParameterWidgetType::BooleanWidget, getCalcOnlyManhattanDist(), false, ""));
   parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));

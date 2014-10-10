@@ -611,7 +611,6 @@ namespace DREAM3D
     const unsigned int FaceEnsemble = 10; //!<
     const unsigned int CellEnsemble = 11; //!<
     const unsigned int GenericBundle = 12; //!<
-    const unsigned int TimeSeriesBundle = 13; //!<
     const unsigned int Unknown = 999; //!<
   }
 

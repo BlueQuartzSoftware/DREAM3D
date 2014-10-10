@@ -115,15 +115,17 @@ bool BrandedInitializer::initialize(int argc, char* argv[])
   this->Splash->setMask(pixmap.createMaskFromColor(QColor(Qt::transparent)));
   this->Splash->show();
 
-  // Not sure why this is needed. Andy added this ages ago with comment saying
-  // needed for Mac apps. Need to check that it's indeed still required.
   QDir dir(QApplication::applicationDirPath());
 #if defined (Q_OS_MAC)
   dir.cdUp();
   dir.cd("Plugins");
 
 #elif defined (Q_OS_LINUX)
-
+  if (! dir.cd("Plugins"))
+  {
+      dir.cdUp();
+      dir.cd("Plugins");
+  }
 #elif defined (Q_OS_WIN)
   dir.cdUp();
   dir.cd("Plugins");
@@ -145,7 +147,7 @@ bool BrandedInitializer::initialize(int argc, char* argv[])
   this->MainWindow->show();
   if (show_splash)
   {
-    delay(2);
+    delay(1);
     this->Splash->finish(this->MainWindow);
   }
   QApplication::instance()->processEvents();
@@ -169,7 +171,7 @@ QVector<DREAM3DPluginInterface*> BrandedInitializer::loadPlugins()
   QString thePath;
 
 #if defined(Q_OS_WIN)
-  if (aPluginDir.cd("plugins") )
+  if (aPluginDir.cd("Plugins") )
   {
     thePath = aPluginDir.absolutePath();
     m_PluginDirs << thePath;
@@ -217,9 +219,9 @@ QVector<DREAM3DPluginInterface*> BrandedInitializer::loadPlugins()
   }
   // Now try moving up a directory which is what should happen when running from a
   // proper distribution of DREAM3D
-  qDebug() << " Linux Plugins:" << aPluginDir.absolutePath();
+ // qDebug() << " Linux Plugins:" << aPluginDir.absolutePath();
   aPluginDir.cdUp();
-  qDebug() << "cdUp() Linux Plugins:" << aPluginDir.absolutePath();
+//  qDebug() << "cdUp() Linux Plugins:" << aPluginDir.absolutePath();
   if (aPluginDir.cd("Plugins"))
   {
     thePath = aPluginDir.absolutePath();

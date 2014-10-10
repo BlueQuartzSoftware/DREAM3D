@@ -359,10 +359,8 @@ void InitializeSyntheticVolumeWidget::filterNeedsInputParameters(AbstractFilter*
     emit errorSettingFilterParameter(ss);
   }
 
-  InitializeSyntheticVolume* ebsdConverter = qobject_cast<InitializeSyntheticVolume*>(filter);
-  Q_ASSERT_X(NULL != ebsdConverter, "InitializeSyntheticVolumeWidget can ONLY be used with InitializeSyntheticVolume filter", __FILE__);
-
-
+  InitializeSyntheticVolume* filt = qobject_cast<InitializeSyntheticVolume*>(filter);
+  if(NULL == filt) Q_ASSERT_X(NULL != filt, "InitializeSyntheticVolumeWidget can ONLY be used with InitializeSyntheticVolume filter", __FILE__);
 }
 
 

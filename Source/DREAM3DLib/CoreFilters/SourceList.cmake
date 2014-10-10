@@ -32,6 +32,9 @@ set(_PublicFilters
   DataContainerReader
   DataContainerWriter
   RawBinaryReader
+  CopyAttributeArray
+  CopyAttributeMatrix
+  CopyDataContainer
 )
 
 

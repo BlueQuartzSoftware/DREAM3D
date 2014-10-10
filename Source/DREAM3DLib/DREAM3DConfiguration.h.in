@@ -33,7 +33,7 @@
 #if (_MSC_VER >= 1)
 
 #pragma warning (error: 4715) /* Not all control points return a value */
-
+#pragma warning (error: 4258) /* Nested Variable Definitions are ignored */
     #ifdef DREAM3D_DISABLE_MSVC_WARNINGS
     #pragma warning(disable:4244)
     #pragma warning(disable:4267)

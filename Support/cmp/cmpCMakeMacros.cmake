@@ -711,6 +711,83 @@ macro (CMP_QT_LIBRARIES_INSTALL_RULES QTLIBLIST destination)
     endif(UNIX AND NOT APPLE)
 endmacro()
 
+# -------------------------------------------------------------
+# This function adds the necessary cmake code to find the HDF5
+# shared libraries and setup custom copy commands and/or install
+# rules for Linux and Windows to use
+function(AddHDF5CopyInstallRules)
+  set(options )
+  set(oneValueArgs LIBNAME LIBVAR)
+  set(multiValueArgs TYPES)
+  cmake_parse_arguments(Z "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN} )
+  set(INTER_DIR ".")
+
+  #message(STATUS "Z_LIBNAME: ${Z_LIBNAME}")
+  #message(STATUS "Z_LIBVAR: ${Z_LIBVAR}")
+  #message(STATUS "Z_TYPES: ${Z_TYPES}")
+
+  set(Z_INSTALL_DIR "lib")
+  if(WIN32)
+    set(Z_INSTALL_DIR ".")
+  endif()
+
+  FOREACH(BTYPE ${Z_TYPES} )
+    #message(STATUS "BTYPE: ${BTYPE}")
+    STRING(TOUPPER ${BTYPE} TYPE)
+    if(MSVC_IDE)
+      set(INTER_DIR "${BTYPE}")
+    endif()
+
+    # Get the Actual Library Path and create Install and copy rules
+    GET_TARGET_PROPERTY(LibPath ${Z_LIBNAME} IMPORTED_LOCATION_${TYPE})
+    #message(STATUS "LibPath: ${LibPath}")
+    if(NOT "${LibPath}" STREQUAL "LibPath-NOTFOUND")
+      #message(STATUS "Creating Install Rule for ${LibPath}")
+      install(FILES ${LibPath}
+        DESTINATION "${Z_INSTALL_DIR}"
+        CONFIGURATIONS ${BTYPE}
+        COMPONENT Applications)
+
+
+      ADD_CUSTOM_TARGET(ZZ_${Z_LIBVAR}_DLL_${TYPE}-Copy ALL
+                          COMMAND ${CMAKE_COMMAND} -E copy_if_different ${LibPath}
+                          ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${INTER_DIR}/
+                          COMMENT "  Copy: ${LibPath}\n    To: ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${INTER_DIR}/")
+      set_target_properties(ZZ_${Z_LIBVAR}_DLL_${TYPE}-Copy PROPERTIES FOLDER ZZ_COPY_FILES)
+        
+    endif()
+
+    # Now get the path that the library is in
+    GET_FILENAME_COMPONENT(${Z_LIBVAR}_DIR ${LibPath} PATH)
+   # message(STATUS "${Z_LIBVAR}_DIR: ${${Z_LIBVAR}_DIR}")
+
+    # Now piece together a complete path for the symlink that Linux Needs to have
+    if(WIN32)
+      GET_TARGET_PROPERTY(${Z_LIBVAR}_${TYPE} ${Z_LIBNAME} IMPORTED_IMPLIB_${TYPE})
+    else()
+      GET_TARGET_PROPERTY(${Z_LIBVAR}_${TYPE} ${Z_LIBNAME} IMPORTED_SONAME_${TYPE})
+    endif()
+    
+    #message(STATUS "${Z_LIBVAR}_${TYPE}: ${${Z_LIBVAR}_${TYPE}}")
+    if(NOT "${${Z_LIBVAR}_${TYPE}}" STREQUAL "${Z_LIBVAR}_${TYPE}-NOTFOUND" AND NOT WIN32)
+      set(SYMLINK_PATH "${${Z_LIBVAR}_DIR}/${${Z_LIBVAR}_${TYPE}}")
+      #message(STATUS "Creating Install Rule for ${SYMLINK_PATH}")
+      install(FILES ${SYMLINK_PATH}
+        DESTINATION "${Z_INSTALL_DIR}"
+        CONFIGURATIONS ${BTYPE}
+        COMPONENT Applications)
+      
+      ADD_CUSTOM_TARGET(ZZ_${Z_LIBVAR}_SYMLINK_${TYPE}-Copy ALL
+                          COMMAND ${CMAKE_COMMAND} -E copy_if_different ${SYMLINK_PATH}
+                          ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${INTER_DIR}/
+                          COMMENT "  Copy: ${SYMLINK_PATH}\n    To: ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${INTER_DIR}/")
+      set_target_properties(ZZ_${Z_LIBVAR}_SYMLINK_${TYPE}-Copy PROPERTIES FOLDER ZZ_COPY_FILES)
+        
+    endif()
+
+  endforeach()
+endfunction()
+
 # --------------------------------------------------------------------
 #-- Copy all the dependent DLLs into the current build directory so that the test
 #-- can run.

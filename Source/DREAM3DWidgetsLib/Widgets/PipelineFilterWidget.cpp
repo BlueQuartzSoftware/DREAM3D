@@ -291,19 +291,19 @@ void PipelineFilterWidget::validateFileSystemFilterParameter(FilterParameter* op
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PipelineFilterWidget::linkConditionalWidgets(QVector<FilterParameter::Pointer> filterParameters)
+void PipelineFilterWidget::linkConditionalWidgets(QVector<FilterParameter::Pointer>& filterParameters)
 {
   // Figure out if we have any "Linked Boolean Widgets" to hook up to other widgets
   for (QVector<FilterParameter::Pointer>::iterator iter = filterParameters.begin(); iter != filterParameters.end(); ++iter )
   {
-    FilterParameter* option = (*iter).get();
-    if(option->getWidgetType().compare(FilterParameterWidgetType::LinkedBooleanWidget) == 0 )
+    FilterParameter::Pointer option = (*iter);
+    LinkedBooleanFilterParameter::Pointer optionPtr = boost::dynamic_pointer_cast<LinkedBooleanFilterParameter>(option);
+    if(NULL != optionPtr.get() && option->getWidgetType().compare(FilterParameterWidgetType::LinkedBooleanWidget) == 0 )
     {
-      //  qDebug() << option->getHumanLabel() << " is conditional";
-      QStringList linkedProps = option->getConditionalProperties();
+      QStringList linkedProps = optionPtr->getConditionalProperties();
 
       QStringListIterator iter = QStringListIterator(linkedProps);
-      QWidget* checkboxSource = m_PropertyToWidget[option->getPropertyName()];
+      QWidget* checkboxSource = m_PropertyToWidget[optionPtr->getPropertyName()];
       LinkedBooleanWidget* lbw = qobject_cast<LinkedBooleanWidget*>(checkboxSource);
       while(iter.hasNext())
       {

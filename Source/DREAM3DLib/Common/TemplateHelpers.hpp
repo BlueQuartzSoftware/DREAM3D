@@ -25,8 +25,6 @@ namespace TemplateHelpers
     const int MissingArray(-404);
   }
 
-
-
   /**
 * @brief This class (functor) simply returns true or false if the IDataArray can be downcast to a certain DataArray type
 * parameterized by the template parameter T.
@@ -45,7 +43,8 @@ namespace TemplateHelpers
 
 
   /**
-   * @brief The CreateNonPrereqArrayFromArrayType class will help
+   * @brief The CreateNonPrereqArrayFromArrayType class will create a DataArray of the same type as another DataArray and attach it to
+   * a supplied data container.
    */
   class CreateNonPrereqArrayFromArrayType
   {
@@ -99,8 +98,8 @@ namespace TemplateHelpers
   };
 
   /**
-   * @brief The CreateArrayFromArrayType functor will create a DataArray of the same type as another DataArray but not attach
-   * it to any data container
+   * @brief The CreateArrayFromArrayType class will create a DataArray of the same type as another DataArray but not attach
+   * it to any data container.
    */
    class CreateArrayFromArrayType
    {
@@ -110,44 +109,9 @@ namespace TemplateHelpers
 
        IDataArray::Pointer operator()(AbstractFilter* f, size_t numTuples, QVector<size_t> compDims, QString arrayName, bool allocate, IDataArray::Pointer sourceArrayType)
        {
-         IDataArray::Pointer ptr = IDataArray::NullPointer();
-
-         if(CanDynamicCast<FloatArrayType>()(sourceArrayType) ) {
-           ptr = FloatArrayType::CreateArray(numTuples, compDims, arrayName, allocate);
-         }
-         else if(CanDynamicCast<DoubleArrayType>()(sourceArrayType) ) {
-           ptr = DoubleArrayType::CreateArray(numTuples, compDims, arrayName, allocate);
-         }
-         else if(CanDynamicCast<Int8ArrayType>()(sourceArrayType) ) {
-           ptr = Int8ArrayType::CreateArray(numTuples, compDims, arrayName, allocate);
-         }
-         else if(CanDynamicCast<UInt8ArrayType>()(sourceArrayType) ) {
-           ptr = UInt8ArrayType::CreateArray(numTuples, compDims, arrayName, allocate);
-         }
-         else if(CanDynamicCast<Int16ArrayType>()(sourceArrayType) ) {
-           ptr = Int16ArrayType::CreateArray(numTuples, compDims, arrayName, allocate);
-         }
-         else if(CanDynamicCast<UInt16ArrayType>()(sourceArrayType) ) {
-           ptr = UInt16ArrayType::CreateArray(numTuples, compDims, arrayName, allocate);
-         }
-         else if(CanDynamicCast<Int32ArrayType>()(sourceArrayType) ) {
-           ptr = Int32ArrayType::CreateArray(numTuples, compDims, arrayName, allocate);
-         }
-         else if(CanDynamicCast<UInt32ArrayType>()(sourceArrayType) ) {
-           ptr = UInt32ArrayType::CreateArray(numTuples, compDims, arrayName, allocate);
-         }
-         else if(CanDynamicCast<Int64ArrayType>()(sourceArrayType) ) {
-           ptr = Int64ArrayType::CreateArray(numTuples, compDims, arrayName, allocate);
-         }
-         else if(CanDynamicCast<UInt64ArrayType>()(sourceArrayType) ) {
-           ptr = UInt64ArrayType::CreateArray(numTuples, compDims, arrayName, allocate);
-         }
-         else {
-          QString msg = QObject::tr("The created array is of unsupported type.");
-          f->setErrorCondition(Errors::UnsupportedType);
-          f->notifyErrorMessage(f->getHumanLabel(), msg, f->getErrorCondition());
-         }
-         return ptr;
+         CreateArrayFromArrayType classInstance;
+         QVector<size_t> tupleDims(1, numTuples);
+         return classInstance(f, tupleDims, compDims, arrayName, allocate, sourceArrayType);
        }
 
        IDataArray::Pointer operator()(AbstractFilter* f, QVector<size_t> tupleDims, QVector<size_t> compDims, QString arrayName, bool allocate, IDataArray::Pointer sourceArrayType)
@@ -193,6 +157,10 @@ namespace TemplateHelpers
        }
    };
 
+   /**
+    * @brief The CreateArrayFromType class will create a DataArray matching the type supplied as a QString.  Available types are listed
+    * in Constants.h.
+    */
    class CreateArrayFromType
    {
      public:
@@ -201,44 +169,9 @@ namespace TemplateHelpers
 
        IDataArray::Pointer operator()(AbstractFilter* f, size_t numTuples, QVector<size_t> compDims, QString arrayName, bool allocate, QString type)
        {
-         IDataArray::Pointer ptr = IDataArray::NullPointer();
-
-         if(type.compare(DREAM3D::TypeNames::Float) == 0) {
-           ptr = FloatArrayType::CreateArray(numTuples, compDims, arrayName, allocate);
-         }
-         else if(type.compare(DREAM3D::TypeNames::Double) == 0) {
-           ptr = DoubleArrayType::CreateArray(numTuples, compDims, arrayName, allocate);
-         }
-         else if(type.compare(DREAM3D::TypeNames::Int8) == 0) {
-           ptr = Int8ArrayType::CreateArray(numTuples, compDims, arrayName, allocate);
-         }
-         else if(type.compare(DREAM3D::TypeNames::UInt8) == 0) {
-           ptr = UInt8ArrayType::CreateArray(numTuples, compDims, arrayName, allocate);
-         }
-         else if(type.compare(DREAM3D::TypeNames::Int16) == 0) {
-           ptr = Int16ArrayType::CreateArray(numTuples, compDims, arrayName, allocate);
-         }
-         else if(type.compare(DREAM3D::TypeNames::UInt16) == 0) {
-           ptr = UInt16ArrayType::CreateArray(numTuples, compDims, arrayName, allocate);
-         }
-         else if(type.compare(DREAM3D::TypeNames::Int32) == 0) {
-           ptr = Int32ArrayType::CreateArray(numTuples, compDims, arrayName, allocate);
-         }
-         else if(type.compare(DREAM3D::TypeNames::UInt32) == 0) {
-           ptr = UInt32ArrayType::CreateArray(numTuples, compDims, arrayName, allocate);
-         }
-         else if(type.compare(DREAM3D::TypeNames::Int64) == 0) {
-           ptr = Int64ArrayType::CreateArray(numTuples, compDims, arrayName, allocate);
-         }
-         else if(type.compare(DREAM3D::TypeNames::UInt64) == 0) {
-           ptr = UInt64ArrayType::CreateArray(numTuples, compDims, arrayName, allocate);
-         }
-         else {
-           QString msg = QObject::tr("The created array is of unsupported type.");
-           f->setErrorCondition(Errors::UnsupportedType);
-           f->notifyErrorMessage(f->getHumanLabel(), msg, f->getErrorCondition());
-         }
-         return ptr;
+         CreateArrayFromType classInstance;
+         QVector<size_t> tupleDims(1, numTuples);
+         return classInstance(f, tupleDims, compDims, arrayName, allocate, type);
        }
 
        IDataArray::Pointer operator()(AbstractFilter* f, QVector<size_t> tupleDims, QVector<size_t> compDims, QString arrayName, bool allocate, QString type)
@@ -284,6 +217,9 @@ namespace TemplateHelpers
        }
    };
 
+   /**
+   * @brief The GetPrereqArrayFromPath class will return a pointer to a DataArray of unknown type given the path.
+   */
   template<typename FilterClass, typename DataContainerClass>
   class GetPrereqArrayFromPath
   {

@@ -92,22 +92,20 @@ int VertexDataContainer::writeVerticesToHDF5(hid_t dcGid, bool writeXdmf)
     err = QH5Lite::writePointerDataset(dcGid, DREAM3D::StringConstants::VerticesName, rank, dims, data);
     if (err < 0)
     {
-//      setErrorCondition(err);
-//      notifyErrorMessage(getHumanLabel(), "Error Writing Face List to DREAM3D file", getErrorCondition());
+      //      setErrorCondition(err);
+      //      notifyErrorMessage(getHumanLabel(), "Error Writing Face List to DREAM3D file", getErrorCondition());
     }
 
     if(writeXdmf == true)
     {
-      QVector<size_t> cDims(1, 3);
+      QVector<size_t> cDims(1, 1);
       DataArray<int32_t>::Pointer vertsPtr = DataArray<int32_t>::CreateArray(verticesPtr->getNumberOfTuples(), cDims, DREAM3D::StringConstants::VertsName);
       int32_t* verts = vertsPtr->getPointer(0);
       for(size_t i = 0; i < vertsPtr->getNumberOfTuples(); i++)
       {
-        verts[3 * i] = 1;
-        verts[3 * i + 1] = 1;
-        verts[3 * i + 2] = i;
+        verts[i] = i;
       }
-      int32_t rank = 2;
+      int32_t rank = 1;
       hsize_t dims[2] = {vertsPtr->getNumberOfTuples(), 3};
       err = QH5Lite::writePointerDataset(dcGid, DREAM3D::StringConstants::VertsName, rank, dims, verts);
     }
@@ -155,7 +153,7 @@ int VertexDataContainer::writeXdmf(QTextStream& out, QString hdfFileName)
     uint32_t amType = attrMat->getType();
     switch(amType)
     {
-        //FIXME: There are more AttributeMatrix Types that should be implemented
+      //FIXME: There are more AttributeMatrix Types that should be implemented
       case DREAM3D::AttributeMatrixType::Vertex:
         xdmfCenter = DREAM3D::XdmfCenterType::Node;
         break;
@@ -180,25 +178,44 @@ int VertexDataContainer::writeXdmf(QTextStream& out, QString hdfFileName)
 // -----------------------------------------------------------------------------
 void VertexDataContainer::writeXdmfMeshStructureHeader(QTextStream& out, QString hdfFileName)
 {
+  // Always start the grid
+  out << "  <Grid Name=\"" << getName() << "\" GridType=\"Uniform\">" << "\n";
+
+#if 0
+  DataArrayPath dap = getTemporalDataPath();
+  if(dap.isValid())
+  {
+    IDataArray::Pointer timeValues = getAttributeMatrix(dap.getAttributeMatrixName())->getAttributeArray(dap.getDataArrayName());
+    Int32ArrayType::Pointer timeValuePtr = boost::dynamic_pointer_cast<Int32ArrayType>(timeValues);
+    out << "    <Time TimeType=\"Single\" Value=\"" << timeValuePtr->getValue(0) << "\"/>\n";
+  }
+#endif
+
   VertexArray::Pointer verts = getVertices();
   if(NULL == verts.get())
   {
-    return;
+    out << "<!-- ********************* DATA CONTAINER ERROR ****************************************\n";
+    out << "The VertexDataContainer with name '" << getName() << "' did not have any vertices assigned.\n";
+    out << "The Topology and Geometry types will be missing from the Xdmf which will cause issues when\n";
+    out << "trying to load the file\n";
+    out << " ********************************************************************************** ->\n";
+  }
+  else
+  {
+    out << "    <Topology TopologyType=\"Polyvertex\" NumberOfElements=\"" << verts->getNumberOfTuples() << "\">" << "\n";
+    out << "      <DataItem Format=\"HDF\" NumberType=\"Int\" Dimensions=\"" << verts->getNumberOfTuples() << "\">" << "\n";
+    out << "        " << hdfFileName << ":/DataContainers/" << getName() << "/Verts" << "\n";
+    out << "      </DataItem>" << "\n";
+    out << "    </Topology>" << "\n";
+
+    out << "    <Geometry Type=\"XYZ\">" << "\n";
+    out << "      <DataItem Format=\"HDF\"  Dimensions=\"" << verts->getNumberOfTuples() << " 3\" NumberType=\"Float\" Precision=\"4\">" << "\n";
+    out << "        " << hdfFileName << ":/DataContainers/" << getName() << "/Vertices" << "\n";
+    out << "      </DataItem>" << "\n";
+    out << "    </Geometry>" << "\n";
+    out << "" << "\n";
   }
 
-  out << "  <Grid Name=\"" << getName() << "\">" << "\n";
-  out << "    <Topology TopologyType=\"Polyvertex\" NumberOfElements=\"" << verts->getNumberOfTuples() << "\">" << "\n";
-  out << "      <DataItem Format=\"HDF\" NumberType=\"Int\" Dimensions=\"" << verts->getNumberOfTuples() << " 3\">" << "\n";
-  out << "        " << hdfFileName << ":/DataContainers/" << getName() << "/Verts" << "\n";
-  out << "      </DataItem>" << "\n";
-  out << "    </Topology>" << "\n";
-
-  out << "    <Geometry Type=\"XYZ\">" << "\n";
-  out << "      <DataItem Format=\"HDF\"  Dimensions=\"" << verts->getNumberOfTuples() << " 3\" NumberType=\"Float\" Precision=\"4\">" << "\n";
-  out << "        " << hdfFileName << ":/DataContainers/" << getName() << "/Vertices" << "\n";
-  out << "      </DataItem>" << "\n";
-  out << "    </Geometry>" << "\n";
-  out << "" << "\n";
 }
 
 // -----------------------------------------------------------------------------
@@ -254,8 +271,8 @@ int VertexDataContainer::readVertices(hid_t dcGid, bool preflight)
       err = QH5Lite::readPointerDataset(dcGid, DREAM3D::StringConstants::VerticesName, data);
       if (err < 0)
       {
-//        setErrorCondition(err);
-//        notifyErrorMessage(getHumanLabel(), "Error Reading Vertex List from DREAM3D file", getErrorCondition());
+        //        setErrorCondition(err);
+        //        notifyErrorMessage(getHumanLabel(), "Error Reading Vertex List from DREAM3D file", getErrorCondition());
         return err;
       }
       setVertices(verticesPtr);

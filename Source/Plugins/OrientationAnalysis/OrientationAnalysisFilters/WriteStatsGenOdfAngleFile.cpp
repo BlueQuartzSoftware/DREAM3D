@@ -120,7 +120,7 @@ void WriteStatsGenOdfAngleFile::setupFilterParameters()
   parameters.push_back(FilterParameter::New("Convert to Degrees", "ConvertToDegrees", FilterParameterWidgetType::BooleanWidget, getConvertToDegrees(), true, ""));
 
   QStringList linkedProps("GoodVoxelsArrayPath");
-  parameters.push_back(FilterParameter::NewConditional("Apply to Good Voxels Only (Bad Voxels Will Be Black)", "UseGoodVoxels", FilterParameterWidgetType::LinkedBooleanWidget, getUseGoodVoxels(), true, linkedProps));
+  parameters.push_back(LinkedBooleanFilterParameter::New("Apply to Good Voxels Only (Bad Voxels Will Be Black)", "UseGoodVoxels", getUseGoodVoxels(), linkedProps, true));
   parameters.push_back(FilterParameter::New("GoodVoxels", "GoodVoxelsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getGoodVoxelsArrayPath(), true, ""));
 
 

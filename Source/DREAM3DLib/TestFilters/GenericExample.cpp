@@ -140,13 +140,13 @@ void GenericExample::setupFilterParameters()
   {
     QStringList linkedProps;
     linkedProps << "Bool2";
-    parameters.push_back(FilterParameter::NewConditional("Bool1", "Bool1", FilterParameterWidgetType::LinkedBooleanWidget, getBool1(), false, linkedProps));
+    parameters.push_back(LinkedBooleanFilterParameter::New("Bool1", "Bool1", getBool1(), linkedProps, false));
   }
 
   {
     QStringList linkedProps;
     linkedProps << "CreatedDataArray";
-    parameters.push_back(FilterParameter::NewConditional("Bool2", "Bool2", FilterParameterWidgetType::LinkedBooleanWidget, getBool2(), false, linkedProps));
+    parameters.push_back(LinkedBooleanFilterParameter::New("Bool2", "Bool2", getBool2(), linkedProps, false));
   }
 
   parameters.push_back(FilterParameter::New("CreatedDataArray", "CreatedDataArray", FilterParameterWidgetType::DataArrayCreationWidget, getCreatedDataArray(), false, ""));

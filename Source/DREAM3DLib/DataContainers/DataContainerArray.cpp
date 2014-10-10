@@ -442,9 +442,9 @@ IDataContainerBundle::Pointer DataContainerArray::getDataContainerBundle(const Q
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DataContainerArray::addDataContainerBundle(IDataContainerBundle::Pointer dataContainer)
+void DataContainerArray::addDataContainerBundle(IDataContainerBundle::Pointer dataContainerBundle)
 {
-  m_DataContainerBundles[dataContainer->getName()] = dataContainer;
+  m_DataContainerBundles[dataContainerBundle->getName()] = dataContainerBundle;
 }
 
 // -----------------------------------------------------------------------------

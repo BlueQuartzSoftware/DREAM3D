@@ -1,4 +1,4 @@
-Name of Filter {#renamedatacontainer}
+Rename Data Container {#renamedatacontainer}
 =====
 
 ## Group (Subgroup) ##
@@ -6,7 +6,8 @@ Generic (Memory Management)
 
 
 ## Description ##
-This filter does the following will rename a DataContainer to a new new chosen by the user
+This filter renames a user chosen DataContainer to a user defined new name.
+
 
 ## Parameters ##
 | Name             | Type |
