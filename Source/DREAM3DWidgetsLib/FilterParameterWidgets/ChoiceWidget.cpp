@@ -37,6 +37,8 @@
 
 #include <QtCore/QMetaProperty>
 
+#include "DREAM3DLib/Common/AbstractFilter.h"
+#include "DREAM3DLib/FilterParameters/FilterParameter.h"
 
 #include "FilterParameterWidgetsDialogs.h"
 
@@ -94,13 +96,16 @@ void ChoiceWidget::setupGui()
 
     // setup the list of choices for the widget
     ChoiceFilterParameter* choice = dynamic_cast<ChoiceFilterParameter*>(getFilterParameter());
-    QList<QString> choices = choice->getChoices().toList();
-    value->blockSignals(true);
-    value->addItems(choices);
-    value->blockSignals(false);
-    // Get the Default value from the filter
-    int i = getFilter()->property(PROPERTY_NAME_AS_CHAR).toInt();
-    value->setCurrentIndex(i);
+    if(choice)
+    {
+      QList<QString> choices = choice->getChoices().toList();
+      value->blockSignals(true);
+      value->addItems(choices);
+      value->blockSignals(false);
+      // Get the Default value from the filter
+      int i = getFilter()->property(PROPERTY_NAME_AS_CHAR).toInt();
+      value->setCurrentIndex(i);
+    }
   }
 }
 
@@ -110,7 +115,21 @@ void ChoiceWidget::setupGui()
 // -----------------------------------------------------------------------------
 void ChoiceWidget::widgetChanged(int index)
 {
+
+  FilterParameter* fp = getFilterParameter();
+
+  LinkedChoicesFilterParameter* lnkedChoices = dynamic_cast<LinkedChoicesFilterParameter*>(fp);
+  if(lnkedChoices)
+  {
+    emit conditionalPropertyChanged(index);
+  }
+
+
+
   emit parametersChanged();
+
+
+
 }
 
 // -----------------------------------------------------------------------------

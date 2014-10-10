@@ -123,55 +123,45 @@ class DREAM3DLib_EXPORT FilterParameter
     static Pointer New(const QString& humanLabel, const QString& propertyName,
                        const QString& widgetType, const QVariant& defaultValue,
                        bool advanced = false,
-                       const QString& units = QString(""));
+                       const QString& units = QString(""),
+                       int groupIndex = -1);
 
 
     static Pointer New(const QString& humanLabel, const QString& propertyName,
                        const QString& widgetType, const FloatVec3_t& defaultValue,
                        bool advanced = false,
-                       const QString& units = QString(""));
+                       const QString& units = QString(""),
+                       int groupIndex = -1);
 
     static Pointer New(const QString& humanLabel, const QString& propertyName,
                        const QString& widgetType, const IntVec3_t& defaultValue,
                        bool advanced = false,
-                       const QString& units = QString(""));
+                       const QString& units = QString(""),
+                       int groupIndex = -1);
 
     static Pointer New(const QString& humanLabel, const QString& propertyName,
                        const QString& widgetType, const DataArrayPath& defaultValue,
                        bool advanced = false,
-                       const QString& units = QString(""));
+                       const QString& units = QString(""),
+                       int groupIndex = -1);
 
     static Pointer New(const QString& humanLabel, const QString& propertyName,
                        const QString& widgetType, const AxisAngleInput_t& defaultValue,
                        bool advanced = false,
-                       const QString& units = QString(""));
+                       const QString& units = QString(""),
+                       int groupIndex = -1);
 
     static Pointer New(const QString& humanLabel, const QString& propertyName,
                        const QString& widgetType, const UInt32Vector_t& defaultValue,
-                       bool advanced = false);
+                       bool advanced = false,
+                       int groupIndex = -1);
 
-#if 0
-    /**
-     * @brief Creates a new Filter Parameter that has conditional logic associated with it through an additional boolean
-     * Q_PROPERTY in the filter's header file. On the GUI this manifests itself as a checkbox that enables or disables the
-     * widget and will also set both the boolean property and the actual filter parameter property
-     * @param humanLabel What is displayed to the user in the GUI
-     * @param propertyName The name of the property that this FilterParameter controls. It should be an exact match for a Q_PROPERTY
-     * that is in the header of the filter
-     * @param widgetType The type of widget that will be used for display and gather the input value from the user
-     * @param valueType The type of data structure that is used to store the data
-     * @param advanced Is this parameter an advanced or basic. If it is advanced then the Filter Parameter will only
-     * show up on the 'Advanced' Tab of the Input widget
-     * @param isConditional Does this FilterParameter have conditional logic
-     * @param conditionalProperty What Q_PROPERTY does this condition link back to
-     * @param conditionalLabel The text to display next to the check box to help the user understand what is going on
-     * @return
-     */
-    static Pointer NewConditional(const QString& humanLabel, const QString& propertyName,
-                                  const QString& widgetType, const QVariant& defaultValue,
-                                  bool advanced,
-                                  QStringList linkedProperties);
-#endif
+    static Pointer New(const QString& humanLabel, const QString& propertyName,
+                       const QString& widgetType, const UInt32Vector_t& defaultValue,
+                       bool advanced = false,
+                       const QString& units = QString(""),
+                       int groupIndex = -1);
+
 
     virtual ~FilterParameter();
 
@@ -227,7 +217,38 @@ class DREAM3DLib_EXPORT LinkedBooleanFilterParameter : public FilterParameter
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-class DREAM3DLib_EXPORT LinkedChoicesFilterParameter : public FilterParameter
+class DREAM3DLib_EXPORT ChoiceFilterParameter : public FilterParameter
+{
+  public:
+    DREAM3D_SHARED_POINTERS(ChoiceFilterParameter)
+    DREAM3D_STATIC_NEW_MACRO(ChoiceFilterParameter)
+    DREAM3D_TYPE_MACRO_SUPER(ChoiceFilterParameter, FilterParameter)
+
+    static Pointer New(const QString& humanLabel, const QString& propertyName,
+                       const QVariant& defaultValue,
+                       QVector<QString> choices,
+                       bool editable,
+                       bool advanced = false );
+
+    virtual ~ChoiceFilterParameter();
+
+    DREAM3D_INSTANCE_PROPERTY(QVector<QString>, Choices)
+    DREAM3D_INSTANCE_PROPERTY(bool, Editable)
+
+  protected:
+    ChoiceFilterParameter();
+
+  private:
+    ChoiceFilterParameter(const ChoiceFilterParameter&); // Copy Constructor Not Implemented
+    void operator=(const ChoiceFilterParameter&); // Operator '=' Not Implemented
+};
+
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+class DREAM3DLib_EXPORT LinkedChoicesFilterParameter : public ChoiceFilterParameter
 {
   public:
     DREAM3D_SHARED_POINTERS(LinkedChoicesFilterParameter)
@@ -236,12 +257,13 @@ class DREAM3DLib_EXPORT LinkedChoicesFilterParameter : public FilterParameter
 
     static Pointer New(const QString& humanLabel, const QString& propertyName,
                        const QVariant& defaultValue,
-                       QStringList conditionalProperties,
+                       QVector<QString> choices,
+                       QStringList linkedProperties,
                        bool advanced = false );
 
     virtual ~LinkedChoicesFilterParameter();
 
-    DREAM3D_INSTANCE_PROPERTY(QStringList, ConditionalProperties)
+    DREAM3D_INSTANCE_PROPERTY(QStringList, LinkedProperties)
 
   protected:
     LinkedChoicesFilterParameter();
@@ -335,40 +357,6 @@ class DREAM3DLib_EXPORT VolumeInfoFilterParameter : public FilterParameter
     VolumeInfoFilterParameter(const VolumeInfoFilterParameter&); // Copy Constructor Not Implemented
     void operator=(const VolumeInfoFilterParameter&); // Operator '=' Not Implemented
 };
-
-
-
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-class DREAM3DLib_EXPORT ChoiceFilterParameter : public FilterParameter
-{
-  public:
-    DREAM3D_SHARED_POINTERS(ChoiceFilterParameter)
-    DREAM3D_STATIC_NEW_MACRO(ChoiceFilterParameter)
-    DREAM3D_TYPE_MACRO_SUPER(ChoiceFilterParameter, FilterParameter)
-
-    static Pointer New(const QString& humanLabel, const QString& propertyName,
-                       const QVariant& defaultValue,
-                       QVector<QString> choices,
-                       bool editable,
-                       bool advanced = false );
-
-    virtual ~ChoiceFilterParameter();
-
-    DREAM3D_INSTANCE_PROPERTY(QVector<QString>, Choices)
-    DREAM3D_INSTANCE_PROPERTY(bool, Editable)
-
-  protected:
-    ChoiceFilterParameter();
-
-  private:
-    ChoiceFilterParameter(const ChoiceFilterParameter&); // Copy Constructor Not Implemented
-    void operator=(const ChoiceFilterParameter&); // Operator '=' Not Implemented
-};
-
-
 
 // -----------------------------------------------------------------------------
 //

@@ -44,7 +44,8 @@ FilterParameter::FilterParameter() :
   m_WidgetType(""),
   m_Advanced(false),
   m_Units(""),
-  m_ReadOnly(false)
+  m_ReadOnly(false),
+  m_GroupIndex(-1)
 {}
 
 // -----------------------------------------------------------------------------
@@ -53,7 +54,7 @@ FilterParameter::FilterParameter() :
 FilterParameter::Pointer FilterParameter::New(const QString& humanLabel, const QString& propertyName,
                                               const QString& widgetType, const QVariant& defaultValue,
                                               bool advanced,
-                                              const QString& units)
+                                              const QString& units, int groupIndex)
 {
 
   FilterParameter::Pointer ptr = FilterParameter::New();
@@ -63,6 +64,7 @@ FilterParameter::Pointer FilterParameter::New(const QString& humanLabel, const Q
   ptr->setDefaultValue(defaultValue);
   ptr->setAdvanced(advanced);
   ptr->setUnits(units);
+  ptr->setGroupIndex(groupIndex);
   if(ptr->getWidgetType().compare(FilterParameterWidgetType::SeparatorWidget) == 0)
   {
     ptr->setReadOnly(true);
@@ -77,7 +79,7 @@ FilterParameter::Pointer FilterParameter::New(const QString& humanLabel, const Q
 FilterParameter::Pointer FilterParameter::New(const QString& humanLabel, const QString& propertyName,
                                               const QString& widgetType, const FloatVec3_t& defaultValue,
                                               bool advanced,
-                                              const QString& units)
+                                              const QString& units, int groupIndex)
 {
 
   FilterParameter::Pointer ptr = FilterParameter::New();
@@ -89,6 +91,7 @@ FilterParameter::Pointer FilterParameter::New(const QString& humanLabel, const Q
   ptr->setDefaultValue(v);
   ptr->setAdvanced(advanced);
   ptr->setUnits(units);
+  ptr->setGroupIndex(groupIndex);
   if(ptr->getWidgetType().compare(FilterParameterWidgetType::SeparatorWidget) == 0)
   {
     ptr->setReadOnly(true);
@@ -102,7 +105,7 @@ FilterParameter::Pointer FilterParameter::New(const QString& humanLabel, const Q
 FilterParameter::Pointer FilterParameter::New(const QString& humanLabel, const QString& propertyName,
                                               const QString& widgetType, const IntVec3_t& defaultValue,
                                               bool advanced,
-                                              const QString& units)
+                                              const QString& units, int groupIndex)
 {
 
   FilterParameter::Pointer ptr = FilterParameter::New();
@@ -114,6 +117,7 @@ FilterParameter::Pointer FilterParameter::New(const QString& humanLabel, const Q
   ptr->setDefaultValue(v);
   ptr->setAdvanced(advanced);
   ptr->setUnits(units);
+  ptr->setGroupIndex(groupIndex);
   if(ptr->getWidgetType().compare(FilterParameterWidgetType::SeparatorWidget) == 0)
   {
     ptr->setReadOnly(true);
@@ -127,7 +131,7 @@ FilterParameter::Pointer FilterParameter::New(const QString& humanLabel, const Q
 FilterParameter::Pointer FilterParameter::New(const QString& humanLabel, const QString& propertyName,
                                               const QString& widgetType, const DataArrayPath& defaultValue,
                                               bool advanced,
-                                              const QString& units)
+                                              const QString& units, int groupIndex)
 {
 
   FilterParameter::Pointer ptr = FilterParameter::New();
@@ -139,6 +143,7 @@ FilterParameter::Pointer FilterParameter::New(const QString& humanLabel, const Q
   ptr->setDefaultValue(v);
   ptr->setAdvanced(advanced);
   ptr->setUnits(units);
+  ptr->setGroupIndex(groupIndex);
   if(ptr->getWidgetType().compare(FilterParameterWidgetType::SeparatorWidget) == 0)
   {
     ptr->setReadOnly(true);
@@ -152,7 +157,7 @@ FilterParameter::Pointer FilterParameter::New(const QString& humanLabel, const Q
 FilterParameter::Pointer FilterParameter::New(const QString& humanLabel, const QString& propertyName,
                                               const QString& widgetType, const AxisAngleInput_t& defaultValue,
                                               bool advanced,
-                                              const QString& units)
+                                              const QString& units, int groupIndex)
 {
   FilterParameter::Pointer ptr = FilterParameter::New();
   ptr->setHumanLabel(humanLabel);
@@ -163,6 +168,7 @@ FilterParameter::Pointer FilterParameter::New(const QString& humanLabel, const Q
   ptr->setDefaultValue(v);
   ptr->setAdvanced(advanced);
   ptr->setUnits(units);
+  ptr->setGroupIndex(groupIndex);
   if(ptr->getWidgetType().compare(FilterParameterWidgetType::SeparatorWidget) == 0)
   {
     ptr->setReadOnly(true);
@@ -175,7 +181,7 @@ FilterParameter::Pointer FilterParameter::New(const QString& humanLabel, const Q
 // -----------------------------------------------------------------------------
 FilterParameter::Pointer FilterParameter::New(const QString& humanLabel, const QString& propertyName,
                                               const QString& widgetType, const UInt32Vector_t& defaultValue,
-                                              bool advanced)
+                                              bool advanced, const QString &units, int groupIndex)
 {
   FilterParameter::Pointer ptr = FilterParameter::New();
   ptr->setHumanLabel(humanLabel);
@@ -185,6 +191,8 @@ FilterParameter::Pointer FilterParameter::New(const QString& humanLabel, const Q
   v.setValue(defaultValue);
   ptr->setDefaultValue(v);
   ptr->setAdvanced(advanced);
+  ptr->setUnits(units);
+  ptr->setGroupIndex(groupIndex);
 
   if(ptr->getWidgetType().compare(FilterParameterWidgetType::SeparatorWidget) == 0)
   {
@@ -193,29 +201,6 @@ FilterParameter::Pointer FilterParameter::New(const QString& humanLabel, const Q
   return ptr;
 }
 
-#if 0
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-FilterParameter::Pointer FilterParameter::NewConditional(const QString& humanLabel, const QString& propertyName,
-                                                         const QString& widgetType, const QVariant& defaultValue,
-                                                         bool advanced,
-                                                         QStringList linkedProperties)
-{
-  FilterParameter::Pointer ptr = FilterParameter::New();
-  ptr->setHumanLabel(humanLabel);
-  ptr->setPropertyName(propertyName);
-  ptr->setWidgetType(widgetType);
-  ptr->setDefaultValue(defaultValue);
-  ptr->setAdvanced(advanced);
-  ptr->setUnits("");
-  if(ptr->getWidgetType().compare(FilterParameterWidgetType::SeparatorWidget) == 0)
-  {
-    ptr->setReadOnly(true);
-  }
-  return ptr;
-}
-#endif
 
 // -----------------------------------------------------------------------------
 //
@@ -241,9 +226,9 @@ LinkedBooleanFilterParameter::~LinkedBooleanFilterParameter()
 //
 // -----------------------------------------------------------------------------
 LinkedBooleanFilterParameter::Pointer LinkedBooleanFilterParameter::New(const QString& humanLabel, const QString& propertyName,
-    const QVariant& defaultValue,
-    QStringList conditionalProperties,
-    bool advanced)
+                                                                        const QVariant& defaultValue,
+                                                                        QStringList conditionalProperties,
+                                                                        bool advanced)
 {
   LinkedBooleanFilterParameter::Pointer ptr = LinkedBooleanFilterParameter::New();
   ptr->setHumanLabel(humanLabel);
@@ -263,8 +248,10 @@ LinkedBooleanFilterParameter::Pointer LinkedBooleanFilterParameter::New(const QS
 //
 // -----------------------------------------------------------------------------
 LinkedChoicesFilterParameter::LinkedChoicesFilterParameter() :
-  FilterParameter()
-{}
+  ChoiceFilterParameter()
+{
+  setWidgetType(FilterParameterWidgetType::ChoiceWidget);
+}
 
 // -----------------------------------------------------------------------------
 //
@@ -276,17 +263,20 @@ LinkedChoicesFilterParameter::~LinkedChoicesFilterParameter()
 //
 // -----------------------------------------------------------------------------
 LinkedChoicesFilterParameter::Pointer LinkedChoicesFilterParameter::New(const QString& humanLabel, const QString& propertyName,
-    const QVariant& defaultValue,
-    QStringList conditionalProperties,
-    bool advanced)
+                                                                        const QVariant& defaultValue,
+                                                                        QVector<QString> choices,
+                                                                        QStringList linkedProperties,
+                                                                        bool advanced)
 {
   LinkedChoicesFilterParameter::Pointer ptr = LinkedChoicesFilterParameter::New();
   ptr->setHumanLabel(humanLabel);
   ptr->setPropertyName(propertyName);
-  ptr->setWidgetType(FilterParameterWidgetType::LinkedBooleanWidget);
+  ptr->setWidgetType(FilterParameterWidgetType::ChoiceWidget);
   ptr->setDefaultValue(defaultValue);
   ptr->setAdvanced(advanced);
-  ptr->setConditionalProperties(conditionalProperties);
+  ptr->setChoices(choices);
+  ptr->setLinkedProperties(linkedProperties);
+  ptr->setEditable(false);
   if(ptr->getWidgetType().compare(FilterParameterWidgetType::SeparatorWidget) == 0)
   {
     ptr->setReadOnly(true);
@@ -315,11 +305,11 @@ FileSystemFilterParameter::~FileSystemFilterParameter()
 //
 // -----------------------------------------------------------------------------
 FileSystemFilterParameter::Pointer FileSystemFilterParameter::New(const QString& humanLabel, const QString& propertyName,
-    const QString& widgetType, const QVariant& defaultValue,
-    bool advanced,
-    const QString& units,
-    const QString& fileExtension,
-    const QString& fileType)
+                                                                  const QString& widgetType, const QVariant& defaultValue,
+                                                                  bool advanced,
+                                                                  const QString& units,
+                                                                  const QString& fileExtension,
+                                                                  const QString& fileType)
 {
   FileSystemFilterParameter::Pointer ptr = FileSystemFilterParameter::New();
   ptr->setHumanLabel(humanLabel);
@@ -356,10 +346,10 @@ VolumeInfoFilterParameter::~VolumeInfoFilterParameter()
 //
 // -----------------------------------------------------------------------------
 VolumeInfoFilterParameter::Pointer VolumeInfoFilterParameter::New(const QString& humanLabel, const QString& dimsProperty,
-    const QString& widgetType, const IntVec3_t& defaultValue,
-    bool advanced,
-    const QString& units,
-    const QString& resProperty)
+                                                                  const QString& widgetType, const IntVec3_t& defaultValue,
+                                                                  bool advanced,
+                                                                  const QString& units,
+                                                                  const QString& resProperty)
 {
   VolumeInfoFilterParameter::Pointer ptr = VolumeInfoFilterParameter::New();
   ptr->setHumanLabel(humanLabel);
@@ -435,10 +425,10 @@ DynamicChoiceFilterParameter::~DynamicChoiceFilterParameter()
 //
 // -----------------------------------------------------------------------------
 DynamicChoiceFilterParameter::Pointer DynamicChoiceFilterParameter::New(const QString& humanLabel,
-                        const QString& propertyName,
-                       const QVariant& defaultValue,
-                       const QString& listProperty,
-                       bool advanced)
+                                                                        const QString& propertyName,
+                                                                        const QVariant& defaultValue,
+                                                                        const QString& listProperty,
+                                                                        bool advanced)
 {
   DynamicChoiceFilterParameter::Pointer ptr = DynamicChoiceFilterParameter::New();
   ptr->setHumanLabel(humanLabel);
@@ -468,10 +458,10 @@ ComparisonFilterParameter::~ComparisonFilterParameter()
 //
 // -----------------------------------------------------------------------------
 ComparisonFilterParameter::Pointer ComparisonFilterParameter::New(const QString& humanLabel, const QString& propertyName,
-    const QString& widgetType, const QVariant& defaultValue,
-    QVector<QString> choices,
-    bool showOperators,
-    bool advanced)
+                                                                  const QString& widgetType, const QVariant& defaultValue,
+                                                                  QVector<QString> choices,
+                                                                  bool showOperators,
+                                                                  bool advanced)
 
 {
   ComparisonFilterParameter::Pointer ptr = ComparisonFilterParameter::New();
@@ -509,10 +499,10 @@ ShapeTypesFilterParameter::~ShapeTypesFilterParameter()
 //
 // -----------------------------------------------------------------------------
 ShapeTypesFilterParameter::Pointer ShapeTypesFilterParameter::New(const QString& humanLabel, const QString& propertyName,
-    const QString& widgetType, const QVariant& defaultValue,
-    const QString& phaseTypeCountProperty,
-    const QString& phaseTypeArrayPathProperty,
-    bool advanced)
+                                                                  const QString& widgetType, const QVariant& defaultValue,
+                                                                  const QString& phaseTypeCountProperty,
+                                                                  const QString& phaseTypeArrayPathProperty,
+                                                                  bool advanced)
 {
   ShapeTypesFilterParameter::Pointer ptr = ShapeTypesFilterParameter::New();
   ptr->setHumanLabel(humanLabel);
@@ -549,10 +539,10 @@ PhaseTypesFilterParameter::~PhaseTypesFilterParameter()
 //
 // -----------------------------------------------------------------------------
 PhaseTypesFilterParameter::Pointer PhaseTypesFilterParameter::New(const QString& humanLabel, const QString& propertyName,
-    const QString& widgetType, const QVariant& defaultValue,
-    const QString& phaseTypeCountProperty,
-    const QString& phaseTypeArrayPathProperty,
-    bool advanced)
+                                                                  const QString& widgetType, const QVariant& defaultValue,
+                                                                  const QString& phaseTypeCountProperty,
+                                                                  const QString& phaseTypeArrayPathProperty,
+                                                                  bool advanced)
 {
   PhaseTypesFilterParameter::Pointer ptr = PhaseTypesFilterParameter::New();
   ptr->setHumanLabel(humanLabel);
@@ -626,9 +616,9 @@ DataContainerArrayProxyFilterParameter::~DataContainerArrayProxyFilterParameter(
 //
 // -----------------------------------------------------------------------------
 DataContainerArrayProxyFilterParameter::Pointer DataContainerArrayProxyFilterParameter::New(const QString& humanLabel, const QString& propertyName,
-    const QString& widgetType, const QVariant& defaultValue,
-    DataContainerArrayProxy proxy, Qt::CheckState defValue,
-    bool advanced)
+                                                                                            const QString& widgetType, const QVariant& defaultValue,
+                                                                                            DataContainerArrayProxy proxy, Qt::CheckState defValue,
+                                                                                            bool advanced)
 {
   DataContainerArrayProxyFilterParameter::Pointer ptr = DataContainerArrayProxyFilterParameter::New();
   ptr->setHumanLabel(humanLabel);
@@ -669,8 +659,8 @@ DataContainerReaderFilterParameter::~DataContainerReaderFilterParameter()
 //
 // -----------------------------------------------------------------------------
 DataContainerReaderFilterParameter::Pointer DataContainerReaderFilterParameter::New(const QString& humanLabel, const QString& propertyName,
-    const QString& widgetType, const QVariant& defaultValue,
-    bool advanced)
+                                                                                    const QString& widgetType, const QVariant& defaultValue,
+                                                                                    bool advanced)
 {
   DataContainerReaderFilterParameter::Pointer ptr = DataContainerReaderFilterParameter::New();
   ptr->setHumanLabel(humanLabel);
