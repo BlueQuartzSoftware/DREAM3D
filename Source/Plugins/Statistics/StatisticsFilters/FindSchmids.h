@@ -101,6 +101,15 @@ class FindSchmids : public AbstractFilter
     DREAM3D_FILTER_PARAMETER(bool, StoreAngleComponents)
     Q_PROPERTY(bool StoreAngleComponents READ getStoreAngleComponents WRITE setStoreAngleComponents)
 
+    DREAM3D_FILTER_PARAMETER(bool, OverrideSystem)
+    Q_PROPERTY(bool OverrideSystem READ getOverrideSystem WRITE setOverrideSystem)
+
+    DREAM3D_FILTER_PARAMETER(FloatVec3_t, SlipPlane)
+    Q_PROPERTY(FloatVec3_t SlipPlane READ getSlipPlane WRITE setSlipPlane)
+
+    DREAM3D_FILTER_PARAMETER(FloatVec3_t, SlipDirection)
+    Q_PROPERTY(FloatVec3_t SlipDirection READ getSlipDirection WRITE setSlipDirection)
+
 
     virtual const QString getCompiledLibraryName();
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
