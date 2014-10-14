@@ -243,14 +243,13 @@ namespace Detail {
 //
 // -----------------------------------------------------------------------------
 DataContainerReaderWidget::DataContainerReaderWidget(FilterParameter* parameter, AbstractFilter* filter, QWidget* parent) :
-  QWidget(parent),
-  m_FilterParameter(NULL),
+  FilterParameterWidget(parameter, filter, parent),
   m_DidCausePreflight(false)
 {
   m_FilterParameter = dynamic_cast<DataContainerReaderFilterParameter*>(parameter);
-  Q_ASSERT_X(m_FilterParameter != NULL, "NULL Pointer", "DataContainerReaderWidget can ONLY be used with a DataContainerReaderFilterParameter object");
+  Q_ASSERT_X(getFilterParameter() != NULL, "NULL Pointer", "DataContainerReaderWidget can ONLY be used with a DataContainerReaderFilterParameter object");
   m_Filter = dynamic_cast<DataContainerReader*>(filter);
-  Q_ASSERT_X(m_Filter != NULL, "NULL Pointer", "DataContainerReaderWidget can ONLY be used with a DataContainerReader object");
+  Q_ASSERT_X(getFilter() != NULL, "NULL Pointer", "DataContainerReaderWidget can ONLY be used with a DataContainerReader object");
 
   if ( m_OpenDialogLastDirectory.isEmpty() )
   {
@@ -265,7 +264,7 @@ DataContainerReaderWidget::DataContainerReaderWidget(FilterParameter* parameter,
 //
 // -----------------------------------------------------------------------------
 DataContainerReaderWidget::DataContainerReaderWidget(QWidget* parent) :
-  QWidget(parent),
+  FilterParameterWidget(NULL, NULL, parent),
   m_Filter(NULL),
   m_FilterParameter(NULL),
   m_DidCausePreflight(false)
@@ -285,16 +284,49 @@ DataContainerReaderWidget::~DataContainerReaderWidget()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void DataContainerReaderWidget::setFilter(AbstractFilter *value)
+{
+  m_Filter = dynamic_cast<DataContainerReader*>(value);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AbstractFilter* DataContainerReaderWidget::getFilter() const
+{
+  return m_Filter;
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DataContainerReaderWidget::setFilterParameter(FilterParameter *value)
+{
+  m_FilterParameter = dynamic_cast<DataContainerReaderFilterParameter*>(value);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+FilterParameter* DataContainerReaderWidget::getFilterParameter() const
+{
+  return m_FilterParameter;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void DataContainerReaderWidget::setupGui()
 {
 
-  connect(m_Filter, SIGNAL(preflightAboutToExecute()),
+  connect(getFilter(), SIGNAL(preflightAboutToExecute()),
           this, SLOT(beforePreflight()));
 
-  connect(m_Filter, SIGNAL(preflightExecuted()),
+  connect(getFilter(), SIGNAL(preflightExecuted()),
           this, SLOT(afterPreflight()));
 
-  connect(m_Filter, SIGNAL(updateFilterParameters(AbstractFilter*)),
+  connect(getFilter(), SIGNAL(updateFilterParameters(AbstractFilter*)),
           this, SLOT(filterNeedsInputParameters(AbstractFilter*)));
 
 
@@ -308,20 +340,20 @@ void DataContainerReaderWidget::setupGui()
   connect(dcaProxyView, SIGNAL(clicked(const QModelIndex&)),
           this, SLOT(itemActivated(const QModelIndex)));
 
-  if (m_FilterParameter != NULL)
+  if (getFilterParameter() != NULL)
   {
-    QString units = m_FilterParameter->getUnits();
+    QString units = getFilterParameter()->getUnits();
     if(units.isEmpty() == false)
     {
-      label->setText(m_FilterParameter->getHumanLabel() + " (" + units + ")");
+      label->setText(getFilterParameter()->getHumanLabel() + " (" + units + ")");
     }
     else
     {
-      label->setText(m_FilterParameter->getHumanLabel() );
+      label->setText(getFilterParameter()->getHumanLabel() );
     }
   }
 
-  if(m_Filter != NULL)
+  if(getFilter() != NULL)
   {
     QString path = m_Filter->getInputFile();
     filePath->setText(path);
@@ -470,7 +502,7 @@ void DataContainerReaderWidget::updateProxyFromModel()
 // -----------------------------------------------------------------------------
 void DataContainerReaderWidget::updateProxyFromProxy(DataContainerArrayProxy& current, DataContainerArrayProxy& incoming)
 {
-  //  qDebug() << m_Filter->getNameOfClass() << " DataContainerReaderWidget::mergeProxies";
+  //  qDebug() << getFilter()->getNameOfClass() << " DataContainerReaderWidget::mergeProxies";
 
   // Loop over the current model and only worry about getting the flag for each proxy from the current and transfering
   // that flag to the incoming. This allows us to save the selections but also update the model later on with this new
@@ -522,12 +554,12 @@ void DataContainerReaderWidget::beforePreflight()
 #if 0
   if (m_DidCausePreflight == false)
   {
-    //  qDebug() << m_Filter->getNameOfClass() << " DataContainerReaderWidget::beforePreflight()";
+    //  qDebug() << getFilter()->getNameOfClass() << " DataContainerReaderWidget::beforePreflight()";
     // Get the DataContainerArray from the Filter instance. This will have what will become the choices for the user
     // to select from.
-    DataContainerArray::Pointer dca = m_Filter->getDataContainerArray();
+    DataContainerArray::Pointer dca = getFilter()->getDataContainerArray();
     DataContainerArrayProxy incomingProxy = DataContainerArrayProxy(dca.get() );
-    incomingProxy.setAllFlags(m_FilterParameter->getDefaultFlagValue());
+    incomingProxy.setAllFlags(getFilterParameter()->getDefaultFlagValue());
     //incomingProxy.print("BeforePreflight INCOMING");
     //Now the idea becomes to save the selections that the user has made and transfer those changes to the incoming
     // proxy object
@@ -560,46 +592,7 @@ void DataContainerReaderWidget::filterNeedsInputParameters(AbstractFilter* filte
 // -----------------------------------------------------------------------------
 void DataContainerReaderWidget::afterPreflight()
 {
-  // qDebug() << m_Filter->getNameOfClass() << " DataContainerReaderWidget::afterPreflight()";
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void DataContainerReaderWidget::setLinkedConditionalState(int state)
-{
-  bool boolProp = (state == Qt::Checked);
-  fadeWidget(this, boolProp);
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void DataContainerReaderWidget::fadeWidget(QWidget* widget, bool in)
-{
-
-  if (faderWidget)
-  {
-    faderWidget->close();
-  }
-  faderWidget = new FaderWidget(widget);
-  if(in)
-  {
-    setVisible(true);
-    faderWidget->setFadeIn();
-    connect(faderWidget, SIGNAL(animationComplete() ),
-            this, SLOT(show()));
-  }
-  else
-  {
-    faderWidget->setFadeOut();
-    connect(faderWidget, SIGNAL(animationComplete() ),
-            this, SLOT(hide()));
-  }
-  QColor color = DREAM3D::Defaults::BasicColor;
-  if(m_FilterParameter->getAdvanced()) { color = DREAM3D::Defaults::AdvancedColor; }
-  faderWidget->setStartColor(color);
-  faderWidget->start();
+  // qDebug() << getFilter()->getNameOfClass() << " DataContainerReaderWidget::afterPreflight()";
 }
 
 
@@ -631,7 +624,7 @@ void DataContainerReaderWidget::on_filePath_fileDropped(const QString& text)
   // Set/Remove the red outline if the file does exist
   if (verifyPathExists(text, filePath) == true)
   {
-    if(m_Filter != NULL)
+    if(getFilter() != NULL)
     {
       if(m_LastFileRead.compare(text) != 0)
       {
@@ -660,9 +653,9 @@ void DataContainerReaderWidget::on_filePath_fileDropped(const QString& text)
 // -----------------------------------------------------------------------------
 void DataContainerReaderWidget::on_selectBtn_clicked()
 {
-  QString currentPath = m_Filter->property(PROPERTY_NAME_AS_CHAR).toString();
-  QString Ftype = ""; //m_FilterParameter->getFileType();
-  QString ext = "*.dream3d"; //m_FilterParameter->getFileExtension();
+  QString currentPath = getFilter()->property(PROPERTY_NAME_AS_CHAR).toString();
+  QString Ftype = ""; //getFilterParameter()->getFileType();
+  QString ext = "*.dream3d"; //getFilterParameter()->getFileExtension();
   QString s = Ftype + QString(" Files (") + ext + QString(");;All Files(*.*)");
   QString defaultName = m_OpenDialogLastDirectory + QDir::separator() + "Untitled";
   QString file = QFileDialog::getOpenFileName(this, tr("Select Input File"), defaultName, s);
@@ -678,7 +671,7 @@ void DataContainerReaderWidget::on_selectBtn_clicked()
   filePath->setText(file);
   on_filePath_fileDropped(file);
 
-  // filterNeedsInputParameters(m_Filter);
+  // filterNeedsInputParameters(getFilter());
   // emit parametersChanged(); // This should force the preflight to run because we are emitting a signal
 }
 

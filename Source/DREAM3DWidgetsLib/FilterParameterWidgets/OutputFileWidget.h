@@ -50,6 +50,8 @@
 #include "DREAM3DLib/Common/AbstractFilter.h"
 
 #include "DREAM3DWidgetsLib/DREAM3DWidgetsLib.h"
+#include "DREAM3DWidgetsLib/FilterParameterWidgets/FilterParameterWidget.h"
+
 
 #include "DREAM3DWidgetsLib/ui_OutputFileWidget.h"
 
@@ -61,7 +63,7 @@ class FileSystemFilterParameter;
 * @author
 * @version
 */
-class DREAM3DWidgetsLib_EXPORT OutputFileWidget : public QWidget, private Ui::OutputFileWidget
+class DREAM3DWidgetsLib_EXPORT OutputFileWidget : public FilterParameterWidget, private Ui::OutputFileWidget
 {
     Q_OBJECT
 
@@ -86,6 +88,9 @@ class DREAM3DWidgetsLib_EXPORT OutputFileWidget : public QWidget, private Ui::Ou
     */
     bool verifyPathExists(QString filePath, QLineEdit* lineEdit);
 
+    void setFilterParameter(FilterParameter *value);
+    FilterParameter* getFilterParameter() const;
+
   public slots:
     void beforePreflight();
     void afterPreflight();
@@ -95,8 +100,7 @@ class DREAM3DWidgetsLib_EXPORT OutputFileWidget : public QWidget, private Ui::Ou
     void on_value_editingFinished();
     void on_value_textChanged(const QString& text);
     void on_selectBtn_clicked();
-    void setLinkedConditionalState(int state);
-    void fadeWidget(QWidget* widget, bool in);
+
 
   protected:
     static void setOpenDialogLastDirectory(QString val) { m_OpenDialogLastDirectory = val; }
@@ -107,11 +111,10 @@ class DREAM3DWidgetsLib_EXPORT OutputFileWidget : public QWidget, private Ui::Ou
     void parametersChanged();
 
   private:
-    AbstractFilter*   m_Filter;
     FileSystemFilterParameter*  m_FilterParameter;
     static QString    m_OpenDialogLastDirectory;
     bool m_DidCausePreflight;
-    QPointer<FaderWidget> faderWidget;
+
 
     OutputFileWidget(const OutputFileWidget&); // Copy Constructor Not Implemented
     void operator=(const OutputFileWidget&); // Operator '=' Not Implemented

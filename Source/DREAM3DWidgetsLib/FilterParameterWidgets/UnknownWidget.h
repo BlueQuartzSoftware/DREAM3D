@@ -47,6 +47,8 @@
 #include "DREAM3DLib/Common/AbstractFilter.h"
 
 #include "DREAM3DWidgetsLib/DREAM3DWidgetsLib.h"
+#include "DREAM3DWidgetsLib/FilterParameterWidgets/FilterParameterWidget.h"
+
 
 #include "DREAM3DWidgetsLib/ui_UnknownWidget.h"
 
@@ -56,7 +58,7 @@
 * @author
 * @version
 */
-class DREAM3DWidgetsLib_EXPORT UnknownWidget : public QWidget, private Ui::UnknownWidget
+class DREAM3DWidgetsLib_EXPORT UnknownWidget : public FilterParameterWidget, private Ui::UnknownWidget
 {
     Q_OBJECT
 
@@ -81,17 +83,15 @@ class DREAM3DWidgetsLib_EXPORT UnknownWidget : public QWidget, private Ui::Unkno
     void beforePreflight();
     void afterPreflight();
     void filterNeedsInputParameters(AbstractFilter* filter);
-    void setLinkedConditionalState(int state);
-    void fadeWidget(QWidget* widget, bool in);
+
 
   signals:
     void errorSettingFilterParameter(const QString& msg);
     void parametersChanged();
 
   private:
-    AbstractFilter*   m_Filter;
-    FilterParameter*  m_FilterParameter;
-    QPointer<FaderWidget> faderWidget;
+
+
 
     UnknownWidget(const UnknownWidget&); // Copy Constructor Not Implemented
     void operator=(const UnknownWidget&); // Operator '=' Not Implemented

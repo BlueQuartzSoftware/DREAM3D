@@ -51,9 +51,7 @@
 //
 // -----------------------------------------------------------------------------
 VolumeDataContainerInfoWidget::VolumeDataContainerInfoWidget(FilterParameter* parameter, AbstractFilter* filter, QWidget* parent) :
-  QWidget(parent),
-  m_Filter(filter),
-  m_FilterParameter(NULL),
+  FilterParameterWidget(parameter, filter, parent),
   m_DidCausePreflight(false)
 {
 
@@ -68,9 +66,7 @@ VolumeDataContainerInfoWidget::VolumeDataContainerInfoWidget(FilterParameter* pa
 //
 // -----------------------------------------------------------------------------
 VolumeDataContainerInfoWidget::VolumeDataContainerInfoWidget(QWidget* parent) :
-  QWidget(parent),
-  m_Filter(NULL),
-  m_FilterParameter(NULL),
+  FilterParameterWidget(NULL, NULL, parent),
   m_DidCausePreflight(false)
 {
   setupUi(this);
@@ -86,9 +82,25 @@ VolumeDataContainerInfoWidget::~VolumeDataContainerInfoWidget()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void VolumeDataContainerInfoWidget::setFilterParameter(FilterParameter *value)
+{
+  m_FilterParameter = dynamic_cast<VolumeInfoFilterParameter*>(value);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+FilterParameter* VolumeDataContainerInfoWidget::getFilterParameter() const
+{
+  return m_FilterParameter;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void VolumeDataContainerInfoWidget::initializeWidget(FilterParameter* parameter, AbstractFilter* filter)
 {
-  m_Filter = filter;
+  setFilter(filter);
 
   m_FilterParameter = dynamic_cast<VolumeInfoFilterParameter*>(parameter);
   Q_ASSERT_X(NULL != m_FilterParameter, "VolumeDataContainerInfoWidget can ONLY be used with VolumeInfoFilterParameter Filter Parameters", __FILE__);
@@ -102,20 +114,20 @@ void VolumeDataContainerInfoWidget::initializeWidget(FilterParameter* parameter,
 // -----------------------------------------------------------------------------
 void VolumeDataContainerInfoWidget::setupGui()
 {
-  if(m_Filter == NULL)
+  if(getFilter() == NULL)
   {
     return;
   }
   // Catch when the filter is about to execute the preflight
-  connect(m_Filter, SIGNAL(preflightAboutToExecute()),
+  connect(getFilter(), SIGNAL(preflightAboutToExecute()),
           this, SLOT(beforePreflight()));
 
   // Catch when the filter is finished running the preflight
-  connect(m_Filter, SIGNAL(preflightExecuted()),
+  connect(getFilter(), SIGNAL(preflightExecuted()),
           this, SLOT(afterPreflight()));
 
   // Catch when the filter wants its values updated
-  connect(m_Filter, SIGNAL(updateFilterParameters(AbstractFilter*)),
+  connect(getFilter(), SIGNAL(updateFilterParameters(AbstractFilter*)),
           this, SLOT(filterNeedsInputParameters(AbstractFilter*)));
 
   if (m_FilterParameter == NULL)
@@ -141,7 +153,7 @@ void VolumeDataContainerInfoWidget::setupGui()
 
   if (m_FilterParameter != NULL)
   {
-    IntVec3_t data = m_Filter->property(PROPERTY_NAME_AS_CHAR).value<IntVec3_t>();
+    IntVec3_t data = getFilter()->property(PROPERTY_NAME_AS_CHAR).value<IntVec3_t>();
     QString str = QString("%1 x %2 x %3").arg(data.x).arg(data.y).arg(data.z);
     voxelExtentsLabel->setText(str);
   }
@@ -149,7 +161,7 @@ void VolumeDataContainerInfoWidget::setupGui()
   if (m_FilterParameter != NULL)
   {
 
-    FloatVec3_t data = m_Filter->property(m_FilterParameter->getResolutionProperty().toLatin1().constData()).value<FloatVec3_t>();
+    FloatVec3_t data = getFilter()->property(m_FilterParameter->getResolutionProperty().toLatin1().constData()).value<FloatVec3_t>();
     QString str = QString("%1, %2, %3").arg(data.x).arg(data.y).arg(data.z);
     resolutionLabel->setText(str);
   }
@@ -169,7 +181,7 @@ void VolumeDataContainerInfoWidget::populateComboBoxes()
 
   // Now get the DataContainerArray from the Filter instance
   // We are going to use this to get all the current DataContainers
-  DataContainerArray::Pointer dca = m_Filter->getDataContainerArray();
+  DataContainerArray::Pointer dca = getFilter()->getDataContainerArray();
   if(NULL == dca.get()) { return; }
 
   // Check to see if we have any DataContainers to actually populate drop downs with.
@@ -222,7 +234,7 @@ void VolumeDataContainerInfoWidget::populateComboBoxes()
   QString filtDcName;
   QString filtAmName;
 
-  QVariant qvSelectedPath = m_Filter->property(PROPERTY_NAME_AS_CHAR);
+  QVariant qvSelectedPath = getFilter()->property(PROPERTY_NAME_AS_CHAR);
   if( QString("QString").compare(qvSelectedPath.typeName()) == 0 )
   {
     filtDcName = qvSelectedPath.toString();
@@ -252,7 +264,7 @@ void VolumeDataContainerInfoWidget::populateComboBoxes()
   if(dcIndex < 0 && dcName.isEmpty() == false)
   {
     dataContainerList->addItem(dcName);
-    qDebug() << "[2] Adding " << dcName;
+   // qDebug() << "[2] Adding " << dcName;
   } // the string was not found so just set it to the first index
   else
   {
@@ -295,7 +307,7 @@ void VolumeDataContainerInfoWidget::on_dataContainerList_currentIndexChanged(int
 // -----------------------------------------------------------------------------
 void VolumeDataContainerInfoWidget::beforePreflight()
 {
-  if (NULL == m_Filter) { return; }
+  if (NULL == getFilter()) { return; }
   if(m_DidCausePreflight == true)
   {
     std::cout << "***  VolumeDataContainerInfoWidget already caused a preflight, just returning" << std::endl;
@@ -309,14 +321,14 @@ void VolumeDataContainerInfoWidget::beforePreflight()
 
   if (m_FilterParameter != NULL)
   {
-    IntVec3_t data = m_Filter->property(PROPERTY_NAME_AS_CHAR).value<IntVec3_t>();
+    IntVec3_t data = getFilter()->property(PROPERTY_NAME_AS_CHAR).value<IntVec3_t>();
     QString str = QString("0-%1 x 0-%2 x 0-%3").arg(data.x - 1).arg(data.y - 1).arg(data.z - 1);
     voxelExtentsLabel->setText(str);
   }
 
   if (m_FilterParameter != NULL)
   {
-    FloatVec3_t data = m_Filter->property(m_FilterParameter->getResolutionProperty().toLatin1().constData()).value<FloatVec3_t>();
+    FloatVec3_t data = getFilter()->property(m_FilterParameter->getResolutionProperty().toLatin1().constData()).value<FloatVec3_t>();
     QString str = QString("%1 x %2 x %3").arg(data.x).arg(data.y).arg(data.z);
     resolutionLabel->setText(str);
   }
@@ -347,46 +359,7 @@ void VolumeDataContainerInfoWidget::filterNeedsInputParameters(AbstractFilter* f
   ok = filter->setProperty(PROPERTY_NAME_AS_CHAR, var);
   if(false == ok)
   {
-    FilterParameterWidgetsDialogs::ShowCouldNotSetFilterParameter(m_Filter, m_FilterParameter);
+    FilterParameterWidgetsDialogs::ShowCouldNotSetFilterParameter(getFilter(), m_FilterParameter);
   }
 #endif
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void VolumeDataContainerInfoWidget::setLinkedConditionalState(int state)
-{
-  bool boolProp = (state == Qt::Checked);
-  fadeWidget(this, boolProp);
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void VolumeDataContainerInfoWidget::fadeWidget(QWidget* widget, bool in)
-{
-
-  if (faderWidget)
-  {
-    faderWidget->close();
-  }
-  faderWidget = new FaderWidget(widget);
-  if(in)
-  {
-    setVisible(true);
-    faderWidget->setFadeIn();
-    connect(faderWidget, SIGNAL(animationComplete() ),
-            this, SLOT(show()));
-  }
-  else
-  {
-    faderWidget->setFadeOut();
-    connect(faderWidget, SIGNAL(animationComplete() ),
-            this, SLOT(hide()));
-  }
-  QColor color = DREAM3D::Defaults::BasicColor;
-  if(m_FilterParameter->getAdvanced()) { color = DREAM3D::Defaults::AdvancedColor; }
-  faderWidget->setStartColor(color);
-  faderWidget->start();
 }

@@ -177,6 +177,7 @@ namespace DREAM3D
 
   namespace CellData
   {
+    const DREAM3D_STRING AxisAngles("AxisAngles");
     const DREAM3D_STRING BC("BandContrasts");
     const DREAM3D_STRING BandContrast("BandContrast");
     const DREAM3D_STRING CellPhases("Phases");
@@ -218,6 +219,7 @@ namespace DREAM3D
     const DREAM3D_STRING QPEuclideanDistances("QPEuclideanDistances");
     const DREAM3D_STRING Quats("Quats");
     const DREAM3D_STRING RodriguesColor("RodriguesColor");
+    const DREAM3D_STRING RodriguesVectors("RodriguesVectors");
     const DREAM3D_STRING SolidMeshNodes("SolidMeshNodes");
     const DREAM3D_STRING SineParams("SineParams");
     const DREAM3D_STRING SolidMeshTetrahedrons("SolidMeshTetrahedrons");

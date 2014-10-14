@@ -50,6 +50,8 @@
 #include "DREAM3DLib/Common/AbstractFilter.h"
 
 #include "DREAM3DWidgetsLib/DREAM3DWidgetsLib.h"
+#include "DREAM3DWidgetsLib/FilterParameterWidgets/FilterParameterWidget.h"
+
 
 #include "DREAM3DWidgetsLib/ui_IntVec3Widget.h"
 
@@ -59,7 +61,7 @@
 * @author
 * @version
 */
-class DREAM3DWidgetsLib_EXPORT IntVec3Widget : public QWidget, private Ui::IntVec3Widget
+class DREAM3DWidgetsLib_EXPORT IntVec3Widget : public FilterParameterWidget, private Ui::IntVec3Widget
 {
     Q_OBJECT
 
@@ -84,18 +86,16 @@ class DREAM3DWidgetsLib_EXPORT IntVec3Widget : public QWidget, private Ui::IntVe
     void beforePreflight();
     void afterPreflight();
     void filterNeedsInputParameters(AbstractFilter* filter);
-    void setLinkedConditionalState(int state);
-    void fadeWidget(QWidget* widget, bool in);
+
 
   signals:
     void errorSettingFilterParameter(const QString& msg);
     void parametersChanged();
 
   private:
-    AbstractFilter*   m_Filter;
-    FilterParameter*  m_FilterParameter;
+
     bool m_DidCausePreflight;
-    QPointer<FaderWidget> faderWidget;
+
 
     IntVec3Widget(const IntVec3Widget&); // Copy Constructor Not Implemented
     void operator=(const IntVec3Widget&); // Operator '=' Not Implemented

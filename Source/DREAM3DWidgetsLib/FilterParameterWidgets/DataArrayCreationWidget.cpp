@@ -51,9 +51,7 @@
 //
 // -----------------------------------------------------------------------------
 DataArrayCreationWidget::DataArrayCreationWidget(FilterParameter* parameter, AbstractFilter* filter, QWidget* parent) :
-  QWidget(parent),
-  m_Filter(filter),
-  m_FilterParameter(parameter),
+  FilterParameterWidget(parameter, filter, parent),
   m_DidCausePreflight(false)
 {
   setupUi(this);
@@ -64,9 +62,7 @@ DataArrayCreationWidget::DataArrayCreationWidget(FilterParameter* parameter, Abs
 //
 // -----------------------------------------------------------------------------
 DataArrayCreationWidget::DataArrayCreationWidget(QWidget* parent) :
-  QWidget(parent),
-  m_Filter(NULL),
-  m_FilterParameter(NULL),
+  FilterParameterWidget(NULL, NULL, parent),
   m_DidCausePreflight(false)
 {
   setupUi(this);
@@ -84,8 +80,8 @@ DataArrayCreationWidget::~DataArrayCreationWidget()
 // -----------------------------------------------------------------------------
 void DataArrayCreationWidget::initializeWidget(FilterParameter* parameter, AbstractFilter* filter)
 {
-  m_Filter = filter;
-  m_FilterParameter = parameter;
+  setFilter(filter);
+  setFilterParameter(parameter);
   setupGui();
 }
 
@@ -98,19 +94,19 @@ void DataArrayCreationWidget::setupGui()
 
 
   blockSignals(true);
-  if (m_FilterParameter != NULL)
+  if (getFilterParameter() != NULL)
   {
-    QString units = m_FilterParameter->getUnits();
+    QString units = getFilterParameter()->getUnits();
     if(units.isEmpty() == false)
     {
-      label->setText(m_FilterParameter->getHumanLabel() + " (" + units + ")");
+      label->setText(getFilterParameter()->getHumanLabel() + " (" + units + ")");
     }
     else
     {
-      label->setText(m_FilterParameter->getHumanLabel() );
+      label->setText(getFilterParameter()->getHumanLabel() );
     }
 
-    QString str = m_Filter->property(PROPERTY_NAME_AS_CHAR).toString();
+    QString str = getFilter()->property(PROPERTY_NAME_AS_CHAR).toString();
     dataArrayName->setText(str);
   }
   blockSignals(false);
@@ -119,15 +115,15 @@ void DataArrayCreationWidget::setupGui()
 
 
   // Catch when the filter is about to execute the preflight
-  connect(m_Filter, SIGNAL(preflightAboutToExecute()),
+  connect(getFilter(), SIGNAL(preflightAboutToExecute()),
           this, SLOT(beforePreflight()));
 
   // Catch when the filter is finished running the preflight
-  connect(m_Filter, SIGNAL(preflightExecuted()),
+  connect(getFilter(), SIGNAL(preflightExecuted()),
           this, SLOT(afterPreflight()));
 
   // Catch when the filter wants its values updated
-  connect(m_Filter, SIGNAL(updateFilterParameters(AbstractFilter*)),
+  connect(getFilter(), SIGNAL(updateFilterParameters(AbstractFilter*)),
           this, SLOT(filterNeedsInputParameters(AbstractFilter*)));
 
   connect(dataArrayName, SIGNAL(textChanged(const QString&)),
@@ -159,7 +155,7 @@ void DataArrayCreationWidget::populateComboBoxes()
 
   // Now get the DataContainerArray from the Filter instance
   // We are going to use this to get all the current DataContainers
-  DataContainerArray::Pointer dca = m_Filter->getDataContainerArray();
+  DataContainerArray::Pointer dca = getFilter()->getDataContainerArray();
   if(NULL == dca.get()) { return; }
 
   // Check to see if we have any DataContainers to actually populate drop downs with.
@@ -189,7 +185,7 @@ void DataArrayCreationWidget::populateComboBoxes()
   QString curDaName = dataArrayName->text();
 
   // Get what is in the filter
-  DataArrayPath selectedPath = m_Filter->property(PROPERTY_NAME_AS_CHAR).value<DataArrayPath>();
+  DataArrayPath selectedPath = getFilter()->property(PROPERTY_NAME_AS_CHAR).value<DataArrayPath>();
 
   // Split the path up to make sure we have a valid path separated by the "|" character
 
@@ -283,9 +279,9 @@ void DataArrayCreationWidget::selectDefaultPath()
   }
 
   // Set the default AttributeArray
-  m_Filter->blockSignals(true);
+  getFilter()->blockSignals(true);
   dataArrayName->setText("Default");
-  m_Filter->blockSignals(false);
+  getFilter()->blockSignals(false);
 }
 
 // -----------------------------------------------------------------------------
@@ -403,38 +399,6 @@ void DataArrayCreationWidget::on_dataArrayName_returnPressed()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DataArrayCreationWidget::fadeInWidget(QWidget* widget)
-{
-  if (faderWidget)
-  {
-    faderWidget->close();
-  }
-  faderWidget = new FaderWidget(widget);
-  faderWidget->start();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void DataArrayCreationWidget::on_applyChangesBtn_clicked()
-{
-  dataArrayName->setStyleSheet(QString(""));
-  emit parametersChanged();
-
-  if (faderWidget)
-  {
-    faderWidget->close();
-  }
-  faderWidget = new FaderWidget(applyChangesBtn);
-  faderWidget->setFadeOut();
-  connect(faderWidget, SIGNAL(animationComplete() ),
-          this, SLOT(hideButton()));
-  faderWidget->start();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void DataArrayCreationWidget::hideButton()
 {
   dataArrayName->setToolTip("");
@@ -477,7 +441,7 @@ void DataArrayCreationWidget::on_dataArrayName_textChanged(const QString& string
 // -----------------------------------------------------------------------------
 void DataArrayCreationWidget::beforePreflight()
 {
-  if (NULL == m_Filter) { return; }
+  if (NULL == getFilter()) { return; }
   if(m_DidCausePreflight == true)
   {
     std::cout << "***  DataArrayCreationWidget already caused a preflight, just returning" << std::endl;
@@ -516,7 +480,7 @@ void DataArrayCreationWidget::filterNeedsInputParameters(AbstractFilter* filter)
   ok = filter->setProperty(PROPERTY_NAME_AS_CHAR, var);
   if(false == ok)
   {
-    FilterParameterWidgetsDialogs::ShowCouldNotSetFilterParameter(m_Filter, m_FilterParameter);
+    FilterParameterWidgetsDialogs::ShowCouldNotSetFilterParameter(getFilter(), getFilterParameter());
   }
 
 }
@@ -524,38 +488,21 @@ void DataArrayCreationWidget::filterNeedsInputParameters(AbstractFilter* filter)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DataArrayCreationWidget::setLinkedConditionalState(int state)
+void DataArrayCreationWidget::on_applyChangesBtn_clicked()
 {
-  bool boolProp = (state == Qt::Checked);
-  fadeWidget(this, boolProp);
-}
+  dataArrayName->setStyleSheet(QString(""));
+  emit parametersChanged();
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void DataArrayCreationWidget::fadeWidget(QWidget* widget, bool in)
-{
+  QPointer<FaderWidget> faderWidget = new FaderWidget(applyChangesBtn);
+  setFaderWidget(faderWidget);
 
-  if (faderWidget)
+  if (getFaderWidget())
   {
     faderWidget->close();
   }
-  faderWidget = new FaderWidget(widget);
-  if(in)
-  {
-    setVisible(true);
-    faderWidget->setFadeIn();
-    connect(faderWidget, SIGNAL(animationComplete() ),
-            this, SLOT(show()));
-  }
-  else
-  {
-    faderWidget->setFadeOut();
-    connect(faderWidget, SIGNAL(animationComplete() ),
-            this, SLOT(hide()));
-  }
-  QColor color = DREAM3D::Defaults::BasicColor;
-  if(m_FilterParameter->getAdvanced()) { color = DREAM3D::Defaults::AdvancedColor; }
-  faderWidget->setStartColor(color);
+  faderWidget = new FaderWidget(applyChangesBtn);
+  faderWidget->setFadeOut();
+  connect(faderWidget, SIGNAL(animationComplete() ),
+          this, SLOT(hideButton()));
   faderWidget->start();
 }

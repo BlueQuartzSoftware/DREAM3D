@@ -56,7 +56,7 @@ QString ConvertHexGridToSquareGridWidget::m_OpenDialogLastDirectory = "";
 //
 // -----------------------------------------------------------------------------
 ConvertHexGridToSquareGridWidget::ConvertHexGridToSquareGridWidget(FilterParameter* parameter, AbstractFilter* filter, QWidget* parent) :
-  QWidget(parent),
+  FilterParameterWidget(parameter, filter, parent),
   m_StackingGroup(NULL),
   m_DidCausePreflight(false)
 {
@@ -80,6 +80,39 @@ ConvertHexGridToSquareGridWidget::ConvertHexGridToSquareGridWidget(FilterParamet
 ConvertHexGridToSquareGridWidget::~ConvertHexGridToSquareGridWidget()
 {
 
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ConvertHexGridToSquareGridWidget::setFilter(AbstractFilter *value)
+{
+  m_Filter = dynamic_cast<ConvertHexGridToSquareGrid*>(value);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AbstractFilter* ConvertHexGridToSquareGridWidget::getFilter() const
+{
+  return m_Filter;
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ConvertHexGridToSquareGridWidget::setFilterParameter(FilterParameter *value)
+{
+  m_FilterParameter = dynamic_cast<FileSystemFilterParameter*>(value);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+FilterParameter* ConvertHexGridToSquareGridWidget::getFilterParameter() const
+{
+  return m_FilterParameter;
 }
 
 // -----------------------------------------------------------------------------

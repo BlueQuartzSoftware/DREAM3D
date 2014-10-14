@@ -80,8 +80,7 @@ class FilterWidgetsLib_EXPORT CustomWidget : public QWidget, private Ui::CustomW
 
 
   private:
-    AbstractFilter*   m_Filter;
-    FilterParameter*  m_FilterParameter;
+
 
     CustomWidget(const CustomWidget&); // Copy Constructor Not Implemented
     void operator=(const CustomWidget&); // Operator '=' Not Implemented

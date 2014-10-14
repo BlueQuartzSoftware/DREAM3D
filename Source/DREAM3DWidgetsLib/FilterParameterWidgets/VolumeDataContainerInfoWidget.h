@@ -49,6 +49,8 @@
 #include "DREAM3DLib/Common/AbstractFilter.h"
 
 #include "DREAM3DWidgetsLib/DREAM3DWidgetsLib.h"
+#include "DREAM3DWidgetsLib/FilterParameterWidgets/FilterParameterWidget.h"
+
 
 #include "DREAM3DWidgetsLib/ui_VolumeDataContainerInfoWidget.h"
 
@@ -60,7 +62,7 @@ class VolumeInfoFilterParameter;
 * @author
 * @version
 */
-class DREAM3DWidgetsLib_EXPORT VolumeDataContainerInfoWidget : public QWidget, private Ui::VolumeDataContainerInfoWidget
+class DREAM3DWidgetsLib_EXPORT VolumeDataContainerInfoWidget : public FilterParameterWidget, private Ui::VolumeDataContainerInfoWidget
 {
     Q_OBJECT
 
@@ -98,14 +100,16 @@ class DREAM3DWidgetsLib_EXPORT VolumeDataContainerInfoWidget : public QWidget, p
     void initializeWidget(FilterParameter* parameter, AbstractFilter* filter);
 
 
+    void setFilterParameter(FilterParameter *value);
+    FilterParameter* getFilterParameter() const;
+
   public slots:
     void beforePreflight();
     void afterPreflight();
     void filterNeedsInputParameters(AbstractFilter* filter);
 
     void on_dataContainerList_currentIndexChanged(int index);
-    void setLinkedConditionalState(int state);
-    void fadeWidget(QWidget* widget, bool in);
+
 
   protected:
     void populateComboBoxes();
@@ -116,10 +120,10 @@ class DREAM3DWidgetsLib_EXPORT VolumeDataContainerInfoWidget : public QWidget, p
     void parametersChanged();
 
   private:
-    AbstractFilter*   m_Filter;
+
     VolumeInfoFilterParameter*  m_FilterParameter;
     bool m_DidCausePreflight;
-    QPointer<FaderWidget> faderWidget;
+
 
     DataContainerArrayProxy m_DcaProxy;
 

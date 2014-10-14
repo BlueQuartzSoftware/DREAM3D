@@ -1,6 +1,5 @@
 /* ============================================================================
- * Copyright (c) 2012 Michael A. Jackson (BlueQuartz Software)
- * Copyright (c) 2012 Dr. Michael A. Groeber (US Air Force Research Laboratories)
+ * Copyright (c) 2014 Michael A. Jackson (BlueQuartz Software)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -33,76 +32,70 @@
  *                           FA8650-10-D-5210
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef _ChoiceWidget_H_
-#define _ChoiceWidget_H_
+#ifndef _FilterParameterWidget_H_
+#define _FilterParameterWidget_H_
+
 
 
 #include <QtCore/QObject>
 #include <QtCore/QPointer>
+
 #include <QtGui/QWidget>
 
 #include "QtSupport/FaderWidget.h"
+
+#include "DREAM3DLib/DREAM3DLib.h"
+#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 
 
 #include "DREAM3DWidgetsLib/DREAM3DWidgetsLib.h"
 #include "DREAM3DWidgetsLib/FilterParameterWidgets/FilterParameterWidget.h"
 
-#include "DREAM3DWidgetsLib/ui_ChoiceWidget.h"
+#include "DREAM3DWidgetsLib/FilterParameterWidgets/FilterParameterWidget.h"
+
 
 class AbstractFilter;
 class FilterParameter;
 
-/**
-* @brief
-* @author
-* @version
-*/
-class DREAM3DWidgetsLib_EXPORT ChoiceWidget : public FilterParameterWidget, private Ui::ChoiceWidget
+
+
+class DREAM3DWidgetsLib_EXPORT FilterParameterWidget : public QWidget
 {
     Q_OBJECT
-
   public:
-    /**
-    * @brief Constructor
-    * @param parameter The FilterParameter object that this widget represents
-    * @param filter The instance of the filter that this parameter is a part of
-    * @param parent The parent QWidget for this Widget
-    */
-    ChoiceWidget(FilterParameter* parameter, AbstractFilter* filter = NULL, QWidget* parent = NULL);
+    FilterParameterWidget(QWidget* parent = 0);
+    FilterParameterWidget(FilterParameter* parameter, AbstractFilter* filter = NULL, QWidget* parent = NULL);
 
-    virtual ~ChoiceWidget();
+    virtual ~FilterParameterWidget();
 
-    /**
-    * @brief This method does additional GUI widget connections
-    */
-    void setupGui();
+    DREAM3D_VIRTUAL_INSTANCE_PROPERTY(AbstractFilter*, Filter)
+    DREAM3D_VIRTUAL_INSTANCE_PROPERTY(FilterParameter*, FilterParameter)
+    void fadeInWidget(QWidget* widget);
 
-    int getCurrentIndex();
+    QPointer<FaderWidget> getFaderWidget() const;
+    void setFaderWidget(QPointer<FaderWidget> faderWidget);
 
+    virtual void setupGui();
 
   public slots:
-    void widgetChanged(int index);
-    void filterNeedsInputParameters(AbstractFilter* filter); // When the filter is ready for us to update its input parameter(s) that we are responsible for
-    void beforePreflight(); // Called just before the "dataCheck()" is called
-    void afterPreflight(); // Called just after the dataCheck() is called.
+
+    void setLinkedConditionalState(int state);
+    void setLinkedComboBoxState(int groupId);
+
+    void fadeWidget(QWidget* widget, bool in);
 
 
+  protected:
 
-  signals:
-    void errorSettingFilterParameter(const QString& msg);
-    void parametersChanged();
-    void conditionalPropertyChanged(int);
 
   private:
+    QPointer<FaderWidget> m_FaderWidget;
 
-    bool m_DidCausePreflight;
-
-
-    ChoiceWidget(const ChoiceWidget&); // Copy Constructor Not Implemented
-    void operator=(const ChoiceWidget&); // Operator '=' Not Implemented
-
+    FilterParameterWidget(const FilterParameterWidget&); // Copy Constructor Not Implemented
+    void operator=(const FilterParameterWidget&); // Operator '=' Not Implemented
 };
 
-#endif /* _ChoiceWidget_H_ */
 
+
+#endif /* _FilterParameterWidget_H_ */
 

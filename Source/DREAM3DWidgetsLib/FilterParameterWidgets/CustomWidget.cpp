@@ -45,9 +45,7 @@
 //
 // -----------------------------------------------------------------------------
 CustomWidget::CustomWidget(FilterParameter* parameter, AbstractFilter* filter, QWidget* parent) :
-  QWidget(parent),
-  m_Filter(filter),
-  m_FilterParameter(parameter)
+  FilterParameterWidget(parameter, filter, parent)
 {
   setupUi(this);
   setupGui();
@@ -64,9 +62,9 @@ CustomWidget::~CustomWidget()
 // -----------------------------------------------------------------------------
 void CustomWidget::setupGui()
 {
-  if (m_FilterParameter != NULL)
+  if (getFilterParameter() != NULL)
   {
-    CustomWidgetLabel->setText(m_FilterParameter->getHumanLabel() );
+    CustomWidgetLabel->setText(getFilterParameter()->getHumanLabel() );
   }
 }
 

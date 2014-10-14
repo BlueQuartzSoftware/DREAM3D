@@ -50,6 +50,8 @@
 #include "DREAM3DLib/Common/AbstractFilter.h"
 
 #include "DREAM3DWidgetsLib/DREAM3DWidgetsLib.h"
+#include "DREAM3DWidgetsLib/FilterParameterWidgets/FilterParameterWidget.h"
+
 
 #include "DREAM3DWidgetsLib/ui_InputPathWidget.h"
 
@@ -61,7 +63,7 @@ class FileSystemFilterParameter;
 * @author
 * @version
 */
-class DREAM3DWidgetsLib_EXPORT InputPathWidget : public QWidget, private Ui::InputPathWidget
+class DREAM3DWidgetsLib_EXPORT InputPathWidget : public FilterParameterWidget, private Ui::InputPathWidget
 {
     Q_OBJECT
 
@@ -86,6 +88,9 @@ class DREAM3DWidgetsLib_EXPORT InputPathWidget : public QWidget, private Ui::Inp
     */
     bool verifyPathExists(QString filePath, QLineEdit* lineEdit);
 
+    void setFilterParameter(FilterParameter *value);
+    FilterParameter* getFilterParameter() const;
+
   public slots:
     void widgetChanged(const QString& msg);// when something in the widget changes
     void filterNeedsInputParameters(AbstractFilter* filter); // When the filter is ready for us to update its input parameter(s) that we are responsible for
@@ -95,19 +100,17 @@ class DREAM3DWidgetsLib_EXPORT InputPathWidget : public QWidget, private Ui::Inp
     void on_value_textChanged(const QString& text);
     void on_value_editingFinished();
     void on_selectBtn_clicked();
-    void setLinkedConditionalState(int state);
-    void fadeWidget(QWidget* widget, bool in);
+
 
   signals:
     void errorSettingFilterParameter(const QString& msg);
     void parametersChanged();
 
   private:
-    AbstractFilter*   m_Filter;
     FileSystemFilterParameter*  m_FilterParameter;
     static QString    m_OpenDialogLastDirectory;
     bool m_DidCausePreflight;
-    QPointer<FaderWidget> faderWidget;
+
 
     InputPathWidget(const InputPathWidget&); // Copy Constructor Not Implemented
     void operator=(const InputPathWidget&); // Operator '=' Not Implemented

@@ -47,6 +47,8 @@
 #include "DREAM3DLib/Common/AbstractFilter.h"
 
 #include "DREAM3DWidgetsLib/DREAM3DWidgetsLib.h"
+#include "DREAM3DWidgetsLib/FilterParameterWidgets/FilterParameterWidget.h"
+
 
 #include "DREAM3DWidgetsLib/ui_DoubleWidget.h"
 
@@ -56,7 +58,7 @@
 * @author
 * @version
 */
-class DREAM3DWidgetsLib_EXPORT DoubleWidget : public QWidget, private Ui::DoubleWidget
+class DREAM3DWidgetsLib_EXPORT DoubleWidget : public FilterParameterWidget, private Ui::DoubleWidget
 {
     Q_OBJECT
 
@@ -81,18 +83,16 @@ class DREAM3DWidgetsLib_EXPORT DoubleWidget : public QWidget, private Ui::Double
     void filterNeedsInputParameters(AbstractFilter* filter); // When the filter is ready for us to update its input parameter(s) that we are responsible for
     void beforePreflight(); // Called just before the "dataCheck()" is called
     void afterPreflight(); // Called just after the dataCheck() is called.
-    void setLinkedConditionalState(int state);
-    void fadeWidget(QWidget* widget, bool in);
+
 
   signals:
     void errorSettingFilterParameter(const QString& msg);
     void parametersChanged();
 
   private:
-    AbstractFilter*   m_Filter;
-    FilterParameter*  m_FilterParameter;
+
     bool m_DidCausePreflight;
-    QPointer<FaderWidget> faderWidget;
+
 
 
     DoubleWidget(const DoubleWidget&); // Copy Constructor Not Implemented

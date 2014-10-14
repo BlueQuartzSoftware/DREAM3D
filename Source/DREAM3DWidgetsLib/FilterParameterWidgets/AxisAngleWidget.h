@@ -47,6 +47,8 @@
 #include "DREAM3DLib/Common/AbstractFilter.h"
 
 #include "DREAM3DWidgetsLib/DREAM3DWidgetsLib.h"
+#include "DREAM3DWidgetsLib/FilterParameterWidgets/FilterParameterWidget.h"
+
 
 #include "DREAM3DWidgetsLib/ui_AxisAngleWidget.h"
 
@@ -56,7 +58,7 @@
 * @author
 * @version
 */
-class DREAM3DWidgetsLib_EXPORT AxisAngleWidget : public QWidget, private Ui::AxisAngleWidget
+class DREAM3DWidgetsLib_EXPORT AxisAngleWidget : public FilterParameterWidget, private Ui::AxisAngleWidget
 {
     Q_OBJECT
 
@@ -81,18 +83,16 @@ class DREAM3DWidgetsLib_EXPORT AxisAngleWidget : public QWidget, private Ui::Axi
     void beforePreflight();
     void afterPreflight();
     void filterNeedsInputParameters(AbstractFilter* filter);
-    void setLinkedConditionalState(int state);
-    void fadeWidget(QWidget* widget, bool in);
+
 
   signals:
     void errorSettingFilterParameter(const QString& msg);
     void parametersChanged();
 
   private:
-    AbstractFilter*   m_Filter;
-    FilterParameter*  m_FilterParameter;
+
     bool m_DidCausePreflight;
-    QPointer<FaderWidget> faderWidget;
+
 
     AxisAngleWidget(const AxisAngleWidget&); // Copy Constructor Not Implemented
     void operator=(const AxisAngleWidget&); // Operator '=' Not Implemented

@@ -37,6 +37,8 @@
 
 #include <QtCore/QMetaProperty>
 
+#include "DREAM3DLib/Common/AbstractFilter.h"
+#include "DREAM3DLib/FilterParameters/FilterParameter.h"
 
 #include "FilterParameterWidgetsDialogs.h"
 
@@ -47,9 +49,7 @@
 //
 // -----------------------------------------------------------------------------
 ChoiceWidget::ChoiceWidget(FilterParameter* parameter, AbstractFilter* filter, QWidget* parent) :
-  QWidget(parent),
-  m_Filter(filter),
-  m_FilterParameter(parameter)
+  FilterParameterWidget(parameter, filter, parent)
 {
   setupUi(this);
   setupGui();
@@ -68,50 +68,73 @@ void ChoiceWidget::setupGui()
 {
 
   // Catch when the filter is about to execute the preflight
-  connect(m_Filter, SIGNAL(preflightAboutToExecute()),
+  connect(getFilter(), SIGNAL(preflightAboutToExecute()),
           this, SLOT(beforePreflight()));
 
   // Catch when the filter is finished running the preflight
-  connect(m_Filter, SIGNAL(preflightExecuted()),
+  connect(getFilter(), SIGNAL(preflightExecuted()),
           this, SLOT(afterPreflight()));
 
   // Catch when the filter wants its values updated
-  connect(m_Filter, SIGNAL(updateFilterParameters(AbstractFilter*)),
+  connect(getFilter(), SIGNAL(updateFilterParameters(AbstractFilter*)),
           this, SLOT(filterNeedsInputParameters(AbstractFilter*)));
 
   connect(value, SIGNAL(currentIndexChanged(int)),
           this, SLOT(widgetChanged(int) ) );
 
-  if (m_FilterParameter != NULL)
+  if (getFilterParameter() != NULL)
   {
-    QString units = m_FilterParameter->getUnits();
+    QString units = getFilterParameter()->getUnits();
     if(units.isEmpty() == false)
     {
-      label->setText(m_FilterParameter->getHumanLabel() + " (" + units + ")");
+      label->setText(getFilterParameter()->getHumanLabel() + " (" + units + ")");
     }
     else
     {
-      label->setText(m_FilterParameter->getHumanLabel() );
+      label->setText(getFilterParameter()->getHumanLabel() );
     }
 
     // setup the list of choices for the widget
-    ChoiceFilterParameter* choice = dynamic_cast<ChoiceFilterParameter*>(m_FilterParameter);
-    QList<QString> choices = choice->getChoices().toList();
-    value->blockSignals(true);
-    value->addItems(choices);
-    value->blockSignals(false);
+    ChoiceFilterParameter* choice = dynamic_cast<ChoiceFilterParameter*>(getFilterParameter());
+    if(choice)
+    {
+      QList<QString> choices = choice->getChoices().toList();
+      value->blockSignals(true);
+      value->addItems(choices);
+      value->blockSignals(false);
+    }
     // Get the Default value from the filter
-    int i = m_Filter->property(PROPERTY_NAME_AS_CHAR).toInt();
+    int i = getFilter()->property(PROPERTY_NAME_AS_CHAR).toInt();
     value->setCurrentIndex(i);
   }
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int ChoiceWidget::getCurrentIndex()
+{
+  return value->currentIndex();
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 void ChoiceWidget::widgetChanged(int index)
 {
+
+  FilterParameter* fp = getFilterParameter();
+
+  // If the parameter type is LinkedChoicesFilterParameter then we need to emit the index that
+  // was selected
+  LinkedChoicesFilterParameter* lnkedChoices = dynamic_cast<LinkedChoicesFilterParameter*>(fp);
+  if(lnkedChoices)
+  {
+    emit conditionalPropertyChanged(index);
+  }
+
+
+  // We emit no matter what
   emit parametersChanged();
 }
 
@@ -126,7 +149,7 @@ void ChoiceWidget::filterNeedsInputParameters(AbstractFilter* filter)
 
   if(false == ok)
   {
-    FilterParameterWidgetsDialogs::ShowCouldNotSetFilterParameter(m_Filter, m_FilterParameter);
+    FilterParameterWidgetsDialogs::ShowCouldNotSetFilterParameter(getFilter(), getFilterParameter());
   }
 }
 
@@ -144,43 +167,4 @@ void ChoiceWidget::beforePreflight()
 void ChoiceWidget::afterPreflight()
 {
 
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void ChoiceWidget::setLinkedConditionalState(int state)
-{
-  bool boolProp = (state == Qt::Checked);
-  fadeWidget(this, boolProp);
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void ChoiceWidget::fadeWidget(QWidget* widget, bool in)
-{
-
-  if (faderWidget)
-  {
-    faderWidget->close();
-  }
-  faderWidget = new FaderWidget(widget);
-  if(in)
-  {
-    setVisible(true);
-    faderWidget->setFadeIn();
-    connect(faderWidget, SIGNAL(animationComplete() ),
-            this, SLOT(show()));
-  }
-  else
-  {
-    faderWidget->setFadeOut();
-    connect(faderWidget, SIGNAL(animationComplete() ),
-            this, SLOT(hide()));
-  }
-  QColor color = DREAM3D::Defaults::BasicColor;
-  if(m_FilterParameter->getAdvanced()) { color = DREAM3D::Defaults::AdvancedColor; }
-  faderWidget->setStartColor(color);
-  faderWidget->start();
 }
