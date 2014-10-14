@@ -13,6 +13,7 @@ This Filter collects the *bad* **Cells** (*GrainId = 0*) and runs the _erode_ op
 | Name | Type |
 |------|------|
 | Minimum Allowed Defect Size | Integer |
+| Replace Bad Data | Boolean |
 
 ## Required DataContainers ##
 Voxel
