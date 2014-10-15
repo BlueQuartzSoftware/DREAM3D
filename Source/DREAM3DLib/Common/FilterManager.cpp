@@ -201,7 +201,7 @@ IFilterFactory::Pointer FilterManager::getFactoryForFilter(const QString& filter
   if(item != m_Factories.end())
     return item.value();
   else
-    return NULL;
+    return IFilterFactory::NullPointer();
 }
 
 // -----------------------------------------------------------------------------
