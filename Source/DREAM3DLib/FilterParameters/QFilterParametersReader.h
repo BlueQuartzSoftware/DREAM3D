@@ -111,6 +111,7 @@ class DREAM3DLib_EXPORT QFilterParametersReader : public AbstractFilterParameter
 
     virtual IntVec3_t readIntVec3(const QString name, IntVec3_t v);
     virtual FloatVec3_t readFloatVec3(const QString name, FloatVec3_t v);
+    virtual FloatVec4_t readFloatVec4(const QString name, FloatVec4_t v);
     virtual ComparisonInput_t readComparisonInput(const QString name, ComparisonInput_t v, int vectorPos);
     virtual ComparisonInputs readComparisonInputs(const QString name, ComparisonInputs v);
     virtual AxisAngleInput_t readAxisAngle(const QString name, AxisAngleInput_t v, int vectorPos);

@@ -102,6 +102,7 @@ class DREAM3DLib_EXPORT AbstractFilterParametersWriter
 
     virtual int writeValue(const QString name, IntVec3_t v) = 0;
     virtual int writeValue(const QString name, FloatVec3_t v) = 0;
+    virtual int writeValue(const QString name, FloatVec4_t v) = 0;
 
     virtual int writeValue(const QString name, ComparisonInput_t v) = 0;
     virtual int writeValue(const QString name, ComparisonInputs v) = 0;
