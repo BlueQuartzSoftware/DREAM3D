@@ -57,8 +57,7 @@ QString ImportImagesWidget::m_OpenDialogLastDirectory = "";
 //
 // -----------------------------------------------------------------------------
 ImportImagesWidget::ImportImagesWidget(FilterParameter* parameter, AbstractFilter* filter, QWidget* parent) :
-  QWidget(parent),
-  m_FilterParameter(parameter),
+  FilterParameterWidget(parameter, filter, parent),
   m_StackingGroup(NULL),
   m_DidCausePreflight(false)
 {
@@ -81,6 +80,25 @@ ImportImagesWidget::~ImportImagesWidget()
 {
 
 }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ImportImagesWidget::setFilter(AbstractFilter *value)
+{
+  m_Filter = dynamic_cast<ImportImageStack*>(value);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AbstractFilter* ImportImagesWidget::getFilter() const
+{
+  return m_Filter;
+}
+
+
 
 // -----------------------------------------------------------------------------
 //
@@ -219,8 +237,8 @@ void ImportImagesWidget::validateInputFile()
   QFileInfo fi(currentPath);
   if (currentPath.isEmpty() == false && fi.exists() == false)
   {
-//    QString Ftype = m_FilterParameter->getFileType();
-//    QString ext = m_FilterParameter->getFileExtension();
+//    QString Ftype = getFilterParameter()->getFileType();
+//    QString ext = getFilterParameter()->getFileExtension();
 //    QString s = Ftype + QString(" Files (") + ext + QString(");;All Files(*.*)");
     QString defaultName = m_OpenDialogLastDirectory;
 
@@ -619,7 +637,7 @@ void ImportImagesWidget::filterNeedsInputParameters(AbstractFilter* filter)
 {
   if (NULL == filter)
   {
-    QString ss = QObject::tr("Error Setting ImportImageStack Gui values to Filter instance. Filter instance was NULL.").arg(m_FilterParameter->getPropertyName());
+    QString ss = QObject::tr("Error Setting ImportImageStack Gui values to Filter instance. Filter instance was NULL.").arg(getFilterParameter()->getPropertyName());
     emit errorSettingFilterParameter(ss);
   }
 

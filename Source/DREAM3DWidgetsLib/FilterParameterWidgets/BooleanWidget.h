@@ -48,6 +48,8 @@
 #include "DREAM3DLib/Common/AbstractFilter.h"
 
 #include "DREAM3DWidgetsLib/DREAM3DWidgetsLib.h"
+#include "DREAM3DWidgetsLib/FilterParameterWidgets/FilterParameterWidget.h"
+
 
 #include "DREAM3DWidgetsLib/ui_BooleanWidget.h"
 
@@ -57,7 +59,7 @@
 * @author
 * @version
 */
-class DREAM3DWidgetsLib_EXPORT BooleanWidget : public QWidget, private Ui::BooleanWidget
+class DREAM3DWidgetsLib_EXPORT BooleanWidget : public FilterParameterWidget, private Ui::BooleanWidget
 {
     Q_OBJECT
 
@@ -83,18 +85,16 @@ class DREAM3DWidgetsLib_EXPORT BooleanWidget : public QWidget, private Ui::Boole
     void filterNeedsInputParameters(AbstractFilter* filter); // When the filter is ready for us to update its input parameter(s) that we are responsible for
     void beforePreflight(); // Called just before the "dataCheck()" is called
     void afterPreflight(); // Called just after the dataCheck() is called.
-    void setLinkedConditionalState(int state);
-    void fadeWidget(QWidget* widget, bool in);
+
 
   signals:
     void errorSettingFilterParameter(const QString& msg);
     void parametersChanged();
 
   private:
-    AbstractFilter*   m_Filter;
-    FilterParameter*  m_FilterParameter;
+
     bool m_DidCausePreflight;
-    QPointer<FaderWidget> faderWidget;
+
 
     BooleanWidget(const BooleanWidget&); // Copy Constructor Not Implemented
     void operator=(const BooleanWidget&); // Operator '=' Not Implemented

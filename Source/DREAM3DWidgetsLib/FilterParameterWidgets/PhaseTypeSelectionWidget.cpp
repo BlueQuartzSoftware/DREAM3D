@@ -53,9 +53,7 @@
 //
 // -----------------------------------------------------------------------------
 PhaseTypeSelectionWidget::PhaseTypeSelectionWidget(FilterParameter* parameter, AbstractFilter* filter, QWidget* parent) :
-  QWidget(parent),
-  m_Filter(filter),
-  m_FilterParameter(parameter),
+  FilterParameterWidget(parameter, filter, parent),
   m_DidCausePreflight(false)
 {
   setupUi(this);
@@ -66,9 +64,7 @@ PhaseTypeSelectionWidget::PhaseTypeSelectionWidget(FilterParameter* parameter, A
 //
 // -----------------------------------------------------------------------------
 PhaseTypeSelectionWidget::PhaseTypeSelectionWidget(QWidget* parent) :
-  QWidget(parent),
-  m_Filter(NULL),
-  m_FilterParameter(NULL),
+  FilterParameterWidget(NULL, NULL, parent),
   m_DidCausePreflight(false)
 {
   setupUi(this);
@@ -87,34 +83,34 @@ PhaseTypeSelectionWidget::~PhaseTypeSelectionWidget()
 // -----------------------------------------------------------------------------
 void PhaseTypeSelectionWidget::setupGui()
 {
-  if(m_Filter == NULL)
+  if(getFilter() == NULL)
   {
     return;
   }
   // Catch when the filter is about to execute the preflight
-  connect(m_Filter, SIGNAL(preflightAboutToExecute()),
+  connect(getFilter(), SIGNAL(preflightAboutToExecute()),
           this, SLOT(beforePreflight()));
 
   // Catch when the filter is finished running the preflight
-  connect(m_Filter, SIGNAL(preflightExecuted()),
+  connect(getFilter(), SIGNAL(preflightExecuted()),
           this, SLOT(afterPreflight()));
 
   // Catch when the filter wants its values updated
-  connect(m_Filter, SIGNAL(updateFilterParameters(AbstractFilter*)),
+  connect(getFilter(), SIGNAL(updateFilterParameters(AbstractFilter*)),
           this, SLOT(filterNeedsInputParameters(AbstractFilter*)));
 
-  if (m_FilterParameter == NULL)
+  if (getFilterParameter() == NULL)
   {
     return;
   }
-  QString units = m_FilterParameter->getUnits();
+  QString units = getFilterParameter()->getUnits();
   if(units.isEmpty() == false)
   {
-    label->setText(m_FilterParameter->getHumanLabel() + " (" + units + ")");
+    label->setText(getFilterParameter()->getHumanLabel() + " (" + units + ")");
   }
   else
   {
-    label->setText(m_FilterParameter->getHumanLabel() );
+    label->setText(getFilterParameter()->getHumanLabel() );
   }
 
   updateComboBoxes();
@@ -128,11 +124,11 @@ void PhaseTypeSelectionWidget::updateComboBoxes()
 {
   bool ok = false;
   // setup the list of choices for the widget
-  PhaseTypesFilterParameter* shapeType = dynamic_cast<PhaseTypesFilterParameter*>(m_FilterParameter);
+  PhaseTypesFilterParameter* shapeType = dynamic_cast<PhaseTypesFilterParameter*>(getFilterParameter());
   QString countProp = shapeType->getPhaseTypeCountProperty();
-  int size = m_Filter->property(countProp.toLatin1().constData()).toInt(&ok);
+  int size = getFilter()->property(countProp.toLatin1().constData()).toInt(&ok);
 
-  UInt32Vector_t vectorWrapper = m_Filter->property(PROPERTY_NAME_AS_CHAR).value<UInt32Vector_t>();
+  UInt32Vector_t vectorWrapper = getFilter()->property(PROPERTY_NAME_AS_CHAR).value<UInt32Vector_t>();
   QVector<quint32> dataFromFilter = vectorWrapper.d;
 
   // Get our list of predefined Phase Type Strings
@@ -212,7 +208,7 @@ void PhaseTypeSelectionWidget::comboboxChanged(int index)
 // -----------------------------------------------------------------------------
 void PhaseTypeSelectionWidget::beforePreflight()
 {
-  if (NULL == m_Filter) { return; }
+  if (NULL == getFilter()) { return; }
   if(m_DidCausePreflight == true)
   {
     //  std::cout << "***  PhaseTypeSelectionWidget already caused a preflight, just returning" << std::endl;
@@ -256,46 +252,7 @@ void PhaseTypeSelectionWidget::filterNeedsInputParameters(AbstractFilter* filter
   ok = filter->setProperty(PROPERTY_NAME_AS_CHAR, var);
   if(false == ok)
   {
-    FilterParameterWidgetsDialogs::ShowCouldNotSetFilterParameter(m_Filter, m_FilterParameter);
+    FilterParameterWidgetsDialogs::ShowCouldNotSetFilterParameter(getFilter(), getFilterParameter());
   }
 
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void PhaseTypeSelectionWidget::setLinkedConditionalState(int state)
-{
-  bool boolProp = (state == Qt::Checked);
-  fadeWidget(this, boolProp);
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void PhaseTypeSelectionWidget::fadeWidget(QWidget* widget, bool in)
-{
-
-  if (faderWidget)
-  {
-    faderWidget->close();
-  }
-  faderWidget = new FaderWidget(widget);
-  if(in)
-  {
-    setVisible(true);
-    faderWidget->setFadeIn();
-    connect(faderWidget, SIGNAL(animationComplete() ),
-            this, SLOT(show()));
-  }
-  else
-  {
-    faderWidget->setFadeOut();
-    connect(faderWidget, SIGNAL(animationComplete() ),
-            this, SLOT(hide()));
-  }
-  QColor color = DREAM3D::Defaults::BasicColor;
-  if(m_FilterParameter->getAdvanced()) { color = DREAM3D::Defaults::AdvancedColor; }
-  faderWidget->setStartColor(color);
-  faderWidget->start();
 }

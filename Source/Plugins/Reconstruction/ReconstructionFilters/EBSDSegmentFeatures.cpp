@@ -107,7 +107,7 @@ void EBSDSegmentFeatures::setupFilterParameters()
   parameters.push_back(FilterParameter::New("Crystal Structures", "CrystalStructuresArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getCrystalStructuresArrayPath(), true, ""));
   parameters.push_back(FilterParameter::New("Quats", "QuatsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getQuatsArrayPath(), true, ""));
   QStringList linkedProps("GoodVoxelsArrayPath");
-  parameters.push_back(FilterParameter::NewConditional("Use GoodVoxels Array", "UseGoodVoxels", FilterParameterWidgetType::LinkedBooleanWidget, getUseGoodVoxels(), false, linkedProps));
+  parameters.push_back(LinkedBooleanFilterParameter::New("Use GoodVoxels Array", "UseGoodVoxels", getUseGoodVoxels(), linkedProps, false));
   parameters.push_back(FilterParameter::New("GoodVoxels", "GoodVoxelsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getGoodVoxelsArrayPath(), false, ""));
 
   parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));

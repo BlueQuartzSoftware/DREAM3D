@@ -653,6 +653,12 @@ void ReadH5Ebsd::execute()
         }
         rot_Sample->execute();
       }
+      else
+      {
+        QString ss = QObject::tr("ReadH5Ebsd Error creating filter '%1' which is a subfilter called by ReadH5Ebsd. Filter was not created/executed. Please notify the developers.").arg(filtName);
+        setErrorCondition(-109870);
+        notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+      }
     }
 
     if(m_EulerTransformation.angle > 0)
@@ -705,6 +711,12 @@ void ReadH5Ebsd::execute()
           notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
         }
         rot_Euler->execute();
+      }
+      else
+      {
+        QString ss = QObject::tr("ReadH5Ebsd Error creating filter '%1' which is a subfilter called by ReadH5Ebsd. Filter was not created/executed. Please notify the developers.").arg(filtName);
+        setErrorCondition(-109870);
+        notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
       }
     }
 

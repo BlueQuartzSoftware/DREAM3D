@@ -43,18 +43,21 @@
 
 #include "QtSupport/FaderWidget.h"
 
-#include "DREAM3DLib/Common/AbstractFilter.h"
 
 #include "DREAM3DWidgetsLib/DREAM3DWidgetsLib.h"
+#include "DREAM3DWidgetsLib/FilterParameterWidgets/FilterParameterWidget.h"
+
 #include "DREAM3DWidgetsLib/ui_ChoiceWidget.h"
 
+class AbstractFilter;
+class FilterParameter;
 
 /**
 * @brief
 * @author
 * @version
 */
-class DREAM3DWidgetsLib_EXPORT ChoiceWidget : public QWidget, private Ui::ChoiceWidget
+class DREAM3DWidgetsLib_EXPORT ChoiceWidget : public FilterParameterWidget, private Ui::ChoiceWidget
 {
     Q_OBJECT
 
@@ -74,25 +77,26 @@ class DREAM3DWidgetsLib_EXPORT ChoiceWidget : public QWidget, private Ui::Choice
     */
     void setupGui();
 
+    int getCurrentIndex();
+
 
   public slots:
     void widgetChanged(int index);
     void filterNeedsInputParameters(AbstractFilter* filter); // When the filter is ready for us to update its input parameter(s) that we are responsible for
     void beforePreflight(); // Called just before the "dataCheck()" is called
     void afterPreflight(); // Called just after the dataCheck() is called.
-    void setLinkedConditionalState(int state);
-    void fadeWidget(QWidget* widget, bool in);
+
 
 
   signals:
     void errorSettingFilterParameter(const QString& msg);
     void parametersChanged();
+    void conditionalPropertyChanged(int);
 
   private:
-    AbstractFilter*   m_Filter;
-    FilterParameter*  m_FilterParameter;
+
     bool m_DidCausePreflight;
-    QPointer<FaderWidget> faderWidget;
+
 
     ChoiceWidget(const ChoiceWidget&); // Copy Constructor Not Implemented
     void operator=(const ChoiceWidget&); // Operator '=' Not Implemented

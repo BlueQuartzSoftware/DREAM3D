@@ -178,9 +178,9 @@ void FindFeatureCentroids::find_centroids()
   float yRes = m->getYRes();
   float zRes = m->getZRes();
 
-  float xSize = float(xPoints)*xRes;
-  float ySize = float(yPoints)*yRes;
-  float zSize = float(zPoints)*zRes;
+//  float xSize = float(xPoints)*xRes;
+//  float ySize = float(yPoints)*yRes;
+//  float zSize = float(zPoints)*zRes;
 
   // Initialize every element to 0.0
   for (size_t i = 0; i < numfeatures * 5; i++)

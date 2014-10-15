@@ -51,6 +51,7 @@
 #include "QtSupport/DREAM3DPluginFrame.h"
 
 #include "DREAM3DWidgetsLib/Widgets/PipelineFilterWidget.h"
+#include "DREAM3DWidgetsLib/FilterParameterWidgets/FilterParameterWidget.h"
 
 
 #include "ui_ImportImagesWidget.h"
@@ -69,7 +70,7 @@ class ImportImageStack;
  * @date Jan 30, 2011
  * @version 1.0
  */
-class ImportImagesWidget : public QWidget, private Ui::ImportImagesWidget
+class ImportImagesWidget : public FilterParameterWidget, private Ui::ImportImagesWidget
 {
     Q_OBJECT
 
@@ -88,6 +89,10 @@ class ImportImagesWidget : public QWidget, private Ui::ImportImagesWidget
      * @brief Initializes some of the GUI elements with selections or other GUI related items
      */
     virtual void setupGui();
+
+    void setFilter(AbstractFilter *value);
+    AbstractFilter* getFilter() const;
+
 
   public slots:
     void widgetChanged(const QString& msg);
@@ -182,8 +187,7 @@ class ImportImagesWidget : public QWidget, private Ui::ImportImagesWidget
 
 
   private:
-    ImportImageStack*               m_Filter;
-    FilterParameter*            m_FilterParameter;
+    ImportImageStack*           m_Filter;
     QList<QWidget*>             m_WidgetList;
     QButtonGroup*               m_StackingGroup;
     QButtonGroup*               m_OriginGroup;

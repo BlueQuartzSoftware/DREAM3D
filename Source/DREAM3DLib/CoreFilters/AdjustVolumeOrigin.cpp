@@ -123,12 +123,12 @@ void AdjustVolumeOrigin::setupFilterParameters()
   FilterParameterVector parameters;
   parameters.push_back(FilterParameter::New("Origin", "Origin", FilterParameterWidgetType::FloatVec3Widget, getOrigin(), false, "Microns"));
   QStringList linkedProps("DataContainerName");
-  parameters.push_back(FilterParameter::NewConditional("Apply to Voxel Volume", "ApplyToVoxelVolume", FilterParameterWidgetType::LinkedBooleanWidget, getApplyToVoxelVolume(), true, linkedProps));
+  parameters.push_back(LinkedBooleanFilterParameter::New("Apply to Voxel Volume", "ApplyToVoxelVolume", getApplyToVoxelVolume(), linkedProps, true));
   parameters.push_back(FilterParameter::New("Data Container To Apply To", "DataContainerName", FilterParameterWidgetType::DataContainerSelectionWidget, getDataContainerName(), true));
 
   linkedProps.clear();
   linkedProps << "SurfaceDataContainerName";
-  parameters.push_back(FilterParameter::NewConditional("Apply to Surface Mesh", "ApplyToSurfaceMesh", FilterParameterWidgetType::LinkedBooleanWidget, getApplyToSurfaceMesh(), true, linkedProps));
+  parameters.push_back(LinkedBooleanFilterParameter::New("Apply to Surface Mesh", "ApplyToSurfaceMesh", getApplyToSurfaceMesh(), linkedProps, true));
   parameters.push_back(FilterParameter::New("Surface Data Container To Apply To", "SurfaceDataContainerName", FilterParameterWidgetType::DataContainerSelectionWidget, getSurfaceDataContainerName(), true));
 
   setFilterParameters(parameters);

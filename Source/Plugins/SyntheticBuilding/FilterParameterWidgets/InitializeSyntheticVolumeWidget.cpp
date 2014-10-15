@@ -80,9 +80,7 @@ QString InitializeSyntheticVolumeWidget::m_OpenDialogLastDirectory = "";
 //
 // -----------------------------------------------------------------------------
 InitializeSyntheticVolumeWidget::InitializeSyntheticVolumeWidget(FilterParameter* parameter, AbstractFilter* filter, QWidget* parent) :
-  QWidget(parent),
-  m_FilterParameter(parameter),
-  m_Version4Warning(false),
+  FilterParameterWidget(parameter, filter, parent),  m_Version4Warning(false),
   m_DidCausePreflight(false),
   m_NewFileLoaded(false)
 {
@@ -105,6 +103,24 @@ InitializeSyntheticVolumeWidget::~InitializeSyntheticVolumeWidget()
 {
 
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void InitializeSyntheticVolumeWidget::setFilter(AbstractFilter *value)
+{
+  m_Filter = dynamic_cast<InitializeSyntheticVolume*>(value);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AbstractFilter* InitializeSyntheticVolumeWidget::getFilter() const
+{
+  return m_Filter;
+}
+
+
 
 // -----------------------------------------------------------------------------
 //
@@ -355,14 +371,12 @@ void InitializeSyntheticVolumeWidget::filterNeedsInputParameters(AbstractFilter*
 {
   if (NULL == filter)
   {
-    QString ss = QObject::tr("Error Setting InitializeSyntheticVolumeWidget Gui values to Filter instance. Filter instance was NULL.").arg(m_FilterParameter->getPropertyName());
+    QString ss = QObject::tr("Error Setting InitializeSyntheticVolumeWidget Gui values to Filter instance. Filter instance was NULL.").arg(getFilterParameter()->getPropertyName());
     emit errorSettingFilterParameter(ss);
   }
 
-  InitializeSyntheticVolume* ebsdConverter = qobject_cast<InitializeSyntheticVolume*>(filter);
-  Q_ASSERT_X(NULL != ebsdConverter, "InitializeSyntheticVolumeWidget can ONLY be used with InitializeSyntheticVolume filter", __FILE__);
-
-
+  InitializeSyntheticVolume* filt = qobject_cast<InitializeSyntheticVolume*>(filter);
+  if(NULL == filt) Q_ASSERT_X(NULL != filt, "InitializeSyntheticVolumeWidget can ONLY be used with InitializeSyntheticVolume filter", __FILE__);
 }
 
 

@@ -57,6 +57,7 @@ FillBadData::FillBadData() :
   m_CellPhasesArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::Phases),
   m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
   m_FeatureIds(NULL),
+  m_ReplaceBadData(true),
   m_CellPhasesArrayName(DREAM3D::CellData::Phases),
   m_CellPhases(NULL)
 {
@@ -79,7 +80,8 @@ void FillBadData::setupFilterParameters()
   parameters.push_back(FilterParameter::New("Minimum Allowed Defect Size", "MinAllowedDefectSize", FilterParameterWidgetType::IntWidget, getMinAllowedDefectSize(), false, "Pixels"));
   QStringList linkedProps;
   linkedProps << "CellPhasesArrayPath";
-  parameters.push_back(FilterParameter::NewConditional("Store Defects As New Phase", "StoreAsNewPhase", FilterParameterWidgetType::LinkedBooleanWidget, getStoreAsNewPhase(), false, linkedProps));
+  parameters.push_back(LinkedBooleanFilterParameter::New("Store Defects As New Phase", "StoreAsNewPhase", getStoreAsNewPhase(), linkedProps, false));
+  parameters.push_back(FilterParameter::New("Replace Bad Data", "ReplaceBadData", FilterParameterWidgetType::BooleanWidget, getReplaceBadData(), false, ""));
 
   parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
   parameters.push_back(FilterParameter::New("FeatureIds", "FeatureIdsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeatureIdsArrayPath(), true, ""));
@@ -94,6 +96,7 @@ void FillBadData::readFilterParameters(AbstractFilterParametersReader* reader, i
   setCellPhasesArrayPath(reader->readDataArrayPath("CellPhasesArrayPath", getCellPhasesArrayPath() ) );
   setMinAllowedDefectSize( reader->readValue("MinAllowedDefectSize", getMinAllowedDefectSize()) );
   setStoreAsNewPhase( reader->readValue("StoreAsNewPhase", getStoreAsNewPhase()) );
+  setReplaceBadData( reader->readValue("ReplaceBadData", getReplaceBadData()) );
   reader->closeFilterGroup();
 }
 
@@ -107,6 +110,7 @@ int FillBadData::writeFilterParameters(AbstractFilterParametersWriter* writer, i
   DREAM3D_FILTER_WRITE_PARAMETER(CellPhasesArrayPath)
   DREAM3D_FILTER_WRITE_PARAMETER(MinAllowedDefectSize)
   DREAM3D_FILTER_WRITE_PARAMETER(StoreAsNewPhase)
+  DREAM3D_FILTER_WRITE_PARAMETER(ReplaceBadData)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
@@ -345,11 +349,18 @@ void FillBadData::execute()
       neighbor = m_Neighbors[j];
       if (featurename < 0 && neighbor != -1 && m_FeatureIds[neighbor] > 0)
       {
-        for(QList<QString>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
+        if(getReplaceBadData())
         {
-          QString name = *iter;
-          IDataArray::Pointer p = m->getAttributeMatrix(attrMatName)->getAttributeArray(*iter);
-          p->copyTuple(neighbor, j);
+          for(QList<QString>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
+          {
+            QString name = *iter;
+            IDataArray::Pointer p = m->getAttributeMatrix(attrMatName)->getAttributeArray(*iter);
+            p->copyTuple(neighbor, j);
+          }
+        }
+        else
+        {
+          m_FeatureIds[j] = m_FeatureIds[neighbor];
         }
       }
     }

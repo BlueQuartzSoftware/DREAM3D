@@ -46,9 +46,7 @@
 //
 // -----------------------------------------------------------------------------
 PreflightUpdatedValueWidget::PreflightUpdatedValueWidget(FilterParameter* parameter, AbstractFilter* filter, QWidget* parent) :
-  QWidget(parent),
-  m_Filter(filter),
-  m_FilterParameter(parameter)
+  FilterParameterWidget(parameter, filter, parent)
 {
   setupUi(this);
   setupGui();
@@ -67,32 +65,32 @@ void PreflightUpdatedValueWidget::setupGui()
 {
 
   // Catch when the filter is about to execute the preflight
-  connect(m_Filter, SIGNAL(preflightAboutToExecute()),
+  connect(getFilter(), SIGNAL(preflightAboutToExecute()),
           this, SLOT(beforePreflight()));
 
   // Catch when the filter is finished running the preflight
-  connect(m_Filter, SIGNAL(preflightExecuted()),
+  connect(getFilter(), SIGNAL(preflightExecuted()),
           this, SLOT(afterPreflight()));
 
   // Catch when the filter wants its values updated
-  connect(m_Filter, SIGNAL(updateFilterParameters(AbstractFilter*)),
+  connect(getFilter(), SIGNAL(updateFilterParameters(AbstractFilter*)),
           this, SLOT(filterNeedsInputParameters(AbstractFilter*)));
 
 
   blockSignals(true);
-  if (m_FilterParameter != NULL)
+  if (getFilterParameter() != NULL)
   {
-    QString units = m_FilterParameter->getUnits();
+    QString units = getFilterParameter()->getUnits();
     if(units.isEmpty() == false)
     {
-      label->setText(m_FilterParameter->getHumanLabel() + " (" + units + ")");
+      label->setText(getFilterParameter()->getHumanLabel() + " (" + units + ")");
     }
     else
     {
-      label->setText(m_FilterParameter->getHumanLabel() );
+      label->setText(getFilterParameter()->getHumanLabel() );
     }
 
-    QString str = m_Filter->property(PROPERTY_NAME_AS_CHAR).toString();
+    QString str = getFilter()->property(PROPERTY_NAME_AS_CHAR).toString();
     value->setText(str);
   }
   blockSignals(false);
@@ -119,54 +117,15 @@ void PreflightUpdatedValueWidget::beforePreflight()
 // -----------------------------------------------------------------------------
 void PreflightUpdatedValueWidget::afterPreflight()
 {
-  QVariant var = m_Filter->property(PROPERTY_NAME_AS_CHAR);
+  QVariant var = getFilter()->property(PROPERTY_NAME_AS_CHAR);
   if (var.isValid() )
   {
     value->setText(QString::number(var.toInt()));
   }
   else
   {
-    QString ss = QObject::tr("Error occurred getting Filter Parameter %1").arg(m_FilterParameter->getPropertyName());
+    QString ss = QObject::tr("Error occurred getting Filter Parameter %1").arg(getFilterParameter()->getPropertyName());
     emit errorSettingFilterParameter(ss);
     qDebug() << ss;
   }
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void PreflightUpdatedValueWidget::setLinkedConditionalState(int state)
-{
-  bool boolProp = (state == Qt::Checked);
-  fadeWidget(this, boolProp);
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void PreflightUpdatedValueWidget::fadeWidget(QWidget* widget, bool in)
-{
-
-  if (faderWidget)
-  {
-    faderWidget->close();
-  }
-  faderWidget = new FaderWidget(widget);
-  if(in)
-  {
-    setVisible(true);
-    faderWidget->setFadeIn();
-    connect(faderWidget, SIGNAL(animationComplete() ),
-            this, SLOT(show()));
-  }
-  else
-  {
-    faderWidget->setFadeOut();
-    connect(faderWidget, SIGNAL(animationComplete() ),
-            this, SLOT(hide()));
-  }
-  QColor color = DREAM3D::Defaults::BasicColor;
-  if(m_FilterParameter->getAdvanced()) { color = DREAM3D::Defaults::AdvancedColor; }
-  faderWidget->setStartColor(color);
-  faderWidget->start();
 }

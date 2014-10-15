@@ -73,11 +73,11 @@ void AddBadData::setupFilterParameters()
 {
   FilterParameterVector parameters;
   QStringList linkedProps("PoissonVolFraction");
-  parameters.push_back(FilterParameter::NewConditional("Add Random Noise", "PoissonNoise", FilterParameterWidgetType::LinkedBooleanWidget, getPoissonNoise(), false, linkedProps));
+  parameters.push_back(LinkedBooleanFilterParameter::New("Add Random Noise", "PoissonNoise", getPoissonNoise(), linkedProps, false));
   parameters.push_back(FilterParameter::New("Volume Fraction of Random Noise", "PoissonVolFraction", FilterParameterWidgetType::DoubleWidget, getPoissonVolFraction(), false));
   linkedProps.clear();
   linkedProps << "BoundaryVolFraction";
-  parameters.push_back(FilterParameter::NewConditional("Add Boundary Noise", "BoundaryNoise", FilterParameterWidgetType::LinkedBooleanWidget, getBoundaryNoise(), false, linkedProps));
+  parameters.push_back(LinkedBooleanFilterParameter::New("Add Boundary Noise", "BoundaryNoise", getBoundaryNoise(), linkedProps, false));
   parameters.push_back(FilterParameter::New("Volume Fraction of Boundary Noise", "BoundaryVolFraction", FilterParameterWidgetType::DoubleWidget, getBoundaryVolFraction(), false));
 
   parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));

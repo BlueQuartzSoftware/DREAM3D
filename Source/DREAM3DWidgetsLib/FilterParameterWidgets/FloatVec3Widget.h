@@ -47,6 +47,8 @@
 #include "DREAM3DLib/Common/AbstractFilter.h"
 
 #include "DREAM3DWidgetsLib/DREAM3DWidgetsLib.h"
+#include "DREAM3DWidgetsLib/FilterParameterWidgets/FilterParameterWidget.h"
+
 
 #include "DREAM3DWidgetsLib/ui_FloatVec3Widget.h"
 
@@ -56,7 +58,7 @@
 * @author
 * @version
 */
-class DREAM3DWidgetsLib_EXPORT FloatVec3Widget : public QWidget, private Ui::FloatVec3Widget
+class DREAM3DWidgetsLib_EXPORT FloatVec3Widget : public FilterParameterWidget, private Ui::FloatVec3Widget
 {
     Q_OBJECT
 
@@ -81,18 +83,16 @@ class DREAM3DWidgetsLib_EXPORT FloatVec3Widget : public QWidget, private Ui::Flo
     void filterNeedsInputParameters(AbstractFilter* filter); // When the filter is ready for us to update its input parameter(s) that we are responsible for
     void beforePreflight(); // Called just before the "dataCheck()" is called
     void afterPreflight(); // Called just after the dataCheck() is called.
-    void setLinkedConditionalState(int state);
-    void fadeWidget(QWidget* widget, bool in);
+
 
   signals:
     void errorSettingFilterParameter(const QString& msg);
     void parametersChanged();
 
   private:
-    AbstractFilter*   m_Filter;
-    FilterParameter*  m_FilterParameter;
+
     bool m_DidCausePreflight;
-    QPointer<FaderWidget> faderWidget;
+
 
     FloatVec3Widget(const FloatVec3Widget&); // Copy Constructor Not Implemented
     void operator=(const FloatVec3Widget&); // Operator '=' Not Implemented

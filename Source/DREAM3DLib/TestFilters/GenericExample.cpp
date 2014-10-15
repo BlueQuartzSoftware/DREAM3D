@@ -59,7 +59,9 @@ GenericExample::GenericExample() :
   m_DataContainerName(DREAM3D::Defaults::StatsGenerator),
   m_CreatedDataArray(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::EulerColor),
   m_Bool1(false),
-  m_Bool2(false)
+  m_Bool2(false),
+  m_AlgorithmSelection(0),
+  m_DistanceMetric(1)
 {
   m_Dimensions.x = 0;
   m_Dimensions.y = 0;
@@ -89,15 +91,6 @@ void GenericExample::setupFilterParameters()
   /* For String input use this code */
   parameters.push_back(FilterParameter::New("STL Output Prefix", "StlFilePrefix", FilterParameterWidgetType::StringWidget, getStlFilePrefix(), false));
 
-  /*  For an Integer use this code*/
-  parameters.push_back(FilterParameter::New("Max Iterations", "MaxIterations", FilterParameterWidgetType::IntWidget, getMaxIterations(), false));
-  /*  For a Floating point value use this code*/
-  parameters.push_back(FilterParameter::New("Misorientation Tolerance", "MisorientationTolerance", FilterParameterWidgetType::DoubleWidget, getMisorientationTolerance(), false));
-  /*   For an input file use this code*/
-  parameters.push_back(FileSystemFilterParameter::New("Input File", "InputFile", FilterParameterWidgetType::InputFileWidget, getInputFile(), false));
-  /*   For an input path use this code*/
-  parameters.push_back(FileSystemFilterParameter::New("Input Path", "InputPath", FilterParameterWidgetType::InputPathWidget, getInputPath(), false, "", ""));
-
   /*   For an output file use this code*/
   parameters.push_back(FileSystemFilterParameter::New("Output File", "OutputFile", FilterParameterWidgetType::OutputFileWidget, getOutputFile(), false));
   /*   For an output path use this code*/
@@ -125,31 +118,87 @@ void GenericExample::setupFilterParameters()
 
   /* Display a group of 3 text boxes to collect 3 integer values */
   parameters.push_back(FilterParameter::New("Dimensions", "Dimensions", FilterParameterWidgetType::IntVec3Widget, getDimensions(), false, "XYZ"));
-  /* Display a group of 3 text boxes to collect 3 float values */
-  parameters.push_back(FilterParameter::New("Origin", "Origin", FilterParameterWidgetType::FloatVec3Widget, getOrigin(), false, "XYZ"));
-
-  /* Display the AxisAngleWidget to collect Axis-Angle pairs from the user */
-  parameters.push_back(FilterParameter::New("Crystal Rotations", "CrystalSymmetryRotations", FilterParameterWidgetType::AxisAngleWidget, getCrystalSymmetryRotations(), false));
 
   parameters.push_back(FilterParameter::New("Feature Ids", "FeatureIdsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeatureIdsArrayPath(), false, ""));
 
-  parameters.push_back(FilterParameter::New("Attribute Matrix", "AttributeMatrixPath", FilterParameterWidgetType::AttributeMatrixSelectionWidget, getAttributeMatrixPath(), false, ""));
-
-  parameters.push_back(FilterParameter::New("Data Container", "DataContainerName", FilterParameterWidgetType::DataContainerSelectionWidget, getDataContainerName(), false, ""));
 
   {
     QStringList linkedProps;
     linkedProps << "Bool2";
-    parameters.push_back(FilterParameter::NewConditional("Bool1", "Bool1", FilterParameterWidgetType::LinkedBooleanWidget, getBool1(), false, linkedProps));
+    parameters.push_back(LinkedBooleanFilterParameter::New("Bool1", "Bool1", getBool1(), linkedProps, false));
   }
 
   {
     QStringList linkedProps;
-    linkedProps << "CreatedDataArray";
-    parameters.push_back(FilterParameter::NewConditional("Bool2", "Bool2", FilterParameterWidgetType::LinkedBooleanWidget, getBool2(), false, linkedProps));
+    linkedProps << "AttributeMatrixPath";
+    parameters.push_back(LinkedBooleanFilterParameter::New("Bool2", "Bool2", getBool2(), linkedProps, false));
+  }
+  parameters.push_back(FilterParameter::New("Attribute Matrix", "AttributeMatrixPath", FilterParameterWidgetType::AttributeMatrixSelectionWidget, getAttributeMatrixPath(), false, ""));
+
+
+  parameters.push_back(FilterParameter::New("Linked Combo Box Example (1)", "", FilterParameterWidgetType::SeparatorWidget, "", false));
+  {
+    LinkedChoicesFilterParameter::Pointer parameter = LinkedChoicesFilterParameter::New();
+    parameter->setHumanLabel("Select Distance Metric");
+    parameter->setPropertyName("DistanceMetric");
+    parameter->setWidgetType(FilterParameterWidgetType::ChoiceWidget);
+    parameter->setDefaultValue(getDistanceMetric()); // Just set the first index
+
+    QVector<QString> choices;
+    choices.push_back("Alt Choice 0");
+    choices.push_back("Alt Choice 1");
+    choices.push_back("Alt Choice 2");
+    parameter->setChoices(choices);
+    QStringList linkedProps;
+    linkedProps << "MaxIterations" << "MisorientationTolerance" << "InputFile" << "InputPath";
+    parameter->setLinkedProperties(linkedProps);
+    parameter->setEditable(false);
+    parameters.push_back(parameter);
+
+    /*  For an Integer use this code*/
+    parameters.push_back(FilterParameter::New("Max Iterations", "MaxIterations", FilterParameterWidgetType::IntWidget, getMaxIterations(), false, "", 0));
+    /*  For a Floating point value use this code*/
+    parameters.push_back(FilterParameter::New("Misorientation Tolerance", "MisorientationTolerance", FilterParameterWidgetType::DoubleWidget, getMisorientationTolerance(), false, "", 1));
+    /*   For an input file use this code*/
+    parameters.push_back(FileSystemFilterParameter::New("Input File", "InputFile", FilterParameterWidgetType::InputFileWidget, getInputFile(), false, "", "", "", 1));
+    /*   For an input path use this code*/
+    parameters.push_back(FileSystemFilterParameter::New("Input Path", "InputPath", FilterParameterWidgetType::InputPathWidget, getInputPath(), false, "", "", "", 2));
   }
 
-  parameters.push_back(FilterParameter::New("CreatedDataArray", "CreatedDataArray", FilterParameterWidgetType::DataArrayCreationWidget, getCreatedDataArray(), false, ""));
+
+
+  parameters.push_back(FilterParameter::New("Linked Combo Box Example (2)", "", FilterParameterWidgetType::SeparatorWidget, "", false));
+
+  /*   For presenting a set of choices to the user use this code*/
+  {
+    LinkedChoicesFilterParameter::Pointer parameter = LinkedChoicesFilterParameter::New();
+    parameter->setHumanLabel("Select Algorithm");
+    parameter->setPropertyName("AlgorithmSelection");
+    parameter->setWidgetType(FilterParameterWidgetType::ChoiceWidget);
+    parameter->setDefaultValue(getAlgorithmSelection()); // Just set the first index
+
+    QVector<QString> choices;
+    choices.push_back("Choice 0");
+    choices.push_back("Choice 1");
+    choices.push_back("Choice 2");
+    parameter->setChoices(choices);
+    QStringList linkedProps;
+    linkedProps << "CreatedDataArray" << "Origin" << "CrystalSymmetryRotations" << "DataContainerName";
+    parameter->setLinkedProperties(linkedProps);
+    parameter->setEditable(false);
+    parameters.push_back(parameter);
+
+
+    parameters.push_back(FilterParameter::New("Created Data Array", "CreatedDataArray", FilterParameterWidgetType::DataArrayCreationWidget, getCreatedDataArray(), false, "", 0));
+    /* Display a group of 3 text boxes to collect 3 float values */
+    parameters.push_back(FilterParameter::New("Origin", "Origin", FilterParameterWidgetType::FloatVec3Widget, getOrigin(), false, "", 1));
+
+    /* Display the AxisAngleWidget to collect Axis-Angle pairs from the user */
+    parameters.push_back(FilterParameter::New("Crystal Rotations", "CrystalSymmetryRotations", FilterParameterWidgetType::AxisAngleWidget, getCrystalSymmetryRotations(), false, "", 2));
+
+    parameters.push_back(FilterParameter::New("Data Container", "DataContainerName", FilterParameterWidgetType::DataContainerSelectionWidget, getDataContainerName(), false, "", 2));
+  }
+
 
   setFilterParameters(parameters);
 }
@@ -185,24 +234,24 @@ int GenericExample::writeFilterParameters(AbstractFilterParametersWriter* writer
   writer->openFilterGroup(this, index);
 
   DREAM3D_FILTER_WRITE_PARAMETER(FeatureIdsArrayPath)
-  /* Place code that will write the inputs values into a file. reference the
-   AbstractFilterParametersWriter class for the proper API to use. */
-  DREAM3D_FILTER_WRITE_PARAMETER(StlFilePrefix)
-  DREAM3D_FILTER_WRITE_PARAMETER(MaxIterations)
-  DREAM3D_FILTER_WRITE_PARAMETER(MisorientationTolerance)
-  DREAM3D_FILTER_WRITE_PARAMETER(InputFile)
-  DREAM3D_FILTER_WRITE_PARAMETER(InputPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(OutputFile)
-  DREAM3D_FILTER_WRITE_PARAMETER(OutputPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(WriteAlignmentShifts)
-  DREAM3D_FILTER_WRITE_PARAMETER(ConversionType)
-  DREAM3D_FILTER_WRITE_PARAMETER(Dimensions)
-  DREAM3D_FILTER_WRITE_PARAMETER(Origin)
-  DREAM3D_FILTER_WRITE_PARAMETER(CrystalSymmetryRotations)
+      /* Place code that will write the inputs values into a file. reference the
+           AbstractFilterParametersWriter class for the proper API to use. */
+      DREAM3D_FILTER_WRITE_PARAMETER(StlFilePrefix)
+      DREAM3D_FILTER_WRITE_PARAMETER(MaxIterations)
+      DREAM3D_FILTER_WRITE_PARAMETER(MisorientationTolerance)
+      DREAM3D_FILTER_WRITE_PARAMETER(InputFile)
+      DREAM3D_FILTER_WRITE_PARAMETER(InputPath)
+      DREAM3D_FILTER_WRITE_PARAMETER(OutputFile)
+      DREAM3D_FILTER_WRITE_PARAMETER(OutputPath)
+      DREAM3D_FILTER_WRITE_PARAMETER(WriteAlignmentShifts)
+      DREAM3D_FILTER_WRITE_PARAMETER(ConversionType)
+      DREAM3D_FILTER_WRITE_PARAMETER(Dimensions)
+      DREAM3D_FILTER_WRITE_PARAMETER(Origin)
+      DREAM3D_FILTER_WRITE_PARAMETER(CrystalSymmetryRotations)
 
 
 
-  writer->closeFilterGroup();
+      writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
 

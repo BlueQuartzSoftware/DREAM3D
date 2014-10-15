@@ -57,6 +57,7 @@ FindSchmids::FindSchmids() :
   m_PhisArrayName("Schmid_Phis"),
   m_LambdasArrayName("Schmid_Lambdas"),
   m_StoreAngleComponents(false),
+  m_OverrideSystem(false),
   m_Schmids(NULL),
   m_Phis(NULL),
   m_Lambdas(NULL),
@@ -72,6 +73,15 @@ FindSchmids::FindSchmids() :
   m_LoadingDirection.x = 1.0f;
   m_LoadingDirection.y = 1.0f;
   m_LoadingDirection.z = 1.0f;
+
+  m_SlipPlane.x = 0.0f;
+  m_SlipPlane.y = 0.0f;
+  m_SlipPlane.z = 1.0f;
+
+  m_SlipDirection.x = 1.0f;
+  m_SlipDirection.y = 0.0f;
+  m_SlipDirection.z = 0.0f;
+
   m_OrientationOps = OrientationOps::getOrientationOpsVector();
 
   setupFilterParameters();
@@ -94,7 +104,7 @@ void FindSchmids::setupFilterParameters()
   parameters.push_back(FilterParameter::New("Loading Direction", "LoadingDirection", FilterParameterWidgetType::FloatVec3Widget, getLoadingDirection(), false));
   QStringList linkedProps;
   linkedProps << "PhisArrayName" << "LambdasArrayName";
-  parameters.push_back(FilterParameter::NewConditional("Store Angle Components of Schmid Factor", "StoreAngleComponents", FilterParameterWidgetType::LinkedBooleanWidget, getStoreAngleComponents(), false, linkedProps));
+  parameters.push_back(LinkedBooleanFilterParameter::New("Store Angle Components of Schmid Factor", "StoreAngleComponents", getStoreAngleComponents(), linkedProps, false));
   parameters.push_back(FilterParameter::New("FeaturePhases", "FeaturePhasesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeaturePhasesArrayPath(), true, ""));
   parameters.push_back(FilterParameter::New("Crystal Structures", "CrystalStructuresArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getCrystalStructuresArrayPath(), true, ""));
   parameters.push_back(FilterParameter::New("AvgQuats", "AvgQuatsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getAvgQuatsArrayPath(), true, ""));
@@ -105,6 +115,12 @@ void FindSchmids::setupFilterParameters()
   parameters.push_back(FilterParameter::New("Poles", "PolesArrayName", FilterParameterWidgetType::StringWidget, getPolesArrayName(), true, ""));
   parameters.push_back(FilterParameter::New("Phis", "PhisArrayName", FilterParameterWidgetType::StringWidget, getPhisArrayName(), true, ""));
   parameters.push_back(FilterParameter::New("Lambdas", "LambdasArrayName", FilterParameterWidgetType::StringWidget, getLambdasArrayName(), true, ""));
+
+  QStringList linkedProps2;
+  linkedProps2 << "SlipPlane" << "SlipDirection";
+  parameters.push_back(LinkedBooleanFilterParameter::New("Override Default Slip System", "OverrideSystem", getOverrideSystem(), linkedProps2, false));
+  parameters.push_back(FilterParameter::New("Slip Plane", "SlipPlane", FilterParameterWidgetType::FloatVec3Widget, getSlipPlane(), false, ""));
+  parameters.push_back(FilterParameter::New("Slip Direction", "SlipDirection", FilterParameterWidgetType::FloatVec3Widget, getSlipDirection(), false, ""));
   setFilterParameters(parameters);
 }
 
@@ -125,6 +141,9 @@ void FindSchmids::readFilterParameters(AbstractFilterParametersReader* reader, i
   setFeaturePhasesArrayPath(reader->readDataArrayPath("FeaturePhasesArrayPath", getFeaturePhasesArrayPath() ) );
   setLoadingDirection( reader->readFloatVec3("LoadingDirection", getLoadingDirection() ) );
   setStoreAngleComponents( reader->readValue("StoreAngleComponents", getStoreAngleComponents()) );
+  setOverrideSystem( reader->readValue("OverrideSystem", getOverrideSystem()) );
+  setSlipPlane( reader->readFloatVec3("SlipPlane", getSlipPlane() ) );
+  setSlipDirection( reader->readFloatVec3("SlipDirection", getSlipDirection() ) );
   reader->closeFilterGroup();
 }
 
@@ -145,6 +164,9 @@ int FindSchmids::writeFilterParameters(AbstractFilterParametersWriter* writer, i
   DREAM3D_FILTER_WRITE_PARAMETER(FeaturePhasesArrayPath)
   DREAM3D_FILTER_WRITE_PARAMETER(LoadingDirection)
   DREAM3D_FILTER_WRITE_PARAMETER(StoreAngleComponents)
+  DREAM3D_FILTER_WRITE_PARAMETER(OverrideSystem)
+  DREAM3D_FILTER_WRITE_PARAMETER(SlipPlane)
+  DREAM3D_FILTER_WRITE_PARAMETER(SlipDirection)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
@@ -196,6 +218,19 @@ void FindSchmids::dataCheck()
     if( NULL != m_LambdasPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
     { m_Lambdas = m_LambdasPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   }
+
+  if(m_OverrideSystem)
+  {
+    //make sure direction lies in plane
+    float cosVec = m_SlipPlane.x * m_SlipDirection.x + m_SlipPlane.y * m_SlipDirection.y + m_SlipPlane.z * m_SlipDirection.z;
+    if( 0 != cosVec )
+    {
+      QString ss = QObject::tr("Slip Plane and Slip Direction must be normal");
+      notifyErrorMessage(getHumanLabel(), ss, -1001);
+      setErrorCondition(-1001);
+      return;
+    }
+  }
 }
 
 
@@ -238,6 +273,22 @@ void FindSchmids::execute()
   sampleLoading[2] = m_LoadingDirection.z;
   MatrixMath::Normalize3x1(sampleLoading);
 
+  float plane[3];
+  float direction[3];
+  if(m_OverrideSystem)
+  {
+    plane[0] = m_SlipPlane.x;
+    plane[1] = m_SlipPlane.y;
+    plane[2] = m_SlipPlane.z;
+    MatrixMath::Normalize3x1(plane);
+
+    direction[0] = m_SlipDirection.x;
+    direction[1] = m_SlipDirection.y;
+    direction[2] = m_SlipDirection.z;
+    MatrixMath::Normalize3x1(direction);
+  }
+
+
   for (size_t i = 1; i < totalFeatures; i++)
   {
     QuaternionMathF::Copy(avgQuats[i], q1);
@@ -248,7 +299,10 @@ void FindSchmids::execute()
     size_t xtal = m_CrystalStructures[m_FeaturePhases[i]];
     if(xtal < Ebsd::CrystalStructure::LaueGroupEnd)
     {
-      m_OrientationOps[xtal]->getSchmidFactorAndSS(crystalLoading, schmid, angleComps, ss);
+      if(!m_OverrideSystem)
+        m_OrientationOps[xtal]->getSchmidFactorAndSS(crystalLoading, schmid, angleComps, ss);
+      else
+        m_OrientationOps[xtal]->getSchmidFactorAndSS(crystalLoading, plane, direction, schmid, angleComps, ss);
 
       m_Schmids[i] = schmid;
       if(m_StoreAngleComponents == true)

@@ -9,11 +9,13 @@ Bad data refers to a **Cell** that has a _GrainId_ of *0*, which means the **Cel
 as a *bad* **Cell**. 
 
 If the bad data is _dilated_, the filter grows the bad data by one **Cell** (in the directions specified by the user) in an iterative sequence for a user defined number of
- iterations.  During the *dilate* process the _GrainId_ of any **Cell** neighboring a *bad* Cell** will be changed to *0*.  
+ iterations.  During the *dilate* process the _FeatureId_ of any **Cell** neighboring a *bad* Cell** will be changed to *0*.  
 
 If the bad data is _eroded_ option, the filter shrinks the bad data by one **Cell** (in the directions specified by the user) in an iterative sequence for a user defined number of
- iterations.  During the *erode* process the _GrainId_ of the *bad* **Cell** is changed from *0* to the _GrainId_ of the majority
- of its neighbors. If there is a tie between two _GrainIds_, then one of the *GrainIds*, chosen randomly, will be assigned to the *bad* **Cell**.
+ iterations.  During the *erode* process the _FeatureId_ of the *bad* **Cell** is changed from *0* to the _FeatureId_ of the majority
+ of its neighbors. If there is a tie between two _FeatureIds_, then one of the *FeatureIds*, chosen randomly, will be assigned to the *bad* **Cell**.
+
+If _Replace Bad Data_ is selected all attribute arrays will be replaced with their neighbor's value during erosion/dilation (instead of only _FeatureId_
 
 Goals a user might be trying to accomplish with this Filter are
 
@@ -41,6 +43,7 @@ Running the _erode-dilate_ operations in pairs can
 | Operation | Dilate or Erode |
 | Number of Iterations | The number of iterations to use for the filter |
 | Application Direction | The directions in which the operation is applied |
+| Replace Bad Data | boolean |
 
 ## Required DataContainers ##
 Voxel
@@ -49,7 +52,7 @@ Voxel
 
 | Type | Default Name | Description | Comment | Filters Known to Create Data |
 |------|--------------|-------------|---------|-----|
-| Cell | GrainIds | Ids (ints) that specify to which **Feature** each **Cell** belongs. | Values should be present from segmentation of experimental data or synthetic generation and cannot be determined by this filter. Not having these values will result in the filter to fail/not execute. | Segment Features (Misorientation, C-Axis Misorientation, Scalar) (Reconstruction), Read Dx File (IO), Read Ph File (IO), Pack Primary Phases (SyntheticBuilding), Insert Precipitate Phases (SyntheticBuilding), Establish Matrix Phase (SyntheticBuilding) |
+| Cell | FeatureIds | Ids (ints) that specify to which **Feature** each **Cell** belongs. | Values should be present from segmentation of experimental data or synthetic generation and cannot be determined by this filter. Not having these values will result in the filter to fail/not execute. | Segment Features (Misorientation, C-Axis Misorientation, Scalar) (Reconstruction), Read Dx File (IO), Read Ph File (IO), Pack Primary Phases (SyntheticBuilding), Insert Precipitate Phases (SyntheticBuilding), Establish Matrix Phase (SyntheticBuilding) |
 
 ## Created Arrays ##
 None

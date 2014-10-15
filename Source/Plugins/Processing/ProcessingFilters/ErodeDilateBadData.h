@@ -79,6 +79,8 @@ class ErodeDilateBadData : public AbstractFilter
     Q_PROPERTY(bool YDirOn READ getYDirOn WRITE setYDirOn)
     DREAM3D_FILTER_PARAMETER(bool, ZDirOn)
     Q_PROPERTY(bool ZDirOn READ getZDirOn WRITE setZDirOn)
+    DREAM3D_FILTER_PARAMETER(bool, ReplaceBadData)
+    Q_PROPERTY(bool ReplaceBadData READ getReplaceBadData WRITE setReplaceBadData)
 
     DREAM3D_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
     Q_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)

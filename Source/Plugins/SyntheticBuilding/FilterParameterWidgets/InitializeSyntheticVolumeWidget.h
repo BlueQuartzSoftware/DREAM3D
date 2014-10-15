@@ -43,9 +43,9 @@
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/FilterParameters/FilterParameter.h"
 
+#include "DREAM3DWidgetsLib/DREAM3DWidgetsLib.h"
+#include "DREAM3DWidgetsLib/FilterParameterWidgets/FilterParameterWidget.h"
 #include "DREAM3DWidgetsLib/Widgets/PipelineFilterWidget.h"
-
-
 
 #include "SyntheticBuilding/ui_InitializeSyntheticVolumeWidget.h"
 
@@ -56,7 +56,7 @@ class InitializeSyntheticVolume;
 /**
  * @brief The InitializeSyntheticVolumeWidget class
  */
-class InitializeSyntheticVolumeWidget : public QWidget, private Ui::InitializeSyntheticVolumeWidget
+class InitializeSyntheticVolumeWidget : public FilterParameterWidget, private Ui::InitializeSyntheticVolumeWidget
 {
     Q_OBJECT
 
@@ -68,6 +68,9 @@ class InitializeSyntheticVolumeWidget : public QWidget, private Ui::InitializeSy
      * @brief Initializes some of the GUI elements with selections or other GUI related items
      */
     virtual void setupGui();
+
+    void setFilter(AbstractFilter *value);
+    AbstractFilter* getFilter() const;
 
   public slots:
     //void widgetChanged(const QString& msg);
@@ -156,7 +159,6 @@ class InitializeSyntheticVolumeWidget : public QWidget, private Ui::InitializeSy
 
   private:
     InitializeSyntheticVolume*         m_Filter;
-    FilterParameter*                   m_FilterParameter;
     QList<QWidget*>                    m_WidgetList;
 
     bool                             m_Version4Warning;

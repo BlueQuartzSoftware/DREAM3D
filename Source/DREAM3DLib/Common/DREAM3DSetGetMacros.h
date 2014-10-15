@@ -302,6 +302,13 @@
   DREAM3D_GET_PROPERTY(type, prpty)
 
 
+#define DREAM3D_OVERLOAD_PROPERTY(type, prpty, overload)\
+  private:\
+   type m_##prpty;\
+   public:\
+   DREAM3D_SET_PROPERTY(overload, prpty)\
+   DREAM3D_GET_PROPERTY(overload, prpty)
+
 #define DREAM3D_BOOL_PROPERTY(prpty)\
   private:\
   bool m_##prpty;\

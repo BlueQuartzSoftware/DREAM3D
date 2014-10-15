@@ -46,6 +46,8 @@
 #include "DREAM3DLib/Common/AbstractFilter.h"
 
 #include "DREAM3DWidgetsLib/DREAM3DWidgetsLib.h"
+#include "DREAM3DWidgetsLib/FilterParameterWidgets/FilterParameterWidget.h"
+
 
 #include "DREAM3DWidgetsLib/ui_AttributeMatrixSelectionWidget.h"
 
@@ -55,7 +57,7 @@
 * @author
 * @version
 */
-class DREAM3DWidgetsLib_EXPORT AttributeMatrixSelectionWidget : public QWidget, private Ui::AttributeMatrixSelectionWidget
+class DREAM3DWidgetsLib_EXPORT AttributeMatrixSelectionWidget : public FilterParameterWidget, private Ui::AttributeMatrixSelectionWidget
 {
     Q_OBJECT
 
@@ -92,8 +94,7 @@ class DREAM3DWidgetsLib_EXPORT AttributeMatrixSelectionWidget : public QWidget, 
     void on_dataContainerList_currentIndexChanged(int index);
 
     void on_attributeMatrixList_currentIndexChanged(int index);
-    void setLinkedConditionalState(int state);
-    void fadeWidget(QWidget* widget, bool in);
+
 
   protected:
     void populateComboBoxes();
@@ -108,10 +109,9 @@ class DREAM3DWidgetsLib_EXPORT AttributeMatrixSelectionWidget : public QWidget, 
     void parametersChanged();
 
   private:
-    AbstractFilter*   m_Filter;
-    FilterParameter*  m_FilterParameter;
+
     bool m_DidCausePreflight;
-    QPointer<FaderWidget> faderWidget;
+
 
     DataContainerArrayProxy m_DcaProxy;
 

@@ -46,9 +46,7 @@
 //
 // -----------------------------------------------------------------------------
 DataContainerArrayProxyWidget::DataContainerArrayProxyWidget(FilterParameter* parameter, AbstractFilter* filter, QWidget* parent) :
-  QWidget(parent),
-  m_Filter(filter),
-  m_FilterParameter(NULL),
+  FilterParameterWidget(parameter, filter, parent),
   m_DidCausePreflight(false)
 {
 
@@ -62,9 +60,7 @@ DataContainerArrayProxyWidget::DataContainerArrayProxyWidget(FilterParameter* pa
 //
 // -----------------------------------------------------------------------------
 DataContainerArrayProxyWidget::DataContainerArrayProxyWidget(QWidget* parent) :
-  QWidget(parent),
-  m_Filter(NULL),
-  m_FilterParameter(NULL),
+  FilterParameterWidget(NULL, NULL, parent),
   m_DidCausePreflight(false)
 {
   setupUi(this);
@@ -81,16 +77,32 @@ DataContainerArrayProxyWidget::~DataContainerArrayProxyWidget()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void DataContainerArrayProxyWidget::setFilterParameter(FilterParameter *value)
+{
+  m_FilterParameter = dynamic_cast<DataContainerArrayProxyFilterParameter*>(value);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+FilterParameter* DataContainerArrayProxyWidget::getFilterParameter() const
+{
+  return m_FilterParameter;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void DataContainerArrayProxyWidget::setupGui()
 {
 
-  connect(m_Filter, SIGNAL(preflightAboutToExecute()),
+  connect(getFilter(), SIGNAL(preflightAboutToExecute()),
           this, SLOT(beforePreflight()));
 
-  connect(m_Filter, SIGNAL(preflightExecuted()),
+  connect(getFilter(), SIGNAL(preflightExecuted()),
           this, SLOT(afterPreflight()));
 
-  connect(m_Filter, SIGNAL(updateFilterParameters(AbstractFilter*)),
+  connect(getFilter(), SIGNAL(updateFilterParameters(AbstractFilter*)),
           this, SLOT(filterNeedsInputParameters(AbstractFilter*)));
 
 
@@ -104,16 +116,16 @@ void DataContainerArrayProxyWidget::setupGui()
   connect(dcaProxyView, SIGNAL(clicked(const QModelIndex&)),
           this, SLOT(itemActivated(const QModelIndex)));
 
-  if (m_FilterParameter != NULL)
+  if (getFilterParameter() != NULL)
   {
-    QString units = m_FilterParameter->getUnits();
+    QString units = getFilterParameter()->getUnits();
     if(units.isEmpty() == false)
     {
-      label->setText(m_FilterParameter->getHumanLabel() + " (" + units + ")");
+      label->setText(getFilterParameter()->getHumanLabel() + " (" + units + ")");
     }
     else
     {
-      label->setText(m_FilterParameter->getHumanLabel() );
+      label->setText(getFilterParameter()->getHumanLabel() );
     }
 
 
@@ -121,7 +133,7 @@ void DataContainerArrayProxyWidget::setupGui()
     // Proxy object at which point nothing is going to be put into the lists. But if the Filter was
     // initialized from a pipeline file then it might actually have a proxy so we need to do something
     // with that proxy?
-    m_DcaProxy = m_Filter->property(PROPERTY_NAME_AS_CHAR).value<DataContainerArrayProxy>();
+    m_DcaProxy = getFilter()->property(PROPERTY_NAME_AS_CHAR).value<DataContainerArrayProxy>();
     //m_DcaProxy.print("DataContainerArrayProxyWidget::setupGui()");
   }
 
@@ -153,16 +165,16 @@ void DataContainerArrayProxyWidget::filterNeedsInputParameters(AbstractFilter* f
   ok = filter->setProperty(PROPERTY_NAME_AS_CHAR, var);
   if(false == ok)
   {
-    FilterParameterWidgetsDialogs::ShowCouldNotSetFilterParameter(m_Filter, m_FilterParameter);
+    FilterParameterWidgetsDialogs::ShowCouldNotSetFilterParameter(getFilter(), getFilterParameter());
   }
 
-//  if(m_FilterParameter->isConditional() )
+//  if(getFilterParameter()->isConditional() )
 //  {
 //    var.setValue(conditionalCB->isChecked());
-//    ok = filter->setProperty(m_FilterParameter->getConditionalProperty().toLatin1().constData(), var);
+//    ok = filter->setProperty(getFilterParameter()->getConditionalProperty().toLatin1().constData(), var);
 //    if(false == ok)
 //    {
-//      FilterParameterWidgetsDialogs::ShowCouldNotSetConditionalFilterParameter(m_Filter, m_FilterParameter);
+//      FilterParameterWidgetsDialogs::ShowCouldNotSetConditionalFilterParameter(getFilter(), getFilterParameter());
 //    }
 //  }
 
@@ -475,7 +487,7 @@ void transferDataArrayFlags(const QString dc_name, const QString am_name, const 
 // -----------------------------------------------------------------------------
 void DataContainerArrayProxyWidget::updateProxyFromProxy(DataContainerArrayProxy& current, DataContainerArrayProxy& incoming)
 {
-  //  qDebug() << m_Filter->getNameOfClass() << " DataContainerArrayProxyWidget::mergeProxies";
+  //  qDebug() << getFilter()->getNameOfClass() << " DataContainerArrayProxyWidget::mergeProxies";
 
   // Loop over the current model and only worry about getting the flag for each proxy from the current and transfering
   // that flag to the incoming. This allows us to save the selections but also update the model later on with this new
@@ -526,10 +538,10 @@ void DataContainerArrayProxyWidget::beforePreflight()
 {
   if (m_DidCausePreflight == false)
   {
-    //  qDebug() << m_Filter->getNameOfClass() << " DataContainerArrayProxyWidget::beforePreflight()";
+    //  qDebug() << getFilter()->getNameOfClass() << " DataContainerArrayProxyWidget::beforePreflight()";
     // Get the DataContainerArray from the Filter instance. This will have what will become the choices for the user
     // to select from.
-    DataContainerArray::Pointer dca = m_Filter->getDataContainerArray();
+    DataContainerArray::Pointer dca = getFilter()->getDataContainerArray();
     DataContainerArrayProxy incomingProxy = DataContainerArrayProxy(dca.get() );
     incomingProxy.setAllFlags(m_FilterParameter->getDefaultFlagValue());
     //incomingProxy.print("BeforePreflight INCOMING");
@@ -551,44 +563,5 @@ void DataContainerArrayProxyWidget::beforePreflight()
 // -----------------------------------------------------------------------------
 void DataContainerArrayProxyWidget::afterPreflight()
 {
-  // qDebug() << m_Filter->getNameOfClass() << " DataContainerArrayProxyWidget::afterPreflight()";
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void DataContainerArrayProxyWidget::setLinkedConditionalState(int state)
-{
-  bool boolProp = (state == Qt::Checked);
-  fadeWidget(this, boolProp);
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void DataContainerArrayProxyWidget::fadeWidget(QWidget* widget, bool in)
-{
-
-  if (faderWidget)
-  {
-    faderWidget->close();
-  }
-  faderWidget = new FaderWidget(widget);
-  if(in)
-  {
-    setVisible(true);
-    faderWidget->setFadeIn();
-    connect(faderWidget, SIGNAL(animationComplete() ),
-            this, SLOT(show()));
-  }
-  else
-  {
-    faderWidget->setFadeOut();
-    connect(faderWidget, SIGNAL(animationComplete() ),
-            this, SLOT(hide()));
-  }
-  QColor color = DREAM3D::Defaults::BasicColor;
-  if(m_FilterParameter->getAdvanced()) { color = DREAM3D::Defaults::AdvancedColor; }
-  faderWidget->setStartColor(color);
-  faderWidget->start();
+  // qDebug() << getFilter()->getNameOfClass() << " DataContainerArrayProxyWidget::afterPreflight()";
 }

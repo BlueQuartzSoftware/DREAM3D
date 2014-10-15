@@ -139,6 +139,7 @@ class DREAM3DLib_EXPORT OrientationOps
     virtual void determineRodriguesVector(int choose, float& r1, float& r2, float& r3) = 0;
     virtual int getOdfBin(float r1, float r2, float r3) = 0;
     virtual void getSchmidFactorAndSS(float load[3], float& schmidfactor, float angleComps[2], int& slipsys) = 0;
+    virtual void getSchmidFactorAndSS(float load[3], float plane[3], float direction[3], float& schmidfactor, float angleComps[2], int& slipsys) = 0;
     virtual void getmPrime(QuatF& q1, QuatF& q2, float LD[3], float& mPrime) = 0;
     virtual void getF1(QuatF& q1, QuatF& q2, float LD[3], bool maxSF, float& F1) = 0;
     virtual void getF1spt(QuatF& q1, QuatF& q2, float LD[3], bool maxSF, float& F1spt) = 0;

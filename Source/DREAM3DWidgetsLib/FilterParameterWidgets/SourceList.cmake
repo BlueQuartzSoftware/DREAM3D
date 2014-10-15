@@ -30,6 +30,7 @@ set(DREAM3D_PARAMETER_WIDGETS
       PhaseTypeSelectionWidget
       VolumeDataContainerInfoWidget
       DataContainerReaderWidget
+      DynamicChoiceWidget
 #      CellArrayComparisonSelectionWidget
 #      FeatureArrayComparisonSelectionWidget
 #      EnsembleArrayComparisonSelectionWidget
@@ -66,19 +67,21 @@ endforeach()
 # Add some support files that still need MOC and UIC to be run on them
 set(DREAM3DWidgetsLib_ParameterWidgets_HDRS
   ${DREAM3DWidgetsLib_ParameterWidgets_HDRS}
+  ${DREAM3DWidgetsLib_SOURCE_DIR}/FilterParameterWidgets/FilterParameterWidget.h
   ${DREAM3DWidgetsLib_SOURCE_DIR}/FilterParameterWidgets/ComparisonSelectionTableModel.h
   ${DREAM3DWidgetsLib_SOURCE_DIR}/FilterParameterWidgets/ComparisonSelectionItemDelegate.h
   ${DREAM3DWidgetsLib_SOURCE_DIR}/FilterParameterWidgets/FilterParameterWidgetsDialogs.h
 )
 set(DREAM3DWidgetsLib_ParameterWidgets_SRCS
   ${DREAM3DWidgetsLib_ParameterWidgets_SRCS}
+  ${DREAM3DWidgetsLib_SOURCE_DIR}/FilterParameterWidgets/FilterParameterWidget.cpp
   ${DREAM3DWidgetsLib_SOURCE_DIR}/FilterParameterWidgets/ComparisonSelectionTableModel.cpp
   ${DREAM3DWidgetsLib_SOURCE_DIR}/FilterParameterWidgets/ComparisonSelectionItemDelegate.cpp
   ${DREAM3DWidgetsLib_SOURCE_DIR}/FilterParameterWidgets/FilterParameterWidgetsDialogs.cpp
 )
 set(DREAM3DWidgetsLib_ParameterWidgets_UIS
   ${DREAM3DWidgetsLib_ParameterWidgets_UIS}
-  )
+)
 
 
 

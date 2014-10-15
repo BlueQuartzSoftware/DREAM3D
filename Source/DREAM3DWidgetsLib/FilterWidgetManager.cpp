@@ -125,7 +125,6 @@ QWidget* FilterWidgetManager::createWidget(FilterParameter* parameter, AbstractF
   {
     return factory->createWidget(parameter, filter, NULL);
   }
-
   factory = m_Factories.value(FilterParameterWidgetType::UnknownWidget);
   QWidget* w = factory->createWidget(parameter, filter, NULL);
   return w;

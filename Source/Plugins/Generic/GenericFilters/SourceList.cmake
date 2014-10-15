@@ -20,6 +20,7 @@ FindFeatureCentroids
 FindFeaturePhases
 FindSurfaceFeatures
 GenerateVectorColors
+ConvertOrientations
 )
 
 

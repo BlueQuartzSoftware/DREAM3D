@@ -53,11 +53,10 @@ QString InputFileWidget::m_OpenDialogLastDirectory = "";
 //
 // -----------------------------------------------------------------------------
 InputFileWidget::InputFileWidget(FilterParameter* parameter, AbstractFilter* filter, QWidget* parent) :
-  QWidget(parent),
-  m_Filter(filter)
+  FilterParameterWidget(parameter, filter, parent)
 {
   m_FilterParameter = dynamic_cast<FileSystemFilterParameter*>(parameter);
-  Q_ASSERT_X(NULL != m_FilterParameter, "InputFileWidget", "Failed to dynamic_cast from FilterParameter to FileSystemFilterParameter");
+  Q_ASSERT_X(NULL != getFilterParameter(), "InputFileWidget", "Failed to dynamic_cast from FilterParameter to FileSystemFilterParameter");
   setupUi(this);
   setupGui();
   if ( m_OpenDialogLastDirectory.isEmpty() )
@@ -77,33 +76,49 @@ InputFileWidget::~InputFileWidget()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void InputFileWidget::setFilterParameter(FilterParameter *value)
+{
+  m_FilterParameter = dynamic_cast<FileSystemFilterParameter*>(value);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+FilterParameter* InputFileWidget::getFilterParameter() const
+{
+  return m_FilterParameter;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void InputFileWidget::setupGui()
 {
 
   // Catch when the filter is about to execute the preflight
-  connect(m_Filter, SIGNAL(preflightAboutToExecute()),
+  connect(getFilter(), SIGNAL(preflightAboutToExecute()),
           this, SLOT(beforePreflight()));
 
   // Catch when the filter is finished running the preflight
-  connect(m_Filter, SIGNAL(preflightExecuted()),
+  connect(getFilter(), SIGNAL(preflightExecuted()),
           this, SLOT(afterPreflight()));
 
   // Catch when the filter wants its values updated
-  connect(m_Filter, SIGNAL(updateFilterParameters(AbstractFilter*)),
+  connect(getFilter(), SIGNAL(updateFilterParameters(AbstractFilter*)),
           this, SLOT(filterNeedsInputParameters(AbstractFilter*)));
 
   // Put a file path completer to help out the user to select a valid file
-//  QFileCompleter* com = new QFileCompleter(this, false);
-//  value->setCompleter(com);
-//  QObject::connect( com, SIGNAL(activated(const QString&)),
-//                    this, SLOT(on_value_textChanged(const QString&)));
+  //  QFileCompleter* com = new QFileCompleter(this, false);
+  //  value->setCompleter(com);
+  //  QObject::connect( com, SIGNAL(activated(const QString&)),
+  //                    this, SLOT(on_value_textChanged(const QString&)));
 
   QFont inputFileFont;
   inputFileFont.setBold(true);
   inputFileFont.setItalic(true);
   inputFileFont.setWeight(75);
   inputFileFont.setStyleStrategy(QFont::PreferAntialias);
- // inputFileFont.setFamily(QString::fromUtf8("Times New Roman"));
+  // inputFileFont.setFamily(QString::fromUtf8("Times New Roman"));
 #if defined (Q_OS_MAC)
   inputFileFont.setPointSize(12);
 #elif defined (Q_OS_WIN)
@@ -115,18 +130,18 @@ void InputFileWidget::setupGui()
   value->setFont(inputFileFont);
 
   // See if we can get the default value from the filter instance
-  if (m_FilterParameter != NULL)
+  if (getFilterParameter() != NULL)
   {
-    QString units = m_FilterParameter->getUnits();
+    QString units = getFilterParameter()->getUnits();
     if(units.isEmpty() == false)
     {
-      selectBtn->setText(m_FilterParameter->getHumanLabel() + " (" + units + ") ...");
+      selectBtn->setText(getFilterParameter()->getHumanLabel() + " (" + units + ") ...");
     }
     else
     {
-      selectBtn->setText(m_FilterParameter->getHumanLabel()  + " ...");
+      selectBtn->setText(getFilterParameter()->getHumanLabel()  + " ...");
     }
-    QString currentPath = m_Filter->property(PROPERTY_NAME_AS_CHAR).toString();
+    QString currentPath = getFilter()->property(PROPERTY_NAME_AS_CHAR).toString();
     value->setText(currentPath);
   }
 
@@ -156,7 +171,7 @@ bool InputFileWidget::verifyPathExists(QString filePath, QFSDropLabel* lineEdit)
 // -----------------------------------------------------------------------------
 void InputFileWidget::on_value_editingFinished()
 {
-  filterNeedsInputParameters(m_Filter);
+  filterNeedsInputParameters(getFilter());
   emit parametersChanged(); // This should force the preflight to run because we are emitting a signal
 }
 
@@ -192,7 +207,8 @@ void InputFileWidget::on_value_fileDropped(const QString& text)
 // -----------------------------------------------------------------------------
 void InputFileWidget::on_selectBtn_clicked()
 {
-  QString currentPath = m_Filter->property(PROPERTY_NAME_AS_CHAR).toString();
+
+  QString currentPath = getFilter()->property(PROPERTY_NAME_AS_CHAR).toString();
   QString Ftype = m_FilterParameter->getFileType();
   QString ext = m_FilterParameter->getFileExtension();
   QString s = Ftype + QString(" Files (") + ext + QString(");;All Files(*.*)");
@@ -208,7 +224,7 @@ void InputFileWidget::on_selectBtn_clicked()
   QFileInfo fi(file);
   m_OpenDialogLastDirectory = fi.path();
   value->setText(file);
-//  filterNeedsInputParameters(m_Filter);
+  //  filterNeedsInputParameters(getFilter());
   emit parametersChanged(); // This should force the preflight to run because we are emitting a signal
 }
 
@@ -223,7 +239,7 @@ void InputFileWidget::filterNeedsInputParameters(AbstractFilter* filter)
   bool ok = filter->setProperty(PROPERTY_NAME_AS_CHAR, text);
   if(false == ok)
   {
-    FilterParameterWidgetsDialogs::ShowCouldNotSetFilterParameter(m_Filter, m_FilterParameter);
+    FilterParameterWidgetsDialogs::ShowCouldNotSetFilterParameter(getFilter(), getFilterParameter());
   }
 
 
@@ -243,43 +259,4 @@ void InputFileWidget::beforePreflight()
 void InputFileWidget::afterPreflight()
 {
 
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void InputFileWidget::setLinkedConditionalState(int state)
-{
-  bool boolProp = (state == Qt::Checked);
-  fadeWidget(this, boolProp);
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void InputFileWidget::fadeWidget(QWidget* widget, bool in)
-{
-
-  if (faderWidget)
-  {
-    faderWidget->close();
-  }
-  faderWidget = new FaderWidget(widget);
-  if(in)
-  {
-    setVisible(true);
-    faderWidget->setFadeIn();
-    connect(faderWidget, SIGNAL(animationComplete() ),
-            this, SLOT(show()));
-  }
-  else
-  {
-    faderWidget->setFadeOut();
-    connect(faderWidget, SIGNAL(animationComplete() ),
-            this, SLOT(hide()));
-  }
-  QColor color = DREAM3D::Defaults::BasicColor;
-  if(m_FilterParameter->getAdvanced()) { color = DREAM3D::Defaults::AdvancedColor; }
-  faderWidget->setStartColor(color);
-  faderWidget->start();
 }

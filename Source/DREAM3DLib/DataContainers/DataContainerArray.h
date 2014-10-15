@@ -166,7 +166,7 @@ class DREAM3DLib_EXPORT DataContainerArray : public QObject
      * @brief addDataContainerBundle
      * @param dataContainer
      */
-    void addDataContainerBundle(IDataContainerBundle::Pointer dataContainer);
+    void addDataContainerBundle(IDataContainerBundle::Pointer dataContainerBundle);
 
     /**
      * @brief removeDataContainerBundle

@@ -48,6 +48,8 @@
 #include "DREAM3DLib/Common/AbstractFilter.h"
 
 #include "DREAM3DWidgetsLib/DREAM3DWidgetsLib.h"
+#include "DREAM3DWidgetsLib/FilterParameterWidgets/FilterParameterWidget.h"
+
 
 #include "DREAM3DWidgetsLib/ui_DataContainerReaderWidget.h"
 
@@ -62,7 +64,7 @@ class QFSDropLabel;
 * @author
 * @version
 */
-class DREAM3DWidgetsLib_EXPORT DataContainerReaderWidget : public QWidget, private Ui::DataContainerReaderWidget
+class DREAM3DWidgetsLib_EXPORT DataContainerReaderWidget : public FilterParameterWidget, private Ui::DataContainerReaderWidget
 {
     Q_OBJECT
 
@@ -98,13 +100,18 @@ class DREAM3DWidgetsLib_EXPORT DataContainerReaderWidget : public QWidget, priva
      */
     bool verifyPathExists(QString filePath, QFSDropLabel *lineEdit);
 
+    void setFilter(AbstractFilter *value);
+    AbstractFilter* getFilter() const;
+
+    void setFilterParameter(FilterParameter *value);
+    FilterParameter* getFilterParameter() const;
+
   public slots:
     void beforePreflight();
     void afterPreflight();
     void filterNeedsInputParameters(AbstractFilter* filter);
     void itemActivated(const QModelIndex& index);
-    void setLinkedConditionalState(int state);
-    void fadeWidget(QWidget* widget, bool in);
+
 
     void on_filePath_fileDropped(const QString& text);
     void on_selectBtn_clicked();
@@ -129,7 +136,7 @@ class DREAM3DWidgetsLib_EXPORT DataContainerReaderWidget : public QWidget, priva
     DataContainerReaderFilterParameter*  m_FilterParameter;
     DataContainerArrayProxy m_DcaProxy;
     bool m_DidCausePreflight;
-    QPointer<FaderWidget> faderWidget;
+
     static QString    m_OpenDialogLastDirectory;
 
 

@@ -48,6 +48,8 @@
 #include "DREAM3DLib/Common/AbstractFilter.h"
 
 #include "DREAM3DWidgetsLib/DREAM3DWidgetsLib.h"
+#include "DREAM3DWidgetsLib/FilterParameterWidgets/FilterParameterWidget.h"
+
 
 
 #include "ComparisonSelectionTableModel.h"
@@ -61,7 +63,7 @@
  * @date Jan 30, 2011
  * @version 1.0
  */
-class ComparisonSelectionWidget : public QWidget, private Ui::ComparisonSelectionWidget
+class ComparisonSelectionWidget : public FilterParameterWidget, private Ui::ComparisonSelectionWidget
 {
 
     Q_OBJECT
@@ -93,8 +95,7 @@ class ComparisonSelectionWidget : public QWidget, private Ui::ComparisonSelectio
     void beforePreflight();
     void afterPreflight();
     void filterNeedsInputParameters(AbstractFilter* filter);
-    void setLinkedConditionalState(int state);
-    void fadeWidget(QWidget* widget, bool in);
+
 
   signals:
     void errorSettingFilterParameter(const QString& msg);
@@ -130,11 +131,10 @@ class ComparisonSelectionWidget : public QWidget, private Ui::ComparisonSelectio
     void tableDataWasChanged(const QModelIndex& topLeft, const QModelIndex& bottomRight);
 
   private:
-    AbstractFilter*   m_Filter;
-    FilterParameter*  m_FilterParameter;
+
     DataContainerArrayProxy m_DcaProxy;
     bool m_DidCausePreflight;
-    QPointer<FaderWidget> faderWidget;
+
 
     ComparisonSelectionTableModel*    m_ComparisonSelectionTableModel;
 
