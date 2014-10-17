@@ -789,8 +789,8 @@ void StatsGenODFWidget::on_loadODFTextureBtn_clicked()
       e1s[i] = data->getComponent(i, 0);
       e2s[i] = data->getComponent(i, 1);
       e3s[i] = data->getComponent(i, 2);
-      weights[i] = 1.0;
-      sigmas[i] = 0.0;
+      weights[i] = data->getComponent(i, 3);
+      sigmas[i] = data->getComponent(i, 4);
     }
 
   }
