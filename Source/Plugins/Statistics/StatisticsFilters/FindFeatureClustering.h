@@ -68,6 +68,16 @@ class FindFeatureClustering : public AbstractFilter
 
     DREAM3D_INSTANCE_STRING_PROPERTY(ErrorOutputFile)
 
+    DREAM3D_FILTER_PARAMETER(int, NumberOfBins)
+    Q_PROPERTY(int NumberOfBins READ getNumberOfBins WRITE setNumberOfBins)
+
+    DREAM3D_FILTER_PARAMETER(DataArrayPath, SelectedFeatureArrayPath)
+    Q_PROPERTY(DataArrayPath SelectedFeatureArrayPath READ getSelectedFeatureArrayPath WRITE setSelectedFeatureArrayPath)
+
+    DREAM3D_FILTER_PARAMETER(DataArrayPath, CellEnsembleAttributeMatrixName)
+    Q_PROPERTY(DataArrayPath CellEnsembleAttributeMatrixName READ getCellEnsembleAttributeMatrixName WRITE setCellEnsembleAttributeMatrixName)
+
+
     DREAM3D_FILTER_PARAMETER(DataArrayPath, EquivalentDiametersArrayPath)
     Q_PROPERTY(DataArrayPath EquivalentDiametersArrayPath READ getEquivalentDiametersArrayPath WRITE setEquivalentDiametersArrayPath)
 
@@ -79,6 +89,9 @@ class FindFeatureClustering : public AbstractFilter
 
     DREAM3D_FILTER_PARAMETER(QString, ClusteringListArrayName)
     Q_PROPERTY(QString ClusteringListArrayName READ getClusteringListArrayName WRITE setClusteringListArrayName)
+
+    DREAM3D_FILTER_PARAMETER(QString, NewEnsembleArrayArrayName)
+    Q_PROPERTY(QString NewEnsembleArrayArrayName READ getNewEnsembleArrayArrayName WRITE setNewEnsembleArrayArrayName)
 
     virtual const QString getCompiledLibraryName();
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
@@ -118,11 +131,13 @@ class FindFeatureClustering : public AbstractFilter
     FindFeatureClustering();
 
     void find_clustering();
+    void findRadialDistFunc();
 
   private:
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, FeaturePhases)
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, Centroids)
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, EquivalentDiameters)
+    DEFINE_CREATED_DATAARRAY_VARIABLE(int32_t, NewEnsembleArray)
     NeighborList<float>::WeakPointer m_ClusteringList;
 
     void dataCheck();
