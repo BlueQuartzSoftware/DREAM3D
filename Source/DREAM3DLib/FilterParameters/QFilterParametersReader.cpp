@@ -730,6 +730,42 @@ FloatVec3_t QFilterParametersReader::readFloatVec3(const QString name, FloatVec3
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+FloatVec4_t QFilterParametersReader::readFloatVec4(const QString name, FloatVec4_t defaultValue)
+{
+  BOOST_ASSERT(m_Prefs != NULL);
+  bool ok = false;
+  FloatVec4_t v4;
+  v4.a = 0.0f;
+  v4.b = 0.0f;
+  v4.c = 0.0f;
+  v4.d = 0.0f;
+  int count = m_Prefs->beginReadArray(name);
+  if (count == 0) { m_Prefs->endArray(); return defaultValue;}
+  m_Prefs->setArrayIndex(0);
+  v4.a = m_Prefs->value("a", v4.a).toFloat(&ok);
+  if(!ok) { v4.a = defaultValue.a; }
+
+  m_Prefs->setArrayIndex(1);
+  v4.b = m_Prefs->value("b", v4.b).toFloat(&ok);
+  if(!ok) { v4.b = defaultValue.b; }
+
+  m_Prefs->setArrayIndex(2);
+  v4.c = m_Prefs->value("c", v4.c).toFloat(&ok);
+  if(!ok) { v4.c = defaultValue.c; }
+
+  m_Prefs->setArrayIndex(3);
+  v4.d = m_Prefs->value("d", v4.d).toFloat(&ok);
+  if(!ok) { v4.d = defaultValue.d; }
+
+
+  m_Prefs->endArray();
+
+  return v4;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 ComparisonInput_t QFilterParametersReader::readComparisonInput(const QString name, ComparisonInput_t defaultValue, int arrayIndex)
 {
   BOOST_ASSERT(m_Prefs != NULL);

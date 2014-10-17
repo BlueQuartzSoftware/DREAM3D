@@ -450,9 +450,9 @@ void ConvertOrientations::dataCheck()
     return;
   }
 
-  if(3 == getInputType() && 0 == getOutputType())
+  if(0 == getInputType() && 3 == getOutputType() || 3 == getInputType() && 0 == getOutputType())
   {
-    QString ss = QObject::tr("Direct conversion from Axis Angle to Euler Angle is currently not implemented");
+    QString ss = QObject::tr("Direct conversion between Axis Angle and Euler Angle is currently not implemented");
     notifyErrorMessage(getHumanLabel(), ss, -1001);
     setErrorCondition(-1001);
     return;

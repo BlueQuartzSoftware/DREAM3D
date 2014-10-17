@@ -480,6 +480,30 @@ int QFilterParametersWriter::writeValue(const QString name, FloatVec3_t v)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+int QFilterParametersWriter::writeValue(const QString name, FloatVec4_t v)
+{
+  BOOST_ASSERT(m_Prefs != NULL);
+  int err = 0;
+  m_Prefs->beginWriteArray(name, 3);
+  m_Prefs->setArrayIndex(0);
+  m_Prefs->setValue("a", static_cast<double>(v.a));
+
+  m_Prefs->setArrayIndex(1);
+  m_Prefs->setValue("b", static_cast<double>(v.b));
+
+  m_Prefs->setArrayIndex(2);
+  m_Prefs->setValue("c", static_cast<double>(v.c));
+
+  m_Prefs->setArrayIndex(3);
+  m_Prefs->setValue("d", static_cast<double>(v.d));
+
+  m_Prefs->endArray();
+  return err;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 int QFilterParametersWriter::writeValue(const QString name, ComparisonInput_t comp)
 {
   ComparisonInputs v;

@@ -16,6 +16,7 @@ set(DREAM3D_PARAMETER_WIDGETS
       ChoiceWidget
       IntVec3Widget
       FloatVec3Widget
+      FloatVec4Widget
       AxisAngleWidget
       DataArraySelectionWidget
       DataContainerArrayProxyWidget
