@@ -71,12 +71,20 @@ class FindFeatureClustering : public AbstractFilter
     DREAM3D_FILTER_PARAMETER(int, NumberOfBins)
     Q_PROPERTY(int NumberOfBins READ getNumberOfBins WRITE setNumberOfBins)
 
+    DREAM3D_FILTER_PARAMETER(int, PhaseNumber)
+    Q_PROPERTY(int PhaseNumber READ getPhaseNumber WRITE setPhaseNumber)
+
     DREAM3D_FILTER_PARAMETER(DataArrayPath, SelectedFeatureArrayPath)
     Q_PROPERTY(DataArrayPath SelectedFeatureArrayPath READ getSelectedFeatureArrayPath WRITE setSelectedFeatureArrayPath)
 
     DREAM3D_FILTER_PARAMETER(DataArrayPath, CellEnsembleAttributeMatrixName)
     Q_PROPERTY(DataArrayPath CellEnsembleAttributeMatrixName READ getCellEnsembleAttributeMatrixName WRITE setCellEnsembleAttributeMatrixName)
 
+    DREAM3D_FILTER_PARAMETER(bool, RemoveBiasedFeatures)
+    Q_PROPERTY(bool RemoveBiasedFeatures READ getRemoveBiasedFeatures WRITE setRemoveBiasedFeatures)
+
+    DREAM3D_FILTER_PARAMETER(DataArrayPath, BiasedFeaturesArrayPath)
+    Q_PROPERTY(DataArrayPath BiasedFeaturesArrayPath READ getBiasedFeaturesArrayPath WRITE setBiasedFeaturesArrayPath)
 
     DREAM3D_FILTER_PARAMETER(DataArrayPath, EquivalentDiametersArrayPath)
     Q_PROPERTY(DataArrayPath EquivalentDiametersArrayPath READ getEquivalentDiametersArrayPath WRITE setEquivalentDiametersArrayPath)
@@ -131,13 +139,13 @@ class FindFeatureClustering : public AbstractFilter
     FindFeatureClustering();
 
     void find_clustering();
-    void findRadialDistFunc();
 
   private:
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, FeaturePhases)
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, Centroids)
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, EquivalentDiameters)
     DEFINE_CREATED_DATAARRAY_VARIABLE(int32_t, NewEnsembleArray)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(bool, BiasedFeatures)
     NeighborList<float>::WeakPointer m_ClusteringList;
 
     void dataCheck();

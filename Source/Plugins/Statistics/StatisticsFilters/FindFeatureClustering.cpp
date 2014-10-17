@@ -55,6 +55,10 @@ FindFeatureClustering::FindFeatureClustering() :
   m_FeaturePhases(NULL),
   m_NewEnsembleArrayArrayName(""),
   m_NumberOfBins(1),
+  m_PhaseNumber(NULL),
+  m_RemoveBiasedFeatures(false),
+  m_BiasedFeaturesArrayName(DREAM3D::FeatureData::BiasedFeatures),
+  m_BiasedFeatures(NULL),
   m_CentroidsArrayName(DREAM3D::FeatureData::Centroids),
   m_Centroids(NULL),
   m_EquivalentDiametersArrayName(DREAM3D::FeatureData::EquivalentDiameters),
@@ -83,10 +87,17 @@ void FindFeatureClustering::setupFilterParameters()
   parameters.push_back(FilterParameter::New("EquivalentDiameters", "EquivalentDiametersArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getEquivalentDiametersArrayPath(), true, ""));
   parameters.push_back(FilterParameter::New("FeaturePhases", "FeaturePhasesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeaturePhasesArrayPath(), true, ""));
   parameters.push_back(FilterParameter::New("Centroids", "CentroidsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getCentroidsArrayPath(), true, ""));
+  parameters.push_back(FilterParameter::New("BiasedFeatures", "BiasedFeaturesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getBiasedFeaturesArrayPath(), true, ""));
+  parameters.push_back(FilterParameter::New("Cell Ensemble Attribute Matrix Name", "CellEnsembleAttributeMatrixName", FilterParameterWidgetType::AttributeMatrixSelectionWidget, getCellEnsembleAttributeMatrixName(), true, ""));
   parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
   parameters.push_back(FilterParameter::New("Clustering List Array Name", "ClusteringListArrayName", FilterParameterWidgetType::StringWidget, getClusteringListArrayName(), true));
-  parameters.push_back(FilterParameter::New("Cell Ensemble Attribute Matrix Name", "CellEnsembleAttributeMatrixName", FilterParameterWidgetType::AttributeMatrixSelectionWidget, getCellEnsembleAttributeMatrixName(), true, ""));
   parameters.push_back(FilterParameter::New("NewEnsembleArray", "NewEnsembleArrayArrayName", FilterParameterWidgetType::StringWidget, getNewEnsembleArrayArrayName(), true, ""));
+  parameters.push_back(FilterParameter::New("Phase Number to Run Min Size Filter on", "PhaseNumber", FilterParameterWidgetType::IntWidget, getPhaseNumber(), false, ""));
+  QStringList linkedProps("BiasedFeaturesArrayPath");
+  parameters.push_back(LinkedBooleanFilterParameter::New("Remove Biased Features", "RemoveBiasedFeatures", getRemoveBiasedFeatures(), linkedProps, false));
+
+
+
 
   setFilterParameters(parameters);
 }
@@ -102,6 +113,12 @@ void FindFeatureClustering::readFilterParameters(AbstractFilterParametersReader*
   setCentroidsArrayPath(reader->readDataArrayPath("CentroidsArrayPath", getCentroidsArrayPath() ) );
   setFeaturePhasesArrayPath(reader->readDataArrayPath("FeaturePhasesArrayPath", getFeaturePhasesArrayPath() ) );
   setEquivalentDiametersArrayPath(reader->readDataArrayPath("EquivalentDiametersArrayPath", getEquivalentDiametersArrayPath() ) );
+  setPhaseNumber( reader->readValue("PhaseNumber", getPhaseNumber() ) );
+  setBiasedFeaturesArrayPath(reader->readDataArrayPath("BiasedFeaturesArrayPath", getBiasedFeaturesArrayPath() ) );
+  setRemoveBiasedFeatures( reader->readValue( "RemoveBiasedFeatures", getRemoveBiasedFeatures() ) );
+
+
+
   reader->closeFilterGroup();
 }
 
@@ -118,6 +135,9 @@ int FindFeatureClustering::writeFilterParameters(AbstractFilterParametersWriter*
   DREAM3D_FILTER_WRITE_PARAMETER(FeaturePhasesArrayPath)
   DREAM3D_FILTER_WRITE_PARAMETER(EquivalentDiametersArrayPath)
   DREAM3D_FILTER_WRITE_PARAMETER(NewEnsembleArrayArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(PhaseNumber)
+  DREAM3D_FILTER_WRITE_PARAMETER(RemoveBiasedFeatures)
+  DREAM3D_FILTER_WRITE_PARAMETER(BiasedFeaturesArrayPath)
 
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
@@ -157,7 +177,13 @@ void FindFeatureClustering::dataCheck()
   if( NULL != m_NewEnsembleArrayPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_NewEnsembleArray = m_NewEnsembleArrayPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
-
+  if(m_RemoveBiasedFeatures == true)
+  {
+    dims[0] = 1;
+    m_BiasedFeaturesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<bool>, AbstractFilter>(this, getBiasedFeaturesArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+    if( NULL != m_BiasedFeaturesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+    { m_BiasedFeatures = m_BiasedFeaturesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  }
 
   }
 
@@ -184,7 +210,6 @@ void FindFeatureClustering::execute()
   if(getErrorCondition() < 0) { return; }
 
   find_clustering();
-  findRadialDistFunc();
   notifyStatusMessage(getHumanLabel(), "FindFeatureClustering Completed");
 }
 
@@ -274,15 +299,15 @@ void FindFeatureClustering::find_clustering()
   {
       for (size_t j=0; j < clusteringlist[i].size(); j++)
       {
-        if (m_FeaturePhases[i] == 2)
+        if (m_FeaturePhases[i] == m_PhaseNumber)
             {
-       // if(removeBiasedFeatures == false || biasedFeatures[i] == false)
-      //  {
+        if(m_RemoveBiasedFeatures == false || m_BiasedFeatures[i] == false)
+        {
           ensemble = m_FeaturePhases[i];
           bin = (clusteringlist[i][j] - min) / stepsize;
           if(bin >= m_NumberOfBins) { bin = m_NumberOfBins - 1; }
           m_NewEnsembleArray[(m_NumberOfBins * ensemble) + bin]++;
-     //   }
+        }
         }
   }
 }
@@ -307,50 +332,7 @@ void FindFeatureClustering::find_clustering()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FindFeatureClustering::findRadialDistFunc()
-{
-//    for (size_t i=1; i < 25; i++)
-//    {
-//        std::vector<std::vector<float> > clusterList = SafePointerDownCast(m_ClusteringList.lock()->getList(i));
-//    }
 
-//    DataArray<T>* featureArray = DataArray<T>::SafePointerDownCast(inputData.get());
-//    if (NULL == featureArray)
-//    {
-//      return;
-//    }
-
-//    T* fPtr = featureArray->getPointer(0);
-//    size_t numfeatures = featureArray->getNumberOfTuples();
-
-//    int32_t bin;
-//    int32_t ensemble;
-//    float min = 1000000.0f;
-//    float max = 0.0f;
-//    float value;
-
-
-//    for (size_t i = 1; i < numfeatures; i++)
-//    {
-//      value = fPtr[i];
-//      if(value > max) { max = value; }
-//      if(value < min) { min = value; }
-//    }
-//    float stepsize = (max - min) / NumberOfBins;
-
-//    for (size_t i = 1; i < numfeatures; i++)
-//    {
-//     // if(removeBiasedFeatures == false || biasedFeatures[i] == false)
-//    //  {
-//        ensemble = eIds[i];
-//        bin = (fPtr[i] - min) / stepsize;
-//        if(bin >= NumberOfBins) { bin = NumberOfBins - 1; }
-//        ensembleArray[(NumberOfBins * ensemble) + bin]++;
-//   //   }
-//    }
-
-
-}
 
 
 
