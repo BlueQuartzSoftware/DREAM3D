@@ -55,7 +55,7 @@ FindFeatureClustering::FindFeatureClustering() :
   m_FeaturePhases(NULL),
   m_NewEnsembleArrayArrayName(""),
   m_NumberOfBins(1),
-  m_PhaseNumber(NULL),
+  m_PhaseNumber(1),
   m_RemoveBiasedFeatures(false),
   m_BiasedFeaturesArrayName(DREAM3D::FeatureData::BiasedFeatures),
   m_BiasedFeatures(NULL),
