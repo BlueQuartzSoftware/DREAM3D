@@ -159,7 +159,7 @@ void PhaseTypeSelectionWidget::updateComboBoxes()
   m_PhaseTypeScrollArea->setWidget(m_PhaseTypeScrollContents);
 
   // We skip the first Ensemble as it is always a dummy
-  for (int i = 0; i < size; i++)
+  for (int i = 1; i < size; i++)
   {
     QLabel* shapeTypeLabel = new QLabel(m_PhaseTypeScrollContents);
     QString str("Phase ");
@@ -233,13 +233,14 @@ void PhaseTypeSelectionWidget::afterPreflight()
 void PhaseTypeSelectionWidget::filterNeedsInputParameters(AbstractFilter* filter)
 {
   int count = m_PhaseTypeCombos.count();
-  QVector<uint32_t> phaseTypes(count, DREAM3D::PhaseType::UnknownPhaseType);
+  QVector<uint32_t> phaseTypes(count+1, DREAM3D::PhaseType::UnknownPhaseType);
   bool ok = false;
+  phaseTypes[0] = DREAM3D::PhaseType::UnknownPhaseType;
   for (int i = 0; i < count; ++i)
   {
     QComboBox* cb = m_PhaseTypeCombos.at(i);
     unsigned int sType = static_cast<unsigned int>(cb->itemData(cb->currentIndex(), Qt::UserRole).toUInt(&ok));
-    phaseTypes[i] = sType;
+    phaseTypes[i+1] = sType;
   }
 
   UInt32Vector_t data;
