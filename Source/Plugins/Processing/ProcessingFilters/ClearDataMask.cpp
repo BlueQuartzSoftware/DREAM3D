@@ -48,7 +48,6 @@
 // -----------------------------------------------------------------------------
 ClearDataMask::ClearDataMask() :
   AbstractFilter(),
-  m_CellAttributeMatrixName(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, ""),
   m_MaskArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::GoodVoxels),
   m_Mask(NULL)
 {
@@ -68,15 +67,13 @@ ClearDataMask::~ClearDataMask()
 void ClearDataMask::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(FilterParameter::New("Cell Attribute Matrix Name", "CellAttributeMatrixName", FilterParameterWidgetType::AttributeMatrixSelectionWidget, getCellAttributeMatrixName(), false));
-  parameters.push_back(FilterParameter::New("Cell Attribute Matrix Name", "MaskArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getMaskArrayPath(), false));
+  parameters.push_back(FilterParameter::New("Mask", "MaskArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getMaskArrayPath(), false));
   setFilterParameters(parameters);
 }
 // -----------------------------------------------------------------------------
 void ClearDataMask::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-  setCellAttributeMatrixName( reader->readDataArrayPath("CellAttributeMatrixName", getCellAttributeMatrixName() ) );
   setMaskArrayPath( reader->readDataArrayPath("MaskArrayPath", getMaskArrayPath() ) );
   reader->closeFilterGroup();
 }
@@ -87,7 +84,6 @@ void ClearDataMask::readFilterParameters(AbstractFilterParametersReader* reader,
 int ClearDataMask::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  DREAM3D_FILTER_WRITE_PARAMETER(CellAttributeMatrixName)
   DREAM3D_FILTER_WRITE_PARAMETER(MaskArrayPath)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
@@ -100,7 +96,7 @@ void ClearDataMask::dataCheck()
 {
   setErrorCondition(0);
 
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(m_CellAttributeMatrixName.getDataContainerName());
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(m_MaskArrayPath.getDataContainerName());
   if( NULL == m)
   {
     QString ss = QObject::tr("VolumeDataContainer was NULL");
@@ -140,20 +136,30 @@ void ClearDataMask::execute()
   dataCheck();
   if(getErrorCondition() < 0) { return; }
 
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(m_CellAttributeMatrixName.getDataContainerName());
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(m_MaskArrayPath.getDataContainerName());
   int64_t totalPoints = m_MaskPtr.lock()->getNumberOfTuples();
 
-  QString attrMatName = m_CellAttributeMatrixName.getAttributeMatrixName();
+  //get list of array names
+  QString attrMatName = m_MaskArrayPath.getAttributeMatrixName();
   QList<QString> voxelArrayNames = m->getAttributeMatrix(attrMatName)->getAttributeArrayNameList();
+
+  //convert to list of pointers
+  std::vector<IDataArray::Pointer> arrayList;
+  for (QList<QString>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
+  {
+    QString name = *iter;
+    IDataArray::Pointer p = m->getAttributeMatrix(attrMatName)->getAttributeArray(*iter);
+    arrayList.push_back(p);
+  }
+  int numArrays = arrayList.size();
+
   for (int64_t i = 0; i < totalPoints; i++)
   {
     if(!m_Mask[i])
     {
-      for (QList<QString>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
+      for (int j = 0; j < numArrays; j++)
       {
-        QString name = *iter;
-        IDataArray::Pointer p = m->getAttributeMatrix(attrMatName)->getAttributeArray(*iter);
-        p->initializeTuple(i, 0);
+        arrayList[j]->initializeTuple(i, 0);
       }
     }
   }
