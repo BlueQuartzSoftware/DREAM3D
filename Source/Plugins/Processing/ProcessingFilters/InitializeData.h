@@ -34,8 +34,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _ClearData_H_
-#define _ClearData_H_
+#ifndef _InitializeData_H_
+#define _InitializeData_H_
 
 #include <QtCore/QString>
 
@@ -48,21 +48,21 @@
 #include "Processing/ProcessingConstants.h"
 
 /**
- * @class ClearData ClearData.h DREAM3DLib/SyntheticBuilderFilters/ClearData.h
+ * @class InitializeData InitializeData.h DREAM3DLib/SyntheticBuilderFilters/InitializeData.h
  * @brief
  * @author
  * @date Nov 19, 2011
  * @version 1.0
  */
-class ClearData : public AbstractFilter
+class InitializeData : public AbstractFilter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
-    DREAM3D_SHARED_POINTERS(ClearData)
-    DREAM3D_STATIC_NEW_MACRO(ClearData)
-    DREAM3D_TYPE_MACRO_SUPER(ClearData, AbstractFilter)
+    DREAM3D_SHARED_POINTERS(InitializeData)
+    DREAM3D_STATIC_NEW_MACRO(InitializeData)
+    DREAM3D_TYPE_MACRO_SUPER(InitializeData, AbstractFilter)
 
-    virtual ~ClearData();
+    virtual ~InitializeData();
 
     DREAM3D_FILTER_PARAMETER(DataArrayPath, CellAttributeMatrixName)
     Q_PROPERTY(DataArrayPath CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
@@ -113,18 +113,18 @@ class ClearData : public AbstractFilter
     void preflightExecuted();
 
   protected:
-    ClearData();
+    InitializeData();
 
 
   private:
 
     void dataCheck();
 
-    ClearData(const ClearData&); // Copy Constructor Not Implemented
-    void operator=(const ClearData&); // Operator '=' Not Implemented
+    InitializeData(const InitializeData&); // Copy Constructor Not Implemented
+    void operator=(const InitializeData&); // Operator '=' Not Implemented
 };
 
-#endif /* ClearData_H_ */
+#endif /* InitializeData_H_ */
 
 
 
