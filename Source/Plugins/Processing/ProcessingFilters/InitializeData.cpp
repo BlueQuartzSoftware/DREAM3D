@@ -34,7 +34,7 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include "ClearData.h"
+#include "InitializeData.h"
 
 #include <QtCore/QMap>
 
@@ -46,7 +46,7 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ClearData::ClearData() :
+InitializeData::InitializeData() :
   AbstractFilter(),
   m_CellAttributeMatrixName(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, ""),
   m_XMin(0),
@@ -62,14 +62,14 @@ ClearData::ClearData() :
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ClearData::~ClearData()
+InitializeData::~InitializeData()
 {
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ClearData::setupFilterParameters()
+void InitializeData::setupFilterParameters()
 {
   FilterParameterVector parameters;
   parameters.push_back(FilterParameter::New("Cell Attribute Matrix Name", "CellAttributeMatrixName", FilterParameterWidgetType::AttributeMatrixSelectionWidget, getCellAttributeMatrixName(), false));
@@ -82,7 +82,7 @@ void ClearData::setupFilterParameters()
   setFilterParameters(parameters);
 }
 // -----------------------------------------------------------------------------
-void ClearData::readFilterParameters(AbstractFilterParametersReader* reader, int index)
+void InitializeData::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
   setCellAttributeMatrixName( reader->readDataArrayPath("CellAttributeMatrixName", getCellAttributeMatrixName() ) );
@@ -98,7 +98,7 @@ void ClearData::readFilterParameters(AbstractFilterParametersReader* reader, int
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int ClearData::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
+int InitializeData::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
   DREAM3D_FILTER_WRITE_PARAMETER(CellAttributeMatrixName)
@@ -115,7 +115,7 @@ int ClearData::writeFilterParameters(AbstractFilterParametersWriter* writer, int
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ClearData::dataCheck()
+void InitializeData::dataCheck()
 {
   setErrorCondition(0);
 
@@ -188,7 +188,7 @@ void ClearData::dataCheck()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ClearData::preflight()
+void InitializeData::preflight()
 {
   setInPreflight(true);
   emit preflightAboutToExecute();
@@ -201,7 +201,7 @@ void ClearData::preflight()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ClearData::execute()
+void InitializeData::execute()
 {
   int err = 0;
   setErrorCondition(err);
@@ -248,9 +248,9 @@ void ClearData::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer ClearData::newFilterInstance(bool copyFilterParameters)
+AbstractFilter::Pointer InitializeData::newFilterInstance(bool copyFilterParameters)
 {
-  ClearData::Pointer filter = ClearData::New();
+  InitializeData::Pointer filter = InitializeData::New();
   if(true == copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
@@ -261,20 +261,20 @@ AbstractFilter::Pointer ClearData::newFilterInstance(bool copyFilterParameters)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ClearData::getCompiledLibraryName()
+const QString InitializeData::getCompiledLibraryName()
 { return Processing::ProcessingBaseName; }
 
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ClearData::getGroupName()
+const QString InitializeData::getGroupName()
 { return DREAM3D::FilterGroups::ProcessingFilters; }
 
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ClearData::getHumanLabel()
-{ return "Clear Data"; }
+const QString InitializeData::getHumanLabel()
+{ return "Initialize Data"; }
 

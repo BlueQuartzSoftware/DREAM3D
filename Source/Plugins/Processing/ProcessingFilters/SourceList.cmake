@@ -14,7 +14,7 @@ set(_PublicFilters
   MinNeighbors
   FlattenImage
   MinSize
-  ClearData
+  InitializeData
   ClearDataMask
   ErodeDilateBadData
   ErodeDilateCoordinationNumber

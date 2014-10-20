@@ -141,7 +141,7 @@ class ScalarSegmentFeatures : public SegmentFeatures
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(bool, GoodVoxels)
     DEFINE_CREATED_DATAARRAY_VARIABLE(bool, Active)
 
-    CompareFunctor* m_Compare;
+    boost::shared_ptr<CompareFunctor> m_Compare;
     bool missingGoodVoxels;
 
     ///Boost Random Number generator stuff. We use the boost::shared_ptr to ensure the pointers are cleaned up when the
