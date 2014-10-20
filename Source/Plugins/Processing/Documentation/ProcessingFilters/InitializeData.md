@@ -1,11 +1,11 @@
-Clear Data {#cleardata}
+Initialize Data {#initializedata}
 ======
 
 ## Group (Subgroup) ##
 Processing Filters (Cleanup)
 
 ## Description ##
-This filter allows the user to define a subvolume of the dataset in which the filter will erase all data by writing *zeros (0)* into every **Cell** array for every element within the subvolume.
+This filter allows the user to define a sub-volume of the dataset in which the filter will reset all data by writing *zeros (0)* into every **Cell** array for every element within the sub-volume.
 
 
 ## Parameters ##
