@@ -208,15 +208,14 @@ void PhaseTypeSelectionWidget::comboboxChanged(int index)
 // -----------------------------------------------------------------------------
 void PhaseTypeSelectionWidget::beforePreflight()
 {
+    std::cout << "PhaseTypeSelectionWidget::beforePreflight()" << std::endl;
   if (NULL == getFilter()) { return; }
   if(m_DidCausePreflight == true)
   {
     //  std::cout << "***  PhaseTypeSelectionWidget already caused a preflight, just returning" << std::endl;
     return;
   }
-
-  updateComboBoxes();
-
+      updateComboBoxes();
 }
 
 // -----------------------------------------------------------------------------
@@ -224,7 +223,10 @@ void PhaseTypeSelectionWidget::beforePreflight()
 // -----------------------------------------------------------------------------
 void PhaseTypeSelectionWidget::afterPreflight()
 {
-  // std::cout << "After Preflight" << std::endl;
+   std::cout << "PhaseTypeSelectionWidget::afterPreflight()" << std::endl;
+
+   updateComboBoxes();
+
 }
 
 // -----------------------------------------------------------------------------
@@ -233,6 +235,11 @@ void PhaseTypeSelectionWidget::afterPreflight()
 void PhaseTypeSelectionWidget::filterNeedsInputParameters(AbstractFilter* filter)
 {
   int count = m_PhaseTypeCombos.count();
+ // if(count == 0)
+  {
+    std::cout << "PhaseTypeSelectionWidget::filterNeedsInputParameters Count = " << count << std::endl;
+  }
+
   QVector<uint32_t> phaseTypes(count+1, DREAM3D::PhaseType::UnknownPhaseType);
   bool ok = false;
   phaseTypes[0] = DREAM3D::PhaseType::UnknownPhaseType;

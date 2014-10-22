@@ -137,10 +137,9 @@ void GenerateEnsembleStatistics::setupFilterParameters()
   parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "", false));
   // The AttributeMatrix that the PhaseTypes are going into
   parameters.push_back(FilterParameter::New("Cell Ensemble Attribute Matrix Name", "CellEnsembleAttributeMatrixPath", FilterParameterWidgetType::AttributeMatrixSelectionWidget, getCellEnsembleAttributeMatrixPath(), false, ""));
-  // The user types in an array name for the Phase Types
-  parameters.push_back(FilterParameter::New("Phase Types Array", "PhaseTypesArrayName", FilterParameterWidgetType::StringWidget, getPhaseTypesArrayName(), false, ""));
+
   // The user selects the appropriate phase types from the combo box menus that are presented to them. One for each tuple in the AttributeMatrix
-  PhaseTypesFilterParameter::Pointer sType_parameter = PhaseTypesFilterParameter::New(
+   PhaseTypesFilterParameter::Pointer sType_parameter = PhaseTypesFilterParameter::New(
                                                          "Phase Types", "PhaseTypeData", FilterParameterWidgetType::PhaseTypeSelectionWidget,
                                                          "UInt32Vector_t", "PhaseCount", "InputPhaseTypesArrayPath", false);
   parameters.push_back(sType_parameter);
@@ -194,7 +193,9 @@ void GenerateEnsembleStatistics::setupFilterParameters()
 
 
   parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "", false));
-
+  // The user types in an array name for the Phase Types
+  parameters.push_back(FilterParameter::New("Phase Types Array", "PhaseTypesArrayName", FilterParameterWidgetType::StringWidget, getPhaseTypesArrayName(), false, ""));
+  // The user types in an array name for Statistics
   parameters.push_back(FilterParameter::New("Created Statistics Array Name", "StatisticsArrayName", FilterParameterWidgetType::StringWidget, getStatisticsArrayName(), false, ""));
 
 
@@ -381,11 +382,18 @@ void GenerateEnsembleStatistics::dataCheck()
     m_SharedSurfaceAreaList = getDataContainerArray()->getPrereqArrayFromPath<NeighborList<float>, AbstractFilter>(this, getSharedSurfaceAreaListArrayPath(), dims);
     m_NeighborList = getDataContainerArray()->getPrereqArrayFromPath<NeighborList<int>, AbstractFilter>(this, getNeighborListArrayPath(), dims);
   }
-
+  std::cout << "GenerateEnsembleStatistics::DataCheck()  m_PhaseTypeData.d.size() = " << m_PhaseTypeData.d.size() << std::endl;
   if (m_PhaseTypeData.d.size() == 0)
   {
-    notifyErrorMessage(getHumanLabel(), "The Phase Type Array must contain at least one member.  Add a Phase Type on the GUI.", -1000);
+    setErrorCondition(-1000);
+    notifyErrorMessage(getHumanLabel(), "The Phase Type Array must contain at least one member. Suggest trying a differnt attribute matrix", getErrorCondition());
     return;
+  }
+  else if (m_PhaseTypeData.d.size() == 1 && m_PhaseTypeData.d[0] ==  DREAM3D::PhaseType::UnknownPhaseType)
+  {
+      setErrorCondition(-1001);
+      notifyErrorMessage(getHumanLabel(), "The Phase Type Array must contain at least one member. Suggest trying a differnt attribute matrix", getErrorCondition());
+      return;
   }
   else
   {
@@ -432,6 +440,7 @@ void GenerateEnsembleStatistics::dataCheck()
 // -----------------------------------------------------------------------------
 void GenerateEnsembleStatistics::preflight()
 {
+    std::cout << "GenerateEnsembleStatistics::preflight()" << std::endl;
   setInPreflight(true);
   emit preflightAboutToExecute();
   emit updateFilterParameters(this);
@@ -1093,12 +1102,18 @@ int GenerateEnsembleStatistics::getPhaseCount()
 
   AttributeMatrix::Pointer inputAttrMat = dca->getAttributeMatrix(getCellEnsembleAttributeMatrixPath());
   if (NULL == inputAttrMat.get() ) { return 0; }
+
+  qDebug() << "  data->getNumberOfTuples(): " << inputAttrMat->getTupleDimensions();
+  qDebug() << "Name" << inputAttrMat->getName();
+
   if(inputAttrMat->getType() < DREAM3D::AttributeMatrixType::VertexEnsemble
           || inputAttrMat->getType() > DREAM3D::AttributeMatrixType::CellEnsemble )
   {
    return 0;
   }
   QVector<size_t> tupleDims = inputAttrMat->getTupleDimensions();
+
+
   size_t phaseCount = 1;
   for(qint32 i = 0; i < tupleDims.size(); i++)
   {
