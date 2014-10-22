@@ -398,12 +398,6 @@ void GenerateEnsembleStatistics::dataCheck()
   }
 
 
-//  tempPath.update(getCellEnsembleAttributeMatrixPath().getDataContainerName(), getCellEnsembleAttributeMatrixPath().getAttributeMatrixName(), getStatisticsArrayName());
-//  m_StatisticsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<uint32_t>, AbstractFilter, uint32_t>(this, tempPath, DREAM3D::PhaseType::UnknownPhaseType, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-//  if( NULL != m_PhaseTypesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
-//  { m_PhaseTypes = m_PhaseTypesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-
-
 
   //now create and add the stats array itself
   VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getCellEnsembleAttributeMatrixPath().getDataContainerName());
@@ -413,7 +407,7 @@ void GenerateEnsembleStatistics::dataCheck()
 
   m_StatsDataArray = StatsDataArray::CreateArray(m_PhaseTypesPtr.lock()->getNumberOfTuples(), getStatisticsArrayName());
   m_StatsDataArray->fillArrayWithNewStatsData(m_PhaseTypesPtr.lock()->getNumberOfTuples(), m_PhaseTypes);
-  attrMat->addAttributeArray(DREAM3D::EnsembleData::Statistics, m_StatsDataArray);
+  attrMat->addAttributeArray(getStatisticsArrayName(), m_StatsDataArray);
 
   if (m_SizeDistributionFitType != DREAM3D::DistributionType::LogNormal)
   {
