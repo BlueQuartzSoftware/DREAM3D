@@ -56,6 +56,7 @@ ErodeDilateBadData::ErodeDilateBadData() :
   m_XDirOn(true),
   m_YDirOn(true),
   m_ZDirOn(true),
+  m_ReplaceBadData(true),
   m_FeatureIdsArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::FeatureIds),
   m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
   m_FeatureIds(NULL)
@@ -91,6 +92,7 @@ void ErodeDilateBadData::setupFilterParameters()
   parameters.push_back(FilterParameter::New("X Direction", "XDirOn", FilterParameterWidgetType::BooleanWidget, getXDirOn(), false));
   parameters.push_back(FilterParameter::New("Y Direction", "YDirOn", FilterParameterWidgetType::BooleanWidget, getYDirOn(), false));
   parameters.push_back(FilterParameter::New("Z Direction", "ZDirOn", FilterParameterWidgetType::BooleanWidget, getZDirOn(), false));
+  parameters.push_back(FilterParameter::New("Replace Bad Data", "ReplaceBadData", FilterParameterWidgetType::BooleanWidget, getReplaceBadData(), false, ""));
   parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
   parameters.push_back(FilterParameter::New("FeatureIds", "FeatureIdsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeatureIdsArrayPath(), true, ""));
   setFilterParameters(parameters);
@@ -108,6 +110,7 @@ void ErodeDilateBadData::readFilterParameters(AbstractFilterParametersReader* re
   setXDirOn(reader->readValue("XDirOn", getXDirOn()) );
   setYDirOn(reader->readValue("YDirOn", getYDirOn()) );
   setZDirOn(reader->readValue("ZDirOn", getZDirOn()) );
+  setReplaceBadData(reader->readValue("ReplaceBadData", getReplaceBadData()) );
   reader->closeFilterGroup();
 }
 
@@ -123,6 +126,7 @@ int ErodeDilateBadData::writeFilterParameters(AbstractFilterParametersWriter* wr
   DREAM3D_FILTER_WRITE_PARAMETER(XDirOn)
   DREAM3D_FILTER_WRITE_PARAMETER(YDirOn)
   DREAM3D_FILTER_WRITE_PARAMETER(ZDirOn)
+  DREAM3D_FILTER_WRITE_PARAMETER(ReplaceBadData)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
@@ -291,11 +295,18 @@ void ErodeDilateBadData::execute()
         if ( (featurename == 0 && m_FeatureIds[neighbor] > 0 && m_Direction == 1)
              || (featurename > 0 && m_FeatureIds[neighbor] == 0 && m_Direction == 0))
         {
-          for(QList<QString>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
+          if(getReplaceBadData())
           {
-            QString name = *iter;
-            IDataArray::Pointer p = m->getAttributeMatrix(attrMatName)->getAttributeArray(*iter);
-            p->copyTuple(neighbor, j);
+            for(QList<QString>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
+            {
+              QString name = *iter;
+              IDataArray::Pointer p = m->getAttributeMatrix(attrMatName)->getAttributeArray(*iter);
+              p->copyTuple(neighbor, j);
+            }
+          }
+          else
+          {
+            m_FeatureIds[j] = m_FeatureIds[neighbor];
           }
         }
       }

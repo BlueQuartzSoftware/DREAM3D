@@ -730,6 +730,53 @@ void CubicOps::getSchmidFactorAndSS(float load[3], float& schmidfactor, float an
   if (schmid12 > schmidfactor) { schmidfactor = schmid12, slipsys = 11, angleComps[0] = theta4, angleComps[1] = lambda6; }
 }
 
+void CubicOps::getSchmidFactorAndSS(float load[3], float plane[3], float direction[3], float& schmidfactor, float angleComps[2], int& slipsys)
+{
+  schmidfactor = 0;
+  slipsys = 0;
+  angleComps[0] = 0;
+  angleComps[1] = 0;
+
+  //compute mags
+  float loadMag = sqrt( load[0] * load[0] + load[1] * load[1] + load[2] * load[2] );
+  float planeMag = sqrt( plane[0] * plane[0] + plane[1] * plane[1] + plane[2] * plane[2] );
+  float directionMag = sqrt( direction[0] * direction[0] + direction[1] * direction[1] + direction[2] * direction[2] );
+  planeMag *= loadMag;
+  directionMag *= loadMag;
+
+  //loop over symmetry operators finding highest schmid factor
+  for(int i = 0; i < k_NumSymQuats; i++)
+  {
+    //compute slip system
+    float slipPlane[3] = {0}; 
+    slipPlane[2] = CubicMatSym[i][2][0] * plane[0] + CubicMatSym[i][2][1] * plane[1] + CubicMatSym[i][2][2] * plane[2];
+
+    //dont consider negative z planes (to avoid duplicates)
+    if( slipPlane[2] >= 0)
+    {
+      slipPlane[0] = CubicMatSym[i][0][0] * plane[0] + CubicMatSym[i][0][1] * plane[1] + CubicMatSym[i][0][2] * plane[2];
+      slipPlane[1] = CubicMatSym[i][1][0] * plane[0] + CubicMatSym[i][1][1] * plane[1] + CubicMatSym[i][1][2] * plane[2];
+
+      float slipDirection[3] = {0};
+      slipDirection[0] = CubicMatSym[i][0][0] * direction[0] + CubicMatSym[i][0][1] * direction[1] + CubicMatSym[i][0][2] * direction[2];
+      slipDirection[1] = CubicMatSym[i][1][0] * direction[0] + CubicMatSym[i][1][1] * direction[1] + CubicMatSym[i][1][2] * direction[2];
+      slipDirection[2] = CubicMatSym[i][2][0] * direction[0] + CubicMatSym[i][2][1] * direction[1] + CubicMatSym[i][2][2] * direction[2];
+
+      float cosPhi = fabs( load[0] * slipPlane[0] + load[1] * slipPlane[1] + load[2] * slipPlane[2] ) / planeMag;
+      float cosLambda = fabs( load[0] * slipDirection[0] + load[1] * slipDirection[1] + load[2] * slipDirection[2] ) / directionMag;
+
+      float schmid = cosPhi * cosLambda;
+      if(schmid > schmidfactor)
+      {
+        schmidfactor = schmid;
+        slipsys = i;
+        angleComps[0] = acos(cosPhi);
+        angleComps[1] = acos(cosLambda);
+      }
+    }
+  }
+}
+
 void CubicOps::getmPrime(QuatF& q1, QuatF& q2, float LD[3], float& mPrime)
 {
   float g1[3][3];

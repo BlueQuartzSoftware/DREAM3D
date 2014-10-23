@@ -131,7 +131,7 @@ FloatArrayType::Pointer AngleFileLoader::loadData()
   numOrients = buf.toInt(&ok, 10);
 
   // Allocate enough for the angles
-  QVector<size_t> dims(1, 3);
+  QVector<size_t> dims(1, 5);
   angles = FloatArrayType::CreateArray(numOrients, dims, "EulerAngles_From_File");
 
   float e1, e2, e3;
@@ -189,10 +189,16 @@ FloatArrayType::Pointer AngleFileLoader::loadData()
       e2 = e2 * DREAM3D::Constants::k_DegToRad;
       e3 = e3 * DREAM3D::Constants::k_DegToRad;
     }
+
+    float weight = tokens[3].toFloat(&ok);
+    float sigma = tokens[4].toFloat(&ok);
+
     // Store the values into our array
     angles->setComponent(i, 0, e1);
     angles->setComponent(i, 1, e2);
     angles->setComponent(i, 2, e3);
+    angles->setComponent(i, 3, weight);
+    angles->setComponent(i, 4, sigma);
     //   qDebug() << "reading line: " << i ;
   }
 

@@ -540,6 +540,18 @@ FloatVec3_t H5FilterParametersReader::readFloatVec3(const QString name, FloatVec
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+FloatVec4_t H5FilterParametersReader::readFloatVec4(const QString name, FloatVec4_t defaultValue)
+{
+  int err = 0;
+  FloatVec4_t v;
+  err = QH5Lite::readPointerDataset<float>(m_CurrentGroupId, name, reinterpret_cast<float*>(&v) );
+  if (err < 0) { return defaultValue; }
+  return v;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 ComparisonInput_t H5FilterParametersReader::readComparisonInput(const QString name, ComparisonInput_t defaultValue, int vectorPos)
 {
   // QVector<ComparisonInput_t> comps(1, defaultValue);

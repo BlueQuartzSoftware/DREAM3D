@@ -397,6 +397,14 @@ void GenerateEnsembleStatistics::dataCheck()
     { m_PhaseTypes = m_PhaseTypesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   }
 
+
+//  tempPath.update(getCellEnsembleAttributeMatrixPath().getDataContainerName(), getCellEnsembleAttributeMatrixPath().getAttributeMatrixName(), getStatisticsArrayName());
+//  m_StatisticsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<uint32_t>, AbstractFilter, uint32_t>(this, tempPath, DREAM3D::PhaseType::UnknownPhaseType, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+//  if( NULL != m_PhaseTypesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+//  { m_PhaseTypes = m_PhaseTypesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+
+
+
   //now create and add the stats array itself
   VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getCellEnsembleAttributeMatrixPath().getDataContainerName());
   if(getErrorCondition() < 0 || m == NULL) { return; }
@@ -1091,6 +1099,11 @@ int GenerateEnsembleStatistics::getPhaseCount()
 
   AttributeMatrix::Pointer inputAttrMat = dca->getAttributeMatrix(getCellEnsembleAttributeMatrixPath());
   if (NULL == inputAttrMat.get() ) { return 0; }
+  if(inputAttrMat->getType() < DREAM3D::AttributeMatrixType::VertexEnsemble
+          || inputAttrMat->getType() > DREAM3D::AttributeMatrixType::CellEnsemble )
+  {
+   return 0;
+  }
   QVector<size_t> tupleDims = inputAttrMat->getTupleDimensions();
   size_t phaseCount = 1;
   for(qint32 i = 0; i < tupleDims.size(); i++)
