@@ -219,6 +219,10 @@ void ParaDisReader::dataCheck()
     }
 
     int error = readHeader();
+    //add edges for preflight sake...they will get overwritten when actually reading the file
+    EdgeArray::Pointer edges = EdgeArray::CreateArray(1, DREAM3D::EdgeData::SurfaceMeshEdges, m->getVertices().get());
+    m->setEdges(edges);
+
     m_InStream.close();
     if (error < 0)
     {
@@ -419,7 +423,7 @@ int ParaDisReader::readFile()
       m_NumberOfArms[nodeNum] = tokens[4].toInt(&ok, 10);
       m_NodeConstraints[nodeNum] = tokens[5].toInt(&ok, 10);
     }
-    if(fileVersion == 5)
+    if(fileVersion >= 5)
     {
       buf = m_InStream.readLine();
     }

@@ -254,6 +254,8 @@ PackPrimaryPhases::PackPrimaryPhases() :
   m_InputStatsArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellEnsembleAttributeMatrixName, DREAM3D::EnsembleData::Statistics),
   m_InputPhaseTypesArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellEnsembleAttributeMatrixName, DREAM3D::EnsembleData::PhaseTypes),
   m_InputShapeTypesArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellEnsembleAttributeMatrixName, DREAM3D::EnsembleData::ShapeTypes),
+  m_MaskArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::GoodVoxels),
+  m_UseMask(false),
   m_HaveFeatures(false),
   m_FeatureInputFile(""),
   m_CsvOutputFile(""),
@@ -272,6 +274,8 @@ PackPrimaryPhases::PackPrimaryPhases() :
   m_AxisEulerAngles(NULL),
   m_Omega3s(NULL),
   m_EquivalentDiameters(NULL),
+  m_MaskArrayName(DREAM3D::CellData::GoodVoxels),
+  m_Mask(NULL),
   m_PhaseTypesArrayName(DREAM3D::EnsembleData::PhaseTypes),
   m_PhaseTypes(NULL),
   m_ShapeTypesArrayName(DREAM3D::EnsembleData::ShapeTypes),
@@ -311,7 +315,10 @@ void PackPrimaryPhases::setupFilterParameters()
 {
   FilterParameterVector parameters;
   parameters.push_back(FilterParameter::New("Periodic Boundaries", "PeriodicBoundaries", FilterParameterWidgetType::BooleanWidget, getPeriodicBoundaries(), false));
+  QStringList linkedProps("MaskArrayPath");
+  parameters.push_back(LinkedBooleanFilterParameter::New("Use Mask", "UseMask", getUseMask(), linkedProps, false));
   parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
+  parameters.push_back(FilterParameter::New("Mask Array", "MaskArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getMaskArrayPath(), true));
   parameters.push_back(FilterParameter::New("Statistics Array", "InputStatsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getInputStatsArrayPath(), true));
   parameters.push_back(FilterParameter::New("Phase Types Array", "InputPhaseTypesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getInputPhaseTypesArrayPath(), true));
   parameters.push_back(FilterParameter::New("Shape Types Array", "InputShapeTypesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getInputShapeTypesArrayPath(), true));
@@ -323,7 +330,8 @@ void PackPrimaryPhases::setupFilterParameters()
   parameters.push_back(FilterParameter::New("Cell Phases Array Name", "CellPhasesArrayName", FilterParameterWidgetType::StringWidget, getCellPhasesArrayName(), true));
   parameters.push_back(FilterParameter::New("Feature Phases Array Name", "FeaturePhasesArrayName", FilterParameterWidgetType::StringWidget, getFeaturePhasesArrayName(), true));
   parameters.push_back(FilterParameter::New("Number of Features Array Name", "NumFeaturesArrayName", FilterParameterWidgetType::StringWidget, getNumFeaturesArrayName(), true));
-  QStringList linkedProps("FeatureInputFile");
+  linkedProps.clear();  
+  linkedProps << "FeatureInputFile";
   parameters.push_back(LinkedBooleanFilterParameter::New("Already Have Features", "HaveFeatures", getHaveFeatures(), linkedProps, false));
   parameters.push_back(FileSystemFilterParameter::New("Feature Input File", "FeatureInputFile", FilterParameterWidgetType::InputFileWidget, getFeatureInputFile(), false, "", "*.txt", "Text File"));
   linkedProps.clear();
@@ -354,12 +362,14 @@ void PackPrimaryPhases::readFilterParameters(AbstractFilterParametersReader* rea
   setNumFeaturesArrayName( reader->readString("NumFeaturesArrayName", getNumFeaturesArrayName() ) );
   setPeriodicBoundaries( reader->readValue("PeriodicBoundaries", false) );
   setWriteGoalAttributes( reader->readValue("WriteGoalAttributes", false) );
+  setUseMask( reader->readValue("UseMask", getUseMask()) );
   setHaveFeatures( reader->readValue("HaveFeatures", getHaveFeatures()) );
   setFeatureInputFile( reader->readString( "FeatureInputFile", getFeatureInputFile() ) );
   setCsvOutputFile( reader->readString( "CsvOutputFile", getCsvOutputFile() ) );
   setInputStatsArrayPath(reader->readDataArrayPath("InputStatsArrayPath", getInputStatsArrayPath() ) );
   setInputPhaseTypesArrayPath(reader->readDataArrayPath("InputPhaseTypesArrayPath", getInputPhaseTypesArrayPath() ) );
   setInputShapeTypesArrayPath(reader->readDataArrayPath("InputShapeTypesArrayPath", getInputShapeTypesArrayPath() ) );
+  setMaskArrayPath(reader->readDataArrayPath("MaskArrayPath", getMaskArrayPath() ) );
   setVtkOutputFile( reader->readString( "VtkOutputFile", getVtkOutputFile() ) );
   setErrorOutputFile( reader->readString( "ErrorOutputFile", getErrorOutputFile() ) );
   reader->closeFilterGroup();
@@ -379,6 +389,7 @@ int PackPrimaryPhases::writeFilterParameters(AbstractFilterParametersWriter* wri
       DREAM3D_FILTER_WRITE_PARAMETER(FeaturePhasesArrayName)
       DREAM3D_FILTER_WRITE_PARAMETER(NumFeaturesArrayName)
       DREAM3D_FILTER_WRITE_PARAMETER(PeriodicBoundaries)
+      DREAM3D_FILTER_WRITE_PARAMETER(UseMask)
       DREAM3D_FILTER_WRITE_PARAMETER(HaveFeatures)
       DREAM3D_FILTER_WRITE_PARAMETER(WriteGoalAttributes)
       DREAM3D_FILTER_WRITE_PARAMETER(FeatureInputFile)
@@ -386,6 +397,7 @@ int PackPrimaryPhases::writeFilterParameters(AbstractFilterParametersWriter* wri
       DREAM3D_FILTER_WRITE_PARAMETER(InputStatsArrayPath)
       DREAM3D_FILTER_WRITE_PARAMETER(InputPhaseTypesArrayPath)
       DREAM3D_FILTER_WRITE_PARAMETER(InputShapeTypesArrayPath)
+      DREAM3D_FILTER_WRITE_PARAMETER(MaskArrayPath)
       DREAM3D_FILTER_WRITE_PARAMETER(VtkOutputFile)
       DREAM3D_FILTER_WRITE_PARAMETER(ErrorOutputFile)
       writer->closeFilterGroup();
@@ -448,6 +460,13 @@ void PackPrimaryPhases::dataCheck()
     QString ss = QObject::tr("Stats Array Not Initialized correctly");
     setErrorCondition(-308);
     notifyErrorMessage(getHumanLabel(), ss, -308);
+  }
+
+  if(m_UseMask == true)
+  {
+    m_MaskPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<bool>, AbstractFilter>(this, getMaskArrayPath(), dims);
+    if( NULL != m_MaskPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+    { m_Mask = m_MaskPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   }
 
   dims[0] = 1;
@@ -2236,7 +2255,9 @@ void PackPrimaryPhases::assign_voxels()
   int gnum;
   for (size_t i = 0; i < static_cast<size_t>(totalPoints); i++)
   {
-    if(ellipfuncs[i] >= 0) { m_FeatureIds[i] = newowners[i]; }
+//    if(ellipfuncs[i] >= 0) { m_FeatureIds[i] = newowners[i]; }
+    if(ellipfuncs[i] >= 0 && (m_UseMask == false || (m_UseMask == true && m_Mask[i] == true))) { m_FeatureIds[i] = newowners[i]; }
+    if(m_UseMask == true && m_Mask[i] == false) m_FeatureIds[i] = 0;
     gnum = m_FeatureIds[i];
     if(gnum >= 0) { activeObjects[gnum] = true; }
     newowners[i] = -1;

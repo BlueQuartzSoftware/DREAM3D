@@ -88,6 +88,12 @@ class IdentifyMicroTextureRegions : public AbstractFilter
     DREAM3D_FILTER_PARAMETER(DataArrayPath, CAxisLocationsArrayPath)
     Q_PROPERTY(DataArrayPath CAxisLocationsArrayPath READ getCAxisLocationsArrayPath WRITE setCAxisLocationsArrayPath)
 
+    DREAM3D_FILTER_PARAMETER(DataArrayPath, CellPhasesArrayPath)
+    Q_PROPERTY(DataArrayPath CellPhasesArrayPath READ getCellPhasesArrayPath WRITE setCellPhasesArrayPath)
+
+    DREAM3D_FILTER_PARAMETER(DataArrayPath, CrystalStructuresArrayPath)
+    Q_PROPERTY(DataArrayPath CrystalStructuresArrayPath READ getCrystalStructuresArrayPath WRITE setCrystalStructuresArrayPath)
+
     DREAM3D_FILTER_PARAMETER(QString, MTRIdsArrayName)
     Q_PROPERTY(QString MTRIdsArrayName READ getMTRIdsArrayName WRITE setMTRIdsArrayName)
 
@@ -135,17 +141,19 @@ class IdentifyMicroTextureRegions : public AbstractFilter
   protected:
     IdentifyMicroTextureRegions();
 
-    void getCAxisBins();
-
-    std::vector<int> phiBins;
-    std::vector<int> thetaBins;
-    size_t numThetaBins;
-    size_t numPhiBins;
-
   private:
-    DEFINE_CREATED_DATAARRAY_VARIABLE(int32_t, MTRIds)
+    DEFINE_CREATED_DATAARRAY_VARIABLE(float, MTRIds)
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, CAxisLocations)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, CellPhases)
     DEFINE_CREATED_DATAARRAY_VARIABLE(bool, Active)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(unsigned int, CrystalStructures)
+
+    //These are temp arrays only stored during this filter, but we are using the DC structure to manage them in this filter.
+    DEFINE_CREATED_DATAARRAY_VARIABLE(bool, InMTR)
+    DEFINE_CREATED_DATAARRAY_VARIABLE(float, VolFrac)
+    DEFINE_CREATED_DATAARRAY_VARIABLE(float, AvgCAxis)
+    DEFINE_CREATED_DATAARRAY_VARIABLE(int32_t, PatchIds)
+    DEFINE_CREATED_DATAARRAY_VARIABLE(bool, PatchActive)
 
     float caxisTolerance;
 

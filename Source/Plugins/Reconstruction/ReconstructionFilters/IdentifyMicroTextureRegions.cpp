@@ -37,6 +37,15 @@
 
 #include "IdentifyMicroTextureRegions.h"
 
+#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
+#include <tbb/parallel_for.h>
+#include <tbb/blocked_range.h>
+#include <tbb/atomic.h>
+#include <tbb/tick_count.h>
+#include <tbb/task_scheduler_init.h>
+#include <tbb/task_group.h>
+#endif
+
 #include <boost/random/mersenne_twister.hpp>
 #include <boost/random/uniform_int.hpp>
 #include <boost/random/variate_generator.hpp>
@@ -49,15 +58,162 @@
 #include "DREAM3DLib/OrientationOps/OrientationOps.h"
 #include "DREAM3DLib/Utilities/DREAM3DRandom.h"
 
+//included so we can call under the hood to segment the patches found in this filter
+#include "Reconstruction/ReconstructionFilters/VectorSegmentFeatures.h"
+
 #define ERROR_TXT_OUT 1
 #define ERROR_TXT_OUT1 1
-
-
-
 
 #define NEW_SHARED_ARRAY(var, m_msgType, size)\
   boost::shared_array<m_msgType> var##Array(new m_msgType[size]);\
   m_msgType* var = var##Array.get();
+
+
+
+class FindPatchMisalignmentsImpl
+{
+  public:
+    FindPatchMisalignmentsImpl(IntVec3_t newDims, IntVec3_t origDims, float* caxisLocs, int32_t* phases, unsigned int* crystructs, float* volFrac, float* avgCAxis, bool* inMTR, IntVec3_t critDim, float minVolFrac, float caxisTol) :
+      m_DicDims(newDims),
+      m_VolDims(origDims),
+      m_CAxisLocations(caxisLocs),
+      m_CellPhases(phases),
+      m_CrystalStructures(crystructs),
+      m_VolFrac(volFrac),
+      m_AvgCAxis(avgCAxis),
+      m_InMTR(inMTR),
+      m_CritDim(critDim),
+      m_MinVolFrac(minVolFrac),
+      m_CAxisTolerance(caxisTol)
+    {
+    }
+    virtual ~FindPatchMisalignmentsImpl() {}
+
+    void convert(size_t start, size_t end) const
+    {
+      int xDim = (2*m_CritDim.x)+1;
+      int yDim = (2*m_CritDim.y)+1;
+      int zDim = (2*m_CritDim.z)+1;
+      QVector<size_t> tDims(1, xDim*yDim*zDim);
+      QVector<size_t> cDims(1, 3);
+      FloatArrayType::Pointer cAxisLocsPtr = FloatArrayType::CreateArray(tDims, cDims, "cAxisLocs");
+      cAxisLocsPtr->initializeWithValue(0);
+      float* cAxisLocs = cAxisLocsPtr->getPointer(0);
+      QVector<int32_t> compCounts;
+      QVector<int32_t> goodCounts;
+
+      int xc, yc, zc;
+      for (size_t iter = start; iter < end; iter++)
+      {
+        int zStride, yStride;
+        int count = 0;
+        xc = ((iter%m_DicDims.x) * m_CritDim.x) + (m_CritDim.x/2);
+        yc = (((iter/m_DicDims.x)%m_DicDims.y) * m_CritDim.y) + (m_CritDim.y/2);
+        zc = ((iter/(m_DicDims.x*m_DicDims.y)) * m_CritDim.z) + (m_CritDim.z/2);
+        for(int k = -m_CritDim.z; k <= m_CritDim.z; k++)
+        {
+          if((zc + k) >= 0 && (zc + k) < m_VolDims.z)
+          {
+            zStride = ((zc + k) * m_VolDims.x * m_VolDims.y);
+            for(int j = -m_CritDim.y; j <= m_CritDim.y; j++)
+            {
+              if((yc + j) >= 0 && (yc + j) < m_VolDims.y)
+              {
+                yStride = ((yc + j) * m_VolDims.x);
+                for(int i = -m_CritDim.x; i <= m_CritDim.x; i++)
+                {
+                  if((xc + i) >= 0 && (xc + i) < m_VolDims.x)
+                  {
+                    if(m_CrystalStructures[m_CellPhases[(zStride+yStride+xc+i)]] == Ebsd::CrystalStructure::Hexagonal_High)
+                    {
+                      cAxisLocs[3*count+0] = m_CAxisLocations[3*(zStride+yStride+xc+i)+0];
+                      cAxisLocs[3*count+1] = m_CAxisLocations[3*(zStride+yStride+xc+i)+1];
+                      cAxisLocs[3*count+2] = m_CAxisLocations[3*(zStride+yStride+xc+i)+2];
+                      count++;
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+        float angle;
+        int sameCount = 0;
+        int totalCount = 0;
+        compCounts.resize(count);
+        compCounts.fill(0);
+        goodCounts.resize(count);
+        goodCounts.fill(0);
+        for(int i = 0; i < count; i++)
+        {
+          for(int j = i+1; j < count; j++)
+          {
+            angle = GeometryMath::AngleBetweenVectors(cAxisLocsPtr->getPointer(3*i), cAxisLocsPtr->getPointer(3*j));
+            if(angle <= m_CAxisTolerance || (DREAM3D::Constants::k_Pi - angle) <= m_CAxisTolerance)
+            {
+              goodCounts[i]++;
+              goodCounts[j]++;
+              sameCount++;
+            }
+            compCounts[i]++;
+            compCounts[j]++;
+            totalCount++;
+          }
+        }
+        float avgCAxis[3] = {0.0, 0.0, 0.0};
+        size_t point;
+        int actualCount = int(sqrtf(2*sameCount))+1;
+        float frac = float(actualCount)/float(count);
+        m_VolFrac[iter] = frac;
+        if(frac > m_MinVolFrac)
+        {
+          m_InMTR[iter] = true;
+          for(int i = 0; i < count; i++)
+          {
+            if(float(goodCounts[i])/float(compCounts[i]) >= m_MinVolFrac)
+            {
+              if(MatrixMath::DotProduct3x1(avgCAxis, cAxisLocsPtr->getPointer(3*i)) < 0)
+              {
+                avgCAxis[0] -= cAxisLocs[3*i];
+                avgCAxis[1] -= cAxisLocs[3*i+1];
+                avgCAxis[2] -= cAxisLocs[3*i+2];
+              }
+              else
+              {
+                avgCAxis[0] += cAxisLocs[3*i];
+                avgCAxis[1] += cAxisLocs[3*i+1];
+                avgCAxis[2] += cAxisLocs[3*i+2];
+              }
+            }
+          }
+          MatrixMath::Normalize3x1(avgCAxis);
+          if(avgCAxis[2] < 0) MatrixMath::Multiply3x1withConstant(avgCAxis, -1);
+          m_AvgCAxis[3*iter] = avgCAxis[0];
+          m_AvgCAxis[3*iter+1] = avgCAxis[1];
+          m_AvgCAxis[3*iter+2] = avgCAxis[2];
+        }
+      }
+    }
+
+#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
+    void operator()(const tbb::blocked_range<size_t>& r) const
+    {
+      convert(r.begin(), r.end());
+    }
+#endif
+  private:
+    IntVec3_t m_DicDims;
+    IntVec3_t m_VolDims;
+    float* m_CAxisLocations;
+    int32_t* m_CellPhases;
+    unsigned int* m_CrystalStructures;
+    bool* m_InMTR;
+    float* m_VolFrac;
+    float* m_AvgCAxis;
+    IntVec3_t m_CritDim;
+    float m_MinVolFrac;
+    float m_CAxisTolerance;
+};
 
 // -----------------------------------------------------------------------------
 //
@@ -70,12 +226,23 @@ IdentifyMicroTextureRegions::IdentifyMicroTextureRegions() :
   m_MinVolFrac(1.0f),
   m_RandomizeMTRIds(false),
   m_CAxisLocationsArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::CAxisLocation),
+  m_CellPhasesArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::Phases),
+  m_CrystalStructuresArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellEnsembleAttributeMatrixName, DREAM3D::EnsembleData::CrystalStructures),
   m_MTRIdsArrayName(DREAM3D::CellData::ParentIds),
   m_ActiveArrayName(DREAM3D::FeatureData::Active),
   m_MTRIds(NULL),
   m_CAxisLocationsArrayName(DREAM3D::CellData::CAxisLocation),
   m_CAxisLocations(NULL),
-  m_Active(NULL)
+  m_CellPhasesArrayName(DREAM3D::CellData::CAxisLocation),
+  m_CellPhases(NULL),
+  m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
+  m_CrystalStructures(NULL),
+  m_Active(NULL),
+  m_InMTR(NULL),
+  m_VolFrac(NULL),
+  m_AvgCAxis(NULL),
+  m_PatchIds(NULL),
+  m_PatchActive(NULL)
 {
   setupFilterParameters();
 }
@@ -98,6 +265,8 @@ void IdentifyMicroTextureRegions::setupFilterParameters()
   parameters.push_back(FilterParameter::New("Minimum Volume Fraction in MTR", "MinVolFrac", FilterParameterWidgetType::DoubleWidget, getMinVolFrac(), false));
   parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
   parameters.push_back(FilterParameter::New("CAxisLocations", "CAxisLocationsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getCAxisLocationsArrayPath(), true, ""));
+  parameters.push_back(FilterParameter::New("CellPhases", "CellPhasesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getCellPhasesArrayPath(), true, ""));
+  parameters.push_back(FilterParameter::New("Crystal Structures", "CrystalStructuresArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getCrystalStructuresArrayPath(), true, ""));
   parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
   parameters.push_back(FilterParameter::New("MTR Ids", "MTRIdsArrayName", FilterParameterWidgetType::StringWidget, getMTRIdsArrayName(), true, ""));
   parameters.push_back(FilterParameter::New("New Cell Feature Attribute Matrix Name", "NewCellFeatureAttributeMatrixName", FilterParameterWidgetType::StringWidget, getNewCellFeatureAttributeMatrixName(), true, ""));
@@ -115,6 +284,8 @@ void IdentifyMicroTextureRegions::readFilterParameters(AbstractFilterParametersR
   setNewCellFeatureAttributeMatrixName(reader->readString("NewCellFeatureAttributeMatrixName", getNewCellFeatureAttributeMatrixName() ) );
   setMTRIdsArrayName(reader->readString("MTRIdsArrayName", getMTRIdsArrayName() ) );
   setCAxisLocationsArrayPath(reader->readDataArrayPath("CAxisLocationsArrayPath", getCAxisLocationsArrayPath() ) );
+  setCellPhasesArrayPath(reader->readDataArrayPath("CellPhasesArrayPath", getCellPhasesArrayPath() ) );
+  setCrystalStructuresArrayPath(reader->readDataArrayPath("CrystalStructuresArrayPath", getCrystalStructuresArrayPath() ) );
   setCAxisTolerance( reader->readValue("CAxisTolerance", getCAxisTolerance()) );
   setMinMTRSize( reader->readValue("MinMTRSize", getMinMTRSize()) );
   setMinVolFrac( reader->readValue("MinVolFrac", getMinVolFrac()) );
@@ -130,6 +301,8 @@ int IdentifyMicroTextureRegions::writeFilterParameters(AbstractFilterParametersW
   DREAM3D_FILTER_WRITE_PARAMETER(ActiveArrayName)
   DREAM3D_FILTER_WRITE_PARAMETER(MTRIdsArrayName)
   DREAM3D_FILTER_WRITE_PARAMETER(CAxisLocationsArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(CellPhasesArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(CrystalStructuresArrayPath)
   DREAM3D_FILTER_WRITE_PARAMETER(CAxisTolerance)
   DREAM3D_FILTER_WRITE_PARAMETER(MinMTRSize)
   DREAM3D_FILTER_WRITE_PARAMETER(MinVolFrac)
@@ -168,16 +341,28 @@ void IdentifyMicroTextureRegions::dataCheck()
   if( NULL != m_CAxisLocationsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_CAxisLocations = m_CAxisLocationsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   dims[0] = 1;
+  m_CellPhasesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, m_CellPhasesArrayPath, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if( NULL != m_CellPhasesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  { m_CellPhases = m_CellPhasesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  dims[0] = 3;
   tempPath.update(m_CAxisLocationsArrayPath.getDataContainerName(), m_CAxisLocationsArrayPath.getAttributeMatrixName(), getMTRIdsArrayName() );
-  m_MTRIdsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(this, tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_MTRIdsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, int32_t>(this, tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_MTRIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_MTRIds = m_MTRIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
+  dims[0] = 1;
   // New Feature Data
   tempPath.update(m_CAxisLocationsArrayPath.getDataContainerName(), getNewCellFeatureAttributeMatrixName(), getActiveArrayName() );
   m_ActivePtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<bool>, AbstractFilter, bool>(this, tempPath, true, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_ActivePtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_Active = m_ActivePtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+
+  // Ensemble Data
+  typedef DataArray<unsigned int> XTalStructArrayType;
+  m_CrystalStructuresPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<unsigned int>, AbstractFilter>(this, getCrystalStructuresArrayPath(), dims)
+                           ; /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if( NULL != m_CrystalStructuresPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  { m_CrystalStructures = m_CrystalStructuresPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
 
 // -----------------------------------------------------------------------------
@@ -203,20 +388,193 @@ void IdentifyMicroTextureRegions::execute()
   if(getErrorCondition() < 0) { return; }
 
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getCAxisLocationsArrayPath().getDataContainerName());
-  int64_t totalPoints = m_MTRIdsPtr.lock()->getNumberOfTuples();
+  int64_t totalPoints = m_MTRIdsPtr.lock()->getNumberOfTuples(); 
 
-  QVector<size_t> tDims(1, 1);
-  m->getAttributeMatrix(getNewCellFeatureAttributeMatrixName())->resizeAttributeArrays(tDims);
-  updateFeatureInstancePointers();
+  //calculate dimensions of DIC-like grid
+  size_t dcDims[3] = { 0, 0, 0};
+  float xRes, yRes, zRes;
+  float m_Origin[3];
+  m->getDimensions(dcDims[0], dcDims[1], dcDims[2]);
+  m->getResolution(xRes, yRes, zRes);
+  m->getOrigin(m_Origin);
+
+  //Find number of original cells in radius of patch
+  IntVec3_t critDim;
+  critDim.x = int(m_MinMTRSize/(4.0*xRes));
+  critDim.y = int(m_MinMTRSize/(4.0*yRes));
+  critDim.z = int(m_MinMTRSize/(4.0*zRes));
+
+  //Find physical distance of patch steps
+  FloatVec3_t critRes;
+  critRes.x = float(critDim.x)*xRes;
+  critRes.y = float(critDim.y)*yRes;
+  critRes.z = float(critDim.z)*zRes;
+
+  //Find number of patch steps in each dimension
+  int newDimX = int(dcDims[0] / critDim.x);
+  int newDimY = int(dcDims[1] / critDim.y);
+  int newDimZ = int(dcDims[2] / critDim.z);
+  if(dcDims[0] == 1) { newDimX = 1, critDim.x = 0; }
+  if(dcDims[1] == 1) { newDimY = 1, critDim.y = 0; }
+  if(dcDims[2] == 1) { newDimZ = 1, critDim.z = 0; }
+
+  //Store the original and patch dimensions for passing into the parallel algo below
+  IntVec3_t origDims;
+  origDims.x = dcDims[0];
+  origDims.y = dcDims[1];
+  origDims.z = dcDims[2];
+  IntVec3_t newDims;
+  newDims.x = newDimX;
+  newDims.y = newDimY;
+  newDims.z = newDimZ;
+  size_t totalPatches = (newDimX * newDimY * newDimZ);
+
+  //Create temporary DataContainer and AttributeMatrix for holding the patch data
+  VolumeDataContainer* tmpDC = getDataContainerArray()->createNonPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, "PatchDataContainer(Temp)");
+  if(getErrorCondition() < 0) { return; }
+  tmpDC->setDimensions(static_cast<size_t>(newDimX), static_cast<size_t>(newDimY), static_cast<size_t>(newDimZ));
+  tmpDC->setResolution(critRes.x, critRes.y, critRes.z);
+  tmpDC->setOrigin(m_Origin[0], m_Origin[1], m_Origin[2]);
+
+  QVector<size_t> tDims(3, 0);
+  tDims[0] = newDimX;
+  tDims[1] = newDimY;
+  tDims[2] = newDimZ;
+  AttributeMatrix::Pointer tempPatchAttrMat = tmpDC->createNonPrereqAttributeMatrix<AbstractFilter>(this, "PatchAM(Temp)", tDims, DREAM3D::AttributeMatrixType::Cell);
+  if(getErrorCondition() < 0) { return; }
+  
+  DataArrayPath tempPath;
+  tDims[0] = totalPatches;
+  QVector<size_t> cDims(1, 1);
+  tempPath.update("PatchDataContainer(Temp)", "PatchAM(Temp)", "InMTR");
+  m_InMTRPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<bool>, AbstractFilter, bool>(this, tempPath, false, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if( NULL != m_InMTRPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  { m_InMTR = m_InMTRPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  tempPath.update("PatchDataContainer(Temp)", "PatchAM(Temp)", "VolFrac");
+  m_VolFracPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if( NULL != m_VolFracPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  { m_VolFrac = m_VolFracPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  cDims[0] = 3;
+  tempPath.update("PatchDataContainer(Temp)", "PatchAM(Temp)", "AvgCAxis");
+  m_AvgCAxisPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if( NULL != m_AvgCAxisPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  { m_AvgCAxis = m_AvgCAxisPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   // Convert user defined tolerance to radians.
   caxisTolerance = m_CAxisTolerance * DREAM3D::Constants::k_Pi / 180.0f;
-  numThetaBins = int(360.0/m_CAxisTolerance);
-  numPhiBins = int(90.0/m_CAxisTolerance);
+
+#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
+  tbb::task_scheduler_init init;
+  bool doParallel = true;
+#endif
 
   // Tell the user we are starting the filter
   notifyStatusMessage(getMessagePrefix(), getHumanLabel(), "Starting");
-  getCAxisBins();
+
+//first determine the misorientation vectors on all the voxel faces
+#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
+  if (doParallel == true)
+  {
+    tbb::parallel_for(tbb::blocked_range<size_t>(0, totalPatches),
+                      FindPatchMisalignmentsImpl(newDims, origDims, m_CAxisLocations, m_CellPhases, m_CrystalStructures, m_VolFrac, m_AvgCAxis, m_InMTR, critDim, m_MinVolFrac, caxisTolerance), tbb::auto_partitioner());
+
+  }
+  else
+#endif
+  {
+    FindPatchMisalignmentsImpl serial(newDims, origDims, m_CAxisLocations, m_CellPhases, m_CrystalStructures, m_VolFrac, m_AvgCAxis, m_InMTR, critDim, m_MinVolFrac, caxisTolerance);
+    serial.convert(0, totalPatches);
+  }
+
+  //Call the SegmentFeatures(Vector) filter under the hood to segment the patches based on average c-axis of the patch
+  VectorSegmentFeatures::Pointer filter = VectorSegmentFeatures::New();
+  filter->setDataContainerArray(getDataContainerArray());
+  tempPath.update("PatchDataContainer(Temp)", "PatchAM(Temp)", "AvgCAxis");
+  filter->setSelectedVectorArrayPath(tempPath);
+  filter->setAngleTolerance(m_CAxisTolerance);
+  filter->setUseGoodVoxels(true);
+  tempPath.update("PatchDataContainer(Temp)", "PatchAM(Temp)", "InMTR");
+  filter->setGoodVoxelsArrayPath(tempPath);
+  filter->setFeatureIdsArrayName("PatchFeatureIds");
+  filter->setCellFeatureAttributeMatrixName("PatchFeatureData");
+  filter->setActiveArrayName("Active");
+  filter->execute();
+
+  cDims[0] = 1;
+  // Cell Data
+  tempPath.update("PatchDataContainer(Temp)", "PatchAM(Temp)", "PatchFeatureIds");
+  m_PatchIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, tempPath, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if( NULL != m_PatchIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  { m_PatchIds = m_PatchIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  tempPath.update("PatchDataContainer(Temp)", "PatchFeatureData", "Active");
+  m_PatchActivePtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<bool>, AbstractFilter>(this, tempPath, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if( NULL != m_PatchActivePtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  { m_PatchActive = m_PatchActivePtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+
+
+
+  size_t numPatchFeatures = m_PatchActivePtr.lock()->getNumberOfTuples();
+  QVector<bool> activeObjects(numPatchFeatures, true);
+  QVector<size_t> counters(numPatchFeatures, 0);
+  for(int64_t iter = 0; iter < totalPatches; ++iter)
+  {
+    counters[m_PatchIds[iter]]++;
+  }
+  for(int64_t iter = 0; iter < numPatchFeatures; ++iter)
+  {
+    if(counters[iter] < 4) activeObjects[iter] = false;
+  }
+  tempPath.update("PatchDataContainer(Temp)", "PatchFeatureData", "Active");
+  AttributeMatrix::Pointer patchFeatureAttrMat = getDataContainerArray()->getAttributeMatrix(tempPath);
+  patchFeatureAttrMat->removeInactiveObjects(activeObjects, m_PatchIdsPtr.lock());
+
+  //Resize the feature attribute matrix for the MTRs to the number identified from SegmentFeatures(Vector) after filtering for size
+  tDims.resize(1);
+  tDims[0] = 2;
+  m->getAttributeMatrix(getNewCellFeatureAttributeMatrixName())->resizeAttributeArrays(tDims);
+  updateFeatureInstancePointers();
+
+  int xc, yc, zc;
+  size_t point;
+  for(int64_t iter = 0; iter < totalPatches; ++iter)
+  {
+    if(m_VolFrac[iter] >= m_MinVolFrac*m_MinVolFrac)
+    {
+      int zStride, yStride;
+      int count = 0;
+
+      xc = ((iter%newDims.x) * critDim.x) + (critDim.x/2);
+      yc = (((iter/newDims.x)%newDims.y) * critDim.y) + (critDim.y/2);
+      zc = ((iter/(newDims.x*newDims.y)) * critDim.z) + (critDim.z/2);
+      for(int k = -critDim.z; k <= critDim.z; k++)
+      {
+        if((zc + k) >= 0 && (zc + k) < origDims.z)
+        {
+          zStride = ((zc + k) * origDims.x * origDims.y);
+          for(int j = -critDim.y; j <= critDim.y; j++)
+          {
+            if((yc + j) >= 0 && (yc + j) < origDims.y)
+            {
+              yStride = ((yc + j) * origDims.x);
+              for(int i = -critDim.x; i <= critDim.x; i++)
+              {
+                if((xc + i) >= 0 && (xc + i) < origDims.x)
+                {
+                  point = zStride+yStride+xc+i;
+                  //m_MTRIds[3*point] = inMTR[iter];
+                  //m_MTRIds[3*point+1] = inMTR[iter];
+                  //m_MTRIds[3*point+2] = inMTR[iter];
+                  m_MTRIds[3*point] = m_AvgCAxis[3*iter];
+                  m_MTRIds[3*point+1] = m_AvgCAxis[3*iter+1];
+                  m_MTRIds[3*point+2] = m_AvgCAxis[3*iter+2];
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
 
   findMTRregions();
 
@@ -280,34 +638,7 @@ void IdentifyMicroTextureRegions::randomizeFeatureIds(int64_t totalPoints, size_
   // Now adjust all the Grain Id values for each Voxel
   for(int64_t i = 0; i < totalPoints; ++i)
   {
-    m_MTRIds[i] = gid[ m_MTRIds[i] ];
-  }
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void IdentifyMicroTextureRegions::getCAxisBins()
-{
-  size_t totalPoints = m_CAxisLocationsPtr.lock()->getNumberOfTuples();
-  phiBins.resize(totalPoints, -1);
-  thetaBins.resize(totalPoints, -1);
-  float theta, phi;
-  size_t thetaBin, phiBin, cAxisBin;
-  float oneOverCAxisTolerance = 1.0/m_CAxisTolerance;
-  for(size_t i = 0; i< totalPoints; i++)
-  {
-    theta = DREAM3D::Constants::k_180OverPi * atan2f(m_CAxisLocations[3*i+1], m_CAxisLocations[3*i]);
-    if(theta < 0) theta += 360.0;
-    phi = DREAM3D::Constants::k_180OverPi * asinf(m_CAxisLocations[3*i+2]);
-    thetaBin = size_t(theta*oneOverCAxisTolerance);
-    phiBin = size_t(phi*oneOverCAxisTolerance);
-    if(thetaBin >= numThetaBins) thetaBin = numThetaBins-1;
-    if(phiBin >= numPhiBins) phiBin = numPhiBins-1;
-    cAxisBin = (phiBin*numThetaBins) + thetaBin;
-    phiBins[i] = phiBin;
-    thetaBins[i] = thetaBin;
-    m_MTRIds[i] = cAxisBin;
+//    m_MTRIds[i] = gid[ m_MTRIds[i] ];
   }
 }
 

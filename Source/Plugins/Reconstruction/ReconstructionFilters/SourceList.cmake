@@ -22,7 +22,6 @@ set(_PublicFilters
   IdentifyMicroTextureRegions
   MergeTwins
   MergeColonies
-  PatchGroupMicroTextureRegions
   ScalarSegmentFeatures
   SineParamsSegmentFeatures
   VectorSegmentFeatures
