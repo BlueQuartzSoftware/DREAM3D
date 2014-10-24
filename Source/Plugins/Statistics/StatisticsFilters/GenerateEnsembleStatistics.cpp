@@ -416,6 +416,8 @@ void GenerateEnsembleStatistics::dataCheck()
   m_StatsDataArray = StatsDataArray::CreateArray(m_PhaseTypesPtr.lock()->getNumberOfTuples(), getStatisticsArrayName());
   m_StatsDataArray->fillArrayWithNewStatsData(m_PhaseTypesPtr.lock()->getNumberOfTuples(), m_PhaseTypes);
   attrMat->addAttributeArray(getStatisticsArrayName(), m_StatsDataArray);
+  //attrMat->addAttributeArray(DREAM3D::EnsembleData::Statistics, m_StatsDataArray);
+
 
   if (m_SizeDistributionFitType != DREAM3D::DistributionType::LogNormal)
   {
