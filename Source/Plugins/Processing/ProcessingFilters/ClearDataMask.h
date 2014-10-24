@@ -64,9 +64,6 @@ class ClearDataMask : public AbstractFilter
 
     virtual ~ClearDataMask();
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, CellAttributeMatrixName)
-    Q_PROPERTY(DataArrayPath CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
-
     DREAM3D_FILTER_PARAMETER(DataArrayPath, MaskArrayPath)
     Q_PROPERTY(DataArrayPath MaskArrayPath READ getMaskArrayPath WRITE setMaskArrayPath)
 

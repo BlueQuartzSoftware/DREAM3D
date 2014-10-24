@@ -250,7 +250,7 @@ float quiltData(IDataArray::Pointer inputData, int xc, int yc, int zc, IntVec3_t
     if((zc + k) >= 0 && (zc + k) < zDim)
     {
       zStride = ((zc + k) * xDim * yDim);
-      for(int j = -(pSize.z / 2); j < (pSize.y / 2); j++)
+      for(int j = -(pSize.y / 2); j < (pSize.y / 2); j++)
       {
         if((yc + j) >= 0 && (yc + j) < yDim)
         {

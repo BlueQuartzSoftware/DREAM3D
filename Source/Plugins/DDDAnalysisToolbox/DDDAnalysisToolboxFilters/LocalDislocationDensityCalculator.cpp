@@ -252,13 +252,22 @@ void LocalDislocationDensityCalculator::execute()
     if(z > zMax) { zMax = z; }
   }
 
+  FloatVec3_t halfCellSize;
+  halfCellSize.x = (m_CellSize.x/2.0);
+  halfCellSize.y = (m_CellSize.y/2.0);
+  halfCellSize.z = (m_CellSize.z/2.0);
+  FloatVec3_t quarterCellSize;
+  quarterCellSize.x = (m_CellSize.x/4.0);
+  quarterCellSize.y = (m_CellSize.y/4.0);
+  quarterCellSize.z = (m_CellSize.z/4.0);
+
   vdc->setOrigin(xMin, yMin, zMin);
   size_t dcDims[3];
-  dcDims[0] = size_t((xMax - xMin) / m_CellSize.x) + 1;
-  dcDims[1] = size_t((yMax - yMin) / m_CellSize.y) + 1;
-  dcDims[2] = size_t((zMax - zMin) / m_CellSize.z) + 1;
+  dcDims[0] = size_t((xMax - xMin) / halfCellSize.x);
+  dcDims[1] = size_t((yMax - yMin) / halfCellSize.y);
+  dcDims[2] = size_t((zMax - zMin) / halfCellSize.z);
   vdc->setDimensions(dcDims[0], dcDims[1], dcDims[2]);
-  vdc->setResolution(m_CellSize.x, m_CellSize.y, m_CellSize.z);
+  vdc->setResolution(m_CellSize.x/2.0, m_CellSize.y/2.0, m_CellSize.z/2.0);
 
   QVector<size_t> tDims(3, 0);
   tDims[0] = dcDims[0];
@@ -284,26 +293,32 @@ void LocalDislocationDensityCalculator::execute()
     x2 = (point2.pos[0] - xMin);
     y2 = (point2.pos[1] - yMin);
     z2 = (point2.pos[2] - zMin);
-    if(x1 > x2) { xCellMin = size_t(x2 / m_CellSize.x), xCellMax = size_t(x1 / m_CellSize.x); }
-    else { xCellMin = size_t(x1 / m_CellSize.x), xCellMax = size_t(x2 / m_CellSize.x); }
-    if(y1 > y2) { yCellMin = size_t(y2 / m_CellSize.y), yCellMax = size_t(y1 / m_CellSize.y); }
-    else { yCellMin = size_t(y1 / m_CellSize.y), yCellMax = size_t(y2 / m_CellSize.y); }
-    if(z1 > z2) { zCellMin = size_t(z2 / m_CellSize.z), zCellMax = size_t(z1 / m_CellSize.z); }
-    else { zCellMin = size_t(z1 / m_CellSize.z), zCellMax = size_t(z2 / m_CellSize.z); }
+    if(x1 > x2) { xCellMin = size_t(x2 / quarterCellSize.x), xCellMax = size_t(x1 / quarterCellSize.x); }
+    else { xCellMin = size_t(x1 / quarterCellSize.x), xCellMax = size_t(x2 / quarterCellSize.x); }
+    if(y1 > y2) { yCellMin = size_t(y2 / quarterCellSize.y), yCellMax = size_t(y1 / quarterCellSize.y); }
+    else { yCellMin = size_t(y1 / quarterCellSize.y), yCellMax = size_t(y2 / quarterCellSize.y); }
+    if(z1 > z2) { zCellMin = size_t(z2 / quarterCellSize.z), zCellMax = size_t(z1 / quarterCellSize.z); }
+    else { zCellMin = size_t(z1 / quarterCellSize.z), zCellMax = size_t(z2 / quarterCellSize.z); }
+    xCellMin = (xCellMin-1)/2;
+    yCellMin = (yCellMin-1)/2;
+    zCellMin = (zCellMin-1)/2;
+    xCellMax = ((xCellMax-1)/2) + 1;
+    yCellMax = ((yCellMax-1)/2) + 1;
+    zCellMax = ((zCellMax-1)/2) + 1;
     for(size_t j = zCellMin; j <= zCellMax; j++)
     {
       zStride = j * tDims[0] * tDims[1];
-      corner1.pos[2] = j * m_CellSize.z + zMin;
-      corner2.pos[2] = (j + 1) * m_CellSize.z + zMin;
+      corner1.pos[2] = (j * halfCellSize.z) - halfCellSize.z + quarterCellSize.z + zMin;
+      corner2.pos[2] = (j * halfCellSize.z) + halfCellSize.z + quarterCellSize.z + zMin;
       for(size_t k = yCellMin; k <= yCellMax; k++)
       {
         yStride = k * tDims[0];
-        corner1.pos[1] = k * m_CellSize.y + yMin;
-        corner2.pos[1] = (k + 1) * m_CellSize.y + yMin;
+        corner1.pos[1] = (k * halfCellSize.y) - halfCellSize.y + quarterCellSize.y + yMin;
+        corner2.pos[1] = (k * halfCellSize.y) + halfCellSize.y + quarterCellSize.y + yMin;
         for(size_t l = xCellMin; l <= xCellMax; l++)
         {
-          corner1.pos[0] = l * m_CellSize.x + xMin;
-          corner2.pos[0] = (l + 1) * m_CellSize.x  + xMin;
+          corner1.pos[0] = (l * halfCellSize.x) - halfCellSize.x + quarterCellSize.x + xMin;
+          corner2.pos[0] = (l * halfCellSize.x) + halfCellSize.x + quarterCellSize.x + xMin;
           length = GeometryMath::LengthOfRayInBox(point1, point2, corner1, corner2);
           m_OutputArray[zStride + yStride + l] += length;
         }
