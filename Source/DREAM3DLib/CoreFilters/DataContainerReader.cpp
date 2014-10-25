@@ -108,8 +108,8 @@ int DataContainerReader::writeFilterParameters(AbstractFilterParametersWriter* w
 
   writer->openFilterGroup(this, index);
   DREAM3D_FILTER_WRITE_PARAMETER(InputFile)
-  DREAM3D_FILTER_WRITE_PARAMETER(OverwriteExistingDataContainers)
-  DataContainerArrayProxy dcaProxy = getInputFileDataContainerArrayProxy(); // This line makes a COPY of the DataContainerArrayProxy that is stored in the current instance
+      DREAM3D_FILTER_WRITE_PARAMETER(OverwriteExistingDataContainers)
+      DataContainerArrayProxy dcaProxy = getInputFileDataContainerArrayProxy(); // This line makes a COPY of the DataContainerArrayProxy that is stored in the current instance
   writer->writeValue("InputFileDataContainerArrayProxy", dcaProxy );
 
 
@@ -143,8 +143,8 @@ void DataContainerReader::dataCheck()
   DataContainerArray::Pointer tempDCA = DataContainerArray::New();
   // Read either the structure or all the data depending on the preflight status
   readData(getInPreflight(), m_InputFileDataContainerArrayProxy, tempDCA);
-//  qDebug() << " Reading Structure from " << getInputFile();
-//  qDebug() << "  Count Data Containers= " << m_InputFileDataContainerArrayProxy.list.count();
+  //  qDebug() << " Reading Structure from " << getInputFile();
+  //  qDebug() << "  Count Data Containers= " << m_InputFileDataContainerArrayProxy.list.count();
 
   if(getErrorCondition())
   {
@@ -179,6 +179,8 @@ void DataContainerReader::dataCheck()
       }
     }
   }
+  QMap<QString, IDataContainerBundle::Pointer> bundles = tempDCA->getDataContainerBundles();
+  dca->setDataContainerBundles(bundles);
 }
 
 // -----------------------------------------------------------------------------
@@ -280,16 +282,22 @@ void DataContainerReader::readData(bool preflight, DataContainerArrayProxy& prox
 
   // DataContainerArray::Pointer dca = getDataContainerArray();
   err = dca->readDataContainersFromHDF5(preflight, dcaGid, proxy, this);
-
   if(err < 0)
   {
     setErrorCondition(err);
     QString ss = QObject::tr("An error occurred trying to read the DataContainers from the file '%1'").arg(getInputFile());
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
-
   err = H5Gclose(dcaGid);
   dcaGid = -1;
+
+  err = readDataContainerBundles(fileId, dca);
+  if(err < 0)
+  {
+    setErrorCondition(err);
+    QString ss = QObject::tr("An error occurred trying to read the DataContainer Bundles from the file '%1'").arg(getInputFile());
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -432,6 +440,89 @@ int DataContainerReader::writeExistingPipelineToFile(AbstractFilterParametersWri
   }
   return index;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int DataContainerReader::readDataContainerBundles(hid_t fileId, DataContainerArray::Pointer dca)
+{
+  int err = 0;
+  hid_t dcbGroupId = H5Gopen(fileId, DREAM3D::StringConstants::DataContainerBundleGroupName.toAscii().constData(), H5P_DEFAULT);
+  if (dcbGroupId < 0)
+  {
+    QString ss = QObject::tr("Error opening HDF5 Group '%1' ").arg(DREAM3D::StringConstants::DataContainerBundleGroupName);
+    setErrorCondition(-74);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    return err;
+  }
+
+  HDF5ScopedGroupSentinel sentinel(&dcbGroupId, false);
+
+  QList<QString> groupNames;
+  err = QH5Utilities::getGroupObjects(dcbGroupId,H5Utilities::H5Support_GROUP, groupNames);
+  if (err < 0)
+  {
+    QString ss = QObject::tr("Error getting group objects from HDF5 group '%1' ").arg(DREAM3D::StringConstants::DataContainerBundleGroupName);
+    setErrorCondition(-75);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    return err;
+  }
+
+  char sep = 0x1E;
+  QListIterator<QString> iter(groupNames);
+  while(iter.hasNext() )
+  {
+    QString bundleName = iter.next();
+    DataContainerBundle::Pointer bundle = DataContainerBundle::New(bundleName);
+
+    hid_t bundleId = H5Gopen(dcbGroupId, bundleName.toLatin1().constData(), H5P_DEFAULT);
+    sentinel.addGroupId(&bundleId); // Make sure this group gets closed
+
+    // Read in the Data Container Names
+    QString dcNames;
+    err = QH5Lite::readStringDataset(bundleId, DREAM3D::StringConstants::DataContainerNames, dcNames);
+    if (err < 0)
+    {
+      QString ss = QObject::tr("Error reading data container group names from HDF5 group '%1' ").arg(bundleName);
+      setErrorCondition(-75);
+      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+      return err;
+    }
+    QStringList dcNameList = dcNames.split(QString(sep));
+
+    QStringListIterator nameIter(dcNameList);
+    while(nameIter.hasNext() )
+    {
+      QString dcName = nameIter.next();
+      DataContainer::Pointer dc = dca->getDataContainer(dcName);
+      if (NULL == dc.get() )
+      {
+        qDebug() << "Data Container '" << dcName << "' was NULL" << " " << __FILE__ << "(" << __LINE__ << ")";
+      }
+      bundle->append(dc);
+    }
+
+
+    QString metaArrays;
+    err = QH5Lite::readStringDataset(bundleId, DREAM3D::StringConstants::MetaDataArrays, metaArrays);
+    if (err < 0)
+    {
+      QString ss = QObject::tr("Error reading data container bundle meta data arrays from HDF5 group '%1' ").arg(bundleName);
+      setErrorCondition(-76);
+      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+      return err;
+    }
+    QStringList metaNameList = metaArrays.split(QString(sep));
+    bundle->setMetaDataArrays(metaNameList);
+
+    dca->addDataContainerBundle(bundle);
+  }
+
+  H5Gclose(dcbGroupId);
+  dcbGroupId = -1;
+  return err;
+}
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -447,9 +538,9 @@ AbstractFilter::Pointer DataContainerReader::newFilterInstance(bool copyFilterPa
   {
     copyFilterParameterInstanceVariables(filter.get());
 
-DREAM3D_COPY_INSTANCEVAR(InputFile)
+    DREAM3D_COPY_INSTANCEVAR(InputFile)
 
-    filter->setInputFile(getInputFile());
+        filter->setInputFile(getInputFile());
 #if 0
     filter->setOverwriteExistingDataContainers(getOverwriteExistingDataContainers());
     filter->setDataContainerArrayProxy(getDataContainerArrayProxy());
@@ -484,4 +575,5 @@ const QString DataContainerReader::getSubGroupName()
 // -----------------------------------------------------------------------------
 const QString DataContainerReader::getHumanLabel()
 { return "Read DREAM3D Data File"; }
+
 

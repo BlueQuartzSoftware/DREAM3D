@@ -354,11 +354,11 @@ int DataContainerWriter::writeDataContainerBundles(hid_t fileId)
     iter.next();
     IDataContainerBundle::Pointer bundle = iter.value();
     err = bundle->writeH5Data(dcbGid);
-
-
+    if (err < 0)
+    {
+      return err;
+    }
   }
-
-
   H5Gclose(dcbGid);
   dcbGid = -1;
   return 0;

@@ -64,7 +64,8 @@ namespace Detail
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-DataContainerBundle::DataContainerBundle()
+DataContainerBundle::DataContainerBundle() :
+m_MetaDataAMName(DREAM3D::StringConstants::MetaData)
 {
 
 }
@@ -206,6 +207,7 @@ int DataContainerBundle::writeH5Data(hid_t groupId)
 {
 
   hid_t bundleId = QH5Utilities::createGroup(groupId, getName());
+  // This object will make sure the HDF5 Group id is closed when it goes out of scope.
   Detail::H5GroupAutoCloser bundleIdClose(&bundleId);
 
   size_t count = static_cast<size_t>(m_DataContainers.size());
@@ -219,7 +221,7 @@ int DataContainerBundle::writeH5Data(hid_t groupId)
   char sep = 0x1E; // Use the ASCII 'record separator' value (Decimal value 30) to separate the names
   // Write the Names of the Data Containers that this bundle holds
   QString nameList = dcNameList.join(QString(sep));
-  int err = QH5Lite::writeStringDataset(bundleId, "DataContainerNames", nameList);
+  int err = QH5Lite::writeStringDataset(bundleId, DREAM3D::StringConstants::DataContainerNames, nameList);
   if(err < 0)
   {
     return err;
@@ -227,7 +229,7 @@ int DataContainerBundle::writeH5Data(hid_t groupId)
 
   // Write the names of the Meta Data Attribute Arrays that this bundle uses for grouping
   QString metaNameList = m_MetaDataArrays.join(QString(sep));
-  err = QH5Lite::writeStringDataset(bundleId, "MetaDataArrays", metaNameList);
+  err = QH5Lite::writeStringDataset(bundleId, DREAM3D::StringConstants::MetaDataArrays, metaNameList);
   if(err < 0)
   {
     return err;
