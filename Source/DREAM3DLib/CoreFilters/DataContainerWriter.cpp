@@ -200,8 +200,8 @@ void DataContainerWriter::execute()
   if(!dir.mkpath(parentPath))
   {
     QString ss = QObject::tr("Error creating parent path '%1'").arg(parentPath);
-    notifyErrorMessage(getHumanLabel(), ss, -1);
-    setErrorCondition(-1);
+    setErrorCondition(-11110);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;
   }
 
@@ -209,7 +209,7 @@ void DataContainerWriter::execute()
   if (err < 0)
   {
     QString ss = QObject::tr(": The hdf5 file could not be opened or created.\n The Given filename was:\n\t[%1]").arg(m_OutputFile);
-    setErrorCondition(-59);
+    setErrorCondition(-11112);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;
   }
@@ -307,14 +307,61 @@ void DataContainerWriter::execute()
     }
   }
 
+  // Write the Data ContainerBundles
+  err = writeDataContainerBundles(m_FileId);
+  if(err < 0)
+  {
+    QString ss = QObject::tr("Error writing the Data Container Bundles");
+    setErrorCondition(-11113);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    return;
+  }
+
+  // Write the XDMF File
   if (m_WriteXdmfFile == true)
   {
     writeXdmfFooter(out);
   }
 
   H5Gclose(dcaGid);
+
   dcaGid = -1;
+
   notifyStatusMessage(getHumanLabel(), "Complete");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int DataContainerWriter::writeDataContainerBundles(hid_t fileId)
+{
+  int err = QH5Utilities::createGroupsFromPath(DREAM3D::StringConstants::DataContainerBundleGroupName, m_FileId);
+  if (err < 0)
+  {
+    QString ss = QObject::tr("Error creating HDF Group %1").arg(DREAM3D::StringConstants::DataContainerBundleGroupName);
+    setErrorCondition(-61);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    return -1;
+  }
+  hid_t dcbGid = H5Gopen(m_FileId, DREAM3D::StringConstants::DataContainerBundleGroupName.toLatin1().data(), H5P_DEFAULT );
+
+  Detail::H5GroupAutoCloser groupCloser(&dcbGid);
+
+  QMap<QString, IDataContainerBundle::Pointer>& bundles = getDataContainerArray()->getDataContainerBundles();
+  QMapIterator<QString, IDataContainerBundle::Pointer> iter(bundles);
+  while(iter.hasNext())
+  {
+    iter.next();
+    IDataContainerBundle::Pointer bundle = iter.value();
+    err = bundle->writeH5Data(dcbGid);
+
+
+  }
+
+
+  H5Gclose(dcbGid);
+  dcbGid = -1;
+  return 0;
 }
 
 // -----------------------------------------------------------------------------

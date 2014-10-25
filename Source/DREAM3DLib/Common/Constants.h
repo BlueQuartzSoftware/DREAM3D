@@ -414,6 +414,7 @@ namespace DREAM3D
     const DREAM3D_STRING CellsName("Cells");
     const DREAM3D_STRING CrystalStructure("CrystalStructure");
     const DREAM3D_STRING DataContainerGroupName("DataContainers");
+    const DREAM3D_STRING DataContainerBundleGroupName("DataContainerBundles");
     const DREAM3D_STRING DataContainerType("DataContainerType");
     const DREAM3D_STRING AttributeMatrixType("AttributeMatrixType");
 

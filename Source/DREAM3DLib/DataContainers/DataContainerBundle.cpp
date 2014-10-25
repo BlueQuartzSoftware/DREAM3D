@@ -37,6 +37,30 @@
 #include "DataContainerBundle.h"
 
 
+#include "DREAM3DLib/DataArrays/StringDataArray.hpp"
+
+namespace Detail
+{
+  class H5GroupAutoCloser
+  {
+    public:
+      H5GroupAutoCloser(hid_t* groupId) :
+        gid(groupId)
+      {}
+
+      virtual ~H5GroupAutoCloser()
+      {
+        if (*gid > 0)
+        {
+          H5Gclose(*gid);
+        }
+      }
+    private:
+      hid_t* gid;
+  };
+}
+
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -173,4 +197,52 @@ qint32 DataContainerBundle::count()
 void DataContainerBundle::clear()
 {
   return m_DataContainers.clear();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int DataContainerBundle::writeH5Data(hid_t groupId)
+{
+
+  hid_t bundleId = QH5Utilities::createGroup(groupId, getName());
+  Detail::H5GroupAutoCloser bundleIdClose(&bundleId);
+
+  size_t count = static_cast<size_t>(m_DataContainers.size());
+  QStringList dcNameList;
+
+  for (size_t i = 0;i < count; i++)
+  {
+    dcNameList << m_DataContainers.at(i)->getName();
+  }
+
+  char sep = 0x1E; // Use the ASCII 'record separator' value (Decimal value 30) to separate the names
+  // Write the Names of the Data Containers that this bundle holds
+  QString nameList = dcNameList.join(QString(sep));
+  int err = QH5Lite::writeStringDataset(bundleId, "DataContainerNames", nameList);
+  if(err < 0)
+  {
+    return err;
+  }
+
+  // Write the names of the Meta Data Attribute Arrays that this bundle uses for grouping
+  QString metaNameList = m_MetaDataArrays.join(QString(sep));
+  err = QH5Lite::writeStringDataset(bundleId, "MetaDataArrays", metaNameList);
+  if(err < 0)
+  {
+    return err;
+  }
+
+  return err;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int DataContainerBundle::readH5Data(hid_t groupId)
+{
+  int err = -1;
+
+
+  return err;
 }

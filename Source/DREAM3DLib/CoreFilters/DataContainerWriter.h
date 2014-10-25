@@ -160,6 +160,8 @@ class DREAM3DLib_EXPORT DataContainerWriter : public AbstractFilter
 
     int writePipeline();
 
+    int writeDataContainerBundles(hid_t fileId);
+
     void writeXdmfHeader(QTextStream& out);
     void writeXdmfFooter(QTextStream& out);
 

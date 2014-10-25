@@ -102,6 +102,20 @@ class DREAM3DLib_EXPORT DataContainerBundle : public IDataContainerBundle
 
     void clear();
 
+    /**
+     * @brief writeH5Data Write this bundle out to an HDF5 File
+     * @param file_id The hdf5 file id or other group id where the bundle is going to be serialized to.
+     * @return
+     */
+    int writeH5Data(hid_t groupId);
+
+    /**
+     * @brief readH5Data Reads this bundle from an HDF5 file
+     * @param groupId
+     * @return
+     */
+    int readH5Data(hid_t groupId);
+
   protected:
     DataContainerBundle();
 
