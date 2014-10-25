@@ -220,7 +220,7 @@ class ConvertOrientationsImpl
           else
           {
             OrientationMath::RodtoQuat( q, m_InputRods[3 * i], m_InputRods[3 * i + 1], m_InputRods[3 * i + 2] );
-            QuaternionMathF::UnitQuaternion(q);            
+            QuaternionMathF::UnitQuaternion(q);
           }
           QuaternionMathF::Copy(q, quats[i]);
         }
@@ -247,7 +247,7 @@ class ConvertOrientationsImpl
       //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
       else if( 3 == m_InputType && 0 == m_OutputType )//axis angles->euler angles (currently unsupported)
       {
-        
+
       }
       else if( 3 == m_InputType && 1 == m_OutputType )//axis angles->quats
       {
@@ -262,7 +262,7 @@ class ConvertOrientationsImpl
           else
           {
             OrientationMath::AxisAngletoQuat( m_InputAxisAngles[4 * i], m_InputAxisAngles[4 * i + 1], m_InputAxisAngles[4 * i + 2], m_InputAxisAngles[4 * i + 3], q );
-            QuaternionMathF::UnitQuaternion(q);            
+            QuaternionMathF::UnitQuaternion(q);
           }
           QuaternionMathF::Copy(q, quats[i]);
         }
@@ -291,7 +291,7 @@ class ConvertOrientationsImpl
       convert(r.begin(), r.end());
     }
 #endif
-  private: 
+  private:
     float* m_InputEulerAngles;
     float* m_InputQuats;
     float* m_InputRods;
@@ -313,6 +313,8 @@ class ConvertOrientationsImpl
 // -----------------------------------------------------------------------------
 ConvertOrientations::ConvertOrientations() :
   AbstractFilter(),
+    m_InputType(0),
+  m_OutputType(1),
   m_CellEulerAnglesArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::EulerAngles),
   m_CellQuatsArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::Quats),
   m_CellRodriguesVectorsArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::RodriguesVectors),
@@ -325,16 +327,19 @@ ConvertOrientations::ConvertOrientations() :
   m_AxisAnglesArrayName(DREAM3D::CellData::AxisAngles),
   m_CellPhasesArrayName(DREAM3D::CellData::Phases),
   m_CellPhases(NULL),
+  m_EulerAngles(NULL),
   m_Quats(NULL),
+  m_RodriguesVectors(NULL),
+  m_AxisAngles(NULL),
   m_CellEulerAnglesArrayName(DREAM3D::CellData::EulerAngles),
+  m_CellEulerAngles(NULL),
   m_CellQuatsArrayName(DREAM3D::CellData::Quats),
+  m_CellQuats(NULL),
   m_CellRodriguesVectorsArrayName(DREAM3D::CellData::RodriguesVectors),
   m_CellAxisAnglesArrayName(DREAM3D::CellData::AxisAngles),
-  m_CellEulerAngles(NULL),
+  m_CellAxisAngles(NULL),
   m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
-  m_CrystalStructures(NULL),
-  m_InputType(0),
-  m_OutputType(1)
+  m_CrystalStructures(NULL)
 {
   m_OrientationOps = OrientationOps::getOrientationOpsVector();
   setupFilterParameters();
@@ -352,31 +357,31 @@ ConvertOrientations::~ConvertOrientations()
 void ConvertOrientations::setupFilterParameters()
 {
   FilterParameterVector parameters;
-    QVector<QString> choices;
-    choices.push_back(DREAM3D::CellData::EulerAngles);
-    choices.push_back(DREAM3D::CellData::Quats);
-    choices.push_back(DREAM3D::CellData::RodriguesVectors);
-    choices.push_back(DREAM3D::CellData::AxisAngles);
-    
-    LinkedChoicesFilterParameter::Pointer input = LinkedChoicesFilterParameter::New();
-    input->setHumanLabel("Input Orientation Representation");
-    input->setPropertyName("InputType");
-    input->setWidgetType(FilterParameterWidgetType::ChoiceWidget);
-    input->setChoices(choices);
-    QStringList inputLinkedProps;
-    inputLinkedProps<<"CellEulerAnglesArrayPath"<<"CellQuatsArrayPath"<<"CellRodriguesVectorsArrayPath"<<"CellAxisAnglesArrayPath";
-    input->setLinkedProperties(inputLinkedProps);
-    parameters.push_back(input);
+  QVector<QString> choices;
+  choices.push_back(DREAM3D::CellData::EulerAngles);
+  choices.push_back(DREAM3D::CellData::Quats);
+  choices.push_back(DREAM3D::CellData::RodriguesVectors);
+  choices.push_back(DREAM3D::CellData::AxisAngles);
 
-    LinkedChoicesFilterParameter::Pointer output = LinkedChoicesFilterParameter::New();
-    output->setHumanLabel("Output Orientation Representation");
-    output->setPropertyName("OutputType");
-    output->setWidgetType(FilterParameterWidgetType::ChoiceWidget);
-    output->setChoices(choices);
-    QStringList outputLinkedProps;
-    outputLinkedProps<<"EulerAnglesArrayName"<<"QuatsArrayName"<<"RodriguesVectorsArrayName"<<"AxisAnglesArrayName";
-    output->setLinkedProperties(outputLinkedProps);
-    parameters.push_back(output);
+  LinkedChoicesFilterParameter::Pointer input = LinkedChoicesFilterParameter::New();
+  input->setHumanLabel("Input Orientation Representation");
+  input->setPropertyName("InputType");
+  input->setWidgetType(FilterParameterWidgetType::ChoiceWidget);
+  input->setChoices(choices);
+  QStringList inputLinkedProps;
+  inputLinkedProps<<"CellEulerAnglesArrayPath"<<"CellQuatsArrayPath"<<"CellRodriguesVectorsArrayPath"<<"CellAxisAnglesArrayPath";
+  input->setLinkedProperties(inputLinkedProps);
+  parameters.push_back(input);
+
+  LinkedChoicesFilterParameter::Pointer output = LinkedChoicesFilterParameter::New();
+  output->setHumanLabel("Output Orientation Representation");
+  output->setPropertyName("OutputType");
+  output->setWidgetType(FilterParameterWidgetType::ChoiceWidget);
+  output->setChoices(choices);
+  QStringList outputLinkedProps;
+  outputLinkedProps<<"EulerAnglesArrayName"<<"QuatsArrayName"<<"RodriguesVectorsArrayName"<<"AxisAnglesArrayName";
+  output->setLinkedProperties(outputLinkedProps);
+  parameters.push_back(output);
 
   parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
   parameters.push_back(FilterParameter::New("Cell Euler Angles", "CellEulerAnglesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getCellEulerAnglesArrayPath(), true, "", 0));
@@ -419,18 +424,18 @@ int ConvertOrientations::writeFilterParameters(AbstractFilterParametersWriter* w
 {
   writer->openFilterGroup(this, index);
   DREAM3D_FILTER_WRITE_PARAMETER(InputType)
-  DREAM3D_FILTER_WRITE_PARAMETER(OutputType)
-  DREAM3D_FILTER_WRITE_PARAMETER(EulerAnglesArrayName)
-  DREAM3D_FILTER_WRITE_PARAMETER(QuatsArrayName)
-  DREAM3D_FILTER_WRITE_PARAMETER(RodriguesVectorsArrayName)
-  DREAM3D_FILTER_WRITE_PARAMETER(AxisAnglesArrayName)
-  DREAM3D_FILTER_WRITE_PARAMETER(CrystalStructuresArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(CellPhasesArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(CellEulerAnglesArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(CellQuatsArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(CellRodriguesVectorsArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(CellAxisAnglesArrayPath)
-  writer->closeFilterGroup();
+      DREAM3D_FILTER_WRITE_PARAMETER(OutputType)
+      DREAM3D_FILTER_WRITE_PARAMETER(EulerAnglesArrayName)
+      DREAM3D_FILTER_WRITE_PARAMETER(QuatsArrayName)
+      DREAM3D_FILTER_WRITE_PARAMETER(RodriguesVectorsArrayName)
+      DREAM3D_FILTER_WRITE_PARAMETER(AxisAnglesArrayName)
+      DREAM3D_FILTER_WRITE_PARAMETER(CrystalStructuresArrayPath)
+      DREAM3D_FILTER_WRITE_PARAMETER(CellPhasesArrayPath)
+      DREAM3D_FILTER_WRITE_PARAMETER(CellEulerAnglesArrayPath)
+      DREAM3D_FILTER_WRITE_PARAMETER(CellQuatsArrayPath)
+      DREAM3D_FILTER_WRITE_PARAMETER(CellRodriguesVectorsArrayPath)
+      DREAM3D_FILTER_WRITE_PARAMETER(CellAxisAnglesArrayPath)
+      writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
 
@@ -450,7 +455,7 @@ void ConvertOrientations::dataCheck()
     return;
   }
 
-  if(0 == getInputType() && 3 == getOutputType() || 3 == getInputType() && 0 == getOutputType())
+  if(  (0 == getInputType() && 3 == getOutputType()) || (3 == getInputType() && 0 == getOutputType() ) )
   {
     QString ss = QObject::tr("Direct conversion between Axis Angle and Euler Angle is currently not implemented");
     notifyErrorMessage(getHumanLabel(), ss, -1001);
@@ -461,104 +466,104 @@ void ConvertOrientations::dataCheck()
   switch(getInputType())
   {
     case 0://euler angles
-      {
-        QVector<size_t> dims(1, 3);
-        m_CellEulerAnglesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getCellEulerAnglesArrayPath(), dims);
-        if( NULL != m_CellEulerAnglesPtr.lock().get() )
-        { m_CellEulerAngles = m_CellEulerAnglesPtr.lock()->getPointer(0); }
-        tempPath.update(getCellEulerAnglesArrayPath().getDataContainerName(), getCellEulerAnglesArrayPath().getAttributeMatrixName(), "" );
-      }
+    {
+      QVector<size_t> dims(1, 3);
+      m_CellEulerAnglesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getCellEulerAnglesArrayPath(), dims);
+      if( NULL != m_CellEulerAnglesPtr.lock().get() )
+      { m_CellEulerAngles = m_CellEulerAnglesPtr.lock()->getPointer(0); }
+      tempPath.update(getCellEulerAnglesArrayPath().getDataContainerName(), getCellEulerAnglesArrayPath().getAttributeMatrixName(), "" );
+    }
       break;
 
     case 1://quats
-      {
-        QVector<size_t> dims(1, 4);
-        m_CellQuatsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getCellQuatsArrayPath(), dims);
-        if( NULL != m_CellQuatsPtr.lock().get() )
-        { m_CellQuats = m_CellQuatsPtr.lock()->getPointer(0); }
-        tempPath.update(getCellQuatsArrayPath().getDataContainerName(), getCellQuatsArrayPath().getAttributeMatrixName(), "" );
-      }
+    {
+      QVector<size_t> dims(1, 4);
+      m_CellQuatsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getCellQuatsArrayPath(), dims);
+      if( NULL != m_CellQuatsPtr.lock().get() )
+      { m_CellQuats = m_CellQuatsPtr.lock()->getPointer(0); }
+      tempPath.update(getCellQuatsArrayPath().getDataContainerName(), getCellQuatsArrayPath().getAttributeMatrixName(), "" );
+    }
       break;
 
     case 2://rods
-      {
-        QVector<size_t> dims(1, 3);
-        m_CellRodriguesVectorsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getCellRodriguesVectorsArrayPath(), dims);
-        if( NULL != m_CellRodriguesVectorsPtr.lock().get() )
-        { m_CellRodriguesVectors = m_CellRodriguesVectorsPtr.lock()->getPointer(0); }
-        tempPath.update(getCellRodriguesVectorsArrayPath().getDataContainerName(), getCellRodriguesVectorsArrayPath().getAttributeMatrixName(), "" );
-      }
+    {
+      QVector<size_t> dims(1, 3);
+      m_CellRodriguesVectorsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getCellRodriguesVectorsArrayPath(), dims);
+      if( NULL != m_CellRodriguesVectorsPtr.lock().get() )
+      { m_CellRodriguesVectors = m_CellRodriguesVectorsPtr.lock()->getPointer(0); }
+      tempPath.update(getCellRodriguesVectorsArrayPath().getDataContainerName(), getCellRodriguesVectorsArrayPath().getAttributeMatrixName(), "" );
+    }
       break;
 
     case 3://axis angle
-      {
-        QVector<size_t> dims(1, 4);
-        m_CellAxisAnglesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getCellAxisAnglesArrayPath(), dims);
-        if( NULL != m_CellAxisAnglesPtr.lock().get() )
-        { m_CellAxisAngles = m_CellAxisAnglesPtr.lock()->getPointer(0); }
-        tempPath.update(getCellAxisAnglesArrayPath().getDataContainerName(), getCellAxisAnglesArrayPath().getAttributeMatrixName(), "" );
-      }
+    {
+      QVector<size_t> dims(1, 4);
+      m_CellAxisAnglesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getCellAxisAnglesArrayPath(), dims);
+      if( NULL != m_CellAxisAnglesPtr.lock().get() )
+      { m_CellAxisAngles = m_CellAxisAnglesPtr.lock()->getPointer(0); }
+      tempPath.update(getCellAxisAnglesArrayPath().getDataContainerName(), getCellAxisAnglesArrayPath().getAttributeMatrixName(), "" );
+    }
       break;
   }
 
   switch(getOutputType())
   {
     case 0://euler angles
-      {
-        QVector<size_t> dims(1, 3);
-        tempPath.update(tempPath.getDataContainerName(), tempPath.getAttributeMatrixName(), getEulerAnglesArrayName() );
-        m_EulerAnglesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0, dims);
-        if( NULL != m_EulerAnglesPtr.lock().get() )
-        { m_EulerAngles = m_EulerAnglesPtr.lock()->getPointer(0); }
-      }
+    {
+      QVector<size_t> dims(1, 3);
+      tempPath.update(tempPath.getDataContainerName(), tempPath.getAttributeMatrixName(), getEulerAnglesArrayName() );
+      m_EulerAnglesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0, dims);
+      if( NULL != m_EulerAnglesPtr.lock().get() )
+      { m_EulerAngles = m_EulerAnglesPtr.lock()->getPointer(0); }
+    }
       break;
 
     case 1://quats
-      {
-        QVector<size_t> dims(1, 4);
-        tempPath.update(tempPath.getDataContainerName(), tempPath.getAttributeMatrixName(), getQuatsArrayName() );
-        m_QuatsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0, dims);
-        if( NULL != m_QuatsPtr.lock().get() )
-        { m_Quats = m_QuatsPtr.lock()->getPointer(0); }
-      }
+    {
+      QVector<size_t> dims(1, 4);
+      tempPath.update(tempPath.getDataContainerName(), tempPath.getAttributeMatrixName(), getQuatsArrayName() );
+      m_QuatsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0, dims);
+      if( NULL != m_QuatsPtr.lock().get() )
+      { m_Quats = m_QuatsPtr.lock()->getPointer(0); }
+    }
       break;
 
     case 2://rods
-      {
-        QVector<size_t> dims(1, 3);
-        tempPath.update(tempPath.getDataContainerName(), tempPath.getAttributeMatrixName(), getRodriguesVectorsArrayName() );
-        m_RodriguesVectorsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0, dims);
-        if( NULL != m_RodriguesVectorsPtr.lock().get() )
-        { m_RodriguesVectors = m_RodriguesVectorsPtr.lock()->getPointer(0); }
-      }
+    {
+      QVector<size_t> dims(1, 3);
+      tempPath.update(tempPath.getDataContainerName(), tempPath.getAttributeMatrixName(), getRodriguesVectorsArrayName() );
+      m_RodriguesVectorsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0, dims);
+      if( NULL != m_RodriguesVectorsPtr.lock().get() )
+      { m_RodriguesVectors = m_RodriguesVectorsPtr.lock()->getPointer(0); }
+    }
       break;
 
     case 3://axis angle
-      {
-        QVector<size_t> dims(1, 4);
-        tempPath.update(tempPath.getDataContainerName(), tempPath.getAttributeMatrixName(), getAxisAnglesArrayName() );
-        m_AxisAnglesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0, dims);
-        if( NULL != m_AxisAnglesPtr.lock().get() )
-        { m_AxisAngles = m_AxisAnglesPtr.lock()->getPointer(0); }
-      }
+    {
+      QVector<size_t> dims(1, 4);
+      tempPath.update(tempPath.getDataContainerName(), tempPath.getAttributeMatrixName(), getAxisAnglesArrayName() );
+      m_AxisAnglesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0, dims);
+      if( NULL != m_AxisAnglesPtr.lock().get() )
+      { m_AxisAngles = m_AxisAnglesPtr.lock()->getPointer(0); }
+    }
       break;
   }
 
 
-   if( 0 != tempPath.getDataContainerName().compare(getCellPhasesArrayPath().getDataContainerName()))
-   {
+  if( 0 != tempPath.getDataContainerName().compare(getCellPhasesArrayPath().getDataContainerName()))
+  {
     QString ss = QObject::tr("'Cell Phases' and 'Input Orientation Representation' types must belong to the same Data Container");
     notifyErrorMessage(getHumanLabel(), ss, -1002);
     setErrorCondition(-1002);
     return;
-   }
-   if( 0 != tempPath.getAttributeMatrixName().compare(getCellPhasesArrayPath().getAttributeMatrixName()))
-   {
+  }
+  if( 0 != tempPath.getAttributeMatrixName().compare(getCellPhasesArrayPath().getAttributeMatrixName()))
+  {
     QString ss = QObject::tr("'Cell Phases' and 'Input Orientation Representation' types must belong to the same Attribute Matrix");
     notifyErrorMessage(getHumanLabel(), ss, -1003);
     setErrorCondition(-1003);
     return;
-   }
+  }
 
   //get phase + crystal structure
   QVector<size_t> dims(1, 1);
@@ -598,27 +603,27 @@ void ConvertOrientations::execute()
   switch(getInputType())
   {
     case 0://euler angles
-      {
-        totalPoints = m_CellEulerAnglesPtr.lock()->getNumberOfTuples();
-      }
+    {
+      totalPoints = m_CellEulerAnglesPtr.lock()->getNumberOfTuples();
+    }
       break;
 
     case 1://quats
-      {
-        totalPoints = m_CellQuatsPtr.lock()->getNumberOfTuples();
-      }
+    {
+      totalPoints = m_CellQuatsPtr.lock()->getNumberOfTuples();
+    }
       break;
 
     case 2://rods
-      {
-        totalPoints = m_CellRodriguesVectorsPtr.lock()->getNumberOfTuples();
-      }
+    {
+      totalPoints = m_CellRodriguesVectorsPtr.lock()->getNumberOfTuples();
+    }
       break;
 
     case 3://axis angle
-      {
-        totalPoints = m_CellAxisAnglesPtr.lock()->getNumberOfTuples();
-      }
+    {
+      totalPoints = m_CellAxisAnglesPtr.lock()->getNumberOfTuples();
+    }
       break;
   }
 
@@ -631,7 +636,7 @@ void ConvertOrientations::execute()
   if (doParallel == true)
   {
     tbb::parallel_for(tbb::blocked_range<size_t>(0, totalPoints),
-      ConvertOrientationsImpl(m_CellEulerAngles, m_CellQuats, m_CellRodriguesVectors, m_CellAxisAngles, m_EulerAngles, m_Quats, m_RodriguesVectors, m_AxisAngles, m_CellPhases, m_CrystalStructures, m_InputType, m_OutputType), tbb::auto_partitioner());
+                      ConvertOrientationsImpl(m_CellEulerAngles, m_CellQuats, m_CellRodriguesVectors, m_CellAxisAngles, m_EulerAngles, m_Quats, m_RodriguesVectors, m_AxisAngles, m_CellPhases, m_CrystalStructures, m_InputType, m_OutputType), tbb::auto_partitioner());
   }
   else
 #endif

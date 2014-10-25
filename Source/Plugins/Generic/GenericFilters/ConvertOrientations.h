@@ -135,10 +135,12 @@ class  ConvertOrientations : public AbstractFilter
 
   private:
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, CellPhases)
+
     DEFINE_CREATED_DATAARRAY_VARIABLE(float, EulerAngles)
     DEFINE_CREATED_DATAARRAY_VARIABLE(float, Quats)
     DEFINE_CREATED_DATAARRAY_VARIABLE(float, RodriguesVectors)
     DEFINE_CREATED_DATAARRAY_VARIABLE(float, AxisAngles)
+
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, CellEulerAngles)
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, CellQuats)
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, CellRodriguesVectors)
