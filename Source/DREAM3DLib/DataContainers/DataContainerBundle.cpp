@@ -55,6 +55,14 @@ DataContainerBundle::~DataContainerBundle()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+QString DataContainerBundle::GetMetaDataName()
+{
+  return DREAM3D::StringConstants::MetaData;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void DataContainerBundle::setDataContainers(QVector<DataContainer::Pointer> &containers)
 {
   m_DataContainers = containers;

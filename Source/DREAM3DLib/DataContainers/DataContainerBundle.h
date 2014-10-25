@@ -60,8 +60,29 @@ class DREAM3DLib_EXPORT DataContainerBundle : public IDataContainerBundle
       return sharedPtr;
     }
 
+    /**
+     * @brief GetMetaDataName
+     * @return Returns the name of the Meta Data AttributeMatrix name. This name should be used for any AttributeMatrix
+     * that is used in a DataContainer to hold the type of data that is used to group DataContainers into bundles.
+     */
+    static QString GetMetaDataName();
+
+    /**
+    * @brief The name of this DataContainerBundle
+    */
     DREAM3D_INSTANCE_STRING_PROPERTY(Name)
-    DREAM3D_INSTANCE_STRING_PROPERTY(MetaDataAttributeMatrixName)
+
+
+    /*
+     * @brief This is the list of array names that reside inside the "Meta Data" attribute matrix that are the
+     * pieces of data that define why the data containers were grouped into a bundle. For example, if you have a time
+     * series set of data where each Data Container is a step in "time" and there are several values for time:
+     * @li Time Value Real value of time
+     * @li Time Step Value Time Step value in the simulation
+     * @li Time Index The raw index of the data, i.e., this is the actual ordering that could also be used as then index
+     * into an array of data containers
+     */
+    DREAM3D_INSTANCE_PROPERTY(QStringList, MetaDataArrays)
 
     void setDataContainers(QVector<DataContainer::Pointer> &containers);
     QVector<QString> getDataContainerNames();
@@ -86,6 +107,7 @@ class DREAM3DLib_EXPORT DataContainerBundle : public IDataContainerBundle
 
   private:
     QVector<DataContainer::Pointer>  m_DataContainers;
+    QString m_MetaDataAMName;
 
     DataContainerBundle(const DataContainerBundle&); // Copy Constructor Not Implemented
     void operator=(const DataContainerBundle&); // Operator '=' Not Implemented
