@@ -157,7 +157,7 @@ void BinaryWatershed::execute()
   seedLabels->SetRegions(region);
   seedLabels->Allocate();
   seedLabels->FillBuffer(0);
-  for(int i=0; i<peakLocations.size(); i++)
+  for(size_t i=0; i<peakLocations.size(); i++)
   {
     seedLabels->SetPixel(peakLocations[i], i+1);
   }
