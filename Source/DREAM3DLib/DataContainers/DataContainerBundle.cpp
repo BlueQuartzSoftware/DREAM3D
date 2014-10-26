@@ -99,7 +99,7 @@ void DataContainerBundle::setDataContainers(QVector<DataContainer::Pointer> &con
 QVector<QString> DataContainerBundle::getDataContainerNames()
 {
   QVector<QString> dcNames;
-  for (size_t i=0;i<m_DataContainers.size();i++)
+  for (qint32 i=0;i<m_DataContainers.size();i++)
   {
     dcNames.push_back(m_DataContainers[i]->getName());
   }

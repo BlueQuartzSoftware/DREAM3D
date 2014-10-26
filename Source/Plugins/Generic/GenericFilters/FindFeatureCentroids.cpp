@@ -188,13 +188,13 @@ void FindFeatureCentroids::find_centroids()
     featurecenters[i] = 0.0f;
   }
   size_t zStride, yStride;
-  for(size_t i = 0; i < zPoints; i++)
+  for(qint32 i = 0; i < zPoints; i++)
   {
     zStride = i * xPoints * yPoints;
-    for (size_t j = 0; j < yPoints; j++)
+    for (qint32 j = 0; j < yPoints; j++)
     {
       yStride = j * xPoints;
-      for(size_t k = 0; k < xPoints; k++)
+      for(qint32 k = 0; k < xPoints; k++)
       {
         int gnum = m_FeatureIds[zStride + yStride + k];
         featurecenters[gnum * 5 + 0]++;

@@ -1619,13 +1619,13 @@ UInt8ArrayType::Pointer CubicOps::generateIPFTriangleLegend(int imageDim)
 
   DREAM3D::Rgb color;
   size_t idx = 0;
-  size_t yScanLineIndex = imageDim; // We use this to control where teh data is drawn. Otherwise the image will come out flipped vertically
+  size_t yScanLineIndex = imageDim; // We use this to control where the data is drawn. Otherwise the image will come out flipped vertically
   // Loop over every pixel in the image and project up to the sphere to get the angle and then figure out the RGB from
   // there.
-  for (size_t yIndex = 0; yIndex < imageDim; ++yIndex)
+  for (int32_t yIndex = 0; yIndex < imageDim; ++yIndex)
   {
     yScanLineIndex--;
-    for (size_t xIndex = 0; xIndex < imageDim; ++xIndex)
+    for (int32_t xIndex = 0; xIndex < imageDim; ++xIndex)
     {
       idx = (imageDim * yScanLineIndex) + xIndex;
 //      temp = 0;
@@ -1926,7 +1926,7 @@ UInt8ArrayType::Pointer CubicOps::generateMisorientationTriangleLegend(float ang
   }
 
   ///create image, fill with empty pixels, setup painter
-  int width = 1000;
+ // int width = 1000;
   //double scale = width / tan(M_PI / 8);
   /*
    int height = ceil(0.349159 * scale);
@@ -1948,7 +1948,7 @@ UInt8ArrayType::Pointer CubicOps::generateMisorientationTriangleLegend(float ang
   double r = tan(A);
   std::vector<double> x, y, z;
   y = DREAM3DMath::linspace(0, r / DREAM3D::Constants::k_Sqrt2, 100);
-  for(int i = 0; i < y.size(); i++)
+  for(std::vector<double>::size_type i = 0; i < y.size(); i++)
   {
     double k = r * r - y[i] * y[i];
     if(k < 0) { k = 0; }
@@ -1964,7 +1964,7 @@ UInt8ArrayType::Pointer CubicOps::generateMisorientationTriangleLegend(float ang
   y.clear();
   z.clear();
   x = DREAM3DMath::linspace(r / DREAM3D::Constants::k_Sqrt3, r, 100);
-  for(int i = 0; i < x.size(); i++)
+  for(std::vector<double>::size_type i = 0; i < x.size(); i++)
   {
     double k = r * r - x[i] * x[i];
     if(k < 0) { k = 0; }
@@ -1980,7 +1980,7 @@ UInt8ArrayType::Pointer CubicOps::generateMisorientationTriangleLegend(float ang
   y.clear();
   z.clear();
   x = DREAM3DMath::linspace(r / DREAM3D::Constants::k_Sqrt3, r / DREAM3D::Constants::k_Sqrt2, 100);
-  for(int i = 0; i < x.size(); i++)
+  for(std::vector<double>::size_type i = 0; i < x.size(); i++)
   {
     y.push_back(x[i]);
     double k = r * r - 2 * x[i] * x[i];
@@ -2056,7 +2056,7 @@ UInt8ArrayType::Pointer CubicOps::generateMisorientationTriangleLegend(float ang
   */
 
   ///fill triangles
-  for(int i = 0; i < ba.size(); i++)
+  for(std::vector< std::pair<double, double> >::size_type i = 0; i < ba.size(); i++)
   {
     QuatF quat, refQuat;
     refQuat.x = 0;
@@ -2077,7 +2077,12 @@ UInt8ArrayType::Pointer CubicOps::generateMisorientationTriangleLegend(float ang
   std::pair<int, int> vert1, vert2, vert3;
   std::vector<int> triangle;
 
-  for(int k = 0; k < triList.size(); k++)
+const double k_PiOver8 = M_PI / 8.0;
+const double k_PiOver6 = M_PI / 6.0;
+qint32 baSizeMinus1 = static_cast<qint32>(ba.size()- 1);
+qint32 baSizeMinus2 = static_cast<qint32>(ba.size()- 2);
+
+  for(std::vector< std::vector<int> >::size_type k = 0; k < triList.size(); k++)
   {
     triangle = triList[k];
     vert1 = scaledba[triangle[0]];
@@ -2086,24 +2091,24 @@ UInt8ArrayType::Pointer CubicOps::generateMisorientationTriangleLegend(float ang
 
     //check that none of verticies are special spots
     bool color = true;
-    if(A > M_PI / 8)
+    if(A > k_PiOver8)
     {
-      if(A > M_PI / 8 && A <= M_PI / 6)
+      if( A <= k_PiOver6)
       {
         //1 extra point at end
-        if(triangle[0] == ba.size() - 1) { color = false; }
-        if(triangle[1] == ba.size() - 1) { color = false; }
-        if(triangle[2] == ba.size() - 1) { color = false; }
+        if(triangle[0] == baSizeMinus1) { color = false; }
+        if(triangle[1] == baSizeMinus1) { color = false; }
+        if(triangle[2] == baSizeMinus1) { color = false; }
       }
       else
       {
         //2 extra points at end
-        if(triangle[0] == ba.size() - 1) { color = false; }
-        if(triangle[1] == ba.size() - 1) { color = false; }
-        if(triangle[2] == ba.size() - 1) { color = false; }
-        if(triangle[0] == ba.size() - 2) { color = false; }
-        if(triangle[1] == ba.size() - 2) { color = false; }
-        if(triangle[2] == ba.size() - 2) { color = false; }
+        if(triangle[0] == baSizeMinus1) { color = false; }
+        if(triangle[1] == baSizeMinus1) { color = false; }
+        if(triangle[2] == baSizeMinus1) { color = false; }
+        if(triangle[0] == baSizeMinus2) { color = false; }
+        if(triangle[1] == baSizeMinus2) { color = false; }
+        if(triangle[2] == baSizeMinus2) { color = false; }
       }
     }
 
@@ -2164,12 +2169,14 @@ UInt8ArrayType::Pointer CubicOps::generateMisorientationTriangleLegend(float ang
             else
             {
               //edge or inside
-              uint8_t red = r1 * gamma1 + r2 * gamma2 + r3 * gamma3;
+              #if 0
+                uint8_t red = r1 * gamma1 + r2 * gamma2 + r3 * gamma3;
               uint8_t green = g1 * gamma1 + g2 * gamma2 + g3 * gamma3;
               uint8_t blue = b1 * gamma1 + b2 * gamma2 + b3 * gamma3;
               uint8_t alpha = 255;
               unsigned int pix = (alpha << 24) | (red << 16) | (green << 8) | blue;
-              //image.setPixel(i, j, pix);
+              image.setPixel(i, j, pix);
+#endif
             }
           }
           else
@@ -2192,7 +2199,7 @@ UInt8ArrayType::Pointer CubicOps::generateMisorientationTriangleLegend(float ang
     y.clear();
     z.clear();
     y = DREAM3DMath::linspace(0.0f, r / sqrt(2.0f), 100);
-    for(int i = 0; i < y.size(); i++)
+    for(std::vector<double>::size_type i = 0; i < y.size(); i++)
     {
       z.push_back(0);
       k = r * r - y[i] * y[i];
@@ -2208,7 +2215,7 @@ UInt8ArrayType::Pointer CubicOps::generateMisorientationTriangleLegend(float ang
     y.clear();
     z.clear();
     x = DREAM3DMath::linspace(r / DREAM3D::Constants::k_Sqrt3, r, 100);
-    for(int i = 0; i < x.size(); i++)
+    for(std::vector<double>::size_type i = 0; i < x.size(); i++)
     {
       k = (r * r - x[i] * x[i]) / 2;
       if(k < 0) { k = 0; }
@@ -2224,7 +2231,7 @@ UInt8ArrayType::Pointer CubicOps::generateMisorientationTriangleLegend(float ang
     y.clear();
     z.clear();
     x = DREAM3DMath::linspace(r / DREAM3D::Constants::k_Sqrt3, r / DREAM3D::Constants::k_Sqrt2, 100);
-    for(int i = 0; i < x.size(); i++)
+    for(std::vector<double>::size_type i = 0; i < x.size(); i++)
     {
       y.push_back(x[i]);
       k = r * r - 2 * x[i] * x[i];
@@ -2248,7 +2255,7 @@ UInt8ArrayType::Pointer CubicOps::generateMisorientationTriangleLegend(float ang
     double phi3 = acos(maxk / (tan(A) * sin(theta3)));
 
     y = DREAM3DMath::linspace(r * sin(phi3), r / (DREAM3D::Constants::k_Sqrt2), 100);
-    for(int i = 0; i < y.size(); i++)
+    for(std::vector<double>::size_type i = 0; i < y.size(); i++)
     {
       x.push_back(sqrt(r * r - y[i]*y[i]));
       z.push_back(0);
@@ -2262,7 +2269,7 @@ UInt8ArrayType::Pointer CubicOps::generateMisorientationTriangleLegend(float ang
     y.clear();
     z.clear();
     z = DREAM3DMath::linspace(r * cos(theta1), r * cos(theta2), 100);
-    for(int i = 0; i < z.size(); i++)
+    for(std::vector<double>::size_type i = 0; i < z.size(); i++)
     {
       y.push_back(z[i]);
       x.push_back(sqrt(r * r - 2 * z[i]*z[i]));
@@ -2276,7 +2283,7 @@ UInt8ArrayType::Pointer CubicOps::generateMisorientationTriangleLegend(float ang
     y.clear();
     z.clear();
     z = DREAM3DMath::linspace(r * cos(theta1), r * cos(theta3), 100);
-    for(int i = 0; i < z.size(); i++)
+    for(std::vector<double>::size_type i = 0; i < z.size(); i++)
     {
       x.push_back(sqrt((r * r - z[i]*z[i]) / 2));
       y.push_back(x[i]);
@@ -2290,7 +2297,7 @@ UInt8ArrayType::Pointer CubicOps::generateMisorientationTriangleLegend(float ang
     y.clear();
     z.clear();
     z = DREAM3DMath::linspace(r * cos(theta2), r * cos(theta3), 100);
-    for(int i = 0; i < z.size(); i++)
+    for(std::vector<double>::size_type i = 0; i < z.size(); i++)
     {
       x.push_back(maxk);
       y.push_back(sqrt(r * r - maxk * maxk - z[i]*z[i]));
@@ -2313,7 +2320,7 @@ UInt8ArrayType::Pointer CubicOps::generateMisorientationTriangleLegend(float ang
     double phi3 = acos(maxk / (tan(A) * sin(thetab)));
 
     y = DREAM3DMath::linspace(r * sin(phi3), r / (DREAM3D::Constants::k_Sqrt2), 100);
-    for(int i = 0; i < y.size(); i++)
+    for(std::vector<double>::size_type i = 0; i < y.size(); i++)
     {
       z.push_back(0);
       x.push_back(sqrt(r * r - y[i]*y[i]));
@@ -2327,7 +2334,7 @@ UInt8ArrayType::Pointer CubicOps::generateMisorientationTriangleLegend(float ang
     y.clear();
     z.clear();
     z = DREAM3DMath::linspace(r * cos(thetac), r * cos(thetad), 100);
-    for(int i = 0; i < z.size(); i++)
+    for(std::vector<double>::size_type i = 0; i < z.size(); i++)
     {
       y.push_back(z[i]);
       double k = r * r - 2 * (z[i] * z[i]);
@@ -2343,7 +2350,7 @@ UInt8ArrayType::Pointer CubicOps::generateMisorientationTriangleLegend(float ang
     y.clear();
     z.clear();
     z = DREAM3DMath::linspace(r * cos(thetaa), r * cos(thetab), 100);
-    for(int i = 0; i < z.size(); i++)
+    for(std::vector<double>::size_type i = 0; i < z.size(); i++)
     {
       x.push_back(sqrt((r * r - (z[i]*z[i])) / 2));
       y.push_back(x[i]);
@@ -2357,7 +2364,7 @@ UInt8ArrayType::Pointer CubicOps::generateMisorientationTriangleLegend(float ang
     y.clear();
     z.clear();
     z = DREAM3DMath::linspace(r * cos(thetad), r * cos(thetab), 100);
-    for(int i = 0; i < z.size(); i++)
+    for(std::vector<double>::size_type i = 0; i < z.size(); i++)
     {
       x.push_back(maxk);
       y.push_back(sqrt(r * r - maxk * maxk - z[i]*z[i]));
@@ -2372,7 +2379,7 @@ UInt8ArrayType::Pointer CubicOps::generateMisorientationTriangleLegend(float ang
     z.clear();
     std::vector<double> theta, tempd3, phi;
     theta = DREAM3DMath::linspace(thetac, thetaa, 100);
-    for(int i = 0; i < theta.size(); i++)
+    for(std::vector<double>::size_type i = 0; i < theta.size(); i++)
     {
       tempd3.push_back(tan(A)*cos(theta[i]));
       double k = 2 * ((tan(A) * tan(A)) - tempd3[i] * tempd3[i]) - (1 - tempd3[i]) * (1 - tempd3[i]);
@@ -2397,7 +2404,7 @@ UInt8ArrayType::Pointer CubicOps::generateMisorientationTriangleLegend(float ang
     double theta3 = acos((sqrt(tan(A) * tan(A) - 2 * maxk * maxk)) / (tan(A)));
 
     z = DREAM3DMath::linspace(r * cos(theta2), r * cos(theta3), 100);
-    for(int i = 0; i < z.size(); i++)
+    for(std::vector<double>::size_type i = 0; i < z.size(); i++)
     {
       x.push_back(sqrt((r * r - z[i]*z[i]) / 2));
       y.push_back(x[i]);
@@ -2412,7 +2419,7 @@ UInt8ArrayType::Pointer CubicOps::generateMisorientationTriangleLegend(float ang
     z.clear();
     std::vector<double> theta, tempd3, phi;
     theta = DREAM3DMath::linspace(theta1, theta2, 100);
-    for(int i = 0; i < theta.size(); i++)
+    for(std::vector<double>::size_type i = 0; i < theta.size(); i++)
     {
       tempd3.push_back(tan(A)*cos(theta[i]));
       double k = 2 * (tan(A) * tan(A) - tempd3[i] * tempd3[i]) - (1 - tempd3[i]) * (1 - tempd3[i]);
@@ -2431,7 +2438,7 @@ UInt8ArrayType::Pointer CubicOps::generateMisorientationTriangleLegend(float ang
     y.clear();
     z.clear();
     z = DREAM3DMath::linspace(r * cos(theta1), r * cos(theta3), 100);
-    for(int i = 0; i < z.size(); i++)
+    for(std::vector<double>::size_type i = 0; i < z.size(); i++)
     {
       x.push_back(maxk);
       y.push_back(sqrt(r * r - maxk * maxk - z[i]*z[i]));
@@ -2450,7 +2457,7 @@ std::vector< std::pair<double, double> > CubicOps::rodri2pair(std::vector<double
   std::vector< std::pair<double, double> > result;
   double q0, q1, q2, q3, ang, r, x1, y1, z1, rad, xPair, yPair, k;
 
-  for(int i = 0; i < x.size(); i++)
+  for(std::vector<double>::size_type i = 0; i < x.size(); i++)
   {
     //rodri2volpreserv
     q0 = sqrt(1 / (1 + x[i] * x[i] + y[i] * y[i] + z[i] * z[i]));

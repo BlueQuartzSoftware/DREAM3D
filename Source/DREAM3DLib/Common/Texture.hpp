@@ -239,7 +239,7 @@ class Texture
         TextureBins[i] = static_cast<int>(bin);
       }
 
-      for (size_t i = 0; i < HexagonalOps::k_OdfSize; i++)
+      for (int i = 0; i < HexagonalOps::k_OdfSize; i++)
       {
         odf[i] = 0;
       }

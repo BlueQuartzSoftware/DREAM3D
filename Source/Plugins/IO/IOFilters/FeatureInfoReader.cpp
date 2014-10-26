@@ -268,7 +268,7 @@ int FeatureInfoReader::readFile()
   for(int i = 0; i < numfeatures; i++)
   {
     inFile >> gnum >> phase >> ea1 >> ea2 >> ea3;
-    if(gnum >= cellFeatureAttrMat->getNumTuples())
+    if(gnum >= static_cast<int>(cellFeatureAttrMat->getNumTuples()) )
     {
       tDims[0] = gnum + 1;
       cellFeatureAttrMat->setTupleDimensions(tDims);

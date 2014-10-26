@@ -64,7 +64,7 @@ standard C++ library."
 #define RANK_2D 2
 #define RANK_3D 3
 
-size_t AttrSize = 0;
+int32_t AttrSize = 0;
 
 
 

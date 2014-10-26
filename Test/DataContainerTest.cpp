@@ -331,7 +331,7 @@ void TestDataContainerWriter()
 
   QVector<size_t> dims(1, 3);
   FloatArrayType::Pointer avgEuler = FloatArrayType::CreateArray(size, dims, DREAM3D::FeatureData::AxisEulerAngles);
-  for(size_t i = 0; i < size; ++i)
+  for(int32_t i = 0; i < size; ++i)
   {
     avgEuler->setComponent(i, 0, i * 0.665f);
     avgEuler->setComponent(i, 1, i * 0.325f);

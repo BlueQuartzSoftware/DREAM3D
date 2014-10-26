@@ -1184,7 +1184,7 @@ void PackPrimaryPhases::place_features(Int32ArrayType::Pointer featureOwnersPtr)
 
   //determine initial set of available points
   availablePointsCount = 0;
-  for(size_t i = 0; i < m_TotalPackingPoints; i++)
+  for(int i = 0; i < m_TotalPackingPoints; i++)
   {
     if(exclusionOwners[i] == 0)
     {
@@ -2478,13 +2478,14 @@ void PackPrimaryPhases::cleanup_features()
   }
 
   float resConst = m->getXRes() * m->getYRes() * m->getZRes();
-  for (int i = 0; i < totalPoints; i++)
+  const double k_PiOver6 = M_PI / 6.0;
+  for (size_t i = 0; i < totalPoints; i++)
   {
     touchessurface = 0;
     if(checked[i] == false && m_FeatureIds[i] > firstPrimaryFeature)
     {
       PrimaryStatsData* pp = PrimaryStatsData::SafePointerDownCast(statsDataArray[m_CellPhases[i]].get());
-      minsize = static_cast<float>( pp->getMinFeatureDiameter() * pp->getMinFeatureDiameter() * pp->getMinFeatureDiameter() * M_PI / 6.0f );
+      minsize = static_cast<float>( pp->getMinFeatureDiameter() * pp->getMinFeatureDiameter() * pp->getMinFeatureDiameter() * k_PiOver6 );
       minsize = static_cast<float>( int(minsize / (resConst)) );
       currentvlist.push_back(i);
       count = 0;

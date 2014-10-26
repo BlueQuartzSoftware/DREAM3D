@@ -450,16 +450,16 @@ void _TestDeepCopyStructArray()
   // Create the array again, this time allocating the data and putting in some known data
   src = StructArray<T>::CreateArray(numTuples, name, true);
   Vec3Int_t* ptr = src->getPointer(0);
-  for(int i = 0; i < numTuples; i++)
+  for(size_t i = 0; i < numTuples; i++)
   {
-    Vec3Int_t* value = ptr + i;
+    Vec3Int_t* value = ptr + i; // Pointer Arithmetic
     value->pos[0] = 1;
     value->pos[1] = 2;
     value->pos[2] = 3;
   }
   copy = boost::dynamic_pointer_cast<StructArray<T> >(src->deepCopy());
   Vec3Int_t* cPtr = copy->getPointer(0);
-  for(int i = 0; i < numTuples; i++)
+  for(size_t i = 0; i < numTuples; i++)
   {
     Vec3Int_t* value = ptr + i;
     Vec3Int_t* cvalue = cPtr + i;

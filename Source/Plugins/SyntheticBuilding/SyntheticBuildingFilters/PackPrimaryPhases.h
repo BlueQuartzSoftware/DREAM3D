@@ -135,10 +135,11 @@ class PackPrimaryPhases : public AbstractFilter
     DREAM3D_FILTER_PARAMETER(DataArrayPath, InputShapeTypesArrayPath)
     Q_PROPERTY(DataArrayPath InputShapeTypesArrayPath READ getInputShapeTypesArrayPath WRITE setInputShapeTypesArrayPath)
 
-    DREAM3D_FILTER_PARAMETER(bool, UseMask)
-    Q_PROPERTY(bool UseMask READ getUseMask WRITE setUseMask)
     DREAM3D_FILTER_PARAMETER(DataArrayPath, MaskArrayPath)
     Q_PROPERTY(DataArrayPath MaskArrayPath READ getMaskArrayPath WRITE setMaskArrayPath)
+
+    DREAM3D_FILTER_PARAMETER(bool, UseMask)
+    Q_PROPERTY(bool UseMask READ getUseMask WRITE setUseMask)
 
     DREAM3D_FILTER_PARAMETER(bool, HaveFeatures)
     Q_PROPERTY(bool HaveFeatures READ getHaveFeatures WRITE setHaveFeatures)

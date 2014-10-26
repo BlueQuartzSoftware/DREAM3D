@@ -282,7 +282,7 @@ class StatsGen
         random = rg.genrand_res53();
         choose = 0;
         totaldensity = 0;
-        for (size_t j = 0; j < HexagonalOps::k_OdfSize; j++)
+        for (int j = 0; j < HexagonalOps::k_OdfSize; j++)
         {
           density = odf[j];
           td1 = totaldensity;
@@ -325,7 +325,7 @@ class StatsGen
         random = rg.genrand_res53();
         choose = 0;
         totaldensity = 0;
-        for (size_t j = 0; j < OrthoRhombicOps::k_OdfSize; j++)
+        for (int j = 0; j < OrthoRhombicOps::k_OdfSize; j++)
         {
           density = odf[j];
           td1 = totaldensity;
@@ -381,7 +381,7 @@ class StatsGen
         random = rg.genrand_res53();
         choose = 0;
         totaldensity = 0;
-        for (size_t j = 0; j < OrthoRhombicOps::k_OdfSize; j++)
+        for (int j = 0; j < OrthoRhombicOps::k_OdfSize; j++)
         {
           density = odf[j];
           td1 = totaldensity;
@@ -437,7 +437,7 @@ class StatsGen
         random = rg.genrand_res53();
         choose = 0;
         totaldensity = 0;
-        for (size_t j = 0; j < CubicOps::k_MdfSize; j++)
+        for (int j = 0; j < CubicOps::k_MdfSize; j++)
         {
           density = mdf[j];
           td1 = totaldensity;
