@@ -207,14 +207,20 @@ void FindBoundingBoxFeatures::find_boundingboxfeatures()
       if(move == 1) { boundbox[sidetomove] = coords[sidetomove]; }
     }
   }
-  for (size_t j = 1; j < size; j++)
+    for (size_t j = 1; j < size; j++)
   {
-    if(m_Centroids[3 * j] <= boundbox[1]) { m_BiasedFeatures[j] = true; }
-    if(m_Centroids[3 * j] >= boundbox[2]) { m_BiasedFeatures[j] = true; }
-    if(m_Centroids[3 * j + 1] <= boundbox[3]) { m_BiasedFeatures[j] = true; }
-    if(m_Centroids[3 * j + 1] >= boundbox[4]) { m_BiasedFeatures[j] = true; }
-    if(m_Centroids[3 * j + 2] <= boundbox[5]) { m_BiasedFeatures[j] = true; }
-    if(m_Centroids[3 * j + 2] >= boundbox[6]) { m_BiasedFeatures[j] = true; }
+    if(m_Centroids[3 * j] <= boundbox[1])
+    { m_BiasedFeatures[j] = true; }
+    if(m_Centroids[3 * j] >= boundbox[2])
+    { m_BiasedFeatures[j] = true; }
+    if(m_Centroids[3 * j + 1] <= boundbox[3])
+    { m_BiasedFeatures[j] = true; }
+    if(m_Centroids[3 * j + 1] >= boundbox[4])
+    { m_BiasedFeatures[j] = true; }
+    if(m_Centroids[3 * j + 2] <= boundbox[5])
+    { m_BiasedFeatures[j] = true; }
+    if(m_Centroids[3 * j + 2] >= boundbox[6])
+    { m_BiasedFeatures[j] = true; }
   }
 }
 void FindBoundingBoxFeatures::find_boundingboxfeatures2D()

@@ -76,6 +76,7 @@ class DREAM3DLib_EXPORT StatsDataArray : public IDataArray
         return NullPointer();
       }
       StatsDataArray::Pointer ptr = StatsDataArray::New();
+      ptr->setName(name);
       std::vector<unsigned int> phase_types(numElements, DREAM3D::PhaseType::UnknownPhaseType);
       if(allocate) { ptr->fillArrayWithNewStatsData(numElements, &(phase_types.front()) ); }
       return ptr;
@@ -88,6 +89,7 @@ class DREAM3DLib_EXPORT StatsDataArray : public IDataArray
         return NullPointer();
       }
       StatsDataArray::Pointer ptr = StatsDataArray::New();
+      ptr->setName(name);
       std::vector<unsigned int> phase_types(numTuples, DREAM3D::PhaseType::UnknownPhaseType);
       if(allocate) { ptr->fillArrayWithNewStatsData(numTuples, &(phase_types.front()) ); }
       return ptr;
@@ -100,6 +102,7 @@ class DREAM3DLib_EXPORT StatsDataArray : public IDataArray
         return NullPointer();
       }
       StatsDataArray::Pointer ptr = StatsDataArray::New();
+      ptr->setName(name);
       std::vector<unsigned int> phase_types(numTuples, DREAM3D::PhaseType::UnknownPhaseType);
       if(allocate) { ptr->fillArrayWithNewStatsData(numTuples, &(phase_types.front()) ); }
       return ptr;
@@ -112,6 +115,7 @@ class DREAM3DLib_EXPORT StatsDataArray : public IDataArray
         return NullPointer();
       }
       StatsDataArray::Pointer ptr = StatsDataArray::New();
+      ptr->setName(name);
       std::vector<unsigned int> phase_types(numTuples, DREAM3D::PhaseType::UnknownPhaseType);
       if(allocate) { ptr->fillArrayWithNewStatsData(numTuples, &(phase_types.front()) ); }
       return ptr;
@@ -130,6 +134,7 @@ class DREAM3DLib_EXPORT StatsDataArray : public IDataArray
         numTuples *= tDims[iter];
       }
       StatsDataArray::Pointer ptr = StatsDataArray::New();
+      ptr->setName(name);
       std::vector<unsigned int> phase_types(numTuples, DREAM3D::PhaseType::UnknownPhaseType);
       if(allocate) { ptr->fillArrayWithNewStatsData(numTuples, &(phase_types.front()) ); }
       return ptr;
