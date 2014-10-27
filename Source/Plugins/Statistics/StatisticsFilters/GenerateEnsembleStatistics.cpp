@@ -547,16 +547,22 @@ void GenerateEnsembleStatistics::gatherSizeStats()
   float vol;
   for (size_t i = 1; i < numfeatures; i++)
   {
-    if(m_BiasedFeatures[i] == false)
-    {
+   // if(m_BiasedFeatures[i] == false || m_PhaseTypes[i] == DREAM3D::PhaseType::MatrixPhase )
+   // {
       values[m_FeaturePhases[i]][0].push_back(m_EquivalentDiameters[i]);
       vol = (1.0 / 6.0) * DREAM3D::Constants::k_Pi * m_EquivalentDiameters[i] * m_EquivalentDiameters[i] * m_EquivalentDiameters[i];
       fractions[m_FeaturePhases[i]] = fractions[m_FeaturePhases[i]] + vol;
       totalUnbiasedVolume = totalUnbiasedVolume + vol;
-    }
+    //}
   }
   for (size_t i = 1; i < numensembles; i++)
   {
+    if(m_PhaseTypes[i] == DREAM3D::PhaseType::MatrixPhase)
+    {
+      MatrixStatsData* pp = MatrixStatsData::SafePointerDownCast(statsDataArray[i].get());
+      pp->setPhaseFraction((fractions[i] / totalUnbiasedVolume));
+    }
+
     if(m_PhaseTypes[i] == DREAM3D::PhaseType::PrimaryPhase)
     {
       PrimaryStatsData* pp = PrimaryStatsData::SafePointerDownCast(statsDataArray[i].get());
