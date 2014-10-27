@@ -450,10 +450,12 @@ int DataContainerReader::readDataContainerBundles(hid_t fileId, DataContainerArr
   hid_t dcbGroupId = H5Gopen(fileId, DREAM3D::StringConstants::DataContainerBundleGroupName.toAscii().constData(), H5P_DEFAULT);
   if (dcbGroupId < 0)
   {
-    QString ss = QObject::tr("Error opening HDF5 Group '%1' ").arg(DREAM3D::StringConstants::DataContainerBundleGroupName);
-    setErrorCondition(-74);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-    return err;
+   // NO Bundles are available to read so just return.
+
+//    QString ss = QObject::tr("Error opening HDF5 Group '%1' ").arg(DREAM3D::StringConstants::DataContainerBundleGroupName);
+//    setErrorCondition(-75);
+//    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    return 0;
   }
 
   HDF5ScopedGroupSentinel sentinel(&dcbGroupId, false);
@@ -463,7 +465,7 @@ int DataContainerReader::readDataContainerBundles(hid_t fileId, DataContainerArr
   if (err < 0)
   {
     QString ss = QObject::tr("Error getting group objects from HDF5 group '%1' ").arg(DREAM3D::StringConstants::DataContainerBundleGroupName);
-    setErrorCondition(-75);
+    setErrorCondition(-76);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return err;
   }
