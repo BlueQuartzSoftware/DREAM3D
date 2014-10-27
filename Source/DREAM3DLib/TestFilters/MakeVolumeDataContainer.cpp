@@ -144,7 +144,7 @@ void MakeVolumeDataContainer::dataCheck()
   QVector<QString> names = angfeatures.getFilterFeatures<QVector<QString> > ();
   dims.resize(1);
   dims[0] = 1;
-  for (size_t i = 0; i < names.size(); ++i)
+  for (qint32 i = 0; i < names.size(); ++i)
   {
     if (reader.getPointerType(names[i]) == Ebsd::Int32)
     {

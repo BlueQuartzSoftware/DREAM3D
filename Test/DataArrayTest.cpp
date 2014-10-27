@@ -683,9 +683,9 @@ int __ValidateArray(typename DataArray<T>::Pointer array, size_t numTuples, int 
       index = t*numComp + j;
       array->setComponent(t, j, static_cast<T>(t+j) );
       T val = array->getComponent(t, j);
-      DREAM3D_REQUIRE_EQUAL(val, t+j)
+      DREAM3D_REQUIRE_EQUAL(val, (static_cast<T>(t+j)))
           val = array->getValue(index);
-      DREAM3D_REQUIRE_EQUAL(val, t+j)
+      DREAM3D_REQUIRE_EQUAL(val, (static_cast<T>(t+j)))
     }
   }
 

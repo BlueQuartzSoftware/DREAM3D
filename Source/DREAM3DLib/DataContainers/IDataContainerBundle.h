@@ -74,6 +74,9 @@ class DREAM3DLib_EXPORT IDataContainerBundle : public QObject
 
     virtual void clear() = 0;
 
+    virtual int writeH5Data(hid_t groupId) = 0;
+
+    virtual int readH5Data(hid_t groupId) = 0;
 
   protected:
     IDataContainerBundle() {}

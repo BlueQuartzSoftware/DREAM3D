@@ -216,7 +216,7 @@ void IdentifyDislocationSegments::execute()
   Int32DynamicListArray::Pointer edgesContainingVert = edgesPtr->getEdgesContainingVert();
 
   int dnum = 0;
-  size_t size = 0;
+  qint32 size = 0;
   QVector<size_t> tDims(1, dnum);
   int64_t initialEdgesListSize = 100;
   QVector<int64_t> edgeslist(initialEdgesListSize, -1);
@@ -299,16 +299,16 @@ void IdentifyDislocationSegments::execute()
   gid[0] = 0;
   QSet<int32_t> featureIdSet;
   featureIdSet.insert(0);
-  for(size_t i = 1; i < dnum; ++i)
+  for(int32_t i = 1; i < dnum; ++i)
   {
     gid[i] = i; //numberGenerator();
     featureIdSet.insert(gid[i]);
   }
 
-  size_t r;
-  size_t temp;
+  qint32 r;
+  qint32 temp;
   //--- Shuffle elements by randomly exchanging each with one other.
-  for (size_t i = 1; i < dnum; i++)
+  for (qint32 i = 1; i < dnum; i++)
   {
     r = numberGenerator(); // Random remaining position.
     if (r >= dnum)

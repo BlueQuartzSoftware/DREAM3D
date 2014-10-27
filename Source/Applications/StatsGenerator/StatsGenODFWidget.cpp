@@ -699,7 +699,7 @@ void StatsGenODFWidget::on_loadODFTextureBtn_clicked()
     e3s.resize(count);
     weights.resize(count);
     sigmas.resize(count);
-    for(int i = 0; i < count; ++i)
+    for(size_t i = 0; i < count; ++i)
     {
       e1s[i] = phi1[i];
       e2s[i] = phi[i];
@@ -732,7 +732,7 @@ void StatsGenODFWidget::on_loadODFTextureBtn_clicked()
     e3s.resize(count);
     weights.resize(count);
     sigmas.resize(count);
-    for(int i = 0; i < count; ++i)
+    for(size_t i = 0; i < count; ++i)
     {
       e1s[i] = phi1[i];
       e2s[i] = phi[i];
@@ -784,7 +784,7 @@ void StatsGenODFWidget::on_loadODFTextureBtn_clicked()
     e3s.resize(count);
     weights.resize(count);
     sigmas.resize(count);
-    for(int i = 0; i < count; ++i)
+    for(size_t i = 0; i < count; ++i)
     {
       e1s[i] = data->getComponent(i, 0);
       e2s[i] = data->getComponent(i, 1);

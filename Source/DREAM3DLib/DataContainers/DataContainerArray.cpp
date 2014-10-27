@@ -466,7 +466,7 @@ void DataContainerArray::removeDataContainerFromBundles(const QString &name)
     if (dcbPtr.get() != NULL)
     {
       QVector<QString> dcbNames = dcbPtr->getDataContainerNames();
-      for (size_t i=0;i<dcbNames.size();i++)
+      for (qint32 i=0;i<dcbNames.size();i++)
       {
         if (dcbNames[i].compare(name) == 0)
         {

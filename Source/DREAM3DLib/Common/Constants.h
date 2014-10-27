@@ -414,6 +414,9 @@ namespace DREAM3D
     const DREAM3D_STRING CellsName("Cells");
     const DREAM3D_STRING CrystalStructure("CrystalStructure");
     const DREAM3D_STRING DataContainerGroupName("DataContainers");
+    const DREAM3D_STRING DataContainerBundleGroupName("DataContainerBundles");
+    const DREAM3D_STRING DataContainerNames("DataContainerNames");
+    const DREAM3D_STRING MetaDataArrays("MetaDataArrays");
     const DREAM3D_STRING DataContainerType("DataContainerType");
     const DREAM3D_STRING AttributeMatrixType("AttributeMatrixType");
 
@@ -477,6 +480,8 @@ namespace DREAM3D
     const DREAM3D_STRING VertsName("Verts");
 
     const DREAM3D_STRING Weight("Weight");
+
+    const DREAM3D_STRING MetaData("_META_DATA");
   }
 
   namespace CellType
@@ -612,7 +617,7 @@ namespace DREAM3D
     const unsigned int EdgeEnsemble = 9; //!<
     const unsigned int FaceEnsemble = 10; //!<
     const unsigned int CellEnsemble = 11; //!<
-    const unsigned int GenericBundle = 12; //!<
+    const unsigned int MetaData = 12; //!<
     const unsigned int Unknown = 999; //!<
   }
 

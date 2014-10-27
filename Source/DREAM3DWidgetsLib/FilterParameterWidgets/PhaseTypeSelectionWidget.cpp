@@ -175,7 +175,7 @@ void PhaseTypeSelectionWidget::updateComboBoxes()
     QComboBox* cb = new QComboBox(m_PhaseTypeScrollContents);
     str.append(" ComboBox");
     cb->setObjectName(str);
-    for (size_t s = 0; s < phaseTypestrings.size(); ++s)
+    for (qint32 s = 0; s < phaseTypestrings.size(); ++s)
     {
       cb->addItem((phaseTypestrings[s]), shapeTypeEnums[s]);
       cb->setItemData(static_cast<int>(s), shapeTypeEnums[s], Qt::UserRole);

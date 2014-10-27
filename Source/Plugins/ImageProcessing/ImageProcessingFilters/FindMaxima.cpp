@@ -96,7 +96,7 @@ class FindMaximaPrivate
 
       //fill output data with false then set peaks to true
       outputImage->FillBuffer(false);
-      for(int i=0; i<peakLocations.size(); i++)
+      for(size_t i=0; i<peakLocations.size(); i++)
       {
         outputImage->SetPixel(peakLocations[i], true);
       }

@@ -180,7 +180,7 @@ namespace ImageProcessing
             
             //create list of seed points (label member pixels)
             typename std::vector<typename TInputImage::IndexType> seedList;
-            for(int j=0; j<labelObject->Size(); j++)
+            for(size_t j=0; j<labelObject->Size(); j++)
             {
               seedList.push_back(labelObject->GetIndex(j));
             }
@@ -221,7 +221,7 @@ namespace ImageProcessing
                         //label j is the peak with the same value as i, merge labels
                         goodPeak[j] = false;
                         typename BinaryToLabelType::OutputImageType::LabelObjectType* otherLabelObject = binaryLabel->GetOutput()->GetNthLabelObject(j);
-                        for(int k=0; k<otherLabelObject->Size(); k++)
+                        for(size_t k=0; k<otherLabelObject->Size(); k++)
                         {
                           labelObject->AddIndex(otherLabelObject->GetIndex(k));
                         }

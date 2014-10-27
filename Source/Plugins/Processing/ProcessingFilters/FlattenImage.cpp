@@ -166,7 +166,7 @@ void FlattenImage::dataCheck()
 
   int numImageComp = 1;
 
-  VolumeDataContainer* m = m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, m_ImageDataArrayPath.getDataContainerName());
+  VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, m_ImageDataArrayPath.getDataContainerName());
   if(getErrorCondition() < 0 || NULL == m) { return; }
   AttributeMatrix::Pointer attrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, m_ImageDataArrayPath.getAttributeMatrixName(), -301);
   if(getErrorCondition() < 0) { return; }

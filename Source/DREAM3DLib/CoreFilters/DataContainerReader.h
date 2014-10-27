@@ -128,6 +128,12 @@ class DREAM3DLib_EXPORT DataContainerReader : public AbstractFilter
      */
     DataContainerArrayProxy readDataContainerArrayStructure(const QString &path);
 
+    /**
+     * @brief readDataContainerBundles Reads the data Container bundles from the HDF5 file
+     * @return
+     */
+    int readDataContainerBundles(hid_t fileId, DataContainerArray::Pointer dca);
+
 
   signals:
     void updateFilterParameters(AbstractFilter* filter);

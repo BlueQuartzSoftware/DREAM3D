@@ -255,7 +255,7 @@ void FindLocalAverageCAxisMisalignments::execute()
   {
     NeighborList<int>& neighborlist = *(m_NeighborList.lock());
     NeighborList<float>& caxismisalignmentList = *(m_CAxisMisalignmentList.lock());
-    for(int i = 1; i < numFeatures; i++)
+    for(size_t i = 1; i < numFeatures; i++)
     {
       int parentid = m_FeatureParentIds[i];
       for (size_t j = 0; j < neighborlist[i].size(); j++)
@@ -271,7 +271,7 @@ void FindLocalAverageCAxisMisalignments::execute()
 
   if (m_CalcBiasedAvg == true)
   {
-    for(int i = 1; i < numFeatures; i++)
+    for(size_t i = 1; i < numFeatures; i++)
     {
       int parentid = m_FeatureParentIds[i];
       m_NumFeaturesPerParent[parentid]++;
@@ -279,7 +279,7 @@ void FindLocalAverageCAxisMisalignments::execute()
     }
   }
 
-  for(int i = 1; i < newNumFeatures; i++)
+  for(size_t i = 1; i < newNumFeatures; i++)
   {
     if (m_CalcBiasedAvg == true) { m_LocalCAxisMisalignments[i] /= m_NumFeaturesPerParent[i]; }
     if (m_CalcUnbiasedAvg == true)

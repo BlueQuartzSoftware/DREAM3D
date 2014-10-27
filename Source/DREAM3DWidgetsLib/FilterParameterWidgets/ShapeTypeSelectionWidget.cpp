@@ -174,7 +174,7 @@ void ShapeTypeSelectionWidget::updateComboBoxes()
     QComboBox* cb = new QComboBox(m_ShapeTypeScrollContents);
     str.append(" ComboBox");
     cb->setObjectName(str);
-    for (size_t s = 0; s < shapeTypeStrings.size(); ++s)
+    for (int32_t s = 0; s < shapeTypeStrings.size(); ++s)
     {
       cb->addItem((shapeTypeStrings[s]), shapeTypeEnums[s]);
       cb->setItemData(static_cast<int>(s), shapeTypeEnums[s], Qt::UserRole);

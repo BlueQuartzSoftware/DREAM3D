@@ -95,7 +95,7 @@ void* ModifiedLambertProjectionArray::getVoidPointer(size_t i)
 #ifndef NDEBUG
   if(m_ModifiedLambertProjectionArray.size() > 0)
   {
-    BOOST_ASSERT(i < m_ModifiedLambertProjectionArray.size());
+    BOOST_ASSERT(i < static_cast<size_t>(m_ModifiedLambertProjectionArray.size()));
   }
 #endif
   if(i >= this->getNumberOfTuples())

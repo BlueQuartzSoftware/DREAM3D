@@ -356,7 +356,7 @@ void MergeColonies::execute()
     return;
   }
 
-  size_t numParents = 0;
+  qint32 numParents = 0;
   size_t totalPoints = static_cast<size_t>(m_FeatureIdsPtr.lock()->getNumberOfTuples());
   for (size_t k = 0; k < totalPoints; k++)
   {
