@@ -434,6 +434,7 @@ namespace DREAM3D
     const DREAM3D_STRING FaceNeighbors("FaceNeighbors");
     const DREAM3D_STRING FacesContainingVert("FacesContainingVert");
     const DREAM3D_STRING FacesName("Faces");
+    const DREAM3D_STRING Frequencies("Frequencies");
 
     const DREAM3D_STRING GBCD("GBCD");
     const DREAM3D_STRING FeatureAvgDisorientation ("FeatureAvgDisorientation");
@@ -451,6 +452,7 @@ namespace DREAM3D
     const DREAM3D_STRING MeshFaceNeighborLists("MeshFaceNeighborLists");
     const DREAM3D_STRING MicroTextureBins("MicroTextureBins");
     const DREAM3D_STRING MinimumValue("Minimum Value");
+    const DREAM3D_STRING MinMaxNoOfBins("MinMaxNoOfBins");
     const DREAM3D_STRING MisorientationBins("MisorientationBins");
     const DREAM3D_STRING Neighbor_Feature_ID_List( "Neighbor_Feature_ID_List");
 
@@ -465,6 +467,8 @@ namespace DREAM3D
     const DREAM3D_STRING PrecipitateBoundaryFraction("Precipitate Boundary Fraction");
     const DREAM3D_STRING PrecipitateStatsData("PrecipitateStatsData");
     const DREAM3D_STRING PrimaryStatsData("PrimaryStatsData");
+
+    const DREAM3D_STRING RadialDistFunc("Radial Distribution Function");
 
     const DREAM3D_STRING Sigma("Sigma");
     const DREAM3D_STRING StandardDeviation("Standard Deviation");
@@ -544,6 +548,7 @@ namespace DREAM3D
       BetaColumnCount = 2,       //!<
       LogNormalColumnCount = 2,  //!<
       PowerLawColumnCount = 2,   //!<
+      RawDistDataColumnCount = 2,   //!<
       UnknownColumCount = 0      //!<
     };
 

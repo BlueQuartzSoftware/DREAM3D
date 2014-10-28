@@ -222,6 +222,7 @@ class GenerateEnsembleStatistics : public AbstractFilter
     void gatherMDFStats();
     void gatherODFStats();
     void gatherAxisODFStats();
+    void gatherRadialDistFunc();
 
   private:
     QVector<OrientationOps::Pointer> m_OrientationOps;

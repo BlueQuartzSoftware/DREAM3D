@@ -245,6 +245,12 @@ int H5PrecipitateStatsDataDelegate::writePrecipitateStatsData(PrecipitateStatsDa
                               DREAM3D::StringConstants::Feature_Size_Distribution,
                               data->getFeatureSizeDistribution());
 
+  // Write the Radial Distribution Function
+  err = writeDistributionData(groupId,
+                              data->getRadialDistFunctionType(),
+                              DREAM3D::StringConstants::RadialDistFunc,
+                              data->getRadialDistFunction());
+
   // Write the Bin Numbers
   err = writeBinNumbers(data, groupId);
 

@@ -514,6 +514,8 @@ void GenerateEnsembleStatistics::execute()
     gatherAxisODFStats();
   }
 
+  gatherRadialDistFunc();
+
   notifyStatusMessage(getHumanLabel(), "GenerateEnsembleStatistics Completed");
 }
 
@@ -708,6 +710,73 @@ void GenerateEnsembleStatistics::gatherAspectRatioStats()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+
+void GenerateEnsembleStatistics::gatherRadialDistFunc()
+{
+    StatsDataArray& statsDataArray = *(m_StatsDataArray);
+
+    //float maxdiam;
+    //float mindiam;
+    //float totalUnbiasedVolume = 0.0;
+    QVector<VectorOfFloatArray> radialDistFunc;
+   // QVector<QVector<QVector<float > > > values;
+
+    //FloatArrayType::Pointer binnumbers;
+    size_t numfeatures = m_EquivalentDiametersPtr.lock()->getNumberOfTuples();
+    size_t numensembles = m_PhaseTypesPtr.lock()->getNumberOfTuples();
+
+    QVector<float> fractions(numensembles, 0.0);
+    radialDistFunc.resize(numensembles);
+    //values.resize(numensembles);
+
+    for(size_t i = 1; i < numensembles; i++)
+    {
+      radialDistFunc[i] = statsDataArray[i]->CreateCorrelatedDistributionArrays(3, 1);
+      //values[i].resize(1);
+    }
+
+    radialDistFunc[2][0]->setValue(0, 10.34);
+    radialDistFunc[2][1]->setValue(0, 11.32);
+
+//    float vol;
+//    for (size_t i = 1; i < numfeatures; i++)
+//    {
+//      if(m_BiasedFeatures[i] == false)
+//      {
+//        values[m_FeaturePhases[i]][0].push_back(m_EquivalentDiameters[i]);
+//      }
+//      vol = (1.0 / 6.0) * DREAM3D::Constants::k_Pi * m_EquivalentDiameters[i] * m_EquivalentDiameters[i] * m_EquivalentDiameters[i];
+//      fractions[m_FeaturePhases[i]] = fractions[m_FeaturePhases[i]] + vol;
+//      totalUnbiasedVolume = totalUnbiasedVolume + vol;
+//    }
+
+
+    for (size_t i = 1; i < numensembles; i++)
+    {
+      if(m_PhaseTypes[i] == DREAM3D::PhaseType::PrecipitatePhase)
+      {
+
+        PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsDataArray[i].get());
+//        pp->setPhaseFraction((fractions[i] / totalUnbiasedVolume));
+//        m_DistributionAnalysis[m_SizeDistributionFitType]->calculateCorrelatedParameters(values[i], sizedist[i]);
+        pp->setRadialDistFunction(radialDistFunc[i]);
+//        DistributionAnalysisOps::determinemaxandminvalues(values[i][0], maxdiam, mindiam);
+//        int numbins = int(maxdiam / m_SizeCorrelationResolution) + 1;
+//        pp->setFeatureDiameterInfo(m_SizeCorrelationResolution, maxdiam, mindiam);
+//        binnumbers = FloatArrayType::CreateArray(numbins, DREAM3D::StringConstants::BinNumber);
+//        DistributionAnalysisOps::determinebinnumbers(maxdiam, mindiam, m_SizeCorrelationResolution, binnumbers);
+
+//        pp->setBinNumbers(binnumbers);
+
+    }
+}
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+
+
 void GenerateEnsembleStatistics::gatherOmega3Stats()
 {
   StatsDataArray& statsDataArray = *(m_StatsDataArray);

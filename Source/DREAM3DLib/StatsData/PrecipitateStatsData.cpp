@@ -103,6 +103,7 @@ FloatArrayType::Pointer PrecipitateStatsData::generateBinNumbers()
 void PrecipitateStatsData::initialize()
 {
   m_FeatureSize_DistType = DREAM3D::DistributionType::LogNormal;
+  m_RadialDistFunctionType = DREAM3D::DistributionType::UnknownDistributionType;
   m_BOverA_DistType = DREAM3D::DistributionType::Beta;
   m_COverA_DistType = DREAM3D::DistributionType::Beta;
   m_Clustering_DistType = DREAM3D::DistributionType::LogNormal;

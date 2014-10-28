@@ -106,6 +106,14 @@ VectorOfFloatArray StatsData::CreateCorrelatedDistributionArrays(uint32_t distri
     v[1] = FloatArrayType::CreateArray(numBins, DREAM3D::StringConstants::MinimumValue);
     v[1]->initializeWithZeros();
   }
+  else if(distributionType == DREAM3D::DistributionType::UnknownDistributionType)
+  {
+    v.resize(DREAM3D::DistributionType::RawDistDataColumnCount);
+    v[0] = FloatArrayType::CreateArray(numBins, DREAM3D::StringConstants::Frequencies);
+    v[0]->initializeWithZeros();
+    v[1] = FloatArrayType::CreateArray(numBins, DREAM3D::StringConstants::MinMaxNoOfBins);
+    v[1]->initializeWithZeros();
+  }
   return v;
 }
 // -----------------------------------------------------------------------------
