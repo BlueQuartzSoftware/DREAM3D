@@ -225,7 +225,8 @@ class DREAM3DLib_EXPORT AttributeMatrix : public Observable
       }
       else
       {
-        return getAttributeArray(attributeArrayName);
+        IDataArray::Pointer ptr = getAttributeArray(attributeArrayName);
+        return boost::dynamic_pointer_cast<ArrayType>(ptr);
       }
       return attributeArray;
     }

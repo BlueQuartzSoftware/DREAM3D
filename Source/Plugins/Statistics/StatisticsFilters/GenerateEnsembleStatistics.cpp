@@ -148,6 +148,13 @@ void GenerateEnsembleStatistics::setupFilterParameters()
   parameters.push_back(FilterParameter::New("Feature Phases", "FeaturePhasesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeaturePhasesArrayPath(), false, ""));
 
   QStringList linkedProps;
+
+  linkedProps << "RDFArrayPath";
+  parameters.push_back(LinkedBooleanFilterParameter::New("Include Radial Dist Func", "IncludeRadialDistFunc", getIncludeRadialDistFunc(), linkedProps, false));
+  parameters.push_back(FilterParameter::New("Radial Distribution Function", "RDFArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getRDFArrayPath(), true, ""));
+  linkedProps.clear();
+
+
   linkedProps << "SizeDistributionFitType" << "BiasedFeaturesArrayPath" << "EquivalentDiametersArrayPath";
   linkedProps << "AspectRatioDistributionFitType" << "AspectRatiosArrayPath";
   linkedProps << "Omega3DistributionFitType" << "Omega3sArrayPath";
@@ -172,6 +179,8 @@ void GenerateEnsembleStatistics::setupFilterParameters()
   parameters.push_back(FilterParameter::New("Axis ODF Input Data", "SEPARATOR-2", FilterParameterWidgetType::SeparatorWidget, "", true));
   parameters.push_back(FilterParameter::New("Axis Euler Angles", "AxisEulerAnglesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getAxisEulerAnglesArrayPath(), true, ""));
 
+
+
   linkedProps.clear();
   linkedProps << "CrystalStructuresArrayPath" << "SurfaceFeaturesArrayPath";
   linkedProps << "CalculateODF" << "VolumesArrayPath" << "FeatureEulerAnglesArrayPath";
@@ -191,6 +200,10 @@ void GenerateEnsembleStatistics::setupFilterParameters()
   parameters.push_back(FilterParameter::New("Avgerage Quats", "AvgQuatsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getAvgQuatsArrayPath(), true, ""));
   parameters.push_back(FilterParameter::New("Neighbor List Array Name", "NeighborListArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getNeighborListArrayPath(), true, ""));
 
+//  linkedProps.clear();
+//  linkedProps << "RadialDistFunctionArrayPath";
+
+//  parameters.push_back(LinkedBooleanFilterParameter::New("Generate Radial Distribution Function", ""));
 
   parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "", false));
   // The user types in an array name for the Phase Types
@@ -206,6 +219,7 @@ void GenerateEnsembleStatistics::readFilterParameters(AbstractFilterParametersRe
 {
   reader->openFilterGroup(this, index);
   setCalculateMorphologicalStats(reader->readValue("CalculateMorphologicalStats", getCalculateMorphologicalStats()));
+  setIncludeRadialDistFunc(reader->readValue("IncludeRadialDistFunc", getIncludeRadialDistFunc()));
   setCellEnsembleAttributeMatrixPath(reader->readDataArrayPath("CellEnsembleAttributeMatrixPath", getCellEnsembleAttributeMatrixPath()));
   setPhaseTypesArrayName(reader->readString("PhaseTypesArrayName", getPhaseTypesArrayName() ) );
   setStatisticsArrayName(reader->readString("StatisticsArrayName", getStatisticsArrayName() ) );
@@ -216,6 +230,7 @@ void GenerateEnsembleStatistics::readFilterParameters(AbstractFilterParametersRe
   setCrystalStructuresArrayPath(reader->readDataArrayPath("CrystalStructuresArrayPath", getCrystalStructuresArrayPath() ) );
   setAxisEulerAnglesArrayPath(reader->readDataArrayPath("AxisEulerAnglesArrayPath", getAxisEulerAnglesArrayPath() ) );
   setOmega3sArrayPath(reader->readDataArrayPath("Omega3sArrayPath", getOmega3sArrayPath() ) );
+  setRDFArrayPath(reader->readDataArrayPath("RDFArrayPath", getRDFArrayPath()));
   setAspectRatiosArrayPath(reader->readDataArrayPath("AspectRatiosArrayPath", getAspectRatiosArrayPath() ) );
   setNeighborhoodsArrayPath(reader->readDataArrayPath("NeighborhoodsArrayPath", getNeighborhoodsArrayPath() ) );
   setEquivalentDiametersArrayPath(reader->readDataArrayPath("EquivalentDiametersArrayPath", getEquivalentDiametersArrayPath() ) );
@@ -251,6 +266,7 @@ int GenerateEnsembleStatistics::writeFilterParameters(AbstractFilterParametersWr
 {
   writer->openFilterGroup(this, index);
   DREAM3D_FILTER_WRITE_PARAMETER(CalculateMorphologicalStats)
+  DREAM3D_FILTER_WRITE_PARAMETER(IncludeRadialDistFunc)
   DREAM3D_FILTER_WRITE_PARAMETER(CellEnsembleAttributeMatrixPath)
   DREAM3D_FILTER_WRITE_PARAMETER(PhaseTypesArrayName)
   DREAM3D_FILTER_WRITE_PARAMETER(StatisticsArrayName)
@@ -261,6 +277,7 @@ int GenerateEnsembleStatistics::writeFilterParameters(AbstractFilterParametersWr
   DREAM3D_FILTER_WRITE_PARAMETER(CrystalStructuresArrayPath)
   DREAM3D_FILTER_WRITE_PARAMETER(AxisEulerAnglesArrayPath)
   DREAM3D_FILTER_WRITE_PARAMETER(Omega3sArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(RDFArrayPath)
   DREAM3D_FILTER_WRITE_PARAMETER(AspectRatiosArrayPath)
   DREAM3D_FILTER_WRITE_PARAMETER(NeighborhoodsArrayPath)
   DREAM3D_FILTER_WRITE_PARAMETER(EquivalentDiametersArrayPath)
@@ -302,6 +319,7 @@ void GenerateEnsembleStatistics::dataCheck()
 
   setCalculateODF(getCalculateCrystallographicStats());
   setCalculateMDF(getCalculateCrystallographicStats());
+
 
 
   m_FeaturePhasesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeaturePhasesArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
@@ -348,6 +366,18 @@ void GenerateEnsembleStatistics::dataCheck()
     { m_AxisEulerAngles = m_AxisEulerAnglesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   }
 
+  if(m_IncludeRadialDistFunc == true)
+  {
+   // dims[0]=10;
+    DataArray<int>::Pointer tempPtr = getDataContainerArray()->getExistingPrereqArrayFromPath<DataArray<int>, AbstractFilter>(this, getRDFArrayPath());
+    if (NULL != tempPtr.get())
+    {
+        m_RadialDistFuncPtr = tempPtr;
+        m_RadialDistFunc = tempPtr->getPointer(0);
+        std::cout << "Radial dist" << m_RadialDistFunc << std::endl;
+    }
+  }
+//FIXME:
   if(m_CalculateODF == true || m_CalculateMDF == true)
   {
     dims[0] = 1;
@@ -715,40 +745,35 @@ void GenerateEnsembleStatistics::gatherRadialDistFunc()
 {
     StatsDataArray& statsDataArray = *(m_StatsDataArray);
 
-    //float maxdiam;
-    //float mindiam;
-    //float totalUnbiasedVolume = 0.0;
-    QVector<VectorOfFloatArray> radialDistFunc;
-   // QVector<QVector<QVector<float > > > values;
+    size_t numBins = m_RadialDistFuncPtr.lock()->getNumberOfComponents();
 
-    //FloatArrayType::Pointer binnumbers;
+
+    QVector<VectorOfFloatArray> radialDistFunc;
+
     size_t numfeatures = m_EquivalentDiametersPtr.lock()->getNumberOfTuples();
     size_t numensembles = m_PhaseTypesPtr.lock()->getNumberOfTuples();
 
     QVector<float> fractions(numensembles, 0.0);
     radialDistFunc.resize(numensembles);
-    //values.resize(numensembles);
+
 
     for(size_t i = 1; i < numensembles; i++)
     {
-      radialDistFunc[i] = statsDataArray[i]->CreateCorrelatedDistributionArrays(3, 1);
-      //values[i].resize(1);
+        if(m_PhaseTypes[i] == DREAM3D::PhaseType::PrecipitatePhase)
+        {
+          radialDistFunc[i] = statsDataArray[i]->CreateCorrelatedDistributionArrays(3, numBins);
+          for(size_t j = 0; j < numBins; j++)
+          {
+              std::cout << "index" <<i*numBins+j << std::endl;
+              std::cout << "Rad Dist" << m_RadialDistFunc[i*numBins+j] << std::endl;
+              radialDistFunc[i][0]->setValue(j, m_RadialDistFunc[i*numBins+j]);
+
+          }
+        }
+
     }
 
-    radialDistFunc[2][0]->setValue(0, 10.34);
-    radialDistFunc[2][1]->setValue(0, 11.32);
 
-//    float vol;
-//    for (size_t i = 1; i < numfeatures; i++)
-//    {
-//      if(m_BiasedFeatures[i] == false)
-//      {
-//        values[m_FeaturePhases[i]][0].push_back(m_EquivalentDiameters[i]);
-//      }
-//      vol = (1.0 / 6.0) * DREAM3D::Constants::k_Pi * m_EquivalentDiameters[i] * m_EquivalentDiameters[i] * m_EquivalentDiameters[i];
-//      fractions[m_FeaturePhases[i]] = fractions[m_FeaturePhases[i]] + vol;
-//      totalUnbiasedVolume = totalUnbiasedVolume + vol;
-//    }
 
 
     for (size_t i = 1; i < numensembles; i++)
@@ -757,16 +782,8 @@ void GenerateEnsembleStatistics::gatherRadialDistFunc()
       {
 
         PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsDataArray[i].get());
-//        pp->setPhaseFraction((fractions[i] / totalUnbiasedVolume));
-//        m_DistributionAnalysis[m_SizeDistributionFitType]->calculateCorrelatedParameters(values[i], sizedist[i]);
-        pp->setRadialDistFunction(radialDistFunc[i]);
-//        DistributionAnalysisOps::determinemaxandminvalues(values[i][0], maxdiam, mindiam);
-//        int numbins = int(maxdiam / m_SizeCorrelationResolution) + 1;
-//        pp->setFeatureDiameterInfo(m_SizeCorrelationResolution, maxdiam, mindiam);
-//        binnumbers = FloatArrayType::CreateArray(numbins, DREAM3D::StringConstants::BinNumber);
-//        DistributionAnalysisOps::determinebinnumbers(maxdiam, mindiam, m_SizeCorrelationResolution, binnumbers);
 
-//        pp->setBinNumbers(binnumbers);
+        pp->setRadialDistFunction(radialDistFunc[i]);
 
     }
 }
