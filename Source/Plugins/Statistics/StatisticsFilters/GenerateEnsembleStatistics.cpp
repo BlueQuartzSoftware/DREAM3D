@@ -44,7 +44,9 @@
 #include "DREAM3DLib/DistributionAnalysisOps/LogNormalOps.h"
 #include "DREAM3DLib/Math/OrientationMath.h"
 
-
+//FIXME: #1 Need to update this to link the phase selectionwidget to the rest of the GUI, so that it preflights after it's updated.
+//FIXME: #2 Need to fix phase selectionWidget to not show phase 0
+//FIXME: #3 Need to link phase selectionWidget to option to include Radial Distribution Function instead of an extra linkedProps boolean.
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -95,6 +97,7 @@ GenerateEnsembleStatistics::GenerateEnsembleStatistics()  :
   m_FeaturePhases(NULL),
   m_AxisEulerAnglesArrayName(DREAM3D::FeatureData::AxisEulerAngles),
   m_AxisEulerAngles(NULL),
+  m_RadialDistFunc(NULL),
   m_Omega3sArrayName(DREAM3D::FeatureData::Omega3s),
   m_Omega3s(NULL),
   m_AspectRatiosArrayName(DREAM3D::FeatureData::AspectRatios),

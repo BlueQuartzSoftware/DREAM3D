@@ -41,7 +41,7 @@
 
 #include "Generic/GenericConstants.h"
 
-
+//FIXME: Need to change this to apply to a specific phase at a time. For example, currently a matrix phase can completely throw off the boundingbox for the precipitate phase.
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
