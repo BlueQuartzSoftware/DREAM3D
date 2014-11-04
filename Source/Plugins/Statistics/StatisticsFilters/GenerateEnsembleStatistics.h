@@ -124,6 +124,9 @@ class GenerateEnsembleStatistics : public AbstractFilter
     DREAM3D_FILTER_PARAMETER(DataArrayPath, RDFArrayPath)
     Q_PROPERTY(DataArrayPath RDFArrayPath READ getRDFArrayPath WRITE setRDFArrayPath)
 
+    DREAM3D_FILTER_PARAMETER(DataArrayPath, MaxMinRDFArrayPath)
+    Q_PROPERTY(DataArrayPath MaxMinRDFArrayPath READ getMaxMinRDFArrayPath WRITE setMaxMinRDFArrayPath)
+
     DREAM3D_FILTER_PARAMETER(DataArrayPath, FeatureEulerAnglesArrayPath)
     Q_PROPERTY(DataArrayPath FeatureEulerAnglesArrayPath READ getFeatureEulerAnglesArrayPath WRITE setFeatureEulerAnglesArrayPath)
 
@@ -244,6 +247,7 @@ class GenerateEnsembleStatistics : public AbstractFilter
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, FeaturePhases)
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, AxisEulerAngles)
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, RadialDistFunc)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, MaxMinRadialDistFunc)
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, Omega3s)
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, AspectRatios)
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, EquivalentDiameters)

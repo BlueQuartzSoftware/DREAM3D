@@ -541,6 +541,8 @@ namespace DREAM3D
     const unsigned int LogNormal = 1;    //!<
     const unsigned int Power = 2;        //!<
     const unsigned int UnknownDistributionType = 3;    //!<
+    const unsigned int RDFFrequency = 4; //!<
+    const unsigned int RDFMaxMin = 5; //!<
     const unsigned int Count = 3; //!<
 
     enum ColumnCount
@@ -548,7 +550,7 @@ namespace DREAM3D
       BetaColumnCount = 2,       //!<
       LogNormalColumnCount = 2,  //!<
       PowerLawColumnCount = 2,   //!<
-      RawDistDataColumnCount = 2,   //!<
+      RawDistDataColumnCount = 1,   //!<
       UnknownColumCount = 0      //!<
     };
 

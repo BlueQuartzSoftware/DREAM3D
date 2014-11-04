@@ -101,6 +101,9 @@ class FindFeatureClustering : public AbstractFilter
     DREAM3D_FILTER_PARAMETER(QString, NewEnsembleArrayArrayName)
     Q_PROPERTY(QString NewEnsembleArrayArrayName READ getNewEnsembleArrayArrayName WRITE setNewEnsembleArrayArrayName)
 
+    DREAM3D_FILTER_PARAMETER(QString, MaxMinArrayName)
+    Q_PROPERTY(QString MaxMinArrayName READ getMaxMinArrayName WRITE setMaxMinArrayName)
+
     virtual const QString getCompiledLibraryName();
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName();
@@ -145,6 +148,7 @@ class FindFeatureClustering : public AbstractFilter
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, Centroids)
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, EquivalentDiameters)
     DEFINE_CREATED_DATAARRAY_VARIABLE(int32_t, NewEnsembleArray)
+    DEFINE_CREATED_DATAARRAY_VARIABLE(float, MaxMinArray)
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(bool, BiasedFeatures)
     NeighborList<float>::WeakPointer m_ClusteringList;
 

@@ -97,6 +97,12 @@ class DREAM3DLib_EXPORT H5PrecipitateStatsDataDelegate : public H5StatsDataDeleg
                               const QString& hdf5GroupName,
                               VectorOfFloatArray colData);
 
+    int writeRDFDistributionData(hid_t pid,
+                                 uint32_t disType,
+                                 const QString& hdf5GroupName,
+                                 VectorOfFloatArray colData,
+                                 VectorOfFloatArray maxMinData);
+
     uint32_t readDistributionType(hid_t pid, const QString& hdf5GroupName);
 
     int readDistributionData(hid_t pid,

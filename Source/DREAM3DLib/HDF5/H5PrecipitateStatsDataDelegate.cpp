@@ -246,10 +246,10 @@ int H5PrecipitateStatsDataDelegate::writePrecipitateStatsData(PrecipitateStatsDa
                               data->getFeatureSizeDistribution());
 
   // Write the Radial Distribution Function
-  err = writeDistributionData(groupId,
+  err = writeRDFDistributionData(groupId,
                               data->getRadialDistFunctionType(),
                               DREAM3D::StringConstants::RadialDistFunc,
-                              data->getRadialDistFunction());
+                              data->getRadialDistFunction(), data->getMaxMinRDF());
 
   // Write the Bin Numbers
   err = writeBinNumbers(data, groupId);
@@ -533,6 +533,77 @@ int H5PrecipitateStatsDataDelegate::writeDistributionData(hid_t pid,
 
   return retErr;
 }
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int H5PrecipitateStatsDataDelegate::writeRDFDistributionData(hid_t pid,
+                                                          uint32_t disType,
+                                                          const QString& hdf5GroupName,
+                                                          VectorOfFloatArray colData,
+                                                          VectorOfFloatArray maxMinData)
+{
+  herr_t err = 0;
+  herr_t retErr = 0;
+
+  QString disTypeStr;
+  switch(disType)
+  {
+    case DREAM3D::DistributionType::Beta:
+      disTypeStr = DREAM3D::StringConstants::BetaDistribution;
+      break;
+    case DREAM3D::DistributionType::LogNormal:
+      disTypeStr = DREAM3D::StringConstants::LogNormalDistribution;
+      break;
+    case DREAM3D::DistributionType::Power:
+      disTypeStr = DREAM3D::StringConstants::PowerLawDistribution;
+      break;
+    case DREAM3D::DistributionType::UnknownDistributionType:
+      disTypeStr = DREAM3D::StringConstants::UnknownDistribution;
+      break;
+    default:
+      disTypeStr = DREAM3D::StringConstants::UnknownDistribution;
+  }
+
+  // Create the Group Folder
+  hid_t disId = QH5Utilities::createGroup(pid, hdf5GroupName);
+  if (disId > 0)
+  {
+    err = QH5Lite::writeStringAttribute(pid, hdf5GroupName, DREAM3D::StringConstants::DistributionType, disTypeStr);
+    if(err >= 0)
+    {
+      err |= writeVectorOfArrays(disId, colData);
+      std::vector<hsize_t> dims(1);
+      dims[0] = 2;
+      std::vector<float> values(2);
+      std::cout << "coldata" << colData.size() << std::endl;
+      if (maxMinData.size() > 0)
+      {
+          values[0] = maxMinData[0]->getValue(0);
+          values[1] = maxMinData[0]->getValue(1);
+          err = QH5Lite::writeScalarAttribute(disId, DREAM3D::StringConstants::Frequencies, "Max", values[0]);
+          err = QH5Lite::writeScalarAttribute(disId, DREAM3D::StringConstants::Frequencies, "Min", values[1]);
+
+      }
+
+
+
+
+    }
+    else
+    {
+      retErr = err;
+    }
+    // Close the HDF5 Group
+    err = H5Gclose(disId);
+  }
+  else
+  {
+    retErr = disId;
+  }
+
+  return retErr;
+}
+
 
 // -----------------------------------------------------------------------------
 //

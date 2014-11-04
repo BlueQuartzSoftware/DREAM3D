@@ -108,17 +108,38 @@ VectorOfFloatArray StatsData::CreateCorrelatedDistributionArrays(uint32_t distri
   }
   else if(distributionType == DREAM3D::DistributionType::UnknownDistributionType)
   {
-    v.resize(DREAM3D::DistributionType::RawDistDataColumnCount);
-    v[0] = FloatArrayType::CreateArray(numBins, DREAM3D::StringConstants::Frequencies);
+    v.resize(DREAM3D::DistributionType::LogNormalColumnCount);
+    v[0] = FloatArrayType::CreateArray(numBins, DREAM3D::StringConstants::Alpha);
     v[0]->initializeWithZeros();
-   // v[1] = FloatArrayType::CreateArray(numBins, DREAM3D::StringConstants::MinMaxNoOfBins);
-  //  v[1]->initializeWithZeros();
+    v[1] = FloatArrayType::CreateArray(numBins, DREAM3D::StringConstants::Beta);
+    v[1]->initializeWithZeros();
   }
   return v;
 }
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+
+VectorOfFloatArray StatsData::CreateRDFDistributionArrays(uint32_t distributionType, size_t numBins)
+{
+  VectorOfFloatArray v;
+  if(distributionType == DREAM3D::DistributionType::RDFFrequency)
+  {
+    v.resize(DREAM3D::DistributionType::RawDistDataColumnCount);
+    v[0] = FloatArrayType::CreateArray(numBins, DREAM3D::StringConstants::Frequencies);
+    v[0]->initializeWithZeros();
+  }
+
+  if(distributionType == DREAM3D::DistributionType::RDFMaxMin)
+  {
+    v.resize(DREAM3D::DistributionType::RawDistDataColumnCount);
+    v[0] = FloatArrayType::CreateArray(numBins, DREAM3D::StringConstants::MinMaxNoOfBins);
+    v[0]->initializeWithZeros();
+  }
+
+  return v;
+}
+
 FloatArrayType::Pointer StatsData::CreateDistributionArrays(uint32_t distributionType)
 {
   FloatArrayType::Pointer v;

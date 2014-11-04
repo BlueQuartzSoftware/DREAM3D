@@ -53,7 +53,8 @@ FindFeatureClustering::FindFeatureClustering() :
   m_ClusteringListArrayName(DREAM3D::FeatureData::ClusteringList),
   m_FeaturePhasesArrayName(DREAM3D::FeatureData::Phases),
   m_FeaturePhases(NULL),
-  m_NewEnsembleArrayArrayName(""),
+  m_NewEnsembleArrayArrayName("RDF"),
+  m_MaxMinArrayName(getNewEnsembleArrayArrayName()+"MaxMinDistances"),
   m_NumberOfBins(1),
   m_PhaseNumber(1),
   m_RemoveBiasedFeatures(false),
@@ -91,7 +92,9 @@ void FindFeatureClustering::setupFilterParameters()
   parameters.push_back(FilterParameter::New("Cell Ensemble Attribute Matrix Name", "CellEnsembleAttributeMatrixName", FilterParameterWidgetType::AttributeMatrixSelectionWidget, getCellEnsembleAttributeMatrixName(), true, ""));
   parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
   parameters.push_back(FilterParameter::New("Clustering List Array Name", "ClusteringListArrayName", FilterParameterWidgetType::StringWidget, getClusteringListArrayName(), true));
-  parameters.push_back(FilterParameter::New("Radial Distribution Function Array Name", "NewEnsembleArrayArrayName", FilterParameterWidgetType::StringWidget, getNewEnsembleArrayArrayName(), true, ""));
+  //parameters.push_back(FilterParameter::New("Max and Min Distances Array Name", "MaxMinArrayName", FilterParameterWidgetType::StringWidget, getMaxMinArrayName(), true, ""));
+  parameters.push_back(FilterParameter::New("NewEnsembleArray", "NewEnsembleArrayArrayName", FilterParameterWidgetType::StringWidget, getNewEnsembleArrayArrayName(), true, ""));
+
   parameters.push_back(FilterParameter::New("Phase Number to Run Min Size Filter on", "PhaseNumber", FilterParameterWidgetType::IntWidget, getPhaseNumber(), false, ""));
   QStringList linkedProps("BiasedFeaturesArrayPath");
   parameters.push_back(LinkedBooleanFilterParameter::New("Remove Biased Features", "RemoveBiasedFeatures", getRemoveBiasedFeatures(), linkedProps, false));
@@ -109,6 +112,7 @@ void FindFeatureClustering::readFilterParameters(AbstractFilterParametersReader*
   setCellEnsembleAttributeMatrixName(reader->readDataArrayPath("CellEnsembleAttributeMatrixName", getCellEnsembleAttributeMatrixName()));
   setNumberOfBins( reader->readValue( "NumberOfBins", getNumberOfBins() ) );
   setNewEnsembleArrayArrayName(reader->readString("NewEnsembleArrayArrayName", getNewEnsembleArrayArrayName() ) );
+  setMaxMinArrayName(reader->readString("MaxMinArrayName", getMaxMinArrayName()));
   setClusteringListArrayName(reader->readString("ClusteringListArrayName", getClusteringListArrayName() ) );
   setCentroidsArrayPath(reader->readDataArrayPath("CentroidsArrayPath", getCentroidsArrayPath() ) );
   setFeaturePhasesArrayPath(reader->readDataArrayPath("FeaturePhasesArrayPath", getFeaturePhasesArrayPath() ) );
@@ -135,6 +139,7 @@ int FindFeatureClustering::writeFilterParameters(AbstractFilterParametersWriter*
   DREAM3D_FILTER_WRITE_PARAMETER(FeaturePhasesArrayPath)
   DREAM3D_FILTER_WRITE_PARAMETER(EquivalentDiametersArrayPath)
   DREAM3D_FILTER_WRITE_PARAMETER(NewEnsembleArrayArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(MaxMinArrayName)
   DREAM3D_FILTER_WRITE_PARAMETER(PhaseNumber)
   DREAM3D_FILTER_WRITE_PARAMETER(RemoveBiasedFeatures)
   DREAM3D_FILTER_WRITE_PARAMETER(BiasedFeaturesArrayPath)
@@ -170,12 +175,20 @@ void FindFeatureClustering::dataCheck()
 
 
   int numComp = m_NumberOfBins;
-  m_NewEnsembleArrayArrayName = m_SelectedFeatureArrayPath.getDataArrayName() + QString("Histogram");
+  m_NewEnsembleArrayArrayName = m_SelectedFeatureArrayPath.getDataArrayName() + QString("RDF");
   dims[0] = numComp;
   tempPath.update(getCellEnsembleAttributeMatrixName().getDataContainerName(), getCellEnsembleAttributeMatrixName().getAttributeMatrixName(), getNewEnsembleArrayArrayName() );
   m_NewEnsembleArrayPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int>, AbstractFilter>(this, tempPath, 0, dims); /* Assigns the shared_ptr<>(this, tempPath, 0, dims); Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_NewEnsembleArrayPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_NewEnsembleArray = m_NewEnsembleArrayPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+
+  dims[0] = 2;
+  m_MaxMinArrayName = getNewEnsembleArrayArrayName() + QString("MaxMinDistances");
+  tempPath.update(getCellEnsembleAttributeMatrixName().getDataContainerName(), getCellEnsembleAttributeMatrixName().getAttributeMatrixName(), getMaxMinArrayName() );
+  m_MaxMinArrayPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, tempPath, 0, dims);
+  if( NULL != m_MaxMinArrayPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  { m_MaxMinArray = m_MaxMinArrayPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+
 
   if(m_RemoveBiasedFeatures == true)
   {
@@ -284,7 +297,7 @@ void FindFeatureClustering::find_clustering()
   {
       for (size_t j=0; j < clusteringlist[i].size(); j++)
       {
-        if (m_FeaturePhases[i] == 2)
+        if (m_FeaturePhases[i] == m_PhaseNumber)
             {
              value = clusteringlist[i][j];
              if(value > max) { max = value; }
@@ -294,6 +307,9 @@ void FindFeatureClustering::find_clustering()
   }
 
   float stepsize = (max - min) / m_NumberOfBins;
+
+  m_MaxMinArray[(m_PhaseNumber*2)] = max;
+  m_MaxMinArray[(m_PhaseNumber*2)+1] = min;
 
   for (size_t i = 1; i < totalFeatures; i++)
   {

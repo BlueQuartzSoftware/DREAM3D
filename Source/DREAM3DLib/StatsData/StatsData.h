@@ -109,6 +109,7 @@ class DREAM3DLib_EXPORT StatsData
      * distribution type is passed in.
      */
     static VectorOfFloatArray CreateCorrelatedDistributionArrays(uint32_t distributionType, size_t numBins);
+    static VectorOfFloatArray CreateRDFDistributionArrays(uint32_t distributionType, size_t numBins);
     static FloatArrayType::Pointer CreateDistributionArrays(uint32_t distributionType);
 
     virtual void initialize();

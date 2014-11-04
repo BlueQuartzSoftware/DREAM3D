@@ -130,6 +130,7 @@ class DREAM3DLib_EXPORT PrecipitateStatsData : public StatsData
     DREAM3D_INSTANCE_PROPERTY(VectorOfFloatArray, FeatureSizeDistribution)
     DREAM3D_INSTANCE_PROPERTY(uint32_t, FeatureSize_DistType)
     DREAM3D_INSTANCE_PROPERTY(VectorOfFloatArray, RadialDistFunction)
+    DREAM3D_INSTANCE_PROPERTY(VectorOfFloatArray, MaxMinRDF)
     DREAM3D_INSTANCE_PROPERTY(uint32_t, RadialDistFunctionType)
 
     DREAM3D_INSTANCE_PROPERTY(FloatArrayType::Pointer, BinNumbers)

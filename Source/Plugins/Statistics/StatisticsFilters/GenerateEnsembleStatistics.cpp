@@ -152,9 +152,10 @@ void GenerateEnsembleStatistics::setupFilterParameters()
 
   QStringList linkedProps;
 
-  linkedProps << "RDFArrayPath";
+  linkedProps << "RDFArrayPath" << "MaxMinRDFArrayPath";
   parameters.push_back(LinkedBooleanFilterParameter::New("Include Radial Dist Func", "IncludeRadialDistFunc", getIncludeRadialDistFunc(), linkedProps, false));
   parameters.push_back(FilterParameter::New("Radial Distribution Function", "RDFArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getRDFArrayPath(), true, ""));
+  parameters.push_back(FilterParameter::New("Max and Min Separation Distances", "MaxMinRDFArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getMaxMinRDFArrayPath(), true, ""));
   linkedProps.clear();
 
 
@@ -234,6 +235,7 @@ void GenerateEnsembleStatistics::readFilterParameters(AbstractFilterParametersRe
   setAxisEulerAnglesArrayPath(reader->readDataArrayPath("AxisEulerAnglesArrayPath", getAxisEulerAnglesArrayPath() ) );
   setOmega3sArrayPath(reader->readDataArrayPath("Omega3sArrayPath", getOmega3sArrayPath() ) );
   setRDFArrayPath(reader->readDataArrayPath("RDFArrayPath", getRDFArrayPath()));
+  setRDFArrayPath(reader->readDataArrayPath("MaxMinRDFArrayPath", getMaxMinRDFArrayPath()));
   setAspectRatiosArrayPath(reader->readDataArrayPath("AspectRatiosArrayPath", getAspectRatiosArrayPath() ) );
   setNeighborhoodsArrayPath(reader->readDataArrayPath("NeighborhoodsArrayPath", getNeighborhoodsArrayPath() ) );
   setEquivalentDiametersArrayPath(reader->readDataArrayPath("EquivalentDiametersArrayPath", getEquivalentDiametersArrayPath() ) );
@@ -281,6 +283,7 @@ int GenerateEnsembleStatistics::writeFilterParameters(AbstractFilterParametersWr
   DREAM3D_FILTER_WRITE_PARAMETER(AxisEulerAnglesArrayPath)
   DREAM3D_FILTER_WRITE_PARAMETER(Omega3sArrayPath)
   DREAM3D_FILTER_WRITE_PARAMETER(RDFArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(MaxMinRDFArrayPath)
   DREAM3D_FILTER_WRITE_PARAMETER(AspectRatiosArrayPath)
   DREAM3D_FILTER_WRITE_PARAMETER(NeighborhoodsArrayPath)
   DREAM3D_FILTER_WRITE_PARAMETER(EquivalentDiametersArrayPath)
@@ -379,6 +382,13 @@ void GenerateEnsembleStatistics::dataCheck()
         m_RadialDistFunc = tempPtr->getPointer(0);
         std::cout << "Radial dist" << m_RadialDistFunc << std::endl;
     }
+
+    dims[0] = 2;
+    m_MaxMinRadialDistFuncPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getMaxMinRDFArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+    if( NULL != m_MaxMinRadialDistFuncPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+    { m_MaxMinRadialDistFunc = m_MaxMinRadialDistFuncPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+
+
   }
 //FIXME:
   if(m_CalculateODF == true || m_CalculateMDF == true)
@@ -752,27 +762,38 @@ void GenerateEnsembleStatistics::gatherRadialDistFunc()
 
 
     QVector<VectorOfFloatArray> radialDistFunc;
+    QVector<VectorOfFloatArray> minMaxDist;
 
     size_t numfeatures = m_EquivalentDiametersPtr.lock()->getNumberOfTuples();
     size_t numensembles = m_PhaseTypesPtr.lock()->getNumberOfTuples();
 
     QVector<float> fractions(numensembles, 0.0);
     radialDistFunc.resize(numensembles);
+    minMaxDist.resize(numensembles);
 
 
     for(size_t i = 1; i < numensembles; i++)
     {
         if(m_PhaseTypes[i] == DREAM3D::PhaseType::PrecipitatePhase)
         {
-          radialDistFunc[i] = statsDataArray[i]->CreateCorrelatedDistributionArrays(3, numBins);
+
+          radialDistFunc[i] = statsDataArray[i]->CreateRDFDistributionArrays(DREAM3D::DistributionType::RDFFrequency, numBins);
+          minMaxDist[i] = statsDataArray[i]->CreateRDFDistributionArrays(DREAM3D::DistributionType::RDFMaxMin, 2);
+
           for(size_t j = 0; j < numBins; j++)
           {
-              std::cout << "index" <<i*numBins+j << std::endl;
-              std::cout << "Rad Dist" << m_RadialDistFunc[i*numBins+j] << std::endl;
+
               radialDistFunc[i][0]->setValue(j, m_RadialDistFunc[i*numBins+j]);
 
           }
+
+          std::cout << "index" <<i << std::endl;
+          std::cout << "Rad Dist" << m_MaxMinRadialDistFunc[i*2] << std::endl;
+          std::cout << "Rad Dist" << m_MaxMinRadialDistFunc[i*2 + 1] << std::endl;
+          minMaxDist[i][0]->setValue(0, m_MaxMinRadialDistFunc[i*2]);
+          minMaxDist[i][0]->setValue(1, m_MaxMinRadialDistFunc[i*2 + 1]);
         }
+
 
     }
 
@@ -787,6 +808,7 @@ void GenerateEnsembleStatistics::gatherRadialDistFunc()
         PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsDataArray[i].get());
 
         pp->setRadialDistFunction(radialDistFunc[i]);
+        pp->setMaxMinRDF(minMaxDist[i]);
 
     }
 }
