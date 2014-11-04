@@ -235,7 +235,7 @@ void GenerateEnsembleStatistics::readFilterParameters(AbstractFilterParametersRe
   setAxisEulerAnglesArrayPath(reader->readDataArrayPath("AxisEulerAnglesArrayPath", getAxisEulerAnglesArrayPath() ) );
   setOmega3sArrayPath(reader->readDataArrayPath("Omega3sArrayPath", getOmega3sArrayPath() ) );
   setRDFArrayPath(reader->readDataArrayPath("RDFArrayPath", getRDFArrayPath()));
-  setRDFArrayPath(reader->readDataArrayPath("MaxMinRDFArrayPath", getMaxMinRDFArrayPath()));
+  setMaxMinRDFArrayPath(reader->readDataArrayPath("MaxMinRDFArrayPath", getMaxMinRDFArrayPath()));
   setAspectRatiosArrayPath(reader->readDataArrayPath("AspectRatiosArrayPath", getAspectRatiosArrayPath() ) );
   setNeighborhoodsArrayPath(reader->readDataArrayPath("NeighborhoodsArrayPath", getNeighborhoodsArrayPath() ) );
   setEquivalentDiametersArrayPath(reader->readDataArrayPath("EquivalentDiametersArrayPath", getEquivalentDiametersArrayPath() ) );
