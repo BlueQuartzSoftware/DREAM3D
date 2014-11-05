@@ -459,7 +459,7 @@ class Texture
      * @param axes The axes
      * @param weights The weights
      * @param odf The ODF which has been already computed and sized correctly in another function
-     * @param mdf [output] The MDF array to store the data whic has been preallocated already
+     * @param mdf [output] The MDF array to store the data which has been preallocated already
      * @param numEntries The number of elemnts in teh Angles/Axes/Weights arrays which should all the be same size or at least
      * the value passed here is the minium size of all the arrays. The sizes of the ODF and MDF arrays are
      * determined by calling the getODFSize and getMDFSize functions of the parameterized OrientationOps class.
