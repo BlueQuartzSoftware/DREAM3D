@@ -182,7 +182,17 @@ int EstablishShapeTypes::getPhaseCount()
   DataContainerArray::Pointer dca = getDataContainerArray();
 
   AttributeMatrix::Pointer inputAttrMat = dca->getAttributeMatrix(getInputPhaseTypesArrayPath());
+
   if (NULL == inputAttrMat.get() ) { return 0; }
+  qDebug() << "  data->getNumberOfTuples(): " << inputAttrMat->getTupleDimensions();
+  qDebug() << "Name" << inputAttrMat->getName();
+
+  if(inputAttrMat->getType() < DREAM3D::AttributeMatrixType::VertexEnsemble
+          || inputAttrMat->getType() > DREAM3D::AttributeMatrixType::CellEnsemble )
+  {
+   return 0;
+  }
+
   QVector<size_t> tupleDims = inputAttrMat->getTupleDimensions();
   size_t phaseCount = 1;
   for(qint32 i = 0; i < tupleDims.size(); i++)
@@ -191,6 +201,11 @@ int EstablishShapeTypes::getPhaseCount()
   }
   return phaseCount;
 }
+
+
+
+
+
 
 // -----------------------------------------------------------------------------
 //
