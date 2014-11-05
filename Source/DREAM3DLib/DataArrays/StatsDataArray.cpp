@@ -342,7 +342,7 @@ int StatsDataArray::readH5Data(hid_t parentId)
   bool ok = false;
   int err = 0;
   QString statsType;
-  hid_t gid = QH5Utilities::openHDF5Object(parentId, DREAM3D::StringConstants::Statistics);
+  hid_t gid = QH5Utilities::openHDF5Object(parentId, m_Name);
   if(gid < 0)
   {
     return err;

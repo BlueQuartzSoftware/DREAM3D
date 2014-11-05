@@ -483,13 +483,20 @@ int AttributeMatrix::readAttributeArraysFromHDF5(hid_t amGid, bool preflight, At
     {
       dPtr = H5DataArrayReader::ReadNeighborListData(amGid, iter->name, preflight);
     }
-    else if ( (iter->name).compare(DREAM3D::EnsembleData::Statistics) == 0)
+    else if(classType.compare("Statistics") == 0)
     {
-      StatsDataArray::Pointer statsData = StatsDataArray::New();
-      statsData->setName(DREAM3D::EnsembleData::Statistics);
-      statsData->readH5Data(amGid);
-      dPtr = statsData;
+        StatsDataArray::Pointer statsData = StatsDataArray::New();
+        statsData->setName(iter->name);
+        statsData->readH5Data(amGid);
+        dPtr = statsData;
     }
+//    else if ( (iter->name).compare(DREAM3D::EnsembleData::Statistics) == 0)
+//    {
+//      StatsDataArray::Pointer statsData = StatsDataArray::New();
+//      statsData->setName(DREAM3D::EnsembleData::Statistics);
+//      statsData->readH5Data(amGid);
+//      dPtr = statsData;
+//    }
 
     if (NULL != dPtr.get())
     {

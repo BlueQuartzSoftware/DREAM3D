@@ -106,7 +106,8 @@ class DataArrayProxy
       QH5Utilities::getGroupObjects(attrMatGid, H5Utilities::H5Support_DATASET | H5Utilities::H5Support_GROUP, dataArrayNames);
       foreach(QString dataArrayName, dataArrayNames)
       {
-        if(__SHOW_DEBUG_MSG__) { std::cout << "        DataArray: " << dataArrayName.toStdString()  << std::endl; }
+        //if(__SHOW_DEBUG_MSG__)
+        { std::cout << "        DataArray: " << dataArrayName.toStdString()  << std::endl; }
 
         DataArrayProxy proxy(h5InternalPath, dataArrayName, DREAM3D::Checked);
 
