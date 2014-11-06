@@ -145,6 +145,32 @@ void MatrixMath::Subtract3x1s(const float g1[3], float g2[3], float outMat[3])
   outMat[2] = g1[2] - g2[2];
 }
 
+void MatrixMath::Add3x3s(const float g1[3][3], float g2[3][3], float outMat[3][3])
+{
+  outMat[0][0] = g1[0][0] + g2[0][0];
+  outMat[0][1] = g1[0][1] + g2[0][1];
+  outMat[0][2] = g1[0][2] + g2[0][2];
+  outMat[1][0] = g1[1][0] + g2[1][0];
+  outMat[1][1] = g1[1][1] + g2[1][1];
+  outMat[1][2] = g1[1][2] + g2[1][2];
+  outMat[2][0] = g1[2][0] + g2[2][0];
+  outMat[2][1] = g1[2][1] + g2[2][1];
+  outMat[2][2] = g1[2][2] + g2[2][2];
+}
+
+void MatrixMath::Subtract3x3s(const float g1[3][3], float g2[3][3], float outMat[3][3])
+{
+  outMat[0][0] = g1[0][0] - g2[0][0];
+  outMat[0][1] = g1[0][1] - g2[0][1];
+  outMat[0][2] = g1[0][2] - g2[0][2];
+  outMat[1][0] = g1[1][0] - g2[1][0];
+  outMat[1][1] = g1[1][1] - g2[1][1];
+  outMat[1][2] = g1[1][2] - g2[1][2];
+  outMat[2][0] = g1[2][0] - g2[2][0];
+  outMat[2][1] = g1[2][1] - g2[2][1];
+  outMat[2][2] = g1[2][2] - g2[2][2];
+}
+
 void MatrixMath::Multiply3x1withConstant(float g[3], float constant)
 {
   g[0] *= constant;
@@ -163,6 +189,54 @@ void MatrixMath::Multiply3x3withConstant(float g[3][3], float constant)
   g[2][0] *= constant;
   g[2][1] *= constant;
   g[2][2] *= constant;
+}
+
+void MatrixMath::Invert3x3(float g[3][3], float outMat[3][3])
+{
+  Adjoint3x3(g, outMat);
+  float determinant = Determinant3x3(g);
+  float oneOverDeterminant = 1.0/determinant;
+  Multiply3x3withConstant(outMat, oneOverDeterminant);
+}
+
+void MatrixMath::Adjoint3x3(float g[3][3], float outMat[3][3])
+{
+  float temp[3][3];
+  Cofactor3x3(g, temp);
+  Transpose3x3(temp, outMat);
+}
+
+void MatrixMath::Cofactor3x3(float g[3][3], float outMat[3][3])
+{
+  float temp[3][3];
+  Minors3x3(g, temp);
+  outMat[0][0] = temp[0][0];
+  outMat[0][1] = -temp[1][0];
+  outMat[0][2] = temp[2][0];
+  outMat[1][0] = -temp[0][1];
+  outMat[1][1] = temp[1][1];
+  outMat[1][2] = -temp[2][1];
+  outMat[2][0] = temp[0][2];
+  outMat[2][1] = -temp[1][2];
+  outMat[2][2] = temp[2][2];
+}
+
+void MatrixMath::Minors3x3(float g[3][3], float outMat[3][3])
+{
+  outMat[0][0] = g[1][1]*g[2][2] - g[2][1]*g[1][2];
+  outMat[0][1] = g[1][0]*g[2][2] - g[2][0]*g[1][2];
+  outMat[0][2] = g[1][0]*g[2][1] - g[2][0]*g[1][1];
+  outMat[1][0] = g[0][1]*g[2][2] - g[2][1]*g[0][2];
+  outMat[1][1] = g[0][0]*g[2][2] - g[2][0]*g[0][2];
+  outMat[1][2] = g[0][0]*g[2][1] - g[2][0]*g[0][1];
+  outMat[2][0] = g[0][1]*g[1][2] - g[1][1]*g[0][2];
+  outMat[2][1] = g[0][0]*g[1][2] - g[1][0]*g[0][2];
+  outMat[2][2] = g[0][0]*g[1][1] - g[1][0]*g[0][1];
+}
+
+float MatrixMath::Determinant3x3(float g[3][3])
+{
+  return (g[0][0]*(g[1][1]*g[2][2]-g[1][2]*g[2][1])) - (g[0][1]*(g[1][0]*g[2][2]-g[1][2]*g[2][0])) + (g[0][2]*(g[1][0]*g[2][1]-g[1][1]*g[2][0])); 
 }
 
 void MatrixMath::Transpose3x3(float g[3][3], float outMat[3][3])

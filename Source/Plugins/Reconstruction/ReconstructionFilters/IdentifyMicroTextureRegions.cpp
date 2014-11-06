@@ -99,7 +99,6 @@ class FindPatchMisalignmentsImpl
       FloatArrayType::Pointer cAxisLocsPtr = FloatArrayType::CreateArray(tDims, cDims, "cAxisLocs");
       cAxisLocsPtr->initializeWithValue(0);
       float* cAxisLocs = cAxisLocsPtr->getPointer(0);
-      QVector<int32_t> compCounts;
       QVector<int32_t> goodCounts;
 
       int xc, yc, zc;
@@ -138,39 +137,35 @@ class FindPatchMisalignmentsImpl
           }
         }
         float angle;
-        int sameCount = 0;
-        int totalCount = 0;
-        compCounts.resize(count);
-        compCounts.fill(0);
         goodCounts.resize(count);
         goodCounts.fill(0);
         for(int i = 0; i < count; i++)
         {
-          for(int j = i+1; j < count; j++)
+          for(int j = i; j < count; j++)
           {
             angle = GeometryMath::AngleBetweenVectors(cAxisLocsPtr->getPointer(3*i), cAxisLocsPtr->getPointer(3*j));
             if(angle <= m_CAxisTolerance || (DREAM3D::Constants::k_Pi - angle) <= m_CAxisTolerance)
             {
               goodCounts[i]++;
               goodCounts[j]++;
-              sameCount++;
             }
-            compCounts[i]++;
-            compCounts[j]++;
-            totalCount++;
           }
+        }
+        int goodPointCount = 0;
+        for(int i = 0; i < count; i++)
+        {
+          if(float(goodCounts[i])/float(count) > m_MinVolFrac) goodPointCount++;
         }
         float avgCAxis[3] = {0.0, 0.0, 0.0};
         size_t point;
-        int actualCount = int(sqrtf(2*sameCount))+1;
-        float frac = float(actualCount)/float(count);
+        float frac = float(goodPointCount)/float(count);
         m_VolFrac[iter] = frac;
         if(frac > m_MinVolFrac)
         {
           m_InMTR[iter] = true;
           for(int i = 0; i < count; i++)
           {
-            if(float(goodCounts[i])/float(compCounts[i]) >= m_MinVolFrac)
+            if(float(goodCounts[i])/float(count) >= m_MinVolFrac)
             {
               if(MatrixMath::DotProduct3x1(avgCAxis, cAxisLocsPtr->getPointer(3*i)) < 0)
               {
@@ -344,13 +339,11 @@ void IdentifyMicroTextureRegions::dataCheck()
   m_CellPhasesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, m_CellPhasesArrayPath, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_CellPhasesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_CellPhases = m_CellPhasesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-  dims[0] = 3;
   tempPath.update(m_CAxisLocationsArrayPath.getDataContainerName(), m_CAxisLocationsArrayPath.getAttributeMatrixName(), getMTRIdsArrayName() );
-  m_MTRIdsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, int32_t>(this, tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_MTRIdsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(this, tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_MTRIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_MTRIds = m_MTRIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
-  dims[0] = 1;
   // New Feature Data
   tempPath.update(m_CAxisLocationsArrayPath.getDataContainerName(), getNewCellFeatureAttributeMatrixName(), getActiveArrayName() );
   m_ActivePtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<bool>, AbstractFilter, bool>(this, tempPath, true, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
@@ -500,8 +493,8 @@ void IdentifyMicroTextureRegions::execute()
   filter->setActiveArrayName("Active");
   filter->execute();
 
+  //get the data created by the SegmentFeatures(Vector) filter
   cDims[0] = 1;
-  // Cell Data
   tempPath.update("PatchDataContainer(Temp)", "PatchAM(Temp)", "PatchFeatureIds");
   m_PatchIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, tempPath, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_PatchIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
@@ -511,8 +504,7 @@ void IdentifyMicroTextureRegions::execute()
   if( NULL != m_PatchActivePtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_PatchActive = m_PatchActivePtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
-
-
+  //Remove the small patches-----planning to remove/redsesign this
   size_t numPatchFeatures = m_PatchActivePtr.lock()->getNumberOfTuples();
   QVector<bool> activeObjects(numPatchFeatures, true);
   QVector<size_t> counters(numPatchFeatures, 0);
@@ -528,53 +520,54 @@ void IdentifyMicroTextureRegions::execute()
   AttributeMatrix::Pointer patchFeatureAttrMat = getDataContainerArray()->getAttributeMatrix(tempPath);
   patchFeatureAttrMat->removeInactiveObjects(activeObjects, m_PatchIdsPtr.lock());
 
+
   //Resize the feature attribute matrix for the MTRs to the number identified from SegmentFeatures(Vector) after filtering for size
   tDims.resize(1);
-  tDims[0] = 2;
+  tDims[0] = patchFeatureAttrMat->getNumTuples();
   m->getAttributeMatrix(getNewCellFeatureAttributeMatrixName())->resizeAttributeArrays(tDims);
   updateFeatureInstancePointers();
 
   int xc, yc, zc;
-  size_t point;
-  for(int64_t iter = 0; iter < totalPatches; ++iter)
-  {
-    if(m_VolFrac[iter] >= m_MinVolFrac*m_MinVolFrac)
-    {
-      int zStride, yStride;
-      int count = 0;
+  size_t point, patch;
+  int zStride, yStride;
+  int zStrideP, yStrideP;
+  int pCol, pRow, pPlane;
+  int count = 0;
 
-      xc = ((iter%newDims.x) * critDim.x) + (critDim.x/2);
-      yc = (((iter/newDims.x)%newDims.y) * critDim.y) + (critDim.y/2);
-      zc = ((iter/(newDims.x*newDims.y)) * critDim.z) + (critDim.z/2);
-      for(int k = -critDim.z; k <= critDim.z; k++)
+  for(int k = 0; k < origDims.z; k++)
+  {
+    if(critDim.z > 0) pPlane = (k / critDim.z);
+    else pPlane = 0;
+    if(pPlane >= newDims.z) pPlane = newDims.z-1;
+    zStride = (k * origDims.x * origDims.y);
+    zStrideP = (pPlane * newDims.x * newDims.y);
+    for(int j = 0; j < origDims.y; j++)
+    {
+      if(critDim.y > 0) pRow = (j / critDim.y);
+      else pRow = 0;
+      if(pRow >= newDims.y) pRow = newDims.y-1;
+      yStride = (j * origDims.x);
+      yStrideP = (pRow * newDims.x);
+      for(int i = 0; i < origDims.x; i++)
       {
-        if((zc + k) >= 0 && (zc + k) < origDims.z)
+        if(critDim.x > 0) pCol = (i / critDim.x);
+        else pCol = 0;
+        if(pCol >= newDims.x) pCol = newDims.x-1;
+        point = zStride+yStride+i;
+        patch = zStrideP+yStrideP+pCol;
+        m_MTRIds[point] = m_PatchIds[patch];
+        if(m_PatchIds[patch] > 0)
         {
-          zStride = ((zc + k) * origDims.x * origDims.y);
-          for(int j = -critDim.y; j <= critDim.y; j++)
-          {
-            if((yc + j) >= 0 && (yc + j) < origDims.y)
-            {
-              yStride = ((yc + j) * origDims.x);
-              for(int i = -critDim.x; i <= critDim.x; i++)
-              {
-                if((xc + i) >= 0 && (xc + i) < origDims.x)
-                {
-                  point = zStride+yStride+xc+i;
-                  //m_MTRIds[3*point] = inMTR[iter];
-                  //m_MTRIds[3*point+1] = inMTR[iter];
-                  //m_MTRIds[3*point+2] = inMTR[iter];
-                  m_MTRIds[3*point] = m_AvgCAxis[3*iter];
-                  m_MTRIds[3*point+1] = m_AvgCAxis[3*iter+1];
-                  m_MTRIds[3*point+2] = m_AvgCAxis[3*iter+2];
-                }
-              }
-            }
-          }
+          m_CAxisLocations[3*point+0] = m_AvgCAxis[3*patch+0];
+          m_CAxisLocations[3*point+1] = m_AvgCAxis[3*patch+1];
+          m_CAxisLocations[3*point+2] = m_AvgCAxis[3*patch+2];
         }
       }
     }
   }
+
+  //remove the data container temporarily created to hold the patch data
+  //getDataContainerArray()->removeDataContainer("PatchDataContainer(Temp)");
 
   findMTRregions();
 

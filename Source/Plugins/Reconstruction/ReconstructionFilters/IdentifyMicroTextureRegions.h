@@ -142,7 +142,7 @@ class IdentifyMicroTextureRegions : public AbstractFilter
     IdentifyMicroTextureRegions();
 
   private:
-    DEFINE_CREATED_DATAARRAY_VARIABLE(float, MTRIds)
+    DEFINE_CREATED_DATAARRAY_VARIABLE(int32_t, MTRIds)
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, CAxisLocations)
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, CellPhases)
     DEFINE_CREATED_DATAARRAY_VARIABLE(bool, Active)

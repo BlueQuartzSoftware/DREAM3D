@@ -12,6 +12,7 @@ START_FILTER_GROUP(${SyntheticBuilding_BINARY_DIR} "${_filterGroupName}" "Synthe
 
 set(_PublicFilters
   PackPrimaryPhases
+  TesselateFarFieldGrains
   MatchCrystallography
   JumbleOrientations
   InsertPrecipitatePhases

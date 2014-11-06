@@ -757,6 +757,38 @@ QuatF OrientationMath::ActiveRotation(float angle, float xAxis, float yAxis, flo
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void OrientationMath::MetricTensorFromLatticeParameters(float a, float b, float c, float alpha, float beta, float gamma, float mt[3][3])
+{
+  mt[0][0] = a*a;
+  mt[0][1] = a*b*cosf(gamma);
+  mt[0][2] = a*c*cosf(beta);
+  mt[1][0] = a*b*cosf(gamma);
+  mt[1][1] = b*b;
+  mt[1][2] = b*c*cosf(alpha);
+  mt[2][0] = a*c*cosf(beta);
+  mt[2][1] = b*c*cosf(alpha);
+  mt[2][2] = c*c;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void OrientationMath::RootTensorFromLatticeParameters(float a, float b, float c, float alpha, float beta, float gamma, float rt[3][3])
+{
+  rt[0][0] = a*sinf(beta)*sinf(gamma);
+  rt[0][1] = 0.0;
+  rt[0][2] = 0.0;
+  rt[1][0] = -a*sinf(beta)*cosf(gamma);
+  rt[1][1] = b*sinf(alpha);
+  rt[1][2] = 0.0;
+  rt[2][0] = a*cosf(beta);
+  rt[2][1] = b*cosf(alpha);
+  rt[2][2] = c;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void OrientationMath::MillerBravaisToMillerDirection(int millerBravais[4], int miller[3])
 {
   miller[0] = millerBravais[0] - millerBravais[2];
