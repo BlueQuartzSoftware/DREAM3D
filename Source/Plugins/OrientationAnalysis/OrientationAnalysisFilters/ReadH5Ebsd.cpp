@@ -620,7 +620,7 @@ void ReadH5Ebsd::execute()
         bool propWasSet = rot_Sample->setProperty("RotationAngle", m_SampleTransformation.angle);
         if(false == propWasSet)
         {
-          QString ss = QObject::tr("ReadH5Ebsd Error Setting Property '%1' into filter '%2' which is a subfilter called by ReadH5Ebsd. The property was not set which could mean the property was not exposed with a Q_PROPERTY macro. Please notify the developers.").arg("RotationAngle").arg(filtName);
+          QString ss = QObject::tr("Error Setting Property '%1' into filter '%2' which is a subfilter called by ReadH5Ebsd. The property was not set which could mean the property was not exposed with a Q_PROPERTY macro. Please notify the developers.").arg("RotationAngle").arg(filtName);
           setErrorCondition(-109874);
           notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
         }
@@ -629,7 +629,7 @@ void ReadH5Ebsd::execute()
         propWasSet = rot_Sample->setProperty("RotationAxis", v);
         if(false == propWasSet)
         {
-          QString ss = QObject::tr("ReadH5Ebsd Error Setting Property '%1' into filter '%2' which is a subfilter called by ReadH5Ebsd. The property was not set which could mean the property was not exposed with a Q_PROPERTY macro. Please notify the developers.").arg("RotationAxis").arg(filtName);
+          QString ss = QObject::tr("Error Setting Property '%1' into filter '%2' which is a subfilter called by ReadH5Ebsd. The property was not set which could mean the property was not exposed with a Q_PROPERTY macro. Please notify the developers.").arg("RotationAxis").arg(filtName);
           setErrorCondition(-109873);
           notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
         }
@@ -637,7 +637,7 @@ void ReadH5Ebsd::execute()
         propWasSet = rot_Sample->setProperty("SliceBySlice", v);
         if(false == propWasSet)
         {
-          QString ss = QObject::tr("ReadH5Ebsd Error Setting Property '%1' into filter '%2' which is a subfilter called by ReadH5Ebsd. The property was not set which could mean the property was not exposed with a Q_PROPERTY macro. Please notify the developers.").arg("SliceBySlice").arg(filtName);
+          QString ss = QObject::tr("Error Setting Property '%1' into filter '%2' which is a subfilter called by ReadH5Ebsd. The property was not set which could mean the property was not exposed with a Q_PROPERTY macro. Please notify the developers.").arg("SliceBySlice").arg(filtName);
           setErrorCondition(-109872);
           notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
         }
@@ -647,15 +647,15 @@ void ReadH5Ebsd::execute()
         propWasSet = rot_Sample->setProperty("CellAttributeMatrixPath", v);
         if(false == propWasSet)
         {
-          QString ss = QObject::tr("ReadH5Ebsd Error Setting Property '%1' into filter '%2' which is a subfilter called by ReadH5Ebsd. The property was not set which could mean the property was not exposed with a Q_PROPERTY macro. Please notify the developers.").arg("CellAttributeMatrixName").arg(filtName);
-          setErrorCondition(-109872);
+          QString ss = QObject::tr("Error Setting Property '%1' into filter '%2' which is a subfilter called by ReadH5Ebsd. The property was not set which could mean the property was not exposed with a Q_PROPERTY macro. Please notify the developers.").arg("CellAttributeMatrixName").arg(filtName);
+          setErrorCondition(-109871);
           notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
         }
         rot_Sample->execute();
       }
       else
       {
-        QString ss = QObject::tr("ReadH5Ebsd Error creating filter '%1' which is a subfilter called by ReadH5Ebsd. Filter was not created/executed. Please notify the developers.").arg(filtName);
+        QString ss = QObject::tr("Error creating filter '%1' which is a subfilter called by ReadH5Ebsd. Filter was not created/executed. Please notify the developers.").arg(filtName);
         setErrorCondition(-109870);
         notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
       }

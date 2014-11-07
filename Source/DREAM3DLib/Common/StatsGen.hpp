@@ -513,7 +513,7 @@ class StatsGen
       for (int i = 0; i < npoints; i++)
       {
         xval[i] = i * 5.0 + 2.5;
-        yval[i] = yval[i] / float(npoints);
+        yval[i] = yval[i] / float(size);
       }
       return err;
     }
