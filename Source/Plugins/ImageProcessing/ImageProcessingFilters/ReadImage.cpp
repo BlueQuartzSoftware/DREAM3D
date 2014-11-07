@@ -266,12 +266,12 @@ void ReadImage::dataCheck()
   {
     if(2 == numDimensions)
     {
-      //allow 2 dimensional images (as 3d image withs size 1 in the z direction)
+      //allow 2 dimensional images (as 3d image with size 1 in the z direction)
     }
     else
     {
       QString message = QObject::tr("3 dimensional image required (slected image dimensions: %1)").arg(numDimensions);
-      setErrorCondition(-2);
+      setErrorCondition(-3);
       notifyErrorMessage(getHumanLabel(), message, getErrorCondition());
       return;
     }
@@ -320,14 +320,14 @@ void ReadImage::dataCheck()
       if(tDims[0] != xdim)
       {
         QString message = QObject::tr("The x size of '%1' (%2) does not match the x size of '%3' (%4)").arg(getInputFileName()).arg(xdim).arg(getDataContainerName() + "/" + getCellAttributeMatrixName()).arg(tDims[0]);
-        setErrorCondition(-3);
+        setErrorCondition(-4);
         notifyErrorMessage(getHumanLabel(), message, getErrorCondition());
         return;
       }
       if(tDims[1] != ydim)
       {
         QString message = QObject::tr("The y size of '%1' (%2) does not match the x size of '%3' (%4)").arg(getInputFileName()).arg(ydim).arg(getDataContainerName() + "/" + getCellAttributeMatrixName()).arg(tDims[1]);
-        setErrorCondition(-4);
+        setErrorCondition(-5);
         notifyErrorMessage(getHumanLabel(), message, getErrorCondition());
         return;
       }
@@ -336,7 +336,7 @@ void ReadImage::dataCheck()
         if(tDims[2] != zdim)
         {
           QString message = QObject::tr("The z size of '%1' (%2) does not match the x size of '%3' (%4)").arg(getInputFileName()).arg(zdim).arg(getDataContainerName() + "/" + getCellAttributeMatrixName()).arg(tDims[2]);
-          setErrorCondition(-5);
+          setErrorCondition(-6);
           notifyErrorMessage(getHumanLabel(), message, getErrorCondition());
           return;
         }
@@ -346,7 +346,7 @@ void ReadImage::dataCheck()
         if(tDims[2] != 1)
         {
           QString message = QObject::tr("The z size of '%1' (%2) does not match the x size of '%3' (1)").arg(getInputFileName()).arg(zdim).arg(getDataContainerName() + "/" + getCellAttributeMatrixName());
-          setErrorCondition(-5);
+          setErrorCondition(-7);
           notifyErrorMessage(getHumanLabel(), message, getErrorCondition());
           return;
         }
@@ -398,7 +398,7 @@ void ReadImage::dataCheck()
   {
     std::string pixelTypeName = itk::ImageIOBase::GetPixelTypeAsString(pixelType);
     QString message = QObject::tr("The pixel type of '%1' (%2) is unsupported").arg(getInputFileName()).arg(QString::fromStdString(pixelTypeName));
-    setErrorCondition(-6);
+    setErrorCondition(-8);
     notifyErrorMessage(getHumanLabel(), message, getErrorCondition());
     return;
   }
@@ -450,7 +450,7 @@ void ReadImage::dataCheck()
   {
     std::string componentTypeName = itk::ImageIOBase::GetComponentTypeAsString(componentType);
     QString message = QObject::tr("The component type type of '%1' (%2) is unsupported").arg(getInputFileName()).arg(QString::fromStdString(componentTypeName));
-    setErrorCondition(-6);
+    setErrorCondition(-9);
     notifyErrorMessage(getHumanLabel(), message, getErrorCondition());
     return;
   }
