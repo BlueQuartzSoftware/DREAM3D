@@ -64,8 +64,15 @@ class  FindBoundingBoxFeatures : public AbstractFilter
     DREAM3D_TYPE_MACRO_SUPER(FindBoundingBoxFeatures, AbstractFilter)
 
     virtual ~FindBoundingBoxFeatures();
+
+    DREAM3D_FILTER_PARAMETER(bool, CalcByPhase)
+    Q_PROPERTY(bool CalcByPhase READ getCalcByPhase WRITE setCalcByPhase)
+
     DREAM3D_FILTER_PARAMETER(DataArrayPath, CentroidsArrayPath)
     Q_PROPERTY(DataArrayPath CentroidsArrayPath READ getCentroidsArrayPath WRITE setCentroidsArrayPath)
+
+    DREAM3D_FILTER_PARAMETER(DataArrayPath, PhasesArrayPath)
+    Q_PROPERTY(DataArrayPath PhasesArrayPath READ getPhasesArrayPath WRITE setPhasesArrayPath)
 
     DREAM3D_FILTER_PARAMETER(DataArrayPath, SurfaceFeaturesArrayPath)
     Q_PROPERTY(DataArrayPath SurfaceFeaturesArrayPath READ getSurfaceFeaturesArrayPath WRITE setSurfaceFeaturesArrayPath)
@@ -110,6 +117,7 @@ class  FindBoundingBoxFeatures : public AbstractFilter
     FindBoundingBoxFeatures();
 
   private:
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, Phases)
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, Centroids)
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(bool, SurfaceFeatures)
     DEFINE_CREATED_DATAARRAY_VARIABLE(bool, BiasedFeatures)
