@@ -49,6 +49,19 @@
 typedef struct { int x; int y; int z; } IntVec3_t;
 typedef struct { float x; float y; float z; } FloatVec3_t;
 typedef struct { float a; float b; float c; float d; } FloatVec4_t;
+typedef struct
+{
+    QString InputPath;
+    QString FilePrefix;
+    QString FileSuffix;
+    QString FileExtension;
+    int PaddingDigits;
+    uint32_t Ordering;
+    int64_t StartIndex;
+    int64_t EndIndex;
+}
+ FileListInfo_t;
+
 
 //typedef struct { float angle; float h; float k; float l; } AxisAngleInput_t;
 
@@ -56,6 +69,7 @@ Q_DECLARE_METATYPE(IntVec3_t)
 Q_DECLARE_METATYPE(FloatVec3_t)
 Q_DECLARE_METATYPE(FloatVec4_t)
 Q_DECLARE_METATYPE(AxisAngleInput_t)
+Q_DECLARE_METATYPE(FileListInfo_t)
 
 
 namespace FilterParameterWidgetType
@@ -68,6 +82,7 @@ namespace FilterParameterWidgetType
   const QString InputPathWidget("InputPathWidget");
   const QString OutputFileWidget("OutputFileWidget");
   const QString OutputPathWidget("OutputPathWidget");
+  const QString FileListInfoWidget("FileListInfoWidget");
   const QString BooleanWidget("BooleanWidget");
   const QString ChoiceWidget("ChoiceWidget"); // Generic ComboBox Drop down where the filter provides the list of strings
   const QString IntVec3Widget("IntVec3Widget");
@@ -145,6 +160,12 @@ class DREAM3DLib_EXPORT FilterParameter
 
     static Pointer New(const QString& humanLabel, const QString& propertyName,
                        const QString& widgetType, const IntVec3_t& defaultValue,
+                       bool advanced = false,
+                       const QString& units = QString(""),
+                       int groupIndex = -1);
+
+    static Pointer New(const QString& humanLabel, const QString& propertyName,
+                       const QString& widgetType, const FileListInfo_t& defaultValue,
                        bool advanced = false,
                        const QString& units = QString(""),
                        int groupIndex = -1);

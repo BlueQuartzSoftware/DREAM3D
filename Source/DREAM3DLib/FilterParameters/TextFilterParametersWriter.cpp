@@ -296,6 +296,15 @@ int TextFilterParametersWriter::writeValue(const QString name, FloatVec4_t v)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+int TextFilterParametersWriter::writeValue(const QString name, FileListInfo_t v)
+{
+  int err = -1;
+  return err;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 int TextFilterParametersWriter::writeValue(const QString name, ComparisonInput_t v)
 {
   int err = -1;

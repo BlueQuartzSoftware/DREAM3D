@@ -60,6 +60,7 @@
 #include "DREAM3DLib/CoreFilters/DataContainerWriter.h"
 #include "DREAM3DLib/Utilities/TimeUtilities.h"
 #include "DREAM3DLib/Utilities/DREAM3DRandom.h"
+#include "DREAM3DLib/Utilities/FilePathGenerator.h"
 
 //// Macro to determine if we are going to show the Debugging Output files
 #define PPP_SHOW_DEBUG_OUTPUTS 0
@@ -250,7 +251,6 @@ TesselateFarFieldGrains::TesselateFarFieldGrains() :
   m_EquivalentDiametersArrayName(DREAM3D::FeatureData::EquivalentDiameters),
   m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
   m_MaskArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::GoodVoxels),
-  m_FeatureInputFile(""),
   m_FeatureIds(NULL),
   m_CellPhases(NULL),
   m_FeaturePhases(NULL),
@@ -267,6 +267,15 @@ TesselateFarFieldGrains::TesselateFarFieldGrains() :
   m_EllipsoidOps = EllipsoidOps::New();
 
   m_OrthoOps = OrthoRhombicOps::New();
+
+  m_FeatureInputFileListInfo.StartIndex = 0;
+  m_FeatureInputFileListInfo.EndIndex = 0;
+  m_FeatureInputFileListInfo.PaddingDigits = 0;
+  m_FeatureInputFileListInfo.Ordering = 0;
+  m_FeatureInputFileListInfo.FileExtension = "";
+  m_FeatureInputFileListInfo.FilePrefix = "";
+  m_FeatureInputFileListInfo.FileSuffix = "";
+  m_FeatureInputFileListInfo.InputPath = "";
 
   m_Seed = QDateTime::currentMSecsSinceEpoch();
   setupFilterParameters();
@@ -285,7 +294,7 @@ TesselateFarFieldGrains::~TesselateFarFieldGrains()
 void TesselateFarFieldGrains::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(FileSystemFilterParameter::New("Feature Input File", "FeatureInputFile", FilterParameterWidgetType::InputFileWidget, getFeatureInputFile(), false, "", "*.txt", "Text File"));
+  parameters.push_back(FilterParameter::New("Feature Input File List", "FeatureInputFileListInfo", FilterParameterWidgetType::FileListInfoWidget, getFeatureInputFileListInfo(), false));
   parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
   parameters.push_back(FilterParameter::New("Mask Array", "MaskArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getMaskArrayPath(), true));
   parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
@@ -311,13 +320,13 @@ void TesselateFarFieldGrains::readFilterParameters(AbstractFilterParametersReade
   setOutputCellAttributeMatrixName( reader->readDataArrayPath("OutputCellAttributeMatrixName", getOutputCellAttributeMatrixName() ) );
   setOutputCellFeatureAttributeMatrixName( reader->readString("OutputCellFeatureAttributeMatrixName", getOutputCellFeatureAttributeMatrixName() ) );
   setOutputCellEnsembleAttributeMatrixName( reader->readString("OutputCellEnsembleAttributeMatrixName", getOutputCellEnsembleAttributeMatrixName() ) );
+  setFeatureInputFileListInfo( reader->readFileListInfo("FeatureInputFileListInfo", getFeatureInputFileListInfo() ) );
   setFeatureIdsArrayName( reader->readString("FeatureIdsArrayName", getFeatureIdsArrayName() ) );
   setCellPhasesArrayName( reader->readString("CellPhasesArrayName", getCellPhasesArrayName() ) );
   setFeaturePhasesArrayName( reader->readString("FeaturePhasesArrayName", getFeaturePhasesArrayName() ) );
   setFeatureEulerAnglesArrayName( reader->readString("FeatureEulerAnglesArrayName", getFeatureEulerAnglesArrayName() ) );
   setElasticStrainsArrayName( reader->readString("ElasticStrainsArrayName", getElasticStrainsArrayName() ) );
   setCrystalStructuresArrayName( reader->readString("CrystalStructuresArrayName", getCrystalStructuresArrayName() ) );
-  setFeatureInputFile( reader->readString( "FeatureInputFile", getFeatureInputFile() ) );
   setMaskArrayPath(reader->readDataArrayPath("MaskArrayPath", getMaskArrayPath() ) );
   reader->closeFilterGroup();
 }
@@ -329,17 +338,17 @@ int TesselateFarFieldGrains::writeFilterParameters(AbstractFilterParametersWrite
 {
   writer->openFilterGroup(this, index);
   DREAM3D_FILTER_WRITE_PARAMETER(OutputCellAttributeMatrixName)
-      DREAM3D_FILTER_WRITE_PARAMETER(OutputCellFeatureAttributeMatrixName)
-      DREAM3D_FILTER_WRITE_PARAMETER(OutputCellEnsembleAttributeMatrixName)
-      DREAM3D_FILTER_WRITE_PARAMETER(FeatureIdsArrayName)
-      DREAM3D_FILTER_WRITE_PARAMETER(CellPhasesArrayName)
-      DREAM3D_FILTER_WRITE_PARAMETER(FeaturePhasesArrayName)
-      DREAM3D_FILTER_WRITE_PARAMETER(FeatureEulerAnglesArrayName)
-      DREAM3D_FILTER_WRITE_PARAMETER(ElasticStrainsArrayName)
-      DREAM3D_FILTER_WRITE_PARAMETER(CrystalStructuresArrayName)
-      DREAM3D_FILTER_WRITE_PARAMETER(FeatureInputFile)
-      DREAM3D_FILTER_WRITE_PARAMETER(MaskArrayPath)
-      writer->closeFilterGroup();
+  DREAM3D_FILTER_WRITE_PARAMETER(OutputCellFeatureAttributeMatrixName)
+  DREAM3D_FILTER_WRITE_PARAMETER(OutputCellEnsembleAttributeMatrixName)
+  DREAM3D_FILTER_WRITE_PARAMETER(FeatureInputFileListInfo)
+  DREAM3D_FILTER_WRITE_PARAMETER(FeatureIdsArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(CellPhasesArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(FeaturePhasesArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(FeatureEulerAnglesArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(ElasticStrainsArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(CrystalStructuresArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(MaskArrayPath)
+  writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
 
@@ -368,7 +377,17 @@ void TesselateFarFieldGrains::updateFeatureInstancePointers()
   { m_ElasticStrains = m_ElasticStrainsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   if( NULL != m_FeatureEulerAnglesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_FeatureEulerAngles = m_FeatureEulerAnglesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+}
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void TesselateFarFieldGrains::updateEnsembleInstancePointers()
+{
+  setErrorCondition(0);
+
+  if( NULL != m_CrystalStructuresPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  { m_CrystalStructures = m_CrystalStructuresPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
 
 // -----------------------------------------------------------------------------
@@ -406,7 +425,6 @@ void TesselateFarFieldGrains::dataCheck()
   QVector<size_t> tDims(1, 0);
   AttributeMatrix::Pointer cellFeatureAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getOutputCellFeatureAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::CellFeature);
   if(getErrorCondition() < 0) { return; }
-  tDims[0] = 2;
   AttributeMatrix::Pointer cellEnsembleAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getOutputCellEnsembleAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::CellEnsemble);
   if(getErrorCondition() < 0) { return; }
 
@@ -456,7 +474,7 @@ void TesselateFarFieldGrains::dataCheck()
   dims.resize(1);
   dims[0] = 1;
   tempPath.update(getOutputCellAttributeMatrixName().getDataContainerName(), getOutputCellEnsembleAttributeMatrixName(), getCrystalStructuresArrayName() );
-  m_CrystalStructuresPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<unsigned int>, AbstractFilter, unsigned int>(this,  tempPath, Ebsd::CrystalStructure::Cubic_High, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_CrystalStructuresPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<unsigned int>, AbstractFilter, unsigned int>(this,  tempPath, Ebsd::CrystalStructure::UnknownCrystalStructure, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_CrystalStructuresPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_CrystalStructures = m_CrystalStructuresPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
@@ -473,12 +491,25 @@ void TesselateFarFieldGrains::preflight()
   dataCheck();
   emit preflightExecuted();
 
-  if(getFeatureInputFile().isEmpty() == true)
+  bool hasMissingFiles = false;
+  bool orderAscending = false;
+
+  if(m_FeatureInputFileListInfo.Ordering == 0) { orderAscending = true; }
+  else if (m_FeatureInputFileListInfo.Ordering == 1) { orderAscending = false; }
+
+  // Now generate all the file names the user is asking for and populate the table
+  QVector<QString> fileList = FilePathGenerator::GenerateFileList(m_FeatureInputFileListInfo.StartIndex, 
+                              m_FeatureInputFileListInfo.EndIndex, hasMissingFiles, orderAscending, 
+                              m_FeatureInputFileListInfo.InputPath, m_FeatureInputFileListInfo.FilePrefix, 
+                              m_FeatureInputFileListInfo.FileSuffix, m_FeatureInputFileListInfo.FileExtension,
+                              m_FeatureInputFileListInfo.PaddingDigits);
+  if (fileList.size() == 0)
   {
-    QString ss = QObject::tr(": The Feature file must be set before executing this filter.");
-    notifyErrorMessage(getHumanLabel(), ss, -1);
-    setErrorCondition(-1);
+    QString ss = QObject::tr("No files have been selected for import. Have you set the input directory?");
+    setErrorCondition(-11);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
+
 
   DataContainer::Pointer dc = getDataContainerArray()->getDataContainer(getOutputCellAttributeMatrixName());
   if(dc == NULL) { setInPreflight(false); return; }
@@ -539,106 +570,148 @@ void  TesselateFarFieldGrains::load_features()
 
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getOutputCellAttributeMatrixName().getDataContainerName());
   AttributeMatrix::Pointer cellFeatureAttrMat = m->getAttributeMatrix(m_OutputCellFeatureAttributeMatrixName);
+  AttributeMatrix::Pointer cellEnsembleAttrMat = m->getAttributeMatrix(m_OutputCellEnsembleAttributeMatrixName);
 
-  std::ifstream inFile;
-  inFile.open(getFeatureInputFile().toLatin1().data(), std::ios_base::binary);
-  if(!inFile)
+  bool hasMissingFiles = false;
+  bool orderAscending = false;
+
+  if(m_FeatureInputFileListInfo.Ordering == 0) { orderAscending = true; }
+  else if (m_FeatureInputFileListInfo.Ordering == 1) { orderAscending = false; }
+
+  // Now generate all the file names the user is asking for and populate the table
+  QVector<QString> fileList = FilePathGenerator::GenerateFileList(m_FeatureInputFileListInfo.StartIndex, 
+                              m_FeatureInputFileListInfo.EndIndex, hasMissingFiles, orderAscending, 
+                              m_FeatureInputFileListInfo.InputPath, m_FeatureInputFileListInfo.FilePrefix, 
+                              m_FeatureInputFileListInfo.FileSuffix, m_FeatureInputFileListInfo.FileExtension,
+                              m_FeatureInputFileListInfo.PaddingDigits);  std::ifstream inFile;
+
+  for (QVector<QString>::iterator filepath = fileList.begin(); filepath != fileList.end(); ++filepath)
   {
-    QString ss = QObject::tr("Failed to open: %1").arg(getFeatureInputFile());
-    setErrorCondition(-1);
-    notifyErrorMessage(getHumanLabel(), ss, -1);
-  }
-  int numFeatures;
-  inFile >> numFeatures;
-  if (0 == numFeatures)
-  {
-    notifyErrorMessage(getHumanLabel(), "The number of features is Zero and should be greater than Zero", -600);
-  }
+    QString fName = *filepath;
+    QString ss = QObject::tr("Importing file %1").arg(fName);
+    notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
 
-  firstPrimaryFeature = 1;
+    inFile.open(fName.toLatin1().data(), std::ios_base::binary);
+    if(!inFile)
+    {
+      QString ss = QObject::tr("Failed to open: %1").arg(fName);
+      setErrorCondition(-1);
+      notifyErrorMessage(getHumanLabel(), ss, -1);
+    }
+  
+    // variable for holding meta data  
+    int numPhases = 1;
+    int numFeatures;
+    float beamCenter, beamThickness, globalZPos;
+    std::string dummyStr, phaseName, crystruct;
+    float aRef, bRef, cRef, alphaRef, betaRef, gammaRef;
 
-  QVector<size_t> tDims(1, firstPrimaryFeature + numFeatures);
-  cellFeatureAttrMat->setTupleDimensions(tDims);
-  updateFeatureInstancePointers();
+    inFile >> dummyStr >> numFeatures;
+    if (0 == numFeatures)
+    {
+      notifyErrorMessage(getHumanLabel(), "The number of features is Zero and should be greater than Zero", -600);
+    }
+    firstPrimaryFeature = 1;
+    QVector<size_t> tDims(1, firstPrimaryFeature + numFeatures);
+    cellFeatureAttrMat->setTupleDimensions(tDims);
+    updateFeatureInstancePointers();
 
-  size_t fId;
-  int phase = 1;
-  float xC, yC, zC;
-  float a, b, c, alpha, beta, gamma;
-  float vol, eqRad;
-  float conf;
-  float phi1, PHI, phi2;
-  float dummy1, dummy2, dummy3;
-  float mat[3][3];
-  float rt[3][3];
-  float rtInv[3][3];
-  float rtMult[3][3];
-  float rtAvg[3][3];
-  float eps[3][3];
-  float epsT[3][3];
-  float epsAdd[3][3];
-  float epsMult[3][3];
-  float identity[3][3];
-  float flst[3][3];
-  size_t currentFeature = firstPrimaryFeature;
-  const float fourThirds = 4.0f / 3.0f;
-  float aAvg = 3.5915;
-  float bAvg = 3.5915;
-  float cAvg = 3.5915;
-  float alphaAvg = DREAM3D::Constants::k_PiOver2;
-  float betaAvg = DREAM3D::Constants::k_PiOver2;
-  float gammaAvg = DREAM3D::Constants::k_PiOver2;
-  OrientationMath::RootTensorFromLatticeParameters(aAvg, bAvg, cAvg, alphaAvg, betaAvg, gammaAvg, rtAvg);
-  MatrixMath::Identity3x3(identity);
-  for(int i = 0; i < numFeatures; i++)
-  {
-    inFile >> fId >> mat[0][0] >> mat[0][1] >> mat[0][2] >> mat[1][0] >> mat[1][1] >> mat[1][2] >> mat[2][0] >> mat[2][1] >> mat[2][2] >> xC >> yC >> zC >> a >> b >> c >> alpha >> beta >> gamma >> dummy1 >> dummy2 >> dummy3 >> eqRad >> conf;
+    inFile >> dummyStr >> beamCenter;
+    inFile >> dummyStr >> beamThickness;
+    inFile >> dummyStr >> globalZPos;
 
-    m_Centroids[3* currentFeature + 0] = xC;
-    m_Centroids[3* currentFeature + 1] = yC;
-    m_Centroids[3* currentFeature + 2] = zC;
+    bool keepGoing = true;
+    while(keepGoing == true)
+    {
+      keepGoing = false;
+      inFile >> dummyStr >> phaseName >> crystruct >> aRef >> bRef >> cRef >> alphaRef >> betaRef >> gammaRef; 
+      numPhases++;
+      tDims[0] = numPhases;
+      cellEnsembleAttrMat->setTupleDimensions(tDims);
+      updateEnsembleInstancePointers();
+      m_CrystalStructures[numPhases=1] = Ebsd::CrystalStructure::Cubic_High;
+    }
 
-    vol = fourThirds * DREAM3D::Constants::k_Pi * eqRad * eqRad * eqRad;
-    m_Volumes[currentFeature] = vol;
-    m_EquivalentDiameters[currentFeature] = eqRad*2.0;
-    m_AxisLengths[3 * currentFeature + 0] = 1.0;
-    m_AxisLengths[3 * currentFeature + 1] = 1.0;
-    m_AxisLengths[3 * currentFeature + 2] = 1.0;
-    m_AxisEulerAngles[3 * currentFeature + 0] = 0.0;
-    m_AxisEulerAngles[3 * currentFeature + 1] = 0.0;
-    m_AxisEulerAngles[3 * currentFeature + 2] = 0.0;
-    m_Omega3s[currentFeature] = 1.0;
+    size_t fId;
+    int phase = 1;
+    float xC, yC, zC;
+    float a, b, c, alpha, beta, gamma;
+    float vol, eqRad;
+    float conf;
+    float phi1, PHI, phi2;
+    float dummy1, dummy2, dummy3;
+    float mat[3][3];
+    float rt[3][3];
+    float rtInv[3][3];
+    float rtMult[3][3];
+    float rtAvg[3][3];
+    float eps[3][3];
+    float epsT[3][3];
+    float epsAdd[3][3];
+    float epsMult[3][3];
+    float identity[3][3];
+    float flst[3][3];
+    size_t currentFeature = firstPrimaryFeature;
+    const float fourThirds = 4.0f / 3.0f;
 
-    m_FeaturePhases[currentFeature] = phase;
+    alphaRef *= DREAM3D::Constants::k_PiOver180;
+    betaRef *= DREAM3D::Constants::k_PiOver180;
+    gammaRef *= DREAM3D::Constants::k_PiOver180;
+    OrientationMath::RootTensorFromLatticeParameters(aRef, bRef, cRef, alphaRef, betaRef, gammaRef, rtAvg);
+    MatrixMath::Identity3x3(identity);
+    for(int i = 0; i < numFeatures; i++)
+    {
+      inFile >> fId >> phase >> mat[0][0] >> mat[0][1] >> mat[0][2] >> mat[1][0] >> mat[1][1] >> mat[1][2] >> mat[2][0] >> mat[2][1] >> mat[2][2] >> xC >> yC >> zC >> a >> b >> c >> alpha >> beta >> gamma >> dummy1 >> dummy2 >> dummy3 >> eqRad >> conf;
 
-    OrientationMath::MattoEuler(mat, phi1, PHI, phi2);
-    m_FeatureEulerAngles[3*currentFeature + 0] = phi1;
-    m_FeatureEulerAngles[3*currentFeature + 1] = PHI;
-    m_FeatureEulerAngles[3*currentFeature + 2] = phi2;
+      if(fabs(zC-beamCenter) <= (beamThickness/2.0))
+      {
+        m_Centroids[3* currentFeature + 0] = xC;
+        m_Centroids[3* currentFeature + 1] = yC;
+        m_Centroids[3* currentFeature + 2] = zC + globalZPos;
 
-    alpha *= DREAM3D::Constants::k_PiOver180;
-    beta *= DREAM3D::Constants::k_PiOver180;
-    gamma *= DREAM3D::Constants::k_PiOver180;
-    OrientationMath::RootTensorFromLatticeParameters(a, b, c, alpha, beta, gamma, rt);
-    MatrixMath::Invert3x3(rt, rtInv);
-    MatrixMath::Multiply3x3with3x3(rtInv, rtAvg, rtMult);
-    MatrixMath::Subtract3x3s(rtMult, identity, eps);
-    MatrixMath::Transpose3x3(eps, epsT);
-    MatrixMath::Multiply3x3with3x3(epsT, eps, epsMult);
-    MatrixMath::Add3x3s(eps, epsT, epsAdd);
-    MatrixMath::Add3x3s(epsAdd, epsMult, flst);
-    MatrixMath::Multiply3x3withConstant(flst, 0.5);
+        vol = fourThirds * DREAM3D::Constants::k_Pi * eqRad * eqRad * eqRad;
+        m_Volumes[currentFeature] = vol;
+        m_EquivalentDiameters[currentFeature] = eqRad*2.0;
+        m_AxisLengths[3 * currentFeature + 0] = 1.0;
+        m_AxisLengths[3 * currentFeature + 1] = 1.0;
+        m_AxisLengths[3 * currentFeature + 2] = 1.0;
+        m_AxisEulerAngles[3 * currentFeature + 0] = 0.0;
+        m_AxisEulerAngles[3 * currentFeature + 1] = 0.0;
+        m_AxisEulerAngles[3 * currentFeature + 2] = 0.0;
+        m_Omega3s[currentFeature] = 1.0;
 
-    m_ElasticStrains[9*currentFeature + 0] = flst[0][0];
-    m_ElasticStrains[9*currentFeature + 1] = flst[0][1];
-    m_ElasticStrains[9*currentFeature + 2] = flst[0][2];
-    m_ElasticStrains[9*currentFeature + 3] = flst[1][0];
-    m_ElasticStrains[9*currentFeature + 4] = flst[1][1];
-    m_ElasticStrains[9*currentFeature + 5] = flst[1][2];
-    m_ElasticStrains[9*currentFeature + 6] = flst[2][0];
-    m_ElasticStrains[9*currentFeature + 7] = flst[2][2];
-    m_ElasticStrains[9*currentFeature + 8] = flst[2][2];
-    currentFeature++;
+        m_FeaturePhases[currentFeature] = phase;
+
+        OrientationMath::MattoEuler(mat, phi1, PHI, phi2);
+        m_FeatureEulerAngles[3*currentFeature + 0] = phi1;
+        m_FeatureEulerAngles[3*currentFeature + 1] = PHI;
+        m_FeatureEulerAngles[3*currentFeature + 2] = phi2;
+
+        alpha *= DREAM3D::Constants::k_PiOver180;
+        beta *= DREAM3D::Constants::k_PiOver180;
+        gamma *= DREAM3D::Constants::k_PiOver180;
+        OrientationMath::RootTensorFromLatticeParameters(a, b, c, alpha, beta, gamma, rt);
+        MatrixMath::Invert3x3(rt, rtInv);
+        MatrixMath::Multiply3x3with3x3(rtInv, rtAvg, rtMult);
+        MatrixMath::Subtract3x3s(rtMult, identity, eps);
+        MatrixMath::Transpose3x3(eps, epsT);
+        MatrixMath::Multiply3x3with3x3(epsT, eps, epsMult);
+        MatrixMath::Add3x3s(eps, epsT, epsAdd);
+        MatrixMath::Add3x3s(epsAdd, epsMult, flst);
+        MatrixMath::Multiply3x3withConstant(flst, 0.5);
+
+        m_ElasticStrains[9*currentFeature + 0] = flst[0][0];
+        m_ElasticStrains[9*currentFeature + 1] = flst[0][1];
+        m_ElasticStrains[9*currentFeature + 2] = flst[0][2];
+        m_ElasticStrains[9*currentFeature + 3] = flst[1][0];
+        m_ElasticStrains[9*currentFeature + 4] = flst[1][1];
+        m_ElasticStrains[9*currentFeature + 5] = flst[1][2];
+        m_ElasticStrains[9*currentFeature + 6] = flst[2][0];
+        m_ElasticStrains[9*currentFeature + 7] = flst[2][1];
+        m_ElasticStrains[9*currentFeature + 8] = flst[2][2];
+        currentFeature++;
+      }
+    }
   }
 }
 

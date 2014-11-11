@@ -122,8 +122,8 @@ class TesselateFarFieldGrains : public AbstractFilter
     DREAM3D_FILTER_PARAMETER(DataArrayPath, MaskArrayPath)
     Q_PROPERTY(DataArrayPath MaskArrayPath READ getMaskArrayPath WRITE setMaskArrayPath)
 
-    DREAM3D_FILTER_PARAMETER(QString, FeatureInputFile)
-    Q_PROPERTY(QString FeatureInputFile READ getFeatureInputFile WRITE setFeatureInputFile)
+    DREAM3D_FILTER_PARAMETER(FileListInfo_t, FeatureInputFileListInfo)
+    Q_PROPERTY(FileListInfo_t FeatureInputFileListInfo READ getFeatureInputFileListInfo WRITE setFeatureInputFileListInfo)
 
     virtual const QString getCompiledLibraryName();
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
@@ -209,6 +209,7 @@ class TesselateFarFieldGrains : public AbstractFilter
 
     void dataCheck();
     void updateFeatureInstancePointers();
+    void updateEnsembleInstancePointers();
 
     TesselateFarFieldGrains(const TesselateFarFieldGrains&); // Copy Constructor Not Implemented
     void operator=(const TesselateFarFieldGrains&); // Operator '=' Not Implemented

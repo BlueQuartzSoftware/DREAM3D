@@ -552,6 +552,30 @@ FloatVec4_t H5FilterParametersReader::readFloatVec4(const QString name, FloatVec
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+FileListInfo_t H5FilterParametersReader::readFileListInfo(const QString name, FileListInfo_t defaultValue)
+{
+  bool ok = false;
+  int err = 0;
+  FileListInfo_t v;
+
+  hid_t dcaGid = QH5Utilities::openHDF5Object(m_CurrentGroupId, name);
+  if(dcaGid < 0) { return defaultValue; }
+
+  err = QH5Lite::readScalarDataset<int64_t>(dcaGid, "EndIndex", v.EndIndex );
+  err = QH5Lite::readScalarDataset<int64_t>(dcaGid, "StartIndex", v.StartIndex );
+  err = QH5Lite::readScalarDataset<int32_t>(dcaGid, "PaddingDigits", v.PaddingDigits );
+  err = QH5Lite::readScalarDataset<uint32_t>(dcaGid, "Ordering", v.Ordering );
+  err = QH5Lite::readStringDataset(dcaGid, "FileExtension", v.FileExtension );
+  err = QH5Lite::readStringDataset(dcaGid, "FilePrefix", v.FilePrefix );
+  err = QH5Lite::readStringDataset(dcaGid, "FileSuffix", v.FileSuffix );
+  err = QH5Lite::readStringDataset(dcaGid, "InputPath", v.InputPath );
+
+  return v;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 ComparisonInput_t H5FilterParametersReader::readComparisonInput(const QString name, ComparisonInput_t defaultValue, int vectorPos)
 {
   // QVector<ComparisonInput_t> comps(1, defaultValue);

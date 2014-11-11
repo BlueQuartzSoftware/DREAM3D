@@ -15,6 +15,7 @@ set(DREAM3D_PARAMETER_WIDGETS
       BooleanWidget
       ChoiceWidget
       IntVec3Widget
+      FileListInfoWidget
       FloatVec3Widget
       FloatVec4Widget
       AxisAngleWidget
