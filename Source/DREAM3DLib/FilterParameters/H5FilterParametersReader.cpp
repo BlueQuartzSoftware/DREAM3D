@@ -554,21 +554,22 @@ FloatVec4_t H5FilterParametersReader::readFloatVec4(const QString name, FloatVec
 // -----------------------------------------------------------------------------
 FileListInfo_t H5FilterParametersReader::readFileListInfo(const QString name, FileListInfo_t defaultValue)
 {
-  bool ok = false;
   int err = 0;
   FileListInfo_t v;
 
-  hid_t dcaGid = QH5Utilities::openHDF5Object(m_CurrentGroupId, name);
-  if(dcaGid < 0) { return defaultValue; }
+  hid_t gid = QH5Utilities::openHDF5Object(m_CurrentGroupId, name);
+  if(gid < 0) { return defaultValue; }
 
-  err = QH5Lite::readScalarDataset<int64_t>(dcaGid, "EndIndex", v.EndIndex );
-  err = QH5Lite::readScalarDataset<int64_t>(dcaGid, "StartIndex", v.StartIndex );
-  err = QH5Lite::readScalarDataset<int32_t>(dcaGid, "PaddingDigits", v.PaddingDigits );
-  err = QH5Lite::readScalarDataset<uint32_t>(dcaGid, "Ordering", v.Ordering );
-  err = QH5Lite::readStringDataset(dcaGid, "FileExtension", v.FileExtension );
-  err = QH5Lite::readStringDataset(dcaGid, "FilePrefix", v.FilePrefix );
-  err = QH5Lite::readStringDataset(dcaGid, "FileSuffix", v.FileSuffix );
-  err = QH5Lite::readStringDataset(dcaGid, "InputPath", v.InputPath );
+  err = QH5Lite::readScalarDataset<qint32>(gid, "EndIndex", v.EndIndex );
+  err = QH5Lite::readScalarDataset<qint32>(gid, "StartIndex", v.StartIndex );
+  err = QH5Lite::readScalarDataset<qint32>(gid, "PaddingDigits", v.PaddingDigits );
+  err = QH5Lite::readScalarDataset<quint32>(gid, "Ordering", v.Ordering );
+  err = QH5Lite::readStringDataset(gid, "FileExtension", v.FileExtension );
+  err = QH5Lite::readStringDataset(gid, "FilePrefix", v.FilePrefix );
+  err = QH5Lite::readStringDataset(gid, "FileSuffix", v.FileSuffix );
+  err = QH5Lite::readStringDataset(gid, "InputPath", v.InputPath );
+
+  H5Gclose(gid); // Close the Group Object before we return
 
   return v;
 }

@@ -51,14 +51,14 @@ typedef struct { float x; float y; float z; } FloatVec3_t;
 typedef struct { float a; float b; float c; float d; } FloatVec4_t;
 typedef struct
 {
+    qint32 PaddingDigits;
+    quint32 Ordering;
+    qint32 StartIndex;
+    qint32 EndIndex;
     QString InputPath;
     QString FilePrefix;
     QString FileSuffix;
     QString FileExtension;
-    int PaddingDigits;
-    uint32_t Ordering;
-    int64_t StartIndex;
-    int64_t EndIndex;
 }
  FileListInfo_t;
 
@@ -165,12 +165,6 @@ class DREAM3DLib_EXPORT FilterParameter
                        int groupIndex = -1);
 
     static Pointer New(const QString& humanLabel, const QString& propertyName,
-                       const QString& widgetType, const FileListInfo_t& defaultValue,
-                       bool advanced = false,
-                       const QString& units = QString(""),
-                       int groupIndex = -1);
-
-    static Pointer New(const QString& humanLabel, const QString& propertyName,
                        const QString& widgetType, const DataArrayPath& defaultValue,
                        bool advanced = false,
                        const QString& units = QString(""),
@@ -215,6 +209,30 @@ class DREAM3DLib_EXPORT FilterParameter
 
 typedef QVector<FilterParameter::Pointer> FilterParameterVector;
 
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+class DREAM3DLib_EXPORT FileListInfoFilterParameter : public FilterParameter
+{
+  public:
+    DREAM3D_SHARED_POINTERS(FileListInfoFilterParameter)
+    DREAM3D_STATIC_NEW_MACRO(FileListInfoFilterParameter)
+    DREAM3D_TYPE_MACRO_SUPER(FileListInfoFilterParameter, FilterParameter)
+
+    static Pointer New(const QString& humanLabel, const QString& propertyName,
+                       const FileListInfo_t& defaultValue,
+                       bool advanced = false);
+
+    virtual ~FileListInfoFilterParameter();
+
+  protected:
+    FileListInfoFilterParameter();
+
+  private:
+    FileListInfoFilterParameter(const FileListInfoFilterParameter&); // Copy Constructor Not Implemented
+    void operator=(const FileListInfoFilterParameter&); // Operator '=' Not Implemented
+};
 
 // -----------------------------------------------------------------------------
 //

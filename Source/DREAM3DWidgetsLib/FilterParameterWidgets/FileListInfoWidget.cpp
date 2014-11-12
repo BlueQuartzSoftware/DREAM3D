@@ -60,9 +60,16 @@ FileListInfoWidget::FileListInfoWidget(FilterParameter* parameter, AbstractFilte
   m_OrderingGroup(NULL),
   m_DidCausePreflight(false)
 {
+  FileListInfoFilterParameter* fli = dynamic_cast<FileListInfoFilterParameter*>(parameter);
+  QString msg;
+  QTextStream ss(&msg);
+  ss << "FileListInfoWidget can ONLY be used with FileListInfoFilterParameter objects. The programmer of the filter has a bug.";
+  ss << " The name of the filter was " << filter->getHumanLabel() << " and the name of the Filter Parameter was " << parameter->getHumanLabel();
+  ss << " and is trying to get the propery " << parameter->getPropertyName() << " in the filter";
+  Q_ASSERT_X(NULL != fli, msg.toLatin1().constData(), __FILE__);
+
   setupUi(this);
   setupGui();
-// checkIOFiles();
 }
 
 // -----------------------------------------------------------------------------
@@ -141,12 +148,8 @@ void FileListInfoWidget::getGuiParametersFromFilter()
 
   m_FilePrefix->setText(data.FilePrefix);
   m_FileSuffix->setText(data.FileSuffix);
-  QString ext = data.FileExtension;
-  if(ext.isEmpty()) // Default to placing tif as the file extension instead of nothing.
-  {
-    ext = "tif";
-  }
-  m_FileExt->setText(ext);
+
+  m_FileExt->setText(data.FileExtension);
   m_TotalDigits->setValue(data.PaddingDigits);
 
   setOrdering(data.Ordering);
@@ -186,6 +189,10 @@ void FileListInfoWidget::validateInputFile()
     QVariant v;
     v.setValue(data);
     bool ok = getFilter()->setProperty(PROPERTY_NAME_AS_CHAR, v);
+    if (!ok)
+    {
+
+    }
   }
 }
 
