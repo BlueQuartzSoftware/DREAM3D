@@ -585,6 +585,7 @@ void  TesselateFarFieldGrains::load_features()
                               m_FeatureInputFileListInfo.FileSuffix, m_FeatureInputFileListInfo.FileExtension,
                               m_FeatureInputFileListInfo.PaddingDigits);  std::ifstream inFile;
 
+  size_t currentFeature = 1;
   for (QVector<QString>::iterator filepath = fileList.begin(); filepath != fileList.end(); ++filepath)
   {
     QString fName = *filepath;
@@ -611,8 +612,7 @@ void  TesselateFarFieldGrains::load_features()
     {
       notifyErrorMessage(getHumanLabel(), "The number of features is Zero and should be greater than Zero", -600);
     }
-    firstPrimaryFeature = 1;
-    QVector<size_t> tDims(1, firstPrimaryFeature + numFeatures);
+    QVector<size_t> tDims(1, currentFeature + numFeatures);
     cellFeatureAttrMat->setTupleDimensions(tDims);
     updateFeatureInstancePointers();
 
@@ -651,7 +651,6 @@ void  TesselateFarFieldGrains::load_features()
     float epsMult[3][3];
     float identity[3][3];
     float flst[3][3];
-    size_t currentFeature = firstPrimaryFeature;
     const float fourThirds = 4.0f / 3.0f;
 
     alphaRef *= DREAM3D::Constants::k_PiOver180;
@@ -712,6 +711,7 @@ void  TesselateFarFieldGrains::load_features()
         currentFeature++;
       }
     }
+    inFile.close();
   }
 }
 
@@ -766,7 +766,7 @@ void TesselateFarFieldGrains::assign_voxels()
   uint64_t currentMillis = millis;
 
   int64_t totalFeatures = m->getAttributeMatrix(m_OutputCellFeatureAttributeMatrixName)->getNumTuples();
-  for (int64_t i = firstPrimaryFeature; i < totalFeatures; i++)
+  for (int64_t i = 1; i < totalFeatures; i++)
   {
     featuresPerTime++;
     currentMillis = QDateTime::currentMSecsSinceEpoch();

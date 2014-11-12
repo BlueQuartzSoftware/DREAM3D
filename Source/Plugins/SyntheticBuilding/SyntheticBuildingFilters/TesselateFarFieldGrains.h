@@ -196,8 +196,6 @@ class TesselateFarFieldGrains : public AbstractFilter
 
     unsigned long long int m_Seed;
 
-    int firstPrimaryFeature;
-
     float sizex;
     float sizey;
     float sizez;
