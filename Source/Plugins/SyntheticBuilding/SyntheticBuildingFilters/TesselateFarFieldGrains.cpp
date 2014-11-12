@@ -65,6 +65,8 @@
 //// Macro to determine if we are going to show the Debugging Output files
 #define PPP_SHOW_DEBUG_OUTPUTS 0
 
+#if 0
+
 #define NEW_SHARED_ARRAY(var, m_msgType, size)\
   boost::shared_array<m_msgType> var##Array(new m_msgType[size]);\
   m_msgType* var = var##Array.get();
@@ -72,11 +74,16 @@
 #define GG_INIT_DOUBLE_ARRAY(array, value, size)\
   for(size_t n = 0; n < size; ++n) { array[n] = (value); }
 
+#endif
+
 #if (CMP_SIZEOF_SIZE_T == 4)
 typedef int32_t DimType;
 #else
 typedef int64_t DimType;
 #endif
+
+
+
 
 /**
  * @brief
@@ -253,6 +260,8 @@ TesselateFarFieldGrains::TesselateFarFieldGrains() :
   m_MaskArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::GoodVoxels),
   m_FeatureIds(NULL),
   m_CellPhases(NULL),
+  m_MaskArrayName(DREAM3D::CellData::GoodVoxels),
+  m_Mask(NULL),
   m_FeaturePhases(NULL),
   m_Centroids(NULL),
   m_Volumes(NULL),
@@ -260,9 +269,7 @@ TesselateFarFieldGrains::TesselateFarFieldGrains() :
   m_AxisEulerAngles(NULL),
   m_Omega3s(NULL),
   m_EquivalentDiameters(NULL),
-  m_CrystalStructures(NULL),
-  m_MaskArrayName(DREAM3D::CellData::GoodVoxels),
-  m_Mask(NULL)
+  m_CrystalStructures(NULL)
 {
   m_EllipsoidOps = EllipsoidOps::New();
 
@@ -294,7 +301,7 @@ TesselateFarFieldGrains::~TesselateFarFieldGrains()
 void TesselateFarFieldGrains::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(FilterParameter::New("Feature Input File List", "FeatureInputFileListInfo", FilterParameterWidgetType::FileListInfoWidget, getFeatureInputFileListInfo(), false));
+  parameters.push_back(FileListInfoFilterParameter::New("Feature Input File List", "FeatureInputFileListInfo", getFeatureInputFileListInfo(), false));
   parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
   parameters.push_back(FilterParameter::New("Mask Array", "MaskArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getMaskArrayPath(), true));
   parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
@@ -498,9 +505,9 @@ void TesselateFarFieldGrains::preflight()
   else if (m_FeatureInputFileListInfo.Ordering == 1) { orderAscending = false; }
 
   // Now generate all the file names the user is asking for and populate the table
-  QVector<QString> fileList = FilePathGenerator::GenerateFileList(m_FeatureInputFileListInfo.StartIndex, 
-                              m_FeatureInputFileListInfo.EndIndex, hasMissingFiles, orderAscending, 
-                              m_FeatureInputFileListInfo.InputPath, m_FeatureInputFileListInfo.FilePrefix, 
+  QVector<QString> fileList = FilePathGenerator::GenerateFileList(m_FeatureInputFileListInfo.StartIndex,
+                              m_FeatureInputFileListInfo.EndIndex, hasMissingFiles, orderAscending,
+                              m_FeatureInputFileListInfo.InputPath, m_FeatureInputFileListInfo.FilePrefix,
                               m_FeatureInputFileListInfo.FileSuffix, m_FeatureInputFileListInfo.FileExtension,
                               m_FeatureInputFileListInfo.PaddingDigits);
   if (fileList.size() == 0)
@@ -579,9 +586,9 @@ void  TesselateFarFieldGrains::load_features()
   else if (m_FeatureInputFileListInfo.Ordering == 1) { orderAscending = false; }
 
   // Now generate all the file names the user is asking for and populate the table
-  QVector<QString> fileList = FilePathGenerator::GenerateFileList(m_FeatureInputFileListInfo.StartIndex, 
-                              m_FeatureInputFileListInfo.EndIndex, hasMissingFiles, orderAscending, 
-                              m_FeatureInputFileListInfo.InputPath, m_FeatureInputFileListInfo.FilePrefix, 
+  QVector<QString> fileList = FilePathGenerator::GenerateFileList(m_FeatureInputFileListInfo.StartIndex,
+                              m_FeatureInputFileListInfo.EndIndex, hasMissingFiles, orderAscending,
+                              m_FeatureInputFileListInfo.InputPath, m_FeatureInputFileListInfo.FilePrefix,
                               m_FeatureInputFileListInfo.FileSuffix, m_FeatureInputFileListInfo.FileExtension,
                               m_FeatureInputFileListInfo.PaddingDigits);  std::ifstream inFile;
 
@@ -599,8 +606,8 @@ void  TesselateFarFieldGrains::load_features()
       setErrorCondition(-1);
       notifyErrorMessage(getHumanLabel(), ss, -1);
     }
-  
-    // variable for holding meta data  
+
+    // variable for holding meta data
     int numPhases = 1;
     int numFeatures;
     float beamCenter, beamThickness, globalZPos;
@@ -624,7 +631,7 @@ void  TesselateFarFieldGrains::load_features()
     while(keepGoing == true)
     {
       keepGoing = false;
-      inFile >> dummyStr >> phaseName >> crystruct >> aRef >> bRef >> cRef >> alphaRef >> betaRef >> gammaRef; 
+      inFile >> dummyStr >> phaseName >> crystruct >> aRef >> bRef >> cRef >> alphaRef >> betaRef >> gammaRef;
       numPhases++;
       tDims[0] = numPhases;
       cellEnsembleAttrMat->setTupleDimensions(tDims);
