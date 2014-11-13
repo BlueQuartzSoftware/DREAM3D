@@ -528,6 +528,7 @@ void  InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer featur
       totalprecipitatefractions = totalprecipitatefractions + pp->getPhaseFraction();
     }
   }
+
   for (size_t i = 0; i < precipitatephases.size(); i++)
   {
     precipitatephasefractions[i] = static_cast<float>(precipitatephasefractions[i] / totalprecipitatefractions);
@@ -651,6 +652,20 @@ void  InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer featur
       }
     }
   }
+
+  for (int64_t i = 1; i < numensembles; ++i)
+  {
+    if(m_PhaseTypes[i] == DREAM3D::PhaseType::PrecipitatePhase)
+    {
+      PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsDataArray[i].get());
+      pp->getRadialDistFunction();
+      m_NumFeatures[i] = 0;
+      precipitatephases.push_back(i);
+      precipitatephasefractions.push_back(pp->getPhaseFraction());
+      totalprecipitatefractions = totalprecipitatefractions + pp->getPhaseFraction();
+    }
+  }
+
 
   //  for each feature : select centroid, determine voxels in feature, monitor filling error and decide of the 10 placements which
   // is the most beneficial, then the feature is added and its clustering are determined
