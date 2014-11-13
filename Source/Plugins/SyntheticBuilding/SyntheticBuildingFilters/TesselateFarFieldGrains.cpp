@@ -550,7 +550,7 @@ void TesselateFarFieldGrains::execute()
   if (getCancel() == true) { return; }
 
   notifyStatusMessage(getHumanLabel(), "Assigning Gaps");
-  assign_gaps_only();
+//  assign_gaps_only();
   if (getCancel() == true) { return; }
 
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getOutputCellAttributeMatrixName().getDataContainerName());
@@ -671,7 +671,7 @@ void  TesselateFarFieldGrains::load_features()
       {
         m_Centroids[3* currentFeature + 0] = xC;
         m_Centroids[3* currentFeature + 1] = yC;
-        m_Centroids[3* currentFeature + 2] = zC + globalZPos;
+        m_Centroids[3* currentFeature + 2] = zC + (globalZPos-beamCenter);
 
         vol = fourThirds * DREAM3D::Constants::k_Pi * eqRad * eqRad * eqRad;
         m_Volumes[currentFeature] = vol;
