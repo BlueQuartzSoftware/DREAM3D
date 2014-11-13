@@ -552,6 +552,31 @@ FloatVec4_t H5FilterParametersReader::readFloatVec4(const QString name, FloatVec
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+FileListInfo_t H5FilterParametersReader::readFileListInfo(const QString name, FileListInfo_t defaultValue)
+{
+  int err = 0;
+  FileListInfo_t v;
+
+  hid_t gid = QH5Utilities::openHDF5Object(m_CurrentGroupId, name);
+  if(gid < 0) { return defaultValue; }
+
+  err = QH5Lite::readScalarDataset<qint32>(gid, "EndIndex", v.EndIndex );
+  err = QH5Lite::readScalarDataset<qint32>(gid, "StartIndex", v.StartIndex );
+  err = QH5Lite::readScalarDataset<qint32>(gid, "PaddingDigits", v.PaddingDigits );
+  err = QH5Lite::readScalarDataset<quint32>(gid, "Ordering", v.Ordering );
+  err = QH5Lite::readStringDataset(gid, "FileExtension", v.FileExtension );
+  err = QH5Lite::readStringDataset(gid, "FilePrefix", v.FilePrefix );
+  err = QH5Lite::readStringDataset(gid, "FileSuffix", v.FileSuffix );
+  err = QH5Lite::readStringDataset(gid, "InputPath", v.InputPath );
+
+  H5Gclose(gid); // Close the Group Object before we return
+
+  return v;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 ComparisonInput_t H5FilterParametersReader::readComparisonInput(const QString name, ComparisonInput_t defaultValue, int vectorPos)
 {
   // QVector<ComparisonInput_t> comps(1, defaultValue);

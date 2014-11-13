@@ -236,6 +236,43 @@ FilterParameter::~FilterParameter()
 {}
 
 
+
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+FileListInfoFilterParameter::FileListInfoFilterParameter() :
+  FilterParameter()
+{}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+FileListInfoFilterParameter::~FileListInfoFilterParameter()
+{}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+FileListInfoFilterParameter::Pointer FileListInfoFilterParameter::New(const QString& humanLabel, const QString& propertyName,
+                                              const FileListInfo_t& defaultValue,
+                                              bool advanced)
+{
+
+  FileListInfoFilterParameter::Pointer ptr = FileListInfoFilterParameter::New();
+  ptr->setHumanLabel(humanLabel);
+  ptr->setPropertyName(propertyName);
+  ptr->setWidgetType(FilterParameterWidgetType::FileListInfoWidget);
+  QVariant v;
+  v.setValue(defaultValue);
+  ptr->setDefaultValue(v);
+  ptr->setAdvanced(advanced);
+  ptr->setUnits("");
+
+  return ptr;
+}
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

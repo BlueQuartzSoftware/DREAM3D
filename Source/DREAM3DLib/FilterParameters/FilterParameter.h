@@ -49,6 +49,19 @@
 typedef struct { int x; int y; int z; } IntVec3_t;
 typedef struct { float x; float y; float z; } FloatVec3_t;
 typedef struct { float a; float b; float c; float d; } FloatVec4_t;
+typedef struct
+{
+    qint32 PaddingDigits;
+    quint32 Ordering;
+    qint32 StartIndex;
+    qint32 EndIndex;
+    QString InputPath;
+    QString FilePrefix;
+    QString FileSuffix;
+    QString FileExtension;
+}
+ FileListInfo_t;
+
 
 //typedef struct { float angle; float h; float k; float l; } AxisAngleInput_t;
 
@@ -56,6 +69,7 @@ Q_DECLARE_METATYPE(IntVec3_t)
 Q_DECLARE_METATYPE(FloatVec3_t)
 Q_DECLARE_METATYPE(FloatVec4_t)
 Q_DECLARE_METATYPE(AxisAngleInput_t)
+Q_DECLARE_METATYPE(FileListInfo_t)
 
 
 namespace FilterParameterWidgetType
@@ -68,6 +82,7 @@ namespace FilterParameterWidgetType
   const QString InputPathWidget("InputPathWidget");
   const QString OutputFileWidget("OutputFileWidget");
   const QString OutputPathWidget("OutputPathWidget");
+  const QString FileListInfoWidget("FileListInfoWidget");
   const QString BooleanWidget("BooleanWidget");
   const QString ChoiceWidget("ChoiceWidget"); // Generic ComboBox Drop down where the filter provides the list of strings
   const QString IntVec3Widget("IntVec3Widget");
@@ -194,6 +209,30 @@ class DREAM3DLib_EXPORT FilterParameter
 
 typedef QVector<FilterParameter::Pointer> FilterParameterVector;
 
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+class DREAM3DLib_EXPORT FileListInfoFilterParameter : public FilterParameter
+{
+  public:
+    DREAM3D_SHARED_POINTERS(FileListInfoFilterParameter)
+    DREAM3D_STATIC_NEW_MACRO(FileListInfoFilterParameter)
+    DREAM3D_TYPE_MACRO_SUPER(FileListInfoFilterParameter, FilterParameter)
+
+    static Pointer New(const QString& humanLabel, const QString& propertyName,
+                       const FileListInfo_t& defaultValue,
+                       bool advanced = false);
+
+    virtual ~FileListInfoFilterParameter();
+
+  protected:
+    FileListInfoFilterParameter();
+
+  private:
+    FileListInfoFilterParameter(const FileListInfoFilterParameter&); // Copy Constructor Not Implemented
+    void operator=(const FileListInfoFilterParameter&); // Operator '=' Not Implemented
+};
 
 // -----------------------------------------------------------------------------
 //

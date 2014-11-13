@@ -766,6 +766,53 @@ FloatVec4_t QFilterParametersReader::readFloatVec4(const QString name, FloatVec4
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+FileListInfo_t QFilterParametersReader::readFileListInfo(const QString name, FileListInfo_t defaultValue)
+{
+  BOOST_ASSERT(m_Prefs != NULL);
+  bool ok = false;
+  FileListInfo_t v;
+  int count = m_Prefs->beginReadArray(name);
+  if (count == 0) { m_Prefs->endArray(); return defaultValue;}
+  m_Prefs->setArrayIndex(0);
+  v.EndIndex = m_Prefs->value("EndIndex", v.EndIndex).toLongLong(&ok);
+  if(!ok) { v.EndIndex = defaultValue.EndIndex; }
+
+  m_Prefs->setArrayIndex(1);
+  v.FileExtension = m_Prefs->value("FileExtension", v.FileExtension).toString();
+  if(!ok) { v.FileExtension = defaultValue.FileExtension; }
+
+  m_Prefs->setArrayIndex(2);
+  v.FilePrefix = m_Prefs->value("FilePrefix", v.FilePrefix).toString();
+  if(!ok) { v.FilePrefix = defaultValue.FilePrefix; }
+
+  m_Prefs->setArrayIndex(3);
+  v.FileSuffix = m_Prefs->value("FileSuffix", v.FileSuffix).toString();
+  if(!ok) { v.FileSuffix = defaultValue.FileSuffix; }
+
+  m_Prefs->setArrayIndex(4);
+  v.InputPath = m_Prefs->value("InputPath", v.InputPath).toString();
+  if(!ok) { v.InputPath = defaultValue.InputPath; }
+
+  m_Prefs->setArrayIndex(5);
+  v.Ordering = m_Prefs->value("Ordering", v.Ordering).toUInt(&ok);
+  if(!ok) { v.Ordering = defaultValue.Ordering; }
+
+  m_Prefs->setArrayIndex(6);
+  v.PaddingDigits = m_Prefs->value("PaddingDigits", v.PaddingDigits).toInt(&ok);
+  if(!ok) { v.PaddingDigits = defaultValue.PaddingDigits; }
+
+  m_Prefs->setArrayIndex(7);
+  v.StartIndex = m_Prefs->value("StartIndex", v.StartIndex).toLongLong(&ok);
+  if(!ok) { v.StartIndex = defaultValue.StartIndex; }
+
+  m_Prefs->endArray();
+
+  return v;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 ComparisonInput_t QFilterParametersReader::readComparisonInput(const QString name, ComparisonInput_t defaultValue, int arrayIndex)
 {
   BOOST_ASSERT(m_Prefs != NULL);

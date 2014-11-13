@@ -34,8 +34,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _ImportImagesWidget_H_
-#define _ImportImagesWidget_H_
+#ifndef _FileListInfoWidget_H_
+#define _FileListInfoWidget_H_
 
 
 #include <QtCore/QString>
@@ -54,13 +54,11 @@
 #include "DREAM3DWidgetsLib/FilterParameterWidgets/FilterParameterWidget.h"
 
 
-#include "ui_ImportImagesWidget.h"
+#include "ui_FileListInfoWidget.h"
 
-
-class ImportImageStack;
 
 /**
- * @class ImportImagesWidget ImportImagesWidget.h Plugins/EbsdImport/UI/ImportImagesWidget.h
+ * @class FileListInfoWidget FileListInfoWidget.h Plugins/EbsdImport/UI/FileListInfoWidget.h
  * @brief This class represents the User Interface for the EBSD file import module
  * of the DREAM3D program. The user interface subclasses QFrame which
  * should make it able to be embedded in most Qt applications. This module controls
@@ -70,7 +68,7 @@ class ImportImageStack;
  * @date Jan 30, 2011
  * @version 1.0
  */
-class ImportImagesWidget : public FilterParameterWidget, private Ui::ImportImagesWidget
+class FileListInfoWidget : public FilterParameterWidget, private Ui::FileListInfoWidget
 {
     Q_OBJECT
 
@@ -81,18 +79,14 @@ class ImportImagesWidget : public FilterParameterWidget, private Ui::ImportImage
     * @param filter The instance of the filter that this parameter is a part of
     * @param parent The parent QWidget for this Widget
     */
-    ImportImagesWidget(FilterParameter* parameter, AbstractFilter* filter = NULL, QWidget* parent = NULL);
+    FileListInfoWidget(FilterParameter* parameter, AbstractFilter* filter = NULL, QWidget* parent = NULL);
 
-    virtual ~ImportImagesWidget();
+    virtual ~FileListInfoWidget();
 
     /**
      * @brief Initializes some of the GUI elements with selections or other GUI related items
      */
     virtual void setupGui();
-
-    void setFilter(AbstractFilter *value);
-    AbstractFilter* getFilter() const;
-
 
   public slots:
     void widgetChanged(const QString& msg);
@@ -116,13 +110,10 @@ class ImportImagesWidget : public FilterParameterWidget, private Ui::ImportImage
     void on_m_FileSuffix_textChanged(const QString& string);
     void on_m_FileExt_textChanged(const QString& string);
     void on_m_TotalDigits_valueChanged(int value);
-    void on_m_ZStartIndex_valueChanged(int value);
-    void on_m_ZEndIndex_valueChanged(int value);
+    void on_m_StartIndex_valueChanged(int value);
+    void on_m_EndIndex_valueChanged(int value);
 
-    void resolutionChanged(const QString& string);
-    void originChanged(const QString& string);
-
-    void stackingOrderChanged(bool checked);
+    void orderingChanged(bool checked);
 
   protected:
     static void setOpenDialogLastDirectory(QString val) { m_OpenDialogLastDirectory = val; }
@@ -170,35 +161,20 @@ class ImportImagesWidget : public FilterParameterWidget, private Ui::ImportImage
      * @brief setRefFrameZDir
      * @param ref
      */
-    void setRefFrameZDir(uint32_t ref);
-    uint32_t getRefFrameZDir();
-
-    /**
-     * @brief setResolutionValues
-     */
-    void setResolutionValues();
-    FloatVec3_t getResolutionValues();
-
-    /**
-     * @brief setOriginValues
-     */
-    void setOriginValues();
-    FloatVec3_t getOriginValues();
+    void setOrdering(uint32_t ref);
+    uint32_t getOrdering();
 
 
   private:
-    ImportImageStack*           m_Filter;
     QList<QWidget*>             m_WidgetList;
-    QButtonGroup*               m_StackingGroup;
-    QButtonGroup*               m_OriginGroup;
-    QButtonGroup*               m_zSpacingGroup;
+    QButtonGroup*               m_OrderingGroup;
 
     static QString                m_OpenDialogLastDirectory;
     bool m_DidCausePreflight;
 
 
-    ImportImagesWidget(const ImportImagesWidget&); // Copy Constructor Not Implemented
-    void operator=(const ImportImagesWidget&); // Operator '=' Not Implemented
+    FileListInfoWidget(const FileListInfoWidget&); // Copy Constructor Not Implemented
+    void operator=(const FileListInfoWidget&); // Operator '=' Not Implemented
 };
 
 #endif /* EbsdImportWIDGET_H_ */

@@ -59,14 +59,6 @@ ImportImageStack::ImportImageStack() :
   AbstractFilter(),
   m_DataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
   m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
-  m_ZStartIndex(0),
-  m_ZEndIndex(0),
-  m_InputPath(""),
-  m_FilePrefix(""),
-  m_FileSuffix(""),
-  m_FileExtension(""),
-  m_PaddingDigits(0),
-  m_RefFrameZDir(Ebsd::RefFrameZDir::LowtoHigh),
   m_ImageDataArrayName(DREAM3D::CellData::ImageData)
 {
 
@@ -78,6 +70,7 @@ ImportImageStack::ImportImageStack() :
   m_Resolution.y = 1.0;
   m_Resolution.z = 1.0;
 
+  m_InputFileListInfo.FileExtension = QString("tif");
 
   setupFilterParameters();
 }
@@ -96,7 +89,9 @@ void ImportImageStack::setupFilterParameters()
 {
   QVector<FilterParameter::Pointer> parameters;
 
-  parameters.push_back(FilterParameter::New("Import Image Data", "ImageStack", FilterParameterWidgetType::ImportImagesWidget, getImageStack(), false));
+  parameters.push_back(FileListInfoFilterParameter::New("Input File List", "InputFileListInfo", getInputFileListInfo(), false));
+  parameters.push_back(FilterParameter::New("Origin", "Origin", FilterParameterWidgetType::FloatVec3Widget, getOrigin(), false, "XYZ"));
+  parameters.push_back(FilterParameter::New("Resolution", "Resolution", FilterParameterWidgetType::FloatVec3Widget, getResolution(), false, "XYZ"));
 
   parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
   parameters.push_back(FilterParameter::New("Data Container Name", "DataContainerName", FilterParameterWidgetType::StringWidget, getDataContainerName(), true, ""));
@@ -114,14 +109,7 @@ void ImportImageStack::readFilterParameters(AbstractFilterParametersReader* read
   setDataContainerName(reader->readString("DataContainerName", getDataContainerName() ) );
   setCellAttributeMatrixName(reader->readString("CellAttributeMatrixName", getCellAttributeMatrixName() ) );
   setImageDataArrayName(reader->readString("ImageDataArrayName", getImageDataArrayName() ) );
-  setZStartIndex( reader->readValue("ZStartIndex", getZStartIndex()) );
-  setZEndIndex( reader->readValue("ZEndIndex", getZEndIndex()) );
-  setPaddingDigits( reader->readValue("PaddingDigits", getPaddingDigits()) );
-  setRefFrameZDir( reader->readValue("RefFrameZDir", getRefFrameZDir()) );
-  setInputPath( reader->readString("InputPath", getInputPath()) );
-  setFilePrefix( reader->readString("FilePrefix", getFilePrefix()) );
-  setFileSuffix( reader->readString("FileSuffix", getFileSuffix()) );
-  setFileExtension( reader->readString("FileExtension", getFileExtension()) );
+  setInputFileListInfo( reader->readFileListInfo("InputFileListInfo", getInputFileListInfo() ) );
   setOrigin( reader->readFloatVec3("Origin", getOrigin()) );
   setResolution( reader->readFloatVec3("Resolution", getResolution()) );
   reader->closeFilterGroup();
@@ -136,14 +124,7 @@ int ImportImageStack::writeFilterParameters(AbstractFilterParametersWriter* writ
   DREAM3D_FILTER_WRITE_PARAMETER(DataContainerName)
   DREAM3D_FILTER_WRITE_PARAMETER(CellAttributeMatrixName)
   DREAM3D_FILTER_WRITE_PARAMETER(ImageDataArrayName)
-  DREAM3D_FILTER_WRITE_PARAMETER(ZStartIndex)
-  DREAM3D_FILTER_WRITE_PARAMETER(ZEndIndex)
-  DREAM3D_FILTER_WRITE_PARAMETER(PaddingDigits)
-  DREAM3D_FILTER_WRITE_PARAMETER(RefFrameZDir)
-  DREAM3D_FILTER_WRITE_PARAMETER(InputPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(FilePrefix)
-  DREAM3D_FILTER_WRITE_PARAMETER(FileSuffix)
-  DREAM3D_FILTER_WRITE_PARAMETER(FileExtension)
+  DREAM3D_FILTER_WRITE_PARAMETER(InputFileListInfo)
   DREAM3D_FILTER_WRITE_PARAMETER(Origin)
   DREAM3D_FILTER_WRITE_PARAMETER(Resolution)
   writer->closeFilterGroup();
@@ -160,7 +141,7 @@ void ImportImageStack::dataCheck()
   QString ss;
 
 
-  if(m_InputPath.isEmpty() == true)
+  if(m_InputFileListInfo.InputPath.isEmpty() == true)
   {
     ss = QObject::tr("The Input Directory must be set before executing this filter.");
     notifyErrorMessage(getHumanLabel(), ss, -13);
@@ -170,17 +151,18 @@ void ImportImageStack::dataCheck()
   VolumeDataContainer* m = getDataContainerArray()->createNonPrereqDataContainer<VolumeDataContainer, ImportImageStack>(this, getDataContainerName());
   if(getErrorCondition() < 0) { return; }
 
-  bool hasMissingFiles = false;
-  bool stackLowToHigh = false;
+   bool hasMissingFiles = false;
+  bool orderAscending = false;
 
-  if( Ebsd::RefFrameZDir::LowtoHigh == m_RefFrameZDir) { stackLowToHigh = true; }
-  else if (Ebsd::RefFrameZDir::HightoLow == m_RefFrameZDir) { stackLowToHigh = false; }
+  if(m_InputFileListInfo.Ordering == 0) { orderAscending = true; }
+  else if (m_InputFileListInfo.Ordering == 1) { orderAscending = false; }
 
   // Now generate all the file names the user is asking for and populate the table
-  QVector<QString> fileList = FilePathGenerator::GenerateFileList(m_ZStartIndex, m_ZEndIndex,
-                              hasMissingFiles, stackLowToHigh, m_InputPath,
-                              m_FilePrefix, m_FileSuffix, m_FileExtension,
-                              m_PaddingDigits);
+  QVector<QString> fileList = FilePathGenerator::GenerateFileList(m_InputFileListInfo.StartIndex,
+                              m_InputFileListInfo.EndIndex, hasMissingFiles, orderAscending,
+                              m_InputFileListInfo.InputPath, m_InputFileListInfo.FilePrefix,
+                              m_InputFileListInfo.FileSuffix, m_InputFileListInfo.FileExtension,
+                              m_InputFileListInfo.PaddingDigits);
   if (fileList.size() == 0)
   {
     QString ss = QObject::tr("No files have been selected for import. Have you set the input directory?");
@@ -281,20 +263,27 @@ void ImportImageStack::execute()
   int height = 0;
   int width = 0;
 
-  int64_t z = m_ZStartIndex;
-  int64_t zSpot;
+  qint64 z = m_InputFileListInfo.StartIndex;
+  qint64 zSpot;
 
   bool hasMissingFiles = false;
-  bool stackLowToHigh = false;
+  bool orderAscending = false;
 
-  if( Ebsd::RefFrameZDir::LowtoHigh == m_RefFrameZDir) { stackLowToHigh = true; }
-  else if (Ebsd::RefFrameZDir::HightoLow == m_RefFrameZDir) { stackLowToHigh = false; }
+  if(m_InputFileListInfo.Ordering == 0) { orderAscending = true; }
+  else if (m_InputFileListInfo.Ordering == 1) { orderAscending = false; }
 
   // Now generate all the file names the user is asking for and populate the table
-  QVector<QString> fileList = FilePathGenerator::GenerateFileList(m_ZStartIndex, m_ZEndIndex,
-                              hasMissingFiles, stackLowToHigh, m_InputPath,
-                              m_FilePrefix, m_FileSuffix, m_FileExtension,
-                              m_PaddingDigits);
+  QVector<QString> fileList = FilePathGenerator::GenerateFileList(m_InputFileListInfo.StartIndex,
+                              m_InputFileListInfo.EndIndex, hasMissingFiles, orderAscending,
+                              m_InputFileListInfo.InputPath, m_InputFileListInfo.FilePrefix,
+                              m_InputFileListInfo.FileSuffix, m_InputFileListInfo.FileExtension,
+                              m_InputFileListInfo.PaddingDigits);
+  if (fileList.size() == 0)
+  {
+    QString ss = QObject::tr("No files have been selected for import. Have you set the input directory?");
+    setErrorCondition(-11);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+  }
 
 
   for (QVector<QString>::iterator filepath = fileList.begin(); filepath != fileList.end(); ++filepath)
@@ -313,7 +302,7 @@ void ImportImageStack::execute()
     width = image.width();
     totalPixels = width * height;
     // This is the first image so we need to create our block of data to store the data
-    if (z == m_ZStartIndex)
+    if (z ==  m_InputFileListInfo.StartIndex)
     {
       m->setDimensions(width, height, fileList.size());
       if (image.format() == QImage::Format_Indexed8)
@@ -331,7 +320,7 @@ void ImportImageStack::execute()
     }
 
     // Get the current position in the array to copy the image into
-    zSpot = (z - m_ZStartIndex);
+    zSpot = (z -  m_InputFileListInfo.StartIndex);
     for(qint32 i = 0; i < height; ++i)
     {
       imagePtr = data->getPointer( (zSpot) * totalPixels * pixelBytes + i * (width * pixelBytes));
@@ -366,16 +355,19 @@ AbstractFilter::Pointer ImportImageStack::newFilterInstance(bool copyFilterParam
     // miss some of them because we are not enumerating all of them.
     DREAM3D_COPY_INSTANCEVAR(DataContainerName)
     DREAM3D_COPY_INSTANCEVAR(CellAttributeMatrixName)
-    DREAM3D_COPY_INSTANCEVAR(ZStartIndex)
-    DREAM3D_COPY_INSTANCEVAR(ZEndIndex)
     DREAM3D_COPY_INSTANCEVAR(Resolution)
     DREAM3D_COPY_INSTANCEVAR(Origin)
+    #if 0
+        DREAM3D_COPY_INSTANCEVAR(ZStartIndex)
+    DREAM3D_COPY_INSTANCEVAR(ZEndIndex)
     DREAM3D_COPY_INSTANCEVAR(InputPath)
     DREAM3D_COPY_INSTANCEVAR(FilePrefix)
     DREAM3D_COPY_INSTANCEVAR(FileSuffix)
     DREAM3D_COPY_INSTANCEVAR(FileExtension)
     DREAM3D_COPY_INSTANCEVAR(PaddingDigits)
     DREAM3D_COPY_INSTANCEVAR(RefFrameZDir)
+    #endif
+    DREAM3D_COPY_INSTANCEVAR(InputFileListInfo)
     DREAM3D_COPY_INSTANCEVAR(ImageStack)
     DREAM3D_COPY_INSTANCEVAR(ImageDataArrayName)
   }
