@@ -79,9 +79,9 @@ class FindPatchMisalignmentsImpl
       m_CAxisLocations(caxisLocs),
       m_CellPhases(phases),
       m_CrystalStructures(crystructs),
+      m_InMTR(inMTR),
       m_VolFrac(volFrac),
       m_AvgCAxis(avgCAxis),
-      m_InMTR(inMTR),
       m_CritDim(critDim),
       m_MinVolFrac(minVolFrac),
       m_CAxisTolerance(caxisTol)
@@ -157,7 +157,6 @@ class FindPatchMisalignmentsImpl
           if(float(goodCounts[i])/float(count) > m_MinVolFrac) goodPointCount++;
         }
         float avgCAxis[3] = {0.0, 0.0, 0.0};
-        size_t point;
         float frac = float(goodPointCount)/float(count);
         m_VolFrac[iter] = frac;
         if(frac > m_MinVolFrac)
@@ -230,9 +229,9 @@ IdentifyMicroTextureRegions::IdentifyMicroTextureRegions() :
   m_CAxisLocations(NULL),
   m_CellPhasesArrayName(DREAM3D::CellData::CAxisLocation),
   m_CellPhases(NULL),
+  m_Active(NULL),
   m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
   m_CrystalStructures(NULL),
-  m_Active(NULL),
   m_InMTR(NULL),
   m_VolFrac(NULL),
   m_AvgCAxis(NULL),
@@ -381,7 +380,7 @@ void IdentifyMicroTextureRegions::execute()
   if(getErrorCondition() < 0) { return; }
 
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getCAxisLocationsArrayPath().getDataContainerName());
-  int64_t totalPoints = m_MTRIdsPtr.lock()->getNumberOfTuples(); 
+  int64_t totalPoints = m_MTRIdsPtr.lock()->getNumberOfTuples();
 
   //calculate dimensions of DIC-like grid
   size_t dcDims[3] = { 0, 0, 0};
@@ -435,7 +434,7 @@ void IdentifyMicroTextureRegions::execute()
   tDims[2] = newDimZ;
   AttributeMatrix::Pointer tempPatchAttrMat = tmpDC->createNonPrereqAttributeMatrix<AbstractFilter>(this, "PatchAM(Temp)", tDims, DREAM3D::AttributeMatrixType::Cell);
   if(getErrorCondition() < 0) { return; }
-  
+
   DataArrayPath tempPath;
   tDims[0] = totalPatches;
   QVector<size_t> cDims(1, 1);
@@ -527,12 +526,10 @@ void IdentifyMicroTextureRegions::execute()
   m->getAttributeMatrix(getNewCellFeatureAttributeMatrixName())->resizeAttributeArrays(tDims);
   updateFeatureInstancePointers();
 
-  int xc, yc, zc;
   size_t point, patch;
   int zStride, yStride;
   int zStrideP, yStrideP;
   int pCol, pRow, pPlane;
-  int count = 0;
 
   for(int k = 0; k < origDims.z; k++)
   {
@@ -640,7 +637,7 @@ void IdentifyMicroTextureRegions::randomizeFeatureIds(int64_t totalPoints, size_
 // -----------------------------------------------------------------------------
 void IdentifyMicroTextureRegions::findMTRregions()
 {
-  
+
 }
 
 // -----------------------------------------------------------------------------

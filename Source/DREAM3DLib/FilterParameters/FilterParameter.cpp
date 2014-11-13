@@ -156,32 +156,6 @@ FilterParameter::Pointer FilterParameter::New(const QString& humanLabel, const Q
 //
 // -----------------------------------------------------------------------------
 FilterParameter::Pointer FilterParameter::New(const QString& humanLabel, const QString& propertyName,
-                                              const QString& widgetType, const FileListInfo_t& defaultValue,
-                                              bool advanced,
-                                              const QString& units, int groupIndex)
-{
-
-  FilterParameter::Pointer ptr = FilterParameter::New();
-  ptr->setHumanLabel(humanLabel);
-  ptr->setPropertyName(propertyName);
-  ptr->setWidgetType(widgetType);
-  QVariant v;
-  v.setValue(defaultValue);
-  ptr->setDefaultValue(v);
-  ptr->setAdvanced(advanced);
-  ptr->setUnits(units);
-  ptr->setGroupIndex(groupIndex);
-  if(ptr->getWidgetType().compare(FilterParameterWidgetType::SeparatorWidget) == 0)
-  {
-    ptr->setReadOnly(true);
-  }
-  return ptr;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-FilterParameter::Pointer FilterParameter::New(const QString& humanLabel, const QString& propertyName,
                                               const QString& widgetType, const DataArrayPath& defaultValue,
                                               bool advanced,
                                               const QString& units, int groupIndex)
@@ -261,6 +235,43 @@ FilterParameter::Pointer FilterParameter::New(const QString& humanLabel, const Q
 FilterParameter::~FilterParameter()
 {}
 
+
+
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+FileListInfoFilterParameter::FileListInfoFilterParameter() :
+  FilterParameter()
+{}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+FileListInfoFilterParameter::~FileListInfoFilterParameter()
+{}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+FileListInfoFilterParameter::Pointer FileListInfoFilterParameter::New(const QString& humanLabel, const QString& propertyName,
+                                              const FileListInfo_t& defaultValue,
+                                              bool advanced)
+{
+
+  FileListInfoFilterParameter::Pointer ptr = FileListInfoFilterParameter::New();
+  ptr->setHumanLabel(humanLabel);
+  ptr->setPropertyName(propertyName);
+  ptr->setWidgetType(FilterParameterWidgetType::FileListInfoWidget);
+  QVariant v;
+  v.setValue(defaultValue);
+  ptr->setDefaultValue(v);
+  ptr->setAdvanced(advanced);
+  ptr->setUnits("");
+
+  return ptr;
+}
 
 // -----------------------------------------------------------------------------
 //

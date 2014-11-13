@@ -416,14 +416,15 @@ int H5FilterParametersWriter::writeValue(const QString name, FileListInfo_t v)
   int err = 0;
   hid_t dcaGid = QH5Utilities::createGroup(m_CurrentGroupId, name);
 
-  err = QH5Lite::writeScalarDataset<int64_t>(dcaGid, "EndIndex", v.EndIndex );
-  err = QH5Lite::writeScalarDataset<int64_t>(dcaGid, "StartIndex", v.StartIndex );
-  err = QH5Lite::writeScalarDataset<int32_t>(dcaGid, "PaddingDigits", v.PaddingDigits );
-  err = QH5Lite::writeScalarDataset<uint32_t>(dcaGid, "Ordering", v.Ordering );
+  err = QH5Lite::writeScalarDataset<qint32>(dcaGid, "EndIndex", v.EndIndex );
+  err = QH5Lite::writeScalarDataset<qint32>(dcaGid, "StartIndex", v.StartIndex );
+  err = QH5Lite::writeScalarDataset<qint32>(dcaGid, "PaddingDigits", v.PaddingDigits );
+  err = QH5Lite::writeScalarDataset<quint32>(dcaGid, "Ordering", v.Ordering );
   err = QH5Lite::writeStringDataset(dcaGid, "FileExtension", v.FileExtension );
   err = QH5Lite::writeStringDataset(dcaGid, "FilePrefix", v.FilePrefix );
   err = QH5Lite::writeStringDataset(dcaGid, "FileSuffix", v.FileSuffix );
   err = QH5Lite::writeStringDataset(dcaGid, "InputPath", v.InputPath );
+  dcaGid = H5Gclose(dcaGid);
   return err;
 }
 

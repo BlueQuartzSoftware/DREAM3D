@@ -325,7 +325,7 @@ bool CorrectInitializerList( AbstractFilter::Pointer filter, const QString& hFil
   {
     // Read the Source File
     QFileInfo fi(cppFile);
-    if (fi.baseName().compare("InsertTransformationPhases") != 0)
+    if (fi.baseName().compare("") != 0)
     {
       return false;
     }
