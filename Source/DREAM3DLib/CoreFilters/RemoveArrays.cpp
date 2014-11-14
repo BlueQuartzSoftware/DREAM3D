@@ -63,7 +63,7 @@ void RemoveArrays::setupFilterParameters()
   FilterParameterVector parameters;
 
   DataContainerArrayProxyFilterParameter::Pointer parameter = DataContainerArrayProxyFilterParameter::New();
-  parameter->setHumanLabel("Arrays to Delete");
+  parameter->setHumanLabel("Items to Delete");
   parameter->setPropertyName("DataArraysToRemove");
   parameter->setWidgetType(FilterParameterWidgetType::DataContainerArrayProxyWidget);
   parameter->setDefaultFlagValue(Qt::Unchecked);
@@ -171,5 +171,5 @@ const QString RemoveArrays::getSubGroupName()
 //
 // -----------------------------------------------------------------------------
 const QString RemoveArrays::getHumanLabel()
-{ return "Delete Arrays"; }
+{ return "Delete Data"; }
 
