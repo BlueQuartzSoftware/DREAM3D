@@ -181,6 +181,8 @@ void ReadOrientationData::dataCheck()
       m->setDimensions(dims[0], dims[1], dims[2]);
       m->setResolution(reader.getXStep(), reader.getYStep(), 1.0);
       m->setOrigin(0.0f, 0.0f, 0.0f);
+      //Update the size of the Cell Attribute Matrix now that the dimensions of the volume are known
+      cellAttrMat->resizeAttributeArrays(dims);
       AngFields angfeatures;
       names = angfeatures.getFilterFeatures<QVector<QString> > ();
       dims.resize(1);
@@ -215,6 +217,8 @@ void ReadOrientationData::dataCheck()
         m->setResolution(reader.getXStep(), reader.getYStep(), 1.0);
       }
       m->setOrigin(0.0f, 0.0f, 0.0f);
+      //Update the size of the Cell Attribute Matrix now that the dimensions of the volume are known
+      cellAttrMat->resizeAttributeArrays(dims);
       CtfFields ctffeatures;
       names = ctffeatures.getFilterFeatures<QVector<QString> > ();
       QVector<size_t> dims(1, 1);
@@ -241,6 +245,8 @@ void ReadOrientationData::dataCheck()
       m->setDimensions(dims[0], dims[1], dims[2]);
       m->setResolution(reader.getXStep(), reader.getYStep(), 1.0);
       m->setOrigin(0.0f, 0.0f, 0.0f);
+      //Update the size of the Cell Attribute Matrix now that the dimensions of the volume are known
+      cellAttrMat->resizeAttributeArrays(dims);
       MicFields micfeatures;
       names = micfeatures.getFilterFeatures<QVector<QString> > ();
       QVector<size_t> dims(1, 1);
