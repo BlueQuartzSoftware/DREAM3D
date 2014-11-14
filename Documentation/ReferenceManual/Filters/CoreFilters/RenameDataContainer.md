@@ -2,7 +2,7 @@ Rename Data Container {#renamedatacontainer}
 =====
 
 ## Group (Subgroup) ##
-Generic (Memory Management)
+Core Filters (Memory/Management)
 
 
 ## Description ##
