@@ -1043,7 +1043,7 @@ void InsertPrecipitatePhases::determine_clustering(size_t gnum, int add)
   while (phase != precipitatephases[iter]) { iter++; }
 
   StatsDataArray& statsDataArray = *(m_StatsDataArray.lock());
-  typedef std::vector<std::vector<float> > VectOfVectFloat_t;
+  //typedef std::vector<std::vector<float> > VectOfVectFloat_t;
 
   PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsDataArray[phase].get());
   //  VectOfVectFloat_t& curSimClusteringDist = simclusteringdist[iter];

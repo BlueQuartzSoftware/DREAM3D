@@ -193,9 +193,6 @@ class DREAM3DLib_EXPORT GenericExample : public AbstractFilter
     */
     void dataCheck();
 
-    // This is just here for testing purpose.
-    void dataCheck2();
-
   private:
 
     GenericExample(const GenericExample&); // Copy Constructor Not Implemented

@@ -184,7 +184,7 @@ if("${HDF5_INSTALL}" STREQUAL "")
 endif()
 
 if( "${HDF5_INSTALL}" STREQUAL "")
-  message(FATA_ERROR "The HDF5_INSTALL variable was not set. In order to find HDF5 you need to either\
+  message(FATAL_ERROR "The HDF5_INSTALL variable was not set. In order to find HDF5 you need to either\
                       pass in the -DHDF5_INSTALL=.... or set the HDF5_INSTALL environment variable.")  
 endif()
 
@@ -196,7 +196,7 @@ if(WIN32)
 else()
     set(ENV{HDF5_ROOT_DIR_HINT} "${HDF5_INSTALL}/share/cmake")
     set(ENV{HDF5_ROOT} "${HDF5_INSTALL}")
-    set(CMAKE_MODULE_PATH ${HDF5_INSTALL}/share/cmake ${CMAKE_MODULE_PATH})
+    set(CMAKE_MODULE_PATH ${HDF5_INSTALL}/share/cmake/hdf5 ${CMAKE_MODULE_PATH})
 endif()
 
 if(0)

@@ -181,9 +181,9 @@ void TestInitialization()
       // Test Reinitializing the Array to Zero Size
       nodes->initialize();
   Vec3Int_t* ptr = reinterpret_cast<Vec3Int_t*>(nodes->getVoidPointer(0));
-  DREAM3D_REQUIRE_EQUAL(NULL, ptr);
+  DREAM3D_REQUIRED_PTR(ptr, ==, NULL);
   ptr = nodes->getPointer(0);
-  DREAM3D_REQUIRE_EQUAL(NULL, ptr);
+  DREAM3D_REQUIRED_PTR(ptr, ==, NULL);
   size_t nTuples = nodes->getNumberOfTuples();
   DREAM3D_REQUIRE_EQUAL(INIT_SIZE, nTuples)
       size = nodes->getSize();
@@ -281,9 +281,9 @@ void TestResizeArray()
   // Resize to a Zero Array
   nodes->resize(INIT_SIZE);
   Vec3Int_t* ptr = reinterpret_cast<Vec3Int_t*>(nodes->getVoidPointer(0));
-  DREAM3D_REQUIRE_EQUAL(NULL, ptr);
+  DREAM3D_REQUIRED_PTR(ptr, ==, NULL);
   ptr = nodes->getPointer(0);
-  DREAM3D_REQUIRE_EQUAL(NULL, ptr);
+  DREAM3D_REQUIRED_PTR(ptr, ==, NULL);
   nTuples = nodes->getNumberOfTuples();
   DREAM3D_REQUIRE_EQUAL(INIT_SIZE, nTuples)
       size = nodes->getSize();

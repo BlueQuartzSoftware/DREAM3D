@@ -772,9 +772,9 @@ int PrecipitatePhaseWidget::gatherStatsData(AttributeMatrix::Pointer attrMat)
 
 // size_t nBins = 0;
 
-  typedef DataArray<unsigned int> XTalStructArrayType;
-  typedef DataArray<unsigned int> PhaseTypeArrayType;
-  typedef DataArray<unsigned int> ShapeTypeArrayType;
+// //typedef DataArray<unsigned int> XTalStructArrayType;
+//  typedef DataArray<unsigned int> PhaseTypeArrayType;
+//  typedef DataArray<unsigned int> ShapeTypeArrayType;
 
   // Get pointers
   IDataArray::Pointer iDataArray = attrMat->getAttributeArray(DREAM3D::EnsembleData::CrystalStructures);

@@ -71,7 +71,7 @@ class GenerateMisorientationColorsImpl
     {
       QVector<OrientationOps::Pointer> ops = OrientationOps::getOrientationOpsVector();
 
-      QuatF refQuat = {m_ReferenceAxis.x * sin(m_ReferenceAngle), m_ReferenceAxis.y * sin(m_ReferenceAngle), m_ReferenceAxis.z * sin(m_ReferenceAngle), cos(m_ReferenceAngle)};
+      QuatF refQuat = {m_ReferenceAxis.x * sinf(m_ReferenceAngle), m_ReferenceAxis.y * sinf(m_ReferenceAngle), m_ReferenceAxis.z * sinf(m_ReferenceAngle), cosf(m_ReferenceAngle)};
       QuatF cellQuat = {0.0f, 0.0f, 0.0f, 1.0f};
       DREAM3D::Rgb argb = 0x00000000;
 
@@ -248,7 +248,7 @@ void GenerateMisorientationColors::dataCheck()
   if( NULL != m_QuatsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_Quats = m_QuatsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
-  typedef DataArray<unsigned int> XTalStructArrayType;
+  //typedef DataArray<unsigned int> XTalStructArrayType;
   dims[0] = 1;
   m_CrystalStructuresPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<unsigned int>, AbstractFilter>(this, getCrystalStructuresArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_CrystalStructuresPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
@@ -301,11 +301,11 @@ void GenerateMisorientationColors::execute()
 
   int64_t totalPoints = m_CellPhasesPtr.lock()->getNumberOfTuples();
 
-  bool missingGoodVoxels = true;
-  if (NULL != m_GoodVoxels)
-  {
-    missingGoodVoxels = false;
-  }
+//  bool missingGoodVoxels = true;
+//  if (NULL != m_GoodVoxels)
+//  {
+//    missingGoodVoxels = false;
+//  }
 
   // Make sure we are dealing with a unit 1 vector.
   FloatVec3_t normRefDir = m_ReferenceAxis; // Make a copy of the reference Direction

@@ -337,6 +337,22 @@ bool AlmostEqualUlpsFinal(float A, float B, int maxUlps)
     }\
   }
 
+#define DREAM3D_REQUIRED_PTR(L, Q, P)\
+{ \
+  QString buf;\
+  QTextStream ss(&buf);\
+  bool b = (L Q P);\
+  if ( (b) == (false) ) \
+  {\
+    ss <<"Your test required the following\n            '";\
+    ss << #L << " " << #Q << " " << #P << "' but this condition was not met.\n";\
+    ss << "            " << #L << " = " << L << "\n";\
+    ss << "            " << #P << " = \n";\
+    DREAM3D_TEST_THROW_EXCEPTION( buf.toStdString() )\
+  }\
+}
+
+
 #define DREAM3D_REQUIRE_NE( L, R )\
   if ( (L) == (R) ) {  \
     QString buf;\
@@ -382,7 +398,7 @@ bool AlmostEqualUlpsFinal(float A, float B, int maxUlps)
       else { ss << "Left side was NULL"; }\
       ss << "\n";\
       ss << "            " << #R << " = ";\
-      if(NULL != R) { ss << R;}\
+      if(NULL != R) { ss << static_cast<long long int>(R);}\
       else { ss << "Right Side was NULL";}\
       ss << "\n";\
       DREAM3D_TEST_THROW_EXCEPTION( buf.toStdString() )\
@@ -395,7 +411,7 @@ bool AlmostEqualUlpsFinal(float A, float B, int maxUlps)
 // -----------------------------------------------------------------------------
 #define DREAM3D_TEST_THROW_EXCEPTION( P)\
   throw TestException( P, __FILE__, __LINE__);\
-   
+
 
 #define DREAM3D_ASSERT( P )\
   assert( (P) );
@@ -434,7 +450,7 @@ bool AlmostEqualUlpsFinal(float A, float B, int maxUlps)
   {\
     err = EXIT_FAILURE;\
   }\
-   
+
 
 
 

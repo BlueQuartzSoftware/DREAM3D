@@ -261,7 +261,7 @@ void SurfaceMeshToStl::execute()
     // Loop over all the triangles for this spin
     for(int t = 0; t < nTriangles; ++t)
     {
-      char winding = 2; // 2 = Do NOT write this triangle
+      //char winding = 2; // 2 = Do NOT write this triangle
       // Get the true indices of the 3 nodes
       int nId0 = triangles[t].verts[0];
       int nId1 = triangles[t].verts[1];
@@ -273,11 +273,11 @@ void SurfaceMeshToStl::execute()
 
       if (m_SurfaceMeshFaceLabels[t * 2] == spin)
       {
-        winding = 0; // 0 = Write it using forward spin
+        //winding = 0; // 0 = Write it using forward spin
       }
       else if (m_SurfaceMeshFaceLabels[t * 2 + 1] == spin)
       {
-        winding = 1; // Write it using backward spin
+        //winding = 1; // Write it using backward spin
         // Switch the 2 node indices
         int temp = nId1;
         nId1 = nId2;

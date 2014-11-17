@@ -519,6 +519,7 @@ QString FavoritesDockWidget::writeNewFavoriteFilePath(QString newFavoriteTitle, 
     reply = QMessageBox::critical(this, QObject::tr("Error renaming a file"),
                                   QObject::tr("Error renaming file '%1' to '%2'.").arg(favoritePath).arg(newPath),
                                   QMessageBox::Ok);
+    Q_UNUSED(reply);
   }
 
   filterLibraryTree->blockSignals(true);
@@ -594,6 +595,7 @@ void FavoritesDockWidget::addFavorite(bool folder)
       reply = QMessageBox::critical(this, QObject::tr("Folder Creation Error"),
                                     QObject::tr("Error creating folder '%1'.").arg(parentPath + "/" + favoriteTitle),
                                     QMessageBox::Ok);
+      Q_UNUSED(reply);
       return; // Bail out now instead of adding it to the tree
     }
 
@@ -627,7 +629,6 @@ QString FavoritesDockWidget::displayNewFavoriteDialog()
   AddFavoriteWidget* addfavoriteDialog = new AddFavoriteWidget("Name of Favorite", NULL);
   //addfavoriteDialog->setModal(false);
   bool done = false;
-  bool cancel = false;
   while (done == false)
   {
     addfavoriteDialog->exec(); // Show the dialog
@@ -644,7 +645,6 @@ QString FavoritesDockWidget::displayNewFavoriteDialog()
         if(reply == QMessageBox::Cancel)
         {
           done = true;
-          cancel = true;
           favoriteTitle = "";
         }
       }

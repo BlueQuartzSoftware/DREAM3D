@@ -200,7 +200,7 @@ void FindBoundingBoxFeatures::find_boundingboxfeatures()
       if(m_Phases[i] > numPhases) numPhases = m_Phases[i];
     }
   }
-  for(size_t iter = 1; iter <= numPhases; iter++)
+  for(int iter = 1; iter <= numPhases; iter++)
   {
     //reset boundbox for each phase
     boundbox[1] = 0;

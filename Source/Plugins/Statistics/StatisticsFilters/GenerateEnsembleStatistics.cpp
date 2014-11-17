@@ -394,7 +394,7 @@ void GenerateEnsembleStatistics::dataCheck()
   if(m_CalculateODF == true || m_CalculateMDF == true)
   {
     dims[0] = 1;
-    typedef DataArray<unsigned int> XTalStructArrayType;
+   //typedef DataArray<unsigned int> XTalStructArrayType;
     m_CrystalStructuresPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<unsigned int>, AbstractFilter>(this, getCrystalStructuresArrayPath(), dims)
                              ; /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
     if( NULL != m_CrystalStructuresPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */

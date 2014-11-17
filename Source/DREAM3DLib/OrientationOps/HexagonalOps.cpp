@@ -104,64 +104,64 @@ static const float HexRodSym[12][3] = {{0.0f, 0.0f, 0.0f},
 };
 static const float HexMatSym[12][3][3] =
 {
-  { {1.0, 0.0, 0.0},
-    {0.0, 1.0, 0.0},
-    {0.0, 0.0, 1.0}
+  { {1.0f, 0.0f, 0.0f},
+    {0.0f, 1.0f, 0.0f},
+    {0.0f, 0.0f, 1.0f}
   },
 
-  { { -0.5, DREAM3D::Constants::k_Root3Over2,  0.0},
-    { -DREAM3D::Constants::k_Root3Over2, -0.5, 0.0},
-    {0.0, 0.0,  1.0}
+  { { -0.5f, DREAM3D::Constants::k_Root3Over2,  0.0f},
+    { -DREAM3D::Constants::k_Root3Over2, -0.5f, 0.0f},
+    {0.0f, 0.0f,  1.0f}
   },
 
-  { { -0.5, -DREAM3D::Constants::k_Root3Over2,  0.0},
-    {DREAM3D::Constants::k_Root3Over2, -0.5, 0.0},
-    {0.0, 0.0,  1.0}
+  { { -0.5f, -DREAM3D::Constants::k_Root3Over2,  0.0f},
+    {DREAM3D::Constants::k_Root3Over2, -0.5f, 0.0f},
+    {0.0f, 0.0f,  1.0f}
   },
 
-  { {0.5, DREAM3D::Constants::k_Root3Over2,  0.0},
-    { -DREAM3D::Constants::k_Root3Over2, 0.5, 0.0},
-    {0.0, 0.0,  1.0}
+  { {0.5f, DREAM3D::Constants::k_Root3Over2,  0.0f},
+    { -DREAM3D::Constants::k_Root3Over2, 0.5f, 0.0f},
+    {0.0f, 0.0f,  1.0f}
   },
 
-  { { -1.0, 0.0, 0.0},
-    {0.0, -1.0, 0.0},
-    {0.0, 0.0, 1.0}
+  { { -1.0f, 0.0f, 0.0f},
+    {0.0f, -1.0f, 0.0f},
+    {0.0f, 0.0f, 1.0f}
   },
 
-  { {0.5, -DREAM3D::Constants::k_Root3Over2,  0.0},
-    {DREAM3D::Constants::k_Root3Over2, 0.5, 0.0},
-    {0.0, 0.0,  1.0}
+  { {0.5f, -DREAM3D::Constants::k_Root3Over2,  0.0f},
+    {DREAM3D::Constants::k_Root3Over2, 0.5f, 0.0f},
+    {0.0f, 0.0f,  1.0f}
   },
 
-  { { -0.5, -DREAM3D::Constants::k_Root3Over2,  0.0},
-    { -DREAM3D::Constants::k_Root3Over2, 0.5, 0.0},
-    {0.0, 0.0,  -1.0}
+  { { -0.5f, -DREAM3D::Constants::k_Root3Over2,  0.0f},
+    { -DREAM3D::Constants::k_Root3Over2, 0.5f, 0.0f},
+    {0.0f, 0.0f,  -1.0f}
   },
 
-  { {1.0, 0.0, 0.0},
-    {0.0, -1.0, 0.0},
-    {0.0, 0.0, -1.0}
+  { {1.0f, 0.0f, 0.0f},
+    {0.0f, -1.0f, 0.0f},
+    {0.0f, 0.0f, -1.0f}
   },
 
-  { { -0.5, DREAM3D::Constants::k_Root3Over2,  0.0},
-    {DREAM3D::Constants::k_Root3Over2, 0.5, 0.0},
-    {0.0, 0.0,  -1.0}
+  { { -0.5f, DREAM3D::Constants::k_Root3Over2,  0.0f},
+    {DREAM3D::Constants::k_Root3Over2, 0.5f, 0.0f},
+    {0.0f, 0.0f,  -1.0f}
   },
 
-  { {0.5, DREAM3D::Constants::k_Root3Over2,  0.0},
-    {DREAM3D::Constants::k_Root3Over2, -0.5, 0.0},
-    {0.0, 0.0,  -1.0}
+  { {0.5f, DREAM3D::Constants::k_Root3Over2,  0.0f},
+    {DREAM3D::Constants::k_Root3Over2, -0.5f, 0.0f},
+    {0.0f, 0.0f,  -1.0f}
   },
 
-  { { -1.0, 0.0, 0.0},
-    {0.0, 1.0, 0.0},
-    {0.0, 0.0, -1.0}
+  { { -1.0f, 0.0f, 0.0f},
+    {0.0f, 1.0f, 0.0f},
+    {0.0f, 0.0f, -1.0f}
   },
 
-  { {0.5, -DREAM3D::Constants::k_Root3Over2,  0.0},
-    { -DREAM3D::Constants::k_Root3Over2, -0.5, 0.0},
-    {0.0, 0.0,  -1.0}
+  { {0.5f, -DREAM3D::Constants::k_Root3Over2,  0.0f},
+    { -DREAM3D::Constants::k_Root3Over2, -0.5f, 0.0f},
+    {0.0f, 0.0f,  -1.0f}
   }
 };
 
@@ -441,8 +441,7 @@ void HexagonalOps::getSchmidFactorAndSS(float load[3], float& schmidfactor, floa
   schmidfactor = 0.0;
   float theta1, theta2, theta3, theta4, theta5, theta6, theta7, theta8, theta9;
   float lambda1, lambda2, lambda3, lambda4, lambda5, lambda6, lambda7, lambda8, lambda9, lambda10;
-  float schmid1, schmid2, schmid3, schmid4, schmid5, schmid6, schmid7, schmid8, schmid9, schmid10, schmid11, schmid12;
-  float schmid13, schmid14, schmid15, schmid16, schmid17, schmid18, schmid19, schmid20, schmid21, schmid22, schmid23, schmid24;
+  float schmid1, schmid2, schmid3, schmid4, schmid5, schmid6;
   float caratio = 1.633f;
   float ph1sdx1 = 1.0f;
   float ph1sdy1 = 0.0f;
@@ -629,12 +628,12 @@ void HexagonalOps::getSchmidFactorAndSS(float load[3], float& schmidfactor, floa
   lambda9 = fabs(lambda9);
   lambda10 = ((l9nx * loadx) + (l9ny * loady) + (l9nz * loadz));
   lambda10 = fabs(lambda10);
-  schmid7 = theta1 * lambda5;
-  schmid8 = theta1 * lambda6;
-  schmid9 = theta2 * lambda7;
-  schmid10 = theta2 * lambda8;
-  schmid11 = theta3 * lambda9;
-  schmid12 = theta3 * lambda10;
+//  schmid7 = theta1 * lambda5;
+//  schmid8 = theta1 * lambda6;
+//  schmid9 = theta2 * lambda7;
+//  schmid10 = theta2 * lambda8;
+//  schmid11 = theta3 * lambda9;
+//  schmid12 = theta3 * lambda10;
   float t4x = (0.866025f * ph1sdx4) + (0.0f * ph1sdy4) + (0.0f * ph1sdz4);
   float t4y = (-0.5f * ph1sdx4) + (1.0f * ph1sdy4) + (0.0f * ph1sdz4);
   float t4z = (0.0f * ph1sdx4) + (0.0f * ph1sdy4) + (caratio * ph1sdz4);
@@ -689,18 +688,18 @@ void HexagonalOps::getSchmidFactorAndSS(float load[3], float& schmidfactor, floa
   t9z = t9z / denomt9;
   theta9 = ((t9x * loadx) + (t9y * loady) + (t9z * loadz));
   theta9 = fabs(theta9);
-  schmid13 = theta7 * lambda6;
-  schmid14 = theta8 * lambda6;
-  schmid15 = theta6 * lambda9;
-  schmid16 = theta4 * lambda9;
-  schmid17 = theta6 * lambda8;
-  schmid18 = theta7 * lambda8;
-  schmid19 = theta4 * lambda5;
-  schmid20 = theta5 * lambda5;
-  schmid21 = theta8 * lambda10;
-  schmid22 = theta9 * lambda10;
-  schmid23 = theta9 * lambda7;
-  schmid24 = theta5 * lambda7;
+//  schmid13 = theta7 * lambda6;
+//  schmid14 = theta8 * lambda6;
+//  schmid15 = theta6 * lambda9;
+//  schmid16 = theta4 * lambda9;
+//  schmid17 = theta6 * lambda8;
+//  schmid18 = theta7 * lambda8;
+//  schmid19 = theta4 * lambda5;
+//  schmid20 = theta5 * lambda5;
+//  schmid21 = theta8 * lambda10;
+//  schmid22 = theta9 * lambda10;
+//  schmid23 = theta9 * lambda7;
+//  schmid24 = theta5 * lambda7;
   if(schmid1 > schmidfactor) { schmidfactor = schmid1, slipsys = 1, angleComps[0] = theta1, angleComps[1] = lambda1; }
   if(schmid2 > schmidfactor) { schmidfactor = schmid2, slipsys = 2, angleComps[0] = theta2, angleComps[1] = lambda1; }
   if(schmid3 > schmidfactor) { schmidfactor = schmid3, slipsys = 3, angleComps[0] = theta3, angleComps[1] = lambda1; }
@@ -745,7 +744,7 @@ void HexagonalOps::getSchmidFactorAndSS(float load[3], float plane[3], float dir
   for(int i = 0; i < k_NumSymQuats; i++)
   {
     //compute slip system
-    float slipPlane[3] = {0}; 
+    float slipPlane[3] = {0};
     slipPlane[2] = HexMatSym[i][2][0] * plane[0] + HexMatSym[i][2][1] * plane[1] + HexMatSym[i][2][2] * plane[2];
 
     //dont consider negative z planes (to avoid duplicates)

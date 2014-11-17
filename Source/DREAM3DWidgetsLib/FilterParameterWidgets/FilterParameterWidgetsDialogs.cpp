@@ -67,6 +67,7 @@ void FilterParameterWidgetsDialogs::ShowCouldNotSetFilterParameter(AbstractFilte
                        " Please report this issue to the developers of this filter.").arg(filterParameter->getPropertyName()).arg(filter->getHumanLabel());
   QMessageBox::StandardButton reply;
   reply = QMessageBox::critical(NULL, QString("Filter Parameter Error"), ss, QMessageBox::Ok);
+    Q_UNUSED(reply);
 }
 
 
@@ -79,6 +80,7 @@ void FilterParameterWidgetsDialogs::ShowCouldNotSetConditionalFilterParameter(Ab
                        " Please report this issue to the developers of this filter.").arg(filterParameter->getPropertyName()).arg(filter->getHumanLabel());
   QMessageBox::StandardButton reply;
   reply = QMessageBox::critical(NULL, QString("Filter Parameter Error"), ss, QMessageBox::Ok);
+  Q_UNUSED(reply);
 }
 
 
@@ -91,4 +93,5 @@ void FilterParameterWidgetsDialogs::ShowFilterPropertyCastError(AbstractFilter* 
                        " Please report this issue to the developers of this filter.").arg(filterParameter->getPropertyName()).arg(filter->getHumanLabel()).arg(filtType).arg(paramType);
   QMessageBox::StandardButton reply;
   reply = QMessageBox::critical(NULL, QString("Filter Parameter Error"), ss, QMessageBox::Ok);
+  Q_UNUSED(reply);
 }

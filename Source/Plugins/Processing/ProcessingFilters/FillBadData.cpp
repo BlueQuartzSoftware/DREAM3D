@@ -271,7 +271,7 @@ void FillBadData::execute()
       }
       if((int)currentvlist.size() < m_MinAllowedDefectSize)
       {
-        for (size_t k = 0; k < currentvlist.size(); k++)
+        for (qint32 k = 0; k < currentvlist.size(); k++)
         {
           m_FeatureIds[currentvlist[k]] = -1;
         }
