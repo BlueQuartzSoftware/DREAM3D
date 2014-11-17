@@ -49,6 +49,14 @@ standard C++ library."
 #include "DREAM3DLib/CoreFilters/MoveData.h"
 #include "DREAM3DLib/CoreFilters/CopyDataContainer.h"
 
+static const int k_MoveAttributeMatrix = 0;
+static const int k_MoveDataArray = 1;
+
+static const int DC_DEST_NOT_FOUND = -11011;
+static const int DC_SRC_NOT_FOUND = -11012;
+static const int AM_SRC_NOT_FOUND = -11013;
+static const int TUPLES_NOT_MATCH = -11019;
+
 
 // -----------------------------------------------------------------------------
 //
@@ -60,13 +68,18 @@ DataContainerArray::Pointer createDataContainerArray()
     DataContainer::Pointer dc2 = DataContainer::New("DataContainer2");
     AttributeMatrix::Pointer am1 = AttributeMatrix::New(QVector<size_t>(1), "AttributeMatrix1", 0);
     AttributeMatrix::Pointer am2 = AttributeMatrix::New(QVector<size_t>(1), "AttributeMatrix2", 0);
-    AttributeMatrix::Pointer am3 = AttributeMatrix::New(QVector<size_t>(1), "AttributeMatrix2", 0);
-    IDataArray::Pointer da1 = DataArray<int>::createArray();
+    AttributeMatrix::Pointer am3 = AttributeMatrix::New(QVector<size_t>(1), "AttributeMatrix3", 0);
+    IDataArray::Pointer da1 = DataArray<int>::CreateArray(3, "DataArray1");
     da1->setName("DataArray1");
+    
+    dc1->addAttributeMatrix("AttributeMatrix1", am1);
+    dc1->addAttributeMatrix("AttributeMatrix2", am2);
+    dc2->addAttributeMatrix("AttributeMatrix3", am3);
+    
     dca->addDataContainer(dc1);
     dca->addDataContainer(dc2);
 
-    std::cout << "Testing";
+    return dca;
 }
 
 // -----------------------------------------------------------------------------
@@ -74,12 +87,59 @@ DataContainerArray::Pointer createDataContainerArray()
 // -----------------------------------------------------------------------------
 void MoveDataTest()
 {
-    createDataContainerArray();
-    //   MXAAbstractAttributes allAttributes;
-    //   err = QH5Utilities::readAllAttributes(file_id, "Pointer2DArrayDataset<H5T_NATIVE_INT32>", allAttributes );
-    //   DREAM3D_REQUIRE(err >= 0);
-    //   DREAM3D_REQUIRE(allAttributes.size() == AttrSize);
-    //   DREAM3D_REQUIRE(H5Fclose(file_id) >= 0);
+    DataContainerArray::Pointer dca = createDataContainerArray();
+    
+    MoveData::Pointer ptr = MoveData::New();
+    ptr->setDataContainerArray(dca);
+    ptr->setWhatToMove(k_MoveAttributeMatrix);
+    
+    // Testing "Destination Data Container Does Not Exist" (Error Code -11011)
+    ptr->setDataContainerDestination("ThisDataContainerShouldNotExist");
+    DataArrayPath amSource("DataContainer1", "AttributeMatrix1", "");
+    ptr->setAttributeMatrixSource(amSource);
+    ptr->execute();
+    int err = ptr->getErrorCondition();
+    DREAM3D_REQUIRE_EQUAL(err, DC_DEST_NOT_FOUND)
+    
+    // Testing "Source Data Container Does Not Exist" (Error Code -11012)
+    ptr->setDataContainerDestination("DataContainer2");
+    ptr->setAttributeMatrixSource(DataArrayPath("ThisDataContainerShouldNotExist", "AttributeMatrix1", ""));
+    ptr->execute();
+    int err2 = ptr->getErrorCondition();
+    DREAM3D_REQUIRE_EQUAL(err2, DC_SRC_NOT_FOUND)
+    
+    // Testing "Source Attribute Matrix Does Not Exist" (Error Code -11013)
+    ptr->setDataContainerDestination("DataContainer2");
+    ptr->setAttributeMatrixSource(DataArrayPath("DataContainer1", "ThisAttributeMatrixShouldNotExist", ""));
+    ptr->execute();
+    int err3 = ptr->getErrorCondition();
+    DREAM3D_REQUIRE_EQUAL(err3, AM_SRC_NOT_FOUND)
+    
+    DataArrayPath daSrcPath("", "", "");
+    IDataArray::Pointer daSrcDataArray = dca->getExistingPrereqArrayFromPath<IDataArray,AbstractFilter>(ptr, daSrcPath);
+    
+/************************************Test************************************/
+    
+//    IDataArray::Pointer daSrcDataArray = getDataContainerArray()->getExistingPrereqArrayFromPath<IDataArray, AbstractFilter>(this, daSrcPath);
+//    if (getErrorCondition() < 0)
+//    {
+//        return;
+//    }
+
+/************************************Test************************************/
+    
+//    AttributeMatrix::Pointer daDestAttributeMatrix = getDataContainerArray()->getPrereqAttributeMatrixFromPath<DataContainer>(this, amDestPath, -11016);
+
+/************************************Test************************************/
+    
+//    if (daDestAttributeMatrix->getNumTuples() != daSrcDataArray->getNumberOfTuples())
+//        setErrorCondition(-11019);
+//        QString ss = QObject::tr("The number of tuples of source and destination do not match");
+
+/************************************Test************************************/
+    
+//    else if (daSrcAttributeMatrix->getName() == daDestAttributeMatrix->getName())
+//        QString ss = QObject::tr("The source and destination Attribute Matrix are the same.  Is this what you meant to do?");
 }
 
 
