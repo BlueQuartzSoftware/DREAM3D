@@ -78,6 +78,7 @@ ADD_DREAM3D_TEST(StructArrayTest  "DREAM3DLib")
 ADD_DREAM3D_TEST(FilterPipelineTest  "DREAM3DLib")
 ADD_DREAM3D_TEST(DataArrayTest  "DREAM3DLib")
 ADD_DREAM3D_TEST(ErrorMessageTest  "DREAM3DLib")
+ADD_DREAM3D_TEST(MoveDataTest  "DREAM3DLib")
 
 set_source_files_properties(moc_PreflightVerify.cpp PROPERTIES HEADER_FILE_ONLY TRUE)
 ADD_DREAM3D_TEST_2(PreFlightTest  "DREAM3DLib" "PreflightVerify.h;PreflightVerify.cpp")
