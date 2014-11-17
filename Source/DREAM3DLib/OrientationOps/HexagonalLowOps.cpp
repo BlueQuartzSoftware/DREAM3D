@@ -81,42 +81,42 @@ static const QuatF HexQuatSym[6] = {QuaternionMathF::New(0.000000000f, 0.0000000
 
 
 static const float HexRodSym[6][3] = {{0.0f, 0.0f, 0.0f},
-  {0.0f, 0.0f, 0.57735f},
-  {0.0f, 0.0f, 1.73205f},
-  {0.0f, 0.0f, 1000000000000.0f},
-  {0.0f, 0.0f, -1.73205f},
-  {0.0f, 0.0f, -0.57735f}
-};
+                                      {0.0f, 0.0f, 0.57735f},
+                                      {0.0f, 0.0f, 1.73205f},
+                                      {0.0f, 0.0f, 1000000000000.0f},
+                                      {0.0f, 0.0f, -1.73205f},
+                                      {0.0f, 0.0f, -0.57735f}
+                                     };
 static const float HexMatSym[6][3][3] =
 {
-  { {1.0, 0.0, 0.0},
-    {0.0, 1.0, 0.0},
-    {0.0, 0.0, 1.0}
+  { {1.0f, 0.0f, 0.0f},
+    {0.0f, 1.0f, 0.0f},
+    {0.0f, 0.0f, 1.0f}
   },
 
-  { { -0.5, DREAM3D::Constants::k_Root3Over2,  0.0},
-    { -DREAM3D::Constants::k_Root3Over2, -0.5, 0.0},
-    {0.0, 0.0,  1.0}
+  { { -0.5f, static_cast<float>(DREAM3D::Constants::k_Root3Over2),  0.0f},
+    { static_cast<float>(-DREAM3D::Constants::k_Root3Over2), -0.5f, 0.0f},
+    {0.0f, 0.0f,  1.0f}
   },
 
-  { { -0.5, -DREAM3D::Constants::k_Root3Over2,  0.0},
-    {DREAM3D::Constants::k_Root3Over2, -0.5, 0.0},
-    {0.0, 0.0,  1.0}
+  { { -0.5f, static_cast<float>(-DREAM3D::Constants::k_Root3Over2),  0.0f},
+    {static_cast<float>(DREAM3D::Constants::k_Root3Over2), -0.5f, 0.0f},
+    {0.0f, 0.0f,  1.0f}
   },
 
-  { {0.5, DREAM3D::Constants::k_Root3Over2,  0.0},
-    { -DREAM3D::Constants::k_Root3Over2, 0.5, 0.0},
-    {0.0, 0.0,  1.0}
+  { {0.5f, static_cast<float>(DREAM3D::Constants::k_Root3Over2),  0.0f},
+    { static_cast<float>(-DREAM3D::Constants::k_Root3Over2), 0.5f, 0.0f},
+    {0.0f, 0.0f,  1.0f}
   },
 
-  { { -1.0, 0.0, 0.0},
-    {0.0, -1.0, 0.0},
-    {0.0, 0.0, 1.0}
+  { { -1.0f, 0.0f, 0.0f},
+    {0.0f, -1.0f, 0.0f},
+    {0.0f, 0.0f, 1.0f}
   },
 
-  { {0.5, -DREAM3D::Constants::k_Root3Over2,  0.0},
-    {DREAM3D::Constants::k_Root3Over2, 0.5, 0.0},
-    {0.0, 0.0,  1.0}
+  { {0.5f, static_cast<float>(-DREAM3D::Constants::k_Root3Over2),  0.0f},
+    {static_cast<float>(DREAM3D::Constants::k_Root3Over2), 0.5f, 0.0f},
+    {0.0f, 0.0f,  1.0f}
   }
 };
 
@@ -145,8 +145,8 @@ HexagonalLowOps::~HexagonalLowOps()
 //
 // -----------------------------------------------------------------------------
 float HexagonalLowOps::_calcMisoQuat(const QuatF quatsym[12], int numsym,
-                                     QuatF& q1, QuatF& q2,
-                                     float& n1, float& n2, float& n3)
+QuatF& q1, QuatF& q2,
+float& n1, float& n2, float& n3)
 {
   float wmin = 9999999.0f; //,na,nb,nc;
   float w = 0;
@@ -572,12 +572,12 @@ void HexagonalLowOps::getSchmidFactorAndSS(float load[3], float& schmidfactor, f
   lambda9 = fabs(lambda9);
   lambda10 = ((l9nx * loadx) + (l9ny * loady) + (l9nz * loadz));
   lambda10 = fabs(lambda10);
-//  schmid7 = theta1 * lambda5;
-//  schmid8 = theta1 * lambda6;
-//  schmid9 = theta2 * lambda7;
-//  schmid10 = theta2 * lambda8;
-//  schmid11 = theta3 * lambda9;
-//  schmid12 = theta3 * lambda10;
+  //  schmid7 = theta1 * lambda5;
+  //  schmid8 = theta1 * lambda6;
+  //  schmid9 = theta2 * lambda7;
+  //  schmid10 = theta2 * lambda8;
+  //  schmid11 = theta3 * lambda9;
+  //  schmid12 = theta3 * lambda10;
   float t4x = (0.866025f * ph1sdx4) + (0.0f * ph1sdy4) + (0.0f * ph1sdz4);
   float t4y = (-0.5f * ph1sdx4) + (1.0f * ph1sdy4) + (0.0f * ph1sdz4);
   float t4z = (0.0f * ph1sdx4) + (0.0f * ph1sdy4) + (caratio * ph1sdz4);
@@ -632,18 +632,18 @@ void HexagonalLowOps::getSchmidFactorAndSS(float load[3], float& schmidfactor, f
   t9z = t9z / denomt9;
   theta9 = ((t9x * loadx) + (t9y * loady) + (t9z * loadz));
   theta9 = fabs(theta9);
-//  schmid13 = theta7 * lambda6;
-//  schmid14 = theta8 * lambda6;
-//  schmid15 = theta6 * lambda9;
-//  schmid16 = theta4 * lambda9;
-//  schmid17 = theta6 * lambda8;
-//  schmid18 = theta7 * lambda8;
-//  schmid19 = theta4 * lambda5;
-//  schmid20 = theta5 * lambda5;
-//  schmid21 = theta8 * lambda10;
-//  schmid22 = theta9 * lambda10;
-//  schmid23 = theta9 * lambda7;
-//  schmid24 = theta5 * lambda7;
+  //  schmid13 = theta7 * lambda6;
+  //  schmid14 = theta8 * lambda6;
+  //  schmid15 = theta6 * lambda9;
+  //  schmid16 = theta4 * lambda9;
+  //  schmid17 = theta6 * lambda8;
+  //  schmid18 = theta7 * lambda8;
+  //  schmid19 = theta4 * lambda5;
+  //  schmid20 = theta5 * lambda5;
+  //  schmid21 = theta8 * lambda10;
+  //  schmid22 = theta9 * lambda10;
+  //  schmid23 = theta9 * lambda7;
+  //  schmid24 = theta5 * lambda7;
   if(schmid1 > schmidfactor) { schmidfactor = schmid1, slipsys = 1, angleComps[0] = theta1, angleComps[1] = lambda1; }
   if(schmid2 > schmidfactor) { schmidfactor = schmid2, slipsys = 2, angleComps[0] = theta2, angleComps[1] = lambda1; }
   if(schmid3 > schmidfactor) { schmidfactor = schmid3, slipsys = 3, angleComps[0] = theta3, angleComps[1] = lambda1; }
@@ -1172,9 +1172,9 @@ DREAM3D::Rgb HexagonalLowOps::generateIPFColor(double phi1, double phi, double p
   _rgb[0] = _rgb[0] / max;
   _rgb[1] = _rgb[1] / max;
   _rgb[2] = _rgb[2] / max;
-//  _rgb[0] = (0.85f * _rgb[0]) + 0.15f;
-//  _rgb[1] = (0.85f * _rgb[1]) + 0.15f;
-//  _rgb[2] = (0.85f * _rgb[2]) + 0.15f;
+  //  _rgb[0] = (0.85f * _rgb[0]) + 0.15f;
+  //  _rgb[1] = (0.85f * _rgb[1]) + 0.15f;
+  //  _rgb[2] = (0.85f * _rgb[2]) + 0.15f;
 
 
   return RgbColor::dRgb(_rgb[0] * 255, _rgb[1] * 255, _rgb[2] * 255, 255);

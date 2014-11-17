@@ -357,7 +357,7 @@ void ReadH5Ebsd::dataCheck()
     m_Manufacturer = Ebsd::HEDM;
   }
 
-  size_t dcDims[3] = {dims[0], dims[1], dims[2]};
+  size_t dcDims[3] = { static_cast<size_t>(dims[0]), static_cast<size_t>(dims[1]), static_cast<size_t>(dims[2]) };
   //Now Calculate our "subvolume" of slices, ie, those start and end values that the user selected from the GUI
   dcDims[2] = m_ZEndIndex - m_ZStartIndex + 1;
   m->setDimensions(dcDims);
@@ -496,7 +496,7 @@ void ReadH5Ebsd::execute()
     float res[3];
     volumeInfoReader->getDimsAndResolution(dims[0], dims[1], dims[2], res[0], res[1], res[2]);
 
-    size_t dcDims[3] = { dims[0], dims[1], dims[2] };
+    size_t dcDims[3] = { static_cast<size_t>(dims[0]), static_cast<size_t>(dims[1]), static_cast<size_t>(dims[2]) };
     m->setDimensions(dcDims);
     m->setResolution(res);
     //Now Calculate our "subvolume" of slices, ie, those start and end values that the user selected from the GUI

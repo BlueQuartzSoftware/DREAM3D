@@ -109,18 +109,18 @@ static const float HexMatSym[12][3][3] =
     {0.0f, 0.0f, 1.0f}
   },
 
-  { { -0.5f, DREAM3D::Constants::k_Root3Over2,  0.0f},
-    { -DREAM3D::Constants::k_Root3Over2, -0.5f, 0.0f},
+  { { -0.5f, static_cast<float>(DREAM3D::Constants::k_Root3Over2),  0.0f},
+    { static_cast<float>(-DREAM3D::Constants::k_Root3Over2), -0.5f, 0.0f},
     {0.0f, 0.0f,  1.0f}
   },
 
-  { { -0.5f, -DREAM3D::Constants::k_Root3Over2,  0.0f},
-    {DREAM3D::Constants::k_Root3Over2, -0.5f, 0.0f},
+  { { -0.5f, static_cast<float>(-DREAM3D::Constants::k_Root3Over2),  0.0f},
+    { static_cast<float>(DREAM3D::Constants::k_Root3Over2), -0.5f, 0.0f},
     {0.0f, 0.0f,  1.0f}
   },
 
-  { {0.5f, DREAM3D::Constants::k_Root3Over2,  0.0f},
-    { -DREAM3D::Constants::k_Root3Over2, 0.5f, 0.0f},
+  { {0.5f, static_cast<float>(DREAM3D::Constants::k_Root3Over2),  0.0f},
+    { static_cast<float>(-DREAM3D::Constants::k_Root3Over2), 0.5f, 0.0f},
     {0.0f, 0.0f,  1.0f}
   },
 
@@ -129,13 +129,13 @@ static const float HexMatSym[12][3][3] =
     {0.0f, 0.0f, 1.0f}
   },
 
-  { {0.5f, -DREAM3D::Constants::k_Root3Over2,  0.0f},
-    {DREAM3D::Constants::k_Root3Over2, 0.5f, 0.0f},
+  { {0.5f, static_cast<float>(-DREAM3D::Constants::k_Root3Over2),  0.0f},
+    {static_cast<float>(DREAM3D::Constants::k_Root3Over2), 0.5f, 0.0f},
     {0.0f, 0.0f,  1.0f}
   },
 
-  { { -0.5f, -DREAM3D::Constants::k_Root3Over2,  0.0f},
-    { -DREAM3D::Constants::k_Root3Over2, 0.5f, 0.0f},
+  { { -0.5f, static_cast<float>(-DREAM3D::Constants::k_Root3Over2),  0.0f},
+    { static_cast<float>(-DREAM3D::Constants::k_Root3Over2), 0.5f, 0.0f},
     {0.0f, 0.0f,  -1.0f}
   },
 
@@ -144,13 +144,13 @@ static const float HexMatSym[12][3][3] =
     {0.0f, 0.0f, -1.0f}
   },
 
-  { { -0.5f, DREAM3D::Constants::k_Root3Over2,  0.0f},
-    {DREAM3D::Constants::k_Root3Over2, 0.5f, 0.0f},
+  { { -0.5f, static_cast<float>(DREAM3D::Constants::k_Root3Over2),  0.0f},
+    {static_cast<float>(DREAM3D::Constants::k_Root3Over2), 0.5f, 0.0f},
     {0.0f, 0.0f,  -1.0f}
   },
 
-  { {0.5f, DREAM3D::Constants::k_Root3Over2,  0.0f},
-    {DREAM3D::Constants::k_Root3Over2, -0.5f, 0.0f},
+  { {0.5f, static_cast<float>(DREAM3D::Constants::k_Root3Over2),  0.0f},
+    { static_cast<float>(DREAM3D::Constants::k_Root3Over2), -0.5f, 0.0f},
     {0.0f, 0.0f,  -1.0f}
   },
 
@@ -159,8 +159,8 @@ static const float HexMatSym[12][3][3] =
     {0.0f, 0.0f, -1.0f}
   },
 
-  { {0.5f, -DREAM3D::Constants::k_Root3Over2,  0.0f},
-    { -DREAM3D::Constants::k_Root3Over2, -0.5f, 0.0f},
+  { {0.5f, static_cast<float>(-DREAM3D::Constants::k_Root3Over2),  0.0f},
+    { static_cast<float>(-DREAM3D::Constants::k_Root3Over2), -0.5f, 0.0f},
     {0.0f, 0.0f,  -1.0f}
   }
 };

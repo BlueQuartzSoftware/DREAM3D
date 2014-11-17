@@ -1777,6 +1777,7 @@ UInt8ArrayType::Pointer CubicOps::generateMisorientationTriangleLegend(float ang
 {
     QVector<size_t> dims(1, 4);
     UInt8ArrayType::Pointer image = UInt8ArrayType::CreateArray(imageDim * imageDim, dims, "Cubic High Misorientation Triangle Legend");
+    #if 0
     //uint32_t* pixelPtr = reinterpret_cast<uint32_t*>(image->getPointer(0));
 
     double maxk = DREAM3D::Constants::k_Sqrt2 - 1;
@@ -2448,7 +2449,7 @@ UInt8ArrayType::Pointer CubicOps::generateMisorientationTriangleLegend(float ang
         //qpointlist = pairToQPoint(pointlist);
         //painter.drawPolyline(qpointlist.data(), static_cast<int>(qpointlist.size()));
     }
-
+#endif
     return image;
 }
 
