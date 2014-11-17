@@ -47,15 +47,15 @@
 // -----------------------------------------------------------------------------
 FindBoundingBoxFeatures::FindBoundingBoxFeatures() :
   AbstractFilter(),
+  m_CalcByPhase(false),
   m_CentroidsArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, DREAM3D::FeatureData::Centroids),
   m_PhasesArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, DREAM3D::FeatureData::Phases),
   m_SurfaceFeaturesArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, DREAM3D::FeatureData::SurfaceFeatures),
   m_BiasedFeaturesArrayName(DREAM3D::FeatureData::BiasedFeatures),
-  m_CalcByPhase(false),
-  m_CentroidsArrayName(DREAM3D::FeatureData::Centroids),
-  m_Centroids(NULL),
   m_PhasesArrayName(DREAM3D::FeatureData::Centroids),
   m_Phases(NULL),
+  m_CentroidsArrayName(DREAM3D::FeatureData::Centroids),
+  m_Centroids(NULL),
   m_SurfaceFeaturesArrayName(DREAM3D::FeatureData::SurfaceFeatures),
   m_SurfaceFeatures(NULL),
   m_BiasedFeatures(NULL)
