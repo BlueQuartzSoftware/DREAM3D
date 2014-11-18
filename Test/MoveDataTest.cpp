@@ -52,10 +52,18 @@
 static const int k_MoveAttributeMatrix = 0;
 static const int k_MoveDataArray = 1;
 
-static const int DC_DEST_NOT_FOUND = -11011;
-static const int DC_SRC_NOT_FOUND = -11012;
-static const int AM_SRC_NOT_FOUND = -11013;
-static const int TUPLES_NOT_MATCH = -11019;
+enum ErrorCodes
+{
+    DC_DEST_NOT_FOUND = -11011,
+    DC_SRC_NOT_FOUND = -11012,
+    AM_SRC_NOT_FOUND = -11013,
+    TUPLES_NOT_MATCH = -11019,
+    DC_SELECTED_NAME_EMPTY = -11000,
+    DC_NEW_NAME_EMPTY = -11001,
+    DC_SELECTED_NOT_FOUND = -11002,
+    DCA_NOT_FOUND = -11003
+};
+
 
 
 // -----------------------------------------------------------------------------
@@ -173,6 +181,34 @@ void MoveDataTest()
 // -----------------------------------------------------------------------------
 void CopyDataTest()
 {
+    CopyDataContainer::Pointer copyDataPtr = CopyDataContainer::New();
+    
+    DataContainerArray::Pointer dca_not_found = DataContainerArray::NullPointer();
+    copyDataPtr->setDataContainerArray(dca_not_found);
+    copyDataPtr->setSelectedDataContainerName("DataContainer1");
+    copyDataPtr->setNewDataContainerName("DataContainer3");
+    copyDataPtr->execute();
+    DREAM3D_REQUIRE_EQUAL(copyDataPtr->getErrorCondition(), DCA_NOT_FOUND)
+    
+    DataContainerArray::Pointer dca = createDataContainerArray();
+    copyDataPtr->setDataContainerArray(dca);
+    
+    // Test "Selected Data Container Name is Empty"
+    copyDataPtr->setSelectedDataContainerName("");
+    copyDataPtr->setNewDataContainerName("DataContainer3");
+    copyDataPtr->execute();
+    DREAM3D_REQUIRE_EQUAL(copyDataPtr->getErrorCondition(), DC_SELECTED_NAME_EMPTY)
+    
+    // Test "New Data Container Name is Empty"
+    copyDataPtr->setSelectedDataContainerName("DataContainer1");
+    copyDataPtr->setNewDataContainerName("");
+    copyDataPtr->execute();
+    DREAM3D_REQUIRE_EQUAL(copyDataPtr->getErrorCondition(), DC_NEW_NAME_EMPTY)
+    
+    copyDataPtr->setSelectedDataContainerName("ThisShouldNotExist");
+    copyDataPtr->setNewDataContainerName("DataContainer3");
+    copyDataPtr->execute();
+    DREAM3D_REQUIRE_EQUAL(copyDataPtr->getErrorCondition(), DC_SELECTED_NOT_FOUND)
     
 }
 
