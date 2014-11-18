@@ -50,6 +50,7 @@
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/DataContainers/VertexArray.h"
 #include "DREAM3DLib/DataContainers/DynamicListArray.hpp"
+#include "DREAM3DLib/DataArrays/DataArray.hpp"
 
 /**
  * @brief The MeshLinks class contains arrays of Cells for each Node in the mesh. This allows quick query to the node
@@ -297,6 +298,44 @@ class CellArray
         }
         // Allocate the array storage for the current triangle to hold its Cell list
         m_CellNeighbors->setElementList(t, linkCount[t], &(loop_neighbors[0]));
+      }
+    }
+
+    // -----------------------------------------------------------------------------
+    //
+    // -----------------------------------------------------------------------------
+    template<typename DataType>
+    void averageVertexArrayValues(typename DataArray<DataType>::Pointer inVertexArray, DataArray<float>::Pointer outCellArray)
+    {
+      // Make sure the incoming arrays match the tuple size of the currently held cells and verts, and
+      // check that they have the same component dimensions (developer should ensure these when creating
+      // the arrays in the filter)
+      BOOST_ASSERT(outCellArray->getNumberOfTuples() == m_Array->getNumberOfTuples());
+      BOOST_ASSERT(inVertexArray->getNumberOfTuples() == m_Verts->getNumberOfTuples());
+      BOOST_ASSERT(outCellArray->getComponentDimensions() == inVertexArray->getComponentDimensions());
+
+      DataType* vertArray = inVertexArray->getPointer(0);
+      float* cellArray = outCellArray->getPointer(0);
+
+      size_t numCells = outCellArray->getNumberOfTuples();
+      size_t numDims = inVertexArray->getNumberOfComponents();
+
+      // CellArray currently only handles polytopes with 4 vertices...
+      float numVertsPerCell = 4.0;
+
+      for (size_t i=0;i<numDims;i++)
+      {
+        for (size_t j=0;j<numCells;j++)
+        {
+          Cell_t& Cell = *(m_Array->getPointer(j));
+          float vertValue = 0.0;
+          for (size_t k=0;k<numVertsPerCell;k++)
+          {
+            vertValue += vertArray[numDims*Cell.verts[k]+i];
+          }
+          vertValue /= numVertsPerCell;
+          cellArray[numDims*j+i] = vertValue;
+        }
       }
     }
 
