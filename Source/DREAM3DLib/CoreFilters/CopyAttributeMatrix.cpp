@@ -98,15 +98,15 @@ void CopyAttributeMatrix::dataCheck()
 
   if(m_NewAttributeMatrix.isEmpty() == true)
   {
-    setErrorCondition(-11000);
-    QString ss = QObject::tr("The New Attribute Array name can not be empty. Please set a value.");
+    setErrorCondition(-11004);
+    QString ss = QObject::tr("The New Attribute Matrix name can not be empty. Please set a value.");
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 
   if (m_SelectedAttributeMatrixPath.isEmpty() == true)
   {
-    setErrorCondition(-11001);
-    QString ss = QObject::tr("The complete path to the Attribute Array can not be empty. Please set an appropriate path.");
+    setErrorCondition(-11005);
+    QString ss = QObject::tr("The complete path to the Attribute Matrix can not be empty. Please set an appropriate path.");
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
   else
