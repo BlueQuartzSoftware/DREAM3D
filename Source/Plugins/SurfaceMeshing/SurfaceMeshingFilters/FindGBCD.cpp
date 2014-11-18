@@ -549,7 +549,7 @@ void FindGBCD::execute()
   float timeDiff = 0.0f;
   startMillis =  QDateTime::currentMSecsSinceEpoch();
   int lastIteration = 0;
-  int numIterationsPerTime = 0;
+  //int numIterationsPerTime = 0;
   int hemisphere = 0;
 
   double totalFaceArea = 0.0;
@@ -585,7 +585,7 @@ void FindGBCD::execute()
       estimatedTime = (float)(totalFaces - i) / timeDiff;
       ss = ss + QObject::tr(" || Est. Time Remain: %1").arg(DREAM3D::convertMillisToHrsMinSecs(estimatedTime));
       millis = QDateTime::currentMSecsSinceEpoch();
-      numIterationsPerTime = i - lastIteration;
+      //numIterationsPerTime = i - lastIteration;
       lastIteration = i;
     }
     notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);

@@ -215,13 +215,14 @@ void TestFailed(const std::string& test)
 #define INFINITYCHECK 1
 #define SIGNCHECK 1
 #ifdef INFINITYCHECK
-inline bool IsInfinite(float A)
+inline bool IsInfinite(float* A)
 {
   const int kInfAsInt = 0x7F800000;
+  int* comp = reinterpret_cast<int*>(A);
 
   // An infinity has an exponent of 255 (shift left 23 positions) and
   // a zero mantissa. There are two infinities - positive and negative.
-  if ((*(int*)&A & 0x7FFFFFFF) == kInfAsInt)
+  if ( (*comp & 0x7FFFFFFF) == kInfAsInt)
   { return true; }
   return false;
 }
@@ -241,14 +242,16 @@ inline bool IsNan(float A)
 #endif
 
 #ifdef SIGNCHECK
-inline int Sign(float A)
+inline int Sign(float* A)
 {
+  int* comp = reinterpret_cast<int*>(A);
+
   // The sign bit of a number is the high bit.
-  return (*(int*)&A) & 0x80000000;
+  return *comp & 0x80000000;
 }
 #endif
 
-bool AlmostEqualUlpsFinal(float A, float B, int maxUlps)
+bool AlmostEqualUlpsFinal(float* A, float* B, int maxUlps)
 {
   // There are several optional checks that you can do, depending
   // on what behavior you want from your floating point comparisons.
@@ -263,7 +266,7 @@ bool AlmostEqualUlpsFinal(float A, float B, int maxUlps)
   // infinities and you don't want them 'close' to numbers
   // near FLT_MAX.
   if (IsInfinite(A) || IsInfinite(B))
-  { return A == B; }
+  { return *A == *B; }
 #endif
 
 #ifdef  NANCHECK
@@ -286,21 +289,21 @@ bool AlmostEqualUlpsFinal(float A, float B, int maxUlps)
   // The check for A == B is because zero and negative zero have different
   // signs but are equal to each other.
   if (Sign(A) != Sign(B))
-  { return A == B; }
+  { return *A == *B; }
 #endif
 
-  int aInt = *(int*)&A;
+  int* aInt = reinterpret_cast<int*>(A);
   // Make aInt lexicographically ordered as a twos-complement int
-  if (aInt < 0)
-  { aInt = 0x80000000 - aInt; }
+  if (*aInt < 0)
+  { *aInt = 0x80000000 - *aInt; }
   // Make bInt lexicographically ordered as a twos-complement int
-  int bInt = *(int*)&B;
-  if (bInt < 0)
-  { bInt = 0x80000000 - bInt; }
+  int* bInt = reinterpret_cast<int*>(B);
+  if (*bInt < 0)
+  { *bInt = 0x80000000 - *bInt; }
 
   // Now we can compare aInt and bInt to find out how far apart A and B
   // are.
-  int intDiff = abs(aInt - bInt);
+  int intDiff = abs(*aInt - *bInt);
   if (intDiff <= maxUlps)
   { return true; }
   return false;

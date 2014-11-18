@@ -185,7 +185,7 @@ endif()
 
 if( "${HDF5_INSTALL}" STREQUAL "")
   message(FATAL_ERROR "The HDF5_INSTALL variable was not set. In order to find HDF5 you need to either\
-                      pass in the -DHDF5_INSTALL=.... or set the HDF5_INSTALL environment variable.")  
+                      pass in the -DHDF5_INSTALL=.... or set the HDF5_INSTALL environment variable.")
 endif()
 
 
@@ -210,7 +210,7 @@ if(HDF5_FOUND)
   file(APPEND ${CMP_PLUGIN_SEARCHDIR_FILE} "${HDF5_LIBRARY_DIRS};")
   include_directories(${HDF5_INCLUDE_DIRS} )
   list(APPEND CMP_LIB_SEARCH_DIRS ${HDF5_BINARY_DIR} ${HDF5_LIBRARY_DIR} )
-  
+
   message(STATUS "Found HDF5: ${HDF5_INSTALL}")
   message(STATUS "HDF5 Version: ${HDF5_VERSION_STRING}")
   if(MSVC_IDE)
@@ -302,7 +302,7 @@ if( CMAKE_BUILD_TYPE MATCHES Debug )
 ENDif( CMAKE_BUILD_TYPE MATCHES Debug )
 
 if(NOT MSVC)
-  ADD_DEFINITIONS(-Wall)
+  #ADD_DEFINITIONS(-Wall)
 endif()
 
 # On linux we need to set this because some of the libraries are Static

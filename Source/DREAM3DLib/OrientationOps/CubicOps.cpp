@@ -1364,12 +1364,12 @@ DREAM3D::Rgb CubicOps::generateIPFColor(double phi1, double phi, double phi2, do
         phi2 = phi2 * DREAM3D::Constants::k_DegToRad;
     }
 
-    QuatF qc;
-    QuatF q1;
+    QuatF qc = QuaternionMath<float>::New();
+    QuatF q1 = QuaternionMath<float>::New();
     float g[3][3];
     float p[3];
-    float refDirection[3];
-    float chi, eta;
+    float refDirection[3] = { 0.0f, 0.0f, 0.0f};
+    float chi = 0.0f, eta = 0.0f;
     float _rgb[3] = { 0.0, 0.0, 0.0 };
 
     OrientationMath::EulertoQuat(phi1, phi, phi2, q1);
