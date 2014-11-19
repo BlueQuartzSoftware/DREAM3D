@@ -375,35 +375,34 @@ void ReadImage::dataCheck()
   //check pixel type (scalar, vector, etc) for support
   QVector<size_t> componentDims(1, 0);
   itk::ImageIOBase::IOPixelType pixelType = imageIO->GetPixelType();
-  if(itk::ImageIOBase::SCALAR == pixelType)
+
+  switch(pixelType)
   {
-    componentDims[0] = 1;
+
+    case itk::ImageIOBase::SCALAR:
+      componentDims[0] = 1;
+      break;
+    case itk::ImageIOBase::RGB:
+      componentDims[0] = 3;
+      break;
+    case itk::ImageIOBase::RGBA:
+      componentDims[0] = 4;
+      break;
+    default:
+      setErrorCondition(-80001);
+      notifyErrorMessage(getHumanLabel(), "The Pixel Type of the image is not supported with DREAM3D.", getErrorCondition());
   }
-  else if(itk::ImageIOBase::RGB == pixelType)
-  {
-    componentDims[0] = 3;
-    notifyWarningMessage(getHumanLabel(), "Warning: reading of rgb images is currenlty experimental (unstable behavoir may occur)", 0);
-  }
-  else if(itk::ImageIOBase::RGBA == pixelType)
-  {
-    componentDims[0] = 4;
-    notifyWarningMessage(getHumanLabel(), "Warning: reading of rgba images is currenlty experimental (unstable behavoir may occur)", 0);
-  }/**
-  else if(itk::ImageIOBase::IOPixelType::FIXEDARRAY==pixelType)
-  {
-    componentDims[0]=imageIO->GetNumberOfComponents();
-    notifyWarningMessage(getHumanLabel(), "Warning: reading of vector images is currenlty experimental (unstable behavoir may occur)", 0);
-  }*/
-  else
+
+  // Check to make sure everything is OK with reading the image
+  if(getErrorCondition() < 0)
   {
     std::string pixelTypeName = itk::ImageIOBase::GetPixelTypeAsString(pixelType);
     QString message = QObject::tr("The pixel type of '%1' (%2) is unsupported").arg(getInputFileName()).arg(QString::fromStdString(pixelTypeName));
-    setErrorCondition(-8);
     notifyErrorMessage(getHumanLabel(), message, getErrorCondition());
     return;
   }
 
-  //get component type
+  //Now get how the actual image data is stored.
   IDataArray::Pointer data;
   itk::ImageIOBase::IOComponentType componentType = imageIO->GetComponentType();
   if(itk::ImageIOBase::CHAR == componentType)
