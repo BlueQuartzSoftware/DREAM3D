@@ -117,7 +117,7 @@ void CopyAttributeMatrix::dataCheck()
     DataContainer::Pointer dc = getDataContainerArray()->getDataContainer(dcName);
     if(NULL == dc.get())
     {
-      setErrorCondition(-11003);
+      setErrorCondition(-11007);
       QString ss = QObject::tr("The DataContainer '%1' was not found in the DataContainerArray").arg(dcName);
       notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
       return;
@@ -126,7 +126,7 @@ void CopyAttributeMatrix::dataCheck()
     AttributeMatrix::Pointer attrMat = dc->getAttributeMatrix(amName);
     if(NULL == attrMat.get())
     {
-      setErrorCondition(-11004);
+      setErrorCondition(-11008);
       QString ss = QObject::tr("The AttributeMatrix '%1' was not found in the DataContainer '%2'").arg(amName).arg(dcName);
       notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
       return;

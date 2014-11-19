@@ -58,17 +58,22 @@ static const int k_MoveDataArray = 1;
 
 enum ErrorCodes
 {
-    DC_DEST_NOT_FOUND = -11011,
-    DC_SRC_NOT_FOUND = -11012,
-    AM_SRC_NOT_FOUND = -11013,
-    TUPLES_NOT_MATCH = -11019,
     DC_SELECTED_NAME_EMPTY = -11000,
     DC_NEW_NAME_EMPTY = -11001,
     DC_SELECTED_NOT_FOUND = -11002,
     DCA_NOT_FOUND = -11003,
-    RENAME_ATTEMPT_FAILED = -11006,
     AM_NEW_NAME_EMPTY = -11004,
-    AM_SELECTED_PATH_EMPTY = -11005
+    AM_SELECTED_PATH_EMPTY = -11005,
+    RENAME_ATTEMPT_FAILED = -11006,
+    DC_NOT_FOUND = -11007,
+    AM_NOT_FOUND = -11008,
+    AA_NEW_NAME_EMPTY = -11009,
+    AA_SELECTED_PATH_EMPTY = -11010,
+    DC_DEST_NOT_FOUND = -11011,
+    DC_SRC_NOT_FOUND = -11012,
+    AM_SRC_NOT_FOUND = -11013,
+    AA_NOT_FOUND = -11014,
+    TUPLES_NOT_MATCH = -11019
 };
 
 
@@ -227,8 +232,8 @@ void CopyDataTest()
     
     /***** Copy Attribute Matrix *****/
     CopyAttributeMatrix::Pointer copyAttrMatPtr = CopyAttributeMatrix::New();
-    DataContainerArray::Pointer dca2 = createDataContainerArray();
-    copyAttrMatPtr->setDataContainerArray(dca2);
+    dca = createDataContainerArray();
+    copyAttrMatPtr->setDataContainerArray(dca);
     
     // "New Attribute Matrix Name is Empty" Test
     copyAttrMatPtr->setSelectedAttributeMatrixPath(DataArrayPath("DataContainer1", "AttributeMatrix1", ""));
@@ -242,46 +247,64 @@ void CopyDataTest()
     copyAttrMatPtr->execute();
     DREAM3D_REQUIRE_EQUAL(copyAttrMatPtr->getErrorCondition(), AM_SELECTED_PATH_EMPTY)
 
+    // "Data Container Not Found" Test
+    copyAttrMatPtr->setSelectedAttributeMatrixPath(DataArrayPath("ThisShouldNotBeFound", "AttributeMatrix1", ""));
+    copyAttrMatPtr->setNewAttributeMatrix("AttributeMatrix10");
+    copyAttrMatPtr->execute();
+    DREAM3D_REQUIRE_EQUAL(copyAttrMatPtr->getErrorCondition(), DC_NOT_FOUND)
     
-//    if(m_NewAttributeMatrix.isEmpty() == true)
-//    {
-//        setErrorCondition(-11004);
-//        QString ss = QObject::tr("The New Attribute Array name can not be empty. Please set a value.");
-//        notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-//    }
-//    
-//    if (m_SelectedAttributeMatrixPath.isEmpty() == true)
-//    {
-//        setErrorCondition(-11005);
-//        QString ss = QObject::tr("The complete path to the Attribute Array can not be empty. Please set an appropriate path.");
-//        notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-//    }
-//    else
-//    {
-//        QString dcName = m_SelectedAttributeMatrixPath.getDataContainerName();
-//        QString amName = m_SelectedAttributeMatrixPath.getAttributeMatrixName();
-//        
-//        DataContainer::Pointer dc = getDataContainerArray()->getDataContainer(dcName);
-//        if(NULL == dc.get())
-//        {
-//            setErrorCondition(-11003);
-//            QString ss = QObject::tr("The DataContainer '%1' was not found in the DataContainerArray").arg(dcName);
-//            notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-//            return;
-//        }
-//        
-//        AttributeMatrix::Pointer attrMat = dc->getAttributeMatrix(amName);
-//        if(NULL == attrMat.get())
-//        {
-//            setErrorCondition(-11004);
-//            QString ss = QObject::tr("The AttributeMatrix '%1' was not found in the DataContainer '%2'").arg(amName).arg(dcName);
-//            notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-//            return;
-//        }
-//        
-//        AttributeMatrix::Pointer p = attrMat->deepCopy();
-//        dc->addAttributeMatrix(getNewAttributeMatrix(), p );
-//    }
+    // "Attribute Matrix Not Found" Test
+    copyAttrMatPtr->setSelectedAttributeMatrixPath(DataArrayPath("DataContainer1", "ThisShouldNotBeFound", ""));
+    copyAttrMatPtr->setNewAttributeMatrix("AttributeMatrix10");
+    copyAttrMatPtr->execute();
+    DREAM3D_REQUIRE_EQUAL(copyAttrMatPtr->getErrorCondition(), AM_NOT_FOUND)
+    
+    // "Copy Attribute Matrix" Verification Test
+    copyAttrMatPtr->setSelectedAttributeMatrixPath(DataArrayPath("DataContainer1", "AttributeMatrix1", ""));
+    copyAttrMatPtr->setNewAttributeMatrix("AttributeMatrix10");
+    copyAttrMatPtr->execute();
+    DREAM3D_REQUIRE_EQUAL(copyAttrMatPtr->getErrorCondition(), 0)
+    
+    /***** Copy Attribute Array *****/
+    CopyAttributeArray::Pointer copyAttrArrayPtr = CopyAttributeArray::New();
+    dca = createDataContainerArray();
+    copyAttrArrayPtr->setDataContainerArray(dca);
+    
+    // "New Data Array Name Empty" Test
+    copyAttrArrayPtr->setSelectedArrayPath(DataArrayPath("DataContainer1", "AttributeMatrix1", "DataArray1"));
+    copyAttrArrayPtr->setNewArrayName("");
+    copyAttrArrayPtr->execute();
+    DREAM3D_REQUIRE_EQUAL(copyAttrArrayPtr->getErrorCondition(), AA_NEW_NAME_EMPTY)
+    
+    // "Data Array Path Empty" Test
+    copyAttrArrayPtr->setSelectedArrayPath(DataArrayPath("", "", ""));
+    copyAttrArrayPtr->setNewArrayName("NewDataArrayName");
+    copyAttrArrayPtr->execute();
+    DREAM3D_REQUIRE_EQUAL(copyAttrArrayPtr->getErrorCondition(), AA_SELECTED_PATH_EMPTY)
+    
+    // "Data Container Not Found" Test
+    copyAttrArrayPtr->setSelectedArrayPath(DataArrayPath("ThisShouldNotExist", "AttributeMatrix1", "DataArray1"));
+    copyAttrArrayPtr->setNewArrayName("NewDataArrayName");
+    copyAttrArrayPtr->execute();
+    DREAM3D_REQUIRE_EQUAL(copyAttrArrayPtr->getErrorCondition(), DC_NOT_FOUND)
+    
+    // "Attribute Matrix Not Found" Test
+    copyAttrArrayPtr->setSelectedArrayPath(DataArrayPath("DataContainer1", "ThisShouldNotExist", "DataArray1"));
+    copyAttrArrayPtr->setNewArrayName("NewDataArrayName");
+    copyAttrArrayPtr->execute();
+    DREAM3D_REQUIRE_EQUAL(copyAttrArrayPtr->getErrorCondition(), AM_NOT_FOUND)
+    
+    // "Data Array Not Found" Test
+    copyAttrArrayPtr->setSelectedArrayPath(DataArrayPath("DataContainer1", "AttributeMatrix1", "ThisShouldNotExist"));
+    copyAttrArrayPtr->setNewArrayName("NewDataArrayName");
+    copyAttrArrayPtr->execute();
+    DREAM3D_REQUIRE_EQUAL(copyAttrArrayPtr->getErrorCondition(), AA_NOT_FOUND)
+    
+    // "Copy Data Array" Verification Test
+    copyAttrArrayPtr->setSelectedArrayPath(DataArrayPath("DataContainer1", "AttributeMatrix1", "DataArray1"));
+    copyAttrArrayPtr->setNewArrayName("NewDataArrayName");
+    copyAttrArrayPtr->execute();
+    DREAM3D_REQUIRE_EQUAL(copyAttrArrayPtr->getErrorCondition(), 0)
 }
 
 // -----------------------------------------------------------------------------
@@ -360,7 +383,7 @@ int main(int argc, char** argv)
     DREAM3D_REGISTER_TEST( MoveDataTest() )
     DREAM3D_REGISTER_TEST( CopyDataTest() )
     //DREAM3D_REGISTER_TEST( RenameDataTest() )
-    DREAM3D_REGISTER_TEST( RemoveDataTest() )
+    //DREAM3D_REGISTER_TEST( RemoveDataTest() )
     
     PRINT_TEST_SUMMARY();
     
