@@ -80,6 +80,7 @@ class CellArray
 
     DREAM3D_INSTANCE_PROPERTY(Int32DynamicListArray::Pointer, CellsContainingVert)
     DREAM3D_INSTANCE_PROPERTY(Int32DynamicListArray::Pointer, CellNeighbors)
+    DREAM3D_INSTANCE_PROPERTY(FloatArrayType::Pointer, CellCentroids)
     DREAM3D_INSTANCE_PROPERTY(QString, CellType)
 
     // -----------------------------------------------------------------------------
@@ -304,6 +305,48 @@ class CellArray
     // -----------------------------------------------------------------------------
     //
     // -----------------------------------------------------------------------------
+    void deleteCellCentroids()
+    {
+      m_CellCentroids = FloatArrayType::NullPointer();
+    }
+
+    // -----------------------------------------------------------------------------
+    //
+    // -----------------------------------------------------------------------------
+    void findCellCentroids()
+    {
+      size_t nCells = m_Array->getNumberOfTuples();
+
+      // CellArray currently only handles polytopes with 4 vertices...
+      float numVertsPerCell = 4.0;
+
+      // VertexArray currently only handles 3 dimensions (Euclidean space)...
+      size_t nDims = 3;
+      QVector<size_t> cDims(1, nDims);
+
+      m_CellCentroids = FloatArrayType::CreateArray(nCells, cDims, "CellCentroids", true);
+      float* cellCentroids = m_CellCentroids->getPointer(0);
+      VertexArray::Vert_t* vertex = m_Verts->getPointer(0);
+
+      for (size_t i=0;i<nDims;i++)
+      {
+        for (size_t j=0;j<nCells;j++)
+        {
+          Cell_t& Cell = *(m_Array->getPointer(j));
+          float vertPos = 0.0;
+          for (size_t k=0;k<numVertsPerCell;k++)
+          {
+            vertPos += vertex[Cell.verts[k]].pos[i];
+          }
+          vertPos /= numVertsPerCell;
+          cellCentroids[nDims*j+i] = vertPos;
+        }
+      }
+    }
+
+    // -----------------------------------------------------------------------------
+    //
+    // -----------------------------------------------------------------------------
     template<typename DataType>
     void averageVertexArrayValues(typename DataArray<DataType>::Pointer inVertexArray, DataArray<float>::Pointer outCellArray)
     {
@@ -317,24 +360,24 @@ class CellArray
       DataType* vertArray = inVertexArray->getPointer(0);
       float* cellArray = outCellArray->getPointer(0);
 
-      size_t numCells = outCellArray->getNumberOfTuples();
-      size_t numDims = inVertexArray->getNumberOfComponents();
+      size_t nCells = outCellArray->getNumberOfTuples();
+      size_t nDims = inVertexArray->getNumberOfComponents();
 
       // CellArray currently only handles polytopes with 4 vertices...
       float numVertsPerCell = 4.0;
 
-      for (size_t i=0;i<numDims;i++)
+      for (size_t i=0;i<nDims;i++)
       {
-        for (size_t j=0;j<numCells;j++)
+        for (size_t j=0;j<nCells;j++)
         {
           Cell_t& Cell = *(m_Array->getPointer(j));
           float vertValue = 0.0;
           for (size_t k=0;k<numVertsPerCell;k++)
           {
-            vertValue += vertArray[numDims*Cell.verts[k]+i];
+            vertValue += vertArray[nDims*Cell.verts[k]+i];
           }
           vertValue /= numVertsPerCell;
-          cellArray[numDims*j+i] = vertValue;
+          cellArray[nDims*j+i] = vertValue;
         }
       }
     }
