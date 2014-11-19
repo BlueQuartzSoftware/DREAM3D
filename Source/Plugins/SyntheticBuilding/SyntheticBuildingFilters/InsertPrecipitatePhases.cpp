@@ -653,18 +653,38 @@ void  InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer featur
     }
   }
 
+
+
+ //initializing the target RDF vector
   for (int64_t i = 1; i < numensembles; ++i)
   {
     if(m_PhaseTypes[i] == DREAM3D::PhaseType::PrecipitatePhase)
     {
       PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsDataArray[i].get());
-      pp->getRadialDistFunction();
-      m_NumFeatures[i] = 0;
-      precipitatephases.push_back(i);
-      precipitatephasefractions.push_back(pp->getPhaseFraction());
-      totalprecipitatefractions = totalprecipitatefractions + pp->getPhaseFraction();
+      VectorOfFloatArray rdfTarget = pp->getRadialDistFunction();
+      VectorOfFloatArray maxmin = pp->getMaxMinRDF();
+
+      int numRDFbins = rdfTarget[0]->getNumberOfTuples();
+      std::vector<float> rdfTargetDist;
+      rdfTargetDist.resize(numRDFbins);
+
+      for (size_t j = 0; j < numRDFbins; j++)
+      {
+          rdfTargetDist[j] = rdfTarget[0]->getValue(j);
+      }
+
+      float rdfMax = maxmin[0]->getValue(0);
+      float rdfMin = maxmin[0]->getValue(1);
+
     }
   }
+
+
+  //get current RDF vector based on current synthetic structure
+
+
+
+
 
 
   //  for each feature : select centroid, determine voxels in feature, monitor filling error and decide of the 10 placements which
@@ -833,32 +853,37 @@ void  InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer featur
       oldxc = m_Centroids[3 * randomfeature];
       oldyc = m_Centroids[3 * randomfeature + 1];
       oldzc = m_Centroids[3 * randomfeature + 2];
-      oldfillingerror = fillingerror;
-      fillingerror = check_fillingerror(-1000, static_cast<int>(randomfeature), featureOwnersPtr);
-      move_precipitate(randomfeature, xc, yc, zc);
-      fillingerror = check_fillingerror(static_cast<int>(randomfeature), -1000, featureOwnersPtr);
-//      currentclusteringerror = check_clusteringerror(-1000, randomfeature);
+//      oldfillingerror = fillingerror;
+//      fillingerror = check_fillingerror(-1000, static_cast<int>(randomfeature), featureOwnersPtr);
 //      move_precipitate(randomfeature, xc, yc, zc);
-//      currentclusteringerror = check_clusteringerror(randomfeature, -1000);
-//      if(currentclusteringerror >= oldclusteringerror)
-      if(fillingerror >= oldfillingerror)
+//      fillingerror = check_fillingerror(static_cast<int>(randomfeature), -1000, featureOwnersPtr);
+
+      currentclusteringerror = check_clusteringerror(-1000, randomfeature);
+      move_precipitate(randomfeature, xc, yc, zc);
+      currentclusteringerror = check_clusteringerror(randomfeature, -1000);
+      if(currentclusteringerror >= oldclusteringerror)
+
+//      if(fillingerror >= oldfillingerror)
       {
-        //oldclusteringerror = currentclusteringerror;
-        oldfillingerror = fillingerror;
+        oldclusteringerror = currentclusteringerror;
+//        oldfillingerror = fillingerror;
         acceptedmoves++;
       }
       else
       {
-        fillingerror = check_fillingerror(-1000, static_cast<int>(randomfeature), featureOwnersPtr);
-        move_precipitate(randomfeature, oldxc, oldyc, oldzc);
-        fillingerror = check_fillingerror(static_cast<int>(randomfeature), -1000, featureOwnersPtr);
-//        currentclusteringerror = check_clusteringerror(-1000, randomfeature);
+//        fillingerror = check_fillingerror(-1000, static_cast<int>(randomfeature), featureOwnersPtr);
 //        move_precipitate(randomfeature, oldxc, oldyc, oldzc);
-//        currentclusteringerror = check_clusteringerror(randomfeature, -1000);
-        //  oldclusteringerror = currentclusteringerror;
-        oldfillingerror = fillingerror;
+//        fillingerror = check_fillingerror(static_cast<int>(randomfeature), -1000, featureOwnersPtr);
+          //        oldfillingerror = fillingerror;
+        currentclusteringerror = check_clusteringerror(-1000, randomfeature);
+        move_precipitate(randomfeature, oldxc, oldyc, oldzc);
+        currentclusteringerror = check_clusteringerror(randomfeature, -1000);
+          oldclusteringerror = currentclusteringerror;
+
       }
     }
+
+
     // NUDGE - this option moves one feature to a spot close to its current centroid
     if(option == 1)
     {
@@ -875,30 +900,31 @@ void  InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer featur
       xc = static_cast<float>(oldxc + ((2.0f * (rg.genrand_res53() - 0.5f)) * (2.0f * m_PackingRes[0])));
       yc = static_cast<float>(oldyc + ((2.0f * (rg.genrand_res53() - 0.5f)) * (2.0f * m_PackingRes[1])));
       zc = static_cast<float>(oldzc + ((2.0f * (rg.genrand_res53() - 0.5f)) * (2.0f * m_PackingRes[2])));
-      oldfillingerror = fillingerror;
-      fillingerror = check_fillingerror(-1000, static_cast<int>(randomfeature), featureOwnersPtr);
-      move_precipitate(randomfeature, xc, yc, zc);
-      fillingerror = check_fillingerror(static_cast<int>(randomfeature), -1000, featureOwnersPtr);
-//      currentclusteringerror = check_clusteringerror(-1000, randomfeature);
+//      oldfillingerror = fillingerror;
+//      fillingerror = check_fillingerror(-1000, static_cast<int>(randomfeature), featureOwnersPtr);
 //      move_precipitate(randomfeature, xc, yc, zc);
-//      currentclusteringerror = check_clusteringerror(randomfeature, -1000);
-//      if(currentclusteringerror >= oldclusteringerror)
-      if(fillingerror >= oldfillingerror)
+//      fillingerror = check_fillingerror(static_cast<int>(randomfeature), -1000, featureOwnersPtr);
+      currentclusteringerror = check_clusteringerror(-1000, randomfeature);
+      move_precipitate(randomfeature, xc, yc, zc);
+      currentclusteringerror = check_clusteringerror(randomfeature, -1000);
+      if(currentclusteringerror >= oldclusteringerror)
+//      if(fillingerror >= oldfillingerror)
       {
-        //oldclusteringerror = currentclusteringerror;
-        oldfillingerror = fillingerror;
+        oldclusteringerror = currentclusteringerror;
+//        oldfillingerror = fillingerror;
         acceptedmoves++;
       }
       else
       {
-        fillingerror = check_fillingerror(-1000, static_cast<int>(randomfeature), featureOwnersPtr);
-        move_precipitate(randomfeature, oldxc, oldyc, oldzc);
-        fillingerror = check_fillingerror(static_cast<int>(randomfeature), -1000, featureOwnersPtr);
-//        currentclusteringerror = check_clusteringerror(-1000, randomfeature);
+//        fillingerror = check_fillingerror(-1000, static_cast<int>(randomfeature), featureOwnersPtr);
 //        move_precipitate(randomfeature, oldxc, oldyc, oldzc);
-//        currentclusteringerror = check_clusteringerror(randomfeature, -1000);
-//  oldclusteringerror = currentclusteringerror;
-        oldfillingerror = fillingerror;
+//        fillingerror = check_fillingerror(static_cast<int>(randomfeature), -1000, featureOwnersPtr);
+          //        oldfillingerror = fillingerror;
+        currentclusteringerror = check_clusteringerror(-1000, randomfeature);
+        move_precipitate(randomfeature, oldxc, oldyc, oldzc);
+        currentclusteringerror = check_clusteringerror(randomfeature, -1000);
+  oldclusteringerror = currentclusteringerror;
+
       }
     }
   }
@@ -1073,6 +1099,7 @@ void InsertPrecipitatePhases::determine_clustering(size_t gnum, int add)
   y = m_Centroids[3 * gnum + 1];
   z = m_Centroids[3 * gnum + 2];
   size_t numFeatures = m_FeaturePhasesPtr.lock()->getNumberOfTuples();
+
   for (size_t n = firstPrecipitateFeature; n < numFeatures; n++)
   {
     if (m_FeaturePhases[n] == phase && n != gnum)
@@ -1097,6 +1124,27 @@ void InsertPrecipitatePhases::determine_clustering(size_t gnum, int add)
     }
   }
 }
+
+//void InsertPrecipitatePhases::determine_current_RDF()
+//{
+//    float x, y, z;
+//    float xn, yn, zn;
+//    float r;
+
+//    int32_t bin;
+//    int32_t ensemble;
+
+//    float min = 1000000.0f;
+//    float max = 0.0f;
+
+//    float value;
+
+
+
+
+
+
+//}
 
 // -----------------------------------------------------------------------------
 //
