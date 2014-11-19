@@ -354,14 +354,92 @@ void RenameDataTest()
     /***** Rename Attribute Matrix *****/
     RenameAttributeMatrix::Pointer renameAttrMatPtr = RenameAttributeMatrix::New();
     
+    // "DataContainerArray Is Null" Test
     renameAttrMatPtr->setDataContainerArray(dca_not_found);
-    //renameAttrMatPtr->setSelectedAttributeMatrixPath(<#DataArrayPath value#>);
-    //renameAttrMatPtr->setNewAttributeMatrix(<#QString value#>);
+    renameAttrMatPtr->setSelectedAttributeMatrixPath(DataArrayPath("DataContainer1", "AttributeMatrix1", "DataArray1"));
+    renameAttrMatPtr->setNewAttributeMatrix("NewAttributeMatrixName");
     renameAttrMatPtr->execute();
     DREAM3D_REQUIRE_EQUAL(renameAttrMatPtr->getErrorCondition(), DCA_NOT_FOUND)
     
-    DataContainerArray::Pointer dca2 = createDataContainerArray();
-    renameAttrMatPtr->setDataContainerArray(dca2);
+    dca = createDataContainerArray();
+    renameAttrMatPtr->setDataContainerArray(dca);
+    
+    // "New Attribute Matrix Name is Empty" Test
+    renameAttrMatPtr->setSelectedAttributeMatrixPath(DataArrayPath("DataContainer1", "AttributeMatrix1", ""));
+    renameAttrMatPtr->setNewAttributeMatrix("");
+    renameAttrMatPtr->execute();
+    DREAM3D_REQUIRE_EQUAL(renameAttrMatPtr->getErrorCondition(), AM_NEW_NAME_EMPTY)
+    
+    // "Selected Attribute Matrix Path is Empty" Test
+    renameAttrMatPtr->setSelectedAttributeMatrixPath(DataArrayPath("", "", ""));
+    renameAttrMatPtr->setNewAttributeMatrix("Foo");
+    renameAttrMatPtr->execute();
+    DREAM3D_REQUIRE_EQUAL(renameAttrMatPtr->getErrorCondition(), AM_SELECTED_PATH_EMPTY)
+    
+    // "Data Container Not Found" Test
+    renameAttrMatPtr->setSelectedAttributeMatrixPath(DataArrayPath("ThisShouldNotBeFound", "AttributeMatrix1", ""));
+    renameAttrMatPtr->setNewAttributeMatrix("AttributeMatrix10");
+    renameAttrMatPtr->execute();
+    DREAM3D_REQUIRE_EQUAL(renameAttrMatPtr->getErrorCondition(), DC_NOT_FOUND)
+    
+    // "Attribute Matrix Not Found" Test
+    renameAttrMatPtr->setSelectedAttributeMatrixPath(DataArrayPath("DataContainer1", "ThisShouldNotBeFound", ""));
+    renameAttrMatPtr->setNewAttributeMatrix("AttributeMatrix10");
+    renameAttrMatPtr->execute();
+    DREAM3D_REQUIRE_EQUAL(renameAttrMatPtr->getErrorCondition(), AM_NOT_FOUND)
+    
+    // "Rename Attribute Matrix" Verification Test
+    renameAttrMatPtr->setSelectedAttributeMatrixPath(DataArrayPath("DataContainer1", "AttributeMatrix1", ""));
+    renameAttrMatPtr->setNewAttributeMatrix("RenamedAttributeMatrix");
+    renameAttrMatPtr->execute();
+    DREAM3D_REQUIRE_EQUAL(renameAttrMatPtr->getErrorCondition(), 0)
+    
+    /***** Copy Attribute Array *****/
+    RenameAttributeArray::Pointer renameAttrArrayPtr = RenameAttributeArray::New();
+    dca = createDataContainerArray();
+    renameAttrArrayPtr->setDataContainerArray(dca);
+    
+    // "New Data Array Name Empty" Test
+    renameAttrArrayPtr->setSelectedArrayPath(DataArrayPath("DataContainer1", "AttributeMatrix1", "DataArray1"));
+    renameAttrArrayPtr->setNewArrayName("");
+    renameAttrArrayPtr->execute();
+    DREAM3D_REQUIRE_EQUAL(renameAttrArrayPtr->getErrorCondition(), AA_NEW_NAME_EMPTY)
+    
+    // "Data Array Path Empty" Test
+    renameAttrArrayPtr->setSelectedArrayPath(DataArrayPath("", "", ""));
+    renameAttrArrayPtr->setNewArrayName("NewDataArrayName");
+    renameAttrArrayPtr->execute();
+    DREAM3D_REQUIRE_EQUAL(renameAttrArrayPtr->getErrorCondition(), AA_SELECTED_PATH_EMPTY)
+    
+    // "Data Container Not Found" Test
+    renameAttrArrayPtr->setSelectedArrayPath(DataArrayPath("ThisShouldNotExist", "AttributeMatrix1", "DataArray1"));
+    renameAttrArrayPtr->setNewArrayName("NewDataArrayName");
+    renameAttrArrayPtr->execute();
+    DREAM3D_REQUIRE_EQUAL(renameAttrArrayPtr->getErrorCondition(), DC_NOT_FOUND)
+    
+    // "Attribute Matrix Not Found" Test
+    renameAttrArrayPtr->setSelectedArrayPath(DataArrayPath("DataContainer1", "ThisShouldNotExist", "DataArray1"));
+    renameAttrArrayPtr->setNewArrayName("NewDataArrayName");
+    renameAttrArrayPtr->execute();
+    DREAM3D_REQUIRE_EQUAL(renameAttrArrayPtr->getErrorCondition(), AM_NOT_FOUND)
+    
+    // "Data Array Not Found" Test
+    renameAttrArrayPtr->setSelectedArrayPath(DataArrayPath("DataContainer1", "AttributeMatrix1", "ThisShouldNotExist"));
+    renameAttrArrayPtr->setNewArrayName("NewDataArrayName");
+    renameAttrArrayPtr->execute();
+    DREAM3D_REQUIRE_EQUAL(renameAttrArrayPtr->getErrorCondition(), AA_NOT_FOUND)
+    
+    // "Rename Attempt Failed" Test
+    renameAttrArrayPtr->setNewArrayName("DataArray3");
+    renameAttrArrayPtr->setSelectedArrayPath(DataArrayPath("DataContainer1", "AttributeMatrix2", "DataArray2"));
+    renameAttrArrayPtr->execute();
+    DREAM3D_REQUIRE_EQUAL(renameAttrArrayPtr->getErrorCondition(), RENAME_ATTEMPT_FAILED)
+    
+    // "Rename Data Array" Verification Test
+    renameAttrArrayPtr->setSelectedArrayPath(DataArrayPath("DataContainer1", "AttributeMatrix1", "DataArray1"));
+    renameAttrArrayPtr->setNewArrayName("NewDataArrayName");
+    renameAttrArrayPtr->execute();
+    DREAM3D_REQUIRE_EQUAL(renameAttrArrayPtr->getErrorCondition(), 0)
     
 }
 
@@ -382,7 +460,7 @@ int main(int argc, char** argv)
     
     DREAM3D_REGISTER_TEST( MoveDataTest() )
     DREAM3D_REGISTER_TEST( CopyDataTest() )
-    //DREAM3D_REGISTER_TEST( RenameDataTest() )
+    DREAM3D_REGISTER_TEST( RenameDataTest() )
     //DREAM3D_REGISTER_TEST( RemoveDataTest() )
     
     PRINT_TEST_SUMMARY();

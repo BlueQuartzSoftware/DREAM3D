@@ -99,16 +99,18 @@ void RenameAttributeArray::dataCheck()
 
   if(m_NewArrayName.isEmpty() == true)
   {
-    setErrorCondition(-11000);
+    setErrorCondition(-11009);
     QString ss = QObject::tr("The New Attribute Array name can not be empty. Please set a value.");
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+      return;
   }
 
   if (m_SelectedArrayPath.isEmpty() == true)
   {
-    setErrorCondition(-11001);
+    setErrorCondition(-11010);
     QString ss = QObject::tr("The complete path to the Attribute Array can not be empty. Please set an appropriate path.");
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+      return;
   }
   else
   {
@@ -119,7 +121,7 @@ void RenameAttributeArray::dataCheck()
     DataContainer::Pointer dc = getDataContainerArray()->getDataContainer(dcName);
     if(NULL == dc.get())
     {
-      setErrorCondition(-11003);
+      setErrorCondition(-11007);
       QString ss = QObject::tr("The DataContainer '%1' was not found in the DataContainerArray").arg(dcName);
       notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
       return;
@@ -128,7 +130,7 @@ void RenameAttributeArray::dataCheck()
     AttributeMatrix::Pointer attrMat = dc->getAttributeMatrix(amName);
     if(NULL == attrMat.get())
     {
-      setErrorCondition(-11004);
+      setErrorCondition(-11008);
       QString ss = QObject::tr("The AttributeMatrix '%1' was not found in the DataContainer '%2'").arg(amName).arg(dcName);
       notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
       return;
@@ -138,7 +140,7 @@ void RenameAttributeArray::dataCheck()
     IDataArray::Pointer dataArray = attrMat->getAttributeArray(daName);
     if(NULL == dataArray.get() )
     {
-      setErrorCondition(-11005);
+      setErrorCondition(-11014);
       QString ss = QObject::tr("A DataArray with the name '%1' was not found in the AttributeMatrix").arg(daName);
       notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
       return;

@@ -208,17 +208,20 @@ IDataArray::Pointer AttributeMatrix::removeAttributeArray(const QString& name)
 // -----------------------------------------------------------------------------
 bool AttributeMatrix::renameAttributeArray(const QString& oldname, const QString& newname)
 {
-  QMap<QString, IDataArray::Pointer>::iterator it;
-  it =  m_AttributeArrays.find(oldname);
-  if ( it == m_AttributeArrays.end() )
-  {
+  QMap<QString, IDataArray::Pointer>::iterator itOld;
+    QMap<QString, IDataArray::Pointer>::iterator itNew;
+
+    itNew = m_AttributeArrays.find(newname);
+    if (itNew == m_AttributeArrays.end())
+    {
+        itOld =  m_AttributeArrays.find(oldname);
+        IDataArray::Pointer p = itOld.value();
+        p->setName(newname);
+        removeAttributeArray(oldname);
+        addAttributeArray(newname, p);
+        return true;
+    }
     return false;
-  }
-  IDataArray::Pointer p = it.value();
-  p->setName(newname);
-  removeAttributeArray(oldname);
-  addAttributeArray(newname, p);
-  return true;
 }
 
 // -----------------------------------------------------------------------------
