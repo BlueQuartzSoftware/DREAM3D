@@ -94,7 +94,8 @@ DataArrayPath::DataArrayPath(const QString& dcName, const QString& amName, const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-DataArrayPath::DataArrayPath(const QString& path)
+DataArrayPath::DataArrayPath(const QString& path) :
+d_ptr(new DataArrayPathPrivate(this))
 {
   Q_D(DataArrayPath);
 
@@ -108,7 +109,8 @@ DataArrayPath::DataArrayPath(const QString& path)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-DataArrayPath::DataArrayPath(const DataArrayPath& rhs)
+DataArrayPath::DataArrayPath(const DataArrayPath& rhs) :
+d_ptr(new DataArrayPathPrivate(this))
 {
   Q_D(DataArrayPath);
   d_ptr->m_DataContainerName = rhs.getDataContainerName();

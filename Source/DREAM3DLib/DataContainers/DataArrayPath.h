@@ -50,7 +50,8 @@
 class DataArrayPathPrivate;
 
 /**
- * @brief The DataArrayPath class
+ * @brief The DataArrayPath class holds a complete or partial path to a data array starting at the DataContainer
+ * level. The class is implemented using the PIMPL design pattern.
  */
 class DREAM3DLib_EXPORT DataArrayPath : public QObject
 {
