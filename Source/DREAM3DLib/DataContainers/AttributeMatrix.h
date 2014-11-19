@@ -63,6 +63,12 @@
 #include "DREAM3DLib/DataContainers/DataContainerProxy.h"
 #include "DREAM3DLib/DataArrays/DataArray.hpp"
 
+enum RenameErrorCodes
+{
+    OLD_DOES_NOT_EXIST,
+    SUCCESS,
+    NEW_EXISTS
+};
 
 /**
  * @class AttributeMatrix AttributeMatrix DREAM3DLib/DataContainers/AttributeMatrix.h
@@ -423,7 +429,7 @@ class DREAM3DLib_EXPORT AttributeMatrix : public Observable
     * @brief Renames a cell data array from the Data Container
     * @param name The name of the array
     */
-    virtual bool renameAttributeArray(const QString& oldname, const QString& newname);
+    virtual RenameErrorCodes renameAttributeArray(const QString& oldname, const QString& newname, bool overwrite);
 
     /**
     * @brief Resizes an array from the Attribute Matrix

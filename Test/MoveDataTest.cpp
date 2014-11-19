@@ -73,6 +73,8 @@ enum ErrorCodes
     DC_SRC_NOT_FOUND = -11012,
     AM_SRC_NOT_FOUND = -11013,
     AA_NOT_FOUND = -11014,
+    AA_OLD_NAME_DOES_NOT_EXIST = -11016,
+    AA_NEW_NAME_EXISTS = -11017,
     TUPLES_NOT_MATCH = -11019
 };
 
@@ -423,17 +425,17 @@ void RenameDataTest()
     renameAttrArrayPtr->execute();
     DREAM3D_REQUIRE_EQUAL(renameAttrArrayPtr->getErrorCondition(), AM_NOT_FOUND)
     
-    // "Data Array Not Found" Test
-    renameAttrArrayPtr->setSelectedArrayPath(DataArrayPath("DataContainer1", "AttributeMatrix1", "ThisShouldNotExist"));
-    renameAttrArrayPtr->setNewArrayName("NewDataArrayName");
-    renameAttrArrayPtr->execute();
-    DREAM3D_REQUIRE_EQUAL(renameAttrArrayPtr->getErrorCondition(), AA_NOT_FOUND)
-    
-    // "Rename Attempt Failed" Test
+    // "New Array Already Exists" Test
     renameAttrArrayPtr->setNewArrayName("DataArray3");
     renameAttrArrayPtr->setSelectedArrayPath(DataArrayPath("DataContainer1", "AttributeMatrix2", "DataArray2"));
     renameAttrArrayPtr->execute();
-    DREAM3D_REQUIRE_EQUAL(renameAttrArrayPtr->getErrorCondition(), RENAME_ATTEMPT_FAILED)
+    DREAM3D_REQUIRE_EQUAL(renameAttrArrayPtr->getErrorCondition(), AA_NEW_NAME_EXISTS)
+    
+    // "Old Name Does Not Exist" Test
+    renameAttrArrayPtr->setNewArrayName("DataArray5");
+    renameAttrArrayPtr->setSelectedArrayPath(DataArrayPath("DataContainer1", "AttributeMatrix2", "DataArray4"));
+    renameAttrArrayPtr->execute();
+    DREAM3D_REQUIRE_EQUAL(renameAttrArrayPtr->getErrorCondition(), AA_OLD_NAME_DOES_NOT_EXIST)
     
     // "Rename Data Array" Verification Test
     renameAttrArrayPtr->setSelectedArrayPath(DataArrayPath("DataContainer1", "AttributeMatrix1", "DataArray1"));
@@ -461,7 +463,7 @@ int main(int argc, char** argv)
     DREAM3D_REGISTER_TEST( MoveDataTest() )
     DREAM3D_REGISTER_TEST( CopyDataTest() )
     DREAM3D_REGISTER_TEST( RenameDataTest() )
-    //DREAM3D_REGISTER_TEST( RemoveDataTest() )
+    DREAM3D_REGISTER_TEST( RemoveDataTest() )
     
     PRINT_TEST_SUMMARY();
     

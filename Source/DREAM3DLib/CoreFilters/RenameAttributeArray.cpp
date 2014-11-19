@@ -41,11 +41,11 @@
 //
 // -----------------------------------------------------------------------------
 RenameAttributeArray::RenameAttributeArray() :
-  AbstractFilter(),
-  m_SelectedArrayPath("", "", ""),
-  m_NewArrayName("")
+AbstractFilter(),
+m_SelectedArrayPath("", "", ""),
+m_NewArrayName("")
 {
-  setupFilterParameters();
+    setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------
@@ -60,11 +60,11 @@ RenameAttributeArray::~RenameAttributeArray()
 // -----------------------------------------------------------------------------
 void RenameAttributeArray::setupFilterParameters()
 {
-  FilterParameterVector parameters;
-  parameters.push_back(FilterParameter::New("Array to Rename", "SelectedArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getSelectedArrayPath(), false));
-  parameters.push_back(FilterParameter::New("New Array Name", "NewArrayName", FilterParameterWidgetType::StringWidget, getNewArrayName(), false));
-
-  setFilterParameters(parameters);
+    FilterParameterVector parameters;
+    parameters.push_back(FilterParameter::New("Array to Rename", "SelectedArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getSelectedArrayPath(), false));
+    parameters.push_back(FilterParameter::New("New Array Name", "NewArrayName", FilterParameterWidgetType::StringWidget, getNewArrayName(), false));
+    
+    setFilterParameters(parameters);
 }
 
 // -----------------------------------------------------------------------------
@@ -72,10 +72,10 @@ void RenameAttributeArray::setupFilterParameters()
 // -----------------------------------------------------------------------------
 void RenameAttributeArray::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
-  reader->openFilterGroup(this, index);
-  setSelectedArrayPath( reader->readDataArrayPath("SelectedArrayPath", getSelectedArrayPath()) );
-  setNewArrayName( reader->readString( "NewArrayName", getNewArrayName() ) );
-  reader->closeFilterGroup();
+    reader->openFilterGroup(this, index);
+    setSelectedArrayPath( reader->readDataArrayPath("SelectedArrayPath", getSelectedArrayPath()) );
+    setNewArrayName( reader->readString( "NewArrayName", getNewArrayName() ) );
+    reader->closeFilterGroup();
 }
 
 // -----------------------------------------------------------------------------
@@ -83,11 +83,11 @@ void RenameAttributeArray::readFilterParameters(AbstractFilterParametersReader* 
 // -----------------------------------------------------------------------------
 int RenameAttributeArray::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
-  writer->openFilterGroup(this, index);
-  DREAM3D_FILTER_WRITE_PARAMETER(SelectedArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(NewArrayName)
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
+    writer->openFilterGroup(this, index);
+    DREAM3D_FILTER_WRITE_PARAMETER(SelectedArrayPath)
+    DREAM3D_FILTER_WRITE_PARAMETER(NewArrayName)
+    writer->closeFilterGroup();
+    return ++index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------
@@ -95,64 +95,71 @@ int RenameAttributeArray::writeFilterParameters(AbstractFilterParametersWriter* 
 // -----------------------------------------------------------------------------
 void RenameAttributeArray::dataCheck()
 {
-  setErrorCondition(0);
-
-  if(m_NewArrayName.isEmpty() == true)
-  {
-    setErrorCondition(-11009);
-    QString ss = QObject::tr("The New Attribute Array name can not be empty. Please set a value.");
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-      return;
-  }
-
-  if (m_SelectedArrayPath.isEmpty() == true)
-  {
-    setErrorCondition(-11010);
-    QString ss = QObject::tr("The complete path to the Attribute Array can not be empty. Please set an appropriate path.");
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-      return;
-  }
-  else
-  {
-    QString dcName = m_SelectedArrayPath.getDataContainerName();
-    QString amName = m_SelectedArrayPath.getAttributeMatrixName();
-    QString daName = m_SelectedArrayPath.getDataArrayName();
-
-    DataContainer::Pointer dc = getDataContainerArray()->getDataContainer(dcName);
-    if(NULL == dc.get())
+    setErrorCondition(0);
+    
+    if(m_NewArrayName.isEmpty() == true)
     {
-      setErrorCondition(-11007);
-      QString ss = QObject::tr("The DataContainer '%1' was not found in the DataContainerArray").arg(dcName);
-      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-      return;
+        setErrorCondition(-11009);
+        QString ss = QObject::tr("The New Attribute Array name can not be empty. Please set a value.");
+        notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+        return;
     }
-
-    AttributeMatrix::Pointer attrMat = dc->getAttributeMatrix(amName);
-    if(NULL == attrMat.get())
+    
+    if (m_SelectedArrayPath.isEmpty() == true)
     {
-      setErrorCondition(-11008);
-      QString ss = QObject::tr("The AttributeMatrix '%1' was not found in the DataContainer '%2'").arg(amName).arg(dcName);
-      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-      return;
+        setErrorCondition(-11010);
+        QString ss = QObject::tr("The complete path to the Attribute Array can not be empty. Please set an appropriate path.");
+        notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+        return;
     }
-
-    // We the AttributeMatrix, now lets try to get the AttributeArray object and rename it if it exists
-    IDataArray::Pointer dataArray = attrMat->getAttributeArray(daName);
-    if(NULL == dataArray.get() )
+    else
     {
-      setErrorCondition(-11014);
-      QString ss = QObject::tr("A DataArray with the name '%1' was not found in the AttributeMatrix").arg(daName);
-      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-      return;
+        QString dcName = m_SelectedArrayPath.getDataContainerName();
+        QString amName = m_SelectedArrayPath.getAttributeMatrixName();
+        QString daName = m_SelectedArrayPath.getDataArrayName();
+        
+        DataContainer::Pointer dc = getDataContainerArray()->getDataContainer(dcName);
+        if(NULL == dc.get())
+        {
+            setErrorCondition(-11007);
+            QString ss = QObject::tr("The DataContainer '%1' was not found in the DataContainerArray").arg(dcName);
+            notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+            return;
+        }
+        
+        AttributeMatrix::Pointer attrMat = dc->getAttributeMatrix(amName);
+        if(NULL == attrMat.get())
+        {
+            setErrorCondition(-11008);
+            QString ss = QObject::tr("The AttributeMatrix '%1' was not found in the DataContainer '%2'").arg(amName).arg(dcName);
+            notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+            return;
+        }
+        
+        RenameErrorCodes code = attrMat->renameAttributeArray(daName, m_NewArrayName, false);
+        switch(code)
+        {
+            case OLD_DOES_NOT_EXIST:
+            {
+                setErrorCondition(-11016);
+                QString ss = QObject::tr("A DataArray with the name '%1' was not found in the AttributeMatrix").arg(daName);
+                notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+                return;
+            }
+            case NEW_EXISTS:
+            {
+                setErrorCondition(-11017);
+                QString ss = QObject::tr("A DataArray with the name '%1' already exists in the AttributeMatrix").arg(m_NewArrayName);
+                notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+                return;
+            }
+            case SUCCESS:
+            {
+                setErrorCondition(0);
+                return;
+            }
+        }
     }
-    bool check = attrMat->renameAttributeArray(daName, m_NewArrayName);
-    if(check == false)
-    {
-      setErrorCondition(-11006);
-      QString ss = QObject::tr("Attempt to rename AttributeArray '%1' to '%2' Failed.").arg(daName).arg(m_NewArrayName);
-      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-    }
-  }
 }
 
 
@@ -161,12 +168,12 @@ void RenameAttributeArray::dataCheck()
 // -----------------------------------------------------------------------------
 void RenameAttributeArray::preflight()
 {
-  setInPreflight(true);
-  emit preflightAboutToExecute();
-  emit updateFilterParameters(this);
-  dataCheck();
-  emit preflightExecuted();
-  setInPreflight(false);
+    setInPreflight(true);
+    emit preflightAboutToExecute();
+    emit updateFilterParameters(this);
+    dataCheck();
+    emit preflightExecuted();
+    setInPreflight(false);
 }
 
 // -----------------------------------------------------------------------------
@@ -174,28 +181,28 @@ void RenameAttributeArray::preflight()
 // -----------------------------------------------------------------------------
 void RenameAttributeArray::execute()
 {
-  setErrorCondition(0);
-
-  dataCheck(); // calling the dataCheck will rename the array, so nothing is required here
-  if(getErrorCondition() < 0) { return; }
-
-  notifyStatusMessage(getHumanLabel(), "Complete");
+    setErrorCondition(0);
+    
+    dataCheck(); // calling the dataCheck will rename the array, so nothing is required here
+    if(getErrorCondition() < 0) { return; }
+    
+    notifyStatusMessage(getHumanLabel(), "Complete");
 }
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 AbstractFilter::Pointer RenameAttributeArray::newFilterInstance(bool copyFilterParameters)
 {
-  /*
-  * SelectedArrayPath
-  * NewArrayName
-  */
-  RenameAttributeArray::Pointer filter = RenameAttributeArray::New();
-  if(true == copyFilterParameters)
-  {
-    copyFilterParameterInstanceVariables(filter.get());
-  }
-  return filter;
+    /*
+     * SelectedArrayPath
+     * NewArrayName
+     */
+    RenameAttributeArray::Pointer filter = RenameAttributeArray::New();
+    if(true == copyFilterParameters)
+    {
+        copyFilterParameterInstanceVariables(filter.get());
+    }
+    return filter;
 }
 
 // -----------------------------------------------------------------------------
