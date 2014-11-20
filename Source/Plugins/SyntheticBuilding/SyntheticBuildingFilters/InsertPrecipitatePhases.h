@@ -192,6 +192,7 @@ class InsertPrecipitatePhases : public AbstractFilter
 
     float check_sizedisterror(Precip* precip);
     void determine_clustering(size_t featureNum, int add);
+    void determine_currentRDF(size_t featureNum, int add);
     float check_clusteringerror(int gadd, int gremove);
     float check_RDFerror(int gadd, int gremove);
 

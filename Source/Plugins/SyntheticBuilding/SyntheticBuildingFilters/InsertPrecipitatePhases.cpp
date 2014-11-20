@@ -1155,14 +1155,13 @@ float InsertPrecipitatePhases::check_clusteringerror(int gadd, int gremove)
 // -----------------------------------------------------------------------------
 void InsertPrecipitatePhases::determine_currentRDF(size_t gnum, int add)
 {
-  //VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(m_FeatureIdsArrayPath.getDataContainerName());
 
   float x, y, z;
   float xn, yn, zn;
   float r;
-//  float dia;
   int iter = 0;
-  int diabin, clusterbin;
+  int32_t rdfBin;
+  float stepsize = (m_rdfMax-m_rdfMin)/m_numRDFbins;
 
   int phase = m_FeaturePhases[gnum];
   while (phase != precipitatephases[iter]) { iter++; }
@@ -1171,13 +1170,6 @@ void InsertPrecipitatePhases::determine_currentRDF(size_t gnum, int add)
   typedef std::vector<std::vector<float> > VectOfVectFloat_t;
 
   PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsDataArray[phase].get());
-  //  VectOfVectFloat_t& curSimClusteringDist = simclusteringdist[iter];
-  //  size_t curSImClusteringDist_Size = curSimClusteringDist.size();
-  float oneOverClusteringDistStep = 1.0f / clusteringdiststep[iter];
-
-//  float maxFeatureDia = pp->getMaxFeatureDiameter();
-//  float minFeatureDia = pp->getMinFeatureDiameter();
-//  float oneOverBinStepSize = 1.0f / pp->getBinStepSize();
 
   x = m_Centroids[3 * gnum];
   y = m_Centroids[3 * gnum + 1];
@@ -1193,18 +1185,13 @@ void InsertPrecipitatePhases::determine_currentRDF(size_t gnum, int add)
       zn = m_Centroids[3 * n + 2];
       r = sqrtf((x - xn) * (x - xn) + (y - yn) * (y - yn) + (z - zn) * (z - zn));
 
-//      dia = m_EquivalentDiameters[gnum];
-//      //      dia2 = m_EquivalentDiameters[n];
-//      if(dia > maxFeatureDia) { dia = maxFeatureDia; }
-//      if(dia < minFeatureDia) { dia = minFeatureDia; }
-      //      if(dia2 > maxFeatureDia) { dia2 = maxFeatureDia; }
-      //      if(dia2 < minFeatureDia) { dia2 = minFeatureDia; }
-//      diabin = static_cast<size_t>(((dia - minFeatureDia) * oneOverBinStepSize) );
-      //      dia2bin = static_cast<size_t>(((dia2 - minFeatureDia) * oneOverBinStepSize) );
-      clusterbin = static_cast<size_t>( r * oneOverClusteringDistStep );
-      if(clusterbin >= 40) { clusterbin = 39; }
-      simclusteringdist[iter][diabin][clusterbin] += add;
-            //      simclusteringdist[iter][dia2bin][clusterbin] += add;
+
+      rdfBin = (r-m_rdfMin)/stepsize;
+
+      if (rdfBin < 0) {rdfBin = 0;}
+      if (rdfBin >= m_numRDFbins) {rdfBin = m_numRDFbins-1;}
+
+      m_rdfCurrentDist[rdfBin] += add;
     }
   }
 }
