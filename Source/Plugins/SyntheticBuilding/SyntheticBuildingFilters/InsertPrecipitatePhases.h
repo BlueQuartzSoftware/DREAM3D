@@ -193,6 +193,7 @@ class InsertPrecipitatePhases : public AbstractFilter
     float check_sizedisterror(Precip* precip);
     void determine_clustering(size_t featureNum, int add);
     float check_clusteringerror(int gadd, int gremove);
+    float check_RDFerror(int gadd, int gremove);
 
     float check_fillingerror(int gadd, int gremove, Int32ArrayType::Pointer featureOwnersPtr);
     void assign_voxels();
@@ -264,6 +265,8 @@ class InsertPrecipitatePhases : public AbstractFilter
     std::vector<std::vector<float> > simfeaturesizedist;
     std::vector<std::vector<std::vector<float> > > clusteringdist;
     std::vector<std::vector<std::vector<float> > > simclusteringdist;
+    std::vector<float> m_rdfTargetDist;
+    std::vector<float> m_rdfCurrentDist;
 
     std::vector<float> featuresizediststep;
     std::vector<float> clusteringdiststep;
@@ -275,6 +278,9 @@ class InsertPrecipitatePhases : public AbstractFilter
     float fillingerror, oldfillingerror;
     float currentclusteringerror, oldclusteringerror;
     float currentsizedisterror, oldsizedisterror;
+    float m_rdfMax;
+    float m_rdfMin;
+    int m_numRDFbins;
 
     void dataCheck();
     void updateFeatureInstancePointers();

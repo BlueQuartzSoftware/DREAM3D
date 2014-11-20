@@ -655,32 +655,32 @@ void  InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer featur
 
 
 
- //initializing the target RDF vector
-  for (int64_t i = 1; i < numensembles; ++i)
-  {
-    if(m_PhaseTypes[i] == DREAM3D::PhaseType::PrecipitatePhase)
-    {
-      PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsDataArray[i].get());
-      VectorOfFloatArray rdfTarget = pp->getRadialDistFunction();
-      VectorOfFloatArray maxmin = pp->getMaxMinRDF();
+  //initializing the target RDF vector - this is the radial distribution function we are trying to match to
+   for (int64_t i = 1; i < numensembles; ++i)
+   {
+     if(m_PhaseTypes[i] == DREAM3D::PhaseType::PrecipitatePhase)
+     {
+       PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsDataArray[i].get());
+       VectorOfFloatArray rdfTarget = pp->getRadialDistFunction();
+       VectorOfFloatArray maxmin = pp->getMaxMinRDF();
 
-      int numRDFbins = rdfTarget[0]->getNumberOfTuples();
-      std::vector<float> rdfTargetDist;
-      rdfTargetDist.resize(numRDFbins);
+       m_numRDFbins = rdfTarget[0]->getNumberOfTuples();
+ //      std::vector<float> rdfTargetDist;
+       m_rdfTargetDist.resize(m_numRDFbins);
+       m_rdfCurrentDist.resize(m_numRDFbins);
 
-      for (size_t j = 0; j < numRDFbins; j++)
-      {
-          rdfTargetDist[j] = rdfTarget[0]->getValue(j);
-      }
+       for (size_t j = 0; j < m_numRDFbins; j++)
+       {
+           m_rdfTargetDist[j] = rdfTarget[0]->getValue(j);
+       }
 
-      float rdfMax = maxmin[0]->getValue(0);
-      float rdfMin = maxmin[0]->getValue(1);
+        m_rdfMax = maxmin[0]->getValue(0);
+        m_rdfMin = maxmin[0]->getValue(1);
 
-    }
-  }
+     }
+   }
 
 
-  //get current RDF vector based on current synthetic structure
 
 
 
@@ -1120,31 +1120,10 @@ void InsertPrecipitatePhases::determine_clustering(size_t gnum, int add)
       clusterbin = static_cast<size_t>( r * oneOverClusteringDistStep );
       if(clusterbin >= 40) { clusterbin = 39; }
       simclusteringdist[iter][diabin][clusterbin] += add;
-      //      simclusteringdist[iter][dia2bin][clusterbin] += add;
+            //      simclusteringdist[iter][dia2bin][clusterbin] += add;
     }
   }
 }
-
-//void InsertPrecipitatePhases::determine_current_RDF()
-//{
-//    float x, y, z;
-//    float xn, yn, zn;
-//    float r;
-
-//    int32_t bin;
-//    int32_t ensemble;
-
-//    float min = 1000000.0f;
-//    float max = 0.0f;
-
-//    float value;
-
-
-
-
-
-
-//}
 
 // -----------------------------------------------------------------------------
 //
@@ -1170,6 +1149,100 @@ float InsertPrecipitatePhases::check_clusteringerror(int gadd, int gremove)
   clusteringerror = bhattdist;
   return clusteringerror;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void InsertPrecipitatePhases::determine_currentRDF(size_t gnum, int add)
+{
+  //VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(m_FeatureIdsArrayPath.getDataContainerName());
+
+  float x, y, z;
+  float xn, yn, zn;
+  float r;
+//  float dia;
+  int iter = 0;
+  int diabin, clusterbin;
+
+  int phase = m_FeaturePhases[gnum];
+  while (phase != precipitatephases[iter]) { iter++; }
+
+  StatsDataArray& statsDataArray = *(m_StatsDataArray.lock());
+  typedef std::vector<std::vector<float> > VectOfVectFloat_t;
+
+  PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsDataArray[phase].get());
+  //  VectOfVectFloat_t& curSimClusteringDist = simclusteringdist[iter];
+  //  size_t curSImClusteringDist_Size = curSimClusteringDist.size();
+  float oneOverClusteringDistStep = 1.0f / clusteringdiststep[iter];
+
+//  float maxFeatureDia = pp->getMaxFeatureDiameter();
+//  float minFeatureDia = pp->getMinFeatureDiameter();
+//  float oneOverBinStepSize = 1.0f / pp->getBinStepSize();
+
+  x = m_Centroids[3 * gnum];
+  y = m_Centroids[3 * gnum + 1];
+  z = m_Centroids[3 * gnum + 2];
+  size_t numFeatures = m_FeaturePhasesPtr.lock()->getNumberOfTuples();
+
+  for (size_t n = firstPrecipitateFeature; n < numFeatures; n++)
+  {
+    if (m_FeaturePhases[n] == phase && n != gnum)
+    {
+      xn = m_Centroids[3 * n];
+      yn = m_Centroids[3 * n + 1];
+      zn = m_Centroids[3 * n + 2];
+      r = sqrtf((x - xn) * (x - xn) + (y - yn) * (y - yn) + (z - zn) * (z - zn));
+
+//      dia = m_EquivalentDiameters[gnum];
+//      //      dia2 = m_EquivalentDiameters[n];
+//      if(dia > maxFeatureDia) { dia = maxFeatureDia; }
+//      if(dia < minFeatureDia) { dia = minFeatureDia; }
+      //      if(dia2 > maxFeatureDia) { dia2 = maxFeatureDia; }
+      //      if(dia2 < minFeatureDia) { dia2 = minFeatureDia; }
+//      diabin = static_cast<size_t>(((dia - minFeatureDia) * oneOverBinStepSize) );
+      //      dia2bin = static_cast<size_t>(((dia2 - minFeatureDia) * oneOverBinStepSize) );
+      clusterbin = static_cast<size_t>( r * oneOverClusteringDistStep );
+      if(clusterbin >= 40) { clusterbin = 39; }
+      simclusteringdist[iter][diabin][clusterbin] += add;
+            //      simclusteringdist[iter][dia2bin][clusterbin] += add;
+    }
+  }
+}
+
+
+
+
+
+
+
+//}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+float InsertPrecipitatePhases::check_RDFerror(int gadd, int gremove)
+{
+
+  float clusteringerror;
+  float bhattdist;
+
+  for (size_t iter = 0; iter < simclusteringdist.size(); ++iter)
+  {
+    if(gadd > 0)
+    {
+      determine_clustering(gadd, 1);
+    }
+    if(gremove > 0)
+    {
+      determine_clustering(gremove, -1);
+    }
+  }
+  compare_1Ddistributions(m_rdfTargetDist, m_rdfCurrentDist, bhattdist);
+  clusteringerror = bhattdist;
+  return clusteringerror;
+}
+
 
 // -----------------------------------------------------------------------------
 //
