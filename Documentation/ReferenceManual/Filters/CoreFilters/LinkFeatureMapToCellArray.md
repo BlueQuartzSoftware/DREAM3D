@@ -2,7 +2,7 @@ Link Feature Map To Cell Array {#linkfeaturemaptocellarray}
 ==============================
 
 ## Group (Subgroup) ##
-Generic Filters (Memory/Management)
+Core Filters (Memory/Management)
 
 ## Description ##
 A **Cell** array is used as the index into the **Feature** map for each **Cell**.  This filter allows the user to specify which **Cell** array is that index.  The filter clears the current **Feature** map, creates a new **Feature** map and resizes it the largest value found in the user selected **Cell** array.  Further the filter creates the *Active* array in the new **Feature** map, which identifies whether each **Feature** *exists* by checking if there is *at least* one **Cell** that belongs to each **Feature**. 

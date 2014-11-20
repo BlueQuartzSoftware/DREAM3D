@@ -35,6 +35,7 @@ set(_PublicFilters
   CopyAttributeArray
   CopyAttributeMatrix
   CopyDataContainer
+  MoveData
 )
 
 

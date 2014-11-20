@@ -1,4 +1,4 @@
-Rename Data Container {#renamedatacontainer}
+Name of Filter {#movedata}
 =====
 
 ## Group (Subgroup) ##
@@ -6,16 +6,14 @@ Core Filters (Memory/Management)
 
 
 ## Description ##
-This filter renames a user chosen DataContainer to a user defined new name.
-
+This filter allows the user to move a data array from one attribute matrix to another compatible attribute matrix.  It also allows the user to move an attribute matrix from one data container to another compatible data container.
 
 ## Parameters ##
 | Name             | Type |
 |------------------|------|
-| Input DataContainer | String or DataArrayPath |
+| Input Attribute Matrix or Data Array | String or DataArrayPath |
 
 ## Required Arrays ##
-
 
 
 
@@ -23,10 +21,9 @@ This filter renames a user chosen DataContainer to a user defined new name.
 
 
 
-
 ## Authors ##
 
-**Copyright** 2014 Michael A. Groeber (AFRL), 2014 Michael A. Jackson (BlueQuartz Software)
+**Copyright** 2014 Joseph B. Kleingers (BlueQuartz Software), 2014 Michael A. Jackson (BlueQuartz Software)
 
 **Contact Info** dream3d@bluequartz.net
 
@@ -37,3 +34,4 @@ This filter renames a user chosen DataContainer to a user defined new name.
 
 
 See a bug? Does this documentation need updated with a citation? Send comments, corrections and additions to [The DREAM3D development team](mailto:dream3d@bluequartz.net?subject=Documentation%20Correction)
+

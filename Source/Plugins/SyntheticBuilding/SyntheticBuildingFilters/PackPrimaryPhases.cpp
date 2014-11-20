@@ -330,7 +330,7 @@ void PackPrimaryPhases::setupFilterParameters()
   parameters.push_back(FilterParameter::New("Cell Phases Array Name", "CellPhasesArrayName", FilterParameterWidgetType::StringWidget, getCellPhasesArrayName(), true));
   parameters.push_back(FilterParameter::New("Feature Phases Array Name", "FeaturePhasesArrayName", FilterParameterWidgetType::StringWidget, getFeaturePhasesArrayName(), true));
   parameters.push_back(FilterParameter::New("Number of Features Array Name", "NumFeaturesArrayName", FilterParameterWidgetType::StringWidget, getNumFeaturesArrayName(), true));
-  linkedProps.clear();  
+  linkedProps.clear();
   linkedProps << "FeatureInputFile";
   parameters.push_back(LinkedBooleanFilterParameter::New("Already Have Features", "HaveFeatures", getHaveFeatures(), linkedProps, false));
   parameters.push_back(FileSystemFilterParameter::New("Feature Input File", "FeatureInputFile", FilterParameterWidgetType::InputFileWidget, getFeatureInputFile(), false, "", "*.txt", "Text File"));
@@ -442,9 +442,6 @@ void PackPrimaryPhases::dataCheck()
   VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getOutputCellAttributeMatrixName().getDataContainerName(), false);
   if(getErrorCondition() < 0 || NULL == m) { return; }
   //Input Ensemble Data That we require
-  typedef DataArray<unsigned int> PhaseTypeArrayType;
-  typedef DataArray<unsigned int> ShapeTypeArrayType;
-
   QVector<size_t> dims(1, 1);
   m_PhaseTypesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<unsigned int>, AbstractFilter>(this, getInputPhaseTypesArrayPath(), dims);
   if( NULL != m_PhaseTypesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
@@ -1203,7 +1200,6 @@ void PackPrimaryPhases::place_features(Int32ArrayType::Pointer featureOwnersPtr)
   size_t key;
   float xshift, yshift, zshift;
   int lastIteration = 0;
-  int numIterationsPerTime = 0;
   for (int iteration = 0; iteration < totalAdjustments; ++iteration)
   {
     currentMillis = QDateTime::currentMSecsSinceEpoch();
@@ -1217,8 +1213,6 @@ void PackPrimaryPhases::place_features(Int32ArrayType::Pointer featureOwnersPtr)
       notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
 
       millis = QDateTime::currentMSecsSinceEpoch();
-
-      numIterationsPerTime = iteration - lastIteration;
       lastIteration = iteration;
     }
 
@@ -1840,7 +1834,6 @@ float PackPrimaryPhases::check_fillingerror(int gadd, int gremove, Int32ArrayTyp
   fillingerror = fillingerror * float(m_TotalPackingPoints);
   int col, row, plane;
   int k1 = 0, k2 = 0, k3 = 0;
-  float multiplier = 1.0;
   if(gadd > 0)
   {
     //size_t key, val;
@@ -1858,7 +1851,6 @@ float PackPrimaryPhases::check_fillingerror(int gadd, int gremove, Int32ArrayTyp
       col = cl[i];
       row = rl[i];
       plane = pl[i];
-      multiplier = 1.0;
       if(m_PeriodicBoundaries == true)
       {
         if(col < 0) { col = col + m_PackingPoints[0]; }
@@ -1869,7 +1861,7 @@ float PackPrimaryPhases::check_fillingerror(int gadd, int gremove, Int32ArrayTyp
         if(plane > m_PackingPoints[2] - 1) { plane = plane - m_PackingPoints[2]; }
         featureOwnersIdx = (m_PackingPoints[0] * m_PackingPoints[1] * plane) + (m_PackingPoints[0] * row) + col;
         int currentFeatureOwner = featureOwners[featureOwnersIdx];
-        if(exclusionOwners[featureOwnersIdx] > 0) { multiplier = 2.0; }
+        if(exclusionOwners[featureOwnersIdx] > 0) {  }
         if(efl[i] > 0.1)
         {
           if(exclusionOwners[featureOwnersIdx] == 0)
@@ -1889,7 +1881,7 @@ float PackPrimaryPhases::check_fillingerror(int gadd, int gremove, Int32ArrayTyp
         {
           featureOwnersIdx = (m_PackingPoints[0] * m_PackingPoints[1] * plane) + (m_PackingPoints[0] * row) + col;
           int currentFeatureOwner = featureOwners[featureOwnersIdx];
-          if(exclusionOwners[featureOwnersIdx] > 0) { multiplier = 2.0; }
+          if(exclusionOwners[featureOwnersIdx] > 0) {  }
           if(efl[i] > 0.1)
           {
             if(exclusionOwners[featureOwnersIdx] == 0)
@@ -1922,7 +1914,7 @@ float PackPrimaryPhases::check_fillingerror(int gadd, int gremove, Int32ArrayTyp
       col = cl[i];
       row = rl[i];
       plane = pl[i];
-      multiplier = 1.0;
+
       if(m_PeriodicBoundaries == true)
       {
         if(col < 0) { col = col + m_PackingPoints[0]; }
@@ -1933,7 +1925,7 @@ float PackPrimaryPhases::check_fillingerror(int gadd, int gremove, Int32ArrayTyp
         if(plane > m_PackingPoints[2] - 1) { plane = plane - m_PackingPoints[2]; }
         featureOwnersIdx = (m_PackingPoints[0] * m_PackingPoints[1] * plane) + (m_PackingPoints[0] * row) + col;
         int currentFeatureOwner = featureOwners[featureOwnersIdx];
-        if(exclusionOwners[featureOwnersIdx] > 1) { multiplier = 2.0; }
+        if(exclusionOwners[featureOwnersIdx] > 1) { }
         if(efl[i] > 0.1)
         {
           exclusionOwners[featureOwnersIdx]--;
@@ -1952,7 +1944,7 @@ float PackPrimaryPhases::check_fillingerror(int gadd, int gremove, Int32ArrayTyp
         {
           featureOwnersIdx = (m_PackingPoints[0] * m_PackingPoints[1] * plane) + (m_PackingPoints[0] * row) + col;
           int currentFeatureOwner = featureOwners[featureOwnersIdx];
-          if(exclusionOwners[featureOwnersIdx] > 1) { multiplier = 2.0; }
+          if(exclusionOwners[featureOwnersIdx] > 1) { }
           if(efl[i] > 0.1)
           {
             exclusionOwners[featureOwnersIdx]--;

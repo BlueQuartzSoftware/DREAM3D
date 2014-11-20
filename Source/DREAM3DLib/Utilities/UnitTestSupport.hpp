@@ -215,13 +215,14 @@ void TestFailed(const std::string& test)
 #define INFINITYCHECK 1
 #define SIGNCHECK 1
 #ifdef INFINITYCHECK
-inline bool IsInfinite(float A)
+inline bool IsInfinite(float* A)
 {
   const int kInfAsInt = 0x7F800000;
+  int* comp = reinterpret_cast<int*>(A);
 
   // An infinity has an exponent of 255 (shift left 23 positions) and
   // a zero mantissa. There are two infinities - positive and negative.
-  if ((*(int*)&A & 0x7FFFFFFF) == kInfAsInt)
+  if ( (*comp & 0x7FFFFFFF) == kInfAsInt)
   { return true; }
   return false;
 }
@@ -241,14 +242,16 @@ inline bool IsNan(float A)
 #endif
 
 #ifdef SIGNCHECK
-inline int Sign(float A)
+inline int Sign(float* A)
 {
+  int* comp = reinterpret_cast<int*>(A);
+
   // The sign bit of a number is the high bit.
-  return (*(int*)&A) & 0x80000000;
+  return *comp & 0x80000000;
 }
 #endif
 
-bool AlmostEqualUlpsFinal(float A, float B, int maxUlps)
+bool AlmostEqualUlpsFinal(float* A, float* B, int maxUlps)
 {
   // There are several optional checks that you can do, depending
   // on what behavior you want from your floating point comparisons.
@@ -263,7 +266,7 @@ bool AlmostEqualUlpsFinal(float A, float B, int maxUlps)
   // infinities and you don't want them 'close' to numbers
   // near FLT_MAX.
   if (IsInfinite(A) || IsInfinite(B))
-  { return A == B; }
+  { return *A == *B; }
 #endif
 
 #ifdef  NANCHECK
@@ -286,21 +289,21 @@ bool AlmostEqualUlpsFinal(float A, float B, int maxUlps)
   // The check for A == B is because zero and negative zero have different
   // signs but are equal to each other.
   if (Sign(A) != Sign(B))
-  { return A == B; }
+  { return *A == *B; }
 #endif
 
-  int aInt = *(int*)&A;
+  int* aInt = reinterpret_cast<int*>(A);
   // Make aInt lexicographically ordered as a twos-complement int
-  if (aInt < 0)
-  { aInt = 0x80000000 - aInt; }
+  if (*aInt < 0)
+  { *aInt = 0x80000000 - *aInt; }
   // Make bInt lexicographically ordered as a twos-complement int
-  int bInt = *(int*)&B;
-  if (bInt < 0)
-  { bInt = 0x80000000 - bInt; }
+  int* bInt = reinterpret_cast<int*>(B);
+  if (*bInt < 0)
+  { *bInt = 0x80000000 - *bInt; }
 
   // Now we can compare aInt and bInt to find out how far apart A and B
   // are.
-  int intDiff = abs(aInt - bInt);
+  int intDiff = abs(*aInt - *bInt);
   if (intDiff <= maxUlps)
   { return true; }
   return false;
@@ -336,6 +339,22 @@ bool AlmostEqualUlpsFinal(float A, float B, int maxUlps)
       DREAM3D_TEST_THROW_EXCEPTION( buf.toStdString() )\
     }\
   }
+
+#define DREAM3D_REQUIRED_PTR(L, Q, P)\
+{ \
+  QString buf;\
+  QTextStream ss(&buf);\
+  bool b = (L Q P);\
+  if ( (b) == (false) ) \
+  {\
+    ss <<"Your test required the following\n            '";\
+    ss << #L << " " << #Q << " " << #P << "' but this condition was not met.\n";\
+    ss << "            " << #L << " = " << L << "\n";\
+    ss << "            " << #P << " = \n";\
+    DREAM3D_TEST_THROW_EXCEPTION( buf.toStdString() )\
+  }\
+}
+
 
 #define DREAM3D_REQUIRE_NE( L, R )\
   if ( (L) == (R) ) {  \
@@ -382,7 +401,7 @@ bool AlmostEqualUlpsFinal(float A, float B, int maxUlps)
       else { ss << "Left side was NULL"; }\
       ss << "\n";\
       ss << "            " << #R << " = ";\
-      if(NULL != R) { ss << R;}\
+      if(NULL != R) { ss << static_cast<long long int>(R);}\
       else { ss << "Right Side was NULL";}\
       ss << "\n";\
       DREAM3D_TEST_THROW_EXCEPTION( buf.toStdString() )\
@@ -395,7 +414,7 @@ bool AlmostEqualUlpsFinal(float A, float B, int maxUlps)
 // -----------------------------------------------------------------------------
 #define DREAM3D_TEST_THROW_EXCEPTION( P)\
   throw TestException( P, __FILE__, __LINE__);\
-   
+
 
 #define DREAM3D_ASSERT( P )\
   assert( (P) );
@@ -434,7 +453,7 @@ bool AlmostEqualUlpsFinal(float A, float B, int maxUlps)
   {\
     err = EXIT_FAILURE;\
   }\
-   
+
 
 
 

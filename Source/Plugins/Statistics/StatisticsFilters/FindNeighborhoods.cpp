@@ -208,11 +208,6 @@ void FindNeighborhoods::find_neighborhoods()
   m->getOrigin(m_OriginX, m_OriginY, m_OriginZ);
   size_t udims[3] = {0, 0, 0};
   m->getDimensions(udims);
-#if (CMP_SIZEOF_SIZE_T == 4)
-  typedef int32_t DimType;
-#else
-  typedef int64_t DimType;
-#endif
 
   int xbin, ybin, zbin;
   //int bin, bin1, bin2;

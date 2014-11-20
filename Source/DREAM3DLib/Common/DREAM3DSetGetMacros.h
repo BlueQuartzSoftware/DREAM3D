@@ -302,6 +302,24 @@
   DREAM3D_GET_PROPERTY(type, prpty)
 
 
+
+#define DREAM3D_PIMPL_PROPERTY_DECL(type, prpty)\
+  public:\
+    void set##prpty(type value);\
+    type get##prpty() const;
+
+
+#define DREAM3D_PIMPL_PROPERTY_DEF(Class, type, prpty)\
+  void Class::set##prpty(type value) {\
+    Q_D(Class);\
+    d->m_##prpty = value;\
+    }\
+  type Class::get##prpty() const {\
+    Q_D(const Class);\
+    return d->m_##prpty;\
+  }
+
+
 #define DREAM3D_OVERLOAD_PROPERTY(type, prpty, overload)\
   private:\
    type m_##prpty;\
@@ -315,6 +333,9 @@
   public:\
   DREAM3D_SET_PROPERTY(bool, prpty)\
   bool is##prpty() { return m_##prpty; }
+
+
+
 
 
 /**

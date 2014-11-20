@@ -77,43 +77,43 @@ static const QuatF TrigQuatSym[6] = {QuaternionMathF::New(0.000000000f, 0.000000
                                     };
 
 static const float TrigRodSym[6][3] = {{0.0f, 0.0f, 0.0f},
-  {0.0f, 0.0f, 1.73205f},
-  {0.0f, 0.0f, -1.73205f},
-  {8660254000000.0f, 5000000000000.0f, 0.0f},
-  {0.0f, 1000000000000.0f, 0.0f},
-  { -8660254000000.0f, 5000000000000.0f, 0.0f}
-};
+                                       {0.0f, 0.0f, 1.73205f},
+                                       {0.0f, 0.0f, -1.73205f},
+                                       {8660254000000.0f, 5000000000000.0f, 0.0f},
+                                       {0.0f, 1000000000000.0f, 0.0f},
+                                       { -8660254000000.0f, 5000000000000.0f, 0.0f}
+                                      };
 
 static const float TrigMatSym[6][3][3] =
 {
-  { {1.0, 0.0, 0.0},
-    {0.0, 1.0, 0.0},
-    {0.0, 0.0, 1.0}
+  { {1.0f, 0.0f, 0.0f},
+    {0.0f, 1.0f, 0.0f},
+    {0.0f, 0.0f, 1.0f}
   },
 
-  { { -0.5, DREAM3D::Constants::k_Root3Over2,  0.0},
-    { -DREAM3D::Constants::k_Root3Over2, -0.5, 0.0},
-    {0.0, 0.0,  1.0}
+  { { -0.5f, static_cast<float>(DREAM3D::Constants::k_Root3Over2),  0.0f},
+    { static_cast<float>(-DREAM3D::Constants::k_Root3Over2), -0.5f, 0.0f},
+    {0.0f, 0.0f,  1.0f}
   },
 
-  { { -0.5, -DREAM3D::Constants::k_Root3Over2,  0.0},
-    {DREAM3D::Constants::k_Root3Over2, -0.5, 0.0},
-    {0.0, 0.0,  1.0}
+  { { -0.5f, static_cast<float>(-DREAM3D::Constants::k_Root3Over2),  0.0f},
+    { static_cast<float>(DREAM3D::Constants::k_Root3Over2), -0.5f, 0.0f},
+    {0.0f, 0.0f,  1.0f}
   },
 
-  { {0.5, DREAM3D::Constants::k_Root3Over2,  0.0},
-    {DREAM3D::Constants::k_Root3Over2, -0.5, 0.0},
-    {0.0, 0.0,  -1.0}
+  { {0.5f, static_cast<float>(DREAM3D::Constants::k_Root3Over2),  0.0f},
+    { static_cast<float>(DREAM3D::Constants::k_Root3Over2), -0.5f, 0.0f},
+    {0.0f, 0.0f,  -1.0f}
   },
 
-  { { -1.0, 0.0, 0.0},
-    {0.0, 1.0, 0.0},
-    {0.0, 0.0, -1.0}
+  { { -1.0f, 0.0f, 0.0f},
+    {0.0f, 1.0f, 0.0f},
+    {0.0f, 0.0f, -1.0f}
   },
 
-  { {0.5, -DREAM3D::Constants::k_Root3Over2,  0.0},
-    { -DREAM3D::Constants::k_Root3Over2, -0.5, 0.0},
-    {0.0, 0.0,  -1.0}
+  { {0.5f, static_cast<float>(-DREAM3D::Constants::k_Root3Over2),  0.0f},
+    { static_cast<float>(-DREAM3D::Constants::k_Root3Over2), -0.5f, 0.0f},
+    {0.0f, 0.0f,  -1.0f}
   }
 };
 
@@ -142,8 +142,8 @@ TrigonalOps::~TrigonalOps()
 //
 // -----------------------------------------------------------------------------
 float TrigonalOps::_calcMisoQuat(const QuatF quatsym[6], int numsym,
-                                 QuatF& q1, QuatF& q2,
-                                 float& n1, float& n2, float& n3)
+QuatF& q1, QuatF& q2,
+float& n1, float& n2, float& n3)
 {
   float wmin = 9999999.0f; //,na,nb,nc;
   float w = 0;
@@ -403,7 +403,7 @@ void TrigonalOps::getSchmidFactorAndSS(float load[3], float plane[3], float dire
   for(int i = 0; i < k_NumSymQuats; i++)
   {
     //compute slip system
-    float slipPlane[3] = {0}; 
+    float slipPlane[3] = {0};
     slipPlane[2] = TrigMatSym[i][2][0] * plane[0] + TrigMatSym[i][2][1] * plane[1] + TrigMatSym[i][2][2] * plane[2];
 
     //dont consider negative z planes (to avoid duplicates)

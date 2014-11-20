@@ -222,14 +222,7 @@ int H5CtfImporter::importFile(hid_t fileId, int64_t z, const QString& ctfFile)
     }
   }
 
-  bool multiSliceFile = false;
-  // Now we have to figure out if this file is really a 3D file. We can do that
-  // by looking for the "Z" position array. Only 3D files will have this:
-  float* zPtr = reader.getZPointer();
-  if(NULL != zPtr)
-  {
-    multiSliceFile = true;
-  }
+
   int zSlices = reader.getZCells();
 
   // This scheme is going to fail if the user has multiple HKL 3D files where each
@@ -343,7 +336,7 @@ int H5CtfImporter::writeSliceData(hid_t fileId, CtfReader& reader, int z, int ac
 
   int32_t rank = 1;
   hsize_t dims[1] =
-  { reader.getXCells()* reader.getYCells() };
+  { static_cast<hsize_t> (reader.getXCells() * reader.getYCells()) };
 
   Ebsd::NumType numType = Ebsd::UnknownNumType;
   QList<QString> columnNames = reader.getColumnNames();

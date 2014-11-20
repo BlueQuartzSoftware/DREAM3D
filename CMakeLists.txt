@@ -184,8 +184,8 @@ if("${HDF5_INSTALL}" STREQUAL "")
 endif()
 
 if( "${HDF5_INSTALL}" STREQUAL "")
-  message(FATA_ERROR "The HDF5_INSTALL variable was not set. In order to find HDF5 you need to either\
-                      pass in the -DHDF5_INSTALL=.... or set the HDF5_INSTALL environment variable.")  
+  message(FATAL_ERROR "The HDF5_INSTALL variable was not set. In order to find HDF5 you need to either\
+                      pass in the -DHDF5_INSTALL=.... or set the HDF5_INSTALL environment variable.")
 endif()
 
 
@@ -196,7 +196,7 @@ if(WIN32)
 else()
     set(ENV{HDF5_ROOT_DIR_HINT} "${HDF5_INSTALL}/share/cmake")
     set(ENV{HDF5_ROOT} "${HDF5_INSTALL}")
-    set(CMAKE_MODULE_PATH ${HDF5_INSTALL}/share/cmake ${CMAKE_MODULE_PATH})
+    set(CMAKE_MODULE_PATH ${HDF5_INSTALL}/share/cmake/hdf5 ${CMAKE_MODULE_PATH})
 endif()
 
 if(0)
@@ -210,7 +210,7 @@ if(HDF5_FOUND)
   file(APPEND ${CMP_PLUGIN_SEARCHDIR_FILE} "${HDF5_LIBRARY_DIRS};")
   include_directories(${HDF5_INCLUDE_DIRS} )
   list(APPEND CMP_LIB_SEARCH_DIRS ${HDF5_BINARY_DIR} ${HDF5_LIBRARY_DIR} )
-  
+
   message(STATUS "Found HDF5: ${HDF5_INSTALL}")
   message(STATUS "HDF5 Version: ${HDF5_VERSION_STRING}")
   if(MSVC_IDE)
@@ -302,7 +302,7 @@ if( CMAKE_BUILD_TYPE MATCHES Debug )
 ENDif( CMAKE_BUILD_TYPE MATCHES Debug )
 
 if(NOT MSVC)
-  ADD_DEFINITIONS(-Wall)
+  #ADD_DEFINITIONS(-Wall)
 endif()
 
 # On linux we need to set this because some of the libraries are Static

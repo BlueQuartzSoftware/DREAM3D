@@ -79,19 +79,19 @@ static const float TrigRodSym[3][3] = {{0.0f, 0.0f, 0.0f},
 
 static const float TrigMatSym[3][3][3] =
 {
-  { {1.0, 0.0, 0.0},
-    {0.0, 1.0, 0.0},
-    {0.0, 0.0, 1.0}
+  { {1.0f, 0.0f, 0.0f},
+    {0.0f, 1.0f, 0.0f},
+    {0.0f, 0.0f, 1.0f}
   },
 
-  { { -0.5, DREAM3D::Constants::k_Root3Over2,  0.0},
-    { -DREAM3D::Constants::k_Root3Over2, -0.5, 0.0},
-    {0.0, 0.0,  1.0}
+  { { -0.5f, static_cast<float>(DREAM3D::Constants::k_Root3Over2),  0.0f},
+    { static_cast<float>(-DREAM3D::Constants::k_Root3Over2), -0.5f, 0.0f},
+    {0.0f, 0.0f,  1.0f}
   },
 
-  { { -0.5, -DREAM3D::Constants::k_Root3Over2,  0.0},
-    {DREAM3D::Constants::k_Root3Over2, -0.5, 0.0},
-    {0.0, 0.0,  1.0}
+  { { -0.5f, static_cast<float>(-DREAM3D::Constants::k_Root3Over2),  0.0f},
+    { static_cast<float>(DREAM3D::Constants::k_Root3Over2), -0.5f, 0.0f},
+    {0.0f, 0.0f,  1.0f}
   }
 };
 
@@ -382,7 +382,7 @@ void TrigonalLowOps::getSchmidFactorAndSS(float load[3], float plane[3], float d
   for(int i = 0; i < k_NumSymQuats; i++)
   {
     //compute slip system
-    float slipPlane[3] = {0}; 
+    float slipPlane[3] = {0};
     slipPlane[2] = TrigMatSym[i][2][0] * plane[0] + TrigMatSym[i][2][1] * plane[1] + TrigMatSym[i][2][2] * plane[2];
 
     //dont consider negative z planes (to avoid duplicates)

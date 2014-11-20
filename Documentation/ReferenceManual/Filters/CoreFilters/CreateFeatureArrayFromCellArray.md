@@ -3,7 +3,7 @@ Create Feature Array From Cell Array {#createfeaturearrayfromcellarray}
 
 ## Group (Subgroup) ##
 
-Generic Filters (Memory/Management)
+Core Filters (Memory/Management)
 
 ## Description ##
 

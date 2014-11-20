@@ -140,7 +140,7 @@ void TestExtractSlice()
 void TestSetSlice()
 {
   // Lets use a typedef to shorten up the "type" that is used in the templates
-  typedef ImageProcessing::DefaultPixelType PixelType;
+  //typedef ImageProcessing::DefaultPixelType PixelType;
   // Now declare our Image and Slice variables
   ImageProcessing::DefaultImageType::Pointer imagePtr;
   ImageProcessing::DefaultSliceType::Pointer slicePtr;

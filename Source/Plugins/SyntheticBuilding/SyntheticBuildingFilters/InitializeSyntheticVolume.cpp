@@ -303,7 +303,13 @@ int InitializeSyntheticVolume::estimateNumFeatures(IntVec3_t dims, FloatVec3_t r
     hid_t amGid = H5Gopen(fileId, hPath.toLatin1().data(), H5P_DEFAULT );
     scopedFileSentinel.addGroupId(&amGid);
     err = phaseType->readH5Data(amGid);
-
+    if(err < 0)
+    {
+      QString ss = QObject::tr("Error reading phase type data.");
+      setErrorCondition(-1003);
+      notifyWarningMessage(getHumanLabel(), ss, getErrorCondition());
+      return -1;
+    }
     if( !phaseType->isAllocated())
     {
       QString ss = QObject::tr("PhaseTypes Array was not allocated due to an error reading the data from the stats file %1").arg(fi.absoluteFilePath());
@@ -334,7 +340,7 @@ int InitializeSyntheticVolume::estimateNumFeatures(IntVec3_t dims, FloatVec3_t r
   }
 
   // scale the primary phase fractions to total to 1
-  for (size_t i = 0; i < primaryphasefractions.size(); i++)
+  for (qint32 i = 0; i < primaryphasefractions.size(); i++)
   {
     primaryphasefractions[i] = primaryphasefractions[i] / totalprimaryfractions;
   }
@@ -347,7 +353,7 @@ int InitializeSyntheticVolume::estimateNumFeatures(IntVec3_t dims, FloatVec3_t r
   float vol;
   float diam;
   int volgood = 0;
-  for (size_t j = 0; j < primaryphases.size(); ++j)
+  for (qint32 j = 0; j < primaryphases.size(); ++j)
   {
     float curphasetotalvol = totalvol * primaryphasefractions[j];
     while (currentvol < (curphasetotalvol))

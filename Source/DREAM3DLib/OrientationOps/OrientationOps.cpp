@@ -184,8 +184,8 @@ void OrientationOps::_calcNearestQuat(const QuatF quatsym[24], int numsym,
 {
   float dist = 0;
   float smallestdist = 1000000.0f;
-  QuatF qc;
-  QuatF qmax;
+  QuatF qc = QuaternionMath<float>::New();
+  QuatF qmax = QuaternionMath<float>::New();
 
   QuaternionMathF::Copy(q2, qc);
 
@@ -217,8 +217,8 @@ void OrientationOps::_calcQuatNearestOrigin(const QuatF quatsym[24], int numsym,
 {
   float dist = 0;
   float smallestdist = 1000000.0f;
-  QuatF qc;
-  QuatF qmax;
+  QuatF qc = QuaternionMath<float>::New();
+  QuatF qmax = QuaternionMath<float>::New();
 
   QuaternionMathF::Copy(qr, qc);
 

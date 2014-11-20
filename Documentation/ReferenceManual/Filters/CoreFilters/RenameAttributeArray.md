@@ -2,7 +2,7 @@ Rename Attribute Array {#renameattributearray}
 ==============================
 
 ## Group (Subgroup) ##
-Generic Filters (Memory/Management)
+Core Filters (Memory/Management)
 
 ## Description ##
 This filter renames a user chosen array to a user defined new name.

@@ -55,9 +55,9 @@
   err = H5Sclose(sid); \
   if ( err < 0) {std::cout << "File: " << __FILE__ << "(" << __LINE__ << "): "<< "Error closing Dataspace." << std::endl;retErr = err;}
 
-#define CloseH5T(tid, err, retError)\
+#define CloseH5T(tid, err, re)\
   err = H5Tclose(tid);\
-  if (err < 0 ) {std::cout << "File: " << __FILE__ << "(" << __LINE__ << "): "<< "Error closing DataType" << std::endl; retErr = err;}
+  if (err < 0 ) {std::cout << "File: " << __FILE__ << "(" << __LINE__ << "): "<< "Error closing DataType" << std::endl; re = err;}
 
 #define HDF_ERROR_HANDLER_OFF\
   herr_t (*_oldHDF_error_func)(hid_t, void *);\
