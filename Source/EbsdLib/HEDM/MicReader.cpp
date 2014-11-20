@@ -613,7 +613,10 @@ void MicReader::parseDataLine(QByteArray& line, size_t i)
   size_t offset = 0;
   size_t featuresRead = 0;
   featuresRead = sscanf(line.data(), "%f %f %f %d %d %d %f %f %f %f %f %f %f %d %d %d %d %d %d", &x, &y, &z, &up, &level, &good, &p1, &p, &p2, &conf, &junk1, &junk2, &junk3, &junk4, &junk5, &junk6, &junk7, &junk8, &junk9);
-
+  if(featuresRead != 19)
+  {
+    qDebug() << "MicReader Error: Not enough columns were read for row " << i;
+  }
   offset = i;
 
   if(good > 0) { good = 1; }

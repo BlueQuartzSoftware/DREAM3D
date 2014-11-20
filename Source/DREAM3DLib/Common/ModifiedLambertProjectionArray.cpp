@@ -404,10 +404,10 @@ void Create2DExpandableDataset(hid_t gid, const QString& dsetName, int lambertSi
   herr_t status = -1;
   hsize_t maxdims[2] = { H5S_UNLIMITED, H5S_UNLIMITED }; // Allow for 2D Arrays
   hsize_t chunk_dims[2] =  { 1, chunk_dim };
-  hsize_t dims[2] = { 1, lambertSize };
+  hsize_t dims[2] = { 1ULL, static_cast<hsize_t>(lambertSize) };
   hsize_t size[2];
   hsize_t offset[2];
-  hsize_t hyperDims[2] =  { 1, lambertSize };
+  hsize_t hyperDims[2] =  { 1ULL, static_cast<hsize_t>(lambertSize) };
   double fillvalue = -1.0;
   int rank = 2;
 //  int i = 0;
@@ -523,7 +523,7 @@ int ModifiedLambertProjectionArray::writeH5Data(hid_t parentId, QVector<size_t> 
 // -----------------------------------------------------------------------------
 int ModifiedLambertProjectionArray::readH5Data(hid_t parentId)
 {
-  bool ok = false;
+  //bool ok = false;
   int err = 0;
   QString statsType;
   hid_t gid = QH5Utilities::openHDF5Object(parentId, DREAM3D::StringConstants::Statistics);
@@ -542,9 +542,9 @@ int ModifiedLambertProjectionArray::readH5Data(hid_t parentId)
 
   for (QList<QString>::iterator iter = names.begin(); iter != names.end(); ++iter)
   {
-    int index = 0;
+    //int index = 0;
     statsType = "";
-    index = QString( *iter ).toInt(&ok, 10);
+    //index = QString( *iter ).toInt(&ok, 10);
     QH5Lite::readStringAttribute(gid, *iter, DREAM3D::StringConstants::StatsType, statsType);
     hid_t statId = QH5Utilities::openHDF5Object(gid, *iter);
     if(statId < 0)

@@ -571,7 +571,6 @@ void ConvertOrientations::dataCheck()
   if( NULL != m_CellPhasesPtr.lock().get() )
   { m_CellPhases = m_CellPhasesPtr.lock()->getPointer(0); }
 
-  typedef DataArray<unsigned int> XTalStructArrayType;
   m_CrystalStructuresPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<unsigned int>, AbstractFilter>(this, getCrystalStructuresArrayPath(), dims);
   if( NULL != m_CrystalStructuresPtr.lock().get() )
   { m_CrystalStructures = m_CrystalStructuresPtr.lock()->getPointer(0); }

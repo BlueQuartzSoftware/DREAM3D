@@ -125,7 +125,7 @@ void __TestReorderCopy()
   {
     src->setValue(i, i);
   }
-  
+
   for(size_t i = 0; i < numTuples; i++)
   {
     for(size_t j = 0; j < cDims[0]; j++)
@@ -142,7 +142,7 @@ void __TestReorderCopy()
       T val = src->getComponent(i, j);
       DREAM3D_REQUIRE_EQUAL(cpy, val)
     }
-  } 
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -720,7 +720,7 @@ int __ValidateArray(typename DataArray<T>::Pointer array, size_t numTuples, int 
   nt = array->getSize();
   DREAM3D_REQUIRED(nt, ==, 0);
   ptr = array->getPointer(0);
-  DREAM3D_REQUIRED(ptr, ==, NULL);
+  DREAM3D_REQUIRED_PTR(ptr, ==, NULL);
 
 
   // Test resizing the array to a any larger size
@@ -731,7 +731,7 @@ int __ValidateArray(typename DataArray<T>::Pointer array, size_t numTuples, int 
   nc = array->getNumberOfComponents();
   DREAM3D_REQUIRED(nc, ==, numComp );
   ptr = array->getPointer(0);
-  DREAM3D_REQUIRED(ptr, !=, NULL);
+  DREAM3D_REQUIRED_PTR(ptr, !=, NULL);
 
   return err;
 }

@@ -135,7 +135,7 @@ int H5DataArrayReader::ReadRequiredAttributes(hid_t gid, const QString& name, QS
 IDataArray::Pointer H5DataArrayReader::ReadStringDataArray(hid_t gid, const QString& name, bool metaDataOnly)
 {
   herr_t err = -1;
-  herr_t retErr = 1;
+  //herr_t retErr = 1;
   hid_t typeId = -1;
   H5T_class_t attr_type;
   size_t attr_size;
@@ -219,7 +219,11 @@ IDataArray::Pointer H5DataArrayReader::ReadStringDataArray(hid_t gid, const QStr
     }
   }
 
-  CloseH5T(typeId, err, retErr);
+  err = H5Tclose(typeId);
+  if (err < 0 ) {
+    return IDataArray::NullPointer();
+  }
+
   return ptr;
 }
 
@@ -231,7 +235,7 @@ IDataArray::Pointer H5DataArrayReader::ReadIDataArray(hid_t gid, const QString& 
 {
 
   herr_t err = -1;
-  herr_t retErr = 1;
+  //herr_t retErr = 1;
   hid_t typeId = -1;
   H5T_class_t attr_type;
   size_t attr_size;
@@ -321,7 +325,7 @@ IDataArray::Pointer H5DataArrayReader::ReadIDataArray(hid_t gid, const QString& 
     {
       if (metaDataOnly == false) { ptr = Detail::readH5Dataset<bool>(gid, name, tDims, cDims); }
       else { ptr = DataArray<bool>::CreateArray(tDims, cDims, name, false); }
-      CloseH5T(typeId, err, retErr);
+      err = H5Tclose(typeId);
       return ptr; // <== Note early return here.
     }
     switch(attr_type)
@@ -382,7 +386,6 @@ IDataArray::Pointer H5DataArrayReader::ReadIDataArray(hid_t gid, const QString& 
         {
           qDebug() << "Unknown Type: " << typeId << " at " << name ;
           err = -1;
-          retErr = -1;
         }
         break;
       case H5T_FLOAT:
@@ -400,7 +403,6 @@ IDataArray::Pointer H5DataArrayReader::ReadIDataArray(hid_t gid, const QString& 
         {
           qDebug() << "Unknown Floating point type" ;
           err = -1;
-          retErr = -1;
         }
         break;
       default:
@@ -408,7 +410,7 @@ IDataArray::Pointer H5DataArrayReader::ReadIDataArray(hid_t gid, const QString& 
         QH5Utilities::printHDFClassType(attr_type);
     }
 
-    CloseH5T(typeId, err, retErr);
+    err = H5Tclose(typeId);
     //Close the H5A type Id that was retrieved during the loop
   }
 
@@ -534,8 +536,8 @@ IDataArray::Pointer H5DataArrayReader::ReadNeighborListData(hid_t gid, const QSt
         qDebug() << "Error: readUserMetaData() Unknown attribute type: " << attr_type ;
         QH5Utilities::printHDFClassType(attr_type);
     }
-    int retErr = 0;
-    CloseH5T(typeId, err, retErr);
+
+    err = H5Tclose(typeId);
     //Close the H5A type Id that was retrieved during the loop
   }
   if (err < 0 )

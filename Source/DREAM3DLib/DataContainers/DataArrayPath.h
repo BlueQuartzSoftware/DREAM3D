@@ -38,7 +38,7 @@
 
 
 #include <QtCore/QObject>
-#include <QtCore/QDebug>
+#include <QtCore/QScopedPointer>
 #include <QtCore/QString>
 #include <QtCore/QVector>
 #include <QtCore/QStringList>
@@ -46,12 +46,17 @@
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 
+// our PIMPL private class
+class DataArrayPathPrivate;
+
 /**
- * @brief The DataArrayPath class
+ * @brief The DataArrayPath class holds a complete or partial path to a data array starting at the DataContainer
+ * level. The class is implemented using the PIMPL design pattern.
  */
 class DREAM3DLib_EXPORT DataArrayPath : public QObject
 {
     Q_OBJECT
+    Q_DECLARE_PRIVATE(DataArrayPath)
 
   public:
     DataArrayPath();
@@ -82,9 +87,10 @@ class DREAM3DLib_EXPORT DataArrayPath : public QObject
 
     virtual ~DataArrayPath();
 
-    DREAM3D_INSTANCE_PROPERTY(QString, DataContainerName)
-    DREAM3D_INSTANCE_PROPERTY(QString, AttributeMatrixName)
-    DREAM3D_INSTANCE_PROPERTY(QString, DataArrayName)
+
+    DREAM3D_PIMPL_PROPERTY_DECL(QString, DataContainerName)
+    DREAM3D_PIMPL_PROPERTY_DECL(QString, AttributeMatrixName)
+    DREAM3D_PIMPL_PROPERTY_DECL(QString, DataArrayName)
 
     /**
      * @brief serialize Returns the path using the '|' charater by default. This can be over ridden by the programmer
@@ -129,7 +135,7 @@ class DREAM3DLib_EXPORT DataArrayPath : public QObject
 
 
   private:
-
+    QScopedPointer<DataArrayPathPrivate> const d_ptr;
 
 
 };

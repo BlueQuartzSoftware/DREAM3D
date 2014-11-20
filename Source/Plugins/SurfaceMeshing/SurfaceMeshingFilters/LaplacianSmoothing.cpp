@@ -414,8 +414,8 @@ int LaplacianSmoothing::edgeBasedSmoothing()
 
       for (int j = 0; j < 3; j++)
       {
-        BOOST_ASSERT( 3 * in1 + j < nvert * 3);
-        BOOST_ASSERT( 3 * in2 + j < nvert * 3);
+        BOOST_ASSERT( static_cast<size_t>(3 * in1 + j) < static_cast<size_t>(nvert * 3) );
+        BOOST_ASSERT( static_cast<size_t>(3 * in2 + j) < static_cast<size_t>(nvert * 3) );
         dlta = vsm[in2].pos[j] - vsm[in1].pos[j];
         delta[3 * in1 + j] += dlta;
         delta[3 * in2 + j] += -1.0 * dlta;

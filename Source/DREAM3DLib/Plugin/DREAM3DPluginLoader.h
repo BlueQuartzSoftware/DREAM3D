@@ -45,7 +45,8 @@ class FilterManager;
 
 
 /**
- * @brief The DREAM3DPluginLoader class
+ * @brief The DREAM3DPluginLoader class loads all the plugins that can be
+ * found in when DREAM3D starts up.
  */
 class DREAM3DLib_EXPORT DREAM3DPluginLoader
 {
@@ -53,6 +54,11 @@ class DREAM3DLib_EXPORT DREAM3DPluginLoader
 
     virtual ~DREAM3DPluginLoader();
 
+    /**
+     * @brief LoadPluginFilters
+     * @param filterManager The FilterManager object to load the filters into when
+     * a plugin is loaded
+     */
     static void LoadPluginFilters(FilterManager* filterManager);
 
 

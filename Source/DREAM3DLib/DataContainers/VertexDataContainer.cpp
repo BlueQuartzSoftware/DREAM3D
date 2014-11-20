@@ -85,7 +85,7 @@ int VertexDataContainer::writeVerticesToHDF5(hid_t dcGid, bool writeXdmf)
   if (verticesPtr.get() != NULL)
   {
     int32_t rank = 2; // THIS NEEDS TO BE THE SAME AS THE NUMBER OF ELEMENTS IN THE Structure from SurfaceMesh::DataStruc
-    hsize_t dims[2] = {verticesPtr->getNumberOfTuples(), 3};
+    hsize_t dims[2] = { static_cast<hsize_t>(verticesPtr->getNumberOfTuples()), 3ULL};
 
     float* data = reinterpret_cast<float*>(verticesPtr->getPointer(0));
 
@@ -237,7 +237,7 @@ int VertexDataContainer::readMeshDataFromHDF5(hid_t dcGid, bool preflight)
 
   err = readVertices(dcGid, preflight);
 
-  return 1;
+  return err;
 }
 
 // -----------------------------------------------------------------------------

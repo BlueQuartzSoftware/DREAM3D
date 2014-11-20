@@ -397,19 +397,19 @@ int StatsGenMDFWidget::getMisorientationData(StatsData* statsData, unsigned int 
   QVector<float> odf = generateODFData();
   QVector<float> mdf;
 
-  unsigned long long int nElements = 0;
+  //unsigned long long int nElements = 0;
 
   if ( Ebsd::CrystalStructure::Cubic_High == m_CrystalStructure)
   {
     mdf.resize(CubicOps::k_MdfSize);
     Texture::CalculateMDFData<float, CubicOps>(angles.data(), axes.data(), weights.data(), odf.data(), mdf.data(), angles.size());
-    nElements = 18 * 18 * 18;
+    //nElements = 18 * 18 * 18;
   }
   else if ( Ebsd::CrystalStructure::Hexagonal_High == m_CrystalStructure)
   {
     mdf.resize(HexagonalOps::k_MdfSize);
     Texture::CalculateMDFData<float, HexagonalOps>(angles.data(), axes.data(), weights.data(), odf.data(), mdf.data(), angles.size());
-    nElements = 36 * 36 * 12;
+    //nElements = 36 * 36 * 12;
   }
   if (mdf.size() > 0)
   {

@@ -87,7 +87,7 @@ int SurfaceDataContainer::writeFacesToHDF5(hid_t dcGid)
   if (facesPtr.get() != NULL)
   {
     int32_t rank = 2; // THIS NEEDS TO BE THE SAME AS THE NUMBER OF ELEMENTS IN THE Structure from SurfaceMesh::DataStruc
-    hsize_t dims[2] = {facesPtr->getNumberOfTuples(), 3};
+    hsize_t dims[2] = { static_cast<hsize_t>(facesPtr->getNumberOfTuples()), 3ULL};
 
     int32_t* data = reinterpret_cast<int32_t*>(facesPtr->getPointer(0));
 
