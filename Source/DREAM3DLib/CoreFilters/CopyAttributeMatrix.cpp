@@ -98,15 +98,15 @@ void CopyAttributeMatrix::dataCheck()
 
   if(m_NewAttributeMatrix.isEmpty() == true)
   {
-    setErrorCondition(-11000);
-    QString ss = QObject::tr("The New Attribute Array name can not be empty. Please set a value.");
+    setErrorCondition(-11004);
+    QString ss = QObject::tr("The New Attribute Matrix name can not be empty. Please set a value.");
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 
   if (m_SelectedAttributeMatrixPath.isEmpty() == true)
   {
-    setErrorCondition(-11001);
-    QString ss = QObject::tr("The complete path to the Attribute Array can not be empty. Please set an appropriate path.");
+    setErrorCondition(-11005);
+    QString ss = QObject::tr("The complete path to the Attribute Matrix can not be empty. Please set an appropriate path.");
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
   else
@@ -117,7 +117,7 @@ void CopyAttributeMatrix::dataCheck()
     DataContainer::Pointer dc = getDataContainerArray()->getDataContainer(dcName);
     if(NULL == dc.get())
     {
-      setErrorCondition(-11003);
+      setErrorCondition(-11007);
       QString ss = QObject::tr("The DataContainer '%1' was not found in the DataContainerArray").arg(dcName);
       notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
       return;
@@ -126,7 +126,7 @@ void CopyAttributeMatrix::dataCheck()
     AttributeMatrix::Pointer attrMat = dc->getAttributeMatrix(amName);
     if(NULL == attrMat.get())
     {
-      setErrorCondition(-11004);
+      setErrorCondition(-11008);
       QString ss = QObject::tr("The AttributeMatrix '%1' was not found in the DataContainer '%2'").arg(amName).arg(dcName);
       notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
       return;

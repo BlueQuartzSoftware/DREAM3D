@@ -196,6 +196,7 @@ IDataArray::Pointer AttributeMatrix::removeAttributeArray(const QString& name)
   it =  m_AttributeArrays.find(name);
   if ( it == m_AttributeArrays.end() )
   {
+      // DO NOT return a NullPointer for any reason other than "Data Array was not found"
     return IDataArray::NullPointer();
   }
   IDataArray::Pointer p = it.value();
@@ -206,19 +207,28 @@ IDataArray::Pointer AttributeMatrix::removeAttributeArray(const QString& name)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-bool AttributeMatrix::renameAttributeArray(const QString& oldname, const QString& newname)
+RenameErrorCodes AttributeMatrix::renameAttributeArray(const QString& oldname, const QString& newname, bool overwrite)
 {
-  QMap<QString, IDataArray::Pointer>::iterator it;
-  it =  m_AttributeArrays.find(oldname);
-  if ( it == m_AttributeArrays.end() )
-  {
-    return false;
-  }
-  IDataArray::Pointer p = it.value();
-  p->setName(newname);
-  removeAttributeArray(oldname);
-  addAttributeArray(newname, p);
-  return true;
+  QMap<QString, IDataArray::Pointer>::iterator itOld;
+    QMap<QString, IDataArray::Pointer>::iterator itNew;
+
+    itNew = m_AttributeArrays.find(newname);
+    // If new name doesn't exist or we want to overwrite one that does exist...
+    if (itNew == m_AttributeArrays.end() || overwrite == true)
+    {
+        itOld =  m_AttributeArrays.find(oldname);
+        // If old name doesn't exist...
+        if (itOld == m_AttributeArrays.end())
+        {
+            return OLD_DOES_NOT_EXIST;
+        }
+        IDataArray::Pointer p = itOld.value();
+        p->setName(newname);
+        removeAttributeArray(oldname);
+        addAttributeArray(newname, p);
+        return SUCCESS;
+    }
+    return NEW_EXISTS;
 }
 
 // -----------------------------------------------------------------------------

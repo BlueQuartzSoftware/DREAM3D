@@ -104,11 +104,12 @@ class DREAM3DLib_EXPORT DataContainerArrayProxy
     void print(const QString header = QString(""));
 
     /**
-     * @brief updateDataContainer This function will attempt to remove those DataContainers, AttributeMatrix and
+     * @brief removeSelectionsFromDataContainerArray This function will attempt to remove those DataContainers, AttributeMatrix and
      * DataArray items that are flagged as selected by the user/programmer.
-     * @param dca
+     * @param dca, state
      */
-    void removeSelectionsFromDataContainerArray(DataContainerArray* dca, Qt::CheckState state = Qt::Unchecked);
+    /* This function has been moved to DREAM3DLib/CoreFilters/RemoveArrays */
+    //void removeSelectionsFromDataContainerArray(DataContainerArray* dca, Qt::CheckState state = Qt::Unchecked);
 
     /**
      * @brief setAllFlags
