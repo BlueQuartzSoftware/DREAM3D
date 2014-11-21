@@ -157,7 +157,8 @@ AttributeMatrix::Pointer DataContainer::removeAttributeMatrix(const QString& nam
   it =  m_AttributeMatrices.find(name);
   if ( it == m_AttributeMatrices.end() )
   {
-    return AttributeMatrix::NullPointer();
+      // DO NOT return a NullPointer for any reason other than "Attribute Matrix was not found"
+      return AttributeMatrix::NullPointer();
   }
   AttributeMatrix::Pointer p = it.value();
   m_AttributeMatrices.erase(it);

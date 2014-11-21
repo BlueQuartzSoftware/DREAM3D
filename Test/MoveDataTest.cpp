@@ -41,6 +41,8 @@
 
 #include <boost/assert.hpp>
 
+#include <QtCore/QObject>
+
 #include "DREAM3DLib/Utilities/UnitTestSupport.hpp"
 #include "TestFileLocations.h"
 
@@ -52,6 +54,8 @@
 #include "DREAM3DLib/CoreFilters/CopyDataContainer.h"
 #include "DREAM3DLib/CoreFilters/CopyAttributeMatrix.h"
 #include "DREAM3DLib/CoreFilters/CopyAttributeArray.h"
+
+
 
 static const int k_MoveAttributeMatrix = 0;
 static const int k_MoveDataArray = 1;
@@ -78,7 +82,33 @@ enum ErrorCodes
     TUPLES_NOT_MATCH = -11019
 };
 
+class RemoveArraysObserver : public QObject
+{
+    Q_OBJECT
+    
+    DREAM3D_INSTANCE_PROPERTY(QList<PipelineMessage>, ErrorList)
+    Q_PROPERTY(QList<PipelineMessage> ErrorList READ getErrorList WRITE setErrorList)
+    
+public:
+    DREAM3D_SHARED_POINTERS(RemoveArraysObserver)
+    DREAM3D_TYPE_MACRO(RemoveArraysObserver)
+    DREAM3D_STATIC_NEW_MACRO(RemoveArraysObserver)
+    
+    RemoveArraysObserver() {}
+    virtual ~RemoveArraysObserver() {}
+ 
+public slots:
+    void processPipelineMessage(const PipelineMessage & msg)
+    {
+        m_ErrorList.push_back(msg);
+    }
+    
+private:
+    RemoveArraysObserver(const RemoveArraysObserver&); // Copy Constructor Not Implemented
+    void operator=(const RemoveArraysObserver&); // Operator '=' Not Implemented
+};
 
+#include "MoveDataTest.moc"
 
 // -----------------------------------------------------------------------------
 //
@@ -88,10 +118,12 @@ DataContainerArray::Pointer createDataContainerArray()
     DataContainerArray::Pointer dca = DataContainerArray::New();
     VolumeDataContainer::Pointer dc1 = VolumeDataContainer::New("DataContainer1");
     VolumeDataContainer::Pointer dc2 = VolumeDataContainer::New("DataContainer2");
+    VolumeDataContainer::Pointer dc3 = VolumeDataContainer::New("DataContainer3");
     AttributeMatrix::Pointer am1 = AttributeMatrix::New(QVector<size_t>(3,2), "AttributeMatrix1", 0);
     AttributeMatrix::Pointer am2 = AttributeMatrix::New(QVector<size_t>(7,2), "AttributeMatrix2", 0);
     AttributeMatrix::Pointer am3 = AttributeMatrix::New(QVector<size_t>(4,3), "AttributeMatrix3", 0);
     AttributeMatrix::Pointer am4 = AttributeMatrix::New(QVector<size_t>(7,2), "AttributeMatrix4", 0);
+    AttributeMatrix::Pointer am5 = AttributeMatrix::New(QVector<size_t>(7,2), "AttributeMatrix5", 0);
     IDataArray::Pointer da1 = DataArray<size_t>::CreateArray(8, "DataArray1");
     IDataArray::Pointer da2 = DataArray<size_t>::CreateArray(128, "DataArray2");
     IDataArray::Pointer da3 = DataArray<size_t>::CreateArray(128, "DataArray3");
@@ -108,11 +140,68 @@ DataContainerArray::Pointer createDataContainerArray()
     dc1->addAttributeMatrix("AttributeMatrix2", am2);
     dc2->addAttributeMatrix("AttributeMatrix3", am3);
     dc2->addAttributeMatrix("AttributeMatrix4", am4);
+    dc3->addAttributeMatrix("AttributeMatrix5", am5);
     
     dca->addDataContainer(dc1);
     dca->addDataContainer(dc2);
+    dca->addDataContainer(dc3);
     
     return dca;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void setDeleteSelections(DataContainerArrayProxy &proxy)
+{
+    proxy.setAllFlags(Qt::Unchecked);
+    
+    QMutableListIterator<DataContainerProxy> dcIter(proxy.list);
+    
+    while (dcIter.hasNext()) // DataContainerLevel
+    {
+        DataContainerProxy& dcProxy =  dcIter.next();
+        if (dcProxy.name == "DataContainer1")
+        {
+            dcProxy.flag = Qt::Checked;
+        }
+        QMutableMapIterator<QString, AttributeMatrixProxy> amIter(dcProxy.attributeMatricies);
+        while(amIter.hasNext()) // AttributeMatrixLevel
+        {
+            amIter.next();
+            AttributeMatrixProxy& amProxy = amIter.value();
+            if (amProxy.name == "AttributeMatrix5")
+            {
+                amProxy.flag = Qt::Checked;
+            }
+            QMutableMapIterator<QString, DataArrayProxy> dIter(amProxy.dataArrays);
+            while(dIter.hasNext()) // DataArray Level
+            {
+                dIter.next();
+                DataArrayProxy& daProxy = dIter.value();
+                if (daProxy.name == "DataArray4")
+                {
+                    daProxy.flag = Qt::Checked;
+                }
+            }
+        }
+    }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void displayErrors(RemoveArraysObserver::Pointer ptr)
+{
+    QList<PipelineMessage> list = ptr->getErrorList();
+    QList<PipelineMessage>::iterator iter = list.begin();
+    
+    int i = 1;
+    for (; iter != list.end(); iter++)
+    {
+        qDebug() << "Error " << i << " - " << "Error Code: " << (*iter).getCode();
+        i++;
+    }
 }
 
 // -----------------------------------------------------------------------------
@@ -450,7 +539,41 @@ void RenameDataTest()
 // -----------------------------------------------------------------------------
 void RemoveDataTest()
 {
+    DataContainerArray::Pointer dca = createDataContainerArray();
+    RemoveArrays::Pointer removeDataPtr = RemoveArrays::New();
+    removeDataPtr->setDataContainerArray(dca);
     
+    DataContainerArrayProxy proxy(dca.get());
+    setDeleteSelections(proxy);
+    removeDataPtr->setDataArraysToRemove(proxy);
+    
+    removeDataPtr->execute();
+    DataContainer::Pointer dc1 = dca->getDataContainer("DataContainer1");
+    AttributeMatrix::Pointer am5 = dca->getDataContainer("DataContainer3")->getAttributeMatrix("AttributeMatrix5");
+    IDataArray::Pointer da4 = dca->getDataContainer("DataContainer2")->getAttributeMatrix("AttributeMatrix3")->getAttributeArray("DataArray4");
+    
+    DREAM3D_REQUIRE_EQUAL(removeDataPtr->getErrorCondition(), 0)
+    DREAM3D_REQUIRE_EQUAL(dc1.get(), NULL)
+    DREAM3D_REQUIRE_EQUAL(am5.get(), NULL)
+    DREAM3D_REQUIRE_EQUAL(da4.get(), NULL)
+    
+    RemoveArraysObserver::Pointer obs = RemoveArraysObserver::New();
+    QObject foo;
+    foo.connect(removeDataPtr.get(), SIGNAL(filterGeneratedMessage(const PipelineMessage&)),
+                obs.get(), SLOT(processPipelineMessage(const PipelineMessage&)));
+    
+    removeDataPtr->execute();
+    QList<PipelineMessage> list = obs->getErrorList();
+    
+    DREAM3D_REQUIRE_EQUAL(list.size(), 3)
+    
+    QList<PipelineMessage>::iterator iter = list.begin();
+    
+    DREAM3D_REQUIRE_EQUAL((*iter).getCode(), DC_NOT_FOUND)
+    iter++;
+    DREAM3D_REQUIRE_EQUAL((*iter).getCode(), AA_NOT_FOUND)
+    iter++;
+    DREAM3D_REQUIRE_EQUAL((*iter).getCode(), AM_NOT_FOUND)
 }
 
 // -----------------------------------------------------------------------------

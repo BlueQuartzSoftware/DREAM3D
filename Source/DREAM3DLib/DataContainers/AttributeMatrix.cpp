@@ -196,6 +196,7 @@ IDataArray::Pointer AttributeMatrix::removeAttributeArray(const QString& name)
   it =  m_AttributeArrays.find(name);
   if ( it == m_AttributeArrays.end() )
   {
+      // DO NOT return a NullPointer for any reason other than "Data Array was not found"
     return IDataArray::NullPointer();
   }
   IDataArray::Pointer p = it.value();
