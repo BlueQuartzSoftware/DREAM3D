@@ -278,6 +278,7 @@ class InsertPrecipitatePhases : public AbstractFilter
 
     float fillingerror, oldfillingerror;
     float currentclusteringerror, oldclusteringerror;
+    float m_currentRDFerror, m_oldRDFerror;
     float currentsizedisterror, oldsizedisterror;
     float m_rdfMax;
     float m_rdfMin;
