@@ -35,60 +35,61 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _GroupFeatures_H_
-#define _GroupFeatures_H_
+#ifndef _FindSaltykovSizes_H_
+#define _FindSaltykovSizes_H_
 
-#include <vector>
 #include <QtCore/QString>
-
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/DataArrays/IDataArray.h"
-
 #include "DREAM3DLib/Common/AbstractFilter.h"
+#include "DREAM3DLib/DataArrays/IDataArray.h"
 #include "DREAM3DLib/DataContainers/VolumeDataContainer.h"
-#include "DREAM3DLib/OrientationOps/OrientationOps.h"
-#include "DREAM3DLib/DataArrays/NeighborList.hpp"
-#include "Plugins/Reconstruction/ReconstructionConstants.h"
+
 
 /**
- * @class GroupFeatures GroupFeatures.h DREAM3DLib/ReconstructionFilters/GroupFeatures.h
+ * @class FindSaltykovSizes FindSaltykovSizes.h DREAM3DLib/GenericFilters/FindSaltykovSizes.h
  * @brief
- * @author Joseph C Tucker (UES) & Michael A Groeber (AFRL)
- * @date Mar 11, 2014
- * @version 5.0
+ * @author Joseph C. Tucker
+ * @date Nov 11, 2014
+ * @version 5.1
  */
-class GroupFeatures : public AbstractFilter
+class FindSaltykovSizes : public AbstractFilter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
-    DREAM3D_SHARED_POINTERS(GroupFeatures)
-    DREAM3D_STATIC_NEW_MACRO(GroupFeatures)
-    DREAM3D_TYPE_MACRO_SUPER(GroupFeatures, AbstractFilter)
+    DREAM3D_SHARED_POINTERS(FindSaltykovSizes)
+    DREAM3D_STATIC_NEW_MACRO(FindSaltykovSizes)
+    DREAM3D_TYPE_MACRO_SUPER(FindSaltykovSizes, AbstractFilter)
 
-    virtual ~GroupFeatures();
+    virtual ~FindSaltykovSizes();
+    DREAM3D_FILTER_PARAMETER(int, NumberOfBins)
+    Q_PROPERTY(int NumberOfBins READ getNumberOfBins WRITE setNumberOfBins)
+	
+	DREAM3D_FILTER_PARAMETER(DataArrayPath, CellFeatureAttributeMatrixName)
+    Q_PROPERTY(DataArrayPath CellFeatureAttributeMatrixName READ getCellFeatureAttributeMatrixName WRITE setCellFeatureAttributeMatrixName)
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, ContiguousNeighborListArrayPath)
-    Q_PROPERTY(DataArrayPath ContiguousNeighborListArrayPath READ getContiguousNeighborListArrayPath WRITE setContiguousNeighborListArrayPath)
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, NonContiguousNeighborListArrayPath)
-    Q_PROPERTY(DataArrayPath NonContiguousNeighborListArrayPath READ getNonContiguousNeighborListArrayPath WRITE setNonContiguousNeighborListArrayPath)
+    DREAM3D_FILTER_PARAMETER(DataArrayPath, EquivalentDiametersArrayPath)
+    Q_PROPERTY(DataArrayPath EquivalentDiametersArrayPath READ getEquivalentDiametersArrayPath WRITE setEquivalentDiametersArrayPath)
 
-    DREAM3D_FILTER_PARAMETER(bool, UseNonContiguousNeighbors)
-    Q_PROPERTY(float UseNonContiguousNeighbors READ getUseNonContiguousNeighbors WRITE setUseNonContiguousNeighbors)
-    DREAM3D_FILTER_PARAMETER(bool, PatchGrouping)
-    Q_PROPERTY(float PatchGrouping READ getPatchGrouping WRITE setPatchGrouping)
+    DREAM3D_FILTER_PARAMETER(QString, SaltykovEquivalentDiametersArrayName)
+    Q_PROPERTY(QString SaltykovEquivalentDiametersArrayName READ getSaltykovEquivalentDiametersArrayName WRITE setSaltykovEquivalentDiametersArrayName)
 
-    virtual const QString getGroupName() {return DREAM3D::FilterGroups::ReconstructionFilters;}
-    virtual const QString getSubGroupName() {return DREAM3D::FilterSubGroups::SegmentationFilters;}
-    virtual const QString getHumanLabel() {return "Group Features";}
-    virtual const QString getBrandingString() { return "DREAM3D Reconstruction Plugin"; }
+    virtual const QString getCompiledLibraryName();
+    virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
+    virtual const QString getGroupName();
+    virtual const QString getSubGroupName();
+    virtual const QString getHumanLabel();
 
-    virtual void setupFilterParameters();
     /**
-    * @brief This method will write the options to a file
-    * @param writer The writer that is used to write the options to a file
+    * @brief This method will instantiate all the end user settable options/parameters
+    * for this filter
     */
+    virtual void setupFilterParameters();
+
+    /**
+     * @brief Reimplemented from @see AbstractFilter class
+     */
     virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
 
     /**
@@ -97,9 +98,6 @@ class GroupFeatures : public AbstractFilter
     */
     virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
 
-    /**
-     * @brief Reimplemented from @see AbstractFilter class
-     */
     virtual void execute();
     virtual void preflight();
 
@@ -110,22 +108,21 @@ class GroupFeatures : public AbstractFilter
     void preflightExecuted();
 
   protected:
-    GroupFeatures();
-
-    virtual int getSeed(int newFid);
-    virtual bool determineGrouping(int referenceFeature, int neighborFeature, int newFid);
-    virtual bool growPatch(int currentPatch);
-    virtual bool growGrouping(int referenceFeature, int neighborFeature, int newFid);
+    FindSaltykovSizes();
+    void find_saltykov_sizes();
+	int do_saltykov(std::vector<int> nA, float Dmax, int k);
 
   private:
-    NeighborList<int>::WeakPointer m_ContiguousNeighborList;
-    NeighborList<int>::WeakPointer m_NonContiguousNeighborList;
+    DEFINE_CREATED_DATAARRAY_VARIABLE(float, EquivalentDiameters)
+    DEFINE_CREATED_DATAARRAY_VARIABLE(float, SaltykovEquivalentDiameters)
 
     void dataCheck();
 
-    GroupFeatures(const GroupFeatures&); // Copy Constructor Not Implemented
-    void operator=(const GroupFeatures&); // Operator '=' Not Implemented
+    FindSaltykovSizes(const FindSaltykovSizes&); // Copy Constructor Not Implemented
+    void operator=(const FindSaltykovSizes&); // Operator '=' Not Implemented
 };
 
-#endif /* GroupFeatures_H_ */
+#endif /* FindSaltykovSizes_H_ */
+
+
 
