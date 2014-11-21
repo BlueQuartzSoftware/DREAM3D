@@ -302,7 +302,7 @@ if( CMAKE_BUILD_TYPE MATCHES Debug )
 ENDif( CMAKE_BUILD_TYPE MATCHES Debug )
 
 if(NOT MSVC)
-  #ADD_DEFINITIONS(-Wall)
+  ADD_DEFINITIONS(-Wall)
 endif()
 
 # On linux we need to set this because some of the libraries are Static
