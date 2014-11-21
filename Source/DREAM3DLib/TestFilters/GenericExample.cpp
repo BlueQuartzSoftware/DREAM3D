@@ -270,27 +270,12 @@ void GenericExample::dataCheck()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void GenericExample::dataCheck2()
-{
-  VolumeDataContainer* vdc = getDataContainerArray()->createNonPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, QString("Test Container") );
-  if(getErrorCondition() < 0) { return; }
-
-  vdc = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(QString("Test Container"));
-
-  DataContainer::Pointer removedDataContainer = getDataContainerArray()->removeDataContainer("Test Container");
-  removedDataContainer = DataContainer::NullPointer(); // this is just here to quiet the compiler about unused variables.
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void GenericExample::preflight()
 {
   setInPreflight(true);
   emit preflightAboutToExecute();
   emit updateFilterParameters(this);
   dataCheck();
-  dataCheck2();
   emit preflightExecuted();
   setInPreflight(false);
 }

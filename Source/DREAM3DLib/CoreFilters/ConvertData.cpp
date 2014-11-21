@@ -277,7 +277,7 @@ void ConvertData::dataCheck(bool preflight)
     return;
   }
 
-  int numberOfComponents = 0;
+ // int numberOfComponents = 0;
   if (true == preflight)
   {
 
@@ -294,7 +294,7 @@ void ConvertData::dataCheck(bool preflight)
       return;
     }
 
-    numberOfComponents = p->getNumberOfComponents();
+  //  numberOfComponents = p->getNumberOfComponents();
     QVector<size_t> dims = p->getComponentDimensions();
     int64_t voxels = cellAttrMat->getNumTuples();
     if (m_ScalarType == Detail::Int8)

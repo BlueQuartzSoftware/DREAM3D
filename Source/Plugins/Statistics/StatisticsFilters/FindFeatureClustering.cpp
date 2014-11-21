@@ -249,7 +249,7 @@ void FindFeatureClustering::find_clustering()
 
   std::vector<std::vector<float> > clusteringlist;
 
-  int totalFeatures = int(m_FeaturePhasesPtr.lock()->getNumberOfTuples());
+  size_t totalFeatures = m_FeaturePhasesPtr.lock()->getNumberOfTuples();
 
   clusteringlist.resize(totalFeatures);
 
@@ -287,21 +287,19 @@ void FindFeatureClustering::find_clustering()
         }
       }
     }
-
-
   }
 
   for (size_t i = 1; i < totalFeatures; i++)
   {
-      for (size_t j=0; j < clusteringlist[i].size(); j++)
+    for (size_t j=0; j < clusteringlist[i].size(); j++)
+    {
+      if (m_FeaturePhases[i] == m_PhaseNumber)
       {
-        if (m_FeaturePhases[i] == m_PhaseNumber)
-            {
-             value = clusteringlist[i][j];
-             if(value > max) { max = value; }
-             if(value < min) { min = value; }
-            }
+        value = clusteringlist[i][j];
+        if(value > max) { max = value; }
+        if(value < min) { min = value; }
       }
+    }
   }
 
   float stepsize = (max - min) / m_NumberOfBins;
@@ -311,10 +309,10 @@ void FindFeatureClustering::find_clustering()
 
   for (size_t i = 1; i < totalFeatures; i++)
   {
-      for (size_t j=0; j < clusteringlist[i].size(); j++)
+    for (size_t j=0; j < clusteringlist[i].size(); j++)
+    {
+      if (m_FeaturePhases[i] == m_PhaseNumber)
       {
-        if (m_FeaturePhases[i] == m_PhaseNumber)
-            {
         if(m_RemoveBiasedFeatures == false || m_BiasedFeatures[i] == false)
         {
           ensemble = m_FeaturePhases[i];
@@ -322,11 +320,9 @@ void FindFeatureClustering::find_clustering()
           if(bin >= m_NumberOfBins) { bin = m_NumberOfBins - 1; }
           m_NewEnsembleArray[(m_NumberOfBins * ensemble) + bin]++;
         }
-        }
+      }
+    }
   }
-}
-
-
 
   for (size_t i = 1; i < totalFeatures; i++)
   {
@@ -336,19 +332,7 @@ void FindFeatureClustering::find_clustering()
     m_ClusteringList.lock()->setList(static_cast<int>(i), sharedClustLst);
   }
 
-
-
-
-
-
-
 }
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-
-
-
 
 // -----------------------------------------------------------------------------
 //

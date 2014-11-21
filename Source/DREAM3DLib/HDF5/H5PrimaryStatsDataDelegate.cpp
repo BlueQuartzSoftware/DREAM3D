@@ -535,7 +535,10 @@ uint32_t H5PrimaryStatsDataDelegate::readDistributionType(hid_t pid, const QStri
 
   QString disTypeStr;
   err = QH5Lite::readStringAttribute(pid, hdf5GroupName, DREAM3D::StringConstants::DistributionType, disTypeStr);
-
+  if(err < 0)
+  {
+    return dType;
+  }
   if (disTypeStr.compare(DREAM3D::StringConstants::BetaDistribution) == 0)
   {
     dType = DREAM3D::DistributionType::Beta;

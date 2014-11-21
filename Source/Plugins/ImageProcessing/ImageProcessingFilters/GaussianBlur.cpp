@@ -152,7 +152,7 @@ void GaussianBlur::execute()
   ImageProcessing::ImportUInt8FilterType::Pointer importFilter = ITKUtilitiesType::Dream3DtoITKImportFilter<ImageProcessing::DefaultPixelType>(m, attrMatName, m_SelectedCellArray);
 
   //get image from filter
-  const ImageProcessing::UInt8ImageType* inputImage = inputImage = importFilter->GetOutput();
+  const ImageProcessing::UInt8ImageType* inputImage = importFilter->GetOutput();
   ImageProcessing::UInt8ImageType::RegionType filterRegion = inputImage->GetBufferedRegion();
   ImageProcessing::UInt8ConstIteratorType it(inputImage, filterRegion);
 

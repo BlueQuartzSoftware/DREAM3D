@@ -259,7 +259,7 @@ void YSChoiAbaqusReader::dataCheck()
         xpoints = tokens[1].toInt(&ok, 10);
         ypoints = tokens[2].toInt(&ok, 10);
         zpoints = tokens[3].toInt(&ok, 10);
-        size_t dims[3] = {xpoints, ypoints, zpoints};
+        size_t dims[3] = { static_cast<size_t>(xpoints), static_cast<size_t>(ypoints), static_cast<size_t>(zpoints) };
         m->setDimensions(dims);
         m->setOrigin(0, 0, 0);
       }
@@ -303,7 +303,7 @@ void YSChoiAbaqusReader::dataCheck()
   if( NULL != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
-  typedef DataArray<unsigned int> XTalStructArrayType;
+ //typedef DataArray<unsigned int> XTalStructArrayType;
   tempPath.update(getDataContainerName(), getCellEnsembleAttributeMatrixName(), getCrystalStructuresArrayName() );
   m_CrystalStructuresPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<uint32_t>, AbstractFilter, uint32_t>(this,  tempPath, Ebsd::CrystalStructure::Cubic_High, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_CrystalStructuresPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
@@ -353,7 +353,7 @@ void YSChoiAbaqusReader::execute()
       ypoints = tokens[2].toInt(&ok, 10);
       zpoints = tokens[3].toInt(&ok, 10);
       totalpoints = xpoints * ypoints * zpoints;
-      size_t dims[3] = {xpoints, ypoints, zpoints};
+      size_t dims[3] = { static_cast<size_t>(xpoints), static_cast<size_t>(ypoints), static_cast<size_t>(zpoints) };
       m->setDimensions(dims);
       m->setOrigin(0, 0, 0);
 

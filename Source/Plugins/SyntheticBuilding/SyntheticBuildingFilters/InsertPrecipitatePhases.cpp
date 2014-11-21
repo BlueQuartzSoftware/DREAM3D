@@ -234,8 +234,8 @@ void InsertPrecipitatePhases::dataCheck()
   VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, m_FeatureIdsArrayPath.getDataContainerName(), false);
   if(getErrorCondition() < 0 || NULL == m) { return; }
   //Input Ensemble Data That we require
-  typedef DataArray<unsigned int> PhaseTypeArrayType;
-  typedef DataArray<unsigned int> ShapeTypeArrayType;
+//  typedef DataArray<unsigned int> PhaseTypeArrayType;
+//  typedef DataArray<unsigned int> ShapeTypeArrayType;
 
   QVector<size_t> dims(1, 1);
   m_PhaseTypesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<unsigned int>, AbstractFilter>(this, getInputPhaseTypesArrayPath(), dims);
@@ -1043,7 +1043,7 @@ void InsertPrecipitatePhases::determine_clustering(size_t gnum, int add)
   while (phase != precipitatephases[iter]) { iter++; }
 
   StatsDataArray& statsDataArray = *(m_StatsDataArray.lock());
-  typedef std::vector<std::vector<float> > VectOfVectFloat_t;
+  //typedef std::vector<std::vector<float> > VectOfVectFloat_t;
 
   PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsDataArray[phase].get());
   //  VectOfVectFloat_t& curSimClusteringDist = simclusteringdist[iter];
@@ -1451,20 +1451,20 @@ void InsertPrecipitatePhases::assign_voxels()
     static_cast<DimType>(udims[2]),
   };
 
-  DimType neighpoints[6];
-  neighpoints[0] = -dims[0] * dims[1];
-  neighpoints[1] = -dims[0];
-  neighpoints[2] = -1;
-  neighpoints[3] = 1;
-  neighpoints[4] = dims[0];
-  neighpoints[5] = dims[0] * dims[1];
+//  DimType neighpoints[6];
+//  neighpoints[0] = -dims[0] * dims[1];
+//  neighpoints[1] = -dims[0];
+//  neighpoints[2] = -1;
+//  neighpoints[3] = 1;
+//  neighpoints[4] = dims[0];
+//  neighpoints[5] = dims[0] * dims[1];
 
   float totalPoints = dims[0] * dims[1] * dims[2];
   float xRes = m->getXRes();
   float yRes = m->getYRes();
   float zRes = m->getZRes();
 
-  int oldname;
+//  int oldname;
   size_t column, row, plane;
   float inside;
   float xc, yc, zc;
@@ -1585,7 +1585,7 @@ void InsertPrecipitatePhases::assign_voxels()
             int currentpoint = index;
             if (m_FeatureIds[currentpoint] > firstPrecipitateFeature)
             {
-              oldname = m_FeatureIds[currentpoint];
+              //oldname = m_FeatureIds[currentpoint];
               m_FeatureIds[currentpoint] = -2;
             }
             if (m_FeatureIds[currentpoint] < firstPrecipitateFeature && m_FeatureIds[currentpoint] != -2)
@@ -2111,7 +2111,7 @@ void InsertPrecipitatePhases::write_goal_attributes()
   float threshold = 0.0f;
 
   // Skip the first feature
-  for(qint32 i = firstPrecipitateFeature; i < numTuples; ++i)
+  for(size_t i = firstPrecipitateFeature; i < numTuples; ++i)
   {
     if (((float)i / numTuples) * 100.0f > threshold)
     {
@@ -2127,7 +2127,7 @@ void InsertPrecipitatePhases::write_goal_attributes()
     // Print the feature id
     dStream << i;
     // Print a row of data
-    for(qint32 p = 0; p < data.size(); ++p)
+    for(size_t p = 0; p < data.size(); ++p)
     {
       dStream << space;
       data[p]->printTuple(dStream, i, space);

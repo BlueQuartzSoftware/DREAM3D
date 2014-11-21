@@ -540,10 +540,10 @@ namespace DREAM3D
     const unsigned int Beta = 0;         //!<
     const unsigned int LogNormal = 1;    //!<
     const unsigned int Power = 2;        //!<
-    const unsigned int UnknownDistributionType = 3;    //!<
-    const unsigned int RDFFrequency = 4; //!<
-    const unsigned int RDFMaxMin = 5; //!<
-    const unsigned int Count = 3; //!<
+    const unsigned int RDFFrequency = 3; //!<
+    const unsigned int RDFMaxMin = 4; //!<
+    const unsigned int UnknownDistributionType = 5;    //!<
+    const unsigned int Count = 5; //!<
 
     enum ColumnCount
     {

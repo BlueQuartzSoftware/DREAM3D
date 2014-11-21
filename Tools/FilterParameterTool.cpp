@@ -325,7 +325,7 @@ bool CorrectInitializerList( AbstractFilter::Pointer filter, const QString& hFil
   {
     // Read the Source File
     QFileInfo fi(cppFile);
-    if (fi.baseName().compare("") != 0)
+    if (fi.baseName().compare("FindBoundingBoxFeatures") != 0)
     {
       return false;
     }
@@ -543,10 +543,10 @@ bool ValidateParameterReader( AbstractFilter::Pointer filter, const QString& hFi
   {
     // Read the Source File
     QFileInfo fi(cppFile);
-//    if (fi.baseName().compare("MatchCrystallography") != 0)
-//    {
-//      return false;
-//    }
+    //    if (fi.baseName().compare("FindBoundingBoxFeatures") != 0)
+    //    {
+    //      return false;
+    //    }
 
     QFile source(cppFile);
     source.open(QFile::ReadOnly);
@@ -646,7 +646,7 @@ bool ValidateParameterReader( AbstractFilter::Pointer filter, const QString& hFi
 // -----------------------------------------------------------------------------
 QString findPath(const QString& groupName, const QString& filtName, const QString ext)
 {
-//  std::cout << groupName.toStdString() << "::" << filtName.toStdString() << std::endl;
+  //  std::cout << groupName.toStdString() << "::" << filtName.toStdString() << std::endl;
   QString prefix = D3DTools::GetDREAM3DProjDir() + ("Source/");
   {
     QString path = D3DTools::GetDREAM3DLibDir() + "/" + groupName + "Filters/" + filtName + ext;
@@ -662,12 +662,12 @@ QString findPath(const QString& groupName, const QString& filtName, const QStrin
   libs << "ProcessModeling" << "UCSB" << "ImageProcessing" << "DDDAnalysisToolbox" << "ImageImport" <<
           "OrientationAnalysis" << "Processing" <<  "Reconstruction" << "Sampling" << "Statistics"  <<
           "SurfaceMeshing" << "SyntheticBuilding" << "ImageProcessing" << "BrukerIntegration" <<
-          "ProcessModeling" << "TransformationPhase" << "IO";
+          "ProcessModeling" << "TransformationPhase" << "IO" << "Generic";
 
   for (int i = 0; i < libs.size(); ++i)
   {
     QString path = prefix + "/" + libs.at(i) + "/" + libs.at(i) + "Filters/" + filtName + ext;
-   // std::cout << "    ****" << path.toStdString() << std::endl;
+    // std::cout << "    ****" << path.toStdString() << std::endl;
 
     QFileInfo fi(path);
     if(fi.exists() == true)
@@ -678,10 +678,10 @@ QString findPath(const QString& groupName, const QString& filtName, const QStrin
 
 
   prefix = D3DTools::GetDREAM3DProjParentDir();
-   for (int i = 0; i < libs.size(); ++i)
+  for (int i = 0; i < libs.size(); ++i)
   {
     QString path = prefix + "/" + libs.at(i) + "/" + libs.at(i) + "Filters/" + filtName + ext;
-  //  std::cout << "    ****" << path.toStdString() << std::endl;
+    //  std::cout << "    ****" << path.toStdString() << std::endl;
 
     QFileInfo fi(path);
     if(fi.exists() == true)

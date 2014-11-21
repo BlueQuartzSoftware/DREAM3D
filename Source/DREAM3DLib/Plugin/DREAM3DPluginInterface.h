@@ -101,7 +101,7 @@ class FilterWidgetManager;
  *  have a fully functioning plugin that is able to display an input GUI and process
  *  the input images.
  *
- *  @subsection plugin_interface PluginInterface
+ * @subsection plugin_interface PluginInterface
  *    The developer should create a C++ class that inherits publicly from DREAM3DPluginInterface and
  *    QObject.
  *    @code

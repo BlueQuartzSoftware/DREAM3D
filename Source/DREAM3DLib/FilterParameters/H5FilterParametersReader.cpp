@@ -35,6 +35,8 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #include "H5FilterParametersReader.h"
 
+#include <limits>
+
 #include <QtCore/QStringList>
 
 #include "H5Support/QH5Utilities.h"
@@ -112,7 +114,10 @@ FilterPipeline::Pointer H5FilterParametersReader::ReadPipelineFromFile(QString f
   // Use QH5Lite to ask how many "groups" are in the "Pipeline Group"
   QList<QString> groupList;
   herr_t err = QH5Utilities::getGroupObjects(pipelineGroupId, H5Utilities::H5Support_GROUP, groupList);
+  if(err < 0)
+  {
 
+  }
 
   H5FilterParametersReader::Pointer reader = H5FilterParametersReader::New();
   reader->setPipelineGroupId(pipelineGroupId);
@@ -200,6 +205,10 @@ QVector<QString> H5FilterParametersReader::readStrings(const QString name, QVect
   int vectorSize = 0;
   QString str = "";
   int err = QH5Lite::readScalarDataset(m_CurrentGroupId, name, vectorSize);
+  if(err < 0)
+  {
+
+  }
   for (int i = 0; i < vectorSize; i++)
   {
     QString ss = QString::number(i, 10);
@@ -554,21 +563,29 @@ FloatVec4_t H5FilterParametersReader::readFloatVec4(const QString name, FloatVec
 // -----------------------------------------------------------------------------
 FileListInfo_t H5FilterParametersReader::readFileListInfo(const QString name, FileListInfo_t defaultValue)
 {
-  int err = 0;
+
   FileListInfo_t v;
 
   hid_t gid = QH5Utilities::openHDF5Object(m_CurrentGroupId, name);
   if(gid < 0) { return defaultValue; }
 
-  err = QH5Lite::readScalarDataset<qint32>(gid, "EndIndex", v.EndIndex );
+  int err = QH5Lite::readScalarDataset<qint32>(gid, "EndIndex", v.EndIndex );
+  if(err < 0) {}
+  if(err < 0) {}
   err = QH5Lite::readScalarDataset<qint32>(gid, "StartIndex", v.StartIndex );
+  if(err < 0) {}
   err = QH5Lite::readScalarDataset<qint32>(gid, "PaddingDigits", v.PaddingDigits );
+  if(err < 0) {}
   err = QH5Lite::readScalarDataset<quint32>(gid, "Ordering", v.Ordering );
+  if(err < 0) {}
   err = QH5Lite::readStringDataset(gid, "FileExtension", v.FileExtension );
+  if(err < 0) {}
   err = QH5Lite::readStringDataset(gid, "FilePrefix", v.FilePrefix );
+  if(err < 0) {}
   err = QH5Lite::readStringDataset(gid, "FileSuffix", v.FileSuffix );
+  if(err < 0) {}
   err = QH5Lite::readStringDataset(gid, "InputPath", v.InputPath );
-
+  if(err < 0) {}
   H5Gclose(gid); // Close the Group Object before we return
 
   return v;
@@ -655,7 +672,13 @@ AxisAngleInput_t H5FilterParametersReader::readAxisAngle(const QString name, Axi
 
   QString ss = QString::number(vectorPos) + H5FilterParameter::AxisAngleInput;
   err = QH5Lite::readPointerAttribute<float>(m_CurrentGroupId, name, ss, reinterpret_cast<float*>(&v) );
-
+  if(err < 0)
+  {
+      v.angle = std::numeric_limits<float>::quiet_NaN();
+      v.h = std::numeric_limits<float>::quiet_NaN();
+      v.k = std::numeric_limits<float>::quiet_NaN();
+      v.l = std::numeric_limits<float>::quiet_NaN();
+  }
   return v;
 }
 
@@ -719,26 +742,41 @@ DataContainerArrayProxy H5FilterParametersReader::readDataContainerArrayProxy(co
   DataContainerArrayProxy dcaProxy;
   // Open the top level group that holds all the values for this filter parameter
   hid_t dcaGid = QH5Utilities::openHDF5Object(m_CurrentGroupId, name);
+  HDF5ScopedGroupSentinel sentinel(&dcaGid, true);
   if(dcaGid < 0) { return defValue; }
   QList<QString> dcaNames;
   int err = QH5Utilities::getGroupObjects(dcaGid, H5Utilities::H5Support_GROUP, dcaNames);
+  if (err < 0)
+  {
+    return defValue;
+  }
   // Loop over all the data Containers
   for(int i = 0; i < dcaNames.size(); i++)
   {
     QString dcName = dcaNames.at(i);
     hid_t dcGid = QH5Utilities::openHDF5Object(dcaGid, dcName);
+    sentinel.addGroupId(&dcGid);
     DataContainerProxy dcProxy;
     dcProxy.name = dcName;
     // Loop over the attribute Matrices
     QList<QString> amNames;
     err = QH5Utilities::getGroupObjects(dcGid, H5Utilities::H5Support_GROUP, amNames);
+    if (err < 0)
+    {
+      return defValue;
+    }
     for(int j = 0; j < amNames.size(); j++)
     {
       QString amName = amNames.at(j);
       hid_t amGid = QH5Utilities::openHDF5Object(dcGid, amName);
+      sentinel.addGroupId(&amGid);
       AttributeMatrixProxy amProxy(amName, true);
       QString data; // Output will be read into this object
       err = QH5Lite::readStringDataset(amGid, "Arrays", data);
+      if (err < 0)
+      {
+        return defValue;
+      }
       H5Gclose(amGid);
       QStringList arrayNames = data.split('\n');
       QString path = DREAM3D::StringConstants::DataContainerGroupName + "/" + dcProxy.name + "/" + amProxy.name;

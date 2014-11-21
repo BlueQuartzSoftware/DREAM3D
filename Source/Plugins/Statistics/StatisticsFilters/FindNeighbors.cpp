@@ -180,8 +180,8 @@ void FindNeighbors::dataCheck()
   // Do this whole block FIRST otherwise the side effect is that a call to m->getNumCellFeatureTuples will = 0
   // because we are just creating an empty NeighborList object.
   // Now we are going to get a "Pointer" to the NeighborList object out of the DataContainer
-  typedef NeighborList<int> IntNeighborList_t;
-  typedef NeighborList<float> FloatNeighborList_t;
+//  typedef NeighborList<int> IntNeighborList_t;
+//  typedef NeighborList<float> FloatNeighborList_t;
 
   tempPath.update(getCellFeatureAttributeMatrixPath().getDataContainerName(), getCellFeatureAttributeMatrixPath().getAttributeMatrixName(), getNeighborListArrayName() );
   m_NeighborList = getDataContainerArray()->createNonPrereqArrayFromPath<NeighborList<int32_t>, AbstractFilter, int32_t>(this, tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */

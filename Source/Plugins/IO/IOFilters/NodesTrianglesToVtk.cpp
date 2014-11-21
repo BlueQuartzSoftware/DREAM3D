@@ -103,11 +103,11 @@ int NodesTrianglesToVtk::writeFilterParameters(AbstractFilterParametersWriter* w
 {
   writer->openFilterGroup(this, index);
   DREAM3D_FILTER_WRITE_PARAMETER(NodesFile)
-  DREAM3D_FILTER_WRITE_PARAMETER(TrianglesFile)
-  DREAM3D_FILTER_WRITE_PARAMETER(OutputVtkFile)
-  DREAM3D_FILTER_WRITE_PARAMETER(WriteBinaryFile)
-  DREAM3D_FILTER_WRITE_PARAMETER(WriteConformalMesh)
-  writer->closeFilterGroup();
+      DREAM3D_FILTER_WRITE_PARAMETER(TrianglesFile)
+      DREAM3D_FILTER_WRITE_PARAMETER(OutputVtkFile)
+      DREAM3D_FILTER_WRITE_PARAMETER(WriteBinaryFile)
+      DREAM3D_FILTER_WRITE_PARAMETER(WriteConformalMesh)
+      writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
 
@@ -179,7 +179,7 @@ void NodesTrianglesToVtk::preflight()
 // -----------------------------------------------------------------------------
 void NodesTrianglesToVtk::execute()
 {
-  int err = 0;
+  //int err = 0;
 
   dataCheck(false);
   if(getErrorCondition() < 0) { return; }
@@ -323,15 +323,23 @@ void NodesTrianglesToVtk::execute()
   }
   fclose(triFile);
 
-
+  int err = 0;
   // Write the CELL_DATA section
   if (m_WriteBinaryFile == true)
   {
     err = writeBinaryCellData(m_TrianglesFile, vtkFile, nTriangles, m_WriteConformalMesh);
+    if(err < 0)
+    {
+      setErrorCondition(-9000);
+    }
   }
   else
   {
     err = writeASCIICellData(m_TrianglesFile, vtkFile, nTriangles, m_WriteConformalMesh);
+    if(err < 0)
+    {
+      setErrorCondition(-9001);
+    }
   }
 
 
@@ -339,10 +347,18 @@ void NodesTrianglesToVtk::execute()
   if (m_WriteBinaryFile == true)
   {
     err = writeBinaryPointData(m_NodesFile, vtkFile, nNodes, m_WriteConformalMesh);
+    if(err < 0)
+    {
+      setErrorCondition(-9002);
+    }
   }
   else
   {
     err = writeASCIIPointData(m_NodesFile, vtkFile, nNodes, m_WriteConformalMesh);
+    if(err < 0)
+    {
+      setErrorCondition(-9003);
+    }
   }
 
 

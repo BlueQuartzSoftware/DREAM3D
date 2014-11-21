@@ -394,7 +394,7 @@ void GenerateEnsembleStatistics::dataCheck()
   if(m_CalculateODF == true || m_CalculateMDF == true)
   {
     dims[0] = 1;
-    typedef DataArray<unsigned int> XTalStructArrayType;
+   //typedef DataArray<unsigned int> XTalStructArrayType;
     m_CrystalStructuresPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<unsigned int>, AbstractFilter>(this, getCrystalStructuresArrayPath(), dims)
                              ; /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
     if( NULL != m_CrystalStructuresPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
@@ -441,7 +441,7 @@ void GenerateEnsembleStatistics::dataCheck()
   else
   {
     dims[0] = 1;
-    typedef DataArray<unsigned int> PhaseTypeArrayType;
+    //typedef DataArray<unsigned int> PhaseTypeArrayType;
     tempPath.update(getCellEnsembleAttributeMatrixPath().getDataContainerName(), getCellEnsembleAttributeMatrixPath().getAttributeMatrixName(), getPhaseTypesArrayName() );
     m_PhaseTypesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<uint32_t>, AbstractFilter, uint32_t>(this, tempPath, DREAM3D::PhaseType::UnknownPhaseType, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
     if( NULL != m_PhaseTypesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
@@ -507,7 +507,7 @@ void GenerateEnsembleStatistics::execute()
   // Check to see if the user has over ridden the phase types for this filter
   if (m_PhaseTypeData.d.size() > 0)
   {
-    typedef DataArray<unsigned int> PhaseTypeArrayType;
+    //typedef DataArray<unsigned int> PhaseTypeArrayType;
 
     if(static_cast<int>(m_PhaseTypeData.d.size()) < totalEnsembles)
     {
@@ -764,7 +764,7 @@ void GenerateEnsembleStatistics::gatherRadialDistFunc()
     QVector<VectorOfFloatArray> radialDistFunc;
     QVector<VectorOfFloatArray> minMaxDist;
 
-    size_t numfeatures = m_EquivalentDiametersPtr.lock()->getNumberOfTuples();
+    //size_t numfeatures = m_EquivalentDiametersPtr.lock()->getNumberOfTuples();
     size_t numensembles = m_PhaseTypesPtr.lock()->getNumberOfTuples();
 
     QVector<float> fractions(numensembles, 0.0);

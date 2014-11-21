@@ -349,8 +349,6 @@ int DxReader::readFile()
   QString line;
   QString delimeters(", ;\t"); /* delimeters to split the data */
 
-  int error; /* dummy variables */
-
   bool finished_header, finished_data;
   finished_header = true;
   finished_data = false;
@@ -377,9 +375,7 @@ int DxReader::readFile()
 
   while (buf.size() > 0 && m_InStream.atEnd() == false)
   {
-
     // Get the remaining lines of the header and ignore
-    error = 0;
     buf = buf.simplified();
     QList<QByteArray> tokens = buf.split(' ');
 

@@ -96,7 +96,7 @@ int VolumeDataContainer::writeMeshToHDF5(hid_t dcGid, bool writeXdmf)
   else
   {
     int64_t volDims[3] =
-    { getXPoints(), getYPoints(), getZPoints() };
+    { static_cast<int64_t>(getXPoints()), static_cast<int64_t>(getYPoints()), static_cast<int64_t>(getZPoints()) };
     float spacing[3] =
     { getXRes(), getYRes(), getZRes() };
     float origin[3] =
@@ -374,8 +374,8 @@ void VolumeDataContainer::writeXdmfPolyMeshStructureHeader(QTextStream& out, QSt
 // -----------------------------------------------------------------------------
 void VolumeDataContainer::writeXdmfRectMeshStructureHeader(QTextStream& out, QString hdfFileName)
 {
-  int64_t volDims[3] =
-  { getXPoints(), getYPoints(), getZPoints() };
+    int64_t volDims[3] =
+    { static_cast<int64_t>(getXPoints()), static_cast<int64_t>(getYPoints()), static_cast<int64_t>(getZPoints()) };
   float spacing[3] =
   { getXRes(), getYRes(), getZRes() };
   float origin[3] =

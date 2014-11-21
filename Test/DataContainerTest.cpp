@@ -604,6 +604,38 @@ void TestInsertDelete()
 
 }
 
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void TestDataArrayPath()
+{
+  QString dcname = QString::fromLatin1("DataContainer");
+  QString amname = QString::fromLatin1("Attribute Matrix");
+  QString daname = QString::fromLatin1("Euler Angles");
+
+
+  DataArrayPath dap0;
+  DataArrayPath dap1(dcname, amname, daname);
+  DataArrayPath dap2("DataContainer2|AttributeMatrix2|DataArray2");
+  DataArrayPath dap3(dap2);
+
+  dap0 = dap3;
+
+  QString serialize = dap1.serialize();
+  QStringList strList = dap2.getAsStringList();
+
+  QVector<QString> strVec = dap0.getAsVector();
+
+  bool isEmpty = dap1.isEmpty();
+
+  bool isValid = dap3.isValid();
+
+  QStringList split = dap2.split();
+
+  dap2.update("Foo", "Bar", "Baz");
+}
+
 #if 0
 template<typename T, typename K>
 void _arrayCreation(VolumeDataContainer::Pointer m)
@@ -855,6 +887,7 @@ void TestDataContainer()
 #endif
 
 
+
 // -----------------------------------------------------------------------------
 //  Use unit test framework
 // -----------------------------------------------------------------------------
@@ -878,6 +911,7 @@ int main(int argc, char** argv)
       DREAM3D_REGISTER_TEST( TestDataContainerArrayProxy() )
 
       DREAM3D_REGISTER_TEST( TestDataContainerReader() )
+    DREAM3D_REGISTER_TEST(TestDataArrayPath() )
 
     #if REMOVE_TEST_FILES
       //DREAM3D_REGISTER_TEST( RemoveTestFiles() )
