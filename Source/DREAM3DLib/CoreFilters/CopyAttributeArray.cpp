@@ -100,7 +100,6 @@ void CopyAttributeArray::dataCheck()
     if(m_NewArrayName.isEmpty() == true)
     {
         setErrorCondition(-11009);
-        int err = getErrorCondition();
         QString ss = QObject::tr("The New Attribute Array name can not be empty. Please set a value.");
         notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
         return;
