@@ -63,10 +63,11 @@ class FindSaltykovSizes : public AbstractFilter
     DREAM3D_TYPE_MACRO_SUPER(FindSaltykovSizes, AbstractFilter)
 
     virtual ~FindSaltykovSizes();
+
     DREAM3D_FILTER_PARAMETER(int, NumberOfBins)
     Q_PROPERTY(int NumberOfBins READ getNumberOfBins WRITE setNumberOfBins)
-	
-	DREAM3D_FILTER_PARAMETER(DataArrayPath, CellFeatureAttributeMatrixName)
+
+    DREAM3D_FILTER_PARAMETER(DataArrayPath, CellFeatureAttributeMatrixName)
     Q_PROPERTY(DataArrayPath CellFeatureAttributeMatrixName READ getCellFeatureAttributeMatrixName WRITE setCellFeatureAttributeMatrixName)
 
     DREAM3D_FILTER_PARAMETER(DataArrayPath, EquivalentDiametersArrayPath)
@@ -110,7 +111,7 @@ class FindSaltykovSizes : public AbstractFilter
   protected:
     FindSaltykovSizes();
     void find_saltykov_sizes();
-	int do_saltykov(std::vector<int> nA, float Dmax, int k);
+    int do_saltykov(std::vector<int> nA, float Dmax, int k);
 
   private:
     DEFINE_CREATED_DATAARRAY_VARIABLE(float, EquivalentDiameters)

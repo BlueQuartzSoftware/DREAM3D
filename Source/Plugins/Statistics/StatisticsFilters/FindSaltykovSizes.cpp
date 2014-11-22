@@ -51,8 +51,8 @@ FindSaltykovSizes::FindSaltykovSizes() :
   m_NumberOfBins(10),
   m_CellFeatureAttributeMatrixName(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellFeatureAttributeMatrixName, ""),
   m_EquivalentDiametersArrayPath(DREAM3D::FeatureData::EquivalentDiameters),
-  m_EquivalentDiameters(NULL),
   m_SaltykovEquivalentDiametersArrayName(DREAM3D::FeatureData::SaltykovEquivalentDiameters),
+  m_EquivalentDiameters(NULL),
   m_SaltykovEquivalentDiameters(NULL)
 {
   setupFilterParameters();
@@ -98,10 +98,10 @@ int FindSaltykovSizes::writeFilterParameters(AbstractFilterParametersWriter* wri
 {
   writer->openFilterGroup(this, index);
   DREAM3D_FILTER_WRITE_PARAMETER(NumberOfBins)
-  DREAM3D_FILTER_WRITE_PARAMETER(CellFeatureAttributeMatrixName)
-  DREAM3D_FILTER_WRITE_PARAMETER(EquivalentDiametersArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(SaltykovEquivalentDiametersArrayName)
-  writer->closeFilterGroup();
+      DREAM3D_FILTER_WRITE_PARAMETER(CellFeatureAttributeMatrixName)
+      DREAM3D_FILTER_WRITE_PARAMETER(EquivalentDiametersArrayPath)
+      DREAM3D_FILTER_WRITE_PARAMETER(SaltykovEquivalentDiametersArrayName)
+      writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
 
@@ -157,7 +157,7 @@ void FindSaltykovSizes::find_saltykov_sizes()
 {
   DREAM3D_RANDOMNG_NEW()
 
-  float minEqDia = FLT_MAX;
+      float minEqDia = std::numeric_limits<float>::max();
   float maxEqDia = 0.0f;
   float binLength = 0.0f;
   float temp1 = 0.0f, temp2 = 0.0f, temp3 = 0.0f;
@@ -168,11 +168,11 @@ void FindSaltykovSizes::find_saltykov_sizes()
   int attempts = 0;
   int binToAddTo = 0;
 
- // int* binLengths = NULL;
- // binLengths = new int[m_NumberOfBins];
+  // int* binLengths = NULL;
+  // binLengths = new int[m_NumberOfBins];
 
-//  int* saltykovBinLengths = NULL;
- // saltykovBinLengths = new int[m_NumberOfBins];
+  //  int* saltykovBinLengths = NULL;
+  // saltykovBinLengths = new int[m_NumberOfBins];
 
   size_t numfeatures = m_EquivalentDiametersPtr.lock()->getNumberOfTuples();
   int numberofbins = m_NumberOfBins;
@@ -186,10 +186,10 @@ void FindSaltykovSizes::find_saltykov_sizes()
 
   for (size_t i = 1; i < numfeatures; i++)
   {
-	// find the min size
-	if (m_EquivalentDiameters[i] < minEqDia) { minEqDia = m_EquivalentDiameters[i]; }
-	// find the max size
-	if (m_EquivalentDiameters[i] > maxEqDia) { maxEqDia = m_EquivalentDiameters[i]; }
+    // find the min size
+    if (m_EquivalentDiameters[i] < minEqDia) { minEqDia = m_EquivalentDiameters[i]; }
+    // find the max size
+    if (m_EquivalentDiameters[i] > maxEqDia) { maxEqDia = m_EquivalentDiameters[i]; }
   }
 
   float currentmiminum = minEqDia;
@@ -197,87 +197,81 @@ void FindSaltykovSizes::find_saltykov_sizes()
 
   while (saltykovLength != numfeatures-1)
   {
-	// find the bin length
-	binLength = (maxEqDia - minEqDia) / numberofbins;
+    // find the bin length
+    binLength = (maxEqDia - minEqDia) / numberofbins;
 
-	for (int i = 0; i < numberofbins; i++) { binLengths[i] = 0; }
+    for (int i = 0; i < numberofbins; i++) { binLengths[i] = 0; }
 
-	for (size_t i = 1; i < numfeatures; i++)
-	{
-	  temp1 = m_EquivalentDiameters[i] - minEqDia;
-	  temp2 = 1.0f / binLength;
-	  temp3 = temp1 * temp2;
-	  binIndex = int (temp3);
-	  if (binIndex == numberofbins) { binIndex--; };
-	  binLengths[binIndex]++;
-	}
-  
-	saltykovLength = 0;
-	for (int i = numberofbins-1; i >= 0; i--)
-	{
-	  saltykovBinLengths[i] = do_saltykov(binLengths, maxEqDia, i);
-	  saltykovLength += saltykovBinLengths[i];
-	}
+    for (size_t i = 1; i < numfeatures; i++)
+    {
+      temp1 = m_EquivalentDiameters[i] - minEqDia;
+      temp2 = 1.0f / binLength;
+      temp3 = temp1 * temp2;
+      binIndex = int (temp3);
+      if (binIndex == numberofbins) { binIndex--; };
+      binLengths[binIndex]++;
+    }
 
-	if (saltykovLength != numfeatures-1)
-	{
-	  int difference = saltykovLength - (numfeatures-1);
-	  if (attempts >= 10  && difference < 0)
-	  {
-		for (int i = 0; i > difference; i--)
-		{
-		  binToAddTo = rg.genrand_int32() % numberofbins + 1;
-		  saltykovBinLengths[binToAddTo]++;
-		  saltykovLength++;
-		  int stop = 0;
-		}
-	  }
-	  else
-	  {
-		attempts++;
-		numberofbins -= difference;
-		binLengths.resize(numberofbins);
-		saltykovBinLengths.resize(numberofbins);
-	  }
-	}
+    saltykovLength = 0;
+    for (int i = numberofbins-1; i >= 0; i--)
+    {
+      saltykovBinLengths[i] = do_saltykov(binLengths, maxEqDia, i);
+      saltykovLength += saltykovBinLengths[i];
+    }
+
+    if (saltykovLength != numfeatures-1)
+    {
+      int difference = saltykovLength - (numfeatures-1);
+      if (attempts >= 10  && difference < 0)
+      {
+        for (int i = 0; i > difference; i--)
+        {
+          binToAddTo = rg.genrand_int32() % numberofbins + 1;
+          saltykovBinLengths[binToAddTo]++;
+          saltykovLength++;
+        }
+      }
+      else
+      {
+        attempts++;
+        numberofbins -= difference;
+        binLengths.resize(numberofbins);
+        saltykovBinLengths.resize(numberofbins);
+      }
+    }
   }
 
   for (int i = 0; i < numberofbins; i++)
   {
-	for (int j = 0; j < saltykovBinLengths[i]; j++)
-	{
+    for (int j = 0; j < saltykovBinLengths[i]; j++)
+    {
       if (saltykovIndex == numfeatures) { break; }
-	  unsigned long number = rg.genrand_int32();
-	  unsigned long number2 = 0xffffffff;
-	  random = (double(number) / double(number2));	
-	  saltykovEquivalentDiameters[saltykovIndex] = (float(random) * binLength) + (minEqDia + (i * binLength));
-	  saltykovIndex++;
-	}
+      unsigned long number = rg.genrand_int32();
+      unsigned long number2 = 0xffffffff;
+      random = (double(number) / double(number2));
+      saltykovEquivalentDiameters[saltykovIndex] = (float(random) * binLength) + (minEqDia + (i * binLength));
+      saltykovIndex++;
+    }
   }
 
   std::sort(saltykovEquivalentDiameters.begin(), saltykovEquivalentDiameters.end(), std::less<float>());
 
   for (size_t i = 1; i < numfeatures; i++)
   {
-	for (size_t j = 1; j < numfeatures; j++)
-	{
-	  if (m_EquivalentDiameters[j] == currentmiminum)
-	  {
-		m_SaltykovEquivalentDiameters[j] = saltykovEquivalentDiameters[i];
-	  }
-	  if (m_EquivalentDiameters[j] > currentmiminum && m_EquivalentDiameters[j] < nextminimum)
-	  {
-		nextminimum = m_EquivalentDiameters[j];
-	  }
-	}
-	currentmiminum = nextminimum;
-	nextminimum = maxEqDia;
-	int stop = 0;
+    for (size_t j = 1; j < numfeatures; j++)
+    {
+      if (m_EquivalentDiameters[j] == currentmiminum)
+      {
+        m_SaltykovEquivalentDiameters[j] = saltykovEquivalentDiameters[i];
+      }
+      if (m_EquivalentDiameters[j] > currentmiminum && m_EquivalentDiameters[j] < nextminimum)
+      {
+        nextminimum = m_EquivalentDiameters[j];
+      }
+    }
+    currentmiminum = nextminimum;
+    nextminimum = maxEqDia;
   }
-
- // delete [] binLengths;
-//  delete [] saltykovBinLengths;
-
 }
 
 // -----------------------------------------------------------------------------
@@ -293,16 +287,13 @@ int FindSaltykovSizes::do_saltykov(std::vector<int> nA, float Dmax, int k)
 
   while ((i < 12) && ((k+1-i) > 0))
   {
-	temp1 = double (nA[k-i]);
-	temp2 += saltyCoefs[i] * temp1;
-	int shownA = nA[k-i];
-	  int stop2 = 0;
-	i++;
+    temp1 = double (nA[k-i]);
+    temp2 += saltyCoefs[i] * temp1;
+    i++;
   }
   temp2 /= Dk;
   temp3 = ceil(temp2);
   temp4 = int(temp3);
-  int stop = 0;
   return temp4;
 }
 
