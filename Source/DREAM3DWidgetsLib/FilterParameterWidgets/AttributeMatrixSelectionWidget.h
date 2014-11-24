@@ -70,6 +70,12 @@ class DREAM3DWidgetsLib_EXPORT AttributeMatrixSelectionWidget : public FilterPar
     */
     AttributeMatrixSelectionWidget(FilterParameter* parameter, AbstractFilter* filter = NULL, QWidget* parent = NULL);
 
+    /**
+     * @brief AttributeMatrixSelectionWidget
+     * @param parent
+     */
+    AttributeMatrixSelectionWidget(QWidget* parent = NULL);
+
     virtual ~AttributeMatrixSelectionWidget();
 
     /**
