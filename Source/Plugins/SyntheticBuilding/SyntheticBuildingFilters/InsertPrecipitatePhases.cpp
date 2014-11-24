@@ -961,7 +961,7 @@ void  InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer featur
     }
   }
 
-  std::cout << "Done" <<std::endl;
+  std::cout << "Done Jumping" <<std::endl;
 
 }
 
@@ -1233,7 +1233,9 @@ void InsertPrecipitatePhases::determine_currentRDF(size_t gnum, int add)
     }
   }
 
-  m_rdfCurrentDist = normalizeRDF(m_rdfCurrentDist, m_numRDFbins, stepsize, m_rdfMin, numPPTfeatures, totalvol);
+
+    m_rdfCurrentDistNorm = normalizeRDF(m_rdfCurrentDist, m_numRDFbins, stepsize, m_rdfMin, numPPTfeatures, totalvol);
+
 
   std::cout << "test" << std::endl;
 
@@ -1290,7 +1292,7 @@ float InsertPrecipitatePhases::check_RDFerror(int gadd, int gremove)
       determine_currentRDF(gremove, -1);
     }
   }
-  compare_1Ddistributions(m_rdfTargetDist, m_rdfCurrentDist, bhattdist);
+  compare_1Ddistributions(m_rdfTargetDist, m_rdfCurrentDistNorm, bhattdist);
   rdferror = bhattdist;
   return rdferror;
 }

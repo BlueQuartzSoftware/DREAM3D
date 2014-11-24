@@ -269,6 +269,7 @@ class InsertPrecipitatePhases : public AbstractFilter
     std::vector<std::vector<std::vector<float> > > simclusteringdist;
     std::vector<float> m_rdfTargetDist;
     std::vector<float> m_rdfCurrentDist;
+    std::vector<float> m_rdfCurrentDistNorm;
 
     std::vector<float> featuresizediststep;
     std::vector<float> clusteringdiststep;
