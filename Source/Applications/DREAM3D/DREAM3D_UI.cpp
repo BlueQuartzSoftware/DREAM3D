@@ -585,12 +585,12 @@ void DREAM3D_UI::setupPipelineContextMenu()
     QAction* actionRemoveFavoriteFolder = new QAction(menuPipeline);
     actionRemoveFavoriteFolder->setObjectName(QString::fromUtf8("actionRemoveFavoriteFolder"));
     actionRemoveFavoriteFolder->setText(QApplication::translate("DREAM3D_UI", "Delete Favorite Folder", 0, QApplication::UnicodeUTF8));
-    menuPipeline->addAction(actionRemoveFavoriteFolder);
+    //menuPipeline->addAction(actionRemoveFavoriteFolder);
     QKeySequence actionRemoveFavFolderKeySeq(Qt::CTRL + Qt::SHIFT + Qt::Key_Minus);
     actionRemoveFavoriteFolder->setShortcut(actionRemoveFavFolderKeySeq);
     connect(actionRemoveFavoriteFolder, SIGNAL(triggered()),
             favoritesDockWidget, SLOT( actionRemoveFavoriteFolder_triggered() ) );
-    favoriteItemActions << actionRemoveFavoriteFolder;
+    //favoriteItemActions << actionRemoveFavoriteFolder;
     favoriteCategoryActions << actionRemoveFavoriteFolder;
     
   {
