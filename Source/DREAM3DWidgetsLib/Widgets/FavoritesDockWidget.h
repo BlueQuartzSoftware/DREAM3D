@@ -38,9 +38,9 @@
 
 #include <QtCore/QFileInfo>
 #include <QtCore/QSettings>
+#include <QtCore/QString>
 #include <QtGui/QDockWidget>
 #include <QtGui/QTreeWidgetItem>
-
 
 #include "DREAM3DLib/Common/Constants.h"
 
@@ -81,6 +81,13 @@ class DREAM3DWidgetsLib_EXPORT FavoritesDockWidget : public QDockWidget, private
     void connectFilterList(FilterListDockWidget* filterListWidget);
 
     /**
+       @brief Delete a directory along with all of its contents.
+       @param dirName Path of directory to remove.
+       @return true on success; false on error.
+    */
+    static bool removeDir(const QString &dirName);
+
+    /**
      * @brief getFilterLibraryTreeWidget
      * @return
      */
@@ -89,7 +96,6 @@ class DREAM3DWidgetsLib_EXPORT FavoritesDockWidget : public QDockWidget, private
   public slots:
     //// Slots to catch signals from main menu or context menu
     void actionAddFavoriteFolder_triggered();
-    void actionRemoveFavoriteFolder_triggered();
     void actionAddFavorite_triggered();
     void actionUpdateFavorite_triggered();
     void removeFavorite(QTreeWidgetItem* item);
@@ -135,12 +141,6 @@ class DREAM3DWidgetsLib_EXPORT FavoritesDockWidget : public QDockWidget, private
      * @param folder Is the new favorite to be a folder or an actual pipeline file
      */
     void addFavorite(bool folder);
-    
-    /**
-     * @brief addFavorite
-     * @param folder Is the new favorite to be a folder or an actual pipeline file
-     */
-    void removeFavorite(bool folder);
 
     /**
      * @brief displayNewFavoriteDialog
