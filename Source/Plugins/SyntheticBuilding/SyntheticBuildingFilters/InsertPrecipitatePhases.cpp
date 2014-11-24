@@ -1237,7 +1237,7 @@ void InsertPrecipitatePhases::determine_currentRDF(size_t gnum, int add)
     m_rdfCurrentDistNorm = normalizeRDF(m_rdfCurrentDist, m_numRDFbins, stepsize, m_rdfMin, numPPTfeatures, totalvol);
 
 
-  std::cout << "test" << std::endl;
+//  std::cout << "test" << std::endl;
 
 }
 
@@ -1263,8 +1263,6 @@ std::vector<float> InsertPrecipitatePhases::normalizeRDF(std::vector<float> rdf,
           r2 = r1 + stepsize;
           normfactor = 4.0f/3.0f*DREAM3D::Constants::k_Pi*((r2*r2*r2) - (r1*r1*r1))*numPPTfeatures*oneovervolume;
           rdf[i] = rdf[i]/normfactor;
-
-
       }
 
       return rdf;
@@ -1304,21 +1302,21 @@ float InsertPrecipitatePhases::check_RDFerror(int gadd, int gremove)
 void InsertPrecipitatePhases::compare_1Ddistributions(std::vector<float> array1, std::vector<float> array2, float& bhattdist)
 {
   bhattdist = 0;
-//  float sum_array1 = 0;
-//  float sum_array2 = 0;
+  float sum_array1 = 0;
+  float sum_array2 = 0;
 
-//  for (std::vector<float>::iterator j=array1.begin(); j!=array1.end(); j++)
-//  {sum_array1 += *j;}
+  for (std::vector<float>::iterator j=array1.begin(); j!=array1.end(); j++)
+  {sum_array1 += *j;}
 
-//  for (std::vector<float>::iterator j=array2.begin(); j!=array2.end(); j++)
-//  {sum_array2 += *j;}
+  for (std::vector<float>::iterator j=array2.begin(); j!=array2.end(); j++)
+  {sum_array2 += *j;}
 
 
 
   for (size_t i = 0; i < array1.size(); i++)
   {
-//    array1[i] = array1[i]/sum_array1;
-//    array2[i] = array2[i]/sum_array2;
+    array1[i] = array1[i]/sum_array1;
+    array2[i] = array2[i]/sum_array2;
     bhattdist = bhattdist + sqrt((array1[i] * array2[i]));
   }
 }
