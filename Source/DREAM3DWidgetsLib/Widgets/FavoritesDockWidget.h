@@ -89,6 +89,7 @@ class DREAM3DWidgetsLib_EXPORT FavoritesDockWidget : public QDockWidget, private
   public slots:
     //// Slots to catch signals from main menu or context menu
     void actionAddFavoriteFolder_triggered();
+    void actionRemoveFavoriteFolder_triggered();
     void actionAddFavorite_triggered();
     void actionUpdateFavorite_triggered();
     void removeFavorite(QTreeWidgetItem* item);
@@ -134,6 +135,12 @@ class DREAM3DWidgetsLib_EXPORT FavoritesDockWidget : public QDockWidget, private
      * @param folder Is the new favorite to be a folder or an actual pipeline file
      */
     void addFavorite(bool folder);
+    
+    /**
+     * @brief addFavorite
+     * @param folder Is the new favorite to be a folder or an actual pipeline file
+     */
+    void removeFavorite(bool folder);
 
     /**
      * @brief displayNewFavoriteDialog

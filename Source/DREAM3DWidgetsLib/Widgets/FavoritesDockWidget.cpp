@@ -537,7 +537,13 @@ void FavoritesDockWidget::actionAddFavoriteFolder_triggered()
   addFavorite(true);
 }
 
-
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void FavoritesDockWidget::actionRemoveFavoriteFolder_triggered()
+{
+    removeFavorite(true);
+}
 
 // -----------------------------------------------------------------------------
 //
@@ -615,6 +621,56 @@ void FavoritesDockWidget::addFavorite(bool folder)
     // Signal out to the PipelineViewWidget to save the current pipeline to the path & filename
     emit pipelineNeedsToBeSaved(newPrefPath, favoriteTitle);
   }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void FavoritesDockWidget::removeFavorite(bool folder)
+{
+    QTreeWidgetItem* selection = filterLibraryTree->currentItem();
+    
+    QString folderTitle = selection->text(0);
+    
+    // Sanity check to make sure we actually have selected a folder to add a favorite into the tree. If the user has
+    // selected an actual favorite item, get it's parent which MUST be a folder
+    if(NULL != selection && selection->type() == FilterLibraryTreeWidget::Leaf_Item_Type)
+    {
+        selection = selection->parent();
+    }
+    
+    // If the selection is NULL, error out and return (should always have a valid folder selected)
+    if (NULL == selection)
+    {
+        return;
+    }
+    
+    bool allowEditing = true;
+    if(false == folder)
+    {
+        allowEditing = false;
+    }
+    
+    QString newPrefPath;
+
+    //itemType = FilterLibraryTreeWidget::Node_Item_Type;
+    //icon = QIcon(":/folder_blue.png");
+    QString folderPath = selection->data(0, Qt::UserRole).toString();
+    QDir dir(folderPath); // Get the QDir for the parent path
+    bool created = dir.remove(folderPath); // Try to actually create the folder
+    if (false == created)
+    {
+        QMessageBox::StandardButton reply;
+        reply = QMessageBox::critical(this, QObject::tr("Folder Creation Error"),
+                                      QObject::tr("Error removing folder '%1'.").arg(parentPath + "/" + folderTitle),
+                                      QMessageBox::Ok);
+        Q_UNUSED(reply);
+        return; // Bail out now instead of adding it to the tree
+    }
+    
+    //Remove favorite folder, graphically, from the DREAM3D interface
+    filterLibraryTree->removeItemWidget(selection, 0);
+    delete selection;
 }
 
 
