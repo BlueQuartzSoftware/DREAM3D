@@ -666,12 +666,16 @@ void  InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer featur
 //       int test =rdfTarget[0]->getNumberOfTuples();
        m_numRDFbins = rdfTarget[0]->getNumberOfTuples();
  //      std::vector<float> rdfTargetDist;
-       m_rdfTargetDist.resize(m_numRDFbins);
-       m_rdfCurrentDist.resize(m_numRDFbins);
+       m_rdfTargetDist.resize(m_numRDFbins+2);
+       m_rdfCurrentDist.resize(m_numRDFbins+2);
+
+       m_rdfTargetDist[0] = 0;
+       m_rdfTargetDist[m_numRDFbins+1] = 0;
+
 
        for (size_t j = 0; j < m_numRDFbins; j++)
        {
-           m_rdfTargetDist[j] = rdfTarget[0]->getValue(j);
+           m_rdfTargetDist[j+1] = rdfTarget[0]->getValue(j);
        }
 
         m_rdfMax = maxmin[0]->getValue(0);
@@ -792,7 +796,7 @@ void  InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer featur
 
 
   // begin swaping/moving/adding/removing features to try to improve packing
-  int totalAdjustments = static_cast<int>(10 * ((numfeatures - firstPrecipitateFeature) - 1));
+  int totalAdjustments = static_cast<int>(1000 * ((numfeatures - firstPrecipitateFeature) - 1));
   for (int iteration = 0; iteration < totalAdjustments; ++iteration)
   {
 
@@ -956,6 +960,7 @@ void  InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer featur
       }
     }
   }
+
 
 }
 
@@ -1204,6 +1209,8 @@ void InsertPrecipitatePhases::determine_currentRDF(size_t gnum, int add)
   z = m_Centroids[3 * gnum + 2];
   size_t numFeatures = m_FeaturePhasesPtr.lock()->getNumberOfTuples();
 
+
+
   for (size_t n = firstPrecipitateFeature; n < numFeatures; n++)
   {
     if (m_FeaturePhases[n] == phase && n != gnum)
@@ -1216,10 +1223,11 @@ void InsertPrecipitatePhases::determine_currentRDF(size_t gnum, int add)
 
       rdfBin = (r-m_rdfMin)/stepsize;
 
-      if (rdfBin < 0) {rdfBin = 0;}
-      if (rdfBin >= m_numRDFbins) {rdfBin = m_numRDFbins-1;}
+      if (r < m_rdfMin) { rdfBin = -1;}
 
-      m_rdfCurrentDist[rdfBin] += add;
+      if (rdfBin >= m_numRDFbins) {rdfBin = m_numRDFbins;}
+
+      m_rdfCurrentDist[rdfBin+1] += add;
     }
   }
 }
@@ -1256,8 +1264,21 @@ float InsertPrecipitatePhases::check_RDFerror(int gadd, int gremove)
 void InsertPrecipitatePhases::compare_1Ddistributions(std::vector<float> array1, std::vector<float> array2, float& bhattdist)
 {
   bhattdist = 0;
+  float sum_array1 = 0;
+  float sum_array2 = 0;
+
+  for (std::vector<float>::iterator j=array1.begin(); j!=array1.end(); j++)
+  {sum_array1 += *j;}
+
+  for (std::vector<float>::iterator j=array2.begin(); j!=array2.end(); j++)
+  {sum_array2 += *j;}
+
+
+
   for (size_t i = 0; i < array1.size(); i++)
   {
+    array1[i] = array1[i]/sum_array1;
+    array2[i] = array2[i]/sum_array2;
     bhattdist = bhattdist + sqrt((array1[i] * array2[i]));
   }
 }
