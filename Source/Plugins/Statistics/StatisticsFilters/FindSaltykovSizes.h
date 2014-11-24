@@ -51,7 +51,7 @@
  * @class FindSaltykovSizes FindSaltykovSizes.h DREAM3DLib/GenericFilters/FindSaltykovSizes.h
  * @brief
  * @author Joseph C. Tucker
- * @date Nov 11, 2014
+ * @date Nov 24, 2014
  * @version 5.1
  */
 class FindSaltykovSizes : public AbstractFilter
@@ -63,9 +63,6 @@ class FindSaltykovSizes : public AbstractFilter
     DREAM3D_TYPE_MACRO_SUPER(FindSaltykovSizes, AbstractFilter)
 
     virtual ~FindSaltykovSizes();
-
-    DREAM3D_FILTER_PARAMETER(int, NumberOfBins)
-    Q_PROPERTY(int NumberOfBins READ getNumberOfBins WRITE setNumberOfBins)
 
     DREAM3D_FILTER_PARAMETER(DataArrayPath, CellFeatureAttributeMatrixName)
     Q_PROPERTY(DataArrayPath CellFeatureAttributeMatrixName READ getCellFeatureAttributeMatrixName WRITE setCellFeatureAttributeMatrixName)
