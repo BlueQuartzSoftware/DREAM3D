@@ -103,10 +103,10 @@ int NodesTrianglesToStl::writeFilterParameters(AbstractFilterParametersWriter* w
 {
   writer->openFilterGroup(this, index);
   DREAM3D_FILTER_WRITE_PARAMETER(NodesFile)
-  DREAM3D_FILTER_WRITE_PARAMETER(TrianglesFile)
-  DREAM3D_FILTER_WRITE_PARAMETER(OutputStlDirectory)
-  DREAM3D_FILTER_WRITE_PARAMETER(OutputStlPrefix)
-  writer->closeFilterGroup();
+      DREAM3D_FILTER_WRITE_PARAMETER(TrianglesFile)
+      DREAM3D_FILTER_WRITE_PARAMETER(OutputStlDirectory)
+      DREAM3D_FILTER_WRITE_PARAMETER(OutputStlPrefix)
+      writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
 
@@ -180,7 +180,7 @@ void NodesTrianglesToStl::preflight()
 // -----------------------------------------------------------------------------
 void NodesTrianglesToStl::execute()
 {
-  int err = 0;
+  //int err = 0;
 
   dataCheck(false);
   if(getErrorCondition() < 0) { return; }
@@ -323,14 +323,18 @@ void NodesTrianglesToStl::execute()
 
     {
       QString ss = "DREAM3D Generated For Feature ID " + QString::number(spin);
-      err = writeHeader(f, ss, 0);
+      int err = writeHeader(f, ss, 0);
+      if(err < 0)
+      {
+        QString ss = QObject::tr("Error Writing STL header").arg(spin);
+        notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
+      }
     }
     triCount = 0; // Reset this to Zero. Increment for every triangle written
 
     // Loop over all the triangles for this spin
     for(int t = 0; t < nTriangles; ++t)
     {
-      char winding = 2; // 2 = Do NOT write this triangle
       // Get the true indices of the 3 nodes
       int nId0 = nodeIdToIndex[triangles[t].verts[0]];
       int nId1 = nodeIdToIndex[triangles[t].verts[1]];
@@ -342,11 +346,11 @@ void NodesTrianglesToStl::execute()
 
       if (faceLabels[t * 2] == spin)
       {
-        winding = 0; // 0 = Write it using forward spin
+        // winding = 0; // 0 = Write it using forward spin
       }
       else if (faceLabels[t * 2 + 1] == spin)
       {
-        winding = 1; // Write it using backward spin
+        //winding = 1; // Write it using backward spin
         // Switch the 2 node indices
         int temp = nId1;
         nId1 = nId2;
@@ -393,7 +397,12 @@ void NodesTrianglesToStl::execute()
       }
       triCount++;
     }
-    err = writeNumTrianglesToFile(filename, triCount);
+    int err = writeNumTrianglesToFile(filename, triCount);
+    if(err < 0)
+    {
+      QString ss = QObject::tr("Error writing number of Triangles to STL file");
+      notifyErrorMessage(getHumanLabel(), ss, -1201);
+    }
   }
 
   setErrorCondition(0);

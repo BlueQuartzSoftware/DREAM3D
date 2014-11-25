@@ -98,13 +98,20 @@ void RenameDataContainer::dataCheck()
 
   if(getNewDataContainerName().isEmpty() == true)
   {
-    setErrorCondition(-11000);
+    setErrorCondition(-11001);
     QString ss = QObject::tr("The New Data Container name can not be empty. Please set a value.");
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    return;
   }
 
   DataContainerArray::Pointer dca = getDataContainerArray();
-  if (NULL == dca.get() ) { return; }
+  if (NULL == dca.get() )
+  {
+      setErrorCondition(-11003);
+      QString ss = QObject::tr("The DataContainerArray was not found. Please contact the DREAM3D developers for more information.");
+      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+      return;
+  }
 
   bool check = dca->renameDataContainer(getSelectedDataContainerName(), getNewDataContainerName());
   if(check == false)

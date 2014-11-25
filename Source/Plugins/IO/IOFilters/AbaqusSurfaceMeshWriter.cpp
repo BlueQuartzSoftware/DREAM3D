@@ -171,8 +171,8 @@ void AbaqusSurfaceMeshWriter::execute()
   if(!parentPath.mkpath("."))
   {
     QString ss = QObject::tr("Error creating parent path '%1'").arg(parentPath.absolutePath());
-    notifyErrorMessage(getHumanLabel(), ss, -1);
-    setErrorCondition(-1);
+    setErrorCondition(-8005);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;
   }
 
@@ -191,9 +191,25 @@ void AbaqusSurfaceMeshWriter::execute()
   ScopedFileMonitor fileMonitor(f);
 
   err = writeHeader(f, nodesPtr->getNumberOfTuples(), trianglePtr->getNumberOfTuples(), uniqueSpins.size() - 1);
+  if(err < 0)
+  {
+    setErrorCondition(-8000);
+  }
   err = writeNodes(f);
+  if(err < 0)
+  {
+  setErrorCondition(-8001);
+  }
   err = writeTriangles(f);
+  if(err < 0)
+  {
+  setErrorCondition(-8002);
+  }
   err = writeFeatures(f);
+  if(err < 0)
+  {
+  setErrorCondition(-8003);
+  }
 
   setErrorCondition(0);
   notifyStatusMessage(getHumanLabel(), "Complete");

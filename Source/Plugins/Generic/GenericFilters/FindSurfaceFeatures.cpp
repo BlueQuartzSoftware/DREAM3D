@@ -200,28 +200,21 @@ void FindSurfaceFeatures::find_surfacefeatures2D()
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getFeatureIdsArrayPath().getDataContainerName());
 
   int xPoints = 0, yPoints = 0;
-  float xRes = 0.0f, yRes = 0.0f;
 
   if(m->getXPoints() == 1)
   {
     xPoints = m->getYPoints();
-    xRes = m->getYRes();
     yPoints = m->getZPoints();
-    yRes = m->getZRes();
   }
   if(m->getYPoints() == 1)
   {
     xPoints = m->getXPoints();
-    xRes = m->getXRes();
     yPoints = m->getZPoints();
-    yRes = m->getZRes();
   }
   if(m->getZPoints() == 1)
   {
     xPoints = m->getXPoints();
-    xRes = m->getXRes();
     yPoints = m->getYPoints();
-    yRes = m->getYRes();
   }
 
   int yStride;

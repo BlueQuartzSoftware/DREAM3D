@@ -503,7 +503,7 @@ void M3CSliceBySlice::execute()
   m->getResolution(res);
   m->getOrigin(origin);
 
-  int wrappedDims[3] = { dims[0], dims[1], dims[2]};
+  int wrappedDims[3] = { static_cast<int>(dims[0]), static_cast<int>(dims[1]), static_cast<int>(dims[2]) };
 
   // Check to see if there is already a layer of bounding negative feature ids around the volume
   bool isWrapped = volumeHasGhostLayer();

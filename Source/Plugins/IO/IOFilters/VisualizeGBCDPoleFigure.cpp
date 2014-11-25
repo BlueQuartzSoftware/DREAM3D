@@ -503,7 +503,7 @@ void VisualizeGBCDPoleFigure::execute()
         count++;
       }
     }
-    int64_t totalWritten = fwrite(gn, sizeof(float), (total), f);
+    size_t totalWritten = fwrite(gn, sizeof(float), (total), f);
     delete[] gn;
     if (totalWritten != (total))
     {
@@ -541,6 +541,36 @@ bool VisualizeGBCDPoleFigure::getSquareCoord(float* xstl1_norm1, float* sqCoord)
   }
   return nhCheck;
 }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int VisualizeGBCDPoleFigure::writeCoords(FILE* f, const char* axis, const char* type,
+                                         qint64 npoints, float min, float step)
+{
+  int err = 0;
+  fprintf(f, "%s %lld %s\n", axis, npoints, type);
+  float* data = new float[npoints];
+  float d;
+  for (int idx = 0; idx < npoints; ++idx)
+  {
+    d = idx * step + min;
+    DREAM3D::Endian::FromSystemToBig::convert(d);
+    data[idx] = d;
+  }
+  size_t totalWritten = fwrite(static_cast<void*>(data), sizeof(float), static_cast<size_t>(npoints), f);
+  delete[] data;
+  if (totalWritten != static_cast<size_t>(npoints) )
+  {
+    qDebug() << "Error Writing Binary VTK Data into file " ;
+    fclose(f);
+    return -1;
+  }
+  return err;
+}
+
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

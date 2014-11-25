@@ -357,7 +357,7 @@ void ReadH5Ebsd::dataCheck()
     m_Manufacturer = Ebsd::HEDM;
   }
 
-  size_t dcDims[3] = {dims[0], dims[1], dims[2]};
+  size_t dcDims[3] = { static_cast<size_t>(dims[0]), static_cast<size_t>(dims[1]), static_cast<size_t>(dims[2]) };
   //Now Calculate our "subvolume" of slices, ie, those start and end values that the user selected from the GUI
   dcDims[2] = m_ZEndIndex - m_ZStartIndex + 1;
   m->setDimensions(dcDims);
@@ -401,7 +401,7 @@ void ReadH5Ebsd::dataCheck()
   m_DataArrayNames = reader->getDataArrayNames();
 
   QVector<size_t> cDims(1, 1);
-  for (size_t i = 0; i < names.size(); ++i)
+  for (qint32 i = 0; i < names.size(); ++i)
   {
     // First check to see if the name is in our list of names to read.
     if(m_SelectedArrayNames.find(names[i]) == m_SelectedArrayNames.end() ) { continue; }
@@ -437,7 +437,7 @@ void ReadH5Ebsd::dataCheck()
 
   // Now create the Ensemble arrays for the XTal Structures, Material Names and LatticeConstants
   cDims[0] = 1;
-  typedef DataArray<unsigned int> XTalStructArrayType;
+  //typedef DataArray<unsigned int> XTalStructArrayType;
   tempPath.update(getDataContainerName(), getCellEnsembleAttributeMatrixName(), getCrystalStructuresArrayName() );
   m_CrystalStructuresPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<uint32_t>, AbstractFilter, uint32_t>(this,  tempPath, Ebsd::CrystalStructure::UnknownCrystalStructure, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_CrystalStructuresPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
@@ -496,8 +496,7 @@ void ReadH5Ebsd::execute()
     float res[3];
     volumeInfoReader->getDimsAndResolution(dims[0], dims[1], dims[2], res[0], res[1], res[2]);
 
-    size_t dcDims[3] =
-    { dims[0], dims[1], dims[2] };
+    size_t dcDims[3] = { static_cast<size_t>(dims[0]), static_cast<size_t>(dims[1]), static_cast<size_t>(dims[2]) };
     m->setDimensions(dcDims);
     m->setResolution(res);
     //Now Calculate our "subvolume" of slices, ie, those start and end values that the user selected from the GUI

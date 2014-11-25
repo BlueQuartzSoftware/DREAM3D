@@ -200,7 +200,7 @@ void FindFeatureReferenceCAxisMisorientations::execute()
 
   QuatF q1;
   QuatF* quats = reinterpret_cast<QuatF*>(m_Quats);
-  typedef DataArray<unsigned int> XTalType;
+  //typedef DataArray<unsigned int> XTalType;
 
   float w;
   size_t udims[3] = {0, 0, 0};

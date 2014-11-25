@@ -197,8 +197,9 @@ class DREAM3DLib_EXPORT DREAM3DRandom
 #define DREAM3D_RANDOMNG_NEW()\
   DREAM3DRandom rg;\
   {\
-    unsigned long long int seed = QDateTime::currentMSecsSinceEpoch();\
-    unsigned int* seedPtr = reinterpret_cast<unsigned int*> (&seed);\
+    unsigned long long int millisSinceEpoch = QDateTime::currentMSecsSinceEpoch();\
+    unsigned long long int* millisSinceEpochPtr = &millisSinceEpoch;\
+    unsigned int* seedPtr = reinterpret_cast<unsigned int*>(millisSinceEpochPtr);\
     rg.init_genrand(seedPtr[AIMRNG_OFFSET]);\
   }
 

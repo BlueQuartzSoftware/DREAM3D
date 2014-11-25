@@ -39,17 +39,45 @@
 
 #include "DREAM3DLib/Common/Constants.h"
 
-
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 QDebug operator<<(QDebug out, const DataArrayPath& v)
 {
   out << v.getDataContainerName() << "|" << v.getAttributeMatrixName() << "|" << v.getDataArrayName();
   return out;
 }
 
+/* ############## Start Private Implementation ############################### */
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-DataArrayPath::DataArrayPath()
+class DataArrayPathPrivate {
+    Q_DISABLE_COPY(DataArrayPathPrivate)
+    Q_DECLARE_PUBLIC(DataArrayPath)
+    DataArrayPath* const q_ptr;
+    QString m_DataContainerName;
+    QString m_AttributeMatrixName;
+    QString m_DataArrayName;
+
+    DataArrayPathPrivate(DataArrayPath* ptr);
+};
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+DataArrayPathPrivate::DataArrayPathPrivate(DataArrayPath* ptr) :
+q_ptr(ptr)
+{
+
+}
+
+/* ############## Start API/Public Implementation ########################### */
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+DataArrayPath::DataArrayPath() :
+d_ptr(new DataArrayPathPrivate(this))
 {
 
 }
@@ -58,33 +86,35 @@ DataArrayPath::DataArrayPath()
 //
 // -----------------------------------------------------------------------------
 DataArrayPath::DataArrayPath(const QString& dcName, const QString& amName, const QString& daName) :
-  m_DataContainerName(dcName),
-  m_AttributeMatrixName(amName),
-  m_DataArrayName(daName)
+  d_ptr(new DataArrayPathPrivate(this))
 {
-
+  d_ptr->m_DataContainerName = dcName;
+  d_ptr->m_AttributeMatrixName = amName;
+  d_ptr->m_DataArrayName = daName;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-DataArrayPath::DataArrayPath(const QString& path)
+DataArrayPath::DataArrayPath(const QString& path) :
+d_ptr(new DataArrayPathPrivate(this))
 {
   QStringList tokens = path.split(DREAM3D::PathSep);
 
-  if(tokens.size() > 0) { m_DataContainerName = tokens.at(0); }
-  if(tokens.size() > 1) { m_AttributeMatrixName = tokens.at(1); }
-  if(tokens.size() > 2) { m_DataArrayName = tokens.at(2); }
+  if(tokens.size() > 0) { d_ptr->m_DataContainerName = tokens.at(0); }
+  if(tokens.size() > 1) { d_ptr->m_AttributeMatrixName = tokens.at(1); }
+  if(tokens.size() > 2) { d_ptr->m_DataArrayName = tokens.at(2); }
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-DataArrayPath::DataArrayPath(const DataArrayPath& rhs)
+DataArrayPath::DataArrayPath(const DataArrayPath& rhs) :
+d_ptr(new DataArrayPathPrivate(this))
 {
-  m_DataContainerName = rhs.m_DataContainerName;
-  m_AttributeMatrixName = rhs.m_AttributeMatrixName;
-  m_DataArrayName = rhs.m_DataArrayName;
+  d_ptr->m_DataContainerName = rhs.getDataContainerName();
+  d_ptr->m_AttributeMatrixName = rhs.getAttributeMatrixName();
+  d_ptr->m_DataArrayName = rhs.getDataArrayName();
 }
 
 // -----------------------------------------------------------------------------
@@ -97,11 +127,18 @@ DataArrayPath::~DataArrayPath()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+DREAM3D_PIMPL_PROPERTY_DEF(DataArrayPath, QString, DataContainerName)
+DREAM3D_PIMPL_PROPERTY_DEF(DataArrayPath, QString, AttributeMatrixName)
+DREAM3D_PIMPL_PROPERTY_DEF(DataArrayPath, QString, DataArrayName)
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void DataArrayPath::operator=(const DataArrayPath& rhs)
 {
-  m_DataContainerName = rhs.m_DataContainerName;
-  m_AttributeMatrixName = rhs.m_AttributeMatrixName;
-  m_DataArrayName = rhs.m_DataArrayName;
+  d_ptr->m_DataContainerName = rhs.getDataContainerName();
+  d_ptr->m_AttributeMatrixName = rhs.getAttributeMatrixName();
+  d_ptr->m_DataArrayName = rhs.getDataArrayName();
 }
 
 // -----------------------------------------------------------------------------
@@ -109,7 +146,7 @@ void DataArrayPath::operator=(const DataArrayPath& rhs)
 // -----------------------------------------------------------------------------
 QString DataArrayPath::serialize(QString delimiter) const
 {
-  QString s = m_DataContainerName + delimiter + m_AttributeMatrixName + delimiter + m_DataArrayName;
+    QString s = d_ptr->m_DataContainerName + delimiter + d_ptr->m_AttributeMatrixName + delimiter + d_ptr->m_DataArrayName;
   return s;
 }
 
@@ -119,7 +156,7 @@ QString DataArrayPath::serialize(QString delimiter) const
 QStringList DataArrayPath::getAsStringList()
 {
   QStringList l;
-  l << m_DataContainerName << m_AttributeMatrixName << m_DataArrayName;
+  l << d_ptr->m_DataContainerName << d_ptr->m_AttributeMatrixName << d_ptr->m_DataArrayName;
   return l;
 }
 
@@ -129,9 +166,9 @@ QStringList DataArrayPath::getAsStringList()
 QVector<QString> DataArrayPath::getAsVector()
 {
   QVector<QString> v(3);
-  v[0] = m_DataContainerName;
-  v[1] = m_AttributeMatrixName;
-  v[2] = m_DataArrayName;
+  v[0] = d_ptr->m_DataContainerName;
+  v[1] = d_ptr->m_AttributeMatrixName;
+  v[2] = d_ptr->m_DataArrayName;
   return v;
 }
 
@@ -141,7 +178,7 @@ QVector<QString> DataArrayPath::getAsVector()
 // -----------------------------------------------------------------------------
 bool DataArrayPath::isEmpty() const
 {
-  if (m_DataContainerName.isEmpty() && m_AttributeMatrixName.isEmpty() && m_DataArrayName.isEmpty() )
+  if (d_ptr->m_DataContainerName.isEmpty() && d_ptr->m_AttributeMatrixName.isEmpty() && d_ptr->m_DataArrayName.isEmpty() )
   { return true; }
   return false;
 }
@@ -151,7 +188,7 @@ bool DataArrayPath::isEmpty() const
 // -----------------------------------------------------------------------------
 bool DataArrayPath::isValid() const
 {
-  if (m_DataContainerName.isEmpty() == false && m_AttributeMatrixName.isEmpty() == false && m_DataArrayName.isEmpty() == false )
+  if (d_ptr->m_DataContainerName.isEmpty() == false && d_ptr->m_AttributeMatrixName.isEmpty() == false && d_ptr->m_DataArrayName.isEmpty() == false )
   { return true; }
   return false;
 }
@@ -162,7 +199,7 @@ bool DataArrayPath::isValid() const
 QStringList DataArrayPath::split(QString NOT_USED) const
 {
   QStringList l;
-  l << m_DataContainerName << m_AttributeMatrixName << m_DataArrayName;
+  l << d_ptr->m_DataContainerName << d_ptr->m_AttributeMatrixName << d_ptr->m_DataArrayName;
   return l;
 }
 
@@ -171,7 +208,7 @@ QStringList DataArrayPath::split(QString NOT_USED) const
 // -----------------------------------------------------------------------------
 void DataArrayPath::update(const QString& dcName, const QString& amName, const QString& daName)
 {
-  m_DataContainerName = dcName;
-  m_AttributeMatrixName = amName;
-  m_DataArrayName = daName;
+  d_ptr->m_DataContainerName = dcName;
+  d_ptr->m_AttributeMatrixName = amName;
+  d_ptr->m_DataArrayName = daName;
 }

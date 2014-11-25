@@ -367,7 +367,7 @@ void AngReader::readData(QFile& in, QByteArray& buf)
   float oldY = m_Y[0];
   int nxOdd = 0;
   int nxEven = 0;
-  int nRows = 0;
+  //int nRows = 0;
 
   for(size_t i = 0; i < totalDataPoints; ++i)
   {
@@ -395,8 +395,9 @@ void AngReader::readData(QFile& in, QByteArray& buf)
       break;
     }
   }
-  nRows = yChange + 1;
 #if 0
+  nRows = yChange + 1;
+
   std::cout << "Header: nRows: " << numRows << " Odd Cols: " << nOddCols << "  Even Cols: " << nEvenCols << std::endl;
   std::cout << "File:   nRows: " << nRows << " Odd Cols: " << nxOdd << "  Even Cols: " << nxEven << std::endl;
 #endif

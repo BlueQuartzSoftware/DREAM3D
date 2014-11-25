@@ -2,7 +2,7 @@ Rename Attribute Array {#copyattributearray}
 ==============================
 
 ## Group (Subgroup) ##
-Generic Filters (Memory/Management)
+Core Filters (Memory/Management)
 
 ## Description ##
 This filter copies a user chosen array to a new array with a user defined new name.

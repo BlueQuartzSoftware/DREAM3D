@@ -510,7 +510,7 @@ int QFilterParametersWriter::writeValue(const QString name, FileListInfo_t v)
   int err = 0;
   m_Prefs->beginWriteArray(name, 8);
   m_Prefs->setArrayIndex(0);
-  m_Prefs->setValue("EndIndex", static_cast<int64_t>(v.EndIndex));
+  m_Prefs->setValue("EndIndex", static_cast<qint32>(v.EndIndex));
 
   m_Prefs->setArrayIndex(1);
   m_Prefs->setValue("FileExtension", v.FileExtension);
@@ -525,13 +525,13 @@ int QFilterParametersWriter::writeValue(const QString name, FileListInfo_t v)
   m_Prefs->setValue("InputPath", v.InputPath);
 
   m_Prefs->setArrayIndex(5);
-  m_Prefs->setValue("Ordering", static_cast<uint32_t>(v.Ordering));
+  m_Prefs->setValue("Ordering", static_cast<quint32>(v.Ordering));
 
   m_Prefs->setArrayIndex(6);
-  m_Prefs->setValue("PaddingDigits", static_cast<int32_t>(v.PaddingDigits));
+  m_Prefs->setValue("PaddingDigits", static_cast<qint32>(v.PaddingDigits));
 
   m_Prefs->setArrayIndex(7);
-  m_Prefs->setValue("StartIndex", static_cast<int64_t>(v.StartIndex));
+  m_Prefs->setValue("StartIndex", static_cast<qint32>(v.StartIndex));
 
   m_Prefs->endArray();
   return err;

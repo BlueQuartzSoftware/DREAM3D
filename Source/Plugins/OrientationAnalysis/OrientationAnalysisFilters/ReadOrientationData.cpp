@@ -181,11 +181,13 @@ void ReadOrientationData::dataCheck()
       m->setDimensions(dims[0], dims[1], dims[2]);
       m->setResolution(reader.getXStep(), reader.getYStep(), 1.0);
       m->setOrigin(0.0f, 0.0f, 0.0f);
+      //Update the size of the Cell Attribute Matrix now that the dimensions of the volume are known
+      cellAttrMat->resizeAttributeArrays(dims);
       AngFields angfeatures;
       names = angfeatures.getFilterFeatures<QVector<QString> > ();
       dims.resize(1);
       dims[0] = 1;
-      for (size_t i = 0; i < names.size(); ++i)
+      for (qint32 i = 0; i < names.size(); ++i)
       {
         if (reader.getPointerType(names[i]) == Ebsd::Int32)
         {
@@ -215,10 +217,12 @@ void ReadOrientationData::dataCheck()
         m->setResolution(reader.getXStep(), reader.getYStep(), 1.0);
       }
       m->setOrigin(0.0f, 0.0f, 0.0f);
+      //Update the size of the Cell Attribute Matrix now that the dimensions of the volume are known
+      cellAttrMat->resizeAttributeArrays(dims);
       CtfFields ctffeatures;
       names = ctffeatures.getFilterFeatures<QVector<QString> > ();
       QVector<size_t> dims(1, 1);
-      for (size_t i = 0; i < names.size(); ++i)
+      for (qint32 i = 0; i < names.size(); ++i)
       {
         if (reader.getPointerType(names[i]) == Ebsd::Int32)
         {
@@ -241,10 +245,12 @@ void ReadOrientationData::dataCheck()
       m->setDimensions(dims[0], dims[1], dims[2]);
       m->setResolution(reader.getXStep(), reader.getYStep(), 1.0);
       m->setOrigin(0.0f, 0.0f, 0.0f);
+      //Update the size of the Cell Attribute Matrix now that the dimensions of the volume are known
+      cellAttrMat->resizeAttributeArrays(dims);
       MicFields micfeatures;
       names = micfeatures.getFilterFeatures<QVector<QString> > ();
       QVector<size_t> dims(1, 1);
-      for (size_t i = 0; i < names.size(); ++i)
+      for (qint32 i = 0; i < names.size(); ++i)
       {
         if (reader.getPointerType(names[i]) == Ebsd::Int32)
         {
@@ -275,7 +281,7 @@ void ReadOrientationData::dataCheck()
     if( NULL != m_CellPhasesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
     { m_CellPhases = m_CellPhasesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
-    typedef DataArray<unsigned int> XTalStructArrayType;
+    //typedef DataArray<unsigned int> XTalStructArrayType;
     tempPath.update(getDataContainerName(), getCellEnsembleAttributeMatrixName(), getCrystalStructuresArrayName() );
     m_CrystalStructuresPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<uint32_t>, AbstractFilter, uint32_t>(this,  tempPath, Ebsd::CrystalStructure::UnknownCrystalStructure, dim); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
     if( NULL != m_CrystalStructuresPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */

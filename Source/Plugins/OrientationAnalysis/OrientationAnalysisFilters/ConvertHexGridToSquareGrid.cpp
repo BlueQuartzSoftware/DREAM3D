@@ -426,15 +426,15 @@ QString ConvertHexGridToSquareGrid::modifyAngHeaderLine(QString& buf)
     ++i;
   }
   size_t wordStart = i;
-  size_t wordEnd = i + 1;
-  while(1)
+ // size_t wordEnd = i + 1;
+  while(true)
   {
     if (buf.at(i) == 45 || buf.at(i) == 95) { ++i; } // "-" or "_" character
     else if (buf.at(i) >= 65 && buf.at(i) <= 90) { ++i; } // Upper case alpha character
     else if (buf.at(i) >= 97 && buf.at(i) <= 122) {++i; } // Lower case alpha character
     else { break;}
   }
-  wordEnd = i;
+ // wordEnd = i;
 
   QString word( buf.mid(wordStart) );
 

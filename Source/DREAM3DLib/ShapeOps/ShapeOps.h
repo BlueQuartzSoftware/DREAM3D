@@ -42,7 +42,9 @@
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 
-
+/**
+ * @brief The ShapeOps class
+ */
 class DREAM3DLib_EXPORT ShapeOps
 {
   public:

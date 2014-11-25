@@ -2,7 +2,7 @@ Copy Data Container{#copydatacontainer}
 =====
 
 ## Group (Subgroup) ##
-Generic (Memory Management)
+Core Filters (Memory/Management)
 
 
 ## Description ##

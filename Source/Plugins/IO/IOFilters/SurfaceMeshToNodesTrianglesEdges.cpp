@@ -209,8 +209,8 @@ void SurfaceMeshToNodesTrianglesEdges::execute()
   VertexArray::Pointer nodes = sm->getVertices();
   FaceArray::Pointer triangles = sm->getFaces();
 
-  int64_t numNodes = nodes->getNumberOfTuples();
-  int64_t numTriangles = triangles->getNumberOfTuples();
+  qint64 numNodes = nodes->getNumberOfTuples();
+  qint64 numTriangles = triangles->getNumberOfTuples();
 
 #if WRITE_EDGES_FILE
   IDataArray::Pointer edges = sm->getPointData(DREAM3D::CellData::SurfaceMeshEdges);

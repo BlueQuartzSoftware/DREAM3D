@@ -381,7 +381,7 @@ void TestNewInstanceAvailable()
     {
       std::cout << "Filter: '" << filter->getNameOfClass().toStdString() << "' from Library/Plugin '" << filter->getCompiledLibraryName().toStdString() << " has not implemented the newInstance() function" << std::endl;
     }
-    DREAM3D_REQUIRE_NE(NULL, copy.get());
+    DREAM3D_REQUIRED_PTR(copy.get(), !=, NULL)
   }
 }
 

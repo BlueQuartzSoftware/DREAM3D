@@ -113,6 +113,13 @@ class DREAM3DLib_EXPORT RemoveArrays : public AbstractFilter
     * in an attempt to ensure the filter can process the inputs.
     */
     virtual void preflight();
+    
+    /**
+     * @brief removeSelectionsFromDataContainerArray This function will attempt to remove those DataContainers, AttributeMatrices, and DataArrays selected by the user/programmer.
+     * DataArray items that are flagged as selected by the user/programmer.
+     * @param dca, state
+     */
+    void removeSelectionsFromDataContainerArray(DataContainerArray* dca, Qt::CheckState state);
 
   signals:
     void updateFilterParameters(AbstractFilter* filter);

@@ -125,6 +125,20 @@ class QuaternionMath
     }
 
     /**
+     * @brief New
+     * @return
+     */
+    static Quaternion New()
+    {
+      Quaternion q;
+      q.x = 0.0;
+      q.y = 0.0;
+      q.z = 0.0;
+      q.w = 1.0;
+      return q;
+    }
+
+    /**
      * @brief Identity Sets the quaternion q to the identity quaternion (<0,0,0>,1)
      * @param q
      */

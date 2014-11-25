@@ -156,7 +156,7 @@ void EstablishMatrixPhase::dataCheck()
   VolumeDataContainer* m = getDataContainerArray()->getPrereqDataContainer<VolumeDataContainer, AbstractFilter>(this, getOutputCellAttributeMatrixName().getDataContainerName());
   if(getErrorCondition() < 0) { return; }
   //Input Ensemble Data That we require
-  typedef DataArray<unsigned int> PhaseTypeArrayType;
+  //typedef DataArray<unsigned int> PhaseTypeArrayType;
 
   QVector<size_t> dims(1, 1);
   m_PhaseTypesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<unsigned int>, AbstractFilter>(this, getInputPhaseTypesArrayPath(), dims);
@@ -289,7 +289,7 @@ void  EstablishMatrixPhase::establish_matrix()
       totalmatrixfractions = totalmatrixfractions + mp->getPhaseFraction();
     }
   }
-  for (size_t i = 0; i < matrixphases.size(); i++)
+  for (qint32 i = 0; i < matrixphases.size(); i++)
   {
     matrixphasefractions[i] = matrixphasefractions[i] / totalmatrixfractions;
     if(i > 0) { matrixphasefractions[i] = matrixphasefractions[i] + matrixphasefractions[i - 1]; }

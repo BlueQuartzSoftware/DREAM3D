@@ -490,7 +490,7 @@ void FindGBCD::dataCheckVoxel()
   m_FeaturePhasesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeaturePhasesArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_FeaturePhasesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_FeaturePhases = m_FeaturePhasesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
-  typedef DataArray<unsigned int> XTalStructArrayType;
+ //typedef DataArray<unsigned int> XTalStructArrayType;
   m_CrystalStructuresPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<unsigned int>, AbstractFilter>(this, getCrystalStructuresArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_CrystalStructuresPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_CrystalStructures = m_CrystalStructuresPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
@@ -549,7 +549,7 @@ void FindGBCD::execute()
   float timeDiff = 0.0f;
   startMillis =  QDateTime::currentMSecsSinceEpoch();
   int lastIteration = 0;
-  int numIterationsPerTime = 0;
+  //int numIterationsPerTime = 0;
   int hemisphere = 0;
 
   double totalFaceArea = 0.0;
@@ -585,7 +585,7 @@ void FindGBCD::execute()
       estimatedTime = (float)(totalFaces - i) / timeDiff;
       ss = ss + QObject::tr(" || Est. Time Remain: %1").arg(DREAM3D::convertMillisToHrsMinSecs(estimatedTime));
       millis = QDateTime::currentMSecsSinceEpoch();
-      numIterationsPerTime = i - lastIteration;
+      //numIterationsPerTime = i - lastIteration;
       lastIteration = i;
     }
     notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);

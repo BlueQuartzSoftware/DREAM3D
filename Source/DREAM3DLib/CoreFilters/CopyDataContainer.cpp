@@ -117,7 +117,13 @@ void CopyDataContainer::dataCheck()
   }
 
   DataContainerArray::Pointer dca = getDataContainerArray();
-  if (NULL == dca.get() ) { return; }
+  if (NULL == dca.get() )
+  {
+      setErrorCondition(-11003);
+      QString ss = QObject::tr("The DataContainerArray was not found. Please contact the DREAM3D developers for more information.");
+      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+      return;
+  }
 
   DataContainer::Pointer dc = dca->getDataContainer(getSelectedDataContainerName());
   if(NULL == dc.get())
