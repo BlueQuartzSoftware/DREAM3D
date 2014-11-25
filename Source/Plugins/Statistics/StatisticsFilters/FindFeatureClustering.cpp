@@ -250,6 +250,7 @@ void FindFeatureClustering::find_clustering()
   float value;
   float sizex, sizey, sizez, totalvol;
   float normfactor;
+  float finiteAdjFactor = 1.0f/8.0f;
 
   std::vector<std::vector<float> > clusteringlist;
   std::vector<float> oldcount(m_NumberOfBins);
@@ -349,19 +350,21 @@ void FindFeatureClustering::find_clustering()
     }
   }
 
-  for (size_t i = 1; i < totalFeatures; i++)
-  {
-      if (m_FeaturePhases[i] == m_PhaseNumber) {totalPPTfeatures++;}
-  }
+//  for (size_t i = 1; i < totalFeatures; i++)
+//  {
+//      if (m_FeaturePhases[i] == m_PhaseNumber) {totalPPTfeatures++;}
+//  }
 
-  for (size_t i = 0; i < m_NumberOfBins; i++)
-  {
-      r1 = min + (i)*stepsize;
-      r2 = r1 + stepsize;
-      normfactor = 4.0f/3.0f*DREAM3D::Constants::k_Pi*((r2*r2*r2) - (r1*r1*r1))*totalPPTfeatures*oneovervolume;
-      oldcount[i] = m_NewEnsembleArray[(m_NumberOfBins*m_PhaseNumber) + i];
-      m_NewEnsembleArray[(m_NumberOfBins*m_PhaseNumber) + i] = oldcount[i]/normfactor;
-  }
+//  for (size_t i = 0; i < m_NumberOfBins; i++)
+//  {
+//      r1 = (min + (i)*stepsize);
+//      r2 = (r1 + stepsize);
+//      r1 = r1*finiteAdjFactor;
+//      r2 = r2*finiteAdjFactor;
+//      normfactor = 4.0f/3.0f*DREAM3D::Constants::k_Pi*((r2*r2*r2) - (r1*r1*r1))*totalPPTfeatures*oneovervolume;
+//      oldcount[i] = m_NewEnsembleArray[(m_NumberOfBins*m_PhaseNumber) + i];
+//      m_NewEnsembleArray[(m_NumberOfBins*m_PhaseNumber) + i] = oldcount[i]/normfactor;
+//  }
 
 
 

@@ -1205,7 +1205,6 @@ void InsertPrecipitatePhases::determine_currentRDF(size_t gnum, int add)
   StatsDataArray& statsDataArray = *(m_StatsDataArray.lock());
   typedef std::vector<std::vector<float> > VectOfVectFloat_t;
 
-  PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsDataArray[phase].get());
 
   x = m_Centroids[3 * gnum];
   y = m_Centroids[3 * gnum + 1];
@@ -1251,19 +1250,22 @@ std::vector<float> InsertPrecipitatePhases::normalizeRDF(std::vector<float> rdf,
     float r1;
     float r2;
     float oneovervolume = 1.0f/volume;
+    float finiteAdjFactor = 0.3;
 
-    r1 = 0;
-    r2 = rdfmin;
+    r1 = 0*finiteAdjFactor;
+    r2 = rdfmin*finiteAdjFactor;
     normfactor = 4.0f/3.0f*DREAM3D::Constants::k_Pi*((r2*r2*r2) - (r1*r1*r1))*numPPTfeatures*oneovervolume;
     rdf[0] = rdf[0]/normfactor;
 
-    for (size_t i = 1; i < num_bins+2; i++)
-      {
-          r1 = rdfmin + (i-1)*stepsize;
-          r2 = r1 + stepsize;
-          normfactor = 4.0f/3.0f*DREAM3D::Constants::k_Pi*((r2*r2*r2) - (r1*r1*r1))*numPPTfeatures*oneovervolume;
-          rdf[i] = rdf[i]/normfactor;
-      }
+//    for (size_t i = 1; i < num_bins+2; i++)
+//      {
+//          r1 = (rdfmin + (i-1)*stepsize);
+//          r2 = (r1 + stepsize);
+//          r1 = r1*finiteAdjFactor;
+//          r2 = r2*finiteAdjFactor;
+//          normfactor = 4.0f/3.0f*DREAM3D::Constants::k_Pi*((r2*r2*r2) - (r1*r1*r1))*numPPTfeatures*oneovervolume;
+//          rdf[i] = rdf[i]/normfactor;
+//      }
 
       return rdf;
 }
