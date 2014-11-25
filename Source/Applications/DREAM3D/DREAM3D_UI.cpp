@@ -515,6 +515,7 @@ void DREAM3D_UI::setupPipelineContextMenu()
 {
   QList<QAction*> favoriteItemActions;
   QList<QAction*> favoriteCategoryActions;
+  QList<QAction*> favoriteDefaultActions;
   QList<QAction*> prebuiltItemActions;
   QList<QAction*> prebuildCategoryActions;
 
@@ -531,6 +532,7 @@ void DREAM3D_UI::setupPipelineContextMenu()
           favoritesDockWidget, SLOT( actionAddFavorite_triggered() ) );
   favoriteItemActions << actionAddFavorite;
   favoriteCategoryActions << actionAddFavorite;
+  favoriteDefaultActions << actionAddFavorite;
 
   QAction* actionAddFavoriteFolder = new QAction(menuPipeline);
   actionAddFavoriteFolder->setObjectName(QString::fromUtf8("actionAddFavoriteFolder"));
@@ -542,6 +544,7 @@ void DREAM3D_UI::setupPipelineContextMenu()
           favoritesDockWidget, SLOT( actionAddFavoriteFolder_triggered() ) );
   favoriteItemActions << actionAddFavoriteFolder;
   favoriteCategoryActions << actionAddFavoriteFolder;
+  favoriteDefaultActions << actionAddFavoriteFolder;
 
 
   QAction* actionUpdateFavorite = new QAction(menuPipeline);
@@ -629,6 +632,7 @@ void DREAM3D_UI::setupPipelineContextMenu()
   }
   favoritesDockWidget->getFilterLibraryTreeWidget()->setNodeActionList(favoriteCategoryActions);
   favoritesDockWidget->getFilterLibraryTreeWidget()->setLeafActionList(favoriteItemActions);
+  favoritesDockWidget->getFilterLibraryTreeWidget()->setDefaultActionList(favoriteDefaultActions);
 
 
 

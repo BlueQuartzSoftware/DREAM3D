@@ -80,6 +80,14 @@ void FilterLibraryTreeWidget::setLeafActionList(QList<QAction*> list)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void FilterLibraryTreeWidget::setDefaultActionList(QList<QAction*> list)
+{
+    m_DefaultActions = list;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void FilterLibraryTreeWidget::onCustomContextMenuRequested(const QPoint& pos)
 {
   QTreeWidgetItem* item = itemAt(pos);
@@ -89,6 +97,10 @@ void FilterLibraryTreeWidget::onCustomContextMenuRequested(const QPoint& pos)
     // Note: We must map the point to global from the viewport to
     // account for the header.
     showContextMenu( item, viewport()->mapToGlobal(pos) );
+  }
+  else
+  {
+      showContextMenu( NULL, mapToGlobal(pos) );
   }
 }
 
@@ -101,27 +113,28 @@ void FilterLibraryTreeWidget::showContextMenu(QTreeWidgetItem* item, const QPoin
   // Clear menu's previous actions
   m_Menu.clear();
 
-  int itemType = item->type();
-  switch (itemType)
-  {
-
-//    case Default_Item_Type:
-//    if ( !m_DefaultActions.isEmpty() )
-//      addActionList(m_DefaultActions);
-//    break;
-
-    case Leaf_Item_Type:
-      if ( !m_LeafActions.isEmpty() )
-      { addActionList(m_LeafActions); }
-      break;
-
-
-    case Node_Item_Type:
-      if ( !m_NodeActions.isEmpty() )
-      { addActionList(m_NodeActions); }
-      break;
-
-  }
+    if (item == NULL)
+    {
+        if ( !m_LeafActions.isEmpty() )
+        { addActionList(m_DefaultActions); }
+    }
+    else
+    {
+        int itemType = item->type();
+        switch (itemType)
+        {
+            case Leaf_Item_Type:
+                if ( !m_LeafActions.isEmpty() )
+                { addActionList(m_LeafActions); }
+                break;
+                
+                
+            case Node_Item_Type:
+                if ( !m_NodeActions.isEmpty() )
+                { addActionList(m_NodeActions); }
+                break;
+        }
+    }
 
   m_Menu.exec(globalPos);
 }
