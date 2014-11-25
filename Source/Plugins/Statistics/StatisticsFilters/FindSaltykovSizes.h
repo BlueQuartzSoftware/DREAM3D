@@ -1,6 +1,7 @@
 /* ============================================================================
- * Copyright (c) 2012 Michael A. Jackson (BlueQuartz Software)
- * Copyright (c) 2012 Dr. Michael A. Groeber (US Air Force Research Laboratories)
+ * Copyright (c) 2011 Michael A. Jackson (BlueQuartz Software)
+ * Copyright (c) 2011 Dr. Michael A. Groeber (US Air Force Research Laboratories)
+ * Copyright (c) 2014 Dr. Joseph C. Tucker (UES, Inc.)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -13,10 +14,10 @@
  * list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
  *
- * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
- * BlueQuartz Software nor the names of its contributors may be used to endorse
- * or promote products derived from this software without specific prior written
- * permission.
+ * Neither the name of Joseph C. Tucker, Michael A. Groeber, Michael A. Jackson,
+ * UES, Inc., the US Air Force, BlueQuartz Software nor the names of its contributors
+ * may be used to endorse or promote products derived from this software without
+ * specific prior written permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -30,59 +31,52 @@
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  *  This code was written under United States Air Force Contract number
- *                           FA8650-07-D-5800
+ *                   FA8650-07-D-5800 and FA8650-10-D-5226
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _RemoveArrays_H_
-#define _RemoveArrays_H_
+#ifndef _FindSaltykovSizes_H_
+#define _FindSaltykovSizes_H_
 
 #include <QtCore/QString>
-#include <set>
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/DataArrays/IDataArray.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/Constants.h"
+#include "DREAM3DLib/DataArrays/IDataArray.h"
+#include "DREAM3DLib/DataContainers/VolumeDataContainer.h"
 
 
 /**
- * @class RemoveArrays RemoveArrays.h /FilterCategoryFilters/RemoveArrays.h
+ * @class FindSaltykovSizes FindSaltykovSizes.h DREAM3DLib/GenericFilters/FindSaltykovSizes.h
  * @brief
- * @author
- * @date
- * @version 1.0
+ * @author Joseph C. Tucker
+ * @date Nov 24, 2014
+ * @version 5.1
  */
-class DREAM3DLib_EXPORT RemoveArrays : public AbstractFilter
+class FindSaltykovSizes : public AbstractFilter
 {
     Q_OBJECT /* Need this for Qt's signals and slots mechanism to work */
   public:
-    DREAM3D_SHARED_POINTERS(RemoveArrays)
-    DREAM3D_STATIC_NEW_MACRO(RemoveArrays)
-    DREAM3D_TYPE_MACRO_SUPER(RemoveArrays, AbstractFilter)
+    DREAM3D_SHARED_POINTERS(FindSaltykovSizes)
+    DREAM3D_STATIC_NEW_MACRO(FindSaltykovSizes)
+    DREAM3D_TYPE_MACRO_SUPER(FindSaltykovSizes, AbstractFilter)
 
+    virtual ~FindSaltykovSizes();
 
-    virtual ~RemoveArrays();
+    DREAM3D_FILTER_PARAMETER(DataArrayPath, CellFeatureAttributeMatrixName)
+    Q_PROPERTY(DataArrayPath CellFeatureAttributeMatrixName READ getCellFeatureAttributeMatrixName WRITE setCellFeatureAttributeMatrixName)
 
-    DREAM3D_FILTER_PARAMETER(DataContainerArrayProxy, DataArraysToRemove)
-    Q_PROPERTY(DataContainerArrayProxy DataArraysToRemove READ getDataArraysToRemove WRITE setDataArraysToRemove)
+    DREAM3D_FILTER_PARAMETER(DataArrayPath, EquivalentDiametersArrayPath)
+    Q_PROPERTY(DataArrayPath EquivalentDiametersArrayPath READ getEquivalentDiametersArrayPath WRITE setEquivalentDiametersArrayPath)
 
+    DREAM3D_FILTER_PARAMETER(QString, SaltykovEquivalentDiametersArrayName)
+    Q_PROPERTY(QString SaltykovEquivalentDiametersArrayName READ getSaltykovEquivalentDiametersArrayName WRITE setSaltykovEquivalentDiametersArrayName)
 
-    /**
-    * @brief This returns the group that the filter belonds to. You can select
-    * a different group if you want. The string returned here will be displayed
-    * in the GUI for the filter
-    */
     virtual const QString getCompiledLibraryName();
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
     virtual const QString getGroupName();
     virtual const QString getSubGroupName();
-
-    /**
-    * @brief This returns a string that is displayed in the GUI. It should be readable
-    * and understandable by humans.
-    */
     virtual const QString getHumanLabel();
 
     /**
@@ -92,9 +86,8 @@ class DREAM3DLib_EXPORT RemoveArrays : public AbstractFilter
     virtual void setupFilterParameters();
 
     /**
-    * @brief This method will write the options to a file
-    * @param writer The writer that is used to write the options to a file
-    */
+     * @brief Reimplemented from @see AbstractFilter class
+     */
     virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
 
     /**
@@ -103,23 +96,8 @@ class DREAM3DLib_EXPORT RemoveArrays : public AbstractFilter
     */
     virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
 
-    /**
-    * @brief Reimplemented from @see AbstractFilter class
-    */
     virtual void execute();
-
-    /**
-    * @brief This function runs some sanity checks on the DataContainer and inputs
-    * in an attempt to ensure the filter can process the inputs.
-    */
     virtual void preflight();
-    
-    /**
-     * @brief removeSelectionsFromDataContainerArray This function will attempt to remove those DataContainers, AttributeMatrices, and DataArrays selected by the user/programmer.
-     * DataArray items that are flagged as selected by the user/programmer.
-     * @param dca, state
-     */
-    void removeSelectionsFromDataContainerArray(DataContainerArray* dca, Qt::CheckState state);
 
   signals:
     void updateFilterParameters(AbstractFilter* filter);
@@ -128,24 +106,21 @@ class DREAM3DLib_EXPORT RemoveArrays : public AbstractFilter
     void preflightExecuted();
 
   protected:
-    RemoveArrays();
+    FindSaltykovSizes();
+    void find_saltykov_sizes();
+    int do_saltykov(std::vector<int> nA, float Dmax, int k);
 
-    /**
-    * @brief Checks for the appropriate parameter values and availability of
-    * arrays in the data container
-    * @param preflight
-    * @param voxels The number of voxels
-    * @param features The number of features
-    * @param ensembles The number of ensembles
-    */
+  private:
+    DEFINE_CREATED_DATAARRAY_VARIABLE(float, EquivalentDiameters)
+    DEFINE_CREATED_DATAARRAY_VARIABLE(float, SaltykovEquivalentDiameters)
+
     void dataCheck();
 
-
-    RemoveArrays(const RemoveArrays&); // Copy Constructor Not Implemented
-    void operator=(const RemoveArrays&); // Operator '=' Not Implemented
+    FindSaltykovSizes(const FindSaltykovSizes&); // Copy Constructor Not Implemented
+    void operator=(const FindSaltykovSizes&); // Operator '=' Not Implemented
 };
 
-#endif /* _RemoveArrays_H_ */
+#endif /* FindSaltykovSizes_H_ */
 
 
 

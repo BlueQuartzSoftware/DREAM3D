@@ -150,10 +150,11 @@ DataContainer::Pointer DataContainerArray::removeDataContainer(const QString& na
     {
       f = *it;
       m_Array.erase(it);
-      break;
+        return f;
     }
   }
 
+    // DO NOT return a NullPointer for any reason other than "DataContainer was not found"
   return f;
 }
 

@@ -41,11 +41,11 @@
 //
 // -----------------------------------------------------------------------------
 CopyAttributeArray::CopyAttributeArray() :
-  AbstractFilter(),
-  m_SelectedArrayPath("", "", ""),
-  m_NewArrayName("")
+AbstractFilter(),
+m_SelectedArrayPath("", "", ""),
+m_NewArrayName("")
 {
-  setupFilterParameters();
+    setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------
@@ -60,11 +60,11 @@ CopyAttributeArray::~CopyAttributeArray()
 // -----------------------------------------------------------------------------
 void CopyAttributeArray::setupFilterParameters()
 {
-  FilterParameterVector parameters;
-  parameters.push_back(FilterParameter::New("Array to Copy", "SelectedArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getSelectedArrayPath(), false));
-  parameters.push_back(FilterParameter::New("New Array Name", "NewArrayName", FilterParameterWidgetType::StringWidget, getNewArrayName(), false));
-
-  setFilterParameters(parameters);
+    FilterParameterVector parameters;
+    parameters.push_back(FilterParameter::New("Array to Copy", "SelectedArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getSelectedArrayPath(), false));
+    parameters.push_back(FilterParameter::New("New Array Name", "NewArrayName", FilterParameterWidgetType::StringWidget, getNewArrayName(), false));
+    
+    setFilterParameters(parameters);
 }
 
 // -----------------------------------------------------------------------------
@@ -72,10 +72,10 @@ void CopyAttributeArray::setupFilterParameters()
 // -----------------------------------------------------------------------------
 void CopyAttributeArray::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
-  reader->openFilterGroup(this, index);
-  setSelectedArrayPath( reader->readDataArrayPath("SelectedArrayPath", getSelectedArrayPath()) );
-  setNewArrayName( reader->readString( "NewArrayName", getNewArrayName() ) );
-  reader->closeFilterGroup();
+    reader->openFilterGroup(this, index);
+    setSelectedArrayPath( reader->readDataArrayPath("SelectedArrayPath", getSelectedArrayPath()) );
+    setNewArrayName( reader->readString( "NewArrayName", getNewArrayName() ) );
+    reader->closeFilterGroup();
 }
 
 // -----------------------------------------------------------------------------
@@ -83,11 +83,11 @@ void CopyAttributeArray::readFilterParameters(AbstractFilterParametersReader* re
 // -----------------------------------------------------------------------------
 int CopyAttributeArray::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
-  writer->openFilterGroup(this, index);
-  DREAM3D_FILTER_WRITE_PARAMETER(SelectedArrayPath)
-  DREAM3D_FILTER_WRITE_PARAMETER(NewArrayName)
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
+    writer->openFilterGroup(this, index);
+    DREAM3D_FILTER_WRITE_PARAMETER(SelectedArrayPath)
+    DREAM3D_FILTER_WRITE_PARAMETER(NewArrayName)
+    writer->closeFilterGroup();
+    return ++index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------
@@ -95,65 +95,67 @@ int CopyAttributeArray::writeFilterParameters(AbstractFilterParametersWriter* wr
 // -----------------------------------------------------------------------------
 void CopyAttributeArray::dataCheck()
 {
-  setErrorCondition(0);
-
-  if(m_NewArrayName.isEmpty() == true)
-  {
-    setErrorCondition(-11000);
-    QString ss = QObject::tr("The New Attribute Array name can not be empty. Please set a value.");
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-  }
-
-  if (m_SelectedArrayPath.isEmpty() == true)
-  {
-    setErrorCondition(-11001);
-    QString ss = QObject::tr("The complete path to the Attribute Array can not be empty. Please set an appropriate path.");
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-  }
-  else
-  {
-    QString dcName = m_SelectedArrayPath.getDataContainerName();
-    QString amName = m_SelectedArrayPath.getAttributeMatrixName();
-    QString daName = m_SelectedArrayPath.getDataArrayName();
-
-    DataContainer::Pointer dc = getDataContainerArray()->getDataContainer(dcName);
-    if(NULL == dc.get())
+    setErrorCondition(0);
+    
+    if(m_NewArrayName.isEmpty() == true)
     {
-      setErrorCondition(-11003);
-      QString ss = QObject::tr("The DataContainer '%1' was not found in the DataContainerArray").arg(dcName);
-      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-      return;
+        setErrorCondition(-11009);
+        QString ss = QObject::tr("The New Attribute Array name can not be empty. Please set a value.");
+        notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+        return;
     }
-
-    AttributeMatrix::Pointer attrMat = dc->getAttributeMatrix(amName);
-    if(NULL == attrMat.get())
+    
+    if (m_SelectedArrayPath.isEmpty() == true)
     {
-      setErrorCondition(-11004);
-      QString ss = QObject::tr("The AttributeMatrix '%1' was not found in the DataContainer '%2'").arg(amName).arg(dcName);
-      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-      return;
+        setErrorCondition(-11010);
+        QString ss = QObject::tr("The complete path to the Attribute Array can not be empty. Please set an appropriate path.");
+        notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+        return;
     }
-
-    // We the AttributeMatrix, now lets try to get the AttributeArray object and copy it if it exists
-    IDataArray::Pointer dataArray = attrMat->getAttributeArray(daName);
-    if(NULL == dataArray.get() )
+    else
     {
-      setErrorCondition(-11005);
-      QString ss = QObject::tr("A DataArray with the name '%1' was not found in the AttributeMatrix").arg(daName);
-      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-      return;
+        QString dcName = m_SelectedArrayPath.getDataContainerName();
+        QString amName = m_SelectedArrayPath.getAttributeMatrixName();
+        QString daName = m_SelectedArrayPath.getDataArrayName();
+        
+        DataContainer::Pointer dc = getDataContainerArray()->getDataContainer(dcName);
+        if(NULL == dc.get())
+        {
+            setErrorCondition(-11007);
+            QString ss = QObject::tr("The DataContainer '%1' was not found in the DataContainerArray").arg(dcName);
+            notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+            return;
+        }
+        
+        AttributeMatrix::Pointer attrMat = dc->getAttributeMatrix(amName);
+        if(NULL == attrMat.get())
+        {
+            setErrorCondition(-11008);
+            QString ss = QObject::tr("The AttributeMatrix '%1' was not found in the DataContainer '%2'").arg(amName).arg(dcName);
+            notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+            return;
+        }
+        
+        // We the AttributeMatrix, now lets try to get the AttributeArray object and copy it if it exists
+        IDataArray::Pointer dataArray = attrMat->getAttributeArray(daName);
+        if(NULL == dataArray.get() )
+        {
+            setErrorCondition(-11014);
+            QString ss = QObject::tr("A DataArray with the name '%1' was not found in the AttributeMatrix").arg(daName);
+            notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+            return;
+        }
+        IDataArray::Pointer p = attrMat->getAttributeArray(daName);
+        IDataArray::Pointer pNew = p->deepCopy();
+        int err = attrMat->addAttributeArray(m_NewArrayName, pNew);
+        
+        if(0 != err)
+        {
+            setErrorCondition(err);
+            QString ss = QObject::tr("Attempt to copy AttributeArray '%1' to '%2' Failed.").arg(daName).arg(m_NewArrayName);
+            notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+        }
     }
-    IDataArray::Pointer p = attrMat->getAttributeArray(daName);
-    IDataArray::Pointer pNew = p->deepCopy();
-    int err = attrMat->addAttributeArray(m_NewArrayName, pNew);
-
-    if(0 != err)
-    {
-      setErrorCondition(err);
-      QString ss = QObject::tr("Attempt to copy AttributeArray '%1' to '%2' Failed.").arg(daName).arg(m_NewArrayName);
-      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-    }
-  }
 }
 
 
@@ -162,12 +164,12 @@ void CopyAttributeArray::dataCheck()
 // -----------------------------------------------------------------------------
 void CopyAttributeArray::preflight()
 {
-  setInPreflight(true);
-  emit preflightAboutToExecute();
-  emit updateFilterParameters(this);
-  dataCheck();
-  emit preflightExecuted();
-  setInPreflight(false);
+    setInPreflight(true);
+    emit preflightAboutToExecute();
+    emit updateFilterParameters(this);
+    dataCheck();
+    emit preflightExecuted();
+    setInPreflight(false);
 }
 
 // -----------------------------------------------------------------------------
@@ -175,28 +177,29 @@ void CopyAttributeArray::preflight()
 // -----------------------------------------------------------------------------
 void CopyAttributeArray::execute()
 {
-  setErrorCondition(0);
-
-  dataCheck(); // calling the dataCheck will copy the array, so nothing is required here
-  if(getErrorCondition() < 0) { return; }
-
-  notifyStatusMessage(getHumanLabel(), "Complete");
+    setErrorCondition(0);
+    
+    dataCheck(); // calling the dataCheck will copy the array, so nothing is required here
+    int err = getErrorCondition();
+    if(getErrorCondition() < 0) { return; }
+    
+    notifyStatusMessage(getHumanLabel(), "Complete");
 }
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 AbstractFilter::Pointer CopyAttributeArray::newFilterInstance(bool copyFilterParameters)
 {
-  /*
-  * SelectedArrayPath
-  * NewArrayName
-  */
-  CopyAttributeArray::Pointer filter = CopyAttributeArray::New();
-  if(true == copyFilterParameters)
-  {
-    copyFilterParameterInstanceVariables(filter.get());
-  }
-  return filter;
+    /*
+     * SelectedArrayPath
+     * NewArrayName
+     */
+    CopyAttributeArray::Pointer filter = CopyAttributeArray::New();
+    if(true == copyFilterParameters)
+    {
+        copyFilterParameterInstanceVariables(filter.get());
+    }
+    return filter;
 }
 
 // -----------------------------------------------------------------------------

@@ -35,6 +35,7 @@ set(_PublicFilters
   FindSchmids
   FindShapes
   FindSizes
+  FindSaltykovSizes
   FindSlipTransmissionMetrics
   #FindBoundaryCellFractions
   FindTwinBoundaries

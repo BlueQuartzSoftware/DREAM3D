@@ -173,6 +173,8 @@ void MoveData::dataCheck()
         }
         else if(amSrcDataContainer->getName() == amDestDataContainer->getName())
         {
+            QString ss = QObject::tr("The source and destination Data Container are the same.  Is this what you meant to do?");
+            notifyWarningMessage(getHumanLabel(), ss, getErrorCondition());
             return;
         }
 
@@ -181,8 +183,6 @@ void MoveData::dataCheck()
     }
     else if( getWhatToMove() == k_MoveDataArray )
     {
-        DataContainer::Pointer daDestDataContainer = getDataContainerArray()->getDataContainer(amDestPath);
-        DataContainer::Pointer daSrcDataContainer = getDataContainerArray()->getDataContainer(daSrcPath);
         AttributeMatrix::Pointer daSrcAttributeMatrix = getDataContainerArray()->getAttributeMatrix(daSrcPath);
         IDataArray::Pointer daSrcDataArray = getDataContainerArray()->getExistingPrereqArrayFromPath<IDataArray, AbstractFilter>(this, daSrcPath);
 
@@ -198,8 +198,6 @@ void MoveData::dataCheck()
             return;
         }
 
-    //    qDebug() << "daDestAttributeMatrix (" << daDestAttributeMatrix->getName() << "): " << daDestAttributeMatrix->getNumTuples() << "\tdaSrcDataArray (" << daSrcDataArray-> << "): " << daSrcDataArray->getNumberOfTuples();
-
         if (daDestAttributeMatrix->getNumTuples() != daSrcDataArray->getNumberOfTuples())
         {
             setErrorCondition(-11019);
@@ -209,7 +207,7 @@ void MoveData::dataCheck()
         }
         else if (daSrcAttributeMatrix->getName() == daDestAttributeMatrix->getName())
         {
-            QString ss = QObject::tr("The source and destination attribute matrix are the same.  Is this what you meant to do?");
+            QString ss = QObject::tr("The source and destination Attribute Matrix are the same.  Is this what you meant to do?");
             notifyWarningMessage(getHumanLabel(), ss, getErrorCondition());
             return;
         }
