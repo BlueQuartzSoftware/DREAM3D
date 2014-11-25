@@ -246,7 +246,7 @@ class GenerateEnsembleStatistics : public AbstractFilter
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(bool, SurfaceFeatures)
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, FeaturePhases)
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, AxisEulerAngles)
-    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, RadialDistFunc)
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, RadialDistFunc)
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, MaxMinRadialDistFunc)
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, Omega3s)
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, AspectRatios)

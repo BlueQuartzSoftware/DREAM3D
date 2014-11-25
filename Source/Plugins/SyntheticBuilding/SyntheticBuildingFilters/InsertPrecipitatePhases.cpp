@@ -528,6 +528,7 @@ void  InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer featur
       totalprecipitatefractions = totalprecipitatefractions + pp->getPhaseFraction();
     }
   }
+
   for (size_t i = 0; i < precipitatephases.size(); i++)
   {
     precipitatephasefractions[i] = static_cast<float>(precipitatephasefractions[i] / totalprecipitatefractions);
@@ -652,6 +653,42 @@ void  InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer featur
     }
   }
 
+
+
+  //initializing the target RDF vector - this is the radial distribution function we are trying to match to
+   for (int64_t i = 1; i < numensembles; ++i)
+   {
+     if(m_PhaseTypes[i] == DREAM3D::PhaseType::PrecipitatePhase)
+     {
+       PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsDataArray[i].get());
+       VectorOfFloatArray rdfTarget = pp->getRadialDistFunction();
+       VectorOfFloatArray maxmin = pp->getMaxMinRDF();
+//       int test =rdfTarget[0]->getNumberOfTuples();
+       m_numRDFbins = rdfTarget[0]->getNumberOfTuples();
+ //      std::vector<float> rdfTargetDist;
+       m_rdfTargetDist.resize(m_numRDFbins+2);
+       m_rdfCurrentDist.resize(m_numRDFbins+2);
+
+       m_rdfTargetDist[0] = 0;
+       m_rdfTargetDist[m_numRDFbins+1] = 0;
+
+
+       for (size_t j = 0; j < m_numRDFbins; j++)
+       {
+           m_rdfTargetDist[j+1] = rdfTarget[0]->getValue(j);
+       }
+
+        m_rdfMax = maxmin[0]->getValue(0);
+        m_rdfMin = maxmin[0]->getValue(1);
+
+     }
+   }
+
+
+
+
+
+
   //  for each feature : select centroid, determine voxels in feature, monitor filling error and decide of the 10 placements which
   // is the most beneficial, then the feature is added and its clustering are determined
 
@@ -749,11 +786,17 @@ void  InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer featur
     outFile << "\n\n";
   }
 
+  //calculate the initial current RDF - this will change as we move particles around
+     for (size_t i = firstPrecipitateFeature; i < numfeatures; i++)
+     {
+       m_oldRDFerror = check_RDFerror(i, -1000);
+     }
+
   notifyStatusMessage(getHumanLabel(), "Packing Features - Initial Feature Placement Complete");
 
 
   // begin swaping/moving/adding/removing features to try to improve packing
-  int totalAdjustments = static_cast<int>(10 * ((numfeatures - firstPrecipitateFeature) - 1));
+  int totalAdjustments = static_cast<int>(1000 * ((numfeatures - firstPrecipitateFeature) - 1));
   for (int iteration = 0; iteration < totalAdjustments; ++iteration)
   {
 
@@ -818,32 +861,47 @@ void  InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer featur
       oldxc = m_Centroids[3 * randomfeature];
       oldyc = m_Centroids[3 * randomfeature + 1];
       oldzc = m_Centroids[3 * randomfeature + 2];
-      oldfillingerror = fillingerror;
-      fillingerror = check_fillingerror(-1000, static_cast<int>(randomfeature), featureOwnersPtr);
-      move_precipitate(randomfeature, xc, yc, zc);
-      fillingerror = check_fillingerror(static_cast<int>(randomfeature), -1000, featureOwnersPtr);
-//      currentclusteringerror = check_clusteringerror(-1000, randomfeature);
+//      oldfillingerror = fillingerror;
+//      fillingerror = check_fillingerror(-1000, static_cast<int>(randomfeature), featureOwnersPtr);
 //      move_precipitate(randomfeature, xc, yc, zc);
-//      currentclusteringerror = check_clusteringerror(randomfeature, -1000);
-//      if(currentclusteringerror >= oldclusteringerror)
-      if(fillingerror >= oldfillingerror)
+//      fillingerror = check_fillingerror(static_cast<int>(randomfeature), -1000, featureOwnersPtr);
+//      if(fillingerror >= oldfillingerror)
+
+      //      currentclusteringerror = check_clusteringerror(-1000, randomfeature);
+//            move_precipitate(randomfeature, xc, yc, zc);
+      //      currentclusteringerror = check_clusteringerror(randomfeature, -1000);
+//            if(currentclusteringerror >= oldclusteringerror)
+      m_currentRDFerror = check_RDFerror(-1000, randomfeature);
+      move_precipitate(randomfeature, xc, yc, zc);
+      m_currentRDFerror = check_RDFerror(randomfeature, -1000);
+      if(m_currentRDFerror >= m_oldRDFerror)
       {
-        //oldclusteringerror = currentclusteringerror;
-        oldfillingerror = fillingerror;
+//        oldfillingerror = fillingerror;
+//        oldclusteringerror = currentclusteringerror;
+        m_oldRDFerror = m_currentRDFerror;
         acceptedmoves++;
       }
       else
       {
-        fillingerror = check_fillingerror(-1000, static_cast<int>(randomfeature), featureOwnersPtr);
-        move_precipitate(randomfeature, oldxc, oldyc, oldzc);
-        fillingerror = check_fillingerror(static_cast<int>(randomfeature), -1000, featureOwnersPtr);
+//        fillingerror = check_fillingerror(-1000, static_cast<int>(randomfeature), featureOwnersPtr);
+//        move_precipitate(randomfeature, oldxc, oldyc, oldzc);
+//        fillingerror = check_fillingerror(static_cast<int>(randomfeature), -1000, featureOwnersPtr);
+          //        oldfillingerror = fillingerror;
+
 //        currentclusteringerror = check_clusteringerror(-1000, randomfeature);
 //        move_precipitate(randomfeature, oldxc, oldyc, oldzc);
 //        currentclusteringerror = check_clusteringerror(randomfeature, -1000);
-        //  oldclusteringerror = currentclusteringerror;
-        oldfillingerror = fillingerror;
+//        oldclusteringerror = currentclusteringerror;
+
+        m_currentRDFerror = check_RDFerror(-1000, randomfeature);
+        move_precipitate(randomfeature, oldxc, oldyc, oldzc);
+        m_currentRDFerror = check_RDFerror(randomfeature, -1000);
+        m_oldRDFerror = m_currentRDFerror;
+
       }
     }
+
+
     // NUDGE - this option moves one feature to a spot close to its current centroid
     if(option == 1)
     {
@@ -860,33 +918,50 @@ void  InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer featur
       xc = static_cast<float>(oldxc + ((2.0f * (rg.genrand_res53() - 0.5f)) * (2.0f * m_PackingRes[0])));
       yc = static_cast<float>(oldyc + ((2.0f * (rg.genrand_res53() - 0.5f)) * (2.0f * m_PackingRes[1])));
       zc = static_cast<float>(oldzc + ((2.0f * (rg.genrand_res53() - 0.5f)) * (2.0f * m_PackingRes[2])));
-      oldfillingerror = fillingerror;
-      fillingerror = check_fillingerror(-1000, static_cast<int>(randomfeature), featureOwnersPtr);
-      move_precipitate(randomfeature, xc, yc, zc);
-      fillingerror = check_fillingerror(static_cast<int>(randomfeature), -1000, featureOwnersPtr);
+
+//      oldfillingerror = fillingerror;
+//      fillingerror = check_fillingerror(-1000, static_cast<int>(randomfeature), featureOwnersPtr);
+//      move_precipitate(randomfeature, xc, yc, zc);
+//      fillingerror = check_fillingerror(static_cast<int>(randomfeature), -1000, featureOwnersPtr);
+//      if(fillingerror >= oldfillingerror)
+
 //      currentclusteringerror = check_clusteringerror(-1000, randomfeature);
 //      move_precipitate(randomfeature, xc, yc, zc);
 //      currentclusteringerror = check_clusteringerror(randomfeature, -1000);
 //      if(currentclusteringerror >= oldclusteringerror)
-      if(fillingerror >= oldfillingerror)
+
+      m_currentRDFerror = check_RDFerror(-1000, randomfeature);
+      move_precipitate(randomfeature, xc, yc, zc);
+      m_currentRDFerror = check_RDFerror(randomfeature, -1000);
+      if(m_currentRDFerror >= m_oldRDFerror)
       {
-        //oldclusteringerror = currentclusteringerror;
-        oldfillingerror = fillingerror;
-        acceptedmoves++;
+          //        oldfillingerror = fillingerror;
+          //        oldclusteringerror = currentclusteringerror;
+                  m_oldRDFerror = m_currentRDFerror;
+                  acceptedmoves++;
       }
       else
       {
-        fillingerror = check_fillingerror(-1000, static_cast<int>(randomfeature), featureOwnersPtr);
-        move_precipitate(randomfeature, oldxc, oldyc, oldzc);
-        fillingerror = check_fillingerror(static_cast<int>(randomfeature), -1000, featureOwnersPtr);
-//        currentclusteringerror = check_clusteringerror(-1000, randomfeature);
-//        move_precipitate(randomfeature, oldxc, oldyc, oldzc);
-//        currentclusteringerror = check_clusteringerror(randomfeature, -1000);
-//  oldclusteringerror = currentclusteringerror;
-        oldfillingerror = fillingerror;
+          //        fillingerror = check_fillingerror(-1000, static_cast<int>(randomfeature), featureOwnersPtr);
+          //        move_precipitate(randomfeature, oldxc, oldyc, oldzc);
+          //        fillingerror = check_fillingerror(static_cast<int>(randomfeature), -1000, featureOwnersPtr);
+                    //        oldfillingerror = fillingerror;
+
+          //        currentclusteringerror = check_clusteringerror(-1000, randomfeature);
+          //        move_precipitate(randomfeature, oldxc, oldyc, oldzc);
+          //        currentclusteringerror = check_clusteringerror(randomfeature, -1000);
+          //        oldclusteringerror = currentclusteringerror;
+
+                  m_currentRDFerror = check_RDFerror(-1000, randomfeature);
+                  move_precipitate(randomfeature, oldxc, oldyc, oldzc);
+                  m_currentRDFerror = check_RDFerror(randomfeature, -1000);
+                  m_oldRDFerror = m_currentRDFerror;
+
       }
     }
   }
+
+  std::cout << "Done Jumping" <<std::endl;
 
 }
 
@@ -1058,6 +1133,7 @@ void InsertPrecipitatePhases::determine_clustering(size_t gnum, int add)
   y = m_Centroids[3 * gnum + 1];
   z = m_Centroids[3 * gnum + 2];
   size_t numFeatures = m_FeaturePhasesPtr.lock()->getNumberOfTuples();
+
   for (size_t n = firstPrecipitateFeature; n < numFeatures; n++)
   {
     if (m_FeaturePhases[n] == phase && n != gnum)
@@ -1078,7 +1154,7 @@ void InsertPrecipitatePhases::determine_clustering(size_t gnum, int add)
       clusterbin = static_cast<size_t>( r * oneOverClusteringDistStep );
       if(clusterbin >= 40) { clusterbin = 39; }
       simclusteringdist[iter][diabin][clusterbin] += add;
-      //      simclusteringdist[iter][dia2bin][clusterbin] += add;
+            //      simclusteringdist[iter][dia2bin][clusterbin] += add;
     }
   }
 }
@@ -1111,11 +1187,136 @@ float InsertPrecipitatePhases::check_clusteringerror(int gadd, int gremove)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void InsertPrecipitatePhases::determine_currentRDF(size_t gnum, int add)
+{
+
+  float x, y, z;
+  float xn, yn, zn;
+  float r;
+
+  int iter = 0;
+  int numPPTfeatures = 1;
+  int32_t rdfBin;
+  float stepsize = (m_rdfMax-m_rdfMin)/m_numRDFbins;
+
+  int phase = m_FeaturePhases[gnum];
+  while (phase != precipitatephases[iter]) { iter++; }
+
+  StatsDataArray& statsDataArray = *(m_StatsDataArray.lock());
+  typedef std::vector<std::vector<float> > VectOfVectFloat_t;
+
+  PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsDataArray[phase].get());
+
+  x = m_Centroids[3 * gnum];
+  y = m_Centroids[3 * gnum + 1];
+  z = m_Centroids[3 * gnum + 2];
+  size_t numFeatures = m_FeaturePhasesPtr.lock()->getNumberOfTuples();
+
+  for (size_t n = firstPrecipitateFeature; n < numFeatures; n++)
+  {
+    if (m_FeaturePhases[n] == phase && n != gnum)
+    {
+      xn = m_Centroids[3 * n];
+      yn = m_Centroids[3 * n + 1];
+      zn = m_Centroids[3 * n + 2];
+      r = sqrtf((x - xn) * (x - xn) + (y - yn) * (y - yn) + (z - zn) * (z - zn));
+
+
+      rdfBin = (r-m_rdfMin)/stepsize;
+
+      if (r < m_rdfMin) { rdfBin = -1;}
+
+      if (rdfBin >= m_numRDFbins) {rdfBin = m_numRDFbins;}
+
+      m_rdfCurrentDist[rdfBin+1] += add;
+      numPPTfeatures += 1;
+    }
+  }
+
+
+    m_rdfCurrentDistNorm = normalizeRDF(m_rdfCurrentDist, m_numRDFbins, stepsize, m_rdfMin, numPPTfeatures, totalvol);
+
+
+//  std::cout << "test" << std::endl;
+
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+std::vector<float> InsertPrecipitatePhases::normalizeRDF(std::vector<float> rdf, int num_bins, float stepsize, float rdfmin, size_t numPPTfeatures, float volume)
+{
+      //Normalizing the RDF by number density of particles (4/3*pi*(r2^3-r1^3)*numPPTfeatures/volume)
+    float normfactor;
+    float r1;
+    float r2;
+    float oneovervolume = 1.0f/volume;
+
+    r1 = 0;
+    r2 = rdfmin;
+    normfactor = 4.0f/3.0f*DREAM3D::Constants::k_Pi*((r2*r2*r2) - (r1*r1*r1))*numPPTfeatures*oneovervolume;
+    rdf[0] = rdf[0]/normfactor;
+
+    for (size_t i = 1; i < num_bins+2; i++)
+      {
+          r1 = rdfmin + (i-1)*stepsize;
+          r2 = r1 + stepsize;
+          normfactor = 4.0f/3.0f*DREAM3D::Constants::k_Pi*((r2*r2*r2) - (r1*r1*r1))*numPPTfeatures*oneovervolume;
+          rdf[i] = rdf[i]/normfactor;
+      }
+
+      return rdf;
+}
+
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+float InsertPrecipitatePhases::check_RDFerror(int gadd, int gremove)
+{
+
+  float rdferror;
+  float bhattdist;
+
+  for (size_t iter = 0; iter < simclusteringdist.size(); ++iter)
+  {
+    if(gadd > 0)
+    {
+      determine_currentRDF(gadd, 1);
+    }
+    if(gremove > 0)
+    {
+      determine_currentRDF(gremove, -1);
+    }
+  }
+  compare_1Ddistributions(m_rdfTargetDist, m_rdfCurrentDistNorm, bhattdist);
+  rdferror = bhattdist;
+  return rdferror;
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void InsertPrecipitatePhases::compare_1Ddistributions(std::vector<float> array1, std::vector<float> array2, float& bhattdist)
 {
   bhattdist = 0;
+  float sum_array1 = 0;
+  float sum_array2 = 0;
+
+  for (std::vector<float>::iterator j=array1.begin(); j!=array1.end(); j++)
+  {sum_array1 += *j;}
+
+  for (std::vector<float>::iterator j=array2.begin(); j!=array2.end(); j++)
+  {sum_array2 += *j;}
+
+
+
   for (size_t i = 0; i < array1.size(); i++)
   {
+    array1[i] = array1[i]/sum_array1;
+    array2[i] = array2[i]/sum_array2;
     bhattdist = bhattdist + sqrt((array1[i] * array2[i]));
   }
 }

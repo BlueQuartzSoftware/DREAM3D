@@ -109,6 +109,10 @@ class DREAM3DLib_EXPORT H5PrecipitateStatsDataDelegate : public H5StatsDataDeleg
                              const QString& hdf5GroupName,
                              VectorOfFloatArray colData);
 
+    int readRDFDistributionData(hid_t pid,
+                             const QString& hdf5GroupName,
+                             VectorOfFloatArray colData, VectorOfFloatArray maxMinData);
+
 
     int writeVectorOfArrays(hid_t pid, VectorOfFloatArray colData);
     int readVectorOfArrays(hid_t pid, VectorOfFloatArray colData);
@@ -120,6 +124,8 @@ class DREAM3DLib_EXPORT H5PrecipitateStatsDataDelegate : public H5StatsDataDeleg
     VectorOfFloatArray createPowerDistributionArrays();
 
     VectorOfFloatArray createLogNormalDistributionArrays();
+    VectorOfFloatArray createRDFDistributionArrays();
+    VectorOfFloatArray createRDFMaxMinDistributionArrays();
 
   private:
     H5PrecipitateStatsDataDelegate(const H5PrecipitateStatsDataDelegate&); // Copy Constructor Not Implemented
