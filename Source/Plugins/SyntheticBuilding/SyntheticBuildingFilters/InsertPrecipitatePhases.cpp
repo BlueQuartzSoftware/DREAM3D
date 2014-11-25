@@ -376,9 +376,6 @@ void InsertPrecipitatePhases::execute()
   notifyStatusMessage(getHumanLabel(), "Packing Precipitates - Filling Gaps");
   assign_gaps();
 
-  notifyStatusMessage(getHumanLabel(), "Packing Precipitates - Cleaning Up Volume");
-  cleanup_features();
-
   if(m_WriteGoalAttributes == true)
   {
     write_goal_attributes();
@@ -604,57 +601,6 @@ void  InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer featur
     }
   }
 
-  // initialize the sim and goal clustering distribution for the primary phases
-  clusteringdist.resize(precipitatephases.size());
-  simclusteringdist.resize(precipitatephases.size());
-  clusteringdiststep.resize(precipitatephases.size());
-  for (size_t i = 0; i < precipitatephases.size(); i++)
-  {
-    phase = precipitatephases[i];
-    PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsDataArray[phase].get());
-    clusteringdist[i].resize(pp->getBinNumbers()->getSize());
-    //    int binNumbers = pp->getBinNumbers();
-    simclusteringdist[i].resize(pp->getBinNumbers()->getSize());
-    VectorOfFloatArray Neighdist = pp->getFeatureSize_Clustering();
-    float normalizer = 0;
-    for (size_t j = 0; j < clusteringdist[i].size(); j++)
-    {
-      clusteringdist[i][j].resize(40);
-      simclusteringdist[i][j].resize(40);
-      float input = 0;
-      float previoustotal = 0;
-      float avg = Neighdist[0]->getValue(j);
-      float stdev = Neighdist[1]->getValue(j);
-      clusteringdiststep[i] = 2;
-      float denominatorConst = sqrtf(2.0f * stdev * stdev); // Calculate it here rather than calculating the same thing multiple times below
-      for (size_t k = 0; k < clusteringdist[i][j].size(); k++)
-      {
-        input = (float(k + 1) * clusteringdiststep[i]);
-        float logInput = logf(input);
-        if(logInput <= avg)
-        {
-          clusteringdist[i][j][k] = 0.5f - 0.5f * (DREAM3DMath::erf((avg - logInput) / denominatorConst)) - previoustotal;
-        }
-        if(logInput > avg)
-        {
-          clusteringdist[i][j][k] = 0.5f + 0.5f * (DREAM3DMath::erf((logInput - avg) / denominatorConst)) - previoustotal;
-        }
-        previoustotal = previoustotal + clusteringdist[i][j][k];
-      }
-      normalizer = normalizer + previoustotal;
-    }
-    for (size_t j = 0; j < clusteringdist[i].size(); j++)
-    {
-      for (size_t k = 0; k < clusteringdist[i][j].size(); k++)
-      {
-        clusteringdist[i][j][k] = clusteringdist[i][j][k] / normalizer;
-        simclusteringdist[i][j][k] = 0;
-      }
-    }
-  }
-
-
-
   //initializing the target RDF vector - this is the radial distribution function we are trying to match to
    for (int64_t i = 1; i < numensembles; ++i)
    {
@@ -672,25 +618,14 @@ void  InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer featur
        m_rdfTargetDist[0] = 0;
        m_rdfTargetDist[m_numRDFbins+1] = 0;
 
-
        for (size_t j = 0; j < m_numRDFbins; j++)
        {
            m_rdfTargetDist[j+1] = rdfTarget[0]->getValue(j);
        }
-
         m_rdfMax = maxmin[0]->getValue(0);
         m_rdfMin = maxmin[0]->getValue(1);
-
      }
    }
-
-
-
-
-
-
-  //  for each feature : select centroid, determine voxels in feature, monitor filling error and decide of the 10 placements which
-  // is the most beneficial, then the feature is added and its clustering are determined
 
   size_t numfeatures = m_FeaturePhasesPtr.lock()->getNumberOfTuples();
 
@@ -734,72 +669,21 @@ void  InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer featur
     m_Centroids[3 * i + 1] = yc;
     m_Centroids[3 * i + 2] = zc;
     insert_precipitate(i);
-    //    fillingerror = check_fillingerror(i, -1000, featureOwnersPtr);
-
-    // try moving precipitate around 10 times, figure out which one of those is the best
-    //    for (int iter_fill = 0; iter_fill < 10; iter_fill++)
-    //    {
-    //      random = static_cast<float>(rg.genrand_res53());
-    //      if(random <= precipboundaryfraction)
-    //      {
-    //        random2 = int(rg.genrand_res53() * double(totalPoints - 1));
-    //        while (m_BoundaryCells[random2] == 0 || m_FeatureIds[random2] >= firstPrecipitateFeature)
-    //        {
-    //          random2++;
-    //          if(random2 >= totalPoints) { random2 = static_cast<int>(random2 - totalPoints); }
-    //        }
-    //      }
-    //      else if(random > precipboundaryfraction)
-    //      {
-    //        random2 = static_cast<int>(rg.genrand_res53() * (totalPoints - 1));
-    //        while (m_BoundaryCells[random2] != 0 || m_FeatureIds[random2] >= firstPrecipitateFeature)
-    //        {
-    //          random2++;
-    //          if(random2 >= totalPoints) { random2 = static_cast<int>(random2 - totalPoints); }
-    //        }
-    //      }
-    //      xc = find_xcoord(random2);
-    //      yc = find_ycoord(random2);
-    //      zc = find_zcoord(random2);
-    //      oldxc = m_Centroids[3 * i];
-    //      oldyc = m_Centroids[3 * i + 1];
-    //      oldzc = m_Centroids[3 * i + 2];
-    //      oldfillingerror = fillingerror;
-    //      fillingerror = check_fillingerror(-1000, i, featureOwnersPtr);
-    //      move_precipitate(i, xc, yc, zc);
-    //      fillingerror = check_fillingerror(i, -1000, featureOwnersPtr);
-    //      if(fillingerror > oldfillingerror)
-    //      {
-    //        fillingerror = check_fillingerror(-1000, i, featureOwnersPtr);
-    //        move_precipitate(i, oldxc, oldyc, oldzc);
-    //        fillingerror = check_fillingerror(i, -1000, featureOwnersPtr);
-    //      }
-    //    }
-  }
-  for (size_t i = firstPrecipitateFeature; i < numfeatures; i++)
-  {
-    oldclusteringerror = check_clusteringerror(i, -1000);
-    for (size_t k = 0; k < clusteringdist[0][0].size(); k++)
-    {
-      outFile << clusteringdist[0][0][k] << " " << simclusteringdist[0][0][k] << "\n";
-    }
-    outFile << "\n\n";
+    fillingerror = check_fillingerror(i, -1000, featureOwnersPtr);
   }
 
   //calculate the initial current RDF - this will change as we move particles around
-     for (size_t i = firstPrecipitateFeature; i < numfeatures; i++)
-     {
-       m_oldRDFerror = check_RDFerror(i, -1000);
-     }
+  for (size_t i = firstPrecipitateFeature; i < numfeatures; i++)
+  {
+    m_oldRDFerror = check_RDFerror(i, -1000);
+  }
 
   notifyStatusMessage(getHumanLabel(), "Packing Features - Initial Feature Placement Complete");
-
 
   // begin swaping/moving/adding/removing features to try to improve packing
   int totalAdjustments = static_cast<int>(1000 * ((numfeatures - firstPrecipitateFeature) - 1));
   for (int iteration = 0; iteration < totalAdjustments; ++iteration)
   {
-
     QString ss;
     ss = QObject::tr("Packing Features - Swapping/Moving/Adding/Removing Features Iteration %1/%2").arg(iteration).arg(totalAdjustments);
     if(iteration % 100 == 0) { notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss); }
@@ -861,43 +745,27 @@ void  InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer featur
       oldxc = m_Centroids[3 * randomfeature];
       oldyc = m_Centroids[3 * randomfeature + 1];
       oldzc = m_Centroids[3 * randomfeature + 2];
-//      oldfillingerror = fillingerror;
-//      fillingerror = check_fillingerror(-1000, static_cast<int>(randomfeature), featureOwnersPtr);
-//      move_precipitate(randomfeature, xc, yc, zc);
-//      fillingerror = check_fillingerror(static_cast<int>(randomfeature), -1000, featureOwnersPtr);
-//      if(fillingerror >= oldfillingerror)
-
-      //      currentclusteringerror = check_clusteringerror(-1000, randomfeature);
-//            move_precipitate(randomfeature, xc, yc, zc);
-      //      currentclusteringerror = check_clusteringerror(randomfeature, -1000);
-//            if(currentclusteringerror >= oldclusteringerror)
+      oldfillingerror = fillingerror;
+      fillingerror = check_fillingerror(-1000, static_cast<int>(randomfeature), featureOwnersPtr);
       m_currentRDFerror = check_RDFerror(-1000, randomfeature);
       move_precipitate(randomfeature, xc, yc, zc);
+      fillingerror = check_fillingerror(static_cast<int>(randomfeature), -1000, featureOwnersPtr);
       m_currentRDFerror = check_RDFerror(randomfeature, -1000);
       if(m_currentRDFerror >= m_oldRDFerror)
       {
-//        oldfillingerror = fillingerror;
-//        oldclusteringerror = currentclusteringerror;
+        oldfillingerror = fillingerror;
         m_oldRDFerror = m_currentRDFerror;
         acceptedmoves++;
       }
       else
       {
-//        fillingerror = check_fillingerror(-1000, static_cast<int>(randomfeature), featureOwnersPtr);
-//        move_precipitate(randomfeature, oldxc, oldyc, oldzc);
-//        fillingerror = check_fillingerror(static_cast<int>(randomfeature), -1000, featureOwnersPtr);
-          //        oldfillingerror = fillingerror;
-
-//        currentclusteringerror = check_clusteringerror(-1000, randomfeature);
-//        move_precipitate(randomfeature, oldxc, oldyc, oldzc);
-//        currentclusteringerror = check_clusteringerror(randomfeature, -1000);
-//        oldclusteringerror = currentclusteringerror;
-
+        fillingerror = check_fillingerror(-1000, static_cast<int>(randomfeature), featureOwnersPtr);
         m_currentRDFerror = check_RDFerror(-1000, randomfeature);
         move_precipitate(randomfeature, oldxc, oldyc, oldzc);
+        fillingerror = check_fillingerror(static_cast<int>(randomfeature), -1000, featureOwnersPtr);
+        oldfillingerror = fillingerror;
         m_currentRDFerror = check_RDFerror(randomfeature, -1000);
         m_oldRDFerror = m_currentRDFerror;
-
       }
     }
 
@@ -918,45 +786,27 @@ void  InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer featur
       xc = static_cast<float>(oldxc + ((2.0f * (rg.genrand_res53() - 0.5f)) * (2.0f * m_PackingRes[0])));
       yc = static_cast<float>(oldyc + ((2.0f * (rg.genrand_res53() - 0.5f)) * (2.0f * m_PackingRes[1])));
       zc = static_cast<float>(oldzc + ((2.0f * (rg.genrand_res53() - 0.5f)) * (2.0f * m_PackingRes[2])));
-
-//      oldfillingerror = fillingerror;
-//      fillingerror = check_fillingerror(-1000, static_cast<int>(randomfeature), featureOwnersPtr);
-//      move_precipitate(randomfeature, xc, yc, zc);
-//      fillingerror = check_fillingerror(static_cast<int>(randomfeature), -1000, featureOwnersPtr);
-//      if(fillingerror >= oldfillingerror)
-
-//      currentclusteringerror = check_clusteringerror(-1000, randomfeature);
-//      move_precipitate(randomfeature, xc, yc, zc);
-//      currentclusteringerror = check_clusteringerror(randomfeature, -1000);
-//      if(currentclusteringerror >= oldclusteringerror)
-
+      oldfillingerror = fillingerror;
+      fillingerror = check_fillingerror(-1000, static_cast<int>(randomfeature), featureOwnersPtr);
       m_currentRDFerror = check_RDFerror(-1000, randomfeature);
       move_precipitate(randomfeature, xc, yc, zc);
+      fillingerror = check_fillingerror(static_cast<int>(randomfeature), -1000, featureOwnersPtr);
       m_currentRDFerror = check_RDFerror(randomfeature, -1000);
       if(m_currentRDFerror >= m_oldRDFerror)
       {
-          //        oldfillingerror = fillingerror;
-          //        oldclusteringerror = currentclusteringerror;
-                  m_oldRDFerror = m_currentRDFerror;
-                  acceptedmoves++;
+        oldfillingerror = fillingerror;
+        m_oldRDFerror = m_currentRDFerror;
+        acceptedmoves++;
       }
       else
       {
-          //        fillingerror = check_fillingerror(-1000, static_cast<int>(randomfeature), featureOwnersPtr);
-          //        move_precipitate(randomfeature, oldxc, oldyc, oldzc);
-          //        fillingerror = check_fillingerror(static_cast<int>(randomfeature), -1000, featureOwnersPtr);
-                    //        oldfillingerror = fillingerror;
-
-          //        currentclusteringerror = check_clusteringerror(-1000, randomfeature);
-          //        move_precipitate(randomfeature, oldxc, oldyc, oldzc);
-          //        currentclusteringerror = check_clusteringerror(randomfeature, -1000);
-          //        oldclusteringerror = currentclusteringerror;
-
-                  m_currentRDFerror = check_RDFerror(-1000, randomfeature);
-                  move_precipitate(randomfeature, oldxc, oldyc, oldzc);
-                  m_currentRDFerror = check_RDFerror(randomfeature, -1000);
-                  m_oldRDFerror = m_currentRDFerror;
-
+        fillingerror = check_fillingerror(-1000, static_cast<int>(randomfeature), featureOwnersPtr);
+        m_currentRDFerror = check_RDFerror(-1000, randomfeature);
+        move_precipitate(randomfeature, oldxc, oldyc, oldzc);
+        fillingerror = check_fillingerror(static_cast<int>(randomfeature), -1000, featureOwnersPtr);
+        oldfillingerror = fillingerror;
+        m_currentRDFerror = check_RDFerror(randomfeature, -1000);
+        m_oldRDFerror = m_currentRDFerror;
       }
     }
   }
@@ -1103,90 +953,6 @@ void InsertPrecipitatePhases::move_precipitate(size_t gnum, float xc, float yc, 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void InsertPrecipitatePhases::determine_clustering(size_t gnum, int add)
-{
-  //VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(m_FeatureIdsArrayPath.getDataContainerName());
-
-  float x, y, z;
-  float xn, yn, zn;
-  float r;
-  float dia;
-  int iter = 0;
-  int diabin, clusterbin;
-
-  int phase = m_FeaturePhases[gnum];
-  while (phase != precipitatephases[iter]) { iter++; }
-
-  StatsDataArray& statsDataArray = *(m_StatsDataArray.lock());
-  //typedef std::vector<std::vector<float> > VectOfVectFloat_t;
-
-  PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsDataArray[phase].get());
-  //  VectOfVectFloat_t& curSimClusteringDist = simclusteringdist[iter];
-  //  size_t curSImClusteringDist_Size = curSimClusteringDist.size();
-  float oneOverClusteringDistStep = 1.0f / clusteringdiststep[iter];
-
-  float maxFeatureDia = pp->getMaxFeatureDiameter();
-  float minFeatureDia = pp->getMinFeatureDiameter();
-  float oneOverBinStepSize = 1.0f / pp->getBinStepSize();
-
-  x = m_Centroids[3 * gnum];
-  y = m_Centroids[3 * gnum + 1];
-  z = m_Centroids[3 * gnum + 2];
-  size_t numFeatures = m_FeaturePhasesPtr.lock()->getNumberOfTuples();
-
-  for (size_t n = firstPrecipitateFeature; n < numFeatures; n++)
-  {
-    if (m_FeaturePhases[n] == phase && n != gnum)
-    {
-      xn = m_Centroids[3 * n];
-      yn = m_Centroids[3 * n + 1];
-      zn = m_Centroids[3 * n + 2];
-      r = sqrtf((x - xn) * (x - xn) + (y - yn) * (y - yn) + (z - zn) * (z - zn));
-
-      dia = m_EquivalentDiameters[gnum];
-      //      dia2 = m_EquivalentDiameters[n];
-      if(dia > maxFeatureDia) { dia = maxFeatureDia; }
-      if(dia < minFeatureDia) { dia = minFeatureDia; }
-      //      if(dia2 > maxFeatureDia) { dia2 = maxFeatureDia; }
-      //      if(dia2 < minFeatureDia) { dia2 = minFeatureDia; }
-      diabin = static_cast<size_t>(((dia - minFeatureDia) * oneOverBinStepSize) );
-      //      dia2bin = static_cast<size_t>(((dia2 - minFeatureDia) * oneOverBinStepSize) );
-      clusterbin = static_cast<size_t>( r * oneOverClusteringDistStep );
-      if(clusterbin >= 40) { clusterbin = 39; }
-      simclusteringdist[iter][diabin][clusterbin] += add;
-            //      simclusteringdist[iter][dia2bin][clusterbin] += add;
-    }
-  }
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-float InsertPrecipitatePhases::check_clusteringerror(int gadd, int gremove)
-{
-
-  float clusteringerror;
-  float bhattdist;
-
-  for (size_t iter = 0; iter < simclusteringdist.size(); ++iter)
-  {
-    if(gadd > 0)
-    {
-      determine_clustering(gadd, 1);
-    }
-    if(gremove > 0)
-    {
-      determine_clustering(gremove, -1);
-    }
-  }
-  compare_3Ddistributions(simclusteringdist, clusteringdist, bhattdist);
-  clusteringerror = bhattdist;
-  return clusteringerror;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void InsertPrecipitatePhases::determine_currentRDF(size_t gnum, int add)
 {
 
@@ -1221,7 +987,6 @@ void InsertPrecipitatePhases::determine_currentRDF(size_t gnum, int add)
       zn = m_Centroids[3 * n + 2];
       r = sqrtf((x - xn) * (x - xn) + (y - yn) * (y - yn) + (z - zn) * (z - zn));
 
-
       rdfBin = (r-m_rdfMin)/stepsize;
 
       if (r < m_rdfMin) { rdfBin = -1;}
@@ -1233,9 +998,7 @@ void InsertPrecipitatePhases::determine_currentRDF(size_t gnum, int add)
     }
   }
 
-
     m_rdfCurrentDistNorm = normalizeRDF(m_rdfCurrentDist, m_numRDFbins, stepsize, m_rdfMin, numPPTfeatures, totalvol);
-
 
 //  std::cout << "test" << std::endl;
 
@@ -1268,8 +1031,6 @@ std::vector<float> InsertPrecipitatePhases::normalizeRDF(std::vector<float> rdf,
       return rdf;
 }
 
-
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -1295,7 +1056,6 @@ float InsertPrecipitatePhases::check_RDFerror(int gadd, int gremove)
   return rdferror;
 }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -1310,7 +1070,6 @@ void InsertPrecipitatePhases::compare_1Ddistributions(std::vector<float> array1,
 
   for (std::vector<float>::iterator j=array2.begin(); j!=array2.end(); j++)
   {sum_array2 += *j;}
-
 
 
   for (size_t i = 0; i < array1.size(); i++)
@@ -1993,174 +1752,6 @@ void InsertPrecipitatePhases::assign_gaps()
       ellipfuncs[i] = -1.0;
     }
   }
-  for (int i = 0; i < totpoints; i++)
-  {
-    if(m_FeatureIds[i] > 0) { m_CellPhases[i] = m_FeaturePhases[m_FeatureIds[i]]; }
-  }
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void InsertPrecipitatePhases::cleanup_features()
-{
-  notifyStatusMessage(getHumanLabel(), "Cleaning Up Features");
-
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(m_FeatureIdsArrayPath.getDataContainerName());
-
-  StatsDataArray& statsDataArray = *(m_StatsDataArray.lock());
-
-  int64_t totpoints = m_FeatureIdsPtr.lock()->getNumberOfTuples();
-  size_t udims[3] = {0, 0, 0};
-  m->getDimensions(udims);
-#if (CMP_SIZEOF_SIZE_T == 4)
-  typedef int32_t DimType;
-#else
-  typedef int64_t DimType;
-#endif
-  DimType dims[3] =
-  {
-    static_cast<DimType>(udims[0]),
-    static_cast<DimType>(udims[1]),
-    static_cast<DimType>(udims[2]),
-  };
-
-  DimType neighpoints[6];
-  DimType xp = dims[0];
-  DimType yp = dims[1];
-  DimType zp = dims[2];
-
-  size_t numFeatures = m_FeaturePhasesPtr.lock()->getNumberOfTuples();
-
-  neighpoints[0] = -(xp * yp);
-  neighpoints[1] = -xp;
-  neighpoints[2] = -1;
-  neighpoints[3] = 1;
-  neighpoints[4] = xp;
-  neighpoints[5] = (xp * yp);
-  std::vector<std::vector<int> > vlists;
-  vlists.resize(numFeatures);
-  std::vector<int> currentvlist;
-  std::vector<bool> checked(totpoints, false);
-  QVector<bool> activeObjects(numFeatures, true);
-  size_t count;
-  int touchessurface = 0;
-  int good;
-  int neighbor;
-  DimType column, row, plane;
-  int index;
-  float minsize = 0;
-  gsizes.resize(numFeatures);
-  for (size_t i = 1; i < numFeatures; i++)
-  {
-    gsizes[i] = 0;
-  }
-
-  float resConst = m->getXRes() * m->getYRes() * m->getZRes();
-  for (int i = 0; i < totpoints; i++)
-  {
-    touchessurface = 0;
-    if(checked[i] == false && m_FeatureIds[i] > firstPrecipitateFeature)
-    {
-      PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsDataArray[m_CellPhases[i]].get());
-      minsize = static_cast<float>( pp->getMinFeatureDiameter() * pp->getMinFeatureDiameter() * pp->getMinFeatureDiameter() * M_PI / 6.0f );
-      minsize = static_cast<float>( int(minsize / (resConst)) );
-      currentvlist.push_back(i);
-      count = 0;
-      while (count < currentvlist.size())
-      {
-        index = currentvlist[count];
-        column = index % xp;
-        row = (index / xp) % yp;
-        plane = index / (xp * yp);
-        if(column == 0 || column == xp || row == 0 || row == yp || plane == 0 || plane == zp) { touchessurface = 1; }
-        for (int j = 0; j < 6; j++)
-        {
-          good = 1;
-          neighbor = static_cast<int>( index + neighpoints[j] );
-          if(m_PeriodicBoundaries == false)
-          {
-            if(j == 0 && plane == 0) { good = 0; }
-            if(j == 5 && plane == (zp - 1)) { good = 0; }
-            if(j == 1 && row == 0) { good = 0; }
-            if(j == 4 && row == (yp - 1)) { good = 0; }
-            if(j == 2 && column == 0) { good = 0; }
-            if(j == 3 && column == (xp - 1)) { good = 0; }
-            if(good == 1 && m_FeatureIds[neighbor] == m_FeatureIds[index] && checked[neighbor] == false)
-            {
-              currentvlist.push_back(neighbor);
-              checked[neighbor] = true;
-            }
-          }
-          else if(m_PeriodicBoundaries == true)
-          {
-            if(j == 0 && plane == 0) { neighbor = static_cast<int>( neighbor + (xp * yp * zp) ); }
-            if(j == 5 && plane == (zp - 1)) { neighbor = static_cast<int>( neighbor - (xp * yp * zp) ); }
-            if(j == 1 && row == 0) { neighbor = static_cast<int>( neighbor + (xp * yp) ); }
-            if(j == 4 && row == (yp - 1)) { neighbor = static_cast<int>( neighbor - (xp * yp) ); }
-            if(j == 2 && column == 0) { neighbor = static_cast<int>( neighbor + (xp) ); }
-            if(j == 3 && column == (xp - 1)) { neighbor = static_cast<int>( neighbor - (xp) ); }
-            if(m_FeatureIds[neighbor] == m_FeatureIds[index] && checked[neighbor] == false)
-            {
-              currentvlist.push_back(neighbor);
-              checked[neighbor] = true;
-            }
-          }
-        }
-        count++;
-      }
-      size_t size = vlists[m_FeatureIds[i]].size();
-      if(size > 0)
-      {
-        if(size < currentvlist.size())
-        {
-          for (size_t k = 0; k < vlists[m_FeatureIds[i]].size(); k++)
-          {
-            m_FeatureIds[vlists[m_FeatureIds[i]][k]] = -1;
-          }
-          vlists[m_FeatureIds[i]].resize(currentvlist.size());
-          vlists[m_FeatureIds[i]].swap(currentvlist);
-        }
-        else if(size >= currentvlist.size())
-        {
-          for (size_t k = 0; k < currentvlist.size(); k++)
-          {
-            m_FeatureIds[currentvlist[k]] = -1;
-          }
-        }
-      }
-      else if(size == 0)
-      {
-        if(currentvlist.size() >= minsize || touchessurface == 1)
-        {
-          vlists[m_FeatureIds[i]].resize(currentvlist.size());
-          vlists[m_FeatureIds[i]].swap(currentvlist);
-        }
-        if(currentvlist.size() < minsize && touchessurface == 0)
-        {
-          for (size_t k = 0; k < currentvlist.size(); k++)
-          {
-            m_FeatureIds[currentvlist[k]] = -1;
-          }
-        }
-      }
-      currentvlist.clear();
-    }
-  }
-  assign_gaps();
-  for (int i = 0; i < totpoints; i++)
-  {
-    if(m_FeatureIds[i] > 0) { gsizes[m_FeatureIds[i]]++; }
-  }
-  for (size_t i = firstPrecipitateFeature; i < numFeatures; i++)
-  {
-    if(gsizes[i] == 0) { activeObjects[i] = false; }
-  }
-
-  AttributeMatrix::Pointer cellFeatureAttrMat = m->getAttributeMatrix(getFeaturePhasesArrayPath().getAttributeMatrixName());
-  cellFeatureAttrMat->removeInactiveObjects(activeObjects, m_FeatureIdsPtr.lock());
-  updateFeatureInstancePointers();
-
   for (int i = 0; i < totpoints; i++)
   {
     if(m_FeatureIds[i] > 0) { m_CellPhases[i] = m_FeaturePhases[m_FeatureIds[i]]; }

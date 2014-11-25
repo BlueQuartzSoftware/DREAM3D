@@ -200,7 +200,6 @@ class InsertPrecipitatePhases : public AbstractFilter
     float check_fillingerror(int gadd, int gremove, Int32ArrayType::Pointer featureOwnersPtr);
     void assign_voxels();
     void assign_gaps();
-    void cleanup_features();
     void write_goal_attributes();
 
     float find_xcoord(long long int index);
