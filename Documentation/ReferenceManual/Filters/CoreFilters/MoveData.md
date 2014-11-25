@@ -6,7 +6,7 @@ Core Filters (Memory/Management)
 
 
 ## Description ##
-This filter allows the user to move a data array from one attribute matrix to another compatible attribute matrix.  It also allows the user to move an attribute matrix from one data container to another compatible data container.
+This filter allows the user to move a data array from one attribute matrix to another compatible attribute matrix.  It also allows the user to move an attribute matrix from one data container to another data container.  Attribute matrices are compatible if the number of tuples are equal.
 
 ## Parameters ##
 | Name             | Type |

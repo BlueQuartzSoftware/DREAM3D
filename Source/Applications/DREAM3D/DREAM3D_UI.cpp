@@ -497,6 +497,15 @@ void DREAM3D_UI::setupGui()
 
   setupViewMenu();
   setupPipelineContextMenu();
+    
+    if (favoritesDockWidget->getFilterLibraryTreeWidget()->children().size() > 0)
+    {
+        favoritesDockWidget->getFilterLibraryTreeWidget()->setCurrentItem((QTreeWidgetItem*)favoritesDockWidget->getFilterLibraryTreeWidget()->children().first());
+    }
+    else
+    {
+        favoritesDockWidget->getFilterLibraryTreeWidget()->setCurrentItem(NULL);
+    }
 }
 
 // -----------------------------------------------------------------------------
@@ -506,6 +515,7 @@ void DREAM3D_UI::setupPipelineContextMenu()
 {
   QList<QAction*> favoriteItemActions;
   QList<QAction*> favoriteCategoryActions;
+  QList<QAction*> favoriteDefaultActions;
   QList<QAction*> prebuiltItemActions;
   QList<QAction*> prebuildCategoryActions;
 
@@ -522,6 +532,7 @@ void DREAM3D_UI::setupPipelineContextMenu()
           favoritesDockWidget, SLOT( actionAddFavorite_triggered() ) );
   favoriteItemActions << actionAddFavorite;
   favoriteCategoryActions << actionAddFavorite;
+  favoriteDefaultActions << actionAddFavorite;
 
   QAction* actionAddFavoriteFolder = new QAction(menuPipeline);
   actionAddFavoriteFolder->setObjectName(QString::fromUtf8("actionAddFavoriteFolder"));
@@ -533,6 +544,7 @@ void DREAM3D_UI::setupPipelineContextMenu()
           favoritesDockWidget, SLOT( actionAddFavoriteFolder_triggered() ) );
   favoriteItemActions << actionAddFavoriteFolder;
   favoriteCategoryActions << actionAddFavoriteFolder;
+  favoriteDefaultActions << actionAddFavoriteFolder;
 
 
   QAction* actionUpdateFavorite = new QAction(menuPipeline);
@@ -554,6 +566,7 @@ void DREAM3D_UI::setupPipelineContextMenu()
   connect(actionRenameFavorite, SIGNAL(triggered()),
           favoritesDockWidget, SLOT( actionRenameFavorite_triggered() ) );
   favoriteItemActions << actionRenameFavorite;
+  favoriteCategoryActions << actionRenameFavorite;
 
 
   QAction* actionAppendFavorite = new QAction(NULL);
@@ -569,6 +582,7 @@ void DREAM3D_UI::setupPipelineContextMenu()
     QAction* separator = new QAction(this);
     separator->setSeparator(true);
     favoriteItemActions << separator;
+    favoriteCategoryActions << separator;
     menuPipeline->addSeparator();
   }
 
@@ -580,11 +594,15 @@ void DREAM3D_UI::setupPipelineContextMenu()
   actionRemoveFavorite->setShortcut(actionRemoveFavKeySeq);
   connect(actionRemoveFavorite, SIGNAL(triggered()),
           favoritesDockWidget, SLOT( actionRemoveFavorite_triggered() ) );
+    favoritesDockWidget->setDeleteAction(actionRemoveFavorite);
   favoriteItemActions << actionRemoveFavorite;
+    favoriteCategoryActions << actionRemoveFavorite;
+    
   {
     QAction* separator = new QAction(this);
     separator->setSeparator(true);
     favoriteItemActions << separator;
+    favoriteCategoryActions << separator;
     menuPipeline->addSeparator();
   }
 
@@ -614,6 +632,7 @@ void DREAM3D_UI::setupPipelineContextMenu()
   }
   favoritesDockWidget->getFilterLibraryTreeWidget()->setNodeActionList(favoriteCategoryActions);
   favoritesDockWidget->getFilterLibraryTreeWidget()->setLeafActionList(favoriteItemActions);
+  favoritesDockWidget->getFilterLibraryTreeWidget()->setDefaultActionList(favoriteDefaultActions);
 
 
 

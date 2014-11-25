@@ -37,12 +37,13 @@
 #include "FavoritesDockWidget.h"
 
 #include <QtCore/QFileInfo>
+#include <QtCore/QFileInfoList>
 #include <QtCore/QDir>
 #include <QtCore/QFile>
-#include <QtCore/QString>
 #include <QtCore/QUrl>
 #include <QtCore/QDebug>
 
+#include <QtGui/QAction>
 #include <QtGui/QMessageBox>
 #include <QtGui/QDesktopServices>
 #include <QtGui/QTreeWidgetItem>
@@ -59,7 +60,8 @@
 //
 // -----------------------------------------------------------------------------
 FavoritesDockWidget::FavoritesDockWidget(QWidget* parent) :
-  QDockWidget(parent)
+  QDockWidget(parent),
+    m_DeleteAction(NULL)
 {
   setupUi(this);
   setupGui();
@@ -403,7 +405,23 @@ void FavoritesDockWidget::on_filterLibraryTree_itemChanged(QTreeWidgetItem* item
 // -----------------------------------------------------------------------------
 void FavoritesDockWidget::on_filterLibraryTree_currentItemChanged(QTreeWidgetItem* item, QTreeWidgetItem* previous )
 {
-  //  on_filterLibraryTree_itemClicked(item, 0);
+    if (m_DeleteAction != NULL)
+    {
+        if (item == NULL)
+        {
+            m_DeleteAction->setVisible(false);
+        }
+        else if (item->type() == FilterLibraryTreeWidget::Node_Item_Type)
+        {
+            m_DeleteAction->setText("Delete Favorite Folder");
+            m_DeleteAction->setVisible(true);
+        }
+        else
+        {
+            m_DeleteAction->setText("Delete Favorite");
+            m_DeleteAction->setVisible(true);
+        }
+    }
 }
 
 // -----------------------------------------------------------------------------
@@ -537,8 +555,6 @@ void FavoritesDockWidget::actionAddFavoriteFolder_triggered()
   addFavorite(true);
 }
 
-
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -573,10 +589,6 @@ void FavoritesDockWidget::addFavorite(bool folder)
   }
 
   bool allowEditing = true;
-  if(false == folder)
-  {
-    allowEditing = false;
-  }
 
   QString newPrefPath;
   QIcon icon;
@@ -616,8 +628,6 @@ void FavoritesDockWidget::addFavorite(bool folder)
     emit pipelineNeedsToBeSaved(newPrefPath, favoriteTitle);
   }
 }
-
-
 
 
 // -----------------------------------------------------------------------------
@@ -712,13 +722,26 @@ void FavoritesDockWidget::removeFavorite(QTreeWidgetItem* item)
   QFileInfo filePathInfo = QFileInfo(filePath);
   if(filePathInfo.exists() == true)
   {
-    bool didRemove = file.remove();
-    if(didRemove == false)
-    {
-      QMessageBox::warning ( this, QString::fromAscii("Pipeline Save Error"),
-                             QString::fromAscii("There was an error removing the existing Pipeline file. The pipeline was NOT removed") );
-      return;
-    }
+      if (item->type() == FilterLibraryTreeWidget::Node_Item_Type)
+      {
+          bool didRemove = removeDir(filePath);
+          if(didRemove == false)
+          {
+            QMessageBox::warning ( this, QString::fromAscii("Pipeline Save Error"),
+                                   QString::fromAscii("There was an error removing the existing Pipeline folder.") );
+            return;
+          }
+      }
+      else
+      {
+          bool didRemove = file.remove();
+          if(didRemove == false)
+          {
+            QMessageBox::warning ( this, QString::fromAscii("Pipeline Save Error"),
+                                   QString::fromAscii("There was an error removing the existing Pipeline file.") );
+            return;
+          }
+      }
   }
 
 
@@ -728,6 +751,33 @@ void FavoritesDockWidget::removeFavorite(QTreeWidgetItem* item)
 
   // Write these changes out to the preferences file
   emit fireWriteSettings();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+bool FavoritesDockWidget::removeDir(const QString &dirName)
+{
+    bool result = true;
+    QDir dir(dirName);
+
+    if (dir.exists(dirName)) {
+        Q_FOREACH(QFileInfo info, dir.entryInfoList(QDir::NoDotAndDotDot | QDir::System | QDir::Hidden  | QDir::AllDirs | QDir::Files, QDir::DirsFirst)) {
+            if (info.isDir()) {
+                result = removeDir(info.absoluteFilePath());
+            }
+            else {
+                result = QFile::remove(info.absoluteFilePath());
+            }
+
+            if (!result) {
+                return result;
+            }
+        }
+        result = dir.rmdir(dirName);
+    }
+
+    return result;
 }
 
 // -----------------------------------------------------------------------------
