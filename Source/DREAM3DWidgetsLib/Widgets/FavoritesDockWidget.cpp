@@ -43,6 +43,7 @@
 #include <QtCore/QUrl>
 #include <QtCore/QDebug>
 
+#include <QtGui/QAction>
 #include <QtGui/QMessageBox>
 #include <QtGui/QDesktopServices>
 #include <QtGui/QTreeWidgetItem>
@@ -59,7 +60,8 @@
 //
 // -----------------------------------------------------------------------------
 FavoritesDockWidget::FavoritesDockWidget(QWidget* parent) :
-  QDockWidget(parent)
+  QDockWidget(parent),
+    m_DeleteAction(NULL)
 {
   setupUi(this);
   setupGui();
@@ -403,7 +405,23 @@ void FavoritesDockWidget::on_filterLibraryTree_itemChanged(QTreeWidgetItem* item
 // -----------------------------------------------------------------------------
 void FavoritesDockWidget::on_filterLibraryTree_currentItemChanged(QTreeWidgetItem* item, QTreeWidgetItem* previous )
 {
-    // Hide/Show menu logic goes here...
+    if (m_DeleteAction != NULL)
+    {
+        if (item == NULL)
+        {
+            m_DeleteAction->setVisible(false);
+        }
+        else if (item->type() == FilterLibraryTreeWidget::Node_Item_Type)
+        {
+            m_DeleteAction->setText("Delete Favorite Folder");
+            m_DeleteAction->setVisible(true);
+        }
+        else
+        {
+            m_DeleteAction->setText("Delete Favorite");
+            m_DeleteAction->setVisible(true);
+        }
+    }
 }
 
 // -----------------------------------------------------------------------------
