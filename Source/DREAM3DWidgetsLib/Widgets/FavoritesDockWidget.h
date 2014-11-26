@@ -38,10 +38,11 @@
 
 #include <QtCore/QFileInfo>
 #include <QtCore/QSettings>
+#include <QtCore/QString>
 #include <QtGui/QDockWidget>
 #include <QtGui/QTreeWidgetItem>
 
-
+#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/Constants.h"
 
 #include "DREAM3DWidgetsLib/DREAM3DWidgetsLib.h"
@@ -53,6 +54,7 @@ class QTreeWidgetItem;
 class FilterListDockWidget;
 class FilterLibraryTreeWidget;
 class QSettings;
+class QAction;
 
 /**
  * @brief The FavoritesDockWidget class
@@ -69,6 +71,8 @@ class DREAM3DWidgetsLib_EXPORT FavoritesDockWidget : public QDockWidget, private
     FavoritesDockWidget(QWidget* parent = NULL);
     virtual ~FavoritesDockWidget();
 
+    DREAM3D_INSTANCE_PROPERTY(QAction*, DeleteAction)
+    
     /**
      * @brief setupGui
      */
@@ -79,6 +83,13 @@ class DREAM3DWidgetsLib_EXPORT FavoritesDockWidget : public QDockWidget, private
      * @param filterListWidget
      */
     void connectFilterList(FilterListDockWidget* filterListWidget);
+
+    /**
+       @brief Delete a directory along with all of its contents.
+       @param dirName Path of directory to remove.
+       @return true on success; false on error.
+    */
+    static bool removeDir(const QString &dirName);
 
     /**
      * @brief getFilterLibraryTreeWidget

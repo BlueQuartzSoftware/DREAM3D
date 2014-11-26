@@ -83,6 +83,12 @@ class DREAM3DWidgetsLib_EXPORT FilterLibraryTreeWidget : public QTreeWidget
      * @param list
      */
     void setLeafActionList(QList<QAction*> list);
+    
+    /**
+     * @brief setDefaultActionList
+     * @param list
+     */
+    void setDefaultActionList(QList<QAction*> list);
 
   protected:
 
@@ -111,6 +117,7 @@ class DREAM3DWidgetsLib_EXPORT FilterLibraryTreeWidget : public QTreeWidget
     QMenu                     m_Menu;
     QList<QAction*>           m_NodeActions;
     QList<QAction*>           m_LeafActions;
+    QList<QAction*>           m_DefaultActions;
 };
 
 #endif /* _TREEWIDGETBUILDER_H_ */
