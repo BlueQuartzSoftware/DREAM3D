@@ -346,12 +346,12 @@ void DREAM3D_UI::writeSettings()
 
     pipelineViewWidget->savePipeline(filePath, fi.baseName(), format);
     // Create a Pipeline Object and fill it with the filters from this View
-//    FilterPipeline::Pointer pipeline = pipelineViewWidget->getFilterPipeline();
-//    int err = QFilterParametersWriter::WritePipelineToFile(pipeline, fi.absoluteFilePath(), fi.baseName(), format, NULL);
-//    if (err < 0)
-//    {
+    //    FilterPipeline::Pointer pipeline = pipelineViewWidget->getFilterPipeline();
+    //    int err = QFilterParametersWriter::WritePipelineToFile(pipeline, fi.absoluteFilePath(), fi.baseName(), format, NULL);
+    //    if (err < 0)
+    //    {
 
-//    }
+    //    }
   }
 }
 
@@ -454,9 +454,9 @@ void DREAM3D_UI::setupGui()
   pipelineViewScrollArea->verticalScrollBar()->setSingleStep(5);
 
   // Make the connections between the gui elements
-//  filterLibraryDockWidget->connectFilterList(filterListDockWidget);
-//  favoritesDockWidget->connectFilterList(filterListDockWidget);
-//  prebuiltPipelinesDockWidget->connectFilterList(filterListDockWidget);
+  //  filterLibraryDockWidget->connectFilterList(filterListDockWidget);
+  //  favoritesDockWidget->connectFilterList(filterListDockWidget);
+  //  prebuiltPipelinesDockWidget->connectFilterList(filterListDockWidget);
 
   // Hook up the signals from the various docks to the PipelineViewWidget that will either add a filter
   // or load an entire pipeline into the view
@@ -480,8 +480,8 @@ void DREAM3D_UI::setupGui()
 
   connect(favoritesDockWidget, SIGNAL(pipelineNeedsToBeSaved(const QString&, const QString&)),
           pipelineViewWidget, SLOT(savePipeline(const QString&, const QString&)) );
-    
-    pipelineViewWidget->setStatusBar(statusbar);
+
+  pipelineViewWidget->setStatusBar(statusbar);
 
   // This will set the initial list of filters in the filterListDockWidget
   // Tell the Filter Library that we have more Filters (potentially)
@@ -499,15 +499,12 @@ void DREAM3D_UI::setupGui()
 
   setupViewMenu();
   setupPipelineContextMenu();
-    
-    if (favoritesDockWidget->getFilterLibraryTreeWidget()->children().size() > 0)
-    {
-        favoritesDockWidget->getFilterLibraryTreeWidget()->setCurrentItem((QTreeWidgetItem*)favoritesDockWidget->getFilterLibraryTreeWidget()->children().first());
-    }
-    else
-    {
-        favoritesDockWidget->getFilterLibraryTreeWidget()->setCurrentItem(NULL);
-    }
+
+
+  if(favoritesDockWidget) {
+    favoritesDockWidget->configureFilterLibraryTree();
+  }
+
 }
 
 // -----------------------------------------------------------------------------
@@ -574,7 +571,7 @@ void DREAM3D_UI::setupPipelineContextMenu()
   QAction* actionAppendFavorite = new QAction(NULL);
   actionAppendFavorite->setObjectName(QString::fromUtf8("actionAppendFavorite"));
   actionAppendFavorite->setText(QApplication::translate("DREAM3D_UI", "Append Favorite to Pipeline", 0, QApplication::UnicodeUTF8));
-// menuPipeline->addAction(actionAppendFavorite);
+  // menuPipeline->addAction(actionAppendFavorite);
   //QKeySequence actionAppendFavKeySeq(Qt::CTRL + Qt::Key_A);
   //actionAppendFavorite->setShortcut(actionAppendFavKeySeq);
   connect(actionAppendFavorite, SIGNAL(triggered()),
@@ -596,10 +593,10 @@ void DREAM3D_UI::setupPipelineContextMenu()
   actionRemoveFavorite->setShortcut(actionRemoveFavKeySeq);
   connect(actionRemoveFavorite, SIGNAL(triggered()),
           favoritesDockWidget, SLOT( actionRemoveFavorite_triggered() ) );
-    favoritesDockWidget->setDeleteAction(actionRemoveFavorite);
+  favoritesDockWidget->setDeleteAction(actionRemoveFavorite);
   favoriteItemActions << actionRemoveFavorite;
-    favoriteCategoryActions << actionRemoveFavorite;
-    
+  favoriteCategoryActions << actionRemoveFavorite;
+
   {
     QAction* separator = new QAction(this);
     separator->setSeparator(true);
@@ -712,8 +709,8 @@ void DREAM3D_UI::setupPipelineContextMenu()
 // -----------------------------------------------------------------------------
 void DREAM3D_UI::setupViewMenu()
 {
-//  m_FilterListBtn = new QToolButton(this);
-//  makeStatusBarButton("Filters", filterListDockWidget, m_FilterListBtn, 0);
+  //  m_FilterListBtn = new QToolButton(this);
+  //  makeStatusBarButton("Filters", filterListDockWidget, m_FilterListBtn, 0);
   menuView->removeAction(actionShow_Filter_List);
   delete actionShow_Filter_List;
   actionShow_Filter_List = filterListDockWidget->toggleViewAction();
@@ -722,12 +719,12 @@ void DREAM3D_UI::setupViewMenu()
   menuView->addAction(actionShow_Filter_List);
   connect(actionShow_Filter_List, SIGNAL(triggered(bool)),
           this, SLOT(on_actionShow_Filter_List_triggered(bool)) );
-//  connect(m_FilterListBtn, SIGNAL(toggled(bool)),
-//          this, SLOT(on_actionShow_Filter_List_triggered(bool)) );
+  //  connect(m_FilterListBtn, SIGNAL(toggled(bool)),
+  //          this, SLOT(on_actionShow_Filter_List_triggered(bool)) );
 
 
-//  m_FilterLibraryBtn = new QToolButton(this);
-//  makeStatusBarButton("Filter Library", filterLibraryDockWidget, m_FilterLibraryBtn, 1);
+  //  m_FilterLibraryBtn = new QToolButton(this);
+  //  makeStatusBarButton("Filter Library", filterLibraryDockWidget, m_FilterLibraryBtn, 1);
   menuView->removeAction(actionShow_Filter_Library);
   delete actionShow_Filter_Library;
   actionShow_Filter_Library = filterLibraryDockWidget->toggleViewAction();
@@ -735,11 +732,11 @@ void DREAM3D_UI::setupViewMenu()
   menuView->addAction(actionShow_Filter_Library);
   connect(actionShow_Filter_Library, SIGNAL(triggered(bool)),
           this, SLOT(on_actionShow_Filter_Library_triggered(bool)) );
-//  connect(m_FilterLibraryBtn, SIGNAL(toggled(bool)),
-//          this, SLOT(on_actionShow_Filter_Library_triggered(bool)) );
+  //  connect(m_FilterLibraryBtn, SIGNAL(toggled(bool)),
+  //          this, SLOT(on_actionShow_Filter_Library_triggered(bool)) );
 
-//  m_FavoritesBtn = new QToolButton(this);
-//  makeStatusBarButton("Favorites", favoritesDockWidget, m_FavoritesBtn, 2);
+  //  m_FavoritesBtn = new QToolButton(this);
+  //  makeStatusBarButton("Favorites", favoritesDockWidget, m_FavoritesBtn, 2);
   menuView->removeAction(actionShow_Favorites);
   delete actionShow_Favorites;
   actionShow_Favorites = favoritesDockWidget->toggleViewAction();
@@ -747,11 +744,11 @@ void DREAM3D_UI::setupViewMenu()
   menuView->addAction(actionShow_Favorites);
   connect(actionShow_Favorites, SIGNAL(triggered(bool)),
           this, SLOT(on_actionShow_Favorites_triggered(bool)) );
-//  connect(m_FavoritesBtn, SIGNAL(toggled(bool)),
-//          this, SLOT(on_actionShow_Favorites_triggered(bool)) );
+  //  connect(m_FavoritesBtn, SIGNAL(toggled(bool)),
+  //          this, SLOT(on_actionShow_Favorites_triggered(bool)) );
 
-//  m_PrebuiltBtn = new QToolButton(this);
-//  makeStatusBarButton("Prebuilt", prebuiltPipelinesDockWidget, m_PrebuiltBtn, 3);
+  //  m_PrebuiltBtn = new QToolButton(this);
+  //  makeStatusBarButton("Prebuilt", prebuiltPipelinesDockWidget, m_PrebuiltBtn, 3);
   menuView->removeAction(actionShow_Prebuilt_Pipelines);
   delete actionShow_Prebuilt_Pipelines;
   actionShow_Prebuilt_Pipelines = prebuiltPipelinesDockWidget->toggleViewAction();
@@ -759,12 +756,12 @@ void DREAM3D_UI::setupViewMenu()
   menuView->addAction(actionShow_Prebuilt_Pipelines);
   connect(actionShow_Prebuilt_Pipelines, SIGNAL(triggered(bool)),
           this, SLOT(on_actionShow_Prebuilt_Pipelines_triggered(bool)) );
-//  connect(m_PrebuiltBtn, SIGNAL(toggled(bool)),
-//          this, SLOT(on_actionShow_Prebuilt_Pipelines_triggered(bool)) );
+  //  connect(m_PrebuiltBtn, SIGNAL(toggled(bool)),
+  //          this, SLOT(on_actionShow_Prebuilt_Pipelines_triggered(bool)) );
 
 
-//  m_IssuesBtn = new QToolButton(this);
-//  makeStatusBarButton("Issues", issuesDockWidget, m_IssuesBtn, 4);
+  //  m_IssuesBtn = new QToolButton(this);
+  //  makeStatusBarButton("Issues", issuesDockWidget, m_IssuesBtn, 4);
   menuView->removeAction(actionShow_Issues);
   delete actionShow_Issues;
   actionShow_Issues = issuesDockWidget->toggleViewAction();
@@ -772,8 +769,8 @@ void DREAM3D_UI::setupViewMenu()
   menuView->addAction(actionShow_Issues);
   connect(actionShow_Issues, SIGNAL(triggered(bool)),
           this, SLOT(on_actionShow_Issues_triggered(bool)) );
-//  connect(m_IssuesBtn, SIGNAL(toggled(bool)),
-//          this, SLOT(on_actionShow_Issues_triggered(bool)) );
+  //  connect(m_IssuesBtn, SIGNAL(toggled(bool)),
+  //          this, SLOT(on_actionShow_Issues_triggered(bool)) );
 
 }
 
