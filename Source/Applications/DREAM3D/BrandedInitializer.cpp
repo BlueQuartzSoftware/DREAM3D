@@ -174,7 +174,7 @@ QVector<DREAM3DPluginInterface*> BrandedInitializer::loadPlugins()
   if (aPluginDir.cd("Plugins") )
   {
     thePath = aPluginDir.absolutePath();
-    m_PluginDirs << thePath;
+    pluginDirs << thePath;
   }
 #elif defined(Q_OS_MAC)
   // Look to see if we are inside an .app package or inside the 'tools' directory
@@ -183,7 +183,7 @@ QVector<DREAM3DPluginInterface*> BrandedInitializer::loadPlugins()
     aPluginDir.cdUp();
     thePath = aPluginDir.absolutePath() + "/Plugins";
     qDebug() << "  Adding Path " << thePath;
-    m_PluginDirs << thePath;
+    pluginDirs << thePath;
     aPluginDir.cdUp();
     aPluginDir.cdUp();
     // We need this because Apple (in their infinite wisdom) changed how the current working directory is set in OS X 10.9 and above. Thanks Apple.
@@ -201,7 +201,7 @@ QVector<DREAM3DPluginInterface*> BrandedInitializer::loadPlugins()
   // aPluginDir.cd("Plugins");
   thePath = aPluginDir.absolutePath() + "/Plugins";
   qDebug() << "  Adding Path " << thePath;
-  m_PluginDirs << thePath;
+  pluginDirs << thePath;
 
   // This is here for Xcode compatibility
 #ifdef CMAKE_INTDIR
