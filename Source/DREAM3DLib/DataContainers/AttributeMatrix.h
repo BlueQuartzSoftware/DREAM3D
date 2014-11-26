@@ -475,7 +475,7 @@ class DREAM3DLib_EXPORT AttributeMatrix : public Observable
 
     /**
     * @brief creates and returns a copy of the attribute matrix
-    * @return
+    * @return On error, will return a null pointer.  It is the responsibility of the calling function to check for errors and return an error message using the PipelineMessage 
     */
     virtual AttributeMatrix::Pointer deepCopy();
 
