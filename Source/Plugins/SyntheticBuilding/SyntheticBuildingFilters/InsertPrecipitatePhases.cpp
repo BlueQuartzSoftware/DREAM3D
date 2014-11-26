@@ -65,6 +65,7 @@ InsertPrecipitatePhases::InsertPrecipitatePhases() :
   m_HavePrecips(false),
   m_PrecipInputFile(""),
   m_PeriodicBoundaries(false),
+  m_MatchRDF(false),
   m_WriteGoalAttributes(false),
   m_InputStatsArrayPath(DREAM3D::Defaults::StatsGenerator, DREAM3D::Defaults::CellEnsembleAttributeMatrixName, DREAM3D::EnsembleData::Statistics),
   m_InputPhaseTypesArrayPath(DREAM3D::Defaults::StatsGenerator, DREAM3D::Defaults::CellEnsembleAttributeMatrixName, DREAM3D::EnsembleData::PhaseTypes),
@@ -134,6 +135,7 @@ void InsertPrecipitatePhases::setupFilterParameters()
 {
   FilterParameterVector parameters;
   parameters.push_back(FilterParameter::New("Periodic Boundary", "PeriodicBoundaries", FilterParameterWidgetType::BooleanWidget, getPeriodicBoundaries(), false));
+  parameters.push_back(FilterParameter::New("Match Radial Distribution Function", "MatchRDF", FilterParameterWidgetType::BooleanWidget, getMatchRDF(), false));
   parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
   parameters.push_back(FilterParameter::New("Statistics Array", "InputStatsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getInputStatsArrayPath(), true));
   parameters.push_back(FilterParameter::New("Phase Types Array", "InputPhaseTypesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getInputPhaseTypesArrayPath(), true));
@@ -167,6 +169,7 @@ void InsertPrecipitatePhases::readFilterParameters(AbstractFilterParametersReade
   setCellPhasesArrayPath(reader->readDataArrayPath("CellPhasesArrayPath", getCellPhasesArrayPath() ) );
   setFeatureIdsArrayPath(reader->readDataArrayPath("FeatureIdsArrayPath", getFeatureIdsArrayPath() ) );
   setPeriodicBoundaries( reader->readValue("PeriodicBoundaries", getPeriodicBoundaries()) );
+  setMatchRDF(reader->readValue("MatchRDF", getMatchRDF()));
   setHavePrecips( reader->readValue("HavePrecips", getHavePrecips()) );
   setPrecipInputFile( reader->readString( "PrecipInputFile", getPrecipInputFile() ) );
   setWriteGoalAttributes( reader->readValue("WriteGoalAttributes", getWriteGoalAttributes()) );
@@ -189,6 +192,7 @@ int InsertPrecipitatePhases::writeFilterParameters(AbstractFilterParametersWrite
   DREAM3D_FILTER_WRITE_PARAMETER(CellPhasesArrayPath)
   DREAM3D_FILTER_WRITE_PARAMETER(FeatureIdsArrayPath)
   DREAM3D_FILTER_WRITE_PARAMETER(PeriodicBoundaries)
+  DREAM3D_FILTER_WRITE_PARAMETER(MatchRDF)
   DREAM3D_FILTER_WRITE_PARAMETER(HavePrecips)
   DREAM3D_FILTER_WRITE_PARAMETER(WriteGoalAttributes)
   DREAM3D_FILTER_WRITE_PARAMETER(PrecipInputFile)
@@ -656,13 +660,17 @@ void  InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer featur
 
 
   //initializing the target RDF vector - this is the radial distribution function we are trying to match to
+  if(m_MatchRDF == true)
+  {
    for (int64_t i = 1; i < numensembles; ++i)
    {
      if(m_PhaseTypes[i] == DREAM3D::PhaseType::PrecipitatePhase)
      {
+
        PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsDataArray[i].get());
        VectorOfFloatArray rdfTarget = pp->getRadialDistFunction();
        VectorOfFloatArray maxmin = pp->getMaxMinRDF();
+
 //       int test =rdfTarget[0]->getNumberOfTuples();
        m_numRDFbins = rdfTarget[0]->getNumberOfTuples();
  //      std::vector<float> rdfTargetDist;
@@ -683,6 +691,7 @@ void  InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer featur
 
      }
    }
+  }
 
 
 
@@ -786,13 +795,18 @@ void  InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer featur
     outFile << "\n\n";
   }
 
+  notifyStatusMessage(getHumanLabel(), "Packing Features - Initial Feature Placement Complete");
+
   //calculate the initial current RDF - this will change as we move particles around
+   if(m_MatchRDF == true)
+   {
      for (size_t i = firstPrecipitateFeature; i < numfeatures; i++)
      {
        m_oldRDFerror = check_RDFerror(i, -1000);
      }
 
-  notifyStatusMessage(getHumanLabel(), "Packing Features - Initial Feature Placement Complete");
+
+
 
 
   // begin swaping/moving/adding/removing features to try to improve packing
@@ -961,10 +975,13 @@ void  InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer featur
     }
   }
 
-  std::cout << "Done Jumping" <<std::endl;
+
+
 
 }
 
+std::cout << "Done Jumping" <<std::endl;
+}
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

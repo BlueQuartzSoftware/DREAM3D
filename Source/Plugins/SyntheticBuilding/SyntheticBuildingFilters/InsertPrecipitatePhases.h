@@ -95,6 +95,8 @@ class InsertPrecipitatePhases : public AbstractFilter
     Q_PROPERTY(QString PrecipInputFile READ getPrecipInputFile WRITE setPrecipInputFile)
     DREAM3D_FILTER_PARAMETER(bool, PeriodicBoundaries)
     Q_PROPERTY(bool PeriodicBoundaries READ getPeriodicBoundaries WRITE setPeriodicBoundaries)
+    DREAM3D_FILTER_PARAMETER(bool, MatchRDF)
+    Q_PROPERTY(bool MatchRDF READ getMatchRDF WRITE setMatchRDF)
     DREAM3D_FILTER_PARAMETER(bool, WriteGoalAttributes)
     Q_PROPERTY(bool WriteGoalAttributes READ getWriteGoalAttributes WRITE setWriteGoalAttributes)
 
