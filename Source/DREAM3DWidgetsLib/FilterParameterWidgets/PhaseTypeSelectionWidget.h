@@ -110,6 +110,8 @@ class DREAM3DWidgetsLib_EXPORT PhaseTypeSelectionWidget : public FilterParameter
     DataContainerArrayProxy generateDCAProxy();
     void setSelectedPath(QString dcName, QString attrMatName, QString attrArrName);
     void selectDefaultPath();
+    void resetPhaseComboBoxes();
+
 
   signals:
     void errorSettingFilterParameter(const QString& msg);
@@ -118,8 +120,8 @@ class DREAM3DWidgetsLib_EXPORT PhaseTypeSelectionWidget : public FilterParameter
   private:
     bool              m_DidCausePreflight;
 
-    QList<QLabel*>              m_PhaseTypeLabels;
-    QList<QComboBox*>           m_PhaseTypeCombos;
+//    QList<QLabel*>              m_PhaseTypeLabels;
+//    QList<QComboBox*>           m_PhaseTypeCombos;
 
     DataContainerArrayProxy m_DcaProxy;
 

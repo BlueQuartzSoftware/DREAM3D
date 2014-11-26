@@ -386,7 +386,7 @@ void GenerateEnsembleStatistics::dataCheck()
     {
       m_RadialDistFuncPtr = tempPtr;
       m_RadialDistFunc = tempPtr->getPointer(0);
-      std::cout << "Radial dist" << m_RadialDistFunc << std::endl;
+      //std::cout << "Radial dist  " << m_RadialDistFunc << std::endl;
     }
 
     dims[0] = 2;
@@ -431,7 +431,7 @@ void GenerateEnsembleStatistics::dataCheck()
     m_SharedSurfaceAreaList = getDataContainerArray()->getPrereqArrayFromPath<NeighborList<float>, AbstractFilter>(this, getSharedSurfaceAreaListArrayPath(), dims);
     m_NeighborList = getDataContainerArray()->getPrereqArrayFromPath<NeighborList<int>, AbstractFilter>(this, getNeighborListArrayPath(), dims);
   }
-  std::cout << "GenerateEnsembleStatistics::DataCheck()  m_PhaseTypeData.d.size() = " << m_PhaseTypeData.d.size() << std::endl;
+ // std::cout << "GenerateEnsembleStatistics::DataCheck()  m_PhaseTypeData.d.size() = " << m_PhaseTypeData.d.size() << std::endl;
   if (m_PhaseTypeData.d.size() == 0)
   {
     setErrorCondition(-1000);
@@ -455,10 +455,10 @@ void GenerateEnsembleStatistics::dataCheck()
       m_PhaseTypes = m_PhaseTypesPtr.lock()->getPointer(0);
       // Now update the "PhaseTypesData" values
       m_PhaseTypeData.d.resize(m_PhaseTypesPtr.lock()->getNumberOfTuples());
-      for(size_t i = 0; i < m_PhaseTypesPtr.lock()->getNumberOfTuples(); i++)
-      {
-        m_PhaseTypeData.d[i] = 0;
-      }
+//      for(size_t i = 0; i < m_PhaseTypesPtr.lock()->getNumberOfTuples(); i++)
+//      {
+//        m_PhaseTypeData.d[i] = 0;
+//      }
     } /* Now assign the raw pointer to data from the DataArray<T> object */
   }
 
@@ -499,7 +499,6 @@ void GenerateEnsembleStatistics::dataCheck()
 // -----------------------------------------------------------------------------
 void GenerateEnsembleStatistics::preflight()
 {
-  std::cout << "GenerateEnsembleStatistics::preflight()" << std::endl;
   setInPreflight(true);
   emit preflightAboutToExecute();
   emit updateFilterParameters(this);
@@ -521,8 +520,6 @@ void GenerateEnsembleStatistics::execute()
   // Check to see if the user has over ridden the phase types for this filter
   if (m_PhaseTypeData.d.size() > 0)
   {
-    //typedef DataArray<unsigned int> PhaseTypeArrayType;
-
     if(static_cast<int>(m_PhaseTypeData.d.size()) < totalEnsembles)
     {
       setErrorCondition(-999);
@@ -531,7 +528,6 @@ void GenerateEnsembleStatistics::execute()
     }
     if(static_cast<int>(m_PhaseTypeData.d.size()) > totalEnsembles)
     {
-
       QString ss = QObject::tr("The number of PhaseTypes entered is more than the number of Ensembles, only the first %1 will be used").arg(totalEnsembles - 1);
       notifyErrorMessage(getHumanLabel(), ss, -999);
     }
@@ -1236,28 +1232,28 @@ int GenerateEnsembleStatistics::getPhaseCount()
 {
   DataContainerArray::Pointer dca = getDataContainerArray();
   if(NULL == dca.get()) {
-    qDebug() << getNameOfClass() <<  "::getPhaseCount()  dca was NULL";
+  //  qDebug() << getNameOfClass() <<  "::getPhaseCount()  dca was NULL";
     return -1;
   }
 
   AttributeMatrix::Pointer inputAttrMat = dca->getAttributeMatrix(getCellEnsembleAttributeMatrixPath());
   if (NULL == inputAttrMat.get() ) {
-    qDebug() << getNameOfClass() << "::getPhaseCount()  CellEnsembleAttributeMatrix was NULL";
-    qDebug() << "     " << getCellEnsembleAttributeMatrixPath().serialize("/");
+  //  qDebug() << getNameOfClass() << "::getPhaseCount()  CellEnsembleAttributeMatrix was NULL";
+  //  qDebug() << "     " << getCellEnsembleAttributeMatrixPath().serialize("/");
     return -2;
   }
 
   if(inputAttrMat->getType() < DREAM3D::AttributeMatrixType::VertexEnsemble
      || inputAttrMat->getType() > DREAM3D::AttributeMatrixType::CellEnsemble )
   {
-    qDebug() << getNameOfClass() << "::getPhaseCount() CellEnsembleAttributeMatrix was not correct Type";
-    qDebug() << "     " << getCellEnsembleAttributeMatrixPath().serialize("/");
-    qDebug() << "     " << (int)(inputAttrMat->getType());
+  //  qDebug() << getNameOfClass() << "::getPhaseCount() CellEnsembleAttributeMatrix was not correct Type";
+  //  qDebug() << "     " << getCellEnsembleAttributeMatrixPath().serialize("/");
+  //  qDebug() << "     " << (int)(inputAttrMat->getType());
     return -3;
   }
 
-  qDebug() << getNameOfClass() << "::getPhaseCount() data->getNumberOfTuples(): " << inputAttrMat->getTupleDimensions();
-  qDebug() << "Name" << inputAttrMat->getName();
+ // qDebug() << getNameOfClass() << "::getPhaseCount() data->getNumberOfTuples(): " << inputAttrMat->getTupleDimensions();
+ // qDebug() << "Name" << inputAttrMat->getName();
   QVector<size_t> tupleDims = inputAttrMat->getTupleDimensions();
 
   size_t phaseCount = 1;
@@ -1278,6 +1274,12 @@ AbstractFilter::Pointer GenerateEnsembleStatistics::newFilterInstance(bool copyF
   if(true == copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
+
+    // Here we need to set all sorts of stuff that is going to get missed. This
+    // is predominantly for FilterParameters that take multiple DREAM3D_FILTER_PARAMETERS
+    // Those will get missed.
+    filter->setPhaseTypeData(getPhaseTypeData());
+    filter->setCellEnsembleAttributeMatrixPath(getCellEnsembleAttributeMatrixPath());
   }
   return filter;
 }

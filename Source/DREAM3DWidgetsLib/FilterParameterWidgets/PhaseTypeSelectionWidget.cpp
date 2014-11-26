@@ -357,11 +357,10 @@ void PhaseTypeSelectionWidget::populateAttributeMatrixList()
 // -----------------------------------------------------------------------------
 void PhaseTypeSelectionWidget::on_attributeMatrixList_currentIndexChanged(int index)
 {
-  std::cout << "###### void PhaseTypeSelectionWidget::on_attributeMatrixList_currentIndexChanged(int index)" << std::endl;
+  resetPhaseComboBoxes();
   m_DidCausePreflight = true;
   emit parametersChanged();
   m_DidCausePreflight = false;
-  std::cout << "^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^" << std::endl;
 }
 
 
@@ -370,17 +369,18 @@ void PhaseTypeSelectionWidget::on_attributeMatrixList_currentIndexChanged(int in
 // -----------------------------------------------------------------------------
 void PhaseTypeSelectionWidget::updatePhaseComboBoxes()
 {
-  qDebug() << "PhaseTypeSelectionWidget::updatePhaseComboBoxes()";
   bool ok = false;
   // setup the list of choices for the widget
   PhaseTypesFilterParameter* phaseTypes = dynamic_cast<PhaseTypesFilterParameter*>(getFilterParameter());
   QString countProp = phaseTypes->getPhaseTypeCountProperty();
   int phaseCount = getFilter()->property(countProp.toLatin1().constData()).toInt(&ok);
-  qDebug() << "PhaseTypeSelectionWidget::updatePhaseComboBoxes()  phaseCount =" << phaseCount;
   QString phaseDataProp = phaseTypes->getPhaseTypeDataProperty();
 
   UInt32Vector_t vectorWrapper = getFilter()->property(phaseDataProp.toLatin1().constData()).value<UInt32Vector_t>();
   QVector<quint32> dataFromFilter = vectorWrapper.d;
+  if(phaseCount < 0 && dataFromFilter.size() < 10) { // there was an issue getting the phase Count from the Filter.
+    phaseCount = dataFromFilter.size(); // So lets just use the count from the actual phase data
+  }
 
   // Get our list of predefined Phase Type Strings
   QVector<QString> phaseTypestrings;
@@ -389,60 +389,31 @@ void PhaseTypeSelectionWidget::updatePhaseComboBoxes()
   QVector<unsigned int> phaseTypeEnums;
   PhaseType::getPhaseTypeEnums(phaseTypeEnums);
 
-  // Remove all the items from the GUI and from the internal tracking Lists
-  QLayoutItem* child;
-  while ((formLayout_2->count() > 0) && (child = formLayout_2->takeAt(0)) != 0)
-  {
-    delete child;
-  }
-  m_PhaseTypeLabels.clear();
-  m_PhaseTypeCombos.clear();
-
-  // Create a whole new QWidget to hold everything
-  m_PhaseTypeScrollContents = new QWidget();
-  m_PhaseTypeScrollContents->setObjectName(QString::fromUtf8("m_PhaseTypeScrollContents"));
-  formLayout_2 = new QFormLayout(m_PhaseTypeScrollContents);
-  formLayout_2->setContentsMargins(4, 4, 4, 4);
-  formLayout_2->setObjectName(QString::fromUtf8("formLayout_2"));
-  formLayout_2->setFieldGrowthPolicy(QFormLayout::FieldsStayAtSizeHint);
-  formLayout_2->setHorizontalSpacing(6);
-  formLayout_2->setVerticalSpacing(6);
-  m_PhaseTypeScrollArea->setWidget(m_PhaseTypeScrollContents);
+  phaseListWidget->clear();
 
   // We skip the first Ensemble as it is always a dummy
   //for (int i = 0; i < size; i++)
   for (int i = 1; i < phaseCount; i++)
   {
-    QLabel* phaseTypeLabel = new QLabel(m_PhaseTypeScrollContents);
-    QString str("Phase ");
-    str.append(QString::number(i, 10));
-    str.append(":");
-    phaseTypeLabel->setText(str);
-    phaseTypeLabel->setObjectName(str);
-    m_PhaseTypeLabels << phaseTypeLabel;
-
-    formLayout_2->setWidget(i, QFormLayout::LabelRole, phaseTypeLabel);
-
-    QComboBox* cb = new QComboBox(m_PhaseTypeScrollContents);
-    str.append(" ComboBox");
-    cb->setObjectName(str);
+    QComboBox* cb = new QComboBox(NULL);
     for (qint32 s = 0; s < phaseTypestrings.size(); ++s)
     {
       cb->addItem((phaseTypestrings[s]), phaseTypeEnums[s]);
       cb->setItemData(static_cast<int>(s), phaseTypeEnums[s], Qt::UserRole);
     }
-    m_PhaseTypeCombos << cb;
-    formLayout_2->setWidget(i, QFormLayout::FieldRole, cb);
+
+    QListWidgetItem* item = new QListWidgetItem(phaseListWidget);
+   phaseListWidget->addItem(item);
+   phaseListWidget->setItemWidget(item, cb);
+
     if (i < dataFromFilter.size())
     {
       cb->setCurrentIndex(dataFromFilter[i]);
-      qDebug() << "  Phase Data[" << i << "] = " << dataFromFilter[i];
+      //qDebug() << "  Phase Data[" << i << "] = " << dataFromFilter[i];
     }
     connect(cb, SIGNAL(currentIndexChanged(int)),
             this, SLOT(phaseTypeComboBoxChanged(int)) );
   }
-
-
 }
 
 // -----------------------------------------------------------------------------
@@ -458,9 +429,23 @@ void PhaseTypeSelectionWidget::phaseTypeComboBoxChanged(int index)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void PhaseTypeSelectionWidget::resetPhaseComboBoxes()
+{
+    int count = phaseListWidget->count();
+
+    for (int i = 0; i < count; ++i)
+    {
+      QComboBox* cb = qobject_cast<QComboBox*>(phaseListWidget->itemWidget(phaseListWidget->item(i)));
+      if (cb) { cb->setCurrentIndex(-1); }
+    }
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void PhaseTypeSelectionWidget::beforePreflight()
 {
-  std::cout << "PhaseTypeSelectionWidget::beforePreflight()" << std::endl;
   if (NULL == getFilter()) { return; }
   if(m_DidCausePreflight == true)
   {
@@ -471,7 +456,7 @@ void PhaseTypeSelectionWidget::beforePreflight()
 
   // Reset all the combo box widgets to have the default selection of the first index in the list
   populateComboBoxes();
-  updatePhaseComboBoxes();
+  //updatePhaseComboBoxes();
 
   dataContainerList->blockSignals(false);
   attributeMatrixList->blockSignals(false);
@@ -484,7 +469,6 @@ void PhaseTypeSelectionWidget::beforePreflight()
 // -----------------------------------------------------------------------------
 void PhaseTypeSelectionWidget::afterPreflight()
 {
-  std::cout << "PhaseTypeSelectionWidget::afterPreflight()" << std::endl;
   updatePhaseComboBoxes();
 }
 
@@ -493,11 +477,10 @@ void PhaseTypeSelectionWidget::afterPreflight()
 // -----------------------------------------------------------------------------
 void PhaseTypeSelectionWidget::filterNeedsInputParameters(AbstractFilter* filter)
 {
-  int count = m_PhaseTypeCombos.count();
-  // if(count == 0)
-  {
-    std::cout << "PhaseTypeSelectionWidget::filterNeedsInputParameters Count = " << count << std::endl;
-  }
+  int count = phaseListWidget->count();
+//  {
+//    std::cout << "PhaseTypeSelectionWidget::filterNeedsInputParameters Count = " << count << std::endl;
+//  }
 
   PhaseTypesFilterParameter* p = dynamic_cast<PhaseTypesFilterParameter*>(getFilterParameter());
   QVariant var;
@@ -506,12 +489,12 @@ void PhaseTypeSelectionWidget::filterNeedsInputParameters(AbstractFilter* filter
   QVector<uint32_t> phaseTypes(count+1, DREAM3D::PhaseType::UnknownPhaseType);
   bool ok = false;
   phaseTypes[0] = DREAM3D::PhaseType::UnknownPhaseType;
-  for (int i = 1; i < count; ++i)
+  for (int i = 0; i < count; ++i)
   {
-    QComboBox* cb = m_PhaseTypeCombos.at(i);
+    QComboBox* cb = qobject_cast<QComboBox*>(phaseListWidget->itemWidget(phaseListWidget->item(i)));
     unsigned int sType = static_cast<unsigned int>(cb->itemData(cb->currentIndex(), Qt::UserRole).toUInt(&ok));
     //phaseTypes[i+1] = sType;
-    phaseTypes[i] = sType;
+    phaseTypes[i+1] = sType;
   }
 
   UInt32Vector_t data;

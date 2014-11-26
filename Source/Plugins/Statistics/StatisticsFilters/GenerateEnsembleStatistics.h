@@ -81,6 +81,18 @@ class GenerateEnsembleStatistics : public AbstractFilter
     Q_PROPERTY(QString PhaseTypesArrayName READ getPhaseTypesArrayName WRITE setPhaseTypesArrayName)
 
     DREAM3D_INSTANCE_PROPERTY(UInt32Vector_t, PhaseTypeData)
+//  private:
+//      UInt32Vector_t m_PhaseTypeData;
+//  public:
+//    void setPhaseTypeData(UInt32Vector_t value) {
+//      m_PhaseTypeData = value;
+//      std::cout << "@@@ GenerateEnsembleStatistics::setPhaseTypeData(...)-> d.size()=" << m_PhaseTypeData.d.size() << std::endl;
+//    }
+//    UInt32Vector_t getPhaseTypeData() {
+//      std::cout << "@@@ GenerateEnsembleStatistics::getPhaseTypeData()-> d.size()=" << m_PhaseTypeData.d.size() << std::endl;
+//      return m_PhaseTypeData;
+//    }
+
     Q_PROPERTY(UInt32Vector_t PhaseTypeData READ getPhaseTypeData WRITE setPhaseTypeData)
 
     int getPhaseCount();
