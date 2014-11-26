@@ -255,8 +255,10 @@ void GeometryMath::GenerateRandomRay(float length, float ray[3])
 {
   float w, t;
 
-  unsigned long long int m_Seed = QDateTime::currentMSecsSinceEpoch();
-  DREAM3D_RANDOMNG_NEW_SEEDED(m_Seed);
+  DREAM3D_RANDOMNG_NEW();
+
+ // unsigned long long int m_Seed = QDateTime::currentMSecsSinceEpoch();
+ // DREAM3D_RANDOMNG_NEW_SEEDED(m_Seed);
 
   ray[2] = (2.0 * rg.genrand_real1()) - 1.0;
   t = (DREAM3D::Constants::k_2Pi * rg.genrand_real1());
