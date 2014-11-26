@@ -364,8 +364,12 @@ void PipelineViewWidget::savePipeline(const QString& filePath, const QString& na
   int err = QFilterParametersWriter::WritePipelineToFile(pipeline, fi.absoluteFilePath(), name, format, reinterpret_cast<IObserver*>(m_PipelineMessageObserver));
   if (err < 0)
   {
-
+      m_StatusBar->showMessage(tr("There was an error while updating the favorite '%1'.").arg(name));
   }
+    else
+    {
+        m_StatusBar->showMessage(tr("Favorite '%1' has been updated successfully.").arg(name));
+    }
 }
 
 // -----------------------------------------------------------------------------
@@ -642,6 +646,14 @@ void PipelineViewWidget::setSelectedFilterWidget(PipelineFilterWidget* w)
     m_SelectedFilterWidget->setIsSelected(false);
   }
   m_SelectedFilterWidget = w;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void PipelineViewWidget::setStatusBar(QStatusBar* statusBar)
+{
+    m_StatusBar = statusBar;
 }
 
 // -----------------------------------------------------------------------------

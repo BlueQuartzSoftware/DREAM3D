@@ -480,6 +480,8 @@ void DREAM3D_UI::setupGui()
 
   connect(favoritesDockWidget, SIGNAL(pipelineNeedsToBeSaved(const QString&, const QString&)),
           pipelineViewWidget, SLOT(savePipeline(const QString&, const QString&)) );
+    
+    pipelineViewWidget->setStatusBar(statusbar);
 
   // This will set the initial list of filters in the filterListDockWidget
   // Tell the Filter Library that we have more Filters (potentially)
