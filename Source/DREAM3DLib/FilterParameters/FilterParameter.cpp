@@ -608,22 +608,29 @@ PhaseTypesFilterParameter::~PhaseTypesFilterParameter()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-PhaseTypesFilterParameter::Pointer PhaseTypesFilterParameter::New(const QString& humanLabel, const QString& propertyName,
-                                                                  const QString& widgetType, const QVariant& defaultValue,
+PhaseTypesFilterParameter::Pointer PhaseTypesFilterParameter::New(const QString& humanLabel,
+                                                                  const QString& PhaseTypesArrayName,
                                                                   const QString& phaseTypeCountProperty,
-                                                                  const QString& phaseTypeArrayPathProperty,
-                                                                  bool advanced, int groupIndex)
+                                                                  const QString& phaseTypeDataProperty,
+                                                                  const QString& attributeMatrixProperty,
+                                                                  const DataArrayPath attributeMatrixDefault,
+                                                                  bool advanced,
+                                                                  int groupIndex)
 {
   PhaseTypesFilterParameter::Pointer ptr = PhaseTypesFilterParameter::New();
   ptr->setHumanLabel(humanLabel);
-  ptr->setPropertyName(propertyName);
-  ptr->setWidgetType(widgetType);
-  ptr->setDefaultValue(defaultValue);
+  ptr->setPropertyName(PhaseTypesArrayName);
+  ptr->setWidgetType(FilterParameterWidgetType::PhaseTypeSelectionWidget);
+
   ptr->setAdvanced(advanced);
   ptr->setUnits("");
   ptr->setGroupIndex(groupIndex);
+
   ptr->setPhaseTypeCountProperty(phaseTypeCountProperty);
-  ptr->setPhaseTypeArrayPathProperty(phaseTypeArrayPathProperty);
+  ptr->setPhaseTypeDataProperty(phaseTypeDataProperty);
+  ptr->setAttributeMatrixPathProperty(attributeMatrixProperty);
+  ptr->setAttributeMatrixPathDefault(attributeMatrixDefault);
+
   if(ptr->getWidgetType().compare(FilterParameterWidgetType::SeparatorWidget) == 0)
   {
     ptr->setReadOnly(true);

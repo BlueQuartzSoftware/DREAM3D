@@ -6,34 +6,25 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>530</width>
+    <width>545</width>
     <height>188</height>
    </rect>
   </property>
-  <layout class="QHBoxLayout" name="horizontalLayout">
-   <property name="spacing">
-    <number>5</number>
-   </property>
-   <property name="leftMargin">
+  <layout class="QGridLayout" name="gridLayout">
+   <property name="margin">
     <number>2</number>
    </property>
-   <property name="topMargin">
-    <number>2</number>
-   </property>
-   <property name="rightMargin">
-    <number>2</number>
-   </property>
-   <property name="bottomMargin">
-    <number>2</number>
-   </property>
-   <item>
+   <item row="0" column="1">
+    <widget class="QComboBox" name="dataContainerList"/>
+   </item>
+   <item row="0" column="0">
     <widget class="QLabel" name="label">
      <property name="text">
       <string>Property</string>
      </property>
     </widget>
    </item>
-   <item>
+   <item row="0" column="3">
     <widget class="QScrollArea" name="m_PhaseTypeScrollArea">
      <property name="minimumSize">
       <size>
@@ -49,8 +40,8 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>477</width>
-        <height>182</height>
+        <width>248</width>
+        <height>180</height>
        </rect>
       </property>
       <layout class="QFormLayout" name="formLayout_2">
@@ -60,21 +51,15 @@
        <property name="verticalSpacing">
         <number>6</number>
        </property>
-       <property name="leftMargin">
-        <number>4</number>
-       </property>
-       <property name="topMargin">
-        <number>4</number>
-       </property>
-       <property name="rightMargin">
-        <number>4</number>
-       </property>
-       <property name="bottomMargin">
+       <property name="margin">
         <number>4</number>
        </property>
       </layout>
      </widget>
     </widget>
+   </item>
+   <item row="0" column="2">
+    <widget class="QComboBox" name="attributeMatrixList"/>
    </item>
   </layout>
  </widget>

@@ -73,6 +73,7 @@ class GenerateEnsembleStatistics : public AbstractFilter
     DREAM3D_TYPE_MACRO_SUPER(GenerateEnsembleStatistics, AbstractFilter)
 
     virtual ~GenerateEnsembleStatistics();
+
     DREAM3D_FILTER_PARAMETER(DataArrayPath, CellEnsembleAttributeMatrixPath)
     Q_PROPERTY(DataArrayPath CellEnsembleAttributeMatrixPath READ getCellEnsembleAttributeMatrixPath WRITE setCellEnsembleAttributeMatrixPath)
 
