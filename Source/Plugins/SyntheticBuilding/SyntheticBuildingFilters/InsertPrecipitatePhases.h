@@ -95,6 +95,8 @@ class InsertPrecipitatePhases : public AbstractFilter
     Q_PROPERTY(QString PrecipInputFile READ getPrecipInputFile WRITE setPrecipInputFile)
     DREAM3D_FILTER_PARAMETER(bool, PeriodicBoundaries)
     Q_PROPERTY(bool PeriodicBoundaries READ getPeriodicBoundaries WRITE setPeriodicBoundaries)
+    DREAM3D_FILTER_PARAMETER(bool, MatchRDF)
+    Q_PROPERTY(bool MatchRDF READ getMatchRDF WRITE setMatchRDF)
     DREAM3D_FILTER_PARAMETER(bool, WriteGoalAttributes)
     Q_PROPERTY(bool WriteGoalAttributes READ getWriteGoalAttributes WRITE setWriteGoalAttributes)
 
@@ -191,13 +193,11 @@ class InsertPrecipitatePhases : public AbstractFilter
     void move_precipitate(size_t featureNum, float xc, float yc, float zc);
 
     float check_sizedisterror(Precip* precip);
-    void determine_clustering(size_t featureNum, int add);
     void determine_currentRDF(size_t featureNum, int add);
     std::vector<float> normalizeRDF(std::vector<float> rdf, int num_bins, float stepsize, float rdfmin, size_t numPPTfeatures, float volume);
     float check_clusteringerror(int gadd, int gremove);
     float check_RDFerror(int gadd, int gremove);
 
-    float check_fillingerror(int gadd, int gremove, Int32ArrayType::Pointer featureOwnersPtr);
     void assign_voxels();
     void assign_gaps();
     void write_goal_attributes();
@@ -264,21 +264,16 @@ class InsertPrecipitatePhases : public AbstractFilter
 
     std::vector<std::vector<float> > featuresizedist;
     std::vector<std::vector<float> > simfeaturesizedist;
-    std::vector<std::vector<std::vector<float> > > clusteringdist;
-    std::vector<std::vector<std::vector<float> > > simclusteringdist;
     std::vector<float> m_rdfTargetDist;
     std::vector<float> m_rdfCurrentDist;
     std::vector<float> m_rdfCurrentDistNorm;
 
     std::vector<float> featuresizediststep;
-    std::vector<float> clusteringdiststep;
 
     std::vector<int> newnames;
     std::vector<int> packqualities;
     std::vector<int> gsizes;
 
-    float fillingerror, oldfillingerror;
-    float currentclusteringerror, oldclusteringerror;
     float m_currentRDFerror, m_oldRDFerror;
     float currentsizedisterror, oldsizedisterror;
     float m_rdfMax;
