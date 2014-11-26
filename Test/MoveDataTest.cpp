@@ -525,10 +525,10 @@ void RemoveDataTest()
     AttributeMatrix::Pointer am5 = dca->getDataContainer("DataContainer3")->getAttributeMatrix("AttributeMatrix5");
     IDataArray::Pointer da4 = dca->getDataContainer("DataContainer2")->getAttributeMatrix("AttributeMatrix3")->getAttributeArray("DataArray4");
 
-    DREAM3D_REQUIRE_EQUAL(removeDataPtr->getErrorCondition(), 0)
-    DREAM3D_REQUIRE_EQUAL(dc1.get(), NULL)
-    DREAM3D_REQUIRE_EQUAL(am5.get(), NULL)
-    DREAM3D_REQUIRE_EQUAL(da4.get(), NULL)
+    DREAM3D_REQUIRED_PTR(removeDataPtr->getErrorCondition(), ==, 0)
+    DREAM3D_REQUIRED_PTR(dc1.get(), ==, NULL)
+    DREAM3D_REQUIRED_PTR(am5.get(), ==, NULL)
+    DREAM3D_REQUIRED_PTR(da4.get(), ==, NULL)
 
     RemoveArraysObserver::Pointer obs = RemoveArraysObserver::New();
     QObject foo;

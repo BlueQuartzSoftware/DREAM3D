@@ -72,7 +72,7 @@ class DREAM3DWidgetsLib_EXPORT FavoritesDockWidget : public QDockWidget, private
     virtual ~FavoritesDockWidget();
 
     DREAM3D_INSTANCE_PROPERTY(QAction*, DeleteAction)
-    
+
     /**
      * @brief setupGui
      */
@@ -96,6 +96,9 @@ class DREAM3DWidgetsLib_EXPORT FavoritesDockWidget : public QDockWidget, private
      * @return
      */
     FilterLibraryTreeWidget* getFilterLibraryTreeWidget();
+
+
+    void configureFilterLibraryTree();
 
   public slots:
     //// Slots to catch signals from main menu or context menu

@@ -1942,7 +1942,7 @@ void M3CSliceBySlice::get_case_triangles_helper(int nedge, int* burnt, int* burn
   int bflag, nbflag;
   int cfeaturename1, cfeaturename2;
   int featurenameFlag, NodeFlag;
-  int nucleus;
+  //int nucleus;
   int ne;
   int chaser;
   int cnode1, cnode2;
@@ -1965,7 +1965,7 @@ void M3CSliceBySlice::get_case_triangles_helper(int nedge, int* burnt, int* burn
     bflag = burnt[i];
     if (bflag == 0)
     {
-      nucleus = ce;
+      //nucleus = ce;
       burnt[i] = loopID;
       burnt_list[tail] = ce;
       coin = 1;
@@ -2183,7 +2183,7 @@ void M3CSliceBySlice::get_case2_triangles(int site, int* ae, int nedge, int* afc
   int tfeaturename, tnode;
   int chaser;
   int start;
-  int end;
+  //int end;
   int from, to;
   int flip;
   int* burnt = NULL;
@@ -2216,7 +2216,7 @@ void M3CSliceBySlice::get_case2_triangles(int site, int* ae, int nedge, int* afc
   // Let's make complete loops...
   // numTri = 0;
   start = afc[0];
-  end = afc[1];
+  //end = afc[1];
   to = 0;
   from = 0;
   // Let's do triangulation...
@@ -2386,7 +2386,7 @@ void M3CSliceBySlice::get_caseM_triangles(int site, int* ae, int nedge, int* afc
   int* burnt_list;
   int* count;
   QVector<int> countVec;
-  int numN, numTri;
+  int numN;//, numTri;
   int tn0, tn1;
   int* burnt_loop;
   int openL; // if a loop is an open loop, it's 1; if closed, it's 0...
@@ -2410,7 +2410,7 @@ void M3CSliceBySlice::get_caseM_triangles(int site, int* ae, int nedge, int* afc
   count = &(countVec.front());
 
   // Let's make complete loops...
-  numTri = 0;
+  //numTri = 0;
   to = 0;
   from = 0;
   // Let's do triangulation...

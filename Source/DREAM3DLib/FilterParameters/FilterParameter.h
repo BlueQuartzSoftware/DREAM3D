@@ -512,17 +512,21 @@ class DREAM3DLib_EXPORT PhaseTypesFilterParameter : public FilterParameter
     DREAM3D_STATIC_NEW_MACRO(PhaseTypesFilterParameter)
     DREAM3D_TYPE_MACRO_SUPER(PhaseTypesFilterParameter, FilterParameter)
 
-    static Pointer New(const QString& humanLabel, const QString& propertyName,
-                       const QString& widgetType, const QVariant& defaultValue,
+    static Pointer New(const QString& humanLabel,
+                       const QString& PhaseTypesArrayName,
                        const QString& phaseTypeCountProperty,
-                       const QString& phaseTypeArrayPathProperty,
+                       const QString& phaseTYpeDataProperty,
+                       const QString& attributeMatrixProperty,
+                       const DataArrayPath attributeMatrixDefault,
                        bool advanced = false,
                        int groupIndex = -1 );
 
     virtual ~PhaseTypesFilterParameter();
 
     DREAM3D_INSTANCE_PROPERTY(QString, PhaseTypeCountProperty)
-    DREAM3D_INSTANCE_PROPERTY(QString, PhaseTypeArrayPathProperty)
+    DREAM3D_INSTANCE_PROPERTY(QString, PhaseTypeDataProperty)
+    DREAM3D_INSTANCE_PROPERTY(QString, AttributeMatrixPathProperty)
+    DREAM3D_INSTANCE_PROPERTY(DataArrayPath, AttributeMatrixPathDefault)
 
   protected:
     PhaseTypesFilterParameter();
