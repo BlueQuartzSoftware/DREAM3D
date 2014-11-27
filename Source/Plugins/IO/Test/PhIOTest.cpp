@@ -34,14 +34,16 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include <stdlib.h>
-#include <iostream>
-#include <vector>
-#include <limits>
+//#include <stdlib.h>
+//#include <iostream>
+//#include <vector>
+//#include <limits>
 
+#include <QtCore/QCoreApplication>
 #include <QtCore/QDir>
 #include <QtCore/QFile>
 
+#include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/DataArrays/DataArray.hpp"
 #include "DREAM3DLib/Common/FilterPipeline.h"
@@ -70,36 +72,47 @@ void RemoveTestFiles()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+int TestFilterAvailability()
+{
+  // Now instantiate the PhWriter Filter from the FilterManager
+  QString filtName = "PhWriter";
+  FilterManager* fm = FilterManager::Instance();
+  IFilterFactory::Pointer filterFactory = fm->getFactoryForFilter(filtName);
+  if (NULL == filterFactory.get() )
+  {
+    std::stringstream ss;
+    ss << "The PhIOTest Requires the use of the " << filtName.toStdString() << " filter which is found in the IO Plugin";
+    DREAM3D_TEST_THROW_EXCEPTION(ss.str())
+  }
+
+  filtName = "PhReader";
+  filterFactory = fm->getFactoryForFilter(filtName);
+  if (NULL == filterFactory.get() )
+  {
+    std::stringstream ss;
+    ss << "The PhIOTest Requires the use of the " << filtName.toStdString() << " filter which is found in the IO Plugin";
+    DREAM3D_TEST_THROW_EXCEPTION(ss.str())
+  }
+  return 0;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 int TestPhWriter()
 {
   FilterPipeline::Pointer pipeline = FilterPipeline::New();
 
-
-  #if 0
-
-
-  // This should FAIL because there is no Volume Data Container for the filter to get.
-  PhWriter::Pointer writer = PhWriter::New();
-  writer->setOutputFile(UnitTest::PhIOTest::TestFile);
-  pipeline->pushBack(writer);
-  int err = pipeline->preflightPipeline();
-  DREAM3D_REQUIRE(err < 0);
-  pipeline->execute();
-  err = pipeline->getErrorCondition();
-  DREAM3D_REQUIRE(err < 0);
-  pipeline->popFront();
-
-  #endif
-
   int err = 0;
 
-  // Now have a VolumeDataContainer created but NO feature Ids. This pipeline should still fail
+  // Use the helper class CreateVolumeDataContainer to generate a valid DataContainer
   CreateVolumeDataContainer::Pointer createVolumeDC = CreateVolumeDataContainer::New();
   pipeline->pushBack(createVolumeDC);
-
+  // Generate some "Feature Ids" inside that DataContainer
   GenerateFeatureIds::Pointer generateFeatureIds = GenerateFeatureIds::New();
   pipeline->pushBack(generateFeatureIds);
 
+  // Now instantiate the PhWriter Filter from the FilterManager
   QString filtName = "PhWriter";
   FilterManager* fm = FilterManager::Instance();
   IFilterFactory::Pointer filterFactory = fm->getFactoryForFilter(filtName);
@@ -119,7 +132,7 @@ int TestPhWriter()
 
         propWasSet = phWriter->setProperty("OutputFile", UnitTest::PhIOTest::TestFile);
     DREAM3D_REQUIRE_EQUAL(propWasSet, true)
-    pipeline->pushBack(phWriter);
+        pipeline->pushBack(phWriter);
   }
   else
   {
@@ -140,13 +153,12 @@ int TestPhWriter()
 // -----------------------------------------------------------------------------
 int TestPhReader()
 {
-  FilterPipeline::Pointer pipeline = FilterPipeline::New();
+ // FilterPipeline::Pointer pipeline = FilterPipeline::New();
 
 
-  VolumeDataContainer::Pointer m = VolumeDataContainer::New();
-  m->setName(DREAM3D::Defaults::VolumeDataContainerName);
+
   DataContainerArray::Pointer dca = DataContainerArray::New();
-  dca->pushBack(m);
+ // dca->pushBack(m);
 
   AbstractFilter::Pointer phReader = AbstractFilter::NullPointer();
   QString filtName = "PhReader";
@@ -160,11 +172,15 @@ int TestPhReader()
     bool propWasSet = phReader->setProperty("InputFile", UnitTest::PhIOTest::TestFile);
     DREAM3D_REQUIRE_EQUAL(propWasSet, true)
     phReader->setDataContainerArray(dca);
-    pipeline->pushBack(phReader);
+    phReader->execute();
+    int err = phReader->getErrorCondition();
+    DREAM3D_REQUIRE_EQUAL(err, 0);
+   // pipeline->pushBack(phReader);
   }
   else
   {
     QString ss = QObject::tr("PhIOTest Error creating filter '%1'. Filter was not created/executed. Please notify the developers.").arg(filtName);
+    qDebug() << ss;
     DREAM3D_REQUIRE_EQUAL(0, 1)
   }
 
@@ -172,9 +188,9 @@ int TestPhReader()
   size_t ny = 0;
   size_t nz = 0;
 
-  pipeline->execute();
-  int err = pipeline->getErrorCondition();
-  DREAM3D_REQUIRE_EQUAL(err, 0);
+
+  VolumeDataContainer* m = phReader->getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(DREAM3D::Defaults::VolumeDataContainerName);
+  DREAM3D_REQUIRED_PTR(m, !=, NULL)
 
   m->getDimensions(nx, ny, nz);
   DREAM3D_REQUIRE_EQUAL(nx, UnitTest::FeatureIdsTest::XSize);
@@ -232,14 +248,21 @@ void loadFilterPlugins()
 int main(int argc, char** argv)
 {
 
+  // Instantiate the QCoreApplication that we need to get the current path and load plugins.
+  QCoreApplication app(argc, argv);
+  QCoreApplication::setOrganizationName("BlueQuartz Software");
+  QCoreApplication::setOrganizationDomain("bluequartz.net");
+  QCoreApplication::setApplicationName("PhIOTest");
+
   int err = EXIT_SUCCESS;
   DREAM3D_REGISTER_TEST( loadFilterPlugins() );
+  DREAM3D_REGISTER_TEST( TestFilterAvailability() );
 
   DREAM3D_REGISTER_TEST( TestPhWriter() )
-      DREAM3D_REGISTER_TEST( TestPhReader() )
+  DREAM3D_REGISTER_TEST( TestPhReader() )
 
-      DREAM3D_REGISTER_TEST( RemoveTestFiles() )
-      PRINT_TEST_SUMMARY();
+  DREAM3D_REGISTER_TEST( RemoveTestFiles() )
+  PRINT_TEST_SUMMARY();
   return err;
 }
 

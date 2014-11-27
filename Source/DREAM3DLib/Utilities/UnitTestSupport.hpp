@@ -314,6 +314,12 @@ bool AlmostEqualUlpsFinal(float* A, float* B, int maxUlps)
 // -----------------------------------------------------------------------------
 // Developer Used Macros
 // -----------------------------------------------------------------------------
+#define DREAM3D_TEST_FAILED( P ) \
+  { \
+      DREAM3D_TEST_THROW_EXCEPTION( s )\
+  }
+
+
 #define DREAM3D_REQUIRE( P ) \
   { \
     bool b = (P);\
