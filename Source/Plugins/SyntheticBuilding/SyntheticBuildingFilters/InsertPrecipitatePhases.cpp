@@ -1424,10 +1424,6 @@ void InsertPrecipitatePhases::assign_voxels()
           if (iter2 > dims[1] - 1) { coords[1] = coords[1] + sizey; }
           if (iter3 < 0) { coords[2] = coords[2] - sizez; }
           if (iter3 > dims[2] - 1) { coords[2] = coords[2] + sizez; }
-          //          dist = ((coords[0] - xc) * (coords[0] - xc)) + ((coords[1] - yc) * (coords[1] - yc)) + ((coords[2] - zc) * (coords[2] - zc));
-          //          dist = sqrtf(dist);
-          //          if (dist < radcur1)
-          //          {
           coords[0] = coords[0] - xc;
           coords[1] = coords[1] - yc;
           coords[2] = coords[2] - zc;
@@ -1450,7 +1446,6 @@ void InsertPrecipitatePhases::assign_voxels()
               m_FeatureIds[currentpoint] = static_cast<int32_t>(i);
             }
           }
-          //          }
         }
       }
     }
