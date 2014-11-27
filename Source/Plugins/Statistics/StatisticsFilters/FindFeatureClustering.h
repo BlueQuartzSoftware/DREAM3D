@@ -147,7 +147,7 @@ class FindFeatureClustering : public AbstractFilter
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, FeaturePhases)
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, Centroids)
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(float, EquivalentDiameters)
-    DEFINE_CREATED_DATAARRAY_VARIABLE(int32_t, NewEnsembleArray)
+    DEFINE_CREATED_DATAARRAY_VARIABLE(float, NewEnsembleArray)
     DEFINE_CREATED_DATAARRAY_VARIABLE(float, MaxMinArray)
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(bool, BiasedFeatures)
     NeighborList<float>::WeakPointer m_ClusteringList;

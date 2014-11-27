@@ -176,7 +176,7 @@ void FindFeatureClustering::dataCheck()
   m_NewEnsembleArrayArrayName = m_SelectedFeatureArrayPath.getDataArrayName() + QString("RDF");
   dims[0] = numComp;
   tempPath.update(getCellEnsembleAttributeMatrixName().getDataContainerName(), getCellEnsembleAttributeMatrixName().getAttributeMatrixName(), getNewEnsembleArrayArrayName() );
-  m_NewEnsembleArrayPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int>, AbstractFilter>(this, tempPath, 0, dims); /* Assigns the shared_ptr<>(this, tempPath, 0, dims); Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_NewEnsembleArrayPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, tempPath, 0, dims); /* Assigns the shared_ptr<>(this, tempPath, 0, dims); Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_NewEnsembleArrayPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_NewEnsembleArray = m_NewEnsembleArrayPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 
@@ -240,16 +240,42 @@ void FindFeatureClustering::find_clustering()
   float x, y, z;
   float xn, yn, zn;
   float r;
+  float r1, r2;
 
   int32_t bin;
   int32_t ensemble;
+  int32_t totalPPTfeatures = 0;
   float min = 1000000.0f;
   float max = 0.0f;
   float value;
+  float sizex, sizey, sizez, totalvol;
+  float normfactor;
+  float finiteAdjFactor = 1.0f/8.0f;
 
   std::vector<std::vector<float> > clusteringlist;
+  std::vector<float> oldcount(m_NumberOfBins);
+
 
   size_t totalFeatures = m_FeaturePhasesPtr.lock()->getNumberOfTuples();
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(m_EquivalentDiametersArrayPath.getDataContainerName());
+
+  size_t udims[3] =
+  { 0, 0, 0 };
+  m->getDimensions(udims);
+#if (CMP_SIZEOF_SIZE_T == 4)
+  typedef int32_t DimType;
+#else
+  typedef int64_t DimType;
+#endif
+  DimType dims[3] =
+  { static_cast<DimType>(udims[0]), static_cast<DimType>(udims[1]), static_cast<DimType>(udims[2]), };
+
+  sizex = dims[0] * m->getXRes();
+  sizey = dims[1] * m->getYRes();
+  sizez = dims[2] * m->getZRes();
+  totalvol = sizex * sizey * sizez;
+  float oneovervolume = 1.0f/totalvol;
+
 
   clusteringlist.resize(totalFeatures);
 
@@ -323,6 +349,26 @@ void FindFeatureClustering::find_clustering()
       }
     }
   }
+
+//  for (size_t i = 1; i < totalFeatures; i++)
+//  {
+//      if (m_FeaturePhases[i] == m_PhaseNumber) {totalPPTfeatures++;}
+//  }
+
+//  for (size_t i = 0; i < m_NumberOfBins; i++)
+//  {
+//      r1 = (min + (i)*stepsize);
+//      r2 = (r1 + stepsize);
+//      r1 = r1*finiteAdjFactor;
+//      r2 = r2*finiteAdjFactor;
+//      normfactor = 4.0f/3.0f*DREAM3D::Constants::k_Pi*((r2*r2*r2) - (r1*r1*r1))*totalPPTfeatures*oneovervolume;
+//      oldcount[i] = m_NewEnsembleArray[(m_NumberOfBins*m_PhaseNumber) + i];
+//      m_NewEnsembleArray[(m_NumberOfBins*m_PhaseNumber) + i] = oldcount[i]/normfactor;
+//  }
+
+
+
+
 
   for (size_t i = 1; i < totalFeatures; i++)
   {

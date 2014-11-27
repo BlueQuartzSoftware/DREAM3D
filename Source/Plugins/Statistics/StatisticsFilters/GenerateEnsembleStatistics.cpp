@@ -380,8 +380,8 @@ void GenerateEnsembleStatistics::dataCheck()
 
   if(m_IncludeRadialDistFunc == true)
   {
-    // dims[0]=10;
-    DataArray<int>::Pointer tempPtr = getDataContainerArray()->getExistingPrereqArrayFromPath<DataArray<int>, AbstractFilter>(this, getRDFArrayPath());
+   // dims[0]=10;
+    DataArray<float>::Pointer tempPtr = getDataContainerArray()->getExistingPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getRDFArrayPath());
     if (NULL != tempPtr.get())
     {
       m_RadialDistFuncPtr = tempPtr;

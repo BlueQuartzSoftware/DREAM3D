@@ -822,7 +822,8 @@ class DataArray : public IDataArray
     void setValue(size_t i, T value)
     {
 #ifndef NDEBUG
-      if (m_Size > 0) { BOOST_ASSERT(i < m_Size);}
+      if (m_Size > 0)
+      { BOOST_ASSERT(i < m_Size);}
 #endif
       m_Array[i] = value;
     }
