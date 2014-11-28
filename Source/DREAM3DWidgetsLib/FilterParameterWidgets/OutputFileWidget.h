@@ -100,6 +100,7 @@ class DREAM3DWidgetsLib_EXPORT OutputFileWidget : public FilterParameterWidget, 
     void on_value_editingFinished();
     void on_value_textChanged(const QString& text);
     void on_selectBtn_clicked();
+    void on_value_returnPressed();
 
 
   protected:

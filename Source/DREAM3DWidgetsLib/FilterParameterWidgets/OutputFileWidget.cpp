@@ -120,6 +120,10 @@ void OutputFileWidget::setupGui()
 
     QString currentPath = getFilter()->property(PROPERTY_NAME_AS_CHAR).toString();
     value->setText(currentPath);
+    if(verifyPathExists(currentPath, value) )
+    {
+
+    }
   }
 
 }
@@ -146,7 +150,16 @@ bool OutputFileWidget::verifyPathExists(QString filePath, QLineEdit* lineEdit)
 // -----------------------------------------------------------------------------
 void OutputFileWidget::on_value_editingFinished()
 {
+  value->setStyleSheet(QString(""));
   emit parametersChanged(); // This should force the preflight to run because we are emitting a signal
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void OutputFileWidget::on_value_returnPressed()
+{
+  on_value_editingFinished();
 }
 
 // -----------------------------------------------------------------------------
@@ -154,9 +167,8 @@ void OutputFileWidget::on_value_editingFinished()
 // -----------------------------------------------------------------------------
 void OutputFileWidget::on_value_textChanged(const QString& text)
 {
-  setOpenDialogLastDirectory(text);
-  // Set/Remove the red outline if the file does exist
-  emit parametersChanged(); // This should force the preflight to run because we are emitting a signal
+  value->setStyleSheet(QString::fromLatin1("color: rgb(255, 0, 0);"));
+  value->setToolTip("Press the 'Return' key to apply your changes");
 }
 
 // -----------------------------------------------------------------------------
