@@ -5,9 +5,188 @@
 #include "RecrystalizeVolume.h"
 #include "CellularAutomataHelpers.hpp"
 
+#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
+#include <tbb/parallel_for.h>
+#include <tbb/blocked_range.h>
+#include <tbb/partitioner.h>
+#include <tbb/task_scheduler_init.h>
+#include <tbb/atomic.h>
+#endif
+
 #include <QtCore/QString>
 
 #include "CellularAutomata/CellularAutomataConstants.h"
+
+class RecrystalizeVolumeImpl
+{
+  public:
+    static const int VON_NEUMAN = 0;
+    static const int MOORE = 1;
+    static const int SEVEN_CELL = 2;
+
+#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
+    RecrystalizeVolumeImpl(CellularAutomata::Lattice* cellLattice, int32_t* currentGrainIDs, int32_t* workingGrainIDs, uint32_t* updateTime, int neighborhoodType, tbb::atomic<size_t>* counter, uint32_t* time, tbb::atomic<int32_t>* grainCount, float nucleationRate) :
+#elif
+    RecrystalizeVolumeImpl(CellularAutomata::Lattice cellLattice, int32_t* currentGrainIDs, int32_t* workingGrainIDs, uint32_t* updateTime, int neighborhoodType, size_t* counter, uint32_t* time, int32_t* grainCount, float nucleationRate) :
+#endif
+      m_lattice(cellLattice),
+      m_currentIDs(currentGrainIDs),
+      m_workingIDs(workingGrainIDs),
+      m_updateTime(updateTime),
+      m_neighborhood(neighborhoodType),
+      m_unrecrystalizedCount(counter),
+      m_time(time),
+      m_grainCount(grainCount),
+      m_nucleationRate(nucleationRate)
+    {}
+
+    virtual ~RecrystalizeVolumeImpl() {}
+
+    inline void computeBase(size_t index, std::vector<size_t>::iterator begin, std::vector<size_t>::iterator end) const
+    {
+      //check if any neighbors are recrystallized
+      std::vector<size_t> goodNeighbors;
+      for(std::vector<size_t>::iterator iter = begin; iter != end; ++iter)
+      {
+        if(0 != m_currentIDs[*iter])
+          goodNeighbors.push_back(*iter);
+      }
+
+      if(0 == goodNeighbors.size())
+      {
+        //if no neighbors are recrystalized, allow random chance to create nucluie
+        float seed = static_cast<float>(rand()) / RAND_MAX;
+        if(seed <= m_nucleationRate)
+        {
+          m_workingIDs[index] = m_grainCount->fetch_and_increment() + 1;
+          m_updateTime[index] = *m_time;
+        }
+        else
+        {
+          ++(*m_unrecrystalizedCount);
+          m_workingIDs[index] = 0;
+        }
+      }
+      else
+      {
+        //if neighbors are recrystallized, choose one at random to join
+        size_t neighbor = rand() % goodNeighbors.size();
+        m_workingIDs[index] = m_currentIDs[goodNeighbors[neighbor]]; 
+        m_updateTime[index] = *m_time;
+      }        
+    }
+
+    void computeVonNeuman(size_t start, size_t end) const
+    {
+      for (size_t i = start; i < end; i++)
+      {
+        //don't change cells that are already recrystallized
+        if(0 != m_currentIDs[i])
+        {
+          m_workingIDs[i] = m_currentIDs[i];
+          continue;
+        }
+
+        //otherwise get cell neighbors and determine next state
+        std::vector<size_t> neighborList = m_lattice->VonNeumann(i);
+        computeBase(i, neighborList.begin(), neighborList.end());
+      }
+    }
+
+    void computeMoore(size_t start, size_t end) const
+    {
+      for (size_t i = start; i < end; i++)
+      {
+        //don't change cells that are already recrystallized
+        if(0 != m_currentIDs[i])
+        {
+          m_workingIDs[i] = m_currentIDs[i];
+          continue;
+        }
+
+        //otherwise get cell neighbors and determine next state
+        std::vector<size_t> neighborList = m_lattice->Moore(i);
+        computeBase(i, neighborList.begin(), neighborList.end());
+      }
+    }
+
+    void compute7Cell(size_t start, size_t end) const
+    {
+      for (size_t i = start; i < end; i++)
+      {
+        //don't change cells that are already recrystallized
+        if(0 != m_currentIDs[i])
+        {
+          m_workingIDs[i] = m_currentIDs[i];
+          continue;
+        }
+
+        //otherwise get cell neighbors and determine next state
+        std::vector<size_t> neighborList;
+        switch(rand() % 4)
+        {
+          case 0:
+            neighborList = m_lattice->SevenCellA(i);
+            break;
+
+          case 1:
+            neighborList = m_lattice->SevenCellB(i);
+            break;
+
+          case 2:
+            neighborList = m_lattice->SevenCellC(i);
+            break;
+
+          case 3:
+            neighborList = m_lattice->SevenCellD(i);
+            break;
+        }
+        computeBase(i, neighborList.begin(), neighborList.end());
+      }
+    }
+
+    void compute(size_t start, size_t end) const
+    {
+      switch(m_neighborhood)
+      {
+        case VON_NEUMAN:
+          computeVonNeuman(start, end);
+          break;
+
+        case MOORE:
+          computeMoore(start, end);
+          break;
+
+        case SEVEN_CELL:
+          compute7Cell(start, end);
+          break;
+      }
+    }
+
+#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
+    void operator()(const tbb::blocked_range<size_t>& r) const
+    {
+      compute(r.begin(), r.end());
+    }
+#endif
+  private:
+    CellularAutomata::Lattice* m_lattice;
+    int32_t* m_currentIDs;
+    int32_t* m_workingIDs;
+    uint32_t* m_updateTime;
+    int m_neighborhood;
+
+  #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
+    tbb::atomic<size_t>* m_unrecrystalizedCount;
+    tbb::atomic<int32_t>* m_grainCount;
+  #elif
+    size_t* m_unrecrystalizedCount;
+    int32_t* m_grainCount;
+  #endif
+    uint32_t* m_time;
+    float m_nucleationRate;
+
+};
 
 #define INIT_SYNTH_VOLUME_CHECK(var, errCond) \
   if (m_##var <= 0) { QString ss = QObject::tr(":%1 must be a value > 0\n").arg( #var); notifyErrorMessage(getHumanLabel(), ss, errCond);}
@@ -19,15 +198,28 @@ RecrystalizeVolume::RecrystalizeVolume() :
   AbstractFilter(),
   m_DataContainerName(DREAM3D::Defaults::SyntheticVolumeDataContainerName),
   m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
-  m_CellFeatureAttributeMatrixName(DREAM3D::Defaults::CellFeatureAttributeMatrixName)
+  m_CellFeatureAttributeMatrixName(DREAM3D::Defaults::CellFeatureAttributeMatrixName),
+  m_CellEnsembleAttributeMatrixName(DREAM3D::Defaults::CellEnsembleAttributeMatrixName),
+  m_NucleationRate(0.0001),
+  m_Neighborhood(0),
+  m_FeatureIds(NULL),
+  m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
+  m_RecrystallizationTime(NULL),
+  m_RecrystallizationTimeArrayName("RecrystallizationTime"),
+  m_Active(NULL),
+  m_ActiveArrayName(DREAM3D::FeatureData::Active),
+  m_RecrystallizationHistory(NULL),
+  m_RecrystallizationHistoryArrayName("RecrystallizationHistory"),
+  m_Avrami(NULL),
+  m_AvramiArrayName("AvaramiParameters")
 {
   m_Dimensions.x = 128;
   m_Dimensions.y = 128;
   m_Dimensions.z = 128;
 
-  m_Resolution.x = 0.25;
-  m_Resolution.y = 0.25;
-  m_Resolution.z = 0.25;
+  m_Resolution.x = 0.25f;
+  m_Resolution.y = 0.25f;
+  m_Resolution.z = 0.25f;
 
   m_Origin.x = 0.0f;
   m_Origin.y = 0.0f;
@@ -50,9 +242,28 @@ void RecrystalizeVolume::setupFilterParameters()
   FilterParameterVector parameters;
   parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
   parameters.push_back(FilterParameter::New("Nucleation Rate", "NucleationRate", FilterParameterWidgetType::DoubleWidget, getNucleationRate(), false, "per cubic micron per time step"));
+  {
+    ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New();
+    parameter->setHumanLabel("Neighborhood Type");
+    parameter->setPropertyName("Neighborhood");
+    parameter->setWidgetType(FilterParameterWidgetType::ChoiceWidget);
+    QVector<QString> choices;
+    choices.push_back("Von Neumann");
+    choices.push_back("Moore");
+    choices.push_back("'7 (9) cell'");
+    parameter->setChoices(choices);
+    parameter->setAdvanced(false);
+    parameters.push_back(parameter);
+  }
   parameters.push_back(FilterParameter::New("New DataContainer Name", "DataContainerName", FilterParameterWidgetType::StringWidget, getDataContainerName(), true, ""));
   parameters.push_back(FilterParameter::New("New Cell Attribute Matrix Name", "CellAttributeMatrixName", FilterParameterWidgetType::StringWidget, getCellAttributeMatrixName(), true, ""));
   parameters.push_back(FilterParameter::New("New Cell Feature Attribute Matrix Name", "CellFeatureAttributeMatrixName", FilterParameterWidgetType::StringWidget, getCellFeatureAttributeMatrixName(), true, ""));
+  parameters.push_back(FilterParameter::New("New Cell Ensemble Attribute Matrix Name", "CellEnsembleAttributeMatrixName", FilterParameterWidgetType::StringWidget, getCellEnsembleAttributeMatrixName(), true, ""));
+  parameters.push_back(FilterParameter::New("Feature Ids Array Name", "FeatureIdsArrayName", FilterParameterWidgetType::StringWidget, getFeatureIdsArrayName(), true, ""));
+  parameters.push_back(FilterParameter::New("Recrystallization Time Array Name", "RecrystallizationTimeArrayName", FilterParameterWidgetType::StringWidget, getRecrystallizationTimeArrayName(), true, ""));
+  parameters.push_back(FilterParameter::New("Recrystallization History Array Name", "RecrystallizationHistoryArrayName", FilterParameterWidgetType::StringWidget, getRecrystallizationHistoryArrayName(), true, ""));
+  parameters.push_back(FilterParameter::New("Active Array Name", "ActiveArrayName", FilterParameterWidgetType::StringWidget, getActiveArrayName(), true, ""));
+  parameters.push_back(FilterParameter::New("Avrami Parameter Array Name", "AvramiArrayName", FilterParameterWidgetType::StringWidget, getAvramiArrayName(), true, ""));
   parameters.push_back(FilterParameter::New("Dimensions", "Dimensions", FilterParameterWidgetType::IntVec3Widget, getDimensions(), false, "Voxels"));
   parameters.push_back(FilterParameter::New("Resolution", "Resolution", FilterParameterWidgetType::FloatVec3Widget, getResolution(), false, "Microns"));
   parameters.push_back(FilterParameter::New("Origin", "Origin", FilterParameterWidgetType::FloatVec3Widget, getOrigin(), false, "Microns"));
@@ -66,9 +277,16 @@ void RecrystalizeVolume::readFilterParameters(AbstractFilterParametersReader* re
 {
   reader->openFilterGroup(this, index);
   setNucleationRate(reader->readValue("NucleationRate", getNucleationRate() ) );
+  setNeighborhood(reader->readValue("Neighborhood", getNeighborhood() ) );
   setDataContainerName(reader->readString("DataContainerName", getDataContainerName() ) );
   setCellAttributeMatrixName(reader->readString("CellAttributeMatrixName", getCellAttributeMatrixName() ) );
   setCellFeatureAttributeMatrixName(reader->readString("CellFeatureAttributeMatrixName", getCellFeatureAttributeMatrixName() ) );
+  setCellEnsembleAttributeMatrixName(reader->readString("CellEnsembleAttributeMatrixName", getCellEnsembleAttributeMatrixName() ) );
+  setFeatureIdsArrayName(reader->readString("FeatureIdsArrayName", getFeatureIdsArrayName() ) );
+  setRecrystallizationTimeArrayName(reader->readString("RecrystallizationTimeArrayName", getRecrystallizationTimeArrayName() ) );
+  setRecrystallizationHistoryArrayName(reader->readString("RecrystallizationHistoryArrayName", getRecrystallizationHistoryArrayName() ) );
+  setActiveArrayName(reader->readString("ActiveArrayName", getActiveArrayName() ) );
+  setAvramiArrayName(reader->readString("AvramiArrayName", getAvramiArrayName() ) );
   setDimensions( reader->readIntVec3("Dimensions", getDimensions() ) );
   setResolution( reader->readFloatVec3("Resolution", getResolution() ) );
   setOrigin( reader->readFloatVec3("Origin", getOrigin() ) );
@@ -82,9 +300,16 @@ int RecrystalizeVolume::writeFilterParameters(AbstractFilterParametersWriter* wr
 {
   writer->openFilterGroup(this, index);
   DREAM3D_FILTER_WRITE_PARAMETER(NucleationRate)
+  DREAM3D_FILTER_WRITE_PARAMETER(Neighborhood)
   DREAM3D_FILTER_WRITE_PARAMETER(DataContainerName)
   DREAM3D_FILTER_WRITE_PARAMETER(CellAttributeMatrixName)
   DREAM3D_FILTER_WRITE_PARAMETER(CellFeatureAttributeMatrixName)
+  DREAM3D_FILTER_WRITE_PARAMETER(CellEnsembleAttributeMatrixName)
+  DREAM3D_FILTER_WRITE_PARAMETER(FeatureIdsArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(RecrystallizationTimeArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(RecrystallizationHistoryArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(ActiveArrayName)
+  DREAM3D_FILTER_WRITE_PARAMETER(AvramiArrayName)
   DREAM3D_FILTER_WRITE_PARAMETER(Dimensions)
   DREAM3D_FILTER_WRITE_PARAMETER(Resolution)
   DREAM3D_FILTER_WRITE_PARAMETER(Origin)
@@ -116,14 +341,46 @@ void RecrystalizeVolume::dataCheck()
   m->setResolution(m_Resolution.x, m_Resolution.y, m_Resolution.z);
   m->setOrigin(m_Origin.x, m_Origin.y, m_Origin.z);
 
-  // Create our output Cell and Cell Feature Attribute Matrix objects
+  // Create our output Attribute Matrix objects
   QVector<size_t> tDims(3, 0);
   AttributeMatrix::Pointer cellAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::Cell);
   if(getErrorCondition() < 0) { return; }
 
-  QVector<size_t> cDims(1, 0);
+  QVector<size_t> cDims(1, 1);
   AttributeMatrix::Pointer cellFeatureAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellFeatureAttributeMatrixName(), cDims, DREAM3D::AttributeMatrixType::CellFeature);
   if(getErrorCondition() < 0) { return; }
+
+  AttributeMatrix::Pointer CellEnsembleAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellEnsembleAttributeMatrixName(), cDims, DREAM3D::AttributeMatrixType::CellEnsemble);
+  if(getErrorCondition() < 0) { return; }
+
+  //create arrays
+  QVector<size_t> dims(1, 1);
+  DataArrayPath tempPath;
+  tempPath.update(getDataContainerName(), getCellAttributeMatrixName(), getFeatureIdsArrayName() );
+  m_FeatureIdsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(this, tempPath, 0, dims);
+  if( NULL != m_FeatureIdsPtr.lock().get() )
+  { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); }
+
+  tempPath.update(getDataContainerName(), getCellAttributeMatrixName(), getRecrystallizationTimeArrayName() );
+  m_RecrystallizationTimePtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<uint32_t>, AbstractFilter, uint32_t>(this, tempPath, 0, dims);
+  if( NULL != m_RecrystallizationTimePtr.lock().get() )
+  { m_RecrystallizationTime = m_RecrystallizationTimePtr.lock()->getPointer(0); }
+
+  tempPath.update(getDataContainerName(), getCellFeatureAttributeMatrixName(), getActiveArrayName() );
+  m_ActivePtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<bool>, AbstractFilter, bool>(this, tempPath, 0, dims);
+  if( NULL != m_ActivePtr.lock().get() )
+  { m_Active = m_ActivePtr.lock()->getPointer(0); }
+
+  tempPath.update(getDataContainerName(), getCellEnsembleAttributeMatrixName(), getRecrystallizationHistoryArrayName() );
+  m_RecrystallizationHistoryPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0, dims);
+  if( NULL != m_RecrystallizationHistoryPtr.lock().get() )
+  { m_RecrystallizationHistory = m_RecrystallizationHistoryPtr.lock()->getPointer(0); }
+
+  dims[0] = 2;
+  tempPath.update(getDataContainerName(), getCellEnsembleAttributeMatrixName(), getAvramiArrayName() );
+  m_AvramiPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0, dims);
+  if( NULL != m_AvramiPtr.lock().get() )
+  { m_Avrami = m_AvramiPtr.lock()->getPointer(0); }
 }
 
 // -----------------------------------------------------------------------------
@@ -172,61 +429,6 @@ const QString RecrystalizeVolume::getSubGroupName()
   return "Misc";
 }
 
-
-//cell class (contains member variables + rules)
-class Cell
-{
-private:
-public:
-  size_t id;//0 if unrecrstallized, grainID if recrystllized
-  size_t updateTime;
-
-public:
-  Cell(size_t grainID, size_t time) : id(grainID), updateTime(time) {}
-
-  //function to get state of cell in next time step
-  Cell updateCell(std::vector<Cell*>& neighbors, size_t& maxID, size_t t, bool seed)
-  {
-    Cell retCell(*this);
-
-    //dont change cells that are already recrystallized
-    if(0 != id)
-      return retCell;
-
-    //otherwise check if any neighbors are recrystallized
-    std::vector<size_t> goodNeighbors;
-    for(size_t i = 0; i < neighbors.size(); i++)
-    {
-      if(0 != neighbors[i]->id)
-        goodNeighbors.push_back(neighbors[i]->id);
-    }
-
-    //if no neighbors are recrystalized, allow random chance to recrystallization
-    if(0 == goodNeighbors.size())
-    {
-      //random chance to create nucluie
-      // float seed = static_cast<float>(rand()) / RAND_MAX;
-      // Generator test = Generator(*gen);
-      // float seed = test();
-      // if(seed <= pNuc)
-      if(seed)
-      {
-        maxID++;
-        retCell.updateTime = t;
-        retCell.id = maxID;
-      }
-      return retCell;
-    }
-
-    //if some neighbors are recrystallized, choose one at random to join
-    size_t index = rand() % goodNeighbors.size();
-    retCell.id = goodNeighbors[index];
-    retCell.updateTime = t;
-    return retCell;
-  }
-};
-
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -239,6 +441,22 @@ void RecrystalizeVolume::execute()
   // happens to fail in the dataCheck() then we simply return
   if(getErrorCondition() < 0) { return; }
   setErrorCondition(0);
+
+
+  //get cretaed data container
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(m_DataContainerName);
+
+  //get created cell attribute matricies
+  AttributeMatrix::Pointer cellAttrMat = m->getAttributeMatrix(m_CellAttributeMatrixName);
+  AttributeMatrix::Pointer cellFeatureAttrMat = m->getAttributeMatrix(m_CellFeatureAttributeMatrixName);
+  AttributeMatrix::Pointer cellEnsembleAttrMat = m->getAttributeMatrix(m_CellEnsembleAttributeMatrixName);
+
+  // Resize the cell attribute matric
+  QVector<size_t> cellDims(3, 0);
+  cellDims[0] = m->getXPoints();
+  cellDims[1] = m->getYPoints();
+  cellDims[2] = m->getZPoints();
+  cellAttrMat->resizeAttributeArrays(cellDims);
 
   //initialize random number generator
   m_Distribution = boost::shared_ptr<NumberDistribution>(new NumberDistribution(0, 1));
@@ -254,120 +472,116 @@ void RecrystalizeVolume::execute()
   size_t numCells = m_Dimensions.x * m_Dimensions.y * m_Dimensions.z;
   CellularAutomata::Lattice lattice(m_Dimensions.x, m_Dimensions.y, m_Dimensions.z);
 
-  //create 2 arrays of cells (current state + working copy)
-  typedef StructArray<Cell> CellArray;
-  CellArray::Pointer currentState = CellArray::CreateArray(numCells, "current state", true);
-  CellArray::Pointer workingCopy = CellArray::CreateArray(numCells, "working copy", true);
+  //create arrays to hold gradin ids + recrystallization time
+  QVector<size_t> cDims(1, 1);
+  Int32ArrayType::Pointer currentIDs = m_FeatureIdsPtr.lock();
+  Int32ArrayType::Pointer workingIDs = Int32ArrayType::CreateArray(numCells, cDims, getFeatureIdsArrayName());
+  UInt32ArrayType::Pointer recrstTime = m_RecrystallizationTimePtr.lock();
 
   //make sure allocation was sucessful
-  if(CellArray::NullPointer() == currentState || CellArray::NullPointer() == workingCopy)
+  if(Int32ArrayType::NullPointer() == workingIDs)
   {
-
-    QString ss = QObject::tr("Unable to allocate memory for cell arrays");
+    QString ss = QObject::tr("Unable to allocate memory for working array");
     setErrorCondition(-1);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;
   }
 
-  //create a default state and fill array
-  Cell defaultState(0, 0);
-  currentState->initializeWithValue(defaultState);
+  //initialize arrays
+  currentIDs->initializeWithValue(0);
+  workingIDs->initializeWithValue(0);
 
-  //get pointers to both arrays
-  Cell* pCurrent = currentState->getPointer(0);
-  Cell* pWorking = workingCopy->getPointer(0);
+  //initialize variables to track recrystallizatino progress
+#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
+  tbb::atomic<size_t> unrecrstallizedCount;
+  unrecrstallizedCount = 1;
+  tbb::atomic<int32_t> grainCount;
+  grainCount = 0;
+#elif
+  size_t unrecrstallizedCount = 1;
+  int32_t grainCount = 1;
+#endif
+
+  uint32_t timeStep = 0;
+  std::vector<float> recrystallizationHistory;
+  recrystallizationHistory.push_back(0);
 
   //continue time stepping until all cells are recrystallized
-  size_t unrecrstallizedCount = 1;
-  size_t grainCount = 0;
-  size_t timeStep = 0; 
-
   while(0 != unrecrstallizedCount)
   {
     //reset count of remaining cells to recrystallize
     unrecrstallizedCount = 0;
 
-    //loop over all cells
-    for(size_t i = 0; i < numCells; i++)
-    {
-      //generate list of neighbors
-      std::vector<size_t> neighborsIndex = lattice.VonNeumann(i);
-      std::vector<Cell*> neighbors;
-      for(size_t j = 0; j < neighborsIndex.size(); j++)
-      {
-
-        neighbors.push_back(currentState->getPointer(neighborsIndex[j]));
-      }
-
-      //randomly determine if this cell can nucleate
-      bool seed = false;
-      if(numberGenerator() <= pNuc)
-        seed = true;
-
-      //compute new state
-      pWorking[i] = pCurrent[i].updateCell(neighbors, grainCount, timeStep, seed);
-      if(0 == pWorking[i].id)
-        unrecrstallizedCount++;
-    }
-
-    //increment time step and copy arrays
+    //perform time step
     timeStep++;
-    // currentState = workingCopy;
-    for(size_t i = 0; i < numCells; i++)
+  #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
+    bool doParallel = true;
+    if (doParallel == true)
     {
-      pCurrent[i] = pWorking[i];
+      tbb::parallel_for(tbb::blocked_range<size_t>(0, numCells),
+                        RecrystalizeVolumeImpl(&lattice, currentIDs->getPointer(0), workingIDs->getPointer(0), recrstTime->getPointer(0), m_Neighborhood, &unrecrstallizedCount, &timeStep, &grainCount, pNuc), tbb::auto_partitioner());
+    }
+    else
+  #endif
+    {
+      RecrystalizeVolumeImpl serial(&lattice, currentIDs->getPointer(0), workingIDs->getPointer(0), recrstTime->getPointer(0), m_Neighborhood, &unrecrstallizedCount, &timeStep, &grainCount, pNuc);
+      serial.compute(0, numCells);
     }
 
-    //update progress
-    float percent = 1.0 - static_cast<float>(unrecrstallizedCount) / numCells;
+    // swap working + current arrays
+    currentIDs.swap(workingIDs);
+
+    //compute recrstallized percent + update progress
+    float percent = 1 - (static_cast<float>(unrecrstallizedCount) / lattice.size());
     QString ss = QObject::tr("%1% recrystallized").arg(100 * percent);
+    recrystallizationHistory.push_back(percent);
     notifyStatusMessage(getHumanLabel(), ss);
   }
 
   //clean up working copy
-  workingCopy = CellArray::NullPointer();
+  workingIDs = Int32ArrayType::NullPointer();
 
-  //get cretaed data container
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(m_DataContainerName);
-
-  //get created cell attribute matricies
-  AttributeMatrix::Pointer cellAttrMat = m->getAttributeMatrix(m_CellAttributeMatrixName);
-  AttributeMatrix::Pointer cellFeatureAttrMat = m->getAttributeMatrix(m_CellFeatureAttributeMatrixName);
-
-  // Resize the Cell AttributeMatricies to have the correct Tuple Dimensions.
-  QVector<size_t> cellDims(3, 0);
-  cellDims[0] = m->getXPoints();
-  cellDims[1] = m->getYPoints();
-  cellDims[2] = m->getZPoints();
-  cellAttrMat->resizeAttributeArrays(cellDims);
-
+  //resize cell feature attribute matrix
   QVector<size_t> featureDims(1, grainCount + 1);
   cellFeatureAttrMat->resizeAttributeArrays(featureDims);
 
-  //Add cell data
-    QVector<size_t> cDims(1, 1);
-    Int32ArrayType::Pointer gid = Int32ArrayType::CreateArray(numCells, cDims, DREAM3D::CellData::FeatureIds);
-    UInt32ArrayType::Pointer tid = UInt32ArrayType::CreateArray(numCells, cDims, "RecrystallizationTime");
+  //fill active array with true (except for grain 0)
+  m_ActivePtr.lock()->initializeWithValue(true);
+  m_ActivePtr.lock()->getPointer(0)[0] = false;
 
-    //copy cell states into grain ids
-    int32_t* pGid = gid->getPointer(0);
-    uint32_t* pTid = tid->getPointer(0);
-    for(size_t i = 0; i < numCells; i++)
-    {
-      pGid[i] = pCurrent[i].id;
-      pTid[i] = pCurrent[i].updateTime;
-    }
-    
-    //add created cell arrays to attribute matrix
-    cellAttrMat->addAttributeArray(gid->getName(), gid);
-    cellAttrMat->addAttributeArray(tid->getName(), tid);
+  //fill recrystalization history
+  cDims[0] = recrystallizationHistory.size();
+  FloatArrayType::Pointer history = FloatArrayType::CreateArray(numCells, cDims, getRecrystallizationHistoryArrayName());
+  float* pHistory = history->getPointer(0);
+  for(size_t i = 0; i < recrystallizationHistory.size(); i++)
+    pHistory[i] = recrystallizationHistory[i];
+  cellEnsembleAttrMat->addAttributeArray(getRecrystallizationHistoryArrayName(), history);
 
-  //add feature data
-    BoolArrayType::Pointer aid = BoolArrayType::CreateArray(grainCount + 1, cDims, DREAM3D::FeatureData::Active);
-    aid->initializeWithValue(true);
-    aid->getPointer(0)[0] = false;
-    cellFeatureAttrMat->addAttributeArray(aid->getName(), aid);
+  //fit avrami equation parameters
+  recrystallizationHistory.pop_back();//last slot is 100% recrystalized
+  std::vector<float> x;
+  std::vector<float> y;
+  for(size_t i = 1; i < recrystallizationHistory.size(); i++)//first time step is 0% recrystallized
+  {
+    x.push_back(log(i));
+    y.push_back( log( -log(1.0 - recrystallizationHistory[i]) ) );
+  }
 
+  float sumX = 0;
+  float sumX2 = 0;
+  float sumXY = 0;
+  float sumY = 0;
+  for(size_t i = 0; i < x.size(); i++)
+  {
+    sumX += x[i];
+    sumX2 += x[i] * x[i];
+    sumXY += x[i] * y[i];
+    sumY += y[i];
+  }
+  float slope = (x.size() * sumXY - sumX * sumY) / (x.size() * sumX2 - sumX * sumX);
+  float intercept = (sumY - slope * sumX) / x.size();
+  m_Avrami[0] = exp(intercept);//k
+  m_Avrami[1] = slope;//n
 
   /* Let the GUI know we are done with this filter */
   notifyStatusMessage(getHumanLabel(), "Complete");

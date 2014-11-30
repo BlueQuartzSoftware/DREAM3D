@@ -48,6 +48,24 @@ class RecrystalizeVolume : public AbstractFilter
     DREAM3D_FILTER_PARAMETER(QString, CellFeatureAttributeMatrixName)
     Q_PROPERTY(QString CellFeatureAttributeMatrixName READ getCellFeatureAttributeMatrixName WRITE setCellFeatureAttributeMatrixName)
 
+    DREAM3D_FILTER_PARAMETER(QString, CellEnsembleAttributeMatrixName)
+    Q_PROPERTY(QString CellEnsembleAttributeMatrixName READ getCellEnsembleAttributeMatrixName WRITE setCellEnsembleAttributeMatrixName)
+
+    DREAM3D_FILTER_PARAMETER(QString, FeatureIdsArrayName)
+    Q_PROPERTY(QString FeatureIdsArrayName READ getFeatureIdsArrayName WRITE setFeatureIdsArrayName)
+
+    DREAM3D_FILTER_PARAMETER(QString, RecrystallizationTimeArrayName)
+    Q_PROPERTY(QString RecrystallizationTimeArrayName READ getRecrystallizationTimeArrayName WRITE setRecrystallizationTimeArrayName)
+
+    DREAM3D_FILTER_PARAMETER(QString, RecrystallizationHistoryArrayName)
+    Q_PROPERTY(QString RecrystallizationHistoryArrayName READ getRecrystallizationHistoryArrayName WRITE setRecrystallizationHistoryArrayName)
+
+    DREAM3D_FILTER_PARAMETER(QString, AvramiArrayName)
+    Q_PROPERTY(QString AvramiArrayName READ getAvramiArrayName WRITE setAvramiArrayName)
+
+    DREAM3D_FILTER_PARAMETER(QString, ActiveArrayName)
+    Q_PROPERTY(QString ActiveArrayName READ getActiveArrayName WRITE setActiveArrayName)
+
     DREAM3D_FILTER_PARAMETER(IntVec3_t, Dimensions)
     Q_PROPERTY(IntVec3_t Dimensions READ getDimensions WRITE setDimensions)
 
@@ -59,6 +77,9 @@ class RecrystalizeVolume : public AbstractFilter
 
     DREAM3D_FILTER_PARAMETER(float, NucleationRate)
     Q_PROPERTY(float NucleationRate READ getNucleationRate WRITE setNucleationRate)
+
+    DREAM3D_FILTER_PARAMETER(unsigned int, Neighborhood)
+    Q_PROPERTY(unsigned int Neighborhood READ getNeighborhood WRITE setNeighborhood)
 
     /* Place your input parameters here using the DREAM3D macros to declare the Filter Parameters
      * or other instance variables
@@ -178,6 +199,13 @@ class RecrystalizeVolume : public AbstractFilter
     boost::shared_ptr<NumberDistribution> m_Distribution;
     boost::shared_ptr<RandomNumberGenerator> m_RandomNumberGenerator;
     boost::shared_ptr<Generator> m_NumberGenerator;
+
+
+    DEFINE_CREATED_DATAARRAY_VARIABLE(int32_t, FeatureIds)
+    DEFINE_CREATED_DATAARRAY_VARIABLE(uint32_t, RecrystallizationTime)
+    DEFINE_CREATED_DATAARRAY_VARIABLE(bool, Active)
+    DEFINE_CREATED_DATAARRAY_VARIABLE(float, RecrystallizationHistory)
+    DEFINE_CREATED_DATAARRAY_VARIABLE(float, Avrami)
 
     RecrystalizeVolume(const RecrystalizeVolume&); // Copy Constructor Not Implemented
     void operator=(const RecrystalizeVolume&); // Operator '=' Not Implemented

@@ -39,6 +39,11 @@ namespace CellularAutomata
 			numCells = sliceSize * z;
 		}
 
+		size_t size()
+		{
+			return dims[0] * dims[1] * dims[2];
+		}
+
 		//given an (x,y,z) tuple compute the index
 		inline size_t ToIndex(size_t x, size_t y, size_t z)
 		{
