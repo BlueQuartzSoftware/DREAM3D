@@ -194,10 +194,10 @@ class InsertPrecipitatePhases : public AbstractFilter
 
     float check_sizedisterror(Precip* precip);
     void determine_clustering(size_t featureNum, int add);
-    void determine_currentRDF(size_t featureNum, int add);
+    void determine_currentRDF(size_t featureNum, int add, bool double_count);
     std::vector<float> normalizeRDF(std::vector<float> rdf, int num_bins, float stepsize, float rdfmin, size_t numPPTfeatures, float volume);
     float check_clusteringerror(int gadd, int gremove);
-    float check_RDFerror(int gadd, int gremove);
+    float check_RDFerror(int gadd, int gremove, bool double_count);
 
     float check_fillingerror(int gadd, int gremove, Int32ArrayType::Pointer featureOwnersPtr);
     void assign_voxels();

@@ -674,11 +674,10 @@ void  InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer featur
 //       int test =rdfTarget[0]->getNumberOfTuples();
        m_numRDFbins = rdfTarget[0]->getNumberOfTuples();
  //      std::vector<float> rdfTargetDist;
-       m_rdfTargetDist.resize(m_numRDFbins+2);
-       m_rdfCurrentDist.resize(m_numRDFbins+2);
+       m_rdfTargetDist.resize(m_numRDFbins+1);
+//       m_rdfCurrentDist.resize(m_numRDFbins+2);
 
        m_rdfTargetDist[0] = 0;
-       m_rdfTargetDist[m_numRDFbins+1] = 0;
 
 
        for (size_t j = 0; j < m_numRDFbins; j++)
@@ -688,6 +687,12 @@ void  InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer featur
 
         m_rdfMax = maxmin[0]->getValue(0);
         m_rdfMin = maxmin[0]->getValue(1);
+
+        float stepsize = (m_rdfMax-m_rdfMin)/m_numRDFbins;
+        float max_box_distance = sqrtf((sizex*sizex) + (sizey*sizey) + (sizez*sizez));
+
+        int32_t current_num_bins = (max_box_distance - m_rdfMin)/(stepsize);
+        m_rdfCurrentDist.resize(current_num_bins+1);
 
      }
    }
@@ -802,15 +807,22 @@ void  InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer featur
    {
      for (size_t i = firstPrecipitateFeature; i < numfeatures; i++)
      {
-       m_oldRDFerror = check_RDFerror(i, -1000);
+       m_oldRDFerror = check_RDFerror(i, -1000, false);
      }
 
+   std::ofstream testFile3;
+   testFile3.open("/Users/Shared/Data/PW_Work/OUTFILE/initial.txt");
+   for (size_t i = 0; i < m_rdfCurrentDistNorm.size(); i++)
+   {
+    testFile3 << "\n" << m_rdfCurrentDistNorm[i];
+   }
+   testFile3.close();
 
-
-
+if (true)
+{
 
   // begin swaping/moving/adding/removing features to try to improve packing
-  int totalAdjustments = static_cast<int>(1000 * ((numfeatures - firstPrecipitateFeature) - 1));
+  int totalAdjustments = static_cast<int>(100000 * ((numfeatures - firstPrecipitateFeature) - 1));
   for (int iteration = 0; iteration < totalAdjustments; ++iteration)
   {
 
@@ -885,9 +897,9 @@ void  InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer featur
 //            move_precipitate(randomfeature, xc, yc, zc);
       //      currentclusteringerror = check_clusteringerror(randomfeature, -1000);
 //            if(currentclusteringerror >= oldclusteringerror)
-      m_currentRDFerror = check_RDFerror(-1000, randomfeature);
+      m_currentRDFerror = check_RDFerror(-1000, randomfeature, true);
       move_precipitate(randomfeature, xc, yc, zc);
-      m_currentRDFerror = check_RDFerror(randomfeature, -1000);
+      m_currentRDFerror = check_RDFerror(randomfeature, -1000, true);
       if(m_currentRDFerror >= m_oldRDFerror)
       {
 //        oldfillingerror = fillingerror;
@@ -907,9 +919,9 @@ void  InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer featur
 //        currentclusteringerror = check_clusteringerror(randomfeature, -1000);
 //        oldclusteringerror = currentclusteringerror;
 
-        m_currentRDFerror = check_RDFerror(-1000, randomfeature);
+        m_currentRDFerror = check_RDFerror(-1000, randomfeature, true);
         move_precipitate(randomfeature, oldxc, oldyc, oldzc);
-        m_currentRDFerror = check_RDFerror(randomfeature, -1000);
+        m_currentRDFerror = check_RDFerror(randomfeature, -1000, true);
         m_oldRDFerror = m_currentRDFerror;
 
       }
@@ -944,9 +956,9 @@ void  InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer featur
 //      currentclusteringerror = check_clusteringerror(randomfeature, -1000);
 //      if(currentclusteringerror >= oldclusteringerror)
 
-      m_currentRDFerror = check_RDFerror(-1000, randomfeature);
+      m_currentRDFerror = check_RDFerror(-1000, randomfeature, true);
       move_precipitate(randomfeature, xc, yc, zc);
-      m_currentRDFerror = check_RDFerror(randomfeature, -1000);
+      m_currentRDFerror = check_RDFerror(randomfeature, -1000, true);
       if(m_currentRDFerror >= m_oldRDFerror)
       {
           //        oldfillingerror = fillingerror;
@@ -966,9 +978,9 @@ void  InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer featur
           //        currentclusteringerror = check_clusteringerror(randomfeature, -1000);
           //        oldclusteringerror = currentclusteringerror;
 
-                  m_currentRDFerror = check_RDFerror(-1000, randomfeature);
+                  m_currentRDFerror = check_RDFerror(-1000, randomfeature, true);
                   move_precipitate(randomfeature, oldxc, oldyc, oldzc);
-                  m_currentRDFerror = check_RDFerror(randomfeature, -1000);
+                  m_currentRDFerror = check_RDFerror(randomfeature, -1000, true);
                   m_oldRDFerror = m_currentRDFerror;
 
       }
@@ -979,6 +991,42 @@ void  InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer featur
 
 
 }
+   }
+
+//   for (size_t i = firstPrecipitateFeature; i < numfeatures; i++)
+//   {
+//     m_oldRDFerror = check_RDFerror(-1000, i, false);
+//   }
+
+//   for (size_t i = firstPrecipitateFeature; i < numfeatures; i++)
+//   {
+//     m_oldRDFerror = check_RDFerror(i, -1000, false);
+//   }
+
+   std::ofstream testFile;
+   testFile.open("/Users/Shared/Data/PW_Work/OUTFILE/current.txt");
+   for (size_t i = 0; i < m_rdfCurrentDistNorm.size(); i++)
+   {
+    testFile << "\n" << m_rdfCurrentDistNorm[i];
+   }
+   testFile.close();
+
+   std::ofstream testFile2;
+   testFile2.open("/Users/Shared/Data/PW_Work/OUTFILE/target.txt");
+   for (size_t i = 0; i < m_rdfTargetDist.size(); i++)
+   {
+    testFile2 << "\n" << m_rdfTargetDist[i];
+   }
+   testFile2.close();
+
+   std::ofstream testFile4;
+   testFile4.open("/Users/Shared/Data/PW_Work/OUTFILE/centroids1.txt");
+   for (size_t i = 1; i < numfeatures; i++)
+   {
+       testFile4 << "\n" << m_Centroids[3*i] << "\t" << m_Centroids[3*i + 1] << "\t" << m_Centroids[3*i + 2];
+   }
+   testFile4.close();
+
 
 std::cout << "Done Jumping" <<std::endl;
 }
@@ -1204,7 +1252,7 @@ float InsertPrecipitatePhases::check_clusteringerror(int gadd, int gremove)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void InsertPrecipitatePhases::determine_currentRDF(size_t gnum, int add)
+void InsertPrecipitatePhases::determine_currentRDF(size_t gnum, int add, bool double_count)
 {
 
   float x, y, z;
@@ -1238,19 +1286,28 @@ void InsertPrecipitatePhases::determine_currentRDF(size_t gnum, int add)
       r = sqrtf((x - xn) * (x - xn) + (y - yn) * (y - yn) + (z - zn) * (z - zn));
 
 
+
       rdfBin = (r-m_rdfMin)/stepsize;
 
       if (r < m_rdfMin) { rdfBin = -1;}
 
-      if (rdfBin >= m_numRDFbins) {rdfBin = m_numRDFbins;}
+      //if (rdfBin >= m_numRDFbins) {rdfBin = m_numRDFbins;}
+      if (double_count == true)
+      {
+        m_rdfCurrentDist[rdfBin+1] += 2*add;
+      }
+      else if (double_count == false)
+      {
+        m_rdfCurrentDist[rdfBin+1] += add;
+      }
 
-      m_rdfCurrentDist[rdfBin+1] += add;
       numPPTfeatures += 1;
     }
   }
 
+    int32_t current_num_bins = m_rdfCurrentDist.size();
 
-    m_rdfCurrentDistNorm = normalizeRDF(m_rdfCurrentDist, m_numRDFbins, stepsize, m_rdfMin, numPPTfeatures, totalvol);
+    m_rdfCurrentDistNorm = normalizeRDF(m_rdfCurrentDist, current_num_bins, stepsize, m_rdfMin, numPPTfeatures, totalvol);
 
 
 //  std::cout << "test" << std::endl;
@@ -1267,7 +1324,7 @@ std::vector<float> InsertPrecipitatePhases::normalizeRDF(std::vector<float> rdf,
     float r1;
     float r2;
     float oneovervolume = 1.0f/volume;
-    float finiteAdjFactor = 0.3;
+    float finiteAdjFactor = .5;
 
     r1 = 0*finiteAdjFactor;
     r2 = rdfmin*finiteAdjFactor;
@@ -1292,7 +1349,7 @@ std::vector<float> InsertPrecipitatePhases::normalizeRDF(std::vector<float> rdf,
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-float InsertPrecipitatePhases::check_RDFerror(int gadd, int gremove)
+float InsertPrecipitatePhases::check_RDFerror(int gadd, int gremove, bool double_count)
 {
 
   float rdferror;
@@ -1302,11 +1359,11 @@ float InsertPrecipitatePhases::check_RDFerror(int gadd, int gremove)
   {
     if(gadd > 0)
     {
-      determine_currentRDF(gadd, 1);
+      determine_currentRDF(gadd, 1, double_count);
     }
     if(gremove > 0)
     {
-      determine_currentRDF(gremove, -1);
+      determine_currentRDF(gremove, -1, double_count);
     }
   }
   compare_1Ddistributions(m_rdfTargetDist, m_rdfCurrentDistNorm, bhattdist);
@@ -1324,18 +1381,25 @@ void InsertPrecipitatePhases::compare_1Ddistributions(std::vector<float> array1,
   float sum_array1 = 0;
   float sum_array2 = 0;
 
-  for (std::vector<float>::iterator j=array1.begin(); j!=array1.end(); j++)
-  {sum_array1 += *j;}
+//  for (std::vector<float>::iterator j=array1.begin(); j!=array1.end(); j++)
+//  {sum_array1 += *j;}
 
-  for (std::vector<float>::iterator j=array2.begin(); j!=array2.end(); j++)
-  {sum_array2 += *j;}
+//  for (std::vector<float>::iterator j=array2.begin(); j!=array2.end(); j++)
+//  {sum_array2 += *j;}
 
+  for (size_t i = 0; i < array1.size(); i++)
+  {
+      sum_array1 = sum_array1 + array1[i];
+      sum_array2 = sum_array2 + array2[i];
+
+  }
 
 
   for (size_t i = 0; i < array1.size(); i++)
   {
     array1[i] = array1[i]/sum_array1;
     array2[i] = array2[i]/sum_array2;
+
     bhattdist = bhattdist + sqrt((array1[i] * array2[i]));
   }
 }
@@ -2184,6 +2248,14 @@ void InsertPrecipitatePhases::cleanup_features()
   {
     if(m_FeatureIds[i] > 0) { m_CellPhases[i] = m_FeaturePhases[m_FeatureIds[i]]; }
   }
+
+  std::ofstream testFile5;
+  testFile5.open("/Users/Shared/Data/PW_Work/OUTFILE/centroids2.txt");
+  for (size_t i = 1; i < numFeatures; i++)
+  {
+      testFile5 << "\n" << m_Centroids[3*i] << "\t" << m_Centroids[3*i + 1] << "\t" << m_Centroids[3*i + 2];
+  }
+  testFile5.close();
 }
 
 // -----------------------------------------------------------------------------
