@@ -13,7 +13,7 @@ START_FILTER_GROUP(${CellularAutomata_BINARY_DIR} "${_filterGroupName}" "Cellula
 #---------
 # List your public filters here
 set(_PublicFilters
-  RecrystalizeVolume
+ # RecrystalizeVolume
 
 )
 
