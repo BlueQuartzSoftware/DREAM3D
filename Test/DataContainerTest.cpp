@@ -626,10 +626,13 @@ void TestDataArrayPath()
   QStringList strList = dap2.getAsStringList();
 
   QVector<QString> strVec = dap0.getAsVector();
+  DREAM3D_REQUIRE(strVec.size() > 0)
 
   bool isEmpty = dap1.isEmpty();
+  DREAM3D_REQUIRE_EQUAL(isEmpty, false)
 
   bool isValid = dap3.isValid();
+  DREAM3D_REQUIRE_EQUAL(isValid, true)
 
   QStringList split = dap2.split();
 

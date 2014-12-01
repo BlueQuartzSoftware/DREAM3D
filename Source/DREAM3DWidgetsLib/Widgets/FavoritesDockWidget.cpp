@@ -110,6 +110,20 @@ filterLibraryTree->setStyleSheet(css);
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void FavoritesDockWidget::configureFilterLibraryTree()
+{
+  FilterLibraryTreeWidget* filterLibraryTree = getFilterLibraryTreeWidget();
+  if(filterLibraryTree) {
+
+    QItemSelectionModel* selectionModel = filterLibraryTree->selectionModel();
+    QModelIndex index = selectionModel->model()->index(0,0);
+    filterLibraryTree->setCurrentIndex(index);
+  }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 FilterLibraryTreeWidget* FavoritesDockWidget::getFilterLibraryTreeWidget()
 {
   return filterLibraryTree;

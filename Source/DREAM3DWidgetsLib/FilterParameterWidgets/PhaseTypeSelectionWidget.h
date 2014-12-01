@@ -82,17 +82,36 @@ class DREAM3DWidgetsLib_EXPORT PhaseTypeSelectionWidget : public FilterParameter
     */
     void setupGui();
 
+    /**
+     * @brief checkStringValues
+     * @param current
+     * @param filt
+     * @return
+     */
+    QString checkStringValues(QString current, QString filtDcName);
 
   public slots:
     void beforePreflight();
     void afterPreflight();
     void filterNeedsInputParameters(AbstractFilter* filter);
 
-    void comboboxChanged(int index);
+    void phaseTypeComboBoxChanged(int index);
 
+
+    void on_dataContainerList_currentIndexChanged(int index);
+
+    void on_attributeMatrixList_currentIndexChanged(int index);
 
   protected:
-    void updateComboBoxes();
+    void updatePhaseComboBoxes();
+
+    void populateComboBoxes();
+    void populateAttributeMatrixList();
+    DataContainerArrayProxy generateDCAProxy();
+    void setSelectedPath(QString dcName, QString attrMatName, QString attrArrName);
+    void selectDefaultPath();
+    void resetPhaseComboBoxes();
+
 
   signals:
     void errorSettingFilterParameter(const QString& msg);
@@ -101,9 +120,10 @@ class DREAM3DWidgetsLib_EXPORT PhaseTypeSelectionWidget : public FilterParameter
   private:
     bool              m_DidCausePreflight;
 
-    QList<QLabel*>              m_PhaseTypeLabels;
-    QList<QComboBox*>           m_PhaseTypeCombos;
+//    QList<QLabel*>              m_PhaseTypeLabels;
+//    QList<QComboBox*>           m_PhaseTypeCombos;
 
+    DataContainerArrayProxy m_DcaProxy;
 
     PhaseTypeSelectionWidget(const PhaseTypeSelectionWidget&); // Copy Constructor Not Implemented
     void operator=(const PhaseTypeSelectionWidget&); // Operator '=' Not Implemented

@@ -162,8 +162,8 @@ bool BrandedInitializer::initialize(int argc, char* argv[])
 // -----------------------------------------------------------------------------
 QVector<DREAM3DPluginInterface*> BrandedInitializer::loadPlugins()
 {
-  QStringList m_PluginDirs;
-  m_PluginDirs << qApp->applicationDirPath();
+  QStringList pluginDirs;
+  pluginDirs << qApp->applicationDirPath();
 
   QDir aPluginDir = QDir(qApp->applicationDirPath());
   qDebug() << "Loading DREAM3D Plugins....";
@@ -174,7 +174,7 @@ QVector<DREAM3DPluginInterface*> BrandedInitializer::loadPlugins()
   if (aPluginDir.cd("Plugins") )
   {
     thePath = aPluginDir.absolutePath();
-    m_PluginDirs << thePath;
+    pluginDirs << thePath;
   }
 #elif defined(Q_OS_MAC)
   // Look to see if we are inside an .app package or inside the 'tools' directory
@@ -183,7 +183,7 @@ QVector<DREAM3DPluginInterface*> BrandedInitializer::loadPlugins()
     aPluginDir.cdUp();
     thePath = aPluginDir.absolutePath() + "/Plugins";
     qDebug() << "  Adding Path " << thePath;
-    m_PluginDirs << thePath;
+    pluginDirs << thePath;
     aPluginDir.cdUp();
     aPluginDir.cdUp();
     // We need this because Apple (in their infinite wisdom) changed how the current working directory is set in OS X 10.9 and above. Thanks Apple.
@@ -201,7 +201,7 @@ QVector<DREAM3DPluginInterface*> BrandedInitializer::loadPlugins()
   // aPluginDir.cd("Plugins");
   thePath = aPluginDir.absolutePath() + "/Plugins";
   qDebug() << "  Adding Path " << thePath;
-  m_PluginDirs << thePath;
+  pluginDirs << thePath;
 
   // This is here for Xcode compatibility
 #ifdef CMAKE_INTDIR
@@ -215,7 +215,8 @@ QVector<DREAM3DPluginInterface*> BrandedInitializer::loadPlugins()
   if (aPluginDir.cd("Plugins"))
   {
     thePath = aPluginDir.absolutePath();
-    m_PluginDirs << thePath;
+    pluginDirs << thePath;
+    aPluginDir.cdUp(); // Move back up a directory levels
   }
   // Now try moving up a directory which is what should happen when running from a
   // proper distribution of DREAM3D
@@ -225,13 +226,15 @@ QVector<DREAM3DPluginInterface*> BrandedInitializer::loadPlugins()
   if (aPluginDir.cd("Plugins"))
   {
     thePath = aPluginDir.absolutePath();
-    m_PluginDirs << thePath;
+    pluginDirs << thePath;
   }
 #endif
 
+  int dupes = pluginDirs.removeDuplicates();
+  qDebug() << "Removed " << dupes << " duplicate Plugin Paths";
   QStringList pluginFilePaths;
 
-  foreach (QString pluginDirString, m_PluginDirs)
+  foreach (QString pluginDirString, pluginDirs)
   {
     qDebug() << "Plugin Directory being Searched: " << pluginDirString;
     aPluginDir = QDir(pluginDirString);

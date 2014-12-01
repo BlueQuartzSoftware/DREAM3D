@@ -86,6 +86,8 @@ class TesselateFarFieldGrains : public AbstractFilter
     DREAM3D_FILTER_PARAMETER(QString, CellPhasesArrayName)
     Q_PROPERTY(QString CellPhasesArrayName READ getCellPhasesArrayName WRITE setCellPhasesArrayName)
 
+    DREAM3D_FILTER_PARAMETER(QString, SlabIdArrayName)
+
     DREAM3D_FILTER_PARAMETER(QString, FeaturePhasesArrayName)
     Q_PROPERTY(QString FeaturePhasesArrayName READ getFeaturePhasesArrayName WRITE setFeaturePhasesArrayName)
 
@@ -162,6 +164,7 @@ class TesselateFarFieldGrains : public AbstractFilter
     TesselateFarFieldGrains();
 
     void load_features();
+    void merge_twins();
     void assign_voxels();
     void assign_gaps_only();
     void assign_orientations();
@@ -177,6 +180,7 @@ class TesselateFarFieldGrains : public AbstractFilter
 
     // Feature Data - make sure these are all initialized to NULL in the constructor
     DEFINE_CREATED_DATAARRAY_VARIABLE(int32_t, FeaturePhases)
+    DEFINE_CREATED_DATAARRAY_VARIABLE(int32_t, SlabId)
     DEFINE_CREATED_DATAARRAY_VARIABLE(float, FeatureEulerAngles)
     DEFINE_CREATED_DATAARRAY_VARIABLE(float, ElasticStrains)
     DEFINE_CREATED_DATAARRAY_VARIABLE(float, Centroids)

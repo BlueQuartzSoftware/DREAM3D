@@ -63,7 +63,7 @@ void CopyAttributeArray::setupFilterParameters()
     FilterParameterVector parameters;
     parameters.push_back(FilterParameter::New("Array to Copy", "SelectedArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getSelectedArrayPath(), false));
     parameters.push_back(FilterParameter::New("New Array Name", "NewArrayName", FilterParameterWidgetType::StringWidget, getNewArrayName(), false));
-    
+
     setFilterParameters(parameters);
 }
 
@@ -96,7 +96,7 @@ int CopyAttributeArray::writeFilterParameters(AbstractFilterParametersWriter* wr
 void CopyAttributeArray::dataCheck()
 {
     setErrorCondition(0);
-    
+
     if(m_NewArrayName.isEmpty() == true)
     {
         setErrorCondition(-11009);
@@ -104,7 +104,7 @@ void CopyAttributeArray::dataCheck()
         notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
         return;
     }
-    
+
     if (m_SelectedArrayPath.isEmpty() == true)
     {
         setErrorCondition(-11010);
@@ -117,7 +117,7 @@ void CopyAttributeArray::dataCheck()
         QString dcName = m_SelectedArrayPath.getDataContainerName();
         QString amName = m_SelectedArrayPath.getAttributeMatrixName();
         QString daName = m_SelectedArrayPath.getDataArrayName();
-        
+
         DataContainer::Pointer dc = getDataContainerArray()->getDataContainer(dcName);
         if(NULL == dc.get())
         {
@@ -126,7 +126,7 @@ void CopyAttributeArray::dataCheck()
             notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
             return;
         }
-        
+
         AttributeMatrix::Pointer attrMat = dc->getAttributeMatrix(amName);
         if(NULL == attrMat.get())
         {
@@ -135,7 +135,7 @@ void CopyAttributeArray::dataCheck()
             notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
             return;
         }
-        
+
         // We the AttributeMatrix, now lets try to get the AttributeArray object and copy it if it exists
         IDataArray::Pointer dataArray = attrMat->getAttributeArray(daName);
         if(NULL == dataArray.get() )
@@ -148,7 +148,7 @@ void CopyAttributeArray::dataCheck()
         IDataArray::Pointer p = attrMat->getAttributeArray(daName);
         IDataArray::Pointer pNew = p->deepCopy();
         int err = attrMat->addAttributeArray(m_NewArrayName, pNew);
-        
+
         if(0 != err)
         {
             setErrorCondition(err);
@@ -178,11 +178,11 @@ void CopyAttributeArray::preflight()
 void CopyAttributeArray::execute()
 {
     setErrorCondition(0);
-    
+
     dataCheck(); // calling the dataCheck will copy the array, so nothing is required here
-    int err = getErrorCondition();
+
     if(getErrorCondition() < 0) { return; }
-    
+
     notifyStatusMessage(getHumanLabel(), "Complete");
 }
 // -----------------------------------------------------------------------------

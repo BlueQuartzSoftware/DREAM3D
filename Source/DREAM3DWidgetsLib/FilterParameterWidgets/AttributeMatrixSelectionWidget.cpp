@@ -47,6 +47,19 @@
 #define DATA_CONTAINER_LEVEL 0
 #define ATTRIBUTE_MATRIX_LEVEL 1
 #define ATTRIBUTE_ARRAY_LEVEL 2
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AttributeMatrixSelectionWidget::AttributeMatrixSelectionWidget(QWidget* parent) :
+  FilterParameterWidget(NULL, NULL, parent),
+  m_DidCausePreflight(false)
+{
+  setupUi(this);
+  setupGui();
+}
+
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -69,7 +82,10 @@ AttributeMatrixSelectionWidget::~AttributeMatrixSelectionWidget()
 // -----------------------------------------------------------------------------
 void AttributeMatrixSelectionWidget::setupGui()
 {
-
+  if(getFilter() == NULL)
+  {
+    return;
+  }
   // Catch when the filter is about to execute the preflight
   connect(getFilter(), SIGNAL(preflightAboutToExecute()),
           this, SLOT(beforePreflight()));

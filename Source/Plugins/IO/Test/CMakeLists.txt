@@ -76,5 +76,5 @@ endmacro()
 
 
 #ADD_DREAM3D_TEST_2(DxIOTest  "DREAM3DLib" GenerateFeatureIds.h)
-#ADD_DREAM3D_TEST(PhIOTest  "DREAM3DLib")
+ADD_DREAM3D_TEST_2(PhIOTest  "DREAM3DLib" GenerateFeatureIds.h)
 

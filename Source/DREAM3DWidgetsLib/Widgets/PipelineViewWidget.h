@@ -45,6 +45,7 @@
 #include <QtGui/QVBoxLayout>
 #include <QtGui/QTextEdit>
 #include <QtGui/QTableWidget>
+#include <QtGui/QStatusBar>
 
 
 #include "DREAM3DLib/Common/PipelineMessage.h"
@@ -214,6 +215,12 @@ class DREAM3DWidgetsLib_EXPORT PipelineViewWidget : public QFrame
     void setFilterBeingDragged(PipelineFilterWidget* w);
 
     /**
+     * @brief setFilterBeingDragged
+     * @param w
+     */
+    void setStatusBar(QStatusBar* statusBar);
+    
+    /**
      * @brief preflightPipeline
      */
     void preflightPipeline();
@@ -286,6 +293,7 @@ class DREAM3DWidgetsLib_EXPORT PipelineViewWidget : public QFrame
     QWidget*                  m_InputParametersWidget;
     QObject*                  m_PipelineMessageObserver;
     QMenu                     m_Menu;
+    QStatusBar*               m_StatusBar;
     QList<QAction*>           m_MenuActions;
 
     PipelineViewWidget(const PipelineViewWidget&); // Copy Constructor Not Implemented

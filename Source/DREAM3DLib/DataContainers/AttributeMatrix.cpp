@@ -391,6 +391,10 @@ AttributeMatrix::Pointer AttributeMatrix::deepCopy()
   {
     IDataArray::Pointer d = iter.value();
     IDataArray::Pointer new_d = d->deepCopy();
+      if (new_d.get() == NULL)
+      {
+          return AttributeMatrix::NullPointer();
+      }
     newAttrMat->addAttributeArray(new_d->getName(), new_d);
   }
 

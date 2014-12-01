@@ -248,6 +248,7 @@ TesselateFarFieldGrains::TesselateFarFieldGrains() :
   m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
   m_CellPhasesArrayName(DREAM3D::CellData::Phases),
   m_FeaturePhasesArrayName(DREAM3D::FeatureData::Phases),
+  m_SlabIdArrayName("BoxBeamID"),
   m_FeatureEulerAnglesArrayName(DREAM3D::FeatureData::EulerAngles),
   m_ElasticStrainsArrayName(DREAM3D::FeatureData::ElasticStrains),
   m_CentroidsArrayName(DREAM3D::FeatureData::Centroids),
@@ -263,6 +264,7 @@ TesselateFarFieldGrains::TesselateFarFieldGrains() :
   m_MaskArrayName(DREAM3D::CellData::GoodVoxels),
   m_Mask(NULL),
   m_FeaturePhases(NULL),
+  m_SlabId(NULL),
   m_Centroids(NULL),
   m_Volumes(NULL),
   m_AxisLengths(NULL),
@@ -368,6 +370,8 @@ void TesselateFarFieldGrains::updateFeatureInstancePointers()
 
   if( NULL != m_FeaturePhasesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_FeaturePhases = m_FeaturePhasesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  if( NULL != m_SlabIdPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  { m_SlabId = m_SlabIdPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   if( NULL != m_EquivalentDiametersPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_EquivalentDiameters = m_EquivalentDiametersPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   if( NULL != m_VolumesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
@@ -438,6 +442,10 @@ void TesselateFarFieldGrains::dataCheck()
   m_FeaturePhasesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(this,  tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_FeaturePhasesPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_FeaturePhases = m_FeaturePhasesPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+  tempPath.update(getOutputCellAttributeMatrixName().getDataContainerName(), getOutputCellFeatureAttributeMatrixName(), getSlabIdArrayName() );
+  m_SlabIdPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(this,  tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if( NULL != m_SlabIdPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  { m_SlabId = m_SlabIdPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
   tempPath.update(getOutputCellAttributeMatrixName().getDataContainerName(), getOutputCellFeatureAttributeMatrixName(), getEquivalentDiametersArrayName() );
   m_EquivalentDiametersPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this,  tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_EquivalentDiametersPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
@@ -590,9 +598,17 @@ void  TesselateFarFieldGrains::load_features()
                               m_FeatureInputFileListInfo.FileSuffix, m_FeatureInputFileListInfo.FileExtension,
                               m_FeatureInputFileListInfo.PaddingDigits);  std::ifstream inFile;
 
+  int slabCount = 0;
   size_t currentFeature = 1;
+  size_t xDim, yDim, zDim;
+  float xRes, yRes, zRes;
+  m->getDimensions(xDim, yDim, zDim);
+  m->getResolution(xRes, yRes, zRes);
+  float xShift = xRes*float(xDim/2.0);
+  float yShift = yRes*float(yDim/2.0);
   for (QVector<QString>::iterator filepath = fileList.begin(); filepath != fileList.end(); ++filepath)
   {
+    slabCount++;
     QString fName = *filepath;
     QString ss = QObject::tr("Importing file %1").arg(fName);
     notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
@@ -608,11 +624,12 @@ void  TesselateFarFieldGrains::load_features()
     // variable for holding meta data
     int numPhases = 1;
     int numFeatures;
+    unsigned int cStruct = Ebsd::CrystalStructure::UnknownCrystalStructure;
     float beamCenter, beamThickness, globalZPos;
-    std::string dummyStr, phaseName, crystruct;
+    std::string keywordStr, phaseName, crystruct;
     float aRef, bRef, cRef, alphaRef, betaRef, gammaRef;
 
-    inFile >> dummyStr >> numFeatures;
+    inFile >> keywordStr >> numFeatures;
     if (0 == numFeatures)
     {
       notifyErrorMessage(getHumanLabel(), "The number of features is Zero and should be greater than Zero", -600);
@@ -621,20 +638,25 @@ void  TesselateFarFieldGrains::load_features()
     cellFeatureAttrMat->setTupleDimensions(tDims);
     updateFeatureInstancePointers();
 
-    inFile >> dummyStr >> beamCenter;
-    inFile >> dummyStr >> beamThickness;
-    inFile >> dummyStr >> globalZPos;
+    inFile >> keywordStr >> beamCenter;
+    inFile >> keywordStr >> beamThickness;
+    inFile >> keywordStr >> globalZPos;
+    inFile >> keywordStr >> numPhases;
 
-    bool keepGoing = true;
-    while(keepGoing == true)
+    tDims[0] = numPhases+1;
+    cellEnsembleAttrMat->setTupleDimensions(tDims);
+    updateEnsembleInstancePointers();
+    for(int i = 1; i <= numPhases; i++)
     {
-      keepGoing = false;
-      inFile >> dummyStr >> phaseName >> crystruct >> aRef >> bRef >> cRef >> alphaRef >> betaRef >> gammaRef;
-      numPhases++;
-      tDims[0] = numPhases;
-      cellEnsembleAttrMat->setTupleDimensions(tDims);
-      updateEnsembleInstancePointers();
-      m_CrystalStructures[numPhases=1] = Ebsd::CrystalStructure::Cubic_High;
+      inFile >> phaseName >> crystruct >> aRef >> bRef >> cRef >> alphaRef >> betaRef >> gammaRef;
+      if(crystruct.compare("Cubic") == 0) cStruct = Ebsd::CrystalStructure::Cubic_High;
+      else if(crystruct.compare("Hexagonal") == 0) cStruct = Ebsd::CrystalStructure::Hexagonal_High;
+      else if(crystruct.compare("Tetragonal") == 0) cStruct = Ebsd::CrystalStructure::Tetragonal_High;
+      else if(crystruct.compare("Orthorhombic") == 0) cStruct = Ebsd::CrystalStructure::OrthoRhombic;
+      else if(crystruct.compare("Trigonal") == 0) cStruct = Ebsd::CrystalStructure::Trigonal_High;
+      else if(crystruct.compare("Monoclinic") == 0) cStruct = Ebsd::CrystalStructure::Monoclinic;
+      else if(crystruct.compare("Triclinic") == 0) cStruct = Ebsd::CrystalStructure::Triclinic;
+      m_CrystalStructures[i] = cStruct;
     }
 
     size_t fId;
@@ -667,11 +689,13 @@ void  TesselateFarFieldGrains::load_features()
     {
       inFile >> fId >> phase >> mat[0][0] >> mat[0][1] >> mat[0][2] >> mat[1][0] >> mat[1][1] >> mat[1][2] >> mat[2][0] >> mat[2][1] >> mat[2][2] >> xC >> yC >> zC >> a >> b >> c >> alpha >> beta >> gamma >> dummy1 >> dummy2 >> dummy3 >> eqRad >> conf;
 
-      if(fabs(zC-beamCenter) <= (beamThickness/2.0))
+//      if(fabs(zC-beamCenter) <= (beamThickness/2.0))
       {
-        m_Centroids[3* currentFeature + 0] = xC;
-        m_Centroids[3* currentFeature + 1] = yC;
-        m_Centroids[3* currentFeature + 2] = zC + globalZPos;
+        m_SlabId[currentFeature] = slabCount;
+
+        m_Centroids[3* currentFeature + 0] = xC + xShift;
+        m_Centroids[3* currentFeature + 1] = yC + yShift;
+        m_Centroids[3* currentFeature + 2] = zC + (globalZPos-beamCenter);
 
         vol = fourThirds * DREAM3D::Constants::k_Pi * eqRad * eqRad * eqRad;
         m_Volumes[currentFeature] = vol;
@@ -720,6 +744,13 @@ void  TesselateFarFieldGrains::load_features()
   }
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void TesselateFarFieldGrains::merge_twins()
+{
+  
+}
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
