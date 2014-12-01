@@ -90,7 +90,7 @@ void FindFeatureReferenceMisorientations::setupFilterParameters()
 {
   FilterParameterVector parameters;
   {
-    ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New();
+    LinkedChoicesFilterParameter::Pointer parameter = LinkedChoicesFilterParameter::New();
     parameter->setHumanLabel("Reference Orientation");
     parameter->setPropertyName("ReferenceOrientation");
     parameter->setWidgetType(FilterParameterWidgetType::ChoiceWidget);
@@ -98,6 +98,10 @@ void FindFeatureReferenceMisorientations::setupFilterParameters()
     choices.push_back("Feature's Average Orientation");
     choices.push_back("Orientation at Feature's Centroid");
     parameter->setChoices(choices);
+    QStringList linkedProps;
+    linkedProps << "GBEuclideanDistancesArrayPath" << "AvgQuatsArrayPath";
+    parameter->setLinkedProperties(linkedProps);
+    parameter->setEditable(false);
     parameters.push_back(parameter);
   }
   parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
@@ -105,8 +109,8 @@ void FindFeatureReferenceMisorientations::setupFilterParameters()
   parameters.push_back(FilterParameter::New("Cell Phases", "CellPhasesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getCellPhasesArrayPath(), true, ""));
   parameters.push_back(FilterParameter::New("Crystal Structures", "CrystalStructuresArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getCrystalStructuresArrayPath(), true, ""));
   parameters.push_back(FilterParameter::New("Quats", "QuatsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getQuatsArrayPath(), true, ""));
-  parameters.push_back(FilterParameter::New("AvgQuats", "AvgQuatsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getAvgQuatsArrayPath(), true, ""));
-  parameters.push_back(FilterParameter::New("GBEuclideanDistances", "GBEuclideanDistancesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getGBEuclideanDistancesArrayPath(), true, ""));
+  parameters.push_back(FilterParameter::New("AvgQuats", "AvgQuatsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getAvgQuatsArrayPath(), true, "", 0));
+  parameters.push_back(FilterParameter::New("GBEuclideanDistances", "GBEuclideanDistancesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getGBEuclideanDistancesArrayPath(), true, "", 1));
   parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
   parameters.push_back(FilterParameter::New("FeatureAvgMisorientations", "FeatureAvgMisorientationsArrayName", FilterParameterWidgetType::StringWidget, getFeatureAvgMisorientationsArrayName(), true, ""));
   parameters.push_back(FilterParameter::New("FeatureReferenceMisorientations", "FeatureReferenceMisorientationsArrayName", FilterParameterWidgetType::StringWidget, getFeatureReferenceMisorientationsArrayName(), true, ""));
