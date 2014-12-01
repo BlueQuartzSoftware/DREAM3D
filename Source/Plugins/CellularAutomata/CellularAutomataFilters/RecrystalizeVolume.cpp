@@ -15,14 +15,16 @@
 
 #include <QtCore/QString>
 
+#include "DREAM3DLib/Utilities/DREAM3DRandom.h"
 #include "CellularAutomata/CellularAutomataConstants.h"
 
 class RecrystalizeVolumeImpl
 {
   public:
     static const int VON_NEUMAN = 0;
-    static const int MOORE = 1;
-    static const int SEVEN_CELL = 2;
+    static const int EIGHT_CELL = 1;
+    static const int TWENTY_CELL = 2;
+    static const int MOORE = 3;
 
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
     RecrystalizeVolumeImpl(CellularAutomata::Lattice* cellLattice, int32_t* currentGrainIDs, int32_t* workingGrainIDs, uint32_t* updateTime, int neighborhoodType, tbb::atomic<size_t>* counter, uint32_t* time, tbb::atomic<int32_t>* grainCount, float nucleationRate) :
@@ -42,7 +44,7 @@ class RecrystalizeVolumeImpl
 
     virtual ~RecrystalizeVolumeImpl() {}
 
-    inline void computeBase(size_t index, std::vector<size_t>::iterator begin, std::vector<size_t>::iterator end) const
+    inline void computeBase(size_t index, std::vector<size_t>::iterator begin, std::vector<size_t>::iterator end, DREAM3DRandom* generator) const
     {
       //check if any neighbors are recrystallized
       std::vector<size_t> goodNeighbors;
@@ -56,7 +58,9 @@ class RecrystalizeVolumeImpl
       {
         //if no neighbors are recrystalized, allow random chance to create nucluie
         float seed = static_cast<float>(rand()) / RAND_MAX;
-        if(seed <= m_nucleationRate)
+      
+        // if(generator.genrand_real1() <= m_nucleationRate)
+        if(generator->genrand_real1() <= m_nucleationRate)
         {
           m_workingIDs[index] = m_grainCount->fetch_and_increment() + 1;
           m_updateTime[index] = *m_time;
@@ -70,13 +74,13 @@ class RecrystalizeVolumeImpl
       else
       {
         //if neighbors are recrystallized, choose one at random to join
-        size_t neighbor = rand() % goodNeighbors.size();
+        size_t neighbor = static_cast<size_t>(generator->genrand_real2() * goodNeighbors.size());
         m_workingIDs[index] = m_currentIDs[goodNeighbors[neighbor]]; 
         m_updateTime[index] = *m_time;
       }        
     }
 
-    void computeVonNeuman(size_t start, size_t end) const
+    void computeVonNeuman(size_t start, size_t end, DREAM3DRandom* generator) const
     {
       for (size_t i = start; i < end; i++)
       {
@@ -89,11 +93,11 @@ class RecrystalizeVolumeImpl
 
         //otherwise get cell neighbors and determine next state
         std::vector<size_t> neighborList = m_lattice->VonNeumann(i);
-        computeBase(i, neighborList.begin(), neighborList.end());
+        computeBase(i, neighborList.begin(), neighborList.end(), generator);
       }
     }
 
-    void computeMoore(size_t start, size_t end) const
+    void computeMoore(size_t start, size_t end, DREAM3DRandom* generator) const
     {
       for (size_t i = start; i < end; i++)
       {
@@ -106,11 +110,11 @@ class RecrystalizeVolumeImpl
 
         //otherwise get cell neighbors and determine next state
         std::vector<size_t> neighborList = m_lattice->Moore(i);
-        computeBase(i, neighborList.begin(), neighborList.end());
+        computeBase(i, neighborList.begin(), neighborList.end(), generator);
       }
     }
 
-    void compute7Cell(size_t start, size_t end) const
+    void compute8Cell(size_t start, size_t end, DREAM3DRandom* generator) const
     {
       for (size_t i = start; i < end; i++)
       {
@@ -122,43 +126,49 @@ class RecrystalizeVolumeImpl
         }
 
         //otherwise get cell neighbors and determine next state
-        std::vector<size_t> neighborList;
-        switch(rand() % 4)
+        std::vector<size_t> neighborList = m_lattice->EightCell(i, static_cast<size_t>(4 * generator->genrand_real2()));
+        computeBase(i, neighborList.begin(), neighborList.end(), generator);
+      }
+    }
+
+    void compute20Cell(size_t start, size_t end, DREAM3DRandom* generator) const
+    {
+      for (size_t i = start; i < end; i++)
+      {
+        //don't change cells that are already recrystallized
+        if(0 != m_currentIDs[i])
         {
-          case 0:
-            neighborList = m_lattice->SevenCellA(i);
-            break;
-
-          case 1:
-            neighborList = m_lattice->SevenCellB(i);
-            break;
-
-          case 2:
-            neighborList = m_lattice->SevenCellC(i);
-            break;
-
-          case 3:
-            neighborList = m_lattice->SevenCellD(i);
-            break;
+          m_workingIDs[i] = m_currentIDs[i];
+          continue;
         }
-        computeBase(i, neighborList.begin(), neighborList.end());
+
+        //otherwise get cell neighbors and determine next state
+        std::vector<size_t> neighborList = m_lattice->TwentyCell(i, static_cast<size_t>(4 * generator->genrand_real2()));
+        computeBase(i, neighborList.begin(), neighborList.end(), generator);
       }
     }
 
     void compute(size_t start, size_t end) const
     {
+      //create random number generator + initialized
+      DREAM3DRandom generator;
+      generator.init_genrand(rand());
       switch(m_neighborhood)
       {
         case VON_NEUMAN:
-          computeVonNeuman(start, end);
+          computeVonNeuman(start, end, &generator);
           break;
 
         case MOORE:
-          computeMoore(start, end);
+          computeMoore(start, end, &generator);
           break;
 
-        case SEVEN_CELL:
-          compute7Cell(start, end);
+        case EIGHT_CELL:
+          compute8Cell(start, end, &generator);
+          break;
+
+        case TWENTY_CELL:
+          compute20Cell(start, end, &generator);
           break;
       }
     }
@@ -185,7 +195,6 @@ class RecrystalizeVolumeImpl
   #endif
     uint32_t* m_time;
     float m_nucleationRate;
-
 };
 
 #define INIT_SYNTH_VOLUME_CHECK(var, errCond) \
@@ -200,7 +209,7 @@ RecrystalizeVolume::RecrystalizeVolume() :
   m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
   m_CellFeatureAttributeMatrixName(DREAM3D::Defaults::CellFeatureAttributeMatrixName),
   m_CellEnsembleAttributeMatrixName(DREAM3D::Defaults::CellEnsembleAttributeMatrixName),
-  m_NucleationRate(0.0001),
+  m_NucleationRate(0.0001f),
   m_Neighborhood(0),
   m_FeatureIds(NULL),
   m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
@@ -249,8 +258,9 @@ void RecrystalizeVolume::setupFilterParameters()
     parameter->setWidgetType(FilterParameterWidgetType::ChoiceWidget);
     QVector<QString> choices;
     choices.push_back("Von Neumann");
+    choices.push_back("'8 cell'");
+    choices.push_back("'20 cell'");
     choices.push_back("Moore");
-    choices.push_back("'7 (9) cell'");
     parameter->setChoices(choices);
     parameter->setAdvanced(false);
     parameters.push_back(parameter);
@@ -442,6 +452,8 @@ void RecrystalizeVolume::execute()
   if(getErrorCondition() < 0) { return; }
   setErrorCondition(0);
 
+  //initialize random number generator
+  srand(static_cast<size_t>( QDateTime::currentMSecsSinceEpoch() ) );
 
   //get cretaed data container
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(m_DataContainerName);
@@ -457,13 +469,6 @@ void RecrystalizeVolume::execute()
   cellDims[1] = m->getYPoints();
   cellDims[2] = m->getZPoints();
   cellAttrMat->resizeAttributeArrays(cellDims);
-
-  //initialize random number generator
-  m_Distribution = boost::shared_ptr<NumberDistribution>(new NumberDistribution(0, 1));
-  m_RandomNumberGenerator = boost::shared_ptr<RandomNumberGenerator>(new RandomNumberGenerator);
-  m_NumberGenerator = boost::shared_ptr<Generator>(new Generator(*m_RandomNumberGenerator, *m_Distribution));
-  m_RandomNumberGenerator->seed(static_cast<size_t>( QDateTime::currentMSecsSinceEpoch() )); // seed with the current time
-  Generator& numberGenerator = *m_NumberGenerator;
 
   //convert nucleation rate to probabilty / voxel / timestep
   float pNuc = m_NucleationRate * m_Resolution.x * m_Resolution.y * m_Resolution.z;

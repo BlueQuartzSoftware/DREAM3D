@@ -152,8 +152,8 @@ namespace CellularAutomata
 				return Moore(x, y, z);
 			}
 
-			//7 cell has 4 variants (actually 20 cell in 3d)
-			std::vector<size_t> SevenCellA(size_t x, size_t y, size_t z)
+			//Twnety cell has 4 variants in 3d (4 opposing pairs of corners)
+			std::vector<size_t> TwentyCell(size_t x, size_t y, size_t z, size_t variant)
 			{
 				//get neighbor indicies
 				size_t xPrev = prev(x, 0);
@@ -191,18 +191,40 @@ namespace CellularAutomata
 				neighbors[17] = ToIndex(xNext, yNext, z);
 
 				//corners
-				neighbors[18] = ToIndex(xPrev, yPrev, zPrev);
-				neighbors[19] = ToIndex(xNext, yNext, zNext);
+				switch(variant)
+				{
+					case 0:
+						neighbors[18] = ToIndex(xPrev, yPrev, zPrev);
+						neighbors[19] = ToIndex(xNext, yNext, zNext);
+						break;
+
+					case 1:
+						neighbors[18] = ToIndex(xPrev, yPrev, zNext);
+						neighbors[19] = ToIndex(xNext, yNext, zPrev);
+						break;
+
+					case 2:
+						neighbors[18] = ToIndex(xPrev, yNext, zPrev);
+						neighbors[19] = ToIndex(xNext, yPrev, zNext);
+						break;
+
+					case 3:
+						neighbors[18] = ToIndex(xPrev, yNext, zNext);
+						neighbors[19] = ToIndex(xNext, yPrev, zPrev);
+						break;
+				}
 				
 				return neighbors;
 			}
-			std::vector<size_t> SevenCellA(size_t index)
+			std::vector<size_t> TwentyCell(size_t index, size_t variant)
 			{
 				size_t x, y, z;
 				ToTuple(index, x, y, z);
-				return SevenCellA(x, y, z);
+				return TwentyCell(x, y, z, variant);
 			}
-			std::vector<size_t> SevenCellB(size_t x, size_t y, size_t z)
+
+			//Twnety cell has 4 variants in 3d (4 opposing pairs of corners)
+			std::vector<size_t> EightCell(size_t x, size_t y, size_t z, size_t variant)
 			{
 				//get neighbor indicies
 				size_t xPrev = prev(x, 0);
@@ -213,7 +235,7 @@ namespace CellularAutomata
 				size_t zNext = next(z, 2);
 
 				//compute neigbors
-				std::vector<size_t> neighbors(20, 0);
+				std::vector<size_t> neighbors(8, 0);
 
 				//always has faces
 				neighbors[0] = ToIndex(xPrev, y, z);
@@ -223,132 +245,43 @@ namespace CellularAutomata
 				neighbors[4] = ToIndex(x, y, zPrev);
 				neighbors[5] = ToIndex(x, y, zNext);
 
-				//edges
-				neighbors[6] = ToIndex(x, yPrev, zPrev);
-				neighbors[7] = ToIndex(x, yPrev, zNext);
-				neighbors[8] = ToIndex(x, yNext, zPrev);
-				neighbors[9] = ToIndex(x, yNext, zNext);
-
-				neighbors[10] = ToIndex(xPrev, y, zPrev);
-				neighbors[11] = ToIndex(xPrev, y, zNext);
-				neighbors[12] = ToIndex(xNext, y, zPrev);
-				neighbors[13] = ToIndex(xNext, y, zNext);
-
-				neighbors[14] = ToIndex(xPrev, yPrev, z);
-				neighbors[15] = ToIndex(xPrev, yNext, z);
-				neighbors[16] = ToIndex(xNext, yPrev, z);
-				neighbors[17] = ToIndex(xNext, yNext, z);
-
 				//corners
-				neighbors[18] = ToIndex(xPrev, yPrev, zNext);
-				neighbors[19] = ToIndex(xNext, yNext, zPrev);
+				switch(variant)
+				{
+					case 0:
+						neighbors[6] = ToIndex(xPrev, yPrev, zPrev);
+						neighbors[7] = ToIndex(xNext, yNext, zNext);
+						break;
 
+					case 1:
+						neighbors[6] = ToIndex(xPrev, yPrev, zNext);
+						neighbors[7] = ToIndex(xNext, yNext, zPrev);
+						break;
+
+					case 2:
+						neighbors[6] = ToIndex(xPrev, yNext, zPrev);
+						neighbors[7] = ToIndex(xNext, yPrev, zNext);
+						break;
+
+					case 3:
+						neighbors[6] = ToIndex(xPrev, yNext, zNext);
+						neighbors[7] = ToIndex(xNext, yPrev, zPrev);
+						break;
+				}
+				
 				return neighbors;
 			}
-			std::vector<size_t> SevenCellB(size_t index)
+			std::vector<size_t> EightCell(size_t index, size_t variant)
 			{
 				size_t x, y, z;
 				ToTuple(index, x, y, z);
-				return SevenCellB(x, y, z);
+				return EightCell(x, y, z, variant);
 			}
-			std::vector<size_t> SevenCellC(size_t x, size_t y, size_t z)
-			{
-				//get neighbor indicies
-				size_t xPrev = prev(x, 0);
-				size_t xNext = next(x, 0);
-				size_t yPrev = prev(y, 1);
-				size_t yNext = next(y, 1);
-				size_t zPrev = prev(z, 2);
-				size_t zNext = next(z, 2);
 
-				//compute neigbors
-				std::vector<size_t> neighbors(20, 0);
 
-				//always has faces
-				neighbors[0] = ToIndex(xPrev, y, z);
-				neighbors[1] = ToIndex(xNext, y, z);
-				neighbors[2] = ToIndex(x, yPrev, z);
-				neighbors[3] = ToIndex(x, yNext, z);
-				neighbors[4] = ToIndex(x, y, zPrev);
-				neighbors[5] = ToIndex(x, y, zNext);
 
-				//edges
-				neighbors[6] = ToIndex(x, yPrev, zPrev);
-				neighbors[7] = ToIndex(x, yPrev, zNext);
-				neighbors[8] = ToIndex(x, yNext, zPrev);
-				neighbors[9] = ToIndex(x, yNext, zNext);
 
-				neighbors[10] = ToIndex(xPrev, y, zPrev);
-				neighbors[11] = ToIndex(xPrev, y, zNext);
-				neighbors[12] = ToIndex(xNext, y, zPrev);
-				neighbors[13] = ToIndex(xNext, y, zNext);
 
-				neighbors[14] = ToIndex(xPrev, yPrev, z);
-				neighbors[15] = ToIndex(xPrev, yNext, z);
-				neighbors[16] = ToIndex(xNext, yPrev, z);
-				neighbors[17] = ToIndex(xNext, yNext, z);
-
-				//corners
-				neighbors[18] = ToIndex(xPrev, yNext, zPrev);
-				neighbors[19] = ToIndex(xNext, yPrev, zNext);
-
-				return neighbors;
-			}
-			std::vector<size_t> SevenCellC(size_t index)
-			{
-				size_t x, y, z;
-				ToTuple(index, x, y, z);
-				return SevenCellC(x, y, z);
-			}
-			std::vector<size_t> SevenCellD(size_t x, size_t y, size_t z)
-			{
-				//get neighbor indicies
-				size_t xPrev = prev(x, 0);
-				size_t xNext = next(x, 0);
-				size_t yPrev = prev(y, 1);
-				size_t yNext = next(y, 1);
-				size_t zPrev = prev(z, 2);
-				size_t zNext = next(z, 2);
-
-				//compute neigbors
-				std::vector<size_t> neighbors(20, 0);
-
-				//always has faces
-				neighbors[0] = ToIndex(xPrev, y, z);
-				neighbors[1] = ToIndex(xNext, y, z);
-				neighbors[2] = ToIndex(x, yPrev, z);
-				neighbors[3] = ToIndex(x, yNext, z);
-				neighbors[4] = ToIndex(x, y, zPrev);
-				neighbors[5] = ToIndex(x, y, zNext);
-
-				//edges
-				neighbors[6] = ToIndex(x, yPrev, zPrev);
-				neighbors[7] = ToIndex(x, yPrev, zNext);
-				neighbors[8] = ToIndex(x, yNext, zPrev);
-				neighbors[9] = ToIndex(x, yNext, zNext);
-
-				neighbors[10] = ToIndex(xPrev, y, zPrev);
-				neighbors[11] = ToIndex(xPrev, y, zNext);
-				neighbors[12] = ToIndex(xNext, y, zPrev);
-				neighbors[13] = ToIndex(xNext, y, zNext);
-
-				neighbors[14] = ToIndex(xPrev, yPrev, z);
-				neighbors[15] = ToIndex(xPrev, yNext, z);
-				neighbors[16] = ToIndex(xNext, yPrev, z);
-				neighbors[17] = ToIndex(xNext, yNext, z);
-
-				//corners
-				neighbors[18] = ToIndex(xPrev, yNext, zNext);
-				neighbors[19] = ToIndex(xNext, yPrev, zPrev);
-
-				return neighbors;
-			}
-			std::vector<size_t> SevenCellD(size_t index)
-			{
-				size_t x, y, z;
-				ToTuple(index, x, y, z);
-				return SevenCellD(x, y, z);
-			}
 	};
 }
 

@@ -5,15 +5,6 @@
 #ifndef _RecrystalizeVolume_H_
 #define _RecrystalizeVolume_H_
 
-///Boost Random Number generator stuff
-#include <boost/random/mersenne_twister.hpp>
-#include <boost/random/uniform_real.hpp>
-#include <boost/random/variate_generator.hpp>
-
-typedef boost::uniform_real<double> NumberDistribution;
-typedef boost::mt19937 RandomNumberGenerator;
-typedef boost::variate_generator<RandomNumberGenerator&, NumberDistribution> Generator;
-
 #include <QtCore/QDateTime>
 
 #include "DREAM3DLib/DREAM3DLib.h"
@@ -195,12 +186,6 @@ class RecrystalizeVolume : public AbstractFilter
      * make sure you have all the variables defined correctly. Those are "DEFINE_REQUIRED_DATAARRAY_VARIABLE()"
      * and  DEFINE_CREATED_DATAARRAY_VARIABLE() which are defined in DREAM3DGetSetMacros.h
      */
-
-    boost::shared_ptr<NumberDistribution> m_Distribution;
-    boost::shared_ptr<RandomNumberGenerator> m_RandomNumberGenerator;
-    boost::shared_ptr<Generator> m_NumberGenerator;
-
-
     DEFINE_CREATED_DATAARRAY_VARIABLE(int32_t, FeatureIds)
     DEFINE_CREATED_DATAARRAY_VARIABLE(uint32_t, RecrystallizationTime)
     DEFINE_CREATED_DATAARRAY_VARIABLE(bool, Active)
