@@ -93,7 +93,7 @@ void FindFeatureClustering::setupFilterParameters()
   //parameters.push_back(FilterParameter::New("Max and Min Distances Array Name", "MaxMinArrayName", FilterParameterWidgetType::StringWidget, getMaxMinArrayName(), true, ""));
   parameters.push_back(FilterParameter::New("NewEnsembleArray", "NewEnsembleArrayArrayName", FilterParameterWidgetType::StringWidget, getNewEnsembleArrayArrayName(), true, ""));
 
-  parameters.push_back(FilterParameter::New("Phase Number to Run Min Size Filter on", "PhaseNumber", FilterParameterWidgetType::IntWidget, getPhaseNumber(), false, ""));
+  parameters.push_back(FilterParameter::New("Phase Number", "PhaseNumber", FilterParameterWidgetType::IntWidget, getPhaseNumber(), false, ""));
   QStringList linkedProps("BiasedFeaturesArrayPath");
   parameters.push_back(LinkedBooleanFilterParameter::New("Remove Biased Features", "RemoveBiasedFeatures", getRemoveBiasedFeatures(), linkedProps, false));
 
