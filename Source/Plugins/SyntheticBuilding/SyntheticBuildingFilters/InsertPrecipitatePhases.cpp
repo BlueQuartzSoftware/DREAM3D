@@ -750,7 +750,7 @@ void  InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclus
     {
 
       // begin swaping/moving/adding/removing features to try to improve packing
-      int totalAdjustments = static_cast<int>(10000 * ((numfeatures - firstPrecipitateFeature) - 1));
+      int totalAdjustments = static_cast<int>(5000 * ((numfeatures - firstPrecipitateFeature) - 1));
       for (int iteration = 0; iteration < totalAdjustments; ++iteration)
       {
         QString ss;
