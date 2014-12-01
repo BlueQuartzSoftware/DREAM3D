@@ -759,7 +759,7 @@ void  InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclus
         }
 
       // begin swaping/moving/adding/removing features to try to improve packing
-      int totalAdjustments = static_cast<int>(5000 * ((numfeatures - firstPrecipitateFeature) - 1));
+      int totalAdjustments = static_cast<int>(1000 * ((numfeatures - firstPrecipitateFeature) - 1));
       for (int iteration = 0; iteration < totalAdjustments; ++iteration)
       {
         QString ss;
@@ -1202,7 +1202,10 @@ void InsertPrecipitatePhases::determine_currentRDF(size_t gnum, int add, bool do
 
       rdfBin = (r-m_rdfMin)/stepsize;
 
-      if (r < m_rdfMin) { rdfBin = -1;}
+      if (r < m_rdfMin)
+      {
+        rdfBin = -1;
+      }
       //if (rdfBin >= m_numRDFbins) {rdfBin = m_numRDFbins;}
       if (double_count == true)
       {
