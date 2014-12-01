@@ -193,13 +193,16 @@ class InsertPrecipitatePhases : public AbstractFilter
     void move_precipitate(size_t featureNum, float xc, float yc, float zc);
 
     float check_sizedisterror(Precip* precip);
-    void determine_currentRDF(size_t featureNum, int add);
+    void determine_clustering(size_t featureNum, int add);
+    void determine_currentRDF(size_t featureNum, int add, bool double_count);
     std::vector<float> normalizeRDF(std::vector<float> rdf, int num_bins, float stepsize, float rdfmin, size_t numPPTfeatures, float volume);
     float check_clusteringerror(int gadd, int gremove);
-    float check_RDFerror(int gadd, int gremove);
+    float check_RDFerror(int gadd, int gremove, bool double_count);
 
+    float check_fillingerror(int gadd, int gremove, Int32ArrayType::Pointer featureOwnersPtr);
     void assign_voxels();
     void assign_gaps();
+    void cleanup_features();
     void write_goal_attributes();
 
     float find_xcoord(long long int index);
@@ -264,16 +267,21 @@ class InsertPrecipitatePhases : public AbstractFilter
 
     std::vector<std::vector<float> > featuresizedist;
     std::vector<std::vector<float> > simfeaturesizedist;
+    std::vector<std::vector<std::vector<float> > > clusteringdist;
+    std::vector<std::vector<std::vector<float> > > simclusteringdist;
     std::vector<float> m_rdfTargetDist;
     std::vector<float> m_rdfCurrentDist;
     std::vector<float> m_rdfCurrentDistNorm;
 
     std::vector<float> featuresizediststep;
+    std::vector<float> clusteringdiststep;
 
     std::vector<int> newnames;
     std::vector<int> packqualities;
     std::vector<int> gsizes;
 
+    float fillingerror, oldfillingerror;
+    float currentclusteringerror, oldclusteringerror;
     float m_currentRDFerror, m_oldRDFerror;
     float currentsizedisterror, oldsizedisterror;
     float m_rdfMax;
