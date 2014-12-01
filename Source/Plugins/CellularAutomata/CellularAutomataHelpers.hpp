@@ -203,6 +203,149 @@ namespace CellularAutomata
 				return ExtendedMoore(x, y, z);
 			}
 
+
+			//Eight cell has 6 variants in 3d (6 opposing pairs of edges)
+			std::vector<size_t> EightCell(size_t x, size_t y, size_t z, size_t variant)
+			{
+				//get neighbor indicies
+				size_t xPrev = prev(x, 0);
+				size_t xNext = next(x, 0);
+				size_t yPrev = prev(y, 1);
+				size_t yNext = next(y, 1);
+				size_t zPrev = prev(z, 2);
+				size_t zNext = next(z, 2);
+
+				//compute neigbors
+				std::vector<size_t> neighbors(14, 0);
+
+				//always has faces
+				neighbors[0] = ToIndex(xPrev, y, z);
+				neighbors[1] = ToIndex(xNext, y, z);
+				neighbors[2] = ToIndex(x, yPrev, z);
+				neighbors[3] = ToIndex(x, yNext, z);
+				neighbors[4] = ToIndex(x, y, zPrev);
+				neighbors[5] = ToIndex(x, y, zNext);
+
+				//edges
+				switch(variant)
+				{
+					case 0:
+						neighbors[6] = ToIndex(xPrev, yPrev, z);
+						neighbors[7] = ToIndex(xNext, yNext, z);
+						break;
+
+					case 1:
+						neighbors[6] = ToIndex(xPrev, yNext, z);
+						neighbors[7] = ToIndex(xNext, yPrev, z);
+						break;
+
+					case 2:
+						neighbors[6] = ToIndex(xPrev, y, zPrev);
+						neighbors[7] = ToIndex(xNext, y, zNext);
+						break;
+
+					case 3:
+						neighbors[6] = ToIndex(xPrev, y, zNext);
+						neighbors[7] = ToIndex(xNext, y, zPrev);
+						break;
+
+					case 4:
+						neighbors[6] = ToIndex(x, yPrev, zPrev);
+						neighbors[7] = ToIndex(x, yNext, zNext);
+						break;
+
+					case 5:
+						neighbors[6] = ToIndex(x, yPrev, zNext);
+						neighbors[7] = ToIndex(x, yNext, zPrev);
+						break;
+				}
+				return neighbors;
+			}
+			std::vector<size_t> EightCell(size_t index, size_t variant)
+			{
+				size_t x, y, z;
+				ToTuple(index, x, y, z);
+				return EightCell(x, y, z, variant);
+			}
+
+			//Fourteen cell has 4 variants in 3d (4 opposing pairs of corners)
+			std::vector<size_t> FourteenCell(size_t x, size_t y, size_t z, size_t variant)
+			{
+				//get neighbor indicies
+				size_t xPrev = prev(x, 0);
+				size_t xNext = next(x, 0);
+				size_t yPrev = prev(y, 1);
+				size_t yNext = next(y, 1);
+				size_t zPrev = prev(z, 2);
+				size_t zNext = next(z, 2);
+
+				//compute neigbors
+				std::vector<size_t> neighbors(14, 0);
+
+				//always has faces
+				neighbors[0] = ToIndex(xPrev, y, z);
+				neighbors[1] = ToIndex(xNext, y, z);
+				neighbors[2] = ToIndex(x, yPrev, z);
+				neighbors[3] = ToIndex(x, yNext, z);
+				neighbors[4] = ToIndex(x, y, zPrev);
+				neighbors[5] = ToIndex(x, y, zNext);
+
+				//corners + adjacent edges
+				switch(variant)
+				{
+					case 0:
+						neighbors[6] = ToIndex(xPrev, yPrev, zPrev);
+						neighbors[7] = ToIndex(x, yPrev, zPrev);
+						neighbors[8] = ToIndex(xPrev, y, zPrev);
+						neighbors[9] = ToIndex(xPrev, yPrev, z);
+						neighbors[10] = ToIndex(xNext, yNext, zNext);
+						neighbors[11] = ToIndex(x, yNext, zNext);
+						neighbors[12] = ToIndex(xNext, y, zNext);
+						neighbors[13] = ToIndex(xNext, yNext, z);
+						break;
+
+					case 1:
+						neighbors[6] = ToIndex(xPrev, yPrev, zNext);
+						neighbors[7] = ToIndex(x, yPrev, zNext);
+						neighbors[8] = ToIndex(xPrev, y, zNext);
+						neighbors[9] = ToIndex(xPrev, yPrev, z);
+						neighbors[10] = ToIndex(xNext, yNext, zPrev);
+						neighbors[11] = ToIndex(x, yNext, zPrev);
+						neighbors[12] = ToIndex(xNext, y, zPrev);
+						neighbors[13] = ToIndex(xNext, yNext, z);
+						break;
+
+					case 2:
+						neighbors[6] = ToIndex(xPrev, yNext, zPrev);
+						neighbors[8] = ToIndex(x, yNext, zPrev);
+						neighbors[9] = ToIndex(xPrev, y, zPrev);
+						neighbors[10] = ToIndex(xPrev, yNext, z);
+						neighbors[11] = ToIndex(xNext, yPrev, zNext);
+						neighbors[12] = ToIndex(x, yPrev, zNext);
+						neighbors[13] = ToIndex(xNext, y, zNext);
+						neighbors[14] = ToIndex(xNext, yPrev, z);
+						break;
+
+					case 3:
+						neighbors[6] = ToIndex(xPrev, yNext, zNext);
+						neighbors[7] = ToIndex(x, yNext, zNext);
+						neighbors[8] = ToIndex(xPrev, y, zNext);
+						neighbors[9] = ToIndex(xPrev, yNext, z);
+						neighbors[10] = ToIndex(xNext, yPrev, zPrev);
+						neighbors[11] = ToIndex(x, yPrev, zPrev);
+						neighbors[12] = ToIndex(xNext, y, zPrev);
+						neighbors[13] = ToIndex(xNext, yPrev, z);
+						break;
+				}				
+				return neighbors;
+			}
+			std::vector<size_t> FourteenCell(size_t index, size_t variant)
+			{
+				size_t x, y, z;
+				ToTuple(index, x, y, z);
+				return FourteenCell(x, y, z, variant);
+			}
+
 			//Twnety cell has 4 variants in 3d (4 opposing pairs of corners)
 			std::vector<size_t> TwentyCell(size_t x, size_t y, size_t z, size_t variant)
 			{
@@ -273,66 +416,6 @@ namespace CellularAutomata
 				ToTuple(index, x, y, z);
 				return TwentyCell(x, y, z, variant);
 			}
-
-			//Twnety cell has 4 variants in 3d (4 opposing pairs of corners)
-			std::vector<size_t> EightCell(size_t x, size_t y, size_t z, size_t variant)
-			{
-				//get neighbor indicies
-				size_t xPrev = prev(x, 0);
-				size_t xNext = next(x, 0);
-				size_t yPrev = prev(y, 1);
-				size_t yNext = next(y, 1);
-				size_t zPrev = prev(z, 2);
-				size_t zNext = next(z, 2);
-
-				//compute neigbors
-				std::vector<size_t> neighbors(8, 0);
-
-				//always has faces
-				neighbors[0] = ToIndex(xPrev, y, z);
-				neighbors[1] = ToIndex(xNext, y, z);
-				neighbors[2] = ToIndex(x, yPrev, z);
-				neighbors[3] = ToIndex(x, yNext, z);
-				neighbors[4] = ToIndex(x, y, zPrev);
-				neighbors[5] = ToIndex(x, y, zNext);
-
-				//corners
-				switch(variant)
-				{
-					case 0:
-						neighbors[6] = ToIndex(xPrev, yPrev, zPrev);
-						neighbors[7] = ToIndex(xNext, yNext, zNext);
-						break;
-
-					case 1:
-						neighbors[6] = ToIndex(xPrev, yPrev, zNext);
-						neighbors[7] = ToIndex(xNext, yNext, zPrev);
-						break;
-
-					case 2:
-						neighbors[6] = ToIndex(xPrev, yNext, zPrev);
-						neighbors[7] = ToIndex(xNext, yPrev, zNext);
-						break;
-
-					case 3:
-						neighbors[6] = ToIndex(xPrev, yNext, zNext);
-						neighbors[7] = ToIndex(xNext, yPrev, zPrev);
-						break;
-				}
-				
-				return neighbors;
-			}
-			std::vector<size_t> EightCell(size_t index, size_t variant)
-			{
-				size_t x, y, z;
-				ToTuple(index, x, y, z);
-				return EightCell(x, y, z, variant);
-			}
-
-
-
-
-
 	};
 }
 

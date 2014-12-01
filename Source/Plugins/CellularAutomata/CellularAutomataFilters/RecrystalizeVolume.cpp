@@ -23,7 +23,7 @@ class RecrystalizeVolumeImpl
   public:
     static const int VON_NEUMAN = 0;
     static const int EIGHT_CELL = 1;
-    static const int TWENTY_CELL = 2;
+    static const int FOURTEEN_CELL = 2;
     static const int MOORE = 3;
 
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
@@ -143,12 +143,12 @@ class RecrystalizeVolumeImpl
         }
 
         //otherwise get cell neighbors and determine next state
-        std::vector<size_t> neighborList = m_lattice->EightCell(i, static_cast<size_t>(4 * generator->genrand_real2()));
+        std::vector<size_t> neighborList = m_lattice->EightCell(i, static_cast<size_t>(6 * generator->genrand_real2()));
         computeBase(i, neighborList.begin(), neighborList.end(), generator);
       }
     }
 
-    void compute20Cell(size_t start, size_t end, DREAM3DRandom* generator) const
+    void compute14Cell(size_t start, size_t end, DREAM3DRandom* generator) const
     {
       for (size_t i = start; i < end; i++)
       {
@@ -160,7 +160,7 @@ class RecrystalizeVolumeImpl
         }
 
         //otherwise get cell neighbors and determine next state
-        std::vector<size_t> neighborList = m_lattice->TwentyCell(i, static_cast<size_t>(4 * generator->genrand_real2()));
+        std::vector<size_t> neighborList = m_lattice->FourteenCell(i, static_cast<size_t>(4 * generator->genrand_real2()));
         computeBase(i, neighborList.begin(), neighborList.end(), generator);
       }
     }
@@ -184,8 +184,8 @@ class RecrystalizeVolumeImpl
           compute8Cell(start, end, &generator);
           break;
 
-        case TWENTY_CELL:
-          compute20Cell(start, end, &generator);
+        case FOURTEEN_CELL:
+          compute14Cell(start, end, &generator);
           break;
       }
     }
@@ -276,7 +276,7 @@ void RecrystalizeVolume::setupFilterParameters()
     QVector<QString> choices;
     choices.push_back("Von Neumann");
     choices.push_back("'8 cell'");
-    choices.push_back("'20 cell'");
+    choices.push_back("'14 cell'");
     choices.push_back("Moore");
     parameter->setChoices(choices);
     parameter->setAdvanced(false);
