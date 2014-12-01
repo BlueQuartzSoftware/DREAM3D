@@ -5,17 +5,24 @@ Find Feature Clustering {#findfeatureclustering}
 Statistics Filters (Morphological)
 
 ## Description ##
-This Filter determines the centroid to centroid distances of **Features**  from each **Feature**.  The algorithm for determining the distances of the **Features**'s centroids is given below:
+This filter determines the radial distribution function (RDF), as a histogram, of a given set of **Features**. 
 
-1. Find the *centroid* of a **Feature**.
-2. Define a sphere centered at the the **Feature**'s *centroid*  and with radius equal to the **Feature**'s *Equivalent Sphere Diameter*.
-3. Determine the distance of every other **Feature**'s centroid.
-4. Repeat 1-3 for all **Features**.
+
+1. Find the distance from current **Feature** to all other Features of the same, specified phase. 
+2. Put all distances in a Clustering List. 
+3. Repeat 1-2 for all **Features**.
+3. Sort the data into the specified number of bins, all equally sized in distance from the minimum distance to the maximum distance between particles.
+
+Note, because this iterates over all the features, each distance will be double counted. For example, the distance from **Feature** 1 to **Feature** 2 will be counted along with the distance from **Feature** 2 to **Feature** 1, which will be identical. 
 
 
 
 ## Parameters ##
-None
+| Name | Type | Description |
+|------|------|-------------|
+| Number of Bins for RDF | Integer | Number of bins to split the RDF into |
+| Phase Number | Integer | Phase number to calculate the RDF and clustering list for |
+
 
 ## Required DataContainers ##
 Volume
@@ -33,6 +40,7 @@ Volume
 | Type | Default Name | Description | Comment |
 |------|--------------|-------------|---------|
 | Feature | Clustering | Distance (float) of each **Features**'s centroid to ever other **Features**'s centroid. |
+
 
 ## Authors ##
 
