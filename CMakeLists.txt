@@ -422,6 +422,7 @@ endfunction()
 set(DREAM3D_PLUGIN_LIST
   Generic
   IO
+  CellularAutomata
   DDDAnalysisToolbox
   ImageImport
   OrientationAnalysis

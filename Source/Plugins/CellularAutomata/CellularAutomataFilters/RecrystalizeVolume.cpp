@@ -585,8 +585,8 @@ void RecrystalizeVolume::execute()
   std::vector<float> y;
   for(size_t i = 1; i < recrystallizationHistory.size(); i++)//first time step is 0% recrystallized
   {
-    x.push_back(log(i));
-    y.push_back( log( -log(1.0 - recrystallizationHistory[i]) ) );
+    x.push_back(logf(i));
+    y.push_back( logf( -logf(1.0 - recrystallizationHistory[i]) ) );
   }
 
   float sumX = 0;
