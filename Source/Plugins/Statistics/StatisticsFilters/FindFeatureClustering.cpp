@@ -36,7 +36,7 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 #include "FindFeatureClustering.h"
-
+#include "DREAM3DLib/Utilities/DREAM3DRandom.h"
 #include "DREAM3DLib/Math/DREAM3DMath.h"
 #include "DREAM3DLib/Common/Constants.h"
 
@@ -241,6 +241,7 @@ void FindFeatureClustering::find_clustering()
   float xn, yn, zn;
   float r;
   float r1, r2;
+  float xc, yc, zc;
 
   int32_t bin;
   int32_t ensemble;
@@ -248,12 +249,16 @@ void FindFeatureClustering::find_clustering()
   float min = 1000000.0f;
   float max = 0.0f;
   float value;
-  float sizex, sizey, sizez, totalvol;
+  float sizex, sizey, sizez, totalvol, totalpoints;
   float normfactor;
   float finiteAdjFactor = 1.0f/8.0f;
 
+  size_t column, row, plane;
+  size_t featureOwnersIdx = 0;
+
   std::vector<std::vector<float> > clusteringlist;
   std::vector<float> oldcount(m_NumberOfBins);
+  std::vector<float> m_RandomCentroids;
 
 
   size_t totalFeatures = m_FeaturePhasesPtr.lock()->getNumberOfTuples();
@@ -274,6 +279,7 @@ void FindFeatureClustering::find_clustering()
   sizey = dims[1] * m->getYRes();
   sizez = dims[2] * m->getZRes();
   totalvol = sizex * sizey * sizez;
+  totalpoints = dims[0]*dims[1]*dims[2];
   float oneovervolume = 1.0f/totalvol;
 
 
@@ -350,10 +356,34 @@ void FindFeatureClustering::find_clustering()
     }
   }
 
-//  for (size_t i = 1; i < totalFeatures; i++)
-//  {
-//      if (m_FeaturePhases[i] == m_PhaseNumber) {totalPPTfeatures++;}
-//  }
+
+
+
+  for (size_t i = 1; i < totalFeatures; i++)
+  {
+      if (m_FeaturePhases[i] == m_PhaseNumber) {totalPPTfeatures++;}
+  }
+  m_RandomCentroids.resize(totalPPTfeatures*3);
+
+  for (size_t i = 1; i < totalPPTfeatures; i++)
+  {
+      featureOwnersIdx = static_cast<size_t>(rg.genrand_res53() * totalpoints);
+
+      column = featureOwnersIdx % dims[0];
+      row = int(featureOwnersIdx / dims[0]) % dims[1];
+      plane = featureOwnersIdx / (dims[0] * dims[1]);
+
+      xc = static_cast<float>(column * m->getXRes()) ;
+      yc = static_cast<float>(row * m->getYRes());
+      zc = static_cast<float>(plane * m->getZRes());
+
+      m_RandomCentroids[3*i] = xc;
+      m_RandomCentroids[3*i+1] = yc;
+      m_RandomCentroids[3*i+2] = zc;
+  }
+
+
+
 
 //  for (size_t i = 0; i < m_NumberOfBins; i++)
 //  {
