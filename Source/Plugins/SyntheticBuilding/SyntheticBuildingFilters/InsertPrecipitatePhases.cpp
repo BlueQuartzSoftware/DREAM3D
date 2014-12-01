@@ -464,6 +464,7 @@ void  InsertPrecipitatePhases::load_precipitates()
 void  InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclusionZonesPtr)
 {
   bool writeErrorFile = true;
+  bool write_test_outputs = true;
 
   std::ofstream outFile;
   if(m_ErrorOutputFile.isEmpty() == false)
@@ -750,7 +751,12 @@ void  InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclus
     if (true)
     {
 
+        std::ofstream testFile;
+        if(write_test_outputs == true)
+        {
 
+            testFile.open("/Users/Shared/Data/PW_Work/OUTFILE/BC.txt");
+        }
 
       // begin swaping/moving/adding/removing features to try to improve packing
       int totalAdjustments = static_cast<int>(10000 * ((numfeatures - firstPrecipitateFeature) - 1));
@@ -853,12 +859,42 @@ void  InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclus
           pointsToAdd.clear();
 
         }
+
+
+        if(write_test_outputs == true && iteration % 100 == 0)
+        {
+         testFile << "\n" << m_oldRDFerror;
+        }
+
+
       }
+      if(write_test_outputs == true)
+{
+testFile.close();
+}
+
     }
   }
 
 
+  if(write_test_outputs == true)
+{
+std::ofstream testFile3;
+testFile3.open("/Users/Shared/Data/PW_Work/OUTFILE/current.txt");
+for (size_t i = 0; i < m_rdfCurrentDistNorm.size(); i++)
+{
+testFile3 << "\n" << m_rdfCurrentDistNorm[i];
+}
+testFile3.close();
 
+std::ofstream testFile2;
+testFile2.open("/Users/Shared/Data/PW_Work/OUTFILE/target.txt");
+for (size_t i = 0; i < m_rdfTargetDist.size(); i++)
+{
+testFile2 << "\n" << m_rdfTargetDist[i];
+}
+testFile2.close();
+}
 
   std::cout << "Done Jumping" <<std::endl;
 }
