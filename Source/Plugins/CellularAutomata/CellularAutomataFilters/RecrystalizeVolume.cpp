@@ -15,7 +15,7 @@
 
 #include <QtCore/QString>
 
-#include "DREAM3DLib/Utilities/DREAM3DRandom.h"
+#include "DREAM3DLib/Math/DREAM3DMath.h"
 
 #include <boost/random/mersenne_twister.hpp>
 #include <boost/random/uniform_int.hpp>
@@ -538,6 +538,7 @@ void RecrystalizeVolume::execute()
 
   uint32_t timeStep = 1;
   std::vector<float> recrystallizationHistory;
+  recrystallizationHistory.push_back(0);
 
   //continue time stepping until all cells are recrystallized
   while(0 != unrecrstallizedCount)
@@ -595,31 +596,28 @@ void RecrystalizeVolume::execute()
     pHistory[i] = recrystallizationHistory[i];
   cellEnsembleAttrMat->addAttributeArray(getRecrystallizationHistoryArrayName(), history);
 
-  //fit avrami equation parameters
-  recrystallizationHistory.pop_back();//last slot is 100% recrystalized
+  //assemble linear pairs to fit avrami equation parameters
+  recrystallizationHistory.pop_back();//last step is 100% recrystallized
   std::vector<float> x;
   std::vector<float> y;
-  for(size_t i = 0; i < recrystallizationHistory.size(); i++)
+  for(size_t i = 1; i < recrystallizationHistory.size(); i++)//first step is 0% recrystallized
   {
     x.push_back(logf(i));
     y.push_back( logf( -logf(1.0 - recrystallizationHistory[i]) ) );
   }
 
-  float sumX = 0;
-  float sumX2 = 0;
-  float sumXY = 0;
-  float sumY = 0;
-  for(size_t i = 0; i < x.size(); i++)
+  //perform regression
+  double slope, intercept;
+  if(DREAM3DMath::linearRegression<float>(slope, intercept,x, y))
   {
-    sumX += x[i];
-    sumX2 += x[i] * x[i];
-    sumXY += x[i] * y[i];
-    sumY += y[i];
+    m_Avrami[0] = exp(intercept);//k
+    m_Avrami[1] = slope;//n
   }
-  float slope = (x.size() * sumXY - sumX * sumY) / (x.size() * sumX2 - sumX * sumX);
-  float intercept = (sumY - slope * sumX) / x.size();
-  m_Avrami[0] = exp(intercept);//k
-  m_Avrami[1] = slope;//n
+  else
+  {
+    QString ss = QObject::tr("Unable to fit Avrami Parameters");
+    notifyWarningMessage(getHumanLabel(), ss, 1);
+  }
 
   /* Let the GUI know we are done with this filter */
   notifyStatusMessage(getHumanLabel(), "Complete");
