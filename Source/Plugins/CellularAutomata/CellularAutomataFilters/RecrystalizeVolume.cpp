@@ -56,14 +56,31 @@ class RecrystalizeVolumeImpl
 
       if(0 == goodNeighbors.size())
       {
-        //if no neighbors are recrystalized, allow random chance to create nucluie
-        float seed = static_cast<float>(rand()) / RAND_MAX;
-      
-        // if(generator.genrand_real1() <= m_nucleationRate)
+        //if no immediate neighbors are recrystalized, allow random chance to create nucluie      
         if(generator->genrand_real1() <= m_nucleationRate)
         {
-          m_workingIDs[index] = m_grainCount->fetch_and_increment() + 1;
-          m_updateTime[index] = *m_time;
+          //if extended neighborhood is empty allow nucleation, otherwise supress
+          std::vector<size_t> extendedNeighbors = m_lattice->ExtendedMoore(index);
+          bool goodSeed = true;
+          for(std::vector<size_t>::iterator iter = extendedNeighbors.begin(); iter != extendedNeighbors.end(); ++iter)
+          {
+            if(0 != m_currentIDs[*iter])
+            {
+              goodSeed = false;
+              break;
+            }
+          }
+
+          if(goodSeed)
+          {
+            m_workingIDs[index] = m_grainCount->fetch_and_increment() + 1;
+            m_updateTime[index] = *m_time;
+          }
+          else
+          {
+            ++(*m_unrecrystalizedCount);
+            m_workingIDs[index] = 0;            
+          }
         }
         else
         {

@@ -152,6 +152,57 @@ namespace CellularAutomata
 				return Moore(x, y, z);
 			}
 
+			std::vector<size_t> ExtendedMoore(size_t x, size_t y, size_t z)
+			{
+				//get neighbor indicies
+				size_t xIndicies[5];
+				size_t yIndicies[5];
+				size_t zIndicies[5];
+
+				xIndicies[1] = prev(x, 0);
+				xIndicies[0] = prev(xIndicies[1], 0);
+				xIndicies[2] = x;
+				xIndicies[3] = next(x, 0);
+				xIndicies[4] = next(xIndicies[3], 0);
+
+				yIndicies[1] = prev(y, 0);
+				yIndicies[0] = prev(yIndicies[1], 0);
+				yIndicies[2] = y;
+				yIndicies[3] = next(y, 0);
+				yIndicies[4] = next(yIndicies[3], 0);
+
+				zIndicies[1] = prev(z, 0);
+				zIndicies[0] = prev(zIndicies[1], 0);
+				zIndicies[2] = z;
+				zIndicies[3] = next(z, 0);
+				zIndicies[4] = next(zIndicies[3], 0);
+
+				//compute neigbors
+				std::vector<size_t> neighbors;
+				neighbors.reserve(124);
+
+				//get all neighbors
+				for(size_t i = 0; i < 5; i++)
+				{
+					for(size_t j = 0; j < 5; j++)
+					{
+						for(size_t k = 0; k < 5; k++)
+						{
+							if(i == 2 && j == 2 && k == 2)
+								continue;
+							neighbors.push_back( ToIndex(xIndicies[i], yIndicies[j], zIndicies[k]) );
+						}
+					}
+				}				
+				return neighbors;
+			}
+			std::vector<size_t> ExtendedMoore(size_t index)
+			{
+				size_t x, y, z;
+				ToTuple(index, x, y, z);
+				return ExtendedMoore(x, y, z);
+			}
+
 			//Twnety cell has 4 variants in 3d (4 opposing pairs of corners)
 			std::vector<size_t> TwentyCell(size_t x, size_t y, size_t z, size_t variant)
 			{
