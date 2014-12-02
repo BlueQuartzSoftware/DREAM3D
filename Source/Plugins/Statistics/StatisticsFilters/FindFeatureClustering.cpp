@@ -345,7 +345,7 @@ void FindFeatureClustering::find_clustering()
 
     for (size_t j = i + 1; j < totalFeatures; j++)
     {
-      if (m_FeaturePhases[i] == m_FeaturePhases[j])// && m_FeaturePhases[i] == m_PhaseNumber)
+      if (m_FeaturePhases[i] == m_FeaturePhases[j] && m_FeaturePhases[i] == m_PhaseNumber)
       {
         xn = m_Centroids[3 * j];
         yn = m_Centroids[3 * j + 1];

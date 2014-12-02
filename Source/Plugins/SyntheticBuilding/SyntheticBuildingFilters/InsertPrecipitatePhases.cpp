@@ -519,6 +519,13 @@ void  InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclus
   int acceptedmoves = 0;
   double totalprecipitatefractions = 0.0;
 
+
+
+
+
+
+
+
   for (int64_t i = 1; i < numensembles; ++i)
   {
     if(m_PhaseTypes[i] == DREAM3D::PhaseType::PrecipitatePhase)
@@ -642,16 +649,18 @@ void  InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclus
         m_rdfMax = maxmin[0]->getValue(0);
         m_rdfMin = maxmin[0]->getValue(1);
 
-
         float stepsize = (m_rdfMax-m_rdfMin)/m_numRDFbins;
         float max_box_distance = sqrtf((sizex*sizex) + (sizey*sizey) + (sizez*sizez));
 
         int32_t current_num_bins = (max_box_distance - m_rdfMin)/(stepsize);
+
         m_rdfCurrentDist.resize(current_num_bins+1);
 
 
       }
     }
+
+
   }
 
   //determine initial set of available points
@@ -674,6 +683,7 @@ void  InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclus
 
   size_t numfeatures = m_FeaturePhasesPtr.lock()->getNumberOfTuples();
 
+  // initial placement
   columnlist.resize(numfeatures);
   rowlist.resize(numfeatures);
   planelist.resize(numfeatures);
@@ -737,6 +747,54 @@ void  InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclus
   }
 
   notifyStatusMessage(getHumanLabel(), "Packing Features - Initial Feature Placement Complete");
+
+  if (m_MatchRDF == true)
+  {
+      //RANDOM: Figure out the RDF for randomly distributed particles
+      m_RandomCentroids.resize(numfeatures*3);
+      for (size_t i = firstPrecipitateFeature; i < numfeatures; i++)
+      {
+
+              featureOwnersIdx = static_cast<size_t>(rg.genrand_res53() * dims[0] * dims[1] * dims[2]);
+
+              column = featureOwnersIdx % dims[0];
+              row = int(featureOwnersIdx / dims[0]) % dims[1];
+              plane = featureOwnersIdx / (dims[0] * dims[1]);
+
+              xc = static_cast<float>(column * m->getXRes()) ;
+              yc = static_cast<float>(row * m->getYRes());
+              zc = static_cast<float>(plane * m->getZRes());
+
+              m_RandomCentroids[3*i] = xc;
+              m_RandomCentroids[3*i+1] = yc;
+              m_RandomCentroids[3*i+2] = zc;
+      }
+
+      float stepsize = (m_rdfMax-m_rdfMin)/m_numRDFbins;
+      float max_box_distance = sqrtf((sizex*sizex) + (sizey*sizey) + (sizez*sizez));
+
+      int32_t current_num_bins = (max_box_distance - m_rdfMin)/(stepsize);
+
+      m_rdfRandom.resize(current_num_bins+1);
+
+      for (size_t i = firstPrecipitateFeature; i < numfeatures; i++)
+      {
+            determine_randomRDF(i, 1, false);
+      }
+
+      if(write_test_outputs == true)
+      {
+
+          std::ofstream testFile6;
+          testFile6.open("/Users/Shared/Data/PW_Work/OUTFILE/randomRDFCurrent.txt");
+          for (size_t i = 0; i < m_rdfRandom.size(); i++)
+          {
+          testFile6 << "\n" << m_rdfRandom[i];
+          }
+          testFile6.close();
+       }
+
+  }
 
   //calculate the initial current RDF - this will change as we move particles around
   if(m_MatchRDF == true)
@@ -1230,6 +1288,67 @@ void InsertPrecipitatePhases::determine_currentRDF(size_t gnum, int add, bool do
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+
+void InsertPrecipitatePhases::determine_randomRDF(size_t gnum, int add, bool double_count)
+{
+
+  float x, y, z;
+  float xn, yn, zn;
+  float r;
+
+  int iter = 0;
+  int numPPTfeatures = 1;
+  int32_t rdfBin;
+  float stepsize = (m_rdfMax-m_rdfMin)/m_numRDFbins;
+
+  int phase = m_FeaturePhases[gnum];
+  while (phase != precipitatephases[iter]) { iter++; }
+
+  StatsDataArray& statsDataArray = *(m_StatsDataArray.lock());
+  typedef std::vector<std::vector<float> > VectOfVectFloat_t;
+
+
+  x = m_RandomCentroids[3 * gnum];
+  y = m_RandomCentroids[3 * gnum + 1];
+  z = m_RandomCentroids[3 * gnum + 2];
+  size_t numFeatures = m_FeaturePhasesPtr.lock()->getNumberOfTuples();
+
+  for (size_t n = firstPrecipitateFeature; n < numFeatures; n++)
+  {
+    if (m_FeaturePhases[n] == phase && n != gnum)
+    {
+      xn = m_RandomCentroids[3 * n];
+      yn = m_RandomCentroids[3 * n + 1];
+      zn = m_RandomCentroids[3 * n + 2];
+      r = sqrtf((x - xn) * (x - xn) + (y - yn) * (y - yn) + (z - zn) * (z - zn));
+
+      rdfBin = (r-m_rdfMin)/stepsize;
+
+      if (r < m_rdfMin)
+      {
+        rdfBin = -1;
+      }
+      if (double_count == true)
+      {
+        m_rdfRandom[rdfBin+1] += 2*add;
+      }
+      else if (double_count == false)
+      {
+        m_rdfRandom[rdfBin+1] += add;
+      }
+
+    }
+  }
+
+
+
+
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 std::vector<float> InsertPrecipitatePhases::normalizeRDF(std::vector<float> rdf, int num_bins, float stepsize, float rdfmin, size_t numPPTfeatures, float volume)
 {
       //Normalizing the RDF by number density of particles (4/3*pi*(r2^3-r1^3)*numPPTfeatures/volume)
@@ -1242,7 +1361,7 @@ std::vector<float> InsertPrecipitatePhases::normalizeRDF(std::vector<float> rdf,
     //r1 = 0*finiteAdjFactor;
     //r2 = rdfmin*finiteAdjFactor;
     //normfactor = 4.0f/3.0f*DREAM3D::Constants::k_Pi*((r2*r2*r2) - (r1*r1*r1))*numPPTfeatures*oneovervolume;
-    rdf[0] = rdf[0];
+//    rdf[0] = rdf[0];
 
 //    for (size_t i = 1; i < num_bins+2; i++)
 //      {
@@ -1253,6 +1372,11 @@ std::vector<float> InsertPrecipitatePhases::normalizeRDF(std::vector<float> rdf,
 //          normfactor = 4.0f/3.0f*DREAM3D::Constants::k_Pi*((r2*r2*r2) - (r1*r1*r1))*numPPTfeatures*oneovervolume;
 //          rdf[i] = rdf[i]/normfactor;
 //      }
+
+    for (size_t i = 0; i < rdf.size(); i++)
+    {
+        rdf[i] = rdf[i]/m_rdfRandom[i];
+    }
 
       return rdf;
 }
