@@ -152,6 +152,8 @@ class FindFeatureClustering : public AbstractFilter
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(bool, BiasedFeatures)
     NeighborList<float>::WeakPointer m_ClusteringList;
 
+    std::vector<float> m_RandomCentroids;
+
     void dataCheck();
 
     FindFeatureClustering(const FindFeatureClustering&); // Copy Constructor Not Implemented

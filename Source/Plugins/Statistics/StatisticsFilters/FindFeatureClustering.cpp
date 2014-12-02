@@ -36,7 +36,7 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 #include "FindFeatureClustering.h"
-
+#include "DREAM3DLib/Utilities/DREAM3DRandom.h"
 #include "DREAM3DLib/Math/DREAM3DMath.h"
 #include "DREAM3DLib/Common/Constants.h"
 
@@ -238,22 +238,31 @@ void FindFeatureClustering::find_clustering()
   }
 
   float x, y, z;
+  float xr, yr, zr;
   float xn, yn, zn;
-  float r;
+  float xnr, ynr, znr;
+  float r, rRand;
   float r1, r2;
+  float xc, yc, zc;
 
-  int32_t bin;
+  int32_t bin, binrandom;
   int32_t ensemble;
   int32_t totalPPTfeatures = 0;
   float min = 1000000.0f;
   float max = 0.0f;
   float value;
-  float sizex, sizey, sizez, totalvol;
+  float sizex, sizey, sizez, totalvol, totalpoints;
   float normfactor;
   float finiteAdjFactor = 1.0f/8.0f;
 
+  size_t column, row, plane;
+  size_t featureOwnersIdx = 0;
+
   std::vector<std::vector<float> > clusteringlist;
+  std::vector<std::vector<float> > randomclusteringlist;
   std::vector<float> oldcount(m_NumberOfBins);
+  std::vector<float> randomRDF(m_NumberOfBins+2);
+  std::vector<float> m_RandomCentroids;
 
 
   size_t totalFeatures = m_FeaturePhasesPtr.lock()->getNumberOfTuples();
@@ -274,17 +283,47 @@ void FindFeatureClustering::find_clustering()
   sizey = dims[1] * m->getYRes();
   sizez = dims[2] * m->getZRes();
   totalvol = sizex * sizey * sizez;
+  totalpoints = dims[0]*dims[1]*dims[2];
   float oneovervolume = 1.0f/totalvol;
-
-
-  clusteringlist.resize(totalFeatures);
 
   for (size_t i = 1; i < totalFeatures; i++)
   {
-    x = m_Centroids[3 * i];
-    y = m_Centroids[3 * i + 1];
-    z = m_Centroids[3 * i + 2];
+      if (m_FeaturePhases[i] == m_PhaseNumber) {totalPPTfeatures++;}
   }
+  m_RandomCentroids.resize(totalFeatures*3);
+
+  DREAM3D_RANDOMNG_NEW()
+
+  for (size_t i = 1; i < totalFeatures; i++)
+  {
+      if (m_FeaturePhases[i] == m_PhaseNumber)
+      {
+          featureOwnersIdx = static_cast<size_t>(rg.genrand_res53() * totalpoints);
+
+          column = featureOwnersIdx % dims[0];
+          row = int(featureOwnersIdx / dims[0]) % dims[1];
+          plane = featureOwnersIdx / (dims[0] * dims[1]);
+
+          xc = static_cast<float>(column * m->getXRes()) ;
+          yc = static_cast<float>(row * m->getYRes());
+          zc = static_cast<float>(plane * m->getZRes());
+
+          m_RandomCentroids[3*i] = xc;
+          m_RandomCentroids[3*i+1] = yc;
+          m_RandomCentroids[3*i+2] = zc;
+      }
+  }
+
+
+  clusteringlist.resize(totalFeatures);
+  randomclusteringlist.resize(totalFeatures);
+
+//  for (size_t i = 1; i < totalFeatures; i++)
+//  {
+//    x = m_Centroids[3 * i];
+//    y = m_Centroids[3 * i + 1];
+//    z = m_Centroids[3 * i + 2];
+//  }
   for (size_t i = 1; i < totalFeatures; i++)
   {
     if (i % 1000 == 0)
@@ -296,16 +335,37 @@ void FindFeatureClustering::find_clustering()
     x = m_Centroids[3 * i];
     y = m_Centroids[3 * i + 1];
     z = m_Centroids[3 * i + 2];
+
+    xr = m_RandomCentroids[3*i];
+    yr = m_RandomCentroids[3*i+1];
+    zr = m_RandomCentroids[3*i+2];
+
+
+
+
     for (size_t j = i + 1; j < totalFeatures; j++)
     {
-      if (m_FeaturePhases[i] == m_FeaturePhases[j])
+      if (m_FeaturePhases[i] == m_FeaturePhases[j])// && m_FeaturePhases[i] == m_PhaseNumber)
       {
         xn = m_Centroids[3 * j];
         yn = m_Centroids[3 * j + 1];
         zn = m_Centroids[3 * j + 2];
+
+        xnr = m_RandomCentroids[3*j];
+        ynr = m_RandomCentroids[3*j+1];
+        znr = m_RandomCentroids[3*j+2];
+
+
+
+
         r = sqrtf((x - xn) * (x - xn) + (y - yn) * (y - yn) + (z - zn) * (z - zn));
+        rRand = sqrtf((xr - xnr) * (xr - xnr) + (yr - ynr) * (yr - ynr) + (zr - znr) * (zr - znr));
+
         clusteringlist[i].push_back(r);
         clusteringlist[j].push_back(r);
+
+        randomclusteringlist[i].push_back(rRand);
+        randomclusteringlist[j].push_back(rRand);
 
         if(writeErrorFile == true && m_FeaturePhases[j] == 2)
         {
@@ -342,30 +402,53 @@ void FindFeatureClustering::find_clustering()
         if(m_RemoveBiasedFeatures == false || m_BiasedFeatures[i] == false)
         {
           ensemble = m_FeaturePhases[i];
+
           bin = (clusteringlist[i][j] - min) / stepsize;
+          binrandom = (randomclusteringlist[i][j] - min)/stepsize;
+
           if(bin >= m_NumberOfBins) { bin = m_NumberOfBins - 1; }
+          if(binrandom >= m_NumberOfBins) {binrandom = m_NumberOfBins;}
+          if(randomclusteringlist[i][j] < min) {binrandom = -1;}
+
           m_NewEnsembleArray[(m_NumberOfBins * ensemble) + bin]++;
+          randomRDF[binrandom+1]++;
         }
       }
     }
   }
 
-//  for (size_t i = 1; i < totalFeatures; i++)
-//  {
-//      if (m_FeaturePhases[i] == m_PhaseNumber) {totalPPTfeatures++;}
-//  }
 
-//  for (size_t i = 0; i < m_NumberOfBins; i++)
-//  {
-//      r1 = (min + (i)*stepsize);
-//      r2 = (r1 + stepsize);
-//      r1 = r1*finiteAdjFactor;
-//      r2 = r2*finiteAdjFactor;
-//      normfactor = 4.0f/3.0f*DREAM3D::Constants::k_Pi*((r2*r2*r2) - (r1*r1*r1))*totalPPTfeatures*oneovervolume;
-//      oldcount[i] = m_NewEnsembleArray[(m_NumberOfBins*m_PhaseNumber) + i];
-//      m_NewEnsembleArray[(m_NumberOfBins*m_PhaseNumber) + i] = oldcount[i]/normfactor;
-//  }
 
+
+
+
+
+
+
+
+
+  for (size_t i = 0; i < m_NumberOfBins; i++)
+  {
+      oldcount[i] = m_NewEnsembleArray[(m_NumberOfBins*m_PhaseNumber) + i];
+      m_NewEnsembleArray[(m_NumberOfBins*m_PhaseNumber) + i] = oldcount[i]/randomRDF[i+1];
+  }
+
+
+    std::ofstream testFile3;
+    testFile3.open("/Users/Shared/Data/PW_Work/OUTFILE/normalized_target.txt");
+    for (size_t i = 0; i < m_NumberOfBins; i++)
+    {
+    testFile3 << "\n" << m_NewEnsembleArray[(m_NumberOfBins*m_PhaseNumber) + i];
+    }
+    testFile3.close();
+
+    std::ofstream testFile4;
+    testFile4.open("/Users/Shared/Data/PW_Work/OUTFILE/randomrdf_target.txt");
+    for (size_t i = 0; i < randomRDF.size(); i++)
+    {
+    testFile4 << "\n" << randomRDF[i];
+    }
+    testFile4.close();
 
 
 
