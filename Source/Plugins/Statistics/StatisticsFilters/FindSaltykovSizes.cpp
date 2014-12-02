@@ -327,10 +327,10 @@ int FindSaltykovSizes::do_saltykov(std::vector<int> nA, float Dmax, int k)
   double temp1 = 0.0, temp2 = 0.0, temp3 = 0.0;
   int temp4 = 0;
 
-  while ((i < 12) && ((k+1-i) > 0))
+  while ((i < 12) && ((k-i) > 0))
   {
     temp1 = double (nA[k-i]);
-    temp2 += saltyCoefs[i] * temp1;
+    temp2 += saltyCoefs[i+1] * temp1;
     i++;
   }
   temp2 /= Dk;
