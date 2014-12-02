@@ -1426,8 +1426,14 @@ float InsertPrecipitatePhases::check_RDFerror(int gadd, int gremove, bool double
       determine_currentRDF(gremove, -1, double_count);
     }
 
-
-  compare_1Ddistributions(m_rdfTargetDist, m_rdfCurrentDistNorm, bhattdist);
+  if (m_rdfCurrentDistNorm.size() > m_rdfTargetDist.size())
+  {
+    compare_1Ddistributions(m_rdfTargetDist, m_rdfCurrentDistNorm, bhattdist);
+  }
+  else
+  {
+    compare_1Ddistributions(m_rdfCurrentDistNorm, m_rdfTargetDist, bhattdist);
+  }
   rdferror = bhattdist;
   return rdferror;
 }
