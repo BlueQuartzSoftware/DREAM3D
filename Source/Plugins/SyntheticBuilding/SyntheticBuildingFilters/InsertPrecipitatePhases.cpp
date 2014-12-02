@@ -496,7 +496,7 @@ void  InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclus
   sizez = dims[2] * m->getZRes();
   totalvol = sizex * sizey * sizez;
 
-  int64_t totalPoints = m_FeatureIdsPtr.lock()->getNumberOfTuples();
+  //int64_t totalPoints = m_FeatureIdsPtr.lock()->getNumberOfTuples();
 
   // figure out how many grains we already have so we can start the counter at +1 this
 
@@ -1269,7 +1269,7 @@ void InsertPrecipitatePhases::determine_currentRDF(size_t gnum, int add, bool do
   int phase = m_FeaturePhases[gnum];
   while (phase != precipitatephases[iter]) { iter++; }
 
-  StatsDataArray& statsDataArray = *(m_StatsDataArray.lock());
+  //StatsDataArray& statsDataArray = *(m_StatsDataArray.lock());
   typedef std::vector<std::vector<float> > VectOfVectFloat_t;
 
 
@@ -1290,10 +1290,10 @@ void InsertPrecipitatePhases::determine_currentRDF(size_t gnum, int add, bool do
       rdfBin = (r-m_rdfMin)/stepsize;
 
       if (r < m_rdfMin) rdfBin = -1;
-      if (r < 9.0)
-      {
-        int stop = 0;
-      }
+//      if (r < 9.0)
+//      {
+//        int stop = 0;
+//      }
       //if (rdfBin >= m_numRDFbins) {rdfBin = m_numRDFbins;}
       if (double_count == true)
       {
@@ -1326,7 +1326,7 @@ void InsertPrecipitatePhases::determine_randomRDF(size_t gnum, int add, bool dou
   float xn, yn, zn;
   float r;
 
-  int iter = 0;
+  //int iter = 0;
   int32_t rdfBin;
   float stepsize = (m_rdfMax-m_rdfMin)/m_numRDFbins;
 
@@ -1379,11 +1379,11 @@ void InsertPrecipitatePhases::determine_randomRDF(size_t gnum, int add, bool dou
 std::vector<float> InsertPrecipitatePhases::normalizeRDF(std::vector<float> rdf, int num_bins, float stepsize, float rdfmin, size_t numPPTfeatures, float volume)
 {
       //Normalizing the RDF by number density of particles (4/3*pi*(r2^3-r1^3)*numPPTfeatures/volume)
-    float normfactor;
-    float r1;
-    float r2;
-    float oneovervolume = 1.0f/volume;
-    float finiteAdjFactor = .5;
+//    float normfactor;
+//    float r1;
+//    float r2;
+//    float oneovervolume = 1.0f/volume;
+//    float finiteAdjFactor = .5;
 
     //r1 = 0*finiteAdjFactor;
     //r2 = rdfmin*finiteAdjFactor;
@@ -1627,7 +1627,7 @@ void InsertPrecipitatePhases::insert_precipitate(size_t gnum)
 
   radcur1 = m_ShapeOps[shapeclass]->radcur1(shapeArgMap);
 
-  //adjust radcur1 to make larger exclusion zone to prevent precipitate overlap 
+  //adjust radcur1 to make larger exclusion zone to prevent precipitate overlap
   radcur1 = radcur1*2.0;
   if(m_MatchRDF == true)
   {

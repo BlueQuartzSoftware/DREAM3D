@@ -165,7 +165,7 @@ void FindSaltykovSizes::find_saltykov_sizes()
   int binIndex = 0;
   int saltykovLength = 0;
   int saltykovIndex = 1;
-  double random = 0.0;
+  //double random = 0.0;
   int attempts = 0;
   int binToAddTo = 0;
   unsigned long randomLong = 0.0;
@@ -208,59 +208,59 @@ void FindSaltykovSizes::find_saltykov_sizes()
     // find the bin length
     binLength = (maxEqDia - minEqDia) / numberofbins;
 
-	// initialize bin lengths to 0
+  // initialize bin lengths to 0
     for (int i = 0; i < numberofbins; i++) { binLengths[i] = 0; }
 
-	// find out how many features are in each bin
+  // find out how many features are in each bin
     for (size_t i = 1; i < numfeatures; i++)
     {
       temp1 = m_EquivalentDiameters[i] - minEqDia;
       temp2 = 1.0f / binLength;
       temp3 = temp1 * temp2;
       binIndex = int(temp3);
-	  // this accounts for if the current feature is
-	  // the maximum eq dia feature so its doesn't
-	  // run off the end of the array
+    // this accounts for if the current feature is
+    // the maximum eq dia feature so its doesn't
+    // run off the end of the array
       if (binIndex == numberofbins) { binIndex--; };
       binLengths[binIndex]++;
     }
 
-	// for formal Saltykov we start at the largest bin then unfold our
-	// way down to the smallest bin which is why the loop is set up
-	// this way
-	// saltykovLength is the total number of features to be sampled from
-	// the saltykov bins
-	saltykovLength = 0;
-	for (int i = numberofbins-1; i >= 0; i--)
+  // for formal Saltykov we start at the largest bin then unfold our
+  // way down to the smallest bin which is why the loop is set up
+  // this way
+  // saltykovLength is the total number of features to be sampled from
+  // the saltykov bins
+  saltykovLength = 0;
+  for (int i = numberofbins-1; i >= 0; i--)
     {
       saltykovBinLengths[i] = do_saltykov(binLengths, maxEqDia, i);
-	  if (saltykovBinLengths[i] < 0) { saltykovBinLengths[i] = 0; }
+    if (saltykovBinLengths[i] < 0) { saltykovBinLengths[i] = 0; }
       saltykovLength += saltykovBinLengths[i];
     }
 
-	// if the number of features to be sampled from the Saltykov
-	// bins (saltykovLength) is not = the number of features
-	// then the difference between the two is calculated.  then, either 
-	// the number of attempts is incremented, the number of bins is increased/decreased
-	// based on the "difference" and the bin arrays are resized accordingly.  This 
-	// will approach us to the correct number of features because the increasing
-	// number of bins, increases the number of features eq dia's to be sampled and decreasing
-	// the number of bins does the opposite. However, if the number of maximum attempts 
-	// is reached, hardcoded at 10, then a random Saltykov bin is selected to add one sample to.
-	// This is done because it is assumed that after 10 attempts, the solution is oscillating
-	// between one less than and one more than feature so, for convienence, only the one less
-	// than option triggers this fudge addition to reach our desired number of features
+  // if the number of features to be sampled from the Saltykov
+  // bins (saltykovLength) is not = the number of features
+  // then the difference between the two is calculated.  then, either
+  // the number of attempts is incremented, the number of bins is increased/decreased
+  // based on the "difference" and the bin arrays are resized accordingly.  This
+  // will approach us to the correct number of features because the increasing
+  // number of bins, increases the number of features eq dia's to be sampled and decreasing
+  // the number of bins does the opposite. However, if the number of maximum attempts
+  // is reached, hardcoded at 10, then a random Saltykov bin is selected to add one sample to.
+  // This is done because it is assumed that after 10 attempts, the solution is oscillating
+  // between one less than and one more than feature so, for convienence, only the one less
+  // than option triggers this fudge addition to reach our desired number of features
     if (saltykovLength != numfeatures-1)
     {
       difference = saltykovLength - (numfeatures-1);
-	  if (attempts >= MaxAttempts && difference < 0)
+    if (attempts >= MaxAttempts && difference < 0)
       {
         for (int i = 0; i > difference; i--)
         {
           binToAddTo = rg.genrand_int32() % numberofbins + 1;
-		  if (binToAddTo == numberofbins) { binToAddTo--; };
+      if (binToAddTo == numberofbins) { binToAddTo--; };
           saltykovBinLengths[binToAddTo]++;
-		  saltykovLength = numfeatures-1;
+      saltykovLength = numfeatures-1;
         }
       }
       else
@@ -279,38 +279,38 @@ void FindSaltykovSizes::find_saltykov_sizes()
   saltykovIndex = 0;
   if (saltykovLength == numfeatures-1)
   {
-	for (int i = 0; i < numberofbins; i++)
-	{
-	  for (int j = 0; j < saltykovBinLengths[i]; j++)
-	  {
-		// generate a random float between the current bin extents
-		randomLong = rg.genrand_int32();
-		randomFraction = (double(randomLong) / double(RandMaxFloat));
-		saltykovEquivalentDiameters[saltykovIndex] = (float(randomFraction) * binLength) + (minEqDia + (i * binLength));
-		saltykovIndex++;
-	  }
-	}
+  for (int i = 0; i < numberofbins; i++)
+  {
+    for (int j = 0; j < saltykovBinLengths[i]; j++)
+    {
+    // generate a random float between the current bin extents
+    randomLong = rg.genrand_int32();
+    randomFraction = (double(randomLong) / double(RandMaxFloat));
+    saltykovEquivalentDiameters[saltykovIndex] = (float(randomFraction) * binLength) + (minEqDia + (i * binLength));
+    saltykovIndex++;
+    }
+  }
 
-	// sort the Saltykov eq dia's into ascending order so they can be matched up with their feature eq dia pair
-	std::sort(saltykovEquivalentDiameters.begin(), saltykovEquivalentDiameters.end(), std::less<float>());
+  // sort the Saltykov eq dia's into ascending order so they can be matched up with their feature eq dia pair
+  std::sort(saltykovEquivalentDiameters.begin(), saltykovEquivalentDiameters.end(), std::less<float>());
 
-	// this nested loop matches the Saltykov eq dia's with the feature eq dia's in asecending order
-	for (size_t i = 1; i < numfeatures; i++)
-	{
-	  for (size_t j = 1; j < numfeatures; j++)
-	  {
-		if (m_EquivalentDiameters[j] == currentmiminum)
-		{
-		  m_SaltykovEquivalentDiameters[j] = saltykovEquivalentDiameters[i];
-		}
-		if (m_EquivalentDiameters[j] > currentmiminum && m_EquivalentDiameters[j] < nextminimum)
-		{
-		  nextminimum = m_EquivalentDiameters[j];
-		}
-	  }
-	  currentmiminum = nextminimum;
-	  nextminimum = maxEqDia;
-	}
+  // this nested loop matches the Saltykov eq dia's with the feature eq dia's in asecending order
+  for (size_t i = 1; i < numfeatures; i++)
+  {
+    for (size_t j = 1; j < numfeatures; j++)
+    {
+    if (m_EquivalentDiameters[j] == currentmiminum)
+    {
+      m_SaltykovEquivalentDiameters[j] = saltykovEquivalentDiameters[i];
+    }
+    if (m_EquivalentDiameters[j] > currentmiminum && m_EquivalentDiameters[j] < nextminimum)
+    {
+      nextminimum = m_EquivalentDiameters[j];
+    }
+    }
+    currentmiminum = nextminimum;
+    nextminimum = maxEqDia;
+  }
   }
 }
 
