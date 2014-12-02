@@ -216,7 +216,7 @@ namespace CellularAutomata
 				size_t zNext = next(z, 2);
 
 				//compute neigbors
-				std::vector<size_t> neighbors(14, 0);
+				std::vector<size_t> neighbors(8, 0);
 
 				//always has faces
 				neighbors[0] = ToIndex(xPrev, y, z);
@@ -317,13 +317,13 @@ namespace CellularAutomata
 
 					case 2:
 						neighbors[6] = ToIndex(xPrev, yNext, zPrev);
-						neighbors[8] = ToIndex(x, yNext, zPrev);
-						neighbors[9] = ToIndex(xPrev, y, zPrev);
-						neighbors[10] = ToIndex(xPrev, yNext, z);
-						neighbors[11] = ToIndex(xNext, yPrev, zNext);
-						neighbors[12] = ToIndex(x, yPrev, zNext);
-						neighbors[13] = ToIndex(xNext, y, zNext);
-						neighbors[14] = ToIndex(xNext, yPrev, z);
+						neighbors[7] = ToIndex(x, yNext, zPrev);
+						neighbors[8] = ToIndex(xPrev, y, zPrev);
+						neighbors[9] = ToIndex(xPrev, yNext, z);
+						neighbors[10] = ToIndex(xNext, yPrev, zNext);
+						neighbors[11] = ToIndex(x, yPrev, zNext);
+						neighbors[12] = ToIndex(xNext, y, zNext);
+						neighbors[13] = ToIndex(xNext, yPrev, z);
 						break;
 
 					case 3:

@@ -15,7 +15,13 @@
 
 #include <QtCore/QString>
 
-#include "DREAM3DLib/Utilities/DREAM3DRandom.h"
+#include "DREAM3DLib/Math/DREAM3DMath.h"
+
+#include <boost/random/mersenne_twister.hpp>
+#include <boost/random/uniform_int.hpp>
+#include <boost/random/uniform_real.hpp>
+#include <boost/random/variate_generator.hpp>
+
 #include "CellularAutomata/CellularAutomataConstants.h"
 
 class RecrystalizeVolumeImpl
@@ -44,7 +50,7 @@ class RecrystalizeVolumeImpl
 
     virtual ~RecrystalizeVolumeImpl() {}
 
-    inline void computeBase(size_t index, std::vector<size_t>::iterator begin, std::vector<size_t>::iterator end, DREAM3DRandom* generator) const
+    inline void computeBase(size_t index, std::vector<size_t>::iterator begin, std::vector<size_t>::iterator end, boost::mt19937& generator) const
     {
       //check if any neighbors are recrystallized
       std::vector<size_t> goodNeighbors;
@@ -56,8 +62,10 @@ class RecrystalizeVolumeImpl
 
       if(0 == goodNeighbors.size())
       {
-        //if no immediate neighbors are recrystalized, allow random chance to create nucluie      
-        if(generator->genrand_real1() <= m_nucleationRate)
+        //if no immediate neighbors are recrystalized, allow random chance to create nucluie
+        boost::uniform_real<> distribution(0, 1);
+        boost::variate_generator<boost::mt19937&, boost::uniform_real<> > seedGen(generator, distribution);
+        if(seedGen() <= m_nucleationRate)
         {
           //if extended neighborhood is empty allow nucleation, otherwise supress
           std::vector<size_t> extendedNeighbors = m_lattice->ExtendedMoore(index);
@@ -91,13 +99,14 @@ class RecrystalizeVolumeImpl
       else
       {
         //if neighbors are recrystallized, choose one at random to join
-        size_t neighbor = static_cast<size_t>(generator->genrand_real2() * goodNeighbors.size());
-        m_workingIDs[index] = m_currentIDs[goodNeighbors[neighbor]]; 
+        boost::uniform_int<> distribution(0, goodNeighbors.size() - 1);//range is inclusive
+        boost::variate_generator<boost::mt19937&, boost::uniform_int<> > indexGen(generator, distribution);
+        m_workingIDs[index] = m_currentIDs[goodNeighbors[indexGen()]]; 
         m_updateTime[index] = *m_time;
       }        
     }
 
-    void computeVonNeuman(size_t start, size_t end, DREAM3DRandom* generator) const
+    void computeVonNeuman(size_t start, size_t end, boost::mt19937& generator) const
     {
       for (size_t i = start; i < end; i++)
       {
@@ -114,7 +123,7 @@ class RecrystalizeVolumeImpl
       }
     }
 
-    void computeMoore(size_t start, size_t end, DREAM3DRandom* generator) const
+    void computeMoore(size_t start, size_t end, boost::mt19937& generator) const
     {
       for (size_t i = start; i < end; i++)
       {
@@ -131,8 +140,11 @@ class RecrystalizeVolumeImpl
       }
     }
 
-    void compute8Cell(size_t start, size_t end, DREAM3DRandom* generator) const
+    void compute8Cell(size_t start, size_t end, boost::mt19937& generator) const
     {
+      //wrap generator in uniform interger distribution for selecting neighborhood variant
+      boost::uniform_int<> distribution(0, 5);
+      boost::variate_generator<boost::mt19937&, boost::uniform_int<> > indexGen(generator, distribution);
       for (size_t i = start; i < end; i++)
       {
         //don't change cells that are already recrystallized
@@ -143,13 +155,16 @@ class RecrystalizeVolumeImpl
         }
 
         //otherwise get cell neighbors and determine next state
-        std::vector<size_t> neighborList = m_lattice->EightCell(i, static_cast<size_t>(6 * generator->genrand_real2()));
+        std::vector<size_t> neighborList = m_lattice->EightCell(i, indexGen());
         computeBase(i, neighborList.begin(), neighborList.end(), generator);
       }
     }
 
-    void compute14Cell(size_t start, size_t end, DREAM3DRandom* generator) const
+    void compute14Cell(size_t start, size_t end, boost::mt19937& generator) const
     {
+      //wrap generator in uniform interger distribution for selecting neighborhood variant
+      boost::uniform_int<> distribution(0, 3);
+      boost::variate_generator<boost::mt19937&, boost::uniform_int<> > indexGen(generator, distribution);
       for (size_t i = start; i < end; i++)
       {
         //don't change cells that are already recrystallized
@@ -160,32 +175,32 @@ class RecrystalizeVolumeImpl
         }
 
         //otherwise get cell neighbors and determine next state
-        std::vector<size_t> neighborList = m_lattice->FourteenCell(i, static_cast<size_t>(4 * generator->genrand_real2()));
+        std::vector<size_t> neighborList = m_lattice->FourteenCell(i, indexGen());
         computeBase(i, neighborList.begin(), neighborList.end(), generator);
       }
     }
 
     void compute(size_t start, size_t end) const
     {
-      //create random number generator + initialized
-      DREAM3DRandom generator;
-      generator.init_genrand(rand());
+      //create random number generator + initialize (parallel threads may call simultaneously so rand() or time alone are insufficient for different seeds)
+      boost::mt19937 generator( static_cast<size_t>( QDateTime::currentMSecsSinceEpoch() * end + start ) );
+
       switch(m_neighborhood)
       {
         case VON_NEUMAN:
-          computeVonNeuman(start, end, &generator);
+          computeVonNeuman(start, end, generator);
           break;
 
         case MOORE:
-          computeMoore(start, end, &generator);
+          computeMoore(start, end, generator);
           break;
 
         case EIGHT_CELL:
-          compute8Cell(start, end, &generator);
+          compute8Cell(start, end, generator);
           break;
 
         case FOURTEEN_CELL:
-          compute14Cell(start, end, &generator);
+          compute14Cell(start, end, generator);
           break;
       }
     }
@@ -469,9 +484,6 @@ void RecrystalizeVolume::execute()
   if(getErrorCondition() < 0) { return; }
   setErrorCondition(0);
 
-  //initialize random number generator
-  srand(static_cast<size_t>( QDateTime::currentMSecsSinceEpoch() ) );
-
   //get cretaed data container
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(m_DataContainerName);
 
@@ -524,7 +536,7 @@ void RecrystalizeVolume::execute()
   int32_t grainCount = 1;
 #endif
 
-  uint32_t timeStep = 0;
+  uint32_t timeStep = 1;
   std::vector<float> recrystallizationHistory;
   recrystallizationHistory.push_back(0);
 
@@ -535,7 +547,6 @@ void RecrystalizeVolume::execute()
     unrecrstallizedCount = 0;
 
     //perform time step
-    timeStep++;
   #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
     bool doParallel = true;
     if (doParallel == true)
@@ -556,8 +567,14 @@ void RecrystalizeVolume::execute()
     //compute recrstallized percent + update progress
     float percent = 1 - (static_cast<float>(unrecrstallizedCount) / lattice.size());
     QString ss = QObject::tr("%1% recrystallized").arg(100 * percent);
-    recrystallizationHistory.push_back(percent);
     notifyStatusMessage(getHumanLabel(), ss);
+
+    //only add to history/consider as time step if there is at least some recrystallization (low nucleations rates may require multiple timesteps for the first nuclei to form)
+    if(percent > 0)
+    {
+      timeStep++;
+      recrystallizationHistory.push_back(percent);
+    }
   }
 
   //clean up working copy
@@ -579,31 +596,28 @@ void RecrystalizeVolume::execute()
     pHistory[i] = recrystallizationHistory[i];
   cellEnsembleAttrMat->addAttributeArray(getRecrystallizationHistoryArrayName(), history);
 
-  //fit avrami equation parameters
-  recrystallizationHistory.pop_back();//last slot is 100% recrystalized
+  //assemble linear pairs to fit avrami equation parameters
+  recrystallizationHistory.pop_back();//last step is 100% recrystallized
   std::vector<float> x;
   std::vector<float> y;
-  for(size_t i = 1; i < recrystallizationHistory.size(); i++)//first time step is 0% recrystallized
+  for(size_t i = 1; i < recrystallizationHistory.size(); i++)//first step is 0% recrystallized
   {
     x.push_back(logf(i));
     y.push_back( logf( -logf(1.0 - recrystallizationHistory[i]) ) );
   }
 
-  float sumX = 0;
-  float sumX2 = 0;
-  float sumXY = 0;
-  float sumY = 0;
-  for(size_t i = 0; i < x.size(); i++)
+  //perform regression
+  double slope, intercept;
+  if(DREAM3DMath::linearRegression<float>(slope, intercept,x, y))
   {
-    sumX += x[i];
-    sumX2 += x[i] * x[i];
-    sumXY += x[i] * y[i];
-    sumY += y[i];
+    m_Avrami[0] = exp(intercept);//k
+    m_Avrami[1] = slope;//n
   }
-  float slope = (x.size() * sumXY - sumX * sumY) / (x.size() * sumX2 - sumX * sumX);
-  float intercept = (sumY - slope * sumX) / x.size();
-  m_Avrami[0] = exp(intercept);//k
-  m_Avrami[1] = slope;//n
+  else
+  {
+    QString ss = QObject::tr("Unable to fit Avrami Parameters");
+    notifyWarningMessage(getHumanLabel(), ss, 1);
+  }
 
   /* Let the GUI know we are done with this filter */
   notifyStatusMessage(getHumanLabel(), "Complete");

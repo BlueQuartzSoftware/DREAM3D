@@ -263,6 +263,15 @@ void LaplacianSmoothing::dataCheck()
   m_SurfaceMeshFaceLabelsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getSurfaceMeshFaceLabelsArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_SurfaceMeshFaceLabelsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_SurfaceMeshFaceLabels = m_SurfaceMeshFaceLabelsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+
+  //make sure that nodes + faces belong to the same data container and use to set datacontainer
+  if(0 != getSurfaceMeshNodeTypeArrayPath().getDataContainerName().compare(getSurfaceMeshFaceLabelsArrayPath().getDataContainerName()))
+  {
+    setErrorCondition(-386);
+    notifyErrorMessage(getHumanLabel(), "Nodes and Triangles must belong to the same SurfaceMesh DataContainer", getErrorCondition());
+  }
+  setSurfaceDataContainerName(getSurfaceMeshNodeTypeArrayPath().getDataContainerName());
+
 }
 
 
