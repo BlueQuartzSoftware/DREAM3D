@@ -761,8 +761,9 @@ void  InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclus
   if (m_MatchRDF == true)
   {
       //RANDOM: Figure out the RDF for randomly distributed particles
-      m_RandomCentroids.resize(numfeatures*3);
-      for (size_t i = firstPrecipitateFeature; i < numfeatures; i++)
+      size_t largeNumber = 1000;
+      m_RandomCentroids.resize(largeNumber*3);
+      for (size_t i = 0; i < largeNumber; i++)
       {
 
               featureOwnersIdx = static_cast<size_t>(rg.genrand_res53() * dims[0] * dims[1] * dims[2]);
@@ -787,9 +788,18 @@ void  InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclus
 
       m_rdfRandom.resize(current_num_bins+1);
 
-      for (size_t i = firstPrecipitateFeature; i < numfeatures; i++)
+      for (size_t i = 0; i < largeNumber; i++)
       {
-            determine_randomRDF(i, 1, false);
+            determine_randomRDF(i, 1, false, largeNumber);
+      }
+
+      size_t numPPTfeatures = numfeatures - firstPrecipitateFeature;
+
+      for (size_t i = 0; i < m_rdfRandom.size(); i++)
+      {
+          m_rdfRandom[i] = m_rdfRandom[i]*numPPTfeatures*(numPPTfeatures-1);
+          m_rdfRandom[i] = m_rdfRandom[i]/largeNumber;
+          m_rdfRandom[i] = m_rdfRandom[i]/(largeNumber-1);
       }
 
       if(write_test_outputs == true)
@@ -1309,7 +1319,7 @@ void InsertPrecipitatePhases::determine_currentRDF(size_t gnum, int add, bool do
 //
 // -----------------------------------------------------------------------------
 
-void InsertPrecipitatePhases::determine_randomRDF(size_t gnum, int add, bool double_count)
+void InsertPrecipitatePhases::determine_randomRDF(size_t gnum, int add, bool double_count, int largeNumber)
 {
 
   float x, y, z;
@@ -1317,25 +1327,22 @@ void InsertPrecipitatePhases::determine_randomRDF(size_t gnum, int add, bool dou
   float r;
 
   int iter = 0;
-  int numPPTfeatures = 1;
   int32_t rdfBin;
   float stepsize = (m_rdfMax-m_rdfMin)/m_numRDFbins;
 
-  int phase = m_FeaturePhases[gnum];
-  while (phase != precipitatephases[iter]) { iter++; }
 
-  StatsDataArray& statsDataArray = *(m_StatsDataArray.lock());
+
   typedef std::vector<std::vector<float> > VectOfVectFloat_t;
 
 
   x = m_RandomCentroids[3 * gnum];
   y = m_RandomCentroids[3 * gnum + 1];
   z = m_RandomCentroids[3 * gnum + 2];
-  size_t numFeatures = m_FeaturePhasesPtr.lock()->getNumberOfTuples();
 
-  for (size_t n = firstPrecipitateFeature; n < numFeatures; n++)
+
+  for (size_t n = 0; n < largeNumber; n++)
   {
-    if (m_FeaturePhases[n] == phase && n != gnum)
+    if (n != gnum)
     {
       xn = m_RandomCentroids[3 * n];
       yn = m_RandomCentroids[3 * n + 1];
