@@ -49,6 +49,12 @@
 typedef struct { int x; int y; int z; } IntVec3_t;
 typedef struct { float x; float y; float z; } FloatVec3_t;
 typedef struct { float a; float b; float c; float d; } FloatVec4_t;
+typedef struct { float v11; float v12; float v13; float v14; float v15; float v16;
+                            float v22; float v23; float v24; float v25; float v26;
+                                       float v33; float v34; float v35; float v36;
+                                                  float v44; float v45; float v46;
+                                                             float v55; float v56;
+                                                                        float v66; } FloatVec21_t;
 typedef struct
 {
     qint32 PaddingDigits;
@@ -68,6 +74,7 @@ typedef struct
 Q_DECLARE_METATYPE(IntVec3_t)
 Q_DECLARE_METATYPE(FloatVec3_t)
 Q_DECLARE_METATYPE(FloatVec4_t)
+Q_DECLARE_METATYPE(FloatVec21_t)
 Q_DECLARE_METATYPE(AxisAngleInput_t)
 Q_DECLARE_METATYPE(FileListInfo_t)
 
@@ -154,6 +161,12 @@ class DREAM3DLib_EXPORT FilterParameter
 
     static Pointer New(const QString& humanLabel, const QString& propertyName,
                        const QString& widgetType, const FloatVec4_t& defaultValue,
+                       bool advanced = false,
+                       const QString& units = QString(""),
+                       int groupIndex = -1);
+
+    static Pointer New(const QString& humanLabel, const QString& propertyName,
+                       const QString& widgetType, const FloatVec21_t& defaultValue,
                        bool advanced = false,
                        const QString& units = QString(""),
                        int groupIndex = -1);
