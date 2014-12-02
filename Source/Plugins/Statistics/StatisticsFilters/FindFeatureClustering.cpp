@@ -252,11 +252,11 @@ void FindFeatureClustering::find_clustering()
   float max = 0.0f;
   float value;
   float sizex, sizey, sizez, totalvol, totalpoints;
-  float normfactor;
-  float finiteAdjFactor = 1.0f/8.0f;
+  float normFactor;
 
   size_t column, row, plane;
   size_t featureOwnersIdx = 0;
+  size_t factor = 100;
 
   std::vector<std::vector<float> > clusteringlist;
   std::vector<std::vector<float> > randomclusteringlist;
@@ -290,14 +290,13 @@ void FindFeatureClustering::find_clustering()
   {
       if (m_FeaturePhases[i] == m_PhaseNumber) {totalPPTfeatures++;}
   }
-  m_RandomCentroids.resize(totalFeatures*3);
+  m_RandomCentroids.resize(totalFeatures*3*factor);
 
   DREAM3D_RANDOMNG_NEW()
 
-  for (size_t i = 1; i < totalFeatures; i++)
+  for (size_t i = 1; i < totalFeatures*factor; i++)
   {
-      if (m_FeaturePhases[i] == m_PhaseNumber)
-      {
+
           featureOwnersIdx = static_cast<size_t>(rg.genrand_res53() * totalpoints);
 
           column = featureOwnersIdx % dims[0];
@@ -311,12 +310,12 @@ void FindFeatureClustering::find_clustering()
           m_RandomCentroids[3*i] = xc;
           m_RandomCentroids[3*i+1] = yc;
           m_RandomCentroids[3*i+2] = zc;
-      }
+
   }
 
 
   clusteringlist.resize(totalFeatures);
-  randomclusteringlist.resize(totalFeatures);
+  randomclusteringlist.resize(totalFeatures*factor);
 
 //  for (size_t i = 1; i < totalFeatures; i++)
 //  {
@@ -336,13 +335,6 @@ void FindFeatureClustering::find_clustering()
     y = m_Centroids[3 * i + 1];
     z = m_Centroids[3 * i + 2];
 
-    xr = m_RandomCentroids[3*i];
-    yr = m_RandomCentroids[3*i+1];
-    zr = m_RandomCentroids[3*i+2];
-
-
-
-
     for (size_t j = i + 1; j < totalFeatures; j++)
     {
       if (m_FeaturePhases[i] == m_FeaturePhases[j] && m_FeaturePhases[i] == m_PhaseNumber)
@@ -351,18 +343,44 @@ void FindFeatureClustering::find_clustering()
         yn = m_Centroids[3 * j + 1];
         zn = m_Centroids[3 * j + 2];
 
+        r = sqrtf((x - xn) * (x - xn) + (y - yn) * (y - yn) + (z - zn) * (z - zn));
+
+        clusteringlist[i].push_back(r);
+        clusteringlist[j].push_back(r);
+
+
+        if(writeErrorFile == true && m_FeaturePhases[j] == 2)
+        {
+          outFile << r << "\n" << r << "\n";
+        }
+      }
+    }
+  }
+
+  for (size_t i = 1; i < totalFeatures*factor; i++)
+  {
+    if (i % 1000 == 0)
+    {
+
+      QString ss = QObject::tr("Working On Feature %1 of %2").arg(i).arg(totalFeatures);
+      notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
+    }
+
+    xr = m_RandomCentroids[3*i];
+    yr = m_RandomCentroids[3*i+1];
+    zr = m_RandomCentroids[3*i+2];
+
+
+
+
+    for (size_t j = i + 1; j < totalFeatures*factor; j++)
+    {
+
         xnr = m_RandomCentroids[3*j];
         ynr = m_RandomCentroids[3*j+1];
         znr = m_RandomCentroids[3*j+2];
 
-
-
-
-        r = sqrtf((x - xn) * (x - xn) + (y - yn) * (y - yn) + (z - zn) * (z - zn));
         rRand = sqrtf((xr - xnr) * (xr - xnr) + (yr - ynr) * (yr - ynr) + (zr - znr) * (zr - znr));
-
-        clusteringlist[i].push_back(r);
-        clusteringlist[j].push_back(r);
 
         randomclusteringlist[i].push_back(rRand);
         randomclusteringlist[j].push_back(rRand);
@@ -372,7 +390,7 @@ void FindFeatureClustering::find_clustering()
           outFile << r << "\n" << r << "\n";
         }
       }
-    }
+
   }
 
   for (size_t i = 1; i < totalFeatures; i++)
@@ -402,26 +420,38 @@ void FindFeatureClustering::find_clustering()
         if(m_RemoveBiasedFeatures == false || m_BiasedFeatures[i] == false)
         {
           ensemble = m_FeaturePhases[i];
-
           bin = (clusteringlist[i][j] - min) / stepsize;
-          binrandom = (randomclusteringlist[i][j] - min)/stepsize;
-
           if(bin >= m_NumberOfBins) { bin = m_NumberOfBins - 1; }
-          if(binrandom >= m_NumberOfBins) {binrandom = m_NumberOfBins;}
-          if(randomclusteringlist[i][j] < min) {binrandom = -1;}
-
           m_NewEnsembleArray[(m_NumberOfBins * ensemble) + bin]++;
-          randomRDF[binrandom+1]++;
         }
       }
     }
   }
 
+  for (size_t i = 1; i < totalFeatures*factor; i++)
+  {
+    for (size_t j=0; j < randomclusteringlist[i].size(); j++)
+    {
 
 
+          binrandom = (randomclusteringlist[i][j] - min)/stepsize;
+
+          if(binrandom >= m_NumberOfBins) {binrandom = m_NumberOfBins;}
+          if(randomclusteringlist[i][j] < min) {binrandom = -1;}
+
+          randomRDF[binrandom+1]++;
+    }
+  }
 
 
+normFactor = totalPPTfeatures*(totalPPTfeatures-1);///((totalFeatures*factor-1)*(totalFeatures*factor-2));
+normFactor = normFactor/(totalFeatures*factor-1);
+normFactor = normFactor/(totalFeatures*factor-2);
 
+for (size_t i=0; i < randomRDF.size(); i++)
+{
+    randomRDF[i] = randomRDF[i]*normFactor;
+}
 
 
 
