@@ -53,7 +53,7 @@ class DREAM3DLib_EXPORT RadialDistributionFunction
      * @param numBins The number of bins to generate
      * @return An array of values that are the frequency values for the histogram
      */
-    static std::vector<int> GenerateRandomDistribution(float minDistance, float maxDistance, int numBins, std::vector<float> boxdims, std::vector<float> boxres);
+    static std::vector<float> GenerateRandomDistribution(float minDistance, float maxDistance, int numBins, std::vector<float> boxdims, std::vector<float> boxres);
 
   protected:
     RadialDistributionFunction();
