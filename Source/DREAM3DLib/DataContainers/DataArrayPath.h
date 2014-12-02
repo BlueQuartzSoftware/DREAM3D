@@ -133,6 +133,34 @@ class DREAM3DLib_EXPORT DataArrayPath : public QObject
      */
     void update(const QString& dcName, const QString& amName, const QString& daName);
 
+    /**
+     * @brief checks that two paths share the same data container
+     * @param other The other path
+     * @return true if the two paths share the same data container, false otherwise
+     */
+    bool sameDataContainer(const DataArrayPath& other) const;
+
+    /**
+     * @brief checks that two paths share the same attribute matrix
+     * @param other The other path
+     * @return true if the two paths share the same attribute matrix, false otherwise
+     */
+    bool sameAttributeMatrix(const DataArrayPath& other) const;
+
+    /**
+     * @brief checks that two paths share the same data array
+     * @param other The other path
+     * @return true if the two paths share the same data array, false otherwise
+     */
+    bool sameDataArray(const DataArrayPath& other) const;
+
+    /**
+     * @brief checks that two paths share the same data container and attribute matrix
+     * @param other The other path
+     * @return true if the two paths share the same data container and attribute matrix, false otherwise
+     */
+    bool sameAttributeMatrixPath(const DataArrayPath& other) const;
+
 
   private:
     QScopedPointer<DataArrayPathPrivate> const d_ptr;
