@@ -59,6 +59,44 @@ namespace CellularAutomata
 			x = index - y * dims[0];
 		}
 
+		//given an (x, y, z) tuple and neighbor offset, compute the corresponding neighbor index (with periodic boundary conditions)
+		inline size_t operator() (int x, int y, int z, int dx, int dy, int dz)
+		{
+			//get neighbor indicies
+			int neighborX = x + dx;
+			int neighborY = y + dy;
+			int neighborZ = z + dz;
+
+			//apply periodic boundary conditions
+			while(neighborX < 0)
+				neighborX += dims[0];
+			while(neighborX >= dims[0])
+				neighborX -= dims[0];
+
+			while(neighborY < 0)
+				neighborY += dims[0];
+			while(neighborY >= dims[0])
+				neighborY -= dims[0];
+
+			while(neighborZ < 0)
+				neighborZ += dims[0];
+			while(neighborZ >= dims[0])
+				neighborZ -= dims[0];
+
+			//convert to index + return
+			return this->ToIndex(neighborX, neighborY, neighborZ);
+		}
+
+		//given an index and offset, compute the corresponding neighbor index (with periodic boundary conditions)
+		inline size_t operator() (size_t index, int dx, int dy, int dz)
+		{
+			//convert index to tuple
+			size_t x, y, z;
+			this->ToTuple(index, x, y, z);
+
+			//return neighbor index
+			return (x, y, z, dx, dy, dz);
+		}
 		
 		/*
 		 * Functions to get the neighhors of a pixel
