@@ -13,7 +13,7 @@ START_FILTER_GROUP(${IO_BINARY_DIR} "${_filterGroupName}" "IO")
 #---------
 # List your public filters here
 set(_PublicFilters
-
+  AbaqusHexahedronWriter
   AbaqusSurfaceMeshWriter
   AvizoRectilinearCoordinateWriter
   AvizoUniformCoordinateWriter
