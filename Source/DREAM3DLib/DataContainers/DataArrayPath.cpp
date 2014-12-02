@@ -212,3 +212,41 @@ void DataArrayPath::update(const QString& dcName, const QString& amName, const Q
   d_ptr->m_AttributeMatrixName = amName;
   d_ptr->m_DataArrayName = daName;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+bool DataArrayPath::sameDataContainer(const DataArrayPath& other) const
+{
+  if(0 == d_ptr->m_DataContainerName.compare(other.d_ptr->m_DataContainerName))
+    return true;
+  return false;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+bool DataArrayPath::sameAttributeMatrix(const DataArrayPath& other) const
+{
+  if(0 == d_ptr->m_AttributeMatrixName.compare(other.d_ptr->m_AttributeMatrixName))
+    return true;
+  return false;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+bool DataArrayPath::sameDataArray(const DataArrayPath& other) const
+{
+  if(0 == d_ptr->m_DataArrayName.compare(other.d_ptr->m_DataArrayName))
+    return true;
+  return false;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+bool DataArrayPath::sameAttributeMatrixPath(const DataArrayPath& other) const
+{
+  return(sameDataContainer(other) && sameAttributeMatrix(other));
+}
