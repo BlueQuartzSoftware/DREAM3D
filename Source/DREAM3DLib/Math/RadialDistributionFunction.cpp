@@ -30,7 +30,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #include "RadialDistributionFunction.h"
-
+#include "DREAM3DLib/Utilities/DREAM3DRandom.h"
+#include "math.h"
 
 // -----------------------------------------------------------------------------
 //
@@ -51,9 +52,47 @@ RadialDistributionFunction::~RadialDistributionFunction()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-std::vector<int> RadialDistributionFunction::GenerateRandomDistribution(float minDistance, float maxDistance, int numBins)
+std::vector<float> RadialDistributionFunction::GenerateRandomDistribution(float minDistance, float maxDistance, int numBins, std::vector<float> boxdims, std::vector<float> boxres)
 {
-  std::vector<int> freq(numBins, 0);
+  std::vector<float> freq(numBins, 0);
+  std::vector<float> randomCentroids(largeNumber*3);
+  int32_t largeNumber = 1000;
+
+  int32_t xpoints;
+  int32_t ypoints;
+  int32_t zpoints;
+
+  size_t featureOwnderIdx = 0;
+
+  float stepsize = (maxDistance-minDistance)/numBins;
+  float maxBoxDistance = sqrtf((boxdims[0]*boxdims[0]) + (boxdims[1]*boxdims[1]) + (boxdims[2]*boxdims[2]))
+
+  DREAM3D_RANDOMNG_NEW();
+
+  for (size_t i = 0; i < largeNumber; i++)
+  {
+       featureOwnderIdx = static_cast<size_t>(rg.genrand_res53() * xpoints * ypoints * zpoints);
+
+       column = featureOwnersIdx % xpoints;
+       row = int(featureOwnersIdx / xpoints) % ypoints;
+       plane = featureOwnersIdx / (xpoints * ypoints);
+
+       xc = static_cast<float>(column * boxres[0]) ;
+       yc = static_cast<float>(row * boxres[1]);
+       zc = static_cast<float>(plane * boxres[2]);
+
+       randomCentroids[3*i] = xc;
+       randomCentroids[3*i+1] = yc;
+       randomCentroids[3*i+2] = zc;
+
+  }
+
+
+
+
+
+
+
 
 
 
