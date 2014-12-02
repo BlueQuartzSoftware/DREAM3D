@@ -1225,6 +1225,13 @@ void InsertPrecipitatePhases::update_availablepoints(std::map<size_t,size_t> &av
   size_t addSize = pointsToAdd.size();
   size_t featureOwnersIdx;
   size_t key, val;
+  for(size_t i = 0; i < addSize; i++)
+  {
+    featureOwnersIdx = pointsToAdd[i];
+    availablePoints[featureOwnersIdx] = availablePointsCount;
+    availablePointsInv[availablePointsCount] = featureOwnersIdx;
+    availablePointsCount++;
+  }
   for(size_t i = 0; i < removeSize; i++)
   {
     featureOwnersIdx = pointsToRemove[i];
@@ -1238,13 +1245,6 @@ void InsertPrecipitatePhases::update_availablepoints(std::map<size_t,size_t> &av
       availablePoints[val] = key;
     }
     availablePointsCount--;
-  }
-  for(size_t i = 0; i < addSize; i++)
-  {
-    featureOwnersIdx = pointsToAdd[i];
-    availablePoints[featureOwnersIdx] = availablePointsCount;
-    availablePointsInv[availablePointsCount] = featureOwnersIdx;
-    availablePointsCount++;
   }
   pointsToRemove.clear();
   pointsToAdd.clear();
