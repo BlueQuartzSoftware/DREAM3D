@@ -694,16 +694,21 @@ void  InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclus
       {
         key = static_cast<size_t>(rg.genrand_res53() * (availablePointsCount-1));
         featureOwnersIdx = availablePointsInv[key];
+        while (m_BoundaryCells[featureOwnersIdx] == 0)
+        {
+          key = static_cast<size_t>(rg.genrand_res53() * (availablePointsCount-1));
+          featureOwnersIdx = availablePointsInv[key];
+        }
       }
       else
       {
         featureOwnersIdx = static_cast<size_t>(rg.genrand_res53() * m_TotalPackingPoints);
+        while (m_BoundaryCells[featureOwnersIdx] == 0)
+        {
+          featureOwnersIdx = static_cast<size_t>(rg.genrand_res53() * m_TotalPackingPoints);
+        }
       }
-      while (m_BoundaryCells[featureOwnersIdx] == 0 || m_FeatureIds[featureOwnersIdx] >= firstPrecipitateFeature)
-      {
-        key++;
-        featureOwnersIdx = availablePointsInv[key];
-      }
+
     }
     else if(random > precipboundaryfraction)
     {
@@ -711,17 +716,22 @@ void  InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclus
       {
         key = static_cast<size_t>(rg.genrand_res53() * (availablePointsCount-1));
         featureOwnersIdx = availablePointsInv[key];
+        while (m_BoundaryCells[featureOwnersIdx] != 0)
+        {
+          key = static_cast<size_t>(rg.genrand_res53() * (availablePointsCount-1));
+          featureOwnersIdx = availablePointsInv[key];
+        }
       }
       else
       {
         featureOwnersIdx = static_cast<size_t>(rg.genrand_res53() * m_TotalPackingPoints);
-      }
-      while (m_BoundaryCells[featureOwnersIdx] != 0 || m_FeatureIds[featureOwnersIdx] >= firstPrecipitateFeature)
-      {
-        key++;
-        featureOwnersIdx = availablePointsInv[key];
+        while (m_BoundaryCells[featureOwnersIdx] != 0)
+        {
+          featureOwnersIdx = static_cast<size_t>(rg.genrand_res53() * m_TotalPackingPoints);
+        }
       }
     }
+
     column = featureOwnersIdx % m_PackingPoints[0];
     row = int(featureOwnersIdx / m_PackingPoints[0]) % m_PackingPoints[1];
     plane = featureOwnersIdx / (m_PackingPoints[0] * m_PackingPoints[1]);
@@ -751,12 +761,12 @@ void  InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclus
     if (true)
     {
 
-        std::ofstream testFile;
-        if(write_test_outputs == true)
-        {
+      std::ofstream testFile;
+      if(write_test_outputs == true)
+      {
 
-            testFile.open("/Users/Shared/Data/PW_Work/OUTFILE/BC.txt");
-        }
+        testFile.open("/Users/Shared/Data/PW_Work/OUTFILE/BC.txt");
+      }
 
       // begin swaping/moving/adding/removing features to try to improve packing
       int totalAdjustments = static_cast<int>(1000 * ((numfeatures - firstPrecipitateFeature) - 1));
@@ -798,16 +808,21 @@ void  InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclus
           {
             key = static_cast<size_t>(rg.genrand_res53() * (availablePointsCount-1));
             featureOwnersIdx = availablePointsInv[key];
+            while (m_BoundaryCells[featureOwnersIdx] == 0)
+            {
+              key = static_cast<size_t>(rg.genrand_res53() * (availablePointsCount-1));
+              featureOwnersIdx = availablePointsInv[key];
+            }
           }
           else
           {
             featureOwnersIdx = static_cast<size_t>(rg.genrand_res53() * m_TotalPackingPoints);
+            while (m_BoundaryCells[featureOwnersIdx] == 0)
+            {
+              featureOwnersIdx = static_cast<size_t>(rg.genrand_res53() * m_TotalPackingPoints);
+            }
           }
-          while (m_BoundaryCells[featureOwnersIdx] == 0 || m_FeatureIds[featureOwnersIdx] >= firstPrecipitateFeature)
-          {
-            key++;
-            featureOwnersIdx = availablePointsInv[key];
-          }
+
         }
         else if(random > precipboundaryfraction)
         {
@@ -815,17 +830,20 @@ void  InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclus
           {
             key = static_cast<size_t>(rg.genrand_res53() * (availablePointsCount-1));
             featureOwnersIdx = availablePointsInv[key];
+            while (m_BoundaryCells[featureOwnersIdx] != 0)
+            {
+              key = static_cast<size_t>(rg.genrand_res53() * (availablePointsCount-1));
+              featureOwnersIdx = availablePointsInv[key];
+            }
           }
           else
           {
             featureOwnersIdx = static_cast<size_t>(rg.genrand_res53() * m_TotalPackingPoints);
+            while (m_BoundaryCells[featureOwnersIdx] != 0)
+            {
+              featureOwnersIdx = static_cast<size_t>(rg.genrand_res53() * m_TotalPackingPoints);
+            }
           }
-          while (m_BoundaryCells[featureOwnersIdx] != 0 || m_FeatureIds[featureOwnersIdx] >= firstPrecipitateFeature)
-          {
-            key++;
-            featureOwnersIdx = availablePointsInv[key];
-          }
-
         }
         column = featureOwnersIdx % m_PackingPoints[0];
         row = int(featureOwnersIdx / m_PackingPoints[0]) % m_PackingPoints[1];
@@ -863,41 +881,42 @@ void  InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclus
 
         if(write_test_outputs == true && iteration % 100 == 0)
         {
-         testFile << "\n" << m_oldRDFerror;
+          testFile << "\n" << m_oldRDFerror;
         }
 
 
       }
       if(write_test_outputs == true)
-{
-testFile.close();
-}
+      {
+        testFile.close();
+      }
 
     }
   }
 
 
   if(write_test_outputs == true)
-{
-std::ofstream testFile3;
-testFile3.open("/Users/Shared/Data/PW_Work/OUTFILE/current.txt");
-for (size_t i = 0; i < m_rdfCurrentDistNorm.size(); i++)
-{
-testFile3 << "\n" << m_rdfCurrentDistNorm[i];
-}
-testFile3.close();
+  {
+    std::ofstream testFile3;
+    testFile3.open("/Users/Shared/Data/PW_Work/OUTFILE/current.txt");
+    for (size_t i = 0; i < m_rdfCurrentDistNorm.size(); i++)
+    {
+      testFile3 << "\n" << m_rdfCurrentDistNorm[i];
+    }
+    testFile3.close();
 
-std::ofstream testFile2;
-testFile2.open("/Users/Shared/Data/PW_Work/OUTFILE/target.txt");
-for (size_t i = 0; i < m_rdfTargetDist.size(); i++)
-{
-testFile2 << "\n" << m_rdfTargetDist[i];
-}
-testFile2.close();
-}
+    std::ofstream testFile2;
+    testFile2.open("/Users/Shared/Data/PW_Work/OUTFILE/target.txt");
+    for (size_t i = 0; i < m_rdfTargetDist.size(); i++)
+    {
+      testFile2 << "\n" << m_rdfTargetDist[i];
+    }
+    testFile2.close();
+  }
 
   std::cout << "Done Jumping" <<std::endl;
 }
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -1202,9 +1221,10 @@ void InsertPrecipitatePhases::determine_currentRDF(size_t gnum, int add, bool do
 
       rdfBin = (r-m_rdfMin)/stepsize;
 
-      if (r < m_rdfMin)
+      if (r < m_rdfMin) rdfBin = -1;
+      if (r < 9.0)
       {
-        rdfBin = -1;
+        int stop = 0;
       }
       //if (rdfBin >= m_numRDFbins) {rdfBin = m_numRDFbins;}
       if (double_count == true)
