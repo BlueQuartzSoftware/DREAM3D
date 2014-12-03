@@ -102,7 +102,7 @@ endif()
 
 
 set(DREAM3D_WEBSITE_SERVER "dream3d.bluequartz.net")
-set(DREAM3D_WEBSITE_SERVER_PATH "/var/www/dream3d.bluequartz.net")
+set(DREAM3D_WEBSITE_SERVER_PATH "/var/www/dream3d-wp.bluequartz.net")
 set(DREAM3D_WEBSITE_SCP_USERNAME "mjackson")
 #-- Create a bash script file that will upload the latest version to the web server
 configure_file(${PROJECT_RESOURCES_DIR}/upload.sh.in
