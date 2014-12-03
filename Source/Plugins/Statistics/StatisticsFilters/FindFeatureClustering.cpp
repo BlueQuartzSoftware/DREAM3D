@@ -481,6 +481,14 @@ for (size_t i=0; i < randomRDF.size(); i++)
     }
     testFile4.close();
 
+    std::ofstream testFile7;
+    testFile7.open("/Users/Shared/Data/PW_Work/OUTFILE/targetRaw.txt");
+    for (size_t i = 0; i < oldcount.size(); i++)
+    {
+    testFile7 << "\n" << oldcount[i];
+    }
+    testFile7.close();
+
 
 
 
