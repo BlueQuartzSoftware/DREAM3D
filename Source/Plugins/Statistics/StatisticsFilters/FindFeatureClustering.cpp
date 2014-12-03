@@ -257,7 +257,7 @@ void FindFeatureClustering::find_clustering()
 
   size_t column, row, plane;
   size_t featureOwnersIdx = 0;
-  size_t factor = 100;
+  size_t factor = 3;
 
   std::vector<std::vector<float> > clusteringlist;
   std::vector<std::vector<float> > randomclusteringlist;
@@ -363,7 +363,7 @@ void FindFeatureClustering::find_clustering()
     if (i % 1000 == 0)
     {
 
-      QString ss = QObject::tr("Working On Feature %1 of %2").arg(i).arg(totalFeatures);
+      QString ss = QObject::tr("Working On Random Feature %1 of %2").arg(i).arg(totalFeatures*factor);
       notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
     }
 
