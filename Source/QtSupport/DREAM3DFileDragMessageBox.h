@@ -38,11 +38,13 @@
 #ifndef _DREAM3DFILEDRAGMESSAGEBOX_H_
 #define _DREAM3DFILEDRAGMESSAGEBOX_H_
 
-#include "ui_DREAM3DFileDragMessageBox.h"
 
 #include <QDialog>
 
-class DREAM3DFileDragMessageBox : public QDialog, public Ui::Form
+#include "ui_DREAM3DFileDragMessageBox.h"
+
+
+class DREAM3DFileDragMessageBox : public QDialog, private Ui::DREAM3DFileDragMessageBox
 {
   Q_OBJECT
 
