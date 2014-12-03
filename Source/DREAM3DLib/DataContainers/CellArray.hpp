@@ -38,6 +38,7 @@
 
 
 #include <string.h>
+#include <cmath>
 
 
 #include <boost/shared_array.hpp>
@@ -378,6 +379,70 @@ class CellArray
           }
           vertValue /= numVertsPerCell;
           cellArray[nDims*j+i] = vertValue;
+        }
+      }
+    }
+
+    // -----------------------------------------------------------------------------
+    //
+    // -----------------------------------------------------------------------------
+    template<typename DataType>
+    void weightedAverageVertexArrayValues(typename DataArray<DataType>::Pointer inVertexArray, DataArray<float>::Pointer outCellArray)
+    {
+      // Make sure the incoming arrays match the tuple size of the currently held cells and verts, and
+      // check that they have the same component dimensions (developer should ensure these when creating
+      // the arrays in the filter)
+      BOOST_ASSERT(outCellArray->getNumberOfTuples() == m_Array->getNumberOfTuples());
+      BOOST_ASSERT(inVertexArray->getNumberOfTuples() == m_Verts->getNumberOfTuples());
+      BOOST_ASSERT(outCellArray->getComponentDimensions() == inVertexArray->getComponentDimensions());
+
+      // Verify that the CellCentroids array is not null
+      BOOST_ASSERT(m_CellCentroids != NULL);
+
+      DataType* vertArray = inVertexArray->getPointer(0);
+      float* cellArray = outCellArray->getPointer(0);
+      float* cellCentroids = m_CellCentroids->getPointer(0);
+      VertexArray::Vert_t* vertex = m_Verts->getPointer(0);
+
+      size_t nCells = outCellArray->getNumberOfTuples();
+      size_t cDims = inVertexArray->getNumberOfComponents();
+
+      // CellArray currently only handles polytopes with 4 vertices...
+      float numVertsPerCell = 4.0;
+
+      // VertexArray currently only handles 3 dimensions (Euclidean space...)
+      size_t nDims = 3;
+
+      // Vector to hold vertex-centroid distances, 4 per cell
+      std::vector<float> vertCentDist(nCells*numVertsPerCell);
+
+      for (size_t i=0;i<nCells;i++)
+      {
+        Cell_t& Cell = *(m_Array->getPointer(i));
+        for (size_t j=0;j<numVertsPerCell;j++)
+        {
+          for (size_t k=0;k<nDims;k++)
+          {
+            vertCentDist[numVertsPerCell*i+j] += (vertex[Cell.verts[j]].pos[k] - cellCentroids[nDims*i+k]) * (vertex[Cell.verts[j]].pos[k] - cellCentroids[nDims*i+k]);
+          }
+          vertCentDist[numVertsPerCell*i+j] = sqrt(vertCentDist[numVertsPerCell*i+j]);
+        }
+      }
+
+      for (size_t i=0;i<cDims;i++)
+      {
+        for (size_t j=0;j<nCells;j++)
+        {
+          Cell_t& Cell = *(m_Array->getPointer(j));
+          float vertValue = 0.0;
+          float sumDist = 0.0;
+          for (size_t k=0;k<numVertsPerCell;k++)
+          {
+            vertValue += vertArray[cDims*Cell.verts[k]+i] * vertCentDist[numVertsPerCell*j+k];
+            sumDist += vertCentDist[numVertsPerCell*j+k];
+          }
+          vertValue /= sumDist;
+          cellArray[cDims*j+i] = vertValue;
         }
       }
     }

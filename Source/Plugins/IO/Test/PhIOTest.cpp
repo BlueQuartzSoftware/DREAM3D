@@ -154,9 +154,6 @@ int TestPhWriter()
 int TestPhReader()
 {
  // FilterPipeline::Pointer pipeline = FilterPipeline::New();
-
-
-
   DataContainerArray::Pointer dca = DataContainerArray::New();
  // dca->pushBack(m);
 
