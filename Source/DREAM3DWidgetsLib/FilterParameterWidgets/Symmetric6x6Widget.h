@@ -86,6 +86,18 @@ class DREAM3DWidgetsLib_EXPORT Symmetric6x6Widget : public FilterParameterWidget
 
     void changeSym(int newState); //slot to connect combobox to symmetry state
 
+    //slots for special symmetry relationships
+    void vbar66(const QString& dummy);
+    void tetragonalv16Changed(const QString& dummy);
+    void tetragonalv26Changed(const QString& dummy);
+
+    void trigonalv14Changed(const QString& dummy);
+    void trigonalv24Changed(const QString& dummy);
+    void trigonalv56Changed(const QString& dummy);
+
+    void trigonalv15Changed(const QString& dummy);
+    void trigonalv25Changed(const QString& dummy);
+    void trigonalv46Changed(const QString& dummy);
 
   signals:
     void errorSettingFilterParameter(const QString& msg);
@@ -108,7 +120,7 @@ class DREAM3DWidgetsLib_EXPORT Symmetric6x6Widget : public FilterParameterWidget
     void setTriclinicSym();
 
     //helper functions for complex inter dependancies
-    void vbar(QLineEdit* obj);
+    // void vbar(QLineEdit* obj);
 
     Symmetric6x6Widget(const Symmetric6x6Widget&); // Copy Constructor Not Implemented
     void operator=(const Symmetric6x6Widget&); // Operator '=' Not Implemented
