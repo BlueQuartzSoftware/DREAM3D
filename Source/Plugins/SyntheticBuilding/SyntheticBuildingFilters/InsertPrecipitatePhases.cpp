@@ -1621,12 +1621,6 @@ void InsertPrecipitatePhases::insert_precipitate(size_t gnum)
 
   //adjust radcur1 to make larger exclusion zone to prevent precipitate overlap
   radcur1 = radcur1*2.0;
-  if(m_MatchRDF == true)
-  {
-    radcur1 = m_rdfMin;
-    bovera = 1.0;
-    covera = 1.0;
-  }
 
   float radcur2 = (radcur1 * bovera);
   float radcur3 = (radcur1 * covera);
