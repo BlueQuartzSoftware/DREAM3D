@@ -1,0 +1,448 @@
+/* ============================================================================
+ * Copyright (c) 2010, Michael A. Jackson (BlueQuartz Software)
+ * Copyright (c) 2010, Dr. Michael A. Groeber (US Air Force Research Laboratories
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without modification,
+ * are permitted provided that the following conditions are met:
+ *
+ * Redistributions of source code must retain the above copyright notice, this
+ * list of conditions and the following disclaimer.
+ *
+ * Redistributions in binary form must reproduce the above copyright notice, this
+ * list of conditions and the following disclaimer in the documentation and/or
+ * other materials provided with the distribution.
+ *
+ * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
+ * BlueQuartz Software nor the names of its contributors may be used to endorse
+ * or promote products derived from this software without specific prior written
+ * permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
+ * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ *  This code was written under United States Air Force Contract number
+ *                           FA8650-07-D-5800
+ *
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+#include "StatsGenRDFWidget.h"
+
+#if QWT_VERSION >= 0x060000
+#include "backwards.h"
+#endif
+
+//-- C++ Includes
+#include <iostream>
+
+//-- Qt Includes
+#include <QtGui/QAbstractItemDelegate>
+#include <QtCore/QtConcurrentMap>
+#include <QtCore/QFileInfo>
+#include <QtCore/QFile>
+#include <QtCore/QDir>
+#include <QtCore/QString>
+#include <QtCore/QSettings>
+#include <QtCore/QVector>
+#include <QtGui/QCloseEvent>
+#include <QtGui/QMessageBox>
+#include <QtGui/QFileDialog>
+
+
+#include <qwt.h>
+#include <qwt_plot.h>
+#include <qwt_plot_curve.h>
+#include <qwt_abstract_scale_draw.h>
+#include <qwt_scale_draw.h>
+#include <qwt_plot_canvas.h>
+
+#include "EbsdLib/EbsdConstants.h"
+
+#include "DREAM3DLib/Common/StatsGen.hpp"
+#include "DREAM3DLib/Common/Texture.hpp"
+#include "DREAM3DLib/OrientationOps/OrientationOps.h"
+#include "DREAM3DLib/OrientationOps/CubicOps.h"
+#include "DREAM3DLib/OrientationOps/HexagonalOps.h"
+#include "DREAM3DLib/OrientationOps/OrthoRhombicOps.h"
+
+#include "Applications/StatsGenerator/TableModels/SGMDFTableModel.h"
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+StatsGenRDFWidget::StatsGenRDFWidget(QWidget* parent) :
+  QWidget(parent),
+//  m_PhaseIndex(-1),
+//  m_CrystalStructure(Ebsd::CrystalStructure::Cubic_High),
+  m_RDFTableModel(NULL)
+{
+  this->setupUi(this);
+  this->setupGui();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+StatsGenRDFWidget::~StatsGenRDFWidget()
+{
+  if (NULL != m_RDFTableModel)
+  {
+    m_RDFTableModel->deleteLater();
+  }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+SGRDFTableModel* StatsGenRDFWidget::tableModel()
+{
+  return m_RDFTableModel;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void StatsGenRDFWidget::setupGui()
+{
+  initQwtPlot("Misorientation Angle(w)", "Freq", m_RDFPlot);
+  m_RDFTableModel = new SGRDFTableModel;
+  m_RDFTableModel->setInitialValues();
+  m_RDFTableView->setModel(m_RDFTableModel);
+  QAbstractItemDelegate* aid = m_RDFTableModel->getItemDelegate();
+  m_RDFTableView->setItemDelegate(aid);
+  m_PlotCurve = new QwtPlotCurve;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void StatsGenRDFWidget::initQwtPlot(QString xAxisName, QString yAxisName, QwtPlot* plot)
+{
+  plot->setAxisTitle(QwtPlot::xBottom, xAxisName);
+  plot->setAxisTitle(QwtPlot::yLeft, yAxisName);
+  //plot->setCanvasBackground(QColor(Qt::white));
+  //plot->canvas()->setFrameShape(QFrame::NoFrame);
+
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void StatsGenRDFWidget::on_m_RDFUpdateBtn_clicked()
+{
+  // Generate the ODF Data from the current values in the ODFTableModel
+  QVector<float> odf = generateODFData();
+
+  updateRDFPlot(odf);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void StatsGenRDFWidget::updateRDFPlot(QVector<float>& odf)
+{
+  int err = 0;
+
+  int size = 100000;
+
+  // These are the input vectors
+  QVector<int> angles;
+  QVector<float> axes;
+  QVector<float> weights;
+
+  angles = m_RDFTableModel->getData(SGRDFTableModel::Angle);
+  weights = m_RDFTableModel->getData(SGRDFTableModel::Weight);
+  axes = m_RDFTableModel->getData(SGRDFTableModel::Axis);
+
+
+  // These are the output vectors
+  QVector<float> x;
+  QVector<float> y;
+
+  // Allocate a new vector to hold the RDF data
+  QVector<float> RDF(CubicOps::k_RDFSize);
+  // Calculate the RDF Data using the ODF data and the rows from the RDF Table model
+  Texture::CalculateRDFData<float, CubicOps>(angles.data(), axes.data(), weights.data(), odf.data(), RDF.data(), angles.size());
+  // Now generate the actual XY point data that gets plotted.
+  size_t npoints = 13;
+  x.resize(npoints);
+  y.resize(npoints);
+  err = StatsGen::GenCubicRDFPlotData(RDF.data(), x.data(), y.data(), npoints, size);
+  if (err < 0)
+  {
+    return;
+  }
+
+  QwtArray<double> xD(static_cast<int>(x.size()));
+  QwtArray<double> yD(static_cast<int>(x.size()));
+  for (qint32 i = 0; i < x.size(); ++i)
+  {
+    xD[i] = static_cast<double>(x.at(i));
+    yD[i] = static_cast<double>(y.at(i));
+  }
+
+
+  // This will actually plot the XY data in the Qwt plot widget
+  QwtPlotCurve* curve = m_PlotCurve;
+#if QWT_VERSION >= 0x060000
+  curve->setSamples(xD, yD);
+#else
+  curve->setData(xD, yD);
+#endif
+  curve->setStyle(QwtPlotCurve::Lines);
+  curve->attach(m_RDFPlot);
+  m_RDFPlot->replot();
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QVector<float> StatsGenRDFWidget::generateODFData()
+{
+  QVector<float> e1s;
+  QVector<float> e2s;
+  QVector<float> e3s;
+  QVector<float> weights;
+  QVector<float> sigmas;
+  QVector<float> odf;
+
+  // Initialize xMax and yMax....
+  e1s = m_ODFTableModel->getData(SGODFTableModel::Euler1);
+  e2s = m_ODFTableModel->getData(SGODFTableModel::Euler2);
+  e3s = m_ODFTableModel->getData(SGODFTableModel::Euler3);
+  weights = m_ODFTableModel->getData(SGODFTableModel::Weight);
+  sigmas = m_ODFTableModel->getData(SGODFTableModel::Sigma);
+
+  for(qint32 i = 0; i < e1s.size(); i++)
+  {
+    e1s[i] = e1s[i] * M_PI / 180.0;
+    e2s[i] = e2s[i] * M_PI / 180.0;
+    e3s[i] = e3s[i] * M_PI / 180.0;
+  }
+  size_t numEntries = e1s.size();
+
+  if ( Ebsd::CrystalStructure::Cubic_High == m_CrystalStructure)
+  {
+
+    odf.resize(CubicOps::k_OdfSize);
+    Texture::CalculateCubicODFData(e1s.data(), e2s.data(), e3s.data(),
+                                   weights.data(), sigmas.data(), true,
+                                   odf.data(), numEntries);
+  }
+  else if ( Ebsd::CrystalStructure::Hexagonal_High == m_CrystalStructure)
+  {
+    odf.resize(HexagonalOps::k_OdfSize);
+    Texture::CalculateHexODFData(e1s.data(), e2s.data(), e3s.data(),
+                                 weights.data(), sigmas.data(), true,
+                                 odf.data(), numEntries);
+  }
+  return odf;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void StatsGenRDFWidget::on_addRDFRowBtn_clicked()
+{
+  if (!m_RDFTableModel->insertRow(m_RDFTableModel->rowCount())) { return; }
+  m_RDFTableView->resizeColumnsToContents();
+  m_RDFTableView->scrollToBottom();
+  m_RDFTableView->setFocus();
+  QModelIndex index = m_RDFTableModel->index(m_RDFTableModel->rowCount() - 1, 0);
+  m_RDFTableView->setCurrentIndex(index);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void StatsGenRDFWidget::on_deleteRDFRowBtn_clicked()
+{
+  QItemSelectionModel* selectionModel = m_RDFTableView->selectionModel();
+  if (!selectionModel->hasSelection()) { return; }
+  QModelIndex index = selectionModel->currentIndex();
+  if (!index.isValid()) { return; }
+  m_RDFTableModel->removeRow(index.row(), index.parent());
+  if (m_RDFTableModel->rowCount() > 0)
+  {
+    m_RDFTableView->resizeColumnsToContents();
+  }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void StatsGenRDFWidget::on_loadRDFBtn_clicked()
+{
+  QString proposedFile = m_OpenDialogLastDirectory;
+  QString file = QFileDialog::getOpenFileName(this, tr("Open Axis ODF File"), proposedFile, tr("Text Document (*.txt)"));
+  if(true == file.isEmpty())
+  {
+    return;
+  }
+  else
+  {
+    size_t numMisorients = 0;
+    QString filename = file;
+    std::ifstream inFile;
+    inFile.open(filename.toLatin1().data());
+
+    inFile >> numMisorients;
+
+    float angle, weight;
+    std::string n1, n2, n3;
+    for(size_t i = 0; i < numMisorients; i++)
+    {
+      inFile >> angle >> n1 >> n2 >> n3 >> weight;
+
+      QString axis = QString("<" + QString::fromStdString(n1) + "," + QString::fromStdString(n2) + "," + QString::fromStdString(n3) + ">");
+
+      if (!m_RDFTableModel->insertRow(m_RDFTableModel->rowCount())) { return; }
+      int row = m_RDFTableModel->rowCount() - 1;
+      m_RDFTableModel->setRowData(row, angle, axis, weight);
+
+      m_RDFTableView->resizeColumnsToContents();
+      m_RDFTableView->scrollToBottom();
+      m_RDFTableView->setFocus();
+      QModelIndex index = m_RDFTableModel->index(m_RDFTableModel->rowCount() - 1, 0);
+      m_RDFTableView->setCurrentIndex(index);
+    }
+  }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void StatsGenRDFWidget::extractStatsData(int index, StatsData* statsData, unsigned int phaseType)
+{
+  VectorOfFloatArray arrays;
+  if(phaseType == DREAM3D::PhaseType::PrimaryPhase)
+  {
+    PrimaryStatsData* pp = PrimaryStatsData::SafePointerDownCast(statsData);
+    arrays = pp->getRDF_Weights();
+  }
+  if(phaseType == DREAM3D::PhaseType::PrecipitatePhase)
+  {
+    PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsData);
+    arrays = pp->getRDF_Weights();
+  }
+  if(phaseType == DREAM3D::PhaseType::TransformationPhase)
+  {
+    TransformationStatsData* tp = TransformationStatsData::SafePointerDownCast(statsData);
+    arrays = tp->getRDF_Weights();
+  }
+  if (arrays.size() > 0 )
+  {
+    QVector<float> angle(static_cast<int>(arrays[0]->getNumberOfTuples()));
+    ::memcpy( &(angle.front()), arrays[0]->getVoidPointer(0), sizeof(float)*angle.size() );
+
+    QVector<float> weights(static_cast<int>(arrays[0]->getNumberOfTuples()));
+    ::memcpy( &(weights.front()), arrays[0]->getVoidPointer(0), sizeof(float)*weights.size() );
+
+    QVector<float> axis(static_cast<int>(arrays[0]->getSize())); // This one is 3xn in size
+    ::memcpy( &(axis.front()), arrays[0]->getVoidPointer(0), sizeof(float)*axis.size() );
+
+    if (angle.size() > 0)
+    {
+      // Load the data into the table model
+      m_RDFTableModel->setTableData(angle, axis, weights);
+    }
+  }
+  on_m_RDFUpdateBtn_clicked();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int StatsGenRDFWidget::getMisorientationData(StatsData* statsData, unsigned int phaseType)
+{
+  int retErr = 0;
+  QVector<float> x;
+  QVector<float> y;
+
+  QVector<float> angles;
+  QVector<float> axes;
+  QVector<float> weights;
+
+  angles = m_RDFTableModel->getData(SGRDFTableModel::Angle);
+  weights = m_RDFTableModel->getData(SGRDFTableModel::Weight);
+  axes = m_RDFTableModel->getData(SGRDFTableModel::Axis);
+
+  // Generate the ODF Data from the current values in the ODFTableModel
+  QVector<float> odf = generateODFData();
+  QVector<float> RDF;
+
+  //unsigned long long int nElements = 0;
+
+  if ( Ebsd::CrystalStructure::Cubic_High == m_CrystalStructure)
+  {
+    RDF.resize(CubicOps::k_RDFSize);
+    Texture::CalculateRDFData<float, CubicOps>(angles.data(), axes.data(), weights.data(), odf.data(), RDF.data(), angles.size());
+    //nElements = 18 * 18 * 18;
+  }
+  else if ( Ebsd::CrystalStructure::Hexagonal_High == m_CrystalStructure)
+  {
+    RDF.resize(HexagonalOps::k_RDFSize);
+    Texture::CalculateRDFData<float, HexagonalOps>(angles.data(), axes.data(), weights.data(), odf.data(), RDF.data(), angles.size());
+    //nElements = 36 * 36 * 12;
+  }
+  if (RDF.size() > 0)
+  {
+    FloatArrayType::Pointer p = FloatArrayType::FromPointer(RDF.data(), RDF.size(), DREAM3D::StringConstants::MisorientationBins);
+    if(phaseType == DREAM3D::PhaseType::PrimaryPhase)
+    {
+      PrimaryStatsData* pp = PrimaryStatsData::SafePointerDownCast(statsData);
+      pp->setMisorientationBins(p);
+    }
+    if(phaseType == DREAM3D::PhaseType::PrecipitatePhase)
+    {
+      PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsData);
+      pp->setMisorientationBins(p);
+    }
+    if(phaseType == DREAM3D::PhaseType::TransformationPhase)
+    {
+      TransformationStatsData* tp = TransformationStatsData::SafePointerDownCast(statsData);
+      tp->setMisorientationBins(p);
+    }
+
+    if(angles.size() > 0)
+    {
+      FloatArrayType::Pointer anglesArray = FloatArrayType::FromPointer(angles.data(), angles.size(), DREAM3D::StringConstants::Angle);
+      FloatArrayType::Pointer axisArray = FloatArrayType::FromPointer(axes.data(), axes.size(), DREAM3D::StringConstants::Axis);
+      FloatArrayType::Pointer weightArray = FloatArrayType::FromPointer(weights.data(), weights.size(), DREAM3D::StringConstants::Weight);
+
+      VectorOfFloatArray RDFWeights;
+      RDFWeights.push_back(anglesArray);
+      RDFWeights.push_back(axisArray);
+      RDFWeights.push_back(weightArray);
+      if(phaseType == DREAM3D::PhaseType::PrimaryPhase)
+      {
+        PrimaryStatsData* pp = PrimaryStatsData::SafePointerDownCast(statsData);
+        pp->setRDF_Weights(RDFWeights);
+      }
+      if(phaseType == DREAM3D::PhaseType::PrecipitatePhase)
+      {
+        PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsData);
+        pp->setRDF_Weights(RDFWeights);
+      }
+      if(phaseType == DREAM3D::PhaseType::TransformationPhase)
+      {
+        TransformationStatsData* tp = TransformationStatsData::SafePointerDownCast(statsData);
+        tp->setRDF_Weights(RDFWeights);
+      }
+    }
+
+  }
+
+  return retErr;
+}
+
+
