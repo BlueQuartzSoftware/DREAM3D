@@ -34,36 +34,24 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include <stdlib.h>
-#include <iostream>
-#include <vector>
-
+#include <QtCore/QCoreApplication>
 #include <QtCore/QDir>
 #include <QtCore/QFile>
 
+#include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/DataArrays/DataArray.hpp"
 #include "DREAM3DLib/Common/FilterPipeline.h"
-#include "DREAM3DLib/DataContainers/VolumeDataContainer.h"
-#include "DREAM3DLib/DataContainers/AttributeMatrix.h"
+#include "DREAM3DLib/Common/FilterManager.h"
+#include "DREAM3DLib/Common/FilterFactory.hpp"
+#include "DREAM3DLib/Plugin/DREAM3DPluginInterface.h"
+#include "DREAM3DLib/Plugin/DREAM3DPluginLoader.h"
 #include "DREAM3DLib/Utilities/UnitTestSupport.hpp"
-
-
-#include "IOFilters/DxWriter.h"
-#include "IOFilters/DxReader.h"
+#include "DREAM3DLib/Utilities/QMetaObjectUtilities.h"
 
 #include "TestFileLocations.h"
+
 #include "GenerateFeatureIds.h"
-
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-
-QString getTestFile()
-{
-  return UnitTest::TestTempDir + "/DxIOTest.dx";
-}
 
 // -----------------------------------------------------------------------------
 //
@@ -71,8 +59,35 @@ QString getTestFile()
 void RemoveTestFiles()
 {
 #if REMOVE_TEST_FILES
-  QFile::remove(getTestFile());
+    QFile::remove(UnitTest::DxIOTest::TestFile);
 #endif
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int TestFilterAvailability()
+{
+    // Now instantiate the DxWriter Filter from the FilterManager
+    QString filtName = "DxWriter";
+    FilterManager* fm = FilterManager::Instance();
+    IFilterFactory::Pointer filterFactory = fm->getFactoryForFilter(filtName);
+    if (NULL == filterFactory.get() )
+    {
+        std::stringstream ss;
+        ss << "The DxIOTest Requires the use of the " << filtName.toStdString() << " filter which is found in the IO Plugin";
+        DREAM3D_TEST_THROW_EXCEPTION(ss.str())
+    }
+    
+    filtName = "DxReader";
+    filterFactory = fm->getFactoryForFilter(filtName);
+    if (NULL == filterFactory.get() )
+    {
+        std::stringstream ss;
+        ss << "The DxIOTest Requires the use of the " << filtName.toStdString() << " filter which is found in the IO Plugin";
+        DREAM3D_TEST_THROW_EXCEPTION(ss.str())
+    }
+    return 0;
 }
 
 // -----------------------------------------------------------------------------
@@ -80,49 +95,51 @@ void RemoveTestFiles()
 // -----------------------------------------------------------------------------
 int TestDxWriter()
 {
-  FilterPipeline::Pointer pipeline = FilterPipeline::New();
-  std::cout << "Test 1 ------------------------------------------------" << std::endl;
-  // This should FAIL because there is no Volume Data Container for the filter to get.
-  DxWriter::Pointer writer = DxWriter::New();
-  writer->setOutputFile(getTestFile());
-  pipeline->pushBack(writer);
-  int err = pipeline->preflightPipeline();
-  DREAM3D_REQUIRE(err < 0);
-  pipeline->execute();
-  err = pipeline->getErrorCondition();
-  DREAM3D_REQUIRE(err < 0);
-  pipeline->popFront();
-
-  std::cout << "Test 2 ------------------------------------------------" << std::endl;
-  // Now have a VolumeDataContainer created but NO feature Ids. This pipeline should still fail
-  CreateVolumeDataContainer::Pointer createVolumeDC = CreateVolumeDataContainer::New();
-  pipeline->pushBack(createVolumeDC);
-  pipeline->pushBack(writer);
-  err = pipeline->preflightPipeline();
-  DREAM3D_REQUIRE(err < 0);
-  pipeline->execute();
-  err = pipeline->getErrorCondition();
-  DREAM3D_REQUIRE(err < 0);
-
-  std::cout << "Test 3 ------------------------------------------------" << std::endl;
-  // Now create some FeatureIds and lets setup a real pipeline that should work
-  pipeline->clear(); // Remove any filters from the pipeline first
-  // Put a filter that will just create an empty VolumeDataContainer
-  pipeline->pushBack(createVolumeDC);
-
-  GenerateFeatureIds::Pointer generateFeatureIds = GenerateFeatureIds::New();
-  pipeline->pushBack(generateFeatureIds);
-
-  writer = DxWriter::New();
-  writer->setOutputFile(getTestFile());
-  pipeline->pushBack(writer);
-  err = pipeline->preflightPipeline();
-  DREAM3D_REQUIRE_EQUAL(err, 0);
-  pipeline->execute();
-  err = pipeline->getErrorCondition();
-  DREAM3D_REQUIRE_EQUAL(err, 0);
-
-  return EXIT_SUCCESS;
+    FilterPipeline::Pointer pipeline = FilterPipeline::New();
+    
+    int err = 0;
+    
+    // Use the helper class CreateVolumeDataContainer to generate a valid DataContainer
+    CreateVolumeDataContainer::Pointer createVolumeDC = CreateVolumeDataContainer::New();
+    pipeline->pushBack(createVolumeDC);
+    // Generate some "Feature Ids" inside that DataContainer
+    GenerateFeatureIds::Pointer generateFeatureIds = GenerateFeatureIds::New();
+    pipeline->pushBack(generateFeatureIds);
+    
+    // Now instantiate the DxWriter Filter from the FilterManager
+    QString filtName = "DxWriter";
+    FilterManager* fm = FilterManager::Instance();
+    IFilterFactory::Pointer filterFactory = fm->getFactoryForFilter(filtName);
+    if (NULL != filterFactory.get() )
+    {
+        // If we get this far, the Factory is good so creating the filter should not fail unless something has
+        // horribly gone wrong in which case the system is going to come down quickly after this.
+        AbstractFilter::Pointer dxWriter = filterFactory->create();
+        
+        DataArrayPath path = DataArrayPath(DREAM3D::Defaults::VolumeDataContainerName,
+                                           DREAM3D::Defaults::CellAttributeMatrixName,
+                                           DREAM3D::CellData::FeatureIds);
+        QVariant var;
+        var.setValue(path);
+        bool propWasSet = dxWriter->setProperty("FeatureIdsArrayPath", var);
+        DREAM3D_REQUIRE_EQUAL(propWasSet, true)
+        
+        propWasSet = dxWriter->setProperty("OutputFile", UnitTest::DxIOTest::TestFile);
+        DREAM3D_REQUIRE_EQUAL(propWasSet, true)
+        pipeline->pushBack(dxWriter);
+    }
+    else
+    {
+        QString ss = QObject::tr("DxIOTest Error creating filter '%1'. Filter was not created/executed. Please notify the developers.").arg(filtName);
+        DREAM3D_REQUIRE_EQUAL(0, 1)
+    }
+    
+    err = pipeline->preflightPipeline();
+    DREAM3D_REQUIRE_EQUAL(err, 0);
+    pipeline->execute();
+    err = pipeline->getErrorCondition();
+    DREAM3D_REQUIRE_EQUAL(err, 0);
+    return EXIT_SUCCESS;
 }
 
 // -----------------------------------------------------------------------------
@@ -130,83 +147,89 @@ int TestDxWriter()
 // -----------------------------------------------------------------------------
 int TestDxReader()
 {
-  Observer obs;
-  // Create the pipeline
-  //FilterPipeline::Pointer pipeline = FilterPipeline::New();
-  DataContainerArray::Pointer dca = DataContainerArray::New();
-  // Create the Dx Reader
-  DxReader::Pointer reader = DxReader::New();
-  reader->setDataContainerArray(dca);
-  reader->setInputFile(getTestFile());
+    // FilterPipeline::Pointer pipeline = FilterPipeline::New();
+    DataContainerArray::Pointer dca = DataContainerArray::New();
+    // dca->pushBack(m);
+    
+    AbstractFilter::Pointer dxReader = AbstractFilter::NullPointer();
+    QString filtName = "DxReader";
+    FilterManager* fm = FilterManager::Instance();
+    IFilterFactory::Pointer filterFactory = fm->getFactoryForFilter(filtName);
+    if (NULL != filterFactory.get() )
+    {
+        // If we get this far, the Factory is good so creating the filter should not fail unless something has gone horribly wrong in which case the system is going to come down quickly after this.
+        dxReader = filterFactory->create();
+        
+        bool propWasSet = dxReader->setProperty("InputFile", UnitTest::DxIOTest::TestFile);
+        DREAM3D_REQUIRE_EQUAL(propWasSet, true)
+        dxReader->setDataContainerArray(dca);
+        dxReader->execute();
+        int err = dxReader->getErrorCondition();
+        DREAM3D_REQUIRE_EQUAL(err, 0);
+        // pipeline->pushBack(DxReader);
+    }
+    else
+    {
+        QString ss = QObject::tr("DxIOTest Error creating filter '%1'. Filter was not created/executed. Please notify the developers.").arg(filtName);
+        qDebug() << ss;
+        DREAM3D_REQUIRE_EQUAL(0, 1)
+    }
+    
+    size_t nx = 0;
+    size_t ny = 0;
+    size_t nz = 0;
+    
+    
+    VolumeDataContainer* m = dxReader->getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(DREAM3D::Defaults::VolumeDataContainerName);
+    DREAM3D_REQUIRED_PTR(m, !=, NULL)
+    
+    m->getDimensions(nx, ny, nz);
+    DREAM3D_REQUIRE_EQUAL(nx, UnitTest::FeatureIdsTest::XSize);
+    DREAM3D_REQUIRE_EQUAL(ny, UnitTest::FeatureIdsTest::YSize);
+    DREAM3D_REQUIRE_EQUAL(nz, UnitTest::FeatureIdsTest::ZSize);
+    
+    IDataArray::Pointer mdata = dxReader->getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(DREAM3D::Defaults::VolumeDataContainerName)->getAttributeMatrix("CellData")->getAttributeArray(DREAM3D::CellData::FeatureIds);
+    
+    int size = UnitTest::FeatureIdsTest::XSize * UnitTest::FeatureIdsTest::YSize * UnitTest::FeatureIdsTest::ZSize;
+    int32_t* data = Int32ArrayType::SafeReinterpretCast<IDataArray*, Int32ArrayType*, int32_t*>(mdata.get());
+    
+    for (int i = 0; i < size; ++i)
+    {
+        int32_t file_value = data[i];
+        int32_t memory_value = i + UnitTest::FeatureIdsTest::Offset;
+        DREAM3D_REQUIRE_EQUAL( memory_value, file_value );
+    }
+    
+    return 1;
+}
 
-  QObject::connect(reader.get(), SIGNAL(filterGeneratedMessage(const PipelineMessage&)),
-                   &obs, SLOT(processPipelineMessage(const PipelineMessage&)) );
+template<typename T>
+void test(T x, T y, T z, const QString& type)
+{
+    T totalPoints = x * y * z;
+    qDebug() << "sizeof(" << type << "): " << sizeof(T) << " totalPoints: " << totalPoints;
+    
+    if (totalPoints > std::numeric_limits<int32_t>::max() )
+    {
+        qDebug() << "  " << type << " would over flow 32 bit signed int";
+    }
+    if (totalPoints > std::numeric_limits<uint32_t>::max() )
+    {
+        qDebug() << "  " << type << " would over flow 32 bit unsigned int";
+    }
+}
 
-  // Put the Filter into the pipeline
-  //pipeline->pushBack(reader);
-  // Preflight the pipeline
-  //int err = pipeline->preflightPipeline();
-
-
-
-  reader->preflight();
-  int err = reader->getErrorCondition();
-  DREAM3D_REQUIRE(err >= 0)
-
-  // Now we need to clear the DataContainerArray from everything that was put into it during the preflight
-  dca->clear();
-
-  // Now execute the filter
-  reader->execute();
-  err = reader->getErrorCondition();
-  // The Pipeline should have executed without any issues
-  DREAM3D_REQUIRE(err >= 0)
-
-
-
-  // Get the Volume Data Container from the Pipeline
-  dca = reader->getDataContainerArray();
-  DREAM3D_REQUIRE(NULL != dca.get());
-  VolumeDataContainer* mFromFile = reader->getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(DREAM3D::Defaults::VolumeDataContainerName);
-  DREAM3D_REQUIRE(NULL != mFromFile );
-
-  size_t nx = 0;
-  size_t ny = 0;
-  size_t nz = 0;
-  mFromFile->getDimensions(nx, ny, nz);
-  DREAM3D_REQUIRE_EQUAL(nx, UnitTest::FeatureIdsTest::XSize);
-  DREAM3D_REQUIRE_EQUAL(ny, UnitTest::FeatureIdsTest::YSize);
-  DREAM3D_REQUIRE_EQUAL(nz, UnitTest::FeatureIdsTest::ZSize);
-
-
-  AttributeMatrix::Pointer attrMat = mFromFile->getAttributeMatrix(reader->getCellAttributeMatrixName());
-  DREAM3D_REQUIRE(NULL != attrMat)
-
-  bool exists = attrMat->doesAttributeArrayExist(reader->getFeatureIdsArrayName() );
-  DREAM3D_REQUIRED(exists, == , true)
-
-  // Now get the actual DataArray from the Attribute Matrix
-  Int32ArrayType::Pointer featureIds = attrMat->getArray<Int32ArrayType>(reader->getFeatureIdsArrayName());
-  DREAM3D_REQUIRED(NULL, != , featureIds.get());
-
-  // Get the Raw Pointer
-  int32_t* data = featureIds->getPointer(0);
-
-  int size = nx * ny * nz;
-
-  // Make sure all the sizes match up
-  size_t nTuples = featureIds->getNumberOfTuples();
-  DREAM3D_REQUIRED(nTuples, == , size);
-
-  for (int i = 0; i < size; ++i)
-  {
-    int32_t file_value = data[i];
-    int32_t memory_value = i + UnitTest::FeatureIdsTest::Offset;
-    DREAM3D_REQUIRE_EQUAL( memory_value, file_value );
-  }
-
-
-  return EXIT_SUCCESS;
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void loadFilterPlugins()
+{
+    // Register all the filters including trying to load those from Plugins
+    FilterManager* fm = FilterManager::Instance();
+    DREAM3DPluginLoader::LoadPluginFilters(fm);
+    
+    // Send progress messages from PipelineBuilder to this object for display
+    QMetaObjectUtilities::RegisterMetaTypes();
 }
 
 
@@ -215,13 +238,21 @@ int TestDxReader()
 // -----------------------------------------------------------------------------
 int main(int argc, char** argv)
 {
-  int err = EXIT_SUCCESS;
-
-  DREAM3D_REGISTER_TEST( TestDxWriter() )
-  DREAM3D_REGISTER_TEST( TestDxReader() )
-
-  DREAM3D_REGISTER_TEST( RemoveTestFiles() )
-  PRINT_TEST_SUMMARY();
-  return err;
+    // Instantiate the QCoreApplication that we need to get the current path and load plugins.
+    QCoreApplication app(argc, argv);
+    QCoreApplication::setOrganizationName("BlueQuartz Software");
+    QCoreApplication::setOrganizationDomain("bluequartz.net");
+    QCoreApplication::setApplicationName("DxIOTest");
+    
+    int err = EXIT_SUCCESS;
+    DREAM3D_REGISTER_TEST( loadFilterPlugins() );
+    DREAM3D_REGISTER_TEST( TestFilterAvailability() );
+    
+    DREAM3D_REGISTER_TEST( TestDxWriter() )
+    DREAM3D_REGISTER_TEST( TestDxReader() )
+    
+    DREAM3D_REGISTER_TEST( RemoveTestFiles() )
+    PRINT_TEST_SUMMARY();
+    return err;
 }
 

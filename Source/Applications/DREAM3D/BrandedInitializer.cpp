@@ -207,7 +207,7 @@ QVector<DREAM3DPluginInterface*> BrandedInitializer::loadPlugins()
 #ifdef CMAKE_INTDIR
   aPluginDir.cdUp();
   thePath = aPluginDir.absolutePath() + "/Plugins/" + CMAKE_INTDIR;
-  m_PluginDirs << thePath;
+  pluginDirs << thePath;
 #endif
 #else
   // We are on Linux - I think
