@@ -1290,10 +1290,10 @@ void InsertPrecipitatePhases::determine_currentRDF(size_t gnum, int add, bool do
       rdfBin = (r-m_rdfMin)/stepsize;
 
       if (r < m_rdfMin) rdfBin = -1;
-//      if (r < 9.0)
-//      {
-//        int stop = 0;
-//      }
+      if (r < 7.0)
+      {
+        int stop = 0;
+      }
       //if (rdfBin >= m_numRDFbins) {rdfBin = m_numRDFbins;}
       if (double_count == true)
       {
