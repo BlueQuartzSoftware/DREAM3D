@@ -751,6 +751,24 @@ void PipelineViewWidget::dragMoveEvent( QDragMoveEvent* event)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void PipelineViewWidget::extractPipelineFromFile(const QString &filePath)
+{
+
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int PipelineViewWidget::readPipelineFromFile(hid_t fileId)
+{
+  int err = -1;
+
+  return err;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void PipelineViewWidget::dropEvent(QDropEvent* event)
 {
   if (event->mimeData()->hasUrls())
@@ -771,6 +789,11 @@ void PipelineViewWidget::dropEvent(QDropEvent* event)
       }
       else if (fi.suffix().endsWith("dream3d") == true )
       {
+        DREAM3DFileDragMessageBox* msgBox = new DREAM3DFileDragMessageBox(this);
+        msgBox->setFilePath(filePath);
+        connect(msgBox, SIGNAL(fireExtractPipelineFromFile(const QString &)), this, SLOT(extractPipelineFromFile(const QString &)));
+        connect(msgBox, SIGNAL(fireAddDREAM3DReaderFilter(const QString &)), this, SLOT(addDREAM3DReaderFilter(const QString &)));
+        msgBox->exec();
 
       }
 
