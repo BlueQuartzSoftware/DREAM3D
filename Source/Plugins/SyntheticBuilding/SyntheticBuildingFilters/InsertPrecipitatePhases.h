@@ -221,7 +221,14 @@ class InsertPrecipitatePhases : public AbstractFilter
     float sizex;
     float sizey;
     float sizez;
+    float xRes;
+    float yRes;
+    float zRes;
     float totalvol;
+    size_t xPoints;
+    size_t yPoints;
+    size_t zPoints;
+    size_t totalPoints;
 
     QMap<unsigned int, ShapeOps*> m_ShapeOps;
     ShapeOps::Pointer m_UnknownShapeOps;
@@ -266,7 +273,6 @@ class InsertPrecipitatePhases : public AbstractFilter
 
     std::vector<float> m_RandomCentroids;
     std::vector<float> m_rdfRandom;
-
 
     std::vector<float> featuresizediststep;
 
