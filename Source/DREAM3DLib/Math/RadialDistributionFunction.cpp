@@ -60,6 +60,7 @@ std::vector<float> RadialDistributionFunction::GenerateRandomDistribution(float 
   std::vector<float> randomCentroids;
   std::vector<std::vector<float> > distancelist;
   int32_t largeNumber = 1000;
+  int32_t numDistances = largeNumber*(largeNumber-1);
 
   // boxdims are the dimensions of the box in microns
   // boxres is the resoultion of the box in microns
@@ -80,7 +81,7 @@ std::vector<float> RadialDistributionFunction::GenerateRandomDistribution(float 
 
   float stepsize = (maxDistance-minDistance)/numBins;
   float maxBoxDistance = sqrtf((boxdims[0]*boxdims[0]) + (boxdims[1]*boxdims[1]) + (boxdims[2]*boxdims[2]));
-  int32_t current_num_bins = ceil((maxBoxDistance - m_rdfMin)/(m_StepSize));
+  int32_t current_num_bins = ceil((maxBoxDistance - minDistance)/(stepsize));
 
   freq.resize(current_num_bins+1);
 
@@ -140,17 +141,20 @@ std::vector<float> RadialDistributionFunction::GenerateRandomDistribution(float 
   {
     for (size_t j = 0; j < distancelist[i].size(); j++)
     {
+        bin = (distancelist[i][j] - minDistance) / stepsize;
 
         if (distancelist[i][j] < minDistance)
         {
             bin = -1;
         }
-
-        bin = (distancelist[i][j] - minDistance) / stepsize;
         freq[bin+1]++;
 
-
     }
+  }
+
+  for (size_t i = 0; i < current_num_bins+1; i++)
+  {
+      freq[i] = freq[i]/(numDistances);
   }
 
 
