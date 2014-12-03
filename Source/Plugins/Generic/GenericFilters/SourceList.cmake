@@ -21,6 +21,7 @@ FindFeaturePhases
 FindSurfaceFeatures
 GenerateVectorColors
 ConvertOrientations
+InputCrystalCompliances
 )
 
 

@@ -107,37 +107,37 @@
      </item>
      <item>
       <property name="text">
-       <string>Tetragonal High (4/mmm, -42m, 4mm, 422)</string>
+       <string>Tetragonal High (422, 4mm, -42m, 4/mmm)</string>
       </property>
      </item>
      <item>
       <property name="text">
-       <string>Tetragonal Low (4/m, 4, -4)</string>
+       <string>Tetragonal Low (4, -4, 4/m)</string>
       </property>
      </item>
      <item>
       <property name="text">
-       <string>Trigonal High (-3m, 3m, 32)</string>
+       <string>Trigonal High (32, 3m, -3m)</string>
       </property>
      </item>
      <item>
       <property name="text">
-       <string>Trigonal Low (-3)</string>
+       <string>Trigonal Low (3, -3)</string>
       </property>
      </item>
      <item>
       <property name="text">
-       <string>OrthoRhombic (mmm, mm2, 222)</string>
+       <string>OrthoRhombic (222, mm2, mmm)</string>
       </property>
      </item>
      <item>
       <property name="text">
-       <string>Monoclinic (2/m, 2, m)</string>
+       <string>Monoclinic (2, m, 2/m)</string>
       </property>
      </item>
      <item>
       <property name="text">
-       <string>Triclinic (-1, 1)</string>
+       <string>Triclinic (1, -1)</string>
       </property>
      </item>
     </widget>

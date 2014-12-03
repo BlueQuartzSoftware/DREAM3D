@@ -65,16 +65,22 @@ void Symmetric6x6Widget::setCubicSym()
   connect(v11, SIGNAL(textChanged(const QString&)), v22, SLOT( setText( const QString& ) ) );
   connect(v22, SIGNAL(textChanged(const QString&)), v33, SLOT( setText( const QString& ) ) );
   connect(v33, SIGNAL(textChanged(const QString&)), v11, SLOT( setText( const QString& ) ) );
+  v22->setText(v11->text());
+  v33->setText(v11->text());
 
   //12 == 13 == 23
   connect(v12, SIGNAL(textChanged(const QString&)), v13, SLOT( setText( const QString& ) ) );
   connect(v13, SIGNAL(textChanged(const QString&)), v23, SLOT( setText( const QString& ) ) );
   connect(v23, SIGNAL(textChanged(const QString&)), v12, SLOT( setText( const QString& ) ) );
+  v13->setText(v12->text());
+  v23->setText(v12->text());
 
   //44 == 55 == 66
   connect(v44, SIGNAL(textChanged(const QString&)), v55, SLOT( setText( const QString& ) ) );
   connect(v55, SIGNAL(textChanged(const QString&)), v66, SLOT( setText( const QString& ) ) );
   connect(v66, SIGNAL(textChanged(const QString&)), v44, SLOT( setText( const QString& ) ) );
+  v55->setText(v44->text());
+  v66->setText(v44->text());
 
   //all others = 0
   v14->setText("0");
@@ -112,20 +118,23 @@ void Symmetric6x6Widget::setHexagonalSym()
   //s11 == s22
   connect(v11, SIGNAL(textChanged(const QString&)), v22, SLOT( setText( const QString& ) ) );
   connect(v22, SIGNAL(textChanged(const QString&)), v11, SLOT( setText( const QString& ) ) );
+  v22->setText(v11->text());
 
   //s13 == s23
   connect(v13, SIGNAL(textChanged(const QString&)), v23, SLOT( setText( const QString& ) ) );
   connect(v23, SIGNAL(textChanged(const QString&)), v13, SLOT( setText( const QString& ) ) );
+  v23->setText(v13->text());
 
   //s44 == s55
   connect(v44, SIGNAL(textChanged(const QString&)), v55, SLOT( setText( const QString& ) ) );
   connect(v55, SIGNAL(textChanged(const QString&)), v44, SLOT( setText( const QString& ) ) );
+  v55->setText(v44->text());
 
   //s66 == 2(s11-s12)
-  QSignalMapper* signalMapper = new QSignalMapper(this);
-  connect(v11, SIGNAL(textChanged(const QString&)), signalMapper, SLOT(map()));
-  connect(signalMapper, SIGNAL(mapped(QLineEdit*)),this, SIGNAL(vbar(QLineEdit*)));
+  connect(v11, SIGNAL( textChanged(const QString&) ), this, SLOT( vbar66(const QString&) ) );
+  connect(v12, SIGNAL( textChanged(const QString&) ), this, SLOT( vbar66(const QString&) ) );
   v66->setEnabled(false);
+  vbar66("");
 
   //s12, s33 independant
   
@@ -166,14 +175,17 @@ void Symmetric6x6Widget::setTetHighSym()
   //s11 == s22
   connect(v11, SIGNAL(textChanged(const QString&)), v22, SLOT( setText( const QString& ) ) );
   connect(v22, SIGNAL(textChanged(const QString&)), v11, SLOT( setText( const QString& ) ) );
+  v22->setText(v11->text());
 
   //s13 == s23
   connect(v13, SIGNAL(textChanged(const QString&)), v23, SLOT( setText( const QString& ) ) );
   connect(v23, SIGNAL(textChanged(const QString&)), v13, SLOT( setText( const QString& ) ) );
+  v23->setText(v13->text());
 
   //s44 == s55
   connect(v44, SIGNAL(textChanged(const QString&)), v55, SLOT( setText( const QString& ) ) );
   connect(v55, SIGNAL(textChanged(const QString&)), v44, SLOT( setText( const QString& ) ) );
+  v55->setText(v44->text());
 
   //s12, s33, s66 independant
   
@@ -214,17 +226,22 @@ void Symmetric6x6Widget::setTetLowSym()
   //s11 == s22
   connect(v11, SIGNAL(textChanged(const QString&)), v22, SLOT( setText( const QString& ) ) );
   connect(v22, SIGNAL(textChanged(const QString&)), v11, SLOT( setText( const QString& ) ) );
+  v22->setText(v11->text());
 
   //s13 == s23
   connect(v13, SIGNAL(textChanged(const QString&)), v23, SLOT( setText( const QString& ) ) );
   connect(v23, SIGNAL(textChanged(const QString&)), v13, SLOT( setText( const QString& ) ) );
+  v23->setText(v13->text());
 
   //s44 == s55
   connect(v44, SIGNAL(textChanged(const QString&)), v55, SLOT( setText( const QString& ) ) );
   connect(v55, SIGNAL(textChanged(const QString&)), v44, SLOT( setText( const QString& ) ) );
+  v55->setText(v44->text());
 
   // s26 == -s16
-  //////////////////////////////////////////////////////////////////////////////////////////unhandled
+  connect(v16, SIGNAL(textChanged(const QString&)), this, SLOT( tetragonalv16Changed( const QString& ) ) );
+  connect(v26, SIGNAL(textChanged(const QString&)), this, SLOT( tetragonalv26Changed( const QString& ) ) );
+  tetragonalv16Changed("");
 
   //s16, s12, s33, s66 independant
   
@@ -238,8 +255,6 @@ void Symmetric6x6Widget::setTetLowSym()
   v24->setEnabled(false);
   v25->setText("0");
   v25->setEnabled(false);
-  v26->setText("0");
-  v26->setEnabled(false);
   
   v34->setText("0");
   v34->setEnabled(false);
@@ -261,38 +276,120 @@ void Symmetric6x6Widget::setTetLowSym()
 void Symmetric6x6Widget::setTrigHighSym()
 {
   //s11 == s22
+  connect(v11, SIGNAL(textChanged(const QString&)), v22, SLOT( setText( const QString& ) ) );
+  connect(v22, SIGNAL(textChanged(const QString&)), v11, SLOT( setText( const QString& ) ) );
+  v22->setText(v11->text());
+
   //s13 == s23
+  connect(v13, SIGNAL(textChanged(const QString&)), v23, SLOT( setText( const QString& ) ) );
+  connect(v23, SIGNAL(textChanged(const QString&)), v13, SLOT( setText( const QString& ) ) );
+  v23->setText(v13->text());
+
   //s55 == s66
-  //s14 == -s24
-  //s66 == 2(s11 + s12
-  //s56 == 2*s14
+  connect(v44, SIGNAL(textChanged(const QString&)), v55, SLOT( setText( const QString& ) ) );
+  connect(v55, SIGNAL(textChanged(const QString&)), v44, SLOT( setText( const QString& ) ) );
+  v55->setText(v44->text());
+
+  //s14 == -s24 && s56 == 2*s14
+  connect(v14, SIGNAL( textChanged(const QString&) ), this, SLOT( trigonalv14Changed(const QString&) ) );
+  connect(v24, SIGNAL( textChanged(const QString&) ), this, SLOT( trigonalv24Changed(const QString&) ) );
+  connect(v56, SIGNAL( textChanged(const QString&) ), this, SLOT( trigonalv56Changed(const QString&) ) );
+  trigonalv14Changed("");
+
+  //s66 == 2(s11 + s12)
+  connect(v11, SIGNAL( textChanged(const QString&) ), this, SLOT( vbar66(const QString&) ) );
+  connect(v12, SIGNAL( textChanged(const QString&) ), this, SLOT( vbar66(const QString&) ) );
+  v66->setEnabled(false);
+  vbar66("");
 
   //s12, s33 independant
 
   //all other = 0
+  v15->setText("0");
+  v15->setEnabled(false);
+  v16->setText("0");
+  v16->setEnabled(false);
+
+  v25->setText("0");
+  v25->setEnabled(false);
+  v26->setText("0");
+  v26->setEnabled(false);
+  
+  v34->setText("0");
+  v34->setEnabled(false);
+  v35->setText("0");
+  v35->setEnabled(false);
+  v36->setText("0");
+  v36->setEnabled(false);
+
+  v45->setText("0");
+  v45->setEnabled(false);
+  v46->setText("0");
+  v46->setEnabled(false);
 }
 
 
 void Symmetric6x6Widget::setTrigLowSym()
 {
   //s11 == s22
+  connect(v11, SIGNAL(textChanged(const QString&)), v22, SLOT( setText( const QString& ) ) );
+  connect(v22, SIGNAL(textChanged(const QString&)), v11, SLOT( setText( const QString& ) ) );
+  v22->setText(v11->text());
+
   //s13 == s23
+  connect(v13, SIGNAL(textChanged(const QString&)), v23, SLOT( setText( const QString& ) ) );
+  connect(v23, SIGNAL(textChanged(const QString&)), v13, SLOT( setText( const QString& ) ) );
+  v23->setText(v13->text());
+
   //s55 == s66
-  //s14 == -s24
-  //s66 == 2(s11 + s12
-  //s56 == 2*s14
-  //s15 == -s25
-  //s46 == 2*s25
+  connect(v44, SIGNAL(textChanged(const QString&)), v55, SLOT( setText( const QString& ) ) );
+  connect(v55, SIGNAL(textChanged(const QString&)), v44, SLOT( setText( const QString& ) ) );
+  v55->setText(v44->text());
+
+  //s14 == -s24 && s56 == 2*s14
+  connect(v14, SIGNAL( textChanged(const QString&) ), this, SLOT( trigonalv14Changed(const QString&) ) );
+  connect(v24, SIGNAL( textChanged(const QString&) ), this, SLOT( trigonalv24Changed(const QString&) ) );
+  connect(v56, SIGNAL( textChanged(const QString&) ), this, SLOT( trigonalv56Changed(const QString&) ) );
+  trigonalv14Changed("");
+
+  //s25 == -s15 && s46 == 2*s25
+  connect(v15, SIGNAL( textChanged(const QString&) ), this, SLOT( trigonalv15Changed(const QString&) ) );
+  connect(v25, SIGNAL( textChanged(const QString&) ), this, SLOT( trigonalv25Changed(const QString&) ) );
+  connect(v46, SIGNAL( textChanged(const QString&) ), this, SLOT( trigonalv46Changed(const QString&) ) );
+  trigonalv25Changed("");
+
+  //s66 == 2(s11 + s12)
+  connect(v11, SIGNAL( textChanged(const QString&) ), this, SLOT( vbar66(const QString&) ) );
+  connect(v12, SIGNAL( textChanged(const QString&) ), this, SLOT( vbar66(const QString&) ) );
+  v66->setEnabled(false);
+  vbar66("");
 
   //s12, s33 independant
 
   //all other = 0
+  v16->setText("0");
+  v16->setEnabled(false);
+
+  v26->setText("0");
+  v26->setEnabled(false);
+  
+  v34->setText("0");
+  v34->setEnabled(false);
+  v35->setText("0");
+  v35->setEnabled(false);
+  v36->setText("0");
+  v36->setEnabled(false);
+
+  v45->setText("0");
+  v45->setEnabled(false);
 }
 
 
 void Symmetric6x6Widget::setOrthorhomicSym()
 {
-  //s11, s12, s13, s22, s23, s33, s44, s55, s66 independant
+  //s11, s22, s33 independant
+  //s44, s55, s66 independant
+  //s12, s13, s23 independant
   
   //all others = 0
   v14->setText("0");
@@ -327,10 +424,11 @@ void Symmetric6x6Widget::setOrthorhomicSym()
 
 void Symmetric6x6Widget::setMonoclinicSym()
 {
-  //s11, s22, s23 independant
+  //s11, s22, s33 independant
   //s44, s55, s66 independant
   //s12, s13, s23 indpenedant
   //s15, s25, s35 indpenedant
+  //s46 independant
 
   //all others = 0
   v14->setText("0");
@@ -350,8 +448,6 @@ void Symmetric6x6Widget::setMonoclinicSym()
 
   v45->setText("0");
   v45->setEnabled(false);
-  v46->setText("0");
-  v46->setEnabled(false);
 
   v56->setText("0");
   v56->setEnabled(false);
@@ -460,18 +556,69 @@ void Symmetric6x6Widget::changeSym(int newState)
     case 8:
       setTriclinicSym();
       break;
-
-
   }
 }
 
-//some symmetries have values that are 2 * (s11 - s12)
-void Symmetric6x6Widget::vbar(QLineEdit* obj)
+//some hexagonal and trigonal low/high have s66 == 2 * (s11 - s12)
+void Symmetric6x6Widget::vbar66(const QString& dummy)
 {
   double s11 = v11->text().toDouble();
   double s12 = v12->text().toDouble();
-  obj->setText(QString::number(2.0 * (s11 + s12)));
+  v66->setText(QString::number(2.0 * (s11 + s12)));
 }
+
+//tetragonal low has s26 == -s16
+void Symmetric6x6Widget::tetragonalv16Changed(const QString& dummy)
+{
+  double v = v16->text().toDouble();
+  v26->setText(QString::number(-v));
+}
+void Symmetric6x6Widget::tetragonalv26Changed(const QString& dummy)
+{
+  double v = v26->text().toDouble();
+  v16->setText(QString::number(-v));
+}
+
+//trigonal low/high have s14 == -s24 && s56 == 2*s14
+void Symmetric6x6Widget::trigonalv14Changed(const QString& dummy)
+{
+  double v = v14->text().toDouble();
+  v24->setText(QString::number(-v));
+  v56->setText(QString::number(2.0 * v));
+}
+void Symmetric6x6Widget::trigonalv24Changed(const QString& dummy)
+{
+  double v = v24->text().toDouble();
+  v14->setText(QString::number(-v));
+  v56->setText(QString::number(-2.0 * v));
+}
+void Symmetric6x6Widget::trigonalv56Changed(const QString& dummy)
+{
+  double v = v56->text().toDouble();
+  v14->setText(QString::number(v / 2.0));
+  v24->setText(QString::number(-v / 2.0));
+}
+
+//trigonal low has s15 == -s25 && s46 == 2*s25
+void Symmetric6x6Widget::trigonalv15Changed(const QString& dummy)
+{
+  double v = v15->text().toDouble();
+  v25->setText(QString::number(-v));
+  v46->setText(QString::number(-2.0 * v));
+}
+void Symmetric6x6Widget::trigonalv25Changed(const QString& dummy)
+{
+  double v = v25->text().toDouble();
+  v15->setText(QString::number(-v));
+  v46->setText(QString::number(2.0 * v));
+}
+void Symmetric6x6Widget::trigonalv46Changed(const QString& dummy)
+{
+  double v = v46->text().toDouble();
+  v15->setText(QString::number(-v / 2.0));
+  v25->setText(QString::number(v / 2.0));
+}
+
 
 
 // -----------------------------------------------------------------------------
@@ -626,6 +773,8 @@ void Symmetric6x6Widget::setupGui()
 
   //connect combobox to symmetry state  
   connect(comboBox, SIGNAL(currentIndexChanged( int )), this, SLOT( changeSym( int ) ) );
+  clearSym();
+  changeSym(comboBox->currentIndex());
 
 }
 
