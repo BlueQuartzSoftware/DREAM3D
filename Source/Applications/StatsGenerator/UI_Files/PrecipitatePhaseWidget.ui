@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>793</width>
-    <height>641</height>
+    <width>903</width>
+    <height>673</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -484,8 +484,8 @@ font-size: 12px;
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>769</width>
-            <height>568</height>
+            <width>98</width>
+            <height>38</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout">
@@ -506,7 +506,7 @@ font-size: 12px;
      </widget>
      <widget class="QWidget" name="clusteringDistributionTab">
       <attribute name="title">
-       <string>Clustering Distributions</string>
+       <string>Radial Distribution Function</string>
       </attribute>
       <layout class="QHBoxLayout" name="horizontalLayout_2">
        <property name="margin">
