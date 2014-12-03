@@ -287,6 +287,7 @@ class InsertPrecipitatePhases : public AbstractFilter
     float currentsizedisterror, oldsizedisterror;
     float m_rdfMax;
     float m_rdfMin;
+    float m_StepSize;
     int m_numRDFbins;
 
     void dataCheck();

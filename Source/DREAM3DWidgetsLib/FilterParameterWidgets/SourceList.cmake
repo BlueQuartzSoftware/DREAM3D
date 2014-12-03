@@ -40,6 +40,7 @@ set(DREAM3D_PARAMETER_WIDGETS
 #      FaceArrayComparisonSelectionWidget
 #      EdgeArrayComparisonSelectionWidget
       UnknownWidget
+	Symmetric6x6Widget
 )
 
 set(REGISTER_KNOWN_WIDGETS ${DREAM3DWidgetsLib_BINARY_DIR}/FilterWidgetManager_RegisterWidgets.cpp)

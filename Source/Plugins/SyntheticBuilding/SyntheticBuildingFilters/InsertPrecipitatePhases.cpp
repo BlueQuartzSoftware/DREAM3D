@@ -642,10 +642,10 @@ void  InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclus
         m_rdfMax = maxmin[0]->getValue(0);
         m_rdfMin = maxmin[0]->getValue(1);
 
-        float stepsize = (m_rdfMax-m_rdfMin)/m_numRDFbins;
+        m_StepSize = (m_rdfMax-m_rdfMin)/m_numRDFbins;
         float max_box_distance = sqrtf((sizex*sizex) + (sizey*sizey) + (sizez*sizez));
 
-        int32_t current_num_bins = (max_box_distance - m_rdfMin)/(stepsize);
+        int32_t current_num_bins = ceil((max_box_distance - m_rdfMin)/(m_StepSize));
 
         m_rdfCurrentDist.resize(current_num_bins+1);
 
@@ -774,10 +774,10 @@ void  InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclus
               m_RandomCentroids[3*i+2] = zc;
       }
 
-      float stepsize = (m_rdfMax-m_rdfMin)/m_numRDFbins;
+
       float max_box_distance = sqrtf((sizex*sizex) + (sizey*sizey) + (sizez*sizez));
 
-      int32_t current_num_bins = (max_box_distance - m_rdfMin)/(stepsize);
+      int32_t current_num_bins = ceil((max_box_distance - m_rdfMin)/(m_StepSize));
 
       m_rdfRandom.resize(current_num_bins+1);
 
@@ -960,9 +960,9 @@ void  InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclus
   {
     std::ofstream testFile3;
     testFile3.open("/Users/Shared/Data/PW_Work/OUTFILE/current.txt");
-    for (size_t i = 0; i < m_rdfCurrentDistNorm.size(); i++)
+    for (size_t i = 0; i < m_rdfCurrentDist.size(); i++)
     {
-      testFile3 << "\n" << m_rdfCurrentDistNorm[i];
+      testFile3 << "\n" << m_rdfCurrentDist[i];
     }
     testFile3.close();
 
@@ -975,7 +975,7 @@ void  InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclus
     testFile2.close();
   }
 
-  std::cout << "Done Jumping" <<std::endl;
+std::cout << "Done Jumping" <<std::endl;
 }
 
 // -----------------------------------------------------------------------------
@@ -1257,7 +1257,6 @@ void InsertPrecipitatePhases::determine_currentRDF(size_t gnum, int add, bool do
   int iter = 0;
   int numPPTfeatures = 1;
   int32_t rdfBin;
-  float stepsize = (m_rdfMax-m_rdfMin)/m_numRDFbins;
 
   int phase = m_FeaturePhases[gnum];
   while (phase != precipitatephases[iter]) { iter++; }
@@ -1280,9 +1279,10 @@ void InsertPrecipitatePhases::determine_currentRDF(size_t gnum, int add, bool do
       zn = m_Centroids[3 * n + 2];
       r = sqrtf((x - xn) * (x - xn) + (y - yn) * (y - yn) + (z - zn) * (z - zn));
 
-      rdfBin = (r-m_rdfMin)/stepsize;
+      rdfBin = (r-m_rdfMin)/m_StepSize;
 
-      if (r < m_rdfMin) rdfBin = -1;
+      if (r < m_rdfMin)
+      { rdfBin = -1;}
       if (r < 6.0)
       {
         int stop = 0;
@@ -1302,7 +1302,7 @@ void InsertPrecipitatePhases::determine_currentRDF(size_t gnum, int add, bool do
   }
 
 
-    m_rdfCurrentDistNorm = normalizeRDF(m_rdfCurrentDist, m_numRDFbins, stepsize, m_rdfMin, numPPTfeatures, totalvol);
+    m_rdfCurrentDistNorm = normalizeRDF(m_rdfCurrentDist, m_numRDFbins, m_StepSize, m_rdfMin, numPPTfeatures, totalvol);
 
 //  std::cout << "test" << std::endl;
 
@@ -1321,7 +1321,6 @@ void InsertPrecipitatePhases::determine_randomRDF(size_t gnum, int add, bool dou
 
   //int iter = 0;
   int32_t rdfBin;
-  float stepsize = (m_rdfMax-m_rdfMin)/m_numRDFbins;
 
 
 
@@ -1342,7 +1341,7 @@ void InsertPrecipitatePhases::determine_randomRDF(size_t gnum, int add, bool dou
       zn = m_RandomCentroids[3 * n + 2];
       r = sqrtf((x - xn) * (x - xn) + (y - yn) * (y - yn) + (z - zn) * (z - zn));
 
-      rdfBin = (r-m_rdfMin)/stepsize;
+      rdfBin = (r-m_rdfMin)/m_StepSize;
 
       if (r < m_rdfMin)
       {
@@ -1369,7 +1368,7 @@ void InsertPrecipitatePhases::determine_randomRDF(size_t gnum, int add, bool dou
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-std::vector<float> InsertPrecipitatePhases::normalizeRDF(std::vector<float> rdf, int num_bins, float stepsize, float rdfmin, size_t numPPTfeatures, float volume)
+std::vector<float> InsertPrecipitatePhases::normalizeRDF(std::vector<float> rdf, int num_bins, float m_StepSize, float rdfmin, size_t numPPTfeatures, float volume)
 {
       //Normalizing the RDF by number density of particles (4/3*pi*(r2^3-r1^3)*numPPTfeatures/volume)
 //    float normfactor;
@@ -1385,8 +1384,8 @@ std::vector<float> InsertPrecipitatePhases::normalizeRDF(std::vector<float> rdf,
 
 //    for (size_t i = 1; i < num_bins+2; i++)
 //      {
-//          r1 = (rdfmin + (i-1)*stepsize);
-//          r2 = (r1 + stepsize);
+//          r1 = (rdfmin + (i-1)*m_StepSize);
+//          r2 = (r1 + m_StepSize);
 //          r1 = r1*finiteAdjFactor;
 //          r2 = r2*finiteAdjFactor;
 //          normfactor = 4.0f/3.0f*DREAM3D::Constants::k_Pi*((r2*r2*r2) - (r1*r1*r1))*numPPTfeatures*oneovervolume;

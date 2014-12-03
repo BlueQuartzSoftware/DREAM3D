@@ -561,6 +561,18 @@ FloatVec4_t H5FilterParametersReader::readFloatVec4(const QString name, FloatVec
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+FloatVec21_t H5FilterParametersReader::readFloatVec21(const QString name, FloatVec21_t defaultValue)
+{
+  int err = 0;
+  FloatVec21_t v;
+  err = QH5Lite::readPointerDataset<float>(m_CurrentGroupId, name, reinterpret_cast<float*>(&v) );
+  if (err < 0) { return defaultValue; }
+  return v;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 FileListInfo_t H5FilterParametersReader::readFileListInfo(const QString name, FileListInfo_t defaultValue)
 {
 
