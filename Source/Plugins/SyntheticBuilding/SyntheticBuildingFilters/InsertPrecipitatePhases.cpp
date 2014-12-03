@@ -735,6 +735,10 @@ void  InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclus
       }
     }
 
+    if(m_BoundaryCells[featureOwnersIdx] == 0)
+    {
+      int stop = 0;
+    }
     column = featureOwnersIdx % m_PackingPoints[0];
     row = int(featureOwnersIdx / m_PackingPoints[0]) % m_PackingPoints[1];
     plane = featureOwnersIdx / (m_PackingPoints[0] * m_PackingPoints[1]);

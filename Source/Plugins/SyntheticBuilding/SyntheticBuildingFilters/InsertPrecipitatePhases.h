@@ -181,8 +181,6 @@ class InsertPrecipitatePhases : public AbstractFilter
   protected:
     InsertPrecipitatePhases();
 
-    Int32ArrayType::Pointer initialize_packinggrid();
-
     void place_precipitates(Int32ArrayType::Pointer exlusionZonesPtr);
     void generate_precipitate(int phase, int Seed, Precip* precip, unsigned int shapeclass, OrientationOps::Pointer OrthoOps);
     void load_precipitates();
@@ -260,13 +258,6 @@ class InsertPrecipitatePhases : public AbstractFilter
     std::vector<size_t> pointsToAdd;
     std::vector<size_t> pointsToRemove;
 
-    float m_HalfPackingRes[3];
-    float m_OneOverHalfPackingRes[3];
-
-    float m_PackingRes[3];
-    int m_PackingPoints[3];
-    int m_TotalPackingPoints;
-
     std::vector<std::vector<float> > featuresizedist;
     std::vector<std::vector<float> > simfeaturesizedist;
     std::vector<float> m_rdfTargetDist;
@@ -279,7 +270,6 @@ class InsertPrecipitatePhases : public AbstractFilter
     std::vector<float> featuresizediststep;
 
     std::vector<int> newnames;
-    std::vector<int> packqualities;
     std::vector<int> gsizes;
 
     size_t availablePointsCount;
