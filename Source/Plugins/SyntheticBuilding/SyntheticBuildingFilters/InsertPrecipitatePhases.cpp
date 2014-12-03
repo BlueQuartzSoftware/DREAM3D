@@ -826,7 +826,7 @@ void  InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclus
 
 
 
-    if (true)
+    if (false)
     {
 
       std::ofstream testFile;
@@ -980,6 +980,15 @@ void  InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclus
       testFile2 << "\n" << m_rdfTargetDist[i];
     }
     testFile2.close();
+
+    std::ofstream testFile5;
+    testFile5.open("/Users/Shared/Data/PW_Work/OUTFILE/centroids.txt");
+    for (size_t i = firstPrecipitateFeature; i < numfeatures; i++)
+    {
+      testFile5 << "\n" << m_Centroids[3*i] << "\t" <<m_Centroids[3*i+1] << "\t" << m_Centroids[3*i+2];
+    }
+    testFile5.close();
+
   }
 
 std::cout << "Done Jumping" <<std::endl;
@@ -1290,6 +1299,8 @@ void InsertPrecipitatePhases::determine_currentRDF(size_t gnum, int add, bool do
 
       if (r < m_rdfMin)
       { rdfBin = -1;}
+
+
 //      if (r < 9.0)
 //      {
 //        int stop = 0;

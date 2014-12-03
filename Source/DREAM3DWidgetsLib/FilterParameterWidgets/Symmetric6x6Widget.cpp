@@ -466,12 +466,12 @@ void Symmetric6x6Widget::changeSym(int newState)
 }
 
 //some symmetries have values that are 2 * (s11 - s12)
-void Symmetric6x6Widget::vbar(QLineEdit* obj)
-{
-  double s11 = v11->text().toDouble();
-  double s12 = v12->text().toDouble();
-  obj->setText(QString::number(2.0 * (s11 + s12)));
-}
+//void Symmetric6x6Widget::vbar(QLineEdit* obj)
+//{
+//  double s11 = v11->text().toDouble();
+//  double s12 = v12->text().toDouble();
+//  obj->setText(QString::number(2.0 * (s11 + s12)));
+//}
 
 
 // -----------------------------------------------------------------------------
