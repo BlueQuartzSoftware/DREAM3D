@@ -67,6 +67,7 @@ std::vector<float> RadialDistributionFunction::GenerateRandomDistribution(float 
   int32_t ypoints = boxdims[1]/boxres[1];
   int32_t zpoints = boxdims[2]/boxres[2];
   int32_t bin;
+  int32_t totalpoints = xpoints*ypoints*zpoints;
 
   float x, y, z;
   float xn, yn, zn;
@@ -79,6 +80,10 @@ std::vector<float> RadialDistributionFunction::GenerateRandomDistribution(float 
 
   float stepsize = (maxDistance-minDistance)/numBins;
   float maxBoxDistance = sqrtf((boxdims[0]*boxdims[0]) + (boxdims[1]*boxdims[1]) + (boxdims[2]*boxdims[2]));
+  int32_t current_num_bins = ceil((maxBoxDistance - m_rdfMin)/(m_StepSize));
+
+  freq.resize(current_num_bins+1);
+
 
   DREAM3D_RANDOMNG_NEW();
 
@@ -87,7 +92,7 @@ std::vector<float> RadialDistributionFunction::GenerateRandomDistribution(float 
   //Generating all of the random points and storing their coordinates in randomCentroids
   for (size_t i = 0; i < largeNumber; i++)
   {
-       featureOwnerIdx = static_cast<size_t>(rg.genrand_res53() * xpoints * ypoints * zpoints);
+       featureOwnerIdx = static_cast<size_t>(rg.genrand_res53() * totalpoints);
 
        column = featureOwnerIdx % xpoints;
        row = int(featureOwnerIdx / xpoints) % ypoints;
@@ -135,11 +140,16 @@ std::vector<float> RadialDistributionFunction::GenerateRandomDistribution(float 
   {
     for (size_t j = 0; j < distancelist[i].size(); j++)
     {
-          if (distancelist[i][j] <= maxDistance && distancelist[i][j] >= minDistance)
-          {
-             bin = (distancelist[i][j] - minDistance) / stepsize;
-             freq[bin]++;
-          }
+
+        if (distancelist[i][j] < minDistance)
+        {
+            bin = -1;
+        }
+
+        bin = (distancelist[i][j] - minDistance) / stepsize;
+        freq[bin+1]++;
+
+
     }
   }
 

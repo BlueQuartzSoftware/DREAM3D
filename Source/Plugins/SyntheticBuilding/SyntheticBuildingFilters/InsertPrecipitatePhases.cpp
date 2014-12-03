@@ -51,6 +51,7 @@
 #include "DREAM3DLib/ShapeOps/EllipsoidOps.h"
 #include "DREAM3DLib/ShapeOps/SuperEllipsoidOps.h"
 #include "DREAM3DLib/StatsData/PrecipitateStatsData.h"
+#include "DREAM3DLib/Math/RadialDistributionFunction.h"
 
 
 
@@ -519,13 +520,6 @@ void  InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclus
   int acceptedmoves = 0;
   double totalprecipitatefractions = 0.0;
 
-
-
-
-
-
-
-
   for (int64_t i = 1; i < numensembles; ++i)
   {
     if(m_PhaseTypes[i] == DREAM3D::PhaseType::PrecipitatePhase)
@@ -700,7 +694,7 @@ void  InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclus
     if(random <= precipboundaryfraction)
     {
       // figure out if we want this to be a boundary centroid voxel or not for the proposed precipitate
-      if(availablePoints.size() > 0)
+      if(availablePointsCount > 0)
       {
         key = static_cast<size_t>(rg.genrand_res53() * (availablePointsCount-1));
         featureOwnersIdx = availablePointsInv[key];
@@ -722,7 +716,7 @@ void  InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclus
     }
     else if(random > precipboundaryfraction)
     {
-      if(availablePoints.size() > 0)
+      if(availablePointsCount > 0)
       {
         key = static_cast<size_t>(rg.genrand_res53() * (availablePointsCount-1));
         featureOwnersIdx = availablePointsInv[key];
@@ -794,6 +788,20 @@ void  InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclus
       }
 
       size_t numPPTfeatures = numfeatures - firstPrecipitateFeature;
+      std::vector<float> boxdims(3);
+      boxdims[0] = dims[0]*m->getXRes;
+      boxdims[1] = dims[1]*m->getYRes;
+      boxdims[2] = dims[2]*m->getZRes;
+
+      std::vector<float> boxres(3);
+      boxres[0] = m->getXRes;
+      boxres[1] = m->getYRes;
+      boxres[2] = m->getZRes;
+
+
+
+      RadialDistributionFunction::GenerateRandomDistribution(m_minRdf, m_rdfMax, current_num_bins, boxdims, boxres);
+
 
       for (size_t i = 0; i < m_rdfRandom.size(); i++)
       {
@@ -826,7 +834,7 @@ void  InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclus
 
 
 
-    if (false)
+    if (true)
     {
 
       std::ofstream testFile;
@@ -872,7 +880,7 @@ void  InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclus
         if(random <= precipboundaryfraction)
         {
           // figure out if we want this to be a boundary centroid voxel or not for the proposed precipitate
-          if(availablePoints.size() > 0)
+          if(availablePointsCount > 0)
           {
             key = static_cast<size_t>(rg.genrand_res53() * (availablePointsCount-1));
             featureOwnersIdx = availablePointsInv[key];
@@ -894,7 +902,7 @@ void  InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclus
         }
         else if(random > precipboundaryfraction)
         {
-          if(availablePoints.size() > 0)
+          if(availablePointsCount > 0)
           {
             key = static_cast<size_t>(rg.genrand_res53() * (availablePointsCount-1));
             featureOwnersIdx = availablePointsInv[key];
@@ -967,9 +975,9 @@ void  InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclus
   {
     std::ofstream testFile3;
     testFile3.open("/Users/Shared/Data/PW_Work/OUTFILE/current.txt");
-    for (size_t i = 0; i < m_rdfCurrentDist.size(); i++)
+    for (size_t i = 0; i < m_rdfCurrentDistNorm.size(); i++)
     {
-      testFile3 << "\n" << m_rdfCurrentDist[i];
+      testFile3 << "\n" << m_rdfCurrentDistNorm[i];
     }
     testFile3.close();
 
@@ -980,15 +988,6 @@ void  InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclus
       testFile2 << "\n" << m_rdfTargetDist[i];
     }
     testFile2.close();
-
-    std::ofstream testFile5;
-    testFile5.open("/Users/Shared/Data/PW_Work/OUTFILE/centroids.txt");
-    for (size_t i = firstPrecipitateFeature; i < numfeatures; i++)
-    {
-      testFile5 << "\n" << m_Centroids[3*i] << "\t" <<m_Centroids[3*i+1] << "\t" << m_Centroids[3*i+2];
-    }
-    testFile5.close();
-
   }
 
 std::cout << "Done Jumping" <<std::endl;
@@ -1299,12 +1298,10 @@ void InsertPrecipitatePhases::determine_currentRDF(size_t gnum, int add, bool do
 
       if (r < m_rdfMin)
       { rdfBin = -1;}
-
-
-//      if (r < 9.0)
-//      {
-//        int stop = 0;
-//      }
+      if (r < 6.0)
+      {
+        int stop = 0;
+      }
       //if (rdfBin >= m_numRDFbins) {rdfBin = m_numRDFbins;}
       if (double_count == true)
       {
