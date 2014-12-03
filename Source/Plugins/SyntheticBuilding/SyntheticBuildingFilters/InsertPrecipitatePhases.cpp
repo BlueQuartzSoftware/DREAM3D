@@ -51,6 +51,7 @@
 #include "DREAM3DLib/ShapeOps/EllipsoidOps.h"
 #include "DREAM3DLib/ShapeOps/SuperEllipsoidOps.h"
 #include "DREAM3DLib/StatsData/PrecipitateStatsData.h"
+#include "DREAM3DLib/Math/RadialDistributionFunction.h"
 
 
 
@@ -757,46 +758,40 @@ void  InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclus
 
   if (m_MatchRDF == true)
   {
-      //RANDOM: Figure out the RDF for randomly distributed particles
-      size_t largeNumber = 1000;
-      m_RandomCentroids.resize(largeNumber*3);
-      for (size_t i = 0; i < largeNumber; i++)
-      {
+      /*RANDOM: Figure out the RDF for randomly distributed particles.
+      We always keep the same stepsize as the target RDF,
+      but change (increase if the current box is bigger than what the target dist was built on and vice versa)
+      the number of bins to account for smaller and larger (up to the max distance i.e. the box diagonal)
+      distances that can occur when particles are just randomly placed in a box. This is true for both m_rdfRandom and m_rdfCurrentDist.*/
 
-              featureOwnersIdx = static_cast<size_t>(rg.genrand_res53() * dims[0] * dims[1] * dims[2]);
 
-              column = featureOwnersIdx % dims[0];
-              row = int(featureOwnersIdx / dims[0]) % dims[1];
-              plane = featureOwnersIdx / (dims[0] * dims[1]);
+      //initialize boxdims and boxres vectors
+      std::vector<float> boxdims(3);
+      boxdims[0] = sizex;
+      boxdims[1] = sizey;
+      boxdims[2] = sizez;
 
-              xc = static_cast<float>(column * m->getXRes()) ;
-              yc = static_cast<float>(row * m->getYRes());
-              zc = static_cast<float>(plane * m->getZRes());
-
-              m_RandomCentroids[3*i] = xc;
-              m_RandomCentroids[3*i+1] = yc;
-              m_RandomCentroids[3*i+2] = zc;
-      }
-
+      std::vector<float> boxres(3);
+      boxres[0] = m->getXRes();
+      boxres[1] = m->getYRes();
+      boxres[2] = m->getZRes();
 
       float max_box_distance = sqrtf((sizex*sizex) + (sizey*sizey) + (sizez*sizez));
 
       int32_t current_num_bins = ceil((max_box_distance - m_rdfMin)/(m_StepSize));
 
+      //resize box to include all the possible distances but using the same stepsize as the target RDF. The zero bin includes all distances smaller than the smallest from the targetRDF
       m_rdfRandom.resize(current_num_bins+1);
 
-      for (size_t i = 0; i < largeNumber; i++)
-      {
-            determine_randomRDF(i, 1, false, largeNumber);
-      }
+      //Call this function to generate the random distribution, which is normalized by the total number of distances
+      m_rdfRandom = RadialDistributionFunction::GenerateRandomDistribution(m_rdfMin, m_rdfMax, m_numRDFbins, boxdims, boxres);
 
       size_t numPPTfeatures = numfeatures - firstPrecipitateFeature;
 
+      //Scale the randomRDF to have the same number of particles (and therfore distances) as the current distribution.
       for (size_t i = 0; i < m_rdfRandom.size(); i++)
       {
           m_rdfRandom[i] = m_rdfRandom[i]*numPPTfeatures*(numPPTfeatures-1);
-          m_rdfRandom[i] = m_rdfRandom[i]/largeNumber;
-          m_rdfRandom[i] = m_rdfRandom[i]/(largeNumber-1);
       }
 
       if(write_test_outputs == true)
@@ -809,6 +804,8 @@ void  InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclus
           testFile6 << "\n" << m_rdfRandom[i];
           }
           testFile6.close();
+
+
        }
 
   }
@@ -964,9 +961,9 @@ void  InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclus
   {
     std::ofstream testFile3;
     testFile3.open("/Users/Shared/Data/PW_Work/OUTFILE/current.txt");
-    for (size_t i = 0; i < m_rdfCurrentDist.size(); i++)
+    for (size_t i = 0; i < m_rdfCurrentDistNorm.size(); i++)
     {
-      testFile3 << "\n" << m_rdfCurrentDist[i];
+      testFile3 << "\n" << m_rdfCurrentDistNorm[i];
     }
     testFile3.close();
 

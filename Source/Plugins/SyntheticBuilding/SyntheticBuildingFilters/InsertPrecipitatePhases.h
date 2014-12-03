@@ -267,6 +267,7 @@ class InsertPrecipitatePhases : public AbstractFilter
     std::vector<float> m_RandomCentroids;
     std::vector<float> m_rdfRandom;
 
+
     std::vector<float> featuresizediststep;
 
     std::vector<int> newnames;

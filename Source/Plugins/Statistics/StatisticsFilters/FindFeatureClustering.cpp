@@ -239,14 +239,11 @@ void FindFeatureClustering::find_clustering()
   }
 
   float x, y, z;
-  float xr, yr, zr;
   float xn, yn, zn;
-  float xnr, ynr, znr;
-  float r, rRand;
-  float r1, r2;
-  float xc, yc, zc;
+  float r;
 
-  int32_t bin, binrandom;
+
+  int32_t bin;
   int32_t ensemble;
   int32_t totalPPTfeatures = 0;
   float min = 1000000.0f;
@@ -255,15 +252,12 @@ void FindFeatureClustering::find_clustering()
   float sizex, sizey, sizez, totalvol, totalpoints;
   float normFactor;
 
-  size_t column, row, plane;
-  size_t featureOwnersIdx = 0;
-  size_t factor = 3;
 
   std::vector<std::vector<float> > clusteringlist;
-  std::vector<std::vector<float> > randomclusteringlist;
   std::vector<float> oldcount(m_NumberOfBins);
-  std::vector<float> randomRDF(m_NumberOfBins+2);
-  std::vector<float> m_RandomCentroids;
+  std::vector<float> randomRDF;
+
+
 
 
   size_t totalFeatures = m_FeaturePhasesPtr.lock()->getNumberOfTuples();
@@ -285,45 +279,31 @@ void FindFeatureClustering::find_clustering()
   sizez = dims[2] * m->getZRes();
   totalvol = sizex * sizey * sizez;
   totalpoints = dims[0]*dims[1]*dims[2];
-  float oneovervolume = 1.0f/totalvol;
+
+
+  //initialize boxdims and boxres vectors
+  std::vector<float> boxdims(3);
+  boxdims[0] = sizex;
+  boxdims[1] = sizey;
+  boxdims[2] = sizez;
+
+  std::vector<float> boxres(3);
+  boxres[0] = m->getXRes();
+  boxres[1] = m->getYRes();
+  boxres[2] = m->getZRes();
+
+
 
   for (size_t i = 1; i < totalFeatures; i++)
   {
       if (m_FeaturePhases[i] == m_PhaseNumber) {totalPPTfeatures++;}
   }
-  m_RandomCentroids.resize(totalFeatures*3*factor);
-
-  DREAM3D_RANDOMNG_NEW()
-
-  for (size_t i = 1; i < totalFeatures*factor; i++)
-  {
-
-          featureOwnersIdx = static_cast<size_t>(rg.genrand_res53() * totalpoints);
-
-          column = featureOwnersIdx % dims[0];
-          row = int(featureOwnersIdx / dims[0]) % dims[1];
-          plane = featureOwnersIdx / (dims[0] * dims[1]);
-
-          xc = static_cast<float>(column * m->getXRes()) ;
-          yc = static_cast<float>(row * m->getYRes());
-          zc = static_cast<float>(plane * m->getZRes());
-
-          m_RandomCentroids[3*i] = xc;
-          m_RandomCentroids[3*i+1] = yc;
-          m_RandomCentroids[3*i+2] = zc;
-
-  }
 
 
   clusteringlist.resize(totalFeatures);
-  randomclusteringlist.resize(totalFeatures*factor);
 
-//  for (size_t i = 1; i < totalFeatures; i++)
-//  {
-//    x = m_Centroids[3 * i];
-//    y = m_Centroids[3 * i + 1];
-//    z = m_Centroids[3 * i + 2];
-//  }
+
+
   for (size_t i = 1; i < totalFeatures; i++)
   {
     if (i % 1000 == 0)
@@ -358,41 +338,6 @@ void FindFeatureClustering::find_clustering()
     }
   }
 
-  for (size_t i = 1; i < totalFeatures*factor; i++)
-  {
-    if (i % 1000 == 0)
-    {
-
-      QString ss = QObject::tr("Working On Random Feature %1 of %2").arg(i).arg(totalFeatures*factor);
-      notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
-    }
-
-    xr = m_RandomCentroids[3*i];
-    yr = m_RandomCentroids[3*i+1];
-    zr = m_RandomCentroids[3*i+2];
-
-
-
-
-    for (size_t j = i + 1; j < totalFeatures*factor; j++)
-    {
-
-        xnr = m_RandomCentroids[3*j];
-        ynr = m_RandomCentroids[3*j+1];
-        znr = m_RandomCentroids[3*j+2];
-
-        rRand = sqrtf((xr - xnr) * (xr - xnr) + (yr - ynr) * (yr - ynr) + (zr - znr) * (zr - znr));
-
-        randomclusteringlist[i].push_back(rRand);
-        randomclusteringlist[j].push_back(rRand);
-
-        if(writeErrorFile == true && m_FeaturePhases[j] == 2)
-        {
-          outFile << r << "\n" << r << "\n";
-        }
-      }
-
-  }
 
   for (size_t i = 1; i < totalFeatures; i++)
   {
@@ -429,33 +374,25 @@ void FindFeatureClustering::find_clustering()
     }
   }
 
-  for (size_t i = 1; i < totalFeatures*factor; i++)
-  {
-    for (size_t j=0; j < randomclusteringlist[i].size(); j++)
-    {
 
 
-          binrandom = (randomclusteringlist[i][j] - min)/stepsize;
-
-          if(binrandom >= m_NumberOfBins) {binrandom = m_NumberOfBins;}
-          if(randomclusteringlist[i][j] < min) {binrandom = -1;}
-
-          randomRDF[binrandom+1]++;
-    }
-  }
 
 
-normFactor = totalPPTfeatures*(totalPPTfeatures-1);///((totalFeatures*factor-1)*(totalFeatures*factor-2));
-normFactor = normFactor/(totalFeatures*factor-1);
-normFactor = normFactor/(totalFeatures*factor-2);
 
+//Generate random distribution based on same box size and same stepsize
+float max_box_distance = sqrtf((sizex*sizex) + (sizey*sizey) + (sizez*sizez));
+int32_t current_num_bins = ceil((max_box_distance - min)/(stepsize));
+
+randomRDF.resize(current_num_bins+1);
+//Call this function to generate the random distribution, which is normalized by the total number of distances
+randomRDF = RadialDistributionFunction::GenerateRandomDistribution(min, max, m_NumberOfBins, boxdims, boxres);
+
+//Scale the random distribution by the number of distances in this particular instance
+normFactor = totalPPTfeatures*(totalPPTfeatures-1);
 for (size_t i=0; i < randomRDF.size(); i++)
 {
     randomRDF[i] = randomRDF[i]*normFactor;
 }
-
-
-
 
 
   for (size_t i = 0; i < m_NumberOfBins; i++)
@@ -465,29 +402,32 @@ for (size_t i=0; i < randomRDF.size(); i++)
   }
 
 
-    std::ofstream testFile3;
-    testFile3.open("/Users/Shared/Data/PW_Work/OUTFILE/normalized_target.txt");
-    for (size_t i = 0; i < m_NumberOfBins; i++)
-    {
-    testFile3 << "\n" << m_NewEnsembleArray[(m_NumberOfBins*m_PhaseNumber) + i];
-    }
-    testFile3.close();
 
-    std::ofstream testFile4;
-    testFile4.open("/Users/Shared/Data/PW_Work/OUTFILE/randomrdf_target.txt");
-    for (size_t i = 0; i < randomRDF.size(); i++)
-    {
-    testFile4 << "\n" << randomRDF[i];
-    }
-    testFile4.close();
 
-    std::ofstream testFile7;
-    testFile7.open("/Users/Shared/Data/PW_Work/OUTFILE/targetRaw.txt");
-    for (size_t i = 0; i < oldcount.size(); i++)
-    {
-    testFile7 << "\n" << oldcount[i];
-    }
-    testFile7.close();
+
+//    std::ofstream testFile3;
+//    testFile3.open("/Users/Shared/Data/PW_Work/OUTFILE/normalized_target.txt");
+//    for (size_t i = 0; i < m_NumberOfBins; i++)
+//    {
+//    testFile3 << "\n" << m_NewEnsembleArray[(m_NumberOfBins*m_PhaseNumber) + i];
+//    }
+//    testFile3.close();
+
+//    std::ofstream testFile4;
+//    testFile4.open("/Users/Shared/Data/PW_Work/OUTFILE/randomrdf_target.txt");
+//    for (size_t i = 0; i < randomRDF.size(); i++)
+//    {
+//    testFile4 << "\n" << randomRDF[i];
+//    }
+//    testFile4.close();
+
+//    std::ofstream testFile7;
+//    testFile7.open("/Users/Shared/Data/PW_Work/OUTFILE/targetRaw.txt");
+//    for (size_t i = 0; i < oldcount.size(); i++)
+//    {
+//    testFile7 << "\n" << oldcount[i];
+//    }
+//    testFile7.close();
 
 
 
