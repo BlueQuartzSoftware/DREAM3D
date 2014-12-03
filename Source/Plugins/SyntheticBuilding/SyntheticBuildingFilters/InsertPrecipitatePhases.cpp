@@ -519,13 +519,6 @@ void  InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclus
   int acceptedmoves = 0;
   double totalprecipitatefractions = 0.0;
 
-
-
-
-
-
-
-
   for (int64_t i = 1; i < numensembles; ++i)
   {
     if(m_PhaseTypes[i] == DREAM3D::PhaseType::PrecipitatePhase)
@@ -700,7 +693,7 @@ void  InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclus
     if(random <= precipboundaryfraction)
     {
       // figure out if we want this to be a boundary centroid voxel or not for the proposed precipitate
-      if(availablePoints.size() > 0)
+      if(availablePointsCount > 0)
       {
         key = static_cast<size_t>(rg.genrand_res53() * (availablePointsCount-1));
         featureOwnersIdx = availablePointsInv[key];
@@ -722,7 +715,7 @@ void  InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclus
     }
     else if(random > precipboundaryfraction)
     {
-      if(availablePoints.size() > 0)
+      if(availablePointsCount > 0)
       {
         key = static_cast<size_t>(rg.genrand_res53() * (availablePointsCount-1));
         featureOwnersIdx = availablePointsInv[key];
@@ -872,7 +865,7 @@ void  InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclus
         if(random <= precipboundaryfraction)
         {
           // figure out if we want this to be a boundary centroid voxel or not for the proposed precipitate
-          if(availablePoints.size() > 0)
+          if(availablePointsCount > 0)
           {
             key = static_cast<size_t>(rg.genrand_res53() * (availablePointsCount-1));
             featureOwnersIdx = availablePointsInv[key];
@@ -894,7 +887,7 @@ void  InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclus
         }
         else if(random > precipboundaryfraction)
         {
-          if(availablePoints.size() > 0)
+          if(availablePointsCount > 0)
           {
             key = static_cast<size_t>(rg.genrand_res53() * (availablePointsCount-1));
             featureOwnersIdx = availablePointsInv[key];
@@ -1290,7 +1283,7 @@ void InsertPrecipitatePhases::determine_currentRDF(size_t gnum, int add, bool do
       rdfBin = (r-m_rdfMin)/stepsize;
 
       if (r < m_rdfMin) rdfBin = -1;
-      if (r < 7.0)
+      if (r < 6.0)
       {
         int stop = 0;
       }
