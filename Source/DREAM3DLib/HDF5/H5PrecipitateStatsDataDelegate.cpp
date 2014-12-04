@@ -589,7 +589,7 @@ int H5PrecipitateStatsDataDelegate::writeRDFDistributionData(hid_t pid, RdfData:
       return err;
     }
     err = QH5Lite::writeStringAttribute(disId, DREAM3D::StringConstants::RadialDistFunc, DREAM3D::StringConstants::DistributionType, disTypeStr);
-    if(err >= 0)
+    if(err < 0)
     {
       return err;
     }
