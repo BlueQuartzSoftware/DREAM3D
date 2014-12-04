@@ -298,6 +298,14 @@ void DataContainerReader::readData(bool preflight, DataContainerArrayProxy& prox
     QString ss = QObject::tr("An error occurred trying to read the DataContainer Bundles from the file '%1'").arg(getInputFile());
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
+    
+    err = readExistingPipelineFromFile(fileId);
+    if(err < 0)
+    {
+        setErrorCondition(err);
+        QString ss = QObject::tr("An error occurred trying to read the existing pipeline from the file '%1'").arg(getInputFile());
+        notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    }
 }
 
 // -----------------------------------------------------------------------------

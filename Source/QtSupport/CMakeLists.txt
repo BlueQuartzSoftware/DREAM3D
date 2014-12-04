@@ -33,6 +33,7 @@ set(QtSupport_SRCS
     ${QtSupport_SOURCE_DIR}/FaderWidget.cpp
     ${QtSupport_SOURCE_DIR}/SearchLineEdit.cpp
     ${QtSupport_SOURCE_DIR}/QFSDropLabel.cpp
+    ${QtSupport_SOURCE_DIR}/DREAM3DFileDragMessageBox.cpp
 )
 
 set(QtSupport_HDRS
@@ -51,6 +52,7 @@ set(QtSupport_HDRS
     ${QtSupport_SOURCE_DIR}/FaderWidget.h
     ${QtSupport_SOURCE_DIR}/SearchLineEdit.h
     ${QtSupport_SOURCE_DIR}/QFSDropLabel.h
+    ${QtSupport_SOURCE_DIR}/DREAM3DFileDragMessageBox.h
 )
 cmp_IDE_SOURCE_PROPERTIES("QtSupport" "${QtSupport_HDRS}" "${QtSupport_SRCS}" "0")
 
@@ -69,6 +71,7 @@ SET(DREAM3D_QT_UI_FILES
   ${QtSupport_SOURCE_DIR}/UI_Files/ApplicationAboutBoxDialog.ui
   ${QtSupport_SOURCE_DIR}/UI_Files/HelpDialog.ui
   ${QtSupport_SOURCE_DIR}/UI_Files/DistributionTypeWidget.ui
+  ${QtSupport_SOURCE_DIR}/UI_Files/DREAM3DFileDragMessageBox.ui
 )
 cmp_IDE_SOURCE_PROPERTIES( "QtSupport/UI_Files" "${DREAM3D_QT_UI_FILES}" "" "0")
 

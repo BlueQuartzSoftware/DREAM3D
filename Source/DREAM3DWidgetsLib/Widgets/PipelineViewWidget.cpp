@@ -66,8 +66,11 @@
 #include "DREAM3DLib/FilterParameters/QFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/QFilterParametersWriter.h"
 
-#include "DREAM3DWidgetsLib/FilterWidgetManager.h"
 #include "QtSupport/QDroppableScrollArea.h"
+#include "QtSupport/DREAM3DFileDragMessageBox.h"
+
+#include "DREAM3DWidgetsLib/FilterWidgetManager.h"
+
 
 
 #include "DREAM3DWidgetsLib/FilterParameterWidgets/FilterParameterWidgetsDialogs.h"
@@ -751,6 +754,24 @@ void PipelineViewWidget::dragMoveEvent( QDragMoveEvent* event)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void PipelineViewWidget::extractPipelineFromFile(const QString &filePath)
+{
+
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int PipelineViewWidget::readPipelineFromFile(hid_t fileId)
+{
+  int err = -1;
+
+  return err;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void PipelineViewWidget::dropEvent(QDropEvent* event)
 {
   if (event->mimeData()->hasUrls())
@@ -771,6 +792,11 @@ void PipelineViewWidget::dropEvent(QDropEvent* event)
       }
       else if (fi.suffix().endsWith("dream3d") == true )
       {
+        DREAM3DFileDragMessageBox* msgBox = new DREAM3DFileDragMessageBox(this);
+        msgBox->setFilePath(fName);
+        connect(msgBox, SIGNAL(fireExtractPipelineFromFile(const QString &)), this, SLOT(extractPipelineFromFile(const QString &)));
+        connect(msgBox, SIGNAL(fireAddDREAM3DReaderFilter(const QString &)), this, SLOT(addDREAM3DReaderFilter(const QString &)));
+        msgBox->exec();
 
       }
 
