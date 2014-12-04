@@ -299,7 +299,7 @@ void DataContainerReader::readData(bool preflight, DataContainerArrayProxy& prox
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
     
-    err = readExistingPipelineFromFile(fileId);
+//    err = readExistingPipelineFromFile(fileId);
     if(err < 0)
     {
         setErrorCondition(err);
