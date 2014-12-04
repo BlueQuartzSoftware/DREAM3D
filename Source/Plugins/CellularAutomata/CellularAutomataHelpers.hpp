@@ -100,13 +100,9 @@ namespace CellularAutomata
 		
 		/*
 		 * Functions to get the neighhors of a pixel
-		 * 2D analogs of neighborhood types:
-		 *
-		 *	    x         x x x         x x   x x
-		 *    x   x       x   x       x   x   x   x
-		 *      x         x x x       x x       x x
-		 * Von Nueman     Moore    7 cell (alternates)
 		 */
+
+		 	//6/face connected
 			std::vector<size_t> VonNeumann(size_t x, size_t y, size_t z)
 			{
 				//get neighbor indicies
@@ -134,6 +130,53 @@ namespace CellularAutomata
 				return VonNeumann(x, y, z);
 			}
 
+			//18/face+edge connected
+			std::vector<size_t> EighteenCell(size_t x, size_t y, size_t z)
+			{
+				//get neighbor indicies
+				size_t xPrev = prev(x, 0);
+				size_t xNext = next(x, 0);
+				size_t yPrev = prev(y, 1);
+				size_t yNext = next(y, 1);
+				size_t zPrev = prev(z, 2);
+				size_t zNext = next(z, 2);
+
+				//compute neigbors
+				std::vector<size_t> neighbors(18, 0);
+
+				//faces
+				neighbors[0] = ToIndex(xPrev, y, z);
+				neighbors[1] = ToIndex(xNext, y, z);
+				neighbors[2] = ToIndex(x, yPrev, z);
+				neighbors[3] = ToIndex(x, yNext, z);
+				neighbors[4] = ToIndex(x, y, zPrev);
+				neighbors[5] = ToIndex(x, y, zNext);
+
+				//edges
+				neighbors[6] = ToIndex(x, yPrev, zPrev);
+				neighbors[7] = ToIndex(x, yPrev, zNext);
+				neighbors[8] = ToIndex(x, yNext, zPrev);
+				neighbors[9] = ToIndex(x, yNext, zNext);
+
+				neighbors[10] = ToIndex(xPrev, y, zPrev);
+				neighbors[11] = ToIndex(xPrev, y, zNext);
+				neighbors[12] = ToIndex(xNext, y, zPrev);
+				neighbors[13] = ToIndex(xNext, y, zNext);
+
+				neighbors[14] = ToIndex(xPrev, yPrev, z);
+				neighbors[15] = ToIndex(xPrev, yNext, z);
+				neighbors[16] = ToIndex(xNext, yPrev, z);
+				neighbors[17] = ToIndex(xNext, yNext, z);
+				return neighbors;
+			}
+			std::vector<size_t> EighteenCell(size_t index)
+			{
+				size_t x, y, z;
+				ToTuple(index, x, y, z);
+				return EighteenCell(x, y, z);
+			}
+
+			//26/face+edge+corner connected
 			std::vector<size_t> Moore(size_t x, size_t y, size_t z)
 			{
 				//get neighbor indicies
@@ -190,6 +233,7 @@ namespace CellularAutomata
 				return Moore(x, y, z);
 			}
 
+			//2 shells of 26 connectivity (26 connected neighborhood of all 26 connected neighbors)
 			std::vector<size_t> ExtendedMoore(size_t x, size_t y, size_t z)
 			{
 				//get neighbor indicies
@@ -241,7 +285,7 @@ namespace CellularAutomata
 				return ExtendedMoore(x, y, z);
 			}
 
-
+			//face connected + 2 opposing edge connected (~spherical)
 			//Eight cell has 6 variants in 3d (6 opposing pairs of edges)
 			std::vector<size_t> EightCell(size_t x, size_t y, size_t z, size_t variant)
 			{
@@ -306,6 +350,8 @@ namespace CellularAutomata
 				return EightCell(x, y, z, variant);
 			}
 
+
+			//6 connected + 2 opposing corner connected + adjacent edge connected
 			//Fourteen cell has 4 variants in 3d (4 opposing pairs of corners)
 			std::vector<size_t> FourteenCell(size_t x, size_t y, size_t z, size_t variant)
 			{
@@ -384,6 +430,7 @@ namespace CellularAutomata
 				return FourteenCell(x, y, z, variant);
 			}
 
+			//face connected + edge connected + 2 opposing corner connected
 			//Twnety cell has 4 variants in 3d (4 opposing pairs of corners)
 			std::vector<size_t> TwentyCell(size_t x, size_t y, size_t z, size_t variant)
 			{
