@@ -65,7 +65,7 @@ VisualizeGBCDGMT::VisualizeGBCDGMT() :
   m_MisorientationRotation.k = 0.0f;
   m_MisorientationRotation.l = 0.0f;
 
-  m_OrientationOps = OrientationOps::getOrientationOpsVector();
+  m_OrientationOps = OrientationOps::getOrientationOpsQVector();
   setupFilterParameters();
 }
 

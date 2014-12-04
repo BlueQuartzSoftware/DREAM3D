@@ -92,7 +92,7 @@ class CalculateGBCDImpl
       m_GbcdHemiCheckArray(HemiCheck),
       m_CrystalStructuresArray(CrystalStructures)
     {
-      m_OrientationOps = OrientationOps::getOrientationOpsVector();
+      m_OrientationOps = OrientationOps::getOrientationOpsQVector();
     }
     virtual ~CalculateGBCDImpl() {}
 
@@ -548,7 +548,7 @@ void FindGBCD::execute()
   uint64_t estimatedTime = 0;
   float timeDiff = 0.0f;
   startMillis =  QDateTime::currentMSecsSinceEpoch();
-  int lastIteration = 0;
+  //int lastIteration = 0;
   //int numIterationsPerTime = 0;
   int hemisphere = 0;
 
@@ -586,13 +586,13 @@ void FindGBCD::execute()
       ss = ss + QObject::tr(" || Est. Time Remain: %1").arg(DREAM3D::convertMillisToHrsMinSecs(estimatedTime));
       millis = QDateTime::currentMSecsSinceEpoch();
       //numIterationsPerTime = i - lastIteration;
-      lastIteration = i;
+      //lastIteration = i;
     }
     notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
 
-    for(int j = 0; j < faceChunkSize; j++)
+    for(size_t j = 0; j < faceChunkSize; j++)
     {
-      for(int k = 0; k < numMisoReps; k++)
+      for(size_t k = 0; k < numMisoReps; k++)
       {
         if(m_GbcdBins[(j * numMisoReps) + (k)] >= 0)
         {

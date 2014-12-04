@@ -82,7 +82,7 @@ FindSchmids::FindSchmids() :
   m_SlipDirection.y = 0.0f;
   m_SlipDirection.z = 0.0f;
 
-  m_OrientationOps = OrientationOps::getOrientationOpsVector();
+  m_OrientationOps = OrientationOps::getOrientationOpsQVector();
 
   setupFilterParameters();
 }

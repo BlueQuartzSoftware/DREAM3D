@@ -181,7 +181,7 @@ void DREAM3D_UI::on_actionImportPipeline_triggered()
 // -----------------------------------------------------------------------------
 void DREAM3D_UI::on_actionExportPipeline_triggered()
 {
-  QString proposedFile = m_OpenDialogLastDirectory + QDir::separator() + "Untitled";
+  QString proposedFile = m_OpenDialogLastDirectory + QDir::separator() + "Untitled.txt";
   QString filePath = QFileDialog::getSaveFileName(this, tr("Save Pipeline To File"),
                                                   proposedFile,
                                                   tr("Pipeline File (*.txt *.ini);;All Files(*.*)") );

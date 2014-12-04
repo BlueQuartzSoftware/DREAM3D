@@ -221,7 +221,7 @@ void AlignSectionsMutualInformation::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AlignSectionsMutualInformation::find_shifts(QVector<int>& xshifts, QVector<int>& yshifts)
+void AlignSectionsMutualInformation::find_shifts(std::vector<int> &xshifts, std::vector<int> &yshifts)
 {
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
@@ -268,11 +268,11 @@ void AlignSectionsMutualInformation::find_shifts(QVector<int>& xshifts, QVector<
 
   form_features_sections();
 
-  QVector<QVector<float> >  misorients;
+  std::vector<std::vector<float> >  misorients;
   misorients.resize(dims[0]);
   for (DimType a = 0; a < dims[0]; a++)
   {
-    misorients[a].fill(0.0, dims[1]);
+    misorients[a].assign(dims[1], 0.0);
   }
   for (DimType iter = 1; iter < dims[2]; iter++)
   {
@@ -467,7 +467,7 @@ void AlignSectionsMutualInformation::form_features_sections()
   m_FeatureCounts->resize(dims[2]);
   featurecounts = m_FeatureCounts->getPointer(0);
 
-  QVector<int> voxelslist(initialVoxelsListSize, -1);
+  std::vector<int> voxelslist(initialVoxelsListSize, -1);
   DimType neighpoints[4];
   neighpoints[0] = -dims[0];
   neighpoints[1] = -1;
@@ -528,7 +528,7 @@ void AlignSectionsMutualInformation::form_features_sections()
             if((i == 2) && col == (dims[0] - 1)) { good = 0; }
             if(good == 1 && m_FeatureIds[neighbor] <= 0 && m_CellPhases[neighbor] > 0)
             {
-              w = 10000.0;
+              w = 10000.0f;
               QuaternionMathF::Copy(quats[neighbor], q2);
               phase2 = m_CrystalStructures[m_CellPhases[neighbor]];
               if(phase1 == phase2)
@@ -544,7 +544,7 @@ void AlignSectionsMutualInformation::form_features_sections()
                 {
                   size = voxelslist.size();
                   voxelslist.resize(size + initialVoxelsListSize);
-                  for(qint32 v = size; v < voxelslist.size(); ++v) { voxelslist[v] = -1; }
+                  for(std::vector<int>::size_type v = size; v < voxelslist.size(); ++v) { voxelslist[v] = -1; }
                 }
               }
             }
@@ -553,7 +553,7 @@ void AlignSectionsMutualInformation::form_features_sections()
         voxelslist.erase(std::remove(voxelslist.begin(), voxelslist.end(), -1), voxelslist.end());
         featurecount++;
 
-        voxelslist.fill(-1, initialVoxelsListSize);
+        voxelslist.assign(initialVoxelsListSize, -1);
       }
     }
     featurecounts[slice] = featurecount;

@@ -74,7 +74,7 @@ AlignSectionsMisorientation::AlignSectionsMisorientation() :
 {
   Seed = QDateTime::currentMSecsSinceEpoch();
 
-  m_OrientationOps = OrientationOps::getOrientationOpsVector();
+  m_OrientationOps = OrientationOps::getOrientationOpsQVector();
 
   //only setting up the child parameters because the parent constructor has already been called
   setupFilterParameters();

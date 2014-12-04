@@ -290,9 +290,38 @@ int OrientationOps::_calcODFBin(float dim[3], float bins[3], float step[3], floa
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QVector<OrientationOps::Pointer> OrientationOps::getOrientationOpsVector()
+QVector<OrientationOps::Pointer> OrientationOps::getOrientationOpsQVector()
 {
   QVector<OrientationOps::Pointer> m_OrientationOps;
+  m_OrientationOps.push_back(HexagonalOps::New());
+
+  m_OrientationOps.push_back(CubicOps::New());
+
+  m_OrientationOps.push_back(HexagonalLowOps::New()); // Hex Low
+  m_OrientationOps.push_back(CubicLowOps::New()); // Cubic Low
+  m_OrientationOps.push_back(TriclinicOps::New()); // Triclinic
+  m_OrientationOps.push_back(MonoclinicOps::New()); // Monoclinic
+
+  m_OrientationOps.push_back(OrthoRhombicOps::New());// OrthoRhombic
+
+
+  m_OrientationOps.push_back(TetragonalLowOps::New()); // Tetragonal-low
+  m_OrientationOps.push_back(TetragonalOps::New());// Tetragonal-high
+
+  m_OrientationOps.push_back(TrigonalLowOps::New()); // Trigonal-low
+  m_OrientationOps.push_back(TrigonalOps::New());// Trigonal-High
+
+  m_OrientationOps.push_back(OrthoRhombicOps::New()); // Axis OrthorhombicOps
+
+  return m_OrientationOps;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+std::vector<OrientationOps::Pointer> OrientationOps::getOrientationOpsVector()
+{
+  std::vector<OrientationOps::Pointer> m_OrientationOps;
   m_OrientationOps.push_back(HexagonalOps::New());
 
   m_OrientationOps.push_back(CubicOps::New());

@@ -216,19 +216,19 @@ class InsertPrecipitatePhases : public AbstractFilter
 
   private:
 
-    int firstPrecipitateFeature;
+    int m_FirstPrecipitateFeature;
     unsigned long long int Seed;
-    float sizex;
-    float sizey;
-    float sizez;
-    float xRes;
-    float yRes;
-    float zRes;
-    float totalvol;
-    size_t xPoints;
-    size_t yPoints;
-    size_t zPoints;
-    size_t totalPoints;
+    float m_SizeX;
+    float m_SizeY;
+    float m_SizeZ;
+    float m_XRes;
+    float m_YRes;
+    float m_ZRes;
+    float m_TotalVol;
+    int64_t m_XPoints;
+    int64_t m_YPoints;
+    int64_t m_ZPoints;
+    size_t m_TotalPoints;
 
     QMap<unsigned int, ShapeOps*> m_ShapeOps;
     ShapeOps::Pointer m_UnknownShapeOps;
@@ -281,7 +281,7 @@ class InsertPrecipitatePhases : public AbstractFilter
 
     size_t availablePointsCount;
     float m_currentRDFerror, m_oldRDFerror;
-    float currentsizedisterror, oldsizedisterror;
+    float m_CurrentSizeDistError, m_OldSizeDistError;
     float m_rdfMax;
     float m_rdfMin;
     float m_StepSize;

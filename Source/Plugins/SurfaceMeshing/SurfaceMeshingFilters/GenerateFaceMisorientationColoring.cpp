@@ -78,7 +78,7 @@ class CalculateFaceMisorientationColorsImpl
       m_Colors(colors),
       m_CrystalStructures(crystalStructures)
     {
-      m_OrientationOps = OrientationOps::getOrientationOpsVector();
+      m_OrientationOps = OrientationOps::getOrientationOpsQVector();
     }
     virtual ~CalculateFaceMisorientationColorsImpl() {}
 
