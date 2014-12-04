@@ -177,6 +177,7 @@ void StatsGenRDFWidget::initQwtPlot(QString xAxisName, QString yAxisName, QwtPlo
 {
   plot->setAxisTitle(QwtPlot::xBottom, xAxisName);
   plot->setAxisTitle(QwtPlot::yLeft, yAxisName);
+  plot->setCanvasBackground( Qt::black ); //Set the Background colour
 }
 
 // -----------------------------------------------------------------------------
@@ -245,6 +246,12 @@ void StatsGenRDFWidget::updateRDFPlot(QVector<float>& freqs)
   curve->setData(xD, yD);
 #endif
   curve->setStyle(QwtPlotCurve::Lines);
+  //Use Antialiasing to improve plot render quality
+  curve->setRenderHint( QwtPlotItem::RenderAntialiased, true );
+  QPen pen;
+  pen.setColor(Qt::white);
+  pen.setWidth(2);
+  curve->setPen(pen);//Set colour and thickness for drawing the curve
   curve->attach(m_RDFPlot);
   m_RDFPlot->replot();
 }
@@ -281,10 +288,17 @@ void StatsGenRDFWidget::extractStatsData(int index, StatsData* statsData, unsign
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-VectorOfFloatArray StatsGenRDFWidget::getStatisticsData()
+RdfData::Pointer StatsGenRDFWidget::getStatisticsData()
 {
-  VectorOfFloatArray arrays;
+  bool ok = false;
+  RdfData::Pointer rdf = RdfData::New();
 
+  rdf->setMinDistance(minDistLE->text().toFloat(&ok));
+  rdf->setMaxDistance(maxDistLE->text().toFloat(&ok));
 
-  return arrays;
+  QVector<float> qRdfData = m_RDFTableModel->getData(SGRDFTableModel::Frequency);
+
+  rdf->setFrequencies(qRdfData.toStdVector());
+
+  return rdf;
 }

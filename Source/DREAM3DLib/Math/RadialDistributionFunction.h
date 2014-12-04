@@ -35,6 +35,34 @@
 #include <vector>
 
 #include "DREAM3DLib/DREAM3DLib.h"
+#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+#include "DREAM3DLib/DataArrays/DataArray.hpp"
+
+
+
+class DREAM3DLib_EXPORT RdfData
+{
+  public:
+    DREAM3D_SHARED_POINTERS(RdfData)
+    DREAM3D_STATIC_NEW_MACRO(RdfData)
+    DREAM3D_TYPE_MACRO(RdfData)
+
+    virtual ~RdfData();
+
+    DREAM3D_INSTANCE_PROPERTY(std::vector<float>, Frequencies)
+    DREAM3D_INSTANCE_PROPERTY(float, MinDistance)
+    DREAM3D_INSTANCE_PROPERTY(float, MaxDistance)
+    DREAM3D_INSTANCE_STRING_PROPERTY(DistributionType)
+
+    protected:
+      RdfData();
+
+  private:
+    RdfData(const RdfData&); // Copy Constructor Not Implemented
+    void operator=(const RdfData&); // Operator '=' Not Implemented
+
+};
+
 
 /**
  * @brief The RadialDistributionFunction class can generate different types of distributions

@@ -650,11 +650,10 @@ void  InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclus
       {
 
         PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsDataArray[i].get());
-        VectorOfFloatArray rdfTarget = pp->getRadialDistFunction();
-        VectorOfFloatArray maxmin = pp->getMaxMinRDF();
-
+        RdfData::Pointer rdfTarget = pp->getRadialDistFunction();
+        const std::vector<float>& freqs = rdfTarget->getFrequencies();
         //       int test =rdfTarget[0]->getNumberOfTuples();
-        m_numRDFbins = rdfTarget[0]->getNumberOfTuples();
+        m_numRDFbins = freqs.size();
         //      std::vector<float> rdfTargetDist;
         m_rdfTargetDist.resize(m_numRDFbins+1);
         //       m_rdfCurrentDist.resize(m_numRDFbins+2);
@@ -663,10 +662,10 @@ void  InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclus
 
         for (int j = 0; j < m_numRDFbins; j++)
         {
-          m_rdfTargetDist[j+1] = rdfTarget[0]->getValue(j);
+          m_rdfTargetDist[j+1] = freqs[j];
         }
-        m_rdfMax = maxmin[0]->getValue(0);
-        m_rdfMin = maxmin[0]->getValue(1);
+        m_rdfMax = rdfTarget->getMaxDistance();
+        m_rdfMin = rdfTarget->getMinDistance();
 
         m_StepSize = (m_rdfMax-m_rdfMin)/m_numRDFbins;
         float max_box_distance = sqrtf((m_SizeX*m_SizeX) + (m_SizeY*m_SizeY) + (m_SizeZ*m_SizeZ));
@@ -674,8 +673,6 @@ void  InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclus
         int32_t current_num_bins = ceil((max_box_distance - m_rdfMin)/(m_StepSize));
 
         m_rdfCurrentDist.resize(current_num_bins+1);
-
-
       }
     }
   }

@@ -46,9 +46,10 @@
 #include "DREAM3DLib/DataContainers/VolumeDataContainer.h"
 #include "DREAM3DLib/StatsData/StatsData.h"
 #include "DREAM3DLib/StatsData/PrecipitateStatsData.h"
+#include "DREAM3DLib/Math/RadialDistributionFunction.h"
 
 
-#include "StatsGenerator/TableModels/SGRDFTableModel.h"
+#include "TableModels/SGRDFTableModel.h"
 
 #include "Applications/StatsGenerator/ui_StatsGenRDFWidget.h"
 
@@ -82,7 +83,7 @@ class StatsGenRDFWidget : public QWidget, private Ui::StatsGenRDFWidget
 
     SGRDFTableModel* tableModel();
 
-    VectorOfFloatArray getStatisticsData();
+    RdfData::Pointer getStatisticsData();
 
   protected slots:
     void on_generateRDFBtn_clicked();

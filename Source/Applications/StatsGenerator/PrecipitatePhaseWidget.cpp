@@ -827,9 +827,8 @@ int PrecipitatePhaseWidget::gatherStatsData(AttributeMatrix::Pointer attrMat)
       precipitateStatsData->setCOverA_DistType(m_COverAPlot->getDistributionType());
     }
     {
-      VectorOfFloatArray data = m_RdfPlot->getStatisticsData();
-    //  precipitateStatsData->setFeatureSize_Clustering(data);
-     // precipitateStatsData->setClustering_DistType(m_RdfPlot->getDistributionType());
+      RdfData::Pointer data = m_RdfPlot->getStatisticsData();
+      precipitateStatsData->setRadialDistFunction(data);
     }
 
     m_ODFWidget->getOrientationData(precipitateStatsData, DREAM3D::PhaseType::PrecipitatePhase);

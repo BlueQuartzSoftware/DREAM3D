@@ -178,8 +178,8 @@ void AlignSections::execute()
   DimType currentPosition;
   //  unsigned int  phase2;
 
-  QVector<int> xshifts(dims[2], 0);
-  QVector<int> yshifts(dims[2], 0);
+  std::vector<int> xshifts(dims[2], 0);
+  std::vector<int> yshifts(dims[2], 0);
 
   find_shifts(xshifts, yshifts);
 
@@ -295,7 +295,7 @@ void AlignSections::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AlignSections::find_shifts(QVector<int>& xshifts, QVector<int>& yshifts)
+void AlignSections::find_shifts(std::vector<int>& xshifts, std::vector<int>& yshifts)
 {
 
 }
