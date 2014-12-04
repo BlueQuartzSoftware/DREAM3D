@@ -8,33 +8,7 @@
 #--
 #--////////////////////////////////////////////////////////////////////////////
 project(StatsGenerator)
-cmake_minimum_required(VERSION 2.8.9)
-
-# ------------------------------------------------------------------------------
-#  Qt 4 Section
-# ------------------------------------------------------------------------------
-if(QT4_FOUND)
-    set(QT_USE_QTSVG "TRUE")
-    set(QT_USE_QTSCRIPT "TRUE")
-    include( ${QT_USE_FILE} )
-    CMP_COPY_QT4_RUNTIME_LIBRARIES( "QtSvg;QtScript")
-    CMP_QT_LIBRARIES_INSTALL_RULES( "QtSvg;QtScript" "./")
-else()
-    message(FATAL_ERROR "Qt 4 is Needed for this project.")
-endif(QT4_FOUND)
-
-# ------------------------------------------------------------------------------
-#  Qwt Section
-# ------------------------------------------------------------------------------
-find_package(Qwt)
-if(QWT_FOUND)
-    include_directories(${QWT_INCLUDE_DIR})
-    include_directories(${QWT_INCLUDE_DIR}/qwt)
-    CMP_COPY_DEPENDENT_LIBRARIES("qwt")
-    CMP_LIBRARIES_INSTALL_RULES("qwt" "./")
-else()
-    message(FATAL_ERROR "Qwt is required for this project")
-endif()
+cmake_minimum_required(VERSION 3.0.0)
 
 # Set the GUI type for different platforms
 SET(GUI_TYPE )
@@ -59,6 +33,7 @@ set(StatsGenerator_SRCS
     ${StatsGenerator_SOURCE_DIR}/StatsGenODFWidget.cpp
     ${StatsGenerator_SOURCE_DIR}/SGAxisODFWidget.cpp
     ${StatsGenerator_SOURCE_DIR}/StatsGenMDFWidget.cpp
+    ${StatsGenerator_SOURCE_DIR}/StatsGenRDFWidget.cpp
     ${StatsGenerator_SOURCE_DIR}/SGWidget.cpp
     ${StatsGenerator_SOURCE_DIR}/EditPhaseDialog.cpp
     ${StatsGenerator_SOURCE_DIR}/TextureDialog.cpp
@@ -67,6 +42,7 @@ set(StatsGenerator_SRCS
     ${StatsGenerator_SOURCE_DIR}/MatrixPhaseWidget.cpp
     ${StatsGenerator_SOURCE_DIR}/BoundaryPhaseWidget.cpp
     ${StatsGenerator_SOURCE_DIR}/TransformationPhaseWidget.cpp
+    ${StatsGenerator_SOURCE_DIR}/QwtHistogramItem.cpp
     )
 set(StatsGenerator_HDRS
 #    ${StatsGenerator_SOURCE_DIR}/StatsGen.h
@@ -79,6 +55,7 @@ SET(StatsGenerator_MOC_HDRS
     ${StatsGenerator_SOURCE_DIR}/StatsGenODFWidget.h
     ${StatsGenerator_SOURCE_DIR}/SGAxisODFWidget.h
     ${StatsGenerator_SOURCE_DIR}/StatsGenMDFWidget.h
+    ${StatsGenerator_SOURCE_DIR}/StatsGenRDFWidget.h
     ${StatsGenerator_SOURCE_DIR}/SGWidget.h
     ${StatsGenerator_SOURCE_DIR}/EditPhaseDialog.h
     ${StatsGenerator_SOURCE_DIR}/TextureDialog.h
@@ -87,7 +64,8 @@ SET(StatsGenerator_MOC_HDRS
     ${StatsGenerator_SOURCE_DIR}/MatrixPhaseWidget.h
     ${StatsGenerator_SOURCE_DIR}/BoundaryPhaseWidget.h
     ${StatsGenerator_SOURCE_DIR}/TransformationPhaseWidget.h
-    )
+    ${StatsGenerator_SOURCE_DIR}/QwtHistogramItem.h
+)
 cmp_IDE_SOURCE_PROPERTIES( "StatsGenerator" "${StatsGenerator_HDRS};${StatsGenerator_MOC_HDRS}" "${StatsGenerator_SRCS}" ${PROJECT_INSTALL_HEADERS})
 
 set(StatsGenerator_DELEGATE_SRCS   "" )
@@ -97,6 +75,7 @@ set(StatsGenerator_DELEGATE_HDRS
     ${StatsGenerator_SOURCE_DIR}/Delegates/SGPowerLawItemDelegate.h
     ${StatsGenerator_SOURCE_DIR}/Delegates/SGODFItemDelegate.h
     ${StatsGenerator_SOURCE_DIR}/Delegates/SGMDFItemDelegate.h
+    ${StatsGenerator_SOURCE_DIR}/Delegates/SGRDFItemDelegate.h
     )
 cmp_IDE_SOURCE_PROPERTIES( "StatsGenerator/Delegates" "${StatsGenerator_DELEGATE_HDRS}" "${StatsGenerator_DELEGATE_SRCS}" ${PROJECT_INSTALL_HEADERS})
 
@@ -107,6 +86,7 @@ set(StatsGenerator_TABLEMODEL_SRCS
     ${StatsGenerator_SOURCE_DIR}/TableModels/SGLogNormalTableModel.cpp
     ${StatsGenerator_SOURCE_DIR}/TableModels/SGODFTableModel.cpp
     ${StatsGenerator_SOURCE_DIR}/TableModels/SGMDFTableModel.cpp
+    ${StatsGenerator_SOURCE_DIR}/TableModels/SGRDFTableModel.cpp
     )
 
 set(StatsGenerator_TABLEMODEL_HDRS
@@ -116,6 +96,7 @@ set(StatsGenerator_TABLEMODEL_HDRS
     ${StatsGenerator_SOURCE_DIR}/TableModels/SGLogNormalTableModel.h
     ${StatsGenerator_SOURCE_DIR}/TableModels/SGODFTableModel.h
     ${StatsGenerator_SOURCE_DIR}/TableModels/SGMDFTableModel.h
+    ${StatsGenerator_SOURCE_DIR}/TableModels/SGRDFTableModel.h
     )
 cmp_IDE_SOURCE_PROPERTIES( "StatsGenerator/TableModels" "${StatsGenerator_TABLEMODEL_HDRS}" "${StatsGenerator_TABLEMODEL_SRCS}" ${PROJECT_INSTALL_HEADERS})
 
@@ -142,14 +123,14 @@ set(StatsGenerator_PRESETS_HDRS
 cmp_IDE_SOURCE_PROPERTIES( "StatsGenerator/Presets" "${StatsGenerator_PRESETS_HDRS}" "${StatsGenerator_PRESETS_SRCS}" ${PROJECT_INSTALL_HEADERS})
 
 set(StatsGenerator_DIALOGS_SRCS
-${StatsGenerator_SOURCE_DIR}/Presets/Dialogs/PrimaryRolledPresetDialog.cpp
-${StatsGenerator_SOURCE_DIR}/Presets/Dialogs/PrecipitateRolledPresetDialog.cpp
-${StatsGenerator_SOURCE_DIR}/Presets/Dialogs/PrimaryRecrystallizedPresetDialog.cpp
+  ${StatsGenerator_SOURCE_DIR}/Presets/Dialogs/PrimaryRolledPresetDialog.cpp
+  ${StatsGenerator_SOURCE_DIR}/Presets/Dialogs/PrecipitateRolledPresetDialog.cpp
+  ${StatsGenerator_SOURCE_DIR}/Presets/Dialogs/PrimaryRecrystallizedPresetDialog.cpp
 )
 set(StatsGenerator_DIALOGS_HDRS
-${StatsGenerator_SOURCE_DIR}/Presets/Dialogs/PrimaryRolledPresetDialog.h
-${StatsGenerator_SOURCE_DIR}/Presets/Dialogs/PrecipitateRolledPresetDialog.h
-${StatsGenerator_SOURCE_DIR}/Presets/Dialogs/PrimaryRecrystallizedPresetDialog.h
+  ${StatsGenerator_SOURCE_DIR}/Presets/Dialogs/PrimaryRolledPresetDialog.h
+  ${StatsGenerator_SOURCE_DIR}/Presets/Dialogs/PrecipitateRolledPresetDialog.h
+  ${StatsGenerator_SOURCE_DIR}/Presets/Dialogs/PrimaryRecrystallizedPresetDialog.h
 )
 cmp_IDE_SOURCE_PROPERTIES( "StatsGenerator/Presets/Dialogs" "${StatsGenerator_DIALOGS_HDRS}" "${StatsGenerator_DIALOGS_SRCS}" ${PROJECT_INSTALL_HEADERS})
 
@@ -159,6 +140,7 @@ SET(StatsGenerator_UIS
   ${StatsGenerator_SOURCE_DIR}/UI_Files/StatsGenPlotWidget.ui
   ${StatsGenerator_SOURCE_DIR}/UI_Files/SGAxisODFWidget.ui
   ${StatsGenerator_SOURCE_DIR}/UI_Files/StatsGenMDFWidget.ui
+  ${StatsGenerator_SOURCE_DIR}/UI_Files/StatsGenRDFWidget.ui
   ${StatsGenerator_SOURCE_DIR}/UI_Files/EditPhaseDialog.ui
   ${StatsGenerator_SOURCE_DIR}/UI_Files/TextureDialog.ui
   ${StatsGenerator_SOURCE_DIR}/UI_Files/PrimaryPhaseWidget.ui
@@ -172,22 +154,10 @@ cmp_IDE_GENERATED_PROPERTIES("StatsGenerator/UI_Files" "${StatsGenerator_UIS}" "
 # and finally any resource files
 SET(StatsGenerator_RCS ${PROJECT_RESOURCES_DIR}/icons/images/Icons.qrc)
 
-# -- Run MOC and UIC on the necessary files
-#message(STATUS "QRC_LICENSE_FILES:")
-#foreach(lic ${QRC_LICENSE_FILES})
-#  message(STATUS "  ${lic}")
-#endforeach(lic ${QRC_LICENSE_FILES})
 QT4_ADD_RESOURCES( Generated_RC_SRCS ${StatsGenerator_RCS} ${QRC_LICENSE_FILES})
 
 # this will run uic on .ui files:
 QT4_WRAP_UI( Generated_UI_HDRS ${StatsGenerator_UIS} )
-
-# and finally this will run moc:
-#QT4_WRAP_CPP( Generated_MOC_SRCS
-#            ${StatsGenerator_MOC_HDRS}
-#            ${StatsGenerator_DELEGATE_HDRS}
-#            ${StatsGenerator_TABLEMODEL_HDRS}
-#            ${StatsGenerator_DIALOGS_HDRS} )
 
 #-- Put the generated files into their own group for IDEs
 cmp_IDE_GENERATED_PROPERTIES("Generated/ui" "${Generated_UI_HDRS}" "")
@@ -212,13 +182,14 @@ set(StatsGenerator_PROJECT_SRCS
     ${Generated_MOC_SRCS}
 )
 
-
-include_directories(${PROJECT_CODE_DIR})
 include_directories(${HDF5_INCLUDE_DIR})
-include_directories(${StatsGenerator_SOURCE_DIR} )
-include_directories(${StatsGenerator_SOURCE_DIR}/.. )
-include_directories(${StatsGenerator_BINARY_DIR} )
+include_directories(${PROJECT_CODE_DIR})
+include_directories(${PROJECT_CODE_DIR}/Applications)
 include_directories(${PROJECT_CODE_DIR}/QtSupport)
+include_directories(${StatsGenerator_SOURCE_DIR})
+include_directories(${DREAM3DProj_BINARY_DIR})
+include_directories(${DREAM3DProj_BINARY_DIR}/Applications)
+include_directories(${DREAM3DProj_BINARY_DIR}/Applications/${PROJECT_NAME})
 include_directories(${DREAM3DProj_BINARY_DIR}/QtSupport)
 
 
