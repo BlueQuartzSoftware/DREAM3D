@@ -64,9 +64,31 @@ void DREAM3DFileDragMessageBox::setFilePath(QString path)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DREAM3DFileDragMessageBox::on_extractPipelineBtn_clicked()
+void DREAM3DFileDragMessageBox::on_replacePipelineBtn_clicked()
 {
-  emit fireExtractPipelineFromFile(filePath);
+  emit fireExtractPipelineFromFile(filePath, Replace);
+
+  // Close the dialog box
+  close();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DREAM3DFileDragMessageBox::on_appendPipelineBtn_clicked()
+{
+  emit fireExtractPipelineFromFile(filePath, Append);
+
+  // Close the dialog box
+  close();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DREAM3DFileDragMessageBox::on_prependPipelineBtn_clicked()
+{
+  emit fireExtractPipelineFromFile(filePath, Prepend);
 
   // Close the dialog box
   close();
