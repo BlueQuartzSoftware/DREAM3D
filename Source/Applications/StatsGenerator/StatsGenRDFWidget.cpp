@@ -56,22 +56,20 @@
 #include <QtGui/QFileDialog>
 
 
-#include <qwt.h>
 #include <qwt_plot.h>
+#include <qwt_plot_grid.h>
+#include <qwt_plot_marker.h>
+#include <qwt_interval_data.h>
 #include <qwt_plot_curve.h>
 #include <qwt_abstract_scale_draw.h>
 #include <qwt_scale_draw.h>
 #include <qwt_plot_canvas.h>
 
-#include "EbsdLib/EbsdConstants.h"
 
-#include "DREAM3DLib/Common/StatsGen.hpp"
-#include "DREAM3DLib/Common/Texture.hpp"
-#include "DREAM3DLib/OrientationOps/OrientationOps.h"
-#include "DREAM3DLib/OrientationOps/CubicOps.h"
-#include "DREAM3DLib/OrientationOps/HexagonalOps.h"
-#include "DREAM3DLib/OrientationOps/OrthoRhombicOps.h"
 
+#include "DREAM3DLib/Math/RadialDistributionFunction.h"
+
+#include "Applications/StatsGenerator/QwtHistogramItem.h"
 #include "Applications/StatsGenerator/TableModels/SGMDFTableModel.h"
 
 
@@ -84,6 +82,9 @@ StatsGenRDFWidget::StatsGenRDFWidget(QWidget* parent) :
 //  m_CrystalStructure(Ebsd::CrystalStructure::Cubic_High),
   m_RDFTableModel(NULL)
 {
+  m_HistogramData = new QwtHistogramItem();
+  m_PlotGrid = new QwtPlotGrid;
+
   this->setupUi(this);
   this->setupGui();
 }
@@ -97,6 +98,8 @@ StatsGenRDFWidget::~StatsGenRDFWidget()
   {
     m_RDFTableModel->deleteLater();
   }
+  delete m_HistogramData;
+  delete m_PlotGrid;
 }
 
 // -----------------------------------------------------------------------------
@@ -110,16 +113,69 @@ SGRDFTableModel* StatsGenRDFWidget::tableModel()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void GenerateTestData(QwtPlot* plotPtr)
+{
+  QwtPlot& plot = *plotPtr;
+     plot.setCanvasBackground(QColor(Qt::white));
+     plot.setTitle("Histogram");
+
+     QwtPlotGrid *grid = new QwtPlotGrid;
+     grid->enableXMin(true);
+     grid->enableYMin(true);
+     grid->setMajPen(QPen(Qt::black, 0, Qt::DotLine));
+     grid->setMinPen(QPen(Qt::gray, 0 , Qt::DotLine));
+     grid->attach(&plot);
+
+     QwtHistogramItem *histogram = new QwtHistogramItem();
+     histogram->setColor(Qt::darkCyan);
+
+     const int numValues = 20;
+
+     QwtArray<QwtDoubleInterval> intervals(numValues);
+     QwtArray<double> values(numValues);
+
+     double pos = 0.0;
+     for ( int i = 0; i < (int)intervals.size(); i++ )
+     {
+         const int width = 5 + rand() % 15;
+         const int value = rand() % 100;
+
+         intervals[i] = QwtDoubleInterval(pos, pos + double(width));
+         values[i] = value;
+
+         pos += width;
+     }
+
+     histogram->setData(QwtIntervalData(intervals, values));
+     histogram->attach(&plot);
+
+     plot.setAxisScale(QwtPlot::yLeft, 0.0, 100.0);
+     plot.setAxisScale(QwtPlot::xBottom, 0.0, pos);
+     plot.replot();
+
+ #if QT_VERSION < 0x040000
+     a.setMainWidget(&plot);
+ #endif
+
+     plot.resize(600,400);
+     plot.show();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void StatsGenRDFWidget::setupGui()
 {
-  initQwtPlot("Misorientation Angle(w)", "Freq", m_RDFPlot);
+  initQwtPlot("Radial Distribution Plot", "Freq", m_RDFPlot);
   m_RDFTableModel = new SGRDFTableModel;
   m_RDFTableModel->setInitialValues();
   m_RDFTableView->setModel(m_RDFTableModel);
   QAbstractItemDelegate* aid = m_RDFTableModel->getItemDelegate();
   m_RDFTableView->setItemDelegate(aid);
-  m_PlotCurve = new QwtPlotCurve;
+  //m_PlotCurve = new QwtPlotCurve;
+  //GenerateTestData(m_RDFPlot);
 }
+
 
 // -----------------------------------------------------------------------------
 //
@@ -128,195 +184,89 @@ void StatsGenRDFWidget::initQwtPlot(QString xAxisName, QString yAxisName, QwtPlo
 {
   plot->setAxisTitle(QwtPlot::xBottom, xAxisName);
   plot->setAxisTitle(QwtPlot::yLeft, yAxisName);
-  //plot->setCanvasBackground(QColor(Qt::white));
-  //plot->canvas()->setFrameShape(QFrame::NoFrame);
-
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void StatsGenRDFWidget::on_m_RDFUpdateBtn_clicked()
+void StatsGenRDFWidget::on_generateRDFBtn_clicked()
 {
   // Generate the ODF Data from the current values in the ODFTableModel
-  QVector<float> odf = generateODFData();
+  bool ok = false;
+  float minDist = minDistLE->text().toFloat(&ok);
+  float maxDist = maxDistLE->text().toFloat(&ok);
+  int numBins = numBinsLE->text().toInt(&ok);
 
-  updateRDFPlot(odf);
+  std::vector<float> boxDims(3);
+  boxDims[0] = 100;
+  boxDims[1] = 100;
+  boxDims[2] = 100;
+  std::vector<float> boxRes(3);
+  boxRes[0] = 0.1;
+  boxRes[1] = 0.1;
+  boxRes[2] = 0.1;
+
+
+  std::vector<float> rdfFrequencies = RadialDistributionFunction::GenerateRandomDistribution(minDist, maxDist, numBins, boxDims, boxRes);
+
+  updateRDFPlot(rdfFrequencies);
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void StatsGenRDFWidget::updateRDFPlot(QVector<float>& odf)
+void StatsGenRDFWidget::updateRDFPlot(std::vector<float>& freqs)
 {
-  int err = 0;
+ // std::cout << "updateRDF Plot" << std::endl;
+  m_RDFPlot->setCanvasBackground(QColor(Qt::white));
+  m_RDFPlot->setTitle("Histogram");
 
-  int size = 100000;
+  //m_PlotGrid = new QwtPlotGrid;
+  m_PlotGrid->enableXMin(true);
+  m_PlotGrid->enableYMin(true);
+  m_PlotGrid->setMajPen(QPen(Qt::black, 0, Qt::DotLine));
+  m_PlotGrid->setMinPen(QPen(Qt::gray, 0 , Qt::DotLine));
+  m_PlotGrid->attach(m_RDFPlot);
 
-  // These are the input vectors
-  QVector<int> angles;
-  QVector<float> axes;
-  QVector<float> weights;
+  //m_HistogramData = new QwtHistogramItem();
+  m_HistogramData->setColor(QColor(23,65,193,255));
 
-  angles = m_RDFTableModel->getData(SGRDFTableModel::Angle);
-  weights = m_RDFTableModel->getData(SGRDFTableModel::Weight);
-  axes = m_RDFTableModel->getData(SGRDFTableModel::Axis);
+  bool ok = false;
+  float minDist = minDistLE->text().toFloat(&ok);
+  float maxDist = maxDistLE->text().toFloat(&ok);
 
+  const int numValues = freqs.size();
+  float increment = (maxDist - minDist) / numValues;
 
-  // These are the output vectors
-  QVector<float> x;
-  QVector<float> y;
+  QwtArray<QwtDoubleInterval> intervals(numValues);
+  QwtArray<double> values(numValues);
 
-  // Allocate a new vector to hold the RDF data
-  QVector<float> RDF(CubicOps::k_RDFSize);
-  // Calculate the RDF Data using the ODF data and the rows from the RDF Table model
-  Texture::CalculateRDFData<float, CubicOps>(angles.data(), axes.data(), weights.data(), odf.data(), RDF.data(), angles.size());
-  // Now generate the actual XY point data that gets plotted.
-  size_t npoints = 13;
-  x.resize(npoints);
-  y.resize(npoints);
-  err = StatsGen::GenCubicRDFPlotData(RDF.data(), x.data(), y.data(), npoints, size);
-  if (err < 0)
+  double pos = minDist;
+  for ( int i = 0; i < (int)intervals.size(); i++ )
   {
-    return;
+      intervals[i] = QwtDoubleInterval(pos, pos + increment,QwtDoubleInterval::ExcludeMaximum);
+      values[i] = freqs[i];
+     // std::cout << pos << "  " << values[i] << std::endl;
+
+      pos += increment;
   }
 
-  QwtArray<double> xD(static_cast<int>(x.size()));
-  QwtArray<double> yD(static_cast<int>(x.size()));
-  for (qint32 i = 0; i < x.size(); ++i)
-  {
-    xD[i] = static_cast<double>(x.at(i));
-    yD[i] = static_cast<double>(y.at(i));
-  }
+  m_HistogramData->setData(QwtIntervalData(intervals, values));
+  m_HistogramData->attach(m_RDFPlot);
 
-
-  // This will actually plot the XY data in the Qwt plot widget
-  QwtPlotCurve* curve = m_PlotCurve;
-#if QWT_VERSION >= 0x060000
-  curve->setSamples(xD, yD);
-#else
-  curve->setData(xD, yD);
-#endif
-  curve->setStyle(QwtPlotCurve::Lines);
-  curve->attach(m_RDFPlot);
+  //m_RDFPlot->setAxisScale(QwtPlot::yLeft, 0.0, 1.0);
+  m_RDFPlot->setAxisScale(QwtPlot::xBottom, 0.0, pos);
   m_RDFPlot->replot();
-}
+  m_RDFPlot->setVisible(true);
+  m_RDFPlot->show();
 
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-QVector<float> StatsGenRDFWidget::generateODFData()
-{
-  QVector<float> e1s;
-  QVector<float> e2s;
-  QVector<float> e3s;
-  QVector<float> weights;
-  QVector<float> sigmas;
-  QVector<float> odf;
-
-  // Initialize xMax and yMax....
-  e1s = m_ODFTableModel->getData(SGODFTableModel::Euler1);
-  e2s = m_ODFTableModel->getData(SGODFTableModel::Euler2);
-  e3s = m_ODFTableModel->getData(SGODFTableModel::Euler3);
-  weights = m_ODFTableModel->getData(SGODFTableModel::Weight);
-  sigmas = m_ODFTableModel->getData(SGODFTableModel::Sigma);
-
-  for(qint32 i = 0; i < e1s.size(); i++)
-  {
-    e1s[i] = e1s[i] * M_PI / 180.0;
-    e2s[i] = e2s[i] * M_PI / 180.0;
-    e3s[i] = e3s[i] * M_PI / 180.0;
-  }
-  size_t numEntries = e1s.size();
-
-  if ( Ebsd::CrystalStructure::Cubic_High == m_CrystalStructure)
-  {
-
-    odf.resize(CubicOps::k_OdfSize);
-    Texture::CalculateCubicODFData(e1s.data(), e2s.data(), e3s.data(),
-                                   weights.data(), sigmas.data(), true,
-                                   odf.data(), numEntries);
-  }
-  else if ( Ebsd::CrystalStructure::Hexagonal_High == m_CrystalStructure)
-  {
-    odf.resize(HexagonalOps::k_OdfSize);
-    Texture::CalculateHexODFData(e1s.data(), e2s.data(), e3s.data(),
-                                 weights.data(), sigmas.data(), true,
-                                 odf.data(), numEntries);
-  }
-  return odf;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void StatsGenRDFWidget::on_addRDFRowBtn_clicked()
-{
-  if (!m_RDFTableModel->insertRow(m_RDFTableModel->rowCount())) { return; }
+  QVector<float> qFreqs = QVector<float>::fromStdVector(freqs);
+  m_RDFTableModel->setTableData( qFreqs);
   m_RDFTableView->resizeColumnsToContents();
   m_RDFTableView->scrollToBottom();
   m_RDFTableView->setFocus();
-  QModelIndex index = m_RDFTableModel->index(m_RDFTableModel->rowCount() - 1, 0);
-  m_RDFTableView->setCurrentIndex(index);
 }
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void StatsGenRDFWidget::on_deleteRDFRowBtn_clicked()
-{
-  QItemSelectionModel* selectionModel = m_RDFTableView->selectionModel();
-  if (!selectionModel->hasSelection()) { return; }
-  QModelIndex index = selectionModel->currentIndex();
-  if (!index.isValid()) { return; }
-  m_RDFTableModel->removeRow(index.row(), index.parent());
-  if (m_RDFTableModel->rowCount() > 0)
-  {
-    m_RDFTableView->resizeColumnsToContents();
-  }
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void StatsGenRDFWidget::on_loadRDFBtn_clicked()
-{
-  QString proposedFile = m_OpenDialogLastDirectory;
-  QString file = QFileDialog::getOpenFileName(this, tr("Open Axis ODF File"), proposedFile, tr("Text Document (*.txt)"));
-  if(true == file.isEmpty())
-  {
-    return;
-  }
-  else
-  {
-    size_t numMisorients = 0;
-    QString filename = file;
-    std::ifstream inFile;
-    inFile.open(filename.toLatin1().data());
-
-    inFile >> numMisorients;
-
-    float angle, weight;
-    std::string n1, n2, n3;
-    for(size_t i = 0; i < numMisorients; i++)
-    {
-      inFile >> angle >> n1 >> n2 >> n3 >> weight;
-
-      QString axis = QString("<" + QString::fromStdString(n1) + "," + QString::fromStdString(n2) + "," + QString::fromStdString(n3) + ">");
-
-      if (!m_RDFTableModel->insertRow(m_RDFTableModel->rowCount())) { return; }
-      int row = m_RDFTableModel->rowCount() - 1;
-      m_RDFTableModel->setRowData(row, angle, axis, weight);
-
-      m_RDFTableView->resizeColumnsToContents();
-      m_RDFTableView->scrollToBottom();
-      m_RDFTableView->setFocus();
-      QModelIndex index = m_RDFTableModel->index(m_RDFTableModel->rowCount() - 1, 0);
-      m_RDFTableView->setCurrentIndex(index);
-    }
-  }
-}
 
 // -----------------------------------------------------------------------------
 //
@@ -324,125 +274,35 @@ void StatsGenRDFWidget::on_loadRDFBtn_clicked()
 void StatsGenRDFWidget::extractStatsData(int index, StatsData* statsData, unsigned int phaseType)
 {
   VectorOfFloatArray arrays;
-  if(phaseType == DREAM3D::PhaseType::PrimaryPhase)
-  {
-    PrimaryStatsData* pp = PrimaryStatsData::SafePointerDownCast(statsData);
-    arrays = pp->getRDF_Weights();
-  }
+
   if(phaseType == DREAM3D::PhaseType::PrecipitatePhase)
   {
     PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsData);
-    arrays = pp->getRDF_Weights();
+    arrays = pp->getMDF_Weights();
   }
-  if(phaseType == DREAM3D::PhaseType::TransformationPhase)
-  {
-    TransformationStatsData* tp = TransformationStatsData::SafePointerDownCast(statsData);
-    arrays = tp->getRDF_Weights();
-  }
+
   if (arrays.size() > 0 )
   {
     QVector<float> angle(static_cast<int>(arrays[0]->getNumberOfTuples()));
     ::memcpy( &(angle.front()), arrays[0]->getVoidPointer(0), sizeof(float)*angle.size() );
 
-    QVector<float> weights(static_cast<int>(arrays[0]->getNumberOfTuples()));
-    ::memcpy( &(weights.front()), arrays[0]->getVoidPointer(0), sizeof(float)*weights.size() );
-
-    QVector<float> axis(static_cast<int>(arrays[0]->getSize())); // This one is 3xn in size
-    ::memcpy( &(axis.front()), arrays[0]->getVoidPointer(0), sizeof(float)*axis.size() );
-
     if (angle.size() > 0)
     {
       // Load the data into the table model
-      m_RDFTableModel->setTableData(angle, axis, weights);
+      m_RDFTableModel->setTableData(angle);
     }
   }
-  on_m_RDFUpdateBtn_clicked();
+//  updateRDFPlot();
 }
+
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int StatsGenRDFWidget::getMisorientationData(StatsData* statsData, unsigned int phaseType)
+VectorOfFloatArray StatsGenRDFWidget::getStatisticsData()
 {
-  int retErr = 0;
-  QVector<float> x;
-  QVector<float> y;
+  VectorOfFloatArray arrays;
 
-  QVector<float> angles;
-  QVector<float> axes;
-  QVector<float> weights;
 
-  angles = m_RDFTableModel->getData(SGRDFTableModel::Angle);
-  weights = m_RDFTableModel->getData(SGRDFTableModel::Weight);
-  axes = m_RDFTableModel->getData(SGRDFTableModel::Axis);
-
-  // Generate the ODF Data from the current values in the ODFTableModel
-  QVector<float> odf = generateODFData();
-  QVector<float> RDF;
-
-  //unsigned long long int nElements = 0;
-
-  if ( Ebsd::CrystalStructure::Cubic_High == m_CrystalStructure)
-  {
-    RDF.resize(CubicOps::k_RDFSize);
-    Texture::CalculateRDFData<float, CubicOps>(angles.data(), axes.data(), weights.data(), odf.data(), RDF.data(), angles.size());
-    //nElements = 18 * 18 * 18;
-  }
-  else if ( Ebsd::CrystalStructure::Hexagonal_High == m_CrystalStructure)
-  {
-    RDF.resize(HexagonalOps::k_RDFSize);
-    Texture::CalculateRDFData<float, HexagonalOps>(angles.data(), axes.data(), weights.data(), odf.data(), RDF.data(), angles.size());
-    //nElements = 36 * 36 * 12;
-  }
-  if (RDF.size() > 0)
-  {
-    FloatArrayType::Pointer p = FloatArrayType::FromPointer(RDF.data(), RDF.size(), DREAM3D::StringConstants::MisorientationBins);
-    if(phaseType == DREAM3D::PhaseType::PrimaryPhase)
-    {
-      PrimaryStatsData* pp = PrimaryStatsData::SafePointerDownCast(statsData);
-      pp->setMisorientationBins(p);
-    }
-    if(phaseType == DREAM3D::PhaseType::PrecipitatePhase)
-    {
-      PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsData);
-      pp->setMisorientationBins(p);
-    }
-    if(phaseType == DREAM3D::PhaseType::TransformationPhase)
-    {
-      TransformationStatsData* tp = TransformationStatsData::SafePointerDownCast(statsData);
-      tp->setMisorientationBins(p);
-    }
-
-    if(angles.size() > 0)
-    {
-      FloatArrayType::Pointer anglesArray = FloatArrayType::FromPointer(angles.data(), angles.size(), DREAM3D::StringConstants::Angle);
-      FloatArrayType::Pointer axisArray = FloatArrayType::FromPointer(axes.data(), axes.size(), DREAM3D::StringConstants::Axis);
-      FloatArrayType::Pointer weightArray = FloatArrayType::FromPointer(weights.data(), weights.size(), DREAM3D::StringConstants::Weight);
-
-      VectorOfFloatArray RDFWeights;
-      RDFWeights.push_back(anglesArray);
-      RDFWeights.push_back(axisArray);
-      RDFWeights.push_back(weightArray);
-      if(phaseType == DREAM3D::PhaseType::PrimaryPhase)
-      {
-        PrimaryStatsData* pp = PrimaryStatsData::SafePointerDownCast(statsData);
-        pp->setRDF_Weights(RDFWeights);
-      }
-      if(phaseType == DREAM3D::PhaseType::PrecipitatePhase)
-      {
-        PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsData);
-        pp->setRDF_Weights(RDFWeights);
-      }
-      if(phaseType == DREAM3D::PhaseType::TransformationPhase)
-      {
-        TransformationStatsData* tp = TransformationStatsData::SafePointerDownCast(statsData);
-        tp->setRDF_Weights(RDFWeights);
-      }
-    }
-
-  }
-
-  return retErr;
+  return arrays;
 }
-
-

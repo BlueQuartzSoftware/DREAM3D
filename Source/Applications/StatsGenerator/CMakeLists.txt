@@ -10,33 +10,6 @@
 project(StatsGenerator)
 cmake_minimum_required(VERSION 3.0.0)
 
-# ------------------------------------------------------------------------------
-#  Qt 4 Section
-# ------------------------------------------------------------------------------
-if(QT4_FOUND)
-    set(QT_USE_QTSVG "TRUE")
-    set(QT_USE_QTSCRIPT "TRUE")
-    include( ${QT_USE_FILE} )
-    CMP_COPY_QT4_RUNTIME_LIBRARIES( "QtSvg;QtScript")
-    CMP_QT_LIBRARIES_INSTALL_RULES( "QtSvg;QtScript" "./")
-else()
-    message(FATAL_ERROR "Qt 4 is Needed for this project.")
-endif(QT4_FOUND)
-
-# ------------------------------------------------------------------------------
-#  Qwt Section
-# ------------------------------------------------------------------------------
-find_package(Qwt)
-if(QWT_FOUND)
-#   message(STATUS "QWT_INCLUDE_DIR: ${QWT_INCLUDE_DIR}")
-    include_directories(${QWT_INCLUDE_DIR})
-#    include_directories(${QWT_INCLUDE_DIR}/qwt)
-    CMP_COPY_DEPENDENT_LIBRARIES("qwt")
-    CMP_LIBRARIES_INSTALL_RULES("qwt" "./")
-else()
-    message(FATAL_ERROR "Qwt is required for this project")
-endif()
-
 # Set the GUI type for different platforms
 SET(GUI_TYPE )
 
@@ -69,6 +42,7 @@ set(StatsGenerator_SRCS
     ${StatsGenerator_SOURCE_DIR}/MatrixPhaseWidget.cpp
     ${StatsGenerator_SOURCE_DIR}/BoundaryPhaseWidget.cpp
     ${StatsGenerator_SOURCE_DIR}/TransformationPhaseWidget.cpp
+    ${StatsGenerator_SOURCE_DIR}/QwtHistogramItem.cpp
     )
 set(StatsGenerator_HDRS
 #    ${StatsGenerator_SOURCE_DIR}/StatsGen.h
@@ -90,7 +64,8 @@ SET(StatsGenerator_MOC_HDRS
     ${StatsGenerator_SOURCE_DIR}/MatrixPhaseWidget.h
     ${StatsGenerator_SOURCE_DIR}/BoundaryPhaseWidget.h
     ${StatsGenerator_SOURCE_DIR}/TransformationPhaseWidget.h
-    )
+    ${StatsGenerator_SOURCE_DIR}/QwtHistogramItem.h
+)
 cmp_IDE_SOURCE_PROPERTIES( "StatsGenerator" "${StatsGenerator_HDRS};${StatsGenerator_MOC_HDRS}" "${StatsGenerator_SRCS}" ${PROJECT_INSTALL_HEADERS})
 
 set(StatsGenerator_DELEGATE_SRCS   "" )
@@ -100,6 +75,7 @@ set(StatsGenerator_DELEGATE_HDRS
     ${StatsGenerator_SOURCE_DIR}/Delegates/SGPowerLawItemDelegate.h
     ${StatsGenerator_SOURCE_DIR}/Delegates/SGODFItemDelegate.h
     ${StatsGenerator_SOURCE_DIR}/Delegates/SGMDFItemDelegate.h
+    ${StatsGenerator_SOURCE_DIR}/Delegates/SGRDFItemDelegate.h
     )
 cmp_IDE_SOURCE_PROPERTIES( "StatsGenerator/Delegates" "${StatsGenerator_DELEGATE_HDRS}" "${StatsGenerator_DELEGATE_SRCS}" ${PROJECT_INSTALL_HEADERS})
 
@@ -211,10 +187,9 @@ include_directories(${PROJECT_CODE_DIR})
 include_directories(${PROJECT_CODE_DIR}/Applications)
 include_directories(${PROJECT_CODE_DIR}/QtSupport)
 include_directories(${StatsGenerator_SOURCE_DIR})
-
-include_directories(${StatsGenerator_BINARY_DIR})
 include_directories(${DREAM3DProj_BINARY_DIR})
 include_directories(${DREAM3DProj_BINARY_DIR}/Applications)
+include_directories(${DREAM3DProj_BINARY_DIR}/Applications/${PROJECT_NAME})
 include_directories(${DREAM3DProj_BINARY_DIR}/QtSupport)
 
 

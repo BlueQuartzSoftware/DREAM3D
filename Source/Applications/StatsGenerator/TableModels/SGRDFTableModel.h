@@ -146,7 +146,7 @@ class SGRDFTableModel : public QAbstractTableModel
      * @param col
      * @return
      */
-    virtual QVector<int> getData(int col);
+    virtual QVector<float> getData(int col);
 
     /**
      *
@@ -157,19 +157,19 @@ class SGRDFTableModel : public QAbstractTableModel
     virtual int getDataValue(int col, int row);
 
 
-    virtual void setColumnData(int col, QVector<int>& data);
+    virtual void setColumnData(int col, QVector<float>& data);
 
     virtual void setRowData(int row, int freq);
 
     virtual void setInitialValues();
 
-    void setTableData(QVector<int> freqs);
+    void setTableData(QVector<float> freqs);
 
   private:
     int m_ColumnCount;
     int m_RowCount;
 
-    QVector<int> m_Frequencies;
+    QVector<float> m_Frequencies;
 
     SGRDFTableModel(const SGRDFTableModel&); // Copy Constructor Not Implemented
     void operator=(const SGRDFTableModel&); // Operator '=' Not Implemented

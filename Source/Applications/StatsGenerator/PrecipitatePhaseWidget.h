@@ -9,7 +9,7 @@
 #define _PrecipitatePhaseWidget_H_
 
 #include "SGWidget.h"
-#include "ui_PrecipitatePhaseWidget.h"
+#include "Applications/StatsGenerator/ui_PrecipitatePhaseWidget.h"
 
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/DataContainers/VolumeDataContainer.h"
@@ -113,6 +113,7 @@ class PrecipitatePhaseWidget : public SGWidget, private Ui::PrecipitatePhaseWidg
     QwtPlotMarker*       m_CutOffMin;
     QwtPlotMarker*       m_CutOffMax;
     QwtPlotGrid*         m_grid;
+
     AbstractMicrostructurePreset::Pointer m_MicroPreset;
 
     PrecipitatePhaseWidget(const PrecipitatePhaseWidget&); // Copy Constructor Not Implemented

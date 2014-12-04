@@ -40,7 +40,7 @@
 #include <QtGui/QStyleOptionComboBox>
 #include <QtGui/QAbstractItemDelegate>
 
-#include "StatsGenerator/Delegates/SGODFItemDelegate.h"
+#include "StatsGenerator/Delegates/SGRDFItemDelegate.h"
 
 // -----------------------------------------------------------------------------
 //
@@ -136,7 +136,7 @@ QVariant SGRDFTableModel::headerData(int section, Qt::Orientation orientation, i
     switch(section)
     {
       case Frequency:
-        return QVariant(QString("Euler 1"));
+        return QVariant(QString("Normalized Fequency"));
         break;
       default:
         break;
@@ -241,7 +241,7 @@ bool SGRDFTableModel::removeRows(int row, int count, const QModelIndex& index)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QVector<int> SGRDFTableModel::getData(int col)
+QVector<float> SGRDFTableModel::getData(int col)
 {
 
   switch(col)
@@ -252,7 +252,7 @@ QVector<int> SGRDFTableModel::getData(int col)
     default:
       Q_ASSERT(false);
   }
-  return QVector<int>();
+  return QVector<float>();
 }
 
 // -----------------------------------------------------------------------------
@@ -274,7 +274,7 @@ int SGRDFTableModel::getDataValue(int col, int row)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SGRDFTableModel::setColumnData(int col, QVector<int>& data)
+void SGRDFTableModel::setColumnData(int col, QVector<float>& data)
 {
   switch(col)
   {
@@ -299,7 +299,7 @@ void SGRDFTableModel::setRowData(int row, int freq)
 // -----------------------------------------------------------------------------
 QAbstractItemDelegate* SGRDFTableModel::getItemDelegate()
 {
-  return new SGODFItemDelegate(m_CrystalStructure);
+  return new SGRDFItemDelegate();
 }
 
 #define ADD_INITIAL_ROW_VALUE(name, weight, sigma)\
@@ -322,9 +322,9 @@ void SGRDFTableModel::setInitialValues()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SGRDFTableModel::setTableData(QVector<float> e1, QVector<float> e2, QVector<float> e3, QVector<float> weights, QVector<float> sigmas)
+void SGRDFTableModel::setTableData(QVector<float> freqs)
 {
-  qint32 count = e1.count();
+  qint32 count = freqs.count();
 
   qint32 row = 0;
   // Remove all the current rows in the table model
@@ -335,11 +335,7 @@ void SGRDFTableModel::setTableData(QVector<float> e1, QVector<float> e2, QVector
   {
     // Now mass insert the data to the table then emit that the data has changed
     beginInsertRows(QModelIndex(), row, row + count - 1);
-    m_Frequencies = e1;
-    m_Euler2s = e2;
-    m_Euler3s = e3;
-    m_Weights = weights;
-    m_Sigmas = sigmas;
+    m_Frequencies = freqs;
     m_RowCount = count;
     endInsertRows();
     QModelIndex topLeft = createIndex(0, 0);
@@ -347,26 +343,5 @@ void SGRDFTableModel::setTableData(QVector<float> e1, QVector<float> e2, QVector
   }
   emit dataChanged(topLeft, botRight);
 }
-
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void SGRDFTableModel::setCrystalStructure(unsigned int value)
-{
-  if (m_CrystalStructure != value)
-  {
-    this->m_CrystalStructure = value;
-  }
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-unsigned int SGRDFTableModel::getCrystalStructure()
-{
-  return m_CrystalStructure;
-}
-
 
 

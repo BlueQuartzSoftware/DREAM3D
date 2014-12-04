@@ -191,7 +191,6 @@ void PrecipitatePhaseWidget::setupGui()
   float binStepSize = 0.5f;
 
   StatsGenPlotWidget* w = m_Omega3Plot;
-
   w->setPlotTitle(QString("Size Vs. Omega 3"));
   w->setXAxisName(QString("Omega 3"));
   w->setYAxisName(QString("Frequency"));
@@ -240,22 +239,23 @@ void PrecipitatePhaseWidget::setupGui()
   connect(m_COverAPlot, SIGNAL(userEditedData()),
           this, SLOT(dataWasEdited()));
 
-  w = m_ClusteringPlot;
-  w->setPlotTitle(QString("Clustering Distributions"));
-  w->setXAxisName(QString("Distance between Centroids"));
-  w->setYAxisName(QString("Frequency"));
-  w->setDistributionType(DREAM3D::DistributionType::LogNormal);
-  w->setStatisticsType(DREAM3D::StatisticsType::Feature_SizeVClustering);
-  w->blockDistributionTypeChanges(true);
-  w->setRowOperationEnabled(false);
-  w->setMu(mu);
-  w->setSigma(sigma);
-  w->setMinCutOff(minCutOff);
-  w->setMaxCutOff(maxCutOff);
-  w->setBinStep(binStepSize);
-  connect(m_ClusteringPlot, SIGNAL(userEditedData()),
-          this, SLOT(dataWasEdited()));
-
+  {
+   // w = m_RdfPlot;
+//    m_RdfPlot->setPlotTitle(QString("Clustering Distributions"));
+//    m_RdfPlot->setXAxisName(QString("Distance between Centroids"));
+//    m_RdfPlot->setYAxisName(QString("Frequency"));
+//    m_RdfPlot->setDistributionType(DREAM3D::DistributionType::LogNormal);
+//    m_RdfPlot->setStatisticsType(DREAM3D::StatisticsType::Feature_SizeVClustering);
+//    m_RdfPlot->blockDistributionTypeChanges(true);
+//    m_RdfPlot->setRowOperationEnabled(false);
+//    w->setMu(mu);
+//    w->setSigma(sigma);
+//    w->setMinCutOff(minCutOff);
+//    w->setMaxCutOff(maxCutOff);
+//    w->setBinStep(binStepSize);
+    connect(m_RdfPlot, SIGNAL(userEditedData()),
+            this, SLOT(dataWasEdited()));
+  }
 
   m_SizeDistributionPlot->setCanvasBackground(QColor(Qt::white));
   m_SizeDistributionPlot->setTitle("Size Distribution");
@@ -293,7 +293,7 @@ void PrecipitatePhaseWidget::setPhaseIndex(int index)
   m_Omega3Plot->setPhaseIndex(m_PhaseIndex);
   m_BOverAPlot->setPhaseIndex(m_PhaseIndex);
   m_COverAPlot->setPhaseIndex(m_PhaseIndex);
-  m_ClusteringPlot->setPhaseIndex(m_PhaseIndex);
+//  m_RdfPlot->setPhaseIndex(m_PhaseIndex);
   m_ODFWidget->setPhaseIndex(m_PhaseIndex);
   m_AxisODFWidget->setPhaseIndex(m_PhaseIndex);
 }
@@ -315,7 +315,7 @@ void PrecipitatePhaseWidget::setCrystalStructure(unsigned int xtal)
   m_Omega3Plot->setCrystalStructure(xtal);
   m_BOverAPlot->setCrystalStructure(xtal);
   m_COverAPlot->setCrystalStructure(xtal);
-  m_ClusteringPlot->setCrystalStructure(xtal);
+  //m_RdfPlot->setCrystalStructure(xtal);
   m_ODFWidget->setCrystalStructure(xtal);
   /* Note that we do NOT want to set the crystal structure for the AxisODF widget
    * because we need that crystal structure to be OrthoRhombic in order for those
@@ -705,8 +705,8 @@ void PrecipitatePhaseWidget::plotSizeDistribution()
   m_COverAPlot->setSizeDistributionValues(mu, sigma, minCutOff, maxCutOff, stepSize);
   m_MicroPreset->initializeCOverATableModel(m_COverAPlot, binsizes);
 
-  m_ClusteringPlot->setSizeDistributionValues(mu, sigma, minCutOff, maxCutOff, stepSize);
-  m_MicroPreset->initializeClusteringTableModel(m_ClusteringPlot, binsizes);
+  // m_RdfPlot->setSizeDistributionValues(mu, sigma, minCutOff, maxCutOff, stepSize);
+  // m_MicroPreset->initializeClusteringTableModel(m_RdfPlot, binsizes);
 
   // Get any presets for the ODF/AxisODF/MDF also
   m_MicroPreset->initializeODFTableModel(m_ODFWidget);
@@ -827,9 +827,9 @@ int PrecipitatePhaseWidget::gatherStatsData(AttributeMatrix::Pointer attrMat)
       precipitateStatsData->setCOverA_DistType(m_COverAPlot->getDistributionType());
     }
     {
-      VectorOfFloatArray data = m_ClusteringPlot->getStatisticsData();
-      precipitateStatsData->setFeatureSize_Clustering(data);
-      precipitateStatsData->setClustering_DistType(m_ClusteringPlot->getDistributionType());
+      VectorOfFloatArray data = m_RdfPlot->getStatisticsData();
+    //  precipitateStatsData->setFeatureSize_Clustering(data);
+     // precipitateStatsData->setClustering_DistType(m_RdfPlot->getDistributionType());
     }
 
     m_ODFWidget->getOrientationData(precipitateStatsData, DREAM3D::PhaseType::PrecipitatePhase);
@@ -877,7 +877,7 @@ void PrecipitatePhaseWidget::extractStatsData(AttributeMatrix::Pointer attrMat, 
   m_Omega3Plot->setCrystalStructure(m_CrystalStructure);
   m_BOverAPlot->setCrystalStructure(m_CrystalStructure);
   m_COverAPlot->setCrystalStructure(m_CrystalStructure);
-  m_ClusteringPlot->setCrystalStructure(m_CrystalStructure);
+  //m_RdfPlot->setCrystalStructure(m_CrystalStructure);
   m_ODFWidget->setCrystalStructure(m_CrystalStructure);
 // m_AxisODFWidget->setCrystalStructure(m_CrystalStructure);
 
@@ -942,9 +942,9 @@ void PrecipitatePhaseWidget::extractStatsData(AttributeMatrix::Pointer attrMat, 
   m_COverAPlot->extractStatsData(index, qbins, precipitateStatsData->getFeatureSize_COverA());
   m_COverAPlot->setSizeDistributionValues(mu, sigma, minCutOff, maxCutOff, binStepSize);
 
-  m_ClusteringPlot->setDistributionType(precipitateStatsData->getClustering_DistType(), false);
-  m_ClusteringPlot->extractStatsData(index, qbins, precipitateStatsData->getFeatureSize_Clustering());
-  m_ClusteringPlot->setSizeDistributionValues(mu, sigma, minCutOff, maxCutOff, binStepSize);
+  //m_RdfPlot->setDistributionType(precipitateStatsData->getClustering_DistType(), false);
+  //m_RdfPlot->extractStatsData(index, qbins, precipitateStatsData->getFeatureSize_Clustering());
+  //m_RdfPlot->setSizeDistributionValues(mu, sigma, minCutOff, maxCutOff, binStepSize);
 
 
   // Set the ODF Data

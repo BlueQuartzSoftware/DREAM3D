@@ -38,24 +38,23 @@
 #define _StatsGenRDFWidget_H_
 
 #include <QtGui/QWidget>
-#include "ui_StatsGenRDFWidget.h"
+
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/DataContainers/VolumeDataContainer.h"
 #include "DREAM3DLib/StatsData/StatsData.h"
-//#include "DREAM3DLib/StatsData/PrimaryStatsData.h"
 #include "DREAM3DLib/StatsData/PrecipitateStatsData.h"
-//#include "DREAM3DLib/StatsData/TransformationStatsData.h"
-//#include "StatsGenerator/TableModels/SGODFTableModel.h"
 
 
 #include "StatsGenerator/TableModels/SGRDFTableModel.h"
 
+#include "Applications/StatsGenerator/ui_StatsGenRDFWidget.h"
+
 class SGRDFTableModel;
-class QwtPlot;
-class QwtPlotCurve;
+class QwtPlotGrid;
+class QwtHistogramItem;
 
 /**
  * @class StatsGenRDFWidget StatsGenRDFWidget.h StatsGenerator/StatsGenRDFWidget.h
@@ -75,30 +74,29 @@ class StatsGenRDFWidget : public QWidget, private Ui::StatsGenRDFWidget
     void setupGui();
     void initQwtPlot(QString xAxisName, QString yAxisName, QwtPlot* plot);
 
-
-//    DREAM3D_INSTANCE_PROPERTY(SGODFTableModel*, ODFTableModel)
-
     int getMisorientationData(StatsData* statsData, unsigned int phaseType);
     void extractStatsData(int index, StatsData* statsData, unsigned int phaseType);
 
     QVector<float> generateODFData();
 
-    void updateRDFPlot(QVector<float>& odf);
+    void updateRDFPlot(std::vector<float> &freqs);
 
     SGRDFTableModel* tableModel();
 
+    VectorOfFloatArray getStatisticsData();
+
   protected slots:
-    void on_addRDFRowBtn_clicked();
-    void on_deleteRDFRowBtn_clicked();
-    void on_m_RDFUpdateBtn_clicked();
-    void on_loadRDFBtn_clicked();
+    void on_generateRDFBtn_clicked();
 
 
   private:
     SGRDFTableModel* m_RDFTableModel;
-    QwtPlotCurve*    m_PlotCurve;
+    QwtPlotGrid* m_PlotGrid;
+    QwtHistogramItem* m_HistogramData;
 
     QString m_OpenDialogLastDirectory; // Must be last in the list
+
+
     StatsGenRDFWidget(const StatsGenRDFWidget&); // Copy Constructor Not Implemented
     void operator=(const StatsGenRDFWidget&); // Operator '=' Not Implemented
 
