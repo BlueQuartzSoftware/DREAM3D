@@ -189,6 +189,11 @@ void DREAM3D_UI::on_actionExportPipeline_triggered()
 
   //If the filePath already exists - delete it so that we get a clean write to the file
   QFileInfo fi(filePath);
+  if (fi.suffix().isEmpty())
+  {
+      filePath.append(".txt");
+      fi.setFile(filePath);
+  }
   pipelineViewWidget->savePipeline(filePath, fi.baseName());
   m_OpenDialogLastDirectory = fi.path();
 }
