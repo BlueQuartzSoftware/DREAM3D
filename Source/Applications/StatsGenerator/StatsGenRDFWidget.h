@@ -53,8 +53,7 @@
 #include "Applications/StatsGenerator/ui_StatsGenRDFWidget.h"
 
 class SGRDFTableModel;
-class QwtPlotGrid;
-class QwtHistogramItem;
+class QwtPlotCurve;
 
 /**
  * @class StatsGenRDFWidget StatsGenRDFWidget.h StatsGenerator/StatsGenRDFWidget.h
@@ -79,7 +78,7 @@ class StatsGenRDFWidget : public QWidget, private Ui::StatsGenRDFWidget
 
     QVector<float> generateODFData();
 
-    void updateRDFPlot(std::vector<float> &freqs);
+    void updateRDFPlot(QVector<float> &freqs);
 
     SGRDFTableModel* tableModel();
 
@@ -91,8 +90,7 @@ class StatsGenRDFWidget : public QWidget, private Ui::StatsGenRDFWidget
 
   private:
     SGRDFTableModel* m_RDFTableModel;
-    QwtPlotGrid* m_PlotGrid;
-    QwtHistogramItem* m_HistogramData;
+    QwtPlotCurve*    m_PlotCurve;
 
     QString m_OpenDialogLastDirectory; // Must be last in the list
 

@@ -42,7 +42,6 @@ set(StatsGenerator_SRCS
     ${StatsGenerator_SOURCE_DIR}/MatrixPhaseWidget.cpp
     ${StatsGenerator_SOURCE_DIR}/BoundaryPhaseWidget.cpp
     ${StatsGenerator_SOURCE_DIR}/TransformationPhaseWidget.cpp
-    ${StatsGenerator_SOURCE_DIR}/QwtHistogramItem.cpp
     )
 set(StatsGenerator_HDRS
 #    ${StatsGenerator_SOURCE_DIR}/StatsGen.h
@@ -64,7 +63,6 @@ SET(StatsGenerator_MOC_HDRS
     ${StatsGenerator_SOURCE_DIR}/MatrixPhaseWidget.h
     ${StatsGenerator_SOURCE_DIR}/BoundaryPhaseWidget.h
     ${StatsGenerator_SOURCE_DIR}/TransformationPhaseWidget.h
-    ${StatsGenerator_SOURCE_DIR}/QwtHistogramItem.h
 )
 cmp_IDE_SOURCE_PROPERTIES( "StatsGenerator" "${StatsGenerator_HDRS};${StatsGenerator_MOC_HDRS}" "${StatsGenerator_SRCS}" ${PROJECT_INSTALL_HEADERS})
 

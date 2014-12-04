@@ -59,7 +59,6 @@
 #include <qwt_plot.h>
 #include <qwt_plot_grid.h>
 #include <qwt_plot_marker.h>
-#include <qwt_interval_data.h>
 #include <qwt_plot_curve.h>
 #include <qwt_abstract_scale_draw.h>
 #include <qwt_scale_draw.h>
@@ -69,7 +68,6 @@
 
 #include "DREAM3DLib/Math/RadialDistributionFunction.h"
 
-#include "Applications/StatsGenerator/QwtHistogramItem.h"
 #include "Applications/StatsGenerator/TableModels/SGMDFTableModel.h"
 
 
@@ -78,13 +76,8 @@
 // -----------------------------------------------------------------------------
 StatsGenRDFWidget::StatsGenRDFWidget(QWidget* parent) :
   QWidget(parent),
-//  m_PhaseIndex(-1),
-//  m_CrystalStructure(Ebsd::CrystalStructure::Cubic_High),
   m_RDFTableModel(NULL)
 {
-  m_HistogramData = new QwtHistogramItem();
-  m_PlotGrid = new QwtPlotGrid;
-
   this->setupUi(this);
   this->setupGui();
 }
@@ -98,8 +91,6 @@ StatsGenRDFWidget::~StatsGenRDFWidget()
   {
     m_RDFTableModel->deleteLater();
   }
-  delete m_HistogramData;
-  delete m_PlotGrid;
 }
 
 // -----------------------------------------------------------------------------
@@ -110,6 +101,7 @@ SGRDFTableModel* StatsGenRDFWidget::tableModel()
   return m_RDFTableModel;
 }
 
+#if 0
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -160,6 +152,7 @@ void GenerateTestData(QwtPlot* plotPtr)
      plot.resize(600,400);
      plot.show();
 }
+#endif
 
 // -----------------------------------------------------------------------------
 //
@@ -172,7 +165,7 @@ void StatsGenRDFWidget::setupGui()
   m_RDFTableView->setModel(m_RDFTableModel);
   QAbstractItemDelegate* aid = m_RDFTableModel->getItemDelegate();
   m_RDFTableView->setItemDelegate(aid);
-  //m_PlotCurve = new QwtPlotCurve;
+  m_PlotCurve = new QwtPlotCurve;
   //GenerateTestData(m_RDFPlot);
 }
 
@@ -206,30 +199,27 @@ void StatsGenRDFWidget::on_generateRDFBtn_clicked()
   boxRes[1] = 0.1;
   boxRes[2] = 0.1;
 
-
+  // Generate the RDF Frequencies
   std::vector<float> rdfFrequencies = RadialDistributionFunction::GenerateRandomDistribution(minDist, maxDist, numBins, boxDims, boxRes);
+  QVector<float> qFreq = QVector<float>::fromStdVector(rdfFrequencies);
 
-  updateRDFPlot(rdfFrequencies);
+  // Update the Table model with the latest values
+  m_RDFTableModel->setTableData(qFreq);
+
+  // Update the Qwt plot with the correct values
+  updateRDFPlot(qFreq);
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void StatsGenRDFWidget::updateRDFPlot(std::vector<float>& freqs)
+void StatsGenRDFWidget::updateRDFPlot(QVector<float>& freqs)
 {
- // std::cout << "updateRDF Plot" << std::endl;
-  m_RDFPlot->setCanvasBackground(QColor(Qt::white));
-  m_RDFPlot->setTitle("Histogram");
 
-  //m_PlotGrid = new QwtPlotGrid;
-  m_PlotGrid->enableXMin(true);
-  m_PlotGrid->enableYMin(true);
-  m_PlotGrid->setMajPen(QPen(Qt::black, 0, Qt::DotLine));
-  m_PlotGrid->setMinPen(QPen(Qt::gray, 0 , Qt::DotLine));
-  m_PlotGrid->attach(m_RDFPlot);
+  // These are the output vectors
+  QwtArray<double> xD(static_cast<int>(freqs.size()));
+  QwtArray<double> yD(static_cast<int>(freqs.size()));
 
-  //m_HistogramData = new QwtHistogramItem();
-  m_HistogramData->setColor(QColor(23,65,193,255));
 
   bool ok = false;
   float minDist = minDistLE->text().toFloat(&ok);
@@ -238,33 +228,25 @@ void StatsGenRDFWidget::updateRDFPlot(std::vector<float>& freqs)
   const int numValues = freqs.size();
   float increment = (maxDist - minDist) / numValues;
 
-  QwtArray<QwtDoubleInterval> intervals(numValues);
-  QwtArray<double> values(numValues);
-
   double pos = minDist;
-  for ( int i = 0; i < (int)intervals.size(); i++ )
-  {
-      intervals[i] = QwtDoubleInterval(pos, pos + increment,QwtDoubleInterval::ExcludeMaximum);
-      values[i] = freqs[i];
-     // std::cout << pos << "  " << values[i] << std::endl;
 
-      pos += increment;
+  for (qint32 i = 0; i < numValues; ++i)
+  {
+    xD[i] = pos;
+    yD[i] = static_cast<double>(freqs.at(i));
+    pos = pos + increment;
   }
 
-  m_HistogramData->setData(QwtIntervalData(intervals, values));
-  m_HistogramData->attach(m_RDFPlot);
-
-  //m_RDFPlot->setAxisScale(QwtPlot::yLeft, 0.0, 1.0);
-  m_RDFPlot->setAxisScale(QwtPlot::xBottom, 0.0, pos);
+  // This will actually plot the XY data in the Qwt plot widget
+  QwtPlotCurve* curve = m_PlotCurve;
+#if QWT_VERSION >= 0x060000
+  curve->setSamples(xD, yD);
+#else
+  curve->setData(xD, yD);
+#endif
+  curve->setStyle(QwtPlotCurve::Lines);
+  curve->attach(m_RDFPlot);
   m_RDFPlot->replot();
-  m_RDFPlot->setVisible(true);
-  m_RDFPlot->show();
-
-  QVector<float> qFreqs = QVector<float>::fromStdVector(freqs);
-  m_RDFTableModel->setTableData( qFreqs);
-  m_RDFTableView->resizeColumnsToContents();
-  m_RDFTableView->scrollToBottom();
-  m_RDFTableView->setFocus();
 }
 
 
