@@ -298,14 +298,17 @@ void DataContainerReader::readData(bool preflight, DataContainerArrayProxy& prox
     QString ss = QObject::tr("An error occurred trying to read the DataContainer Bundles from the file '%1'").arg(getInputFile());
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
-    
-//    err = readExistingPipelineFromFile(fileId);
+
+  if (!getInPreflight())
+  {
+    err = readExistingPipelineFromFile(fileId);
     if(err < 0)
     {
-        setErrorCondition(err);
-        QString ss = QObject::tr("An error occurred trying to read the existing pipeline from the file '%1'").arg(getInputFile());
-        notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+      setErrorCondition(err);
+      QString ss = QObject::tr("An error occurred trying to read the existing pipeline from the file '%1'").arg(getInputFile());
+      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     }
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -458,11 +461,11 @@ int DataContainerReader::readDataContainerBundles(hid_t fileId, DataContainerArr
   hid_t dcbGroupId = H5Gopen(fileId, DREAM3D::StringConstants::DataContainerBundleGroupName.toAscii().constData(), H5P_DEFAULT);
   if (dcbGroupId < 0)
   {
-   // NO Bundles are available to read so just return.
+    // NO Bundles are available to read so just return.
 
-//    QString ss = QObject::tr("Error opening HDF5 Group '%1' ").arg(DREAM3D::StringConstants::DataContainerBundleGroupName);
-//    setErrorCondition(-75);
-//    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    //    QString ss = QObject::tr("Error opening HDF5 Group '%1' ").arg(DREAM3D::StringConstants::DataContainerBundleGroupName);
+    //    setErrorCondition(-75);
+    //    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return 0;
   }
 
