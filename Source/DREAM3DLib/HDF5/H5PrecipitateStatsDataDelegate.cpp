@@ -90,14 +90,6 @@ VectorOfFloatArray H5PrecipitateStatsDataDelegate::createLogNormalDistributionAr
   return vect;
 }
 
-VectorOfFloatArray H5PrecipitateStatsDataDelegate::createRDFDistributionArrays()
-{
-  FloatArrayType::Pointer frequencies = FloatArrayType::CreateArray(0, DREAM3D::StringConstants::Frequencies);
-  QVector<FloatArrayType::Pointer> vect;
-  vect.push_back(frequencies);
-  return vect;
-}
-
 VectorOfFloatArray H5PrecipitateStatsDataDelegate::createRDFMaxMinDistributionArrays()
 {
   FloatArrayType::Pointer maxmin = FloatArrayType::CreateArray(2, DREAM3D::StringConstants::MinMaxNoOfBins);
@@ -106,11 +98,13 @@ VectorOfFloatArray H5PrecipitateStatsDataDelegate::createRDFMaxMinDistributionAr
   return vect;
 }
 
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 VectorOfFloatArray H5PrecipitateStatsDataDelegate::createDistributionVector(unsigned int distType)
 {
+    QVector<FloatArrayType::Pointer> empty;
   if (distType == DREAM3D::DistributionType::Beta)
   {
     return createBetaDistributionArrays();
@@ -123,15 +117,15 @@ VectorOfFloatArray H5PrecipitateStatsDataDelegate::createDistributionVector(unsi
   {
     return createLogNormalDistributionArrays();
   }
-  else if (distType == DREAM3D::DistributionType::RDFFrequency)
-  {
-      return createRDFDistributionArrays();
-  }
+//  else if (distType == DREAM3D::DistributionType::RDFFrequency)
+//  {
+//    return empty();
+//  }
   else if (distType == DREAM3D::DistributionType::RDFMaxMin)
   {
-      return createRDFMaxMinDistributionArrays();
+    return createRDFMaxMinDistributionArrays();
   }
-  QVector<FloatArrayType::Pointer> empty;
+
   return empty;
 }
 
@@ -158,19 +152,21 @@ int H5PrecipitateStatsDataDelegate::readPrecipitateStatsData(PrecipitateStatsDat
   uint32_t dType = readDistributionType(groupId, DREAM3D::StringConstants::Feature_Size_Distribution);
   data->setFeatureSize_DistType(dType);
   data->setFeatureSizeDistribution(createDistributionVector(data->getFeatureSize_DistType()));
+  data->getRadialDistFunction();
   err = readDistributionData(groupId,
                              DREAM3D::StringConstants::Feature_Size_Distribution,
                              data->getFeatureSizeDistribution());
 
-//  // Read the Radial Distribution Function
-  dType = readDistributionType(groupId, DREAM3D::StringConstants::RadialDistFunc);
-  data->setRadialDistFunctionType(dType);
-  data->setMaxMinRDF(createDistributionVector(DREAM3D::DistributionType::RDFMaxMin));
-  data->setRadialDistFunction(createDistributionVector(DREAM3D::DistributionType::RDFFrequency));
+  //  // Read the Radial Distribution Function
+  RdfData::Pointer rdfData = RdfData::New();
+  data->setRadialDistFunction(rdfData);
   err = readRDFDistributionData(groupId,
-                             DREAM3D::StringConstants::RadialDistFunc,
-                             data->getRadialDistFunction(),
-                                data->getMaxMinRDF());
+                                DREAM3D::StringConstants::RadialDistFunc,
+                                data->getRadialDistFunction() );
+  if(err < 0)
+  {
+      data->setRadialDistFunction(RdfData::NullPointer());
+  }
 
   // Read the Bin Numbers
   err = readBinNumbers(data, groupId);
@@ -279,10 +275,7 @@ int H5PrecipitateStatsDataDelegate::writePrecipitateStatsData(PrecipitateStatsDa
                               data->getFeatureSizeDistribution());
 
   // Write the Radial Distribution Function
-  err = writeRDFDistributionData(groupId,
-                              data->getRadialDistFunctionType(),
-                              DREAM3D::StringConstants::RadialDistFunc,
-                              data->getRadialDistFunction(), data->getMaxMinRDF());
+  err = writeRDFDistributionData(groupId, data->getRadialDistFunction(), DREAM3D::StringConstants::RadialDistFunc);
 
   // Write the Bin Numbers
   err = writeBinNumbers(data, groupId);
@@ -569,69 +562,55 @@ int H5PrecipitateStatsDataDelegate::writeDistributionData(hid_t pid,
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int H5PrecipitateStatsDataDelegate::writeRDFDistributionData(hid_t pid,
-                                                          uint32_t disType,
-                                                          const QString& hdf5GroupName,
-                                                          VectorOfFloatArray colData,
-                                                          VectorOfFloatArray maxMinData)
+int H5PrecipitateStatsDataDelegate::writeRDFDistributionData(hid_t pid, RdfData::Pointer rdfData,
+                                                             const QString& hdf5GroupName)
 {
   herr_t err = 0;
   herr_t retErr = 0;
 
-  QString disTypeStr;
-  switch(disType)
+  if (NULL != rdfData)
   {
-    case DREAM3D::DistributionType::Beta:
-      disTypeStr = DREAM3D::StringConstants::BetaDistribution;
-      break;
-    case DREAM3D::DistributionType::LogNormal:
-      disTypeStr = DREAM3D::StringConstants::LogNormalDistribution;
-      break;
-    case DREAM3D::DistributionType::Power:
-      disTypeStr = DREAM3D::StringConstants::PowerLawDistribution;
-      break;
-    case DREAM3D::DistributionType::UnknownDistributionType:
-      disTypeStr = DREAM3D::StringConstants::UnknownDistribution;
-      break;
-    default:
-      disTypeStr = DREAM3D::StringConstants::UnknownDistribution;
-  }
+  QString disTypeStr = rdfData->getDistributionType();
 
   // Create the Group Folder
   hid_t disId = QH5Utilities::createGroup(pid, hdf5GroupName);
   if (disId > 0)
   {
-    err = QH5Lite::writeStringAttribute(pid, hdf5GroupName, DREAM3D::StringConstants::DistributionType, disTypeStr);
-    if(err >= 0)
+
+    std::vector<hsize_t> dims(1);
+    //Write the Frequencies
+    dims[0] = rdfData->getFrequencies().size();
+    std::vector<float> freqs = rdfData->getFrequencies();
+    err = H5Lite::writeVectorDataset(disId, DREAM3D::StringConstants::Frequencies.toStdString(), dims, freqs);
+    if(err < 0)
     {
-      err |= writeVectorOfArrays(disId, colData);
-      std::vector<hsize_t> dims(1);
-      dims[0] = 2;
-      std::vector<float> values(2);
-      std::cout << "coldata" << colData.size() << std::endl;
-      if (maxMinData.size() > 0)
-      {
-          values[0] = maxMinData[0]->getValue(0);
-          values[1] = maxMinData[0]->getValue(1);
-          err = QH5Lite::writeScalarAttribute(disId, DREAM3D::StringConstants::Frequencies, "Max", values[0]);
-          err = QH5Lite::writeScalarAttribute(disId, DREAM3D::StringConstants::Frequencies, "Min", values[1]);
-
-      }
-
-
-
-
+      return err;
     }
-    else
+    float val = rdfData->getMaxDistance();
+    err = QH5Lite::writeScalarAttribute(disId, DREAM3D::StringConstants::Frequencies, DREAM3D::StringConstants::RdfMaxDistance, val);
+    if(err < 0)
     {
-      retErr = err;
+      return err;
     }
+    val = rdfData->getMinDistance();
+    err = QH5Lite::writeScalarAttribute(disId, DREAM3D::StringConstants::Frequencies, DREAM3D::StringConstants::RdfMinDistance, val);
+    if(err < 0)
+    {
+      return err;
+    }
+    err = QH5Lite::writeStringAttribute(disId, DREAM3D::StringConstants::Frequencies, DREAM3D::StringConstants::DistributionType, disTypeStr);
+    if(err < 0)
+    {
+      return err;
+    }
+
     // Close the HDF5 Group
     err = H5Gclose(disId);
   }
   else
   {
     retErr = disId;
+  }
   }
 
   return retErr;
@@ -694,38 +673,49 @@ int H5PrecipitateStatsDataDelegate::readDistributionData(hid_t pid,
 //
 // -----------------------------------------------------------------------------
 int H5PrecipitateStatsDataDelegate::readRDFDistributionData(hid_t pid,
-                                                         const QString& hdf5GroupName,
-                                                         VectorOfFloatArray colData,
-                                                            VectorOfFloatArray maxMinData)
+                                                            const QString& hdf5GroupName,
+                                                            RdfData::Pointer rdfData)
 {
   int err = 0;
   hid_t disId = QH5Utilities::openHDF5Object(pid, hdf5GroupName);
-
-  std::vector<float> values(2);
-  values[0]=0;
-  values[1]=0;
-
   if(disId < 0)
   {
     return -1;
   }
 
-  for (VectorOfFloatArray::iterator iter = colData.begin(); iter != colData.end(); ++iter)
+
+  std::vector<float> freqs;
+  err = H5Lite::readVectorDataset(disId, DREAM3D::StringConstants::Frequencies.toStdString(), freqs);
+  if(err < 0)
   {
-    FloatArrayType::Pointer d = *iter;
-    err |= d->readH5Data(disId);
+    return err;
   }
+  rdfData->setFrequencies(freqs);
 
+  float val = 0.0f;
+  err = QH5Lite::readScalarAttribute(disId, DREAM3D::StringConstants::Frequencies, DREAM3D::StringConstants::RdfMaxDistance, val);
+  if(err < 0)
+  {
+    return err;
+  }
+  rdfData->setMaxDistance(val);
 
-    err = QH5Lite::readScalarAttribute(disId, DREAM3D::StringConstants::Frequencies, "Max", values[0]);
-    err = QH5Lite::readScalarAttribute(disId, DREAM3D::StringConstants::Frequencies, "Min", values[1]);
+  err = QH5Lite::readScalarAttribute(disId, DREAM3D::StringConstants::Frequencies, DREAM3D::StringConstants::RdfMinDistance, val);
+  if(err < 0)
+  {
+    return err;
+  }
+  rdfData->setMinDistance(val);
 
-    std::cout << "MaxMin" << maxMinData.size() << std::endl;
+  QString disType;
+  err = QH5Lite::readStringAttribute(disId, DREAM3D::StringConstants::Frequencies, DREAM3D::StringConstants::DistributionType, disType);
+  if(err < 0)
+  {
+    return err;
+  }
+  rdfData->setDistributionType(disType);
 
-    maxMinData[0]->setValue(0, values[0]);
-    maxMinData[0]->setValue(1, values[1]);
-
-  err |= QH5Utilities::closeHDF5Object(disId);
+  err = QH5Utilities::closeHDF5Object(disId);
   return err;
 }
 

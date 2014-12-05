@@ -245,6 +245,7 @@ class GenerateEnsembleStatistics : public AbstractFilter
     void gatherODFStats();
     void gatherAxisODFStats();
     void gatherRadialDistFunc();
+    void calculatePPTBoundaryFrac();
 
   private:
     QVector<OrientationOps::Pointer> m_OrientationOps;

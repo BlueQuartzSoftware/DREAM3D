@@ -66,8 +66,10 @@
 #include "DREAM3DLib/FilterParameters/QFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/QFilterParametersWriter.h"
 
-#include "DREAM3DWidgetsLib/FilterWidgetManager.h"
 #include "QtSupport/QDroppableScrollArea.h"
+
+#include "DREAM3DWidgetsLib/FilterWidgetManager.h"
+
 
 
 #include "DREAM3DWidgetsLib/FilterParameterWidgets/FilterParameterWidgetsDialogs.h"
@@ -204,6 +206,12 @@ int PipelineViewWidget::filterCount()
   {
     count = m_FilterWidgetLayout->count();
   }
+  if (count == 1)
+  {
+      QSpacerItem* w = m_FilterWidgetLayout->itemAt(0)->spacerItem();
+      QLayout* w2 = m_FilterWidgetLayout->itemAt(0)->layout();
+      qDebug() << "";
+  }
   return count;
 }
 
@@ -257,6 +265,7 @@ void PipelineViewWidget::clearWidgets()
   for(qint32 i = count - 1; i >= 0; --i)
   {
     QWidget* w = m_FilterWidgetLayout->itemAt(i)->widget();
+    QSpacerItem* spacer = m_FilterWidgetLayout->itemAt(i)->spacerItem();
     if (NULL != w)
     {
       m_FilterWidgetLayout->removeWidget(w);
@@ -268,7 +277,12 @@ void PipelineViewWidget::clearWidgets()
       }
       w->deleteLater();
     }
+    else if (NULL != spacer)
+    {
+      m_FilterWidgetLayout->removeItem(spacer);
+    }
   }
+  count = filterCount();
   m_SelectedFilterWidget = NULL;
   resetLayout();
 
@@ -364,12 +378,12 @@ void PipelineViewWidget::savePipeline(const QString& filePath, const QString& na
   int err = QFilterParametersWriter::WritePipelineToFile(pipeline, fi.absoluteFilePath(), name, format, reinterpret_cast<IObserver*>(m_PipelineMessageObserver));
   if (err < 0)
   {
-      m_StatusBar->showMessage(tr("There was an error while updating the favorite '%1'.").arg(name));
+    m_StatusBar->showMessage(tr("There was an error while updating the favorite '%1'.").arg(name));
   }
-    else
-    {
-        m_StatusBar->showMessage(tr("Favorite '%1' has been updated successfully.").arg(name));
-    }
+  else
+  {
+    m_StatusBar->showMessage(tr("Favorite '%1' has been updated successfully.").arg(name));
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -381,35 +395,11 @@ void PipelineViewWidget::loadPipelineFile(const QString& filePath, QSettings::Fo
   emit pipelineIssuesCleared();
   // Load the pipeline from the file resulting in a FilterPipeline Object
   FilterPipeline::Pointer pipeline = QFilterParametersReader::ReadPipelineFromFile(filePath, format, dynamic_cast<IObserver*>(m_PipelineMessageObserver) );
-  if (NULL == pipeline.get()) { clearWidgets(); return; }
-  // Clear the Pipeline First
-  if (false == append) { clearWidgets(); }
-  // get a reference to the filters which are in some type of container object.
-  FilterPipeline::FilterContainerType& filters = pipeline->getFilterContainer();
-  int fCount = filters.size();
-  int index = -1;
 
-  // QProgressDialog progress("Opening Pipeline File....", "Cancel", 0, fCount, this);
-  // progress.setWindowModality(Qt::WindowModal);
-  // progress.setMinimumDuration(2000);
-  PipelineFilterWidget* firstWidget = NULL;
-  // Start looping on each filter
-  for (int i = 0; i < fCount; i++)
-  {
-    //   progress.setValue(i);
-    // Create a PipelineFilterWidget using the current AbstractFilter instance to initialize it
-    PipelineFilterWidget* w = new PipelineFilterWidget(filters.at(i), NULL, this);
-    index = filterCount() - 1; // We want to add the filter as the next filter but BEFORE the vertical spacer
-    addFilterWidget(w, index);
-    if(i == 0) { firstWidget = w; }
-  }
-  if (firstWidget) { firstWidget->setIsSelected(true); }
-  // progress.setValue(fCount);
-
-
-  // Now preflight the pipeline for this filter.
-  preflightPipeline();
-  if (append == true ) { emit pipelineChanged(); }
+  if (append)
+    populatePipelineView(pipeline, Append);
+  else
+    populatePipelineView(pipeline, Replace);
 }
 
 // -----------------------------------------------------------------------------
@@ -653,7 +643,7 @@ void PipelineViewWidget::setSelectedFilterWidget(PipelineFilterWidget* w)
 // -----------------------------------------------------------------------------
 void PipelineViewWidget::setStatusBar(QStatusBar* statusBar)
 {
-    m_StatusBar = statusBar;
+  m_StatusBar = statusBar;
 }
 
 // -----------------------------------------------------------------------------
@@ -751,6 +741,103 @@ void PipelineViewWidget::dragMoveEvent( QDragMoveEvent* event)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void PipelineViewWidget::extractPipelineFromFile(const QString &filePath, ExtractionType type)
+{
+    FilterPipeline::Pointer pipeline = H5FilterParametersReader::ReadPipelineFromFile(filePath);
+
+    switch (type)
+    {
+        case Replace:
+        {
+            populatePipelineView(pipeline, Replace);
+            break;
+        }
+        case Append:
+        {
+            populatePipelineView(pipeline, Append);
+            break;
+        }
+        case Prepend:
+        {
+            populatePipelineView(pipeline, Prepend);
+            break;
+        }
+    }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void PipelineViewWidget::addDREAM3DReaderFilter(const QString &filePath)
+{
+    DataContainerReader::Pointer reader = DataContainerReader::New();
+    reader->setInputFile(filePath);
+
+    // Create a PipelineFilterWidget using the current AbstractFilter instance to initialize it
+    PipelineFilterWidget* w = new PipelineFilterWidget(reader, NULL, this);
+    int index = filterCount() - 1; // We want to add the filter as the next filter but BEFORE the vertical spacer
+    addFilterWidget(w, index);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void PipelineViewWidget::populatePipelineView(FilterPipeline::Pointer pipeline, ExtractionType type)
+{
+    if (NULL == pipeline.get()) { clearWidgets(); return; }
+    // Clear the Pipeline First
+    if (type == Replace) { clearWidgets(); }
+    // get a reference to the filters which are in some type of container object.
+    FilterPipeline::FilterContainerType& filters = pipeline->getFilterContainer();
+    int fCount = filters.size();
+
+    int index = -1;
+
+    // QProgressDialog progress("Opening Pipeline File....", "Cancel", 0, fCount, this);
+    // progress.setWindowModality(Qt::WindowModal);
+    // progress.setMinimumDuration(2000);
+    PipelineFilterWidget* firstWidget = NULL;
+    // Start looping on each filter
+    for (int i = 0; i < fCount; i++)
+    {
+      //   progress.setValue(i);
+      // Create a PipelineFilterWidget using the current AbstractFilter instance to initialize it
+      PipelineFilterWidget* w = new PipelineFilterWidget(filters.at(i), NULL, this);
+      if (type == Replace || type == Append)
+      {
+        index = filterCount() - 1; // We want to add the filter as the next filter but BEFORE the vertical spacer
+      }
+      else
+      {
+          index++;
+      }
+
+      addFilterWidget(w, index);
+      if(i == 0) { firstWidget = w; }
+
+    }
+    if (firstWidget) { firstWidget->setIsSelected(true); }
+    // progress.setValue(fCount);
+
+
+    // Now preflight the pipeline for this filter.
+    preflightPipeline();
+    if (type == Append || type == Prepend) { emit pipelineChanged(); }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int PipelineViewWidget::readPipelineFromFile(hid_t fileId)
+{
+  int err = -1;
+
+  return err;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void PipelineViewWidget::dropEvent(QDropEvent* event)
 {
   if (event->mimeData()->hasUrls())
@@ -771,7 +858,12 @@ void PipelineViewWidget::dropEvent(QDropEvent* event)
       }
       else if (fi.suffix().endsWith("dream3d") == true )
       {
-
+        DREAM3DFileDragMessageBox* msgBox = new DREAM3DFileDragMessageBox(this, filterCount());
+        msgBox->setFilePath(fName);
+        connect(msgBox, SIGNAL(fireExtractPipelineFromFile(const QString &, ExtractionType)), this, SLOT(extractPipelineFromFile(const QString &, ExtractionType)));
+        connect(msgBox, SIGNAL(fireAddDREAM3DReaderFilter(const QString &)), this, SLOT(addDREAM3DReaderFilter(const QString &)));
+        msgBox->exec();
+        msgBox->deleteLater();
       }
 
     }

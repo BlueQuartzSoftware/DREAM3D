@@ -33,6 +33,9 @@
 #ifndef _OrientationOps_H_
 #define _OrientationOps_H_
 
+#include <vector>
+
+
 #include <QtCore/QVector>
 #include <QtCore/QString>
 
@@ -76,7 +79,14 @@ class DREAM3DLib_EXPORT OrientationOps
      * index into the vector is the value of the constant at EBSD::CrystalStructure::***
      * @return Vector of OrientationOps subclasses.
      */
-    static QVector<OrientationOps::Pointer> getOrientationOpsVector();
+    static QVector<OrientationOps::Pointer> getOrientationOpsQVector();
+
+    /**
+     * @brief getOrientationOpsVector This method returns a vector of each type of OrientationOps placed such that the
+     * index into the vector is the value of the constant at EBSD::CrystalStructure::***
+     * @return Vector of OrientationOps subclasses.
+     */
+    static std::vector<OrientationOps::Pointer> getOrientationOpsVector();
 
     /**
      * @brief getODFSize Returns the number of elements in the ODF array

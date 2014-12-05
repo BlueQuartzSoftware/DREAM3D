@@ -90,7 +90,7 @@ GroupMicroTextureRegions::GroupMicroTextureRegions() :
   m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
   m_CrystalStructures(NULL)
 {
-  m_OrientationOps = OrientationOps::getOrientationOpsVector();
+  m_OrientationOps = OrientationOps::getOrientationOpsQVector();
 
   setupFilterParameters();
 }

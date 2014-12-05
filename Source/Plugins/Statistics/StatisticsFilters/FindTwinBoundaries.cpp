@@ -77,7 +77,7 @@ class CalculateTwinBoundaryImpl
       m_TwinBoundaryIncoherence(TwinBoundaryIncoherence),
       m_CrystalStructures(CrystalStructures)
     {
-      m_OrientationOps = OrientationOps::getOrientationOpsVector();
+      m_OrientationOps = OrientationOps::getOrientationOpsQVector();
     }
 
     virtual ~CalculateTwinBoundaryImpl() {}
@@ -196,7 +196,7 @@ FindTwinBoundaries::FindTwinBoundaries()  :
   m_SurfaceMeshTwinBoundary(NULL),
   m_SurfaceMeshTwinBoundaryIncoherence(NULL)
 {
-  m_OrientationOps = OrientationOps::getOrientationOpsVector();
+  m_OrientationOps = OrientationOps::getOrientationOpsQVector();
   setupFilterParameters();
 }
 

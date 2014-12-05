@@ -114,7 +114,7 @@ GenerateEnsembleStatistics::GenerateEnsembleStatistics()  :
   m_DistributionAnalysis.push_back(LogNormalOps::New());
   m_DistributionAnalysis.push_back(PowerLawOps::New());
 
-  m_OrientationOps = OrientationOps::getOrientationOpsVector();
+  m_OrientationOps = OrientationOps::getOrientationOpsQVector();
   setupFilterParameters();
 }
 
@@ -154,6 +154,7 @@ void GenerateEnsembleStatistics::setupFilterParameters()
   parameters.push_back(FilterParameter::New("Size Correlation Resolution", "SizeCorrelationResolution", FilterParameterWidgetType::DoubleWidget, getSizeCorrelationResolution(), false));
 
   parameters.push_back(FilterParameter::New("Feature Phases", "FeaturePhasesArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeaturePhasesArrayPath(), false, ""));
+  parameters.push_back(FilterParameter::New("Neighbor List Array Name", "NeighborListArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getNeighborListArrayPath(), true, ""));
 
   QStringList linkedProps;
 
@@ -193,7 +194,7 @@ void GenerateEnsembleStatistics::setupFilterParameters()
   linkedProps.clear();
   linkedProps << "CrystalStructuresArrayPath" << "SurfaceFeaturesArrayPath";
   linkedProps << "CalculateODF" << "VolumesArrayPath" << "FeatureEulerAnglesArrayPath";
-  linkedProps << "CalculateMDF" << "SharedSurfaceAreaListArrayPath" << "AvgQuatsArrayPath" << "NeighborListArrayPath";
+  linkedProps << "CalculateMDF" << "SharedSurfaceAreaListArrayPath" << "AvgQuatsArrayPath";
   linkedProps << "SEPARATOR-0" << "SEPARATOR-1";
   parameters.push_back(LinkedBooleanFilterParameter::New("Calculate Crystallographic Stats", "CalculateCrystallographicStats", getCalculateCrystallographicStats(), linkedProps, false));
 
@@ -207,7 +208,7 @@ void GenerateEnsembleStatistics::setupFilterParameters()
   parameters.push_back(FilterParameter::New("MDF Input Data", "SEPARATOR-1", FilterParameterWidgetType::SeparatorWidget, "", true));
   parameters.push_back(FilterParameter::New("Shared Surface Area List Array Name", "SharedSurfaceAreaListArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getSharedSurfaceAreaListArrayPath(), true, ""));
   parameters.push_back(FilterParameter::New("Avgerage Quats", "AvgQuatsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getAvgQuatsArrayPath(), true, ""));
-  parameters.push_back(FilterParameter::New("Neighbor List Array Name", "NeighborListArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getNeighborListArrayPath(), true, ""));
+  //parameters.push_back(FilterParameter::New("Neighbor List Array Name", "NeighborListArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getNeighborListArrayPath(), true, ""));
 
   //  linkedProps.clear();
   //  linkedProps << "RadialDistFunctionArrayPath";
@@ -231,7 +232,7 @@ void GenerateEnsembleStatistics::readFilterParameters(AbstractFilterParametersRe
   setIncludeRadialDistFunc(reader->readValue("IncludeRadialDistFunc", getIncludeRadialDistFunc()));
   setCellEnsembleAttributeMatrixPath(reader->readDataArrayPath("CellEnsembleAttributeMatrixPath", getCellEnsembleAttributeMatrixPath()));
   setPhaseTypesArrayName(reader->readString("PhaseTypesArrayName", getPhaseTypesArrayName() ) );
-
+  setNeighborListArrayPath(reader->readDataArrayPath("NeighborListArrayPath", getNeighborListArrayPath()));
   setStatisticsArrayName(reader->readString("StatisticsArrayName", getStatisticsArrayName() ) );
   setAvgQuatsArrayPath(reader->readDataArrayPath("AvgQuatsArrayPath", getAvgQuatsArrayPath() ) );
   setFeatureEulerAnglesArrayPath(reader->readDataArrayPath("FeatureEulerAnglesArrayPath", getFeatureEulerAnglesArrayPath() ) );
@@ -292,6 +293,7 @@ int GenerateEnsembleStatistics::writeFilterParameters(AbstractFilterParametersWr
       DREAM3D_FILTER_WRITE_PARAMETER(MaxMinRDFArrayPath)
       DREAM3D_FILTER_WRITE_PARAMETER(AspectRatiosArrayPath)
       DREAM3D_FILTER_WRITE_PARAMETER(NeighborhoodsArrayPath)
+      DREAM3D_FILTER_WRITE_PARAMETER(NeighborListArrayPath)
       DREAM3D_FILTER_WRITE_PARAMETER(EquivalentDiametersArrayPath)
       DREAM3D_FILTER_WRITE_PARAMETER(BiasedFeaturesArrayPath)
       DREAM3D_FILTER_WRITE_PARAMETER(FeaturePhasesArrayPath)
@@ -380,7 +382,7 @@ void GenerateEnsembleStatistics::dataCheck()
 
   if(m_IncludeRadialDistFunc == true)
   {
-   // dims[0]=10;
+    // dims[0]=10;
     DataArray<float>::Pointer tempPtr = getDataContainerArray()->getExistingPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getRDFArrayPath());
     if (NULL != tempPtr.get())
     {
@@ -429,9 +431,13 @@ void GenerateEnsembleStatistics::dataCheck()
     // Now we are going to get a "Pointer" to the NeighborList object out of the DataContainer
     dims[0] = 1;
     m_SharedSurfaceAreaList = getDataContainerArray()->getPrereqArrayFromPath<NeighborList<float>, AbstractFilter>(this, getSharedSurfaceAreaListArrayPath(), dims);
-    m_NeighborList = getDataContainerArray()->getPrereqArrayFromPath<NeighborList<int>, AbstractFilter>(this, getNeighborListArrayPath(), dims);
+    //m_NeighborList = getDataContainerArray()->getPrereqArrayFromPath<NeighborList<int>, AbstractFilter>(this, getNeighborListArrayPath(), dims);
   }
- // std::cout << "GenerateEnsembleStatistics::DataCheck()  m_PhaseTypeData.d.size() = " << m_PhaseTypeData.d.size() << std::endl;
+
+  dims[0] = 1;
+  m_NeighborList = getDataContainerArray()->getPrereqArrayFromPath<NeighborList<int>, AbstractFilter>(this, getNeighborListArrayPath(), dims);
+
+  // std::cout << "GenerateEnsembleStatistics::DataCheck()  m_PhaseTypeData.d.size() = " << m_PhaseTypeData.d.size() << std::endl;
   if (m_PhaseTypeData.d.size() == 0)
   {
     setErrorCondition(-1000);
@@ -455,10 +461,10 @@ void GenerateEnsembleStatistics::dataCheck()
       m_PhaseTypes = m_PhaseTypesPtr.lock()->getPointer(0);
       // Now update the "PhaseTypesData" values
       m_PhaseTypeData.d.resize(m_PhaseTypesPtr.lock()->getNumberOfTuples());
-//      for(size_t i = 0; i < m_PhaseTypesPtr.lock()->getNumberOfTuples(); i++)
-//      {
-//        m_PhaseTypeData.d[i] = 0;
-//      }
+      //      for(size_t i = 0; i < m_PhaseTypesPtr.lock()->getNumberOfTuples(); i++)
+      //      {
+      //        m_PhaseTypeData.d[i] = 0;
+      //      }
     } /* Now assign the raw pointer to data from the DataArray<T> object */
   }
 
@@ -566,8 +572,13 @@ void GenerateEnsembleStatistics::execute()
   {
     gatherAxisODFStats();
   }
+  if(m_IncludeRadialDistFunc == true)
+  {
+    gatherRadialDistFunc();
+  }
 
-  gatherRadialDistFunc();
+  calculatePPTBoundaryFrac();
+
 
   notifyStatusMessage(getHumanLabel(), "GenerateEnsembleStatistics Completed");
 }
@@ -664,6 +675,9 @@ void GenerateEnsembleStatistics::gatherSizeStats()
     }
   }
 }
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void GenerateEnsembleStatistics::gatherAspectRatioStats()
 {
 
@@ -760,69 +774,6 @@ void GenerateEnsembleStatistics::gatherAspectRatioStats()
 }
 
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-
-void GenerateEnsembleStatistics::gatherRadialDistFunc()
-{
-  StatsDataArray& statsDataArray = *(m_StatsDataArray);
-
-  size_t numBins = m_RadialDistFuncPtr.lock()->getNumberOfComponents();
-
-
-  QVector<VectorOfFloatArray> radialDistFunc;
-  QVector<VectorOfFloatArray> minMaxDist;
-
-  //size_t numfeatures = m_EquivalentDiametersPtr.lock()->getNumberOfTuples();
-  size_t numensembles = m_PhaseTypesPtr.lock()->getNumberOfTuples();
-
-  QVector<float> fractions(numensembles, 0.0);
-  radialDistFunc.resize(numensembles);
-  minMaxDist.resize(numensembles);
-
-
-  for(size_t i = 1; i < numensembles; i++)
-  {
-    if(m_PhaseTypes[i] == DREAM3D::PhaseType::PrecipitatePhase)
-    {
-
-      radialDistFunc[i] = statsDataArray[i]->CreateRDFDistributionArrays(DREAM3D::DistributionType::RDFFrequency, numBins);
-      minMaxDist[i] = statsDataArray[i]->CreateRDFDistributionArrays(DREAM3D::DistributionType::RDFMaxMin, 2);
-
-      for(size_t j = 0; j < numBins; j++)
-      {
-
-        radialDistFunc[i][0]->setValue(j, m_RadialDistFunc[i*numBins+j]);
-
-      }
-
-      std::cout << "index" <<i << std::endl;
-      std::cout << "Rad Dist" << m_MaxMinRadialDistFunc[i*2] << std::endl;
-      std::cout << "Rad Dist" << m_MaxMinRadialDistFunc[i*2 + 1] << std::endl;
-      minMaxDist[i][0]->setValue(0, m_MaxMinRadialDistFunc[i*2]);
-      minMaxDist[i][0]->setValue(1, m_MaxMinRadialDistFunc[i*2 + 1]);
-    }
-
-
-  }
-
-
-
-
-  for (size_t i = 1; i < numensembles; i++)
-  {
-    if(m_PhaseTypes[i] == DREAM3D::PhaseType::PrecipitatePhase)
-    {
-
-      PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsDataArray[i].get());
-
-      pp->setRadialDistFunction(radialDistFunc[i]);
-      pp->setMaxMinRDF(minMaxDist[i]);
-
-    }
-  }
-}
 
 // -----------------------------------------------------------------------------
 //
@@ -1228,32 +1179,130 @@ void GenerateEnsembleStatistics::gatherAxisODFStats()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+
+void GenerateEnsembleStatistics::gatherRadialDistFunc()
+{
+  StatsDataArray& statsDataArray = *(m_StatsDataArray);
+
+  size_t numBins = m_RadialDistFuncPtr.lock()->getNumberOfComponents();
+
+  size_t numensembles = m_PhaseTypesPtr.lock()->getNumberOfTuples();
+
+  QVector<float> fractions(numensembles, 0.0);
+  for(size_t i = 1; i < numensembles; i++)
+  {
+    if(m_PhaseTypes[i] == DREAM3D::PhaseType::PrecipitatePhase)
+    {
+      RdfData::Pointer rdfData = RdfData::New();
+      std::vector<float> freqs(numBins);
+
+      for(size_t j = 0; j < numBins; j++)
+      {
+        freqs[j] = m_RadialDistFunc[i*numBins+j];
+      }
+      rdfData->setFrequencies(freqs);
+
+      std::cout << "index" <<i << std::endl;
+      std::cout << "Rad Dist" << m_MaxMinRadialDistFunc[i*2] << std::endl;
+      std::cout << "Rad Dist" << m_MaxMinRadialDistFunc[i*2 + 1] << std::endl;
+
+      rdfData->setMaxDistance(m_MaxMinRadialDistFunc[i*2]);
+      rdfData->setMinDistance(m_MaxMinRadialDistFunc[i*2 + 1]);
+
+      PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsDataArray[i].get());
+      if(NULL == pp)
+      {
+        Q_ASSERT_X(NULL != pp, "StatsDataArray could not be down-cast to a PrecipitatesStatsDataArray", "");
+      }
+
+      pp->setRadialDistFunction(rdfData);
+    }
+
+  }
+
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void GenerateEnsembleStatistics::calculatePPTBoundaryFrac()
+{
+
+  StatsDataArray& statsDataArray = *(m_StatsDataArray);
+
+  NeighborList<int>& neighborlist = *(m_NeighborList.lock());
+  size_t numensembles = m_PhaseTypesPtr.lock()->getNumberOfTuples();
+  size_t numfeatures = m_FeaturePhasesPtr.lock()->getNumberOfTuples();
+  std::vector<int> boundaryPPT(numensembles, 0);
+  std::vector<int> totalNumPPT(numensembles, 0);
+  std::vector<float> PPTBoundaryFrac(numensembles, 0);
+  int32_t count = 0;
+
+  for(size_t k = 1; k < numensembles; k++)
+  {
+    if(m_PhaseTypes[k] == DREAM3D::PhaseType::PrecipitatePhase)
+    {
+      for(size_t i = 1; i < numfeatures; i++)
+      {
+        if(m_FeaturePhases[i] == k)
+        {
+          totalNumPPT[k]++;
+
+          for(size_t j=0; j < neighborlist[i].size(); j++)
+          {
+            if(m_FeaturePhases[i] != m_FeaturePhases[neighborlist[i][j]])  //Currently counts something as on the boundary if it has at least two neighbors of a different phase. Might want to specify which phase in the future.
+            {
+              count++;
+            }
+          }
+          if (count >= 2)
+          {
+            boundaryPPT[k]++;
+          }
+          count = 0;
+
+        }
+      }
+
+      PPTBoundaryFrac[k] = (float)boundaryPPT[k]/(float)totalNumPPT[k];
+      PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsDataArray[k].get());
+      pp->setPrecipBoundaryFraction(PPTBoundaryFrac[k]);
+    }
+  }
+
+
+
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 int GenerateEnsembleStatistics::getPhaseCount()
 {
   DataContainerArray::Pointer dca = getDataContainerArray();
   if(NULL == dca.get()) {
-  //  qDebug() << getNameOfClass() <<  "::getPhaseCount()  dca was NULL";
+    //  qDebug() << getNameOfClass() <<  "::getPhaseCount()  dca was NULL";
     return -1;
   }
 
   AttributeMatrix::Pointer inputAttrMat = dca->getAttributeMatrix(getCellEnsembleAttributeMatrixPath());
   if (NULL == inputAttrMat.get() ) {
-  //  qDebug() << getNameOfClass() << "::getPhaseCount()  CellEnsembleAttributeMatrix was NULL";
-  //  qDebug() << "     " << getCellEnsembleAttributeMatrixPath().serialize("/");
+    //  qDebug() << getNameOfClass() << "::getPhaseCount()  CellEnsembleAttributeMatrix was NULL";
+    //  qDebug() << "     " << getCellEnsembleAttributeMatrixPath().serialize("/");
     return -2;
   }
 
   if(inputAttrMat->getType() < DREAM3D::AttributeMatrixType::VertexEnsemble
      || inputAttrMat->getType() > DREAM3D::AttributeMatrixType::CellEnsemble )
   {
-  //  qDebug() << getNameOfClass() << "::getPhaseCount() CellEnsembleAttributeMatrix was not correct Type";
-  //  qDebug() << "     " << getCellEnsembleAttributeMatrixPath().serialize("/");
-  //  qDebug() << "     " << (int)(inputAttrMat->getType());
+    //  qDebug() << getNameOfClass() << "::getPhaseCount() CellEnsembleAttributeMatrix was not correct Type";
+    //  qDebug() << "     " << getCellEnsembleAttributeMatrixPath().serialize("/");
+    //  qDebug() << "     " << (int)(inputAttrMat->getType());
     return -3;
   }
 
- // qDebug() << getNameOfClass() << "::getPhaseCount() data->getNumberOfTuples(): " << inputAttrMat->getTupleDimensions();
- // qDebug() << "Name" << inputAttrMat->getName();
+  // qDebug() << getNameOfClass() << "::getPhaseCount() data->getNumberOfTuples(): " << inputAttrMat->getTupleDimensions();
+  // qDebug() << "Name" << inputAttrMat->getName();
   QVector<size_t> tupleDims = inputAttrMat->getTupleDimensions();
 
   size_t phaseCount = 1;

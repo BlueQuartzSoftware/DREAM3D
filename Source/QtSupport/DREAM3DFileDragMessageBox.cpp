@@ -1,6 +1,7 @@
 /* ============================================================================
  * Copyright (c) 2012 Michael A. Jackson (BlueQuartz Software)
  * Copyright (c) 2012 Dr. Michael A. Groeber (US Air Force Research Laboratories)
+ * Copyright (c) 2012 Joseph B. Kleingers (Student Research Assistant)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -13,10 +14,10 @@
  * list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
  *
- * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
- * BlueQuartz Software nor the names of its contributors may be used to endorse
- * or promote products derived from this software without specific prior written
- * permission.
+ * Neither the name of Michael A. Groeber, Michael A. Jackson, Joseph B. Kleingers,
+ * the US Air Force, BlueQuartz Software nor the names of its contributors may be
+ * used to endorse or promote products derived from this software without specific
+ * prior written permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -33,103 +34,85 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#include "PrecipitateStatsData.h"
 
-#include <QtCore/QString>
-#include <vector>
-
-#include "H5Support/H5Utilities.h"
-
-#include "DREAM3DLib/HDF5/H5PrecipitateStatsDataDelegate.h"
-
+#include "DREAM3DFileDragMessageBox.h"
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-PrecipitateStatsData::PrecipitateStatsData()
+DREAM3DFileDragMessageBox::DREAM3DFileDragMessageBox(QWidget* parent, int filterCount)
 {
-  initialize();
-}
+  setupUi(this);
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-PrecipitateStatsData::~PrecipitateStatsData()
-{
-
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-QString PrecipitateStatsData::getStatsType()
-{
-  return DREAM3D::StringConstants::PrecipitateStatsData;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-unsigned int PrecipitateStatsData::getPhaseType()
-{
-  return DREAM3D::PhaseType::PrecipitatePhase;
-}
-
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-FloatArrayType::Pointer PrecipitateStatsData::generateBinNumbers()
-{
-  float featureDiameterInfo[3];
-  getFeatureDiameterInfo(featureDiameterInfo);
-  QVector<float> bins;
-  float d = featureDiameterInfo[2];
-  while (d <= featureDiameterInfo[1])
+  if (filterCount == -1)
   {
-    //  qDebug() << d << "\n";
-    bins.push_back(d);
-    d = d + featureDiameterInfo[0];
+      // This should never be the case - Throw error???
+      return;
   }
-  // Copy this into the DataArray<float>
-  m_BinNumbers = FloatArrayType::CreateArray(bins.size(), DREAM3D::StringConstants::BinNumber );
-  ::memcpy(m_BinNumbers->getVoidPointer(0), &(bins.front()), bins.size() * sizeof(float));
-  return m_BinNumbers;
+  else if (filterCount <= 0)
+  {
+      appendPipelineBtn->setHidden(true);
+      prependPipelineBtn->setHidden(true);
+      replacePipelineBtn->setText("Extract Pipeline");
+  }
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PrecipitateStatsData::initialize()
+QString DREAM3DFileDragMessageBox::getFilePath()
 {
-  m_FeatureSize_DistType = DREAM3D::DistributionType::LogNormal;
-//  m_RadialDistFunctionType = DREAM3D::DistributionType::UnknownDistributionType;
-  m_BOverA_DistType = DREAM3D::DistributionType::Beta;
-  m_COverA_DistType = DREAM3D::DistributionType::Beta;
-  m_Clustering_DistType = DREAM3D::DistributionType::LogNormal;
-  m_Omegas_DistType = DREAM3D::DistributionType::Beta;
-  m_PrecipBoundaryFraction = 0.0;
+  return filePath;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int PrecipitateStatsData::writeHDF5Data(hid_t groupId)
+void DREAM3DFileDragMessageBox::setFilePath(QString path)
 {
-  int err = 0;
-  H5PrecipitateStatsDataDelegate::Pointer writer = H5PrecipitateStatsDataDelegate::New();
-  err = writer->writePrecipitateStatsData(this, groupId);
-  return err;
+  filePath = path;
 }
-
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int PrecipitateStatsData::readHDF5Data(hid_t groupId)
+void DREAM3DFileDragMessageBox::on_replacePipelineBtn_clicked()
 {
-  int err = 0;
-  H5PrecipitateStatsDataDelegate::Pointer reader = H5PrecipitateStatsDataDelegate::New();
-  err = reader->readPrecipitateStatsData(this, groupId);
-  return err;
+  emit fireExtractPipelineFromFile(filePath, Replace);
+
+  // Close the dialog box
+  close();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DREAM3DFileDragMessageBox::on_appendPipelineBtn_clicked()
+{
+  emit fireExtractPipelineFromFile(filePath, Append);
+
+  // Close the dialog box
+  close();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DREAM3DFileDragMessageBox::on_prependPipelineBtn_clicked()
+{
+  emit fireExtractPipelineFromFile(filePath, Prepend);
+
+  // Close the dialog box
+  close();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DREAM3DFileDragMessageBox::on_addFilterBtn_clicked()
+{
+  emit fireAddDREAM3DReaderFilter(filePath);
+
+  // Close the dialog box
+  close();
 }

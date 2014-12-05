@@ -564,7 +564,7 @@ void Symmetric6x6Widget::vbar66(const QString& dummy)
 {
   double s11 = v11->text().toDouble();
   double s12 = v12->text().toDouble();
-  v66->setText(QString::number(2.0 * (s11 + s12)));
+  v66->setText(QString::number(2.0 * (s11 - s12)));
 }
 
 //tetragonal low has s26 == -s16

@@ -78,7 +78,7 @@ class CalculateFaceSchuhMisorientationColorsImpl
       m_Colors(colors),
       m_CrystalStructures(crystalStructures)
     {
-      m_OrientationOps = OrientationOps::getOrientationOpsVector();
+      m_OrientationOps = OrientationOps::getOrientationOpsQVector();
     }
     virtual ~CalculateFaceSchuhMisorientationColorsImpl() {}
 
@@ -89,7 +89,7 @@ class CalculateFaceSchuhMisorientationColorsImpl
      */
     void generate(size_t start, size_t end) const
     {
-      QVector<OrientationOps::Pointer> ops = OrientationOps::getOrientationOpsVector();
+      QVector<OrientationOps::Pointer> ops = OrientationOps::getOrientationOpsQVector();
       DREAM3D::Rgb argb = 0x00000000;
 
       int grain1, grain2, phase1, phase2;

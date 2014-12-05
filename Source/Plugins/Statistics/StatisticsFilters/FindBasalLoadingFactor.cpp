@@ -64,7 +64,7 @@ FindBasalLoadingFactor::FindBasalLoadingFactor() :
   m_LoadingDirection.x = 1.0f;
   m_LoadingDirection.y = 1.0f;
   m_LoadingDirection.z = 1.0f;
-  m_OrientationOps = OrientationOps::getOrientationOpsVector();
+  m_OrientationOps = OrientationOps::getOrientationOpsQVector();
 
   setupFilterParameters();
 }

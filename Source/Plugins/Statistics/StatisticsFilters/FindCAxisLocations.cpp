@@ -53,7 +53,7 @@ FindCAxisLocations::FindCAxisLocations() :
   m_Quats(NULL),
   m_CAxisLocations(NULL)
 {
-  m_OrientationOps = OrientationOps::getOrientationOpsVector();
+  m_OrientationOps = OrientationOps::getOrientationOpsQVector();
   setupFilterParameters();
 }
 

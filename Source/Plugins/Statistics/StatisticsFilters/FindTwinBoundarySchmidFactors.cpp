@@ -72,7 +72,7 @@ class CalculateTwinBoundarySchmidFactorsImpl
       m_TwinBoundarySchmidFactors(TwinBoundarySchmidFactors),
       m_LoadDir(LoadingDir)
     {
-      m_OrientationOps = OrientationOps::getOrientationOpsVector();
+      m_OrientationOps = OrientationOps::getOrientationOpsQVector();
     }
     virtual ~CalculateTwinBoundarySchmidFactorsImpl() {}
 
@@ -240,7 +240,7 @@ FindTwinBoundarySchmidFactors::FindTwinBoundarySchmidFactors()  :
   m_LoadingDir.x = 1.0f;
   m_LoadingDir.y = 1.0f;
   m_LoadingDir.z = 1.0f;
-  m_OrientationOps = OrientationOps::getOrientationOpsVector();
+  m_OrientationOps = OrientationOps::getOrientationOpsQVector();
   setupFilterParameters();
 }
 

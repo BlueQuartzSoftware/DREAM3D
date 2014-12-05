@@ -127,9 +127,6 @@ void StatsGenMDFWidget::initQwtPlot(QString xAxisName, QString yAxisName, QwtPlo
 {
   plot->setAxisTitle(QwtPlot::xBottom, xAxisName);
   plot->setAxisTitle(QwtPlot::yLeft, yAxisName);
-  //plot->setCanvasBackground(QColor(Qt::white));
-  //plot->canvas()->setFrameShape(QFrame::NoFrame);
-
 }
 
 // -----------------------------------------------------------------------------
