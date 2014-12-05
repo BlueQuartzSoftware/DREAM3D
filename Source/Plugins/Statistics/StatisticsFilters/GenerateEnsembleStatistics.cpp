@@ -1198,7 +1198,7 @@ void GenerateEnsembleStatistics::gatherRadialDistFunc()
 
       for(size_t j = 0; j < numBins; j++)
       {
-        freqs[i] = m_RadialDistFunc[i*numBins+j];
+        freqs[j] = m_RadialDistFunc[i*numBins+j];
       }
       rdfData->setFrequencies(freqs);
 
