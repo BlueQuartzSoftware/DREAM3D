@@ -280,7 +280,7 @@ void BadDataNeighborOrientationCheck::execute()
               QuaternionMathF::Copy(quats[i], q1);
 
               phase2 = m_CrystalStructures[m_CellPhases[neighbor]];
-              QuaternionMathF::Copy(quats[neighbor], q1);
+              QuaternionMathF::Copy(quats[neighbor], q2);
 
               if (m_CellPhases[i] == m_CellPhases[neighbor] && m_CellPhases[i] > 0) { w = m_OrientationOps[phase1]->getMisoQuat( q1, q2, n1, n2, n3); }
               if (w < m_MisorientationTolerance)
