@@ -206,12 +206,6 @@ int PipelineViewWidget::filterCount()
   {
     count = m_FilterWidgetLayout->count();
   }
-  if (count == 1)
-  {
-      QSpacerItem* w = m_FilterWidgetLayout->itemAt(0)->spacerItem();
-      QLayout* w2 = m_FilterWidgetLayout->itemAt(0)->layout();
-      qDebug() << "";
-  }
   return count;
 }
 
@@ -282,7 +276,6 @@ void PipelineViewWidget::clearWidgets()
       m_FilterWidgetLayout->removeItem(spacer);
     }
   }
-  count = filterCount();
   m_SelectedFilterWidget = NULL;
   resetLayout();
 
