@@ -470,6 +470,8 @@ namespace DREAM3D
     const DREAM3D_STRING PrimaryStatsData("PrimaryStatsData");
 
     const DREAM3D_STRING RadialDistFunc("Radial Distribution Function");
+    const DREAM3D_STRING RdfMinDistance("RDF Min Distance");
+    const DREAM3D_STRING RdfMaxDistance("RDF Max Distance");
 
     const DREAM3D_STRING Sigma("Sigma");
     const DREAM3D_STRING StandardDeviation("Standard Deviation");

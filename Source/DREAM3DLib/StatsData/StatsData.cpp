@@ -116,30 +116,10 @@ VectorOfFloatArray StatsData::CreateCorrelatedDistributionArrays(uint32_t distri
   }
   return v;
 }
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-
-VectorOfFloatArray StatsData::CreateRDFDistributionArrays(uint32_t distributionType, size_t numBins)
-{
-  VectorOfFloatArray v;
-  if(distributionType == DREAM3D::DistributionType::RDFFrequency)
-  {
-    v.resize(DREAM3D::DistributionType::RawDistDataColumnCount);
-    v[0] = FloatArrayType::CreateArray(numBins, DREAM3D::StringConstants::Frequencies);
-    v[0]->initializeWithZeros();
-  }
-
-  if(distributionType == DREAM3D::DistributionType::RDFMaxMin)
-  {
-    v.resize(DREAM3D::DistributionType::RawDistDataColumnCount);
-    v[0] = FloatArrayType::CreateArray(numBins, DREAM3D::StringConstants::MinMaxNoOfBins);
-    v[0]->initializeWithZeros();
-  }
-
-  return v;
-}
-
 FloatArrayType::Pointer StatsData::CreateDistributionArrays(uint32_t distributionType)
 {
   FloatArrayType::Pointer v;

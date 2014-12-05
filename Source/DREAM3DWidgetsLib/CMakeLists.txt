@@ -169,6 +169,7 @@ set(Project_SRCS
 # Set some Include directories
 include_directories(${PROJECT_CODE_DIR})
 include_directories(${PROJECT_CODE_DIR}/QtSupport)
+include_directories(${DREAM3DProj_BINARY_DIR}/QtSupport)
 include_directories(${DREAM3DWidgetsLib_SOURCE_DIR}/..)
 include_directories(${DREAM3DWidgetsLib_SOURCE_DIR}/Widgets)
 include_directories(${DREAM3DWidgetsLib_SOURCE_DIR}/FilterParameterWidgets)

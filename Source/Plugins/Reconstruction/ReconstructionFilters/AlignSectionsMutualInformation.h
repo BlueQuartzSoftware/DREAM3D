@@ -104,7 +104,7 @@ class AlignSectionsMutualInformation : public AlignSections
   protected:
     AlignSectionsMutualInformation();
 
-    virtual void find_shifts(QVector<int>& xshifts, QVector<int>& yshifts);
+    virtual void find_shifts(std::vector<int>& xshifts, std::vector<int>& yshifts);
     void form_features_sections();
 
     virtual void setupFilterParameters();
@@ -119,7 +119,7 @@ class AlignSectionsMutualInformation : public AlignSections
 
     DEFINE_REQUIRED_DATAARRAY_VARIABLE(unsigned int, CrystalStructures)
 
-    QVector<OrientationOps::Pointer> m_OrientationOps;
+    std::vector<OrientationOps::Pointer> m_OrientationOps;
 
     unsigned long long int Seed;
 

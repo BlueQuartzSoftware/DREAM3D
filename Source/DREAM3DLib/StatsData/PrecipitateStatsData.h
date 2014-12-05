@@ -44,6 +44,7 @@
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/DataArrays/DataArray.hpp"
 #include "DREAM3DLib/StatsData/StatsData.h"
+#include "DREAM3DLib/Math/RadialDistributionFunction.h"
 
 typedef QVector<FloatArrayType::Pointer> VectorOfFloatArray;
 
@@ -129,9 +130,7 @@ class DREAM3DLib_EXPORT PrecipitateStatsData : public StatsData
       */
     DREAM3D_INSTANCE_PROPERTY(VectorOfFloatArray, FeatureSizeDistribution)
     DREAM3D_INSTANCE_PROPERTY(uint32_t, FeatureSize_DistType)
-    DREAM3D_INSTANCE_PROPERTY(VectorOfFloatArray, RadialDistFunction)
-    DREAM3D_INSTANCE_PROPERTY(VectorOfFloatArray, MaxMinRDF)
-    DREAM3D_INSTANCE_PROPERTY(uint32_t, RadialDistFunctionType)
+    DREAM3D_INSTANCE_PROPERTY(RdfData::Pointer, RadialDistFunction)
 
     DREAM3D_INSTANCE_PROPERTY(FloatArrayType::Pointer, BinNumbers)
 

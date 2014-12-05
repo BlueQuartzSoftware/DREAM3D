@@ -158,7 +158,7 @@ void DREAM3D_UI::resizeEvent ( QResizeEvent* event )
 
 // -----------------------------------------------------------------------------
 //
-// -----------------------------------------------------------------------------
+// -----------------------------------------------------------------------------b
 void DREAM3D_UI::on_actionExit_triggered()
 {
   this->close();
@@ -181,7 +181,7 @@ void DREAM3D_UI::on_actionImportPipeline_triggered()
 // -----------------------------------------------------------------------------
 void DREAM3D_UI::on_actionExportPipeline_triggered()
 {
-  QString proposedFile = m_OpenDialogLastDirectory + QDir::separator() + "Untitled";
+  QString proposedFile = m_OpenDialogLastDirectory + QDir::separator() + "Untitled.txt";
   QString filePath = QFileDialog::getSaveFileName(this, tr("Save Pipeline To File"),
                                                   proposedFile,
                                                   tr("Pipeline File (*.txt *.ini);;All Files(*.*)") );
@@ -189,6 +189,11 @@ void DREAM3D_UI::on_actionExportPipeline_triggered()
 
   //If the filePath already exists - delete it so that we get a clean write to the file
   QFileInfo fi(filePath);
+  if (fi.suffix().isEmpty())
+  {
+      filePath.append(".txt");
+      fi.setFile(filePath);
+  }
   pipelineViewWidget->savePipeline(filePath, fi.baseName());
   m_OpenDialogLastDirectory = fi.path();
 }

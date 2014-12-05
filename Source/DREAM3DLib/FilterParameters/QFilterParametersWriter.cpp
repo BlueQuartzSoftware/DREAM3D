@@ -90,12 +90,13 @@ int QFilterParametersWriter::WritePipelineToFile(FilterPipeline::Pointer pipelin
   writer->openFile(filePath, format);
   // Loop over each filter and write it's input parameters to the file
   int count = filters.size();
+  int index = 0;
   for(qint32 i = 0; i < count; ++i)
   {
     AbstractFilter::Pointer filter = filters.at(i);
     if(NULL != filter.get())
     {
-      filter->writeFilterParameters(writer.get(), i);
+      index = filter->writeFilterParameters(writer.get(), index);
     }
     else
     {
@@ -106,7 +107,7 @@ int QFilterParametersWriter::WritePipelineToFile(FilterPipeline::Pointer pipelin
     }
   }
 
-  writer->setNumberOfFilters(count);
+  writer->setNumberOfFilters(index);
   writer->setPipelineName(name);
   writer->closeFile(); // Close the file
   return 0;

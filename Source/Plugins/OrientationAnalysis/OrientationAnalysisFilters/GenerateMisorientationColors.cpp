@@ -69,7 +69,7 @@ class GenerateMisorientationColorsImpl
 
     void convert(size_t start, size_t end) const
     {
-      QVector<OrientationOps::Pointer> ops = OrientationOps::getOrientationOpsVector();
+      QVector<OrientationOps::Pointer> ops = OrientationOps::getOrientationOpsQVector();
 
       QuatF refQuat = {m_ReferenceAxis.x * sinf(m_ReferenceAngle), m_ReferenceAxis.y * sinf(m_ReferenceAngle), m_ReferenceAxis.z * sinf(m_ReferenceAngle), cosf(m_ReferenceAngle)};
       QuatF cellQuat = {0.0f, 0.0f, 0.0f, 1.0f};
@@ -334,7 +334,7 @@ void GenerateMisorientationColors::execute()
     serial.convert(0, totalPoints);
   }
 
-  QVector<OrientationOps::Pointer> ops = OrientationOps::getOrientationOpsVector();
+  QVector<OrientationOps::Pointer> ops = OrientationOps::getOrientationOpsQVector();
 
   // Check and warn about unsupported crystal symmetries in the computation which will show as black
   for(size_t i = 0; i < notSupported->getNumberOfTuples() - 1; i++)

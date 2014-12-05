@@ -97,11 +97,8 @@ class DREAM3DLib_EXPORT H5PrecipitateStatsDataDelegate : public H5StatsDataDeleg
                               const QString& hdf5GroupName,
                               VectorOfFloatArray colData);
 
-    int writeRDFDistributionData(hid_t pid,
-                                 uint32_t disType,
-                                 const QString& hdf5GroupName,
-                                 VectorOfFloatArray colData,
-                                 VectorOfFloatArray maxMinData);
+    int writeRDFDistributionData(hid_t pid, RdfData::Pointer rdfData,
+                                 const QString& hdf5GroupName);
 
     uint32_t readDistributionType(hid_t pid, const QString& hdf5GroupName);
 
@@ -111,7 +108,7 @@ class DREAM3DLib_EXPORT H5PrecipitateStatsDataDelegate : public H5StatsDataDeleg
 
     int readRDFDistributionData(hid_t pid,
                              const QString& hdf5GroupName,
-                             VectorOfFloatArray colData, VectorOfFloatArray maxMinData);
+                             RdfData::Pointer rdfData);
 
 
     int writeVectorOfArrays(hid_t pid, VectorOfFloatArray colData);
@@ -124,7 +121,7 @@ class DREAM3DLib_EXPORT H5PrecipitateStatsDataDelegate : public H5StatsDataDeleg
     VectorOfFloatArray createPowerDistributionArrays();
 
     VectorOfFloatArray createLogNormalDistributionArrays();
-    VectorOfFloatArray createRDFDistributionArrays();
+
     VectorOfFloatArray createRDFMaxMinDistributionArrays();
 
   private:

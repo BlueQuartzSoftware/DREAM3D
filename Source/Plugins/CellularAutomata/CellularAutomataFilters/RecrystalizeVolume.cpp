@@ -30,7 +30,9 @@ class RecrystalizeVolumeImpl
     static const int VON_NEUMAN = 0;
     static const int EIGHT_CELL = 1;
     static const int FOURTEEN_CELL = 2;
-    static const int MOORE = 3;
+    static const int EIGHTEEN_CELL = 3;
+    static const int TWENTY_CELL = 4;
+    static const int MOORE = 5;
 
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
     RecrystalizeVolumeImpl(CellularAutomata::Lattice* cellLattice, int32_t* currentGrainIDs, int32_t* workingGrainIDs, uint32_t* updateTime, int neighborhoodType, tbb::atomic<size_t>* counter, uint32_t* time, tbb::atomic<int32_t>* grainCount, float nucleationRate) :
@@ -123,6 +125,23 @@ class RecrystalizeVolumeImpl
       }
     }
 
+    void compute18Cell(size_t start, size_t end, boost::mt19937& generator) const
+    {
+      for (size_t i = start; i < end; i++)
+      {
+        //don't change cells that are already recrystallized
+        if(0 != m_currentIDs[i])
+        {
+          m_workingIDs[i] = m_currentIDs[i];
+          continue;
+        }
+
+        //otherwise get cell neighbors and determine next state
+        std::vector<size_t> neighborList = m_lattice->EighteenCell(i);
+        computeBase(i, neighborList.begin(), neighborList.end(), generator);
+      }
+    }
+
     void computeMoore(size_t start, size_t end, boost::mt19937& generator) const
     {
       for (size_t i = start; i < end; i++)
@@ -180,6 +199,26 @@ class RecrystalizeVolumeImpl
       }
     }
 
+    void compute20Cell(size_t start, size_t end, boost::mt19937& generator) const
+    {
+      //wrap generator in uniform interger distribution for selecting neighborhood variant
+      boost::uniform_int<> distribution(0, 3);
+      boost::variate_generator<boost::mt19937&, boost::uniform_int<> > indexGen(generator, distribution);
+      for (size_t i = start; i < end; i++)
+      {
+        //don't change cells that are already recrystallized
+        if(0 != m_currentIDs[i])
+        {
+          m_workingIDs[i] = m_currentIDs[i];
+          continue;
+        }
+
+        //otherwise get cell neighbors and determine next state
+        std::vector<size_t> neighborList = m_lattice->TwentyCell(i, indexGen());
+        computeBase(i, neighborList.begin(), neighborList.end(), generator);
+      }
+    }
+
     void compute(size_t start, size_t end) const
     {
       //create random number generator + initialize (parallel threads may call simultaneously so rand() or time alone are insufficient for different seeds)
@@ -191,16 +230,24 @@ class RecrystalizeVolumeImpl
           computeVonNeuman(start, end, generator);
           break;
 
-        case MOORE:
-          computeMoore(start, end, generator);
-          break;
-
         case EIGHT_CELL:
           compute8Cell(start, end, generator);
           break;
 
         case FOURTEEN_CELL:
           compute14Cell(start, end, generator);
+          break;
+
+        case EIGHTEEN_CELL:
+          compute18Cell(start, end, generator);
+          break;
+
+        case TWENTY_CELL:
+          compute20Cell(start, end, generator);
+          break;
+
+        case MOORE:
+          computeMoore(start, end, generator);
           break;
       }
     }
@@ -289,10 +336,12 @@ void RecrystalizeVolume::setupFilterParameters()
     parameter->setPropertyName("Neighborhood");
     parameter->setWidgetType(FilterParameterWidgetType::ChoiceWidget);
     QVector<QString> choices;
-    choices.push_back("Von Neumann");
-    choices.push_back("'8 cell'");
-    choices.push_back("'14 cell'");
-    choices.push_back("Moore");
+    choices.push_back("Von Neumann (6 cell) [octohedra]");
+    choices.push_back("8 cell [sphere]");
+    choices.push_back("14 cell [~superellipsoid]");
+    choices.push_back("18 cell [cubeoctahedron]");
+    choices.push_back("20 cell [~truncated cube]");
+    choices.push_back("Moore (26 cell) [cube]");
     parameter->setChoices(choices);
     parameter->setAdvanced(false);
     parameters.push_back(parameter);

@@ -64,6 +64,7 @@ lacking still.
 //#define _USE_MATH_DEFINES 1
 #endif
 
+#include <stddef.h>
 #include <math.h>
 #include <vector>
 

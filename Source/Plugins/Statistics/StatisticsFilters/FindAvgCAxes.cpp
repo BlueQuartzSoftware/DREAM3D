@@ -57,7 +57,7 @@ FindAvgCAxes::FindAvgCAxes() :
   m_Quats(NULL),
   m_AvgCAxes(NULL)
 {
-  m_OrientationOps = OrientationOps::getOrientationOpsVector();
+  m_OrientationOps = OrientationOps::getOrientationOpsQVector();
   setupFilterParameters();
 }
 

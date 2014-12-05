@@ -274,6 +274,20 @@ else()
 endif()
 
 
+# ------------------------------------------------------------------------------
+#  Qwt Section
+# ------------------------------------------------------------------------------
+find_package(Qwt)
+if(QWT_FOUND)
+#   message(STATUS "QWT_INCLUDE_DIR: ${QWT_INCLUDE_DIR}")
+    include_directories(${QWT_INCLUDE_DIR})
+#    include_directories(${QWT_INCLUDE_DIR}/qwt)
+    CMP_COPY_DEPENDENT_LIBRARIES("qwt")
+    CMP_LIBRARIES_INSTALL_RULES("qwt" "./")
+else()
+    message(FATAL_ERROR "Qwt is required for this project")
+endif()
+
 # --------------------------------------------------------------------
 # Now that we have found all of our required libraries and packages we can start the all
 # the tests

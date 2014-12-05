@@ -219,7 +219,7 @@ class DREAM3DWidgetsLib_EXPORT PipelineViewWidget : public QFrame
      * @param w
      */
     void setStatusBar(QStatusBar* statusBar);
-    
+
     /**
      * @brief preflightPipeline
      */
@@ -256,6 +256,20 @@ class DREAM3DWidgetsLib_EXPORT PipelineViewWidget : public QFrame
      * @brief reindexWidgetTitles
      */
     void reindexWidgetTitles();
+
+    /**
+     * @brief extractPipelineFromFile
+     * @param filePath
+     */
+    void extractPipelineFromFile(const QString &filePath);
+
+    /**
+     * @brief readPipelineFromFile
+     * @param fileId
+     * @return
+     */
+    int readPipelineFromFile(hid_t fileId);
+
 
   signals:
     void addPlaceHolderFilter(QPoint p);

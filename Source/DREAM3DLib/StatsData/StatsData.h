@@ -43,6 +43,7 @@
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/DataArrays/DataArray.hpp"
+#include "DREAM3DLib/Math/RadialDistributionFunction.h"
 
 typedef QVector<FloatArrayType::Pointer> VectorOfFloatArray;
 
@@ -109,7 +110,7 @@ class DREAM3DLib_EXPORT StatsData
      * distribution type is passed in.
      */
     static VectorOfFloatArray CreateCorrelatedDistributionArrays(uint32_t distributionType, size_t numBins);
-    static VectorOfFloatArray CreateRDFDistributionArrays(uint32_t distributionType, size_t numBins);
+    //static RdfData::Pointer CreateRDFDistributionArrays(uint32_t distributionType, size_t numBins);
     static FloatArrayType::Pointer CreateDistributionArrays(uint32_t distributionType);
 
     virtual void initialize();

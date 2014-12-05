@@ -14,7 +14,16 @@
    <string>Form</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout_2">
-   <property name="margin">
+   <property name="leftMargin">
+    <number>4</number>
+   </property>
+   <property name="topMargin">
+    <number>4</number>
+   </property>
+   <property name="rightMargin">
+    <number>4</number>
+   </property>
+   <property name="bottomMargin">
     <number>4</number>
    </property>
    <item>
@@ -458,7 +467,16 @@ font-size: 12px;
        <string>Omega 3 Distributions</string>
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout_4">
-       <property name="margin">
+       <property name="leftMargin">
+        <number>4</number>
+       </property>
+       <property name="topMargin">
+        <number>4</number>
+       </property>
+       <property name="rightMargin">
+        <number>4</number>
+       </property>
+       <property name="bottomMargin">
         <number>4</number>
        </property>
        <item>
@@ -471,7 +489,16 @@ font-size: 12px;
        <string>Shape Distributions</string>
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout_3">
-       <property name="margin">
+       <property name="leftMargin">
+        <number>4</number>
+       </property>
+       <property name="topMargin">
+        <number>4</number>
+       </property>
+       <property name="rightMargin">
+        <number>4</number>
+       </property>
+       <property name="bottomMargin">
         <number>4</number>
        </property>
        <item>
@@ -489,7 +516,16 @@ font-size: 12px;
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout">
-           <property name="margin">
+           <property name="leftMargin">
+            <number>4</number>
+           </property>
+           <property name="topMargin">
+            <number>4</number>
+           </property>
+           <property name="rightMargin">
+            <number>4</number>
+           </property>
+           <property name="bottomMargin">
             <number>4</number>
            </property>
            <item>
@@ -504,16 +540,25 @@ font-size: 12px;
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="clusteringDistributionTab">
+     <widget class="QWidget" name="rdfTab">
       <attribute name="title">
        <string>Radial Distribution Function</string>
       </attribute>
       <layout class="QHBoxLayout" name="horizontalLayout_2">
-       <property name="margin">
+       <property name="leftMargin">
+        <number>4</number>
+       </property>
+       <property name="topMargin">
+        <number>4</number>
+       </property>
+       <property name="rightMargin">
+        <number>4</number>
+       </property>
+       <property name="bottomMargin">
         <number>4</number>
        </property>
        <item>
-        <widget class="StatsGenPlotWidget" name="m_ClusteringPlot" native="true"/>
+        <widget class="StatsGenRDFWidget" name="m_RdfPlot" native="true"/>
        </item>
       </layout>
      </widget>
@@ -533,15 +578,15 @@ font-size: 12px;
  </widget>
  <customwidgets>
   <customwidget>
-   <class>SGWidget</class>
-   <extends>QWidget</extends>
-   <header location="global">SGWidget.h</header>
-   <container>1</container>
-  </customwidget>
-  <customwidget>
    <class>QwtPlot</class>
    <extends>QFrame</extends>
    <header>qwt_plot.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>SGWidget</class>
+   <extends>QWidget</extends>
+   <header location="global">SGWidget.h</header>
    <container>1</container>
   </customwidget>
   <customwidget>
@@ -560,6 +605,12 @@ font-size: 12px;
    <class>SGAxisODFWidget</class>
    <extends>QWidget</extends>
    <header location="global">SGAxisODFWidget.h</header>
+  </customwidget>
+  <customwidget>
+   <class>StatsGenRDFWidget</class>
+   <extends>QWidget</extends>
+   <header location="global">StatsGenRDFWidget.h</header>
+   <container>1</container>
   </customwidget>
  </customwidgets>
  <resources>

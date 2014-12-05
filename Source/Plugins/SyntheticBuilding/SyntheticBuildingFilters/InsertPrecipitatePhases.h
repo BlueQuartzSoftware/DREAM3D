@@ -181,8 +181,6 @@ class InsertPrecipitatePhases : public AbstractFilter
   protected:
     InsertPrecipitatePhases();
 
-    Int32ArrayType::Pointer initialize_packinggrid();
-
     void place_precipitates(Int32ArrayType::Pointer exlusionZonesPtr);
     void generate_precipitate(int phase, int Seed, Precip* precip, unsigned int shapeclass, OrientationOps::Pointer OrthoOps);
     void load_precipitates();
@@ -218,12 +216,19 @@ class InsertPrecipitatePhases : public AbstractFilter
 
   private:
 
-    int firstPrecipitateFeature;
+    int m_FirstPrecipitateFeature;
     unsigned long long int Seed;
-    float sizex;
-    float sizey;
-    float sizez;
-    float totalvol;
+    float m_SizeX;
+    float m_SizeY;
+    float m_SizeZ;
+    float m_XRes;
+    float m_YRes;
+    float m_ZRes;
+    float m_TotalVol;
+    int64_t m_XPoints;
+    int64_t m_YPoints;
+    int64_t m_ZPoints;
+    size_t m_TotalPoints;
 
     QMap<unsigned int, ShapeOps*> m_ShapeOps;
     ShapeOps::Pointer m_UnknownShapeOps;
@@ -260,13 +265,6 @@ class InsertPrecipitatePhases : public AbstractFilter
     std::vector<size_t> pointsToAdd;
     std::vector<size_t> pointsToRemove;
 
-    float m_HalfPackingRes[3];
-    float m_OneOverHalfPackingRes[3];
-
-    float m_PackingRes[3];
-    int m_PackingPoints[3];
-    int m_TotalPackingPoints;
-
     std::vector<std::vector<float> > featuresizedist;
     std::vector<std::vector<float> > simfeaturesizedist;
     std::vector<float> m_rdfTargetDist;
@@ -276,16 +274,14 @@ class InsertPrecipitatePhases : public AbstractFilter
     std::vector<float> m_RandomCentroids;
     std::vector<float> m_rdfRandom;
 
-
     std::vector<float> featuresizediststep;
 
     std::vector<int> newnames;
-    std::vector<int> packqualities;
     std::vector<int> gsizes;
 
     size_t availablePointsCount;
     float m_currentRDFerror, m_oldRDFerror;
-    float currentsizedisterror, oldsizedisterror;
+    float m_CurrentSizeDistError, m_OldSizeDistError;
     float m_rdfMax;
     float m_rdfMin;
     float m_StepSize;

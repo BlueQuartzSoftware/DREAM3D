@@ -66,8 +66,11 @@
 #include "DREAM3DLib/FilterParameters/QFilterParametersReader.h"
 #include "DREAM3DLib/FilterParameters/QFilterParametersWriter.h"
 
-#include "DREAM3DWidgetsLib/FilterWidgetManager.h"
 #include "QtSupport/QDroppableScrollArea.h"
+#include "QtSupport/DREAM3DFileDragMessageBox.h"
+
+#include "DREAM3DWidgetsLib/FilterWidgetManager.h"
+
 
 
 #include "DREAM3DWidgetsLib/FilterParameterWidgets/FilterParameterWidgetsDialogs.h"
@@ -364,12 +367,12 @@ void PipelineViewWidget::savePipeline(const QString& filePath, const QString& na
   int err = QFilterParametersWriter::WritePipelineToFile(pipeline, fi.absoluteFilePath(), name, format, reinterpret_cast<IObserver*>(m_PipelineMessageObserver));
   if (err < 0)
   {
-      m_StatusBar->showMessage(tr("There was an error while updating the favorite '%1'.").arg(name));
+    m_StatusBar->showMessage(tr("There was an error while updating the favorite '%1'.").arg(name));
   }
-    else
-    {
-        m_StatusBar->showMessage(tr("Favorite '%1' has been updated successfully.").arg(name));
-    }
+  else
+  {
+    m_StatusBar->showMessage(tr("Favorite '%1' has been updated successfully.").arg(name));
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -653,7 +656,7 @@ void PipelineViewWidget::setSelectedFilterWidget(PipelineFilterWidget* w)
 // -----------------------------------------------------------------------------
 void PipelineViewWidget::setStatusBar(QStatusBar* statusBar)
 {
-    m_StatusBar = statusBar;
+  m_StatusBar = statusBar;
 }
 
 // -----------------------------------------------------------------------------
@@ -751,6 +754,24 @@ void PipelineViewWidget::dragMoveEvent( QDragMoveEvent* event)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void PipelineViewWidget::extractPipelineFromFile(const QString &filePath)
+{
+
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int PipelineViewWidget::readPipelineFromFile(hid_t fileId)
+{
+  int err = -1;
+
+  return err;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void PipelineViewWidget::dropEvent(QDropEvent* event)
 {
   if (event->mimeData()->hasUrls())
@@ -771,6 +792,11 @@ void PipelineViewWidget::dropEvent(QDropEvent* event)
       }
       else if (fi.suffix().endsWith("dream3d") == true )
       {
+        DREAM3DFileDragMessageBox* msgBox = new DREAM3DFileDragMessageBox(this);
+        msgBox->setFilePath(fName);
+        connect(msgBox, SIGNAL(fireExtractPipelineFromFile(const QString &)), this, SLOT(extractPipelineFromFile(const QString &)));
+        connect(msgBox, SIGNAL(fireAddDREAM3DReaderFilter(const QString &)), this, SLOT(addDREAM3DReaderFilter(const QString &)));
+        msgBox->exec();
 
       }
 
