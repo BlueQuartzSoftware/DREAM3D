@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>506</width>
+    <width>517</width>
     <height>171</height>
    </rect>
   </property>
@@ -18,7 +18,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>501</width>
+     <width>516</width>
      <height>171</height>
     </rect>
    </property>
@@ -77,18 +77,75 @@
        </spacer>
       </item>
       <item>
-       <widget class="QPushButton" name="extractPipelineBtn">
+       <widget class="QPushButton" name="prependPipelineBtn">
         <property name="text">
-         <string>Extract Pipeline</string>
+         <string>Extract - Prepend</string>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="QPushButton" name="addFilterBtn">
+       <widget class="QPushButton" name="appendPipelineBtn">
         <property name="text">
-         <string>Add Filter</string>
+         <string>Extract - Append</string>
         </property>
        </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="replacePipelineBtn">
+        <property name="text">
+         <string>Extract - Replace</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <spacer name="horizontalSpacer_4">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>158</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+     </layout>
+    </item>
+    <item>
+     <layout class="QHBoxLayout" name="horizontalLayout_3">
+      <item>
+       <spacer name="horizontalSpacer_3">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item>
+       <widget class="QPushButton" name="addFilterBtn">
+        <property name="text">
+         <string>Add DREAM3D File Reader Filter</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <spacer name="horizontalSpacer">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
       </item>
      </layout>
     </item>

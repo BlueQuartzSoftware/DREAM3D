@@ -50,9 +50,13 @@
 
 #include "DREAM3DLib/Common/PipelineMessage.h"
 #include "DREAM3DLib/Common/FilterPipeline.h"
+#include "DREAM3DLib/FilterParameters/H5FilterParametersReader.h"
+#include "DREAM3DLib/CoreFilters/DataContainerReader.h"
 
 #include "DREAM3DWidgetsLib/DREAM3DWidgetsLib.h"
 #include "DREAM3DWidgetsLib/Widgets/PipelineFilterWidget.h"
+
+#include "QtSupport/DREAM3DFileDragMessageBox.h"
 
 
 class QScrollArea;
@@ -177,6 +181,12 @@ class DREAM3DWidgetsLib_EXPORT PipelineViewWidget : public QFrame
      */
     void setContextMenuActions(QList<QAction*> list);
 
+    /**
+     * @brief populatePipelineView
+     * @param pipeline
+     */
+    void populatePipelineView(FilterPipeline::Pointer pipeline, ExtractionType type);
+
     bool eventFilter(QObject *, QEvent *);
 
   public slots:
@@ -261,7 +271,13 @@ class DREAM3DWidgetsLib_EXPORT PipelineViewWidget : public QFrame
      * @brief extractPipelineFromFile
      * @param filePath
      */
-    void extractPipelineFromFile(const QString &filePath);
+    void extractPipelineFromFile(const QString &filePath, ExtractionType type);
+
+    /**
+     * @brief addDREAM3DReaderFilter
+     * @param filePath
+     */
+    void addDREAM3DReaderFilter(const QString &filePath);
 
     /**
      * @brief readPipelineFromFile

@@ -43,23 +43,32 @@
 
 #include "ui_DREAM3DFileDragMessageBox.h"
 
+enum ExtractionType
+{
+    Replace,
+    Append,
+    Prepend
+};
+
 
 class DREAM3DFileDragMessageBox : public QDialog, private Ui::DREAM3DFileDragMessageBox
 {
   Q_OBJECT
 
   public:
-    DREAM3DFileDragMessageBox(QWidget* parent = 0);
+    DREAM3DFileDragMessageBox(QWidget* parent = 0, int filterCount = -1);
 
     QString getFilePath();
     void setFilePath(QString path);
 
   protected slots:
-    void on_extractPipelineBtn_clicked();
+    void on_replacePipelineBtn_clicked();
+    void on_appendPipelineBtn_clicked();
+    void on_prependPipelineBtn_clicked();
     void on_addFilterBtn_clicked();
 
   signals:
-    void fireExtractPipelineFromFile(const QString &filePath);
+    void fireExtractPipelineFromFile(const QString &filePath, ExtractionType type);
     void fireAddDREAM3DReaderFilter(const QString &filePath);
 
   private:
