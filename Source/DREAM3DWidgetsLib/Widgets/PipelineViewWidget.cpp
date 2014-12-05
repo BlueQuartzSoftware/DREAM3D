@@ -603,6 +603,12 @@ void PipelineViewWidget::removeFilterWidget(PipelineFilterWidget* whoSent)
     }
   }
 
+  QSpacerItem* spacer = m_FilterWidgetLayout->itemAt(0)->spacerItem();
+  if (NULL != spacer)
+  {
+      m_FilterWidgetLayout->removeItem(spacer);
+  }
+
   reindexWidgetTitles();
   preflightPipeline();
 
