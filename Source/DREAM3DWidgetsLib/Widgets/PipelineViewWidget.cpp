@@ -206,6 +206,12 @@ int PipelineViewWidget::filterCount()
   {
     count = m_FilterWidgetLayout->count();
   }
+  if (count == 1)
+  {
+      QSpacerItem* w = m_FilterWidgetLayout->itemAt(0)->spacerItem();
+      QLayout* w2 = m_FilterWidgetLayout->itemAt(0)->layout();
+      qDebug() << "";
+  }
   return count;
 }
 
@@ -259,6 +265,7 @@ void PipelineViewWidget::clearWidgets()
   for(qint32 i = count - 1; i >= 0; --i)
   {
     QWidget* w = m_FilterWidgetLayout->itemAt(i)->widget();
+    QSpacerItem* spacer = m_FilterWidgetLayout->itemAt(i)->spacerItem();
     if (NULL != w)
     {
       m_FilterWidgetLayout->removeWidget(w);
@@ -270,7 +277,12 @@ void PipelineViewWidget::clearWidgets()
       }
       w->deleteLater();
     }
+    else if (NULL != spacer)
+    {
+      m_FilterWidgetLayout->removeItem(spacer);
+    }
   }
+  count = filterCount();
   m_SelectedFilterWidget = NULL;
   resetLayout();
 
