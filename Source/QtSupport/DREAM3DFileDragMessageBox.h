@@ -56,7 +56,7 @@ class DREAM3DFileDragMessageBox : public QDialog, private Ui::DREAM3DFileDragMes
   Q_OBJECT
 
   public:
-    DREAM3DFileDragMessageBox(QWidget* parent = 0);
+    DREAM3DFileDragMessageBox(QWidget* parent = 0, int filterCount = -1);
 
     QString getFilePath();
     void setFilePath(QString path);

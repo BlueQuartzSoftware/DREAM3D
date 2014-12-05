@@ -40,9 +40,21 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-DREAM3DFileDragMessageBox::DREAM3DFileDragMessageBox(QWidget* parent)
+DREAM3DFileDragMessageBox::DREAM3DFileDragMessageBox(QWidget* parent, int filterCount)
 {
   setupUi(this);
+
+  if (filterCount == -1)
+  {
+      // This should never be the case - Throw error???
+      return;
+  }
+  else if (filterCount <= 0)
+  {
+      appendPipelineBtn->setHidden(true);
+      prependPipelineBtn->setHidden(true);
+      replacePipelineBtn->setText("Extract Pipeline");
+  }
 }
 
 // -----------------------------------------------------------------------------
