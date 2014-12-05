@@ -651,6 +651,7 @@ void  InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclus
 
         PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsDataArray[i].get());
         RdfData::Pointer rdfTarget = pp->getRadialDistFunction();
+
         const std::vector<float>& freqs = rdfTarget->getFrequencies();
         //       int test =rdfTarget[0]->getNumberOfTuples();
         m_numRDFbins = freqs.size();
