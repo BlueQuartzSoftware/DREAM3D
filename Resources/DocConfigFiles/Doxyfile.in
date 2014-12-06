@@ -8,7 +8,7 @@ OUTPUT_DIRECTORY  = @DOX_OUTPUT_DIR@
 #---------------------------------------------------------------------------
 # configuration options related to warning and progress messages
 #---------------------------------------------------------------------------
-QUIET             = NO
+QUIET             = @DOXYGEN_QUIET@
 WARNINGS          = YES
 
 DISABLE_INDEX     = YES
