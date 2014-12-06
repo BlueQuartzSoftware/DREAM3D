@@ -156,7 +156,7 @@ void AlignSectionsList::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AlignSectionsList::find_shifts(QVector<int>& xshifts, QVector<int>& yshifts)
+void AlignSectionsList::find_shifts(std::vector<int> &xshifts, std::vector<int> &yshifts)
 {
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 

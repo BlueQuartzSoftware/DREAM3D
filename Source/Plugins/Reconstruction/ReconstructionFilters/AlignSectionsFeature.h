@@ -88,7 +88,7 @@ class AlignSectionsFeature : public AlignSections
   protected:
     AlignSectionsFeature();
 
-    virtual void find_shifts(QVector<int>& xshifts, QVector<int>& yshifts);
+    virtual void find_shifts(std::vector<int>& xshifts, std::vector<int>& yshifts);
 
     virtual void setupFilterParameters();
     virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
