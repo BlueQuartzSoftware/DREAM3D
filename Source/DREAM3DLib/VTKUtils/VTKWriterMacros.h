@@ -48,22 +48,22 @@
 
 #define WRITE_RECTILINEAR_GRID_HEADER(FILE_TYPE, ptr, xpoints, ypoints, zpoints)\
   fprintf(f, "# vtk DataFile Version 2.0\n");\
-  fprintf(f, "Data set from DREAM3D\n");\
+  fprintf(f, "Data set from %s\n", DREAM3DLib::Version::PackageComplete().toLatin1().constData());\
   fprintf(f, FILE_TYPE);\
   fprintf(f, "\n");\
   fprintf(f, "DATASET RECTILINEAR_GRID\n");\
   fprintf(f, "DIMENSIONS %ld %ld %ld\n", xpoints, ypoints, zpoints);\
-   
+
 #define WRITE_STRUCTURED_POINTS_HEADER(FILE_TYPE, ptr)\
   fprintf(f, "# vtk DataFile Version 2.0\n");\
-  fprintf(f, "data set from DREAM3D\n");\
+  fprintf(f, "Data set from %s\n", DREAM3DLib::Version::PackageComplete().toLatin1().constData());\
   fprintf(f, FILE_TYPE); fprintf(f, "\n");\
   fprintf(f, "DATASET STRUCTURED_POINTS\n");\
   fprintf(f, "DIMENSIONS %ld %ld %ld\n", ptr->getXPoints(), ptr->getYPoints(), ptr->getZPoints());\
-  fprintf(f, "ORIGIN 0.0 0.0 0.0\n");\
   fprintf(f, "SPACING %f %f %f\n", ptr->getXRes(), ptr->getYRes(), ptr->getZRes());\
+  fprintf(f, "ORIGIN 0.0 0.0 0.0\n");\
   fprintf(f, "POINT_DATA %ld\n\n", ptr->getXPoints() * ptr->getYPoints() * ptr->getZPoints() );\
-   
+
 
 #else
 
@@ -73,7 +73,7 @@
   fprintf(f, FILE_TYPE); fprintf(f, "\n");\
   fprintf(f, "DATASET RECTILINEAR_GRID\n");\
   fprintf(f, "DIMENSIONS %ld %ld %ld\n", xpoints, ypoints, zpoints);\
-   
+
 #define WRITE_STRUCTURED_POINTS_HEADER(FILE_TYPE, ptr)\
   fprintf(f, "# vtk DataFile Version 2.0\n");\
   fprintf(f, "data set from DREAM3D\n");\
@@ -83,7 +83,7 @@
   fprintf(f, "ORIGIN 0.0 0.0 0.0\n");\
   fprintf(f, "SPACING %f %f %f\n", ptr->getXRes(), ptr->getYRes(), ptr->getZRes());\
   fprintf(f, "POINT_DATA %lld\n\n", ptr->getXPoints() * ptr->getYPoints() * ptr->getZPoints() );\
-   
+
 
 #endif
 
@@ -97,7 +97,7 @@
     fprintf(f, "%d ", m_FeatureIds[i]);\
   }\
   fprintf(f, "\n");\
-   
+
 
 #define WRITE_VTK_FEATURE_IDS_BINARY(ptr, ScalarName)  \
   fprintf(f, "SCALARS %s int 1\n", ScalarName.toLatin1().data());\
@@ -126,7 +126,7 @@
     if(i%20 == 0 && i > 0) { fprintf(f, "\n");}\
     fprintf(f, FORMAT, var[i]);\
   }fprintf(f,"\n"); \
-   
+
 #define WRITE_VTK_SCALARS_FROM_VOXEL_BINARY(ptr, name, m_msgType, var)\
   fprintf(f, "SCALARS %s %s 1\n", name.toLatin1().data(), #m_msgType);\
   fprintf(f, "LOOKUP_TABLE default\n");\
@@ -193,6 +193,40 @@
       return -1;\
     }\
   }
+
+/**
+  *@param
+  * @param
+  * @param
+  * @param
+  */
+#define VTK_WRITE_RECTILINEAR_DATA(ArrayType, iDataPtr, VtkType, Type, Format)\
+{\
+  ArrayType::Pointer array = boost::dynamic_pointer_cast<ArrayType>(iDataPtr);\
+  if(NULL != array.get()) {\
+    size_t totalElements = array->getSize();\
+    Type* val = array->getPointer(0);\
+    int numComps = array->getNumberOfComponents();\
+    QString dName = array->getName();\
+    dName = dName.replace(" ", "_");\
+    fprintf(f, "SCALARS %s %s %d\n", dName.toLatin1().data(), VtkType, numComps);\
+    fprintf(f, "LOOKUP_TABLE default\n");\
+    if(getWriteBinaryFile()) {\
+      if(BIGENDIAN == 0) {array->byteSwapElements(); }\
+      int64_t totalWritten = fwrite(val, array->getTypeSize(), totalElements, f);\
+      if(totalWritten != totalElements) {}\
+      fprintf(f,"\n");\
+      if(BIGENDIAN == 0) {array->byteSwapElements(); }\
+    } else {\
+      for (int64_t i = 0; i < totalElements; i++) {\
+        if(i%20 == 0 && i > 0) { fprintf(f, "\n");}\
+        fprintf(f, Format, val[i]);\
+      }\
+      fprintf(f,"\n");\
+    }\
+  }\
+}
+
 
 
 #endif /* VTKWRITER_H_ */

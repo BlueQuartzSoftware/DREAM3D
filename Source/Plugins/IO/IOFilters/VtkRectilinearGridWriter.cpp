@@ -54,10 +54,7 @@
 VtkRectilinearGridWriter::VtkRectilinearGridWriter() :
   AbstractFilter(),
   m_OutputFile(""),
-  m_WriteBinaryFile(false),
-  m_FeatureIdsArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::FeatureIds),
-  m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
-  m_FeatureIds(NULL)
+  m_WriteBinaryFile(false)
 {
   setupFilterParameters();
 }
@@ -76,9 +73,8 @@ void VtkRectilinearGridWriter::setupFilterParameters()
 {
   FilterParameterVector parameters;
   parameters.push_back(FileSystemFilterParameter::New("Output File", "OutputFile", FilterParameterWidgetType::OutputFileWidget, getOutputFile(), false, "", "*.vtk", "VTK Rectilinear Grid"));
+  parameters.push_back(FilterParameter::New("Cell AttributeMatrix to Write", "SelectedAttributeMatrixPath", FilterParameterWidgetType::AttributeMatrixSelectionWidget, getSelectedAttributeMatrixPath(), false));
   parameters.push_back(FilterParameter::New("Write Binary File", "WriteBinaryFile", FilterParameterWidgetType::BooleanWidget, getWriteBinaryFile(), false));
-  parameters.push_back(FilterParameter::New("Required Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
-  parameters.push_back(FilterParameter::New("FeatureIds", "FeatureIdsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeatureIdsArrayPath(), true, ""));
   setFilterParameters(parameters);
 }
 
@@ -86,8 +82,8 @@ void VtkRectilinearGridWriter::setupFilterParameters()
 void VtkRectilinearGridWriter::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-  setFeatureIdsArrayPath(reader->readDataArrayPath("FeatureIdsArrayPath", getFeatureIdsArrayPath() ) );
   setOutputFile( reader->readString( "OutputFile", getOutputFile() ) );
+  setSelectedAttributeMatrixPath( reader->readDataArrayPath("SelectedAttributeMatrixPath", getSelectedAttributeMatrixPath()) );
   setWriteBinaryFile( reader->readValue("WriteBinaryFile", false) );
   reader->closeFilterGroup();
 }
@@ -98,7 +94,7 @@ void VtkRectilinearGridWriter::readFilterParameters(AbstractFilterParametersRead
 int VtkRectilinearGridWriter::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  DREAM3D_FILTER_WRITE_PARAMETER(FeatureIdsArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(SelectedAttributeMatrixPath)
   DREAM3D_FILTER_WRITE_PARAMETER(OutputFile)
   DREAM3D_FILTER_WRITE_PARAMETER(WriteBinaryFile)
   writer->closeFilterGroup();
@@ -137,10 +133,6 @@ void VtkRectilinearGridWriter::dataCheck()
     setErrorCondition(-1);
   }
 
-  QVector<size_t> dims(1, 1);
-  m_FeatureIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeatureIdsArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if( NULL != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
-  { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
 
 // -----------------------------------------------------------------------------
@@ -173,8 +165,8 @@ void VtkRectilinearGridWriter::execute()
   if(!dir.mkpath(parentPath))
   {
     QString ss = QObject::tr("Error creating parent path '%1'").arg(parentPath);
-    notifyErrorMessage(getHumanLabel(), ss, -1);
-    setErrorCondition(-1);
+    setErrorCondition(-2031000);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;
   }
 
@@ -183,9 +175,8 @@ void VtkRectilinearGridWriter::execute()
   if (err < 0)
   {
     QString ss = QObject::tr("Error writing output vtk file '%1'\n ").arg(m_OutputFile);
-    setErrorCondition(-1);
+    setErrorCondition(-2031001);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-
   }
 
   notifyStatusMessage(getHumanLabel(), "Complete");
@@ -197,7 +188,7 @@ void VtkRectilinearGridWriter::execute()
 // -----------------------------------------------------------------------------
 int VtkRectilinearGridWriter::write(const QString& file)
 {
-  VolumeDataContainer* r = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(m_FeatureIdsArrayPath.getDataContainerName());
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(m_SelectedAttributeMatrixPath.getDataContainerName());
 
   int err = 0;
   FILE* f = NULL;
@@ -209,37 +200,50 @@ int VtkRectilinearGridWriter::write(const QString& file)
   // Write the correct header
   if(m_WriteBinaryFile == true)
   {
-    WRITE_RECTILINEAR_GRID_HEADER("BINARY", r, r->getXPoints() + 1, r->getYPoints() + 1, r->getZPoints() + 1)
+    WRITE_RECTILINEAR_GRID_HEADER("BINARY", m, m->getXPoints() + 1, m->getYPoints() + 1, m->getZPoints() + 1)
   }
   else
   {
-    WRITE_RECTILINEAR_GRID_HEADER("ASCII", r, r->getXPoints() + 1, r->getYPoints() + 1, r->getZPoints() + 1)
+    WRITE_RECTILINEAR_GRID_HEADER("ASCII", m, m->getXPoints() + 1, m->getYPoints() + 1, m->getZPoints() + 1)
   }
 
-  // Write the XCoords
-  VtkRectilinearGridWriter::WriteCoords(f, "X_COORDINATES", "float", r->getXPoints() + 1, 0.0f - r->getXRes() * 0.5f, (float)(r->getXPoints() + 1 * r->getXRes()), r->getXRes(), m_WriteBinaryFile);
-  VtkRectilinearGridWriter::WriteCoords(f, "Y_COORDINATES", "float", r->getYPoints() + 1, 0.0f - r->getYRes() * 0.5f, (float)(r->getYPoints() + 1 * r->getYRes()), r->getYRes(), m_WriteBinaryFile);
-  VtkRectilinearGridWriter::WriteCoords(f, "Z_COORDINATES", "float", r->getZPoints() + 1, 0.0f - r->getZRes() * 0.5f, (float)(r->getZPoints() + 1 * r->getZRes()), r->getZRes(), m_WriteBinaryFile);
+  // Write the Coordinate Points
+  VtkRectilinearGridWriter::WriteCoords(f, "X_COORDINATES", "float", m->getXPoints() + 1, 0.0f - m->getXRes() * 0.5f, (float)(m->getXPoints() + 1 * m->getXRes()), m->getXRes(), m_WriteBinaryFile);
+  VtkRectilinearGridWriter::WriteCoords(f, "Y_COORDINATES", "float", m->getYPoints() + 1, 0.0f - m->getYRes() * 0.5f, (float)(m->getYPoints() + 1 * m->getYRes()), m->getYRes(), m_WriteBinaryFile);
+  VtkRectilinearGridWriter::WriteCoords(f, "Z_COORDINATES", "float", m->getZPoints() + 1, 0.0f - m->getZRes() * 0.5f, (float)(m->getZPoints() + 1 * m->getZRes()), m->getZRes(), m_WriteBinaryFile);
 
-  int64_t totalPoints = r->getXPoints() * r->getYPoints() * r->getZPoints();
+  int64_t totalPoints = m->getXPoints() * m->getYPoints() * m->getZPoints();
   fprintf(f, "CELL_DATA %d\n", (int)totalPoints);
 
-  QString ss = QObject::tr("Writing Feature Ids");
-  notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
-  if (m_WriteBinaryFile == true)
+  AttributeMatrix::Pointer am = getDataContainerArray()->getAttributeMatrix(m_SelectedAttributeMatrixPath);
+  QList<QString> arrayNames = am->getAttributeArrayNameList();
+  foreach(const QString arrayName, arrayNames)
   {
-    WRITE_VTK_FEATURE_IDS_BINARY(r, DREAM3D::CellData::FeatureIds);
+    IDataArray::Pointer iDataPtr = am->getAttributeArray(arrayName);
+    QString className = iDataPtr->getNameOfClass();
+    if (className.startsWith("DataArray"))
+    {
+      QString ss = QObject::tr("Writing Cell Data %1").arg(iDataPtr->getName());
+      notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
+      //qDebug() << "Writing DataArray " << iDataPtr->getName() << " To a VTK File";
+      VTK_WRITE_RECTILINEAR_DATA(UInt8ArrayType, iDataPtr, "unsigned_char", uint8_t, "%d ");
+      VTK_WRITE_RECTILINEAR_DATA(Int8ArrayType, iDataPtr, "char", int8_t, "%d ");
+      VTK_WRITE_RECTILINEAR_DATA(UInt16ArrayType, iDataPtr, "unsigned_short", uint16_t, "%d ");
+      VTK_WRITE_RECTILINEAR_DATA(Int16ArrayType, iDataPtr, "short", int16_t, "%d ");
+      VTK_WRITE_RECTILINEAR_DATA(UInt32ArrayType, iDataPtr, "unsigned_int", uint32_t, "%d ");
+      VTK_WRITE_RECTILINEAR_DATA(Int32ArrayType, iDataPtr, "int", int32_t, "%d ");
+      VTK_WRITE_RECTILINEAR_DATA(UInt64ArrayType, iDataPtr, "unsigned_long", uint64_t, "%llu ");
+      VTK_WRITE_RECTILINEAR_DATA(Int64ArrayType, iDataPtr, "long", int64_t, "%lld ");
+      VTK_WRITE_RECTILINEAR_DATA(FloatArrayType, iDataPtr, "float", float, "%f ");
+      VTK_WRITE_RECTILINEAR_DATA(DoubleArrayType, iDataPtr, "double", double, "%f ");
+    }
   }
-  else
-  {
-    WRITE_VTK_FEATURE_IDS_ASCII(r, DREAM3D::CellData::FeatureIds, m_FeatureIds)
-  }
+
   if(err < 0)
   {
     QString ss = QObject::tr("Error writing vtk file '%1'\n ").arg(file);
     setErrorCondition(-100);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-
   }
   // Close the file
   fclose(f);
@@ -283,5 +287,5 @@ const QString VtkRectilinearGridWriter::getSubGroupName()
 //
 // -----------------------------------------------------------------------------
 const QString VtkRectilinearGridWriter::getHumanLabel()
-{ return "Write Vtk File (Rectilinear Grid)"; }
+{ return "Vtk Rectilinear Grid Writer"; }
 

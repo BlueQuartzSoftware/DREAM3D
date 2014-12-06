@@ -75,13 +75,15 @@ class  VtkRectilinearGridWriter : public AbstractFilter
 
     DREAM3D_FILTER_PARAMETER(QString, OutputFile)
     Q_PROPERTY(QString OutputFile READ getOutputFile WRITE setOutputFile)
+
     DREAM3D_FILTER_PARAMETER(bool, WriteBinaryFile)
     Q_PROPERTY(bool WriteBinaryFile READ getWriteBinaryFile WRITE setWriteBinaryFile)
 
-    virtual void preflight();
 
-    DREAM3D_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
-    Q_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
+    DREAM3D_FILTER_PARAMETER(DataArrayPath, SelectedAttributeMatrixPath)
+    Q_PROPERTY(DataArrayPath SelectedAttributeMatrixPath READ getSelectedAttributeMatrixPath WRITE setSelectedAttributeMatrixPath)
+
+    virtual void preflight();
 
     virtual const QString getCompiledLibraryName();
     virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters);
@@ -134,6 +136,7 @@ class  VtkRectilinearGridWriter : public AbstractFilter
           data[idx] = d;
         }
         size_t totalWritten = fwrite(static_cast<void*>(data), sizeof(T), static_cast<size_t>(npoints), f);
+        fprintf(f, "\n"); // Write a newline character at the end of the coordinates
         delete[] data;
         if (totalWritten != static_cast<size_t>(npoints) )
         {
