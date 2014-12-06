@@ -185,10 +185,10 @@ void FindSlipTransmissionMetrics::execute()
   // us to use the same syntax as the "vector of vectors"
   NeighborList<int>& neighborlist = *(m_NeighborList.lock());
 
-  QVector<QVector<float> > F1lists;
-  QVector<QVector<float> > F1sptlists;
-  QVector<QVector<float> > F7lists;
-  QVector<QVector<float> > mPrimelists;
+  std::vector<std::vector<float> > F1lists;
+  std::vector<std::vector<float> > F1sptlists;
+  std::vector<std::vector<float> > F7lists;
+  std::vector<std::vector<float> > mPrimelists;
 
   float mprime, F1, F1spt, F7;
   int nname;
@@ -207,10 +207,10 @@ void FindSlipTransmissionMetrics::execute()
   mPrimelists.resize(totalFeatures);
   for (int i = 1; i < totalFeatures; i++)
   {
-    F1lists[i].fill(0.0f, neighborlist[i].size());
-    F1sptlists[i].fill(0.0f, neighborlist[i].size());
-    F7lists[i].fill(0.0f, neighborlist[i].size());
-    mPrimelists[i].fill(0.0f, neighborlist[i].size());
+    F1lists[i].assign(neighborlist[i].size(), 0.0f);
+    F1sptlists[i].assign(neighborlist[i].size(), 0.0f);
+    F7lists[i].assign(neighborlist[i].size(), 0.0f);
+    mPrimelists[i].assign(neighborlist[i].size(), 0.0f);
     for (size_t j = 0; j < neighborlist[i].size(); j++)
     {
       nname = neighborlist[i][j];

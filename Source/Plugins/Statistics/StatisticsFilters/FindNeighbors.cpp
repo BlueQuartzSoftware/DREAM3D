@@ -248,8 +248,8 @@ void FindNeighbors::execute()
   int good = 0;
   int neighbor = 0;
 
-  QVector<QVector<int> > neighborlist;
-  QVector<QVector<float> > neighborsurfacearealist;
+  std::vector<std::vector<int> > neighborlist;
+  std::vector<std::vector<float> > neighborsurfacearealist;
 
   int nListSize = 100;
   neighborlist.resize(totalFeatures);
@@ -275,7 +275,7 @@ void FindNeighbors::execute()
 
     m_NumNeighbors[i] = 0;
     neighborlist[i].resize(nListSize);
-    neighborsurfacearealist[i].fill(-1.0, nListSize);
+    neighborsurfacearealist[i].assign(nListSize, -1.0f);
     if(m_StoreSurfaceFeatures == true) { m_SurfaceFeatures[i] = false; }
 
   }

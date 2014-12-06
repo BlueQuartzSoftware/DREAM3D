@@ -594,7 +594,7 @@ void GenerateEnsembleStatistics::gatherSizeStats()
   float mindiam;
   float totalUnbiasedVolume = 0.0;
   QVector<VectorOfFloatArray> sizedist;
-  QVector<QVector<QVector<float > > > values;
+  std::vector<std::vector<std::vector<float > > > values;
 
   FloatArrayType::Pointer binnumbers;
   size_t numfeatures = m_EquivalentDiametersPtr.lock()->getNumberOfTuples();
@@ -638,11 +638,11 @@ void GenerateEnsembleStatistics::gatherSizeStats()
       pp->setPhaseFraction((fractions[i] / totalUnbiasedVolume));
       m_DistributionAnalysis[m_SizeDistributionFitType]->calculateCorrelatedParameters(values[i], sizedist[i]);
       pp->setFeatureSizeDistribution(sizedist[i]);
-      DistributionAnalysisOps::determinemaxandminvalues(values[i][0], maxdiam, mindiam);
+      DistributionAnalysisOps::determineMaxAndMinValues(values[i][0], maxdiam, mindiam);
       int numbins = int(maxdiam / m_SizeCorrelationResolution) + 1;
       pp->setFeatureDiameterInfo(m_SizeCorrelationResolution, maxdiam, mindiam);
       binnumbers = FloatArrayType::CreateArray(numbins, DREAM3D::StringConstants::BinNumber);
-      DistributionAnalysisOps::determinebinnumbers(maxdiam, mindiam, m_SizeCorrelationResolution, binnumbers);
+      DistributionAnalysisOps::determineBinNumbers(maxdiam, mindiam, m_SizeCorrelationResolution, binnumbers);
       pp->setBinNumbers(binnumbers);
     }
     if(m_PhaseTypes[i] == DREAM3D::PhaseType::PrecipitatePhase)
@@ -651,11 +651,11 @@ void GenerateEnsembleStatistics::gatherSizeStats()
       pp->setPhaseFraction((fractions[i] / totalUnbiasedVolume));
       m_DistributionAnalysis[m_SizeDistributionFitType]->calculateCorrelatedParameters(values[i], sizedist[i]);
       pp->setFeatureSizeDistribution(sizedist[i]);
-      DistributionAnalysisOps::determinemaxandminvalues(values[i][0], maxdiam, mindiam);
+      DistributionAnalysisOps::determineMaxAndMinValues(values[i][0], maxdiam, mindiam);
       int numbins = int(maxdiam / m_SizeCorrelationResolution) + 1;
       pp->setFeatureDiameterInfo(m_SizeCorrelationResolution, maxdiam, mindiam);
       binnumbers = FloatArrayType::CreateArray(numbins, DREAM3D::StringConstants::BinNumber);
-      DistributionAnalysisOps::determinebinnumbers(maxdiam, mindiam, m_SizeCorrelationResolution, binnumbers);
+      DistributionAnalysisOps::determineBinNumbers(maxdiam, mindiam, m_SizeCorrelationResolution, binnumbers);
 
       pp->setBinNumbers(binnumbers);
     }
@@ -665,11 +665,11 @@ void GenerateEnsembleStatistics::gatherSizeStats()
       tp->setPhaseFraction((fractions[i] / totalUnbiasedVolume));
       m_DistributionAnalysis[m_SizeDistributionFitType]->calculateCorrelatedParameters(values[i], sizedist[i]);
       tp->setFeatureSizeDistribution(sizedist[i]);
-      DistributionAnalysisOps::determinemaxandminvalues(values[i][0], maxdiam, mindiam);
+      DistributionAnalysisOps::determineMaxAndMinValues(values[i][0], maxdiam, mindiam);
       int numbins = int(maxdiam / m_SizeCorrelationResolution) + 1;
       tp->setFeatureDiameterInfo(m_SizeCorrelationResolution, maxdiam, mindiam);
       binnumbers = FloatArrayType::CreateArray(numbins, DREAM3D::StringConstants::BinNumber);
-      DistributionAnalysisOps::determinebinnumbers(maxdiam, mindiam, m_SizeCorrelationResolution, binnumbers);
+      DistributionAnalysisOps::determineBinNumbers(maxdiam, mindiam, m_SizeCorrelationResolution, binnumbers);
 
       tp->setBinNumbers(binnumbers);
     }
@@ -689,8 +689,8 @@ void GenerateEnsembleStatistics::gatherAspectRatioStats()
 
   QVector<VectorOfFloatArray> boveras;
   QVector<VectorOfFloatArray> coveras;
-  QVector<QVector<QVector<float> > > bvalues;
-  QVector<QVector<QVector<float> > > cvalues;
+  std::vector<std::vector<std::vector<float> > > bvalues;
+  std::vector<std::vector<std::vector<float> > > cvalues;
   QVector<float> mindiams;
   QVector<float> binsteps;
   size_t numfeatures = m_AspectRatiosPtr.lock()->getNumberOfTuples();
@@ -787,7 +787,7 @@ void GenerateEnsembleStatistics::gatherOmega3Stats()
   size_t bin;
 
   QVector<VectorOfFloatArray> omega3s;
-  QVector<QVector<QVector<float> > > values;
+  std::vector<std::vector<std::vector<float> > > values;
   QVector<float> mindiams;
   QVector<float> binsteps;
   size_t numfeatures = m_Omega3sPtr.lock()->getNumberOfTuples();
@@ -860,7 +860,7 @@ void GenerateEnsembleStatistics::gatherNeighborhoodStats()
 
   size_t bin;
   QVector<VectorOfFloatArray> neighborhoods;
-  QVector<QVector<QVector<float > > > values;
+  std::vector<std::vector<std::vector<float > > > values;
   QVector<float> mindiams;
   QVector<float> binsteps;
   size_t numfeatures = m_NeighborhoodsPtr.lock()->getNumberOfTuples();

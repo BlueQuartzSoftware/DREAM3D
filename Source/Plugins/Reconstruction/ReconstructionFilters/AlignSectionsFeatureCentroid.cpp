@@ -208,8 +208,8 @@ void AlignSectionsFeatureCentroid::find_shifts(std::vector<int> &xshifts, std::v
   //  int xspot, yspot;
   float xRes = m->getXRes();
   float yRes = m->getYRes();
-  QVector<float> xCentroid(dims[2], 0.0);
-  QVector<float> yCentroid(dims[2], 0.0);
+  std::vector<float> xCentroid(dims[2], 0.0);
+  std::vector<float> yCentroid(dims[2], 0.0);
 
   for (DimType iter = 0; iter < dims[2]; iter++)
   {

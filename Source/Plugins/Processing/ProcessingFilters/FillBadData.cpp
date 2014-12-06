@@ -184,8 +184,8 @@ void FillBadData::execute()
     static_cast<DimType>(udims[2]),
   };
 
-  QVector<int > neighs;
-  QVector<int > remove;
+  std::vector<int> neighs;
+  std::vector<int> remove;
   size_t count = 1;
   //size_t point = 0;
   int good = 1;
@@ -224,7 +224,7 @@ void FillBadData::execute()
   neighpoints[3] = static_cast<int>(1);
   neighpoints[4] = static_cast<int>(dims[0]);
   neighpoints[5] = static_cast<int>(dims[0] * dims[1]);
-  QVector<int> currentvlist;
+  std::vector<int> currentvlist;
 
   for (int64_t iter = 0; iter < totalPoints; iter++)
   {
@@ -283,7 +283,7 @@ void FillBadData::execute()
   int current = 0;
   int most = 0;
 
-  QVector<int > n(numfeatures + 1, 0);
+  std::vector<int> n(numfeatures + 1, 0);
   while (count != 0)
   {
     count = 0;

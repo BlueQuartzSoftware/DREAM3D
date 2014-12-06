@@ -164,9 +164,9 @@ void IdentifySample::execute()
   neighpoints[3] = 1;
   neighpoints[4] = xp;
   neighpoints[5] = (xp * yp);
-  QVector<int> currentvlist;
-  QVector<bool> checked(totalPoints, false);
-  QVector<bool> Sample(totalPoints, false);
+  std::vector<int> currentvlist;
+  std::vector<bool> checked(totalPoints, false);
+  std::vector<bool> sample(totalPoints, false);
   int biggestBlock = 0;
   size_t count;
   int good;
@@ -209,10 +209,10 @@ void IdentifySample::execute()
       if(static_cast<int>(currentvlist.size()) >= biggestBlock)
       {
         biggestBlock = currentvlist.size();
-        Sample.fill(false, totalPoints);
+        sample.assign(totalPoints, false);
         for(size_t j = 0; j < biggestBlock; j++)
         {
-          Sample[currentvlist[j]] = true;
+          sample[currentvlist[j]] = true;
         }
       }
       currentvlist.clear();
@@ -220,10 +220,10 @@ void IdentifySample::execute()
   }
   for (int i = 0; i < totalPoints; i++)
   {
-    if (Sample[i] == false && m_GoodVoxels[i] == true) { m_GoodVoxels[i] = false; }
+    if (sample[i] == false && m_GoodVoxels[i] == true) { m_GoodVoxels[i] = false; }
   }
-  Sample.clear();
-  checked.fill(false, totalPoints);
+  sample.clear();
+  checked.assign(totalPoints, false);
 
 
   // In this loop we are going to 'close' all of the 'holes' inside of the region already identified as the 'sample' if the user chose to do so.

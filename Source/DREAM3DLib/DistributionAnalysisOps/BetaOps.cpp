@@ -55,7 +55,7 @@ BetaOps::BetaOps()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int BetaOps::calculateParameters(QVector<float>& data, FloatArrayType::Pointer outputs)
+int BetaOps::calculateParameters(std::vector<float>& data, FloatArrayType::Pointer outputs)
 {
   int err = 0;
   float avg = 0;
@@ -89,7 +89,7 @@ int BetaOps::calculateParameters(QVector<float>& data, FloatArrayType::Pointer o
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int BetaOps::calculateCorrelatedParameters(QVector<QVector<float> >& data, VectorOfFloatArray outputs)
+int BetaOps::calculateCorrelatedParameters(std::vector<std::vector<float> > &data, VectorOfFloatArray outputs)
 {
   int err = 0;
   float avg = 0;
