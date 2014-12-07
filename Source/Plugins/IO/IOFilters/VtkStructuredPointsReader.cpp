@@ -252,7 +252,7 @@ int readDataChunk(AttributeMatrix::Pointer attrMat, QFile &inStream, bool inPref
   {
     T* buffer = data->getPointer(0);
     // Read all the data in one shot into a buffer
-    size_t totalSize = numTuples*numComp;
+    qint64 totalSize = static_cast<qint64>(numTuples*numComp);
     qint64 bytesRead = inStream.read(reinterpret_cast<char*> (buffer), (totalSize * sizeof(T)));
     if(bytesRead != (totalSize * sizeof(T)))
     {
