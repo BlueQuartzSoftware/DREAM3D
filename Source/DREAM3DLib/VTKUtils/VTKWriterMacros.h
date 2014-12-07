@@ -213,7 +213,7 @@
     fprintf(f, "LOOKUP_TABLE default\n");\
     if(getWriteBinaryFile()) {\
       if(BIGENDIAN == 0) {array->byteSwapElements(); }\
-      int64_t totalWritten = fwrite(val, array->getTypeSize(), totalElements, f);\
+      size_t totalWritten = fwrite(val, array->getTypeSize(), totalElements, f);\
       if(totalWritten != totalElements) {}\
       fprintf(f,"\n");\
       if(BIGENDIAN == 0) {array->byteSwapElements(); }\
