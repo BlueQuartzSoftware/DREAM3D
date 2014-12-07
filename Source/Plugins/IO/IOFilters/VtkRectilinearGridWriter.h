@@ -124,7 +124,11 @@ class  VtkRectilinearGridWriter : public AbstractFilter
     static int WriteCoords(FILE* f, const char* axis, const char* type, int64_t npoints, T min, T max, T step, bool binary)
     {
       int err = 0;
+      #if CMP_SIZEOF_LONG == 8
+      fprintf(f, "%s %ld %s\n", axis, npoints, type);
+      #else
       fprintf(f, "%s %lld %s\n", axis, npoints, type);
+      #endif
       if (binary == true)
       {
         T* data = new T[npoints];

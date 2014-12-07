@@ -218,7 +218,7 @@
       fprintf(f,"\n");\
       if(BIGENDIAN == 0) {array->byteSwapElements(); }\
     } else {\
-      for (int64_t i = 0; i < totalElements; i++) {\
+      for (size_t i = 0; i < totalElements; i++) {\
         if(i%20 == 0 && i > 0) { fprintf(f, "\n");}\
         fprintf(f, Format, val[i]);\
       }\
