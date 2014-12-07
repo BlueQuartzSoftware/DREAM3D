@@ -304,13 +304,13 @@ void FindRelativeMotionBetweenSlices::execute()
       }
     }
     numSearchPoints = count;
-    for(int k = 0; k < zP - m_SliceStep; k++)
+    for(size_t k = 0; k < zP - m_SliceStep; k++)
     {
       zStride = k * xP * yP;
-      for(int j = buffer2; j < (yP - buffer2); j++)
+      for(size_t j = buffer2; j < (yP - buffer2); j++)
       {
         yStride = j * xP;
-        for(int i = buffer1; i < (xP - buffer1); i++)
+        for(size_t i = buffer1; i < (xP - buffer1); i++)
         {
           validPoints[zStride + yStride + i] = true;
         }
@@ -343,13 +343,13 @@ void FindRelativeMotionBetweenSlices::execute()
       }
     }
     numSearchPoints = count;
-    for(int k = buffer2; k < (zP - buffer2); k++)
+    for(size_t k = buffer2; k < (zP - buffer2); k++)
     {
       zStride = k * xP * yP;
-      for(int j = 0; j < yP - m_SliceStep; j++)
+      for(size_t j = 0; j < yP - m_SliceStep; j++)
       {
         yStride = j * xP;
-        for(int i = buffer1; i < (xP - buffer1); i++)
+        for(size_t i = buffer1; i < (xP - buffer1); i++)
         {
           validPoints[zStride + yStride + i] = true;
         }

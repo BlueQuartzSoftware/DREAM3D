@@ -622,11 +622,11 @@ int H5PrecipitateStatsDataDelegate::writeRDFDistributionData(hid_t pid, RdfData:
 // -----------------------------------------------------------------------------
 uint32_t H5PrecipitateStatsDataDelegate::readDistributionType(hid_t pid, const QString& hdf5GroupName)
 {
-  int err = 0;
+  //int err = 0;
   uint32_t dType = DREAM3D::DistributionType::UnknownDistributionType;
 
   QString disTypeStr;
-  err = QH5Lite::readStringAttribute(pid, hdf5GroupName, DREAM3D::StringConstants::DistributionType, disTypeStr);
+  int err = QH5Lite::readStringAttribute(pid, hdf5GroupName, DREAM3D::StringConstants::DistributionType, disTypeStr);
 
   if (disTypeStr.compare(DREAM3D::StringConstants::BetaDistribution) == 0)
   {

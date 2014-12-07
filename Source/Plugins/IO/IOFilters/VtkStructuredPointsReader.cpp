@@ -498,10 +498,10 @@ void VtkStructuredPointsReader::readData(QFile &instream)
       err = readDataChunk<int32_t>(attrMat, instream, getInPreflight(), getFileIsBinary(), scalarName, scalarType, scalarNumComps);
     }
     else if (scalarType.compare("unsigned_long") == 0) {
-      err = readDataChunk<uint64_t>(attrMat, instream, getInPreflight(), getFileIsBinary(), scalarName, scalarType, scalarNumComps);
+      err = readDataChunk<qint64>(attrMat, instream, getInPreflight(), getFileIsBinary(), scalarName, scalarType, scalarNumComps);
     }
     else if (scalarType.compare("long") == 0) {
-      err = readDataChunk<int64_t>(attrMat, instream, getInPreflight(), getFileIsBinary(), scalarName, scalarType, scalarNumComps);
+      err = readDataChunk<quint64>(attrMat, instream, getInPreflight(), getFileIsBinary(), scalarName, scalarType, scalarNumComps);
     }
     else if (scalarType.compare("float") == 0) {
       err = readDataChunk<float>(attrMat, instream, getInPreflight(), getFileIsBinary(), scalarName, scalarType, scalarNumComps);

@@ -60,7 +60,7 @@ void DistributionAnalysisOps::determineMaxAndMinValues(std::vector<float>& data,
   float value;
   min = std::numeric_limits<float>::max();
   max = std::numeric_limits<float>::min();
-  for (qint32 i = 0; i < data.size(); i++)
+  for (std::vector<float>::size_type i = 0; i < data.size(); i++)
   {
     value = data[i];
     if(value > max) { max = value; }
