@@ -43,6 +43,7 @@
 #include <QtGui/QFileDialog>
 #include <QtGui/QStandardItemModel>
 #include <QtGui/QItemSelectionModel>
+#include <QtGui/QListWidget>
 
 #include "DREAM3DLib/CoreFilters/DataContainerReader.h"
 
@@ -680,5 +681,9 @@ void DataContainerReaderWidget::on_selectBtn_clicked()
 // -----------------------------------------------------------------------------
 void DataContainerReaderWidget::on_dcaProxyView_updatePreviewWidget(const QModelIndex &index)
 {
-    qDebug() << "on_dcaProxyView_updatePreviewWidget slot works.";
+    QVariant var = index.data();
+    QString name = var.toString();
+
+    // Create widget and add to dcaProxyView
+    //dcaProxyView->setPreviewWidget(widget);
 }
