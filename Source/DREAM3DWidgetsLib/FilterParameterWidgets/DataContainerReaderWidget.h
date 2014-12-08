@@ -115,6 +115,7 @@ class DREAM3DWidgetsLib_EXPORT DataContainerReaderWidget : public FilterParamete
 
     void on_filePath_fileDropped(const QString& text);
     void on_selectBtn_clicked();
+    void on_dcaProxyView_updatePreviewWidget(const QModelIndex &index);
 
   signals:
     void errorSettingFilterParameter(const QString& msg);

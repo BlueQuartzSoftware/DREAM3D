@@ -675,4 +675,10 @@ void DataContainerReaderWidget::on_selectBtn_clicked()
   // emit parametersChanged(); // This should force the preflight to run because we are emitting a signal
 }
 
-
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DataContainerReaderWidget::on_dcaProxyView_updatePreviewWidget(const QModelIndex &index)
+{
+    qDebug() << "on_dcaProxyView_updatePreviewWidget slot works.";
+}
