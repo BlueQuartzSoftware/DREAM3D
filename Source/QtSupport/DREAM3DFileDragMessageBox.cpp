@@ -44,6 +44,10 @@ DREAM3DFileDragMessageBox::DREAM3DFileDragMessageBox(QWidget* parent, int filter
 {
   setupUi(this);
 
+  this->filterCount = filterCount;
+
+  extractPipelineRadioBtn->setChecked(true);
+
   if (filterCount == -1)
   {
       // This should never be the case - Throw error???
@@ -53,7 +57,7 @@ DREAM3DFileDragMessageBox::DREAM3DFileDragMessageBox(QWidget* parent, int filter
   {
       appendPipelineBtn->setHidden(true);
       prependPipelineBtn->setHidden(true);
-      replacePipelineBtn->setText("Extract Pipeline");
+      replacePipelineBtn->setText("Add to Pipeline");
   }
 }
 
@@ -78,8 +82,14 @@ void DREAM3DFileDragMessageBox::setFilePath(QString path)
 // -----------------------------------------------------------------------------
 void DREAM3DFileDragMessageBox::on_replacePipelineBtn_clicked()
 {
-  emit fireExtractPipelineFromFile(filePath, Replace);
-
+    if (addFilterRadioBtn->isChecked())
+    {
+        emit fireAddDREAM3DReaderFilter(filePath, Replace);
+    }
+    else
+    {
+        emit fireExtractPipelineFromFile(filePath, Replace);
+    }
   // Close the dialog box
   close();
 }
@@ -89,7 +99,14 @@ void DREAM3DFileDragMessageBox::on_replacePipelineBtn_clicked()
 // -----------------------------------------------------------------------------
 void DREAM3DFileDragMessageBox::on_appendPipelineBtn_clicked()
 {
-  emit fireExtractPipelineFromFile(filePath, Append);
+    if (addFilterRadioBtn->isChecked())
+    {
+        emit fireAddDREAM3DReaderFilter(filePath, Append);
+    }
+    else
+    {
+        emit fireExtractPipelineFromFile(filePath, Append);
+    }
 
   // Close the dialog box
   close();
@@ -100,7 +117,14 @@ void DREAM3DFileDragMessageBox::on_appendPipelineBtn_clicked()
 // -----------------------------------------------------------------------------
 void DREAM3DFileDragMessageBox::on_prependPipelineBtn_clicked()
 {
-  emit fireExtractPipelineFromFile(filePath, Prepend);
+    if (addFilterRadioBtn->isChecked())
+    {
+        emit fireAddDREAM3DReaderFilter(filePath, Prepend);
+    }
+    else
+    {
+        emit fireExtractPipelineFromFile(filePath, Prepend);
+    }
 
   // Close the dialog box
   close();
@@ -109,10 +133,26 @@ void DREAM3DFileDragMessageBox::on_prependPipelineBtn_clicked()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DREAM3DFileDragMessageBox::on_addFilterBtn_clicked()
+void DREAM3DFileDragMessageBox::on_cancelBtn_clicked()
 {
-  emit fireAddDREAM3DReaderFilter(filePath);
-
   // Close the dialog box
   close();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DREAM3DFileDragMessageBox::on_addFilterRadioBtn_toggled()
+{
+    if (addFilterRadioBtn->isChecked())
+    {
+        prependPipelineBtn->setHidden(true);
+    }
+    else
+    {
+        if (filterCount > 0)
+        {
+            prependPipelineBtn->setHidden(false);
+        }
+    }
 }

@@ -767,15 +767,31 @@ void PipelineViewWidget::extractPipelineFromFile(const QString &filePath, Extrac
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PipelineViewWidget::addDREAM3DReaderFilter(const QString &filePath)
+void PipelineViewWidget::addDREAM3DReaderFilter(const QString &filePath, ExtractionType type)
 {
     DataContainerReader::Pointer reader = DataContainerReader::New();
     reader->setInputFile(filePath);
 
-    // Create a PipelineFilterWidget using the current AbstractFilter instance to initialize it
-    PipelineFilterWidget* w = new PipelineFilterWidget(reader, NULL, this);
-    int index = filterCount() - 1; // We want to add the filter as the next filter but BEFORE the vertical spacer
-    addFilterWidget(w, index);
+    switch(type)
+    {
+    case Replace:
+    {
+        clearWidgets();
+        // Do not place a break statement here - Replace needs to use the "Append" code below.
+    }
+    case Append:
+    {
+        // Create a PipelineFilterWidget using the current AbstractFilter instance to initialize it
+        PipelineFilterWidget* w = new PipelineFilterWidget(reader, NULL, this);
+        int index = filterCount() - 1; // We want to add the filter as the next filter but BEFORE the vertical spacer
+        addFilterWidget(w, index);
+        break;
+    }
+    case Prepend:
+    {
+        // Prepend filter to pipeline
+    }
+    }
 }
 
 // -----------------------------------------------------------------------------
@@ -860,7 +876,7 @@ void PipelineViewWidget::dropEvent(QDropEvent* event)
         DREAM3DFileDragMessageBox* msgBox = new DREAM3DFileDragMessageBox(this, filterCount());
         msgBox->setFilePath(fName);
         connect(msgBox, SIGNAL(fireExtractPipelineFromFile(const QString &, ExtractionType)), this, SLOT(extractPipelineFromFile(const QString &, ExtractionType)));
-        connect(msgBox, SIGNAL(fireAddDREAM3DReaderFilter(const QString &)), this, SLOT(addDREAM3DReaderFilter(const QString &)));
+        connect(msgBox, SIGNAL(fireAddDREAM3DReaderFilter(const QString &, ExtractionType)), this, SLOT(addDREAM3DReaderFilter(const QString &, ExtractionType)));
         msgBox->exec();
         msgBox->deleteLater();
       }
