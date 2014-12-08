@@ -55,7 +55,7 @@ BetaOps::BetaOps()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int BetaOps::calculateParameters(QVector<float>& data, FloatArrayType::Pointer outputs)
+int BetaOps::calculateParameters(std::vector<float>& data, FloatArrayType::Pointer outputs)
 {
   int err = 0;
   float avg = 0;
@@ -64,12 +64,12 @@ int BetaOps::calculateParameters(QVector<float>& data, FloatArrayType::Pointer o
   float beta = 0;
   if(data.size() > 1)
   {
-    for(qint32 i = 0; i < data.size(); i++)
+    for(std::vector<float>::size_type i = 0; i < data.size(); i++)
     {
       avg = avg + data[i];
     }
     avg = avg / float(data.size());
-    for(qint32 i = 0; i < data.size(); i++)
+    for(std::vector<float>::size_type i = 0; i < data.size(); i++)
     {
       stddev = stddev + ((avg - data[i]) * (avg - data[i]));
     }
@@ -89,25 +89,25 @@ int BetaOps::calculateParameters(QVector<float>& data, FloatArrayType::Pointer o
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int BetaOps::calculateCorrelatedParameters(QVector<QVector<float> >& data, VectorOfFloatArray outputs)
+int BetaOps::calculateCorrelatedParameters(std::vector<std::vector<float> > &data, VectorOfFloatArray outputs)
 {
   int err = 0;
   float avg = 0;
   float stddev = 0;
   float alpha = 0;
   float beta = 0;
-  for(qint32 i = 0; i < data.size(); i++)
+  for(std::vector<float>::size_type i = 0; i < data.size(); i++)
   {
     avg = 0;
     stddev = 0;
     if(data[i].size() > 1)
     {
-      for(qint32 j = 0; j < data[i].size(); j++)
+      for(std::vector<float>::size_type j = 0; j < data[i].size(); j++)
       {
         avg = avg + data[i][j];
       }
       avg = avg / float(data[i].size());
-      for(qint32 j = 0; j < data[i].size(); j++)
+      for(std::vector<float>::size_type j = 0; j < data[i].size(); j++)
       {
         stddev = stddev + ((avg - data[i][j]) * (avg - data[i][j]));
       }

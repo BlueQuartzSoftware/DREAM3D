@@ -217,7 +217,7 @@ void AlignSectionsMisorientation::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AlignSectionsMisorientation::find_shifts(QVector<int>& xshifts, QVector<int>& yshifts)
+void AlignSectionsMisorientation::find_shifts(std::vector<int>& xshifts, std::vector<int>& yshifts)
 {
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 

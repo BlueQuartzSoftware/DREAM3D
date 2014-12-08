@@ -215,10 +215,10 @@ void fitData(IDataArray::Pointer inputData, float* ensembleArray, int32_t* eIds,
 {
   StatsData::Pointer sData = StatsData::New();
 
-  QVector<DistributionAnalysisOps::Pointer> m_DistributionAnalysis;
-  m_DistributionAnalysis.push_back(BetaOps::New());
-  m_DistributionAnalysis.push_back(LogNormalOps::New());
-  m_DistributionAnalysis.push_back(PowerLawOps::New());
+  std::vector<DistributionAnalysisOps::Pointer> distributionAnalysis;
+  distributionAnalysis.push_back(BetaOps::New());
+  distributionAnalysis.push_back(LogNormalOps::New());
+  distributionAnalysis.push_back(PowerLawOps::New());
 
   DataArray<T>* featureArray = DataArray<T>::SafePointerDownCast(inputData.get());
   if (NULL == featureArray)
@@ -239,8 +239,8 @@ void fitData(IDataArray::Pointer inputData, float* ensembleArray, int32_t* eIds,
 
   //float max;
   //float min;
-  QVector<VectorOfFloatArray> dist;
-  QVector<QVector<QVector<float > > > values;
+  std::vector<VectorOfFloatArray> dist;
+  std::vector<std::vector<std::vector<float > > > values;
 
   size_t numfeatures = featureArray->getNumberOfTuples();
 
@@ -264,7 +264,7 @@ void fitData(IDataArray::Pointer inputData, float* ensembleArray, int32_t* eIds,
   }
   for (int64_t i = 1; i < numEnsembles; i++)
   {
-    m_DistributionAnalysis[dType]->calculateCorrelatedParameters(values[i], dist[i]);
+    distributionAnalysis[dType]->calculateCorrelatedParameters(values[i], dist[i]);
     for (int j = 0; j < numBins; j++)
     {
       for(int k = 0; k < numComp; k++)

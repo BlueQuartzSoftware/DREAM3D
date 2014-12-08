@@ -376,6 +376,12 @@
 #endif
 #endif
 
+#ifdef CMP_WORDS_BIGENDIAN
+#define BIGENDIAN 1
+#else
+#define BIGENDIAN 0
+#endif
+
 
 #endif /* _@CMP_CONFIGURATION_HEADER_GUARD@_H_ */
 

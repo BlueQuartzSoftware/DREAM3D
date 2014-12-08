@@ -182,8 +182,8 @@ void FindNeighborhoods::find_neighborhoods()
   //  float xn, yn, zn;
   //  float dx, dy, dz;
 
-  QVector<QVector<int> > neighborhoodlist;
-  QVector<float> criticalDistance;
+  std::vector<std::vector<int> > neighborhoodlist;
+  std::vector<float> criticalDistance;
 
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(m_EquivalentDiametersArrayPath.getDataContainerName());
   size_t totalFeatures = m_EquivalentDiametersPtr.lock()->getNumberOfTuples();
@@ -211,7 +211,7 @@ void FindNeighborhoods::find_neighborhoods()
 
   int xbin, ybin, zbin;
   //int bin, bin1, bin2;
-  QVector<size_t> bins(3 * totalFeatures, 0);
+  std::vector<size_t> bins(3 * totalFeatures, 0);
   for (size_t i = 1; i < totalFeatures; i++)
   {
     x = m_Centroids[3 * i];

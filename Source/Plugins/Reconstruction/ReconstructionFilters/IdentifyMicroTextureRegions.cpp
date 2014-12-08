@@ -99,7 +99,7 @@ class FindPatchMisalignmentsImpl
       FloatArrayType::Pointer cAxisLocsPtr = FloatArrayType::CreateArray(tDims, cDims, "cAxisLocs");
       cAxisLocsPtr->initializeWithValue(0);
       float* cAxisLocs = cAxisLocsPtr->getPointer(0);
-      QVector<int32_t> goodCounts;
+      std::vector<int32_t> goodCounts;
 
       int xc, yc, zc;
       for (size_t iter = start; iter < end; iter++)
@@ -138,7 +138,7 @@ class FindPatchMisalignmentsImpl
         }
         float angle;
         goodCounts.resize(count);
-        goodCounts.fill(0);
+        goodCounts.assign(count, 0);
         for(int i = 0; i < count; i++)
         {
           for(int j = i; j < count; j++)
@@ -506,7 +506,7 @@ void IdentifyMicroTextureRegions::execute()
   //Remove the small patches-----planning to remove/redsesign this
   size_t numPatchFeatures = m_PatchActivePtr.lock()->getNumberOfTuples();
   QVector<bool> activeObjects(numPatchFeatures, true);
-  QVector<size_t> counters(numPatchFeatures, 0);
+  std::vector<size_t> counters(numPatchFeatures, 0);
   for(int64_t iter = 0; iter < totalPatches; ++iter)
   {
     counters[m_PatchIds[iter]]++;

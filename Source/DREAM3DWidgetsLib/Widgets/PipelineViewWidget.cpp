@@ -259,6 +259,7 @@ void PipelineViewWidget::clearWidgets()
   for(qint32 i = count - 1; i >= 0; --i)
   {
     QWidget* w = m_FilterWidgetLayout->itemAt(i)->widget();
+    QSpacerItem* spacer = m_FilterWidgetLayout->itemAt(i)->spacerItem();
     if (NULL != w)
     {
       m_FilterWidgetLayout->removeWidget(w);
@@ -269,6 +270,10 @@ void PipelineViewWidget::clearWidgets()
         fw->getFilter()->setNextFilter(AbstractFilter::NullPointer());
       }
       w->deleteLater();
+    }
+    else if (NULL != spacer)
+    {
+      m_FilterWidgetLayout->removeItem(spacer);
     }
   }
   m_SelectedFilterWidget = NULL;
@@ -596,6 +601,12 @@ void PipelineViewWidget::removeFilterWidget(PipelineFilterWidget* whoSent)
       whoSent->getFilter()->setNextFilter(AbstractFilter::NullPointer());
       w->deleteLater();
     }
+  }
+
+  QSpacerItem* spacer = m_FilterWidgetLayout->itemAt(0)->spacerItem();
+  if (NULL != spacer)
+  {
+      m_FilterWidgetLayout->removeItem(spacer);
   }
 
   reindexWidgetTitles();

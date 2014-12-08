@@ -195,7 +195,7 @@ void FindMisorientations::execute()
   // us to use the same syntax as the "vector of vectors"
   NeighborList<int>& neighborlist = *(m_NeighborList.lock());
 
-  QVector<QVector<float> > misorientationlists;
+  std::vector<std::vector<float> > misorientationlists;
 
   float n1 = 0.0f, n2 = 0.0f, n3 = 0.0f;
   //float r1= 0.0f, r2 = 0.0f, r3 = 0.0f;
@@ -216,7 +216,7 @@ void FindMisorientations::execute()
   {
     QuaternionMathF::Copy(avgQuats[i], q1);
     phase1 = m_CrystalStructures[m_FeaturePhases[i]];
-    misorientationlists[i].fill(-1.0, neighborlist[i].size() );
+    misorientationlists[i].assign(neighborlist[i].size(), -1.0 );
     for (size_t j = 0; j < neighborlist[i].size(); j++)
     {
       w = 10000.0;

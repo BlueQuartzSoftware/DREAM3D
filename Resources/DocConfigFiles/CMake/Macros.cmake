@@ -50,6 +50,12 @@ function(ADD_DOXYGEN_TARGETS)
       set(LATEX_STYLE_FILE  "" )
     endif()
 
+    option(DOXYGEN_QUIET_OUTPUT "Do not output anything from Doxygen Run" ON)
+    if(DOXYGEN_QUIET_OUTPUT)
+      set(DOXYGEN_QUIET "YES")
+    else()
+      set(DOXYGEN_QUIET "NO")
+    endif()
 
     configure_file(${DOX_TEMPLATE_DIR}/Doxyfile.in
                    ${DOX_PROJECT_BINARY_DIR}/${DOXYFILE} @ONLY IMMEDIATE)

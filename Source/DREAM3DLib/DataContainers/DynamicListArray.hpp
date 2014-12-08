@@ -174,7 +174,25 @@ class DynamicListArray
       }
     }
 
+    /**
+     * @brief allocateLists
+     * @param linkCounts
+     */
     void allocateLists(QVector<int32_t>& linkCounts)
+    {
+      allocate(linkCounts.size());
+      for (int i = 0; i < linkCounts.size(); i++)
+      {
+        this->m_Array[i].ncells = linkCounts[i];
+        this->m_Array[i].cells = new int[this->m_Array[i].ncells];
+      }
+    }
+
+    /**
+     * @brief allocateLists
+     * @param linkCounts
+     */
+    void allocateLists(std::vector<int32_t>& linkCounts)
     {
       allocate(linkCounts.size());
       for (int i = 0; i < linkCounts.size(); i++)

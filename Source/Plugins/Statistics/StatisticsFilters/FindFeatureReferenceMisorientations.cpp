@@ -255,8 +255,8 @@ void FindFeatureReferenceMisorientations::execute()
 
   size_t gnum;
   float dist;
-  QVector<size_t> m_Centers(totalFeatures, 0);
-  QVector<float> m_CenterDists(totalFeatures, 0);
+  std::vector<size_t> m_Centers(totalFeatures, 0);
+  std::vector<float> m_CenterDists(totalFeatures, 0);
   if(m_ReferenceOrientation == 1)
   {
     for (int64_t i = 0; i < totalPoints; i++)
