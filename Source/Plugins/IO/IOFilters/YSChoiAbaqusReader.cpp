@@ -449,8 +449,6 @@ void YSChoiAbaqusReader::execute()
     }
   }
   //Read feature info
-  int numpoints;
-  //float q0, q1, q2, q3;
   QuatF* avgQuats = reinterpret_cast<QuatF*>(m_AvgQuats);
   avgQuats[0].x = 0.0;
   avgQuats[0].y = 0.0;
@@ -461,9 +459,7 @@ void YSChoiAbaqusReader::execute()
   {
     buf = in2.readLine();
     tokens = buf.split(' ');
-    //in2 >> gnum >> numpoints >> q0 >> q1 >> q2 >> q3;
     gnum = tokens[0].toInt(&ok, 10);
-    numpoints = tokens[1].toInt(&ok, 10);
     avgQuats[i].x = tokens[2].toFloat(&ok);
     avgQuats[i].y = tokens[3].toFloat(&ok);
     avgQuats[i].z = tokens[4].toFloat(&ok);

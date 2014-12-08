@@ -337,10 +337,8 @@ void GoldfeatherReader::execute()
   err = fscanf(f, "%d\n", &nTriangles);
   if (err < 0)
   {
-    off_t fpos;
-    fpos = ftell(f);
     setErrorCondition(-876);
-    notifyErrorMessage(getHumanLabel(), "Error Reading the number of Triangles from the file", getErrorCondition());
+    notifyErrorMessage(getHumanLabel(), "Error Reading the number of Triangles from the file.", getErrorCondition());
     return;
   }
 

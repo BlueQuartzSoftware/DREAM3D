@@ -243,7 +243,7 @@ void SampleSurfaceMesh::execute()
 
   //create a dynamic list array to hold face lists
   Int32DynamicListArray::Pointer faceLists = Int32DynamicListArray::New();
-  QVector<int32_t> linkCount(numFeatures, 0);
+  std::vector<int32_t> linkCount(numFeatures, 0);
   int32_t* linkLoc;
 
   // fill out lists with number of references to cells

@@ -309,10 +309,10 @@ void FindProjectedImageStatistics::execute()
     startPoints = startingPoints->getPointer(0);
     stride = xP * yP;
     depth = zP;
-    for(int i = 0; i < yP; i++)
+    for(size_t i = 0; i < yP; i++)
     {
       yStride = i * xP;
-      for(int j = 0; j < xP; j++)
+      for(size_t j = 0; j < xP; j++)
       {
         startPoints[count] = yStride + j;
         count++;
@@ -325,10 +325,10 @@ void FindProjectedImageStatistics::execute()
     startPoints = startingPoints->getPointer(0);
     stride = xP;
     depth = yP;
-    for(int i = 0; i < zP; i++)
+    for(size_t i = 0; i < zP; i++)
     {
       yStride = i * xP * yP;
-      for(int j = 0; j < xP; j++)
+      for(size_t j = 0; j < xP; j++)
       {
         startPoints[count] = yStride + j;
         count++;
@@ -341,10 +341,10 @@ void FindProjectedImageStatistics::execute()
     startPoints = startingPoints->getPointer(0);
     stride = 1;
     depth = xP;
-    for(int i = 0; i < zP; i++)
+    for(size_t i = 0; i < zP; i++)
     {
       yStride = i * xP * yP;
-      for(int j = 0; j < yP; j++)
+      for(size_t j = 0; j < yP; j++)
       {
         startPoints[count] = yStride + (j * xP);
         count++;

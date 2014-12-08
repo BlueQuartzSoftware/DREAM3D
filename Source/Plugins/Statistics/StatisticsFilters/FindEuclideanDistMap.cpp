@@ -453,7 +453,7 @@ void FindEuclideanDistMap::find_euclideandistmap()
   int add = 1;
   int good = 0;
   int feature, neighbor;
-  QVector<int> coordination;
+  std::vector<int> coordination;
 
   size_t udims[3] = {0, 0, 0};
   m->getDimensions(udims);

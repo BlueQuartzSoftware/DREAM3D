@@ -51,19 +51,27 @@ DistributionAnalysisOps::~DistributionAnalysisOps()
 {
 
 }
-void DistributionAnalysisOps::determinemaxandminvalues(QVector<float>& data, float& max, float& min)
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DistributionAnalysisOps::determineMaxAndMinValues(std::vector<float>& data, float& max, float& min)
 {
   float value;
   min = std::numeric_limits<float>::max();
   max = std::numeric_limits<float>::min();
-  for (qint32 i = 0; i < data.size(); i++)
+  for (std::vector<float>::size_type i = 0; i < data.size(); i++)
   {
     value = data[i];
     if(value > max) { max = value; }
     if(value < min) { min = value; }
   }
 }
-void DistributionAnalysisOps::determinebinnumbers(float& max, float& min, float& stepsize, FloatArrayType::Pointer binnumbers)
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DistributionAnalysisOps::determineBinNumbers(float& max, float& min, float& stepsize, FloatArrayType::Pointer binnumbers)
 {
   size_t iter = 0;
   float current = (float(iter * stepsize) + min);

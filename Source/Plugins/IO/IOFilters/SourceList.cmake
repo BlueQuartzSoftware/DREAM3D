@@ -43,7 +43,7 @@ set(_PublicFilters
   VASPReader
   VisualizeGBCDGMT
   VisualizeGBCDPoleFigure
-  VtkFeatureIdReader
+  VtkStructuredPointsReader
   VtkRectilinearGridWriter
   YSChoiAbaqusReader
 )

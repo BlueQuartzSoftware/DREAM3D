@@ -177,7 +177,7 @@ void AlignSectionsFeatureCentroid::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AlignSectionsFeatureCentroid::find_shifts(QVector<int>& xshifts, QVector<int>& yshifts)
+void AlignSectionsFeatureCentroid::find_shifts(std::vector<int> &xshifts, std::vector<int> &yshifts)
 {
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
@@ -208,8 +208,8 @@ void AlignSectionsFeatureCentroid::find_shifts(QVector<int>& xshifts, QVector<in
   //  int xspot, yspot;
   float xRes = m->getXRes();
   float yRes = m->getYRes();
-  QVector<float> xCentroid(dims[2], 0.0);
-  QVector<float> yCentroid(dims[2], 0.0);
+  std::vector<float> xCentroid(dims[2], 0.0);
+  std::vector<float> yCentroid(dims[2], 0.0);
 
   for (DimType iter = 0; iter < dims[2]; iter++)
   {

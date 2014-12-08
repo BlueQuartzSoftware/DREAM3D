@@ -175,7 +175,7 @@ void findAverage(IDataArray::Pointer inputData, FloatArrayType::Pointer averageA
   size_t numPoints = cellArray->getNumberOfTuples();
   size_t numFeatures = averageArray->getNumberOfTuples();
 
-  QVector<float> counts(numFeatures, 0.0);
+  std::vector<float> counts(numFeatures, 0.0);
 
   int32_t feature;
   float value;

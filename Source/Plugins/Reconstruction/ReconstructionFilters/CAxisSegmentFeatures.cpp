@@ -373,17 +373,17 @@ bool CAxisSegmentFeatures::determineGrouping(int64_t referencepoint, int64_t nei
   float g1t[3][3];
   float g2t[3][3];
 // float n1, n2, n3;
-  unsigned int phase1, phase2;
+  //unsigned int phase1, phase2;
   float caxis[3] = {0, 0, 1};
   float c1[3];
   float c2[3];
 
   if(m_FeatureIds[neighborpoint] == 0 && (m_UseGoodVoxels == false || m_GoodVoxels[neighborpoint] == true))
   {
-    phase1 = m_CrystalStructures[m_CellPhases[referencepoint]];
+    //phase1 = m_CrystalStructures[m_CellPhases[referencepoint]];
     QuaternionMathF::Copy(quats[referencepoint], q1);
 
-    phase2 = m_CrystalStructures[m_CellPhases[neighborpoint]];
+    //phase2 = m_CrystalStructures[m_CellPhases[neighborpoint]];
     QuaternionMathF::Copy(quats[neighborpoint], q2);
 
     if (m_CellPhases[referencepoint] == m_CellPhases[neighborpoint])
