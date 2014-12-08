@@ -112,7 +112,7 @@ std::vector<float> RadialDistributionFunction::GenerateRandomDistribution(float 
   randomCentroids.resize(largeNumber*3);
 
   //Generating all of the random points and storing their coordinates in randomCentroids
-  for (size_t i = 0; i < largeNumber; i++)
+  for (int32_t i = 0; i < largeNumber; i++)
   {
        featureOwnerIdx = static_cast<size_t>(rg.genrand_res53() * totalpoints);
 
@@ -134,14 +134,14 @@ std::vector<float> RadialDistributionFunction::GenerateRandomDistribution(float 
 
 
 //Calculating all of the distances and storing them in the distnace list
-  for (size_t i = 1; i < largeNumber; i++)
+  for (int32_t i = 1; i < largeNumber; i++)
   {
 
     x = randomCentroids[3 * i];
     y = randomCentroids[3 * i + 1];
     z = randomCentroids[3 * i + 2];
 
-    for (size_t j = i + 1; j < largeNumber; j++)
+    for (int32_t j = i + 1; j < largeNumber; j++)
     {
 
         xn = randomCentroids[3 * j];
@@ -158,7 +158,7 @@ std::vector<float> RadialDistributionFunction::GenerateRandomDistribution(float 
   }
 
   //bin up the distance list
-  for (size_t i = 0; i < largeNumber; i++)
+  for (int32_t i = 0; i < largeNumber; i++)
   {
     for (size_t j = 0; j < distancelist[i].size(); j++)
     {
@@ -173,7 +173,7 @@ std::vector<float> RadialDistributionFunction::GenerateRandomDistribution(float 
     }
   }
 
-  for (size_t i = 0; i < current_num_bins+1; i++)
+  for (int32_t i = 0; i < current_num_bins+1; i++)
   {
       freq[i] = freq[i]/(numDistances);
   }

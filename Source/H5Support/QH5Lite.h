@@ -471,7 +471,7 @@ namespace H5Support_NAMESPACE
         did = H5Dopen( loc_id, dsetName.toAscii().data(), H5P_DEFAULT);
         if ( did < 0 )
         {
-          qDebug() << "Error opening Dataset at loc_id (" << loc_id << ") with object name (" << dsetName << ")";
+          qDebug() << "QH5Lite::readStringDataset(" << __LINE__ << ") Error opening Dataset at loc_id (" << loc_id << ") with object name (" << dsetName << ")";
           return -1;
         }
         if ( did >= 0 )
@@ -550,7 +550,7 @@ namespace H5Support_NAMESPACE
         did = H5Dopen( loc_id, dsetName.toAscii().data(), H5P_DEFAULT );
         if ( did < 0 )
         {
-          qDebug() << "Error opening Dataset at loc_id (" << loc_id << ") with object name (" << dsetName << ")";
+          qDebug() << "QH5Lite::readStringDataset(" << __LINE__ << ") Error opening Dataset at loc_id (" << loc_id << ") with object name (" << dsetName << ")";
           return -1;
         }
         if ( did >= 0 )

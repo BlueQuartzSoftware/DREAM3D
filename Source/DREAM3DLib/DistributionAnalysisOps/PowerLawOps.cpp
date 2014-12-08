@@ -57,18 +57,18 @@ PowerLawOps::PowerLawOps()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int PowerLawOps::calculateParameters(QVector<float>& data, FloatArrayType::Pointer outputs)
+int PowerLawOps::calculateParameters(std::vector<float> &data, FloatArrayType::Pointer outputs)
 {
   int err = 0;
   float alpha = 0;
   float min = std::numeric_limits<float>::max();
   if(data.size() > 1)
   {
-    for(qint32 i = 0; i < data.size(); i++)
+    for(std::vector<float>::size_type i = 0; i < data.size(); i++)
     {
       if (data[i] < min) { min = data[i]; }
     }
-    for(qint32 i = 0; i < data.size(); i++)
+    for(std::vector<float>::size_type i = 0; i < data.size(); i++)
     {
       alpha = alpha + log(data[i] / min);
     }
@@ -87,21 +87,21 @@ int PowerLawOps::calculateParameters(QVector<float>& data, FloatArrayType::Point
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int PowerLawOps::calculateCorrelatedParameters(QVector<QVector<float> >& data, VectorOfFloatArray outputs)
+int PowerLawOps::calculateCorrelatedParameters(std::vector<std::vector<float> > &data, VectorOfFloatArray outputs)
 {
   int err = 0;
   float alpha = 0;
   float min;
-  for(qint32 i = 0; i < data.size(); i++)
+  for(std::vector<float>::size_type i = 0; i < data.size(); i++)
   {
     if(data[i].size() > 1)
     {
       min = std::numeric_limits<float>::max();
-      for(qint32 j = 0; j < data[i].size(); j++)
+      for(std::vector<float>::size_type j = 0; j < data[i].size(); j++)
       {
         if (data[i][j] < min) { min = data[i][j]; }
       }
-      for(qint32 j = 0; j < data[i].size(); j++)
+      for(std::vector<float>::size_type j = 0; j < data[i].size(); j++)
       {
         alpha = alpha + log(data[i][j] / min);
       }

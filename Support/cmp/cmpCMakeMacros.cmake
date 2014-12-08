@@ -754,7 +754,7 @@ function(AddHDF5CopyInstallRules)
                           ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${INTER_DIR}/
                           COMMENT "  Copy: ${LibPath}\n    To: ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${INTER_DIR}/")
       set_target_properties(ZZ_${Z_LIBVAR}_DLL_${TYPE}-Copy PROPERTIES FOLDER ZZ_COPY_FILES)
-        
+
     endif()
 
     # Now get the path that the library is in
@@ -767,7 +767,7 @@ function(AddHDF5CopyInstallRules)
     else()
       GET_TARGET_PROPERTY(${Z_LIBVAR}_${TYPE} ${Z_LIBNAME} IMPORTED_SONAME_${TYPE})
     endif()
-    
+
     #message(STATUS "${Z_LIBVAR}_${TYPE}: ${${Z_LIBVAR}_${TYPE}}")
     if(NOT "${${Z_LIBVAR}_${TYPE}}" STREQUAL "${Z_LIBVAR}_${TYPE}-NOTFOUND" AND NOT WIN32)
       set(SYMLINK_PATH "${${Z_LIBVAR}_DIR}/${${Z_LIBVAR}_${TYPE}}")
@@ -776,13 +776,13 @@ function(AddHDF5CopyInstallRules)
         DESTINATION "${Z_INSTALL_DIR}"
         CONFIGURATIONS ${BTYPE}
         COMPONENT Applications)
-      
+
       ADD_CUSTOM_TARGET(ZZ_${Z_LIBVAR}_SYMLINK_${TYPE}-Copy ALL
                           COMMAND ${CMAKE_COMMAND} -E copy_if_different ${SYMLINK_PATH}
                           ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${INTER_DIR}/
                           COMMENT "  Copy: ${SYMLINK_PATH}\n    To: ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${INTER_DIR}/")
       set_target_properties(ZZ_${Z_LIBVAR}_SYMLINK_${TYPE}-Copy PROPERTIES FOLDER ZZ_COPY_FILES)
-        
+
     endif()
 
   endforeach()
@@ -1027,26 +1027,29 @@ function(cmpConfigureFileWithMD5Check)
     set(oneValueArgs CONFIGURED_TEMPLATE_PATH GENERATED_FILE_PATH )
     cmake_parse_arguments(GVS "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN} )
 
-  #  message(STATUS "GVS_CONFIGURED_TEMPLATE_PATH: ${GVS_CONFIGURED_TEMPLATE_PATH}")
-  #  message(STATUS "GVS_GENERATED_FILE_PATH: ${GVS_GENERATED_FILE_PATH}")
+ #   message(STATUS "   GVS_CONFIGURED_TEMPLATE_PATH: ${GVS_CONFIGURED_TEMPLATE_PATH}")
+ #   message(STATUS "   GVS_GENERATED_FILE_PATH: ${GVS_GENERATED_FILE_PATH}")
 
     # Only Generate a file if it is different than what is already there.
     if(EXISTS ${GVS_GENERATED_FILE_PATH} )
         file(MD5 ${GVS_GENERATED_FILE_PATH} VERSION_HDR_MD5)
-        #configure_file(${CMP_CONFIGURED_FILES_SOURCE_DIR}/cmpVersion.h.in   ${GVS_GENERATED_HEADER_FILE_PATH}_tmp.h  )
         configure_file(${GVS_CONFIGURED_TEMPLATE_PATH}   ${GVS_GENERATED_FILE_PATH}_tmp  )
+
         file(MD5 ${GVS_GENERATED_FILE_PATH}_tmp VERSION_GEN_HDR_MD5)
-    #    message(STATUS "  File Exists, doing MD5 Comparison")
+        #message(STATUS "  File Exists, doing MD5 Comparison")
+
         # Compare the MD5 checksums. If they are different then configure the file into the proper location
         if(NOT "${VERSION_HDR_MD5}" STREQUAL "${VERSION_GEN_HDR_MD5}")
-     #       message(STATUS "  Files differ: Replacing with newly generated file")
+            #message(STATUS "   ${VERSION_GEN_HDR_MD5}")
+            #message(STATUS "   ${VERSION_HDR_MD5}")
+            #message(STATUS "  Files differ: Replacing with newly generated file")
             configure_file(${GVS_CONFIGURED_TEMPLATE_PATH}  ${GVS_GENERATED_FILE_PATH} )
         else()
-     #       message(STATUS "  NO Difference in Files")
+            #message(STATUS "  NO Difference in Files")
         endif()
         file(REMOVE ${GVS_GENERATED_FILE_PATH}_tmp)
     else()
-     #   message(STATUS "  File does NOT Exist, Generating one...")
+       # message(STATUS "  File does NOT Exist, Generating one...")
         configure_file(${GVS_CONFIGURED_TEMPLATE_PATH} ${GVS_GENERATED_FILE_PATH} )
     endif()
 
@@ -1066,6 +1069,7 @@ function(cmpReplaceFileIfDifferent)
    # message(STATUS "GVS_OLD_FILE_PATH: ${GVS_OLD_FILE_PATH}")
 
     # Only Generate a file if it is different than what is already there.
+
     if(EXISTS ${GVS_OLD_FILE_PATH} )
       #  message(STATUS "  File Exists, doing MD5 Comparison")
         file(MD5 ${GVS_OLD_FILE_PATH} VERSION_HDR_MD5)
@@ -1122,50 +1126,50 @@ function(cmpVersionStringsFromGit)
         WORKING_DIRECTORY ${DREAM3DProj_SOURCE_DIR}
     )
 
-        # message(STATUS "DVERS: ${DVERS}")
+      # message(STATUS "DVERS: ${DVERS}")
 
-        #-- Make sure that actually worked and if not just generate some dummy values
-        if(DVERS STREQUAL "")
-            cmpGenerateVersionString( ${GVS_GENERATED_HEADER_FILE_PATH} ${GVS_GENERATED_SOURCE_FILE_PATH} ${GVS_NAMESPACE} ${GVS_cmpProjectName} )
-        else()
-            string(STRIP ${DVERS} DVERS)
-            string(REPLACE  "-" ";" VERSION_LIST ${DVERS})
-               # message(STATUS "VERSION_LIST: ${VERSION_LIST}")
-               # list(GET VERSION_LIST 0 VERSION_GEN_VER_MAJOR)
-            set(VERSION_GEN_VER_MAJOR ${CMP_VERSION_MAJOR})
-            list(GET VERSION_LIST 1 VERSION_GEN_VER_MINOR)
-            list(GET VERSION_LIST 2 VERSION_GEN_VER_PATCH)
+      #-- Make sure that actually worked and if not just generate some dummy values
+      if(DVERS STREQUAL "")
+          cmpGenerateVersionString( ${GVS_GENERATED_HEADER_FILE_PATH} ${GVS_GENERATED_SOURCE_FILE_PATH} ${GVS_NAMESPACE} ${GVS_cmpProjectName} )
+      else()
+          string(STRIP ${DVERS} DVERS)
+          string(REPLACE  "-" ";" VERSION_LIST ${DVERS})
+             # message(STATUS "VERSION_LIST: ${VERSION_LIST}")
+             # list(GET VERSION_LIST 0 VERSION_GEN_VER_MAJOR)
+          set(VERSION_GEN_VER_MAJOR ${CMP_VERSION_MAJOR})
+          list(GET VERSION_LIST 1 VERSION_GEN_VER_MINOR)
+          list(GET VERSION_LIST 2 VERSION_GEN_VER_PATCH)
 
-            set(VERSION_GEN_NAMESPACE "${GVS_NAMESPACE}")
-            set(VERSION_GEN_NAME "${GVS_cmpProjectName}")
-              #  message(STATUS "VERSION_GEN_VER_MAJOR: ${VERSION_GEN_VER_MAJOR}")
-              #  message(STATUS "VERSION_GEN_VER_MINOR: ${VERSION_GEN_VER_MINOR}")
-              #  message(STATUS "VERSION_GEN_VER_PATCH: ${VERSION_GEN_VER_PATCH}")
-            string(SUBSTRING ${VERSION_GEN_VER_PATCH} 1 -1 VERSION_GEN_VER_PATCH)
+          set(VERSION_GEN_NAMESPACE "${GVS_NAMESPACE}")
+          set(VERSION_GEN_NAME "${GVS_cmpProjectName}")
+            #  message(STATUS "VERSION_GEN_VER_MAJOR: ${VERSION_GEN_VER_MAJOR}")
+            #  message(STATUS "VERSION_GEN_VER_MINOR: ${VERSION_GEN_VER_MINOR}")
+            #  message(STATUS "VERSION_GEN_VER_PATCH: ${VERSION_GEN_VER_PATCH}")
+          string(SUBSTRING ${VERSION_GEN_VER_PATCH} 1 -1 VERSION_GEN_VER_PATCH)
 
-            set(${GVS_cmpProjectName}_VER_MAJOR ${CMP_VERSION_MAJOR} CACHE STRING "" FORCE)
-            set(${GVS_cmpProjectName}_VER_MINOR ${VERSION_GEN_VER_MINOR} CACHE STRING "" FORCE)
-            set(${GVS_cmpProjectName}_VER_PATCH ${VERSION_GEN_VER_PATCH} CACHE STRING "" FORCE)
-            set(VERSION_GEN_COMPLETE "${VERSION_GEN_VER_MAJOR}.${VERSION_GEN_VER_MINOR}.${VERSION_GEN_VER_PATCH}" )
-               # message(STATUS "VERSION_GEN_COMPLETE: ${VERSION_GEN_COMPLETE}")
-              #  message(STATUS "${GVS_cmpProjectName}_VER_MAJOR: ${${GVS_cmpProjectName}_VER_MAJOR}")
-               # message(STATUS "${GVS_cmpProjectName}_VER_MINOR: ${${GVS_cmpProjectName}_VER_MINOR}")
-               # message(STATUS "${GVS_cmpProjectName}_VER_PATCH: ${${GVS_cmpProjectName}_VER_PATCH}")
+          set(${GVS_cmpProjectName}_VER_MAJOR ${CMP_VERSION_MAJOR} CACHE STRING "" FORCE)
+          set(${GVS_cmpProjectName}_VER_MINOR ${VERSION_GEN_VER_MINOR} CACHE STRING "" FORCE)
+          set(${GVS_cmpProjectName}_VER_PATCH ${VERSION_GEN_VER_PATCH} CACHE STRING "" FORCE)
+          set(VERSION_GEN_COMPLETE "${VERSION_GEN_VER_MAJOR}.${VERSION_GEN_VER_MINOR}.${VERSION_GEN_VER_PATCH}" )
+             # message(STATUS "VERSION_GEN_COMPLETE: ${VERSION_GEN_COMPLETE}")
+            #  message(STATUS "${GVS_cmpProjectName}_VER_MAJOR: ${${GVS_cmpProjectName}_VER_MAJOR}")
+             # message(STATUS "${GVS_cmpProjectName}_VER_MINOR: ${${GVS_cmpProjectName}_VER_MINOR}")
+             # message(STATUS "${GVS_cmpProjectName}_VER_PATCH: ${${GVS_cmpProjectName}_VER_PATCH}")
 
-            set(${GVS_cmpProjectName}_VERSION "${${GVS_cmpProjectName}_VER_MAJOR}.${${GVS_cmpProjectName}_VER_MINOR}.${${GVS_cmpProjectName}_VER_PATCH}" CACHE STRING "Full Version Number" FORCE)
-               # message(STATUS "${GVS_cmpProjectName}_VERSION: ${${GVS_cmpProjectName}_VERSION}")
-            mark_as_advanced(${GVS_cmpProjectName}_VERSION ${GVS_cmpProjectName}_VER_MAJOR ${GVS_cmpProjectName}_VER_MINOR ${GVS_cmpProjectName}_VER_PATCH)
-            set(PROJECT_PREFIX "${GVS_cmpProjectName}")
+          set(${GVS_cmpProjectName}_VERSION "${${GVS_cmpProjectName}_VER_MAJOR}.${${GVS_cmpProjectName}_VER_MINOR}.${${GVS_cmpProjectName}_VER_PATCH}" CACHE STRING "Full Version Number" FORCE)
+             # message(STATUS "${GVS_cmpProjectName}_VERSION: ${${GVS_cmpProjectName}_VERSION}")
+          mark_as_advanced(${GVS_cmpProjectName}_VERSION ${GVS_cmpProjectName}_VER_MAJOR ${GVS_cmpProjectName}_VER_MINOR ${GVS_cmpProjectName}_VER_PATCH)
+          set(PROJECT_PREFIX "${GVS_cmpProjectName}")
 
-            cmpConfigureFileWithMD5Check( GENERATED_FILE_PATH        ${GVS_GENERATED_HEADER_FILE_PATH}
-                                         CONFIGURED_TEMPLATE_PATH   ${CMP_CONFIGURED_FILES_SOURCE_DIR}/cmpVersion.h.in )
+          cmpConfigureFileWithMD5Check( GENERATED_FILE_PATH        ${GVS_GENERATED_HEADER_FILE_PATH}
+                                       CONFIGURED_TEMPLATE_PATH   ${CMP_CONFIGURED_FILES_SOURCE_DIR}/cmpVersion.h.in )
 
-            cmpConfigureFileWithMD5Check( GENERATED_FILE_PATH        ${GVS_GENERATED_SOURCE_FILE_PATH}
-                                         CONFIGURED_TEMPLATE_PATH   ${CMP_CONFIGURED_FILES_SOURCE_DIR}/cmpVersion.cpp.in )
+          cmpConfigureFileWithMD5Check( GENERATED_FILE_PATH        ${GVS_GENERATED_SOURCE_FILE_PATH}
+                                       CONFIGURED_TEMPLATE_PATH   ${CMP_CONFIGURED_FILES_SOURCE_DIR}/cmpVersion.cpp.in )
 
-            # MARK_AS_ADVANCED(${CMP_PROJECT_NAME}_VERSION ${CMP_PROJECT_NAME}_VER_MAJOR ${CMP_PROJECT_NAME}_VER_MINOR ${CMP_PROJECT_NAME}_VER_PATCH)
+          # MARK_AS_ADVANCED(${CMP_PROJECT_NAME}_VERSION ${CMP_PROJECT_NAME}_VER_MAJOR ${CMP_PROJECT_NAME}_VER_MINOR ${CMP_PROJECT_NAME}_VER_PATCH)
 
-        endif()
+      endif()
     else()
        cmpGenerateVersionString( ${GVS_GENERATED_HEADER_FILE_PATH} ${GVS_GENERATED_SOURCE_FILE_PATH} ${GVS_NAMESPACE} ${GVS_cmpProjectName})
     endif()

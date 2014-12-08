@@ -40,9 +40,21 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-DREAM3DFileDragMessageBox::DREAM3DFileDragMessageBox(QWidget* parent)
+DREAM3DFileDragMessageBox::DREAM3DFileDragMessageBox(QWidget* parent, int filterCount)
 {
   setupUi(this);
+
+  if (filterCount == -1)
+  {
+      // This should never be the case - Throw error???
+      return;
+  }
+  else if (filterCount <= 0)
+  {
+      appendPipelineBtn->setHidden(true);
+      prependPipelineBtn->setHidden(true);
+      replacePipelineBtn->setText("Extract Pipeline");
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -64,9 +76,31 @@ void DREAM3DFileDragMessageBox::setFilePath(QString path)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DREAM3DFileDragMessageBox::on_extractPipelineBtn_clicked()
+void DREAM3DFileDragMessageBox::on_replacePipelineBtn_clicked()
 {
-  emit fireExtractPipelineFromFile(filePath);
+  emit fireExtractPipelineFromFile(filePath, Replace);
+
+  // Close the dialog box
+  close();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DREAM3DFileDragMessageBox::on_appendPipelineBtn_clicked()
+{
+  emit fireExtractPipelineFromFile(filePath, Append);
+
+  // Close the dialog box
+  close();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DREAM3DFileDragMessageBox::on_prependPipelineBtn_clicked()
+{
+  emit fireExtractPipelineFromFile(filePath, Prepend);
 
   // Close the dialog box
   close();

@@ -173,7 +173,7 @@ void RegularizeZSpacing::execute()
   inFile.open(m_InputFile.toLatin1().data());
 
   float zval;
-  QVector<float> zboundvalues(dims[2] + 1, 0.0);
+  std::vector<float> zboundvalues(dims[2] + 1, 0.0);
   for (size_t iter = 0; iter < dims[2] + 1; iter++)
   {
     inFile >> zval;
@@ -193,7 +193,7 @@ void RegularizeZSpacing::execute()
 
   int index, oldindex;
   int plane;
-  QVector<size_t> newindicies(totalPoints, 0);
+  std::vector<size_t> newindicies(totalPoints, 0);
   for (size_t i = 0; i < m_ZP; i++)
   {
     plane = 0;
@@ -222,7 +222,7 @@ void RegularizeZSpacing::execute()
   QList<QString> voxelArrayNames = cellAttrMat->getAttributeArrayNameList();
   for (QList<QString>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
   {
-    QString name = *iter;
+    //QString name = *iter;
     IDataArray::Pointer p = cellAttrMat->getAttributeArray(*iter);
     // Make a copy of the 'p' array that has the same name. When placed into
     // the data container this will over write the current array with

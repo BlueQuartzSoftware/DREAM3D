@@ -162,7 +162,7 @@ void FindAvgCAxes::execute()
   float caxis[3] = {0, 0, 1};
   float c1[3];
 
-  QVector<int> counter(totalFeatures, 0);
+  std::vector<int> counter(totalFeatures, 0);
 
   for (size_t i = 1; i < totalFeatures; i++)
   {

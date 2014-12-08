@@ -249,7 +249,7 @@ void FindLocalAverageCAxisMisalignments::execute()
   size_t numFeatures = m_FeatureParentIdsPtr.lock()->getNumberOfTuples();
   size_t newNumFeatures = m_NumFeaturesPerParentPtr.lock()->getNumberOfTuples();
 
-  QVector<int32_t> NumUnbiasedFeaturesPerParent(numFeatures, 0);
+  std::vector<int32_t> NumUnbiasedFeaturesPerParent(numFeatures, 0);
 
   if(m_CalcUnbiasedAvg == true)
   {

@@ -159,7 +159,7 @@ void GroupFeatures::execute()
   NeighborList<int>& neighborlist = *(m_ContiguousNeighborList.lock());
   NeighborList<int>* nonContigNeighList = m_NonContiguousNeighborList.lock().get();
 
-  QVector<int> grouplist;
+  std::vector<int> grouplist;
 
   int parentcount = 0;
   int seed = 0;

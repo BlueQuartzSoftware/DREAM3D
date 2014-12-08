@@ -180,7 +180,7 @@ void FindAvgOrientations::execute()
   int64_t totalPoints = m_FeatureIdsPtr.lock()->getNumberOfTuples();
   size_t totalFeatures = m_AvgQuatsPtr.lock()->getNumberOfTuples();
 
-  QVector<float> counts(totalFeatures, 0.0);
+  std::vector<float> counts(totalFeatures, 0.0);
 
   int phase;
   QuatF voxquat;

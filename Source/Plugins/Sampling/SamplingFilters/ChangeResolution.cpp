@@ -262,8 +262,8 @@ void ChangeResolution::execute()
   int col, row, plane;
   int index;
   int index_old;
-  QVector<size_t> newindicies;
-  newindicies.resize(totalPoints);
+  std::vector<size_t> newindicies(totalPoints);
+
   for (int i = 0; i < m_ZP; i++)
   {
     QString ss = QObject::tr("Changing Resolution - %1 Percent Complete").arg(((float)i / m->getZPoints()) * 100);

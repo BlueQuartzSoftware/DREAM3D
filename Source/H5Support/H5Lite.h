@@ -1131,7 +1131,7 @@ namespace H5Support_NAMESPACE
         did = H5Dopen( loc_id, dsetName.c_str(), H5P_DEFAULT);
         if ( did < 0 )
         {
-          std::cout << "Error opening Dataset at loc_id (" << loc_id << ") with object name (" << dsetName << ")" << std::endl;
+          std::cout << "H5Lite.h::readStringDataset(" << __LINE__ << ") Error opening Dataset at loc_id (" << loc_id << ") with object name (" << dsetName << ")" << std::endl;
           return -1;
         }
         if ( did >= 0 )
@@ -1209,7 +1209,7 @@ namespace H5Support_NAMESPACE
         did = H5Dopen( loc_id, dsetName.c_str(), H5P_DEFAULT );
         if ( did < 0 )
         {
-          std::cout << "Error opening Dataset at loc_id (" << loc_id << ") with object name (" << dsetName << ")" << std::endl;
+          std::cout << "H5Lite.h::readStringDataset(" << __LINE__ << ") Error opening Dataset at loc_id (" << loc_id << ") with object name (" << dsetName << ")" << std::endl;
           return -1;
         }
         if ( did >= 0 )
