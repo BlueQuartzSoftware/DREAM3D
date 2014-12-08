@@ -32,6 +32,7 @@ set(_PublicFilters
   ParaDisReader
   PhReader
   PhWriter
+  ReadStlToSurfaceMesh
   SPParksWriter
   SPParksTextReader
   SurfaceMeshToNodesTrianglesEdges
