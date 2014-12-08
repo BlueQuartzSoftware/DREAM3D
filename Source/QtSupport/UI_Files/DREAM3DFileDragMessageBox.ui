@@ -2,24 +2,27 @@
 <ui version="4.0">
  <class>DREAM3DFileDragMessageBox</class>
  <widget class="QWidget" name="DREAM3DFileDragMessageBox">
+  <property name="windowModality">
+   <enum>Qt::WindowModal</enum>
+  </property>
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>517</width>
-    <height>171</height>
+    <width>847</width>
+    <height>193</height>
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Form</string>
+   <string>DREAM3D File Drop</string>
   </property>
   <widget class="QWidget" name="layoutWidget">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>516</width>
-     <height>171</height>
+     <width>765</width>
+     <height>186</height>
     </rect>
    </property>
    <layout class="QVBoxLayout" name="verticalLayout">
@@ -62,6 +65,92 @@
      </widget>
     </item>
     <item>
+     <layout class="QHBoxLayout" name="horizontalLayout_2">
+      <item>
+       <spacer name="horizontalSpacer_6">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeType">
+         <enum>QSizePolicy::Expanding</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item>
+       <widget class="QRadioButton" name="radioButton">
+        <property name="text">
+         <string>Add Existing DREAM3D Filter</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <spacer name="horizontalSpacer_5">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeType">
+         <enum>QSizePolicy::Expanding</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+     </layout>
+    </item>
+    <item>
+     <layout class="QHBoxLayout" name="horizontalLayout_5">
+      <item>
+       <spacer name="horizontalSpacer_9">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeType">
+         <enum>QSizePolicy::Expanding</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item>
+       <widget class="QRadioButton" name="radioButton_3">
+        <property name="text">
+         <string>Extract Pipeline</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <spacer name="horizontalSpacer_10">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeType">
+         <enum>QSizePolicy::Expanding</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+     </layout>
+    </item>
+    <item>
      <layout class="QHBoxLayout" name="horizontalLayout">
       <item>
        <spacer name="horizontalSpacer_2">
@@ -77,23 +166,23 @@
        </spacer>
       </item>
       <item>
-       <widget class="QPushButton" name="prependPipelineBtn">
+       <widget class="QPushButton" name="appendPipelineBtn">
         <property name="text">
-         <string>Extract - Prepend</string>
+         <string>Append</string>
         </property>
        </widget>
       </item>
       <item>
-       <widget class="QPushButton" name="appendPipelineBtn">
+       <widget class="QPushButton" name="prependPipelineBtn">
         <property name="text">
-         <string>Extract - Append</string>
+         <string>Prepend</string>
         </property>
        </widget>
       </item>
       <item>
        <widget class="QPushButton" name="replacePipelineBtn">
         <property name="text">
-         <string>Extract - Replace</string>
+         <string>Replace</string>
         </property>
        </widget>
       </item>
@@ -110,42 +199,12 @@
         </property>
        </spacer>
       </item>
-     </layout>
-    </item>
-    <item>
-     <layout class="QHBoxLayout" name="horizontalLayout_3">
       <item>
-       <spacer name="horizontalSpacer_3">
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
-        </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>40</width>
-          <height>20</height>
-         </size>
-        </property>
-       </spacer>
-      </item>
-      <item>
-       <widget class="QPushButton" name="addFilterBtn">
+       <widget class="QPushButton" name="cancelBtn">
         <property name="text">
-         <string>Add DREAM3D File Reader Filter</string>
+         <string>Cancel</string>
         </property>
        </widget>
-      </item>
-      <item>
-       <spacer name="horizontalSpacer">
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
-        </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>40</width>
-          <height>20</height>
-         </size>
-        </property>
-       </spacer>
       </item>
      </layout>
     </item>
