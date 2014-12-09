@@ -8,7 +8,7 @@ IO Filters
 
 This filter reads an STRUCTURED_POINTS type of 3D array from a legacy .vtk file. The
 currently supported vtk dataset attribute types are SCALARS and VECTORS. More will
-come eventually.
+come eventually. The vtk data must be POINT_DATA and CELL_DATA
 
 The reader should be able to handle both Binary and ASCII data.
 
@@ -24,7 +24,7 @@ then create a new AttributeMatrix inside the new Data Container.
     DIMENSIONS 3 4 6
     SPACING 1 1 1
     ORIGIN 0 0 0
-    CELL_DATA 72
+    POINT_DATA 72
     SCALARS GrainIds char 1
     LOOKUP_TABLE default
     0 0 0 0 0 0 0 0 0 0 0 0

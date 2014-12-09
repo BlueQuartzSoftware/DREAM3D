@@ -17,6 +17,7 @@ set(_PublicFilters
   FindAvgScalarValueForFeatures
   FindBoundaryStrengths
   FindCAxisLocations
+  FindDirectionalModuli
   FindEuclideanDistMap
   FindFeatureClustering
   FindFeatureHistogram
