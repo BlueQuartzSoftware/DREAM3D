@@ -604,6 +604,7 @@ void  InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclus
     }
   }
 
+  // adding precipitates until the volume fraction of precipitates matches the target (while making sure to keep the size distribution error within tolerance)
   Precip precip;
   std::vector<float> curphasevol;
   curphasevol.resize(precipitatephases.size());
@@ -826,9 +827,11 @@ void  InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclus
 
   }
 
-  //calculate the initial current RDF - this will change as we move particles around
+
   if(m_MatchRDF == true)
   {
+
+      //calculate the initial current RDF - this will change as we move particles around
     for (size_t i = m_FirstPrecipitateFeature; i < numfeatures; i++)
     {
       m_oldRDFerror = check_RDFerror(i, -1000, false);
@@ -842,11 +845,12 @@ void  InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclus
       std::ofstream testFile;
       if(write_test_outputs == true)
       {
-
         testFile.open("/Users/Shared/Data/PW_Work/OUTFILE/BC.txt");
       }
 
       // begin swaping/moving/adding/removing features to try to improve packing
+      // The totalAdjustments are roughly equal to the prefactor (1000, right now) times the number of precipitates.
+      // This is not based on convergence or any physics - it's just a factor and there's probably room for improvement here
       int totalAdjustments = static_cast<int>(1000 * ((numfeatures - m_FirstPrecipitateFeature) - 1));
       for (int iteration = 0; iteration < totalAdjustments; ++iteration)
       {
