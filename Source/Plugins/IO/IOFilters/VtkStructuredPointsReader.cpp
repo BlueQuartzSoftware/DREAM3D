@@ -194,17 +194,11 @@ int skipVolume(QFile& inStream, bool binary, size_t totalSize)
   int err = 0;
   if(binary == true)
   {
-    //T* buffer = new T[totalSize];
-    std::vector<T> bufferVec(totalSize);
-    T* buffer = &(bufferVec.front());
-    // Read all the data in one shot into a buffer
-    qint64 bytesRead = inStream.read(reinterpret_cast<char*> (buffer), (totalSize * sizeof(T)));
-    if(bytesRead != (totalSize * sizeof(T)))
-    {
-      qDebug() << "Skipping Dataset: ERROR READING BINARY FILE. Bytes read was not the same as func->xDim *. " << bytesRead << " vs "
-               << (totalSize * sizeof(T)) ;
-      return -4001;
-    }
+    qint64 pos = inStream.pos();
+
+    qint64 newPos = pos + totalSize * sizeof(T);
+
+    inStream.seek(newPos);
 
   }
   else
@@ -247,19 +241,31 @@ int readDataChunk(AttributeMatrix::Pointer attrMat, QFile &inStream, bool inPref
     return skipVolume<T>(inStream, binary, numTuples*numComp);
   }
   //qDebug() << "Reading Scalars " << scalarName;
-  //  QMap<int, int> featureIdMap;
+
+
   if (binary == true)
   {
+    size_t k_BufferSize = 8192; // Read the data in k_BufferSize chunks which should be reasonably optimal for most drives
     T* buffer = data->getPointer(0);
+    char* ptr = reinterpret_cast<char*>(buffer);
     // Read all the data in one shot into a buffer
     qint64 totalSize = static_cast<qint64>(numTuples*numComp);
-    qint64 bytesRead = inStream.read(reinterpret_cast<char*> (buffer), (totalSize * sizeof(T)));
-    if(bytesRead != (totalSize * sizeof(T)))
+    for(qint64 i = 0; i < totalSize; i=i+k_BufferSize)
     {
-      qDebug() << "Reading Dataset: ERROR READING BINARY FILE. Bytes read was not the same as func->xDim *. " << bytesRead << " vs "
-               << (totalSize * sizeof(T)) ;
-      return -4002;
+      if(totalSize - i < k_BufferSize)
+      {
+        k_BufferSize = totalSize - i;
+      }
+      qint64 bytesRead = inStream.read(ptr, k_BufferSize);
+      if(bytesRead != k_BufferSize)
+      {
+        qDebug() << "Reading Dataset: ERROR READING BINARY FILE. Bytes read was not the same as func->xDim *. " << bytesRead << " vs "
+                 << k_BufferSize ;
+        return -4002;
+      }
+      buffer = buffer + k_BufferSize;
     }
+
     //Vtk Binary files are written with BIG Endine byte order. If we are on a little
     // endian machine (Intel x86 or Intel x86_64 then we need to byte swap the elements in the array
     if(BIGENDIAN == 0) {data->byteSwapElements(); }
@@ -347,11 +353,8 @@ int VtkStructuredPointsReader::readFile()
   size_t dims[3];
   QList<QByteArray> tokens = buf.split(' ');
   dims[0] = tokens[1].toInt(&ok, 10);
-  if(dims[0] > 1) { dims[0] = dims[0] - 1; }
   dims[1] = tokens[2].toInt(&ok, 10);
-  if(dims[1] > 1) { dims[1] = dims[1] - 1; }
   dims[2] = tokens[3].toInt(&ok, 10);
-  if(dims[2] > 1) { dims[2] = dims[2] - 1; }
   m->setDimensions(dims);
 
   buf = instream.readLine().trimmed();// Read Line 7 which is the Scaling values
@@ -370,25 +373,22 @@ int VtkStructuredPointsReader::readFile()
   origin[2] = tokens[3].toFloat(&ok);
   m->setOrigin(origin);
 
-
-  // Red the "CELL_DATA"
-  buf = instream.readLine().trimmed();
-  words = buf.split(' ');
-  QString cellDataStr(words.at(0));
-  if (cellDataStr.compare("CELL_DATA") != 0)
-  {
-    QString msg = QObject::tr("Error Reading the CELL_DATA line. Got this line: %1").arg(cellDataStr);
-    setErrorCondition(-101);
-    notifyErrorMessage(getHumanLabel(), "", getErrorCondition());
-    return getErrorCondition();
-  }
-
   QVector<size_t> tDims(3, 0);
   tDims[0] = dims[0];
   tDims[1] = dims[1];
   tDims[2] = dims[2];
-  AttributeMatrix::Pointer attrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::Cell);
+  AttributeMatrix::Pointer attrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::Vertex);
   if(getErrorCondition() < 0 && NULL == attrMat.get() ) { return getErrorCondition(); }
+
+  if(dims[0] > 1) { dims[0] = dims[0] - 1; }
+  if(dims[1] > 1) { dims[1] = dims[1] - 1; }
+  if(dims[2] > 1) { dims[2] = dims[2] - 1; }
+
+  tDims[0] = dims[0];
+  tDims[1] = dims[1];
+  tDims[2] = dims[2];
+  AttributeMatrix::Pointer cellDataAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, "CELL_DATA", tDims, DREAM3D::AttributeMatrixType::Cell);
+  if(getErrorCondition() < 0 && NULL == cellDataAttrMat.get() ) { return getErrorCondition(); }
 
   // Now parse through the file. If we are preflighting then we only construct the DataArrays with no allocation
   readData(instream);
@@ -421,17 +421,19 @@ int VtkStructuredPointsReader::parseCoordinateLine(const char* input, size_t& va
 void VtkStructuredPointsReader::readData(QFile &instream)
 {
 
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-  AttributeMatrix::Pointer attrMat = m->getAttributeMatrix(getCellAttributeMatrixName());
-
   QByteArray buf ;
   QList<QByteArray> tokens;
+  // QList<QByteArray> words;
   int err = 0;
+
+
+
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  AttributeMatrix::Pointer attrMat;
 
   while(instream.atEnd() == false)
   {
     qint64 filePos = instream.pos();
-    // Read the SCALARS/VECTORS line which should be 3 or 4 words
     buf = instream.readLine().trimmed();
     // If we read an empty line, then we should drop into this while loop and start reading lines until
     // we find a line with something on it.
@@ -446,7 +448,37 @@ void VtkStructuredPointsReader::readData(QFile &instream)
     }
     tokens = buf.split(' ');
 
-    //int n = sscanf(buf, "%s %s %s %s", text1, text2, text3, text4);
+    bool readNewSection = false;
+    QString cellDataStr(tokens.at(0));
+    if (cellDataStr.compare("POINT_DATA") == 0)
+    {
+      attrMat = m->getAttributeMatrix(getCellAttributeMatrixName());
+      readNewSection = true;
+    }
+    else if (cellDataStr.compare("CELL_DATA") == 0)
+    {
+      attrMat = m->getAttributeMatrix("CELL_DATA");
+      readNewSection = true;
+    }
+
+    if(readNewSection == true)
+    {
+      // Read the SCALARS/VECTORS line which should be 3 or 4 words
+      buf = instream.readLine().trimmed();
+      // If we read an empty line, then we should drop into this while loop and start reading lines until
+      // we find a line with something on it.
+      while(buf.isEmpty() == true && instream.atEnd() == false)
+      {
+        buf = instream.readLine().trimmed();
+      }
+      // Check to make sure we didn't read to the end of the file
+      if(instream.atEnd() == true)
+      {
+        return;
+      }
+      tokens = buf.split(' ');
+    }
+
     if (tokens.size() < 3 || tokens.size() > 4)
     {
       QString ss = QObject::tr("Error reading SCALARS header section of VTK file. 3 or 4 words are needed. Found %1. Read Line was\n  %2").arg(tokens.size()).arg(QString(buf));
