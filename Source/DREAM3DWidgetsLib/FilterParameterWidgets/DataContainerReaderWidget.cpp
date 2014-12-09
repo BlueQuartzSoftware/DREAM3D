@@ -50,6 +50,7 @@
 #include "DREAM3DWidgetsLib/DREAM3DWidgetsLibConstants.h"
 
 #include "FilterParameterWidgetsDialogs.h"
+#include "DataArrayInformationDisplayWidget.h"
 
 
 // Initialize private static member variable
@@ -684,6 +685,10 @@ void DataContainerReaderWidget::on_dcaProxyView_updatePreviewWidget(const QModel
     QVariant var = index.data();
     QString name = var.toString();
 
+    DataArrayInformationDisplayWidget::Pointer widget = DataArrayInformationDisplayWidget::New();
+    widget->setNameText(name);
+
+
     // Create widget and add to dcaProxyView
-    //dcaProxyView->setPreviewWidget(widget);
+    dcaProxyView->setPreviewWidget(widget.get());
 }
