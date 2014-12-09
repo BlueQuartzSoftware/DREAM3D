@@ -703,6 +703,22 @@ void  InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclus
   columnlist.resize(numfeatures);
   rowlist.resize(numfeatures);
   planelist.resize(numfeatures);
+
+  int32_t boundaryVoxels = 0;
+
+  for (size_t i = 1; i < m_TotalPoints; i++)
+  {
+      if (m_BoundaryCells[i] != 0)
+      {
+          boundaryVoxels++;
+      }
+  }
+
+  float boundaryFraction = (float)boundaryVoxels/(float)m_TotalPoints;
+
+
+
+
   for (size_t i = m_FirstPrecipitateFeature; i < numfeatures; i++)
   {
 
@@ -712,49 +728,73 @@ void  InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclus
     PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsDataArray[m_FeaturePhases[i]].get());
     precipboundaryfraction = pp->getPrecipBoundaryFraction();
     random = static_cast<float>(rg.genrand_res53());
-    if(random <= precipboundaryfraction)
-    {
-      // figure out if we want this to be a boundary centroid voxel or not for the proposed precipitate
-      if(availablePointsCount > 0)
-      {
-        key = static_cast<size_t>(rg.genrand_res53() * (availablePointsCount-1));
-        featureOwnersIdx = availablePointsInv[key];
-        while (m_BoundaryCells[featureOwnersIdx] == 0)
-        {
-          key = static_cast<size_t>(rg.genrand_res53() * (availablePointsCount-1));
-          featureOwnersIdx = availablePointsInv[key];
-        }
-      }
-      else
-      {
-        featureOwnersIdx = static_cast<size_t>(rg.genrand_res53() * m_TotalPoints);
-        while (m_BoundaryCells[featureOwnersIdx] == 0)
-        {
-          featureOwnersIdx = static_cast<size_t>(rg.genrand_res53() * m_TotalPoints);
-        }
-      }
 
-    }
-    else if(random > precipboundaryfraction)
+    if (boundaryFraction != 0)
     {
-      if(availablePointsCount > 0)
-      {
-        key = static_cast<size_t>(rg.genrand_res53() * (availablePointsCount-1));
-        featureOwnersIdx = availablePointsInv[key];
-        while (m_BoundaryCells[featureOwnersIdx] != 0)
+        if(random <= precipboundaryfraction)
+        {
+          // figure out if we want this to be a boundary centroid voxel or not for the proposed precipitate
+          if(availablePointsCount > 0)
+          {
+            key = static_cast<size_t>(rg.genrand_res53() * (availablePointsCount-1));
+            featureOwnersIdx = availablePointsInv[key];
+            while (m_BoundaryCells[featureOwnersIdx] == 0)
+            {
+              key = static_cast<size_t>(rg.genrand_res53() * (availablePointsCount-1));
+              featureOwnersIdx = availablePointsInv[key];
+            }
+          }
+          else
+          {
+            featureOwnersIdx = static_cast<size_t>(rg.genrand_res53() * m_TotalPoints);
+            while (m_BoundaryCells[featureOwnersIdx] == 0)
+            {
+              featureOwnersIdx = static_cast<size_t>(rg.genrand_res53() * m_TotalPoints);
+            }
+          }
+
+        }
+        else if(random > precipboundaryfraction)
+        {
+          if(availablePointsCount > 0)
+          {
+            key = static_cast<size_t>(rg.genrand_res53() * (availablePointsCount-1));
+            featureOwnersIdx = availablePointsInv[key];
+            while (m_BoundaryCells[featureOwnersIdx] != 0)
+            {
+              key = static_cast<size_t>(rg.genrand_res53() * (availablePointsCount-1));
+              featureOwnersIdx = availablePointsInv[key];
+            }
+          }
+          else
+          {
+            featureOwnersIdx = static_cast<size_t>(rg.genrand_res53() * m_TotalPoints);
+            while (m_BoundaryCells[featureOwnersIdx] != 0)
+            {
+              featureOwnersIdx = static_cast<size_t>(rg.genrand_res53() * m_TotalPoints);
+            }
+          }
+        }
+    }
+    else
+    {
+
+        if (precipboundaryfraction > 0)
+        {
+            QString msg("There are no grain boundaries to place precipitates on, and the target statistics precipitate fraction is greater than zero");
+            notifyWarningMessage(getHumanLabel(), msg, -501);
+        }
+
+
+        if(availablePointsCount > 0)
         {
           key = static_cast<size_t>(rg.genrand_res53() * (availablePointsCount-1));
           featureOwnersIdx = availablePointsInv[key];
         }
-      }
-      else
-      {
-        featureOwnersIdx = static_cast<size_t>(rg.genrand_res53() * m_TotalPoints);
-        while (m_BoundaryCells[featureOwnersIdx] != 0)
+        else
         {
           featureOwnersIdx = static_cast<size_t>(rg.genrand_res53() * m_TotalPoints);
         }
-      }
     }
 
     column = featureOwnersIdx % m_XPoints;
@@ -883,49 +923,71 @@ void  InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclus
 
         precipboundaryfraction = pp->getPrecipBoundaryFraction();
         random = static_cast<float>(rg.genrand_res53());
-        if(random <= precipboundaryfraction)
+        if (boundaryFraction != 0)
         {
-          // figure out if we want this to be a boundary centroid voxel or not for the proposed precipitate
-          if(availablePointsCount > 0)
-          {
-            key = static_cast<size_t>(rg.genrand_res53() * (availablePointsCount-1));
-            featureOwnersIdx = availablePointsInv[key];
-            while (m_BoundaryCells[featureOwnersIdx] == 0)
+            if(random <= precipboundaryfraction)
             {
-              key = static_cast<size_t>(rg.genrand_res53() * (availablePointsCount-1));
-              featureOwnersIdx = availablePointsInv[key];
-            }
-          }
-          else
-          {
-            featureOwnersIdx = static_cast<size_t>(rg.genrand_res53() * m_TotalPoints);
-            while (m_BoundaryCells[featureOwnersIdx] == 0)
-            {
-              featureOwnersIdx = static_cast<size_t>(rg.genrand_res53() * m_TotalPoints);
-            }
-          }
+              // figure out if we want this to be a boundary centroid voxel or not for the proposed precipitate
+              if(availablePointsCount > 0)
+              {
+                key = static_cast<size_t>(rg.genrand_res53() * (availablePointsCount-1));
+                featureOwnersIdx = availablePointsInv[key];
+                while (m_BoundaryCells[featureOwnersIdx] == 0)
+                {
+                  key = static_cast<size_t>(rg.genrand_res53() * (availablePointsCount-1));
+                  featureOwnersIdx = availablePointsInv[key];
+                }
+              }
+              else
+              {
+                featureOwnersIdx = static_cast<size_t>(rg.genrand_res53() * m_TotalPoints);
+                while (m_BoundaryCells[featureOwnersIdx] == 0)
+                {
+                  featureOwnersIdx = static_cast<size_t>(rg.genrand_res53() * m_TotalPoints);
+                }
+              }
 
+            }
+            else if(random > precipboundaryfraction)
+            {
+              if(availablePointsCount > 0)
+              {
+                key = static_cast<size_t>(rg.genrand_res53() * (availablePointsCount-1));
+                featureOwnersIdx = availablePointsInv[key];
+                while (m_BoundaryCells[featureOwnersIdx] != 0)
+                {
+                  key = static_cast<size_t>(rg.genrand_res53() * (availablePointsCount-1));
+                  featureOwnersIdx = availablePointsInv[key];
+                }
+              }
+              else
+              {
+                featureOwnersIdx = static_cast<size_t>(rg.genrand_res53() * m_TotalPoints);
+                while (m_BoundaryCells[featureOwnersIdx] != 0)
+                {
+                  featureOwnersIdx = static_cast<size_t>(rg.genrand_res53() * m_TotalPoints);
+                }
+              }
+            }
         }
-        else if(random > precipboundaryfraction)
+        else
         {
-          if(availablePointsCount > 0)
-          {
-            key = static_cast<size_t>(rg.genrand_res53() * (availablePointsCount-1));
-            featureOwnersIdx = availablePointsInv[key];
-            while (m_BoundaryCells[featureOwnersIdx] != 0)
+
+            if (precipboundaryfraction > 0)
+            {
+                QString msg("There are no grain boundaries to place precipitates on, and the target statistics precipitate fraction is greater than zero. This filter will run without trying to match the precipitate fraction");
+                notifyWarningMessage(getHumanLabel(), msg, -501);
+            }
+
+            if(availablePointsCount > 0)
             {
               key = static_cast<size_t>(rg.genrand_res53() * (availablePointsCount-1));
               featureOwnersIdx = availablePointsInv[key];
             }
-          }
-          else
-          {
-            featureOwnersIdx = static_cast<size_t>(rg.genrand_res53() * m_TotalPoints);
-            while (m_BoundaryCells[featureOwnersIdx] != 0)
+            else
             {
               featureOwnersIdx = static_cast<size_t>(rg.genrand_res53() * m_TotalPoints);
             }
-          }
         }
         column = featureOwnersIdx % m_XPoints;
         row = int(featureOwnersIdx / m_XPoints) % m_YPoints;

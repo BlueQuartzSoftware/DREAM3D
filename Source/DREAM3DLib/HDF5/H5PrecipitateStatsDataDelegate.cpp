@@ -598,7 +598,7 @@ int H5PrecipitateStatsDataDelegate::writeRDFDistributionData(hid_t pid, RdfData:
     {
       return err;
     }
-    err = QH5Lite::writeStringAttribute(disId, DREAM3D::StringConstants::Frequencies, DREAM3D::StringConstants::DistributionType, disTypeStr);
+    err = QH5Lite::writeStringAttribute(disId, DREAM3D::StringConstants::RadialDistFunc, DREAM3D::StringConstants::DistributionType, disTypeStr);
     if(err < 0)
     {
       return err;
@@ -707,13 +707,13 @@ int H5PrecipitateStatsDataDelegate::readRDFDistributionData(hid_t pid,
   }
   rdfData->setMinDistance(val);
 
-  QString disType;
-  err = QH5Lite::readStringAttribute(disId, DREAM3D::StringConstants::Frequencies, DREAM3D::StringConstants::DistributionType, disType);
-  if(err < 0)
-  {
-    return err;
-  }
-  rdfData->setDistributionType(disType);
+//  QString disType;
+//  err = QH5Lite::readStringAttribute(disId, DREAM3D::StringConstants::RadialDistFunc, DREAM3D::StringConstants::DistributionType, disType);
+//  if(err < 0)
+//  {
+//    return err;
+//  }
+//  rdfData->setDistributionType(disType);
 
   err = QH5Utilities::closeHDF5Object(disId);
   return err;
