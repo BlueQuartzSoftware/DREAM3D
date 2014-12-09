@@ -148,21 +148,21 @@ void FindDirectionalModuli::dataCheck()
   if( !getFeaturePhasesArrayPath().sameAttributeMatrixPath(getAvgQuatsArrayPath()) )
   {
     setErrorCondition(-2);
-    notifyErrorMessage(getHumanLabel(), "Feature Phases and Average Quats must belong to the same DataContainer / AtributreMatrix", getErrorCondition());    
+    notifyErrorMessage(getHumanLabel(), "Feature Phases and Average Quats must belong to the same DataContainer / AtributreMatrix", getErrorCondition());
   }
 
   //make sure compliances + crystal structures are from the same attribute matrix + data container
   if( !getCrystalStructuresArrayPath().sameAttributeMatrixPath(getCrystalCompliancesArrayPath()) )
   {
     setErrorCondition(-2);
-    notifyErrorMessage(getHumanLabel(), "Crystal Structures and Crystal Compliances must belong to the same DataContainer / AtributreMatrix", getErrorCondition());    
+    notifyErrorMessage(getHumanLabel(), "Crystal Structures and Crystal Compliances must belong to the same DataContainer / AtributreMatrix", getErrorCondition());
   }
 
   //make sure everything is in the same data container (may not be true for synthetic volumes using a stats gen container but the user can copy the ensemble attribute matrix over)
   if( !getAvgQuatsArrayPath().sameDataContainer(getCrystalStructuresArrayPath()) )
   {
     setErrorCondition(-2);
-    notifyErrorMessage(getHumanLabel(), "Crystal Structures and Average Quaternions must belong to the same DataContainer", getErrorCondition());    
+    notifyErrorMessage(getHumanLabel(), "Crystal Structures and Average Quaternions must belong to the same DataContainer", getErrorCondition());
   }
 }
 
@@ -179,7 +179,7 @@ void FindDirectionalModuli::preflight()
   emit preflightExecuted();
   setInPreflight(false);
 }
-#include<windows.h>
+//#include<windows.h>
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -209,7 +209,7 @@ void FindDirectionalModuli::execute()
   //                    m_CrystalCompliances[index + 24], m_CrystalCompliances[index + 25], m_CrystalCompliances[index + 26], m_CrystalCompliances[index + 27], m_CrystalCompliances[index + 28], m_CrystalCompliances[index + 29],
   //                    m_CrystalCompliances[index + 30], m_CrystalCompliances[index + 31], m_CrystalCompliances[index + 32], m_CrystalCompliances[index + 33], m_CrystalCompliances[index + 34], m_CrystalCompliances[index + 35] ;
   // }
-  
+
   QuatF q1, q2, qTotal;
   float sampleLoading[3];
   float crystalLoading[3];
@@ -266,10 +266,10 @@ void FindDirectionalModuli::execute()
       //concatenate rotation with crystal orientation (determine rotation from crystal frame to sample loading direction)
       QuaternionMathF::Copy(avgQuats[i], q1);
       QuaternionMathF::Multiply(q2, q1, qTotal);
-      
-      /* 
+
+      /*
       This method is straightforward but computationally very expensive/wasteful (since it computes the full rotated compliance matrix and we only need s'11)
-      
+
       //convert orientation to rotation matrix and invert (need rotation from crystal -> sample frame)
       QuaternionMathF::Conjugate(qTotal);
       OrientationMath::QuattoMat(q1, g);
@@ -319,7 +319,7 @@ void FindDirectionalModuli::execute()
         // float g00 = (1.0f - (2.0f * q1.y * q1.y) - (2.0f * q1.z * q1.z));
         // float g01 = ((2.0f * q1.x * q1.y) - (2.0f * q1.z * q1.w));
         // float g02 = ((2.0f * q1.x * q1.z) + (2.0f * q1.y * q1.w));
-        
+
         // float g10 = ((2.0f * q1.x * q1.y) + (2.0f * q1.z * q1.w));
         // float g11 = (1.0f - (2.0f * q1.x * q1.x) - (2.0f * q1.z * q1.z));
         // float g12 = (2.0f * q1.y * q1.z) - (2.0f * q1.x * q1.w);
@@ -352,11 +352,11 @@ void FindDirectionalModuli::execute()
       float s44Coef = b2 * c2;//b^2 c^2
       float s55Coef = a2 * c2;//a^2 c^2
       float s66Coef = a2 * b2;//a^2 b^2
-      
+
       float s12Coef = 2.0f * a2 * b2;//2 a^2 b^2
       float s23Coef = 2.0f * b2 * c2;//2 b^2 c^2
       float s13Coef = 2.0f * a2 * c2;//2 a^2 c^2
-      
+
       float s14Coef = 2.0f * a2 * b * c;//2 a^2 b c
       float s15Coef = 2.0f * a2 * a * c;//2 a^3 c
       float s16Coef = 2.0f * a2 * a * b;//2 a^3 b
@@ -380,25 +380,25 @@ void FindDirectionalModuli::execute()
                        s14Coef * m_CrystalCompliances[index + 3] +
                        s15Coef * m_CrystalCompliances[index + 4] +
                        s16Coef * m_CrystalCompliances[index + 5] +
-  
+
                        s22Coef * m_CrystalCompliances[index + 7] +
                        s23Coef * m_CrystalCompliances[index + 8] +
                        s24Coef * m_CrystalCompliances[index + 9] +
                        s25Coef * m_CrystalCompliances[index + 10] +
                        s26Coef * m_CrystalCompliances[index + 11] +
-  
+
                        s33Coef * m_CrystalCompliances[index + 14] +
                        s34Coef * m_CrystalCompliances[index + 15] +
                        s35Coef * m_CrystalCompliances[index + 16] +
                        s36Coef * m_CrystalCompliances[index + 17] +
-                       
+
                        s44Coef * m_CrystalCompliances[index + 21] +
                        s45Coef * m_CrystalCompliances[index + 22] +
                        s46Coef * m_CrystalCompliances[index + 23] +
-  
+
                        s55Coef * m_CrystalCompliances[index + 28] +
                        s56Coef * m_CrystalCompliances[index + 29] +
-  
+
                        s66Coef * m_CrystalCompliances[index + 35];
 
       //compute modulus
