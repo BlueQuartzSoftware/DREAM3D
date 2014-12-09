@@ -347,11 +347,11 @@ int VtkStructuredPointsReader::readFile()
   size_t dims[3];
   QList<QByteArray> tokens = buf.split(' ');
   dims[0] = tokens[1].toInt(&ok, 10);
-  if(dims[0] > 1) { dims[0] = dims[0] - 1; }
+  if(dims[0] > 1) { dims[0] = dims[0]; }
   dims[1] = tokens[2].toInt(&ok, 10);
-  if(dims[1] > 1) { dims[1] = dims[1] - 1; }
+  if(dims[1] > 1) { dims[1] = dims[1]; }
   dims[2] = tokens[3].toInt(&ok, 10);
-  if(dims[2] > 1) { dims[2] = dims[2] - 1; }
+  if(dims[2] > 1) { dims[2] = dims[2]; }
   m->setDimensions(dims);
 
   buf = instream.readLine().trimmed();// Read Line 7 which is the Scaling values
@@ -371,15 +371,15 @@ int VtkStructuredPointsReader::readFile()
   m->setOrigin(origin);
 
 
-  // Red the "CELL_DATA"
+  // Red the "POINT_DATA"
   buf = instream.readLine().trimmed();
   words = buf.split(' ');
   QString cellDataStr(words.at(0));
-  if (cellDataStr.compare("CELL_DATA") != 0)
+  if (cellDataStr.compare("POINT_DATA") != 0)
   {
-    QString msg = QObject::tr("Error Reading the CELL_DATA line. Got this line: %1").arg(cellDataStr);
+    QString msg = QObject::tr("Error Reading the POINT_DATA line. Got this line: %1").arg(cellDataStr);
     setErrorCondition(-101);
-    notifyErrorMessage(getHumanLabel(), "", getErrorCondition());
+    notifyErrorMessage(getHumanLabel(), msg, getErrorCondition());
     return getErrorCondition();
   }
 

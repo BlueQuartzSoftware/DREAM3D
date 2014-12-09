@@ -42,9 +42,62 @@
 #include <QtCore/QDir>
 #include <QtCore/QFile>
 
+#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
+#include <tbb/parallel_for.h>
+#include <tbb/blocked_range.h>
+#include <tbb/partitioner.h>
+#include <tbb/task_scheduler_init.h>
+#endif
+
 #include "DREAM3DLib/Math/DREAM3DMath.h"
 
 #include "IO/IOConstants.h"
+
+class FindUniqueIdsImpl
+{
+
+  public:
+    FindUniqueIdsImpl(VertexArray::Vert_t* vertex, QVector<QVector<size_t>> nodesInBin, int32_t* uniqueIds) :
+      m_Vertex(vertex),
+      m_NodesInBin(nodesInBin),
+      m_UniqueIds(uniqueIds)
+    {}
+    virtual ~FindUniqueIdsImpl() {}
+
+    void convert(size_t start, size_t end) const
+    {
+      for (size_t i = start; i < end; i++)
+      {
+        for(int j = 0; j < m_NodesInBin[i].size(); j++)
+        {
+          size_t node1 = m_NodesInBin[i][j];
+          if(m_UniqueIds[node1] == node1)
+          {
+            for(int k = j+1; k < m_NodesInBin[i].size(); k++)
+            {
+              size_t node2 = m_NodesInBin[i][k];
+              if(m_Vertex[node1].pos[0] == m_Vertex[node2].pos[0] && m_Vertex[node1].pos[1] == m_Vertex[node2].pos[1] && m_Vertex[node1].pos[2] == m_Vertex[node2].pos[2])
+              {
+                m_UniqueIds[node2] = node1;
+              }
+            }
+          }
+        }
+      }
+    }
+
+#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
+    void operator()(const tbb::blocked_range<size_t>& r) const
+    {
+      convert(r.begin(), r.end());
+    }
+#endif
+  private:
+    VertexArray::Vert_t* m_Vertex; 
+    QVector<QVector<size_t>> m_NodesInBin;
+    int32_t* m_UniqueIds;
+
+};
 
 
 // -----------------------------------------------------------------------------
@@ -292,13 +345,11 @@ void ReadStlToSurfaceMesh::eliminate_duplicate_nodes()
   int nTriangles = facesPtr->getNumberOfTuples();
   FaceArray::Face_t* triangle = facesPtr->getPointer(0); // Get the pointer to the from of the array so we can use [] notation
 
-  float stepX = m_maxXcoord-m_minXcoord/100.0;
-  float stepY = m_maxYcoord-m_minYcoord/100.0;
-  float stepZ = m_maxZcoord-m_minZcoord/100.0;
+  float stepX = (m_maxXcoord-m_minXcoord)/100.0;
+  float stepY = (m_maxYcoord-m_minYcoord)/100.0;
+  float stepZ = (m_maxZcoord-m_minZcoord)/100.0;
 
-  //Create array to hold binIds
-  Int32ArrayType::Pointer binArray = Int32ArrayType::CreateArray(nNodes, "binIds");
-  int32_t* bins = binArray->getPointer(0);
+  QVector<QVector<size_t>> nodesInBin(100*100*100);
 
   //determine (xyz) bin each node falls in - used to speed up node comparison
   int bin, xBin, yBin, zBin;
@@ -307,8 +358,11 @@ void ReadStlToSurfaceMesh::eliminate_duplicate_nodes()
     xBin = (vertex[i].pos[0]-m_minXcoord)/stepX;
     yBin = (vertex[i].pos[1]-m_minYcoord)/stepY;
     zBin = (vertex[i].pos[2]-m_minZcoord)/stepZ;
+    if(xBin == 100) xBin = 99;
+    if(yBin == 100) yBin = 99;
+    if(zBin == 100) zBin = 99;
     bin = (zBin*10000)+(yBin*100)+xBin;
-    bins[i] = bin;
+    nodesInBin[bin].push_back(i);
   }
 
   //Create array to hold unique node numbers
@@ -319,24 +373,38 @@ void ReadStlToSurfaceMesh::eliminate_duplicate_nodes()
     uniqueIds[i] = i;
   }
 
-  //look for duplicate nodes and renumber - only need to check nodes in same (xyz) bin
+#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
+  tbb::task_scheduler_init init;
+  bool doParallel = true;
+#endif
+
+  //Parallel algorithm to find duplicate nodes
+#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
+  if (doParallel == true)
+  {
+    tbb::parallel_for(tbb::blocked_range<size_t>(0, 100*100*100),
+                      FindUniqueIdsImpl(vertex, nodesInBin, uniqueIds), tbb::auto_partitioner());
+
+  }
+  else
+#endif
+  {
+    FindUniqueIdsImpl serial(vertex, nodesInBin, uniqueIds);
+    serial.convert(0, 100*100*100);
+  }
+
+  //renumber the unique nodes
   size_t uniqueCount = 0;
   for(size_t i = 0; i < nNodes; i++)
   {
     if(uniqueIds[i] == i)
     {
       uniqueIds[i] = uniqueCount;
-      for(size_t j = i+1; j < nNodes; j++)
-      {
-        if(bins[i] == bins[j])
-        {
-          if(vertex[i].pos[0] == vertex[j].pos[0] && vertex[i].pos[1] == vertex[j].pos[1] && vertex[i].pos[2] == vertex[j].pos[2])
-          {
-            uniqueIds[j] = uniqueCount;
-          }
-        }
-      }
       uniqueCount++;
+    }
+    else
+    {
+      uniqueIds[i] = uniqueIds[uniqueIds[i]];
     }
   }
 
