@@ -43,12 +43,14 @@
 #include <QtGui/QFileDialog>
 #include <QtGui/QStandardItemModel>
 #include <QtGui/QItemSelectionModel>
+#include <QtGui/QListWidget>
 
 #include "DREAM3DLib/CoreFilters/DataContainerReader.h"
 
 #include "DREAM3DWidgetsLib/DREAM3DWidgetsLibConstants.h"
 
 #include "FilterParameterWidgetsDialogs.h"
+#include "DataArrayInformationDisplayWidget.h"
 
 
 // Initialize private static member variable
@@ -675,4 +677,17 @@ void DataContainerReaderWidget::on_selectBtn_clicked()
   // emit parametersChanged(); // This should force the preflight to run because we are emitting a signal
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DataContainerReaderWidget::on_dcaProxyView_updatePreviewWidget(const QModelIndex &index)
+{
+//    QVariant var = index.data();
+//    QString name = var.toString();
 
+//    DataArrayInformationDisplayWidget::Pointer widget = DataArrayInformationDisplayWidget::New();
+//    widget->setNameText(name);
+
+//    // Create widget and add to dcaProxyView
+//    dcaProxyView->setPreviewWidget(widget.get());
+}

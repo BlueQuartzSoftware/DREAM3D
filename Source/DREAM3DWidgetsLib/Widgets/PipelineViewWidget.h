@@ -277,7 +277,7 @@ class DREAM3DWidgetsLib_EXPORT PipelineViewWidget : public QFrame
      * @brief addDREAM3DReaderFilter
      * @param filePath
      */
-    void addDREAM3DReaderFilter(const QString &filePath);
+    void addDREAM3DReaderFilter(const QString &filePath, ExtractionType type);
 
     /**
      * @brief readPipelineFromFile
