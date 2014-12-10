@@ -156,7 +156,7 @@ void AbaqusHexahedronWriter::execute()
   }
 
   VolumeDataContainer* r = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(m_FeatureIdsArrayPath.getDataContainerName());
-  int elementX = r->getXPoints();
+	size_t elementX = r->getXPoints();
   float step = r->getXRes();
 
   // Create file names
@@ -207,15 +207,15 @@ void AbaqusHexahedronWriter::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int AbaqusHexahedronWriter::writeNodes(const QString& file, int elementX, float step)
+int AbaqusHexahedronWriter::writeNodes(const QString& file, size_t elementX, float step)
 {
   float min = 0.0f - step * 0.5f;
   float x_factor, x_coord, y_factor, y_coord, z_factor, z_coord;
   int index = 0;
   float distance = (((index + 1)*step + min) - (index*step + min)) / 1000.0f; // Length in millimeters(mm)
   float sidelength = distance * elementX; // sidelength of an individual element(in mm's)
-  int nodeX = elementX + 1;
-  int nodeTotal = nodeX * nodeX * nodeX;
+	size_t nodeX = elementX + 1;
+	size_t nodeTotal = nodeX * nodeX * nodeX;
 
   int err = 0;
   FILE* f = NULL;
@@ -230,7 +230,7 @@ int AbaqusHexahedronWriter::writeNodes(const QString& file, int elementX, float 
 
   // Loop through the nodes and assign the x - , y - , and z - coordinates.
   // This code starts at(0, 0, 0) and increments up to(L, L, L) by iterating through x, then y, then z
-  int node = 1;
+	size_t node = 1;
   while (node <= nodeTotal) {
     x_factor = (node - 1) % nodeX;
     x_coord = (x_factor * distance);
@@ -260,11 +260,11 @@ int AbaqusHexahedronWriter::writeNodes(const QString& file, int elementX, float 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int AbaqusHexahedronWriter::writeElems(const QString& file, int elementX)
+int AbaqusHexahedronWriter::writeElems(const QString& file, size_t elementX)
 {
-  int n1, n2, n3, n4, n5, n6, n7, n8;
-  int nodeX = elementX + 1;
-  int elementTotal = elementX * elementX * elementX;
+	size_t n1, n2, n3, n4, n5, n6, n7, n8;
+	size_t nodeX = elementX + 1;
+	size_t elementTotal = elementX * elementX * elementX;
 
   int err = 0;
   FILE* f = NULL;
@@ -280,7 +280,7 @@ int AbaqusHexahedronWriter::writeElems(const QString& file, int elementX)
 
   // Loop through the elements and assign the 8 nodes for each element.
   // The nodes in the elements were reordered below to account for the new numbering system of nodes from(0, 0, 0) to(L, L, L)
-  int element = 1;
+	size_t element = 1;
   while (element <= elementTotal) {
     n4 = element + (nodeX * nodeX) + 0           + ((element - 1) / elementX) + (nodeX * ((element - 1) / (elementX * elementX)));
     n1 = element + (nodeX * nodeX) + 1           + ((element - 1) / elementX) + (nodeX * ((element - 1) / (elementX * elementX)));
@@ -309,7 +309,7 @@ int AbaqusHexahedronWriter::writeElems(const QString& file, int elementX)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int AbaqusHexahedronWriter::writeElset(const QString& file, int elementX)
+int AbaqusHexahedronWriter::writeElset(const QString& file, size_t elementX)
 {
 	size_t totalPoints = elementX * elementX * elementX;
 
@@ -329,7 +329,7 @@ int AbaqusHexahedronWriter::writeElset(const QString& file, int elementX)
 
   // find total number of Grain Ids
 	size_t maxGrainId = 0;
-  for (int i = 0; i < totalPoints; i++) {
+	for (size_t i = 0; i < totalPoints; i++) {
     if (m_FeatureIds[i] > maxGrainId)
     {
       maxGrainId = m_FeatureIds[i];
@@ -338,7 +338,7 @@ int AbaqusHexahedronWriter::writeElset(const QString& file, int elementX)
 
 	size_t voxelId = 1;
   while (voxelId <= maxGrainId) {
-    int elementPerLine = 0;
+		size_t elementPerLine = 0;
     fprintf(f, "\n*Elset, elset=Grain%d_set\n", voxelId);
 		for (size_t i = 0; i < totalPoints + 1; i++)
     {
@@ -410,9 +410,9 @@ int AbaqusHexahedronWriter::writeMicrons(const QString& file)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int AbaqusHexahedronWriter::writeSects(const QString& file, int elementX)
+int AbaqusHexahedronWriter::writeSects(const QString& file, size_t elementX)
 {
-  int totalPoints = elementX * elementX * elementX;
+	size_t totalPoints = elementX * elementX * elementX;
 
   int err = 0;
   FILE* f = NULL;
@@ -426,8 +426,8 @@ int AbaqusHexahedronWriter::writeSects(const QString& file, int elementX)
   fprintf(f, "** ----------------------------------------------------------------\n**\n** Each section is a separate grain\n");
 
   // find total number of Grain Ids
-  int maxGrainId = 0;
-  for (int i = 0; i < totalPoints; i++) {
+	size_t maxGrainId = 0;
+	for (size_t i = 0; i < totalPoints; i++) {
     if (m_FeatureIds[i] > maxGrainId)
     {
       maxGrainId = m_FeatureIds[i];
@@ -435,7 +435,7 @@ int AbaqusHexahedronWriter::writeSects(const QString& file, int elementX)
   }
 
   // We are now defining the sections, which is for each grain
-  int grain = 1;
+	size_t grain = 1;
   while (grain <= maxGrainId) {
     fprintf(f, "** Section: Grain%d\n", grain);
     fprintf(f, "*Solid Section, elset=Grain%d_set, material=Grain_Mat%d\n", grain, grain);
