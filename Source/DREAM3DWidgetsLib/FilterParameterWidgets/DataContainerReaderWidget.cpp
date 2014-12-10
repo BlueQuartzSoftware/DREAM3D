@@ -682,17 +682,12 @@ void DataContainerReaderWidget::on_selectBtn_clicked()
 // -----------------------------------------------------------------------------
 void DataContainerReaderWidget::on_dcaProxyView_updatePreviewWidget(const QModelIndex &index)
 {
-    if ( NULL != dcaProxyView->previewWidget())
-    {
-        delete dcaProxyView->previewWidget();
-    }
+//    QVariant var = index.data();
+//    QString name = var.toString();
 
-    QVariant var = index.data();
-    QString name = var.toString();
+//    DataArrayInformationDisplayWidget::Pointer widget = DataArrayInformationDisplayWidget::New();
+//    widget->setNameText(name);
 
-    DataArrayInformationDisplayWidget* widget = new DataArrayInformationDisplayWidget();
-    widget->setNameText(name);
-
-    // Create widget and add to dcaProxyView
-    dcaProxyView->setPreviewWidget(widget);
+//    // Create widget and add to dcaProxyView
+//    dcaProxyView->setPreviewWidget(widget.get());
 }
