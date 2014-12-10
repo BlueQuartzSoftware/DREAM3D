@@ -33,11 +33,13 @@
 #ifndef _AbaqusHexahedronWriter_H_
 #define _AbaqusHexahedronWriter_H_
 
+#include <QtCore/QString>
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
-
+#include "DREAM3DLib/DataContainers/VolumeDataContainer.h"
+#include "DREAM3DLib/Common/Constants.h"
 
 /**
  * @class AbaqusHexahedronWriter AbaqusHexahedronWriter.h IO/IOFilters/AbaqusHexahedronWriter.h
@@ -57,18 +59,20 @@ class AbaqusHexahedronWriter : public AbstractFilter
 
     virtual ~AbaqusHexahedronWriter();
 
-    /* Place your input parameters here using the DREAM3D macros to declare the Filter Parameters
-     * or other instance variables
-     */
-    //DREAM3D_FILTER_PARAMETER(QString, ImagePrefix)
-    /* If you declare a filter parameter above then you MUST create a Q_PROPERTY for that FilterParameter */
-    //Q_PROPERTY(QString ImagePrefix READ getImagePrefix WRITE setImagePrefix)
+    DREAM3D_FILTER_PARAMETER(QString, OutputPath)
+    Q_PROPERTY(QString OutputPath READ getOutputPath WRITE setOutputPath)
 
-    /* Here is another example of declaring an integer FilterParameter */
-    // DREAM3D_FILTER_PARAMETER(int, ImageSize)
-    // Q_PROPERTY(int ImageSize READ getImageSize WRITE setImageSize)
+    DREAM3D_FILTER_PARAMETER(QString, FilePrefix)
+    Q_PROPERTY(QString FilePrefix READ getFilePrefix WRITE setFilePrefix)
 
+    DREAM3D_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
+    Q_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
 
+    DREAM3D_FILTER_PARAMETER(int, HourglassStiffness)
+    Q_PROPERTY(int HourglassStiffness READ getHourglassStiffness WRITE setHourglassStiffness)
+
+    DREAM3D_FILTER_PARAMETER(QString, JobName)
+    Q_PROPERTY(QString JobName READ getJobName WRITE setJobName)
 
     /**
      * @brief getCompiledLibraryName Returns the name of the Library that this filter is a part of
@@ -171,9 +175,16 @@ class AbaqusHexahedronWriter : public AbstractFilter
      * make sure you have all the variables defined correctly. Those are "DEFINE_REQUIRED_DATAARRAY_VARIABLE()"
      * and  DEFINE_CREATED_DATAARRAY_VARIABLE() which are defined in DREAM3DGetSetMacros.h
      */
+    DEFINE_REQUIRED_DATAARRAY_VARIABLE(int32_t, FeatureIds)
 
     AbaqusHexahedronWriter(const AbaqusHexahedronWriter&); // Copy Constructor Not Implemented
     void operator=(const AbaqusHexahedronWriter&); // Operator '=' Not Implemented
+
+	int writeNodes(const QString& file, int elem, float step);
+	int writeElems(const QString& file, int elem);
+	int writeSects(const QString& file, int elem);
+	int writeElset(const QString& file, int elem);
+	int writeMicrons(const QString& file);
 };
 
 #endif /* _AbaqusHexahedronWriter_H_ */
