@@ -508,17 +508,19 @@ class NeighborList : public IDataArray
      * @brief deepCopy
      * @return
      */
-    IDataArray::Pointer deepCopy()
+    IDataArray::Pointer deepCopy(bool forceNoAllocate = false)
     {
       typename NeighborList<T>::Pointer daCopyPtr = NeighborList<T>::CreateArray(getNumberOfTuples(), "Copy of NeighborList", true);
 
-      for(size_t i = 0; i < getNumberOfTuples(); i++)
+      if(forceNoAllocate == false)
       {
-        typename NeighborList<T>::SharedVectorType sharedNeiLst(new std::vector<T>);
-        sharedNeiLst = m_Array[i];
-        daCopyPtr->setList(static_cast<int>(i), sharedNeiLst);
+        for(size_t i = 0; i < getNumberOfTuples(); i++)
+        {
+          typename NeighborList<T>::SharedVectorType sharedNeiLst(new std::vector<T>);
+          sharedNeiLst = m_Array[i];
+          daCopyPtr->setList(static_cast<int>(i), sharedNeiLst);
+        }
       }
-
       return daCopyPtr;
     }
 

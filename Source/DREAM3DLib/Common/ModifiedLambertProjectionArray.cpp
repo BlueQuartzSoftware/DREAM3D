@@ -275,16 +275,18 @@ void ModifiedLambertProjectionArray::initializeWithZeros()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-IDataArray::Pointer ModifiedLambertProjectionArray::deepCopy()
+IDataArray::Pointer ModifiedLambertProjectionArray::deepCopy(bool forceNoAllocate)
 {
   ModifiedLambertProjectionArray::Pointer daCopyPtr = ModifiedLambertProjectionArray::New();
-  daCopyPtr->resize(getNumberOfTuples());
-  ModifiedLambertProjectionArray& daCopy = *daCopyPtr;
-  for(size_t i = 0; i < getNumberOfTuples(); i++)
+  if(forceNoAllocate == false)
   {
-    daCopy[i] = m_ModifiedLambertProjectionArray[i];
+    daCopyPtr->resize(getNumberOfTuples());
+    ModifiedLambertProjectionArray& daCopy = *daCopyPtr;
+    for(size_t i = 0; i < getNumberOfTuples(); i++)
+    {
+      daCopy[i] = m_ModifiedLambertProjectionArray[i];
+    }
   }
-
   return daCopyPtr;
 }
 
