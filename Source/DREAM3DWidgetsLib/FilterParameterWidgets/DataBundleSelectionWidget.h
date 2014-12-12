@@ -103,7 +103,7 @@ class DREAM3DWidgetsLib_EXPORT DataBundleSelectionWidget : public FilterParamete
     void afterPreflight();
     void filterNeedsInputParameters(AbstractFilter* filter);
 
-    void on_dataContainerList_currentIndexChanged(int index);
+    void on_dataBundleList_currentIndexChanged(int index);
 
 
   protected:

@@ -121,12 +121,12 @@ void DataBundleSelectionWidget::setupGui()
     label->setText(getFilterParameter()->getHumanLabel() );
   }
 
-  dataContainerList->blockSignals(true);
+  dataBundleList->blockSignals(true);
 
-  dataContainerList->clear();
+  dataBundleList->clear();
 
   // Now let the gui send signals like normal
-  dataContainerList->blockSignals(false);
+  dataBundleList->blockSignals(false);
 
 
   populateComboBoxes();
@@ -144,7 +144,7 @@ void DataBundleSelectionWidget::populateComboBoxes()
   // Now get the DataContainerArray from the Filter instance
   // We are going to use this to get all the current DataContainers
   DataContainerArray::Pointer dca = getFilter()->getDataContainerArray();
-  IDataContainerBundle::Pointer dcb = dca->getDataContainerBundles();
+  QMap<QString, IDataContainerBundle::Pointer> dcb = dca->getDataContainerBundles();
 //DataContainerBundle::Pointer dcb = dca->getDataContainerBundle();
 
   if(NULL == dca.get()) { return; }
@@ -155,34 +155,37 @@ void DataBundleSelectionWidget::populateComboBoxes()
     return;
   }
 
-  if(dca->getDataContainerBundles().size() == 0)
+  if(dcb.size() == 0)
   {
       return;
   }
 
-  dcb.get();
+  QList<QString> listOfBundles = dcb.keys();
+
+
+
   // Cache the DataContainerArray Structure for our use during all the selections
   m_DcaProxy = DataContainerArrayProxy(dca.get());
 
   // Populate the DataContainerArray Combo Box with all the DataContainers
 
-  QList<DataContainerProxy> dcList = m_DcaProxy.list;
-  QListIterator<DataContainerProxy> iter(dcList);
+  //QList<DataContainerProxy> dcList = m_DcaProxy.list;
+  QListIterator<QString> iter(listOfBundles);
 
-  while(iter.hasNext() )
+  while(iter.hasNext())
   {
-    DataContainerProxy dc = iter.next();
-    if(dataContainerList->findText(dc.name) == -1 )
+    QString dc = iter.next();
+    if(dataBundleList->findText(dc) == -1 )
     {
-      dataContainerList->addItem(dc.name);
+      dataBundleList->addItem(dc);
     }
   }
 
   //remove items in the combo that are NOT in the Data Container Array
-  int count = dataContainerList->count();
+  int count = dataBundleList->count();
   for(int i = count - 1; i >= 0; i--)
   {
-    QString str0 = dataContainerList->itemText(i);
+    QString str0 = dataBundleList->itemText(i);
     iter.toFront();
     bool boo = false;
     while(iter.hasNext() )
@@ -195,12 +198,12 @@ void DataBundleSelectionWidget::populateComboBoxes()
     }
     if(boo == false)
     {
-      dataContainerList->removeItem(i);
+      dataBundleList->removeItem(i);
     }
   }
 
   // Grab what is currently selected
-  QString curDcName = dataContainerList->currentText();
+  QString curDcName = dataBundleList->currentText();
 
 
   // Get what is in the filter
@@ -231,20 +234,20 @@ void DataBundleSelectionWidget::populateComboBoxes()
 
   bool didBlock = false;
 
-  if (!dataContainerList->signalsBlocked()) { didBlock = true; }
-  dataContainerList->blockSignals(true);
-  int dcIndex = dataContainerList->findText(dcName);
+  if (!dataBundleList->signalsBlocked()) { didBlock = true; }
+  dataBundleList->blockSignals(true);
+  int dcIndex = dataBundleList->findText(dcName);
   if(dcIndex < 0 && dcName.isEmpty() == false)
   {
-    dataContainerList->addItem(dcName);
+    dataBundleList->addItem(dcName);
     //qDebug() << "[2] Adding " << dcName;
   } // the string was not found so just set it to the first index
   else
   {
     if(dcIndex < 0) { dcIndex = 0; } // Just set it to the first DataContainer in the list
-    dataContainerList->setCurrentIndex(dcIndex);
+    dataBundleList->setCurrentIndex(dcIndex);
   }
-  if(didBlock) { dataContainerList->blockSignals(false); didBlock = false; }
+  if(didBlock) { dataBundleList->blockSignals(false); didBlock = false; }
 
 }
 
@@ -268,7 +271,7 @@ QString DataBundleSelectionWidget::checkStringValues(QString curDcName, QString 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DataBundleSelectionWidget::on_dataContainerList_currentIndexChanged(int index)
+void DataBundleSelectionWidget::on_dataBundleList_currentIndexChanged(int index)
 {
   m_DidCausePreflight = true;
   emit parametersChanged();
@@ -287,10 +290,10 @@ void DataBundleSelectionWidget::beforePreflight()
     return;
   }
 
-  dataContainerList->blockSignals(true);
+  dataBundleList->blockSignals(true);
   // Reset all the combo box widgets to have the default selection of the first index in the list
   populateComboBoxes();
-  dataContainerList->blockSignals(false);
+  dataBundleList->blockSignals(false);
 }
 
 // -----------------------------------------------------------------------------
@@ -307,8 +310,8 @@ void DataBundleSelectionWidget::afterPreflight()
 void DataBundleSelectionWidget::filterNeedsInputParameters(AbstractFilter* filter)
 {
   // Generate the path to the AttributeArray
-  //DataArrayPath path(dataContainerList->currentText(), attributeMatrixList->currentText(), attributeArrayList->currentText());
-  QVariant var(dataContainerList->currentText() );
+  //DataArrayPath path(dataBundleList->currentText(), attributeMatrixList->currentText(), attributeArrayList->currentText());
+  QVariant var(dataBundleList->currentText() );
   // var.setValue(path);
   bool ok = false;
   // Set the value into the Filter
