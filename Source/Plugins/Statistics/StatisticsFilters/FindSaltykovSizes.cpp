@@ -158,13 +158,11 @@ void FindSaltykovSizes::find_saltykov_sizes()
   // an initial guess of 10 bins is used
   int numberofbins = 10, numberofbins1 = 0, numberofbins2 = 20;
   // the second guess is 20 bins, after this, a forward difference will ensue
-  int secondGuess = 20;
 
   float minEqDia = std::numeric_limits<float>::max();
   float maxEqDia = 0.0f;
   float binLength = 0.0f;
-  float temp1 = 0.0f, temp2 = 0.0f, temp3 = 0.0f, temp4 = 0.0f, temp5 = 0.0f;
-  int binIndex = 0, iter = 0;
+  int iter = 0;
   int saltykovLength = 0, saltykovLength1 = 0, saltykovLength2 = 0;
   int saltykovIndex = 1;
   int attempts = 0;
@@ -198,7 +196,7 @@ void FindSaltykovSizes::find_saltykov_sizes()
   for (size_t i = 0; i < numfeatures-1; i++)
   {
     // find the min size
-	if (equivalentDiameters[i] < minEqDia) { minEqDia = equivalentDiameters[i]; }
+  if (equivalentDiameters[i] < minEqDia) { minEqDia = equivalentDiameters[i]; }
     // find the max size
     if (equivalentDiameters[i] > maxEqDia) { maxEqDia = equivalentDiameters[i]; }
   }
@@ -223,19 +221,19 @@ void FindSaltykovSizes::find_saltykov_sizes()
   // initialize bin lengths to 0
     for (int i = 0; i < numberofbins; i++) { binLengths[i] = 0; }
 
-	iter = 0;
-    for (int i = 0; i < numberofbins; i++) 
-	{ 
-	  temp.resize(0);
-	  std::copy(
-		std::lower_bound(equivalentDiameters.begin(), equivalentDiameters.end(), binLength*i),
-		std::upper_bound(equivalentDiameters.begin(), equivalentDiameters.end(), binLength*(i+1)),
-		std::back_inserter(temp)
-		);
-	  binLengths[i] = temp.size();
-	  iter++;
-	}
-  
+  iter = 0;
+    for (int i = 0; i < numberofbins; i++)
+  {
+    temp.resize(0);
+    std::copy(
+    std::lower_bound(equivalentDiameters.begin(), equivalentDiameters.end(), binLength*i),
+    std::upper_bound(equivalentDiameters.begin(), equivalentDiameters.end(), binLength*(i+1)),
+    std::back_inserter(temp)
+    );
+    binLengths[i] = temp.size();
+    iter++;
+  }
+
   std::reverse(binLengths.begin(),binLengths.end());
 
   // for formal Saltykov we start at the largest bin then unfold our
@@ -247,7 +245,7 @@ void FindSaltykovSizes::find_saltykov_sizes()
   for (int i = 1; i <= numberofbins; i++)
   {
     saltykovBinLengths[i-1] = do_saltykov(binLengths, maxEqDia, i);
-	if (saltykovBinLengths[i-1] < 0) { saltykovBinLengths[i-1] = 0; }
+  if (saltykovBinLengths[i-1] < 0) { saltykovBinLengths[i-1] = 0; }
     saltykovLength += saltykovBinLengths[i-1];
   }
 
@@ -267,43 +265,42 @@ void FindSaltykovSizes::find_saltykov_sizes()
   // than option triggers this fudge addition to reach our desired number of features
     if (saltykovLength != numfeatures-1)
     {
-	  //better minumum formula
+    //better minumum formula
       difference = saltykovLength - (numfeatures-1);
     if (attempts >= MaxAttempts && difference < 0)
       {
         for (int i = 0; i > difference; i--)
         {
           binToAddTo = rg.genrand_int32() % numberofbins + 1;
-		  if (binToAddTo == numberofbins) { binToAddTo--; };
-		  // only add to bins that already have values in them
-		  if (saltykovBinLengths[binToAddTo] < 1)
-		  {
-			saltykovBinLengths[binToAddTo]++;
-		    saltykovLength = numfeatures-1;
-		  }
-		  else { i++; } 
+      if (binToAddTo == numberofbins) { binToAddTo--; };
+      // only add to bins that already have values in them
+      if (saltykovBinLengths[binToAddTo] < 1)
+      {
+      saltykovBinLengths[binToAddTo]++;
+        saltykovLength = numfeatures-1;
+      }
+      else { i++; }
         }
       }
       else
       {
         attempts++;
-		if (numberofbins2 == 20 && numberofbins1 == 0) 
-		{ 
-		  numberofbins1 = numberofbins;
-		  numberofbins = numberofbins2;
-		  saltykovLength1 = saltykovLength;
-		}
-		else
-		{
-		  numberofbins2 = numberofbins1;
-		  numberofbins1 = numberofbins;
-		  saltykovLength2 = saltykovLength1;
-		  saltykovLength1 = saltykovLength;
-		  numberofbins = forward_difference(numfeatures-1,saltykovLength2,saltykovLength1,numberofbins2,numberofbins1);
-		  int stop = 0;
-		}
-		// in case the number of bins is less than 1
-		if (numberofbins < 1) { numberofbins = 1; }
+    if (numberofbins2 == 20 && numberofbins1 == 0)
+    {
+      numberofbins1 = numberofbins;
+      numberofbins = numberofbins2;
+      saltykovLength1 = saltykovLength;
+    }
+    else
+    {
+      numberofbins2 = numberofbins1;
+      numberofbins1 = numberofbins;
+      saltykovLength2 = saltykovLength1;
+      saltykovLength1 = saltykovLength;
+      numberofbins = forward_difference(numfeatures-1,saltykovLength2,saltykovLength1,numberofbins2,numberofbins1);
+    }
+    // in case the number of bins is less than 1
+    if (numberofbins < 1) { numberofbins = 1; }
         binLengths.resize(numberofbins);
         saltykovBinLengths.resize(numberofbins);
       }
@@ -324,8 +321,6 @@ void FindSaltykovSizes::find_saltykov_sizes()
     randomLong = rg.genrand_int32();
     randomFraction = (double(randomLong) / double(RandMaxFloat));
     saltykovEquivalentDiameters[saltykovIndex] = float(randomFraction) * binLength + float(i)*binLength;
-	float seeMe = saltykovEquivalentDiameters[saltykovIndex];
-	int stop = 0;
     saltykovIndex++;
     }
   }
