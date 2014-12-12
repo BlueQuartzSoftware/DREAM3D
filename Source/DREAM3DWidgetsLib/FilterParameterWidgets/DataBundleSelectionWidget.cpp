@@ -154,7 +154,7 @@ void DataBundleSelectionWidget::populateComboBoxes()
   {
     return;
   }
-
+    // Check to see if we have any DataBundles to actually populate drop downs with.
   if(dcb.size() == 0)
   {
       return;
@@ -190,8 +190,8 @@ void DataBundleSelectionWidget::populateComboBoxes()
     bool boo = false;
     while(iter.hasNext() )
     {
-      DataContainerProxy dc = iter.next();
-      if(dc.name.compare(str0) == 0)
+      QString dc = iter.next();
+      if(dc.compare(str0) == 0)
       {
         boo = true; // found in the list
       }
