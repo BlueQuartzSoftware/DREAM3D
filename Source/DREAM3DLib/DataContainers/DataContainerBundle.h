@@ -53,7 +53,7 @@ class DREAM3DLib_EXPORT DataContainerBundle : public IDataContainerBundle
 
     virtual ~DataContainerBundle();
 
-    static Pointer New(const QString &name)
+    static Pointer                                        New(const QString &name)
     {
       Pointer sharedPtr (new DataContainerBundle);
       sharedPtr->setName(name);

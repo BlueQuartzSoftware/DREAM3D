@@ -103,6 +103,7 @@ namespace FilterParameterWidgetType
   const QString DataArraySelectionWidget("DataArraySelectionWidget");
   const QString ComparisonSelectionWidget("ComparisonSelectionWidget");
   const QString AttributeMatrixSelectionWidget("AttributeMatrixSelectionWidget");
+  const QString DataBundleSelectionWidget("DataBundleSelectionWidget");
   const QString DataContainerSelectionWidget("DataContainerSelectionWidget");
   const QString ShapeTypeSelectionWidget("ShapeTypeSelectionWidget");
   const QString DataArrayCreationWidget("DataArrayCreationWidget");

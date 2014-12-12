@@ -31,16 +31,30 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #include "AbaqusHexahedronWriter.h"
 
+#include <QtCore/QDir>
 #include <QtCore/QString>
+#include <QDebug>
 
 #include "IO/IOConstants.h"
 
+#include <stdio.h>
+#include <stdlib.h>
+#include <string>
+#include <sstream>
+#include <iostream>
+#include <vector>
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 AbaqusHexahedronWriter::AbaqusHexahedronWriter() :
-  AbstractFilter()
-/* DO NOT FORGET TO INITIALIZE ALL YOUR DREAM3D Filter Parameters HERE */
+AbstractFilter(),
+m_FilePrefix("default"),
+m_OutputPath(""),
+m_HourglassStiffness(0),
+m_JobName(""),
+m_FeatureIdsArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::FeatureIds),
+m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
+m_FeatureIds(NULL)
 {
   setupFilterParameters();
 }
@@ -58,21 +72,11 @@ AbaqusHexahedronWriter::~AbaqusHexahedronWriter()
 void AbaqusHexahedronWriter::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  /* There are several types of FilterParameter classes to choose from and several
-  * options for each class type. The programmer can put the entire invocation into
-  * a single line if they want. For example:
-  *
-  *   parameters.push_back(FilterParameter::New("Reference Direction", "ReferenceDir", FilterParameterWidgetType::FloatVec3Widget, getReferenceDir(), false));
-  * or the programmer can create a FilterParameter like usual C++ codes:
-  * {
-  *  FilterParameter::Pointer parameter = FilterParameter::New();
-  *  parameter->setHumanLabel("Eulers Array");
-  *  parameter->setPropertyName("CellEulerAnglesArrayName");
-  *  parameter->setWidgetType(FilterParameterWidgetType::SingleArraySelectionWidget);
-  *  parameter->setUnits("");
-  *  parameters.push_back(parameter);
-  * }
-  */
+  parameters.push_back(FileSystemFilterParameter::New("Output Path", "OutputPath", FilterParameterWidgetType::OutputPathWidget, getOutputPath(), false));
+  parameters.push_back(FilterParameter::New("Output Prefix", "FilePrefix", FilterParameterWidgetType::StringWidget, getFilePrefix(), false));
+  parameters.push_back(FilterParameter::New("FeatureIds", "FeatureIdsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeatureIdsArrayPath(), false));
+  parameters.push_back(FilterParameter::New("Hourglass Stiffness", "HourglassStiffness", FilterParameterWidgetType::IntWidget, getHourglassStiffness(), false, "", 0));
+  parameters.push_back(FilterParameter::New("Job Name", "JobName", FilterParameterWidgetType::StringWidget, getJobName(), false));
   setFilterParameters(parameters);
 }
 
@@ -82,10 +86,11 @@ void AbaqusHexahedronWriter::setupFilterParameters()
 void AbaqusHexahedronWriter::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-  /*
-   Place code in here that will read the parameters from a file
-   setOutputFile( reader->readValue("OutputFile", getOutputFile() ) );
-   */
+  setFeatureIdsArrayPath(reader->readDataArrayPath("FeatureIdsArrayPath", getFeatureIdsArrayPath()));
+  setFilePrefix(reader->readString("FilePrefix", getFilePrefix()));
+  setOutputPath(reader->readString("OutputPath", getOutputPath()));
+  setHourglassStiffness(reader->readValue("HourglassStiffness", getHourglassStiffness()));
+  setJobName(reader->readString("JobName", getJobName()));
   reader->closeFilterGroup();
 }
 
@@ -95,8 +100,11 @@ void AbaqusHexahedronWriter::readFilterParameters(AbstractFilterParametersReader
 int AbaqusHexahedronWriter::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  /* Place code that will write the inputs values into a file. reference the AbstractFilterParametersWriter class for the proper API to use. */
-  /*  writer->writeValue("OutputFile", getOutputFile() ); */
+  DREAM3D_FILTER_WRITE_PARAMETER(FeatureIdsArrayPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(OutputPath)
+  DREAM3D_FILTER_WRITE_PARAMETER(FilePrefix)
+  DREAM3D_FILTER_WRITE_PARAMETER(HourglassStiffness)
+  DREAM3D_FILTER_WRITE_PARAMETER(JobName)
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
@@ -107,40 +115,17 @@ int AbaqusHexahedronWriter::writeFilterParameters(AbstractFilterParametersWriter
 void AbaqusHexahedronWriter::dataCheck()
 {
   setErrorCondition(0);
-
-  /* Example code for preflighting looking for a valid string for the output file
-   * but not necessarily the fact that the file exists: Example code to make sure
-   * we have something in a string before proceeding.*/
-  /*
-  if (m_OutputFile.empty() == true)
+  if (m_OutputPath.isEmpty() == true)
   {
-    QString ss = QObject::tr("Output file name was not set").arg(getHumanLabel());
-    setErrorCondition(-1);
+    QString ss = QObject::tr("The output path must be set before executing this filter.");
     notifyErrorMessage(getHumanLabel(), ss, -1);
-    return;
+    setErrorCondition(-1);
   }
-  * We can also check for the availability of REQUIRED ARRAYS:
-  * QVector<size_t> dims(1, 1);
-  * // Assigns the shared_ptr<> to an instance variable that is a weak_ptr<>
-  * m_CellPhasesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getCellPhasesArrayPath(), dims);
-  *  // Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object
-  * if( NULL != m_CellPhasesPtr.lock().get() )
-  * {
-  *   // Now assign the raw pointer to data from the DataArray<T> object
-  *   m_CellPhases = m_CellPhasesPtr.lock()->getPointer(0);
-  * }
-  *
-  * We can also CREATE a new array to dump new data into
-  *   tempPath.update(m_CellEulerAnglesArrayPath.getDataContainerName(), m_CellEulerAnglesArrayPath.getAttributeMatrixName(), getCellIPFColorsArrayName() );
-  * // Assigns the shared_ptr<> to an instance variable that is a weak_ptr<>
-  * m_CellIPFColorsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<uint8_t>, AbstractFilter, uint8_t>(this, tempPath, 0, dims);
-  * // Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object
-  * if( NULL != m_CellIPFColorsPtr.lock().get() )
-  * {
-  * // Now assign the raw pointer to data from the DataArray<T> object
-  * m_CellIPFColors = m_CellIPFColorsPtr.lock()->getPointer(0);
-  * }
-  */
+
+  QVector<size_t> dims(1, 1);
+  m_FeatureIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeatureIdsArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if( NULL != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
+  { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
 
 // -----------------------------------------------------------------------------
@@ -160,61 +145,351 @@ void AbaqusHexahedronWriter::preflight()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString AbaqusHexahedronWriter::getCompiledLibraryName()
-{
-  return IO::IOBaseName;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-const QString AbaqusHexahedronWriter::getGroupName()
-{
-  return "IO";
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-const QString AbaqusHexahedronWriter::getHumanLabel()
-{
-  return "AbaqusHexahedronWriter";
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-const QString AbaqusHexahedronWriter::getSubGroupName()
-{
-  return "Misc";
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void AbaqusHexahedronWriter::execute()
 {
-  int err = 0;
-  // typically run your dataCheck function to make sure you can get that far and all your variables are initialized
-  dataCheck();
-  // Check to make sure you made it through the data check. Errors would have been reported already so if something
-  // happens to fail in the dataCheck() then we simply return
-  if(getErrorCondition() < 0) { return; }
+  int err;
   setErrorCondition(0);
+  dataCheck();
+  if (getErrorCondition() < 0) { return; }
 
-  /* Place all your code to execute your filter here. */
-
-  /* If some error occurs this code snippet can report the error up the call chain*/
-  if (err < 0)
+  // Check Output Path
+  QDir dir;
+  if (!dir.mkpath(m_OutputPath))
   {
-    QString ss = QObject::tr("Some error message");
-    setErrorCondition(-99999999);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    QString ss = QObject::tr("Error creating parent path '%1'").arg(m_OutputPath);
+    notifyErrorMessage(getHumanLabel(), ss, -1);
+    setErrorCondition(-1);
     return;
   }
 
-  /* Let the GUI know we are done with this filter */
+  VolumeDataContainer* r = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(m_FeatureIdsArrayPath.getDataContainerName());
+  size_t cDims[3] = { 0, 0, 0 };
+  r->getDimensions(cDims);
+  size_t pDims[3] = { cDims[0] + 1, cDims[1] + 1, cDims[2] + 1 };
+  float origin[3] = { 0.0f, 0.0f, 0.0f };
+  r->getOrigin(origin);
+  float spacing[3] = { 0.0f, 0.0f, 0.0f };
+  r->getResolution(spacing);
+  size_t totalPoints = r->getXPoints() * r->getYPoints() * r->getZPoints();
+
+  // Create file names
+  QString nodesFile = m_OutputPath + QDir::separator() + m_FilePrefix + "_nodes.inp";
+  QString elemsFile = m_OutputPath + QDir::separator() + m_FilePrefix + "_elems.inp";
+  QString sectsFile = m_OutputPath + QDir::separator() + m_FilePrefix + "_sects.inp";
+  QString elsetFile = m_OutputPath + QDir::separator() + m_FilePrefix + "_elset.inp";
+  QString micronsFile = m_OutputPath + QDir::separator() +  m_FilePrefix + ".inp";
+
+  err = writeNodes(nodesFile, cDims, origin, spacing);
+  if (err < 0)
+  {
+    QString ss = QObject::tr("Error writing output nodes file '%1'\n ").arg(nodesFile);
+    setErrorCondition(-1);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+  }
+  err = writeElems(elemsFile, cDims, pDims);
+  if (err < 0)
+  {
+    QString ss = QObject::tr("Error writing output elems file '%1'\n ").arg(elemsFile);
+    setErrorCondition(-1);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+  }
+	err = writeSects(sectsFile, totalPoints);
+  if (err < 0)
+  {
+    QString ss = QObject::tr("Error writing output sects file '%1'\n ").arg(sectsFile);
+    setErrorCondition(-1);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+  }
+  err = writeElset(elsetFile, totalPoints);
+  if (err < 0)
+  {
+    QString ss = QObject::tr("Error writing output elset file '%1'\n ").arg(elsetFile);
+    setErrorCondition(-1);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+  }
+  err = writeMicrons(micronsFile);
+  if (err < 0)
+  {
+    QString ss = QObject::tr("Error writing output microns file '%1'\n ").arg(micronsFile);
+    setErrorCondition(-1);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+  }
   notifyStatusMessage(getHumanLabel(), "Complete");
+}
+
+/**
+* @param cDims
+* @param origin
+* @param spacing
+*/
+int AbaqusHexahedronWriter::writeNodes(const QString& file, size_t* cDims, float* origin, float* spacing)
+{
+  size_t pDims[3] = { cDims[0] + 1, cDims[1] + 1, cDims[2] + 1 };
+  size_t nodeIndex = 1;
+
+  int err = 0;
+  FILE* f = NULL;
+  f = fopen(file.toLatin1().data(), "wb");
+  if (NULL == f)
+  {
+    return -1;
+  }
+
+  fprintf(f, "** Generated by : %s\n", DREAM3DLib::Version::PackageComplete().toLatin1().data());
+  fprintf(f, "** ----------------------------------------------------------------\n**\n*Node\n");
+
+  for (size_t z = 0; z < pDims[2]; z++)
+  {
+    for (size_t y = 0; y < pDims[1]; y++)
+    {
+      for (size_t x = 0; x < pDims[0]; x++)
+      {
+        float xCoord = origin[0] + (x * spacing[0]);
+        float yCoord = origin[1] + (y * spacing[1]);
+        float zCoord = origin[2] + (z * spacing[2]);
+        fprintf(f, "%lu, %f, %f, %f\n", nodeIndex, xCoord, yCoord, zCoord);
+        ++nodeIndex;
+      }
+    }
+  }
+
+  // Write the last node, which is a dummy node used for stress - strain curves.
+	fprintf(f, "%d, %f, %f, %f\n", 999999, 0.0f, 0.0f, 0.0f);
+  fprintf(f, "**\n** ----------------------------------------------------------------\n**\n");
+
+  if (err < 0)
+  {
+    QString ss = QObject::tr("Error writing nodes file '%1'\n ").arg(file);
+    setErrorCondition(-100);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+  }
+
+  // Close the file
+  fclose(f);
+  return err;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int AbaqusHexahedronWriter::writeElems(const QString& file, size_t* cDims, size_t* pDims)
+{
+  int err = 0;
+  FILE* f = NULL;
+  f = fopen(file.toLatin1().data(), "wb");
+  if (NULL == f)
+  {
+    return -1;
+  }
+
+  size_t index = 1;
+  fprintf(f, "** Generated by : %s\n", DREAM3DLib::Version::PackageComplete().toLatin1().data());
+  fprintf(f, "** ----------------------------------------------------------------\n**\n*Element, type=C3D8\n");
+  for (size_t z = 0; z < cDims[2]; z++)
+  {
+    for (size_t y = 0; y < cDims[1]; y++)
+    {
+      for (size_t x = 0; x < cDims[0]; x++)
+      {
+        std::vector<int> nodeId = getNodeIds(index, x, y, z, pDims);
+        fprintf(f, "%lu, %d, %d, %d, %d, %d, %d, %d, %d\n", index, nodeId[5], nodeId[1], nodeId[0], nodeId[4], nodeId[7], nodeId[3], nodeId[2], nodeId[6]);
+        ++index;
+      }
+    }
+  }
+  fprintf(f, "**\n** ----------------------------------------------------------------\n**\n");
+
+  if (err < 0)
+  {
+    QString ss = QObject::tr("Error writing elems file '%1'\n ").arg(file);
+    setErrorCondition(-100);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+  }
+  // Close the file
+  fclose(f);
+  return err;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int AbaqusHexahedronWriter::writeElset(const QString& file, size_t totalPoints)
+{
+  int err = 0;
+  FILE* f = NULL;
+  f = fopen(file.toLatin1().data(), "wb");
+  if (NULL == f)
+  {
+    return -1;
+  }
+
+  fprintf(f, "** Generated by : %s\n", DREAM3DLib::Version::PackageComplete().toLatin1().data());
+  fprintf(f, "** ----------------------------------------------------------------\n**\n** The element sets\n");
+  fprintf(f, "*Elset, elset=cube, generate\n");
+  fprintf(f, "%d, %d, %d\n", 1, totalPoints, 1);
+  fprintf(f, "**\n** Each Grain is made up of multiple elements\n**");
+
+  // find total number of Grain Ids
+  size_t maxGrainId = 0;
+  for (size_t i = 0; i < totalPoints; i++) {
+    if (m_FeatureIds[i] > maxGrainId)
+    {
+      maxGrainId = m_FeatureIds[i];
+    }
+  }
+
+  size_t voxelId = 1;
+  while (voxelId <= maxGrainId) {
+    size_t elementPerLine = 0;
+    fprintf(f, "\n*Elset, elset=Grain%d_set\n", voxelId);
+    for (size_t i = 0; i < totalPoints + 1; i++)
+    {
+      if (m_FeatureIds[i] == voxelId)
+      {
+        if(elementPerLine != 0 && (elementPerLine % 16)){ // no comma at beginning and after last element
+        fprintf(f, ", ");
+        }
+        fprintf(f, "%d", i+1);
+        elementPerLine++;
+        if ((elementPerLine % 16) == 0) // 16 elements per line
+        {
+          fprintf(f, ",\n");
+        }
+      }
+    }
+    voxelId++;
+  }
+  fprintf(f, "\n**\n** ----------------------------------------------------------------\n**\n");
+
+  if (err < 0)
+  {
+    QString ss = QObject::tr("Error writing element set file '%1'\n ").arg(file);
+    setErrorCondition(-100);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+  }
+  // Close the file
+  fclose(f);
+  return err;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int AbaqusHexahedronWriter::writeMicrons(const QString& file)
+{
+  int err = 0;
+  FILE* f = NULL;
+  f = fopen(file.toLatin1().data(), "wb");
+  if (NULL == f)
+  {
+    return -1;
+  }
+
+  fprintf(f, "*Heading\n");
+  fprintf(f, "%s\n", m_JobName.toLatin1().data());
+  fprintf(f, "** Job name : %s\n", m_JobName.toLatin1().data());
+  fprintf(f, "** Generated by : %s\n", DREAM3DLib::Version::PackageComplete().toLatin1().data());
+  fprintf(f, "*Preprint, echo = NO, model = NO, history = NO, contact = NO\n");
+  fprintf(f, "**\n** ----------------------------Geometry----------------------------\n**\n");
+  fprintf(f, "*Include, Input = %s\n", (m_FilePrefix + "_nodes.inp").toLatin1().data());
+  fprintf(f, "*Include, Input = %s\n", (m_FilePrefix + "_elems.inp").toLatin1().data());
+  fprintf(f, "*Include, Input = %s\n", (m_FilePrefix + "_elset.inp").toLatin1().data());
+  fprintf(f, "*Include, Input = %s\n", (m_FilePrefix + "_sects.inp").toLatin1().data());
+  fprintf(f, "**\n** ----------------------------------------------------------------\n**\n");
+
+  if (err < 0)
+  {
+    QString ss = QObject::tr("Error writing microns file '%1'\n ").arg(file);
+    setErrorCondition(-100);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+  }
+  // Close the file
+  fclose(f);
+  return err;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int AbaqusHexahedronWriter::writeSects(const QString& file, size_t totalPoints)
+{
+  int err = 0;
+  FILE* f = NULL;
+  f = fopen(file.toLatin1().data(), "wb");
+  if (NULL == f)
+  {
+    return -1;
+  }
+
+  fprintf(f, "** Generated by : %s\n", DREAM3DLib::Version::PackageComplete().toLatin1().data());
+  fprintf(f, "** ----------------------------------------------------------------\n**\n** Each section is a separate grain\n");
+
+  // find total number of Grain Ids
+  size_t maxGrainId = 0;
+  for (size_t i = 0; i < totalPoints; i++) {
+    if (m_FeatureIds[i] > maxGrainId)
+    {
+      maxGrainId = m_FeatureIds[i];
+    }
+  }
+
+  // We are now defining the sections, which is for each grain
+  size_t grain = 1;
+  while (grain <= maxGrainId) {
+    fprintf(f, "** Section: Grain%d\n", grain);
+    fprintf(f, "*Solid Section, elset=Grain%d_set, material=Grain_Mat%d\n", grain, grain);
+    fprintf(f, "*Hourglass Stiffness\n%d\n", m_HourglassStiffness);
+    fprintf(f, "** --------------------------------------\n");
+    grain++;
+  }
+  fprintf(f, "**\n** ----------------------------------------------------------------\n**\n");
+
+  if (err < 0)
+  {
+    QString ss = QObject::tr("Error writing sects file '%1'\n ").arg(file);
+    setErrorCondition(-100);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+  }
+  // Close the file
+  fclose(f);
+  return err;
+}
+
+/**
+* @param index Element index
+* @param x Voxel
+* @param y Voxel
+* @param z Voxel
+* @param pDims The point Dims, or the Voxel Dims + 1 in each direction
+*/
+std::vector<int> AbaqusHexahedronWriter::getNodeIds(size_t index, size_t x, size_t y, size_t z, size_t* pDims)
+{
+    std::vector<int> nodeId(8, 0);
+
+    nodeId[0] = 1 + (pDims[0] * pDims[1] * z) + (pDims[0] * y) + x;
+    nodeId[1] = 1 + (pDims[0] * pDims[1] * z) + (pDims[0] * y) + (x + 1);
+    nodeId[2] = 1 + (pDims[0] * pDims[1] * z) + (pDims[0] * (y + 1)) + x;
+    nodeId[3] = 1 + (pDims[0] * pDims[1] * z) + (pDims[0] * (y + 1)) + (x + 1);
+
+    nodeId[4] = 1 + (pDims[0] * pDims[1] * (z + 1)) + (pDims[0] * y) + x;
+    nodeId[5] = 1 + (pDims[0] * pDims[1] * (z + 1)) + (pDims[0] * y) + (x + 1);
+    nodeId[6] = 1 + (pDims[0] * pDims[1] * (z + 1)) + (pDims[0] * (y + 1)) + x;
+    nodeId[7] = 1 + (pDims[0] * pDims[1] * (z + 1)) + (pDims[0] * (y + 1)) + (x + 1);
+
+    if (0)
+    {
+        printf("           %03d-------%03d  \n", nodeId[4], nodeId[5]);
+        printf("            /|        /|   \n");
+        printf("           / |       / |   \n");
+        printf("          /  |      /  |   \n");
+        printf("       %03d--------%03d  |   \n", nodeId[6], nodeId[7]);
+        printf("         |   |      |  |   \n");
+        printf("         | %03d------|-%03d  \n", nodeId[0], nodeId[1]);
+        printf("         |  /       | /    \n");
+        printf("         | /        |/     \n");
+        printf("        %03d--------%03d     \n", nodeId[2], nodeId[3]);
+    }
+    return nodeId;
 }
 
 // -----------------------------------------------------------------------------
@@ -228,20 +503,42 @@ AbstractFilter::Pointer AbaqusHexahedronWriter::newFilterInstance(bool copyFilte
   AbaqusHexahedronWriter::Pointer filter = AbaqusHexahedronWriter::New();
   if(true == copyFilterParameters)
   {
-    /* If the filter uses all the standard Filter Parameter Widgets you can probabaly get
-     * away with using this method to copy the filter parameters from the current instance
-     * into the new instance
-     */
     copyFilterParameterInstanceVariables(filter.get());
-    /* If your filter is using a lot of custom FilterParameterWidgets @see ReadH5Ebsd then you
-     * may need to copy each filter parameter explicitly plus any other instance variables that
-     * are needed into the new instance. Here is some example code from ReadH5Ebsd
-     */
-    //    DREAM3D_COPY_INSTANCEVAR(OutputFile)
-    //    DREAM3D_COPY_INSTANCEVAR(ZStartIndex)
-    //    DREAM3D_COPY_INSTANCEVAR(ZEndIndex)
-    //    DREAM3D_COPY_INSTANCEVAR(ZResolution)
   }
   return filter;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString AbaqusHexahedronWriter::getCompiledLibraryName()
+{
+    return IO::IOBaseName;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString AbaqusHexahedronWriter::getGroupName()
+{
+    return "IO";
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString AbaqusHexahedronWriter::getHumanLabel()
+{
+    return "Abaqus Hexahedron Writer";
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString AbaqusHexahedronWriter::getSubGroupName()
+{
+    return "Output";
+}
+
+
 

@@ -33,16 +33,17 @@
  *                           FA8650-10-D-5210
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef _DataContainerReaderWidget_H_
-#define _DataContainerReaderWidget_H_
+#ifndef _DataBundleSelectionWidget_H_
+#define _DataBundleSelectionWidget_H_
+
 
 
 #include <QtCore/QObject>
 #include <QtCore/QPointer>
 #include <QtGui/QWidget>
 
-#include "QtSupport/FaderWidget.h"
 
+#include "QtSupport/FaderWidget.h"
 
 
 #include "DREAM3DLib/Common/AbstractFilter.h"
@@ -51,12 +52,7 @@
 #include "DREAM3DWidgetsLib/FilterParameterWidgets/FilterParameterWidget.h"
 
 
-#include "DREAM3DWidgetsLib/ui_DataContainerReaderWidget.h"
-
-class QStandardItemModel;
-class DataContainerReader;
-class QLabel;
-class QFSDropLabel;
+#include "DREAM3DWidgetsLib/ui_DataBundleSelectionWidget.h"
 
 
 /**
@@ -64,7 +60,7 @@ class QFSDropLabel;
 * @author
 * @version
 */
-class DREAM3DWidgetsLib_EXPORT DataContainerReaderWidget : public FilterParameterWidget, private Ui::DataContainerReaderWidget
+class DREAM3DWidgetsLib_EXPORT DataBundleSelectionWidget : public FilterParameterWidget, private Ui::DataBundleSelectionWidget
 {
     Q_OBJECT
 
@@ -75,17 +71,11 @@ class DREAM3DWidgetsLib_EXPORT DataContainerReaderWidget : public FilterParamete
     * @param filter The instance of the filter that this parameter is a part of
     * @param parent The parent QWidget for this Widget
     */
-    DataContainerReaderWidget(FilterParameter* parameter, AbstractFilter* filter = NULL, QWidget* parent = NULL);
+    DataBundleSelectionWidget(FilterParameter* parameter, AbstractFilter* filter = NULL, QWidget* parent = NULL);
 
-    /**
-     * @brief DataContainerReaderWidget
-     * @param parent
-     */
-    DataContainerReaderWidget(QWidget* parent = NULL);
+    DataBundleSelectionWidget(QWidget* parent = NULL);
 
-    virtual ~DataContainerReaderWidget();
-
-    void initialize(FilterParameter* parameter, AbstractFilter* filter = NULL);
+    virtual ~DataBundleSelectionWidget();
 
     /**
     * @brief This method does additional GUI widget connections
@@ -93,60 +83,49 @@ class DREAM3DWidgetsLib_EXPORT DataContainerReaderWidget : public FilterParamete
     void setupGui();
 
     /**
-     * @brief verifyPathExists
-     * @param filePath
-     * @param lineEdit
+     * @brief checkStringValues
+     * @param current
+     * @param filt
      * @return
      */
-    bool verifyPathExists(QString filePath, QFSDropLabel *lineEdit);
+    QString checkStringValues(QString current, QString filtDcName);
 
-    void setFilter(AbstractFilter *value);
-    AbstractFilter* getFilter() const;
+    /**
+     * @brief initializeWidget
+     * @param parameter
+     * @param filter
+     */
+    void initializeWidget(FilterParameter* parameter, AbstractFilter* filter);
 
-    void setFilterParameter(FilterParameter *value);
-    FilterParameter* getFilterParameter() const;
 
   public slots:
     void beforePreflight();
     void afterPreflight();
     void filterNeedsInputParameters(AbstractFilter* filter);
-    void itemActivated(const QModelIndex& index);
+
+    void on_dataBundleList_currentIndexChanged(int index);
 
 
-    void on_filePath_fileDropped(const QString& text);
-    void on_selectBtn_clicked();
-    void on_dcaProxyView_updatePreviewWidget(const QModelIndex &index);
+  protected:
+    void populateComboBoxes();
+
 
   signals:
     void errorSettingFilterParameter(const QString& msg);
     void parametersChanged();
 
-  protected:
-    void updateProxyFromModel();
-
-    void updateModelFromProxy(DataContainerArrayProxy& proxy);
-    void updateProxyFromProxy(DataContainerArrayProxy& current, DataContainerArrayProxy& incoming);
-
-    static void setOpenDialogLastDirectory(QString val) { m_OpenDialogLastDirectory = val; }
-    static QString getOpenDialogLastDirectory() { return m_OpenDialogLastDirectory; }
-
-
   private:
-    QString m_LastFileRead;
-    DataContainerReader*   m_Filter;
-    DataContainerReaderFilterParameter*  m_FilterParameter;
-    DataContainerArrayProxy m_DcaProxy;
+
     bool m_DidCausePreflight;
 
-    static QString    m_OpenDialogLastDirectory;
 
+    DataContainerArrayProxy m_DcaProxy;
 
-
-    DataContainerReaderWidget(const DataContainerReaderWidget&); // Copy Constructor Not Implemented
-    void operator=(const DataContainerReaderWidget&); // Operator '=' Not Implemented
+    DataBundleSelectionWidget(const DataBundleSelectionWidget&); // Copy Constructor Not Implemented
+    void operator=(const DataBundleSelectionWidget&); // Operator '=' Not Implemented
 
 };
 
-#endif /* _DataContainerReaderWidget_H_ */
+#endif /* _DataBundleSelectionWidget_H_ */
 
 

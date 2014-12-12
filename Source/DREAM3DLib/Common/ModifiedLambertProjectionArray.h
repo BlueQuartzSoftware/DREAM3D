@@ -259,7 +259,7 @@ class DREAM3DLib_EXPORT ModifiedLambertProjectionArray : public IDataArray
      * @brief deepCopy
      * @return
      */
-    virtual IDataArray::Pointer deepCopy();
+    virtual IDataArray::Pointer deepCopy(bool forceNoAllocate = false);
 
     /**
        * @brief Reseizes the internal array

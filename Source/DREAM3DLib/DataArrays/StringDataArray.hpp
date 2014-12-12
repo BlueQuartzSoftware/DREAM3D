@@ -332,12 +332,20 @@ class StringDataArray : public IDataArray
       m_Array.fill(QString(""), m_Array.size());
     }
 
-    virtual IDataArray::Pointer deepCopy()
+    /**
+     * @brief deepCopy
+     * @param forceNoAllocate
+     * @return
+     */
+    virtual IDataArray::Pointer deepCopy(bool forceNoAllocate = false)
     {
       StringDataArray::Pointer daCopy = StringDataArray::CreateArray(getNumberOfTuples(), getName());
-      for(QVector<QString>::size_type i = 0; i < m_Array.size(); ++i)
+      if(forceNoAllocate == false)
       {
-        daCopy->setValue(i, m_Array[i]);
+        for(QVector<QString>::size_type i = 0; i < m_Array.size(); ++i)
+        {
+          daCopy->setValue(i, m_Array[i]);
+        }
       }
       return daCopy;
     }

@@ -187,7 +187,7 @@ class DREAM3DLib_EXPORT IDataArray
     virtual void printTuple(QTextStream& out, size_t i, char delimiter = ',') = 0;
     virtual void printComponent(QTextStream& out, size_t i, int j) = 0;
 
-    virtual IDataArray::Pointer deepCopy() = 0;
+    virtual IDataArray::Pointer deepCopy(bool forceNoAllocate = false) = 0;
 
     /**
      *

@@ -508,12 +508,12 @@ class ManagedArrayOfArrays : public IDataArray
       }
     }
 
-    virtual IDataArray::Pointer deepCopy()
+    virtual IDataArray::Pointer deepCopy(bool forceNoAllocate = false)
     {
       // This is NOT the way to do this. You are not COPYING the actual data.
       assert(false);
       IDataArray::Pointer daCopy = createNewArray(getNumberOfTuples(), getComponentDimensions(), getName(), m_IsAllocated);
-      if(m_IsAllocated == true)
+      if(m_IsAllocated == true && forceNoAllocate == false)
       {
         Data_t* src = getPointer(0);
         void* dest = daCopy->getVoidPointer(0);

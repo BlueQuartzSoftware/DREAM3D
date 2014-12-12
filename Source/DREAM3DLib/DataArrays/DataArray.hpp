@@ -999,11 +999,15 @@ class DataArray : public IDataArray
       return "UnknownType";
     }
 
-
-    virtual IDataArray::Pointer deepCopy()
+    /**
+     * @brief deepCopy
+     * @param forceNoAllocate
+     * @return
+     */
+    virtual IDataArray::Pointer deepCopy(bool forceNoAllocate = false)
     {
       IDataArray::Pointer daCopy = createNewArray(getNumberOfTuples(), getComponentDimensions(), getName(), m_IsAllocated);
-      if(m_IsAllocated == true)
+      if(m_IsAllocated == true && forceNoAllocate == false)
       {
         T* src = getPointer(0);
         void* dest = daCopy->getVoidPointer(0);
@@ -1012,6 +1016,8 @@ class DataArray : public IDataArray
       }
       return daCopy;
     }
+
+
 
     /**
      *
