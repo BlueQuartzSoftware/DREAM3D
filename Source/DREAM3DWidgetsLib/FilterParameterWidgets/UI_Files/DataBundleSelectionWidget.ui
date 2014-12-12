@@ -11,16 +11,7 @@
    </rect>
   </property>
   <layout class="QHBoxLayout" name="horizontalLayout">
-   <property name="leftMargin">
-    <number>2</number>
-   </property>
-   <property name="topMargin">
-    <number>2</number>
-   </property>
-   <property name="rightMargin">
-    <number>2</number>
-   </property>
-   <property name="bottomMargin">
+   <property name="margin">
     <number>2</number>
    </property>
    <item>
@@ -31,7 +22,7 @@
     </widget>
    </item>
    <item>
-    <widget class="QComboBox" name="dataContainerList"/>
+    <widget class="QComboBox" name="dataBundleList"/>
    </item>
    <item>
     <spacer name="horizontalSpacer">
