@@ -180,11 +180,12 @@ class AbaqusHexahedronWriter : public AbstractFilter
     AbaqusHexahedronWriter(const AbaqusHexahedronWriter&); // Copy Constructor Not Implemented
     void operator=(const AbaqusHexahedronWriter&); // Operator '=' Not Implemented
 
-		int writeNodes(const QString& file, size_t elem, float step);
-		int writeElems(const QString& file, size_t elem);
-		int writeSects(const QString& file, size_t elem);
-		int writeElset(const QString& file, size_t elem);
-	int writeMicrons(const QString& file);
+    int writeNodes(const QString& file, size_t* cDims, float* origin, float* spacing);
+    int writeElems(const QString& file, size_t* cDims, size_t* pDims);
+    int writeSects(const QString& file, size_t elem);
+    int writeElset(const QString& file, size_t totalPoints);
+    int writeMicrons(const QString& file);
+    std::vector<int> getNodeIds(size_t index, size_t x, size_t y, size_t z, size_t* pDims);
 };
 
 #endif /* _AbaqusHexahedronWriter_H_ */
