@@ -144,32 +144,30 @@ void DataBundleSelectionWidget::populateComboBoxes()
   // Now get the DataContainerArray from the Filter instance
   // We are going to use this to get all the current DataContainers
   DataContainerArray::Pointer dca = getFilter()->getDataContainerArray();
-  QMap<QString, IDataContainerBundle::Pointer> dcb = dca->getDataContainerBundles();
-//DataContainerBundle::Pointer dcb = dca->getDataContainerBundle();
+    if(NULL == dca.get()) { return; }
 
-  if(NULL == dca.get()) { return; }
-
-  // Check to see if we have any DataContainers to actually populate drop downs with.
+      // Check to see if we have any DataContainers to actually populate drop downs with.
   if(dca->getDataContainerArray().size() == 0)
   {
     return;
   }
+  QMap<QString, IDataContainerBundle::Pointer> dcb = dca->getDataContainerBundles();
+
+
     // Check to see if we have any DataBundles to actually populate drop downs with.
   if(dcb.size() == 0)
   {
       return;
   }
 
+  // Grab what is currently selected
+  QString curDcName = dataBundleList->currentText();
+
   QList<QString> listOfBundles = dcb.keys();
 
 
+  // Populate the  Combo Box with all the DataContainer Bundles
 
-  // Cache the DataContainerArray Structure for our use during all the selections
-  m_DcaProxy = DataContainerArrayProxy(dca.get());
-
-  // Populate the DataContainerArray Combo Box with all the DataContainers
-
-  //QList<DataContainerProxy> dcList = m_DcaProxy.list;
   QListIterator<QString> iter(listOfBundles);
 
   while(iter.hasNext())
@@ -202,6 +200,22 @@ void DataBundleSelectionWidget::populateComboBoxes()
     }
   }
 
+  bool isInList = false;
+  for (int i = 0; i < count; ++i)
+  {
+    QString str0 = dataBundleList->itemText(i);
+    if(curDcName.compare(str0) == 0)
+    {
+      isInList = true;
+      dataBundleList->setCurrentIndex(i);
+    }
+  }
+  if(isInList == false)
+  {
+    dataBundleList->setCurrentIndex(-1);
+  }
+
+#if 0
   // Grab what is currently selected
   QString curDcName = dataBundleList->currentText();
 
@@ -248,6 +262,7 @@ void DataBundleSelectionWidget::populateComboBoxes()
     dataBundleList->setCurrentIndex(dcIndex);
   }
   if(didBlock) { dataBundleList->blockSignals(false); didBlock = false; }
+#endif
 
 }
 
