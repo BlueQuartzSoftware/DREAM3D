@@ -248,3 +248,11 @@ int DataContainerBundle::readH5Data(hid_t groupId)
 
   return err;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+ void DataContainerBundle::findCommonDataArrayPaths()
+ {
+
+ }

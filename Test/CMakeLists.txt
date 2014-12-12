@@ -86,6 +86,7 @@ set_source_files_properties(moc_PreflightVerify.cpp PROPERTIES HEADER_FILE_ONLY 
 ADD_DREAM3D_TEST_2(PreFlightTest  "DREAM3DLib" "PreflightVerify.h;PreflightVerify.cpp")
 ADD_DREAM3D_TEST(DataContainerTest  "DREAM3DLib")
 
+ADD_DREAM3D_TEST(DataContainerBundleTest  "DREAM3DLib")
 
 if(0)
 ADD_DREAM3D_TEST(NewDataContainerStructureTest  "DREAM3DLib")
