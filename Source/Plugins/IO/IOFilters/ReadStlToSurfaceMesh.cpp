@@ -57,7 +57,7 @@ class FindUniqueIdsImpl
 {
 
   public:
-    FindUniqueIdsImpl(VertexArray::Vert_t* vertex, QVector<QVector<size_t>> nodesInBin, int32_t* uniqueIds) :
+    FindUniqueIdsImpl(VertexArray::Vert_t* vertex, QVector<QVector<size_t> > nodesInBin, int32_t* uniqueIds) :
       m_Vertex(vertex),
       m_NodesInBin(nodesInBin),
       m_UniqueIds(uniqueIds)
@@ -94,7 +94,7 @@ class FindUniqueIdsImpl
 #endif
   private:
     VertexArray::Vert_t* m_Vertex; 
-    QVector<QVector<size_t>> m_NodesInBin;
+    QVector<QVector<size_t> > m_NodesInBin;
     int32_t* m_UniqueIds;
 
 };
@@ -349,7 +349,7 @@ void ReadStlToSurfaceMesh::eliminate_duplicate_nodes()
   float stepY = (m_maxYcoord-m_minYcoord)/100.0;
   float stepZ = (m_maxZcoord-m_minZcoord)/100.0;
 
-  QVector<QVector<size_t>> nodesInBin(100*100*100);
+  QVector<QVector<size_t> > nodesInBin(100*100*100);
 
   //determine (xyz) bin each node falls in - used to speed up node comparison
   int bin, xBin, yBin, zBin;
