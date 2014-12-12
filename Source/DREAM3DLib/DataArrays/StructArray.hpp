@@ -539,10 +539,10 @@ class StructArray : public IDataArray
       }
     }
 
-    virtual IDataArray::Pointer deepCopy()
+    virtual IDataArray::Pointer deepCopy(bool forceNoAllocate = false)
     {
       IDataArray::Pointer daCopy = createNewArray(getNumberOfTuples(), getComponentDimensions(), getName(), m_IsAllocated);
-      if(m_IsAllocated == true)
+      if(m_IsAllocated == true && forceNoAllocate == false)
       {
         T* src = getPointer(0);
         void* dest = daCopy->getVoidPointer(0);

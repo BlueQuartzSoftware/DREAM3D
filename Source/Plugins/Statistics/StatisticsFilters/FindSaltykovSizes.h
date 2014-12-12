@@ -51,8 +51,8 @@
  * @class FindSaltykovSizes FindSaltykovSizes.h DREAM3DLib/GenericFilters/FindSaltykovSizes.h
  * @brief
  * @author Joseph C. Tucker
- * @date Nov 24, 2014
- * @version 5.1
+ * @date Dec 9, 2014
+ * @version 5.2
  */
 class FindSaltykovSizes : public AbstractFilter
 {
@@ -109,6 +109,9 @@ class FindSaltykovSizes : public AbstractFilter
     FindSaltykovSizes();
     void find_saltykov_sizes();
     int do_saltykov(std::vector<int> nA, float Dmax, int k);
+	int forward_difference(int fx, int f1, int f0, int x1, int x0);
+	template<class T>
+	int round_to_nearest_int(T x);
 
   private:
     DEFINE_CREATED_DATAARRAY_VARIABLE(float, EquivalentDiameters)

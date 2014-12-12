@@ -65,14 +65,17 @@ class DREAM3DFileDragMessageBox : public QDialog, private Ui::DREAM3DFileDragMes
     void on_replacePipelineBtn_clicked();
     void on_appendPipelineBtn_clicked();
     void on_prependPipelineBtn_clicked();
-    void on_addFilterBtn_clicked();
+    void on_cancelBtn_clicked();
+    void on_addFilterRadioBtn_toggled();
+
 
   signals:
     void fireExtractPipelineFromFile(const QString &filePath, ExtractionType type);
-    void fireAddDREAM3DReaderFilter(const QString &filePath);
+    void fireAddDREAM3DReaderFilter(const QString &filePath, ExtractionType type);
 
   private:
     QString filePath;
+    int     filterCount;
 };
 
 #endif /* _DREAM3DFileDragMessageBox_H */

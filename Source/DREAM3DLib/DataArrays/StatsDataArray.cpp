@@ -257,16 +257,18 @@ void StatsDataArray::initializeWithZeros()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-IDataArray::Pointer StatsDataArray::deepCopy()
+IDataArray::Pointer StatsDataArray::deepCopy(bool forceNoAllocate)
 {
   StatsDataArray::Pointer daCopyPtr = StatsDataArray::New();
-  daCopyPtr->resize(getNumberOfTuples());
-  StatsDataArray& daCopy = *daCopyPtr;
-  for(size_t i = 0; i < getNumberOfTuples(); i++)
+  if(forceNoAllocate == false)
   {
-    daCopy[i] = m_StatsDataArray[i];
+    daCopyPtr->resize(getNumberOfTuples());
+    StatsDataArray& daCopy = *daCopyPtr;
+    for(size_t i = 0; i < getNumberOfTuples(); i++)
+    {
+      daCopy[i] = m_StatsDataArray[i];
+    }
   }
-
   return daCopyPtr;
 }
 

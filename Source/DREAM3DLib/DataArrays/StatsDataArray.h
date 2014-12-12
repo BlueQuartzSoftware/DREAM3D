@@ -345,7 +345,7 @@ class DREAM3DLib_EXPORT StatsDataArray : public IDataArray
     virtual void initializeWithZeros();
 
 
-    virtual IDataArray::Pointer deepCopy();
+    virtual IDataArray::Pointer deepCopy(bool forceNoAllocate = false);
 
     /**
        * @brief Reseizes the internal array
