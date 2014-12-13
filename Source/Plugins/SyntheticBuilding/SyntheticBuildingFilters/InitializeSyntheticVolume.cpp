@@ -178,16 +178,19 @@ void InitializeSyntheticVolume::dataCheck()
 
   // Create our output Cell and Ensemble Attribute Matrix objects
   QVector<size_t> tDims(3, 0);
+  tDims[0] = m_Dimensions.x;
+  tDims[1] = m_Dimensions.y;
+  tDims[2] = m_Dimensions.z;
   AttributeMatrix::Pointer cellAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::Cell);
-  if(getErrorCondition() < 0) { return; }
+  if(getErrorCondition() < 0 && cellAttrMat.get() == NULL) { return; }
 
   QVector<size_t> compDims(1, 1); // This states that we are looking for an array with a single component
   UInt32ArrayType::Pointer phaseType = getDataContainerArray()->getPrereqArrayFromPath<UInt32ArrayType, AbstractFilter>(NULL, getInputPhaseTypesArrayPath(), compDims);
-  if(getErrorCondition() < 0) { return; }
+  if(getErrorCondition() < 0 && phaseType.get() == NULL) { return; }
 
   QVector<size_t> statsDims(1, 1);
   StatsDataArray::Pointer statsPtr = getDataContainerArray()->getPrereqArrayFromPath<StatsDataArray, AbstractFilter>(this, getInputStatsArrayPath(), statsDims);
-  if(getErrorCondition() < 0) { return; }
+  if(getErrorCondition() < 0 && statsPtr.get() == NULL) { return; }
 
   if(m_EstimateNumberOfFeatures)
   {
