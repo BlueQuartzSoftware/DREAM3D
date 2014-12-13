@@ -73,8 +73,8 @@ void AbaqusHexahedronWriter::setupFilterParameters()
 {
   FilterParameterVector parameters;
   parameters.push_back(FileSystemFilterParameter::New("Output Path", "OutputPath", FilterParameterWidgetType::OutputPathWidget, getOutputPath(), false));
-  parameters.push_back(FilterParameter::New("Output Prefix", "FilePrefix", FilterParameterWidgetType::StringWidget, getFilePrefix(), false));
-  parameters.push_back(FilterParameter::New("FeatureIds", "FeatureIdsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeatureIdsArrayPath(), false));
+  parameters.push_back(FilterParameter::New("Output File Prefix", "FilePrefix", FilterParameterWidgetType::StringWidget, getFilePrefix(), false));
+  parameters.push_back(FilterParameter::New("Feature Ids", "FeatureIdsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeatureIdsArrayPath(), false));
   parameters.push_back(FilterParameter::New("Hourglass Stiffness", "HourglassStiffness", FilterParameterWidgetType::IntWidget, getHourglassStiffness(), false, "", 0));
   parameters.push_back(FilterParameter::New("Job Name", "JobName", FilterParameterWidgetType::StringWidget, getJobName(), false));
   setFilterParameters(parameters);
@@ -117,15 +117,41 @@ void AbaqusHexahedronWriter::dataCheck()
   setErrorCondition(0);
   if (m_OutputPath.isEmpty() == true)
   {
+    setErrorCondition(-12001);
     QString ss = QObject::tr("The output path must be set before executing this filter.");
-    notifyErrorMessage(getHumanLabel(), ss, -1);
-    setErrorCondition(-1);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 
-  QVector<size_t> dims(1, 1);
-  m_FeatureIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeatureIdsArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+
+  QVector<size_t> cDims(1, 1); // The component dimensions of the needed array.
+  m_FeatureIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeatureIdsArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+
+  // Now make sure we have a VolumeDataContainer
+  VolumeDataContainer* dc = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getFeatureIdsArrayPath().getDataContainerName());
+  if (NULL == dc)
+  {
+    setErrorCondition(-12002);
+    QString ss = QObject::tr("The selected DataContainer is not a 'Volume DataContainer' type. Please select an array that has as its parent a VolumeDataContainer.");
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+  }
+
+  size_t volDims[3] = { 0,0,0};
+  dc->getDimensions(volDims);
+
+  if(NULL != m_FeatureIdsPtr.lock().get() && NULL != dc )
+  {
+    size_t volTuples = volDims[0] * volDims[1] * volDims[2];
+
+    if (volTuples != m_FeatureIdsPtr.lock()->getNumberOfTuples() )
+    {
+      setErrorCondition(-12000);
+      QString ss = QObject::tr("The number of tuples for the selected volume '%1' does not match the number of tuples for the selected data array '%2'.\
+      Did you select an Attribute Matrix that holds data for each voxel? These AttributeMatrices are usually called 'CellData'.").arg(volTuples).arg(m_FeatureIdsPtr.lock()->getNumberOfTuples());
+      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    }
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -195,7 +221,7 @@ void AbaqusHexahedronWriter::execute()
     setErrorCondition(-1);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
-	err = writeSects(sectsFile, totalPoints);
+  err = writeSects(sectsFile, totalPoints);
   if (err < 0)
   {
     QString ss = QObject::tr("Error writing output sects file '%1'\n ").arg(sectsFile);
@@ -260,7 +286,7 @@ int AbaqusHexahedronWriter::writeNodes(const QString& file, size_t* cDims, float
   }
 
   // Write the last node, which is a dummy node used for stress - strain curves.
-	fprintf(f, "%d, %f, %f, %f\n", 999999, 0.0f, 0.0f, 0.0f);
+  fprintf(f, "%d, %f, %f, %f\n", 999999, 0.0f, 0.0f, 0.0f);
   fprintf(f, "**\n** ----------------------------------------------------------------\n**\n");
 
   if (err < 0)
