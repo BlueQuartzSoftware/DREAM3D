@@ -512,7 +512,7 @@ int DataContainerReader::readDataContainerBundles(hid_t fileId, DataContainerArr
       {
         qDebug() << "Data Container '" << dcName << "' was NULL" << " " << __FILE__ << "(" << __LINE__ << ")";
       }
-      bundle->append(dc);
+      bundle->addDataContainer(dc);
     }
 
 

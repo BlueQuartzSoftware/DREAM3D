@@ -87,16 +87,16 @@ class DREAM3DLib_EXPORT DataContainerBundle : public IDataContainerBundle
     void setDataContainers(QVector<DataContainer::Pointer> &containers);
     QVector<QString> getDataContainerNames();
 
-    void append(DataContainer::Pointer dc);
-    void prepend(DataContainer::Pointer dc);
 
-    void remove(DataContainer::Pointer dc);
-    void remove(const QString &name);
-    void remove(qint32 i);
-    void pop_back();
-    void pop_front();
 
-    DataContainer::Pointer value(qint32 index);
+    void addDataContainer(DataContainer::Pointer dc);
+
+    void removeDataContainer(DataContainer::Pointer dc);
+    void removeDataContainer(const QString &name);
+    void removeDataContainer(qint32 i);
+
+
+    DataContainer::Pointer getDataContainer(qint32 index);
 
     qint32 count();
 

@@ -86,10 +86,34 @@ void TestDataBundleCommonPaths()
   cDims[0] = 3;
   cDims[1] = 3;
 
+  DataContainer::Pointer dc0 = DataContainer::New();
+  dc0->setName("DC 0");
   AttributeMatrix::Pointer am = AttributeMatrix::New(tDims, "CellAttributeMatrix", DREAM3D::AttributeMatrixType::Cell);
   AddDataArray<uint8_t>(am, "Uint8 Array", tDims, cDims);
   AddDataArray<float>(am, "Float Array", tDims, cDims);
-  AddDataArray<int32_t>(am, "Float Array", tDims, cDims);
+  AddDataArray<int32_t>(am, "int32 Array", tDims, cDims);
+  dc0->addAttributeMatrix(am->getName(), am);
+
+  QVector<size_t> tupleDims(1, 1);
+  AttributeMatrix::Pointer metaAm = AttributeMatrix::New(tupleDims, DataContainerBundle::GetMetaDataName(), DREAM3D::AttributeMatrixType::MetaData);
+  dc0->addAttributeMatrix(metaAm->getName(), metaAm);
+
+  DataContainer::Pointer dc1 = dc0->deepCopy();
+  dc1->setName("DC 1");
+
+  DataContainer::Pointer dc2 = dc0->deepCopy();
+  dc2->setName("DC 2");
+
+  DataContainerArray::Pointer dca = DataContainerArray::New();
+  dca->addDataContainer(dc0);
+  dca->addDataContainer(dc1);
+  dca->addDataContainer(dc2);
+
+
+  DataContainerBundle::Pointer bundle = DataContainerBundle::New("Bundle 1");
+  bundle->addDataContainer(dc0);
+  bundle->addDataContainer(dc1);
+  bundle->addDataContainer(dc0);
 }
 
 
