@@ -137,11 +137,10 @@ void AbaqusHexahedronWriter::dataCheck()
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 
-  size_t volDims[3] = { 0,0,0};
-  dc->getDimensions(volDims);
-
   if(NULL != m_FeatureIdsPtr.lock().get() && NULL != dc )
   {
+    size_t volDims[3] = { 0,0,0};
+    dc->getDimensions(volDims);
     size_t volTuples = volDims[0] * volDims[1] * volDims[2];
 
     if (volTuples != m_FeatureIdsPtr.lock()->getNumberOfTuples() )

@@ -52,7 +52,7 @@
 void RemoveTestFiles()
 {
 #if REMOVE_TEST_FILES
-  QFile::remove(UnitTest::DataArrayTest::TestFile);
+  QFile::remove(UnitTest::DataContainerBundleTest::TestFile);
 #endif
 }
 
@@ -86,7 +86,7 @@ void TestDataBundleCommonPaths()
   cDims[0] = 3;
   cDims[1] = 3;
 
-  DataContainer::Pointer dc0 = DataContainer::New();
+  VolumeDataContainer::Pointer dc0 = VolumeDataContainer::New();
   dc0->setName("DC 0");
   AttributeMatrix::Pointer am = AttributeMatrix::New(tDims, "CellAttributeMatrix", DREAM3D::AttributeMatrixType::Cell);
   AddDataArray<uint8_t>(am, "Uint8 Array", tDims, cDims);
