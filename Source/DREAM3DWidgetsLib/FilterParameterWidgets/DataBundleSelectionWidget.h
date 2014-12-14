@@ -118,9 +118,6 @@ class DREAM3DWidgetsLib_EXPORT DataBundleSelectionWidget : public FilterParamete
 
     bool m_DidCausePreflight;
 
-
-    DataContainerArrayProxy m_DcaProxy;
-
     DataBundleSelectionWidget(const DataBundleSelectionWidget&); // Copy Constructor Not Implemented
     void operator=(const DataBundleSelectionWidget&); // Operator '=' Not Implemented
 

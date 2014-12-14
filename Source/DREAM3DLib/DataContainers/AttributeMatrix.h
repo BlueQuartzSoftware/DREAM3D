@@ -126,19 +126,18 @@ class DREAM3DLib_EXPORT AttributeMatrix : public Observable
 
     /**
      * @brief getPrereqArray
-     * @param filter
-     * @param attributeMatrixName
-     * @param attributeArrayName
-     * @param err
-     * @param size
-     * @param dims
-     * @return
+     * @param filter An instance of an AbstractFilter that is calling this function. Can be NULL in which case
+     * no error message will be returned if there is an error.
+     * @param attributeArrayName The name of the Attribute Array
+     * @param err The error code to set into the filter if there is an error
+     * @param cDims The component Dimensions of the Data Array
+     * @return A valid IDataArray Subclass if the array exists otherwise a null shared pointer.
      */
     template<class ArrayType, class Filter>
     typename ArrayType::Pointer getPrereqArray(Filter* filter,
                                                QString attributeArrayName,
                                                int err,
-                                               QVector<size_t> dims)
+                                               QVector<size_t> cDims)
     {
       QString ss;
       typename ArrayType::Pointer attributeArray = ArrayType::NullPointer();
@@ -149,7 +148,7 @@ class DREAM3DLib_EXPORT AttributeMatrix : public Observable
       {
         if(filter)
         {
-          filter->setErrorCondition(err * 1010);
+          filter->setErrorCondition(err);
           ss = QObject::tr("AttributeMatrix:'%1' The name of a requested Attribute Array was empty. Please provide a name for this array").arg(getName());
           filter->notifyErrorMessage(filter->getHumanLabel(), ss, filter->getErrorCondition());
         }
@@ -159,33 +158,33 @@ class DREAM3DLib_EXPORT AttributeMatrix : public Observable
       {
         if(filter)
         {
-          filter->setErrorCondition(err * 1020);
+          filter->setErrorCondition(err);
           ss = QObject::tr("The AttributeMatrix named '%1' does NOT have a DataArray with name '%2'. This filter requires this DataArray in order to execute.").arg(getName()).arg(attributeArrayName);
           filter->notifyErrorMessage(filter->getHumanLabel(), ss, filter->getErrorCondition());
         }
         return attributeArray;
       }
-      int NumComp = dims[0];
-      for(int i = 1; i < dims.size(); i++)
+      int NumComp = cDims[0];
+      for(int i = 1; i < cDims.size(); i++)
       {
-        NumComp *= dims[i];
+        NumComp *= cDims[i];
       }
       // Check to make sure the AttributeArray we have is of the proper type, size and number of components
       if(false == dataArrayCompatibility<ArrayType, Filter>(attributeArrayName, NumComp, filter) )
       {
         if(filter)
-        {
-          filter->setErrorCondition(err * 1030);
-          ss = QObject::tr("The AttributeMatrix named '%1' contains an array with name '%2' but this DataArray is not compatible with desired dimensions.").arg(getName()).arg(attributeArrayName);
-          filter->notifyErrorMessage(filter->getHumanLabel(), ss, filter->getErrorCondition());
-        }
+//        {
+//          filter->setErrorCondition(err);
+//          ss = QObject::tr("The AttributeMatrix named '%1' contains an array with name '%2' but this DataArray is not compatible with desired dimensions.").arg(getName()).arg(attributeArrayName);
+//          filter->notifyErrorMessage(filter->getHumanLabel(), ss, filter->getErrorCondition());
+//        }
         return attributeArray;
       }
       IDataArray::Pointer iDataArray = getAttributeArray(attributeArrayName);
       attributeArray = boost::dynamic_pointer_cast< ArrayType >(iDataArray);
       if(NULL == attributeArray.get() && filter)
       {
-        filter->setErrorCondition(err * 1040);
+        filter->setErrorCondition(err);
         ss = QObject::tr("The AttributeMatrix named '%1' contains an array with name '%2' but the DataArray could not be downcast using boost::dynamic_pointer_cast<T>.").arg(getName()).arg(attributeArrayName);
         filter->notifyErrorMessage(filter->getHumanLabel(), ss, filter->getErrorCondition());
       }
@@ -213,7 +212,7 @@ class DREAM3DLib_EXPORT AttributeMatrix : public Observable
       {
         if(filter)
         {
-          filter->setErrorCondition(err * 1010);
+          filter->setErrorCondition(err);
           ss = QObject::tr("AttributeMatrix:'%1' The name of a requested Attribute Array was empty. Please provide a name for this array").arg(getName());
           filter->notifyErrorMessage(filter->getHumanLabel(), ss, filter->getErrorCondition());
         }
@@ -223,7 +222,7 @@ class DREAM3DLib_EXPORT AttributeMatrix : public Observable
       {
         if(filter)
         {
-          filter->setErrorCondition(err * 1020);
+          filter->setErrorCondition(err);
           ss = QObject::tr("The AttributeMatrix named '%1' does NOT have a DataArray with name '%2'. This filter requires this DataArray in order to execute.").arg(getName()).arg(attributeArrayName);
           filter->notifyErrorMessage(filter->getHumanLabel(), ss, filter->getErrorCondition());
         }
@@ -319,50 +318,54 @@ class DREAM3DLib_EXPORT AttributeMatrix : public Observable
     {
       // First try checking by name
       // IDataArray::Pointer iDataArray = ;
-      typename ArrayType::Pointer attributeArray = boost::dynamic_pointer_cast< ArrayType >(getAttributeArray(arrayName));
+      typename ArrayType::Pointer targetDestArray = boost::dynamic_pointer_cast< ArrayType >(getAttributeArray(arrayName));
+      typename ArrayType::Pointer validTargetArray = ArrayType::CreateArray(1, "JUNK_INTERNAL_ARRAY", false);
 
-      if (attributeArray.get() == 0)
+      if (targetDestArray.get() == 0)
       {
         if (NULL != filter)
         {
-          QString ss = QObject::tr("Filter '%1' requires an available array with name '%2'").arg(filter->getHumanLabel()).arg(arrayName);
+          IDataArray::Pointer srcArray = getAttributeArray(arrayName);
+          QString srcDesc = srcArray->getTypeAsString();
+          QString desc = validTargetArray->getTypeAsString();
+          QString ss = QObject::tr("The Filter '%1' requires an array of type '%2' but the data array '%3' has a type of '%4'").arg(filter->getHumanLabel()).arg(desc).arg(srcArray->getName()).arg(srcDesc);
           filter->setErrorCondition(-501);
           filter->notifyErrorMessage(filter->getHumanLabel(), ss, filter->getErrorCondition());
         }
         return false;
       }
       // Make sure the sizes are equal to what is being asked for
-      if (getNumTuples() != attributeArray->getNumberOfTuples())
+      if (getNumTuples() != targetDestArray->getNumberOfTuples())
       {
         if (NULL != filter)
         {
-          QString ss = QObject::tr("Filter '%1' requires array with name '%2' to have Number of Tuples = %3. The currently available array "
-                                   " has %4").arg(filter->getHumanLabel()).arg(arrayName).arg((getNumTuples())).arg(attributeArray->getNumberOfTuples());
+          QString ss = QObject::tr("Filter '%1' requires array with name '%2' to have Number of Tuples = %3. The currently selected array "
+                                   " has %4").arg(filter->getHumanLabel()).arg(arrayName).arg((getNumTuples())).arg(targetDestArray->getNumberOfTuples());
           filter->setErrorCondition(-502);
           filter->notifyErrorMessage(filter->getHumanLabel(), ss, filter->getErrorCondition());
         }
         return false;
       }
       // Make sure the number of components match
-      if (numComp != attributeArray->getNumberOfComponents())
+      if (numComp != targetDestArray->getNumberOfComponents())
       {
         if (NULL != filter)
         {
           QString ss = QObject::tr("Filter '%1' is trying to use array '%2' where the number of components is %3 but the filter requires that array "
-                                   " to have %4.").arg(filter->getHumanLabel()).arg(attributeArray->getName()).arg(attributeArray->getNumberOfComponents()).arg(numComp);
+                                   " to have %4.").arg(filter->getHumanLabel()).arg(targetDestArray->getName()).arg(targetDestArray->getNumberOfComponents()).arg(numComp);
           filter->setErrorCondition(-503);
           filter->notifyErrorMessage(filter->getHumanLabel(), ss, filter->getErrorCondition());
         }
         return false;
       }
       // Make sure we can downcast to the proper type
-      ArrayType* array = ArrayType::SafePointerDownCast(attributeArray.get());
+      ArrayType* array = ArrayType::SafePointerDownCast(targetDestArray.get());
       if (NULL == array)
       {
         typename ArrayType::Pointer dat = ArrayType::CreateArray(1, "JUNK-INTERNAL-USE-ONLY");
-        QString ss = QObject::tr(" - The filter requested an array named '%1' with type '%2' from the %3.\n"
+        QString ss = QObject::tr(" - The filter requested an array named '%1' with type '%2' from the filter '%3'.\n"
                                  "An Array with name '%4' is stored in the %5 but is of type %6\n")
-                     .arg(arrayName).arg(dat->getTypeAsString()).arg(getNameOfClass()).arg(arrayName).arg(getNameOfClass()).arg(attributeArray->getTypeAsString());
+                     .arg(arrayName).arg(dat->getTypeAsString()).arg(getNameOfClass()).arg(arrayName).arg(getNameOfClass()).arg(targetDestArray->getTypeAsString());
         if (NULL != filter)
         {
           filter->setErrorCondition(-504);
@@ -373,7 +376,7 @@ class DREAM3DLib_EXPORT AttributeMatrix : public Observable
       return true;
     }
 
-    //DREAM3D_INSTANCE_PROPERTY(uint32_t, Type)
+
     void setType(uint32_t value);
     uint32_t getType();
 
@@ -475,7 +478,7 @@ class DREAM3DLib_EXPORT AttributeMatrix : public Observable
 
     /**
     * @brief creates and returns a copy of the attribute matrix
-    * @return On error, will return a null pointer.  It is the responsibility of the calling function to check for errors and return an error message using the PipelineMessage 
+    * @return On error, will return a null pointer.  It is the responsibility of the calling function to check for errors and return an error message using the PipelineMessage
     */
     virtual AttributeMatrix::Pointer deepCopy();
 

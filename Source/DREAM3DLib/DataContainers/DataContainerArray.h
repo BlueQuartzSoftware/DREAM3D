@@ -283,13 +283,13 @@ class DREAM3DLib_EXPORT DataContainerArray : public QObject
 
     /**
      * @brief getPrereqArrayFromPath
-     * @param filter
-     * @param path
-     * @param dims
-     * @return
+     * @param filter Instance of an AbstractFilter. Can be NULL
+     * @param path The path to the IDataArray
+     * @param cDims The component dimensions of the IDataArray subclass
+     * @return Valid or NULL shared pointer based on availability of the array
      */
     template<class ArrayType, class Filter>
-    typename ArrayType::Pointer getPrereqArrayFromPath(Filter* filter, const DataArrayPath& path, QVector<size_t> dims)
+    typename ArrayType::Pointer getPrereqArrayFromPath(Filter* filter, const DataArrayPath& path, QVector<size_t> cDims)
     {
 
       QString ss;
@@ -346,7 +346,7 @@ class DREAM3DLib_EXPORT DataContainerArray : public QObject
         return dataArray;
       }
 
-      dataArray = attrMat->getPrereqArray<ArrayType, Filter>(filter, daName, -80002, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+      dataArray = attrMat->getPrereqArray<ArrayType, Filter>(filter, daName, -80002, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
       return dataArray;
     }
 

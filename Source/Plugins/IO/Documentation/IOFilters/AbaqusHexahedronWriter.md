@@ -1,43 +1,49 @@
-Name of Filter {#abaqushexahedronwriter}
+Abaqus Hexahedron Writer {#abaqushexahedronwriter}
 =====
 
 ## Group (Subgroup) ##
-Filter Group (Filter Subgroup)
+IO (Writers)
 
 
 ## Description ##
 This filter does the following...
 
+Desciption of each input
+
+maybe first few lines of the output files
+
+Give Credit to Matthew Priddy at Ga. Tech for the original codes.
+
 ## Parameters ##
 | Name             | Type |
 |------------------|------|
-| Feature Array Name | String |
+| Output Path | String |
+| File Prefix | String |
+| Feature Ids | String |
+| Hour Glass Stiffness | Int |
+| Job Name | String |
 
 ## Required Arrays ##
 
 | Type | Default Array Name | Description | Comment |
 |------|--------------------|-------------|---------|
-| Int  | SomeName           | ....        | other   |
+| Int  | Feature Ids        | The feature Ids array |    |
 
 
 ## Created Arrays ##
 
-| Type | Default Array Name | Description | Comment |
-|------|--------------------|-------------|---------|
-| Int  | SomeName           | ....        | other   |
+None
 
 
 
 ## Authors ##
 
-**Copyright** 2014 Michael A. Groeber (AFRL), 2014 Michael A. Jackson (BlueQuartz Software)
+**Copyright** BlueQuartz Software, LLC
 
 **Contact Info** dream3d@bluequartz.net
 
 **Version** 1.0.0
 
 **License**  See the License.txt file that came with DREAM3D.
-
-
 
 See a bug? Does this documentation need updated with a citation? Send comments, corrections and additions to [The DREAM3D development team](mailto:dream3d@bluequartz.net?subject=Documentation%20Correction)

@@ -781,8 +781,8 @@ void  InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclus
 
         if (precipboundaryfraction > 0)
         {
-            QString msg("There are no grain boundaries to place precipitates on, and the target statistics precipitate fraction is greater than zero");
-            notifyWarningMessage(getHumanLabel(), msg, -501);
+          QString msg("There are no grain boundaries to place precipitates on, and the target statistics precipitate fraction is greater than zero. This filter will run without trying to match the precipitate fraction");
+          notifyWarningMessage(getHumanLabel(), msg, -5010);
         }
 
 
@@ -976,7 +976,7 @@ void  InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclus
             if (precipboundaryfraction > 0)
             {
                 QString msg("There are no grain boundaries to place precipitates on, and the target statistics precipitate fraction is greater than zero. This filter will run without trying to match the precipitate fraction");
-                notifyWarningMessage(getHumanLabel(), msg, -501);
+                notifyWarningMessage(getHumanLabel(), msg, -5010);
             }
 
             if(availablePointsCount > 0)

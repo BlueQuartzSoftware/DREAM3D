@@ -184,8 +184,11 @@ int EstablishShapeTypes::getPhaseCount()
   AttributeMatrix::Pointer inputAttrMat = dca->getAttributeMatrix(getInputPhaseTypesArrayPath());
 
   if (NULL == inputAttrMat.get() ) { return 0; }
-  qDebug() << "  data->getNumberOfTuples(): " << inputAttrMat->getTupleDimensions();
-  qDebug() << "Name" << inputAttrMat->getName();
+
+  if(__SHOW_DEBUG_MSG__) {
+    qDebug() << "  data->getNumberOfTuples(): " << inputAttrMat->getTupleDimensions();
+    qDebug() << "Name" << inputAttrMat->getName();
+  }
 
   if(inputAttrMat->getType() < DREAM3D::AttributeMatrixType::VertexEnsemble
           || inputAttrMat->getType() > DREAM3D::AttributeMatrixType::CellEnsemble )

@@ -48,11 +48,11 @@
 // -----------------------------------------------------------------------------
 AbaqusHexahedronWriter::AbaqusHexahedronWriter() :
 AbstractFilter(),
-m_FilePrefix("default"),
 m_OutputPath(""),
-m_HourglassStiffness(0),
-m_JobName(""),
+m_FilePrefix("default"),
 m_FeatureIdsArrayPath(DREAM3D::Defaults::VolumeDataContainerName, DREAM3D::Defaults::CellAttributeMatrixName, DREAM3D::CellData::FeatureIds),
+m_HourglassStiffness(250),
+m_JobName(""),
 m_FeatureIdsArrayName(DREAM3D::CellData::FeatureIds),
 m_FeatureIds(NULL)
 {
@@ -73,8 +73,8 @@ void AbaqusHexahedronWriter::setupFilterParameters()
 {
   FilterParameterVector parameters;
   parameters.push_back(FileSystemFilterParameter::New("Output Path", "OutputPath", FilterParameterWidgetType::OutputPathWidget, getOutputPath(), false));
-  parameters.push_back(FilterParameter::New("Output Prefix", "FilePrefix", FilterParameterWidgetType::StringWidget, getFilePrefix(), false));
-  parameters.push_back(FilterParameter::New("FeatureIds", "FeatureIdsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeatureIdsArrayPath(), false));
+  parameters.push_back(FilterParameter::New("Output File Prefix", "FilePrefix", FilterParameterWidgetType::StringWidget, getFilePrefix(), false));
+  parameters.push_back(FilterParameter::New("Feature Ids", "FeatureIdsArrayPath", FilterParameterWidgetType::DataArraySelectionWidget, getFeatureIdsArrayPath(), false));
   parameters.push_back(FilterParameter::New("Hourglass Stiffness", "HourglassStiffness", FilterParameterWidgetType::IntWidget, getHourglassStiffness(), false, "", 0));
   parameters.push_back(FilterParameter::New("Job Name", "JobName", FilterParameterWidgetType::StringWidget, getJobName(), false));
   setFilterParameters(parameters);
@@ -117,15 +117,41 @@ void AbaqusHexahedronWriter::dataCheck()
   setErrorCondition(0);
   if (m_OutputPath.isEmpty() == true)
   {
+    setErrorCondition(-12001);
     QString ss = QObject::tr("The output path must be set before executing this filter.");
-    notifyErrorMessage(getHumanLabel(), ss, -1);
-    setErrorCondition(-1);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 
-  QVector<size_t> dims(1, 1);
-  m_FeatureIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeatureIdsArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+
+  QVector<size_t> cDims(1, 1); // The component dimensions of the needed array.
+  m_FeatureIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeatureIdsArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if( NULL != m_FeatureIdsPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-NULL pointer to a DataArray<T> object */
   { m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
+
+  // Now make sure we have a VolumeDataContainer
+  VolumeDataContainer* dc = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getFeatureIdsArrayPath().getDataContainerName());
+  if (NULL == dc)
+  {
+    setErrorCondition(-12002);
+    QString ss = QObject::tr("The selected DataContainer is not a 'Volume DataContainer' type. Please select an array that has as its parent a VolumeDataContainer.");
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+  }
+
+  size_t volDims[3] = { 0,0,0};
+  dc->getDimensions(volDims);
+
+  if(NULL != m_FeatureIdsPtr.lock().get() && NULL != dc )
+  {
+    size_t volTuples = volDims[0] * volDims[1] * volDims[2];
+
+    if (volTuples != m_FeatureIdsPtr.lock()->getNumberOfTuples() )
+    {
+      setErrorCondition(-12000);
+      QString ss = QObject::tr("The number of tuples for the selected volume '%1' does not match the number of tuples for the selected data array '%2'.\
+      Did you select an Attribute Matrix that holds data for each voxel? These AttributeMatrices are usually called 'CellData'.").arg(volTuples).arg(m_FeatureIdsPtr.lock()->getNumberOfTuples());
+      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    }
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -163,6 +189,7 @@ void AbaqusHexahedronWriter::execute()
   }
 
   VolumeDataContainer* r = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(m_FeatureIdsArrayPath.getDataContainerName());
+
   size_t cDims[3] = { 0, 0, 0 };
   r->getDimensions(cDims);
   size_t pDims[3] = { cDims[0] + 1, cDims[1] + 1, cDims[2] + 1 };
@@ -171,6 +198,7 @@ void AbaqusHexahedronWriter::execute()
   float spacing[3] = { 0.0f, 0.0f, 0.0f };
   r->getResolution(spacing);
   size_t totalPoints = r->getXPoints() * r->getYPoints() * r->getZPoints();
+
 
   // Create file names
   QString nodesFile = m_OutputPath + QDir::separator() + m_FilePrefix + "_nodes.inp";
@@ -193,7 +221,7 @@ void AbaqusHexahedronWriter::execute()
     setErrorCondition(-1);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
-	err = writeSects(sectsFile, totalPoints);
+  err = writeSects(sectsFile, totalPoints);
   if (err < 0)
   {
     QString ss = QObject::tr("Error writing output sects file '%1'\n ").arg(sectsFile);
@@ -224,8 +252,10 @@ void AbaqusHexahedronWriter::execute()
 */
 int AbaqusHexahedronWriter::writeNodes(const QString& file, size_t* cDims, float* origin, float* spacing)
 {
+
   size_t pDims[3] = { cDims[0] + 1, cDims[1] + 1, cDims[2] + 1 };
   size_t nodeIndex = 1;
+
 
   int err = 0;
   FILE* f = NULL;
@@ -237,6 +267,7 @@ int AbaqusHexahedronWriter::writeNodes(const QString& file, size_t* cDims, float
 
   fprintf(f, "** Generated by : %s\n", DREAM3DLib::Version::PackageComplete().toLatin1().data());
   fprintf(f, "** ----------------------------------------------------------------\n**\n*Node\n");
+
 
   for (size_t z = 0; z < pDims[2]; z++)
   {
@@ -251,10 +282,11 @@ int AbaqusHexahedronWriter::writeNodes(const QString& file, size_t* cDims, float
         ++nodeIndex;
       }
     }
+
   }
 
   // Write the last node, which is a dummy node used for stress - strain curves.
-	fprintf(f, "%d, %f, %f, %f\n", 999999, 0.0f, 0.0f, 0.0f);
+  fprintf(f, "%d, %f, %f, %f\n", 999999, 0.0f, 0.0f, 0.0f);
   fprintf(f, "**\n** ----------------------------------------------------------------\n**\n");
 
   if (err < 0)
@@ -274,6 +306,7 @@ int AbaqusHexahedronWriter::writeNodes(const QString& file, size_t* cDims, float
 // -----------------------------------------------------------------------------
 int AbaqusHexahedronWriter::writeElems(const QString& file, size_t* cDims, size_t* pDims)
 {
+
   int err = 0;
   FILE* f = NULL;
   f = fopen(file.toLatin1().data(), "wb");
@@ -296,6 +329,7 @@ int AbaqusHexahedronWriter::writeElems(const QString& file, size_t* cDims, size_
         ++index;
       }
     }
+
   }
   fprintf(f, "**\n** ----------------------------------------------------------------\n**\n");
 
@@ -315,6 +349,7 @@ int AbaqusHexahedronWriter::writeElems(const QString& file, size_t* cDims, size_
 // -----------------------------------------------------------------------------
 int AbaqusHexahedronWriter::writeElset(const QString& file, size_t totalPoints)
 {
+
   int err = 0;
   FILE* f = NULL;
   f = fopen(file.toLatin1().data(), "wb");
@@ -326,7 +361,7 @@ int AbaqusHexahedronWriter::writeElset(const QString& file, size_t totalPoints)
   fprintf(f, "** Generated by : %s\n", DREAM3DLib::Version::PackageComplete().toLatin1().data());
   fprintf(f, "** ----------------------------------------------------------------\n**\n** The element sets\n");
   fprintf(f, "*Elset, elset=cube, generate\n");
-  fprintf(f, "%d, %d, %d\n", 1, totalPoints, 1);
+  fprintf(f, "1 %lu, 1\n", totalPoints);
   fprintf(f, "**\n** Each Grain is made up of multiple elements\n**");
 
   // find total number of Grain Ids
@@ -342,6 +377,7 @@ int AbaqusHexahedronWriter::writeElset(const QString& file, size_t totalPoints)
   while (voxelId <= maxGrainId) {
     size_t elementPerLine = 0;
     fprintf(f, "\n*Elset, elset=Grain%d_set\n", voxelId);
+
     for (size_t i = 0; i < totalPoints + 1; i++)
     {
       if (m_FeatureIds[i] == voxelId)
@@ -349,7 +385,7 @@ int AbaqusHexahedronWriter::writeElset(const QString& file, size_t totalPoints)
         if(elementPerLine != 0 && (elementPerLine % 16)){ // no comma at beginning and after last element
         fprintf(f, ", ");
         }
-        fprintf(f, "%d", i+1);
+        fprintf(f, "%lu", i+1);
         elementPerLine++;
         if ((elementPerLine % 16) == 0) // 16 elements per line
         {
@@ -413,6 +449,7 @@ int AbaqusHexahedronWriter::writeMicrons(const QString& file)
 // -----------------------------------------------------------------------------
 int AbaqusHexahedronWriter::writeSects(const QString& file, size_t totalPoints)
 {
+
   int err = 0;
   FILE* f = NULL;
   f = fopen(file.toLatin1().data(), "wb");
@@ -436,8 +473,8 @@ int AbaqusHexahedronWriter::writeSects(const QString& file, size_t totalPoints)
   // We are now defining the sections, which is for each grain
   size_t grain = 1;
   while (grain <= maxGrainId) {
-    fprintf(f, "** Section: Grain%d\n", grain);
-    fprintf(f, "*Solid Section, elset=Grain%d_set, material=Grain_Mat%d\n", grain, grain);
+    fprintf(f, "** Section: Grain%lu\n", grain);
+    fprintf(f, "*Solid Section, elset=Grain%lu_set, material=Grain_Mat%lu\n", grain, grain);
     fprintf(f, "*Hourglass Stiffness\n%d\n", m_HourglassStiffness);
     fprintf(f, "** --------------------------------------\n");
     grain++;
