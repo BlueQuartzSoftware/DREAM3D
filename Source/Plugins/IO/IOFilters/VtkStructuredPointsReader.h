@@ -59,11 +59,20 @@ class  VtkStructuredPointsReader : public AbstractFilter
 
     virtual ~VtkStructuredPointsReader();
 
-    DREAM3D_FILTER_PARAMETER(QString, DataContainerName)
-    Q_PROPERTY(QString DataContainerName READ getDataContainerName WRITE setDataContainerName)
 
+    DREAM3D_FILTER_PARAMETER(bool, ReadCellData)
+    Q_PROPERTY(bool ReadCellData READ getReadCellData WRITE setReadCellData)
+    DREAM3D_FILTER_PARAMETER(QString, VolumeDataContainerName)
+    Q_PROPERTY(QString VolumeDataContainerName READ getVolumeDataContainerName WRITE setVolumeDataContainerName)
     DREAM3D_FILTER_PARAMETER(QString, CellAttributeMatrixName)
     Q_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
+
+    DREAM3D_FILTER_PARAMETER(bool, ReadPointData)
+    Q_PROPERTY(bool ReadPointData READ getReadPointData WRITE setReadPointData)
+    DREAM3D_FILTER_PARAMETER(QString, VertexDataContainerName)
+    Q_PROPERTY(QString VertexDataContainerName READ getVertexDataContainerName WRITE setVertexDataContainerName)
+    DREAM3D_FILTER_PARAMETER(QString, VertexAttributeMatrixName)
+    Q_PROPERTY(QString VertexAttributeMatrixName READ getVertexAttributeMatrixName WRITE setVertexAttributeMatrixName)
 
     DREAM3D_FILTER_PARAMETER(QString, InputFile)
     Q_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile)
