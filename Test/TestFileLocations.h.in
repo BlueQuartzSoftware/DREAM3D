@@ -47,6 +47,12 @@ namespace UnitTest
     const QString TestFile("@TEST_TEMP_DIR@/DataArrayTest/DataArrayTest.h5");
   }
 
+  namespace DataContainerBundleTest
+  {
+    const QString TestDir("@TEST_TEMP_DIR@/DataContainerBundleTest");
+    const QString TestFile("@TEST_TEMP_DIR@/DataContainerBundleTest/DataContainerBundleTest.h5");
+  }
+
   namespace FeatureIdsTest
   {
     static const size_t XSize = 3;
