@@ -237,17 +237,19 @@ void DataArraySelectionWidget::populateComboBoxes()
   if (!dataContainerList->signalsBlocked()) { didBlock = true; }
   dataContainerList->blockSignals(true);
   int dcIndex = dataContainerList->findText(dcName);
-  if(dcIndex < 0 && dcName.isEmpty() == false)
+  if(dcIndex < 0)
   {
-    dataContainerList->addItem(dcName);
-  } // the string was not found so just set it to the first index
+    dataContainerList->setCurrentIndex(dcIndex);
+    attributeMatrixList->setCurrentIndex(dcIndex);
+    attributeArrayList->setCurrentIndex(dcIndex);
+  }
   else
   {
-    if(dcIndex < 0) { dcIndex = 0; } // Just set it to the first DataContainer in the list
     dataContainerList->setCurrentIndex(dcIndex);
     populateAttributeMatrixList();
   }
   if(didBlock) { dataContainerList->blockSignals(false); didBlock = false; }
+  if(dcIndex < 0) { return; }
 
 
   if(!attributeMatrixList->signalsBlocked()) { didBlock = true; }
@@ -272,24 +274,11 @@ void DataArraySelectionWidget::populateComboBoxes()
   {
     QVariant var = getFilterParameter()->getDefaultValue();
     DataArrayPath path = var.value<DataArrayPath>();
-
-    //AbstractFilter::Pointer ptr = getFilter()->newFilterInstance(false);
-    //DataArrayPath path = ptr->property(PROPERTY_NAME_AS_CHAR).value<DataArrayPath>();
     daName = path.getDataArrayName(); // Pick up the DataArray Name from a Default instantiation of the filter
     daIndex = attributeArrayList->findText(daName);
-    // //qDebug() << "Trying default value for DataArrayPath.dataArrayName: " << daName;
   }
 
-
-  //if(daIndex < 0 && daName.isEmpty() == false)
-  {
-    // attributeArrayList->addItem(daName);
-  } // The name of the attribute array was not found in the list
-  //else
-  {
-    //if (daIndex < 0) { daIndex = 0; }
-    attributeArrayList->setCurrentIndex(daIndex); // we set the selection but we are NOT triggering anything so we shoudl
-  }
+  attributeArrayList->setCurrentIndex(daIndex); // we set the selection but we are NOT triggering anything so we should
   if(didBlock) { attributeArrayList->blockSignals(false); didBlock = false; }// not be triggering an infinte recursion of preflights
 
 }

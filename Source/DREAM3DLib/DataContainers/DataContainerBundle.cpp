@@ -109,7 +109,7 @@ QVector<QString> DataContainerBundle::getDataContainerNames()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DataContainerBundle::append(DataContainer::Pointer dc)
+void DataContainerBundle::addDataContainer(DataContainer::Pointer dc)
 {
   m_DataContainers.append(dc);
 }
@@ -117,15 +117,7 @@ void DataContainerBundle::append(DataContainer::Pointer dc)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DataContainerBundle::prepend(DataContainer::Pointer dc)
-{
-  m_DataContainers.prepend(dc);
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void DataContainerBundle::remove(DataContainer::Pointer dc)
+void DataContainerBundle::removeDataContainer(DataContainer::Pointer dc)
 {
   for(qint32 i = 0; i < m_DataContainers.size(); i++)
   {
@@ -140,7 +132,7 @@ void DataContainerBundle::remove(DataContainer::Pointer dc)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DataContainerBundle::remove(const QString &name)
+void DataContainerBundle::removeDataContainer(const QString &name)
 {
   for(qint32 i = 0; i < m_DataContainers.size(); i++)
   {
@@ -155,7 +147,7 @@ void DataContainerBundle::remove(const QString &name)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DataContainerBundle::remove(qint32 i)
+void DataContainerBundle::removeDataContainer(qint32 i)
 {
   m_DataContainers.remove(i);
 }
@@ -163,23 +155,7 @@ void DataContainerBundle::remove(qint32 i)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DataContainerBundle::pop_back()
-{
-  m_DataContainers.pop_back();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void DataContainerBundle::pop_front()
-{
-  m_DataContainers.pop_front();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-DataContainer::Pointer DataContainerBundle::value(qint32 index)
+DataContainer::Pointer DataContainerBundle::getDataContainer(qint32 index)
 {
   return m_DataContainers.value(index);
 }
@@ -248,3 +224,11 @@ int DataContainerBundle::readH5Data(hid_t groupId)
 
   return err;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+ void DataContainerBundle::findCommonDataArrayPaths()
+ {
+
+ }

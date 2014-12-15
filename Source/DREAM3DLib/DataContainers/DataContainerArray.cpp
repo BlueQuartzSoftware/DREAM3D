@@ -471,7 +471,7 @@ void DataContainerArray::removeDataContainerFromBundles(const QString &name)
       {
         if (dcbNames[i].compare(name) == 0)
         {
-          dcbPtr->remove(name);
+          dcbPtr->removeDataContainer(name);
         }
       }
     }

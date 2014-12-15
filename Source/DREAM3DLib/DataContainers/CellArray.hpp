@@ -50,8 +50,15 @@
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/DataContainers/VertexArray.h"
+#include "DREAM3DLib/DataContainers/EdgeArray.hpp"
 #include "DREAM3DLib/DataContainers/DynamicListArray.hpp"
 #include "DREAM3DLib/DataArrays/DataArray.hpp"
+
+typedef QSet<int64_t> EdgeSet_t;
+typedef EdgeSet_t::iterator EdgeSetIterator_t;
+
+typedef QMap<int64_t, int32_t> EdgeMap_t;
+typedef EdgeMap_t::iterator EdgeMapIterator_t;
 
 /**
  * @brief The MeshLinks class contains arrays of Cells for each Node in the mesh. This allows quick query to the node
@@ -78,7 +85,8 @@ class CellArray
     // -----------------------------------------------------------------------------
     virtual ~CellArray() { }
 
-
+    DREAM3D_INSTANCE_PROPERTY(EdgeArray::Pointer, BoundaryEdges)
+    DREAM3D_INSTANCE_PROPERTY(EdgeArray::Pointer, UniqueEdges)
     DREAM3D_INSTANCE_PROPERTY(Int32DynamicListArray::Pointer, CellsContainingVert)
     DREAM3D_INSTANCE_PROPERTY(Int32DynamicListArray::Pointer, CellNeighbors)
     DREAM3D_INSTANCE_PROPERTY(FloatArrayType::Pointer, CellCentroids)
@@ -135,6 +143,146 @@ class CellArray
       Cell.verts[1] = verts[1];
       Cell.verts[2] = verts[2];
       Cell.verts[3] = verts[3];
+    }
+
+    // -----------------------------------------------------------------------------
+    //
+    // -----------------------------------------------------------------------------
+    void findBoundaryEdgeIds()
+    {
+      size_t numCells = m_Array->getNumberOfTuples();
+      Cell_t* cells = m_Array->getPointer(0);
+
+      struct  { int32_t v0; int32_t v1; } edge;
+      int64_t* u64Edge = reinterpret_cast<int64_t*>(&edge); // This pointer is a 64 bit integer interpretation of the above struct variable
+
+      EdgeMap_t bedges_id_set;
+      for(size_t t = 0; t < numCells; ++t)
+      {
+        // Get the cell
+        Cell_t& cell = cells[t];
+
+        // Edge map iterator
+        EdgeMapIterator_t iter;
+
+        // Edge 0
+        int i = 0;
+        edge.v0 = cell.verts[i];
+        edge.v1 = cell.verts[i + 1];
+        if (edge.v0 > edge.v1) { edge.v0 = cell.verts[i + 1]; edge.v1 = cell.verts[i]; }
+        iter = bedges_id_set.find(*u64Edge);
+        if (iter == bedges_id_set.end()) { bedges_id_set.insert(*u64Edge, 1); }
+        else { bedges_id_set[*u64Edge]++; }
+
+        // Edge 1
+        i = 1;
+        edge.v0 = cell.verts[i];
+        edge.v1 = cell.verts[i + 1];
+        if (edge.v0 > edge.v1) { edge.v0 = cell.verts[i + 1]; edge.v1 = cell.verts[i]; }
+        iter = bedges_id_set.find(*u64Edge);
+        if (iter == bedges_id_set.end()) { bedges_id_set.insert(*u64Edge, 1); }
+        else { bedges_id_set[*u64Edge]++; }
+
+        // Edge 2
+        i = 2;
+        edge.v0 = cell.verts[i];
+        edge.v1 = cell.verts[i + 1];
+        if (edge.v0 > edge.v1) { edge.v0 = cell.verts[i + 1]; edge.v1 = cell.verts[i]; }
+        iter = bedges_id_set.find(*u64Edge);
+        if (iter == bedges_id_set.end()) { bedges_id_set.insert(*u64Edge, 1); }
+        else { bedges_id_set[*u64Edge]++; }
+
+        // Edge 3
+        i = 3;
+        edge.v0 = cell.verts[i];
+        edge.v1 = cell.verts[0];
+        if (edge.v0 > edge.v1) { edge.v0 = cell.verts[0]; edge.v1 = cell.verts[i]; }
+        iter = bedges_id_set.find(*u64Edge);
+        if (iter == bedges_id_set.end()) { bedges_id_set.insert(*u64Edge, 1); }
+        else { bedges_id_set[*u64Edge]++; }
+      }
+
+      // Run through the edge map and remove any edge that has a value > 1, leaving only boundary edges left
+      for (EdgeMapIterator_t iter = bedges_id_set.begin(); iter != bedges_id_set.end(); ++iter)
+      {
+        if (iter.value() > 1)
+        {
+          bedges_id_set.erase(iter);
+        }
+      }
+
+      EdgeArray::Pointer bEdges = EdgeArray::CreateArray(bedges_id_set.size(), "boundaryEdges", m_Verts);
+      EdgeArray::Edge_t* bEdge = bEdges->getPointer(0);
+
+      int index = 0;
+      for(EdgeMapIterator_t iter = bedges_id_set.begin(); iter != bedges_id_set.end(); ++iter)
+      {
+        *u64Edge = iter.key();
+        bEdge[index].verts[0] = edge.v0;
+        bEdge[index].verts[1] = edge.v1;
+        ++index;
+      }
+      setBoundaryEdges(bEdges);
+    }
+
+    // -----------------------------------------------------------------------------
+    //
+    // -----------------------------------------------------------------------------
+    void generateUniqueEdgeIds()
+    {
+      size_t numCells = m_Array->getNumberOfTuples();
+      Cell_t* cells = m_Array->getPointer(0);
+
+      struct  { int32_t v0; int32_t v1; } edge;
+      int64_t* u64Edge = reinterpret_cast<int64_t*>(&edge); // This pointer is a 64 bit integer interpretation of the above struct variable
+
+      EdgeSet_t uedges_id_set;
+      for(size_t t = 0; t < numCells; ++t)
+      {
+        // Get the cell
+        Cell_t& cell = cells[t];
+
+        // Edge 0
+        int i = 0;
+        edge.v0 = cell.verts[i];
+        edge.v1 = cell.verts[i + 1];
+        if (edge.v0 > edge.v1) { edge.v0 = cell.verts[i + 1]; edge.v1 = cell.verts[i]; }
+        uedges_id_set.insert(*u64Edge);
+
+        // Edge 1
+        i = 1;
+        edge.v0 = cell.verts[i];
+        edge.v1 = cell.verts[i + 1];
+        if (edge.v0 > edge.v1) { edge.v0 = cell.verts[i + 1]; edge.v1 = cell.verts[i]; }
+        uedges_id_set.insert(*u64Edge);
+
+        // Edge 2
+        i = 2;
+        edge.v0 = cell.verts[i];
+        edge.v1 = cell.verts[i + 1];
+        if (edge.v0 > edge.v1) { edge.v0 = cell.verts[i + 1]; edge.v1 = cell.verts[i]; }
+        uedges_id_set.insert(*u64Edge);
+
+        // Edge 3
+        i = 3;
+        edge.v0 = cell.verts[i];
+        edge.v1 = cell.verts[0];
+        if (edge.v0 > edge.v1) { edge.v0 = cell.verts[0]; edge.v1 = cell.verts[i]; }
+        uedges_id_set.insert(*u64Edge);
+      }
+
+      EdgeArray::Pointer uEdges = EdgeArray::CreateArray(uedges_id_set.size(), "uniqueEdges", m_Verts);
+      EdgeArray::Edge_t* uEdge = uEdges->getPointer(0);
+
+      int index = 0;
+      for(EdgeSetIterator_t iter = uedges_id_set.begin(); iter != uedges_id_set.end(); ++iter)
+      {
+        *u64Edge = *iter;
+        uEdge[index].verts[0] = edge.v0;
+        uEdge[index].verts[1] = edge.v1;
+        ++index;
+      }
+      setUniqueEdges(uEdges);
     }
 
     // -----------------------------------------------------------------------------
