@@ -295,9 +295,9 @@ int readDataChunk(AttributeMatrix::Pointer attrMat, QFile &inStream, bool inPref
     qint64 totalSize = static_cast<qint64>(numTuples*numComp*sizeof(T));
     while(pos < fileSize)
     {
-      if(fileSize - pos < k_BufferSize)
+      if(totalSize - totalBytesRead < k_BufferSize)
       {
-        k_BufferSize = fileSize - pos;
+        k_BufferSize = totalSize - totalBytesRead;
       }
       if(pos > fileSize)
       {
