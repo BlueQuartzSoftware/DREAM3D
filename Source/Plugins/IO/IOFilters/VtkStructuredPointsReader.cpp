@@ -80,7 +80,7 @@ void VtkStructuredPointsReader::setupFilterParameters()
   parameters.push_back(LinkedBooleanFilterParameter::New("Read Point Data", "ReadPointData", getReadPointData(), linkedProps, false));
   linkedProps.clear();
   linkedProps << "VolumeDataContainerName" << "CellAttributeMatrixName";
-  parameters.push_back(LinkedBooleanFilterParameter::New("Read Cell Data", "ReadCellData", getReadcellData(), linkedProps, false));
+  parameters.push_back(LinkedBooleanFilterParameter::New("Read Cell Data", "ReadCellData", getReadCellData(), linkedProps, false));
   parameters.push_back(FilterParameter::New("Created Information", "", FilterParameterWidgetType::SeparatorWidget, "", true));
   parameters.push_back(FilterParameter::New("Vertex Data Container", "VertexDataContainerName", FilterParameterWidgetType::StringWidget, getVolumeDataContainerName(), true, ""));
   parameters.push_back(FilterParameter::New("Vertex Attribute Matrix", "VertexAttributeMatrixName", FilterParameterWidgetType::StringWidget, getVertexAttributeMatrixName(), true, ""));
@@ -390,9 +390,9 @@ int VtkStructuredPointsReader::readFile()
   {
     getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getVolumeDataContainerName())->setDimensions(dims);
     QVector<size_t> tDims(3, 0);
-    tDims[0] = dims[0];
-    tDims[1] = dims[1];
-    tDims[2] = dims[2];
+    tDims[0] = dims[0]-1;
+    tDims[1] = dims[1]-1;
+    tDims[2] = dims[2]-1;
     getDataContainerArray()->getDataContainer(getVolumeDataContainerName())->getAttributeMatrix(getCellAttributeMatrixName())->resizeAttributeArrays(tDims);
   }
 
@@ -415,14 +415,8 @@ int VtkStructuredPointsReader::readFile()
   {
     //create point and cell attribute matrices
     QVector<size_t> tDims(1, dims[0]*dims[1]*dims[2]);
-    AttributeMatrix::Pointer vertexDataAttrMat = m->getAttributeMatrix(getVertexAttributeMatrixName());
-    vertexDataAttrMat->resizeAttributeArrays(tDims);
+    getDataContainerArray()->getDataContainer(getVertexDataContainerName())->getAttributeMatrix(getVertexAttributeMatrixName())->resizeAttributeArrays(tDims);
   }
-
-  
-  // Read the "XXXX_DATA"
-  buf = instream.readLine().trimmed();
-  words = buf.split(' ');
 
   // Now parse through the file. If we are preflighting then we only construct the DataArrays with no allocation
   readData(instream);
@@ -508,76 +502,77 @@ void VtkStructuredPointsReader::readData(QFile &instream)
         return;
       }
       tokens = buf.split(' ');
-    }
 
-    if (tokens.size() < 3 || tokens.size() > 4)
-    {
-      QString ss = QObject::tr("Error reading SCALARS header section of VTK file. 3 or 4 words are needed. Found %1. Read Line was\n  %2").arg(tokens.size()).arg(QString(buf));
-      setErrorCondition(-1002);
-      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-      return;
-    }
+      if (tokens.size() < 3 || tokens.size() > 4)
+      {
+        QString ss = QObject::tr("Error reading SCALARS header section of VTK file. 3 or 4 words are needed. Found %1. Read Line was\n  %2").arg(tokens.size()).arg(QString(buf));
+        setErrorCondition(-1002);
+        notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+        return;
+      }
 
-    QString scalarNumComps("1");
-    QString scalarKeyWord = tokens[0];
-    if(scalarKeyWord.compare("SCALARS") == 0)
-    {
-      buf = instream.readLine().trimmed(); // Read the LOOKUP_TABLE line
-    }
-    else if (scalarKeyWord.compare("VECTORS") == 0)
-    {
-      scalarNumComps = QString("3");
-    }
-    else {
-      QString ss = QObject::tr("Error reading Dataset section. Unknown Keyword found. %1").arg(scalarKeyWord);
-      setErrorCondition(-1003);
-      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-      return;
-    }
-    QString scalarName = tokens[1];
-    scalarName = scalarName.replace("%20", " "); // Replace URL style encoding of string names. %20 is a Space.
-    QString scalarType = tokens[2];
+      QString scalarNumComps("1");
+      QString scalarKeyWord = tokens[0];
+      if(scalarKeyWord.compare("SCALARS") == 0)
+      {
+        buf = instream.readLine().trimmed(); // Read the LOOKUP_TABLE line
+      }
+      else if (scalarKeyWord.compare("VECTORS") == 0)
+      {
+        scalarNumComps = QString("3");
+      }
+      else {
+        QString ss = QObject::tr("Error reading Dataset section. Unknown Keyword found. %1").arg(scalarKeyWord);
+        setErrorCondition(-1003);
+        notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+        return;
+      }
+      QString scalarName = tokens[1];
+      scalarName = scalarName.replace("%20", " "); // Replace URL style encoding of string names. %20 is a Space.
+      QString scalarType = tokens[2];
 
-    if(tokens.size() == 4) {
-      scalarNumComps = tokens[3];
-    }
+      if(tokens.size() == 4) {
+        scalarNumComps = tokens[3];
+      }
 
-    if (scalarType.compare("unsigned_char") == 0) {
-      err = readDataChunk<uint8_t>(attrMat, instream, getInPreflight(), getFileIsBinary(), scalarName, scalarType, scalarNumComps);
-    }
-    else if (scalarType.compare("char") == 0) {
-      err = readDataChunk<int8_t>(attrMat, instream, getInPreflight(), getFileIsBinary(), scalarName, scalarType, scalarNumComps);
-    }
-    else if (scalarType.compare("unsigned_short") == 0) {
-      err = readDataChunk<uint16_t>(attrMat, instream, getInPreflight(), getFileIsBinary(), scalarName, scalarType, scalarNumComps);
-    }
-    else if (scalarType.compare("short") == 0) {
-      err = readDataChunk<int16_t>(attrMat, instream, getInPreflight(), getFileIsBinary(), scalarName, scalarType, scalarNumComps);
-    }
-    else if (scalarType.compare("unsigned_int") == 0) {
-      err = readDataChunk<uint32_t>(attrMat, instream, getInPreflight(), getFileIsBinary(), scalarName, scalarType, scalarNumComps);
-    }
-    else if (scalarType.compare("int") == 0) {
-      err = readDataChunk<int32_t>(attrMat, instream, getInPreflight(), getFileIsBinary(), scalarName, scalarType, scalarNumComps);
-    }
-    else if (scalarType.compare("unsigned_long") == 0) {
-      err = readDataChunk<qint64>(attrMat, instream, getInPreflight(), getFileIsBinary(), scalarName, scalarType, scalarNumComps);
-    }
-    else if (scalarType.compare("long") == 0) {
-      err = readDataChunk<quint64>(attrMat, instream, getInPreflight(), getFileIsBinary(), scalarName, scalarType, scalarNumComps);
-    }
-    else if (scalarType.compare("float") == 0) {
-      err = readDataChunk<float>(attrMat, instream, getInPreflight(), getFileIsBinary(), scalarName, scalarType, scalarNumComps);
-    }
-    else if (scalarType.compare("double") == 0) {
-      err = readDataChunk<double>(attrMat, instream, getInPreflight(), getFileIsBinary(), scalarName, scalarType, scalarNumComps);
-    }
+      if (scalarType.compare("unsigned_char") == 0) {
+        err = readDataChunk<uint8_t>(attrMat, instream, getInPreflight(), getFileIsBinary(), scalarName, scalarType, scalarNumComps);
+      }
+      else if (scalarType.compare("char") == 0) {
+        err = readDataChunk<int8_t>(attrMat, instream, getInPreflight(), getFileIsBinary(), scalarName, scalarType, scalarNumComps);
+      }
+      else if (scalarType.compare("unsigned_short") == 0) {
+        err = readDataChunk<uint16_t>(attrMat, instream, getInPreflight(), getFileIsBinary(), scalarName, scalarType, scalarNumComps);
+      }
+      else if (scalarType.compare("short") == 0) {
+        err = readDataChunk<int16_t>(attrMat, instream, getInPreflight(), getFileIsBinary(), scalarName, scalarType, scalarNumComps);
+      }
+      else if (scalarType.compare("unsigned_int") == 0) {
+        err = readDataChunk<uint32_t>(attrMat, instream, getInPreflight(), getFileIsBinary(), scalarName, scalarType, scalarNumComps);
+      }
+      else if (scalarType.compare("int") == 0) {
+        err = readDataChunk<int32_t>(attrMat, instream, getInPreflight(), getFileIsBinary(), scalarName, scalarType, scalarNumComps);
+      }
+      else if (scalarType.compare("unsigned_long") == 0) {
+        err = readDataChunk<qint64>(attrMat, instream, getInPreflight(), getFileIsBinary(), scalarName, scalarType, scalarNumComps);
+      }
+      else if (scalarType.compare("long") == 0) {
+        err = readDataChunk<quint64>(attrMat, instream, getInPreflight(), getFileIsBinary(), scalarName, scalarType, scalarNumComps);
+      }
+      else if (scalarType.compare("float") == 0) {
+        err = readDataChunk<float>(attrMat, instream, getInPreflight(), getFileIsBinary(), scalarName, scalarType, scalarNumComps);
+      }
+      else if (scalarType.compare("double") == 0) {
+        err = readDataChunk<double>(attrMat, instream, getInPreflight(), getFileIsBinary(), scalarName, scalarType, scalarNumComps);
+      }
 
-    if(err < 0) {
-      QString ss = QObject::tr("Error Reading Dataset from VTK File. Dataset Type %1\n  DataSet Name %2\n  Numerical Type: %3\n  File Pos").arg(scalarKeyWord).arg(scalarKeyWord).arg(scalarType).arg(filePos);
-      setErrorCondition(err);
-      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-      return;
+      if(err < 0) {
+        QString ss = QObject::tr("Error Reading Dataset from VTK File. Dataset Type %1\n  DataSet Name %2\n  Numerical Type: %3\n  File Pos").arg(scalarKeyWord).arg(scalarKeyWord).arg(scalarType).arg(filePos);
+        setErrorCondition(err);
+        notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+        return;
+      }
+    
     }
 
   }
