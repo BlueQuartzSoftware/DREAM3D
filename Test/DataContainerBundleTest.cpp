@@ -103,6 +103,8 @@ void TestDataBundleCommonPaths()
 
   DataContainer::Pointer dc2 = dc0->deepCopy();
   dc2->setName("DC 2");
+  // remove an array so that we have something different
+  dc2->getAttributeMatrix("CellAttributeMatrix")->removeAttributeArray("Uint8 Array");
 
   DataContainerArray::Pointer dca = DataContainerArray::New();
   dca->addDataContainer(dc0);
@@ -114,6 +116,9 @@ void TestDataBundleCommonPaths()
   bundle->addDataContainer(dc0);
   bundle->addDataContainer(dc1);
   bundle->addDataContainer(dc0);
+
+  bundle->findCommonDataArrayPaths();
+
 }
 
 
