@@ -46,15 +46,15 @@
 // -----------------------------------------------------------------------------
 VtkStructuredPointsReader::VtkStructuredPointsReader() :
   AbstractFilter(),
+    m_ReadCellData(true),
   m_VolumeDataContainerName(DREAM3D::Defaults::VolumeDataContainerName),
-  m_VertexDataContainerName(DREAM3D::Defaults::VertexDataContainerName),
   m_CellAttributeMatrixName(DREAM3D::Defaults::CellAttributeMatrixName),
+  m_ReadPointData(true),
+    m_VertexDataContainerName(DREAM3D::Defaults::VertexDataContainerName),
   m_VertexAttributeMatrixName(DREAM3D::Defaults::VertexAttributeMatrixName),
   m_InputFile(""),
   m_Comment(""),
   m_DatasetType(""),
-  m_ReadCellData(true),
-  m_ReadPointData(true),
   m_FileIsBinary(true)
 {
   setupFilterParameters();
@@ -134,7 +134,7 @@ void VtkStructuredPointsReader::dataCheck()
 
     QVector<size_t> tDims(1, 0);
     AttributeMatrix::Pointer pointAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getVertexAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::Vertex);
-    if(getErrorCondition() < 0) { return; }  
+    if(getErrorCondition() < 0) { return; }
   }
 
   if(m_ReadCellData == true)
@@ -144,7 +144,7 @@ void VtkStructuredPointsReader::dataCheck()
 
     QVector<size_t> tDims(3, 0);
     AttributeMatrix::Pointer cellAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::Cell);
-    if(getErrorCondition() < 0) { return; }  
+    if(getErrorCondition() < 0) { return; }
   }
 
   QFileInfo fi(getInputFile());
@@ -431,7 +431,7 @@ int VtkStructuredPointsReader::readFile()
   origin[1] = tokens[2].toFloat(&ok);
   origin[2] = tokens[3].toFloat(&ok);
   if(m_ReadCellData == true) getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getVolumeDataContainerName())->setOrigin(origin);
-  if(m_ReadPointData = true)
+  if(m_ReadPointData == true)
   {
     //create point and cell attribute matrices
     QVector<size_t> tDims(1, dims[0]*dims[1]*dims[2]);
@@ -604,7 +604,7 @@ void VtkStructuredPointsReader::readData(QFile &instream)
         notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
         return;
       }
-    
+
     }
 
   }
