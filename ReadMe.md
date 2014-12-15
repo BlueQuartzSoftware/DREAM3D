@@ -33,6 +33,8 @@ Parts of DREAM.3D were written under US Air Force (AFRL) Contract FA8650-07-D-58
 
 ### BlueQuartz Software ###
 + Mr. Michael A. Jackson (VC, CC)
++ Mr. Joey Kleingers (CC)
++ Ms. Sally Connell (CC)
 
 ### Ohio State University/Johns Hopkins University ###
 + Dr. Somnath Ghosh (VC)
@@ -55,5 +57,6 @@ Parts of DREAM.3D were written under US Air Force (AFRL) Contract FA8650-07-D-58
 + Dr. Dave Rowenhorst (VC, CC)
 
 ### Other Institutions ###
-+ Mr. Joey Kleingers (CC) (SOCHE)
 + Mr. Jarrell Waggoner (CC) (Univ. South Carolina)
++ Mr. Matthew Priddy (CC) Georgia Tech University
++ 
