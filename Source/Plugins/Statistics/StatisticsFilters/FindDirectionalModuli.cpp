@@ -212,7 +212,7 @@ void FindDirectionalModuli::execute()
 
   QuatF q1, q2, qTotal;
   float sampleLoading[3];
-  float crystalLoading[3];
+  //float crystalLoading[3];
 
   //normalize loading direction
   sampleLoading[0] = m_LoadingDirection.x;
