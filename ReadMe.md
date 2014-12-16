@@ -33,7 +33,7 @@ Parts of DREAM.3D were written under US Air Force (AFRL) Contract FA8650-07-D-58
 
 ### BlueQuartz Software ###
 + Mr. Michael A. Jackson (VC, CC)
-+ Mr. Joey Kleingers (CC)
++ Mr. Joseph B. Kleingers (CC)
 + Ms. Sally Connell (CC)
 
 ### Ohio State University/Johns Hopkins University ###
