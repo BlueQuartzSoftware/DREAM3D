@@ -551,6 +551,7 @@ class DataArray : public IDataArray
      */
     virtual void initializeWithZeros()
     {
+      if(!m_IsAllocated) { return; }
       size_t typeSize = sizeof(T);
       ::memset(m_Array, 0, m_Size * typeSize);
     }
@@ -560,6 +561,7 @@ class DataArray : public IDataArray
      */
     virtual void initializeWithValue(T initValue, size_t offset = 0)
     {
+      if(!m_IsAllocated) { return; }
       for (size_t i = offset; i < m_Size; i++)
       {
         m_Array[i] = initValue;
@@ -859,6 +861,7 @@ class DataArray : public IDataArray
      */
     void initializeTuple(size_t i, double p)
     {
+      if(!m_IsAllocated) { return; }
 #ifndef NDEBUG
       if (m_Size > 0) { BOOST_ASSERT(i * m_NumComponents < m_Size);}
 #endif
