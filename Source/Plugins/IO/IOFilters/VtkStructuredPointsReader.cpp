@@ -303,17 +303,18 @@ int vtkReadBinaryData(std::istream &in, T *data, int numTuples, int numComp)
 
   // suck up newline
   // in->getline(line,256);
+  size_t total = sizeof(T)*numComp*numTuples;
   in.read((char *)data, sizeof(T)*numComp*numTuples);
   //  std::cout << " Data[0]=" << data[0];
-  if (in.eof())
-  {
-    std::cout <<"Error reading binary data!" << std::endl;
-    return 0;
-  }
+//  if (in.eof())
+//  {
+//    std::cout <<"Error reading binary data!" << std::endl;
+//    return 0;
+//  }
   if (in) {
     //  std::cout << "all data read successfully." << in.gcount() << std::endl;
   } else {
-    std::cout << "error: only " << in.gcount() << " could be read";
+    std::cout << "error: only " << in.gcount() << " could be read. Needed " << total << std::endl;
   }
   return 1;
 }
@@ -326,8 +327,10 @@ int readDataChunk(AttributeMatrix::Pointer attrMat, std::istream &in, bool inPre
                   const QString &scalarName, int scalarNumComp)
 {
   QVector<size_t> amTDims = attrMat->getTupleDimensions();
-
+  //std::cout  << "Reading into " << attrMat->getName().toStdString() << std::endl;
   size_t numTuples = attrMat->getNumTuples();
+ // std::cout << "  numTuples = " << numTuples << std::endl;
+
   QVector<size_t> tDims = attrMat->getTupleDimensions();
   QVector<size_t> cDims(1, scalarNumComp);
 
@@ -494,7 +497,7 @@ int VtkStructuredPointsReader::readFile()
   tDims[0] = dims[0]-1;
   tDims[1] = dims[1]-1;
   tDims[2] = dims[2]-1;
-  volAm->resizeAttributeArrays(tDims);
+  volAm->setTupleDimensions(tDims);
   volDc->setDimensions(tDims.data());
 
 
@@ -690,16 +693,22 @@ int VtkStructuredPointsReader::readDataTypeSection(std::istream &in, int numValu
       QList<QByteArray>tokens = buf.split(' ');
       QString word = QString(tokens[0]);
       bool ok = false;
-
-      if(nextKeyWord.compare("cell_data") == 0)
+      if(readString(in, line, 256))
       {
-        int ncells = tokens[1].toInt(&ok);
-        this->readDataTypeSection(in, ncells, "point_data");
-      }
-      else if(nextKeyWord.compare("point_data") == 0)
-      {
-        int npts = tokens[1].toInt(&ok);
-        this->readDataTypeSection(in, npts, "cell_data");
+        if(nextKeyWord.compare("cell_data") == 0)
+        {
+          VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getVolumeDataContainerName());
+          m_CurrentAttrMat = m->getAttributeMatrix(getCellAttributeMatrixName());
+          int ncells = QString(line).toInt(&ok);
+          this->readDataTypeSection(in, ncells, "point_data");
+        }
+        else if(nextKeyWord.compare("point_data") == 0)
+        {
+          VertexDataContainer* m = getDataContainerArray()->getDataContainerAs<VertexDataContainer>(getVertexDataContainerName());
+          m_CurrentAttrMat = m->getAttributeMatrix(getVertexAttributeMatrixName());
+          int npts = QString(line).toInt(&ok);
+          this->readDataTypeSection(in, npts, "cell_data");
+        }
       }
     }
 
@@ -826,7 +835,7 @@ int VtkStructuredPointsReader::readScalarData(std::istream &in, int numPts)
   }
 
 
-  std::cout << "Reading Scalar data--> " << name << std::endl;
+  //std::cout << "Reading Scalar data--> " << name << std::endl;
   // Suck up the newline at the end of the current line
   this->readLine(in, line, 1024);
 
