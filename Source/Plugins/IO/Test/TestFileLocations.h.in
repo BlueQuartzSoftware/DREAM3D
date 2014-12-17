@@ -58,6 +58,17 @@ namespace UnitTest
     static const size_t Offset = 200;
   }
 
+  namespace VtkStructuredPointsReaderTest
+  {
+    const QString BinaryFile("@TEST_TEMP_DIR@/binary_file.vtk");
+    const QString AsciiFile("@TEST_TEMP_DIR@/ascii_file.vtk");
+
+        static const size_t XSize = 3;
+    static const size_t YSize = 4;
+    static const size_t ZSize = 5;
+
+  }
+
 }
 
 #endif

@@ -306,17 +306,27 @@ int vtkReadBinaryData(std::istream &in, T *data, int numTuples, int numComp)
   size_t total = sizeof(T)*numComp*numTuples;
   in.read((char *)data, sizeof(T)*numComp*numTuples);
   //  std::cout << " Data[0]=" << data[0];
-//  if (in.eof())
-//  {
-//    std::cout <<"Error reading binary data!" << std::endl;
-//    return 0;
-//  }
-  if (in) {
+
+  if (in.good()) {
     //  std::cout << "all data read successfully." << in.gcount() << std::endl;
-  } else {
-    std::cout << "error: only " << in.gcount() << " could be read. Needed " << total << std::endl;
   }
-  return 1;
+
+  if ((in.rdstate() & std::ifstream::failbit ) != 0)
+  {
+    std::cout << "FAIL. " << in.gcount() << " could be read. Needed " << total << std::endl;
+    return -12020;
+  }
+  if ((in.rdstate() & std::ifstream::eofbit ) != 0)
+  {
+    std::cout <<"EOF " << in.gcount() << " could be read. Needed " << total << std::endl;
+    return -12021;
+  }
+  if ((in.rdstate() & std::ifstream::badbit ) != 0)
+  {
+    std::cout <<"BAD " << in.gcount() << " could be read. Needed " << total << std::endl;
+    return -12021;
+  }
+  return 0;
 }
 
 // -----------------------------------------------------------------------------
@@ -329,7 +339,7 @@ int readDataChunk(AttributeMatrix::Pointer attrMat, std::istream &in, bool inPre
   QVector<size_t> amTDims = attrMat->getTupleDimensions();
   //std::cout  << "Reading into " << attrMat->getName().toStdString() << std::endl;
   size_t numTuples = attrMat->getNumTuples();
- // std::cout << "  numTuples = " << numTuples << std::endl;
+  // std::cout << "  numTuples = " << numTuples << std::endl;
 
   QVector<size_t> tDims = attrMat->getTupleDimensions();
   QVector<size_t> cDims(1, scalarNumComp);
@@ -345,7 +355,13 @@ int readDataChunk(AttributeMatrix::Pointer attrMat, std::istream &in, bool inPre
   {
     if(binary)
     {
-      vtkReadBinaryData<T>(in, data->getPointer(0), numTuples, scalarNumComp);
+      int err = vtkReadBinaryData<T>(in, data->getPointer(0), numTuples, scalarNumComp);
+      if( err < 0 )
+      {
+        std::cout << "Error Reading Binary Data '" << scalarName.toStdString() << "' " << attrMat->getName().toStdString()
+        << " numTuples=" << numTuples << std::endl;
+        return err;
+      }
       if(BIGENDIAN == 0) {data->byteSwapElements(); }
     }
     else
@@ -581,7 +597,7 @@ int VtkStructuredPointsReader::readDataTypeSection(std::istream &in, int numValu
     //
     if ( ! strncmp(lowerCase(line, kBufferSize), "scalars", 7) )
     {
-      if ( ! this->readScalarData(in, numValues) )
+      if (  this->readScalarData(in, numValues) <= 0 )
       {
         return 0;
       }
@@ -591,7 +607,7 @@ int VtkStructuredPointsReader::readDataTypeSection(std::istream &in, int numValu
     //
     else if ( ! strncmp(line, "vectors", 7) )
     {
-      if ( ! this->readVectorData(in, numValues) )
+      if ( this->readVectorData(in, numValues) <= 0 )
       {
         return 0;
       }
@@ -773,8 +789,6 @@ int VtkStructuredPointsReader::DecodeString(char *resname, const char* name)
 int VtkStructuredPointsReader::readScalarData(std::istream &in, int numPts)
 {
   char line[256], name[256], key[256], tableName[256];
-  int skipScalar=0;
-
   int numComp = 1;
   char buffer[1024];
 
@@ -822,24 +836,11 @@ int VtkStructuredPointsReader::readScalarData(std::istream &in, int numPts)
     return 0;
   }
 
-  // See whether scalar has been already read or scalar name (if specified)
-  // matches name in file.
-  //
-  if (getInPreflight() == true )
-  {
-    skipScalar = 1;
-  }
-  else
-  {
-    //  this->SetScalarLut(tableName); //may be "default"
-  }
-
-
   //std::cout << "Reading Scalar data--> " << name << std::endl;
   // Suck up the newline at the end of the current line
   this->readLine(in, line, 1024);
 
-  int err = 0;
+  int err = 1;
   // Read the data
   if (scalarType.compare("unsigned_char") == 0) {
     err = readDataChunk<uint8_t>(m_CurrentAttrMat, in, getInPreflight(), getFileIsBinary(), name, numComp);
@@ -874,7 +875,7 @@ int VtkStructuredPointsReader::readScalarData(std::istream &in, int numPts)
 
 
 
-  return 1;
+  return err;
 }
 
 
