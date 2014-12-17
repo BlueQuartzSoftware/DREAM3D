@@ -387,7 +387,7 @@ void VolumeDataContainer::writeXdmfRectMeshStructureHeader(QTextStream& out, QSt
   out << "    <Geometry Type=\"ORIGIN_DXDYDZ\">" << "\n";
   out << "      <!-- Origin -->" << "\n";
   out << "      <DataItem Format=\"XML\" Dimensions=\"3\">" << origin[2] << " " << origin[1] << " " << origin[0] <<  "</DataItem>" << "\n";
-  out << "      <!-- DxDyDz (Spacing/Resolution)-->" << "\n";
+  out << "      <!-- DxDyDz (Spacing/Resolution) -->" << "\n";
   out << "      <DataItem Format=\"XML\" Dimensions=\"3\">" << spacing[2] << " " << spacing[1] << " " << spacing[0] <<  "</DataItem>" << "\n";
   out << "    </Geometry>" << "\n";
 }
