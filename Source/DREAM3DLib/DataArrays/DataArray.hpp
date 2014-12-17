@@ -971,6 +971,8 @@ class DataArray : public IDataArray
       if (typeid(value) == typeid(unsigned int)) { return "unsigned int"; }
 #endif
 
+      if (typeid(value) == typeid(int64_t)) { return "int64_t"; }
+      if (typeid(value) == typeid(uint64_t)) { return "uint64_t";}
 
 #if (CMP_SIZEOF_LONG == 4)
       if (typeid(value) == typeid(long int)) { return "long int"; }
@@ -982,8 +984,7 @@ class DataArray : public IDataArray
       if (typeid(value) == typeid(unsigned long int)) { return "unsigned long int"; }
 #endif
 
-      if (typeid(value) == typeid(int64_t)) { return "int64_t"; }
-      if (typeid(value) == typeid(uint64_t)) { return "uint64_t"; }
+
 #if (CMP_SIZEOF_LONG_LONG == 8)
       if (typeid(value) == typeid(long long int)) { return "long long int"; }
       if (typeid(value) == typeid(signed long long int)) { return "signed long long int"; }
