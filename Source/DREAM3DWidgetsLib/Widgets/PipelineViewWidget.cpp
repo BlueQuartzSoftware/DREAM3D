@@ -338,8 +338,8 @@ FilterPipeline::Pointer PipelineViewWidget::getCopyOfFilterPipeline()
     if (fw)
     {
       AbstractFilter::Pointer filter = fw->getFilter();
-      pipeline->pushBack(filter->newFilterInstance(true));
-      //pipeline->pushBack(filter);
+      AbstractFilter::Pointer copy = filter->newFilterInstance(true);
+      pipeline->pushBack(copy);
     }
 
   }

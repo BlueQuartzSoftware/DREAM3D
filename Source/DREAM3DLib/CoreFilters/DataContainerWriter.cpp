@@ -397,16 +397,16 @@ int DataContainerWriter::writePipeline()
 
 
   // Now start walking BACKWARDS through the pipeline to find the first filter.
-  AbstractFilter::Pointer previousFilter = getPreviousFilter();
+  AbstractFilter::Pointer previousFilter = getPreviousFilter().lock();
   while (previousFilter.get() != NULL)
   {
-    if (NULL == previousFilter->getPreviousFilter())
+    if (NULL == previousFilter->getPreviousFilter().lock().get())
     {
       break;
     }
     else
     {
-      previousFilter = previousFilter->getPreviousFilter();
+      previousFilter = previousFilter->getPreviousFilter().lock();
     }
   }
 
@@ -417,7 +417,7 @@ int DataContainerWriter::writePipeline()
   while(NULL != currentFilter.get())
   {
     index = currentFilter->writeFilterParameters(parametersWriter.get(), index);
-    currentFilter = currentFilter->getNextFilter();
+    currentFilter = currentFilter->getNextFilter().lock();
   }
 
   int err = QH5Lite::writeScalarAttribute(m_FileId, DREAM3D::StringConstants::PipelineGroupName, DREAM3D::Settings::NumFilters, index);

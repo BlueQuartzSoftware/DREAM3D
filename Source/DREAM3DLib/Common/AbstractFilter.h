@@ -163,11 +163,11 @@ class DREAM3DLib_EXPORT AbstractFilter : public Observable
     /**
     * @brief Returns the previous filter
     */
-    DREAM3D_INSTANCE_PROPERTY(AbstractFilter::Pointer, PreviousFilter)
+    DREAM3D_INSTANCE_PROPERTY(AbstractFilter::WeakPointer, PreviousFilter)
     /**
     * @brief Returns the next filter in the pipeline
     */
-    DREAM3D_INSTANCE_PROPERTY(AbstractFilter::Pointer, NextFilter)
+    DREAM3D_INSTANCE_PROPERTY(AbstractFilter::WeakPointer, NextFilter)
 
     /**
      * @brief doesPipelineContainFilterBeforeThis

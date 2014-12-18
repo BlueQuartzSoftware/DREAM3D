@@ -53,7 +53,7 @@ AbstractFilter::~AbstractFilter()
   //  if(NULL != m_PreviousFilter.get())
   //  std::cout << "~PipelineFilterWidget() m_PreviousFilter " << this  << "  " << m_PreviousFilter->getNameOfClass().toStdString()
   //            << "  " << m_PreviousFilter.use_count() << std::endl;
-  //  m_PreviousFilter = AbstractFilter::NullPointer();
+   // m_PreviousFilter = AbstractFilter::NullPointer();
 
   //  if(NULL != m_NextFilter.get())
   //  std::cout << "~PipelineFilterWidget() m_NextFilter " << this  << "  " << m_NextFilter->getNameOfClass().toStdString()
@@ -103,7 +103,7 @@ bool AbstractFilter::doesPipelineContainFilterBeforeThis(const QString& name)
 {
   bool contains = false;
   // Check the previous filter
-  AbstractFilter::Pointer prev = getPreviousFilter();
+  AbstractFilter::Pointer prev = getPreviousFilter().lock();
   while(prev.get() != NULL)
   {
     if (prev->getNameOfClass().compare(name) == 0)
@@ -111,7 +111,7 @@ bool AbstractFilter::doesPipelineContainFilterBeforeThis(const QString& name)
       contains = true;
       break;
     }
-    prev = prev->getPreviousFilter();
+    prev = prev->getPreviousFilter().lock();
   }
   return contains;
 }
@@ -123,7 +123,7 @@ bool AbstractFilter::doesPipelineContainFilterAfterThis(const QString& name)
 {
   bool contains = false;
   // Check the previous filter
-  AbstractFilter::Pointer next = getNextFilter();
+  AbstractFilter::Pointer next = getNextFilter().lock();
   while(next.get() != NULL)
   {
     if (next->getNameOfClass().compare(name) == 0)
@@ -131,7 +131,7 @@ bool AbstractFilter::doesPipelineContainFilterAfterThis(const QString& name)
       contains = true;
       break;
     }
-    next = next->getNextFilter();
+    next = next->getNextFilter().lock();
   }
   return contains;
 }
