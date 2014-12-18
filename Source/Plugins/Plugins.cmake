@@ -37,7 +37,7 @@ function(DREAM3D_ADD_PLUGINS)
     set(multiValueArgs PLUGIN_NAMES)
     cmake_parse_arguments(PLUG  "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN} )
     get_filename_component(DREAM3D_PARENT_DIR  ${DREAM3DProj_SOURCE_DIR} DIRECTORY)
-    message(STATUS "DREAM3D_PARENT_DIR: ${DREAM3D_PARENT_DIR}")
+    #message(STATUS "DREAM3D_PARENT_DIR: ${DREAM3D_PARENT_DIR}")
 
     #-- Attempt to look in our local source directory for the plugin. Anywhere else
     # and the user will have to put the entire path into CMake manually.
