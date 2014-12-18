@@ -93,13 +93,11 @@ int SanityCheckFileSizeVersusAllocatedSize(size_t allocatedBytes, size_t fileSiz
   return 0;
 }
 
-
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 template<typename T>
-int ReadBinaryFile(typename DataArray<T>::Pointer p, const QString& filename, int skipHeaderBytes)
+int readBinaryFile(typename DataArray<T>::Pointer p, const QString& filename, int skipHeaderBytes)
 {
   int err = 0;
   QFileInfo fi(filename);
@@ -112,7 +110,6 @@ int ReadBinaryFile(typename DataArray<T>::Pointer p, const QString& filename, in
     return RBR_FILE_TOO_SMALL;
   }
 
-
   FILE* f = fopen(filename.toLatin1().data(), "rb");
   if (NULL == f)
   {
@@ -120,36 +117,45 @@ int ReadBinaryFile(typename DataArray<T>::Pointer p, const QString& filename, in
   }
 
   ScopedFileMonitor monitor(f);
-  size_t numElements = p->getNumberOfTuples() * p->getNumberOfComponents();
+  size_t numBytesToRead = p->getNumberOfTuples() * static_cast<size_t>(p->getNumberOfComponents()) * sizeof(T);
   size_t numRead = 0;
 
-  T* ptr = p->getPointer(0);
+  unsigned char* chunkptr = reinterpret_cast<unsigned char*>(p->getPointer(0));
 
   //Skip some header bytes by just reading those bytes into the pointer knowing that the next
   // thing we are going to do it over write those bytes with the real data that we are after.
   if (skipHeaderBytes > 0)
   {
-    numRead = fread(ptr, 1, skipHeaderBytes, f);
+    numRead = fread(chunkptr, 1, skipHeaderBytes, f);
   }
   numRead = 0;
   // Now start reading the data in chunks if needed.
+  size_t chunkSize = DEFAULT_BLOCKSIZE;
+
+  if(numBytesToRead < DEFAULT_BLOCKSIZE)
+  {
+    chunkSize = numBytesToRead;
+  }
+
+  size_t master_counter = 0;
+  size_t bytes_read = 0;
   while(1)
   {
-    numRead += fread(ptr, sizeof(T), numElements, f);
+    bytes_read = fread(chunkptr, sizeof(unsigned char), chunkSize, f);
+    chunkptr = chunkptr + bytes_read;
+    master_counter += bytes_read;
 
-    // If we try to read at or past EOF
-    if ( feof(f) != 0 )
+    if( numBytesToRead - master_counter < chunkSize)
     {
-      return RBR_READ_EOF;
+      chunkSize = numBytesToRead - master_counter;
     }
-    // Don't read junk at the end of the file
-    else if (numRead == numElements)
+    if(master_counter >= numBytesToRead)
     {
       break;
     }
-    // If we are here we did NOT read all the data, so increment the pointer and loop again.
-    ptr = p->getPointer(numRead);
+
   }
+
   return RBR_NO_ERROR;
 }
 
@@ -275,20 +281,20 @@ int RawBinaryReader::writeFilterParameters(AbstractFilterParametersWriter* write
 {
   writer->openFilterGroup(this, index);
   DREAM3D_FILTER_WRITE_PARAMETER(DataContainerName)
-  DREAM3D_FILTER_WRITE_PARAMETER(CellAttributeMatrixName)
-  DREAM3D_FILTER_WRITE_PARAMETER(ScalarType)
-  DREAM3D_FILTER_WRITE_PARAMETER(Dimensionality)
-  DREAM3D_FILTER_WRITE_PARAMETER(NumberOfComponents)
-  DREAM3D_FILTER_WRITE_PARAMETER(Endian)
-  DREAM3D_FILTER_WRITE_PARAMETER(Dimensions)
-  DREAM3D_FILTER_WRITE_PARAMETER(Origin)
-  DREAM3D_FILTER_WRITE_PARAMETER(Resolution)
-  DREAM3D_FILTER_WRITE_PARAMETER(InputFile)
-  DREAM3D_FILTER_WRITE_PARAMETER(OverRideOriginResolution)
-  DREAM3D_FILTER_WRITE_PARAMETER(SkipHeaderBytes)
-  DREAM3D_FILTER_WRITE_PARAMETER(OutputArrayName)
-  DREAM3D_FILTER_WRITE_PARAMETER(AddToExistingAttributeMatrix)
-  writer->closeFilterGroup();
+      DREAM3D_FILTER_WRITE_PARAMETER(CellAttributeMatrixName)
+      DREAM3D_FILTER_WRITE_PARAMETER(ScalarType)
+      DREAM3D_FILTER_WRITE_PARAMETER(Dimensionality)
+      DREAM3D_FILTER_WRITE_PARAMETER(NumberOfComponents)
+      DREAM3D_FILTER_WRITE_PARAMETER(Endian)
+      DREAM3D_FILTER_WRITE_PARAMETER(Dimensions)
+      DREAM3D_FILTER_WRITE_PARAMETER(Origin)
+      DREAM3D_FILTER_WRITE_PARAMETER(Resolution)
+      DREAM3D_FILTER_WRITE_PARAMETER(InputFile)
+      DREAM3D_FILTER_WRITE_PARAMETER(OverRideOriginResolution)
+      DREAM3D_FILTER_WRITE_PARAMETER(SkipHeaderBytes)
+      DREAM3D_FILTER_WRITE_PARAMETER(OutputArrayName)
+      DREAM3D_FILTER_WRITE_PARAMETER(AddToExistingAttributeMatrix)
+      writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
 
@@ -358,6 +364,9 @@ void RawBinaryReader::dataCheck(bool preflight)
     if(getErrorCondition() < 0) { return; }
 
     QVector<size_t> tDims(3, 0);
+    tDims[0] = m_Dimensions.x;
+    tDims[1] = m_Dimensions.y;
+    tDims[2] =  m_Dimensions.z;
     attrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), tDims, DREAM3D::AttributeMatrixType::Cell);
     if(getErrorCondition() < 0) { return; }
   }
@@ -483,7 +492,10 @@ void RawBinaryReader::execute()
 
   if(getAddToExistingAttributeMatrix() == false)
   {
-    QVector<size_t> tDims(1, voxels);
+    QVector<size_t> tDims(3, 0);
+    tDims[0] = m_Dimensions.x;
+    tDims[1] = m_Dimensions.y;
+    tDims[2] =  m_Dimensions.z;
     m->getAttributeMatrix(getCellAttributeMatrixName())->resizeAttributeArrays(tDims);
   }
 
@@ -492,110 +504,111 @@ void RawBinaryReader::execute()
   {
     QVector<size_t> dims(1, m_NumberOfComponents);
     Int8ArrayType::Pointer p = Int8ArrayType::CreateArray(voxels, dims, m_OutputArrayName);
-    err = ReadBinaryFile<int8_t>(p, m_InputFile, m_SkipHeaderBytes);
+    err = readBinaryFile<int8_t>(p, m_InputFile, m_SkipHeaderBytes);
     if (err >= 0 )
     {
       SWAP_ARRAY(p)
-      array = p;
+          array = p;
     }
   }
   else if (m_ScalarType == Detail::UInt8)
   {
     QVector<size_t> dims(1, m_NumberOfComponents);
     UInt8ArrayType::Pointer p = UInt8ArrayType::CreateArray(voxels, dims, m_OutputArrayName);
-    err = ReadBinaryFile<uint8_t>(p, m_InputFile, m_SkipHeaderBytes);
+    err = readBinaryFile<uint8_t>(p, m_InputFile, m_SkipHeaderBytes);
     if (err >= 0 )
     {
       SWAP_ARRAY(p)
-      array = p;
+          array = p;
     }
   }
   else if (m_ScalarType == Detail::Int16)
   {
     QVector<size_t> dims(1, m_NumberOfComponents);
     Int16ArrayType::Pointer p = Int16ArrayType::CreateArray(voxels, dims, m_OutputArrayName);
-    err = ReadBinaryFile<int16_t>(p, m_InputFile, m_SkipHeaderBytes);
+    err = readBinaryFile<int16_t>(p, m_InputFile, m_SkipHeaderBytes);
     if (err >= 0 )
     {
       SWAP_ARRAY(p)
-      array = p;
+          array = p;
     }
   }
   else if (m_ScalarType == Detail::UInt16)
   {
     QVector<size_t> dims(1, m_NumberOfComponents);
     UInt16ArrayType::Pointer p = UInt16ArrayType::CreateArray(voxels, dims, m_OutputArrayName);
-    err = ReadBinaryFile<uint16_t>(p, m_InputFile, m_SkipHeaderBytes);
+    err = readBinaryFile<uint16_t>(p, m_InputFile, m_SkipHeaderBytes);
     if (err >= 0 )
     {
       SWAP_ARRAY(p)
-      array = p;
+          array = p;
     }
   }
   else if (m_ScalarType == Detail::Int32)
   {
     QVector<size_t> dims(1, m_NumberOfComponents);
     Int32ArrayType::Pointer p = Int32ArrayType::CreateArray(voxels, dims, m_OutputArrayName);
-    err = ReadBinaryFile<int32_t>(p, m_InputFile, m_SkipHeaderBytes);
+    err = readBinaryFile<int32_t>(p, m_InputFile, m_SkipHeaderBytes);
     if (err >= 0 )
     {
       SWAP_ARRAY(p)
-      array = p;
+          array = p;
     }
   }
   else if (m_ScalarType == Detail::UInt32)
   {
     QVector<size_t> dims(1, m_NumberOfComponents);
     UInt32ArrayType::Pointer p = UInt32ArrayType::CreateArray(voxels, dims, m_OutputArrayName);
-    err = ReadBinaryFile<uint32_t>(p, m_InputFile, m_SkipHeaderBytes);
+    err = readBinaryFile<uint32_t>(p, m_InputFile, m_SkipHeaderBytes);
     if (err >= 0 )
     {
       SWAP_ARRAY(p)
-      array = p;
+          array = p;
     }
   }
   else if (m_ScalarType == Detail::Int64)
   {
     QVector<size_t> dims(1, m_NumberOfComponents);
     Int64ArrayType::Pointer p = Int64ArrayType::CreateArray(voxels, dims, m_OutputArrayName);
-    err = ReadBinaryFile<int64_t>(p, m_InputFile, m_SkipHeaderBytes);
+    err = readBinaryFile<int64_t>(p, m_InputFile, m_SkipHeaderBytes);
     if (err >= 0 )
     {
       SWAP_ARRAY(p)
-      array = p;
+          array = p;
     }
   }
   else if (m_ScalarType == Detail::UInt64)
   {
     QVector<size_t> dims(1, m_NumberOfComponents);
     UInt64ArrayType::Pointer p = UInt64ArrayType::CreateArray(voxels, dims, m_OutputArrayName);
-    err = ReadBinaryFile<uint64_t>(p, m_InputFile, m_SkipHeaderBytes);
+    err = readBinaryFile<uint64_t>(p, m_InputFile, m_SkipHeaderBytes);
     if (err >= 0 )
     {
       SWAP_ARRAY(p)
-      array = p;
+          array = p;
     }
   }
   else if (m_ScalarType == Detail::Float)
   {
     QVector<size_t> dims(1, m_NumberOfComponents);
     FloatArrayType::Pointer p = FloatArrayType::CreateArray(voxels, dims, m_OutputArrayName);
-    err = ReadBinaryFile<float>(p, m_InputFile, m_SkipHeaderBytes);
+    p->initializeWithValue(666.6666f);
+    err = readBinaryFile<float>(p, m_InputFile, m_SkipHeaderBytes);
     if (err >= 0 )
     {
       SWAP_ARRAY(p)
-      array = p;
+          array = p;
     }
   }
   else if (m_ScalarType == Detail::Double)
   {
     QVector<size_t> dims(1, m_NumberOfComponents);
     DoubleArrayType::Pointer p = DoubleArrayType::CreateArray(voxels, dims, m_OutputArrayName);
-    err = ReadBinaryFile<double>(p, m_InputFile, m_SkipHeaderBytes);
+    err = readBinaryFile<double>(p, m_InputFile, m_SkipHeaderBytes);
     if (err >= 0 )
     {
       SWAP_ARRAY(p)
-      array = p;
+          array = p;
     }
   }
 

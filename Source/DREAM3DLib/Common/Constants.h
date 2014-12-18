@@ -49,6 +49,7 @@
 
 #define DREAM3D_STRING QString
 
+#define DEFAULT_BLOCKSIZE 1048576
 
 // -----------------------------------------------------------------------------
 //
@@ -62,6 +63,8 @@ namespace DREAM3D
   static const uint8_t Unchecked = 0;
   static const uint8_t PartiallyChecked = 1;
   static const uint8_t Checked = 2;
+
+
 
   namespace TypeNames
   {
