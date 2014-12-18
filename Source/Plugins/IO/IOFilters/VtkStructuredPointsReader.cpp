@@ -259,7 +259,7 @@ int skipVolume(QFile& inStream, bool binary, size_t totalSize)
 //
 // -----------------------------------------------------------------------------
 template<typename T>
-int readDataChunk(AttributeMatrix::Pointer attrMat, QFile &inStream, bool inPreflight, bool binary, const QString &scalarName, const QString &scalarType, const QString &scalarNumComp)
+int readDataChunk(AttributeMatrix::Pointer attrMat, QFile &inStream, bool inPreflight, bool binary, const QString &scalarName, const QString &scalarType, const QString &scalarNumComp, bool skipChunk)
 {
   QVector<size_t> amTDims = attrMat->getTupleDimensions();
 
@@ -272,7 +272,8 @@ int readDataChunk(AttributeMatrix::Pointer attrMat, QFile &inStream, bool inPref
 
   typename DataArray<T>::Pointer data = DataArray<T>::CreateArray(tDims, cDims, scalarName, !inPreflight);
   attrMat->addAttributeArray(data->getName(), data);
-  if(inPreflight == true) {
+  if(inPreflight == true || skipChunk == true)
+  {
     // qDebug() << "Skipping Scalars " << scalarName;
     return skipVolume<T>(inStream, binary, numTuples*numComp);
   }
@@ -281,19 +282,21 @@ int readDataChunk(AttributeMatrix::Pointer attrMat, QFile &inStream, bool inPref
 
   if (binary == true)
   {
-    size_t k_BufferSize = 8192; // Read the data in k_BufferSize chunks which should be reasonably optimal for most drives
+    data->initializeWithValue(static_cast<T>(-1));
+    size_t k_BufferSize = 4096; // Read the data in k_BufferSize chunks which should be reasonably optimal for most drives
     T* buffer = data->getPointer(0);
     char* ptr = reinterpret_cast<char*>(buffer);
 
     //get current position in file and file size
     qint64 pos = inStream.pos();
+    qint64 posCheck;
     qint64 fileSize = inStream.size();
 
     qint64 totalBytesRead = 0;
 
     // Read all the data in one shot into a buffer
     qint64 totalSize = static_cast<qint64>(numTuples*numComp*sizeof(T));
-    while(pos < fileSize)
+    while(totalBytesRead < totalSize)
     {
       if(totalSize - totalBytesRead < k_BufferSize)
       {
@@ -305,20 +308,20 @@ int readDataChunk(AttributeMatrix::Pointer attrMat, QFile &inStream, bool inPref
         return -4002;
       }
       qint64 bytesRead = inStream.read(ptr, k_BufferSize);
-      if(bytesRead != k_BufferSize)
+      //calculating bytesRead by checking the actual position in the file....THIS MAY BE A BAD FIX, SINCE WE ARE ALLOWING THE AMOUTN READ TO BE DIFFERENT THAN WHAT WE TOLD IT TO READ
+      if(inStream.pos()-pos !=  bytesRead)
       {
-        //NOT SURE THIS WILL END WELL....BUT IF NOT AT END OF FILE.....IGNORE WHY WRONG AMOUNT OF BYTES READ AND TRY AGAIN
-        int stop = 9;
+        inStream.seek(pos+bytesRead);
       }
+      bytesRead = inStream.pos()-pos;
       pos += bytesRead;
-      buffer = buffer + bytesRead;
+      ptr = ptr + bytesRead;
       totalBytesRead += bytesRead;
       if(inStream.atEnd() == true)
       {
         return -1;
       }
     }
-
     //Vtk Binary files are written with BIG Endine byte order. If we are on a little
     // endian machine (Intel x86 or Intel x86_64 then we need to byte swap the elements in the array
     if(BIGENDIAN == 0) {data->byteSwapElements(); }
@@ -403,16 +406,19 @@ int VtkStructuredPointsReader::readFile()
   // But we need the 'extents' which is one less in all directions (unless dim=1)
   size_t dims[3];
   QList<QByteArray> tokens = buf.split(' ');
-  dims[0] = tokens[1].toInt(&ok, 10);
-  dims[1] = tokens[2].toInt(&ok, 10);
-  dims[2] = tokens[3].toInt(&ok, 10);
+  dims[0] = tokens[1].toInt(&ok, 10)+1;
+  dims[1] = tokens[2].toInt(&ok, 10)+1;
+  dims[2] = tokens[3].toInt(&ok, 10)+1;
   if(m_ReadCellData == true)
   {
-    getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getVolumeDataContainerName())->setDimensions(dims);
     QVector<size_t> tDims(3, 0);
-    tDims[0] = dims[0]-1;
-    tDims[1] = dims[1]-1;
-    tDims[2] = dims[2]-1;
+    dims[0] -= 1;
+    dims[1] -= 1;
+    dims[2] -= 1;
+    tDims[0] = dims[0];
+    tDims[1] = dims[1];
+    tDims[2] = dims[2];
+    getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getVolumeDataContainerName())->setDimensions(dims);
     getDataContainerArray()->getDataContainer(getVolumeDataContainerName())->getAttributeMatrix(getCellAttributeMatrixName())->resizeAttributeArrays(tDims);
   }
 
@@ -440,6 +446,40 @@ int VtkStructuredPointsReader::readFile()
 
   // Now parse through the file. If we are preflighting then we only construct the DataArrays with no allocation
   readData(instream);
+
+  //if there is point data, we need to create the vertex array
+  VertexDataContainer* vm = getDataContainerArray()->getDataContainerAs<VertexDataContainer>(getVertexDataContainerName());
+  if(vm != NULL)
+  {
+    AttributeMatrix::Pointer attrMat = vm->getAttributeMatrix(getVertexAttributeMatrixName());
+    size_t numPoints = attrMat->getNumTuples();
+    //only calculate coordinates if not in preflight
+    if(getInPreflight() == true)
+    {
+      VertexArray::Pointer vertices = VertexArray::CreateArray(1, DREAM3D::VertexData::SurfaceMeshNodes);
+      vm->setVertices(vertices);
+    }
+    else
+    {
+      VertexArray::Pointer vertices = VertexArray::CreateArray(numPoints, DREAM3D::VertexData::SurfaceMeshNodes);
+      VertexArray::Vert_t* vertex = vertices.get()->getPointer(0);
+      size_t count = 0;
+      for(size_t k = 0; k < dims[2]; k++)
+      {
+        for(size_t j = 0; j < dims[1]; j++)
+        {
+          for(size_t i = 0; i < dims[0]; i++)
+          {
+            vertex[count].pos[0] = float(i) * resolution[0];
+            vertex[count].pos[1] = float(j) * resolution[1];
+            vertex[count].pos[2] = float(k) * resolution[2];
+            count++;
+          }
+        }
+      }
+      vm->setVertices(vertices);
+    } 
+  }
 
   instream.close();
   return err;
@@ -474,39 +514,51 @@ void VtkStructuredPointsReader::readData(QFile &instream)
   // QList<QByteArray> words;
   int err = 0;
 
+  bool hasPointData = false;
+  bool hasCellData = false;
+  bool skipChunk = false;
+
   AttributeMatrix::Pointer attrMat;
 
+  //read a line to get whether the first block of data is POINT_DATA or CELL_DATA
+  qint64 filePos = instream.pos();
+  buf = instream.readLine().trimmed();
+  // If we read an empty line, then we should drop into this while loop and start reading lines until
+  // we find a line with something on it.
+  while(buf.isEmpty() == true && instream.atEnd() == false)
+  {
+    buf = instream.readLine().trimmed();
+  }
+  // Check to make sure we didn't read to the end of the file
+  if(instream.atEnd() == true)
+  {
+    return;
+  }
+  tokens = buf.split(' ');
+
+  bool readDataSections;
   while(instream.atEnd() == false)
   {
-    qint64 filePos = instream.pos();
-    buf = instream.readLine().trimmed();
-    // If we read an empty line, then we should drop into this while loop and start reading lines until
-    // we find a line with something on it.
-    while(buf.isEmpty() == true && instream.atEnd() == false)
-    {
-      buf = instream.readLine().trimmed();
-    }
-    // Check to make sure we didn't read to the end of the file
-    if(instream.atEnd() == true)
-    {
-      return;
-    }
-    tokens = buf.split(' ');
-
-    bool readNewSection = false;
-    QString cellDataStr(tokens.at(0));
-    if (cellDataStr.compare("POINT_DATA") == 0)
+    skipChunk = false;
+    readDataSections = false;
+    QString dataStr(tokens.at(0));
+    dataStr = "CELL_DATA";
+    if (dataStr.compare("POINT_DATA") == 0)
     {
       attrMat = getDataContainerArray()->getDataContainer(getVertexDataContainerName())->getAttributeMatrix(getVertexAttributeMatrixName());
-      readNewSection = true;
+      readDataSections = true;
+      if(m_ReadPointData == true) hasPointData = true;
+      else skipChunk = true;
     }
-    else if (cellDataStr.compare("CELL_DATA") == 0)
+    else if (dataStr.compare("CELL_DATA") == 0)
     {
       attrMat = getDataContainerArray()->getDataContainer(getVolumeDataContainerName())->getAttributeMatrix(getCellAttributeMatrixName());
-      readNewSection = true;
+      readDataSections = true;
+      if(m_ReadCellData == true) hasCellData = true;
+      else skipChunk = true;
     }
 
-    if(readNewSection == true)
+    while(readDataSections == true)
     {
       // Read the SCALARS/VECTORS line which should be 3 or 4 words
       buf = instream.readLine().trimmed();
@@ -519,10 +571,23 @@ void VtkStructuredPointsReader::readData(QFile &instream)
       // Check to make sure we didn't read to the end of the file
       if(instream.atEnd() == true)
       {
-        return;
+        readDataSections = false;
+        continue;
       }
       tokens = buf.split(' ');
 
+      QString scalarNumComps;
+      QString scalarKeyWord = tokens[0];
+
+      //Check to see if the line read is actually a POINT_DATA or CELL_DATA line
+      //This would happen on the second or later block of data and means we have switched data types and need to jump out of this while loop
+      if(scalarKeyWord.compare("POINT_DATA") == 0 || scalarKeyWord.compare("CELL_DATA") == 0)
+      {
+        readDataSections = false;
+        continue;
+      }
+
+      //if we didn't exit from the POINT_DATA/CELL_DATA check, then make sure the scalars line has the correct info on it
       if (tokens.size() < 3 || tokens.size() > 4)
       {
         QString ss = QObject::tr("Error reading SCALARS header section of VTK file. 3 or 4 words are needed. Found %1. Read Line was\n  %2").arg(tokens.size()).arg(QString(buf));
@@ -531,8 +596,6 @@ void VtkStructuredPointsReader::readData(QFile &instream)
         return;
       }
 
-      QString scalarNumComps;
-      QString scalarKeyWord = tokens[0];
       if(scalarKeyWord.compare("SCALARS") == 0)
       {
         scalarNumComps = QString("1");
@@ -541,7 +604,8 @@ void VtkStructuredPointsReader::readData(QFile &instream)
       {
         scalarNumComps = QString("3");
       }
-      else {
+      else 
+      {
         QString ss = QObject::tr("Error reading Dataset section. Unknown Keyword found. %1").arg(scalarKeyWord);
         setErrorCondition(-1003);
         notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
@@ -568,34 +632,34 @@ void VtkStructuredPointsReader::readData(QFile &instream)
       }
 
       if (scalarType.compare("unsigned_char") == 0) {
-        err = readDataChunk<uint8_t>(attrMat, instream, getInPreflight(), getFileIsBinary(), scalarName, scalarType, scalarNumComps);
+        err = readDataChunk<uint8_t>(attrMat, instream, getInPreflight(), getFileIsBinary(), scalarName, scalarType, scalarNumComps, skipChunk);
       }
       else if (scalarType.compare("char") == 0) {
-        err = readDataChunk<int8_t>(attrMat, instream, getInPreflight(), getFileIsBinary(), scalarName, scalarType, scalarNumComps);
+        err = readDataChunk<int8_t>(attrMat, instream, getInPreflight(), getFileIsBinary(), scalarName, scalarType, scalarNumComps, skipChunk);
       }
       else if (scalarType.compare("unsigned_short") == 0) {
-        err = readDataChunk<uint16_t>(attrMat, instream, getInPreflight(), getFileIsBinary(), scalarName, scalarType, scalarNumComps);
+        err = readDataChunk<uint16_t>(attrMat, instream, getInPreflight(), getFileIsBinary(), scalarName, scalarType, scalarNumComps, skipChunk);
       }
       else if (scalarType.compare("short") == 0) {
-        err = readDataChunk<int16_t>(attrMat, instream, getInPreflight(), getFileIsBinary(), scalarName, scalarType, scalarNumComps);
+        err = readDataChunk<int16_t>(attrMat, instream, getInPreflight(), getFileIsBinary(), scalarName, scalarType, scalarNumComps, skipChunk);
       }
       else if (scalarType.compare("unsigned_int") == 0) {
-        err = readDataChunk<uint32_t>(attrMat, instream, getInPreflight(), getFileIsBinary(), scalarName, scalarType, scalarNumComps);
+        err = readDataChunk<uint32_t>(attrMat, instream, getInPreflight(), getFileIsBinary(), scalarName, scalarType, scalarNumComps, skipChunk);
       }
       else if (scalarType.compare("int") == 0) {
-        err = readDataChunk<int32_t>(attrMat, instream, getInPreflight(), getFileIsBinary(), scalarName, scalarType, scalarNumComps);
+        err = readDataChunk<int32_t>(attrMat, instream, getInPreflight(), getFileIsBinary(), scalarName, scalarType, scalarNumComps, skipChunk);
       }
       else if (scalarType.compare("unsigned_long") == 0) {
-        err = readDataChunk<qint64>(attrMat, instream, getInPreflight(), getFileIsBinary(), scalarName, scalarType, scalarNumComps);
+        err = readDataChunk<qint64>(attrMat, instream, getInPreflight(), getFileIsBinary(), scalarName, scalarType, scalarNumComps, skipChunk);
       }
       else if (scalarType.compare("long") == 0) {
-        err = readDataChunk<quint64>(attrMat, instream, getInPreflight(), getFileIsBinary(), scalarName, scalarType, scalarNumComps);
+        err = readDataChunk<quint64>(attrMat, instream, getInPreflight(), getFileIsBinary(), scalarName, scalarType, scalarNumComps, skipChunk);
       }
       else if (scalarType.compare("float") == 0) {
-        err = readDataChunk<float>(attrMat, instream, getInPreflight(), getFileIsBinary(), scalarName, scalarType, scalarNumComps);
+        err = readDataChunk<float>(attrMat, instream, getInPreflight(), getFileIsBinary(), scalarName, scalarType, scalarNumComps, skipChunk);
       }
       else if (scalarType.compare("double") == 0) {
-        err = readDataChunk<double>(attrMat, instream, getInPreflight(), getFileIsBinary(), scalarName, scalarType, scalarNumComps);
+        err = readDataChunk<double>(attrMat, instream, getInPreflight(), getFileIsBinary(), scalarName, scalarType, scalarNumComps, skipChunk);
       }
 
       if(err < 0) {
@@ -608,6 +672,8 @@ void VtkStructuredPointsReader::readData(QFile &instream)
     }
 
   }
+  if(hasPointData == false) getDataContainerArray()->removeDataContainer(getVertexDataContainerName());
+  if(hasCellData == false) getDataContainerArray()->removeDataContainer(getVolumeDataContainerName());
 
 }
 
