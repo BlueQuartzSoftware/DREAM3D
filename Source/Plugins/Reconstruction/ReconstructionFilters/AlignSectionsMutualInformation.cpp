@@ -81,7 +81,7 @@ AlignSectionsMutualInformation::AlignSectionsMutualInformation() :
   m_OrientationOps = OrientationOps::getOrientationOpsVector();
 
   featurecounts = NULL;
-  INIT_DataArray(m_FeatureCounts, int);
+
   //only setting up the child parameters because the parent constructor has already been called
   setupFilterParameters();
 }
@@ -151,6 +151,8 @@ int AlignSectionsMutualInformation::writeFilterParameters(AbstractFilterParamete
 void AlignSectionsMutualInformation::dataCheck()
 {
   setErrorCondition(0);
+
+  INIT_DataArray(m_FeatureCounts, int);
 
   //Set the DataContainerName and AttributematrixName for the Parent Class (AlignSections) to Use.
   setDataContainerName(m_QuatsArrayPath.getDataContainerName());

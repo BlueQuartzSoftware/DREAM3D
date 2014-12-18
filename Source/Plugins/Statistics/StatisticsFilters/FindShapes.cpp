@@ -68,9 +68,6 @@ FindShapes::FindShapes()  :
 
   scaleFactor = 1.0;
 
-  INIT_DataArray(m_FeatureMoments, double);
-  INIT_DataArray(m_FeatureEigenVals, double);
-
   setupFilterParameters();
 }
 
@@ -141,6 +138,9 @@ void FindShapes::dataCheck()
 {
   DataArrayPath tempPath;
   setErrorCondition(0);
+
+  INIT_DataArray(m_FeatureMoments, double);
+  INIT_DataArray(m_FeatureEigenVals, double);
 
   QVector<size_t> dims(1, 1);
   m_FeatureIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeatureIdsArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */

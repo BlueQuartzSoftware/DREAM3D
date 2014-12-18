@@ -55,7 +55,6 @@ FindFeatureCentroids::FindFeatureCentroids() :
   m_FeatureIds(NULL),
   m_Centroids(NULL)
 {
-  INIT_DataArray(m_FeatureCenters, float)
   featurecenters = NULL;
   setupFilterParameters();
 }
@@ -109,6 +108,8 @@ void FindFeatureCentroids::dataCheck()
 {
   DataArrayPath tempPath;
   setErrorCondition(0);
+
+  INIT_DataArray(m_FeatureCenters, float)
 
   QVector<size_t> dims(1, 1);
   m_FeatureIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeatureIdsArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
