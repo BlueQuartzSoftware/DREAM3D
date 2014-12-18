@@ -119,7 +119,7 @@ DataContainerArray::Pointer CreateDataContainerArrayTestStructure()
   int64_t col, row, plane;
   int64_t index;
   QList<QString> voxelArrayNames = am1->getAttributeArrayNameList();
-  int64_t val = 1;
+
   for (int64_t i = 0; i < ZP; i++)
   {
     plane = i * XP * YP;
@@ -133,8 +133,7 @@ DataContainerArray::Pointer CreateDataContainerArrayTestStructure()
         for (QList<QString>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
         {
           IDataArray::Pointer p = am1->getAttributeArray(*iter);
-          p->initializeTuple(index, val);
-          val++;
+          p->initializeTuple(index, i+j+k);
         }
       }
     }
@@ -456,6 +455,7 @@ int TestCropVolume()
         //    var.setValue(true);
         //    propWasSet = cropVolume->setProperty("SaveAsNewDataContainer", var);
         //    DREAM3D_REQUIRE_EQUAL(propWasSet, true)
+
 
     preflightTests(cropVolume);
 
